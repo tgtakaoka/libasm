@@ -73,6 +73,8 @@ void run_test(void (*test)(), const char *name, void (*set_up)(), void (*tear_do
 #define ERUI(src, ...) ERRT(src, UNKNOWN_INSTRUCTION, src, ##__VA_ARGS__);
 #define ATEST(addr, src, ...) AERRT(addr, src, OK, "", __VA_ARGS__)
 #define TEST(src, ...) ATEST(0x0000, src, __VA_ARGS__)
+#define COMM(src, remain, ...) AERRT(0x0000, src, OK, remain, ##__VA_ARGS__)
+#define ACOMM(addr, src, remain, ...) AERRT(addr, src, OK, remain, __VA_ARGS__)
 #define BERRT(src, error, at, ...) BVASSERT(error, at, 0x0000, src, ##__VA_ARGS__)
 #define BTEST(src, ...) BERRT(src, OK, "", __VA_ARGS__)
 

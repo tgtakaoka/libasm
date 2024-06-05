@@ -503,15 +503,19 @@ static void test_dataio() {
 }
 
 static void test_comment() {
-    ERRT("ADDH 70H     ; comment", OK, "; comment", 0x6070);
-    ERRT("ADDH *       ; comment", OK, "; comment", 0x6088);
-    ERRT("ADDH *-      ; comment", OK, "; comment", 0x6098);
-    ERRT("ADDH *+      ; comment", OK, "; comment", 0x60A8);
-    ERRT("ADDH *, AR0  ; comment", OK, "; comment", 0x6080);
-    ERRT("ADDH *-, AR1 ; comment", OK, "; comment", 0x6091);
-    ERRT("ADDH *+, AR0 ; comment", OK, "; comment", 0x60A0);
-    ERRT("ADDH *-, 1   ; comment", OK, "; comment", 0x6091);
-    ERRT("ADDH *+, 0   ; comment", OK, "; comment", 0x60A0);
+    COMM("ADDH 70H     ; comment", "; comment", 0x6070);
+    COMM("ADDH *       ; comment", "; comment", 0x6088);
+    COMM("ADDH *-      ; comment", "; comment", 0x6098);
+    COMM("ADDH *+      ; comment", "; comment", 0x60A8);
+    COMM("ADDH *, AR0  ; comment", "; comment", 0x6080);
+    COMM("ADDH *-, AR1 ; comment", "; comment", 0x6091);
+    COMM("ADDH *+, AR0 ; comment", "; comment", 0x60A0);
+    COMM("ADDH *-, 1   ; comment", "; comment", 0x6091);
+    COMM("ADDH *+, 0   ; comment", "; comment", 0x60A0);
+    COMM(".byte -128, 255  ; comment", "; comment", 0x0080, 0x00FF);
+    COMM(".word -128, 256  ; comment", "; comment", 0xFF80, 0x0100);
+    COMM(".long 12345678H  ; comment", "; comment", 0x5678, 0x1234);
+    COMM(".string \"TEXT\" ; comment", "; comment", 0x4554, 0x5458);
 }
 
 static void test_undef() {

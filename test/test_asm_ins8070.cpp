@@ -409,22 +409,26 @@ static void test_func() {
 }
 
 static void test_comment() {
-    ERRT("NOP        ; comment", OK, "; comment", 0x00);
-    ERRT("XCH  A , E ; comment", OK, "; comment", 0x01);
-    ERRT("PUSH EA    ; comment", OK, "; comment", 0x08);
-    ERRT("CALL 15    ; comment", OK, "; comment", 0x1F);
-    ERRT("SSM  P2    ; comment", OK, "; comment", 0x2E);
-    ERRT("LD EA , SP ; comment", OK, "; comment", 0x31);
-    ERRT("ADD A , # 0x12    ; comment", OK, "; comment", 0xF4, 0x12);
-    ERRT("PLI P2 , # 0x1234 ; comment", OK, "; comment", 0x22, 0x34, 0x12);
-    ERRT("ADD A , = 0x12    ; comment", OK, "; comment", 0xF4, 0x12);
-    ERRT("PLI P2 , = 0x1234 ; comment", OK, "; comment", 0x22, 0x34, 0x12);
-    ERRT("ADD EA , 0xFF34   ; comment", OK, "; comment", 0xB5, 0x34);
-    AERRT(0x1000, "BZ 0x1005; comment", OK, "; comment", 0x6C, 0x03);
-    ERRT("BZ 0 , P3         ; comment", OK, "; comment", 0x6F, 0x00);
-    ERRT("LD EA , 0 , SP    ; comment", OK, "; comment", 0x81, 0x00);
-    AERRT(0x1000, "LD T , 0x1080 , PC ; comment",  OK, "; comment", 0xA0, 0x7F);
-    ERRT("ST EA , @127 , P3; comment",  OK, "; comment", 0x8F, 0x7F);
+    COMM("NOP        ; comment", "; comment", 0x00);
+    COMM("XCH  A , E ; comment", "; comment", 0x01);
+    COMM("PUSH EA    ; comment", "; comment", 0x08);
+    COMM("CALL 15    ; comment", "; comment", 0x1F);
+    COMM("SSM  P2    ; comment", "; comment", 0x2E);
+    COMM("LD EA , SP ; comment", "; comment", 0x31);
+    COMM("ADD A , # 0x12    ; comment", "; comment", 0xF4, 0x12);
+    COMM("PLI P2 , # 0x1234 ; comment", "; comment", 0x22, 0x34, 0x12);
+    COMM("ADD A , = 0x12    ; comment", "; comment", 0xF4, 0x12);
+    COMM("PLI P2 , = 0x1234 ; comment", "; comment", 0x22, 0x34, 0x12);
+    COMM("ADD EA , 0xFF34   ; comment", "; comment", 0xB5, 0x34);
+    ACOMM(0x1000, "BZ 0x1005; comment", "; comment", 0x6C, 0x03);
+    COMM("BZ 0 , P3         ; comment", "; comment", 0x6F, 0x00);
+    COMM("LD EA , 0 , SP    ; comment", "; comment", 0x81, 0x00);
+    ACOMM(0x1000, "LD T , 0x1080 , PC ; comment",  "; comment", 0xA0, 0x7F);
+    COMM("ST EA , @127 , P3; comment",  "; comment", 0x8F, 0x7F);
+    COMM(".BYTE -128, 255  ; comment", "; comment", 0x80, 0xFF);
+    COMM(".ASCII 'TEXT'    ; comment", "; comment", 0x54, 0x45, 0x58, 0x54);
+    COMM(".DBYTE -128, 255 ; comment", "; comment", 0x80, 0xFF, 0xFF, 0x00);
+    COMM(".ADDR X'1000     ; comment", "; comment", 0xFF, 0x0F);
 }
 
 static void test_undef() {

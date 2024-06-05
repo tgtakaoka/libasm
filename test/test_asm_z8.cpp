@@ -942,29 +942,38 @@ static void test_setrp() {
 }
 
 static void test_comment() {
-    ERRT(" RET             ; comment", OK, "; comment", 0xAF);
-    ERRT(" JP  ULE , %3E3F ; comment", OK, "; comment", 0x3D, 0x3E, 0x3F);
-    ERRT(" JP  %8E8F       ; comment", OK, "; comment", 0x8D, 0x8E, 0x8F);
-    ERRT(" LD  R1 , >%0F   ; comment", OK, "; comment", 0x18, 0x0F);
-    ERRT(" LD  R2 , R0     ; comment", OK, "; comment", 0x28, R(0));
-    ERRT(" LD  >%0F , R1   ; comment", OK, "; comment", 0x19, 0x0F);
-    ERRT(" LD  R9 , #%9D   ; comment", OK, "; comment", 0x9C, 0x9D);
-    ERRT(" INC R0          ; comment", OK, "; comment", 0x0E);
-    ERRT(" RLC %11         ; comment", OK, "; comment", 0x10, 0x11);
-    ERRT(" RLC R1          ; comment", OK, "; comment", 0x10, R(1));
-    ERRT(" RLC @%12        ; comment", OK, "; comment", 0x11, 0x12);
-    ERRT(" RLC @R2         ; comment", OK, "; comment", 0x11, R(2));
-    ERRT(" ADD >%07, @%16  ; comment", OK, "; comment", 0x05, 0x16, 0x07);
-    ERRT(" ADD >%07, @R6   ; comment", OK, "; comment", 0x05, R(6), 0x07);
-    ERRT(" ADD R7 , @%16   ; comment", OK, "; comment", 0x05, 0x16, R(7));
-    EZ86(" LDC @RR4 , R13  ; comment", OK, "; comment", 0xD2, 0xD4);
-    EZ88(" LDC @RR4 , R13  ; comment", OK, "; comment", 0xD3, 0xD4);
-    EZ86(" LD  R12 , %C9 (R8) ; comment", OK, "; comment", 0xC7, 0xC8, 0xC9);
-    EZ88(" LD  R12 , %C9 (R8) ; comment", OK, "; comment", 0x87, 0xC8, 0xC9);
-    EZ86(" LD  %D9 (R8) , R13 ; comment", OK, "; comment", 0xD7, 0xD8, 0xD9);
-    EZ88(" LD  %D9 (R8) , R13 ; comment", OK, "; comment", 0x97, 0xD8, 0xD9);
-    AERRT(0x1000, " JR   C , %107E  ; comment", OK, "; comment", 0x7B, 0x7C);
-    AERRT(0x1000, " DJNZ R2 , %102D ; comment", OK, "; comment", 0x2A, 0x2B);
+    COMM(" RET             ; comment", "; comment", 0xAF);
+    COMM(" JP  ULE , %3E3F ; comment", "; comment", 0x3D, 0x3E, 0x3F);
+    COMM(" JP  %8E8F       ; comment", "; comment", 0x8D, 0x8E, 0x8F);
+    COMM(" LD  R1 , >%0F   ; comment", "; comment", 0x18, 0x0F);
+    COMM(" LD  R2 , R0     ; comment", "; comment", 0x28, R(0));
+    COMM(" LD  >%0F , R1   ; comment", "; comment", 0x19, 0x0F);
+    COMM(" LD  R9 , #%9D   ; comment", "; comment", 0x9C, 0x9D);
+    COMM(" INC R0          ; comment", "; comment", 0x0E);
+    COMM(" RLC %11         ; comment", "; comment", 0x10, 0x11);
+    COMM(" RLC R1          ; comment", "; comment", 0x10, R(1));
+    COMM(" RLC @%12        ; comment", "; comment", 0x11, 0x12);
+    COMM(" RLC @R2         ; comment", "; comment", 0x11, R(2));
+    COMM(" ADD >%07, @%16  ; comment", "; comment", 0x05, 0x16, 0x07);
+    COMM(" ADD >%07, @R6   ; comment", "; comment", 0x05, R(6), 0x07);
+    COMM(" ADD R7 , @%16   ; comment", "; comment", 0x05, 0x16, R(7));
+    if (z86()) {
+        COMM(" LDC @RR4 , R13  ; comment", "; comment", 0xD2, 0xD4);
+        COMM(" LD  R12 , %C9 (R8) ; comment", "; comment", 0xC7, 0xC8, 0xC9);
+        COMM(" LD  %D9 (R8) , R13 ; comment", "; comment", 0xD7, 0xD8, 0xD9);
+    }
+    if (z88()) {
+        COMM(" LDC @RR4 , R13  ; comment", "; comment", 0xD3, 0xD4);
+        COMM(" LD  R12 , %C9 (R8) ; comment", "; comment", 0x87, 0xC8, 0xC9);
+        COMM(" LD  %D9 (R8) , R13 ; comment", "; comment", 0x97, 0xD8, 0xD9);
+    }
+    ACOMM(0x1000, " JR   C , %107E  ; comment", "; comment", 0x7B, 0x7C);
+    ACOMM(0x1000, " DJNZ R2 , %102D ; comment", "; comment", 0x2A, 0x2B);
+
+    COMM("DB -128, 255 ; comment", "; comment", 0x80, 0xFF);
+    COMM("DB 'TEXT'    ; comment", "; comment", 0x54, 0x45, 0x58, 0x54);
+    COMM("DW -128, 255 ; comment", "; comment", 0xFF, 0x80, 0x00, 0xFF);
+    COMM("DL %12345678 ; comment", "; comment", 0x12, 0x34, 0x56, 0x78);
 }
 
 static void test_undef() {

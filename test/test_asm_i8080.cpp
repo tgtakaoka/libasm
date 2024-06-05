@@ -408,16 +408,19 @@ static void test_io() {
 }
 
 static void test_comment() {
-    ERRT("RST 1    ; comment", OK, "; comment", 0xCF);
-    ERRT("MOV B,B  ; comment", OK, "; comment", 0x40);
-    ERRT("STAX B   ; comment", OK, "; comment", 0x02);
-    ERRT("XTHL     ; comment", OK, "; comment", 0xE3);
-    ERRT("JMP 1234H; comment", OK, "; comment", 0xC3, 0x34, 0x12);
-    ERRT("ANI ~0FH ; comment", OK, "; comment", 0xE6, 0xF0);
-    ERRT("CPI -1-23; comment", OK, "; comment", 0xFE, 0xE8);
-    ERRT("MOV B , B  ; comment",     OK, "; comment", 0x40);
-    ERRT("MVI M , 0F6H ; comment",   OK, "; comment", 0x36, 0xF6);
-    ERRT("LXI B , 0BEEFH ; comment", OK, "; comment", 0x01, 0xEF, 0xBE);
+    COMM("RST 1    ; comment", "; comment", 0xCF);
+    COMM("MOV B,B  ; comment", "; comment", 0x40);
+    COMM("STAX B   ; comment", "; comment", 0x02);
+    COMM("XTHL     ; comment", "; comment", 0xE3);
+    COMM("JMP 1234H; comment", "; comment", 0xC3, 0x34, 0x12);
+    COMM("ANI ~0FH ; comment", "; comment", 0xE6, 0xF0);
+    COMM("CPI -1-23; comment", "; comment", 0xFE, 0xE8);
+    COMM("MOV B , B  ; comment",     "; comment", 0x40);
+    COMM("MVI M , 0F6H ; comment",   "; comment", 0x36, 0xF6);
+    COMM("LXI B , 0BEEFH ; comment", "; comment", 0x01, 0xEF, 0xBE);
+    COMM("DB -128, 255 ; comment", "; comment", 0x80, 0xFF);
+    COMM("DB 'TEXT'    ; comment", "; comment", 0x54, 0x45, 0x58, 0x54);
+    COMM("DW -128, 255 ; comment", "; comment", 0x80, 0xFF, 0xFF, 0x00);
 }
 
 static void test_undef() {

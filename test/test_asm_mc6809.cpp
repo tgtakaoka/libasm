@@ -1492,39 +1492,43 @@ static void test_bit_position() {
 }
 
 static void test_comment() {
-    ERRT("NOP      ; comment", OK, "; comment", 0x12);
-    ERRT("PSHS A   ; comment", OK, "; comment", 0x34, 0x02);
-    ERRT("PSHS CC , A , B , DP , X , Y , U , PC ; comment", OK, "; comment", 0x34, 0xFF);
-    ERRT("TFR  D , X   ; comment", OK, "; comment", 0x1F, 0x01);
-    ERRT("SUBB # $90   ; comment", OK, "; comment", 0xC0, 0x90);
-    ERRT("NEG  $10     ; comment", OK, "; comment", 0x00, 0x10);
-    AERRT(0x1000, "BRA $1002           ; comment", OK, "; comment", 0x20, 0x00);
-    AERRT(0x1000, "LDA [ $1004 , PCR ] ; comment", OK, "; comment", 0xA6, 0x9C, 0x01);
+    COMM("NOP      ; comment", "; comment", 0x12);
+    COMM("PSHS A   ; comment", "; comment", 0x34, 0x02);
+    COMM("PSHS CC , A , B , DP , X , Y , U , PC ; comment", "; comment", 0x34, 0xFF);
+    COMM("TFR  D , X   ; comment", "; comment", 0x1F, 0x01);
+    COMM("SUBB # $90   ; comment", "; comment", 0xC0, 0x90);
+    COMM("NEG  $10     ; comment", "; comment", 0x00, 0x10);
+    ACOMM(0x1000, "BRA $1002           ; comment", "; comment", 0x20, 0x00);
+    ACOMM(0x1000, "LDA [ $1004 , PCR ] ; comment", "; comment", 0xA6, 0x9C, 0x01);
 
-    ERRT("LDA ,S      ; comment", OK, "; comment", 0xA6, 0xE4);
-    ERRT("LDA <<0 , S ; comment", OK, "; comment", 0xA6, 0x60);
-    ERRT("LDA <0 , X  ; comment", OK, "; comment", 0xA6, 0x88, 0x00);
-    ERRT("LDA >0 , X  ; comment", OK, "; comment", 0xA6, 0x89, 0x00, 0x00);
-    ERRT("LDA D , X   ; comment", OK, "; comment", 0xA6, 0x8B);
-    ERRT("LDA - 1 , S ; comment", OK, "; comment", 0xA6, 0x7F);
-    ERRT("LDA 15 , S  ; comment", OK, "; comment", 0xA6, 0x6F);
-    ERRT("LDA [ ,S ]          ; comment", OK, "; comment", 0xA6, 0xF4);
-    ERRT("LDA [ 0 , S ]       ; comment", OK, "; comment", 0xA6, 0xF4);
-    ERRT("LDA [ <0 , X ]      ; comment", OK, "; comment", 0xA6, 0x98, 0x00);
-    ERRT("LDA [ >0 , X ]      ; comment", OK, "; comment", 0xA6, 0x99, 0x00, 0x00);
-    ERRT("LDA [ -32768 , PC ] ; comment", OK, "; comment", 0xA6, 0x9D, 0x80, 0x00);
-    ERRT("LDA [ D , X ]       ; comment", OK, "; comment", 0xA6, 0x9B);
-    AERRT(0x1000, "LDA $0F83 , PCR     ; comment", OK, "; comment", 0xA6, 0x8C, 0x80);
-    AERRT(0x1000, "LDA [ $0F83 , PCR ] ; comment", OK, "; comment", 0xa6, 0x9C, 0x80);
+    COMM("LDA ,S      ; comment", "; comment", 0xA6, 0xE4);
+    COMM("LDA <<0 , S ; comment", "; comment", 0xA6, 0x60);
+    COMM("LDA <0 , X  ; comment", "; comment", 0xA6, 0x88, 0x00);
+    COMM("LDA >0 , X  ; comment", "; comment", 0xA6, 0x89, 0x00, 0x00);
+    COMM("LDA D , X   ; comment", "; comment", 0xA6, 0x8B);
+    COMM("LDA - 1 , S ; comment", "; comment", 0xA6, 0x7F);
+    COMM("LDA 15 , S  ; comment", "; comment", 0xA6, 0x6F);
+    COMM("LDA [ ,S ]          ; comment", "; comment", 0xA6, 0xF4);
+    COMM("LDA [ 0 , S ]       ; comment", "; comment", 0xA6, 0xF4);
+    COMM("LDA [ <0 , X ]      ; comment", "; comment", 0xA6, 0x98, 0x00);
+    COMM("LDA [ >0 , X ]      ; comment", "; comment", 0xA6, 0x99, 0x00, 0x00);
+    COMM("LDA [ -32768 , PC ] ; comment", "; comment", 0xA6, 0x9D, 0x80, 0x00);
+    COMM("LDA [ D , X ]       ; comment", "; comment", 0xA6, 0x9B);
+    ACOMM(0x1000, "LDA $0F83 , PCR     ; comment", "; comment", 0xA6, 0x8C, 0x80);
+    ACOMM(0x1000, "LDA [ $0F83 , PCR ] ; comment", "; comment", 0xa6, 0x9C, 0x80);
 
     if (is6309()) {
-        ERRT("TFM S+ , D+  ; comment", OK, "; comment", 0x11, 0x38, 0x40);
-        ERRT("TFM X- , Y-  ; comment", OK, "; comment", 0x11, 0x39, 0x12);
-        ERRT("TFM X+ , Y   ; comment", OK, "; comment", 0x11, 0x3A, 0x12);
-        ERRT("TFM X , Y+   ; comment", OK, "; comment", 0x11, 0x3B, 0x12);
-        ERRT("BOR A.1   , $34.2   ; comment", OK, "; comment", 0x11, 0x32, 0x51, 0x34);
-        ERRT("BOR A , 1 , $34 , 2 ; comment", OK, "; comment", 0x11, 0x32, 0x51, 0x34);
+        COMM("TFM S+ , D+  ; comment", "; comment", 0x11, 0x38, 0x40);
+        COMM("TFM X- , Y-  ; comment", "; comment", 0x11, 0x39, 0x12);
+        COMM("TFM X+ , Y   ; comment", "; comment", 0x11, 0x3A, 0x12);
+        COMM("TFM X , Y+   ; comment", "; comment", 0x11, 0x3B, 0x12);
+        COMM("BOR A.1   , $34.2   ; comment", "; comment", 0x11, 0x32, 0x51, 0x34);
+        COMM("BOR A , 1 , $34 , 2 ; comment", "; comment", 0x11, 0x32, 0x51, 0x34);
     }
+
+    COMM("FCB -128, 255 ; comment", "; comment", 0x80, 0xFF);
+    COMM("FDB -128, 255 ; comment", "; comment", 0xFF, 0x80, 0x00, 0xFF);
+    COMM("FCC ;TEXT;    ; comment", "; comment", 0x54, 0x45, 0x58, 0x54);
 }
 
 static void test_error() {
@@ -1535,13 +1539,13 @@ static void test_error() {
     ERRT("LDA , --X",     UNKNOWN_OPERAND, ", --X");
     ERRT("LDA [ , X++ ]", UNKNOWN_OPERAND, "[ , X++ ]");
     ERRT("LDA [ , --X ]", UNKNOWN_OPERAND, "[ , --X ]");
-    ERRT("LDA ,X +",  GARBAGE_AT_END, "+",   0xA6, 0x84);
-    ERRT("LDA ,X ++", GARBAGE_AT_END, "++",  0xA6, 0x84);
-    ERRT("LDA ,X+ +", GARBAGE_AT_END, "+",   0xA6, 0x80);
+    ERRT("LDA ,X +",  GARBAGE_AT_END, "+",  0xA6, 0x84);
+    ERRT("LDA ,X ++", GARBAGE_AT_END, "++", 0xA6, 0x84);
+    ERRT("LDA ,X+ +", GARBAGE_AT_END, "+",  0xA6, 0x80);
     ERRT("LDA ,- X",  UNKNOWN_OPERAND, ",- X");
     ERRT("LDA ,-- X", UNKNOWN_OPERAND, ",-- X");
     ERRT("LDA ,- -X", UNKNOWN_OPERAND, ",- -X");
-    ERRT("LDA ,X]",   GARBAGE_AT_END, "]",   0xA6, 0x84);
+    ERRT("LDA ,X]",   GARBAGE_AT_END, "]", 0xA6, 0x84);
     ERRT("LDA [,X ; comment", MISSING_CLOSING_BRACKET, "[,X ; comment");
 
     if (is6309()) {

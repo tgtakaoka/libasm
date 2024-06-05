@@ -663,43 +663,50 @@ static void test_comment() {
     TEST("FPU NS32081");
     TEST("PMMU NS32082");
 
-    ERRT("ADDB R1 , R0           ; comment",     OK, "; comment", 0x00, 0x08);
-    ERRT("ADDB 2 (R2) , R0       ; comment",     OK, "; comment", 0x00, 0x50, 0x02);
-    ERRT("ADDB 2 ( 4 (FP) ) , R0 ; comment",     OK, "; comment", 0x00, 0x80, 0x04, 0x02);
-    ERRT("ADDB 0x123 , R0        ; comment",     OK, "; comment", 0x00, 0xA0, 0x23);
-    ERRT("ADDB @0x123 , R0       ; comment",     OK, "; comment", 0x00, 0xA8, 0x81, 0x23);
-    ERRT("ADDB EXT( 2 ) + ( -4 ), R0 ; comment", OK, "; comment", 0x00, 0xB0, 0x02, 0x7C);
-    ERRT("ADDB - 4 ( 2 (EXT)),    R0 ; comment", OK, "; comment", 0x00, 0xB0, 0x02, 0x7C);
-    ERRT("ADDB TOS , R0          ; comment",     OK, "; comment", 0x00, 0xB8);
-    ERRT("ADDB 2 (SP) , R0       ; comment",     OK, "; comment", 0x00, 0xC8, 0x02);
-    ERRT("ADDB R1[R3:B] , R0           ; comment",     OK, "; comment", 0x00, 0xE0, 0x0B);
-    ERRT("ADDB 2 (R2)[R3:B] , R0       ; comment",     OK, "; comment", 0x00, 0xE0, 0x53, 0x02);
-    ERRT("ADDB 2 ( 4 (FP) )[R3:B] , R0 ; comment",     OK, "; comment", 0x00, 0xE0, 0x83, 0x04, 0x02);
-    ERRT("ADDB @0x123[R3:B] , R0       ; comment",     OK, "; comment", 0x00, 0xE0, 0xAB, 0x81, 0x23);
-    ERRT("ADDB EXT( 2 ) + ( -4 )[R3:B], R0 ; comment", OK, "; comment", 0x00, 0xE0, 0xB3, 0x02, 0x7C);
-    ERRT("ADDB - 4 ( 2 (EXT)) [R3:B],   R0 ; comment", OK, "; comment", 0x00, 0xE0, 0xB3, 0x02, 0x7C);
-    ERRT("ADDB TOS[R3:B] , R0          ; comment",     OK, "; comment", 0x00, 0xE0, 0xBB);
-    ERRT("ADDB 2 (SP)[R3:B] , R0       ; comment",     OK, "; comment", 0x00, 0xE0, 0xCB, 0x02);
-    AERRT(0x100, "ADDW 8 (SP) , . + 10    ; comment", OK, "; comment", 0xC1, 0xCE, 0x08, 0x0A);
-    AERRT(0x100, "ADDW 8 (SP) , * - 10    ; comment", OK, "; comment", 0xC1, 0xCE, 0x08, 0x76);
-    AERRT(0x100, "ADDW 8 (SP) , 0x10A (PC); comment", OK, "; comment", 0xC1, 0xCE, 0x08, 0x0A);
+    COMM("ADDB R1 , R0           ; comment",     "; comment", 0x00, 0x08);
+    COMM("ADDB 2 (R2) , R0       ; comment",     "; comment", 0x00, 0x50, 0x02);
+    COMM("ADDB 2 ( 4 (FP) ) , R0 ; comment",     "; comment", 0x00, 0x80, 0x04, 0x02);
+    COMM("ADDB 0x123 , R0        ; comment",     "; comment", 0x00, 0xA0, 0x23);
+    COMM("ADDB @0x123 , R0       ; comment",     "; comment", 0x00, 0xA8, 0x81, 0x23);
+    COMM("ADDB EXT( 2 ) + ( -4 ), R0 ; comment", "; comment", 0x00, 0xB0, 0x02, 0x7C);
+    COMM("ADDB - 4 ( 2 (EXT)),    R0 ; comment", "; comment", 0x00, 0xB0, 0x02, 0x7C);
+    COMM("ADDB TOS , R0          ; comment",     "; comment", 0x00, 0xB8);
+    COMM("ADDB 2 (SP) , R0       ; comment",     "; comment", 0x00, 0xC8, 0x02);
+    COMM("ADDB R1[R3:B] , R0           ; comment",     "; comment", 0x00, 0xE0, 0x0B);
+    COMM("ADDB 2 (R2)[R3:B] , R0       ; comment",     "; comment", 0x00, 0xE0, 0x53, 0x02);
+    COMM("ADDB 2 ( 4 (FP) )[R3:B] , R0 ; comment",     "; comment", 0x00, 0xE0, 0x83, 0x04, 0x02);
+    COMM("ADDB @0x123[R3:B] , R0       ; comment",     "; comment", 0x00, 0xE0, 0xAB, 0x81, 0x23);
+    COMM("ADDB EXT( 2 ) + ( -4 )[R3:B], R0 ; comment", "; comment", 0x00, 0xE0, 0xB3, 0x02, 0x7C);
+    COMM("ADDB - 4 ( 2 (EXT)) [R3:B],   R0 ; comment", "; comment", 0x00, 0xE0, 0xB3, 0x02, 0x7C);
+    COMM("ADDB TOS[R3:B] , R0          ; comment",     "; comment", 0x00, 0xE0, 0xBB);
+    COMM("ADDB 2 (SP)[R3:B] , R0       ; comment",     "; comment", 0x00, 0xE0, 0xCB, 0x02);
+    ACOMM(0x100, "ADDW 8 (SP) , . + 10    ; comment", "; comment", 0xC1, 0xCE, 0x08, 0x0A);
+    ACOMM(0x100, "ADDW 8 (SP) , * - 10    ; comment", "; comment", 0xC1, 0xCE, 0x08, 0x76);
+    ACOMM(0x100, "ADDW 8 (SP) , 0x10A (PC); comment", "; comment", 0xC1, 0xCE, 0x08, 0x0A);
 
     TEST("ADDL 137.03599908421, F6",
          0xBE, 0x80, 0xA1, 0x40, 0x61, 0x21, 0x26, 0xE7, 0x8D, 0x2B, 0xC6);
 
-    ERRT("LPRB UPSR , R0 ; comment", OK, "; comment", 0x6C, 0x00);
-    ERRT("LMR  PTB0 , R0 ; comment", OK, "; comment", 0x1E, 0x0B, 0x06);
+    COMM("LPRB UPSR , R0 ; comment", "; comment", 0x6C, 0x00);
+    COMM("LMR  PTB0 , R0 ; comment", "; comment", 0x1E, 0x0B, 0x06);
 
-    ERRT("SETCFG [ I , F , M , C ] ; comment", OK, "; comment", 0x0E, 0x8B, 0x07);
+    COMM("SETCFG [ I , F , M , C ] ; comment", "; comment", 0x0E, 0x8B, 0x07);
 
-    ERRT("ENTER [ R0 , R1 ] , 10   ; comment", OK, "; comment", 0x82, 0x03, 0x0A);
-    ERRT("EXIT  [ R0 , R1 ]        ; comment", OK, "; comment", 0x92, 0xC0);
+    COMM("ENTER [ R0 , R1 ] , 10   ; comment", "; comment", 0x82, 0x03, 0x0A);
+    COMM("EXIT  [ R0 , R1 ]        ; comment", "; comment", 0x92, 0xC0);
 
-    ERRT("MOVSB [ ]       ; comment", OK, "; comment", 0x0E, 0x00, 0x00);
-    ERRT("MOVSB [ B ]     ; comment", OK, "; comment", 0x0E, 0x00, 0x01);
-    ERRT("MOVSB [ B , W ] ; comment", OK, "; comment", 0x0E, 0x00, 0x03);
-    ERRT("MOVSB [ U , B ] ; comment", OK, "; comment", 0x0E, 0x00, 0x07);
-    ERRT("MOVSB [ U , W ] ; comment", ILLEGAL_OPERAND,  "[ U , W ] ; comment");
+    COMM("MOVSB [ ]       # comment", "# comment", 0x0E, 0x00, 0x00);
+    COMM("MOVSB [ B ]     # comment", "# comment", 0x0E, 0x00, 0x01);
+    COMM("MOVSB [ B , W ] # comment", "# comment", 0x0E, 0x00, 0x03);
+    COMM("MOVSB [ U , B ] # comment", "# comment", 0x0E, 0x00, 0x07);
+    ERRT("MOVSB [ U , W ] # comment", ILLEGAL_OPERAND,  "[ U , W ] # comment");
+
+    COMM(".byte   -128, 255 # comment", "# comment", 0x80, 0xFF);
+    COMM(".ascii  \"TEXT\"  # comment", "# comment", 0x54, 0x45, 0x58, 0x54);
+    COMM(".word   -128, 255 ; comment", "; comment", 0x80, 0xFF, 0xFF, 0x00);
+    COMM(".double x'1234    # comment", "# comment", 0x34, 0x12, 0x00, 0x00);
+    COMM(".float  1.0       # comment", "# comment", 0x00, 0x00, 0x80, 0x3F);
+    COMM(".long  -1.0       # comment", "# comment", 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xF0, 0xBF);
 }
 
 static void test_undef() {

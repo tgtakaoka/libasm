@@ -572,11 +572,15 @@ static void test_control() {
 }
 
 static void test_comment() {
-    ERRT("SUB   52, 18         ; comment", OK, "; comment", 0x68, 0x12, 0x34);
-    ERRT("SUB   86, #3412H     ; comment", OK, "; comment", 0x69, 0x12, 0x34, 0x56);
-    ERRT("SUB   52, [18]       ; comment", OK, "; comment", 0x6A, 0x12, 0x34);
-    ERRT("SUB   86, 52[18]     ; comment", OK, "; comment", 0x6B, 0x12, 0x34, 0x56);
-    ERRT("SUB   120, 5634H[18] ; comment", OK, "; comment", 0x6B, 0x13, 0x34, 0x56, 0x78);
+    COMM("SUB 52, 18         ; comment", "; comment", 0x68, 0x12, 0x34);
+    COMM("SUB 86, #3412H     ; comment", "; comment", 0x69, 0x12, 0x34, 0x56);
+    COMM("SUB 52, [18]       ; comment", "; comment", 0x6A, 0x12, 0x34);
+    COMM("SUB 86, 52[18]     ; comment", "; comment", 0x6B, 0x12, 0x34, 0x56);
+    COMM("SUB 120, 5634H[18] ; comment", "; comment", 0x6B, 0x13, 0x34, 0x56, 0x78);
+    COMM("DCB -128, 255  ; comment", "; comment", 0x80, 0xFF);
+    COMM("DCB 'TEXT'     ; comment", "; comment", 0x54, 0x45, 0x58, 0x54);
+    COMM("DCW -128, 255  ; comment", "; comment", 0x80, 0xFF, 0xFF, 0x00);
+    COMM("DCL 12345678H  ; comment", "; comment", 0x78, 0x56, 0x34, 0x12);
 }
 
 static void test_undef() {

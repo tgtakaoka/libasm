@@ -423,18 +423,21 @@ static void test_comment() {
     symtab.intern(255,    "sym255");
     symtab.intern(0x1234, "sym1234");
 
-    ERRT("NOP         ; comment", OK, "; comment", 0x9D);
-    ERRT("SUB   #$90  ; comment", OK, "; comment", 0xA0, 0x90);
-    ERRT("NEG < $0010 ; comment", OK, "; comment", 0x30, 0x10);
-    ERRT("SUB   >$90  ; comment", OK, "; comment", 0xC0, 0x00, 0x90);
-    ERRT("SUB sym255  ; comment", OK, "; comment", 0xB0, 0xFF);
-    ERRT("SUB >sym255 ; comment", OK, "; comment", 0xC0, 0x00, 0xFF);
-    ERRT("SUB sym1234 ; comment", OK, "; comment", 0xC0, 0x12, 0x34);
-    ERRT("JMP sym255  ; comment", OK, "; comment", 0xBC, 0xFF);
-    ERRT("JSR sym1234 ; comment", OK, "; comment", 0xCD, 0x12, 0x34);
-    ERRT("LDA 0 , X   ; comment", OK, "; comment", 0xF6);
-    ERRT("LDA < 0 , X ; comment", OK, "; comment", 0xE6, 0x00);
-    ERRT("LDA > 0 , X ; comment", OK, "; comment", 0xD6, 0x00, 0x00);
+    COMM("NOP         ; comment", "; comment", 0x9D);
+    COMM("SUB   #$90  ; comment", "; comment", 0xA0, 0x90);
+    COMM("NEG < $0010 ; comment", "; comment", 0x30, 0x10);
+    COMM("SUB   >$90  ; comment", "; comment", 0xC0, 0x00, 0x90);
+    COMM("SUB sym255  ; comment", "; comment", 0xB0, 0xFF);
+    COMM("SUB >sym255 ; comment", "; comment", 0xC0, 0x00, 0xFF);
+    COMM("SUB sym1234 ; comment", "; comment", 0xC0, 0x12, 0x34);
+    COMM("JMP sym255  ; comment", "; comment", 0xBC, 0xFF);
+    COMM("JSR sym1234 ; comment", "; comment", 0xCD, 0x12, 0x34);
+    COMM("LDA 0 , X   ; comment", "; comment", 0xF6);
+    COMM("LDA < 0 , X ; comment", "; comment", 0xE6, 0x00);
+    COMM("LDA > 0 , X ; comment", "; comment", 0xD6, 0x00, 0x00);
+    COMM("FCB -128, 255 ; comment", "; comment", 0x80, 0xFF);
+    COMM("FDB -128, 255 ; comment", "; comment", 0xFF, 0x80, 0x00, 0xFF);
+    COMM("FCC ;TEXT;    ; comment", "; comment", 0x54, 0x45, 0x58, 0x54);
 }
 
 static void test_undef() {

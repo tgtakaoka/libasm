@@ -468,29 +468,32 @@ static void test_jump() {
 }
 
 static void test_comment() {
-    ERRT("NOP       ; comment",      OK, "; comment", 0x00);
-    ERRT("SWAP A    ; comment",      OK, "; comment", 0xC4);
-    ERRT("INC  DPTR ; comment",      OK, "; comment", 0xA3);
-    ERRT("ANL  A , R0 ; comment",    OK, "; comment", 0x58);
-    ERRT("JMP  @A+DPTR ; comment",   OK, "; comment", 0x73);
+    COMM("NOP       ; comment",      "; comment", 0x00);
+    COMM("SWAP A    ; comment",      "; comment", 0xC4);
+    COMM("INC  DPTR ; comment",      "; comment", 0xA3);
+    COMM("ANL  A , R0 ; comment",    "; comment", 0x58);
+    COMM("JMP  @A+DPTR ; comment",   "; comment", 0x73);
     ERRT("JMP  @ A+DPTR ; comment",  UNKNOWN_OPERAND, "@ A+DPTR ; comment");
     ERRT("JMP  @A +DPTR ; comment",  UNKNOWN_OPERAND, "@A +DPTR ; comment");
     ERRT("JMP  @A+ DPTR ; comment",  UNKNOWN_OPERAND, "@A+ DPTR ; comment");
     ERRT("JMP  @ A+PC   ; comment",  UNKNOWN_OPERAND, "@ A+PC   ; comment");
     ERRT("JMP  @A +PC   ; comment",  UNKNOWN_OPERAND, "@A +PC   ; comment");
     ERRT("JMP  @A+ PC   ; comment",  UNKNOWN_OPERAND, "@A+ PC   ; comment");
-    ERRT("MOVX A , @DPTR ; comment", OK, "; comment", 0xE0);
-    ERRT("MOVX @DPTR , A ; comment", OK, "; comment", 0xF0);
+    COMM("MOVX A , @DPTR ; comment", "; comment", 0xE0);
+    COMM("MOVX @DPTR , A ; comment", "; comment", 0xF0);
     ERRT("MOVX A,@ DPTR ; comment",  UNKNOWN_OPERAND, "@ DPTR ; comment");
     ERRT("MOVX @ DPTR,A ; comment",  UNKNOWN_OPERAND, "@ DPTR,A ; comment");
     ERRT("INC  @ R0     ; comment",  UNKNOWN_OPERAND, "@ R0     ; comment");
-    ERRT("ADD  A , @R1  ; comment",  OK, "; comment", 0x27);
+    COMM("ADD  A , @R1  ; comment",  "; comment", 0x27);
     ERRT("ADD  A, @ R1  ; comment",  UNKNOWN_OPERAND, "@ R1  ; comment");
-    ERRT("ADD  A , # 25H   ; comment",      OK, "; comment", 0x24, 0x25);
-    ERRT("ORL  44H , # 45H ; comment",      OK, "; comment", 0x43, 0x44, 0x45);
-    ERRT("JBC  22H.1 , $ + 15H  ; comment", OK, "; comment", 0x10, 0x11, 0x12);
-    ERRT("ORL  C , / 0A8H.1     ; comment", OK, "; comment", 0xA0, 0xA9);
-    AERRT(0x1000, "CJNE A , # 0B5H , $ - 47H ; comment", OK, "; comment", 0xB4, 0xB5, 0xB6);
+    COMM("ADD  A , # 25H   ; comment",      "; comment", 0x24, 0x25);
+    COMM("ORL  44H , # 45H ; comment",      "; comment", 0x43, 0x44, 0x45);
+    COMM("JBC  22H.1 , $ + 15H  ; comment", "; comment", 0x10, 0x11, 0x12);
+    COMM("ORL  C , / 0A8H.1     ; comment", "; comment", 0xA0, 0xA9);
+    ACOMM(0x1000, "CJNE A , # 0B5H , $ - 47H ; comment", "; comment", 0xB4, 0xB5, 0xB6);
+    COMM("DB -128, 255 ; comment", "; comment", 0x80, 0xFF);
+    COMM("DB 'TEXT'    ; comment", "; comment", 0x54, 0x45, 0x58, 0x54);
+    COMM("DW -128, 255 ; comment", "; comment", 0xFF, 0x80, 0x00, 0xFF);
 }
 
 static void test_undef() {

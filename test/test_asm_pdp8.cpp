@@ -621,10 +621,15 @@ void test_io_transfer() {
 }
 
 void test_comment() {
-    ERRT("CML        / comment", OK, "/ comment", 07020);
-    ERRT("CML     IAC; comment", OK, "; comment", 07021);
-    ERRT("CML BSW    ; comment", OK, "; comment", 07022);
-    ERRT("CML BSW IAC/ comment", OK, "/ comment", 07023);
+    COMM("CML        / comment", "/ comment", 07020);
+    COMM("CML     IAC; comment", "; comment", 07021);
+    COMM("CML BSW    ; comment", "; comment", 07022);
+    COMM("CML BSW IAC/ comment", "/ comment", 07023);
+
+    COMM(" 7+5        / comment", "/ comment", 00014);
+    COMM("DUBL 10     ; comment", "; comment", 00000, 00012);
+    COMM("TEXT /TEXT/ / comment", "/ comment", 02405, 03024, 0000);
+    COMM("TEXT ;TEXT; ; comment", "; comment", 02405, 03024, 0000);
 }
 
 void test_undef() {

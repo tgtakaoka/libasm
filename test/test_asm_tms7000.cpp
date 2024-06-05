@@ -403,33 +403,37 @@ void test_error() {
 }
 
 void test_comment() {
-    ERRT("CLR R214; comment", OK, "; comment", 0xD5, 0xD6);
-    ERRT("CLR >D6 ; comment", OK, "; comment", 0xD5, 0xD6);
+    COMM("CLR R214; comment", "; comment", 0xD5, 0xD6);
+    COMM("CLR >D6 ; comment", "; comment", 0xD5, 0xD6);
 
-    ERRT("ADC %122, R123  ; comment", OK, "; comment", 0x79, 0x7A, 0x7B);
-    ERRT("ADC % 122, R123 ; comment", OK, "; comment", 0x79, 0x7A, 0x7B);
+    COMM("ADC %122, R123  ; comment", "; comment", 0x79, 0x7A, 0x7B);
+    COMM("ADC % 122, R123 ; comment", "; comment", 0x79, 0x7A, 0x7B);
 
-    TEST("MOVD %>A9AA(B), R171",     0xA8, 0xA9, 0xAA, 0xAB);
-    TEST("MOVD % >A9AA(B), R171",    0xA8, 0xA9, 0xAA, 0xAB);
-    TEST("MOVD %>A9AA (B), R171",    0xA8, 0xA9, 0xAA, 0xAB);
-    TEST("MOVD %>A9AA( B), R171",    0xA8, 0xA9, 0xAA, 0xAB);
-    TEST("MOVD %>A9AA(B ), R171",    0xA8, 0xA9, 0xAA, 0xAB);
-    TEST("MOVD % >A9AA ( B ), R171", 0xA8, 0xA9, 0xAA, 0xAB);
+    COMM("MOVD %>A9AA(B), R171     ; comment", "; comment", 0xA8, 0xA9, 0xAA, 0xAB);
+    COMM("MOVD % >A9AA(B), R171    ; comment", "; comment", 0xA8, 0xA9, 0xAA, 0xAB);
+    COMM("MOVD %>A9AA (B), R171    ; comment", "; comment", 0xA8, 0xA9, 0xAA, 0xAB);
+    COMM("MOVD %>A9AA( B), R171    ; comment", "; comment", 0xA8, 0xA9, 0xAA, 0xAB);
+    COMM("MOVD %>A9AA(B ), R171    ; comment", "; comment", 0xA8, 0xA9, 0xAA, 0xAB);
+    COMM("MOVD % >A9AA ( B ), R171 ; comment", "; comment", 0xA8, 0xA9, 0xAA, 0xAB);
 
-    TEST("CALL @>8F90",  0x8E, 0x8F, 0x90);
-    TEST("CALL @ >8F90", 0x8E, 0x8F, 0x90);
+    COMM("CALL @>8F90  ; comment", "; comment", 0x8E, 0x8F, 0x90);
+    COMM("CALL @ >8F90 ; comment", "; comment", 0x8E, 0x8F, 0x90);
 
-    TEST("CALL *R159",   0x9E, 0x9F);
-    TEST("CALL * R159",  0x9E, 0x9F);
-    TEST("CALL *159",    0x9E, 0x9F);
-    TEST("CALL * 159",   0x9E, 0x9F);
+    COMM("CALL *R159  ; comment", "; comment", 0x9E, 0x9F);
+    COMM("CALL * R159 ; comment", "; comment", 0x9E, 0x9F);
+    COMM("CALL *159   ; comment", "; comment", 0x9E, 0x9F);
+    COMM("CALL * 159  ; comment", "; comment", 0x9E, 0x9F);
 
-    TEST("CALL @>AFB0(B)"    , 0xAE, 0xAF, 0xB0);
-    TEST("CALL @ >AFB0(B)",    0xAE, 0xAF, 0xB0);
-    TEST("CALL @>AFB0 (B)",    0xAE, 0xAF, 0xB0);
-    TEST("CALL @>AFB0( B)",    0xAE, 0xAF, 0xB0);
-    TEST("CALL @>AFB0(B )",    0xAE, 0xAF, 0xB0);
-    TEST("CALL @ >AFB0 ( B )", 0xAE, 0xAF, 0xB0);
+    COMM("CALL @>AFB0(B)     ; comment", "; comment", 0xAE, 0xAF, 0xB0);
+    COMM("CALL @ >AFB0(B)    ; comment", "; comment", 0xAE, 0xAF, 0xB0);
+    COMM("CALL @>AFB0 (B)    ; comment", "; comment", 0xAE, 0xAF, 0xB0);
+    COMM("CALL @>AFB0( B)    ; comment", "; comment", 0xAE, 0xAF, 0xB0);
+    COMM("CALL @>AFB0(B )    ; comment", "; comment", 0xAE, 0xAF, 0xB0);
+    COMM("CALL @ >AFB0 ( B ) ; comment", "; comment", 0xAE, 0xAF, 0xB0);
+
+    COMM("BYTE -128, 255 ; comment", "; comment", 0x80, 0xFF);
+    COMM("TEXT 'TEXT'    ; comment", "; comment", 0x54, 0x45, 0x58, 0x54);
+    COMM("DATA -128, 255 ; comment", "; comment", 0xFF, 0x80, 0x00, 0xFF);
 }
 
 void test_undef() {

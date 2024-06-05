@@ -2475,30 +2475,30 @@ static void test_short_direct() {
     symtab.intern(0x56,   "snum");
     symtab.intern(0x560000, "seg");
 
-    ERRT("CLR %560034          ; auto short",  OK, "; auto short",  0x4D08, 0x5634);
-    ERRT("CLR %561234          ; long offset", OK, "; long offset", 0x4D08, 0xD600, 0x1234);
-    ERRT("CLR %560034(R2)      ; auto short",  OK, "; auto short",  0x4D28, 0x5634);
-    ERRT("CLR %561234(R2)      ; long offset", OK, "; long offset", 0x4D28, 0xD600, 0x1234);
-    ERRT("CLR seg|soff         ; auto short",  OK, "; auto short",  0x4D08, 0x5634);
-    ERRT("CLR seg+soff(R2)     ; auto short",  OK, "; auto short",  0x4D28, 0x5634);
-    ERRT("CLR (seg+soff)       ; auto short",  OK, "; auto short",  0x4D08, 0x5634);
-    ERRT("CLR (seg|soff)(R2)   ; auto short",  OK, "; auto short",  0x4D28, 0x5634);
-    ERRT("CLR seg+loff         ; long offset", OK, "; long offset", 0x4D08, 0xD600, 0x1234);
-    ERRT("CLR seg|loff(R2)     ; long offset", OK, "; long offset", 0x4D28, 0xD600, 0x1234);
-    ERRT("CLR (seg|loff)       ; long offset", OK, "; long offset", 0x4D08, 0xD600, 0x1234);
-    ERRT("CLR (seg+loff)(R2)   ; long offset", OK, "; long offset", 0x4D28, 0xD600, 0x1234);
-    ERRT("CLR <<%56>>%34       ; auto short",  OK, "; auto short",  0x4D08, 0x5634);
-    ERRT("CLR <<%56>>%1234     ; long offset", OK, "; long offset", 0x4D08, 0xD600, 0x1234);
-    ERRT("CLR <<%56>>%34(R2)   ; auto short",  OK, "; auto short",  0x4D28, 0x5634);
-    ERRT("CLR <<%56>>%1234(R2) ; long offset", OK, "; long offset", 0x4D28, 0xD600, 0x1234);
-    ERRT("CLR <<snum>>soff     ; auto short",  OK, "; auto short",  0x4D08, 0x5634);
-    ERRT("CLR <<snum>>soff(R2) ; auto short",  OK, "; auto short",  0x4D28, 0x5634);
-    ERRT("CLR <<snum>>soff     ; auto short",  OK, "; auto short",  0x4D08, 0x5634);
-    ERRT("CLR <<snum>>soff(R2) ; auto short",  OK, "; auto short",  0x4D28, 0x5634);
-    ERRT("CLR <<snum>>loff     ; long offset", OK, "; long offset", 0x4D08, 0xD600, 0x1234);
-    ERRT("CLR <<snum>>loff(R2) ; long offset", OK, "; long offset", 0x4D28, 0xD600, 0x1234);
-    ERRT("CLR <<snum>>loff     ; long offset", OK, "; long offset", 0x4D08, 0xD600, 0x1234);
-    ERRT("CLR <<snum>>loff(R2) ; long offset", OK, "; long offset", 0x4D28, 0xD600, 0x1234);
+    COMM("CLR %560034          ; auto short",  "; auto short",  0x4D08, 0x5634);
+    COMM("CLR %561234          ; long offset", "; long offset", 0x4D08, 0xD600, 0x1234);
+    COMM("CLR %560034(R2)      ; auto short",  "; auto short",  0x4D28, 0x5634);
+    COMM("CLR %561234(R2)      ; long offset", "; long offset", 0x4D28, 0xD600, 0x1234);
+    COMM("CLR seg|soff         ; auto short",  "; auto short",  0x4D08, 0x5634);
+    COMM("CLR seg+soff(R2)     ; auto short",  "; auto short",  0x4D28, 0x5634);
+    COMM("CLR (seg+soff)       ; auto short",  "; auto short",  0x4D08, 0x5634);
+    COMM("CLR (seg|soff)(R2)   ; auto short",  "; auto short",  0x4D28, 0x5634);
+    COMM("CLR seg+loff         ; long offset", "; long offset", 0x4D08, 0xD600, 0x1234);
+    COMM("CLR seg|loff(R2)     ; long offset", "; long offset", 0x4D28, 0xD600, 0x1234);
+    COMM("CLR (seg|loff)       ; long offset", "; long offset", 0x4D08, 0xD600, 0x1234);
+    COMM("CLR (seg+loff)(R2)   ; long offset", "; long offset", 0x4D28, 0xD600, 0x1234);
+    COMM("CLR <<%56>>%34       ; auto short",  "; auto short",  0x4D08, 0x5634);
+    COMM("CLR <<%56>>%1234     ; long offset", "; long offset", 0x4D08, 0xD600, 0x1234);
+    COMM("CLR <<%56>>%34(R2)   ; auto short",  "; auto short",  0x4D28, 0x5634);
+    COMM("CLR <<%56>>%1234(R2) ; long offset", "; long offset", 0x4D28, 0xD600, 0x1234);
+    COMM("CLR <<snum>>soff     ; auto short",  "; auto short",  0x4D08, 0x5634);
+    COMM("CLR <<snum>>soff(R2) ; auto short",  "; auto short",  0x4D28, 0x5634);
+    COMM("CLR <<snum>>soff     ; auto short",  "; auto short",  0x4D08, 0x5634);
+    COMM("CLR <<snum>>soff(R2) ; auto short",  "; auto short",  0x4D28, 0x5634);
+    COMM("CLR <<snum>>loff     ; long offset", "; long offset", 0x4D08, 0xD600, 0x1234);
+    COMM("CLR <<snum>>loff(R2) ; long offset", "; long offset", 0x4D28, 0xD600, 0x1234);
+    COMM("CLR <<snum>>loff     ; long offset", "; long offset", 0x4D08, 0xD600, 0x1234);
+    COMM("CLR <<snum>>loff(R2) ; long offset", "; long offset", 0x4D28, 0xD600, 0x1234);
 
     assembler.setOption("short-direct", "disable");
 
@@ -2527,16 +2527,16 @@ static void test_short_direct() {
     TEST("CLR <<snum>>soff(R2)", 0x4D28, 0xD600, 0x0034);
     TEST("CLR <<snum>>loff(R2)", 0x4D28, 0xD600, 0x1234);
 
-    ERRT("CLR |%560034|           ; short direct", OK, "; short direct", 0x4D08, 0x5634);
-    ERRT("CLR |%560034|(R2)       ; short direct", OK, "; short direct", 0x4D28, 0x5634);
-    ERRT("CLR |seg+soff|(R2)      ; short direct", OK, "; short direct", 0x4D28, 0x5634);
-    ERRT("CLR |(seg|soff)|        ; short direct", OK, "; short direct", 0x4D08, 0x5634);
-    ERRT("CLR |(seg+soff)|(R2)    ; short direct", OK, "; short direct", 0x4D28, 0x5634);
-    ERRT("CLR |<<%56>>%34|        ; short direct", OK, "; short direct", 0x4D08, 0x5634);
-    ERRT("CLR |<<%56>>%34|(R2)    ; short direct", OK, "; short direct", 0x4D28, 0x5634);
-    ERRT("CLR |<<snum>>soff|(R2)  ; short direct", OK, "; short direct", 0x4D28, 0x5634);
-    ERRT("CLR |<<snum>>soff|      ; short direct", OK, "; short direct", 0x4D08, 0x5634);
-    ERRT("CLR |(seg+soff)|(R2)    ; short direct", OK, "; short direct", 0x4D28, 0x5634);
+    COMM("CLR |%560034|           ; short direct", "; short direct", 0x4D08, 0x5634);
+    COMM("CLR |%560034|(R2)       ; short direct", "; short direct", 0x4D28, 0x5634);
+    COMM("CLR |seg+soff|(R2)      ; short direct", "; short direct", 0x4D28, 0x5634);
+    COMM("CLR |(seg|soff)|        ; short direct", "; short direct", 0x4D08, 0x5634);
+    COMM("CLR |(seg+soff)|(R2)    ; short direct", "; short direct", 0x4D28, 0x5634);
+    COMM("CLR |<<%56>>%34|        ; short direct", "; short direct", 0x4D08, 0x5634);
+    COMM("CLR |<<%56>>%34|(R2)    ; short direct", "; short direct", 0x4D28, 0x5634);
+    COMM("CLR |<<snum>>soff|(R2)  ; short direct", "; short direct", 0x4D28, 0x5634);
+    COMM("CLR |<<snum>>soff|      ; short direct", "; short direct", 0x4D08, 0x5634);
+    COMM("CLR |(seg+soff)|(R2)    ; short direct", "; short direct", 0x4D28, 0x5634);
     ERRT("CLR |%561234|           ; long offset",  OVERFLOW_RANGE, "|%561234|           ; long offset", 0x4D08, 0x5634);
     ERRT("CLR |%561234|(R2)       ; long offset",  OVERFLOW_RANGE, "|%561234|(R2)       ; long offset", 0x4D28, 0x5634);
     ERRT("CLR |seg+loff|          ; long offset",  OVERFLOW_RANGE, "|seg+loff|          ; long offset", 0x4D08, 0x5634);
@@ -2549,17 +2549,22 @@ static void test_short_direct() {
 }
 
 static void test_comment() {
-    TEST("ADD R1 , # %1234", 0x0101, 0x1234);
+    COMM("ADD R1 , # %1234 ; comment", "; comment", 0x0101, 0x1234);
     if (z8001()) {
-        ERRT("EXB  RL1 , %1234 ( R2 ) ; comment", OK, "; comment", 0x6C29 ,0x8000, 0x1234);
-        TEST("PUSH @RR4 , R2",  0x9342);
-        ERRT("PUSH @ RR4 , R2", UNKNOWN_REGISTER, "@ RR4 , R2");
+        COMM("EXB  RL1 , %1234 ( R2 ) ; comment", "; comment", 0x6C29 ,0x8000, 0x1234);
+        COMM("PUSH @RR4 , R2          ; comment", "; comment", 0x9342);
+        ERRT("PUSH @ RR4 , R2         ; comment", UNKNOWN_REGISTER, "@ RR4 , R2         ; comment");
     } else {
-        ERRT("EXB  RL1 , %1234 ( R2 ) ; comment", OK, "; comment", 0x6C29 ,0x1234);
-        TEST("PUSH @R4 , R2",  0x9342);
-        ERRT("PUSH @ R4 , R2", UNKNOWN_REGISTER, "@ R4 , R2");
+        COMM("EXB  RL1 , %1234 ( R2 ) ; comment", "; comment", 0x6C29 ,0x1234);
+        COMM("PUSH @R4 , R2           ; comment", "; comment", 0x9342);
+        ERRT("PUSH @ R4 , R2          ; comment", UNKNOWN_REGISTER, "@ R4 , R2          ; comment");
     }
-    TEST("SETFLG C , Z , S , P , V", 0x8DF1);
+    COMM("SETFLG C , Z , S , P , V    ; comment", "; comment", 0x8DF1);
+
+    COMM("byte -128, 255 ; comment", "; comment", 0x80FF);
+    COMM("byte 'TEXT'    ; comment", "; comment", 0x5445, 0x5854);
+    COMM("word -128, 255 ; comment", "; comment", 0xFF80, 0x00FF);
+    COMM("long %12345678 ; comment", "; comment", 0x1234, 0x5678);
 }
 
 static void test_undefined_symbol() {

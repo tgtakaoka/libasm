@@ -698,15 +698,17 @@ static void test_call() {
 }
 
 static void test_comment() {
-    ERRT("NOP; comment",     OK, "; comment", 0xC4);
-    ERRT("RET    ; comment", OK, "; comment", 0x70);
-    ERRT("LDN  1 ; comment", OK, "; comment", 0x01);
-    ERRT("DEC  15; comment", OK, "; comment", 0x2F);
-    ERRT("LDI 12H; comment", OK, "; comment", 0xF8, 0x12);
-    ERRT("INP 4  ; comment", OK, "; comment", 0x6C);
-    ERRT("BNQ 3AH; comment", OK, "; comment", 0x39, 0x3A);
-    ERRT("LBZ 3AH; comment", OK, "; comment", 0xC2, 0x00, 0x3A);
-    ERRT("LSKP   ; comment", OK, "; comment", 0xC8);
+    COMM("NOP; comment",     "; comment", 0xC4);
+    COMM("RET    ; comment", "; comment", 0x70);
+    COMM("LDN  1 ; comment", "; comment", 0x01);
+    COMM("DEC  15; comment", "; comment", 0x2F);
+    COMM("LDI 12H; comment", "; comment", 0xF8, 0x12);
+    COMM("INP 4  ; comment", "; comment", 0x6C);
+    COMM("BNQ 3AH; comment", "; comment", 0x39, 0x3A);
+    COMM("LBZ 3AH; comment", "; comment", 0xC2, 0x00, 0x3A);
+    COMM("LSKP   ; comment", "; comment", 0xC8);
+    COMM("DC -128, 255; comment", "; comment",  0x80, 0xFF);
+    COMM("DC 'TEXT' ;'comment'",  ";'comment'", 0x54, 0x45, 0x58, 0x54);
 }
 
 static void test_undef() {

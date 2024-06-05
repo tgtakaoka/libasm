@@ -939,30 +939,30 @@ static void test_bitop_indexed() {
 }
 
 static void test_comment() {
-    ERRT("RST 18H        ; comment", OK, "; comment", 0xDF);
-    ERRT("LD B , B       ; comment", OK, "; comment", 0x40);
-    ERRT("NOP            ; comment", OK, "; comment", 0x00);
-    ERRT("LD BC , 0BEEFH ; comment", OK, "; comment", 0x01, 0xEF, 0xBE);
-    ERRT("LD HL , ( 5678H ) ; comment", OK, "; comment", 0x2A, 0x78, 0x56);
-    ERRT("CALL C , 1234H ; comment", OK, "; comment", 0xDC, 0x34, 0x12);
-    ERRT("RET         ; comment", OK, "; comment", 0xC9);
-    ERRT("RET NZ      ; comment", OK, "; comment", 0xC0);
+    COMM("RST 18H        ; comment", "; comment", 0xDF);
+    COMM("LD B , B       ; comment", "; comment", 0x40);
+    COMM("NOP            ; comment", "; comment", 0x00);
+    COMM("LD BC , 0BEEFH ; comment", "; comment", 0x01, 0xEF, 0xBE);
+    COMM("LD HL , ( 5678H ) ; comment", "; comment", 0x2A, 0x78, 0x56);
+    COMM("CALL C , 1234H ; comment", "; comment", 0xDC, 0x34, 0x12);
+    COMM("RET         ; comment", "; comment", 0xC9);
+    COMM("RET NZ      ; comment", "; comment", 0xC0);
 
     if (isZ80()) {
-        ERRT("IM 2           ; comment", OK, "; comment", 0xED, 0x5E);
-        ERRT("BIT 0 , B      ; comment", OK, "; comment", 0xCB, 0x40);
-        ERRT("BIT 6 , ( HL ) ; comment", OK, "; comment", 0xCB, 0x76);
-        ERRT("INC ( IX + 2 ) ; comment", OK, "; comment", 0xDD, 0x34, 0x02);
-        ERRT("LD ( IY - 2 ) , B  ; comment", OK, "; comment", 0xFD, 0x70, 0xFE);
-        ERRT("ADD A , ( IY - 2 ) ; comment", OK, "; comment", 0xFD, 0x86, 0xFE);
-        ERRT("EX AF , AF'        ; comment", OK, "; comment", 0x08);
-        ERRT("LD ( 0ABCDH ) , IX ; comment", OK, "; comment", 0xDD, 0x22, 0xCD, 0xAB);
-        ERRT("LD IX , ( 5678H )  ; comment", OK, "; comment", 0xDD, 0x2A, 0x78, 0x56);
-        ERRT("EX ( SP ) , IX     ; comment", OK, "; comment", 0xDD, 0xE3);
-        ERRT("JP ( IX )          ; comment", OK, "; comment", 0xDD, 0xE9);
+        COMM("IM 2           ; comment", "; comment", 0xED, 0x5E);
+        COMM("BIT 0 , B      ; comment", "; comment", 0xCB, 0x40);
+        COMM("BIT 6 , ( HL ) ; comment", "; comment", 0xCB, 0x76);
+        COMM("INC ( IX + 2 ) ; comment", "; comment", 0xDD, 0x34, 0x02);
+        COMM("LD ( IY - 2 ) , B  ; comment", "; comment", 0xFD, 0x70, 0xFE);
+        COMM("ADD A , ( IY - 2 ) ; comment", "; comment", 0xFD, 0x86, 0xFE);
+        COMM("EX AF , AF'        ; comment", "; comment", 0x08);
+        COMM("LD ( 0ABCDH ) , IX ; comment", "; comment", 0xDD, 0x22, 0xCD, 0xAB);
+        COMM("LD IX , ( 5678H )  ; comment", "; comment", 0xDD, 0x2A, 0x78, 0x56);
+        COMM("EX ( SP ) , IX     ; comment", "; comment", 0xDD, 0xE3);
+        COMM("JP ( IX )          ; comment", "; comment", 0xDD, 0xE9);
 
-        AERRT(0x1000, "JR 1000H     ; comment", OK, "; comment", 0x18, 0xFE);
-        AERRT(0x1000, "JR NZ , 1004H; comment", OK, "; comment", 0x20, 0x02);
+        ACOMM(0x1000, "JR 1000H     ; comment", "; comment", 0x18, 0xFE);
+        ACOMM(0x1000, "JR NZ , 1004H; comment", "; comment", 0x20, 0x02);
     }
 }
 
@@ -1001,6 +1001,15 @@ static void test_undefined_symbol() {
         AERUS(0x1000, "JR NZ,UNDEF", "UNDEF", 0x20, 0x00);
         AERUS(0x1000, "DJNZ UNDEF",  "UNDEF", 0x10, 0x00);
     }
+
+    COMM("DB -128, 255 ; comment", "; comment", 0x80, 0xFF);
+    COMM("DB 'TEXT'    ; comment", "; comment", 0x54, 0x45, 0x58, 0x54);
+    COMM("DW -128, 255 ; comment", "; comment", 0x80, 0xFF, 0xFF, 0x00);
+    COMM("DL 12345678H ; comment", "; comment", 0x78, 0x56, 0x34, 0x12);
+    COMM("DEFB -128, 255 ; comment", "; comment", 0x80, 0xFF);
+    COMM("DEFB 'TEXT'    ; comment", "; comment", 0x54, 0x45, 0x58, 0x54);
+    COMM("DEFM 'TEXT'    ; comment", "; comment", 0x54, 0x45, 0x58, 0x54);
+    COMM("DEFW -128, 255 ; comment", "; comment", 0x80, 0xFF, 0xFF, 0x00);
 }
 
 static void test_data_constant() {

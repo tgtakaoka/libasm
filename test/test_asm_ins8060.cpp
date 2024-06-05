@@ -264,15 +264,19 @@ static void test_comment() {
     symtab.intern(-127, "m127");
     symtab.intern(127,  "p127");
 
-    ERRT("NOP       ; comment", OK, "; comment", 0x08);
-    ERRT("XPPC P3   ; comment", OK, "; comment", 0x3F);
-    ERRT("DLY  0x12 ; comment", OK, "; comment", 0x8F, 0x12);
-    AERRT(0x1000, "JMP 0x1000 ; comment", OK, "; comment", 0x90, 0xFE);
+    COMM("NOP       ; comment", "; comment", 0x08);
+    COMM("XPPC P3   ; comment", "; comment", 0x3F);
+    COMM("DLY  0x12 ; comment", "; comment", 0x8F, 0x12);
+    ACOMM(0x1000, "JMP 0x1000 ; comment", "; comment", 0x90, 0xFE);
     AERRT(0x1000, "JNZ E (PC) ; comment", REGISTER_NOT_ALLOWED, "E (PC) ; comment", 0x9C, 0x80);
-    ERRT("JMP E (P1)    ; comment", OK, "; comment", 0x91, 0x80);
-    ERRT("JMP p127 (P2) ; comment", OK, "; comment", 0x92, 0x7F);
-    ERRT("JMP m127 (P3) ; comment", OK, "; comment", 0x93, 0x81);
-    ERRT("LD @ 126 (P3) ; comment", OK, "; comment", 0xC7, 0x7E);
+    COMM("JMP E (P1)    ; comment", "; comment", 0x91, 0x80);
+    COMM("JMP p127 (P2) ; comment", "; comment", 0x92, 0x7F);
+    COMM("JMP m127 (P3) ; comment", "; comment", 0x93, 0x81);
+    COMM("LD @ 126 (P3) ; comment", "; comment", 0xC7, 0x7E);
+    COMM(".BYTE -128, 255  ; comment", "; comment", 0x80, 0xFF);
+    COMM(".ASCII 'TEXT'    ; comment", "; comment", 0x54, 0x45, 0x58, 0x54);
+    COMM(".DBYTE -128, 255 ; comment", "; comment", 0x80, 0xFF, 0xFF, 0x00);
+    COMM(".ADDR X'1000     ; comment", "; comment", 0xFF, 0x1F);
 }
 
 static void test_undef() {

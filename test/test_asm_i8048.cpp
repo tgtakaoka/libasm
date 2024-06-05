@@ -449,7 +449,9 @@ static void test_control() {
 }
 
 static void test_comment() {
-    ERRT("ADDC A, R0; comment", OK, "; comment",  0x78);
+    COMM("ADDC A, R0; comment", "; comment",  0x78);
+    COMM("DB -128, 255 ; comment", "; comment", 0x80, 0xFF);
+    COMM("DW 'A''B'    ; comment", "; comment", 0x41, 0x27, 0x42, 0x00);
 }
 
 static void test_undef() {

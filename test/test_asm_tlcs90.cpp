@@ -1772,14 +1772,18 @@ static void test_jump_call() {
 }
 
 static void test_comment() {
-    ERRT("LD B , ( BC )      ; comment", OK, "; comment", 0xE0, 0x28);
-    ERRT("LD B , ( 1234H )   ; comment", OK, "; comment", 0xE3, 0x34, 0x12, 0x28);
-    ERRT("LD B , ( IX + 34H ); comment", OK, "; comment", 0xF0, 0x34, 0x28);
-    ERRT("LD B , ( HL + A )  ; comment", OK, "; comment", 0xF3, 0x28);
-    ERRT("CALL LE , HL       ; comment", OK, "; comment", 0xEA, 0xD2);
-    ERRT("CALL ULE , 1234H   ; comment", OK, "; comment", 0xEB, 0x34, 0x12, 0xD3);
-    ERRT("CALL GT , SP + 34H ; comment", OK, "; comment", 0xF6, 0x34, 0xDA);
-    ERRT("CALL UGT , HL + A  ; comment", OK, "; comment", 0xF7, 0xDB);
+    COMM("LD B , ( BC )      ; comment", "; comment", 0xE0, 0x28);
+    COMM("LD B , ( 1234H )   ; comment", "; comment", 0xE3, 0x34, 0x12, 0x28);
+    COMM("LD B , ( IX + 34H ); comment", "; comment", 0xF0, 0x34, 0x28);
+    COMM("LD B , ( HL + A )  ; comment", "; comment", 0xF3, 0x28);
+    COMM("CALL LE , HL       ; comment", "; comment", 0xEA, 0xD2);
+    COMM("CALL ULE , 1234H   ; comment", "; comment", 0xEB, 0x34, 0x12, 0xD3);
+    COMM("CALL GT , SP + 34H ; comment", "; comment", 0xF6, 0x34, 0xDA);
+    COMM("CALL UGT , HL + A  ; comment", "; comment", 0xF7, 0xDB);
+    COMM("DB -128, 255 ; comment", "; comment", 0x80, 0xFF);
+    COMM("DB 'TEXT'    ; comment", "; comment", 0x54, 0x45, 0x58, 0x54);
+    COMM("DW -128, 255 ; comment", "; comment", 0x80, 0xFF, 0xFF, 0x00);
+    COMM("DL 12345678H ; comment", "; comment", 0x78, 0x56, 0x34, 0x12);
 }
 
 static void test_error() {

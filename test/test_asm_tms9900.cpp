@@ -88,6 +88,7 @@ static void test_inh() {
         ERRT("RTWP 3", OPERAND_NOT_ALLOWED, "3", 0x0383);
     } else {
         ERRT("RTWP 0", OPERAND_NOT_ALLOWED, "0");
+        ERRT("RTWP 1", OPERAND_NOT_ALLOWED, "1");
     }
 }
 
@@ -373,23 +374,27 @@ static void test_cru_off() {
 }
 
 static void test_comment() {
-    ERRT("IDLE         ; comment", OK, "; comment", 0x0340);
-    ERRT("LWPI >1234   ; comment", OK, "; comment", 0x02E0, 0x1234);
-    ERRT("STWP R14     ; comment", OK, "; comment", 0x02AE);
-    ERRT("LI   R0 , 0  ; comment", OK, "; comment", 0x0200, 0x0000);
-    ERRT("X *R10   ; comment",     OK, "; comment", 0x049A);
-    ERRT("X * R10  ; comment",     UNKNOWN_OPERAND, "* R10  ; comment");
-    ERRT("CLR *R12+  ; comment",   OK, "; comment", 0x04FC);
-    ERRT("CLR * R12+ ; comment",   UNKNOWN_OPERAND, "* R12+ ; comment");
-    ERRT("BLWP @ >3456 ; comment", OK, "; comment", 0x0420, 0x3456);
-    ERRT("SBO  0       ; comment", OK, "; comment", 0x1D00);
-    ERRT("INC  @ 2 ( R7 )  ; comment", OK, "; comment", 0x05A7, 0x0002);
-    ERRT("LDCR *R13+  , 16 ; comment", OK, "; comment", 0x303D);
+    COMM("IDLE         ; comment", "; comment", 0x0340);
+    COMM("LWPI >1234   ; comment", "; comment", 0x02E0, 0x1234);
+    COMM("STWP R14     ; comment", "; comment", 0x02AE);
+    COMM("LI   R0 , 0  ; comment", "; comment", 0x0200, 0x0000);
+    COMM("X *R10       ; comment", "; comment", 0x049A);
+    ERRT("X * R10      ; comment",  UNKNOWN_OPERAND, "* R10      ; comment");
+    COMM("CLR *R12+    ; comment", "; comment", 0x04FC);
+    ERRT("CLR * R12+   ; comment",  UNKNOWN_OPERAND, "* R12+   ; comment");
+    COMM("BLWP @ >3456 ; comment", "; comment", 0x0420, 0x3456);
+    COMM("SBO  0       ; comment", "; comment", 0x1D00);
+    COMM("INC  @ 2 ( R7 )  ; comment", "; comment", 0x05A7, 0x0002);
+    COMM("LDCR *R13+  , 16 ; comment", "; comment", 0x303D);
     ERRT("LDCR * R13+ , 16 ; comment", UNKNOWN_OPERAND, "* R13+ , 16 ; comment");
-    ERRT("SZC  @ >1234 ( R10 ) , @ >2345 ( R11 ) ; comment", OK, "; comment", 0x4AEA, 0x1234, 0x2345);
-    AERRT(0x1000, "JMP >1002 ; comment", OK, "; comment", 0x1000);
-    ERRT("CLR  *R12 + ; comment",     GARBAGE_AT_END, "+ ; comment", 0x04DC);
+    COMM("SZC  @ >1234 ( R10 ) , @ >2345 ( R11 ) ; comment", "; comment", 0x4AEA, 0x1234, 0x2345);
+    ACOMM(0x1000, "JMP >1002 ; comment", "; comment", 0x1000);
+    ERRT("CLR  *R12 +     ; comment", GARBAGE_AT_END,  "+     ; comment", 0x04DC);
     ERRT("LDCR *R13 +, 16 ; comment", OPERAND_NOT_ALLOWED, "*R13 +, 16 ; comment");
+
+    COMM("BYTE -128, 255 ; comment", "; comment", 0x80FF);
+    COMM("TEXT 'TEXT'    ; comment", "; comment", 0x5445, 0x5854);
+    COMM("DATA -128, 255 ; comment", "; comment", 0xFF80, 0x00FF);
 }
 
 static void test_undef() {

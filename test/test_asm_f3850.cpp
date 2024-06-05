@@ -265,10 +265,13 @@ void test_control() {
 }
 
 void test_comment() {
-    ERRT("CLR      ; comment", OK, "; comment", 0x70);
-    ERRT("LIS 1    ; comment", OK, "; comment", 0x71);
-    ERRT("LR  A, 14; comment", OK, "; comment", 0x4E);
-    ERRT("LR  0, A ; comment", OK, "; comment", 0x50);
+    COMM("CLR           ; comment", "; comment", 0x70);
+    COMM("LIS ( 1 + 2 ) ; comment", "; comment", 0x73);
+    COMM("LR  A, 14 -1  ; comment", "; comment", 0x4D);
+    COMM("LR  0 + 2, A  ; comment", "; comment", 0x52);
+    COMM("DC -128,255   ; comment", "; comment", 0x80, 0xFF);
+    COMM("DC 'TEXT'     ; comment", "; comment", 0x54, 0x45, 0x58, 0x54);
+    COMM("DA -128,255   ; comment", "; comment", 0xFF, 0x80, 0x00, 0xFF);
 }
 
 void test_undef() {
