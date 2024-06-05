@@ -24,12 +24,12 @@ namespace test {
 TestAsserter asserter;
 TestSymtab symtab;
 
-void val_assert(const char *file, int line, const char *expr, uint32_t expected,
+void val_assert(const char *file, int line, StrScanner &expr, char delim, uint32_t expected,
         const ErrorAt &expected_error, size_t size, const ValueParser &parser) {
     Value val;
     ErrorAt actual_error;
     StrScanner scan = expr;
-    val = parser.eval(scan, actual_error, &symtab);
+    val = parser.eval(scan, actual_error, &symtab, delim);
     uint32_t actual = val.getUnsigned();
     if (size == 1) {
         if (val.overflowUint8())
@@ -43,14 +43,13 @@ void val_assert(const char *file, int line, const char *expr, uint32_t expected,
         actual = static_cast<uint16_t>(actual);
         expected = static_cast<uint16_t>(expected);
     }
-    if (!parser.endOfLine(scan))
-        actual_error.setErrorIf(scan, GARBAGE_AT_END);
-    asserter.equals(file, line, expr, expected_error.getError(), actual_error);
+    asserter.equals(file, line, expr.str(), expected_error.getError(), actual_error);
     if (expected_error.isOK()) {
-        asserter.equals(file, line, expr, expected, actual);
+        asserter.equals(file, line, expr.str(), expected, actual);
     } else {
-        asserter.equals(file, line, expr, expected_error.errorAt(), actual_error.errorAt());
+        asserter.equals(file, line, expr.str(), expected_error.errorAt(), actual_error.errorAt());
     }
+    expr = scan;
 }
 
 void dec_assert(const char *file, int line, uint32_t value, int8_t bitWidth, const char *expected,

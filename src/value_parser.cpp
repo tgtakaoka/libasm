@@ -105,7 +105,7 @@ Value ValueParser::eval(
     const auto start = scan.skipSpaces();
     const auto value = _eval(scan, error, symtab, delim);
     if (scan.str() == start.str())
-        error.setErrorIf(start, GARBAGE_AT_END);
+        error.setErrorIf(start, NOT_AN_EXPECTED);
     return value;
 }
 

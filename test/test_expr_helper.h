@@ -31,7 +31,7 @@ namespace test {
 extern TestSymtab symtab;
 extern TestAsserter asserter;
 
-void val_assert(const char *file, int line, const char *expr, uint32_t expected,
+void val_assert(const char *file, int line, StrScanner &expr, char delim, uint32_t expected,
         const ErrorAt &expected_error, size_t size, const ValueParser &);
 void dec_assert(const char *file, int line, uint32_t value, int8_t bitWidth, const char *expected,
         const ValueFormatter &, bool uppercase = false);
@@ -52,32 +52,32 @@ struct TestLocator : ValueParser::Locator {
 }  // namespace test
 }  // namespace libasm
 
-#define SCAN(delim, text, expected)                                          \
-    do {                                                                     \
-        ErrorAt error;                                                       \
-        StrScanner p(text);                                                  \
-        parser.eval(p, error, &symtab, delim);                               \
-        StrScanner actual(text, p.str());                                    \
-        asserter.equals(__FILE__, __LINE__, "scan " text, expected, actual); \
+#define _EXPR(expr, delim, expected, expected_error, error_at, expr_type, remain)                \
+    do {                                                                                         \
+        ErrorAt error;                                                                           \
+        error.setError(error_at, expected_error);                                                \
+        StrScanner scan{expr};                                                                   \
+        val_assert(__FILE__, __LINE__, scan, delim, expected, error, sizeof(expr_type), parser); \
+        asserter.equals(__FILE__, __LINE__, "remain " expr, remain, scan.str());                 \
     } while (0)
-#define _EXPR(expr, expected, expected_error, error_at, expr_type)                        \
-    do {                                                                                  \
-        ErrorAt error;                                                                    \
-        error.setError(error_at, expected_error);                                         \
-        val_assert(__FILE__, __LINE__, expr, expected, error, sizeof(expr_type), parser); \
-    } while (0)
-#define _EXPR8(expr, expected, expected_error, error_at) \
-    _EXPR(expr, expected, expected_error, error_at, uint8_t)
-#define _EXPR16(expr, expected, expected_error, error_at) \
-    _EXPR(expr, expected, expected_error, error_at, uint16_t)
-#define _EXPR32(expr, expected, expected_error, error_at) \
-    _EXPR(expr, expected, expected_error, error_at, uint32_t)
-#define X8(expr, expected_error, error_at) _EXPR8(expr, 0, expected_error, error_at)
-#define X16(expr, expected_error, error_at) _EXPR16(expr, 0, expected_error, error_at)
-#define X32(expr, expected_error, error_at) _EXPR32(expr, 0, expected_error, error_at)
-#define E8(expr, expected) _EXPR8(expr, expected, OK, "")
-#define E16(expr, expected) _EXPR16(expr, expected, OK, "")
-#define E32(expr, expected) _EXPR32(expr, expected, OK, "")
+#define SERR(delim, expr, expected, remain, expected_error, error_at) \
+    _EXPR(expr, delim, expected, expected_error, error_at, uint32_t, remain)
+#define SCAN(delim, expr, expected, remain) _EXPR(expr, delim, expected, OK, "", uint32_t, remain)
+#define _EXPR8(expr, expected, expected_error, error_at, remain) \
+    _EXPR(expr, 0, expected, expected_error, error_at, uint8_t, remain)
+#define _EXPR16(expr, expected, expected_error, error_at, remain) \
+    _EXPR(expr, 0, expected, expected_error, error_at, uint16_t, remain)
+#define _EXPR32(expr, expected, expected_error, error_at, remain) \
+    _EXPR(expr, 0, expected, expected_error, error_at, uint32_t, remain)
+#define X8(expr, expected_error, error_at, remain) _EXPR8(expr, 0, expected_error, error_at, remain)
+#define X16(expr, expected_error, error_at, remain) \
+    _EXPR16(expr, 0, expected_error, error_at, remain)
+#define X32(expr, expected_error, error_at, remain) \
+    _EXPR32(expr, 0, expected_error, error_at, remain)
+#define E8(expr, expected) _EXPR8(expr, expected, OK, "", "")
+#define E16(expr, expected) _EXPR16(expr, expected, OK, "", "")
+#define E32(expr, expected) _EXPR32(expr, expected, OK, "", "")
+#define EXPR(expr, expected, remain) _EXPR32(expr, expected, OK, "", remain)
 
 #define DEC(value, bits, expected) dec_assert(__FILE__, __LINE__, value, bits, expected, formatter)
 #define BIN(value, bits, expected) bin_assert(__FILE__, __LINE__, value, bits, expected, formatter)

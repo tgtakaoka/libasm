@@ -385,13 +385,13 @@ void test_error() {
     ERRT("CLR R000  ; comment", UNDEFINED_SYMBOL, "R000  ; comment", 0xD5, 0x00);
     ERRT("CLR R256  ; comment", UNDEFINED_SYMBOL, "R256  ; comment", 0xD5, 0x00);
     ERRT("CLR R     ; comment", UNDEFINED_SYMBOL, "R     ; comment", 0xD5, 0x00);
-    ERRT("CLR > D6  ; comment", GARBAGE_AT_END,   "> D6  ; comment");
+    ERRT("CLR > D6  ; comment", NOT_AN_EXPECTED,  "> D6  ; comment");
 
     ERRT("ANDP A, P132X", OPERAND_NOT_ALLOWED, "A, P132X");
     ERRT("ANDP A, P000",  OPERAND_NOT_ALLOWED, "A, P000");
     ERRT("ANDP A, P256",  OPERAND_NOT_ALLOWED, "A, P256");
     ERRT("ANDP A, P",     OPERAND_NOT_ALLOWED, "A, P");
-    ERRT("ANDP A, > 184", GARBAGE_AT_END,      "> 184");
+    ERRT("ANDP A, > 184", NOT_AN_EXPECTED,     "> 184");
 
     ERRT("MOVD %>A9AA(A), R171",  REGISTER_NOT_ALLOWED, "A), R171");
     ERRT("MOVD %>A9AA(R3), R171", REGISTER_NOT_ALLOWED, "R3), R171");

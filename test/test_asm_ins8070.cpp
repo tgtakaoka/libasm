@@ -446,9 +446,9 @@ static void test_undef() {
 }
 
 static void test_error() {
-    ERRT("LD A,@@1,P3", GARBAGE_AT_END, "@1,P3");
-    ERRT("LD A,@#1",    GARBAGE_AT_END, "#1");
-    ERRT("LD A,@=1",    GARBAGE_AT_END, "=1");
+    ERRT("LD A,@@1,P3", NOT_AN_EXPECTED, "@1,P3");
+    ERRT("LD A,@#1",    NOT_AN_EXPECTED, "#1");
+    ERRT("LD A,@=1",    NOT_AN_EXPECTED, "=1");
     ERRT("LD A,1(P3)",  MISSING_COMMA,     "1(P3)"); // SC/MP style
     ERRT("LD A,@1(P3)", MISSING_COMMA,    "@1(P3)"); // SC/MP style
     ERRT("LD A,1,EA",   REGISTER_NOT_ALLOWED, "EA");
