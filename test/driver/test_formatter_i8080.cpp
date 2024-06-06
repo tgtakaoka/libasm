@@ -32,36 +32,40 @@ void test_asm_i8080() {
     driver.setUpperHex(false);
 
     ASM("i8080",
-            "        cpu   i8080\n"
-            "; comment line\n"
-            "        org   0abcdh\n"
-            "label1: equ   0ebech\n"
-            "        jpe   label1\n"
-            "        db    'z'-'a', 'A''B', 0\n"
-            "label2  dw    label2\n",
-            "          0 :                            cpu   i8080\n"
-            "          0 :                    ; comment line\n"
-            "       abcd :                            org   0abcdh\n"
-            "       abcd : =ebec              label1: equ   0ebech\n"
-            "       abcd : ea ec eb                   jpe   label1\n"
-            "       abd0 : 19 41 27 42 00             db    'z'-'a', 'A''B', 0\n"
-            "       abd5 : d5 ab              label2  dw    label2\n");
+            R"(        cpu   i8080
+; comment line
+        org   0abcdh
+label1: equ   0ebech
+        jpe   label1
+        db    'z'-'a', 'A''B', 0
+label2  dw    label2
+)",
+            R"(          0 :                            cpu   i8080
+          0 :                    ; comment line
+       abcd :                            org   0abcdh
+       abcd : =ebec              label1: equ   0ebech
+       abcd : ea ec eb                   jpe   label1
+       abd0 : 19 41 27 42 00             db    'z'-'a', 'A''B', 0
+       abd5 : d5 ab              label2  dw    label2
+)");
 }
 
 void test_dis_i8080() {
     PREP_DIS(i8080::DisI8080);
 
     DIS8("i8080", 0xabcd,
-            "      cpu   8080\n"
-            "      org   0ABCDH\n"
-            "      jpe   0ECEBH\n"
-            "; test.bin: error: Unknown instruction\n"
-            ";     ABD0 : DD\n",
-            "       0 :                            cpu   8080\n"
-            "    ABCD :                            org   0ABCDH\n"
-            "    ABCD : EA EB EC                   jpe   0ECEBH\n"
-            "test.bin: error: Unknown instruction\n"
-            "    ABD0 : DD\n",
+            R"(      cpu   8080
+      org   0ABCDH
+      jpe   0ECEBH
+; test.bin: error: Unknown instruction
+;     ABD0 : DD
+)",
+            R"(       0 :                            cpu   8080
+    ABCD :                            org   0ABCDH
+    ABCD : EA EB EC                   jpe   0ECEBH
+test.bin: error: Unknown instruction
+    ABD0 : DD
+)",
             0xea, 0xeb, 0xec, 0xdd);
 }
 

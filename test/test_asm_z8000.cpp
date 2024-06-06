@@ -2661,7 +2661,7 @@ static void test_undefined_symbol() {
 
 static void test_data_constant() {
     BTEST("byte -128, 255",  0x80, 0xFF);
-    BTEST("byte 'A', '\"'",  0x41, 0x22);
+    BTEST(R"(byte 'A', '"')", 0x41, 0x22);
     BTEST("byte '9'-'0'",    0x09);
     BTEST("byte '%27'",      0x27);
     ERRT("byte '%2'",        UNKNOWN_ESCAPE_SEQUENCE, "%2'");

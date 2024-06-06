@@ -1014,7 +1014,7 @@ static void test_undefined_symbol() {
 
 static void test_data_constant() {
     TEST("DB -128, 255", 0x80, 0xFF);
-    TEST("DB 'A', '\"'", 0x41, 0x22);
+    TEST(R"(DB 'A', '"')", 0x41, 0x22);
     TEST("DB '9'-'0'",   0x09);
     TEST("DB ''''",      0x27);
     ERRT("DB '''",       MISSING_CLOSING_QUOTE, "'''");
@@ -1024,10 +1024,10 @@ static void test_data_constant() {
     TEST("DW 'A''B'",    0x41, 0x27, 0x42, 0x00);
     ERRT("DW 'A''B",     MISSING_CLOSING_QUOTE, "'A''B");
     TEST("DL 12345678H", 0x78, 0x56, 0x34, 0x12);
-    TEST("DL 'A''B\"C'", 0x41, 0x27, 0x42, 0x22, 0x43, 0x00, 0x00, 0x00);
-    ERRT("DL 'A''B\"C",  MISSING_CLOSING_QUOTE, "'A''B\"C");
+    TEST(R"(DL 'A''B"C')", 0x41, 0x27, 0x42, 0x22, 0x43, 0x00, 0x00, 0x00);
+    ERRT(R"(DL 'A''B"C)",  MISSING_CLOSING_QUOTE, R"('A''B"C)");
     TEST("DEFB -128, 255", 0x80, 0xFF);
-    TEST("DEFB 'A', '\"'", 0x41, 0x22);
+    TEST(R"(DEFB 'A', '"')", 0x41, 0x22);
     TEST("DEFB '9'-'0'",   0x09);
     TEST("DEFB ''''",      0x27);
     ERRT("DEFB '''",       MISSING_CLOSING_QUOTE, "'''");
@@ -1036,7 +1036,7 @@ static void test_data_constant() {
     TEST("DEFW -128, 255", 0x80, 0xFF, 0xFF, 0x00);
     TEST("DEFW 'A''B'",    0x41, 0x27, 0x42, 0x00);
     ERRT("DEFW 'A''B",     MISSING_CLOSING_QUOTE, "'A''B");
-    TEST("DEFM 'A''B\"C'", 0x41, 0x27, 0x42, 0x22, 0x43);
+    TEST(R"(DEFM 'A''B"C')", 0x41, 0x27, 0x42, 0x22, 0x43);
     ERUS("DB 1, UNDEF", "UNDEF", 0x01, 0x00);
     ERUS("DW 1, UNDEF", "UNDEF", 0x01, 0x00, 0x00, 0x00);
     ERUS("DL 1, UNDEF", "UNDEF", 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00);

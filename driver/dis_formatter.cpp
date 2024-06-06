@@ -97,7 +97,7 @@ void DisFormatter::formatComment(StrBuffer &out) {
 void DisFormatter::formatError(StrBuffer &out) {
     out.rtext(_inputName).rtext_P(PSTR(": error: ")).rtext_P(_error.errorText_P());
     if (*_error.errorAt())
-        out.rtext_P(PSTR(": \"")).rtext(_error.errorAt()).rletter('"');
+        out.rtext_P(PSTR(R"(: ")")).rtext(_error.errorAt()).rletter('"');
 }
 
 void DisFormatter::formatLine(StrBuffer &out, int &next) {

@@ -32,22 +32,24 @@ void test_asm_ins8070() {
     driver.setUpperHex(false);
 
     ASM("ins8070",
-            "        cpu    ins8070\n"
-            "; comment line\n"
-            "        .=x'abcd\n"
-            "label:  pli    p2, =x'2423\n"
-            "        .byte  h(label)\n"
-            "        .byte  l(label)\n"
-            "        .dbyte addr(label)\n"
-            "        .dbyte addr(x'1000)\n",
-            "          0 :                            cpu    ins8070\n"
-            "          0 :                    ; comment line\n"
-            "       abcd :                            .=x'abcd\n"
-            "       abcd : 22 23 24           label:  pli    p2, =x'2423\n"
-            "       abd0 : ab                         .byte  h(label)\n"
-            "       abd1 : cd                         .byte  l(label)\n"
-            "       abd2 : cc ab                      .dbyte addr(label)\n"
-            "       abd4 : ff 0f                      .dbyte addr(x'1000)\n");
+            R"(        cpu    ins8070
+; comment line
+        .=x'abcd
+label:  pli    p2, =x'2423
+        .byte  h(label)
+        .byte  l(label)
+        .dbyte addr(label)
+        .dbyte addr(x'1000)
+)",
+            R"(          0 :                            cpu    ins8070
+          0 :                    ; comment line
+       abcd :                            .=x'abcd
+       abcd : 22 23 24           label:  pli    p2, =x'2423
+       abd0 : ab                         .byte  h(label)
+       abd1 : cd                         .byte  l(label)
+       abd2 : cc ab                      .dbyte addr(label)
+       abd4 : ff 0f                      .dbyte addr(x'1000)
+)");
 }
 
 void test_dis_ins8070() {
@@ -56,16 +58,18 @@ void test_dis_ins8070() {
     driver.setUpperHex(false);
 
     DIS8("ins8070", 0xabcd,
-            "      cpu   8070\n"
-            "      org   x'abcd\n"
-            "      pli   p2, =x'2423\n"
-            "; test.bin: error: Unknown instruction\n"
-            ";     abd0 : ef\n",
-            "       0 :                            cpu   8070\n"
-            "    abcd :                            org   x'abcd\n"
-            "    abcd : 22 23 24                   pli   p2, =x'2423\n"
-            "test.bin: error: Unknown instruction\n"
-            "    abd0 : ef\n",
+            R"(      cpu   8070
+      org   x'abcd
+      pli   p2, =x'2423
+; test.bin: error: Unknown instruction
+;     abd0 : ef
+)",
+            R"(       0 :                            cpu   8070
+    abcd :                            org   x'abcd
+    abcd : 22 23 24                   pli   p2, =x'2423
+test.bin: error: Unknown instruction
+    abd0 : ef
+)",
             0x22, 0x23, 0x24, 0xef);
 }
 

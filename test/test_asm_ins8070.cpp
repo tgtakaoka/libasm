@@ -461,7 +461,7 @@ static void test_error() {
 
 static void test_data_constant() {
     TEST(".byte  -128, 255", 0x80, 0xFF);
-    TEST(".byte  'A', '\"'", 0x41, 0x22);
+    TEST(R"(.byte  'A', '"')", 0x41, 0x22);
     TEST(".byte  '9'-'0'",   0x09);
     TEST(".byte  ''''",      0x27);
     ERRT(".byte  '''",       MISSING_CLOSING_QUOTE, "'''");

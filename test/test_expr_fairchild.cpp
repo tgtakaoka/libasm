@@ -210,7 +210,7 @@ static void test_scan() {
     SCAN('|', "1+(2|3)+4|5",  8,        "|5");
     SCAN('|', "1+c'|'+2|3",   '|'+3,    "|3");
     SCAN(',', "1+2|3+4",      7,        "");
-    SCAN(',', "','+'\'',abc", ','+'\'', ",abc");
+    SCAN(',', R"(','+''',abc)", ','+'\'', ",abc");
     SCAN('h', "0x1230hG",     0x1230,   "hG");
     SCAN('b', "0b1010b0",     0b1010,   "b0");
     SERR('H', "H'1AB0HHX",    0x1AB0,   "H'1AB0HHX", MISSING_CLOSING_QUOTE, "H'1AB0HHX");

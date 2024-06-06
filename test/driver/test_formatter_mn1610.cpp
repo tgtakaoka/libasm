@@ -30,20 +30,22 @@ void test_asm_mn1610() {
     PREP_ASM(mn1610::AsmMn1610, NationalDirective);
 
     ASM("mn1610",
-            "        cpu   mn1610\n"
-            "* comment line\n"
-            "        org   x'abcd'\n"
-            "        tbit  r3, 5, nz\n"
-            "label:  dc    label\n"
-            "        ds    2\n"
-            "        dc    c'ABC',3\n",
-            "          0 :                            cpu   mn1610\n"
-            "          0 :                    * comment line\n"
-            "       ABCD :                            org   x'abcd'\n"
-            "       ABCD : 2B55                       tbit  r3, 5, nz\n"
-            "       ABCE : ABCE               label:  dc    label\n"
-            "       ABCF :                            ds    2\n"
-            "       ABD1 : 4142 4300 0003             dc    c'ABC',3\n");
+            R"(        cpu   mn1610
+* comment line
+        org   x'abcd'
+        tbit  r3, 5, nz
+label:  dc    label
+        ds    2
+        dc    c'ABC',3
+)",
+            R"(          0 :                            cpu   mn1610
+          0 :                    * comment line
+       ABCD :                            org   x'abcd'
+       ABCD : 2B55                       tbit  r3, 5, nz
+       ABCE : ABCE               label:  dc    label
+       ABCF :                            ds    2
+       ABD1 : 4142 4300 0003             dc    c'ABC',3
+)");
 }
 
 void test_asm_mn1613() {
@@ -52,14 +54,16 @@ void test_asm_mn1613() {
     driver.setUpperHex(false);
 
     ASM("mn1613",
-            "        cpu   mn1613\n"
-            "* comment line\n"
-            "        org   x'34567'\n"
-            "        mvwi  str, x'5678', skp\n",
-            "          0 :                            cpu   mn1613\n"
-            "          0 :                    * comment line\n"
-            "      34567 :                            org   x'34567'\n"
-            "      34567 : 7e1f 5678                  mvwi  str, x'5678', skp\n");
+            R"(        cpu   mn1613
+* comment line
+        org   x'34567'
+        mvwi  str, x'5678', skp
+)",
+            R"(          0 :                            cpu   mn1613
+          0 :                    * comment line
+      34567 :                            org   x'34567'
+      34567 : 7e1f 5678                  mvwi  str, x'5678', skp
+)");
 }
 
 void test_dis_mn1610() {
@@ -68,16 +72,18 @@ void test_dis_mn1610() {
     driver.setUpperHex(false);
 
     DIS16("mn1610", 0xabcd,
-            "      cpu   mn1610\n"
-            "      org   x'abcd'\n"
-            "      tbit  r3, 5, nz\n"
-            "* test.bin: error: Unknown instruction\n"
-            "*     abce : 0f06\n",
-            "       0 :                            cpu   mn1610\n"
-            "    abcd :                            org   x'abcd'\n"
-            "    abcd : 2b55                       tbit  r3, 5, nz\n"
-            "test.bin: error: Unknown instruction\n"
-            "    abce : 0f06\n",
+            R"(      cpu   mn1610
+      org   x'abcd'
+      tbit  r3, 5, nz
+* test.bin: error: Unknown instruction
+*     abce : 0f06
+)",
+            R"(       0 :                            cpu   mn1610
+    abcd :                            org   x'abcd'
+    abcd : 2b55                       tbit  r3, 5, nz
+test.bin: error: Unknown instruction
+    abce : 0f06
+)",
             0x2b55, 0x0F00 | (0 << 4) | 6);
 }
 
@@ -87,17 +93,18 @@ void test_dis_mn1613() {
     driver.setUpperHex(false);
 
     DIS16("mn1613", 0x34567,
-            "      cpu   mn1613\n"
-            "      org   x'34567'\n"
-            "      mvwi  str, x'5678', skp\n"
-            "* test.bin: error: Unknown instruction\n"
-            "*    34569 : 0f06\n",
-            "       0 :                            cpu   mn1613\n"
-            "   34567 :                            org   x'34567'\n"
-            "   34567 : 7e1f 5678                  mvwi  str, x'5678', skp\n"
-            "test.bin: error: Unknown instruction\n"
-            "   34569 : 0f06\n",
-
+            R"(      cpu   mn1613
+      org   x'34567'
+      mvwi  str, x'5678', skp
+* test.bin: error: Unknown instruction
+*    34569 : 0f06
+)",
+            R"(       0 :                            cpu   mn1613
+   34567 :                            org   x'34567'
+   34567 : 7e1f 5678                  mvwi  str, x'5678', skp
+test.bin: error: Unknown instruction
+   34569 : 0f06
+)",
             0x7e1f, 0x5678, 0x0f00 | (0 << 4) | 6);
 }
 

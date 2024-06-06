@@ -421,7 +421,7 @@ static void test_undef() {
 
 static void test_data_constant() {
     BTEST("BYTE -128, 255", 0x80, 0xFF);
-    BTEST("BYTE 'A', '\"'", 0x41, 0x22);
+    BTEST(R"(BYTE 'A', '"')", 0x41, 0x22);
     BTEST("BYTE '9'-'0'",   0x09);
     BTEST("BYTE ''''",      0x27);
     ERRT("BYTE '''",        MISSING_CLOSING_QUOTE, "'''");
@@ -433,8 +433,8 @@ static void test_data_constant() {
     BTEST("DATA 'A''B'",    0x41, 0x27, 0x42, 0x00);
     ERRT("DATA  'A''B",     MISSING_CLOSING_QUOTE, "'A''B");
     BTEST("TEXT 'X'",       0x58);
-    BTEST("TEXT 'A''B\"C'", 0x41, 0x27, 0x42, 0x22, 0x43);
-    ERRT("TEXT 'A''B\"C",   MISSING_CLOSING_QUOTE, "'A''B\"C");
+    BTEST(R"(TEXT 'A''B"C')", 0x41, 0x27, 0x42, 0x22, 0x43);
+    ERRT(R"(TEXT 'A''B"C)",   MISSING_CLOSING_QUOTE, R"('A''B"C)");
     BERRT("BYTE 1, UNDEF", UNDEFINED_SYMBOL, "UNDEF", 0x01, 0x00);
     BERRT("DATA 1, UNDEF", UNDEFINED_SYMBOL, "UNDEF", 0x00, 0x01, 0x00, 0x00);
     BERRT("TEXT 1, UNDEF", UNDEFINED_SYMBOL, "UNDEF", 0x01, 0x00);

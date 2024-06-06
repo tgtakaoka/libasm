@@ -32,29 +32,31 @@ void test_asm_tms9900() {
     driver.setUpperHex(false);
 
     ASM("tms99105",
-            "        cpu   tms99105\n"
-            "* comment line\n"
-            "        aorg  >9abc\n"
-            "        am    @>4a4b(r1), @>4c4d(r1)\n"
-            "        byte  1\n"
-            "        byte  2, 3\n"
-            "label1: byte  4, 5, 6, 7\n"
-            "        data  >1234\n"
-            "        byte  8\n"
-            "        even\n"
-            "label2: ab    @label1, @label2\n",
-            "          0 :                            cpu   tms99105\n"
-            "          0 :                    * comment line\n"
-            "       9abc :                            aorg  >9abc\n"
-            "       9abc : 002a 4861 4a4b             am    @>4a4b(r1), @>4c4d(r1)\n"
-            "       9ac2 : 4c4d\n"
-            "       9ac4 : 01                         byte  1\n"
-            "       9ac5 :   02 03                    byte  2, 3\n"
-            "       9ac7 :   04 0506 07       label1: byte  4, 5, 6, 7\n"
-            "       9acc : 1234                       data  >1234\n"
-            "       9ace : 08                         byte  8\n"
-            "       9ad0 :                            even\n"
-            "       9ad0 : b820 9ac7 9ad0     label2: ab    @label1, @label2\n");
+            R"(        cpu   tms99105
+* comment line
+        aorg  >9abc
+        am    @>4a4b(r1), @>4c4d(r1)
+        byte  1
+        byte  2, 3
+label1: byte  4, 5, 6, 7
+        data  >1234
+        byte  8
+        even
+label2: ab    @label1, @label2
+)",
+            R"(          0 :                            cpu   tms99105
+          0 :                    * comment line
+       9abc :                            aorg  >9abc
+       9abc : 002a 4861 4a4b             am    @>4a4b(r1), @>4c4d(r1)
+       9ac2 : 4c4d
+       9ac4 : 01                         byte  1
+       9ac5 :   02 03                    byte  2, 3
+       9ac7 :   04 0506 07       label1: byte  4, 5, 6, 7
+       9acc : 1234                       data  >1234
+       9ace : 08                         byte  8
+       9ad0 :                            even
+       9ad0 : b820 9ac7 9ad0     label2: ab    @label1, @label2
+)");
 }
 
 void test_dis_tms9900() {
@@ -63,17 +65,19 @@ void test_dis_tms9900() {
     driver.setUpperHex(false);
 
     DIS16("tms99105", 0x9abc,
-            "      cpu   99105\n"
-            "      org   >9abc\n"
-            "      am    @>4a4b(r1), @>4c4d(r1)\n"
-            "* test.bin: error: Unknown instruction\n"
-            "*     9ac4 : 0383\n",
-            "       0 :                            cpu   99105\n"
-            "    9abc :                            org   >9abc\n"
-            "    9abc : 002a 4861 4a4b             am    @>4a4b(r1), @>4c4d(r1)\n"
-            "    9ac2 : 4c4d\n"
-            "test.bin: error: Unknown instruction\n"
-            "    9ac4 : 0383\n",
+            R"(      cpu   99105
+      org   >9abc
+      am    @>4a4b(r1), @>4c4d(r1)
+* test.bin: error: Unknown instruction
+*     9ac4 : 0383
+)",
+            R"(       0 :                            cpu   99105
+    9abc :                            org   >9abc
+    9abc : 002a 4861 4a4b             am    @>4a4b(r1), @>4c4d(r1)
+    9ac2 : 4c4d
+test.bin: error: Unknown instruction
+    9ac4 : 0383
+)",
             0x002a, 0x4861, 0x4a4b, 0x4c4d, 0x0383);
 }
 

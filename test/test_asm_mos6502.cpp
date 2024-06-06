@@ -1107,7 +1107,7 @@ static void test_error() {
 
 static void test_data_constant() {
     TEST(".BYTE -128, 255", 0x80, 0xFF);
-    TEST(".BYTE 'A', '\"'", 0x41, 0x22);
+    TEST(R"(.BYTE 'A', '"')", 0x41, 0x22);
     TEST(".BYTE '9'-'0'",   0x09);
     TEST(".BYTE ''''",      0x27);
     TEST(".BYTE '''",       0x27);
@@ -1124,14 +1124,14 @@ static void test_data_constant() {
     ERUS(".WORD 1, UNDEF", "UNDEF", 0x01, 0x00, 0x00, 0x00);
 
     TEST("FCB -128, 255", 0x80, 0xFF);
-    TEST("FCB 'A', '\"'", 0x41, 0x22);
+    TEST(R"(FCB 'A', '"')", 0x41, 0x22);
     TEST("FCB '9'-'0'",   0x09);
     TEST("FCB ''''",      0x27);
     TEST("FCB '''",       0x27);
     TEST("FCB ''");
     ERRT("FCB '",         MISSING_CLOSING_QUOTE, "'");
-    TEST("FCB \"\"");
-    TEST("FCB \"\"\"\"",  0x22);
+    TEST(R"(FCB "")");
+    TEST(R"(FCB """")",   0x22);
     TEST("FCB 'A''B',0",  0x41, 0x27, 0x42, 0x00);
     ERRT("FCB 'A''B,0",   MISSING_CLOSING_QUOTE, "'A''B,0");
     TEST("FDB -128, 255", 0x80, 0xFF, 0xFF, 0x00);

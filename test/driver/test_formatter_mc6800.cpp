@@ -32,16 +32,18 @@ void test_asm_mc6800() {
     driver.setUpperHex(false);
 
     ASM("mc6800",
-            "        cpu   mc6800\n"
-            "* comment line\n"
-            "        org   $abcd\n"
-            "label1: equ   $f1f2\n"
-            "        subb  label1\n",
-            "          0 :                            cpu   mc6800\n"
-            "          0 :                    * comment line\n"
-            "       abcd :                            org   $abcd\n"
-            "       abcd : =f1f2              label1: equ   $f1f2\n"
-            "       abcd : f0 f1 f2                   subb  label1\n");
+            R"(        cpu   mc6800
+* comment line
+        org   $abcd
+label1: equ   $f1f2
+        subb  label1
+)",
+            R"(          0 :                            cpu   mc6800
+          0 :                    * comment line
+       abcd :                            org   $abcd
+       abcd : =f1f2              label1: equ   $f1f2
+       abcd : f0 f1 f2                   subb  label1
+)");
 }
 
 void test_dis_mc6800() {
@@ -50,16 +52,18 @@ void test_dis_mc6800() {
     driver.setUppercase(true);
 
     DIS8("mc6800", 0xabcd,
-            "      CPU   6800\n"
-            "      ORG   $ABCD\n"
-            "      SUBB  $F1F2\n"
-            "* test.bin: error: Unknown instruction\n"
-            "*     ABD0 : 83\n",
-            "       0 :                            CPU   6800\n"
-            "    ABCD :                            ORG   $ABCD\n"
-            "    ABCD : F0 F1 F2                   SUBB  $F1F2\n"
-            "test.bin: error: Unknown instruction\n"
-            "    ABD0 : 83\n",
+            R"(      CPU   6800
+      ORG   $ABCD
+      SUBB  $F1F2
+* test.bin: error: Unknown instruction
+*     ABD0 : 83
+)",
+            R"(       0 :                            CPU   6800
+    ABCD :                            ORG   $ABCD
+    ABCD : F0 F1 F2                   SUBB  $F1F2
+test.bin: error: Unknown instruction
+    ABD0 : 83
+)",
             0xf0, 0xf1, 0xf2, 0x83);
 }
 

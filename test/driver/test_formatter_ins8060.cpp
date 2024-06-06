@@ -30,38 +30,42 @@ void test_asm_ins8060() {
     PREP_ASM(ins8060::AsmIns8060, NationalDirective);
 
     ASM("ins8060",
-            "        cpu    ins8060\n"
-            "; comment line\n"
-            "        .=x'abcd\n"
-            "label:  and    @e(p1)\n"
-            "        .byte  h(label)\n"
-            "        .byte  l(label)\n"
-            "        .dbyte addr(label)\n"
-            "        .dbyte addr(x'1000)\n",
-            "          0 :                            cpu    ins8060\n"
-            "          0 :                    ; comment line\n"
-            "       ABCD :                            .=x'abcd\n"
-            "       ABCD : D5 80              label:  and    @e(p1)\n"
-            "       ABCF : AB                         .byte  h(label)\n"
-            "       ABD0 : CD                         .byte  l(label)\n"
-            "       ABD1 : CC AB                      .dbyte addr(label)\n"
-            "       ABD3 : FF 1F                      .dbyte addr(x'1000)\n");
+            R"(        cpu    ins8060
+; comment line
+        .=x'abcd
+label:  and    @e(p1)
+        .byte  h(label)
+        .byte  l(label)
+        .dbyte addr(label)
+        .dbyte addr(x'1000)
+)",
+            R"(          0 :                            cpu    ins8060
+          0 :                    ; comment line
+       ABCD :                            .=x'abcd
+       ABCD : D5 80              label:  and    @e(p1)
+       ABCF : AB                         .byte  h(label)
+       ABD0 : CD                         .byte  l(label)
+       ABD1 : CC AB                      .dbyte addr(label)
+       ABD3 : FF 1F                      .dbyte addr(x'1000)
+)");
 }
 
 void test_dis_ins8060() {
     PREP_DIS(ins8060::DisIns8060);
 
     DIS8("ins8060", 0xabcd,
-            "      cpu   sc/mp\n"
-            "      org   X'ABCD\n"
-            "      and   @e(p1)\n"
-            "; test.bin: error: Unknown instruction\n"
-            ";     ABCF : 09\n",
-            "       0 :                            cpu   sc/mp\n"
-            "    ABCD :                            org   X'ABCD\n"
-            "    ABCD : D5 80                      and   @e(p1)\n"
-            "test.bin: error: Unknown instruction\n"
-            "    ABCF : 09\n",
+            R"(      cpu   sc/mp
+      org   X'ABCD
+      and   @e(p1)
+; test.bin: error: Unknown instruction
+;     ABCF : 09
+)",
+            R"(       0 :                            cpu   sc/mp
+    ABCD :                            org   X'ABCD
+    ABCD : D5 80                      and   @e(p1)
+test.bin: error: Unknown instruction
+    ABCF : 09
+)",
             0xd5, 0x80, 0x09);
 }
 

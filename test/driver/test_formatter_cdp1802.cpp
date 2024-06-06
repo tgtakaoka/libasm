@@ -32,37 +32,41 @@ void test_asm_cdp1802() {
     driver.setUpperHex(false);
 
     ASM("cdp1804",
-            "        cpu   cdp1804\n"
-            ".. comment line\n"
-            "        org   x'abcd'\n"
-            "        scal  3, #8485\n"
-            "label:  dc    a(label)\n"
-            "symbol  =     x'1234'\n"
-            "        ldi   a.0(symbol)\n"
-            "        ldi   a.1(symbol)\n"
-            "        lbr   x'ab23'\n",
-            "          0 :                            cpu   cdp1804\n"
-            "          0 :                    .. comment line\n"
-            "       abcd :                            org   x'abcd'\n"
-            "       abcd : 68 83 84 85                scal  3, #8485\n"
-            "       abd1 : ab d1              label:  dc    a(label)\n"
-            "       abd3 : =1234              symbol  =     x'1234'\n"
-            "       abd3 : f8 34                      ldi   a.0(symbol)\n"
-            "       abd5 : f8 12                      ldi   a.1(symbol)\n"
-            "       abd7 : c0 ab 23                   lbr   x'ab23'\n");
+            R"(        cpu   cdp1804
+.. comment line
+        org   x'abcd'
+        scal  3, #8485
+label:  dc    a(label)
+symbol  =     x'1234'
+        ldi   a.0(symbol)
+        ldi   a.1(symbol)
+        lbr   x'ab23'
+)",
+            R"(          0 :                            cpu   cdp1804
+          0 :                    .. comment line
+       abcd :                            org   x'abcd'
+       abcd : 68 83 84 85                scal  3, #8485
+       abd1 : ab d1              label:  dc    a(label)
+       abd3 : =1234              symbol  =     x'1234'
+       abd3 : f8 34                      ldi   a.0(symbol)
+       abd5 : f8 12                      ldi   a.1(symbol)
+       abd7 : c0 ab 23                   lbr   x'ab23'
+)");
 
     driver.setOption("use-register", "on");
     driver.setOption("smart-branch", "on");
 
     ASM("cdp1804",
-            "        org   x'abcd'\n"
-            "        scal  r3, x'8485'\n"
-            "        lbr   x'ab23'\n"
-            "        br    x'ac23'\n",
-            "       abcd :                            org   x'abcd'\n"
-            "       abcd : 68 83 84 85                scal  r3, x'8485'\n"
-            "       abd1 : 30 23                      lbr   x'ab23'\n"
-            "       abd3 : c0 ac 23                   br    x'ac23'\n");
+            R"(        org   x'abcd'
+        scal  r3, x'8485'
+        lbr   x'ab23'
+        br    x'ac23'
+)",
+            R"(       abcd :                            org   x'abcd'
+       abcd : 68 83 84 85                scal  r3, x'8485'
+       abd1 : 30 23                      lbr   x'ab23'
+       abd3 : c0 ac 23                   br    x'ac23'
+)");
 }
 
 void test_dis_cdp1802() {
@@ -72,20 +76,22 @@ void test_dis_cdp1802() {
     EQ("use-register", OK, driver.setOption("use-register", "on"));
 
     DIS8("cdp1804", 0xabcd,
-            "      cpu   1804\n"
-            "      org   x'abcd'\n"
-            "      scal  r3, x'8485'\n"
-            ".. test.bin: error: Unknown instruction\n"
-            "..     abd1 : 68 0f\n"
-            "      lbr   x'ab23'\n"
-            "      br    x'ab23'\n",
-            "       0 :                            cpu   1804\n"
-            "    abcd :                            org   x'abcd'\n"
-            "    abcd : 68 83 84 85                scal  r3, x'8485'\n"
-            "test.bin: error: Unknown instruction\n"
-            "    abd1 : 68 0f\n"
-            "    abd3 : c0 ab 23                   lbr   x'ab23'\n"
-            "    abd6 : 30 23                      br    x'ab23'\n",
+            R"(      cpu   1804
+      org   x'abcd'
+      scal  r3, x'8485'
+.. test.bin: error: Unknown instruction
+..     abd1 : 68 0f
+      lbr   x'ab23'
+      br    x'ab23'
+)",
+            R"(       0 :                            cpu   1804
+    abcd :                            org   x'abcd'
+    abcd : 68 83 84 85                scal  r3, x'8485'
+test.bin: error: Unknown instruction
+    abd1 : 68 0f
+    abd3 : c0 ab 23                   lbr   x'ab23'
+    abd6 : 30 23                      br    x'ab23'
+)",
             0x68, 0x83, 0x84, 0x85, 0x68, 0x0f, 0xc0, 0xab, 0x23, 0x30, 0x23);
 }
 

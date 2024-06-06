@@ -32,16 +32,18 @@ void test_asm_i8048() {
     driver.setUpperHex(false);
 
     ASM("i8039",
-            "        cpu   i8039\n"
-            "; comment line\n"
-            "        org   0bcdh\n"
-            "data1:  equ   8ah\n"
-            "        orl   p1, #data1\n",
-            "          0 :                            cpu   i8039\n"
-            "          0 :                    ; comment line\n"
-            "        bcd :                            org   0bcdh\n"
-            "        bcd : =8a                data1:  equ   8ah\n"
-            "        bcd : 89 8a                      orl   p1, #data1\n");
+            R"(        cpu   i8039
+; comment line
+        org   0bcdh
+data1:  equ   8ah
+        orl   p1, #data1
+)",
+            R"(          0 :                            cpu   i8039
+          0 :                    ; comment line
+        bcd :                            org   0bcdh
+        bcd : =8a                data1:  equ   8ah
+        bcd : 89 8a                      orl   p1, #data1
+)");
 }
 
 void test_dis_i8048() {
@@ -50,16 +52,18 @@ void test_dis_i8048() {
     driver.setUppercase(true);
 
     DIS8("i8039", 0xbcd,
-            "      CPU   8039\n"
-            "      ORG   0BCDH\n"
-            "      ORL   P1, #8AH\n"
-            "; test.bin: error: Unknown instruction\n"
-            ";      BCF : 08\n",
-            "       0 :                            CPU   8039\n"
-            "     BCD :                            ORG   0BCDH\n"
-            "     BCD : 89 8A                      ORL   P1, #8AH\n"
-            "test.bin: error: Unknown instruction\n"
-            "     BCF : 08\n",
+            R"(      CPU   8039
+      ORG   0BCDH
+      ORL   P1, #8AH
+; test.bin: error: Unknown instruction
+;      BCF : 08
+)",
+            R"(       0 :                            CPU   8039
+     BCD :                            ORG   0BCDH
+     BCD : 89 8A                      ORL   P1, #8AH
+test.bin: error: Unknown instruction
+     BCF : 08
+)",
             0x89, 0x8A, 0x08);
 }
 

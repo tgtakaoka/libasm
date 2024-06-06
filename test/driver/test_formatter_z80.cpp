@@ -31,51 +31,56 @@ void test_asm_z80() {
 
     TestReader inc("data/db.inc");
     sources.add(inc);
-    inc.add("        defw  1234H, 5678H, 9ABCH\n"
-            "        defb  'a,', 'bc''de', 0\n"  // DB requires surrounding quotes
-            "        defs  2\n"                  // DS allocate spaces
-            "data1:  equ   8AH\n"
-            "data2:  defm  'A', '''', 'C'+80H, 'a''c'\n");
+    inc.add(R"(        defw  1234H, 5678H, 9ABCH
+        defb  'a,', 'bc''de', 0   ; DB requires surrounding quotes
+        defs  2                   ; DS allocate spaces
+data1:  equ   8AH
+data2:  defm  'A', '''', 'C'+80H, 'a''c'
+)");
 
     driver.setUpperHex(false);
 
     ASM("z80",
-            "        cpu   z80\n"
-            "; comment line\n"
-            "        org   0abcdh\n"
-            "        include \"data/db.inc\"\n"
-            "        res   0, (iy-128)\n"
-            "        set   7, (ix+127)\n"
-            "        ld    A, low data2\n",
-            "          0 :                            cpu   z80\n"
-            "          0 :                    ; comment line\n"
-            "       abcd :                            org   0abcdh\n"
-            "       abcd :                            include \"data/db.inc\"\n"
-            "(1)    abcd : 34 12 78 56 bc 9a          defw  1234H, 5678H, 9ABCH\n"
-            "(1)    abd3 : 61 2c 62 63 27 64          defb  'a,', 'bc''de', 0\n"
-            "       abd9 : 65 00\n"
-            "(1)    abdb :                            defs  2\n"
-            "(1)    abdd : =8a                data1:  equ   8AH\n"
-            "(1)    abdd : 41 27 c3 61 27 63  data2:  defm  'A', '''', 'C'+80H, 'a''c'\n"
-            "       abe3 : fd cb 80 86                res   0, (iy-128)\n"
-            "       abe7 : dd cb 7f fe                set   7, (ix+127)\n"
-            "       abeb : 3e dd                      ld    A, low data2\n");
+            R"(        cpu   z80
+; comment line
+        org   0abcdh
+        include "data/db.inc"
+        res   0, (iy-128)
+        set   7, (ix+127)
+        ld    A, low data2
+)",
+            R"(          0 :                            cpu   z80
+          0 :                    ; comment line
+       abcd :                            org   0abcdh
+       abcd :                            include "data/db.inc"
+(1)    abcd : 34 12 78 56 bc 9a          defw  1234H, 5678H, 9ABCH
+(1)    abd3 : 61 2c 62 63 27 64          defb  'a,', 'bc''de', 0   ; DB requires surrounding quotes
+       abd9 : 65 00
+(1)    abdb :                            defs  2                   ; DS allocate spaces
+(1)    abdd : =8a                data1:  equ   8AH
+(1)    abdd : 41 27 c3 61 27 63  data2:  defm  'A', '''', 'C'+80H, 'a''c'
+       abe3 : fd cb 80 86                res   0, (iy-128)
+       abe7 : dd cb 7f fe                set   7, (ix+127)
+       abeb : 3e dd                      ld    A, low data2
+)");
 }
 
 void test_dis_z80() {
     PREP_DIS(z80::DisZ80);
 
     DIS8("z80", 0xabcd,
-            "      cpu   z80\n"
-            "      org   0ABCDH\n"
-            "      res   0, (iy-128)\n"
-            "; test.bin: error: Unknown instruction\n"
-            ";     ABD1 : DD CB 00 EF\n",
-            "       0 :                            cpu   z80\n"
-            "    ABCD :                            org   0ABCDH\n"
-            "    ABCD : FD CB 80 86                res   0, (iy-128)\n"
-            "test.bin: error: Unknown instruction\n"
-            "    ABD1 : DD CB 00 EF\n",
+            R"(      cpu   z80
+      org   0ABCDH
+      res   0, (iy-128)
+; test.bin: error: Unknown instruction
+;     ABD1 : DD CB 00 EF
+)",
+            R"(       0 :                            cpu   z80
+    ABCD :                            org   0ABCDH
+    ABCD : FD CB 80 86                res   0, (iy-128)
+test.bin: error: Unknown instruction
+    ABD1 : DD CB 00 EF
+)",
             0xfd, 0xcb, 0x80, 0x86, 0xdd, 0xcb, 0x00, 0xef);
 }
 

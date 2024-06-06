@@ -30,16 +30,18 @@ void test_asm_scn2650() {
     PREP_ASM(scn2650::AsmScn2650, IntelDirective);
 
     ASM("scn2650",
-            "        cpu     scn2650\n"
-            "* comment line\n"
-            "        org     h'7bcd'\n"
-            "label1: equ     h'7def'\n"
-            "        loda,r0 *label1, r0, +\n",
-            "          0 :                            cpu     scn2650\n"
-            "          0 :                    * comment line\n"
-            "       7BCD :                            org     h'7bcd'\n"
-            "       7BCD : =7DEF              label1: equ     h'7def'\n"
-            "       7BCD : 0C BD EF                   loda,r0 *label1, r0, +\n");
+            R"(        cpu     scn2650
+* comment line
+        org     h'7bcd'
+label1: equ     h'7def'
+        loda,r0 *label1, r0, +
+)",
+            R"(          0 :                            cpu     scn2650
+          0 :                    * comment line
+       7BCD :                            org     h'7bcd'
+       7BCD : =7DEF              label1: equ     h'7def'
+       7BCD : 0C BD EF                   loda,r0 *label1, r0, +
+)");
 }
 
 void test_dis_scn2650() {
@@ -48,16 +50,18 @@ void test_dis_scn2650() {
     driver.setUpperHex(false);
 
     DIS8("scn2650", 0x7bcd,
-            "      cpu     2650\n"
-            "      org     h'7bcd'\n"
-            "      loda,r0 *h'7def', r0, +\n"
-            "* test.bin: error: Unknown instruction\n"
-            "*     7bd0 : 90\n",
-            "       0 :                            cpu     2650\n"
-            "    7bcd :                            org     h'7bcd'\n"
-            "    7bcd : 0c bd ef                   loda,r0 *h'7def', r0, +\n"
-            "test.bin: error: Unknown instruction\n"
-            "    7bd0 : 90\n",
+            R"(      cpu     2650
+      org     h'7bcd'
+      loda,r0 *h'7def', r0, +
+* test.bin: error: Unknown instruction
+*     7bd0 : 90
+)",
+            R"(       0 :                            cpu     2650
+    7bcd :                            org     h'7bcd'
+    7bcd : 0c bd ef                   loda,r0 *h'7def', r0, +
+test.bin: error: Unknown instruction
+    7bd0 : 90
+)",
             0x0C, 0xBD, 0xEF, 0x90);
 }
 

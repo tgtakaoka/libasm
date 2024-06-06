@@ -33,28 +33,30 @@ void test_asm_i8051() {
     driver.setOption("smart-branch", "on");
 
     ASM("i8051",
-            "        cpu   i8051\n"
-            "; comment line\n"
-            "        org   0abcdh\n"
-            "data1:  equ   0b0h\n"
-            "        anl   c, /data1.1\n"
-            "        ljmp  label2\n"
-            "        lcall label2\n"
-            "        ajmp  label3\n"
-            "        acall label3\n"
-            "label2: equ   0ac00h\n"
-            "label3: equ   0b000h\n",
-            "          0 :                            cpu   i8051\n"
-            "          0 :                    ; comment line\n"
-            "       abcd :                            org   0abcdh\n"
-            "       abcd : =b0                data1:  equ   0b0h\n"
-            "       abcd : b0 b1                      anl   c, /data1.1\n"
-            "       abcf : 81 00                      ljmp  label2\n"
-            "       abd1 : 91 00                      lcall label2\n"
-            "       abd3 : 02 b0 00                   ajmp  label3\n"
-            "       abd6 : 12 b0 00                   acall label3\n"
-            "       abd9 : =ac00              label2: equ   0ac00h\n"
-            "       abd9 : =b000              label3: equ   0b000h\n");
+            R"(        cpu   i8051
+; comment line
+        org   0abcdh
+data1:  equ   0b0h
+        anl   c, /data1.1
+        ljmp  label2
+        lcall label2
+        ajmp  label3
+        acall label3
+label2: equ   0ac00h
+label3: equ   0b000h
+)",
+            R"(          0 :                            cpu   i8051
+          0 :                    ; comment line
+       abcd :                            org   0abcdh
+       abcd : =b0                data1:  equ   0b0h
+       abcd : b0 b1                      anl   c, /data1.1
+       abcf : 81 00                      ljmp  label2
+       abd1 : 91 00                      lcall label2
+       abd3 : 02 b0 00                   ajmp  label3
+       abd6 : 12 b0 00                   acall label3
+       abd9 : =ac00              label2: equ   0ac00h
+       abd9 : =b000              label3: equ   0b000h
+)");
 }
 
 void test_dis_i8051() {
@@ -63,16 +65,18 @@ void test_dis_i8051() {
     driver.setUpperHex(false);
 
     DIS8("i8051", 0xabcd,
-            "      cpu   8051\n"
-            "      org   0abcdh\n"
-            "      anl   c, /0b0h.1\n"
-            "; test.bin: error: Unknown instruction\n"
-            ";     abcf : a5\n",
-            "       0 :                            cpu   8051\n"
-            "    abcd :                            org   0abcdh\n"
-            "    abcd : b0 b1                      anl   c, /0b0h.1\n"
-            "test.bin: error: Unknown instruction\n"
-            "    abcf : a5\n",
+            R"(      cpu   8051
+      org   0abcdh
+      anl   c, /0b0h.1
+; test.bin: error: Unknown instruction
+;     abcf : a5
+)",
+            R"(       0 :                            cpu   8051
+    abcd :                            org   0abcdh
+    abcd : b0 b1                      anl   c, /0b0h.1
+test.bin: error: Unknown instruction
+    abcf : a5
+)",
             0xb0, 0xb1, 0xa5);
 }
 

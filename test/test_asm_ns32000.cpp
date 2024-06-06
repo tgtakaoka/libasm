@@ -702,7 +702,7 @@ static void test_comment() {
     ERRT("MOVSB [ U , W ] # comment", ILLEGAL_OPERAND,  "[ U , W ] # comment");
 
     COMM(".byte   -128, 255 # comment", "# comment", 0x80, 0xFF);
-    COMM(".ascii  \"TEXT\"  # comment", "# comment", 0x54, 0x45, 0x58, 0x54);
+    COMM(R"(.ascii  "TEXT"  # comment)", "# comment", 0x54, 0x45, 0x58, 0x54);
     COMM(".word   -128, 255 ; comment", "; comment", 0x80, 0xFF, 0xFF, 0x00);
     COMM(".double x'1234    # comment", "# comment", 0x34, 0x12, 0x00, 0x00);
     COMM(".float  1.0       # comment", "# comment", 0x00, 0x00, 0x80, 0x3F);
@@ -768,38 +768,38 @@ static void test_undef() {
 
 static void test_data_constant() {
     TEST(".byte   -128, 255",    0x80, 0xFF);
-    TEST(".byte   'A', '\"'",    0x41, 0x22);
+    TEST(R"(.byte 'A', '"')",    0x41, 0x22);
     TEST(".byte   '9'-'0'",      0x09);
-    TEST(".byte   '\\''",        0x27);
+    TEST(R"(.byte   '\'')",      0x27);
     ERRT(".byte   '''",          ILLEGAL_CONSTANT, "'''");
     ERRT(".byte   ''",           ILLEGAL_CONSTANT, "''");
-    TEST(".byte   \"A\\\"B\",0", 0x41, 0x22, 0x42, 0x00);
-    ERRT(".byte   \"A\\\"B,0",   MISSING_CLOSING_DQUOTE, "\"A\\\"B,0");
-    TEST(".byte   \"\\x12\"",    0x78, 0x31, 0x32);
-    TEST(".ascii  \"A'B\\\"C\"", 0x41, 0x27, 0x42, 0x22, 0x43);
-    TEST(".ascii  \"A\", \"C\"", 0x41, 0x43);
-    TEST(".ascii   \"\\x12\"",   0x78, 0x31, 0x32);
+    TEST(R"(.byte "A\"B",0)",    0x41, 0x22, 0x42, 0x00);
+    ERRT(R"(.byte "A\"B,0)",     MISSING_CLOSING_DQUOTE, R"("A\"B,0)");
+    TEST(R"(.byte "\x12")",      0x78, 0x31, 0x32);
+    TEST(R"(.ascii "A'B\"C")"  , 0x41, 0x27, 0x42, 0x22, 0x43);
+    TEST(R"(.ascii "A", "C")",   0x41, 0x43);
+    TEST(R"(.ascii "\x12")",     0x78, 0x31, 0x32);
     TEST(".word   -128, 255",    0x80, 0xFF, 0xFF, 0x00);
     TEST(".word   'X'",          0x58, 0x00);
     TEST(".word   'X'+0",        0x58, 0x00);
-    TEST(".word   \"X\"",        0x58, 0x00);
-    TEST(".word   \"A'B\"",      0x41, 0x27, 0x42, 0x00);
-    ERRT(".word   \"A'B",        MISSING_CLOSING_DQUOTE, "\"A'B");
+    TEST(R"(.word "X")",         0x58, 0x00);
+    TEST(R"(.word "A'B")",       0x41, 0x27, 0x42, 0x00);
+    ERRT(R"(.word  "A'B)",       MISSING_CLOSING_DQUOTE, R"("A'B)");
     TEST(".double x'1234",       0x34, 0x12, 0x00, 0x00);
     TEST(".double x'12345678",   0x78, 0x56, 0x34, 0x12);
     TEST(".double 'X'",          0x58, 0x00, 0x00, 0x00);
-    TEST(".double \"X\"",        0x58, 0x00, 0x00, 0x00);
-    TEST(".double \"A'B\\\"C\"", 0x41, 0x27, 0x42, 0x22, 0x43, 0x00, 0x00, 0x00);
-    ERRT(".double \"A'B\\\"C",   MISSING_CLOSING_DQUOTE, "\"A'B\\\"C");
+    TEST(R"(.double "X")",       0x58, 0x00, 0x00, 0x00);
+    TEST(R"(.double "A'B\"C")",  0x41, 0x27, 0x42, 0x22, 0x43, 0x00, 0x00, 0x00);
+    ERRT(R"(.double "A'B\"C)",   MISSING_CLOSING_DQUOTE, R"("A'B\"C)");
     ERUS(".byte   1, UNDEF", "UNDEF", 0x01, 0x00);
     ERUS(".word   1, UNDEF", "UNDEF", 0x01, 0x00, 0x00, 0x00);
     ERUS(".double 1, UNDEF", "UNDEF", 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00);
 
-    ERRT(".ascii \""
+    ERRT(R"(.ascii ")"
          "1234567890" "1234567890" "1234567890" "1234567890" "1234567890" "1234567890"
-         "1234567890\"",
+         R"(1234567890")",
          NO_MEMORY,
-         "567890\"",
+         R"(567890")",
          0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37, 0x38, 0x39, 0x30,
          0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37, 0x38, 0x39, 0x30,
          0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37, 0x38, 0x39, 0x30,

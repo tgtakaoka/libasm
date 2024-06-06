@@ -32,16 +32,18 @@ void test_asm_mc6805() {
     driver.setUpperHex(false);
 
     ASM("mc146805",
-            "        cpu   mc146805\n"
-            "* comment line\n"
-            "        org   $1234\n"
-            "label1: equ   $0800\n"
-            "        stx   label1, x\n",
-            "          0 :                            cpu   mc146805\n"
-            "          0 :                    * comment line\n"
-            "       1234 :                            org   $1234\n"
-            "       1234 : =800               label1: equ   $0800\n"
-            "       1234 : df 08 00                   stx   label1, x\n");
+            R"(        cpu   mc146805
+* comment line
+        org   $1234
+label1: equ   $0800
+        stx   label1, x
+)",
+            R"(          0 :                            cpu   mc146805
+          0 :                    * comment line
+       1234 :                            org   $1234
+       1234 : =800               label1: equ   $0800
+       1234 : df 08 00                   stx   label1, x
+)");
 }
 
 void test_dis_mc6805() {
@@ -51,20 +53,22 @@ void test_dis_mc6805() {
     driver.setUppercase(true);
 
     DIS8("mc146805", 0x1234,
-            "      CPU   146805\n"
-            "      ORG   $1234\n"
-            "      STX   $4000,X\n"
-            "* test.bin: error: Unknown instruction\n"
-            "*     1237 : 82\n"
-            "* test.bin: error: Overflow range: \"$2000\"\n"
-            "*     1238 : c6 20 00                   LDA   $2000\n",
-            "       0 :                            CPU   146805\n"
-            "    1234 :                            ORG   $1234\n"
-            "    1234 : df 40 00                   STX   $4000,X\n"
-            "test.bin: error: Unknown instruction\n"
-            "    1237 : 82\n"
-            "test.bin: error: Overflow range: \"$2000\"\n"
-            "    1238 : c6 20 00                   LDA   $2000\n",
+            R"(      CPU   146805
+      ORG   $1234
+      STX   $4000,X
+* test.bin: error: Unknown instruction
+*     1237 : 82
+* test.bin: error: Overflow range: "$2000"
+*     1238 : c6 20 00                   LDA   $2000
+)",
+            R"(       0 :                            CPU   146805
+    1234 :                            ORG   $1234
+    1234 : df 40 00                   STX   $4000,X
+test.bin: error: Unknown instruction
+    1237 : 82
+test.bin: error: Overflow range: "$2000"
+    1238 : c6 20 00                   LDA   $2000
+)",
             0xdf, 0x40, 0x00, 0x82, 0xC6, 0x20, 0x00);
 }
 

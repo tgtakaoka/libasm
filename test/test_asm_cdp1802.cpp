@@ -768,7 +768,7 @@ static void test_usereg() {
         TEST("DBNZ R10,1234H",              0x68, 0x2A, 0x12, 0x34);
     }
 
-    TEST("OPTION \"USE-REGISTER\", ENABLE");
+    TEST(R"(OPTION "USE-REGISTER", ENABLE)");
 
     ERRT("LDN R0",  REGISTER_NOT_ALLOWED, "R0", 0x07);
     TEST("ldn r1",  0x01);

@@ -32,30 +32,32 @@ void test_asm_mos6502() {
     driver.setUpperHex(false);
 
     ASM("mos6502",
-            "        cpu   mos6502\n"
-            "; comment line\n"
-            "label1 = $f1f2\n"
-            "        *= $abcd\n"
-            "        sbc   label1\n"
-            "label2 = 2\n"
-            "label3 := 3\n"
-            "        lda   #label2\n"
-            "        ldy   #label3\n"
-            "label4: bne   label4\n"
-            "        .byte 'abc'\n"
-            "        fcb   'xyz'\n",
-            "          0 :                            cpu   mos6502\n"
-            "          0 :                    ; comment line\n"
-            "          0 : =f1f2              label1 = $f1f2\n"
-            "       abcd :                            *= $abcd\n"
-            "       abcd : ed f2 f1                   sbc   label1\n"
-            "       abd0 : =2                 label2 = 2\n"
-            "       abd0 : =3                 label3 := 3\n"
-            "       abd0 : a9 02                      lda   #label2\n"
-            "       abd2 : a0 03                      ldy   #label3\n"
-            "       abd4 : d0 fe              label4: bne   label4\n"
-            "       abd6 : 61 62 63                   .byte 'abc'\n"
-            "       abd9 : 78 79 7a                   fcb   'xyz'\n");
+            R"(        cpu   mos6502
+; comment line
+label1 = $f1f2
+        *= $abcd
+        sbc   label1
+label2 = 2
+label3 := 3
+        lda   #label2
+        ldy   #label3
+label4: bne   label4
+        .byte 'abc'
+        fcb   'xyz'
+)",
+            R"(          0 :                            cpu   mos6502
+          0 :                    ; comment line
+          0 : =f1f2              label1 = $f1f2
+       abcd :                            *= $abcd
+       abcd : ed f2 f1                   sbc   label1
+       abd0 : =2                 label2 = 2
+       abd0 : =3                 label3 := 3
+       abd0 : a9 02                      lda   #label2
+       abd2 : a0 03                      ldy   #label3
+       abd4 : d0 fe              label4: bne   label4
+       abd6 : 61 62 63                   .byte 'abc'
+       abd9 : 78 79 7a                   fcb   'xyz'
+)");
 }
 
 void test_asm_w65816() {
@@ -65,28 +67,30 @@ void test_asm_w65816() {
     driver.setOption("smart-branch", "on");
 
     ASM("w65c816",
-            "        cpu   w65c816\n"
-            "; comment line\n"
-            "label1 = $f2f1f0\n"
-            "        *=$abcdef\n"
-            "        sbc   label1\n"
-            "        longa on\n"
-            "        adc   #$1234\n"
-            "        brl   label2\n"
-            "        bra   label3\n"
-            "label2 = $abce00\n"
-            "label3 = $abd000\n",
-            "          0 :                            cpu   w65c816\n"
-            "          0 :                    ; comment line\n"
-            "          0 : =f2f1f0            label1 = $f2f1f0\n"
-            "     abcdef :                            *=$abcdef\n"
-            "     abcdef : ef f0 f1 f2                sbc   label1\n"
-            "     abcdf3 :                            longa on\n"
-            "     abcdf3 : 69 34 12                   adc   #$1234\n"
-            "     abcdf6 : 80 08                      brl   label2\n"
-            "     abcdf8 : 82 05 02                   bra   label3\n"
-            "     abcdfb : =abce00            label2 = $abce00\n"
-            "     abcdfb : =abd000            label3 = $abd000\n");
+            R"(        cpu   w65c816
+; comment line
+label1 = $f2f1f0
+        *=$abcdef
+        sbc   label1
+        longa on
+        adc   #$1234
+        brl   label2
+        bra   label3
+label2 = $abce00
+label3 = $abd000
+)",
+            R"(          0 :                            cpu   w65c816
+          0 :                    ; comment line
+          0 : =f2f1f0            label1 = $f2f1f0
+     abcdef :                            *=$abcdef
+     abcdef : ef f0 f1 f2                sbc   label1
+     abcdf3 :                            longa on
+     abcdf3 : 69 34 12                   adc   #$1234
+     abcdf6 : 80 08                      brl   label2
+     abcdf8 : 82 05 02                   bra   label3
+     abcdfb : =abce00            label2 = $abce00
+     abcdfb : =abd000            label3 = $abd000
+)");
 }
 
 void test_dis_mos6502() {
@@ -95,16 +99,18 @@ void test_dis_mos6502() {
     driver.setUpperHex(false);
 
     DIS8("mos6502", 0xabcd,
-            "      cpu   6502\n"
-            "      org   $abcd\n"
-            "      sbc   $f1f2\n"
-            "; test.bin: error: Unknown instruction\n"
-            ";     abd0 : 80\n",
-            "       0 :                            cpu   6502\n"
-            "    abcd :                            org   $abcd\n"
-            "    abcd : ed f2 f1                   sbc   $f1f2\n"
-            "test.bin: error: Unknown instruction\n"
-            "    abd0 : 80\n",
+            R"(      cpu   6502
+      org   $abcd
+      sbc   $f1f2
+; test.bin: error: Unknown instruction
+;     abd0 : 80
+)",
+            R"(       0 :                            cpu   6502
+    abcd :                            org   $abcd
+    abcd : ed f2 f1                   sbc   $f1f2
+test.bin: error: Unknown instruction
+    abd0 : 80
+)",
             0xed, 0xf2, 0xf1, 0x80);
 }
 
@@ -116,18 +122,20 @@ void test_dis_w65816() {
     driver.setOption("longa", "on");
 
     DIS8("w65c816", 0xabcdef,
-            "      CPU   65816\n"
-            "      ORG   $ABCDEF\n"
-            "      SBC   $F2F1F0\n"
-            "      ADC   #$1234\n"
-            "; test.bin: error: Overwrap segment/bank/page boundary: \"$AC4DF8\"\n"
-            ";   ABCDF6 : 82 FF 7F                   BRL   $AC4DF8\n",
-            "       0 :                            CPU   65816\n"
-            "  ABCDEF :                            ORG   $ABCDEF\n"
-            "  ABCDEF : EF F0 F1 F2                SBC   $F2F1F0\n"
-            "  ABCDF3 : 69 34 12                   ADC   #$1234\n"
-            "test.bin: error: Overwrap segment/bank/page boundary: \"$AC4DF8\"\n"
-            "  ABCDF6 : 82 FF 7F                   BRL   $AC4DF8\n",
+            R"(      CPU   65816
+      ORG   $ABCDEF
+      SBC   $F2F1F0
+      ADC   #$1234
+; test.bin: error: Overwrap segment/bank/page boundary: "$AC4DF8"
+;   ABCDF6 : 82 FF 7F                   BRL   $AC4DF8
+)",
+            R"(       0 :                            CPU   65816
+  ABCDEF :                            ORG   $ABCDEF
+  ABCDEF : EF F0 F1 F2                SBC   $F2F1F0
+  ABCDF3 : 69 34 12                   ADC   #$1234
+test.bin: error: Overwrap segment/bank/page boundary: "$AC4DF8"
+  ABCDF6 : 82 FF 7F                   BRL   $AC4DF8
+)",
             0xef, 0xf0, 0xf1, 0xf2, 0x69, 0x34, 0x12, 0x82, 0xFF, 0x7F);
 }
 

@@ -466,7 +466,7 @@ void test_undef() {
 
 void test_data_constant() {
     TEST("BYTE -128, 255", 0x80, 0xFF);
-    TEST("BYTE 'A', '\"'", 0x41, 0x22);
+    TEST(R"(BYTE 'A', '"')", 0x41, 0x22);
     TEST("BYTE '9'-'0'",   0x09);
     TEST("BYTE ''''",      0x27);
     ERRT("BYTE '''",       MISSING_CLOSING_QUOTE, "'''");
@@ -478,8 +478,8 @@ void test_data_constant() {
     TEST("DATA 'A''B'",    0x41, 0x27, 0x42, 0x00);
     ERRT("DATA  'A''B",    MISSING_CLOSING_QUOTE, "'A''B");
     TEST("TEXT 'X'",       0x58);
-    TEST("TEXT 'A''B\"C'", 0x41, 0x27, 0x42, 0x22, 0x43);
-    ERRT("TEXT 'A''B\"C",  MISSING_CLOSING_QUOTE, "'A''B\"C");
+    TEST(R"(TEXT 'A''B"C')", 0x41, 0x27, 0x42, 0x22, 0x43);
+    ERRT(R"(TEXT 'A''B"C)",  MISSING_CLOSING_QUOTE, R"('A''B"C)");
     ERUS("BYTE 1, UNDEF", "UNDEF", 0x01, 0x00);
     ERUS("DATA 1, UNDEF", "UNDEF", 0x00, 0x01, 0x00, 0x00);
     ERUS("TEXT 1, UNDEF", "UNDEF", 0x01, 0x00);

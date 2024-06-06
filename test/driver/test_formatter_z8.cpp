@@ -32,14 +32,16 @@ void test_asm_z8() {
     driver.setUpperHex(false);
 
     ASM("z8",
-            "        cpu     z8\n"
-            "; comment line\n"
-            "        org     0abcdh\n"
-            "        ld      r12, 0c9h(r8)\n",
-            "          0 :                            cpu     z8\n"
-            "          0 :                    ; comment line\n"
-            "       abcd :                            org     0abcdh\n"
-            "       abcd : c7 c8 c9                   ld      r12, 0c9h(r8)");
+            R"(        cpu     z8
+; comment line
+        org     0abcdh
+        ld      r12, 0c9h(r8)
+)",
+            R"(          0 :                            cpu     z8
+          0 :                    ; comment line
+       abcd :                            org     0abcdh
+       abcd : c7 c8 c9                   ld      r12, 0c9h(r8)
+)");
 }
 
 void test_dis_z8() {
@@ -48,16 +50,18 @@ void test_dis_z8() {
     driver.setUpperHex(false);
 
     DIS8("z8", 0xabcd,
-            "      cpu     z8\n"
-            "      org     %abcd\n"
-            "      ld      r12, %c9(r8)\n"
-            "; test.bin: error: Unknown instruction\n"
-            ";     abd0 : 0f\n",
-            "       0 :                            cpu     z8\n"
-            "    abcd :                            org     %abcd\n"
-            "    abcd : c7 c8 c9                   ld      r12, %c9(r8)\n"
-            "test.bin: error: Unknown instruction\n"
-            "    abd0 : 0f\n",
+            R"(      cpu     z8
+      org     %abcd
+      ld      r12, %c9(r8)
+; test.bin: error: Unknown instruction
+;     abd0 : 0f
+)",
+            R"(       0 :                            cpu     z8
+    abcd :                            org     %abcd
+    abcd : c7 c8 c9                   ld      r12, %c9(r8)
+test.bin: error: Unknown instruction
+    abd0 : 0f
+)",
             0xc7, 0xc8, 0xc9, 0x0f);
 }
 

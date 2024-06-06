@@ -2834,7 +2834,7 @@ static void test_error() {
 
 static void test_data_constant() {
     TEST("DB -128, 255", 0x80, 0xFF);
-    TEST("DB 'A', '\"'", 0x41, 0x22);
+    TEST(R"(DB 'A', '"')", 0x41, 0x22);
     TEST("DB '9'-'0'",   0x09);
     TEST("DB ''''",      0x27);
     ERRT("DB '''",       MISSING_CLOSING_QUOTE, "'''");
@@ -2844,8 +2844,8 @@ static void test_data_constant() {
     TEST("DW 'A''B'",    0x41, 0x27, 0x42, 0x00);
     ERRT("DW 'A''B",     MISSING_CLOSING_QUOTE, "'A''B");
     TEST("DD 12345678H", 0x78, 0x56, 0x34, 0x12);
-    TEST("DD 'A''B\"C'", 0x41, 0x27, 0x42, 0x22, 0x43, 0x00, 0x00, 0x00);
-    ERRT("DD 'A''B\"C",  MISSING_CLOSING_QUOTE, "'A''B\"C");
+    TEST(R"(DD 'A''B"C')", 0x41, 0x27, 0x42, 0x22, 0x43, 0x00, 0x00, 0x00);
+    ERRT(R"(DD 'A''B"C)",  MISSING_CLOSING_QUOTE, R"('A''B"C)");
     ERUS("DB 1, UNDEF", "UNDEF", 0x01, 0x00);
     ERUS("DW 1, UNDEF", "UNDEF", 0x01, 0x00, 0x00, 0x00);
     ERUS("DD 1, UNDEF", "UNDEF", 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00);

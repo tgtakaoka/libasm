@@ -32,22 +32,25 @@ void test_asm_tms32010() {
     driver.setUpperHex(false);
 
     ASM("tms32010",
-            "        .cpu  tms32010\n"
-            "* comment line\n"
-            "        .org  789h\n"
-            "        call  0fedh\n"
-            "        sacl  *+, 0, ar0\n"
-            "label:  .word label\n"
-            "        .byte 1,'''',3\n"
-            "        .string \"A\"\"B'C\"\n",
-            "          0 :                            .cpu  tms32010\n"
-            "          0 :                    * comment line\n"
-            "        789 :                            .org  789h\n"
-            "        789 : f800 0fed                  call  0fedh\n"
-            "        78b : 50a0                       sacl  *+, 0, ar0\n"
-            "        78c : 078c               label:  .word label\n"
-            "        78d : 0001 0027 0003             .byte 1,'''',3\n"
-            "        790 : 2241 2742 0043             .string \"A\"\"B'C\"\n");
+            R"(        .cpu  tms32010
+* comment line
+        .org  789h
+        call  0fedh
+        sacl  *+, 0, ar0
+label:  .word label
+        .byte 1,'''',3
+        .string "A""B'C"
+)",
+
+            R"(          0 :                            .cpu  tms32010
+          0 :                    * comment line
+        789 :                            .org  789h
+        789 : f800 0fed                  call  0fedh
+        78b : 50a0                       sacl  *+, 0, ar0
+        78c : 078c               label:  .word label
+        78d : 0001 0027 0003             .byte 1,'''',3
+        790 : 2241 2742 0043             .string "A""B'C"
+)");
 }
 
 void test_dis_tms32010() {
@@ -56,18 +59,20 @@ void test_dis_tms32010() {
     driver.setUpperHex(false);
 
     DIS16("tms32010", 0x789,
-            "      cpu   32010\n"
-            "      org   789h\n"
-            "      call  0fedh\n"
-            "      sacl  *+, 0, ar0\n"
-            "* test.bin: error: Unknown instruction\n"
-            "*      78c : 0086\n",
-            "       0 :                            cpu   32010\n"
-            "     789 :                            org   789h\n"
-            "     789 : f800 0fed                  call  0fedh\n"
-            "     78b : 50a0                       sacl  *+, 0, ar0\n"
-            "test.bin: error: Unknown instruction\n"
-            "     78c : 0086\n",
+            R"(      cpu   32010
+      org   789h
+      call  0fedh
+      sacl  *+, 0, ar0
+* test.bin: error: Unknown instruction
+*      78c : 0086
+)",
+            R"(       0 :                            cpu   32010
+     789 :                            org   789h
+     789 : f800 0fed                  call  0fedh
+     78b : 50a0                       sacl  *+, 0, ar0
+test.bin: error: Unknown instruction
+     78c : 0086
+)",
             0xf800, 0x0fed, 0x50a0, 0x0086);
 }
 

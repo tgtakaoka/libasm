@@ -37,35 +37,37 @@ void test_symbols_mc6809() {
     driver.setLineNumber(true);
 
     ASM("mc6809",
-            "label1  equ   $1234\n"
-            "label1  set   $1234\n"
-            "label1  equ   $3456\n"
-            "var1    set   $1234\n"
-            "var1    equ   $1234\n"
-            "var1    set   $1234\n"
-            "var1    set   $3456\n"
-            "        org   $1234\n"
-            "var1\n"
-            "label2  bra   label2\n"
-            "label3  fdb   label3\n"
-            "label2:\n",
-            "       1/       0 : =1234              label1  equ   $1234\n"
-            "mc6809:2:1: error: Duplicate label: \"label1  set   $1234\"\n"
-            "       2/       0 :                    label1  set   $1234\n"
-            "mc6809:3:1: error: Duplicate label: \"label1  equ   $3456\"\n"
-            "       3/       0 :                    label1  equ   $3456\n"
-            "       4/       0 : =1234              var1    set   $1234\n"
-            "mc6809:5:1: error: Duplicate label: \"var1    equ   $1234\"\n"
-            "       5/       0 :                    var1    equ   $1234\n"
-            "       6/       0 : =1234              var1    set   $1234\n"
-            "       7/       0 : =3456              var1    set   $3456\n"
-            "       8/    1234 :                            org   $1234\n"
-            "mc6809:9:1: error: Duplicate label: \"var1\"\n"
-            "       9/    1234 :                    var1\n"
-            "      10/    1234 : 20 FE              label2  bra   label2\n"
-            "      11/    1236 : 12 36              label3  fdb   label3\n"
-            "mc6809:12:1: error: Duplicate label: \"label2:\"\n"
-            "      12/    1238 :                    label2:\n");
+            R"(label1  equ   $1234
+label1  set   $1234
+label1  equ   $3456
+var1    set   $1234
+var1    equ   $1234
+var1    set   $1234
+var1    set   $3456
+        org   $1234
+var1
+label2  bra   label2
+label3  fdb   label3
+label2:
+)",
+            R"(       1/       0 : =1234              label1  equ   $1234
+mc6809:2:1: error: Duplicate label: "label1  set   $1234"
+       2/       0 :                    label1  set   $1234
+mc6809:3:1: error: Duplicate label: "label1  equ   $3456"
+       3/       0 :                    label1  equ   $3456
+       4/       0 : =1234              var1    set   $1234
+mc6809:5:1: error: Duplicate label: "var1    equ   $1234"
+       5/       0 :                    var1    equ   $1234
+       6/       0 : =1234              var1    set   $1234
+       7/       0 : =3456              var1    set   $3456
+       8/    1234 :                            org   $1234
+mc6809:9:1: error: Duplicate label: "var1"
+       9/    1234 :                    var1
+      10/    1234 : 20 FE              label2  bra   label2
+      11/    1236 : 12 36              label3  fdb   label3
+mc6809:12:1: error: Duplicate label: "label2:"
+      12/    1238 :                    label2:
+)");
 }
 
 void test_symbols_ins8060() {
@@ -75,32 +77,34 @@ void test_symbols_ins8060() {
     driver.setLineNumber(true);
 
     ASM("ins8060",
-            "label1  =     X'1234\n"
-            "        .set  label1, X'1234\n"
-            "label1  =     X'3456\n"
-            "        .set  var1, X'1234\n"
-            "var1    =     X'1234\n"
-            "        .set  var1, X'1234\n"
-            "        .set  var1, X'3456\n"
-            "        .=X'1234\n"
-            "var1\n"
-            "label2  jmp    label2\n"
-            "label3  .dbyte label3\n",
-            "       1/       0 : =1234              label1  =     X'1234\n"
-            "ins8060:2:15: error: Duplicate label: \"label1, X'1234\"\n"
-            "       2/       0 :                            .set  label1, X'1234\n"
-            "ins8060:3:1: error: Duplicate label: \"label1  =     X'3456\"\n"
-            "       3/       0 :                    label1  =     X'3456\n"
-            "       4/       0 : =1234                      .set  var1, X'1234\n"
-            "ins8060:5:1: error: Duplicate label: \"var1    =     X'1234\"\n"
-            "       5/       0 :                    var1    =     X'1234\n"
-            "       6/       0 : =1234                      .set  var1, X'1234\n"
-            "       7/       0 : =3456                      .set  var1, X'3456\n"
-            "       8/    1234 :                            .=X'1234\n"
-            "ins8060:9:1: error: Duplicate label: \"var1\"\n"
-            "       9/    1234 :                    var1\n"
-            "      10/    1234 : 90 FE              label2  jmp    label2\n"
-            "      11/    1236 : 36 12              label3  .dbyte label3\n");
+            R"(label1  =     X'1234
+        .set  label1, X'1234
+label1  =     X'3456
+        .set  var1, X'1234
+var1    =     X'1234
+        .set  var1, X'1234
+        .set  var1, X'3456
+        .=X'1234
+var1
+label2  jmp    label2
+label3  .dbyte label3
+)",
+            R"(       1/       0 : =1234              label1  =     X'1234
+ins8060:2:15: error: Duplicate label: "label1, X'1234"
+       2/       0 :                            .set  label1, X'1234
+ins8060:3:1: error: Duplicate label: "label1  =     X'3456"
+       3/       0 :                    label1  =     X'3456
+       4/       0 : =1234                      .set  var1, X'1234
+ins8060:5:1: error: Duplicate label: "var1    =     X'1234"
+       5/       0 :                    var1    =     X'1234
+       6/       0 : =1234                      .set  var1, X'1234
+       7/       0 : =3456                      .set  var1, X'3456
+       8/    1234 :                            .=X'1234
+ins8060:9:1: error: Duplicate label: "var1"
+       9/    1234 :                    var1
+      10/    1234 : 90 FE              label2  jmp    label2
+      11/    1236 : 36 12              label3  .dbyte label3
+)");
 }
 
 void test_symbols_z80() {
@@ -110,32 +114,34 @@ void test_symbols_z80() {
     driver.setLineNumber(true);
 
     ASM("z80",
-            "label1  equ   1234H\n"
-            "label1  defl  1234H\n"
-            "label1  equ   3456H\n"
-            "var1    defl  1234H\n"
-            "var1    equ   1234H\n"
-            "var1    var   3456H\n"
-            "        org   1234H\n"
-            "label1  set   0, b\n"  // Z80 has SET instruction
-            "var1\n"
-            "label2  jr    label2\n"
-            "label3  defw  label3\n",
-            "       1/       0 : =1234              label1  equ   1234H\n"
-            "z80:2:1: error: Duplicate label: \"label1  defl  1234H\"\n"
-            "       2/       0 :                    label1  defl  1234H\n"  // SET
-            "z80:3:1: error: Duplicate label: \"label1  equ   3456H\"\n"
-            "       3/       0 :                    label1  equ   3456H\n"
-            "       4/       0 : =1234              var1    defl  1234H\n"
-            "z80:5:1: error: Duplicate label: \"var1    equ   1234H\"\n"
-            "       5/       0 :                    var1    equ   1234H\n"
-            "       6/       0 : =3456              var1    var   3456H\n"
-            "       7/    1234 :                            org   1234H\n"
-            "       8/    1234 : CB C0              label1  set   0, b\n"
-            "z80:9:1: error: Duplicate label: \"var1\"\n"
-            "       9/    1236 :                    var1\n"
-            "      10/    1236 : 18 FE              label2  jr    label2\n"
-            "      11/    1238 : 38 12              label3  defw  label3\n");
+            R"(label1  equ   1234H
+label1  defl  1234H
+label1  equ   3456H
+var1    defl  1234H
+var1    equ   1234H
+var1    var   3456H
+        org   1234H
+label1  set   0, b  ; Z80 has SET instruction
+var1
+label2  jr    label2
+label3  defw  label3
+)",
+            R"(       1/       0 : =1234              label1  equ   1234H
+z80:2:1: error: Duplicate label: "label1  defl  1234H"
+       2/       0 :                    label1  defl  1234H
+z80:3:1: error: Duplicate label: "label1  equ   3456H"
+       3/       0 :                    label1  equ   3456H
+       4/       0 : =1234              var1    defl  1234H
+z80:5:1: error: Duplicate label: "var1    equ   1234H"
+       5/       0 :                    var1    equ   1234H
+       6/       0 : =3456              var1    var   3456H
+       7/    1234 :                            org   1234H
+       8/    1234 : CB C0              label1  set   0, b  ; Z80 has SET instruction
+z80:9:1: error: Duplicate label: "var1"
+       9/    1236 :                    var1
+      10/    1236 : 18 FE              label2  jr    label2
+      11/    1238 : 38 12              label3  defw  label3
+)");
 }
 
 void test_switch_cpu() {
@@ -151,52 +157,54 @@ void test_switch_cpu() {
     TestSources sources;
 
     ASM("switch cpu",
-            "        cpu   mc6809\n"
-            "        org   $1000\n"
-            "        ldx   #$1234\n"
-            "        cpu   z80\n"
-            "        ld    hl, 1234H\n"
-            "        cpu   i8080\n"
-            "        lxi   d, 5678H\n"
-            "        z80syntax on\n"
-            "        ld    bc, 9abcH\n"
-            "        cpu   i8080zilog\n"
-            "        ld    bc, 9abcH\n"
-            "        z80syntax off\n"
-            "        lxi   d, 5678H\n"
-            "        cpu   65816\n"
-            "        longa on\n"
-            "        longi off\n"
-            "        lda   #$1234\n"
-            "        ldx   #$12\n"
-            "        *=$123456\n"
-            "        longa off\n"
-            "        longi on\n"
-            "        lda   #$12\n"
-            "        ldx   #$1234\n",
-            "          0 :                            cpu   mc6809\n"
-            "       1000 :                            org   $1000\n"
-            "       1000 : 8E 12 34                   ldx   #$1234\n"
-            "       1003 :                            cpu   z80\n"
-            "       1003 : 21 34 12                   ld    hl, 1234H\n"
-            "       1006 :                            cpu   i8080\n"
-            "       1006 : 11 78 56                   lxi   d, 5678H\n"
-            "       1009 :                            z80syntax on\n"
-            "       1009 : 01 BC 9A                   ld    bc, 9abcH\n"
-            "       100C :                            cpu   i8080zilog\n"
-            "       100C : 01 BC 9A                   ld    bc, 9abcH\n"
-            "       100F :                            z80syntax off\n"
-            "       100F : 11 78 56                   lxi   d, 5678H\n"
-            "       1012 :                            cpu   65816\n"
-            "       1012 :                            longa on\n"
-            "       1012 :                            longi off\n"
-            "       1012 : A9 34 12                   lda   #$1234\n"
-            "       1015 : A2 12                      ldx   #$12\n"
-            "     123456 :                            *=$123456\n"
-            "     123456 :                            longa off\n"
-            "     123456 :                            longi on\n"
-            "     123456 : A9 12                      lda   #$12\n"
-            "     123458 : A2 34 12                   ldx   #$1234\n");
+            R"(        cpu   mc6809
+        org   $1000
+        ldx   #$1234
+        cpu   z80
+        ld    hl, 1234H
+        cpu   i8080
+        lxi   d, 5678H
+        z80syntax on
+        ld    bc, 9abcH
+        cpu   i8080zilog
+        ld    bc, 9abcH
+        z80syntax off
+        lxi   d, 5678H
+        cpu   65816
+        longa on
+        longi off
+        lda   #$1234
+        ldx   #$12
+        *=$123456
+        longa off
+        longi on
+        lda   #$12
+        ldx   #$1234
+)",
+            R"(          0 :                            cpu   mc6809
+       1000 :                            org   $1000
+       1000 : 8E 12 34                   ldx   #$1234
+       1003 :                            cpu   z80
+       1003 : 21 34 12                   ld    hl, 1234H
+       1006 :                            cpu   i8080
+       1006 : 11 78 56                   lxi   d, 5678H
+       1009 :                            z80syntax on
+       1009 : 01 BC 9A                   ld    bc, 9abcH
+       100C :                            cpu   i8080zilog
+       100C : 01 BC 9A                   ld    bc, 9abcH
+       100F :                            z80syntax off
+       100F : 11 78 56                   lxi   d, 5678H
+       1012 :                            cpu   65816
+       1012 :                            longa on
+       1012 :                            longi off
+       1012 : A9 34 12                   lda   #$1234
+       1015 : A2 12                      ldx   #$12
+     123456 :                            *=$123456
+     123456 :                            longa off
+     123456 :                            longi on
+     123456 : A9 12                      lda   #$12
+     123458 : A2 34 12                   ldx   #$1234
+)");
 }
 
 void test_list_radix() {
@@ -208,87 +216,90 @@ void test_list_radix() {
     TestSources sources;
 
     ASM("list-radix",
-            "        option \"list-radix\", 8\n"
-            "        cpu   z80\n"
-            "        org   1234Q\n"
-            "        ld    hl, 1234H\n"
-            "        option \"list-radix\", 16\n"
-            "        jr    $\n"
-            "        cpu   65816\n"
-            "        adc   #$34\n"
-            "        *=@1234567\n"
-            "        option \"list-radix\", \"8\"\n"
-            "        lda   #$34\n"
-            "        *=@3456\n"
-            "        ldx   #$12\n"
-            "        cpu   z80\n"
-            "        res   0, (iy-128)\n",
-            "          0 :                            option \"list-radix\", 8\n"
-            "          0 :                            cpu   z80\n"
-            "       1234 :                            org   1234Q\n"
-            "       1234 : 041 064 022                ld    hl, 1234H\n"
-            "        29F :                            option \"list-radix\", 16\n"
-            "        29F : 18 FE                      jr    $\n"
-            "        2A1 :                            cpu   65816\n"
-            "        2A1 : 69 34                      adc   #$34\n"
-            "      53977 :                            *=@1234567\n"
-            "    1234567 :                            option \"list-radix\", \"8\"\n"
-            "    1234567 : 251 064                    lda   #$34\n"
-            "       3456 :                            *=@3456\n"
-            "       3456 : 242 022                    ldx   #$12\n"
-            "       3460 :                            cpu   z80\n"
-            "       3460 : 375 313 200 206            res   0, (iy-128)\n");
+            R"(        option "list-radix", 8
+        cpu   z80
+        org   1234Q
+        ld    hl, 1234H
+        option "list-radix", 16
+        jr    $
+        cpu   65816
+        adc   #$34
+        *=@1234567
+        option "list-radix", "8"
+        lda   #$34
+        *=@3456
+        ldx   #$12
+        cpu   z80
+        res   0, (iy-128)
+)",
+            R"(          0 :                            option "list-radix", 8
+          0 :                            cpu   z80
+       1234 :                            org   1234Q
+       1234 : 041 064 022                ld    hl, 1234H
+        29F :                            option "list-radix", 16
+        29F : 18 FE                      jr    $
+        2A1 :                            cpu   65816
+        2A1 : 69 34                      adc   #$34
+      53977 :                            *=@1234567
+    1234567 :                            option "list-radix", "8"
+    1234567 : 251 064                    lda   #$34
+       3456 :                            *=@3456
+       3456 : 242 022                    ldx   #$12
+       3460 :                            cpu   z80
+       3460 : 375 313 200 206            res   0, (iy-128)
+)");
 }
 
 void test_function() {
     PREP_ASM(ins8060::AsmIns8060, NationalDirective);
 
     ASM("ins8060",
-            "        cpu    ins8060\n"
-            "high:   function v  , v >> 8 ; high 8-bit\n"
-            "low:    function v, L(v)     ; predefined\n"
-            "cons:   function hi, lo, (hi << 8) | lo ; 16-bit\n"
-            "CONS:   function -1\n"
-            "        .=x'abcd\n"
-            "label:  and    @e(p1)\n"
-            "        .byte  high(label)\n"
-            "        .byte  low(label)\n"
-            "        .dbyte cons(h(label), l(label))\n"
-            "        .dbyte cons (high(x'1234),low(x'3456))\n"
-            "        .dbyte CONS (  ) \n"
-            "        .dbyte ADDR(label)\n"
-            "high:   function x,x   ; duplicate\n"
-            "label:  function y,y   ; symbol\n"
-            "cons=0                 ; function\n"
-            "        .dbyte cons(0) ; requires 2\n"
-            "        .dbyte CONS(0) ; requires 0\n"
-            "        .dbyte CONS    ; missing\n",
-            "          0 :                            cpu    ins8060\n"
-            "          0 :                    high:   function v  , v >> 8 ; high 8-bit\n"
-            "          0 :                    low:    function v, L(v)     ; predefined\n"
-            "          0 :                    cons:   function hi, lo, (hi << 8) | lo ; "
-            "16-bit\n"
-            "          0 :                    CONS:   function -1\n"
-            "       ABCD :                            .=x'abcd\n"
-            "       ABCD : D5 80              label:  and    @e(p1)\n"
-            "       ABCF : AB                         .byte  high(label)\n"
-            "       ABD0 : CD                         .byte  low(label)\n"
-            "       ABD1 : CD AB                      .dbyte cons(h(label), l(label))\n"
-            "       ABD3 : 56 12                      .dbyte cons (high(x'1234),low(x'3456))\n"
-            "       ABD5 : FF FF                      .dbyte CONS (  ) \n"
-            "       ABD7 : CC AB                      .dbyte ADDR(label)\n"
-            "ins8060:14:1: error: Duplicate function: \"high:   function x,x   ; duplicate\"\n"
-            "       ABD9 :                    high:   function x,x   ; duplicate\n"
-            "ins8060:15:1: error: Duplicate label: \"label:  function y,y   ; symbol\"\n"
-            "       ABD9 :                    label:  function y,y   ; symbol\n"
-            "ins8060:16:1: error: Duplicate label: \"cons=0                 ; function\"\n"
-            "       ABD9 :                    cons=0                 ; function\n"
-            "ins8060:17:16: error: Too few function arguments: \"cons(0) ; requires 2\"\n"
-            "       ABD9 :                            .dbyte cons(0) ; requires 2\n"
-            "ins8060:18:16: error: Too many function arguments: \"CONS(0) ; requires 0\"\n"
-            "       ABD9 :                            .dbyte CONS(0) ; requires 0\n"
-            "ins8060:19:16: error: Missing function arguments: \"CONS    ; missing\"\n"
-            "       ABD9 :                            .dbyte CONS    ; missing\n");
+            R"(        cpu    ins8060
+high:   function v  , v >> 8 ; high 8-bit
+low:    function v, L(v)     ; predefined
+cons:   function hi, lo, (hi << 8) | lo ; 16-bit
+CONS:   function -1
+        .=x'abcd
+label:  and    @e(p1)
+        .byte  high(label)
+        .byte  low(label)
+        .dbyte cons(h(label), l(label))
+        .dbyte cons (high(x'1234),low(x'3456))
+        .dbyte CONS (  ) 
+        .dbyte ADDR(label)
+high:   function x,x   ; duplicate
+label:  function y,y   ; symbol
+cons=0                 ; function
+        .dbyte cons(0) ; requires 2
+        .dbyte CONS(0) ; requires 0
+        .dbyte CONS    ; missing
+)",
+            R"(          0 :                            cpu    ins8060
+          0 :                    high:   function v  , v >> 8 ; high 8-bit
+          0 :                    low:    function v, L(v)     ; predefined
+          0 :                    cons:   function hi, lo, (hi << 8) | lo ; 16-bit
+          0 :                    CONS:   function -1
+       ABCD :                            .=x'abcd
+       ABCD : D5 80              label:  and    @e(p1)
+       ABCF : AB                         .byte  high(label)
+       ABD0 : CD                         .byte  low(label)
+       ABD1 : CD AB                      .dbyte cons(h(label), l(label))
+       ABD3 : 56 12                      .dbyte cons (high(x'1234),low(x'3456))
+       ABD5 : FF FF                      .dbyte CONS (  ) 
+       ABD7 : CC AB                      .dbyte ADDR(label)
+ins8060:14:1: error: Duplicate function: "high:   function x,x   ; duplicate"
+       ABD9 :                    high:   function x,x   ; duplicate
+ins8060:15:1: error: Duplicate label: "label:  function y,y   ; symbol"
+       ABD9 :                    label:  function y,y   ; symbol
+ins8060:16:1: error: Duplicate label: "cons=0                 ; function"
+       ABD9 :                    cons=0                 ; function
+ins8060:17:16: error: Too few function arguments: "cons(0) ; requires 2"
+       ABD9 :                            .dbyte cons(0) ; requires 2
+ins8060:18:16: error: Too many function arguments: "CONS(0) ; requires 0"
+       ABD9 :                            .dbyte CONS(0) ; requires 0
+ins8060:19:16: error: Missing function arguments: "CONS    ; missing"
+       ABD9 :                            .dbyte CONS    ; missing
+)");
 }
 
 void test_forward_labels() {
@@ -298,24 +309,26 @@ void test_forward_labels() {
     driver.setLineNumber(true);
 
     ASM("mc6809",
-            "        org   $1000\n"
-            "        lda   label1,pcr\n"
-            "        ldb   label3,x\n"
-            "        rmb   label2-label1\n"
-            "label1  equ   *\n"
-            "label2  equ   label1+label3\n"
-            "label3  equ   label4+1\n"
-            "label4  equ   label5-1\n"
-            "label5  equ   4\n",
-            "       1/    1000 :                            org   $1000\n"
-            "       2/    1000 : A6 8C 06                   lda   label1,pcr\n"
-            "       3/    1003 : E6 04                      ldb   label3,x\n"
-            "       4/    1005 :                            rmb   label2-label1\n"
-            "       5/    1009 : =1009              label1  equ   *\n"
-            "       6/    1009 : =100D              label2  equ   label1+label3\n"
-            "       7/    1009 : =4                 label3  equ   label4+1\n"
-            "       8/    1009 : =3                 label4  equ   label5-1\n"
-            "       9/    1009 : =4                 label5  equ   4\n");
+            R"(       org   $1000
+        lda   label1,pcr
+        ldb   label3,x
+        rmb   label2-label1
+label1  equ   *
+label2  equ   label1+label3
+label3  equ   label4+1
+label4  equ   label5-1
+label5  equ   4
+)",
+            R"(       1/    1000 :                           org   $1000
+       2/    1000 : A6 8C 06                   lda   label1,pcr
+       3/    1003 : E6 04                      ldb   label3,x
+       4/    1005 :                            rmb   label2-label1
+       5/    1009 : =1009              label1  equ   *
+       6/    1009 : =100D              label2  equ   label1+label3
+       7/    1009 : =4                 label3  equ   label4+1
+       8/    1009 : =3                 label4  equ   label5-1
+       9/    1009 : =4                 label5  equ   4
+)");
 }
 
 void test_include() {
@@ -323,25 +336,27 @@ void test_include() {
 
     TestReader exist("data/exist.inc");
     sources.add(exist);
-    exist.add("        fcc   /exist/\n");
+    exist.add("        fcc   /exist/");
 
     driver.setUpperHex(true);
     driver.setLineNumber(true);
     driver.setOption("smart-branch", "on");
 
     ASM("mc6809",
-            "        cpu   mc6809\n"
-            "* comment line\n"
-            "        org   $abcd\n"
-            "        include \"data/exist.inc\"\n"
-            "        include \"data/not-exist.inc\"\n",
-            "       1/       0 :                            cpu   mc6809\n"
-            "       2/       0 :                    * comment line\n"
-            "       3/    ABCD :                            org   $abcd\n"
-            "       4/    ABCD :                            include \"data/exist.inc\"\n"
-            "(1)    1/    ABCD : 65 78 69 73 74             fcc   /exist/\n"
-            "mc6809:5:18: error: Include file not found: \"data/not-exist.inc\"\"\n"
-            "       5/    ABD2 :                            include \"data/not-exist.inc\"\n");
+            R"(        cpu   mc6809
+* comment line
+        org   $abcd
+        include "data/exist.inc"
+        include "data/not-exist.inc"
+)",
+            R"(       1/       0 :                            cpu   mc6809
+       2/       0 :                    * comment line
+       3/    ABCD :                            org   $abcd
+       4/    ABCD :                            include "data/exist.inc"
+(1)    1/    ABCD : 65 78 69 73 74             fcc   /exist/
+mc6809:5:18: error: Include file not found: "data/not-exist.inc""
+       5/    ABD2 :                            include "data/not-exist.inc"
+)");
 }
 
 void run_tests() {

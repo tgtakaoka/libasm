@@ -275,13 +275,13 @@ static void test_extended() {
     TEST("JMP  ext1ABC", 0xCC, 0x1A, 0xBC);
     TEST("JSR  ext0090", 0xBD, 0x90);
 
-    TEST("option \"pc-bits\", \"11\""); // MC68HC05J for instance
+    TEST(R"(option "pc-bits", "11")"); // MC68HC05J for instance
     TEST(         "LDA $07FF",                          0xC6, 0x07, 0xFF);
     ERRT(         "LDA $0800", OVERFLOW_RANGE, "$0800", 0xC6, 0x08, 0x00);
     ATEST(0x07F0, "BSR $07FF",                          0xAD, 0x0D);
     AERRT(0x07F0, "BSR $0800", OVERFLOW_RANGE, "$0800", 0xAD, 0x0E);
 
-    TEST("option \"pc-bits\", 0");  // Most of MC68HC05 has 13bits PC.
+    TEST(R"(option "pc-bits", 0)");  // Most of MC68HC05 has 13bits PC.
     TEST(         "LDA $1FFF",                          0xC6, 0x1F, 0xFF);
     ERRT(         "LDA $2000", OVERFLOW_RANGE, "$2000", 0xC6, 0x20, 0x00);
     ATEST(0x1FF0, "BSR $1FFF",                          0xAD, 0x0D);
@@ -459,14 +459,14 @@ static void test_undef() {
 
 static void test_data_constant() {
     TEST("FCB -128, 255", 0x80, 0xFF);
-    TEST("FCB 'A', '\"'", 0x41, 0x22);
+    TEST(R"(FCB 'A', '"')", 0x41, 0x22);
     TEST("FCB '9'-'0'",   0x09);
     TEST("FCB '''",       0x27);
     TEST("FCB ''",        0x27);
     ERRT("FCB '",         ILLEGAL_CONSTANT, "'");
     TEST("FCB 'A,'','B",  0x41, 0x27, 0x42);
     TEST("FDB -128, 255", 0xFF, 0x80, 0x00, 0xFF);
-    TEST("FDB 'A, '\"",   0x00, 0x41, 0x00, 0x22);
+    TEST(R"(FDB 'A, '")", 0x00, 0x41, 0x00, 0x22);
     TEST("FCC 'ABC'",     0x41, 0x42, 0x43);
     TEST("FCC /ABC/",     0x41, 0x42, 0x43);
     ERRT("FCC 'ABC",      MISSING_CLOSING_DELIMITER, "", 0x41, 0x42, 0x43);

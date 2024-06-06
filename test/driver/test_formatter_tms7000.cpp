@@ -30,16 +30,18 @@ void test_asm_tms7000() {
     PREP_ASM(tms7000::AsmTms7000, IntelDirective);
 
     ASM("tms7000",
-            "        cpu     tms7000\n"
-            "* comment line\n"
-            "        aorg    >7BCD\n"
-            "label1: equ     >7def\n"
-            "        movd    %>a9aa(b), r171\n",
-            "          0 :                            cpu     tms7000\n"
-            "          0 :                    * comment line\n"
-            "       7BCD :                            aorg    >7BCD\n"
-            "       7BCD : =7DEF              label1: equ     >7def\n"
-            "       7BCD : A8 A9 AA AB                movd    %>a9aa(b), r171\n");
+            R"(        cpu     tms7000
+* comment line
+        aorg    >7BCD
+label1: equ     >7def
+        movd    %>a9aa(b), r171
+)",
+            R"(          0 :                            cpu     tms7000
+          0 :                    * comment line
+       7BCD :                            aorg    >7BCD
+       7BCD : =7DEF              label1: equ     >7def
+       7BCD : A8 A9 AA AB                movd    %>a9aa(b), r171
+)");
 }
 
 void test_dis_tms7000() {
@@ -48,17 +50,19 @@ void test_dis_tms7000() {
     driver.setUpperHex(false);
 
     DIS8("tms7000", 0x7bcd,
-            "      cpu   tms7000\n"
-            "      org   >7bcd\n"
-            "      movd  %>a9aa(b), r171\n"
-            "* test.bin: error: Unknown instruction\n"
-            "*     7bd1 : af\n",
-            "       0 :                            cpu   tms7000\n"
-            "    7bcd :                            org   >7bcd\n"
-            "    7bcd : a8 a9 aa ab                movd  %>a9aa(b), r171\n"
-            "test.bin: error: Unknown instruction\n"
-            "    7bd1 : af\n",
-         0xA8, 0xA9, 0xAA, 0xAB, 0xAF);
+            R"(      cpu   tms7000
+      org   >7bcd
+      movd  %>a9aa(b), r171
+* test.bin: error: Unknown instruction
+*     7bd1 : af
+)",
+            R"(       0 :                            cpu   tms7000
+    7bcd :                            org   >7bcd
+    7bcd : a8 a9 aa ab                movd  %>a9aa(b), r171
+test.bin: error: Unknown instruction
+    7bd1 : af
+)",
+            0xA8, 0xA9, 0xAA, 0xAB, 0xAF);
 }
 
 void run_tests() {

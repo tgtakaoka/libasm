@@ -33,24 +33,26 @@ void test_asm_tlcs90() {
     driver.setOption("smart-branch", "on");
 
     ASM("tlcs90",
-            "        cpu   tlcs90\n"
-            "; comment line\n"
-            "        org   0abcdh\n"
-            "        xor   (hl+a), 0efh\n"
-            "        set   7,a\n"
-            "        jrl   label2\n"
-            "        jr    label3\n"
-            "label2: equ   0ac00h\n"
-            "label3: equ   0ad00h\n",
-            "          0 :                            cpu   tlcs90\n"
-            "          0 :                    ; comment line\n"
-            "       abcd :                            org   0abcdh\n"
-            "       abcd : f7 6d ef                   xor   (hl+a), 0efh\n"
-            "       abd0 : fe bf                      set   7,a\n"
-            "       abd2 : c8 2c                      jrl   label2\n"
-            "       abd4 : 1b 2a 01                   jr    label3\n"
-            "       abd7 : =ac00              label2: equ   0ac00h\n"
-            "       abd7 : =ad00              label3: equ   0ad00h\n");
+            R"(        cpu   tlcs90
+; comment line
+        org   0abcdh
+        xor   (hl+a), 0efh
+        set   7,a
+        jrl   label2
+        jr    label3
+label2: equ   0ac00h
+label3: equ   0ad00h
+)",
+            R"(          0 :                            cpu   tlcs90
+          0 :                    ; comment line
+       abcd :                            org   0abcdh
+       abcd : f7 6d ef                   xor   (hl+a), 0efh
+       abd0 : fe bf                      set   7,a
+       abd2 : c8 2c                      jrl   label2
+       abd4 : 1b 2a 01                   jr    label3
+       abd7 : =ac00              label2: equ   0ac00h
+       abd7 : =ad00              label3: equ   0ad00h
+)");
 }
 
 void test_dis_tlcs90() {
@@ -59,16 +61,18 @@ void test_dis_tlcs90() {
     driver.setUpperHex(false);
 
     DIS8("tlcs90", 0xabcd,
-            "      cpu   tlcs90\n"
-            "      org   0abcdh\n"
-            "      xor   (hl+a), 0efh\n"
-            "; test.bin: error: Unknown instruction\n"
-            ";     abd0 : e3 12 34 17\n",
-            "       0 :                            cpu   tlcs90\n"
-            "    abcd :                            org   0abcdh\n"
-            "    abcd : f7 6d ef                   xor   (hl+a), 0efh\n"
-            "test.bin: error: Unknown instruction\n"
-            "    abd0 : e3 12 34 17\n",
+            R"(      cpu   tlcs90
+      org   0abcdh
+      xor   (hl+a), 0efh
+; test.bin: error: Unknown instruction
+;     abd0 : e3 12 34 17
+)",
+            R"(       0 :                            cpu   tlcs90
+    abcd :                            org   0abcdh
+    abcd : f7 6d ef                   xor   (hl+a), 0efh
+test.bin: error: Unknown instruction
+    abd0 : e3 12 34 17
+)",
             0xf7, 0x6d, 0xef, 0xe3, 0x12, 0x34, 0x17);
 }
 

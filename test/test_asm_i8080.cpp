@@ -437,7 +437,7 @@ static void test_undef() {
 
 static void test_data_constant() {
     TEST("DB -128, 255", 0x80, 0xFF);
-    TEST("DB 'A', '\"'", 0x41, 0x22);
+    TEST(R"(DB 'A', '"')", 0x41, 0x22);
     TEST("DB '9'-'0'",   0x09);
     TEST("DB ''''",      0x27);
     ERRT("DB '''",       MISSING_CLOSING_QUOTE, "'''");

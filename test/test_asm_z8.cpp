@@ -817,12 +817,12 @@ static void test_setrp() {
     TZ86("CALL @%24", 0xD4, 0x24);
     TZ88("CALL @%24", 0xF4, 0x24);
 
-    TEST("option \"reg-alias\", \"disable\"");
+    TEST(R"(option "reg-alias", "disable")");
     TEST("LD  %01,%0E",  0x18, 0x0E);
     TEST("LD   R4,%0E",  0x48, 0x0E);
     TEST("CLR %0E",      0xB0, 0x0E);
     TEST("JP   @%04",    0x30, 0x04);
-    TEST("option \"reg-alias\", \"enable\"");
+    TEST(R"(option "reg-alias", "enable")");
 
     TEST("SETRP %21 & %F0");
     TEST("LD  %21,R4",   0x18, R(4));
@@ -1022,7 +1022,7 @@ static void test_error() {
 
 static void test_data_constant() {
     TEST("DB -128, 255", 0x80, 0xFF);
-    TEST("DB 'A', '\"'", 0x41, 0x22);
+    TEST(R"(DB 'A', '"')", 0x41, 0x22);
     TEST("DB '9'-'0'",   0x09);
     TEST("DB '%27'",     0x27);
     ERRT("DB '%2'",      UNKNOWN_ESCAPE_SEQUENCE, "%2'");
