@@ -32,7 +32,7 @@ ARDUINO_FLAGS += --no-color
 endif
 endif
 
-PIO_CI_FLAGS = -l ~/.platformio/lib/libcli
+PIO_CI_FLAGS =
 ARDUINO_CI_FLAGS = --warnings all --library $(CURDIR)/../../
 
 ENVS = $(shell grep -Po '^\[env:\K[^]]+' platformio.ini)
@@ -43,8 +43,14 @@ BOARD ?= $(firstword $(BOARDS))
 
 EXAMPLE = $(shell basename $(CURDIR))
 
+define pio-libdep-path # env libdep
+-l .pio/libdeps/$(1)/$(2)
+endef
+
 define pio-ci # board
-	pio $(PIO_FLAGS) ci -l $(CURDIR)/../.. $(PIO_CI_FLAGS) -b $(1) $(EXAMPLE).ino
+	ENV=$(shell awk 'BEGIN{RS="\n\n"} /$(1)/' platformio.ini | grep -Po '(?<=env:)[^]]+')
+	pio $(PIO_FLAGS) pkg install
+	pio $(PIO_FLAGS) ci -l $(CURDIR)/../.. $(call pio-libdep-path,$(ENV),libcli) -b $(1) $(EXAMPLE).ino
 
 endef
 
