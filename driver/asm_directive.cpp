@@ -197,8 +197,8 @@ Error AsmDirective::defineSymbol(
         context.value.clear();
         return setError(scan, error);
     }
-    if (context.reportUndefined && context.value.isUndefined())
-        return setError(symbol, UNDEFINED_SYMBOL);
+    if (context.reportUndefined && error.getError() == UNDEFINED_SYMBOL)
+        return setError(error);
 
     setErrorIf(symbol, context.symbols.internSymbol(context.value.getUnsigned(), symbol, variable));
     return getError();

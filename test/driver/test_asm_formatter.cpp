@@ -144,6 +144,41 @@ z80:9:1: error: Duplicate label: "var1"
 )");
 }
 
+void test_undefined() {
+    PREP_ASM(mc6809::AsmMc6809, MotorolaDirective);
+
+    driver.setUpperHex(true);
+
+    ASM("mc6809",
+            R"(        org    $1000
+label1: lda   #0      ; comment
+label2: bra   label1  comment
+        lda   #1      * comment
+)",
+            R"(       1000 :                            org    $1000
+       1000 : 86 00              label1: lda   #0      ; comment
+       1002 : 20 FC              label2: bra   label1  comment
+mc6809:4:25: error: Undefined symbol: "comment"
+       1004 : 86 00                      lda   #1      * comment
+)");
+
+    driver.clearSymbols();
+
+    ASM("mc6809",
+            R"(        org    $1000
+label1: equ   $1000   ; comment
+label2: equ   label1  comment
+label3: equ   1       * comment
+)",
+            R"(       1000 :                            org    $1000
+       1000 : =1000              label1: equ   $1000   ; comment
+       1000 : =1000              label2: equ   label1  comment
+mc6809:4:25: error: Undefined symbol: "comment"
+       1000 : =0                 label3: equ   1       * comment
+)");
+
+}
+
 void test_switch_cpu() {
     mc6809::AsmMc6809 asm6809;
     MotorolaDirective dir6809(asm6809);
@@ -363,6 +398,7 @@ void run_tests() {
     RUN_TEST(test_symbols_mc6809);
     RUN_TEST(test_symbols_ins8060);
     RUN_TEST(test_symbols_z80);
+    RUN_TEST(test_undefined);
     RUN_TEST(test_switch_cpu);
     RUN_TEST(test_list_radix);
     RUN_TEST(test_function);
