@@ -8362,7 +8362,6 @@
       FSGLMUL.X   FP0, FP1
       FSUB.X  FP0, FP1
       FCMP.X  FP0, FP1
-      FTST.X  FP0, FP1
       FMOVE.L D0, FP0
       FINT.L  D0, FP0
       FSINH.L D0, FP0
@@ -8400,7 +8399,7 @@
       FSUB.L  D0, FP0
       FSINCOS.L   D0, FP0:FP0
       FCMP.L  D0, FP0
-      FTST.L  D0, FP0
+      FTST.L  D0
       FMOVE.S D0, FP0
       FINT.S  D0, FP0
       FSINH.S D0, FP0
@@ -8438,7 +8437,7 @@
       FSUB.S  D0, FP0
       FSINCOS.S   D0, FP0:FP0
       FCMP.S  D0, FP0
-      FTST.S  D0, FP0
+      FTST.S  D0
       FMOVE.X D0, FP0
       FINT.X  D0, FP0
       FSINH.X D0, FP0
@@ -8476,7 +8475,7 @@
       FSUB.X  D0, FP0
       FSINCOS.X   D0, FP0:FP0
       FCMP.X  D0, FP0
-      FTST.X  D0, FP0
+      FTST.X  D0
       FMOVE.P D0, FP0
       FINT.P  D0, FP0
       FSINH.P D0, FP0
@@ -8514,7 +8513,7 @@
       FSUB.P  D0, FP0
       FSINCOS.P   D0, FP0:FP0
       FCMP.P  D0, FP0
-      FTST.P  D0, FP0
+      FTST.P  D0
       FMOVE.W D0, FP0
       FINT.W  D0, FP0
       FSINH.W D0, FP0
@@ -8552,7 +8551,7 @@
       FSUB.W  D0, FP0
       FSINCOS.W   D0, FP0:FP0
       FCMP.W  D0, FP0
-      FTST.W  D0, FP0
+      FTST.W  D0
       FMOVE.D D0, FP0
       FINT.D  D0, FP0
       FSINH.D D0, FP0
@@ -8590,7 +8589,7 @@
       FSUB.D  D0, FP0
       FSINCOS.D   D0, FP0:FP0
       FCMP.D  D0, FP0
-      FTST.D  D0, FP0
+      FTST.D  D0
       FMOVE.B D0, FP0
       FINT.B  D0, FP0
       FSINH.B D0, FP0
@@ -8628,7 +8627,7 @@
       FSUB.B  D0, FP0
       FSINCOS.B   D0, FP0:FP0
       FCMP.B  D0, FP0
-      FTST.B  D0, FP0
+      FTST.B  D0
       FMOVECR.X   #$00, FP0
       FMOVE.L FP0, D0
       FMOVE.S FP0, D0
@@ -8680,7 +8679,7 @@
       FSUB.L  (A0), FP0
       FSINCOS.L   (A0), FP0:FP0
       FCMP.L  (A0), FP0
-      FTST.L  (A0), FP0
+      FTST.L  (A0)
       FMOVE.S (A0), FP0
       FINT.S  (A0), FP0
       FSINH.S (A0), FP0
@@ -8718,7 +8717,7 @@
       FSUB.S  (A0), FP0
       FSINCOS.S   (A0), FP0:FP0
       FCMP.S  (A0), FP0
-      FTST.S  (A0), FP0
+      FTST.S  (A0)
       FMOVE.X (A0), FP0
       FINT.X  (A0), FP0
       FSINH.X (A0), FP0
@@ -8756,7 +8755,7 @@
       FSUB.X  (A0), FP0
       FSINCOS.X   (A0), FP0:FP0
       FCMP.X  (A0), FP0
-      FTST.X  (A0), FP0
+      FTST.X  (A0)
       FMOVE.P (A0), FP0
       FINT.P  (A0), FP0
       FSINH.P (A0), FP0
@@ -8794,7 +8793,7 @@
       FSUB.P  (A0), FP0
       FSINCOS.P   (A0), FP0:FP0
       FCMP.P  (A0), FP0
-      FTST.P  (A0), FP0
+      FTST.P  (A0)
       FMOVE.W (A0), FP0
       FINT.W  (A0), FP0
       FSINH.W (A0), FP0
@@ -8832,7 +8831,7 @@
       FSUB.W  (A0), FP0
       FSINCOS.W   (A0), FP0:FP0
       FCMP.W  (A0), FP0
-      FTST.W  (A0), FP0
+      FTST.W  (A0)
       FMOVE.D (A0), FP0
       FINT.D  (A0), FP0
       FSINH.D (A0), FP0
@@ -8870,7 +8869,7 @@
       FSUB.D  (A0), FP0
       FSINCOS.D   (A0), FP0:FP0
       FCMP.D  (A0), FP0
-      FTST.D  (A0), FP0
+      FTST.D  (A0)
       FMOVE.B (A0), FP0
       FINT.B  (A0), FP0
       FSINH.B (A0), FP0
@@ -8908,7 +8907,7 @@
       FSUB.B  (A0), FP0
       FSINCOS.B   (A0), FP0:FP0
       FCMP.B  (A0), FP0
-      FTST.B  (A0), FP0
+      FTST.B  (A0)
       FMOVE.L FP0, (A0)
       FMOVE.S FP0, (A0)
       FMOVE.X FP0, (A0)
@@ -8982,7 +8981,7 @@
       FSUB.L  (A0)+, FP0
       FSINCOS.L   (A0)+, FP0:FP0
       FCMP.L  (A0)+, FP0
-      FTST.L  (A0)+, FP0
+      FTST.L  (A0)+
       FMOVE.S (A0)+, FP0
       FINT.S  (A0)+, FP0
       FSINH.S (A0)+, FP0
@@ -9020,7 +9019,7 @@
       FSUB.S  (A0)+, FP0
       FSINCOS.S   (A0)+, FP0:FP0
       FCMP.S  (A0)+, FP0
-      FTST.S  (A0)+, FP0
+      FTST.S  (A0)+
       FMOVE.X (A0)+, FP0
       FINT.X  (A0)+, FP0
       FSINH.X (A0)+, FP0
@@ -9058,7 +9057,7 @@
       FSUB.X  (A0)+, FP0
       FSINCOS.X   (A0)+, FP0:FP0
       FCMP.X  (A0)+, FP0
-      FTST.X  (A0)+, FP0
+      FTST.X  (A0)+
       FMOVE.P (A0)+, FP0
       FINT.P  (A0)+, FP0
       FSINH.P (A0)+, FP0
@@ -9096,7 +9095,7 @@
       FSUB.P  (A0)+, FP0
       FSINCOS.P   (A0)+, FP0:FP0
       FCMP.P  (A0)+, FP0
-      FTST.P  (A0)+, FP0
+      FTST.P  (A0)+
       FMOVE.W (A0)+, FP0
       FINT.W  (A0)+, FP0
       FSINH.W (A0)+, FP0
@@ -9134,7 +9133,7 @@
       FSUB.W  (A0)+, FP0
       FSINCOS.W   (A0)+, FP0:FP0
       FCMP.W  (A0)+, FP0
-      FTST.W  (A0)+, FP0
+      FTST.W  (A0)+
       FMOVE.D (A0)+, FP0
       FINT.D  (A0)+, FP0
       FSINH.D (A0)+, FP0
@@ -9172,7 +9171,7 @@
       FSUB.D  (A0)+, FP0
       FSINCOS.D   (A0)+, FP0:FP0
       FCMP.D  (A0)+, FP0
-      FTST.D  (A0)+, FP0
+      FTST.D  (A0)+
       FMOVE.B (A0)+, FP0
       FINT.B  (A0)+, FP0
       FSINH.B (A0)+, FP0
@@ -9210,7 +9209,7 @@
       FSUB.B  (A0)+, FP0
       FSINCOS.B   (A0)+, FP0:FP0
       FCMP.B  (A0)+, FP0
-      FTST.B  (A0)+, FP0
+      FTST.B  (A0)+
       FMOVE.L FP0, (A0)+
       FMOVE.S FP0, (A0)+
       FMOVE.X FP0, (A0)+
@@ -9278,7 +9277,7 @@
       FSUB.L  -(A0), FP0
       FSINCOS.L   -(A0), FP0:FP0
       FCMP.L  -(A0), FP0
-      FTST.L  -(A0), FP0
+      FTST.L  -(A0)
       FMOVE.S -(A0), FP0
       FINT.S  -(A0), FP0
       FSINH.S -(A0), FP0
@@ -9316,7 +9315,7 @@
       FSUB.S  -(A0), FP0
       FSINCOS.S   -(A0), FP0:FP0
       FCMP.S  -(A0), FP0
-      FTST.S  -(A0), FP0
+      FTST.S  -(A0)
       FMOVE.X -(A0), FP0
       FINT.X  -(A0), FP0
       FSINH.X -(A0), FP0
@@ -9354,7 +9353,7 @@
       FSUB.X  -(A0), FP0
       FSINCOS.X   -(A0), FP0:FP0
       FCMP.X  -(A0), FP0
-      FTST.X  -(A0), FP0
+      FTST.X  -(A0)
       FMOVE.P -(A0), FP0
       FINT.P  -(A0), FP0
       FSINH.P -(A0), FP0
@@ -9392,7 +9391,7 @@
       FSUB.P  -(A0), FP0
       FSINCOS.P   -(A0), FP0:FP0
       FCMP.P  -(A0), FP0
-      FTST.P  -(A0), FP0
+      FTST.P  -(A0)
       FMOVE.W -(A0), FP0
       FINT.W  -(A0), FP0
       FSINH.W -(A0), FP0
@@ -9430,7 +9429,7 @@
       FSUB.W  -(A0), FP0
       FSINCOS.W   -(A0), FP0:FP0
       FCMP.W  -(A0), FP0
-      FTST.W  -(A0), FP0
+      FTST.W  -(A0)
       FMOVE.D -(A0), FP0
       FINT.D  -(A0), FP0
       FSINH.D -(A0), FP0
@@ -9468,7 +9467,7 @@
       FSUB.D  -(A0), FP0
       FSINCOS.D   -(A0), FP0:FP0
       FCMP.D  -(A0), FP0
-      FTST.D  -(A0), FP0
+      FTST.D  -(A0)
       FMOVE.B -(A0), FP0
       FINT.B  -(A0), FP0
       FSINH.B -(A0), FP0
@@ -9506,7 +9505,7 @@
       FSUB.B  -(A0), FP0
       FSINCOS.B   -(A0), FP0:FP0
       FCMP.B  -(A0), FP0
-      FTST.B  -(A0), FP0
+      FTST.B  -(A0)
       FMOVE.L FP0, -(A0)
       FMOVE.S FP0, -(A0)
       FMOVE.X FP0, -(A0)
@@ -9613,8 +9612,8 @@
       FSINCOS.L   (-$8000,A0), FP0:FP0
       FCMP.L  ($4139,A0), FP0
       FCMP.L  (-$8000,A0), FP0
-      FTST.L  ($413B,A0), FP0
-      FTST.L  (-$8000,A0), FP0
+      FTST.L  ($413B,A0)
+      FTST.L  (-$8000,A0)
       FMOVE.S ($4501,A0), FP0
       FMOVE.S (-$8000,A0), FP0
       FINT.S  ($4502,A0), FP0
@@ -9689,8 +9688,8 @@
       FSINCOS.S   (-$8000,A0), FP0:FP0
       FCMP.S  ($4539,A0), FP0
       FCMP.S  (-$8000,A0), FP0
-      FTST.S  ($453B,A0), FP0
-      FTST.S  (-$8000,A0), FP0
+      FTST.S  ($453B,A0)
+      FTST.S  (-$8000,A0)
       FMOVE.X ($4901,A0), FP0
       FMOVE.X (-$8000,A0), FP0
       FINT.X  ($4902,A0), FP0
@@ -9765,8 +9764,8 @@
       FSINCOS.X   (-$8000,A0), FP0:FP0
       FCMP.X  ($4939,A0), FP0
       FCMP.X  (-$8000,A0), FP0
-      FTST.X  ($493B,A0), FP0
-      FTST.X  (-$8000,A0), FP0
+      FTST.X  ($493B,A0)
+      FTST.X  (-$8000,A0)
       FMOVE.P ($4D01,A0), FP0
       FMOVE.P (-$8000,A0), FP0
       FINT.P  ($4D02,A0), FP0
@@ -9841,8 +9840,8 @@
       FSINCOS.P   (-$8000,A0), FP0:FP0
       FCMP.P  ($4D39,A0), FP0
       FCMP.P  (-$8000,A0), FP0
-      FTST.P  ($4D3B,A0), FP0
-      FTST.P  (-$8000,A0), FP0
+      FTST.P  ($4D3B,A0)
+      FTST.P  (-$8000,A0)
       FMOVE.W ($5101,A0), FP0
       FMOVE.W (-$8000,A0), FP0
       FINT.W  ($5102,A0), FP0
@@ -9917,8 +9916,8 @@
       FSINCOS.W   (-$8000,A0), FP0:FP0
       FCMP.W  ($5139,A0), FP0
       FCMP.W  (-$8000,A0), FP0
-      FTST.W  ($513B,A0), FP0
-      FTST.W  (-$8000,A0), FP0
+      FTST.W  ($513B,A0)
+      FTST.W  (-$8000,A0)
       FMOVE.D ($5501,A0), FP0
       FMOVE.D (-$8000,A0), FP0
       FINT.D  ($5502,A0), FP0
@@ -9993,8 +9992,8 @@
       FSINCOS.D   (-$8000,A0), FP0:FP0
       FCMP.D  ($5539,A0), FP0
       FCMP.D  (-$8000,A0), FP0
-      FTST.D  ($553B,A0), FP0
-      FTST.D  (-$8000,A0), FP0
+      FTST.D  ($553B,A0)
+      FTST.D  (-$8000,A0)
       FMOVE.B ($5901,A0), FP0
       FMOVE.B (-$8000,A0), FP0
       FINT.B  ($5902,A0), FP0
@@ -10069,8 +10068,8 @@
       FSINCOS.B   (-$8000,A0), FP0:FP0
       FCMP.B  ($5939,A0), FP0
       FCMP.B  (-$8000,A0), FP0
-      FTST.B  ($593B,A0), FP0
-      FTST.B  (-$8000,A0), FP0
+      FTST.B  ($593B,A0)
+      FTST.B  (-$8000,A0)
       FMOVE.L FP0, ($6101,A0)
       FMOVE.L FP0, (-$8000,A0)
       FMOVE.S FP0, ($6501,A0)
@@ -10447,14 +10446,14 @@
       FCMP.L  (-$80,A0,A0.W), FP0
       FCMP.L  (0,A0,A0.L), FP0
       FCMP.L  (-$80,A0,A0.L), FP0
-      FTST.L  ($3B,A0,D4.W), FP0
-      FTST.L  (-$80,A0,D4.W), FP0
-      FTST.L  (0,A0,D4.L), FP0
-      FTST.L  (-$80,A0,D4.L), FP0
-      FTST.L  (0,A0,A0.W), FP0
-      FTST.L  (-$80,A0,A0.W), FP0
-      FTST.L  (0,A0,A0.L), FP0
-      FTST.L  (-$80,A0,A0.L), FP0
+      FTST.L  ($3B,A0,D4.W)
+      FTST.L  (-$80,A0,D4.W)
+      FTST.L  (0,A0,D4.L)
+      FTST.L  (-$80,A0,D4.L)
+      FTST.L  (0,A0,A0.W)
+      FTST.L  (-$80,A0,A0.W)
+      FTST.L  (0,A0,A0.L)
+      FTST.L  (-$80,A0,A0.L)
       FMOVE.S (1,A0,D4.W), FP0
       FMOVE.S (-$80,A0,D4.W), FP0
       FMOVE.S (0,A0,D4.L), FP0
@@ -10751,14 +10750,14 @@
       FCMP.S  (-$80,A0,A0.W), FP0
       FCMP.S  (0,A0,A0.L), FP0
       FCMP.S  (-$80,A0,A0.L), FP0
-      FTST.S  ($3B,A0,D4.W), FP0
-      FTST.S  (-$80,A0,D4.W), FP0
-      FTST.S  (0,A0,D4.L), FP0
-      FTST.S  (-$80,A0,D4.L), FP0
-      FTST.S  (0,A0,A0.W), FP0
-      FTST.S  (-$80,A0,A0.W), FP0
-      FTST.S  (0,A0,A0.L), FP0
-      FTST.S  (-$80,A0,A0.L), FP0
+      FTST.S  ($3B,A0,D4.W)
+      FTST.S  (-$80,A0,D4.W)
+      FTST.S  (0,A0,D4.L)
+      FTST.S  (-$80,A0,D4.L)
+      FTST.S  (0,A0,A0.W)
+      FTST.S  (-$80,A0,A0.W)
+      FTST.S  (0,A0,A0.L)
+      FTST.S  (-$80,A0,A0.L)
       FMOVE.X (1,A0,D4.L), FP0
       FMOVE.X (-$80,A0,D4.L), FP0
       FMOVE.X (0,A0,D5.W), FP0
@@ -11055,14 +11054,14 @@
       FCMP.X  (-$80,A0,A0.W), FP0
       FCMP.X  (0,A0,A0.L), FP0
       FCMP.X  (-$80,A0,A0.L), FP0
-      FTST.X  ($3B,A0,D4.L), FP0
-      FTST.X  (-$80,A0,D4.L), FP0
-      FTST.X  (0,A0,D5.W), FP0
-      FTST.X  (-$80,A0,D5.W), FP0
-      FTST.X  (0,A0,A0.W), FP0
-      FTST.X  (-$80,A0,A0.W), FP0
-      FTST.X  (0,A0,A0.L), FP0
-      FTST.X  (-$80,A0,A0.L), FP0
+      FTST.X  ($3B,A0,D4.L)
+      FTST.X  (-$80,A0,D4.L)
+      FTST.X  (0,A0,D5.W)
+      FTST.X  (-$80,A0,D5.W)
+      FTST.X  (0,A0,A0.W)
+      FTST.X  (-$80,A0,A0.W)
+      FTST.X  (0,A0,A0.L)
+      FTST.X  (-$80,A0,A0.L)
       FMOVE.P (1,A0,D4.L), FP0
       FMOVE.P (-$80,A0,D4.L), FP0
       FMOVE.P (0,A0,D5.W), FP0
@@ -11359,14 +11358,14 @@
       FCMP.P  (-$80,A0,A0.W), FP0
       FCMP.P  (0,A0,A0.L), FP0
       FCMP.P  (-$80,A0,A0.L), FP0
-      FTST.P  ($3B,A0,D4.L), FP0
-      FTST.P  (-$80,A0,D4.L), FP0
-      FTST.P  (0,A0,D5.W), FP0
-      FTST.P  (-$80,A0,D5.W), FP0
-      FTST.P  (0,A0,A0.W), FP0
-      FTST.P  (-$80,A0,A0.W), FP0
-      FTST.P  (0,A0,A0.L), FP0
-      FTST.P  (-$80,A0,A0.L), FP0
+      FTST.P  ($3B,A0,D4.L)
+      FTST.P  (-$80,A0,D4.L)
+      FTST.P  (0,A0,D5.W)
+      FTST.P  (-$80,A0,D5.W)
+      FTST.P  (0,A0,A0.W)
+      FTST.P  (-$80,A0,A0.W)
+      FTST.P  (0,A0,A0.L)
+      FTST.P  (-$80,A0,A0.L)
       FMOVE.W (1,A0,D5.W), FP0
       FMOVE.W (-$80,A0,D5.W), FP0
       FMOVE.W (0,A0,D5.L), FP0
@@ -11663,14 +11662,14 @@
       FCMP.W  (-$80,A0,A0.W), FP0
       FCMP.W  (0,A0,A0.L), FP0
       FCMP.W  (-$80,A0,A0.L), FP0
-      FTST.W  ($3B,A0,D5.W), FP0
-      FTST.W  (-$80,A0,D5.W), FP0
-      FTST.W  (0,A0,D5.L), FP0
-      FTST.W  (-$80,A0,D5.L), FP0
-      FTST.W  (0,A0,A0.W), FP0
-      FTST.W  (-$80,A0,A0.W), FP0
-      FTST.W  (0,A0,A0.L), FP0
-      FTST.W  (-$80,A0,A0.L), FP0
+      FTST.W  ($3B,A0,D5.W)
+      FTST.W  (-$80,A0,D5.W)
+      FTST.W  (0,A0,D5.L)
+      FTST.W  (-$80,A0,D5.L)
+      FTST.W  (0,A0,A0.W)
+      FTST.W  (-$80,A0,A0.W)
+      FTST.W  (0,A0,A0.L)
+      FTST.W  (-$80,A0,A0.L)
       FMOVE.D (1,A0,D5.W), FP0
       FMOVE.D (-$80,A0,D5.W), FP0
       FMOVE.D (0,A0,D5.L), FP0
@@ -11967,14 +11966,14 @@
       FCMP.D  (-$80,A0,A0.W), FP0
       FCMP.D  (0,A0,A0.L), FP0
       FCMP.D  (-$80,A0,A0.L), FP0
-      FTST.D  ($3B,A0,D5.W), FP0
-      FTST.D  (-$80,A0,D5.W), FP0
-      FTST.D  (0,A0,D5.L), FP0
-      FTST.D  (-$80,A0,D5.L), FP0
-      FTST.D  (0,A0,A0.W), FP0
-      FTST.D  (-$80,A0,A0.W), FP0
-      FTST.D  (0,A0,A0.L), FP0
-      FTST.D  (-$80,A0,A0.L), FP0
+      FTST.D  ($3B,A0,D5.W)
+      FTST.D  (-$80,A0,D5.W)
+      FTST.D  (0,A0,D5.L)
+      FTST.D  (-$80,A0,D5.L)
+      FTST.D  (0,A0,A0.W)
+      FTST.D  (-$80,A0,A0.W)
+      FTST.D  (0,A0,A0.L)
+      FTST.D  (-$80,A0,A0.L)
       FMOVE.B (1,A0,D5.L), FP0
       FMOVE.B (-$80,A0,D5.L), FP0
       FMOVE.B (0,A0,D6.W), FP0
@@ -12271,14 +12270,14 @@
       FCMP.B  (-$80,A0,A0.W), FP0
       FCMP.B  (0,A0,A0.L), FP0
       FCMP.B  (-$80,A0,A0.L), FP0
-      FTST.B  ($3B,A0,D5.L), FP0
-      FTST.B  (-$80,A0,D5.L), FP0
-      FTST.B  (0,A0,D6.W), FP0
-      FTST.B  (-$80,A0,D6.W), FP0
-      FTST.B  (0,A0,A0.W), FP0
-      FTST.B  (-$80,A0,A0.W), FP0
-      FTST.B  (0,A0,A0.L), FP0
-      FTST.B  (-$80,A0,A0.L), FP0
+      FTST.B  ($3B,A0,D5.L)
+      FTST.B  (-$80,A0,D5.L)
+      FTST.B  (0,A0,D6.W)
+      FTST.B  (-$80,A0,D6.W)
+      FTST.B  (0,A0,A0.W)
+      FTST.B  (-$80,A0,A0.W)
+      FTST.B  (0,A0,A0.L)
+      FTST.B  (-$80,A0,A0.L)
       FMOVE.L FP0, (1,A0,D6.W)
       FMOVE.L FP0, (-$80,A0,D6.W)
       FMOVE.L FP0, (0,A0,D6.L)
@@ -12605,7 +12604,7 @@
       FSUB.L  ($00412A).W, FP0
       FSINCOS.L   ($004132).W, FP0:FP0
       FCMP.L  ($00413A).W, FP0
-      FTST.L  ($00413C).W, FP0
+      FTST.L  ($00413C).W
       FMOVE.S ($004502).W, FP0
       FINT.S  ($004502).W, FP0
       FSINH.S ($004504).W, FP0
@@ -12643,7 +12642,7 @@
       FSUB.S  ($00452A).W, FP0
       FSINCOS.S   ($004532).W, FP0:FP0
       FCMP.S  ($00453A).W, FP0
-      FTST.S  ($00453C).W, FP0
+      FTST.S  ($00453C).W
       FMOVE.X ($004902).W, FP0
       FINT.X  ($004902).W, FP0
       FSINH.X ($004904).W, FP0
@@ -12681,7 +12680,7 @@
       FSUB.X  ($00492A).W, FP0
       FSINCOS.X   ($004932).W, FP0:FP0
       FCMP.X  ($00493A).W, FP0
-      FTST.X  ($00493C).W, FP0
+      FTST.X  ($00493C).W
       FMOVE.P ($004D02).W, FP0
       FINT.P  ($004D02).W, FP0
       FSINH.P ($004D04).W, FP0
@@ -12719,7 +12718,7 @@
       FSUB.P  ($004D2A).W, FP0
       FSINCOS.P   ($004D32).W, FP0:FP0
       FCMP.P  ($004D3A).W, FP0
-      FTST.P  ($004D3C).W, FP0
+      FTST.P  ($004D3C).W
       FMOVE.W ($005102).W, FP0
       FINT.W  ($005102).W, FP0
       FSINH.W ($005104).W, FP0
@@ -12757,7 +12756,7 @@
       FSUB.W  ($00512A).W, FP0
       FSINCOS.W   ($005132).W, FP0:FP0
       FCMP.W  ($00513A).W, FP0
-      FTST.W  ($00513C).W, FP0
+      FTST.W  ($00513C).W
       FMOVE.D ($005502).W, FP0
       FINT.D  ($005502).W, FP0
       FSINH.D ($005504).W, FP0
@@ -12795,7 +12794,7 @@
       FSUB.D  ($00552A).W, FP0
       FSINCOS.D   ($005532).W, FP0:FP0
       FCMP.D  ($00553A).W, FP0
-      FTST.D  ($00553C).W, FP0
+      FTST.D  ($00553C).W
       FMOVE.B ($005901).W, FP0
       FINT.B  ($005902).W, FP0
       FSINH.B ($005903).W, FP0
@@ -12833,7 +12832,7 @@
       FSUB.B  ($005929).W, FP0
       FSINCOS.B   ($005931).W, FP0:FP0
       FCMP.B  ($005939).W, FP0
-      FTST.B  ($00593B).W, FP0
+      FTST.B  ($00593B).W
       FMOVE.L FP0, ($006102).W
       FMOVE.S FP0, ($006502).W
       FMOVE.X FP0, ($006902).W
@@ -12908,7 +12907,7 @@
       FSUB.L  ($29422A).L, FP0
       FSINCOS.L   ($314232).L, FP0:FP0
       FCMP.L  ($39423A).L, FP0
-      FTST.L  ($3B423C).L, FP0
+      FTST.L  ($3B423C).L
       FMOVE.S ($014602).L, FP0
       FINT.S  ($024604).L, FP0
       FSINH.S ($034604).L, FP0
@@ -12946,7 +12945,7 @@
       FSUB.S  ($29462A).L, FP0
       FSINCOS.S   ($314632).L, FP0:FP0
       FCMP.S  ($39463A).L, FP0
-      FTST.S  ($3B463C).L, FP0
+      FTST.S  ($3B463C).L
       FMOVE.X ($014A02).L, FP0
       FINT.X  ($024A04).L, FP0
       FSINH.X ($034A04).L, FP0
@@ -12984,7 +12983,7 @@
       FSUB.X  ($294A2A).L, FP0
       FSINCOS.X   ($314A32).L, FP0:FP0
       FCMP.X  ($394A3A).L, FP0
-      FTST.X  ($3B4A3C).L, FP0
+      FTST.X  ($3B4A3C).L
       FMOVE.P ($014E02).L, FP0
       FINT.P  ($024E04).L, FP0
       FSINH.P ($034E04).L, FP0
@@ -13022,7 +13021,7 @@
       FSUB.P  ($294E2A).L, FP0
       FSINCOS.P   ($314E32).L, FP0:FP0
       FCMP.P  ($394E3A).L, FP0
-      FTST.P  ($3B4E3C).L, FP0
+      FTST.P  ($3B4E3C).L
       FMOVE.W ($015202).L, FP0
       FINT.W  ($025204).L, FP0
       FSINH.W ($035204).L, FP0
@@ -13060,7 +13059,7 @@
       FSUB.W  ($29522A).L, FP0
       FSINCOS.W   ($315232).L, FP0:FP0
       FCMP.W  ($39523A).L, FP0
-      FTST.W  ($3B523C).L, FP0
+      FTST.W  ($3B523C).L
       FMOVE.D ($015602).L, FP0
       FINT.D  ($025604).L, FP0
       FSINH.D ($035604).L, FP0
@@ -13098,7 +13097,7 @@
       FSUB.D  ($29562A).L, FP0
       FSINCOS.D   ($315632).L, FP0:FP0
       FCMP.D  ($39563A).L, FP0
-      FTST.D  ($3B563C).L, FP0
+      FTST.D  ($3B563C).L
       FMOVE.B ($015A02).L, FP0
       FINT.B  ($025A03).L, FP0
       FSINH.B ($035A04).L, FP0
@@ -13136,7 +13135,7 @@
       FSUB.B  ($295A2A).L, FP0
       FSINCOS.B   ($315A32).L, FP0:FP0
       FCMP.B  ($395A3A).L, FP0
-      FTST.B  ($3B5A3C).L, FP0
+      FTST.B  ($3B5A3C).L
       FMOVE.L FP0, ($016202).L
       FMOVE.S FP0, ($016602).L
       FMOVE.X FP0, ($016A02).L
@@ -13284,9 +13283,9 @@
       FCMP.L  (*+$413E,PC), FP0
       FCMP.L  (*-$7FFC,PC), FP0
       FCMP.L  (*,PC), FP0
-      FTST.L  (*+$4140,PC), FP0
-      FTST.L  (*-$7FFC,PC), FP0
-      FTST.L  (*,PC), FP0
+      FTST.L  (*+$4140,PC)
+      FTST.L  (*-$7FFC,PC)
+      FTST.L  (*,PC)
       FMOVE.S (*+$4506,PC), FP0
       FMOVE.S (*-$7FFC,PC), FP0
       FMOVE.S (*,PC), FP0
@@ -13398,9 +13397,9 @@
       FCMP.S  (*+$453E,PC), FP0
       FCMP.S  (*-$7FFC,PC), FP0
       FCMP.S  (*,PC), FP0
-      FTST.S  (*+$4540,PC), FP0
-      FTST.S  (*-$7FFC,PC), FP0
-      FTST.S  (*,PC), FP0
+      FTST.S  (*+$4540,PC)
+      FTST.S  (*-$7FFC,PC)
+      FTST.S  (*,PC)
       FMOVE.X (*+$4906,PC), FP0
       FMOVE.X (*-$7FFC,PC), FP0
       FMOVE.X (*,PC), FP0
@@ -13512,9 +13511,9 @@
       FCMP.X  (*+$493E,PC), FP0
       FCMP.X  (*-$7FFC,PC), FP0
       FCMP.X  (*,PC), FP0
-      FTST.X  (*+$4940,PC), FP0
-      FTST.X  (*-$7FFC,PC), FP0
-      FTST.X  (*,PC), FP0
+      FTST.X  (*+$4940,PC)
+      FTST.X  (*-$7FFC,PC)
+      FTST.X  (*,PC)
       FMOVE.P (*+$4D06,PC), FP0
       FMOVE.P (*-$7FFC,PC), FP0
       FMOVE.P (*,PC), FP0
@@ -13626,9 +13625,9 @@
       FCMP.P  (*+$4D3E,PC), FP0
       FCMP.P  (*-$7FFC,PC), FP0
       FCMP.P  (*,PC), FP0
-      FTST.P  (*+$4D40,PC), FP0
-      FTST.P  (*-$7FFC,PC), FP0
-      FTST.P  (*,PC), FP0
+      FTST.P  (*+$4D40,PC)
+      FTST.P  (*-$7FFC,PC)
+      FTST.P  (*,PC)
       FMOVE.W (*+$5106,PC), FP0
       FMOVE.W (*-$7FFC,PC), FP0
       FMOVE.W (*,PC), FP0
@@ -13740,9 +13739,9 @@
       FCMP.W  (*+$513E,PC), FP0
       FCMP.W  (*-$7FFC,PC), FP0
       FCMP.W  (*,PC), FP0
-      FTST.W  (*+$5140,PC), FP0
-      FTST.W  (*-$7FFC,PC), FP0
-      FTST.W  (*,PC), FP0
+      FTST.W  (*+$5140,PC)
+      FTST.W  (*-$7FFC,PC)
+      FTST.W  (*,PC)
       FMOVE.D (*+$5506,PC), FP0
       FMOVE.D (*-$7FFC,PC), FP0
       FMOVE.D (*,PC), FP0
@@ -13854,9 +13853,9 @@
       FCMP.D  (*+$553E,PC), FP0
       FCMP.D  (*-$7FFC,PC), FP0
       FCMP.D  (*,PC), FP0
-      FTST.D  (*+$5540,PC), FP0
-      FTST.D  (*-$7FFC,PC), FP0
-      FTST.D  (*,PC), FP0
+      FTST.D  (*+$5540,PC)
+      FTST.D  (*-$7FFC,PC)
+      FTST.D  (*,PC)
       FMOVE.B (*+$5905,PC), FP0
       FMOVE.B (*-$7FFC,PC), FP0
       FMOVE.B (*,PC), FP0
@@ -13968,9 +13967,9 @@
       FCMP.B  (*+$593D,PC), FP0
       FCMP.B  (*-$7FFC,PC), FP0
       FCMP.B  (*,PC), FP0
-      FTST.B  (*+$593F,PC), FP0
-      FTST.B  (*-$7FFC,PC), FP0
-      FTST.B  (*,PC), FP0
+      FTST.B  (*+$593F,PC)
+      FTST.B  (*-$7FFC,PC)
+      FTST.B  (*,PC)
       FMOVE.L (*-$7AFA,PC), FPIAR
       FMOVE.L (*,PC), FPIAR
       FMOVE.L (*+2,PC), FPIAR
@@ -14457,18 +14456,18 @@
       FCMP.L  (*+4,PC,A0.L), FP0
       FCMP.L  (*-124,PC,A0.L), FP0
       FCMP.L  (*,PC,A0.L), FP0
-      FTST.L  (*+63,PC,D4.W), FP0
-      FTST.L  (*-124,PC,D4.W), FP0
-      FTST.L  (*,PC,D4.W), FP0
-      FTST.L  (*+4,PC,D4.L), FP0
-      FTST.L  (*-124,PC,D4.L), FP0
-      FTST.L  (*,PC,D4.L), FP0
-      FTST.L  (*+4,PC,A0.W), FP0
-      FTST.L  (*-124,PC,A0.W), FP0
-      FTST.L  (*,PC,A0.W), FP0
-      FTST.L  (*+4,PC,A0.L), FP0
-      FTST.L  (*-124,PC,A0.L), FP0
-      FTST.L  (*,PC,A0.L), FP0
+      FTST.L  (*+63,PC,D4.W)
+      FTST.L  (*-124,PC,D4.W)
+      FTST.L  (*,PC,D4.W)
+      FTST.L  (*+4,PC,D4.L)
+      FTST.L  (*-124,PC,D4.L)
+      FTST.L  (*,PC,D4.L)
+      FTST.L  (*+4,PC,A0.W)
+      FTST.L  (*-124,PC,A0.W)
+      FTST.L  (*,PC,A0.W)
+      FTST.L  (*+4,PC,A0.L)
+      FTST.L  (*-124,PC,A0.L)
+      FTST.L  (*,PC,A0.L)
       FMOVE.S (*+5,PC,D4.W), FP0
       FMOVE.S (*-124,PC,D4.W), FP0
       FMOVE.S (*,PC,D4.W), FP0
@@ -14913,18 +14912,18 @@
       FCMP.S  (*+4,PC,A0.L), FP0
       FCMP.S  (*-124,PC,A0.L), FP0
       FCMP.S  (*,PC,A0.L), FP0
-      FTST.S  (*+63,PC,D4.W), FP0
-      FTST.S  (*-124,PC,D4.W), FP0
-      FTST.S  (*,PC,D4.W), FP0
-      FTST.S  (*+4,PC,D4.L), FP0
-      FTST.S  (*-124,PC,D4.L), FP0
-      FTST.S  (*,PC,D4.L), FP0
-      FTST.S  (*+4,PC,A0.W), FP0
-      FTST.S  (*-124,PC,A0.W), FP0
-      FTST.S  (*,PC,A0.W), FP0
-      FTST.S  (*+4,PC,A0.L), FP0
-      FTST.S  (*-124,PC,A0.L), FP0
-      FTST.S  (*,PC,A0.L), FP0
+      FTST.S  (*+63,PC,D4.W)
+      FTST.S  (*-124,PC,D4.W)
+      FTST.S  (*,PC,D4.W)
+      FTST.S  (*+4,PC,D4.L)
+      FTST.S  (*-124,PC,D4.L)
+      FTST.S  (*,PC,D4.L)
+      FTST.S  (*+4,PC,A0.W)
+      FTST.S  (*-124,PC,A0.W)
+      FTST.S  (*,PC,A0.W)
+      FTST.S  (*+4,PC,A0.L)
+      FTST.S  (*-124,PC,A0.L)
+      FTST.S  (*,PC,A0.L)
       FMOVE.X (*+5,PC,D4.L), FP0
       FMOVE.X (*-124,PC,D4.L), FP0
       FMOVE.X (*,PC,D4.L), FP0
@@ -15369,18 +15368,18 @@
       FCMP.X  (*+4,PC,A0.L), FP0
       FCMP.X  (*-124,PC,A0.L), FP0
       FCMP.X  (*,PC,A0.L), FP0
-      FTST.X  (*+63,PC,D4.L), FP0
-      FTST.X  (*-124,PC,D4.L), FP0
-      FTST.X  (*,PC,D4.L), FP0
-      FTST.X  (*+4,PC,D5.W), FP0
-      FTST.X  (*-124,PC,D5.W), FP0
-      FTST.X  (*,PC,D5.W), FP0
-      FTST.X  (*+4,PC,A0.W), FP0
-      FTST.X  (*-124,PC,A0.W), FP0
-      FTST.X  (*,PC,A0.W), FP0
-      FTST.X  (*+4,PC,A0.L), FP0
-      FTST.X  (*-124,PC,A0.L), FP0
-      FTST.X  (*,PC,A0.L), FP0
+      FTST.X  (*+63,PC,D4.L)
+      FTST.X  (*-124,PC,D4.L)
+      FTST.X  (*,PC,D4.L)
+      FTST.X  (*+4,PC,D5.W)
+      FTST.X  (*-124,PC,D5.W)
+      FTST.X  (*,PC,D5.W)
+      FTST.X  (*+4,PC,A0.W)
+      FTST.X  (*-124,PC,A0.W)
+      FTST.X  (*,PC,A0.W)
+      FTST.X  (*+4,PC,A0.L)
+      FTST.X  (*-124,PC,A0.L)
+      FTST.X  (*,PC,A0.L)
       FMOVE.P (*+5,PC,D4.L), FP0
       FMOVE.P (*-124,PC,D4.L), FP0
       FMOVE.P (*,PC,D4.L), FP0
@@ -15825,18 +15824,18 @@
       FCMP.P  (*+4,PC,A0.L), FP0
       FCMP.P  (*-124,PC,A0.L), FP0
       FCMP.P  (*,PC,A0.L), FP0
-      FTST.P  (*+63,PC,D4.L), FP0
-      FTST.P  (*-124,PC,D4.L), FP0
-      FTST.P  (*,PC,D4.L), FP0
-      FTST.P  (*+4,PC,D5.W), FP0
-      FTST.P  (*-124,PC,D5.W), FP0
-      FTST.P  (*,PC,D5.W), FP0
-      FTST.P  (*+4,PC,A0.W), FP0
-      FTST.P  (*-124,PC,A0.W), FP0
-      FTST.P  (*,PC,A0.W), FP0
-      FTST.P  (*+4,PC,A0.L), FP0
-      FTST.P  (*-124,PC,A0.L), FP0
-      FTST.P  (*,PC,A0.L), FP0
+      FTST.P  (*+63,PC,D4.L)
+      FTST.P  (*-124,PC,D4.L)
+      FTST.P  (*,PC,D4.L)
+      FTST.P  (*+4,PC,D5.W)
+      FTST.P  (*-124,PC,D5.W)
+      FTST.P  (*,PC,D5.W)
+      FTST.P  (*+4,PC,A0.W)
+      FTST.P  (*-124,PC,A0.W)
+      FTST.P  (*,PC,A0.W)
+      FTST.P  (*+4,PC,A0.L)
+      FTST.P  (*-124,PC,A0.L)
+      FTST.P  (*,PC,A0.L)
       FMOVE.W (*+5,PC,D5.W), FP0
       FMOVE.W (*-124,PC,D5.W), FP0
       FMOVE.W (*,PC,D5.W), FP0
@@ -16281,18 +16280,18 @@
       FCMP.W  (*+4,PC,A0.L), FP0
       FCMP.W  (*-124,PC,A0.L), FP0
       FCMP.W  (*,PC,A0.L), FP0
-      FTST.W  (*+63,PC,D5.W), FP0
-      FTST.W  (*-124,PC,D5.W), FP0
-      FTST.W  (*,PC,D5.W), FP0
-      FTST.W  (*+4,PC,D5.L), FP0
-      FTST.W  (*-124,PC,D5.L), FP0
-      FTST.W  (*,PC,D5.L), FP0
-      FTST.W  (*+4,PC,A0.W), FP0
-      FTST.W  (*-124,PC,A0.W), FP0
-      FTST.W  (*,PC,A0.W), FP0
-      FTST.W  (*+4,PC,A0.L), FP0
-      FTST.W  (*-124,PC,A0.L), FP0
-      FTST.W  (*,PC,A0.L), FP0
+      FTST.W  (*+63,PC,D5.W)
+      FTST.W  (*-124,PC,D5.W)
+      FTST.W  (*,PC,D5.W)
+      FTST.W  (*+4,PC,D5.L)
+      FTST.W  (*-124,PC,D5.L)
+      FTST.W  (*,PC,D5.L)
+      FTST.W  (*+4,PC,A0.W)
+      FTST.W  (*-124,PC,A0.W)
+      FTST.W  (*,PC,A0.W)
+      FTST.W  (*+4,PC,A0.L)
+      FTST.W  (*-124,PC,A0.L)
+      FTST.W  (*,PC,A0.L)
       FMOVE.D (*+5,PC,D5.W), FP0
       FMOVE.D (*-124,PC,D5.W), FP0
       FMOVE.D (*,PC,D5.W), FP0
@@ -16737,18 +16736,18 @@
       FCMP.D  (*+4,PC,A0.L), FP0
       FCMP.D  (*-124,PC,A0.L), FP0
       FCMP.D  (*,PC,A0.L), FP0
-      FTST.D  (*+63,PC,D5.W), FP0
-      FTST.D  (*-124,PC,D5.W), FP0
-      FTST.D  (*,PC,D5.W), FP0
-      FTST.D  (*+4,PC,D5.L), FP0
-      FTST.D  (*-124,PC,D5.L), FP0
-      FTST.D  (*,PC,D5.L), FP0
-      FTST.D  (*+4,PC,A0.W), FP0
-      FTST.D  (*-124,PC,A0.W), FP0
-      FTST.D  (*,PC,A0.W), FP0
-      FTST.D  (*+4,PC,A0.L), FP0
-      FTST.D  (*-124,PC,A0.L), FP0
-      FTST.D  (*,PC,A0.L), FP0
+      FTST.D  (*+63,PC,D5.W)
+      FTST.D  (*-124,PC,D5.W)
+      FTST.D  (*,PC,D5.W)
+      FTST.D  (*+4,PC,D5.L)
+      FTST.D  (*-124,PC,D5.L)
+      FTST.D  (*,PC,D5.L)
+      FTST.D  (*+4,PC,A0.W)
+      FTST.D  (*-124,PC,A0.W)
+      FTST.D  (*,PC,A0.W)
+      FTST.D  (*+4,PC,A0.L)
+      FTST.D  (*-124,PC,A0.L)
+      FTST.D  (*,PC,A0.L)
       FMOVE.B (*+5,PC,D5.L), FP0
       FMOVE.B (*-124,PC,D5.L), FP0
       FMOVE.B (*,PC,D5.L), FP0
@@ -17193,18 +17192,18 @@
       FCMP.B  (*+4,PC,A0.L), FP0
       FCMP.B  (*-124,PC,A0.L), FP0
       FCMP.B  (*,PC,A0.L), FP0
-      FTST.B  (*+63,PC,D5.L), FP0
-      FTST.B  (*-124,PC,D5.L), FP0
-      FTST.B  (*,PC,D5.L), FP0
-      FTST.B  (*+4,PC,D6.W), FP0
-      FTST.B  (*-124,PC,D6.W), FP0
-      FTST.B  (*,PC,D6.W), FP0
-      FTST.B  (*+4,PC,A0.W), FP0
-      FTST.B  (*-124,PC,A0.W), FP0
-      FTST.B  (*,PC,A0.W), FP0
-      FTST.B  (*+4,PC,A0.L), FP0
-      FTST.B  (*-124,PC,A0.L), FP0
-      FTST.B  (*,PC,A0.L), FP0
+      FTST.B  (*+63,PC,D5.L)
+      FTST.B  (*-124,PC,D5.L)
+      FTST.B  (*,PC,D5.L)
+      FTST.B  (*+4,PC,D6.W)
+      FTST.B  (*-124,PC,D6.W)
+      FTST.B  (*,PC,D6.W)
+      FTST.B  (*+4,PC,A0.W)
+      FTST.B  (*-124,PC,A0.W)
+      FTST.B  (*,PC,A0.W)
+      FTST.B  (*+4,PC,A0.L)
+      FTST.B  (*-124,PC,A0.L)
+      FTST.B  (*,PC,A0.L)
       FMOVE.L (*+5,PC,A0.W), FPIAR
       FMOVE.L (*-124,PC,A0.W), FPIAR
       FMOVE.L (*,PC,A0.W), FPIAR
@@ -17410,7 +17409,7 @@
       FSUB.L  #$4129422A, FP0
       FSINCOS.L   #$41314232, FP0:FP0
       FCMP.L  #$4139423A, FP0
-      FTST.L  #$413B423C, FP0
+      FTST.L  #$413B423C
       FMOVE.S #2068.37549, FP0
       FMOVE.S #2069, FP0
       FMOVE.S #-8965129, FP0
@@ -17522,9 +17521,9 @@
       FCMP.S  #2964.38916, FP0
       FCMP.S  #2965, FP0
       FCMP.S  #-12635201, FP0
-      FTST.S  #2996.38965, FP0
-      FTST.S  #2997, FP0
-      FTST.S  #-12766275, FP0
+      FTST.S  #2996.38965
+      FTST.S  #2997
+      FTST.S  #-12766275
       FMOVE.X #INF, FP0
       FMOVE.X #-0, FP0
       FMOVE.X #0, FP0
@@ -17636,9 +17635,9 @@
       FCMP.X  #INF, FP0
       FCMP.X  #-0, FP0
       FCMP.X  #0, FP0
-      FTST.X  #INF, FP0
-      FTST.X  #-0, FP0
-      FTST.X  #0, FP0
+      FTST.X  #INF
+      FTST.X  #-0
+      FTST.X  #0
       FMOVE.P #-7.8268836984708571E66, FP0
       FINT.P  #-8.8269837084718572E67, FP0
       FSINH.P #1.5612571358145915E-410, FP0
@@ -17708,8 +17707,8 @@
       FSINCOS.P   #2.4213431444154516E-11, FP0:FP0
       FCMP.P  #1.5342544355445645E-140, FP0
       FCMP.P  #-1.8302840385048605E100, FP0
-      FTST.P  #1.5242534354445545E-40, FP0
-      FTST.P  #-1.8302840385048605E100, FP0
+      FTST.P  #1.5242534354445545E-40
+      FTST.P  #-1.8302840385048605E100
       FMOVE.P #4.4265436644674568E-63, FP1
       FINT.P  #1.5692579358945995E-490, FP1
       FTAN.P  #3.4274437544764577E-72, FP1
@@ -17752,7 +17751,7 @@
       FSUB.W  #$5129, FP0
       FSINCOS.W   #$5131, FP0:FP0
       FCMP.W  #$5139, FP0
-      FTST.W  #$513B, FP0
+      FTST.W  #$513B
       FMOVE.D #3.033449596414564E+101, FP0
       FINT.D  #3.2084323244217412E+101, FP0
       FSINH.D #3.3834150524289184E+101, FP0
@@ -17792,7 +17791,7 @@
       FSUB.D  #1.7733587445028565E+102, FP0
       FSINCOS.D   #2.4268622060738429E+102, FP0:FP0
       FCMP.D  #3.546751665319777E+102, FP0
-      FTST.D  #3.8267240301312605E+102, FP0
+      FTST.D  #3.8267240301312605E+102
       FMOVE.B #1, FP0
       FINT.B  #2, FP0
       FSINH.B #3, FP0
@@ -17830,7 +17829,7 @@
       FSUB.B  #$29, FP0
       FSINCOS.B   #$31, FP0:FP0
       FCMP.B  #$39, FP0
-      FTST.B  #$3B, FP0
+      FTST.B  #$3B
       FMOVE.L #$85018602, FPIAR
       FMOVE.L #$89018A02, FPSR
       FMOVE.L #$91019202, FPCR
