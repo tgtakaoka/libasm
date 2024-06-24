@@ -25,27 +25,17 @@ namespace libasm {
 
 namespace {
 
-bool expectTrue(StrScanner &scan) {
-    return scan.iexpectWord_P(PSTR("enable")) || scan.iexpectWord_P(PSTR("true")) ||
-           scan.iexpectWord_P(PSTR("yes")) || scan.iexpectWord_P(PSTR("on"));
-}
-
-bool expectFalse(StrScanner &scan) {
-    return scan.iexpectWord_P(PSTR("disable")) || scan.iexpectWord_P(PSTR("false")) ||
-           scan.iexpectWord_P(PSTR("no")) || scan.iexpectWord_P(PSTR("off"));
-}
-
 Error parseBool(StrScanner &scan, bool &value) {
     auto p = scan;
     const auto dquote = p.expect('"');
-    if (expectTrue(p)) {
+    if (p.expectTrue()) {
         if (dquote && !p.expect('"'))
             return MISSING_CLOSING_DQUOTE;
         scan = p;
         value = true;
         return OK;
     }
-    if (expectFalse(p)) {
+    if (p.expectFalse()) {
         if (dquote && !p.expect('"'))
             return MISSING_CLOSING_DQUOTE;
         scan = p;

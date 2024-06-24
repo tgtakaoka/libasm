@@ -85,9 +85,9 @@ void AsmI8086::reset() {
 Error AsmI8086::setFpu(StrScanner &scan) {
     auto p = scan;
     p.iexpect('i');
-    if (p.iequals_P(TEXT_FPU_8087)) {
+    if (scan.expectTrue() || p.iequals_P(TEXT_FPU_8087)) {
         setFpuType(FPU_I8087);
-    } else if (scan.iequals_P(TEXT_none)) {
+    } else if (scan.expectFalse() || scan.iequals_P(TEXT_none)) {
         setFpuType(FPU_NONE);
     } else {
         return UNKNOWN_OPERAND;

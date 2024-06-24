@@ -112,9 +112,9 @@ void AsmMc68000::reset() {
 }
 
 Error AsmMc68000::setFpu(StrScanner &scan) {
-    if (scan.iequals_P(TEXT_FPU_68881) || scan.iequals_P(TEXT_FPU_MC68881)) {
+    if (scan.expectTrue() || scan.iequals_P(TEXT_FPU_68881) || scan.iequals_P(TEXT_FPU_MC68881)) {
         setFpuType(FPU_MC68881);
-    } else if (scan.iequals_P(TEXT_none)) {
+    } else if (scan.expectFalse() || scan.iequals_P(TEXT_none)) {
         setFpuType(FPU_NONE);
     } else {
         return UNKNOWN_OPERAND;

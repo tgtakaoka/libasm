@@ -52,6 +52,16 @@ bool StrScanner::iexpectWord_P(const /*PROGMEM*/ char *text_P) {
     return false;
 }
 
+bool StrScanner::expectTrue() {
+    return iexpectWord_P(PSTR("enable")) || iexpectWord_P(PSTR("true")) ||
+           iexpectWord_P(PSTR("yes")) || iexpectWord_P(PSTR("on"));
+}
+
+bool StrScanner::expectFalse() {
+    return iexpectWord_P(PSTR("disable")) || iexpectWord_P(PSTR("false")) ||
+           iexpectWord_P(PSTR("no")) || iexpectWord_P(PSTR("off"));
+}
+
 }  // namespace libasm
 
 // Local Variables:

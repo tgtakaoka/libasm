@@ -148,6 +148,16 @@ struct StrScanner {
      */
     bool iexpectWord_P(const /*PROGMEM*/ char *text_P);
 
+    /**
+     * return true if this starts with "true", "on", "enable", or "yes" with ignore case.
+     */
+    bool expectTrue();
+
+    /**
+     * return true if this starts with "false", "off", "disable", or "no" with ignore case.
+     */
+    bool expectFalse();
+
     /** return true if this equals to |text| with ignore case. */
     bool iequals(const StrScanner &text) const;
 

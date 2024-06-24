@@ -204,6 +204,32 @@ void test_expectWord() {
     EQ("scan5", "text5_text6", scan5.str());
 }
 
+void test_true_false() {
+    StrScanner scanT("true");
+    TRUE("true", scanT.expectTrue());
+
+    StrScanner scanF("false");
+    TRUE("false", scanF.expectFalse());
+
+    StrScanner scan1("on");
+    TRUE("on", scan1.expectTrue());
+
+    StrScanner scan2("off");
+    TRUE("off", scan2.expectFalse());
+
+    StrScanner scan3("enable");
+    TRUE("enable", scan3.expectTrue());
+
+    StrScanner scan4("disable");
+    TRUE("disable", scan4.expectFalse());
+
+    StrScanner scan5("YES");
+    TRUE("YES", scan5.expectTrue());
+
+    StrScanner scan6("NO");
+    TRUE("NO", scan6.expectFalse());
+}
+
 void test_iequals() {
     const StrScanner textA("textA");
     const StrScanner scanA("textA");
@@ -224,6 +250,7 @@ void run_tests() {
     RUN_TEST(test_expect);
     RUN_TEST(test_expectText);
     RUN_TEST(test_expectWord);
+    RUN_TEST(test_true_false);
     RUN_TEST(test_iequals);
 }
 
