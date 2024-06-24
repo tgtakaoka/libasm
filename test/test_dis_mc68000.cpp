@@ -3890,6 +3890,34 @@ static void test_float_trap() {
     TEST("FTRAPST.L", "#$12345678", 0xF240|073, 0x001F, 0x1234, 0x5678);
     TEST("FTRAPST",   "",           0xF240|074, 0x001F);
 }
+
+static void test_float_system() {
+    UNKN(0xF340|002);
+    UNKN(0xF340|014);
+    TEST("FRESTORE", "(A6)",           0xF340|026);
+    TEST("FRESTORE", "(A0)+",          0xF340|030);
+    UNKN(0xF340|042);
+    TEST("FRESTORE", "($1234,A4)",     0xF340|054, 0x1234);
+    TEST("FRESTORE", "($23,A6,D7.W)",  0xF340|066, 0x7023);
+    TEST("FRESTORE", "($004566).W",    0xF340|070, 0x4566);
+    TEST("FRESTORE", "($56789A).L",    0xF340|071, 0x0056, 0x789A);
+    TEST("FRESTORE", "(*+$1234,PC)",   0xF340|072, 0x1232);
+    TEST("FRESTORE", "(*+90,PC,A4.L)", 0xF340|073, 0xC858);
+    UNKN(0xF340|074);
+
+    UNKN(0xF300|002);
+    UNKN(0xF300|014);
+    TEST("FSAVE", "(A6)",           0xF300|026);
+    UNKN(0xF300|030);
+    TEST("FSAVE", "-(A2)",          0xF300|042);
+    TEST("FSAVE", "($1234,A4)",     0xF300|054, 0x1234);
+    TEST("FSAVE", "($23,A6,D7.W)",  0xF300|066, 0x7023);
+    TEST("FSAVE", "($004566).W",    0xF300|070, 0x4566);
+    TEST("FSAVE", "($56789A).L",    0xF300|071, 0x0056, 0x789A);
+    UNKN(0xF300|072);
+    UNKN(0xF300|073);
+    UNKN(0xF300|074);
+}
 // clang-format on
 
 void run_tests(const char *cpu) {
@@ -3907,6 +3935,7 @@ void run_tests(const char *cpu) {
     RUN_TEST(test_float_arithmetic);
     RUN_TEST(test_float_branch);
     RUN_TEST(test_float_trap);
+    RUN_TEST(test_float_system);
 }
 
 // Local Variables:

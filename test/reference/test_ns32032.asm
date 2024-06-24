@@ -18,7 +18,7 @@
 
         fpu     ns32081
         align   32
-        include "test_ns32000_float.inc"
+        include "test_ns32000_fpu.inc"
 
         pmmu    ns32082
         align   32

@@ -4428,6 +4428,37 @@ static void test_float_trap() {
     TEST("FTRAPST.L #$12345678", 0xF240|073, 0x001F, 0x1234, 0x5678);
     TEST("FTRAPST",              0xF240|074, 0x001F);
 }
+
+static void test_float_system() {
+    TEST("FPU ON");
+
+    ERRT("FRESTORE D2",             OPERAND_NOT_ALLOWED, "D2");
+    ERRT("FRESTORE A4",             OPERAND_NOT_ALLOWED, "A4");
+    TEST("FRESTORE (A6)",           0xF340|026);
+    TEST("FRESTORE (A0)+",          0xF340|030);
+    ERRT("FRESTORE -(A2)",          OPERAND_NOT_ALLOWED, "-(A2)");
+    TEST("FRESTORE ($1234,A4)",     0xF340|054, 0x1234);
+    TEST("FRESTORE ($23,A6,D7.W)",  0xF340|066, 0x7023);
+    TEST("FRESTORE ($004566).W",    0xF340|070, 0x4566);
+    TEST("FRESTORE ($56789A).L",    0xF340|071, 0x0056, 0x789A);
+    TEST("FRESTORE (*+$1234,PC)",   0xF340|072, 0x1232);
+    TEST("FRESTORE (*+90,PC,A4.L)", 0xF340|073, 0xC858);
+    ERRT("FRESTORE #$6789ABCD",     OPERAND_NOT_ALLOWED, "#$6789ABCD");
+
+    ERRT("FSAVE D2",             OPERAND_NOT_ALLOWED, "D2");
+    ERRT("FSAVE A4",             OPERAND_NOT_ALLOWED, "A4");
+    TEST("FSAVE (A6)",           0xF300|026);
+    ERRT("FSAVE (A0)+",          OPERAND_NOT_ALLOWED, "(A0)+");
+    TEST("FSAVE -(A2)",          0xF300|042);
+    TEST("FSAVE ($1234,A4)",     0xF300|054, 0x1234);
+    TEST("FSAVE ($23,A6,D7.W)",  0xF300|066, 0x7023);
+    TEST("FSAVE ($004566).W",    0xF300|070, 0x4566);
+    TEST("FSAVE ($56789A).L",    0xF300|071, 0x0056, 0x789A);
+    ERRT("FSAVE (*+$1234,PC)",   OPERAND_NOT_ALLOWED, "(*+$1234,PC)");
+    ERRT("FSAVE (*+90,PC,A4.L)", OPERAND_NOT_ALLOWED, "(*+90,PC,A4.L)");
+    ERRT("FSAVE #$6789ABCD",     OPERAND_NOT_ALLOWED, "#$6789ABCD");
+}
+
 static void test_comment() {
     COMM("NOP           ; comment", "; comment", 0047161);
     COMM("ORI  # 0 , CCR; comment", "; comment", 0000074, 0x0000);
@@ -4578,6 +4609,7 @@ void run_tests(const char *cpu) {
     RUN_TEST(test_float_arithmetic);
     RUN_TEST(test_float_branch);
     RUN_TEST(test_float_trap);
+    RUN_TEST(test_float_system);
     RUN_TEST(test_comment);
     RUN_TEST(test_undef);
     RUN_TEST(test_data_constant);

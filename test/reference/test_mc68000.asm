@@ -13,8 +13,10 @@
 ;;; limitations under the License.
 
         cpu     68000
+        fpu     on
         org     $10000
         include "test_mc68000.inc"
+        include "test_mc68000_fpu.inc"
         end
 
 ;;; Local Variables:
