@@ -560,10 +560,18 @@ static constexpr Entry MC68881_ARITH[] PROGMEM = {
     P2(0xF000, TEXT_FMOVE,   ISZ_FIXD, M_RADDR, M_FPIAR, OP_10, OP___, SZ_LONG, 0x8400),
     P2(0xF000, TEXT_FMOVE,   ISZ_FIXD, M_RADDR, M_FPSR,  OP_10, OP___, SZ_LONG, 0x8800),
     P2(0xF000, TEXT_FMOVE,   ISZ_FIXD, M_RADDR, M_FPCR,  OP_10, OP___, SZ_LONG, 0x9000),
+    P2(0xF000, TEXT_FMOVEM,  ISZ_FIXD, M_AREG,  M_FPIAR, OP_10, OP___, SZ_LONG, 0x8400),
+    P2(0xF000, TEXT_FMOVEM,  ISZ_FIXD, M_DREG,  M_FPIAR, OP_10, OP___, SZ_LONG, 0x8400),
+    P2(0xF000, TEXT_FMOVEM,  ISZ_FIXD, M_DREG,  M_FPSR,  OP_10, OP___, SZ_LONG, 0x8800),
+    P2(0xF000, TEXT_FMOVEM,  ISZ_FIXD, M_DREG,  M_FPCR,  OP_10, OP___, SZ_LONG, 0x9000),
     P2(0xF000, TEXT_FMOVEM,  ISZ_FIXD, M_RADDR, M_FCMLT, OP_10, EX_RX, SZ_LONG, 0x8000),
     P2(0xF000, TEXT_FMOVE,   ISZ_FIXD, M_FPIAR, M_WADDR, OP___, OP_10, SZ_LONG, 0xA400),
     P2(0xF000, TEXT_FMOVE,   ISZ_FIXD, M_FPSR,  M_WADDR, OP___, OP_10, SZ_LONG, 0xA800),
     P2(0xF000, TEXT_FMOVE,   ISZ_FIXD, M_FPCR,  M_WADDR, OP___, OP_10, SZ_LONG, 0xB000),
+    P2(0xF000, TEXT_FMOVEM,  ISZ_FIXD, M_FPIAR, M_AREG,  OP___, OP_10, SZ_LONG, 0xA400),
+    P2(0xF000, TEXT_FMOVEM,  ISZ_FIXD, M_FPIAR, M_DREG,  OP___, OP_10, SZ_LONG, 0xA400),
+    P2(0xF000, TEXT_FMOVEM,  ISZ_FIXD, M_FPSR,  M_DREG,  OP___, OP_10, SZ_LONG, 0xA800),
+    P2(0xF000, TEXT_FMOVEM,  ISZ_FIXD, M_FPCR,  M_DREG,  OP___, OP_10, SZ_LONG, 0xB000),
     P2(0xF000, TEXT_FMOVEM,  ISZ_FIXD, M_FCMLT, M_WADDR, EX_RX, OP_10, SZ_LONG, 0xA000),
     P2(0xF000, TEXT_FMOVEM,  ISZ_FIXD, M_FPMLT, M_DADDR, EX_SL, OP_10, SZ_XTND, 0xE000),
     P2(0xF000, TEXT_FMOVEM,  ISZ_FIXD, M_DREG,  M_DADDR, EX_DL, OP_10, SZ_XTND, 0xE800),
@@ -606,61 +614,61 @@ static constexpr Entry MC68881_ARITH[] PROGMEM = {
 static constexpr uint8_t MC68881_ARITH_INDEX[] PROGMEM = {
      19,  // TEXT_FABS
      57,  // TEXT_FABS
-    113,  // TEXT_FABS
+    121,  // TEXT_FABS
      22,  // TEXT_FACOS
      60,  // TEXT_FACOS
-    116,  // TEXT_FACOS
+    124,  // TEXT_FACOS
      28,  // TEXT_FADD
      66,  // TEXT_FADD
       9,  // TEXT_FASIN
      47,  // TEXT_FASIN
-    103,  // TEXT_FASIN
+    111,  // TEXT_FASIN
       8,  // TEXT_FATAN
      46,  // TEXT_FATAN
-    102,  // TEXT_FATAN
+    110,  // TEXT_FATAN
      10,  // TEXT_FATANH
      48,  // TEXT_FATANH
-    104,  // TEXT_FATANH
+    112,  // TEXT_FATANH
      36,  // TEXT_FCMP
      74,  // TEXT_FCMP
      23,  // TEXT_FCOS
      61,  // TEXT_FCOS
-    117,  // TEXT_FCOS
+    125,  // TEXT_FCOS
      20,  // TEXT_FCOSH
      58,  // TEXT_FCOSH
-    114,  // TEXT_FCOSH
+    122,  // TEXT_FCOSH
      26,  // TEXT_FDIV
      64,  // TEXT_FDIV
      13,  // TEXT_FETOX
      51,  // TEXT_FETOX
-    107,  // TEXT_FETOX
+    115,  // TEXT_FETOX
       6,  // TEXT_FETOXM1
      44,  // TEXT_FETOXM1
-    100,  // TEXT_FETOXM1
+    108,  // TEXT_FETOXM1
      24,  // TEXT_FGETEXP
      62,  // TEXT_FGETEXP
-    118,  // TEXT_FGETEXP
+    126,  // TEXT_FGETEXP
      25,  // TEXT_FGETMAN
      63,  // TEXT_FGETMAN
-    119,  // TEXT_FGETMAN
+    127,  // TEXT_FGETMAN
       1,  // TEXT_FINT
      39,  // TEXT_FINT
-     95,  // TEXT_FINT
+    103,  // TEXT_FINT
       3,  // TEXT_FINTRZ
      41,  // TEXT_FINTRZ
-     97,  // TEXT_FINTRZ
+    105,  // TEXT_FINTRZ
      17,  // TEXT_FLOG10
      55,  // TEXT_FLOG10
-    111,  // TEXT_FLOG10
+    119,  // TEXT_FLOG10
      18,  // TEXT_FLOG2
      56,  // TEXT_FLOG2
-    112,  // TEXT_FLOG2
+    120,  // TEXT_FLOG2
      16,  // TEXT_FLOGN
      54,  // TEXT_FLOGN
-    110,  // TEXT_FLOGN
+    118,  // TEXT_FLOGN
       5,  // TEXT_FLOGNP1
      43,  // TEXT_FLOGNP1
-     99,  // TEXT_FLOGNP1
+    107,  // TEXT_FLOGNP1
      27,  // TEXT_FMOD
      65,  // TEXT_FMOD
       0,  // TEXT_FMOVE
@@ -671,29 +679,37 @@ static constexpr uint8_t MC68881_ARITH_INDEX[] PROGMEM = {
      79,  // TEXT_FMOVE
      80,  // TEXT_FMOVE
      81,  // TEXT_FMOVE
-     83,  // TEXT_FMOVE
-     84,  // TEXT_FMOVE
-     85,  // TEXT_FMOVE
-    120,  // TEXT_FMOVECR
+     87,  // TEXT_FMOVE
+     88,  // TEXT_FMOVE
+     89,  // TEXT_FMOVE
+    128,  // TEXT_FMOVECR
      82,  // TEXT_FMOVEM
+     83,  // TEXT_FMOVEM
+     84,  // TEXT_FMOVEM
+     85,  // TEXT_FMOVEM
      86,  // TEXT_FMOVEM
-     87,  // TEXT_FMOVEM
-     88,  // TEXT_FMOVEM
-     89,  // TEXT_FMOVEM
      90,  // TEXT_FMOVEM
      91,  // TEXT_FMOVEM
      92,  // TEXT_FMOVEM
      93,  // TEXT_FMOVEM
      94,  // TEXT_FMOVEM
+     95,  // TEXT_FMOVEM
+     96,  // TEXT_FMOVEM
+     97,  // TEXT_FMOVEM
+     98,  // TEXT_FMOVEM
+     99,  // TEXT_FMOVEM
+    100,  // TEXT_FMOVEM
+    101,  // TEXT_FMOVEM
+    102,  // TEXT_FMOVEM
      29,  // TEXT_FMUL
      67,  // TEXT_FMUL
      21,  // TEXT_FNEG
      59,  // TEXT_FNEG
-    115,  // TEXT_FNEG
+    123,  // TEXT_FNEG
      31,  // TEXT_FREM
      69,  // TEXT_FREM
-    122,  // TEXT_FRESTORE
-    121,  // TEXT_FSAVE
+    130,  // TEXT_FRESTORE
+    129,  // TEXT_FSAVE
      32,  // TEXT_FSCALE
      70,  // TEXT_FSCALE
      30,  // TEXT_FSGLDIV
@@ -702,31 +718,31 @@ static constexpr uint8_t MC68881_ARITH_INDEX[] PROGMEM = {
      71,  // TEXT_FSGLMUL
      11,  // TEXT_FSIN
      49,  // TEXT_FSIN
-    105,  // TEXT_FSIN
+    113,  // TEXT_FSIN
      35,  // TEXT_FSINCOS
      73,  // TEXT_FSINCOS
       2,  // TEXT_FSINH
      40,  // TEXT_FSINH
-     96,  // TEXT_FSINH
+    104,  // TEXT_FSINH
       4,  // TEXT_FSQRT
      42,  // TEXT_FSQRT
-     98,  // TEXT_FSQRT
+    106,  // TEXT_FSQRT
      34,  // TEXT_FSUB
      72,  // TEXT_FSUB
      12,  // TEXT_FTAN
      50,  // TEXT_FTAN
-    106,  // TEXT_FTAN
+    114,  // TEXT_FTAN
       7,  // TEXT_FTANH
      45,  // TEXT_FTANH
-    101,  // TEXT_FTANH
+    109,  // TEXT_FTANH
      15,  // TEXT_FTENTOX
      53,  // TEXT_FTENTOX
-    109,  // TEXT_FTENTOX
+    117,  // TEXT_FTENTOX
      37,  // TEXT_FTST
      75,  // TEXT_FTST
      14,  // TEXT_FTWOTOX
      52,  // TEXT_FTWOTOX
-    108,  // TEXT_FTWOTOX
+    116,  // TEXT_FTWOTOX
 };
 
 static constexpr Entry MC68881_BRANCH[] PROGMEM = {
