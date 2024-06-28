@@ -15,9 +15,8 @@
  */
 
 #include "operators.h"
-
 #include <ctype.h>
-
+#include <math.h>
 #include "str_scanner.h"
 
 namespace libasm {

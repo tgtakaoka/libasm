@@ -1,3 +1,4 @@
+#include <stdio.h>
 /*
  * Copyright 2022 Tadashi G. Takaoka
  *
@@ -34,7 +35,7 @@ enum Radix : uint8_t {
 };
 
 struct Value {
-    Value() : _value(0), _type(UNDEFINED) {}
+    Value() : _uint32(0), _type(V_UNDEF) {}
 
     /**
      * Parse text |scan| as a number of |radix| based.
@@ -46,34 +47,47 @@ struct Value {
      * - Returns ILLEGAL_CONSTANT when there is no valid digit found at |scan|, and |scan} is
      *   unchanged.
      */
-    Error parseNumber(StrScanner &scan, Radix radix) {
-        _type = UNSIGNED;
-        return parseNumber(scan, radix, _value);
-    }
+    Error parseNumber(StrScanner &scan, Radix radix);
 
-    bool isUndefined() const { return _type == UNDEFINED; }
-    bool isSigned() const { return _type == NEGATIVE; }
-    bool isUnsigned() const { return _type == UNSIGNED; }
-    bool overflowUint8() const { return ConfigBase::overflowUint8(_value); }
-    bool overflowUint16() const { return ConfigBase::overflowUint16(_value); }
-    bool overflowUint(uint8_t bitw) const { return ConfigBase::overflowUint(_value, bitw); }
+    bool isUndefined() const { return _type == V_UNDEF; }
+    bool isSigned() const { return _type == V_INT32; }
+    bool isUnsigned() const { return _type == V_UINT32 || isUndefined(); }
+    bool isInt32() const { return isUnsigned() || isSigned(); }
+    bool isInt64() const { return isInt32() || _type == V_INT64 || _type == V_UINT64; }
+    bool isFloat() const { return _type == V_FLOAT64; }
+    bool overflowUint8() const { return ConfigBase::overflowUint8(_uint32); }
+    bool overflowUint16() const { return ConfigBase::overflowUint16(_uint32); }
+    bool overflowUint32() const { return ConfigBase::overflowUint32(getInt64()); }
+    bool overflowUint(uint8_t bitw) const { return ConfigBase::overflowUint(_uint32, bitw); }
 
-    int32_t getSigned() const { return static_cast<int32_t>(_value); }
-    uint32_t getUnsigned() const { return _value; }
+    int32_t getSigned() const { return static_cast<int32_t>(_uint32); }
+    uint32_t getUnsigned() const { return _uint32; }
+    int64_t getInt64() const;
+    double getFloat() const;
 
     Value &setSigned(int32_t value) {
-        _value = value;
-        _type = value < 0 ? NEGATIVE : UNSIGNED;
+        _uint32 = value;
+        _type = value < 0 ? V_INT32 : V_UINT32;
         return *this;
     }
     Value &setUnsigned(uint32_t value) {
-        _value = value;
-        _type = UNSIGNED;
+        _uint32 = value;
+        _type = V_UINT32;
+        return *this;
+    }
+    Value &setInt64(int64_t value) {
+        _uint64 = value;
+        _type = V_INT64;
+        return *this;
+    }
+    Value &setFloat(double value) {
+        _float64 = value;
+        _type = V_FLOAT64;
         return *this;
     }
     Value &clear() {
-        _value = 0;
-        _type = UNDEFINED;
+        _uint32 = 0;
+        _type = V_UNDEF;
         return *this;
     }
 
@@ -94,14 +108,49 @@ struct Value {
     static Error parseNumber(StrScanner &scan, Radix radix, uint32_t &value);
     static Error parseNumber(StrScanner &scan, Radix radix, uint64_t &value);
 
+#define DEBUG_VALUE 0
+#if DEBUG_VALUE
+    void print() const {
+        switch (_type) {
+        case V_UNDEF:
+            printf("<undef>");
+            break;
+        case V_INT32:
+            printf("<i32>%d", static_cast<int32_t>(_uint32));
+            break;
+        case V_UINT32:
+            printf("<u32>%u", _uint32);
+            break;
+        case V_INT64:
+            printf("<i64>%ld", static_cast<int64_t>(_uint64));
+            break;
+        case V_UINT64:
+            printf("<u64>%ld", _uint64);
+            break;
+        case V_FLOAT64:
+            printf("<f64>%lg", _float64);
+            break;
+        }
+    }
+#else
+    void print() const {}
+#endif
+
 private:
     enum ValueType : uint8_t {
-        UNDEFINED = 0,
-        NEGATIVE = 1,
-        UNSIGNED = 2,
+        V_UNDEF = 0,
+        V_UINT32 = 1,
+        V_INT32 = 2,
+        V_UINT64 = 3,
+        V_INT64 = 4,
+        V_FLOAT64 = 5,
     };
 
-    uint32_t _value;
+    union {
+        uint32_t _uint32;
+        uint64_t _uint64;
+        double _float64;
+    };
     ValueType _type;
 };
 

@@ -19,11 +19,11 @@
 namespace libasm {
 
 bool ConfigBase::overflowInt8(int32_t s32) {
-    return s32 < -128 || s32 >= 128;
+    return s32 < -0x80 || s32 >= 0x80;
 }
 
 bool ConfigBase::overflowInt16(int32_t s32) {
-    return s32 < -32768L || s32 >= 32768L;
+    return s32 < -0x8000 || s32 >= 0x8000;
 }
 
 bool ConfigBase::overflowInt(int32_t s32, uint8_t bitw) {
@@ -33,17 +33,22 @@ bool ConfigBase::overflowInt(int32_t s32, uint8_t bitw) {
 
 bool ConfigBase::overflowUint8(uint16_t u16) {
     const auto s16 = static_cast<int16_t>(u16);
-    return s16 < -128 || (s16 >= 0 && u16 >= 256);
+    return s16 < -0x80 || (s16 >= 0 && u16 >= 0x100);
 }
 
 bool ConfigBase::overflowUint8(uint32_t u32) {
     const auto s32 = static_cast<int32_t>(u32);
-    return s32 < -128 || (s32 >= 0 && u32 >= 0x100);
+    return s32 < -0x80 || (s32 >= 0 && u32 >= 0x100);
 }
 
 bool ConfigBase::overflowUint16(uint32_t u32) {
     const auto s32 = static_cast<int32_t>(u32);
-    return s32 < -32768L || (s32 >= 0 && u32 >= 0x10000L);
+    return s32 < -0x8000L || (s32 >= 0 && u32 >= 0x1'0000L);
+}
+
+bool ConfigBase::overflowUint32(uint64_t u64) {
+    const auto s64 = static_cast<int64_t>(u64);
+    return s64 < -0x8000'0000L || (s64 >= 0 && u64 >= 0x1'0000'0000L);
 }
 
 bool ConfigBase::overflowUint(uint32_t u32, uint8_t bitw) {

@@ -21,6 +21,7 @@
 #include "entry_mc68000.h"
 #include "insn_base.h"
 #include "reg_mc68000.h"
+#include "value.h"
 
 namespace libasm {
 namespace mc68000 {
@@ -41,18 +42,13 @@ struct Operand final : ErrorAt {
     RegName reg;
     RegName indexReg;
     InsnSize indexSize;
-    uint32_t val32;
-    long double float80;
+    Value value;
     StrScanner list;
     Operand()
-        : mode(M_NONE),
-          reg(REG_UNDEF),
-          indexReg(REG_UNDEF),
-          indexSize(ISZ_NONE),
-          val32(0),
-          float80(0),
-          list() {}
+        : mode(M_NONE), reg(REG_UNDEF), indexReg(REG_UNDEF), indexSize(ISZ_NONE), value(), list() {}
     Config::uintptr_t offset(const AsmInsn &insn) const;
+    uint32_t getUint32() const { return value.getUnsigned(); }
+    double getFloat() const { return value.getFloat(); }
 };
 
 struct AsmInsn final : AsmInsnImpl<Config>, EntryInsn {
@@ -81,6 +77,9 @@ struct AsmInsn final : AsmInsnImpl<Config>, EntryInsn {
 private:
     InsnSize _isize;
     void parseInsnSize();
+
+    friend class AsmMc68000;
+    Insn &getInsn() { return _insn; }
 };
 
 struct DisInsn final : DisInsnImpl<Config>, EntryInsn {

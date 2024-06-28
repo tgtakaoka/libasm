@@ -50,17 +50,17 @@ constexpr char TEXT_dSPACE[]  PROGMEM = ".space";
 
 constexpr Pseudo PSEUDOS[] PROGMEM = {
     {TEXT_dALIGN,  &Assembler::alignOrigin},
-    {TEXT_dASCII,  &Assembler::defineDataConstant,  Assembler::DATA_BYTE},
-    {TEXT_dBLKB,   &Assembler::allocateSpaces,      Assembler::DATA_BYTE},
-    {TEXT_dBLKD,   &Assembler::allocateSpaces,      Assembler::DATA_LONG},
-    {TEXT_dBLKW,   &Assembler::allocateSpaces,      Assembler::DATA_WORD},
-    {TEXT_dBYTE,   &Assembler::defineDataConstant,  Assembler::DATA_BYTE},
-    {TEXT_dDOUBLE, &Assembler::defineDataConstant,  Assembler::DATA_LONG},
-    {TEXT_dFLOAT,  &Assembler::defineFloatConstant, Assembler::DATA_FLOAT32},
-    {TEXT_dLONG,   &Assembler::defineFloatConstant, Assembler::DATA_FLOAT64},
+    {TEXT_dASCII,  &Assembler::defineDataConstant, Assembler::DATA_BYTE},
+    {TEXT_dBLKB,   &Assembler::allocateSpaces,     Assembler::DATA_BYTE},
+    {TEXT_dBLKD,   &Assembler::allocateSpaces,     Assembler::DATA_LONG},
+    {TEXT_dBLKW,   &Assembler::allocateSpaces,     Assembler::DATA_WORD},
+    {TEXT_dBYTE,   &Assembler::defineDataConstant, Assembler::DATA_BYTE},
+    {TEXT_dDOUBLE, &Assembler::defineDataConstant, Assembler::DATA_LONG},
+    {TEXT_dFLOAT,  &Assembler::defineDataConstant, Assembler::DATA_FLOAT32},
+    {TEXT_dLONG,   &Assembler::defineDataConstant, Assembler::DATA_FLOAT64},
     {TEXT_dORG,    &Assembler::defineOrigin},
-    {TEXT_dSPACE,  &Assembler::allocateSpaces,      Assembler::DATA_BYTE},
-    {TEXT_dWORD,   &Assembler::defineDataConstant,  Assembler::DATA_WORD},
+    {TEXT_dSPACE,  &Assembler::allocateSpaces,     Assembler::DATA_BYTE},
+    {TEXT_dWORD,   &Assembler::defineDataConstant, Assembler::DATA_WORD},
 };
 // clang-format on
 PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
@@ -311,28 +311,17 @@ Error AsmNs32000::parseBaseOperand(StrScanner &scan, Operand &op) const {
         return op.setError(scan, UNKNOWN_REGISTER);
     }
 
-    const auto val = parseExpr(p, op);
-    if ((op.isOK() && (*p == '.' || *p == 'e' || *p == 'E')) || op.getError() == OVERFLOW_RANGE ||
-            op.getError() == UNDEFINED_SYMBOL) {
-        char *end;
-        op.float64 = strtod(scan.str(), &end);
-        StrScanner e(end);
-        if (end != scan.str() && (endOfLine(e.skipSpaces()) || *e == ',')) {
-            op.mode = M_IMM;
-            op.size = SZ_OCTA;
-            scan = e;
-            return op.setOK();
-        }
-    }
+    op.value = parseExpr(p, op);
     if (op.hasError())
         return op.getError();
-    op.val32 = val.getUnsigned();
-    op.size = SZ_QUAD;
-    if (val.isSigned()) {
-        op.float64 = val.getSigned();
-    } else {
-        op.float64 = val.getUnsigned();
+    if (op.value.isFloat()) {
+        op.mode = M_IMM;
+        op.size = SZ_OCTA;
+        scan = p;
+        return op.setOK();
     }
+    op.val32 = op.value.getUnsigned();
+    op.size = SZ_QUAD;
     if (endOfLine(p.skipSpaces()) || *p == ',') {
         op.mode = M_IMM;  // M_REL
         scan = p;
@@ -525,9 +514,9 @@ void AsmNs32000::emitImmediate(AsmInsn &insn, AddrMode mode, const Operand &op) 
         insn.emitOperand8(op.val32);
     } else if (mode == M_FENR) {
         if (size == SZ_OCTA) {
-            insn.emitOpFloat64(op.float64);
+            insn.emitOpFloat64(op.getFloat());
         } else {
-            insn.emitOpFloat32(op.float64);
+            insn.emitOpFloat32(op.getFloat());
         }
     } else if (size == SZ_WORD) {
         insn.emitOperand16(op.val32);

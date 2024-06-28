@@ -70,6 +70,21 @@ typedef union {
 
 #endif  // AVR
 
+namespace libasm {
+namespace host {
+constexpr bool is_little_endian() {
+#if defined(__LITTLE_ENDIAN__)
+    return true;
+#elif defined(__BIG_ENDIAN__)
+    return false;
+#else
+    const int i = 1;
+    return (bool)(*(const char *)&i);
+#endif
+}
+}  // namespace host
+}  // namespace libasm
+
 #endif  // __LIBASM_CONFIG_HOST_H__
 
 // Local Variables:

@@ -95,6 +95,7 @@ struct ConfigBase {
     static bool overflowUint8(uint16_t u16);
     static bool overflowUint8(uint32_t u32);
     static bool overflowUint16(uint32_t u32);
+    static bool overflowUint32(uint64_t u64);
     static bool overflowUint(uint32_t, uint8_t bitw);
 };
 
