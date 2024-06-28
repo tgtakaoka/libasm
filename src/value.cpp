@@ -16,6 +16,7 @@
 
 #include "value.h"
 #include <ctype.h>
+#include <math.h>
 #include <stdlib.h>
 
 namespace libasm {
@@ -64,8 +65,46 @@ Error Value::parseNumber(StrScanner &scan, Radix radix, uint64_t &value) {
     return strToNumber<uint64_t, UINT64_MAX>(scan, radix, value);
 }
 
+Error Value::parseNumber(StrScanner &scan, Radix radix) {
+    const auto save = scan;
+    auto type = V_UINT32;
+    auto error = parseNumber(scan, radix, _uint32);
+    if (error == OVERFLOW_RANGE) {
+        scan = save;
+        type = V_UINT64;
+        error = parseNumber(scan, radix, _uint64);
+    }
+    if (error == OK) {
+        _type = type;
+        return OK;
+    }
+    return NOT_AN_EXPECTED;
+}
+
+int64_t Value::getInt64() const {
+    if (isSigned())
+        return getSigned();
+    if (isUnsigned())
+        return getUnsigned();
+    return static_cast<int64_t>(_uint64);
+}
+
+double Value::getFloat() const {
+    if (isInt32() || _type == V_INT64)
+        return static_cast<double>(getInt64());
+    if (_type == V_UINT64)
+        return static_cast<double>(_uint64);
+    return _float64;
+}
+
 bool Value::isZero() const {
-    return !isUndefined() && getUnsigned() == 0;
+    if (isUndefined())
+        return false;
+    if (isInt32())
+        return getUnsigned() == 0;
+    if (isInt64())
+        return getInt64() == 0;
+    return _float64 == 0;
 }
 
 bool Value::negateOverflow() const {
@@ -103,39 +142,63 @@ Value Value::operator-() const {
         const auto u32 = getUnsigned();
         if (u32 <= static_cast<uint32_t>(INT32_MIN)) {
             v.setSigned(-static_cast<int32_t>(u32));
+        } else {
+            v.setInt64(-static_cast<int64_t>(u32));
         }
+    } else if (isInt64()) {
+        v.setInt64(-getInt64());
+    } else {
+        v.setFloat(-getFloat());
     }
     return v;
 }
 
 Value Value::operator+(const Value &rhs) const {
     Value v;
-    if (isSigned() || rhs.isSigned()) {
-        v.setSigned(getSigned() + rhs.getSigned());
+    if (isInt32() && rhs.isInt32()) {
+        if (isSigned() || rhs.isSigned()) {
+            v.setSigned(getSigned() + rhs.getSigned());
+        } else {
+            v.setUnsigned(getUnsigned() + rhs.getUnsigned());
+        }
+    } else if (isInt64() && rhs.isInt64()) {
+        v.setInt64(getInt64() + rhs.getInt64());
     } else {
-        v.setUnsigned(getUnsigned() + rhs.getUnsigned());
+        v.setFloat(getFloat() + rhs.getFloat());
     }
     return v;
 }
 
 Value Value::operator-(const Value &rhs) const {
     Value v;
-    if (isSigned() || rhs.isSigned()) {
-        v.setSigned(getSigned() - rhs.getSigned());
-    } else if (getUnsigned() < rhs.getUnsigned()) {
-        v.setSigned(getUnsigned() - rhs.getUnsigned());
+    if (isInt32() && rhs.isInt32()) {
+        if (isSigned() || rhs.isSigned()) {
+            v.setSigned(getSigned() - rhs.getSigned());
+        } else if (getUnsigned() < rhs.getUnsigned()) {
+            v.setSigned(getUnsigned() - rhs.getUnsigned());
+        } else {
+            v.setUnsigned(getUnsigned() - rhs.getUnsigned());
+        }
+    } else if (isInt64() && rhs.isInt64()) {
+        v.setInt64(getInt64() - rhs.getInt64());
     } else {
-        v.setUnsigned(getUnsigned() - rhs.getUnsigned());
+        v.setFloat(getFloat() - rhs.getFloat());
     }
     return v;
 }
 
 Value Value::operator*(const Value &rhs) const {
     Value v;
-    if (isSigned() || rhs.isSigned()) {
-        v.setSigned(getSigned() * rhs.getSigned());
+    if (isInt32() && rhs.isInt32()) {
+        if (isSigned() || rhs.isSigned()) {
+            v.setSigned(getSigned() * rhs.getSigned());
+        } else {
+            v.setUnsigned(getUnsigned() * rhs.getUnsigned());
+        }
+    } else if (isInt64() && rhs.isInt64()) {
+        v.setInt64(getInt64() * rhs.getInt64());
     } else {
-        v.setUnsigned(getUnsigned() * rhs.getUnsigned());
+        v.setFloat(getFloat() * rhs.getFloat());
     }
     return v;
 }
@@ -144,10 +207,16 @@ Value Value::operator/(const Value &rhs) const {
     Value v;
     if (rhs.isUndefined()) {
         v = *this;
-    } else if (isSigned() || rhs.isSigned()) {
-        v.setSigned(getSigned() / rhs.getSigned());
+    } else if (isInt32() && rhs.isInt32()) {
+        if (isSigned() || rhs.isSigned()) {
+            v.setSigned(getSigned() / rhs.getSigned());
+        } else {
+            v.setUnsigned(getUnsigned() / rhs.getUnsigned());
+        }
+    } else if (isInt64() && rhs.isInt64()) {
+        v.setInt64(getInt64() / rhs.getInt64());
     } else {
-        v.setUnsigned(getUnsigned() / rhs.getUnsigned());
+        v.setFloat(getFloat() / rhs.getFloat());
     }
     return v;
 }
@@ -156,10 +225,16 @@ Value Value::operator%(const Value &rhs) const {
     Value v;
     if (rhs.isUndefined()) {
         v = *this;
-    } else if (isSigned() || rhs.isSigned()) {
-        v.setSigned(getSigned() % rhs.getSigned());
+    } else if (isInt32() && rhs.isInt32()) {
+        if (isSigned() || rhs.isSigned()) {
+            v.setSigned(getSigned() % rhs.getSigned());
+        } else {
+            v.setUnsigned(getUnsigned() % rhs.getUnsigned());
+        }
+    } else if (isInt64() && rhs.isInt64()) {
+        v.setInt64(getInt64() % rhs.getInt64());
     } else {
-        v.setUnsigned(getUnsigned() % rhs.getUnsigned());
+        v.setFloat(fmod(getFloat(), rhs.getFloat()));
     }
     return v;
 }
@@ -202,10 +277,14 @@ static BASE power(BASE base, uint32_t exp) {
 
 Value Value::exponential(const Value &rhs) const {
     Value v;
-    if (isSigned() && getSigned() < 0) {
-        v.setSigned(power<int32_t>(getSigned(), rhs.getUnsigned()));
+    if (isInt32() && rhs.isInt32()) {
+        if (isSigned() && getSigned() < 0) {
+            v.setSigned(power<int32_t>(getSigned(), rhs.getUnsigned()));
+        } else {
+            v.setUnsigned(power<uint32_t>(getUnsigned(), rhs.getUnsigned()));
+        }
     } else {
-        v.setUnsigned(power<uint32_t>(getUnsigned(), rhs.getUnsigned()));
+        v.setFloat(pow(getFloat(), rhs.getFloat()));
     }
     return v;
 }

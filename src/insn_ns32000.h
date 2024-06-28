@@ -21,6 +21,7 @@
 #include "entry_ns32000.h"
 #include "insn_base.h"
 #include "reg_ns32000.h"
+#include "value.h"
 
 namespace libasm {
 namespace ns32000 {
@@ -52,22 +53,24 @@ private:
 struct Operand final : ErrorAt {
     AddrMode mode;
     RegName reg;
+    Value value;
     uint32_t val32;
     uint32_t disp2;
-    double float64;
     RegName index;
     OprSize size;
     Operand()
         : mode(M_NONE),
           reg(REG_UNDEF),
+          value(),
           val32(0),
           disp2(0),
-          float64(0),
           index(REG_UNDEF),
           size(SZ_NONE) {}
+    uint32_t getUint32() const { return value.getUnsigned(); }
+    double getFloat() const { return value.getFloat(); }
 };
 
-struct AsmInsn final : AsmInsnImpl<Config>, EntryInsn {
+struct AsmInsn final : public AsmInsnImpl<Config>, EntryInsn {
     AsmInsn(Insn &insn) : AsmInsnImpl(insn) {}
 
     Operand srcOp, dstOp, ex1Op, ex2Op;
@@ -84,7 +87,7 @@ struct AsmInsn final : AsmInsnImpl<Config>, EntryInsn {
     void emitOperand8(uint8_t val8) { emitByte(val8, operandPos()); }
     void emitOperand16(uint16_t val16) { emitUint16Be(val16, operandPos()); }
     void emitOperand32(uint32_t val32) { emitUint32Be(val32, operandPos()); }
-    void emitOpFloat32(float float32) { emitFloat32Be(float32, operandPos()); }
+    void emitOpFloat32(double float64) { emitFloat32Be(float64, operandPos()); }
     void emitOpFloat64(double float64) { emitFloat64Be(float64, operandPos()); }
 
 private:

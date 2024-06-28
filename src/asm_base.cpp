@@ -14,27 +14,9 @@
  * limitations under the License.
  */
 
+#include "asm_base.h"
 #include <math.h>
 #include <stdlib.h>
-
-#ifndef powl
-#define powl(a, b) pow(a, b)
-#endif
-#ifndef log10l
-#define log10l(a) log10(a)
-#endif
-#ifndef log2l
-#define log2l(a) (log10(a) / log10(2))
-#endif
-#ifndef strtold
-#define strtold(a, b) strtod(a, b)
-#endif
-#ifndef modfl
-#define modfl(a, b) modf(a, b)
-#endif
-
-#include "asm_base.h"
-
 #include "text_common.h"
 
 namespace libasm {
@@ -132,6 +114,8 @@ Error Assembler::processPseudo(StrScanner &scan, Insn &insn) {
 uint16_t Assembler::parseExpr16(StrScanner &expr, ErrorAt &error, char delim) const {
     auto p = expr;
     const auto value = _parser.eval(p, error, _symtab, delim);
+    if (value.isFloat())
+        error.setErrorIf(expr, INTEGER_REQUIRED);
     if (value.overflowUint16())
         error.setErrorIf(expr, OVERFLOW_RANGE);
     expr = p;
@@ -139,7 +123,10 @@ uint16_t Assembler::parseExpr16(StrScanner &expr, ErrorAt &error, char delim) co
 }
 
 uint32_t Assembler::parseExpr32(StrScanner &expr, ErrorAt &error, char delim) const {
-    return _parser.eval(expr, error, _symtab, delim).getUnsigned();
+    const auto value = _parser.eval(expr, error, _symtab, delim);
+    if (value.isFloat())
+        error.setErrorIf(expr, INTEGER_REQUIRED);
+    return value.getUnsigned();
 }
 
 Value Assembler::parseExpr(StrScanner &expr, ErrorAt &error, char delim) const {
@@ -379,7 +366,8 @@ Error Assembler::defineDataConstant(StrScanner &scan, Insn &insn, uint8_t dataTy
         setCurrentLocation(insn.align(2));
     const auto type = static_cast<DataType>(dataType & ~DATA_ALIGN2);
     const auto big = config().endian() == ENDIAN_BIG;
-    const auto hasString = !(type == DATA_BYTE_NO_STRING || type == DATA_WORD_NO_STRING);
+    const auto hasString = !(type == DATA_BYTE_NO_STRING || type == DATA_WORD_NO_STRING) ||
+                           type == DATA_FLOAT32_LONG;
     ErrorAt error;
     do {
         auto p = scan.skipSpaces();
@@ -391,14 +379,19 @@ Error Assembler::defineDataConstant(StrScanner &scan, Insn &insn, uint8_t dataTy
 
         const auto at = p;
         ErrorAt exprErr;
-        const auto value = parseExpr(p, exprErr);
+        const auto val = parseExpr(p, exprErr);
         if (!endOfLine(p) && *p != ',')
             exprErr.setErrorIf(at, ILLEGAL_CONSTANT);
         if (!exprErr.hasError()) {
-            auto v = value.getUnsigned();
+            auto v = val.getUnsigned();
             switch (type) {
-            case DATA_LONG:
-                big ? insn.emitUint32Be(v) : insn.emitUint32Le(v);
+            case DATA_BYTE_OR_WORD:
+                if (val.overflowUint8())
+                    goto emit_word;
+                // Fall-through
+            case DATA_BYTE:
+            case DATA_BYTE_NO_STRING:
+                insn.emitByte(v);
                 break;
             case DATA_BYTE_IN_WORD:
                 v &= 0xFF;
@@ -408,13 +401,52 @@ Error Assembler::defineDataConstant(StrScanner &scan, Insn &insn, uint8_t dataTy
             emit_word:
                 big ? insn.emitUint16Be(v) : insn.emitUint16Le(v);
                 break;
-            case DATA_BYTE_OR_WORD:
-                if (value.overflowUint8())
-                    goto emit_word;
-                goto emit_byte;
-            default:  // DATA_BYTE, DATA_BYTE_NO_STRING
-            emit_byte:
-                insn.emitByte(v);
+            case DATA_LONG:
+                big ? insn.emitUint32Be(v) : insn.emitUint32Le(v);
+                break;
+            case DATA_FLOAT32_LONG:
+                if (val.isInt32()) {
+                    const auto v = val.getUnsigned();
+                    big ? insn.emitUint32Be(v) : insn.emitUint32Le(v);
+                    break;
+                }
+                /* Fall-through */
+            case DATA_FLOAT32:
+                big ? insn.emitFloat32Be(val.getFloat()) : insn.emitFloat32Le(val.getFloat());
+                break;
+            case DATA_FLOAT64_QUAD:
+                if (val.isInt64()) {
+                    const auto v = val.getInt64();
+                    big ? insn.emitUint64Be(v) : insn.emitUint64Le(v);
+                    break;
+                }
+                /* Fall-through */
+            case DATA_FLOAT64:
+                big ? insn.emitFloat64Be(val.getFloat()) : insn.emitFloat64Le(val.getFloat());
+                break;
+            case DATA_FLOAT80_BCD:
+                if (val.isInt64()) {
+                    const auto value = val.getInt64();
+                    constexpr auto MAX_PBCD80 = 999'999'999'999'999'999L;
+                    constexpr auto MIN_PBCD80 = -MAX_PBCD80;
+                    if (value >= MIN_PBCD80 && value <= MAX_PBCD80) {
+                        generatePackedBcd80Le(value, insn);
+                        break;
+                    }
+                }
+                if (!big) {  // i8087
+                    generateFloat80Le(val.getFloat(), insn);
+                }
+                break;
+            case DATA_FLOAT96:
+                if (big)  // MC68881
+                    generateFloat96Be(val.getFloat(), insn, insn.length());
+                break;
+            case DATA_PACKED_BCD96:
+                if (big)  // MC68881
+                    generatePackedBcd96Be(val.getFloat(), insn, insn.length());
+                break;
+            case DATA_ALIGN2:
                 break;
             }
             if (insn.getError())
@@ -431,6 +463,7 @@ Error Assembler::defineDataConstant(StrScanner &scan, Insn &insn, uint8_t dataTy
 }
 
 namespace {
+
 uint64_t convert2pbcd(uint64_t bin, uint8_t digits) {
     uint64_t pbcd = 0;
     uint8_t shift = 0;
@@ -441,165 +474,99 @@ uint64_t convert2pbcd(uint64_t bin, uint8_t digits) {
     }
     return pbcd;
 }
-}  // namespace
 
-void Assembler::generateFloat80Le(bool negative, long double value, Insn &insn) const {
-    if (negative)
-        value = -value;
-    const uint16_t sign = negative ? 0x8000 : 0;
-    if (isinf(value)) {
-        insn.emitUint64Le(0);
-        insn.emitUint16Le(sign | 0x7FFF);
-    } else if (isnan(value)) {
-        insn.emitUint64Le(static_cast<uint64_t>(1) << 63);
-        insn.emitUint16Le(sign | 0x7FFF);
-    } else {
-        const int16_t exponent = log2l(value);
-        const auto significand = value / powl(2.0, exponent);
-        insn.emitUint64Le(significand * powl(2.0, 63));
-        insn.emitUint16Le(sign | (exponent + 16383));
-    }
+void swap(uint8_t &a, uint8_t &b) {
+    auto t = a;
+    a = b;
+    b = t;
 }
 
-void Assembler::generateFloat96Be(
-        bool negative, long double value, AsmInsnBase &insn, uint8_t pos, DataType type) const {
-    if (negative)
-        value = -value;
-    uint16_t sign = negative ? 0x8000 : 0;
+struct Float80 {
+    uint16_t exponent;
+    uint64_t significant;
+    Float80(double value) {
+        union {
+            double float64;
+            uint8_t buffer[8];
+        };
+        float64 = value;
+        if (host::is_little_endian()) {
+            swap(buffer[0], buffer[7]);
+            swap(buffer[1], buffer[6]);
+            swap(buffer[2], buffer[5]);
+            swap(buffer[3], buffer[4]);
+        }
+        uint16_t exp11 = ((uint16_t)(buffer[0] & 0x7F) << 4) + (buffer[1] >> 4);
+        const auto denormal = exp11 == 0;
+        exponent = (exp11 == 0x07FF) ? 0x7FFF : exp11 + (0x3FFF - 0x03FF);
+        if (buffer[0] & 0x80)
+            exponent |= 0x8000;
+        significant = buffer[1] & 0xF;
+        if (!denormal)
+            significant |= 0x10;  // hidden integer 1
+        for (auto i = 2; i < 8; ++i) {
+            significant <<= 8;
+            significant |= buffer[i];
+        }
+        significant <<= (63 - 52);
+    }
+};
+
+}  // namespace
+
+void Assembler::generateFloat80Le(double value, Insn &insn) const {
+    Float80 v(value);
+    insn.emitUint64Le(v.significant);
+    insn.emitUint16Le(v.exponent);
+}
+
+void Assembler::generatePackedBcd80Le(int64_t value, Insn &insn) const {
+    const auto sign = value < 0 ? INT8_MIN : 0;
+    auto u64 = static_cast<uint64_t>(sign ? -value : value);
+    for (auto i = 0; i < 9; ++i) {
+        uint8_t d = u64 % 10;
+        u64 /= 10;
+        d |= (u64 % 10) << 4;
+        u64 /= 10;
+        insn.emitByte(d);
+    }
+    insn.emitByte(sign);
+}
+
+void Assembler::generateFloat96Be(double value, Insn &insn, uint8_t pos) const {
+    Float80 v(value);
+    insn.emitUint16Be(v.exponent, pos);
+    insn.emitUint16Be(0, pos + 2);
+    insn.emitUint64Be(v.significant, pos + 4);
+}
+
+void Assembler::generatePackedBcd96Be(double value, Insn &insn, uint8_t pos) const {
+    Float80 v(value);
     if (isinf(value)) {
-        insn.emitUint16Be(sign | 0x7FFF, pos);
+        insn.emitUint16Be(v.exponent | INT16_MAX, pos);
         insn.emitUint16Be(0, pos += 2);
         insn.emitUint64Be(0, pos += 2);
     } else if (isnan(value)) {
-        insn.emitUint16Be(sign | 0x7FFF, pos);
+        insn.emitUint16Be(v.exponent | INT16_MAX, pos);
         insn.emitUint16Be(0, pos += 2);
-        insn.emitUint64Be(static_cast<uint64_t>(1) << 63, pos += 2);
-    } else if (type == DATA_FLOAT96) {
-        const int16_t exponent = log2l(value);
-        const auto significand = value / powl(2.0, exponent);
-        insn.emitUint16Be(sign | (exponent + 16383), pos);
-        insn.emitUint16Be(0, pos += 2);
-        insn.emitUint64Be(significand * powl(2.0, 63), pos += 2);
-    } else if (type == DATA_PACKED_BCD96) {
-        int16_t exponent = log10l(value);
+        insn.emitUint64Be(INT64_MIN, pos += 2);
+    } else {
+        if (value < 0)
+            value = -value;
+        auto exponent = static_cast<int16_t>(log10(value));
         if (exponent < 0 || (exponent == 0 && value < 1.0))
             --exponent;
-        uint8_t digit = value * powl(10.0, -exponent);
-        value *= powl(10.0, 16 - exponent);
+        uint8_t digit = value * pow(10.0, -exponent);
+        v.significant = value * pow(10.0, 16 - exponent);
+        auto sign = v.exponent & 0x8000;
         if (exponent < 0) {
             sign |= 0x4000;
             exponent = -exponent;
         }
         insn.emitUint16Be(sign | convert2pbcd(exponent, 3), pos);
         insn.emitUint16Be(digit, pos += 2);
-        insn.emitUint64Be(convert2pbcd(value, 16), pos += 2);
+        insn.emitUint64Be(convert2pbcd(v.significant, 16), pos += 2);
     }
-}
-
-Error Assembler::defineFloatConstant(StrScanner &scan, Insn &insn, uint8_t dataType) {
-    // Do alignment if requested.
-    if (dataType & DATA_ALIGN2)
-        setCurrentLocation(insn.align(2));
-    const auto type = static_cast<DataType>(dataType & ~DATA_ALIGN2);
-    const auto big = config().endian() == ENDIAN_BIG;
-    const auto hasString = (type == DATA_FLOAT32_LONG);
-    ErrorAt error;
-    do {
-        auto p = scan.skipSpaces();
-        ErrorAt strErr;
-        if (hasString && isString(p, strErr) == OK) {
-            generateString(scan, p, insn, type, error);
-            continue;
-        }
-
-        const auto at = p;
-        const auto negative = p.expect('-') != 0;
-        ErrorAt exprErr;
-        long double value = 0;
-        uint64_t val64 = parseExpr(p, exprErr).getUnsigned();
-        const auto fpnum = (*p == '.' || *p == 'e' || *p == 'E');
-        auto integer = exprErr.isOK() && !fpnum;
-        if (!integer) {
-            p = at;
-            p.expect('-');
-            const auto error = Value::parseNumber(p, RADIX_10, val64);
-            integer = (error == OK && !fpnum);
-            if (integer) {
-                value = negative ? -static_cast<int64_t>(val64) : val64;
-                exprErr.setOK();
-            } else {
-                char *end;
-                value = strtold(at.str(), &end);
-                if (end != at.str()) {
-                    exprErr.setOK();
-                } else if (exprErr.hasError()) {
-                    exprErr.setError(at, ILLEGAL_CONSTANT);
-                }
-                p = end;
-            }
-        }
-        if (!endOfLine(p) && *p != ',')
-            exprErr.setErrorIf(at, ILLEGAL_CONSTANT);
-        if (!exprErr.hasError()) {
-            switch (type) {
-            case DATA_FLOAT32_LONG:
-                if (integer && val64 <= UINT32_MAX) {
-                    if (negative)
-                        val64 = -static_cast<int64_t>(val64);
-                    big ? insn.emitUint32Be(val64) : insn.emitUint32Le(val64);
-                    break;
-                }
-                /* Fall-through */
-            case DATA_FLOAT32:
-                big ? insn.emitFloat32Be(value) : insn.emitFloat32Le(value);
-                break;
-            case DATA_FLOAT64_QUAD:
-                if (integer) {
-                    if (negative)
-                        val64 = -static_cast<int64_t>(val64);
-                    big ? insn.emitUint64Be(val64) : insn.emitUint64Le(val64);
-                    break;
-                }
-                /* Fall-through */
-            case DATA_FLOAT64:
-                big ? insn.emitFloat64Be(value) : insn.emitFloat64Le(value);
-                break;
-            case DATA_FLOAT80_BCD:
-                if (integer && val64 <= 1e18 - 1) {  // i8087
-                    for (auto i = 0; i < 9; ++i) {
-                        uint8_t d = val64 % 10;
-                        val64 /= 10;
-                        d |= (val64 % 10) << 4;
-                        val64 /= 10;
-                        insn.emitByte(d);
-                    }
-                    const uint8_t sign = negative ? 0x80 : 0;
-                    insn.emitByte(sign);
-                } else if (!big) {  // i8087
-                    generateFloat80Le(negative, value, insn);
-                }
-                break;
-            case DATA_FLOAT96:
-            case DATA_PACKED_BCD96:
-                if (big) {  // MC68881
-                    AsmInsnBase i{insn};
-                    generateFloat96Be(negative, value, i, insn.length(), type);
-                }
-                break;
-            default:
-                break;
-            }
-            if (insn.getError())
-                error.setErrorIf(at, insn);
-            scan = p;
-            if (exprErr.isOK())
-                continue;
-        }
-
-        return insn.setError(strErr.getError() ? strErr : exprErr);
-    } while (scan.skipSpaces().expect(','));
-
-    return insn.setError(error);
 }
 
 Error OptionBase::parseBoolOption(StrScanner &scan, bool &value, const Assembler &assembler) {

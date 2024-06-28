@@ -85,7 +85,6 @@ struct Assembler : private ValueParser::Locator {
         DATA_ALIGN2 = 0x80,
     };
     Error defineDataConstant(StrScanner &scan, Insn &insn, uint8_t dataType);
-    Error defineFloatConstant(StrScanner &scan, Insn &insn, uint8_t dataType);
     Error allocateSpaces(StrScanner &scan, Insn &insn, uint8_t dataType);
 
 protected:
@@ -114,9 +113,10 @@ protected:
 
     void generateString(StrScanner &scan, const StrScanner &end, Insn &insn, DataType type,
             ErrorAt &error) const;
-    void generateFloat80Le(bool neagtive, long double value, Insn &insn) const;
-    void generateFloat96Be(
-            bool neagtive, long double value, AsmInsnBase &insn, uint8_t pos, DataType type) const;
+    void generatePackedBcd80Le(int64_t value, Insn &insn) const;
+    void generateFloat80Le(double value, Insn &insn) const;
+    void generateFloat96Be(double value, Insn &insn, uint8_t pos) const;
+    void generatePackedBcd96Be(double value, Insn &insn, uint8_t pos) const;
 
 private:
     virtual ConfigSetter &configSetter() = 0;

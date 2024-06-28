@@ -63,18 +63,18 @@ constexpr char TEXT_DS_W[] PROGMEM = "ds.w";
 
 constexpr Pseudo PSEUDOS[] PROGMEM = {
     {TEXT_dALIGN, &Assembler::alignOrigin},
-    {TEXT_DC,     &Assembler::defineDataConstant,  Assembler::DATA_WORD|Assembler::DATA_ALIGN2},
-    {TEXT_DC_B,   &Assembler::defineDataConstant,  Assembler::DATA_BYTE},
-    {TEXT_DC_D,   &Assembler::defineFloatConstant, Assembler::DATA_FLOAT64|Assembler::DATA_ALIGN2},
-    {TEXT_DC_L,   &Assembler::defineDataConstant,  Assembler::DATA_LONG|Assembler::DATA_ALIGN2},
-    {TEXT_DC_P,   &Assembler::defineFloatConstant, Assembler::DATA_PACKED_BCD96|Assembler::DATA_ALIGN2},
-    {TEXT_DC_S,   &Assembler::defineFloatConstant, Assembler::DATA_FLOAT32|Assembler::DATA_ALIGN2},
-    {TEXT_DC_W,   &Assembler::defineDataConstant,  Assembler::DATA_WORD|Assembler::DATA_ALIGN2},
-    {TEXT_DC_X,   &Assembler::defineFloatConstant, Assembler::DATA_FLOAT96|Assembler::DATA_ALIGN2},
-    {TEXT_DS,     &Assembler::allocateSpaces,      Assembler::DATA_BYTE},
-    {TEXT_DS_B,   &Assembler::allocateSpaces,      Assembler::DATA_BYTE},
-    {TEXT_DS_L,   &Assembler::allocateSpaces,      Assembler::DATA_LONG|Assembler::DATA_ALIGN2},
-    {TEXT_DS_W,   &Assembler::allocateSpaces,      Assembler::DATA_WORD|Assembler::DATA_ALIGN2},
+    {TEXT_DC,     &Assembler::defineDataConstant, Assembler::DATA_WORD|Assembler::DATA_ALIGN2},
+    {TEXT_DC_B,   &Assembler::defineDataConstant, Assembler::DATA_BYTE},
+    {TEXT_DC_D,   &Assembler::defineDataConstant, Assembler::DATA_FLOAT64|Assembler::DATA_ALIGN2},
+    {TEXT_DC_L,   &Assembler::defineDataConstant, Assembler::DATA_LONG|Assembler::DATA_ALIGN2},
+    {TEXT_DC_P,   &Assembler::defineDataConstant, Assembler::DATA_PACKED_BCD96|Assembler::DATA_ALIGN2},
+    {TEXT_DC_S,   &Assembler::defineDataConstant, Assembler::DATA_FLOAT32|Assembler::DATA_ALIGN2},
+    {TEXT_DC_W,   &Assembler::defineDataConstant, Assembler::DATA_WORD|Assembler::DATA_ALIGN2},
+    {TEXT_DC_X,   &Assembler::defineDataConstant, Assembler::DATA_FLOAT96|Assembler::DATA_ALIGN2},
+    {TEXT_DS,     &Assembler::allocateSpaces,     Assembler::DATA_BYTE},
+    {TEXT_DS_B,   &Assembler::allocateSpaces,     Assembler::DATA_BYTE},
+    {TEXT_DS_L,   &Assembler::allocateSpaces,     Assembler::DATA_LONG|Assembler::DATA_ALIGN2},
+    {TEXT_DS_W,   &Assembler::allocateSpaces,     Assembler::DATA_WORD|Assembler::DATA_ALIGN2},
 };
 // clang-format on
 PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
@@ -203,9 +203,10 @@ void emitOprSize(AsmInsn &insn, InsnSize isize) {
 }
 
 Error AsmMc68000::checkAlignment(AsmInsn &insn, OprSize size, const Operand &op) const {
-    if (size == SZ_WORD && (op.val32 % 2))
+    const auto val32 = op.getUint32();
+    if (size == SZ_WORD && (val32 % 2))
         return insn.setError(op, OPERAND_NOT_ALIGNED);
-    if (size == SZ_LONG && (op.val32 % 2))
+    if (size == SZ_LONG && (val32 % 2))
         return insn.setError(op, OPERAND_NOT_ALIGNED);
     return OK;
 }
@@ -232,7 +233,7 @@ void AsmMc68000::encodeDisplacement(
 
 void AsmMc68000::encodeRelativeAddr(AsmInsn &insn, AddrMode mode, const Operand &op) const {
     const auto base = insn.address() + 2;
-    const auto target = op.getError() ? base : op.val32;
+    const auto target = op.getError() ? base : op.getUint32();
     insn.setErrorIf(op, checkAddr(target, true));
     const auto delta = branchDelta(base, target, insn, op);
     const auto insnSize = insn.insnSize();
@@ -282,31 +283,32 @@ void AsmMc68000::encodeRelativeAddr(AsmInsn &insn, AddrMode mode, const Operand 
 }
 
 void AsmMc68000::encodeImmediate(AsmInsn &insn, const Operand &op, OprSize size) const {
+    const auto val32 = op.getUint32();
     switch (size) {
     case SZ_LONG:
-        insn.emitOperand32(op.val32);
+        insn.emitOperand32(val32);
         break;
     case SZ_WORD:
-        if (overflowUint16(op.val32))
+        if (overflowUint16(val32))
             insn.setErrorIf(op, OVERFLOW_RANGE);
-        insn.emitOperand16(op.val32);
+        insn.emitOperand16(val32);
         break;
     case SZ_BYTE:
-        if (overflowUint8(op.val32))
+        if (overflowUint8(val32))
             insn.setErrorIf(op, OVERFLOW_RANGE);
-        insn.emitOperand16(static_cast<uint8_t>(op.val32));
+        insn.emitOperand16(static_cast<uint8_t>(val32));
         break;
     case SZ_SNGL:
-        insn.emitFloat32(op.float80, insn.operandPos());
+        insn.emitFloat32(op.getFloat(), insn.operandPos());
         break;
     case SZ_DUBL:
-        insn.emitFloat64(op.float80, insn.operandPos());
+        insn.emitFloat64(op.getFloat(), insn.operandPos());
         break;
     case SZ_XTND:
+        generateFloat96Be(op.getFloat(), insn.getInsn(), insn.operandPos());
+        break;
     case SZ_PBCD: {
-        const auto type = size == SZ_XTND ? DATA_FLOAT96 : DATA_PACKED_BCD96;
-        const auto negative = op.float80 < 0;
-        generateFloat96Be(negative, op.float80, insn, insn.operandPos(), type);
+        generatePackedBcd96Be(op.getFloat(), insn.getInsn(), insn.operandPos());
         break;
     }
     default:
@@ -322,7 +324,7 @@ Config::uintptr_t Operand::offset(const AsmInsn &insn) const {
         len = sizeof(Config::opcode_t);
     if (insn.hasPostVal() && len < 4)
         len = 4;
-    return val32 - (insn.address() + len);
+    return getUint32() - (insn.address() + len);
 }
 
 Error AsmMc68000::encodeOperand(
@@ -353,19 +355,20 @@ Error AsmMc68000::encodeOperand(
             insn.embedPostfix(0x1000);
     }
 
+    const auto val32 = op.getUint32();
     switch (op.mode) {
     case M_AREG:
         if (size == SZ_BYTE)
             insn.setErrorIf(op, OPERAND_NOT_ALLOWED);
         break;
     case M_INDX:
-        encodeBriefExtension(insn, op, static_cast<Config::ptrdiff_t>(op.val32));
+        encodeBriefExtension(insn, op, static_cast<Config::ptrdiff_t>(val32));
         break;
     case M_PCIDX:
         encodeBriefExtension(insn, op, op.offset(insn));
         break;
     case M_DISP:
-        encodeDisplacement(insn, op, static_cast<Config::ptrdiff_t>(op.val32));
+        encodeDisplacement(insn, op, static_cast<Config::ptrdiff_t>(val32));
         break;
     case M_PCDSP:
         insn.setErrorIf(op, checkAlignment(insn, size, op));
@@ -375,9 +378,9 @@ Error AsmMc68000::encodeOperand(
     case M_ALONG:
         insn.setErrorIf(op, checkAlignment(insn, size, op));
         if (op.mode == M_AWORD) {
-            insn.emitOperand16(op.val32);
+            insn.emitOperand16(val32);
         } else {
-            insn.emitOperand32(op.val32);
+            insn.emitOperand32(val32);
         }
         break;
     case M_IMDAT:
@@ -385,37 +388,37 @@ Error AsmMc68000::encodeOperand(
             break;
         if (mode == M_IM3) {
             // "Zero means 2^3" unsigned 3-bit.
-            if (op.val32 > 8)
+            if (val32 > 8)
                 insn.setErrorIf(op, OVERFLOW_RANGE);
-            if (op.val32 == 0 && op.isOK())
+            if (val32 == 0 && op.isOK())
                 insn.setErrorIf(op, OPERAND_NOT_ALLOWED);
-            const auto count = (op.val32 & 7);  // 8 is encoded to 0.
+            const auto count = (val32 & 7);  // 8 is encoded to 0.
             insn.embed(count << 9);
             break;
         }
         if (mode == M_IM8) {
             // Signed 8-bit.
-            if (overflowInt8(static_cast<int32_t>(op.val32)))
+            if (overflowInt8(static_cast<int32_t>(val32)))
                 insn.setErrorIf(op, OVERFLOW_RANGE);
-            insn.embed(static_cast<uint8_t>(op.val32));
+            insn.embed(static_cast<uint8_t>(val32));
             break;
         }
         if (mode == M_IMROM) {
-            if (op.val32 >= 0x80)
+            if (val32 >= 0x80)
                 insn.setErrorIf(op, OVERFLOW_RANGE);
-            insn.embedPostfix(op.val32 & 0x7F);
+            insn.embedPostfix(val32 & 0x7F);
             break;
         }
         if (mode == M_IMVEC) {
-            if (op.val32 >= 16)
+            if (val32 >= 16)
                 insn.setErrorIf(op, OVERFLOW_RANGE);
-            insn.embed(static_cast<uint8_t>(op.val32 & 0xF));
+            insn.embed(static_cast<uint8_t>(val32 & 0xF));
             break;
         }
         if (mode == M_IMDSP) {
-            if (overflowInt16(static_cast<int32_t>(op.val32)))
+            if (overflowInt16(static_cast<int32_t>(val32)))
                 insn.setErrorIf(op, OVERFLOW_RANGE);
-            insn.emitOperand16(static_cast<uint16_t>(op.val32));
+            insn.emitOperand16(static_cast<uint16_t>(val32));
             break;
         }
         /* Fall-through */
@@ -597,21 +600,14 @@ Error AsmMc68000::parseOperand(StrScanner &scan, Operand &op) const {
         return OK;
 
     if (p.expect('#')) {
-        auto text = p;
-        op.val32 = parseExpr32(p, op);
-        if ((op.isOK() && (*p == '.' || *p == 'e' || *p == 'E')) ||
-                op.getError() == OVERFLOW_RANGE || op.getError() == UNDEFINED_SYMBOL) {
-            char *end;
-            op.float80 = strtold(text.str(), &end);
-            StrScanner e{end};
-            if (end != text.str() && (endOfLine(e.skipSpaces()) || *e == ',')) {
-                op.mode = M_IMFLT;
-                scan = e;
-                return op.setOK();
-            }
-        }
+        op.value = parseExpr(p, op);
         if (op.hasError())
             return op.getError();
+        if (op.value.isFloat()) {
+            op.mode = M_IMFLT;
+            scan = p;
+            return op.setOK();
+        }
         op.mode = M_IMDAT;
         scan = p;
         return OK;
@@ -635,16 +631,19 @@ Error AsmMc68000::parseOperand(StrScanner &scan, Operand &op) const {
             scan = p;
             return OK;
         }
-        op.val32 = parseExpr32(p, op, ')');
+        op.value = parseExpr(p, op, ')');
         if (op.hasError())
             return op.getError();
+        if (op.value.isFloat())
+            return op.setErrorIf(INTEGER_REQUIRED);
+        const auto val32 = op.value.getUnsigned();
         if (p.skipSpaces().expect(')')) {
             const auto size = parseSize(p.skipSpaces());
-            auto over16 = overflowInt16(op.val32);
+            auto over16 = overflowInt16(val32);
             if (over16) {
                 // check if it is near the end of address space.
                 const auto max = 1UL << uint8_t(addressWidth());
-                if (op.val32 <= max - 1 && op.val32 >= (max - 0x8000))
+                if (val32 <= max - 1 && val32 >= (max - 0x8000))
                     over16 = false;
             }
             if (over16 && size == ISZ_WORD)
@@ -731,9 +730,11 @@ Error AsmMc68000::parseOperand(StrScanner &scan, Operand &op) const {
         scan = a;
         return OK;
     }
-    op.val32 = parseExpr32(p, op);
+    op.value = parseExpr(p, op);
     if (op.hasError())
         return op.getError();
+    if (op.value.isFloat())
+        return INTEGER_REQUIRED;
     op.mode = M_LABEL;
     scan = p;
     return OK;
@@ -785,7 +786,7 @@ Error AsmMc68000::encodeImpl(StrScanner &scan, Insn &_insn) const {
     if (dst == M_MULT)
         encodeRegisterList(insn, insn.dstOp);
     if (src == M_IMBIT) {
-        auto bitno = insn.srcOp.val32;
+        auto bitno = insn.srcOp.getUint32();
         if (insn.srcOp.mode != M_IMDAT) {
             insn.setErrorIf(insn.srcOp, OPERAND_NOT_ALLOWED);
             bitno = 0;

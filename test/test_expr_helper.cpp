@@ -42,6 +42,11 @@ void val_assert(const char *file, int line, StrScanner &expr, char delim, uint32
         actual = static_cast<uint16_t>(actual);
         expected = static_cast<uint16_t>(expected);
     }
+    if (size == 4) {
+        if (val.overflowUint32()) {
+            actual_error.setErrorIf(expr, OVERFLOW_RANGE);
+        }
+    }
     asserter.equals(file, line, expr.str(), expected_error.getError(), actual_error);
     if (expected_error.isOK()) {
         asserter.equals(file, line, expr.str(), expected, actual);

@@ -120,6 +120,8 @@ const /*PROGMEM*/ char *ErrorReporter::errorText_P(Error error) {
         return PSTR("Not an expected entity");
     case MISSING_OPERAND:
         return PSTR("Missing operand");
+    case INTEGER_REQUIRED:
+        return PSTR("Integer required");
 
     // AsmDirective
     case UNKNOWN_DIRECTIVE:

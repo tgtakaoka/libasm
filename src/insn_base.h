@@ -322,7 +322,7 @@ struct AsmInsnBase : ErrorAt {
     /** Generate 64 bit little endian floating point |data| at |pos| (Assembler). */
     Error emitFloat64Le(double data, uint8_t pos) { return _insn.emitFloat64Le(data, pos); }
 
-private:
+protected:
     Insn &_insn;
 };
 
