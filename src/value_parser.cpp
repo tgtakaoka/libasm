@@ -16,6 +16,7 @@
 
 #include "value_parser.h"
 #include <ctype.h>
+#include <stdlib.h>
 #include "config_base.h"
 #include "stack.h"
 
@@ -273,6 +274,16 @@ Error ValueParser::parseConstant(StrScanner &scan, Value &val) const {
         return err;
 
     err = _number.parseNumber(p, val);
+    const auto fpnum = (err == OK && (*p == '.' || toupper(*p) == 'E'));
+    if (fpnum || err == OVERFLOW_RANGE || err == NOT_AN_EXPECTED) {
+        char *end;
+        const auto value = strtod(scan.str(), &end);
+        if (end > p.str()) {
+            val.setFloat(value);
+            scan = end;
+            return OK;
+        }
+    }
     if (err != NOT_AN_EXPECTED) {
         scan = p;
         return err;

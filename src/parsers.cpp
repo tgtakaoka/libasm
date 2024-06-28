@@ -284,7 +284,7 @@ char CStyleLetterParser::readLetter(StrScanner &scan, ErrorAt &error, char delim
         // Backslash escape sequence
         if (p.iexpect('x')) {
             // hexadecimal digits.
-            uint32_t n = 0;
+            uint16_t n = 0;
             while (isxdigit(*p)) {
                 n *= 16;
                 n += tonumbert(*p++);
