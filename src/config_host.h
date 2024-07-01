@@ -17,6 +17,8 @@
 #ifndef __LIBASM_CONFIG_HOST_H__
 #define __LIBASM_CONFIG_HOST_H__
 
+// #define ASM_NOFLOAT
+
 #include <stddef.h>
 #include <stdint.h>
 

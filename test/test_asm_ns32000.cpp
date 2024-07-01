@@ -40,7 +40,11 @@ static void tear_down() {
     EQUALS("cpu 32032", true,    assembler.setCpu("32032"));
     EQUALS_P("cpu 32032", "32032", assembler.config().cpu_P());
 
+#ifdef ASM_NOFLOAT
+    ERRT("fpu ns32081", UNKNOWN_OPERAND, "ns32081");
+#else
     TEST("fpu ns32081");
+#endif
     TEST("fpu none");
     ERRT("fpu ns32082", UNKNOWN_OPERAND, "ns32082");
 
@@ -362,6 +366,8 @@ static void test_format_8() {
     ERRT("INSD   R0,R2,0(R1),33", OVERFLOW_RANGE,  "33", 0xAE, 0x43, 0x12, 0x00, 0x21);
 }
 
+#ifndef ASM_NOFLOAT
+
 static void test_format_9() {
     TEST("FPU NS32081");
 
@@ -499,6 +505,8 @@ static void test_format_11() {
     ERUI("SUBL F2,16(SB)");
 }
 
+#endif
+
 static void test_format_8_mmu() {
     TEST("PMMU NS32082");
 
@@ -528,11 +536,15 @@ static void test_format_14() {
 }
 
 static void test_generic_addressing() {
+#ifndef ASM_NOFLOAT
     TEST("FPU NS32081");
+#endif
 
     // Register
     TEST("ADDW R1, R2", 0x81, 0x08);
+#ifndef ASM_NOFLOAT
     TEST("ADDF F1, F2", 0xBE, 0x81, 0x08);
+#endif
     // Register Relative
     TEST("ADDW 4(R1), R2",     0x81, 0x48, 0x04);
     TEST("ADDW 4(R1), 64(R2)", 0x81, 0x4A, 0x04, 0x80, 0x40);
@@ -545,6 +557,7 @@ static void test_generic_addressing() {
     TEST("ADDB 0x56,       R1", 0x40, 0xA0, 0x56);
     TEST("ADDW 0x1234,     R1", 0x41, 0xA0, 0x12, 0x34);
     TEST("ADDD 0x12345678, R1", 0x43, 0xA0, 0x12, 0x34, 0x56, 0x78);
+#ifndef ASM_NOFLOAT
     TEST("ADDF 3.14159, F1",
          0xBE, 0x41, 0xA0, 0x40, 0x49, 0x0F, 0xD0);
     TEST("ADDF 299792000, F3",
@@ -553,6 +566,7 @@ static void test_generic_addressing() {
          0xBE, 0x80, 0xA0, 0x40, 0x05, 0xBF, 0x0A, 0x8B, 0x14, 0x57, 0x69);
     TEST("ADDL 6.62607015e-34, F4",
          0xBE, 0x00, 0xA1, 0x39, 0x0B, 0x86, 0x0B, 0xDE, 0x02, 0x31, 0x11);
+#endif
     // Absolute
     TEST("ADDW @0x1234, 4(R2)",   0x81, 0xAA, 0x92, 0x34, 0x4);
     TEST("ADDW @0x1234, @0x5678", 0x41, 0xAD, 0x92, 0x34, 0xC0, 0x00, 0x56, 0x78);
@@ -660,7 +674,9 @@ static void test_generic_addressing() {
 }
 
 static void test_comment() {
+#ifndef ASM_NOFLOAT
     TEST("FPU NS32081");
+#endif
     TEST("PMMU NS32082");
 
     COMM("ADDB R1 , R0           ; comment",     "; comment", 0x00, 0x08);
@@ -684,8 +700,10 @@ static void test_comment() {
     ACOMM(0x100, "ADDW 8 (SP) , * - 10    ; comment", "; comment", 0xC1, 0xCE, 0x08, 0x76);
     ACOMM(0x100, "ADDW 8 (SP) , 0x10A (PC); comment", "; comment", 0xC1, 0xCE, 0x08, 0x0A);
 
+#ifndef ASM_NOFLOAT
     TEST("ADDL 137.03599908421, F6",
          0xBE, 0x80, 0xA1, 0x40, 0x61, 0x21, 0x26, 0xE7, 0x8D, 0x2B, 0xC6);
+#endif
 
     COMM("LPRB UPSR , R0 ; comment", "; comment", 0x6C, 0x00);
     COMM("LMR  PTB0 , R0 ; comment", "; comment", 0x1E, 0x0B, 0x06);
@@ -705,8 +723,10 @@ static void test_comment() {
     COMM(R"(.ascii  "TEXT"  # comment)", "# comment", 0x54, 0x45, 0x58, 0x54);
     COMM(".word   -128, 255 ; comment", "; comment", 0x80, 0xFF, 0xFF, 0x00);
     COMM(".double x'1234    # comment", "# comment", 0x34, 0x12, 0x00, 0x00);
+#ifndef ASM_NOFLOAT
     COMM(".float  1.0       # comment", "# comment", 0x00, 0x00, 0x80, 0x3F);
     COMM(".long  -1.0       # comment", "# comment", 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xF0, 0xBF);
+#endif
 }
 
 static void test_undef() {
@@ -759,11 +779,13 @@ static void test_undef() {
     ERUS("INSB R1,16,   2(R0),UNDEF", "UNDEF",             0xAE, 0x08, 0xA2, 0x10, 0x02, 0x00);
     ERUS("INSB R1,UNDEF,2(R0),UNDEF", "UNDEF,2(R0),UNDEF", 0xAE, 0x08, 0xA2, 0x00, 0x02, 0x00);
 
+#ifndef ASM_NOFLOAT
     TEST("FPU NS32081");
     ERUS("ADDF UNDEF, F0", "UNDEF, F0", 0xBE, 0x01, 0xA0, 0x00, 0x00, 0x00, 0x00);
     ERUS("ADDL UNDEF, F0", "UNDEF, F0", 0xBE, 0x00, 0xA0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00);
     ERUS("CMPF F0, UNDEF", "UNDEF",     0xBE, 0x09, 0x05, 0x00, 0x00, 0x00, 0x00);
     ERUS("CMPL F0, UNDEF", "UNDEF",     0xBE, 0x08, 0x05, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00);
+#endif
 }
 
 static void test_data_constant() {
@@ -821,6 +843,7 @@ static void test_data_constant() {
          0x78, 0x56, 0x34, 0x12, 0xF0, 0xDE, 0xBC, 0x9A, 0x78, 0x56, 0x34, 0x12, 0xF0, 0xDE, 0xBC, 0x9A,
          0x78, 0x56, 0x34, 0x12, 0xF0, 0xDE, 0xBC, 0x9A, 0x78, 0x56, 0x34, 0x12, 0xDE, 0xBC, 0x9A, 0x00);
 
+#ifndef ASM_NOFLOAT
     TEST(".float  1.0, -inf, +nan, -2.25e2",
          0x00, 0x00, 0x80, 0x3F,
          0x00, 0x00, 0x80, 0xFF,
@@ -831,6 +854,7 @@ static void test_data_constant() {
          0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xF0, 0x7F,
          0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xF8, 0xFF,
          0x00, 0x00, 0x00, 0x00, 0x00, 0x20, 0x6C, 0xC0);
+#endif
 }
 
 // clang-format on
@@ -846,8 +870,10 @@ void run_tests(const char *cpu) {
     RUN_TEST(test_format_6);
     RUN_TEST(test_format_7);
     RUN_TEST(test_format_8);
+#ifndef ASM_NOFLOAT
     RUN_TEST(test_format_9);
     RUN_TEST(test_format_11);
+#endif
     RUN_TEST(test_format_8_mmu);
     RUN_TEST(test_format_14);
     RUN_TEST(test_generic_addressing);

@@ -48,7 +48,9 @@ struct Operand final : ErrorAt {
         : mode(M_NONE), reg(REG_UNDEF), indexReg(REG_UNDEF), indexSize(ISZ_NONE), value(), list() {}
     Config::uintptr_t offset(const AsmInsn &insn) const;
     uint32_t getUint32() const { return value.getUnsigned(); }
+#ifndef ASM_NOFLOAT
     double getFloat() const { return value.getFloat(); }
+#endif
 };
 
 struct AsmInsn final : AsmInsnImpl<Config>, EntryInsn {
