@@ -56,8 +56,10 @@ constexpr Pseudo PSEUDOS[] PROGMEM = {
     {TEXT_dBLKW,   &Assembler::allocateSpaces,     Assembler::DATA_WORD},
     {TEXT_dBYTE,   &Assembler::defineDataConstant, Assembler::DATA_BYTE},
     {TEXT_dDOUBLE, &Assembler::defineDataConstant, Assembler::DATA_LONG},
+#ifndef ASM_NOFLOAT
     {TEXT_dFLOAT,  &Assembler::defineDataConstant, Assembler::DATA_FLOAT32},
     {TEXT_dLONG,   &Assembler::defineDataConstant, Assembler::DATA_FLOAT64},
+#endif
     {TEXT_dORG,    &Assembler::defineOrigin},
     {TEXT_dSPACE,  &Assembler::allocateSpaces,     Assembler::DATA_BYTE},
     {TEXT_dWORD,   &Assembler::defineDataConstant, Assembler::DATA_WORD},
@@ -116,10 +118,12 @@ void AsmNs32000::reset() {
 }
 
 Error AsmNs32000::setFpu(StrScanner &scan) {
-    if (scan.iequals_P(TEXT_FPU_NS32081)) {
-        setFpuType(FPU_NS32081);
-    } else if (scan.iequals_P(TEXT_none)) {
+    if (scan.iequals_P(TEXT_none)) {
         setFpuType(FPU_NONE);
+#ifndef ASM_NOFLOAT
+    } else if (scan.iequals_P(TEXT_FPU_NS32081)) {
+        setFpuType(FPU_NS32081);
+#endif
     } else {
         return UNKNOWN_OPERAND;
     }
@@ -512,12 +516,14 @@ void AsmNs32000::emitImmediate(AsmInsn &insn, AddrMode mode, const Operand &op) 
     const auto size = insn.size();
     if (size == SZ_BYTE || mode == M_GENC) {
         insn.emitOperand8(op.val32);
+#ifndef ASM_NOFLOAT
     } else if (mode == M_FENR) {
         if (size == SZ_OCTA) {
             insn.emitOpFloat64(op.getFloat());
         } else {
             insn.emitOpFloat32(op.getFloat());
         }
+#endif
     } else if (size == SZ_WORD) {
         insn.emitOperand16(op.val32);
     } else if (size == SZ_QUAD) {

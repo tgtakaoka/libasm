@@ -45,9 +45,13 @@ constexpr char TEXT_RESW[] PROGMEM = "resw";
 constexpr Pseudo PSEUDOS[] PROGMEM = {
     {TEXT_DB,   &Assembler::defineDataConstant, Assembler::DATA_BYTE},
     {TEXT_DD,   &Assembler::defineDataConstant, Assembler::DATA_FLOAT32_LONG},
+#ifndef ASM_NOFLOAT
     {TEXT_DQ,   &Assembler::defineDataConstant, Assembler::DATA_FLOAT64_QUAD},
+#endif
     {TEXT_DS,   &Assembler::allocateSpaces,     Assembler::DATA_BYTE},
+#ifndef ASM_NOFLOAT
     {TEXT_DT,   &Assembler::defineDataConstant, Assembler::DATA_FLOAT80_BCD},
+#endif
     {TEXT_DW,   &Assembler::defineDataConstant, Assembler::DATA_WORD},
     {TEXT_RESB, &Assembler::allocateSpaces,     Assembler::DATA_BYTE},
     {TEXT_RESD, &Assembler::allocateSpaces,     Assembler::DATA_LONG},
@@ -85,10 +89,12 @@ void AsmI8086::reset() {
 Error AsmI8086::setFpu(StrScanner &scan) {
     auto p = scan;
     p.iexpect('i');
-    if (scan.expectTrue() || p.iequals_P(TEXT_FPU_8087)) {
-        setFpuType(FPU_I8087);
-    } else if (scan.expectFalse() || scan.iequals_P(TEXT_none)) {
+    if (scan.expectFalse() || scan.iequals_P(TEXT_none)) {
         setFpuType(FPU_NONE);
+#ifndef ASM_NOFLOAT
+    } else if (scan.expectTrue() || p.iequals_P(TEXT_FPU_8087)) {
+        setFpuType(FPU_I8087);
+#endif
     } else {
         return UNKNOWN_OPERAND;
     }
