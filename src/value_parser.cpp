@@ -21,50 +21,6 @@
 
 namespace libasm {
 
-namespace {
-bool isValidDigit(char c, Radix radix) {
-    if (radix == RADIX_16)
-        return isxdigit(c);
-    return c >= '0' && c < '0' + uint8_t(radix);
-}
-
-uint8_t toNumber(char c, Radix radix) {
-    if (radix == RADIX_16 && c >= 'A')
-        return (c & ~0x20) - 'A' + 10;
-    return c - '0';
-}
-
-template <typename VAL_T, VAL_T VAL_MAX>
-Error strToNumber(StrScanner &scan, Radix radix, VAL_T &value) {
-    auto p = scan;
-    if (!isValidDigit(*p, radix))
-        return NOT_AN_EXPECTED;
-    const VAL_T limit = VAL_MAX / uint8_t(radix);
-    const uint8_t limit_digit = VAL_MAX % uint8_t(radix);
-    Error error = OK;
-    VAL_T v = 0;
-    while (isValidDigit(*p, radix)) {
-        const auto n = toNumber(*p, radix);
-        if (v > limit || (v == limit && n > limit_digit))
-            error = OVERFLOW_RANGE;
-        v *= uint8_t(radix);
-        v += n;
-        ++p;
-    }
-    scan = p;
-    value = v;
-    return error;
-}
-}  // namespace
-
-Error Value::parseNumber(StrScanner &scan, Radix radix, uint64_t &value) {
-    return strToNumber<uint64_t, UINT64_MAX>(scan, radix, value);
-}
-
-Error Value::parseNumber(StrScanner &scan, Radix radix, uint32_t &value) {
-    return strToNumber<uint32_t, UINT32_MAX>(scan, radix, value);
-}
-
 const NumberParser &ValueParser::Plugins::number() const {
     return CStyleNumberParser::singleton();
 }

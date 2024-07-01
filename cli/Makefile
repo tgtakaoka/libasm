@@ -49,8 +49,8 @@ OBJS_com = \
     file_reader.o file_printer.o list_formatter.o text_common.o
 OBJS_asm = \
     asm.o asm_commander.o asm_driver.o asm_directive.o asm_formatter.o \
-    asm_base.o config_base.o reg_base.o value_parser.o parsers.o operators.o \
-    function_store.o symbol_store.o \
+    asm_base.o config_base.o reg_base.o value.o value_parser.o parsers.o \
+    operators.o function_store.o symbol_store.o \
     $(foreach a,$(ARCHS),$(if $(wildcard ../src/asm_$(a).cpp),asm_$(a).o))
 OBJS_dis = \
     dis.o dis_commander.o dis_driver.o dis_formatter.o dis_base.o \

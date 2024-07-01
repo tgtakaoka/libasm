@@ -1,0 +1,74 @@
+/*
+ * Copyright 2024 Tadashi G. Takaoka
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+#include "value.h"
+#include <ctype.h>
+#include <stdlib.h>
+
+namespace libasm {
+
+namespace {
+bool isValidDigit(char c, Radix radix) {
+    if (radix == RADIX_16)
+        return isxdigit(c);
+    return c >= '0' && c < '0' + uint8_t(radix);
+}
+
+uint8_t toNumber(char c, Radix radix) {
+    if (radix == RADIX_16 && c >= 'A')
+        return (c & ~0x20) - 'A' + 10;
+    return c - '0';
+}
+
+template <typename VAL_T, VAL_T VAL_MAX>
+Error strToNumber(StrScanner &scan, Radix radix, VAL_T &value) {
+    auto p = scan;
+    if (!isValidDigit(*p, radix))
+        return NOT_AN_EXPECTED;
+    const VAL_T limit = VAL_MAX / uint8_t(radix);
+    const uint8_t limit_digit = VAL_MAX % uint8_t(radix);
+    Error error = OK;
+    VAL_T v = 0;
+    while (isValidDigit(*p, radix)) {
+        const auto n = toNumber(*p, radix);
+        if (v > limit || (v == limit && n > limit_digit))
+            error = OVERFLOW_RANGE;
+        v *= uint8_t(radix);
+        v += n;
+        ++p;
+    }
+    scan = p;
+    value = v;
+    return error;
+}
+}  // namespace
+
+Error Value::parseNumber(StrScanner &scan, Radix radix, uint32_t &value) {
+    return strToNumber<uint32_t, UINT32_MAX>(scan, radix, value);
+}
+
+Error Value::parseNumber(StrScanner &scan, Radix radix, uint64_t &value) {
+    return strToNumber<uint64_t, UINT64_MAX>(scan, radix, value);
+}
+
+}  // namespace libasm
+
+// Local Variables:
+// mode: c++
+// c-basic-offset: 4
+// tab-width: 4
+// End:
+// vim: set ft=cpp et ts=4 sw=4:

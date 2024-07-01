@@ -14,6 +14,7 @@ build str_buffer.o:      cxx ${root}/src/str_buffer.cpp
 build str_scanner.o:     cxx ${root}/src/str_scanner.cpp
 build text_common.o:     cxx ${root}/src/text_common.cpp
 build value_formatter.o: cxx ${root}/src/value_formatter.cpp
+build value.o:           cxx ${root}/src/value.cpp
 build value_parser.o:    cxx ${root}/src/value_parser.cpp
 
 # cdp1802

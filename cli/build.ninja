@@ -23,7 +23,7 @@ build asm: link $
   file_printer.o file_reader.o bin_decoder.o bin_encoder.o intel_hex.o $
   moto_srec.o asm_base.o config_base.o error_reporter.o formatters.o $
   operators.o option_base.o parsers.o reg_base.o str_buffer.o str_scanner.o $
-  text_common.o value_formatter.o value_parser.o $
+  text_common.o value_formatter.o value.o value_parser.o $
   asm_cdp1802.o  reg_cdp1802.o  table_cdp1802.o  text_cdp1802.o  $
   asm_f3850.o    reg_f3850.o    table_f3850.o    text_f3850.o    $
   asm_i8048.o    reg_i8048.o    table_i8048.o    text_i8048.o    $
