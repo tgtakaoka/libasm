@@ -64,6 +64,152 @@ Error Value::parseNumber(StrScanner &scan, Radix radix, uint64_t &value) {
     return strToNumber<uint64_t, UINT64_MAX>(scan, radix, value);
 }
 
+bool Value::isZero() const {
+    return !isUndefined() && getUnsigned() == 0;
+}
+
+bool Value::negateOverflow() const {
+    return isUnsigned() && getUnsigned() > static_cast<uint32_t>(INT32_MIN);
+}
+
+bool Value::operator==(const Value &rhs) const {
+    return getUnsigned() == rhs.getUnsigned();
+}
+
+bool Value::operator<(const Value &rhs) const {
+    if (isUnsigned() && rhs.isUnsigned()) {
+        return getUnsigned() < rhs.getUnsigned();
+    } else if (isSigned() && rhs.isSigned()) {
+        return getSigned() < rhs.getSigned();
+    } else if (isSigned()) {
+        const auto v = getSigned();
+        return v < 0 || static_cast<uint32_t>(v) < rhs.getUnsigned();
+    } else {
+        const auto v = rhs.getSigned();
+        return v >= 0 && getUnsigned() < static_cast<uint32_t>(v);
+    }
+}
+
+Value Value::operator-() const {
+    Value v;
+    if (isSigned()) {
+        const auto i32 = getSigned();
+        if (i32 == INT32_MIN) {
+            v.setUnsigned(static_cast<uint32_t>(INT32_MIN));
+        } else {
+            v.setSigned(-i32);
+        }
+    } else if (isUnsigned()) {
+        const auto u32 = getUnsigned();
+        if (u32 <= static_cast<uint32_t>(INT32_MIN)) {
+            v.setSigned(-static_cast<int32_t>(u32));
+        }
+    }
+    return v;
+}
+
+Value Value::operator+(const Value &rhs) const {
+    Value v;
+    if (isSigned() || rhs.isSigned()) {
+        v.setSigned(getSigned() + rhs.getSigned());
+    } else {
+        v.setUnsigned(getUnsigned() + rhs.getUnsigned());
+    }
+    return v;
+}
+
+Value Value::operator-(const Value &rhs) const {
+    Value v;
+    if (isSigned() || rhs.isSigned()) {
+        v.setSigned(getSigned() - rhs.getSigned());
+    } else if (getUnsigned() < rhs.getUnsigned()) {
+        v.setSigned(getUnsigned() - rhs.getUnsigned());
+    } else {
+        v.setUnsigned(getUnsigned() - rhs.getUnsigned());
+    }
+    return v;
+}
+
+Value Value::operator*(const Value &rhs) const {
+    Value v;
+    if (isSigned() || rhs.isSigned()) {
+        v.setSigned(getSigned() * rhs.getSigned());
+    } else {
+        v.setUnsigned(getUnsigned() * rhs.getUnsigned());
+    }
+    return v;
+}
+
+Value Value::operator/(const Value &rhs) const {
+    Value v;
+    if (rhs.isUndefined()) {
+        v = *this;
+    } else if (isSigned() || rhs.isSigned()) {
+        v.setSigned(getSigned() / rhs.getSigned());
+    } else {
+        v.setUnsigned(getUnsigned() / rhs.getUnsigned());
+    }
+    return v;
+}
+
+Value Value::operator%(const Value &rhs) const {
+    Value v;
+    if (rhs.isUndefined()) {
+        v = *this;
+    } else if (isSigned() || rhs.isSigned()) {
+        v.setSigned(getSigned() % rhs.getSigned());
+    } else {
+        v.setUnsigned(getUnsigned() % rhs.getUnsigned());
+    }
+    return v;
+}
+
+Value Value::operator<<(const Value &rhs) const {
+    const auto count = rhs.getUnsigned();
+    Value v;
+    v.setUnsigned(count < 32 ? getUnsigned() << count : 0);
+    return v;
+}
+
+Value Value::operator>>(const Value &rhs) const {
+    const auto count = rhs.getUnsigned();
+    Value v;
+    if (isSigned()) {
+        const auto msb = static_cast<uint32_t>(INT32_MIN);
+        auto value = getUnsigned();
+        for (uint32_t i = 0; i < count && i < 32; ++i) {
+            value >>= 1;
+            value |= msb;
+        }
+        v.setUnsigned(value);
+    } else {
+        v.setUnsigned(count < 32 ? getUnsigned() >> count : 0);
+    }
+    return v;
+}
+
+template <typename BASE>
+static BASE power(BASE base, uint32_t exp) {
+    BASE prod = 1;
+    while (true) {
+        if (exp & 1)
+            prod *= base;
+        if ((exp >>= 1) == 0)
+            return prod;
+        base *= base;
+    }
+}
+
+Value Value::exponential(const Value &rhs) const {
+    Value v;
+    if (isSigned() && getSigned() < 0) {
+        v.setSigned(power<int32_t>(getSigned(), rhs.getUnsigned()));
+    } else {
+        v.setUnsigned(power<uint32_t>(getUnsigned(), rhs.getUnsigned()));
+    }
+    return v;
+}
+
 }  // namespace libasm
 
 // Local Variables:

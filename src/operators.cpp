@@ -56,176 +56,107 @@ static Error logical_not(ValueStack &stack) {
 
 static Error unary_minus(ValueStack &stack) {
     const auto v = stack.pop();
-    const auto error = v.isUnsigned() && v.getUnsigned() > 0x80000000 ? OVERFLOW_RANGE : OK;
-    stack.pushSigned(-v.getSigned());
-    return error;
+    stack.push(-v);
+    return v.negateOverflow() ? OVERFLOW_RANGE : OK;
 }
 
 static Error unary_plus(ValueStack &stack) {
-    const auto v = stack.pop().getUnsigned();
-    stack.pushUnsigned(v);
+    stack.push(stack.pop());
     return OK;
 }
 
 static Error multiply(ValueStack &stack) {
     const auto rhs = stack.pop();
     const auto lhs = stack.pop();
-    if (lhs.isSigned() || rhs.isSigned()) {
-        stack.pushSigned(lhs.getSigned() * rhs.getSigned());
-    } else {
-        stack.pushUnsigned(lhs.getUnsigned() * rhs.getUnsigned());
-    }
+    stack.push(lhs * rhs);
     return OK;
 }
 
 static Error divide(ValueStack &stack) {
     const auto rhs = stack.pop();
     const auto lhs = stack.pop();
-    auto error = OK;
-    if (rhs.getUnsigned() == 0) {
-        stack.push(Value());
-        error = DIVIDE_BY_ZERO;
-    } else if (lhs.isSigned() || rhs.isSigned()) {
-        stack.pushSigned(lhs.getSigned() / rhs.getSigned());
-    } else {
-        stack.pushUnsigned(lhs.getUnsigned() / rhs.getUnsigned());
-    }
-    return error;
+    if (rhs.isZero())
+        return DIVIDE_BY_ZERO;
+    stack.push(lhs / rhs);
+    return OK;
 }
 
 static Error modulo(ValueStack &stack) {
     const auto rhs = stack.pop();
     const auto lhs = stack.pop();
-    auto error = OK;
-    if (rhs.getUnsigned() == 0) {
-        stack.push(Value());
-        error = DIVIDE_BY_ZERO;
-    } else if (lhs.isSigned() || rhs.isSigned()) {
-        stack.pushSigned(lhs.getSigned() % rhs.getSigned());
-    } else {
-        stack.pushUnsigned(lhs.getUnsigned() % rhs.getUnsigned());
-    }
-    return error;
+    if (rhs.isZero())
+        return DIVIDE_BY_ZERO;
+    stack.push(lhs % rhs);
+    return OK;
 }
 
 static Error add(ValueStack &stack) {
     const auto rhs = stack.pop();
     const auto lhs = stack.pop();
-    if (lhs.isSigned() || rhs.isSigned()) {
-        stack.pushSigned(lhs.getSigned() + rhs.getSigned());
-    } else {
-        stack.pushUnsigned(lhs.getUnsigned() + rhs.getUnsigned());
-    }
+    stack.push(lhs + rhs);
     return OK;
 }
 
 static Error subtract(ValueStack &stack) {
     const auto rhs = stack.pop();
     const auto lhs = stack.pop();
-    if (lhs.isSigned() || rhs.isSigned()) {
-        stack.pushSigned(lhs.getSigned() - rhs.getSigned());
-    } else if (lhs.getUnsigned() < rhs.getUnsigned()) {
-        stack.pushSigned(lhs.getUnsigned() - rhs.getUnsigned());
-    } else {
-        stack.pushUnsigned(lhs.getUnsigned() - rhs.getUnsigned());
-    }
+    stack.push(lhs - rhs);
     return OK;
 }
 
-static uint32_t shift_left(uint32_t value, uint8_t count) {
-    for (uint8_t i = 0; i <= 32 && i < count; i++)
-        value <<= 1;
-    return value;
-}
-
-static uint32_t shift_right(uint32_t value, uint8_t count) {
-    for (uint8_t i = 0; i <= 32 && i < count; i++)
-        value >>= 1;
-    return value;
-}
-
-static int32_t shift_right_signed(int32_t value, uint8_t count) {
-    const auto sign = (value < 0) ? 0x80000000 : 0;
-    for (uint8_t i = 0; i <= 32 && i < count; i++) {
-        value >>= 1;
-        value |= sign;
-    }
-    return value;
-}
-
 static Error logical_shift_left(ValueStack &stack) {
-    const auto rhs = stack.pop().getUnsigned();
-    const auto lhs = stack.pop().getUnsigned();
-    stack.pushUnsigned(shift_left(lhs, rhs));
+    const auto rhs = stack.pop();
+    const auto lhs = stack.pop();
+    stack.push(lhs << rhs);
     return OK;
 }
 
 static Error arithmetic_shift_right(ValueStack &stack) {
-    const auto rhs = stack.pop().getUnsigned();
+    const auto rhs = stack.pop();
     const auto lhs = stack.pop();
-    if (lhs.isSigned()) {
-        stack.pushSigned(shift_right_signed(lhs.getSigned(), rhs));
-    } else {
-        stack.pushUnsigned(shift_right(lhs.getUnsigned(), rhs));
-    }
+    stack.push(lhs >> rhs);
     return OK;
 }
 
 static Error less_than(ValueStack &stack) {
     const auto rhs = stack.pop();
     const auto lhs = stack.pop();
-    if (lhs.isSigned() || rhs.isSigned()) {
-        stack.pushUnsigned(lhs.getSigned() < rhs.getSigned());
-    } else {
-        stack.pushUnsigned(lhs.getUnsigned() < rhs.getUnsigned());
-    }
+    stack.pushUnsigned(lhs < rhs);
     return OK;
 }
 
 static Error less_than_or_equal(ValueStack &stack) {
     const auto rhs = stack.pop();
     const auto lhs = stack.pop();
-    if (lhs.isSigned() || rhs.isSigned()) {
-        stack.pushUnsigned(lhs.getSigned() <= rhs.getSigned());
-    } else {
-        stack.pushUnsigned(lhs.getUnsigned() <= rhs.getUnsigned());
-    }
+    stack.pushUnsigned(lhs < rhs || lhs == rhs);
     return OK;
 }
 
 static Error greater_than_or_equal(ValueStack &stack) {
     const auto rhs = stack.pop();
     const auto lhs = stack.pop();
-    if (lhs.isSigned() || rhs.isSigned()) {
-        stack.pushUnsigned(lhs.getSigned() >= rhs.getSigned());
-    } else {
-        stack.pushUnsigned(lhs.getUnsigned() >= rhs.getUnsigned());
-    }
+    stack.pushUnsigned(!(lhs < rhs));
     return OK;
 }
 
 static Error greater_than(ValueStack &stack) {
     const auto rhs = stack.pop();
     const auto lhs = stack.pop();
-    if (lhs.isSigned() || rhs.isSigned()) {
-        stack.pushUnsigned(lhs.getSigned() > rhs.getSigned());
-    } else {
-        stack.pushUnsigned(lhs.getUnsigned() > rhs.getUnsigned());
-    }
+    stack.pushUnsigned(!(lhs < rhs) && !(lhs == rhs));
     return OK;
 }
 
 static Error logical_equal(ValueStack &stack) {
-    const auto rhs = stack.pop().getUnsigned();
-    const auto lhs = stack.pop().getUnsigned();
+    const auto rhs = stack.pop();
+    const auto lhs = stack.pop();
     stack.pushUnsigned(lhs == rhs);
     return OK;
 }
 
 static Error logical_not_equal(ValueStack &stack) {
-    const auto rhs = stack.pop().getUnsigned();
-    const auto lhs = stack.pop().getUnsigned();
-    stack.pushUnsigned(lhs != rhs);
+    const auto rhs = stack.pop();
+    const auto lhs = stack.pop();
+    stack.pushUnsigned(!(lhs == rhs));
     return OK;
 }
 
@@ -355,56 +286,42 @@ const Operator *CStyleOperatorParser::readOperator(
     return opr;
 }
 
-template <typename BASE>
-static BASE power(BASE base, uint32_t exp) {
-    BASE prod = 1;
-    while (true) {
-        if (exp & 1)
-            prod *= base;
-        if ((exp >>= 1) == 0)
-            return prod;
-        base *= base;
-    }
-}
-
 static Error exponential(ValueStack &stack) {
-    const auto rhs = stack.pop().getUnsigned();
+    const auto rhs = stack.pop();
     const auto lhs = stack.pop();
-    if (lhs.isSigned() && lhs.getSigned() < 0) {
-        stack.pushSigned(power<int32_t>(lhs.getSigned(), rhs));
-    } else {
-        stack.pushUnsigned(power<uint32_t>(lhs.getUnsigned(), rhs));
-    }
+    stack.push(lhs.exponential(rhs));
     return OK;
 }
 
 static Error rotate_left_16bit(ValueStack &stack) {
-    const auto rhs = stack.pop().getUnsigned();
-    const auto lhs = stack.pop().getUnsigned() & 0xFFFF;
-    const auto v = shift_left(lhs, rhs) | shift_right(lhs, 16 - rhs);
-    stack.pushUnsigned(v & 0xFFFF);
+    const auto rhs = stack.pop().getUnsigned() % 16;
+    const auto lhs = stack.pop().getUnsigned() & UINT16_MAX;
+    const auto v = (lhs << rhs) | (lhs >> (16 - rhs));
+    stack.pushUnsigned(v & UINT16_MAX);
     return OK;
 }
 
 static Error rotate_right_16bit(ValueStack &stack) {
-    const auto rhs = stack.pop().getUnsigned();
-    const auto lhs = stack.pop().getUnsigned() & 0xFFFF;
-    const auto v = shift_right(lhs, rhs) | shift_left(lhs, 16 - rhs);
-    stack.pushUnsigned(v & 0xFFFF);
+    const auto rhs = stack.pop().getUnsigned() % 16;
+    const auto lhs = stack.pop().getUnsigned() & UINT16_MAX;
+    const auto v = (lhs >> rhs) | (lhs << (16 - rhs));
+    stack.pushUnsigned(v & UINT16_MAX);
     return OK;
 }
 
 static Error logical_shift_left_16bit(ValueStack &stack) {
     const auto rhs = stack.pop().getUnsigned();
-    const auto lhs = stack.pop().getUnsigned() & 0xFFFF;
-    stack.pushUnsigned(shift_left(lhs, rhs) & 0xFFFF);
+    const auto lhs = stack.pop().getUnsigned() & UINT16_MAX;
+    const auto value = (rhs < 16) ? (lhs << rhs) : 0;
+    stack.pushUnsigned(value & UINT16_MAX);
     return OK;
 }
 
 static Error logical_shift_right_16bit(ValueStack &stack) {
     const auto rhs = stack.pop().getUnsigned();
-    const auto lhs = stack.pop().getUnsigned() & 0xFFFF;
-    stack.pushUnsigned(shift_right(lhs, rhs) & 0xFFFF);
+    const auto lhs = stack.pop().getUnsigned() & UINT16_MAX;
+    const auto value = (rhs < 16) ? (lhs >> rhs) : 0;
+    stack.pushUnsigned(value & UINT16_MAX);
     return OK;
 }
 
@@ -453,25 +370,25 @@ const Operator *Mc68xxOperatorParser::readOperator(
 
 static Error most_siginificant_byte(ValueStack &stack) {
     const auto v = stack.pop().getUnsigned();
-    stack.pushUnsigned((v >> 8) & 0xFF);
+    stack.pushUnsigned((v >> 8) & UINT8_MAX);
     return OK;
 }
 
 static Error least_significant_byte(ValueStack &stack) {
     const auto v = stack.pop().getUnsigned();
-    stack.pushUnsigned(v & 0xFF);
+    stack.pushUnsigned(v & UINT8_MAX);
     return OK;
 }
 
 static Error most_siginificant_word(ValueStack &stack) {
     const auto v = stack.pop().getUnsigned();
-    stack.pushUnsigned((v >> 16) & 0xFFFF);
+    stack.pushUnsigned((v >> 16) & UINT16_MAX);
     return OK;
 }
 
 static Error least_significant_word(ValueStack &stack) {
     const auto v = stack.pop().getUnsigned();
-    stack.pushUnsigned(v & 0xFFFF);
+    stack.pushUnsigned(v & UINT16_MAX);
     return OK;
 }
 

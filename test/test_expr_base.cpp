@@ -64,8 +64,8 @@ static void test_dec_constant() {
     E32("2147483647", 0x7fffffff);
     E32("2147483648", 0x80000000);
     E32("4294967295", 0xffffffff);
-    X32("4294967296", OVERFLOW_RANGE, "4294967296", "4294967296");
-    X32("9999999999", OVERFLOW_RANGE, "9999999999", "9999999999");
+    X32("4294967296", OVERFLOW_RANGE, "4294967296", "");
+    X32("9999999999", OVERFLOW_RANGE, "9999999999", "");
 }
 
 static void test_hex_constant() {
@@ -85,8 +85,8 @@ static void test_hex_constant() {
     E32("0x7FFFFFFF",  0x7fffffff);
     E32("0x80000000",  0x80000000);
     E32("0xFFFFffff",  0xffffffff);
-    X32("0x100000000", OVERFLOW_RANGE, "0x100000000", "0x100000000");
-    X32("0x7FFFFFFFF", OVERFLOW_RANGE, "0x7FFFFFFFF", "0x7FFFFFFFF");
+    X32("0x100000000", OVERFLOW_RANGE, "0x100000000", "");
+    X32("0x7FFFFFFFF", OVERFLOW_RANGE, "0x7FFFFFFFF", "");
 }
 
 static void test_oct_constant() {
@@ -105,8 +105,8 @@ static void test_oct_constant() {
     E32("017777777777", 0x7fffffff);
     E32("020000000000", 0x80000000);
     E32("037777777777", 0xffffffff);
-    X32("040000000000", OVERFLOW_RANGE, "040000000000", "040000000000");
-    X32("047777777777", OVERFLOW_RANGE, "047777777777", "047777777777");
+    X32("040000000000", OVERFLOW_RANGE, "040000000000", "");
+    X32("047777777777", OVERFLOW_RANGE, "047777777777", "");
 }
 
 static void test_bin_constant() {
@@ -126,8 +126,8 @@ static void test_bin_constant() {
     E32("0b01111111111111111111111111111111",  0x7fffffff);
     E32("0b10000000000000000000000000000000",  0x80000000);
     E32("0b11111111111111111111111111111111",  0xffffffff);
-    X32("0b100000000000000000000000000000000", OVERFLOW_RANGE, "0b100000000000000000000000000000000", "0b100000000000000000000000000000000");
-    X32("0b111111111111111111111111111111111", OVERFLOW_RANGE, "0b111111111111111111111111111111111", "0b111111111111111111111111111111111");
+    X32("0b100000000000000000000000000000000", OVERFLOW_RANGE, "0b100000000000000000000000000000000", "");
+    X32("0b111111111111111111111111111111111", OVERFLOW_RANGE, "0b111111111111111111111111111111111", "");
 }
 
 static void test_unary_operator() {
@@ -154,7 +154,7 @@ static void test_unary_operator() {
 
     E32("+2147483648", 0x80000000);
     E32("+2147483649", 0x80000001);
-    X32("+4294967296", OVERFLOW_RANGE, "4294967296", "4294967296");
+    X32("+4294967296", OVERFLOW_RANGE, "4294967296", "");
 
     E8("~+0",    0xFF);
     E8("~(1|8)", 0xF6);
@@ -266,7 +266,7 @@ static void test_binary_operator() {
 
     E32(" 0 <  0xFFFFFFFD", 1);
     E32(" 2 <  0xFFFFFFFD", 1); // unsigned comparison
-    E32("-2 <  0xFFFFFFFD", 0); // signed comparison
+    E32("-2 <  0xFFFFFFFD", 1); // signed comparison
     E32("-3 == 0xFFFFFFFD", 1);
 
     E32("10 == 10", 1);
@@ -385,6 +385,19 @@ static void test_overflow() {
 
     E16("0xE000+(-0x2000)", 0xC000);
     E16("(-0x2000)+0xE000", 0xC000);
+}
+
+static void test_symbol() {
+    X32("100 / (1 - 1)",      DIVIDE_BY_ZERO,   "/ (1 - 1)", "");
+    X32("100 / symbol",       UNDEFINED_SYMBOL, "symbol", "");
+    X32("100 / (symbol - 1)", UNDEFINED_SYMBOL, "symbol - 1)", "");
+
+    symtab.intern(10, "symbol");
+    E32("100 / symbol", 10);
+    symtab.intern(0, "symbol");
+    X32("100 / symbol",       DIVIDE_BY_ZERO, "/ symbol", "");
+    symtab.intern(1, "symbol");
+    X32("100 / (symbol - 1)", DIVIDE_BY_ZERO, "/ (symbol - 1)", "");
 }
 
 static void test_current_address() {
@@ -1140,6 +1153,7 @@ void run_tests() {
     RUN_TEST(test_binary_operator);
     RUN_TEST(test_precedence);
     RUN_TEST(test_overflow);
+    RUN_TEST(test_symbol);
     RUN_TEST(test_current_address);
     RUN_TEST(test_function);
     RUN_TEST(test_scan);

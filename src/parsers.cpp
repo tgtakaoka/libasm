@@ -65,7 +65,7 @@ Error PrefixNumberParser::parseNumber(StrScanner &scan, Value &val) const {
     if (radix == RADIX_NONE)
         return IntelNumberParser::singleton().parseNumber(scan, val);
     const auto error = val.parseNumber(p, radix);
-    if (error == OK)
+    if (error != NOT_AN_EXPECTED)
         scan = p;
     return error;
 }
@@ -105,10 +105,9 @@ Error NationalNumberParser::parseNumber(StrScanner &scan, Value &val) const {
         return NOT_AN_EXPECTED;
 
     const auto error = val.parseNumber(p, radix);
-    if (error == OK) {
-        p.expect('\'');  // closing quote is optional
+    p.expect('\'');  // closing quote is optional
+    if (error != NOT_AN_EXPECTED)
         scan = p;
-    }
     return error;
 }
 
@@ -131,7 +130,7 @@ Error CStyleNumberParser::parseNumber(StrScanner &scan, Value &val) const {
         return NOT_AN_EXPECTED;
 
     const auto error = val.parseNumber(p, radix);
-    if (error == OK)
+    if (error != NOT_AN_EXPECTED)
         scan = p;
     return error;
 }
@@ -158,7 +157,7 @@ Error IntelNumberParser::parseNumber(
     if (radix == RADIX_NONE)
         return CStyleNumberParser::singleton().parseNumber(scan, val);
     const auto error = val.parseNumber(scan, radix);
-    if (error == OK)
+    if (error != NOT_AN_EXPECTED)
         scan = next;
     return error;
 }
@@ -205,7 +204,7 @@ Error ZilogNumberParser::parseNumber(StrScanner &scan, Value &val) const {
         return IntelNumberParser::singleton().parseNumber(scan, val);
 
     const auto error = val.parseNumber(p, radix);
-    if (error == OK)
+    if (error != NOT_AN_EXPECTED)
         scan = p;
     return error;
 }
@@ -214,7 +213,7 @@ Error FairchildNumberParser::parseNumber(StrScanner &scan, Value &val) const {
     auto p = scan;
     if (*p == '$' && isxdigit(p[1])) {
         const auto error = val.parseNumber(++p, RADIX_16);
-        if (error == OK)
+        if (error != NOT_AN_EXPECTED)
             scan = p;
         return error;
     }

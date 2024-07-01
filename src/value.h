@@ -77,6 +77,20 @@ struct Value {
         return *this;
     }
 
+    bool isZero() const;
+    bool negateOverflow() const;
+    bool operator==(const Value &rhs) const;
+    bool operator<(const Value &rhs) const;
+    Value operator-() const;
+    Value operator+(const Value &rhs) const;
+    Value operator-(const Value &rhs) const;
+    Value operator*(const Value &rhs) const;
+    Value operator/(const Value &rhs) const;
+    Value operator%(const Value &rhs) const;
+    Value operator<<(const Value &rhs) const;
+    Value operator>>(const Value &rhs) const;
+    Value exponential(const Value &rhs) const;
+
     static Error parseNumber(StrScanner &scan, Radix radix, uint32_t &value);
     static Error parseNumber(StrScanner &scan, Radix radix, uint64_t &value);
 

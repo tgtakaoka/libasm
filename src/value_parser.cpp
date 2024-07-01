@@ -102,7 +102,7 @@ Value ValueParser::_eval(
                 maybe_prefix = false;
                 continue;
             } else if (err != NOT_AN_EXPECTED) {
-                error.setError(scan, err);
+                error.setError(at, err);
                 return val;
             }
 
@@ -273,12 +273,10 @@ Error ValueParser::parseConstant(StrScanner &scan, Value &val) const {
         return err;
 
     err = _number.parseNumber(p, val);
-    if (err == OK) {
+    if (err != NOT_AN_EXPECTED) {
         scan = p;
-        return OK;
-    }
-    if (err != NOT_AN_EXPECTED)
         return err;
+    }
 
     if (_location.locationSymbol(p)) {
         val.setUnsigned(_locator.currentLocation());
