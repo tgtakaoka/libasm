@@ -67,7 +67,9 @@ struct Operand final : ErrorAt {
           index(REG_UNDEF),
           size(SZ_NONE) {}
     uint32_t getUint32() const { return value.getUnsigned(); }
+#ifndef ASM_NOFLOAT
     double getFloat() const { return value.getFloat(); }
+#endif
 };
 
 struct AsmInsn final : public AsmInsnImpl<Config>, EntryInsn {

@@ -2839,6 +2839,8 @@ static void test_areg_alias() {
     TEST("MOVE.L #$00345678,A6",      0026174, 0x0034, 0x5678);
 }
 
+#ifndef ASM_NOFLOAT
+
 static void test_float_move() {
     TEST("FPU MC68881");
 
@@ -4459,6 +4461,8 @@ static void test_float_system() {
     ERRT("FSAVE #$6789ABCD",     OPERAND_NOT_ALLOWED, "#$6789ABCD");
 }
 
+#endif
+
 static void test_comment() {
     COMM("NOP           ; comment", "; comment", 0047161);
     COMM("ORI  # 0 , CCR; comment", "; comment", 0000074, 0x0000);
@@ -4487,10 +4491,12 @@ static void test_comment() {
     COMM("DC.B 'TEXT'    comment", "comment", 0x5445, 0x5854);
     COMM("DC.W -128, 255 comment", "comment", 0xFF80, 0x00FF);
     COMM("DC.L -128, 255 comment", "comment", 0xFFFF, 0xFF80, 0x0000, 0x00FF);
+#ifndef ASM_NOFLOAT
     COMM("DC.S 1.0       comment", "comment", 0x3F80, 0x0000);
     COMM("DC.D -1.0      comment", "comment", 0xBFF0, 0x0000, 0x0000, 0x0000);
     COMM("DC.X -2.25     comment", "comment", 0xC000, 0x0000, 0x9000, 0x0000, 0x0000, 0x0000);
     COMM("DC.P -2.25     comment", "comment", 0x8000, 0x0002, 0x2500, 0x0000, 0x0000, 0x0000);
+#endif
 }
 
 static void test_undef() {
@@ -4568,6 +4574,7 @@ static void test_data_constant() {
          0x1234, 0x5678, 0x9ABC, 0xDEF0, 0x1234, 0x5678, 0x9ABC, 0xDEF0,
          0x1234, 0x5678, 0x9ABC, 0xDEF0, 0x1234, 0x5678, 0x009A, 0xBCDE);
 
+#ifndef ASM_NOFLOAT
     TEST("DC.S  1.0, -inf, +nan, -2.25e2",
          0x3F80, 0x0000,
          0xFF80, 0x0000,
@@ -4589,6 +4596,7 @@ static void test_data_constant() {
          0xFFFF, 0x0000, 0x8000, 0x0000, 0x0000, 0x0000,
          0x8001, 0x0002, 0x2500, 0x0000, 0x0000, 0x0000,
          0xC001, 0x0002, 0x2500, 0x0000, 0x0000, 0x0000);
+#endif
 }
 
 // clang-format on
@@ -4605,11 +4613,13 @@ void run_tests(const char *cpu) {
     RUN_TEST(test_system);
     RUN_TEST(test_multiproc);
     RUN_TEST(test_areg_alias);
+#ifndef ASM_NOFLOAT
     RUN_TEST(test_float_move);
     RUN_TEST(test_float_arithmetic);
     RUN_TEST(test_float_branch);
     RUN_TEST(test_float_trap);
     RUN_TEST(test_float_system);
+#endif
     RUN_TEST(test_comment);
     RUN_TEST(test_undef);
     RUN_TEST(test_data_constant);
