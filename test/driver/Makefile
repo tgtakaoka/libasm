@@ -47,7 +47,7 @@ OBJS_formatter = \
 OBJS_asm = \
     asm_base.o asm_formatter.o value.o value_parser.o parsers.o operators.o \
     asm_driver.o asm_directive.o function_store.o symbol_store.o bin_encoder.o \
-    bin_decoder.o moto_srec.o intel_hex.o
+    bin_decoder.o moto_srec.o intel_hex.o insn_base.o
 ARCHS_test_asm_formatter = i8080 ins8060 mc6809 mos6502 z80
 OBJS_test_asm_formatter = $(OBJS_formatter) $(OBJS_common) $(OBJS_asm) \
         $(foreach a,$(ARCHS_test_asm_formatter),asm_$(a).o $(OBJS_$(a)))

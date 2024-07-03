@@ -435,21 +435,20 @@ Error Assembler::defineDataConstant(StrScanner &scan, Insn &insn, uint8_t dataTy
                     constexpr auto MAX_PBCD80 = 999'999'999'999'999'999L;
                     constexpr auto MIN_PBCD80 = -MAX_PBCD80;
                     if (value >= MIN_PBCD80 && value <= MAX_PBCD80) {
-                        generatePackedBcd80Le(value, insn);
+                        insn.emitPackedBcd80Le(value);
                         break;
                     }
                 }
-                if (!big) {  // i8087
-                    generateFloat80Le(val.getFloat(), insn);
-                }
+                if (!big)  // i8087
+                    insn.emitFloat80Le(val.getFloat());
                 break;
             case DATA_FLOAT96:
                 if (big)  // MC68881
-                    generateFloat96Be(val.getFloat(), insn, insn.length());
+                    insn.emitFloat96Be(val.getFloat(), insn.length());
                 break;
             case DATA_PACKED_BCD96:
                 if (big)  // MC68881
-                    generatePackedBcd96Be(val.getFloat(), insn, insn.length());
+                    insn.emitPackedBcd96Be(val.getFloat(), insn.length());
 #endif
                 break;
             case DATA_ALIGN2:
@@ -466,113 +465,6 @@ Error Assembler::defineDataConstant(StrScanner &scan, Insn &insn, uint8_t dataTy
     } while (scan.skipSpaces().expect(','));
 
     return insn.setError(error);
-}
-
-namespace {
-
-uint64_t convert2pbcd(uint64_t bin, uint8_t digits) {
-    uint64_t pbcd = 0;
-    uint8_t shift = 0;
-    while (digits-- > 0) {
-        pbcd |= (bin % 10) << shift;
-        bin /= 10;
-        shift += 4;
-    }
-    return pbcd;
-}
-
-void swap(uint8_t &a, uint8_t &b) {
-    auto t = a;
-    a = b;
-    b = t;
-}
-
-struct Float80 {
-    uint16_t exponent;
-    uint64_t significant;
-    Float80(double value) {
-        union {
-            double float64;
-            uint8_t buffer[8];
-        };
-        float64 = value;
-        if (host::is_little_endian()) {
-            swap(buffer[0], buffer[7]);
-            swap(buffer[1], buffer[6]);
-            swap(buffer[2], buffer[5]);
-            swap(buffer[3], buffer[4]);
-        }
-        uint16_t exp11 = ((uint16_t)(buffer[0] & 0x7F) << 4) + (buffer[1] >> 4);
-        const auto denormal = exp11 == 0;
-        exponent = (exp11 == 0x07FF) ? 0x7FFF : exp11 + (0x3FFF - 0x03FF);
-        if (buffer[0] & 0x80)
-            exponent |= 0x8000;
-        significant = buffer[1] & 0xF;
-        if (!denormal)
-            significant |= 0x10;  // hidden integer 1
-        for (auto i = 2; i < 8; ++i) {
-            significant <<= 8;
-            significant |= buffer[i];
-        }
-        significant <<= (63 - 52);
-    }
-};
-
-}  // namespace
-
-void Assembler::generateFloat80Le(double value, Insn &insn) const {
-    Float80 v(value);
-    insn.emitUint64Le(v.significant);
-    insn.emitUint16Le(v.exponent);
-}
-
-void Assembler::generatePackedBcd80Le(int64_t value, Insn &insn) const {
-    const auto sign = value < 0 ? INT8_MIN : 0;
-    auto u64 = static_cast<uint64_t>(sign ? -value : value);
-    for (auto i = 0; i < 9; ++i) {
-        uint8_t d = u64 % 10;
-        u64 /= 10;
-        d |= (u64 % 10) << 4;
-        u64 /= 10;
-        insn.emitByte(d);
-    }
-    insn.emitByte(sign);
-}
-
-void Assembler::generateFloat96Be(double value, Insn &insn, uint8_t pos) const {
-    Float80 v(value);
-    insn.emitUint16Be(v.exponent, pos);
-    insn.emitUint16Be(0, pos + 2);
-    insn.emitUint64Be(v.significant, pos + 4);
-}
-
-void Assembler::generatePackedBcd96Be(double value, Insn &insn, uint8_t pos) const {
-    Float80 v(value);
-    if (isinf(value)) {
-        insn.emitUint16Be(v.exponent | INT16_MAX, pos);
-        insn.emitUint16Be(0, pos += 2);
-        insn.emitUint64Be(0, pos += 2);
-    } else if (isnan(value)) {
-        insn.emitUint16Be(v.exponent | INT16_MAX, pos);
-        insn.emitUint16Be(0, pos += 2);
-        insn.emitUint64Be(INT64_MIN, pos += 2);
-    } else {
-        if (value < 0)
-            value = -value;
-        auto exponent = static_cast<int16_t>(log10(value));
-        if (exponent < 0 || (exponent == 0 && value < 1.0))
-            --exponent;
-        uint8_t digit = value * pow(10.0, -exponent);
-        v.significant = value * pow(10.0, 16 - exponent);
-        auto sign = v.exponent & 0x8000;
-        if (exponent < 0) {
-            sign |= 0x4000;
-            exponent = -exponent;
-        }
-        insn.emitUint16Be(sign | convert2pbcd(exponent, 3), pos);
-        insn.emitUint16Be(digit, pos += 2);
-        insn.emitUint64Be(convert2pbcd(v.significant, 16), pos += 2);
-    }
 }
 
 Error OptionBase::parseBoolOption(StrScanner &scan, bool &value, const Assembler &assembler) {

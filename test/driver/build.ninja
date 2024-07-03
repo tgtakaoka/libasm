@@ -36,9 +36,9 @@ build test_asm_formatter: test test_asm_formatter.o $
   test_driver_helper.o test_asserter.o list_formatter.o asm_formatter.o $
   asm_driver.o asm_directive.o function_store.o symbol_store.o bin_memory.o $
   bin_encoder.o bin_decoder.o intel_hex.o moto_srec.o $
-  asm_base.o config_base.o formatters.o reg_base.o error_reporter.o $
-  value_formatter.o value.o value_parser.o parsers.o operators.o option_base.o $
-  str_buffer.o str_scanner.o text_common.o $
+  asm_base.o config_base.o formatters.o insn_base.o reg_base.o $
+  error_reporter.o value_formatter.o value.o value_parser.o parsers.o $
+  operators.o option_base.o str_buffer.o str_scanner.o text_common.o $
   asm_i8080.o   reg_i8080.o   table_i8080.o   text_i8080.o $
   asm_ins8060.o reg_ins8060.o table_ins8060.o text_ins8060.o $
   asm_mc6809.o  reg_mc6809.o  table_mc6809.o  text_mc6809.o $
@@ -49,225 +49,250 @@ build test_formatter_cdp1802:  test test_formatter_cdp1802.o   $
   test_driver_helper.o test_asserter.o list_formatter.o asm_formatter.o $
   asm_driver.o asm_directive.o function_store.o symbol_store.o bin_memory.o $
   bin_encoder.o bin_decoder.o intel_hex.o moto_srec.o asm_base.o $
-  config_base.o formatters.o reg_base.o error_reporter.o value_formatter.o $
-  value.o value_parser.o dis_driver.o dis_base.o dis_formatter.o parsers.o $
-  operators.o option_base.o str_buffer.o str_scanner.o text_common.o $
+  config_base.o formatters.o insn_base.o reg_base.o error_reporter.o $
+  value_formatter.o value.o value_parser.o dis_driver.o dis_base.o $
+  dis_formatter.o parsers.o operators.o option_base.o str_buffer.o $
+  str_scanner.o text_common.o $
   asm_cdp1802.o  dis_cdp1802.o  reg_cdp1802.o  table_cdp1802.o  text_cdp1802.o
 
 build test_formatter_f3850:  test test_formatter_f3850.o       $
   test_driver_helper.o test_asserter.o list_formatter.o asm_formatter.o $
   asm_driver.o asm_directive.o function_store.o symbol_store.o bin_memory.o $
   bin_encoder.o bin_decoder.o intel_hex.o moto_srec.o asm_base.o $
-  config_base.o formatters.o reg_base.o error_reporter.o value_formatter.o $
-  value.o value_parser.o dis_driver.o dis_base.o dis_formatter.o parsers.o $
-  operators.o option_base.o str_buffer.o str_scanner.o text_common.o $
+  config_base.o formatters.o insn_base.o reg_base.o error_reporter.o $
+  value_formatter.o value.o value_parser.o dis_driver.o dis_base.o $
+  dis_formatter.o parsers.o operators.o option_base.o str_buffer.o $
+  str_scanner.o text_common.o $
   asm_f3850.o    dis_f3850.o    reg_f3850.o    table_f3850.o    text_f3850.o
 
 build test_formatter_i8048:  test test_formatter_i8048.o    $
   test_driver_helper.o test_asserter.o list_formatter.o asm_formatter.o $
   asm_driver.o asm_directive.o function_store.o symbol_store.o bin_memory.o $
   bin_encoder.o bin_decoder.o intel_hex.o moto_srec.o asm_base.o $
-  config_base.o formatters.o reg_base.o error_reporter.o value_formatter.o $
-  value.o value_parser.o dis_driver.o dis_base.o dis_formatter.o parsers.o $
-  operators.o option_base.o str_buffer.o str_scanner.o text_common.o $
+  config_base.o formatters.o insn_base.o reg_base.o error_reporter.o $
+  value_formatter.o value.o value_parser.o dis_driver.o dis_base.o $
+  dis_formatter.o parsers.o operators.o option_base.o str_buffer.o $
+  str_scanner.o text_common.o $
   asm_i8048.o    dis_i8048.o    reg_i8048.o    table_i8048.o    text_i8048.o
 
 build test_formatter_i8051:  test test_formatter_i8051.o    $
   test_driver_helper.o test_asserter.o list_formatter.o asm_formatter.o $
   asm_driver.o asm_directive.o function_store.o symbol_store.o bin_memory.o $
   bin_encoder.o bin_decoder.o intel_hex.o moto_srec.o asm_base.o $
-  config_base.o formatters.o reg_base.o error_reporter.o value_formatter.o $
-  value.o value_parser.o dis_driver.o dis_base.o dis_formatter.o parsers.o $
-  operators.o option_base.o str_buffer.o str_scanner.o text_common.o $
+  config_base.o formatters.o insn_base.o reg_base.o error_reporter.o $
+  value_formatter.o value.o value_parser.o dis_driver.o dis_base.o $
+  dis_formatter.o parsers.o operators.o option_base.o str_buffer.o $
+  str_scanner.o text_common.o $
   asm_i8051.o    dis_i8051.o    reg_i8051.o    table_i8051.o    text_i8051.o
 
 build test_formatter_i8080:  test test_formatter_i8080.o    $
   test_driver_helper.o test_asserter.o list_formatter.o asm_formatter.o $
   asm_driver.o asm_directive.o function_store.o symbol_store.o bin_memory.o $
   bin_encoder.o bin_decoder.o intel_hex.o moto_srec.o asm_base.o $
-  config_base.o formatters.o reg_base.o error_reporter.o value_formatter.o $
-  value.o value_parser.o dis_driver.o dis_base.o dis_formatter.o parsers.o $
-  operators.o option_base.o str_buffer.o str_scanner.o text_common.o $
+  config_base.o formatters.o insn_base.o reg_base.o error_reporter.o $
+  value_formatter.o value.o value_parser.o dis_driver.o dis_base.o $
+  dis_formatter.o parsers.o operators.o option_base.o str_buffer.o $
+  str_scanner.o text_common.o $
   asm_i8080.o    dis_i8080.o    reg_i8080.o    table_i8080.o    text_i8080.o
 
 build test_formatter_i8086:  test test_formatter_i8086.o    $
   test_driver_helper.o test_asserter.o list_formatter.o asm_formatter.o $
   asm_driver.o asm_directive.o function_store.o symbol_store.o bin_memory.o $
   bin_encoder.o bin_decoder.o intel_hex.o moto_srec.o asm_base.o $
-  config_base.o formatters.o reg_base.o error_reporter.o value_formatter.o $
-  value.o value_parser.o dis_driver.o dis_base.o dis_formatter.o parsers.o $
-  operators.o option_base.o str_buffer.o str_scanner.o text_common.o $
+  config_base.o formatters.o insn_base.o reg_base.o error_reporter.o $
+  value_formatter.o value.o value_parser.o dis_driver.o dis_base.o $
+  dis_formatter.o parsers.o operators.o option_base.o str_buffer.o $
+  str_scanner.o text_common.o $
   asm_i8086.o    dis_i8086.o    reg_i8086.o    table_i8086.o    text_i8086.o
 
 build test_formatter_i8096:  test test_formatter_i8096.o    $
   test_driver_helper.o test_asserter.o list_formatter.o asm_formatter.o $
   asm_driver.o asm_directive.o function_store.o symbol_store.o bin_memory.o $
   bin_encoder.o bin_decoder.o intel_hex.o moto_srec.o asm_base.o $
-  config_base.o formatters.o reg_base.o error_reporter.o value_formatter.o $
-  value.o value_parser.o dis_driver.o dis_base.o dis_formatter.o parsers.o $
-  operators.o option_base.o str_buffer.o str_scanner.o text_common.o $
+  config_base.o formatters.o insn_base.o reg_base.o error_reporter.o $
+  value_formatter.o value.o value_parser.o dis_driver.o dis_base.o $
+  dis_formatter.o parsers.o operators.o option_base.o str_buffer.o $
+  str_scanner.o text_common.o $
   asm_i8096.o    dis_i8096.o    reg_i8096.o    table_i8096.o    text_i8096.o
 
 build test_formatter_ins8060:  test test_formatter_ins8060.o  $
   test_driver_helper.o test_asserter.o list_formatter.o asm_formatter.o $
   asm_driver.o asm_directive.o function_store.o symbol_store.o bin_memory.o $
   bin_encoder.o bin_decoder.o intel_hex.o moto_srec.o asm_base.o $
-  config_base.o formatters.o reg_base.o error_reporter.o value_formatter.o $
-  value.o value_parser.o dis_driver.o dis_base.o dis_formatter.o parsers.o $
-  operators.o option_base.o str_buffer.o str_scanner.o text_common.o $
+  config_base.o formatters.o insn_base.o reg_base.o error_reporter.o $
+  value_formatter.o value.o value_parser.o dis_driver.o dis_base.o $
+  dis_formatter.o parsers.o operators.o option_base.o str_buffer.o $
+  str_scanner.o text_common.o $
   asm_ins8060.o  dis_ins8060.o  reg_ins8060.o  table_ins8060.o  text_ins8060.o
 
 build test_formatter_ins8070:  test test_formatter_ins8070.o  $
   test_driver_helper.o test_asserter.o list_formatter.o asm_formatter.o $
   asm_driver.o asm_directive.o function_store.o symbol_store.o bin_memory.o $
   bin_encoder.o bin_decoder.o intel_hex.o moto_srec.o asm_base.o $
-  config_base.o formatters.o reg_base.o error_reporter.o value_formatter.o $
-  value.o value_parser.o dis_driver.o dis_base.o dis_formatter.o parsers.o $
-  operators.o option_base.o str_buffer.o str_scanner.o text_common.o $
+  config_base.o formatters.o insn_base.o reg_base.o error_reporter.o $
+  value_formatter.o value.o value_parser.o dis_driver.o dis_base.o $
+  dis_formatter.o parsers.o operators.o option_base.o str_buffer.o $
+  str_scanner.o text_common.o $
   asm_ins8070.o  dis_ins8070.o  reg_ins8070.o  table_ins8070.o  text_ins8070.o
 
 build test_formatter_mc6800:  test test_formatter_mc6800.o   $
   test_driver_helper.o test_asserter.o list_formatter.o asm_formatter.o $
   asm_driver.o asm_directive.o function_store.o symbol_store.o bin_memory.o $
   bin_encoder.o bin_decoder.o intel_hex.o moto_srec.o asm_base.o $
-  config_base.o formatters.o reg_base.o error_reporter.o value_formatter.o $
-  value.o value_parser.o dis_driver.o dis_base.o dis_formatter.o parsers.o $
-  operators.o option_base.o str_buffer.o str_scanner.o text_common.o $
+  config_base.o formatters.o insn_base.o reg_base.o error_reporter.o $
+  value_formatter.o value.o value_parser.o dis_driver.o dis_base.o $
+  dis_formatter.o parsers.o operators.o option_base.o str_buffer.o $
+  str_scanner.o text_common.o $
   asm_mc6800.o   dis_mc6800.o   reg_mc6800.o   table_mc6800.o   text_mc6800.o
 
 build test_formatter_mc68000:  test test_formatter_mc68000.o  $
   test_driver_helper.o test_asserter.o list_formatter.o asm_formatter.o $
   asm_driver.o asm_directive.o function_store.o symbol_store.o bin_memory.o $
   bin_encoder.o bin_decoder.o intel_hex.o moto_srec.o asm_base.o $
-  config_base.o formatters.o reg_base.o error_reporter.o value_formatter.o $
-  value.o value_parser.o dis_driver.o dis_base.o dis_formatter.o parsers.o $
-  operators.o option_base.o str_buffer.o str_scanner.o text_common.o $
+  config_base.o formatters.o insn_base.o reg_base.o error_reporter.o $
+  value_formatter.o value.o value_parser.o dis_driver.o dis_base.o $
+  dis_formatter.o parsers.o operators.o option_base.o str_buffer.o $
+  str_scanner.o text_common.o $
   asm_mc68000.o  dis_mc68000.o  reg_mc68000.o  table_mc68000.o  text_mc68000.o
 
 build test_formatter_mc6805:  test test_formatter_mc6805.o   $
   test_driver_helper.o test_asserter.o list_formatter.o asm_formatter.o $
   asm_driver.o asm_directive.o function_store.o symbol_store.o bin_memory.o $
   bin_encoder.o bin_decoder.o intel_hex.o moto_srec.o asm_base.o $
-  config_base.o formatters.o reg_base.o error_reporter.o value_formatter.o $
-  value.o value_parser.o dis_driver.o dis_base.o dis_formatter.o parsers.o $
-  operators.o option_base.o str_buffer.o str_scanner.o text_common.o $
+  config_base.o formatters.o insn_base.o reg_base.o error_reporter.o $
+  value_formatter.o value.o value_parser.o dis_driver.o dis_base.o $
+  dis_formatter.o parsers.o operators.o option_base.o str_buffer.o $
+  str_scanner.o text_common.o $
   asm_mc6805.o   dis_mc6805.o   reg_mc6805.o   table_mc6805.o   text_mc6805.o
 
 build test_formatter_mc6809:  test test_formatter_mc6809.o   $
   test_driver_helper.o test_asserter.o list_formatter.o asm_formatter.o $
   asm_driver.o asm_directive.o function_store.o symbol_store.o bin_memory.o $
   bin_encoder.o bin_decoder.o intel_hex.o moto_srec.o asm_base.o $
-  config_base.o formatters.o reg_base.o error_reporter.o value_formatter.o $
-  value.o value_parser.o dis_driver.o dis_base.o dis_formatter.o parsers.o $
-  operators.o option_base.o str_buffer.o str_scanner.o text_common.o $
+  config_base.o formatters.o insn_base.o reg_base.o error_reporter.o $
+  value_formatter.o value.o value_parser.o dis_driver.o dis_base.o $
+  dis_formatter.o parsers.o operators.o option_base.o str_buffer.o $
+  str_scanner.o text_common.o $
   asm_mc6809.o   dis_mc6809.o   reg_mc6809.o   table_mc6809.o   text_mc6809.o
 
 build test_formatter_mn1610:  test test_formatter_mn1610.o   $
   test_driver_helper.o test_asserter.o list_formatter.o asm_formatter.o $
   asm_driver.o asm_directive.o function_store.o symbol_store.o bin_memory.o $
   bin_encoder.o bin_decoder.o intel_hex.o moto_srec.o asm_base.o $
-  config_base.o formatters.o reg_base.o error_reporter.o value_formatter.o $
-  value.o value_parser.o dis_driver.o dis_base.o dis_formatter.o parsers.o $
-  operators.o option_base.o str_buffer.o str_scanner.o text_common.o $
+  config_base.o formatters.o insn_base.o reg_base.o error_reporter.o $
+  value_formatter.o value.o value_parser.o dis_driver.o dis_base.o $
+  dis_formatter.o parsers.o operators.o option_base.o str_buffer.o $
+  str_scanner.o text_common.o $
   asm_mn1610.o   dis_mn1610.o   reg_mn1610.o   table_mn1610.o   text_mn1610.o
 
 build test_formatter_mos6502:  test test_formatter_mos6502.o  $
   test_driver_helper.o test_asserter.o list_formatter.o asm_formatter.o $
   asm_driver.o asm_directive.o function_store.o symbol_store.o bin_memory.o $
   bin_encoder.o bin_decoder.o intel_hex.o moto_srec.o asm_base.o $
-  config_base.o formatters.o reg_base.o error_reporter.o value_formatter.o $
-  value.o value_parser.o dis_driver.o dis_base.o dis_formatter.o parsers.o $
-  operators.o option_base.o str_buffer.o str_scanner.o text_common.o $
+  config_base.o formatters.o insn_base.o reg_base.o error_reporter.o $
+  value_formatter.o value.o value_parser.o dis_driver.o dis_base.o $
+  dis_formatter.o parsers.o operators.o option_base.o str_buffer.o $
+  str_scanner.o text_common.o $
   asm_mos6502.o  dis_mos6502.o  reg_mos6502.o  table_mos6502.o  text_mos6502.o
 
 build test_formatter_ns32000:  test test_formatter_ns32000.o  $
   test_driver_helper.o test_asserter.o list_formatter.o asm_formatter.o $
   asm_driver.o asm_directive.o function_store.o symbol_store.o bin_memory.o $
   bin_encoder.o bin_decoder.o intel_hex.o moto_srec.o asm_base.o $
-  config_base.o formatters.o reg_base.o error_reporter.o value_formatter.o $
-  value.o value_parser.o dis_driver.o dis_base.o dis_formatter.o parsers.o $
-  operators.o option_base.o str_buffer.o str_scanner.o text_common.o $
+  config_base.o formatters.o insn_base.o reg_base.o error_reporter.o $
+  value_formatter.o value.o value_parser.o dis_driver.o dis_base.o $
+  dis_formatter.o parsers.o operators.o option_base.o str_buffer.o $
+  str_scanner.o text_common.o $
   asm_ns32000.o  dis_ns32000.o  reg_ns32000.o  table_ns32000.o  text_ns32000.o
 
 build test_formatter_pdp8:  test test_formatter_pdp8.o   $
   test_driver_helper.o test_asserter.o list_formatter.o asm_formatter.o $
   asm_driver.o asm_directive.o function_store.o symbol_store.o bin_memory.o $
   bin_encoder.o bin_decoder.o intel_hex.o moto_srec.o asm_base.o $
-  config_base.o formatters.o reg_base.o error_reporter.o value_formatter.o $
-  value.o value_parser.o dis_driver.o dis_base.o dis_formatter.o parsers.o $
-  operators.o option_base.o str_buffer.o str_scanner.o text_common.o $
+  config_base.o formatters.o insn_base.o reg_base.o error_reporter.o $
+  value_formatter.o value.o value_parser.o dis_driver.o dis_base.o $
+  dis_formatter.o parsers.o operators.o option_base.o str_buffer.o $
+  str_scanner.o text_common.o $
   asm_pdp8.o   dis_pdp8.o   reg_pdp8.o   table_pdp8.o   text_pdp8.o
 
 build test_formatter_scn2650:  test test_formatter_scn2650.o  $
   test_driver_helper.o test_asserter.o list_formatter.o asm_formatter.o $
   asm_driver.o asm_directive.o function_store.o symbol_store.o bin_memory.o $
   bin_encoder.o bin_decoder.o intel_hex.o moto_srec.o asm_base.o $
-  config_base.o formatters.o reg_base.o error_reporter.o value_formatter.o $
-  value.o value_parser.o dis_driver.o dis_base.o dis_formatter.o parsers.o $
-  operators.o option_base.o str_buffer.o str_scanner.o text_common.o $
+  config_base.o formatters.o insn_base.o reg_base.o error_reporter.o $
+  value_formatter.o value.o value_parser.o dis_driver.o dis_base.o $
+  dis_formatter.o parsers.o operators.o option_base.o str_buffer.o $
+  str_scanner.o text_common.o $
   asm_scn2650.o  dis_scn2650.o  reg_scn2650.o  table_scn2650.o  text_scn2650.o
 
 build test_formatter_tlcs90:  test test_formatter_tlcs90.o   $
   test_driver_helper.o test_asserter.o list_formatter.o asm_formatter.o $
   asm_driver.o asm_directive.o function_store.o symbol_store.o bin_memory.o $
   bin_encoder.o bin_decoder.o intel_hex.o moto_srec.o asm_base.o $
-  config_base.o formatters.o reg_base.o error_reporter.o value_formatter.o $
-  value.o value_parser.o dis_driver.o dis_base.o dis_formatter.o parsers.o $
-  operators.o option_base.o str_buffer.o str_scanner.o text_common.o $
+  config_base.o formatters.o insn_base.o reg_base.o error_reporter.o $
+  value_formatter.o value.o value_parser.o dis_driver.o dis_base.o $
+  dis_formatter.o parsers.o operators.o option_base.o str_buffer.o $
+  str_scanner.o text_common.o $
   asm_tlcs90.o   dis_tlcs90.o   reg_tlcs90.o   table_tlcs90.o   text_tlcs90.o
 
 build test_formatter_tms32010:  test test_formatter_tms32010.o $
   test_driver_helper.o test_asserter.o list_formatter.o asm_formatter.o $
   asm_driver.o asm_directive.o function_store.o symbol_store.o bin_memory.o $
   bin_encoder.o bin_decoder.o intel_hex.o moto_srec.o asm_base.o $
-  config_base.o formatters.o reg_base.o error_reporter.o value_formatter.o $
-  value.o value_parser.o dis_driver.o dis_base.o dis_formatter.o parsers.o $
-  operators.o option_base.o str_buffer.o str_scanner.o text_common.o $
+  config_base.o formatters.o insn_base.o reg_base.o error_reporter.o $
+  value_formatter.o value.o value_parser.o dis_driver.o dis_base.o $
+  dis_formatter.o parsers.o operators.o option_base.o str_buffer.o $
+  str_scanner.o text_common.o $
   asm_tms32010.o dis_tms32010.o reg_tms32010.o table_tms32010.o text_tms32010.o
 
 build test_formatter_tms7000:  test test_formatter_tms7000.o  $
   test_driver_helper.o test_asserter.o list_formatter.o asm_formatter.o $
   asm_driver.o asm_directive.o function_store.o symbol_store.o bin_memory.o $
   bin_encoder.o bin_decoder.o intel_hex.o moto_srec.o asm_base.o $
-  config_base.o formatters.o reg_base.o error_reporter.o value_formatter.o $
-  value.o value_parser.o dis_driver.o dis_base.o dis_formatter.o parsers.o $
-  operators.o option_base.o str_buffer.o str_scanner.o text_common.o $
+  config_base.o formatters.o insn_base.o reg_base.o error_reporter.o $
+  value_formatter.o value.o value_parser.o dis_driver.o dis_base.o $
+  dis_formatter.o parsers.o operators.o option_base.o str_buffer.o $
+  str_scanner.o text_common.o $
   asm_tms7000.o  dis_tms7000.o  reg_tms7000.o  table_tms7000.o  text_tms7000.o
 
 build test_formatter_tms9900:  test test_formatter_tms9900.o  $
   test_driver_helper.o test_asserter.o list_formatter.o asm_formatter.o $
   asm_driver.o asm_directive.o function_store.o symbol_store.o bin_memory.o $
   bin_encoder.o bin_decoder.o intel_hex.o moto_srec.o asm_base.o $
-  config_base.o formatters.o reg_base.o error_reporter.o value_formatter.o $
-  value.o value_parser.o dis_driver.o dis_base.o dis_formatter.o parsers.o $
-  operators.o option_base.o str_buffer.o str_scanner.o text_common.o $
+  config_base.o formatters.o insn_base.o reg_base.o error_reporter.o $
+  value_formatter.o value.o value_parser.o dis_driver.o dis_base.o $
+  dis_formatter.o parsers.o operators.o option_base.o str_buffer.o $
+  str_scanner.o text_common.o $
   asm_tms9900.o  dis_tms9900.o  reg_tms9900.o  table_tms9900.o  text_tms9900.o
 
 build test_formatter_z8:  test test_formatter_z8.o       $
   test_driver_helper.o test_asserter.o list_formatter.o asm_formatter.o $
   asm_driver.o asm_directive.o function_store.o symbol_store.o bin_memory.o $
   bin_encoder.o bin_decoder.o intel_hex.o moto_srec.o asm_base.o $
-  config_base.o formatters.o reg_base.o error_reporter.o value_formatter.o $
-  value.o value_parser.o dis_driver.o dis_base.o dis_formatter.o parsers.o $
-  operators.o option_base.o str_buffer.o str_scanner.o text_common.o $
+  config_base.o formatters.o insn_base.o reg_base.o error_reporter.o $
+  value_formatter.o value.o value_parser.o dis_driver.o dis_base.o $
+  dis_formatter.o parsers.o operators.o option_base.o str_buffer.o $
+  str_scanner.o text_common.o $
   asm_z8.o       dis_z8.o       reg_z8.o       table_z8.o       text_z8.o
 
 build test_formatter_z80:  test test_formatter_z80.o      $
   test_driver_helper.o test_asserter.o list_formatter.o asm_formatter.o $
   asm_driver.o asm_directive.o function_store.o symbol_store.o bin_memory.o $
   bin_encoder.o bin_decoder.o intel_hex.o moto_srec.o asm_base.o $
-  config_base.o formatters.o reg_base.o error_reporter.o value_formatter.o $
-  value.o value_parser.o dis_driver.o dis_base.o dis_formatter.o parsers.o $
-  operators.o option_base.o str_buffer.o str_scanner.o text_common.o $
+  config_base.o formatters.o insn_base.o reg_base.o error_reporter.o $
+  value_formatter.o value.o value_parser.o dis_driver.o dis_base.o $
+  dis_formatter.o parsers.o operators.o option_base.o str_buffer.o $
+  str_scanner.o text_common.o $
   asm_z80.o      dis_z80.o      reg_z80.o      table_z80.o      text_z80.o
 
 build test_formatter_z8000:  test test_formatter_z8000.o    $
   test_driver_helper.o test_asserter.o list_formatter.o asm_formatter.o $
   asm_driver.o asm_directive.o function_store.o symbol_store.o bin_memory.o $
   bin_encoder.o bin_decoder.o intel_hex.o moto_srec.o asm_base.o $
-  config_base.o formatters.o reg_base.o error_reporter.o value_formatter.o $
-  value.o value_parser.o dis_driver.o dis_base.o dis_formatter.o parsers.o $
-  operators.o option_base.o str_buffer.o str_scanner.o text_common.o $
+  config_base.o formatters.o insn_base.o reg_base.o error_reporter.o $
+  value_formatter.o value.o value_parser.o dis_driver.o dis_base.o $
+  dis_formatter.o parsers.o operators.o option_base.o str_buffer.o $
+  str_scanner.o text_common.o $
   asm_z8000.o    dis_z8000.o    reg_z8000.o    table_z8000.o    text_z8000.o
 
 build test: phony test_helpers test_bin_memory test_intel_hex test_moto_srec $

@@ -6,6 +6,7 @@ build config_base.o:     cxx ${root}/src/config_base.cpp
 build dis_base.o:        cxx ${root}/src/dis_base.cpp
 build error_reporter.o:  cxx ${root}/src/error_reporter.cpp
 build formatters.o:      cxx ${root}/src/formatters.cpp
+build insn_base.o:       cxx ${root}/src/insn_base.cpp
 build operators.o:       cxx ${root}/src/operators.cpp
 build option_base.o:     cxx ${root}/src/option_base.cpp
 build parsers.o:         cxx ${root}/src/parsers.cpp

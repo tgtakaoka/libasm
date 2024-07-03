@@ -115,10 +115,6 @@ protected:
 
     void generateString(StrScanner &scan, const StrScanner &end, Insn &insn, DataType type,
             ErrorAt &error) const;
-    void generatePackedBcd80Le(int64_t value, Insn &insn) const;
-    void generateFloat80Le(double value, Insn &insn) const;
-    void generateFloat96Be(double value, Insn &insn, uint8_t pos) const;
-    void generatePackedBcd96Be(double value, Insn &insn, uint8_t pos) const;
 
 private:
     virtual ConfigSetter &configSetter() = 0;

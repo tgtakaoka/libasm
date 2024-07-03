@@ -44,18 +44,18 @@ CPPFLAGS = -I../src -I../driver -MD -MF $@.d
 OBJS_test = \
     test_asserter.o error_reporter.o option_base.o str_buffer.o str_scanner.o
 OBJS_asm  = \
-    asm_base.o config_base.o reg_base.o test_asm_helper.o value.o \
-    value_parser.o parsers.o operators.o text_common.o
+    asm_base.o config_base.o reg_base.o test_asm_helper.o \
+    insn_base.o value.o value_parser.o parsers.o operators.o text_common.o
 OBJS_dis  = \
     dis_base.o config_base.o formatters.o reg_base.o test_dis_helper.o \
-    value_formatter.o text_common.o
+    insn_base.o value_formatter.o text_common.o
 OBJS_expr = \
     config_base.o test_expr_helper.o formatters.o operators.o parsers.o \
-    value_formatter.o value.o value_parser.o text_common.o
+    insn_base.o value_formatter.o value.o value_parser.o text_common.o
 OBJS_gen  = \
     gen_driver.o test_generator.o tokenized_text.o dis_formatter.o \
-    config_base.o dis_base.o formatters.o reg_base.o value_formatter.o \
-    list_formatter.o text_common.o
+    config_base.o insn_base.o dis_base.o formatters.o reg_base.o \
+    value_formatter.o list_formatter.o text_common.o
 
 TEST_OBJS = $(ARCHS:%=test_asm_%.o) $(ARCHS:%=test_dis_%.o)
 EXPR_OBJS = $(EXPRS:%=test_expr_%.o)
