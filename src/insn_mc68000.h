@@ -85,6 +85,12 @@ private:
     void parseInsnSize();
 };
 
+struct Float96 {
+    uint16_t exp;
+    uint16_t digit;
+    uint64_t significand;
+};
+
 struct DisInsn final : DisInsnImpl<Config>, EntryInsn {
     DisInsn(Insn &insn, DisMemory &memory, const StrBuffer &out) : DisInsnImpl(insn, memory, out) {}
     InsnSize insnSize() const { return flags().insnSize(); }
@@ -93,6 +99,8 @@ struct DisInsn final : DisInsnImpl<Config>, EntryInsn {
         if (!hasPostfix())
             setPostfix(readUint16());
     }
+
+    Float96 readFloat96();
 };
 
 }  // namespace mc68000

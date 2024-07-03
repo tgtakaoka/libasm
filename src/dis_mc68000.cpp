@@ -18,11 +18,13 @@
 
 #include "reg_mc68000.h"
 #include "table_mc68000.h"
+#include "text_common.h"
 
 namespace libasm {
 namespace mc68000 {
 
 using namespace reg;
+using namespace text::common;
 
 const ValueFormatter::Plugins &DisMc68000::defaultPlugins() {
     return ValueFormatter::Plugins::motorola();
@@ -34,6 +36,7 @@ DisMc68000::DisMc68000(const ValueFormatter::Plugins &plugins)
 }
 
 namespace {
+
 StrBuffer &outOprSize(StrBuffer &out, OprSize size) {
     const auto suffix = sizeSuffix(size);
     if (suffix)
@@ -41,14 +44,15 @@ StrBuffer &outOprSize(StrBuffer &out, OprSize size) {
     return out;
 }
 
-void outBcdDigit(DisInsn &insn, StrBuffer &out, uint8_t digit) {
+void outBcdDigit(StrBuffer &out, uint8_t digit, ErrorAt &error) {
     if (digit < 10) {
         out.letter(digit + '0');
     } else {
         out.letter('0');
-        insn.setErrorIf(out, ILLEGAL_CONSTANT);
+        error.setErrorIf(out, ILLEGAL_CONSTANT);
     }
 }
+
 }  // namespace
 
 void DisMc68000::decodeImmediateData(DisInsn &insn, StrBuffer &out, OprSize size) const {
@@ -64,47 +68,69 @@ void DisMc68000::decodeImmediateData(DisInsn &insn, StrBuffer &out, OprSize size
     } else if (size == SZ_DUBL) {
         out.float64(insn.readFloat64());
     } else if (size == SZ_XTND) {
-        // | |15-bit exponent|16-bit zeroes|64-bit significand|
-        //  ^- sign of significand
-        const auto exp = insn.readUint16();
-        (void)(insn.readUint16());  // read padding zeroes
-        const auto significand = insn.readUint64();
-        if (exp & 0x8000)
-            out.letter('-');
-        const auto exponent = static_cast<int16_t>(exp & 0x7FFF) - 16383 - 63;
-        out.float80(exponent, significand);
+        outFloat96(out, insn.readFloat96(), insn);
     } else if (size == SZ_PBCD) {
-        // | | |  |3-digit exponebt|12-bit zeroes|1-digit integer|16-digit significand|
-        //  ^ ^ ^-  2 bits used for infinity and NaNs
-        //  | +---- sign of exponent
-        //  +------ sign of significand
-        const auto exp = insn.readUint16();
-        const auto digit = insn.readUint16() & 0xF;
-        auto significand = insn.readUint64();
-        if (exp & 0x8000)
+        outPackedBcd96(out, insn.readFloat96(), insn);
+    }
+}
+
+StrBuffer &DisMc68000::outFloat96(StrBuffer &out, const Float96 &v, ErrorAt &error) const {
+#if FLOAT96_STRICT
+    if (v.digit != 0) {
+        error.setErrorIf(out, ILLEGAL_CONSTANT);
+        return out;
+    }
+#endif
+    if (v.exp & INT16_MIN)
+        out.letter('-');
+    const auto exp = v.exp & INT16_MAX;
+    if (exp == INT16_MAX) {
+        // MSB of siginificand is don't care.
+        return (v.significand & INT64_MAX) == 0 ? out.text_P(TEXT_INF) : out.text_P(TEXT_NAN);
+    }
+    const auto exponent = static_cast<int16_t>(exp) - 0x3FFF - 63;
+    return out.float80(exponent, v.significand);
+}
+
+StrBuffer &DisMc68000::outPackedBcd96(StrBuffer &out, const Float96 &v, ErrorAt &error) const {
+#if FLOAT96_STRICT
+    if ((v.digit & ~0xF) != 0) {
+        error.setErrorIf(out, ILLEGAL_CONSTANT);
+        return out;
+    }
+#endif
+    if (v.exp & 0x8000)
+        out.letter('-');
+    const auto exp = v.exp & INT16_MAX;
+    if (exp == INT16_MAX)
+        return v.significand == 0 ? out.text_P(TEXT_INF) : out.text_P(TEXT_NAN);
+#if FLOAT96_STRICT
+    if (v.exp & 0x3000)
+        error.setErrorIf(out, ILLEGAL_CONSTANT);
+#endif
+    outBcdDigit(out, v.digit & 0xF, error);
+    if (v.significand)
+        out.letter('.');
+    auto significand = v.significand;
+    while (significand) {
+        outBcdDigit(out, significand >> 60, error);
+        significand <<= 4;
+    }
+    if (v.exp & 0x0FFF) {
+        out.letter('E');
+        if (v.exp & 0x4000)
             out.letter('-');
-        outBcdDigit(insn, out, digit);
-        if (significand)
-            out.letter('.');
-        while (significand) {
-            outBcdDigit(insn, out, significand >> 60);
-            significand <<= 4;
-        }
-        if (exp & 0x3FFF) {
-            out.letter('E');
-            if (exp & 0x4000)
-                out.letter('-');
-            auto exponent = exp << 4;
-            auto suppress = true;
-            for (auto i = 0; i < 3; ++i, exponent <<= 4) {
-                const auto digit = (exponent >> 12) & 0xF;
-                if (digit || !suppress) {
-                    outBcdDigit(insn, out, digit);
-                    suppress = false;
-                }
+        auto exponent = v.exp << 4;
+        auto suppress = true;
+        for (auto i = 0; i < 3; ++i, exponent <<= 4) {
+            const auto digit = (exponent >> 12) & 0xF;
+            if (digit || !suppress) {
+                outBcdDigit(out, digit, error);
+                suppress = false;
             }
         }
     }
+    return out;
 }
 
 void DisMc68000::decodeEffectiveAddr(
@@ -578,6 +604,23 @@ Error DisMc68000::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) con
     if (dst != M_NONE && !isFloatOpOnSameFpreg(insn))
         decodeOperand(insn, out.comma(), dst, insn.dstPos(), osize, opr16, opr16Error);
     return _insn.setError(insn);
+}
+
+Float96 DisInsn::readFloat96() {
+    /** Float96
+     * | |15-bit exponent|16-bit zeroes|64-bit significand|
+     *  ^- sign of significand
+     */
+    /** PackedBcd96
+     * | | |  |3-digit exponent|12-bit zeroes|1-digit integer|16-digit significand|
+     *  ^ ^ ^-- infinity and nan
+     *  | +---- sign of exponent
+     *  +------ sign of significand
+     */
+    const auto exp = readUint16();
+    const auto digit = readUint16();
+    const auto significand = readUint64();
+    return {exp, digit, significand};
 }
 
 }  // namespace mc68000

@@ -35,6 +35,9 @@ private:
     void decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode, OprPos pos, OprSize size,
             uint16_t opr16 = 0, Error opr16Error = OK) const;
 
+    StrBuffer &outFloat96(StrBuffer &buf, const Float96 &v, ErrorAt &error) const;
+    StrBuffer &outPackedBcd96(StrBuffer &buf, const Float96 &v, ErrorAt &error) const;
+
     Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) const override;
     const ConfigBase &config() const override { return *this; }
     ConfigSetter &configSetter() override { return *this; }

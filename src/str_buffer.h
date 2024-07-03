@@ -76,7 +76,7 @@ struct StrBuffer : ErrorReporter {
     StrBuffer &uint8(uint8_t num);
 
     /** Output |num| as 32-bit floating point number. */
-    StrBuffer &float32(float num);
+    StrBuffer &float32(double num);
 
     /** Output |num| as 64-bit floating point number. */
     StrBuffer &float64(double num);
