@@ -33,199 +33,102 @@ namespace libasm {
  * General instruction code interface for Assembler and Disassembler.
  */
 struct Insn final : ErrorAt {
-    Insn(uint32_t addr) : ErrorAt(), _address(addr), _length(0) {
-        memset(_bytes, 0, sizeof(_bytes));
-    }
+    Insn(uint32_t addr);
 
     uint32_t address() const { return _address; }
     const uint8_t *bytes() const { return _bytes; }
     uint8_t length() const { return _length; }
     const char *name() const { return _name; }
     StrBuffer &nameBuffer() { return _buffer; }
-    void reset(uint32_t addr, uint8_t length = 0) {
-        resetError();
-        setAt(StrScanner::EMPTY);
-        _address = addr;
-        if (length >= sizeof(_bytes))
-            length = sizeof(_bytes);
-        _length = length;
-        memset(_bytes + length, 0, sizeof(_bytes) - length);
-        _buffer.reset();
-    }
-    uint32_t align(uint8_t step) {
-        const uint8_t rem = _address % step;
-        if (rem)
-            _address += step - rem;
-        return _address;
-    }
+    void reset(uint32_t addr, uint8_t length = 0);
+    uint32_t align(uint8_t step);
 
     /** No copy constructor. */
     Insn(Insn const &) = delete;
     /** No assignment operator. */
     void operator=(Insn const &) = delete;
 
+    /** Generate 8 bit |data| (Assembler). */
     Error emitByte(uint8_t val) { return emitByte(val, _length); }
 
-    Error emitByte(uint8_t val, uint8_t pos) {
-        if (pos >= MAX_CODE)
-            return setErrorIf(NO_MEMORY);
-        _bytes[pos++] = val;
-        if (_length < pos)
-            _length = pos;
-        return OK;
-    }
-
     /** Generate 16 bit big endian |data| (Assembler). */
-    Error emitUint16Be(uint16_t data) {
-        emitByte(data >> 8);
-        return emitByte(data >> 0);
-    }
+    Error emitUint16Be(uint16_t data) { return emitUint16Be(data, _length); }
 
     /** Generate 16 bit little endian |data| (Assembler). */
-    Error emitUint16Le(uint16_t data) {
-        emitByte(data >> 0);
-        return emitByte(data >> 8);
-    }
-
-    /** Generate 16 bit big endian |data| at |pos| (Assembler). */
-    Error emitUint16Be(uint16_t data, uint8_t pos) {
-        emitByte(data >> 8, pos + 0);
-        return emitByte(data >> 0, pos + 1);
-    }
-
-    /** Generate 16 bit little endian |data| at |pos| (Assembler). */
-    Error emitUint16Le(uint16_t data, uint8_t pos) {
-        emitByte(data >> 0, pos + 0);
-        return emitByte(data >> 8, pos + 1);
-    }
+    Error emitUint16Le(uint16_t data) { return emitUint16Le(data, _length); }
 
     /** Generate 32 bit big endian |data| (Assembler). */
-    Error emitUint32Be(uint32_t data) {
-        emitUint16Be(data >> 16);
-        return emitUint16Be(data >> 0);
-    }
+    Error emitUint32Be(uint32_t data) { return emitUint32Be(data, _length); }
 
     /** Generate 32 bit little endian |data| (Assembler). */
-    Error emitUint32Le(uint32_t data) {
-        emitUint16Le(data >> 0);
-        return emitUint16Le(data >> 16);
-    }
-
-    /** Generate 32 bit big endian |data| at |pos| (Assembler). */
-    Error emitUint32Be(uint32_t data, uint8_t pos) {
-        emitUint16Be(data >> 16, pos + 0);
-        return emitUint16Be(data >> 0, pos + 2);
-    }
-
-    /** Generate 32 bit little endian |data| at |pos| (Assembler). */
-    Error emitUint32Le(uint32_t data, uint8_t pos) {
-        emitUint16Le(data >> 0, pos + 0);
-        return emitUint16Le(data >> 16, pos + 2);
-    }
+    Error emitUint32Le(uint32_t data) { return emitUint32Le(data, _length); }
 
     /** Generate 64 bit big enditan |data| (Assembler). */
-    Error emitUint64Be(uint64_t data) {
-        emitUint32Be(data >> 32);
-        return emitUint32Be(data >> 0);
-    }
+    Error emitUint64Be(uint64_t data) { return emitUint64Be(data, _length); }
 
     /** Generate 64 bit little endian |data| (Assembler). */
-    Error emitUint64Le(uint64_t data) {
-        emitUint32Le(data >> 0);
-        return emitUint32Le(data >> 32);
-    }
+    Error emitUint64Le(uint64_t data) { return emitUint64Le(data, _length); }
 
-    /** Generate 64 bit big endian |data| at |pos| (Assembler). */
-    Error emitUint64Be(uint64_t data, uint8_t pos) {
-        emitUint32Be(data >> 32, pos + 0);
-        return emitUint32Be(data >> 0, pos + 4);
-    }
-
-    /** Generate 64 bit little endian |data| at |pos| (Assembler). */
-    Error emitUint64Le(uint64_t data, uint8_t pos) {
-        emitUint32Le(data >> 0, pos + 0);
-        return emitUint32Le(data >> 32, pos + 4);
-    }
-
+#ifndef ASM_NOFLOAT
     /** Generate 32 bit big endian floating point |data|(Assembler). */
-    Error emitFloat32Be(float data) {
-        union {
-            float float32;
-            uint32_t data32;
-        } bytes;
-        bytes.float32 = data;
-        return emitUint32Be(bytes.data32);
-    }
+    Error emitFloat32Be(double data) { return emitFloat32Be(data, _length); }
 
     /** Generate 32 bit little endian floating point |data| (Assembler). */
-    Error emitFloat32Le(float data) {
-        union {
-            float float32;
-            uint32_t data32;
-        } bytes;
-        bytes.float32 = data;
-        return emitUint32Le(bytes.data32);
-    }
-
-    /** Generate 32 bit big endian floating point |data| at |pos| (Assembler). */
-    Error emitFloat32Be(float data, uint8_t pos) {
-        union {
-            float float32;
-            uint32_t data32;
-        } bytes;
-        bytes.float32 = data;
-        return emitUint32Be(bytes.data32, pos);
-    }
-
-    /** Generate 32 bit little endian floating point |data| at |pos| (Assembler). */
-    Error emitFloat32Le(float data, uint8_t pos) {
-        union {
-            float float32;
-            uint32_t data32;
-        } bytes;
-        bytes.float32 = data;
-        return emitUint32Le(bytes.data32, pos);
-    }
+    Error emitFloat32Le(double data) { return emitFloat32Le(data, _length); }
 
     /** Generate 64 bit big endian floating point |data| (Assembler). */
-    Error emitFloat64Be(double data) {
-        union {
-            double float64;
-            uint64_t data64;
-        } bytes;
-        bytes.float64 = data;
-        return emitUint64Be(bytes.data64);
-    }
+    Error emitFloat64Be(double data) { return emitFloat64Be(data, _length); }
 
     /** Generate 64 bit little endian floating point |data| (Assembler). */
-    Error emitFloat64Le(double data) {
-        union {
-            double float64;
-            uint64_t data64;
-        } bytes;
-        bytes.float64 = data;
-        return emitUint64Le(bytes.data64);
-    }
+    Error emitFloat64Le(double data) { return emitFloat64Le(data, _length); }
+#endif
+
+    /** Generate 8 bit |data| at |pos| (Assembler). */
+    Error emitByte(uint8_t val, uint8_t pos);
+
+    /** Generate 16 bit big endian |data| at |pos| (Assembler). */
+    Error emitUint16Be(uint16_t data, uint8_t pos);
+
+    /** Generate 16 bit little endian |data| at |pos| (Assembler). */
+    Error emitUint16Le(uint16_t data, uint8_t pos);
+
+    /** Generate 32 bit big endian |data| at |pos| (Assembler). */
+    Error emitUint32Be(uint32_t data, uint8_t pos);
+
+    /** Generate 32 bit little endian |data| at |pos| (Assembler). */
+    Error emitUint32Le(uint32_t data, uint8_t pos);
+
+    /** Generate 64 bit big endian |data| at |pos| (Assembler). */
+    Error emitUint64Be(uint64_t data, uint8_t pos);
+
+    /** Generate 64 bit little endian |data| at |pos| (Assembler). */
+    Error emitUint64Le(uint64_t data, uint8_t pos);
+
+#ifndef ASM_NOFLOAT
+    /** Generate 32 bit big endian floating point |data| at |pos| (Assembler). */
+    Error emitFloat32Be(double data, uint8_t pos);
+
+    /** Generate 32 bit little endian floating point |data| at |pos| (Assembler). */
+    Error emitFloat32Le(double data, uint8_t pos);
 
     /** Generate 64 bit big endian floating point |data| at |pos| (Assembler). */
-    Error emitFloat64Be(double data, uint8_t pos) {
-        union {
-            double float64;
-            uint64_t data64;
-        } bytes;
-        bytes.float64 = data;
-        return emitUint64Be(bytes.data64, pos);
-    }
+    Error emitFloat64Be(double data, uint8_t pos);
 
     /** Generate 64 bit little endian floating point |data| at |pos| (Assembler). */
-    Error emitFloat64Le(double data, uint8_t pos) {
-        union {
-            double float64;
-            uint64_t data64;
-        } bytes;
-        bytes.float64 = data;
-        return emitUint64Le(bytes.data64, pos);
-    }
+    Error emitFloat64Le(double data, uint8_t pos);
+
+    /** Generate 80 bit little endian packed BCD |data| (Assembler). */
+    Error emitPackedBcd80Le(int64_t value);
+
+    /** Generate 80 bit little endian floating point |data| (Assembler). */
+    Error emitFloat80Le(double value);
+
+    /** Generate 96 bit big endian floating point |data| at |pos| (Assembler). */
+    Error emitFloat96Be(double value, uint8_t pos);
+
+    /** Generate 96 bit big endian packed BCD |data| at |pos| (Assembler). */
+    Error emitPackedBcd96Be(double value, uint8_t pos);
+#endif
 
 private:
     uint32_t _address;
@@ -336,104 +239,40 @@ struct DisInsnBase : ErrorAt {
     const char *name() const { return _insn.name(); }
     StrBuffer &nameBuffer() { return _insn.nameBuffer(); }
 
-    void reset(uint8_t length = 0) {
-        resetError();
-        _insn.reset(_insn.address(), length);
-    }
+    void reset(uint8_t length = 0);
 
     /** Read 8 bit data. */
-    virtual uint8_t readByte() {
-        if (!_memory.hasNext()) {
-            setErrorIf(_out, NO_MEMORY);
-            return 0;
-        }
-        const uint8_t data = _memory.readByte();
-        if (_insn.emitByte(data))
-            setErrorIf(_out, NO_MEMORY);
-        return data;
-    }
+    virtual uint8_t readByte();
 
     /** Read 16 bit big endian data */
-    uint16_t readUint16Be() {
-        const uint8_t msb = readByte();
-        const uint8_t lsb = readByte();
-        return static_cast<uint16_t>(msb) << 8 | lsb;
-    }
+    uint16_t readUint16Be();
 
     /** Read 16 bit little endian data */
-    uint16_t readUint16Le() {
-        const uint8_t lsb = readByte();
-        const uint8_t msb = readByte();
-        return static_cast<uint16_t>(msb) << 8 | lsb;
-    }
+    uint16_t readUint16Le();
 
     /** Read 32 bit big endian data */
-    uint32_t readUint32Be() {
-        const uint16_t msw = readUint16Be();
-        const uint16_t lsw = readUint16Be();
-        return static_cast<uint32_t>(msw) << 16 | lsw;
-    }
+    uint32_t readUint32Be();
 
     /** Read 32 bit little endian data */
-    uint32_t readUint32Le() {
-        const uint16_t lsw = readUint16Le();
-        const uint16_t msw = readUint16Le();
-        return static_cast<uint32_t>(msw) << 16 | lsw;
-    }
+    uint32_t readUint32Le();
 
     /** Read 64 bit big endian data */
-    uint64_t readUint64Be() {
-        const uint32_t msw = readUint32Be();
-        const uint32_t lsw = readUint32Be();
-        return static_cast<uint64_t>(msw) << 32 | lsw;
-    }
+    uint64_t readUint64Be();
 
     /** Read 64 bit little endian data */
-    uint64_t readUint64Le() {
-        const uint32_t lsw = readUint32Le();
-        const uint32_t msw = readUint32Le();
-        return static_cast<uint64_t>(msw) << 32 | lsw;
-    }
+    uint64_t readUint64Le();
 
     /** Read 32 bit big endian floating point data */
-    float readFloat32Be() {
-        union {
-            float float32;
-            uint32_t data32;
-        } bytes;
-        bytes.data32 = readUint32Be();
-        return bytes.float32;
-    }
+    double readFloat32Be();
 
     /** Read 32 bit little endian floating point data */
-    float readFloat32Le() {
-        union {
-            float float32;
-            uint32_t data32;
-        } bytes;
-        bytes.data32 = readUint32Le();
-        return bytes.float32;
-    }
+    double readFloat32Le();
 
     /** Read 64 bit big endian floating point data */
-    double readFloat64Be() {
-        union {
-            double float64;
-            uint64_t data64;
-        } bytes;
-        bytes.data64 = readUint64Be();
-        return bytes.float64;
-    }
+    double readFloat64Be();
 
     /** Read 64 bit little endian floating point data */
-    double readFloat64Le() {
-        union {
-            double float64;
-            uint64_t data64;
-        } bytes;
-        bytes.data64 = readUint64Le();
-        return bytes.float64;
-    }
+    double readFloat64Le();
 
 protected:
     DisInsnBase(Insn &insn, DisMemory &memory, const StrBuffer &out)

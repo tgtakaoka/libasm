@@ -42,8 +42,8 @@ CXXFLAGS = -std=c++14 -Wall -O $(DEBUG_FLAGS)
 CPPFLAGS = -I../src -I../driver -MD -MF $@.d
 
 OBJS_com = \
-    str_buffer.o str_scanner.o option_base.o error_reporter.o formatters.o \
-    value_formatter.o \
+    str_buffer.o str_scanner.o option_base.o error_reporter.o insn_base.o \
+    formatters.o value_formatter.o \
     $(foreach a,$(ARCHS),$(OBJS_$(a))) \
     bin_memory.o bin_decoder.o bin_encoder.o intel_hex.o moto_srec.o \
     file_reader.o file_printer.o list_formatter.o text_common.o
