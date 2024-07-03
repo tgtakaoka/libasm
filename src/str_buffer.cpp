@@ -15,17 +15,10 @@
  */
 
 #include "str_buffer.h"
-
-#include "config_host.h"
-
 #include <ctype.h>
 #include <math.h>
-#include <stdarg.h>
 #include <stdio.h>
-
-#ifndef powl
-#define powl(a, b) pow(a, b)
-#endif
+#include "config_host.h"
 
 namespace libasm {
 
@@ -126,7 +119,7 @@ StrBuffer &StrBuffer::uint8(uint8_t num) {
     return reverse(start);
 }
 
-StrBuffer &StrBuffer::float32(float num) {
+StrBuffer &StrBuffer::float32(double num) {
     *_end = 1;  // to check buffer overflow
     const auto len = snprintf_P(_out, _end - _out + 1, PSTR("%.9g"), num);
     return convert(len);
@@ -134,20 +127,15 @@ StrBuffer &StrBuffer::float32(float num) {
 
 StrBuffer &StrBuffer::float64(double num) {
     *_end = 1;  // to check buffer overflow
-    const auto len = snprintf_P(_out, _end - _out + 1, PSTR("%.17lg"), num);
+    const auto len = snprintf_P(_out, _end - _out + 1, PSTR("%.17g"), num);
     return convert(len);
 }
 
 StrBuffer &StrBuffer::float80(int16_t exponent, uint64_t significand) {
     *_end = 1;  // to check buffer overflow
-    if (sizeof(long double) >= 10) {
-        const long double num = significand * powl(2.0, exponent);
-        const auto len = snprintf_P(_out, _end - _out + 1, PSTR("%.17Lg"), num);
-        return convert(len);
-    }
     // TODO: Implement Dragon4 algorithm
-    const double num = significand * pow(2.0, exponent);
-    const auto len = snprintf_P(_out, _end - _out + 1, PSTR("%.17lg"), num);
+    const auto num = significand * pow(2.0, exponent);
+    const auto len = snprintf_P(_out, _end - _out + 1, PSTR("%.17g"), num);
     return convert(len);
 }
 

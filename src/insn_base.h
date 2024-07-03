@@ -239,104 +239,40 @@ struct DisInsnBase : ErrorAt {
     const char *name() const { return _insn.name(); }
     StrBuffer &nameBuffer() { return _insn.nameBuffer(); }
 
-    void reset(uint8_t length = 0) {
-        resetError();
-        _insn.reset(_insn.address(), length);
-    }
+    void reset(uint8_t length = 0);
 
     /** Read 8 bit data. */
-    virtual uint8_t readByte() {
-        if (!_memory.hasNext()) {
-            setErrorIf(_out, NO_MEMORY);
-            return 0;
-        }
-        const uint8_t data = _memory.readByte();
-        if (_insn.emitByte(data))
-            setErrorIf(_out, NO_MEMORY);
-        return data;
-    }
+    virtual uint8_t readByte();
 
     /** Read 16 bit big endian data */
-    uint16_t readUint16Be() {
-        const uint8_t msb = readByte();
-        const uint8_t lsb = readByte();
-        return static_cast<uint16_t>(msb) << 8 | lsb;
-    }
+    uint16_t readUint16Be();
 
     /** Read 16 bit little endian data */
-    uint16_t readUint16Le() {
-        const uint8_t lsb = readByte();
-        const uint8_t msb = readByte();
-        return static_cast<uint16_t>(msb) << 8 | lsb;
-    }
+    uint16_t readUint16Le();
 
     /** Read 32 bit big endian data */
-    uint32_t readUint32Be() {
-        const uint16_t msw = readUint16Be();
-        const uint16_t lsw = readUint16Be();
-        return static_cast<uint32_t>(msw) << 16 | lsw;
-    }
+    uint32_t readUint32Be();
 
     /** Read 32 bit little endian data */
-    uint32_t readUint32Le() {
-        const uint16_t lsw = readUint16Le();
-        const uint16_t msw = readUint16Le();
-        return static_cast<uint32_t>(msw) << 16 | lsw;
-    }
+    uint32_t readUint32Le();
 
     /** Read 64 bit big endian data */
-    uint64_t readUint64Be() {
-        const uint32_t msw = readUint32Be();
-        const uint32_t lsw = readUint32Be();
-        return static_cast<uint64_t>(msw) << 32 | lsw;
-    }
+    uint64_t readUint64Be();
 
     /** Read 64 bit little endian data */
-    uint64_t readUint64Le() {
-        const uint32_t lsw = readUint32Le();
-        const uint32_t msw = readUint32Le();
-        return static_cast<uint64_t>(msw) << 32 | lsw;
-    }
+    uint64_t readUint64Le();
 
     /** Read 32 bit big endian floating point data */
-    float readFloat32Be() {
-        union {
-            float float32;
-            uint32_t data32;
-        } bytes;
-        bytes.data32 = readUint32Be();
-        return bytes.float32;
-    }
+    double readFloat32Be();
 
     /** Read 32 bit little endian floating point data */
-    float readFloat32Le() {
-        union {
-            float float32;
-            uint32_t data32;
-        } bytes;
-        bytes.data32 = readUint32Le();
-        return bytes.float32;
-    }
+    double readFloat32Le();
 
     /** Read 64 bit big endian floating point data */
-    double readFloat64Be() {
-        union {
-            double float64;
-            uint64_t data64;
-        } bytes;
-        bytes.data64 = readUint64Be();
-        return bytes.float64;
-    }
+    double readFloat64Be();
 
     /** Read 64 bit little endian floating point data */
-    double readFloat64Le() {
-        union {
-            double float64;
-            uint64_t data64;
-        } bytes;
-        bytes.data64 = readUint64Le();
-        return bytes.float64;
-    }
+    double readFloat64Le();
 
 protected:
     DisInsnBase(Insn &insn, DisMemory &memory, const StrBuffer &out)

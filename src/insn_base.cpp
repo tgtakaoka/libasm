@@ -246,38 +246,38 @@ uint8_t DisInsnBase::readByte() {
 }
 
 uint16_t DisInsnBase::readUint16Be() {
-    const uint8_t msb = readByte();
-    const uint8_t lsb = readByte();
+    const auto msb = readByte();
+    const auto lsb = readByte();
     return static_cast<uint16_t>(msb) << 8 | lsb;
 }
 
 uint16_t DisInsnBase::readUint16Le() {
-    const uint8_t lsb = readByte();
-    const uint8_t msb = readByte();
+    const auto lsb = readByte();
+    const auto msb = readByte();
     return static_cast<uint16_t>(msb) << 8 | lsb;
 }
 
 uint32_t DisInsnBase::readUint32Be() {
-    const uint16_t msw = readUint16Be();
-    const uint16_t lsw = readUint16Be();
+    const auto msw = readUint16Be();
+    const auto lsw = readUint16Be();
     return static_cast<uint32_t>(msw) << 16 | lsw;
 }
 
 uint32_t DisInsnBase::readUint32Le() {
-    const uint16_t lsw = readUint16Le();
-    const uint16_t msw = readUint16Le();
+    const auto lsw = readUint16Le();
+    const auto msw = readUint16Le();
     return static_cast<uint32_t>(msw) << 16 | lsw;
 }
 
 uint64_t DisInsnBase::readUint64Be() {
-    const uint32_t msw = readUint32Be();
-    const uint32_t lsw = readUint32Be();
+    const auto msw = readUint32Be();
+    const auto lsw = readUint32Be();
     return static_cast<uint64_t>(msw) << 32 | lsw;
 }
 
 uint64_t DisInsnBase::readUint64Le() {
-    const uint32_t lsw = readUint32Le();
-    const uint32_t msw = readUint32Le();
+    const auto lsw = readUint32Le();
+    const auto msw = readUint32Le();
     return static_cast<uint64_t>(msw) << 32 | lsw;
 }
 
