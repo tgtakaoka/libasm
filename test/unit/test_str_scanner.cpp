@@ -14,11 +14,9 @@
  * limitations under the License.
  */
 
-#include "str_scanner.h"
-
-#include "test_src_helper.h"
-
 #include <cctype>
+#include "str_scanner.h"
+#include "test_unit_helper.h"
 
 namespace libasm {
 namespace test {

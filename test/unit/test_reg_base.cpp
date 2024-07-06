@@ -15,8 +15,7 @@
  */
 
 #include "reg_base.h"
-
-#include "test_src_helper.h"
+#include "test_unit_helper.h"
 
 using namespace libasm::reg;
 

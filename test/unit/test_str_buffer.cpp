@@ -14,12 +14,10 @@
  * limitations under the License.
  */
 
-#include "str_buffer.h"
-
 #include <float.h>
 #include <math.h>
-
-#include "test_src_helper.h"
+#include "str_buffer.h"
+#include "test_unit_helper.h"
 
 namespace libasm {
 namespace test {

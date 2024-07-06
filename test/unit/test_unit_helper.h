@@ -14,36 +14,30 @@
  * limitations under the License.
  */
 
-#include "test_src_helper.h"
+#ifndef __LIBASM_TEST_UNIT_HELPER_H__
+#define __LIBASM_TEST_UNIT_HELPER_H__
 
 #include "test_asserter.h"
 
 namespace libasm {
 namespace test {
 
-libasm::test::TestAsserter asserter;
+void run_tests();
 
-bool test_failed;
+extern libasm::test::TestAsserter asserter;
 
-void run_test(void (*test)(), const char *name, void (*set_up)(), void (*tear_down)()) {
-    asserter.clear(name);
-    set_up();
-    test();
-    tear_down();
-    if (!asserter.check())
-        test_failed = true;
-}
+void run_test(void (*test)(), const char *name, void (*set_up)(), void (*tear_down)());
 
 }  // namespace test
 }  // namespace libasm
 
-using namespace libasm::test;
+#define TRUE(msg, actual) asserter.isTrue(__FILE__, __LINE__, msg, actual)
+#define FALSE(msg, actual) asserter.isFalse(__FILE__, __LINE__, msg, actual)
+#define EQ(msg, expected, actual) asserter.equals(__FILE__, __LINE__, msg, expected, actual)
 
-int main(int argc, char **argv) {
-    test_failed = false;
-    run_tests();
-    return test_failed ? 2 : 0;
-}
+#define RUN_TEST(test) run_test(test, #test, set_up, tear_down)
+
+#endif
 
 // Local Variables:
 // mode: c++

@@ -15,8 +15,7 @@
  */
 
 #include "array_memory.h"
-
-#include "test_src_helper.h"
+#include "test_unit_helper.h"
 
 namespace libasm {
 namespace test {
