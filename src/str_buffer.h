@@ -16,11 +16,11 @@
 #ifndef __LIBASM_STR_BUFFER_H__
 #define __LIBASM_STR_BUFFER_H__
 
-#include "error_reporter.h"
-#include "str_scanner.h"
-
 #include <ctype.h>
 #include <stdint.h>
+#include "error_reporter.h"
+#include "float80.h"
+#include "str_scanner.h"
 
 namespace libasm {
 
@@ -81,8 +81,8 @@ struct StrBuffer : ErrorReporter {
     /** Output |value| as 64-bit floating point number. */
     StrBuffer &float64(double value);
 
-    /** Output |mantissa|x2^|exponent| as 80-bit floating point number. */
-    StrBuffer &float80(int16_t exponent, uint64_t mantissa);
+    /** Output |value| as 80-bit floating point number. */
+    StrBuffer &float80(float80_t value);
 
     /** output ", " */
     StrBuffer &comma();

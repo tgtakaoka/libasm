@@ -82,47 +82,47 @@ Error Insn::emitUint64Le(uint64_t data, uint8_t pos) {
 
 #ifndef ASM_NOFLOAT
 
-Error Insn::emitFloat32Be(double data, uint8_t pos) {
+Error Insn::emitFloat32Be(float80_t data, uint8_t pos) {
     union {
-        float float32;
-        uint32_t data32;
+        float f32;
+        uint32_t u32;
     } bytes;
-    bytes.float32 = data;
-    return emitUint32Be(bytes.data32, pos);
+    bytes.f32 = static_cast<double>(data);
+    return emitUint32Be(bytes.u32, pos);
 }
 
-Error Insn::emitFloat32Le(double data, uint8_t pos) {
+Error Insn::emitFloat32Le(float80_t data, uint8_t pos) {
     union {
-        float float32;
-        uint32_t data32;
+        float f32;
+        uint32_t u32;
     } bytes;
-    bytes.float32 = data;
-    return emitUint32Le(bytes.data32, pos);
+    bytes.f32 = static_cast<double>(data);
+    return emitUint32Le(bytes.u32, pos);
 }
 
-Error Insn::emitFloat64Be(double data, uint8_t pos) {
+Error Insn::emitFloat64Be(float80_t data, uint8_t pos) {
     union {
-        double float64;
-        uint64_t data64;
+        double f64;
+        uint64_t u64;
     } bytes;
-    bytes.float64 = data;
-    return emitUint64Be(bytes.data64, pos);
+    bytes.f64 = static_cast<double>(data);
+    return emitUint64Be(bytes.u64, pos);
 }
 
-Error Insn::emitFloat64Le(double data, uint8_t pos) {
+Error Insn::emitFloat64Le(float80_t data, uint8_t pos) {
     union {
-        double float64;
-        uint64_t data64;
+        double f64;
+        uint64_t u64;
     } bytes;
-    bytes.float64 = data;
-    return emitUint64Le(bytes.data64, pos);
+    bytes.f64 = static_cast<double>(data);
+    return emitUint64Le(bytes.u64, pos);
 }
 
 namespace {
 
-uint64_t convert2pbcd(uint64_t bin, uint8_t digits) {
+uint64_t convert2pbcd(uint64_t bin, uint_fast8_t digits) {
     uint64_t pbcd = 0;
-    uint8_t shift = 0;
+    uint_fast8_t shift = 0;
     while (digits-- > 0) {
         pbcd |= (bin % 10) << shift;
         bin /= 10;
@@ -131,49 +131,11 @@ uint64_t convert2pbcd(uint64_t bin, uint8_t digits) {
     return pbcd;
 }
 
-void swap(uint8_t &a, uint8_t &b) {
-    auto t = a;
-    a = b;
-    b = t;
-}
-
-struct Float80 {
-    uint16_t exponent;
-    uint64_t significant;
-    Float80(double value) {
-        union {
-            double float64;
-            uint8_t buffer[8];
-        };
-        float64 = value;
-        if (host::is_little_endian()) {
-            swap(buffer[0], buffer[7]);
-            swap(buffer[1], buffer[6]);
-            swap(buffer[2], buffer[5]);
-            swap(buffer[3], buffer[4]);
-        }
-        uint16_t exp11 = ((uint16_t)(buffer[0] & 0x7F) << 4) + (buffer[1] >> 4);
-        const auto denormal = exp11 == 0;
-        exponent = (exp11 == 0x07FF) ? 0x7FFF : exp11 + (0x3FFF - 0x03FF);
-        if (buffer[0] & 0x80)
-            exponent |= 0x8000;
-        significant = buffer[1] & 0xF;
-        if (!denormal)
-            significant |= 0x10; // hidden integer 1
-        for (auto i = 2; i < 8; ++i) {
-            significant <<= 8;
-            significant |= buffer[i];
-        }
-        significant <<= (63 - 52);
-    }
-};
-
 }  // namespace
 
-Error Insn::emitFloat80Le(double value) {
-    Float80 v(value);
-    emitUint64Le(v.significant);
-    emitUint16Le(v.exponent);
+Error Insn::emitFloat80Le(float80_t value) {
+    emitUint64Le(value.significand());
+    emitUint16Le(value.tag());
     return getError();
 }
 
@@ -190,40 +152,50 @@ Error Insn::emitPackedBcd80Le(int64_t value) {
     return emitByte(sign);
 }
 
-Error Insn::emitFloat96Be(double value, uint8_t pos) {
-    Float80 v(value);
-    emitUint16Be(v.exponent, pos);
+Error Insn::emitFloat96Be(float80_t value, uint8_t pos) {
+    emitUint16Be(value.tag(), pos);
     emitUint16Be(0, pos + 2);
-    emitUint64Be(v.significant, pos + 4);
+    emitUint64Be(value.significand(), pos + 4);
     return getError();
 }
 
-Error Insn::emitPackedBcd96Be(double value, uint8_t pos) {
-    Float80 v(value);
-    if (isinf(value)) {
-        emitUint16Be(v.exponent | INT16_MAX, pos);
+Error Insn::emitPackedBcd96Be(float80_t value, uint8_t pos) {
+    if (value.isInf()) {
+        emitUint16Be(value.tag() | 0x7FFF, pos);
         emitUint16Be(0, pos += 2);
         emitUint64Be(0, pos += 2);
-    } else if (isnan(value)) {
-        emitUint16Be(v.exponent | INT16_MAX, pos);
+    } else if (value.isNan()) {
+        emitUint16Be(value.tag() | 0x7FFF, pos);
         emitUint16Be(0, pos += 2);
         emitUint64Be(INT64_MIN, pos += 2);
     } else {
-        if (value < 0)
+        const auto negative = value.isNegative();
+        if (negative)
             value = -value;
-        auto exponent = static_cast<int16_t>(log10(value));
-        if (exponent < 0 || (exponent == 0 && value < 1.0))
-            --exponent;
-        uint8_t digit = value * pow(10.0, -exponent);
-        v.significant = value * pow(10.0, 16 - exponent);
-        auto sign = v.exponent & 0x8000;
-        if (exponent < 0) {
-            sign |= 0x4000;
-            exponent = -exponent;
+        constexpr auto log10_2 = 0.3010299956639812;
+        // Estimate approximate exponent of 10.
+        int_fast16_t exp = floor(value.exponent() * log10_2);
+        auto v = static_cast<uint64_t>(value.pow10(16 - exp));
+        constexpr auto ten17 = UINT64_C(100'000'000'000'000'000);
+        while (v >= ten17) {
+            v /= 10;
+            exp++;
         }
-        emitUint16Be(sign | convert2pbcd(exponent, 3), pos);
-        emitUint16Be(digit, pos += 2);
-        emitUint64Be(convert2pbcd(v.significant, 16), pos += 2);
+        // v < 10^17
+        constexpr auto ten16 = UINT64_C(10'000'000'000'000'000);
+        while (v < ten16) {
+            v *= 10;
+            exp--;
+        }
+        // v >= 10^16
+        uint16_t tag = negative ? 0x8000 : 0;
+        if (exp < 0) {
+            tag |= 0x4000;
+            exp = -exp;
+        }
+        emitUint16Be(tag | convert2pbcd(exp, 3), pos);
+        emitUint16Be(convert2pbcd(v / ten16, 2), pos += 2);
+        emitUint64Be(convert2pbcd(v % ten16, 16), pos += 2);
     }
     return getError();
 }
@@ -283,38 +255,38 @@ uint64_t DisInsnBase::readUint64Le() {
 
 double DisInsnBase::readFloat32Be() {
     union {
-        float float32;
-        uint32_t data32;
+        float f32;
+        uint32_t u32;
     } bytes;
-    bytes.data32 = readUint32Be();
-    return bytes.float32;
+    bytes.u32 = readUint32Be();
+    return bytes.f32;
 }
 
 double DisInsnBase::readFloat32Le() {
     union {
-        float float32;
-        uint32_t data32;
+        float f32;
+        uint32_t u32;
     } bytes;
-    bytes.data32 = readUint32Le();
-    return bytes.float32;
+    bytes.u32 = readUint32Le();
+    return bytes.f32;
 }
 
 double DisInsnBase::readFloat64Be() {
     union {
-        double float64;
-        uint64_t data64;
+        double f64;
+        uint64_t u64;
     } bytes;
-    bytes.data64 = readUint64Be();
-    return bytes.float64;
+    bytes.u64 = readUint64Be();
+    return bytes.f64;
 }
 
 double DisInsnBase::readFloat64Le() {
     union {
-        double float64;
-        uint64_t data64;
+        double f64;
+        uint64_t u64;
     } bytes;
-    bytes.data64 = readUint64Le();
-    return bytes.float64;
+    bytes.u64 = readUint64Le();
+    return bytes.f64;
 }
 
 }  // namespace libasm

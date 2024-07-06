@@ -49,7 +49,7 @@ struct Operand final : ErrorAt {
     Config::uintptr_t offset(const AsmInsn &insn) const;
     uint32_t getUint32() const { return value.getUnsigned(); }
 #ifndef ASM_NOFLOAT
-    double getFloat() const {
+    float80_t getFloat() const {
         return value.getFloat();
     }
 #endif
@@ -69,8 +69,8 @@ struct AsmInsn final : AsmInsnImpl<Config>, EntryInsn {
     void emitOperand16(uint16_t val16) { emitUint16(val16, operandPos()); }
     void emitOperand32(uint32_t val32) { emitUint32(val32, operandPos()); }
     void emitOperand64(uint64_t val64) { emitUint64(val64, operandPos()); }
-    void emitFloat96(double value) { _insn.emitFloat96Be(value, operandPos()); }
-    void emitPackedBcd96(double value) { _insn.emitPackedBcd96Be(value, operandPos()); }
+    void emitFloat96(float80_t value) { _insn.emitFloat96Be(value, operandPos()); }
+    void emitPackedBcd96(float80_t value) { _insn.emitPackedBcd96Be(value, operandPos()); }
     uint8_t operandPos() const {
         auto pos = length();
         if (pos == 0)

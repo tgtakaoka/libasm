@@ -97,12 +97,12 @@ int64_t Value::getInt64() const {
     return static_cast<int64_t>(_uint64);
 }
 
-double Value::getFloat() const {
+float80_t Value::getFloat() const {
     if (isInt32() || _type == V_INT64)
-        return static_cast<double>(getInt64());
+        return float80_t(getInt64());
     if (_type == V_UINT64)
-        return static_cast<double>(_uint64);
-    return _float64;
+        return float80_t(_uint64);
+    return _float80;
 }
 #endif
 
@@ -116,7 +116,7 @@ bool Value::isZero() const {
         return getUnsigned() == 0;
     if (isInt64())
         return getInt64() == 0;
-    return _float64 == 0;
+    return _float80.isZero();
 #endif
 }
 
@@ -259,8 +259,6 @@ Value Value::operator%(const Value &rhs) const {
 #ifndef ASM_NOFLOAT
     } else if (isInt64() && rhs.isInt64()) {
         v.setInt64(getInt64() % rhs.getInt64());
-    } else {
-        v.setFloat(fmod(getFloat(), rhs.getFloat()));
 #endif
     }
     return v;
@@ -310,10 +308,6 @@ Value Value::exponential(const Value &rhs) const {
         } else {
             v.setUnsigned(power<uint32_t>(getUnsigned(), rhs.getUnsigned()));
         }
-#ifndef ASM_NOFLOAT
-    } else {
-        v.setFloat(pow(getFloat(), rhs.getFloat()));
-#endif
     }
     return v;
 }

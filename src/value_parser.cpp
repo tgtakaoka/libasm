@@ -278,7 +278,7 @@ Error ValueParser::parseConstant(StrScanner &scan, Value &val) const {
     const auto fpnum = (err == OK && (*p == '.' || toupper(*p) == 'E'));
     if (fpnum || err == OVERFLOW_RANGE || err == NOT_AN_EXPECTED) {
         char *end;
-        const auto value = strtod(scan.str(), &end);
+        const auto value = float80_t::read(scan.str(), &end);
         if (end > p.str()) {
             val.setFloat(value);
             scan = end;

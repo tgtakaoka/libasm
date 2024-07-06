@@ -22,6 +22,7 @@
 
 #include "config_base.h"
 #include "error_reporter.h"
+#include "float80.h"
 #include "str_scanner.h"
 
 namespace libasm {
@@ -70,7 +71,7 @@ struct Value {
         return isInt32() || _type == V_INT64 || _type == V_UINT64;
     }
     bool isFloat() const {
-        return _type == V_FLOAT64;
+        return _type == V_FLOAT80;
     }
 #endif
     bool overflowUint8() const {
@@ -100,7 +101,7 @@ struct Value {
     }
 #ifndef ASM_NOFLOAT
     int64_t getInt64() const;
-    double getFloat() const;
+    float80_t getFloat() const;
 #endif
 
     Value &setSigned(int32_t value) {
@@ -119,9 +120,9 @@ struct Value {
         _type = V_INT64;
         return *this;
     }
-    Value &setFloat(double value) {
-        _float64 = value;
-        _type = V_FLOAT64;
+    Value &setFloat(float80_t value) {
+        _float80 = value;
+        _type = V_FLOAT80;
         return *this;
     }
 #endif
@@ -170,9 +171,12 @@ struct Value {
         case V_UINT64:
             printf("<u64>%ld", _uint64);
             break;
-        case V_FLOAT64:
-            printf("<f64>%lg", _float64);
+        case V_FLOAT80: {
+            char buf[40];
+            _float80.write(buf, sizeof(buf));
+            printf("<f80>%s", buf);
             break;
+        }
 #endif
         }
     }
@@ -188,7 +192,7 @@ private:
 #ifndef ASM_NOFLOAT
         V_UINT64 = 3,
         V_INT64 = 4,
-        V_FLOAT64 = 5,
+        V_FLOAT80 = 5,
 #endif
     };
 
@@ -196,7 +200,7 @@ private:
         uint32_t _uint32;
 #ifndef ASM_NOFLOAT
         uint64_t _uint64;
-        double _float64;
+        float80_t _float80;
 #endif
     };
     ValueType _type;

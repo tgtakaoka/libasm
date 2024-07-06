@@ -15,8 +15,8 @@
 help:
 	@echo '"make test"     run unit tests of libasm::src'
 
-TESTS = test_array_memory test_str_buffer test_str_scanner \
-    test_reg_base
+TESTS = test_array_memory test_reg_base test_str_buffer \
+    test_str_scanner test_uint128 test_float80_impl
 
 .PHONY:: help test clean clean-objs
 
@@ -31,7 +31,8 @@ vpath %.cpp ../../test
 CXXFLAGS = -std=c++14 -Wall -O $(DEBUG_FLAGS)
 CPPFLAGS = -I../../src -I../../test -MD -MF $@.d
 
-OBJS_common = test_unit_helper.o test_asserter.o error_reporter.o
+OBJS_common = test_unit_helper.o test_asserter.o error_reporter.o \
+  text_common.o str_buffer.o str_scanner.o
 OBJS = $(OBJS_common) $(TESTS:=.o)
 BINS = $(TESTS)
 
@@ -46,12 +47,17 @@ $(eval $(foreach t,$(TESTS),$(call test-rule,$(t))))
 
 test_array_memory: test_array_memory.o $(OBJS_common)
 	$(CXX) -o $@ $^
-test_str_buffer: test_str_buffer.o str_buffer.o $(OBJS_common)
-	$(CXX) -o $@ $^
-test_str_scanner: test_str_scanner.o str_scanner.o $(OBJS_common)
-	$(CXX) -o $@ $^
-test_reg_base: test_reg_base.o reg_base.o str_scanner.o str_buffer.o \
+test_float80_impl: test_float80_impl.o uint128.o float80_impl.o uint128.o \
     $(OBJS_common)
+	$(CXX) -o $@ $^
+test_str_buffer: test_str_buffer.o float80_impl.o uint128.o $(OBJS_common)
+	$(CXX) -o $@ $^
+test_str_scanner: test_str_scanner.o $(OBJS_common)
+	$(CXX) -o $@ $^
+test_reg_base: test_reg_base.o reg_base.o float80_impl.o uint128.o \
+    $(OBJS_common)
+	$(CXX) -o $@ $^
+test_uint128: test_uint128.o uint128.o $(OBJS_common)
 	$(CXX) -o $@ $^
 
 # Local Variables:

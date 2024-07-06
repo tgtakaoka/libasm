@@ -16,7 +16,6 @@
 
 #include "str_buffer.h"
 #include <ctype.h>
-#include <math.h>
 #include <stdio.h>
 #include "config_host.h"
 
@@ -136,11 +135,10 @@ StrBuffer &StrBuffer::float64(double value) {
     return convert(len);
 }
 
-StrBuffer &StrBuffer::float80(int16_t exponent, uint64_t significand) {
+StrBuffer &StrBuffer::float80(float80_t value) {
     *_end = 1;  // to check buffer overflow
     // TODO: Implement Dragon4 algorithm
-    const auto n = significand * pow(2.0, exponent);
-    const auto len = snprintf_P(_out, _end - _out + 1, PSTR("%.17g"), n);
+    const auto len = value.write(_out, _end - _out + 1);
     return convert(len);
 }
 

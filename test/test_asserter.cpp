@@ -70,13 +70,13 @@ void TestAsserter::isNotNull(const char *file, const int line, const char *messa
 }
 
 void TestAsserter::equals(
-        const char *file, const int line, const char *message, uint32_t expected, uint32_t actual) {
+        const char *file, const int line, const char *message, uint64_t expected, uint64_t actual) {
     if (expected == actual) {
         _pass_count++;
         return;
     }
     _fail_count++;
-    printf("%s:%d: %s: expected '%u': actual '%u'\n", file, line, message, expected, actual);
+    printf("%s:%d: %s: expected '%lu': actual '%lu'\n", file, line, message, expected, actual);
 }
 
 void TestAsserter::equals(const char *file, const int line, const char *message,

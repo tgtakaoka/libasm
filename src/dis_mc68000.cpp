@@ -81,15 +81,8 @@ StrBuffer &DisMc68000::outFloat96(StrBuffer &out, const Float96 &v, ErrorAt &err
         return out;
     }
 #endif
-    if (v.exp & INT16_MIN)
-        out.letter('-');
-    const auto exp = v.exp & INT16_MAX;
-    if (exp == INT16_MAX) {
-        // MSB of siginificand is don't care.
-        return (v.significand & INT64_MAX) == 0 ? out.text_P(TEXT_INF) : out.text_P(TEXT_NAN);
-    }
-    const auto exponent = static_cast<int16_t>(exp) - 0x3FFF - 63;
-    return out.float80(exponent, v.significand);
+    float80_t value{v.exp, v.significand};
+    return out.float80(value);
 }
 
 StrBuffer &DisMc68000::outPackedBcd96(StrBuffer &out, const Float96 &v, ErrorAt &error) const {
