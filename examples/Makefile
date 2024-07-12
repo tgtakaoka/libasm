@@ -63,6 +63,7 @@ BOARDS = $(shell $(MAKE) -s -C $(EX) boards)
 BOARD ?= $(firstword $(BOARDS))
 
 FQBNS = $(shell $(MAKE) -s -C $(EX) fqbns)
+FQBN ?= $(firstword $(FQBNS))
 
 boards:
 	@echo $(BOARDS)
@@ -91,7 +92,7 @@ pio-ci:
 	$(call pio-ci,$(EX),$(BOARD))
 
 pio-ci-all:
-	$(foreach board,$(BOARDS),$(call pio-ci,$(EX),$(board)))
+	$(foreach ex,$(EXS),$(foreach board,$(BOARDS),$(call pio-ci,$(ex),$(board))))
 
 define pio-run # example, env
 	$(MAKE) -C $(1) pio-run ENV=$(2)
@@ -102,7 +103,7 @@ pio-run:
 	$(call pio-run,$(EX),$(ENV))
 
 pio-run-all:
-	$(foreach env,$(ENVS),$(call pio-run,$(EX),$(env)))
+	$(foreach ex,$(EXS),$(foreach env,$(ENVS),$(call pio-run,$(ex),$(env))))
 
 define arduino-ci # example, fqbn
 	$(MAKE) -C $(1) arduino-ci FQBN=$(2)
@@ -110,10 +111,10 @@ define arduino-ci # example, fqbn
 endef
 
 arduino-ci:
-	$(call arduino-ci,$(EX),$(BOARD))
+	$(call arduino-ci,$(EX),$(FQBN))
 
 arduino-ci-all:
-	$(foreach fqbn,$(FQBNS),$(call arduino-ci,$(EX),$(fqbn)))
+	$(foreach ex,$(EXS),$(foreach fqbn,$(FQBNS),$(call arduino-ci,$(ex),$(fqbn))))
 
 define clean-ex # ex
 	$(MAKE) -s -C $(1) clean

@@ -86,12 +86,13 @@ FQBNS = \
 	MightyCore:avr:1284  \
 	DxCore:megaavr:avrda \
 	teensy:avr:teensy41
+FQBN ?= $(firstword $(FQBNS))
 
 fqbns:
 	@echo $(FQBNS)
 
 arduino-ci:
-	$(call arduino-ci,$(firstword $(FQBNS)))
+	$(call arduino-ci,$(FQBN))
 
 arduino-ci-all:
 	$(foreach fqbn,$(FQBNS),$(call arduino-ci,$(fqbn)))
