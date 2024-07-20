@@ -339,7 +339,7 @@ void DisI8086::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode, OprPo
         outRegName(out, REG_ST);
         break;
     case M_STI:
-        outRegName(out, REG_ST).letter('(').uint8(insn.opCode() & 7).letter(')');
+        outRegName(out, REG_ST).letter('(').int16(insn.opCode() & 7).letter(')');
         break;
     default:
         break;

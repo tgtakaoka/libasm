@@ -55,9 +55,9 @@ StrBuffer &outRegName(StrBuffer &out, RegName name) {
     if (name == REG_A || name == REG_B)
         return out.letter(char(name));
     if (isRegName(name))
-        return out.letter('R').uint8(toRegNum(name));
+        return out.letter('R').int16(toRegNum(name));
     if (isPortName(name))
-        return out.letter('P').uint8(toPortNum(name));
+        return out.letter('P').int16(toPortNum(name));
     if (name == REG_ST)
         return out.text_P(TEXT_REG_ST);
     return out;

@@ -110,32 +110,37 @@ StrBuffer &StrBuffer::rtext_P(const /*PROGMEM*/ char *text_P) {
     return *this;
 }
 
-StrBuffer &StrBuffer::uint8(uint8_t num) {
+StrBuffer &StrBuffer::int16(int16_t n) {
+    auto u16 = static_cast<uint16_t>(n);
+    if (n < 0) {
+        letter('-');
+        u16 = -n;
+    }
     auto *start = mark();
     do {
-        letter(num % 10 + '0');
-        num /= 10;
-    } while (num);
+        letter(u16 % 10 + '0');
+        u16 /= 10;
+    } while (u16);
     return reverse(start);
 }
 
-StrBuffer &StrBuffer::float32(double num) {
+StrBuffer &StrBuffer::float32(double n) {
     *_end = 1;  // to check buffer overflow
-    const auto len = snprintf_P(_out, _end - _out + 1, PSTR("%.9g"), num);
+    const auto len = snprintf_P(_out, _end - _out + 1, PSTR("%.9g"), n);
     return convert(len);
 }
 
-StrBuffer &StrBuffer::float64(double num) {
+StrBuffer &StrBuffer::float64(double n) {
     *_end = 1;  // to check buffer overflow
-    const auto len = snprintf_P(_out, _end - _out + 1, PSTR("%.17g"), num);
+    const auto len = snprintf_P(_out, _end - _out + 1, PSTR("%.17g"), n);
     return convert(len);
 }
 
 StrBuffer &StrBuffer::float80(int16_t exponent, uint64_t significand) {
     *_end = 1;  // to check buffer overflow
     // TODO: Implement Dragon4 algorithm
-    const auto num = significand * pow(2.0, exponent);
-    const auto len = snprintf_P(_out, _end - _out + 1, PSTR("%.17g"), num);
+    const auto n = significand * pow(2.0, exponent);
+    const auto len = snprintf_P(_out, _end - _out + 1, PSTR("%.17g"), n);
     return convert(len);
 }
 

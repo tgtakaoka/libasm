@@ -62,7 +62,7 @@ RegName decodeRegName(uint8_t opc) {
 }
 
 StrBuffer &outRegName(StrBuffer &out, RegName name) {
-    return out.letter('R').uint8(int8_t(name));
+    return out.letter('R').int16(int8_t(name));
 }
 
 CcName parseCcName(StrScanner &scan) {
