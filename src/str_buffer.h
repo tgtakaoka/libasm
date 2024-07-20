@@ -72,14 +72,14 @@ struct StrBuffer : ErrorReporter {
     StrBuffer &rtext(const StrScanner &scan);
     StrBuffer &rtext_P(const /*PROGMEM*/ char *text_P);
 
-    /** Output |num| as decimal number. */
-    StrBuffer &uint8(uint8_t num);
+    /** Output |value| as decimal number. */
+    StrBuffer &int16(int16_t value);
 
-    /** Output |num| as 32-bit floating point number. */
-    StrBuffer &float32(double num);
+    /** Output |value| as 32-bit floating point number. */
+    StrBuffer &float32(double value);
 
-    /** Output |num| as 64-bit floating point number. */
-    StrBuffer &float64(double num);
+    /** Output |value| as 64-bit floating point number. */
+    StrBuffer &float64(double value);
 
     /** Output |mantissa|x2^|exponent| as 80-bit floating point number. */
     StrBuffer &float80(int16_t exponent, uint64_t mantissa);

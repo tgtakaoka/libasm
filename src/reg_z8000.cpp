@@ -125,14 +125,14 @@ RegName parseRegName(StrScanner &scan) {
 
 StrBuffer &outRegName(StrBuffer &out, RegName name) {
     if (isWordReg(name))
-        return out.letter('R').uint8(name - REG_R0);
+        return out.letter('R').int16(name - REG_R0);
     if (isLongReg(name))
-        return out.text_P(TEXT_REG_RR).uint8(name - REG_RR0);
+        return out.text_P(TEXT_REG_RR).int16(name - REG_RR0);
     if (isByteReg(name))
-        return name < REG_RL0 ? out.text_P(TEXT_REG_RH).uint8(name - REG_RH0)
-                              : out.text_P(TEXT_REG_RL).uint8(name - REG_RL0);
+        return name < REG_RL0 ? out.text_P(TEXT_REG_RH).int16(name - REG_RH0)
+                              : out.text_P(TEXT_REG_RL).int16(name - REG_RL0);
     if (isQuadReg(name))
-        return out.text_P(TEXT_REG_RQ).uint8(name - REG_RQ0);
+        return out.text_P(TEXT_REG_RQ).int16(name - REG_RQ0);
     return outCtlName(out, name);
 }
 

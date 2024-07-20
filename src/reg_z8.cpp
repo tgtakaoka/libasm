@@ -102,8 +102,8 @@ bool isPairReg(RegName name) {
 }
 
 StrBuffer &outRegName(StrBuffer &out, RegName name) {
-    return isPairReg(name) ? out.text_P(TEXT_REG_RR).uint8(name - REG_RR0)
-                           : out.letter('R').uint8(name - REG_R0);
+    return isPairReg(name) ? out.text_P(TEXT_REG_RR).int16(name - REG_RR0)
+                           : out.letter('R').int16(name - REG_R0);
 }
 
 CcName parseCcName(StrScanner &scan) {

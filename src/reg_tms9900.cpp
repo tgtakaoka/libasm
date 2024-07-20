@@ -37,7 +37,7 @@ RegName parseRegName(StrScanner &scan) {
 }
 
 StrBuffer &outRegName(StrBuffer &out, uint8_t num) {
-    return out.letter('R').uint8(num & 0xf);
+    return out.letter('R').int16(num & 0xf);
 }
 
 uint8_t encodeRegNumber(RegName name) {

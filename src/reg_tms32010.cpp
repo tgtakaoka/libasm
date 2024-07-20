@@ -52,8 +52,8 @@ RegName parseRegName(StrScanner &scan) {
 
 StrBuffer &outRegName(StrBuffer &out, RegName name) {
     if (isAuxiliary(name))
-        return out.text_P(TEXT_REG_AR).uint8(name - REG_AR0);
-    return out.text_P(TEXT_REG_PA).uint8(name - REG_PA0);
+        return out.text_P(TEXT_REG_AR).int16(name - REG_AR0);
+    return out.text_P(TEXT_REG_PA).int16(name - REG_PA0);
 }
 
 bool isAuxiliary(RegName name) {

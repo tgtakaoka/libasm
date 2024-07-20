@@ -267,16 +267,20 @@ void test_rtext() {
     }
 }
 
-void test_uint8() {
+void test_int16() {
     char buffer[8];
     StrBuffer out(buffer, sizeof(buffer));
 
-    out.uint8(0);
-    EQ("uint8-0", "0", out.str());
+    out.int16(0);
+    EQ("int16-0", "0", out.str());
 
     out.reset();
-    out.uint8(255);
-    EQ("uint8-255", "255", out.str());
+    out.int16(INT16_MIN);
+    EQ("int16-min", "-32768", out.str());
+
+    out.reset();
+    out.int16(INT16_MAX);
+    EQ("int16-max", "32767", out.str());
 }
 
 void test_float32() {
@@ -402,7 +406,7 @@ void run_tests() {
     RUN_TEST(test_text_P);
     RUN_TEST(test_scanner);
     RUN_TEST(test_rtext);
-    RUN_TEST(test_uint8);
+    RUN_TEST(test_int16);
     RUN_TEST(test_float32);
     RUN_TEST(test_float64);
     RUN_TEST(test_comma);
