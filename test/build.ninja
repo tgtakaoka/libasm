@@ -320,10 +320,11 @@ build test_dis_pdp8: run test_dis_pdp8.o    $
   insn_base.o reg_base.o str_buffer.o str_scanner.o text_common.o $
   value_formatter.o test_dis_helper.o test_asserter.o
 build gen_pdp8:      link gen_pdp8.o    $
-  dis_pdp8.o   reg_pdp8.o   table_pdp8.o   text_pdp8.o    $
+  dis_pdp8.o  reg_pdp8.o  table_pdp8.o  text_pdp8.o  $
   gen_driver.o config_base.o dis_base.o dis_formatter.o error_reporter.o $
-  list_formatter.o option_base.o reg_base.o str_buffer.o str_scanner.o $
-  test_generator.o text_common.o tokenized_text.o value_formatter.o
+  formatters.o list_formatter.o option_base.o insn_base.o reg_base.o $
+  str_buffer.o str_scanner.o test_generator.o text_common.o tokenized_text.o $
+  value_formatter.o
 
 # scn2650
 build test_asm_scn2650: run test_asm_scn2650.o  $
@@ -571,6 +572,7 @@ build gen: phony $
   gen_mn1610   $
   gen_mos6502  $
   gen_ns32000  $
+  gen_pdp8     $
   gen_scn2650  $
   gen_tlcs90   $
   gen_tms32010 $
