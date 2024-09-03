@@ -21,6 +21,7 @@
 #include "entry_mc6809.h"
 #include "insn_base.h"
 #include "reg_mc6809.h"
+#include "value.h"
 
 namespace libasm {
 namespace mc6809 {
@@ -36,7 +37,7 @@ struct Operand final : ErrorAt {
     RegName base;
     bool indir;
     int8_t extra;
-    uint32_t val32;
+    Value val;
     StrScanner list;
     Operand()
         : mode(M_NONE),
@@ -44,7 +45,7 @@ struct Operand final : ErrorAt {
           base(REG_UNDEF),
           indir(false),
           extra(0),
-          val32(0),
+          val(),
           list() {}
 };
 

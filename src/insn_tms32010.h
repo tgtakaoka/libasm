@@ -21,6 +21,7 @@
 #include "entry_tms32010.h"
 #include "insn_base.h"
 #include "reg_tms32010.h"
+#include "value.h"
 
 namespace libasm {
 namespace tms32010 {
@@ -37,9 +38,8 @@ struct EntryInsn : EntryInsnBase<Config, Entry> {
 struct Operand final : ErrorAt {
     AddrMode mode;
     RegName reg;
-    uint16_t val16;
-    int16_t signedVal16() const { return static_cast<int16_t>(val16); }
-    Operand() : mode(M_NONE), reg(REG_UNDEF), val16(0) {}
+    Value val;
+    Operand() : mode(M_NONE), reg(REG_UNDEF), val() {}
 };
 
 struct AsmInsn final : AsmInsnImpl<Config>, EntryInsn {

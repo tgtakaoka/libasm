@@ -31,7 +31,8 @@ namespace driver {
 
 struct SymbolStore : SymbolTable {
     virtual bool hasValue(const StrScanner &symbol, bool variable) const = 0;
-    virtual Error internSymbol(uint32_t value, const StrScanner &symbol, bool variable = false) = 0;
+    virtual Error internSymbol(
+            const Value &value, const StrScanner &symbol, bool variable = false) = 0;
     virtual bool hasFunction(const StrScanner &name) const = 0;
     virtual Error internFunction(const StrScanner &name, const FunctionStore::Parameters &params,
             const StrScanner &body, const ValueParser &parser) = 0;
@@ -47,21 +48,22 @@ struct SymbolStoreImpl final : SymbolStore {
     void clearFunctions();
 
     // SymbolTable
-    const char *lookupValue(uint32_t) const override { return nullptr; }
+    const char *lookupValue(symval_t) const override { return nullptr; }
     bool hasSymbol(const StrScanner &name) const override;
-    uint32_t lookupSymbol(const StrScanner &symbol) const override;
+    symval_t lookupSymbol(const StrScanner &symbol) const override;
     const void *lookupFunction(const StrScanner &name) const override;
 
     bool hasValue(const StrScanner &symbol, bool variable) const override;
-    Error internSymbol(uint32_t value, const StrScanner &symbol, bool variable = false) override;
+    Error internSymbol(
+            const Value &value, const StrScanner &symbol, bool variable = false) override;
 
     bool hasFunction(const StrScanner &name) const override;
     Error internFunction(const StrScanner &name, const FunctionStore::Parameters &params,
             const StrScanner &body, const ValueParser &parser) override;
 
 private:
-    std::map<std::string, uint32_t, std::less<>> _symbols;
-    std::map<std::string, uint32_t, std::less<>> _variables;
+    std::map<std::string, symval_t, std::less<>> _symbols;
+    std::map<std::string, symval_t, std::less<>> _variables;
     FunctionStore _functions;
 };
 

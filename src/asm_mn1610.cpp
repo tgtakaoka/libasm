@@ -60,8 +60,8 @@ AsmMn1610::AsmMn1610(const ValueParser::Plugins &plugins)
 }
 
 void AsmMn1610::encodeIcRelative(AsmInsn &insn, const Operand &op) const {
-    const auto delta = branchDelta(insn.address(), op.val32, insn, op);
-    if (overflowInt8(delta))
+    const auto delta = branchDelta(insn.address(), op.val.getUnsigned(), insn, op);
+    if (overflowDelta(delta, 8))
         insn.setErrorIf(op, OPERAND_TOO_FAR);
     const Config::opcode_t mode = (op.mode == M_IABS) ? 3 : 1;
     insn.embed(mode << 11);
@@ -71,9 +71,9 @@ void AsmMn1610::encodeIcRelative(AsmInsn &insn, const Operand &op) const {
 void AsmMn1610::encodeGenericAddress(AsmInsn &insn, const Operand &op) const {
     switch (op.mode) {
     case M_IABS:
-        if (op.val32 < 0x100) {  // Zero-page indirect: (D)
+        if (!op.val.overflow(UINT8_MAX)) {  // Zero-page indirect: (D)
             insn.embed(2 << 11);
-            insn.embed(static_cast<uint8_t>(op.val32));
+            insn.embed(static_cast<uint8_t>(op.val.getUnsigned()));
             break;
         }
         // Relative indirect: (abs)
@@ -88,10 +88,10 @@ void AsmMn1610::encodeGenericAddress(AsmInsn &insn, const Operand &op) const {
         if (isIndex(op.reg)) {
             if (op.mode == M_IXID)
                 insn.setErrorIf(op, REGISTER_NOT_ALLOWED);
-            if (op.val32 >= 0x100)
+            if (op.val.overflow(UINT8_MAX))
                 insn.setErrorIf(op, OVERFLOW_RANGE);
             // Direct index: D(Xj), Indirect index: (D)(Xj)
-            insn.embed(static_cast<uint8_t>(op.val32));
+            insn.embed(static_cast<uint8_t>(op.val.getUnsigned()));
             const Config::opcode_t mode = (op.mode == M_IDIX ? 2 : 0) | encodeIndex(op.reg);
             insn.embed(mode << 11);
             break;
@@ -99,10 +99,10 @@ void AsmMn1610::encodeGenericAddress(AsmInsn &insn, const Operand &op) const {
         if (op.reg == REG_IC) {
             if (op.mode == M_IDIX)
                 insn.setErrorIf(op, REGISTER_NOT_ALLOWED);
-            if (overflowInt8(static_cast<int32_t>(op.val32)))
+            if (op.val.overflowInt8())
                 insn.setErrorIf(op, OPERAND_TOO_FAR);
             // Relative: d(IC), Relative indirect: (d(IC))
-            insn.embed(static_cast<uint8_t>(op.val32));
+            insn.embed(static_cast<uint8_t>(op.val.getUnsigned()));
             insn.embed((op.mode == M_INDX ? 1 : 3) << 11);
             break;
         }
@@ -112,7 +112,7 @@ void AsmMn1610::encodeGenericAddress(AsmInsn &insn, const Operand &op) const {
     case M_IM4:
     case M_ILVL:
         // Zero-page direct: D
-        insn.embed((0 << 11) | op.val32);
+        insn.embed((0 << 11) | op.val.getUnsigned());
         break;
     default:
         break;
@@ -121,7 +121,7 @@ void AsmMn1610::encodeGenericAddress(AsmInsn &insn, const Operand &op) const {
 
 void AsmMn1610::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode) const {
     insn.setErrorIf(op);
-    auto val32 = op.val32;
+    uint8_t val8 = op.val.getUnsigned();
     switch (mode) {
     case M_RDG:
         if (op.reg == REG_STR)
@@ -155,7 +155,7 @@ void AsmMn1610::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode) c
         insn.embed(encodeSpecial(op.reg) << 4);
         break;
     case M_RIAU:
-        insn.embed((op.mode == M_RIAU ? (op.val32 == 1 ? 3 : 2) : 1) << 6);
+        insn.embed((op.mode == M_RIAU ? (op.val.getUnsigned() == 1 ? 3 : 2) : 1) << 6);
         // Fall-through
     case M_RI:
         insn.embed(encodeIndirect(op.reg));
@@ -172,45 +172,46 @@ void AsmMn1610::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode) c
             insn.embed(encodeCop(op.cc) << 3);
             break;
         }
-        if (op.val32 >= 2)
+        if (op.val.overflow(1))
             insn.setErrorIf(op, ILLEGAL_CONSTANT);
-        insn.embed((op.val32 & 1) << 3);
+        insn.embed((op.val.getUnsigned() & 1) << 3);
         break;
     case M_IM8W:
     case M_IM16:
-        if (overflowUint16(op.val32))
+        if (op.val.overflowUint16())
             insn.setErrorIf(op, OVERFLOW_RANGE);
         // Fall-through
     case M_IABS:
-        insn.emitOperand16(op.val32);
+        insn.emitOperand16(op.val.getUnsigned());
         break;
     case M_BIT:
-        if (op.val32 >= 16)
+        if (op.val.overflow(15))
             insn.setErrorIf(op, ILLEGAL_BIT_NUMBER);
-        insn.embed(static_cast<uint8_t>(op.val32 & 0x0F));
+        insn.embed(static_cast<uint8_t>(op.val.getUnsigned() & 0x0F));
         break;
     case M_ILVL:
-        if (val32 >= 4) {
+        if (op.val.overflow(3)) {
             insn.setErrorIf(op, ILLEGAL_CONSTANT);
-            val32 &= 3;
+            val8 &= 3;
         }
         // Fall-through
     case M_IM4:
-        if (val32 >= 16) {
+        if (op.val.overflow(15)) {
             insn.setErrorIf(op, OVERFLOW_RANGE);
-            val32 &= 0xF;
+            val8 &= 0xF;
         }
         // Fall-through
     case M_IM8:
     case M_IOA:
-        if (overflowUint8(val32))
+        if (op.val.overflowUint8())
             insn.setErrorIf(op, OVERFLOW_RANGE);
-        insn.embed(static_cast<uint8_t>(val32));
+        insn.embed(val8);
         break;
     case M_ABS: {
         // TODO: calculate/check segment/offset
-        insn.setErrorIf(op, checkAddr(op.val32));
-        insn.emitOperand16(op.val32);
+        const auto addr = op.val.getUnsigned();
+        insn.setErrorIf(op, checkAddr(addr));
+        insn.emitOperand16(addr);
         break;
     }
     case M_GEN:
@@ -262,10 +263,10 @@ Error AsmMn1610::parseOperand(StrScanner &scan, Operand &op) const {
                 return op.setError(t, MISSING_CLOSING_PAREN);
             if (preDec) {
                 op.mode = M_RIAU;
-                op.val32 = -1;
+                op.val.setSigned(-1);
             } else if (t.expect('+')) {
                 op.mode = M_RIAU;
-                op.val32 = 1;
+                op.val.setUnsigned(1);
             }
         } else {
             if (op.reg == REG_R0) {
@@ -291,14 +292,14 @@ Error AsmMn1610::parseOperand(StrScanner &scan, Operand &op) const {
         return op.setError(UNKNOWN_OPERAND);
 
     // v, (v), (v)(r), v(r), (v(r))
-    op.val32 = parseExpr32(p, op, indir);
+    op.val = parseInteger(p, op, indir);
     if (op.hasError())
         return op.getError();
     if (endOfLine(p) || *p == ',') {
         // v
-        if (overflowUint16(op.val32)) {
+        if (op.val.overflowUint16()) {
             op.mode = M_ABS;
-        } else if (overflowUint8(op.val32)) {
+        } else if (op.val.overflowUint8()) {
             op.mode = M_IM16;
         } else {
             op.mode = M_IM8;

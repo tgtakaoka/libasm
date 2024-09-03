@@ -21,6 +21,7 @@
 #include "entry_z8.h"
 #include "insn_base.h"
 #include "reg_z8.h"
+#include "value.h"
 
 namespace libasm {
 namespace z8 {
@@ -40,9 +41,9 @@ struct Operand final : ErrorAt {
     AddrMode mode;
     RegName reg;
     CcName cc;
-    uint16_t val16;
+    Value val;
     StrScanner regAt;
-    Operand() : mode(M_NONE), reg(REG_UNDEF), cc(CC_UNDEF), val16(0), regAt() {}
+    Operand() : mode(M_NONE), reg(REG_UNDEF), cc(CC_UNDEF), val(), regAt() {}
 };
 
 struct AsmInsn final : AsmInsnImpl<Config>, EntryInsn {

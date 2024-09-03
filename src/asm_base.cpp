@@ -111,26 +111,13 @@ Error Assembler::processPseudo(StrScanner &scan, Insn &insn) {
     return p ? p->invoke(this, scan, insn) : UNKNOWN_DIRECTIVE;
 }
 
-uint16_t Assembler::parseExpr16(StrScanner &expr, ErrorAt &error, char delim) const {
+Value Assembler::parseInteger(StrScanner &expr, ErrorAt &error, char delim) const {
     auto p = expr;
     const auto value = _parser.eval(p, error, _symtab, delim);
-#ifndef LIBASM_ASM_NOFLOAT
     if (value.isFloat())
         error.setErrorIf(expr, INTEGER_REQUIRED);
-#endif
-    if (value.overflowUint16())
-        error.setErrorIf(expr, OVERFLOW_RANGE);
     expr = p;
-    return value.getUnsigned();
-}
-
-uint32_t Assembler::parseExpr32(StrScanner &expr, ErrorAt &error, char delim) const {
-    const auto value = _parser.eval(expr, error, _symtab, delim);
-#ifndef LIBASM_ASM_NOFLOAT
-    if (value.isFloat())
-        error.setErrorIf(expr, INTEGER_REQUIRED);
-#endif
-    return value.getUnsigned();
+    return value;
 }
 
 Value Assembler::parseExpr(StrScanner &expr, ErrorAt &error, char delim) const {
@@ -409,7 +396,7 @@ Error Assembler::defineDataConstant(StrScanner &scan, Insn &insn, uint8_t dataTy
                 big ? insn.emitUint32Be(v) : insn.emitUint32Le(v);
                 break;
             case DATA_FLOAT32_LONG:
-                if (val.isInt32()) {
+                if (val.isInteger()) {
                     const auto v = val.getUnsigned();
                     big ? insn.emitUint32Be(v) : insn.emitUint32Le(v);
                     break;
@@ -420,8 +407,8 @@ Error Assembler::defineDataConstant(StrScanner &scan, Insn &insn, uint8_t dataTy
                 big ? insn.emitFloat32Be(val.getFloat()) : insn.emitFloat32Le(val.getFloat());
                 break;
             case DATA_FLOAT64_QUAD:
-                if (val.isInt64()) {
-                    const auto v = val.getInt64();
+                if (val.isInteger()) {
+                    const auto v = val.getInteger();
                     big ? insn.emitUint64Be(v) : insn.emitUint64Le(v);
                     break;
                 }
@@ -430,14 +417,16 @@ Error Assembler::defineDataConstant(StrScanner &scan, Insn &insn, uint8_t dataTy
                 big ? insn.emitFloat64Be(val.getFloat()) : insn.emitFloat64Le(val.getFloat());
                 break;
             case DATA_FLOAT80_BCD:
-                if (val.isInt64()) {
-                    const auto value = val.getInt64();
-                    constexpr auto MAX_PBCD80 = 999'999'999'999'999'999L;
-                    constexpr auto MIN_PBCD80 = -MAX_PBCD80;
-                    if (value >= MIN_PBCD80 && value <= MAX_PBCD80) {
-                        insn.emitPackedBcd80Le(value);
+                if (val.isInteger()) {
+                    constexpr auto PBCD80_MAX = INT64_C(999'999'999'999'999'999);
+                    constexpr auto PBCD80_MIN = -INT64_C(999'999'999'999'999'999);
+                    const auto v = val.getInteger();
+                    if (v >= PBCD80_MIN && v <= PBCD80_MAX) {
+                        insn.emitPackedBcd80Le(v);
                         break;
                     }
+                    insn.setError(OVERFLOW_RANGE);
+                    break;
                 }
                 if (!big)  // i8087
                     insn.emitFloat80Le(val.getFloat());

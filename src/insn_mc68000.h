@@ -42,17 +42,11 @@ struct Operand final : ErrorAt {
     RegName reg;
     RegName indexReg;
     InsnSize indexSize;
-    Value value;
+    Value val;
     StrScanner list;
     Operand()
-        : mode(M_NONE), reg(REG_UNDEF), indexReg(REG_UNDEF), indexSize(ISZ_NONE), value(), list() {}
+        : mode(M_NONE), reg(REG_UNDEF), indexReg(REG_UNDEF), indexSize(ISZ_NONE), val(), list() {}
     Config::uintptr_t offset(const AsmInsn &insn) const;
-    uint32_t getUint32() const { return value.getUnsigned(); }
-#ifndef LIBASM_ASM_NOFLOAT
-    double getFloat() const {
-        return value.getFloat();
-    }
-#endif
 };
 
 struct AsmInsn final : AsmInsnImpl<Config>, EntryInsn {

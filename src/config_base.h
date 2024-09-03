@@ -78,25 +78,28 @@ struct ConfigBase {
     virtual const /*PROGMEM*/ char *cpu_P() const = 0;
 
     /**
-     * Check |addr| is in the range of |addressWidth()|.  This also check whether |addr| is word
-     * aligned when |align| is true.
+     * Check |addr| is in the range of |addressWidth()|.  This also
+     * check whether |addr| is word aligned when |align| is true.
      */
     Error checkAddr(uint32_t addr, bool align = false) const;
+
     /**
-     * In addition to check by |checkAddr(uint32_t, bool)|, also check whether |addr| and |base| are
-     * only different in the most least |width| bits.
+     * In addition to check by |checkAddr(uint32_t, bool)|, also check
+     * whether |addr| and |base| are only different in the most least
+     * |width| bits.
      */
     Error checkAddr(uint32_t addr, uint32_t base, uint8_t width, bool align = false) const;
 
-    static int32_t signExtend(uint32_t u32, uint8_t bitw);
-    static bool overflowInt8(int32_t s32);
-    static bool overflowInt16(int32_t s32);
-    static bool overflowInt(int32_t s32, uint8_t bitw);
-    static bool overflowUint8(uint16_t u16);
-    static bool overflowUint8(uint32_t u32);
-    static bool overflowUint16(uint32_t u32);
-    static bool overflowUint32(uint64_t u64);
-    static bool overflowUint(uint32_t, uint8_t bitw);
+    /**
+     * Sign extend least significant |bitw| bits of |u32| as |bitw|
+     * bits signed integer.
+     */
+    static int32_t signExtend(uint32_t u32, uint_fast8_t bitw);
+
+    /**
+     * Check |delta| is in the range of |bitw| bits width signed integer.
+     */
+    static bool overflowDelta(int32_t s32, uint_fast8_t bitw);
 };
 
 namespace {

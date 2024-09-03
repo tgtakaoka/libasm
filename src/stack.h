@@ -29,7 +29,7 @@ struct Stack {
     bool empty() const { return _size == 0; }
     bool full() const { return _size >= CAPACITY; }
 
-    void push(const ELEM elem) {
+    void push(const ELEM &elem) {
         if (_size < CAPACITY)
             _contents[_size++] = elem;
     }

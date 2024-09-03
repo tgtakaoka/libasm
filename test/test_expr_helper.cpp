@@ -16,6 +16,7 @@
 
 #include "test_expr_helper.h"
 
+#include <stdio.h>
 #include "str_buffer.h"
 
 namespace libasm {
@@ -28,24 +29,23 @@ void val_assert(const char *file, int line, StrScanner &expr, char delim, uint32
         const ErrorAt &expected_error, size_t size, const ValueParser &parser) {
     ErrorAt actual_error;
     StrScanner remain = expr;
-    Value val = parser.eval(remain, actual_error, &symtab, delim);
-    uint32_t actual = val.getUnsigned();
-    if (size == 1) {
+    auto val = parser.eval(remain, actual_error, &symtab, delim);
+    auto actual = val.getUnsigned();
+    if (size == sizeof(uint8_t)) {
         if (val.overflowUint8())
             actual_error.setErrorIf(expr, OVERFLOW_RANGE);
-        actual = static_cast<uint8_t>(actual);
+        actual = static_cast<uint8_t>(val.getUnsigned());
         expected = static_cast<uint8_t>(expected);
     }
-    if (size == 2) {
+    if (size == sizeof(uint16_t)) {
         if (val.overflowUint16())
             actual_error.setErrorIf(expr, OVERFLOW_RANGE);
-        actual = static_cast<uint16_t>(actual);
+        actual = static_cast<uint16_t>(val.getUnsigned());
         expected = static_cast<uint16_t>(expected);
     }
-    if (size == 4) {
-        if (val.overflowUint32()) {
+    if (size == sizeof(uint32_t)) {
+        if (val.overflowUint32())
             actual_error.setErrorIf(expr, OVERFLOW_RANGE);
-        }
     }
     asserter.equals(file, line, expr.str(), expected_error.getError(), actual_error);
     if (expected_error.isOK()) {
@@ -59,7 +59,7 @@ void val_assert(const char *file, int line, StrScanner &expr, char delim, uint32
 void dec_assert(const char *file, int line, uint32_t value, int8_t bitWidth, const char *expected,
         const ValueFormatter &formatter, bool uppercase) {
     char msg[80];
-    sprintf(msg, "%d", value);
+    snprintf(msg, sizeof(msg), "%d", value);
     char actual[80];
     StrCaseBuffer buf(actual, sizeof(actual), uppercase);
     formatter.formatDec(buf, value, bitWidth);
@@ -69,7 +69,7 @@ void dec_assert(const char *file, int line, uint32_t value, int8_t bitWidth, con
 void bin_assert(const char *file, int line, uint32_t value, int8_t bitWidth, const char *expected,
         const ValueFormatter &formatter, bool uppercase) {
     char msg[80];
-    sprintf(msg, "%d", value);
+    snprintf(msg, sizeof(msg), "%d", value);
     char actual[80];
     StrCaseBuffer buf(actual, sizeof(actual), uppercase);
     formatter.formatBin(buf, value, bitWidth);
@@ -79,7 +79,7 @@ void bin_assert(const char *file, int line, uint32_t value, int8_t bitWidth, con
 void oct_assert(const char *file, int line, uint32_t value, int8_t bitWidth, const char *expected,
         const ValueFormatter &formatter, bool uppercase) {
     char msg[80];
-    sprintf(msg, "%d", value);
+    snprintf(msg, sizeof(msg), "%d", value);
     char actual[80];
     StrCaseBuffer buf(actual, sizeof(actual), uppercase);
     formatter.formatOct(buf, value, bitWidth);
@@ -89,7 +89,7 @@ void oct_assert(const char *file, int line, uint32_t value, int8_t bitWidth, con
 void hex_assert(const char *file, int line, uint32_t value, int8_t bitWidth, const char *expected,
         const ValueFormatter &formatter, bool uppercase, bool relax) {
     char msg[80];
-    sprintf(msg, "%#x", value);
+    snprintf(msg, sizeof(msg), "%#x", value);
     char actual[80];
     StrCaseBuffer buf(actual, sizeof(actual), uppercase);
     auto abs = value;

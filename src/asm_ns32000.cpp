@@ -17,7 +17,6 @@
 #include "asm_ns32000.h"
 
 #include <stdlib.h>
-
 #include "table_ns32000.h"
 #include "text_ns32000.h"
 
@@ -159,7 +158,7 @@ Error AsmNs32000::parseStrOptNames(StrScanner &scan, Operand &op, bool braket) c
         }
         return UNKNOWN_OPERAND;
     }
-    op.val32 = strOpt;
+    op.val.setUnsigned(strOpt);
     op.mode = M_SOPT;
     scan = p;
     return OK;
@@ -181,7 +180,7 @@ Error AsmNs32000::parseConfigNames(StrScanner &scan, Operand &op) const {
             return UNKNOWN_OPERAND;
         p.skipSpaces();
     }
-    op.val32 = configs;
+    op.val.setUnsigned(configs);
     op.mode = configs ? M_CONF : M_NONE;
     scan = p;
     return OK;
@@ -203,7 +202,7 @@ Error AsmNs32000::parseRegisterList(StrScanner &scan, Operand &op) const {
             return UNKNOWN_OPERAND;
         p.skipSpaces();
     }
-    op.val32 = list;
+    op.val.setUnsigned(list);
     op.mode = M_RLST;
     scan = p;
     return OK;
@@ -216,7 +215,7 @@ Error AsmNs32000::parseBaseOperand(StrScanner &scan, Operand &op) const {
         return OK;
 
     if (p.expect('@')) {
-        op.val32 = parseExpr32(p, op);
+        op.val = parseInteger(p, op);
         if (op.hasError())
             return op.getError();
         op.mode = M_ABS;
@@ -243,7 +242,7 @@ Error AsmNs32000::parseBaseOperand(StrScanner &scan, Operand &op) const {
 
     auto l = p;
     if (parser().locationSymbol(l)) {
-        op.val32 = parseExpr32(p, op);
+        op.val = parseInteger(p, op);
         if (op.hasError())
             return op.getError();
         op.mode = M_REL;
@@ -254,7 +253,7 @@ Error AsmNs32000::parseBaseOperand(StrScanner &scan, Operand &op) const {
 
     const auto preg = parsePregName(p);
     if (preg != PREG_UNDEF) {
-        op.val32 = encodePregName(preg);
+        op.val.setUnsigned(encodePregName(preg));
         op.mode = M_PREG;
         scan = p;
         return OK;
@@ -262,7 +261,7 @@ Error AsmNs32000::parseBaseOperand(StrScanner &scan, Operand &op) const {
 
     const auto mreg = parseMregName(p);
     if (mreg != MREG_UNDEF) {
-        op.val32 = encodeMregName(mreg);
+        op.val.setUnsigned(encodeMregName(mreg));
         op.mode = M_MREG;
         scan = p;
         return OK;
@@ -292,14 +291,14 @@ Error AsmNs32000::parseBaseOperand(StrScanner &scan, Operand &op) const {
         if (reg == REG_EXT) {
             if (!p.expect('('))
                 return op.setError(p, UNKNOWN_OPERAND);
-            op.val32 = parseExpr32(p, op, ')');
+            op.val = parseInteger(p, op, ')');
             if (op.hasError())
                 return op.getError();
             if (!p.skipSpaces().expect(')'))
                 return op.setErrorIf(p, MISSING_CLOSING_PAREN);
             if (*p.skipSpaces() == '+' || *p == '-') {
                 ErrorAt error;
-                op.disp2 = parseExpr32(p, error);
+                op.disp2 = parseInteger(p, error);
                 op.setErrorIf(error);
                 if (op.hasError())
                     return op.getError();
@@ -315,16 +314,15 @@ Error AsmNs32000::parseBaseOperand(StrScanner &scan, Operand &op) const {
         return op.setError(scan, UNKNOWN_REGISTER);
     }
 
-    op.value = parseExpr(p, op);
+    op.val = parseExpr(p, op);
     if (op.hasError())
         return op.getError();
-    if (op.value.isFloat()) {
+    if (op.val.isFloat()) {
         op.mode = M_IMM;
         op.size = SZ_OCTA;
         scan = p;
         return op.setOK();
     }
-    op.val32 = op.value.getUnsigned();
     op.size = SZ_QUAD;
     if (endOfLine(p.skipSpaces()) || *p == ',') {
         op.mode = M_IMM;  // M_REL
@@ -354,9 +352,9 @@ Error AsmNs32000::parseBaseOperand(StrScanner &scan, Operand &op) const {
         return op.setErrorIf(r, UNKNOWN_OPERAND);
     }
 
-    op.disp2 = op.val32;
+    op.disp2 = op.val;
     ErrorAt error;
-    op.val32 = parseExpr32(p, error, ')');
+    op.val = parseInteger(p, error, ')');
     op.setErrorIf(error);
     if (op.hasError())
         return op.getError();
@@ -458,76 +456,91 @@ void embedOprField(AsmInsn &insn, OprPos pos, uint8_t opr) {
 }  // namespace
 
 void AsmNs32000::emitDisplacement(
-        AsmInsn &insn, const Operand &op, int32_t val32, Error error) const {
-    if (overflowInt(val32, 30) || val32 < -0x1F000000L) {
-        insn.setErrorIf(op, error);
-        val32 = val32 < 0 ? -0x1F000000 : 0x1FFFFFFF;
-    }
-    if (overflowInt(val32, 14)) {
-        insn.emitOperand32((val32 & 0x3FFFFFFFL) | 0xC0000000L);
-    } else if (overflowInt(val32, 7)) {
-        insn.emitOperand16((val32 & 0x3FFF) | 0x8000);
+        AsmInsn &insn, const Operand &op, const Value &disp, Error error) const {
+    constexpr auto INT7_MIN = INT32_C(-0x40);
+    constexpr auto INT7_MAX = INT32_C(0x3F);
+    constexpr auto INT14_MIN = INT32_C(-0x2000);
+    constexpr auto INT14_MAX = INT32_C(0x1FFF);
+    constexpr auto INT30_MIN = INT32_C(-0x1F00'0000);
+    constexpr auto INT30_MAX = INT32_C(0x1FFF'FFFF);
+    if (!disp.overflow(INT7_MAX, INT7_MIN)) {
+        insn.emitOperand8(disp.getUnsigned() & UINT8_C(0x7F));
+    } else if (!disp.overflow(INT14_MAX, INT14_MIN)) {
+        const auto mark = UINT16_C(0x8000);
+        insn.emitOperand16((disp.getUnsigned() & UINT16_C(0x3FFF)) | mark);
     } else {
-        insn.emitOperand8(val32 & 0x7F);
+        auto val = disp.getSigned();
+        if (val < INT30_MIN) {
+            insn.setErrorIf(op, error);
+            val = INT30_MIN;
+        } else if (val > INT30_MAX) {
+            insn.setErrorIf(op, error);
+            val = INT30_MAX;
+        }
+        const auto mark = UINT32_C(0xC000'0000);
+        insn.emitOperand32((val & UINT32_C(0x3FFF'FFFF)) | mark);
     }
 }
 
 void AsmNs32000::emitLength(AsmInsn &insn, const Operand &op) const {
-    uint8_t len = op.getError() ? 0 : op.val32;
-    if (op.isOK()) {
-        const auto val = static_cast<int32_t>(op.val32);
-        if (val <= 0) {
-            insn.setErrorIf(op, ILLEGAL_CONSTANT);
-        } else if (insn.size() == SZ_QUAD) {
-            if (len > 4)
+    auto len = 0;
+    if (op.val.isNegative() || op.val.isZero()) {
+        insn.setErrorIf(op, ILLEGAL_CONSTANT);
+    } else if (op.isOK()) {
+        len = op.val.getUnsigned() - 1;
+        if (insn.size() == SZ_QUAD) {
+            if (op.val.overflow(4))
                 insn.setErrorIf(op, OVERFLOW_RANGE);
-            len -= 1;
             len *= 4;
         } else if (insn.size() == SZ_WORD) {
-            if (len > 8)
+            if (op.val.overflow(8))
                 insn.setErrorIf(op, OVERFLOW_RANGE);
-            len -= 1;
             len *= 2;
-        } else if (insn.size() == SZ_BYTE) {
-            if (len > 16)
+        } else {
+            if (op.val.overflow(16))
                 insn.setErrorIf(op, OVERFLOW_RANGE);
-            len -= 1;
         }
     }
-    emitDisplacement(insn, op, len);
+    Value disp;
+    emitDisplacement(insn, op, disp.setUnsigned(len));
 }
 
 void AsmNs32000::emitBitField(
         AsmInsn &insn, AddrMode mode, const Operand &off, const Operand &len) const {
     if (mode == M_BFOFF)
         return;
-    if (off.val32 >= 8)
+    if (off.val.overflow(7))
         insn.setErrorIf(off, ILLEGAL_BIT_NUMBER);
-    if (len.isOK() && len.val32 == 0)
+    const auto offset = off.val.getUnsigned();
+    auto length = len.val.getUnsigned();
+    if (len.val.isNegative() || len.val.isZero()) {
         insn.setErrorIf(len, ILLEGAL_CONSTANT);
-    if (off.val32 + len.val32 > 32)
+        length = 1;
+    } else if (len.getError()) {
+        length = 1;  // undefined symbol
+    }
+    if (offset + length > 32)
         insn.setErrorIf(off, OVERFLOW_RANGE);
-    const auto length = (len.getError() || len.val32 == 0) ? 0 : len.val32 - 1;
-    const auto data = (static_cast<uint8_t>(off.val32) << 5) | (length & 0x1F);
+    const auto data = (offset << 5) | ((length - 1) & 0x1F);
     insn.emitOperand8(data);
 }
 
 void AsmNs32000::emitImmediate(AsmInsn &insn, AddrMode mode, const Operand &op) const {
     const auto size = insn.size();
     if (size == SZ_BYTE || mode == M_GENC) {
-        insn.emitOperand8(op.val32);
+        insn.emitOperand8(op.val.getUnsigned());
 #ifndef LIBASM_ASM_NOFLOAT
     } else if (mode == M_FENR) {
         if (size == SZ_OCTA) {
-            insn.emitOpFloat64(op.getFloat());
+            insn.emitOpFloat64(op.val.getFloat());
         } else {
-            insn.emitOpFloat32(op.getFloat());
+            insn.emitOpFloat32(op.val.getFloat());
         }
 #endif
     } else if (size == SZ_WORD) {
-        insn.emitOperand16(op.val32);
+        insn.emitOperand16(op.val.getUnsigned());
     } else if (size == SZ_QUAD) {
-        insn.emitOperand32(op.val32);
+        insn.emitOperand32(op.val.getUnsigned());
     }
 }
 
@@ -583,11 +596,12 @@ void AsmNs32000::emitGeneric(AsmInsn &insn, AddrMode mode, const Operand &op, Op
     embedOprField(insn, pos, field);
     switch (op.mode) {
     case M_ABS: {
-        if (checkAddr(op.val32))
+        if (checkAddr(op.val.getUnsigned()))
             insn.setErrorIf(op, OVERFLOW_RANGE);
+        Value disp;
         // Sign extends 24 bit address into 32 bit.
-        const auto val32 = signExtend(op.val32, addressWidth());
-        emitDisplacement(insn, op, val32);
+        disp.setSigned(signExtend(op.val.getUnsigned(), addressWidth()));
+        emitDisplacement(insn, op, disp);
         break;
     }
     case M_RREL:
@@ -595,7 +609,7 @@ void AsmNs32000::emitGeneric(AsmInsn &insn, AddrMode mode, const Operand &op, Op
         if (op.mode == M_MEM && op.reg == REG_PC) {
             emitRelative(insn, op);
         } else {
-            emitDisplacement(insn, op, op.val32);
+            emitDisplacement(insn, op, op.val);
         }
         break;
     case M_REL:
@@ -603,7 +617,7 @@ void AsmNs32000::emitGeneric(AsmInsn &insn, AddrMode mode, const Operand &op, Op
         break;
     case M_MREL:
     case M_EXT:
-        emitDisplacement(insn, op, op.val32);
+        emitDisplacement(insn, op, op.val);
         emitDisplacement(insn, op, op.disp2);
         break;
     case M_IMM:
@@ -617,12 +631,10 @@ void AsmNs32000::emitGeneric(AsmInsn &insn, AddrMode mode, const Operand &op, Op
 
 void AsmNs32000::emitRelative(AsmInsn &insn, const Operand &op) const {
     const auto base = insn.address();
-    const auto target = op.getError() ? base : op.val32;
+    const auto target = op.getError() ? base : op.val.getUnsigned();
     insn.setErrorIf(op, checkAddr(target));
-    const auto delta = static_cast<int32_t>(target - base);
-    if ((delta >= 0 && target < base) || (delta < 0 && target >= base))
-        insn.setErrorIf(op, OVERFLOW_RANGE);
-    emitDisplacement(insn, op, delta, OPERAND_TOO_FAR);
+    Value delta;
+    emitDisplacement(insn, op, delta.setSigned(target - base), OPERAND_TOO_FAR);
 }
 
 void AsmNs32000::emitOperand(AsmInsn &insn, AddrMode mode, OprSize size, const Operand &op,
@@ -637,15 +649,15 @@ void AsmNs32000::emitOperand(AsmInsn &insn, AddrMode mode, OprSize size, const O
     case M_MREG:
     case M_CONF:
     case M_SOPT:
-        embedOprField(insn, pos, op.val32);
+        embedOprField(insn, pos, op.val.getUnsigned());
         break;
     case M_RLST:
-        if (op.val32 == 0 && (insn.opCode() == SAVE || insn.opCode() == RESTORE))
+        if (op.val.isZero() && (insn.opCode() == SAVE || insn.opCode() == RESTORE))
             insn.setErrorIf(op, OPCODE_HAS_NO_EFFECT);
         if (size == SZ_NONE) {  // PUSH
-            insn.emitOperand8(op.val32);
+            insn.emitOperand8(op.val.getUnsigned());
         } else {  // POP
-            insn.emitOperand8(reverseBits(op.val32));
+            insn.emitOperand8(reverseBits(op.val.getUnsigned()));
         }
         break;
     case M_FENR:
@@ -664,10 +676,9 @@ void AsmNs32000::emitOperand(AsmInsn &insn, AddrMode mode, OprSize size, const O
         emitGeneric(insn, mode, op, pos);
         break;
     case M_INT4: {
-        const int32_t val = static_cast<int32_t>(op.val32);
-        if (val < -8 || val >= 8)
+        if (op.val.overflow(7, -8))
             insn.setErrorIf(op, OVERFLOW_RANGE);
-        embedOprField(insn, pos, op.val32);
+        embedOprField(insn, pos, op.val.getUnsigned());
         break;
     }
     case M_BFOFF:
@@ -678,18 +689,15 @@ void AsmNs32000::emitOperand(AsmInsn &insn, AddrMode mode, OprSize size, const O
         emitRelative(insn, op);
         break;
     case M_LEN32: {
-        const int32_t val = static_cast<int32_t>(op.val32);
-        if (val < 0)
+        if (op.val.isNegative() || op.val.isZero())
             insn.setErrorIf(op, ILLEGAL_CONSTANT);
-        if (op.isOK() && val == 0)
-            insn.setErrorIf(op, ILLEGAL_CONSTANT);
-        if (val > 32)
+        if (op.val.overflow(32))
             insn.setErrorIf(op, OVERFLOW_RANGE);
-        emitDisplacement(insn, op, val);
+        emitDisplacement(insn, op, op.val);
         break;
     }
     case M_DISP:
-        emitDisplacement(insn, op, op.val32);
+        emitDisplacement(insn, op, op.val);
         break;
     case M_LEN16:
         emitLength(insn, op);

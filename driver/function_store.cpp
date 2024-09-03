@@ -76,11 +76,11 @@ bool FunctionStore::Binding::hasSymbol(const StrScanner &symbol) const {
            parent->hasSymbol(symbol);
 }
 
-uint32_t FunctionStore::Binding::lookupSymbol(const StrScanner &symbol) const {
+SymbolTable::symval_t FunctionStore::Binding::lookupSymbol(const StrScanner &symbol) const {
     const auto it = paramsAt.find(std::string(symbol.str(), symbol.size()));
     if (it == paramsAt.end())
         return parent->lookupSymbol(symbol);
-    return stack.at(it->second).getUnsigned();
+    return stack.at(it->second).getSigned();
 }
 
 const void *FunctionStore::Binding::lookupFunction(const StrScanner &symbol) const {

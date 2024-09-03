@@ -36,7 +36,7 @@ private:
 
     uint8_t _direct_page;
 
-    bool onDirectPage(Config::uintptr_t addr) const;
+    bool onDirectPage(const Value &addr) const;
 
     bool parseBitPosition(StrScanner &scan, Operand &op) const;
     bool parseMemBit(StrScanner &scan, Operand &op) const;

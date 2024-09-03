@@ -233,7 +233,7 @@ static void test_binary_operator() {
 
     E32("%(2)0001 LOR  %(2)0100", 0x05);
     E32("%(2)1011 LAND %(2)0110", 0x02);
-    E32("%(2)0110 LXOR -1",    0xfffffff9);
+    E32("%(2)0110 LXOR %FFFFFFFF", 0xfffffff9);
 }
 
 static void test_precedence() {

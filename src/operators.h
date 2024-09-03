@@ -28,8 +28,8 @@ namespace libasm {
 struct ValueStack : Stack<Value, 8> {
     ValueStack() : Stack() {}
     void push(const Value &value) { _contents[_size++] = value; }
-    void pushSigned(int32_t val) { _contents[_size++].setSigned(val); }
-    void pushUnsigned(uint32_t val) { _contents[_size++].setUnsigned(val); }
+    void pushSigned(Value::signed_t val) { _contents[_size++].setSigned(val); }
+    void pushUnsigned(Value::unsigned_t val) { _contents[_size++].setUnsigned(val); }
     /** Returns |pos|-th element from stack top */
     const Value &at(uint8_t pos) const { return _contents[_size - pos - 1]; }
 };

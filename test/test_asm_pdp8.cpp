@@ -674,11 +674,22 @@ void test_data_constant() {
     TEST( "17-5", 17-5);
     TEST( "15&5", 15&5);
     TEST( "16!5", 16|5);
+    TEST( "4095", 07777);
+    ERUS("UNDEF", "UNDEF", 00000);
+    ERUS("UNDEF+1", "UNDEF+1", 00001);
+
+    symtab.intern(01234, "unknown_instruction");
+    TEST("unknown_instruction", 01234);
+
+    TEST("-2048", 04000);
+    ERRT( "4096", OVERFLOW_RANGE, "4096", 00000);
+    ERRT("-2049", OVERFLOW_RANGE, "-2049", 03777);
     TEST("OCTAL");
     TEST( "7777", 07777);
     TEST( "  -1", 07777);
     TEST( "4000", 04000);
-    TEST("-4000", 04000);
+    ERRT( "10000", OVERFLOW_RANGE, "10000", 00000);
+    ERRT(" -4001", OVERFLOW_RANGE, "-4001", 03777);
 
     ATEST(00300, ".+2400", 02700);
 
@@ -689,6 +700,8 @@ void test_data_constant() {
     TEST("DUBL 16777215", 07777, 07777);
     TEST("DUBL  8388608", 04000, 00000);
     TEST("DUBL -8388608", 04000, 00000);
+    ERRT("DUBL 16777216", OVERFLOW_RANGE, "16777216");
+    ERRT("DUBL -8388609", OVERFLOW_RANGE, "-8388609");
     TEST("           10", 00010);
     ERUS("DUBL UNDEF", "UNDEF", 0, 0);
 

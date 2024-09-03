@@ -21,6 +21,7 @@
 #include "entry_scn2650.h"
 #include "insn_base.h"
 #include "reg_scn2650.h"
+#include "value.h"
 
 namespace libasm {
 namespace scn2650 {
@@ -39,8 +40,8 @@ struct Operand final : ErrorAt {
     CcName cc;
     bool indir;
     char sign;
-    uint16_t val16;
-    Operand() : mode(M_NONE), reg(REG_UNDEF), cc(CC_UNDEF), indir(false), sign(0), val16(0) {}
+    Value val;
+    Operand() : mode(M_NONE), reg(REG_UNDEF), cc(CC_UNDEF), indir(false), sign(0), val() {}
 };
 
 struct AsmInsn final : AsmInsnImpl<Config>, EntryInsn {

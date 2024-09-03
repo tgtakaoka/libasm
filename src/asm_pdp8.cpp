@@ -53,7 +53,7 @@ struct RadixNumberParser final : NumberParser {
         const auto radix = IntelNumberParser::hasSuffix(p);
         if (radix != RADIX_NONE)
             return IntelNumberParser::singleton().parseNumber(scan, val, radix, p);
-        return val.parseNumber(scan, _radix);
+        return val.read(scan, _radix);
     }
 
 private:
@@ -140,14 +140,20 @@ Error AsmPdp8::setInputRadix(StrScanner &scan, Insn &insn, uint8_t extra) {
 
 Error AsmPdp8::defineDoubleDecimal(StrScanner &scan, Insn &insn, uint8_t extra) {
     UNUSED(extra);
-    const auto save = NUMBER_PARSER.radix();
+    const auto radix = NUMBER_PARSER.radix();
     NUMBER_PARSER.setRadix(RADIX_10);
-    const auto val24 = parseExpr(scan, insn).getUnsigned();
+    const auto save = scan;
+    const auto val = parseInteger(scan, insn);
+    constexpr auto UINT24_MAX = INT32_C(0x00FF'FFFF);
+    constexpr auto INT24_MIN = INT32_C(-0x0080'0000);
+    if (val.overflow(UINT24_MAX, INT24_MIN))
+        insn.setErrorIf(save, OVERFLOW_RANGE);
     if (!insn.hasError()) {
+        const auto val24 = val.getUnsigned();
         insn.setErrorIf(insn.emitUint16Be((val24 >> 12) & 07777));
         insn.setErrorIf(insn.emitUint16Be(val24 & 07777));
     }
-    NUMBER_PARSER.setRadix(save);
+    NUMBER_PARSER.setRadix(radix);
     return insn.getError();
 }
 
@@ -158,7 +164,7 @@ Error AsmPdp8::alignOnPage(StrScanner &scan, Insn &insn, uint8_t extra) {
     if (endOfLine(p)) {
         page++;
     } else {
-        page = parseExpr(p, insn).getUnsigned();
+        page = parseInteger(p, insn).getUnsigned();
         if (insn.getError())
             return insn.getError();
     }
@@ -174,7 +180,7 @@ Error AsmPdp8::alignOnPage(StrScanner &scan, Insn &insn, uint8_t extra) {
 Error AsmPdp8::defineField(StrScanner &scan, Insn &insn, uint8_t extra) {
     UNUSED(extra);
     auto p = scan.skipSpaces();
-    const auto field = parseExpr(p, insn).getUnsigned();
+    const auto field = parseInteger(p, insn).getUnsigned();
     if (insn.getError())
         return insn.getError();
     const auto addr = memoryAddress(0, 0, field);
@@ -192,7 +198,7 @@ Error AsmPdp8::parseMemReferenceOperand(StrScanner &scan, AsmInsn &insn) const {
         p = scan;
 
     const auto at = p;
-    const auto addr = parseExpr(p, insn).getUnsigned();
+    const auto addr = parseInteger(p, insn).getUnsigned();
     if (insn.hasError())
         return insn.getError();
 
@@ -211,21 +217,21 @@ Error AsmPdp8::parseMemReferenceOperand(StrScanner &scan, AsmInsn &insn) const {
 
 Error AsmPdp8::parseIoTransferOperand(StrScanner &scan, AsmInsn &insn) const {
     auto p = scan;
-    const auto addr = parseExpr(p, insn).getUnsigned();
+    const auto addr = parseInteger(p, insn);
     if (insn.hasError())
         return insn.getError();
     const auto pcont = p.skipSpaces();
     if (endOfLine(p))
         return insn.setError(p, MISSING_OPERAND);
-    const auto control = parseExpr(p, insn).getUnsigned();
+    const auto control = parseInteger(p, insn);
     if (insn.hasError())
         return insn.getError();
 
-    if (overflowUint(addr, 6))
+    if (addr.overflow(0x3F))
         return insn.setErrorIf(scan, OVERFLOW_RANGE);
-    if (overflowUint(control, 3))
+    if (control.overflow(7))
         return insn.setErrorIf(pcont, OVERFLOW_RANGE);
-    insn.embed((addr << 3) | control);
+    insn.embed((addr.getUnsigned() << 3) | control.getUnsigned());
     scan = p;
     return OK;
 }
@@ -244,7 +250,7 @@ Error AsmPdp8::encodeMicro(AsmInsn &insn, const AsmInsn &micro, Config::opcode_t
 
 Error AsmPdp8::parseField(StrScanner &scan, AsmInsn &insn) const {
     auto p = scan;
-    auto field = parseExpr(p, insn).getUnsigned();
+    auto field = parseInteger(p, insn).getUnsigned();
     if (!insn.hasError()) {
         if (field < 8) {
             field <<= 3;
@@ -352,12 +358,16 @@ Error AsmPdp8::encodeImpl(StrScanner &scan, Insn &_insn) const {
             parseMemExtensionOperand(scan, insn);
         }
     } else {
+        StrScanner p = _insn.errorAt();
         insn.setOK();  // clear UNKNOWN_INSTRUCTION
-        StrScanner p{_insn.errorAt()};
-        const auto val12 = parseExpr(p, insn).getUnsigned();
+        const auto opc = parseInteger(p, insn);
         if (insn.hasError())
             return _insn.setError(insn);
-        insn.setOpCode(val12 & 07777);
+        constexpr auto UINT12_MAX = INT32_C(07777);
+        constexpr auto INT12_MIN = INT32_C(-04000);
+        if (opc.overflow(UINT12_MAX, INT12_MIN))
+            insn.setError(_insn.errorAt(), OVERFLOW_RANGE);
+        insn.setOpCode(opc.getUnsigned() & 07777);
         scan = p;
     }
 

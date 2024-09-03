@@ -73,14 +73,14 @@ void AsmMc6809::reset() {
 }
 
 Error AsmMc6809::setDirectPage(int32_t val) {
-    if (overflowUint8(static_cast<uint32_t>(val)))
+    if (val < 0 || val > UINT8_MAX)
         return OVERFLOW_RANGE;
     _direct_page = val;
     return OK;
 }
 
-bool AsmMc6809::onDirectPage(Config::uintptr_t addr) const {
-    return static_cast<uint8_t>(addr >> 8) == _direct_page;
+bool AsmMc6809::onDirectPage(const Value &addr) const {
+    return (addr.getUnsigned() >> 8) == _direct_page;
 }
 
 namespace {
@@ -133,9 +133,9 @@ void AsmMc6809::encodeRelative(AsmInsn &insn, const Operand &op, AddrMode mode) 
     if (mode == M_REL && !smartBranch) {
         const auto length = (insn.hasPrefix() ? 1 : 0) + 2;
         const auto base = insn.address() + length;
-        const auto target = op.getError() ? base : op.val32;
+        const auto target = op.getError() ? base : op.val.getUnsigned();
         const auto delta = branchDelta(base, target, insn, op);
-        if (overflowInt8(delta))
+        if (overflowDelta(delta, 8))
             insn.setErrorIf(op, OPERAND_TOO_FAR);
         insn.emitOperand8(delta);
         return;
@@ -144,15 +144,15 @@ void AsmMc6809::encodeRelative(AsmInsn &insn, const Operand &op, AddrMode mode) 
     long_branch:
         const auto length = (insn.hasPrefix() ? 1 : 0) + 3;
         const auto base = insn.address() + length;
-        const auto target = op.getError() ? base : op.val32;
+        const auto target = op.getError() ? base : op.val.getUnsigned();
         const auto delta = branchDelta(base, target, insn, op);
         insn.emitOperand16(delta);
         return;
     }
     const auto base = insn.address() + 2;
-    const auto target = op.getError() ? base : op.val32;
+    const auto target = op.getError() ? base : op.val.getUnsigned();
     const auto delta = branchDelta(base, target, insn, op);
-    if (op.getError() || overflowInt8(delta)) {
+    if (op.getError() || overflowDelta(delta, 8)) {
         longBranch(insn, op);
         goto long_branch;
     }
@@ -161,12 +161,12 @@ void AsmMc6809::encodeRelative(AsmInsn &insn, const Operand &op, AddrMode mode) 
 }
 
 Config::ptrdiff_t AsmMc6809::calculateDisplacement(const AsmInsn &insn, const Operand &op) const {
-    const auto disp = static_cast<Config::ptrdiff_t>(op.val32);
+    const auto disp = op.val.getSigned();
     if (op.base == REG_PCR && op.isOK()) {
         const auto length = (insn.hasPrefix() ? 1 : 0) +
                             (insn.length() == 0 ? 3 : insn.length() + 2) + (op.extra == 16 ? 1 : 0);
         const auto base = static_cast<Config::uintptr_t>(insn.address()) + length;
-        const auto target = static_cast<Config::uintptr_t>(op.val32);
+        const auto target = op.val.getUnsigned();
         return target - base;
     }
     return disp;
@@ -187,7 +187,7 @@ void AsmMc6809::encodeIndexed(AsmInsn &insn, const Operand &op) const {
             size = 0;
         } else if (!pc && !spec.indir && disp >= -16 && disp < 16) {
             size = 5;
-        } else if (!overflowInt8(disp)) {
+        } else if (disp >= INT8_MIN && disp <= INT8_MAX) {
             size = 8;
         } else {
             if (spec.base == REG_PCR)
@@ -229,7 +229,7 @@ void AsmMc6809::encodeRegisterPair(AsmInsn &insn, const Operand &op) const {
 
 void AsmMc6809::encodeRegisterList(AsmInsn &insn, const Operand &op) const {
     if (op.mode == M_NONE || op.mode == M_IM32) {
-        insn.emitOperand8(op.val32);
+        insn.emitOperand8(op.val.getUnsigned());
         return;
     }
     const auto userStack = (insn.opCode() & 2) != 0;
@@ -266,14 +266,14 @@ void AsmMc6809::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode) c
         break;
     case M_GEN16:
         if (op.mode == M_IM32) {
-            insn.emitOperand16(op.val32);
+            insn.emitOperand16(op.val.getUnsigned());
             break;
         }
         // Fall through
     case M_GEN8:
         if (op.mode == M_DIR) {
             insn.embed(0x10);
-            insn.emitOperand8(op.val32);
+            insn.emitOperand8(op.val.getUnsigned());
             break;
         }
         if (op.mode == M_IDX || op.mode == M_PAIR) {
@@ -283,15 +283,15 @@ void AsmMc6809::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode) c
         }
         if (op.mode == M_EXT) {
             insn.embed(0x30);
-            insn.emitOperand16(op.val32);
+            insn.emitOperand16(op.val.getUnsigned());
             break;
         }
         // Fall through
     case M_IM8:
-        insn.emitOperand8(op.val32);
+        insn.emitOperand8(op.val.getUnsigned());
         break;
     case M_IM32:
-        insn.emitOperand32(op.val32);
+        insn.emitOperand32(op.val.getUnsigned());
         break;
     case M_GMEM:
         if (op.mode == M_IDX || op.mode == M_PAIR) {
@@ -301,15 +301,15 @@ void AsmMc6809::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode) c
         }
         if (op.mode == M_EXT) {
             insn.embed(0x70);
-            insn.emitOperand16(op.val32);
+            insn.emitOperand16(op.val.getUnsigned());
             break;
         }
         // Fall-through
     case M_DIR:
-        insn.emitOperand8(op.val32);
+        insn.emitOperand8(op.val.getUnsigned());
         break;
     case M_EXT:
-        insn.emitOperand16(op.val32);
+        insn.emitOperand16(op.val.getUnsigned());
         break;
     case M_IDX:
         return encodeIndexed(insn, op);
@@ -324,7 +324,7 @@ void AsmMc6809::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode) c
     case M_DBIT:
         insn.embedPostfix((op.extra & 7) << 3);
         insn.emitOperand8(insn.postfix());
-        insn.emitOperand8(op.val32);
+        insn.emitOperand8(op.val.getUnsigned());
     default:
         break;
     }
@@ -383,16 +383,16 @@ bool AsmMc6809::parseBitPosition(StrScanner &scan, Operand &op) const {
 
         ErrorAt save(op);
         op.setError(p, OK);
-        const auto bitp = parseExpr32(p, op);
+        const auto bitp = parseInteger(p, op);
         if (op.hasError()) {
             op.setError(save);
             return false;
         }
         if (save.getError())
             op.setError(save);
-        if (bitp >= 8)
+        if (bitp.overflow(7))
             op.setErrorIf(scan, ILLEGAL_BIT_NUMBER);
-        op.extra = bitp;
+        op.extra = bitp.getUnsigned();
         scan = p;
         return true;
     }
@@ -408,17 +408,17 @@ bool AsmMc6809::parseMemBit(StrScanner &scan, Operand &op) const {
 
     // There is no '.' in operand.
     if (operand.size() < 2) {
-        op.val32 = parseExpr32(scan, op);
+        op.val = parseInteger(scan, op);
         return parseBitPosition(scan, op);
     } else if (isspace(operand[operand.size() - 2])) {
-        op.val32 = parseExpr32(scan, op);
+        op.val = parseInteger(scan, op);
         return false;
     }
 
     // |operand| points '.'
     operand += operand.size() - 1;
     StrScanner expr{scan.str(), operand.str()};
-    op.val32 = parseExpr32(expr, op);
+    op.val = parseInteger(expr, op);
     StrScanner bit{operand.str(), scan.str() + scan.size()};
     if (parseBitPosition(bit, op)) {
         scan = bit;
@@ -435,7 +435,7 @@ Error AsmMc6809::parseOperand(StrScanner &scan, Operand &op, AddrMode hint) cons
 
     op.list = p;
     if (p.expect('#')) {
-        op.val32 = parseExpr32(p, op);
+        op.val = parseInteger(p, op);
         if (op.hasError())
             return op.getError();
         op.mode = M_IM32;
@@ -486,7 +486,7 @@ Error AsmMc6809::parseOperand(StrScanner &scan, Operand &op, AddrMode hint) cons
     } else if (indexBits) {
         if (hint == M_DBIT) {
             if (parseMemBit(p, op)) {
-                if (op.isOK() && !onDirectPage(op.val32) && indexBits != 8)
+                if (op.isOK() && !onDirectPage(op.val) && indexBits != 8)
                     return op.setError(scan, OPERAND_NOT_ALLOWED);
                 op.mode = M_DBIT;
                 scan = p;
@@ -494,7 +494,7 @@ Error AsmMc6809::parseOperand(StrScanner &scan, Operand &op, AddrMode hint) cons
             }
             return op.setError(scan, UNKNOWN_OPERAND);
         }
-        op.val32 = parseExpr32(p, op);
+        op.val = parseInteger(p, op);
     }
 
     auto indexEnd = p;
@@ -508,10 +508,8 @@ Error AsmMc6809::parseOperand(StrScanner &scan, Operand &op, AddrMode hint) cons
                 scan = p;
                 return OK;
             }
-            if (indexBits < 0) {
-                const auto addr = static_cast<Config::uintptr_t>(op.val32);
-                indexBits = onDirectPage(addr) ? 8 : 16;
-            }
+            if (indexBits < 0)
+                indexBits = onDirectPage(op.val) ? 8 : 16;
             op.extra = indexBits;
             op.mode = (indexBits == 8) ? M_DIR : M_EXT;
             scan = p;

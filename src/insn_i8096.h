@@ -20,6 +20,7 @@
 #include "config_i8096.h"
 #include "entry_i8096.h"
 #include "insn_base.h"
+#include "value.h"
 
 namespace libasm {
 namespace i8096 {
@@ -34,10 +35,10 @@ struct EntryInsn : EntryInsnPrefix<Config, Entry> {
 
 struct Operand final : ErrorAt {
     AddrMode mode;
-    uint8_t regno;
+    Value regno;
     Error regerr;
-    uint16_t val16;
-    Operand() : mode(M_NONE), regno(0), regerr(OK), val16(0) {}
+    Value val;
+    Operand() : mode(M_NONE), regno(), regerr(OK), val() {}
 };
 
 struct AsmInsn final : AsmInsnImpl<Config>, EntryInsn {

@@ -15,9 +15,8 @@
  */
 
 #include "parsers.h"
-
 #include <ctype.h>
-
+#include "config_base.h"
 #include "text_common.h"
 
 namespace libasm {
@@ -64,7 +63,7 @@ Error PrefixNumberParser::parseNumber(StrScanner &scan, Value &val) const {
     const auto radix = hasPrefix(p);
     if (radix == RADIX_NONE)
         return IntelNumberParser::singleton().parseNumber(scan, val);
-    const auto error = val.parseNumber(p, radix);
+    const auto error = val.read(p, radix);
     if (error != NOT_AN_EXPECTED)
         scan = p;
     return error;
@@ -79,7 +78,7 @@ Error IbmNumberParser::parseNumber(StrScanner &scan, Value &val) const {
     if (!p.expect('\'') || !isValidDigit(*p, radix))
         return NOT_AN_EXPECTED;
 
-    const auto error = val.parseNumber(p, radix);
+    const auto error = val.read(p, radix);
     if (p.expect('\'')) {
         scan = p;
         return error;
@@ -104,7 +103,7 @@ Error NationalNumberParser::parseNumber(StrScanner &scan, Value &val) const {
     if (!p.expect('\'') || !isValidDigit(*p, radix))
         return NOT_AN_EXPECTED;
 
-    const auto error = val.parseNumber(p, radix);
+    const auto error = val.read(p, radix);
     p.expect('\'');  // closing quote is optional
     if (error != NOT_AN_EXPECTED)
         scan = p;
@@ -129,7 +128,7 @@ Error CStyleNumberParser::parseNumber(StrScanner &scan, Value &val) const {
     if (radix == RADIX_NONE)
         return NOT_AN_EXPECTED;
 
-    const auto error = val.parseNumber(p, radix);
+    const auto error = val.read(p, radix);
     if (error != NOT_AN_EXPECTED)
         scan = p;
     return error;
@@ -156,7 +155,7 @@ Error IntelNumberParser::parseNumber(
         StrScanner &scan, Value &val, Radix radix, StrScanner &next) const {
     if (radix == RADIX_NONE)
         return CStyleNumberParser::singleton().parseNumber(scan, val);
-    const auto error = val.parseNumber(scan, radix);
+    const auto error = val.read(scan, radix);
     if (error != NOT_AN_EXPECTED)
         scan = next;
     return error;
@@ -203,7 +202,7 @@ Error ZilogNumberParser::parseNumber(StrScanner &scan, Value &val) const {
     if (radix == RADIX_NONE)
         return IntelNumberParser::singleton().parseNumber(scan, val);
 
-    const auto error = val.parseNumber(p, radix);
+    const auto error = val.read(p, radix);
     if (error != NOT_AN_EXPECTED)
         scan = p;
     return error;
@@ -212,7 +211,7 @@ Error ZilogNumberParser::parseNumber(StrScanner &scan, Value &val) const {
 Error FairchildNumberParser::parseNumber(StrScanner &scan, Value &val) const {
     auto p = scan;
     if (*p == '$' && isxdigit(p[1])) {
-        const auto error = val.parseNumber(++p, RADIX_16);
+        const auto error = val.read(++p, RADIX_16);
         if (error != NOT_AN_EXPECTED)
             scan = p;
         return error;
@@ -284,25 +283,25 @@ char CStyleLetterParser::readLetter(StrScanner &scan, ErrorAt &error, char delim
         // Backslash escape sequence
         if (p.iexpect('x')) {
             // hexadecimal digits.
-            uint16_t n = 0;
+            uint32_t n = 0;
             while (isxdigit(*p)) {
                 n *= 16;
                 n += tonumbert(*p++);
             }
             scan = p;
-            if (ConfigBase::overflowUint8(n))
+            if (n > UINT8_MAX)
                 error.setErrorIf(OVERFLOW_RANGE);
             return n;
         }
         if (isoctal(*p)) {
             // 1~3 octal digits.
-            uint16_t n = 0;
+            uint32_t n = 0;
             for (auto i = 0; isoctal(*p) && i < 3; i++) {
                 n *= 8;
                 n += tonumbert(*p++);
             }
             scan = p;
-            if (ConfigBase::overflowUint8(n))
+            if (n > UINT8_MAX)
                 error.setErrorIf(scan, OVERFLOW_RANGE);
             return n;
         }

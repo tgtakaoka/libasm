@@ -21,6 +21,7 @@
 #include "entry_tlcs90.h"
 #include "insn_base.h"
 #include "reg_tlcs90.h"
+#include "value.h"
 
 namespace libasm {
 namespace tlcs90 {
@@ -40,8 +41,8 @@ struct Operand final : ErrorAt {
     AddrMode mode;
     RegName reg;
     CcName cc;
-    uint16_t val16;
-    Operand() : ErrorAt(), mode(M_NONE), reg(REG_UNDEF), cc(CC_UNDEF), val16(0) {}
+    Value val;
+    Operand() : ErrorAt(), mode(M_NONE), reg(REG_UNDEF), cc(CC_UNDEF), val() {}
 };
 
 struct AsmInsn final : AsmInsnImpl<Config>, EntryInsn {
@@ -68,17 +69,17 @@ struct DisInsn final : DisInsnImpl<Config>, EntryInsn {
         const auto prefix = opCode();
         switch (op.mode) {
         case M_EXT:
-            op.val16 = readUint16();
+            op.val.setUnsigned(readUint16());
             break;
         case M_DIR:
-            op.val16 = readByte();
+            op.val.setUnsigned(readByte());
             break;
         case M_IND:
             op.reg = reg::decodeReg16(prefix);
             break;
         case M_IDX:
             op.reg = reg::decodeIndexReg(prefix);
-            op.val16 = static_cast<int8_t>(readByte());
+            op.val.setSigned(static_cast<int8_t>(readByte()));
             break;
         case M_REG8:
             op.reg = reg::decodeReg8(prefix);

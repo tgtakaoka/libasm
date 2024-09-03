@@ -59,7 +59,7 @@ Error AsmI8048::parseOperand(StrScanner &scan, Operand &op) const {
         return OK;
 
     if (p.expect('#')) {
-        op.val16 = parseExpr16(p, op);
+        op.val = parseInteger(p, op);
         if (op.hasError())
             return op.getError();
         op.mode = M_IMM8;
@@ -163,7 +163,7 @@ Error AsmI8048::parseOperand(StrScanner &scan, Operand &op) const {
     if (indir)
         return op.setError(UNKNOWN_OPERAND);
 
-    op.val16 = parseExpr16(p, op);
+    op.val = parseInteger(p, op);
     if (!op.hasError()) {
         scan = p;
         op.mode = M_AD11;
@@ -180,17 +180,18 @@ constexpr Config::uintptr_t page(Config::uintptr_t addr) {
 }  // namespace
 
 void AsmI8048::encodeAddress(AsmInsn &insn, const AddrMode mode, const Operand &op) const {
+    const auto target = op.val.getUnsigned();
     if (mode == M_AD08) {
         const auto base = insn.address() + 1;
-        if (page(op.val16) != page(base))
+        if (page(target) != page(base))
             insn.setErrorIf(op, OPERAND_TOO_FAR);
-        insn.emitOperand8(op.val16);
+        insn.emitOperand8(target);
         return;
     }
-    if (checkAddr(op.val16))
+    if (checkAddr(target))
         insn.setErrorIf(op, OVERFLOW_RANGE);
-    insn.embed((op.val16 >> 3) & 0xE0);
-    insn.emitOperand8(op.val16);
+    insn.embed((target >> 3) & 0xE0);
+    insn.emitOperand8(target);
 }
 
 void AsmI8048::encodeOperand(AsmInsn &insn, const AddrMode mode, const Operand &op) const {
@@ -211,14 +212,14 @@ void AsmI8048::encodeOperand(AsmInsn &insn, const AddrMode mode, const Operand &
         return;
     case M_IMM8:
     case M_BIT8:
-        if (overflowUint8(op.val16))
+        if (op.val.overflowUint8())
             insn.setErrorIf(op, OVERFLOW_RANGE);
-        insn.emitOperand8(op.val16);
+        insn.emitOperand8(op.val.getUnsigned());
         return;
     case M_BITN:
-        if (op.val16 >= 8)
+        if (op.val.overflow(7))
             insn.setErrorIf(op, ILLEGAL_BIT_NUMBER);
-        insn.embed((op.val16 & 7) << 5);
+        insn.embed((op.val.getUnsigned() & 7) << 5);
         return;
     case M_F:
         insn.embed(op.reg == REG_F1 ? 0x20 : 0);

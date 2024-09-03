@@ -57,17 +57,17 @@ AsmTms9900::AsmTms9900(const ValueParser::Plugins &plugins)
 
 void AsmTms9900::encodeRelative(AsmInsn &insn, const Operand &op) const {
     const auto base = insn.address() + 2;
-    const auto target = op.getError() ? base : op.val16;
+    const auto target = op.getError() ? base : op.val.getUnsigned();
     insn.setErrorIf(op, checkAddr(target, true));
     const auto delta = branchDelta(base, target, insn, op) / 2;
-    if (overflowInt8(delta))
+    if (overflowDelta(delta, 8))
         insn.setErrorIf(op, OPERAND_TOO_FAR);
     insn.embed(static_cast<uint8_t>(delta));
 }
 
 void AsmTms9900::encodeCruOffset(AsmInsn &insn, const Operand &op) const {
-    const int16_t offset = static_cast<int16_t>(op.val16);
-    if (overflowInt16(offset))
+    const auto offset = op.val.getSigned();
+    if (op.val.overflowInt16())
         insn.setErrorIf(op, OVERFLOW_RANGE);
     insn.embed(static_cast<uint8_t>(offset));
 }
@@ -87,15 +87,15 @@ void AsmTms9900::encodeModeReg(AsmInsn &insn, const Operand &op, AddrMode mode) 
         break;
     case M_SYBL:
         opc = (2 << 4);
-        if (op.getError() != UNDEFINED_SYMBOL)
-            insn.setErrorIf(op, checkAddr(op.val16, !insn.byteOp()));
-        insn.emitOperand16(op.val16);
+        //       if (op.getError() != UNDEFINED_SYMBOL)
+        insn.setErrorIf(op, checkAddr(op.val.getUnsigned(), !insn.byteOp()));
+        insn.emitOperand16(op.val.getUnsigned());
         break;
     default:  // M_INDX
         if (op.reg == REG_R0)
             insn.setErrorIf(op, REGISTER_NOT_ALLOWED);
         opc |= (2 << 4);
-        insn.emitOperand16(op.val16);
+        insn.emitOperand16(op.val.getUnsigned());
         break;
     }
     switch (mode) {
@@ -116,10 +116,10 @@ void AsmTms9900::encodeModeReg(AsmInsn &insn, const Operand &op, AddrMode mode) 
 
 void AsmTms9900::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode) const {
     insn.setErrorIf(op);
-    auto val16 = op.val16;
+    auto val16 = op.val.getUnsigned();
     switch (mode) {
     case M_IMM:
-        insn.emitOperand16(op.val16);
+        insn.emitOperand16(val16);
         break;
     case M_REG:
         insn.embed(encodeRegNumber(op.reg));
@@ -142,14 +142,16 @@ void AsmTms9900::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode) 
         encodeCruOffset(insn, op);
         break;
     case M_CNT:
-        if (val16 == 0 && !op.getError()) {
-            insn.setErrorIf(op, OPERAND_NOT_ALLOWED);
-        } else if (val16 == 16) {
+        // 0 < op.val <= 16
+        if (op.val.isZero() || op.val.overflow(16))
+            insn.setErrorIf(op, OVERFLOW_RANGE);
+        if (val16 == 16)
             val16 = 0;
-        }
-        /* Fall-through */
+        insn.embed((val16 & 0xF) << 6);
+        break;
     case M_XOP:
-        if (val16 >= 16)
+        // 0 <= op.val < 16
+        if (op.val.overflow(15))
             insn.setErrorIf(op, OVERFLOW_RANGE);
         insn.embed((val16 & 0xF) << 6);
         break;
@@ -159,10 +161,11 @@ void AsmTms9900::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode) 
                 insn.setErrorIf(op, REGISTER_NOT_ALLOWED);
             break;
         }
-        if (val16 == 0 && !op.getError()) {
+        if (op.val.isZero()) {
             insn.setErrorIf(op, OPERAND_NOT_ALLOWED);
-        } else if (val16 >= 16)
+        } else if (op.val.overflow(15)) {
             insn.setErrorIf(op, OVERFLOW_RANGE);
+        }
         insn.embed((val16 & 0xF) << 4);
         break;
     case M_CNT2:
@@ -172,17 +175,17 @@ void AsmTms9900::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode) 
                 insn.setErrorIf(op, REGISTER_NOT_ALLOWED);
             break;
         }
-        if (val16 == 0 && !op.getError())
+        if (op.val.isZero())
             insn.setErrorIf(op, OPERAND_NOT_ALLOWED);
         /* Fall-through */
     case M_BIT2:
-        if (val16 >= 16)
+        if (op.val.overflow(15))
             insn.setErrorIf(op, OVERFLOW_RANGE);
         insn.embedPostfix((val16 & 0xF) << 6);
         break;
     case M_RTWP:
         // 0,1,2,4 are acceptable.
-        if (val16 == 3 || val16 > 4)
+        if (op.val.isNegative() || val16 == 3 || val16 > 4)
             insn.setErrorIf(op, OPERAND_NOT_ALLOWED);
         insn.embed(val16 & 7);
         break;
@@ -207,7 +210,7 @@ Error AsmTms9900::parseOperand(StrScanner &scan, Operand &op) const {
         return OK;
     }
     if (p.expect('@')) {
-        op.val16 = parseExpr16(p, op);
+        op.val = parseInteger(p, op);
         if (op.hasError())
             return op.getError();
         if (p.skipSpaces().expect('(')) {
@@ -233,7 +236,7 @@ Error AsmTms9900::parseOperand(StrScanner &scan, Operand &op) const {
         return OK;
     }
 
-    op.val16 = parseExpr16(p, op);
+    op.val = parseInteger(p, op);
     if (op.hasError())
         return op.getError();
     op.mode = M_IMM;

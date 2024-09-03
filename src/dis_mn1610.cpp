@@ -165,7 +165,8 @@ void DisMn1610::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) cons
             outRegister(out, decodeSegment((opc >> 4) & 3), mode);
         break;
     case M_IABS:
-        outAbsAddr(out.letter('('), insn.readUint16(), 16).letter(')');
+        out.letter('(');
+        outAbsAddr(out, insn.readUint16(), 16).letter(')');
         break;
     case M_COP:
         outConditionCode(out, decodeCop(opc >> 3));

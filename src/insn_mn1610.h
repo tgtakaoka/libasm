@@ -21,6 +21,7 @@
 #include "entry_mn1610.h"
 #include "insn_base.h"
 #include "reg_mn1610.h"
+#include "value.h"
 
 namespace libasm {
 namespace mn1610 {
@@ -36,8 +37,8 @@ struct Operand final : ErrorAt {
     AddrMode mode;
     RegName reg;
     CcName cc;
-    uint32_t val32;
-    Operand() : mode(M_NONE), reg(REG_UNDEF), cc(CC_UNDEF), val32(0) {}
+    Value val;
+    Operand() : mode(M_NONE), reg(REG_UNDEF), cc(CC_UNDEF), val() {}
 };
 
 struct AsmInsn final : AsmInsnImpl<Config>, EntryInsn {

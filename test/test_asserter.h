@@ -46,9 +46,9 @@ struct TestAsserter {
     void isNull(const char *file, int line, const char *message, const void *actual);
     void isNotNull(const char *file, int line, const char *message, const void *actual);
 
-    /** assert uint32_t */
+    /** assert uint64_t */
     void equals(
-            const char *file, int line, const char *message, uint32_t expected, uint32_t actual);
+            const char *file, int line, const char *message, uint64_t expected, uint64_t actual);
 
     /** assert const char* */
     void equals(const char *file, int line, const char *message, const char *expected,

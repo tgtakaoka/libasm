@@ -6,3 +6,4 @@ build test_reg_base.o:     cxx ${root}/test/unit/test_reg_base.cpp
 build test_str_buffer.o:   cxx ${root}/test/unit/test_str_buffer.cpp
 build test_str_scanner.o:  cxx ${root}/test/unit/test_str_scanner.cpp
 build test_unit_helper.o:  cxx ${root}/test/unit/test_unit_helper.cpp
+build test_value.o:        cxx ${root}/test/unit/test_value.cpp

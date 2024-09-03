@@ -105,10 +105,9 @@ Error AsmTms7000::parseOperand(StrScanner &scan, Operand &op) const {
 
     auto p = scan;
     if (p.expect('%')) {
-        const auto val = parseExpr(p, op);
+        op.val = parseInteger(p, op);
         if (op.hasError())
             return op.getError();
-        op.val16 = val.getUnsigned();
         if (hasIndexB(p, op)) {
             op.mode = M_BIMM;
             scan = p;
@@ -116,7 +115,7 @@ Error AsmTms7000::parseOperand(StrScanner &scan, Operand &op) const {
         }
         if (op.hasError())
             return op.getError();
-        op.mode = val.overflowUint8() ? M_IM16 : M_IM8;
+        op.mode = op.val.overflowUint8() ? M_IM16 : M_IM8;
         scan = p;
         return OK;
     }
@@ -127,10 +126,12 @@ Error AsmTms7000::parseOperand(StrScanner &scan, Operand &op) const {
         return op.getError();
     if (reg != REG_UNDEF) {
         if (!indir) {
-            op.mode = toAddrMode(reg, op.val16);
+            uint16_t regno = 0;
+            op.mode = toAddrMode(reg, regno);
+            op.val.setUnsigned(regno);
         } else if (isRegName(reg)) {
             op.mode = M_IDIR;
-            op.val16 = toRegNum(reg);
+            op.val.setUnsigned(toRegNum(reg));
         } else {
             return op.setError(UNKNOWN_OPERAND);
         }
@@ -143,10 +144,9 @@ Error AsmTms7000::parseOperand(StrScanner &scan, Operand &op) const {
         indir = p.skipSpaces().expect('*');
     if (abs && indir)
         return op.setError(UNKNOWN_OPERAND);
-    const auto val = parseExpr(p.skipSpaces(), op);
+    op.val = parseExpr(p.skipSpaces(), op);
     if (op.hasError())
         return op.getError();
-    op.val16 = val.getUnsigned();
     if (hasIndexB(p, op)) {
         if (!indir && abs) {
             op.mode = M_BIDX;
@@ -156,21 +156,18 @@ Error AsmTms7000::parseOperand(StrScanner &scan, Operand &op) const {
     } else if (op.hasError()) {
         return op.getError();
     } else if (indir) {
-        if (val.getUnsigned() < 0x100) {
-            op.mode = M_IDIR;
-        } else {
+        if (op.val.overflow(UINT8_MAX))
             return op.setError(OVERFLOW_RANGE);
-        }
+        op.mode = M_IDIR;
     } else if (abs) {
         op.mode = M_ABS;
     } else {
-        const auto v = val.getUnsigned();
-        if (v < 0x100) {
-            op.mode = M_ADRR;
-        } else if (v < 0x200) {
+        if (op.val.overflow(0x1FF)) {
+            op.mode = M_REL;
+        } else if (op.val.overflow(0xFF)) {
             op.mode = M_ADRP;
         } else {
-            op.mode = M_REL;
+            op.mode = M_ADRR;
         }
     }
     scan = p;
@@ -180,9 +177,9 @@ Error AsmTms7000::parseOperand(StrScanner &scan, Operand &op) const {
 void AsmTms7000::emitRelative(AsmInsn &insn, const Operand &op) const {
     const auto len = insn.length();
     const auto base = insn.address() + (len ? len + 1 : 2);
-    const auto target = op.getError() ? base : op.val16;
+    const auto target = op.getError() ? base : op.val.getUnsigned();
     const auto delta = branchDelta(base, target, insn, op);
-    if (overflowInt8(delta))
+    if (overflowDelta(delta, 8))
         insn.setErrorIf(op, OPERAND_TOO_FAR);
     insn.emitOperand8(delta);
 }
@@ -194,7 +191,7 @@ void AsmTms7000::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode) 
     case M_PN:
     case M_IM8:
     case M_IDIR:
-        insn.emitOperand8(op.val16);
+        insn.emitOperand8(op.val.getUnsigned());
         break;
     case M_REL:
         emitRelative(insn, op);
@@ -203,13 +200,13 @@ void AsmTms7000::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode) 
     case M_BIDX:
     case M_IM16:
     case M_BIMM:
-        insn.emitOperand16(op.val16);
+        insn.emitOperand16(op.val.getUnsigned());
         break;
     case M_TRAP:
-        if (op.val16 >= 24) {
+        if (op.val.overflow(23)) {
             insn.setError(op, OVERFLOW_RANGE);
         } else {
-            insn.setOpCode(insn.opCode() + 23 - op.val16);
+            insn.setOpCode(insn.opCode() + 23 - op.val.getUnsigned());
         }
         break;
     default:

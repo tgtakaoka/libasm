@@ -20,6 +20,7 @@
 #include "config_cdp1802.h"
 #include "entry_cdp1802.h"
 #include "insn_base.h"
+#include "value.h"
 
 namespace libasm {
 namespace cdp1802 {
@@ -31,8 +32,8 @@ struct EntryInsn : EntryInsnPrefix<Config, Entry> {
 
 struct Operand final : ErrorAt {
     AddrMode mode;
-    uint16_t val16;
-    Operand() : mode(M_NONE), val16(0) {}
+    Value val;
+    Operand() : mode(M_NONE), val() {}
 };
 
 struct AsmInsn final : AsmInsnImpl<Config>, EntryInsn {

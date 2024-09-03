@@ -20,6 +20,7 @@
 #include "config_mc6805.h"
 #include "entry_mc6805.h"
 #include "insn_base.h"
+#include "value.h"
 
 namespace libasm {
 namespace mc6805 {
@@ -33,8 +34,8 @@ struct EntryInsn : EntryInsnBase<Config, Entry> {
 struct Operand final : ErrorAt {
     AddrMode mode;
     int8_t size;
-    uint16_t val16;
-    Operand() : mode(M_NONE), size(0), val16(0) {}
+    Value val;
+    Operand() : mode(M_NONE), size(0), val() {}
 };
 
 struct AsmInsn final : AsmInsnImpl<Config>, EntryInsn {

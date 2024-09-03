@@ -58,58 +58,29 @@ Error strToNumber(StrScanner &scan, Radix radix, VAL_T &value) {
 }
 }  // namespace
 
-Error Value::parseNumber(StrScanner &scan, Radix radix, uint32_t &value) {
-    return strToNumber<uint32_t, UINT32_MAX>(scan, radix, value);
+Error Value::read(StrScanner &scan, Radix radix, unsigned_t &value) {
+    return strToNumber<unsigned_t, UNSIGNED_MAX>(scan, radix, value);
 }
 
-#ifndef LIBASM_ASM_NOFLOAT
-Error Value::parseNumber(StrScanner &scan, Radix radix, uint64_t &value) {
-    return strToNumber<uint64_t, UINT64_MAX>(scan, radix, value);
-}
-#endif
-
-Error Value::parseNumber(StrScanner &scan, Radix radix) {
-#ifdef LIBASM_ASM_NOFLOAT
-    _type = V_UINT32;
-    return parseNumber(scan, radix, _uint32);
-#else
-    const auto save = scan;
-    auto type = V_UINT32;
-    auto error = parseNumber(scan, radix, _uint32);
-    if (error == OVERFLOW_RANGE) {
-        scan = save;
-        type = V_UINT64;
-        error = parseNumber(scan, radix, _uint64);
-    }
-    if (error == OK) {
-        _type = type;
-        return OK;
-    }
-    return NOT_AN_EXPECTED;
-#endif
+Error Value::read(StrScanner &scan, Radix radix) {
+    const auto error = read(scan, radix, _unsigned);
+    _type = V_UNSIGNED;
+    if (error)
+        clear();
+    return error;
 }
 
 const char *Value::str() const {
 #ifdef LIBASM_DEBUG_VALUE
     static char buf[80];
     StrBuffer out{buf, sizeof(buf)};
-    if (_type == V_UINT32 || _type == V_INT32) {
-        out.text(_type == V_UINT32 ? "<u32>" : "<i32>").hex(_uint32).letter('(');
-        const auto negative = (_type == V_INT32 && _int32 < 0);
-        auto u32 = negative ? -_int32 : _uint32;
-        if (negative)
-            out.letter('-');
-        out.dec(u32).letter(')');
+    if (_type == V_UNSIGNED) {
+        out.text("<u>").hex(_unsigned).letter('(').dec(_unsigned).letter(')');
+    } else if (_type == V_SIGNED) {
+        out.text("<s>").hex(_signed).letter('(').dec(_signed).letter(')');
 #ifndef LIBASM_ASM_NOFLOAT
-    } else if (_type == V_UINT64 || _type == V_INT64) {
-        out.text(_type == V_UINT64 ? "<u64>" : "<i64>").hex(_uint64).letter('(');
-        const auto negative = (_type == V_INT64 && _int64 < 0);
-        auto u64 = negative ? -_int64 : _uint64;
-        if (negative)
-            out.letter('-');
-        out.dec(u64).letter(')');
-    } else if (_type == V_FLOAT64) {
-        out.text("<f64>").hex(_uint64).letter('(').float64(_float64).letter(')');
+    } else if (_type == V_FLOAT) {
+        out.text("<f>").hex(_unsigned).letter('(').float64(_float).letter(')');
 #endif
     } else {
         return "<undef>";
@@ -120,81 +91,222 @@ const char *Value::str() const {
 #endif
 }
 
-#ifndef LIBASM_ASM_NOFLOAT
-int64_t Value::getInt64() const {
-    if (isSigned())
-        return getSigned();
-    if (isUnsigned())
-        return getUnsigned();
-    return static_cast<int64_t>(_uint64);
+void Value::setS(signed_t s) {
+    if (s >= 0) {
+        setU(static_cast<unsigned_t>(s));
+    } else {
+        _signed = s;
+        _type = V_SIGNED;
+    }
 }
 
-double Value::getFloat() const {
-    if (isInt32() || _type == V_INT64)
-        return static_cast<double>(getInt64());
-    if (_type == V_UINT64)
-        return static_cast<double>(_uint64);
-    return _float64;
+void Value::setU(unsigned_t u) {
+    _unsigned = u;
+    _type = V_UNSIGNED;
 }
+
+Value &Value::setSigned(int32_t s) {
+    if (s >= 0) {
+        setU(static_cast<uint32_t>(s));
+    } else {
+        setS(s);
+    }
+    return *this;
+}
+
+Value &Value::setUnsigned(uint32_t u) {
+    setU(u);
+    return *this;
+}
+
+Value &Value::setInteger(signed_t s) {
+    setS(s);
+    return *this;
+}
+
+Value &Value::setUinteger(unsigned_t u) {
+    setU(u);
+    return *this;
+}
+
+#ifdef LIBASM_ASM_NOFLOAT
+
+bool Value::isFloat() const {
+    return false;
+}
+
+#else
+
+bool Value::isFloat() const {
+    return _type == V_FLOAT;
+}
+
+Value::float_t Value::getFloat() const {
+    if (isUnsigned())
+        return static_cast<float_t>(_unsigned);
+    if (isSigned())
+        return static_cast<float_t>(_signed);
+    return _float;
+}
+
+Value &Value::setFloat(float_t f) {
+    _float = f;
+    _type = V_FLOAT;
+    return *this;
+}
+
 #endif
+
+Value &Value::clear() {
+    _unsigned = 0;
+    _type = V_UNDEF;
+    return *this;
+}
+
+bool Value::overflowInt8() const {
+    return overflow(INT8_MAX, INT8_MIN);
+}
+
+bool Value::overflowUint8() const {
+    return overflow(UINT8_MAX, INT8_MIN);
+}
+
+bool Value::overflowInt16() const {
+    return overflow(INT16_MAX, INT16_MIN);
+}
+
+bool Value::overflowUint16() const {
+    return overflow(UINT16_MAX, INT16_MIN);
+}
+
+bool Value::overflowInt32() const {
+#ifdef LIBASM_ASM_NOFLOAT
+    if (isUnsigned())
+        return _unsigned > INT32_MAX;
+    return false;
+#else
+    if (isUnsigned()) {
+        return _unsigned > INT32_MAX;
+    } else {
+        return _signed > INT32_MAX || _signed < INT32_MIN;
+    }
+#endif
+}
+
+bool Value::overflowUint32() const {
+#ifdef LIBASM_ASM_NOFLOAT
+    return false;
+#else
+    if (isUnsigned()) {
+        return _unsigned > UINT32_MAX;
+    } else {
+        return _signed > UINT32_MAX || _signed < INT32_MIN;
+    }
+#endif
+}
+
+bool Value::overflow(uint32_t max, int32_t min) const {
+    if (overflowUint32()) {
+        return true;
+    } else if (isUnsigned()) {
+        const auto u = static_cast<uint32_t>(_unsigned);
+        return u > max || (min > 0 && u < static_cast<uint32_t>(min));
+    } else if (_signed >= 0) {
+        const auto u = static_cast<uint32_t>(_signed);
+        return u > max || (min > 0 && u < static_cast<uint32_t>(min));
+    } else {
+        const auto s = static_cast<int32_t>(_signed);
+        return (max <= INT32_MAX && s > static_cast<int32_t>(max)) || s < min;
+    }
+}
 
 bool Value::isZero() const {
     if (isUndefined())
         return false;
 #ifdef LIBASM_ASM_NOFLOAT
-    return getUnsigned() == 0;
+    return _unsigned == 0;
 #else
-    if (isInt32())
-        return getUnsigned() == 0;
-    if (isInt64())
-        return getInt64() == 0;
-    return _float64 == 0;
+    if (isInteger())
+        return _unsigned == 0;
+    return _float == 0.0;
+#endif
+}
+
+bool Value::isNegative() const {
+#ifdef LIBASM_ASM_NOFLOAT
+    return isSigned() && _signed < 0;
+#else
+    return (isSigned() && _signed < 0) || (isFloat() && getFloat() < 0);
 #endif
 }
 
 bool Value::negateOverflow() const {
-    return isUnsigned() && getUnsigned() > static_cast<uint32_t>(INT32_MIN);
+#ifdef LIBASM_ASM_NOFLOAT
+    if (isUnsigned())
+        return _unsigned > static_cast<unsigned_t>(SIGNED_MAX);
+    if (isSigned())
+        return _signed == SIGNED_MIN;
+#endif
+    return false;
 }
 
 bool Value::operator==(const Value &rhs) const {
-    return getUnsigned() == rhs.getUnsigned();
+    if (isInteger() && rhs.isInteger())
+        return _unsigned == rhs._unsigned;
+#ifdef LIBASM_ASM_NOFLOAT
+    return false;
+#else
+    return getFloat() == rhs.getFloat();
+#endif
 }
 
 bool Value::operator<(const Value &rhs) const {
-    if (isUnsigned() && rhs.isUnsigned()) {
-        return getUnsigned() < rhs.getUnsigned();
-    } else if (isSigned() && rhs.isSigned()) {
-        return getSigned() < rhs.getSigned();
-    } else if (isSigned()) {
-        const auto v = getSigned();
-        return v < 0 || static_cast<uint32_t>(v) < rhs.getUnsigned();
+    if (isInteger() && rhs.isInteger()) {
+        if (isUnsigned()) {
+            if (rhs.isUnsigned())
+                return _unsigned < rhs._unsigned;
+            const auto s = rhs._signed;
+            return s >= 0 && _unsigned < static_cast<unsigned_t>(s);
+        } else {
+            if (rhs.isSigned())
+                return _signed < rhs._signed;
+            const auto u = rhs._unsigned;
+            return _signed < 0 || static_cast<unsigned_t>(_signed) < u;
+        }
     } else {
-        const auto v = rhs.getSigned();
-        return v >= 0 && getUnsigned() < static_cast<uint32_t>(v);
+#ifdef LIBASM_ASM_NOFLOAT
+        return false;
+#else
+        return getFloat() < rhs.getFloat();
+#endif
     }
 }
 
-Value Value::operator-() const {
+Value::operator bool() const {
+    return isInteger() && _unsigned;
+};
+
+bool Value::operator!() const {
+    return isInteger() && _unsigned == 0;
+};
+
+bool Value::operator&&(const Value &rhs) const {
+    return !!*this && !!rhs;
+};
+
+bool Value::operator||(const Value &rhs) const {
+    return !!*this || !!rhs;
+};
+
+Value Value::negate() const {
     Value v;
-    if (isSigned()) {
-        const auto i32 = getSigned();
-        if (i32 == INT32_MIN) {
-            v.setUnsigned(static_cast<uint32_t>(INT32_MIN));
+    if (isInteger()) {
+        if (isNegative()) {
+            v.setU(static_cast<unsigned_t>(-_signed));
         } else {
-            v.setSigned(-i32);
-        }
-    } else if (isUnsigned()) {
-        const auto u32 = getUnsigned();
-        if (u32 <= static_cast<uint32_t>(INT32_MIN)) {
-            v.setSigned(-static_cast<int32_t>(u32));
-#ifndef LIBASM_ASM_NOFLOAT
-        } else {
-            v.setInt64(-static_cast<int64_t>(u32));
-#endif
+            v.setS(-static_cast<signed_t>(_unsigned));
         }
 #ifndef LIBASM_ASM_NOFLOAT
-    } else if (isInt64()) {
-        v.setInt64(-getInt64());
     } else {
         v.setFloat(-getFloat());
 #endif
@@ -202,17 +314,38 @@ Value Value::operator-() const {
     return v;
 }
 
+Value::unsigned_t Value::absolute() const {
+    return isNegative() ? static_cast<unsigned_t>(-_signed) : _unsigned;
+}
+
 Value Value::operator+(const Value &rhs) const {
     Value v;
-    if (isInt32() && rhs.isInt32()) {
-        if (isSigned() || rhs.isSigned()) {
-            v.setSigned(getSigned() + rhs.getSigned());
+    if (isInteger() && rhs.isInteger()) {
+        const auto l = absolute();
+        const auto r = rhs.absolute();
+        if (isNegative() == rhs.isNegative()) {
+            const auto a = l + r;
+            if (isNegative()) {
+                v.setS(-static_cast<signed_t>(a));
+            } else {
+                v.setU(a);
+            }
+        } else if (l >= r) {
+            const auto u = l - r;
+            if (isNegative()) {
+                v.setS(-static_cast<signed_t>(u));
+            } else {
+                v.setU(u);
+            }
         } else {
-            v.setUnsigned(getUnsigned() + rhs.getUnsigned());
+            const auto u = r - l;
+            if (isNegative()) {
+                v.setU(u);
+            } else {
+                v.setS(-static_cast<signed_t>(u));
+            }
         }
 #ifndef LIBASM_ASM_NOFLOAT
-    } else if (isInt64() && rhs.isInt64()) {
-        v.setInt64(getInt64() + rhs.getInt64());
     } else {
         v.setFloat(getFloat() + rhs.getFloat());
 #endif
@@ -221,36 +354,19 @@ Value Value::operator+(const Value &rhs) const {
 }
 
 Value Value::operator-(const Value &rhs) const {
-    Value v;
-    if (isInt32() && rhs.isInt32()) {
-        if (isSigned() || rhs.isSigned()) {
-            v.setSigned(getSigned() - rhs.getSigned());
-        } else if (getUnsigned() < rhs.getUnsigned()) {
-            v.setSigned(getUnsigned() - rhs.getUnsigned());
-        } else {
-            v.setUnsigned(getUnsigned() - rhs.getUnsigned());
-        }
-#ifndef LIBASM_ASM_NOFLOAT
-    } else if (isInt64() && rhs.isInt64()) {
-        v.setInt64(getInt64() - rhs.getInt64());
-    } else {
-        v.setFloat(getFloat() - rhs.getFloat());
-#endif
-    }
-    return v;
+    return *this + rhs.negate();
 }
 
 Value Value::operator*(const Value &rhs) const {
     Value v;
-    if (isInt32() && rhs.isInt32()) {
-        if (isSigned() || rhs.isSigned()) {
-            v.setSigned(getSigned() * rhs.getSigned());
+    if (isInteger() && rhs.isInteger()) {
+        const auto p = absolute() * rhs.absolute();
+        if (isNegative() == rhs.isNegative()) {
+            v.setU(p);
         } else {
-            v.setUnsigned(getUnsigned() * rhs.getUnsigned());
+            v.setS(-static_cast<signed_t>(p));
         }
 #ifndef LIBASM_ASM_NOFLOAT
-    } else if (isInt64() && rhs.isInt64()) {
-        v.setInt64(getInt64() * rhs.getInt64());
     } else {
         v.setFloat(getFloat() * rhs.getFloat());
 #endif
@@ -260,17 +376,16 @@ Value Value::operator*(const Value &rhs) const {
 
 Value Value::operator/(const Value &rhs) const {
     Value v;
-    if (rhs.isUndefined()) {
-        v = *this;
-    } else if (isInt32() && rhs.isInt32()) {
-        if (isSigned() || rhs.isSigned()) {
-            v.setSigned(getSigned() / rhs.getSigned());
+    if (rhs.isZero() || rhs.isUndefined()) {
+        ;  // divide by zero
+    } else if (isInteger() && rhs.isInteger()) {
+        const auto q = absolute() / rhs.absolute();
+        if (isNegative() == rhs.isNegative()) {
+            v.setU(q);
         } else {
-            v.setUnsigned(getUnsigned() / rhs.getUnsigned());
+            v.setS(-static_cast<signed_t>(q));
         }
 #ifndef LIBASM_ASM_NOFLOAT
-    } else if (isInt64() && rhs.isInt64()) {
-        v.setInt64(getInt64() / rhs.getInt64());
     } else {
         v.setFloat(getFloat() / rhs.getFloat());
 #endif
@@ -280,50 +395,92 @@ Value Value::operator/(const Value &rhs) const {
 
 Value Value::operator%(const Value &rhs) const {
     Value v;
-    if (rhs.isUndefined()) {
-        v = *this;
-    } else if (isInt32() && rhs.isInt32()) {
-        if (isSigned() || rhs.isSigned()) {
-            v.setSigned(getSigned() % rhs.getSigned());
+    if (rhs.isZero() || rhs.isUndefined()) {
+        ;  // divide by zero
+    } else if (isInteger() && rhs.isInteger()) {
+        const auto r = absolute() % rhs.absolute();
+        if (isNegative()) {
+            v.setS(-static_cast<signed_t>(r));
         } else {
-            v.setUnsigned(getUnsigned() % rhs.getUnsigned());
+            v.setU(r);
         }
-#ifndef LIBASM_ASM_NOFLOAT
-    } else if (isInt64() && rhs.isInt64()) {
-        v.setInt64(getInt64() % rhs.getInt64());
-    } else {
-        v.setFloat(fmod(getFloat(), rhs.getFloat()));
-#endif
+    }
+    // not defined for floating point number
+    return v;
+}
+
+Value Value::operator~() const {
+    Value v;
+    if (isInteger()) {
+        // logical operator set signed value for spurious overflow on lower precision.
+        v.setS(~_unsigned);
+    }
+    // not defined for floating point number
+    return v;
+}
+
+Value Value::operator&(const Value &rhs) const {
+    Value v;
+    if (isInteger() && rhs.isInteger()) {
+        // logical operator set signed value for spurious overflow on lower precision.
+        v.setS(_unsigned & rhs._unsigned);
+    }
+    return v;
+}
+
+Value Value::operator|(const Value &rhs) const {
+    Value v;
+    if (isInteger() && rhs.isInteger()) {
+        // logical operator set signed value for spurious overflow on lower precision.
+        v.setS(_unsigned | rhs._unsigned);
+    }
+    return v;
+}
+
+Value Value::operator^(const Value &rhs) const {
+    Value v;
+    if (isInteger() && rhs.isInteger()) {
+        // logical operator set signed value for spurious overflow on lower precision.
+        v.setS(_unsigned ^ rhs._unsigned);
     }
     return v;
 }
 
 Value Value::operator<<(const Value &rhs) const {
-    const auto count = rhs.getUnsigned();
     Value v;
-    v.setUnsigned(count < 32 ? getUnsigned() << count : 0);
-    return v;
-}
-
-Value Value::operator>>(const Value &rhs) const {
-    const auto count = rhs.getUnsigned();
-    Value v;
-    if (isSigned()) {
-        const auto msb = static_cast<uint32_t>(INT32_MIN);
-        auto value = getUnsigned();
-        for (uint32_t i = 0; i < count && i < 32; ++i) {
-            value >>= 1;
-            value |= msb;
+    if (isInteger() && rhs.isInteger()) {
+        const auto count = rhs.getUnsigned();
+        if (count >= INTEGER_BITS) {
+            v.setU(0);
+        } else {
+            v.setU(_unsigned << count);
         }
-        v.setUnsigned(value);
-    } else {
-        v.setUnsigned(count < 32 ? getUnsigned() >> count : 0);
     }
     return v;
 }
 
+Value Value::operator>>(const Value &rhs) const {
+    Value v;
+    if (isInteger() && rhs.isInteger()) {
+        const auto count = rhs.getUnsigned();
+        if (count >= INTEGER_BITS) {
+            if (isSigned() && isNegative()) {
+                v.setS(-1);
+            } else {
+                v.setU(0);
+            }
+        } else if (isNegative()) {
+            v.setS(_signed >> count);
+        } else {
+            v.setU(_unsigned >> count);
+        }
+    }
+    return v;
+}
+
+namespace {
 template <typename BASE>
-static BASE power(BASE base, uint32_t exp) {
+BASE power(BASE base, Value::unsigned_t exp) {
     BASE prod = 1;
     while (true) {
         if (exp & 1)
@@ -333,20 +490,18 @@ static BASE power(BASE base, uint32_t exp) {
         base *= base;
     }
 }
+}  // namespace
 
 Value Value::exponential(const Value &rhs) const {
     Value v;
-    if (isInt32() && rhs.isInt32()) {
-        if (isSigned() && getSigned() < 0) {
-            v.setSigned(power<int32_t>(getSigned(), rhs.getUnsigned()));
+    if (isInteger() && rhs.isInteger()) {
+        if (isNegative()) {
+            v.setS(power(_signed, rhs._unsigned));
         } else {
-            v.setUnsigned(power<uint32_t>(getUnsigned(), rhs.getUnsigned()));
+            v.setU(power(_unsigned, rhs._unsigned));
         }
-#ifndef LIBASM_ASM_NOFLOAT
-    } else {
-        v.setFloat(pow(getFloat(), rhs.getFloat()));
-#endif
     }
+    // not defined for floating point number
     return v;
 }
 

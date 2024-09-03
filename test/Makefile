@@ -38,7 +38,7 @@ clean-test:
 vpath %.cpp ../src
 vpath %.cpp ../driver
 
-CXXFLAGS = -std=c++14 -Wall -O $(DEBUG_FLAGS)
+CXXFLAGS = -std=c++14 -Wall -O $(DEBUG_FLAGS) -DLIBASM_DEBUG_VALUE
 CPPFLAGS = -I../src -I../driver -MD -MF $@.d
 
 OBJS_test = \
@@ -48,14 +48,14 @@ OBJS_asm  = \
     insn_base.o value.o value_parser.o parsers.o operators.o text_common.o
 OBJS_dis  = \
     dis_base.o config_base.o formatters.o reg_base.o test_dis_helper.o \
-    insn_base.o value_formatter.o text_common.o
+    insn_base.o value.o value_formatter.o text_common.o
 OBJS_expr = \
     config_base.o test_expr_helper.o formatters.o operators.o parsers.o \
     insn_base.o value_formatter.o value.o value_parser.o text_common.o
 OBJS_gen  = \
     gen_driver.o test_generator.o tokenized_text.o dis_formatter.o \
     config_base.o insn_base.o dis_base.o formatters.o reg_base.o \
-    value_formatter.o list_formatter.o text_common.o
+    value_formatter.o value.o list_formatter.o text_common.o
 
 TEST_OBJS = $(ARCHS:%=test_asm_%.o) $(ARCHS:%=test_dis_%.o)
 EXPR_OBJS = $(EXPRS:%=test_expr_%.o)

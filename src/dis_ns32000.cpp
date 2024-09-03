@@ -365,7 +365,7 @@ void DisNs32000::decodeGeneric(DisInsn &insn, StrBuffer &out, AddrMode mode, Opr
     case 0x12:
         reg = REG_SB;
         goto m_mrel;
-    m_mrel :  // M_MREL
+    m_mrel:  // M_MREL
     {
         const auto dispError = readDisplacement(insn, disp);
         if (readDisplacement(insn, disp2))
@@ -387,8 +387,8 @@ void DisNs32000::decodeGeneric(DisInsn &insn, StrBuffer &out, AddrMode mode, Opr
     case 0x15:  // M_ABS
         if (readDisplacement(insn, disp))
             insn.setErrorIf(out, disp);
-        // Check absolute address is in 24bit unsigned integer range.
-        if (overflowUint(disp.val32, addressWidth()))
+        // Check address is in 24bit signed integer range.
+        if (disp.val32 < INT32_C(-0x80'0000) || disp.val32 > INT32_C(0x00FF'FFFF))
             insn.setErrorIf(out, OVERFLOW_RANGE);
         outAbsAddr(out.letter('@'), disp.val32, insn.getError() == OVERFLOW_RANGE ? -32 : 0);
         break;

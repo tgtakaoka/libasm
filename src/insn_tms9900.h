@@ -21,6 +21,7 @@
 #include "entry_tms9900.h"
 #include "insn_base.h"
 #include "reg_tms9900.h"
+#include "value.h"
 
 namespace libasm {
 namespace tms9900 {
@@ -34,8 +35,8 @@ struct EntryInsn : EntryInsnPostfix<Config, Entry> {
 struct Operand final : ErrorAt {
     AddrMode mode;
     RegName reg;
-    uint16_t val16;
-    Operand() : mode(M_NONE), reg(REG_UNDEF), val16(0) {}
+    Value val;
+    Operand() : mode(M_NONE), reg(REG_UNDEF), val() {}
 };
 
 struct AsmInsn final : AsmInsnImpl<Config>, EntryInsn {

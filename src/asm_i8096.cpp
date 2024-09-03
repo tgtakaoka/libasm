@@ -59,13 +59,12 @@ AsmI8096::AsmI8096(const ValueParser::Plugins &plugins)
 }
 
 Error AsmI8096::parseIndirect(StrScanner &scan, Operand &op) const {
-    Operand regop;
-    op.regno = parseExpr16(scan, regop);
-    if (regop.getError())
-        op.setErrorIf(regop);
-    if (scan.skipSpaces().expect(']'))
-        return OK;
-    return op.setError(scan, MISSING_CLOSING_BRACKET);
+    ErrorAt error;
+    op.regno = parseInteger(scan, error);
+    op.setErrorIf(error);
+    if (!scan.skipSpaces().expect(']'))
+        return op.setError(scan, MISSING_CLOSING_BRACKET);
+    return OK;
 }
 
 Error AsmI8096::parseOperand(StrScanner &scan, Operand &op) const {
@@ -75,7 +74,7 @@ Error AsmI8096::parseOperand(StrScanner &scan, Operand &op) const {
         return OK;
 
     if (p.expect('#')) {
-        op.val16 = parseExpr16(p, op);
+        op.val = parseInteger(p, op);
         if (op.hasError())
             return op.getError();
         op.mode = M_IMM16;
@@ -85,12 +84,12 @@ Error AsmI8096::parseOperand(StrScanner &scan, Operand &op) const {
     if (p.expect('[')) {
         if (parseIndirect(p, op))
             return op.getError();
-        op.val16 = op.regno;
+        op.val = op.regno;
         op.mode = M_INDIR;
         scan = p;
         return OK;
     }
-    op.val16 = parseExpr16(p, op);
+    op.val = parseInteger(p, op);
     if (op.hasError())
         return op.getError();
     if (p.skipSpaces().expect('[')) {
@@ -106,49 +105,51 @@ Error AsmI8096::parseOperand(StrScanner &scan, Operand &op) const {
 
 void AsmI8096::emitAop(AsmInsn &insn, AddrMode mode, const Operand &op) const {
     const auto waop = (mode == M_WAOP);
+    const auto val16 = op.val.getUnsigned();
+    const auto regno = op.regno.getUnsigned();
     switch (op.mode) {
     case M_IMM16:
         insn.embedAa(AA_IMM);
         if (waop) {
-            insn.emitOperand16(op.val16);
+            insn.emitOperand16(val16);
         } else {
-            insn.emitOperand8(op.val16);
+            insn.emitOperand8(val16);
         }
         return;
     case M_INDIR:
     indir:
         insn.embedAa(AA_INDIR);
-        if (!isWreg(op.regno))
+        if (!isWreg(regno))
             insn.setErrorIf(op, OPERAND_NOT_ALIGNED);
-        insn.emitOperand8(op.regno);
+        insn.emitOperand8(regno);
         return;
     case M_IDX16:
-        if (op.isOK() && op.val16 == 0)
+        if (op.val.isZero())
             goto indir;
-        if (op.isOK() && op.regno == 0)
+        if (op.regno.isZero())
             goto absolute;
         insn.embedAa(AA_IDX);
-        if (!isWreg(op.regno))
+        if (!isWreg(regno))
             insn.setErrorIf(op, OPERAND_NOT_ALIGNED);
-        if (op.isOK() && !overflowInt8(static_cast<int16_t>(op.val16))) {
-            insn.emitOperand8(op.regno);
-            insn.emitOperand8(op.val16);
+        if (op.isOK() && !op.val.overflowInt8()) {
+            insn.emitOperand8(regno);
+            insn.emitOperand8(val16);
         } else {
-            insn.emitOperand8(op.regno | 1);
-            insn.emitOperand16(op.val16);
+            insn.emitOperand8(regno | 1);
+            insn.emitOperand16(val16);
         }
         return;
     default:  // M_ADDR
     absolute:
-        if (waop && !isWreg(op.val16))
+        if (waop && !isWreg(val16))
             insn.setErrorIf(op, OPERAND_NOT_ALIGNED);
-        if (op.isOK() && !overflowUint8(op.val16)) {
+        if (op.isOK() && !op.val.overflowUint8()) {
             insn.embedAa(AA_REG);
-            insn.emitOperand8(op.val16);
+            insn.emitOperand8(val16);
         } else {
             insn.embedAa(AA_IDX);
             insn.emitOperand8(0 | 1);  // Zero register
-            insn.emitOperand16(op.val16);
+            insn.emitOperand16(val16);
         }
         return;
     }
@@ -185,18 +186,18 @@ void AsmI8096::emitRelative(AsmInsn &insn, AddrMode mode, const Operand &op) con
         // Jx: 2 bytes, DJNZ/JBx: 3 bytes
         const auto opc = insn.opCode();
         const auto base = insn.address() + ((opc & 0xF0) == 0xD0 ? 2 : 3);
-        const auto target = op.getError() ? base : op.val16;
+        const auto target = op.getError() ? base : op.val.getUnsigned();
         const auto delta = branchDelta(base, target, insn, op);
-        if (overflowInt8(delta))
+        if (overflowDelta(delta, 8))
             insn.setErrorIf(op, OPERAND_TOO_FAR);
         insn.emitOperand8(delta);
         return;
     }
     if (mode == M_REL11 && !_smartBranch) {
         const auto base = insn.address() + 2;
-        const auto target = op.getError() ? base : op.val16;
+        const auto target = op.getError() ? base : op.val.getUnsigned();
         const auto delta = branchDelta(base, target, insn, op);
-        if (overflowInt(delta, 11))
+        if (overflowDelta(delta, 11))
             insn.setErrorIf(op, OPERAND_TOO_FAR);
         insn.embed(static_cast<uint8_t>(delta >> 8) & 7);
         insn.emitOperand8(delta);
@@ -205,15 +206,15 @@ void AsmI8096::emitRelative(AsmInsn &insn, AddrMode mode, const Operand &op) con
     if (mode == M_REL16 && !_smartBranch) {
     long_branch:
         const auto base = insn.address() + 3;
-        const auto target = op.getError() ? base : op.val16;
+        const auto target = op.getError() ? base : op.val.getUnsigned();
         const auto delta = branchDelta(base, target, insn, op);
         insn.emitOperand16(delta);
         return;
     }
     const auto base = insn.address() + 2;
-    const auto target = op.getError() ? base : op.val16;
+    const auto target = op.getError() ? base : op.val.getUnsigned();
     const auto delta = branchDelta(base, target, insn, op);
-    if (op.getError() || overflowInt(delta, 11)) {
+    if (op.getError() || overflowDelta(delta, 11)) {
         longBranch(insn, op);
         goto long_branch;
     }
@@ -224,7 +225,7 @@ void AsmI8096::emitRelative(AsmInsn &insn, AddrMode mode, const Operand &op) con
 
 void AsmI8096::emitOperand(AsmInsn &insn, AddrMode mode, const Operand &op) const {
     insn.setErrorIf(op);
-    auto val16 = op.val16;
+    auto val16 = op.val.getUnsigned();
     switch (mode) {
     case M_LREG:
         if (!isLreg(val16))
@@ -237,7 +238,7 @@ void AsmI8096::emitOperand(AsmInsn &insn, AddrMode mode, const Operand &op) cons
         // Fall-through
     case M_COUNT:
     case M_BREG:
-        if (val16 >= 0x100)
+        if (op.val.overflow(UINT8_MAX))
             insn.setErrorIf(op, ILLEGAL_REGISTER);
         insn.emitOperand8(val16);
         return;
@@ -251,9 +252,9 @@ void AsmI8096::emitOperand(AsmInsn &insn, AddrMode mode, const Operand &op) cons
         emitRelative(insn, mode, op);
         return;
     case M_BITNO:
-        if (op.val16 >= 8)
+        if (op.val.overflow(7))
             insn.setErrorIf(op, ILLEGAL_BIT_NUMBER);
-        insn.embed(op.val16 & 7);
+        insn.embed(op.val.getUnsigned() & 7);
         return;
     default:
         return;

@@ -2,7 +2,7 @@
 
 root = ..
 cxx      = g++
-cxxflags = -std=c++14 -Wall -O ${debug_flags}
+cxxflags = -std=c++14 -Wall -O ${debug_flags} -DLIBASM_DEBUG_VALUE
 cppflags = -I${root}/src -I${root}/driver
 
 rule cxx
@@ -354,13 +354,13 @@ build test_dis_tlcs90: run test_dis_tlcs90.o   $
   dis_tlcs90.o   reg_tlcs90.o   table_tlcs90.o   text_tlcs90.o   $
   dis_base.o config_base.o error_reporter.o formatters.o option_base.o $
   insn_base.o reg_base.o str_buffer.o str_scanner.o text_common.o $
-  value_formatter.o test_dis_helper.o test_asserter.o
+  value_formatter.o value.o test_dis_helper.o test_asserter.o
 build gen_tlcs90:      link gen_tlcs90.o   $
   dis_tlcs90.o   reg_tlcs90.o   table_tlcs90.o   text_tlcs90.o   $
   gen_driver.o config_base.o dis_base.o dis_formatter.o error_reporter.o $
   formatters.o list_formatter.o option_base.o insn_base.o reg_base.o $
   str_buffer.o str_scanner.o test_generator.o text_common.o tokenized_text.o $
-  value_formatter.o
+  value_formatter.o value.o
 
 # tms32010
 build test_asm_tms32010: run test_asm_tms32010.o $

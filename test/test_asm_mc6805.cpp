@@ -450,7 +450,7 @@ static void test_undef() {
     ERUS("SUB <UNDEF",   "UNDEF", 0xB0, 0x00);
     ERUS("SUB >UNDEF",   "UNDEF", 0xC0, 0x00, 0x00);
     ERUS("JMP  UNDEF",   "UNDEF", 0xBC, 0x00);
-    ERUS("LDA  UNDEF,X", "UNDEF,X", 0xF6);
+    ERUS("LDA  UNDEF,X", "UNDEF,X", 0xE6, 0x00);
     ERUS("LDA <UNDEF,X", "UNDEF,X", 0xE6, 0x00);
     ERUS("LDA >UNDEF,X", "UNDEF,X", 0xD6, 0x00, 0x00);
     ERUS("JSR UNDEF",   "UNDEF",   0xBD, 0x00);

@@ -38,7 +38,9 @@ struct Assembler : private ValueParser::Locator {
 
     const ValueParser &parser() const { return _parser; }
     bool endOfLine(StrScanner &scan) const { return _parser.endOfLine(scan); }
-    /** Parse |expr| text and get value. */
+    /** Parse |expr| text as an integer expression and get value. */
+    Value parseInteger(StrScanner &expr, ErrorAt &error, char delim = 0) const;
+    /** Parse |expr| text as an expression and get value. */
     Value parseExpr(StrScanner &expr, ErrorAt &error, char delim = 0) const;
 
     bool setCpu(const char *name);
@@ -107,11 +109,6 @@ protected:
             const OptionBase *option = nullptr);
 
     int32_t branchDelta(uint32_t base, uint32_t target, ErrorAt &error, const ErrorAt &at) const;
-
-    /** Parse |expr| text and get value as unsigned 16 bit. */
-    uint16_t parseExpr16(StrScanner &expr, ErrorAt &error, char delim = 0) const;
-    /** Parse |expr| text and get value as unsigned 32 bit. */
-    uint32_t parseExpr32(StrScanner &expr, ErrorAt &error, char delim = 0) const;
 
     void generateString(StrScanner &scan, const StrScanner &end, Insn &insn, DataType type,
             ErrorAt &error) const;
