@@ -141,7 +141,7 @@ Error AsmZ8::parseOperand(StrScanner &scan, Operand &op) const {
     }
 
     if (p.expect('#')) {
-        op.val16 = parseExpr16(p, op);
+        op.val = parseInteger(p, op);
         if (op.hasError())
             return op.getError();
         op.mode = M_IM;
@@ -163,7 +163,7 @@ Error AsmZ8::parseOperand(StrScanner &scan, Operand &op) const {
         } else {
             op.mode = pair ? M_rr : M_r;
         }
-        op.val16 = encodeWorkRegAddr(isSuper8(), op.reg);
+        op.val.setUnsigned(encodeWorkRegAddr(isSuper8(), op.reg));
         scan = p;
         return OK;
     }
@@ -171,64 +171,57 @@ Error AsmZ8::parseOperand(StrScanner &scan, Operand &op) const {
     const auto forceRegAddr = p.expect('>');
     if (forceRegAddr && isspace(*p))
         return op.setError(UNKNOWN_OPERAND);
-    const int32_t val32 = parseExpr32(p, op);
+    op.val = parseInteger(p, op);
     if (op.hasError())
         return op.getError();
+    const auto val16 = op.val.getUnsigned();
     if (p.skipSpaces().expect('(')) {
         if (indir || forceRegAddr)
             op.setError(UNKNOWN_OPERAND);
         op.regAt = p;
         op.reg = parseRegName(p);
         if (op.reg == REG_UNDEF) {
-            const auto val16 = parseExpr16(p, op, ')');
+            const auto regno = parseInteger(p, op, ')');
             if (op.hasError())
                 return op.getError();
-            if (!isWorkReg(val16))
+            if (regno.overflow(UINT8_MAX) || !isWorkReg(regno.getUnsigned()))
                 return op.setError(UNKNOWN_OPERAND);
-            op.reg = decodeRegNum(val16 & 0xF);
+            op.reg = decodeRegNum(regno.getUnsigned() & 0xF);
         }
         if (!p.skipSpaces().expect(')'))
             return op.setError(p, MISSING_CLOSING_PAREN);
         scan = p;
-        if (val32 >= -128 && val32 < 128) {
-            op.mode = M_XS;
-        } else {
-            op.mode = M_XL;
-        }
-        op.val16 = val32;
+        op.mode = op.val.overflowInt8() ? M_XL : M_XS;
         return OK;
     }
-    if (val32 < 0)
-        op.setErrorIf(OVERFLOW_RANGE);
     scan = p;
-    op.val16 = val32;
     if (indir) {
-        if (op.val16 >= 0x100)
+        if (op.val.overflow(UINT8_MAX))
             op.setErrorIf(OVERFLOW_RANGE);
-        if (!forceRegAddr && isWorkReg(op.val16)) {
-            op.mode = (op.val16 & 1) == 0 ? M_IWW : M_IW;
-            op.reg = decodeRegNum(op.val16 & 0xF);
+        if (!forceRegAddr && isWorkReg(val16)) {
+            op.mode = (val16 & 1) == 0 ? M_IWW : M_IW;
+            op.reg = decodeRegNum(val16 & 0xF);
             return OK;
         }
-        op.mode = (op.val16 & 1) == 0 ? M_IRR : M_IR;
+        op.mode = (val16 & 1) == 0 ? M_IRR : M_IR;
         return OK;
     }
     if (forceRegAddr) {
-        if (op.val16 >= 0x100)
+        if (op.val.overflow(UINT8_MAX))
             op.setErrorIf(OVERFLOW_RANGE);
-        op.mode = (op.val16 & 1) == 0 ? M_RR : M_R;
+        op.mode = (val16 & 1) == 0 ? M_RR : M_R;
         return OK;
     }
-    if (op.val16 >= 0x100) {
+    if (op.val.overflow(UINT8_MAX)) {
         op.mode = M_DA;
         return OK;
     }
-    if (isWorkReg(op.val16)) {
-        op.mode = (op.val16 & 1) == 0 ? M_WW : M_W;
-        op.reg = decodeRegNum(op.val16 & 0xF);
+    if (isWorkReg(val16)) {
+        op.mode = (val16 & 1) == 0 ? M_WW : M_W;
+        op.reg = decodeRegNum(val16 & 0xF);
         return OK;
     }
-    op.mode = (op.val16 & 1) == 0 ? M_RR : M_R;
+    op.mode = (val16 & 1) == 0 ? M_RR : M_R;
     return OK;
 }
 
@@ -290,21 +283,21 @@ void AsmInsn::emitOperand(uint16_t val16, OprPos pos) {
 
 void AsmZ8::encodeRelative(AsmInsn &insn, OprPos pos, const Operand &op) const {
     const auto base = insn.address() + (pos == OP_BYT1 ? 2 : 3);
-    const auto target = op.getError() ? base : op.val16;
+    const auto target = op.getError() ? base : op.val.getUnsigned();
     const auto delta = branchDelta(base, target, insn, op);
-    if (overflowInt8(delta))
+    if (overflowDelta(delta, 8))
         insn.setErrorIf(op, OPERAND_TOO_FAR);
     insn.emitOperand(delta, pos);
 }
 
 void AsmZ8::encodeIndexed(AsmInsn &insn, AddrMode mode, OprPos pos, const Operand &op) const {
-    if (mode == M_X && overflowUint8(op.val16))
+    if (mode == M_X && op.val.overflowUint8())
         insn.setErrorIf(op, OVERFLOW_RANGE);
-    if (mode == M_XS && overflowInt8(static_cast<int8_t>(op.val16)))
+    if (mode == M_XS && op.val.overflowInt8())
         insn.setErrorIf(op, OVERFLOW_RANGE);
     if (mode == M_XL && op.reg == REG_RR0)
         insn.setErrorIf(op.regAt, REGISTER_NOT_ALLOWED);
-    if (_optimizeIndex && op.isOK() && op.val16 == 0) {
+    if (_optimizeIndex && op.val.isZero()) {
         const auto opc = insn.opCode();
         auto pos = OP_B1LO;
         if (cpuType() == SUPER8) {
@@ -330,23 +323,23 @@ void AsmZ8::encodeIndexed(AsmInsn &insn, AddrMode mode, OprPos pos, const Operan
         }
         insn.emitOperand(encodeRegName(op.reg), pos);
     } else {
-        insn.emitOperand(op.val16, pos);
+        insn.emitOperand(op.val.getUnsigned(), pos);
         insn.emitOperand(encodeRegName(op.reg), OP_B1LO);  // Index register
     }
 }
 
 void AsmZ8::encodeRegAddr(AsmInsn &insn, OprPos pos, const Operand &op) const {
-    const auto addr =
-            (op.reg != REG_UNDEF && _regAlias) ? encodeWorkRegAddr(isSuper8(), op.reg) : op.val16;
+    const auto addr = (op.reg != REG_UNDEF && _regAlias) ? encodeWorkRegAddr(isSuper8(), op.reg)
+                                                         : op.val.getUnsigned();
     insn.emitOperand(addr, pos);
 }
 
 void AsmZ8::encodeImmediate(AsmInsn &insn, AddrMode mode, OprPos pos, const Operand &op) const {
-    if ((mode == M_IM || mode == M_IA) && overflowUint8(op.val16))
+    if ((mode == M_IM || mode == M_IA) && op.val.overflowUint8())
         insn.setErrorIf(op, OVERFLOW_RANGE);
-    if (mode == M_IA && op.val16 % 2)
+    auto val16 = op.val.getUnsigned();
+    if (mode == M_IA && val16 % 2)
         insn.setErrorIf(op, OPERAND_NOT_ALIGNED);
-    auto val16 = op.val16;
     if (insn.opCode() == TableZ8::SRP) {
         const auto postFormat = insn.postFormat();
         if (postFormat == PF_NONE) {  // Z8
@@ -363,7 +356,7 @@ void AsmZ8::encodeImmediate(AsmInsn &insn, AddrMode mode, OprPos pos, const Oper
         }
     }
     if (mode == M_IMb) {
-        if (overflowUint(val16, 3))
+        if (op.val.overflow(7))
             insn.setErrorIf(op, ILLEGAL_BIT_NUMBER);
         val16 <<= 1;
     }
@@ -383,7 +376,7 @@ void AsmZ8::encodeOperand(AsmInsn &insn, AddrMode mode, OprPos pos, const Operan
     case M_Ir:
     case M_rr:
     case M_Irr:
-        insn.emitOperand(op.val16 & 0xF, pos);
+        insn.emitOperand(op.val.getUnsigned() & 0xF, pos);
         break;
     case M_R:
     case M_IR:
@@ -395,7 +388,7 @@ void AsmZ8::encodeOperand(AsmInsn &insn, AddrMode mode, OprPos pos, const Operan
         encodeRelative(insn, pos, op);
         break;
     case M_DA:
-        insn.emitOperand(op.val16, pos);
+        insn.emitOperand(op.val.getUnsigned(), pos);
         break;
     case M_X:
     case M_XS:

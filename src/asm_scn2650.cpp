@@ -86,7 +86,7 @@ Error AsmScn2650::parseOperand(StrScanner &scan, Operand &op) const {
 
     const auto bop = p.expect([](char c) { return c == '<' || c == '>'; });
     op.indir = p.expect('*');
-    op.val16 = parseExpr16(p.skipSpaces(), op);
+    op.val = parseInteger(p.skipSpaces(), op);
     if (op.hasError())
         return op.getError();
     if (p.expect(',')) {
@@ -110,9 +110,9 @@ Error AsmScn2650::parseOperand(StrScanner &scan, Operand &op) const {
         op.mode = M_AB15;
     } else {
         if (bop == '<')
-            op.val16 &= 0xFF;  // LSB
+            op.val.setUnsigned(op.val.getUnsigned() & 0xFF);  // LSB
         if (bop == '>')
-            op.val16 >>= 8;  // MSB;
+            op.val.setUnsigned((op.val.getUnsigned() >> 8) & 0xFF);  // MSB;
         op.mode = M_IMM8;
     }
     scan = p;
@@ -120,7 +120,7 @@ Error AsmScn2650::parseOperand(StrScanner &scan, Operand &op) const {
 }
 
 void AsmScn2650::emitAbsolute(AsmInsn &insn, const Operand &op, AddrMode mode) const {
-    const auto target = op.getError() ? insn.address() : op.val16;
+    const auto target = op.getError() ? insn.address() : op.val.getUnsigned();
     insn.setErrorIf(op, checkAddr(target));
     auto opr = target;
     if (op.indir)
@@ -134,7 +134,7 @@ void AsmScn2650::emitAbsolute(AsmInsn &insn, const Operand &op, AddrMode mode) c
 }
 
 void AsmScn2650::emitIndexed(AsmInsn &insn, const Operand &op, AddrMode mode) const {
-    const auto target = op.getError() ? insn.address() : op.val16;
+    const auto target = op.getError() ? insn.address() : op.val.getUnsigned();
     insn.setErrorIf(op, checkAddr(target, insn.address(), 13));
     auto opr = offset(target);
     if (op.indir)
@@ -157,12 +157,12 @@ void AsmScn2650::emitIndexed(AsmInsn &insn, const Operand &op, AddrMode mode) co
 }
 
 void AsmScn2650::emitZeroPage(AsmInsn &insn, const Operand &op) const {
-    const auto target = op.val16;
+    const auto target = op.val.getUnsigned();
     if (page(target) != 0)
         insn.setErrorIf(op, OVERFLOW_RANGE);
     // Sign extends 13-bit number
     const auto offset = signExtend(target, 13);
-    if (overflowInt(offset, 7))
+    if (overflowDelta(offset, 7))
         insn.setErrorIf(op, OPERAND_TOO_FAR);
     uint8_t opr = target & 0x7F;
     if (op.indir)
@@ -172,10 +172,10 @@ void AsmScn2650::emitZeroPage(AsmInsn &insn, const Operand &op) const {
 
 void AsmScn2650::emitRelative(AsmInsn &insn, const Operand &op) const {
     const auto base = inpage(insn.address(), 2);
-    const auto target = op.getError() ? base : op.val16;
+    const auto target = op.getError() ? base : op.val.getUnsigned();
     insn.setErrorIf(op, checkAddr(target, insn.address(), 13));
     const auto delta = branchDelta(base, target, insn, op);
-    if (overflowInt(delta, 7))
+    if (overflowDelta(delta, 7))
         insn.setErrorIf(op, OPERAND_TOO_FAR);
     uint8_t opr = delta & 0x7F;
     if (op.indir)
@@ -196,7 +196,9 @@ void AsmScn2650::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode) 
         insn.embed(encodeCcName(op.cc));
         break;
     case M_IMM8:
-        insn.emitOperand8(op.val16);
+        if (op.val.overflowUint8())
+            insn.setErrorIf(op, OVERFLOW_RANGE);
+        insn.emitOperand8(op.val.getUnsigned());
         break;
     case M_REL7:
         emitRelative(insn, op);

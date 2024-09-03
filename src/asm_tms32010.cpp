@@ -112,44 +112,44 @@ void AsmTms32010::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode)
             insn.embed(0x98);
             break;
         default:
-            if (op.val16 > dataMemoryLimit())
+            if (op.val.getUnsigned() > dataMemoryLimit())
                 insn.setErrorIf(op, OVERFLOW_RANGE);
-            if (insn.opCode() == SST && op.val16 < 0x80)
+            if (insn.opCode() == SST && op.val.getUnsigned() < 0x80)
                 insn.setErrorIf(op, OVERFLOW_RANGE);
-            insn.embed(op.val16 & 0x7F);
+            insn.embed(op.val.getUnsigned() & 0x7F);
             break;
         }
         break;
     case M_LS3:
     case M_LS4:
     case M_PA:
-        insn.embed(op.val16 << 8);
+        insn.embed(op.val.getUnsigned() << 8);
         break;
     case M_NARP:
         if (op.mode == M_NONE)
             break;
         insn.setOpCode(insn.opCode() & ~8);
-        insn.embed(op.val16);
+        insn.embed(op.val.getUnsigned());
         break;
     case M_AR:
-        insn.embed(op.val16 << 8);
+        insn.embed(op.val.getUnsigned() << 8);
         break;
     case M_ARK:
     case M_DPK:
-        insn.embed(op.val16);
+        insn.embed(op.val.getUnsigned());
         break;
     case M_IM8:
-        insn.embed(op.val16);
+        insn.embed(op.val.getUnsigned());
         break;
     case M_IM13:
-        if (overflowInt(op.signedVal16(), 13))
+        if (op.val.overflow(0x0FFF, -0x1000))
             insn.setErrorIf(op, OVERFLOW_RANGE);
-        insn.embed(op.val16 & 0x1FFF);
+        insn.embed(op.val.getUnsigned() & 0x1FFF);
         break;
     case M_PMA:
-        if (op.val16 >= 0x1000)
+        if (op.val.overflow(0x0FFF))
             insn.setErrorIf(op, OVERFLOW_RANGE);
-        insn.emitOperand16(op.val16 & 0x0FFF);
+        insn.emitOperand16(op.val.getUnsigned() & 0x0FFF);
         break;
     default:
         break;
@@ -177,19 +177,19 @@ Error AsmTms32010::parseOperand(StrScanner &scan, Operand &op) const {
     if (op.reg != REG_UNDEF) {
         if (isAuxiliary(op.reg)) {
             op.mode = M_AR;
-            op.val16 = int8_t(op.reg) - int8_t(REG_AR0);
+            op.val.setUnsigned(int8_t(op.reg) - int8_t(REG_AR0));
         } else {
             op.mode = M_PA;
-            op.val16 = int8_t(op.reg) - int8_t(REG_PA0);
+            op.val.setUnsigned(int8_t(op.reg) - int8_t(REG_PA0));
         }
         scan = p;
         return OK;
     }
 
-    op.val16 = parseExpr16(p, op);
+    op.val = parseInteger(p, op);
     if (op.hasError())
         return op.getError();
-    op.mode = constantType(op.val16);
+    op.mode = constantType(op.val.getUnsigned());
     scan = p;
     return OK;
 }

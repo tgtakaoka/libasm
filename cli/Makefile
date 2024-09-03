@@ -54,7 +54,7 @@ OBJS_asm = \
     $(foreach a,$(ARCHS),$(if $(wildcard ../src/asm_$(a).cpp),asm_$(a).o))
 OBJS_dis = \
     dis.o dis_commander.o dis_driver.o dis_formatter.o dis_base.o \
-    config_base.o reg_base.o \
+    config_base.o reg_base.o value.o \
     $(foreach a,$(ARCHS),$(if $(wildcard ../src/dis_$(a).cpp),dis_$(a).o))
 OBJS_bin = $(BINS:=.o)
 $(eval $(foreach a,$(ARCHS),$(call objs-arch,$(a))))

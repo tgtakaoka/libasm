@@ -58,17 +58,17 @@ void AsmI8080::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode) co
     insn.setErrorIf(op);
     switch (mode) {
     case M_IOA:
-        if (op.val16 >= 0x100)
+        if (op.val.overflow(UINT8_MAX))
             insn.setErrorIf(op, OVERFLOW_RANGE);
         /* Fall-through */
     case M_IM8:
-        if (overflowUint8(op.val16))
+        if (op.val.overflowUint8())
             insn.setErrorIf(op, OVERFLOW_RANGE);
-        insn.emitOperand8(op.val16);
+        insn.emitOperand8(op.val.getUnsigned());
         return;
     case M_IM16:
     case M_ABS:
-        insn.emitOperand16(op.val16);
+        insn.emitOperand16(op.val.getUnsigned());
         return;
     case M_PTR:
         insn.embed(encodePointerReg(op.reg) << 4);
@@ -86,9 +86,9 @@ void AsmI8080::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode) co
         insn.embed(encodeDataReg(op.reg) << 3);
         return;
     case M_VEC:
-        if (op.val16 >= 8)
+        if (op.val.overflow(7))
             insn.setErrorIf(op, OVERFLOW_RANGE);
-        insn.embed((op.val16 & 7) << 3);
+        insn.embed((op.val.getUnsigned() & 7) << 3);
         return;
     default:
         return;
@@ -124,7 +124,7 @@ Error AsmI8080::parseOperand(StrScanner &scan, Operand &op) const {
         scan = p;
         return OK;
     }
-    op.val16 = parseExpr16(p, op);
+    op.val = parseInteger(p, op);
     if (op.hasError())
         return op.getError();
     op.mode = M_IM16;

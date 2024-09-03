@@ -18,11 +18,11 @@
 #define __LIBASM_VALUE_H__
 
 #include <stdint.h>
-#include "config_base.h"
 #include "error_reporter.h"
-#include "str_scanner.h"
 
 namespace libasm {
+
+struct StrScanner;
 
 enum Radix : uint8_t {
     RADIX_NONE = 0,
@@ -33,119 +33,132 @@ enum Radix : uint8_t {
 };
 
 struct Value {
-    Value() : _uint32(0), _type(V_UNDEF) {}
+#ifdef ASM_NOFLOAT
+    using signed_t = int32_t;
+    using unsigned_t = uint32_t;
+    static constexpr auto SIGNED_MAX = INT32_MAX;
+    static constexpr auto SIGNED_MIN = INT32_MIN;
+    static constexpr auto UNSIGNED_MAX = UINT32_MAX;
+#else
+    using signed_t = int64_t;
+    using unsigned_t = uint64_t;
+    using float_t = double;
+    static constexpr auto SIGNED_MAX = INT64_MAX;
+    static constexpr auto SIGNED_MIN = INT64_MIN;
+    static constexpr auto UNSIGNED_MAX = UINT64_MAX;
+#endif
+    static constexpr auto INTEGER_BITS = sizeof(unsigned_t) * 8;
+
+    Value() : _unsigned(0), _type(V_UNDEF) {}
+    Value(const Value &) = default;
+    Value &operator=(const Value &) = default;
 
     /**
-     * Parse text |scan| as a number of |radix| based.
+     * Read text |scan| as an integer of |radix| based.
      *
-     * - Returns OK when |scan| is recognized as valid |radix| based number, and updates |scan| at
-     *   the end of number.
-     * - Returns OVERFLOW_RANGE when a number exceeds UINT_MAX, and updates |scan| at the end of a
-     *   number.
-     * - Returns ILLEGAL_CONSTANT when there is no valid digit found at |scan|, and |scan} is
-     *   unchanged.
+     * - Returns OK when |scan| is recognized as valid |radix| based
+     *   integer, and updates |scan| at the end of an integer.
+     *
+     * - Returns OVERFLOW_RANGE when an integer exceeds UNSIGNED_MAX,
+     *   and updates |scan| at the end of an integer.
+     *
+     * - Returns NOT_AN_EXPECTED when there is no valid integer found
+     *   at |scan|, and |scan| is unchanged.
      */
-    Error parseNumber(StrScanner &scan, Radix radix);
+    Error read(StrScanner &scan, Radix radix = RADIX_10);
 
     bool isUndefined() const { return _type == V_UNDEF; }
-    bool isSigned() const { return _type == V_INT32; }
-    bool isUnsigned() const { return _type == V_UINT32 || isUndefined(); }
-#ifdef LIBASM_ASM_NOFLOAT
-    constexpr bool isInt32() const { return true; }
-    constexpr bool isInt64() const { return false; }
-    constexpr bool isFloat() const { return false; }
-#else
-    bool isInt32() const { return isUnsigned() || isSigned(); }
-    bool isInt64() const { return isInt32() || _type == V_INT64 || _type == V_UINT64; }
-    bool isFloat() const { return _type == V_FLOAT64; }
-#endif
-    bool overflowUint8() const { return ConfigBase::overflowUint8(_uint32); }
-    bool overflowUint16() const { return ConfigBase::overflowUint16(_uint32); }
-#ifdef LIBASM_ASM_NOFLOAT
-    constexpr bool overflowUint32() const { return false; }
-#else
-    bool overflowUint32() const { return ConfigBase::overflowUint32(getInt64()); }
-#endif
-    bool overflowUint(uint8_t bitw) const { return ConfigBase::overflowUint(_uint32, bitw); }
-
-    int32_t getSigned() const { return static_cast<int32_t>(_uint32); }
-    uint32_t getUnsigned() const { return _uint32; }
-#ifndef LIBASM_ASM_NOFLOAT
-    int64_t getInt64() const;
-    double getFloat() const;
-#endif
-
-    Value &setSigned(int32_t value) {
-        _uint32 = value;
-        _type = value < 0 ? V_INT32 : V_UINT32;
-        return *this;
-    }
-    Value &setUnsigned(uint32_t value) {
-        _uint32 = value;
-        _type = V_UINT32;
-        return *this;
-    }
-#ifndef LIBASM_ASM_NOFLOAT
-    Value &setInt64(int64_t value) {
-        _uint64 = value;
-        _type = V_INT64;
-        return *this;
-    }
-    Value &setFloat(double value) {
-        _float64 = value;
-        _type = V_FLOAT64;
-        return *this;
-    }
-#endif
-    Value &clear() {
-        _uint32 = 0;
-        _type = V_UNDEF;
-        return *this;
-    }
-
+    bool isUnsigned() const { return _type == V_UNSIGNED || isUndefined(); }
+    bool isSigned() const { return _type == V_SIGNED; }
+    bool isInteger() const { return !isFloat(); }
+    bool isFloat() const;
+    /** Return true if value exists and is zero */
     bool isZero() const;
+    /** Return true if value is signed or float and is negative */
+    bool isNegative() const;
+
+    /** Get signed/unsigned 32-bit integer */
+    int32_t getSigned() const { return static_cast<int32_t>(_signed); }
+    uint32_t getUnsigned() const { return static_cast<uint32_t>(_unsigned); }
+    /** Get full precision signed integer */
+    signed_t getInteger() const { return _signed; }
+#ifndef ASM_NOFLOAT
+    /** Get value as floating point numbe */
+    float_t getFloat() const;
+#endif
+    Value &setSigned(int32_t s);
+    Value &setUnsigned(uint32_t u);
+    Value &setInteger(signed_t s);
+    Value &setUinteger(unsigned_t s);
+#ifndef ASM_NOFLOAT
+    Value &setFloat(float_t f);
+#endif
+    /** Clear value as undefined */
+    Value &clear();
+
+    /** Returns true if value is larger than INT8_MAX or less than INT8_MIN */
+    bool overflowInt8() const;
+    /** Returns true if value is larger than UINT8_MAX or less than INT8_MIN */
+    bool overflowUint8() const;
+    /** Returns true if value is larger than INT16_MAX or less than INT16_MIN */
+    bool overflowInt16() const;
+    /** Returns true if value is larger than UINT16_MAX or less than INT16_MIN */
+    bool overflowUint16() const;
+    /** Returns true if value is larger than INT32_MAX or less than INT32_MIN */
+    bool overflowInt32() const;
+    /** Returns true if value is larger than UINT32_MAX or less than INT32_MIN */
+    bool overflowUint32() const;
+    /** Returns true if value is larger than |max| or less than |min| */
+    bool overflow(uint32_t max, int32_t min = 0) const;
+
     bool negateOverflow() const;
     bool operator==(const Value &rhs) const;
     bool operator<(const Value &rhs) const;
-    Value operator-() const;
+    explicit operator bool() const;
+    bool operator!() const;
+    bool operator&&(const Value &rhs) const;
+    bool operator||(const Value &rhs) const;
+    Value operator-() const { return negate(); }
     Value operator+(const Value &rhs) const;
     Value operator-(const Value &rhs) const;
     Value operator*(const Value &rhs) const;
     Value operator/(const Value &rhs) const;
     Value operator%(const Value &rhs) const;
+    Value operator~() const;
+    Value operator|(const Value &rhs) const;
+    Value operator&(const Value &rhs) const;
+    Value operator^(const Value &rhs) const;
     Value operator<<(const Value &rhs) const;
     Value operator>>(const Value &rhs) const;
     Value exponential(const Value &rhs) const;
 
-    static Error parseNumber(StrScanner &scan, Radix radix, uint32_t &value);
-#ifndef LIBASM_ASM_NOFLOAT
-    static Error parseNumber(StrScanner &scan, Radix radix, uint64_t &value);
-#endif
+    static Error read(StrScanner &scan, Radix radix, unsigned_t &value);
 
     const char *str() const;
 
 private:
     enum ValueType : uint8_t {
         V_UNDEF = 0,
-        V_UINT32 = 1,
-        V_INT32 = 2,
-#ifndef LIBASM_ASM_NOFLOAT
-        V_UINT64 = 3,
-        V_INT64 = 4,
-        V_FLOAT64 = 5,
+        V_UNSIGNED = 1,
+        V_SIGNED = 2,
+#ifndef ASM_NOFLOAT
+        V_FLOAT = 3,
 #endif
     };
 
     union {
-        uint32_t _uint32;
-        int32_t _int32;
-#ifndef LIBASM_ASM_NOFLOAT
-        uint64_t _uint64;
-        int64_t _int64;
-        double _float64;
+        unsigned_t _unsigned;
+        signed_t _signed;
+#ifndef ASM_NOFLOAT
+        double _float;
 #endif
     };
     ValueType _type;
+
+    void setU(unsigned_t u);
+    void setS(signed_t s);
+    Value negate() const;
+    unsigned_t absolute() const;
 };
 
 }  // namespace libasm

@@ -18,7 +18,6 @@
 
 #include <math.h>
 #include <stdlib.h>
-
 #include "table_mc68000.h"
 #include "text_mc68000.h"
 
@@ -212,7 +211,7 @@ void emitOprSize(AsmInsn &insn, InsnSize isize) {
 }
 
 Error AsmMc68000::checkAlignment(AsmInsn &insn, OprSize size, const Operand &op) const {
-    const auto val32 = op.getUint32();
+    const auto val32 = op.val.getUnsigned();
     if (size == SZ_WORD && (val32 % 2))
         return insn.setError(op, OPERAND_NOT_ALIGNED);
     if (size == SZ_LONG && (val32 % 2))
@@ -222,7 +221,7 @@ Error AsmMc68000::checkAlignment(AsmInsn &insn, OprSize size, const Operand &op)
 
 void AsmMc68000::encodeBriefExtension(
         AsmInsn &insn, const Operand &op, Config::ptrdiff_t disp) const {
-    if (overflowInt8(disp))
+    if (overflowDelta(disp, 8))
         insn.setErrorIf(op, OVERFLOW_RANGE);
     uint16_t ext = static_cast<uint8_t>(disp);
     ext |= encodeGeneralRegNo(op.indexReg) << 12;
@@ -235,24 +234,24 @@ void AsmMc68000::encodeBriefExtension(
 
 void AsmMc68000::encodeDisplacement(
         AsmInsn &insn, const Operand &op, Config::ptrdiff_t disp) const {
-    if (overflowInt16(disp))
+    if (overflowDelta(disp, 16))
         insn.setErrorIf(op, OVERFLOW_RANGE);
-    insn.emitOperand16(static_cast<uint16_t>(disp));
+    insn.emitOperand16(disp);
 }
 
 void AsmMc68000::encodeRelativeAddr(AsmInsn &insn, AddrMode mode, const Operand &op) const {
     const auto base = insn.address() + 2;
-    const auto target = op.getError() ? base : op.getUint32();
+    const auto target = op.getError() ? base : op.val.getUnsigned();
     insn.setErrorIf(op, checkAddr(target, true));
     const auto delta = branchDelta(base, target, insn, op);
     const auto insnSize = insn.insnSize();
     if (mode == M_REL8) {
         if (insnSize == ISZ_NONE) {
-            if (overflowInt8(delta))
+            if (overflowDelta(delta, 8))
                 goto rel16;
             insn.embed(static_cast<uint8_t>(delta));
         } else if (insnSize == ISZ_BYTE || insnSize == ISZ_SNGL) {
-            if (overflowInt8(delta))
+            if (overflowDelta(delta, 8))
                 insn.setErrorIf(op, OPERAND_TOO_FAR);
             insn.embed(static_cast<uint8_t>(delta));
         } else if (insnSize == ISZ_WORD || insnSize == ISZ_LONG) {
@@ -263,7 +262,7 @@ void AsmMc68000::encodeRelativeAddr(AsmInsn &insn, AddrMode mode, const Operand 
     } else if (mode == M_REL16) {
         if (insnSize == ISZ_NONE || insnSize == ISZ_WORD || insnSize == ISZ_LONG) {
         rel16:
-            if (overflowInt16(delta))
+            if (overflowDelta(delta, 16))
                 insn.setErrorIf(op, OPERAND_TOO_FAR);
         } else {
             insn.setErrorIf(ILLEGAL_SIZE);
@@ -271,11 +270,11 @@ void AsmMc68000::encodeRelativeAddr(AsmInsn &insn, AddrMode mode, const Operand 
         insn.emitOperand16(delta);
     } else if (mode == M_REL32) {
         if (insnSize == ISZ_NONE) {
-            if (!overflowInt16(delta))
+            if (!overflowDelta(delta, 16))
                 goto rel32_16;
             goto rel32;
         } else if (insnSize == ISZ_WORD || insnSize == ISZ_LONG) {
-            if (overflowInt16(delta))
+            if (overflowDelta(delta, 16))
                 insn.setErrorIf(op, OPERAND_TOO_FAR);
         rel32_16:
             insn.setOpCode(insn.opCode() & ~(1 << 6));
@@ -292,33 +291,35 @@ void AsmMc68000::encodeRelativeAddr(AsmInsn &insn, AddrMode mode, const Operand 
 }
 
 void AsmMc68000::encodeImmediate(AsmInsn &insn, const Operand &op, OprSize size) const {
-    const auto val32 = op.getUint32();
+    const auto val32 = op.val.getUnsigned();
     switch (size) {
     case SZ_LONG:
+        if (op.val.overflowUint32())
+            insn.setErrorIf(op, OVERFLOW_RANGE);
         insn.emitOperand32(val32);
         break;
     case SZ_WORD:
-        if (overflowUint16(val32))
+        if (op.val.overflowUint16())
             insn.setErrorIf(op, OVERFLOW_RANGE);
         insn.emitOperand16(val32);
         break;
     case SZ_BYTE:
-        if (overflowUint8(val32))
+        if (op.val.overflowUint8())
             insn.setErrorIf(op, OVERFLOW_RANGE);
         insn.emitOperand16(static_cast<uint8_t>(val32));
         break;
 #ifndef LIBASM_ASM_NOFLOAT
     case SZ_SNGL:
-        insn.emitFloat32(op.getFloat(), insn.operandPos());
+        insn.emitFloat32(op.val.getFloat(), insn.operandPos());
         break;
     case SZ_DUBL:
-        insn.emitFloat64(op.getFloat(), insn.operandPos());
+        insn.emitFloat64(op.val.getFloat(), insn.operandPos());
         break;
     case SZ_XTND:
-        insn.emitFloat96(op.getFloat());
+        insn.emitFloat96(op.val.getFloat());
         break;
     case SZ_PBCD: {
-        insn.emitPackedBcd96(op.getFloat());
+        insn.emitPackedBcd96(op.val.getFloat());
         break;
     }
 #endif
@@ -335,7 +336,7 @@ Config::uintptr_t Operand::offset(const AsmInsn &insn) const {
         len = sizeof(Config::opcode_t);
     if (insn.hasPostVal() && len < 4)
         len = 4;
-    return getUint32() - (insn.address() + len);
+    return val.getUnsigned() - (insn.address() + len);
 }
 
 Error AsmMc68000::encodeOperand(
@@ -366,7 +367,7 @@ Error AsmMc68000::encodeOperand(
             insn.embedPostfix(0x1000);
     }
 
-    const auto val32 = op.getUint32();
+    const auto val32 = op.val.getUnsigned();
     switch (op.mode) {
     case M_AREG:
         if (size == SZ_BYTE)
@@ -399,9 +400,9 @@ Error AsmMc68000::encodeOperand(
             break;
         if (mode == M_IM3) {
             // "Zero means 2^3" unsigned 3-bit.
-            if (val32 > 8)
+            if (op.val.overflow(8))
                 insn.setErrorIf(op, OVERFLOW_RANGE);
-            if (val32 == 0 && op.isOK())
+            if (op.val.isZero())
                 insn.setErrorIf(op, OPERAND_NOT_ALLOWED);
             const auto count = (val32 & 7);  // 8 is encoded to 0.
             insn.embed(count << 9);
@@ -409,25 +410,25 @@ Error AsmMc68000::encodeOperand(
         }
         if (mode == M_IM8) {
             // Signed 8-bit.
-            if (overflowInt8(static_cast<int32_t>(val32)))
+            if (op.val.overflowInt8())
                 insn.setErrorIf(op, OVERFLOW_RANGE);
             insn.embed(static_cast<uint8_t>(val32));
             break;
         }
         if (mode == M_IMROM) {
-            if (val32 >= 0x80)
+            if (op.val.overflow(INT8_MAX))
                 insn.setErrorIf(op, OVERFLOW_RANGE);
             insn.embedPostfix(val32 & 0x7F);
             break;
         }
         if (mode == M_IMVEC) {
-            if (val32 >= 16)
+            if (op.val.overflow(15))
                 insn.setErrorIf(op, OVERFLOW_RANGE);
             insn.embed(static_cast<uint8_t>(val32 & 0xF));
             break;
         }
         if (mode == M_IMDSP) {
-            if (overflowInt16(static_cast<int32_t>(val32)))
+            if (op.val.overflowInt16())
                 insn.setErrorIf(op, OVERFLOW_RANGE);
             insn.emitOperand16(static_cast<uint16_t>(val32));
             break;
@@ -611,10 +612,10 @@ Error AsmMc68000::parseOperand(StrScanner &scan, Operand &op) const {
         return OK;
 
     if (p.expect('#')) {
-        op.value = parseExpr(p, op);
+        op.val = parseExpr(p, op);
         if (op.hasError())
             return op.getError();
-        if (op.value.isFloat()) {
+        if (op.val.isFloat()) {
             op.mode = M_IMFLT;
             scan = p;
             return op.setOK();
@@ -642,15 +643,13 @@ Error AsmMc68000::parseOperand(StrScanner &scan, Operand &op) const {
             scan = p;
             return OK;
         }
-        op.value = parseExpr(p, op, ')');
+        op.val = parseInteger(p, op, ')');
         if (op.hasError())
             return op.getError();
-        if (op.value.isFloat())
-            return op.setErrorIf(INTEGER_REQUIRED);
-        const auto val32 = op.value.getUnsigned();
+        const auto val32 = op.val.getUnsigned();
         if (p.skipSpaces().expect(')')) {
             const auto size = parseSize(p.skipSpaces());
-            auto over16 = overflowInt16(val32);
+            auto over16 = op.val.overflowInt16();
             if (over16) {
                 // check if it is near the end of address space.
                 const auto max = 1UL << uint8_t(addressWidth());
@@ -741,11 +740,9 @@ Error AsmMc68000::parseOperand(StrScanner &scan, Operand &op) const {
         scan = a;
         return OK;
     }
-    op.value = parseExpr(p, op);
+    op.val = parseInteger(p, op);
     if (op.hasError())
         return op.getError();
-    if (op.value.isFloat())
-        return INTEGER_REQUIRED;
     op.mode = M_LABEL;
     scan = p;
     return OK;
@@ -797,7 +794,7 @@ Error AsmMc68000::encodeImpl(StrScanner &scan, Insn &_insn) const {
     if (dst == M_MULT)
         encodeRegisterList(insn, insn.dstOp);
     if (src == M_IMBIT) {
-        auto bitno = insn.srcOp.getUint32();
+        auto bitno = insn.srcOp.val.getUnsigned();
         if (insn.srcOp.mode != M_IMDAT) {
             insn.setErrorIf(insn.srcOp, OPERAND_NOT_ALLOWED);
             bitno = 0;

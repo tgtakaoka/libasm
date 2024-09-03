@@ -49,7 +49,7 @@ bool SymbolStoreImpl::hasSymbol(const StrScanner &symbol) const {
     return hasValue(symbol, false) || hasValue(symbol, true);
 }
 
-uint32_t SymbolStoreImpl::lookupSymbol(const StrScanner &symbol) const {
+SymbolTable::symval_t SymbolStoreImpl::lookupSymbol(const StrScanner &symbol) const {
     const auto key = std::string(symbol.str(), symbol.size());
     const auto s = _symbols.find(key);
     if (s != _symbols.end())
@@ -66,17 +66,19 @@ bool SymbolStoreImpl::hasValue(const StrScanner &symbol, bool variable) const {
     return map.find(key) != map.end();
 }
 
-Error SymbolStoreImpl::internSymbol(uint32_t value, const StrScanner &symbol, bool variable) {
+Error SymbolStoreImpl::internSymbol(const Value &value, const StrScanner &symbol, bool variable) {
     if (hasValue(symbol, !variable))
         return DUPLICATE_LABEL;
+    if (value.overflowUint32())
+        return OVERFLOW_RANGE;
 
     const auto key = std::string(symbol.str(), symbol.size());
     auto &map = variable ? _variables : _symbols;
     auto it = map.find(key);
     if (it == map.end()) {
-        map.emplace(key, value);
+        map.emplace(key, value.getInteger());
     } else {
-        it->second = value;
+        it->second = value.getInteger();
     }
     return OK;
 }

@@ -151,14 +151,14 @@ void longBranch(AsmInsn &insn, const Operand &op) {
 void AsmMos6502::encodeRelative(AsmInsn &insn, AddrMode mode, const Operand &op) const {
     const auto len = insn.length();
     const auto base = insn.address() + (len ? len : 1) + 1;
-    const auto target = op.getError() ? base : op.val32;
+    const auto target = op.getError() ? base : op.val.getUnsigned();
     if (bankModel())
         insn.setErrorIf(op, checkAddr(target, insn.address(), 16));
     const auto smartBranch = _smartBranch && maySmartBranch(insn, cpuType());
     if (mode == M_REL && !smartBranch) {
     short_branch:
         const auto delta = branchDelta(base, target, insn, op);
-        if (overflowInt8(delta))
+        if (overflowDelta(delta, 8))
             insn.setErrorIf(op, OPERAND_TOO_FAR);
         insn.emitOperand8(delta);
         return;
@@ -166,7 +166,7 @@ void AsmMos6502::encodeRelative(AsmInsn &insn, AddrMode mode, const Operand &op)
     if (mode == M_LREL && !smartBranch) {
     long_branch:
         const auto base = insn.address() + 3;
-        const auto target = op.getError() ? base : op.val32;
+        const auto target = op.getError() ? base : op.val.getUnsigned();
         if (bankModel())
             insn.setErrorIf(op, checkAddr(target, insn.address(), 16));
         const auto delta = branchDelta(base, target, insn, op);
@@ -174,7 +174,7 @@ void AsmMos6502::encodeRelative(AsmInsn &insn, AddrMode mode, const Operand &op)
         return;
     }
     const auto delta = branchDelta(base, target, insn, op);
-    if (op.getError() || overflowInt8(delta)) {
+    if (op.getError() || overflowDelta(delta, 8)) {
         longBranch(insn, op);
         goto long_branch;
     }
@@ -184,13 +184,13 @@ void AsmMos6502::encodeRelative(AsmInsn &insn, AddrMode mode, const Operand &op)
 
 void AsmMos6502::emitImmediate(AsmInsn &insn, const Operand &op, bool imm16) const {
     if (imm16) {
-        if (overflowUint16(op.val32))
+        if (op.val.overflowUint16())
             insn.setErrorIf(op, OVERFLOW_RANGE);
-        insn.emitOperand16(op.val32);
+        insn.emitOperand16(op.val.getUnsigned());
     } else {
-        if (overflowUint8(op.val32))
+        if (op.val.overflowUint8())
             insn.setErrorIf(op, OVERFLOW_RANGE);
-        insn.emitOperand8(op.val32);
+        insn.emitOperand8(op.val.getUnsigned());
     }
 }
 
@@ -204,18 +204,18 @@ void AsmMos6502::encodeOperand(AsmInsn &insn, AddrMode modeAndFlags, const Opera
         emitImmediate(insn, op, _longIndex);
         break;
     case M_ABS:
-        if (overflowUint16(op.val32))
+        if (op.val.overflowUint16())
             insn.setErrorIf(op, OVERFLOW_RANGE);
         emitImmediate(insn, op, true);
         break;
     case M_ABSL:
-        if (checkAddr(op.val32))
+        if (checkAddr(op.val.getUnsigned()))
             insn.setErrorIf(op, OVERFLOW_RANGE);
-        insn.emitOperand16(op.val32);
-        insn.emitOperand8(op.val32 >> 16);
+        insn.emitOperand16(op.val.getUnsigned());
+        insn.emitOperand8(op.val.getUnsigned() >> 16);
         break;
     case M_DPG:
-        if (overflowUint8(op.val32))
+        if (op.val.overflowUint8())
             insn.setErrorIf(op, OVERFLOW_RANGE);
         /* Fall-through */
     case M_IM8:
@@ -240,10 +240,10 @@ Error AsmMos6502::selectMode(
         op.mode = abs;
     } else if (size == '<') {
         op.mode = zp;
-    } else if (op.val32 >= 0x10000L && op.isOK()) {
+    } else if (op.val.overflow(UINT16_MAX) && op.isOK()) {
         op.mode = labs;
     } else {
-        op.mode = (op.val32 < 0x100) ? zp : abs;
+        op.mode = op.val.overflow(UINT8_MAX) ? abs : zp;
     }
     return OK;
 }
@@ -318,13 +318,13 @@ Error AsmMos6502::parseOperand(StrScanner &scan, Operand &op, char &indirect) co
 
     if (p.expect('#')) {  // #nn
         const auto bop = p.expect([](char c) { return c == '<' || c == '>'; });
-        op.val32 = parseExpr32(p, op);
+        op.val = parseInteger(p, op);
         if (op.hasError())
             return op.getError();
         if (bop == '<')
-            op.val32 &= 0xFF;
+            op.val.setUnsigned(op.val.getUnsigned() & 0xFF);
         if (bop == '>')
-            op.val32 = (op.val32 >> 8) & 0xFF;
+            op.val.setUnsigned((op.val.getUnsigned() >> 8) & 0xFF);
         op.mode = M_IMA;
         scan = p;
         return OK;
@@ -339,7 +339,7 @@ Error AsmMos6502::parseOperand(StrScanner &scan, Operand &op, char &indirect) co
         op.mode = regName2AddrMode(reg);
     } else {
         const auto size = parseSizeOverride(p);
-        op.val32 = parseExpr32(p, op, indirect);
+        op.val = parseInteger(p, op, indirect);
         if (op.hasError())
             return op.getError();
         if (selectMode(size, op, M_DPG, M_ABS, M_ABSL))
@@ -414,8 +414,8 @@ Error AsmMos6502::encodeImpl(StrScanner &scan, Insn &_insn) const {
     insn.setErrorIf(insn.op2);
     // W65C816 block move instructions
     if (insn.mode1() == M_BANK && insn.mode2() == M_BANK) {
-        insn.emitOperand8(insn.op2.val32 >> 16);  // destination
-        insn.emitOperand8(insn.op1.val32 >> 16);  // source
+        insn.emitOperand8(insn.op2.val.getUnsigned() >> 16);  // destination
+        insn.emitOperand8(insn.op1.val.getUnsigned() >> 16);  // source
     } else {
         encodeOperand(insn, insn.mode1(), insn.op1);
         encodeOperand(insn, insn.mode2(), insn.op2);

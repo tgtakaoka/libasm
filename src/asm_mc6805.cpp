@@ -90,7 +90,7 @@ Error AsmMc6805::parseOperand(StrScanner &scan, Operand &op) const {
     op.setAt(p);
 
     if (p.expect('#')) {
-        op.val16 = parseExpr16(p, op);
+        op.val = parseInteger(p, op);
         if (op.hasError())
             return op.getError();
         op.mode = M_IMM;
@@ -114,7 +114,7 @@ Error AsmMc6805::parseOperand(StrScanner &scan, Operand &op) const {
     } else if (p.expect('>')) {
         op.size = 16;
     }
-    op.val16 = parseExpr16(p, op);
+    op.val = parseInteger(p, op);
     if (op.hasError())
         return op.getError();
 
@@ -126,22 +126,23 @@ Error AsmMc6805::parseOperand(StrScanner &scan, Operand &op) const {
                 op.mode = M_IDX;
             } else if (op.size == 16) {
                 op.mode = M_IX2;
-            } else if (op.val16 == 0) {
+            } else if (op.val.isZero()) {
                 op.mode = M_IX0;
             } else {
-                op.mode = (op.val16 < 0x100) ? M_IDX : M_IX2;
+                op.mode = op.val.overflow(UINT8_MAX) ? M_IX2 : M_IDX;
             }
             scan = a;
             return OK;
         }
     }
     if (op.size == 0) {
-        if (op.val16 < 8)
-            op.mode = M_BNO;
-        else if (op.val16 < 0x100)
-            op.mode = M_DIR;
-        else
+        if (op.val.overflow(UINT8_MAX)) {
             op.mode = M_EXT;
+        } else if (op.val.overflow(7)) {
+            op.mode = M_DIR;
+        } else {
+            op.mode = M_BNO;
+        }
     } else {
         op.mode = (op.size == 8) ? M_DIR : M_EXT;
     }
@@ -151,15 +152,15 @@ Error AsmMc6805::parseOperand(StrScanner &scan, Operand &op) const {
 
 void AsmMc6805::emitRelative(AsmInsn &insn, const Operand &op) const {
     const auto base = insn.address() + insn.length() + (insn.length() == 0 ? 2 : 1);
-    const auto target = op.getError() ? base : op.val16;
+    const auto target = op.getError() ? base : op.val.getUnsigned();
     const auto delta = branchDelta(base, target, insn, op);
-    if (overflowInt8(delta))
+    if (overflowDelta(delta, 8))
         insn.setErrorIf(op, OPERAND_TOO_FAR);
     insn.emitOperand8(delta);
 }
 
 void AsmMc6805::emitBitNumber(AsmInsn &insn, const Operand &op) const {
-    const uint8_t imm = 1U << (op.val16 & 7);
+    const uint8_t imm = 1U << (op.val.getUnsigned() & 7);
     const auto aim = (insn.opCode() & 0xF) == 1;
     insn.emitOperand8(aim ? ~imm : imm);
 }
@@ -210,27 +211,27 @@ void AsmMc6805::emitOperand(AsmInsn &insn, AddrMode mode, const Operand &op) con
     dir:
     case M_IDX:
     idx:
-        if (op.val16 >= 256)
+        if (op.val.overflow(UINT8_MAX))
             insn.setErrorIf(op, OVERFLOW_RANGE);
-        insn.emitOperand8(op.val16);
+        insn.emitOperand8(op.val.getUnsigned());
         break;
     case M_IX2:
     ix2:
-        insn.emitOperand16(op.val16);
+        insn.emitOperand16(op.val.getUnsigned());
         break;
     case M_EXT:
     ext:
-        if (checkAddr(op.val16))
+        if (checkAddr(op.val.getUnsigned()))
             insn.setErrorIf(op, OVERFLOW_RANGE);
-        insn.emitOperand16(op.val16);
+        insn.emitOperand16(op.val.getUnsigned());
         break;
     case M_REL:
         return emitRelative(insn, op);
     case M_IMM:
     imm:
-        if (overflowUint8(op.val16))
+        if (op.val.overflowUint8())
             insn.setErrorIf(op, OVERFLOW_RANGE);
-        insn.emitOperand8(op.val16);
+        insn.emitOperand8(op.val.getUnsigned());
         break;
     case M_BNO:  // handled in encodeImpl(Insn)
     default:
@@ -258,7 +259,7 @@ Error AsmMc6805::encodeImpl(StrScanner &scan, Insn &_insn) const {
         return _insn.getError();
 
     if (insn.mode1() == M_BNO)
-        insn.embed((insn.op1.val16 & 7) << 1);
+        insn.embed((insn.op1.val.getUnsigned() & 7) << 1);
     emitOperand(insn, insn.mode1(), insn.op1);
     emitOperand(insn, insn.mode2(), insn.op2);
     emitOperand(insn, insn.mode3(), insn.op3);

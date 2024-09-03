@@ -42,8 +42,8 @@ Error Operator::eval(ValueStack &stack, uint8_t argc) const {
 }
 
 static Error bitwise_not(ValueStack &stack) {
-    const auto v = stack.pop().getUnsigned();
-    stack.pushUnsigned(~v);
+    const auto v = stack.pop();
+    stack.push(~v);
     return OK;
 }
 
@@ -56,7 +56,11 @@ static Error logical_not(ValueStack &stack) {
 static Error unary_minus(ValueStack &stack) {
     const auto v = stack.pop();
     stack.push(-v);
-    return v.negateOverflow() ? OVERFLOW_RANGE : OK;
+#ifndef ASM_NOFLOAT
+    if (v.negateOverflow())
+        return OVERFLOW_RANGE;
+#endif
+    return OK;
 }
 
 static Error unary_plus(ValueStack &stack) {
@@ -103,10 +107,11 @@ static Error subtract(ValueStack &stack) {
     return OK;
 }
 
-static Error logical_shift_left(ValueStack &stack) {
-    const auto rhs = stack.pop();
-    const auto lhs = stack.pop();
-    stack.push(lhs << rhs);
+static Error logical_shift_left_32bit(ValueStack &stack) {
+    const auto rhs = stack.pop().getUnsigned();
+    const auto lhs = stack.pop().getUnsigned() & UINT32_MAX;
+    const auto value = (rhs < 32) ? (lhs << rhs) : 0;
+    stack.pushUnsigned(value & UINT32_MAX);
     return OK;
 }
 
@@ -160,38 +165,40 @@ static Error logical_not_equal(ValueStack &stack) {
 }
 
 static Error bitwise_and(ValueStack &stack) {
-    const auto rhs = stack.pop().getUnsigned();
-    const auto lhs = stack.pop().getUnsigned();
-    stack.pushUnsigned(lhs & rhs);
+    const auto rhs = stack.pop();
+    const auto lhs = stack.pop();
+    stack.push(lhs & rhs);
     return OK;
 }
 
 static Error bitwise_xor(ValueStack &stack) {
-    const auto rhs = stack.pop().getUnsigned();
-    const auto lhs = stack.pop().getUnsigned();
-    stack.pushUnsigned(lhs ^ rhs);
+    const auto rhs = stack.pop();
+    const auto lhs = stack.pop();
+    stack.push(lhs ^ rhs);
     return OK;
 }
 
 static Error bitwise_or(ValueStack &stack) {
-    const auto rhs = stack.pop().getUnsigned();
-    const auto lhs = stack.pop().getUnsigned();
-    stack.pushUnsigned(lhs | rhs);
+    const auto rhs = stack.pop();
+    const auto lhs = stack.pop();
+    stack.push(lhs | rhs);
     return OK;
 }
 
 static Error logical_and(ValueStack &stack) {
-    const auto rhs = stack.pop().getUnsigned();
-    const auto lhs = stack.pop().getUnsigned();
-    stack.pushUnsigned(lhs && rhs);
+    const auto rhs = stack.pop();
+    const auto lhs = stack.pop();
+    Value v;
+    stack.push(v.setUnsigned(lhs && rhs));
 
     return OK;
 }
 
 static Error logical_or(ValueStack &stack) {
-    const auto rhs = stack.pop().getUnsigned();
-    const auto lhs = stack.pop().getUnsigned();
-    stack.pushUnsigned(lhs || rhs);
+    const auto rhs = stack.pop();
+    const auto lhs = stack.pop();
+    Value v;
+    stack.push(v.setUnsigned(lhs || rhs));
     return OK;
 }
 
@@ -209,7 +216,7 @@ static const Operator OP_DIV(         5, L, 2, divide);
 static const Operator OP_MOD(         5, L, 2, modulo);
 static const Operator OP_ADD(         6, L, 2, add);
 static const Operator OP_SUB(         6, L, 2, subtract);
-static const Operator OP_SHIFT_LEFT(  7, L, 2, logical_shift_left);
+static const Operator OP_SHIFT_LEFT(  7, L, 2, logical_shift_left_32bit);
 static const Operator OP_SHIFT_RIGHT( 7, L, 2, arithmetic_shift_right);
 static const Operator OP_LOGICAL_LT(  9, N, 2, less_than);
 static const Operator OP_LOGICAL_LE(  9, N, 2, less_than_or_equal);

@@ -111,17 +111,17 @@ const Functor *Ins8070FunctionTable::lookupFunction(const StrScanner &name) cons
 
 void AsmIns8070::emitAbsolute(AsmInsn &insn, const Operand &op) const {
     // PC will be +1 before fetching instruction.
-    const auto target = op.getError() ? 0 : op.val16 - 1;
+    const auto target = op.getError() ? 0 : op.val.getUnsigned()- 1;
     insn.emitOperand16(target);
 }
 
 void AsmIns8070::emitImmediate(AsmInsn &insn, const Operand &op) const {
     if (insn.oprSize() == SZ_WORD) {
-        insn.emitOperand16(op.val16);
+        insn.emitOperand16(op.val.getUnsigned());
     } else {
-        if (overflowUint8(op.val16))
+        if (op.val.overflowUint8())
             insn.setErrorIf(op, OVERFLOW_RANGE);
-        insn.emitOperand8(op.val16);
+        insn.emitOperand8(op.val.getUnsigned());
     }
 }
 
@@ -129,9 +129,9 @@ void AsmIns8070::emitRelative(AsmInsn &insn, const Operand &op) const {
     const auto base = insn.address() + 1;
     // PC will be +1 before feting instruction
     const auto fetch = insn.execute() ? 1 : 0;
-    const auto target = (op.getError() ? base + fetch : op.val16) - fetch;
+    const auto target = (op.getError() ? base + fetch : op.val.getUnsigned()) - fetch;
     const auto offset = branchDelta(base, target, insn, op);
-    if (overflowInt8(offset))
+    if (overflowDelta(offset, 8))
         insn.setErrorIf(op, OPERAND_TOO_FAR);
     insn.emitOperand8(offset);
 }
@@ -143,7 +143,7 @@ void AsmIns8070::emitGeneric(AsmInsn &insn, const Operand &op) const {
         return;
     }
     if ((op.mode == M_ADR || op.mode == M_VEC) && op.reg == REG_UNDEF) {
-        const auto target = op.getError() ? 0xFF00 : op.val16;
+        const auto target = op.getError() ? 0xFF00 : op.val.getUnsigned();
         if (target < 0xFF00) {
             emitRelative(insn, op);
             return;
@@ -160,10 +160,9 @@ void AsmIns8070::emitGeneric(AsmInsn &insn, const Operand &op) const {
     insn.embed(encodePointerReg(op.reg));
     if (op.autoIndex)
         insn.embed(4);
-    const auto offset = static_cast<Config::ptrdiff_t>(op.val16);
-    if (overflowInt8(offset))
+    if (op.val.overflowInt8())
         insn.setErrorIf(op, OVERFLOW_RANGE);
-    insn.emitOperand8(offset);
+    insn.emitOperand8(op.val.getSigned());
 }
 
 void AsmIns8070::emitOperand(AsmInsn &insn, AddrMode mode, const Operand &op) const {
@@ -174,7 +173,7 @@ void AsmIns8070::emitOperand(AsmInsn &insn, AddrMode mode, const Operand &op) co
         insn.embed(encodePointerReg(op.reg));
         break;
     case M_VEC:
-        insn.embed(op.val16 & 0x0F);
+        insn.embed(op.val.getUnsigned() & 0x0F);
         break;
     case M_IMM:
         emitImmediate(insn, op);
@@ -201,7 +200,7 @@ Error AsmIns8070::parseOperand(StrScanner &scan, Operand &op) const {
         return OK;
 
     if (p.expect('#') || p.expect('=')) {
-        op.val16 = parseExpr16(p, op);
+        op.val = parseInteger(p, op);
         if (op.hasError())
             return op.getError();
         op.mode = M_IMM;
@@ -245,7 +244,7 @@ Error AsmIns8070::parseOperand(StrScanner &scan, Operand &op) const {
     }
 
     auto autoIndex = p.expect('@');
-    op.val16 = parseExpr16(p, op);
+    op.val = parseInteger(p, op);
     if (op.hasError())
         return op.getError();
 
@@ -270,7 +269,7 @@ Error AsmIns8070::parseOperand(StrScanner &scan, Operand &op) const {
         return OK;
     }
 
-    op.mode = (op.val16 < 0x10) ? M_VEC : M_ADR;
+    op.mode = op.val.overflow(15) ? M_ADR : M_VEC;
     scan = p;
     return OK;
 }
@@ -278,7 +277,7 @@ Error AsmIns8070::parseOperand(StrScanner &scan, Operand &op) const {
 Error AsmIns8070::defineAddrConstant(StrScanner &scan, Insn &insn) {
     do {
         auto p = scan.skipSpaces();
-        const auto value = parseExpr(p, insn);
+        const auto value = parseInteger(p, insn);
         if (insn.hasError())
             break;
         const auto v = value.getUnsigned();

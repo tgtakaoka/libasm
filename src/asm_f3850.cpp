@@ -71,28 +71,26 @@ Error AsmF3850::parseOperand(StrScanner &scan, Operand &op) const {
         } else {
             op.mode = M_REG;
         }
-        op.val16 = int8_t(reg) - int8_t(REG_alias);
+        op.val.setUnsigned(int8_t(reg) - int8_t(REG_alias));
         scan = p;
         return OK;
     }
 
-    auto val = parseExpr(p.skipSpaces(), op);
-
+    op.val = parseInteger(p.skipSpaces(), op);
     if (op.hasError())
         return op.getError();
-    op.val16 = val.getUnsigned();
-    const int16_t v = val.isSigned() ? val.getSigned() : val.getUnsigned();
+    const auto v = op.val.getSigned();
     if (v == 1) {
         op.mode = M_C1;
     } else if (v == 4) {
         op.mode = M_C4;
-    } else if (v >= 0 && v < 8) {
+    } else if (op.val.overflow(7)) {
         op.mode = M_IM3;
-    } else if (v >= 0 && v < 16) {
+    } else if (op.val.overflow(15)) {
         op.mode = M_IM4;
-    } else if (!val.overflowUint8()) {
+    } else if (!op.val.overflowUint8()) {
         op.mode = M_IM8;
-    } else if (!val.overflowUint16()) {
+    } else if (!op.val.overflowUint16()) {
         op.mode = M_ADDR;
     } else {
         op.setError(OVERFLOW_RANGE);
@@ -103,53 +101,58 @@ Error AsmF3850::parseOperand(StrScanner &scan, Operand &op) const {
 
 void AsmF3850::emitRelative(AsmInsn &insn, const Operand &op) const {
     const auto base = insn.address() + 1;
-    const auto target = op.getError() ? base : op.val16;
+    const auto target = op.getError() ? base : op.val.getUnsigned();
     const auto delta = branchDelta(base, target, insn, op);
-    if (overflowInt8(delta))
+    if (overflowDelta(delta, 8))
         insn.setErrorIf(op, OPERAND_TOO_FAR);
     insn.emitOperand8(delta);
 }
 
 void AsmF3850::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode) const {
     insn.setErrorIf(op);
+    const auto v = op.val.getUnsigned();
     switch (mode) {
     case M_REG:
-        if (op.val16 >= 16)
+        if (op.val.overflow(15))
             insn.setErrorIf(op, OVERFLOW_RANGE);
-        if (op.val16 == 15)
+        if (v == 15)
             insn.setErrorIf(op, OPERAND_NOT_ALLOWED);
-        insn.embed(op.val16 & 0xF);
+        insn.embed(v & 0xF);
         break;
     case M_C1:
-        if (op.val16 != 1 && op.val16 != 4) {
-            insn.setErrorIf(op, OPERAND_NOT_ALLOWED);
-        } else if (op.val16 == 4) {
+        if (v == 1) {
+            ;  // nop
+        } else if (v == 4) {
             insn.setOpCode(insn.opCode() + 2);
+        } else {
+            insn.setErrorIf(op, OPERAND_NOT_ALLOWED);
         }
         break;
     case M_IM3:
-        if (op.val16 >= 8)
+        if (op.val.overflow(7))
             insn.setErrorIf(op, OVERFLOW_RANGE);
-        insn.embed(op.val16 & 7);
+        insn.embed(v & 7);
         break;
     case M_IOS:
-        if (op.val16 == 2 || op.val16 == 3)
+        if (v == 2 || v == 3)
             insn.setErrorIf(op, OPERAND_NOT_ALLOWED);
         /* Fall-through */
     case M_IM4:
-        if (op.val16 >= 16)
+        if (op.val.overflow(15))
             insn.setErrorIf(op, OVERFLOW_RANGE);
-        insn.embed(op.val16 & 0xF);
+        insn.embed(v & 0xF);
         break;
     case M_IOA:
-        if (op.isOK() && op.val16 < 4)
+        if (op.isOK() && !op.val.overflow(3, 0))
             insn.setErrorIf(op, OPERAND_NOT_ALLOWED);
         /* Fall-through */
     case M_IM8:
-        insn.emitOperand8(op.val16);
+        if (op.val.overflowUint8())
+            insn.setErrorIf(op, OVERFLOW_RANGE);
+        insn.emitOperand8(v);
         break;
     case M_ADDR:
-        insn.emitOperand16(op.val16);
+        insn.emitOperand16(v);
         break;
     case M_REL:
         emitRelative(insn, op);

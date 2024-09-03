@@ -203,7 +203,7 @@ void DisMc68000::decodeRelative(DisInsn &insn, StrBuffer &out, AddrMode mode) co
         mode = M_REL16;
     if (mode == M_REL32) {
         const auto delta = static_cast<int32_t>(insn.readUint32());
-        if (!overflowInt16(delta)) {
+        if (!overflowDelta(delta, 16)) {
             auto save{out};
             insn.nameBuffer().over(out);
             out.letter('.').letter('L').over(insn.nameBuffer());
@@ -216,7 +216,7 @@ void DisMc68000::decodeRelative(DisInsn &insn, StrBuffer &out, AddrMode mode) co
     }
     const auto rel8 = (mode == M_REL8) ? static_cast<int8_t>(insn.opCode() & 0xFF) : 0;
     const auto delta = rel8 ? static_cast<int8_t>(rel8) : static_cast<int16_t>(insn.readUint16());
-    if (mode == M_REL8 && rel8 == 0 && !overflowInt8(delta)) {
+    if (mode == M_REL8 && rel8 == 0 && !overflowDelta(delta, 8)) {
         auto save{out};
         insn.nameBuffer().over(out);
         out.letter('.').letter('W').over(insn.nameBuffer());

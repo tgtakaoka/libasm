@@ -15,7 +15,8 @@
 help:
 	@echo '"make test"     run unit tests of libasm::src'
 
-TESTS = test_array_memory test_reg_base test_str_buffer test_str_scanner
+TESTS = test_array_memory test_reg_base test_str_buffer test_str_scanner \
+    test_value
 
 .PHONY:: help test clean clean-objs
 
@@ -27,7 +28,7 @@ clean-objs:
 vpath %.cpp ../../src
 vpath %.cpp ../../test
 
-CXXFLAGS = -std=c++14 -Wall -O $(DEBUG_FLAGS)
+CXXFLAGS = -std=c++14 -Wall -O $(DEBUG_FLAGS) -DLIBASM_DEBUG_VALUE
 CPPFLAGS = -I../../src -I../../test -MD -MF $@.d
 
 OBJS_common = test_unit_helper.o test_asserter.o error_reporter.o
@@ -51,6 +52,8 @@ test_reg_base: test_reg_base.o reg_base.o str_scanner.o str_buffer.o \
 test_str_buffer: test_str_buffer.o str_buffer.o $(OBJS_common)
 	$(CXX) -o $@ $^
 test_str_scanner: test_str_scanner.o str_scanner.o $(OBJS_common)
+	$(CXX) -o $@ $^
+test_value: test_value.o value.o str_buffer.o str_scanner.o $(OBJS_common)
 	$(CXX) -o $@ $^
 
 # Local Variables:

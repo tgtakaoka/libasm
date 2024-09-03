@@ -310,6 +310,7 @@ static void test_load_and_exchange() {
     // Load Multiple
     if (z8001()) {
         TEST("LDM R15,@RR2,#1",        0x1C21, 0x0F00);
+        ERRT("LDM R15,@RR2,#0",        ILLEGAL_CONSTANT, "#0", 0x1C21, 0x0F00);
         ERRT("LDM R15,@RR2,#2",        OVERFLOW_RANGE, "#2", 0x1c21, 0x0F01);
         TEST("LDM R1,@RR2,#2",         0x1C21, 0x0101);
         TEST("LDM R13,%120034,#3",     0x5C01, 0x0D02, 0x1234);

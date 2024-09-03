@@ -21,6 +21,7 @@
 #include "entry_i8086.h"
 #include "insn_base.h"
 #include "reg_i8086.h"
+#include "value.h"
 
 namespace libasm {
 namespace i8086 {
@@ -56,18 +57,18 @@ struct Operand final : ErrorAt {
     RegName seg;
     RegName reg;
     RegName index;
-    bool hasVal;
-    uint32_t val32;
-    uint16_t seg16;
+    bool hasDisp;
+    Value val;
+    Value segval;
     Operand()
         : mode(M_NONE),
           ptr(REG_UNDEF),
           seg(REG_UNDEF),
           reg(REG_UNDEF),
           index(REG_UNDEF),
-          hasVal(false),
-          val32(0),
-          seg16(0) {}
+          hasDisp(false),
+          val(),
+          segval() {}
     uint8_t encodeMod() const;
     uint8_t encodeR_m() const;
     AddrMode immediateMode() const;

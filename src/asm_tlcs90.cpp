@@ -76,11 +76,11 @@ void longBranch(AsmInsn &insn) {
 
 void AsmTlcs90::encodeRelative(AsmInsn &insn, AddrMode mode, const Operand &op) const {
     const auto base = insn.address() + 2;
-    const auto target = op.getError() ? base : op.val16;
+    const auto target = op.getError() ? base : op.val.getUnsigned();
     const auto delta = branchDelta(base, target, insn, op);
     const auto smartBranch = _smartBranch && maySmartBranch(insn);
     if (mode == M_REL8 && !smartBranch) {
-        if (overflowInt8(delta))
+        if (overflowDelta(delta, 8))
             insn.setErrorIf(op, OPERAND_TOO_FAR);
     short_branch:
         insn.emitInsn(insn.opCode());
@@ -93,7 +93,7 @@ void AsmTlcs90::encodeRelative(AsmInsn &insn, AddrMode mode, const Operand &op) 
         insn.emitUint16(delta);
         return;
     }
-    if (op.getError() || overflowInt8(delta)) {
+    if (op.getError() || overflowDelta(delta, 8)) {
         longBranch(insn);
         goto long_branch;
     }
@@ -106,22 +106,25 @@ void AsmTlcs90::encodeOperand(
     insn.setErrorIf(op);
     switch (mode) {
     case M_IMM8:
-        if (overflowUint8(op.val16))
+        if (op.val.overflowUint8())
             insn.setErrorIf(op, OVERFLOW_RANGE);
         /* Fall-through */
     case M_DIR:
         insn.emitInsn(opc);
-        insn.emitByte(op.val16);
+        insn.emitByte(op.val.getUnsigned());
         return;
     case M_IMM16:
+        if (op.val.overflowUint16())
+            insn.setErrorIf(op, OVERFLOW_RANGE);
+        /* Fall-through */
     case M_EXT:
         insn.emitInsn(opc);
-        insn.emitUint16(op.val16);
+        insn.emitUint16(op.val.getUnsigned());
         return;
     case M_BIT:
-        if (op.val16 >= 8)
+        if (op.val.overflow(7))
             insn.setErrorIf(op, OVERFLOW_RANGE);
-        insn.emitInsn(opc | (op.val16 & 7));
+        insn.emitInsn(opc | (op.val.getUnsigned() & 7));
         return;
     case M_REL8:
     case M_REL16:
@@ -133,10 +136,10 @@ void AsmTlcs90::encodeOperand(
         return;
     case M_IDX:
     case M_IXPD:
-        if (overflowInt8(static_cast<int16_t>(op.val16)))
+        if (op.val.overflowInt8())
             insn.setErrorIf(op, OVERFLOW_RANGE);
         insn.emitInsn(opc | encodeIndexReg(op.reg));
-        insn.emitByte(op.val16);
+        insn.emitByte(op.val.getUnsigned());
         return;
     case M_CC:
         insn.emitInsn(opc | encodeCcName(op.cc));
@@ -185,13 +188,13 @@ Error AsmTlcs90::parseOperand(StrScanner &scan, Operand &op) const {
     const auto regAt = p.skipSpaces();
     const auto reg = parseRegName(p);
     if (reg == REG_UNDEF) {
-        op.val16 = parseExpr16(p, op, paren);
+        op.val = parseInteger(p, op, paren);
         if (op.hasError())
             return op.getError();
         if (paren && !p.skipSpaces().expect(')'))
             return op.setError(p, MISSING_CLOSING_PAREN);
         if (paren) {  // (nnnn)
-            op.mode = op.getError() ? M_SYM : (op.val16 >= 0xFF00 ? M_DIR : M_EXT);
+            op.mode = op.getError() ? M_SYM : (op.val.getUnsigned() >= 0xFF00 ? M_DIR : M_EXT);
         } else {  // nnnn
             op.mode = M_IMM16;
         }
@@ -220,19 +223,19 @@ Error AsmTlcs90::parseOperand(StrScanner &scan, Operand &op) const {
                 if (paren && !p.skipSpaces().expect(')'))
                     return op.setError(p, MISSING_CLOSING_PAREN);
                 scan = p;
-                op.mode = paren ?  M_BASE : M_HLPA;  // (HL+A), HL+A
+                op.mode = paren ? M_BASE : M_HLPA;  // (HL+A), HL+A
                 return OK;
             }
         }
         if (isRegIndex(reg)) {
             p = dispAt;
-            op.val16 = parseExpr16(p, op, paren);
+            op.val = parseInteger(p, op, paren);
             if (op.hasError())
                 return op.getError();
             if (paren && !p.skipSpaces().expect(')'))
                 return op.setError(p, MISSING_CLOSING_PAREN);
             scan = p;
-            op.mode = paren ? M_IDX : M_IXPD; // (ix+d), ix+d
+            op.mode = paren ? M_IDX : M_IXPD;  // (ix+d), ix+d
             return OK;
         }
         return op.setError(regAt, REGISTER_NOT_ALLOWED);

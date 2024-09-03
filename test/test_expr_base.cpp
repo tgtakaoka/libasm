@@ -154,11 +154,7 @@ static void test_unary_operator() {
 
     E32("+2147483648", 0x80000000);
     E32("+2147483649", 0x80000001);
-#ifdef LIBASM_ASM_NOFLOAT
-    X32("+4294967296", OVERFLOW_RANGE, "4294967296", "");
-#else
     X32("+4294967296", OVERFLOW_RANGE, "+4294967296", "");
-#endif
 
     E8("~+0",    0xFF);
     E8("~(1|8)", 0xF6);
@@ -256,7 +252,7 @@ static void test_binary_operator() {
 
     E32("0b0001|0b0100", 0x05);
     E32("0b1011&0b0110", 0x02);
-    E32("0b0110^-1",    0xfffffff9);
+    E32("0b0110^0xffffffff",    0xfffffff9);
 
     E32(" 10< 10", 0);
     E32(" 10<=10", 1);
@@ -268,10 +264,10 @@ static void test_binary_operator() {
     E32(" 10> 20", 0);
     E32("-10>-20", 1);
 
-    E32(" 0 <  0xFFFFFFFD", 1);
-    E32(" 2 <  0xFFFFFFFD", 1); // unsigned comparison
-    E32("-2 <  0xFFFFFFFD", 1); // signed comparison
-    E32("-3 == 0xFFFFFFFD", 1);
+    E32(" 2 <  3", 1);
+    E32(" 2 < -3", 0);
+    E32("-2 < -3", 0);
+    E32("-2 <  3", 1);
 
     E32("10 == 10", 1);
     E32("10 == 20", 0);

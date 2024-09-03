@@ -50,6 +50,11 @@ static void test_load_store() {
     TEST("LODI,R1 <H'4567'", 0x05, 0x67);
     TEST("LODI,R2 >H'789A'", 0x06, 0x78);
     TEST("LODI,R3 H'89'",    0x07, 0x89);
+    TEST("LODI,R3  255",     0x07, 0xFF);
+    TEST("LODI,R3 -128",     0x07, 0x80);
+    ERRT("LODI,R3 H'100'",   OVERFLOW_RANGE,  "H'100'", 0x07, 0x00);
+    ERRT("LODI,R3  256",     OVERFLOW_RANGE,  "256",    0x07, 0x00);
+    ERRT("LODI,R3 -129",     OVERFLOW_RANGE,  "-129",   0x07, 0x7F);
     TEST("LODR,R0 *$+H'0B'", 0x08, 0x89);
     TEST("LODR,R1  $+H'0C'", 0x09, 0x0A);
     TEST("LODR,R2  $+H'0D'", 0x0A, 0x0B);

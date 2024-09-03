@@ -38,7 +38,7 @@ private:
 
     int8_t parseIntrNames(StrScanner &scan) const;
     int8_t parseFlagNames(StrScanner &scan) const;
-    uint32_t parseAddress(StrScanner &scan, Operand &op) const;
+    void parseAddress(StrScanner &scan, Operand &op) const;
     Error parseOperand(StrScanner &scan, Operand &op) const;
 
     void emitData(AsmInsn &insn, OprPos pos, Config::opcode_t data) const;

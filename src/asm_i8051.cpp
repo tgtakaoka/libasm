@@ -61,7 +61,7 @@ Error AsmI8051::parseOperand(StrScanner &scan, Operand &op) const {
         return OK;
 
     if (p.expect('#')) {
-        op.val16 = parseExpr16(p, op);
+        op.val = parseInteger(p, op);
         if (op.hasError())
             return op.getError();
         op.mode = M_IMM16;
@@ -123,25 +123,25 @@ Error AsmI8051::parseOperand(StrScanner &scan, Operand &op) const {
 
     const auto addrp = p;
     const auto bitNot = p.expect('/');
-    op.val16 = parseExpr16(p.skipSpaces(), op);
+    op.val = parseInteger(p.skipSpaces(), op, '.');
     if (op.hasError())
         return op.getError();
     if (p.expect('.')) {
         if (op.getError())
-            op.val16 = 0x20;
+            op.val.setUnsigned(0x20);
         const auto bitp = p;
         ErrorAt bitOp;
-        auto bitNo = parseExpr16(p, bitOp);
+        auto bitNo = parseInteger(p, bitOp);
         if (bitOp.getError())
             op.setErrorIf(bitOp);
-        if (bitNo >= 8)
+        if (bitNo.overflow(7))
             return op.setError(bitp, ILLEGAL_BIT_NUMBER);
-        auto val16 = op.val16;
-        if ((val16 & ~0x0F) == 0x20 || (val16 & ~0x78) == 0x80) {
+        auto bitAddr = op.val.getUnsigned();
+        if ((bitAddr & ~0x0F) == 0x20 || (bitAddr & ~0x78) == 0x80) {
             op.mode = bitNot ? M_NOTAD : M_BITAD;
-            if ((val16 & 0x80) == 0)
-                op.val16 = (val16 & 0xF) << 3;
-            op.val16 |= bitNo;
+            if ((bitAddr & 0x80) == 0)
+                bitAddr = (bitAddr & 0xF) << 3;
+            op.val.setUnsigned(bitAddr | bitNo.getUnsigned());
             scan = p;
             return OK;
         }
@@ -155,9 +155,9 @@ Error AsmI8051::parseOperand(StrScanner &scan, Operand &op) const {
 void AsmI8051::encodeRelative(AsmInsn &insn, const Operand &op) const {
     const auto len = insn.length();
     const auto base = insn.address() + (len ? len : 1) + 1;
-    const auto target = op.getError() ? base : op.val16;
+    const auto target = op.getError() ? base : op.val.getUnsigned();
     const auto delta = branchDelta(base, target, insn, op);
-    if (overflowInt8(delta))
+    if (overflowDelta(delta, 8))
         insn.setErrorIf(op, OPERAND_TOO_FAR);
     insn.emitOperand8(delta);
 }
@@ -202,7 +202,7 @@ void longJump(AsmInsn &insn) {
 void AsmI8051::encodeJump(AsmInsn &insn, AddrMode mode, const Operand &op) const {
     const auto smartBranch = _smartBranch && maySmartBranch(insn);
     const auto base = insn.address() + 2;
-    const auto target = op.getError() ? block(base) : op.val16;
+    const auto target = op.getError() ? block(base) : op.val.getUnsigned();
     if (mode == M_ADR11 && !smartBranch) {
         if (block(base) != block(target))
             insn.setErrorIf(op, OPERAND_TOO_FAR);
@@ -213,7 +213,7 @@ void AsmI8051::encodeJump(AsmInsn &insn, AddrMode mode, const Operand &op) const
     }
     if (mode == M_ADR16 && !smartBranch) {
     long_jump:
-        insn.emitOperand16(op.val16);
+        insn.emitOperand16(op.val.getUnsigned());
         return;
     }
     if (op.getError() || block(base) != block(target)) {
@@ -235,25 +235,25 @@ void AsmI8051::encodeOperand(AsmInsn &insn, AddrMode mode, const Operand &op) co
         insn.embed(encodeRRegName(op.reg));
         break;
     case M_IMM8:
-        if (overflowUint8(op.val16))
+        if (op.val.overflowUint8())
             insn.setErrorIf(op, OVERFLOW_RANGE);
-        insn.emitOperand8(op.val16);
+        insn.emitOperand8(op.val.getUnsigned());
         break;
     case M_ADR11:
     case M_ADR16:
         encodeJump(insn, mode, op);
         break;
     case M_IMM16:
-        insn.emitOperand16(op.val16);
+        insn.emitOperand16(op.val.getUnsigned());
         break;
     case M_ADR8:
     case M_BITAD:
     case M_NOTAD:
-        if (op.val16 >= 0x100)
+        if (op.val.overflow(UINT8_MAX))
             insn.setErrorIf(op, mode == M_ADR8 ? OVERFLOW_RANGE : NOT_BIT_ADDRESSABLE);
-        if (TABLE.invalidDirect(insn.opCode(), op.val16))
+        if (TABLE.invalidDirect(insn.opCode(), op.val.getUnsigned()))
             insn.setErrorIf(op, OPERAND_NOT_ALLOWED);
-        insn.emitOperand8(op.val16);
+        insn.emitOperand8(op.val.getUnsigned());
         break;
     default:
         break;

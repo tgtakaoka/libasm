@@ -73,7 +73,7 @@ Error AsmMc6800::parseOperand(StrScanner &scan, Operand &op) const {
     }
 
     if (p.expect('#')) {
-        op.val16 = parseExpr16(p, op);
+        op.val = parseInteger(p, op);
         if (op.hasError())
             return op.getError();
         op.mode = M_IM16;
@@ -87,7 +87,7 @@ Error AsmMc6800::parseOperand(StrScanner &scan, Operand &op) const {
     } else if (p.expect('>')) {
         op.size = 16;
     }
-    op.val16 = parseExpr16(p, op);
+    op.val = parseInteger(p, op);
     if (op.hasError())
         return op.getError();
 
@@ -101,12 +101,13 @@ Error AsmMc6800::parseOperand(StrScanner &scan, Operand &op) const {
         }
     }
     if (op.size == 0) {
-        if (op.val16 < 8)
-            op.mode = M_BIT;
-        else if (op.val16 < 0x100)
-            op.mode = M_DIR;
-        else
+        if (op.val.overflowUint8()) {
             op.mode = M_EXT;
+        } else if (op.val.overflow(7)) {
+            op.mode = M_DIR;
+        } else {
+            op.mode = M_BIT;
+        }
     } else {
         op.mode = (op.size == 8) ? M_DIR : M_EXT;
     }
@@ -116,68 +117,69 @@ Error AsmMc6800::parseOperand(StrScanner &scan, Operand &op) const {
 
 void AsmMc6800::emitRelative(AsmInsn &insn, const Operand &op) const {
     const auto base = insn.address() + (insn.length() == 0 ? 2 : insn.length() + 1);
-    const auto target = op.getError() ? base : op.val16;
+    const auto target = op.getError() ? base : op.val.getUnsigned();
     const auto delta = branchDelta(base, target, insn, op);
-    if (overflowInt8(delta))
+    if (overflowDelta(delta, 8))
         insn.setErrorIf(op, OPERAND_TOO_FAR);
     insn.emitOperand8(delta);
 }
 
 void AsmMc6800::emitImmediate(AsmInsn &insn, AddrMode mode, const Operand &op) const {
     if (mode == M_GN16 || mode == M_IM16) {
-        insn.emitOperand16(op.val16);
+        insn.emitOperand16(op.val.getUnsigned());
     } else {
-        if (overflowUint8(op.val16))
+        if (op.val.overflowUint8())
             insn.setErrorIf(op, OVERFLOW_RANGE);
-        insn.emitOperand8(op.val16);
+        insn.emitOperand8(op.val.getUnsigned());
     }
 }
 
 void AsmMc6800::emitBitNumber(AsmInsn &insn, const Operand &op) const {
-    const uint8_t imm = 1U << (op.val16 & 7);
+    const uint8_t imm = 1U << (op.val.getUnsigned() & 7);
     const auto aim = (insn.opCode() & 0xF) == 1;
     insn.emitOperand8(aim ? ~imm : imm);
 }
 
 void AsmMc6800::emitOperand(AsmInsn &insn, AddrMode mode, const Operand &op) const {
     insn.setErrorIf(op);
+    const auto val16 = op.val.getUnsigned();
     switch (mode) {
     case M_GN8:
     case M_GN16:
         if (op.mode == M_DIR || op.mode == M_BIT) {
             insn.embed(0x10);
-            insn.emitOperand8(op.val16);
+            insn.emitOperand8(val16);
         } else if (op.mode == M_IDX || op.mode == M_IDY) {
-            if (op.val16 >= 256)
+            if (op.val.overflow(UINT8_MAX))
                 insn.setErrorIf(op, OVERFLOW_RANGE);
             insn.embed(0x20);
-            insn.emitOperand8(op.val16);
+            insn.emitOperand8(val16);
         } else if (op.mode == M_EXT) {
             insn.embed(0x30);
-            insn.emitOperand16(op.val16);
+            insn.emitOperand16(val16);
         } else {
             emitImmediate(insn, mode, op);
         }
         break;
     case M_GMEM:
         if (op.mode == M_IDX) {
-            if (op.val16 >= 256)
+            if (op.val.overflow(UINT8_MAX))
                 insn.setErrorIf(op, OVERFLOW_RANGE);
-            insn.emitOperand8(op.val16);
+            insn.emitOperand8(val16);
         } else {
             insn.embed(0x70);
-            insn.emitOperand16(op.val16);
+            insn.emitOperand16(val16);
         }
         break;
     case M_DIR:
     case M_IDX:
     case M_IDY:
-        if (op.val16 >= 256)
+        if (op.val.overflow(UINT8_MAX))
             insn.setErrorIf(op, OVERFLOW_RANGE);
-        insn.emitOperand8(op.val16);
+        insn.emitOperand8(val16);
         break;
     case M_EXT:
-        insn.emitOperand16(op.val16);
+        insn.emitOperand16(val16);
         break;
     case M_REL:
         emitRelative(insn, op);

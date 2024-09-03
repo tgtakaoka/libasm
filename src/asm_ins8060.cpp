@@ -119,8 +119,8 @@ void AsmIns8060::encodeRel8(AsmInsn &insn, const Operand &op) const {
                 insn.setErrorIf(op, REGISTER_NOT_ALLOWED);
             delta = -128;
         } else {
-            delta = static_cast<Config::ptrdiff_t>(op.val16);
-            if (overflowInt8(delta) || (!pcdisp && delta == -128))
+            delta = op.val.getSigned();
+            if (overflowDelta(delta, 8) || (!pcdisp && delta == -128))
                 insn.setErrorIf(op, OVERFLOW_RANGE);
         }
         insn.embed(encodePointerReg(op.reg));
@@ -129,13 +129,13 @@ void AsmIns8060::encodeRel8(AsmInsn &insn, const Operand &op) const {
         const Config::uintptr_t base = insn.address() + 1;
         // PC will be incremented before fetching next instruction.
         const uint8_t fetch = (insn.addrMode() == M_REL8) ? 1 : 0;
-        const Config::uintptr_t target = op.getError() ? base : op.val16;
+        const Config::uintptr_t target = op.getError() ? base : op.val.getUnsigned();
         // Program space is paged by 4kB.
         insn.setErrorIf(op, checkAddr(target, insn.address(), 12));
         const auto diff = offset(target - fetch) - offset(base);
         // Sign extends 12-bit number.
         delta = signExtend(diff, 12);
-        if (overflowInt8(delta))
+        if (overflowDelta(delta, 8))
             insn.setErrorIf(op, OPERAND_TOO_FAR);
         if (op.getError())
             delta = 0;
@@ -156,13 +156,13 @@ void AsmIns8060::encodeIndx(AsmInsn &insn, const Operand &op) const {
             insn.setErrorIf(op, OPERAND_NOT_ALLOWED);
         insn.embed(4);
     }
-    auto disp = static_cast<Config::ptrdiff_t>(op.val16);
+    auto disp = op.val.getSigned();
     const auto pcdisp = (op.reg == REG_PC || op.reg == REG_P0);
     if (op.index == REG_E) {
         if (pcdisp)
             insn.setErrorIf(op, REGISTER_NOT_ALLOWED);
         disp = -128;
-    } else if (overflowInt8(disp) || (!pcdisp && disp == -128)) {
+    } else if (overflowDelta(disp, 8) || (!pcdisp && disp == -128)) {
         insn.setErrorIf(op, OVERFLOW_RANGE);
     }
     insn.emitInsn();
@@ -187,7 +187,7 @@ Error AsmIns8060::parseOperand(StrScanner &scan, Operand &op) const {
         scan = p;
         return OK;
     } else {
-        op.val16 = parseExpr16(p, op);
+        op.val = parseInteger(p, op);
         if (op.hasError())
             return op.getError();
     }
@@ -213,7 +213,7 @@ Error AsmIns8060::parseOperand(StrScanner &scan, Operand &op) const {
 Error AsmIns8060::defineAddrConstant(StrScanner &scan, Insn &insn) {
     do {
         auto p = scan.skipSpaces();
-        const auto value = parseExpr(p, insn);
+        const auto value = parseInteger(p, insn);
         if (insn.hasError())
             break;
         const auto v = value.getUnsigned();
@@ -255,10 +255,10 @@ Error AsmIns8060::encodeImpl(StrScanner &scan, Insn &_insn) const {
         encodeIndx(insn, insn.op);
         break;
     case M_IMM8:
-        if (overflowUint8(insn.op.val16))
+        if (insn.op.val.overflowUint8())
             insn.setErrorIf(insn.op, OVERFLOW_RANGE);
         insn.emitInsn();
-        insn.emitByte(insn.op.val16);
+        insn.emitByte(insn.op.val.getUnsigned());
         break;
     default:
         break;

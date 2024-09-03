@@ -46,7 +46,7 @@ private:
     Error parseDisplacement(StrScanner &scan, Operand &op) const;
     Error parseOperand(StrScanner &scan, Operand &opr) const;
 
-    void emitImmediate(AsmInsn &insn, const Operand &op, OprSize size, uint32_t val) const;
+    void emitImmediate(AsmInsn &insn, const Operand &op, OprSize size, const Value &val) const;
     void emitRelative(AsmInsn &insn, const Operand &op, AddrMode mode) const;
     void emitRegister(AsmInsn &insn, const Operand &op, OprPos pos) const;
     Config::opcode_t encodeSegmentOverride(RegName seg, RegName base) const;

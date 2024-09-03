@@ -14,12 +14,11 @@
  * limitations under the License.
  */
 
+#include "test_asserter.h"
 #include <cinttypes>
 #include <cstdint>
 #include <cstdio>
 #include <cstring>
-
-#include "test_asserter.h"
 
 namespace libasm {
 namespace test {
@@ -51,7 +50,8 @@ void TestAsserter::isFalse(const char *file, const int line, const char *message
     printf("%s:%d: %s: expected 'false': actual 'true'\n", file, line, message);
 }
 
-void TestAsserter::isNull(const char *file, const int line, const char *message, const void *actual) {
+void TestAsserter::isNull(
+        const char *file, const int line, const char *message, const void *actual) {
     if (actual == nullptr) {
         _pass_count++;
         return;
@@ -60,7 +60,8 @@ void TestAsserter::isNull(const char *file, const int line, const char *message,
     printf("%s:%d: %s: expected 'nullptr': actual '%p'\n", file, line, message, actual);
 }
 
-void TestAsserter::isNotNull(const char *file, const int line, const char *message, const void *actual) {
+void TestAsserter::isNotNull(
+        const char *file, const int line, const char *message, const void *actual) {
     if (actual != nullptr) {
         _pass_count++;
         return;
@@ -70,13 +71,13 @@ void TestAsserter::isNotNull(const char *file, const int line, const char *messa
 }
 
 void TestAsserter::equals(
-        const char *file, const int line, const char *message, uint32_t expected, uint32_t actual) {
+        const char *file, const int line, const char *message, uint64_t expected, uint64_t actual) {
     if (expected == actual) {
         _pass_count++;
         return;
     }
     _fail_count++;
-    printf("%s:%d: %s: expected '%u': actual '%u'\n", file, line, message, expected, actual);
+    printf("%s:%d: %s: expected '%lu': actual '%lu'\n", file, line, message, expected, actual);
 }
 
 void TestAsserter::equals(const char *file, const int line, const char *message,

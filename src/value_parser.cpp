@@ -93,7 +93,7 @@ Value ValueParser::_eval(
         }
         if (maybe_prefix && opr == nullptr) {
             Value val;
-            auto err = parseConstant(scan, val);
+            auto err = parseConstant(scan, val, delim);
             if (err == OK) {
                 if (vstack.full()) {
                     error.setError(at, TOO_COMPLEX_EXPRESSION);
@@ -134,7 +134,14 @@ Value ValueParser::_eval(
                     return Value();
                 }
                 if (symtab && symtab->hasSymbol(symbol)) {
-                    vstack.pushSigned(symtab->lookupSymbol(symbol));
+                    Value value;
+                    const auto v = symtab->lookupSymbol(symbol);
+                    if (v < 0) {
+                        value.setSigned(v);
+                    } else {
+                        value.setUnsigned(v);
+                    }
+                    vstack.push(value);
                 } else {
                     error.setErrorIf(at, UNDEFINED_SYMBOL);
                     vstack.push(Value());
@@ -260,7 +267,7 @@ Value ValueParser::_eval(
     return vstack.pop();
 }
 
-Error ValueParser::parseConstant(StrScanner &scan, Value &val) const {
+Error ValueParser::parseConstant(StrScanner &scan, Value &val, char delim) const {
     auto p = scan;
 
     char letter;
@@ -275,11 +282,11 @@ Error ValueParser::parseConstant(StrScanner &scan, Value &val) const {
 
     err = _number.parseNumber(p, val);
 #ifndef LIBASM_ASM_NOFLOAT
-    const auto fpnum = (err == OK && (*p == '.' || toupper(*p) == 'E'));
+    const auto fpnum = (err == OK && (*p == '.' || toupper(*p) == 'E')) && delim != '.';
     if (fpnum || err == OVERFLOW_RANGE || err == NOT_AN_EXPECTED) {
         char *end;
         const auto value = strtod(scan.str(), &end);
-        if (end > p.str()) {
+        if (end > scan.str()) {
             val.setFloat(value);
             scan = end;
             return OK;

@@ -41,8 +41,8 @@ private:
     Error parseRegisterList(StrScanner &scan, Operand &op) const;
     Error parseBaseOperand(StrScanner &scan, Operand &op) const;
     Error parseOperand(StrScanner &scan, Operand &op) const;
-    void emitDisplacement(
-            AsmInsn &insn, const Operand &op, int32_t val32, Error error = OVERFLOW_RANGE) const;
+    void emitDisplacement(AsmInsn &insn, const Operand &op, const Value &disp,
+            Error error = OVERFLOW_RANGE) const;
     void emitLength(AsmInsn &insn, const Operand &op) const;
     void emitBitField(AsmInsn &insn, AddrMode mode, const Operand &off, const Operand &len) const;
     void emitImmediate(AsmInsn &insn, AddrMode mode, const Operand &op) const;

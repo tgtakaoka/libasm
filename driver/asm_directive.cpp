@@ -107,7 +107,9 @@ Error AsmDirective::encode(StrScanner &scan, Insn &insn, Context &context) {
         if (context.reportDuplicate && context.symbols.hasSymbol(context.label)) {
             setErrorIf(context.label, DUPLICATE_LABEL);
         } else {
-            context.symbols.internSymbol(insn.address(), context.label);
+            Value addr;
+            addr.setUnsigned(insn.address());
+            context.symbols.internSymbol(addr, context.label);
         }
     }
     if (error != UNKNOWN_DIRECTIVE)
@@ -200,7 +202,7 @@ Error AsmDirective::defineSymbol(
     if (context.reportUndefined && error.getError() == UNDEFINED_SYMBOL)
         return setError(error);
 
-    setErrorIf(symbol, context.symbols.internSymbol(context.value.getUnsigned(), symbol, variable));
+    setErrorIf(symbol, context.symbols.internSymbol(context.value, symbol, variable));
     return getError();
 }
 

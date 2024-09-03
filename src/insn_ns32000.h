@@ -53,23 +53,11 @@ private:
 struct Operand final : ErrorAt {
     AddrMode mode;
     RegName reg;
-    Value value;
-    uint32_t val32;
-    uint32_t disp2;
+    Value val;
+    Value disp2;
     RegName index;
     OprSize size;
-    Operand()
-        : mode(M_NONE),
-          reg(REG_UNDEF),
-          value(),
-          val32(0),
-          disp2(0),
-          index(REG_UNDEF),
-          size(SZ_NONE) {}
-    uint32_t getUint32() const { return value.getUnsigned(); }
-#ifndef LIBASM_ASM_NOFLOAT
-    double getFloat() const { return value.getFloat(); }
-#endif
+    Operand() : mode(M_NONE), reg(REG_UNDEF), val(), disp2(), index(REG_UNDEF), size(SZ_NONE) {}
 };
 
 struct AsmInsn final : public AsmInsnImpl<Config>, EntryInsn {

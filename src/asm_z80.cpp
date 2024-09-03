@@ -63,9 +63,9 @@ AsmZ80::AsmZ80(const ValueParser::Plugins &plugins)
 
 void AsmZ80::encodeRelative(AsmInsn &insn, const Operand &op) const {
     const auto base = insn.address() + 2;
-    const auto target = op.getError() ? base : op.val16;
+    const auto target = op.getError() ? base : op.val.getUnsigned();
     const auto delta = branchDelta(base, target, insn, op);
-    if (overflowInt8(delta))
+    if (overflowDelta(delta, 8))
         insn.setErrorIf(op, OPERAND_TOO_FAR);
     insn.emitOperand8(delta);
 }
@@ -75,31 +75,31 @@ static void encodeIndexReg(AsmInsn &insn, RegName ixReg) {
 }
 
 void AsmZ80::encodeIndexedBitOp(AsmInsn &insn, const Operand &op) const {
-    const auto opc = insn.opCode();  // Bit opcode.
-    insn.setOpCode(insn.prefix());   // Make 0xCB prefix as opcode.
-    encodeIndexReg(insn, op.reg);    // Add 0xDD/0xFD prefix
-    insn.emitOperand8(op.val16);     // Index offset.
-    insn.emitOperand8(opc);          // Bit opcode.
+    const auto opc = insn.opCode();           // Bit opcode.
+    insn.setOpCode(insn.prefix());            // Make 0xCB prefix as opcode.
+    encodeIndexReg(insn, op.reg);             // Add 0xDD/0xFD prefix
+    insn.emitOperand8(op.val.getUnsigned());  // Index offset.
+    insn.emitOperand8(opc);                   // Bit opcode.
     insn.emitInsn();
 }
 
 void AsmZ80::encodeOperand(
         AsmInsn &insn, const Operand &op, AddrMode mode, const Operand &other) const {
     insn.setErrorIf(op);
-    auto val16 = op.val16;
+    auto val16 = op.val.getUnsigned();
     switch (mode) {
     case M_IM8:
-        if (overflowUint8(val16))
+        if (op.val.overflowUint8())
             insn.setErrorIf(op, OVERFLOW_RANGE);
         insn.emitOperand8(val16);
         break;
     case M_IOA:
-        if (val16 >= 0x100)
+        if (op.val.overflow(UINT8_MAX))
             insn.setErrorIf(op, OVERFLOW_RANGE);
         insn.emitOperand8(val16);
         break;
     case M_IDX:
-        if (overflowInt8(static_cast<int16_t>(val16)))
+        if (op.val.overflowInt8())
             insn.setErrorIf(op, OVERFLOW_RANGE);
         if (insn.indexBit()) {
             encodeIndexedBitOp(insn, op);
@@ -153,7 +153,7 @@ void AsmZ80::encodeOperand(
         insn.embed(val16);
         break;
     case M_BIT:
-        if (val16 >= 8)
+        if (op.val.overflow(7))
             insn.setErrorIf(op, ILLEGAL_BIT_NUMBER);
         insn.embed(static_cast<uint8_t>(val16 & 7) << 3);
         break;
@@ -188,7 +188,7 @@ Error AsmZ80::parseOperand(StrScanner &scan, Operand &op) const {
     if (reg == REG_C) {
         op.mode = R_C;
         op.reg = REG_C;
-        op.val16 = encodeCcName(CC_C);
+        op.val.setUnsigned(encodeCcName(CC_C));
         scan = a;
         return OK;
     }
@@ -196,7 +196,7 @@ Error AsmZ80::parseOperand(StrScanner &scan, Operand &op) const {
     const auto cc = parseCcName(p);
     if (cc != CC_UNDEF) {
         op.mode = isCc4Name(cc) ? M_CC4 : M_CC8;
-        op.val16 = encodeCcName(cc);
+        op.val.setUnsigned(encodeCcName(cc));
         scan = p;
         return OK;
     }
@@ -232,7 +232,7 @@ Error AsmZ80::parseOperand(StrScanner &scan, Operand &op) const {
         const auto regp = p.skipSpaces();
         op.reg = parseRegName(p);
         if (op.reg == REG_UNDEF) {
-            op.val16 = parseExpr16(p, op, ')');
+            op.val = parseInteger(p, op, ')');
             if (op.hasError())
                 return op.getError();
             if (!p.skipSpaces().expect(')'))
@@ -264,7 +264,7 @@ Error AsmZ80::parseOperand(StrScanner &scan, Operand &op) const {
         }
         if (*p == '+' || *p == '-') {
             if (op.reg == REG_IX || op.reg == REG_IY) {
-                op.val16 = parseExpr16(p, op, ')');
+                op.val = parseInteger(p, op, ')');
                 if (op.hasError())
                     return op.getError();
                 if (!p.skipSpaces().expect(')'))
@@ -276,7 +276,7 @@ Error AsmZ80::parseOperand(StrScanner &scan, Operand &op) const {
         }
         return op.setError(UNKNOWN_OPERAND);
     }
-    op.val16 = parseExpr16(p, op);
+    op.val = parseInteger(p, op);
     if (op.hasError())
         return op.getError();
     op.mode = M_IM16;

@@ -28,8 +28,8 @@ namespace libasm {
 namespace test {
 
 struct TestSymtab final : SymbolTable {
-    const char *lookupValue(uint32_t addr) const override {
-        auto it = _values.find(addr);
+    const char *lookupValue(symval_t val) const override {
+        auto it = _values.find(val);
         return it == _values.end() ? nullptr : it->second.c_str();
     }
 
@@ -38,7 +38,7 @@ struct TestSymtab final : SymbolTable {
         return _symbols.find(key) != _symbols.end();
     }
 
-    uint32_t lookupSymbol(const StrScanner &symbol) const override {
+    symval_t lookupSymbol(const StrScanner &symbol) const override {
         const std::string key(symbol.str(), symbol.size());
         auto it = _symbols.find(key);
         return it == _symbols.end() ? 0 : it->second;
@@ -50,9 +50,9 @@ struct TestSymtab final : SymbolTable {
         return it == _functions.end() ? nullptr : it->second;
     }
 
-    void intern(uint32_t value, const std::string &key) {
-        _symbols[key] = value;
-        _values[value] = key;
+    void intern(int32_t s, const std::string &key) {
+        _symbols[key] = s;
+        _values[s] = key;
     }
 
     void internFunction(const void *value, const std::string &key) { _functions[key] = value; }
@@ -64,8 +64,8 @@ struct TestSymtab final : SymbolTable {
     }
 
 private:
-    std::map<std::string, uint32_t, std::less<>> _symbols;
-    std::map<uint32_t, std::string> _values;
+    std::map<std::string, symval_t, std::less<>> _symbols;
+    std::map<symval_t, std::string> _values;
     std::map<std::string, const void *, std::less<>> _functions;
 };
 

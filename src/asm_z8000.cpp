@@ -111,30 +111,33 @@ void AsmZ8000::emitIndirectRegister(
 
 void AsmZ8000::emitImmediate(AsmInsn &insn, OprPos pos, AddrMode mode, const Operand &op) const {
     if (mode == M_IM8) {
-        if (overflowUint8(op.val32))
+        if (op.val.overflowUint8())
             insn.setErrorIf(op, OVERFLOW_RANGE);
-        insn.embed(static_cast<uint8_t>(op.val32));
+        insn.embed(static_cast<uint8_t>(op.val.getUnsigned()));
         return;
     }
     if (mode == M_BIT) {
-        if (op.val32 >= (insn.size() == SZ_BYTE ? 8 : 16))
+        if (op.val.overflow(insn.size() == SZ_BYTE ? 7 : 15))
             insn.setErrorIf(op, ILLEGAL_BIT_NUMBER);
-        emitData(insn, pos, op.val32);
+        emitData(insn, pos, op.val.getUnsigned());
         return;
     }
     if (mode == M_CNT) {
-        if (op.val32 > 16)
+        auto count = op.val.getUnsigned();
+        if (op.val.isNegative() || count == 0 || count > 16) {
             insn.setErrorIf(op, OVERFLOW_RANGE);
-        const Config::opcode_t count = op.getError() ? 0 : static_cast<uint8_t>(op.val32) - 1;
-        emitData(insn, pos, count);
+            count = 1;
+        }
+        emitData(insn, pos, count - 1);
         return;
     }
     if (mode == M_QCNT) {
-        if (op.val32 == 1 || op.getError())
+        const auto qcnt = op.val.getUnsigned();
+        if (qcnt == 1 || op.getError())
             return;
-        if (op.val32 == 0)
+        if (qcnt == 0)
             insn.setErrorIf(op, OPERAND_NOT_ALLOWED);
-        if (op.val32 == 2) {
+        if (qcnt == 2) {
             emitData(insn, pos, 2);
             return;
         }
@@ -142,11 +145,11 @@ void AsmZ8000::emitImmediate(AsmInsn &insn, OprPos pos, AddrMode mode, const Ope
         return;
     }
     if (mode == M_SCNT || mode == M_NCNT) {
-        if (op.val32 > 32)
+        if (op.val.overflow(32))
             insn.setErrorIf(op, OVERFLOW_RANGE);
-        auto count = static_cast<int16_t>(op.val32);
+        auto count = op.val.getSigned();
         const auto size = insn.size();
-        if (count < 0 || (size == SZ_BYTE && count > 8) || (size == SZ_WORD && op.val32 > 16))
+        if (count < 0 || (size == SZ_BYTE && count > 8) || (size == SZ_WORD && count > 16))
             insn.setErrorIf(op, OVERFLOW_RANGE);
         if (mode == M_NCNT)
             count = -count;
@@ -158,21 +161,21 @@ void AsmZ8000::emitImmediate(AsmInsn &insn, OprPos pos, AddrMode mode, const Ope
     // M_IM
     switch (insn.size()) {
     case SZ_BYTE:
-        if (overflowUint8(op.val32))
+        if (op.val.overflowUint8())
             insn.setErrorIf(op, OVERFLOW_RANGE);
         {
-            uint16_t val16 = static_cast<uint8_t>(op.val32);
+            uint16_t val16 = static_cast<uint8_t>(op.val.getUnsigned());
             val16 |= (val16 << 8);
             insn.emitOperand16(val16);
         }
         break;
     case SZ_WORD:
-        if (overflowUint16(op.val32))
+        if (op.val.overflowUint16())
             insn.setErrorIf(op, OVERFLOW_RANGE);
-        insn.emitOperand16(static_cast<uint16_t>(op.val32));
+        insn.emitOperand16(op.val.getUnsigned());
         break;
     case SZ_QUAD:
-        insn.emitOperand32(op.val32);
+        insn.emitOperand32(op.val.getUnsigned());
         break;
     default:
         break;
@@ -181,10 +184,11 @@ void AsmZ8000::emitImmediate(AsmInsn &insn, OprPos pos, AddrMode mode, const Ope
 
 void AsmZ8000::emitDirectAddress(AsmInsn &insn, AddrMode mode, const Operand &op) const {
     const auto align = mode == M_DA && (insn.size() == SZ_WORD || insn.size() == SZ_QUAD);
-    insn.setErrorIf(op, checkAddr(op.val32, align));
+    const auto addr = op.val.getUnsigned();
+    insn.setErrorIf(op, checkAddr(addr, align));
     if (segmentedModel()) {
-        const uint16_t seg = (op.val32 >> 8) & 0x7F00;
-        const uint16_t disp = op.val32;
+        const uint16_t seg = (addr >> 8) & 0x7F00;
+        const uint16_t disp = addr;
         const auto autoShortDirect = _autoShortDirect && op.isOK();
         if (disp < 0x100 && autoShortDirect) {
             insn.emitOperand16(seg | disp);
@@ -198,18 +202,18 @@ void AsmZ8000::emitDirectAddress(AsmInsn &insn, AddrMode mode, const Operand &op
         }
         return;
     }
-    insn.emitOperand16(op.val32);
+    insn.emitOperand16(addr);
 }
 
 void AsmZ8000::emitRelative(AsmInsn &insn, AddrMode mode, const Operand &op) const {
     const auto base = insn.address() + (mode == M_RA ? 4 : 2);
-    const auto target = op.getError() ? base : op.val32;
+    const auto target = op.getError() ? base : op.val.getUnsigned();
     if (segmentedModel())
         insn.setErrorIf(op, checkAddr(target, insn.address(), 16));
     if (mode == M_RA) {
         insn.setErrorIf(op, checkAddr(target, insn.size() == SZ_WORD || insn.size() == SZ_QUAD));
         const auto delta = target - base;
-        if (overflowInt16(delta))
+        if (overflowDelta(delta, 16))
             insn.setErrorIf(op, OPERAND_TOO_FAR);
         insn.emitOperand16(static_cast<uint16_t>(delta));
         return;
@@ -218,13 +222,13 @@ void AsmZ8000::emitRelative(AsmInsn &insn, AddrMode mode, const Operand &op) con
     auto delta = branchDelta(base, target, insn, op) / 2;
     if (mode == M_RA12) {
         delta = -delta;
-        if (overflowInt(delta, 12))
+        if (overflowDelta(delta, 12))
             insn.setErrorIf(op, OPERAND_TOO_FAR);
         insn.embed(static_cast<uint16_t>(delta & 0xFFF));
         return;
     }
     if (mode == M_RA8) {
-        if (overflowInt8(delta))
+        if (overflowDelta(delta, 8))
             insn.setErrorIf(op, OPERAND_TOO_FAR);
         insn.embed(static_cast<uint16_t>(delta & 0xFF));
         return;
@@ -243,11 +247,10 @@ void AsmZ8000::emitIndexed(AsmInsn &insn, OprPos pos, const Operand &op) const {
 }
 
 void AsmZ8000::emitBaseAddress(AsmInsn &insn, OprPos pos, const Operand &op) const {
-    const int32_t disp = static_cast<int32_t>(op.val32);
-    if (overflowInt16(disp))
+    if (op.val.overflowInt16())
         insn.setErrorIf(op.baseAt, OVERFLOW_RANGE);
     emitIndirectRegister(insn, op, pos, op.base);
-    insn.emitOperand16(static_cast<uint16_t>(disp));
+    insn.emitOperand16(op.val.getUnsigned());
 }
 
 void AsmZ8000::emitBaseIndexed(AsmInsn &insn, OprPos pos, const Operand &op) const {
@@ -268,9 +271,9 @@ void AsmZ8000::emitFlags(AsmInsn &insn, OprPos pos, const Operand &op) const {
         }
         return;
     }
-    if (op.val32 == 0)
+    if (op.val.isUndefined())
         insn.setErrorIf(op, OPCODE_HAS_NO_EFFECT);
-    emitData(insn, pos, static_cast<uint16_t>(op.val32));
+    emitData(insn, pos, op.val.getUnsigned());
 }
 
 void AsmZ8000::emitCtlRegister(AsmInsn &insn, OprPos pos, const Operand &op) const {
@@ -349,9 +352,9 @@ void AsmZ8000::emitOperand(AsmInsn &insn, AddrMode mode, const Operand &op, OprP
         emitBaseIndexed(insn, pos, op);
         break;
     case M_IO:
-        if (op.val32 >= 0x10000)
+        if (op.val.overflow(UINT16_MAX))
             insn.setErrorIf(op, OVERFLOW_RANGE);
-        insn.emitOperand16(static_cast<uint16_t>(op.val32));
+        insn.emitOperand16(op.val.getUnsigned());
         break;
     case M_IM:
     case M_IM8:
@@ -370,9 +373,9 @@ void AsmZ8000::emitOperand(AsmInsn &insn, AddrMode mode, const Operand &op, OprP
         emitData(insn, pos, encodeCcName(op.cc));
         break;
     case M_INTR:
-        if (op.val32 == 0)
+        if (op.val.isUndefined())
             insn.setErrorIf(op, OPCODE_HAS_NO_EFFECT);
-        emitData(insn, pos, static_cast<uint16_t>(3 ^ op.val32));
+        emitData(insn, pos, 3 ^ op.val.getUnsigned());
         break;
     case M_FLAG:
         emitFlags(insn, pos, op);
@@ -473,34 +476,35 @@ int8_t AsmZ8000::parseFlagNames(StrScanner &scan) const {
     }
 }
 
-uint32_t AsmZ8000::parseAddress(StrScanner &scan, Operand &op) const {
+void AsmZ8000::parseAddress(StrScanner &scan, Operand &op) const {
     auto p = scan;
     const auto delim = p.expect('|');
     if (p.skipSpaces().iexpectText_P(PSTR("<<"))) {
         const auto segAt = p.skipSpaces();
         ErrorAt segError;
-        auto seg = parseExpr(p, segError, '>').getUnsigned();
+        auto seg = parseInteger(p, segError, '>');
         if (segError.hasError()) {
             op.setError(segError);
         } else if (p.skipSpaces().iexpectText_P(PSTR(">>"))) {
             const auto dispAt = p;
-            if (overflowUint(seg, 7)) {
+            constexpr auto UINT7_MAX = UINT8_C(0x7F);
+            if (seg.overflow(UINT7_MAX)) {
                 op.setErrorIf(segAt, OVERFLOW_RANGE);
-                seg &= 0x7F;
+                seg.setUnsigned(seg.getUnsigned() & UINT7_MAX);
             }
-            op.val32 = parseExpr(p, op, delim).getUnsigned();
-            if (overflowUint16(op.val32)) {
+            op.val = parseInteger(p, op, delim);
+            if (op.val.overflow(UINT16_MAX)) {
                 op.setErrorIf(dispAt, OVERFLOW_RANGE);
-                op.val32 &= 0xFFFF;
+                op.val.setUnsigned(op.val.getUnsigned() & UINT16_MAX);
             }
-            op.val32 |= (seg << 16);
+            op.val.setUnsigned(op.val.getUnsigned() | (seg.getUnsigned() << 16));
             if (segError.getError() == UNDEFINED_SYMBOL)
                 op.setError(segError);
         } else {
             op.setError(scan, UNKNOWN_OPERAND);
         }
     } else {
-        op.val32 = parseExpr(p, op, delim).getUnsigned();
+        op.val = parseInteger(p, op, delim);
     }
     if (delim) {
         if (p.skipSpaces().expect(delim)) {
@@ -510,14 +514,13 @@ uint32_t AsmZ8000::parseAddress(StrScanner &scan, Operand &op) const {
         }
     }
     scan = p;
-    return op.val32;
 }
 
 Error AsmZ8000::parseOperand(StrScanner &scan, Operand &op) const {
     auto p = scan.skipSpaces();
     op.setAt(p);
     if (p.expect('#')) {
-        op.val32 = parseExpr32(p, op);
+        op.val = parseInteger(p, op);
         if (op.hasError())
             return op.getError();
         op.mode = M_IM;
@@ -546,7 +549,7 @@ Error AsmZ8000::parseOperand(StrScanner &scan, Operand &op) const {
             op.base = op.reg;
             op.baseAt = p;
             if (p.skipSpaces().expect('#')) {
-                op.val32 = parseExpr32(p, op, ')');
+                op.val = parseInteger(p, op, ')');
                 if (op.hasError())
                     return op.getError();
                 if (!p.skipSpaces().expect(')'))
@@ -582,7 +585,7 @@ Error AsmZ8000::parseOperand(StrScanner &scan, Operand &op) const {
         const int8_t num = parseFlagNames(a);
         const auto flag = FlagName(num);
         if (num > 0 && flag != FLAG_C && flag != FLAG_Z) {
-            op.val32 = num;
+            op.val.setUnsigned(num);
             op.mode = M_FLAG;
             scan = a;
             return OK;
@@ -593,19 +596,19 @@ Error AsmZ8000::parseOperand(StrScanner &scan, Operand &op) const {
     }
     int8_t num = parseFlagNames(p);
     if (num >= 0) {
-        op.val32 = num;
+        op.val.setUnsigned(num);
         op.mode = M_FLAG;
         scan = p;
         return OK;
     }
     num = parseIntrNames(p);
     if (num >= 0) {
-        op.val32 = num;
+        op.val.setUnsigned(num);
         op.mode = M_INTR;
         scan = p;
         return OK;
     }
-    op.val32 = parseAddress(p, op);
+    parseAddress(p, op);
     if (op.hasError())
         return op.getError();
     if (p.skipSpaces().expect('(')) {
@@ -651,8 +654,15 @@ Error AsmZ8000::encodeImpl(StrScanner &scan, Insn &_insn) const {
     if (insn.isPushPopInsn())
         checkRegisterOverlap(insn, insn.dstOp, insn.srcOp);
     if (insn.isLoadMultiInsn()) {
+        auto &len = insn.ex1Op.val;
+        auto n = len.getUnsigned();
+        if (len.isNegative() || n == 0) {
+            if (!insn.ex1Op.hasError())
+                insn.ex1Op.setErrorIf(ILLEGAL_CONSTANT);
+            n = 1;
+        }
         const auto &regOp = insn.dst() == M_R ? insn.dstOp : insn.srcOp;
-        if (encodeGeneralRegName(regOp.reg) + insn.ex1Op.val32 > 16)
+        if (encodeGeneralRegName(regOp.reg) + n > 16)
             insn.setErrorIf(insn.ex1Op, OVERFLOW_RANGE);
     }
 

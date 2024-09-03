@@ -71,7 +71,7 @@ private:
         Binding(const ParametersAt &paramsAt_, const ValueStack &stack_, const SymbolTable *parent_)
             : paramsAt(paramsAt_), stack(stack_), parent(parent_) {}
         bool hasSymbol(const StrScanner &symbol) const override;
-        uint32_t lookupSymbol(const StrScanner &symbol) const override;
+        symval_t lookupSymbol(const StrScanner &symbol) const override;
         const void *lookupFunction(const StrScanner &symbol) const override;
 
     private:

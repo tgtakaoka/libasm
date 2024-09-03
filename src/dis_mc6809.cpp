@@ -77,19 +77,19 @@ void DisMc6809::decodeIndexed(DisInsn &insn, StrBuffer &out) const {
             if (spec.indir && offset == 0)
                 prefix = '<';
             // Check offset is in 5-bit integer range.
-            if (!spec.indir && !overflowInt(offset, 5))
+            if (!spec.indir && (offset >= -16 && offset < 16))
                 prefix = '<';
         } else {
             offset = static_cast<int16_t>(insn.readUint16());
             // Check offset is in 8-bit integer range.
-            if (!overflowInt8(offset))
+            if (offset >= INT8_MIN && offset <= INT8_MAX)
                 prefix = '>';
         }
         if (spec.base == REG_PCR) {
             const auto base = insn.address() + insn.length();
             const auto target = base + offset;
             insn.setErrorIf(out, checkAddr(target));
-            if (spec.size == 16 && !overflowInt8(offset))
+            if (spec.size == 16 && offset >= INT8_MIN && offset <= INT8_MAX)
                 out.letter('>');
             outRelAddr(out, target, insn.address(), spec.size);
         } else {

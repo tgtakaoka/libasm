@@ -20,6 +20,7 @@
 #include "config_mos6502.h"
 #include "entry_mos6502.h"
 #include "insn_base.h"
+#include "value.h"
 
 namespace libasm {
 namespace mos6502 {
@@ -37,8 +38,8 @@ struct EntryInsn : EntryInsnBase<Config, Entry> {
 
 struct Operand final : ErrorAt {
     AddrMode mode;
-    uint32_t val32;
-    Operand() : mode(M_NONE), val32(0) {}
+    Value val;
+    Operand() : mode(M_NONE), val() {}
     void embed(AddrMode indirectFlags) {
         mode = AddrMode(uint8_t(EntryInsn::indirectFlags(indirectFlags)) |
                         uint8_t(EntryInsn::baseMode(mode)));

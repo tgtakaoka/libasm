@@ -38,17 +38,17 @@ Error DisTlcs90::readOperand(DisInsn &insn, AddrMode mode, Operand &op) const {
     op.mode = mode;
     switch (mode) {
     case M_BIT:
-        op.val16 = opc & 7;
+        op.val.setUnsigned(opc & 7);
         break;
     case M_IMM8:
     case M_REL8:
     case M_DIR:
-        op.val16 = insn.readByte();
+        op.val.setUnsigned(insn.readByte());
         break;
     case M_IMM16:
     case M_REL16:
     case M_EXT:
-        op.val16 = insn.readUint16();
+        op.val.setUnsigned(insn.readUint16());
         break;
     case M_CC:
         op.cc = decodeCcName(opc);
@@ -81,8 +81,7 @@ Error DisTlcs90::readOperand(DisInsn &insn, AddrMode mode, Operand &op) const {
 
 void DisTlcs90::decodeRelative(
         DisInsn &insn, StrBuffer &out, AddrMode mode, const Operand &op) const {
-    const auto delta =
-            (mode == M_REL8) ? static_cast<int8_t>(op.val16) : static_cast<int16_t>(op.val16);
+    const auto delta = signExtend(op.val.getUnsigned(), mode == M_REL8 ? 8 : 16);
     const auto base = insn.address() + 2;
     const auto target = base + delta;
     insn.setErrorIf(out, checkAddr(target));
@@ -91,8 +90,8 @@ void DisTlcs90::decodeRelative(
 
 void DisTlcs90::decodeOperand(
         DisInsn &insn, StrBuffer &out, AddrMode mode, const Operand &op) const {
-    auto val16 = op.val16;
-    auto val8 = static_cast<int8_t>(val16);
+    auto val16 = op.val.getUnsigned();
+    auto val8 = op.val.getSigned();
     switch (mode) {
     case M_IMM8:
     case M_BIT:
