@@ -1,3 +1,4 @@
+#include <stdio.h>
 /*
  * Copyright 2022 Tadashi G. Takaoka
  *
@@ -275,12 +276,20 @@ void test_int16() {
     EQ("int16-0", "0", out.str());
 
     out.reset();
+    out.int16(0, 2);
+    EQ("int16-0", "00", out.str());
+
+    out.reset();
     out.int16(INT16_MIN);
     EQ("int16-min", "-32768", out.str());
 
     out.reset();
     out.int16(INT16_MAX);
     EQ("int16-max", "32767", out.str());
+
+    out.reset();
+    out.int16(INT16_MAX, 6);
+    EQ("int16-max", "032767", out.str());
 }
 
 void test_float32() {
@@ -291,16 +300,16 @@ void test_float32() {
     EQ("float32-0", "0", out.str());
 
     out.reset();
-    out.float32(FLT_EPSILON);
-    EQ("float32-epsilon", "1.1920929e-07", out.str());
+    out.float32(FLT_EPSILON, 10);
+    EQ("float32-epsilon", "1.192092896e-07", out.str());
 
     out.reset();
-    out.float32(FLT_MIN);
-    EQ("float32-min", "1.17549435e-38", out.str());
+    out.float32(FLT_MIN, 10);
+    EQ("float32-min", "1.175494351e-38", out.str());
 
     out.reset();
-    out.float32(FLT_MAX);
-    EQ("float32-max", "3.40282347e+38", out.str());
+    out.float32(FLT_MAX, 10);
+    EQ("float32-max", "3.402823466e+38", out.str());
 
     out.reset();
     out.float32(-INFINITY);
@@ -344,11 +353,41 @@ void test_float64() {
     out.float64(-NAN);
     EQ("float64-nan", "-NAN", out.str());
 
-    char sbuf[10];
+    char sbuf[20];
     StrCaseBuffer sout(sbuf, sizeof(sbuf), false);
-    sout.float32(DBL_EPSILON);
+    sout.float64(DBL_EPSILON);
     EQ("float64-overflow", BUFFER_OVERFLOW, sout.getError());
-    EQ("float64-overflow", "2.2204460", sout.str());
+    EQ("float64-overflow", "2.2204460492503131e", sout.str());
+}
+
+void test_float80() {
+    char buffer[40];
+    StrCaseBuffer out(buffer, sizeof(buffer), true);
+
+    out.float80(0, UINT64_C(0), 17);
+    EQ("float80-0", "0", out.str());
+
+    out.reset();
+    out.float80(-52, UINT64_C(1), 17); // DBL_EPSILON
+    EQ("float80-epsilon", "2.2204460492503131E-16", out.str());
+
+    out.reset();
+    out.float80(-1022, UINT64_C(1), 17); // DBL_MIN
+    EQ("float80-min", "2.2250738585072014E-308", out.str());
+
+    out.reset();
+    out.float80(+1023-52, UINT64_C(0x1F'FFFF'FFFF'FFFF), 17); // DBL_MAX
+    EQ("float80-max", "1.7976931348623157E+308", out.str());
+
+    out.reset();
+    out.float80(INT16_MAX, UINT64_C(0xFFFF'FFFF'FFFF'FFFF));
+    EQ("float80-inf", "INF", out.str());
+
+    char sbuf[20];
+    StrCaseBuffer sout(sbuf, sizeof(sbuf), false);
+    sout.float80(-52, UINT64_C(1), 17); // DBL_EPSILON
+    EQ("float80-overflow", BUFFER_OVERFLOW, sout.getError());
+    EQ("float64-overflow", "2.2204460492503131e", sout.str());
 }
 
 void test_comma() {
@@ -409,6 +448,7 @@ void run_tests() {
     RUN_TEST(test_int16);
     RUN_TEST(test_float32);
     RUN_TEST(test_float64);
+    RUN_TEST(test_float80);
     RUN_TEST(test_comma);
     RUN_TEST(test_reverse);
     RUN_TEST(test_reset);
