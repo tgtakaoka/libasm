@@ -1,4 +1,3 @@
-#include <stdio.h>
 /*
  * Copyright 2022 Tadashi G. Takaoka
  *
@@ -18,8 +17,9 @@
 #ifndef __LIBASM_VALUE_H__
 #define __LIBASM_VALUE_H__
 
-#include <stdint.h>
+#define DEBUG_VALUE 0
 
+#include <stdint.h>
 #include "config_base.h"
 #include "error_reporter.h"
 #include "str_scanner.h"
@@ -53,51 +53,25 @@ struct Value {
     bool isSigned() const { return _type == V_INT32; }
     bool isUnsigned() const { return _type == V_UINT32 || isUndefined(); }
 #ifdef ASM_NOFLOAT
-    constexpr bool isInt32() const {
-        return true;
-    }
-    constexpr bool isInt64() const {
-        return false;
-    }
-    constexpr bool isFloat() const {
-        return false;
-    }
+    constexpr bool isInt32() const { return true; }
+    constexpr bool isInt64() const { return false; }
+    constexpr bool isFloat() const { return false; }
 #else
-    bool isInt32() const {
-        return isUnsigned() || isSigned();
-    }
-    bool isInt64() const {
-        return isInt32() || _type == V_INT64 || _type == V_UINT64;
-    }
-    bool isFloat() const {
-        return _type == V_FLOAT64;
-    }
+    bool isInt32() const { return isUnsigned() || isSigned(); }
+    bool isInt64() const { return isInt32() || _type == V_INT64 || _type == V_UINT64; }
+    bool isFloat() const { return _type == V_FLOAT64; }
 #endif
-    bool overflowUint8() const {
-        return ConfigBase::overflowUint8(_uint32);
-    }
-    bool overflowUint16() const {
-        return ConfigBase::overflowUint16(_uint32);
-    }
+    bool overflowUint8() const { return ConfigBase::overflowUint8(_uint32); }
+    bool overflowUint16() const { return ConfigBase::overflowUint16(_uint32); }
 #ifdef ASM_NOFLOAT
-    constexpr bool overflowUint32() const {
-        return false;
-    }
+    constexpr bool overflowUint32() const { return false; }
 #else
-    bool overflowUint32() const {
-        return ConfigBase::overflowUint32(getInt64());
-    }
+    bool overflowUint32() const { return ConfigBase::overflowUint32(getInt64()); }
 #endif
-    bool overflowUint(uint8_t bitw) const {
-        return ConfigBase::overflowUint(_uint32, bitw);
-    }
+    bool overflowUint(uint8_t bitw) const { return ConfigBase::overflowUint(_uint32, bitw); }
 
-    int32_t getSigned() const {
-        return static_cast<int32_t>(_uint32);
-    }
-    uint32_t getUnsigned() const {
-        return _uint32;
-    }
+    int32_t getSigned() const { return static_cast<int32_t>(_uint32); }
+    uint32_t getUnsigned() const { return _uint32; }
 #ifndef ASM_NOFLOAT
     int64_t getInt64() const;
     double getFloat() const;
@@ -150,35 +124,7 @@ struct Value {
     static Error parseNumber(StrScanner &scan, Radix radix, uint64_t &value);
 #endif
 
-#define DEBUG_VALUE 0
-#if DEBUG_VALUE
-    void print() const {
-        switch (_type) {
-        case V_UNDEF:
-            printf("<undef>");
-            break;
-        case V_INT32:
-            printf("<i32>%d", static_cast<int32_t>(_uint32));
-            break;
-        case V_UINT32:
-            printf("<u32>%u", _uint32);
-            break;
-#ifndef ASM_NOFLOAT
-        case V_INT64:
-            printf("<i64>%ld", static_cast<int64_t>(_uint64));
-            break;
-        case V_UINT64:
-            printf("<u64>%ld", _uint64);
-            break;
-        case V_FLOAT64:
-            printf("<f64>%lg", _float64);
-            break;
-#endif
-        }
-    }
-#else
-    void print() const {}
-#endif
+    const char *str() const;
 
 private:
     enum ValueType : uint8_t {
@@ -194,8 +140,10 @@ private:
 
     union {
         uint32_t _uint32;
+        int32_t _int32;
 #ifndef ASM_NOFLOAT
         uint64_t _uint64;
+        int64_t _int64;
         double _float64;
 #endif
     };

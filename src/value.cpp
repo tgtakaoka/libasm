@@ -18,6 +18,7 @@
 #include <ctype.h>
 #include <math.h>
 #include <stdlib.h>
+#include "str_buffer.h"
 
 namespace libasm {
 
@@ -85,6 +86,37 @@ Error Value::parseNumber(StrScanner &scan, Radix radix) {
         return OK;
     }
     return NOT_AN_EXPECTED;
+#endif
+}
+
+const char *Value::str() const {
+#ifdef LIBASM_DEBUG_VALUE
+    static char buf[80];
+    StrBuffer out{buf, sizeof(buf)};
+    if (_type == V_UINT32 || _type == V_INT32) {
+        out.text(_type == V_UINT32 ? "<u32>" : "<i32>").hex(_uint32).letter('(');
+        const auto negative = (_type == V_INT32 && _int32 < 0);
+        auto u32 = negative ? -_int32 : _uint32;
+        if (negative)
+            out.letter('-');
+        out.dec(u32).letter(')');
+#ifndef ASM_NOFLOAT
+    } else if (_type == V_UINT64 || _type == V_INT64) {
+        out.text(_type == V_UINT64 ? "<u64>" : "<i64>").hex(_uint64).letter('(');
+        const auto negative = (_type == V_INT64 && _int64 < 0);
+        auto u64 = negative ? -_int64 : _uint64;
+        if (negative)
+            out.letter('-');
+        out.dec(u64).letter(')');
+    } else if (_type == V_FLOAT64) {
+        out.text("<f64>").hex(_uint64).letter('(').float64(_float64).letter(')');
+#endif
+    } else {
+        return "<undef>";
+    }
+    return out.str();
+#else
+    return "";
 #endif
 }
 

@@ -15,8 +15,7 @@
 help:
 	@echo '"make test"     run unit tests of libasm::src'
 
-TESTS = test_array_memory test_str_buffer test_str_scanner \
-    test_reg_base
+TESTS = test_array_memory test_reg_base test_str_buffer test_str_scanner
 
 .PHONY:: help test clean clean-objs
 
@@ -46,12 +45,12 @@ $(eval $(foreach t,$(TESTS),$(call test-rule,$(t))))
 
 test_array_memory: test_array_memory.o $(OBJS_common)
 	$(CXX) -o $@ $^
+test_reg_base: test_reg_base.o reg_base.o str_scanner.o str_buffer.o \
+    $(OBJS_common)
+	$(CXX) -o $@ $^
 test_str_buffer: test_str_buffer.o str_buffer.o $(OBJS_common)
 	$(CXX) -o $@ $^
 test_str_scanner: test_str_scanner.o str_scanner.o $(OBJS_common)
-	$(CXX) -o $@ $^
-test_reg_base: test_reg_base.o reg_base.o str_scanner.o str_buffer.o \
-    $(OBJS_common)
 	$(CXX) -o $@ $^
 
 # Local Variables:

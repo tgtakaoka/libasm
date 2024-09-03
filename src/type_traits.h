@@ -24,13 +24,11 @@ namespace libasm {
 // Extracted from <type_traits>
 
 // true_type, false_type
-namespace {
 template <bool v>
 struct __bool_constant {
     static constexpr bool value = v;
     typedef bool value_type;
 };
-}  // namespace
 typedef __bool_constant<true> true_type;
 typedef __bool_constant<false> false_type;
 
@@ -43,12 +41,10 @@ struct enable_if<true, T> {
 };
 
 // declval
-namespace {
 template <typename T, typename U = T &&>
 U __declval(int);
 template <typename T>
 T __declval(long);
-}  // namespace
 template <typename T>
 auto declval() noexcept -> decltype(__declval<T>(0));
 
@@ -71,7 +67,6 @@ template <typename BASE, typename DERIVED>
 struct is_base_of : integral_constant<bool, __is_base_of(BASE, DERIVED)> {};
 
 // is_base_of_template - is_base_of for template base class
-namespace {
 template <template <typename...> class BASE, typename DERIVED>
 struct __is_base_of_template {
     template <typename... Ts>
@@ -79,12 +74,10 @@ struct __is_base_of_template {
     static constexpr false_type test(...);
     using type = decltype(test(declval<DERIVED *>()));
 };
-}  // namespace
 template <template <typename...> class BASE, typename DERIVED>
 using is_base_of_template = typename __is_base_of_template<BASE, DERIVED>::type;
 
 // is_unsugned
-namespace {
 template <typename T>
 struct __is_unsigned_helper;
 template <>
@@ -99,12 +92,14 @@ template <>
 struct __is_unsigned_helper<int32_t> : public false_type {};
 template <>
 struct __is_unsigned_helper<uint32_t> : public true_type {};
-}  // namespace
+template <>
+struct __is_unsigned_helper<int64_t> : public false_type {};
+template <>
+struct __is_unsigned_helper<uint64_t> : public true_type {};
 template <typename T>
 struct is_unsigned : public __is_unsigned_helper<T> {};
 
 // is_signed
-namespace {
 template <typename T>
 struct __is_signed_helper;
 template <>
@@ -119,12 +114,14 @@ template <>
 struct __is_signed_helper<int32_t> : public true_type {};
 template <>
 struct __is_signed_helper<uint32_t> : public false_type {};
-}  // namespace
+template <>
+struct __is_signed_helper<int64_t> : public true_type {};
+template <>
+struct __is_signed_helper<uint64_t> : public false_type {};
 template <typename T>
 struct is_signed : public __is_signed_helper<T> {};
 
 // make_unsigned
-namespace {
 template <typename T>
 struct __make_unsigned {
     typedef T __type;
@@ -153,7 +150,14 @@ template <>
 struct __make_unsigned<uint32_t> {
     typedef uint32_t __type;
 };
-}  // namespace
+template <>
+struct __make_unsigned<int64_t> {
+    typedef uint64_t __type;
+};
+template <>
+struct __make_unsigned<uint64_t> {
+    typedef uint64_t __type;
+};
 // make_unsigned
 template <typename T>
 struct make_unsigned {
@@ -161,7 +165,6 @@ struct make_unsigned {
 };
 
 // make_signed
-namespace {
 template <typename T>
 struct __make_signed {
     typedef T __type;
@@ -190,7 +193,14 @@ template <>
 struct __make_signed<uint32_t> {
     typedef int32_t __type;
 };
-}  // namespace
+template <>
+struct __make_signed<int64_t> {
+    typedef int64_t __type;
+};
+template <>
+struct __make_signed<uint64_t> {
+    typedef int64_t __type;
+};
 template <typename T>
 struct make_signed {
     typedef typename __make_signed<T>::__type type;

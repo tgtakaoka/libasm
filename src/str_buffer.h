@@ -16,11 +16,11 @@
 #ifndef __LIBASM_STR_BUFFER_H__
 #define __LIBASM_STR_BUFFER_H__
 
-#include "error_reporter.h"
-#include "str_scanner.h"
-
 #include <ctype.h>
 #include <stdint.h>
+#include "error_reporter.h"
+#include "str_scanner.h"
+#include "type_traits.h"
 
 namespace libasm {
 
@@ -72,8 +72,47 @@ struct StrBuffer : ErrorReporter {
     StrBuffer &rtext(const StrScanner &scan);
     StrBuffer &rtext_P(const /*PROGMEM*/ char *text_P);
 
+    /** Output |v| in hexadecimal. */
+    template <typename T>
+    StrBuffer &hex(T v, uint_fast8_t prec = 0) {
+        using U = typename make_unsigned<T>::type;
+        U u = static_cast<U>(v);
+        auto *start = mark();
+        for (uint_fast8_t i = 0; i < sizeof(T) * 2; ++i) {
+            const uint8_t digit = u & 0xF;
+            letter(digit + (digit < 10 ? '0' : 'A' - 10));
+            u >>= 4;
+            if (prec && --prec == 0)
+                break;
+        }
+        for (; prec; --prec)
+            letter('0');
+        return reverse(start);
+    }
+
+    /** Output signed/unsigned |v| in decimal. */
+    template <typename T>
+    StrBuffer &dec(T v, uint_fast8_t prec = 0) {
+        const auto negative = is_signed<T>::value && v < 0;
+        if (negative)
+            letter('-');
+        using U = typename make_unsigned<T>::type;
+        U u = negative ? static_cast<U>(-v) : v;
+        auto *start = mark();
+        do {
+            const uint8_t digit = u % 10;
+            letter(digit + '0');
+            u /= 10;
+            if (prec)
+                --prec;
+        } while (u);
+        for (; prec; --prec)
+            letter('0');
+        return reverse(start);
+    }
+
     /** Output |value| as decimal number. */
-    StrBuffer &int16(int16_t i16, uint_fast8_t prec = 0);
+    StrBuffer &int16(int16_t i16, uint_fast8_t prec = 0) { return dec(i16, prec); }
 
     /**
      * Output |value| as 32-bit floating point number.

@@ -1,4 +1,3 @@
-#include <stdio.h>
 /*
  * Copyright 2022 Tadashi G. Takaoka
  *
@@ -268,28 +267,141 @@ void test_rtext() {
     }
 }
 
-void test_int16() {
-    char buffer[8];
+void test_hex() {
+    char buffer[20];
+    StrBuffer out(buffer, sizeof(buffer));
+
+    out.reset();
+    out.hex(static_cast<int8_t>(INT8_MAX));
+    EQ("INT8_MAX", "7F", out.str());
+
+    out.reset();
+    out.hex(static_cast<int16_t>(INT16_MAX));
+    EQ("INT16_MAX", "7FFF", out.str());
+
+    out.reset();
+    out.hex(static_cast<int32_t>(INT32_MAX));
+    EQ("INT32_MAX", "7FFFFFFF", out.str());
+
+    out.reset();
+    out.hex(static_cast<int64_t>(INT64_MAX));
+    EQ("INT64_MAX", "7FFFFFFFFFFFFFFF", out.str());
+
+    out.reset();
+    out.hex(static_cast<int8_t>(INT8_MIN));
+    EQ("INT8_MIN", "80", out.str());
+
+    out.reset();
+    out.hex(static_cast<int16_t>(INT16_MIN));
+    EQ("INT16_MIN", "8000", out.str());
+
+    out.reset();
+    out.hex(static_cast<int32_t>(INT32_MIN));
+    EQ("INT32_MIN", "80000000", out.str());
+
+    out.reset();
+    out.hex(static_cast<int64_t>(INT64_MIN));
+    EQ("INT64_MIN", "8000000000000000", out.str());
+
+    out.reset();
+    out.hex(static_cast<uint8_t>(UINT8_MAX));
+    EQ("UINT8_MAX", "FF", out.str());
+
+    out.reset();
+    out.hex(static_cast<uint16_t>(UINT16_MAX));
+    EQ("UINT16_MAX", "FFFF", out.str());
+
+    out.reset();
+    out.hex(static_cast<uint32_t>(UINT32_MAX));
+    EQ("UINT32_MAX", "FFFFFFFF", out.str());
+
+    out.reset();
+    out.hex(static_cast<uint64_t>(UINT64_MAX));
+    EQ("UINT64_MAX", "FFFFFFFFFFFFFFFF", out.str());
+
+    out.reset();
+    out.hex(static_cast<uint8_t>(0x34), 4);
+    EQ("0x34", "0034", out.str());
+
+    out.reset();
+    out.hex(static_cast<uint16_t>(0x1234), 3);
+    EQ("0x234", "234", out.str());
+
+    out.reset();
+    out.hex(UINT64_C(0x123456789ABCDEF0), 13);
+    EQ("0x456789ABCDEF0", "456789ABCDEF0", out.str());
+}
+
+void test_dec() {
+    char buffer[30];
     StrBuffer out(buffer, sizeof(buffer));
 
     out.int16(0);
-    EQ("int16-0", "0", out.str());
+    EQ("0", "0", out.str());
 
     out.reset();
     out.int16(0, 2);
-    EQ("int16-0", "00", out.str());
+    EQ("00", "00", out.str());
 
     out.reset();
     out.int16(INT16_MIN);
-    EQ("int16-min", "-32768", out.str());
+    EQ("INT16_MIN", "-32768", out.str());
 
     out.reset();
     out.int16(INT16_MAX);
-    EQ("int16-max", "32767", out.str());
+    EQ("INT16_MAX", "32767", out.str());
 
     out.reset();
     out.int16(INT16_MAX, 6);
-    EQ("int16-max", "032767", out.str());
+    EQ("INT16_MAX", "032767", out.str());
+
+    out.reset();
+    out.dec(INT8_MAX);
+    EQ("INT8_MAX", "127", out.str());
+
+    out.reset();
+    out.dec(INT16_MAX);
+    EQ("INT16_MAX", "32767", out.str());
+
+    out.reset();
+    out.dec(INT32_MAX);
+    EQ("INT32_MAX", "2147483647", out.str());
+
+    out.reset();
+    out.dec(INT64_MAX);
+    EQ("INT64_MAX", "9223372036854775807", out.str());
+
+    out.reset();
+    out.dec(INT8_MIN);
+    EQ("INT8_MIN", "-128", out.str());
+
+    out.reset();
+    out.dec(INT16_MIN);
+    EQ("INT16_MIN", "-32768", out.str());
+
+    out.reset();
+    out.dec(INT32_MIN);
+    EQ("INT32_MIN", "-2147483648", out.str());
+
+    out.reset();
+    out.dec(INT64_MIN);
+    EQ("INT64_MIN", "-9223372036854775808", out.str());
+
+    out.reset();
+    out.dec(UINT8_MAX);
+    EQ("UINT8_MAX", "255", out.str());
+
+    out.reset();
+    out.dec(UINT16_MAX);
+    EQ("UINT16_MAX", "65535", out.str());
+
+    out.reset();
+    out.dec(UINT32_MAX);
+    EQ("UINT32_MAX", "4294967295", out.str());
+
+    out.reset();
+    out.dec(UINT64_MAX);
+    EQ("UINT64_MAX", "18446744073709551615", out.str());
 }
 
 void test_float32() {
@@ -445,7 +557,8 @@ void run_tests() {
     RUN_TEST(test_text_P);
     RUN_TEST(test_scanner);
     RUN_TEST(test_rtext);
-    RUN_TEST(test_int16);
+    RUN_TEST(test_hex);
+    RUN_TEST(test_dec);
     RUN_TEST(test_float32);
     RUN_TEST(test_float64);
     RUN_TEST(test_float80);
