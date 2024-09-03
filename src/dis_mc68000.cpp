@@ -80,6 +80,8 @@ StrBuffer &DisMc68000::outFloat96(StrBuffer &out, const Float96 &v, ErrorAt &err
         error.setErrorIf(out, ILLEGAL_CONSTANT);
         return out;
     }
+#else
+    UNUSED(error);
 #endif
     if (v.exp & INT16_MIN)
         out.letter('-');

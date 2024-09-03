@@ -132,9 +132,9 @@ uint64_t convert2pbcd(uint64_t bin, uint8_t digits) {
 }
 
 void swap(uint8_t &a, uint8_t &b) {
-    auto t = a;
-    a = b;
-    b = t;
+    a ^= b;
+    b ^= a;
+    a ^= b;
 }
 
 struct Float80 {
