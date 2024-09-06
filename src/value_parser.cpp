@@ -274,7 +274,7 @@ Error ValueParser::parseConstant(StrScanner &scan, Value &val) const {
         return err;
 
     err = _number.parseNumber(p, val);
-#ifndef ASM_NOFLOAT
+#ifndef LIBASM_ASM_NOFLOAT
     const auto fpnum = (err == OK && (*p == '.' || toupper(*p) == 'E'));
     if (fpnum || err == OVERFLOW_RANGE || err == NOT_AN_EXPECTED) {
         char *end;

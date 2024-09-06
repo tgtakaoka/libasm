@@ -114,7 +114,7 @@ Error Assembler::processPseudo(StrScanner &scan, Insn &insn) {
 uint16_t Assembler::parseExpr16(StrScanner &expr, ErrorAt &error, char delim) const {
     auto p = expr;
     const auto value = _parser.eval(p, error, _symtab, delim);
-#ifndef ASM_NOFLOAT
+#ifndef LIBASM_ASM_NOFLOAT
     if (value.isFloat())
         error.setErrorIf(expr, INTEGER_REQUIRED);
 #endif
@@ -126,7 +126,7 @@ uint16_t Assembler::parseExpr16(StrScanner &expr, ErrorAt &error, char delim) co
 
 uint32_t Assembler::parseExpr32(StrScanner &expr, ErrorAt &error, char delim) const {
     const auto value = _parser.eval(expr, error, _symtab, delim);
-#ifndef ASM_NOFLOAT
+#ifndef LIBASM_ASM_NOFLOAT
     if (value.isFloat())
         error.setErrorIf(expr, INTEGER_REQUIRED);
 #endif
@@ -414,7 +414,7 @@ Error Assembler::defineDataConstant(StrScanner &scan, Insn &insn, uint8_t dataTy
                     big ? insn.emitUint32Be(v) : insn.emitUint32Le(v);
                     break;
                 }
-#ifndef ASM_NOFLOAT
+#ifndef LIBASM_ASM_NOFLOAT
                 /* Fall-through */
             case DATA_FLOAT32:
                 big ? insn.emitFloat32Be(val.getFloat()) : insn.emitFloat32Le(val.getFloat());

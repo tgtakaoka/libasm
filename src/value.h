@@ -17,8 +17,6 @@
 #ifndef __LIBASM_VALUE_H__
 #define __LIBASM_VALUE_H__
 
-#define DEBUG_VALUE 0
-
 #include <stdint.h>
 #include "config_base.h"
 #include "error_reporter.h"
@@ -52,7 +50,7 @@ struct Value {
     bool isUndefined() const { return _type == V_UNDEF; }
     bool isSigned() const { return _type == V_INT32; }
     bool isUnsigned() const { return _type == V_UINT32 || isUndefined(); }
-#ifdef ASM_NOFLOAT
+#ifdef LIBASM_ASM_NOFLOAT
     constexpr bool isInt32() const { return true; }
     constexpr bool isInt64() const { return false; }
     constexpr bool isFloat() const { return false; }
@@ -63,7 +61,7 @@ struct Value {
 #endif
     bool overflowUint8() const { return ConfigBase::overflowUint8(_uint32); }
     bool overflowUint16() const { return ConfigBase::overflowUint16(_uint32); }
-#ifdef ASM_NOFLOAT
+#ifdef LIBASM_ASM_NOFLOAT
     constexpr bool overflowUint32() const { return false; }
 #else
     bool overflowUint32() const { return ConfigBase::overflowUint32(getInt64()); }
@@ -72,7 +70,7 @@ struct Value {
 
     int32_t getSigned() const { return static_cast<int32_t>(_uint32); }
     uint32_t getUnsigned() const { return _uint32; }
-#ifndef ASM_NOFLOAT
+#ifndef LIBASM_ASM_NOFLOAT
     int64_t getInt64() const;
     double getFloat() const;
 #endif
@@ -87,7 +85,7 @@ struct Value {
         _type = V_UINT32;
         return *this;
     }
-#ifndef ASM_NOFLOAT
+#ifndef LIBASM_ASM_NOFLOAT
     Value &setInt64(int64_t value) {
         _uint64 = value;
         _type = V_INT64;
@@ -120,7 +118,7 @@ struct Value {
     Value exponential(const Value &rhs) const;
 
     static Error parseNumber(StrScanner &scan, Radix radix, uint32_t &value);
-#ifndef ASM_NOFLOAT
+#ifndef LIBASM_ASM_NOFLOAT
     static Error parseNumber(StrScanner &scan, Radix radix, uint64_t &value);
 #endif
 
@@ -131,7 +129,7 @@ private:
         V_UNDEF = 0,
         V_UINT32 = 1,
         V_INT32 = 2,
-#ifndef ASM_NOFLOAT
+#ifndef LIBASM_ASM_NOFLOAT
         V_UINT64 = 3,
         V_INT64 = 4,
         V_FLOAT64 = 5,
@@ -141,7 +139,7 @@ private:
     union {
         uint32_t _uint32;
         int32_t _int32;
-#ifndef ASM_NOFLOAT
+#ifndef LIBASM_ASM_NOFLOAT
         uint64_t _uint64;
         int64_t _int64;
         double _float64;

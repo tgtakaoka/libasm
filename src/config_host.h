@@ -17,11 +17,9 @@
 #ifndef __LIBASM_CONFIG_HOST_H__
 #define __LIBASM_CONFIG_HOST_H__
 
-// #define ASM_NOFLOAT
-
 #include <stddef.h>
 #include <stdint.h>
-
+#include "config_libasm.h"
 #include "version.h"
 
 #define ARRAY_BEGIN(array) (&(array)[0])

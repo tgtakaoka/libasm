@@ -65,16 +65,16 @@ constexpr Pseudo PSEUDOS[] PROGMEM = {
     {TEXT_dALIGN, &Assembler::alignOrigin},
     {TEXT_DC,     &Assembler::defineDataConstant, Assembler::DATA_WORD|Assembler::DATA_ALIGN2},
     {TEXT_DC_B,   &Assembler::defineDataConstant, Assembler::DATA_BYTE},
-#ifndef ASM_NOFLOAT
+#ifndef LIBASM_ASM_NOFLOAT
     {TEXT_DC_D,   &Assembler::defineDataConstant, Assembler::DATA_FLOAT64|Assembler::DATA_ALIGN2},
 #endif
     {TEXT_DC_L,   &Assembler::defineDataConstant, Assembler::DATA_LONG|Assembler::DATA_ALIGN2},
-#ifndef ASM_NOFLOAT
+#ifndef LIBASM_ASM_NOFLOAT
     {TEXT_DC_P,   &Assembler::defineDataConstant, Assembler::DATA_PACKED_BCD96|Assembler::DATA_ALIGN2},
     {TEXT_DC_S,   &Assembler::defineDataConstant, Assembler::DATA_FLOAT32|Assembler::DATA_ALIGN2},
 #endif
     {TEXT_DC_W,   &Assembler::defineDataConstant, Assembler::DATA_WORD|Assembler::DATA_ALIGN2},
-#ifndef ASM_NOFLOAT
+#ifndef LIBASM_ASM_NOFLOAT
     {TEXT_DC_X,   &Assembler::defineDataConstant, Assembler::DATA_FLOAT96|Assembler::DATA_ALIGN2},
 #endif
     {TEXT_DS,     &Assembler::allocateSpaces,     Assembler::DATA_BYTE},
@@ -120,7 +120,7 @@ void AsmMc68000::reset() {
 Error AsmMc68000::setFpu(StrScanner &scan) {
     if (scan.expectFalse() || scan.iequals_P(TEXT_none)) {
         setFpuType(FPU_NONE);
-#ifndef ASM_NOFLOAT
+#ifndef LIBASM_ASM_NOFLOAT
     } else if (scan.expectTrue() || scan.iequals_P(TEXT_FPU_68881) ||
                scan.iequals_P(TEXT_FPU_MC68881)) {
         setFpuType(FPU_MC68881);
@@ -307,7 +307,7 @@ void AsmMc68000::encodeImmediate(AsmInsn &insn, const Operand &op, OprSize size)
             insn.setErrorIf(op, OVERFLOW_RANGE);
         insn.emitOperand16(static_cast<uint8_t>(val32));
         break;
-#ifndef ASM_NOFLOAT
+#ifndef LIBASM_ASM_NOFLOAT
     case SZ_SNGL:
         insn.emitFloat32(op.getFloat(), insn.operandPos());
         break;

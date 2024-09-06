@@ -56,7 +56,7 @@ constexpr Pseudo PSEUDOS[] PROGMEM = {
     {TEXT_dBLKW,   &Assembler::allocateSpaces,     Assembler::DATA_WORD},
     {TEXT_dBYTE,   &Assembler::defineDataConstant, Assembler::DATA_BYTE},
     {TEXT_dDOUBLE, &Assembler::defineDataConstant, Assembler::DATA_LONG},
-#ifndef ASM_NOFLOAT
+#ifndef LIBASM_ASM_NOFLOAT
     {TEXT_dFLOAT,  &Assembler::defineDataConstant, Assembler::DATA_FLOAT32},
     {TEXT_dLONG,   &Assembler::defineDataConstant, Assembler::DATA_FLOAT64},
 #endif
@@ -120,7 +120,7 @@ void AsmNs32000::reset() {
 Error AsmNs32000::setFpu(StrScanner &scan) {
     if (scan.iequals_P(TEXT_none)) {
         setFpuType(FPU_NONE);
-#ifndef ASM_NOFLOAT
+#ifndef LIBASM_ASM_NOFLOAT
     } else if (scan.iequals_P(TEXT_FPU_NS32081)) {
         setFpuType(FPU_NS32081);
 #endif
@@ -516,7 +516,7 @@ void AsmNs32000::emitImmediate(AsmInsn &insn, AddrMode mode, const Operand &op) 
     const auto size = insn.size();
     if (size == SZ_BYTE || mode == M_GENC) {
         insn.emitOperand8(op.val32);
-#ifndef ASM_NOFLOAT
+#ifndef LIBASM_ASM_NOFLOAT
     } else if (mode == M_FENR) {
         if (size == SZ_OCTA) {
             insn.emitOpFloat64(op.getFloat());

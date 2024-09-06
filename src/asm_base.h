@@ -76,7 +76,7 @@ struct Assembler : private ValueParser::Locator {
         DATA_WORD_NO_STRING,
         DATA_LONG,
         DATA_FLOAT32_LONG,
-#ifndef ASM_NOFLOAT
+#ifndef LIBASM_ASM_NOFLOAT
         DATA_FLOAT32,
         DATA_FLOAT64,
         DATA_FLOAT64_QUAD,

@@ -2839,7 +2839,7 @@ static void test_areg_alias() {
     TEST("MOVE.L #$00345678,A6",      0026174, 0x0034, 0x5678);
 }
 
-#ifndef ASM_NOFLOAT
+#ifndef LIBASM_ASM_NOFLOAT
 
 static void test_float_move() {
     TEST("FPU MC68881");
@@ -4491,7 +4491,7 @@ static void test_comment() {
     COMM("DC.B 'TEXT'    comment", "comment", 0x5445, 0x5854);
     COMM("DC.W -128, 255 comment", "comment", 0xFF80, 0x00FF);
     COMM("DC.L -128, 255 comment", "comment", 0xFFFF, 0xFF80, 0x0000, 0x00FF);
-#ifndef ASM_NOFLOAT
+#ifndef LIBASM_ASM_NOFLOAT
     COMM("DC.S 1.0       comment", "comment", 0x3F80, 0x0000);
     COMM("DC.D -1.0      comment", "comment", 0xBFF0, 0x0000, 0x0000, 0x0000);
     COMM("DC.X -2.25     comment", "comment", 0xC000, 0x0000, 0x9000, 0x0000, 0x0000, 0x0000);
@@ -4574,7 +4574,7 @@ static void test_data_constant() {
          0x1234, 0x5678, 0x9ABC, 0xDEF0, 0x1234, 0x5678, 0x9ABC, 0xDEF0,
          0x1234, 0x5678, 0x9ABC, 0xDEF0, 0x1234, 0x5678, 0x009A, 0xBCDE);
 
-#ifndef ASM_NOFLOAT
+#ifndef LIBASM_ASM_NOFLOAT
     TEST("DC.S  1.0, -inf, +nan",
          0x3F80, 0x0000,
          0xFF80, 0x0000,
@@ -4620,7 +4620,7 @@ void run_tests(const char *cpu) {
     RUN_TEST(test_system);
     RUN_TEST(test_multiproc);
     RUN_TEST(test_areg_alias);
-#ifndef ASM_NOFLOAT
+#ifndef LIBASM_ASM_NOFLOAT
     RUN_TEST(test_float_move);
     RUN_TEST(test_float_arithmetic);
     RUN_TEST(test_float_branch);

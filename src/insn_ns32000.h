@@ -67,7 +67,7 @@ struct Operand final : ErrorAt {
           index(REG_UNDEF),
           size(SZ_NONE) {}
     uint32_t getUint32() const { return value.getUnsigned(); }
-#ifndef ASM_NOFLOAT
+#ifndef LIBASM_ASM_NOFLOAT
     double getFloat() const { return value.getFloat(); }
 #endif
 };
@@ -89,8 +89,10 @@ struct AsmInsn final : public AsmInsnImpl<Config>, EntryInsn {
     void emitOperand8(uint8_t val8) { emitByte(val8, operandPos()); }
     void emitOperand16(uint16_t val16) { emitUint16Be(val16, operandPos()); }
     void emitOperand32(uint32_t val32) { emitUint32Be(val32, operandPos()); }
+#ifndef LIBASM_ASM_NOFLOAT
     void emitOpFloat32(double float64) { emitFloat32Be(float64, operandPos()); }
     void emitOpFloat64(double float64) { emitFloat64Be(float64, operandPos()); }
+#endif
 
 private:
     uint8_t operandPos() {

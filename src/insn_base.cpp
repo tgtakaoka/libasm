@@ -80,7 +80,7 @@ Error Insn::emitUint64Le(uint64_t data, uint8_t pos) {
     return emitUint32Le(data >> 32, pos + 4);
 }
 
-#ifndef ASM_NOFLOAT
+#ifndef LIBASM_ASM_NOFLOAT
 
 Error Insn::emitFloat32Be(double data, uint8_t pos) {
     union {

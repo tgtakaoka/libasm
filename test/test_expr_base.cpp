@@ -154,7 +154,7 @@ static void test_unary_operator() {
 
     E32("+2147483648", 0x80000000);
     E32("+2147483649", 0x80000001);
-#ifdef ASM_NOFLOAT
+#ifdef LIBASM_ASM_NOFLOAT
     X32("+4294967296", OVERFLOW_RANGE, "4294967296", "");
 #else
     X32("+4294967296", OVERFLOW_RANGE, "+4294967296", "");

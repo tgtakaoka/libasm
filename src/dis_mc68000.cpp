@@ -75,7 +75,7 @@ void DisMc68000::decodeImmediateData(DisInsn &insn, StrBuffer &out, OprSize size
 }
 
 StrBuffer &DisMc68000::outFloat96(StrBuffer &out, const Float96 &v, ErrorAt &error) const {
-#if FLOAT96_STRICT
+#ifdef MC68000_FLOAT96_STRICT
     if (v.digit != 0) {
         error.setErrorIf(out, ILLEGAL_CONSTANT);
         return out;
@@ -95,7 +95,7 @@ StrBuffer &DisMc68000::outFloat96(StrBuffer &out, const Float96 &v, ErrorAt &err
 }
 
 StrBuffer &DisMc68000::outPackedBcd96(StrBuffer &out, const Float96 &v, ErrorAt &error) const {
-#if FLOAT96_STRICT
+#ifdef MC68000_FLOAT96_STRICT
     if ((v.digit & ~0xF) != 0) {
         error.setErrorIf(out, ILLEGAL_CONSTANT);
         return out;
@@ -106,7 +106,7 @@ StrBuffer &DisMc68000::outPackedBcd96(StrBuffer &out, const Float96 &v, ErrorAt 
     const auto exp = v.exp & INT16_MAX;
     if (exp == INT16_MAX)
         return v.significand == 0 ? out.text_P(TEXT_INF) : out.text_P(TEXT_NAN);
-#if FLOAT96_STRICT
+#ifdef MC68000_FLOAT96_STRICT
     if (v.exp & 0x3000)
         error.setErrorIf(out, ILLEGAL_CONSTANT);
 #endif

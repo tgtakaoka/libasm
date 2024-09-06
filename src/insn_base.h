@@ -69,7 +69,7 @@ struct Insn final : ErrorAt {
     /** Generate 64 bit little endian |data| (Assembler). */
     Error emitUint64Le(uint64_t data) { return emitUint64Le(data, _length); }
 
-#ifndef ASM_NOFLOAT
+#ifndef LIBASM_ASM_NOFLOAT
     /** Generate 32 bit big endian floating point |data|(Assembler). */
     Error emitFloat32Be(double data) { return emitFloat32Be(data, _length); }
 
@@ -104,7 +104,7 @@ struct Insn final : ErrorAt {
     /** Generate 64 bit little endian |data| at |pos| (Assembler). */
     Error emitUint64Le(uint64_t data, uint8_t pos);
 
-#ifndef ASM_NOFLOAT
+#ifndef LIBASM_ASM_NOFLOAT
     /** Generate 32 bit big endian floating point |data| at |pos| (Assembler). */
     Error emitFloat32Be(double data, uint8_t pos);
 
@@ -201,6 +201,7 @@ struct AsmInsnBase : ErrorAt {
     /** Generate 64 bit little endian |data| at |pos| (Assembler). */
     Error emitUint64Le(uint64_t data, uint8_t pos) { return _insn.emitUint64Le(data, pos); }
 
+#ifndef LIBASM_ASM_NOFLOAT
     /** Generate 32 bit big endian floating point |data|(Assembler). */
     Error emitFloat32Be(float data) { return _insn.emitFloat32Be(data); }
 
@@ -224,6 +225,7 @@ struct AsmInsnBase : ErrorAt {
 
     /** Generate 64 bit little endian floating point |data| at |pos| (Assembler). */
     Error emitFloat64Le(double data, uint8_t pos) { return _insn.emitFloat64Le(data, pos); }
+#endif
 
 protected:
     Insn &_insn;
@@ -369,6 +371,7 @@ struct AsmInsnImpl : AsmInsnBase {
         return big ? emitUint64Be(data, pos) : emitUint64Le(data, pos);
     }
 
+#ifndef LIBASM_ASM_NOFLOAT
     /** Generate 32 bit floating point |data| */
     Error emitFloat32(float data) { return big ? emitFloat32Be(data) : emitFloat32Le(data); }
 
@@ -384,6 +387,7 @@ struct AsmInsnImpl : AsmInsnBase {
     Error emitFloat64(double data, uint8_t pos) {
         return big ? emitFloat64Be(data, pos) : emitFloat64Le(data, pos);
     }
+#endif
 
 protected:
     AsmInsnImpl(Insn &insn) : AsmInsnBase(insn) {}

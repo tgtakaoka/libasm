@@ -62,14 +62,14 @@ Error Value::parseNumber(StrScanner &scan, Radix radix, uint32_t &value) {
     return strToNumber<uint32_t, UINT32_MAX>(scan, radix, value);
 }
 
-#ifndef ASM_NOFLOAT
+#ifndef LIBASM_ASM_NOFLOAT
 Error Value::parseNumber(StrScanner &scan, Radix radix, uint64_t &value) {
     return strToNumber<uint64_t, UINT64_MAX>(scan, radix, value);
 }
 #endif
 
 Error Value::parseNumber(StrScanner &scan, Radix radix) {
-#ifdef ASM_NOFLOAT
+#ifdef LIBASM_ASM_NOFLOAT
     _type = V_UINT32;
     return parseNumber(scan, radix, _uint32);
 #else
@@ -100,7 +100,7 @@ const char *Value::str() const {
         if (negative)
             out.letter('-');
         out.dec(u32).letter(')');
-#ifndef ASM_NOFLOAT
+#ifndef LIBASM_ASM_NOFLOAT
     } else if (_type == V_UINT64 || _type == V_INT64) {
         out.text(_type == V_UINT64 ? "<u64>" : "<i64>").hex(_uint64).letter('(');
         const auto negative = (_type == V_INT64 && _int64 < 0);
@@ -120,7 +120,7 @@ const char *Value::str() const {
 #endif
 }
 
-#ifndef ASM_NOFLOAT
+#ifndef LIBASM_ASM_NOFLOAT
 int64_t Value::getInt64() const {
     if (isSigned())
         return getSigned();
@@ -141,7 +141,7 @@ double Value::getFloat() const {
 bool Value::isZero() const {
     if (isUndefined())
         return false;
-#ifdef ASM_NOFLOAT
+#ifdef LIBASM_ASM_NOFLOAT
     return getUnsigned() == 0;
 #else
     if (isInt32())
@@ -187,12 +187,12 @@ Value Value::operator-() const {
         const auto u32 = getUnsigned();
         if (u32 <= static_cast<uint32_t>(INT32_MIN)) {
             v.setSigned(-static_cast<int32_t>(u32));
-#ifndef ASM_NOFLOAT
+#ifndef LIBASM_ASM_NOFLOAT
         } else {
             v.setInt64(-static_cast<int64_t>(u32));
 #endif
         }
-#ifndef ASM_NOFLOAT
+#ifndef LIBASM_ASM_NOFLOAT
     } else if (isInt64()) {
         v.setInt64(-getInt64());
     } else {
@@ -210,7 +210,7 @@ Value Value::operator+(const Value &rhs) const {
         } else {
             v.setUnsigned(getUnsigned() + rhs.getUnsigned());
         }
-#ifndef ASM_NOFLOAT
+#ifndef LIBASM_ASM_NOFLOAT
     } else if (isInt64() && rhs.isInt64()) {
         v.setInt64(getInt64() + rhs.getInt64());
     } else {
@@ -230,7 +230,7 @@ Value Value::operator-(const Value &rhs) const {
         } else {
             v.setUnsigned(getUnsigned() - rhs.getUnsigned());
         }
-#ifndef ASM_NOFLOAT
+#ifndef LIBASM_ASM_NOFLOAT
     } else if (isInt64() && rhs.isInt64()) {
         v.setInt64(getInt64() - rhs.getInt64());
     } else {
@@ -248,7 +248,7 @@ Value Value::operator*(const Value &rhs) const {
         } else {
             v.setUnsigned(getUnsigned() * rhs.getUnsigned());
         }
-#ifndef ASM_NOFLOAT
+#ifndef LIBASM_ASM_NOFLOAT
     } else if (isInt64() && rhs.isInt64()) {
         v.setInt64(getInt64() * rhs.getInt64());
     } else {
@@ -268,7 +268,7 @@ Value Value::operator/(const Value &rhs) const {
         } else {
             v.setUnsigned(getUnsigned() / rhs.getUnsigned());
         }
-#ifndef ASM_NOFLOAT
+#ifndef LIBASM_ASM_NOFLOAT
     } else if (isInt64() && rhs.isInt64()) {
         v.setInt64(getInt64() / rhs.getInt64());
     } else {
@@ -288,7 +288,7 @@ Value Value::operator%(const Value &rhs) const {
         } else {
             v.setUnsigned(getUnsigned() % rhs.getUnsigned());
         }
-#ifndef ASM_NOFLOAT
+#ifndef LIBASM_ASM_NOFLOAT
     } else if (isInt64() && rhs.isInt64()) {
         v.setInt64(getInt64() % rhs.getInt64());
     } else {
@@ -342,7 +342,7 @@ Value Value::exponential(const Value &rhs) const {
         } else {
             v.setUnsigned(power<uint32_t>(getUnsigned(), rhs.getUnsigned()));
         }
-#ifndef ASM_NOFLOAT
+#ifndef LIBASM_ASM_NOFLOAT
     } else {
         v.setFloat(pow(getFloat(), rhs.getFloat()));
 #endif
