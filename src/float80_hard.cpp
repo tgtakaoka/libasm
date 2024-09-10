@@ -21,6 +21,7 @@
 #include <errno.h>
 #include <math.h>
 #include <stdio.h>
+#include "float64.h"
 #include "str_buffer.h"
 
 namespace libasm {
@@ -39,6 +40,25 @@ __float80_hard &__float80_hard::set(int64_t i64) {
 __float80_hard &__float80_hard::set(uint64_t u64) {
     _f80 = static_cast<long double>(u64);
     return *this;
+}
+
+__float80_hard &__float80_hard::set(const float64_t &f64) {
+    union {
+        uint64_t u64;
+        double f64;
+    } data;
+    data.u64 = f64.bits();
+    _f80 = static_cast<long double>(data.f64);
+    return *this;
+}
+
+float64_t &__float80_hard::get(float64_t &f64) const {
+    union {
+        uint64_t u64;
+        double f64;
+    } data;
+    data.f64 = static_cast<double>(_f80);
+    return f64.set(data.u64);
 }
 
 __float80_hard __float80_hard::pow10(int_fast16_t n) const {

@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+#include "float64.h"
 #include "float80.h"
 #include "test_unit_helper.h"
 
@@ -21,6 +22,7 @@
 
 namespace libasm {
 namespace test {
+using f64 = float64_t;
 using f80 = __float80_hard;
 }  // namespace test
 }  // namespace libasm
@@ -51,6 +53,8 @@ void run_tests() {
     RUN_TEST(test_pow10);
     RUN_TEST(test_read);
     RUN_TEST(test_write);
+    RUN_TEST(test_float64_set);
+    RUN_TEST(test_float64_get);
 #endif
 }
 

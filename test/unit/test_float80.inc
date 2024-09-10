@@ -16,17 +16,31 @@
 
 #include <string>
 
-#define SEQ(msg, actual, expected)        \
+#define SEQ(msg, expected, actual)        \
     do {                                  \
-        std::string a = (actual).str();   \
         std::string e = (expected).str(); \
+        std::string a = (actual).str();   \
         EQ(msg, e.c_str(), a.c_str());    \
     } while (0)
 
 namespace libasm {
 namespace test {
 
-// String representation
+// float64_t significand constants and string literals
+constexpr auto INT53_MIN = -INT64_C(0x00010000000000000);
+constexpr auto INT53_MAX = INT64_C(0x0000FFFFFFFFFFFFF);
+constexpr auto UINT53_MAX = UINT64_C(0x0001FFFFFFFFFFFFF);
+constexpr auto UINT54_MIN = UINT64_C(0x00020000000000000);
+constexpr char tINT53_MIN[] = "-4503599627370496";           // -0x1.0000000000000p+52
+constexpr char tINT53_MAX[] = "4503599627370495";            // +0x1.0000000000000p+52
+constexpr char tUINT53_MAX[] = "9007199254740991";           // +0x1.FFFFFFFFFFFFFp+53
+constexpr char tUINT54_MIN[] = "9007199254740992";           // +0x1.0000000000000p+54
+constexpr char tDBL_MAX[] = "1.7976931348623157e+308";       // +0x1.FFFFFFFFFFFFFp+1023
+constexpr char tDBL_MIN[] = "2.2250738585072014e-308";       // +0x1.0000000000000p-1022
+constexpr char tDBL_SUBN_MAX[] = "2.2250738585072009e-308";  // +0x0.FFFFFFFFFFFFFp-1022
+constexpr char tDBL_TRUE_MIN[] = "4.9406564584124654e-324";  // +0x0.0000000000001p-1022
+
+// float80_t string literals
 constexpr char tINT64_MIN[] = "-9223372036854775808";              // -0x8.000000000000000p+60
 constexpr char tINT64_MAX[] = "9223372036854775807";               // +0xF.FFFFFFFFFFFFFFEp+59
 constexpr char tUINT64_MAX[] = "18446744073709551615";             // +0xF.FFFFFFFFFFFFFFFp+60
@@ -644,6 +658,82 @@ void test_write() {
     EQ("ILLEGAL", "nan", gcvt(ILLEGAL));
     FALSE("-ILLEGAL", (-ILLEGAL).isValid());
     EQ("-ILLEGAL", "-nan", gcvt(-ILLEGAL));
+}
+
+void test_float64_set() {
+    f80 v;
+    SEQ("+nan", f80::not_a_number(false), v.set(f64::not_a_number(false)));
+    SEQ("-nan", f80::not_a_number(true), v.set(f64::not_a_number(true)));
+    SEQ("+inf", f80::infinity(false), v.set(f64::infinity(false)));
+    SEQ("-inf", f80::infinity(true), v.set(f64::infinity(true)));
+
+    SEQ("+0", f80::zero(false), v.set(f64::zero(false)));
+    SEQ("-0", f80::zero(true), v.set(f64::zero(true)));
+
+    SEQ("+1", f80(0x3FFF, UINT64_C(0x8000000000000000)),
+            v.set(f64(0x03FF, UINT64_C(0x0000000000000000))));
+    SEQ("-1", f80(0x8000 | 0x3FFF, UINT64_C(0x8000000000000000)),
+            v.set(f64(0x800 | 0x03FF, UINT64_C(0x0000000000000000))));
+    SEQ("INT53_MAX", f80(51 + 0x3FFF, UINT64_C(0xFFFFFFFFFFFFF800)),
+            v.set(f64(51 + 0x03FF, UINT64_C(0x000FFFFFFFFFFFFF))));
+    SEQ("INT53_MIN", f80(0x8000 | (52 + 0x3FFF), UINT64_C(0x8000000000000000)),
+            v.set(f64(0x800 | (52 + 0x03FF), UINT64_C(0x0100000000000000))));
+    SEQ("UINT53_MAX", f80(52 + 0x3FFF, UINT64_C(0xFFFFFFFFFFFFF800)),
+            v.set(f64(52 + 0x03FF, UINT64_C(0x001FFFFFFFFFFFFF))));
+
+    SEQ("DBL_MAX", f80(1023 + 0x3FFF, UINT64_C(0xFFFFFFFFFFFFF800)),
+            v.set(f64(1023 + 0x3FF, UINT64_C(0x000FFFFFFFFFFFFF))));
+    SEQ("DBL_MIN", f80(-1022 + 0x3FFF, UINT64_C(0x8000000000000000)),
+            v.set(f64(-1022 + 0x3FF, UINT64_C(0x0000000000000000))));
+    SEQ("DBL_SUBN_MAX", f80(-1023 + 0x3FFF, UINT64_C(0xFFFFFFFFFFFFF000)),
+            v.set(f64(-1023 + 0x3FF, UINT64_C(0x000FFFFFFFFFFFFF))));
+    SEQ("DBL_TRUE_MIN", f80(-1074 + 0x3FFF, UINT64_C(0x8000000000000000)),
+            v.set(f64(-1023 + 0x3FF, UINT64_C(0x0000000000000001))));
+}
+
+void test_float64_get() {
+    f64 v;
+    SEQ("+nan", f64::not_a_number(false), f80::not_a_number(false).get(v));
+    SEQ("-nan", f64::not_a_number(true), f80::not_a_number(true).get(v));
+    SEQ("+inf", f64::infinity(false), f80::infinity(false).get(v));
+    SEQ("-inf", f64::infinity(true), f80::infinity(true).get(v));
+
+    SEQ("+0", f64::zero(false), f80::zero(false).get(v));
+    SEQ("-0", f64::zero(true), f80::zero(true).get(v));
+
+    SEQ("+1", f64(0x03FF, UINT64_C(0x0000000000000000)),
+            f80(0x3FFF, UINT64_C(0x8000000000000000)).get(v));
+    SEQ("-1", f64(0x800 | 0x03FF, UINT64_C(0x0000000000000000)),
+            f80(0x8000 | 0x3FFF, UINT64_C(0x8000000000000000)).get(v));
+    SEQ("INT53_MAX", f64(51 + 0x03FF, UINT64_C(0x000FFFFFFFFFFFFF)),
+            f80(51 + 0x3FFF, UINT64_C(0xFFFFFFFFFFFFF800)).get(v));
+    SEQ("INT53_MIN", f64(0x800 | (52 + 0x03FF), UINT64_C(0x0100000000000000)),
+            f80(0x8000 | (52 + 0x3FFF), UINT64_C(0x8000000000000000)).get(v));
+    SEQ("UINT53_MAX", f64(53 + 0x03FF, UINT64_C(0x0000000000000000)),
+            f80(52 + 0x3FFF, UINT64_C(0xFFFFFFFFFFFFFC00)).get(v));
+
+    SEQ("INT64_MAX", f64(63 + 0x3FF, UINT64_C(0x0000000000000000)),
+            f80(62 + 0x3FFF, UINT64_C(0xFFFFFFFFFFFFFFFE)).get(v));
+    SEQ("INT64_MIN", f64(0x800 | (63 + 0x3FF), UINT64_C(0x0000000000000000)),
+            f80(0x8000 | (63 + 0x3FFF), UINT64_C(0x8000000000000000)).get(v));
+    SEQ("UINT64_MAX", f64(64 + 0x3FF, UINT64_C(0x0000000000000000)),
+            f80(63 + 0x3FFF, UINT64_C(0xFFFFFFFFFFFFFFFF)).get(v));
+
+    SEQ("DBL_MAX", f64(1023 + 0x3FF, UINT64_C(0x000FFFFFFFFFFFFF)),
+            f80(1023 + 0x3FFF, UINT64_C(0xFFFFFFFFFFFFF800)).get(v));
+    SEQ("DBL_MIN", f64(-1022 + 0x3FF, UINT64_C(0x0000000000000000)),
+            f80(-1022 + 0x3FFF, UINT64_C(0x8000000000000000)).get(v));
+    SEQ("DBL_SUBN_MAX", f64(0, UINT64_C(0x000FFFFFFFFFFFFF)),
+            f80(-1023 + 0x3FFF, UINT64_C(0xFFFFFFFFFFFFF000)).get(v));
+    SEQ("DBL_TRUE_MIN", f64(0, UINT64_C(1)),
+            f80(-1074 + 0x3FFF, UINT64_C(0x8000000000000000)).get(v));
+
+    SEQ("LDBL_MAX", f64::infinity(false), f80(16383 + 0x3FFF, UINT64_C(0xFFFFFFFFFFFFFFFF)).get(v));
+    SEQ("LDBL_MIN", f64::zero(false), f80(-16382 + 0x3FFF, UINT64_C(0x8000000000000000)).get(v));
+    SEQ("LDBL_SUBN_MAX", f64::zero(false),
+            f80(-16383 + 0x3FFF, UINT64_C(0x7FFFFFFFFFFFFFFF)).get(v));
+    SEQ("LDBL_TRUE_MIN", f64::zero(false),
+            f80(-16383 + 0x3FFF, UINT64_C(0x0000000000000001)).get(v));
 }
 
 }  // namespace test
