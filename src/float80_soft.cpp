@@ -17,6 +17,7 @@
 #include "float80_soft.h"
 #include <ctype.h>
 #include <errno.h>
+#include "float64.h"
 #include "str_buffer.h"
 #include "str_scanner.h"
 #include "text_common.h"
@@ -51,6 +52,28 @@ __float80_soft &__float80_soft::set(uint64_t u64) {
         _sig = sig.value();
     }
     return *this;
+}
+
+__float80_soft &__float80_soft::set(const float64_t &f64) {
+    const auto negative = f64.isNegative();
+    if (f64.isNan())
+        return *this = __float80_soft::not_a_number(negative);
+    if (f64.isInf())
+        return *this = __float80_soft::infinity(negative);
+    fixed64_t sig;
+    const auto exp = f64.decompose(sig);
+    return *this = compose(negative, exp, sig);
+}
+
+float64_t &__float80_soft::get(float64_t &f64) const {
+    const auto negative = isNegative();
+    if (isNan())
+        return f64 = float64_t::not_a_number(negative);
+    if (isInf())
+        return f64 = float64_t::infinity(negative);
+    fixed64_t sig;
+    const auto exp = decompose(sig);
+    return f64 = float64_t::compose(negative, exp, sig);
 }
 
 bool __float80_soft::operator==(const __float80_soft &rhs) const {
