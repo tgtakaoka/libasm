@@ -19,6 +19,8 @@ subninja ${root}/test/unit/ninja.rules
 
 build test_array_memory: test test_array_memory.o $
   test_unit_helper.o test_asserter.o error_reporter.o
+build test_fixed64: test test_fixed64.o fixed64.o str_buffer.o $
+  test_unit_helper.o test_asserter.o error_reporter.o
 build test_reg_base:  test test_reg_base.o reg_base.o str_scanner.o $
   str_buffer.o $
   test_unit_helper.o test_asserter.o error_reporter.o
@@ -29,7 +31,7 @@ build test_str_scanner:  test test_str_scanner.o str_scanner.o $
 build test_value:  test test_value.o value.o str_buffer.o str_scanner.o $
   test_unit_helper.o test_asserter.o error_reporter.o
 
-build test: phony test_array_memory test_reg_base test_str_buffer $
-  test_str_scanner test_value
+build test: phony test_array_memory test_fixed64 test_reg_base $
+  test_str_buffer test_str_scanner test_value
 
 default test
