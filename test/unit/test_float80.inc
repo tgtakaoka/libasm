@@ -26,6 +26,19 @@
 namespace libasm {
 namespace test {
 
+// float32_t significand constants and string literals
+constexpr auto INT24_MAX = INT32_C(0x7FFFFF);
+constexpr auto INT24_MIN = -INT32_C(0x800000);
+constexpr auto UINT24_MAX = UINT32_C(0xFFFFFF);
+constexpr auto UINT25_MIN = UINT32_C(0x1000000);
+constexpr char tINT24_MAX[] = "8388507";            // +0x1.FFFFFCp+22
+constexpr char tINT24_MIN[] = "-8388608";           // -0x1.000000p+23
+constexpr char tUINT24_MAX[] = "16777215";          // +0x1.FFFFFEp+23
+constexpr char tUINT25_MIN[] = "16777216";          // +0x1.000000p+24
+constexpr char tFLT_MAX[] = "3.40282347e+38";       // +0x1.FFFFFEp+127
+constexpr char tFLT_MIN[] = "1.17549435e-38";       // +0x1.000000p-126
+constexpr char tFLT_SUBN_MAX[] = "1.17549421e-38";  // +0x0.FFFFFCp-127
+constexpr char tFLT_TRUE_MIN[] = "1.40129846e-45";  // +0x0.000000p-149
 // float64_t significand constants and string literals
 constexpr auto INT53_MIN = -INT64_C(0x00010000000000000);
 constexpr auto INT53_MAX = INT64_C(0x0000FFFFFFFFFFFFF);
@@ -658,6 +671,87 @@ void test_write() {
     EQ("ILLEGAL", "nan", gcvt(ILLEGAL));
     FALSE("-ILLEGAL", (-ILLEGAL).isValid());
     EQ("-ILLEGAL", "-nan", gcvt(-ILLEGAL));
+}
+
+void test_float32_set() {
+    f80 v;
+    SEQ("+nan", f80::not_a_number(false), v.set(f32::not_a_number(false)));
+    SEQ("-nan", f80::not_a_number(true), v.set(f32::not_a_number(true)));
+    SEQ("+inf", f80::infinity(false), v.set(f32::infinity(false)));
+    SEQ("-inf", f80::infinity(true), v.set(f32::infinity(true)));
+
+    SEQ("+0", f80::zero(false), v.set(f32::zero(false)));
+    SEQ("-0", f80::zero(true), v.set(f32::zero(true)));
+
+    SEQ("+1", f80(0 + 0x3FFF, UINT64_C(0x8000000000000000)),
+            v.set(f32(0 + 0x07F, UINT32_C(0x00000000))));
+    SEQ("-1", f80(0x8000 | 0x3FFF, UINT64_C(0x8000000000000000)),
+            v.set(f32(0x100 | 0x07F, UINT32_C(0x00000000))));
+    SEQ("INT23_MAX", f80(22 + 0x3FFF, UINT64_C(0xFFFFFF0000000000)),
+            v.set(f32(22 + 0x07F, UINT32_C(0x00FFFFFF))));
+    SEQ("INT23_MIN", f80(0x8000 | (23 + 0x3FFF), UINT64_C(0x8000000000000000)),
+            v.set(f32(0x100 | (23 + 0x07F), UINT32_C(0x01000000))));
+    SEQ("UINT23_MAX", f80(23 + 0x3FFF, UINT64_C(0xFFFFFF0000000000)),
+            v.set(f32(23 + 0x07F, UINT32_C(0x00FFFFFF))));
+
+    SEQ("FLT_MAX", f80(127 + 0x3FFF, UINT64_C(0xFFFFFF0000000000)),
+            v.set(f32(127 + 0x07F, UINT32_C(0x00FFFFFF))));
+    SEQ("FLT_MIN", f80(-126 + 0x3FFF, UINT64_C(0x8000000000000000)),
+            v.set(f32(-126 + 0x7F, UINT32_C(0x00000000))));
+    SEQ("FLT_SUBN_MAX", f80(-127 + 0x3FFF, UINT64_C(0xFFFFFE0000000000)),
+            v.set(f32(-127 + 0x7F, UINT32_C(0x00FFFFFF))));
+    SEQ("FLT_TRUE_MIN", f80(-149 + 0x3FFF, UINT64_C(0x8000000000000000)),
+            v.set(f32(-127 + 0x7F, UINT32_C(0x00000001))));
+}
+
+void test_float32_get() {
+    f32 v;
+    SEQ("+nan", f32::not_a_number(false), f80::not_a_number(false).get(v));
+    SEQ("-nan", f32::not_a_number(true), f80::not_a_number(true).get(v));
+    SEQ("+inf", f32::infinity(false), f80::infinity(false).get(v));
+    SEQ("-inf", f32::infinity(true), f80::infinity(true).get(v));
+
+    SEQ("+0", f32::zero(false), f80::zero(false).get(v));
+    SEQ("-0", f32::zero(true), f80::zero(true).get(v));
+
+    SEQ("+1", f32(0 + 0x07F, UINT32_C(0x00000000)),
+            f80(0 + 0x3FFF, UINT64_C(0x8000000000000000)).get(v));
+    SEQ("-1", f32(0x100 | 0x07F, UINT32_C(0x00000000)),
+            f80(0x8000 | 0x3FFF, UINT64_C(0x8000000000000000)).get(v));
+    SEQ("INT24_MAX", f32(22 + 0x07F, UINT32_C(0x00FFFFFE)),
+            f80(22 + 0x3FFF, UINT64_C(0xFFFFFE0000000000)).get(v));
+    SEQ("INT24_MIN", f32(0x100 | (23 + 0x07F), UINT32_C(0x01000000)),
+            f80(0x8000 | (23 + 0x3FFF), UINT64_C(0x8000000000000000)).get(v));
+    SEQ("UINT24_MAX", f32(23 + 0x07F, UINT32_C(0x00FFFFFFF)),
+            f80(23 + 0x3FFF, UINT64_C(0xFFFFFF0000000000)).get(v));
+
+    SEQ("INT64_MAX", f32(63 + 0x7F, UINT32_C(0x00000000)),
+            f80(62 + 0x3FFF, UINT64_C(0xFFFFFFFFFFFFFFFE)).get(v));
+    SEQ("INT64_MIN", f32(0x100 | (63 + 0x7F), UINT32_C(0x00000000)),
+            f80(0x8000 | (63 + 0x3FFF), UINT64_C(0x8000000000000000)).get(v));
+    SEQ("UINT64_MAX", f32(64 + 0x7F, UINT32_C(0x00000000)),
+            f80(63 + 0x3FFF, UINT64_C(0xFFFFFFFFFFFFFFFF)).get(v));
+
+    SEQ("FLT_MAX", f32(127 + 0x7F, UINT32_C(0x00FFFFFF)),
+            f80(127 + 0x3FFF, UINT64_C(0xFFFFFF0000000000)).get(v));
+    SEQ("FLT_MIN", f32(-126 + 0x7F, UINT32_C(0x00000000)),
+            f80(-126 + 0x3FFF, UINT64_C(0x8000000000000000)).get(v));
+    SEQ("FLT_SUBN_MAX", f32(-127 + 0x7F, UINT32_C(0x007FFFFF)),
+            f80(-127 + 0x3FFF, UINT64_C(0xFFFFFE0000000000)).get(v));
+    SEQ("FLT_TRUE_MIN", f32(-127 + 0x7F, UINT32_C(0x00000001)),
+            f80(-149 + 0x3FFF, UINT64_C(0x8000000000000000)).get(v));
+
+    SEQ("DBL_MAX", f32::infinity(false), f80(1023 + 0x3FFF, UINT64_C(0xFFFFFFFFFFFFF800)).get(v));
+    SEQ("DBL_MIN", f32::zero(false), f80(-1022 + 0x3FFF, UINT64_C(0x8000000000000000)).get(v));
+    SEQ("DBL_SUBN_MAX", f32::zero(false), f80(-1023 + 0x3FFF, UINT64_C(0xFFFFFFFFFFFFF000)).get(v));
+    SEQ("DBL_TRUE_MIN", f32::zero(false), f80(-1074 + 0x3FFF, UINT64_C(0x8000000000000000)).get(v));
+
+    SEQ("LDBL_MAX", f32::infinity(false), f80(16383 + 0x3FFF, UINT64_C(0xFFFFFFFFFFFFFFFF)).get(v));
+    SEQ("LDBL_MIN", f32::zero(false), f80(-16382 + 0x3FFF, UINT64_C(0x8000000000000000)).get(v));
+    SEQ("LDBL_SUBN_MAX", f32::zero(false),
+            f80(-16383 + 0x3FFF, UINT64_C(0x7FFFFFFFFFFFFFFF)).get(v));
+    SEQ("LDBL_TRUE_MIN", f32::zero(false),
+            f80(-16383 + 0x3FFF, UINT64_C(0x0000000000000001)).get(v));
 }
 
 void test_float64_set() {

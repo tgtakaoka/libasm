@@ -22,6 +22,7 @@
 
 namespace libasm {
 
+struct __float32;
 struct __float64;
 struct StrBuffer;
 struct StrScanner;
@@ -31,15 +32,19 @@ struct __float80_soft : __float80_base {
     __float80_soft(uint16_t tag = 0, uint64_t sig = 0) { set(tag, sig); }
     __float80_soft(const __float80_soft &f80) = default;
     __float80_soft &operator=(const __float80_soft &f80) = default;
+    __float80_soft(const __float32 &f32) { set(f32); }
+    __float80_soft &operator=(const __float32 &f32) { return set(f32); }
     __float80_soft(const __float64 &f64) { set(f64); }
     __float80_soft &operator=(const __float64 &f64) { return set(f64); }
 
     __float80_soft &set(uint16_t tag, uint64_t sig);
     __float80_soft &set(int64_t i64);
     __float80_soft &set(uint64_t u64);
+    __float80_soft &set(const __float32 &f32);
     __float80_soft &set(const __float64 &f64);
+    __float32 &get(__float32 &f32) const;
     __float64 &get(__float64 &f64) const;
-    
+
     uint16_t tag() const { return _tag; }
     uint64_t significand() const { return _sig; }
     int_fast16_t exponent() const { return __float80_base::exponent(_tag); }

@@ -43,19 +43,22 @@ CPPFLAGS = -I../src -I../driver -MD -MF $@.d
 
 OBJS_test = \
     test_asserter.o error_reporter.o option_base.o str_buffer.o str_scanner.o
-OBJS_asm  = \
-    asm_base.o config_base.o reg_base.o test_asm_helper.o \
-    insn_base.o value.o value_parser.o parsers.o operators.o text_common.o
-OBJS_dis  = \
-    dis_base.o config_base.o formatters.o reg_base.o test_dis_helper.o \
-    insn_base.o value.o value_formatter.o text_common.o
-OBJS_expr = \
-    config_base.o test_expr_helper.o formatters.o operators.o parsers.o \
-    insn_base.o value_formatter.o value.o value_parser.o text_common.o
-OBJS_gen  = \
-    gen_driver.o test_generator.o tokenized_text.o dis_formatter.o \
-    config_base.o insn_base.o dis_base.o formatters.o reg_base.o \
-    value_formatter.o value.o list_formatter.o text_common.o
+OBJS_asm  = test_asm_helper.o asm_base.o \
+    config_base.o insn_base.o operators.o parsers.o reg_base.o value.o \
+    value_parser.o text_common.o \
+    fixed64.o float32.o float64.o float80_base.o float80_hard.o float80_soft.o
+OBJS_dis  = test_dis_helper.o dis_base.o \
+    config_base.o formatters.o insn_base.o reg_base.o value.o \
+    value_formatter.o text_common.o \
+    fixed64.o float32.o float64.o float80_base.o float80_hard.o float80_soft.o
+OBJS_expr = test_expr_helper.o \
+    config_base.o formatters.o insn_base.o operators.o parsers.o \
+    value.o value_formatter.o value_parser.o text_common.o \
+    fixed64.o float32.o float64.o float80_base.o float80_hard.o float80_soft.o
+OBJS_gen  = gen_driver.o test_generator.o tokenized_text.o \
+    config_base.o dis_base.o dis_formatter.o formatters.o insn_base.o \
+    list_formatter.o reg_base.o value.o value_formatter.o text_common.o \
+    fixed64.o float32.o float64.o float80_base.o float80_hard.o float80_soft.o
 
 TEST_OBJS = $(ARCHS:%=test_asm_%.o) $(ARCHS:%=test_dis_%.o)
 EXPR_OBJS = $(EXPRS:%=test_expr_%.o)
