@@ -6,6 +6,9 @@ build config_base.o:     cxx ${root}/src/config_base.cpp
 build dis_base.o:        cxx ${root}/src/dis_base.cpp
 build error_reporter.o:  cxx ${root}/src/error_reporter.cpp
 build fixed64.o:         cxx ${root}/src/fixed64.cpp
+build float80_base.o:    cxx ${root}/src/float80_base.cpp
+build float80_hard.o:    cxx ${root}/src/float80_hard.cpp
+build float80_soft.o:    cxx ${root}/src/float80_soft.cpp
 build formatters.o:      cxx ${root}/src/formatters.cpp
 build insn_base.o:       cxx ${root}/src/insn_base.cpp
 build operators.o:       cxx ${root}/src/operators.cpp

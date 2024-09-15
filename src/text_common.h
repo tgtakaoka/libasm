@@ -26,8 +26,9 @@ namespace common {
 // clang-format off
 extern const char TEXT_FPU[]   PROGMEM;
 extern const char TEXT_none[]  PROGMEM;
-extern const char TEXT_INF[]   PROGMEM;
 extern const char TEXT_NAN[]   PROGMEM;
+extern const char TEXT_INF[]   PROGMEM;
+extern const char TEXT_INFINITY[] PROGMEM;
 
 extern const char TEXT_ABS[]   PROGMEM;
 extern const char TEXT_ABX[]   PROGMEM;

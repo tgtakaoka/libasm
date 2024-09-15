@@ -3,6 +3,8 @@
 
 build test_array_memory.o: cxx ${root}/test/unit/test_array_memory.cpp
 build test_fixed64.o:      cxx ${root}/test/unit/test_fixed64.cpp
+build test_float80_hard.o: cxx ${root}/test/unit/test_float80_hard.cpp
+build test_float80_soft.o: cxx ${root}/test/unit/test_float80_soft.cpp
 build test_reg_base.o:     cxx ${root}/test/unit/test_reg_base.cpp
 build test_str_buffer.o:   cxx ${root}/test/unit/test_str_buffer.cpp
 build test_str_scanner.o:  cxx ${root}/test/unit/test_str_scanner.cpp

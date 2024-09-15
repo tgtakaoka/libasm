@@ -21,6 +21,8 @@
 
 namespace libasm {
 
+struct StrScanner;
+
 /**
  * Number of leading zero.
  */
@@ -95,6 +97,31 @@ struct __fixed64 {
     /** For testing */
     const char *str() const;
 
+    /**
+     * Normalize |exp| and |this| floating point number where 1.0 <=
+     * |this| < 10.0, and returns 10 based exponent to |exp10|.
+     */
+    int_fast16_t normalize(int_fast16_t exp, int_fast16_t &exp10);
+
+    /**
+     * Convert normalized |exp| and |this|, where 1.0 <= |this| <
+     * 10.0, to |prec| decimal digits |digits[0..ndigits]| with
+     * rounding off at |prec|+1. Returns true if rounding off causes
+     * overflow at most significant digit.
+     */
+    bool decompose(int_fast16_t exp, uint8_t *digits, uint_fast8_t ndigits);
+
+    /**
+     * Read integral and fraction from |scan| and returns exponent of
+     * 2 and significand in |this|.
+     */
+    int_fast16_t read(StrScanner &scan);
+
+    /** Multiply by 10 and add one decimal digit |digit| */
+    int_fast16_t dec_digit(int_fast16_t exp, uint_fast8_t digit);
+    /** Multiply by 16 and add one hexadecimal digit |digit| */
+    int_fast16_t hex_digit(int_fast16_t exp, uint_fast8_t digit);
+
 private:
     static constexpr auto _BITS = 16;
     static constexpr auto _LOW = 0;   // low guard
@@ -119,6 +146,8 @@ private:
      * return quotient
      */
     static uint16_t div(uint16_t u[], const uint16_t v[], int_fast8_t j);
+    /** Add one hexadecimal digit |digit| */
+    int_fast16_t add_digit(int_fast16_t exp, uint_fast8_t digit);
 };
 
 using fixed64_t = __fixed64;

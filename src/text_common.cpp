@@ -23,8 +23,9 @@ namespace common {
 // clang-format off
 constexpr char TEXT_FPU[]  PROGMEM = "FPU";
 constexpr char TEXT_none[] PROGMEM = "none";
-constexpr char TEXT_INF[]  PROGMEM = "INF";
-constexpr char TEXT_NAN[]  PROGMEM = "NAN";
+constexpr char TEXT_NAN[]  PROGMEM = "nan";
+constexpr char TEXT_INF[]  PROGMEM = "inf";
+constexpr char TEXT_INFINITY[] PROGMEM = "infinity";
 
 constexpr char TEXT_ABS[]   PROGMEM = "ABS";
 constexpr char TEXT_ABX[]   PROGMEM = "ABX";
