@@ -14,19 +14,42 @@
  * limitations under the License.
  */
 
-#ifndef __LIBASM_CONFIG_LIBASM_H__
-#define __LIBASM_CONFIG_LIBASM_H__
+#include "float80.h"
+#include "test_unit_helper.h"
 
-/** Disable floating point number support from assembler */
-// #define LIBASM_ASM_NOFLOAT
+namespace libasm {
+namespace test {
+using f80 = __float80_soft;
+}  // namespace test
+}  // namespace libasm
 
-/** Enable debugging functionality of Value class */
-// #define LIBASM_DEBUG_VALUE
+#include "test_float80.inc"
 
-/** Enable software emulated floating point */
-#define LIBASM_SOFT_FLOAT80
+namespace libasm {
+namespace test {
 
-#endif  // __LIBASM_CONFIG_LIBASM_H__
+void set_up() {}
+
+void tear_down() {}
+
+void run_tests() {
+    RUN_TEST(test_decompose);
+    RUN_TEST(test_compose);
+    RUN_TEST(test_ctor);
+    RUN_TEST(test_set);
+    RUN_TEST(test_equals);
+    RUN_TEST(test_lessthan);
+    RUN_TEST(test_add);
+    RUN_TEST(test_sub);
+    RUN_TEST(test_mul);
+    RUN_TEST(test_div);
+    RUN_TEST(test_pow10);
+    RUN_TEST(test_read);
+    RUN_TEST(test_write);
+}
+
+}  // namespace test
+}  // namespace libasm
 
 // Local Variables:
 // mode: c++

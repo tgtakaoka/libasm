@@ -16,6 +16,7 @@
 
 #include "fixed64.h"
 #include "str_buffer.h"
+#include "str_scanner.h"
 
 namespace libasm {
 
@@ -359,6 +360,149 @@ int_fast16_t __fixed64::power10(int_fast16_t n) {
         }
     }
     return exp2;
+}
+
+namespace {
+const struct digits {
+    __fixed64 sig;
+    int_fast16_t exp;
+} DIGITS[16] = {
+        {fixed64_t{UINT64_C(0x0000000000000000)}, 0},  // 0
+        {fixed64_t{UINT64_C(0x8000000000000000)}, 0},  // 1
+        {fixed64_t{UINT64_C(0x8000000000000000)}, 1},  // 2
+        {fixed64_t{UINT64_C(0xC000000000000000)}, 1},  // 3
+        {fixed64_t{UINT64_C(0x8000000000000000)}, 2},  // 4
+        {fixed64_t{UINT64_C(0xA000000000000000)}, 2},  // 5
+        {fixed64_t{UINT64_C(0xC000000000000000)}, 2},  // 6
+        {fixed64_t{UINT64_C(0xE000000000000000)}, 2},  // 7
+        {fixed64_t{UINT64_C(0x8000000000000000)}, 3},  // 8
+        {fixed64_t{UINT64_C(0x9000000000000000)}, 3},  // 9
+        {fixed64_t{UINT64_C(0xA000000000000000)}, 3},  // 10
+        {fixed64_t{UINT64_C(0xB000000000000000)}, 3},  // 11
+        {fixed64_t{UINT64_C(0xC000000000000000)}, 3},  // 12
+        {fixed64_t{UINT64_C(0xD000000000000000)}, 3},  // 13
+        {fixed64_t{UINT64_C(0xE000000000000000)}, 3},  // 14
+        {fixed64_t{UINT64_C(0xF000000000000000)}, 3},  // 15
+};
+}  // namespace
+
+int_fast16_t __fixed64::normalize(int_fast16_t exp, int_fast16_t &exp10) {
+    if (exp == 0 && zero()) {
+        exp10 = 0;
+        return 0;
+    }
+    // estimate exponent of 10
+    // log10(2) = 0.3010299956 ~ 0.30103 ~ 18734 / 62233
+    exp10 = static_cast<int32_t>(exp) * INT32_C(18734) / INT32_C(62233);
+    // normalize 1.0 <= |sig| < 10.0
+    exp += power10(-exp10);
+    const auto &TEN = DIGITS[10];
+    while (exp > TEN.exp || (exp == TEN.exp && *this >= TEN.sig)) {
+        // |sig| >= 10.0
+        exp += power10(-1);
+        ++exp10;
+    }
+    const auto &ONE = DIGITS[1];
+    while (exp < ONE.exp || (exp == ONE.exp && *this < ONE.sig)) {
+        // |sig| < 1.0
+        exp += power10(1);
+        --exp10;
+    }
+    return exp;
+}
+
+bool __fixed64::decompose(int_fast16_t exp, uint8_t *digits, uint_fast8_t ndigits) {
+    const auto &ONE = DIGITS[1];
+    uint_fast8_t digit = 0;  // keeps last digit
+    // |ndigits| + 1 loop to calculate extra digit for erounding off.
+    for (uint_fast16_t i = 0; i <= ndigits; ++i) {
+        if (exp < ONE.exp || (exp == ONE.exp && *this < ONE.sig)) {
+            // sig < 1.0
+            digit = 0;
+        } else {
+            // digit = (int)sig;
+            shift_left(exp + 1);
+            digit = get_high();
+            // sig -= digit;
+            clear_high();
+            shift_right(exp + 1);
+            exp += normalize();
+        }
+        if (i == ndigits)
+            break;
+        digits[i] = digit;
+        // sig *= 10;
+        exp += power10(1);
+    }
+    // check rounding off
+    if (digit < 5)
+        return false;
+    // round up
+    for (int_fast16_t i = ndigits; --i >= 0;) {
+        if (++digits[i] <= 9)
+            return false;
+        digits[i] = 0;
+    }
+    // '999..9' overflows to '1000..0'
+    digits[0] = 1;
+    return true;
+}
+
+int_fast16_t __fixed64::dec_digit(int_fast16_t exp, uint_fast8_t digit) {
+    if (!(exp == 0 && zero())) {
+        const auto &TEN = DIGITS[10];
+        mul(TEN.sig);  // x10
+        exp += TEN.exp + normalize();
+    }
+    return add_digit(exp, digit);
+}
+
+int_fast16_t __fixed64::hex_digit(int_fast16_t exp, uint_fast8_t digit) {
+    if (!(exp == 0 && zero())) {
+        shift_left(4);  // x16
+        exp += normalize();
+    }
+    return add_digit(exp, digit);
+}
+
+int_fast16_t __fixed64::add_digit(int_fast16_t exp, uint_fast8_t digit) {
+    digit &= 0xF;
+    if (digit) {
+        auto d = DIGITS[digit];
+        if (exp >= d.exp) {
+            d.sig.shift_right(exp - d.exp);
+        } else {
+            shift_right(d.exp - exp);
+            exp = d.exp;
+        }
+        add(d.sig);
+        exp += normalize();
+    }
+    return exp;
+}
+
+int_fast16_t __fixed64::read(StrScanner &scan) {
+    uint_fast8_t digits = 0;
+    int_fast8_t frac = -1;
+    int_fast16_t exp = 0;
+    set(0);  // clear significand to 0
+    while (true) {
+        if (isdigit(*scan)) {
+            ++digits;
+            if (frac >= 0)
+                ++frac;
+            exp = dec_digit(exp, *scan++ - '0');
+        } else if (digits && frac < 0 && scan.expect('.')) {
+            frac = 0;
+        } else {
+            break;
+        }
+    }
+    if (frac > 0) {
+        // Adjust fraction part if exists
+        exp += power10(-frac);
+    }
+    return exp;
 }
 
 }  // namespace libasm

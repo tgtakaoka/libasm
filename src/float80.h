@@ -14,19 +14,22 @@
  * limitations under the License.
  */
 
-#ifndef __LIBASM_CONFIG_LIBASM_H__
-#define __LIBASM_CONFIG_LIBASM_H__
+#ifndef __LIBASM_FLOAT80_H__
+#define __LIBASM_FLOAT80_H__
 
-/** Disable floating point number support from assembler */
-// #define LIBASM_ASM_NOFLOAT
+#include <float.h>
+#include "float80_hard.h"
+#include "float80_soft.h"
 
-/** Enable debugging functionality of Value class */
-// #define LIBASM_DEBUG_VALUE
+namespace libasm {
+#if defined(LIBASM_HAS_LONG_DOUBLE) && !defined(LIBASM_SOFT_FLOAT80)
+using float80_t = __float80_hard;
+#else
+using float80_t = __float80_soft;
+#endif
+}  // namespace libasm
 
-/** Enable software emulated floating point */
-#define LIBASM_SOFT_FLOAT80
-
-#endif  // __LIBASM_CONFIG_LIBASM_H__
+#endif
 
 // Local Variables:
 // mode: c++
