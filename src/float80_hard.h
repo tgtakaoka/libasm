@@ -30,6 +30,7 @@
 
 namespace libasm {
 
+struct __float32;
 struct __float64;
 
 /** float80_t implementation using hardware 80-bit long double */
@@ -37,13 +38,17 @@ struct __float80_hard : __float80_base {
     __float80_hard(uint16_t tag = 0, uint64_t sig = 0) { set(tag, sig); }
     __float80_hard(const __float80_hard &f80) = default;
     __float80_hard &operator=(const __float80_hard &f80) = default;
+    __float80_hard(const __float32 &f32) { set(f32); }
+    __float80_hard &operator=(const __float32 &f32) { return set(f32); }
     __float80_hard(const __float64 &f64) { set(f64); }
     __float80_hard &operator=(const __float64 &f64) { return set(f64); }
 
     __float80_hard &set(uint16_t tag, uint64_t sig);
     __float80_hard &set(int64_t i64);
     __float80_hard &set(uint64_t u64);
+    __float80_hard &set(const __float32 &f32);
     __float80_hard &set(const __float64 &f64);
+    __float32 &get(__float32 &f32) const;
     __float64 &get(__float64 &f64) const;
 
     uint16_t tag() const { return _tag; }

@@ -21,6 +21,7 @@
 #include <errno.h>
 #include <math.h>
 #include <stdio.h>
+#include "float32.h"
 #include "float64.h"
 #include "str_buffer.h"
 
@@ -42,6 +43,16 @@ __float80_hard &__float80_hard::set(uint64_t u64) {
     return *this;
 }
 
+__float80_hard &__float80_hard::set(const float32_t &f32) {
+    union {
+        uint32_t u32;
+        float f32;
+    } data;
+    data.u32 = f32.bits();
+    _f80 = static_cast<long double>(data.f32);
+    return *this;
+}
+
 __float80_hard &__float80_hard::set(const float64_t &f64) {
     union {
         uint64_t u64;
@@ -50,6 +61,15 @@ __float80_hard &__float80_hard::set(const float64_t &f64) {
     data.u64 = f64.bits();
     _f80 = static_cast<long double>(data.f64);
     return *this;
+}
+
+float32_t &__float80_hard::get(float32_t &f32) const {
+    union {
+        uint32_t u32;
+        float f32;
+    } data;
+    data.f32 = static_cast<float>(_f80);
+    return f32.set(data.u32);
 }
 
 float64_t &__float80_hard::get(float64_t &f64) const {

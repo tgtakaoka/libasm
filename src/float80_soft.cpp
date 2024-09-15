@@ -17,6 +17,7 @@
 #include "float80_soft.h"
 #include <ctype.h>
 #include <errno.h>
+#include "float32.h"
 #include "float64.h"
 #include "str_buffer.h"
 #include "str_scanner.h"
@@ -54,6 +55,16 @@ __float80_soft &__float80_soft::set(uint64_t u64) {
     return *this;
 }
 
+__float80_soft &__float80_soft::set(const float32_t &f32) {
+    if (f32.isNan())
+        return *this = __float80_soft::not_a_number(f32.isNegative());
+    if (f32.isInf())
+        return *this = __float80_soft::infinity(f32.isNegative());
+    fixed64_t sig;
+    const auto exp = f32.decompose(sig);
+    return *this = compose(f32.isNegative(), exp, sig);
+}
+
 __float80_soft &__float80_soft::set(const float64_t &f64) {
     const auto negative = f64.isNegative();
     if (f64.isNan())
@@ -63,6 +74,16 @@ __float80_soft &__float80_soft::set(const float64_t &f64) {
     fixed64_t sig;
     const auto exp = f64.decompose(sig);
     return *this = compose(negative, exp, sig);
+}
+
+float32_t &__float80_soft::get(float32_t &f32) const {
+    if (isNan())
+        return f32 = float32_t::not_a_number(isNegative());
+    if (isInf())
+        return f32 = float32_t::infinity(isNegative());
+    fixed64_t sig;
+    const auto exp = decompose(sig);
+    return f32 = float32_t::compose(isNegative(), exp, sig);
 }
 
 float64_t &__float80_soft::get(float64_t &f64) const {
