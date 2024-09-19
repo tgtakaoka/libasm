@@ -112,13 +112,13 @@ StrBuffer &StrBuffer::rtext_P(const /*PROGMEM*/ char *text_P) {
 
 StrBuffer &StrBuffer::float32(float f32, uint_fast8_t prec) {
     *_end = 1;  // to check buffer overflow
-    const auto len = snprintf_P(_out, _end - _out + 1, PSTR("%.*g"), prec, f32);
+    const auto len = snprintf_P(_out, capacity() + 1, PSTR("%.*g"), prec, f32);
     return convert(len);
 }
 
 StrBuffer &StrBuffer::float64(double f64, uint_fast8_t prec) {
     *_end = 1;  // to check buffer overflow
-    const auto len = snprintf_P(_out, _end - _out + 1, PSTR("%.*g"), prec, f64);
+    const auto len = snprintf_P(_out, capacity() + 1, PSTR("%.*g"), prec, f64);
     return convert(len);
 }
 
@@ -126,17 +126,16 @@ StrBuffer &StrBuffer::float80(int16_t exponent, uint64_t significand, uint_fast8
     *_end = 1;  // to check buffer overflow
     // TODO: Implement Dragon4 algorithm
     const auto n = significand * pow(2.0, exponent);
-    const auto len = snprintf_P(_out, _end - _out + 1, PSTR("%.*g"), prec, n);
+    const auto len = snprintf_P(_out, capacity() + 1, PSTR("%.*g"), prec, n);
     return convert(len);
 }
 
 StrBuffer &StrBuffer::convert(size_t len) {
-    if (*_end == 0) {
-        // Possible buffer overflow, though it may be just the right length.
+    if (*_end == 0)
         setError(BUFFER_OVERFLOW);
-    }
     for (auto c = *_out; len; --len) {
         const auto next = _out[1];
+        // may convert letter case.
         letter(c);
         c = next;
     }
@@ -148,7 +147,7 @@ StrBuffer &StrBuffer::comma() {
 }
 
 StrBuffer &StrBuffer::reverse(char *start) {
-    if (start >= _out) {
+    if (start > _out) {
         setError(OVERWRAP_SEGMENT);
     } else {
         for (auto *end = _out - 1; start < end;) {

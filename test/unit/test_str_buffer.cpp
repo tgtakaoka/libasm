@@ -523,16 +523,22 @@ void test_reverse() {
 
     out.text("abc");
     char *m = out.mark();
+    out.reverse(m);
+    EQ("empty", OK, out.getError());
+    EQ("empty", "abc", out.str());
+
     out.text("123");
     EQ("before", "abc123", out.str());
     out.reverse(m);
+    EQ("after", OK, out.getError());
     EQ("after", "abc321", out.str());
 
     out.text("xY");
     out.reverse(buffer);
+    EQ("while", OK, out.getError());
     EQ("whole", "Yx123cba", out.str());
 
-    out.reverse(buffer + 8);
+    out.reverse(buffer + 9);
     EQ("overwrap", OVERWRAP_SEGMENT, out.getError());
     EQ("error", "Yx123cba", out.str());
 }
