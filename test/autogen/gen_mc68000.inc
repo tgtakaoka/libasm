@@ -8427,82 +8427,6 @@
       FSINCOS.S   D0, FP0:FP0
       FCMP.S  D0, FP0
       FTST.S  D0
-      FMOVE.X D0, FP0
-      FINT.X  D0, FP0
-      FSINH.X D0, FP0
-      FINTRZ.X    D0, FP0
-      FSQRT.X D0, FP0
-      FLOGNP1.X   D0, FP0
-      FETOXM1.X   D0, FP0
-      FTANH.X D0, FP0
-      FATAN.X D0, FP0
-      FASIN.X D0, FP0
-      FATANH.X    D0, FP0
-      FSIN.X  D0, FP0
-      FTAN.X  D0, FP0
-      FETOX.X D0, FP0
-      FTWOTOX.X   D0, FP0
-      FTENTOX.X   D0, FP0
-      FLOGN.X D0, FP0
-      FLOG10.X    D0, FP0
-      FLOG2.X D0, FP0
-      FABS.X  D0, FP0
-      FCOSH.X D0, FP0
-      FNEG.X  D0, FP0
-      FACOS.X D0, FP0
-      FCOS.X  D0, FP0
-      FGETEXP.X   D0, FP0
-      FGETMAN.X   D0, FP0
-      FDIV.X  D0, FP0
-      FMOD.X  D0, FP0
-      FADD.X  D0, FP0
-      FMUL.X  D0, FP0
-      FSGLDIV.X   D0, FP0
-      FREM.X  D0, FP0
-      FSCALE.X    D0, FP0
-      FSGLMUL.X   D0, FP0
-      FSUB.X  D0, FP0
-      FSINCOS.X   D0, FP0:FP0
-      FCMP.X  D0, FP0
-      FTST.X  D0
-      FMOVE.P D0, FP0
-      FINT.P  D0, FP0
-      FSINH.P D0, FP0
-      FINTRZ.P    D0, FP0
-      FSQRT.P D0, FP0
-      FLOGNP1.P   D0, FP0
-      FETOXM1.P   D0, FP0
-      FTANH.P D0, FP0
-      FATAN.P D0, FP0
-      FASIN.P D0, FP0
-      FATANH.P    D0, FP0
-      FSIN.P  D0, FP0
-      FTAN.P  D0, FP0
-      FETOX.P D0, FP0
-      FTWOTOX.P   D0, FP0
-      FTENTOX.P   D0, FP0
-      FLOGN.P D0, FP0
-      FLOG10.P    D0, FP0
-      FLOG2.P D0, FP0
-      FABS.P  D0, FP0
-      FCOSH.P D0, FP0
-      FNEG.P  D0, FP0
-      FACOS.P D0, FP0
-      FCOS.P  D0, FP0
-      FGETEXP.P   D0, FP0
-      FGETMAN.P   D0, FP0
-      FDIV.P  D0, FP0
-      FMOD.P  D0, FP0
-      FADD.P  D0, FP0
-      FMUL.P  D0, FP0
-      FSGLDIV.P   D0, FP0
-      FREM.P  D0, FP0
-      FSCALE.P    D0, FP0
-      FSGLMUL.P   D0, FP0
-      FSUB.P  D0, FP0
-      FSINCOS.P   D0, FP0:FP0
-      FCMP.P  D0, FP0
-      FTST.P  D0
       FMOVE.W D0, FP0
       FINT.W  D0, FP0
       FSINH.W D0, FP0
@@ -8541,44 +8465,6 @@
       FSINCOS.W   D0, FP0:FP0
       FCMP.W  D0, FP0
       FTST.W  D0
-      FMOVE.D D0, FP0
-      FINT.D  D0, FP0
-      FSINH.D D0, FP0
-      FINTRZ.D    D0, FP0
-      FSQRT.D D0, FP0
-      FLOGNP1.D   D0, FP0
-      FETOXM1.D   D0, FP0
-      FTANH.D D0, FP0
-      FATAN.D D0, FP0
-      FASIN.D D0, FP0
-      FATANH.D    D0, FP0
-      FSIN.D  D0, FP0
-      FTAN.D  D0, FP0
-      FETOX.D D0, FP0
-      FTWOTOX.D   D0, FP0
-      FTENTOX.D   D0, FP0
-      FLOGN.D D0, FP0
-      FLOG10.D    D0, FP0
-      FLOG2.D D0, FP0
-      FABS.D  D0, FP0
-      FCOSH.D D0, FP0
-      FNEG.D  D0, FP0
-      FACOS.D D0, FP0
-      FCOS.D  D0, FP0
-      FGETEXP.D   D0, FP0
-      FGETMAN.D   D0, FP0
-      FDIV.D  D0, FP0
-      FMOD.D  D0, FP0
-      FADD.D  D0, FP0
-      FMUL.D  D0, FP0
-      FSGLDIV.D   D0, FP0
-      FREM.D  D0, FP0
-      FSCALE.D    D0, FP0
-      FSGLMUL.D   D0, FP0
-      FSUB.D  D0, FP0
-      FSINCOS.D   D0, FP0:FP0
-      FCMP.D  D0, FP0
-      FTST.D  D0
       FMOVE.B D0, FP0
       FINT.B  D0, FP0
       FSINH.B D0, FP0

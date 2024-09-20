@@ -44,8 +44,19 @@ struct Operand final : ErrorAt {
     InsnSize indexSize;
     Value val;
     StrScanner list;
+    AddrMode kMode;
+    union {
+        int8_t kFact;
+        RegName kDreg;
+    };
     Operand()
-        : mode(M_NONE), reg(REG_UNDEF), indexReg(REG_UNDEF), indexSize(ISZ_NONE), val(), list() {}
+        : mode(M_NONE),
+          reg(REG_UNDEF),
+          indexReg(REG_UNDEF),
+          indexSize(ISZ_NONE),
+          val(),
+          list(),
+          kMode(M_NONE) {}
     Config::uintptr_t offset(const AsmInsn &insn) const;
 };
 

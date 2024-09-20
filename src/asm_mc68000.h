@@ -33,6 +33,7 @@ struct AsmMc68000 final : Assembler, Config {
 
 private:
     Error parseOperand(StrScanner &scan, Operand &op) const;
+    Error parseKFactor(StrScanner &scan, Operand &op) const;
     Error checkAlignment(AsmInsn &insn, OprSize size, const Operand &op) const;
 
     void encodeBriefExtension(AsmInsn &insn, const Operand &op, Config::ptrdiff_t disp) const;

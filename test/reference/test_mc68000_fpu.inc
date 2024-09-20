@@ -31,6 +31,16 @@
         fmove.w #$1234, fp2
         fmove.d #-8.25, fp3
         fmove.b #$23, fp4
+        fmove.l fp3, d2
+        fmove.x fp7, (a6)
+        fmove.p fp1, (a0)+
+        fmove.p fp1, (a0)+{#16}
+        fmove.p fp1, (a0)+{d2}
+        fmove.w fp3, -(a2)
+        fmove.d fp5, ($1234,a4)
+        fmove.b fp0, ($23,a6,d7.w)
+        fmove.l fp1, ($004566).w
+        fmove.s fp2, ($56789a).l
         fmovem.x (a6), fp0
         fmovem.x (a6), fp0/fp4-fp7
         fmovem.x (a0)+, fp7
