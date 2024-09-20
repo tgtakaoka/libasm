@@ -325,6 +325,21 @@ Config::uintptr_t Operand::offset(const AsmInsn &insn) const {
     return val.getUnsigned() - (insn.address() + len);
 }
 
+namespace {
+bool inFloatOperand(const AsmInsn &insn, AddrMode mode) {
+    if (mode == M_RDATA) {
+        const auto dst = insn.dst();
+        // Dn,FPn || Dn,FPc:FPs || FTST Dn
+        return dst == M_FPREG || dst == M_FSICO || dst == M_NONE;
+    }
+    if (mode == M_WDATA || mode == M_KFACT || mode == M_KDREG) {
+        // FPn,Dn
+        return insn.src() == M_FPREG;
+    }
+    return false;
+}
+}  // namespace
+
 Error AsmMc68000::encodeOperand(
         AsmInsn &insn, OprSize size, const Operand &op, AddrMode mode, OprPos pos) const {
     if (mode == M_NONE) {
@@ -355,6 +370,12 @@ Error AsmMc68000::encodeOperand(
 
     const auto val32 = op.val.getUnsigned();
     switch (op.mode) {
+    case M_DREG:
+        if (inFloatOperand(insn, mode)) {
+            if (size == SZ_DUBL || size == SZ_XTND || size == SZ_PBCD)
+                insn.setErrorIf(op, ILLEGAL_SIZE);
+        }
+        break;
     case M_AREG:
         if (size == SZ_BYTE)
             insn.setErrorIf(op, OPERAND_NOT_ALLOWED);
@@ -457,6 +478,12 @@ Error AsmMc68000::encodeOperand(
         break;
     default:
         break;
+    }
+    if (op.kMode == M_KFACT) {
+        insn.embedPostfix(op.kFact & 0x7F);
+    } else if (op.kMode == M_KDREG) {
+        const auto kdreg = encodeGeneralRegNo(op.kDreg);
+        insn.embedPostfix(0x1000 | (kdreg << 4));
     }
     return insn.getError();
 }
@@ -589,6 +616,38 @@ void AsmMc68000::encodeRegisterList(AsmInsn &insn, const Operand &op, bool rever
     if (reverse)
         bits = reverseUint16(bits);
     insn.emitOperand16(bits);
+}
+
+Error AsmMc68000::parseKFactor(StrScanner &scan, Operand &op) const {
+    auto p = scan;
+    if (p.skipSpaces().expect('{')) {
+        if (p.skipSpaces().expect('#')) {
+            auto kfact = parseInteger(p, op);
+            if (op.hasError())
+                return op.getError();
+            if (kfact.overflow(63, -64)) {
+                op.setErrorIf(scan, OVERFLOW_RANGE);
+                op.kFact = 17;
+            } else {
+                op.kFact = kfact.isUndefined() ? 17 : kfact.getSigned();
+            }
+            op.kMode = M_KFACT;
+        } else {
+            op.kDreg = parseRegName(p);
+            if (isDataReg(op.kDreg)) {
+                op.kMode = M_KDREG;
+            } else {
+                op.setErrorIf(scan, REGISTER_NOT_ALLOWED);
+            }
+        }
+        if (!p.skipSpaces().expect('}'))
+            return op.setErrorIf(p, MISSING_CLOSING_PAREN);
+        scan = p;
+    } else {
+        op.kMode = M_KFACT;
+        op.kFact = 17;
+    }
+    return OK;
 }
 
 Error AsmMc68000::parseOperand(StrScanner &scan, Operand &op) const {
@@ -752,6 +811,18 @@ Error AsmMc68000::processPseudo(StrScanner &scan, Insn &insn) {
     return Assembler::processPseudo(scan, insn);
 }
 
+namespace {
+bool hasKFactor(const AsmInsn &insn, InsnSize size) {
+    // FMOVE.P FPn, ea
+    if (strcasecmp_P(insn.name(), PSTR("FMOVE")) == 0 && size == ISZ_PBCD &&
+            insn.srcOp.mode == M_FPREG) {
+        const auto mode = insn.dstOp.mode;
+        return (mode >= M_AIND && mode <= M_INDX) || mode == M_AWORD || mode == M_ALONG;
+    }
+    return false;
+}
+}  // namespace
+
 Error AsmMc68000::encodeImpl(StrScanner &scan, Insn &_insn) const {
     AsmInsn insn(_insn);
     const auto isize = insn.insnSize();
@@ -764,6 +835,10 @@ Error AsmMc68000::encodeImpl(StrScanner &scan, Insn &_insn) const {
         if (scan.skipSpaces().expect(',')) {
             if (parseOperand(scan, insn.dstOp) && insn.dstOp.hasError())
                 return _insn.setError(insn.dstOp);
+            if (hasKFactor(insn, isize)) {
+                if (parseKFactor(scan, insn.dstOp) && insn.dstOp.hasError())
+                    return _insn.setError(insn.dstOp);
+            }
         }
     }
     scan.skipSpaces();

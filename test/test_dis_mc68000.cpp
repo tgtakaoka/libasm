@@ -2326,6 +2326,17 @@ static void test_float_move() {
     TEST("FMOVE.X", "FP2, FP2",            0xF200,     0x0000|(2<<10)|(2<<7));
 
     TEST("FMOVE.L", "D2, FP3",             0xF200|002, 0x4000|(0<<10)|(3<<7));
+    TEST("FMOVE.S", "D2, FP3",             0xF200|002, 0x4000|(1<<10)|(3<<7));
+    ERRT("FMOVE.X", "D2, FP3", ILLEGAL_SIZE, "D2, FP3",
+                                           0xF200|002, 0x4000|(2<<10)|(3<<7));
+    ERRT("FMOVE.P", "D2, FP3", ILLEGAL_SIZE, "D2, FP3",
+                                           0xF200|002, 0x4000|(3<<10)|(3<<7));
+    TEST("FMOVE.W", "D2, FP3",             0xF200|002, 0x4000|(4<<10)|(3<<7));
+    ERRT("FMOVE.D", "D2, FP3", ILLEGAL_SIZE, "D2, FP3",
+                                           0xF200|002, 0x4000|(5<<10)|(3<<7));
+    TEST("FMOVE.B", "D2, FP3",             0xF200|002, 0x4000|(6<<10)|(3<<7));
+    UNKN(/* FMOVE.P A4{D3}, FP5 */         0xF200|002, 0x4000|(7<<10)|(5<<7));
+    UNKN(/* FMOVE.L A4, FP5 */             0xF200|014, 0x4000|(0<<10)|(5<<7));
     UNKN(/* FMOVE.S A4, FP5 */             0xF200|014, 0x4000|(1<<10)|(5<<7));
     TEST("FMOVE.X", "(A6), FP7",           0xF200|026, 0x4000|(2<<10)|(7<<7));
     TEST("FMOVE.P", "(A0)+, FP1",          0xF200|030, 0x4000|(3<<10)|(1<<7));
@@ -2346,6 +2357,38 @@ static void test_float_move() {
     TEST("FMOVE.D", "#-8.25, FP3",         0xF200|074, 0x4000|(5<<10)|(3<<7),
          0xC020, 0x8000, 0x0000, 0x0000);
     TEST("FMOVE.B", "#$23, FP4",           0xF200|074, 0x4000|(6<<10)|(4<<7), 0x0023);
+
+    TEST("FMOVE.L", "FP3, D2",             0xF200|002, 0x6000|(0<<10)|(3<<7));
+    TEST("FMOVE.S", "FP3, D2",             0xF200|002, 0x6000|(1<<10)|(3<<7));
+    ERRT("FMOVE.X", "FP3, D2", ILLEGAL_SIZE, "D2",
+                                        0xF200|002, 0x6000|(2<<10)|(3<<7));
+    ERRT("FMOVE.P", "FP3, D2", ILLEGAL_SIZE, "D2",
+                                        0xF200|002, 0x6000|(3<<10)|(3<<7));
+    TEST("FMOVE.W", "FP3, D2",             0xF200|002, 0x6000|(4<<10)|(3<<7));
+    ERRT("FMOVE.D", "FP3, D2", ILLEGAL_SIZE, "D2",
+                                        0xF200|002, 0x6000|(5<<10)|(3<<7));
+    TEST("FMOVE.B", "FP3, D2",             0xF200|002, 0x6000|(6<<10)|(3<<7));
+    UNKN(/* FMOVE.L FP5, A4 */             0xF200|014, 0x4000|(0<<10)|(5<<7));
+    UNKN(/* FMOVE.S FP5, A4 */             0xF200|014, 0x4000|(1<<10)|(5<<7));
+    TEST("FMOVE.X", "FP7, (A6)",           0xF200|026, 0x6000|(2<<10)|(7<<7));
+    TEST("FMOVE.P", "FP1, (A0)+{#63}",     0xF200|030, 0x6000|(3<<10)|(1<<7)|0x3F);
+    TEST("FMOVE.P", "FP1, (A0)+{#-64}",    0xF200|030, 0x6000|(3<<10)|(1<<7)|0x40);
+    TEST("FMOVE.W", "FP3, -(A2)",          0xF200|042, 0x6000|(4<<10)|(3<<7));
+    TEST("FMOVE.D", "FP5, ($1234,A4)",     0xF200|054, 0x6000|(5<<10)|(5<<7), 0x1234);
+    TEST("FMOVE.B", "FP0, ($23,A6,D7.W)",  0xF200|066, 0x6000|(6<<10)|(0<<7), 0x7023);
+    TEST("FMOVE.P", "FP1, (A0)+{D5}",      0xF200|030, 0x6000|(7<<10)|(1<<7)|(5<<4));
+    TEST("FMOVE.L", "FP1, ($004566).W",    0xF200|070, 0x6000|(0<<10)|(1<<7), 0x4566);
+    TEST("FMOVE.S", "FP2, ($56789A).L",    0xF200|071, 0x6000|(1<<10)|(2<<7), 0x0056, 0x789A);
+    UNKN(/* FMOVE.X FP3, (*+$1234,PC) */   0xF200|072, 0x6000|(2<<10)|(3<<7));
+    UNKN(/* FMOVE.P FP5, (*+90,PC,A4.L) */ 0xF200|073, 0x6000|(3<<10)|(5<<7));
+    UNKN(/* FMOVE.L FP6, #$6789ABCD */     0xF200|074, 0x6000|(0<<10)|(6<<7));
+    UNKN(/* FMOVE.S FP7, #7.88999976E-10 */0xF200|074, 0x6000|(1<<10)|(7<<7));
+    UNKN(/* FMOVE.X FP0, #-89000000032 */  0xF200|074, 0x6000|(2<<10)|(0<<7));
+    UNKN(/* FMOVE.P FP1, #9.12E20 */       0xF200|074, 0x6000|(3<<10)|(1<<7));
+    UNKN(/* FMOVE.W FP2, #$1234 */         0xF200|074, 0x6000|(4<<10)|(2<<7));
+    UNKN(/* FMOVE.D FP3, #-8.25 */         0xF200|074, 0x6000|(5<<10)|(3<<7));
+    UNKN(/* FMOVE.B FP4, #$23 */           0xF200|074, 0x6000|(6<<10)|(4<<7));
+    UNKN(/* FMOVE.P FP5, #$23 */           0xF200|074, 0x6000|(7<<10)|(5<<7));
 
     UNKN(/* FMOVEM.X Dn, list */            0xF200|000, 0xD000|0x01);
     UNKN(/* FMOVEM.X An, list */            0xF200|010, 0xD000|0x02);
@@ -2560,6 +2603,16 @@ static void test_float_arithmetic() {
     TEST("FINT.X", "FP0, FP1",            0xF200,     0x0001|(0<<10)|(1<<7));
     TEST("FINT.X", "FP2",                 0xF200,     0x0001|(2<<10)|(2<<7));
     TEST("FINT.L", "D2, FP3",             0xF200|002, 0x4001|(0<<10)|(3<<7));
+    TEST("FINT.S", "D2, FP3",             0xF200|002, 0x4001|(1<<10)|(3<<7));
+    ERRT("FINT.X", "D2, FP3", ILLEGAL_SIZE, "D2, FP3",
+                                          0xF200|002, 0x4001|(2<<10)|(3<<7));
+    ERRT("FINT.P", "D2, FP3", ILLEGAL_SIZE, "D2, FP3",
+                                          0xF200|002, 0x4001|(3<<10)|(3<<7));
+    TEST("FINT.W", "D2, FP3",             0xF200|002, 0x4001|(4<<10)|(3<<7));
+    ERRT("FINT.D", "D2, FP3", ILLEGAL_SIZE, "D2, FP3",
+                                          0xF200|002, 0x4001|(5<<10)|(3<<7));
+    TEST("FINT.B", "D2, FP3",             0xF200|002, 0x4001|(6<<10)|(3<<7));
+    UNKN(/* FINT.P D2, FP3 */             0xF200|002, 0x4001|(7<<10)|(3<<7));
     UNKN(/* FINT.S A4, FP5 */             0xF200|014, 0x4001|(1<<10)|(5<<7));
     TEST("FINT.X", "(A6), FP7",           0xF200|026, 0x4001|(2<<10)|(7<<7));
     TEST("FINT.P", "(A0)+, FP1",          0xF200|030, 0x4001|(3<<10)|(1<<7));
@@ -2584,6 +2637,16 @@ static void test_float_arithmetic() {
     TEST("FSINH.X", "FP0, FP1",            0xF200,     0x0002|(0<<10)|(1<<7));
     TEST("FSINH.X", "FP2",                 0xF200,     0x0002|(2<<10)|(2<<7));
     TEST("FSINH.L", "D2, FP3",             0xF200|002, 0x4002|(0<<10)|(3<<7));
+    TEST("FSINH.S", "D2, FP3",             0xF200|002, 0x4002|(1<<10)|(3<<7));
+    ERRT("FSINH.X", "D2, FP3", ILLEGAL_SIZE, "D2, FP3",
+                                           0xF200|002, 0x4002|(2<<10)|(3<<7));
+    ERRT("FSINH.P", "D2, FP3", ILLEGAL_SIZE, "D2, FP3",
+                                           0xF200|002, 0x4002|(3<<10)|(3<<7));
+    TEST("FSINH.W", "D2, FP3",             0xF200|002, 0x4002|(4<<10)|(3<<7));
+    ERRT("FSINH.D", "D2, FP3", ILLEGAL_SIZE, "D2, FP3",
+                                           0xF200|002, 0x4002|(5<<10)|(3<<7));
+    TEST("FSINH.B", "D2, FP3",             0xF200|002, 0x4002|(6<<10)|(3<<7));
+    UNKN(/* FSINH.P D2, FP3 */             0xF200|002, 0x4002|(7<<10)|(3<<7));
     UNKN(/* FSINH.S A4, FP5 */             0xF200|014, 0x4002|(1<<10)|(5<<7));
     TEST("FSINH.X", "(A6), FP7",           0xF200|026, 0x4002|(2<<10)|(7<<7));
     TEST("FSINH.P", "(A0)+, FP1",          0xF200|030, 0x4002|(3<<10)|(1<<7));
@@ -2608,6 +2671,16 @@ static void test_float_arithmetic() {
     TEST("FINTRZ.X", "FP0, FP1",            0xF200,     0x0003|(0<<10)|(1<<7));
     TEST("FINTRZ.X", "FP2",                 0xF200,     0x0003|(2<<10)|(2<<7));
     TEST("FINTRZ.L", "D2, FP3",             0xF200|002, 0x4003|(0<<10)|(3<<7));
+    TEST("FINTRZ.S", "D2, FP3",             0xF200|002, 0x4003|(1<<10)|(3<<7));
+    ERRT("FINTRZ.X", "D2, FP3", ILLEGAL_SIZE, "D2, FP3",
+                                           0xF200|002, 0x4003|(2<<10)|(3<<7));
+    ERRT("FINTRZ.P", "D2, FP3", ILLEGAL_SIZE, "D2, FP3",
+                                            0xF200|002, 0x4003|(3<<10)|(3<<7));
+    TEST("FINTRZ.W", "D2, FP3",             0xF200|002, 0x4003|(4<<10)|(3<<7));
+    ERRT("FINTRZ.D", "D2, FP3", ILLEGAL_SIZE, "D2, FP3",
+                                            0xF200|002, 0x4003|(5<<10)|(3<<7));
+    TEST("FINTRZ.B", "D2, FP3",             0xF200|002, 0x4003|(6<<10)|(3<<7));
+    UNKN(/* FINTRZ.P D2, FP3 */             0xF200|002, 0x4003|(7<<10)|(3<<7));
     UNKN(/* FINTRZ.S A4, FP5 */             0xF200|014, 0x4003|(1<<10)|(5<<7));
     TEST("FINTRZ.X", "(A6), FP7",           0xF200|026, 0x4003|(2<<10)|(7<<7));
     TEST("FINTRZ.P", "(A0)+, FP1",          0xF200|030, 0x4003|(3<<10)|(1<<7));
@@ -2632,6 +2705,16 @@ static void test_float_arithmetic() {
     TEST("FSQRT.X", "FP0, FP1",            0xF200,     0x0004|(0<<10)|(1<<7));
     TEST("FSQRT.X", "FP2",                 0xF200,     0x0004|(2<<10)|(2<<7));
     TEST("FSQRT.L", "D2, FP3",             0xF200|002, 0x4004|(0<<10)|(3<<7));
+    TEST("FSQRT.S", "D2, FP3",             0xF200|002, 0x4004|(1<<10)|(3<<7));
+    ERRT("FSQRT.X", "D2, FP3", ILLEGAL_SIZE, "D2, FP3",
+                                           0xF200|002, 0x4004|(2<<10)|(3<<7));
+    ERRT("FSQRT.P", "D2, FP3", ILLEGAL_SIZE, "D2, FP3",
+                                           0xF200|002, 0x4004|(3<<10)|(3<<7));
+    TEST("FSQRT.W", "D2, FP3",             0xF200|002, 0x4004|(4<<10)|(3<<7));
+    ERRT("FSQRT.D", "D2, FP3", ILLEGAL_SIZE, "D2, FP3",
+                                           0xF200|002, 0x4004|(5<<10)|(3<<7));
+    TEST("FSQRT.B", "D2, FP3",             0xF200|002, 0x4004|(6<<10)|(3<<7));
+    UNKN(/* FSQRT.P D2, FP3 */             0xF200|002, 0x4004|(7<<10)|(3<<7));
     UNKN(/* FSQRT.S A4, FP5 */             0xF200|014, 0x4004|(1<<10)|(5<<7));
     TEST("FSQRT.X", "(A6), FP7",           0xF200|026, 0x4004|(2<<10)|(7<<7));
     TEST("FSQRT.P", "(A0)+, FP1",          0xF200|030, 0x4004|(3<<10)|(1<<7));
@@ -2656,6 +2739,16 @@ static void test_float_arithmetic() {
     TEST("FLOGNP1.X", "FP0, FP1",            0xF200,     0x0006|(0<<10)|(1<<7));
     TEST("FLOGNP1.X", "FP2",                 0xF200,     0x0006|(2<<10)|(2<<7));
     TEST("FLOGNP1.L", "D2, FP3",             0xF200|002, 0x4006|(0<<10)|(3<<7));
+    TEST("FLOGNP1.S", "D2, FP3",             0xF200|002, 0x4006|(1<<10)|(3<<7));
+    ERRT("FLOGNP1.X", "D2, FP3", ILLEGAL_SIZE, "D2, FP3",
+                                           0xF200|002, 0x4006|(2<<10)|(3<<7));
+    ERRT("FLOGNP1.P", "D2, FP3", ILLEGAL_SIZE, "D2, FP3",
+                                           0xF200|002, 0x4006|(3<<10)|(3<<7));
+    TEST("FLOGNP1.W", "D2, FP3",             0xF200|002, 0x4006|(4<<10)|(3<<7));
+    ERRT("FLOGNP1.D", "D2, FP3", ILLEGAL_SIZE, "D2, FP3",
+                                           0xF200|002, 0x4006|(5<<10)|(3<<7));
+    TEST("FLOGNP1.B", "D2, FP3",             0xF200|002, 0x4006|(6<<10)|(3<<7));
+    UNKN(/* FLOGNP1.P D2, FP3 */             0xF200|002, 0x4006|(7<<10)|(3<<7));
     UNKN(/* FLOGNP1.S A4, FP5 */             0xF200|014, 0x4006|(1<<10)|(5<<7));
     TEST("FLOGNP1.X", "(A6), FP7",           0xF200|026, 0x4006|(2<<10)|(7<<7));
     TEST("FLOGNP1.P", "(A0)+, FP1",          0xF200|030, 0x4006|(3<<10)|(1<<7));
@@ -2680,6 +2773,16 @@ static void test_float_arithmetic() {
     TEST("FETOXM1.X", "FP0, FP1",            0xF200,     0x0008|(0<<10)|(1<<7));
     TEST("FETOXM1.X", "FP2",                 0xF200,     0x0008|(2<<10)|(2<<7));
     TEST("FETOXM1.L", "D2, FP3",             0xF200|002, 0x4008|(0<<10)|(3<<7));
+    TEST("FETOXM1.S", "D2, FP3",             0xF200|002, 0x4008|(1<<10)|(3<<7));
+    ERRT("FETOXM1.X", "D2, FP3", ILLEGAL_SIZE, "D2, FP3",
+                                           0xF200|002, 0x4008|(2<<10)|(3<<7));
+    ERRT("FETOXM1.P", "D2, FP3", ILLEGAL_SIZE, "D2, FP3",
+                                           0xF200|002, 0x4008|(3<<10)|(3<<7));
+    TEST("FETOXM1.W", "D2, FP3",             0xF200|002, 0x4008|(4<<10)|(3<<7));
+    ERRT("FETOXM1.D", "D2, FP3", ILLEGAL_SIZE, "D2, FP3",
+                                           0xF200|002, 0x4008|(5<<10)|(3<<7));
+    TEST("FETOXM1.B", "D2, FP3",             0xF200|002, 0x4008|(6<<10)|(3<<7));
+    UNKN(/* FETOXM1.P D2, FP3 */             0xF200|002, 0x4008|(7<<10)|(3<<7));
     UNKN(/* FETOXM1.S A4, FP5 */             0xF200|014, 0x4008|(1<<10)|(5<<7));
     TEST("FETOXM1.X", "(A6), FP7",           0xF200|026, 0x4008|(2<<10)|(7<<7));
     TEST("FETOXM1.P", "(A0)+, FP1",          0xF200|030, 0x4008|(3<<10)|(1<<7));
@@ -2704,6 +2807,16 @@ static void test_float_arithmetic() {
     TEST("FTANH.X", "FP0, FP1",            0xF200,     0x0009|(0<<10)|(1<<7));
     TEST("FTANH.X", "FP2",                 0xF200,     0x0009|(2<<10)|(2<<7));
     TEST("FTANH.L", "D2, FP3",             0xF200|002, 0x4009|(0<<10)|(3<<7));
+    TEST("FTANH.S", "D2, FP3",             0xF200|002, 0x4009|(1<<10)|(3<<7));
+    ERRT("FTANH.X", "D2, FP3", ILLEGAL_SIZE, "D2, FP3",
+                                           0xF200|002, 0x4009|(2<<10)|(3<<7));
+    ERRT("FTANH.P", "D2, FP3", ILLEGAL_SIZE, "D2, FP3",
+                                           0xF200|002, 0x4009|(3<<10)|(3<<7));
+    TEST("FTANH.W", "D2, FP3",             0xF200|002, 0x4009|(4<<10)|(3<<7));
+    ERRT("FTANH.D", "D2, FP3", ILLEGAL_SIZE, "D2, FP3",
+                                           0xF200|002, 0x4009|(5<<10)|(3<<7));
+    TEST("FTANH.B", "D2, FP3",             0xF200|002, 0x4009|(6<<10)|(3<<7));
+    UNKN(/* FTANH.P D2, FP3 */             0xF200|002, 0x4009|(7<<10)|(3<<7));
     UNKN(/* FTANH.S A4, FP5 */             0xF200|014, 0x4009|(1<<10)|(5<<7));
     TEST("FTANH.X", "(A6), FP7",           0xF200|026, 0x4009|(2<<10)|(7<<7));
     TEST("FTANH.P", "(A0)+, FP1",          0xF200|030, 0x4009|(3<<10)|(1<<7));
@@ -2728,6 +2841,16 @@ static void test_float_arithmetic() {
     TEST("FATAN.X", "FP0, FP1",            0xF200,     0x000A|(0<<10)|(1<<7));
     TEST("FATAN.X", "FP2",                 0xF200,     0x000A|(2<<10)|(2<<7));
     TEST("FATAN.L", "D2, FP3",             0xF200|002, 0x400A|(0<<10)|(3<<7));
+    TEST("FATAN.S", "D2, FP3",             0xF200|002, 0x400A|(1<<10)|(3<<7));
+    ERRT("FATAN.X", "D2, FP3", ILLEGAL_SIZE, "D2, FP3",
+                                           0xF200|002, 0x400A|(2<<10)|(3<<7));
+    ERRT("FATAN.P", "D2, FP3", ILLEGAL_SIZE, "D2, FP3",
+                                           0xF200|002, 0x400A|(3<<10)|(3<<7));
+    TEST("FATAN.W", "D2, FP3",             0xF200|002, 0x400A|(4<<10)|(3<<7));
+    ERRT("FATAN.D", "D2, FP3", ILLEGAL_SIZE, "D2, FP3",
+                                           0xF200|002, 0x400A|(5<<10)|(3<<7));
+    TEST("FATAN.B", "D2, FP3",             0xF200|002, 0x400A|(6<<10)|(3<<7));
+    UNKN(/* FATAN.P D2, FP3 */             0xF200|002, 0x400A|(7<<10)|(3<<7));
     UNKN(/* FATAN.S A4, FP5 */             0xF200|014, 0x400A|(1<<10)|(5<<7));
     TEST("FATAN.X", "(A6), FP7",           0xF200|026, 0x400A|(2<<10)|(7<<7));
     TEST("FATAN.P", "(A0)+, FP1",          0xF200|030, 0x400A|(3<<10)|(1<<7));
@@ -2752,6 +2875,16 @@ static void test_float_arithmetic() {
     TEST("FASIN.X", "FP0, FP1",            0xF200,     0x000C|(0<<10)|(1<<7));
     TEST("FASIN.X", "FP2",                 0xF200,     0x000C|(2<<10)|(2<<7));
     TEST("FASIN.L", "D2, FP3",             0xF200|002, 0x400C|(0<<10)|(3<<7));
+    TEST("FASIN.S", "D2, FP3",             0xF200|002, 0x400C|(1<<10)|(3<<7));
+    ERRT("FASIN.X", "D2, FP3", ILLEGAL_SIZE, "D2, FP3",
+                                           0xF200|002, 0x400C|(2<<10)|(3<<7));
+    ERRT("FASIN.P", "D2, FP3", ILLEGAL_SIZE, "D2, FP3",
+                                           0xF200|002, 0x400C|(3<<10)|(3<<7));
+    TEST("FASIN.W", "D2, FP3",             0xF200|002, 0x400C|(4<<10)|(3<<7));
+    ERRT("FASIN.D", "D2, FP3", ILLEGAL_SIZE, "D2, FP3",
+                                           0xF200|002, 0x400C|(5<<10)|(3<<7));
+    TEST("FASIN.B", "D2, FP3",             0xF200|002, 0x400C|(6<<10)|(3<<7));
+    UNKN(/* FASIN.P D2, FP3 */             0xF200|002, 0x400C|(7<<10)|(3<<7));
     UNKN(/* FASIN.S A4, FP5 */             0xF200|014, 0x400C|(1<<10)|(5<<7));
     TEST("FASIN.X", "(A6), FP7",           0xF200|026, 0x400C|(2<<10)|(7<<7));
     TEST("FASIN.P", "(A0)+, FP1",          0xF200|030, 0x400C|(3<<10)|(1<<7));
@@ -2800,6 +2933,16 @@ static void test_float_arithmetic() {
     TEST("FSIN.X", "FP0, FP1",            0xF200,     0x000E|(0<<10)|(1<<7));
     TEST("FSIN.X", "FP2",                 0xF200,     0x000E|(2<<10)|(2<<7));
     TEST("FSIN.L", "D2, FP3",             0xF200|002, 0x400E|(0<<10)|(3<<7));
+    TEST("FSIN.S", "D2, FP3",             0xF200|002, 0x400E|(1<<10)|(3<<7));
+    ERRT("FSIN.X", "D2, FP3", ILLEGAL_SIZE, "D2, FP3",
+                                          0xF200|002, 0x400E|(2<<10)|(3<<7));
+    ERRT("FSIN.P", "D2, FP3", ILLEGAL_SIZE, "D2, FP3",
+                                          0xF200|002, 0x400E|(3<<10)|(3<<7));
+    TEST("FSIN.W", "D2, FP3",             0xF200|002, 0x400E|(4<<10)|(3<<7));
+    ERRT("FSIN.D", "D2, FP3", ILLEGAL_SIZE, "D2, FP3",
+                                          0xF200|002, 0x400E|(5<<10)|(3<<7));
+    TEST("FSIN.B", "D2, FP3",             0xF200|002, 0x400E|(6<<10)|(3<<7));
+    UNKN(/* FSIN.P D2, FP3 */             0xF200|002, 0x400E|(7<<10)|(3<<7));
     UNKN(/* FSIN.S A4, FP5 */             0xF200|014, 0x400E|(1<<10)|(5<<7));
     TEST("FSIN.X", "(A6), FP7",           0xF200|026, 0x400E|(2<<10)|(7<<7));
     TEST("FSIN.P", "(A0)+, FP1",          0xF200|030, 0x400E|(3<<10)|(1<<7));
@@ -2824,6 +2967,16 @@ static void test_float_arithmetic() {
     TEST("FTAN.X", "FP0, FP1",            0xF200,     0x000F|(0<<10)|(1<<7));
     TEST("FTAN.X", "FP2",                 0xF200,     0x000F|(2<<10)|(2<<7));
     TEST("FTAN.L", "D2, FP3",             0xF200|002, 0x400F|(0<<10)|(3<<7));
+    TEST("FTAN.S", "D2, FP3",             0xF200|002, 0x400F|(1<<10)|(3<<7));
+    ERRT("FTAN.X", "D2, FP3", ILLEGAL_SIZE, "D2, FP3",
+                                          0xF200|002, 0x400F|(2<<10)|(3<<7));
+    ERRT("FTAN.P", "D2, FP3", ILLEGAL_SIZE, "D2, FP3",
+                                          0xF200|002, 0x400F|(3<<10)|(3<<7));
+    TEST("FTAN.W", "D2, FP3",             0xF200|002, 0x400F|(4<<10)|(3<<7));
+    ERRT("FTAN.D", "D2, FP3", ILLEGAL_SIZE, "D2, FP3",
+                                          0xF200|002, 0x400F|(5<<10)|(3<<7));
+    TEST("FTAN.B", "D2, FP3",             0xF200|002, 0x400F|(6<<10)|(3<<7));
+    UNKN(/* FTAN.P D2, FP3 */             0xF200|002, 0x400F|(7<<10)|(3<<7));
     UNKN(/* FTAN.S A4, FP5 */             0xF200|014, 0x400F|(1<<10)|(5<<7));
     TEST("FTAN.X", "(A6), FP7",           0xF200|026, 0x400F|(2<<10)|(7<<7));
     TEST("FTAN.P", "(A0)+, FP1",          0xF200|030, 0x400F|(3<<10)|(1<<7));
@@ -2848,6 +3001,16 @@ static void test_float_arithmetic() {
     TEST("FETOX.X", "FP0, FP1",            0xF200,     0x0010|(0<<10)|(1<<7));
     TEST("FETOX.X", "FP2",                 0xF200,     0x0010|(2<<10)|(2<<7));
     TEST("FETOX.L", "D2, FP3",             0xF200|002, 0x4010|(0<<10)|(3<<7));
+    TEST("FETOX.S", "D2, FP3",             0xF200|002, 0x4010|(1<<10)|(3<<7));
+    ERRT("FETOX.X", "D2, FP3", ILLEGAL_SIZE, "D2, FP3",
+                                           0xF200|002, 0x4010|(2<<10)|(3<<7));
+    ERRT("FETOX.P", "D2, FP3", ILLEGAL_SIZE, "D2, FP3",
+                                           0xF200|002, 0x4010|(3<<10)|(3<<7));
+    TEST("FETOX.W", "D2, FP3",             0xF200|002, 0x4010|(4<<10)|(3<<7));
+    ERRT("FETOX.D", "D2, FP3", ILLEGAL_SIZE, "D2, FP3",
+                                           0xF200|002, 0x4010|(5<<10)|(3<<7));
+    TEST("FETOX.B", "D2, FP3",             0xF200|002, 0x4010|(6<<10)|(3<<7));
+    UNKN(/* FETOX.P D2, FP3 */             0xF200|002, 0x4010|(7<<10)|(3<<7));
     UNKN(/* FETOX.S A4, FP5 */             0xF200|014, 0x4010|(1<<10)|(5<<7));
     TEST("FETOX.X", "(A6), FP7",           0xF200|026, 0x4010|(2<<10)|(7<<7));
     TEST("FETOX.P", "(A0)+, FP1",          0xF200|030, 0x4010|(3<<10)|(1<<7));
@@ -2872,6 +3035,16 @@ static void test_float_arithmetic() {
     TEST("FTWOTOX.X", "FP0, FP1",            0xF200,     0x0011|(0<<10)|(1<<7));
     TEST("FTWOTOX.X", "FP2",                 0xF200,     0x0011|(2<<10)|(2<<7));
     TEST("FTWOTOX.L", "D2, FP3",             0xF200|002, 0x4011|(0<<10)|(3<<7));
+    TEST("FTWOTOX.S", "D2, FP3",             0xF200|002, 0x4011|(1<<10)|(3<<7));
+    ERRT("FTWOTOX.X", "D2, FP3", ILLEGAL_SIZE, "D2, FP3",
+                                             0xF200|002, 0x4011|(2<<10)|(3<<7));
+    ERRT("FTWOTOX.P", "D2, FP3", ILLEGAL_SIZE, "D2, FP3",
+                                             0xF200|002, 0x4011|(3<<10)|(3<<7));
+    TEST("FTWOTOX.W", "D2, FP3",             0xF200|002, 0x4011|(4<<10)|(3<<7));
+    ERRT("FTWOTOX.D", "D2, FP3", ILLEGAL_SIZE, "D2, FP3",
+                                             0xF200|002, 0x4011|(5<<10)|(3<<7));
+    TEST("FTWOTOX.B", "D2, FP3",             0xF200|002, 0x4011|(6<<10)|(3<<7));
+    UNKN(/* FTWOTOX.P D2, FP3 */             0xF200|002, 0x4011|(7<<10)|(3<<7));
     UNKN(/* FTWOTOX.S A4, FP5 */             0xF200|014, 0x4011|(1<<10)|(5<<7));
     TEST("FTWOTOX.X", "(A6), FP7",           0xF200|026, 0x4011|(2<<10)|(7<<7));
     TEST("FTWOTOX.P", "(A0)+, FP1",          0xF200|030, 0x4011|(3<<10)|(1<<7));
@@ -2896,6 +3069,16 @@ static void test_float_arithmetic() {
     TEST("FTENTOX.X", "FP0, FP1",            0xF200,     0x0012|(0<<10)|(1<<7));
     TEST("FTENTOX.X", "FP2",                 0xF200,     0x0012|(2<<10)|(2<<7));
     TEST("FTENTOX.L", "D2, FP3",             0xF200|002, 0x4012|(0<<10)|(3<<7));
+    TEST("FTENTOX.S", "D2, FP3",             0xF200|002, 0x4012|(1<<10)|(3<<7));
+    ERRT("FTENTOX.X", "D2, FP3", ILLEGAL_SIZE, "D2, FP3",
+                                             0xF200|002, 0x4012|(2<<10)|(3<<7));
+    ERRT("FTENTOX.P", "D2, FP3", ILLEGAL_SIZE, "D2, FP3",
+                                             0xF200|002, 0x4012|(3<<10)|(3<<7));
+    TEST("FTENTOX.W", "D2, FP3",             0xF200|002, 0x4012|(4<<10)|(3<<7));
+    ERRT("FTENTOX.D", "D2, FP3", ILLEGAL_SIZE, "D2, FP3",
+                                             0xF200|002, 0x4012|(5<<10)|(3<<7));
+    TEST("FTENTOX.B", "D2, FP3",             0xF200|002, 0x4012|(6<<10)|(3<<7));
+    UNKN(/* FTENTOX.P D2, FP3 */             0xF200|002, 0x4012|(7<<10)|(3<<7));
     UNKN(/* FTENTOX.S A4, FP5 */             0xF200|014, 0x4012|(1<<10)|(5<<7));
     TEST("FTENTOX.X", "(A6), FP7",           0xF200|026, 0x4012|(2<<10)|(7<<7));
     TEST("FTENTOX.P", "(A0)+, FP1",          0xF200|030, 0x4012|(3<<10)|(1<<7));
@@ -2920,6 +3103,16 @@ static void test_float_arithmetic() {
     TEST("FLOGN.X", "FP0, FP1",            0xF200,     0x0014|(0<<10)|(1<<7));
     TEST("FLOGN.X", "FP2",                 0xF200,     0x0014|(2<<10)|(2<<7));
     TEST("FLOGN.L", "D2, FP3",             0xF200|002, 0x4014|(0<<10)|(3<<7));
+    TEST("FLOGN.S", "D2, FP3",             0xF200|002, 0x4014|(1<<10)|(3<<7));
+    ERRT("FLOGN.X", "D2, FP3", ILLEGAL_SIZE, "D2, FP3",
+                                           0xF200|002, 0x4014|(2<<10)|(3<<7));
+    ERRT("FLOGN.P", "D2, FP3", ILLEGAL_SIZE, "D2, FP3",
+                                           0xF200|002, 0x4014|(3<<10)|(3<<7));
+    TEST("FLOGN.W", "D2, FP3",             0xF200|002, 0x4014|(4<<10)|(3<<7));
+    ERRT("FLOGN.D", "D2, FP3", ILLEGAL_SIZE, "D2, FP3",
+                                           0xF200|002, 0x4014|(5<<10)|(3<<7));
+    TEST("FLOGN.B", "D2, FP3",             0xF200|002, 0x4014|(6<<10)|(3<<7));
+    UNKN(/* FLOGN.P D2, FP3 */             0xF200|002, 0x4014|(7<<10)|(3<<7));
     UNKN(/* FLOGN.S A4, FP5 */             0xF200|014, 0x4014|(1<<10)|(5<<7));
     TEST("FLOGN.X", "(A6), FP7",           0xF200|026, 0x4014|(2<<10)|(7<<7));
     TEST("FLOGN.P", "(A0)+, FP1",          0xF200|030, 0x4014|(3<<10)|(1<<7));
@@ -2944,6 +3137,16 @@ static void test_float_arithmetic() {
     TEST("FLOG10.X", "FP0, FP1",            0xF200,     0x0015|(0<<10)|(1<<7));
     TEST("FLOG10.X", "FP2",                 0xF200,     0x0015|(2<<10)|(2<<7));
     TEST("FLOG10.L", "D2, FP3",             0xF200|002, 0x4015|(0<<10)|(3<<7));
+    TEST("FLOG10.S", "D2, FP3",             0xF200|002, 0x4015|(1<<10)|(3<<7));
+    ERRT("FLOG10.X", "D2, FP3", ILLEGAL_SIZE, "D2, FP3",
+                                            0xF200|002, 0x4015|(2<<10)|(3<<7));
+    ERRT("FLOG10.P", "D2, FP3", ILLEGAL_SIZE, "D2, FP3",
+                                            0xF200|002, 0x4015|(3<<10)|(3<<7));
+    TEST("FLOG10.W", "D2, FP3",             0xF200|002, 0x4015|(4<<10)|(3<<7));
+    ERRT("FLOG10.D", "D2, FP3", ILLEGAL_SIZE, "D2, FP3",
+                                            0xF200|002, 0x4015|(5<<10)|(3<<7));
+    TEST("FLOG10.B", "D2, FP3",             0xF200|002, 0x4015|(6<<10)|(3<<7));
+    UNKN(/* FLOG10.P D2, FP3 */             0xF200|002, 0x4015|(7<<10)|(3<<7));
     UNKN(/* FLOG10.S A4, FP5 */             0xF200|014, 0x4015|(1<<10)|(5<<7));
     TEST("FLOG10.X", "(A6), FP7",           0xF200|026, 0x4015|(2<<10)|(7<<7));
     TEST("FLOG10.P", "(A0)+, FP1",          0xF200|030, 0x4015|(3<<10)|(1<<7));
@@ -2968,6 +3171,16 @@ static void test_float_arithmetic() {
     TEST("FLOG2.X", "FP0, FP1",            0xF200,     0x0016|(0<<10)|(1<<7));
     TEST("FLOG2.X", "FP2",                 0xF200,     0x0016|(2<<10)|(2<<7));
     TEST("FLOG2.L", "D2, FP3",             0xF200|002, 0x4016|(0<<10)|(3<<7));
+    TEST("FLOG2.S", "D2, FP3",             0xF200|002, 0x4016|(1<<10)|(3<<7));
+    ERRT("FLOG2.X", "D2, FP3", ILLEGAL_SIZE, "D2, FP3",
+                                           0xF200|002, 0x4016|(2<<10)|(3<<7));
+    ERRT("FLOG2.P", "D2, FP3", ILLEGAL_SIZE, "D2, FP3",
+                                           0xF200|002, 0x4016|(3<<10)|(3<<7));
+    TEST("FLOG2.W", "D2, FP3",             0xF200|002, 0x4016|(4<<10)|(3<<7));
+    ERRT("FLOG2.D", "D2, FP3", ILLEGAL_SIZE, "D2, FP3",
+                                           0xF200|002, 0x4016|(5<<10)|(3<<7));
+    TEST("FLOG2.B", "D2, FP3",             0xF200|002, 0x4016|(6<<10)|(3<<7));
+    UNKN(/* FLOG2.P D2, FP3 */             0xF200|002, 0x4016|(7<<10)|(3<<7));
     UNKN(/* FLOG2.S A4, FP5 */             0xF200|014, 0x4016|(1<<10)|(5<<7));
     TEST("FLOG2.X", "(A6), FP7",           0xF200|026, 0x4016|(2<<10)|(7<<7));
     TEST("FLOG2.P", "(A0)+, FP1",          0xF200|030, 0x4016|(3<<10)|(1<<7));
@@ -2992,6 +3205,16 @@ static void test_float_arithmetic() {
     TEST("FABS.X", "FP0, FP1",            0xF200,     0x0018|(0<<10)|(1<<7));
     TEST("FABS.X", "FP2",                 0xF200,     0x0018|(2<<10)|(2<<7));
     TEST("FABS.L", "D2, FP3",             0xF200|002, 0x4018|(0<<10)|(3<<7));
+    TEST("FABS.S", "D2, FP3",             0xF200|002, 0x4018|(1<<10)|(3<<7));
+    ERRT("FABS.X", "D2, FP3", ILLEGAL_SIZE, "D2, FP3",
+                                           0xF200|002, 0x4018|(2<<10)|(3<<7));
+    ERRT("FABS.P", "D2, FP3", ILLEGAL_SIZE, "D2, FP3",
+                                           0xF200|002, 0x4018|(3<<10)|(3<<7));
+    TEST("FABS.W", "D2, FP3",             0xF200|002, 0x4018|(4<<10)|(3<<7));
+    ERRT("FABS.D", "D2, FP3", ILLEGAL_SIZE, "D2, FP3",
+                                           0xF200|002, 0x4018|(5<<10)|(3<<7));
+    TEST("FABS.B", "D2, FP3",             0xF200|002, 0x4018|(6<<10)|(3<<7));
+    UNKN(/* FABS.P D2, FP3 */             0xF200|002, 0x4018|(7<<10)|(3<<7));
     UNKN(/* FABS.S A4, FP5 */             0xF200|014, 0x4018|(1<<10)|(5<<7));
     TEST("FABS.X", "(A6), FP7",           0xF200|026, 0x4018|(2<<10)|(7<<7));
     TEST("FABS.P", "(A0)+, FP1",          0xF200|030, 0x4018|(3<<10)|(1<<7));
@@ -3016,6 +3239,16 @@ static void test_float_arithmetic() {
     TEST("FCOSH.X", "FP0, FP1",            0xF200,     0x0019|(0<<10)|(1<<7));
     TEST("FCOSH.X", "FP2",                 0xF200,     0x0019|(2<<10)|(2<<7));
     TEST("FCOSH.L", "D2, FP3",             0xF200|002, 0x4019|(0<<10)|(3<<7));
+    TEST("FCOSH.S", "D2, FP3",             0xF200|002, 0x4019|(1<<10)|(3<<7));
+    ERRT("FCOSH.X", "D2, FP3", ILLEGAL_SIZE, "D2, FP3",
+                                           0xF200|002, 0x4019|(2<<10)|(3<<7));
+    ERRT("FCOSH.P", "D2, FP3", ILLEGAL_SIZE, "D2, FP3",
+                                           0xF200|002, 0x4019|(3<<10)|(3<<7));
+    TEST("FCOSH.W", "D2, FP3",             0xF200|002, 0x4019|(4<<10)|(3<<7));
+    ERRT("FCOSH.D", "D2, FP3", ILLEGAL_SIZE, "D2, FP3",
+                                           0xF200|002, 0x4019|(5<<10)|(3<<7));
+    TEST("FCOSH.B", "D2, FP3",             0xF200|002, 0x4019|(6<<10)|(3<<7));
+    UNKN(/* FCOSH.P D2, FP3 */             0xF200|002, 0x4019|(7<<10)|(3<<7));
     UNKN(/* FCOSH.S A4, FP5 */             0xF200|014, 0x4019|(1<<10)|(5<<7));
     TEST("FCOSH.X", "(A6), FP7",           0xF200|026, 0x4019|(2<<10)|(7<<7));
     TEST("FCOSH.P", "(A0)+, FP1",          0xF200|030, 0x4019|(3<<10)|(1<<7));
@@ -3040,6 +3273,16 @@ static void test_float_arithmetic() {
     TEST("FNEG.X", "FP0, FP1",            0xF200,     0x001A|(0<<10)|(1<<7));
     TEST("FNEG.X", "FP2",                 0xF200,     0x001A|(2<<10)|(2<<7));
     TEST("FNEG.L", "D2, FP3",             0xF200|002, 0x401A|(0<<10)|(3<<7));
+    TEST("FNEG.S", "D2, FP3",             0xF200|002, 0x401A|(1<<10)|(3<<7));
+    ERRT("FNEG.X", "D2, FP3", ILLEGAL_SIZE, "D2, FP3",
+                                          0xF200|002, 0x401A|(2<<10)|(3<<7));
+    ERRT("FNEG.P", "D2, FP3", ILLEGAL_SIZE, "D2, FP3",
+                                          0xF200|002, 0x401A|(3<<10)|(3<<7));
+    TEST("FNEG.W", "D2, FP3",             0xF200|002, 0x401A|(4<<10)|(3<<7));
+    ERRT("FNEG.D", "D2, FP3", ILLEGAL_SIZE, "D2, FP3",
+                                          0xF200|002, 0x401A|(5<<10)|(3<<7));
+    TEST("FNEG.B", "D2, FP3",             0xF200|002, 0x401A|(6<<10)|(3<<7));
+    UNKN(/* FNEG.P D2, FP3 */             0xF200|002, 0x401A|(7<<10)|(3<<7));
     UNKN(/* FNEG.S A4, FP5 */             0xF200|014, 0x401A|(1<<10)|(5<<7));
     TEST("FNEG.X", "(A6), FP7",           0xF200|026, 0x401A|(2<<10)|(7<<7));
     TEST("FNEG.P", "(A0)+, FP1",          0xF200|030, 0x401A|(3<<10)|(1<<7));
@@ -3064,6 +3307,16 @@ static void test_float_arithmetic() {
     TEST("FACOS.X", "FP0, FP1",            0xF200,     0x001C|(0<<10)|(1<<7));
     TEST("FACOS.X", "FP2",                 0xF200,     0x001C|(2<<10)|(2<<7));
     TEST("FACOS.L", "D2, FP3",             0xF200|002, 0x401C|(0<<10)|(3<<7));
+    TEST("FACOS.S", "D2, FP3",             0xF200|002, 0x401C|(1<<10)|(3<<7));
+    ERRT("FACOS.X", "D2, FP3", ILLEGAL_SIZE, "D2, FP3",
+                                           0xF200|002, 0x401C|(2<<10)|(3<<7));
+    ERRT("FACOS.P", "D2, FP3", ILLEGAL_SIZE, "D2, FP3",
+                                           0xF200|002, 0x401C|(3<<10)|(3<<7));
+    TEST("FACOS.W", "D2, FP3",             0xF200|002, 0x401C|(4<<10)|(3<<7));
+    ERRT("FACOS.D", "D2, FP3", ILLEGAL_SIZE, "D2, FP3",
+                                           0xF200|002, 0x401C|(5<<10)|(3<<7));
+    TEST("FACOS.B", "D2, FP3",             0xF200|002, 0x401C|(6<<10)|(3<<7));
+    UNKN(/* FACOS.P D2, FP3 */             0xF200|002, 0x401C|(7<<10)|(3<<7));
     UNKN(/* FACOS.S A4, FP5 */             0xF200|014, 0x401C|(1<<10)|(5<<7));
     TEST("FACOS.X", "(A6), FP7",           0xF200|026, 0x401C|(2<<10)|(7<<7));
     TEST("FACOS.P", "(A0)+, FP1",          0xF200|030, 0x401C|(3<<10)|(1<<7));
@@ -3088,6 +3341,16 @@ static void test_float_arithmetic() {
     TEST("FCOS.X", "FP0, FP1",            0xF200,     0x001D|(0<<10)|(1<<7));
     TEST("FCOS.X", "FP2",                 0xF200,     0x001D|(2<<10)|(2<<7));
     TEST("FCOS.L", "D2, FP3",             0xF200|002, 0x401D|(0<<10)|(3<<7));
+    TEST("FCOS.S", "D2, FP3",             0xF200|002, 0x401D|(1<<10)|(3<<7));
+    ERRT("FCOS.X", "D2, FP3", ILLEGAL_SIZE, "D2, FP3",
+                                          0xF200|002, 0x401D|(2<<10)|(3<<7));
+    ERRT("FCOS.P", "D2, FP3", ILLEGAL_SIZE, "D2, FP3",
+                                          0xF200|002, 0x401D|(3<<10)|(3<<7));
+    TEST("FCOS.W", "D2, FP3",             0xF200|002, 0x401D|(4<<10)|(3<<7));
+    ERRT("FCOS.D", "D2, FP3", ILLEGAL_SIZE, "D2, FP3",
+                                          0xF200|002, 0x401D|(5<<10)|(3<<7));
+    TEST("FCOS.B", "D2, FP3",             0xF200|002, 0x401D|(6<<10)|(3<<7));
+    UNKN(/* FCOS.P D2, FP3 */             0xF200|002, 0x401D|(7<<10)|(3<<7));
     UNKN(/* FCOS.S A4, FP5 */             0xF200|014, 0x401D|(1<<10)|(5<<7));
     TEST("FCOS.X", "(A6), FP7",           0xF200|026, 0x401D|(2<<10)|(7<<7));
     TEST("FCOS.P", "(A0)+, FP1",          0xF200|030, 0x401D|(3<<10)|(1<<7));
@@ -3112,6 +3375,16 @@ static void test_float_arithmetic() {
     TEST("FGETEXP.X", "FP0, FP1",            0xF200,     0x001E|(0<<10)|(1<<7));
     TEST("FGETEXP.X", "FP2",                 0xF200,     0x001E|(2<<10)|(2<<7));
     TEST("FGETEXP.L", "D2, FP3",             0xF200|002, 0x401E|(0<<10)|(3<<7));
+    TEST("FGETEXP.S", "D2, FP3",             0xF200|002, 0x401E|(1<<10)|(3<<7));
+    ERRT("FGETEXP.X", "D2, FP3", ILLEGAL_SIZE, "D2, FP3",
+                                             0xF200|002, 0x401E|(2<<10)|(3<<7));
+    ERRT("FGETEXP.P", "D2, FP3", ILLEGAL_SIZE, "D2, FP3",
+                                             0xF200|002, 0x401E|(3<<10)|(3<<7));
+    TEST("FGETEXP.W", "D2, FP3",             0xF200|002, 0x401E|(4<<10)|(3<<7));
+    ERRT("FGETEXP.D", "D2, FP3", ILLEGAL_SIZE, "D2, FP3",
+                                             0xF200|002, 0x401E|(5<<10)|(3<<7));
+    TEST("FGETEXP.B", "D2, FP3",             0xF200|002, 0x401E|(6<<10)|(3<<7));
+    UNKN(/* FGETEXP.P D2, FP3 */             0xF200|002, 0x401E|(7<<10)|(3<<7));
     UNKN(/* FGETEXP.S A4, FP5 */             0xF200|014, 0x401E|(1<<10)|(5<<7));
     TEST("FGETEXP.X", "(A6), FP7",           0xF200|026, 0x401E|(2<<10)|(7<<7));
     TEST("FGETEXP.P", "(A0)+, FP1",          0xF200|030, 0x401E|(3<<10)|(1<<7));
@@ -3136,6 +3409,16 @@ static void test_float_arithmetic() {
     TEST("FGETMAN.X", "FP0, FP1",            0xF200,     0x001F|(0<<10)|(1<<7));
     TEST("FGETMAN.X", "FP2",                 0xF200,     0x001F|(2<<10)|(2<<7));
     TEST("FGETMAN.L", "D2, FP3",             0xF200|002, 0x401F|(0<<10)|(3<<7));
+    TEST("FGETMAN.S", "D2, FP3",             0xF200|002, 0x401F|(1<<10)|(3<<7));
+    ERRT("FGETMAN.X", "D2, FP3", ILLEGAL_SIZE, "D2, FP3",
+                                             0xF200|002, 0x401F|(2<<10)|(3<<7));
+    ERRT("FGETMAN.P", "D2, FP3", ILLEGAL_SIZE, "D2, FP3",
+                                             0xF200|002, 0x401F|(3<<10)|(3<<7));
+    TEST("FGETMAN.W", "D2, FP3",             0xF200|002, 0x401F|(4<<10)|(3<<7));
+    ERRT("FGETMAN.D", "D2, FP3", ILLEGAL_SIZE, "D2, FP3",
+                                             0xF200|002, 0x401F|(5<<10)|(3<<7));
+    TEST("FGETMAN.B", "D2, FP3",             0xF200|002, 0x401F|(6<<10)|(3<<7));
+    UNKN(/* FGETMAN.P D2, FP3 */             0xF200|002, 0x401F|(7<<10)|(3<<7));
     UNKN(/* FGETMAN.S A4, FP5 */             0xF200|014, 0x401F|(1<<10)|(5<<7));
     TEST("FGETMAN.X", "(A6), FP7",           0xF200|026, 0x401F|(2<<10)|(7<<7));
     TEST("FGETMAN.P", "(A0)+, FP1",          0xF200|030, 0x401F|(3<<10)|(1<<7));
@@ -3160,6 +3443,16 @@ static void test_float_arithmetic() {
     TEST("FDIV.X", "FP0, FP1",            0xF200,     0x0020|(0<<10)|(1<<7));
     TEST("FDIV.X", "FP2, FP2",            0xF200,     0x0020|(2<<10)|(2<<7));
     TEST("FDIV.L", "D2, FP3",             0xF200|002, 0x4020|(0<<10)|(3<<7));
+    TEST("FDIV.S", "D2, FP3",             0xF200|002, 0x4020|(1<<10)|(3<<7));
+    ERRT("FDIV.X", "D2, FP3", ILLEGAL_SIZE, "D2, FP3",
+                                          0xF200|002, 0x4020|(2<<10)|(3<<7));
+    ERRT("FDIV.P", "D2, FP3", ILLEGAL_SIZE, "D2, FP3",
+                                          0xF200|002, 0x4020|(3<<10)|(3<<7));
+    TEST("FDIV.W", "D2, FP3",             0xF200|002, 0x4020|(4<<10)|(3<<7));
+    ERRT("FDIV.D", "D2, FP3", ILLEGAL_SIZE, "D2, FP3",
+                                          0xF200|002, 0x4020|(5<<10)|(3<<7));
+    TEST("FDIV.B", "D2, FP3",             0xF200|002, 0x4020|(6<<10)|(3<<7));
+    UNKN(/* FDIV.P D2, FP3 */             0xF200|002, 0x4020|(7<<10)|(3<<7));
     UNKN(/* FDIV.S A4, FP5 */             0xF200|014, 0x4020|(1<<10)|(5<<7));
     TEST("FDIV.X", "(A6), FP7",           0xF200|026, 0x4020|(2<<10)|(7<<7));
     TEST("FDIV.P", "(A0)+, FP1",          0xF200|030, 0x4020|(3<<10)|(1<<7));
@@ -3184,6 +3477,16 @@ static void test_float_arithmetic() {
     TEST("FMOD.X", "FP0, FP1",            0xF200,     0x0021|(0<<10)|(1<<7));
     TEST("FMOD.X", "FP2, FP2",            0xF200,     0x0021|(2<<10)|(2<<7));
     TEST("FMOD.L", "D2, FP3",             0xF200|002, 0x4021|(0<<10)|(3<<7));
+    TEST("FMOD.S", "D2, FP3",             0xF200|002, 0x4021|(1<<10)|(3<<7));
+    ERRT("FMOD.X", "D2, FP3", ILLEGAL_SIZE, "D2, FP3",
+                                          0xF200|002, 0x4021|(2<<10)|(3<<7));
+    ERRT("FMOD.P", "D2, FP3", ILLEGAL_SIZE, "D2, FP3",
+                                          0xF200|002, 0x4021|(3<<10)|(3<<7));
+    TEST("FMOD.W", "D2, FP3",             0xF200|002, 0x4021|(4<<10)|(3<<7));
+    ERRT("FMOD.D", "D2, FP3", ILLEGAL_SIZE, "D2, FP3",
+                                          0xF200|002, 0x4021|(5<<10)|(3<<7));
+    TEST("FMOD.B", "D2, FP3",             0xF200|002, 0x4021|(6<<10)|(3<<7));
+    UNKN(/* FMOD.P D2, FP3 */             0xF200|002, 0x4021|(7<<10)|(3<<7));
     UNKN(/* FMOD.S A4, FP5 */             0xF200|014, 0x4021|(1<<10)|(5<<7));
     TEST("FMOD.X", "(A6), FP7",           0xF200|026, 0x4021|(2<<10)|(7<<7));
     TEST("FMOD.P", "(A0)+, FP1",          0xF200|030, 0x4021|(3<<10)|(1<<7));
@@ -3208,6 +3511,16 @@ static void test_float_arithmetic() {
     TEST("FADD.X", "FP0, FP1",            0xF200,     0x0022|(0<<10)|(1<<7));
     TEST("FADD.X", "FP2, FP2",            0xF200,     0x0022|(2<<10)|(2<<7));
     TEST("FADD.L", "D2, FP3",             0xF200|002, 0x4022|(0<<10)|(3<<7));
+    TEST("FADD.S", "D2, FP3",             0xF200|002, 0x4022|(1<<10)|(3<<7));
+    ERRT("FADD.X", "D2, FP3", ILLEGAL_SIZE, "D2, FP3",
+                                          0xF200|002, 0x4022|(2<<10)|(3<<7));
+    ERRT("FADD.P", "D2, FP3", ILLEGAL_SIZE, "D2, FP3",
+                                          0xF200|002, 0x4022|(3<<10)|(3<<7));
+    TEST("FADD.W", "D2, FP3",             0xF200|002, 0x4022|(4<<10)|(3<<7));
+    ERRT("FADD.D", "D2, FP3", ILLEGAL_SIZE, "D2, FP3",
+                                          0xF200|002, 0x4022|(5<<10)|(3<<7));
+    TEST("FADD.B", "D2, FP3",             0xF200|002, 0x4022|(6<<10)|(3<<7));
+    UNKN(/* FADD.P D2, FP3 */             0xF200|002, 0x4022|(7<<10)|(3<<7));
     UNKN(/* FADD.S A4, FP5 */             0xF200|014, 0x4022|(1<<10)|(5<<7));
     TEST("FADD.X", "(A6), FP7",           0xF200|026, 0x4022|(2<<10)|(7<<7));
     TEST("FADD.P", "(A0)+, FP1",          0xF200|030, 0x4022|(3<<10)|(1<<7));
@@ -3232,6 +3545,16 @@ static void test_float_arithmetic() {
     TEST("FMUL.X", "FP0, FP1",            0xF200,     0x0023|(0<<10)|(1<<7));
     TEST("FMUL.X", "FP2, FP2",            0xF200,     0x0023|(2<<10)|(2<<7));
     TEST("FMUL.L", "D2, FP3",             0xF200|002, 0x4023|(0<<10)|(3<<7));
+    TEST("FMUL.S", "D2, FP3",             0xF200|002, 0x4023|(1<<10)|(3<<7));
+    ERRT("FMUL.X", "D2, FP3", ILLEGAL_SIZE, "D2, FP3",
+                                          0xF200|002, 0x4023|(2<<10)|(3<<7));
+    ERRT("FMUL.P", "D2, FP3", ILLEGAL_SIZE, "D2, FP3",
+                                          0xF200|002, 0x4023|(3<<10)|(3<<7));
+    TEST("FMUL.W", "D2, FP3",             0xF200|002, 0x4023|(4<<10)|(3<<7));
+    ERRT("FMUL.D", "D2, FP3", ILLEGAL_SIZE, "D2, FP3",
+                                          0xF200|002, 0x4023|(5<<10)|(3<<7));
+    TEST("FMUL.B", "D2, FP3",             0xF200|002, 0x4023|(6<<10)|(3<<7));
+    UNKN(/* FMUL.P D2, FP3 */             0xF200|002, 0x4023|(7<<10)|(3<<7));
     UNKN(/* FMUL.S A4, FP5 */             0xF200|014, 0x4023|(1<<10)|(5<<7));
     TEST("FMUL.X", "(A6), FP7",           0xF200|026, 0x4023|(2<<10)|(7<<7));
     TEST("FMUL.P", "(A0)+, FP1",          0xF200|030, 0x4023|(3<<10)|(1<<7));
@@ -3256,6 +3579,16 @@ static void test_float_arithmetic() {
     TEST("FSGLDIV.X", "FP0, FP1",            0xF200,     0x0024|(0<<10)|(1<<7));
     TEST("FSGLDIV.X", "FP2, FP2",            0xF200,     0x0024|(2<<10)|(2<<7));
     TEST("FSGLDIV.L", "D2, FP3",             0xF200|002, 0x4024|(0<<10)|(3<<7));
+    TEST("FSGLDIV.S", "D2, FP3",             0xF200|002, 0x4024|(1<<10)|(3<<7));
+    ERRT("FSGLDIV.X", "D2, FP3", ILLEGAL_SIZE, "D2, FP3",
+                                             0xF200|002, 0x4024|(2<<10)|(3<<7));
+    ERRT("FSGLDIV.P", "D2, FP3", ILLEGAL_SIZE, "D2, FP3",
+                                             0xF200|002, 0x4024|(3<<10)|(3<<7));
+    TEST("FSGLDIV.W", "D2, FP3",             0xF200|002, 0x4024|(4<<10)|(3<<7));
+    ERRT("FSGLDIV.D", "D2, FP3", ILLEGAL_SIZE, "D2, FP3",
+                                             0xF200|002, 0x4024|(5<<10)|(3<<7));
+    TEST("FSGLDIV.B", "D2, FP3",             0xF200|002, 0x4024|(6<<10)|(3<<7));
+    UNKN(/* FSGLDIV.P D2, FP3 */             0xF200|002, 0x4024|(7<<10)|(3<<7));
     UNKN(/* FSGLDIV.S A4, FP5 */             0xF200|014, 0x4024|(1<<10)|(5<<7));
     TEST("FSGLDIV.X", "(A6), FP7",           0xF200|026, 0x4024|(2<<10)|(7<<7));
     TEST("FSGLDIV.P", "(A0)+, FP1",          0xF200|030, 0x4024|(3<<10)|(1<<7));
@@ -3280,6 +3613,16 @@ static void test_float_arithmetic() {
     TEST("FREM.X", "FP0, FP1",            0xF200,     0x0025|(0<<10)|(1<<7));
     TEST("FREM.X", "FP2, FP2",            0xF200,     0x0025|(2<<10)|(2<<7));
     TEST("FREM.L", "D2, FP3",             0xF200|002, 0x4025|(0<<10)|(3<<7));
+    TEST("FREM.S", "D2, FP3",             0xF200|002, 0x4025|(1<<10)|(3<<7));
+    ERRT("FREM.X", "D2, FP3", ILLEGAL_SIZE, "D2, FP3",
+                                          0xF200|002, 0x4025|(2<<10)|(3<<7));
+    ERRT("FREM.P", "D2, FP3", ILLEGAL_SIZE, "D2, FP3",
+                                          0xF200|002, 0x4025|(3<<10)|(3<<7));
+    TEST("FREM.W", "D2, FP3",             0xF200|002, 0x4025|(4<<10)|(3<<7));
+    ERRT("FREM.D", "D2, FP3", ILLEGAL_SIZE, "D2, FP3",
+                                          0xF200|002, 0x4025|(5<<10)|(3<<7));
+    TEST("FREM.B", "D2, FP3",             0xF200|002, 0x4025|(6<<10)|(3<<7));
+    UNKN(/* FREM.P D2, FP3 */             0xF200|002, 0x4025|(7<<10)|(3<<7));
     UNKN(/* FREM.S A4, FP5 */             0xF200|014, 0x4025|(1<<10)|(5<<7));
     TEST("FREM.X", "(A6), FP7",           0xF200|026, 0x4025|(2<<10)|(7<<7));
     TEST("FREM.P", "(A0)+, FP1",          0xF200|030, 0x4025|(3<<10)|(1<<7));
@@ -3304,6 +3647,16 @@ static void test_float_arithmetic() {
     TEST("FSCALE.X", "FP0, FP1",            0xF200,     0x0026|(0<<10)|(1<<7));
     TEST("FSCALE.X", "FP2, FP2",            0xF200,     0x0026|(2<<10)|(2<<7));
     TEST("FSCALE.L", "D2, FP3",             0xF200|002, 0x4026|(0<<10)|(3<<7));
+    TEST("FSCALE.S", "D2, FP3",             0xF200|002, 0x4026|(1<<10)|(3<<7));
+    ERRT("FSCALE.X", "D2, FP3", ILLEGAL_SIZE, "D2, FP3",
+                                            0xF200|002, 0x4026|(2<<10)|(3<<7));
+    ERRT("FSCALE.P", "D2, FP3", ILLEGAL_SIZE, "D2, FP3",
+                                            0xF200|002, 0x4026|(3<<10)|(3<<7));
+    TEST("FSCALE.W", "D2, FP3",             0xF200|002, 0x4026|(4<<10)|(3<<7));
+    ERRT("FSCALE.D", "D2, FP3", ILLEGAL_SIZE, "D2, FP3",
+                                            0xF200|002, 0x4026|(5<<10)|(3<<7));
+    TEST("FSCALE.B", "D2, FP3",             0xF200|002, 0x4026|(6<<10)|(3<<7));
+    UNKN(/* FSCALE.P D2, FP3 */             0xF200|002, 0x4026|(7<<10)|(3<<7));
     UNKN(/* FSCALE.S A4, FP5 */             0xF200|014, 0x4026|(1<<10)|(5<<7));
     TEST("FSCALE.X", "(A6), FP7",           0xF200|026, 0x4026|(2<<10)|(7<<7));
     TEST("FSCALE.P", "(A0)+, FP1",          0xF200|030, 0x4026|(3<<10)|(1<<7));
@@ -3328,6 +3681,16 @@ static void test_float_arithmetic() {
     TEST("FSGLMUL.X", "FP0, FP1",            0xF200,     0x0027|(0<<10)|(1<<7));
     TEST("FSGLMUL.X", "FP2, FP2",            0xF200,     0x0027|(2<<10)|(2<<7));
     TEST("FSGLMUL.L", "D2, FP3",             0xF200|002, 0x4027|(0<<10)|(3<<7));
+    TEST("FSGLMUL.S", "D2, FP3",             0xF200|002, 0x4027|(1<<10)|(3<<7));
+    ERRT("FSGLMUL.X", "D2, FP3", ILLEGAL_SIZE, "D2, FP3",
+                                             0xF200|002, 0x4027|(2<<10)|(3<<7));
+    ERRT("FSGLMUL.P", "D2, FP3", ILLEGAL_SIZE, "D2, FP3",
+                                             0xF200|002, 0x4027|(3<<10)|(3<<7));
+    TEST("FSGLMUL.W", "D2, FP3",             0xF200|002, 0x4027|(4<<10)|(3<<7));
+    ERRT("FSGLMUL.D", "D2, FP3", ILLEGAL_SIZE, "D2, FP3",
+                                             0xF200|002, 0x4027|(5<<10)|(3<<7));
+    TEST("FSGLMUL.B", "D2, FP3",             0xF200|002, 0x4027|(6<<10)|(3<<7));
+    UNKN(/* FSGLMUL.P D2, FP3 */             0xF200|002, 0x4027|(7<<10)|(3<<7));
     UNKN(/* FSGLMUL.S A4, FP5 */             0xF200|014, 0x4027|(1<<10)|(5<<7));
     TEST("FSGLMUL.X", "(A6), FP7",           0xF200|026, 0x4027|(2<<10)|(7<<7));
     TEST("FSGLMUL.P", "(A0)+, FP1",          0xF200|030, 0x4027|(3<<10)|(1<<7));
@@ -3352,6 +3715,16 @@ static void test_float_arithmetic() {
     TEST("FSUB.X", "FP0, FP1",            0xF200,     0x0028|(0<<10)|(1<<7));
     TEST("FSUB.X", "FP2, FP2",            0xF200,     0x0028|(2<<10)|(2<<7));
     TEST("FSUB.L", "D2, FP3",             0xF200|002, 0x4028|(0<<10)|(3<<7));
+    TEST("FSUB.S", "D2, FP3",             0xF200|002, 0x4028|(1<<10)|(3<<7));
+    ERRT("FSUB.X", "D2, FP3", ILLEGAL_SIZE, "D2, FP3",
+                                          0xF200|002, 0x4028|(2<<10)|(3<<7));
+    ERRT("FSUB.P", "D2, FP3", ILLEGAL_SIZE, "D2, FP3",
+                                          0xF200|002, 0x4028|(3<<10)|(3<<7));
+    TEST("FSUB.W", "D2, FP3",             0xF200|002, 0x4028|(4<<10)|(3<<7));
+    ERRT("FSUB.D", "D2, FP3", ILLEGAL_SIZE, "D2, FP3",
+                                          0xF200|002, 0x4028|(5<<10)|(3<<7));
+    TEST("FSUB.B", "D2, FP3",             0xF200|002, 0x4028|(6<<10)|(3<<7));
+    UNKN(/* FSUB.P D2, FP3 */             0xF200|002, 0x4028|(7<<10)|(3<<7));
     UNKN(/* FSUB.S A4, FP5 */             0xF200|014, 0x4028|(1<<10)|(5<<7));
     TEST("FSUB.X", "(A6), FP7",           0xF200|026, 0x4028|(2<<10)|(7<<7));
     TEST("FSUB.P", "(A0)+, FP1",          0xF200|030, 0x4028|(3<<10)|(1<<7));
@@ -3375,7 +3748,17 @@ static void test_float_arithmetic() {
 
     TEST("FSINCOS.X", "FP0, FP2:FP1",            0xF200,     0x0032|(0<<10)|(1<<7));
     TEST("FSINCOS.X", "FP1, FP1:FP1",            0xF200,     0x0031|(1<<10)|(1<<7));
-    TEST("FSINCOS.L", "D2, FP1:FP3",             0xF200|002, 0x4031|(0<<10)|(3<<7));
+    TEST("FSINCOS.L", "D2, FP4:FP3",             0xF200|002, 0x4034|(0<<10)|(3<<7));
+    TEST("FSINCOS.S", "D2, FP4:FP3",             0xF200|002, 0x4034|(1<<10)|(3<<7));
+    ERRT("FSINCOS.X", "D2, FP4:FP3", ILLEGAL_SIZE, "D2, FP4:FP3",
+                                                 0xF200|002, 0x4034|(2<<10)|(3<<7));
+    ERRT("FSINCOS.P", "D2, FP4:FP3", ILLEGAL_SIZE, "D2, FP4:FP3",
+                                                 0xF200|002, 0x4034|(3<<10)|(3<<7));
+    TEST("FSINCOS.W", "D2, FP4:FP3",             0xF200|002, 0x4034|(4<<10)|(3<<7));
+    ERRT("FSINCOS.D", "D2, FP4:FP3", ILLEGAL_SIZE, "D2, FP4:FP3",
+                                                 0xF200|002, 0x4034|(5<<10)|(3<<7));
+    TEST("FSINCOS.B", "D2, FP4:FP3",             0xF200|002, 0x4034|(6<<10)|(3<<7));
+    UNKN(/* FSINCOS.P D2, FP4:FP3 */             0xF200|002, 0x4034|(7<<10)|(3<<7));
     UNKN(/* FSINCOS.S A4, FP2:FP5 */             0xF200|014, 0x4032|(1<<10)|(5<<7));
     TEST("FSINCOS.X", "(A6), FP0:FP7",           0xF200|026, 0x4030|(2<<10)|(7<<7));
     TEST("FSINCOS.P", "(A0)+, FP7:FP1",          0xF200|030, 0x4037|(3<<10)|(1<<7));
@@ -3400,6 +3783,16 @@ static void test_float_arithmetic() {
     TEST("FCMP.X", "FP0, FP1",            0xF200,     0x0038|(0<<10)|(1<<7));
     TEST("FCMP.X", "FP2, FP2",            0xF200,     0x0038|(2<<10)|(2<<7));
     TEST("FCMP.L", "D2, FP3",             0xF200|002, 0x4038|(0<<10)|(3<<7));
+    TEST("FCMP.S", "D2, FP3",             0xF200|002, 0x4038|(1<<10)|(3<<7));
+    ERRT("FCMP.X", "D2, FP3", ILLEGAL_SIZE, "D2, FP3",
+                                          0xF200|002, 0x4038|(2<<10)|(3<<7));
+    ERRT("FCMP.P", "D2, FP3", ILLEGAL_SIZE, "D2, FP3",
+                                          0xF200|002, 0x4038|(3<<10)|(3<<7));
+    TEST("FCMP.W", "D2, FP3",             0xF200|002, 0x4038|(4<<10)|(3<<7));
+    ERRT("FCMP.D", "D2, FP3", ILLEGAL_SIZE, "D2, FP3",
+                                          0xF200|002, 0x4038|(5<<10)|(3<<7));
+    TEST("FCMP.B", "D2, FP3",             0xF200|002, 0x4038|(6<<10)|(3<<7));
+    UNKN(/* FCMP.P D2, FP3 */             0xF200|002, 0x4038|(7<<10)|(3<<7));
     UNKN(/* FCMP.S A4, FP5 */             0xF200|014, 0x4038|(1<<10)|(5<<7));
     TEST("FCMP.X", "(A6), FP7",           0xF200|026, 0x4038|(2<<10)|(7<<7));
     TEST("FCMP.P", "(A0)+, FP1",          0xF200|030, 0x4038|(3<<10)|(1<<7));
@@ -3423,6 +3816,16 @@ static void test_float_arithmetic() {
 
     TEST("FTST.X", "FP0",            0xF200,     0x003A|(0<<10));
     TEST("FTST.L", "D2",             0xF200|002, 0x403A|(0<<10));
+    TEST("FTST.S", "D2",             0xF200|002, 0x403A|(1<<10));
+    ERRT("FTST.X", "D2", ILLEGAL_SIZE, "D2",
+                                     0xF200|002, 0x403A|(2<<10));
+    ERRT("FTST.P", "D2", ILLEGAL_SIZE, "D2",
+                                     0xF200|002, 0x403A|(3<<10));
+    TEST("FTST.W", "D2",             0xF200|002, 0x403A|(4<<10));
+    ERRT("FTST.D", "D2", ILLEGAL_SIZE, "D2",
+                                     0xF200|002, 0x403A|(5<<10));
+    TEST("FTST.B", "D2",             0xF200|002, 0x403A|(6<<10));
+    UNKN(/* FTST.P D2 */             0xF200|002, 0x403A|(7<<10));
     UNKN(/* FTST.S A4, FP5 */        0xF200|014, 0x403A|(1<<10));
     TEST("FTST.X", "(A6)",           0xF200|026, 0x403A|(2<<10));
     TEST("FTST.P", "(A0)+",          0xF200|030, 0x403A|(3<<10));

@@ -440,6 +440,19 @@ bool isFloatOpOnSameFpreg(const DisInsn &insn) {
            regVal(insn, insn.srcPos()) == regVal(insn, insn.dstPos());
 }
 
+bool inFloatOperand(const DisInsn &insn, AddrMode mode) {
+    if (mode == M_RDATA) {
+        const auto dst = insn.dst();
+        // Dn,FPn || Dn,FPc:FPs || FTST Dn
+        return dst == M_FPREG || dst == M_FSICO || dst == M_NONE;
+    }
+    if (mode == M_WDATA || mode == M_KFACT || mode == M_KDREG) {
+        // FPn,Dn
+        return insn.src() == M_FPREG;
+    }
+    return false;
+}
+
 }  // namespace
 
 void DisMc68000::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode, OprPos pos,
@@ -449,6 +462,10 @@ void DisMc68000::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode, Opr
     auto m = modeVal(insn, pos);
     auto r = regVal(insn, pos);
     EaMc68000 ea(size, m, r);
+    if (ea.mode == M_DREG && inFloatOperand(insn, mode)) {
+        if (size == SZ_DUBL || size == SZ_XTND || size == SZ_PBCD)
+            insn.setErrorIf(out, ILLEGAL_SIZE);
+    }
     switch (mode) {
     case M_AREG:
     case M_PDEC:
@@ -469,10 +486,6 @@ void DisMc68000::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode, Opr
     case M_RMEM:
     case M_KDREG:
     case M_KFACT:
-        if (insn.src() == M_FPREG && ea.mode == M_DREG) {
-            if (size != SZ_BYTE && size != SZ_WORD && size != SZ_LONG && size != SZ_SNGL)
-                insn.setErrorIf(out, ILLEGAL_OPERAND_MODE);
-        }
         decodeEffectiveAddr(insn, out, ea.mode, ea.reg, size);
         if (insn.getError())
             break;
