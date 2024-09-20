@@ -81,10 +81,18 @@ private:
     void parseInsnSize();
 };
 
-struct Float96 {
-    uint16_t exp;
-    uint16_t digit;
-    uint64_t significand;
+struct ExtendedReal {
+    uint16_t tag;
+    uint16_t pad;
+    uint64_t sig;
+    bool isValid() const;
+};
+
+struct DecimalString {
+    uint16_t tag;
+    uint16_t integ;
+    uint64_t sig;
+    bool isValid() const;
 };
 
 struct DisInsn final : DisInsnImpl<Config>, EntryInsn {
@@ -96,7 +104,8 @@ struct DisInsn final : DisInsnImpl<Config>, EntryInsn {
             setPostfix(readUint16());
     }
 
-    Float96 readFloat96();
+    ExtendedReal readExtendedReal();
+    DecimalString readDecimalString();
 };
 
 }  // namespace mc68000
