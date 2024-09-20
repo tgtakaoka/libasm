@@ -434,7 +434,9 @@ uint8_t regVal(const DisInsn &insn, OprPos pos) {
 }
 
 bool isFloatOpOnSameFpreg(const DisInsn &insn) {
-    return insn.src() == M_FPREG && insn.dst() == M_FPREG &&
+    const auto postVal = insn.postVal();
+    const auto may1opr = insn.hasPostVal() && postVal >= 0x0001 && postVal < 0x0020;
+    return may1opr && insn.src() == M_FPREG && insn.dst() == M_FPREG &&
            regVal(insn, insn.srcPos()) == regVal(insn, insn.dstPos());
 }
 
