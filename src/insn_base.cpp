@@ -131,40 +131,33 @@ uint64_t convert2pbcd(uint64_t bin, uint8_t digits) {
     return pbcd;
 }
 
-void swap(uint8_t &a, uint8_t &b) {
-    a ^= b;
-    b ^= a;
-    a ^= b;
-}
-
 struct Float80 {
-    uint16_t exponent;
-    uint64_t significant;
+    uint16_t tag;
+    uint64_t sig;
+
     Float80(double value) {
         union {
-            double float64;
-            uint8_t buffer[8];
+            double f64;
+            uint64_t u64;
         };
-        float64 = value;
-        if (host::is_little_endian()) {
-            swap(buffer[0], buffer[7]);
-            swap(buffer[1], buffer[6]);
-            swap(buffer[2], buffer[5]);
-            swap(buffer[3], buffer[4]);
+        f64 = value;
+        uint16_t t = static_cast<uint16_t>(u64 >> 52);
+        uint64_t s = u64 & UINT64_C(0x000FFFFFFFFFFFFF);
+        tag = (t & 0x800) ? 0x8000 : 0;  // sign bit
+        uint16_t exp = t & 0x7FF;
+        if (exp == 0x7FF) {
+            // INF or NAN
+            tag |= 0x7FFF;
+            sig = (s == 0) ? UINT64_C(0x8000000000000000) : UINT64_C(0xC000000000000000);
+        } else {
+            // Normal or Subnormal
+            if (exp != 0) {
+                s |= UINT64_C(0x0010000000000000);  // hidden MSB for normal
+                exp = (exp - 0x3FF) + 0x3FFF;
+            }
+            tag += exp;
+            sig = s << 11;
         }
-        uint16_t exp11 = ((uint16_t)(buffer[0] & 0x7F) << 4) + (buffer[1] >> 4);
-        const auto denormal = exp11 == 0;
-        exponent = (exp11 == 0x07FF) ? 0x7FFF : exp11 + (0x3FFF - 0x03FF);
-        if (buffer[0] & 0x80)
-            exponent |= 0x8000;
-        significant = buffer[1] & 0xF;
-        if (!denormal)
-            significant |= 0x10; // hidden integer 1
-        for (auto i = 2; i < 8; ++i) {
-            significant <<= 8;
-            significant |= buffer[i];
-        }
-        significant <<= (63 - 52);
     }
 };
 
@@ -172,8 +165,8 @@ struct Float80 {
 
 Error Insn::emitFloat80Le(double value) {
     Float80 v(value);
-    emitUint64Le(v.significant);
-    emitUint16Le(v.exponent);
+    emitUint64Le(v.sig);
+    emitUint16Le(v.tag);
     return getError();
 }
 
@@ -192,38 +185,39 @@ Error Insn::emitPackedBcd80Le(int64_t value) {
 
 Error Insn::emitFloat96Be(double value, uint8_t pos) {
     Float80 v(value);
-    emitUint16Be(v.exponent, pos);
+    emitUint16Be(v.tag, pos);
     emitUint16Be(0, pos + 2);
-    emitUint64Be(v.significant, pos + 4);
+    emitUint64Be(v.sig, pos + 4);
     return getError();
 }
 
 Error Insn::emitPackedBcd96Be(double value, uint8_t pos) {
     Float80 v(value);
     if (isinf(value)) {
-        emitUint16Be(v.exponent | INT16_MAX, pos);
+        emitUint16Be(v.tag | 0x7FFF, pos);
         emitUint16Be(0, pos += 2);
         emitUint64Be(0, pos += 2);
     } else if (isnan(value)) {
-        emitUint16Be(v.exponent | INT16_MAX, pos);
+        emitUint16Be(v.tag | 0x7FFF, pos);
         emitUint16Be(0, pos += 2);
-        emitUint64Be(INT64_MIN, pos += 2);
+        // MSB: don't care, MSB-1: 0=sNan, 1=qNan
+        emitUint64Be(UINT64_C(0xC000000000000000), pos += 2);  // qNaN
     } else {
         if (value < 0)
             value = -value;
-        auto exponent = static_cast<int16_t>(log10(value));
-        if (exponent < 0 || (exponent == 0 && value < 1.0))
-            --exponent;
-        uint8_t digit = value * pow(10.0, -exponent);
-        v.significant = value * pow(10.0, 16 - exponent);
-        auto sign = v.exponent & 0x8000;
-        if (exponent < 0) {
+        auto exp10 = static_cast<int16_t>(log10(value));
+        if (exp10 < 0 || (exp10 == 0 && value < 1.0))
+            --exp10;
+        uint8_t digit = value * pow(10.0, -exp10);
+        v.sig = value * pow(10.0, 16 - exp10);
+        auto sign = v.tag & 0x8000;
+        if (exp10 < 0) {
             sign |= 0x4000;
-            exponent = -exponent;
+            exp10 = -exp10;
         }
-        emitUint16Be(sign | convert2pbcd(exponent, 3), pos);
+        emitUint16Be(sign | convert2pbcd(exp10, 3), pos);
         emitUint16Be(digit, pos += 2);
-        emitUint64Be(convert2pbcd(v.significant, 16), pos += 2);
+        emitUint64Be(convert2pbcd(v.sig, 16), pos += 2);
     }
     return getError();
 }
