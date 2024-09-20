@@ -2323,6 +2323,7 @@ static void test_multiproc() {
 
 static void test_float_move() {
     TEST("FMOVE.X", "FP0, FP1",            0xF200,     0x0000|(0<<10)|(1<<7));
+    TEST("FMOVE.X", "FP2, FP2",            0xF200,     0x0000|(2<<10)|(2<<7));
 
     TEST("FMOVE.L", "D2, FP3",             0xF200|002, 0x4000|(0<<10)|(3<<7));
     UNKN(/* FMOVE.S A4, FP5 */             0xF200|014, 0x4000|(1<<10)|(5<<7));
@@ -3157,7 +3158,7 @@ static void test_float_arithmetic() {
     TEST("FGETMAN.B", "#$23, FP4",           0xF200|074, 0x401F|(6<<10)|(4<<7), 0x0023);
 
     TEST("FDIV.X", "FP0, FP1",            0xF200,     0x0020|(0<<10)|(1<<7));
-    TEST("FDIV.X", "FP2",                 0xF200,     0x0020|(2<<10)|(2<<7));
+    TEST("FDIV.X", "FP2, FP2",            0xF200,     0x0020|(2<<10)|(2<<7));
     TEST("FDIV.L", "D2, FP3",             0xF200|002, 0x4020|(0<<10)|(3<<7));
     UNKN(/* FDIV.S A4, FP5 */             0xF200|014, 0x4020|(1<<10)|(5<<7));
     TEST("FDIV.X", "(A6), FP7",           0xF200|026, 0x4020|(2<<10)|(7<<7));
@@ -3181,7 +3182,7 @@ static void test_float_arithmetic() {
     TEST("FDIV.B", "#$23, FP4",           0xF200|074, 0x4020|(6<<10)|(4<<7), 0x0023);
 
     TEST("FMOD.X", "FP0, FP1",            0xF200,     0x0021|(0<<10)|(1<<7));
-    TEST("FMOD.X", "FP2",                 0xF200,     0x0021|(2<<10)|(2<<7));
+    TEST("FMOD.X", "FP2, FP2",            0xF200,     0x0021|(2<<10)|(2<<7));
     TEST("FMOD.L", "D2, FP3",             0xF200|002, 0x4021|(0<<10)|(3<<7));
     UNKN(/* FMOD.S A4, FP5 */             0xF200|014, 0x4021|(1<<10)|(5<<7));
     TEST("FMOD.X", "(A6), FP7",           0xF200|026, 0x4021|(2<<10)|(7<<7));
@@ -3205,7 +3206,7 @@ static void test_float_arithmetic() {
     TEST("FMOD.B", "#$23, FP4",           0xF200|074, 0x4021|(6<<10)|(4<<7), 0x0023);
 
     TEST("FADD.X", "FP0, FP1",            0xF200,     0x0022|(0<<10)|(1<<7));
-    TEST("FADD.X", "FP2",                 0xF200,     0x0022|(2<<10)|(2<<7));
+    TEST("FADD.X", "FP2, FP2",            0xF200,     0x0022|(2<<10)|(2<<7));
     TEST("FADD.L", "D2, FP3",             0xF200|002, 0x4022|(0<<10)|(3<<7));
     UNKN(/* FADD.S A4, FP5 */             0xF200|014, 0x4022|(1<<10)|(5<<7));
     TEST("FADD.X", "(A6), FP7",           0xF200|026, 0x4022|(2<<10)|(7<<7));
@@ -3229,7 +3230,7 @@ static void test_float_arithmetic() {
     TEST("FADD.B", "#$23, FP4",           0xF200|074, 0x4022|(6<<10)|(4<<7), 0x0023);
 
     TEST("FMUL.X", "FP0, FP1",            0xF200,     0x0023|(0<<10)|(1<<7));
-    TEST("FMUL.X", "FP2",                 0xF200,     0x0023|(2<<10)|(2<<7));
+    TEST("FMUL.X", "FP2, FP2",            0xF200,     0x0023|(2<<10)|(2<<7));
     TEST("FMUL.L", "D2, FP3",             0xF200|002, 0x4023|(0<<10)|(3<<7));
     UNKN(/* FMUL.S A4, FP5 */             0xF200|014, 0x4023|(1<<10)|(5<<7));
     TEST("FMUL.X", "(A6), FP7",           0xF200|026, 0x4023|(2<<10)|(7<<7));
@@ -3253,7 +3254,7 @@ static void test_float_arithmetic() {
     TEST("FMUL.B", "#$23, FP4",           0xF200|074, 0x4023|(6<<10)|(4<<7), 0x0023);
 
     TEST("FSGLDIV.X", "FP0, FP1",            0xF200,     0x0024|(0<<10)|(1<<7));
-    TEST("FSGLDIV.X", "FP2",                 0xF200,     0x0024|(2<<10)|(2<<7));
+    TEST("FSGLDIV.X", "FP2, FP2",            0xF200,     0x0024|(2<<10)|(2<<7));
     TEST("FSGLDIV.L", "D2, FP3",             0xF200|002, 0x4024|(0<<10)|(3<<7));
     UNKN(/* FSGLDIV.S A4, FP5 */             0xF200|014, 0x4024|(1<<10)|(5<<7));
     TEST("FSGLDIV.X", "(A6), FP7",           0xF200|026, 0x4024|(2<<10)|(7<<7));
@@ -3277,7 +3278,7 @@ static void test_float_arithmetic() {
     TEST("FSGLDIV.B", "#$23, FP4",           0xF200|074, 0x4024|(6<<10)|(4<<7), 0x0023);
 
     TEST("FREM.X", "FP0, FP1",            0xF200,     0x0025|(0<<10)|(1<<7));
-    TEST("FREM.X", "FP2",                 0xF200,     0x0025|(2<<10)|(2<<7));
+    TEST("FREM.X", "FP2, FP2",            0xF200,     0x0025|(2<<10)|(2<<7));
     TEST("FREM.L", "D2, FP3",             0xF200|002, 0x4025|(0<<10)|(3<<7));
     UNKN(/* FREM.S A4, FP5 */             0xF200|014, 0x4025|(1<<10)|(5<<7));
     TEST("FREM.X", "(A6), FP7",           0xF200|026, 0x4025|(2<<10)|(7<<7));
@@ -3301,7 +3302,7 @@ static void test_float_arithmetic() {
     TEST("FREM.B", "#$23, FP4",           0xF200|074, 0x4025|(6<<10)|(4<<7), 0x0023);
 
     TEST("FSCALE.X", "FP0, FP1",            0xF200,     0x0026|(0<<10)|(1<<7));
-    TEST("FSCALE.X", "FP2",                 0xF200,     0x0026|(2<<10)|(2<<7));
+    TEST("FSCALE.X", "FP2, FP2",            0xF200,     0x0026|(2<<10)|(2<<7));
     TEST("FSCALE.L", "D2, FP3",             0xF200|002, 0x4026|(0<<10)|(3<<7));
     UNKN(/* FSCALE.S A4, FP5 */             0xF200|014, 0x4026|(1<<10)|(5<<7));
     TEST("FSCALE.X", "(A6), FP7",           0xF200|026, 0x4026|(2<<10)|(7<<7));
@@ -3325,7 +3326,7 @@ static void test_float_arithmetic() {
     TEST("FSCALE.B", "#$23, FP4",           0xF200|074, 0x4026|(6<<10)|(4<<7), 0x0023);
 
     TEST("FSGLMUL.X", "FP0, FP1",            0xF200,     0x0027|(0<<10)|(1<<7));
-    TEST("FSGLMUL.X", "FP2",                 0xF200,     0x0027|(2<<10)|(2<<7));
+    TEST("FSGLMUL.X", "FP2, FP2",            0xF200,     0x0027|(2<<10)|(2<<7));
     TEST("FSGLMUL.L", "D2, FP3",             0xF200|002, 0x4027|(0<<10)|(3<<7));
     UNKN(/* FSGLMUL.S A4, FP5 */             0xF200|014, 0x4027|(1<<10)|(5<<7));
     TEST("FSGLMUL.X", "(A6), FP7",           0xF200|026, 0x4027|(2<<10)|(7<<7));
@@ -3349,7 +3350,7 @@ static void test_float_arithmetic() {
     TEST("FSGLMUL.B", "#$23, FP4",           0xF200|074, 0x4027|(6<<10)|(4<<7), 0x0023);
 
     TEST("FSUB.X", "FP0, FP1",            0xF200,     0x0028|(0<<10)|(1<<7));
-    TEST("FSUB.X", "FP2",                 0xF200,     0x0028|(2<<10)|(2<<7));
+    TEST("FSUB.X", "FP2, FP2",            0xF200,     0x0028|(2<<10)|(2<<7));
     TEST("FSUB.L", "D2, FP3",             0xF200|002, 0x4028|(0<<10)|(3<<7));
     UNKN(/* FSUB.S A4, FP5 */             0xF200|014, 0x4028|(1<<10)|(5<<7));
     TEST("FSUB.X", "(A6), FP7",           0xF200|026, 0x4028|(2<<10)|(7<<7));
@@ -3373,6 +3374,7 @@ static void test_float_arithmetic() {
     TEST("FSUB.B", "#$23, FP4",           0xF200|074, 0x4028|(6<<10)|(4<<7), 0x0023);
 
     TEST("FSINCOS.X", "FP0, FP2:FP1",            0xF200,     0x0032|(0<<10)|(1<<7));
+    TEST("FSINCOS.X", "FP1, FP1:FP1",            0xF200,     0x0031|(1<<10)|(1<<7));
     TEST("FSINCOS.L", "D2, FP1:FP3",             0xF200|002, 0x4031|(0<<10)|(3<<7));
     UNKN(/* FSINCOS.S A4, FP2:FP5 */             0xF200|014, 0x4032|(1<<10)|(5<<7));
     TEST("FSINCOS.X", "(A6), FP0:FP7",           0xF200|026, 0x4030|(2<<10)|(7<<7));
@@ -3396,7 +3398,7 @@ static void test_float_arithmetic() {
     TEST("FSINCOS.B", "#$23, FP7:FP4",           0xF200|074, 0x4037|(6<<10)|(4<<7), 0x0023);
 
     TEST("FCMP.X", "FP0, FP1",            0xF200,     0x0038|(0<<10)|(1<<7));
-    TEST("FCMP.X", "FP2",                 0xF200,     0x0038|(2<<10)|(2<<7));
+    TEST("FCMP.X", "FP2, FP2",            0xF200,     0x0038|(2<<10)|(2<<7));
     TEST("FCMP.L", "D2, FP3",             0xF200|002, 0x4038|(0<<10)|(3<<7));
     UNKN(/* FCMP.S A4, FP5 */             0xF200|014, 0x4038|(1<<10)|(5<<7));
     TEST("FCMP.X", "(A6), FP7",           0xF200|026, 0x4038|(2<<10)|(7<<7));
