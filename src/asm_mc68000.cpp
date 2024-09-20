@@ -16,23 +16,9 @@
 
 #include "asm_mc68000.h"
 
-#include <math.h>
 #include <stdlib.h>
 #include "table_mc68000.h"
 #include "text_mc68000.h"
-
-#ifndef powl
-#define powl(a, b) pow(a, b)
-#endif
-#ifndef log10l
-#define log10l(a) log10(a)
-#endif
-#ifndef log2l
-#define log2l(a) (log10(a) / log10(2))
-#endif
-#ifndef strtold
-#define strtold(a, b) strtod(a, b)
-#endif
 
 namespace libasm {
 namespace mc68000 {

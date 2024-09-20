@@ -277,17 +277,16 @@ struct DisInsnBase : ErrorAt {
     double readFloat64Le();
 
 protected:
+    Insn &_insn;
+    DisMemory &_memory;
+    const StrBuffer &_out;
+
     DisInsnBase(Insn &insn, DisMemory &memory, const StrBuffer &out)
         : ErrorAt(), _insn(insn), _memory(memory), _out(out) {}
     DisInsnBase(Insn &insn, DisInsnBase &o, const StrBuffer &out)
         : ErrorAt(), _insn(insn), _memory(o._memory), _out(out) {}
     DisInsnBase(DisInsnBase &o, const StrBuffer &out)
         : ErrorAt(*this), _insn(o._insn), _memory(o._memory), _out(out) {}
-
-private:
-    Insn &_insn;
-    DisMemory &_memory;
-    const StrBuffer &_out;
 };
 
 template <typename Conf, typename Entry>

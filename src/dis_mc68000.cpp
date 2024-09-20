@@ -16,6 +16,7 @@
 
 #include "dis_mc68000.h"
 
+#include <math.h>
 #include "reg_mc68000.h"
 #include "table_mc68000.h"
 #include "text_common.h"
@@ -44,15 +45,6 @@ StrBuffer &outOprSize(StrBuffer &out, OprSize size) {
     return out;
 }
 
-void outBcdDigit(StrBuffer &out, uint8_t digit, ErrorAt &error) {
-    if (digit < 10) {
-        out.letter(digit + '0');
-    } else {
-        out.letter('0');
-        error.setErrorIf(out, ILLEGAL_CONSTANT);
-    }
-}
-
 }  // namespace
 
 void DisMc68000::decodeImmediateData(DisInsn &insn, StrBuffer &out, OprSize size) const {
@@ -68,71 +60,116 @@ void DisMc68000::decodeImmediateData(DisInsn &insn, StrBuffer &out, OprSize size
     } else if (size == SZ_DUBL) {
         out.float64(insn.readFloat64());
     } else if (size == SZ_XTND) {
-        outFloat96(out, insn.readFloat96(), insn);
+        outExtendedReal(out, insn.readExtendedReal());
     } else if (size == SZ_PBCD) {
-        outPackedBcd96(out, insn.readFloat96(), insn);
+        outDecimalString(out, insn.readDecimalString());
     }
 }
 
-StrBuffer &DisMc68000::outFloat96(StrBuffer &out, const Float96 &v, ErrorAt &error) const {
-#ifdef MC68000_FLOAT96_STRICT
-    if (v.digit != 0) {
-        error.setErrorIf(out, ILLEGAL_CONSTANT);
-        return out;
+bool ExtendedReal::isValid() const {
+    /**
+     * Extended Binary Real
+     * |s|15-bit exponent|16-bit zero|j|63-bit significand|
+     *  s - sign of significand
+     *  j - integer part of significand
+     */
+    const auto exp = tag & 0x7FFF;
+    if (exp != 0x7FFF) {
+        // Zero, Normalized, and Denormalized
+        const auto j = static_cast<uint_fast8_t>(sig >> 63);
+        return (exp == 0 && j == 0) || (exp != 0 && j != 0);
     }
-#else
-    UNUSED(error);
-#endif
-    if (v.exp & INT16_MIN)
-        out.letter('-');
-    const auto exp = v.exp & INT16_MAX;
-    if (exp == INT16_MAX) {
-        // MSB of siginificand is don't care.
-        return (v.significand & INT64_MAX) == 0 ? out.text_P(TEXT_INF) : out.text_P(TEXT_NAN);
-    }
-    const auto exponent = static_cast<int16_t>(exp) - 0x3FFF - 63;
-    return out.float80(exponent, v.significand);
+    return true;
 }
 
-StrBuffer &DisMc68000::outPackedBcd96(StrBuffer &out, const Float96 &v, ErrorAt &error) const {
-#ifdef MC68000_FLOAT96_STRICT
-    if ((v.digit & ~0xF) != 0) {
-        error.setErrorIf(out, ILLEGAL_CONSTANT);
-        return out;
-    }
-#endif
-    if (v.exp & 0x8000)
+ExtendedReal DisInsn::readExtendedReal() {
+    const auto tag = readUint16();
+    const auto pad = readUint16();  // don't care for input
+    const auto sig = readUint64();
+    const ExtendedReal value{tag, pad, sig};
+    if (!value.isValid())
+        setErrorIf(_out, ILLEGAL_CONSTANT);
+    return value;
+}
+
+StrBuffer &DisMc68000::outExtendedReal(StrBuffer &out, const ExtendedReal &v) const {
+    if (v.tag & 0x8000)
         out.letter('-');
-    const auto exp = v.exp & INT16_MAX;
-    if (exp == INT16_MAX)
-        return v.significand == 0 ? out.text_P(TEXT_INF) : out.text_P(TEXT_NAN);
-#ifdef MC68000_FLOAT96_STRICT
-    if (v.exp & 0x3000)
-        error.setErrorIf(out, ILLEGAL_CONSTANT);
-#endif
-    outBcdDigit(out, v.digit & 0xF, error);
-    if (v.significand)
-        out.letter('.');
-    auto significand = v.significand;
-    while (significand) {
-        outBcdDigit(out, significand >> 60, error);
-        significand <<= 4;
+    const auto bexp = v.tag & 0x7FFF;
+    if (!v.isValid())
+        return out.text_P(TEXT_NAN);
+    if (bexp == 0x7FFF) {
+        // Inf or Nan, don't care bit j.
+        const auto inf = (v.sig << 1) == 0;
+        return out.text_P(inf ? TEXT_INF : TEXT_NAN);
     }
-    if (v.exp & 0x0FFF) {
-        out.letter('E');
-        if (v.exp & 0x4000)
-            out.letter('-');
-        auto exponent = v.exp << 4;
-        auto suppress = true;
-        for (auto i = 0; i < 3; ++i, exponent <<= 4) {
-            const auto digit = (exponent >> 12) & 0xF;
-            if (digit || !suppress) {
-                outBcdDigit(out, digit, error);
-                suppress = false;
-            }
+    const auto exp = static_cast<int16_t>(bexp) - 0x3FFF;
+    return out.float80(exp - 63, v.sig);
+}
+
+bool DecimalString::isValid() const {
+    /**
+     * Decimal String Type
+     * |s|e|in|3-digit exponent|12-bit zero|1-digit integer|16-digit significand|
+     *  s - sign of significand
+     *  e - sign of exponent
+     *  in - 11: infinity or nan, exp=FFF
+     */
+    if ((tag & 0x7FFF) != 0x7FFF) {
+        for (auto bcd = tag & 0xFFF; bcd; bcd >>= 4) {
+            if ((bcd & 0xF) >= 10)
+                return false;
+        }
+        if (integ >= 10)
+            return false;
+        for (auto bcd = sig; bcd; bcd >>= 4) {
+            if ((bcd & 0xF) >= 10)
+                return false;
         }
     }
-    return out;
+    return true;
+}
+
+DecimalString DisInsn::readDecimalString() {
+    const auto tag = readUint16();
+    const auto integ = readUint16();
+    const auto sig = readUint64();
+    const DecimalString value{tag, integ, sig};
+    if (!value.isValid())
+        setErrorIf(_out, ILLEGAL_CONSTANT);
+    return DecimalString{tag, integ, sig};
+}
+
+StrBuffer &DisMc68000::outDecimalString(StrBuffer &out, const DecimalString &v) const {
+    if (v.tag & 0x8000)
+        out.letter('-');
+    if ((v.tag & 0x7FFF) == 0x7FFF)
+        return out.text_P(v.sig == 0 ? TEXT_INF : TEXT_NAN);
+    // nondecimal digit is ignored and converted as is.
+    int16_t exp10 = 0;
+    uint16_t expbcd = v.tag << 4;
+    for (auto i = 0; i < 3; ++i) {
+        const auto digit = expbcd >> 12;
+        expbcd <<= 4;
+        exp10 *= 10;
+        exp10 += digit;
+    }
+    if (v.tag & 0x4000)
+        exp10 = -exp10;
+    uint64_t sig = v.integ & 0xF;
+    auto sigbcd = v.sig;
+    for (auto i = 0; i < 16; ++i) {
+        const auto digit = static_cast<uint_fast8_t>(sigbcd >> 60);
+        sigbcd <<= 4;
+        sig *= 10;
+        sig += digit;
+    }
+    // The exponent range of DoubleString is -999~+999(-16) and is
+    // well covered by double's -1022~+1023.  The significand
+    // precision of DoubleString is about 56 bit log2(10^17), and it
+    // is less than double's 53 bit.
+    const auto value = sig * pow(10.0, exp10 - 16);
+    return out.float64(value);
 }
 
 void DisMc68000::decodeEffectiveAddr(
@@ -606,23 +643,6 @@ Error DisMc68000::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) con
     if (dst != M_NONE && !isFloatOpOnSameFpreg(insn))
         decodeOperand(insn, out.comma(), dst, insn.dstPos(), osize, opr16, opr16Error);
     return _insn.setError(insn);
-}
-
-Float96 DisInsn::readFloat96() {
-    /** Float96
-     * | |15-bit exponent|16-bit zeroes|64-bit significand|
-     *  ^- sign of significand
-     */
-    /** PackedBcd96
-     * | | |  |3-digit exponent|12-bit zeroes|1-digit integer|16-digit significand|
-     *  ^ ^ ^-- infinity and nan
-     *  | +---- sign of exponent
-     *  +------ sign of significand
-     */
-    const auto exp = readUint16();
-    const auto digit = readUint16();
-    const auto significand = readUint64();
-    return {exp, digit, significand};
 }
 
 }  // namespace mc68000
