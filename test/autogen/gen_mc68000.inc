@@ -17629,101 +17629,101 @@
       FSNGT   D0
       FSSNE   D0
       FSST    D0
-      FDBF    D0, *+$0104
-      FDBF    D0, *-$7FFE
+      FDBF    D0, *+$0106
+      FDBF    D0, *-$7FFC
       FDBF    D0, *
-      FDBEQ   D0, *+$0104
-      FDBEQ   D0, *-$7FFE
+      FDBEQ   D0, *+$0106
+      FDBEQ   D0, *-$7FFC
       FDBEQ   D0, *
-      FDBOGT  D0, *+$0106
-      FDBOGT  D0, *-$7FFE
+      FDBOGT  D0, *+$0108
+      FDBOGT  D0, *-$7FFC
       FDBOGT  D0, *
-      FDBOGE  D0, *+$0106
-      FDBOGE  D0, *-$7FFE
+      FDBOGE  D0, *+$0108
+      FDBOGE  D0, *-$7FFC
       FDBOGE  D0, *
-      FDBOLT  D0, *+$0108
-      FDBOLT  D0, *-$7FFE
+      FDBOLT  D0, *+$010A
+      FDBOLT  D0, *-$7FFC
       FDBOLT  D0, *
-      FDBOLE  D0, *+$0108
-      FDBOLE  D0, *-$7FFE
+      FDBOLE  D0, *+$010A
+      FDBOLE  D0, *-$7FFC
       FDBOLE  D0, *
-      FDBOGL  D0, *+$010A
-      FDBOGL  D0, *-$7FFE
+      FDBOGL  D0, *+$010C
+      FDBOGL  D0, *-$7FFC
       FDBOGL  D0, *
-      FDBOR   D0, *+$010A
-      FDBOR   D0, *-$7FFE
+      FDBOR   D0, *+$010C
+      FDBOR   D0, *-$7FFC
       FDBOR   D0, *
-      FDBUN   D0, *+$010C
-      FDBUN   D0, *-$7FFE
+      FDBUN   D0, *+$010E
+      FDBUN   D0, *-$7FFC
       FDBUN   D0, *
-      FDBUEQ  D0, *+$010C
-      FDBUEQ  D0, *-$7FFE
+      FDBUEQ  D0, *+$010E
+      FDBUEQ  D0, *-$7FFC
       FDBUEQ  D0, *
-      FDBUGT  D0, *+$010E
-      FDBUGT  D0, *-$7FFE
+      FDBUGT  D0, *+$0110
+      FDBUGT  D0, *-$7FFC
       FDBUGT  D0, *
-      FDBUGE  D0, *+$010E
-      FDBUGE  D0, *-$7FFE
+      FDBUGE  D0, *+$0110
+      FDBUGE  D0, *-$7FFC
       FDBUGE  D0, *
-      FDBULT  D0, *+$0110
-      FDBULT  D0, *-$7FFE
+      FDBULT  D0, *+$0112
+      FDBULT  D0, *-$7FFC
       FDBULT  D0, *
-      FDBULE  D0, *+$0110
-      FDBULE  D0, *-$7FFE
+      FDBULE  D0, *+$0112
+      FDBULE  D0, *-$7FFC
       FDBULE  D0, *
-      FDBNE   D0, *+$0112
-      FDBNE   D0, *-$7FFE
+      FDBNE   D0, *+$0114
+      FDBNE   D0, *-$7FFC
       FDBNE   D0, *
-      FDBT    D0, *+$0112
-      FDBT    D0, *-$7FFE
+      FDBT    D0, *+$0114
+      FDBT    D0, *-$7FFC
       FDBT    D0, *
-      FDBSF   D0, *+$0114
-      FDBSF   D0, *-$7FFE
+      FDBSF   D0, *+$0116
+      FDBSF   D0, *-$7FFC
       FDBSF   D0, *
-      FDBSEQ  D0, *+$0114
-      FDBSEQ  D0, *-$7FFE
+      FDBSEQ  D0, *+$0116
+      FDBSEQ  D0, *-$7FFC
       FDBSEQ  D0, *
-      FDBGT   D0, *+$0116
-      FDBGT   D0, *-$7FFE
+      FDBGT   D0, *+$0118
+      FDBGT   D0, *-$7FFC
       FDBGT   D0, *
-      FDBGE   D0, *+$0116
-      FDBGE   D0, *-$7FFE
+      FDBGE   D0, *+$0118
+      FDBGE   D0, *-$7FFC
       FDBGE   D0, *
-      FDBLT   D0, *+$0118
-      FDBLT   D0, *-$7FFE
+      FDBLT   D0, *+$011A
+      FDBLT   D0, *-$7FFC
       FDBLT   D0, *
-      FDBLE   D0, *+$0118
-      FDBLE   D0, *-$7FFE
+      FDBLE   D0, *+$011A
+      FDBLE   D0, *-$7FFC
       FDBLE   D0, *
-      FDBGL   D0, *+$011A
-      FDBGL   D0, *-$7FFE
+      FDBGL   D0, *+$011C
+      FDBGL   D0, *-$7FFC
       FDBGL   D0, *
-      FDBGLE  D0, *+$011A
-      FDBGLE  D0, *-$7FFE
+      FDBGLE  D0, *+$011C
+      FDBGLE  D0, *-$7FFC
       FDBGLE  D0, *
-      FDBNGLE D0, *+$011C
-      FDBNGLE D0, *-$7FFE
+      FDBNGLE D0, *+$011E
+      FDBNGLE D0, *-$7FFC
       FDBNGLE D0, *
-      FDBNGL  D0, *+$011C
-      FDBNGL  D0, *-$7FFE
+      FDBNGL  D0, *+$011E
+      FDBNGL  D0, *-$7FFC
       FDBNGL  D0, *
-      FDBNLE  D0, *+$011E
-      FDBNLE  D0, *-$7FFE
+      FDBNLE  D0, *+$0120
+      FDBNLE  D0, *-$7FFC
       FDBNLE  D0, *
-      FDBNLT  D0, *+$011E
-      FDBNLT  D0, *-$7FFE
+      FDBNLT  D0, *+$0120
+      FDBNLT  D0, *-$7FFC
       FDBNLT  D0, *
-      FDBNGE  D0, *+$0120
-      FDBNGE  D0, *-$7FFE
+      FDBNGE  D0, *+$0122
+      FDBNGE  D0, *-$7FFC
       FDBNGE  D0, *
-      FDBNGT  D0, *+$0120
-      FDBNGT  D0, *-$7FFE
+      FDBNGT  D0, *+$0122
+      FDBNGT  D0, *-$7FFC
       FDBNGT  D0, *
-      FDBSNE  D0, *+$0122
-      FDBSNE  D0, *-$7FFE
+      FDBSNE  D0, *+$0124
+      FDBSNE  D0, *-$7FFC
       FDBSNE  D0, *
-      FDBST   D0, *+$0122
-      FDBST   D0, *-$7FFE
+      FDBST   D0, *+$0124
+      FDBST   D0, *-$7FFC
       FDBST   D0, *
       FSF     (A0)
       FSEQ    (A0)

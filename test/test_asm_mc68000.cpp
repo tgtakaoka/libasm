@@ -4410,14 +4410,16 @@ static void test_float_branch() {
     TEST("FBNGT  *+$123456",    0xF2DD, 0x0012, 0x3454);
     TEST("FBSNE  *+$123456",    0xF2DE, 0x0012, 0x3454);
     TEST("FBST   *+$123456",    0xF2DF, 0x0012, 0x3454);
-    ERRT("FBST   *+$12345678", OVERFLOW_RANGE, "*+$12345678", 0xF2DF, 0x0034, 0x5676);
+    ATEST(0x10000, "FBST   $723456",  0xF2DF, 0x0071, 0x3454);
+    ATEST(0x10000, "FBST   $F23456",  0xF2DF, 0x00F1, 0x3454);
+    AERRT(0x10000, "FBST $12345678",  OVERFLOW_RANGE, "$12345678", 0xF2DF, 0x1233, 0x5676);
 }
 
 static void test_float_trap() {
     TEST("FPU MC68881");
 
     TEST("FSF D2",              0xF240|002, 0x0000);
-    TEST("FDBF D2, *+$1234",    0xF240|012, 0x0000, 0x1232);
+    TEST("FDBF D2, *+$1234",    0xF240|012, 0x0000, 0x1230);
     TEST("FSF (A2)",            0xF240|022, 0x0000);
     TEST("FSF (A2)+",           0xF240|032, 0x0000);
     TEST("FSF -(A2)",           0xF240|042, 0x0000);
@@ -4430,7 +4432,7 @@ static void test_float_trap() {
     TEST("FTRAPF",              0xF240|074, 0x0000);
 
     TEST("FSEQ D2",              0xF240|002, 0x0001);
-    TEST("FDBEQ D2, *+$1234",    0xF240|012, 0x0001, 0x1232);
+    TEST("FDBEQ D2, *+$1234",    0xF240|012, 0x0001, 0x1230);
     TEST("FSEQ (A2)",            0xF240|022, 0x0001);
     TEST("FSEQ (A2)+",           0xF240|032, 0x0001);
     TEST("FSEQ -(A2)",           0xF240|042, 0x0001);
@@ -4443,7 +4445,7 @@ static void test_float_trap() {
     TEST("FTRAPEQ",              0xF240|074, 0x0001);
 
     TEST("FSOGT D2",              0xF240|002, 0x0002);
-    TEST("FDBOGT D2, *+$1234",    0xF240|012, 0x0002, 0x1232);
+    TEST("FDBOGT D2, *+$1234",    0xF240|012, 0x0002, 0x1230);
     TEST("FSOGT (A2)",            0xF240|022, 0x0002);
     TEST("FSOGT (A2)+",           0xF240|032, 0x0002);
     TEST("FSOGT -(A2)",           0xF240|042, 0x0002);
@@ -4456,7 +4458,7 @@ static void test_float_trap() {
     TEST("FTRAPOGT",              0xF240|074, 0x0002);
 
     TEST("FSOGE D2",              0xF240|002, 0x0003);
-    TEST("FDBOGE D2, *+$1234",    0xF240|012, 0x0003, 0x1232);
+    TEST("FDBOGE D2, *+$1234",    0xF240|012, 0x0003, 0x1230);
     TEST("FSOGE (A2)",            0xF240|022, 0x0003);
     TEST("FSOGE (A2)+",           0xF240|032, 0x0003);
     TEST("FSOGE -(A2)",           0xF240|042, 0x0003);
@@ -4469,7 +4471,7 @@ static void test_float_trap() {
     TEST("FTRAPOGE",              0xF240|074, 0x0003);
 
     TEST("FSOLT D2",              0xF240|002, 0x0004);
-    TEST("FDBOLT D2, *+$1234",    0xF240|012, 0x0004, 0x1232);
+    TEST("FDBOLT D2, *+$1234",    0xF240|012, 0x0004, 0x1230);
     TEST("FSOLT (A2)",            0xF240|022, 0x0004);
     TEST("FSOLT (A2)+",           0xF240|032, 0x0004);
     TEST("FSOLT -(A2)",           0xF240|042, 0x0004);
@@ -4482,7 +4484,7 @@ static void test_float_trap() {
     TEST("FTRAPOLT",              0xF240|074, 0x0004);
 
     TEST("FSOLE D2",              0xF240|002, 0x0005);
-    TEST("FDBOLE D2, *+$1234",    0xF240|012, 0x0005, 0x1232);
+    TEST("FDBOLE D2, *+$1234",    0xF240|012, 0x0005, 0x1230);
     TEST("FSOLE (A2)",            0xF240|022, 0x0005);
     TEST("FSOLE (A2)+",           0xF240|032, 0x0005);
     TEST("FSOLE -(A2)",           0xF240|042, 0x0005);
@@ -4495,7 +4497,7 @@ static void test_float_trap() {
     TEST("FTRAPOLE",              0xF240|074, 0x0005);
 
     TEST("FSOGL D2",              0xF240|002, 0x0006);
-    TEST("FDBOGL D2, *+$1234",    0xF240|012, 0x0006, 0x1232);
+    TEST("FDBOGL D2, *+$1234",    0xF240|012, 0x0006, 0x1230);
     TEST("FSOGL (A2)",            0xF240|022, 0x0006);
     TEST("FSOGL (A2)+",           0xF240|032, 0x0006);
     TEST("FSOGL -(A2)",           0xF240|042, 0x0006);
@@ -4508,7 +4510,7 @@ static void test_float_trap() {
     TEST("FTRAPOGL",              0xF240|074, 0x0006);
 
     TEST("FSOR D2",              0xF240|002, 0x0007);
-    TEST("FDBOR D2, *+$1234",    0xF240|012, 0x0007, 0x1232);
+    TEST("FDBOR D2, *+$1234",    0xF240|012, 0x0007, 0x1230);
     TEST("FSOR (A2)",            0xF240|022, 0x0007);
     TEST("FSOR (A2)+",           0xF240|032, 0x0007);
     TEST("FSOR -(A2)",           0xF240|042, 0x0007);
@@ -4521,7 +4523,7 @@ static void test_float_trap() {
     TEST("FTRAPOR",              0xF240|074, 0x0007);
 
     TEST("FSUN D2",              0xF240|002, 0x0008);
-    TEST("FDBUN D2, *+$1234",    0xF240|012, 0x0008, 0x1232);
+    TEST("FDBUN D2, *+$1234",    0xF240|012, 0x0008, 0x1230);
     TEST("FSUN (A2)",            0xF240|022, 0x0008);
     TEST("FSUN (A2)+",           0xF240|032, 0x0008);
     TEST("FSUN -(A2)",           0xF240|042, 0x0008);
@@ -4534,7 +4536,7 @@ static void test_float_trap() {
     TEST("FTRAPUN",              0xF240|074, 0x0008);
 
     TEST("FSUEQ D2",              0xF240|002, 0x0009);
-    TEST("FDBUEQ D2, *+$1234",    0xF240|012, 0x0009, 0x1232);
+    TEST("FDBUEQ D2, *+$1234",    0xF240|012, 0x0009, 0x1230);
     TEST("FSUEQ (A2)",            0xF240|022, 0x0009);
     TEST("FSUEQ (A2)+",           0xF240|032, 0x0009);
     TEST("FSUEQ -(A2)",           0xF240|042, 0x0009);
@@ -4547,7 +4549,7 @@ static void test_float_trap() {
     TEST("FTRAPUEQ",              0xF240|074, 0x0009);
 
     TEST("FSUGT D2",              0xF240|002, 0x000A);
-    TEST("FDBUGT D2, *+$1234",    0xF240|012, 0x000A, 0x1232);
+    TEST("FDBUGT D2, *+$1234",    0xF240|012, 0x000A, 0x1230);
     TEST("FSUGT (A2)",            0xF240|022, 0x000A);
     TEST("FSUGT (A2)+",           0xF240|032, 0x000A);
     TEST("FSUGT -(A2)",           0xF240|042, 0x000A);
@@ -4560,7 +4562,7 @@ static void test_float_trap() {
     TEST("FTRAPUGT",              0xF240|074, 0x000A);
 
     TEST("FSUGE D2",              0xF240|002, 0x000B);
-    TEST("FDBUGE D2, *+$1234",    0xF240|012, 0x000B, 0x1232);
+    TEST("FDBUGE D2, *+$1234",    0xF240|012, 0x000B, 0x1230);
     TEST("FSUGE (A2)",            0xF240|022, 0x000B);
     TEST("FSUGE (A2)+",           0xF240|032, 0x000B);
     TEST("FSUGE -(A2)",           0xF240|042, 0x000B);
@@ -4573,7 +4575,7 @@ static void test_float_trap() {
     TEST("FTRAPUGE",              0xF240|074, 0x000B);
 
     TEST("FSULT D2",              0xF240|002, 0x000C);
-    TEST("FDBULT D2, *+$1234",    0xF240|012, 0x000C, 0x1232);
+    TEST("FDBULT D2, *+$1234",    0xF240|012, 0x000C, 0x1230);
     TEST("FSULT (A2)",            0xF240|022, 0x000C);
     TEST("FSULT (A2)+",           0xF240|032, 0x000C);
     TEST("FSULT -(A2)",           0xF240|042, 0x000C);
@@ -4586,7 +4588,7 @@ static void test_float_trap() {
     TEST("FTRAPULT",              0xF240|074, 0x000C);
 
     TEST("FSULE D2",              0xF240|002, 0x000D);
-    TEST("FDBULE D2, *+$1234",    0xF240|012, 0x000D, 0x1232);
+    TEST("FDBULE D2, *+$1234",    0xF240|012, 0x000D, 0x1230);
     TEST("FSULE (A2)",            0xF240|022, 0x000D);
     TEST("FSULE (A2)+",           0xF240|032, 0x000D);
     TEST("FSULE -(A2)",           0xF240|042, 0x000D);
@@ -4599,7 +4601,7 @@ static void test_float_trap() {
     TEST("FTRAPULE",              0xF240|074, 0x000D);
 
     TEST("FSNE D2",              0xF240|002, 0x000E);
-    TEST("FDBNE D2, *+$1234",    0xF240|012, 0x000E, 0x1232);
+    TEST("FDBNE D2, *+$1234",    0xF240|012, 0x000E, 0x1230);
     TEST("FSNE (A2)",            0xF240|022, 0x000E);
     TEST("FSNE (A2)+",           0xF240|032, 0x000E);
     TEST("FSNE -(A2)",           0xF240|042, 0x000E);
@@ -4612,7 +4614,7 @@ static void test_float_trap() {
     TEST("FTRAPNE",              0xF240|074, 0x000E);
 
     TEST("FST D2",              0xF240|002, 0x000F);
-    TEST("FDBT D2, *+$1234",    0xF240|012, 0x000F, 0x1232);
+    TEST("FDBT D2, *+$1234",    0xF240|012, 0x000F, 0x1230);
     TEST("FST (A2)",            0xF240|022, 0x000F);
     TEST("FST (A2)+",           0xF240|032, 0x000F);
     TEST("FST -(A2)",           0xF240|042, 0x000F);
@@ -4625,7 +4627,7 @@ static void test_float_trap() {
     TEST("FTRAPT",              0xF240|074, 0x000F);
 
     TEST("FSSF D2",              0xF240|002, 0x0010);
-    TEST("FDBSF D2, *+$1234",    0xF240|012, 0x0010, 0x1232);
+    TEST("FDBSF D2, *+$1234",    0xF240|012, 0x0010, 0x1230);
     TEST("FSSF (A2)",            0xF240|022, 0x0010);
     TEST("FSSF (A2)+",           0xF240|032, 0x0010);
     TEST("FSSF -(A2)",           0xF240|042, 0x0010);
@@ -4638,7 +4640,7 @@ static void test_float_trap() {
     TEST("FTRAPSF",              0xF240|074, 0x0010);
 
     TEST("FSSEQ D2",              0xF240|002, 0x0011);
-    TEST("FDBSEQ D2, *+$1234",    0xF240|012, 0x0011, 0x1232);
+    TEST("FDBSEQ D2, *+$1234",    0xF240|012, 0x0011, 0x1230);
     TEST("FSSEQ (A2)",            0xF240|022, 0x0011);
     TEST("FSSEQ (A2)+",           0xF240|032, 0x0011);
     TEST("FSSEQ -(A2)",           0xF240|042, 0x0011);
@@ -4651,7 +4653,7 @@ static void test_float_trap() {
     TEST("FTRAPSEQ",              0xF240|074, 0x0011);
 
     TEST("FSGT D2",              0xF240|002, 0x0012);
-    TEST("FDBGT D2, *+$1234",    0xF240|012, 0x0012, 0x1232);
+    TEST("FDBGT D2, *+$1234",    0xF240|012, 0x0012, 0x1230);
     TEST("FSGT (A2)",            0xF240|022, 0x0012);
     TEST("FSGT (A2)+",           0xF240|032, 0x0012);
     TEST("FSGT -(A2)",           0xF240|042, 0x0012);
@@ -4664,7 +4666,7 @@ static void test_float_trap() {
     TEST("FTRAPGT",              0xF240|074, 0x0012);
 
     TEST("FSGE D2",              0xF240|002, 0x0013);
-    TEST("FDBGE D2, *+$1234",    0xF240|012, 0x0013, 0x1232);
+    TEST("FDBGE D2, *+$1234",    0xF240|012, 0x0013, 0x1230);
     TEST("FSGE (A2)",            0xF240|022, 0x0013);
     TEST("FSGE (A2)+",           0xF240|032, 0x0013);
     TEST("FSGE -(A2)",           0xF240|042, 0x0013);
@@ -4677,7 +4679,7 @@ static void test_float_trap() {
     TEST("FTRAPGE",              0xF240|074, 0x0013);
 
     TEST("FSLT D2",              0xF240|002, 0x0014);
-    TEST("FDBLT D2, *+$1234",    0xF240|012, 0x0014, 0x1232);
+    TEST("FDBLT D2, *+$1234",    0xF240|012, 0x0014, 0x1230);
     TEST("FSLT (A2)",            0xF240|022, 0x0014);
     TEST("FSLT (A2)+",           0xF240|032, 0x0014);
     TEST("FSLT -(A2)",           0xF240|042, 0x0014);
@@ -4690,7 +4692,7 @@ static void test_float_trap() {
     TEST("FTRAPLT",              0xF240|074, 0x0014);
 
     TEST("FSLE D2",              0xF240|002, 0x0015);
-    TEST("FDBLE D2, *+$1234",    0xF240|012, 0x0015, 0x1232);
+    TEST("FDBLE D2, *+$1234",    0xF240|012, 0x0015, 0x1230);
     TEST("FSLE (A2)",            0xF240|022, 0x0015);
     TEST("FSLE (A2)+",           0xF240|032, 0x0015);
     TEST("FSLE -(A2)",           0xF240|042, 0x0015);
@@ -4703,7 +4705,7 @@ static void test_float_trap() {
     TEST("FTRAPLE",              0xF240|074, 0x0015);
 
     TEST("FSGL D2",              0xF240|002, 0x0016);
-    TEST("FDBGL D2, *+$1234",    0xF240|012, 0x0016, 0x1232);
+    TEST("FDBGL D2, *+$1234",    0xF240|012, 0x0016, 0x1230);
     TEST("FSGL (A2)",            0xF240|022, 0x0016);
     TEST("FSGL (A2)+",           0xF240|032, 0x0016);
     TEST("FSGL -(A2)",           0xF240|042, 0x0016);
@@ -4716,7 +4718,7 @@ static void test_float_trap() {
     TEST("FTRAPGL",              0xF240|074, 0x0016);
 
     TEST("FSGLE D2",              0xF240|002, 0x0017);
-    TEST("FDBGLE D2, *+$1234",    0xF240|012, 0x0017, 0x1232);
+    TEST("FDBGLE D2, *+$1234",    0xF240|012, 0x0017, 0x1230);
     TEST("FSGLE (A2)",            0xF240|022, 0x0017);
     TEST("FSGLE (A2)+",           0xF240|032, 0x0017);
     TEST("FSGLE -(A2)",           0xF240|042, 0x0017);
@@ -4729,7 +4731,7 @@ static void test_float_trap() {
     TEST("FTRAPGLE",              0xF240|074, 0x0017);
 
     TEST("FSNGLE D2",              0xF240|002, 0x0018);
-    TEST("FDBNGLE D2, *+$1234",    0xF240|012, 0x0018, 0x1232);
+    TEST("FDBNGLE D2, *+$1234",    0xF240|012, 0x0018, 0x1230);
     TEST("FSNGLE (A2)",            0xF240|022, 0x0018);
     TEST("FSNGLE (A2)+",           0xF240|032, 0x0018);
     TEST("FSNGLE -(A2)",           0xF240|042, 0x0018);
@@ -4742,7 +4744,7 @@ static void test_float_trap() {
     TEST("FTRAPNGLE",              0xF240|074, 0x0018);
 
     TEST("FSNGL D2",              0xF240|002, 0x0019);
-    TEST("FDBNGL D2, *+$1234",    0xF240|012, 0x0019, 0x1232);
+    TEST("FDBNGL D2, *+$1234",    0xF240|012, 0x0019, 0x1230);
     TEST("FSNGL (A2)",            0xF240|022, 0x0019);
     TEST("FSNGL (A2)+",           0xF240|032, 0x0019);
     TEST("FSNGL -(A2)",           0xF240|042, 0x0019);
@@ -4755,7 +4757,7 @@ static void test_float_trap() {
     TEST("FTRAPNGL",              0xF240|074, 0x0019);
 
     TEST("FSNLE D2",              0xF240|002, 0x001A);
-    TEST("FDBNLE D2, *+$1234",    0xF240|012, 0x001A, 0x1232);
+    TEST("FDBNLE D2, *+$1234",    0xF240|012, 0x001A, 0x1230);
     TEST("FSNLE (A2)",            0xF240|022, 0x001A);
     TEST("FSNLE (A2)+",           0xF240|032, 0x001A);
     TEST("FSNLE -(A2)",           0xF240|042, 0x001A);
@@ -4768,7 +4770,7 @@ static void test_float_trap() {
     TEST("FTRAPNLE",              0xF240|074, 0x001A);
 
     TEST("FSNLT D2",              0xF240|002, 0x001B);
-    TEST("FDBNLT D2, *+$1234",    0xF240|012, 0x001B, 0x1232);
+    TEST("FDBNLT D2, *+$1234",    0xF240|012, 0x001B, 0x1230);
     TEST("FSNLT (A2)",            0xF240|022, 0x001B);
     TEST("FSNLT (A2)+",           0xF240|032, 0x001B);
     TEST("FSNLT -(A2)",           0xF240|042, 0x001B);
@@ -4781,7 +4783,7 @@ static void test_float_trap() {
     TEST("FTRAPNLT",              0xF240|074, 0x001B);
 
     TEST("FSNGE D2",              0xF240|002, 0x001C);
-    TEST("FDBNGE D2, *+$1234",    0xF240|012, 0x001C, 0x1232);
+    TEST("FDBNGE D2, *+$1234",    0xF240|012, 0x001C, 0x1230);
     TEST("FSNGE (A2)",            0xF240|022, 0x001C);
     TEST("FSNGE (A2)+",           0xF240|032, 0x001C);
     TEST("FSNGE -(A2)",           0xF240|042, 0x001C);
@@ -4794,7 +4796,7 @@ static void test_float_trap() {
     TEST("FTRAPNGE",              0xF240|074, 0x001C);
 
     TEST("FSNGT D2",              0xF240|002, 0x001D);
-    TEST("FDBNGT D2, *+$1234",    0xF240|012, 0x001D, 0x1232);
+    TEST("FDBNGT D2, *+$1234",    0xF240|012, 0x001D, 0x1230);
     TEST("FSNGT (A2)",            0xF240|022, 0x001D);
     TEST("FSNGT (A2)+",           0xF240|032, 0x001D);
     TEST("FSNGT -(A2)",           0xF240|042, 0x001D);
@@ -4807,7 +4809,7 @@ static void test_float_trap() {
     TEST("FTRAPNGT",              0xF240|074, 0x001D);
 
     TEST("FSSNE D2",              0xF240|002, 0x001E);
-    TEST("FDBSNE D2, *+$1234",    0xF240|012, 0x001E, 0x1232);
+    TEST("FDBSNE D2, *+$1234",    0xF240|012, 0x001E, 0x1230);
     TEST("FSSNE (A2)",            0xF240|022, 0x001E);
     TEST("FSSNE (A2)+",           0xF240|032, 0x001E);
     TEST("FSSNE -(A2)",           0xF240|042, 0x001E);
@@ -4820,7 +4822,7 @@ static void test_float_trap() {
     TEST("FTRAPSNE",              0xF240|074, 0x001E);
 
     TEST("FSST D2",              0xF240|002, 0x001F);
-    TEST("FDBST D2, *+$1234",    0xF240|012, 0x001F, 0x1232);
+    TEST("FDBST D2, *+$1234",    0xF240|012, 0x001F, 0x1230);
     TEST("FSST (A2)",            0xF240|022, 0x001F);
     TEST("FSST (A2)+",           0xF240|032, 0x001F);
     TEST("FSST -(A2)",           0xF240|042, 0x001F);
