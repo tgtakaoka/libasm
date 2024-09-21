@@ -235,7 +235,8 @@ void DisMc68000::decodeEffectiveAddr(
 }
 
 void DisMc68000::decodeRelative(DisInsn &insn, StrBuffer &out, AddrMode mode) const {
-    const auto base = insn.address() + 2;
+    // FDxx has different base address
+    const auto base = insn.address() + (insn.hasPostVal() ? 4 : 2);
     if (mode == M_REL32 && (insn.opCode() & (1 << 6)) == 0)
         mode = M_REL16;
     if (mode == M_REL32) {

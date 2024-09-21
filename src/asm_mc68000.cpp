@@ -226,10 +226,16 @@ void AsmMc68000::encodeDisplacement(
 }
 
 void AsmMc68000::encodeRelativeAddr(AsmInsn &insn, AddrMode mode, const Operand &op) const {
-    const auto base = insn.address() + 2;
+    // FDxx has different base address
+    const auto base = insn.address() + (insn.hasPostVal() ? 4 : 2);
     const auto target = op.getError() ? base : op.val.getUnsigned();
     insn.setErrorIf(op, checkAddr(target, true));
-    const auto delta = branchDelta(base, target, insn, op);
+    ErrorAt error;
+    // the branchDelta() uses addressWidth(), which is 24 bit, to
+    // check the range of |delta|. It is not suitable for
+    // M_REL32. Record errors in |error| then copy it to |insn| if
+    // any.
+    const auto delta = branchDelta(base, target, error, op);
     const auto insnSize = insn.insnSize();
     if (mode == M_REL8) {
         if (insnSize == ISZ_NONE) {
@@ -238,20 +244,20 @@ void AsmMc68000::encodeRelativeAddr(AsmInsn &insn, AddrMode mode, const Operand 
             insn.embed(static_cast<uint8_t>(delta));
         } else if (insnSize == ISZ_BYTE || insnSize == ISZ_SNGL) {
             if (overflowDelta(delta, 8))
-                insn.setErrorIf(op, OPERAND_TOO_FAR);
+                error.setErrorIf(op, OPERAND_TOO_FAR);
             insn.embed(static_cast<uint8_t>(delta));
         } else if (insnSize == ISZ_WORD || insnSize == ISZ_LONG) {
             goto rel16;
         } else {
-            insn.setErrorIf(ILLEGAL_SIZE);
+            error.setErrorIf(ILLEGAL_SIZE);
         }
     } else if (mode == M_REL16) {
         if (insnSize == ISZ_NONE || insnSize == ISZ_WORD || insnSize == ISZ_LONG) {
         rel16:
             if (overflowDelta(delta, 16))
-                insn.setErrorIf(op, OPERAND_TOO_FAR);
+                error.setErrorIf(op, OPERAND_TOO_FAR);
         } else {
-            insn.setErrorIf(ILLEGAL_SIZE);
+            error.setErrorIf(ILLEGAL_SIZE);
         }
         insn.emitOperand16(delta);
     } else if (mode == M_REL32) {
@@ -261,19 +267,22 @@ void AsmMc68000::encodeRelativeAddr(AsmInsn &insn, AddrMode mode, const Operand 
             goto rel32;
         } else if (insnSize == ISZ_WORD || insnSize == ISZ_LONG) {
             if (overflowDelta(delta, 16))
-                insn.setErrorIf(op, OPERAND_TOO_FAR);
+                error.setErrorIf(op, OPERAND_TOO_FAR);
         rel32_16:
-            insn.setOpCode(insn.opCode() & ~(1 << 6));
+            insn.setOpCode(insn.opCode() & ~(1 << 6));  // M_REL16
             insn.emitOperand16(static_cast<uint16_t>(delta));
         } else if (insnSize == ISZ_LONG || insnSize == ISZ_XTND) {
         rel32:
-            insn.embed(1 << 6);
-            insn.emitOperand32(delta);
+            error.setOK();                      // M_REL32 never overflow.
+            insn.embed(1 << 6);                 // M_REL32
+            insn.emitOperand32(target - base);  // 32 bit delta
         } else {
-            insn.setErrorIf(ILLEGAL_SIZE);
+            error.setErrorIf(ILLEGAL_SIZE);
             goto rel32_16;
         }
     }
+    // Copy error if any
+    insn.setErrorIf(error);
 }
 
 void AsmMc68000::encodeImmediate(AsmInsn &insn, const Operand &op, OprSize size) const {

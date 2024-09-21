@@ -14,7 +14,7 @@
 
         cpu     68000
         fpu     on
-        org     0000h
+        org     10000h
         include "gen_mc68000.inc"
         end
 
