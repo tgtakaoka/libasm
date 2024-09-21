@@ -15,9 +15,6 @@
  */
 
 #include "str_buffer.h"
-#include <ctype.h>
-#include <math.h>
-#include <stdio.h>
 #include "config_host.h"
 
 namespace libasm {
@@ -110,23 +107,21 @@ StrBuffer &StrBuffer::rtext_P(const /*PROGMEM*/ char *text_P) {
     return *this;
 }
 
-StrBuffer &StrBuffer::float32(float f32, uint_fast8_t prec) {
+StrBuffer &StrBuffer::float32(const float80_t &f80, uint_fast8_t prec) {
     *_end = 1;  // to check buffer overflow
-    const auto len = snprintf_P(_out, capacity() + 1, PSTR("%.*g"), prec, f32);
+    const auto len = f80.gcvt(mark(), capacity() + 1, prec);
     return convert(len);
 }
 
-StrBuffer &StrBuffer::float64(double f64, uint_fast8_t prec) {
+StrBuffer &StrBuffer::float64(const float80_t &f80, uint_fast8_t prec) {
     *_end = 1;  // to check buffer overflow
-    const auto len = snprintf_P(_out, capacity() + 1, PSTR("%.*g"), prec, f64);
+    const auto len = f80.gcvt(mark(), capacity() + 1, prec);
     return convert(len);
 }
 
-StrBuffer &StrBuffer::float80(int16_t exponent, uint64_t significand, uint_fast8_t prec) {
+StrBuffer &StrBuffer::float80(const float80_t &f80, uint_fast8_t prec) {
     *_end = 1;  // to check buffer overflow
-    // TODO: Implement Dragon4 algorithm
-    const auto n = significand * pow(2.0, exponent);
-    const auto len = snprintf_P(_out, capacity() + 1, PSTR("%.*g"), prec, n);
+    const auto len = f80.gcvt(mark(), capacity() + 1, prec);
     return convert(len);
 }
 

@@ -137,7 +137,8 @@ StrBuffer &DisMc68000::outExtendedReal(StrBuffer &out, const ExtendedReal &v) co
         return out.text_P(inf ? TEXT_INF : TEXT_NAN);
     }
     const auto exp = static_cast<int16_t>(bexp) - 0x3FFF;
-    return out.float80(exp - 63, v.sig);
+    fixed64_t sig{v.sig};
+    return out.float80(float80_t::compose(false, exp, sig));
 }
 
 bool DecimalString::isValid() const {
@@ -178,8 +179,16 @@ StrBuffer &DisMc68000::outDecimalString(StrBuffer &out, const DecimalString &v) 
         out.letter('-');
     if ((v.tag & 0x7FFF) == 0x7FFF)
         return out.text_P(v.sig == 0 ? TEXT_INF : TEXT_NAN);
+    fixed64_t sig;
     // nondecimal digit is ignored and converted as is.
-    int16_t exp10 = 0;
+    int_fast16_t exp = sig.dec_digit(0, v.integ & 0xF);
+    auto sigbcd = v.sig;
+    for (int_fast8_t i = 0; i < 16; ++i) {
+        const auto digit = static_cast<uint_fast8_t>(sigbcd >> 60);
+        sigbcd <<= 4;
+        exp = sig.dec_digit(exp, digit);
+    }
+    int_fast16_t exp10 = 0;
     uint16_t expbcd = v.tag << 4;
     for (auto i = 0; i < 3; ++i) {
         const auto digit = expbcd >> 12;
@@ -189,20 +198,8 @@ StrBuffer &DisMc68000::outDecimalString(StrBuffer &out, const DecimalString &v) 
     }
     if (v.tag & 0x4000)
         exp10 = -exp10;
-    uint64_t sig = v.integ & 0xF;
-    auto sigbcd = v.sig;
-    for (auto i = 0; i < 16; ++i) {
-        const auto digit = static_cast<uint_fast8_t>(sigbcd >> 60);
-        sigbcd <<= 4;
-        sig *= 10;
-        sig += digit;
-    }
-    // The exponent range of DoubleString is -999~+999(-16) and is
-    // well covered by double's -1022~+1023.  The significand
-    // precision of DoubleString is about 56 bit log2(10^17), and it
-    // is less than double's 53 bit.
-    const auto value = sig * pow(10.0, exp10 - 16);
-    return out.float64(value);
+    exp += sig.power10(exp10 - 16);
+    return out.float80(float80_t::compose(false, exp, sig), 17);
 }
 
 void DisMc68000::decodeEffectiveAddr(

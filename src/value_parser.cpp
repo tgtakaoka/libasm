@@ -287,11 +287,12 @@ Error ValueParser::parseConstant(StrScanner &scan, Value &val, char delim) const
     const auto fpnum = (err == OK && (*p == '.' || toupper(*p) == 'E')) && delim != '.';
     if (fpnum || err == OVERFLOW_RANGE || err == NOT_AN_EXPECTED) {
         char *end;
-        const auto value = strtod(scan.str(), &end);
+        Value::float_t f80;
+        const auto error = f80.read(scan.str(), &end);
         if (end > scan.str()) {
-            val.setFloat(value);
+            val.setFloat(f80);
             scan = end;
-            return OK;
+            return error == 0 || f80.isSubnormal() ? OK : OVERFLOW_RANGE;
         }
     }
 #endif

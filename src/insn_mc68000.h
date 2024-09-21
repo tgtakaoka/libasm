@@ -75,8 +75,8 @@ struct AsmInsn final : AsmInsnImpl<Config>, EntryInsn {
     void emitOperand32(uint32_t val32) { emitUint32(val32, operandPos()); }
     void emitOperand64(uint64_t val64) { emitUint64(val64, operandPos()); }
 #ifndef LIBASM_ASM_NOFLOAT
-    void emitFloat96(double value) { _insn.emitFloat96Be(value, operandPos()); }
-    void emitPackedBcd96(double value) { _insn.emitPackedBcd96Be(value, operandPos()); }
+    void emitExtendedReal(const float80_t &val80) { _insn.emitFloat96Be(val80, operandPos()); }
+    void emitDecimalString(const float80_t &val80) { _insn.emitPackedBcd96Be(val80, operandPos()); }
 #endif
     uint8_t operandPos() const {
         auto pos = length();

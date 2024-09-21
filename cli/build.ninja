@@ -17,13 +17,14 @@ subninja ${root}/cli/ninja.rules
 subninja ${root}/driver/ninja.rules
 subninja ${root}/src/ninja.rules
 
-build asm: link $
-  asm.o asm_commander.o asm_driver.o asm_directive.o asm_formatter.o $
-  list_formatter.o function_store.o symbol_store.o bin_memory.o $
-  file_printer.o file_reader.o bin_decoder.o bin_encoder.o intel_hex.o $
-  moto_srec.o asm_base.o config_base.o error_reporter.o formatters.o $
-  operators.o option_base.o parsers.o insn_base.o reg_base.o str_buffer.o $
-  str_scanner.o text_common.o value_formatter.o value.o value_parser.o $
+build asm: link asm.o $
+  asm_base.o asm_commander.o asm_directive.o asm_driver.o asm_formatter.o $
+  bin_decoder.o bin_encoder.o bin_memory.o config_base.o error_reporter.o $
+  file_printer.o file_reader.o formatters.o function_store.o insn_base.o $
+  intel_hex.o list_formatter.o moto_srec.o operators.o option_base.o $
+  parsers.o reg_base.o str_buffer.o str_scanner.o symbol_store.o $
+  text_common.o value.o value_formatter.o value_parser.o $
+  fixed64.o float32.o float64.o float80_base.o float80_hard.o float80_soft.o $
   asm_cdp1802.o  reg_cdp1802.o  table_cdp1802.o  text_cdp1802.o  $
   asm_f3850.o    reg_f3850.o    table_f3850.o    text_f3850.o    $
   asm_i8048.o    reg_i8048.o    table_i8048.o    text_i8048.o    $
@@ -50,13 +51,13 @@ build asm: link $
   asm_z80.o      reg_z80.o      table_z80.o      text_z80.o      $
   asm_z8.o       reg_z8.o       table_z8.o       text_z8.o
 
-build dis: link $
-  dis.o dis_commander.o dis_driver.o dis_formatter.o list_formatter.o $
-  bin_memory.o file_printer.o file_reader.o bin_decoder.o bin_encoder.o $
-  intel_hex.o moto_srec.o $
-  dis_base.o config_base.o error_reporter.o formatters.o option_base.o $
-  insn_base.o reg_base.o str_buffer.o str_scanner.o text_common.o $
-  value_formatter.o value.o $
+build dis: link dis.o $
+  bin_decoder.o bin_encoder.o bin_memory.o config_base.o dis_base.o $
+  dis_commander.o dis_driver.o dis_formatter.o error_reporter.o $
+  file_printer.o file_reader.o formatters.o insn_base.o intel_hex.o $
+  list_formatter.o moto_srec.o option_base.o reg_base.o str_buffer.o $
+  str_scanner.o text_common.o value.o value_formatter.o $
+  fixed64.o float32.o float64.o float80_base.o float80_hard.o float80_soft.o $
   dis_cdp1802.o  reg_cdp1802.o  table_cdp1802.o  text_cdp1802.o  $
   dis_f3850.o    reg_f3850.o    table_f3850.o    text_f3850.o    $
   dis_i8048.o    reg_i8048.o    table_i8048.o    text_i8048.o    $

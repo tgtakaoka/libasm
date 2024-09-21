@@ -19,6 +19,7 @@
 
 #include <stdint.h>
 #include "error_reporter.h"
+#include "float80.h"
 
 namespace libasm {
 
@@ -42,7 +43,7 @@ struct Value {
 #else
     using signed_t = int64_t;
     using unsigned_t = uint64_t;
-    using float_t = double;
+    using float_t = float80_t;
     static constexpr auto SIGNED_MAX = INT64_MAX;
     static constexpr auto SIGNED_MIN = INT64_MIN;
     static constexpr auto UNSIGNED_MAX = UINT64_MAX;
@@ -91,7 +92,8 @@ struct Value {
     Value &setInteger(signed_t s);
     Value &setUinteger(unsigned_t s);
 #ifndef LIBASM_ASM_NOFLOAT
-    Value &setFloat(float_t f);
+    Value &setFloat(const float_t &f);
+    Value &setFloat(float_t &&f) { return setFloat(f); }
 #endif
     /** Clear value as undefined */
     Value &clear();
@@ -110,6 +112,8 @@ struct Value {
     bool overflowUint32() const;
     /** Returns true if value is larger than |max| or less than |min| */
     bool overflow(uint32_t max, int32_t min = 0) const;
+    /** Returns true if value is larger than |max| or less than |min| */
+    bool overflowInteger(unsigned_t max, signed_t min = 0) const;
 
     bool negateOverflow() const;
     bool operator==(const Value &rhs) const;
@@ -150,7 +154,7 @@ private:
         unsigned_t _unsigned;
         signed_t _signed;
 #ifndef LIBASM_ASM_NOFLOAT
-        double _float;
+        float_t _float;
 #endif
     };
     ValueType _type;

@@ -24,7 +24,6 @@ namespace libasm {
 
 /** Base class for float80_t */
 struct __float80_base {
-protected:
     static constexpr auto MANT_DIG = 64;
     static constexpr auto MAX_DECIMAL_DIG = 36;  // MANT_DIG=113
     static constexpr auto SGN_MASK = UINT16_C(0x8000);
@@ -33,6 +32,7 @@ protected:
     static constexpr auto SIG_NORM = UINT64_C(0x8000000000000000);
     static constexpr auto SIG_BITS = UINT64_C(0x7FFFFFFFFFFFFFFF);
 
+protected:
     static int_fast16_t exponent(uint16_t tag) { return (tag & EXP_MASK) - EXP_BASE; }
 
     static const char *str(uint16_t tag, uint64_t sig);

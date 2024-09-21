@@ -78,8 +78,8 @@ struct AsmInsn final : public AsmInsnImpl<Config>, EntryInsn {
     void emitOperand16(uint16_t val16) { emitUint16Be(val16, operandPos()); }
     void emitOperand32(uint32_t val32) { emitUint32Be(val32, operandPos()); }
 #ifndef LIBASM_ASM_NOFLOAT
-    void emitOpFloat32(double float64) { emitFloat32Be(float64, operandPos()); }
-    void emitOpFloat64(double float64) { emitFloat64Be(float64, operandPos()); }
+    void emitOpFloat32(const float80_t &val80) { emitFloat32Be(val80, operandPos()); }
+    void emitOpFloat64(const float80_t &val80) { emitFloat64Be(val80, operandPos()); }
 #endif
 
 private:
