@@ -76,6 +76,7 @@ enum Error : uint8_t {
     NOT_AN_EXPECTED = 113,
     MISSING_OPERAND = 114,
     INTEGER_REQUIRED = 115,
+    UNDERFLOW_RANGE = 116,
 
     // AsmDirective
     UNKNOWN_DIRECTIVE = 150,

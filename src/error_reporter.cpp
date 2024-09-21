@@ -122,6 +122,8 @@ const /*PROGMEM*/ char *ErrorReporter::errorText_P(Error error) {
         return PSTR("Missing operand");
     case INTEGER_REQUIRED:
         return PSTR("Integer required");
+    case UNDERFLOW_RANGE:
+        return PSTR("Undeflow range");
 
     // AsmDirective
     case UNKNOWN_DIRECTIVE:

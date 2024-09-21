@@ -16,6 +16,8 @@
 
 #include "insn_base.h"
 #include <math.h>
+#include "float32.h"
+#include "float64.h"
 
 namespace libasm {
 
@@ -82,40 +84,40 @@ Error Insn::emitUint64Le(uint64_t data, uint8_t pos) {
 
 #ifndef LIBASM_ASM_NOFLOAT
 
-Error Insn::emitFloat32Be(double data, uint8_t pos) {
-    union {
-        float float32;
-        uint32_t data32;
-    } bytes;
-    bytes.float32 = data;
-    return emitUint32Be(bytes.data32, pos);
+Error Insn::emitFloat32Be(const float80_t &data, uint8_t pos) {
+    float32_t f32{data};
+    if (f32.isInf() && !data.isInf())
+        setErrorIf(OVERFLOW_RANGE);
+    if (f32.isZero() && !data.isZero())
+        setErrorIf(UNDERFLOW_RANGE);
+    return emitUint32Be(f32.bits(), pos);
 }
 
-Error Insn::emitFloat32Le(double data, uint8_t pos) {
-    union {
-        float float32;
-        uint32_t data32;
-    } bytes;
-    bytes.float32 = data;
-    return emitUint32Le(bytes.data32, pos);
+Error Insn::emitFloat32Le(const float80_t &data, uint8_t pos) {
+    float32_t f32{data};
+    if (f32.isInf() && !data.isInf())
+        setErrorIf(OVERFLOW_RANGE);
+    if (f32.isZero() && !data.isZero())
+        setErrorIf(UNDERFLOW_RANGE);
+    return emitUint32Le(f32.bits(), pos);
 }
 
-Error Insn::emitFloat64Be(double data, uint8_t pos) {
-    union {
-        double float64;
-        uint64_t data64;
-    } bytes;
-    bytes.float64 = data;
-    return emitUint64Be(bytes.data64, pos);
+Error Insn::emitFloat64Be(const float80_t &data, uint8_t pos) {
+    float64_t f64{data};
+    if (f64.isInf() && !data.isInf())
+        setErrorIf(OVERFLOW_RANGE);
+    if (f64.isZero() && !data.isZero())
+        setErrorIf(UNDERFLOW_RANGE);
+    return emitUint64Be(f64.bits(), pos);
 }
 
-Error Insn::emitFloat64Le(double data, uint8_t pos) {
-    union {
-        double float64;
-        uint64_t data64;
-    } bytes;
-    bytes.float64 = data;
-    return emitUint64Le(bytes.data64, pos);
+Error Insn::emitFloat64Le(const float80_t &data, uint8_t pos) {
+    float64_t f64{data};
+    if (f64.isInf() && !data.isInf())
+        setErrorIf(OVERFLOW_RANGE);
+    if (f64.isZero() && !data.isZero())
+        setErrorIf(UNDERFLOW_RANGE);
+    return emitUint64Le(f64.bits(), pos);
 }
 
 namespace {
@@ -131,47 +133,16 @@ uint64_t convert2pbcd(uint64_t bin, uint8_t digits) {
     return pbcd;
 }
 
-struct Float80 {
-    uint16_t tag;
-    uint64_t sig;
-
-    Float80(double value) {
-        union {
-            double f64;
-            uint64_t u64;
-        };
-        f64 = value;
-        uint16_t t = static_cast<uint16_t>(u64 >> 52);
-        uint64_t s = u64 & UINT64_C(0x000FFFFFFFFFFFFF);
-        tag = (t & 0x800) ? 0x8000 : 0;  // sign bit
-        uint16_t exp = t & 0x7FF;
-        if (exp == 0x7FF) {
-            // INF or NAN
-            tag |= 0x7FFF;
-            sig = (s == 0) ? UINT64_C(0x8000000000000000) : UINT64_C(0xC000000000000000);
-        } else {
-            // Normal or Subnormal
-            if (exp != 0) {
-                s |= UINT64_C(0x0010000000000000);  // hidden MSB for normal
-                exp = (exp - 0x3FF) + 0x3FFF;
-            }
-            tag += exp;
-            sig = s << 11;
-        }
-    }
-};
-
 }  // namespace
 
-Error Insn::emitFloat80Le(double value) {
-    Float80 v(value);
-    emitUint64Le(v.sig);
-    emitUint16Le(v.tag);
+Error Insn::emitFloat80Le(const float80_t &value) {
+    emitUint64Le(value.significand());
+    emitUint16Le(value.tag());
     return getError();
 }
 
 Error Insn::emitPackedBcd80Le(int64_t value) {
-    const auto sign = value < 0 ? INT8_MIN : 0;
+    const auto sign = value < 0 ? 0x80 : 0;
     auto u64 = static_cast<uint64_t>(sign ? -value : value);
     for (auto i = 0; i < 9; ++i) {
         uint8_t d = u64 % 10;
@@ -183,41 +154,58 @@ Error Insn::emitPackedBcd80Le(int64_t value) {
     return emitByte(sign);
 }
 
-Error Insn::emitFloat96Be(double value, uint8_t pos) {
-    Float80 v(value);
-    emitUint16Be(v.tag, pos);
+Error Insn::emitFloat96Be(const float80_t &value, uint8_t pos) {
+    emitUint16Be(value.tag(), pos);
     emitUint16Be(0, pos + 2);
-    emitUint64Be(v.sig, pos + 4);
+    emitUint64Be(value.significand(), pos + 4);
     return getError();
 }
 
-Error Insn::emitPackedBcd96Be(double value, uint8_t pos) {
-    Float80 v(value);
-    if (isinf(value)) {
-        emitUint16Be(v.tag | 0x7FFF, pos);
+Error Insn::emitPackedBcd96Be(const float80_t &value, uint8_t pos) {
+    if (value.isInf()) {
+    infinity:
+        const auto tag = (value.tag() & float80_t::SGN_MASK) | float80_t::EXP_MASK;
+        emitUint16Be(tag, pos);
         emitUint16Be(0, pos += 2);
         emitUint64Be(0, pos += 2);
-    } else if (isnan(value)) {
-        emitUint16Be(v.tag | 0x7FFF, pos);
+    } else if (value.isNan()) {
+    not_a_number:
+        const auto tag = (value.tag() & float80_t::SGN_MASK) | float80_t::EXP_MASK;
+        emitUint16Be(tag, pos);
         emitUint16Be(0, pos += 2);
-        // MSB: don't care, MSB-1: 0=sNan, 1=qNan
-        emitUint64Be(UINT64_C(0xC000000000000000), pos += 2);  // qNaN
+        emitUint64Be(UINT64_C(0xC000000000000000), pos += 2);
     } else {
-        if (value < 0)
-            value = -value;
-        auto exp10 = static_cast<int16_t>(log10(value));
-        if (exp10 < 0 || (exp10 == 0 && value < 1.0))
-            --exp10;
-        uint8_t digit = value * pow(10.0, -exp10);
-        v.sig = value * pow(10.0, 16 - exp10);
-        auto sign = v.tag & 0x8000;
+        uint_fast16_t sign = value.isNegative() ? 0x8000 : 0x0000;
+        int_fast16_t exp10;
+        fixed64_t sig;
+        auto exp = value.decompose(sig, exp10);
+        const auto ndigits = 17;
+        uint8_t digits[ndigits];
+        if (sig.decompose(exp, digits, ndigits))
+            ++exp10;
+        if (exp >= 1000) {
+            setErrorIf(OVERFLOW_RANGE);
+            goto infinity;
+        }
+        if (exp <= -1000) {
+            setErrorIf(UNDERFLOW_RANGE);
+            goto not_a_number;
+        }
         if (exp10 < 0) {
             sign |= 0x4000;
             exp10 = -exp10;
         }
         emitUint16Be(sign | convert2pbcd(exp10, 3), pos);
-        emitUint16Be(digit, pos += 2);
-        emitUint64Be(convert2pbcd(v.sig, 16), pos += 2);
+        emitByte(0, pos += 2);
+        uint_fast8_t data = 0;
+        for (auto i = 0; i < ndigits; ++i) {
+            if (i % 2 == 0) {
+                data |= digits[i];
+                emitByte(data, ++pos);
+            } else {
+                data = digits[i] << 4;
+            }
+        }
     }
     return getError();
 }
@@ -275,40 +263,24 @@ uint64_t DisInsnBase::readUint64Le() {
     return static_cast<uint64_t>(msw) << 32 | lsw;
 }
 
-double DisInsnBase::readFloat32Be() {
-    union {
-        float float32;
-        uint32_t data32;
-    } bytes;
-    bytes.data32 = readUint32Be();
-    return bytes.float32;
+float80_t DisInsnBase::readFloat32Be() {
+    float32_t f32;
+    return float80_t(f32.set(readUint32Be()));
 }
 
-double DisInsnBase::readFloat32Le() {
-    union {
-        float float32;
-        uint32_t data32;
-    } bytes;
-    bytes.data32 = readUint32Le();
-    return bytes.float32;
+float80_t DisInsnBase::readFloat32Le() {
+    float32_t f32;
+    return float80_t(f32.set(readUint32Le()));
 }
 
-double DisInsnBase::readFloat64Be() {
-    union {
-        double float64;
-        uint64_t data64;
-    } bytes;
-    bytes.data64 = readUint64Be();
-    return bytes.float64;
+float80_t DisInsnBase::readFloat64Be() {
+    float64_t f64;
+    return float80_t(f64.set(readUint64Be()));
 }
 
-double DisInsnBase::readFloat64Le() {
-    union {
-        double float64;
-        uint64_t data64;
-    } bytes;
-    bytes.data64 = readUint64Le();
-    return bytes.float64;
+float80_t DisInsnBase::readFloat64Le() {
+    float64_t f64;
+    return float80_t(f64.set(readUint64Le()));
 }
 
 }  // namespace libasm

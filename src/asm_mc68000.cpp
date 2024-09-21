@@ -311,10 +311,10 @@ void AsmMc68000::encodeImmediate(AsmInsn &insn, const Operand &op, OprSize size)
         insn.emitFloat64(op.val.getFloat(), insn.operandPos());
         break;
     case SZ_XTND:
-        insn.emitFloat96(op.val.getFloat());
+        insn.emitExtendedReal(op.val.getFloat());
         break;
     case SZ_PBCD: {
-        insn.emitPackedBcd96(op.val.getFloat());
+        insn.emitDecimalString(op.val.getFloat());
         break;
     }
 #endif

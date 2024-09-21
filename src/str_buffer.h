@@ -19,6 +19,7 @@
 #include <ctype.h>
 #include <stdint.h>
 #include "error_reporter.h"
+#include "float80.h"
 #include "str_scanner.h"
 #include "type_traits.h"
 
@@ -118,19 +119,19 @@ struct StrBuffer : ErrorReporter {
      * Output |value| as 32-bit floating point number.
      * Significand is 23+1 bit and UINT24_MAX is 16777215 (8 digits).
      */
-    StrBuffer &float32(float f32, uint_fast8_t prec = 9);
+    StrBuffer &float32(const float80_t &f80, uint_fast8_t prec = 9);
 
     /**
      * Output |value| as 64-bit floating point number.
      * Significand is 52+1 bit and UINT53_MAX is 9007199254740991 (16 digits)
      */
-    StrBuffer &float64(double f64, uint_fast8_t prec = 17);
+    StrBuffer &float64(const float80_t &f80, uint_fast8_t prec = 17);
 
     /**
      * Output |value| as 80-bit floating point number.
      * Significandis 64 bit and UINT64_MAX is 18446744073709551615 (20 digits)
      */
-    StrBuffer &float80(int16_t exponent, uint64_t mantissa, uint_fast8_t prec = 21);
+    StrBuffer &float80(const float80_t &f80, uint_fast8_t prec = 21);
 
     /** output ", " */
     StrBuffer &comma();

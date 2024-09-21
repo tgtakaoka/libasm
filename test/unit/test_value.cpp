@@ -17,9 +17,19 @@
 #include "str_scanner.h"
 #include "test_unit_helper.h"
 #include "value.h"
+#include <string>
+
+#define SEQ(msg, expected, actual)        \
+    do {                                  \
+        std::string e = (expected).str(); \
+        std::string a = (actual).str();   \
+        EQ(msg, e.c_str(), a.c_str());    \
+    } while (0)
 
 namespace libasm {
 namespace test {
+
+using f80 = Value::float_t;
 
 void set_up() {}
 
@@ -138,8 +148,9 @@ void test_setget() {
     TRUE("clear", si.isUndefined());
 
 #ifndef ASM_NOFLOAT
+    Value::float_t v;
     Value f;
-    f.setFloat(0.0);
+    f.setFloat(v.read("0.0"));
     FALSE("f", f.isUndefined());
     FALSE("f", f.isUnsigned());
     FALSE("f", f.isSigned());
@@ -147,14 +158,14 @@ void test_setget() {
     TRUE("f", f.isFloat());
     TRUE("f", f.isZero());
     FALSE("f", f.isNegative());
-    TRUE("f", Value::float_t(0.0) == f.getFloat());
+    TRUE("f", f.getFloat().isZero());
 
     f.setUinteger(UINT64_MAX);
     FALSE("f", f.isNegative());
-    TRUE("f", Value::float_t(UINT64_MAX) == f.getFloat());
+    SEQ("f", v.set(UINT64_MAX), f.getFloat());
     f.setInteger(INT64_MIN);
     TRUE("f", f.isNegative());
-    TRUE("f", Value::float_t(INT64_MIN) == f.getFloat());
+    SEQ("f", v.set(INT64_MIN), f.getFloat());
 #endif
 }
 
@@ -346,6 +357,15 @@ void test_bool() {
     FALSE("f||f", f || f);
 }
 
+#define read_float(str)                                           \
+    ({                                                            \
+        char *end;                                                \
+        const auto error = v.read(str, &end);                     \
+        asserter.equals(__FILE__, __LINE__, "errno", 0, error);   \
+        asserter.not_equals(__FILE__, __LINE__, "end", str, end); \
+        v;                                                        \
+    })
+
 void test_arithmetic() {
     Value p1, m1, p2, m2, p6, m6, p10, m10;
     p1.setSigned(1);
@@ -408,49 +428,50 @@ void test_arithmetic() {
     EQ("-10%(-6)", -4, (m10 % m6).getSigned());
 
 #ifndef ASM_NOFLOAT
+    Value::float_t v;
     Value p05, m05, p3, m3;
     p1.setSigned(1);
     m1.setSigned(-1);
-    p05.setFloat(0.5);
-    m05.setFloat(-0.5);
+    p05.setFloat(read_float("0.5"));
+    m05.setFloat(read_float("-0.5"));
     p3.setSigned(3);
     m3.setSigned(-3);
 
-    TRUE("1+0.5", Value::float_t(1.5) == (p1 + p05).getFloat());
-    TRUE("0.5+1", Value::float_t(1.5) == (p05 + p1).getFloat());
-    TRUE("-1+0.5", Value::float_t(-0.5) == (m1 + p05).getFloat());
-    TRUE("0.5+(-1)", Value::float_t(-0.5) == (p05 + m1).getFloat());
-    TRUE("1+(-0.5)", Value::float_t(0.5) == (p1 + m05).getFloat());
-    TRUE("-0.5+1", Value::float_t(0.5) == (m05 + p1).getFloat());
-    TRUE("-1+(-0.5)", Value::float_t(-1.5) == (m1 + m05).getFloat());
-    TRUE("-0.5+(-1)", Value::float_t(-1.5) == (m05 + m1).getFloat());
+    TRUE("1+0.5", read_float("1.5") == (p1 + p05).getFloat());
+    TRUE("0.5+1", read_float("1.5") == (p05 + p1).getFloat());
+    TRUE("-1+0.5", read_float("-0.5") == (m1 + p05).getFloat());
+    TRUE("0.5+(-1)", read_float("-0.5") == (p05 + m1).getFloat());
+    TRUE("1+(-0.5)", read_float("0.5") == (p1 + m05).getFloat());
+    TRUE("-0.5+1", read_float("0.5") == (m05 + p1).getFloat());
+    TRUE("-1+(-0.5)", read_float("-1.5") == (m1 + m05).getFloat());
+    TRUE("-0.5+(-1)", read_float("-1.5") == (m05 + m1).getFloat());
 
-    TRUE("1-0.5", Value::float_t(0.5) == (p1 - p05).getFloat());
-    TRUE("0.5-1", Value::float_t(-0.5) == (p05 - p1).getFloat());
-    TRUE("-1-0.5", Value::float_t(-1.5) == (m1 - p05).getFloat());
-    TRUE("0.5-(-1)", Value::float_t(1.5) == (p05 - m1).getFloat());
-    TRUE("1-(-0.5)", Value::float_t(1.5) == (p1 - m05).getFloat());
-    TRUE("-0.5-1", Value::float_t(-1.5) == (m05 - p1).getFloat());
-    TRUE("-1-(-0.5)", Value::float_t(-0.5) == (m1 - m05).getFloat());
-    TRUE("-0.5-(-1)", Value::float_t(0.5) == (m05 - m1).getFloat());
+    TRUE("1-0.5", read_float("0.5") == (p1 - p05).getFloat());
+    TRUE("0.5-1", read_float("-0.5") == (p05 - p1).getFloat());
+    TRUE("-1-0.5", read_float("-1.5") == (m1 - p05).getFloat());
+    TRUE("0.5-(-1)", read_float("1.5") == (p05 - m1).getFloat());
+    TRUE("1-(-0.5)", read_float("1.5") == (p1 - m05).getFloat());
+    TRUE("-0.5-1", read_float("-1.5") == (m05 - p1).getFloat());
+    TRUE("-1-(-0.5)", read_float("-0.5") == (m1 - m05).getFloat());
+    TRUE("-0.5-(-1)", read_float("0.5") == (m05 - m1).getFloat());
 
-    TRUE("3*0.5", Value::float_t(1.5) == (p3 * p05).getFloat());
-    TRUE("0.5*3", Value::float_t(1.5) == (p05 * p3).getFloat());
-    TRUE("-3*0.5", Value::float_t(-1.5) == (m3 * p05).getFloat());
-    TRUE("0.5*(-3)", Value::float_t(-1.5) == (p05 * m3).getFloat());
-    TRUE("3*(-0.5)", Value::float_t(-1.5) == (p3 * m05).getFloat());
-    TRUE("-0.5*3", Value::float_t(-1.5) == (m05 * p3).getFloat());
-    TRUE("-3*(-0.5)", Value::float_t(1.5) == (m3 * m05).getFloat());
-    TRUE("-0.5*(-3)", Value::float_t(1.5) == (m05 * m3).getFloat());
+    TRUE("3*0.5", read_float("1.5") == (p3 * p05).getFloat());
+    TRUE("0.5*3", read_float("1.5") == (p05 * p3).getFloat());
+    TRUE("-3*0.5", read_float("-1.5") == (m3 * p05).getFloat());
+    TRUE("0.5*(-3)", read_float("-1.5") == (p05 * m3).getFloat());
+    TRUE("3*(-0.5)", read_float("-1.5") == (p3 * m05).getFloat());
+    TRUE("-0.5*3", read_float("-1.5") == (m05 * p3).getFloat());
+    TRUE("-3*(-0.5)", read_float("1.5") == (m3 * m05).getFloat());
+    TRUE("-0.5*(-3)", read_float("1.5") == (m05 * m3).getFloat());
 
-    TRUE("2/0.5", Value::float_t(4.0) == (p2 / p05).getFloat());
-    TRUE("0.5/2", Value::float_t(0.25) == (p05 / p2).getFloat());
-    TRUE("-2/0.5", Value::float_t(-4.0) == (m2 / p05).getFloat());
-    TRUE("0.5/(-2)", Value::float_t(-0.25) == (p05 / m2).getFloat());
-    TRUE("2/(-0.5)", Value::float_t(-4.0) == (p2 / m05).getFloat());
-    TRUE("-0.5/2", Value::float_t(-0.25) == (m05 / p2).getFloat());
-    TRUE("-2/(-0.5)", Value::float_t(4.0) == (m2 / m05).getFloat());
-    TRUE("-0.5/(-2)", Value::float_t(0.25) == (m05 / m2).getFloat());
+    TRUE("2/0.5", read_float("4.0") == (p2 / p05).getFloat());
+    TRUE("0.5/2", read_float("0.25") == (p05 / p2).getFloat());
+    TRUE("-2/0.5", read_float("-4.0") == (m2 / p05).getFloat());
+    TRUE("0.5/(-2)", read_float("-0.25") == (p05 / m2).getFloat());
+    TRUE("2/(-0.5)", read_float("-4.0") == (p2 / m05).getFloat());
+    TRUE("-0.5/2", read_float("-0.25") == (m05 / p2).getFloat());
+    TRUE("-2/(-0.5)", read_float("4.0") == (m2 / m05).getFloat());
+    TRUE("-0.5/(-2)", read_float("0.25") == (m05 / m2).getFloat());
 #endif
 }
 

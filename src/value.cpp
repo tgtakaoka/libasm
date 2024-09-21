@@ -80,7 +80,7 @@ const char *Value::str() const {
         out.text("<s>").hex(_signed).letter('(').dec(_signed).letter(')');
 #ifndef ASM_NOFLOAT
     } else if (_type == V_FLOAT) {
-        out.text("<f>").hex(_unsigned).letter('(').float64(_float).letter(')');
+        out.text("<f>").hex(_unsigned).letter('(').float80(_float).letter(')');
 #endif
     } else {
         return "<undef>";
@@ -142,14 +142,18 @@ bool Value::isFloat() const {
 }
 
 Value::float_t Value::getFloat() const {
-    if (isUnsigned())
-        return static_cast<float_t>(_unsigned);
-    if (isSigned())
-        return static_cast<float_t>(_signed);
+    if (isUnsigned()) {
+        float_t v;
+        return v.set(_unsigned);
+    }
+    if (isSigned()) {
+        float_t v;
+        return v.set(_signed);
+    }
     return _float;
 }
 
-Value &Value::setFloat(float_t f) {
+Value &Value::setFloat(const float_t &f) {
     _float = f;
     _type = V_FLOAT;
     return *this;
@@ -212,6 +216,14 @@ bool Value::overflow(uint32_t max, int32_t min) const {
         const auto s = static_cast<int32_t>(_signed);
         return (max <= INT32_MAX && s > static_cast<int32_t>(max)) || s < min;
     }
+}
+
+bool Value::overflowInteger(unsigned_t max, signed_t min) const {
+    if (isUnsigned())
+        return _unsigned > max;
+    if (isSigned())
+        return (max <= SIGNED_MAX && _signed > static_cast<signed_t>(max)) || _signed < min;
+    return false;
 }
 
 bool Value::isZero() const {
