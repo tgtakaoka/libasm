@@ -57,7 +57,7 @@
 
 # MC68000 target
 %_mc68000.s28: %_mc68000.gas
-	m68k-elf-as -m68000 --warn --register-prefix-optional \
+	m68k-elf-as -m68000 -m68881 --warn --register-prefix-optional \
 		--base-size-default-16 -o $(@:.s28=.p) -al=$(@:.s28=.lst) $^
 	m68k-elf-ld --entry=0 -o $(@:.s28=.o) $(@:.s28=.p)
 	m68k-elf-objcopy -I elf32-m68k -O srec --srec-len=16 \
