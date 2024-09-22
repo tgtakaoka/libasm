@@ -27,13 +27,34 @@ namespace mc68000 {
 using namespace reg;
 using namespace text::common;
 
+namespace {
+
+const char OPT_BOOL_BINARY_FLOAT[] PROGMEM = "gnu-as";
+const char OPT_DESC_BINARY_FLOAT[] PROGMEM = "GNU assembler compatible";
+
+}  // namespace
+
 const ValueFormatter::Plugins &DisMc68000::defaultPlugins() {
     return ValueFormatter::Plugins::motorola();
 }
 
 DisMc68000::DisMc68000(const ValueFormatter::Plugins &plugins)
-    : Disassembler(plugins), Config(TABLE) {
+    : Disassembler(plugins, &_opt_gnuAs),
+      Config(TABLE),
+      _opt_gnuAs(this, &DisMc68000::setGnuAs, OPT_BOOL_BINARY_FLOAT, OPT_DESC_BINARY_FLOAT) {
     reset();
+}
+
+void DisMc68000::reset() {
+    Disassembler::reset();
+    setGnuAs(false);
+}
+
+Error DisMc68000::setGnuAs(bool enable) {
+    _gnuAs = enable;
+    setCStyle(enable);
+    setCurSym(enable ? '.' : 0);
+    return OK;
 }
 
 namespace {
@@ -47,6 +68,11 @@ StrBuffer &outOprSize(StrBuffer &out, OprSize size) {
 
 }  // namespace
 
+StrBuffer &DisMc68000::outHex32(StrBuffer &out, uint32_t val) const {
+    StrCaseBuffer caseOut(out, _upperHex);
+    return HexFormatter::singleton().format(caseOut, val, 32).over(out);
+}
+
 void DisMc68000::decodeImmediateData(DisInsn &insn, StrBuffer &out, OprSize size) const {
     out.letter('#');
     if (size == SZ_BYTE || insn.src() == M_CCR || insn.dst() == M_CCR) {
@@ -55,6 +81,13 @@ void DisMc68000::decodeImmediateData(DisInsn &insn, StrBuffer &out, OprSize size
         outHex(out, insn.readUint16(), 16);
     } else if (size == SZ_LONG) {
         outHex(out, insn.readUint32(), 32);
+    } else if (_gnuAs) {
+        outHex(out, insn.readUint32(), 32);
+        if (size != SZ_SNGL) {
+            outHex32(out, insn.readUint32());
+            if (size != SZ_DUBL)
+                outHex32(out, insn.readUint32());
+        }
     } else if (size == SZ_SNGL) {
         out.float32(insn.readFloat32());
     } else if (size == SZ_DUBL) {
@@ -206,7 +239,7 @@ void DisMc68000::decodeEffectiveAddr(
                 (mode == M_AWORD) ? static_cast<int16_t>(insn.readUint16()) : insn.readUint32();
         if (size != SZ_BYTE && (target % 2) != 0)
             insn.setErrorIf(out, OPERAND_NOT_ALIGNED);
-        outAbsAddr(out.letter('('), target);
+        outAbsAddr(out.letter('('), target, _gnuAs ? 16 : 0);
     } else if (mode == M_INDX || mode == M_PCIDX) {
         const auto base = (mode == M_INDX) ? reg : REG_PC;
         BriefExt ext;
@@ -241,12 +274,16 @@ void DisMc68000::decodeRelative(DisInsn &insn, StrBuffer &out, AddrMode mode) co
         mode = M_REL16;
     if (mode == M_REL32) {
         const auto delta = static_cast<int32_t>(insn.readUint32());
+        auto save{out};
+        insn.nameBuffer().over(out);
         if (!overflowDelta(delta, 16)) {
-            auto save{out};
-            insn.nameBuffer().over(out);
-            out.letter('.').letter('L').over(insn.nameBuffer());
-            save.over(out);
+            if (!_gnuAs)
+                out.letter('.').letter('L');
         }
+        if (_gnuAs)
+            out.letter('L');
+        out.over(insn.nameBuffer());
+        save.over(out);
         const auto target = base + delta;
         insn.setErrorIf(out, checkAddr(target, true));
         outRelAddr(out, target, insn.address(), insn.isOK() ? addressWidth() : 32);
@@ -254,10 +291,17 @@ void DisMc68000::decodeRelative(DisInsn &insn, StrBuffer &out, AddrMode mode) co
     }
     const auto rel8 = (mode == M_REL8) ? static_cast<int8_t>(insn.opCode() & 0xFF) : 0;
     const auto delta = rel8 ? static_cast<int8_t>(rel8) : static_cast<int16_t>(insn.readUint16());
-    if (mode == M_REL8 && rel8 == 0 && !overflowDelta(delta, 8)) {
+    if (mode == M_REL8) {
         auto save{out};
         insn.nameBuffer().over(out);
-        out.letter('.').letter('W').over(insn.nameBuffer());
+        if (_gnuAs) {
+            if (rel8)
+                out.letter('S');
+        } else {
+            if (rel8 == 0 && !overflowDelta(delta, 8))
+                out.letter('.').letter('W');
+        }
+        out.over(insn.nameBuffer());
         save.over(out);
     }
     const auto target = base + delta;
@@ -647,7 +691,9 @@ Error DisMc68000::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) con
     if (suffix) {
         auto save{out};
         insn.nameBuffer().over(out);
-        out.letter('.').letter(suffix).over(insn.nameBuffer());
+        if (!_gnuAs)
+            out.letter('.');
+        out.letter(suffix).over(insn.nameBuffer());
         save.over(out);
     }
 

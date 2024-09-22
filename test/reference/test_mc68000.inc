@@ -48,7 +48,7 @@
 ;#       ori.l   #5,(*,pc)
 ;#       ori.l   #5,(*,pc,d3)
 
-        .align  32
+;#       .align  32
         andi.b  #5,ccr
         andi.b  #5,d1
 ;#       andi.b  #5,a2
@@ -85,7 +85,7 @@
 ;#       andi.l  #5,(*,pc)
 ;#       andi.l  #5,(*,pc,d3)
 
-        .align  32
+;#       .align  32
         subi.b  #0x56,d1
 ;#       subi.b  #0x55,a2
         subi.b  #0x56,(a3)
@@ -120,7 +120,7 @@
 ;#       subi.l  #0x56,(*,pc)
 ;#       subi.l  #0x56,(*,pc,d3)
 
-        .align  32
+;#       .align  32
         addi.b  #0x56,d1
 ;#       addi.b  #0x56,a2
         addi.b  #0x56,(a3)
@@ -155,7 +155,7 @@
 ;#       addi.l  #0x56,(*,pc)
 ;#       addi.l  #0x56,(*,pc,d3)
 
-        .align  32
+;#       .align  32
         eori.b  #0x56,ccr
         eori.b  #0x56,d1
 ;#       eori.b  #0x56,a2
@@ -192,7 +192,7 @@
 ;#       eori.l  #0x56,(*,pc)
 ;#       eori.l  #0x56,(*,pc,d3)
 
-        .align  32
+;#       .align  32
         cmpi.b  #0x56,d1
 ;#       cmpi.b  #0x56,a2
         cmpi.b  #0x56,(a3)
@@ -227,7 +227,7 @@
 ;#       cmpi.l  #0x56,(*,pc)
 ;#       cmpi.l  #0x56,(*,pc,d3)
 
-        .align  32
+;#       .align  32
         bchg.l  #5,d1
 ;#       bchg.l  #5,a2
         bchg.b  #5,(a3)
@@ -251,7 +251,7 @@
 ;#       bchg.b  d2,(*,pc)
 ;#       bchg.b  d2,(*,pc,d4)
 
-        .align  32
+;#       .align  32
         bclr.l  #5,d1
 ;#       bclr.b  #5,a2
         bclr.b  #5,(a3)
@@ -275,7 +275,7 @@
 ;#       bclr.b  d2,(*,pc)
 ;#       bclr.b  d2,(*,pc,d4)
 
-        .align  32
+;#       .align  32
         bset.l  #5,d1
 ;#       bset.b  #5,a2
         bset.b  #5,(a3)
@@ -299,7 +299,7 @@
 ;#       bset.b  d2,(*,pc)
 ;#       bset.b  d2,(*,pc,d4)
 
-        .align  32
+;#       .align  32
         btst.l  #5,d1
 ;#       btst.b  #5,a2
         btst.b  #5,(a3)
@@ -323,13 +323,13 @@
         btst.b  d2,(*,pc)
         btst.b  d2,(*,pc,d4)
 
-        .align  32
+;#       .align  32
         movep.w d2,(4,a6)
         movep.w (4,a6),d1
         movep.l d2,(4,a6)
         movep.l (4,a6),d1
 
-        .align  32
+;#       .align  32
         movea.w d2,a2
         movea.w a4,a2
         movea.w (a3),a2
@@ -355,7 +355,7 @@
         movea.l (*-2,pc),a2
         movea.l (*,pc,d3),a2
 
-        .align  32
+;#       .align  32
         move.w  sr,d1
 ;#       move.w  sr,a2
         move.w  sr,(a3)
@@ -368,7 +368,7 @@
 ;#       move.w  sr,(*,pc)
 ;#       move.w  sr,(*,pc,d3)
 
-        .align  32
+;#       .align  32
         move.w  d1,ccr
 ;#       move.w  a2,ccr
         move.w  (a3),ccr
@@ -382,7 +382,7 @@
         move.w  (*,pc),ccr
         move.w  (*,pc,d3),ccr
 
-        .align  32
+;#       .align  32
         move.w  d1,sr
 ;#       move.w  a2,sr
         move.w  (a3),sr
@@ -396,7 +396,7 @@
         move.w  (*,pc),sr
         move.w  (*,pc,d3),sr
 
-        .align  32
+;#       .align  32
         move.b  d2,d1
 ;#       move.b  a4,d1
         move.b  (a3),d1
@@ -500,7 +500,7 @@
         move.b  (*,pc),(8).l
         move.b  (*,pc,d3),(8).l
 
-        .align  32
+;#       .align  32
         move.w  d2,d1
         move.w  a4,d1
         move.w  (a3),d1
@@ -604,7 +604,7 @@
         move.w  (*,pc),(8).l
         move.w  (*,pc,d3),(8).l
 
-        .align  32
+;#       .align  32
         move.l  d2,d1
         move.l  a4,d1
         move.l  (a3),d1
@@ -708,7 +708,7 @@
         move.l  (*,pc),(8).l
         move.l  (*,pc,d3),(8).l
 
-        .align  32
+;#       .align  32
         negx.b  d1
 ;#       negx.b  a2
         negx.b  (a3)
@@ -743,7 +743,7 @@
 ;#       negx.l  (*,pc)
 ;#       negx.l  (*,pc,d3)
 
-        .align  32
+;#       .align  32
         clr.b   d1
 ;#       clr.b   a2
         clr.b   (a3)
@@ -778,7 +778,7 @@
 ;#       clr.l   (*,pc)
 ;#       clr.l   (*,pc,d3)
 
-        .align  32
+;#       .align  32
         neg.b   d1
 ;#       neg.b   a2
         neg.b   (a3)
@@ -813,7 +813,7 @@
 ;#       neg.l   (*,pc)
 ;#       neg.l   (*,pc,d3)
 
-        .align  32
+;#       .align  32
         not.b   d1
 ;#       not.b   a2
         not.b   (a3)
@@ -848,11 +848,11 @@
 ;#       not.l   (*,pc)
 ;#       not.l   (*,pc,d3)
 
-        .align  32
+;#       .align  32
         ext.w   d1
         ext.l   d1
 
-        .align  32
+;#       .align  32
         nbcd.b  d1
 ;#       nbcd.b  a2
         nbcd.b  (a3)
@@ -865,11 +865,11 @@
 ;#       nbcd.b  (*,pc)
 ;#       nbcd.b  (*,pc,d3)
 
-        .align  32
+;#       .align  32
         swap    d1
         swap.l  d1
 
-        .align  32
+;#       .align  32
 ;#       pea.l   d1
 ;#       pea.l   a2
         pea     (a3)
@@ -884,7 +884,7 @@
         pea.l   (*-6,pc)
         pea.l   (*,pc,d3)
 
-        .align  32
+;#       .align  32
         tas.b   d1
 ;#       tas.b   a2
         tas.b   (a3)
@@ -897,7 +897,7 @@
 ;#       tas.b   (*,pc)
 ;#       tas.b   (*,pc,d3)
 
-        .align  32
+;#       .align  32
         tst.b   d1
 ;#       tst.b   a2
         tst.b   (a3)
@@ -935,7 +935,7 @@
 ;#       tst.l   (*,pc)
 ;#       tst.l   (*,pc,d3)
 
-        .align  32
+;#       .align  32
         illegal
         trap    #5
         link    a1,#5
@@ -950,7 +950,7 @@
         trapv
         rtr
 
-        .align  32
+;#       .align  32
 ;#       jsr     d1
 ;#       jsr     a2
         jsr     (a3)
@@ -964,7 +964,7 @@
         jsr     (*,pc)
         jsr     (*,pc,d3)
 
-        .align  32
+;#       .align  32
 ;#       jmp     d1
 ;#       jmp     a2
         jmp     (a3)
@@ -978,7 +978,7 @@
         jmp     (*,pc)
         jmp     (*,pc,d3)
 
-        .align  32
+;#       .align  32
         movem.w d0-d7,(a3)
 ;#       movem.w d0-d7,(a4)+
         movem.w d0-d7,-(a5)
@@ -1017,7 +1017,7 @@
         movem.l (*,pc),d0-d7/a0-a7
         movem.l (*,pc,d2),d0-d7/a0-a7
 
-        .align  32
+;#       .align  32
 ;#       lea.l   d1,a2
 ;#       lea.l   a2,a2
         lea.l   (a3),a2
@@ -1031,7 +1031,7 @@
         lea.l   (*,pc),a2
         lea.l   (*,pc,d3),a2
 
-        .align  32
+;#       .align  32
         chk.w   d2,d1
 ;#       chk.w   a4,d1
         chk.w   (a3),d1
@@ -1045,7 +1045,7 @@
         chk.w   (*,pc),d1
         chk.w   (*,pc,d3),d1
 
-        .align  32
+;#       .align  32
         addq.b  #5,d1
 ;#       addq.b  #5,a2
         addq.b  #5,(a3)
@@ -1080,7 +1080,7 @@
 ;#       addq.l  #5,(*,pc)
 ;#       addq.l  #5,(*,pc,d3)
 
-        .align  32
+;#       .align  32
         subq.b  #5,d1
 ;#       subq.b  #5,a2
         subq.b  #5,(a3)
@@ -1115,7 +1115,7 @@
 ;#       subq.l  #5,(*,pc)
 ;#       subq.l  #5,(*,pc,d3)
 
-        .align  32
+;#       .align  32
         st.b    d1
 ;#       st.b    a2
         st.b    (a3)
@@ -1128,7 +1128,7 @@
 ;#       st.b    (*,pc)
 ;#       st.b    (*,pc,d3)
 
-        .align  32
+;#       .align  32
         sf.b    d1
 ;#       sf.b    a2
         sf.b    (a3)
@@ -1141,7 +1141,7 @@
 ;#       sf.b    (*,pc)
 ;#       sf.b    (*,pc,d3)
 
-        .align  32
+;#       .align  32
         shi.b   d1
 ;#       shi.b   a2
         shi.b   (a3)
@@ -1154,7 +1154,7 @@
 ;#       shi.b   (*,pc)
 ;#       shi.b   (*,pc,d3)
 
-        .align  32
+;#       .align  32
         sls.b   d1
 ;#       sls.b   a2
         sls.b   (a3)
@@ -1167,7 +1167,7 @@
 ;#       sls.b   (*,pc)
 ;#       sls.b   (*,pc,d3)
 
-        .align  32
+;#       .align  32
         scc.b   d1
 ;#       scc.b   a2
         scc.b   (a3)
@@ -1180,7 +1180,7 @@
 ;#       scc.b   (*,pc)
 ;#       scc.b   (*,pc,d3)
 
-        .align  32
+;#       .align  32
         scs.b   d1
 ;#       scs.b   a2
         scs.b   (a3)
@@ -1193,7 +1193,7 @@
 ;#       scs.b   (*,pc)
 ;#       scs.b   (*,pc,d3)
 
-        .align  32
+;#       .align  32
         sls.b   d1
 ;#       sls.b   a2
         sls.b   (a3)
@@ -1206,7 +1206,7 @@
 ;#       sls.b   (*,pc)
 ;#       sls.b   (*,pc,d3)
 
-        .align  32
+;#       .align  32
         sne.b   d1
 ;#       sne.b   a2
         sne.b   (a3)
@@ -1219,7 +1219,7 @@
 ;#       sne.b   (*,pc)
 ;#       sne.b   (*,pc,d3)
 
-        .align  32
+;#       .align  32
         seq.b   d1
 ;#       seq.b   a2
         seq.b   (a3)
@@ -1232,7 +1232,7 @@
 ;#       seq.b   (*,pc)
 ;#       seq.b   (*,pc,d3)
 
-        .align  32
+;#       .align  32
         svc.b   d1
 ;#       svc.b   a2
         svc.b   (a3)
@@ -1245,7 +1245,7 @@
 ;#       svc.b   (*,pc)
 ;#       svc.b   (*,pc,d3)
 
-        .align  32
+;#       .align  32
         svs.b   d1
 ;#       svs.b   a2
         svs.b   (a3)
@@ -1258,7 +1258,7 @@
 ;#       svs.b   (*,pc)
 ;#       svs.b   (*,pc,d3)
 
-        .align  32
+;#       .align  32
         spl.b   d1
 ;#       spl.b   a2
         spl.b   (a3)
@@ -1271,7 +1271,7 @@
 ;#       spl.b   (*,pc)
 ;#       spl.b   (*,pc,d3)
 
-        .align  32
+;#       .align  32
         smi.b   d1
 ;#       smi.b   a2
         smi.b   (a3)
@@ -1284,7 +1284,7 @@
 ;#       smi.b   (*,pc)
 ;#       smi.b   (*,pc,d3)
 
-        .align  32
+;#       .align  32
         sge.b   d1
 ;#       sge.b   a2
         sge.b   (a3)
@@ -1297,7 +1297,7 @@
 ;#       sge.b   (*,pc)
 ;#       sge.b   (*,pc,d3)
 
-        .align  32
+;#       .align  32
         slt.b   d1
 ;#       slt.b   a2
         slt.b   (a3)
@@ -1310,7 +1310,7 @@
 ;#       slt.b   (*,pc)
 ;#       slt.b   (*,pc,d3)
 
-        .align  32
+;#       .align  32
         sgt.b   d1
 ;#       sgt.b   a2
         sgt.b   (a3)
@@ -1323,7 +1323,7 @@
 ;#       sgt.b   (*,pc)
 ;#       sgt.b   (*,pc,d3)
 
-        .align  32
+;#       .align  32
         sle.b   d1
 ;#       sle.b   a2
         sle.b   (a3)
@@ -1336,7 +1336,7 @@
 ;#       sle.b   (*,pc)
 ;#       sle.b   (*,pc,d3)
 
-        .align  32
+;#       .align  32
         dbt     d1,*
         dbra    d1,*
         dbf     d1,*
@@ -1357,7 +1357,7 @@
         dbgt    d1,*
         dble    d1,*
 
-        .align  32
+;#       .align  32
         bra.b   *
         bra.w   *
         bsr.b   *
@@ -1395,10 +1395,10 @@
         ble.b   *
         ble.w   *
 
-        .align  32
+;#       .align  32
         moveq.l #5,d1
 
-        .align  32
+;#       .align  32
         divu.w  d2,d1
 ;#       divu.w  a4,d1
         divu.w  (a3),d1
@@ -1412,7 +1412,7 @@
         divu.w  (*,pc),d1
         divu.w  (*,pc,d3),d1
 
-        .align  32
+;#       .align  32
         divs.w  d2,d1
 ;#       divs.w  a4,d1
         divs.w  (a3),d1
@@ -1426,11 +1426,11 @@
         divs.w  (*,pc),d1
         divs.w  (*,pc,d3),d1
 
-        .align  32
+;#       .align  32
         sbcd.b  d2,d1
         sbcd.b  -(a2),-(a3)
 
-        .align  32
+;#       .align  32
         or.b    d2,d1
 ;#       or.b    a4,d1
         or.b    (a3),d1
@@ -1504,7 +1504,7 @@
 ;#       or.l    d1,(*,pc)
 ;#       or.l    d1,(*,pc,d3)
 
-        .align  32
+;#       .align  32
         sub.b   d2,d1
 ;#       sub.b   a4,d1
         sub.b   (a3),d1
@@ -1575,13 +1575,13 @@
 ;#       sub.l   d1,(*,pc)
 ;#       sub.l   d1,(*,pc,d3)
 
-        .align  32
+;#       .align  32
         subx.b  d2,d1
         subx.b  -(a2),-(a3)
         subx.w  d2,d1
         subx.w  -(a2),-(a3)
 
-        .align  32
+;#       .align  32
         suba.w  d2,a2
         suba.w  a4,a2
         suba.w  (a3),a2
@@ -1607,7 +1607,7 @@
         suba.l  (*-10,pc),a2
         suba.l  (*,pc,d3),a2
 
-        .align  32
+;#       .align  32
         eor.b   d1,d2
 ;#       eor.b   d1,a4
         eor.b   d1,(a3)
@@ -1645,12 +1645,12 @@
 ;#       eor.l   d1,(*,pc)
 ;#       eor.l   d1,(*,pc,d3)
 
-        .align  32
+;#       .align  32
         cmpm.b  (a2)+,(a3)+
         cmpm.w  (a2)+,(a3)+
         cmpm.l  (a2)+,(a3)+
 
-        .align  32
+;#       .align  32
         cmp.b   d2,d1
 ;#       cmp.b   a4,d1
         cmp.b   (a3),d1
@@ -1688,7 +1688,7 @@
         cmp.l   (*,pc),d1
         cmp.l   (*,pc,d3),d1
 
-        .align  32
+;#       .align  32
         cmpa.w  d2,a2
         cmpa.w  a4,a2
         cmpa.w  (a3),a2
@@ -1714,7 +1714,7 @@
         cmpa.l  (*+14,pc),a2
         cmpa.l  (*,pc,d3),a2
 
-        .align  32
+;#       .align  32
         mulu.w  d2,d1
 ;#       mulu.w  a4,d1
         mulu.w  (a3),d1
@@ -1728,7 +1728,7 @@
         mulu.w  (*,pc),d1
         mulu.w  (*,pc,d3),d1
 
-        .align  32
+;#       .align  32
         muls.w  d2,d1
 ;#       muls.w  a4,d1
         muls.w  (a3),d1
@@ -1742,16 +1742,16 @@
         muls.w  (*,pc),d1
         muls.w  (*,pc,d3),d1
 
-        .align  32
+;#       .align  32
         abcd.b  d2,d1
         abcd.b  -(a2),-(a3)
 
-        .align  32
+;#       .align  32
         exg.l   d1,d2
         exg.l   d1,a2
         exg.l   a1,a2
 
-        .align  32
+;#       .align  32
         and.b   d2,d1
 ;#       and.b   a4,d1
         and.b   (a3),d1
@@ -1822,7 +1822,7 @@
 ;#       and.l   d1,(*,pc)
 ;#       and.l   d1,(*,pc,d3)
 
-        .align  32
+;#       .align  32
         add.b   d2,d1
 ;#       add.b   a4,d1
         add.b   (a3),d1
@@ -1893,13 +1893,13 @@
 ;#       add.l   d1,(*,pc)
 ;#       add.l   d1,(*,pc,d3)
 
-        .align  32
+;#       .align  32
         addx.b  d2,d1
         addx.b  -(a2),-(a3)
         addx.w  d2,d1
         addx.w  -(a2),-(a3)
 
-        .align  32
+;#       .align  32
         adda.w  d2,a2
         adda.w  a4,a2
         adda.w  (a3),a2
@@ -1925,7 +1925,7 @@
         adda.l  (*+18,pc),a2
         adda.l  (*,pc,d3),a2
 
-        .align  32
+;#       .align  32
         asr.b   d2,d1
         asr.b   #5,d1
         asr.w   d2,d1
@@ -1942,7 +1942,7 @@
 ;#       asr.w   (*,pc)
 ;#       asr.w   (*,pc,d3)
 
-        .align  32
+;#       .align  32
         asl.b   d2,d1
         asl.b   #5,d1
         asl.w   d2,d1
@@ -1959,7 +1959,7 @@
 ;#       asl.w   (*,pc)
 ;#       asl.w   (*,pc,d3)
 
-        .align  32
+;#       .align  32
         lsr.b   d2,d1
         lsr.b   #5,d1
         lsr.w   d2,d1
@@ -1976,7 +1976,7 @@
 ;#       lsr.w   (*,pc)
 ;#       lsr.w   (*,pc,d3)
 
-        .align  32
+;#       .align  32
         lsl.b   d2,d1
         lsl.b   #5,d1
         lsl.w   d2,d1
@@ -1993,7 +1993,7 @@
 ;#       lsl.w   (*,pc)
 ;#       lsl.w   (*,pc,d3)
 
-        .align  32
+;#       .align  32
         roxr.b  d2,d1
         roxr.b  #5,d1
         roxr.w  d2,d1
@@ -2010,7 +2010,7 @@
 ;#       roxr.w  (*,pc)
 ;#       roxr.w  (*,pc,d3)
 
-        .align  32
+;#       .align  32
         roxl.b  d2,d1
         roxl.b  #5,d1
         roxl.w  d2,d1
@@ -2027,7 +2027,7 @@
 ;#       roxl.w  (*,pc)
 ;#       roxl.w  (*,pc,d3)
 
-        .align  32
+;#       .align  32
         ror.b   d2,d1
         ror.b   #5,d1
         ror.w   d2,d1
@@ -2044,7 +2044,7 @@
 ;#       ror.w   (*,pc)
 ;#       ror.w   (*,pc,d3)
 
-        .align  32
+;#       .align  32
         rol.b   d2,d1
         rol.b   #5,d1
         rol.w   d2,d1

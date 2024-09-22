@@ -27,7 +27,15 @@ namespace mc68000 {
 struct DisMc68000 final : Disassembler, Config {
     DisMc68000(const ValueFormatter::Plugins &plugins = defaultPlugins());
 
+    void reset() override;
+
+    Error setGnuAs(bool enable);
+
 private:
+    const BoolOption<DisMc68000> _opt_gnuAs;
+
+    bool _gnuAs;
+
     void decodeImmediateData(DisInsn &insn, StrBuffer &out, OprSize eaSize) const;
     void decodeEffectiveAddr(
             DisInsn &insn, StrBuffer &out, uint8_t mode, RegName reg, OprSize size) const;
@@ -35,6 +43,7 @@ private:
     void decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode, OprPos pos, OprSize size,
             uint16_t opr16 = 0, Error opr16Error = OK) const;
 
+    StrBuffer &outHex32(StrBuffer &buf, uint32_t u32) const;
     StrBuffer &outExtendedReal(StrBuffer &buf, const ExtendedReal &v) const;
     StrBuffer &outDecimalString(StrBuffer &buf, const DecimalString &v) const;
 

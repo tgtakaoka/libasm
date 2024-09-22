@@ -2120,6 +2120,30 @@ static void test_program() {
     AERRT(0x10000, "BSR", "*+129",   OPERAND_NOT_ALIGNED, "*+129",   0060400 | 0x7F);
     AERRT(0x10000, "BSR", "*+$8001", OPERAND_NOT_ALIGNED, "*+$8001", 0060400, 0x7FFF);
 
+    disassembler.setOption("gnu-as", "on");
+
+    ATEST(0x10000, "BRA",  ".-0x7FFE", 0060000, 0x8000);
+    ATEST(0x10000, "BRA",  ".-0x007E", 0060000, 0xFF80);
+    ATEST(0x10000, "BRAS", ".-126",    0060000 | 0x80);
+    ATEST(0x10000, "BRAS", ".",        0060000 | 0xFE);
+    ATEST(0x10000, "BRA",  ".",        0060000, 0xFFFE);
+    ATEST(0x10000, "BRA",  ".+2",      0060000, 0x0000);
+    ATEST(0x10000, "BRAS", ".+128",    0060000 | 0x7E);
+    ATEST(0x10000, "BRA",  ".+0x0080", 0060000, 0x007E);
+    ATEST(0x10000, "BRA",  ".+0x8000", 0060000, 0x7FFE);
+
+    ATEST(0x10000, "BSR",  ".-0x7FFE", 0060400, 0x8000);
+    ATEST(0x10000, "BSR",  ".-0x007E", 0060400, 0xFF80);
+    ATEST(0x10000, "BSRS", ".-126",    0060400 | 0x80);
+    ATEST(0x10000, "BSRS", ".",        0060400 | 0xFE);
+    ATEST(0x10000, "BSR",  ".",        0060400, 0xFFFE);
+    ATEST(0x10000, "BSR",  ".+2",      0060400, 0x0000);
+    ATEST(0x10000, "BSRS", ".+128",    0060400 | 0x7E);
+    ATEST(0x10000, "BSR",  ".+0x0080", 0060400, 0x007E);
+    ATEST(0x10000, "BSR",  ".+0x8000", 0060400, 0x7FFE);
+
+    disassembler.setOption("gnu-as", "off");
+
     // JMP dst: 00473|M|Rn
     UNKN(                         0047302); // D2
     UNKN(                         0047312); // A2
@@ -2597,6 +2621,27 @@ static void test_float_move() {
          0xF200|074, 0x4000|(3<<10)|(1<<7), 0x0020, 0x0008, 0xB200, 0x0000, 0x0000, 0x0000);
     ERRT("FMOVE.P", "#1.012E+20, FP1", ILLEGAL_CONSTANT, "1.012E+20, FP1",
          0xF200|074, 0x4000|(3<<10)|(1<<7), 0x0019, 0x000A, 0x1200, 0x0000, 0x0000, 0x0000);
+
+    EQUALS("gnu-as", OK, disassembler.setOption("gnu-as", "on"));
+
+    TEST("FMOVEL", "#0x6789ABCD, FP6",
+         0xF200|074, 0x4000|(0<<10)|(6<<7), 0x6789, 0xABCD);
+    TEST("FMOVES", "#0x3058E0F0, FP7",
+         0xF200|074, 0x4000|(1<<10)|(7<<7), 0x3058, 0xE0F0);
+    TEST("FMOVEX", "#0xFFFF00008000000000000000, FP0",
+         0xF200|074, 0x4000|(2<<10)|(0<<7), 0xFFFF, 0x0000, 0x8000, 0x0000, 0x0000, 0x0000);
+    TEST("FMOVEX", "#0xC0230000A5C681D100000000, FP0",
+         0xF200|074, 0x4000|(2<<10)|(0<<7), 0xC023, 0x0000, 0xA5C6, 0x81D1, 0x0000, 0x0000);
+    TEST("FMOVEP", "#0xFFFF00000000000000000001, FP1",
+         0xF200|074, 0x4000|(3<<10)|(1<<7), 0xFFFF, 0x0000, 0x0000, 0x0000, 0x0000, 0x0001);
+    TEST("FMOVEP", "#0x002000091200000000000000, FP1",
+         0xF200|074, 0x4000|(3<<10)|(1<<7), 0x0020, 0x0009, 0x1200, 0x0000, 0x0000, 0x0000);
+    TEST("FMOVEW", "#0x1234, FP2",
+         0xF200|074, 0x4000|(4<<10)|(2<<7), 0x1234);
+    TEST("FMOVED", "#0xC020800000000000, FP3",
+         0xF200|074, 0x4000|(5<<10)|(3<<7), 0xC020, 0x8000, 0x0000, 0x0000);
+    TEST("FMOVEB", "#0x23, FP4",
+         0xF200|074, 0x4000|(6<<10)|(4<<7), 0x0023);
 }
 
 static void test_float_arithmetic() {
@@ -3916,6 +3961,10 @@ static void test_float_branch() {
     TEST("FBSNE",  "*+$123456",    0xF2DE, 0x0012, 0x3454);
     TEST("FBST",   "*+$123456",    0xF2DF, 0x0012, 0x3454);
     ERRT("FBST",   "*+$12345678", OVERFLOW_RANGE, "*+$12345678", 0xF2DF, 0x1234, 0x5676);
+
+    disassembler.setOption("gnu-as", "on");
+    TEST("FBFL",  ".+0x123456",    0xF2C0, 0x0012, 0x3454);
+    TEST("FBEQL", ".+0x001234",    0xF2C1, 0x0000, 0x1232);
 }
 
 static void test_float_trap() {
