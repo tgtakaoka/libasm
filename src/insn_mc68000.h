@@ -61,22 +61,23 @@ struct Operand final : ErrorAt {
 };
 
 struct AsmInsn final : AsmInsnImpl<Config>, EntryInsn {
-    AsmInsn(Insn &insn) : AsmInsnImpl(insn), _isize(ISZ_NONE) { parseInsnSize(); }
+    AsmInsn(Insn &insn) : AsmInsnImpl(insn), _isize(ISZ_NONE) {}
 
     Operand srcOp, dstOp;
 
+    InsnSize parseInsnSize();
     InsnSize insnSize() const { return _isize; }
     void emitInsn() {
         emitUint16(opCode(), 0);
         if (hasPostVal())
             emitUint16(postfix() | postVal(), 2);
     }
-    void emitOperand16(uint16_t val16) { emitUint16(val16, operandPos()); }
-    void emitOperand32(uint32_t val32) { emitUint32(val32, operandPos()); }
-    void emitOperand64(uint64_t val64) { emitUint64(val64, operandPos()); }
+    Error emitOperand16(uint16_t val16) { return emitUint16(val16, operandPos()); }
+    Error emitOperand32(uint32_t val32) { return emitUint32(val32, operandPos()); }
+    Error emitOperand64(uint64_t val64) { return emitUint64(val64, operandPos()); }
 #ifndef LIBASM_ASM_NOFLOAT
-    void emitExtendedReal(const float80_t &val80) { _insn.emitFloat96Be(val80, operandPos()); }
-    void emitDecimalString(const float80_t &val80) { _insn.emitPackedBcd96Be(val80, operandPos()); }
+    Error emitExtendedReal(const float80_t &val80, uint8_t pos);
+    Error emitDecimalString(const float80_t &val80, uint8_t pos);
 #endif
     uint8_t operandPos() const {
         auto pos = length();
@@ -89,7 +90,6 @@ struct AsmInsn final : AsmInsnImpl<Config>, EntryInsn {
 
 private:
     InsnSize _isize;
-    void parseInsnSize();
 };
 
 struct ExtendedReal {

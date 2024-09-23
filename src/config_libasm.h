@@ -24,7 +24,7 @@
 // #define LIBASM_DEBUG_VALUE
 
 /** Enable software emulated floating point */
-#define LIBASM_SOFT_FLOAT80
+// #define LIBASM_SOFT_FLOAT80
 
 #endif  // __LIBASM_CONFIG_LIBASM_H__
 

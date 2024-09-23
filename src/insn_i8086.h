@@ -107,8 +107,12 @@ struct AsmInsn final : AsmInsnImpl<Config>, EntryInsn {
         if (_hasModReg)
             emitByte(_modReg, pos);
     }
-    void emitOperand8(uint8_t val8) { emitByte(val8, operandPos()); }
-    void emitOperand16(uint16_t val16) { emitUint16(val16, operandPos()); }
+    Error emitOperand8(uint8_t val8) { return emitByte(val8, operandPos()); }
+    Error emitOperand16(uint16_t val16) { return emitUint16(val16, operandPos()); }
+#ifndef LIBASM_ASM_NOFLOAT
+    Error emitPackedDecimal(int64_t val64);
+    Error emitTemporaryReal(const float80_t &val80);
+#endif
 
 private:
     Config::opcode_t _modReg;

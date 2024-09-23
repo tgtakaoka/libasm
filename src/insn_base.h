@@ -116,18 +116,6 @@ struct Insn final : ErrorAt {
 
     /** Generate 64 bit little endian floating point |data| at |pos| (Assembler). */
     Error emitFloat64Le(const float80_t &data, uint8_t pos);
-
-    /** Generate 80 bit little endian packed BCD |data| (Assembler). */
-    Error emitPackedBcd80Le(int64_t value);
-
-    /** Generate 80 bit little endian floating point |data| (Assembler). */
-    Error emitFloat80Le(const float80_t &value);
-
-    /** Generate 96 bit big endian floating point |data| at |pos| (Assembler). */
-    Error emitFloat96Be(const float80_t &value, uint8_t pos);
-
-    /** Generate 96 bit big endian packed BCD |data| at |pos| (Assembler). */
-    Error emitPackedBcd96Be(const float80_t &value, uint8_t pos);
 #endif
 
 private:
@@ -153,6 +141,7 @@ struct AsmInsnBase : ErrorAt {
     uint8_t length() const { return _insn.length(); }
     const char *name() const { return _insn.name(); }
     StrBuffer &nameBuffer() { return _insn.nameBuffer(); }
+    Insn &insnBase() { return _insn; }
 
     void reset(uint32_t addr) {
         resetError();

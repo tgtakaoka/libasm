@@ -55,13 +55,9 @@ constexpr Pseudo PSEUDOS[] PROGMEM = {
 #endif
     {TEXT_DC_L,   &Assembler::defineDataConstant, Assembler::DATA_LONG|Assembler::DATA_ALIGN2},
 #ifndef LIBASM_ASM_NOFLOAT
-    {TEXT_DC_P,   &Assembler::defineDataConstant, Assembler::DATA_PACKED_BCD96|Assembler::DATA_ALIGN2},
     {TEXT_DC_S,   &Assembler::defineDataConstant, Assembler::DATA_FLOAT32|Assembler::DATA_ALIGN2},
 #endif
     {TEXT_DC_W,   &Assembler::defineDataConstant, Assembler::DATA_WORD|Assembler::DATA_ALIGN2},
-#ifndef LIBASM_ASM_NOFLOAT
-    {TEXT_DC_X,   &Assembler::defineDataConstant, Assembler::DATA_FLOAT96|Assembler::DATA_ALIGN2},
-#endif
     {TEXT_DS,     &Assembler::allocateSpaces,     Assembler::DATA_BYTE},
     {TEXT_DS_B,   &Assembler::allocateSpaces,     Assembler::DATA_BYTE},
     {TEXT_DS_L,   &Assembler::allocateSpaces,     Assembler::DATA_LONG|Assembler::DATA_ALIGN2},
@@ -311,10 +307,10 @@ void AsmMc68000::encodeImmediate(AsmInsn &insn, const Operand &op, OprSize size)
         insn.emitFloat64(op.val.getFloat(), insn.operandPos());
         break;
     case SZ_XTND:
-        insn.emitExtendedReal(op.val.getFloat());
+        insn.emitExtendedReal(op.val.getFloat(), insn.operandPos());
         break;
     case SZ_PBCD: {
-        insn.emitDecimalString(op.val.getFloat());
+        insn.emitDecimalString(op.val.getFloat(), insn.operandPos());
         break;
     }
 #endif
@@ -802,22 +798,124 @@ Error AsmMc68000::parseOperand(StrScanner &scan, Operand &op) const {
     return OK;
 }
 
-void AsmInsn::parseInsnSize() {
-    StrScanner p(name());
+InsnSize AsmInsn::parseInsnSize() {
+    StrScanner p{name()};
     p.trimStart([](char c) { return c != '.'; });
     auto eos = const_cast<char *>(p.str());
     const auto isize = parseSize(p);
     *eos = 0;
-    _isize = isize;
+    return _isize = isize;
 }
 
-Error AsmMc68000::processPseudo(StrScanner &scan, Insn &insn) {
+#ifndef LIBASM_ASM_NOFLOAT
+
+namespace {
+
+uint64_t convert2pbcd(uint64_t bin, uint8_t digits) {
+    uint64_t pbcd = 0;
+    uint8_t shift = 0;
+    while (digits-- > 0) {
+        pbcd |= (bin % 10) << shift;
+        bin /= 10;
+        shift += 4;
+    }
+    return pbcd;
+}
+
+}  // namespace
+
+Error AsmInsn::emitExtendedReal(const float80_t &value, uint8_t pos) {
+    emitUint16(value.tag(), pos);
+    emitUint16(0, pos + 2);
+    return emitUint64(value.significand(), pos + 4);
+}
+
+Error AsmInsn::emitDecimalString(const float80_t &value, uint8_t pos) {
+    if (value.isInf()) {
+    infinity:
+        const auto tag = (value.tag() & float80_t::SGN_MASK) | float80_t::EXP_MASK;
+        emitUint16(tag, pos);
+        emitUint16(0, pos += 2);
+        emitUint64(0, pos += 2);
+    } else if (value.isNan()) {
+    not_a_number:
+        const auto tag = (value.tag() & float80_t::SGN_MASK) | float80_t::EXP_MASK;
+        emitUint16(tag, pos);
+        emitUint16(0, pos += 2);
+        emitUint64(UINT64_C(0xC000000000000000), pos += 2);
+    } else {
+        uint_fast16_t sign = value.isNegative() ? 0x8000 : 0x0000;
+        int_fast16_t exp10;
+        fixed64_t sig;
+        auto exp = value.decompose(sig, exp10);
+        const auto ndigits = 17;
+        uint8_t digits[ndigits];
+        if (sig.decompose(exp, digits, ndigits))
+            ++exp10;
+        if (exp >= 1000) {
+            setErrorIf(OVERFLOW_RANGE);
+            goto infinity;
+        }
+        if (exp <= -1000) {
+            setErrorIf(UNDERFLOW_RANGE);
+            goto not_a_number;
+        }
+        if (exp10 < 0) {
+            sign |= 0x4000;
+            exp10 = -exp10;
+        }
+        emitUint16(sign | convert2pbcd(exp10, 3), pos);
+        emitByte(0, pos += 2);
+        uint_fast8_t data = 0;
+        for (auto i = 0; i < ndigits; ++i) {
+            if (i % 2 == 0) {
+                data |= digits[i];
+                emitByte(data, ++pos);
+            } else {
+                data = digits[i] << 4;
+            }
+        }
+    }
+    return getError();
+}
+
+Error AsmMc68000::defineDataConstant(
+        AsmInsn &insn, StrScanner &scan, Mc68881Type type, ErrorAt &error) const {
+    insn.insnBase().align(2);
+    do {
+        auto p = scan.skipSpaces();
+        const auto at = p;
+        const auto val = parseExpr(p, error);
+        if ((endOfLine(p) || *p == ',') && !error.hasError()) {
+            if (type == DATA_DCX) {
+                if (insn.emitExtendedReal(val.getFloat(), insn.length()))
+                    error.setAt(at);
+            } else {  // DATA_DCP
+                if (insn.emitDecimalString(val.getFloat(), insn.length()))
+                    error.setAt(at);
+            }
+            scan = p;
+        }
+    } while (scan.skipSpaces().expect(',') && !error.hasError());
+    return error.getError();
+}
+
+#endif
+
+Error AsmMc68000::processPseudo(StrScanner &scan, Insn &_insn) {
+    AsmInsn insn(_insn);
     const auto at = scan;
     if (strcasecmp_P(insn.name(), TEXT_FPU) == 0) {
         const auto error = _opt_fpu.set(scan);
         return error ? insn.setErrorIf(at, error) : OK;
     }
-    return Assembler::processPseudo(scan, insn);
+#ifndef LIBASM_ASM_NOFLOAT
+    if (strcasecmp_P(insn.name(), TEXT_DC_X) == 0)
+        return defineDataConstant(insn, scan, DATA_DCX, _insn);
+    if (strcasecmp_P(insn.name(), TEXT_DC_P) == 0)
+        return defineDataConstant(insn, scan, DATA_DCP, _insn);
+#endif
+    return Assembler::processPseudo(scan, _insn);
 }
 
 namespace {
@@ -834,7 +932,7 @@ bool hasKFactor(const AsmInsn &insn, InsnSize size) {
 
 Error AsmMc68000::encodeImpl(StrScanner &scan, Insn &_insn) const {
     AsmInsn insn(_insn);
-    const auto isize = insn.insnSize();
+    const auto isize = insn.parseInsnSize();
     if (isize == ISZ_ERROR)
         return _insn.setError(scan, ILLEGAL_SIZE);
 
