@@ -338,7 +338,6 @@ void Assembler::generateString(
             error.setErrorIf(scan, insn.emitByte(0));
         break;
     case DATA_LONG:
-    case DATA_FLOAT32_LONG:
         while (count % 4) {
             error.setErrorIf(scan, insn.emitByte(0));
             count++;
@@ -357,8 +356,7 @@ Error Assembler::defineDataConstant(StrScanner &scan, Insn &insn, uint8_t dataTy
         setCurrentLocation(insn.align(2));
     const auto type = static_cast<DataType>(dataType & ~DATA_ALIGN2);
     const auto big = config().endian() == ENDIAN_BIG;
-    const auto hasString = !(type == DATA_BYTE_NO_STRING || type == DATA_WORD_NO_STRING) ||
-                           type == DATA_FLOAT32_LONG;
+    const auto hasString = !(type == DATA_BYTE_NO_STRING || type == DATA_WORD_NO_STRING);
     ErrorAt error;
     do {
         auto p = scan.skipSpaces();
@@ -395,51 +393,14 @@ Error Assembler::defineDataConstant(StrScanner &scan, Insn &insn, uint8_t dataTy
             case DATA_LONG:
                 big ? insn.emitUint32Be(v) : insn.emitUint32Le(v);
                 break;
-            case DATA_FLOAT32_LONG:
-                if (val.isInteger()) {
-                    const auto v = val.getUnsigned();
-                    big ? insn.emitUint32Be(v) : insn.emitUint32Le(v);
-                    break;
-                }
 #ifndef LIBASM_ASM_NOFLOAT
-                /* Fall-through */
             case DATA_FLOAT32:
                 big ? insn.emitFloat32Be(val.getFloat()) : insn.emitFloat32Le(val.getFloat());
                 break;
-            case DATA_FLOAT64_QUAD:
-                if (val.isInteger()) {
-                    const auto v = val.getInteger();
-                    big ? insn.emitUint64Be(v) : insn.emitUint64Le(v);
-                    break;
-                }
-                /* Fall-through */
             case DATA_FLOAT64:
                 big ? insn.emitFloat64Be(val.getFloat()) : insn.emitFloat64Le(val.getFloat());
                 break;
-            case DATA_FLOAT80_BCD:
-                if (val.isInteger()) {
-                    constexpr auto PBCD80_MAX = INT64_C(999'999'999'999'999'999);
-                    constexpr auto PBCD80_MIN = -INT64_C(999'999'999'999'999'999);
-                    const auto v = val.getInteger();
-                    if (v >= PBCD80_MIN && v <= PBCD80_MAX) {
-                        insn.emitPackedBcd80Le(v);
-                        break;
-                    }
-                    insn.setError(OVERFLOW_RANGE);
-                    break;
-                }
-                if (!big)  // i8087
-                    insn.emitFloat80Le(val.getFloat());
-                break;
-            case DATA_FLOAT96:
-                if (big)  // MC68881
-                    insn.emitFloat96Be(val.getFloat(), insn.length());
-                break;
-            case DATA_PACKED_BCD96:
-                if (big)  // MC68881
-                    insn.emitPackedBcd96Be(val.getFloat(), insn.length());
 #endif
-                break;
             case DATA_ALIGN2:
                 break;
             }
