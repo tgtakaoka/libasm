@@ -157,6 +157,7 @@ struct CpuBase {
     const ENTRY *searchName(INSN &insn, bool (*acceptOperands)(INSN &, const ENTRY *),
             void (*pageSetup)(INSN &, const ENTRY_PAGE *) = defaultPageSetup,
             void (*readCode)(INSN &, const ENTRY *, const ENTRY_PAGE *) = defaultReadCode) const {
+        insn.setOK();
         auto found = false;
         for (auto page = _pages.table(); page < _pages.end(); page++) {
             pageSetup(insn, page);
@@ -214,6 +215,7 @@ struct CpuBase {
             bool (*pageMatcher)(INSN &, const ENTRY_PAGE *) = defaultPageMatcher,
             void (*readName)(INSN &, const ENTRY *, StrBuffer &,
                     const ENTRY_PAGE *) = defaultReadName) const {
+        insn.setOK();
         for (const ENTRY_PAGE *page = _pages.table(); page < _pages.end(); page++) {
             if (pageMatcher(insn, page)) {
                 const auto *entry = page->linearSearch(insn, matchCode, page);

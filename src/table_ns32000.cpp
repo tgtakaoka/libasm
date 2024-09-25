@@ -959,14 +959,10 @@ static bool acceptModes(AsmInsn &insn, const Entry *entry) {
 
 Error TableNs32000::searchName(const CpuSpec &cpuSpec, AsmInsn &insn) const {
     cpu(cpuSpec.cpu)->searchName(insn, acceptModes);
-    if (insn.getError() == UNKNOWN_INSTRUCTION) {
-        insn.setOK();
+    if (insn.getError() == UNKNOWN_INSTRUCTION)
         fpu(cpuSpec.fpu)->searchName(insn, acceptModes);
-    }
-    if (insn.getError() == UNKNOWN_INSTRUCTION) {
-        insn.setOK();
+    if (insn.getError() == UNKNOWN_INSTRUCTION)
         mmu(cpuSpec.mmu)->searchName(insn, acceptModes);
-    }
     return insn.getError();
 }
 
@@ -982,14 +978,10 @@ static void readEntryName(
 
 Error TableNs32000::searchOpCode(const CpuSpec &cpuSpec, DisInsn &insn, StrBuffer &out) const {
     cpu(cpuSpec.cpu)->searchOpCode(insn, out, matchOpCode, readEntryName);
-    if (insn.getError() == UNKNOWN_INSTRUCTION) {
-        insn.setOK();
+    if (insn.getError() == UNKNOWN_INSTRUCTION)
         fpu(cpuSpec.fpu)->searchOpCode(insn, out, matchOpCode, readEntryName);
-    }
-    if (insn.getError() == UNKNOWN_INSTRUCTION) {
-        insn.setOK();
+    if (insn.getError() == UNKNOWN_INSTRUCTION)
         mmu(cpuSpec.mmu)->searchOpCode(insn, out, matchOpCode, readEntryName);
-    }
     return insn.getError();
 }
 

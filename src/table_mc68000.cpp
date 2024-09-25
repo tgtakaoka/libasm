@@ -1261,10 +1261,8 @@ static bool acceptAll(AsmInsn &insn, const Entry *entry) {
 
 bool TableMc68000::hasOperand(const CpuSpec &cpuSpec, AsmInsn &insn) const {
     cpu(cpuSpec.cpu)->searchName(insn, acceptAll);
-    if (!insn.isOK()) {
-        insn.setOK();
+    if (!insn.isOK())
         fpu(cpuSpec.fpu)->searchName(insn, acceptAll);
-    }
     return insn.isOK() && insn.src() != M_NONE;
 }
 
@@ -1336,7 +1334,6 @@ static bool acceptModes(AsmInsn &insn, const Entry *entry) {
 Error TableMc68000::searchName(const CpuSpec &cpuSpec, AsmInsn &insn) const {
     cpu(cpuSpec.cpu)->searchName(insn, acceptModes);
     if (insn.getError() == UNKNOWN_INSTRUCTION) {
-        insn.setOK();
         fpu(cpuSpec.fpu)->searchName(insn, acceptModes);
         if (insn.getError() != UNKNOWN_INSTRUCTION)
             insn.embed(cpuSpec.fpuCid << 9);
@@ -1487,10 +1484,8 @@ static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page
 Error TableMc68000::searchOpCode(const CpuSpec &cpuSpec, DisInsn &insn, StrBuffer &out) const {
     cpu(cpuSpec.cpu)->searchOpCode(insn, out, matchOpCode);
     if (insn.getError() == UNKNOWN_INSTRUCTION) {
-        if ((insn.opCode() & 0xFE00) == (0xF000 | (cpuSpec.fpuCid << 9))) {
-            insn.setOK();
+        if ((insn.opCode() & 0xFE00) == (0xF000 | (cpuSpec.fpuCid << 9)))
             fpu(cpuSpec.fpu)->searchOpCode(insn, out, matchOpCode);
-        }
     }
     if (insn.getError() == UNKNOWN_INSTRUCTION)
         insn.nameBuffer().reset();
