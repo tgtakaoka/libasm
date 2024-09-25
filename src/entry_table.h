@@ -98,7 +98,7 @@ struct CpuBase {
     template <typename CPU_T>
     static const CPU_T *search(const StrScanner &name, const CPU_T *table, const CPU_T *end) {
         for (const auto *t = table; t < end; t++) {
-            if (name.iequals(t->name_P()))
+            if (name.iequals_P(t->name_P()))
                 return t;
         }
         return nullptr;
