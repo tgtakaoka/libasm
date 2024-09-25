@@ -1298,7 +1298,6 @@ Error TableI8086::searchName(const CpuSpec &cpuSpec, AsmInsn &insn) const {
             char name[insn.nameBuffer().len() + 1];
             strcpy(name, insn.name());
             insn.nameBuffer().reset().letter('F').text(name + 2);
-            insn.setOK();
             fpu(cpuSpec.fpu)->searchName(insn, acceptModes);
             if (insn.isOK() && insn.fpuInst()) {
                 ;  // found non-wait float instruction
@@ -1310,10 +1309,8 @@ Error TableI8086::searchName(const CpuSpec &cpuSpec, AsmInsn &insn) const {
     } else if (insn.fpuInst()) {
         insn.setFwait();
     }
-    if (insn.getError() == UNKNOWN_INSTRUCTION) {
-        insn.setOK();
+    if (insn.getError() == UNKNOWN_INSTRUCTION)
         cpu(cpuSpec.cpu)->searchName(insn, acceptModes);
-    }
     return insn.getError();
 }
 
@@ -1384,10 +1381,8 @@ Error TableI8086::searchOpCode(const CpuSpec &cpuSpec, DisInsn &insn, StrBuffer 
             save.over(out);
         }
     }
-    if (insn.getError() == UNKNOWN_INSTRUCTION && insn.fwait() == 0) {
-        insn.setOK();
+    if (insn.getError() == UNKNOWN_INSTRUCTION && insn.fwait() == 0)
         cpu(cpuSpec.cpu)->searchOpCode(insn, out, matchOpCode);
-    }
     return insn.getError();
 }
 
