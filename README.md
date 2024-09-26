@@ -72,7 +72,7 @@ run on actual Arduino board at
 On POSIX environment, assembler command line interface is provided.
 It can generate Intel HEX or Motorola S-Record output.
 
-    libasm assembler (version 1.6.47)
+    libasm assembler (version 1.6.48)
     usage: asm [-o <output>] [-l <list>] <input>
       -C <CPU>    : target CPU
                     MC6800 MB8861 MC6801 HD6301 MC68HC11 MC6805 MC146805
@@ -115,7 +115,7 @@ It can generate Intel HEX or Motorola S-Record output.
 On POSIX environment, disassembler command line interface is provided.
 It can read Intel HEX or Motorola S-Record input.
 
-    libasm disassembler (version 1.6.47)
+    libasm disassembler (version 1.6.48)
     usage: dis -C <CPU> [-o <output>] [-l <list>] <input>
       -C <CPU>    : target CPU
                     MC6800 MB8861 MC6801 HD6301 MC68HC11 MC6805 MC146805
@@ -153,6 +153,7 @@ It can read Intel HEX or Motorola S-Record input.
       segment-insn    : segment override as instruction  (bool, 8086)
       string-insn     : string instruction as repeat operand  (bool, 8086)
       use-absolute    : zero register indexing as absolute addressing  (bool, 8096)
+      gnu-as          : GNU assembler compatible  (bool, 68000)
       short-direct    : use |addr| for short direct notation  (bool, Z8001)
       segmented-addr  : use <<segment>> notation  (bool, Z8001)
       ioaddr-prefix   : I/O address prefix # (default none)  (bool, Z8001)
