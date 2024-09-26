@@ -48,7 +48,11 @@ static void tear_down() {
     TEST("fpu none");
     ERRT("fpu ns32082", UNKNOWN_OPERAND, "ns32082");
 
+#ifdef LIBASM_NS32000_NOMMU
+    ERRT("pmmu ns32082", UNKNOWN_OPERAND, "ns32082");
+#else
     TEST("pmmu ns32082");
+#endif
     TEST("pmmu none");
     ERRT("pmmu ns32081", UNKNOWN_OPERAND, "ns32081");
 }
@@ -507,6 +511,8 @@ static void test_format_11() {
 
 #endif
 
+#ifndef LIBASM_NS32000_NOMMU
+
 static void test_format_8_mmu() {
     TEST("PMMU NS32082");
 
@@ -519,7 +525,7 @@ static void test_format_8_mmu() {
     ERUI("MOVUSB 9(SB),5(SP)");
 }
 
-static void test_format_14() {
+static void test_format_14_mmu() {
     TEST("PMMU NS32082");
 
     TEST("LMR PTB1,R0", 0x1E, 0x8B, 0x06);
@@ -534,6 +540,8 @@ static void test_format_14() {
     ERUI("RDVAL 0x200(R0)");
     ERUI("WRVAL 0x200(R0)");
 }
+
+#endif
 
 static void test_generic_addressing() {
 #ifndef LIBASM_ASM_NOFLOAT
@@ -677,7 +685,9 @@ static void test_comment() {
 #ifndef LIBASM_ASM_NOFLOAT
     TEST("FPU NS32081");
 #endif
+#ifndef LIBASM_NS32000_NOMMU
     TEST("PMMU NS32082");
+#endif
 
     COMM("ADDB R1 , R0           ; comment",     "; comment", 0x00, 0x08);
     COMM("ADDB 2 (R2) , R0       ; comment",     "; comment", 0x00, 0x50, 0x02);
@@ -706,7 +716,9 @@ static void test_comment() {
 #endif
 
     COMM("LPRB UPSR , R0 ; comment", "; comment", 0x6C, 0x00);
+#ifndef LIBASM_NS32000_NOMMU
     COMM("LMR  PTB0 , R0 ; comment", "; comment", 0x1E, 0x0B, 0x06);
+#endif
 
     COMM("SETCFG [ I , F , M , C ] ; comment", "; comment", 0x0E, 0x8B, 0x07);
 
@@ -874,8 +886,10 @@ void run_tests(const char *cpu) {
     RUN_TEST(test_format_9);
     RUN_TEST(test_format_11);
 #endif
+#ifndef LIBASM_NS32000_NOMMU
     RUN_TEST(test_format_8_mmu);
-    RUN_TEST(test_format_14);
+    RUN_TEST(test_format_14_mmu);
+#endif
     RUN_TEST(test_generic_addressing);
     RUN_TEST(test_comment);
     RUN_TEST(test_undef);

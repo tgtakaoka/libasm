@@ -130,10 +130,12 @@ Error AsmNs32000::setFpu(StrScanner &scan) {
 }
 
 Error AsmNs32000::setPmmu(StrScanner &scan) {
-    if (scan.iequals_P(TEXT_MMU_NS32082)) {
-        setMmuType(MMU_NS32082);
-    } else if (scan.iequals_P(TEXT_none)) {
+    if (scan.iequals_P(TEXT_none)) {
         setMmuType(MMU_NONE);
+#ifndef LIBASM_NS32000_NOMMU
+    } else if (scan.iequals_P(TEXT_MMU_NS32082)) {
+        setMmuType(MMU_NS32082);
+#endif
     } else {
         return UNKNOWN_OPERAND;
     }

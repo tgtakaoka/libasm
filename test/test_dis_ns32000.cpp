@@ -591,12 +591,14 @@ static void test_format_11() {
          0x40, 0x0E, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00);
 }
 
+#ifndef LIBASM_NS32000_NOMMU
+
 static void test_format_8_mmu() {
     TEST("MOVSUB", "5(SP), 9(SB)",        0xAE, 0x8C, 0xCE, 0x05, 0x09);
     TEST("MOVUSB", "9(SB), 5(SP)",        0xAE, 0x5C, 0xD6, 0x09, 0x05);
 }
 
-static void test_format_14() {
+static void test_format_14_mmu() {
     TEST("LMR", "BPR0, R1",                           0x1E, 0x0B, 0x08);
     TEST("LMR", "BPR1, R2",                           0x1E, 0x8B, 0x10);
     ERRT("LMR",     ", R3", UNKNOWN_REGISTER, ", R3", 0x1E, 0x0B, 0x19);
@@ -640,6 +642,7 @@ static void test_format_14() {
     UNKN(                       0x1E, 0x07, 0x42);
     UNKN(                       0x1E, 0x07, 0x41);
 }
+#endif
 
 static void test_generic_addressing() {
     // Register
@@ -782,7 +785,11 @@ static void test_formatter() {
 }
 // clang-format on
 
+#ifdef LIBASM_NS32000_NOMMU
+static const CpuSpec SPEC{NS32032, FPU_NS32081, MMU_NONE};
+#else
 static const CpuSpec SPEC{NS32032, FPU_NS32081, MMU_NS32082};
+#endif
 
 static void assert_unknown(const char *file, int line, Config::opcode_t opc, Config::opcode_t prefix) {
     if (TABLE.isPrefixCode(SPEC, prefix)) {
@@ -965,8 +972,10 @@ void run_tests(const char *cpu) {
     RUN_TEST(test_format_8);
     RUN_TEST(test_format_9);
     RUN_TEST(test_format_11);
+#ifndef LIBASM_NS32000_NOMMU
     RUN_TEST(test_format_8_mmu);
-    RUN_TEST(test_format_14);
+    RUN_TEST(test_format_14_mmu);
+#endif
     RUN_TEST(test_generic_addressing);
     RUN_TEST(test_formatter);
     RUN_TEST(test_illegal);

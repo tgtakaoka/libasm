@@ -614,14 +614,6 @@ static constexpr Entry FORMAT_8_3[] PROGMEM = {
     E4(0x01, TEXT_INSW, SZ_WORD, M_GREG, M_GENR, P_REG, P_GEN1, M_GENW, EM2_LEN32, P_GEN2, EP2_DISP),
     E4(0x03, TEXT_INSD, SZ_QUAD, M_GREG, M_GENR, P_REG, P_GEN1, M_GENW, EM2_LEN32, P_GEN2, EP2_DISP),
 };
-static constexpr Entry FORMAT_8_3_1[] PROGMEM = {
-    E2(0x0C, TEXT_MOVSUB, SZ_BYTE, M_GENA, M_GENA, P_GEN1, P_GEN2),
-    E2(0x0D, TEXT_MOVSUW, SZ_WORD, M_GENA, M_GENA, P_GEN1, P_GEN2),
-    E2(0x0F, TEXT_MOVSUD, SZ_QUAD, M_GENA, M_GENA, P_GEN1, P_GEN2),
-    E2(0x1C, TEXT_MOVUSB, SZ_BYTE, M_GENA, M_GENA, P_GEN1, P_GEN2),
-    E2(0x1D, TEXT_MOVUSW, SZ_WORD, M_GENA, M_GENA, P_GEN1, P_GEN2),
-    E2(0x1F, TEXT_MOVUSD, SZ_QUAD, M_GENA, M_GENA, P_GEN1, P_GEN2),
-};
 static constexpr Entry FORMAT_8_4[] PROGMEM = {
     E3(0x00, TEXT_CHECKB, SZ_BYTE, M_GREG, M_GENA, P_REG, P_GEN1, M_GENR, P_GEN2),
     E3(0x01, TEXT_CHECKW, SZ_WORD, M_GREG, M_GENA, P_REG, P_GEN1, M_GENR, P_GEN2),
@@ -648,7 +640,22 @@ static constexpr uint8_t INDEX_8_3[] PROGMEM = {
       2,  // TEXT_INSD
       1,  // TEXT_INSW
 };
-static constexpr uint8_t INDEX_8_3_1[] PROGMEM = {
+static constexpr uint8_t INDEX_8_4[] PROGMEM = {
+      0,  // TEXT_CHECKB
+      2,  // TEXT_CHECKD
+      1,  // TEXT_CHECKW
+};
+
+#ifndef LIBASM_NS32000_NOMMU
+static constexpr Entry FORMAT_8_3_1_MMU[] PROGMEM = {
+    E2(0x0C, TEXT_MOVSUB, SZ_BYTE, M_GENA, M_GENA, P_GEN1, P_GEN2),
+    E2(0x0D, TEXT_MOVSUW, SZ_WORD, M_GENA, M_GENA, P_GEN1, P_GEN2),
+    E2(0x0F, TEXT_MOVSUD, SZ_QUAD, M_GENA, M_GENA, P_GEN1, P_GEN2),
+    E2(0x1C, TEXT_MOVUSB, SZ_BYTE, M_GENA, M_GENA, P_GEN1, P_GEN2),
+    E2(0x1D, TEXT_MOVUSW, SZ_WORD, M_GENA, M_GENA, P_GEN1, P_GEN2),
+    E2(0x1F, TEXT_MOVUSD, SZ_QUAD, M_GENA, M_GENA, P_GEN1, P_GEN2),
+};
+static constexpr uint8_t INDEX_8_3_1_MMU[] PROGMEM = {
       0,  // TEXT_MOVSUB
       2,  // TEXT_MOVSUD
       1,  // TEXT_MOVSUW
@@ -656,11 +663,7 @@ static constexpr uint8_t INDEX_8_3_1[] PROGMEM = {
       5,  // TEXT_MOVUSD
       4,  // TEXT_MOVUSW
 };
-static constexpr uint8_t INDEX_8_4[] PROGMEM = {
-      0,  // TEXT_CHECKB
-      2,  // TEXT_CHECKD
-      1,  // TEXT_CHECKW
-};
+#endif
 
 // Format 9: |gen1_|gen| |2_|_op|f|ii| |0011|1110|
 static constexpr Entry FORMAT_9[] PROGMEM = {
@@ -765,23 +768,25 @@ static constexpr uint8_t INDEX_11[] PROGMEM = {
       6,  // TEXT_SUBL
 };
 
+#ifndef LIBASM_NS32000_NOMMU
 // Format 14: |gen1_|sho| |t|0|_op_|ii| |0001|1110|
-static constexpr Entry FORMAT_14_1[] PROGMEM = {
+static constexpr Entry FORMAT_14_1_MMU[] PROGMEM = {
     E2(0x03, TEXT_RDVAL, SZ_QUAD, M_GENA, M_ZERO, P_GEN1, P_GEN2),
     E2(0x07, TEXT_WRVAL, SZ_QUAD, M_GENA, M_ZERO, P_GEN1, P_GEN2),
 };
-static constexpr Entry FORMAT_14_2[] PROGMEM = {
+static constexpr Entry FORMAT_14_2_MMU[] PROGMEM = {
     E2(0x0B, TEXT_LMR, SZ_QUAD, M_MREG, M_GENR, P_SHORT, P_GEN1),
     E2(0x0F, TEXT_SMR, SZ_QUAD, M_MREG, M_GENW, P_SHORT, P_GEN1),
 };
-static constexpr uint8_t INDEX_14_1[] PROGMEM = {
+static constexpr uint8_t INDEX_14_1_MMU[] PROGMEM = {
       0,  // TEXT_RDVAL
       1,  // TEXT_WRVAL
 };
-static constexpr uint8_t INDEX_14_2[] PROGMEM = {
+static constexpr uint8_t INDEX_14_2_MMU[] PROGMEM = {
       0,  // TEXT_LMR
       1,  // TEXT_SMR
 };
+#endif
 // clang-format on
 
 struct EntryPage : entry::PrefixTableBase<Entry> {
@@ -830,12 +835,14 @@ static constexpr EntryPage NS32081_PAGES[] PROGMEM = {
         {0xBE, 0xC0, 1, ARRAY_RANGE(FORMAT_11), ARRAY_RANGE(INDEX_11)},
 };
 
+#ifndef LIBASM_NS32000_NOMMU
 // Memory management instructions
 static constexpr EntryPage NS32082_PAGES[] PROGMEM = {
-        {0xAE, 0xC0, 1, ARRAY_RANGE(FORMAT_8_3_1), ARRAY_RANGE(INDEX_8_3_1)},
-        {0x1E, 0x00, 1, ARRAY_RANGE(FORMAT_14_1), ARRAY_RANGE(INDEX_14_1)},
-        {0x1E, 0x80, 1, ARRAY_RANGE(FORMAT_14_2), ARRAY_RANGE(INDEX_14_2)},
+        {0xAE, 0xC0, 1, ARRAY_RANGE(FORMAT_8_3_1_MMU), ARRAY_RANGE(INDEX_8_3_1_MMU)},
+        {0x1E, 0x00, 1, ARRAY_RANGE(FORMAT_14_1_MMU), ARRAY_RANGE(INDEX_14_1_MMU)},
+        {0x1E, 0x80, 1, ARRAY_RANGE(FORMAT_14_2_MMU), ARRAY_RANGE(INDEX_14_2_MMU)},
 };
+#endif
 
 template <typename CPUTYPE>
 using ProcessorBase = entry::CpuBase<CPUTYPE, EntryPage>;
@@ -902,6 +909,7 @@ static const Fpu *fpu(FpuType fpuType) {
     return Fpu::search(fpuType, ARRAY_RANGE(FPU_TABLE));
 }
 
+#ifndef LIBASM_NS32000_NOMMU
 static constexpr Mmu MMU_TABLE[] PROGMEM = {
         {MMU_NS32082, TEXT_MMU_NS32082, ARRAY_RANGE(NS32082_PAGES)},
         {MMU_NONE, TEXT_none, EMPTY_RANGE(NS32082_PAGES)},
@@ -910,6 +918,7 @@ static constexpr Mmu MMU_TABLE[] PROGMEM = {
 static const Mmu *mmu(MmuType mmuType) {
     return Mmu::search(mmuType, ARRAY_RANGE(MMU_TABLE));
 }
+#endif
 
 static bool acceptMode(AddrMode opr, AddrMode table) {
     if (opr == table)
@@ -941,8 +950,10 @@ Error TableNs32000::searchName(const CpuSpec &cpuSpec, AsmInsn &insn) const {
     cpu(cpuSpec.cpu)->searchName(insn, acceptModes);
     if (insn.getError() == UNKNOWN_INSTRUCTION)
         fpu(cpuSpec.fpu)->searchName(insn, acceptModes);
+#ifndef LIBASM_NS32000_NOMMU
     if (insn.getError() == UNKNOWN_INSTRUCTION)
         mmu(cpuSpec.mmu)->searchName(insn, acceptModes);
+#endif
     return insn.getError();
 }
 
@@ -960,14 +971,19 @@ Error TableNs32000::searchOpCode(const CpuSpec &cpuSpec, DisInsn &insn, StrBuffe
     cpu(cpuSpec.cpu)->searchOpCode(insn, out, matchOpCode, readEntryName);
     if (insn.getError() == UNKNOWN_INSTRUCTION)
         fpu(cpuSpec.fpu)->searchOpCode(insn, out, matchOpCode, readEntryName);
+#ifndef LIBASM_NS32000_NOMMU
     if (insn.getError() == UNKNOWN_INSTRUCTION)
         mmu(cpuSpec.mmu)->searchOpCode(insn, out, matchOpCode, readEntryName);
+#endif
     return insn.getError();
 }
 
 bool TableNs32000::isPrefixCode(const CpuSpec &cpuSpec, uint8_t code) const {
-    return cpu(cpuSpec.cpu)->isPrefix(code) || fpu(cpuSpec.fpu)->isPrefix(code) ||
-           mmu(cpuSpec.mmu)->isPrefix(code);
+    return fpu(cpuSpec.fpu)->isPrefix(code) ||
+#ifndef LIBASM_NS32000_NOMMU
+           mmu(cpuSpec.mmu)->isPrefix(code) ||
+#endif
+           cpu(cpuSpec.cpu)->isPrefix(code);
 }
 
 const /*PROGMEM*/ char *TableNs32000::listCpu_P() const {

@@ -19,6 +19,9 @@
 
 #include "config_base.h"
 
+/** Disable NS32082 PMMU instructions */
+// #define LIBASM_NS32000_NOMMU
+
 namespace libasm {
 namespace ns32000 {
 
@@ -32,7 +35,9 @@ enum FpuType : uint8_t {
 };
 enum MmuType : uint8_t {
     MMU_NONE,
+#ifndef LIBASM_NS32000_NOMMU
     MMU_NS32082,
+#endif
 };
 
 struct CpuSpec final {
@@ -45,7 +50,11 @@ struct CpuSpec final {
 struct Config
     : ConfigImpl<CpuType, ADDRESS_24BIT, ADDRESS_BYTE, OPCODE_8BIT, ENDIAN_LITTLE, 25, 7> {
     Config(const InsnTable<CpuType> &table)
+#ifdef LIBASM_NS32000_NOMMU
+        : ConfigImpl(table, NS32032), _cpuSpec(NS32032, FPU_NS32081, MMU_NONE) {}
+#else
         : ConfigImpl(table, NS32032), _cpuSpec(NS32032, FPU_NS32081, MMU_NS32082) {}
+#endif
 
     void setCpuType(CpuType cpuType) override {
         _cpuSpec.cpu = cpuType;
