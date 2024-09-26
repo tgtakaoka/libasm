@@ -2345,6 +2345,8 @@ static void test_multiproc() {
     TEST("ILLEGAL", "",         0045374); // ILLEGAL
 }
 
+#if !defined(LIBASM_DIS_NOFLOAT) && !defined(LIBASM_MC68000_NOFPU)
+
 static void test_float_move() {
     TEST("FMOVE.X", "FP0, FP1",            0xF200,     0x0000|(0<<10)|(1<<7));
     TEST("FMOVE.X", "FP2, FP2",            0xF200,     0x0000|(2<<10)|(2<<7));
@@ -4412,6 +4414,8 @@ static void test_float_system() {
     UNKN(0xF300|073);
     UNKN(0xF300|074);
 }
+
+#endif
 // clang-format on
 
 void run_tests(const char *cpu) {
@@ -4425,11 +4429,13 @@ void run_tests(const char *cpu) {
     RUN_TEST(test_program);
     RUN_TEST(test_system);
     RUN_TEST(test_multiproc);
+#if !defined(LIBASM_DIS_NOFLOAT) && !defined(LIBASM_MC68000_NOFPU)
     RUN_TEST(test_float_move);
     RUN_TEST(test_float_arithmetic);
     RUN_TEST(test_float_branch);
     RUN_TEST(test_float_trap);
     RUN_TEST(test_float_system);
+#endif
 }
 
 // Local Variables:

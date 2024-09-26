@@ -819,6 +819,7 @@ static constexpr uint8_t V30INDEX_0F[] PROGMEM = {
       6,  // TEXT_SUB4S
 };
 
+#if !defined(LIBASM_I8086_NOFPU)
 static constexpr Entry TABLE_D8[] PROGMEM = {
     F2(0xC0, TEXT_FADD,   SZ_NONE,  M_ST0,  M_STI,  P_NONE, P_OREG),
     F2(0xC8, TEXT_FMUL,   SZ_NONE,  M_ST0,  M_STI,  P_NONE, P_OREG),
@@ -1097,6 +1098,8 @@ static constexpr uint8_t INDEX_FPU[] PROGMEM = {
       0,  // TEXT_FWAIT
 };
 
+#endif
+
 // clang-format on
 
 using EntryPage = entry::PrefixTableBase<Entry>;
@@ -1174,6 +1177,7 @@ static constexpr EntryPage V30_PAGES[] PROGMEM = {
         {0xFF, ARRAY_RANGE(TABLE_FF), ARRAY_RANGE(INDEX_FF)},
 };
 
+#if !defined(LIBASM_I8086_NOFPU)
 static constexpr EntryPage I8087_PAGES[] PROGMEM = {
         {0x00, ARRAY_RANGE(TABLE_FPU), ARRAY_RANGE(INDEX_FPU)},
         {0xD8, ARRAY_RANGE(TABLE_D8), ARRAY_RANGE(INDEX_D8)},
@@ -1185,6 +1189,7 @@ static constexpr EntryPage I8087_PAGES[] PROGMEM = {
         {0xDE, ARRAY_RANGE(TABLE_DE), ARRAY_RANGE(INDEX_DE)},
         {0xDF, ARRAY_RANGE(TABLE_DF), ARRAY_RANGE(INDEX_DF)},
 };
+#endif
 
 template <typename CPUTYPE>
 using Processor = entry::CpuBase<CPUTYPE, EntryPage>;
@@ -1213,6 +1218,7 @@ static const Cpu *cpu(CpuType cpuType) {
 
 #define EMPTY_RANGE(a) ARRAY_BEGIN(a), ARRAY_BEGIN(a)
 
+#if !defined(LIBASM_I8086_NOFPU)
 static constexpr Fpu FPU_TABLE[] PROGMEM = {
         {FPU_I8087, TEXT_FPU_8087, ARRAY_RANGE(I8087_PAGES)},
         {FPU_NONE, TEXT_none, EMPTY_RANGE(I8087_PAGES)},
@@ -1221,6 +1227,7 @@ static constexpr Fpu FPU_TABLE[] PROGMEM = {
 static const Fpu *fpu(FpuType fpuType) {
     return Fpu::search(fpuType, ARRAY_RANGE(FPU_TABLE));
 }
+#endif
 
 static bool acceptMode(AddrMode opr, AddrMode table) {
     if (opr == table)
@@ -1291,6 +1298,7 @@ static bool acceptModes(AsmInsn &insn, const Entry *entry) {
 static constexpr char TEXT_FN[] PROGMEM = "FN";
 
 Error TableI8086::searchName(const CpuSpec &cpuSpec, AsmInsn &insn) const {
+#if !defined(LIBASM_ASM_NOFLOAT) && !defined(LIBASM_I8086_NOFPU)
     fpu(cpuSpec.fpu)->searchName(insn, acceptModes);
     if (insn.getError() == UNKNOWN_INSTRUCTION) {
         // check non-wait version FNxxxx
@@ -1310,6 +1318,7 @@ Error TableI8086::searchName(const CpuSpec &cpuSpec, AsmInsn &insn) const {
         insn.setFwait();
     }
     if (insn.getError() == UNKNOWN_INSTRUCTION)
+#endif
         cpu(cpuSpec.cpu)->searchName(insn, acceptModes);
     return insn.getError();
 }
@@ -1367,6 +1376,7 @@ static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page
 }
 
 Error TableI8086::searchOpCode(const CpuSpec &cpuSpec, DisInsn &insn, StrBuffer &out) const {
+#if !defined(LIBASM_DIS_NOFLOAT) && !defined(LIBASM_I8086_NOFPU)
     fpu(cpuSpec.fpu)->searchOpCode(insn, out, matchOpCode);
     if (insn.isOK()) {
         if (insn.opCode() == DisInsn::FWAIT)
@@ -1382,6 +1392,7 @@ Error TableI8086::searchOpCode(const CpuSpec &cpuSpec, DisInsn &insn, StrBuffer 
         }
     }
     if (insn.getError() == UNKNOWN_INSTRUCTION && insn.fwait() == 0)
+#endif
         cpu(cpuSpec.cpu)->searchOpCode(insn, out, matchOpCode);
     return insn.getError();
 }
@@ -1391,7 +1402,11 @@ bool TableI8086::isPrefix(CpuType cpuType, Config::opcode_t code) const {
 }
 
 bool TableI8086::isPrefix(FpuType fpuType, Config::opcode_t code) const {
+#if !defined(LIBASM_DIS_NOFLOAT) && !defined(LIBASM_I8086_NOFPU)
     return fpu(fpuType)->isPrefix(code);
+#else
+    return false;
+#endif
 }
 
 const /*PROGMEM*/ char *TableI8086::listCpu_P() const {

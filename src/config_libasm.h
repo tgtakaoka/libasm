@@ -20,11 +20,14 @@
 /** Disable floating point number support from assembler */
 // #define LIBASM_ASM_NOFLOAT
 
+/** Disable floating point number support from disassembler */
+// #define LIBASM_DIS_NOFLOAT
+
+/** Forcibly enable software emulated floating point */
+// #define LIBASM_SOFT_FLOAT80
+
 /** Enable debugging functionality of Value class */
 // #define LIBASM_DEBUG_VALUE
-
-/** Enable software emulated floating point */
-// #define LIBASM_SOFT_FLOAT80
 
 #endif  // __LIBASM_CONFIG_LIBASM_H__
 

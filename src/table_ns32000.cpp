@@ -665,8 +665,10 @@ static constexpr uint8_t INDEX_8_3_1_MMU[] PROGMEM = {
 };
 #endif
 
+#if !defined(LIBASM_NS32000_NOFPU)
+
 // Format 9: |gen1_|gen| |2_|_op|f|ii| |0011|1110|
-static constexpr Entry FORMAT_9[] PROGMEM = {
+static constexpr Entry FORMAT_9_FPU[] PROGMEM = {
     // gen2 must be register pair
     W2(0x00, TEXT_MOVBL,   SZ_BYTE, M_GENR, M_FENW, P_GEN1, P_GEN2, false, true),
     W2(0x01, TEXT_MOVWL,   SZ_WORD, M_GENR, M_FENW, P_GEN1, P_GEN2, false, true),
@@ -699,7 +701,7 @@ static constexpr Entry FORMAT_9[] PROGMEM = {
     E2(0x3D, TEXT_FLOORFW, SZ_QUAD, M_FENR, M_GENW, P_GEN1, P_GEN2),
     E2(0x3F, TEXT_FLOORFD, SZ_QUAD, M_FENR, M_GENW, P_GEN1, P_GEN2),
 };
-static constexpr uint8_t INDEX_9[] PROGMEM = {
+static constexpr uint8_t INDEX_9_FPU[] PROGMEM = {
      25,  // TEXT_FLOORFB
      27,  // TEXT_FLOORFD
      26,  // TEXT_FLOORFW
@@ -731,7 +733,7 @@ static constexpr uint8_t INDEX_9[] PROGMEM = {
 };
 
 // Format 11: |gen1_|gen| |2_|_op_|0f| |1011|1110|
-static constexpr Entry FORMAT_11[] PROGMEM = {
+static constexpr Entry FORMAT_11_FPU[] PROGMEM = {
     E2(0x00, TEXT_ADDL, SZ_OCTA, M_FENR, M_FENW, P_GEN1, P_GEN2),
     E2(0x01, TEXT_ADDF, SZ_QUAD, M_FENR, M_FENW, P_GEN1, P_GEN2),
     E2(0x04, TEXT_MOVL, SZ_OCTA, M_FENR, M_FENW, P_GEN1, P_GEN2),
@@ -749,7 +751,7 @@ static constexpr Entry FORMAT_11[] PROGMEM = {
     E2(0x34, TEXT_ABSL, SZ_OCTA, M_FENR, M_FENW, P_GEN1, P_GEN2),
     E2(0x35, TEXT_ABSF, SZ_QUAD, M_FENR, M_FENW, P_GEN1, P_GEN2),
 };
-static constexpr uint8_t INDEX_11[] PROGMEM = {
+static constexpr uint8_t INDEX_11_FPU[] PROGMEM = {
      15,  // TEXT_ABSF
      14,  // TEXT_ABSL
       1,  // TEXT_ADDF
@@ -768,7 +770,9 @@ static constexpr uint8_t INDEX_11[] PROGMEM = {
       6,  // TEXT_SUBL
 };
 
-#ifndef LIBASM_NS32000_NOMMU
+#endif
+
+#if !defined(LIBASM_NS32000_NOMMU)
 // Format 14: |gen1_|sho| |t|0|_op_|ii| |0001|1110|
 static constexpr Entry FORMAT_14_1_MMU[] PROGMEM = {
     E2(0x03, TEXT_RDVAL, SZ_QUAD, M_GENA, M_ZERO, P_GEN1, P_GEN2),
@@ -829,13 +833,15 @@ static constexpr EntryPage NS32032_PAGES[] PROGMEM = {
         {0xEE, 0xF8, 1, ARRAY_RANGE(FORMAT_8_4), ARRAY_RANGE(INDEX_8_4)},
 };
 
+#if !defined(LIBASM_NS32000_NOFPU)
 // Floating point instructions
 static constexpr EntryPage NS32081_PAGES[] PROGMEM = {
-        {0x3E, 0xC0, 1, ARRAY_RANGE(FORMAT_9), ARRAY_RANGE(INDEX_9)},
-        {0xBE, 0xC0, 1, ARRAY_RANGE(FORMAT_11), ARRAY_RANGE(INDEX_11)},
+        {0x3E, 0xC0, 1, ARRAY_RANGE(FORMAT_9_FPU), ARRAY_RANGE(INDEX_9_FPU)},
+        {0xBE, 0xC0, 1, ARRAY_RANGE(FORMAT_11_FPU), ARRAY_RANGE(INDEX_11_FPU)},
 };
+#endif
 
-#ifndef LIBASM_NS32000_NOMMU
+#if !defined(LIBASM_NS32000_NOMMU)
 // Memory management instructions
 static constexpr EntryPage NS32082_PAGES[] PROGMEM = {
         {0xAE, 0xC0, 1, ARRAY_RANGE(FORMAT_8_3_1_MMU), ARRAY_RANGE(INDEX_8_3_1_MMU)},
@@ -900,6 +906,7 @@ static const Cpu *cpu(CpuType cpuType) {
 
 #define EMPTY_RANGE(a) ARRAY_BEGIN(a), ARRAY_BEGIN(a)
 
+#if !defined(LIBASM_NS32000_NOFPU)
 static constexpr Fpu FPU_TABLE[] PROGMEM = {
         {FPU_NS32081, TEXT_FPU_NS32081, ARRAY_RANGE(NS32081_PAGES)},
         {FPU_NONE, TEXT_none, EMPTY_RANGE(NS32081_PAGES)},
@@ -908,8 +915,9 @@ static constexpr Fpu FPU_TABLE[] PROGMEM = {
 static const Fpu *fpu(FpuType fpuType) {
     return Fpu::search(fpuType, ARRAY_RANGE(FPU_TABLE));
 }
+#endif
 
-#ifndef LIBASM_NS32000_NOMMU
+#if !defined(LIBASM_NS32000_NOMMU)
 static constexpr Mmu MMU_TABLE[] PROGMEM = {
         {MMU_NS32082, TEXT_MMU_NS32082, ARRAY_RANGE(NS32082_PAGES)},
         {MMU_NONE, TEXT_none, EMPTY_RANGE(NS32082_PAGES)},
@@ -948,9 +956,11 @@ static bool acceptModes(AsmInsn &insn, const Entry *entry) {
 
 Error TableNs32000::searchName(const CpuSpec &cpuSpec, AsmInsn &insn) const {
     cpu(cpuSpec.cpu)->searchName(insn, acceptModes);
+#if !defined(LIBASM_ASM_NOFLOAT) && !defined(LIBASM_NS32000_NOFPU)
     if (insn.getError() == UNKNOWN_INSTRUCTION)
         fpu(cpuSpec.fpu)->searchName(insn, acceptModes);
-#ifndef LIBASM_NS32000_NOMMU
+#endif
+#if !defined(LIBASM_NS32000_NOMMU)
     if (insn.getError() == UNKNOWN_INSTRUCTION)
         mmu(cpuSpec.mmu)->searchName(insn, acceptModes);
 #endif
@@ -969,9 +979,11 @@ static void readEntryName(
 
 Error TableNs32000::searchOpCode(const CpuSpec &cpuSpec, DisInsn &insn, StrBuffer &out) const {
     cpu(cpuSpec.cpu)->searchOpCode(insn, out, matchOpCode, readEntryName);
+#if !defined(LIBASM_DIS_NOFLOAT) && !defined(LIBASM_NS32000_NOFPU)
     if (insn.getError() == UNKNOWN_INSTRUCTION)
         fpu(cpuSpec.fpu)->searchOpCode(insn, out, matchOpCode, readEntryName);
-#ifndef LIBASM_NS32000_NOMMU
+#endif
+#if !defined(LIBASM_NS32000_NOMMU)
     if (insn.getError() == UNKNOWN_INSTRUCTION)
         mmu(cpuSpec.mmu)->searchOpCode(insn, out, matchOpCode, readEntryName);
 #endif
@@ -979,11 +991,14 @@ Error TableNs32000::searchOpCode(const CpuSpec &cpuSpec, DisInsn &insn, StrBuffe
 }
 
 bool TableNs32000::isPrefixCode(const CpuSpec &cpuSpec, uint8_t code) const {
-    return fpu(cpuSpec.fpu)->isPrefix(code) ||
-#ifndef LIBASM_NS32000_NOMMU
-           mmu(cpuSpec.mmu)->isPrefix(code) ||
+    return
+#if !defined(LIBASM_DIS_NOFLOAT) && !defined(LIBASM_NS32000_NOFPU)
+            fpu(cpuSpec.fpu)->isPrefix(code) ||
 #endif
-           cpu(cpuSpec.cpu)->isPrefix(code);
+#if !defined(LIBASM_NS32000_NOMMU)
+            mmu(cpuSpec.mmu)->isPrefix(code) ||
+#endif
+            cpu(cpuSpec.cpu)->isPrefix(code);
 }
 
 const /*PROGMEM*/ char *TableNs32000::listCpu_P() const {

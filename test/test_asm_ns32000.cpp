@@ -40,18 +40,18 @@ static void tear_down() {
     EQUALS("cpu 32032", true,    assembler.setCpu("32032"));
     EQUALS_P("cpu 32032", "32032", assembler.config().cpu_P());
 
-#ifdef LIBASM_ASM_NOFLOAT
-    ERRT("fpu ns32081", UNKNOWN_OPERAND, "ns32081");
-#else
+#if !defined(LIBASM_ASM_NOFLOAT) && !defined(LIBASM_NS32000_NOFPU)
     TEST("fpu ns32081");
+#else
+    ERRT("fpu ns32081", UNKNOWN_OPERAND, "ns32081");
 #endif
     TEST("fpu none");
     ERRT("fpu ns32082", UNKNOWN_OPERAND, "ns32082");
 
-#ifdef LIBASM_NS32000_NOMMU
-    ERRT("pmmu ns32082", UNKNOWN_OPERAND, "ns32082");
-#else
+#if !defined(LIBASM_NS32000_NOMMU)
     TEST("pmmu ns32082");
+#else
+    ERRT("pmmu ns32082", UNKNOWN_OPERAND, "ns32082");
 #endif
     TEST("pmmu none");
     ERRT("pmmu ns32081", UNKNOWN_OPERAND, "ns32081");
@@ -370,9 +370,9 @@ static void test_format_8() {
     ERRT("INSD   R0,R2,0(R1),33", OVERFLOW_RANGE,  "33", 0xAE, 0x43, 0x12, 0x00, 0x21);
 }
 
-#ifndef LIBASM_ASM_NOFLOAT
+#if !defined(LIBASM_ASM_NOFLOAT) && !defined(LIBASM_NS32000_NOFPU)
 
-static void test_format_9() {
+static void test_format_9_fpu() {
     TEST("FPU NS32081");
 
     TEST("MOVF F1,8(SB)",   0xBE, 0x85, 0x0E, 0x08);
@@ -464,7 +464,7 @@ static void test_format_9() {
     ERUI("SFSR TOS");
 }
 
-static void test_format_11() {
+static void test_format_11_fpu() {
     TEST("FPU NS32081");
 
     TEST("ABSF F1,F5",     0xBE, 0x75, 0x09);
@@ -511,7 +511,7 @@ static void test_format_11() {
 
 #endif
 
-#ifndef LIBASM_NS32000_NOMMU
+#if !defined(LIBASM_NS32000_NOMMU)
 
 static void test_format_8_mmu() {
     TEST("PMMU NS32082");
@@ -540,17 +540,16 @@ static void test_format_14_mmu() {
     ERUI("RDVAL 0x200(R0)");
     ERUI("WRVAL 0x200(R0)");
 }
-
 #endif
 
 static void test_generic_addressing() {
-#ifndef LIBASM_ASM_NOFLOAT
+#if !defined(LIBASM_ASM_NOFLOAT) && !defined(LIBASM_NS32000_NOFPU)
     TEST("FPU NS32081");
 #endif
 
     // Register
     TEST("ADDW R1, R2", 0x81, 0x08);
-#ifndef LIBASM_ASM_NOFLOAT
+#if !defined(LIBASM_ASM_NOFLOAT) && !defined(LIBASM_NS32000_NOFPU)
     TEST("ADDF F1, F2", 0xBE, 0x81, 0x08);
 #endif
     // Register Relative
@@ -565,7 +564,7 @@ static void test_generic_addressing() {
     TEST("ADDB 0x56,       R1", 0x40, 0xA0, 0x56);
     TEST("ADDW 0x1234,     R1", 0x41, 0xA0, 0x12, 0x34);
     TEST("ADDD 0x12345678, R1", 0x43, 0xA0, 0x12, 0x34, 0x56, 0x78);
-#ifndef LIBASM_ASM_NOFLOAT
+#if !defined(LIBASM_ASM_NOFLOAT) && !defined(LIBASM_NS32000_NOFPU)
     TEST("ADDF 3.14159, F1",
          0xBE, 0x41, 0xA0, 0x40, 0x49, 0x0F, 0xD0);
     TEST("ADDF 299792000, F3",
@@ -682,10 +681,10 @@ static void test_generic_addressing() {
 }
 
 static void test_comment() {
-#ifndef LIBASM_ASM_NOFLOAT
+#if !defined(LIBASM_ASM_NOFLOAT) && !defined(LIBASM_NS32000_NOFPU)
     TEST("FPU NS32081");
 #endif
-#ifndef LIBASM_NS32000_NOMMU
+#if !defined(LIBASM_NS32000_NOMMU)
     TEST("PMMU NS32082");
 #endif
 
@@ -710,13 +709,13 @@ static void test_comment() {
     ACOMM(0x100, "ADDW 8 (SP) , * - 10    ; comment", "; comment", 0xC1, 0xCE, 0x08, 0x76);
     ACOMM(0x100, "ADDW 8 (SP) , 0x10A (PC); comment", "; comment", 0xC1, 0xCE, 0x08, 0x0A);
 
-#ifndef LIBASM_ASM_NOFLOAT
+#if !defined(LIBASM_ASM_NOFLOAT) && !defined(LIBASM_NS32000_NOFPU)
     TEST("ADDL 137.03599908421, F6",
          0xBE, 0x80, 0xA1, 0x40, 0x61, 0x21, 0x26, 0xE7, 0x8D, 0x2B, 0xC6);
 #endif
 
     COMM("LPRB UPSR , R0 ; comment", "; comment", 0x6C, 0x00);
-#ifndef LIBASM_NS32000_NOMMU
+#if !defined(LIBASM_NS32000_NOMMU)
     COMM("LMR  PTB0 , R0 ; comment", "; comment", 0x1E, 0x0B, 0x06);
 #endif
 
@@ -735,7 +734,7 @@ static void test_comment() {
     COMM(R"(.ascii  "TEXT"  # comment)", "# comment", 0x54, 0x45, 0x58, 0x54);
     COMM(".word   -128, 255 ; comment", "; comment", 0x80, 0xFF, 0xFF, 0x00);
     COMM(".double x'1234    # comment", "# comment", 0x34, 0x12, 0x00, 0x00);
-#ifndef LIBASM_ASM_NOFLOAT
+#if !defined(LIBASM_ASM_NOFLOAT) && !defined(LIBASM_NS32000_NOFPU)
     COMM(".float  1.0       # comment", "# comment", 0x00, 0x00, 0x80, 0x3F);
     COMM(".long  -1.0       # comment", "# comment", 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xF0, 0xBF);
 #endif
@@ -791,7 +790,7 @@ static void test_undef() {
     ERUS("INSB R1,16,   2(R0),UNDEF", "UNDEF",             0xAE, 0x08, 0xA2, 0x10, 0x02, 0x00);
     ERUS("INSB R1,UNDEF,2(R0),UNDEF", "UNDEF,2(R0),UNDEF", 0xAE, 0x08, 0xA2, 0x00, 0x02, 0x00);
 
-#ifndef LIBASM_ASM_NOFLOAT
+#if !defined(LIBASM_ASM_NOFLOAT) && !defined(LIBASM_NS32000_NOFPU)
     TEST("FPU NS32081");
     ERUS("ADDF UNDEF, F0", "UNDEF, F0", 0xBE, 0x01, 0xA0, 0x00, 0x00, 0x00, 0x00);
     ERUS("ADDL UNDEF, F0", "UNDEF, F0", 0xBE, 0x00, 0xA0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00);
@@ -855,7 +854,7 @@ static void test_data_constant() {
          0x78, 0x56, 0x34, 0x12, 0xF0, 0xDE, 0xBC, 0x9A, 0x78, 0x56, 0x34, 0x12, 0xF0, 0xDE, 0xBC, 0x9A,
          0x78, 0x56, 0x34, 0x12, 0xF0, 0xDE, 0xBC, 0x9A, 0x78, 0x56, 0x34, 0x12, 0xDE, 0xBC, 0x9A, 0x00);
 
-#ifndef LIBASM_ASM_NOFLOAT
+#if !defined(LIBASM_ASM_NOFLOAT) && !defined(LIBASM_NS32000_NOFPU)
     TEST(".float  1.0, -inf, +nan",
          0x00, 0x00, 0x80, 0x3F,
          0x00, 0x00, 0x80, 0xFF,
@@ -882,11 +881,11 @@ void run_tests(const char *cpu) {
     RUN_TEST(test_format_6);
     RUN_TEST(test_format_7);
     RUN_TEST(test_format_8);
-#ifndef LIBASM_ASM_NOFLOAT
-    RUN_TEST(test_format_9);
-    RUN_TEST(test_format_11);
+#if !defined(LIBASM_ASM_NOFLOAT) && !defined(LIBASM_NS32000_NOFPU)
+    RUN_TEST(test_format_9_fpu);
+    RUN_TEST(test_format_11_fpu);
 #endif
-#ifndef LIBASM_NS32000_NOMMU
+#if !defined(LIBASM_NS32000_NOMMU)
     RUN_TEST(test_format_8_mmu);
     RUN_TEST(test_format_14_mmu);
 #endif

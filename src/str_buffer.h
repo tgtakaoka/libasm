@@ -115,6 +115,8 @@ struct StrBuffer : ErrorReporter {
     /** Output |value| as decimal number. */
     StrBuffer &int16(int16_t i16, uint_fast8_t prec = 0) { return dec(i16, prec); }
 
+#if !defined(LIBASM_DIS_NOFLOAT)
+
     /**
      * Output |value| as 32-bit floating point number.
      * Significand is 23+1 bit and UINT24_MAX is 16777215 (8 digits).
@@ -133,6 +135,8 @@ struct StrBuffer : ErrorReporter {
      */
     StrBuffer &float80(const float80_t &f80, uint_fast8_t prec = 21);
 
+#endif
+
     /** output ", " */
     StrBuffer &comma();
 
@@ -144,7 +148,9 @@ private:
     char *_out;
     char *_end;
 
+#if !defined(LIBASM_DIS_NOFLOAT)
     StrBuffer &convert(size_t len);
+#endif
 };
 
 /**

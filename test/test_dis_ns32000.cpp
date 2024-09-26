@@ -481,7 +481,9 @@ static void test_format_8() {
     ERRT("INSD", "R0, R2, 0(R1), 33", OVERFLOW_RANGE,  "33", 0xAE, 0x43, 0x12, 0x00, 0x21);
 }
 
-static void test_format_9() {
+#if !defined(LIBASM_DIS_NOFLOAT) && !defined(LIBASM_NS32000_NOFPU)
+
+static void test_format_9_fpu() {
     TEST("MOVF", "F1, 8(SB)", 0xBE, 0x85, 0x0E, 0x08);
     TEST("MOVL", "F2, 8(SB)", 0xBE, 0x84, 0x16, 0x08);
     TEST("MOVF", "NAN, F1",   0xBE, 0x45, 0xA0, 0x7F, 0xC0, 0x00, 0x00);
@@ -537,7 +539,7 @@ static void test_format_9() {
     ERRT("TRUNCLD", "F1, R5",   REGISTER_NOT_ALIGNED, "F1, R5",     0x3E, 0x6B, 0x09);
 }
 
-static void test_format_11() {
+static void test_format_11_fpu() {
     TEST("ABSF", "F1, F5",     0xBE, 0x75, 0x09);
     TEST("ABSL", "F2, F4",     0xBE, 0x34, 0x11);
     TEST("ADDF", "F3, F7",     0xBE, 0xC1, 0x19);
@@ -591,7 +593,9 @@ static void test_format_11() {
          0x40, 0x0E, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00);
 }
 
-#ifndef LIBASM_NS32000_NOMMU
+#endif
+
+#if !defined(LIBASM_NS32000_NOMMU)
 
 static void test_format_8_mmu() {
     TEST("MOVSUB", "5(SP), 9(SB)",        0xAE, 0x8C, 0xCE, 0x05, 0x09);
@@ -647,7 +651,9 @@ static void test_format_14_mmu() {
 static void test_generic_addressing() {
     // Register
     TEST("ADDW", "R1, R2", 0x81, 0x08);
+#if !defined(LIBASM_DIS_NOFLOAT) && !defined(LIBASM_NS32000_NOFPU)
     TEST("ADDF", "F1, F2", 0xBE, 0x81, 0x08);
+#endif
     // Register Relative
     TEST("ADDW", "4(R1), R2",     0x81, 0x48, 0x04);
     TEST("ADDW", "4(R1), 32(R2)", 0x81, 0x4A, 0x04, 0x80, 0x20);
@@ -663,6 +669,7 @@ static void test_generic_addressing() {
     ERRT("ADDB", "R1, 0", OPERAND_NOT_ALLOWED, "0", 0x00, 0x0D);
     ERRT("ADDW", "R1, 0", OPERAND_NOT_ALLOWED, "0", 0x01, 0x0D);
     ERRT("ADDD", "R1, 0", OPERAND_NOT_ALLOWED, "0", 0x03, 0x0D);
+#if !defined(LIBASM_DIS_NOFLOAT) && !defined(LIBASM_NS32000_NOFPU)
     TEST("ADDF", "3.14159012, F1",
          0xBE, 0x41, 0xA0, 0x40, 0x49, 0x0F, 0xD0);
     TEST("ADDF", "299792000, F3",
@@ -673,6 +680,7 @@ static void test_generic_addressing() {
          0xBE, 0x00, 0xA1, 0x39, 0x0B, 0x86, 0x0B, 0xDE, 0x02, 0x31, 0x11);
     ERRT("ADDF", "F1, 0", OPERAND_NOT_ALLOWED, "0", 0xBE, 0x01, 0x0D);
     ERRT("ADDL", "F2, 0", OPERAND_NOT_ALLOWED, "0", 0xBE, 0x00, 0x15);
+#endif
 
     // Absolute
     TEST("ADDW", "@0x001234, 4(R2)"  ,   0x81, 0xAA, 0x92, 0x34, 0x04);
@@ -785,13 +793,21 @@ static void test_formatter() {
 }
 // clang-format on
 
-#ifdef LIBASM_NS32000_NOMMU
-static const CpuSpec SPEC{NS32032, FPU_NS32081, MMU_NONE};
+static const CpuSpec SPEC{NS32032,
+#if defined(LIBASM_NS32000_NOFPU)
+        FPU_NONE,
 #else
-static const CpuSpec SPEC{NS32032, FPU_NS32081, MMU_NS32082};
+        FPU_NS32081,
 #endif
+#if defined(LIBASM_NS32000_NOMMU)
+        MMU_NONE
+#else
+        MMU_NS32082
+#endif
+};
 
-static void assert_unknown(const char *file, int line, Config::opcode_t opc, Config::opcode_t prefix) {
+static void assert_unknown(
+        const char *file, int line, Config::opcode_t opc, Config::opcode_t prefix) {
     if (TABLE.isPrefixCode(SPEC, prefix)) {
         __VASSERT(file, line, UNKNOWN_INSTRUCTION, "", 0x0000, "", "", prefix, opc);
     } else {
@@ -970,9 +986,11 @@ void run_tests(const char *cpu) {
     RUN_TEST(test_format_6);
     RUN_TEST(test_format_7);
     RUN_TEST(test_format_8);
-    RUN_TEST(test_format_9);
-    RUN_TEST(test_format_11);
-#ifndef LIBASM_NS32000_NOMMU
+#if !defined(LIBASM_DIS_NOFLOAT) && !defined(LIBASM_NS32000_NOFPU)
+    RUN_TEST(test_format_9_fpu);
+    RUN_TEST(test_format_11_fpu);
+#endif
+#if !defined(LIBASM_NS32000_NOMMU)
     RUN_TEST(test_format_8_mmu);
     RUN_TEST(test_format_14_mmu);
 #endif

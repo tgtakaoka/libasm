@@ -19,6 +19,12 @@
 
 #include "config_base.h"
 
+/** Disable MC68881 FPU instructions */
+// #define LIBASM_MC68000_NOFPU
+#if defined(LIBASM_ASM_NOFLOAT) && defined(LIBASM_DIS_NOFLOAT)
+#define LIBASM_MC68000_NOFPU
+#endif
+
 namespace libasm {
 namespace mc68000 {
 
@@ -28,7 +34,9 @@ enum CpuType : uint8_t {
 
 enum FpuType : uint8_t {
     FPU_NONE,
+#if !defined(LIBASM_MC68000_NOFPU)
     FPU_MC68881,
+#endif
 };
 
 struct CpuSpec final {
@@ -40,7 +48,15 @@ struct CpuSpec final {
 
 struct Config : ConfigImpl<CpuType, ADDRESS_24BIT, ADDRESS_BYTE, OPCODE_16BIT, ENDIAN_BIG, 16, 7> {
     Config(const InsnTable<CpuType> &table)
-        : ConfigImpl(table, MC68000), _cpuSpec(MC68000, FPU_MC68881, 1) {}
+        : ConfigImpl(table, MC68000),
+          _cpuSpec(MC68000,
+#if defined(LIBASM_MC68000_NOFPU)
+                  FPU_NONE,
+#else
+                  FPU_MC68881,
+#endif
+                  1) {
+    }
 
     void setCpuType(CpuType cpuType) override {
         _cpuSpec.cpu = cpuType;

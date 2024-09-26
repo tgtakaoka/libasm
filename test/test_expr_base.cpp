@@ -140,7 +140,7 @@ static void test_unary_operator() {
     X16("-32769", OVERFLOW_RANGE, "-32769", "");
 
     E32("-1",          0xffffffff);
-#ifdef LIBASM_ASM_NOFLOAT
+#if defined(LIBASM_ASM_NOFLOAT)
     X32("-2147483648", OVERFLOW_RANGE, "-2147483648", "");
 #else
     E32("-2147483648", 0x80000000);
@@ -158,7 +158,7 @@ static void test_unary_operator() {
 
     E32("+2147483648", 0x80000000);
     E32("+2147483649", 0x80000001);
-#ifdef LIBASM_ASM_NOFLOAT
+#if defined(LIBASM_ASM_NOFLOAT)
     X32("+4294967296", OVERFLOW_RANGE, "4294967296", "");
 #else
     X32("+4294967296", OVERFLOW_RANGE, "+4294967296", "");

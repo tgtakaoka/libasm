@@ -107,6 +107,8 @@ StrBuffer &StrBuffer::rtext_P(const /*PROGMEM*/ char *text_P) {
     return *this;
 }
 
+#if !defined(LIBASM_DIS_NOFLOAT)
+
 StrBuffer &StrBuffer::float32(const float80_t &f80, uint_fast8_t prec) {
     *_end = 1;  // to check buffer overflow
     const auto len = f80.gcvt(mark(), capacity() + 1, prec);
@@ -136,6 +138,8 @@ StrBuffer &StrBuffer::convert(size_t len) {
     }
     return *this;
 }
+
+#endif
 
 StrBuffer &StrBuffer::comma() {
     return rletter(',').rletter(' ');

@@ -82,7 +82,7 @@ Error Insn::emitUint64Le(uint64_t data, uint8_t pos) {
     return emitUint32Le(data >> 32, pos + 4);
 }
 
-#ifndef LIBASM_ASM_NOFLOAT
+#if !defined(LIBASM_ASM_NOFLOAT)
 
 Error Insn::emitFloat32Be(const float80_t &data, uint8_t pos) {
     float32_t f32{data};
@@ -174,6 +174,8 @@ uint64_t DisInsnBase::readUint64Le() {
     return static_cast<uint64_t>(msw) << 32 | lsw;
 }
 
+#if !defined(LIBASM_DIS_NOFLOAT)
+
 float80_t DisInsnBase::readFloat32Be() {
     float32_t f32;
     return float80_t(f32.set(readUint32Be()));
@@ -193,6 +195,8 @@ float80_t DisInsnBase::readFloat64Le() {
     float64_t f64;
     return float80_t(f64.set(readUint64Le()));
 }
+
+#endif
 
 }  // namespace libasm
 

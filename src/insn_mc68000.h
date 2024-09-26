@@ -75,7 +75,9 @@ struct AsmInsn final : AsmInsnImpl<Config>, EntryInsn {
     Error emitOperand16(uint16_t val16) { return emitUint16(val16, operandPos()); }
     Error emitOperand32(uint32_t val32) { return emitUint32(val32, operandPos()); }
     Error emitOperand64(uint64_t val64) { return emitUint64(val64, operandPos()); }
-#ifndef LIBASM_ASM_NOFLOAT
+#if !defined(LIBASM_ASM_NOFLOAT) && !defined(LIBASM_MC68000_NOFPU)
+    Error emitFloat32(const float80_t &val80, uint8_t pos) { return emitFloat32Be(val80, pos); }
+    Error emitFloat64(const float80_t &val80, uint8_t pos) { return emitFloat64Be(val80, pos); }
     Error emitExtendedReal(const float80_t &val80, uint8_t pos);
     Error emitDecimalString(const float80_t &val80, uint8_t pos);
 #endif
@@ -92,6 +94,7 @@ private:
     InsnSize _isize;
 };
 
+#if !defined(LIBASM_DIS_NOFLOAT) && !defined(LIBASM_MC68000_NOFPU)
 struct ExtendedReal {
     uint16_t tag;
     uint16_t pad;
@@ -105,6 +108,7 @@ struct DecimalString {
     uint64_t sig;
     bool isValid() const;
 };
+#endif
 
 struct DisInsn final : DisInsnImpl<Config>, EntryInsn {
     DisInsn(Insn &insn, DisMemory &memory, const StrBuffer &out) : DisInsnImpl(insn, memory, out) {}
@@ -115,8 +119,10 @@ struct DisInsn final : DisInsnImpl<Config>, EntryInsn {
             setPostfix(readUint16());
     }
 
+#if !defined(LIBASM_DIS_NOFLOAT) && !defined(LIBASM_MC68000_NOFPU)
     ExtendedReal readExtendedReal();
     DecimalString readDecimalString();
+#endif
 };
 
 }  // namespace mc68000

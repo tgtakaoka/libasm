@@ -235,7 +235,6 @@ static void test_data_transfer() {
     TEST("IN   AL,DX",  0xEC);
     TEST("IN   AX,34H", 0xE5, 0x34);
     TEST("IN   AX,DX",  0xED);
-
     TEST("OUT  34H,AL", 0xE6, 0x34);
     TEST("OUT  DX,AL",  0xEE);
     TEST("OUT  34H,AX", 0xE7, 0x34);
@@ -1981,7 +1980,7 @@ static void test_segment_override() {
     }
 }
 
-#ifndef LIBASM_ASM_NOFLOAT
+#if !defined(LIBASM_ASM_NOFLOAT) && !defined(LIBASM_I8086_NOFPU)
 
 static void test_float() {
     TEST("FPU 8087");
@@ -2746,7 +2745,7 @@ static void test_comment() {
     COMM("DB 'TEXT'    ; comment", "; comment", 0x54, 0x45, 0x58, 0x54);
     COMM("DW -128, 255 ; comment", "; comment", 0x80, 0xFF, 0xFF, 0x00);
     COMM("DD 1, 2      ; comment", "; comment", 0x01, 0x00, 0x00, 0x00, 0x02, 0x00, 0x00, 0x00);
-#ifndef LIBASM_ASM_NOFLOAT
+#if !defined(LIBASM_ASM_NOFLOAT) && !defined(LIBASM_I8086_NOFPU)
     COMM("DQ 1, 2      ; comment", "; comment", 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
          0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00);
     COMM("DD  1.0      ; comment", "; comment", 0x00, 0x00, 0x80, 0x3F);
@@ -2855,7 +2854,7 @@ static void test_data_constant() {
     ERUS("DB 1, UNDEF", "UNDEF", 0x01, 0x00);
     ERUS("DW 1, UNDEF", "UNDEF", 0x01, 0x00, 0x00, 0x00);
     ERUS("DD 1, UNDEF", "UNDEF", 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00);
-#ifndef LIBASM_ASM_NOFLOAT
+#if !defined(LIBASM_ASM_NOFLOAT) && !defined(LIBASM_I8086_NOFPU)
     ERUS("DQ 1, UNDEF", "UNDEF",
          0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
          0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00);
@@ -2887,7 +2886,7 @@ static void test_data_constant() {
          0x78, 0x56, 0x34, 0x12, 0xF0, 0xDE, 0xBC, 0x9A, 0x78, 0x56, 0x34, 0x12, 0xF0, 0xDE, 0xBC, 0x9A,
          0x78, 0x56, 0x34, 0x12, 0xF0, 0xDE, 0xBC, 0x9A, 0x78, 0x56, 0x34, 0x12, 0xDE, 0xBC, 0x9A, 0x00);
 
-#ifndef LIBASM_ASM_NOFLOAT
+#if !defined(LIBASM_ASM_NOFLOAT) && !defined(LIBASM_I8086_NOFPU)
     TEST("DD  1.0, -inf, +nan",
          0x00, 0x00, 0x80, 0x3F,
          0x00, 0x00, 0x80, 0xFF,
@@ -2924,7 +2923,7 @@ void run_tests(const char *cpu) {
     RUN_TEST(test_control_transfer);
     RUN_TEST(test_processor_control);
     RUN_TEST(test_segment_override);
-#ifndef LIBASM_ASM_NOFLOAT
+#if !defined(LIBASM_ASM_NOFLOAT) && !defined(LIBASM_I8086_NOFPU)
     RUN_TEST(test_float);
     RUN_TEST(test_float_nowait);
 #endif

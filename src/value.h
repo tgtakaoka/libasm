@@ -34,7 +34,7 @@ enum Radix : uint8_t {
 };
 
 struct Value {
-#ifdef LIBASM_ASM_NOFLOAT
+#if defined(LIBASM_ASM_NOFLOAT)
     using signed_t = int32_t;
     using unsigned_t = uint32_t;
     static constexpr auto SIGNED_MAX = INT32_MAX;
@@ -83,7 +83,7 @@ struct Value {
     uint32_t getUnsigned() const { return static_cast<uint32_t>(_unsigned); }
     /** Get full precision signed integer */
     signed_t getInteger() const { return _signed; }
-#ifndef LIBASM_ASM_NOFLOAT
+#if !defined(LIBASM_ASM_NOFLOAT)
     /** Get value as floating point numbe */
     float_t getFloat() const;
 #endif
@@ -91,7 +91,7 @@ struct Value {
     Value &setUnsigned(uint32_t u);
     Value &setInteger(signed_t s);
     Value &setUinteger(unsigned_t s);
-#ifndef LIBASM_ASM_NOFLOAT
+#if !defined(LIBASM_ASM_NOFLOAT)
     Value &setFloat(const float_t &f);
     Value &setFloat(float_t &&f) { return setFloat(f); }
 #endif
@@ -145,7 +145,7 @@ private:
         V_UNDEF = 0,
         V_UNSIGNED = 1,
         V_SIGNED = 2,
-#ifndef LIBASM_ASM_NOFLOAT
+#if !defined(LIBASM_ASM_NOFLOAT)
         V_FLOAT = 3,
 #endif
     };
@@ -153,7 +153,7 @@ private:
     union {
         unsigned_t _unsigned;
         signed_t _signed;
-#ifndef LIBASM_ASM_NOFLOAT
+#if !defined(LIBASM_ASM_NOFLOAT)
         float_t _float;
 #endif
     };

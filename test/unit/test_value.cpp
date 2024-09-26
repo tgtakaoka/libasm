@@ -29,7 +29,7 @@
 namespace libasm {
 namespace test {
 
-using f80 = Value::float_t;
+using f80 = float80_t;
 
 void set_up() {}
 
@@ -66,7 +66,6 @@ void test_read() {
     EQ("zero", 0, v.getInteger());
     EQ("zero", ".0", zero.str());
 
-#ifndef LIBASM_ASM_NOFLOAT
     StrScanner umax64{"18446744073709551615E20"};
     EQ("umax64", OK, v.read(umax64, RADIX_10));
     EQ("umax64", UINT64_MAX, v.getInteger());
@@ -76,7 +75,6 @@ void test_read() {
     EQ("umin65", OVERFLOW_RANGE, v.read(umin65, RADIX_10));
     TRUE("umin65", v.isUndefined());
     EQ("umin65", "H", umin65.str());
-#endif
 
     StrScanner nan{"-1"};
     EQ("nan", NOT_AN_EXPECTED, v.read(nan, RADIX_10));
@@ -116,7 +114,6 @@ void test_setget() {
     EQ("s", INT32_MIN, s.getSigned());
     EQ("s", INT32_MIN, s.getInteger());
 
-#ifndef LIBASM_ASM_NOFLOAT
     Value ui;
     ui.setUinteger(UINT64_MAX);
     TRUE("ui", ui.isUnsigned());
@@ -150,7 +147,7 @@ void test_setget() {
     TRUE("clear", si.isUndefined());
 
     Value f;
-    float80_t v;
+    f80 v;
     f.setFloat(v.read("0.0"));
     FALSE("f", f.isUndefined());
     FALSE("f", f.isUnsigned());
@@ -167,7 +164,6 @@ void test_setget() {
     f.setInteger(INT64_MIN);
     TRUE("f", f.isNegative());
     SEQ("f", v.set(INT64_MIN), f.getFloat());
-#endif
 }
 
 void test_overflow() {
@@ -281,7 +277,6 @@ void test_overflow() {
     FALSE("-0x80000000", v.overflowInt32());
     FALSE("-0x80000000", v.overflowUint32());
 
-#ifndef LIBASM_ASM_NOFLOAT
     v.setInteger(INT64_C(0x100000000));
     TRUE("0x100000000", v.overflowInt32());
     TRUE("0x100000000", v.overflowUint32());
@@ -289,7 +284,6 @@ void test_overflow() {
     v.setInteger(INT64_C(-0x80000001));
     TRUE("-0x80000001", v.overflowInt32());
     TRUE("-0x80000001", v.overflowUint32());
-#endif
 
     v.setUnsigned(10);
     FALSE("10", v.overflowInt8());
@@ -430,7 +424,6 @@ void test_arithmetic() {
     EQ("-6%(-10)", -6, (m6 % m10).getSigned());
     EQ("-10%(-6)", -4, (m10 % m6).getSigned());
 
-#ifndef LIBASM_ASM_NOFLOAT
     Value::float_t v;
     Value p05, m05, p3, m3;
     p1.setSigned(1);
@@ -475,7 +468,6 @@ void test_arithmetic() {
     TRUE("-0.5/2", read_float("-0.25") == (m05 / p2).getFloat());
     TRUE("-2/(-0.5)", read_float("4.0") == (m2 / m05).getFloat());
     TRUE("-0.5/(-2)", read_float("0.25") == (m05 / m2).getFloat());
-#endif
 }
 
 void test_logical() {

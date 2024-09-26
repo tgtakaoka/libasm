@@ -477,6 +477,8 @@ static constexpr uint8_t MC68000_INDEX[] PROGMEM = {
      52,  // TEXT_UNLK
 };
 
+#if !defined(LIBASM_MC68000_NOFPU)
+
 static constexpr Entry MC68881_ARITH[] PROGMEM = {
     P2(0xF000, TEXT_FMOVE,   ISZ_FIXD, M_FPREG, M_FPREG, EX_RX, EX_RY, SZ_XTND, 0x0000),
     P2(0xF000, TEXT_FINT,    ISZ_FIXD, M_FPREG, M_FPREG, EX_RX, EX_RY, SZ_XTND, 0x0001),
@@ -1204,6 +1206,8 @@ static constexpr uint8_t MC68881_TRAP_INDEX[] PROGMEM = {
      72,  // TEXT_FTRAPUN
     104,  // TEXT_FTRAPUN
 };
+
+#endif
 // clang-format on
 
 using EntryPage = entry::TableBase<Entry>;
@@ -1227,11 +1231,13 @@ static constexpr EntryPage MC68000_PAGES[] PROGMEM = {
         {ARRAY_RANGE(MC68000_TABLE), ARRAY_RANGE(MC68000_INDEX)},
 };
 
+#if !defined(LIBASM_MC68000_NOFPU)
 static constexpr EntryPage MC68881_PAGES[] PROGMEM = {
         {ARRAY_RANGE(MC68881_ARITH), ARRAY_RANGE(MC68881_ARITH_INDEX)},
         {ARRAY_RANGE(MC68881_BRANCH), ARRAY_RANGE(MC68881_BRANCH_INDEX)},
         {ARRAY_RANGE(MC68881_TRAP), ARRAY_RANGE(MC68881_TRAP_INDEX)},
 };
+#endif
 
 static constexpr Cpu CPU_TABLE[] PROGMEM = {
         {MC68000, TEXT_CPU_68000, ARRAY_RANGE(MC68000_PAGES)},
@@ -1244,6 +1250,7 @@ static const Cpu *cpu(CpuType cpuType) {
 
 #define EMPTY_RANGE(a) ARRAY_BEGIN(a), ARRAY_BEGIN(a)
 
+#if !defined(LIBASM_MC68000_NOFPU)
 static constexpr Fpu FPU_TABLE[] PROGMEM = {
         {FPU_MC68881, TEXT_FPU_68881, ARRAY_RANGE(MC68881_PAGES)},
         {FPU_NONE, TEXT_none, EMPTY_RANGE(MC68881_PAGES)},
@@ -1252,6 +1259,7 @@ static constexpr Fpu FPU_TABLE[] PROGMEM = {
 static const Fpu *fpu(FpuType fpuType) {
     return Fpu::search(fpuType, ARRAY_RANGE(FPU_TABLE));
 }
+#endif
 
 static bool acceptAll(AsmInsn &insn, const Entry *entry) {
     UNUSED(insn);
@@ -1261,8 +1269,10 @@ static bool acceptAll(AsmInsn &insn, const Entry *entry) {
 
 bool TableMc68000::hasOperand(const CpuSpec &cpuSpec, AsmInsn &insn) const {
     cpu(cpuSpec.cpu)->searchName(insn, acceptAll);
+#if !defined(LIBASM_ASM_NOFLOAT) && !defined(LIBASM_MC68000_NOFPU)
     if (!insn.isOK())
         fpu(cpuSpec.fpu)->searchName(insn, acceptAll);
+#endif
     return insn.isOK() && insn.src() != M_NONE;
 }
 
@@ -1333,11 +1343,13 @@ static bool acceptModes(AsmInsn &insn, const Entry *entry) {
 
 Error TableMc68000::searchName(const CpuSpec &cpuSpec, AsmInsn &insn) const {
     cpu(cpuSpec.cpu)->searchName(insn, acceptModes);
+#if !defined(LIBASM_ASM_NOFLOAT) && !defined(LIBASM_MC68000_NOFPU)
     if (insn.getError() == UNKNOWN_INSTRUCTION) {
         fpu(cpuSpec.fpu)->searchName(insn, acceptModes);
         if (insn.getError() != UNKNOWN_INSTRUCTION)
             insn.embed(cpuSpec.fpuCid << 9);
     }
+#endif
     return insn.getError();
 }
 
@@ -1483,10 +1495,12 @@ static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page
 
 Error TableMc68000::searchOpCode(const CpuSpec &cpuSpec, DisInsn &insn, StrBuffer &out) const {
     cpu(cpuSpec.cpu)->searchOpCode(insn, out, matchOpCode);
+#if !defined(LIBASM_DIS_NOFLOAT) && !defined(LIBASM_MC68000_NOFPU)
     if (insn.getError() == UNKNOWN_INSTRUCTION) {
         if ((insn.opCode() & 0xFE00) == (0xF000 | (cpuSpec.fpuCid << 9)))
             fpu(cpuSpec.fpu)->searchOpCode(insn, out, matchOpCode);
     }
+#endif
     if (insn.getError() == UNKNOWN_INSTRUCTION)
         insn.nameBuffer().reset();
     return insn.getError();

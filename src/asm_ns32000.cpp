@@ -55,7 +55,7 @@ constexpr Pseudo PSEUDOS[] PROGMEM = {
     {TEXT_dBLKW,   &Assembler::allocateSpaces,     Assembler::DATA_WORD},
     {TEXT_dBYTE,   &Assembler::defineDataConstant, Assembler::DATA_BYTE},
     {TEXT_dDOUBLE, &Assembler::defineDataConstant, Assembler::DATA_LONG},
-#ifndef LIBASM_ASM_NOFLOAT
+#if !defined(LIBASM_ASM_NOFLOAT) && !defined(LIBASM_NS32000_NOFPU)
     {TEXT_dFLOAT,  &Assembler::defineDataConstant, Assembler::DATA_FLOAT32},
     {TEXT_dLONG,   &Assembler::defineDataConstant, Assembler::DATA_FLOAT64},
 #endif
@@ -119,7 +119,7 @@ void AsmNs32000::reset() {
 Error AsmNs32000::setFpu(StrScanner &scan) {
     if (scan.iequals_P(TEXT_none)) {
         setFpuType(FPU_NONE);
-#ifndef LIBASM_ASM_NOFLOAT
+#if !defined(LIBASM_ASM_NOFLOAT) && !defined(LIBASM_NS32000_NOFPU)
     } else if (scan.iequals_P(TEXT_FPU_NS32081)) {
         setFpuType(FPU_NS32081);
 #endif
@@ -132,7 +132,7 @@ Error AsmNs32000::setFpu(StrScanner &scan) {
 Error AsmNs32000::setPmmu(StrScanner &scan) {
     if (scan.iequals_P(TEXT_none)) {
         setMmuType(MMU_NONE);
-#ifndef LIBASM_NS32000_NOMMU
+#if !defined(LIBASM_NS32000_NOMMU)
     } else if (scan.iequals_P(TEXT_MMU_NS32082)) {
         setMmuType(MMU_NS32082);
 #endif
@@ -531,7 +531,7 @@ void AsmNs32000::emitImmediate(AsmInsn &insn, AddrMode mode, const Operand &op) 
     const auto size = insn.size();
     if (size == SZ_BYTE || mode == M_GENC) {
         insn.emitOperand8(op.val.getUnsigned());
-#ifndef LIBASM_ASM_NOFLOAT
+#if !defined(LIBASM_ASM_NOFLOAT) && !defined(LIBASM_NS32000_NOFPU)
     } else if (mode == M_FENR) {
         if (size == SZ_OCTA) {
             insn.emitOpFloat64(op.val.getFloat());

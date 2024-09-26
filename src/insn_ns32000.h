@@ -77,7 +77,7 @@ struct AsmInsn final : public AsmInsnImpl<Config>, EntryInsn {
     void emitOperand8(uint8_t val8) { emitByte(val8, operandPos()); }
     void emitOperand16(uint16_t val16) { emitUint16Be(val16, operandPos()); }
     void emitOperand32(uint32_t val32) { emitUint32Be(val32, operandPos()); }
-#ifndef LIBASM_ASM_NOFLOAT
+#if !defined(LIBASM_ASM_NOFLOAT) && !defined(LIBASM_NS32000_NOFPU)
     void emitOpFloat32(const float80_t &val80) { emitFloat32Be(val80, operandPos()); }
     void emitOpFloat64(const float80_t &val80) { emitFloat64Be(val80, operandPos()); }
 #endif

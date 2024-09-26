@@ -44,8 +44,10 @@ private:
             uint16_t opr16 = 0, Error opr16Error = OK) const;
 
     StrBuffer &outHex32(StrBuffer &buf, uint32_t u32) const;
+#if !defined(LIBASM_DIS_NOFLOAT) && !defined(LIBASM_MC68000_NOFPU)
     StrBuffer &outExtendedReal(StrBuffer &buf, const ExtendedReal &v) const;
     StrBuffer &outDecimalString(StrBuffer &buf, const DecimalString &v) const;
+#endif
 
     Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) const override;
     const ConfigBase &config() const override { return *this; }

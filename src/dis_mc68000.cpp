@@ -88,16 +88,20 @@ void DisMc68000::decodeImmediateData(DisInsn &insn, StrBuffer &out, OprSize size
             if (size != SZ_DUBL)
                 outHex32(out, insn.readUint32());
         }
+#if !defined(LIBASM_DIS_NOFLOAT) && !defined(LIBASM_MC68000_NOFPU)
     } else if (size == SZ_SNGL) {
-        out.float32(insn.readFloat32());
+        out.float32(insn.readFloat32Be());
     } else if (size == SZ_DUBL) {
-        out.float64(insn.readFloat64());
+        out.float64(insn.readFloat64Be());
     } else if (size == SZ_XTND) {
         outExtendedReal(out, insn.readExtendedReal());
     } else if (size == SZ_PBCD) {
         outDecimalString(out, insn.readDecimalString());
+#endif
     }
 }
+
+#if !defined(LIBASM_DIS_NOFLOAT) && !defined(LIBASM_MC68000_NOFPU)
 
 bool ExtendedReal::isValid() const {
     /**
@@ -201,6 +205,8 @@ StrBuffer &DisMc68000::outDecimalString(StrBuffer &out, const DecimalString &v) 
     exp += sig.power10(exp10 - 16);
     return out.float80(float80_t::compose(false, exp, sig), 17);
 }
+
+#endif
 
 void DisMc68000::decodeEffectiveAddr(
         DisInsn &insn, StrBuffer &out, uint8_t mode, RegName reg, OprSize size) const {

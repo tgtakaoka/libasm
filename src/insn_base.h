@@ -69,7 +69,7 @@ struct Insn final : ErrorAt {
     /** Generate 64 bit little endian |data| (Assembler). */
     Error emitUint64Le(uint64_t data) { return emitUint64Le(data, _length); }
 
-#ifndef LIBASM_ASM_NOFLOAT
+#if !defined(LIBASM_ASM_NOFLOAT)
     /** Generate 32 bit big endian floating point |data|(Assembler). */
     Error emitFloat32Be(const float80_t &data) { return emitFloat32Be(data, _length); }
 
@@ -104,7 +104,7 @@ struct Insn final : ErrorAt {
     /** Generate 64 bit little endian |data| at |pos| (Assembler). */
     Error emitUint64Le(uint64_t data, uint8_t pos);
 
-#ifndef LIBASM_ASM_NOFLOAT
+#if !defined(LIBASM_ASM_NOFLOAT)
     /** Generate 32 bit big endian floating point |data| at |pos| (Assembler). */
     Error emitFloat32Be(const float80_t &data, uint8_t pos);
 
@@ -190,7 +190,7 @@ struct AsmInsnBase : ErrorAt {
     /** Generate 64 bit little endian |data| at |pos| (Assembler). */
     Error emitUint64Le(uint64_t data, uint8_t pos) { return _insn.emitUint64Le(data, pos); }
 
-#ifndef LIBASM_ASM_NOFLOAT
+#if !defined(LIBASM_ASM_NOFLOAT)
     /** Generate 32 bit big endian floating point |data|(Assembler). */
     Error emitFloat32Be(const float80_t &data) { return _insn.emitFloat32Be(data); }
 
@@ -261,6 +261,7 @@ struct DisInsnBase : ErrorAt {
     /** Read 64 bit little endian data */
     uint64_t readUint64Le();
 
+#if !defined(LIBASM_DIS_NOFLOAT)
     /** Read 32 bit big endian floating point data */
     float80_t readFloat32Be();
 
@@ -272,6 +273,7 @@ struct DisInsnBase : ErrorAt {
 
     /** Read 64 bit little endian floating point data */
     float80_t readFloat64Le();
+#endif
 
 protected:
     Insn &_insn;
@@ -367,28 +369,6 @@ struct AsmInsnImpl : AsmInsnBase {
         return big ? emitUint64Be(data, pos) : emitUint64Le(data, pos);
     }
 
-#ifndef LIBASM_ASM_NOFLOAT
-    /** Generate 32 bit floating point |data| */
-    Error emitFloat32(const float80_t &data) {
-        return big ? emitFloat32Be(data) : emitFloat32Le(data);
-    }
-
-    /** Generate 32 bit floating point |data| at |pos| */
-    Error emitFloat32(const float80_t &data, uint8_t pos) {
-        return big ? emitFloat32Be(data, pos) : emitFloat32Le(data, pos);
-    }
-
-    /** Generate 64 bit floating point |data| */
-    Error emitFloat64(const float80_t &data) {
-        return big ? emitFloat64Be(data) : emitFloat64Le(data);
-    }
-
-    /** Generate 64 bit floating point |data| at |pos| */
-    Error emitFloat64(const float80_t &data, uint8_t pos) {
-        return big ? emitFloat64Be(data, pos) : emitFloat64Le(data, pos);
-    }
-#endif
-
 protected:
     AsmInsnImpl(Insn &insn) : AsmInsnBase(insn) {}
 
@@ -408,12 +388,6 @@ struct DisInsnImpl : DisInsnBase {
 
     /** Read 64 bit data */
     uint64_t readUint64() { return big ? readUint64Be() : readUint64Le(); }
-
-    /** Read 32 bit floating point data */
-    float80_t readFloat32() { return big ? readFloat32Be() : readFloat32Le(); }
-
-    /** Read 64 bit floating point data */
-    float80_t readFloat64() { return big ? readFloat64Be() : readFloat64Le(); }
 
 protected:
     DisInsnImpl(Insn &insn, DisMemory &memory, const StrBuffer &out)

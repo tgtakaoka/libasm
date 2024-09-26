@@ -50,11 +50,11 @@ constexpr Pseudo PSEUDOS[] PROGMEM = {
     {TEXT_dALIGN, &Assembler::alignOrigin},
     {TEXT_DC,     &Assembler::defineDataConstant, Assembler::DATA_WORD|Assembler::DATA_ALIGN2},
     {TEXT_DC_B,   &Assembler::defineDataConstant, Assembler::DATA_BYTE},
-#ifndef LIBASM_ASM_NOFLOAT
+#if !defined(LIBASM_ASM_NOFLOAT) && !defined(LIBASM_MC68000_NOFPU)
     {TEXT_DC_D,   &Assembler::defineDataConstant, Assembler::DATA_FLOAT64|Assembler::DATA_ALIGN2},
 #endif
     {TEXT_DC_L,   &Assembler::defineDataConstant, Assembler::DATA_LONG|Assembler::DATA_ALIGN2},
-#ifndef LIBASM_ASM_NOFLOAT
+#if !defined(LIBASM_ASM_NOFLOAT) && !defined(LIBASM_MC68000_NOFPU)
     {TEXT_DC_S,   &Assembler::defineDataConstant, Assembler::DATA_FLOAT32|Assembler::DATA_ALIGN2},
 #endif
     {TEXT_DC_W,   &Assembler::defineDataConstant, Assembler::DATA_WORD|Assembler::DATA_ALIGN2},
@@ -101,7 +101,7 @@ void AsmMc68000::reset() {
 Error AsmMc68000::setFpu(StrScanner &scan) {
     if (scan.expectFalse() || scan.iequals_P(TEXT_none)) {
         setFpuType(FPU_NONE);
-#ifndef LIBASM_ASM_NOFLOAT
+#if !defined(LIBASM_ASM_NOFLOAT) && !defined(LIBASM_MC68000_NOFPU)
     } else if (scan.expectTrue() || scan.iequals_P(TEXT_FPU_68881) ||
                scan.iequals_P(TEXT_FPU_MC68881)) {
         setFpuType(FPU_MC68881);
@@ -299,7 +299,7 @@ void AsmMc68000::encodeImmediate(AsmInsn &insn, const Operand &op, OprSize size)
             insn.setErrorIf(op, OVERFLOW_RANGE);
         insn.emitOperand16(static_cast<uint8_t>(val32));
         break;
-#ifndef LIBASM_ASM_NOFLOAT
+#if !defined(LIBASM_ASM_NOFLOAT) && !defined(LIBASM_MC68000_NOFPU)
     case SZ_SNGL:
         insn.emitFloat32(op.val.getFloat(), insn.operandPos());
         break;
@@ -807,7 +807,7 @@ InsnSize AsmInsn::parseInsnSize() {
     return _isize = isize;
 }
 
-#ifndef LIBASM_ASM_NOFLOAT
+#if !defined(LIBASM_ASM_NOFLOAT) && !defined(LIBASM_MC68000_NOFPU)
 
 namespace {
 
@@ -909,7 +909,7 @@ Error AsmMc68000::processPseudo(StrScanner &scan, Insn &_insn) {
         const auto error = _opt_fpu.set(scan);
         return error ? insn.setErrorIf(at, error) : OK;
     }
-#ifndef LIBASM_ASM_NOFLOAT
+#if !defined(LIBASM_ASM_NOFLOAT) && !defined(LIBASM_MC68000_NOFPU)
     if (strcasecmp_P(insn.name(), TEXT_DC_X) == 0)
         return defineDataConstant(insn, scan, DATA_DCX, _insn);
     if (strcasecmp_P(insn.name(), TEXT_DC_P) == 0)

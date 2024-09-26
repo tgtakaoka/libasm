@@ -418,7 +418,7 @@ void test_dec() {
 void test_float32() {
     char buffer[16];
     StrCaseBuffer out(buffer, sizeof(buffer), false);
-    Value::float_t v;
+    float80_t v;
 
     EQ("FLT_0", "0", out.float32(v.set(UINT64_C(0))).str());
 
@@ -430,9 +430,9 @@ void test_float32() {
     EQ("FLT_MAX", "3.40282347e+38",
             out.reset().float32(v.set(127 + 0x3FFF, UINT32_C(0xFFFFFF0000000000))).str());
 
-    EQ("-FLT_INF", "-inf", out.reset().float32(Value::float_t::infinity(true)).str());
+    EQ("-FLT_INF", "-inf", out.reset().float32(float80_t::infinity(true)).str());
 
-    EQ("-FLT_NAN", "-nan", out.reset().float32(Value::float_t::not_a_number(true)).str());
+    EQ("-FLT_NAN", "-nan", out.reset().float32(float80_t::not_a_number(true)).str());
 
     char sbuf[10];
     StrCaseBuffer sout(sbuf, sizeof(sbuf), false);
@@ -444,7 +444,7 @@ void test_float32() {
 void test_float64() {
     char buffer[32];
     StrCaseBuffer out(buffer, sizeof(buffer), true);
-    Value::float_t v;
+    float80_t v;
 
     EQ("DBL_0", "0", out.float64(v.set(UINT64_C(0))).str());
 
@@ -457,9 +457,9 @@ void test_float64() {
     EQ("DBL_MAX", "1.7976931348623157E+308",
             out.reset().float64(v.set(1023 + 0x3FFF, UINT64_C(0xFFFFFFFFFFFFF800))).str());
 
-    EQ("-DBL_INF", "-INF", out.reset().float64(Value::float_t::infinity(true)).str());
+    EQ("-DBL_INF", "-INF", out.reset().float64(float80_t::infinity(true)).str());
 
-    EQ("-DBL_NAN", "-NAN", out.reset().float64(Value::float_t::not_a_number(true)).str());
+    EQ("-DBL_NAN", "-NAN", out.reset().float64(float80_t::not_a_number(true)).str());
 
     char sbuf[20];
     StrCaseBuffer sout(sbuf, sizeof(sbuf), false);
@@ -471,7 +471,7 @@ void test_float64() {
 void test_float80() {
     char buffer[40];
     StrCaseBuffer out(buffer, sizeof(buffer), true);
-    Value::float_t v;
+    float80_t v;
 
     EQ("LDBL_0", "0", out.float80(v.set(UINT64_C(0))).str());
 
@@ -484,9 +484,9 @@ void test_float80() {
     EQ("LDBL_MAX", "1.18973149535723176502E+4932",
             out.reset().float80(v.set(16383 + 0x3FFF, UINT64_C(0xFFFFFFFFFFFFFFFF))).str());
 
-    EQ("LDBL_INF", "INF", out.reset().float80(Value::float_t::infinity(false)).str());
+    EQ("LDBL_INF", "INF", out.reset().float80(float80_t::infinity(false)).str());
 
-    EQ("-LDBL_NAN", "-NAN", out.reset().float80(Value::float_t::not_a_number(true)).str());
+    EQ("-LDBL_NAN", "-NAN", out.reset().float80(float80_t::not_a_number(true)).str());
 
     char sbuf[20];
     StrCaseBuffer sout(sbuf, sizeof(sbuf), false);

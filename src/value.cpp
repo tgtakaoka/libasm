@@ -71,17 +71,25 @@ Error Value::read(StrScanner &scan, Radix radix) {
 }
 
 const char *Value::str() const {
-#ifdef LIBASM_DEBUG_VALUE
+#if defined(LIBASM_DEBUG_VALUE)
     static char buf[80];
     StrBuffer out{buf, sizeof(buf)};
     if (_type == V_UNSIGNED) {
         out.text("<u>").hex(_unsigned).letter('(').dec(_unsigned).letter(')');
     } else if (_type == V_SIGNED) {
         out.text("<s>").hex(_signed).letter('(').dec(_signed).letter(')');
-#ifndef LIBASM_ASM_NOFLOAT
+#if !defined(LIBASM_ASM_NOFLOAT)
     } else if (_type == V_FLOAT) {
-        out.text("<f>").hex(_unsigned).letter('(').float80(_float).letter(')');
+        out.text("<f>")
+                .text(_float.str())
+#if !defined(LIBASM_DIS_NOFLOAT)
+                .letter('(')
+                .float80(_float)
+                .letter(')');
 #endif
+        ;
+#endif
+
     } else {
         return "<undef>";
     }
@@ -129,7 +137,7 @@ Value &Value::setUinteger(unsigned_t u) {
     return *this;
 }
 
-#ifdef LIBASM_ASM_NOFLOAT
+#if defined(LIBASM_ASM_NOFLOAT)
 
 bool Value::isFloat() const {
     return false;
@@ -184,7 +192,7 @@ bool Value::overflowUint16() const {
 }
 
 bool Value::overflowInt32() const {
-#ifdef LIBASM_ASM_NOFLOAT
+#if defined(LIBASM_ASM_NOFLOAT)
     if (isUnsigned())
         return _unsigned > INT32_MAX;
     return false;
@@ -198,7 +206,7 @@ bool Value::overflowInt32() const {
 }
 
 bool Value::overflowUint32() const {
-#ifdef LIBASM_ASM_NOFLOAT
+#if defined(LIBASM_ASM_NOFLOAT)
     return false;
 #else
     if (isUnsigned()) {
@@ -235,7 +243,7 @@ bool Value::overflowInteger(unsigned_t max, signed_t min) const {
 bool Value::isZero() const {
     if (isUndefined())
         return false;
-#ifdef LIBASM_ASM_NOFLOAT
+#if defined(LIBASM_ASM_NOFLOAT)
     return _unsigned == 0;
 #else
     if (isInteger())
@@ -245,7 +253,7 @@ bool Value::isZero() const {
 }
 
 bool Value::isNegative() const {
-#ifdef LIBASM_ASM_NOFLOAT
+#if defined(LIBASM_ASM_NOFLOAT)
     return isSigned() && _signed < 0;
 #else
     return (isSigned() && _signed < 0) || (isFloat() && getFloat() < 0);
@@ -253,7 +261,7 @@ bool Value::isNegative() const {
 }
 
 bool Value::negateOverflow() const {
-#ifdef LIBASM_ASM_NOFLOAT
+#if defined(LIBASM_ASM_NOFLOAT)
     if (isUnsigned())
         return _unsigned > static_cast<unsigned_t>(SIGNED_MAX);
     if (isSigned())
@@ -265,7 +273,7 @@ bool Value::negateOverflow() const {
 bool Value::operator==(const Value &rhs) const {
     if (isInteger() && rhs.isInteger())
         return _unsigned == rhs._unsigned;
-#ifdef LIBASM_ASM_NOFLOAT
+#if defined(LIBASM_ASM_NOFLOAT)
     return false;
 #else
     return getFloat() == rhs.getFloat();
@@ -286,7 +294,7 @@ bool Value::operator<(const Value &rhs) const {
             return _signed < 0 || static_cast<unsigned_t>(_signed) < u;
         }
     } else {
-#ifdef LIBASM_ASM_NOFLOAT
+#if defined(LIBASM_ASM_NOFLOAT)
         return false;
 #else
         return getFloat() < rhs.getFloat();
@@ -318,7 +326,7 @@ Value Value::negate() const {
         } else {
             v.setS(-static_cast<signed_t>(_unsigned));
         }
-#ifndef LIBASM_ASM_NOFLOAT
+#if !defined(LIBASM_ASM_NOFLOAT)
     } else {
         v.setFloat(-getFloat());
 #endif
@@ -357,7 +365,7 @@ Value Value::operator+(const Value &rhs) const {
                 v.setS(-static_cast<signed_t>(u));
             }
         }
-#ifndef LIBASM_ASM_NOFLOAT
+#if !defined(LIBASM_ASM_NOFLOAT)
     } else {
         v.setFloat(getFloat() + rhs.getFloat());
 #endif
@@ -378,7 +386,7 @@ Value Value::operator*(const Value &rhs) const {
         } else {
             v.setS(-static_cast<signed_t>(p));
         }
-#ifndef LIBASM_ASM_NOFLOAT
+#if !defined(LIBASM_ASM_NOFLOAT)
     } else {
         v.setFloat(getFloat() * rhs.getFloat());
 #endif
@@ -397,7 +405,7 @@ Value Value::operator/(const Value &rhs) const {
         } else {
             v.setS(-static_cast<signed_t>(q));
         }
-#ifndef LIBASM_ASM_NOFLOAT
+#if !defined(LIBASM_ASM_NOFLOAT)
     } else {
         v.setFloat(getFloat() / rhs.getFloat());
 #endif

@@ -19,6 +19,12 @@
 
 #include "config_base.h"
 
+/** Disable i8087 FPU instructions */
+// #define LIBASM_I8086_NOFPU
+#if defined(LIBASM_ASM_NOFLOAT) && defined(LIBASM_DIS_NOFLOAT)
+#define LIBASM_I8086_NOFPU
+#endif
+
 namespace libasm {
 namespace i8086 {
 
@@ -30,7 +36,9 @@ enum CpuType : uint8_t {
 
 enum FpuType : uint8_t {
     FPU_NONE,
+#if !defined(LIBASM_I8086_NOFPU)
     FPU_I8087,
+#endif
 };
 
 struct CpuSpec final {
@@ -40,7 +48,16 @@ struct CpuSpec final {
 };
 
 struct Config : ConfigImpl<CpuType, ADDRESS_20BIT, ADDRESS_BYTE, OPCODE_8BIT, ENDIAN_LITTLE, 8, 6> {
-    Config(const InsnTable<CpuType> &table) : ConfigImpl(table, I8086), _cpuSpec(I8086, FPU_I8087) {}
+    Config(const InsnTable<CpuType> &table)
+        : ConfigImpl(table, I8086),
+          _cpuSpec(I8086,
+#if defined(LIBASM_I8086_NOFPU)
+                  FPU_NONE
+#else
+                  FPU_I8087
+#endif
+          ) {
+    }
 
     void setCpuType(CpuType cpuType) override {
         _cpuSpec.cpu = cpuType;

@@ -219,6 +219,7 @@ void DisNs32000::decodeImmediate(DisInsn &insn, StrBuffer &out, AddrMode mode) c
         outDec(out, static_cast<int8_t>(insn.readByte()), -8);
     } else if (size == SZ_BYTE) {
         outHex(out, insn.readByte(), 8);
+#if !defined(LIBASM_DIS_NOFLOAT) && !defined(LIBASM_NS32000_NOFPU)
     } else if (mode == M_FENR || mode == M_FENW) {
         if (size == SZ_OCTA) {
             const auto float64 = insn.readFloat64Be();
@@ -231,6 +232,7 @@ void DisNs32000::decodeImmediate(DisInsn &insn, StrBuffer &out, AddrMode mode) c
                 out.letter('0').letter('f');
             out.float32(float32);
         }
+#endif
     } else if (size == SZ_WORD) {
         outHex(out, insn.readUint16Be(), 16);
     } else if (size == SZ_QUAD) {

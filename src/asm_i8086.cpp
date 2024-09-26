@@ -84,7 +84,7 @@ Error AsmI8086::setFpu(StrScanner &scan) {
     p.iexpect('i');
     if (scan.expectFalse() || scan.iequals_P(TEXT_none)) {
         setFpuType(FPU_NONE);
-#ifndef LIBASM_ASM_NOFLOAT
+#if !defined(LIBASM_I8086_NOFPU) && !defined(LIBASM_I8086_NOFPU)
     } else if (scan.expectTrue() || p.iequals_P(TEXT_FPU_8087)) {
         setFpuType(FPU_I8087);
 #endif
@@ -617,7 +617,7 @@ void AsmI8086::emitStringInst(AsmInsn &insn, const Operand &dst, const Operand &
     }
 }
 
-#ifndef LIBASM_ASM_NOFLOAT
+#if !defined(LIBASM_ASM_NOFLOAT) && !defined(LIBASM_I8086_NOFPU)
 
 Error AsmInsn::emitPackedDecimal(int64_t val64) {
     const auto sign = val64 < 0 ? 0x80 : 0;
@@ -659,15 +659,15 @@ Error AsmI8086::defineDataConstant(
                             error.setAt(at);
                         }
                     } else {
-#ifdef LIBASM_ASM_NOFLOAT
-                        error.setErrorIf(at, INTEGER_REQUIRED);
-#else
+#if !defined(LIBASM_ASM_NOFLOAT) && !defined(LIBASM_I8086_NOFPU)
                         if (insn.emitFloat32(val.getFloat()))
                             error.setAt(at);
+#else
+                        error.setErrorIf(at, INTEGER_REQUIRED);
 #endif
                     }
                     break;
-#ifndef LIBASM_ASM_NOFLOAT
+#if !defined(LIBASM_ASM_NOFLOAT) && !defined(LIBASM_I8086_NOFPU)
                 case DATA_DQ:
                     if (val.isInteger()) {
                         if (insn.emitUint64(val.getInteger()))
@@ -711,7 +711,7 @@ Error AsmI8086::processPseudo(StrScanner &scan, Insn &_insn) {
     }
     if (strcasecmp_P(insn.name(), TEXT_DD) == 0)
         return defineDataConstant(insn, scan, DATA_DD, _insn);
-#ifndef LIBASM_ASM_NOFLOAT
+#if !defined(LIBASM_ASM_NOFLOAT) && !defined(LIBASM_I8086_NOFPU)
     if (strcasecmp_P(insn.name(), TEXT_DQ) == 0)
         return defineDataConstant(insn, scan, DATA_DQ, _insn);
     if (strcasecmp_P(insn.name(), TEXT_DT) == 0)

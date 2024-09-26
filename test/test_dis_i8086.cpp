@@ -1783,6 +1783,8 @@ static void test_segment_override() {
     }
 }
 
+#if !defined(LIBASM_DIS_NOFLOAT) && !defined(LIBASM_I8086_NOFPU)
+
 static void test_float() {
     TEST("FINIT", "", 0x9B, 0xDB, 0xE3);
 
@@ -2440,6 +2442,8 @@ static void test_float_nowait() {
     TEST("FNFREE", "ST(0)", 0xDD, 0xC0);
 }
 
+#endif
+
 // clang-format on
 
 static void test_illegal() {
@@ -2476,6 +2480,12 @@ static void test_illegal() {
         UNKN(0xC9);
     }
 
+#if !defined(LIBASM_DIS_NOFLOAT) && !defined(LIBASM_I8086_NOFPU)
+#define UNKN_FPU(opc, modReg) UNKN(opc, modReg);
+#else
+#define UNKN_FPU(opc, modReg) UNKN(opc);
+#endif
+    
     for (auto mod = 0; mod < 4; mod++) {
         for (auto reg = 0; reg < 8; reg++) {
             for (auto r_m = 0; r_m < 8; r_m++) {
@@ -2484,23 +2494,23 @@ static void test_illegal() {
                     if ((modReg >= 0xD1 && modReg < 0xE0) || modReg == 0xE2 || modReg == 0xE3 ||
                             modReg == 0xE6 || modReg == 0xE7 || modReg == 0xEF || modReg == 0xF5 ||
                             modReg == 0xFB || modReg >= 0xFE) {
-                        UNKN(0xD9, modReg);
+                        UNKN_FPU(0xD9, modReg);
                     }
-                    UNKN(0xDA, modReg);
+                    UNKN_FPU(0xDA, modReg);
                     if (modReg < 0xE0 || modReg >= 0xE4)
-                        UNKN(0xDB, modReg);
+                        UNKN_FPU(0xDB, modReg);
                     if (modReg >= 0xD0 && modReg < 0xE0)
-                        UNKN(0xDC, modReg);
+                        UNKN_FPU(0xDC, modReg);
                     if ((modReg >= 0xC8 && modReg < 0xD0) || modReg >= 0xE0)
-                        UNKN(0xDD, modReg);
+                        UNKN_FPU(0xDD, modReg);
                     if ((modReg >= 0xD0 && modReg < 0xD9) || (modReg >= 0xDA && modReg < 0xE0))
-                        UNKN(0xDE, modReg);
-                    UNKN(0xDF, modReg);
+                        UNKN_FPU(0xDE, modReg);
+                    UNKN_FPU(0xDF, modReg);
                 }
                 if (reg == 1) {
                     UNKN(0xF6, modReg);
                     UNKN(0xF7, modReg);
-                    UNKN(0xDF, modReg);
+                    UNKN_FPU(0xDF, modReg);
                 }
                 if (reg == 6) {
                     UNKN(0xD0, modReg);
@@ -2515,7 +2525,7 @@ static void test_illegal() {
                 if (reg == 7)
                     UNKN(0xFF, modReg);
                 if (reg == 1 || reg == 6)
-                    UNKN(0xDB, modReg);
+                    UNKN_FPU(0xDB, modReg);
                 if (reg != 0 && reg != 1)
                     UNKN(0xFE, modReg);
                 if (reg != 0) {
@@ -2549,8 +2559,10 @@ void run_tests(const char *cpu) {
     RUN_TEST(test_control_transfer);
     RUN_TEST(test_processor_control);
     RUN_TEST(test_segment_override);
+#if !defined(LIBASM_DIS_NOFLOAT) && !defined(LIBASM_I8086_NOFPU)
     RUN_TEST(test_float);
     RUN_TEST(test_float_nowait);
+#endif
     RUN_TEST(test_illegal);
 }
 
