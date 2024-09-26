@@ -1212,15 +1212,15 @@ template <typename CPUTYPE, typename ENTRYPAGE>
 using Processor = entry::CpuBase<CPUTYPE, ENTRYPAGE>;
 
 struct Cpu : Processor<CpuType, EntryPage> {
-    constexpr Cpu(CpuType cpuType, const /* PROGMEM */ char *name_P, const EntryPage *table,
-            const EntryPage *end)
-        : Processor<CpuType, EntryPage>(cpuType, name_P, table, end) {}
+    constexpr Cpu(CpuType cpuType, const /* PROGMEM */ char *name_P, const EntryPage *head_P,
+            const EntryPage *tail_P)
+        : Processor<CpuType, EntryPage>(cpuType, name_P, head_P, tail_P) {}
 };
 
 struct Fpu : Processor<FpuType, EntryPage> {
-    constexpr Fpu(FpuType fpuType, const /* PROGMEM */ char *name_P, const EntryPage *table,
-            const EntryPage *end)
-        : Processor<FpuType, EntryPage>(fpuType, name_P, table, end) {}
+    constexpr Fpu(FpuType fpuType, const /* PROGMEM */ char *name_P, const EntryPage *head_P,
+            const EntryPage *tail_P)
+        : Processor<FpuType, EntryPage>(fpuType, name_P, head_P, tail_P) {}
 };
 
 static constexpr EntryPage MC68000_PAGES[] PROGMEM = {
@@ -1326,7 +1326,7 @@ static bool acceptSize(const AsmInsn &insn, const Entry::Flags &flags) {
 }
 
 static bool acceptModes(AsmInsn &insn, const Entry *entry) {
-    const auto table = entry->flags();
+    const auto table = entry->readFlags();
     return acceptMode(insn.srcOp.mode, table.src(), table.oprSize()) &&
            acceptMode(insn.dstOp.mode, table.dst(), table.oprSize()) && acceptSize(insn, table);
 }
@@ -1452,7 +1452,7 @@ static bool invalidSize(Config::opcode_t opc, OprSize size) {
 static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page) {
     UNUSED(page);
     auto opc = insn.opCode();
-    const auto flags = entry->flags();
+    const auto flags = entry->readFlags();
     if (invalidModeReg(opc, flags.src(), flags.srcPos(), flags.oprSize()))
         return false;
     if (invalidModeReg(opc, flags.dst(), flags.dstPos(), flags.oprSize()))
@@ -1462,7 +1462,7 @@ static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page
     opc &= ~getInsnMask(flags);
     if ((opc & 0xF000) == 0xF000)
         opc &= ~07000;  // clear co-processor ID
-    if (opc != entry->opCode())
+    if (opc != entry->readOpCode())
         return false;
     if (flags.hasPostVal()) {
         insn.readPostfix();

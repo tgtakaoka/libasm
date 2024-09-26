@@ -468,7 +468,7 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
 }
 
 static bool acceptModes(AsmInsn &insn, const Entry *entry) {
-    const auto table = entry->flags();
+    const auto table = entry->readFlags();
     return acceptMode(insn.dstOp.mode, table.dst()) && acceptMode(insn.srcOp.mode, table.src());
 }
 
@@ -480,7 +480,7 @@ Error TableZ80::searchName(CpuType cpuType, AsmInsn &insn) const {
 static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page) {
     UNUSED(page);
     auto opc = insn.opCode();
-    const auto flags = entry->flags();
+    const auto flags = entry->readFlags();
     const auto dst = flags.dst();
     const auto src = flags.src();
 
@@ -517,7 +517,7 @@ static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page
             return false;  // IM x
         opc &= ~(3 << 3);
     }
-    return opc == entry->opCode();
+    return opc == entry->readOpCode();
 }
 
 Error TableZ80::searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) const {
@@ -540,7 +540,7 @@ const /*PROGMEM*/ char *TableZ80::cpuName_P(CpuType cpuType) const {
 Error TableZ80::searchCpuName(StrScanner &name, CpuType &cpuType) const {
     auto t = Cpu::search(name, ARRAY_RANGE(CPU_TABLE));
     if (t) {
-        cpuType = t->cpuType();
+        cpuType = t->readCpuType();
         return OK;
     }
     if (name.iexpectText_P(TEXT_CPU_V30EMU)) {

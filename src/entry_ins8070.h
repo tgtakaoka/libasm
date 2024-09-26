@@ -73,31 +73,31 @@ struct Entry final : entry::Base<Config::opcode_t> {
                                           (static_cast<uint16_t>(SZ_NONE) << size_gp) | undef_bm)};
         }
 
-        Flags read() const { return Flags{pgm_read_word(&_attr)}; }
         AddrMode dst() const { return AddrMode((_attr >> dst_gp) & mode_gm); }
         AddrMode src() const { return AddrMode((_attr >> src_gp) & mode_gm); }
         OprSize size() const { return OprSize((_attr >> size_gp) & size_gm); }
         bool execute() const { return _attr & exec_bm; }
         bool undefined() const { return _attr & undef_bm; }
+
+    private:
+        static constexpr int dst_gp = 0;
+        static constexpr int src_gp = 4;
+        static constexpr int size_gp = 8;
+        static constexpr int exec_bp = 14;
+        static constexpr int undef_bp = 15;
+        static constexpr uint8_t mode_gm = 0x0F;
+        static constexpr uint8_t size_gm = 0x03;
+        static constexpr uint16_t exec_bm = (1 << exec_bp);
+        static constexpr uint16_t undef_bm = (1 << undef_bp);
     };
 
-    constexpr Entry(Config::opcode_t opCode, Flags flags, const char *name)
-        : Base(name, opCode), _flags(flags) {}
+    constexpr Entry(Config::opcode_t opCode, Flags flags, const /* PROGMEM */ char *name_P)
+        : Base(name_P, opCode), _flags_P(flags) {}
 
-    Flags flags() const { return _flags.read(); }
+    Flags readFlags() const { return Flags{pgm_read_word(&_flags_P._attr)}; }
 
 private:
-    const Flags _flags;
-
-    static constexpr int dst_gp = 0;
-    static constexpr int src_gp = 4;
-    static constexpr int size_gp = 8;
-    static constexpr int exec_bp = 14;
-    static constexpr int undef_bp = 15;
-    static constexpr uint8_t mode_gm = 0x0F;
-    static constexpr uint8_t size_gm = 0x03;
-    static constexpr uint16_t exec_bm = (1 << exec_bp);
-    static constexpr uint16_t undef_bm = (1 << undef_bp);
+    const Flags _flags_P;
 };
 
 }  // namespace ins8070

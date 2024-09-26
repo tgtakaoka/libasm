@@ -31,11 +31,11 @@ namespace table {
  */
 template <typename /*PROGMEM*/ ITEM>
 struct Table {
-    const ITEM *table() const { return reinterpret_cast<const ITEM *>(pgm_read_ptr(&_table)); }
-    const ITEM *end() const { return reinterpret_cast<const ITEM *>(pgm_read_ptr(&_end)); }
+    const ITEM *readHead() const { return reinterpret_cast<const ITEM *>(pgm_read_ptr(&_head_P)); }
+    const ITEM *readTail() const { return reinterpret_cast<const ITEM *>(pgm_read_ptr(&_tail_P)); }
 
-    constexpr Table(const /*PROGMEM*/ ITEM *table, const /*PROGMEM*/ ITEM *end)
-        : _table(table), _end(end) {}
+    constexpr Table(const /*PROGMEM*/ ITEM *head_P, const /*PROGMEM*/ ITEM *tail_P)
+        : _head_P(head_P), _tail_P(tail_P) {}
 
     /**
      * Linear searching an item which satisfies |match| and returns the pointer to the |ITEM|.
@@ -46,7 +46,8 @@ struct Table {
 
     template <typename DATA, typename EXTRA>
     const ITEM *linearSearch(DATA &data, Matcher<DATA, EXTRA> matcher, EXTRA extra) const {
-        for (const auto *item = table(); item < end(); item++) {
+        const auto *end = readTail();
+        for (const auto *item = readHead(); item < end; item++) {
             if (matcher(data, item, extra))
                 return item;
         }
@@ -58,31 +59,31 @@ struct Table {
 
     template <typename DATA>
     const ITEM *binarySearch(DATA &data, Comparator<DATA> comparator) const {
-        const auto *first = table();
-        const auto *last = end();
+        const auto *head = readHead();
+        const auto *tail = readTail();
         const ITEM *found = nullptr;
         for (;;) {
-            const auto diff = last - first;
+            const auto diff = tail - head;
             if (diff == 0)
                 break;
-            const auto *middle = first;
+            const auto *middle = head;
             middle += diff / 2;
             const auto res = comparator(data, middle);
             if (res > 0) {
-                first = middle + 1;
+                head = middle + 1;
             } else if (res < 0) {
-                last = middle;
+                tail = middle;
             } else {
-                // search the first occurrence in table
-                last = found = middle;
+                // search the head occurrence in table
+                tail = found = middle;
             }
         }
         return found;
     }
 
 private:
-    const ITEM *const _table;
-    const ITEM *const _end;
+    const /* PROGMEM */ ITEM *const _head_P;
+    const /* PROGMEM */ ITEM *const _tail_P;
 };
 
 /**
@@ -90,12 +91,12 @@ private:
  */
 template <typename /*PROGMEM*/ ITEM, typename INDEX>
 struct IndexedTable {
-    const ITEM *table() const { return _items.table(); }
-    const ITEM *end() const { return _items.end(); }
+    const ITEM *readHead() const { return _items.readHead(); }
+    const ITEM *readTail() const { return _items.readTail(); }
 
-    constexpr IndexedTable(const /*PROGMEM*/ ITEM *table, const /*PROGMEM*/ ITEM *end,
-            const /*PROGMEM*/ INDEX *itable, const /*PROGMEM*/ INDEX *iend)
-        : _items(table, end), _indexes(itable, iend) {}
+    constexpr IndexedTable(const /*PROGMEM*/ ITEM *head_P, const /*PROGMEM*/ ITEM *tail_P,
+            const /*PROGMEM*/ INDEX *ihead_P, const /*PROGMEM*/ INDEX *itail_P)
+        : _items(head_P, tail_P), _indexes(ihead_P, itail_P) {}
 
     template <typename DATA, typename EXTRA>
     using Matcher = bool (*)(DATA &, const ITEM *, EXTRA);
@@ -110,31 +111,31 @@ struct IndexedTable {
     template <typename DATA>
     using Matcher2 = bool (*)(DATA &, const ITEM *);
 
-    bool notExactMatch(const ITEM *item) const { return item == _items.end(); }
+    bool notExactMatch(const ITEM *item) const { return item == _items.readTail(); }
 
     template <typename DATA>
     const ITEM *binarySearch(
             DATA &data, Comparator<DATA> comparator, Matcher2<DATA> matcher2) const {
-        const auto *first = _indexes.table();
-        const auto *last = _indexes.end();
+        const auto *head = _indexes.readHead();
+        const auto *tail = _indexes.readTail();
         for (;;) {
-            const auto diff = last - first;
+            const auto diff = tail - head;
             if (diff == 0)
                 break;
-            const auto *middle = first;
+            const auto *middle = head;
             middle += diff / 2;
             if (comparator(data, itemAt(middle)) > 0) {
-                first = middle + 1;
+                head = middle + 1;
             } else {
-                // If |res| == 0, search the first occurrence in table
-                last = middle;
+                // If |res| == 0, search the head occurrence in table
+                tail = middle;
             }
         }
         // Search for an item which satisfies |matcher2|
         const ITEM *found = nullptr;
-        while (first < _indexes.end()) {
-            const auto *item = itemAt(first);
-            // |first| may point an item which doesn't satisfies |comparator|
+        while (head < _indexes.readTail()) {
+            const auto *item = itemAt(head);
+            // |head| may point an item which doesn't satisfies |comparator|
             if (comparator(data, item) != 0)
                 break;
             if (matcher2(data, item)) {
@@ -143,8 +144,8 @@ struct IndexedTable {
             }
             // assign a marker to |found| because there is an item doesn't
             // sattisfies |matcher2|
-            found = _items.end();
-            ++first;
+            found = _items.readTail();
+            ++head;
         }
         return found;
     }
@@ -155,9 +156,9 @@ private:
 
     const ITEM *itemAt(const INDEX *index) const {
         if (sizeof(INDEX) == 1) {
-            return _items.table() + pgm_read_byte(index);
+            return _items.readHead() + pgm_read_byte(index);
         } else {
-            return _items.table() + pgm_read_word(index);
+            return _items.readHead() + pgm_read_word(index);
         }
     }
 };
@@ -165,7 +166,7 @@ private:
 }  // namespace table
 }  // namespace libasm
 
-#endif  // __LIBASM_TABLE_BASE_H__
+#endif  // __LIBASM_HEAD_BASE_H__
 
 // Local Variables:
 // mode: c++

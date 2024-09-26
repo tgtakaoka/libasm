@@ -219,7 +219,7 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
 }
 
 static bool acceptModes(AsmInsn &insn, const Entry *entry) {
-    const auto table = entry->flags();
+    const auto table = entry->readFlags();
     if (acceptMode(insn.dstOp.mode, table.dst()) && acceptMode(insn.srcOp.mode, table.src())) {
         if (table.undefined())
             insn.setErrorIf(OPERAND_NOT_ALLOWED);
@@ -252,15 +252,15 @@ static Config::opcode_t maskCode(AddrMode mode) {
 static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page) {
     UNUSED(page);
     auto opCode = insn.opCode();
-    const auto flags = entry->flags();
+    const auto flags = entry->readFlags();
     opCode &= maskCode(flags.dst());
     opCode &= maskCode(flags.src());
-    return opCode == entry->opCode();
+    return opCode == entry->readOpCode();
 }
 
 Error TableIns8070::searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) const {
     auto entry = cpu(cpuType)->searchOpCode(insn, out, matchOpCode);
-    if (entry && entry->flags().undefined()) {
+    if (entry && entry->readFlags().undefined()) {
         insn.nameBuffer().reset();
         insn.setErrorIf(UNKNOWN_INSTRUCTION);
     }

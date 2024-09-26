@@ -346,7 +346,7 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
 }
 
 static bool acceptModes(AsmInsn &insn, const Entry *entry) {
-    const auto table = entry->flags();
+    const auto table = entry->readFlags();
     return acceptMode(insn.op1.mode, table.mode1()) && acceptMode(insn.op2.mode, table.mode2()) &&
            acceptMode(insn.op3.mode, table.mode3()) && acceptMode(insn.op4.mode, table.mode4());
 }
@@ -359,10 +359,11 @@ Error TableMn1610::searchName(CpuType cpuType, AsmInsn &insn) const {
 static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page) {
     UNUSED(page);
     auto opc = insn.opCode();
-    const auto mode1 = entry->flags().mode1();
-    const auto mode2 = entry->flags().mode2();
-    const auto mode3 = entry->flags().mode3();
-    const auto mode4 = entry->flags().mode4();
+    const auto flags = entry->readFlags();
+    const auto mode1 = flags.mode1();
+    const auto mode2 = flags.mode2();
+    const auto mode3 = flags.mode3();
+    const auto mode4 = flags.mode4();
     if (mode1 == M_GEN || mode2 == M_GEN)
         opc &= ~((7 << 11) | 0xFF);
     const auto dstReg = (opc >> 8) & 7;
@@ -427,7 +428,7 @@ static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page
         opc &= ~3;
     if (mode2 == M_COP || mode3 == M_COP)
         opc &= ~(1 << 3);
-    return opc == entry->opCode();
+    return opc == entry->readOpCode();
 }
 
 Error TableMn1610::searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) const {
@@ -446,7 +447,7 @@ const /*PROGMEM*/ char *TableMn1610::cpuName_P(CpuType cpuType) const {
 Error TableMn1610::searchCpuName(StrScanner &name, CpuType &cpuType) const {
     auto t = Cpu::search(name, ARRAY_RANGE(CPU_TABLE));
     if (t) {
-        cpuType = t->cpuType();
+        cpuType = t->readCpuType();
     } else if (name.iequals_P(TEXT_CPU_MN1610 + 2)) {
         cpuType = MN1610;
     } else if (name.iequals_P(TEXT_CPU_MN1613 + 2)) {

@@ -253,7 +253,7 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
 }
 
 static bool acceptModes(AsmInsn &insn, const Entry *entry) {
-    const auto table = entry->flags();
+    const auto table = entry->readFlags();
     return acceptMode(insn.op1.mode, table.mode1()) && acceptMode(insn.op2.mode, table.mode2());
 }
 
@@ -265,7 +265,7 @@ Error TableScn2650::searchName(CpuType cpuType, AsmInsn &insn) const {
 static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page) {
     UNUSED(page);
     auto opc = insn.opCode();
-    const auto flags = entry->flags();
+    const auto flags = entry->readFlags();
     const auto mode1 = flags.mode1();
     const auto mode2 = flags.mode2();
     if (mode1 == M_R123 && (opc & 3) == 0)
@@ -277,7 +277,7 @@ static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page
     } else if (mode2 == M_IX13) {
         opc &= ~3;
     }
-    return opc == entry->opCode();
+    return opc == entry->readOpCode();
 }
 
 Error TableScn2650::searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) const {

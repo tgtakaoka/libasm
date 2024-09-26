@@ -232,7 +232,7 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
 }
 
 static bool acceptModes(AsmInsn &insn, const Entry *entry) {
-    const auto table = entry->flags();
+    const auto table = entry->readFlags();
     return acceptMode(insn.op1.mode, table.mode1()) && acceptMode(insn.op2.mode, table.mode2());
 }
 
@@ -244,7 +244,7 @@ Error TableF3850::searchName(CpuType cpuType, AsmInsn &insn) const {
 static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page) {
     UNUSED(page);
     auto opCode = insn.opCode();
-    const auto flags = entry->flags();
+    const auto flags = entry->readFlags();
     const auto mode1 = flags.mode1();
     const auto mode2 = flags.mode2();
     if (mode1 == M_REG || mode2 == M_REG || mode1 == M_IM4 || mode1 == M_IOS) {
@@ -252,7 +252,7 @@ static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page
     } else if (mode1 == M_IM3) {
         opCode &= ~0x07;
     }
-    return opCode == entry->opCode();
+    return opCode == entry->readOpCode();
 }
 
 Error TableF3850::searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) const {

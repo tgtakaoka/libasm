@@ -94,86 +94,104 @@ struct Entry final : entry::Base<Config::opcode_t> {
     struct Flags final {
         uint8_t _src;
         uint8_t _dst;
-        uint8_t _ex1;
-        uint8_t _ex2;
+        uint8_t _ext1;
+        uint8_t _ext2;
 
         static constexpr Flags create(AddrMode src, OprPos srcp, AddrMode dst, OprPos dstp,
                 AddrMode ex1, OprPos ex1p, Ex2Mode ex2, Ex2Pos ex2p, OprSize size) {
-            return Entry::Flags{Entry::opr(src, srcp), Entry::opr(dst, dstp), Entry::opr(ex1, ex1p),
-                    Entry::ex2(ex2, ex2p, size)};
+            return Flags{opr(src, srcp), opr(dst, dstp), opr(ex1, ex1p), ext2(ex2, ex2p, size)};
         }
 
         static const Flags create(AddrMode src, AddrMode dst, AddrMode ex1, AddrMode ex2) {
-            return Entry::Flags{Entry::opr(src, P_NONE), Entry::opr(dst, P_NONE),
-                    Entry::opr(ex1, P_NONE), Entry::ex2(toEx2Mode(ex2), EP2_NONE, SZ_NONE)};
+            return Flags{opr(src, P_NONE), opr(dst, P_NONE), opr(ex1, P_NONE),
+                    ext2(toEx2Mode(ex2), EP2_NONE, SZ_NONE)};
         }
 
-        Flags read() const {
-            return Flags{pgm_read_byte(&_src), pgm_read_byte(&_dst), pgm_read_byte(&_ex1),
-                    pgm_read_byte(&_ex2)};
-        }
         AddrMode src() const { return mode(_src); }
         AddrMode dst() const { return mode(_dst); }
-        AddrMode ex1() const { return mode(_ex1); }
-        AddrMode ex2() const { return toAddrMode(Ex2Mode((_ex2 >> ex2Mode_gp) & ex2Mode_gm)); }
+        AddrMode ex1() const { return mode(_ext1); }
+        AddrMode ex2() const { return toAddrMode(Ex2Mode((_ext2 >> ex2Mode_gp) & ex2Mode_gm)); }
         OprPos srcPos() const { return pos(_src); }
         OprPos dstPos() const { return pos(_dst); }
-        OprPos ex1Pos() const { return pos(_ex1); }
-        OprPos ex2Pos() const { return toOprPos(Ex2Pos((_ex2 >> ex2Pos_gp) & ex2Pos_gm)); }
-        OprSize size() const { return OprSize((_ex2 >> size_gp) & size_gm); }
+        OprPos ex1Pos() const { return pos(_ext1); }
+        OprPos ex2Pos() const { return toOprPos(Ex2Pos((_ext2 >> ex2Pos_gp) & ex2Pos_gm)); }
+        OprSize size() const { return OprSize((_ext2 >> size_gp) & size_gm); }
+
+    private:
+        static AddrMode mode(uint8_t opr) { return AddrMode((opr >> mode_gp) & mode_gm); }
+
+        static OprPos pos(uint8_t opr) { return OprPos((opr >> pos_gp) & pos_gm); }
+
+        static constexpr uint8_t opr(AddrMode mode, OprPos pos) {
+            return (static_cast<uint8_t>(mode) << mode_gp) | (static_cast<uint8_t>(pos) << pos_gp);
+        }
+
+        static constexpr uint8_t ext2(Ex2Mode mode, Ex2Pos pos, OprSize size) {
+            return (static_cast<uint8_t>(mode << ex2Mode_gp)) |
+                   (static_cast<uint8_t>(pos << ex2Pos_gp)) |
+                   (static_cast<uint8_t>(size) << size_gp);
+        }
+
+        static inline Ex2Mode toEx2Mode(AddrMode mode) {
+            switch (mode) {
+            case M_NONE:
+                return EM2_NONE;
+            case M_IMM:
+                return EM2_IMM;
+            case M_BFLEN:
+                return EM2_BFLEN;
+            case M_LEN32:
+                return EM2_LEN32;
+            default:
+                return EM2_ERROR;
+            }
+        }
+
+        static AddrMode toAddrMode(Ex2Mode mode) {
+            static constexpr AddrMode ex2Modes[] PROGMEM = {
+                    M_NONE,   // EM2_NONE
+                    M_IMM,    // EM2_IMM
+                    M_BFLEN,  // EM2_BFLEN
+                    M_LEN32,  // EM2_LEN32
+                    M_NONE,   // EM2_ERROR
+            };
+            return AddrMode(pgm_read_byte(ex2Modes + mode));
+        }
+
+        static OprPos toOprPos(Ex2Pos pos) {
+            static constexpr OprPos ex2Pos[] PROGMEM = {
+                    P_NONE,  // EP2_NONE
+                    P_IMPL,  // EP2_IMPL
+                    P_DISP,  // EP2_DISP
+                    P_NONE,  // EP2_ERROR
+            };
+            return OprPos(pgm_read_byte(ex2Pos + pos));
+        }
+
+        // |_src|, |_dst|, |_ext1|
+        static constexpr uint8_t mode_gp = 0;
+        static constexpr uint8_t pos_gp = 5;
+        static constexpr uint8_t mode_gm = 0x1F;
+        static constexpr uint8_t pos_gm = 0x07;
+        // |_ext2|
+        static constexpr uint8_t ex2Mode_gp = 0;
+        static constexpr uint8_t ex2Pos_gp = 3;
+        static constexpr uint8_t size_gp = 5;
+        static constexpr uint8_t ex2Mode_gm = 0x07;
+        static constexpr uint8_t ex2Pos_gm = 0x03;
+        static constexpr uint8_t size_gm = 0x07;
     };
 
-    constexpr Entry(Config::opcode_t opCode, Flags flags, const char *name)
-        : Base(name, opCode), _flags(flags) {}
+    constexpr Entry(Config::opcode_t opCode, Flags flags, const /* PROGMEM */ char *name_P)
+        : Base(name_P, opCode), _flags_P(flags) {}
 
-    Flags flags() const { return _flags.read(); }
+    Flags readFlags() const {
+        return Flags{pgm_read_byte(&_flags_P._src), pgm_read_byte(&_flags_P._dst),
+                pgm_read_byte(&_flags_P._ext1), pgm_read_byte(&_flags_P._ext2)};
+    }
 
 private:
-    const Flags _flags;
-
-    static inline AddrMode mode(uint8_t opr) { return AddrMode((opr >> mode_gp) & mode_gm); }
-
-    static inline OprPos pos(uint8_t opr) { return OprPos((opr >> pos_gp) & pos_gm); }
-
-    static constexpr uint8_t opr(AddrMode mode, OprPos pos) {
-        return (static_cast<uint8_t>(mode) << mode_gp) | (static_cast<uint8_t>(pos) << pos_gp);
-    }
-
-    static constexpr uint8_t ex2(Ex2Mode mode, Ex2Pos pos, OprSize size) {
-        return (static_cast<uint8_t>(mode << ex2Mode_gp)) |
-               (static_cast<uint8_t>(pos << ex2Pos_gp)) | (static_cast<uint8_t>(size) << size_gp);
-    }
-
-    static inline Ex2Mode toEx2Mode(AddrMode mode) {
-        switch (mode) {
-        case M_NONE:
-            return EM2_NONE;
-        case M_IMM:
-            return EM2_IMM;
-        case M_BFLEN:
-            return EM2_BFLEN;
-        case M_LEN32:
-            return EM2_LEN32;
-        default:
-            return EM2_ERROR;
-        }
-    }
-
-    static AddrMode toAddrMode(Ex2Mode mode);
-    static OprPos toOprPos(Ex2Pos pos);
-
-    // |src|,|dst|,|ex1|
-    static constexpr uint8_t mode_gp = 0;
-    static constexpr uint8_t pos_gp = 5;
-    static constexpr uint8_t mode_gm = 0x1F;
-    static constexpr uint8_t pos_gm = 0x07;
-    // |ex2|
-    static constexpr uint8_t ex2Mode_gp = 0;
-    static constexpr uint8_t ex2Pos_gp = 3;
-    static constexpr uint8_t size_gp = 5;
-    static constexpr uint8_t ex2Mode_gm = 0x07;
-    static constexpr uint8_t ex2Pos_gm = 0x03;
-    static constexpr uint8_t size_gm = 0x07;
+    const Flags _flags_P;
 };
 
 }  // namespace ns32000

@@ -91,7 +91,6 @@ struct Entry final : entry::Base<Config::opcode_t> {
                                                (static_cast<uint16_t>(opr3) << opr3_gp))};
         }
 
-        Flags read() const { return Flags{pgm_read_word(&_attr)}; }
         AddrMode mode1() const {
             return AddrMode((_attr >> opr1_gp) & (mode_gm | indir_bm | longi_bm));
         }
@@ -99,10 +98,10 @@ struct Entry final : entry::Base<Config::opcode_t> {
         AddrMode mode3() const { return AddrMode((_attr >> opr3_gp) & mode_gm); }
     };
 
-    constexpr Entry(Config::opcode_t opCode, Flags flags, const char *name)
-        : Base(name, opCode), _flags(flags) {}
+    constexpr Entry(Config::opcode_t opCode, Flags flags, const /* PROGMEM */ char *name_P)
+        : Base(name_P, opCode), _flags_P(flags) {}
 
-    Flags flags() const { return _flags.read(); }
+    Flags readFlags() const { return Flags{pgm_read_word(&_flags_P._attr)}; }
 
     static AddrMode baseMode(AddrMode mode) { return AddrMode(uint8_t(mode) & mode_gm); }
     static AddrMode indirectFlags(AddrMode mode) { return AddrMode(uint8_t(mode) & ~mode_gm); }
@@ -110,7 +109,7 @@ struct Entry final : entry::Base<Config::opcode_t> {
     static bool longIndirect(AddrMode mode) { return (uint8_t(mode) & longi_bm) != 0; }
 
 private:
-    const Flags _flags;
+    const Flags _flags_P;
 };
 
 }  // namespace mos6502

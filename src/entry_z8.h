@@ -85,7 +85,6 @@ struct Entry final : entry::Base<Config::opcode_t> {
                 PostFormat postFormat, OprPos dstPos, OprPos srcPos, OprPos extPos) {
             return Flags{mode(dst, src, ext), attr(dstPos, srcPos, extPos, postFormat)};
         }
-        Flags read() const { return Flags{pgm_read_word(&_mode), pgm_read_word(&_attr)}; }
 
         AddrMode dst() const { return AddrMode((_mode >> dst_gp) & mode_gm); }
         AddrMode src() const { return AddrMode((_mode >> src_gp) & mode_gm); }
@@ -96,57 +95,60 @@ struct Entry final : entry::Base<Config::opcode_t> {
         PostFormat postFormat() const {
             return PostFormat((_attr >> postFormat_gp) & postFormat_gm);
         }
-        Config::opcode_t postVal() const { return Entry::postVal(postFormat()); }
+        Config::opcode_t postVal() const { return postVal(postFormat()); }
         void setSrcPos(OprPos pos) { _attr = attr(dstPos(), pos, extPos(), postFormat()); }
+
+    private:
+        static Config::opcode_t postVal(PostFormat postFormat) {
+            static constexpr Config::opcode_t val[] = {
+                    0x00,  // PF_NONE
+                    0x00,  // PF1_0
+                    0x01,  // PF1_1
+                    0x00,  // PF2_0
+                    0x01,  // PF2_1
+                    0x02,  // PF2_2
+                    0x00,  // PF4_0
+                    0x01,  // PF4_1
+            };
+            return val[postFormat];
+        }
+
+        static constexpr uint16_t mode(AddrMode dst, AddrMode src, AddrMode ext) {
+            return (static_cast<uint16_t>(dst) << dst_gp) | (static_cast<uint16_t>(src) << src_gp) |
+                   (static_cast<uint16_t>(ext) << ext_gp);
+        }
+
+        static constexpr uint16_t attr(
+                OprPos dstPos, OprPos srcPos, OprPos extPos, PostFormat postFormat) {
+            return (static_cast<uint16_t>(dstPos) << dstPos_gp) |
+                   (static_cast<uint16_t>(srcPos) << srcPos_gp) |
+                   (static_cast<uint16_t>(extPos) << extPos_gp) |
+                   (static_cast<uint16_t>(postFormat) << postFormat_gp);
+        }
+
+        // |_mode|
+        static constexpr uint8_t mode_gm = 0x1F;
+        static constexpr int dst_gp = 0;
+        static constexpr int src_gp = 5;
+        static constexpr int ext_gp = 10;
+        // |_attr|
+        static constexpr uint8_t oprPos_gm = 0xF;
+        static constexpr uint8_t postFormat_gm = 0x7;
+        static constexpr int dstPos_gp = 0;
+        static constexpr int srcPos_gp = 4;
+        static constexpr int extPos_gp = 8;
+        static constexpr int postFormat_gp = 12;
     };
 
-    constexpr Entry(Config::opcode_t opCode, Flags flags, const char *name)
-        : Base(name, opCode), _flags(flags) {}
+    constexpr Entry(Config::opcode_t opCode, Flags flags, const /* PROGMEM */ char *name_P)
+        : Base(name_P, opCode), _flags_P(flags) {}
 
-    Flags flags() const { return _flags.read(); }
+    Flags readFlags() const {
+        return Flags{pgm_read_word(&_flags_P._mode), pgm_read_word(&_flags_P._attr)};
+    }
 
 private:
-    const Flags _flags;
-
-    static Config::opcode_t postVal(PostFormat postFormat) {
-        static constexpr Config::opcode_t val[] = {
-                0x00,  // PF_NONE
-                0x00,  // PF1_0
-                0x01,  // PF1_1
-                0x00,  // PF2_0
-                0x01,  // PF2_1
-                0x02,  // PF2_2
-                0x00,  // PF4_0
-                0x01,  // PF4_1
-        };
-        return val[postFormat];
-    }
-
-    static constexpr uint16_t mode(AddrMode dst, AddrMode src, AddrMode ext) {
-        return (static_cast<uint16_t>(dst) << dst_gp) | (static_cast<uint16_t>(src) << src_gp) |
-               (static_cast<uint16_t>(ext) << ext_gp);
-    }
-
-    static constexpr uint16_t attr(
-            OprPos dstPos, OprPos srcPos, OprPos extPos, PostFormat postFormat) {
-        return (static_cast<uint16_t>(dstPos) << dstPos_gp) |
-               (static_cast<uint16_t>(srcPos) << srcPos_gp) |
-               (static_cast<uint16_t>(extPos) << extPos_gp) |
-               (static_cast<uint16_t>(postFormat) << postFormat_gp);
-    }
-
-    // |_mode|
-    static constexpr uint8_t mode_gm = 0x1F;
-    static constexpr int dst_gp = 0;
-    static constexpr int src_gp = 5;
-    static constexpr int ext_gp = 10;
-    // |_attr|
-    static constexpr uint8_t oprPos_gm = 0xF;
-    static constexpr uint8_t postFormat_gm = 0x7;
-    static constexpr int dstPos_gp = 0;
-    static constexpr int srcPos_gp = 4;
-    static constexpr int extPos_gp = 8;
-    static constexpr int postFormat_gp = 12;
+    const Flags _flags_P;
 };
 
 }  // namespace z8

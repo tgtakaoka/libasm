@@ -129,32 +129,28 @@ struct Entry final : entry::Base<Config::opcode_t> {
     struct Flags final {
         uint8_t _src;
         uint8_t _dst;
-        uint8_t _pos;
-        uint8_t _size;
+        uint8_t _oprPos;
+        uint8_t _attr;
         Config::opcode_t _postVal;
 
         static constexpr Flags create(AddrMode src, AddrMode dst, OprPos srcPos, OprPos dstPos,
                 OprSize oSize, InsnSize iSize) {
-            return Flags{static_cast<uint8_t>(src), static_cast<uint8_t>(dst),
-                    Entry::_pos(srcPos, dstPos), Entry::_size(oSize, iSize), 0};
+            return Flags{static_cast<uint8_t>(src), static_cast<uint8_t>(dst), _pos(srcPos, dstPos),
+                    _size(oSize, iSize), 0};
         }
 
         static constexpr Flags create(AddrMode src, AddrMode dst, OprPos srcPos, OprPos dstPos,
                 OprSize oSize, InsnSize iSize, Config::opcode_t postVal) {
             return Flags{static_cast<uint8_t>(src | hasPostVal_bm), static_cast<uint8_t>(dst),
-                    Entry::_pos(srcPos, dstPos), Entry::_size(oSize, iSize), postVal};
+                    _pos(srcPos, dstPos), _size(oSize, iSize), postVal};
         }
 
-        Flags read() const {
-            return Flags{pgm_read_byte(&_src), pgm_read_byte(&_dst), pgm_read_byte(&_pos),
-                    pgm_read_byte(&_size), pgm_read_word(&_postVal)};
-        }
         AddrMode src() const { return AddrMode(_src & mode_gm); }
         AddrMode dst() const { return AddrMode(_dst); }
-        OprPos srcPos() const { return OprPos((_pos >> srcPos_gp) & pos_gm); }
-        OprPos dstPos() const { return OprPos((_pos >> dstPos_gp) & pos_gm); }
-        OprSize oprSize() const { return OprSize((_size >> oprSize_gp) & size_gm); }
-        InsnSize insnSize() const { return InsnSize((_size >> insnSize_gp) & size_gm); }
+        OprPos srcPos() const { return OprPos((_oprPos >> srcPos_gp) & pos_gm); }
+        OprPos dstPos() const { return OprPos((_oprPos >> dstPos_gp) & pos_gm); }
+        OprSize oprSize() const { return OprSize((_attr >> oprSize_gp) & size_gm); }
+        InsnSize insnSize() const { return InsnSize((_attr >> insnSize_gp) & size_gm); }
         bool hasPostVal() const { return (_src & hasPostVal_bm) != 0; }
         Config::opcode_t postVal() const { return _postVal; }
 
@@ -162,42 +158,48 @@ struct Entry final : entry::Base<Config::opcode_t> {
             _src = static_cast<uint8_t>(src | (_src & hasPostVal_bm));
             _dst = static_cast<uint8_t>(dst);
         }
-        void setInsnSize(InsnSize size) { _size = Entry::_size(oprSize(), size); }
+        void setInsnSize(InsnSize size) { _attr = _size(oprSize(), size); }
         Config::opcode_t postMask() const { return postMask(dstPos()) | postMask(srcPos()); }
         static Config::opcode_t postMask(OprPos pos);
+
+    private:
+        static constexpr uint8_t _pos(OprPos src, OprPos dst) {
+            return (static_cast<uint8_t>(src) << srcPos_gp) |
+                   (static_cast<uint8_t>(dst) << dstPos_gp);
+        }
+
+        static constexpr uint8_t _size(OprSize opr, InsnSize insn) {
+            return (static_cast<uint8_t>(opr) << oprSize_gp) |
+                   (static_cast<uint8_t>(insn) << insnSize_gp);
+        }
+
+        // |_src|, |_dst|
+        static constexpr int mode_gp = 0;
+        static constexpr uint8_t mode_gm = 0x7F;
+        // |_src|
+        static constexpr int hasPostVal_bp = 7;
+        static constexpr uint8_t hasPostVal_bm = (1 << hasPostVal_bp);
+        // |_oprPos|
+        static constexpr int srcPos_gp = 0;
+        static constexpr int dstPos_gp = 4;
+        static constexpr uint8_t pos_gm = 0x0F;
+        // |_attr|
+        static constexpr int oprSize_gp = 0;
+        static constexpr int insnSize_gp = 4;
+        static constexpr uint8_t size_gm = 0x0F;
     };
 
-    constexpr Entry(Config::opcode_t opCode, Flags flags, const char *name)
-        : Base(name, opCode), _flags(flags) {}
+    constexpr Entry(Config::opcode_t opCode, Flags flags, const /* PROGMEM */ char *name_P)
+        : Base(name_P, opCode), _flags_P(flags) {}
 
-    Flags flags() const { return _flags.read(); }
+    Flags readFlags() const {
+        return Flags{pgm_read_byte(&_flags_P._src), pgm_read_byte(&_flags_P._dst),
+                pgm_read_byte(&_flags_P._oprPos), pgm_read_byte(&_flags_P._attr),
+                pgm_read_word(&_flags_P._postVal)};
+    }
 
 private:
-    const Flags _flags;
-
-    static constexpr uint8_t _pos(OprPos src, OprPos dst) {
-        return (static_cast<uint8_t>(src) << srcPos_gp) | (static_cast<uint8_t>(dst) << dstPos_gp);
-    }
-
-    static constexpr uint8_t _size(OprSize opr, InsnSize insn) {
-        return (static_cast<uint8_t>(opr) << oprSize_gp) |
-               (static_cast<uint8_t>(insn) << insnSize_gp);
-    }
-
-    // |src|
-    static constexpr int mode_gp = 0;
-    static constexpr int hasPostVal_bp = 7;
-    static constexpr uint8_t mode_gm = 0x7F;
-    static constexpr uint8_t hasPostVal_bm = (1 << hasPostVal_bp);
-
-    // |pos|
-    static constexpr int srcPos_gp = 0;
-    static constexpr int dstPos_gp = 4;
-    static constexpr uint8_t pos_gm = 0x0F;
-    // |size|
-    static constexpr int oprSize_gp = 0;
-    static constexpr int insnSize_gp = 4;
-    static constexpr uint8_t size_gm = 0x0F;
+    const Flags _flags_P;
 };
 
 }  // namespace mc68000

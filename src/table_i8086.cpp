@@ -1190,15 +1190,15 @@ template <typename CPUTYPE>
 using Processor = entry::CpuBase<CPUTYPE, EntryPage>;
 
 struct Cpu : Processor<CpuType> {
-    constexpr Cpu(CpuType cpuType, const /* PROGMEM */ char *name_P, const EntryPage *table,
-            const EntryPage *end)
-        : Processor<CpuType>(cpuType, name_P, table, end) {}
+    constexpr Cpu(CpuType cpuType, const /* PROGMEM */ char *name_P, const EntryPage *head_P,
+            const EntryPage *tail_P)
+        : Processor<CpuType>(cpuType, name_P, head_P, tail_P) {}
 };
 
 struct Fpu : Processor<FpuType> {
-    constexpr Fpu(FpuType fpuType, const /* PROGMEM */ char *name_P, const EntryPage *table,
-            const EntryPage *end)
-        : Processor<FpuType>(fpuType, name_P, table, end) {}
+    constexpr Fpu(FpuType fpuType, const /* PROGMEM */ char *name_P, const EntryPage *head_P,
+            const EntryPage *tail_P)
+        : Processor<FpuType>(fpuType, name_P, head_P, tail_P) {}
 };
 
 static constexpr Cpu CPU_TABLE[] PROGMEM = {
@@ -1267,7 +1267,7 @@ static bool hasSize(AddrMode mode) {
 static bool acceptSize(const AsmInsn &insn, const Entry *entry) {
     const auto dst = insn.dstOp.mode;
     const auto src = insn.srcOp.mode;
-    const auto flags = entry->flags();
+    const auto flags = entry->readFlags();
     if (dst == M_MEM || dst == M_DIR) {
         if (src == M_NONE)
             return flags.size() == SZ_NONE;
@@ -1283,7 +1283,7 @@ static bool acceptSize(const AsmInsn &insn, const Entry *entry) {
 }
 
 static bool acceptModes(AsmInsn &insn, const Entry *entry) {
-    const auto table = entry->flags();
+    const auto table = entry->readFlags();
     return acceptMode(insn.dstOp.mode, table.dst()) && acceptMode(insn.srcOp.mode, table.src()) &&
            acceptMode(insn.extOp.mode, table.ext()) && acceptSize(insn, entry);
 }
@@ -1351,7 +1351,7 @@ Config::opcode_t TableI8086::segOverridePrefix(RegName name) const {
 static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page) {
     UNUSED(page);
     auto opc = insn.opCode();
-    const auto flags = entry->flags();
+    const auto flags = entry->readFlags();
     const auto dstPos = flags.dstPos();
     const auto srcPos = flags.srcPos();
     if (dstPos == P_OREG || srcPos == P_OREG) {
@@ -1359,11 +1359,11 @@ static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page
     } else if (dstPos == P_OSEG || srcPos == P_OSEG) {
         opc &= ~0030;
     } else if (dstPos == P_OMOD || srcPos == P_OMOD) {
-        const auto prefix = page->prefix();
+        const auto prefix = page->readPrefix();
         if (prefix < 0xD8 || prefix >= 0xE0 || (opc >> 6) != 3)
             opc &= ~0307;
     }
-    return opc == entry->opCode();
+    return opc == entry->readOpCode();
 }
 
 Error TableI8086::searchOpCode(const CpuSpec &cpuSpec, DisInsn &insn, StrBuffer &out) const {
@@ -1405,7 +1405,7 @@ const /*PROGMEM*/ char *TableI8086::cpuName_P(CpuType cpuType) const {
 Error TableI8086::searchCpuName(StrScanner &name, CpuType &cpuType) const {
     auto t = Cpu::search(name, ARRAY_RANGE(CPU_TABLE));
     if (t) {
-        cpuType = t->cpuType();
+        cpuType = t->readCpuType();
     } else {
         name.iexpect('i');
         if (name.iequals(TEXT_CPU_8086)) {

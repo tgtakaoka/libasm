@@ -505,7 +505,7 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
 }
 
 static bool acceptModes(AsmInsn &insn, const Entry *entry) {
-    const auto table = entry->flags();
+    const auto table = entry->readFlags();
     return acceptMode(insn.srcOp.mode, table.src()) && acceptMode(insn.dstOp.mode, table.dst()) &&
            acceptMode(insn.extOp.mode, table.ext());
 }
@@ -518,11 +518,11 @@ Error TableTms7000::searchName(CpuType cpuType, AsmInsn &insn) const {
 static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page) {
     UNUSED(page);
     const auto opc = insn.opCode();
-    const auto flags = entry->flags();
+    const auto flags = entry->readFlags();
     const auto src = flags.src();
     if (src == M_TRAP)
-        return opc >= entry->opCode();
-    return opc == entry->opCode();
+        return opc >= entry->readOpCode();
+    return opc == entry->readOpCode();
 }
 
 Error TableTms7000::searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) const {

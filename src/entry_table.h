@@ -32,9 +32,9 @@ namespace entry {
  */
 template <typename ENTRY>
 struct TableBase {
-    constexpr TableBase(
-            const ENTRY *table, const ENTRY *end, const uint8_t *index, const uint8_t *iend)
-        : _entries(table, end, index, iend) {}
+    constexpr TableBase(const /* PROGMEM */ ENTRY *head_P, const /* PROGMEM */ ENTRY *tail_P,
+            const /* PROGMEM */ uint8_t *index_P, const /* PROGMEM */ uint8_t *itail_P)
+        : _entries(head_P, tail_P, index_P, itail_P) {}
 
     template <typename DATA, typename EXTRA>
     using Matcher = bool (*)(DATA &, const ENTRY *, EXTRA);
@@ -66,14 +66,15 @@ protected:
  */
 template <typename ENTRY>
 struct PrefixTableBase : TableBase<ENTRY> {
-    constexpr PrefixTableBase(uint8_t prefix, const ENTRY *table, const ENTRY *end,
-            const uint8_t *index, const uint8_t *iend)
-        : TableBase<ENTRY>(table, end, index, iend), _prefix(prefix) {}
+    constexpr PrefixTableBase(uint8_t prefix, const /* PROGMEM */ ENTRY *head_P,
+            const /* PROGMEM */ ENTRY *tail_P, const /* PROGMEM */ uint8_t *index_P,
+            const /* PROGMEM */ uint8_t *itail_P)
+        : TableBase<ENTRY>(head_P, tail_P, index_P, itail_P), _prefix_P(prefix) {}
 
-    uint8_t prefix() const { return pgm_read_byte(&_prefix); }
+    uint8_t readPrefix() const { return pgm_read_byte(&_prefix_P); }
 
 private:
-    const uint8_t _prefix;
+    const /* PROGMEM */ uint8_t _prefix_P;
 };
 
 /**
@@ -81,7 +82,7 @@ private:
  */
 template <typename CPUTYPE, typename ENTRY_PAGE>
 struct CpuBase {
-    CPUTYPE cpuType() const { return static_cast<CPUTYPE>(pgm_read_byte(&_cpuType)); }
+    CPUTYPE readCpuType() const { return static_cast<CPUTYPE>(pgm_read_byte(&_cpuType_P)); }
     const /* PROGMEM */ char *name_P() const {
         return reinterpret_cast<const char *>(pgm_read_ptr(&_name_P));
     }
@@ -89,7 +90,7 @@ struct CpuBase {
     template <typename CPU_T>
     static const CPU_T *search(CPUTYPE cpuType, const CPU_T *table, const CPU_T *end) {
         for (const auto *t = table; t < end; t++) {
-            if (cpuType == t->cpuType())
+            if (cpuType == t->readCpuType())
                 return t;
         }
         return nullptr;
@@ -104,13 +105,14 @@ struct CpuBase {
         return nullptr;
     }
 
-    constexpr CpuBase(CPUTYPE cpuType, const /*PROGMEM*/ char *name_P, const ENTRY_PAGE *table,
-            const ENTRY_PAGE *end)
-        : _pages(table, end), _cpuType(cpuType), _name_P(name_P) {}
+    constexpr CpuBase(CPUTYPE cpuType, const /*PROGMEM*/ char *name_P,
+            const /* PROGMEM */ ENTRY_PAGE *head_P, const /* PROGMEM */ ENTRY_PAGE *tail_P)
+        : _pages(head_P, tail_P), _cpuType_P(cpuType), _name_P(name_P) {}
 
     bool isPrefix(uint8_t code) const {
-        for (const auto *page = _pages.table(); page < _pages.end(); page++) {
-            const auto prefix = page->prefix();
+        const auto *tail = _pages.readTail();
+        for (const auto *page = _pages.readHead(); page < tail; page++) {
+            const auto prefix = page->readPrefix();
             if (prefix == 0)
                 continue;
             if (prefix == code)
@@ -120,33 +122,33 @@ struct CpuBase {
     }
 
     template <typename INSN, typename ENTRY>
-    static int nameComparator(INSN &insn, const ENTRY *entry) {
-        return strcasecmp_P(insn.name(), entry->name_P());
+    static int nameComparator(INSN &insn, const ENTRY *entry_P) {
+        return strcasecmp_P(insn.name(), entry_P->name_P());
     }
 
     /** Tempalte specialization of |readCode| for non-prefixed TableBase */
     template <typename INSN, typename ENTRY, typename PAGE,
             typename enable_if<!is_base_of<PrefixTableBase<ENTRY>, PAGE>::value>::type * = nullptr>
-    static void defaultReadCode(INSN &insn, const ENTRY *entry, const PAGE *page) {
-        UNUSED(page);
-        insn.setFlags(entry->flags());
-        insn.setOpCode(entry->opCode());
+    static void defaultReadCode(INSN &insn, const ENTRY *entry_P, const PAGE *page_P) {
+        UNUSED(page_P);
+        insn.setOpCode(entry_P->readOpCode());
+        insn.setFlags(entry_P->readFlags());
     }
 
     /** Template specialization of |readCode| for PrefixTableBase */
     template <typename INSN, typename ENTRY, typename PAGE,
             typename enable_if<is_base_of<PrefixTableBase<ENTRY>, PAGE>::value>::type * = nullptr>
-    static void defaultReadCode(INSN &insn, const ENTRY *entry, const PAGE *page) {
-        UNUSED(page);
-        insn.setFlags(entry->flags());
-        insn.setPrefix(page->prefix());
-        insn.setOpCode(entry->opCode());
+    static void defaultReadCode(INSN &insn, const ENTRY *entry_P, const PAGE *page_P) {
+        UNUSED(page_P);
+        insn.setPrefix(page_P->readPrefix());
+        insn.setOpCode(entry_P->readOpCode());
+        insn.setFlags(entry_P->readFlags());
     }
 
     template <typename INSN>
-    static void defaultPageSetup(INSN &insn, const ENTRY_PAGE *page) {
+    static void defaultPageSetup(INSN &insn, const ENTRY_PAGE *page_P) {
         UNUSED(insn);
-        UNUSED(page);
+        UNUSED(page_P);
     }
 
     /**
@@ -159,7 +161,8 @@ struct CpuBase {
             void (*readCode)(INSN &, const ENTRY *, const ENTRY_PAGE *) = defaultReadCode) const {
         insn.setOK();
         auto found = false;
-        for (auto page = _pages.table(); page < _pages.end(); page++) {
+        const auto *tail = _pages.readTail();
+        for (auto page = _pages.readHead(); page < tail; page++) {
             pageSetup(insn, page);
             const auto *entry = page->binarySearch(insn, nameComparator, acceptOperands);
             if (page->notExactMatch(entry)) {
@@ -175,34 +178,35 @@ struct CpuBase {
 
     template <typename INSN, typename ENTRY>
     static void defaultReadName(
-            INSN &insn, const ENTRY *entry, StrBuffer &out, const ENTRY_PAGE *page) {
-        UNUSED(page);
-        insn.setFlags(entry->flags());
+            INSN &insn, const ENTRY *entry_P, StrBuffer &out, const ENTRY_PAGE *page_P) {
+        UNUSED(page_P);
+        insn.setFlags(entry_P->readFlags());
         auto save{out};
-        insn.nameBuffer().reset().over(out).text_P(entry->name_P()).over(insn.nameBuffer());
+        insn.nameBuffer().reset().over(out).text_P(entry_P->name_P()).over(insn.nameBuffer());
         save.over(out);
     }
 
     template <typename INSN, typename ENTRY>
-    static bool defaultMatchOpCode(INSN &insn, const ENTRY *entry, const ENTRY_PAGE *page) {
-        return insn.opCode() == entry->opCode();
+    static bool defaultMatchOpCode(INSN &insn, const ENTRY *entry_P, const ENTRY_PAGE *page_P) {
+        UNUSED(page_P);
+        return insn.opCode() == entry_P->readOpCode();
     }
 
     /** Template specialization of |pageMatcher| for non-prefixed TableBase */
     template <typename INSN, typename PAGE,
             typename enable_if<!is_base_of_template<PrefixTableBase, PAGE>::value>::type * =
                     nullptr>
-    static bool defaultPageMatcher(INSN &insn, const PAGE *page) {
+    static bool defaultPageMatcher(INSN &insn, const PAGE *page_P) {
         UNUSED(insn);
-        UNUSED(page);
+        UNUSED(page_P);
         return true;
     }
 
     /** Template specialization of |pageMatcher| for PrefixTableBase */
     template <typename INSN, typename PAGE,
             typename enable_if<is_base_of_template<PrefixTableBase, PAGE>::value>::type * = nullptr>
-    static bool defaultPageMatcher(INSN &insn, const PAGE *page) {
-        return insn.prefix() == page->prefix();
+    static bool defaultPageMatcher(INSN &insn, const PAGE *page_P) {
+        return insn.prefix() == page_P->readPrefix();
     }
 
     /**
@@ -216,7 +220,8 @@ struct CpuBase {
             void (*readName)(INSN &, const ENTRY *, StrBuffer &,
                     const ENTRY_PAGE *) = defaultReadName) const {
         insn.setOK();
-        for (const ENTRY_PAGE *page = _pages.table(); page < _pages.end(); page++) {
+        const auto *tail = _pages.readTail();
+        for (const ENTRY_PAGE *page = _pages.readHead(); page < tail; page++) {
             if (pageMatcher(insn, page)) {
                 const auto *entry = page->linearSearch(insn, matchCode, page);
                 if (entry) {
@@ -231,7 +236,7 @@ struct CpuBase {
 
 protected:
     const table::Table<ENTRY_PAGE> _pages;
-    CPUTYPE _cpuType;
+    CPUTYPE _cpuType_P;
     const /* PROGMEM */ char *_name_P;
 };
 

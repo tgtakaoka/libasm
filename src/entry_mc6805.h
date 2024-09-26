@@ -56,27 +56,27 @@ struct Entry final : entry::Base<Config::opcode_t> {
                                           (static_cast<uint16_t>(M_NONE) << opr3_gp) | undef_bm)};
         }
 
-        Flags read() const { return Flags{pgm_read_word(&_attr)}; }
         AddrMode mode1() const { return AddrMode((_attr >> opr1_gp) & mode_gm); }
         AddrMode mode2() const { return AddrMode((_attr >> opr2_gp) & mode_gm); }
         AddrMode mode3() const { return AddrMode((_attr >> opr3_gp) & mode_gm); }
         bool undefined() const { return (_attr & (1 << undef_bp)) != 0; }
+
+    private:
+        static constexpr int opr1_gp = 0;
+        static constexpr int opr2_gp = 4;
+        static constexpr int opr3_gp = 8;
+        static constexpr int undef_bp = 15;
+        static constexpr uint8_t mode_gm = 0xF;
+        static constexpr uint16_t undef_bm = (1 << undef_bp);
     };
 
-    constexpr Entry(Config::opcode_t opCode, Flags flags, const char *name)
-        : Base(name, opCode), _flags(flags) {}
+    constexpr Entry(Config::opcode_t opCode, Flags flags, const /* PROGMEM */ char *name_P)
+        : Base(name_P, opCode), _flags_P(flags) {}
 
-    Flags flags() const { return _flags.read(); }
+    Flags readFlags() const { return Flags{pgm_read_word(&_flags_P._attr)}; }
 
 private:
-    const Flags _flags;
-
-    static constexpr int opr1_gp = 0;
-    static constexpr int opr2_gp = 4;
-    static constexpr int opr3_gp = 8;
-    static constexpr int undef_bp = 15;
-    static constexpr uint8_t mode_gm = 0xF;
-    static constexpr uint16_t undef_bm = (1 << undef_bp);
+    const Flags _flags_P;
 };
 
 }  // namespace mc6805

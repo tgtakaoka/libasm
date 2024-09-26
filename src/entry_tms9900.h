@@ -57,28 +57,31 @@ struct Entry final : entry::Base<Config::opcode_t> {
         static constexpr Flags create(AddrMode src, AddrMode dst, bool byteOp = false) {
             return Flags{static_cast<uint8_t>(src), attr(dst, byteOp)};
         }
-        Flags read() const { return Flags{pgm_read_byte(&_src), pgm_read_byte(&_attr)}; }
 
         AddrMode src() const { return AddrMode(_src); }
         AddrMode dst() const { return AddrMode((_attr >> dst_gp) & dst_gm); }
         bool byteOp() const { return (_attr & (1 << byteOp_bp)) != 0; }
+
+    private:
+        // |_attr|
+        static constexpr int dst_gp = 0;
+        static constexpr uint8_t dst_gm = 0x1F;
+        static constexpr int byteOp_bp = 7;
+        static constexpr uint8_t attr(AddrMode dst, bool byteOp) {
+            return ((static_cast<uint8_t>(dst) & dst_gm) << dst_gp) |
+                   (byteOp ? (1 << byteOp_bp) : 0);
+        }
     };
 
-    constexpr Entry(Config::opcode_t opCode, Flags flags, const char *name)
-        : Base(name, opCode), _flags(flags) {}
+    constexpr Entry(Config::opcode_t opCode, Flags flags, const /* PROGMEM */ char *name_P)
+        : Base(name_P, opCode), _flags_P(flags) {}
 
-    Flags flags() const { return _flags.read(); }
+    Flags readFlags() const {
+        return Flags{pgm_read_byte(&_flags_P._src), pgm_read_byte(&_flags_P._attr)};
+    }
 
 private:
-    const Flags _flags;
-
-    // |_attr|
-    static constexpr int dst_gp = 0;
-    static constexpr uint8_t dst_gm = 0x1F;
-    static constexpr int byteOp_bp = 7;
-    static constexpr uint8_t attr(AddrMode dst, bool byteOp) {
-        return ((static_cast<uint8_t>(dst) & dst_gm) << dst_gp) | (byteOp ? (1 << byteOp_bp) : 0);
-    }
+    const Flags _flags_P;
 };
 
 }  // namespace tms9900

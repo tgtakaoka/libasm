@@ -493,11 +493,11 @@ static constexpr uint8_t INDEX_BLOCK[] PROGMEM = {
 // clang-format on
 
 struct EntryPage : entry::PrefixTableBase<Entry> {
-    AddrMode prefixMode() const { return AddrMode(pgm_read_byte(&_mode)); }
+    AddrMode readPrefixMode() const { return AddrMode(pgm_read_byte(&_mode_P)); }
     bool prefixMatcher(Config::opcode_t code) const {
-        const auto pre = prefix();
+        const auto pre = readPrefix();
         const auto reg = code & 7;
-        switch (prefixMode()) {
+        switch (readPrefixMode()) {
         case M_IND:
         case M_REG16:
             return (code & ~7) == pre && reg != 3 && reg != 7;
@@ -513,12 +513,12 @@ struct EntryPage : entry::PrefixTableBase<Entry> {
         }
     }
 
-    constexpr EntryPage(Config::opcode_t prefix, AddrMode mode, const Entry *table,
-            const Entry *end, const uint8_t *index, const uint8_t *iend)
-        : PrefixTableBase(prefix, table, end, index, iend), _mode(mode) {}
+    constexpr EntryPage(Config::opcode_t prefix, AddrMode mode, const Entry *head_P,
+            const Entry *tail_P, const uint8_t *index_P, const uint8_t *itail_P)
+        : PrefixTableBase(prefix, head_P, tail_P, index_P, itail_P), _mode_P(mode) {}
 
 private:
-    const AddrMode _mode;
+    const AddrMode _mode_P;
 };
 
 // clang-format off
@@ -547,14 +547,15 @@ static constexpr EntryPage TLCS90_PAGES[] PROGMEM = {
 // clang-format on
 
 struct Cpu : entry::CpuBase<CpuType, EntryPage> {
-    constexpr Cpu(CpuType cpuType, const /*PROGMEM*/ char *name_P, const EntryPage *table,
-            const EntryPage *end)
-        : CpuBase(cpuType, name_P, table, end) {}
+    constexpr Cpu(CpuType cpuType, const /*PROGMEM*/ char *name_P, const EntryPage *head_P,
+            const EntryPage *tail_P)
+        : CpuBase(cpuType, name_P, head_P, tail_P) {}
 
     bool isPrefix(Config::opcode_t code, AddrMode &prefixMode) const {
-        for (auto page = _pages.table(); page < _pages.end(); page++) {
-            if (page->prefix() && page->prefixMatcher(code)) {
-                prefixMode = page->prefixMode();
+        const auto *tail = _pages.readTail();
+        for (auto page = _pages.readHead(); page < tail; page++) {
+            if (page->readPrefix() && page->prefixMatcher(code)) {
+                prefixMode = page->readPrefixMode();
                 return true;
             }
         }
@@ -594,11 +595,11 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
 }
 
 static void pageSetup(AsmInsn &insn, const EntryPage *page) {
-    insn.setPrefixMode(page->prefixMode());
+    insn.setPrefixMode(page->readPrefixMode());
 }
 
 static bool acceptModes(AsmInsn &insn, const Entry *entry) {
-    const auto table = entry->flags();
+    const auto table = entry->readFlags();
     const auto tableDst = table.dst();
     const auto tableSrc = table.src();
     const auto dst = (tableDst == M_DST) ? insn.pre() : tableDst;
@@ -610,8 +611,9 @@ static void readCode(AsmInsn &insn, const Entry *entry, const EntryPage *page) {
     Cpu::defaultReadCode(insn, entry, page);
 
     // Update prefix mode.
-    auto tableDst = entry->flags().dst();
-    auto tableSrc = entry->flags().src();
+    const auto flags = entry->readFlags();
+    auto tableDst = flags.dst();
+    auto tableSrc = flags.src();
     auto dst = (tableDst == M_DST) ? insn.pre() : tableDst;
     auto src = (tableSrc == M_SRC) ? insn.pre() : (tableSrc == M_SRC16 ? M_REG16 : tableSrc);
     insn.setAddrMode(dst, src);
@@ -631,7 +633,7 @@ Error TableTlcs90::searchName(CpuType cpuType, AsmInsn &insn) const {
 
 static bool prefixMatcher(DisInsn &insn, const EntryPage *page) {
     if (page->prefixMatcher(insn.prefix())) {
-        insn.setPrefixMode(page->prefixMode());
+        insn.setPrefixMode(page->readPrefixMode());
         return true;
     }
     return false;
@@ -651,7 +653,7 @@ static bool invalidPrefixCode(Config::opcode_t prefix, AddrMode mode) {
 static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page) {
     UNUSED(page);
     auto opc = insn.opCode();
-    const auto flags = entry->flags();
+    const auto flags = entry->readFlags();
     const auto dst = flags.dst();
     const auto src = flags.src();
     if (invalidPrefixCode(opc, dst) || invalidPrefixCode(opc, src))
@@ -664,7 +666,7 @@ static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page
     } else if (dst == M_REGIX) {
         opc &= ~3;
     }
-    return opc == entry->opCode();
+    return opc == entry->readOpCode();
 }
 
 Error TableTlcs90::searchOpCode(
