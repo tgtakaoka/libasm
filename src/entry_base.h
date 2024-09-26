@@ -28,23 +28,23 @@ namespace entry {
 template <typename OPCODE>
 struct Base {
     constexpr Base(const /* PROGMEM */ char *name_P, OPCODE opCode)
-        : _name_P(name_P), _opCode(opCode) {}
+        : _name_P(name_P), _opCode_P(opCode) {}
 
     const /* PROGMEM */ char *name_P() const {
         return reinterpret_cast<const char *>(pgm_read_ptr(&_name_P));
     }
 
-    OPCODE opCode() const {
+    OPCODE readOpCode() const {
         if (sizeof(OPCODE) == 1) {
-            return pgm_read_byte(&_opCode);
+            return pgm_read_byte(&_opCode_P);
         } else {
-            return pgm_read_word(&_opCode);
+            return pgm_read_word(&_opCode_P);
         }
     }
 
 private:
     const /* PROGMEM */ char *const _name_P;
-    const OPCODE _opCode;
+    const OPCODE _opCode_P;
 };
 
 }  // namespace entry

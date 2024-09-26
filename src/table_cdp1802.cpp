@@ -337,7 +337,7 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
 }
 
 static bool acceptModes(AsmInsn &insn, const Entry *entry) {
-    const auto table = entry->flags();
+    const auto table = entry->readFlags();
     return acceptMode(insn.op1.mode, table.mode1()) && acceptMode(insn.op2.mode, table.mode2());
 }
 
@@ -349,7 +349,7 @@ Error TableCdp1802::searchName(CpuType cpuType, AsmInsn &insn) const {
 static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page) {
     UNUSED(page);
     auto opc = insn.opCode();
-    auto flags = entry->flags();
+    auto flags = entry->readFlags();
     auto mode = flags.mode1();
     if (mode == M_REGN || mode == M_REG1) {
         opc &= ~0x0F;
@@ -358,7 +358,7 @@ static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page
             return false;
         opc &= ~7;
     }
-    return opc == entry->opCode();
+    return opc == entry->readOpCode();
 }
 
 Error TableCdp1802::searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) const {
@@ -382,7 +382,7 @@ Error TableCdp1802::searchCpuName(StrScanner &name, CpuType &cpuType) const {
     name.iexpectText_P(TEXT_CDP1802_LIST, 3);
     const auto t = Cpu::search(name, ARRAY_RANGE(CPU_TABLE));
     if (t) {
-        cpuType = t->cpuType();
+        cpuType = t->readCpuType();
         return OK;
     }
     return UNSUPPORTED_CPU;

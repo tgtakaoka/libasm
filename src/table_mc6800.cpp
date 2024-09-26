@@ -638,7 +638,7 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
 }
 
 static bool acceptModes(AsmInsn &insn, const Entry *entry) {
-    const auto table = entry->flags();
+    const auto table = entry->readFlags();
     if (acceptMode(insn.op1.mode, table.mode1()) && acceptMode(insn.op2.mode, table.mode2()) &&
             acceptMode(insn.op3.mode, table.mode3())) {
         if (table.undefined())
@@ -656,7 +656,7 @@ Error TableMc6800::searchName(CpuType cpuType, AsmInsn &insn) const {
 static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page) {
     UNUSED(*page);
     auto opCode = insn.opCode();
-    const auto flags = entry->flags();
+    const auto flags = entry->readFlags();
     const auto mode1 = flags.mode1();
     if (mode1 == M_GMEM || flags.mode2() == M_GMEM) {
         const auto opc = opCode & 0xF0;
@@ -665,12 +665,12 @@ static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page
     } else if (mode1 == M_GN8 || mode1 == M_GN16) {
         opCode &= ~0x30;
     }
-    return opCode == entry->opCode();
+    return opCode == entry->readOpCode();
 }
 
 static const Entry *searchOpCodeImpl(const Cpu *cpu, DisInsn &insn, StrBuffer &out) {
     auto entry = cpu->searchOpCode(insn, out, matchOpCode);
-    if (entry && entry->flags().undefined()) {
+    if (entry && entry->readFlags().undefined()) {
         insn.nameBuffer().reset();
         insn.setErrorIf(UNKNOWN_INSTRUCTION);
         entry = nullptr;
@@ -688,7 +688,7 @@ Error TableMc6800::searchOpCodeAlias(CpuType cpuType, DisInsn &insn, StrBuffer &
     if (entry == nullptr)
         return insn.setErrorIf(INTERNAL_ERROR);
     entry += 1;
-    if (entry->opCode() != insn.opCode())
+    if (entry->readOpCode() != insn.opCode())
         return insn.setError(INTERNAL_ERROR);
     Cpu::defaultReadName(insn, entry, out, nullptr);
     return OK;
@@ -711,7 +711,7 @@ Error TableMc6800::searchCpuName(StrScanner &name, CpuType &cpuType) const {
     p.iexpectText_P(TEXT_MC6800_LIST, 2);
     auto t = Cpu::search(p, ARRAY_RANGE(CPU_TABLE));
     if (t) {
-        cpuType = t->cpuType();
+        cpuType = t->readCpuType();
     } else if (p.iequals_P(TEXT_CPU_68HC11)) {
         cpuType = MC68HC11;
     } else if (name.iequals_P(TEXT_CPU_HD6301)) {

@@ -25,27 +25,6 @@ using namespace libasm::text::ns32000;
 namespace libasm {
 namespace ns32000 {
 
-static constexpr AddrMode ex2Modes[] PROGMEM = {
-        M_NONE,   // EM2_NONE
-        M_IMM,    // EM2_IMM
-        M_BFLEN,  // EM2_BFLEN
-        M_LEN32,  // EM2_LEN32
-        M_NONE,   // EM2_ERROR
-};
-AddrMode Entry::toAddrMode(Ex2Mode mode) {
-    return AddrMode(pgm_read_byte(ex2Modes + mode));
-}
-
-static constexpr OprPos ex2Pos[] PROGMEM = {
-        P_NONE,  // EP2_NONE
-        P_IMPL,  // EP2_IMPL
-        P_DISP,  // EP2_DISP
-        P_NONE,  // EP2_ERROR
-};
-OprPos Entry::toOprPos(Ex2Pos pos) {
-    return OprPos(pgm_read_byte(ex2Pos + pos));
-}
-
 #define E4(_opc, _name, _sz, _srcm, _dstm, _srcp, _dstp, _ex1m, _ex2m, _ex1p, _ex2p)             \
     {                                                                                            \
         _opc, Entry::Flags::create(_srcm, _srcp, _dstm, _dstp, _ex1m, _ex1p, _ex2m, _ex2p, _sz), \
@@ -806,16 +785,17 @@ static constexpr uint8_t INDEX_14_2[] PROGMEM = {
 // clang-format on
 
 struct EntryPage : entry::PrefixTableBase<Entry> {
-    Config::opcode_t mask() const { return pgm_read_byte(&_mask); }
-    Config::opcode_t post() const { return pgm_read_byte(&_post); }
+    Config::opcode_t readMask() const { return pgm_read_byte(&_mask_P); }
+    Config::opcode_t readPost() const { return pgm_read_byte(&_post_P); }
 
     constexpr EntryPage(Config::opcode_t prefix, Config::opcode_t mask, uint8_t post,
-            const Entry *table, const Entry *end, const uint8_t *index, const uint8_t *iend)
-        : PrefixTableBase(prefix, table, end, index, iend), _mask(mask), _post(post) {}
+            const Entry *head_P, const Entry *tail_P, const uint8_t *index_P,
+            const uint8_t *itail_P)
+        : PrefixTableBase(prefix, head_P, tail_P, index_P, itail_P), _mask_P(mask), _post_P(post) {}
 
 private:
-    const Config::opcode_t _mask;
-    const uint8_t _post;
+    const Config::opcode_t _mask_P;
+    const uint8_t _post_P;
 };
 
 // Standard Instructions
@@ -862,12 +842,12 @@ using ProcessorBase = entry::CpuBase<CPUTYPE, EntryPage>;
 
 template <typename CPUTYPE>
 struct Processor : ProcessorBase<CPUTYPE> {
-    constexpr Processor(CPUTYPE cpuType, const /* PROGMEM */ char *name_P, const EntryPage *table,
-            const EntryPage *end)
-        : ProcessorBase<CPUTYPE>(cpuType, name_P, table, end) {}
+    constexpr Processor(CPUTYPE cpuType, const /* PROGMEM */ char *name_P, const EntryPage *head_P,
+            const EntryPage *tail_P)
+        : ProcessorBase<CPUTYPE>(cpuType, name_P, head_P, tail_P) {}
 
     static void pageSetup(AsmInsn &insn, const EntryPage *page) {
-        insn.setPostfix(0, page->post() != 0);
+        insn.setPostfix(0, page->readPost() != 0);
     }
 
     Error searchName(AsmInsn &insn, bool (*accept)(AsmInsn &, const Entry *)) const {
@@ -952,7 +932,7 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
 }
 
 static bool acceptModes(AsmInsn &insn, const Entry *entry) {
-    const auto table = entry->flags();
+    const auto table = entry->readFlags();
     return acceptMode(insn.srcOp.mode, table.src()) && acceptMode(insn.dstOp.mode, table.dst()) &&
            acceptMode(insn.ex1Op.mode, table.ex1()) && acceptMode(insn.ex2Op.mode, table.ex2());
 }
@@ -967,13 +947,13 @@ Error TableNs32000::searchName(const CpuSpec &cpuSpec, AsmInsn &insn) const {
 }
 
 static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page) {
-    return (insn.opCode() & ~page->mask()) == entry->opCode();
+    return (insn.opCode() & ~page->readMask()) == entry->readOpCode();
 }
 
 static void readEntryName(
         DisInsn &insn, const Entry *entry, StrBuffer &out, const EntryPage *page) {
     Cpu::defaultReadName(insn, entry, out, page);
-    insn.setPostfix(0, page->post() != 0);
+    insn.setPostfix(0, page->readPost() != 0);
 }
 
 Error TableNs32000::searchOpCode(const CpuSpec &cpuSpec, DisInsn &insn, StrBuffer &out) const {

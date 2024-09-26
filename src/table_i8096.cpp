@@ -289,7 +289,7 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
 }
 
 static bool acceptModes(AsmInsn &insn, const Entry *entry) {
-    const auto table = entry->flags();
+    const auto table = entry->readFlags();
     if (acceptMode(insn.dstOp.mode, table.dst()) && acceptMode(insn.src1Op.mode, table.src1()) &&
             acceptMode(insn.src2Op.mode, table.src2())) {
         if (table.undefined())
@@ -307,7 +307,7 @@ Error TableI8096::searchName(CpuType cpuType, AsmInsn &insn) const {
 static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page) {
     UNUSED(page);
     auto opc = insn.opCode();
-    const auto flags = entry->flags();
+    const auto flags = entry->readFlags();
     const auto dst = flags.dst();
     const auto src1 = flags.src1();
     const auto src2 = flags.src2();
@@ -317,12 +317,12 @@ static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page
     } else if (dst == M_REL11 || src1 == M_BITNO) {
         opc &= ~7;
     }
-    return opc == entry->opCode();
+    return opc == entry->readOpCode();
 }
 
 Error TableI8096::searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) const {
     const auto entry = cpu(cpuType)->searchOpCode(insn, out, matchOpCode);
-    if (entry && entry->flags().undefined()) {
+    if (entry && entry->readFlags().undefined()) {
         insn.nameBuffer().reset();
         insn.setErrorIf(UNKNOWN_INSTRUCTION);
     }

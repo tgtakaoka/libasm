@@ -73,23 +73,22 @@ struct Entry final : entry::Base<Config::opcode_t> {
                     static_cast<uint8_t>(opr3), static_cast<uint8_t>(opr4)};
         }
 
-        Flags read() const {
-            return Flags{pgm_read_byte(&_opr1), pgm_read_byte(&_opr2), pgm_read_byte(&_opr3),
-                    pgm_read_byte(&_opr4)};
-        }
         AddrMode mode1() const { return AddrMode(_opr1); }
         AddrMode mode2() const { return AddrMode(_opr2); }
         AddrMode mode3() const { return AddrMode(_opr3); }
         AddrMode mode4() const { return AddrMode(_opr4); }
     };
 
-    constexpr Entry(Config::opcode_t opCode, Flags flags, const char *name)
-        : Base(name, opCode), _flags(flags) {}
+    constexpr Entry(Config::opcode_t opCode, Flags flags, const /* PROGMEM */ char *name_P)
+        : Base(name_P, opCode), _flags_P(flags) {}
 
-    Flags flags() const { return _flags.read(); }
+    Flags readFlags() const {
+        return Flags{pgm_read_byte(&_flags_P._opr1), pgm_read_byte(&_flags_P._opr2),
+                pgm_read_byte(&_flags_P._opr3), pgm_read_byte(&_flags_P._opr4)};
+    }
 
 private:
-    const Flags _flags;
+    const Flags _flags_P;
 };
 
 }  // namespace mn1610

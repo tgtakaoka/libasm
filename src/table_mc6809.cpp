@@ -566,20 +566,20 @@ static constexpr EntryPage HD6309_PAGES[] PROGMEM = {
 };
 
 struct PostEntry : private PostSpec {
-    RegName _index() const { return RegName(pgm_read_byte(&index)); }
-    RegName _base() const { return RegName(pgm_read_byte(&base)); }
-    int8_t _size() const { return static_cast<int8_t>(pgm_read_byte(&size)); }
-    bool _indir() const { return static_cast<bool>(pgm_read_byte(&indir)); }
-    uint8_t _mask() const { return pgm_read_byte(&mask); }
-    uint8_t _byte() const { return pgm_read_byte(&byte); }
+    RegName readIndex() const { return RegName(pgm_read_byte(&index)); }
+    RegName readBase() const { return RegName(pgm_read_byte(&base)); }
+    int8_t readSize() const { return static_cast<int8_t>(pgm_read_byte(&size)); }
+    bool readIndir() const { return static_cast<bool>(pgm_read_byte(&indir)); }
+    uint8_t readMask() const { return pgm_read_byte(&mask_P); }
+    uint8_t readByte() const { return pgm_read_byte(&byte_P); }
 
     constexpr PostEntry(
-            RegName _index, RegName _base, int8_t _size, bool _indir, uint8_t _mask, uint8_t _byte)
-        : PostSpec(_index, _base, _size, _indir), mask(_mask), byte(_byte) {}
+            RegName _index, RegName _base, int8_t _size, bool _indir, uint8_t mask, uint8_t byte)
+        : PostSpec(_index, _base, _size, _indir), mask_P(mask), byte_P(byte) {}
 
 private:
-    const uint8_t mask;
-    const uint8_t byte;
+    const uint8_t mask_P;
+    const uint8_t byte_P;
 };
 
 static constexpr PostEntry MC6809_POSTBYTE[] PROGMEM = {
@@ -625,12 +625,10 @@ static constexpr PostPage HD6309_POSTS[] PROGMEM = {
 };
 
 struct Cpu : entry::CpuBase<CpuType, EntryPage> {
-    constexpr Cpu(CpuType cpuType, const /*PROGMEM*/ char *name, const /*PROGMEM*/ EntryPage *table,
-            const /*PROGMEM*/ EntryPage *end, const /*PROGMEM*/ PostPage *postTable,
-            const /*PROGMEM*/ PostPage *postEnd)
-        : CpuBase(cpuType, name, table, end), _postCodes(postTable, postEnd) {}
-    const PostPage *postTable() const;
-    const PostPage *postEnd() const;
+    constexpr Cpu(CpuType cpuType, const /*PROGMEM*/ char *name,
+            const /*PROGMEM*/ EntryPage *head_P, const /*PROGMEM*/ EntryPage *tail_P,
+            const /*PROGMEM*/ PostPage *postHead_P, const /*PROGMEM*/ PostPage *postTail_P)
+        : CpuBase(cpuType, name, head_P, tail_P), _postCodes(postHead_P, postTail_P) {}
 
     Error searchPostByte(const uint8_t post, PostSpec &spec) const;
     int16_t searchPostSpec(PostSpec &spec) const;
@@ -673,7 +671,7 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
 }
 
 static bool acceptModes(AsmInsn &insn, const Entry *entry) {
-    const auto table = entry->flags();
+    const auto table = entry->readFlags();
     if (acceptMode(insn.op1.mode, table.mode1()) && acceptMode(insn.op2.mode, table.mode2())) {
         if (table.undefined())
             insn.setErrorIf(OPERAND_NOT_ALLOWED);
@@ -701,7 +699,7 @@ Error TableMc6809::hasName(CpuType cpuType, AsmInsn &insn) const {
 static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page) {
     UNUSED(page);
     auto opCode = insn.opCode();
-    const auto flags = entry->flags();
+    const auto flags = entry->readFlags();
     const auto mode1 = flags.mode1();
     if (mode1 == M_GMEM || flags.mode2() == M_GMEM) {
         const auto opc = opCode & 0xF0;
@@ -710,12 +708,12 @@ static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page
     } else if (mode1 == M_GEN8 || mode1 == M_GEN16) {
         opCode &= ~0x30;
     }
-    return opCode == entry->opCode();
+    return opCode == entry->readOpCode();
 }
 
 Error TableMc6809::searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) const {
     auto entry = cpu(cpuType)->searchOpCode(insn, out, matchOpCode);
-    if (entry && entry->flags().undefined()) {
+    if (entry && entry->readFlags().undefined()) {
         insn.nameBuffer().reset();
         insn.setErrorIf(UNKNOWN_INSTRUCTION);
     }
@@ -723,14 +721,16 @@ Error TableMc6809::searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) 
 }
 
 Error Cpu::searchPostByte(const uint8_t post, PostSpec &spec) const {
-    for (auto page = _postCodes.table(); page < _postCodes.end(); page++) {
-        for (auto entry = page->table(); entry < page->end(); entry++) {
-            const auto mask = entry->_mask();
+    const auto *pageTail = _postCodes.readTail();
+    for (auto page = _postCodes.readHead(); page < pageTail; page++) {
+        const auto *tail = page->readTail();
+        for (auto entry = page->readHead(); entry < tail; entry++) {
+            const auto mask = entry->readMask();
             const auto byte = post & mask;
-            if (byte == entry->_byte()) {
-                spec.index = entry->_index();
-                spec.base = entry->_base();
-                spec.size = entry->_size();
+            if (byte == entry->readByte()) {
+                spec.index = entry->readIndex();
+                spec.base = entry->readBase();
+                spec.size = entry->readSize();
                 spec.indir = (mask != 0x80) && (post & 0x10);
                 return OK;
             }
@@ -756,13 +756,15 @@ static RegName baseRegName(const RegName base) {
 int16_t Cpu::searchPostSpec(PostSpec &spec) const {
     const auto specBase = baseRegName(spec.base);
     uint8_t maybe = 0;
-    for (auto page = _postCodes.table(); page < _postCodes.end(); page++) {
-        for (auto entry = page->table(); entry < page->end(); entry++) {
-            auto byte = entry->_byte();
-            const auto index = entry->_index();
-            const auto base = entry->_base();
-            const auto size = entry->_size();
-            const auto indir = entry->_indir();
+    const auto *pageTail = _postCodes.readTail();
+    for (auto page = _postCodes.readHead(); page < pageTail; page++) {
+        const auto *tail = page->readTail();
+        for (auto entry = page->readHead(); entry < tail; entry++) {
+            auto byte = entry->readByte();
+            const auto index = entry->readIndex();
+            const auto base = entry->readBase();
+            const auto size = entry->readSize();
+            const auto indir = entry->readIndir();
             if (spec.indir && indir)
                 byte |= 0x10;
             if (specBase == base && spec.size == size) {
@@ -799,7 +801,7 @@ const /*PROGMEM*/ char *TableMc6809::cpuName_P(CpuType cpuType) const {
 Error TableMc6809::searchCpuName(StrScanner &name, CpuType &cpuType) const {
     auto t = Cpu::search(name, ARRAY_RANGE(CPU_TABLE));
     if (t) {
-        cpuType = t->cpuType();
+        cpuType = t->readCpuType();
     } else if (name.iequals_P(TEXT_CPU_MC6809)) {
         cpuType = MC6809;
     } else if (name.iequals_P(TEXT_CPU_HD6309)) {

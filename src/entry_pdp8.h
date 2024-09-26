@@ -51,33 +51,35 @@ struct Entry final : entry::Base<Config::opcode_t> {
             return Flags{attr(mode, true, multiGroup), selector, bits};
         }
 
-        Flags read() const {
-            return Flags{pgm_read_byte(&_attr), pgm_read_byte(&_selector), pgm_read_word(&_bits)};
-        }
         AddrMode mode() const { return AddrMode((_attr >> mode_gp) & mode_gm); }
         uint16_t bits() const { return _bits; }
         bool combination() const { return (_attr & (1 << combination_bp)) != 0; }
         bool multiGroup() const { return (_attr & (1 << multiGroup_bp)) != 0; }
         uint8_t selector() const { return _selector; }
+
+    private:
+        static constexpr uint8_t attr(AddrMode mode, bool combination, bool multiGroup) {
+            return ((static_cast<uint8_t>(mode) & mode_gm) << mode_gp) |
+                   (multiGroup ? (1 << multiGroup_bp) : 0) |
+                   (combination ? (1 << combination_bp) : 0);
+        }
+
+        static constexpr int mode_gp = 0;
+        static constexpr int multiGroup_bp = 6;
+        static constexpr int combination_bp = 7;
+        static constexpr uint8_t mode_gm = 0x07;
     };
 
-    constexpr Entry(Config::opcode_t opCode, Flags flags, const char *name)
-        : Base(name, opCode), _flags(flags) {}
+    constexpr Entry(Config::opcode_t opCode, Flags flags, const /* PROGMEM */ char *name_P)
+        : Base(name_P, opCode), _flags_P(flags) {}
 
-    Flags flags() const { return _flags.read(); }
-
-private:
-    Flags _flags;
-
-    static constexpr uint8_t attr(AddrMode mode, bool combination, bool multiGroup) {
-        return ((static_cast<uint8_t>(mode) & mode_gm) << mode_gp) |
-               (multiGroup ? (1 << multiGroup_bp) : 0) | (combination ? (1 << combination_bp) : 0);
+    Flags readFlags() const {
+        return Flags{pgm_read_byte(&_flags_P._attr), pgm_read_byte(&_flags_P._selector),
+                pgm_read_word(&_flags_P._bits)};
     }
 
-    static constexpr int mode_gp = 0;
-    static constexpr int multiGroup_bp = 6;
-    static constexpr int combination_bp = 7;
-    static constexpr uint8_t mode_gm = 0x07;
+private:
+    const Flags _flags_P;
 };
 
 }  // namespace pdp8

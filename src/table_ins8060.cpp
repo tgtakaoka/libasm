@@ -150,7 +150,7 @@ static const Cpu *cpu(CpuType cpuType) {
 
 static bool acceptMode(AsmInsn &insn, const Entry *entry) {
     const auto opr = insn.op.mode;
-    const auto table = entry->flags().mode();
+    const auto table = entry->readFlags().mode();
     if (opr == table)
         return true;
     if (opr == M_REL8)
@@ -168,13 +168,13 @@ Error TableIns8060::searchName(CpuType cpuType, AsmInsn &insn) const {
 static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page) {
     UNUSED(page);
     auto opc = insn.opCode();
-    const auto mode = entry->flags().mode();
+    const auto mode = entry->readFlags().mode();
     if (mode == M_INDX) {
         opc &= ~0x07;
     } else if (mode == M_PNTR || mode == M_REL8 || mode == M_DISP) {
         opc &= ~0x03;
     }
-    return opc == entry->opCode();
+    return opc == entry->readOpCode();
 }
 
 Error TableIns8060::searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) const {

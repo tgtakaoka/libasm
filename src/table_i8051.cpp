@@ -289,7 +289,7 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
 }
 
 static bool acceptModes(AsmInsn &insn, const Entry *entry) {
-    const auto table = entry->flags();
+    const auto table = entry->readFlags();
     return acceptMode(insn.dstOp.mode, table.dst()) && acceptMode(insn.srcOp.mode, table.src()) &&
            acceptMode(insn.extOp.mode, table.ext());
 }
@@ -302,7 +302,7 @@ Error TableI8051::searchName(CpuType cpuType, AsmInsn &insn) const {
 static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page) {
     UNUSED(page);
     auto opc = insn.opCode();
-    auto flags = entry->flags();
+    auto flags = entry->readFlags();
     auto dst = flags.dst();
     auto src = flags.src();
     if (dst == M_RREG || src == M_RREG) {
@@ -312,7 +312,7 @@ static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page
     } else if (dst == M_ADR11) {
         opc &= ~0xE0;
     }
-    return opc == entry->opCode();
+    return opc == entry->readOpCode();
 }
 
 Error TableI8051::searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) const {

@@ -745,7 +745,7 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
 }
 
 static bool acceptModes(AsmInsn &insn, const Entry *entry) {
-    const auto table = entry->flags();
+    const auto table = entry->readFlags();
     return acceptMode(insn.op1.mode, table.mode1()) && acceptMode(insn.op2.mode, table.mode2()) &&
            acceptMode(insn.op3.mode, table.mode3());
 }
@@ -757,10 +757,10 @@ Error TableMos6502::searchName(CpuType cpuType, AsmInsn &insn) const {
 
 static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page) {
     UNUSED(page);
-    const auto opCode = entry->opCode();
+    const auto opCode = entry->readOpCode();
     if (insn.opCode() != opCode || opCode == TableMos6502::WDM)
         return false;
-    const auto mode = entry->flags().mode1();
+    const auto mode = entry->readFlags().mode1();
     if (mode == L_ABS || mode == L_DPG)
         return insn.allowIndirectLong();
     return true;
@@ -782,7 +782,7 @@ const /*PROGMEM*/ char *TableMos6502::cpuName_P(CpuType cpuType) const {
 Error TableMos6502::searchCpuName(StrScanner &name, CpuType &cpuType) const {
     const auto t = Cpu::search(name, ARRAY_RANGE(CPU_TABLE));
     if (t) {
-        cpuType = t->cpuType();
+        cpuType = t->readCpuType();
     } else if (name.iequals(TEXT_CPU_MOS6502)) {
         cpuType = MOS6502;
     } else if (name.iequals(TEXT_CPU_R65C02)) {

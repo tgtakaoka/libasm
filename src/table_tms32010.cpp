@@ -199,7 +199,7 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
 }
 
 static bool acceptModes(AsmInsn &insn, const Entry *entry) {
-    const auto table = entry->flags();
+    const auto table = entry->readFlags();
     return acceptMode(insn.op1.mode, table.mode1()) && acceptMode(insn.op2.mode, table.mode2()) &&
            acceptMode(insn.op3.mode, table.mode3());
 }
@@ -212,7 +212,7 @@ Error TableTms32010::searchName(CpuType cpuType, AsmInsn &insn) const {
 static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page) {
     UNUSED(page);
     auto opc = insn.opCode();
-    const auto flags = entry->flags();
+    const auto flags = entry->readFlags();
     const auto mode1 = flags.mode1();
     const auto mode2 = flags.mode2();
     if (mode1 == M_IM8 || mode2 == M_IM8) {
@@ -248,7 +248,7 @@ static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page
             return false;
         }
     }
-    return opc == entry->opCode();
+    return opc == entry->readOpCode();
 }
 
 Error TableTms32010::searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) const {

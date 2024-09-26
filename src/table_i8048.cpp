@@ -299,7 +299,7 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
 }
 
 static bool acceptModes(AsmInsn &insn, const Entry *entry) {
-    const auto table = entry->flags();
+    const auto table = entry->readFlags();
     return acceptMode(insn.dstOp.mode, table.dst()) && acceptMode(insn.srcOp.mode, table.src());
 }
 
@@ -311,7 +311,7 @@ Error TableI8048::searchName(CpuType cpuType, AsmInsn &insn) const {
 static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page) {
     UNUSED(page);
     auto opc = insn.opCode();
-    const auto flags = entry->flags();
+    const auto flags = entry->readFlags();
     const auto dst = flags.dst();
     const auto src = flags.src();
     if (dst == M_R || src == M_R) {
@@ -327,10 +327,10 @@ static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page
     } else if (dst == M_RB || dst == M_MB) {
         opc &= ~0x10;
     } else if (dst == M_P12 || src == M_P12) {
-        const auto table = entry->opCode();
+        const auto table = entry->readOpCode();
         return opc == table + 1 || opc == table + 2;
     }
-    return opc == entry->opCode();
+    return opc == entry->readOpCode();
 }
 
 Error TableI8048::searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) const {
@@ -351,7 +351,7 @@ Error TableI8048::searchCpuName(StrScanner &name, CpuType &cpuType) const {
     p.iexpect('i');
     const auto t = Cpu::search(p, ARRAY_RANGE(CPU_TABLE));
     if (t) {
-        cpuType = t->cpuType();
+        cpuType = t->readCpuType();
         return OK;
     }
     return UNSUPPORTED_CPU;

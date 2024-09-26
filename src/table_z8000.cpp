@@ -25,69 +25,6 @@ using namespace libasm::text::z8000;
 namespace libasm {
 namespace z8000 {
 
-AddrMode Entry::toAddrMode(Ex1Mode mode) {
-    static constexpr AddrMode EX1MODES[] PROGMEM = {
-            M_NONE,   // E1_NONE
-            M_CNT,    // E1_CNT
-            M_WR,     // E1_WR
-            M_ERROR,  // E1_ERROR
-    };
-    return AddrMode(pgm_read_byte(EX1MODES + mode));
-}
-
-AddrMode Entry::toAddrMode(Ex2Mode mode) {
-    static constexpr AddrMode EX2MODES[] PROGMEM = {
-            M_NONE,   // E2_NONE
-            M_CC,     // E2_CC
-            M_ERROR,  // E2_ERROR
-    };
-    return AddrMode(pgm_read_byte(EX2MODES + mode));
-}
-
-Config::opcode_t Entry::postVal(PostFormat postFormat) {
-    static constexpr Config::opcode_t POSTFIXES[] PROGMEM = {
-            0x0000,  // PF_NONE
-            0x0000,  // PF_0XX0
-            0x0008,  // PF_0XX8
-            0x000E,  // PF_0XXE
-            0x0000,  // PF_0X0X
-            0x0000,  // PF_0X00
-            0x0000,  // PF_0XXX
-    };
-    return pgm_read_word(POSTFIXES + postFormat);
-}
-
-Config::opcode_t Entry::postMask(PostFormat postFormat) {
-    static constexpr Config::opcode_t POSTMASKS[] PROGMEM = {
-            0x0000,  // PF_NONE
-            0xF00F,  // PF_0XX0
-            0xF00F,  // PF_0XX8
-            0xF00F,  // PF_0XXE
-            0xF0F0,  // PF_0X0X
-            0xF0FF,  // PF_0X00
-            0xF000,  // PF_0XXX
-    };
-    return pgm_read_word(POSTMASKS + postFormat);
-}
-
-Config::opcode_t Entry::codeMask(CodeFormat codeFormat) {
-    static constexpr Config::opcode_t CODEMASKS[] PROGMEM = {
-            (Config::opcode_t)~0x0000,  // CF_0000
-            (Config::opcode_t)~0x0003,  // CF_0003
-            (Config::opcode_t)~0x000F,  // CF_000F
-            (Config::opcode_t)~0x00F0,  // CF_00F0
-            (Config::opcode_t)~0x00F2,  // CF_00F2
-            (Config::opcode_t)~0x00F7,  // CF_00F7
-            (Config::opcode_t)~0x00FF,  // CF_00FF
-            (Config::opcode_t)~0x0F7F,  // CF_0F7F
-            (Config::opcode_t)~0x0FFF,  // CF_0FFF
-            (Config::opcode_t)~0xC0F0,  // CF_C0F0
-            (Config::opcode_t)~0xC0FF,  // CF_C0FF
-            (Config::opcode_t)~0xC0FF,  // CF_X0FF
-    };
-    return pgm_read_word(CODEMASKS + codeFormat);
-}
-
 #define X4(_opc, _name, _cf, _sz, _dst, _src, _dstf, _srcf, _ex1, _ex2, _postFormat)             \
     {                                                                                            \
         _opc, Entry::Flags::create(_dst, _dstf, _src, _srcf, _ex1, _ex2, _postFormat, _cf, _sz), \
@@ -615,7 +552,7 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
 }
 
 static bool acceptModes(AsmInsn &insn, const Entry *entry) {
-    const auto table = entry->flags();
+    const auto table = entry->readFlags();
     return acceptMode(insn.dstOp.mode, table.dst()) && acceptMode(insn.srcOp.mode, table.src()) &&
            acceptMode(insn.ex1Op.mode, table.ex1()) && acceptMode(insn.ex2Op.mode, table.ex2());
 }
@@ -627,14 +564,14 @@ Error TableZ8000::searchName(CpuType cpuType, AsmInsn &insn) const {
 
 static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page) {
     UNUSED(page);
-    const auto flags = entry->flags();
+    const auto flags = entry->readFlags();
     const auto cf = flags.codeFormat();
     const auto opc = insn.opCode();
     if ((cf == CF_C0F0 || cf == CF_C0FF) && (opc & 0xC000) == 0xC000)
         return false;
     if (cf == CF_X0FF && (opc & 0xC000) == 0 && (opc & 0x00F0) == 0)
         return false;
-    if ((opc & flags.codeMask()) != entry->opCode())
+    if ((opc & ~flags.codeMask()) != entry->readOpCode())
         return false;
     if (flags.postFormat() != PF_NONE) {
         insn.readPostfix();
@@ -668,7 +605,7 @@ const /*PROGMEM*/ char *TableZ8000::cpuName_P(CpuType cpuType) const {
 Error TableZ8000::searchCpuName(StrScanner &name, CpuType &cpuType) const {
     auto t = Cpu::search(name, ARRAY_RANGE(CPU_TABLE));
     if (t) {
-        cpuType = t->cpuType();
+        cpuType = t->readCpuType();
         return OK;
     }
     return UNSUPPORTED_CPU;

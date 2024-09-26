@@ -308,25 +308,28 @@ static constexpr uint8_t INDEX_HD6120_I20[] PROGMEM = {
 // clang-format on
 
 struct EntryPage : entry::TableBase<Entry> {
-    AddrMode group() const { return _entries.table()->flags().mode(); }
-    Config::opcode_t groupMask() const { return pgm_read_word(&_groupMask); }
-    Config::opcode_t groupId() const { return pgm_read_word(&_groupId); }
+    AddrMode readGroup() const { return _entries.readHead()->readFlags().mode(); }
+    Config::opcode_t readGroupMask() const { return pgm_read_word(&_groupMask_P); }
+    Config::opcode_t readGroupId() const { return pgm_read_word(&_groupId_P); }
 
-    constexpr EntryPage(const Entry *table, const Entry *end, const uint8_t *index,
-            const uint8_t *iend, Config::opcode_t groupMask, Config::opcode_t groupId)
-        : TableBase(table, end, index, iend), _groupMask(groupMask), _groupId(groupId) {}
+    constexpr EntryPage(const Entry *head_P, const Entry *tail_P, const uint8_t *index_P,
+            const uint8_t *itail_P, Config::opcode_t groupMask, Config::opcode_t groupId)
+        : TableBase(head_P, tail_P, index_P, itail_P),
+          _groupMask_P(groupMask),
+          _groupId_P(groupId) {}
 
     Config::opcode_t appendMicros(
             const DisInsn &insn, Config::opcode_t micros, StrBuffer &out) const {
-        const auto gmask = groupMask();
+        const auto gmask = readGroupMask();
         auto clearMask = insn.selector();
         bool addSep = false;
-        for (const auto *entry = _entries.table(); micros && entry != _entries.end(); entry++) {
-            const auto flags = entry->flags();
+        const auto *tail = _entries.readTail();
+        for (const auto *entry = _entries.readHead(); micros && entry != tail; entry++) {
+            const auto flags = entry->readFlags();
             if (!flags.combination())
                 continue;
             const auto mask = flags.bits() | flags.selector();
-            if ((micros & mask) == (entry->opCode() & ~gmask)) {
+            if ((micros & mask) == (entry->readOpCode() & ~gmask)) {
                 micros &= ~flags.bits();
                 clearMask |= flags.selector();
                 if (addSep)
@@ -339,20 +342,21 @@ struct EntryPage : entry::TableBase<Entry> {
     }
 
 private:
-    const Config::opcode_t _groupMask;
-    const Config::opcode_t _groupId;
+    const Config::opcode_t _groupMask_P;
+    const Config::opcode_t _groupId_P;
 };
 
 struct Cpu : entry::CpuBase<CpuType, EntryPage> {
-    constexpr Cpu(CpuType cpuType, const /*PROGMEM*/ char *name_P, const EntryPage *table,
-            const EntryPage *end)
-        : CpuBase(cpuType, name_P, table, end) {}
+    constexpr Cpu(CpuType cpuType, const /*PROGMEM*/ char *name_P, const EntryPage *head_P,
+            const EntryPage *tail_P)
+        : CpuBase(cpuType, name_P, head_P, tail_P) {}
 
     void appendMicros(DisInsn &insn, StrBuffer &out) const {
         auto micros = insn.opCode() & ~insn.bits();
-        for (const auto *page = _pages.table(); page != _pages.end(); page++) {
-            if (page->group() == insn.mode()) {
-                micros &= ~page->groupMask();
+        const auto *pageTail = _pages.readTail();
+        for (const auto *page = _pages.readHead(); page != pageTail; page++) {
+            if (page->readGroup() == insn.mode()) {
+                micros &= ~page->readGroupMask();
                 if (insn.mode() == M_MEX)
                     micros &= ~CLEAR_MEX;
                 micros = page->appendMicros(insn, micros, out);
@@ -402,7 +406,7 @@ Error TablePdp8::searchName(CpuType cpuType, AsmInsn &insn) const {
 }
 
 static bool acceptSameMode(AsmInsn &insn, const Entry *entry) {
-    return insn.mode() == entry->flags().mode();
+    return insn.mode() == entry->readFlags().mode();
 }
 
 Error TablePdp8::searchMicro(CpuType cpuType, AsmInsn &micro, AddrMode mode) const {
@@ -413,16 +417,16 @@ Error TablePdp8::searchMicro(CpuType cpuType, AsmInsn &micro, AddrMode mode) con
 }
 
 static bool pageMatcher(DisInsn &insn, const EntryPage *page) {
-    const auto groupId = page->groupId();
-    return (insn.opCode() & page->groupMask()) == groupId || groupId == 0;
+    const auto groupId = page->readGroupId();
+    return (insn.opCode() & page->readGroupMask()) == groupId || groupId == 0;
 }
 
 static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page) {
     UNUSED(page);
-    const auto flags = entry->flags();
-    const auto mask = flags.bits() | flags.selector() | page->groupMask();
+    const auto flags = entry->readFlags();
+    const auto mask = flags.bits() | flags.selector() | page->readGroupMask();
     const auto masked = insn.opCode() & mask;
-    return masked == entry->opCode();
+    return masked == entry->readOpCode();
 }
 
 Error TablePdp8::searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) const {

@@ -69,18 +69,19 @@ struct Entry final : entry::Base<Config::opcode_t> {
             return Flags{static_cast<uint8_t>(dst), static_cast<uint8_t>(src)};
         }
 
-        Flags read() const { return Flags{pgm_read_byte(&_dst), pgm_read_byte(&_src)}; }
         AddrMode dst() const { return AddrMode(_dst); }
         AddrMode src() const { return AddrMode(_src); }
     };
 
-    constexpr Entry(Config::opcode_t opCode, Flags flags, const char *name)
-        : Base(name, opCode), _flags(flags) {}
+    constexpr Entry(Config::opcode_t opCode, Flags flags, const /* PROGMEM */ char *name_P)
+        : Base(name_P, opCode), _flags_P(flags) {}
 
-    Flags flags() const { return _flags.read(); }
+    Flags readFlags() const {
+        return Flags{pgm_read_byte(&_flags_P._dst), pgm_read_byte(&_flags_P._src)};
+    }
 
 private:
-    const Flags _flags;
+    const Flags _flags_P;
 };
 
 }  // namespace tlcs90

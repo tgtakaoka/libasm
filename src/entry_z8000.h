@@ -123,118 +123,172 @@ struct Entry final : entry::Base<Config::opcode_t> {
         uint8_t _dst;
         uint8_t _src;
         uint8_t _ext;
-        uint8_t _size;
+        uint8_t _attr;
 
         static constexpr Flags create(AddrMode dst, OprPos dstPos, AddrMode src, OprPos srcPos,
                 Ex1Mode ex1, Ex2Mode ex2, PostFormat postFormat, CodeFormat codeFormat,
                 OprSize size) {
-            return Flags{Entry::opr(dst, dstPos), Entry::opr(src, srcPos),
-                    Entry::ext(ex1, ex2, postFormat), Entry::size(codeFormat, size)};
+            return Flags{opr(dst, dstPos), opr(src, srcPos), ext(ex1, ex2, postFormat),
+                    attr(codeFormat, size)};
         }
 
         static const Flags create(AddrMode dst, AddrMode src, AddrMode ex1, AddrMode ex2) {
-            return Flags{Entry::opr(dst, OP_NO), Entry::opr(src, OP_NO),
-                    Entry::ext(toEx1Mode(ex1), toEx2Mode(ex2), PF_NONE),
-                    Entry::size(CF_0000, SZ_NONE)};
+            return Flags{opr(dst, OP_NO), opr(src, OP_NO),
+                    ext(toEx1Mode(ex1), toEx2Mode(ex2), PF_NONE), attr(CF_0000, SZ_NONE)};
         }
 
-        Flags read() const {
-            return Flags{pgm_read_byte(&_dst), pgm_read_byte(&_src), pgm_read_byte(&_ext),
-                    pgm_read_byte(&_size)};
-        }
-        AddrMode dst() const { return Entry::mode(_dst); }
-        AddrMode src() const { return Entry::mode(_src); }
+        AddrMode dst() const { return mode(_dst); }
+        AddrMode src() const { return mode(_src); }
         AddrMode ex1() const { return toAddrMode(Ex1Mode((_ext >> ex1Mode_gp) & ex1Mode_gm)); }
         AddrMode ex2() const { return toAddrMode(Ex2Mode((_ext >> ex2Mode_gp) & ex2Mode_gm)); }
-        OprPos dstPos() const { return Entry::pos(_dst); }
-        OprPos srcPos() const { return Entry::pos(_src); }
+        OprPos dstPos() const { return pos(_dst); }
+        OprPos srcPos() const { return pos(_src); }
         PostFormat postFormat() const {
             return PostFormat((_ext >> postFormat_gp) & postFormat_gm);
         }
         CodeFormat codeFormat() const {
-            return CodeFormat((_size >> codeFormat_gp) & codeFormat_gm);
+            return CodeFormat((_attr >> codeFormat_gp) & codeFormat_gm);
         }
-        OprSize size() const { return OprSize((_size >> size_gp) & size_gm); }
-        Config::opcode_t postMask() const { return Entry::postMask(postFormat()); }
-        Config::opcode_t postVal() const { return Entry::postVal(postFormat()); }
-        Config::opcode_t codeMask() const { return Entry::codeMask(codeFormat()); }
+        OprSize size() const { return OprSize((_attr >> size_gp) & size_gm); }
+
+        Config::opcode_t postVal() const {
+            static constexpr Config::opcode_t POSTFIXES[] PROGMEM = {
+                    0x0000,  // PF_NONE
+                    0x0000,  // PF_0XX0
+                    0x0008,  // PF_0XX8
+                    0x000E,  // PF_0XXE
+                    0x0000,  // PF_0X0X
+                    0x0000,  // PF_0X00
+                    0x0000,  // PF_0XXX
+            };
+            return pgm_read_word(POSTFIXES + postFormat());
+        }
+
+        Config::opcode_t postMask() const {
+            static constexpr Config::opcode_t POSTMASKS[] PROGMEM = {
+                    0x0000,  // PF_NONE
+                    0xF00F,  // PF_0XX0
+                    0xF00F,  // PF_0XX8
+                    0xF00F,  // PF_0XXE
+                    0xF0F0,  // PF_0X0X
+                    0xF0FF,  // PF_0X00
+                    0xF000,  // PF_0XXX
+            };
+            return pgm_read_word(POSTMASKS + postFormat());
+        }
+
+        Config::opcode_t codeMask() const {
+            static constexpr Config::opcode_t CODEMASKS[] PROGMEM = {
+                    0x0000,  // CF_0000
+                    0x0003,  // CF_0003
+                    0x000F,  // CF_000F
+                    0x00F0,  // CF_00F0
+                    0x00F2,  // CF_00F2
+                    0x00F7,  // CF_00F7
+                    0x00FF,  // CF_00FF
+                    0x0F7F,  // CF_0F7F
+                    0x0FFF,  // CF_0FFF
+                    0xC0F0,  // CF_C0F0
+                    0xC0FF,  // CF_C0FF
+                    0xC0FF,  // CF_X0FF
+            };
+            return pgm_read_word(CODEMASKS + codeFormat());
+        }
+
+    private:
+        static constexpr uint8_t opr(AddrMode mode, OprPos pos) {
+            return (static_cast<uint8_t>(mode) << mode_gp) |
+                   (static_cast<uint8_t>(pos) << modePos_gp);
+        }
+
+        static constexpr uint8_t ext(Ex1Mode ex1, Ex2Mode ex2, PostFormat postFormat) {
+            return (static_cast<uint8_t>(ex1) << ex1Mode_gp) |
+                   (static_cast<uint8_t>(ex2) << ex2Mode_gp) |
+                   (static_cast<uint8_t>(postFormat) << postFormat_gp);
+        }
+
+        static constexpr uint8_t attr(CodeFormat codeFormat, OprSize size) {
+            return (static_cast<uint8_t>(codeFormat) << codeFormat_gp) |
+                   (static_cast<uint8_t>(size) << size_gp);
+        }
+
+        static inline AddrMode mode(uint8_t opr) { return AddrMode((opr >> mode_gp) & mode_gm); }
+        static inline OprPos pos(uint8_t opr) { return OprPos((opr >> modePos_gp) & modePos_gm); }
+
+        static AddrMode toAddrMode(Ex1Mode mode) {
+            static constexpr AddrMode EX1MODES[] PROGMEM = {
+                    M_NONE,   // E1_NONE
+                    M_CNT,    // E1_CNT
+                    M_WR,     // E1_WR
+                    M_ERROR,  // E1_ERROR
+            };
+            return AddrMode(pgm_read_byte(EX1MODES + mode));
+        }
+
+        static inline Ex1Mode toEx1Mode(AddrMode mode) {
+            switch (mode) {
+            case M_NONE:
+                return E1_NONE;
+            case M_CNT:
+            case M_IM:
+                return E1_CNT;
+            case M_WR:
+            case M_R:
+                return E1_WR;
+            default:
+                return E1_ERROR;
+            }
+        }
+
+        static inline Ex2Mode toEx2Mode(AddrMode mode) {
+            switch (mode) {
+            case M_NONE:
+                return E2_NONE;
+            case M_CC:
+                return E2_CC;
+            default:
+                return E2_ERROR;
+            }
+        }
+
+        static AddrMode toAddrMode(Ex2Mode mode) {
+            static constexpr AddrMode EX2MODES[] PROGMEM = {
+                    M_NONE,   // E2_NONE
+                    M_CC,     // E2_CC
+                    M_ERROR,  // E2_ERROR
+            };
+            return AddrMode(pgm_read_byte(EX2MODES + mode));
+        }
+
+        // |_dst|, |_src|
+        static constexpr int mode_gp = 0;
+        static constexpr int modePos_gp = 5;
+        static constexpr uint8_t mode_gm = 0x1f;
+        static constexpr uint8_t modePos_gm = 0x7;
+        // |_ext|
+        static constexpr int ex1Mode_gp = 0;
+        static constexpr int ex2Mode_gp = 2;
+        static constexpr int postFormat_gp = 4;
+        static constexpr uint8_t ex1Mode_gm = 0x3;
+        static constexpr uint8_t ex2Mode_gm = 0x3;
+        static constexpr uint8_t postFormat_gm = 0x7;
+        // |_attr|
+        static constexpr int codeFormat_gp = 0;
+        static constexpr int size_gp = 4;
+        static constexpr uint8_t codeFormat_gm = 0xf;
+        static constexpr uint8_t size_gm = 0x7;
     };
 
-    constexpr Entry(Config::opcode_t opCode, Flags flags, const char *name)
-        : Base(name, opCode), _flags(flags) {}
+    constexpr Entry(Config::opcode_t opCode, Flags flags, const /* PROGMEM */ char *name_P)
+        : Base(name_P, opCode), _flags_P(flags) {}
 
-    Flags flags() const { return _flags.read(); }
+    Flags readFlags() const {
+        return Flags{pgm_read_byte(&_flags_P._dst), pgm_read_byte(&_flags_P._src),
+                pgm_read_byte(&_flags_P._ext), pgm_read_byte(&_flags_P._attr)};
+    }
 
 private:
-    const Flags _flags;
-
-    static constexpr uint8_t opr(AddrMode mode, OprPos pos) {
-        return (static_cast<uint8_t>(mode) << mode_gp) | (static_cast<uint8_t>(pos) << modePos_gp);
-    }
-
-    static constexpr uint8_t ext(Ex1Mode ex1, Ex2Mode ex2, PostFormat postFormat) {
-        return (static_cast<uint8_t>(ex1) << ex1Mode_gp) |
-               (static_cast<uint8_t>(ex2) << ex2Mode_gp) |
-               (static_cast<uint8_t>(postFormat) << postFormat_gp);
-    }
-
-    static constexpr uint8_t size(CodeFormat codeFormat, OprSize size) {
-        return (static_cast<uint8_t>(codeFormat) << codeFormat_gp) |
-               (static_cast<uint8_t>(size) << size_gp);
-    }
-
-    static inline AddrMode mode(uint8_t opr) { return AddrMode((opr >> mode_gp) & mode_gm); }
-    static inline OprPos pos(uint8_t opr) { return OprPos((opr >> modePos_gp) & modePos_gm); }
-
-    static AddrMode toAddrMode(Ex1Mode mode);
-    static inline Ex1Mode toEx1Mode(AddrMode mode) {
-        switch (mode) {
-        case M_NONE:
-            return E1_NONE;
-        case M_CNT:
-        case M_IM:
-            return E1_CNT;
-        case M_WR:
-        case M_R:
-            return E1_WR;
-        default:
-            return E1_ERROR;
-        }
-    }
-
-    static AddrMode toAddrMode(Ex2Mode mode);
-    static inline Ex2Mode toEx2Mode(AddrMode mode) {
-        switch (mode) {
-        case M_NONE:
-            return E2_NONE;
-        case M_CC:
-            return E2_CC;
-        default:
-            return E2_ERROR;
-        }
-    }
-
-    static Config::opcode_t postVal(PostFormat postFormat);
-    static Config::opcode_t postMask(PostFormat postFormat);
-    static Config::opcode_t codeMask(CodeFormat codeFormat);
-
-    // |dst|, |src|
-    static constexpr int mode_gp = 0;
-    static constexpr int modePos_gp = 5;
-    static constexpr uint8_t mode_gm = 0x1f;
-    static constexpr uint8_t modePos_gm = 0x7;
-    // |ext|
-    static constexpr int ex1Mode_gp = 0;
-    static constexpr int ex2Mode_gp = 2;
-    static constexpr int postFormat_gp = 4;
-    static constexpr uint8_t ex1Mode_gm = 0x3;
-    static constexpr uint8_t ex2Mode_gm = 0x3;
-    static constexpr uint8_t postFormat_gm = 0x7;
-    // |size|
-    static constexpr int codeFormat_gp = 0;
-    static constexpr int size_gp = 4;
-    static constexpr uint8_t codeFormat_gm = 0xf;
-    static constexpr uint8_t size_gm = 0x7;
+    const Flags _flags_P;
 };
 
 }  // namespace z8000

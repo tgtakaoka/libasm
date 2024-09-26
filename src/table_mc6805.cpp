@@ -297,7 +297,7 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
 }
 
 static bool acceptModes(AsmInsn &insn, const Entry *entry) {
-    const auto table = entry->flags();
+    const auto table = entry->readFlags();
     if (acceptMode(insn.op1.mode, table.mode1()) && acceptMode(insn.op2.mode, table.mode2()) &&
             acceptMode(insn.op3.mode, table.mode3())) {
         if (table.undefined())
@@ -315,7 +315,7 @@ Error TableMc6805::searchName(CpuType cpuType, AsmInsn &insn) const {
 static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page) {
     UNUSED(page);
     auto opCode = insn.opCode();
-    const auto flags = entry->flags();
+    const auto flags = entry->readFlags();
     const auto mode1 = flags.mode1();
     if (mode1 == M_MEM) {
         const auto opc = opCode & 0xF0;
@@ -326,12 +326,12 @@ static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page
     } else if (mode1 == M_BNO) {
         opCode &= ~0x0E;
     }
-    return opCode == entry->opCode();
+    return opCode == entry->readOpCode();
 }
 
 Error TableMc6805::searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) const {
     auto entry = cpu(cpuType)->searchOpCode(insn, out, matchOpCode);
-    if (entry && entry->flags().undefined()) {
+    if (entry && entry->readFlags().undefined()) {
         insn.nameBuffer().reset();
         insn.setErrorIf(UNKNOWN_INSTRUCTION);
     }
@@ -350,7 +350,7 @@ Error TableMc6805::searchCpuName(StrScanner &name, CpuType &cpuType) const {
     name.iexpectText_P(TEXT_MC6805_LIST, 2);
     auto t = Cpu::search(name, ARRAY_RANGE(CPU_TABLE));
     if (t) {
-        cpuType = t->cpuType();
+        cpuType = t->readCpuType();
         return OK;
     }
     return UNSUPPORTED_CPU;

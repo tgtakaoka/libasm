@@ -56,24 +56,24 @@ struct Entry final : entry::Base<Config::opcode_t> {
                                                (static_cast<uint16_t>(ext) << ext_gp))};
         }
 
-        Flags read() const { return Flags{pgm_read_word(&_attr)}; }
         AddrMode dst() const { return AddrMode((_attr >> dst_gp) & mode_gm); }
         AddrMode src() const { return AddrMode((_attr >> src_gp) & mode_gm); }
         AddrMode ext() const { return AddrMode((_attr >> ext_gp) & mode_gm); }
+
+    private:
+        static constexpr uint8_t dst_gp = 0;
+        static constexpr uint8_t src_gp = 5;
+        static constexpr uint8_t ext_gp = 10;
+        static constexpr uint8_t mode_gm = 0x1f;
     };
 
-    constexpr Entry(Config::opcode_t opCode, Flags flags, const char *name)
-        : Base(name, opCode), _flags(flags) {}
+    constexpr Entry(Config::opcode_t opCode, Flags flags, const /* PROGMEM */ char *name_P)
+        : Base(name_P, opCode), _flags_P(flags) {}
 
-    Flags flags() const { return _flags.read(); }
+    Flags readFlags() const { return Flags{pgm_read_word(&_flags_P._attr)}; }
 
 private:
-    const Flags _flags;
-
-    static constexpr uint8_t dst_gp = 0;
-    static constexpr uint8_t src_gp = 5;
-    static constexpr uint8_t ext_gp = 10;
-    static constexpr uint8_t mode_gm = 0x1f;
+    const Flags _flags_P;
 };
 
 }  // namespace i8051

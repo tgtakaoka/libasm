@@ -280,7 +280,7 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
 }
 
 static bool acceptModes(AsmInsn &insn, const Entry *entry) {
-    const auto table = entry->flags();
+    const auto table = entry->readFlags();
     return acceptMode(insn.srcOp.mode, table.src()) && acceptMode(insn.dstOp.mode, table.dst());
 }
 
@@ -292,7 +292,7 @@ Error TableTms9900::searchName(CpuType cpuType, AsmInsn &insn) const {
 static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page) {
     UNUSED(page);
     auto opCode = insn.opCode();
-    const auto flags = entry->flags();
+    const auto flags = entry->readFlags();
     const auto src = flags.src();
     const auto dst = flags.dst();
     if (src == M_REG || dst == M_REG) {
@@ -308,7 +308,7 @@ static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page
         opCode &= ~0x3C0;
     if (dst == M_SCNT)
         opCode &= ~0xF0;
-    return opCode == entry->opCode();
+    return opCode == entry->readOpCode();
 }
 
 Error TableTms9900::searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) const {
@@ -328,7 +328,7 @@ Error TableTms9900::searchCpuName(StrScanner &name, CpuType &cpuType) const {
     name.iexpectText_P(TEXT_TMS9900_LIST, 3);
     auto t = Cpu::search(name, ARRAY_RANGE(CPU_TABLE));
     if (t) {
-        cpuType = t->cpuType();
+        cpuType = t->readCpuType();
         return OK;
     }
     return UNSUPPORTED_CPU;
