@@ -49,7 +49,7 @@ endef
 
 define pio-ci # board
 	ENV=$(shell awk 'BEGIN{RS="\n\n"} /$(1)/' platformio.ini | grep -Po '(?<=env:)[^]]+')
-	pio $(PIO_FLAGS) pkg install
+	pio $(PIO_FLAGS) pkg install -l libcli
 	pio $(PIO_FLAGS) ci -l $(CURDIR)/../.. $(call pio-libdep-path,$(ENV),libcli) -b $(1) $(EXAMPLE).ino
 
 endef
