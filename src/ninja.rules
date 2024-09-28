@@ -137,6 +137,7 @@ build table_ns32000.o: cxx ${root}/src/table_ns32000.cpp
 build text_ns32000.o:  cxx ${root}/src/text_ns32000.cpp
 
 # pdp11
+build asm_pdp11.o:    cxx ${root}/src/asm_pdp11.cpp
 build dis_pdp11.o:    cxx ${root}/src/dis_pdp11.cpp
 build reg_pdp11.o:    cxx ${root}/src/reg_pdp11.cpp
 build table_pdp11.o:  cxx ${root}/src/table_pdp11.cpp

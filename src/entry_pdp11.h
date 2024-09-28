@@ -50,6 +50,22 @@ enum AddrMode : uint8_t {
     M_IMM8 = 10,  // Immediate 8-bit: 0~255
     M_IMM6 = 11,  // Immediate 6-bit: 0~63
     M_IMM3 = 12,  // Immediate 3-bit: 0~7
+    /* Assebmler */
+    M_FREG = 13,          // Floating point register: ACn
+    M_gen = 14,           // General addressing
+    M_REL = M_gen + 0,    // Relative: nn/M_REL8/M_REL6/M_IMM3/M_IMM6/M_IMM8
+    M_RELD = M_gen + 1,   // PC-Relative deferred: @nn
+    M_IMM = M_gen + 2,    // Immediate: #nn
+    M_ABS = M_gen + 3,    // Absolute: @#nn
+    M_base = M_gen + 4,   // mode base
+    M_REG = M_base + 0,   // Register: Rn/SP/PC/ACn
+    M_REGD = M_base + 1,  // Register deferred: @Rn/(Rn)
+    M_INC = M_base + 2,   // Autoincrement: (Rn)+
+    M_INCD = M_base + 3,  // Autoincrement deferred: @(Rn)+
+    M_DEC = M_base + 4,   // Autodecrement: -(Rn)
+    M_DECD = M_base + 5,  // Autodecrement deferred: @-(Rn)
+    M_IDX = M_base + 6,   // Index: nn(Rn)
+    M_IDXD = M_base + 7,  // Index deferred: @nn(Rn)
 };
 
 enum OprPos : uint8_t {

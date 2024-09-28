@@ -37,9 +37,7 @@ namespace {
 constexpr char OPT_TEXT_PMMU[] PROGMEM = "pmmu";
 constexpr char OPT_DESC_PMMU[] PROGMEM = "memory management unit";
 
-constexpr char TEXT_dBLKB[]   PROGMEM = ".blkb";
 constexpr char TEXT_dBLKD[]   PROGMEM = ".blkd";
-constexpr char TEXT_dBLKW[]   PROGMEM = ".blkw";
 constexpr char TEXT_dDOUBLE[] PROGMEM = ".double";
 constexpr char TEXT_dFLOAT[]  PROGMEM = ".float";
 constexpr char TEXT_dLONG[]   PROGMEM = ".long";

@@ -234,6 +234,20 @@ Error FairchildNumberParser::parseNumber(StrScanner &scan, Value &val, Radix def
     return IbmNumberParser::parseNumber(scan, val, defaultRadix);
 }
 
+Error Pdp11NumberParser::parseNumber(StrScanner &scan, Value &val, Radix defaultRadix) const {
+    if (scan[0] == '"' && scan[1] && scan[2]) {
+        const auto value = (static_cast<uint16_t>(scan[2]) << 8) | scan[1];
+        val.setUnsigned(value);
+        scan += 3;
+        return OK;
+    }
+    auto end = scan;
+    // '[0-9]+.' should be decimal
+    if (scanNumberEnd(end, RADIX_10, '.') == OK && !isdigit(*end))
+        return IntelNumberParser::singleton().parseNumber(scan, val, RADIX_10, end);
+    return IntelNumberParser::singleton().parseNumber(scan, val, defaultRadix);
+}
+
 bool SymbolParser::symbolLetter(char c, bool headOfSymbol) const {
     return isalpha(c) || (!headOfSymbol && isdigit(c)) || c == '_';
 }
@@ -298,6 +312,14 @@ bool Ns32000SymbolParser::instructionLetter(char c) const {
     return SimpleSymbolParser::instructionLetter(c) || c == '.';
 }
 
+bool Pdp11SymbolParser::locationSymbol(StrScanner &scan) const {
+    return SymbolParser::locationSymbol(scan, '.') || SymbolParser::locationSymbol(scan, '*');
+}
+
+bool Pdp11SymbolParser::instructionLetter(char c) const {
+    return PrefixSymbolParser::instructionLetter(c) || c == '=' || c == '.';
+}
+
 bool Pdp8SymbolParser::locationSymbol(StrScanner &scan) const {
     return SymbolParser::locationSymbol(scan, '.') || SymbolParser::locationSymbol(scan, '$');
 }
@@ -318,7 +340,7 @@ Error LetterParser::parseLetter(StrScanner &scan, char &letter) const {
     auto p = scan;
     if (!letterPrefix(p))
         return NOT_AN_EXPECTED;
-    const char delim = letterDelimiter(p);
+    const auto delim = letterDelimiter(p);
     if (delim) {
         ErrorAt error;
         letter = readLetter(p, error, delim);
@@ -415,7 +437,7 @@ char CStyleLetterParser::readLetter(StrScanner &scan, ErrorAt &error, char delim
 
 Error MotorolaLetterParser::parseLetter(StrScanner &scan, char &letter) const {
     auto p = scan;
-    const char delim = letterDelimiter(p);
+    const auto delim = letterDelimiter(p);
     if (delim) {
         if ((letter = *p++) == 0)
             return ILLEGAL_CONSTANT;

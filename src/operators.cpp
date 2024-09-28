@@ -17,10 +17,12 @@
 #include "operators.h"
 #include <ctype.h>
 #include <math.h>
+#include "dec_float.h"
 #include "function_table.h"
 #include "reg_ins8060.h"
 #include "str_scanner.h"
 #include "text_common.h"
+#include "value_parser.h"
 
 namespace libasm {
 
@@ -683,6 +685,76 @@ const Functor *Ins8070FunctionTable::lookupFunction(const StrScanner &name) cons
     if (name.iequals_P(TEXT_FN_ADDR))
         return &ins8070::FN_ADDR;
     return nullptr;
+}
+
+namespace pdp11 {
+Error restore_radix(ValueStack &stack, ParserContext &context) {
+    const auto value = stack.pop();
+    const auto radix = stack.pop().getUnsigned();
+    context.defaultRadix = static_cast<Radix>(radix);
+    stack.push(value);
+    return OK;
+}
+const Operator OP_RESTORE_RADIX{3, Operator::RIGHT, 1, restore_radix};
+
+Error to_float16(ValueStack &stack, ParserContext &) {
+    auto value = stack.pop();
+#if defined(LIBASM_ASM_NOFLOAT)
+    value.setFloat();
+    stack.push(value);
+    return FLOAT_NOT_SUPPORTED;
+#else
+    dec_float16_t f16;
+    const auto error = f16.set(value.getFloat());
+    stack.pushUnsigned(f16.bits());
+    return error;
+#endif
+}
+const Operator OP_TO_FLOAT16{3, Operator::RIGHT, 1, to_float16};
+}  // namespace pdp11
+
+const Operator *Pdp11OperatorParser::readPrefix(
+        StrScanner &scan, ValueStack &stack, ParserContext &context) const {
+    const Operator *opr = nullptr;
+    auto p = scan;
+    if (*p == '<' && (p[1] != '<' && p[1] != '=')) {
+        // Open parenthesis
+        return nullptr;
+    } else if (p.expect('^')) {
+        if (p.iexpect('D')) {
+            stack.pushUnsigned(context.defaultRadix);
+            context.defaultRadix = RADIX_10;
+            opr = &pdp11::OP_RESTORE_RADIX;
+        } else if (p.iexpect('O')) {
+            stack.pushUnsigned(context.defaultRadix);
+            context.defaultRadix = RADIX_8;
+            opr = &pdp11::OP_RESTORE_RADIX;
+        } else if (p.iexpect('B')) {
+            stack.pushUnsigned(context.defaultRadix);
+            context.defaultRadix = RADIX_2;
+            opr = &pdp11::OP_RESTORE_RADIX;
+        } else if (p.iexpect('C')) {
+            opr = &Operator::OP_BITWISE_NOT;
+        } else if (p.iexpect('F')) {
+            opr = &pdp11::OP_TO_FLOAT16;
+        }
+    }
+    if (opr) {
+        scan = p;
+        return opr;
+    }
+    return CStyleOperatorParser::singleton().readPrefix(scan, stack, context);
+}
+
+const Operator *Pdp11OperatorParser::readInfix(
+        StrScanner &scan, ValueStack &stack, ParserContext &context) const {
+    if (*scan == '>' && (scan[1] != '>' && scan[1] != '=')) {
+        // Close parenthesis
+        return nullptr;
+    } else if (scan.expect('!')) {
+        return &Operator::OP_BITWISE_OR;
+    }
+    return CStyleOperatorParser::singleton().readInfix(scan, stack, context);
 }
 
 }  // namespace libasm

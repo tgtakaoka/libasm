@@ -110,15 +110,99 @@ static constexpr Entry TABLE_BASE[] PROGMEM = {
     E0(0000244, SZ_NONE, TEXT_CLZ),
     E0(0000250, SZ_NONE, TEXT_CLN),
     E0(0000257, SZ_NONE, TEXT_CCC),
-    E0(0000260, SZ_NONE, TEXT_NOP),
     E0(0000261, SZ_NONE, TEXT_SEC),
     E0(0000262, SZ_NONE, TEXT_SEV),
     E0(0000264, SZ_NONE, TEXT_SEZ),
     E0(0000270, SZ_NONE, TEXT_SEN),
     E0(0000277, SZ_NONE, TEXT_SCC),
+    // Duplicate NOP must be excluded from INDEX_DCT11
+    E0(0000260, SZ_NONE, TEXT_NOP),
 };
 
 static constexpr uint8_t INDEX_BASE[] PROGMEM = {
+     25,  // TEXT_ADC
+     26,  // TEXT_ADCB
+     10,  // TEXT_ADD
+     37,  // TEXT_ASL
+     38,  // TEXT_ASLB
+     35,  // TEXT_ASR
+     36,  // TEXT_ASRB
+     55,  // TEXT_BCC
+     56,  // TEXT_BCS
+     44,  // TEXT_BEQ
+     45,  // TEXT_BGE
+     47,  // TEXT_BGT
+     51,  // TEXT_BHI
+     57,  // TEXT_BHIS
+      6,  // TEXT_BIC
+      7,  // TEXT_BICB
+      8,  // TEXT_BIS
+      9,  // TEXT_BISB
+      4,  // TEXT_BIT
+      5,  // TEXT_BITB
+     48,  // TEXT_BLE
+     58,  // TEXT_BLO
+     52,  // TEXT_BLOS
+     46,  // TEXT_BLT
+     50,  // TEXT_BMI
+     43,  // TEXT_BNE
+     49,  // TEXT_BPL
+     65,  // TEXT_BPT
+     42,  // TEXT_BR
+     53,  // TEXT_BVC
+     54,  // TEXT_BVS
+     77,  // TEXT_CCC
+     73,  // TEXT_CLC
+     76,  // TEXT_CLN
+     15,  // TEXT_CLR
+     16,  // TEXT_CLRB
+     74,  // TEXT_CLV
+     75,  // TEXT_CLZ
+      2,  // TEXT_CMP
+      3,  // TEXT_CMPB
+     17,  // TEXT_COM
+     18,  // TEXT_COMB
+     21,  // TEXT_DEC
+     22,  // TEXT_DECB
+     62,  // TEXT_EMT
+     68,  // TEXT_HALT
+     19,  // TEXT_INC
+     20,  // TEXT_INCB
+     66,  // TEXT_IOT
+     13,  // TEXT_JMP
+     60,  // TEXT_JSR
+     41,  // TEXT_MFPS
+     71,  // TEXT_MFPT
+      0,  // TEXT_MOV
+      1,  // TEXT_MOVB
+     39,  // TEXT_MTPS
+     23,  // TEXT_NEG
+     24,  // TEXT_NEGB
+     72,  // TEXT_NOP
+     70,  // TEXT_RESET
+     33,  // TEXT_ROL
+     34,  // TEXT_ROLB
+     31,  // TEXT_ROR
+     32,  // TEXT_RORB
+     64,  // TEXT_RTI
+     61,  // TEXT_RTS
+     67,  // TEXT_RTT
+     27,  // TEXT_SBC
+     28,  // TEXT_SBCB
+     82,  // TEXT_SCC
+     78,  // TEXT_SEC
+     81,  // TEXT_SEN
+     79,  // TEXT_SEV
+     80,  // TEXT_SEZ
+     59,  // TEXT_SOB
+     11,  // TEXT_SUB
+     14,  // TEXT_SWAB
+     40,  // TEXT_SXT
+     63,  // TEXT_TRAP
+     29,  // TEXT_TST
+     30,  // TEXT_TSTB
+     69,  // TEXT_WAIT
+     12,  // TEXT_XOR
 };
 
 static constexpr Entry TABLE_EIS[] PROGMEM = {
@@ -129,6 +213,10 @@ static constexpr Entry TABLE_EIS[] PROGMEM = {
 };
 
 static constexpr uint8_t INDEX_EIS[] PROGMEM = {
+      2,  // TEXT_ASH
+      3,  // TEXT_ASHC
+      1,  // TEXT_DIV
+      0,  // TEXT_MUL
 };
 
 static constexpr Entry TABLE_MFPMTP[] PROGMEM = {
@@ -139,6 +227,10 @@ static constexpr Entry TABLE_MFPMTP[] PROGMEM = {
 };
 
 static constexpr uint8_t INDEX_MFPMTP[] PROGMEM = {
+      1,  // TEXT_MFPD
+      0,  // TEXT_MFPI
+      3,  // TEXT_MTPD
+      2,  // TEXT_MTPI
 };
 
 static constexpr Entry TABLE_J11[] PROGMEM = {
@@ -150,6 +242,11 @@ static constexpr Entry TABLE_J11[] PROGMEM = {
 };
 
 static constexpr uint8_t INDEX_J11[] PROGMEM = {
+      1,  // TEXT_CSM
+      0,  // TEXT_MARK
+      2,  // TEXT_SPL
+      3,  // TEXT_TSTSET
+      4,  // TEXT_WRTLCK
 };
 
 static constexpr Entry TABLE_FP11[] PROGMEM = {
@@ -202,6 +299,52 @@ static constexpr Entry TABLE_FP11[] PROGMEM = {
 };
 
 static constexpr uint8_t INDEX_FP11[] PROGMEM = {
+     10,  // TEXT_ABSD
+     28,  // TEXT_ABSF
+     11,  // TEXT_ADDD
+     29,  // TEXT_ADDF
+      0,  // TEXT_CFCC
+     12,  // TEXT_CLRD
+     30,  // TEXT_CLRF
+     13,  // TEXT_CMPD
+     31,  // TEXT_CMPF
+     14,  // TEXT_DIVD
+     32,  // TEXT_DIVF
+     15,  // TEXT_LDCDF
+     33,  // TEXT_LDCFD
+     17,  // TEXT_LDCID
+     35,  // TEXT_LDCIF
+     16,  // TEXT_LDCLD
+     34,  // TEXT_LDCLF
+     18,  // TEXT_LDD
+      8,  // TEXT_LDEXP
+     36,  // TEXT_LDF
+      5,  // TEXT_LDFPS
+     19,  // TEXT_MODD
+     37,  // TEXT_MODF
+     20,  // TEXT_MULD
+     38,  // TEXT_MULF
+     21,  // TEXT_NEGD
+     39,  // TEXT_NEGF
+      1,  // TEXT_SETD
+      2,  // TEXT_SETF
+      3,  // TEXT_SETI
+      4,  // TEXT_SETL
+     22,  // TEXT_STCDF
+     25,  // TEXT_STCDI
+     24,  // TEXT_STCDL
+     40,  // TEXT_STCFD
+     43,  // TEXT_STCFI
+     42,  // TEXT_STCFL
+     23,  // TEXT_STD
+      9,  // TEXT_STEXP
+     41,  // TEXT_STF
+      6,  // TEXT_STFPS
+      7,  // TEXT_STST
+     26,  // TEXT_SUBD
+     44,  // TEXT_SUBF
+     27,  // TEXT_TSTD
+     45,  // TEXT_TSTF
 };
 
 // clang-format on
@@ -229,6 +372,44 @@ static constexpr Cpu CPU_TABLE[] PROGMEM = {
 
 static const Cpu *cpu(CpuType cpuType) {
     return Cpu::search(cpuType, ARRAY_RANGE(CPU_TABLE));
+}
+
+static bool isGeneralMode(AddrMode mode) {
+    return mode >= M_GENS && mode <= M_GENG;
+}
+
+static bool acceptMode(AddrMode opr, AddrMode table) {
+    if (table == M_NONE)
+        return opr == M_NONE;
+    if (table == M_GENR)
+        return opr == M_REG;
+    if (isGeneralMode(table))
+        return opr == M_REG || opr == M_FREG || opr >= M_gen;
+    if (table == M_AC03)
+        return opr == M_FREG || opr == M_REG;
+    if (opr == M_REL)
+        return table == M_REL8 || table == M_REL6 || table == M_IMM8 || table == M_IMM6 ||
+               table == M_IMM3;
+    return false;
+}
+
+static bool acceptModes(AsmInsn &insn, const Entry *entry) {
+    const auto table = entry->readFlags();
+    return acceptMode(insn.srcOp.mode, table.src()) && acceptMode(insn.dstOp.mode, table.dst());
+}
+
+Error TablePdp11::searchName(CpuType cpuType, AsmInsn &insn) const {
+    cpu(cpuType)->searchName(insn, acceptModes);
+    return insn.getError();
+}
+
+static bool acceptAll(AsmInsn &, const Entry *) {
+    return true;
+}
+
+Error TablePdp11::hasName(CpuType cpuType, AsmInsn &insn) const {
+    cpu(cpuType)->searchName(insn, acceptAll);
+    return insn.getError();
 }
 
 static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *) {

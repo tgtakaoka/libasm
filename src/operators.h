@@ -167,6 +167,16 @@ struct ZilogOperatorParser final : OperatorParser, Singleton<ZilogOperatorParser
     const Operator *readInfix(StrScanner &, ValueStack &, ParserContext &) const override;
 };
 
+struct Pdp11OperatorParser final : OperatorParser, Singleton<Pdp11OperatorParser> {
+    const Operator *readPrefix(StrScanner &, ValueStack &, ParserContext &) const override;
+    const Operator *readInfix(StrScanner &, ValueStack &, ParserContext &) const override;
+    bool isOpenExpr(StrScanner &scan) const override {
+        return scan.expect('(') || scan.expect('<');
+    }
+    bool isCloseExpr(StrScanner &scan) const override {
+        return scan.expect(')') || scan.expect('>');
+    }
+};
 struct Pdp8OperatorParser final : OperatorParser, Singleton<Pdp8OperatorParser> {
     const Operator *readInfix(StrScanner &, ValueStack &, ParserContext &) const override;
 };

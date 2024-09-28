@@ -85,7 +85,7 @@ usage: asm [-o <output>] [-l <list>] <input>
      TLCS90 INS8060 INS8070 CDP1802 CDP1804 CDP1804A SCN2650 F3850 IM6100
      HD6120 TMS7000 TMS32010 TMS32015 i8086 i80186 V30 i8096 MC68000
      TMS9900 TMS9980 TMS9995 TMS99105 Z8001 Z8002 NS32032 MN1610 MN1613
-     MN1613A
+     MN1613A J11 T11
   -o <output>       : output file
   -l <list>         : list file
   -S[<bytes>]       : output Motorola S-Record format
@@ -98,7 +98,7 @@ usage: asm [-o <output>] [-l <list>] <input>
   --list-radix      : set listing radix (8, 16) (int)
   --smart-branch    : optimize branch instruction (bool)
   --fpu             : floating point co-processor (text: 8086, 68000, 32032)
-  --implicit-word   : unknown instruction defines word (bool: 6100)
+  --implicit-word   : unknown instruction defines word (bool: 6100, J11)
   --longa           : enable 16-bit accumulator (bool: 6502)
   --longi           : enable 16-bit index registers (bool: 6502)
   --optimize-index  : optimize zero index (bool: Z8)
