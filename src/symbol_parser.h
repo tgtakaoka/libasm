@@ -137,6 +137,13 @@ struct Ns32000SymbolParser final : SimpleSymbolParser, Singleton<Ns32000SymbolPa
     bool instructionLetter(char c) const override;
 };
 
+struct Pdp11SymbolParser final : PrefixSymbolParser, Singleton<Pdp11SymbolParser> {
+    Pdp11SymbolParser() : PrefixSymbolParser(text::common::PSTR_UNDER_DOT_DOLLAR) {}
+    bool locationSymbol(StrScanner &scan) const override;
+    bool instructionLetter(char c) const override;
+    bool instructionTerminator(char c) const override { return c == '='; }
+};
+
 struct Pdp8SymbolParser final : SymbolParser, Singleton<Pdp8SymbolParser> {
     bool locationSymbol(StrScanner &scan) const override;
     bool labelDelimitor(StrScanner &scan) const override { return scan.expect(','); }

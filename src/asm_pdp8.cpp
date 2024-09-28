@@ -26,13 +26,11 @@ namespace pdp8 {
 using namespace pseudo;
 using namespace reg;
 using namespace text::common;
+using namespace text::option;
 
 namespace {
 
 // clang-format off
-constexpr char OPT_BOOL_IMPLICIT_WORD[] PROGMEM = "implicit-word";
-constexpr char OPT_DESC_IMPLICIT_WORD[] PROGMEM = "unknown instruction defines word";
-
 constexpr char TEXT_OCTAL[]   PROGMEM = "OCTAL";
 constexpr char TEXT_DECIMAL[] PROGMEM = "DECIMAL";
 constexpr char TEXT_FIELD[]   PROGMEM = "FIELD";

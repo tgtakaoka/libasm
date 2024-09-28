@@ -173,6 +173,8 @@ extern const char OPT_BOOL_GNU_AS[] PROGMEM;
 extern const char OPT_DESC_GNU_AS[] PROGMEM;
 extern const char OPT_TEXT_FPU[] PROGMEM;
 extern const char OPT_DESC_FPU[] PROGMEM;
+extern const char OPT_BOOL_IMPLICIT_WORD[] PROGMEM;
+extern const char OPT_DESC_IMPLICIT_WORD[] PROGMEM;
 
 }  // namespace option
 }  // namespace text
