@@ -16,7 +16,7 @@
 
 #include <float.h>
 #include "fixed64.h"
-#include "float32.h"
+#include "ieee_float.h"
 #include "test_unit_helper.h"
 
 namespace libasm {

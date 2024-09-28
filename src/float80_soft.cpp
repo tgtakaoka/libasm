@@ -17,8 +17,7 @@
 #include "float80_soft.h"
 #include <ctype.h>
 #include <errno.h>
-#include "float32.h"
-#include "float64.h"
+#include "ieee_float.h"
 #include "str_buffer.h"
 #include "str_scanner.h"
 #include "text_common.h"

@@ -42,7 +42,7 @@ CXXFLAGS = -std=c++14 -Wall -O $(DEBUG_FLAGS)
 CPPFLAGS = -I../src -I../driver -MD -MF $@.d
 
 OBJS_com = \
-    fixed64.o float32.o float64.o float80_base.o float80_hard.o float80_soft.o \
+    fixed64.o ieee_float.o float80_base.o float80_hard.o float80_soft.o \
     str_buffer.o str_scanner.o option_base.o error_reporter.o insn_base.o \
     formatters.o value_formatter.o \
     $(foreach a,$(ARCHS),$(OBJS_$(a))) \

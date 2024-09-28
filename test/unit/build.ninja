@@ -21,37 +21,37 @@ subninja ${root}/test/unit/ninja.rules
 build test_array_memory: test test_array_memory.o $
   test_unit_helper.o test_asserter.o error_reporter.o
 build test_fixed64: test test_fixed64.o $
-  fixed64.o float32.o float64.o float80_base.o float80_hard.o float80_soft.o $
+  fixed64.o ieee_float.o float80_base.o float80_hard.o float80_soft.o $
   str_buffer.o str_scanner.o text_common.o value.o $
   test_unit_helper.o test_asserter.o error_reporter.o
 build test_float32: test test_float32.o $
-  fixed64.o float32.o float64.o float80_base.o float80_hard.o float80_soft.o $
+  fixed64.o ieee_float.o float80_base.o float80_hard.o float80_soft.o $
   str_buffer.o str_scanner.o text_common.o value.o $
   test_unit_helper.o test_asserter.o error_reporter.o
 build test_float64: test test_float64.o $
-  fixed64.o float32.o float64.o float80_base.o float80_hard.o float80_soft.o $
+  fixed64.o ieee_float.o float80_base.o float80_hard.o float80_soft.o $
   str_buffer.o str_scanner.o text_common.o value.o $
   test_unit_helper.o test_asserter.o error_reporter.o
 build test_float80_hard: test test_float80_hard.o $
-  fixed64.o float32.o float64.o float80_base.o float80_hard.o float80_soft.o $
+  fixed64.o ieee_float.o float80_base.o float80_hard.o float80_soft.o $
   str_buffer.o str_scanner.o text_common.o value.o $
   test_unit_helper.o test_asserter.o error_reporter.o
 build test_float80_soft: test test_float80_soft.o $
-  fixed64.o float32.o float64.o float80_base.o float80_hard.o float80_soft.o $
+  fixed64.o ieee_float.o float80_base.o float80_hard.o float80_soft.o $
   str_buffer.o str_scanner.o text_common.o value.o $
   test_unit_helper.o test_asserter.o error_reporter.o
 build test_reg_base:  test test_reg_base.o reg_base.o $
-  fixed64.o float32.o float64.o float80_base.o float80_hard.o float80_soft.o $
+  fixed64.o ieee_float.o float80_base.o float80_hard.o float80_soft.o $
   str_buffer.o str_scanner.o text_common.o value.o $
   test_unit_helper.o test_asserter.o error_reporter.o
 build test_str_buffer:   test test_str_buffer.o $
-  fixed64.o float32.o float64.o float80_base.o float80_hard.o float80_soft.o $
+  fixed64.o ieee_float.o float80_base.o float80_hard.o float80_soft.o $
   str_buffer.o str_scanner.o text_common.o value.o $
   test_unit_helper.o test_asserter.o error_reporter.o
 build test_str_scanner:  test test_str_scanner.o str_scanner.o $
   test_unit_helper.o test_asserter.o error_reporter.o
 build test_value:  test test_value.o value.o $
-  fixed64.o float32.o float64.o float80_base.o float80_hard.o float80_soft.o $
+  fixed64.o ieee_float.o float80_base.o float80_hard.o float80_soft.o $
   str_buffer.o str_scanner.o text_common.o $
   test_unit_helper.o test_asserter.o error_reporter.o
 

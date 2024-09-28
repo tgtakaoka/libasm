@@ -16,8 +16,7 @@
 
 #include "insn_base.h"
 #include <math.h>
-#include "float32.h"
-#include "float64.h"
+#include "ieee_float.h"
 
 namespace libasm {
 

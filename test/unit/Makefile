@@ -34,7 +34,7 @@ CXXFLAGS = -std=c++14 -Wall -O $(DEBUG_FLAGS) \
 CPPFLAGS = -I../../src -I../../test -MD -MF $@.d
 
 OBJS_common = test_unit_helper.o test_asserter.o error_reporter.o \
-   fixed64.o float32.o float64.o float80_base.o float80_hard.o float80_soft.o \
+   fixed64.o ieee_float.o float80_base.o float80_hard.o float80_soft.o \
    str_buffer.o str_scanner.o text_common.o value.o
 OBJS = $(OBJS_common) $(TESTS:=.o)
 BINS = $(TESTS)

@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 
-#include "float32.h"
-#include "float64.h"
 #include "float80.h"
+#include "ieee_float.h"
 #include "test_unit_helper.h"
 
 #ifdef LIBASM_HAS_LONG_DOUBLE

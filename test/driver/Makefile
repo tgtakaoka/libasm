@@ -37,7 +37,7 @@ CPPFLAGS = -I../../driver -I../../src -I../../test -MD -MF $@.d
 
 OBJS_common = \
     test_driver_helper.o test_asserter.o error_reporter.o \
-    fixed64.o float32.o float64.o float80_base.o float80_hard.o float80_soft.o \
+    fixed64.o ieee_float.o float80_base.o float80_hard.o float80_soft.o \
     str_buffer.o str_scanner.o value.o text_common.o
 OBJS_encdec = \
     bin_encoder.o bin_decoder.o intel_hex.o moto_srec.o bin_memory.o

@@ -16,7 +16,7 @@
 
 #include <float.h>
 #include <math.h>
-#include "float64.h"
+#include "ieee_float.h"
 #include "test_unit_helper.h"
 
 namespace libasm {
@@ -173,7 +173,7 @@ void test_ctor() {
     EQ("INT53_MAX", 51 + 0x3FF, I53_MAX.tag());
     EQ("INT53_MAX", UINT64_C(0xFFFFFFFFFFFFF800), I53_MAX.significand());
 
-    const f64 I53_MIN{0x800| (52 + 0x3FF), UINT64_C(0x0010000000000000)};
+    const f64 I53_MIN{0x800 | (52 + 0x3FF), UINT64_C(0x0010000000000000)};
     EQ("INT53_MIN", 0x800 | (52 + 0x3FF), I53_MIN.tag());
     EQ("INT53_MIN", UINT64_C(0x8000000000000000), I53_MIN.significand());
 

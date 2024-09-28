@@ -46,19 +46,19 @@ OBJS_test = \
 OBJS_asm  = test_asm_helper.o asm_base.o \
     config_base.o insn_base.o operators.o parsers.o reg_base.o value.o \
     value_parser.o text_common.o \
-    fixed64.o float32.o float64.o float80_base.o float80_hard.o float80_soft.o
+    fixed64.o ieee_float.o float80_base.o float80_hard.o float80_soft.o
 OBJS_dis  = test_dis_helper.o dis_base.o \
     config_base.o formatters.o insn_base.o reg_base.o value.o \
     value_formatter.o text_common.o \
-    fixed64.o float32.o float64.o float80_base.o float80_hard.o float80_soft.o
+    fixed64.o ieee_float.o float80_base.o float80_hard.o float80_soft.o
 OBJS_expr = test_expr_helper.o \
     config_base.o formatters.o insn_base.o operators.o parsers.o \
     value.o value_formatter.o value_parser.o text_common.o \
-    fixed64.o float32.o float64.o float80_base.o float80_hard.o float80_soft.o
+    fixed64.o ieee_float.o float80_base.o float80_hard.o float80_soft.o
 OBJS_gen  = gen_driver.o test_generator.o tokenized_text.o \
     config_base.o dis_base.o dis_formatter.o formatters.o insn_base.o \
     list_formatter.o reg_base.o value.o value_formatter.o text_common.o \
-    fixed64.o float32.o float64.o float80_base.o float80_hard.o float80_soft.o
+    fixed64.o ieee_float.o float80_base.o float80_hard.o float80_soft.o
 
 TEST_OBJS = $(ARCHS:%=test_asm_%.o) $(ARCHS:%=test_dis_%.o)
 EXPR_OBJS = $(EXPRS:%=test_expr_%.o)
