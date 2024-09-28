@@ -68,11 +68,6 @@ StrBuffer &outOprSize(StrBuffer &out, OprSize size) {
 
 }  // namespace
 
-StrBuffer &DisMc68000::outHex32(StrBuffer &out, uint32_t val) const {
-    StrCaseBuffer caseOut(out, _upperHex);
-    return HexFormatter::singleton().format(caseOut, val, 32).over(out);
-}
-
 void DisMc68000::decodeImmediateData(DisInsn &insn, StrBuffer &out, OprSize size) const {
     out.letter('#');
     if (size == SZ_BYTE || insn.src() == M_CCR || insn.dst() == M_CCR) {
@@ -81,14 +76,14 @@ void DisMc68000::decodeImmediateData(DisInsn &insn, StrBuffer &out, OprSize size
         outHex(out, insn.readUint16(), 16);
     } else if (size == SZ_LONG) {
         outHex(out, insn.readUint32(), 32);
+#if !defined(LIBASM_DIS_NOFLOAT) && !defined(LIBASM_MC68000_NOFPU)
     } else if (_gnuAs) {
         outHex(out, insn.readUint32(), 32);
-        if (size != SZ_SNGL) {
-            outHex32(out, insn.readUint32());
-            if (size != SZ_DUBL)
-                outHex32(out, insn.readUint32());
+        if (size == SZ_DUBL) {
+            out.hex(insn.readUint32(), 8);
+        } else if (size == SZ_XTND || size == SZ_PBCD) {
+            out.hex(insn.readUint64(), 16);
         }
-#if !defined(LIBASM_DIS_NOFLOAT) && !defined(LIBASM_MC68000_NOFPU)
     } else if (size == SZ_SNGL) {
         out.float32(insn.readFloat32Be());
     } else if (size == SZ_DUBL) {
