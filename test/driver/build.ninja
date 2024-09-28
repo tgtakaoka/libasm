@@ -222,6 +222,18 @@ build test_formatter_ns32000: test test_formatter_ns32000.o $
   fixed64.o ieee_float.o float80_base.o float80_hard.o float80_soft.o $
   test_driver_helper.o test_asserter.o
 
+build test_formatter_pdp11: test test_formatter_pdp11.o $
+  asm_pdp8.o dis_pdp8.o reg_pdp8.o table_pdp8.o text_pdp8.o $
+  asm_base.o asm_directive.o asm_driver.o asm_formatter.o bin_decoder.o $
+  bin_encoder.o bin_memory.o config_base.o dis_base.o dis_driver.o $
+  dis_formatter.o error_reporter.o formatters.o function_store.o insn_base.o $
+  intel_hex.o list_formatter.o moto_srec.o operators.o option_base.o $
+  parsers.o reg_base.o str_buffer.o str_scanner.o symbol_store.o $
+  text_common.o value.o value_formatter.o value_parser.o $
+  fixed64.o ieee_float.o float80_base.o float80_hard.o float80_soft.o $
+  dec_float.o $
+  test_driver_helper.o test_asserter.o
+
 build test_formatter_pdp8: test test_formatter_pdp8.o $
   asm_pdp8.o dis_pdp8.o reg_pdp8.o table_pdp8.o text_pdp8.o $
   asm_base.o asm_directive.o asm_driver.o asm_formatter.o bin_decoder.o $
@@ -339,6 +351,7 @@ build test: phony test_helpers test_bin_memory test_intel_hex test_moto_srec $
   test_formatter_mn1610   $
   test_formatter_mos6502  $
   test_formatter_ns32000  $
+  test_formatter_pdp11    $
   test_formatter_pdp8     $
   test_formatter_scn2650  $
   test_formatter_tlcs90   $

@@ -516,6 +516,8 @@ extern const char TEXT_FN_L[]    PROGMEM;
 extern const char TEXT_dADDR[]  PROGMEM; // .addr
 extern const char TEXT_dALIGN[] PROGMEM; // .align
 extern const char TEXT_dASCII[] PROGMEM; // .ascii
+extern const char TEXT_dBLKB[]  PROGMEM; // .blkb
+extern const char TEXT_dBLKW[]  PROGMEM; // .blkw
 extern const char TEXT_dBYTE[]  PROGMEM; // .byte
 extern const char TEXT_dDBYTE[] PROGMEM; // .dbyte
 extern const char TEXT_dequal[] PROGMEM; // .=

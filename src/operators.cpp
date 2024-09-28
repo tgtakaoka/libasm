@@ -18,6 +18,7 @@
 #include <ctype.h>
 #include <math.h>
 #include "str_scanner.h"
+#include "value_parser.h"
 
 namespace libasm {
 

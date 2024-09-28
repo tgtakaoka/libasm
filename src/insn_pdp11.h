@@ -21,6 +21,7 @@
 #include "entry_pdp11.h"
 #include "insn_base.h"
 #include "reg_pdp11.h"
+#include "value.h"
 
 namespace libasm {
 namespace pdp11 {
@@ -31,6 +32,33 @@ struct EntryInsn : EntryInsnPostfix<Config, Entry> {
     OprPos srcPos() const { return flags().srcPos(); }
     OprPos dstPos() const { return flags().dstPos(); }
     OprSize size() const { return flags().size(); }
+};
+
+struct Operand final : ErrorAt {
+    AddrMode mode;
+    RegName reg;
+    Value val;
+    Operand() : mode(M_NONE), reg(REG_UNDEF), val() {}
+};
+
+struct AsmInsn final : AsmInsnImpl<Config>, EntryInsn {
+    AsmInsn(Insn &insn) : AsmInsnImpl(insn) {}
+
+    Operand srcOp, dstOp;
+
+    void embed(Config::opcode_t data, OprPos pos);
+    void emitInsn() { emitUint16(opCode(), 0); }
+
+    uint_fast8_t operandPos() const;
+    Error emitOperand16(uint16_t u16) { return emitUint16(u16, operandPos()); }
+    Error emitOperand32(uint32_t u32, uint8_t pos);
+    Error emitOperand64(uint64_t u64, uint8_t pos);
+#if !defined(LIBASM_ASM_NOFLOAT) && !defined(LIBASM_MC68000_NOFPU)
+    Error emitDecFloat32(const float80_t &val80) { return emitDecFloat32(val80, operandPos()); }
+    Error emitDecFloat64(const float80_t &val80) { return emitDecFloat64(val80, operandPos()); }
+    Error emitDecFloat32(const float80_t &val80, uint8_t pos);
+    Error emitDecFloat64(const float80_t &val80, uint8_t pos);
+#endif
 };
 
 struct DisInsn final : DisInsnImpl<Config>, EntryInsn {

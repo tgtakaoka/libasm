@@ -32,6 +32,7 @@
 #include "asm_mn1610.h"
 #include "asm_mos6502.h"
 #include "asm_ns32000.h"
+#include "asm_pdp11.h"
 #include "asm_pdp8.h"
 #include "asm_scn2650.h"
 #include "asm_tlcs90.h"
@@ -62,6 +63,7 @@ mc6809::AsmMc6809 asm6809;
 mn1610::AsmMn1610 asm1610;
 mos6502::AsmMos6502 asm6502;
 ns32000::AsmNs32000 asm32000;
+pdp11::AsmPdp11 asmpdp11;
 pdp8::AsmPdp8 asmpdp8;
 scn2650::AsmScn2650 asm2650;
 tlcs90::AsmTlcs90 asm90;
@@ -72,6 +74,7 @@ z8000::AsmZ8000 asmz8000;
 z80::AsmZ80 asmz80;
 z8::AsmZ8 asmz8;
 
+DecDirective dirpdp11(asmpdp11);
 DecDirective dirpdp8(asmpdp8);
 FairchildDirective dir3850(asm3850);
 IntelDirective dir1610(asm1610);
@@ -124,6 +127,7 @@ AsmCommander commander{
         &dirz8000,
         &dir32000,
         &dir1610,
+        &dirpdp11,
 };
 
 int main(int argc, const char **argv) {

@@ -46,7 +46,8 @@ OBJS_test = \
 OBJS_asm  = test_asm_helper.o asm_base.o \
     config_base.o insn_base.o operators.o parsers.o reg_base.o value.o \
     value_parser.o text_common.o \
-    fixed64.o ieee_float.o float80_base.o float80_hard.o float80_soft.o
+    fixed64.o ieee_float.o float80_base.o float80_hard.o float80_soft.o \
+    dec_float.o
 OBJS_dis  = test_dis_helper.o dis_base.o \
     config_base.o formatters.o insn_base.o reg_base.o value.o \
     value_formatter.o text_common.o \

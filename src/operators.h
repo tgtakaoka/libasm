@@ -18,7 +18,6 @@
 #define __LIBASM_OPERATORS_H__
 
 #include <stdint.h>
-
 #include "error_reporter.h"
 #include "stack.h"
 #include "value.h"

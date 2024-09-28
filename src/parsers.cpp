@@ -215,7 +215,7 @@ Error LetterParser::parseLetter(StrScanner &scan, char &letter) const {
     auto p = scan;
     if (!letterPrefix(p))
         return NOT_AN_EXPECTED;
-    const char delim = letterDelimiter(p);
+    const auto delim = letterDelimiter(p);
     if (delim) {
         ErrorAt error;
         letter = readLetter(p, error, delim);
@@ -312,7 +312,7 @@ char CStyleLetterParser::readLetter(StrScanner &scan, ErrorAt &error, char delim
 
 Error MotorolaLetterParser::parseLetter(StrScanner &scan, char &letter) const {
     auto p = scan;
-    const char delim = letterDelimiter(p);
+    const auto delim = letterDelimiter(p);
     if (delim) {
         if ((letter = *p++) == 0)
             return ILLEGAL_CONSTANT;

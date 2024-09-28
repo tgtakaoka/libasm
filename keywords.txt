@@ -26,6 +26,7 @@ AsmMc6809       KEYWORD1        libasm
 AsmMn1610       KEYWORD1        libasm
 AsmMos6502      KEYWORD1        libasm
 AsmNs32000      KEYWORD1        libasm
+AsmPdp11        KEYWORD1        libasm
 AsmPdp8         KEYWORD1        libasm
 AsmScn2650      KEYWORD1        libasm
 AsmTlcs90       KEYWORD1        libasm
