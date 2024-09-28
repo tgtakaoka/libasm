@@ -556,11 +556,11 @@ extern const char PSTR_ZERO_X[]         PROGMEM; // "0x"
 
 extern const char PSTR_DOT_STAR_DOLLAR[]   PROGMEM; // ".*$"
 extern const char PSTR_UNDER_AT_QUESTION[] PROGMEM; // "_@?"
-extern const char PSTR_UNDER_DOT_DOLLER[]  PROGMEM; // "_.$"
+extern const char PSTR_UNDER_DOT_DOLLAR[]  PROGMEM; // "_.$"
 
 extern const char PSTR_PERCENT_2[]                 PROGMEM; // "%(2)"
 extern const char PSTR_PERCENT_8[]                 PROGMEM; // "%(8)"
-extern const char PSTR_UNDER_DOT_DOLLER_QUESTION[] PROGMEM; // "_.$?"
+extern const char PSTR_UNDER_DOT_DOLLAR_QUESTION[] PROGMEM; // "_.$?"
 
 // clang-format on
 
