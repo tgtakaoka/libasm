@@ -137,6 +137,8 @@ It can read Intel HEX or Motorola S-Record input.
       -v          : print progress verbosely
       --<name>=<vale>
                   : extra options (<type> [, <CPU>])
+      upper-hex       : use upper case letter for hexadecimal  (bool)
+      upper-case      : use upper case letter for output  (bool)
       list-radix      : set listing radix (8, 16)  (int)
       relative        : program counter relative branch target  (bool)
       c-style         : C language style number constant  (bool)

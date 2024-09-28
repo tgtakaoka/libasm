@@ -73,6 +73,8 @@ private:
 protected:
     const Options _commonOptions;
     const Options _options;
+    const BoolOption<Disassembler> _opt_upperHex;
+    const BoolOption<Disassembler> _opt_uppercase;
     const IntOption<Disassembler> _opt_listRadix;
     const BoolOption<Disassembler> _opt_relative;
     const BoolOption<Disassembler> _opt_cstyle;

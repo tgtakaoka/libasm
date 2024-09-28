@@ -2625,24 +2625,26 @@ static void test_float_move() {
          0xF200|074, 0x4000|(3<<10)|(1<<7), 0x0019, 0x000A, 0x1200, 0x0000, 0x0000, 0x0000);
 
     EQUALS("gnu-as", OK, disassembler.setOption("gnu-as", "on"));
+    EQUALS("upper-hex", OK, disassembler.setOption("upper-hex", "off"));
+    EQUALS("upper-case", OK, disassembler.setOption("upper-case", "off"));
 
-    TEST("FMOVEL", "#0x6789ABCD, FP6",
+    TEST("fmovel", "#0x6789abcd, fp6",
          0xF200|074, 0x4000|(0<<10)|(6<<7), 0x6789, 0xABCD);
-    TEST("FMOVES", "#0x3058E0F0, FP7",
+    TEST("fmoves", "#0x3058e0f0, fp7",
          0xF200|074, 0x4000|(1<<10)|(7<<7), 0x3058, 0xE0F0);
-    TEST("FMOVEX", "#0xFFFF00008000000000000000, FP0",
+    TEST("fmovex", "#0xffff00008000000000000000, fp0",
          0xF200|074, 0x4000|(2<<10)|(0<<7), 0xFFFF, 0x0000, 0x8000, 0x0000, 0x0000, 0x0000);
-    TEST("FMOVEX", "#0xC0230000A5C681D100000000, FP0",
+    TEST("fmovex", "#0xc0230000a5c681d100000000, fp0",
          0xF200|074, 0x4000|(2<<10)|(0<<7), 0xC023, 0x0000, 0xA5C6, 0x81D1, 0x0000, 0x0000);
-    TEST("FMOVEP", "#0xFFFF00000000000000000001, FP1",
+    TEST("fmovep", "#0xffff00000000000000000001, fp1",
          0xF200|074, 0x4000|(3<<10)|(1<<7), 0xFFFF, 0x0000, 0x0000, 0x0000, 0x0000, 0x0001);
-    TEST("FMOVEP", "#0x002000091200000000000000, FP1",
+    TEST("fmovep", "#0x002000091200000000000000, fp1",
          0xF200|074, 0x4000|(3<<10)|(1<<7), 0x0020, 0x0009, 0x1200, 0x0000, 0x0000, 0x0000);
-    TEST("FMOVEW", "#0x1234, FP2",
+    TEST("fmovew", "#0x1234, fp2",
          0xF200|074, 0x4000|(4<<10)|(2<<7), 0x1234);
-    TEST("FMOVED", "#0xC020800000000000, FP3",
+    TEST("fmoved", "#0xc020800000000000, fp3",
          0xF200|074, 0x4000|(5<<10)|(3<<7), 0xC020, 0x8000, 0x0000, 0x0000);
-    TEST("FMOVEB", "#0x23, FP4",
+    TEST("fmoveb", "#0x23, fp4",
          0xF200|074, 0x4000|(6<<10)|(4<<7), 0x0023);
 }
 

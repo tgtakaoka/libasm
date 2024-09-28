@@ -20,6 +20,10 @@ namespace libasm {
 
 namespace {
 
+constexpr char OPT_BOOL_UPPER_HEX[] PROGMEM = "upper-hex";
+constexpr char OPT_DESC_UPPER_HEX[] PROGMEM = "use upper case letter for hexadecimal";
+constexpr char OPT_BOOL_UPPERCASE[] PROGMEM = "upper-case";
+constexpr char OPT_DESC_UPPERCASE[] PROGMEM = "use upper case letter for output";
 constexpr char OPT_INT_LIST_RADIX[] PROGMEM = "list-radix";
 constexpr char OPT_DESC_LIST_RADIX[] PROGMEM = "set listing radix (8, 16)";
 constexpr char OPT_BOOL_RELATIVE[] PROGMEM = "relative";
@@ -35,8 +39,12 @@ constexpr char OPT_DESC_ORIGIN[] PROGMEM = "letter for origin symbol";
 
 Disassembler::Disassembler(const ValueFormatter::Plugins &plugins, const OptionBase *option)
     : _formatter(plugins),
-      _commonOptions(&_opt_listRadix),
+      _commonOptions(&_opt_upperHex),
       _options(option),
+      _opt_upperHex(this, &Disassembler::setUpperHex, OPT_BOOL_UPPER_HEX, OPT_DESC_UPPER_HEX,
+              &_opt_uppercase),
+      _opt_uppercase(this, &Disassembler::setUppercase, OPT_BOOL_UPPERCASE, OPT_DESC_UPPERCASE,
+              &_opt_listRadix),
       _opt_listRadix(this, &Disassembler::setListRadix, OPT_INT_LIST_RADIX, OPT_DESC_LIST_RADIX,
               &_opt_relative),
       _opt_relative(this, &Disassembler::setRelativeTarget, OPT_BOOL_RELATIVE, OPT_DESC_RELATIVE,
