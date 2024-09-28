@@ -83,7 +83,8 @@ ASM_TESTS = $(patsubst %.asm,%,$(wildcard gen_*.asm))
 ASM_OUTS  = $(foreach f,$(ASM_TESTS),$(f).$(call out-ext,$(f)))
 define asm-rule # source stem suffix option
 .PHONY:: asm-$(2).$(3)
-asm-$(2).$(3): $(1)
+asm-$(2).$(3):: $(ASM)-refresh
+asm-$(2).$(3):: $(1)
 	$$(ASM) $$(ASM_FLAGS) $(4) -o $(2).$(3) -l $(2).lst $$^
 
 endef

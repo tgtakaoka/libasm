@@ -53,6 +53,7 @@ StrBuffer &outRegName(StrBuffer &out, RegName name);
 bool isGeneralReg(RegName name);
 bool isAc03Reg(RegName name);
 bool isFloatReg(RegName name);
+Config::opcode_t encodeRegNo(RegName reg);
 RegName decodeGeneralReg(uint8_t regno);
 RegName decodeFloatReg(uint8_t regno);
 

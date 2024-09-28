@@ -84,6 +84,12 @@ bool isFloatReg(RegName name) {
     return num >= REG_AC0;
 }
 
+Config::opcode_t encodeRegNo(RegName name) {
+    // Rn and ACn have the same register number.
+    const auto num = int8_t(name);
+    return num & 7;
+}
+
 RegName decodeGeneralReg(uint8_t regno) {
     return RegName(regno & 7);
 }
