@@ -185,6 +185,10 @@ struct Ns32000NumberParser final : NationalNumberParser, Singleton<Ns32000Number
     Ns32000NumberParser() : NationalNumberParser(/* 'X','H' */ 0, 'B', /* 'O' or */ 'Q', 'D') {}
 };
 
+struct Pdp11NumberParser final : NumberParser, Singleton<Pdp11NumberParser> {
+    Error parseNumber(StrScanner &scan, Value &val, Radix defaultRadix) const override;
+};
+
 }  // namespace libasm
 
 #endif

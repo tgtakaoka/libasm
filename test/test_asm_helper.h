@@ -77,6 +77,7 @@ void run_test(void (*test)(), const char *name, void (*set_up)(), void (*tear_do
 #define ACOMM(addr, src, remain, ...) AERRT(addr, src, OK, remain, __VA_ARGS__)
 #define BERRT(src, error, at, ...) BVASSERT(error, at, 0x0000, src, ##__VA_ARGS__)
 #define BTEST(src, ...) BERRT(src, OK, "", __VA_ARGS__)
+#define BCOMM(src, remain, ...) BERRT(src, OK, remain, ##__VA_ARGS__)
 
 #define RUN_TEST(test) run_test(test, #test, set_up, tear_down)
 
