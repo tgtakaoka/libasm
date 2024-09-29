@@ -24,11 +24,6 @@ namespace pdp8 {
 
 using namespace reg;
 
-namespace {
-const char OPT_BOOL_IGNORE_LITERAL[] PROGMEM = "ignore-literal";
-const char OPT_DESC_IGNORE_LITERAL[] PROGMEM = "Ignore literal constant";
-}  // namespace
-
 const ValueFormatter::Plugins &DisPdp8::defaultPlugins() {
     static const struct fianl : ValueFormatter::Plugins {
         const /*PROGMEM*/ char *lineComment_P() const override { return PSTR("/"); }
@@ -36,38 +31,21 @@ const ValueFormatter::Plugins &DisPdp8::defaultPlugins() {
     return PLUGINS;
 }
 
-DisPdp8::DisPdp8(const ValueFormatter::Plugins &plugins)
-    : Disassembler(plugins, &_opt_ignoreliteral),
-      Config(TABLE),
-      _opt_ignoreliteral(this, &DisPdp8::setIgnoreliteral, OPT_BOOL_IGNORE_LITERAL,
-              OPT_DESC_IGNORE_LITERAL) {
+DisPdp8::DisPdp8(const ValueFormatter::Plugins &plugins) : Disassembler(plugins), Config(TABLE) {
     reset();
 }
 
 void DisPdp8::reset() {
     Disassembler::reset();
-    setIgnoreliteral(false);
     setListRadix(RADIX_8);
-}
-
-Error DisPdp8::setIgnoreliteral(bool enable) {
-    _ignoreliteral = enable;
-    return OK;
 }
 
 Error DisPdp8::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) const {
     DisInsn insn(_insn, memory, out);
     const auto opc = insn.readUint16();
     insn.setOpCode(opc);
-    if (TABLE.searchOpCode(cpuType(), insn, out)) {
-        if (!_ignoreliteral) {
-            insn.setOK();
-            out.reset();
-            outHex(insn.nameBuffer().reset().over(out), insn.opCode(), opCodeWidth())
-                    .over(insn.nameBuffer());
-        }
+    if (TABLE.searchOpCode(cpuType(), insn, out))
         return _insn.setError(insn);
-    }
     const auto mode = insn.mode();
     if (mode == M_MEM) {
         if (opc & 0400)

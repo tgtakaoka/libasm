@@ -31,6 +31,7 @@ void test_asm_im6100() {
 
     ASM("im6100",
             R"(        cpu   im6100
+        option "implicit-word", "on"
 / comment line
         *0400
         tad   i 0105   / comment
@@ -44,6 +45,7 @@ symbol=0474
         spa   sna szl cla hlt
 )",
             R"(          0 :                            cpu   im6100
+          0 :                            option "implicit-word", "on"
           0 :                    / comment line
         400 :                            *0400
         400 : 1505                       tad   i 0105   / comment
@@ -63,6 +65,7 @@ void test_asm_hd6120() {
 
     ASM("hd6120",
             R"(        cpu   hd6120
+        option "implicit-word", "on"
 / comment line
         *0400
         tad   i 0105   / comment
@@ -80,6 +83,7 @@ symbol=0474
         cdf   cif 7
 )",
             R"(          0 :                            cpu   hd6120
+          0 :                            option "implicit-word", "on"
           0 :                    / comment line
         400 :                            *0400
         400 : 1505                       tad   i 0105   / comment
@@ -101,7 +105,7 @@ symbol=0474
 void test_dis_im6100() {
     PREP_DIS(pdp8::DisPdp8);
 
-    driver.setOption("ignore-literal", "on");
+    driver.setOption("implicit-word", "off");
 
     DIS16("im6100", 0400,
             R"(      cpu   6100
@@ -130,36 +134,32 @@ test.bin: error: Invalid instruction combination
 )",
             01505, 07175, 04274, 05201, 07777, 07023, 07772);
 
-    driver.setOption("ignore-literal", "off");
+    driver.setOption("implicit-word", "on");
 
     DIS16("im6100", 0400,
             R"(      cpu   6100
       org   0400
       tad   i 0105
-      7175
       jms   0474
       jmp   0401
-      7777
       cml   bsw iac
       spa   sna szl cla hlt
 )",
             R"(       0 :                            cpu   6100
      400 :                            org   0400
      400 : 1505                       tad   i 0105
-     401 : 7175                       7175
-     402 : 4274                       jms   0474
-     403 : 5201                       jmp   0401
-     404 : 7777                       7777
-     405 : 7023                       cml   bsw iac
-     406 : 7772                       spa   sna szl cla hlt
+     401 : 4274                       jms   0474
+     402 : 5201                       jmp   0401
+     403 : 7023                       cml   bsw iac
+     404 : 7772                       spa   sna szl cla hlt
 )",
-            01505, 07175, 04274, 05201, 07777, 07023, 07772);
+            01505, 04274, 05201, 07023, 07772);
 }
 
 void test_dis_hd6120() {
     PREP_DIS(pdp8::DisPdp8);
 
-    driver.setOption("ignore-literal", "on");
+    driver.setOption("implicit-word", "off");
 
     DIS16("hd6120", 070400,
             R"(      cpu   6120
@@ -186,7 +186,7 @@ test.bin: error: Invalid instruction combination
 )",
             01505, 07175, 04274, 05201, 07777, 07023, 07772);
 
-    driver.setOption("ignore-literal", "off");
+    driver.setOption("implicit-word", "on");
 
     DIS16("hd6120", 070400,
             R"(      cpu   6120
@@ -195,7 +195,6 @@ test.bin: error: Invalid instruction combination
       stl   cia r3l
       jms   70474
       jmp   70401
-      7777
       cml   bsw iac
       spa   sna szl cla hlt
 )",
@@ -205,11 +204,10 @@ test.bin: error: Invalid instruction combination
    70401 : 7175                       stl   cia r3l
    70402 : 4274                       jms   70474
    70403 : 5201                       jmp   70401
-   70404 : 7777                       7777
-   70405 : 7023                       cml   bsw iac
-   70406 : 7772                       spa   sna szl cla hlt
+   70404 : 7023                       cml   bsw iac
+   70405 : 7772                       spa   sna szl cla hlt
 )",
-            01505, 07175, 04274, 05201, 07777, 07023, 07772);
+            01505, 07175, 04274, 05201, 07023, 07772);
 }
 
 void run_tests() {

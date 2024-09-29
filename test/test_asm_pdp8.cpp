@@ -626,6 +626,7 @@ void test_comment() {
     COMM("CML BSW    ; comment", "; comment", 07022);
     COMM("CML BSW IAC/ comment", "/ comment", 07023);
 
+    TEST(R"(option "implicit-word", "on")");
     COMM(" 7+5        / comment", "/ comment", 00014);
     COMM("DUBL 10     ; comment", "; comment", 00000, 00012);
     COMM("TEXT /TEXT/ / comment", "/ comment", 02405, 03024, 0000);
@@ -662,6 +663,10 @@ void test_error() {
 }
 
 void test_data_constant() {
+    ERUI("0");
+    ERUI("UNDEF");
+
+    TEST(R"(option "implicit-word", "on")");
     TEST( "   0", 00000);
     TEST( "  10", 00010);
     TEST( " 7+5", 00014);

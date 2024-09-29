@@ -29,13 +29,7 @@ struct DisPdp8 final : Disassembler, Config {
 
     void reset() override;
 
-    Error setIgnoreliteral(bool enable);
-
 private:
-    const BoolOption<DisPdp8> _opt_ignoreliteral;
-
-    bool _ignoreliteral;
-
     Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) const override;
     const ConfigBase &config() const override { return *this; }
     ConfigSetter &configSetter() override { return *this; }

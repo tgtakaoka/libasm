@@ -29,7 +29,13 @@ struct AsmPdp8 final : Assembler, Config {
 
     void reset() override;
 
+    Error setImplicitWord(bool enable);
+
 private:
+    const BoolOption<AsmPdp8> _opt_implicitWord;
+
+    bool _implicitWord;
+
     Error setInputRadix(StrScanner &scan, Insn &insn, uint8_t extra);
     Error defineDoubleDecimal(StrScanner &scan, Insn &insn, uint8_t extra = 0);
     Error alignOnPage(StrScanner &scan, Insn &insn, uint8_t extra = 0);

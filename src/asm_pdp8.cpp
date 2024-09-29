@@ -30,6 +30,9 @@ using namespace text::common;
 namespace {
 
 // clang-format off
+constexpr char OPT_BOOL_IMPLICIT_WORD[] PROGMEM = "implicit-word";
+constexpr char OPT_DESC_IMPLICIT_WORD[] PROGMEM = "unknown instruction defines word";
+
 constexpr char TEXT_star[]    PROGMEM = "*";
 constexpr char TEXT_OCTAL[]   PROGMEM = "OCTAL";
 constexpr char TEXT_DECIMAL[] PROGMEM = "DECIMAL";
@@ -60,7 +63,7 @@ private:
     Radix _radix;
 } NUMBER_PARSER;
 
-struct DecSymbolParser final : SymbolParser {
+struct Pdp8SymbolParser final : SymbolParser {
     bool labelDelimitor(StrScanner &scan) const override { return scan.expect(','); }
     bool instructionLetter(char c) const override {
         return SymbolParser::symbolLetter(c) || c == '*' || c == '=';
@@ -68,7 +71,7 @@ struct DecSymbolParser final : SymbolParser {
     bool instructionTerminator(char c) const override { return c == '*' || c == '='; }
 };
 
-struct DecLetterParser final : LetterParser {
+struct Pdp8LetterParser final : LetterParser {
     Error parseLetter(StrScanner &scan, char &letter) const override {
         if (*scan == '\'')
             return LetterParser::parseLetter(scan, letter);
@@ -97,7 +100,7 @@ struct DecLetterParser final : LetterParser {
     }
 };
 
-struct DecCommentParser final : CommentParser {
+struct Pdp8CommentParser final : CommentParser {
     bool endOfLine(StrScanner &scan) const override {
         return *scan == 0 || *scan == '/' || *scan == ';';
     };
@@ -113,28 +116,37 @@ const ValueParser::Plugins &AsmPdp8::defaultPlugins() {
         const CommentParser &comment() const override { return _comment; }
         const OperatorParser &operators() const override { return DecOperatorParser::singleton(); }
         const LocationParser &location() const override { return _location; }
-        const DecSymbolParser _symbol{};
-        const DecLetterParser _letter{};
-        const DecCommentParser _comment{};
+        const Pdp8SymbolParser _symbol{};
+        const Pdp8LetterParser _letter{};
+        const Pdp8CommentParser _comment{};
         const SimpleLocationParser _location{PSTR_DOT_DOLLAR};
     } PLUGINS{};
     return PLUGINS;
 }
 
 AsmPdp8::AsmPdp8(const ValueParser::Plugins &plugins)
-    : Assembler(plugins, PSEUDO_TABLE), Config(TABLE) {
+    : Assembler(plugins, PSEUDO_TABLE, &_opt_implicitWord),
+      Config(TABLE),
+      _opt_implicitWord(
+              this, &AsmPdp8::setImplicitWord, OPT_BOOL_IMPLICIT_WORD, OPT_DESC_IMPLICIT_WORD) {
     reset();
 }
 
 void AsmPdp8::reset() {
     Assembler::reset();
     setListRadix(RADIX_8);
+    setImplicitWord(false);
 }
 
 Error AsmPdp8::setInputRadix(StrScanner &scan, Insn &insn, uint8_t extra) {
     UNUSED(scan);
     UNUSED(insn);
     NUMBER_PARSER.setRadix(static_cast<Radix>(extra));
+    return OK;
+}
+
+Error AsmPdp8::setImplicitWord(bool enable) {
+    _implicitWord = enable;
     return OK;
 }
 
@@ -357,7 +369,8 @@ Error AsmPdp8::encodeImpl(StrScanner &scan, Insn &_insn) const {
         } else if (mode == M_MEX) {
             parseMemExtensionOperand(scan, insn);
         }
-    } else {
+        insn.emitInsn();
+    } else if (_implicitWord) {
         StrScanner p = _insn.errorAt();
         insn.setOK();  // clear UNKNOWN_INSTRUCTION
         const auto opc = parseInteger(p, insn);
@@ -369,9 +382,8 @@ Error AsmPdp8::encodeImpl(StrScanner &scan, Insn &_insn) const {
             insn.setError(_insn.errorAt(), OVERFLOW_RANGE);
         insn.setOpCode(opc.getUnsigned() & 07777);
         scan = p;
+        insn.emitInsn();
     }
-
-    insn.emitInsn();
     return _insn.setError(insn);
 }
 
