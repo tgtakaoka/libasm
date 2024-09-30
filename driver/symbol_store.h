@@ -48,10 +48,10 @@ struct SymbolStoreImpl final : SymbolStore {
     void clearFunctions();
 
     // SymbolTable
-    const char *lookupValue(symval_t) const override { return nullptr; }
+    const char *lookupValue(const Value &) const override { return nullptr; }
     bool hasSymbol(const StrScanner &name) const override;
-    symval_t lookupSymbol(const StrScanner &symbol) const override;
-    const void *lookupFunction(const StrScanner &name) const override;
+    const Value *lookupSymbol(const StrScanner &symbol) const override;
+    const Functor *lookupFunction(const StrScanner &name) const override;
 
     bool hasValue(const StrScanner &symbol, bool variable) const override;
     Error internSymbol(
@@ -62,8 +62,8 @@ struct SymbolStoreImpl final : SymbolStore {
             const StrScanner &body, const ValueParser &parser) override;
 
 private:
-    std::map<std::string, symval_t, std::less<>> _symbols;
-    std::map<std::string, symval_t, std::less<>> _variables;
+    std::map<std::string, Value> _symbols;
+    std::map<std::string, Value> _variables;
     FunctionStore _functions;
 };
 

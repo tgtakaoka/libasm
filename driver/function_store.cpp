@@ -49,12 +49,9 @@ bool FunctionStore::hasFunction(const StrScanner &_name) const {
     return lookupFunction(_name) != nullptr;
 }
 
-const void *FunctionStore::lookupFunction(const StrScanner &name) const {
+const Functor *FunctionStore::lookupFunction(const StrScanner &name) const {
     auto it = _functions.find(std::string(name.str(), name.size()));
-    if (it == _functions.end())
-        return nullptr;
-    const Function *fn = &it->second;
-    return reinterpret_cast<const void *>(fn);
+    return it == _functions.end() ? nullptr : &it->second;
 }
 
 Error FunctionStore::internFunction(const StrScanner &name_, const Parameters &params,
@@ -76,14 +73,14 @@ bool FunctionStore::Binding::hasSymbol(const StrScanner &symbol) const {
            parent->hasSymbol(symbol);
 }
 
-SymbolTable::symval_t FunctionStore::Binding::lookupSymbol(const StrScanner &symbol) const {
+const Value *FunctionStore::Binding::lookupSymbol(const StrScanner &symbol) const {
     const auto it = paramsAt.find(std::string(symbol.str(), symbol.size()));
     if (it == paramsAt.end())
         return parent->lookupSymbol(symbol);
-    return stack.at(it->second).getSigned();
+    return &stack.at(it->second);
 }
 
-const void *FunctionStore::Binding::lookupFunction(const StrScanner &symbol) const {
+const Functor *FunctionStore::Binding::lookupFunction(const StrScanner &symbol) const {
     return parent->lookupFunction(symbol);
 }
 

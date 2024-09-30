@@ -37,7 +37,7 @@ struct FunctionStore final {
     void clear();
 
     bool hasFunction(const StrScanner &name) const;
-    const void *lookupFunction(const StrScanner &symbol) const;
+    const Functor *lookupFunction(const StrScanner &symbol) const;
 
     using Parameters = std::list<StrScanner>;
     Error internFunction(const StrScanner &name, const Parameters &params, const StrScanner &body,
@@ -71,8 +71,8 @@ private:
         Binding(const ParametersAt &paramsAt_, const ValueStack &stack_, const SymbolTable *parent_)
             : paramsAt(paramsAt_), stack(stack_), parent(parent_) {}
         bool hasSymbol(const StrScanner &symbol) const override;
-        symval_t lookupSymbol(const StrScanner &symbol) const override;
-        const void *lookupFunction(const StrScanner &symbol) const override;
+        const Value *lookupSymbol(const StrScanner &symbol) const override;
+        const Functor *lookupFunction(const StrScanner &symbol) const override;
 
     private:
         const ParametersAt &paramsAt;

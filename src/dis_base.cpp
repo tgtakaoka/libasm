@@ -148,9 +148,13 @@ Error Disassembler::decode(
 const char *Disassembler::lookup(uint32_t addr, uint8_t addrWidth) const {
     const char *symbol = nullptr;
     if (_symtab) {
-        symbol = _symtab->lookupValue(addr);
-        if (!symbol)
-            symbol = _symtab->lookupValue(config().signExtend(addr, addrWidth));
+        Value val;
+        val.setUnsigned(addr);
+        symbol = _symtab->lookupValue(val);
+        if (!symbol) {
+            val.setSigned(config().signExtend(addr, addrWidth));
+            symbol = _symtab->lookupValue(val);
+        }
     }
     return symbol;
 }

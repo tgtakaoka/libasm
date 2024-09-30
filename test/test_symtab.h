@@ -22,13 +22,15 @@
 #include <map>
 #include <string>
 
+#include "operators.h"
 #include "symbol_table.h"
+#include "value.h"
 
 namespace libasm {
 namespace test {
 
 struct TestSymtab final : SymbolTable {
-    const char *lookupValue(symval_t val) const override {
+    const char *lookupValue(const Value &val) const override {
         auto it = _values.find(val);
         return it == _values.end() ? nullptr : it->second.c_str();
     }
@@ -38,24 +40,30 @@ struct TestSymtab final : SymbolTable {
         return _symbols.find(key) != _symbols.end();
     }
 
-    symval_t lookupSymbol(const StrScanner &symbol) const override {
+    const Value *lookupSymbol(const StrScanner &symbol) const override {
         const std::string key(symbol.str(), symbol.size());
         auto it = _symbols.find(key);
-        return it == _symbols.end() ? 0 : it->second;
+        return it == _symbols.end() ? nullptr : &it->second;
     }
 
-    const void *lookupFunction(const StrScanner &symbol) const override {
+    const Functor *lookupFunction(const StrScanner &symbol) const override {
         const std::string key(symbol.str(), symbol.size());
         auto it = _functions.find(key);
         return it == _functions.end() ? nullptr : it->second;
     }
 
-    void intern(int32_t s, const std::string &key) {
-        _symbols[key] = s;
-        _values[s] = key;
+    void intern(int32_t val, const std::string &key) {
+        Value v;
+        v.setSigned(val);
+        intern(v, key);
     }
 
-    void internFunction(const void *value, const std::string &key) { _functions[key] = value; }
+    void intern(const Value &val, const std::string &key) {
+        _symbols[key] = val;
+        _values[val] = key;
+    }
+
+    void internFunction(const Functor *fn, const std::string &key) { _functions[key] = fn; }
 
     void reset() {
         _symbols.clear();
@@ -64,9 +72,9 @@ struct TestSymtab final : SymbolTable {
     }
 
 private:
-    std::map<std::string, symval_t, std::less<>> _symbols;
-    std::map<symval_t, std::string> _values;
-    std::map<std::string, const void *, std::less<>> _functions;
+    std::map<std::string, Value> _symbols;
+    std::map<const Value, std::string> _values;
+    std::map<std::string, const Functor *> _functions;
 };
 
 }  // namespace test
