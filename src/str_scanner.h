@@ -24,6 +24,8 @@
 namespace libasm {
 
 struct StrScanner {
+    StrScanner() { empty(); }
+
     /** construct from C-string |str| to end of it. */
     StrScanner(const char *str) : _str(str), _end(str + strlen(str)) {}
 
@@ -31,7 +33,7 @@ struct StrScanner {
     constexpr StrScanner(const char *str, const char *end) : _str(str), _end(end) {}
 
     /** copy construct from |scan|, or |EMPTY|. */
-    constexpr StrScanner(const StrScanner &scan = EMPTY) : _str(scan._str), _end(scan._end) {}
+    constexpr StrScanner(const StrScanner &scan) : _str(scan._str), _end(scan._end) {}
 
     /** assignment. */
     StrScanner &operator=(const StrScanner &scan) {
@@ -39,6 +41,8 @@ struct StrScanner {
         _end = scan._end;
         return *this;
     }
+
+    void empty() { _str = _end = ""; }
 
     /** return head of underlying string. */
     constexpr const char *str() const { return _str; }
@@ -163,8 +167,6 @@ struct StrScanner {
 
     /** return true if this equals to |text_P| with ignore case. */
     bool iequals_P(const /*PROGMEM*/ char *text_P) const;
-
-    static const StrScanner EMPTY;
 
 private:
     /** |str| must not be greater than |_end|. */

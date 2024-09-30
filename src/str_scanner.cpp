@@ -20,8 +20,6 @@
 
 namespace libasm {
 
-const StrScanner StrScanner::EMPTY("");
-
 bool StrScanner::iequals(const StrScanner &text) const {
     const auto len = text.size();
     return size() == len && strncasecmp(str(), text.str(), len) == 0;
