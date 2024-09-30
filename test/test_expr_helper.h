@@ -30,6 +30,7 @@ namespace test {
 
 extern TestSymtab symtab;
 extern TestAsserter asserter;
+extern ParserContext context;
 
 void val_assert(const char *file, int line, StrScanner &expr, char delim, uint32_t expected,
         const ErrorAt &expected_error, size_t size, const ValueParser &);
@@ -43,11 +44,6 @@ void hex_assert(const char *file, int line, uint32_t value, int8_t bitWidth, con
         const ValueFormatter &, bool uppercase = false, bool relax = false);
 
 void run_test(void (*test)(), const char *name, void (*set_up)(), void (*tear_down)());
-
-struct TestLocator : ValueParser::Locator {
-    uint32_t location = 0;
-    uint32_t currentLocation() const override { return location; }
-};
 
 }  // namespace test
 }  // namespace libasm

@@ -31,8 +31,8 @@
 
 namespace libasm {
 
-struct Assembler : private ValueParser::Locator {
-    Error encode(const char *line, Insn &insn, SymbolTable *symtab = nullptr);
+struct Assembler {
+    Error encode(const char *line, Insn &insn, const SymbolTable *symtab = nullptr);
     virtual const ConfigBase &config() const = 0;
     virtual void reset();
 
@@ -100,7 +100,7 @@ protected:
 
     Radix _listRadix;
     bool _smartBranch;
-    SymbolTable *_symtab;
+    const SymbolTable *_symtab;
     uint32_t _currentLocation;
 
     Assembler(const ValueParser::Plugins &plugins, const pseudo::Pseudos &pseudos,

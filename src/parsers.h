@@ -20,7 +20,6 @@
 #include "error_reporter.h"
 #include "operators.h"
 #include "str_scanner.h"
-#include "symbol_table.h"
 #include "value.h"
 
 namespace libasm {
@@ -54,10 +53,7 @@ struct SymbolParser : Singleton<SymbolParser> {
     virtual bool instructionLetter(char c) const { return symbolLetter(c); }
 
     /** Instruction terminates when this returns true */
-    virtual bool instructionTerminator(char c) const {
-        UNUSED(c);
-        return false;
-    }
+    virtual bool instructionTerminator(char) const { return false; }
 
     /** Function name is same as symbol */
     virtual bool functionNameLetter(char c) const { return symbolLetter(c); }
@@ -70,10 +66,7 @@ struct FunctionTable : Singleton<FunctionTable> {
     /**
      * Look up |name| and returns a Functor pointer for a function, otherwise return nullptr.
      */
-    virtual const Functor *lookupFunction(const StrScanner &name) const {
-        UNUSED(name);
-        return nullptr;
-    }
+    virtual const Functor *lookupFunction(const StrScanner &) const { return nullptr; }
 };
 
 /**
@@ -95,10 +88,7 @@ struct LetterParser {
      * Returns true and consumes prefix for a letter surrounded by letterdelimiters. Also returns
      * true if no prefix is required.
      */
-    virtual bool letterPrefix(StrScanner &scan) const {
-        UNUSED(scan);
-        return true;
-    }
+    virtual bool letterPrefix(StrScanner &) const { return true; }
 
     /**
      * Returns a delimiters for a letter and cosume it. Returns zero if no delimiter exists.
@@ -117,10 +107,7 @@ struct LetterParser {
      * Returns true and consumes prefix for a string surrounded by string delimiters. Also returns
      * true if no prefix is required.
      */
-    virtual bool stringPrefix(StrScanner &scan) const {
-        UNUSED(scan);
-        return true;
-    }
+    virtual bool stringPrefix(StrScanner &) const { return true; }
 
     /**
      * Returns a delimiter which encloses a string and cosume it. Returns zero if no delimiter

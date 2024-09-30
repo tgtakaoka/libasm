@@ -19,8 +19,7 @@
 using namespace libasm;
 using namespace libasm::test;
 
-TestLocator locator{};
-const ValueParser parser{ValueParser::Plugins::singleton(), locator};
+const ValueParser parser{ValueParser::Plugins::singleton()};
 
 const ValueFormatter formatter{ValueFormatter::Plugins::cstyle()};
 
@@ -409,7 +408,7 @@ static void test_symbol() {
 }
 
 static void test_current_address() {
-    locator.location = 0x1000;
+    context.currentLocation = 0x1000;
     E16("$",       0x1000);
     E16("$+2",     0x1002);
     E16("$-2",     0x0FFE);
@@ -419,7 +418,7 @@ static void test_current_address() {
     E32("$-0x1001", 0xFFFFFFFF);
 
     symtab.intern(0x1000, "table");
-    locator.location = 0x1100;
+    context.currentLocation = 0x1100;
     E16("$-table",     0x100);
     E16("($-table)/2", 0x080);
 }
@@ -428,14 +427,14 @@ static void test_function() {
     // clang-format on
     static const struct : Functor {
         int8_t nargs() const override { return 0; }
-        Error eval(ValueStack &stack, uint8_t argc) const override {
+        Error eval(ValueStack &stack, ParserContext &, uint8_t) const override {
             stack.pushUnsigned(0x31415926);
             return OK;
         }
     } FN_PI;
     static const struct : Functor {
         int8_t nargs() const override { return 2; }
-        Error eval(ValueStack &stack, uint8_t argc) const override {
+        Error eval(ValueStack &stack, ParserContext &, uint8_t) const override {
             const auto rhs = stack.pop().getSigned();
             const auto lhs = stack.pop().getSigned();
             stack.pushSigned(lhs - rhs);
@@ -443,7 +442,7 @@ static void test_function() {
         }
     } FN_SUB;
     static const struct : Functor {
-        Error eval(ValueStack &stack, uint8_t argc) const override {
+        Error eval(ValueStack &stack, ParserContext &, uint8_t argc) const override {
             int32_t sum = 0;
             while (argc--)
                 sum += stack.pop().getSigned();

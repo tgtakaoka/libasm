@@ -46,7 +46,7 @@ PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
 
 Assembler::Assembler(
         const ValueParser::Plugins &plugins, const Pseudos &pseudos, const OptionBase *option)
-    : _parser(plugins, *this),
+    : _parser(plugins),
       _pseudos(pseudos),
       _commonOptions(&_opt_listRadix),
       _options(option),
@@ -77,7 +77,7 @@ Error Assembler::setCurrentLocation(uint32_t location, bool align) {
     return config().checkAddr(_currentLocation = location, align);
 }
 
-Error Assembler::encode(const char *line, Insn &insn, SymbolTable *symtab) {
+Error Assembler::encode(const char *line, Insn &insn, const SymbolTable *symtab) {
     _symtab = symtab;
     StrScanner scan{line};
     insn.setError(scan.skipSpaces(), OK);
@@ -113,7 +113,7 @@ Error Assembler::processPseudo(StrScanner &scan, Insn &insn) {
 
 Value Assembler::parseInteger(StrScanner &expr, ErrorAt &error, char delim) const {
     auto p = expr;
-    const auto value = _parser.eval(p, error, _symtab, delim);
+    const auto value = parseExpr(p, error, delim);
     if (value.isFloat())
         error.setErrorIf(expr, INTEGER_REQUIRED);
     expr = p;
@@ -121,7 +121,8 @@ Value Assembler::parseInteger(StrScanner &expr, ErrorAt &error, char delim) cons
 }
 
 Value Assembler::parseExpr(StrScanner &expr, ErrorAt &error, char delim) const {
-    return _parser.eval(expr, error, _symtab, delim);
+    ParserContext context{_currentLocation, _symtab, delim};
+    return _parser.eval(expr, error, context);
 }
 
 int32_t Assembler::branchDelta(
