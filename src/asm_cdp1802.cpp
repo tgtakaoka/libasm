@@ -43,7 +43,7 @@ PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
  * RCA style numbers are the same as IBM plus '#hh' for hexadecimal.
  */
 struct RcaNumberParser final : NumberParser {
-    Error parseNumber(StrScanner &scan, Value &val) const override {
+    Error parseNumber(StrScanner &scan, Value &val, Radix defaultRadix) const override {
         auto p = scan;
         if (*p == '#' && isxdigit(p[1])) {
             const auto error = val.read(++p, RADIX_16);
@@ -51,7 +51,7 @@ struct RcaNumberParser final : NumberParser {
                 scan = p;
             return error;
         }
-        return _ibm.parseNumber(scan, val);
+        return _ibm.parseNumber(scan, val, defaultRadix);
     }
 
 private:

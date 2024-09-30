@@ -98,6 +98,7 @@ protected:
     const BoolOption<Assembler> _opt_smartBranch;
     const TextOption<Assembler> _opt_fpu;
 
+    Radix _inputRadix;
     Radix _listRadix;
     bool _smartBranch;
     const SymbolTable *_symtab;
@@ -105,6 +106,11 @@ protected:
 
     Assembler(const ValueParser::Plugins &plugins, const pseudo::Pseudos &pseudos,
             const OptionBase *option = nullptr);
+
+    Error setInputRadix(Radix radix) {
+        _inputRadix = radix;
+        return OK;
+    }
 
     int32_t branchDelta(uint32_t base, uint32_t target, ErrorAt &error, const ErrorAt &at) const;
 

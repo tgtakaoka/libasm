@@ -45,22 +45,6 @@ constexpr Pseudo PSEUDOS[] PROGMEM = {
 // clang-format on
 PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
 
-struct RadixNumberParser final : NumberParser {
-    RadixNumberParser() : _radix(RADIX_8) {}
-    Radix radix() const { return _radix; }
-    void setRadix(Radix radix) { _radix = radix; }
-    Error parseNumber(StrScanner &scan, Value &val) const {
-        auto p = scan;
-        const auto radix = IntelNumberParser::hasSuffix(p);
-        if (radix != RADIX_NONE)
-            return IntelNumberParser::singleton().parseNumber(scan, val, radix, p);
-        return val.read(scan, _radix);
-    }
-
-private:
-    Radix _radix;
-} NUMBER_PARSER;
-
 struct Pdp8SymbolParser final : SymbolParser {
     bool labelDelimitor(StrScanner &scan) const override { return scan.expect(','); }
     bool instructionLetter(char c) const override {
@@ -125,7 +109,7 @@ struct Pdp8OperatorParser final : OperatorParser, Singleton<Pdp8OperatorParser> 
 
 const ValueParser::Plugins &AsmPdp8::defaultPlugins() {
     static const struct final : ValueParser::Plugins {
-        const NumberParser &number() const override { return NUMBER_PARSER; }
+        const NumberParser &number() const override { return IntelNumberParser::singleton(); }
         const SymbolParser &symbol() const override { return _symbol; }
         const LetterParser &letter() const override { return _letter; }
         const CommentParser &comment() const override { return _comment; }
@@ -149,15 +133,9 @@ AsmPdp8::AsmPdp8(const ValueParser::Plugins &plugins)
 
 void AsmPdp8::reset() {
     Assembler::reset();
+    setInputRadix(RADIX_8);
     setListRadix(RADIX_8);
     setImplicitWord(false);
-}
-
-Error AsmPdp8::setInputRadix(StrScanner &scan, Insn &insn, uint8_t extra) {
-    UNUSED(scan);
-    UNUSED(insn);
-    NUMBER_PARSER.setRadix(static_cast<Radix>(extra));
-    return OK;
 }
 
 Error AsmPdp8::setImplicitWord(bool enable) {
@@ -167,8 +145,8 @@ Error AsmPdp8::setImplicitWord(bool enable) {
 
 Error AsmPdp8::defineDoubleDecimal(StrScanner &scan, Insn &insn, uint8_t extra) {
     UNUSED(extra);
-    const auto radix = NUMBER_PARSER.radix();
-    NUMBER_PARSER.setRadix(RADIX_10);
+    const auto radix = _inputRadix;
+    setInputRadix(RADIX_10);
     const auto save = scan;
     const auto val = parseInteger(scan, insn);
     constexpr auto UINT24_MAX = INT32_C(0x00FF'FFFF);
@@ -180,7 +158,7 @@ Error AsmPdp8::defineDoubleDecimal(StrScanner &scan, Insn &insn, uint8_t extra) 
         insn.setErrorIf(insn.emitUint16Be((val24 >> 12) & 07777));
         insn.setErrorIf(insn.emitUint16Be(val24 & 07777));
     }
-    NUMBER_PARSER.setRadix(radix);
+    setInputRadix(radix);
     return insn.getError();
 }
 
@@ -393,9 +371,9 @@ Error AsmPdp8::defineDec6String(StrScanner &scan, Insn &insn) {
 
 Error AsmPdp8::processPseudo(StrScanner &scan, Insn &insn) {
     if (strcasecmp_P(insn.name(), TEXT_OCTAL) == 0)
-        return setInputRadix(scan, insn, RADIX_8);
+        return setInputRadix(RADIX_8);
     if (strcasecmp_P(insn.name(), TEXT_DECIMAL) == 0)
-        return setInputRadix(scan, insn, RADIX_10);
+        return setInputRadix(RADIX_10);
     if (strcasecmp_P(insn.name(), TEXT_DUBL) == 0)
         return defineDoubleDecimal(scan, insn);
     if (strcasecmp_P(insn.name(), TEXT_PAGE) == 0)

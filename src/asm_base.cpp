@@ -59,6 +59,7 @@ Assembler::Assembler(
 }
 
 void Assembler::reset() {
+    setInputRadix(RADIX_10);
     setListRadix(RADIX_16);
     setSmartBranch(false);
 }
@@ -121,7 +122,7 @@ Value Assembler::parseInteger(StrScanner &expr, ErrorAt &error, char delim) cons
 }
 
 Value Assembler::parseExpr(StrScanner &expr, ErrorAt &error, char delim) const {
-    ParserContext context{_currentLocation, _symtab, delim};
+    ParserContext context{_currentLocation, _symtab, delim, _inputRadix};
     return _parser.eval(expr, error, context);
 }
 

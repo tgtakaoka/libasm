@@ -23,7 +23,9 @@ const ValueParser parser{ValueParser::Plugins::singleton()};
 
 const ValueFormatter formatter{ValueFormatter::Plugins::cstyle()};
 
-static void set_up() {}
+static void set_up() {
+    context.defaultRadix = RADIX_10;
+}
 
 static void tear_down() {
     symtab.reset();
@@ -65,6 +67,15 @@ static void test_dec_constant() {
     E32("4294967295", 0xffffffff);
     X32("4294967296", OVERFLOW_RANGE, "4294967296", "");
     X32("9999999999", OVERFLOW_RANGE, "9999999999", "");
+
+    context.defaultRadix = RADIX_16;
+    E32("101", 0x101);
+    context.defaultRadix = RADIX_10;
+    E32("101", 101);
+    context.defaultRadix = RADIX_8;
+    E32("101", 0101);
+    context.defaultRadix = RADIX_2;
+    E32("101", 0b101);
 }
 
 static void test_hex_constant() {

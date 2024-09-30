@@ -36,7 +36,6 @@ private:
 
     bool _implicitWord;
 
-    Error setInputRadix(StrScanner &scan, Insn &insn, uint8_t extra);
     Error defineDoubleDecimal(StrScanner &scan, Insn &insn, uint8_t extra = 0);
     Error alignOnPage(StrScanner &scan, Insn &insn, uint8_t extra = 0);
     Error defineField(StrScanner &scan, Insn &insn, uint8_t extra = 0);
