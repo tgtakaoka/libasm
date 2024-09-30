@@ -115,6 +115,8 @@ private:
 struct OperatorParser {
     virtual const Operator *readOperator(
             StrScanner &scan, ErrorAt &error, Operator::Type type) const = 0;
+    virtual bool isOpenExpr(StrScanner &scan) const { return scan.expect('('); }
+    virtual bool isCloseExpr(StrScanner &scan) const { return scan.expect(')'); }
 };
 
 struct CStyleOperatorParser final : OperatorParser, Singleton<CStyleOperatorParser> {
