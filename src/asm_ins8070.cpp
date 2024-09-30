@@ -74,24 +74,24 @@ AsmIns8070::AsmIns8070(const ValueParser::Plugins &plugins)
 namespace {
 
 const struct : Functor {
-    int8_t nargs() const override { return 1; }
-    Error eval(ValueStack &stack, uint8_t) const override {
+    int_fast8_t nargs() const override { return 1; }
+    Error eval(ValueStack &stack, ParserContext &, uint_fast8_t) const override {
         stack.pushUnsigned((stack.pop().getUnsigned() >> 8) & 0xFF);
         return OK;
     }
 } FN_HIGH;
 
 const struct : Functor {
-    int8_t nargs() const override { return 1; }
-    Error eval(ValueStack &stack, uint8_t) const override {
+    int_fast8_t nargs() const override { return 1; }
+    Error eval(ValueStack &stack, ParserContext &, uint_fast8_t) const override {
         stack.pushUnsigned(stack.pop().getUnsigned() & 0xFF);
         return OK;
     }
 } FN_LOW;
 
 const struct : Functor {
-    int8_t nargs() const override { return 1; }
-    Error eval(ValueStack &stack, uint8_t) const override {
+    int_fast8_t nargs() const override { return 1; }
+    Error eval(ValueStack &stack, ParserContext &, uint_fast8_t) const override {
         stack.pushUnsigned((stack.pop().getUnsigned() - 1) & 0xFFFF);
         return OK;
     }
@@ -111,7 +111,7 @@ const Functor *Ins8070FunctionTable::lookupFunction(const StrScanner &name) cons
 
 void AsmIns8070::emitAbsolute(AsmInsn &insn, const Operand &op) const {
     // PC will be +1 before fetching instruction.
-    const auto target = op.getError() ? 0 : op.val.getUnsigned()- 1;
+    const auto target = op.getError() ? 0 : op.val.getUnsigned() - 1;
     insn.emitOperand16(target);
 }
 

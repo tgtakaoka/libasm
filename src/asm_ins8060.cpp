@@ -74,24 +74,24 @@ AsmIns8060::AsmIns8060(const ValueParser::Plugins &plugins)
 namespace {
 
 const struct : Functor {
-    int8_t nargs() const override { return 1; }
-    Error eval(ValueStack &stack, uint8_t) const override {
+    int_fast8_t nargs() const override { return 1; }
+    Error eval(ValueStack &stack, ParserContext &, uint_fast8_t) const override {
         stack.pushUnsigned((stack.pop().getUnsigned() >> 8) & 0xFF);
         return OK;
     }
 } FN_HIGH;
 
 const struct : Functor {
-    int8_t nargs() const override { return 1; }
-    Error eval(ValueStack &stack, uint8_t) const override {
+    int_fast8_t nargs() const override { return 1; }
+    Error eval(ValueStack &stack, ParserContext &, uint_fast8_t) const override {
         stack.pushUnsigned(stack.pop().getUnsigned() & 0xFF);
         return OK;
     }
 } FN_LOW;
 
 const struct : Functor {
-    int8_t nargs() const override { return 1; }
-    Error eval(ValueStack &stack, uint8_t) const override {
+    int_fast8_t nargs() const override { return 1; }
+    Error eval(ValueStack &stack, ParserContext &, uint_fast8_t) const override {
         const auto v = stack.pop().getUnsigned();
         stack.pushUnsigned(page(v) | offset(v - 1));
         return OK;

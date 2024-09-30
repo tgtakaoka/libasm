@@ -55,20 +55,18 @@ struct OperatorStack : Stack<Operator, 8> {
     Operator &top() { return _contents[_size - 1]; }
 };
 
-Value ValueParser::eval(
-        StrScanner &scan, ErrorAt &error, const SymbolTable *symtab, char delim) const {
+Value ValueParser::eval(StrScanner &scan, ErrorAt &error, ParserContext &context) const {
     const auto start = scan.skipSpaces();
-    const auto value = _eval(scan, error, symtab, delim);
+    const auto value = _eval(scan, error, context);
     if (scan.str() == start.str())
         error.setErrorIf(start, NOT_AN_EXPECTED);
     return value;
 }
 
-Value ValueParser::_eval(
-        StrScanner &scan, ErrorAt &error, const SymbolTable *symtab, char delim) const {
+Value ValueParser::_eval(StrScanner &scan, ErrorAt &error, ParserContext &context) const {
     ValueStack vstack;
     OperatorStack ostack;
-    char end_of_expr = delim;
+    char end_of_expr = context.delimitor;
     uint8_t in_paren = 0;
     bool maybe_prefix = true;
     bool expect_fn_args = false;
@@ -93,29 +91,29 @@ Value ValueParser::_eval(
         }
         if (maybe_prefix && opr == nullptr) {
             Value val;
-            auto err = parseConstant(scan, val, delim);
+            auto err = parseConstant(scan, val, context);
             if (err == OK) {
                 if (vstack.full()) {
-                    error.setError(at, TOO_COMPLEX_EXPRESSION);
+                    error.setErrorIf(at, TOO_COMPLEX_EXPRESSION);
                     return Value();
                 }
                 vstack.push(val);
                 maybe_prefix = false;
                 continue;
             } else if (err != NOT_AN_EXPECTED) {
-                error.setError(at, err);
+                error.setErrorIf(at, err);
                 return val;
             }
 
             StrScanner symbol;
             if (readFunctionName(scan, symbol) == OK) {
                 auto fn = _function.lookupFunction(symbol);
-                if (fn == nullptr && symtab)
-                    fn = symtab->lookupFunction(symbol);
+                if (fn == nullptr && context.symbolTable)
+                    fn = context.symbolTable->lookupFunction(symbol);
                 if (fn) {
                     const auto open = scan.skipSpaces();
                     if (!_operators.isOpenExpr(scan)) {
-                        error.setError(at, MISSING_FUNC_ARGUMENT);
+                        error.setErrorIf(at, MISSING_FUNC_ARGUMENT);
                         return val;
                     }
                     scan = open;
@@ -132,12 +130,13 @@ Value ValueParser::_eval(
 
             if (readSymbol(scan, symbol) == OK) {
                 if (vstack.full()) {
-                    error.setError(at, TOO_COMPLEX_EXPRESSION);
+                    error.setErrorIf(at, TOO_COMPLEX_EXPRESSION);
                     return Value();
                 }
-                if (symtab && symtab->hasSymbol(symbol)) {
-                    const auto value = *symtab->lookupSymbol(symbol);
-                    vstack.push(value);
+                const auto *value =
+                        context.symbolTable ? context.symbolTable->lookupSymbol(symbol) : nullptr;
+                if (value) {
+                    vstack.push(*value);
                 } else {
                     error.setErrorIf(at, UNDEFINED_SYMBOL);
                     vstack.push(Value());
@@ -164,7 +163,7 @@ Value ValueParser::_eval(
                 if (!top.isHigher(*opr))
                     break;
                 const auto op = ostack.pop();
-                const auto err = op.eval(vstack);
+                const auto err = op.eval(vstack, context);
                 if (err) {
                     error.setErrorIf(op, err);
                     return Value();
@@ -184,7 +183,7 @@ Value ValueParser::_eval(
             // non-zero |in_fn_args| ensures the existence of open parenthesis in |ostack|.
             while (!ostack.top().isOpenParen()) {
                 const auto op = ostack.pop();
-                const auto err = op.eval(vstack);
+                const auto err = op.eval(vstack, context);
                 if (err) {
                     error.setErrorIf(op, err);
                     return Value();
@@ -217,7 +216,7 @@ Value ValueParser::_eval(
         if (_operators.isCloseExpr(scan)) {
             while (!ostack.empty() && !ostack.top().isOpenParen()) {
                 const auto op = ostack.pop();
-                const auto err = op.eval(vstack);
+                const auto err = op.eval(vstack, context);
                 if (err) {
                     error.setErrorIf(op, err);
                     return Value();
@@ -231,7 +230,7 @@ Value ValueParser::_eval(
             if (!ostack.empty() && ostack.top().isFunction()) {
                 const auto argc = vstack.size() - openParen.stackPosition();
                 const auto fn = ostack.pop();
-                const auto err = fn.eval(vstack, argc);
+                const auto err = fn.eval(vstack, context, argc);
                 if (err) {
                     error.setErrorIf(fn, err);
                     return Value();
@@ -239,7 +238,7 @@ Value ValueParser::_eval(
                 in_fn_args--;
             }
             if (--in_paren == 0)
-                end_of_expr = delim;
+                end_of_expr = context.delimitor;
             maybe_prefix = false;
             continue;
         }
@@ -254,7 +253,7 @@ Value ValueParser::_eval(
             error.setErrorIf(op, MISSING_CLOSING_PAREN);
             return Value();
         }
-        const auto err = op.eval(vstack);
+        const auto err = op.eval(vstack, context);
         if (err) {
             error.setErrorIf(op, err);
             return Value();
@@ -263,7 +262,7 @@ Value ValueParser::_eval(
     return vstack.pop();
 }
 
-Error ValueParser::parseConstant(StrScanner &scan, Value &val, char delim) const {
+Error ValueParser::parseConstant(StrScanner &scan, Value &val, ParserContext &context) const {
     auto p = scan;
 
     char letter;
@@ -277,10 +276,8 @@ Error ValueParser::parseConstant(StrScanner &scan, Value &val, char delim) const
         return err;
 
     err = _number.parseNumber(p, val);
-#ifdef LIBASM_ASM_NOFLOAT
-    UNUSED(delim);
-#else
-    const auto fpnum = (err == OK && (*p == '.' || toupper(*p) == 'E')) && delim != '.';
+#if !defined(LIBASM_ASM_NOFLOAT)
+    const auto fpnum = (err == OK && (*p == '.' || toupper(*p) == 'E')) && context.delimitor != '.';
     if (fpnum || err == OVERFLOW_RANGE || err == NOT_AN_EXPECTED) {
         char *end;
         Value::float_t f80;
@@ -298,7 +295,7 @@ Error ValueParser::parseConstant(StrScanner &scan, Value &val, char delim) const
     }
 
     if (_location.locationSymbol(p)) {
-        val.setUnsigned(_locator.currentLocation());
+        val.setUnsigned(context.currentLocation);
         scan = p;
         return OK;
     }

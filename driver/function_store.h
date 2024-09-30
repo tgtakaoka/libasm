@@ -54,8 +54,8 @@ private:
 
         bool operator==(const Function &other) const;
         bool operator!=(const Function &other) const { return !(*this == other); }
-        int8_t nargs() const override { return paramsAt.size(); }
-        Error eval(ValueStack &stack, uint8_t argc) const override;
+        int_fast8_t nargs() const override { return paramsAt.size(); }
+        Error eval(ValueStack &stack, ParserContext &context, uint_fast8_t argc) const override;
 
     private:
         const std::string body;

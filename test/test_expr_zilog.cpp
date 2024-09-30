@@ -26,11 +26,7 @@ const struct final : ValueParser::Plugins {
     const LetterParser &letter() const override { return ZilogLetterParser::singleton(); }
     const OperatorParser &operators() const override { return ZilogOperatorParser::singleton(); }
 } plugins{};
-struct : ValueParser::Locator {
-    uint32_t location = 0;
-    uint32_t currentLocation() const { return location; }
-} locator;
-const ValueParser parser{plugins, locator};
+const ValueParser parser{plugins};
 
 const ValueFormatter formatter{ValueFormatter::Plugins::zilog()};
 
@@ -291,7 +287,7 @@ static void test_precedence() {
 }
 
 static void test_current_address() {
-    locator.location = 0x1000;
+    context.currentLocation = 0x1000;
     E16("$",        0x1000);
     E16("$+2",      0x1002);
     E16("$-2",      0x0FFE);
@@ -301,7 +297,7 @@ static void test_current_address() {
     E32("$-%1001", 0xFFFFFFFF);
 
     symtab.intern(0x1000, "table");
-    locator.location = 0x1100;
+    context.currentLocation = 0x1100;
     E16("$-table",     0x100);
     E16("($-table)/2", 0x080);
 }

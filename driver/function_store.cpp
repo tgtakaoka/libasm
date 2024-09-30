@@ -84,11 +84,14 @@ const Functor *FunctionStore::Binding::lookupFunction(const StrScanner &symbol) 
     return parent->lookupFunction(symbol);
 }
 
-Error FunctionStore::Function::eval(ValueStack &stack, uint8_t argc) const {
-    Binding binding{paramsAt, stack, symtab};
+Error FunctionStore::Function::eval(
+        ValueStack &stack, ParserContext &parent, uint_fast8_t argc) const {
     StrScanner body_scan(body.c_str());
     ErrorAt error;
-    const auto val = parser.eval(body_scan, error, &binding);
+    Binding binding{paramsAt, stack, parent.symbolTable};
+    ParserContext context{parent};
+    context.symbolTable = &binding;
+    const auto val = parser.eval(body_scan, error, context);
     while (argc) {
         stack.pop();
         argc--;

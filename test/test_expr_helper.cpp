@@ -24,12 +24,14 @@ namespace test {
 
 TestAsserter asserter;
 TestSymtab symtab;
+ParserContext context{0, &symtab};
 
 void val_assert(const char *file, int line, StrScanner &expr, char delim, uint32_t expected,
         const ErrorAt &expected_error, size_t size, const ValueParser &parser) {
     ErrorAt actual_error;
     StrScanner remain = expr;
-    auto val = parser.eval(remain, actual_error, &symtab, delim);
+    context.delimitor = delim;
+    auto val = parser.eval(remain, actual_error, context);
     auto actual = val.getUnsigned();
     if (size == sizeof(uint8_t)) {
         if (val.overflowUint8())

@@ -194,7 +194,8 @@ Error AsmDirective::defineSymbol(
 
     auto &parser = _assembler.parser();
     ErrorAt error;
-    context.value = parser.eval(scan, error, &context.symbols);
+    ParserContext c{_assembler.currentLocation(), &context.symbols};
+    context.value = parser.eval(scan, error, c);
     if (error.hasError()) {
         context.value.clear();
         return setError(scan, error);

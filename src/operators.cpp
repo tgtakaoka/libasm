@@ -29,13 +29,13 @@ bool Operator::isNoneAssoc(const Operator &o) const {
     return _prec == o._prec && _assoc == NONE;
 }
 
-Error Operator::eval(ValueStack &stack, uint8_t argc) const {
+Error Operator::eval(ValueStack &stack, ParserContext &context, uint_fast8_t argc) const {
     if (argc == 0)
         argc = stack.size();
     if (_fn) {
         const auto nargs = _fn->nargs();
         if (nargs < 0 || argc == nargs)
-            return _fn->eval(stack, argc);
+            return _fn->eval(stack, context, argc);
         return argc > nargs ? TOO_MANY_FUNC_ARGUMENT : TOO_FEW_FUNC_ARGUMENT;
     }
     return argc >= _nargs ? (*_op)(stack) : MISSING_OPERAND;

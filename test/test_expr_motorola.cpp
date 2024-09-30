@@ -28,11 +28,7 @@ const struct MotorolaPlugins : ValueParser::Plugins {
     const OperatorParser &operators() const override { return Mc68xxOperatorParser::singleton(); }
     const SimpleSymbolParser _symbol{PSTR(".$")};
 } plugins{};
-struct : ValueParser::Locator {
-    uint32_t location = 0;
-    uint32_t currentLocation() const { return location; }
-} locator;
-const ValueParser parser{plugins, locator};
+const ValueParser parser{plugins};
 
 const ValueFormatter formatter{ValueFormatter::Plugins::motorola()};
 
@@ -63,7 +59,7 @@ static void test_char_closing() {
     const struct : MotorolaPlugins {
         const LetterParser &letter() const override { return DefaultLetterParser::singleton(); }
     } plugins{};
-    const ValueParser parser{plugins, locator};
+    const ValueParser parser{plugins};
 
     X8("'a",   MISSING_CLOSING_QUOTE, "'a", "'a");
     X8("'a+5", MISSING_CLOSING_QUOTE, "'a+5", "'a+5");
@@ -490,7 +486,7 @@ static void test_precedence() {
 }
 
 static void test_current_address() {
-    locator.location = 0x1000;
+    context.currentLocation = 0x1000;
     E16("*",       0x1000);
     E16("*+2",     0x1002);
     E16("*-2",     0x0FFE);
@@ -500,7 +496,7 @@ static void test_current_address() {
     E32("*-$1001", 0xFFFFFFFF);
 
     symtab.intern(0x1000, "table");
-    locator.location = 0x1100;
+    context.currentLocation = 0x1100;
     E16("*-table",     0x100);
     E16("(*-table)/2", 0x080);
 }

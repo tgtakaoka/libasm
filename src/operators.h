@@ -25,6 +25,8 @@
 
 namespace libasm {
 
+struct ParserContext;
+
 struct ValueStack : Stack<Value, 8> {
     ValueStack() : Stack() {}
     void push(const Value &value) { _contents[_size++] = value; }
@@ -39,16 +41,16 @@ struct ValueStack : Stack<Value, 8> {
  */
 struct Functor {
     /** Returns the number of required arguments. Negative value means variable arguments. */
-    virtual int8_t nargs() const { return -1; }
+    virtual int_fast8_t nargs() const { return -1; }
     /** Evaluate function with |arguments|. */
-    virtual Error eval(ValueStack &, uint8_t) const { return OK; }
+    virtual Error eval(ValueStack &, ParserContext &context, uint_fast8_t) const { return OK; }
 };
 
 /**
  * Immutable instance to represent prefix or infix operators and functions.
  */
 struct Operator : ErrorAt {
-    enum Type : uint8_t {
+    enum Type : uint_fast8_t {
         PREFIX,
         INFIX,
     };
@@ -74,7 +76,7 @@ struct Operator : ErrorAt {
     }
 
     /** Pop operands in |stack|, evaluate and push  result onto |stack|. */
-    Error eval(ValueStack &stack, uint8_t argc = 0) const;
+    Error eval(ValueStack &stack, ParserContext &context, uint_fast8_t argc = 0) const;
     /** Returns true when |this| operator has higher precedence than |o| */
     bool isHigher(const Operator &o) const;
     /** Returns true when |this| operator is none associative and has the same precedence of
@@ -83,7 +85,7 @@ struct Operator : ErrorAt {
 
     /** Constructor for operators */
     typedef Error(OperatorEval)(ValueStack &stack);
-    Operator(uint8_t prec, Assoc assoc, int8_t nargs = 0, OperatorEval *op = nullptr)
+    Operator(uint8_t prec, Assoc assoc, int_fast8_t nargs = 0, OperatorEval *op = nullptr)
         : ErrorAt(), _prec(prec), _assoc(assoc), _nargs(nargs), _op(op), _fn(nullptr) {}
 
     /** Constructor for function */

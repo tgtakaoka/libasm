@@ -18,10 +18,20 @@
 #define __LIBASM_VALUE_PARSER_H__
 
 #include <stdint.h>
-
 #include "parsers.h"
+#include "symbol_table.h"
 
 namespace libasm {
+
+struct ParserContext final {
+    ParserContext(uint32_t loc = 0, const SymbolTable *symtab = nullptr, char delim = 0)
+        : currentLocation(loc), symbolTable(symtab), delimitor(delim) {}
+    ParserContext(const ParserContext &) = default;
+
+    uint32_t currentLocation;
+    const SymbolTable *symbolTable;
+    char delimitor;
+};
 
 struct ValueParser {
     struct Plugins : Singleton<Plugins> {
@@ -34,26 +44,21 @@ struct ValueParser {
         virtual const FunctionTable &function() const;
     };
 
-    struct Locator : Singleton<Locator> {
-        virtual uint32_t currentLocation() const { return 0; }
-    };
-
-    ValueParser(const Plugins &plugins = Plugins::singleton(),
-            const Locator &locator = Locator::singleton())
+    ValueParser(const Plugins &plugins = Plugins::singleton())
         : _number(plugins.number()),
           _comment(plugins.comment()),
           _symbol(plugins.symbol()),
           _letter(plugins.letter()),
           _location(plugins.location()),
           _operators(plugins.operators()),
-          _function(plugins.function()),
-          _locator(locator) {}
+          _function(plugins.function()) {}
 
     /**
-     * Parse |scan| text and return expression |value|.  Undefined symbol reference in expression
-     * will be checked by UNDEFINED_SYMBOL in |error|.
+     * Parse |scan| text using |context| and return expression valu|.  Undefined
+     * symbol reference in expression will be checked by UNDEFINED_SYMBOL in
+     * |error|.
      */
-    Value eval(StrScanner &scan, ErrorAt &error, const SymbolTable *symtab, char delim = 0) const;
+    Value eval(StrScanner &scan, ErrorAt &error, ParserContext &context) const;
 
     /**
      * Parse |scan| text and return letter constant.
@@ -82,10 +87,9 @@ private:
     const LocationParser &_location;
     const OperatorParser &_operators;
     const FunctionTable &_function;
-    const Locator &_locator;
 
-    Value _eval(StrScanner &scan, ErrorAt &error, const SymbolTable *symtab, char delim) const;
-    Error parseConstant(StrScanner &scan, Value &val, char delim) const;
+    Value _eval(StrScanner &scan, ErrorAt &error, ParserContext &context) const;
+    Error parseConstant(StrScanner &scan, Value &val, ParserContext &context) const;
     Error readFunctionName(StrScanner &scan, StrScanner &name) const;
 };
 

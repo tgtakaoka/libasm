@@ -32,7 +32,7 @@ vpath %.cpp ../../driver
 vpath %.cpp ../../src
 vpath %.cpp ../../test
 
-CXXFLAGS = -std=c++14 -Wall -O $(DEBUG_FLAGS)
+CXXFLAGS = -std=c++14 -Wall -O $(DEBUG_FLAGS) -DLIBASM_DEBUG_VALUE
 CPPFLAGS = -I../../driver -I../../src -I../../test -MD -MF $@.d
 
 OBJS_common = \

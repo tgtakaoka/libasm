@@ -25,8 +25,7 @@ const struct final : ValueParser::Plugins {
     const LetterParser &letter() const override { return FairchildLetterParser::singleton(); }
     const LocationParser &location() const override { return AsteriskLocationParser::singleton(); }
 } plugins{};
-TestLocator locator{};
-const ValueParser parser{plugins, locator};
+const ValueParser parser{plugins};
 
 const ValueFormatter formatter{ValueFormatter::Plugins::fairchild()};
 
@@ -181,7 +180,7 @@ static void test_bin_constant() {
 }
 
 static void test_current_address() {
-    locator.location = 0x1000;
+    context.currentLocation = 0x1000;
     E16("*",         0x1000);
     E16("*+2",       0x1002);
     E16("*-2",       0x0FFE);
@@ -199,7 +198,7 @@ static void test_current_address() {
     E32("*-0x1001",  0xFFFFFFFF);
 
     symtab.intern(0x1000, "table");
-    locator.location = 0x1100;
+    context.currentLocation = 0x1100;
     E16("*-table",     0x100);
     E16("(*-table)/2", 0x080);
 }

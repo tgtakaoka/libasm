@@ -132,8 +132,8 @@ Error AsmCdp1802::setUseReg(bool enable) {
 namespace {
 
 const struct : Functor {
-    int8_t nargs() const override { return 1; }
-    Error eval(ValueStack &stack, uint8_t) const override {
+    int_fast8_t nargs() const override { return 1; }
+    Error eval(ValueStack &stack, ParserContext &, uint_fast8_t) const override {
         // Mark that this is 2 bytes value.
         stack.pushUnsigned((stack.pop().getUnsigned() & UINT16_MAX) | UINT32_C(0x1000'0000));
         return OK;
@@ -141,16 +141,16 @@ const struct : Functor {
 } FN_A;
 
 const struct : Functor {
-    int8_t nargs() const override { return 1; }
-    Error eval(ValueStack &stack, uint8_t) const override {
+    int_fast8_t nargs() const override { return 1; }
+    Error eval(ValueStack &stack, ParserContext &, uint_fast8_t) const override {
         stack.pushUnsigned(stack.pop().getUnsigned() & UINT8_MAX);
         return OK;
     }
 } FN_A0;
 
 const struct : Functor {
-    int8_t nargs() const override { return 1; }
-    Error eval(ValueStack &stack, uint8_t) const override {
+    int_fast8_t nargs() const override { return 1; }
+    Error eval(ValueStack &stack, ParserContext &, uint_fast8_t) const override {
         stack.pushUnsigned((stack.pop().getUnsigned() >> 8) & UINT8_MAX);
         return OK;
     }
