@@ -113,10 +113,12 @@ Value ValueParser::_eval(
                 if (fn == nullptr && symtab)
                     fn = reinterpret_cast<const Functor *>(symtab->lookupFunction(symbol));
                 if (fn) {
-                    if (*scan.skipSpaces() != '(') {
+                    const auto open = scan.skipSpaces();
+                    if (!_operators.isOpenExpr(scan)) {
                         error.setError(at, MISSING_FUNC_ARGUMENT);
                         return val;
                     }
+                    scan = open;
                     const Operator opr(fn);
                     ostack.push(opr);
                     ostack.top().setAt(at);
@@ -198,7 +200,7 @@ Value ValueParser::_eval(
             continue;
         }
 
-        if (scan.expect('(')) {
+        if (_operators.isOpenExpr(scan)) {
             // expression ends with '('
             if (!maybe_prefix && !expect_fn_args) {
                 --scan;
@@ -218,7 +220,7 @@ Value ValueParser::_eval(
             continue;
         }
 
-        if (scan.expect(')')) {
+        if (_operators.isCloseExpr(scan)) {
             while (!ostack.empty() && !ostack.top().isOpenParen()) {
                 const auto op = ostack.pop();
                 const auto err = op.eval(vstack);
