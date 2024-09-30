@@ -33,7 +33,6 @@ namespace {
 constexpr char OPT_BOOL_IMPLICIT_WORD[] PROGMEM = "implicit-word";
 constexpr char OPT_DESC_IMPLICIT_WORD[] PROGMEM = "unknown instruction defines word";
 
-constexpr char TEXT_star[]    PROGMEM = "*";
 constexpr char TEXT_OCTAL[]   PROGMEM = "OCTAL";
 constexpr char TEXT_DECIMAL[] PROGMEM = "DECIMAL";
 constexpr char TEXT_FIELD[]   PROGMEM = "FIELD";
@@ -41,7 +40,7 @@ constexpr char TEXT_PAGE[]    PROGMEM = "PAGE";
 constexpr char TEXT_DUBL[]    PROGMEM = "DUBL";
 
 constexpr Pseudo PSEUDOS[] PROGMEM = {
-    {TEXT_star, &Assembler::defineOrigin},
+    {PSTR_STAR, &Assembler::defineOrigin},
     {TEXT_TEXT, &Assembler::defineString, Assembler::STR_DEC_6BIT},
 };
 // clang-format on
@@ -106,6 +105,23 @@ struct Pdp8CommentParser final : CommentParser {
     };
 };
 
+struct Pdp8OperatorParser final : OperatorParser, Singleton<Pdp8OperatorParser> {
+    const Operator *readOperator(
+            StrScanner &scan, ErrorAt &error, Operator::Type type) const override {
+        auto p = scan;
+        const Operator *opr = nullptr;
+        if (type == Operator::INFIX) {
+            if (p.expect('!'))
+                opr = &Operator::OP_BITWISE_OR;
+        }
+        if (opr) {
+            scan = p;
+            return opr;
+        }
+        return CStyleOperatorParser::singleton().readOperator(scan, error, type);
+    }
+};
+
 }  // namespace
 
 const ValueParser::Plugins &AsmPdp8::defaultPlugins() {
@@ -114,7 +130,7 @@ const ValueParser::Plugins &AsmPdp8::defaultPlugins() {
         const SymbolParser &symbol() const override { return _symbol; }
         const LetterParser &letter() const override { return _letter; }
         const CommentParser &comment() const override { return _comment; }
-        const OperatorParser &operators() const override { return DecOperatorParser::singleton(); }
+        const OperatorParser &operators() const override { return Pdp8OperatorParser::singleton(); }
         const LocationParser &location() const override { return _location; }
         const Pdp8SymbolParser _symbol{};
         const Pdp8LetterParser _letter{};

@@ -100,6 +100,29 @@ struct Operator : ErrorAt {
     bool isOpenParen() const { return _prec == 254; }
     uint8_t stackPosition() const { return _nargs; }
 
+    static const Operator OP_BITWISE_NOT;
+    static const Operator OP_LOGICAL_NOT;
+    static const Operator OP_UNARY_MINUS;
+    static const Operator OP_UNARY_PLUS;
+    static const Operator OP_MUL;
+    static const Operator OP_DIV;
+    static const Operator OP_MOD;
+    static const Operator OP_ADD;
+    static const Operator OP_SUB;
+    static const Operator OP_SHIFT_LEFT;
+    static const Operator OP_SHIFT_RIGHT;
+    static const Operator OP_LOGICAL_LT;
+    static const Operator OP_LOGICAL_LE;
+    static const Operator OP_LOGICAL_GE;
+    static const Operator OP_LOGICAL_GT;
+    static const Operator OP_LOGICAL_EQ;
+    static const Operator OP_LOGICAL_NE;
+    static const Operator OP_BITWISE_AND;
+    static const Operator OP_BITWISE_XOR;
+    static const Operator OP_BITWISE_OR;
+    static const Operator OP_LOGICAL_AND;
+    static const Operator OP_LOGICAL_OR;
+
 private:
     /** Operator precedence (smaller value means higher precedence). */
     uint8_t _prec;
@@ -135,11 +158,6 @@ struct IntelOperatorParser final : OperatorParser, Singleton<IntelOperatorParser
 };
 
 struct ZilogOperatorParser final : OperatorParser, Singleton<ZilogOperatorParser> {
-    const Operator *readOperator(
-            StrScanner &scan, ErrorAt &error, Operator::Type type) const override;
-};
-
-struct DecOperatorParser final : OperatorParser, Singleton<DecOperatorParser> {
     const Operator *readOperator(
             StrScanner &scan, ErrorAt &error, Operator::Type type) const override;
 };

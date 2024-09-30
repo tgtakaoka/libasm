@@ -212,28 +212,28 @@ constexpr Operator::Assoc L = Operator::LEFT;
 constexpr Operator::Assoc N = Operator::NONE;
 
 // clang-format off
-static const Operator OP_BITWISE_NOT( 3, R, 1, bitwise_not);
-static const Operator OP_LOGICAL_NOT( 3, R, 1, logical_not);
-static const Operator OP_UNARY_MINUS( 3, R, 1, unary_minus);
-static const Operator OP_UNARY_PLUS(  3, R, 1, unary_plus);
-static const Operator OP_MUL(         5, L, 2, multiply);
-static const Operator OP_DIV(         5, L, 2, divide);
-static const Operator OP_MOD(         5, L, 2, modulo);
-static const Operator OP_ADD(         6, L, 2, add);
-static const Operator OP_SUB(         6, L, 2, subtract);
-static const Operator OP_SHIFT_LEFT(  7, L, 2, logical_shift_left_32bit);
-static const Operator OP_SHIFT_RIGHT( 7, L, 2, arithmetic_shift_right);
-static const Operator OP_LOGICAL_LT(  9, N, 2, less_than);
-static const Operator OP_LOGICAL_LE(  9, N, 2, less_than_or_equal);
-static const Operator OP_LOGICAL_GE(  9, N, 2, greater_than_or_equal);
-static const Operator OP_LOGICAL_GT(  9, N, 2, greater_than);
-static const Operator OP_LOGICAL_EQ( 10, N, 2, logical_equal);
-static const Operator OP_LOGICAL_NE( 10, N, 2, logical_not_equal);
-static const Operator OP_BITWISE_AND(11, L, 2, bitwise_and);
-static const Operator OP_BITWISE_XOR(12, L, 2, bitwise_xor);
-static const Operator OP_BITWISE_OR( 13, L, 2, bitwise_or);
-static const Operator OP_LOGICAL_AND(14, L, 2, logical_and);
-static const Operator OP_LOGICAL_OR( 15, L, 2, logical_or);
+const Operator Operator::OP_BITWISE_NOT( 3, R, 1, bitwise_not);
+const Operator Operator::OP_LOGICAL_NOT( 3, R, 1, logical_not);
+const Operator Operator::OP_UNARY_MINUS( 3, R, 1, unary_minus);
+const Operator Operator::OP_UNARY_PLUS(  3, R, 1, unary_plus);
+const Operator Operator::OP_MUL(         5, L, 2, multiply);
+const Operator Operator::OP_DIV(         5, L, 2, divide);
+const Operator Operator::OP_MOD(         5, L, 2, modulo);
+const Operator Operator::OP_ADD(         6, L, 2, add);
+const Operator Operator::OP_SUB(         6, L, 2, subtract);
+const Operator Operator::OP_SHIFT_LEFT(  7, L, 2, logical_shift_left_32bit);
+const Operator Operator::OP_SHIFT_RIGHT( 7, L, 2, arithmetic_shift_right);
+const Operator Operator::OP_LOGICAL_LT(  9, N, 2, less_than);
+const Operator Operator::OP_LOGICAL_LE(  9, N, 2, less_than_or_equal);
+const Operator Operator::OP_LOGICAL_GE(  9, N, 2, greater_than_or_equal);
+const Operator Operator::OP_LOGICAL_GT(  9, N, 2, greater_than);
+const Operator Operator::OP_LOGICAL_EQ( 10, N, 2, logical_equal);
+const Operator Operator::OP_LOGICAL_NE( 10, N, 2, logical_not_equal);
+const Operator Operator::OP_BITWISE_AND(11, L, 2, bitwise_and);
+const Operator Operator::OP_BITWISE_XOR(12, L, 2, bitwise_xor);
+const Operator Operator::OP_BITWISE_OR( 13, L, 2, bitwise_or);
+const Operator Operator::OP_LOGICAL_AND(14, L, 2, logical_and);
+const Operator Operator::OP_LOGICAL_OR( 15, L, 2, logical_or);
 // clang-format on
 
 const Operator *CStyleOperatorParser::readOperator(
@@ -243,53 +243,53 @@ const Operator *CStyleOperatorParser::readOperator(
     const Operator *opr = nullptr;
     if (type == Operator::PREFIX) {
         if (p.expect('~')) {
-            opr = &OP_BITWISE_NOT;
+            opr = &Operator::OP_BITWISE_NOT;
         } else if (p.expect('!') && *p != '=') {
-            opr = &OP_LOGICAL_NOT;
+            opr = &Operator::OP_LOGICAL_NOT;
         } else if (p.expect('-')) {
-            opr = &OP_UNARY_MINUS;
+            opr = &Operator::OP_UNARY_MINUS;
         } else if (p.expect('+')) {
-            opr = &OP_UNARY_PLUS;
+            opr = &Operator::OP_UNARY_PLUS;
         }
     } else if (type == Operator::INFIX) {
         if (p.expect('*')) {
-            opr = &OP_MUL;
+            opr = &Operator::OP_MUL;
         } else if (p.expect('/')) {
-            opr = &OP_DIV;
+            opr = &Operator::OP_DIV;
         } else if (p.expect('%')) {
-            opr = &OP_MOD;
+            opr = &Operator::OP_MOD;
         } else if (p.expect('+')) {
-            opr = &OP_ADD;
+            opr = &Operator::OP_ADD;
         } else if (p.expect('-')) {
-            opr = &OP_SUB;
+            opr = &Operator::OP_SUB;
         } else if (p.expect('<')) {
             if (p.expect('<')) {
-                opr = &OP_SHIFT_LEFT;
+                opr = &Operator::OP_SHIFT_LEFT;
             } else if (p.expect('=')) {
-                opr = &OP_LOGICAL_LE;
+                opr = &Operator::OP_LOGICAL_LE;
             } else {
-                opr = &OP_LOGICAL_LT;
+                opr = &Operator::OP_LOGICAL_LT;
             }
         } else if (p.expect('>')) {
             if (p.expect('>')) {
-                opr = &OP_SHIFT_RIGHT;
+                opr = &Operator::OP_SHIFT_RIGHT;
             } else if (p.expect('=')) {
-                opr = &OP_LOGICAL_GE;
+                opr = &Operator::OP_LOGICAL_GE;
             } else {
-                opr = &OP_LOGICAL_GT;
+                opr = &Operator::OP_LOGICAL_GT;
             }
         } else if (p.expect('&')) {
-            opr = p.expect('&') ? &OP_LOGICAL_AND : &OP_BITWISE_AND;
+            opr = p.expect('&') ? &Operator::OP_LOGICAL_AND : &Operator::OP_BITWISE_AND;
         } else if (p.expect('^')) {
-            opr = &OP_BITWISE_XOR;
+            opr = &Operator::OP_BITWISE_XOR;
         } else if (p.expect('|')) {
-            opr = p.expect('|') ? &OP_LOGICAL_OR : &OP_BITWISE_OR;
+            opr = p.expect('|') ? &Operator::OP_LOGICAL_OR : &Operator::OP_BITWISE_OR;
         } else if (p.expect('!')) {
             if (p.expect('='))
-                opr = &OP_LOGICAL_NE;
+                opr = &Operator::OP_LOGICAL_NE;
         } else if (p.expect('=')) {
             if (p.expect('='))
-                opr = &OP_LOGICAL_EQ;
+                opr = &Operator::OP_LOGICAL_EQ;
         }
     }
     if (opr)
@@ -450,7 +450,7 @@ const Operator *IntelOperatorParser::readOperator(
         }
     } else if (type == Operator::INFIX) {
         if (name.iequals_P(PSTR("MOD"))) {
-            opr = &OP_MOD;
+            opr = &Operator::OP_MOD;
         } else if (name.iequals_P(PSTR("AND"))) {
             opr = &INTEL_BITWISE_AND;
         } else if (name.iequals_P(PSTR("OR"))) {
@@ -466,13 +466,13 @@ const Operator *IntelOperatorParser::readOperator(
         } else if (name.iequals_P(PSTR("NE"))) {
             opr = &INTEL_LOGICAL_NE;
         } else if (name.iequals_P(PSTR("LT"))) {
-            opr = &OP_LOGICAL_LT;
+            opr = &Operator::OP_LOGICAL_LT;
         } else if (name.iequals_P(PSTR("LE"))) {
-            opr = &OP_LOGICAL_LE;
+            opr = &Operator::OP_LOGICAL_LE;
         } else if (name.iequals_P(PSTR("GE"))) {
-            opr = &OP_LOGICAL_GE;
+            opr = &Operator::OP_LOGICAL_GE;
         } else if (name.iequals_P(PSTR("GT"))) {
-            opr = &OP_LOGICAL_GT;
+            opr = &Operator::OP_LOGICAL_GT;
         }
         if (opr) {
             scan += name.size();
@@ -501,7 +501,7 @@ const Operator *ZilogOperatorParser::readOperator(
     const Operator *opr = nullptr;
     if (type == Operator::PREFIX) {
         if (name.iequals_P(PSTR("LNOT"))) {
-            opr = &OP_BITWISE_NOT;
+            opr = &Operator::OP_BITWISE_NOT;
         } else if (name.iequals_P(PSTR("HIGH"))) {
             opr = &INTEL_HIGH;
         } else if (name.iequals_P(PSTR("LOW"))) {
@@ -517,7 +517,7 @@ const Operator *ZilogOperatorParser::readOperator(
         }
     } else if (type == Operator::INFIX) {
         if (name.iequals_P(PSTR("MOD"))) {
-            opr = &OP_MOD;
+            opr = &Operator::OP_MOD;
         } else if (name.iequals_P(PSTR("SHR"))) {
             opr = &ZILOG_SHIFT_RIGHT;
         } else if (name.iequals_P(PSTR("SHL"))) {
@@ -535,37 +535,6 @@ const Operator *ZilogOperatorParser::readOperator(
         }
     }
     return CStyleOperatorParser::singleton().readOperator(scan, error, type);
-}
-
-const Operator *DecOperatorParser::readOperator(
-        StrScanner &scan, ErrorAt &error, Operator::Type type) const {
-    UNUSED(error);
-    auto p = scan;
-    const Operator *opr = nullptr;
-    if (type == Operator::PREFIX) {
-        if (p.expect('~')) {
-            opr = &OP_BITWISE_NOT;
-        } else if (p.expect('-')) {
-            opr = &OP_UNARY_MINUS;
-        } else if (p.expect('+')) {
-            opr = &OP_UNARY_PLUS;
-        }
-    } else if (type == Operator::INFIX) {
-        if (p.expect('+')) {
-            opr = &OP_ADD;
-        } else if (p.expect('-')) {
-            opr = &OP_SUB;
-        } else if (p.expect('&')) {
-            opr = &OP_BITWISE_AND;
-        } else if (p.expect('^')) {
-            opr = &OP_BITWISE_XOR;
-        } else if (p.expect('!')) {
-            opr = &OP_BITWISE_OR;
-        }
-    }
-    if (opr)
-        scan = p;
-    return opr;
 }
 
 }  // namespace libasm
