@@ -111,7 +111,7 @@ Value ValueParser::_eval(
             if (readFunctionName(scan, symbol) == OK) {
                 auto fn = _function.lookupFunction(symbol);
                 if (fn == nullptr && symtab)
-                    fn = reinterpret_cast<const Functor *>(symtab->lookupFunction(symbol));
+                    fn = symtab->lookupFunction(symbol);
                 if (fn) {
                     const auto open = scan.skipSpaces();
                     if (!_operators.isOpenExpr(scan)) {
@@ -136,13 +136,7 @@ Value ValueParser::_eval(
                     return Value();
                 }
                 if (symtab && symtab->hasSymbol(symbol)) {
-                    Value value;
-                    const auto v = symtab->lookupSymbol(symbol);
-                    if (v < 0) {
-                        value.setSigned(v);
-                    } else {
-                        value.setUnsigned(v);
-                    }
+                    const auto value = *symtab->lookupSymbol(symbol);
                     vstack.push(value);
                 } else {
                     error.setErrorIf(at, UNDEFINED_SYMBOL);

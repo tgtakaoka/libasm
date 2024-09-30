@@ -49,15 +49,15 @@ bool SymbolStoreImpl::hasSymbol(const StrScanner &symbol) const {
     return hasValue(symbol, false) || hasValue(symbol, true);
 }
 
-SymbolTable::symval_t SymbolStoreImpl::lookupSymbol(const StrScanner &symbol) const {
+const Value *SymbolStoreImpl::lookupSymbol(const StrScanner &symbol) const {
     const auto key = std::string(symbol.str(), symbol.size());
     const auto s = _symbols.find(key);
     if (s != _symbols.end())
-        return s->second;
+        return &s->second;
     const auto v = _variables.find(key);
     if (v != _variables.end())
-        return v->second;
-    return 0;
+        return &v->second;
+    return nullptr;
 }
 
 bool SymbolStoreImpl::hasValue(const StrScanner &symbol, bool variable) const {
@@ -74,12 +74,7 @@ Error SymbolStoreImpl::internSymbol(const Value &value, const StrScanner &symbol
 
     const auto key = std::string(symbol.str(), symbol.size());
     auto &map = variable ? _variables : _symbols;
-    auto it = map.find(key);
-    if (it == map.end()) {
-        map.emplace(key, value.getInteger());
-    } else {
-        it->second = value.getInteger();
-    }
+    map[key] = value;
     return OK;
 }
 
@@ -87,7 +82,7 @@ bool SymbolStoreImpl::hasFunction(const StrScanner &name) const {
     return _functions.hasFunction(name);
 }
 
-const void *SymbolStoreImpl::lookupFunction(const StrScanner &name) const {
+const Functor *SymbolStoreImpl::lookupFunction(const StrScanner &name) const {
     return _functions.lookupFunction(name);
 }
 

@@ -18,18 +18,18 @@
 #define __LIBASM_SYMBOL_TABLE_H__
 
 #include <stdint.h>
-#include "str_scanner.h"
-#include "value.h"
 
 namespace libasm {
 
-struct SymbolTable {
-    using symval_t = int32_t;
+struct Functor;
+struct StrScanner;
+struct Value;
 
-    virtual const char *lookupValue(symval_t) const { return nullptr; }
+struct SymbolTable {
+    virtual const char *lookupValue(const Value &) const { return nullptr; }
     virtual bool hasSymbol(const StrScanner &symbol) const = 0;
-    virtual symval_t lookupSymbol(const StrScanner &symbol) const = 0;
-    virtual const void *lookupFunction(const StrScanner &symbol) const = 0;
+    virtual const Value *lookupSymbol(const StrScanner &symbol) const = 0;
+    virtual const Functor *lookupFunction(const StrScanner &symbol) const = 0;
 };
 
 }  // namespace libasm
