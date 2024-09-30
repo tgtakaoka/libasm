@@ -692,6 +692,10 @@ void test_data_constant() {
     TEST("OCTAL");
     TEST( "7777", 07777);
     TEST( "  -1", 07777);
+    TEST( " 7+5", 07+05);
+    TEST( "17-5", 017-05);
+    TEST( "15&5", 015&05);
+    TEST( "16!5", 016|05);
     TEST( "4000", 04000);
     ERRT( "10000", OVERFLOW_RANGE, "10000", 00000);
     ERRT(" -4001", OVERFLOW_RANGE, "-4001", 03777);
@@ -700,7 +704,7 @@ void test_data_constant() {
 
     TEST("OCTAL");
     TEST("           10", 00010);
-    TEST("DUBL       10", 00000, 00012);
+    TEST("DUBL       10", 0, 10);
     TEST("DUBL      -10", 07777, 07766);
     TEST("DUBL 16777215", 07777, 07777);
     TEST("DUBL  8388608", 04000, 00000);

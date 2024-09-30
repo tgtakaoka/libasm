@@ -24,13 +24,15 @@
 namespace libasm {
 
 struct ParserContext final {
-    ParserContext(uint32_t loc = 0, const SymbolTable *symtab = nullptr, char delim = 0)
-        : currentLocation(loc), symbolTable(symtab), delimitor(delim) {}
+    ParserContext(uint32_t loc = 0, const SymbolTable *symtab = nullptr, char delim = 0,
+            Radix radix = RADIX_10)
+        : currentLocation(loc), symbolTable(symtab), delimitor(delim), defaultRadix(radix) {}
     ParserContext(const ParserContext &) = default;
 
     uint32_t currentLocation;
     const SymbolTable *symbolTable;
     char delimitor;
+    Radix defaultRadix;
 };
 
 struct ValueParser {

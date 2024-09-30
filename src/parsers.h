@@ -126,7 +126,7 @@ struct LetterParser {
  * - Returns NOT_AN_EXPECTED when |scan| doesn't look like a number. |scan| is unchanged.
  */
 struct NumberParser {
-    virtual Error parseNumber(StrScanner &scan, Value &val) const = 0;
+    virtual Error parseNumber(StrScanner &scan, Value &val, Radix defaultRadix) const = 0;
 };
 
 /**
@@ -137,10 +137,10 @@ struct NumberParser {
  * - Binary:      "[01]+[bB]"
  */
 struct IntelNumberParser final : NumberParser, Singleton<IntelNumberParser> {
-    Error parseNumber(StrScanner &scan, Value &val) const override;
-    Error parseNumber(StrScanner &scan, Value &val, Radix radix, StrScanner &next) const;
+    Error parseNumber(StrScanner &scan, Value &val, Radix defaultRadix) const override;
+    Error parseNumber(StrScanner &scan, Value &val, Radix radix, StrScanner &end) const;
 
-    static Radix hasSuffix(StrScanner &scan);
+    static Radix hasSuffix(StrScanner &scan, Radix defaultRadix);
 
 private:
     /**
@@ -161,10 +161,10 @@ private:
  * - Binary:      "0[bB][01]+"
  */
 struct CStyleNumberParser final : NumberParser, Singleton<CStyleNumberParser> {
-    Error parseNumber(StrScanner &scan, Value &val) const override;
+    Error parseNumber(StrScanner &scan, Value &val, Radix defaultRadix) const override;
 
 private:
-    Radix hasPrefix(StrScanner &scan) const;
+    Radix hasPrefix(StrScanner &scan, Radix defaultRadix) const;
 };
 
 /**
@@ -175,7 +175,7 @@ private:
  * - Binary:      "%(2)[01]+"
  */
 struct ZilogNumberParser final : NumberParser, Singleton<ZilogNumberParser> {
-    Error parseNumber(StrScanner &scan, Value &val) const override;
+    Error parseNumber(StrScanner &scan, Value &val, Radix defaultRadix) const override;
 
 private:
     Radix hasPrefix(StrScanner &scan) const;
@@ -187,7 +187,7 @@ private:
 struct PrefixNumberParser : NumberParser {
     PrefixNumberParser(char hex, char bin, char oct, char dec);
 
-    Error parseNumber(StrScanner &scan, Value &val) const override;
+    Error parseNumber(StrScanner &scan, Value &val, Radix defaultRadix) const override;
 
 protected:
     const char _hex;
@@ -219,7 +219,7 @@ struct MotorolaNumberParser final : PrefixNumberParser, Singleton<MotorolaNumber
 struct IbmNumberParser : PrefixNumberParser {
     IbmNumberParser(char hex, char bin, char oct, char dec)
         : PrefixNumberParser(hex, bin, oct, dec) {}
-    Error parseNumber(StrScanner &scan, Value &val) const override;
+    Error parseNumber(StrScanner &scan, Value &val, Radix defaultRadix) const override;
 };
 
 /**
@@ -232,7 +232,7 @@ struct IbmNumberParser : PrefixNumberParser {
 struct NationalNumberParser final : IbmNumberParser {
     NationalNumberParser(char hex, char bin, char oct, char dec)
         : IbmNumberParser(hex, bin, oct, dec) {}
-    Error parseNumber(StrScanner &scan, Value &val) const override;
+    Error parseNumber(StrScanner &scan, Value &val, Radix defaultRadix) const override;
 
 private:
     Radix hasPrefix(StrScanner &scan) const override;
@@ -242,7 +242,7 @@ private:
  * Fairchild style numbers are the same as IBM plus '$hh' for hexadecimal.
  */
 struct FairchildNumberParser final : NumberParser, Singleton<FairchildNumberParser> {
-    Error parseNumber(StrScanner &scan, Value &val) const override;
+    Error parseNumber(StrScanner &scan, Value &val, Radix defaultRadix) const override;
 
 private:
     IbmNumberParser _ibm{'H', 'B', 'O', 'D'};
