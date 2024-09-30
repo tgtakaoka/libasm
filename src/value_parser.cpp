@@ -317,7 +317,7 @@ Error ValueParser::readSymbol(StrScanner &scan, StrScanner &symbol) const {
         --symbol;
         return OK;
     }
-    symbol = StrScanner::EMPTY;
+    symbol.empty();
     return NOT_AN_EXPECTED;
 }
 
@@ -329,7 +329,7 @@ Error ValueParser::readLabel(StrScanner &scan, StrScanner &label) const {
         _symbol.labelDelimitor(scan);
         return OK;
     }
-    label = StrScanner::EMPTY;
+    label.empty();
     return NOT_AN_EXPECTED;
 }
 
@@ -348,7 +348,7 @@ Error ValueParser::readInstruction(StrScanner &scan, StrScanner &inst) const {
         scan = p;
         return OK;
     }
-    inst = StrScanner::EMPTY;
+    inst.empty();
     return NOT_AN_EXPECTED;
 }
 
@@ -359,7 +359,7 @@ Error ValueParser::readFunctionName(StrScanner &scan, StrScanner &name) const {
         --name;
         return OK;
     }
-    name = StrScanner::EMPTY;
+    name.empty();
     return NOT_AN_EXPECTED;
 }
 

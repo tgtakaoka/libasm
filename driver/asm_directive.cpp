@@ -156,13 +156,13 @@ BinEncoder &AsmDirective::defaultEncoder() const {
 
 Error AsmDirective::defineConstant(StrScanner &scan, Context &context) {
     defineSymbol(scan, context.label, context, /*variable*/ false);
-    context.label = StrScanner::EMPTY;
+    context.label.empty();
     return getError();
 }
 
 Error AsmDirective::defineVariable(StrScanner &scan, Context &context) {
     defineSymbol(scan, context.label, context, /*variable*/ true);
-    context.label = StrScanner::EMPTY;
+    context.label.empty();
     return getError();
 }
 
@@ -245,11 +245,11 @@ Error AsmDirective::defineFunction(StrScanner &scan, Context &context) {
                 error = DUPLICATE_LABEL;
             } else {
                 error = context.symbols.internFunction(name, params, scan, parser);
-                scan = StrScanner::EMPTY;  // whole body is interned
+                scan.empty();  // whole body is interned
             }
             if (error)
                 setErrorIf(name, error);
-            name = StrScanner::EMPTY;
+            name.empty();
             return getError();
         }
     }

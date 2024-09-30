@@ -118,7 +118,7 @@ private:
 struct StrBuffer;
 
 struct ErrorAt : ErrorReporter {
-    constexpr ErrorAt() : ErrorReporter(), _at(StrScanner::EMPTY.str()) {}
+    constexpr ErrorAt() : ErrorReporter(), _at("") {}
 
     constexpr bool hasError() const { return getError() && getError() != UNDEFINED_SYMBOL; }
 
@@ -174,6 +174,7 @@ struct ErrorAt : ErrorReporter {
         return isOK() && error.getError() ? setError(at, error) : getError();
     }
 
+    void resetAt() { _at = ""; }
     void setAt(const char *at) { _at = at; }
     void setAt(const StrScanner &at) { _at = at.str(); }
     void setAt(const StrBuffer &at);
