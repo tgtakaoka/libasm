@@ -35,6 +35,7 @@ constexpr Pseudo PSEUDOS[] PROGMEM = {
     {TEXT_BSS,  &Assembler::allocateSpaces,     Assembler::DATA_BYTE},
     {TEXT_BYTE, &Assembler::defineDataConstant, Assembler::DATA_BYTE},
     {TEXT_DATA, &Assembler::defineDataConstant, Assembler::DATA_WORD},
+    {TEXT_EVEN, &Assembler::alignOrigin,        Assembler::ALIGN_EVEN},
     {TEXT_TEXT, &Assembler::defineDataConstant, Assembler::DATA_BYTE},
 };
 // clang-format on

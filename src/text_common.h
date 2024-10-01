@@ -498,6 +498,7 @@ extern const char TEXT_dASCII[] PROGMEM; // .ascii
 extern const char TEXT_dBYTE[]  PROGMEM; // .byte
 extern const char TEXT_dDBYTE[] PROGMEM; // .dbyte
 extern const char TEXT_dequal[] PROGMEM; // .=
+extern const char TEXT_dEVEN[]  PROGMEM; // .even
 extern const char TEXT_dLONG[]  PROGMEM; // .long
 extern const char TEXT_dORG[]   PROGMEM; // .org
 extern const char TEXT_dSTRING[] PROGMEM; // .string

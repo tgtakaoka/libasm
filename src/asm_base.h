@@ -62,7 +62,12 @@ struct Assembler : private ValueParser::Locator {
     virtual Error processPseudo(StrScanner &scan, Insn &insn);
     Error setOption(StrScanner &scan, Insn &insn, uint8_t extra = 0);
     Error defineOrigin(StrScanner &scan, Insn &insn, uint8_t extra = 0);
-    Error alignOrigin(StrScanner &scan, Insn &insn, uint8_t step = 0);
+    enum AlignStep : uint8_t {
+        ALIGN_VAR = 0,
+        ALIGN_ODD = 1,
+        ALIGN_EVEN = 2,
+    };
+    Error alignOrigin(StrScanner &scan, Insn &insn, uint8_t alignStep = ALIGN_VAR);
     enum StringType : uint8_t {
         STR_ASCII = 0,
         STR_DEC_6BIT = 1,

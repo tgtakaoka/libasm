@@ -495,6 +495,7 @@ constexpr char TEXT_dASCII[] PROGMEM = ".ascii";
 constexpr char TEXT_dBYTE[]  PROGMEM = ".byte";
 constexpr char TEXT_dDBYTE[] PROGMEM = ".dbyte";
 constexpr char TEXT_dequal[] PROGMEM = ".=";
+constexpr char TEXT_dEVEN[]  PROGMEM = ".even";
 constexpr char TEXT_dLONG[]  PROGMEM = ".long";
 constexpr char TEXT_dORG[]   PROGMEM = ".org";
 constexpr char TEXT_dSTRING[] PROGMEM = ".string";
