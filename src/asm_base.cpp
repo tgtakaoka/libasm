@@ -192,23 +192,27 @@ Error Assembler::defineOrigin(StrScanner &scan, Insn &insn, uint8_t extra) {
 }
 
 Error Assembler::alignOrigin(StrScanner &scan, Insn &insn, uint8_t step) {
-    auto p = scan;
-    Value value;
-    if (step) {
-        value.setUnsigned(step);
-    } else {
+    auto at = insn.errorAt();
+    if (step == ALIGN_ODD) {
+        if (insn.address() % 2 == 0)
+            insn.reset(insn.address() + 1, insn.length());
+        return insn.setErrorIf(at, setCurrentLocation(insn.address()));
+    }
+
+    if (step == ALIGN_VAR) {
         ErrorAt error;
-        value = parseExpr(p, error);
+        auto p = scan;
+        const auto value = parseExpr(p, error);
         if (error.getError())
             return insn.setError(error);
+        if (value.overflow(UINT8_MAX))
+            return insn.setError(scan, OVERFLOW_RANGE);
+        step = value.getUnsigned();
+        at = scan.str();
+        scan = p;
     }
-    if (value.overflowUint8())
-        return insn.setError(scan, OVERFLOW_RANGE);
-    insn.align(value.getUnsigned());
-    if (insn.setErrorIf(scan, setCurrentLocation(insn.address())))
-        return insn.getError();
-    scan = p;
-    return OK;
+    insn.align(step);
+    return insn.setErrorIf(at, setCurrentLocation(insn.address()));
 }
 
 Error Assembler::allocateSpaces(StrScanner &scan, Insn &insn, uint8_t dataType) {
