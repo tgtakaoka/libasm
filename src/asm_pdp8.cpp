@@ -89,19 +89,11 @@ struct Pdp8CommentParser final : CommentParser {
 };
 
 struct Pdp8OperatorParser final : OperatorParser, Singleton<Pdp8OperatorParser> {
-    const Operator *readOperator(
-            StrScanner &scan, ErrorAt &error, Operator::Type type) const override {
-        auto p = scan;
-        const Operator *opr = nullptr;
-        if (type == Operator::INFIX) {
-            if (p.expect('!'))
-                opr = &Operator::OP_BITWISE_OR;
-        }
-        if (opr) {
-            scan = p;
-            return opr;
-        }
-        return CStyleOperatorParser::singleton().readOperator(scan, error, type);
+    const Operator *readInfix(
+            StrScanner &scan, ValueStack &stack, ParserContext &context) const override {
+        if (scan.expect('!'))
+            return &Operator::OP_BITWISE_OR;
+        return CStyleOperatorParser::singleton().readInfix(scan, stack, context);
     }
 };
 

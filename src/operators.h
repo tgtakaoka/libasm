@@ -43,17 +43,13 @@ struct Functor {
     /** Returns the number of required arguments. Negative value means variable arguments. */
     virtual int_fast8_t nargs() const { return -1; }
     /** Evaluate function with |arguments|. */
-    virtual Error eval(ValueStack &, ParserContext &context, uint_fast8_t) const { return OK; }
+    virtual Error eval(ValueStack &, ParserContext &, uint_fast8_t) const { return OK; }
 };
 
 /**
  * Immutable instance to represent prefix or infix operators and functions.
  */
 struct Operator : ErrorAt {
-    enum Type : uint_fast8_t {
-        PREFIX,
-        INFIX,
-    };
     /** Associativity of an operator */
     enum Assoc : uint8_t {
         LEFT,
@@ -84,7 +80,7 @@ struct Operator : ErrorAt {
     bool isNoneAssoc(const Operator &o) const;
 
     /** Constructor for operators */
-    typedef Error(OperatorEval)(ValueStack &stack);
+    typedef Error(OperatorEval)(ValueStack &stack, ParserContext &);
     Operator(uint8_t prec, Assoc assoc, int_fast8_t nargs = 0, OperatorEval *op = nullptr)
         : ErrorAt(), _prec(prec), _assoc(assoc), _nargs(nargs), _op(op), _fn(nullptr) {}
 
@@ -138,30 +134,29 @@ private:
  * Parsing prefix and infix operator.
  */
 struct OperatorParser {
-    virtual const Operator *readOperator(
-            StrScanner &scan, ErrorAt &error, Operator::Type type) const = 0;
+    virtual const Operator *readPrefix(StrScanner &, ValueStack &, ParserContext &) const;
+    virtual const Operator *readInfix(StrScanner &, ValueStack &, ParserContext &) const;
     virtual bool isOpenExpr(StrScanner &scan) const { return scan.expect('('); }
     virtual bool isCloseExpr(StrScanner &scan) const { return scan.expect(')'); }
 };
 
 struct CStyleOperatorParser final : OperatorParser, Singleton<CStyleOperatorParser> {
-    const Operator *readOperator(
-            StrScanner &scan, ErrorAt &error, Operator::Type type) const override;
+    const Operator *readPrefix(StrScanner &, ValueStack &, ParserContext &) const override;
+    const Operator *readInfix(StrScanner &, ValueStack &, ParserContext &) const override;
 };
 
 struct Mc68xxOperatorParser final : OperatorParser, Singleton<Mc68xxOperatorParser> {
-    const Operator *readOperator(
-            StrScanner &scan, ErrorAt &error, Operator::Type type) const override;
+    const Operator *readInfix(StrScanner &, ValueStack &, ParserContext &) const override;
 };
 
 struct IntelOperatorParser final : OperatorParser, Singleton<IntelOperatorParser> {
-    const Operator *readOperator(
-            StrScanner &scan, ErrorAt &error, Operator::Type type) const override;
+    const Operator *readPrefix(StrScanner &, ValueStack &, ParserContext &) const override;
+    const Operator *readInfix(StrScanner &, ValueStack &, ParserContext &) const override;
 };
 
 struct ZilogOperatorParser final : OperatorParser, Singleton<ZilogOperatorParser> {
-    const Operator *readOperator(
-            StrScanner &scan, ErrorAt &error, Operator::Type type) const override;
+    const Operator *readPrefix(StrScanner &, ValueStack &, ParserContext &) const override;
+    const Operator *readInfix(StrScanner &, ValueStack &, ParserContext &) const override;
 };
 
 }  // namespace libasm

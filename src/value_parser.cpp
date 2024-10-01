@@ -85,7 +85,7 @@ Value ValueParser::_eval(StrScanner &scan, ErrorAt &error, ParserContext &contex
         if (maybe_prefix) {
             // Prefix operator may consist of alpha numeric text. Check operator before handling
             // symbols.
-            opr = _operators.readOperator(scan, error, Operator::PREFIX);
+            opr = _operators.readPrefix(scan, vstack, context);
             if (error.hasError())
                 return Value();
         }
@@ -147,8 +147,11 @@ Value ValueParser::_eval(StrScanner &scan, ErrorAt &error, ParserContext &contex
         }
 
         if (opr == nullptr) {
-            const auto oprType = maybe_prefix ? Operator::PREFIX : Operator::INFIX;
-            opr = _operators.readOperator(scan, error, oprType);
+            if (maybe_prefix) {
+                opr = _operators.readPrefix(scan, vstack, context);
+            } else {
+                opr = _operators.readInfix(scan, vstack, context);
+            }
             if (error.hasError())
                 return Value();
         }
