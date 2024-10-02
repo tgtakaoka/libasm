@@ -48,6 +48,7 @@ private:
     Error parseOperateOperand(StrScanner &scan, AsmInsn &insn) const;
     Error encodeMicro(AsmInsn &insn, const AsmInsn &micro, Config::opcode_t &done) const;
 
+    Error defineDec6String(StrScanner &scan, Insn &Insn);
     Error processPseudo(StrScanner &scan, Insn &insn) override;
     Error encodeImpl(StrScanner &scan, Insn &insn) const override;
     const ConfigBase &config() const override { return *this; }

@@ -70,11 +70,7 @@ struct Assembler : private ValueParser::Locator {
         ALIGN_EVEN = 2,
     };
     Error alignOrigin(StrScanner &scan, Insn &insn, uint8_t alignStep = ALIGN_VAR);
-    enum StringType : uint8_t {
-        STR_ASCII = 0,
-        STR_DEC_6BIT = 1,
-    };
-    Error defineString(StrScanner &scan, Insn &insn, uint8_t stringType);
+    Error defineString(StrScanner &scan, Insn &insn, uint8_t extra = 0);
     Error isString(StrScanner &scan, ErrorAt &error) const;
     enum DataType : uint8_t {
         DATA_BYTE,

@@ -246,42 +246,17 @@ Error Assembler::allocateSpaces(StrScanner &scan, Insn &insn, uint8_t dataType) 
     return OK;
 }
 
-Error Assembler::defineString(StrScanner &scan, Insn &insn, uint8_t stringType) {
-    const auto type = static_cast<StringType>(stringType);
+Error Assembler::defineString(StrScanner &scan, Insn &insn, uint8_t) {
     ErrorAt error;
     do {
-        uint8_t count = 0;
-        uint16_t val = 0;
         const auto delim = *scan.skipSpaces()++;
         auto p = scan;
         while (!p.expect(delim)) {
             const auto c = *p;
             if (c == 0)
                 return insn.setErrorIf(p, MISSING_CLOSING_DELIMITER);
-            if (type == STR_ASCII) {
-                error.setErrorIf(p, insn.emitByte(c));
-            } else if (type == STR_DEC_6BIT) {
-                uint8_t dec6 = (c < 0x40) ? c : c - 0x40;
-                if (c < 0x20 || c >= 0x60) {
-                    error.setErrorIf(p, ILLEGAL_CONSTANT);
-                    dec6 = 0;
-                }
-                if (count % 2 == 0) {
-                    val = static_cast<uint16_t>(dec6) << 6;
-                } else {
-                    val |= dec6;
-                    error.setErrorIf(p, insn.emitUint16Be(val));
-                }
-            }
+            error.setErrorIf(p, insn.emitByte(c));
             ++p;
-            count++;
-        }
-        if (type == STR_DEC_6BIT) {
-            if (count % 2 == 0) {
-                error.setErrorIf(p, insn.emitUint16Be(0));
-            } else {
-                error.setErrorIf(p, insn.emitUint16Be(val));
-            }
         }
         scan = p;
     } while (scan.skipSpaces().expect(','));
