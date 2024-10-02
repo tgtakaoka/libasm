@@ -421,21 +421,21 @@ Error Assembler::defineDataConstant(StrScanner &scan, Insn &insn, uint8_t dataTy
     return insn.setError(error);
 }
 
-Error OptionBase::parseBoolOption(StrScanner &scan, bool &value, const Assembler &assembler) {
-    if (parseBoolOption(scan, value) == OK)
+Error Assembler::parseBoolOption(StrScanner &scan, bool &value) const {
+    if (OptionBase::parseBoolOption(scan, value) == OK)
         return OK;
     int32_t val;
-    const auto error = parseIntOption(scan, val, assembler);
+    const auto error = parseIntOption(scan, val);
     if (error == OK)
         value = (val != 0);
     return error;
 }
 
-Error OptionBase::parseIntOption(StrScanner &scan, int32_t &value, const Assembler &assembler) {
+Error Assembler::parseIntOption(StrScanner &scan, int32_t &value) const {
     auto p = scan;
     const auto dquote = p.expect('"');
     ErrorAt error;
-    value = assembler.parseExpr(p, error).getSigned();
+    value = parseInteger(p, error).getSigned();
     if (error.isOK()) {
         if (dquote && !p.expect('"'))
             return ILLEGAL_CONSTANT;
