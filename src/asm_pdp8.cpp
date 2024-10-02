@@ -41,7 +41,6 @@ constexpr char TEXT_DUBL[]    PROGMEM = "DUBL";
 
 constexpr Pseudo PSEUDOS[] PROGMEM = {
     {PSTR_STAR, &Assembler::defineOrigin},
-    {TEXT_TEXT, &Assembler::defineString, Assembler::STR_DEC_6BIT},
 };
 // clang-format on
 PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
@@ -356,6 +355,42 @@ Error AsmPdp8::parseOperateOperand(StrScanner &scan, AsmInsn &insn) const {
     return OK;
 }
 
+Error AsmPdp8::defineDec6String(StrScanner &scan, Insn &insn) {
+    ErrorAt error;
+    do {
+        uint8_t count = 0;
+        uint16_t val = 0;
+        const auto delim = *scan.skipSpaces()++;
+        auto p = scan;
+        while (!p.expect(delim)) {
+            const auto c = *p;
+            if (c == 0)
+                return insn.setErrorIf(p, MISSING_CLOSING_DELIMITER);
+            uint8_t dec6 = (c < 0x40) ? c : c - 0x40;
+            if (c < 0x20 || c >= 0x60) {
+                error.setErrorIf(p, ILLEGAL_CONSTANT);
+                dec6 = 0;
+            }
+            if (count % 2 == 0) {
+                val = static_cast<uint16_t>(dec6) << 6;
+            } else {
+                val |= dec6;
+                error.setErrorIf(p, insn.emitUint16Be(val));
+            }
+            ++p;
+            count++;
+        }
+        if (count % 2 == 0) {
+            error.setErrorIf(p, insn.emitUint16Be(0));
+        } else {
+            error.setErrorIf(p, insn.emitUint16Be(val));
+        }
+        scan = p;
+    } while (scan.skipSpaces().expect(','));
+
+    return insn.setError(error);
+}
+
 Error AsmPdp8::processPseudo(StrScanner &scan, Insn &insn) {
     if (strcasecmp_P(insn.name(), TEXT_OCTAL) == 0)
         return setInputRadix(scan, insn, RADIX_8);
@@ -367,6 +402,8 @@ Error AsmPdp8::processPseudo(StrScanner &scan, Insn &insn) {
         return alignOnPage(scan, insn);
     if (cpuType() == HD6120 && strcasecmp_P(insn.name(), TEXT_FIELD) == 0)
         return defineField(scan, insn);
+    if (strcasecmp_P(insn.name(), TEXT_TEXT) == 0)
+        return defineDec6String(scan, insn);
     return Assembler::processPseudo(scan, insn);
 }
 
