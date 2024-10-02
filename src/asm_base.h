@@ -51,6 +51,8 @@ struct Assembler : private ValueParser::Locator {
     Error setOption(const StrScanner &name, StrScanner &text);
     const Options &commonOptions() const { return _commonOptions; }
     const Options &options() const { return _options; }
+    Error parseBoolOption(StrScanner &scan, bool &value) const;
+    Error parseIntOption(StrScanner &scan, int32_t &value) const;
 
     Error setListRadix(int32_t radix);
     Radix listRadix() const { return _listRadix; }

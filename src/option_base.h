@@ -41,15 +41,14 @@ struct OptionBase {
     virtual Error set(StrScanner &scan) const = 0;
     const OptionBase *next() const { return _next; }
 
+    static Error parseBoolOption(StrScanner &scan, bool &value);
+
 protected:
     constexpr OptionBase(const /*PROGMEM*/ char *name_P, const /*PROGMEM*/ char *desc_P,
             OptionSpec spec, const OptionBase *next)
         : _name_P(name_P), _desc_P(desc_P), _spec(spec), _next(next) {}
 
-    static Error parseBoolOption(StrScanner &scan, bool &value);
-    static Error parseBoolOption(StrScanner &scan, bool &value, const Assembler &assembler);
     static Error parseIntOption(StrScanner &scan, int32_t &value);
-    static Error parseIntOption(StrScanner &scan, int32_t &value, const Assembler &assembler);
     static Error parseCharOption(StrScanner &scan, char &value);
     static Error parseTextOption(StrScanner &scan, StrScanner &value);
 
@@ -70,11 +69,10 @@ struct BoolOption : public OptionBase {
 
     template <typename A, typename enable_if<is_base_of<Assembler, A>::value>::type * = nullptr>
     static Error parseBool(StrScanner &scan, bool &value, const A *app) {
-        return parseBoolOption(scan, value, *app);
+        return app->parseBoolOption(scan, value);
     }
     template <typename A, typename enable_if<!is_base_of<Assembler, A>::value>::type * = nullptr>
-    static Error parseBool(StrScanner &scan, bool &value, const A *app) {
-        UNUSED(app);
+    static Error parseBool(StrScanner &scan, bool &value, const A *) {
         return parseBoolOption(scan, value);
     }
 
@@ -99,11 +97,10 @@ struct IntOption : public OptionBase {
 
     template <typename A, typename enable_if<is_base_of<Assembler, A>::value>::type * = nullptr>
     static Error parseInt(StrScanner &scan, int32_t &value, const A *app) {
-        return parseIntOption(scan, value, *app);
+        return app->parseIntOption(scan, value);
     }
     template <typename A, typename enable_if<!is_base_of<Assembler, A>::value>::type * = nullptr>
-    static Error parseInt(StrScanner &scan, int32_t &value, const A *app) {
-        UNUSED(app);
+    static Error parseInt(StrScanner &scan, int32_t &value, const A *) {
         return parseIntOption(scan, value);
     }
 
