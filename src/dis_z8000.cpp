@@ -15,7 +15,6 @@
  */
 
 #include "dis_z8000.h"
-
 #include "reg_z8000.h"
 #include "table_z8000.h"
 
@@ -23,6 +22,7 @@ namespace libasm {
 namespace z8000 {
 
 using namespace reg;
+using namespace text::option;
 
 namespace {
 
@@ -30,8 +30,6 @@ constexpr char OPT_BOOL_SHORT_DIRECT[] PROGMEM = "short-direct";
 constexpr char OPT_DESC_SHORT_DIRECT[] PROGMEM = "use |addr| for short direct notation";
 constexpr char OPT_BOOL_SEGMENTED_ADDR[] PROGMEM = "segmented-addr";
 constexpr char OPT_DESC_SEGMENTED_ADDR[] PROGMEM = "use <<segment>> notation";
-constexpr char OPT_BOOL_IOADDR_PREFIX[] PROGMEM = "ioaddr-prefix";
-constexpr char OPT_DESC_IOADDR_PREFIX[] PROGMEM = "I/O address prefix # (default none)";
 
 }  // namespace
 
@@ -40,22 +38,28 @@ const ValueFormatter::Plugins &DisZ8000::defaultPlugins() {
 }
 
 DisZ8000::DisZ8000(const ValueFormatter::Plugins &plugins)
-    : Disassembler(plugins, &_opt_shortDirect),
+    : Disassembler(plugins, &_opt_gnuAs),
       Config(TABLE),
+      _opt_gnuAs(this, &DisZ8000::setGnuAs, OPT_BOOL_GNU_AS, OPT_DESC_GNU_AS, &_opt_shortDirect),
       _opt_shortDirect(this, &DisZ8000::setShortDirect, OPT_BOOL_SHORT_DIRECT,
               OPT_DESC_SHORT_DIRECT, &_opt_segmentedAddr),
-      _opt_segmentedAddr(this, &DisZ8000::setSegmentedAddr, OPT_BOOL_SEGMENTED_ADDR,
-              OPT_DESC_SEGMENTED_ADDR, &_opt_ioaddrPrefix),
-      _opt_ioaddrPrefix(
-              this, &DisZ8000::setIoAddressPrefix, OPT_BOOL_IOADDR_PREFIX, OPT_DESC_IOADDR_PREFIX) {
+      _opt_segmentedAddr(
+              this, &DisZ8000::setSegmentedAddr, OPT_BOOL_SEGMENTED_ADDR, OPT_DESC_SEGMENTED_ADDR) {
     reset();
 }
 
 void DisZ8000::reset() {
     Disassembler::reset();
+    setGnuAs(false);
     setShortDirect(true);
     setSegmentedAddr(true);
-    setIoAddressPrefix(false);
+}
+
+Error DisZ8000::setGnuAs(bool enable) {
+    _gnuAs = enable;
+    setCStyle(enable);
+    setCurSym(enable ? '.' : 0);
+    return OK;
 }
 
 Error DisZ8000::setShortDirect(bool enable) {
@@ -65,11 +69,6 @@ Error DisZ8000::setShortDirect(bool enable) {
 
 Error DisZ8000::setSegmentedAddr(bool enable) {
     _segmentedAddr = enable;
-    return OK;
-}
-
-Error DisZ8000::setIoAddressPrefix(bool enable) {
-    _ioAddressPrefix = enable;
     return OK;
 }
 
@@ -205,7 +204,7 @@ void DisZ8000::decodeDirectAddress(DisInsn &insn, StrBuffer &out, AddrMode mode)
     if (segmentedModel()) {
         const auto seg = (val16 >> 8) & 0x7F;
         uint16_t disp = val16 & 0xFF;
-        auto shortDirect = _shortDirect;
+        auto shortDirect = _shortDirect && !_gnuAs;
         if (val16 & 0x8000) {
             if (disp)
                 insn.setErrorIf(out, ILLEGAL_OPERAND);
@@ -216,7 +215,7 @@ void DisZ8000::decodeDirectAddress(DisInsn &insn, StrBuffer &out, AddrMode mode)
         insn.setErrorIf(out, checkAddr(addr, align));
         if (shortDirect)
             out.letter('|');
-        if (_segmentedAddr) {
+        if (_segmentedAddr && !_gnuAs) {
             outHex(out.rtext_P(PSTR("<<")), seg, 7).rtext_P(PSTR(">>"));
             outAbsAddr(out, disp, ADDRESS_16BIT);
         } else {
@@ -302,7 +301,7 @@ void DisZ8000::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode, OprPo
         decodeFlags(insn, out, num);
         break;
     case M_IO:
-        if (_ioAddressPrefix)
+        if (_gnuAs)
             out.letter('#');
         outAbsAddr(out, insn.readUint16(), 16);
         break;

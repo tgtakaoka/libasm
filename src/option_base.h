@@ -166,6 +166,17 @@ private:
     const OptionBase *const _head;
 };
 
+namespace text {
+namespace option {
+
+extern const char OPT_BOOL_GNU_AS[] PROGMEM;
+extern const char OPT_DESC_GNU_AS[] PROGMEM;
+extern const char OPT_TEXT_FPU[] PROGMEM;
+extern const char OPT_DESC_FPU[] PROGMEM;
+
+}  // namespace option
+}  // namespace text
+
 }  // namespace libasm
 
 #endif  // __LIBASM_OPT_BASE_H__

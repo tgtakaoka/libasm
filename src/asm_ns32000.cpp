@@ -15,7 +15,6 @@
  */
 
 #include "asm_ns32000.h"
-
 #include <stdlib.h>
 #include "table_ns32000.h"
 #include "text_ns32000.h"
@@ -26,11 +25,10 @@ namespace ns32000 {
 using namespace pseudo;
 using namespace reg;
 using namespace text::common;
+using namespace text::option;
 
-using text::ns32000::TEXT_FPU;
 using text::ns32000::TEXT_FPU_NS32081;
 using text::ns32000::TEXT_MMU_NS32082;
-using text::ns32000::TEXT_none;
 using text::ns32000::TEXT_PMMU;
 
 namespace {
@@ -98,14 +96,17 @@ const ValueParser::Plugins &AsmNs32000::defaultPlugins() {
         const CommentParser &comment() const override { return SharpCommentParser::singleton(); }
         const SymbolParser &symbol() const override { return Ns32000SymbolParser::singleton(); }
         const LetterParser &letter() const override { return Ns32000LetterParser::singleton(); }
-        const LocationParser &location() const override { return DotStarLocationParser::singleton(); }
+        const LocationParser &location() const override {
+            return DotStarLocationParser::singleton();
+        }
     } PLUGINS{};
     return PLUGINS;
 }
 
 AsmNs32000::AsmNs32000(const ValueParser::Plugins &plugins)
-    : Assembler(plugins, PSEUDO_TABLE, &_opt_pmmu),
+    : Assembler(plugins, PSEUDO_TABLE, &_opt_fpu),
       Config(TABLE),
+      _opt_fpu(this, &Assembler::setFpu, OPT_TEXT_FPU, OPT_DESC_FPU, &_opt_pmmu),
       _opt_pmmu(this, &AsmNs32000::setPmmu, OPT_TEXT_PMMU, OPT_DESC_PMMU) {
     reset();
 }

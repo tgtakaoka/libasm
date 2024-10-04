@@ -96,8 +96,6 @@ protected:
     const Options _options;
     const IntOption<Assembler> _opt_listRadix;
     const BoolOption<Assembler> _opt_smartBranch;
-    const TextOption<Assembler> _opt_fpu;
-
     Radix _inputRadix;
     Radix _listRadix;
     bool _smartBranch;

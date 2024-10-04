@@ -15,7 +15,6 @@
  */
 
 #include "dis_mc68000.h"
-
 #include <math.h>
 #include "reg_mc68000.h"
 #include "table_mc68000.h"
@@ -26,13 +25,7 @@ namespace mc68000 {
 
 using namespace reg;
 using namespace text::common;
-
-namespace {
-
-const char OPT_BOOL_BINARY_FLOAT[] PROGMEM = "gnu-as";
-const char OPT_DESC_BINARY_FLOAT[] PROGMEM = "GNU assembler compatible";
-
-}  // namespace
+using namespace text::option;
 
 const ValueFormatter::Plugins &DisMc68000::defaultPlugins() {
     return ValueFormatter::Plugins::motorola();
@@ -41,7 +34,7 @@ const ValueFormatter::Plugins &DisMc68000::defaultPlugins() {
 DisMc68000::DisMc68000(const ValueFormatter::Plugins &plugins)
     : Disassembler(plugins, &_opt_gnuAs),
       Config(TABLE),
-      _opt_gnuAs(this, &DisMc68000::setGnuAs, OPT_BOOL_BINARY_FLOAT, OPT_DESC_BINARY_FLOAT) {
+      _opt_gnuAs(this, &DisMc68000::setGnuAs, OPT_BOOL_GNU_AS, OPT_DESC_GNU_AS) {
     reset();
 }
 

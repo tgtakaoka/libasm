@@ -29,21 +29,18 @@ struct DisNs32000 final : Disassembler, Config {
 
     void reset() override;
 
+    Error setGnuAs(bool enable);
     Error setPcRelativeParen(bool enable);
     Error setExternalParen(bool enable);
     Error setStringOptionBracket(bool enable);
     Error setFloatPrefix(bool enable);
 
 private:
-    const BoolOption<DisNs32000> _opt_pcrelParen;
+    const BoolOption<DisNs32000> _opt_gnuAs;
     const BoolOption<DisNs32000> _opt_externalParen;
-    const BoolOption<DisNs32000> _opt_stroptBracket;
-    const BoolOption<DisNs32000> _opt_floatPrefix;
 
-    bool _stringOptionBracket;
-    bool _pcRelativeParen;
+    bool _gnuAs;
     bool _externalParen;
-    bool _floatPrefix;
 
     struct Displacement : ErrorReporter {
         int32_t val32;

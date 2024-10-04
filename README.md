@@ -74,42 +74,40 @@ It can generate Intel HEX or Motorola S-Record output.
 
     libasm assembler (version 1.6.48)
     usage: asm [-o <output>] [-l <list>] <input>
-      -C <CPU>    : target CPU
-                    MC6800 MB8861 MC6801 HD6301 MC68HC11 MC6805 MC146805
-                    MC68HC05 MC6809 HD6309 MOS6502 R65C02 G65SC02 W65C02S
-                    W65C816S i8039 i8048 i80C39 i80C48 MSM80C39 MSM80C48 i8051
-                    i8080 i8085 V30EMU Z80 Z8 Z86C Z88 TLCS90 INS8060 INS8070
-                    CDP1802 CDP1804 CDP1804A SCN2650 F3850 IM6100 HD6120
-                    TMS7000 TMS32010 TMS32015 i8086 i80186 V30 i8096 MC68000
-                    TMS9900 TMS9980 TMS9995 TMS99105 Z8001 Z8002 NS32032 MN1610
-                    MN1613 MN1613A
-      -o <output> : output file
-      -l <list>   : list file
-      -S[<bytes>] : output Motorola S-Record format
-      -H[<bytes>] : output Intel HEX format
-                  : optional <bytes> specifies data record length (max 32)
-      -h          : use lowe case letter for hexadecimal
-      -n          : output line number to list file
-      -v          : print progress verbosely
-      --<name>=<vale>
-                  : extra options (<type> [, <CPU>])
-      list-radix      : set listing radix (8, 16)  (int)
-      smart-branch    : optimize branch instruction  (bool)
-      fpu             : floating point co-processor  (text)
-      pc-bits         : program counter width in bit, default 13  (int, 6805)
-      setdp           : set direct page register  (int, 6809)
-      longa           : enable 16-bit accumulator  (bool, 6502)
-      longi           : enable 16-bit index registers  (bool, 6502)
-      reg-alias       : emit register alias regarding setrp value  (bool, Z8)
-      setrp           : set register pointer  (int, Z8)
-      setrp0          : set register pointer 0  (int, Z8)
-      setrp1          : set register pointer 1  (int, Z8)
-      optimize-index  : optimize zero index  (bool, Z8)
-      use-register    : enable register name Rn  (bool, 1802)
-      implicit-word   : unknown instruction defines word  (bool, 6100)
-      optimize-segment: enable optimizing segment override  (bool, 8086)
-      short-direct    : enable optimizing direct addressing  (bool, Z8001)
-      pmmu            : memory management unit  (text, 32032)
+      -C <CPU>          : target CPU
+         MC6800 MB8861 MC6801 HD6301 MC68HC11 MC6805 MC146805 MC68HC05 MC6809
+         HD6309 MOS6502 R65C02 G65SC02 W65C02S W65C816S i8039 i8048 i80C39
+         i80C48 MSM80C39 MSM80C48 i8051 i8080 i8085 V30EMU Z80 Z8 Z86C Z88
+         TLCS90 INS8060 INS8070 CDP1802 CDP1804 CDP1804A SCN2650 F3850 IM6100
+         HD6120 TMS7000 TMS32010 TMS32015 i8086 i80186 V30 i8096 MC68000
+         TMS9900 TMS9980 TMS9995 TMS99105 Z8001 Z8002 NS32032 MN1610 MN1613
+         MN1613A
+      -o <output>       : output file
+      -l <list>         : list file
+      -S[<bytes>]       : output Motorola S-Record format
+      -H[<bytes>]       : output Intel HEX format
+                        : optional <bytes> specifies data record length (max 32)
+      -h                : use lowe case letter for hexadecimal
+      -n                : output line number to list file
+      -v                : print progress verbosely
+      --<name>=<vale>   : extra options (<type> [, <CPU>])
+      --list-radix      : set listing radix (8, 16) (int)
+      --smart-branch    : optimize branch instruction (bool)
+      --fpu             : floating point co-processor (text: 8086, 68000, 32032)
+      --implicit-word   : unknown instruction defines word (bool: 6100)
+      --longa           : enable 16-bit accumulator (bool: 6502)
+      --longi           : enable 16-bit index registers (bool: 6502)
+      --optimize-index  : optimize zero index (bool: Z8)
+      --optimize-segment: enable optimizing segment override (bool: 8086)
+      --pc-bits         : program counter width in bit, default 13 (int: 6805)
+      --pmmu            : memory management unit (text: 32032)
+      --reg-alias       : emit register alias regarding setrp value (bool: Z8)
+      --setdp           : set direct page register (int: 6809)
+      --setrp           : set register pointer (int: Z8)
+      --setrp0          : set register pointer 0 (int: Z8)
+      --setrp1          : set register pointer 1 (int: Z8)
+      --short-direct    : enable optimizing direct addressing (bool: Z8001)
+      --use-register    : enable register name Rn (bool: 1802)
 
 ## Disassembler command line interface
 
@@ -118,51 +116,44 @@ It can read Intel HEX or Motorola S-Record input.
 
     libasm disassembler (version 1.6.48)
     usage: dis -C <CPU> [-o <output>] [-l <list>] <input>
-      -C <CPU>    : target CPU
-                    MC6800 MB8861 MC6801 HD6301 MC68HC11 MC6805 MC146805
-                    MC68HC05 MC6809 HD6309 MOS6502 R65C02 G65SC02 W65C02S
-                    W65C816S i8039 i8048 i80C39 i80C48 MSM80C39 MSM80C48 i8051
-                    i8080 i8085 V30EMU Z80 Z8 Z86C Z88 TLCS90 INS8060 INS8070
-                    CDP1802 CDP1804 CDP1804A SCN2650 F3850 IM6100 HD6120
-                    TMS7000 TMS32010 TMS32015 i8086 i80186 V30 i8096 MC68000
-                    TMS9900 TMS9980 TMS9995 TMS99105 Z8001 Z8002 NS32032 MN1610
-                    MN1613 MN1613A
-      -o <output> : output file
-      -l <list>   : list file
-      <input>     : file can be Motorola S-Record or Intel HEX format
-      -A start[,end]
-                  : disassemble start address and optional end address
-      -r          : use program counter relative notation
-      -h          : use lower case letter for hexadecimal
-      -u          : use upper case letter for output
-      -v          : print progress verbosely
-      --<name>=<vale>
-                  : extra options (<type> [, <CPU>])
-      upper-hex       : use upper case letter for hexadecimal  (bool)
-      upper-case      : use upper case letter for output  (bool)
-      list-radix      : set listing radix (8, 16)  (int)
-      relative        : program counter relative branch target  (bool)
-      c-style         : C language style number constant  (bool)
-      intel-hex       : Intel style hexadecimal  (bool)
-      origin-char     : letter for origin symbol  (char)
-      pc-bits         : program counter width in bit (default 13)  (int, 6805)
-      longa           : enable 16-bit accumulator  (bool, 6502)
-      longi           : enable 16-bit index registers  (bool, 6502)
-      indirect-long   : [] for indirect long operand  (bool, 6502)
-      work-register   : prefer work register name than alias address  (bool, Z8)
-      use-sharp       : use # (default =) for immediate  (bool, 8070)
-      use-register    : use register name Rn  (bool, 1802)
-      segment-insn    : segment override as instruction  (bool, 8086)
-      string-insn     : string instruction as repeat operand  (bool, 8086)
-      use-absolute    : zero register indexing as absolute addressing  (bool, 8096)
-      gnu-as          : GNU assembler compatible  (bool, 68000)
-      short-direct    : use |addr| for short direct notation  (bool, Z8001)
-      segmented-addr  : use <<segment>> notation  (bool, Z8001)
-      ioaddr-prefix   : I/O address prefix # (default none)  (bool, Z8001)
-      pcrel-paren     : addr(pc) as program counter relative  (bool, 32032)
-      external-paren  : disp2(disp(ext)) as external addressing  (bool, 32032)
-      stropt-bracket  : string instruction operand in []  (bool, 32032)
-      float-prefix    : float prefix 0F/0L (default none)  (bool, 32032)
+      -C <CPU>         : target CPU
+         MC6800 MB8861 MC6801 HD6301 MC68HC11 MC6805 MC146805 MC68HC05 MC6809
+         HD6309 MOS6502 R65C02 G65SC02 W65C02S W65C816S i8039 i8048 i80C39
+         i80C48 MSM80C39 MSM80C48 i8051 i8080 i8085 V30EMU Z80 Z8 Z86C Z88
+         TLCS90 INS8060 INS8070 CDP1802 CDP1804 CDP1804A SCN2650 F3850 IM6100
+         HD6120 TMS7000 TMS32010 TMS32015 i8086 i80186 V30 i8096 MC68000
+         TMS9900 TMS9980 TMS9995 TMS99105 Z8001 Z8002 NS32032 MN1610 MN1613
+         MN1613A
+      -o <output>      : output file
+      -l <list>        : list file
+      <input>          : file can be Motorola S-Record or Intel HEX format
+      -A start[,end]   : disassemble start address and optional end address
+      -r               : use program counter relative notation
+      -h               : use lower case letter for hexadecimal
+      -u               : use upper case letter for output
+      -v               : print progress verbosely
+      --<name>=<vale>  : extra options (<type> [, <CPU>])
+      --upper-hex      : use upper case letter for hexadecimal (bool)
+      --upper-case     : use upper case letter for output (bool)
+      --list-radix     : set listing radix (8, 16) (int)
+      --relative       : program counter relative branch target (bool)
+      --c-style        : C language style number constant (bool)
+      --intel-hex      : Intel style hexadecimal (bool)
+      --origin-char    : letter for origin symbol (char)
+      --external-paren : disp2(disp(ext)) as external addressing (bool: 32032)
+      --gnu-as         : GNU assembler compatible (bool: 68000, Z8001, 32032)
+      --indirect-long  : [] for indirect long operand (bool: 6502)
+      --longa          : enable 16-bit accumulator (bool: 6502)
+      --longi          : enable 16-bit index registers (bool: 6502)
+      --pc-bits        : program counter width in bit (default 13) (int: 6805)
+      --segment-insn   : segment override as instruction (bool: 8086)
+      --segmented-addr : use <<segment>> notation (bool: Z8001)
+      --short-direct   : use |addr| for short direct notation (bool: Z8001)
+      --string-insn    : string instruction as repeat operand (bool: 8086)
+      --use-absolute   : zero register indexing as absolute addressing (bool: 8096)
+      --use-register   : use register name Rn (bool: 1802)
+      --use-sharp      : use # (default =) for immediate (bool: 8070)
+      --work-register  : prefer work register name than alias address (bool: Z8)
 
 ## Supported host environment
 
