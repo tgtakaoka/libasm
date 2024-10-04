@@ -295,8 +295,8 @@ void test_data_constant() {
     TEST("DC #'",      0x27);
     TEST("DC c'A''C'",     0x41, 0x27, 0x43);
     TEST("DC 'A''C'",      0x41, 0x27, 0x43);
-    ERUS("DC 1, UNDEF", "UNDEF", 0x01, 0x00);
-    ERUS("DA 1, UNDEF", "UNDEF", 0x00, 0x01, 0x00, 0x00);
+    ERUS("DC 1, UNDEF, 2", "UNDEF, 2", 0x01, 0x00, 0x02);
+    ERUS("DA 1, UNDEF, 2", "UNDEF, 2", 0x00, 0x01, 0x00, 0x00, 0x00, 0x02);
 
     ERRT("DC C'"
          "1234567890" "1234567890" "1234567890" "1234567890" "1234567890" "1234567890"

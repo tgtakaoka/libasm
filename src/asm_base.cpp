@@ -385,11 +385,12 @@ Error Assembler::defineDataConstant(StrScanner &scan, Insn &insn, uint8_t dataTy
             case DATA_ALIGN2:
                 break;
             }
+            if (exprErr.getError())
+                error.setErrorIf(exprErr);
             if (insn.getError())
                 error.setErrorIf(at, insn);
             scan = p;
-            if (exprErr.isOK())
-                continue;
+            continue;
         }
 
         return insn.setError(strErr.getError() ? strErr : exprErr);

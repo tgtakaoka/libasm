@@ -446,8 +446,8 @@ static void test_data_constant() {
     TEST("DW -128, 255", 0x80, 0xFF, 0xFF, 0x00);
     TEST("DW 'A''B'",    0x41, 0x27, 0x42, 0x00);
     ERRT("DW 'A''B",     MISSING_CLOSING_QUOTE, "'A''B");
-    ERUS("DB 1, UNDEF", "UNDEF", 0x01, 0x00);
-    ERUS("DW 1, UNDEF", "UNDEF", 0x01, 0x00, 0x00, 0x00);
+    ERUS("DB 1, UNDEF, 2", "UNDEF, 2", 0x01, 0x00, 0x02);
+    ERUS("DW 1, UNDEF, 2", "UNDEF, 2", 0x01, 0x00, 0x00, 0x00, 0x02, 0x00);
 
     ERRT("DB '"
          "1234567890" "1234567890" "1234567890" "1234567890" "1234567890" "1234567890"

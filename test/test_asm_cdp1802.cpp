@@ -818,8 +818,8 @@ static void test_data_constant() {
     ERRT("DC T'A",         MISSING_CLOSING_QUOTE, "T'A");
     ERRT("DC T'TEXT",      MISSING_CLOSING_QUOTE, "T'TEXT");
     ERRT("DC 'TEXT",       MISSING_CLOSING_QUOTE, "'TEXT");
-    ERUS("DC 1, UNDEF",    "UNDEF",  0x01, 0x00);
-    ERUS("DC A(1), A(UNDEF)", "UNDEF)", 0x00, 0x01, 0x00, 0x00);
+    ERUS("DC 1, UNDEF, 2",       "UNDEF, 2",  0x01, 0x00, 0x02);
+    ERUS("DC A(1), A(UNDEF), 2", "UNDEF), 2", 0x00, 0x01, 0x00, 0x00, 0x02);
 
     ERRT("DC T'"
          "1234567890" "1234567890" "1234567890" "1234567890" "1234567890" "1234567890"
