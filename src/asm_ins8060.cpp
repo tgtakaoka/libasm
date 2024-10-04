@@ -204,12 +204,12 @@ Error AsmIns8060::defineAddrConstant(StrScanner &scan, Insn &insn) {
     do {
         auto p = scan.skipSpaces();
         const auto value = parseInteger(p, insn);
-        if (insn.hasError())
-            break;
-        const auto v = value.getUnsigned();
-        insn.emitUint16Le(page(v) | offset(v - 1));
+        if (!insn.hasError()) {
+            const auto v = value.getUnsigned();
+            insn.emitUint16Le(page(v) | offset(v - 1));
+        }
         scan = p;
-    } while (scan.skipSpaces().expect(',') && insn.isOK());
+    } while (scan.skipSpaces().expect(',') && !insn.hasError());
     return insn.getError();
 }
 

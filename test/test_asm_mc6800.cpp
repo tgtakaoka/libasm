@@ -1060,8 +1060,8 @@ static void test_data_constant() {
     TEST("FCC //");
     ERRT("FCC 'ABC",      MISSING_CLOSING_DELIMITER, "", 0x41, 0x42, 0x43);
     ERRT("FCC /ABC",      MISSING_CLOSING_DELIMITER, "", 0x41, 0x42, 0x43);
-    ERUS("FCB 1, UNDEF", "UNDEF", 0x01, 0x00);
-    ERUS("FDB 1, UNDEF", "UNDEF", 0x00, 0x01, 0x00, 0x00);
+    ERUS("FCB 1, UNDEF, 2", "UNDEF, 2", 0x01, 0x00, 0x02);
+    ERUS("FDB 1, UNDEF, 2", "UNDEF, 2", 0x00, 0x01, 0x00, 0x00, 0x00, 0x02);
 
     ERRT("FCC /"
          "1234567890" "1234567890" "1234567890" "1234567890" "1234567890" "1234567890"

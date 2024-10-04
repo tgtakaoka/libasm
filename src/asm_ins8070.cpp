@@ -268,12 +268,12 @@ Error AsmIns8070::defineAddrConstant(StrScanner &scan, Insn &insn) {
     do {
         auto p = scan.skipSpaces();
         const auto value = parseInteger(p, insn);
-        if (insn.hasError())
-            break;
-        const auto v = value.getUnsigned();
-        insn.emitUint16Le((v - 1) & 0xFFFF);
+        if (!insn.hasError()) {
+            const auto v = value.getUnsigned();
+            insn.emitUint16Le((v - 1) & 0xFFFF);
+        }
         scan = p;
-    } while (scan.skipSpaces().expect(',') && insn.isOK());
+    } while (scan.skipSpaces().expect(',') && !insn.hasError());
     return insn.getError();
 }
 
