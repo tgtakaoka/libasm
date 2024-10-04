@@ -15,7 +15,6 @@
  */
 
 #include "dis_ns32000.h"
-
 #include "reg_ns32000.h"
 #include "table_ns32000.h"
 #include "text_common.h"
@@ -25,17 +24,12 @@ namespace ns32000 {
 
 using namespace reg;
 using namespace text::common;
+using namespace text::option;
 
 namespace {
 
-const char OPT_BOOL_PCREL_PAREN[] PROGMEM = "pcrel-paren";
-const char OPT_DESC_PCREL_PAREN[] PROGMEM = "addr(pc) as program counter relative";
 const char OPT_BOOL_EXTERNAL_PAREN[] PROGMEM = "external-paren";
 const char OPT_DESC_EXTERNAL_PAREN[] PROGMEM = "disp2(disp(ext)) as external addressing";
-const char OPT_BOOL_STROPT_BRACKET[] PROGMEM = "stropt-bracket";
-const char OPT_DESC_STROPT_BRACKET[] PROGMEM = "string instruction operand in []";
-const char OPT_BOOL_FLOAT_PREFIX[] PROGMEM = "float-prefix";
-const char OPT_DESC_FLOAT_PREFIX[] PROGMEM = "float prefix 0F/0L (default none)";
 
 }  // namespace
 
@@ -49,44 +43,30 @@ const ValueFormatter::Plugins &DisNs32000::defaultPlugins() {
 }
 
 DisNs32000::DisNs32000(const ValueFormatter::Plugins &plugins)
-    : Disassembler(plugins, &_opt_pcrelParen),
+    : Disassembler(plugins, &_opt_gnuAs),
       Config(TABLE),
-      _opt_pcrelParen(this, &DisNs32000::setPcRelativeParen, OPT_BOOL_PCREL_PAREN,
-              OPT_DESC_PCREL_PAREN, &_opt_externalParen),
+      _opt_gnuAs(
+              this, &DisNs32000::setGnuAs, OPT_BOOL_GNU_AS, OPT_DESC_GNU_AS, &_opt_externalParen),
       _opt_externalParen(this, &DisNs32000::setExternalParen, OPT_BOOL_EXTERNAL_PAREN,
-              OPT_DESC_EXTERNAL_PAREN, &_opt_stroptBracket),
-      _opt_stroptBracket(this, &DisNs32000::setStringOptionBracket, OPT_BOOL_STROPT_BRACKET,
-              OPT_DESC_STROPT_BRACKET, &_opt_floatPrefix),
-      _opt_floatPrefix(
-              this, &DisNs32000::setFloatPrefix, OPT_BOOL_FLOAT_PREFIX, OPT_DESC_FLOAT_PREFIX) {
+              OPT_DESC_EXTERNAL_PAREN) {
     reset();
 }
 
 void DisNs32000::reset() {
     Disassembler::reset();
-    setPcRelativeParen(false);
+    setGnuAs(false);
     setExternalParen(false);
-    setStringOptionBracket(false);
-    setFloatPrefix(false);
 }
 
-Error DisNs32000::setPcRelativeParen(bool enable) {
-    _pcRelativeParen = enable;
+Error DisNs32000::setGnuAs(bool enable) {
+    _gnuAs = enable;
+    setCStyle(enable);
+    setCurSym(enable ? '.' : 0);
     return OK;
 }
 
 Error DisNs32000::setExternalParen(bool enable) {
     _externalParen = enable;
-    return OK;
-}
-
-Error DisNs32000::setStringOptionBracket(bool enable) {
-    _stringOptionBracket = enable;
-    return OK;
-}
-
-Error DisNs32000::setFloatPrefix(bool enable) {
-    _floatPrefix = enable;
     return OK;
 }
 
@@ -223,12 +203,12 @@ void DisNs32000::decodeImmediate(DisInsn &insn, StrBuffer &out, AddrMode mode) c
     } else if (mode == M_FENR || mode == M_FENW) {
         if (size == SZ_OCTA) {
             const auto float64 = insn.readFloat64Be();
-            if (_floatPrefix)
+            if (_gnuAs)
                 out.letter('0').letter('l');
             out.float64(float64);
         } else {
             const auto float32 = insn.readFloat32Be();
-            if (_floatPrefix)
+            if (_gnuAs)
                 out.letter('0').letter('f');
             out.float32(float32);
         }
@@ -271,7 +251,7 @@ void DisNs32000::decodeConfig(DisInsn &insn, StrBuffer &out, OprPos pos) const {
 
 void DisNs32000::decodeStrOpt(DisInsn &insn, StrBuffer &out, OprPos pos) const {
     auto strOpts = getOprField(insn, pos);
-    if (_stringOptionBracket)
+    if (_gnuAs)
         out.letter('[');
     char sep = 0;
     if (strOpts & uint8_t(STROPT_B)) {
@@ -290,7 +270,7 @@ void DisNs32000::decodeStrOpt(DisInsn &insn, StrBuffer &out, OprPos pos) const {
             insn.setErrorIf(ILLEGAL_OPERAND_MODE);
         }
     }
-    if (_stringOptionBracket)
+    if (_gnuAs)
         out.letter(']');
 }
 
@@ -395,7 +375,7 @@ void DisNs32000::decodeGeneric(DisInsn &insn, StrBuffer &out, AddrMode mode, Opr
         outAbsAddr(out.letter('@'), disp.val32, insn.getError() == OVERFLOW_RANGE ? -32 : 0);
         break;
     case 0x16:  // M_EXT
-        if (_externalParen) {
+        if (_externalParen && !_gnuAs) {
             reg = REG_EXT;
             goto m_mrel;
         }
@@ -435,7 +415,7 @@ void DisNs32000::decodeGeneric(DisInsn &insn, StrBuffer &out, AddrMode mode, Opr
         if (reg == REG_PC) {
             const auto target = insn.address() + disp.val32;
             insn.setErrorIf(out, checkAddr(target));
-            if (_pcRelativeParen) {
+            if (_gnuAs) {
                 outAbsAddr(out, target);
             } else {
                 out.letter(_curSym);

@@ -52,7 +52,7 @@ private:
     std::map<std::string, std::string> _options;
 
     static constexpr const char *PROG_PREFIX = "asm";
-    void defaultDirective();
+    bool defaultDirective();
     int parseOptionValue(const char *option);
 };
 

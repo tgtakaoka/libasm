@@ -130,6 +130,17 @@ const char *Options::nameof(OptionBase::OptionSpec spec) {
     }
 }
 
+namespace text {
+namespace option {
+
+constexpr char OPT_BOOL_GNU_AS[] PROGMEM = "gnu-as";
+constexpr char OPT_DESC_GNU_AS[] PROGMEM = "GNU assembler compatible";
+constexpr char OPT_TEXT_FPU[] PROGMEM = "fpu";
+constexpr char OPT_DESC_FPU[] PROGMEM = "floating point co-processor";
+
+}  // namespace option
+}  // namespace text
+
 }  // namespace libasm
 
 // Local Variables:

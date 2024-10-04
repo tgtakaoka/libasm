@@ -15,7 +15,6 @@
  */
 
 #include "asm_i8086.h"
-
 #include "table_i8086.h"
 #include "text_i8086.h"
 
@@ -25,10 +24,9 @@ namespace i8086 {
 using namespace pseudo;
 using namespace reg;
 using namespace text::common;
+using namespace text::option;
 
-using text::i8086::TEXT_FPU;
 using text::i8086::TEXT_FPU_8087;
-using text::i8086::TEXT_none;
 
 namespace {
 
@@ -69,8 +67,9 @@ const ValueParser::Plugins &AsmI8086::defaultPlugins() {
 }
 
 AsmI8086::AsmI8086(const ValueParser::Plugins &plugins)
-    : Assembler(plugins, PSEUDO_TABLE, &_opt_optimizeSegment),
+    : Assembler(plugins, PSEUDO_TABLE, &_opt_fpu),
       Config(TABLE),
+      _opt_fpu(this, &Assembler::setFpu, OPT_TEXT_FPU, OPT_DESC_FPU, &_opt_optimizeSegment),
       _opt_optimizeSegment(this, &AsmI8086::setOptimizeSegment, OPT_BOOL_OPTIMIZE_SEGMENT,
               OPT_DESC_OPTIMIZE_SEGMENT) {
     reset();

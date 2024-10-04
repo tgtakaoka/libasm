@@ -34,6 +34,7 @@ struct AsmI8086 final : Assembler, Config {
     Error setOptimizeSegment(bool enable);
 
 private:
+    const TextOption<Assembler> _opt_fpu;
     const BoolOption<AsmI8086> _opt_optimizeSegment;
 
     bool _optimizeSegment;

@@ -34,6 +34,7 @@ struct AsmNs32000 final : Assembler, Config {
     Error setPmmu(StrScanner &scan);
 
 private:
+    const TextOption<Assembler> _opt_fpu;
     const TextOption<AsmNs32000> _opt_pmmu;
 
     Error parseStrOptNames(StrScanner &scan, Operand &op, bool braket = false) const;

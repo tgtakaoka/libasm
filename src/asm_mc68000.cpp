@@ -15,7 +15,6 @@
  */
 
 #include "asm_mc68000.h"
-
 #include <stdlib.h>
 #include "table_mc68000.h"
 #include "text_mc68000.h"
@@ -26,11 +25,10 @@ namespace mc68000 {
 using namespace pseudo;
 using namespace reg;
 using namespace text::common;
+using namespace text::option;
 
-using text::mc68000::TEXT_FPU;
 using text::mc68000::TEXT_FPU_68881;
 using text::mc68000::TEXT_FPU_MC68881;
-using text::mc68000::TEXT_none;
 
 namespace {
 
@@ -87,7 +85,9 @@ const ValueParser::Plugins &AsmMc68000::defaultPlugins() {
 }
 
 AsmMc68000::AsmMc68000(const ValueParser::Plugins &plugins)
-    : Assembler(plugins, PSEUDO_TABLE), Config(TABLE) {
+    : Assembler(plugins, PSEUDO_TABLE, &_opt_fpu),
+      Config(TABLE),
+      _opt_fpu(this, &Assembler::setFpu, OPT_TEXT_FPU, OPT_DESC_FPU) {
     reset();
 }
 

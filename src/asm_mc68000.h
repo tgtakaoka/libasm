@@ -32,6 +32,8 @@ struct AsmMc68000 final : Assembler, Config {
     Error setFpu(StrScanner &scan) override;
 
 private:
+    const TextOption<Assembler> _opt_fpu;
+
     Error parseOperand(StrScanner &scan, Operand &op) const;
     Error parseKFactor(StrScanner &scan, Operand &op) const;
     Error checkAlignment(AsmInsn &insn, OprSize size, const Operand &op) const;

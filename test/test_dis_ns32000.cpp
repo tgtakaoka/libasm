@@ -268,11 +268,15 @@ static void test_format_2() {
     TEST("SLTD", "-14(SB)",      0x3F, 0xD6, 0x72);
     ATEST(0x1000, "SGED", ".-15",         0xBF, 0xDE, 0x71);
 
-    disassembler.setOption("pcrel-paren", "enable");
+    disassembler.setOption("gnu-as", "enable");
     ATEST(0x1000, "SHSW", "0x00100F(PC)", 0xBD, 0xDD, 0x0F);
     ATEST(0x1000, "SGED", "0x000FF1(PC)", 0xBF, 0xDE, 0x71);
 
     disassembler.setOption("external-paren", "enable");
+    TEST("SGTW", "EXT(15)+16", 0x3D, 0xB3, 0x0F, 0x10);
+    TEST("SFCD", "EXT(-9)+(-8)", 0xBF, 0xB4, 0x77, 0x78);
+
+    disassembler.setOption("gnu-as", "disable");
     TEST("SGTW", "16(15(EXT))", 0x3D, 0xB3, 0x0F, 0x10);
     TEST("SFCD", "-8(-9(EXT))", 0xBF, 0xB4, 0x77, 0x78);
 }
@@ -286,7 +290,7 @@ static void test_format_3() {
     TEST("JSR",    "0(4(SB))",  0x7F, 0x96, 0x04, 0x00);
     TEST("JUMP",   "0(-8(FP))", 0x7F, 0x82, 0x78, 0x00);
 
-    disassembler.setOption("pcrel-paren", "enable");
+    disassembler.setOption("gnu-as", "enable");
     ATEST(0x100000, "CASEB",  "0x100004(PC)[R7:B]", 0x7C, 0xE7, 0xDF, 0x04);
 }
 
@@ -582,7 +586,7 @@ static void test_format_11_fpu() {
     ERRT("SUBL", "F1, 16(SB)", REGISTER_NOT_ALIGNED, "F1, 16(SB)", 0xBE, 0x90, 0x0E, 0x10);
     ERRT("SUBL", "16(SB), F3", REGISTER_NOT_ALIGNED, "F3",         0xBE, 0xD0, 0xD0, 0x10);
 
-    disassembler.setOption("float-prefix", "on");
+    disassembler.setOption("gnu-as", "on");
     TEST("CMPF", "0F1.25, 0F3.75",
          0xBE, 0x09, 0xA5,
          0x3F, 0xA0, 0x00, 0x00,
@@ -761,7 +765,7 @@ static void test_generic_addressing() {
          0xC0, 0x55, 0x66, 0x77,
          0x20);
 
-    disassembler.setOption("pcrel-paren", "enable");
+    disassembler.setOption("gnu-as", "enable");
     symtab.intern(0x10004, "label4");
     ATEST(0x10000, "ADDW", "label4(PC), 6(R2)",   0x81, 0xDA, 0x04, 0x06);
     ATEST(0x10000, "ADDW", "6(R2), label4(PC)",   0xC1, 0x56, 0x06, 0x04);
@@ -772,6 +776,14 @@ static void test_generic_addressing() {
     ATEST(0x10000, "ADDW", "8(R2)[R3:Q], label4(PC)[R5:W]",  0x41, 0xFF, 0x53, 0xDD, 0x08, 0x04);
 
     disassembler.setOption("external-paren", "enable");
+    TEST("ADDW", "EXT(2)+4, 10(R2)",         0x81, 0xB2, 0x02, 0x04, 0x0A);
+    TEST("ADDW", "EXT(-2)+(-4), 10(R2)",     0x81, 0xB2, 0x7E, 0x7C, 0x0A);
+    TEST("ADDW", "EXT(-2)+4, EXT(-6)+8",     0x81, 0xB5, 0x7E, 0x04, 0x7A, 0x08);
+    TEST("ADDW", "EXT(2)+(-4), EXT(6)+(-8)", 0x81, 0xB5, 0x02, 0x7C, 0x06, 0x78);
+    TEST("ADDW", "10(R2), EXT(6)+8",         0x81, 0x55, 0x0A, 0x06, 0x08);
+    TEST("ADDW", "10(R2), EXT(-6)+(-8)",     0x81, 0x55, 0x0A, 0x7A, 0x78);
+
+    disassembler.setOption("gnu-as", "disable");
     TEST("ADDW", "4(2(EXT)), 10(R2)",      0x81, 0xB2, 0x02, 0x04, 0x0A);
     TEST("ADDW", "-4(-2(EXT)), 10(R2)",    0x81, 0xB2, 0x7E, 0x7C, 0x0A);
     TEST("ADDW", "4(-2(EXT)), 8(-6(EXT))", 0x81, 0xB5, 0x7E, 0x04, 0x7A, 0x08);
@@ -788,8 +800,8 @@ static void test_formatter() {
     TEST("SLSW", "@X'00000E",              0xBD, 0xAA, 0x0E);
     TEST("CMPW", "X'1234, X'5678",         0x05, 0xA5, 0x12, 0x34, 0x56, 0x78);
 
-    disassembler.setOption("pcrel-paren", "enable");
-    ATEST(0x1000, "SHSW", "X'00100F(PC)", 0xBD, 0xDD, 0x0F);
+    disassembler.setOption("gnu-as", "enable");
+    ATEST(0x1000, "SHSW", "0x00100F(PC)", 0xBD, 0xDD, 0x0F);
 }
 // clang-format on
 

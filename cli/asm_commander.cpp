@@ -125,23 +125,25 @@ int AsmCommander::assemble() {
     return errors;
 }
 
-void AsmCommander::defaultDirective() {
+bool AsmCommander::defaultDirective() {
     const auto prefix = strstr(_prog_name, PROG_PREFIX);
     if (prefix) {
         const auto cpu = prefix + strlen(PROG_PREFIX);
-        _driver.restrictCpu(cpu);
+        return _driver.restrictCpu(cpu);
     }
+    return false;
 }
 
 int AsmCommander::usage() {
-    defaultDirective();
+    if (!defaultDirective() && _cpu && !_driver.restrictCpu(_cpu))
+        fprintf(stderr, "Unknown CPU specified\n");
     std::string list;
-    const auto cpuSep = "\n                ";
+    const auto cpuSep = "\n     ";
     std::string buf;
     for (auto &cpu : _driver.listCpu()) {
         if (buf.size())
             buf += " ";
-        if (buf.size() + cpu.size() < 60) {
+        if (buf.size() + cpu.size() < 70) {
             buf += cpu;
         } else {
             list += cpuSep;
@@ -149,7 +151,7 @@ int AsmCommander::usage() {
             buf = cpu;
         }
     }
-    if (list.size() + buf.size() < 60) {
+    if (list.size() + buf.size() < 70) {
         list += ": " + buf;
     } else {
         list += cpuSep + buf;
@@ -158,34 +160,49 @@ int AsmCommander::usage() {
             "libasm assembler (version " LIBASM_VERSION_STRING
             ")\n"
             "usage: %s [-o <output>] [-l <list>] <input>\n"
-            "  -C <CPU>    : target CPU%s\n"
-            "  -o <output> : output file\n"
-            "  -l <list>   : list file\n"
-            "  -S[<bytes>] : output Motorola S-Record format\n"
-            "  -H[<bytes>] : output Intel HEX format\n"
-            "              : optional <bytes> specifies data record length "
+            "  -C <CPU>          : target CPU%s\n"
+            "  -o <output>       : output file\n"
+            "  -l <list>         : list file\n"
+            "  -S[<bytes>]       : output Motorola S-Record format\n"
+            "  -H[<bytes>]       : output Intel HEX format\n"
+            "                    : optional <bytes> specifies data record length "
             "(max 32)\n"
-            "  -h          : use lowe case letter for hexadecimal\n"
-            "  -n          : output line number to list file\n"
-            "  -v          : print progress verbosely\n",
+            "  -h                : use lowe case letter for hexadecimal\n"
+            "  -n                : output line number to list file\n"
+            "  -v                : print progress verbosely\n",
             _prog_name, list.c_str());
     bool longOptions = false;
     for (const auto *dir : _driver)
         longOptions |= (dir->commonOptions().head() || dir->options().head());
     if (longOptions) {
         fprintf(stderr,
-                "  --<name>=<vale>\n"
-                "              : extra options (<type> [, <CPU>])\n");
+                "  --<name>=<vale>   : extra options (<type> [, <CPU>])\n");
         const auto dir = *_driver.begin();
         for (const auto *opt = dir->commonOptions().head(); opt; opt = opt->next()) {
-            fprintf(stderr, "  %-16s: %s  (%s)\n", opt->name_P(), opt->description_P(),
+            fprintf(stderr, "  --%-16s: %s (%s)\n", opt->name_P(), opt->description_P(),
                     Options::nameof(opt->spec()));
         }
+        std::map<std::string, std::string> cpus;
+        std::map<std::string, std::string> descs;
+        std::map<std::string, OptionBase::OptionSpec> specs;
         for (const auto *dir : _driver) {
             for (const auto *opt = dir->options().head(); opt; opt = opt->next()) {
-                fprintf(stderr, "  %-16s: %s  (%s, %s)\n", opt->name_P(), opt->description_P(),
-                        Options::nameof(opt->spec()), dir->cpu_P());
+                const std::string name{opt->name_P()};
+                if (descs.find(name) == descs.end()) {
+                    descs[name] = opt->description_P();
+                    specs[name] = opt->spec();
+                    cpus[name] = dir->cpu_P();
+                } else {
+                    cpus[name] += ", ";
+                    cpus[name] += dir->cpu_P();
+                }
             }
+        }
+        for (const auto &opt : descs) {
+            const auto &name = opt.first;
+            const auto &desc = opt.second;
+            fprintf(stderr, "  --%-16s: %s (%s: %s)\n", name.c_str(), desc.c_str(),
+                    Options::nameof(specs[name]), cpus[name].c_str());
         }
     }
     return 2;

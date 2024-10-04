@@ -128,16 +128,17 @@ Disassembler *DisCommander::defaultDisassembler() {
 }
 
 int DisCommander::usage() {
-    defaultDisassembler();
+    if (defaultDisassembler() == nullptr && _cpu && _driver.restrictCpu(_cpu) == nullptr)
+        fprintf(stderr, "Unknown CPU specified\n");
     const auto cpuList = _driver.listCpu();
     const auto cpuOption = cpuList.size() == 1 ? "" : " -C <CPU>";
     std::string list;
-    const auto cpuSep = "\n                ";
+    const auto cpuSep = "\n     ";
     std::string buf;
     for (auto &cpu : cpuList) {
         if (buf.size())
             buf += " ";
-        if (buf.size() + cpu.size() < 60) {
+        if (buf.size() + cpu.size() < 70) {
             buf += cpu;
         } else {
             list += cpuSep;
@@ -145,7 +146,7 @@ int DisCommander::usage() {
             buf = cpu;
         }
     }
-    if (list.size() + buf.size() < 60) {
+    if (list.size() + buf.size() < 70) {
         list += ": " + buf;
     } else {
         list += cpuSep + buf;
@@ -154,34 +155,48 @@ int DisCommander::usage() {
             "libasm disassembler (version " LIBASM_VERSION_STRING
             ")\n"
             "usage: %s%s [-o <output>] [-l <list>] <input>\n"
-            "  -C <CPU>    : target CPU%s\n"
-            "  -o <output> : output file\n"
-            "  -l <list>   : list file\n"
-            "  <input>     : file can be Motorola S-Record or Intel HEX format\n"
-            "  -A start[,end]\n"
-            "              : disassemble start address and optional end address\n"
-            "  -r          : use program counter relative notation\n"
-            "  -h          : use lower case letter for hexadecimal\n"
-            "  -u          : use upper case letter for output\n"
-            "  -v          : print progress verbosely\n",
+            "  -C <CPU>         : target CPU%s\n"
+            "  -o <output>      : output file\n"
+            "  -l <list>        : list file\n"
+            "  <input>          : file can be Motorola S-Record or Intel HEX format\n"
+            "  -A start[,end]   : disassemble start address and optional end address\n"
+            "  -r               : use program counter relative notation\n"
+            "  -h               : use lower case letter for hexadecimal\n"
+            "  -u               : use upper case letter for output\n"
+            "  -v               : print progress verbosely\n",
             _prog_name, cpuOption, list.c_str());
     bool longOptions = false;
     for (const auto *dis : _driver)
         longOptions |= (dis->commonOptions().head() || dis->options().head());
     if (longOptions) {
         fprintf(stderr,
-                "  --<name>=<vale>\n"
-                "              : extra options (<type> [, <CPU>])\n");
+                "  --<name>=<vale>  : extra options (<type> [, <CPU>])\n");
         const auto dis = *_driver.begin();
         for (const auto *opt = dis->commonOptions().head(); opt; opt = opt->next()) {
-            fprintf(stderr, "  %-16s: %s  (%s)\n", opt->name_P(), opt->description_P(),
+            fprintf(stderr, "  --%-15s: %s (%s)\n", opt->name_P(), opt->description_P(),
                     Options::nameof(opt->spec()));
         }
-        for (const auto *dis : _driver) {
-            for (const auto *opt = dis->options().head(); opt; opt = opt->next()) {
-                fprintf(stderr, "  %-16s: %s  (%s, %s)\n", opt->name_P(), opt->description_P(),
-                        Options::nameof(opt->spec()), dis->config().cpu_P());
+        std::map<std::string, std::string> cpus;
+        std::map<std::string, std::string> descs;
+        std::map<std::string, OptionBase::OptionSpec> specs;
+        for (const auto *dir : _driver) {
+            for (const auto *opt = dir->options().head(); opt; opt = opt->next()) {
+                const std::string name{opt->name_P()};
+                if (descs.find(name) == descs.end()) {
+                    descs[name] = opt->description_P();
+                    specs[name] = opt->spec();
+                    cpus[name] = dir->config().cpu_P();
+                } else {
+                    cpus[name] += ", ";
+                    cpus[name] += dir->config().cpu_P();
+                }
             }
+        }
+        for (const auto &opt : descs) {
+            const auto &name = opt.first;
+            const auto &desc = opt.second;
+            fprintf(stderr, "  --%-15s: %s (%s: %s)\n", name.c_str(), desc.c_str(),
+                    Options::nameof(specs[name]), cpus[name].c_str());
         }
     }
     return 2;
