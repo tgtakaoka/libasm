@@ -39,17 +39,18 @@ constexpr Pseudo PSEUDOS[] PROGMEM = {
 // clang-format on
 PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
 
+struct Mn1610NumberParser final : IbmNumberParser, Singleton<Mn1610NumberParser> {
+    Mn1610NumberParser() : IbmNumberParser('X', 0, 0, 0) {}
+};
+
 }  // namespace
 
 const ValueParser::Plugins &AsmMn1610::defaultPlugins() {
     static const struct final : ValueParser::Plugins {
-        const NumberParser &number() const override { return _number; }
-        const CommentParser &comment() const override { return AsteriskCommentParser::singleton(); }
+        const NumberParser &number() const override { return Mn1610NumberParser::singleton(); }
+        const CommentParser &comment() const override { return StarCommentParser::singleton(); }
         const LetterParser &letter() const override { return IbmLetterParser::singleton(); }
-        const LocationParser &location() const override {
-            return AsteriskLocationParser::singleton();
-        }
-        const IbmNumberParser _number{'X', 0, 0, 0};
+        const LocationParser &location() const override { return StarLocationParser::singleton(); }
     } PLUGINS{};
     return PLUGINS;
 }

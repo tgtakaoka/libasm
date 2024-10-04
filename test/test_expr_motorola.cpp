@@ -19,16 +19,7 @@
 using namespace libasm;
 using namespace libasm::test;
 
-const struct MotorolaPlugins : ValueParser::Plugins {
-    const NumberParser &number() const override { return MotorolaNumberParser::singleton(); }
-    const CommentParser &comment() const override { return AsteriskCommentParser::singleton(); }
-    const SymbolParser &symbol() const override { return _symbol; }
-    const LetterParser &letter() const override { return MotorolaLetterParser::singleton(); }
-    const LocationParser &location() const override { return AsteriskLocationParser::singleton(); }
-    const OperatorParser &operators() const override { return Mc68xxOperatorParser::singleton(); }
-    const SimpleSymbolParser _symbol{PSTR(".$")};
-} plugins{};
-const ValueParser parser{plugins};
+const ValueParser parser{ValueParser::Plugins::motorola()};
 
 const ValueFormatter formatter{ValueFormatter::Plugins::motorola()};
 
@@ -56,8 +47,10 @@ static void test_char_constant() {
 }
 
 static void test_char_closing() {
-    const struct : MotorolaPlugins {
-        const LetterParser &letter() const override { return DefaultLetterParser::singleton(); }
+    const struct final : ValueParser::MotorolaPlugins {
+        const LetterParser &letter() const override {
+            return Plugins::letter();
+        }
     } plugins{};
     const ValueParser parser{plugins};
 

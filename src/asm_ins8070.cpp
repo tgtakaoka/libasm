@@ -38,15 +38,7 @@ constexpr Pseudo PSEUDOS[] PROGMEM = {
 // clang-format on
 PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
 
-struct Ins8070SymbolParser final : PrefixSymbolParser {
-    Ins8070SymbolParser() : PrefixSymbolParser(PSTR_DOLLAR) {}
-    bool instructionLetter(char c) const override {
-        return PrefixSymbolParser::instructionLetter(c) || c == '=' || c == '.';
-    }
-    bool instructionTerminator(char c) const override { return c == '='; }
-};
-
-struct Ins8070FunctionTable final : FunctionTable {
+struct Ins8070FunctionTable final : FunctionTable, Singleton<Ins8070FunctionTable> {
     const Functor *lookupFunction(const StrScanner &) const override;
 };
 
@@ -54,14 +46,12 @@ struct Ins8070FunctionTable final : FunctionTable {
 
 const ValueParser::Plugins &AsmIns8070::defaultPlugins() {
     static const struct final : ValueParser::Plugins {
-        const NumberParser &number() const override { return _number; }
-        const SymbolParser &symbol() const override { return _symbol; }
-        const LocationParser &location() const override { return _location; }
-        const FunctionTable &function() const override { return _function; }
-        const NationalNumberParser _number{'X', 0, 0, 0};
-        const Ins8070SymbolParser _symbol{};
-        const SimpleLocationParser _location{PSTR_DOT_DOLLAR};
-        const Ins8070FunctionTable _function{};
+        const NumberParser &number() const override { return Ins80xxNumberParser::singleton(); }
+        const SymbolParser &symbol() const override { return Ins80xxSymbolParser::singleton(); }
+        const LocationParser &location() const override {
+            return DotDollarLocationParser::singleton();
+        }
+        const FunctionTable &function() const override { return Ins8070FunctionTable::singleton(); }
     } PLUGINS{};
     return PLUGINS;
 }

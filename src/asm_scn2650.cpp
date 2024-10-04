@@ -42,7 +42,14 @@ constexpr Pseudo PSEUDOS[] PROGMEM = {
 // clang-format on
 PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
 
-struct SigneticsLetterParser final : LetterParser {
+/**
+ * Signetics style numbers are the same as IBM except H'hh' for hexadecimal.
+ */
+struct SigneticsNumberParser final : IbmNumberParser, Singleton<SigneticsNumberParser> {
+    SigneticsNumberParser() : IbmNumberParser('H', 'B', 'O', 'D') {}
+};
+
+struct SigneticsLetterParser final : LetterParser, Singleton<SigneticsLetterParser> {
     bool letterPrefix(StrScanner &scan) const override { return scan.iexpect('A') != 0; }
     bool stringPrefix(StrScanner &scan) const override { return scan.iexpect('A') != 0; }
 };
@@ -52,9 +59,8 @@ struct SigneticsLetterParser final : LetterParser {
 const ValueParser::Plugins &AsmScn2650::defaultPlugins() {
     static const struct final : ValueParser::Plugins {
         const NumberParser &number() const override { return SigneticsNumberParser::singleton(); }
-        const CommentParser &comment() const override { return AsteriskCommentParser::singleton(); }
-        const LetterParser &letter() const override { return _letter; }
-        const SigneticsLetterParser _letter{};
+        const CommentParser &comment() const override { return StarCommentParser::singleton(); }
+        const LetterParser &letter() const override { return SigneticsLetterParser::singleton(); }
     } PLUGINS{};
     return PLUGINS;
 }

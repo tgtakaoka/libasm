@@ -45,17 +45,20 @@ constexpr Pseudo PSEUDOS[] PROGMEM = {
 // clang-format on
 PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
 
+struct Z8000SymbolParser final : PrefixSymbolParser, Singleton<Z8000SymbolParser> {
+    Z8000SymbolParser() : PrefixSymbolParser(nullptr, PSTR_UNDER) {}
+};
+
 }  // namespace
 
 const ValueParser::Plugins &AsmZ8000::defaultPlugins() {
     static const struct final : ValueParser::Plugins {
         const NumberParser &number() const override { return ZilogNumberParser::singleton(); }
-        const SymbolParser &symbol() const override { return _symbol; }
+        const SymbolParser &symbol() const override { return Z8000SymbolParser::singleton(); }
         const LetterParser &letter() const override { return ZilogLetterParser::singleton(); }
         const OperatorParser &operators() const override {
             return ZilogOperatorParser::singleton();
         }
-        const PrefixSymbolParser _symbol{nullptr, PSTR_UNDER};
     } PLUGINS{};
     return PLUGINS;
 }

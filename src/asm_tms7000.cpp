@@ -46,7 +46,7 @@ PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
 const ValueParser::Plugins &AsmTms7000::defaultPlugins() {
     static const struct final : ValueParser::Plugins {
         const NumberParser &number() const override { return TexasNumberParser::singleton(); }
-        const CommentParser &comment() const override { return AsteriskCommentParser::singleton(); }
+        const CommentParser &comment() const override { return StarCommentParser::singleton(); }
     } PLUGINS{};
     return PLUGINS;
 }

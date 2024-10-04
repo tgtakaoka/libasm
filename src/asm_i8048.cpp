@@ -40,11 +40,7 @@ PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
 }  // namespace
 
 const ValueParser::Plugins &AsmI8048::defaultPlugins() {
-    static struct final : ValueParser::Plugins {
-        const NumberParser &number() const { return IntelNumberParser::singleton(); }
-        const OperatorParser &operators() const { return IntelOperatorParser::singleton(); }
-    } PLUGINS;
-    return PLUGINS;
+    return ValueParser::Plugins::intel();
 }
 
 AsmI8048::AsmI8048(const ValueParser::Plugins &plugins)

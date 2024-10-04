@@ -46,17 +46,17 @@ constexpr Pseudo PSEUDOS[] PROGMEM = {
 // clang-format on
 PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
 
-struct MostekCommentParser final : CommentParser {
+struct MostekCommentParser final : CommentParser, Singleton<MostekCommentParser> {
     bool commentLine(StrScanner &scan) const override {
         return SemicolonCommentParser::singleton().commentLine(scan);
     }
     bool endOfLine(StrScanner &scan) const override {
-        return AsteriskCommentParser::singleton().endOfLine(scan) ||
+        return StarCommentParser::singleton().endOfLine(scan) ||
                SemicolonCommentParser::singleton().endOfLine(scan);
     }
 };
 
-struct MostekSymbolParser final : SimpleSymbolParser {
+struct MostekSymbolParser final : SimpleSymbolParser, Singleton<MostekSymbolParser> {
     MostekSymbolParser() : SimpleSymbolParser(PSTR_UNDER) {}
     bool instructionLetter(char c) const override {
         return SymbolParser::instructionLetter(c) || c == '.' || c == '=' || c == '*' || c == ':';
@@ -64,7 +64,7 @@ struct MostekSymbolParser final : SimpleSymbolParser {
     bool instructionTerminator(char c) const override { return c == '='; }
 };
 
-struct MostekLetterParser final : LetterParser {
+struct MostekLetterParser final : LetterParser, Singleton<MostekLetterParser> {
     Error parseLetter(StrScanner &scan, char &letter) const {
         return MotorolaLetterParser::singleton().parseLetter(scan, letter);
     }
@@ -79,15 +79,10 @@ struct MostekLetterParser final : LetterParser {
 const ValueParser::Plugins &AsmMos6502::defaultPlugins() {
     static const struct final : ValueParser::Plugins {
         const NumberParser &number() const override { return MotorolaNumberParser::singleton(); }
-        const CommentParser &comment() const override { return _comment; }
-        const SymbolParser &symbol() const override { return _symbol; }
-        const LetterParser &letter() const override { return _letter; }
-        const LocationParser &location() const override {
-            return AsteriskLocationParser::singleton();
-        }
-        const MostekCommentParser _comment{};
-        const MostekSymbolParser _symbol{};
-        const MostekLetterParser _letter{};
+        const CommentParser &comment() const override { return MostekCommentParser::singleton(); }
+        const SymbolParser &symbol() const override { return MostekSymbolParser::singleton(); }
+        const LetterParser &letter() const override { return MostekLetterParser::singleton(); }
+        const LocationParser &location() const override { return StarLocationParser::singleton(); }
     } PLUGINS{};
     return PLUGINS;
 }

@@ -19,7 +19,7 @@
 using namespace libasm;
 using namespace libasm::test;
 
-const ValueParser parser{ValueParser::Plugins::singleton()};
+const ValueParser parser{ValueParser::Plugins::defaultPlugins()};
 
 const ValueFormatter formatter{ValueFormatter::Plugins::cstyle()};
 
