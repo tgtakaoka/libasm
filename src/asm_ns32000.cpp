@@ -66,14 +66,18 @@ constexpr Pseudo PSEUDOS[] PROGMEM = {
 // clang-format on
 PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
 
-struct Ns32000SymbolParser final : SimpleSymbolParser {
+struct Ns32000NumberParser final : NationalNumberParser, Singleton<Ns32000NumberParser> {
+    Ns32000NumberParser() : NationalNumberParser(/* 'X','H' */ 0, 'B', /* 'O' or */ 'Q', 'D') {}
+};
+
+struct Ns32000SymbolParser final : SimpleSymbolParser, Singleton<Ns32000SymbolParser> {
     Ns32000SymbolParser() : SimpleSymbolParser(PSTR_UNDER_DOT) {}
     bool instructionLetter(char c) const override {
         return SimpleSymbolParser::instructionLetter(c) || c == '.';
     }
 };
 
-struct Ns32000LetterParser final : LetterParser {
+struct Ns32000LetterParser final : LetterParser, Singleton<Ns32000LetterParser> {
     char stringDelimiter(StrScanner &scan) const override { return scan.expect('"'); }
     char readLetter(StrScanner &scan, ErrorAt &error, char delim) const override {
         auto c = *scan++;
@@ -90,15 +94,11 @@ struct Ns32000LetterParser final : LetterParser {
 
 const ValueParser::Plugins &AsmNs32000::defaultPlugins() {
     static const struct final : ValueParser::Plugins {
-        const NumberParser &number() const override { return _number; }
+        const NumberParser &number() const override { return Ns32000NumberParser::singleton(); }
         const CommentParser &comment() const override { return SharpCommentParser::singleton(); }
-        const SymbolParser &symbol() const override { return _symbol; }
-        const LetterParser &letter() const override { return _letter; }
-        const LocationParser &location() const override { return _location; }
-        const NationalNumberParser _number{/* 'X','H' */ 0, 'B', /* 'O' or */ 'Q', 'D'};
-        const Ns32000SymbolParser _symbol{};
-        const SimpleLocationParser _location{PSTR_DOT_STAR};
-        const Ns32000LetterParser _letter{};
+        const SymbolParser &symbol() const override { return Ns32000SymbolParser::singleton(); }
+        const LetterParser &letter() const override { return Ns32000LetterParser::singleton(); }
+        const LocationParser &location() const override { return DotStarLocationParser::singleton(); }
     } PLUGINS{};
     return PLUGINS;
 }

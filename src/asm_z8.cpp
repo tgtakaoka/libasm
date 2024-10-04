@@ -49,17 +49,20 @@ constexpr Pseudo PSEUDOS[] PROGMEM = {
 // clang-format on
 PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
 
+struct Z8SymbolParser final : SimpleSymbolParser, Singleton<Z8SymbolParser> {
+    Z8SymbolParser() : SimpleSymbolParser(PSTR_UNDER_DOT_DOLLAR_QUESTION) {}
+};
+
 }  // namespace
 
 const ValueParser::Plugins &AsmZ8::defaultPlugins() {
     static const struct final : ValueParser::Plugins {
         const NumberParser &number() const override { return ZilogNumberParser::singleton(); }
-        const SymbolParser &symbol() const override { return _symbol; }
+        const SymbolParser &symbol() const override { return Z8SymbolParser::singleton(); }
         const LetterParser &letter() const override { return ZilogLetterParser::singleton(); }
         const OperatorParser &operators() const override {
             return ZilogOperatorParser::singleton();
         }
-        const SimpleSymbolParser _symbol{PSTR_UNDER_DOT_DOLLAR_QUESTION};
     } PLUGINS{};
     return PLUGINS;
 }

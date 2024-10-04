@@ -31,11 +31,13 @@ const CommentParser &ValueParser::Plugins::comment() const {
 }
 
 const SymbolParser &ValueParser::Plugins::symbol() const {
-    return SymbolParser::singleton();
+    static const SymbolParser SINGLETON;
+    return SINGLETON;
 }
 
 const LetterParser &ValueParser::Plugins::letter() const {
-    return DefaultLetterParser::singleton();
+    static const LetterParser SINGLETON;
+    return SINGLETON;
 }
 
 const LocationParser &ValueParser::Plugins::location() const {
@@ -47,7 +49,128 @@ const OperatorParser &ValueParser::Plugins::operators() const {
 }
 
 const FunctionTable &ValueParser::Plugins::function() const {
-    return FunctionTable::singleton();
+    static const FunctionTable SINGLETON;
+    return SINGLETON;
+}
+
+const ValueParser::Plugins &ValueParser::Plugins::defaultPlugins() {
+    static const Plugins PLUGINS;
+    return PLUGINS;
+}
+
+const ValueParser::Plugins &ValueParser::Plugins::intel() {
+    static const IntelPlugins PLUGINS;
+    return PLUGINS;
+}
+
+const NumberParser &ValueParser::IntelPlugins::number() const {
+    return IntelNumberParser::singleton();
+}
+
+const OperatorParser &ValueParser::IntelPlugins::operators() const {
+    return IntelOperatorParser::singleton();
+}
+
+const ValueParser::Plugins &ValueParser::Plugins::motorola() {
+    static const MotorolaPlugins PLUGINS;
+    return PLUGINS;
+}
+
+const NumberParser &ValueParser::MotorolaPlugins::number() const {
+    return MotorolaNumberParser::singleton();
+}
+const CommentParser &ValueParser::MotorolaPlugins::comment() const {
+    return StarCommentParser::singleton();
+}
+const SymbolParser &ValueParser::MotorolaPlugins::symbol() const {
+    return Mc68xxSymbolParser::singleton();
+}
+const LetterParser &ValueParser::MotorolaPlugins::letter() const {
+    return MotorolaLetterParser::singleton();
+}
+const LocationParser &ValueParser::MotorolaPlugins::location() const {
+    return StarLocationParser::singleton();
+}
+const OperatorParser &ValueParser::MotorolaPlugins::operators() const {
+    return Mc68xxOperatorParser::singleton();
+}
+
+namespace fairchild {
+/**
+ * Fairchild style numbers are the same as IBM plus '$hh' for hexadecimal.
+ */
+struct FairchildNumberParser final : NumberParser, Singleton<FairchildNumberParser> {
+    Error parseNumber(StrScanner &scan, Value &val, Radix defaultRadix) const override {
+        auto p = scan;
+        if (*p == '$' && isxdigit(p[1])) {
+            const auto error = val.read(++p, RADIX_16);
+            if (error != NOT_AN_EXPECTED)
+                scan = p;
+            return error;
+        }
+        return _ibm.parseNumber(scan, val, defaultRadix);
+    }
+
+private:
+    IbmNumberParser _ibm{'H', 'B', 'O', 'D'};
+};
+
+struct FairchildLetterParser final : LetterParser, Singleton<FairchildLetterParser> {
+    /** Fairchild style letter is [cC]'[:print:]', #[:print:], '[:print:]'? */
+    Error parseLetter(StrScanner &scan, char &letter) const override {
+        auto p = scan;
+        if (p.iexpect('C')) {  // C'C'
+            const auto error = LetterParser::parseLetter(p, letter);
+            if (error == OK)
+                scan = p;
+            return error;
+        }
+        if (p.expect('#')) {  // #C
+            if ((letter = *p) == 0)
+                return NOT_AN_EXPECTED;
+            scan = ++p;
+            return OK;
+        }
+        if (p.expect('\'')) {  // 'c' or 'c
+            ErrorAt error;
+            letter = readLetter(p, error, '\'');
+            if (error.isOK()) {
+                p.expect('\'');  // closing quote is optional
+                scan = p;
+                return OK;
+            }
+            return error.getError();
+        }
+        return NOT_AN_EXPECTED;
+    }
+
+    /** Fairchild style string constant is C'str'. */
+    bool stringPrefix(StrScanner &scan) const override {
+        scan.iexpect('C');  // optional
+        return true;
+    }
+};
+
+struct FairchildLocationParser final : SimpleLocationParser, Singleton<FairchildLocationParser> {
+    FairchildLocationParser() : SimpleLocationParser(text::common::PSTR_DOT_STAR_DOLLAR) {}
+};
+
+}  // namespace fairchild
+
+const ValueParser::Plugins &ValueParser::Plugins::fairchild() {
+    static const struct final : ValueParser::Plugins {
+        const NumberParser &number() const override {
+            return fairchild::FairchildNumberParser::singleton();
+        }
+        const CommentParser &comment() const override { return StarCommentParser::singleton(); }
+        const LetterParser &letter() const override {
+            return fairchild::FairchildLetterParser::singleton();
+        }
+        const LocationParser &location() const override {
+            return fairchild::FairchildLocationParser::singleton();
+        }
+    } PLUGINS{};
+    return PLUGINS;
 }
 
 struct OperatorStack : Stack<Operator, 8> {

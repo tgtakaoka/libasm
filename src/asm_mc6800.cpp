@@ -42,20 +42,7 @@ PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
 }  // namespace
 
 const ValueParser::Plugins &AsmMc6800::defaultPlugins() {
-    static const struct final : ValueParser::Plugins {
-        const NumberParser &number() const override { return MotorolaNumberParser::singleton(); }
-        const CommentParser &comment() const override { return AsteriskCommentParser::singleton(); }
-        const SymbolParser &symbol() const override { return _symbol; }
-        const LetterParser &letter() const override { return MotorolaLetterParser::singleton(); }
-        const LocationParser &location() const override {
-            return AsteriskLocationParser::singleton();
-        }
-        const OperatorParser &operators() const override {
-            return Mc68xxOperatorParser::singleton();
-        }
-        const PrefixSymbolParser _symbol{PSTR_DOT, PSTR_UNDER_DOT_DOLLAR};
-    } PLUGINS{};
-    return PLUGINS;
+    return ValueParser::Plugins::motorola();
 }
 
 AsmMc6800::AsmMc6800(const ValueParser::Plugins &plugins)

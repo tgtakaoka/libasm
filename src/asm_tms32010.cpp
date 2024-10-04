@@ -41,18 +41,22 @@ constexpr Pseudo PSEUDOS[] PROGMEM = {
 // clang-format on
 PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
 
-struct Tms32010CommentParser final : CommentParser {
+struct Tms32010CommentParser final : CommentParser, Singleton<Tms32010CommentParser> {
     bool commentLine(StrScanner &scan) const override { return *scan == '*'; }
     bool endOfLine(StrScanner &scan) const override {
         return SemicolonCommentParser::singleton().endOfLine(scan);
     }
 };
 
-struct Tms32010SymbolParser final : SimpleSymbolParser {
+struct Tms32010SymbolParser final : SimpleSymbolParser, Singleton<Tms32010SymbolParser> {
     Tms32010SymbolParser() : SimpleSymbolParser(PSTR_UNDER_DOLLAR) {}
     bool instructionLetter(char c) const override {
         return SimpleSymbolParser::instructionLetter(c) || c == '.';
     }
+};
+
+struct Tms32010LetterParser final : LetterParser, Singleton<Tms32010LetterParser> {
+    char stringDelimiter(StrScanner &scan) const override { return scan.expect('"'); }
 };
 
 }  // namespace
@@ -60,14 +64,9 @@ struct Tms32010SymbolParser final : SimpleSymbolParser {
 const ValueParser::Plugins &AsmTms32010::defaultPlugins() {
     static const struct final : ValueParser::Plugins {
         const NumberParser &number() const override { return IntelNumberParser::singleton(); }
-        const CommentParser &comment() const override { return _comment; }
-        const SymbolParser &symbol() const override { return _symbol; }
-        const LetterParser &letter() const override { return _letter; }
-        const Tms32010CommentParser _comment{};
-        const Tms32010SymbolParser _symbol{};
-        const struct : LetterParser {
-            char stringDelimiter(StrScanner &scan) const override { return scan.expect('"'); }
-        } _letter{};
+        const CommentParser &comment() const override { return Tms32010CommentParser::singleton(); }
+        const SymbolParser &symbol() const override { return Tms32010SymbolParser::singleton(); }
+        const LetterParser &letter() const override { return Tms32010LetterParser::singleton(); }
     } PLUGINS{};
     return PLUGINS;
 }

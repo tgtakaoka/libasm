@@ -36,7 +36,7 @@ struct ParserContext final {
 };
 
 struct ValueParser {
-    struct Plugins : Singleton<Plugins> {
+    struct Plugins {
         virtual const NumberParser &number() const;
         virtual const CommentParser &comment() const;
         virtual const SymbolParser &symbol() const;
@@ -44,9 +44,26 @@ struct ValueParser {
         virtual const LocationParser &location() const;
         virtual const OperatorParser &operators() const;
         virtual const FunctionTable &function() const;
+
+        static const Plugins &defaultPlugins();
+        static const Plugins &intel();
+        static const Plugins &motorola();
+        static const Plugins &fairchild();
+    };
+    struct IntelPlugins : Plugins {
+        const NumberParser &number() const override;
+        const OperatorParser &operators() const override;
+    };
+    struct MotorolaPlugins : Plugins {
+        const NumberParser &number() const override;
+        const CommentParser &comment() const override;
+        const SymbolParser &symbol() const override;
+        const LetterParser &letter() const override;
+        const LocationParser &location() const override;
+        const OperatorParser &operators() const override;
     };
 
-    ValueParser(const Plugins &plugins = Plugins::singleton())
+    ValueParser(const Plugins &plugins = Plugins::defaultPlugins())
         : _number(plugins.number()),
           _comment(plugins.comment()),
           _symbol(plugins.symbol()),

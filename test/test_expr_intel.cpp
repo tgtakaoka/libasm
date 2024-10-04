@@ -21,13 +21,7 @@
 using namespace libasm;
 using namespace libasm::test;
 
-const struct final : ValueParser::Plugins {
-    const NumberParser &number() const override { return IntelNumberParser::singleton(); }
-    const SymbolParser &symbol() const override { return _symbol; }
-    const OperatorParser &operators() const override { return IntelOperatorParser::singleton(); }
-    const SimpleSymbolParser _symbol{PSTR("_?@")};
-} plugins{};
-const ValueParser parser{plugins};
+const ValueParser parser{ValueParser::Plugins::intel()};
 
 const ValueFormatter formatter{ValueFormatter::Plugins::intel()};
 

@@ -45,7 +45,7 @@ constexpr Pseudo PSEUDOS[] PROGMEM = {
 // clang-format on
 PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
 
-struct Pdp8SymbolParser final : SymbolParser {
+struct Pdp8SymbolParser final : SymbolParser, Singleton<Pdp8SymbolParser> {
     bool labelDelimitor(StrScanner &scan) const override { return scan.expect(','); }
     bool instructionLetter(char c) const override {
         return SymbolParser::symbolLetter(c) || c == '*' || c == '=';
@@ -53,7 +53,7 @@ struct Pdp8SymbolParser final : SymbolParser {
     bool instructionTerminator(char c) const override { return c == '*' || c == '='; }
 };
 
-struct Pdp8LetterParser final : LetterParser {
+struct Pdp8LetterParser final : LetterParser, Singleton<Pdp8LetterParser> {
     Error parseLetter(StrScanner &scan, char &letter) const override {
         if (*scan == '\'')
             return LetterParser::parseLetter(scan, letter);
@@ -82,7 +82,7 @@ struct Pdp8LetterParser final : LetterParser {
     }
 };
 
-struct Pdp8CommentParser final : CommentParser {
+struct Pdp8CommentParser final : CommentParser, Singleton<Pdp8CommentParser> {
     bool endOfLine(StrScanner &scan) const override {
         return *scan == 0 || *scan == '/' || *scan == ';';
     };
@@ -102,15 +102,13 @@ struct Pdp8OperatorParser final : OperatorParser, Singleton<Pdp8OperatorParser> 
 const ValueParser::Plugins &AsmPdp8::defaultPlugins() {
     static const struct final : ValueParser::Plugins {
         const NumberParser &number() const override { return IntelNumberParser::singleton(); }
-        const SymbolParser &symbol() const override { return _symbol; }
-        const LetterParser &letter() const override { return _letter; }
-        const CommentParser &comment() const override { return _comment; }
+        const SymbolParser &symbol() const override { return Pdp8SymbolParser::singleton(); }
+        const LetterParser &letter() const override { return Pdp8LetterParser::singleton(); }
+        const CommentParser &comment() const override { return Pdp8CommentParser::singleton(); }
         const OperatorParser &operators() const override { return Pdp8OperatorParser::singleton(); }
-        const LocationParser &location() const override { return _location; }
-        const Pdp8SymbolParser _symbol{};
-        const Pdp8LetterParser _letter{};
-        const Pdp8CommentParser _comment{};
-        const SimpleLocationParser _location{PSTR_DOT_DOLLAR};
+        const LocationParser &location() const override {
+            return DotDollarLocationParser::singleton();
+        }
     } PLUGINS{};
     return PLUGINS;
 }

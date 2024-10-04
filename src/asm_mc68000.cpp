@@ -66,7 +66,7 @@ constexpr Pseudo PSEUDOS[] PROGMEM = {
 // clang-format on
 PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
 
-struct Mc68000SymbolParser final : PrefixSymbolParser {
+struct Mc68000SymbolParser final : PrefixSymbolParser, Singleton<Mc68000SymbolParser> {
     Mc68000SymbolParser() : PrefixSymbolParser(PSTR_DOT, PSTR_UNDER_DOT_DOLLAR) {}
     bool instructionLetter(char c) const override {
         return PrefixSymbolParser::instructionLetter(c) || c == '.';
@@ -76,14 +76,12 @@ struct Mc68000SymbolParser final : PrefixSymbolParser {
 }  // namespace
 
 const ValueParser::Plugins &AsmMc68000::defaultPlugins() {
-    static const struct final : ValueParser::Plugins {
-        const NumberParser &number() const override { return MotorolaNumberParser::singleton(); }
-        const CommentParser &comment() const override { return AsteriskCommentParser::singleton(); }
-        const SymbolParser &symbol() const override { return _symbol; }
-        const LocationParser &location() const override {
-            return AsteriskLocationParser::singleton();
+    static const struct final : ValueParser::MotorolaPlugins {
+        const SymbolParser &symbol() const override { return Mc68000SymbolParser::singleton(); }
+        const LetterParser &letter() const override { return Plugins::letter(); }
+        const OperatorParser &operators() const override {
+            return CStyleOperatorParser::singleton();
         }
-        const Mc68000SymbolParser _symbol{};
     } PLUGINS{};
     return PLUGINS;
 }

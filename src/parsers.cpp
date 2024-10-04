@@ -19,6 +19,8 @@
 #include "config_base.h"
 #include "text_common.h"
 
+using namespace libasm::text::common;
+
 namespace libasm {
 
 namespace {
@@ -111,9 +113,9 @@ Error NationalNumberParser::parseNumber(StrScanner &scan, Value &val, Radix defa
 }
 
 Radix CStyleNumberParser::hasPrefix(StrScanner &scan, Radix defaultRadix) const {
-    if (scan.iexpectText_P(text::common::PSTR_ZERO_X))
+    if (scan.iexpectText_P(PSTR_ZERO_X))
         return RADIX_16;
-    if (scan.iexpectText_P(text::common::PSTR_ZERO_B))
+    if (scan.iexpectText_P(PSTR_ZERO_B))
         return RADIX_2;
     if (*scan == '0' && isoctal(scan[1]))
         return RADIX_8;
@@ -162,9 +164,9 @@ Error IntelNumberParser::parseNumber(
     return error;
 }
 
-Error IntelNumberParser::scanNumberEnd(StrScanner &scan, Radix radix, char suffix) {
+Error NumberParser::scanNumberEnd(StrScanner &scan, Radix radix, char suffix) {
     auto p = scan;
-    if (suffix == 'B') {
+    if (radix == RADIX_2 && suffix == 'B') {
         // Check whether Intel binary or C-style binary, '010b' vs '0b10'
         if (p.expect('0') && p.iexpect('B') && isbinary(*p))
             return NOT_AN_EXPECTED;
@@ -188,9 +190,9 @@ Error IntelNumberParser::scanNumberEnd(StrScanner &scan, Radix radix, char suffi
 }
 
 Radix ZilogNumberParser::hasPrefix(StrScanner &scan) const {
-    if (scan.iexpectText_P(text::common::PSTR_PERCENT_8))
+    if (scan.iexpectText_P(PSTR_PERCENT_8))
         return RADIX_8;
-    if (scan.iexpectText_P(text::common::PSTR_PERCENT_2))
+    if (scan.iexpectText_P(PSTR_PERCENT_2))
         return RADIX_2;
     if (scan.expect('%') && isxdigit(*scan))
         return RADIX_16;
@@ -207,35 +209,6 @@ Error ZilogNumberParser::parseNumber(StrScanner &scan, Value &val, Radix default
     if (error != NOT_AN_EXPECTED)
         scan = p;
     return error;
-}
-
-Error FairchildNumberParser::parseNumber(StrScanner &scan, Value &val, Radix defaultRadix) const {
-    auto p = scan;
-    if (*p == '$' && isxdigit(p[1])) {
-        const auto error = val.read(++p, RADIX_16);
-        if (error != NOT_AN_EXPECTED)
-            scan = p;
-        return error;
-    }
-    return _ibm.parseNumber(scan, val, defaultRadix);
-}
-
-bool SymbolParser::symbolLetter(char c, bool headOfSymbol) const {
-    return isalpha(c) || (!headOfSymbol && isdigit(c)) || c == '_';
-}
-
-bool SimpleSymbolParser::symbolLetter(char c, bool headOfSymbol) const {
-    return SymbolParser::symbolLetter(c, headOfSymbol) || (c && strchr_P(_extra_P, c));
-}
-
-bool PrefixSymbolParser::symbolLetter(char c, bool headOfSymbol) const {
-    if (SymbolParser::symbolLetter(c, headOfSymbol))
-        return true;
-    if (headOfSymbol && _prefix_P)
-        return c && strchr_P(_prefix_P, c);
-    if (_extra_P)
-        return c && strchr_P(_extra_P, c);
-    return false;
 }
 
 Error LetterParser::parseLetter(StrScanner &scan, char &letter) const {
@@ -387,51 +360,6 @@ char ZilogLetterParser::readLetter(StrScanner &scan, ErrorAt &error, char delim)
     }
     scan = p;
     return c;
-}
-
-Error FairchildLetterParser::parseLetter(StrScanner &scan, char &letter) const {
-    auto p = scan;
-    if (p.iexpect('C')) {  // C'C'
-        const auto error = LetterParser::parseLetter(p, letter);
-        if (error == OK)
-            scan = p;
-        return error;
-    }
-    if (p.expect('#')) {  // #C
-        if ((letter = *p) == 0)
-            return NOT_AN_EXPECTED;
-        scan = ++p;
-        return OK;
-    }
-    if (p.expect('\'')) {  // 'c' or 'c
-        ErrorAt error;
-        letter = readLetter(p, error, '\'');
-        if (error.isOK()) {
-            p.expect('\'');  // closing quote is optional
-            scan = p;
-            return OK;
-        }
-        return error.getError();
-    }
-    return NOT_AN_EXPECTED;
-}
-
-bool AsteriskLocationParser::locationSymbol(StrScanner &scan) const {
-    return scan.expect('*') && !isalnum(*scan);
-}
-
-bool DollarLocationParser::locationSymbol(StrScanner &scan) const {
-    return scan.expect('$') && !isalnum(*scan);
-}
-
-bool SimpleLocationParser::locationSymbol(StrScanner &scan) const {
-    auto p = scan;
-    const auto c = *p++;
-    if (c && strchr_P(_letters_P, c) && !isalnum(*p)) {
-        scan = p;
-        return true;
-    }
-    return false;
 }
 
 }  // namespace libasm

@@ -53,14 +53,17 @@ constexpr Pseudo PSEUDOS[] PROGMEM = {
 // clang-format on
 PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
 
+struct I8086SymbolParser final : SimpleSymbolParser, Singleton<I8086SymbolParser> {
+    I8086SymbolParser() : SimpleSymbolParser(PSTR_UNDER_AT_QUESTION) {}
+};
+
 }  // namespace
 
 const ValueParser::Plugins &AsmI8086::defaultPlugins() {
     static struct final : ValueParser::Plugins {
         const NumberParser &number() const { return IntelNumberParser::singleton(); }
-        const SymbolParser &symbol() const { return _symbol; }
+        const SymbolParser &symbol() const { return I8086SymbolParser::singleton(); }
         const OperatorParser &operators() const { return IntelOperatorParser::singleton(); }
-        const SimpleSymbolParser _symbol{PSTR_UNDER_AT_QUESTION};
     } PLUGINS;
     return PLUGINS;
 }
