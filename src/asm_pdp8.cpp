@@ -377,21 +377,8 @@ Error AsmPdp8::processPseudo(StrScanner &scan, Insn &insn) {
 
 Error AsmPdp8::encodeImpl(StrScanner &scan, Insn &_insn) const {
     AsmInsn insn(_insn);
-    scan.skipSpaces();
     const auto error = TABLE.searchName(cpuType(), insn);
-    if (error == OK) {
-        const auto mode = insn.mode();
-        if (mode == M_MEM) {
-            parseMemReferenceOperand(scan, insn);
-        } else if (mode == M_GR1 || mode == M_GR2 || mode == M_GR3) {
-            parseOperateOperand(scan, insn);
-        } else if (mode == M_IOT) {
-            parseIoTransferOperand(scan, insn);
-        } else if (mode == M_MEX) {
-            parseMemExtensionOperand(scan, insn);
-        }
-        insn.emitInsn();
-    } else if (_implicitWord) {
+    if (_implicitWord && error != OK) {
         StrScanner p = _insn.errorAt();
         insn.setOK();  // clear UNKNOWN_INSTRUCTION
         const auto opc = parseInteger(p, insn);
@@ -403,6 +390,19 @@ Error AsmPdp8::encodeImpl(StrScanner &scan, Insn &_insn) const {
             insn.setError(_insn.errorAt(), OVERFLOW_RANGE);
         insn.setOpCode(opc.getUnsigned() & 07777);
         scan = p;
+        insn.emitInsn();
+    } else if (error == OK) {
+        scan.skipSpaces();
+        const auto mode = insn.mode();
+        if (mode == M_MEM) {
+            parseMemReferenceOperand(scan, insn);
+        } else if (mode == M_GR1 || mode == M_GR2 || mode == M_GR3) {
+            parseOperateOperand(scan, insn);
+        } else if (mode == M_IOT) {
+            parseIoTransferOperand(scan, insn);
+        } else if (mode == M_MEX) {
+            parseMemExtensionOperand(scan, insn);
+        }
         insn.emitInsn();
     }
     return _insn.setError(insn);
