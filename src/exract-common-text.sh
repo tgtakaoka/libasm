@@ -1,7 +1,14 @@
 #!/bin/bash
 
 function get_text {
-    grep -Po '(?<!__LIBASM_)TEXT_[\w_]+' "$@"
+    grep -hPo '(?<=^extern const char )TEXT_[\w_]+' "$@"
+}
+
+function list_files {
+    for f in $(grep -lPow '(?<=^extern const char )'"$1" text_*.h); do
+        printf "%-15s" $f
+    done
+    echo
 }
 
 function list_array {
@@ -11,14 +18,12 @@ function list_array {
     done
 }
 
-declare -ar text_files=($(list_array text_*.h | grep -v text_common.h))
-
 declare -a texts=()
-for f in "${text_files[@]}"; do
+for f in text_*.h; do
     texts=($(sort -s <(list_array "${texts[@]}") <(get_text "$f")))
 done
 
-declare -ar duplicated=$(list_array "${texts[@]}" | uniq -d)
-declare -ar common=($(get_text text_common.h | sort -s))
-
-diff -u <(list_array "${common[@]}") <(list_array "${duplicated[@]}") | grep '^+'
+for t in $(list_array "${texts[@]}" | uniq -d); do
+    printf "%-7s" "${t/TEXT_/}"
+    list_files "$t"
+done
