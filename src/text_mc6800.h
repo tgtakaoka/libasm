@@ -199,7 +199,7 @@ using common::TEXT_BRSET;
 using common::TEXT_CPD;
 using common::TEXT_CPY;
 using common::TEXT_DEY;
-extern const char TEXT_FDIV[]  PROGMEM;
+using common::TEXT_FDIV;
 using common::TEXT_IDIV;
 using common::TEXT_INY;
 using common::TEXT_LDY;

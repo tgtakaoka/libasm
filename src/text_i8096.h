@@ -90,7 +90,7 @@ using common::TEXT_NOT;
 using common::TEXT_NOTB;
 using common::TEXT_OR;
 using common::TEXT_ORB;
-extern const char TEXT_ORG[]   PROGMEM;
+using common::TEXT_ORG;
 using common::TEXT_POP;
 using common::TEXT_POPF;
 using common::TEXT_PUSH;
