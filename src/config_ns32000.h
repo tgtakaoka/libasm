@@ -19,8 +19,8 @@
 
 #include "config_base.h"
 
-/** Disable NS32081 VPU instructions */
-#define LIBASM_NS32000_NOFPU
+/** Disable NS32081 FPU instructions */
+// #define LIBASM_NS32000_NOFPU
 /** Disable NS32082 PMMU instructions */
 // #define LIBASM_NS32000_NOMMU
 #if defined(LIBASM_ASM_NOFLOAT) && defined(LIBASM_DIS_NOFLOAT)
