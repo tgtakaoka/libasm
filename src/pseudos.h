@@ -32,7 +32,7 @@ struct Pseudo {
     using Handler = Error (Assembler::*)(StrScanner &scan, Insn &insn, uint8_t);
 
     constexpr Pseudo(const /*PROGMEM*/ char *name_P, Handler handler, uint8_t extra = 0)
-        : _name_P(name_P), _handler(handler), _extra(extra) {}
+        : _name_P(name_P), _handler_P(handler), _extra_P(extra) {}
 
     const /*PROGMEM*/ char *name_P() const {
         return reinterpret_cast<const char *>(pgm_read_ptr(&_name_P));
@@ -45,24 +45,23 @@ struct Pseudo {
 
 private:
     const /*PROGMEM*/ char *const _name_P;
-    const Handler _handler;
-    const uint8_t _extra;
+    const Handler _handler_P;
+    const uint8_t _extra_P;
 
     Handler handler() const {
         Handler h;
-        memcpy_P(&h, &_handler, sizeof(Handler));
+        memcpy_P(&h, &_handler_P, sizeof(Handler));
         return h;
     }
 
-    uint8_t extra() const { return pgm_read_byte(&_extra); }
+    uint8_t extra() const { return pgm_read_byte(&_extra_P); }
 };
 
 struct Pseudos {
-    constexpr Pseudos(const /*PROGMEM*/ Pseudo *table, const /*PROGMEM*/ Pseudo *end) : _table(table, end) {}
+    constexpr Pseudos(const /*PROGMEM*/ Pseudo *table_P, const /*PROGMEM*/ Pseudo *end_P)
+        : _table(table_P, end_P) {}
 
-    const Pseudo *search(const Insn &insn) const {
-        return _table.binarySearch(insn, comparator);
-    }
+    const Pseudo *search(const Insn &insn) const { return _table.binarySearch(insn, comparator); }
 
 private:
     const table::Table<Pseudo> _table;

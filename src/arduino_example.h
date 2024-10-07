@@ -118,7 +118,7 @@ protected:
             }
             return true;
         }
-        if (strcasecmp_P(line, PSTR("CPU")) == 0 || strncasecmp_P(line, PSTR("CPU "), 4) == 0) {
+        if (strcasecmp_P(line, PSTR("CPU")) == 0) {
             const auto cpu = skipSpaces(line + 3);
             if (*cpu == 0)
                 return isAsm() ? printCpuList<>(_abegin, _aend) : printCpuList<>(_dbegin, _dend);
@@ -140,7 +140,7 @@ protected:
             _cli.println(F("unknown CPU"));
             return true;
         }
-        if (strcasecmp_P(line, PSTR("ORG")) == 0 || strncasecmp_P(line, PSTR("ORG "), 4) == 0) {
+        if (!isAsm() && strncasecmp_P(line, PSTR("ORG"), 3) == 0) {
             const auto org = skipSpaces(line + 3);
             if (*org) {
                 uint32_t addr;
@@ -302,8 +302,12 @@ private:
             printAddress(insn.address(), ':');
             printBytes(insn.bytes(), insn.length());
             _cli.println();
-            _origin += insn.length() / addrUnit();
-            _origin &= max - 1;
+            if (insn.address() == _origin) {
+                _origin += insn.length() / addrUnit();
+                _origin &= max - 1;
+            } else {
+                _origin = insn.address();
+            }
         }
     }
 
