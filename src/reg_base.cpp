@@ -15,7 +15,6 @@
  */
 
 #include "reg_base.h"
-
 #include <ctype.h>
 #include <string.h>
 
@@ -24,8 +23,7 @@ namespace reg {
 
 namespace {
 
-bool nameMatcher(int8_t &name, const NameEntry *item, int extra) {
-    UNUSED(extra);
+bool nameMatcher(int8_t &name, const NameEntry *item, int) {
     return name == item->name();
 }
 

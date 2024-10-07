@@ -91,7 +91,7 @@ struct Assembler {
 
 protected:
     const ValueParser _parser;
-    const pseudo::Pseudos _pseudos;
+    const pseudo::Pseudos *const _pseudos;
     const Options _commonOptions;
     const Options _options;
     const IntOption<Assembler> _opt_listRadix;

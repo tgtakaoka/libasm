@@ -45,7 +45,7 @@ PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
 Assembler::Assembler(
         const ValueParser::Plugins &plugins, const Pseudos &pseudos, const OptionBase *option)
     : _parser(plugins),
-      _pseudos(pseudos),
+      _pseudos(&pseudos),
       _commonOptions(&_opt_listRadix),
       _options(option),
       _opt_listRadix(this, &Assembler::setListRadix, OPT_INT_LIST_RADIX, OPT_DESC_LIST_RADIX,
@@ -103,7 +103,7 @@ Error Assembler::encode(const char *line, Insn &insn, const SymbolTable *symtab)
 }
 
 Error Assembler::processPseudo(StrScanner &scan, Insn &insn) {
-    const auto *p = _pseudos.search(insn);
+    const auto *p = _pseudos->search(insn);
     if (p == nullptr)
         p = PSEUDO_TABLE.search(insn);
     return p ? p->invoke(this, scan, insn) : UNKNOWN_DIRECTIVE;
