@@ -80,10 +80,8 @@ struct Assembler {
         DATA_WORD,
         DATA_WORD_NO_STRING,
         DATA_LONG,
-#ifndef LIBASM_ASM_NOFLOAT
         DATA_FLOAT32,
         DATA_FLOAT64,
-#endif
         DATA_ALIGN2 = 0x80,
     };
     Error defineDataConstant(StrScanner &scan, Insn &insn, uint8_t dataType);

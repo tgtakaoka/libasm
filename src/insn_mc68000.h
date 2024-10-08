@@ -94,7 +94,7 @@ private:
     InsnSize _isize;
 };
 
-#if !defined(LIBASM_DIS_NOFLOAT) && !defined(LIBASM_MC68000_NOFPU)
+#if !defined(LIBASM_MC68000_NOFPU)
 struct ExtendedReal {
     uint16_t tag;
     uint16_t pad;
@@ -119,7 +119,7 @@ struct DisInsn final : DisInsnImpl<Config>, EntryInsn {
             setPostfix(readUint16());
     }
 
-#if !defined(LIBASM_DIS_NOFLOAT) && !defined(LIBASM_MC68000_NOFPU)
+#if !defined(LIBASM_MC68000_NOFPU)
     ExtendedReal readExtendedReal();
     DecimalString readDecimalString();
 #endif

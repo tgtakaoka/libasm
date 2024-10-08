@@ -78,17 +78,17 @@ const char *Value::str() const {
         out.text("<u>").hex(_unsigned).letter('(').dec(_unsigned).letter(')');
     } else if (_type == V_SIGNED) {
         out.text("<s>").hex(_signed).letter('(').dec(_signed).letter(')');
-#if !defined(LIBASM_ASM_NOFLOAT)
     } else if (_type == V_FLOAT) {
         out.text("<f>")
+#if !defined(LIBASM_ASM_NOFLOAT)
                 .text(_float.str())
 #if !defined(LIBASM_DIS_NOFLOAT)
                 .letter('(')
                 .float80(_float)
                 .letter(')');
 #endif
-        ;
 #endif
+        ;
 
     } else {
         return "<undef>";
@@ -139,15 +139,13 @@ Value &Value::setUinteger(unsigned_t u) {
 
 #if defined(LIBASM_ASM_NOFLOAT)
 
-bool Value::isFloat() const {
-    return false;
+Value &Value::setFloat() {
+    _type = V_FLOAT;
+    _unsigned = 0;
+    return *this;
 }
 
 #else
-
-bool Value::isFloat() const {
-    return _type == V_FLOAT;
-}
 
 Value::float_t Value::getFloat() const {
     if (isUnsigned()) {
@@ -326,8 +324,10 @@ Value Value::negate() const {
         } else {
             v.setS(-static_cast<signed_t>(_unsigned));
         }
-#if !defined(LIBASM_ASM_NOFLOAT)
     } else {
+#if defined(LIBASM_ASM_NOFLOAT)
+        v.setFloat();
+#else
         v.setFloat(-getFloat());
 #endif
     }
@@ -365,8 +365,10 @@ Value Value::operator+(const Value &rhs) const {
                 v.setS(-static_cast<signed_t>(u));
             }
         }
-#if !defined(LIBASM_ASM_NOFLOAT)
     } else {
+#if defined(LIBASM_ASM_NOFLOAT)
+        v.setFloat();
+#else
         v.setFloat(getFloat() + rhs.getFloat());
 #endif
     }
@@ -386,8 +388,10 @@ Value Value::operator*(const Value &rhs) const {
         } else {
             v.setS(-static_cast<signed_t>(p));
         }
-#if !defined(LIBASM_ASM_NOFLOAT)
     } else {
+#if defined(LIBASM_ASM_NOFLOAT)
+        v.setFloat();
+#else
         v.setFloat(getFloat() * rhs.getFloat());
 #endif
     }
@@ -405,8 +409,10 @@ Value Value::operator/(const Value &rhs) const {
         } else {
             v.setS(-static_cast<signed_t>(q));
         }
-#if !defined(LIBASM_ASM_NOFLOAT)
     } else {
+#if defined(LIBASM_ASM_NOFLOAT)
+        v.setFloat();
+#else
         v.setFloat(getFloat() / rhs.getFloat());
 #endif
     }

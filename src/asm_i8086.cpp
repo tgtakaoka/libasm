@@ -86,7 +86,7 @@ Error AsmI8086::setFpu(StrScanner &scan) {
     p.iexpect('i');
     if (scan.expectFalse() || scan.iequals_P(TEXT_none)) {
         setFpuType(FPU_NONE);
-#if !defined(LIBASM_I8086_NOFPU) && !defined(LIBASM_I8086_NOFPU)
+#if !defined(LIBASM_I8086_NOFPU)
     } else if (scan.expectTrue() || p.iequals_P(TEXT_FPU_8087)) {
         setFpuType(FPU_I8087);
 #endif
@@ -619,7 +619,7 @@ void AsmI8086::emitStringInst(AsmInsn &insn, const Operand &dst, const Operand &
     }
 }
 
-#if !defined(LIBASM_ASM_NOFLOAT) && !defined(LIBASM_I8086_NOFPU)
+#if !defined(LIBASM_ASM_NOFLOAT)
 
 Error AsmInsn::emitPackedDecimal(int64_t val64) {
     const auto sign = val64 < 0 ? 0x80 : 0;
@@ -642,66 +642,92 @@ Error AsmInsn::emitTemporaryReal(const float80_t &val80) {
 #endif
 
 Error AsmI8086::defineDataConstant(
-        AsmInsn &insn, StrScanner &scan, I8087Type type, ErrorAt &error) const {
+        AsmInsn &insn, StrScanner &scan, I8087Type type, ErrorAt &_error) const {
+    ErrorAt error;
     do {
-        auto p = scan.skipSpaces();
-        ErrorAt strErr, exprErr;
-        if (type == DATA_DD && isString(p, strErr) == OK) {
-            generateString(scan, p, insn.insnBase(), DATA_LONG, error);
-        } else {
-            const auto at = p;
-            const auto val = parseExpr(p, exprErr);
-            if ((endOfLine(p) || *p == ',') && !exprErr.hasError()) {
-                switch (type) {
-                case DATA_DD:
-                    if (val.isInteger()) {
-                        if (val.overflowUint32()) {
-                            error.setErrorIf(at, OVERFLOW_RANGE);
-                        } else if (insn.emitUint32(val.getUnsigned())) {
-                            error.setAt(at);
-                        }
-                    } else {
-#if !defined(LIBASM_ASM_NOFLOAT) && !defined(LIBASM_I8086_NOFPU)
-                        if (insn.emitFloat32(val.getFloat()))
-                            error.setAt(at);
-#else
-                        error.setErrorIf(at, INTEGER_REQUIRED);
-#endif
-                    }
+        scan.skipSpaces();
+        ErrorAt strErr;
+        if (type == DATA_DD) {
+            auto end = scan;
+            const auto err = isString(end, strErr);
+            if (err == OK) {
+                generateString(scan, end, insn.insnBase(), DATA_LONG, strErr);
+                if (error.setErrorIf(strErr) == NO_MEMORY)
                     break;
-#if !defined(LIBASM_ASM_NOFLOAT) && !defined(LIBASM_I8086_NOFPU)
-                case DATA_DQ:
-                    if (val.isInteger()) {
-                        if (insn.emitUint64(val.getInteger()))
-                            error.setAt(at);
-                    } else if (insn.emitFloat64(val.getFloat())) {
-                        error.setAt(at);
-                    }
-                    break;
-                case DATA_DT:
-                    if (val.isInteger()) {
-                        constexpr auto PDEC80_MAX = INT64_C(999'999'999'999'999'999);
-                        constexpr auto PDEC80_MIN = -INT64_C(999'999'999'999'999'999);
-                        const auto v = val.getInteger();
-                        if (v < PDEC80_MIN || v > PDEC80_MAX) {
-                            error.setErrorIf(at, OVERFLOW_RANGE);
-                        } else if (insn.emitPackedDecimal(v)) {
-                            error.setAt(at);
-                        }
-                    } else if (insn.emitTemporaryReal(val.getFloat())) {
-                        error.setAt(at);
-                    }
-                    break;
-#endif
-                }
-                error.setErrorIf(exprErr);
-                scan = p;
-            } else {
-                error.setErrorIf(strErr);
+                continue;
             }
         }
-    } while (scan.skipSpaces().expect(',') && !error.hasError());
-    return error.getError();
+        ErrorAt exprErr;
+        auto p = scan;
+        const auto val = parseExpr(p, exprErr);
+        if (!endOfLine(p) && *p != ',') {
+            if (strErr.getError()) {
+                error.setErrorIf(strErr);
+            } else {
+                error.setErrorIf(scan, ILLEGAL_CONSTANT);
+            }
+            break;
+        }
+        if (exprErr.hasError()) {
+            error.setErrorIf(strErr.getError() ? strErr : exprErr);
+            break;
+        }
+        switch (type) {
+        case DATA_DD:
+            if (val.isInteger()) {
+                if (val.overflowUint32()) {
+                    exprErr.setErrorIf(scan, OVERFLOW_RANGE);
+                } else {
+                    exprErr.setErrorIf(scan, insn.emitUint32(val.getUnsigned()));
+                }
+            } else {
+#if !defined(LIBASM_ASM_NOFLOAT)
+                exprErr.setErrorIf(scan, insn.emitFloat32(val.getFloat()));
+#else
+                exprErr.setErrorIf(scan, FLOAT_NOT_SUPPORTED);
+                insn.emitUint32(0);
+#endif
+            }
+            break;
+        case DATA_DQ:
+#if defined(LIBASM_ASM_NOFLOAT)
+            exprErr.setErrorIf(scan, FLOAT_NOT_SUPPORTED);
+            insn.emitUint64(0);
+#else
+            if (val.isInteger()) {
+                exprErr.setErrorIf(scan, insn.emitUint64(val.getInteger()));
+            } else {
+                exprErr.setErrorIf(scan, insn.emitFloat64(val.getFloat()));
+            }
+#endif
+            break;
+        case DATA_DT:
+#if defined(LIBASM_ASM_NOFLOAT)
+            exprErr.setErrorIf(scan, FLOAT_NOT_SUPPORTED);
+            insn.emitUint16(0);
+            insn.emitUint64(0);
+#else
+            if (val.isInteger()) {
+                constexpr auto PDEC80_MAX = INT64_C(999'999'999'999'999'999);
+                constexpr auto PDEC80_MIN = -INT64_C(999'999'999'999'999'999);
+                const auto v = val.getInteger();
+                if (v < PDEC80_MIN || v > PDEC80_MAX) {
+                    exprErr.setErrorIf(scan, OVERFLOW_RANGE);
+                } else {
+                    exprErr.setErrorIf(scan, insn.emitPackedDecimal(v));
+                }
+            } else {
+                exprErr.setErrorIf(scan, insn.emitTemporaryReal(val.getFloat()));
+            }
+#endif
+            break;
+        }
+        scan = p;
+        error.setErrorIf(exprErr);
+        if (error.setErrorIf(exprErr) == NO_MEMORY)
+            break;
+    } while (scan.skipSpaces().expect(','));
+    return _error.setError(error);
 }
 
 Error AsmI8086::processPseudo(StrScanner &scan, Insn &_insn) {
@@ -713,12 +739,10 @@ Error AsmI8086::processPseudo(StrScanner &scan, Insn &_insn) {
     }
     if (strcasecmp_P(insn.name(), TEXT_DD) == 0)
         return defineDataConstant(insn, scan, DATA_DD, _insn);
-#if !defined(LIBASM_ASM_NOFLOAT) && !defined(LIBASM_I8086_NOFPU)
     if (strcasecmp_P(insn.name(), TEXT_DQ) == 0)
         return defineDataConstant(insn, scan, DATA_DQ, _insn);
     if (strcasecmp_P(insn.name(), TEXT_DT) == 0)
         return defineDataConstant(insn, scan, DATA_DT, _insn);
-#endif
     return Assembler::processPseudo(scan, _insn);
 }
 

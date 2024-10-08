@@ -1269,7 +1269,7 @@ static bool acceptAll(AsmInsn &insn, const Entry *entry) {
 
 bool TableMc68000::hasOperand(const CpuSpec &cpuSpec, AsmInsn &insn) const {
     cpu(cpuSpec.cpu)->searchName(insn, acceptAll);
-#if !defined(LIBASM_ASM_NOFLOAT) && !defined(LIBASM_MC68000_NOFPU)
+#if !defined(LIBASM_MC68000_NOFPU)
     if (!insn.isOK())
         fpu(cpuSpec.fpu)->searchName(insn, acceptAll);
 #endif
@@ -1343,7 +1343,7 @@ static bool acceptModes(AsmInsn &insn, const Entry *entry) {
 
 Error TableMc68000::searchName(const CpuSpec &cpuSpec, AsmInsn &insn) const {
     cpu(cpuSpec.cpu)->searchName(insn, acceptModes);
-#if !defined(LIBASM_ASM_NOFLOAT) && !defined(LIBASM_MC68000_NOFPU)
+#if !defined(LIBASM_MC68000_NOFPU)
     if (insn.getError() == UNKNOWN_INSTRUCTION) {
         fpu(cpuSpec.fpu)->searchName(insn, acceptModes);
         if (insn.getError() != UNKNOWN_INSTRUCTION)
@@ -1495,7 +1495,7 @@ static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page
 
 Error TableMc68000::searchOpCode(const CpuSpec &cpuSpec, DisInsn &insn, StrBuffer &out) const {
     cpu(cpuSpec.cpu)->searchOpCode(insn, out, matchOpCode);
-#if !defined(LIBASM_DIS_NOFLOAT) && !defined(LIBASM_MC68000_NOFPU)
+#if !defined(LIBASM_MC68000_NOFPU)
     if (insn.getError() == UNKNOWN_INSTRUCTION) {
         if ((insn.opCode() & 0xFE00) == (0xF000 | (cpuSpec.fpuCid << 9)))
             fpu(cpuSpec.fpu)->searchOpCode(insn, out, matchOpCode);

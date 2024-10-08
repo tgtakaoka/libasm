@@ -43,7 +43,7 @@ private:
     void decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode, OprPos pos, OprSize size,
             uint16_t opr16 = 0, Error opr16Error = OK) const;
 
-#if !defined(LIBASM_DIS_NOFLOAT) && !defined(LIBASM_MC68000_NOFPU)
+#if !defined(LIBASM_MC68000_NOFPU)
     StrBuffer &outExtendedReal(StrBuffer &buf, const ExtendedReal &v) const;
     StrBuffer &outDecimalString(StrBuffer &buf, const DecimalString &v) const;
 #endif

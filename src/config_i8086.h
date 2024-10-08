@@ -21,9 +21,6 @@
 
 /** Disable i8087 FPU instructions */
 // #define LIBASM_I8086_NOFPU
-#if defined(LIBASM_ASM_NOFLOAT) && defined(LIBASM_DIS_NOFLOAT)
-#define LIBASM_I8086_NOFPU
-#endif
 
 namespace libasm {
 namespace i8086 {

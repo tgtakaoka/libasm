@@ -54,6 +54,8 @@ const /*PROGMEM*/ char *ErrorReporter::errorText_P(Error error) {
         return PSTR("Invalid instruction combination");
     case SUBOPTIMAL_INSTRUCTION:
         return PSTR("Suboptimal instruction");
+    case FLOAT_NOT_SUPPORTED:
+        return PSTR("Float literal not supported");
 
     // Assembler
     case UNKNOWN_INSTRUCTION:

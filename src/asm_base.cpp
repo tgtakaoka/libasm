@@ -337,62 +337,80 @@ Error Assembler::defineDataConstant(StrScanner &scan, Insn &insn, uint8_t dataTy
     const auto hasString = !(type == DATA_BYTE_NO_STRING || type == DATA_WORD_NO_STRING);
     ErrorAt error;
     do {
-        auto p = scan.skipSpaces();
+        scan.skipSpaces();
         ErrorAt strErr;
-        if (hasString && isString(p, strErr) == OK) {
-            generateString(scan, p, insn, type, error);
-            continue;
-        }
-
-        const auto at = p;
-        ErrorAt exprErr;
-        const auto val = parseExpr(p, exprErr);
-        if (!endOfLine(p) && *p != ',')
-            exprErr.setErrorIf(at, ILLEGAL_CONSTANT);
-        if (!exprErr.hasError()) {
-            auto v = val.getUnsigned();
-            switch (type) {
-            case DATA_BYTE_OR_WORD:
-                if (val.overflowUint8())
-                    goto emit_word;
-                // Fall-through
-            case DATA_BYTE:
-            case DATA_BYTE_NO_STRING:
-                insn.emitByte(v);
-                break;
-            case DATA_BYTE_IN_WORD:
-                v &= 0xFF;
-                // Fall-through
-            case DATA_WORD:
-            case DATA_WORD_NO_STRING:
-            emit_word:
-                big ? insn.emitUint16Be(v) : insn.emitUint16Le(v);
-                break;
-            case DATA_LONG:
-                big ? insn.emitUint32Be(v) : insn.emitUint32Le(v);
-                break;
-#ifndef LIBASM_ASM_NOFLOAT
-            case DATA_FLOAT32:
-                big ? insn.emitFloat32Be(val.getFloat()) : insn.emitFloat32Le(val.getFloat());
-                break;
-            case DATA_FLOAT64:
-                big ? insn.emitFloat64Be(val.getFloat()) : insn.emitFloat64Le(val.getFloat());
-                break;
-#endif
-            case DATA_ALIGN2:
-                break;
+        if (hasString) {
+            auto end = scan;
+            const auto err = isString(end, strErr);
+            if (err == OK) {
+                generateString(scan, end, insn, type, strErr);
+                if (error.setErrorIf(strErr) == NO_MEMORY)
+                    break;
+                continue;
             }
-            if (exprErr.getError())
-                error.setErrorIf(exprErr);
-            if (insn.getError())
-                error.setErrorIf(at, insn);
-            scan = p;
-            continue;
+        }
+        ErrorAt exprErr;
+        auto p = scan;
+        const auto val = parseExpr(p, exprErr);
+        if (!endOfLine(p) && *p != ',') {
+            if (strErr.getError()) {
+                error.setErrorIf(strErr);
+            } else {
+                error.setErrorIf(scan, ILLEGAL_CONSTANT);
+            }
+            break;
+        }
+        if (exprErr.hasError()) {
+            error.setErrorIf(strErr.getError() ? strErr : exprErr);
+            break;
         }
 
-        return insn.setError(strErr.getError() ? strErr : exprErr);
+        auto v = val.getUnsigned();
+        switch (type) {
+        case DATA_BYTE_OR_WORD:
+            if (val.overflowUint8())
+                goto emit_word;
+            // Fall-through
+        case DATA_BYTE:
+        case DATA_BYTE_NO_STRING:
+            exprErr.setErrorIf(scan, insn.emitByte(v));
+            break;
+        case DATA_BYTE_IN_WORD:
+            v &= 0xFF;
+            // Fall-through
+        case DATA_WORD:
+        case DATA_WORD_NO_STRING:
+        emit_word:
+            exprErr.setErrorIf(scan, big ? insn.emitUint16Be(v) : insn.emitUint16Le(v));
+            break;
+        case DATA_LONG:
+            exprErr.setErrorIf(scan, big ? insn.emitUint32Be(v) : insn.emitUint32Le(v));
+            break;
+        case DATA_FLOAT32:
+#if defined(LIBASM_ASM_NOFLOAT)
+            exprErr.setErrorIf(scan, FLOAT_NOT_SUPPORTED);
+            insn.emitUint32Be(0);
+#else
+            exprErr.setErrorIf(scan,
+                    big ? insn.emitFloat32Be(val.getFloat()) : insn.emitFloat32Le(val.getFloat()));
+#endif
+            break;
+        case DATA_FLOAT64:
+#if defined(LIBASM_ASM_NOFLOAT)
+            exprErr.setErrorIf(scan, FLOAT_NOT_SUPPORTED);
+            insn.emitUint64Be(0);
+#else
+            exprErr.setErrorIf(scan,
+                    big ? insn.emitFloat64Be(val.getFloat()) : insn.emitFloat64Le(val.getFloat()));
+#endif
+            break;
+        case DATA_ALIGN2:
+            break;
+        }
+        scan = p;
+        if (error.setErrorIf(exprErr) == NO_MEMORY)
+            break;
     } while (scan.skipSpaces().expect(','));
-
     return insn.setError(error);
 }
 

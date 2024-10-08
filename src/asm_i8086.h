@@ -59,10 +59,8 @@ private:
 
     enum I8087Type : char {
         DATA_DD = 'D',  // 32-bit binary or IEEE 754 floating point number
-#if !defined(LIBASM_ASM_NOFLOAT) && !defined(LIBASM_I8086_NOFPU)
         DATA_DQ = 'Q',  // 64-bit binary or IEEE 754 floating point number
         DATA_DT = 'T'   // 80-bit BCD or i8087 Temporary Real
-#endif
     };
     Error defineDataConstant(AsmInsn &insn, StrScanner &scan, I8087Type type, ErrorAt &error) const;
     Error processPseudo(StrScanner &scan, Insn &insn) override;

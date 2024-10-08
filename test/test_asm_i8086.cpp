@@ -1980,7 +1980,7 @@ static void test_segment_override() {
     }
 }
 
-#if !defined(LIBASM_ASM_NOFLOAT) && !defined(LIBASM_I8086_NOFPU)
+#if !defined(LIBASM_I8086_NOFPU)
 
 static void test_float() {
     TEST("FPU 8087");
@@ -2888,7 +2888,19 @@ static void test_data_constant() {
          0x78, 0x56, 0x34, 0x12, 0xF0, 0xDE, 0xBC, 0x9A, 0x78, 0x56, 0x34, 0x12, 0xF0, 0xDE, 0xBC, 0x9A,
          0x78, 0x56, 0x34, 0x12, 0xF0, 0xDE, 0xBC, 0x9A, 0x78, 0x56, 0x34, 0x12, 0xDE, 0xBC, 0x9A, 0x00);
 
-#if !defined(LIBASM_ASM_NOFLOAT) && !defined(LIBASM_I8086_NOFPU)
+#if defined(LIBASM_ASM_NOFLOAT)
+    TEST("DD 12345678H", 0x78, 0x56, 0x34, 0x12);
+    ERRT("DD -2.25e2", FLOAT_NOT_SUPPORTED, "-2.25e2",
+         0x00, 0x00, 0x00, 0x00);
+    ERRT("DQ 123456789ABCDEF0H", FLOAT_NOT_SUPPORTED, "123456789ABCDEF0H",
+         0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00);
+    ERRT("DQ -2.25e2", FLOAT_NOT_SUPPORTED, "-2.25e2",
+         0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00);
+    ERRT("DT 123456789ABCDEF01234H", FLOAT_NOT_SUPPORTED, "123456789ABCDEF01234H",
+         0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00);
+    ERRT("DT -2.25e2", FLOAT_NOT_SUPPORTED, "-2.25e2",
+         0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00);
+#else
     TEST("DD  1.0, -inf, +nan",
          0x00, 0x00, 0x80, 0x3F,
          0x00, 0x00, 0x80, 0xFF,
@@ -2933,7 +2945,7 @@ void run_tests(const char *cpu) {
     RUN_TEST(test_control_transfer);
     RUN_TEST(test_processor_control);
     RUN_TEST(test_segment_override);
-#if !defined(LIBASM_ASM_NOFLOAT) && !defined(LIBASM_I8086_NOFPU)
+#if !defined(LIBASM_I8086_NOFPU)
     RUN_TEST(test_float);
     RUN_TEST(test_float_nowait);
 #endif

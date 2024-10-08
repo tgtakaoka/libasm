@@ -62,6 +62,9 @@ StrBuffer &outOprSize(StrBuffer &out, OprSize size) {
 }  // namespace
 
 void DisMc68000::decodeImmediateData(DisInsn &insn, StrBuffer &out, OprSize size) const {
+#if defined(LIBASM_DIS_NOFLOAT) && !defined(LIBASM_MC68000_NOFPU)
+    const auto *at = out.mark();
+#endif
     out.letter('#');
     if (size == SZ_BYTE || insn.src() == M_CCR || insn.dst() == M_CCR) {
         outHex(out, insn.readUint16() & 0xFF, 8);
@@ -69,27 +72,41 @@ void DisMc68000::decodeImmediateData(DisInsn &insn, StrBuffer &out, OprSize size
         outHex(out, insn.readUint16(), 16);
     } else if (size == SZ_LONG) {
         outHex(out, insn.readUint32(), 32);
-#if !defined(LIBASM_DIS_NOFLOAT) && !defined(LIBASM_MC68000_NOFPU)
+#if !defined(LIBASM_MC68000_NOFPU)
     } else if (_gnuAs) {
-        outHex(out, insn.readUint32(), 32);
+        outHex(out, insn.readUint32(), 32, false);
         if (size == SZ_DUBL) {
             out.hex(insn.readUint32(), 8);
         } else if (size == SZ_XTND || size == SZ_PBCD) {
             out.hex(insn.readUint64(), 16);
         }
-    } else if (size == SZ_SNGL) {
-        out.float32(insn.readFloat32Be());
-    } else if (size == SZ_DUBL) {
-        out.float64(insn.readFloat64Be());
-    } else if (size == SZ_XTND) {
-        outExtendedReal(out, insn.readExtendedReal());
-    } else if (size == SZ_PBCD) {
-        outDecimalString(out, insn.readDecimalString());
+    } else {
+#if defined(LIBASM_DIS_NOFLOAT)
+        insn.setErrorIf(at, FLOAT_NOT_SUPPORTED);
+#endif
+        if (size == SZ_SNGL) {
+#if defined(LIBASM_DIS_NOFLOAT)
+            outHex(out, insn.readUint32(), 32, false);
+#else
+            out.float32(insn.readFloat32Be());
+#endif
+        } else if (size == SZ_DUBL) {
+#if defined(LIBASM_DIS_NOFLOAT)
+            outHex(out, insn.readUint32(), 32, false);
+            out.hex(insn.readUint32(), 8);
+#else
+            out.float64(insn.readFloat64Be());
+#endif
+        } else if (size == SZ_XTND) {
+            outExtendedReal(out, insn.readExtendedReal());
+        } else if (size == SZ_PBCD) {
+            outDecimalString(out, insn.readDecimalString());
+        }
 #endif
     }
 }
 
-#if !defined(LIBASM_DIS_NOFLOAT) && !defined(LIBASM_MC68000_NOFPU)
+#if !defined(LIBASM_MC68000_NOFPU)
 
 bool ExtendedReal::isValid() const {
     /**
@@ -118,6 +135,11 @@ ExtendedReal DisInsn::readExtendedReal() {
 }
 
 StrBuffer &DisMc68000::outExtendedReal(StrBuffer &out, const ExtendedReal &v) const {
+#if defined(LIBASM_DIS_NOFLOAT)
+    outHex(out, v.tag, 16, false);
+    out.hex(v.pad, 4);
+    return out.hex(v.sig, 16);
+#else
     if (v.tag & 0x8000)
         out.letter('-');
     const auto bexp = v.tag & 0x7FFF;
@@ -131,6 +153,7 @@ StrBuffer &DisMc68000::outExtendedReal(StrBuffer &out, const ExtendedReal &v) co
     const auto exp = static_cast<int16_t>(bexp) - 0x3FFF;
     fixed64_t sig{v.sig};
     return out.float80(float80_t::compose(false, exp, sig));
+#endif
 }
 
 bool DecimalString::isValid() const {
@@ -167,6 +190,11 @@ DecimalString DisInsn::readDecimalString() {
 }
 
 StrBuffer &DisMc68000::outDecimalString(StrBuffer &out, const DecimalString &v) const {
+#if defined(LIBASM_DIS_NOFLOAT)
+    outHex(out, v.tag, 16, false);
+    out.hex(v.integ, 4);
+    return out.hex(v.sig, 16);
+#else
     if (v.tag & 0x8000)
         out.letter('-');
     if ((v.tag & 0x7FFF) == 0x7FFF)
@@ -192,6 +220,7 @@ StrBuffer &DisMc68000::outDecimalString(StrBuffer &out, const DecimalString &v) 
         exp10 = -exp10;
     exp += sig.power10(exp10 - 16);
     return out.float80(float80_t::compose(false, exp, sig), 17);
+#endif
 }
 
 #endif
