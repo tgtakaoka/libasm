@@ -646,7 +646,7 @@ static constexpr uint8_t INDEX_8_4[] PROGMEM = {
       1,  // TEXT_CHECKW
 };
 
-#ifndef LIBASM_NS32000_NOMMU
+#if !defined(LIBASM_NS32000_NOMMU)
 static constexpr Entry FORMAT_8_3_1_MMU[] PROGMEM = {
     E2(0x0C, TEXT_MOVSUB, SZ_BYTE, M_GENA, M_GENA, P_GEN1, P_GEN2),
     E2(0x0D, TEXT_MOVSUW, SZ_WORD, M_GENA, M_GENA, P_GEN1, P_GEN2),
@@ -956,7 +956,7 @@ static bool acceptModes(AsmInsn &insn, const Entry *entry) {
 
 Error TableNs32000::searchName(const CpuSpec &cpuSpec, AsmInsn &insn) const {
     cpu(cpuSpec.cpu)->searchName(insn, acceptModes);
-#if !defined(LIBASM_ASM_NOFLOAT) && !defined(LIBASM_NS32000_NOFPU)
+#if !defined(LIBASM_NS32000_NOFPU)
     if (insn.getError() == UNKNOWN_INSTRUCTION)
         fpu(cpuSpec.fpu)->searchName(insn, acceptModes);
 #endif
@@ -979,7 +979,7 @@ static void readEntryName(
 
 Error TableNs32000::searchOpCode(const CpuSpec &cpuSpec, DisInsn &insn, StrBuffer &out) const {
     cpu(cpuSpec.cpu)->searchOpCode(insn, out, matchOpCode, readEntryName);
-#if !defined(LIBASM_DIS_NOFLOAT) && !defined(LIBASM_NS32000_NOFPU)
+#if !defined(LIBASM_NS32000_NOFPU)
     if (insn.getError() == UNKNOWN_INSTRUCTION)
         fpu(cpuSpec.fpu)->searchOpCode(insn, out, matchOpCode, readEntryName);
 #endif
@@ -992,7 +992,7 @@ Error TableNs32000::searchOpCode(const CpuSpec &cpuSpec, DisInsn &insn, StrBuffe
 
 bool TableNs32000::isPrefixCode(const CpuSpec &cpuSpec, uint8_t code) const {
     return
-#if !defined(LIBASM_DIS_NOFLOAT) && !defined(LIBASM_NS32000_NOFPU)
+#if !defined(LIBASM_NS32000_NOFPU)
             fpu(cpuSpec.fpu)->isPrefix(code) ||
 #endif
 #if !defined(LIBASM_NS32000_NOMMU)

@@ -29,8 +29,7 @@ clean-objs:
 vpath %.cpp ../../src
 vpath %.cpp ../../test
 
-CXXFLAGS = -std=c++14 -Wall -O $(DEBUG_FLAGS) \
-    -DLIBASM_DEBUG_VALUE -ULIBASM_ASM_NOFLOAT -ULIBASM_DIS_NOFLOAT
+CXXFLAGS = -std=c++14 -Wall -O $(DEBUG_FLAGS) -DLIBASM_DEBUG_VALUE
 CPPFLAGS = -I../../src -I../../test -MD -MF $@.d
 
 OBJS_common = test_unit_helper.o test_asserter.o error_reporter.o \

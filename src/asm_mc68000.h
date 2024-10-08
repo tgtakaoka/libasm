@@ -48,14 +48,12 @@ private:
     Error encodeOperand(
             AsmInsn &insn, OprSize size, const Operand &op, AddrMode mode, OprPos pos) const;
 
-#if !defined(LIBASM_ASM_NOFLOAT) && !defined(LIBASM_MC68000_NOFPU)
     enum Mc68881Type : char {
         DATA_DCX = 'X',  // 96-bit MC68881 Extended Binary Real
         DATA_DCP = 'P',  // 96-bit MC68881 Packed Decimal String
     };
     Error defineDataConstant(
             AsmInsn &insn, StrScanner &scan, Mc68881Type type, ErrorAt &error) const;
-#endif
     Error processPseudo(StrScanner &scan, Insn &insn) override;
     Error encodeImpl(StrScanner &scan, Insn &insn) const override;
     const ConfigBase &config() const override { return *this; }

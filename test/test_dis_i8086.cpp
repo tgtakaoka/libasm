@@ -1783,7 +1783,7 @@ static void test_segment_override() {
     }
 }
 
-#if !defined(LIBASM_DIS_NOFLOAT) && !defined(LIBASM_I8086_NOFPU)
+#if !defined(LIBASM_I8086_NOFPU)
 
 static void test_float() {
     TEST("FINIT", "", 0x9B, 0xDB, 0xE3);
@@ -2480,10 +2480,10 @@ static void test_illegal() {
         UNKN(0xC9);
     }
 
-#if !defined(LIBASM_DIS_NOFLOAT) && !defined(LIBASM_I8086_NOFPU)
-#define UNKN_FPU(opc, modReg) UNKN(opc, modReg);
-#else
+#if defined(LIBASM_I8086_NOFPU)
 #define UNKN_FPU(opc, modReg) UNKN(opc);
+#else
+#define UNKN_FPU(opc, modReg) UNKN(opc, modReg);
 #endif
     
     for (auto mod = 0; mod < 4; mod++) {
@@ -2559,7 +2559,7 @@ void run_tests(const char *cpu) {
     RUN_TEST(test_control_transfer);
     RUN_TEST(test_processor_control);
     RUN_TEST(test_segment_override);
-#if !defined(LIBASM_DIS_NOFLOAT) && !defined(LIBASM_I8086_NOFPU)
+#if !defined(LIBASM_I8086_NOFPU)
     RUN_TEST(test_float);
     RUN_TEST(test_float_nowait);
 #endif

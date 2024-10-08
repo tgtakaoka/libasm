@@ -27,6 +27,7 @@ using namespace reg;
 using namespace text::common;
 using namespace text::option;
 
+using text::mc68000::TEXT_FMOVE;
 using text::mc68000::TEXT_FPU_68881;
 using text::mc68000::TEXT_FPU_MC68881;
 
@@ -48,11 +49,11 @@ constexpr Pseudo PSEUDOS[] PROGMEM = {
     {TEXT_dALIGN, &Assembler::alignOrigin},
     {TEXT_DC,     &Assembler::defineDataConstant, Assembler::DATA_WORD|Assembler::DATA_ALIGN2},
     {TEXT_DC_B,   &Assembler::defineDataConstant, Assembler::DATA_BYTE},
-#if !defined(LIBASM_ASM_NOFLOAT) && !defined(LIBASM_MC68000_NOFPU)
+#if !defined(LIBASM_MC68000_NOFPU)
     {TEXT_DC_D,   &Assembler::defineDataConstant, Assembler::DATA_FLOAT64|Assembler::DATA_ALIGN2},
 #endif
     {TEXT_DC_L,   &Assembler::defineDataConstant, Assembler::DATA_LONG|Assembler::DATA_ALIGN2},
-#if !defined(LIBASM_ASM_NOFLOAT) && !defined(LIBASM_MC68000_NOFPU)
+#if !defined(LIBASM_MC68000_NOFPU)
     {TEXT_DC_S,   &Assembler::defineDataConstant, Assembler::DATA_FLOAT32|Assembler::DATA_ALIGN2},
 #endif
     {TEXT_DC_W,   &Assembler::defineDataConstant, Assembler::DATA_WORD|Assembler::DATA_ALIGN2},
@@ -99,7 +100,7 @@ void AsmMc68000::reset() {
 Error AsmMc68000::setFpu(StrScanner &scan) {
     if (scan.expectFalse() || scan.iequals_P(TEXT_none)) {
         setFpuType(FPU_NONE);
-#if !defined(LIBASM_ASM_NOFLOAT) && !defined(LIBASM_MC68000_NOFPU)
+#if !defined(LIBASM_MC68000_NOFPU)
     } else if (scan.expectTrue() || scan.iequals_P(TEXT_FPU_68881) ||
                scan.iequals_P(TEXT_FPU_MC68881)) {
         setFpuType(FPU_MC68881);
@@ -297,7 +298,22 @@ void AsmMc68000::encodeImmediate(AsmInsn &insn, const Operand &op, OprSize size)
             insn.setErrorIf(op, OVERFLOW_RANGE);
         insn.emitOperand16(static_cast<uint8_t>(val32));
         break;
-#if !defined(LIBASM_ASM_NOFLOAT) && !defined(LIBASM_MC68000_NOFPU)
+#if defined(LIBASM_ASM_NOFLOAT) || defined(LIBASM_MC68000_NOFPU)
+    case SZ_SNGL:
+        insn.setErrorIf(op, FLOAT_NOT_SUPPORTED);
+        insn.emitUint32(0, insn.operandPos());
+        break;
+    case SZ_DUBL:
+        insn.setErrorIf(op, FLOAT_NOT_SUPPORTED);
+        insn.emitUint64(0, insn.operandPos());
+        break;
+    case SZ_XTND:
+    case SZ_PBCD:
+        insn.setErrorIf(op, FLOAT_NOT_SUPPORTED);
+        insn.emitUint32(0, insn.operandPos());
+        insn.emitUint64(0, insn.operandPos());
+        break;
+#else
     case SZ_SNGL:
         insn.emitFloat32(op.val.getFloat(), insn.operandPos());
         break;
@@ -877,28 +893,44 @@ Error AsmInsn::emitDecimalString(const float80_t &value, uint8_t pos) {
     return getError();
 }
 
-Error AsmMc68000::defineDataConstant(
-        AsmInsn &insn, StrScanner &scan, Mc68881Type type, ErrorAt &error) const {
-    insn.insnBase().align(2);
-    do {
-        auto p = scan.skipSpaces();
-        const auto at = p;
-        const auto val = parseExpr(p, error);
-        if ((endOfLine(p) || *p == ',') && !error.hasError()) {
-            if (type == DATA_DCX) {
-                if (insn.emitExtendedReal(val.getFloat(), insn.length()))
-                    error.setAt(at);
-            } else {  // DATA_DCP
-                if (insn.emitDecimalString(val.getFloat(), insn.length()))
-                    error.setAt(at);
-            }
-            scan = p;
-        }
-    } while (scan.skipSpaces().expect(',') && !error.hasError());
-    return error.getError();
-}
-
 #endif
+
+Error AsmMc68000::defineDataConstant(
+        AsmInsn &insn, StrScanner &scan, Mc68881Type type, ErrorAt &_error) const {
+    insn.insnBase().align(2);
+    ErrorAt error;
+    do {
+        scan.skipSpaces();
+        ErrorAt exprErr;
+        auto p = scan;
+        const auto val = parseExpr(p, exprErr);
+        if (!endOfLine(p) && *p != ',') {
+            error.setErrorIf(scan, ILLEGAL_CONSTANT);
+            break;
+        }
+        if (exprErr.hasError()) {
+            error.setErrorIf(exprErr);
+            break;
+        }
+#if defined(LIBASM_MC68000_NOFPU)
+        (void)val;
+#elif defined(LIBASM_ASM_NOFLOAT)
+        (void)val;
+        exprErr.setErrorIf(scan, FLOAT_NOT_SUPPORTED);
+        insn.emitUint32(0, insn.length());
+        insn.emitUint64(0, insn.length());
+#else
+        if (type == DATA_DCX)
+            exprErr.setErrorIf(scan, insn.emitExtendedReal(val.getFloat(), insn.length()));
+        if (type == DATA_DCP)
+            exprErr.setErrorIf(scan, insn.emitDecimalString(val.getFloat(), insn.length()));
+#endif
+        scan = p;
+        if (error.setErrorIf(exprErr) == NO_MEMORY)
+            break;
+    } while (scan.skipSpaces().expect(',') && error.getError() != NO_MEMORY);
+    return _error.setError(error);
+}
 
 Error AsmMc68000::processPseudo(StrScanner &scan, Insn &_insn) {
     AsmInsn insn(_insn);
@@ -907,7 +939,7 @@ Error AsmMc68000::processPseudo(StrScanner &scan, Insn &_insn) {
         const auto error = _opt_fpu.set(scan);
         return error ? insn.setErrorIf(at, error) : OK;
     }
-#if !defined(LIBASM_ASM_NOFLOAT) && !defined(LIBASM_MC68000_NOFPU)
+#if !defined(LIBASM_MC68000_NOFPU)
     if (strcasecmp_P(insn.name(), TEXT_DC_X) == 0)
         return defineDataConstant(insn, scan, DATA_DCX, _insn);
     if (strcasecmp_P(insn.name(), TEXT_DC_P) == 0)
@@ -919,7 +951,7 @@ Error AsmMc68000::processPseudo(StrScanner &scan, Insn &_insn) {
 namespace {
 bool hasKFactor(const AsmInsn &insn, InsnSize size) {
     // FMOVE.P FPn, ea
-    if (strcasecmp_P(insn.name(), PSTR("FMOVE")) == 0 && size == ISZ_PBCD &&
+    if (strcasecmp_P(insn.name(), TEXT_FMOVE) == 0 && size == ISZ_PBCD &&
             insn.srcOp.mode == M_FPREG) {
         const auto mode = insn.dstOp.mode;
         return (mode >= M_AIND && mode <= M_INDX) || mode == M_AWORD || mode == M_ALONG;

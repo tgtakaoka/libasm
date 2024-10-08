@@ -197,26 +197,40 @@ void DisNs32000::decodeImmediate(DisInsn &insn, StrBuffer &out, AddrMode mode) c
     const auto size = insn.size();
     if (mode == M_GENC) {
         outDec(out, static_cast<int8_t>(insn.readByte()), -8);
-    } else if (size == SZ_BYTE) {
-        outHex(out, insn.readByte(), 8);
-#if !defined(LIBASM_DIS_NOFLOAT) && !defined(LIBASM_NS32000_NOFPU)
-    } else if (mode == M_FENR || mode == M_FENW) {
-        if (size == SZ_OCTA) {
-            const auto float64 = insn.readFloat64Be();
-            if (_gnuAs)
-                out.letter('0').letter('l');
-            out.float64(float64);
-        } else {
+    } else if (mode != M_FENR && mode != M_FENW) {
+        if (size == SZ_BYTE) {
+            outHex(out, insn.readByte(), 8);
+        } else if (size == SZ_WORD) {
+            outHex(out, insn.readUint16Be(), 16);
+        } else if (size == SZ_QUAD) {
+            outHex(out, insn.readUint32Be(), 32);
+        }
+#if !defined(LIBASM_NS32000_NOFPU)
+    } else {
+        if (size == SZ_QUAD) {
+#if defined(LIBASM_DIS_NOFLOAT)
+            insn.setErrorIf(out, FLOAT_NOT_SUPPORTED);
+            outHex(out, insn.readUint32(), 32, false);
+#else
             const auto float32 = insn.readFloat32Be();
             if (_gnuAs)
                 out.letter('0').letter('f');
             out.float32(float32);
+#endif
+        } else if (size == SZ_OCTA) {
+#if defined(LIBASM_DIS_NOFLOAT)
+            insn.setErrorIf(out, FLOAT_NOT_SUPPORTED);
+            const auto lsw = insn.readUint32();
+            outHex(out, insn.readUint32(), 32, false);
+            out.hex(lsw, 8);
+#else
+            const auto float64 = insn.readFloat64Be();
+            if (_gnuAs)
+                out.letter('0').letter('l');
+            out.float64(float64);
+#endif
         }
 #endif
-    } else if (size == SZ_WORD) {
-        outHex(out, insn.readUint16Be(), 16);
-    } else if (size == SZ_QUAD) {
-        outHex(out, insn.readUint32Be(), 32);
     }
 }
 

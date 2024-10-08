@@ -415,6 +415,7 @@ void test_dec() {
         v;                                                        \
     })
 
+#if !defined(LIBASM_DIS_NOFLOAT)
 void test_float32() {
     char buffer[16];
     StrCaseBuffer out(buffer, sizeof(buffer), false);
@@ -494,6 +495,7 @@ void test_float80() {
     EQ("float80-overflow", BUFFER_OVERFLOW, sout.getError());
     EQ("float64-overflow", "1.08420217248550443", sout.str());
 }
+#endif
 
 void test_comma() {
     char buffer[8];
@@ -558,9 +560,11 @@ void run_tests() {
     RUN_TEST(test_rtext);
     RUN_TEST(test_hex);
     RUN_TEST(test_dec);
+#if !defined(LIBASM_DIS_NOFLOAT)
     RUN_TEST(test_float32);
     RUN_TEST(test_float64);
     RUN_TEST(test_float80);
+#endif
     RUN_TEST(test_comma);
     RUN_TEST(test_reverse);
     RUN_TEST(test_reset);

@@ -2,8 +2,7 @@
 
 root = ../..
 cxx      = g++
-cxxflags = -std=c++14 -Wall -O ${debug_flags} $
-  -DLIBASM_DEBUG_VALUE -ULIBASM_ASM_NOFLOAT -ULIBASM_DIS_NOFLOAT
+cxxflags = -std=c++14 -Wall -O ${debug_flags} -DLIBASM_DEBUG_VALUE
 cppflags = -I${root}/src -I${root}/test
 
 rule cxx

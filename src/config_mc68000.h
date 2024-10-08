@@ -21,9 +21,6 @@
 
 /** Disable MC68881 FPU instructions */
 // #define LIBASM_MC68000_NOFPU
-#if defined(LIBASM_ASM_NOFLOAT) && defined(LIBASM_DIS_NOFLOAT)
-#define LIBASM_MC68000_NOFPU
-#endif
 
 namespace libasm {
 namespace mc68000 {

@@ -72,7 +72,7 @@ struct Value {
     bool isUnsigned() const { return _type == V_UNSIGNED || isUndefined(); }
     bool isSigned() const { return _type == V_SIGNED; }
     bool isInteger() const { return !isFloat(); }
-    bool isFloat() const;
+    bool isFloat() const { return _type == V_FLOAT; }
     /** Return true if value exists and is zero */
     bool isZero() const;
     /** Return true if value is signed or float and is negative */
@@ -91,7 +91,9 @@ struct Value {
     Value &setUnsigned(uint32_t u);
     Value &setInteger(signed_t s);
     Value &setUinteger(unsigned_t s);
-#if !defined(LIBASM_ASM_NOFLOAT)
+#if defined(LIBASM_ASM_NOFLOAT)
+    Value &setFloat();
+#else
     Value &setFloat(const float_t &f);
     Value &setFloat(float_t &&f) { return setFloat(f); }
 #endif
@@ -145,9 +147,7 @@ private:
         V_UNDEF = 0,
         V_UNSIGNED = 1,
         V_SIGNED = 2,
-#if !defined(LIBASM_ASM_NOFLOAT)
         V_FLOAT = 3,
-#endif
     };
 
     union {

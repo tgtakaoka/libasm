@@ -109,7 +109,7 @@ struct AsmInsn final : AsmInsnImpl<Config>, EntryInsn {
     }
     Error emitOperand8(uint8_t val8) { return emitByte(val8, operandPos()); }
     Error emitOperand16(uint16_t val16) { return emitUint16(val16, operandPos()); }
-#if !defined(LIBASM_ASM_NOFLOAT) && !defined(LIBASM_I8086_NOFPU)
+#if !defined(LIBASM_ASM_NOFLOAT)
     Error emitFloat32(const float80_t &value) { return emitFloat32Le(value); }
     Error emitFloat64(const float80_t &value) { return emitFloat64Le(value); }
     Error emitPackedDecimal(int64_t val64);

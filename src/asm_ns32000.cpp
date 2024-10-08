@@ -53,7 +53,7 @@ constexpr Pseudo PSEUDOS[] PROGMEM = {
     {TEXT_dBLKW,   &Assembler::allocateSpaces,     Assembler::DATA_WORD},
     {TEXT_dBYTE,   &Assembler::defineDataConstant, Assembler::DATA_BYTE},
     {TEXT_dDOUBLE, &Assembler::defineDataConstant, Assembler::DATA_LONG},
-#if !defined(LIBASM_ASM_NOFLOAT) && !defined(LIBASM_NS32000_NOFPU)
+#if !defined(LIBASM_NS32000_NOFPU)
     {TEXT_dFLOAT,  &Assembler::defineDataConstant, Assembler::DATA_FLOAT32},
     {TEXT_dLONG,   &Assembler::defineDataConstant, Assembler::DATA_FLOAT64},
 #endif
@@ -120,7 +120,7 @@ void AsmNs32000::reset() {
 Error AsmNs32000::setFpu(StrScanner &scan) {
     if (scan.iequals_P(TEXT_none)) {
         setFpuType(FPU_NONE);
-#if !defined(LIBASM_ASM_NOFLOAT) && !defined(LIBASM_NS32000_NOFPU)
+#if !defined(LIBASM_NS32000_NOFPU)
     } else if (scan.iequals_P(TEXT_FPU_NS32081)) {
         setFpuType(FPU_NS32081);
 #endif
@@ -530,20 +530,33 @@ void AsmNs32000::emitBitField(
 
 void AsmNs32000::emitImmediate(AsmInsn &insn, AddrMode mode, const Operand &op) const {
     const auto size = insn.size();
-    if (size == SZ_BYTE || mode == M_GENC) {
-        insn.emitOperand8(op.val.getUnsigned());
-#if !defined(LIBASM_ASM_NOFLOAT) && !defined(LIBASM_NS32000_NOFPU)
-    } else if (mode == M_FENR) {
-        if (size == SZ_OCTA) {
-            insn.emitOpFloat64(op.val.getFloat());
-        } else {
+    if (mode != M_FENR) {
+        if (size == SZ_BYTE || mode == M_GENC) {
+            insn.emitOperand8(op.val.getUnsigned());
+        } else if (size == SZ_WORD) {
+            insn.emitOperand16(op.val.getUnsigned());
+        } else if (size == SZ_QUAD) {
+            insn.emitOperand32(op.val.getUnsigned());
+        }
+#if !defined(LIBASM_NS32000_NOFPU)
+    } else {
+        if (size == SZ_QUAD) {
+#if defined(LIBASM_ASM_NOFLOAT)
+            insn.setErrorIf(op, FLOAT_NOT_SUPPORTED);
+            insn.emitOperand32(0);
+#else
             insn.emitOpFloat32(op.val.getFloat());
+#endif
+        } else if (size == SZ_OCTA) {
+#if defined(LIBASM_ASM_NOFLOAT)
+            insn.setErrorIf(op, FLOAT_NOT_SUPPORTED);
+            insn.emitOperand32(0);
+            insn.emitOperand32(0);
+#else
+            insn.emitOpFloat64(op.val.getFloat());
+#endif
         }
 #endif
-    } else if (size == SZ_WORD) {
-        insn.emitOperand16(op.val.getUnsigned());
-    } else if (size == SZ_QUAD) {
-        insn.emitOperand32(op.val.getUnsigned());
     }
 }
 

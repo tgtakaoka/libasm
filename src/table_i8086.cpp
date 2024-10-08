@@ -1298,7 +1298,7 @@ static bool acceptModes(AsmInsn &insn, const Entry *entry) {
 static constexpr char TEXT_FN[] PROGMEM = "FN";
 
 Error TableI8086::searchName(const CpuSpec &cpuSpec, AsmInsn &insn) const {
-#if !defined(LIBASM_ASM_NOFLOAT) && !defined(LIBASM_I8086_NOFPU)
+#if !defined(LIBASM_I8086_NOFPU)
     fpu(cpuSpec.fpu)->searchName(insn, acceptModes);
     if (insn.getError() == UNKNOWN_INSTRUCTION) {
         // check non-wait version FNxxxx
@@ -1376,7 +1376,7 @@ static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page
 }
 
 Error TableI8086::searchOpCode(const CpuSpec &cpuSpec, DisInsn &insn, StrBuffer &out) const {
-#if !defined(LIBASM_DIS_NOFLOAT) && !defined(LIBASM_I8086_NOFPU)
+#if !defined(LIBASM_I8086_NOFPU)
     fpu(cpuSpec.fpu)->searchOpCode(insn, out, matchOpCode);
     if (insn.isOK()) {
         if (insn.opCode() == DisInsn::FWAIT)
@@ -1402,7 +1402,7 @@ bool TableI8086::isPrefix(CpuType cpuType, Config::opcode_t code) const {
 }
 
 bool TableI8086::isPrefix(FpuType fpuType, Config::opcode_t code) const {
-#if !defined(LIBASM_DIS_NOFLOAT) && !defined(LIBASM_I8086_NOFPU)
+#if !defined(LIBASM_I8086_NOFPU)
     return fpu(fpuType)->isPrefix(code);
 #else
     return false;
