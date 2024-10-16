@@ -67,6 +67,9 @@ PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
 
 struct Mc68000SymbolParser final : PrefixSymbolParser, Singleton<Mc68000SymbolParser> {
     Mc68000SymbolParser() : PrefixSymbolParser(PSTR_DOT, PSTR_UNDER_DOT_DOLLAR) {}
+    bool locationSymbol(StrScanner &scan) const override {
+        return SymbolParser::locationSymbol(scan, '*');
+    }
     bool instructionLetter(char c) const override {
         return PrefixSymbolParser::instructionLetter(c) || c == '.';
     }

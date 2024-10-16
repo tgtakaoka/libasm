@@ -70,6 +70,9 @@ struct Ns32000NumberParser final : NationalNumberParser, Singleton<Ns32000Number
 
 struct Ns32000SymbolParser final : SimpleSymbolParser, Singleton<Ns32000SymbolParser> {
     Ns32000SymbolParser() : SimpleSymbolParser(PSTR_UNDER_DOT) {}
+    bool locationSymbol(StrScanner &scan) const override {
+        return SymbolParser::locationSymbol(scan, '.') || SymbolParser::locationSymbol(scan, '*');
+    }
     bool instructionLetter(char c) const override {
         return SimpleSymbolParser::instructionLetter(c) || c == '.';
     }
@@ -96,9 +99,6 @@ const ValueParser::Plugins &AsmNs32000::defaultPlugins() {
         const CommentParser &comment() const override { return SharpCommentParser::singleton(); }
         const SymbolParser &symbol() const override { return Ns32000SymbolParser::singleton(); }
         const LetterParser &letter() const override { return Ns32000LetterParser::singleton(); }
-        const LocationParser &location() const override {
-            return DotStarLocationParser::singleton();
-        }
     } PLUGINS{};
     return PLUGINS;
 }
@@ -244,7 +244,7 @@ Error AsmNs32000::parseBaseOperand(StrScanner &scan, Operand &op) const {
     }
 
     auto l = p;
-    if (parser().locationSymbol(l)) {
+    if (Ns32000SymbolParser::singleton().locationSymbol(l)) {
         op.val = parseInteger(p, op);
         if (op.hasError())
             return op.getError();

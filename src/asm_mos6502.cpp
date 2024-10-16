@@ -29,10 +29,9 @@ using namespace text::common;
 using namespace text::mos6502;
 
 namespace {
-
-// clang-format off
 constexpr char TEXT_aequal[] PROGMEM = "*=";
 
+// clang-format off
 constexpr Pseudo PSEUDOS[] PROGMEM = {
     {TEXT_aequal, &Assembler::defineOrigin},
     {TEXT_dALIGN, &Assembler::alignOrigin},
@@ -58,6 +57,9 @@ struct MostekCommentParser final : CommentParser, Singleton<MostekCommentParser>
 
 struct MostekSymbolParser final : SimpleSymbolParser, Singleton<MostekSymbolParser> {
     MostekSymbolParser() : SimpleSymbolParser(PSTR_UNDER) {}
+    bool locationSymbol(StrScanner &scan) const override {
+        return SymbolParser::locationSymbol(scan, '*');
+    }
     bool instructionLetter(char c) const override {
         return SymbolParser::instructionLetter(c) || c == '.' || c == '=' || c == '*' || c == ':';
     }
@@ -82,7 +84,6 @@ const ValueParser::Plugins &AsmMos6502::defaultPlugins() {
         const CommentParser &comment() const override { return MostekCommentParser::singleton(); }
         const SymbolParser &symbol() const override { return MostekSymbolParser::singleton(); }
         const LetterParser &letter() const override { return MostekLetterParser::singleton(); }
-        const LocationParser &location() const override { return StarLocationParser::singleton(); }
     } PLUGINS{};
     return PLUGINS;
 }

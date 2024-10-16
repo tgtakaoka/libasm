@@ -43,14 +43,20 @@ struct Mn1610NumberParser final : IbmNumberParser, Singleton<Mn1610NumberParser>
     Mn1610NumberParser() : IbmNumberParser('X', 0, 0, 0) {}
 };
 
+struct Mn1610SymbolParser final : SymbolParser, Singleton<Mn1610SymbolParser> {
+    bool locationSymbol(StrScanner &scan) const override {
+        return SymbolParser::locationSymbol(scan, '*');
+    }
+};
+
 }  // namespace
 
 const ValueParser::Plugins &AsmMn1610::defaultPlugins() {
     static const struct final : ValueParser::Plugins {
         const NumberParser &number() const override { return Mn1610NumberParser::singleton(); }
+        const SymbolParser &symbol() const override { return Mn1610SymbolParser::singleton(); }
         const CommentParser &comment() const override { return StarCommentParser::singleton(); }
         const LetterParser &letter() const override { return IbmLetterParser::singleton(); }
-        const LocationParser &location() const override { return StarLocationParser::singleton(); }
     } PLUGINS{};
     return PLUGINS;
 }

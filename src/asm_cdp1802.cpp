@@ -99,7 +99,6 @@ const ValueParser::Plugins &AsmCdp1802::defaultPlugins() {
         const CommentParser &comment() const override { return RcaCommentParser::singleton(); }
         const SymbolParser &symbol() const override { return RcaSymbolParser::singleton(); }
         const LetterParser &letter() const override { return RcaLetterParser::singleton(); }
-        const LocationParser &location() const override { return StarLocationParser::singleton(); }
         const FunctionTable &function() const override { return RcaFunctionTable::singleton(); }
     } PLUGINS{};
     return PLUGINS;

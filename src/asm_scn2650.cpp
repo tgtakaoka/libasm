@@ -50,8 +50,8 @@ struct SigneticsNumberParser final : IbmNumberParser, Singleton<SigneticsNumberP
 };
 
 struct SigneticsLetterParser final : LetterParser, Singleton<SigneticsLetterParser> {
-    bool letterPrefix(StrScanner &scan) const override { return scan.iexpect('A') != 0; }
-    bool stringPrefix(StrScanner &scan) const override { return scan.iexpect('A') != 0; }
+    bool letterPrefix(StrScanner &scan) const override { return scan.iexpect('A'); }
+    bool stringPrefix(StrScanner &scan) const override { return scan.iexpect('A'); }
 };
 
 }  // namespace

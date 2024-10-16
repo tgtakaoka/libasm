@@ -41,7 +41,6 @@ struct ValueParser {
         virtual const CommentParser &comment() const;
         virtual const SymbolParser &symbol() const;
         virtual const LetterParser &letter() const;
-        virtual const LocationParser &location() const;
         virtual const OperatorParser &operators() const;
         virtual const FunctionTable &function() const;
 
@@ -59,7 +58,6 @@ struct ValueParser {
         const CommentParser &comment() const override;
         const SymbolParser &symbol() const override;
         const LetterParser &letter() const override;
-        const LocationParser &location() const override;
         const OperatorParser &operators() const override;
     };
 
@@ -68,7 +66,6 @@ struct ValueParser {
           _comment(plugins.comment()),
           _symbol(plugins.symbol()),
           _letter(plugins.letter()),
-          _location(plugins.location()),
           _operators(plugins.operators()),
           _function(plugins.function()) {}
 
@@ -92,7 +89,6 @@ struct ValueParser {
     Error readSymbol(StrScanner &scan, StrScanner &symbol) const;
     Error readLabel(StrScanner &scan, StrScanner &label) const;
     Error readInstruction(StrScanner &scan, StrScanner &inst) const;
-    bool locationSymbol(StrScanner &scan) const { return _location.locationSymbol(scan); }
     bool commentLine(StrScanner &scan) const { return _comment.commentLine(scan); }
     bool endOfLine(StrScanner &scan) const { return _comment.endOfLine(scan); }
     bool stringPrefix(StrScanner &scan) const { return _letter.stringPrefix(scan); }
@@ -103,7 +99,6 @@ private:
     const CommentParser &_comment;
     const SymbolParser &_symbol;
     const LetterParser &_letter;
-    const LocationParser &_location;
     const OperatorParser &_operators;
     const FunctionTable &_function;
 

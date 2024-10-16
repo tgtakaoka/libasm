@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
+#include "value_parser.h"
 #include <ctype.h>
 #include <stdlib.h>
 #include "config_base.h"
 #include "stack.h"
 #include "text_common.h"
-#include "value_parser.h"
 
 namespace libasm {
 
@@ -39,10 +39,6 @@ const SymbolParser &ValueParser::Plugins::symbol() const {
 const LetterParser &ValueParser::Plugins::letter() const {
     static const LetterParser SINGLETON;
     return SINGLETON;
-}
-
-const LocationParser &ValueParser::Plugins::location() const {
-    return DollarLocationParser::singleton();
 }
 
 const OperatorParser &ValueParser::Plugins::operators() const {
@@ -80,18 +76,19 @@ const ValueParser::Plugins &ValueParser::Plugins::motorola() {
 const NumberParser &ValueParser::MotorolaPlugins::number() const {
     return MotorolaNumberParser::singleton();
 }
+
 const CommentParser &ValueParser::MotorolaPlugins::comment() const {
     return StarCommentParser::singleton();
 }
+
 const SymbolParser &ValueParser::MotorolaPlugins::symbol() const {
     return Mc68xxSymbolParser::singleton();
 }
+
 const LetterParser &ValueParser::MotorolaPlugins::letter() const {
     return MotorolaLetterParser::singleton();
 }
-const LocationParser &ValueParser::MotorolaPlugins::location() const {
-    return StarLocationParser::singleton();
-}
+
 const OperatorParser &ValueParser::MotorolaPlugins::operators() const {
     return Mc68xxOperatorParser::singleton();
 }
@@ -114,6 +111,13 @@ struct FairchildNumberParser final : NumberParser, Singleton<FairchildNumberPars
 
 private:
     IbmNumberParser _ibm{'H', 'B', 'O', 'D'};
+};
+
+struct FairchildSymbolParser final : SymbolParser, Singleton<FairchildSymbolParser> {
+    bool locationSymbol(StrScanner &scan) const override {
+        return SymbolParser::locationSymbol(scan, '*') || SymbolParser::locationSymbol(scan, '$') ||
+               SymbolParser::locationSymbol(scan, '.');
+    }
 };
 
 struct FairchildLetterParser final : LetterParser, Singleton<FairchildLetterParser> {
@@ -152,10 +156,6 @@ struct FairchildLetterParser final : LetterParser, Singleton<FairchildLetterPars
     }
 };
 
-struct FairchildLocationParser final : SimpleLocationParser, Singleton<FairchildLocationParser> {
-    FairchildLocationParser() : SimpleLocationParser(text::common::PSTR_DOT_STAR_DOLLAR) {}
-};
-
 }  // namespace fairchild
 
 const ValueParser::Plugins &ValueParser::Plugins::fairchild() {
@@ -163,12 +163,12 @@ const ValueParser::Plugins &ValueParser::Plugins::fairchild() {
         const NumberParser &number() const override {
             return fairchild::FairchildNumberParser::singleton();
         }
+        const SymbolParser &symbol() const override {
+            return fairchild::FairchildSymbolParser::singleton();
+        }
         const CommentParser &comment() const override { return StarCommentParser::singleton(); }
         const LetterParser &letter() const override {
             return fairchild::FairchildLetterParser::singleton();
-        }
-        const LocationParser &location() const override {
-            return fairchild::FairchildLocationParser::singleton();
         }
     } PLUGINS{};
     return PLUGINS;
@@ -457,7 +457,7 @@ Error ValueParser::parseConstant(StrScanner &scan, Value &val, ParserContext &co
         return err;
     }
 
-    if (_location.locationSymbol(p)) {
+    if (_symbol.locationSymbol(p)) {
         val.setUnsigned(context.currentLocation);
         scan = p;
         return OK;

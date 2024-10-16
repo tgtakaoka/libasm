@@ -48,9 +48,6 @@ const ValueParser::Plugins &AsmIns8060::defaultPlugins() {
     static const struct final : ValueParser::Plugins {
         const NumberParser &number() const override { return Ins80xxNumberParser::singleton(); }
         const SymbolParser &symbol() const override { return Ins80xxSymbolParser::singleton(); }
-        const LocationParser &location() const override {
-            return DotDollarLocationParser::singleton();
-        }
         const FunctionTable &function() const override { return Ins8060FunctionTable::singleton(); }
     } PLUGINS{};
     return PLUGINS;

@@ -21,20 +21,8 @@ using namespace libasm::test;
 
 const struct final : ValueParser::Plugins {
     const NumberParser &number() const override { return _number; }
-    const SymbolParser &symbol() const override { return _symbol; }
-    const LetterParser &letter() const override { return _letter; }
+    const SymbolParser &symbol() const override { return Ins80xxSymbolParser::singleton(); }
     const NationalNumberParser _number{/* 'X' or 'H' */ 0, 'B', /* 'O' or */ 'Q', 'D'};
-    const SimpleSymbolParser _symbol{PSTR("$")};
-    const struct : LetterParser {
-        bool letterPrefix(StrScanner &scan) const override {
-            scan.iexpect('A'); // optional
-            return true;
-        }
-        bool stringPrefix(StrScanner &scan) const override {
-            scan.iexpect('A'); // optional
-            return true;
-        }
-    } _letter{};
 } plugins{};
 const ValueParser parser{plugins};
 
@@ -58,16 +46,7 @@ static void test_char_constant() {
     X8("''",    MISSING_CLOSING_QUOTE, "''", "''");
     E8("''''",  0x27);
 
-    E8("A'a'",   0x61);
-    E8("a'a'+5", 0x66);
-    E8("5+A'a'", 0x66);
-    X8("A'a",    MISSING_CLOSING_QUOTE, "A'a", "A'a");
-    X8("A'a+5",  MISSING_CLOSING_QUOTE, "A'a+5", "A'a+5");
-    X8("5+A'a",  MISSING_CLOSING_QUOTE, "A'a", "A'a");
-    X8("a' ",    MISSING_CLOSING_QUOTE, "a' ", "a' ");
-    X8("a''",    MISSING_CLOSING_QUOTE, "a''", "a''");
-
-    E8("''''",  0x27);
+    E8("''''", 0x27);
     E16("'a'", 0x61);
     E32("'a'", 0x61);
 }

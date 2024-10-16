@@ -19,7 +19,6 @@
 
 #include "comment_parser.h"
 #include "letter_parser.h"
-#include "location_parser.h"
 #include "number_parser.h"
 #include "symbol_parser.h"
 
