@@ -17,9 +17,14 @@
 #include "operators.h"
 #include <ctype.h>
 #include <math.h>
+#include "function_table.h"
+#include "reg_ins8060.h"
 #include "str_scanner.h"
+#include "text_common.h"
 
 namespace libasm {
+
+using namespace text::common;
 
 bool Operator::isHigher(const Operator &o) const {
     return _prec < o._prec || (_prec == o._prec && o._assoc == LEFT);
@@ -29,7 +34,7 @@ bool Operator::isNoneAssoc(const Operator &o) const {
     return _prec == o._prec && _assoc == NONE;
 }
 
-Error Operator::eval(ValueStack &stack, ParserContext &context, uint_fast8_t argc) const {
+Error Operator::eval(ValueStack &stack, ParserContext &context, int_fast8_t argc) const {
     if (argc == 0)
         argc = stack.size();
     if (_fn) {
@@ -112,9 +117,9 @@ static Error subtract(ValueStack &stack, ParserContext &) {
     return OK;
 }
 
-static Error logical_shift_left_32bit(ValueStack &stack, ParserContext &) {
+static Error logical_shift_left(ValueStack &stack, ParserContext &) {
     const auto rhs = stack.pop().getUnsigned();
-    const auto lhs = stack.pop().getUnsigned() & UINT32_MAX;
+    const auto lhs = stack.pop().getUnsigned();
     const auto value = (rhs < 32) ? (lhs << rhs) : 0;
     stack.pushUnsigned(value & UINT32_MAX);
     return OK;
@@ -221,8 +226,8 @@ const Operator Operator::OP_DIV(         5, L, 2, divide);
 const Operator Operator::OP_MOD(         5, L, 2, modulo);
 const Operator Operator::OP_ADD(         6, L, 2, add);
 const Operator Operator::OP_SUB(         6, L, 2, subtract);
-const Operator Operator::OP_SHIFT_LEFT(  7, L, 2, logical_shift_left_32bit);
-const Operator Operator::OP_SHIFT_RIGHT( 7, L, 2, arithmetic_shift_right);
+const Operator Operator::OP_SHIFT_LEFT( 7, L, 2, logical_shift_left);
+const Operator Operator::OP_SHIFT_RIGHT(7, L, 2, arithmetic_shift_right);
 const Operator Operator::OP_LOGICAL_LT(  9, N, 2, less_than);
 const Operator Operator::OP_LOGICAL_LE(  9, N, 2, less_than_or_equal);
 const Operator Operator::OP_LOGICAL_GE(  9, N, 2, greater_than_or_equal);
@@ -321,7 +326,7 @@ static Error exponential(ValueStack &stack, ParserContext &) {
 
 static Error rotate_left_16bit(ValueStack &stack, ParserContext &) {
     const auto rhs = stack.pop().getUnsigned() % 16;
-    const auto lhs = stack.pop().getUnsigned() & UINT16_MAX;
+    const uint16_t lhs = stack.pop().getUnsigned();
     const auto v = (lhs << rhs) | (lhs >> (16 - rhs));
     stack.pushUnsigned(v & UINT16_MAX);
     return OK;
@@ -329,7 +334,7 @@ static Error rotate_left_16bit(ValueStack &stack, ParserContext &) {
 
 static Error rotate_right_16bit(ValueStack &stack, ParserContext &) {
     const auto rhs = stack.pop().getUnsigned() % 16;
-    const auto lhs = stack.pop().getUnsigned() & UINT16_MAX;
+    const uint16_t lhs = stack.pop().getUnsigned();
     const auto v = (lhs >> rhs) | (lhs << (16 - rhs));
     stack.pushUnsigned(v & UINT16_MAX);
     return OK;
@@ -337,7 +342,7 @@ static Error rotate_right_16bit(ValueStack &stack, ParserContext &) {
 
 static Error logical_shift_left_16bit(ValueStack &stack, ParserContext &) {
     const auto rhs = stack.pop().getUnsigned();
-    const auto lhs = stack.pop().getUnsigned() & UINT16_MAX;
+    const uint16_t lhs = stack.pop().getUnsigned();
     const auto value = (rhs < 16) ? (lhs << rhs) : 0;
     stack.pushUnsigned(value & UINT16_MAX);
     return OK;
@@ -345,44 +350,44 @@ static Error logical_shift_left_16bit(ValueStack &stack, ParserContext &) {
 
 static Error logical_shift_right_16bit(ValueStack &stack, ParserContext &) {
     const auto rhs = stack.pop().getUnsigned();
-    const auto lhs = stack.pop().getUnsigned() & UINT16_MAX;
+    const uint16_t lhs = stack.pop().getUnsigned();
     const auto value = (rhs < 16) ? (lhs >> rhs) : 0;
     stack.pushUnsigned(value & UINT16_MAX);
     return OK;
 }
 
 // clang-format off
-static const Operator MC68_EXPONENTIAL( 5, R, 2, exponential);
-static const Operator MC68_ROTATE_LEFT( 5, L, 2, rotate_left_16bit);
-static const Operator MC68_ROTATE_RIGHT(5, L, 2, rotate_right_16bit);
-static const Operator MC68_SHIFT_LEFT(  5, L, 2, logical_shift_left_16bit);
-static const Operator MC68_SHIFT_RIGHT( 5, L, 2, logical_shift_right_16bit);
-static const Operator MC68_BITWISE_AND( 5, L, 2, bitwise_and);
-static const Operator MC68_BITWISE_XOR( 5, L, 2, bitwise_xor);
-static const Operator MC68_BITWISE_OR(  5, L, 2, bitwise_or);
+static const Operator MOTOROLA_EXPONENTIAL( 5, R, 2, exponential);
+static const Operator MOTOROLA_ROTATE_LEFT( 5, L, 2, rotate_left_16bit);
+static const Operator MOTOROLA_ROTATE_RIGHT(5, L, 2, rotate_right_16bit);
+static const Operator MOTOROLA_SHIFT_LEFT(  5, L, 2, logical_shift_left_16bit);
+static const Operator MOTOROLA_SHIFT_RIGHT( 5, L, 2, logical_shift_right_16bit);
+static const Operator MOTOROLA_BITWISE_AND( 5, L, 2, bitwise_and);
+static const Operator MOTOROLA_BITWISE_XOR( 5, L, 2, bitwise_xor);
+static const Operator MOTOROLA_BITWISE_OR(  5, L, 2, bitwise_or);
 // clang-format on
 
-const Operator *Mc68xxOperatorParser::readInfix(
+const Operator *MotorolaOperatorParser::readInfix(
         StrScanner &scan, ValueStack &stack, ParserContext &context) const {
     auto p = scan;
     const Operator *opr = nullptr;
     if (p.expect('!')) {
         if (p.expect('.')) {
-            opr = &MC68_BITWISE_AND;
+            opr = &MOTOROLA_BITWISE_AND;
         } else if (p.expect('+')) {
-            opr = &MC68_BITWISE_OR;
+            opr = &MOTOROLA_BITWISE_OR;
         } else if (p.expect('X') && !isalnum(*p)) {
-            opr = &MC68_BITWISE_XOR;
+            opr = &MOTOROLA_BITWISE_XOR;
         } else if (p.expect('^')) {
-            opr = &MC68_EXPONENTIAL;
+            opr = &MOTOROLA_EXPONENTIAL;
         } else if (p.expect('<')) {
-            opr = &MC68_SHIFT_LEFT;
+            opr = &MOTOROLA_SHIFT_LEFT;
         } else if (p.expect('>')) {
-            opr = &MC68_SHIFT_RIGHT;
+            opr = &MOTOROLA_SHIFT_RIGHT;
         } else if (p.expect('L') && !isalnum(*p)) {
-            opr = &MC68_ROTATE_LEFT;
+            opr = &MOTOROLA_ROTATE_LEFT;
         } else if (p.expect('R') && !isalnum(*p)) {
-            opr = &MC68_ROTATE_RIGHT;
+            opr = &MOTOROLA_ROTATE_RIGHT;
         }
     }
     if (opr) {
@@ -503,8 +508,6 @@ const Operator *IntelOperatorParser::readInfix(
 }
 
 // clang-format off
-static const Operator ZILOG_HIGH16(     3, R, 1, most_siginificant_word);
-static const Operator ZILOG_LOW16(      3, R, 1, least_significant_word);
 static const Operator ZILOG_SHIFT_RIGHT(5, L, 1, logical_shift_right_16bit);
 static const Operator ZILOG_SHIFT_LEFT( 5, L, 1, logical_shift_left_16bit);
 static const Operator ZILOG_BITWISE_AND(5, L, 2, bitwise_and);
@@ -526,9 +529,9 @@ const Operator *ZilogOperatorParser::readPrefix(
     } else if (name.iequals_P(PSTR("LOW"))) {
         opr = &INTEL_LOW;
     } else if (name.iequals_P(PSTR("HIGH16"))) {
-        opr = &ZILOG_HIGH16;
+        opr = &INTEL_MSW;
     } else if (name.iequals_P(PSTR("LOW16"))) {
-        opr = &ZILOG_LOW16;
+        opr = &INTEL_LSW;
     }
     if (opr) {
         scan = p;
@@ -562,6 +565,124 @@ const Operator *ZilogOperatorParser::readInfix(
         return opr;
     }
     return CStyleOperatorParser::singleton().readInfix(scan, stack, context);
+}
+
+const Operator *SigneticsOperatorParser::readPrefix(
+        StrScanner &scan, ValueStack &stack, ParserContext &context) const {
+    if (scan.expect('<')) {
+        return &INTEL_LOW;
+    } else if (scan.expect('>')) {
+        return &INTEL_HIGH;
+    }
+    return CStyleOperatorParser::singleton().readPrefix(scan, stack, context);
+}
+
+const Operator *TexasOperatorParser::readPrefix(
+        StrScanner &scan, ValueStack &stack, ParserContext &context) const {
+    if (scan.expect('#'))
+        return &Operator::OP_BITWISE_NOT;
+    return CStyleOperatorParser::singleton().readPrefix(scan, stack, context);
+}
+
+const Operator *TexasOperatorParser::readInfix(
+        StrScanner &scan, ValueStack &stack, ParserContext &context) const {
+    if (scan.iexpectText_P(PSTR("++"))) {
+        return &Operator::OP_BITWISE_OR;
+    } else if (scan.iexpectText_P(PSTR("&&"))) {
+        return &Operator::OP_BITWISE_XOR;
+    } else if (scan.iexpectText_P(PSTR("//"))) {
+        return &MOTOROLA_SHIFT_RIGHT;
+    } else if (scan.expect('=')) {
+        return &Operator::OP_LOGICAL_EQ;
+    } else if (scan.iexpectText_P(PSTR("#="))) {
+        return &Operator::OP_LOGICAL_NE;
+    }
+    return CStyleOperatorParser::singleton().readInfix(scan, stack, context);
+}
+
+const Operator *Pdp8OperatorParser::readInfix(
+        StrScanner &scan, ValueStack &stack, ParserContext &context) const {
+    if (scan.expect('!'))
+        return &Operator::OP_BITWISE_OR;
+    return CStyleOperatorParser::singleton().readInfix(scan, stack, context);
+}
+
+const struct : Functor {
+    int_fast8_t nargs() const override { return 1; }
+    Error eval(ValueStack &stack, ParserContext &, uint_fast8_t) const override {
+        stack.pushUnsigned(stack.pop().getUnsigned() & UINT8_MAX);
+        return OK;
+    }
+} FN_LOW;
+
+const struct : Functor {
+    int_fast8_t nargs() const override { return 1; }
+    Error eval(ValueStack &stack, ParserContext &, uint_fast8_t) const override {
+        stack.pushUnsigned((stack.pop().getUnsigned() >> 8) & UINT8_MAX);
+        return OK;
+    }
+} FN_HIGH;
+
+namespace rca {
+const struct : Functor {
+    int_fast8_t nargs() const override { return 1; }
+    Error eval(ValueStack &stack, ParserContext &, uint_fast8_t) const override {
+        // Mark that this is 2 bytes value.
+        stack.pushUnsigned((stack.pop().getUnsigned() & UINT16_MAX) | UINT32_C(0x1000'0000));
+        return OK;
+    }
+} FN_A;
+}  // namespace rca
+
+const Functor *RcaFunctionTable::lookupFunction(const StrScanner &name) const {
+    if (name.iequals_P(PSTR("A.0")))
+        return &FN_LOW;
+    if (name.iequals_P(PSTR("A.1")))
+        return &FN_HIGH;
+    if (name.iequals_P(PSTR("A")))
+        return &rca::FN_A;
+    return nullptr;
+}
+
+namespace ins8060 {
+const struct : Functor {
+    int_fast8_t nargs() const override { return 1; }
+    Error eval(ValueStack &stack, ParserContext &, uint_fast8_t) const override {
+        const auto v = stack.pop().getUnsigned();
+        stack.pushUnsigned(reg::page(v) | reg::offset(v - 1));
+        return OK;
+    }
+} FN_ADDR;
+}  // namespace ins8060
+
+const Functor *Ins8060FunctionTable::lookupFunction(const StrScanner &name) const {
+    if (name.iequals_P(TEXT_FN_H))
+        return &FN_HIGH;
+    if (name.iequals_P(TEXT_FN_L))
+        return &FN_LOW;
+    if (name.iequals_P(TEXT_FN_ADDR))
+        return &ins8060::FN_ADDR;
+    return nullptr;
+}
+
+namespace ins8070 {
+const struct : Functor {
+    int_fast8_t nargs() const override { return 1; }
+    Error eval(ValueStack &stack, ParserContext &, uint_fast8_t) const override {
+        stack.pushUnsigned((stack.pop().getUnsigned() - 1) & 0xFFFF);
+        return OK;
+    }
+} FN_ADDR;
+}  // namespace ins8070
+
+const Functor *Ins8070FunctionTable::lookupFunction(const StrScanner &name) const {
+    if (name.iequals_P(TEXT_FN_H))
+        return &FN_HIGH;
+    if (name.iequals_P(TEXT_FN_L))
+        return &FN_LOW;
+    if (name.iequals_P(TEXT_FN_ADDR))
+        return &ins8070::FN_ADDR;
+    return nullptr;
 }
 
 }  // namespace libasm

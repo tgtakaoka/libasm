@@ -118,11 +118,15 @@ static void test_reg() {
 }
 
 static void test_reg_imm() {
-    TEST("LI   R0,>0000", 0x0200, 0x0000);
-    TEST("AI   R1,+1",    0x0221, 0x0001);
-    TEST("ANDI R8,>00FF", 0x0248, 0x00FF);
-    TEST("ORI  R14,~>FF", 0x026E, 0xFF00);
-    TEST("CI   R15,-1",   0x028F, 0xFFFF);
+    TEST("LI   R0, >0000",    0x0200, 0x0000);
+    TEST("AI   R1, +1",       0x0221, 0x0001);
+    TEST("ANDI R8, >00FF",    0x0248, 0x00FF);
+    TEST("ORI  R14, #>00FF",  0x026E, 0xFF00);
+    TEST("ORI  R14, >1200++>0034", 0x026E, 0x1234);
+    TEST("ORI  R14, >1234&>0FF0",  0x026E, 0x0230);
+    TEST("ORI  R14, >00FF&&>0FF0", 0x026E, 0x0F0F);
+    TEST("CI   R15, -1",    0x028F, 0xFFFF);
+    TEST("CI   R15, -1//8", 0x028F, 0x00FF);
 
     symtab.intern(0x1234, "sym1234");
 

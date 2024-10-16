@@ -35,9 +35,9 @@ const char OPT_DESC_EXTERNAL_PAREN[] PROGMEM = "disp2(disp(ext)) as external add
 
 const ValueFormatter::Plugins &DisNs32000::defaultPlugins() {
     static const struct final : ValueFormatter::Plugins {
-        const HexFormatter &hex() const override { return _hex; }
+        const HexFormatter &hex() const override { return NationalHexFormatter::singleton(); }
+        char locationSymbol() const override { return '.'; }
         const /*PROGMEM*/ char *lineComment_P() const override { return PSTR_SHARP; }
-        const PrefixStrHexFormatter _hex{PSTR_X_DASH};
     } PLUGINS{};
     return PLUGINS;
 }

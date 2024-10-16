@@ -43,11 +43,7 @@ PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
 }  // namespace
 
 const ValueParser::Plugins &AsmTms9900::defaultPlugins() {
-    static const struct final : ValueParser::Plugins {
-        const NumberParser &number() const override { return TexasNumberParser::singleton(); }
-        const CommentParser &comment() const override { return StarCommentParser::singleton(); }
-    } PLUGINS{};
-    return PLUGINS;
+    return ValueParser::Plugins::texas();
 }
 
 AsmTms9900::AsmTms9900(const ValueParser::Plugins &plugins)

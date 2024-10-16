@@ -27,13 +27,7 @@ using namespace reg;
 using namespace text::common;
 
 const ValueFormatter::Plugins& DisF3850::defaultPlugins() {
-    static const struct fianl : ValueFormatter::Plugins {
-        const HexFormatter& hex() const override { return _hex; }
-        char locationSymbol() const override { return '$'; }
-        const /*PROGMEM*/ char* lineComment_P() const override { return PSTR_STAR; }
-        const SurroundHexFormatter _hex{PSTR_H_DASH, '\''};
-    } PLUGINS{};
-    return PLUGINS;
+    return ValueFormatter::Plugins::fairchild();
 }
 
 DisF3850::DisF3850(const ValueFormatter::Plugins& plugins) : Disassembler(plugins), Config(TABLE) {

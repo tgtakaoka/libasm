@@ -64,33 +64,6 @@ constexpr Pseudo PSEUDOS[] PROGMEM = {
 // clang-format on
 PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
 
-struct Ns32000NumberParser final : NationalNumberParser, Singleton<Ns32000NumberParser> {
-    Ns32000NumberParser() : NationalNumberParser(/* 'X','H' */ 0, 'B', /* 'O' or */ 'Q', 'D') {}
-};
-
-struct Ns32000SymbolParser final : SimpleSymbolParser, Singleton<Ns32000SymbolParser> {
-    Ns32000SymbolParser() : SimpleSymbolParser(PSTR_UNDER_DOT) {}
-    bool locationSymbol(StrScanner &scan) const override {
-        return SymbolParser::locationSymbol(scan, '.') || SymbolParser::locationSymbol(scan, '*');
-    }
-    bool instructionLetter(char c) const override {
-        return SimpleSymbolParser::instructionLetter(c) || c == '.';
-    }
-};
-
-struct Ns32000LetterParser final : LetterParser, Singleton<Ns32000LetterParser> {
-    char stringDelimiter(StrScanner &scan) const override { return scan.expect('"'); }
-    char readLetter(StrScanner &scan, ErrorAt &error, char delim) const override {
-        auto c = *scan++;
-        if (c == '\\' && *scan) {
-            c = *scan++;
-        } else if (c == delim) {
-            error.setErrorIf(ILLEGAL_CONSTANT);
-        }
-        return c;
-    }
-};
-
 }  // namespace
 
 const ValueParser::Plugins &AsmNs32000::defaultPlugins() {

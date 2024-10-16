@@ -24,7 +24,6 @@
 #include "error_reporter.h"
 #include "insn_base.h"
 #include "option_base.h"
-#include "parsers.h"
 #include "pseudos.h"
 #include "symbol_table.h"
 #include "value_parser.h"

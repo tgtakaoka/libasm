@@ -38,10 +38,6 @@ constexpr Pseudo PSEUDOS[] PROGMEM = {
 // clang-format on
 PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
 
-struct Ins8070FunctionTable final : FunctionTable, Singleton<Ins8070FunctionTable> {
-    const Functor *lookupFunction(const StrScanner &) const override;
-};
-
 }  // namespace
 
 const ValueParser::Plugins &AsmIns8070::defaultPlugins() {
@@ -57,44 +53,6 @@ AsmIns8070::AsmIns8070(const ValueParser::Plugins &plugins)
     : Assembler(plugins, PSEUDO_TABLE), Config(TABLE) {
     reset();
 }
-
-namespace {
-
-const struct : Functor {
-    int_fast8_t nargs() const override { return 1; }
-    Error eval(ValueStack &stack, ParserContext &, uint_fast8_t) const override {
-        stack.pushUnsigned((stack.pop().getUnsigned() >> 8) & 0xFF);
-        return OK;
-    }
-} FN_HIGH;
-
-const struct : Functor {
-    int_fast8_t nargs() const override { return 1; }
-    Error eval(ValueStack &stack, ParserContext &, uint_fast8_t) const override {
-        stack.pushUnsigned(stack.pop().getUnsigned() & 0xFF);
-        return OK;
-    }
-} FN_LOW;
-
-const struct : Functor {
-    int_fast8_t nargs() const override { return 1; }
-    Error eval(ValueStack &stack, ParserContext &, uint_fast8_t) const override {
-        stack.pushUnsigned((stack.pop().getUnsigned() - 1) & 0xFFFF);
-        return OK;
-    }
-} FN_ADDR;
-
-const Functor *Ins8070FunctionTable::lookupFunction(const StrScanner &name) const {
-    if (name.iequals_P(TEXT_FN_H))
-        return &FN_HIGH;
-    if (name.iequals_P(TEXT_FN_L))
-        return &FN_LOW;
-    if (name.iequals_P(TEXT_FN_ADDR))
-        return &FN_ADDR;
-    return nullptr;
-}
-
-}  // namespace
 
 void AsmIns8070::emitAbsolute(AsmInsn &insn, const Operand &op) const {
     // PC will be +1 before fetching instruction.

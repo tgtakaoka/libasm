@@ -45,61 +45,6 @@ constexpr Pseudo PSEUDOS[] PROGMEM = {
 // clang-format on
 PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
 
-struct Pdp8SymbolParser final : SymbolParser, Singleton<Pdp8SymbolParser> {
-    bool locationSymbol(StrScanner &scan) const override {
-        return SymbolParser::locationSymbol(scan, '.') || SymbolParser::locationSymbol(scan, '$');
-    }
-    bool labelDelimitor(StrScanner &scan) const override { return scan.expect(','); }
-    bool instructionLetter(char c) const override {
-        return SymbolParser::symbolLetter(c) || c == '*' || c == '=';
-    }
-    bool instructionTerminator(char c) const override { return c == '*' || c == '='; }
-};
-
-struct Pdp8LetterParser final : LetterParser, Singleton<Pdp8LetterParser> {
-    Error parseLetter(StrScanner &scan, char &letter) const override {
-        if (*scan == '\'')
-            return LetterParser::parseLetter(scan, letter);
-        auto p = scan;
-        if (p.expect('"')) {
-            ErrorAt error;
-            letter = readLetter(p, error, 0);
-            if (error.isOK()) {
-                scan = p;
-                return OK;
-            }
-            return ILLEGAL_CONSTANT;
-        }
-        return NOT_AN_EXPECTED;
-    }
-
-    char readLetter(StrScanner &scan, ErrorAt &error, char delim) const override {
-        UNUSED(delim);
-        const auto c = *scan;
-        if (c == 0 || (c >= 0x60 && c < 0x7F)) {
-            error.setErrorIf(ILLEGAL_CONSTANT);  // no lowercase letter
-            return 0;
-        }
-        ++scan;
-        return c + 0x80;  // convert to DEC 8-Bit form.
-    }
-};
-
-struct Pdp8CommentParser final : CommentParser, Singleton<Pdp8CommentParser> {
-    bool endOfLine(StrScanner &scan) const override {
-        return *scan == 0 || *scan == '/' || *scan == ';';
-    };
-};
-
-struct Pdp8OperatorParser final : OperatorParser, Singleton<Pdp8OperatorParser> {
-    const Operator *readInfix(
-            StrScanner &scan, ValueStack &stack, ParserContext &context) const override {
-        if (scan.expect('!'))
-            return &Operator::OP_BITWISE_OR;
-        return CStyleOperatorParser::singleton().readInfix(scan, stack, context);
-    }
-};
-
 }  // namespace
 
 const ValueParser::Plugins &AsmPdp8::defaultPlugins() {

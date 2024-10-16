@@ -1,3 +1,4 @@
+#include <stdio.h>
 /*
  * Copyright 2023 Tadashi G. Takaoka
  *

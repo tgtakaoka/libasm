@@ -64,6 +64,10 @@ const NumberParser &ValueParser::IntelPlugins::number() const {
     return IntelNumberParser::singleton();
 }
 
+const SymbolParser &ValueParser::IntelPlugins::symbol() const {
+    return IntelSymbolParser::singleton();
+}
+
 const OperatorParser &ValueParser::IntelPlugins::operators() const {
     return IntelOperatorParser::singleton();
 }
@@ -82,7 +86,7 @@ const CommentParser &ValueParser::MotorolaPlugins::comment() const {
 }
 
 const SymbolParser &ValueParser::MotorolaPlugins::symbol() const {
-    return Mc68xxSymbolParser::singleton();
+    return MotorolaSymbolParser::singleton();
 }
 
 const LetterParser &ValueParser::MotorolaPlugins::letter() const {
@@ -90,88 +94,36 @@ const LetterParser &ValueParser::MotorolaPlugins::letter() const {
 }
 
 const OperatorParser &ValueParser::MotorolaPlugins::operators() const {
-    return Mc68xxOperatorParser::singleton();
+    return MotorolaOperatorParser::singleton();
 }
 
-namespace fairchild {
-/**
- * Fairchild style numbers are the same as IBM plus '$hh' for hexadecimal.
- */
-struct FairchildNumberParser final : NumberParser, Singleton<FairchildNumberParser> {
-    Error parseNumber(StrScanner &scan, Value &val, Radix defaultRadix) const override {
-        auto p = scan;
-        if (*p == '$' && isxdigit(p[1])) {
-            const auto error = val.read(++p, RADIX_16);
-            if (error != NOT_AN_EXPECTED)
-                scan = p;
-            return error;
-        }
-        return _ibm.parseNumber(scan, val, defaultRadix);
-    }
+const NumberParser &ValueParser::TexasPlugins::number() const {
+    return TexasNumberParser::singleton();
+}
 
-private:
-    IbmNumberParser _ibm{'H', 'B', 'O', 'D'};
-};
+const CommentParser &ValueParser::TexasPlugins::comment() const {
+    return StarCommentParser::singleton();
+}
 
-struct FairchildSymbolParser final : SymbolParser, Singleton<FairchildSymbolParser> {
-    bool locationSymbol(StrScanner &scan) const override {
-        return SymbolParser::locationSymbol(scan, '*') || SymbolParser::locationSymbol(scan, '$') ||
-               SymbolParser::locationSymbol(scan, '.');
-    }
-};
+const OperatorParser &ValueParser::TexasPlugins::operators() const {
+    return TexasOperatorParser::singleton();
+}
 
-struct FairchildLetterParser final : LetterParser, Singleton<FairchildLetterParser> {
-    /** Fairchild style letter is [cC]'[:print:]', #[:print:], '[:print:]'? */
-    Error parseLetter(StrScanner &scan, char &letter) const override {
-        auto p = scan;
-        if (p.iexpect('C')) {  // C'C'
-            const auto error = LetterParser::parseLetter(p, letter);
-            if (error == OK)
-                scan = p;
-            return error;
-        }
-        if (p.expect('#')) {  // #C
-            if ((letter = *p) == 0)
-                return NOT_AN_EXPECTED;
-            scan = ++p;
-            return OK;
-        }
-        if (p.expect('\'')) {  // 'c' or 'c
-            ErrorAt error;
-            letter = readLetter(p, error, '\'');
-            if (error.isOK()) {
-                p.expect('\'');  // closing quote is optional
-                scan = p;
-                return OK;
-            }
-            return error.getError();
-        }
-        return NOT_AN_EXPECTED;
-    }
-
-    /** Fairchild style string constant is C'str'. */
-    bool stringPrefix(StrScanner &scan) const override {
-        scan.iexpect('C');  // optional
-        return true;
-    }
-};
-
-}  // namespace fairchild
-
-const ValueParser::Plugins &ValueParser::Plugins::fairchild() {
-    static const struct final : ValueParser::Plugins {
-        const NumberParser &number() const override {
-            return fairchild::FairchildNumberParser::singleton();
-        }
-        const SymbolParser &symbol() const override {
-            return fairchild::FairchildSymbolParser::singleton();
-        }
-        const CommentParser &comment() const override { return StarCommentParser::singleton(); }
-        const LetterParser &letter() const override {
-            return fairchild::FairchildLetterParser::singleton();
-        }
-    } PLUGINS{};
+const ValueParser::Plugins &ValueParser::Plugins::texas() {
+    static const TexasPlugins PLUGINS;
     return PLUGINS;
+}
+
+const NumberParser &ValueParser::ZilogPlugins::number() const {
+    return ZilogNumberParser::singleton();
+}
+
+const LetterParser &ValueParser::ZilogPlugins::letter() const {
+    return ZilogLetterParser::singleton();
+}
+
+const OperatorParser &ValueParser::ZilogPlugins::operators() const {
+    return ZilogOperatorParser::singleton();
 }
 
 struct OperatorStack : Stack<Operator, 8> {

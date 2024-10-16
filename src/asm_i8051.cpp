@@ -40,12 +40,7 @@ PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
 }  // namespace
 
 const ValueParser::Plugins &AsmI8051::defaultPlugins() {
-    static struct final : ValueParser::IntelPlugins {
-        const SymbolParser &symbol() const override {
-            return UnderQuestionSymbolParser::singleton();
-        }
-    } PLUGINS;
-    return PLUGINS;
+    return ValueParser::Plugins::intel();
 }
 
 AsmI8051::AsmI8051(const ValueParser::Plugins &plugins)

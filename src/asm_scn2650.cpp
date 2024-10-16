@@ -42,18 +42,6 @@ constexpr Pseudo PSEUDOS[] PROGMEM = {
 // clang-format on
 PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
 
-/**
- * Signetics style numbers are the same as IBM except H'hh' for hexadecimal.
- */
-struct SigneticsNumberParser final : IbmNumberParser, Singleton<SigneticsNumberParser> {
-    SigneticsNumberParser() : IbmNumberParser('H', 'B', 'O', 'D') {}
-};
-
-struct SigneticsLetterParser final : LetterParser, Singleton<SigneticsLetterParser> {
-    bool letterPrefix(StrScanner &scan) const override { return scan.iexpect('A'); }
-    bool stringPrefix(StrScanner &scan) const override { return scan.iexpect('A'); }
-};
-
 }  // namespace
 
 const ValueParser::Plugins &AsmScn2650::defaultPlugins() {
@@ -61,6 +49,9 @@ const ValueParser::Plugins &AsmScn2650::defaultPlugins() {
         const NumberParser &number() const override { return SigneticsNumberParser::singleton(); }
         const CommentParser &comment() const override { return StarCommentParser::singleton(); }
         const LetterParser &letter() const override { return SigneticsLetterParser::singleton(); }
+        const OperatorParser &operators() const override {
+            return SigneticsOperatorParser::singleton();
+        }
     } PLUGINS{};
     return PLUGINS;
 }
@@ -90,14 +81,13 @@ Error AsmScn2650::parseOperand(StrScanner &scan, Operand &op) const {
         return OK;
     }
 
-    const auto bop = p.expect([](char c) { return c == '<' || c == '>'; });
     op.indir = p.expect('*');
     op.val = parseInteger(p.skipSpaces(), op);
     if (op.hasError())
         return op.getError();
     if (p.expect(',')) {
         op.reg = parseRegName(p.skipSpaces());
-        if (op.reg == REG_UNDEF || bop)
+        if (op.reg == REG_UNDEF)
             return op.setError(UNKNOWN_OPERAND);
         if (p.skipSpaces().expect(',')) {
             op.sign = p.skipSpaces().expect([](char c) { return c == '+' || c == '-'; });
@@ -115,10 +105,6 @@ Error AsmScn2650::parseOperand(StrScanner &scan, Operand &op) const {
     if (op.indir) {
         op.mode = M_AB15;
     } else {
-        if (bop == '<')
-            op.val.setUnsigned(op.val.getUnsigned() & 0xFF);  // LSB
-        if (bop == '>')
-            op.val.setUnsigned((op.val.getUnsigned() >> 8) & 0xFF);  // MSB;
         op.mode = M_IMM8;
     }
     scan = p;

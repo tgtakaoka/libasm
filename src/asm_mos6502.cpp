@@ -45,37 +45,6 @@ constexpr Pseudo PSEUDOS[] PROGMEM = {
 // clang-format on
 PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
 
-struct MostekCommentParser final : CommentParser, Singleton<MostekCommentParser> {
-    bool commentLine(StrScanner &scan) const override {
-        return SemicolonCommentParser::singleton().commentLine(scan);
-    }
-    bool endOfLine(StrScanner &scan) const override {
-        return StarCommentParser::singleton().endOfLine(scan) ||
-               SemicolonCommentParser::singleton().endOfLine(scan);
-    }
-};
-
-struct MostekSymbolParser final : SimpleSymbolParser, Singleton<MostekSymbolParser> {
-    MostekSymbolParser() : SimpleSymbolParser(PSTR_UNDER) {}
-    bool locationSymbol(StrScanner &scan) const override {
-        return SymbolParser::locationSymbol(scan, '*');
-    }
-    bool instructionLetter(char c) const override {
-        return SymbolParser::instructionLetter(c) || c == '.' || c == '=' || c == '*' || c == ':';
-    }
-    bool instructionTerminator(char c) const override { return c == '='; }
-};
-
-struct MostekLetterParser final : LetterParser, Singleton<MostekLetterParser> {
-    Error parseLetter(StrScanner &scan, char &letter) const {
-        return MotorolaLetterParser::singleton().parseLetter(scan, letter);
-    }
-    char stringDelimiter(StrScanner &scan) const {
-        const auto c = scan.expect('\'');
-        return c ? c : scan.expect('"');
-    }
-};
-
 }  // namespace
 
 const ValueParser::Plugins &AsmMos6502::defaultPlugins() {

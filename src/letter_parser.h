@@ -70,39 +70,86 @@ struct LetterParser {
 };
 
 struct CStyleLetterParser final : LetterParser, Singleton<CStyleLetterParser> {
-    /** C-style letter is 'c' where c is [:print:], \['"?\btnt], \x[0-9A-Fa-f]+, \[0-7]+ */
+    /** A letter is 'c' where c is [:print:], \['"?\btnt], \x[0-9A-Fa-f]+, \[0-7]+ */
     char readLetter(StrScanner &scan, ErrorAt &error, char delim) const override;
-    /** C-style string is "str". */
+    /** A string is "str". */
     char stringDelimiter(StrScanner &scan) const override { return scan.expect('"'); }
 };
 
 struct MotorolaLetterParser final : LetterParser, Singleton<MotorolaLetterParser> {
     /**
-     * Motorola style letter is followed after a single quote and optionally closed with another
-     * single quote
+     * A letter is followed after a single quote and optionally closed with
+     * another single quote.
      */
     Error parseLetter(StrScanner &scan, char &letter) const override;
 };
 
 struct ZilogLetterParser final : LetterParser, Singleton<ZilogLetterParser> {
     /**
-     * Zilog style letter is followed after a single quote and hexadecimal escape sequence with
-     * '%hh'. Also a single quote is expressed as %Q.
+     * A letter is followed after a single quote and hexadecimal escape sequence
+     * with '%hh'. Also a single quote is expressed as %Q.
      */
     char readLetter(StrScanner &scan, ErrorAt &error, char delim) const override;
 };
 
-struct IbmLetterParser final : LetterParser, Singleton<IbmLetterParser> {
-    /** IBM style letter constant is C'c'. */
+struct PrefixLetterParser : LetterParser {
+    PrefixLetterParser(char prefix) : _prefix(prefix) {}
+    /** A letter constant is [prefix]'[:print:]', and [prefix] is optional. */
     bool letterPrefix(StrScanner &scan) const override {
-        scan.iexpect('C');  // optional
+        scan.iexpect(_prefix);
         return true;
     }
-    /** IBM style string constant is C'str'. */
+
+    /** A string constant is [prefix]'[:print:]', and [prefix] is optional. */
     bool stringPrefix(StrScanner &scan) const override {
-        scan.iexpect('C');  // optional
+        scan.iexpect(_prefix);
         return true;
     }
+
+private:
+    const char _prefix;
+};
+
+struct IbmLetterParser final : PrefixLetterParser, Singleton<IbmLetterParser> {
+    IbmLetterParser() : PrefixLetterParser('C') {}
+};
+
+struct RcaLetterParser final : PrefixLetterParser, Singleton<RcaLetterParser> {
+    RcaLetterParser() : PrefixLetterParser('T') {}
+};
+
+struct FairchildLetterParser final : LetterParser, Singleton<FairchildLetterParser> {
+    /** A letter is C'[:print:]', #[:print:], '[:print:]'? */
+    Error parseLetter(StrScanner &scan, char &letter) const override;
+    /** A string constant is C'str'. */
+    bool stringPrefix(StrScanner &scan) const override;
+};
+
+struct MostekLetterParser final : LetterParser, Singleton<MostekLetterParser> {
+    Error parseLetter(StrScanner &scan, char &letter) const override {
+        return MotorolaLetterParser::singleton().parseLetter(scan, letter);
+    }
+    /** A strinf constant is 'str' or "str". */
+    char stringDelimiter(StrScanner &scan) const override;
+};
+
+struct SigneticsLetterParser final : LetterParser, Singleton<SigneticsLetterParser> {
+    bool letterPrefix(StrScanner &scan) const override { return scan.iexpect('A'); }
+    bool stringPrefix(StrScanner &scan) const override { return scan.iexpect('A'); }
+};
+
+struct Ns32000LetterParser final : LetterParser, Singleton<Ns32000LetterParser> {
+    char stringDelimiter(StrScanner &scan) const override { return scan.expect('"'); }
+    char readLetter(StrScanner &scan, ErrorAt &error, char delim) const override;
+};
+
+struct Pdp8LetterParser final : LetterParser, Singleton<Pdp8LetterParser> {
+    Error parseLetter(StrScanner &scan, char &letter) const override;
+    char readLetter(StrScanner &scan, ErrorAt &error, char delim) const override;
+};
+
+struct Tms32010LetterParser final : LetterParser, Singleton<Tms32010LetterParser> {
+    char stringDelimiter(StrScanner &scan) const override { return scan.expect('"'); }
 };
 
 }  // namespace libasm
