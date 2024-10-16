@@ -25,7 +25,7 @@
 namespace libasm {
 
 struct ValueFormatter final {
-    struct Plugins : Singleton<Plugins> {
+    struct Plugins {
         virtual const DecFormatter &dec() const;
         virtual const BinFormatter &bin() const;
         virtual const OctFormatter &oct() const;
@@ -33,6 +33,7 @@ struct ValueFormatter final {
         virtual char locationSymbol() const;
         virtual const /*PROGMEM*/ char *lineComment_P() const;
 
+        static const Plugins &singleton();
         static const Plugins &cstyle();
         static const Plugins &fairchild();
         static const Plugins &intel();

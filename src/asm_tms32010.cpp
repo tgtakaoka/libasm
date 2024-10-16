@@ -41,24 +41,6 @@ constexpr Pseudo PSEUDOS[] PROGMEM = {
 // clang-format on
 PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
 
-struct Tms32010CommentParser final : CommentParser, Singleton<Tms32010CommentParser> {
-    bool commentLine(StrScanner &scan) const override { return *scan == '*'; }
-    bool endOfLine(StrScanner &scan) const override {
-        return SemicolonCommentParser::singleton().endOfLine(scan);
-    }
-};
-
-struct Tms32010SymbolParser final : SimpleSymbolParser, Singleton<Tms32010SymbolParser> {
-    Tms32010SymbolParser() : SimpleSymbolParser(PSTR_UNDER_DOLLAR) {}
-    bool instructionLetter(char c) const override {
-        return SimpleSymbolParser::instructionLetter(c) || c == '.';
-    }
-};
-
-struct Tms32010LetterParser final : LetterParser, Singleton<Tms32010LetterParser> {
-    char stringDelimiter(StrScanner &scan) const override { return scan.expect('"'); }
-};
-
 }  // namespace
 
 const ValueParser::Plugins &AsmTms32010::defaultPlugins() {

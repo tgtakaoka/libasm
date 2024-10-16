@@ -39,64 +39,9 @@ constexpr Pseudo PSEUDOS[] PROGMEM = {
 // clang-format on
 PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
 
-/**
- * RCA style numbers are the same as IBM plus '#hh' for hexadecimal.
- */
-struct RcaNumberParser final : NumberParser, Singleton<RcaNumberParser> {
-    Error parseNumber(StrScanner &scan, Value &val, Radix defaultRadix) const override {
-        auto p = scan;
-        if (*p == '#' && isxdigit(p[1])) {
-            const auto error = val.read(++p, RADIX_16);
-            if (error == OK)
-                scan = p;
-            return error;
-        }
-        return _ibm.parseNumber(scan, val, defaultRadix);
-    }
-
-private:
-    const IbmNumberParser _ibm{'X', 'B', 0, 'D'};
-};
-
-struct RcaCommentParser final : CommentParser, Singleton<RcaCommentParser> {
-    bool commentLine(StrScanner &scan) const override {
-        static constexpr char TEXT_DOTDOT[] PROGMEM = "..";
-        return scan.iexpectText_P(TEXT_DOTDOT) || endOfLine(scan);
-    }
-    bool endOfLine(StrScanner &scan) const override {
-        return SemicolonCommentParser::singleton().endOfLine(scan);
-    }
-};
-
-struct RcaSymbolParser final : SymbolParser, Singleton<RcaSymbolParser> {
-    bool functionNameLetter(char c) const override { return symbolLetter(c) || c == '.'; }
-    bool locationSymbol(StrScanner &scan) const override {
-        return SymbolParser::locationSymbol(scan, '*');
-    }
-    bool instructionLetter(char c) const override {
-        return SymbolParser::instructionLetter(c) || c == '=';
-    }
-    bool instructionTerminator(char c) const override { return c == '='; }
-};
-
-struct RcaLetterParser final : LetterParser, Singleton<RcaLetterParser> {
-    bool letterPrefix(StrScanner &scan) const override {
-        scan.iexpect('T');  // optional
-        return true;
-    }
-    bool stringPrefix(StrScanner &scan) const override {
-        scan.iexpect('T');  // optional
-        return true;
-    }
-};
-
-struct RcaFunctionTable final : FunctionTable, Singleton<RcaFunctionTable> {
-    const Functor *lookupFunction(const StrScanner &name) const override;
-};
-
 }  // namespace
 
-const ValueParser::Plugins &AsmCdp1802::defaultPlugins() {
+const ValueParser::Plugins &defaultPlugins() {
     static const struct final : ValueParser::Plugins {
         const NumberParser &number() const override { return RcaNumberParser::singleton(); }
         const CommentParser &comment() const override { return RcaCommentParser::singleton(); }
@@ -125,41 +70,6 @@ Error AsmCdp1802::setUseReg(bool enable) {
 }
 
 namespace {
-
-const struct : Functor {
-    int_fast8_t nargs() const override { return 1; }
-    Error eval(ValueStack &stack, ParserContext &, uint_fast8_t) const override {
-        // Mark that this is 2 bytes value.
-        stack.pushUnsigned((stack.pop().getUnsigned() & UINT16_MAX) | UINT32_C(0x1000'0000));
-        return OK;
-    }
-} FN_A;
-
-const struct : Functor {
-    int_fast8_t nargs() const override { return 1; }
-    Error eval(ValueStack &stack, ParserContext &, uint_fast8_t) const override {
-        stack.pushUnsigned(stack.pop().getUnsigned() & UINT8_MAX);
-        return OK;
-    }
-} FN_A0;
-
-const struct : Functor {
-    int_fast8_t nargs() const override { return 1; }
-    Error eval(ValueStack &stack, ParserContext &, uint_fast8_t) const override {
-        stack.pushUnsigned((stack.pop().getUnsigned() >> 8) & UINT8_MAX);
-        return OK;
-    }
-} FN_A1;
-
-const Functor *RcaFunctionTable::lookupFunction(const StrScanner &name) const {
-    if (name.iequals_P(PSTR("A.0")))
-        return &FN_A0;
-    if (name.iequals_P(PSTR("A.1")))
-        return &FN_A1;
-    if (name.iequals_P(PSTR("A")))
-        return &FN_A;
-    return nullptr;
-}
 
 constexpr Config::opcode_t BR = 0x30;
 constexpr Config::opcode_t LBR = 0xC0;

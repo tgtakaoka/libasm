@@ -43,7 +43,13 @@ PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
 }  // namespace
 
 const ValueParser::Plugins &AsmF3850::defaultPlugins() {
-    return ValueParser::Plugins::fairchild();
+    static const struct final : ValueParser::Plugins {
+        const NumberParser &number() const override { return FairchildNumberParser::singleton(); }
+        const SymbolParser &symbol() const override { return FairchildSymbolParser::singleton(); }
+        const CommentParser &comment() const override { return StarCommentParser::singleton(); }
+        const LetterParser &letter() const override { return FairchildLetterParser::singleton(); }
+    } PLUGINS{};
+    return PLUGINS;
 }
 
 AsmF3850::AsmF3850(const ValueParser::Plugins &plugins)

@@ -19,7 +19,14 @@
 using namespace libasm;
 using namespace libasm::test;
 
-const ValueParser parser{ValueParser::Plugins::fairchild()};
+const struct final : ValueParser::Plugins {
+    const NumberParser &number() const override { return FairchildNumberParser::singleton(); }
+    const SymbolParser &symbol() const override { return FairchildSymbolParser::singleton(); }
+    const CommentParser &comment() const override { return StarCommentParser::singleton(); }
+    const LetterParser &letter() const override { return FairchildLetterParser::singleton(); }
+} PLUGINS{};
+
+const ValueParser parser{PLUGINS};
 
 const ValueFormatter formatter{ValueFormatter::Plugins::fairchild()};
 

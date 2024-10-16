@@ -18,7 +18,11 @@
 #define __LIBASM_VALUE_PARSER_H__
 
 #include <stdint.h>
-#include "parsers.h"
+#include "comment_parser.h"
+#include "function_table.h"
+#include "letter_parser.h"
+#include "number_parser.h"
+#include "symbol_parser.h"
 #include "symbol_table.h"
 
 namespace libasm {
@@ -46,17 +50,32 @@ struct ValueParser {
 
         static const Plugins &defaultPlugins();
         static const Plugins &intel();
+        static const Plugins &texas();
         static const Plugins &motorola();
-        static const Plugins &fairchild();
     };
+
     struct IntelPlugins : Plugins {
         const NumberParser &number() const override;
+        const SymbolParser &symbol() const override;
         const OperatorParser &operators() const override;
     };
+
     struct MotorolaPlugins : Plugins {
         const NumberParser &number() const override;
         const CommentParser &comment() const override;
         const SymbolParser &symbol() const override;
+        const LetterParser &letter() const override;
+        const OperatorParser &operators() const override;
+    };
+
+    struct TexasPlugins : Plugins {
+        const NumberParser &number() const override;
+        const CommentParser &comment() const override;
+        const OperatorParser &operators() const override;
+    };
+
+    struct ZilogPlugins : Plugins {
+        const NumberParser &number() const override;
         const LetterParser &letter() const override;
         const OperatorParser &operators() const override;
     };

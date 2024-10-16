@@ -18,7 +18,6 @@
 #define __LIBASM_OPERATORS_H__
 
 #include <stdint.h>
-
 #include "error_reporter.h"
 #include "stack.h"
 #include "value.h"
@@ -72,7 +71,7 @@ struct Operator : ErrorAt {
     }
 
     /** Pop operands in |stack|, evaluate and push  result onto |stack|. */
-    Error eval(ValueStack &stack, ParserContext &context, uint_fast8_t argc = 0) const;
+    Error eval(ValueStack &stack, ParserContext &context, int_fast8_t argc = 0) const;
     /** Returns true when |this| operator has higher precedence than |o| */
     bool isHigher(const Operator &o) const;
     /** Returns true when |this| operator is none associative and has the same precedence of
@@ -145,17 +144,30 @@ struct CStyleOperatorParser final : OperatorParser, Singleton<CStyleOperatorPars
     const Operator *readInfix(StrScanner &, ValueStack &, ParserContext &) const override;
 };
 
-struct Mc68xxOperatorParser final : OperatorParser, Singleton<Mc68xxOperatorParser> {
+struct IntelOperatorParser final : OperatorParser, Singleton<IntelOperatorParser> {
+    const Operator *readPrefix(StrScanner &, ValueStack &, ParserContext &) const override;
     const Operator *readInfix(StrScanner &, ValueStack &, ParserContext &) const override;
 };
 
-struct IntelOperatorParser final : OperatorParser, Singleton<IntelOperatorParser> {
+struct MotorolaOperatorParser final : OperatorParser, Singleton<MotorolaOperatorParser> {
+    const Operator *readInfix(StrScanner &, ValueStack &, ParserContext &) const override;
+};
+
+struct SigneticsOperatorParser final : OperatorParser, Singleton<SigneticsOperatorParser> {
+    const Operator *readPrefix(StrScanner &, ValueStack &, ParserContext &) const override;
+};
+
+struct TexasOperatorParser final : OperatorParser, Singleton<TexasOperatorParser> {
     const Operator *readPrefix(StrScanner &, ValueStack &, ParserContext &) const override;
     const Operator *readInfix(StrScanner &, ValueStack &, ParserContext &) const override;
 };
 
 struct ZilogOperatorParser final : OperatorParser, Singleton<ZilogOperatorParser> {
     const Operator *readPrefix(StrScanner &, ValueStack &, ParserContext &) const override;
+    const Operator *readInfix(StrScanner &, ValueStack &, ParserContext &) const override;
+};
+
+struct Pdp8OperatorParser final : OperatorParser, Singleton<Pdp8OperatorParser> {
     const Operator *readInfix(StrScanner &, ValueStack &, ParserContext &) const override;
 };
 

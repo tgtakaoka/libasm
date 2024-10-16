@@ -49,7 +49,8 @@ struct NumberParser {
  * Base for character prefixed number parser.
  */
 struct PrefixNumberParser : NumberParser {
-    PrefixNumberParser(char hex, char bin, char oct, char dec);
+    PrefixNumberParser(char hex, char bin, char oct, char dec)
+        : _hex(hex), _bin(bin), _oct(oct), _dec(dec) {}
 
     Error parseNumber(StrScanner &scan, Value &val, Radix defaultRadix) const override;
 
@@ -87,7 +88,18 @@ struct IntelNumberParser final : NumberParser, Singleton<IntelNumberParser> {
     Error parseNumber(StrScanner &scan, Value &val, Radix defaultRadix) const override;
     Error parseNumber(StrScanner &scan, Value &val, Radix radix, StrScanner &end) const;
 
-    static Radix hasSuffix(StrScanner &scan, Radix defaultRadix);
+    static Radix hasSuffix(StrScanner &scan);
+};
+
+/**
+ * Motorola style numbers are
+ * - Decimal:     "{&}[0-9]+"
+ * - Hexadecimal: "$[0-9A-Fa-f]+"
+ * - Octal:       "@[0-7]+"
+ * - Binary:      "%[01]+"
+ */
+struct MotorolaNumberParser final : PrefixNumberParser, Singleton<MotorolaNumberParser> {
+    MotorolaNumberParser() : PrefixNumberParser('$', '%', '@', '&') {}
 };
 
 /**
@@ -105,14 +117,12 @@ private:
 };
 
 /**
- * Motorola style numbers are
- * - Decimal:     "{&}[0-9]+"
- * - Hexadecimal: "$[0-9A-Fa-f]+"
- * - Octal:       "@[0-7]+"
- * - Binary:      "%[01]+"
+ * Texas Instrument style numbers is:
+ * - '>hh' as hexadecimal.
+ * - '?bb' as binary.
  */
-struct MotorolaNumberParser final : PrefixNumberParser, Singleton<MotorolaNumberParser> {
-    MotorolaNumberParser() : PrefixNumberParser('$', '%', '@', '&') {}
+struct TexasNumberParser final : PrefixNumberParser, Singleton<TexasNumberParser> {
+    TexasNumberParser() : PrefixNumberParser('>', '?', 0, 0) {}
 };
 
 /**
@@ -126,6 +136,29 @@ struct IbmNumberParser : PrefixNumberParser {
     IbmNumberParser(char hex, char bin, char oct, char dec)
         : PrefixNumberParser(hex, bin, oct, dec) {}
     Error parseNumber(StrScanner &scan, Value &val, Radix defaultRadix) const override;
+};
+
+/** RCA style numbers are the same as IBM plus '#hh' for hexadecimal. */
+struct RcaNumberParser final : IbmNumberParser, Singleton<RcaNumberParser> {
+    RcaNumberParser() : IbmNumberParser('X', 'B', 0, 'D') {}
+    Error parseNumber(StrScanner &scan, Value &val, Radix defaultRadix) const override;
+};
+
+/**
+ * Fairchild style numbers are the same as IBM plus '$hh' for hexadecimal.
+ */
+struct FairchildNumberParser final : IbmNumberParser, Singleton<FairchildNumberParser> {
+    FairchildNumberParser() : IbmNumberParser('H', 'B', 'O', 'D') {}
+    Error parseNumber(StrScanner &scan, Value &val, Radix defaultRadix) const override;
+};
+
+struct PanasonicNumberParser final : IbmNumberParser, Singleton<PanasonicNumberParser> {
+    PanasonicNumberParser() : IbmNumberParser('X', 0, 0, 0) {}
+};
+
+/** A numbers are the same as IBM except H'hh' for hexadecimal. */
+struct SigneticsNumberParser final : IbmNumberParser, Singleton<SigneticsNumberParser> {
+    SigneticsNumberParser() : IbmNumberParser('H', 'B', 'O', 'D') {}
 };
 
 /**
@@ -148,13 +181,8 @@ struct Ins80xxNumberParser final : NationalNumberParser, Singleton<Ins80xxNumber
     Ins80xxNumberParser() : NationalNumberParser('X', 0, 0, 0) {}
 };
 
-/**
- * Texas Instrument style numbers is:
- * - '>hh' as hexadecimal.
- * - '?bb' as binary.
- */
-struct TexasNumberParser final : PrefixNumberParser, Singleton<TexasNumberParser> {
-    TexasNumberParser() : PrefixNumberParser('>', '?', 0, 0) {}
+struct Ns32000NumberParser final : NationalNumberParser, Singleton<Ns32000NumberParser> {
+    Ns32000NumberParser() : NationalNumberParser(/* 'X','H' */ 0, 'B', /* 'O' or */ 'Q', 'D') {}
 };
 
 }  // namespace libasm

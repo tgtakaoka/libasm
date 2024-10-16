@@ -58,10 +58,8 @@ struct I8086SymbolParser final : SimpleSymbolParser, Singleton<I8086SymbolParser
 }  // namespace
 
 const ValueParser::Plugins &AsmI8086::defaultPlugins() {
-    static struct final : ValueParser::Plugins {
-        const NumberParser &number() const { return IntelNumberParser::singleton(); }
+    static struct final : ValueParser::IntelPlugins {
         const SymbolParser &symbol() const { return I8086SymbolParser::singleton(); }
-        const OperatorParser &operators() const { return IntelOperatorParser::singleton(); }
     } PLUGINS;
     return PLUGINS;
 }

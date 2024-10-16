@@ -38,10 +38,6 @@ constexpr Pseudo PSEUDOS[] PROGMEM = {
 // clang-format on
 PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
 
-struct Ins8060FunctionTable final : FunctionTable, Singleton<Ins8060FunctionTable> {
-    const Functor *lookupFunction(const StrScanner &) const override;
-};
-
 }  // namespace
 
 const ValueParser::Plugins &AsmIns8060::defaultPlugins() {
@@ -57,45 +53,6 @@ AsmIns8060::AsmIns8060(const ValueParser::Plugins &plugins)
     : Assembler(plugins, PSEUDO_TABLE), Config(TABLE) {
     reset();
 }
-
-namespace {
-
-const struct : Functor {
-    int_fast8_t nargs() const override { return 1; }
-    Error eval(ValueStack &stack, ParserContext &, uint_fast8_t) const override {
-        stack.pushUnsigned((stack.pop().getUnsigned() >> 8) & 0xFF);
-        return OK;
-    }
-} FN_HIGH;
-
-const struct : Functor {
-    int_fast8_t nargs() const override { return 1; }
-    Error eval(ValueStack &stack, ParserContext &, uint_fast8_t) const override {
-        stack.pushUnsigned(stack.pop().getUnsigned() & 0xFF);
-        return OK;
-    }
-} FN_LOW;
-
-const struct : Functor {
-    int_fast8_t nargs() const override { return 1; }
-    Error eval(ValueStack &stack, ParserContext &, uint_fast8_t) const override {
-        const auto v = stack.pop().getUnsigned();
-        stack.pushUnsigned(page(v) | offset(v - 1));
-        return OK;
-    }
-} FN_ADDR;
-
-const Functor *Ins8060FunctionTable::lookupFunction(const StrScanner &name) const {
-    if (name.iequals_P(TEXT_FN_H))
-        return &FN_HIGH;
-    if (name.iequals_P(TEXT_FN_L))
-        return &FN_LOW;
-    if (name.iequals_P(TEXT_FN_ADDR))
-        return &FN_ADDR;
-    return nullptr;
-}
-
-}  // namespace
 
 void AsmIns8060::encodeRel8(AsmInsn &insn, const Operand &op) const {
     Config::ptrdiff_t delta;

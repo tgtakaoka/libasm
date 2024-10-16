@@ -24,6 +24,8 @@
 namespace libasm {
 namespace cdp1802 {
 
+const ValueParser::Plugins &defaultPlugins();
+
 struct AsmCdp1802 final : Assembler, Config {
     AsmCdp1802(const ValueParser::Plugins &plugins = defaultPlugins());
 
@@ -44,7 +46,6 @@ private:
     Error encodeImpl(StrScanner &scan, Insn &insn) const override;
     const ConfigBase &config() const override { return *this; }
     ConfigSetter &configSetter() override { return *this; }
-    static const ValueParser::Plugins &defaultPlugins();
 };
 
 }  // namespace cdp1802

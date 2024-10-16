@@ -21,12 +21,8 @@
 using namespace libasm;
 using namespace libasm::test;
 
-const struct final : ValueParser::Plugins {
-    const NumberParser &number() const override { return ZilogNumberParser::singleton(); }
-    const LetterParser &letter() const override { return ZilogLetterParser::singleton(); }
-    const OperatorParser &operators() const override { return ZilogOperatorParser::singleton(); }
-} plugins{};
-const ValueParser parser{plugins};
+const ValueParser::ZilogPlugins PLUGINS{};
+const ValueParser parser{PLUGINS};
 
 const ValueFormatter formatter{ValueFormatter::Plugins::zilog()};
 

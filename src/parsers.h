@@ -18,28 +18,10 @@
 #define __LIBASM_PARSERS_H__
 
 #include "comment_parser.h"
+#include "function_table.h"
 #include "letter_parser.h"
 #include "number_parser.h"
 #include "symbol_parser.h"
-
-#include "error_reporter.h"
-#include "operators.h"
-#include "str_scanner.h"
-#include "value.h"
-
-namespace libasm {
-
-/**
- * Pre-defined function table.
- */
-struct FunctionTable {
-    /**
-     * Look up |name| and returns a Functor pointer for a function, otherwise return nullptr.
-     */
-    virtual const Functor *lookupFunction(const StrScanner &) const { return nullptr; }
-};
-
-}  // namespace libasm
 
 #endif
 

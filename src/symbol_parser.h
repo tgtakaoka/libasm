@@ -28,9 +28,7 @@ namespace libasm {
  */
 struct SymbolParser {
     /** Default symbol is '[:alpha:][:alnum:]*' */
-    virtual bool symbolLetter(char c, bool headOfSymbol = false) const {
-        return isalpha(c) || (!headOfSymbol && isdigit(c)) || c == '_';
-    }
+    virtual bool symbolLetter(char c, bool headOfSymbol = false) const;
 
     /** Default location symbol is '$' */
     virtual bool locationSymbol(StrScanner &scan) const { return locationSymbol(scan, '$'); }
@@ -48,14 +46,7 @@ struct SymbolParser {
     virtual bool functionNameLetter(char c) const { return symbolLetter(c); }
 
 protected:
-    bool locationSymbol(StrScanner &scan, char location) const {
-        auto p = scan;
-        if (p.expect(location) && !symbolLetter(*p)) {
-            scan = p;
-            return true;
-        }
-        return false;
-    }
+    bool locationSymbol(StrScanner &scan, char location) const;
 };
 
 /**
@@ -63,9 +54,8 @@ protected:
  */
 struct SimpleSymbolParser : SymbolParser {
     SimpleSymbolParser(const /*PROGMEM*/ char *extra_P) : _extra_P(extra_P) {}
-    bool symbolLetter(char c, bool headOfSymbol = false) const override {
-        return SymbolParser::symbolLetter(c, headOfSymbol) || (c && strchr_P(_extra_P, c));
-    }
+
+    bool symbolLetter(char c, bool headOfSymbol = false) const override;
 
 private:
     const /*PROGMEMD*/ char *const _extra_P;
@@ -77,42 +67,97 @@ private:
 struct PrefixSymbolParser : SymbolParser {
     PrefixSymbolParser(const /*PROGMEM*/ char *prefix_P, const /*PROGMEM*/ char *extra_P = nullptr)
         : _prefix_P(prefix_P), _extra_P(extra_P) {}
-    bool symbolLetter(char c, bool headOfSymbol = false) const override {
-        if (SymbolParser::symbolLetter(c, headOfSymbol))
-            return true;
-        if (headOfSymbol && _prefix_P)
-            return c && strchr_P(_prefix_P, c);
-        if (_extra_P)
-            return c && strchr_P(_extra_P, c);
-        return false;
-    }
+
+    bool symbolLetter(char c, bool headOfSymbol = false) const override;
 
 private:
     const /*PROGMEMD*/ char *const _prefix_P;
     const /*PROGMEMD*/ char *const _extra_P;
 };
 
-struct UnderQuestionSymbolParser final : PrefixSymbolParser, Singleton<UnderQuestionSymbolParser> {
-    UnderQuestionSymbolParser() : PrefixSymbolParser(nullptr, text::common::PSTR_UNDER_QUESTION) {}
+struct IntelSymbolParser final : PrefixSymbolParser, Singleton<IntelSymbolParser> {
+    IntelSymbolParser() : PrefixSymbolParser(nullptr, text::common::PSTR_UNDER_QUESTION) {}
 };
 
-struct Mc68xxSymbolParser final : PrefixSymbolParser, Singleton<Mc68xxSymbolParser> {
-    Mc68xxSymbolParser()
+struct MotorolaSymbolParser final : PrefixSymbolParser, Singleton<MotorolaSymbolParser> {
+    MotorolaSymbolParser()
         : PrefixSymbolParser(text::common::PSTR_DOT, text::common::PSTR_UNDER_DOT_DOLLAR) {}
     bool locationSymbol(StrScanner &scan) const override {
         return SymbolParser::locationSymbol(scan, '*');
     }
 };
 
+struct RcaSymbolParser final : SymbolParser, Singleton<RcaSymbolParser> {
+    /** Pre-defined function name may have '.' */
+    bool functionNameLetter(char c) const override;
+    bool locationSymbol(StrScanner &scan) const override {
+        return SymbolParser::locationSymbol(scan, '*');
+    }
+    /** Symbol is definde by "=". */
+    bool instructionLetter(char c) const override;
+    bool instructionTerminator(char c) const override { return c == '='; }
+};
+
+struct FairchildSymbolParser final : SymbolParser, Singleton<FairchildSymbolParser> {
+    /** Accepts location symbol '*', '$', '.' */
+    bool locationSymbol(StrScanner &scan) const override;
+};
+
+struct PanasonicSymbolParser final : SymbolParser, Singleton<PanasonicSymbolParser> {
+    bool locationSymbol(StrScanner &scan) const override {
+        return SymbolParser::locationSymbol(scan, '*');
+    }
+};
+
+struct MostekSymbolParser final : SimpleSymbolParser, Singleton<MostekSymbolParser> {
+    MostekSymbolParser() : SimpleSymbolParser(text::common::PSTR_UNDER) {}
+    bool locationSymbol(StrScanner &scan) const override {
+        return SymbolParser::locationSymbol(scan, '*');
+    }
+    bool instructionLetter(char c) const override;
+    bool instructionTerminator(char c) const override { return c == '='; }
+};
+
 struct Ins80xxSymbolParser final : PrefixSymbolParser, Singleton<Ins80xxSymbolParser> {
     Ins80xxSymbolParser() : PrefixSymbolParser(text::common::PSTR_DOLLAR) {}
-    bool locationSymbol(StrScanner &scan) const override {
-        return SymbolParser::locationSymbol(scan, '.') || SymbolParser::locationSymbol(scan, '$');
-    }
-    bool instructionLetter(char c) const override {
-        return PrefixSymbolParser::instructionLetter(c) || c == '=' || c == '.';
-    }
+    bool locationSymbol(StrScanner &scan) const override;
+    bool instructionLetter(char c) const override;
     bool instructionTerminator(char c) const override { return c == '='; }
+};
+
+struct Mc68000SymbolParser final : PrefixSymbolParser, Singleton<Mc68000SymbolParser> {
+    Mc68000SymbolParser()
+        : PrefixSymbolParser(text::common::PSTR_DOT, text::common::PSTR_UNDER_DOT_DOLLAR) {}
+    bool locationSymbol(StrScanner &scan) const override {
+        return SymbolParser::locationSymbol(scan, '*');
+    }
+    bool instructionLetter(char c) const override;
+};
+
+struct Ns32000SymbolParser final : SimpleSymbolParser, Singleton<Ns32000SymbolParser> {
+    Ns32000SymbolParser() : SimpleSymbolParser(text::common::PSTR_UNDER_DOT) {}
+    bool locationSymbol(StrScanner &scan) const override;
+    bool instructionLetter(char c) const override;
+};
+
+struct Pdp8SymbolParser final : SymbolParser, Singleton<Pdp8SymbolParser> {
+    bool locationSymbol(StrScanner &scan) const override;
+    bool labelDelimitor(StrScanner &scan) const override { return scan.expect(','); }
+    bool instructionLetter(char c) const override;
+    bool instructionTerminator(char c) const override;
+};
+
+struct Tms32010SymbolParser final : SimpleSymbolParser, Singleton<Tms32010SymbolParser> {
+    Tms32010SymbolParser() : SimpleSymbolParser(text::common::PSTR_UNDER_DOLLAR) {}
+    bool instructionLetter(char c) const override;
+};
+
+struct Z8SymbolParser final : SimpleSymbolParser, Singleton<Z8SymbolParser> {
+    Z8SymbolParser() : SimpleSymbolParser(text::common::PSTR_UNDER_DOT_DOLLAR_QUESTION) {}
+};
+
+struct Z8000SymbolParser final : PrefixSymbolParser, Singleton<Z8000SymbolParser> {
+    Z8000SymbolParser() : PrefixSymbolParser(nullptr, text::common::PSTR_UNDER) {}
 };
 
 }  // namespace libasm

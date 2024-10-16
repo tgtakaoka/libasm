@@ -15,121 +15,108 @@
  */
 
 #include "value_formatter.h"
-
 #include <stdlib.h>
-
 #include "text_common.h"
 
 namespace libasm {
 
+using namespace text::common;
+
 const DecFormatter &ValueFormatter::Plugins::dec() const {
-    return DecFormatter::singleton();
+    static const DecFormatter FORMATTER{};
+    return FORMATTER;
 }
 
 const BinFormatter &ValueFormatter::Plugins::bin() const {
-    return BinFormatter::singleton();
+    static const BinFormatter FORMATTER{};
+    return FORMATTER;
 }
 
 const OctFormatter &ValueFormatter::Plugins::oct() const {
-    return OctFormatter::singleton();
+    static const OctFormatter FORMATTER{};
+    return FORMATTER;
 }
 
 const HexFormatter &ValueFormatter::Plugins::hex() const {
-    return HexFormatter::singleton();
+    static const HexFormatter FORMATTER{};
+    return FORMATTER;
 }
 
 char ValueFormatter::Plugins::locationSymbol() const {
-    return '.';
+    return '$';
 }
 
 const /*PROGMEM*/ char *ValueFormatter::Plugins::lineComment_P() const {
-    return PSTR(";");
+    return PSTR_SEMI;
+}
+
+const ValueFormatter::Plugins &ValueFormatter::Plugins::singleton() {
+    static const Plugins PLUGINS{};
+    return PLUGINS;
 }
 
 const ValueFormatter::Plugins &ValueFormatter::Plugins::cstyle() {
     static const struct fianl : Plugins {
-        const BinFormatter &bin() const override { return _bin; }
-        const OctFormatter &oct() const override { return _oct; }
-        const HexFormatter &hex() const override { return _hex; }
-        const CStyleBinFormatter _bin{};
-        const CStyleOctFormatter _oct{};
-        const CStyleHexFormatter _hex{};
-    } PLUGINS{};
-    return PLUGINS;
-}
-
-const ValueFormatter::Plugins &ValueFormatter::Plugins::fairchild() {
-    static const struct fianl : Plugins {
-        const BinFormatter &bin() const override { return _bin; }
-        const OctFormatter &oct() const override { return _oct; }
-        const HexFormatter &hex() const override { return _hex; }
-        char locationSymbol() const override { return '*'; }
-        const SurroundBinFormatter _bin{text::common::PSTR_B_DASH, '\''};
-        const SurroundOctFormatter _oct{text::common::PSTR_O_DASH, '\''};
-        const SurroundHexFormatter _hex{text::common::PSTR_H_DASH, '\''};
+        const BinFormatter &bin() const override { return CStyleBinFormatter::singleton(); }
+        const OctFormatter &oct() const override { return CStyleOctFormatter::singleton(); }
+        const HexFormatter &hex() const override { return CStyleHexFormatter::singleton(); }
     } PLUGINS{};
     return PLUGINS;
 }
 
 const ValueFormatter::Plugins &ValueFormatter::Plugins::intel() {
     static const struct fianl : Plugins {
-        const BinFormatter &bin() const override { return _bin; }
-        const OctFormatter &oct() const override { return _oct; }
-        const HexFormatter &hex() const override { return _hex; }
-        char locationSymbol() const override { return '$'; }
-        const SuffixBinFormatter _bin{'b'};
-        const SuffixOctFormatter _oct{'q'};
-        const SuffixHexFormatter _hex{'h'};
+        const BinFormatter &bin() const override { return IntelBinFormatter::singleton(); }
+        const OctFormatter &oct() const override { return IntelOctFormatter::singleton(); }
+        const HexFormatter &hex() const override { return IntelHexFormatter::singleton(); }
     } PLUGINS{};
     return PLUGINS;
 }
 
 const ValueFormatter::Plugins &ValueFormatter::Plugins::motorola() {
     static const struct fianl : Plugins {
-        const BinFormatter &bin() const override { return _bin; }
-        const OctFormatter &oct() const override { return _oct; }
-        const HexFormatter &hex() const override { return _hex; }
+        const BinFormatter &bin() const override { return MotorolaBinFormatter::singleton(); }
+        const OctFormatter &oct() const override { return MotorolaOctFormatter::singleton(); }
+        const HexFormatter &hex() const override { return MotorolaHexFormatter::singleton(); }
         char locationSymbol() const override { return '*'; }
-        const /*PROGMEM*/ char *lineComment_P() const override { return text::common::PSTR_STAR; }
-        const PrefixBinFormatter    _bin{'%'};
-        const PrefixStrOctFormatter _oct{text::common::PSTR_AT};
-        const PrefixHexFormatter    _hex{'$'};
+        const /*PROGMEM*/ char *lineComment_P() const override { return PSTR_STAR; }
+    } PLUGINS{};
+    return PLUGINS;
+}
+
+const ValueFormatter::Plugins &ValueFormatter::Plugins::fairchild() {
+    static const struct fianl : Plugins {
+        const BinFormatter &bin() const override { return FairchildBinFormatter::singleton(); }
+        const OctFormatter &oct() const override { return FairchildOctFormatter::singleton(); }
+        const HexFormatter &hex() const override { return FairchildHexFormatter::singleton(); }
+        const /*PROGMEM*/ char *lineComment_P() const override { return PSTR_STAR; }
     } PLUGINS{};
     return PLUGINS;
 }
 
 const ValueFormatter::Plugins &ValueFormatter::Plugins::national() {
     static const struct fianl : Plugins {
-        const BinFormatter &bin() const override { return _bin; }
-        const OctFormatter &oct() const override { return _oct; }
-        const HexFormatter &hex() const override { return _hex; }
-        char locationSymbol() const override { return '$'; }
-        const PrefixStrBinFormatter _bin{text::common::PSTR_B_DASH};
-        const PrefixStrOctFormatter _oct{text::common::PSTR_O_DASH};
-        const PrefixStrHexFormatter _hex{text::common::PSTR_X_DASH};
+        const BinFormatter &bin() const override { return NationalBinFormatter::singleton(); }
+        const OctFormatter &oct() const override { return NationalOctFormatter::singleton(); }
+        const HexFormatter &hex() const override { return NationalHexFormatter::singleton(); }
     } PLUGINS{};
     return PLUGINS;
 }
 
 const ValueFormatter::Plugins &ValueFormatter::Plugins::texas() {
     static const struct fianl : Plugins {
-        const HexFormatter &hex() const override { return _hex; }
-        char locationSymbol() const override { return '$'; }
-        const /*PROGMEM*/ char *lineComment_P() const override { return text::common::PSTR_STAR; }
-        const PrefixHexFormatter _hex{'>'};
+        const BinFormatter &bin() const override { return TexasBinFormatter::singleton(); }
+        const HexFormatter &hex() const override { return TexasHexFormatter::singleton(); }
+        const /*PROGMEM*/ char *lineComment_P() const override { return PSTR_STAR; }
     } PLUGINS{};
     return PLUGINS;
 }
 
 const ValueFormatter::Plugins &ValueFormatter::Plugins::zilog() {
     static const struct fianl : Plugins {
-        const BinFormatter &bin() const override { return _bin; }
-        const OctFormatter &oct() const override { return _oct; }
-        const HexFormatter &hex() const override { return _hex; }
-        char locationSymbol() const override { return '$'; }
-        const PrefixStrBinFormatter _bin{text::common::PSTR_PERCENT_2};
-        const PrefixStrOctFormatter _oct{text::common::PSTR_PERCENT_8};
-        const PrefixHexFormatter _hex{'%'};
+        const BinFormatter &bin() const override { return ZilogBinFormatter::singleton(); }
+        const OctFormatter &oct() const override { return ZilogOctFormatter::singleton(); }
+        const HexFormatter &hex() const override { return ZilogHexFormatter::singleton(); }
     } PLUGINS{};
     return PLUGINS;
 }

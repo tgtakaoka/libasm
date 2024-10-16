@@ -45,11 +45,7 @@ PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
 }  // namespace
 
 const ValueParser::Plugins &AsmZ80::defaultPlugins() {
-    static const struct final : ValueParser::Plugins {
-        const NumberParser &number() const override { return IntelNumberParser::singleton(); }
-        const SymbolParser &symbol() const override {
-            return UnderQuestionSymbolParser::singleton();
-        }
+    static const struct final : ValueParser::IntelPlugins {
         const OperatorParser &operators() const override {
             return ZilogOperatorParser::singleton();
         }
