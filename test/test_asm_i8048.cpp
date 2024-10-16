@@ -307,6 +307,7 @@ static void test_branch() {
     AERRT(0x3FF, "JNI  334H",  OPERAND_TOO_FAR, "334H", 0x86, 0x34);
     ATEST(0x3FF, "JNI  434H",  0x86, 0x34);
     AERRT(0x500, "JNI  434H",  OPERAND_TOO_FAR, "434H", 0x86, 0x34);
+    ATEST(0x200, "JNI  $+80H",  0x86, 0x80);
 
     ATEST(0x300, "JB 0, 334H",  0x12, 0x34);
     ATEST(0x200, "JB 1, 234H",  0x32, 0x34);

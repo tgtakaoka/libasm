@@ -70,6 +70,9 @@ struct RcaCommentParser final : CommentParser, Singleton<RcaCommentParser> {
 
 struct RcaSymbolParser final : SymbolParser, Singleton<RcaSymbolParser> {
     bool functionNameLetter(char c) const override { return symbolLetter(c) || c == '.'; }
+    bool locationSymbol(StrScanner &scan) const override {
+        return SymbolParser::locationSymbol(scan, '*');
+    }
     bool instructionLetter(char c) const override {
         return SymbolParser::instructionLetter(c) || c == '=';
     }
@@ -99,7 +102,6 @@ const ValueParser::Plugins &AsmCdp1802::defaultPlugins() {
         const CommentParser &comment() const override { return RcaCommentParser::singleton(); }
         const SymbolParser &symbol() const override { return RcaSymbolParser::singleton(); }
         const LetterParser &letter() const override { return RcaLetterParser::singleton(); }
-        const LocationParser &location() const override { return StarLocationParser::singleton(); }
         const FunctionTable &function() const override { return RcaFunctionTable::singleton(); }
     } PLUGINS{};
     return PLUGINS;

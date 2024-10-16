@@ -377,6 +377,7 @@ static void test_relative() {
 
     ATEST(0x1000, "BSR  $1042", 0x8D, 0x40);
     ATEST(0x1000, "LBSR $1043", 0x17, 0x00, 0x40);
+    ATEST(0x1000, "LBSR *+$43", 0x17, 0x00, 0x40);
 
     TEST("option smart-branch, on");
 

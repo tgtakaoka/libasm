@@ -32,6 +32,9 @@ struct SymbolParser {
         return isalpha(c) || (!headOfSymbol && isdigit(c)) || c == '_';
     }
 
+    /** Default location symbol is '$' */
+    virtual bool locationSymbol(StrScanner &scan) const { return locationSymbol(scan, '$'); }
+
     /** Label may have delimitor letter */
     virtual bool labelDelimitor(StrScanner &scan) const { return scan.expect(':'); }
 
@@ -43,6 +46,16 @@ struct SymbolParser {
 
     /** Function name is same as symbol */
     virtual bool functionNameLetter(char c) const { return symbolLetter(c); }
+
+protected:
+    bool locationSymbol(StrScanner &scan, char location) const {
+        auto p = scan;
+        if (p.expect(location) && !symbolLetter(*p)) {
+            scan = p;
+            return true;
+        }
+        return false;
+    }
 };
 
 /**
@@ -86,10 +99,16 @@ struct UnderQuestionSymbolParser final : PrefixSymbolParser, Singleton<UnderQues
 struct Mc68xxSymbolParser final : PrefixSymbolParser, Singleton<Mc68xxSymbolParser> {
     Mc68xxSymbolParser()
         : PrefixSymbolParser(text::common::PSTR_DOT, text::common::PSTR_UNDER_DOT_DOLLAR) {}
+    bool locationSymbol(StrScanner &scan) const override {
+        return SymbolParser::locationSymbol(scan, '*');
+    }
 };
 
 struct Ins80xxSymbolParser final : PrefixSymbolParser, Singleton<Ins80xxSymbolParser> {
     Ins80xxSymbolParser() : PrefixSymbolParser(text::common::PSTR_DOLLAR) {}
+    bool locationSymbol(StrScanner &scan) const override {
+        return SymbolParser::locationSymbol(scan, '.') || SymbolParser::locationSymbol(scan, '$');
+    }
     bool instructionLetter(char c) const override {
         return PrefixSymbolParser::instructionLetter(c) || c == '=' || c == '.';
     }

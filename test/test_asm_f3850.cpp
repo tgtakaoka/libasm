@@ -229,6 +229,7 @@ void test_branch() {
     ATEST(0x1000, "BF  13, H'1002'", 0x9D, 0x01);
     ATEST(0x1000, "BF  14, H'1002'", 0x9E, 0x01);
     ATEST(0x1000, "BF  15, H'1002'", 0x9F, 0x01);
+    ATEST(0x1000, "BF  15, *+H'80'", 0x9F, 0x7F);
 }
 
 void test_io() {

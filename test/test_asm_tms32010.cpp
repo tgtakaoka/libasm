@@ -372,6 +372,7 @@ static void test_branch() {
     TEST("B 400H",  0xF900, 0x0400);
     TEST("B 800H",  0xF900, 0x0800);
     TEST("B 0FFFH", 0xF900, 0x0FFF);
+    TEST("B $+80H", 0xF900, 0x0080);
     ERUS("B UNDEF", "UNDEF", 0xF900, 0x0000);
     ERRT("B 1000H", OVERFLOW_RANGE, "1000H", 0xF900, 0x0000);
     ERRT("B 2000H", OVERFLOW_RANGE, "2000H", 0xF900, 0x0000);

@@ -46,6 +46,9 @@ constexpr Pseudo PSEUDOS[] PROGMEM = {
 PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
 
 struct Pdp8SymbolParser final : SymbolParser, Singleton<Pdp8SymbolParser> {
+    bool locationSymbol(StrScanner &scan) const override {
+        return SymbolParser::locationSymbol(scan, '.') || SymbolParser::locationSymbol(scan, '$');
+    }
     bool labelDelimitor(StrScanner &scan) const override { return scan.expect(','); }
     bool instructionLetter(char c) const override {
         return SymbolParser::symbolLetter(c) || c == '*' || c == '=';
@@ -106,9 +109,6 @@ const ValueParser::Plugins &AsmPdp8::defaultPlugins() {
         const LetterParser &letter() const override { return Pdp8LetterParser::singleton(); }
         const CommentParser &comment() const override { return Pdp8CommentParser::singleton(); }
         const OperatorParser &operators() const override { return Pdp8OperatorParser::singleton(); }
-        const LocationParser &location() const override {
-            return DotDollarLocationParser::singleton();
-        }
     } PLUGINS{};
     return PLUGINS;
 }

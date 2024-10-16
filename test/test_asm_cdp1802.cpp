@@ -280,6 +280,7 @@ static void test_reg_op() {
         TEST("DBNZ 15,1234H", 0x68, 0x2F, 0x12, 0x34);
         ERRT("DBNZ 16,1234H", ILLEGAL_REGISTER, "16,1234H", 0x68, 0x27, 0x12, 0x34);
         ERRT("DBNZ -1,1234H", ILLEGAL_REGISTER, "-1,1234H", 0x68, 0x27, 0x12, 0x34);
+        TEST("DBNZ 15,*+1234H", 0x68, 0x2F, 0x12, 0x34);
     } else {
         ERUI("DBNZ 15,1234H");
     }

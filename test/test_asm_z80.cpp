@@ -612,6 +612,7 @@ static void test_relative() {
         ATEST(0x1000, "JR C,0F82H",  0x38, 0x80);
         AERRT(0x1000, "JR C,1082H",  OPERAND_TOO_FAR, "1082H", 0x38, 0x80);
         AERRT(0x1000, "JR C,0F81H",  OPERAND_TOO_FAR, "0F81H", 0x38, 0x7F);
+        ATEST(0x1000, "JR $+80H",    0x18, 0x7E);
     } else {
         ERUI("DJNZ 1000H");
         ERUI("JR 1000H");

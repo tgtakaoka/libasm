@@ -383,6 +383,7 @@ static void test_relative() {
     ATEST(0x1000, "BGT $1002", 0x2E, 0x00);
     ATEST(0x1000, "BLE $1002", 0x2F, 0x00);
     ATEST(0x1000, "BSR $1042", 0x8D, 0x40);
+    ATEST(0x1000, "BSR *+$42", 0x8D, 0x40);
 
     if (m6801()) {
         // MC6801
