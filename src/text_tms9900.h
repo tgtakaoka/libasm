@@ -29,6 +29,7 @@ extern const char TEXT_CPU_9900[]  PROGMEM;
 extern const char TEXT_CPU_9980[]  PROGMEM;
 extern const char TEXT_CPU_9995[]  PROGMEM;
 extern const char TEXT_CPU_99105[] PROGMEM;
+extern const char TEXT_CPU_99110[] PROGMEM;
 
 // TMS9900
 using common::TEXT_A;
@@ -118,8 +119,25 @@ extern const char TEXT_SRAM[] PROGMEM;
 extern const char TEXT_TCMB[] PROGMEM;
 extern const char TEXT_TMB[]  PROGMEM;
 extern const char TEXT_TSMB[] PROGMEM;
-// clang-format on
 
+// TMS99110
+extern const char TEXT_AR[]   PROGMEM;
+extern const char TEXT_CER[]  PROGMEM;
+extern const char TEXT_CIR[]  PROGMEM;
+extern const char TEXT_CR[]   PROGMEM;
+extern const char TEXT_CRE[]  PROGMEM;
+extern const char TEXT_CRI[]  PROGMEM;
+extern const char TEXT_DR[]   PROGMEM;
+using common::TEXT_LDD;
+using common::TEXT_LDS;
+using common::TEXT_LR;
+extern const char TEXT_MM[]   PROGMEM;
+extern const char TEXT_MR[]   PROGMEM;
+extern const char TEXT_NEGR[] PROGMEM;
+using common::TEXT_SR;
+using common::TEXT_STR;
+
+// clang-format on
 }  // namespace tms9900
 }  // namespace text
 }  // namespace libasm

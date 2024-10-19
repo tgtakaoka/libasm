@@ -192,15 +192,15 @@ static constexpr uint8_t INDEX_TMS9995[] PROGMEM = {
 };
 
 static constexpr Entry TABLE_TMS99105[] PROGMEM = {
-    E2(0x001C, TEXT_SRAM, M_SRC2, M_CNT2),
-    E2(0x001D, TEXT_SLAM, M_SRC2, M_CNT2),
-    E2(0x0029, TEXT_SM,   M_SRC2, M_DST2),
-    E2(0x002A, TEXT_AM,   M_SRC2, M_DST2),
+    E2(0x001C, TEXT_SRAM, M_SRC2, M_CNT4),
+    E2(0x001D, TEXT_SLAM, M_SRC2, M_CNT4),
+    E2(0x0029, TEXT_SM,   M_SRC2, M_DST4),
+    E2(0x002A, TEXT_AM,   M_SRC2, M_DST4),
     E2(0x00B0, TEXT_BLSK, M_REG,  M_IMM),
     E1(0x0140, TEXT_BIND, M_SRC),
-    E2(0x0C09, TEXT_TMB,  M_SRC2, M_BIT2),
-    E2(0x0C0A, TEXT_TCMB, M_SRC2, M_BIT2),
-    E2(0x0C0B, TEXT_TSMB, M_SRC2, M_BIT2),
+    E2(0x0C09, TEXT_TMB,  M_SRC2, M_BIT0),
+    E2(0x0C0A, TEXT_TCMB, M_SRC2, M_BIT0),
+    E2(0x0C0B, TEXT_TSMB, M_SRC2, M_BIT0),
     E1(0x0100, TEXT_EVAD, M_SRC),
     E1(0x0380, TEXT_RTWP, M_RTWP),
     // Extra
@@ -222,6 +222,43 @@ static constexpr uint8_t INDEX_TMS99105[] PROGMEM = {
       6,  // TEXT_TMB
       8,  // TEXT_TSMB
 };
+
+static constexpr Entry TABLE_TMS99110[] PROGMEM = {
+    E0(0x0780, TEXT_LDS),
+    E0(0x07C0, TEXT_LDD),
+    E0(0x0C00, TEXT_CRI),
+    E0(0x0C02, TEXT_NEGR),
+    E0(0x0C04, TEXT_CRE),
+    E0(0x0C06, TEXT_CER),
+    E1(0x0C40, TEXT_AR,  M_SRC),
+    E1(0x0C80, TEXT_CIR, M_SRC),
+    E1(0x0CC0, TEXT_SR,  M_SRC),
+    E1(0x0D00, TEXT_MR,  M_SRC),
+    E1(0x0D40, TEXT_DR,  M_SRC),
+    E1(0x0D80, TEXT_LR,  M_SRC),
+    E1(0x0DC0, TEXT_STR, M_SRC),
+    E2(0x0301, TEXT_CR,  M_SRC2, M_DST0),
+    E2(0x0302, TEXT_MM,  M_SRC2, M_DST0),
+};
+
+static constexpr uint8_t INDEX_TMS99110[] PROGMEM = {
+      6,  // TEXT_AR
+      5,  // TEXT_CER
+      7,  // TEXT_CIR
+     13,  // TEXT_CR
+      4,  // TEXT_CRE
+      2,  // TEXT_CRI
+     10,  // TEXT_DR
+      1,  // TEXT_LDD
+      0,  // TEXT_LDS
+     11,  // TEXT_LR
+     14,  // TEXT_MM
+      9,  // TEXT_MR
+      3,  // TEXT_NEGR
+      8,  // TEXT_SR
+     12,  // TEXT_STR
+};
+
 // clang-format on
 
 using EntryPage = entry::TableBase<Entry>;
@@ -241,6 +278,13 @@ static constexpr EntryPage TMS99105_PAGES[] PROGMEM = {
         {ARRAY_RANGE(TABLE_TMS9995), ARRAY_RANGE(INDEX_TMS9995)},
 };
 
+static constexpr EntryPage TMS99110_PAGES[] PROGMEM = {
+        {ARRAY_RANGE(TABLE_TMS99105), ARRAY_RANGE(INDEX_TMS99105)},
+        {ARRAY_RANGE(TABLE_TMS9900), ARRAY_RANGE(INDEX_TMS9900)},
+        {ARRAY_RANGE(TABLE_TMS9995), ARRAY_RANGE(INDEX_TMS9995)},
+        {ARRAY_RANGE(TABLE_TMS99110), ARRAY_RANGE(INDEX_TMS99110)},
+};
+
 using Cpu = entry::CpuBase<CpuType, EntryPage>;
 
 static constexpr Cpu CPU_TABLE[] PROGMEM = {
@@ -248,6 +292,7 @@ static constexpr Cpu CPU_TABLE[] PROGMEM = {
         {TMS9980, TEXT_CPU_9980, ARRAY_RANGE(TMS9900_PAGES)},
         {TMS9995, TEXT_CPU_9995, ARRAY_RANGE(TMS9995_PAGES)},
         {TMS99105, TEXT_CPU_99105, ARRAY_RANGE(TMS99105_PAGES)},
+        {TMS99110, TEXT_CPU_99110, ARRAY_RANGE(TMS99110_PAGES)},
 };
 
 static const Cpu *cpu(CpuType cpuType) {
@@ -269,13 +314,14 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
     if (opr == table)
         return true;
     if (opr == M_IREG || opr == M_INCR || opr == M_SYBL || opr == M_INDX)
-        return table == M_SRC || table == M_DST || table == M_SRC2 || table == M_DST2;
+        return table == M_SRC || table == M_DST || table == M_SRC2 || table == M_DST0 ||
+               table == M_DST4;
     if (opr == M_REG)
-        return table == M_SRC || table == M_DST || table == M_SRC2 || table == M_DST2 ||
-               table == M_DREG || table == M_SCNT || table == M_CNT2;
+        return table == M_SRC || table == M_DST || table == M_SRC2 || table == M_DST0 ||
+               table == M_DST4 || table == M_DREG || table == M_SCNT || table == M_CNT4;
     if (opr == M_IMM)
-        return table == M_REL || table == M_SCNT || table == M_CNT || table == M_CNT2 ||
-               table == M_CRU || table == M_BIT2 || table == M_XOP || table == M_RTWP;
+        return table == M_REL || table == M_SCNT || table == M_CNT || table == M_CNT4 ||
+               table == M_CRU || table == M_BIT0 || table == M_XOP || table == M_RTWP;
     return false;
 }
 

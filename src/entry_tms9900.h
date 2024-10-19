@@ -38,10 +38,11 @@ enum AddrMode : uint8_t {
     M_REL = 10,   // ---- ---- nnnn nnnn
     M_CRU = 11,   // ---- ---- nnnn nnnn
     M_RTWP = 12,  // ---- ---- ---- -nnn RTWP mode
-    M_DST2 = 13,  // 0100 DDdd dd-- ---- in 2nd word
-    M_CNT2 = 14,  // 0100 00cc cc-- ---- in 2nd word
-    M_BIT2 = 15,  // 0000 00bb bb-- ---- in 2nd word
-    M_SRC2 = 16,  // ---- ---- --SS ssss in 2nd word
+    M_SRC2 = 13,  // ---- ---- --SS ssss in 2nd word
+    M_DST0 = 14,  // 0000 DDdd dd-- ---- in 2nd word
+    M_DST4 = 15,  // 0100 DDdd dd-- ---- in 2nd word
+    M_BIT0 = 16,  // 0000 00bb bb-- ---- in 2nd word
+    M_CNT4 = 17,  // 0100 00cc cc-- ---- in 2nd word
     // Only for assembler.
     M_IREG = 17,  // Work Register Indirect Addressing: *Rn
     M_INCR = 18,  // Work Register Indirect Auto Increment Addressing: *Rn+

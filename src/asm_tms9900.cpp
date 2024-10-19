@@ -69,7 +69,7 @@ void AsmTms9900::encodeCruOffset(AsmInsn &insn, const Operand &op) const {
 }
 
 void AsmTms9900::encodeModeReg(AsmInsn &insn, const Operand &op, AddrMode mode) const {
-    if (mode == M_SRC2 && insn.dst() == M_BIT2 && op.mode == M_INCR)
+    if (mode == M_SRC2 && insn.dst() == M_BIT0 && op.mode == M_INCR)
         insn.setErrorIf(op, OPERAND_NOT_ALLOWED);
     auto opc = encodeRegNumber(op.reg);
     switch (op.mode) {
@@ -83,7 +83,6 @@ void AsmTms9900::encodeModeReg(AsmInsn &insn, const Operand &op, AddrMode mode) 
         break;
     case M_SYBL:
         opc = (2 << 4);
-        //       if (op.getError() != UNDEFINED_SYMBOL)
         insn.setErrorIf(op, checkAddr(op.val.getUnsigned(), !insn.byteOp()));
         insn.emitOperand16(op.val.getUnsigned());
         break;
@@ -123,9 +122,10 @@ void AsmTms9900::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode) 
     case M_DREG:
         insn.embed(encodeRegNumber(op.reg) << 6);
         break;
-    case M_DST2:
+    case M_DST4:
         insn.embedPostfix(0x4000);
         /* Fall-through */
+    case M_DST0:
     case M_SRC:
     case M_SRC2:
     case M_DST:
@@ -164,7 +164,7 @@ void AsmTms9900::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode) 
         }
         insn.embed((val16 & 0xF) << 4);
         break;
-    case M_CNT2:
+    case M_CNT4:
         insn.embedPostfix(0x4000);
         if (op.mode == M_REG) {
             if (op.reg != REG_R0)
@@ -174,7 +174,7 @@ void AsmTms9900::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode) 
         if (op.val.isZero())
             insn.setErrorIf(op, OPERAND_NOT_ALLOWED);
         /* Fall-through */
-    case M_BIT2:
+    case M_BIT0:
         if (op.val.overflow(15))
             insn.setErrorIf(op, OVERFLOW_RANGE);
         insn.embedPostfix((val16 & 0xF) << 6);

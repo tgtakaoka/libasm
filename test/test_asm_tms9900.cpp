@@ -24,12 +24,16 @@ using namespace libasm::test;
 AsmTms9900 as9900;
 Assembler &assembler(as9900);
 
-static bool is99105() {
-    return strcmp_P("99105", assembler.config().cpu_P()) == 0;
+static bool is99110() {
+    return strcmp_P("99110", assembler.config().cpu_P()) == 0;
+}
+
+static bool is991xx() {
+    return strcmp_P("99105", assembler.config().cpu_P()) == 0 || is99110();
 }
 
 static bool is9995() {
-    return strcmp_P("9995", assembler.config().cpu_P()) == 0 || is99105();
+    return strcmp_P("9995", assembler.config().cpu_P()) == 0 || is991xx();
 }
 
 static bool is9980() {
@@ -79,8 +83,8 @@ static void test_inh() {
     TEST("CKOF", 0x03C0);
     TEST("LREX", 0x03E0);
 
-    if (is99105()) {
-        // TMS99105
+    if (is991xx()) {
+        // TMS99105, TMS99110
         TEST("RTWP 0", 0x0380);
         TEST("RTWP 1", 0x0381);
         TEST("RTWP 2", 0x0382);
@@ -89,6 +93,21 @@ static void test_inh() {
     } else {
         COMM("RTWP 0", "0", 0x0380);
         COMM("RTWP 1", "1", 0x0380);
+    }
+    if (is99110()) {
+        TEST("LDS",  0x0780);
+        TEST("LDD",  0x07C0);
+        TEST("CRI",  0x0C00);
+        TEST("NEGR", 0x0C02);
+        TEST("CRE",  0x0C04);
+        TEST("CER",  0x0C06);
+    } else {
+        ERUI("LDS");
+        ERUI("LDD");
+        ERUI("CRI");
+        ERUI("NEGR");
+        ERUI("CRE");
+        ERUI("CER");
     }
 }
 
@@ -108,7 +127,7 @@ static void test_reg() {
     TEST("STST R15", 0x02CF);
 
     if (is9995()) {
-        // TMS9995
+        // TMS9995, TMS99105, TMS99110
         TEST("LST R0", 0x0080);
         TEST("LWP R1", 0x0091);
     } else {
@@ -132,8 +151,8 @@ static void test_reg_imm() {
 
     TEST("LI R2,sym1234", 0x0202, 0x1234);
 
-    if (is99105()) {
-        // TMS99105
+    if (is991xx()) {
+        // TMS99105, TMS99110
         TEST("BLSK R3,>4567",   0x00B3, 0x4567);
         TEST("BLSK R3,sym1234", 0x00B3, 0x1234);
     } else {
@@ -176,7 +195,7 @@ static void test_src() {
     ERRT("ABS  @8(R0)", REGISTER_NOT_ALLOWED, "R0)");
 
     if (is9995()) {
-        // TMS9995
+        // TMS9995, TMS99105, TMS99110
         TEST("DIVS R2",         0x0182);
         TEST("DIVS *R3",        0x0193);
         TEST("DIVS @>1234",     0x01A0, 0x1234);
@@ -190,8 +209,8 @@ static void test_src() {
         ERUI("MPYS R0");
     }
 
-    if (is99105()) {
-        // TMS99105
+    if (is991xx()) {
+        // TMS99105, TMS99110
         TEST("TMB  @>0123(R15),7", 0x0C09, 0x01EF, 0x0123);
         TEST("TCMB R0,0",          0x0C0A, 0x0000);
         TEST("TSMB *R2,15",        0x0C0B, 0x03D2);
@@ -208,6 +227,24 @@ static void test_src() {
         ERUI("EVAD R5");
     }
 
+    if (is99110()) {
+        TEST("AR  R2",         0x0C42);
+        TEST("CIR *R3",        0x0C93);
+        TEST("SR  @>1234",     0x0CE0, 0x1234);
+        TEST("MR  @>1234(R5)", 0x0D25, 0x1234);
+        TEST("DR  *R6+",       0x0D76);
+        TEST("LR  R2",         0x0D82);
+        TEST("STR *R3",        0x0DD3);
+    } else {
+        ERUI("AR  R2");
+        ERUI("CIR *R3");
+        ERUI("SR  @>1234");
+        ERUI("MR  @>1234(R5)");
+        ERUI("DR  *R6+");
+        ERUI("LR  R2");
+        ERUI("STR *R3");
+    }
+
     symtab.intern(-2, "neg2");
     symtab.intern(0x1000, "sym1000");
     symtab.intern(0x1234, "sym1234");
@@ -217,13 +254,13 @@ static void test_src() {
     TEST("DEC  @neg2(R7)",    0x0627, 0xFFFE);
 
     if (is9995()) {
-        // TMS9995
+        // TMS9995, TMS99105, TMS99110
         TEST("DIVS @sym1234",     0x01A0, 0x1234);
         TEST("DIVS @sym1000(R4)", 0x01A4, 0x1000);
     }
 
-    if (is99105()) {
-        // TMS99105
+    if (is991xx()) {
+        // TMS99105, TMS99110
         TEST("BIND @sym1000(R1)", 0x0161, 0x1000);
     }
 }
@@ -255,8 +292,8 @@ static void test_cnt_src() {
     TEST("STCR @offset2(R4),16",    0x3424, 0x0002);
     TEST("STCR @>1000(R4),size7",   0x35E4, 0x1000);
 
-    if (is99105()) {
-        // TMS99105
+    if (is991xx()) {
+        // TMS99105, TMS99110
         TEST("SRAM @offset2(R4),15", 0x001C, 0x43E4, 0x0002);
         TEST("SLAM R11,R0",          0x001D, 0x400B);
         TEST("SLAM *R13+,1",         0x001D, 0x407D);
@@ -317,8 +354,8 @@ static void test_dst_src() {
     TEST("SOC  @sym1234,@sym2345(R11)", 0xEAE0, 0x1234, 0x2345);
     TEST("SOCB @sym1234(R10),@sym2345", 0xF82A, 0x1234, 0x2345);
 
-    if (is99105()) {
-        // TMS99105
+    if (is991xx()) {
+        // TMS99105, TMS99110
         TEST("SM @sym2345(R10),@sym4000(R11)", 0x0029, 0x4AEA, 0x2345, 0x4000);
         TEST("SM @sym1234,@sym4000",           0x0029, 0x4820, 0x1234, 0x4000);
         TEST("SM R10,@sym4000(R11)",           0x0029, 0x4ACA, 0x4000);
@@ -328,6 +365,18 @@ static void test_dst_src() {
     } else {
         ERUI("SM R10,@sym4000(R11)");
         ERUI("AM @zero(R10),@1(R11)");
+    }
+
+    if (is99110()) {
+        TEST("CR @>1234(R10), @>5678(R11)", 0x0301, 0x0AEA, 0x1234, 0x5678);
+        TEST("CR @>1234, @>5678",           0x0301, 0x0820, 0x1234, 0x5678);
+        TEST("CR R10, @>4000(R11)",         0x0301, 0x0ACA, 0x4000);
+        TEST("MM @0(R10), @1(R11)",    0x0302, 0x0AEA, 0x0000, 0x0001);
+        TEST("MM @>1234, @>5678(R11)", 0x0302, 0x0AE0, 0x1234, 0x5678);
+        TEST("MM @>1234(R10), @>5678", 0x0302, 0x082A, 0x1234, 0x5678);
+    } else {
+        ERUI("CR R10, @>4000(R11)");
+        ERUI("MM @0(R10), @1(R11)");
     }
 }
 

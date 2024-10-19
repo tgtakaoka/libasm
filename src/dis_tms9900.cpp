@@ -37,15 +37,19 @@ Error DisTms9900::checkPostWord(DisInsn &insn) const {
     const auto post = insn.postfix();
     const auto src = (post >> 4 & 3);
     switch (insn.dst()) {
-    case M_DST2:
+    case M_DST0:
+        if ((post & 0xF000) != 0x0000)
+            insn.setErrorIf(UNKNOWN_POSTBYTE);
+        break;
+    case M_DST4:
         if ((post & 0xF000) != 0x4000)
             insn.setErrorIf(UNKNOWN_POSTBYTE);
         break;
-    case M_CNT2:
+    case M_CNT4:
         if ((post & 0xFC00) != 0x4000)
             insn.setErrorIf(UNKNOWN_POSTBYTE);
         break;
-    case M_BIT2:
+    case M_BIT0:
         // no auto increment mode.
         if ((post & 0xFC00) != 0x0000 || src == 3)
             insn.setErrorIf(UNKNOWN_POSTBYTE);
@@ -98,21 +102,22 @@ void DisTms9900::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) con
     case M_DREG:
         outRegName(out, opc >> 6);
         break;
-    case M_SRC2:
     case M_SRC:
+    case M_SRC2:
         val8 = (mode == M_SRC) ? opc : post;
         decodeModeReg(insn, out, val8);
         break;
-    case M_DST2:
     case M_DST:
+    case M_DST0:
+    case M_DST4:
         val8 = ((mode == M_DST) ? opc : post) >> 6;
         decodeModeReg(insn, out, val8);
         break;
-    case M_CNT2:
+    case M_CNT4:
     case M_XOP:
     case M_CNT:
-        val8 = (((mode == M_CNT2) ? post : opc) >> 6) & 0xF;
-        if (mode == M_CNT2 && val8 == 0) {
+        val8 = (((mode == M_CNT4) ? post : opc) >> 6) & 0xF;
+        if (mode == M_CNT4 && val8 == 0) {
             outRegName(out, REG_R0);
             break;
         }
@@ -120,7 +125,7 @@ void DisTms9900::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) con
             val8 = 16;
         outDec(out, val8, 5);
         break;
-    case M_BIT2:
+    case M_BIT0:
         val8 = (post >> 6) & 0xF;
         outDec(out, val8, 4);
         break;
