@@ -27,6 +27,7 @@ enum CpuType : uint8_t {
     TMS9980,
     TMS9995,
     TMS99105,
+    TMS99110,
 };
 
 struct Config : ConfigImpl<CpuType, ADDRESS_16BIT, ADDRESS_BYTE, OPCODE_16BIT, ENDIAN_BIG, 8, 4> {
