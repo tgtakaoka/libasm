@@ -25,24 +25,6 @@ using namespace libasm::text::mc68000;
 namespace libasm {
 namespace mc68000 {
 
-Config::opcode_t Entry::Flags::postMask(OprPos pos) {
-    static constexpr Config::opcode_t BITS[] PROGMEM = {
-            0x0000,  // OP_10 = 0,  // ____|___|___|mmm|rrr
-            0x0000,  // OP_23 = 1,  // ____|rrr|mmm|___|___
-            0x0000,  // OP__0 = 2,  // ____|___|___|___|rrr
-            0x0000,  // OP__3 = 3,  // ____|rrr|___|___|___
-            0x0000,  // OP___ = 4,  // ____|___|___|___|___
-            0x1C00,  // EX_RX = 5,  // ___|xxx|___|_______ : format or source register
-            0x0380,  // EX_RY = 6,  // ___|___|yyy|_______ : destination register
-            0x0387,  // EX_SC = 7,  // ___|___|sss|____ccc : FPSINCOS
-            0x00FF,  // EX_SL = 8,  // ___|___|__|ffffffff : static register list
-            0x0070,  // EX_DL = 9,  // ___|___|___|rrr____ : dynamic register list/k-factor
-            0x007F,  // EX_SK = 10, // ___|___|___|kkkkkkk : static k-factor
-            0x0070,  // EX_DK = 11, // ___|___|___|rrr____ : dynamic register list/k-factor
-    };
-    return pgm_read_word(&BITS[pos]);
-}
-
 #define E2(_opc, _name, _isize, _src, _dst, _srcp, _dstp, _osize) \
     { _opc, Entry::Flags::create(_src, _dst, _srcp, _dstp, _osize, _isize), _name }
 #define E1(_opc, _name, _isize, _src, _srcp, _osize) \
@@ -475,6 +457,30 @@ static constexpr uint8_t MC68000_INDEX[] PROGMEM = {
      60,  // TEXT_TRAPV
      49,  // TEXT_TST
      52,  // TEXT_UNLK
+};
+
+static constexpr Entry MC68010_TABLE[] PROGMEM = {
+    E1(0047164, TEXT_RTD,   ISZ_NONE, M_IMDAT, OP___, SZ_WORD),
+    P2(0047172, TEXT_MOVEC, ISZ_NONE, M_CREG,  M_DREG,  EX_RC, EX_RR, SZ_LONG, 0x0000),
+    P2(0047172, TEXT_MOVEC, ISZ_NONE, M_CREG,  M_AREG,  EX_RC, EX_RR, SZ_LONG, 0x8000),
+    P2(0047173, TEXT_MOVEC, ISZ_NONE, M_DREG,  M_CREG,  EX_RR, EX_RC, SZ_LONG, 0x0000),
+    P2(0047173, TEXT_MOVEC, ISZ_NONE, M_AREG,  M_CREG,  EX_RR, EX_RC, SZ_LONG, 0x8000),
+    P2(0007000, TEXT_MOVES, ISZ_DATA, M_WMEM,  M_DREG,  OP_10, EX_RR, SZ_DATA, 0x0000),
+    P2(0007000, TEXT_MOVES, ISZ_DATA, M_WMEM,  M_AREG,  OP_10, EX_RR, SZ_DATA, 0x8000),
+    P2(0007000, TEXT_MOVES, ISZ_DATA, M_DREG,  M_WMEM,  EX_RR, OP_10, SZ_DATA, 0x0800),
+    P2(0007000, TEXT_MOVES, ISZ_DATA, M_AREG,  M_WMEM,  EX_RR, OP_10, SZ_DATA, 0x8800),
+};
+
+static constexpr uint8_t MC68010_INDEX[] PROGMEM = {
+      1,  // TEXT_MOVEC
+      2,  // TEXT_MOVEC
+      3,  // TEXT_MOVEC
+      4,  // TEXT_MOVEC
+      5,  // TEXT_MOVES
+      6,  // TEXT_MOVES
+      7,  // TEXT_MOVES
+      8,  // TEXT_MOVES
+      0,  // TEXT_RTD
 };
 
 #if !defined(LIBASM_MC68000_NOFPU)
@@ -1231,6 +1237,11 @@ static constexpr EntryPage MC68000_PAGES[] PROGMEM = {
         {ARRAY_RANGE(MC68000_TABLE), ARRAY_RANGE(MC68000_INDEX)},
 };
 
+static constexpr EntryPage MC68010_PAGES[] PROGMEM = {
+        {ARRAY_RANGE(MC68000_TABLE), ARRAY_RANGE(MC68000_INDEX)},
+        {ARRAY_RANGE(MC68010_TABLE), ARRAY_RANGE(MC68010_INDEX)},
+};
+
 #if !defined(LIBASM_MC68000_NOFPU)
 static constexpr EntryPage MC68881_PAGES[] PROGMEM = {
         {ARRAY_RANGE(MC68881_ARITH), ARRAY_RANGE(MC68881_ARITH_INDEX)},
@@ -1241,11 +1252,11 @@ static constexpr EntryPage MC68881_PAGES[] PROGMEM = {
 
 static constexpr Cpu CPU_TABLE[] PROGMEM = {
         {MC68000, TEXT_CPU_68000, ARRAY_RANGE(MC68000_PAGES)},
+        {MC68010, TEXT_CPU_68010, ARRAY_RANGE(MC68010_PAGES)},
 };
 
 static const Cpu *cpu(CpuType cpuType) {
-    UNUSED(cpuType);
-    return &CPU_TABLE[0];
+    return Cpu::search(cpuType, ARRAY_RANGE(CPU_TABLE));
 }
 
 #define EMPTY_RANGE(a) ARRAY_BEGIN(a), ARRAY_BEGIN(a)
@@ -1261,9 +1272,7 @@ static const Fpu *fpu(FpuType fpuType) {
 }
 #endif
 
-static bool acceptAll(AsmInsn &insn, const Entry *entry) {
-    UNUSED(insn);
-    UNUSED(entry);
+static bool acceptAll(AsmInsn &, const Entry *) {
     return true;
 }
 
@@ -1308,6 +1317,8 @@ static bool acceptMode(AddrMode opr, AddrMode table, OprSize size) {
         return table == M_FPMLT;
     if (opr == M_FPCR || opr == M_FPSR || opr == M_FPIAR)
         return table == M_FCMLT;
+    if (opr == M_USP)
+        return table == M_CREG;
     return false;
 }
 
@@ -1351,54 +1362,6 @@ Error TableMc68000::searchName(const CpuSpec &cpuSpec, AsmInsn &insn) const {
     }
 #endif
     return insn.getError();
-}
-
-static Config::opcode_t getInsnMask(AddrMode mode) {
-    if (mode == M_IM8 || mode == M_REL8)
-        return 0xFF;
-    if (mode == M_IMVEC)
-        return 0xF;
-    if (mode == M_IM3)
-        return 07000;
-    if (mode == M_KFACT || mode == M_KDREG)
-        return 00077;  // OP_10
-    return 0;
-}
-
-static Config::opcode_t getInsnMask(OprPos pos) {
-    static constexpr Config::opcode_t BITS[] PROGMEM = {
-            00077,  // OP_10 = 0,  // ____|___|___|mmm|rrr
-            07700,  // OP_23 = 1,  // ____|rrr|mmm|___|___
-            00007,  // OP__0 = 2,  // ____|___|___|___|rrr
-            07000,  // OP__3 = 3,  // ____|rrr|___|___|___
-            00000,  // OP___ = 4,  // ____|___|___|___|___
-            00000,  // EX_RX = 5,  // ___|xxx|___|_______ : format or source register
-            00000,  // EX_RY = 6,  // ___|___|yyy|_______ : destination register
-            00000,  // EX_SC = 7,  // ___|___|sss|____ccc : FPSINCOS
-            00000,  // EX_SL = 8,  // ___|___|__|ffffffff : static register list
-            00000,  // EX_DL = 9,  // ___|___|___|rrr____ : dynamic register list/k-factor
-            00000,  // EX_SK = 10, // ___|___|___|kkkkkkk : static k-factor
-            00000,  // EX_DK = 11, // ___|___|___|rrr____ : dynamic register list/k-factor
-    };
-    return pgm_read_word(&BITS[pos]);
-}
-
-static Config::opcode_t getInsnMask(OprSize size) {
-    switch (size) {
-    case SZ_DATA:
-        return (3 << 6);
-    case SZ_ADDR:
-        return (1 << 6);
-    case SZ_ADR8:
-        return (1 << 8);
-    default:
-        return 0;
-    }
-}
-
-static Config::opcode_t getInsnMask(Entry::Flags flags) {
-    return getInsnMask(flags.src()) | getInsnMask(flags.dst()) | getInsnMask(flags.srcPos()) |
-           getInsnMask(flags.dstPos()) | getInsnMask(flags.oprSize());
 }
 
 static bool invalidModeReg(Config::opcode_t opc, AddrMode addrMode, OprPos pos, OprSize size) {
@@ -1461,20 +1424,20 @@ static bool invalidSize(Config::opcode_t opc, OprSize size) {
     return size == SZ_DATA && ((opc >> 6) & 3) == 3;
 }
 
-static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page) {
-    UNUSED(page);
+static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *) {
     auto opc = insn.opCode();
     const auto flags = entry->readFlags();
+    opc &= ~flags.insnMask();
+    if ((opc & 0xF000) == 0xF000)
+        opc &= ~07000;  // clear co-processor ID
+    if (opc != entry->readOpCode())
+        return false;
+    opc = insn.opCode();
     if (invalidModeReg(opc, flags.src(), flags.srcPos(), flags.oprSize()))
         return false;
     if (invalidModeReg(opc, flags.dst(), flags.dstPos(), flags.oprSize()))
         return false;
     if (invalidSize(opc, flags.oprSize()))
-        return false;
-    opc &= ~getInsnMask(flags);
-    if ((opc & 0xF000) == 0xF000)
-        opc &= ~07000;  // clear co-processor ID
-    if (opc != entry->readOpCode())
         return false;
     if (flags.hasPostVal()) {
         insn.readPostfix();
@@ -1507,7 +1470,7 @@ Error TableMc68000::searchOpCode(const CpuSpec &cpuSpec, DisInsn &insn, StrBuffe
 }
 
 const /*PROGMEM*/ char *TableMc68000::listCpu_P() const {
-    return TEXT_CPU_MC68000;
+    return TEXT_MC68000_LIST;
 }
 
 const /*PROGMEM*/ char *TableMc68000::cpuName_P(CpuType cpuType) const {
@@ -1516,8 +1479,9 @@ const /*PROGMEM*/ char *TableMc68000::cpuName_P(CpuType cpuType) const {
 
 Error TableMc68000::searchCpuName(StrScanner &name, CpuType &cpuType) const {
     name.iexpectText_P(TEXT_CPU_MC68000, 2);
-    if (name.iequals_P(TEXT_CPU_68000)) {
-        cpuType = MC68000;
+    auto t = Cpu::search(name, ARRAY_RANGE(CPU_TABLE));
+    if (t) {
+        cpuType = t->readCpuType();
         return OK;
     }
     return UNSUPPORTED_CPU;

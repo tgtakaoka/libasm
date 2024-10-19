@@ -18,12 +18,13 @@
 #define __LIBASM_REG_MC68000_H__
 
 #include <stdint.h>
-
 #include "entry_mc68000.h"
-#include "str_buffer.h"
-#include "str_scanner.h"
 
 namespace libasm {
+
+struct StrBuffer;
+struct StrScanner;
+
 namespace mc68000 {
 
 enum RegName : int8_t {
@@ -59,11 +60,15 @@ enum RegName : int8_t {
     REG_PC = 0 + 24,
     REG_CCR = 1 + 24,
     REG_SR = 2 + 24,
-    REG_USP = 3 + 24,
     // Floating point status/control registers
     REG_FPCR = 4 + 24,
     REG_FPSR = 5 + 24,
     REG_FPIAR = 6 + 24,
+    // Control register
+    REG_SFC = 32 + 0,
+    REG_DFC = 32 + 1,
+    REG_USP = 32 + 2,
+    REG_VBR = 32 + 3,
 };
 
 struct EaMc68000 {
@@ -93,9 +98,11 @@ StrBuffer &outRegName(StrBuffer &out, RegName name);
 bool isDataReg(RegName name);
 bool isAddrReg(RegName name);
 bool isGeneralReg(RegName name);
+bool isControlReg(RegName name);
 bool isFloatReg(RegName name);
 bool isFloatControlReg(RegName name);
 Config::opcode_t encodeGeneralRegNo(RegName name);
+Config::opcode_t encodeControlRegNo(RegName name);
 Config::opcode_t encodeFloatRegNo(RegName name);
 uint8_t encodeGeneralRegPos(RegName name);
 uint8_t encodeFloatRegPos(RegName name);
@@ -103,6 +110,7 @@ uint8_t encodeFloatControlRegPos(RegName name);
 RegName decodeGeneralReg(uint8_t regno);
 RegName decodeDataReg(uint8_t regno);
 RegName decodeAddrReg(uint8_t regno);
+RegName decodeControlReg(Config::opcode_t regno);
 
 InsnSize parseSize(StrScanner &scan);
 uint8_t sizeNameLen(OprSize size);

@@ -29,10 +29,10 @@ help:
 # target which has ".inc" suffix for output.
 INC_targets  = \
     w65c816 tlcs90 i8080_z80syn i8085_z80syn v30emu_z80syn i8086 i80186 v30 \
-    mc68000 m68k z8001 z8002 z8k1 z8k2 ns32000 ns32k mn1610 mn1613 tms7000 \
-    tms9980 j11 t11
+    mc68000 mc68010 m68k m68k10 z8001 z8002 z8k1 z8k2 ns32000 ns32k \
+    mn1610 mn1613 tms7000 tms9980 j11 t11
 # target which for GNU assembler
-GAS_targets  = m68k z8k1 z8k2 ns32k
+GAS_targets  = m68k m68k10 z8k1 z8k2 ns32k
 
 # suffix of generating file
 define out-inc # target

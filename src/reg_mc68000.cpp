@@ -15,7 +15,6 @@
  */
 
 #include "reg_mc68000.h"
-
 #include "reg_base.h"
 #include "text_mc68000.h"
 
@@ -47,6 +46,7 @@ constexpr NameEntry REG_ENTRIES[] PROGMEM = {
     { TEXT_REG_D5,    REG_D5  },
     { TEXT_REG_D6,    REG_D6  },
     { TEXT_REG_D7,    REG_D7  },
+    { TEXT_REG_DFC,   REG_DFC },
     { TEXT_REG_FP0,   REG_FP0 },
     { TEXT_REG_FP1,   REG_FP1 },
     { TEXT_REG_FP2,   REG_FP2 },
@@ -59,8 +59,10 @@ constexpr NameEntry REG_ENTRIES[] PROGMEM = {
     { TEXT_REG_FPIAR, REG_FPIAR },
     { TEXT_REG_FPSR,  REG_FPSR },
     { TEXT_REG_PC,    REG_PC  },
+    { TEXT_REG_SFC,   REG_SFC },
     { TEXT_REG_SR,    REG_SR  },
     { TEXT_REG_USP,   REG_USP },
+    { TEXT_REG_VBR,   REG_VBR },
 };
 
 PROGMEM constexpr NameTable TABLE{ARRAY_RANGE(REG_ENTRIES)};
@@ -93,6 +95,11 @@ bool isGeneralReg(RegName name) {
     return num >= REG_D0 && num <= REG_A7;
 }
 
+bool isControlReg(RegName name) {
+    const auto num = int8_t(name);
+    return num >= REG_SFC;
+}
+
 bool isFloatReg(RegName name) {
     const auto num = int8_t(name);
     return num >= REG_FP0 && num <= REG_FP7;
@@ -105,6 +112,21 @@ bool isFloatControlReg(RegName name) {
 
 Config::opcode_t encodeGeneralRegNo(RegName name) {
     return int8_t(name) & 7;
+}
+
+Config::opcode_t encodeControlRegNo(RegName name) {
+    switch (name) {
+    case REG_SFC:
+        return 0x000;
+    case REG_DFC:
+        return 0x001;
+    case REG_USP:
+        return 0x800;
+    case REG_VBR:
+        return 0x801;
+    default:
+        return 0;
+    }
 }
 
 Config::opcode_t encodeFloatRegNo(RegName name) {
@@ -133,6 +155,21 @@ RegName decodeDataReg(uint8_t regno) {
 
 RegName decodeAddrReg(uint8_t regno) {
     return RegName((regno & 7) + 8);
+}
+
+RegName decodeControlReg(Config::opcode_t regno) {
+    switch (regno & Entry::Flags::postMask(EX_RC)) {
+    case 0x000:
+        return REG_SFC;
+    case 0x001:
+        return REG_DFC;
+    case 0x800:
+        return REG_USP;
+    case 0x801:
+        return REG_VBR;
+    default:
+        return REG_UNDEF;
+    }
 }
 
 InsnSize parseSize(StrScanner &scan) {

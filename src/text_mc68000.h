@@ -24,9 +24,12 @@ namespace text {
 namespace mc68000 {
 
 // clang-format off
+extern const char TEXT_MC68000_LIST[] PROGMEM;
 extern const char TEXT_CPU_MC68000[] PROGMEM;
+extern const char TEXT_CPU_MC68010[] PROGMEM;
 extern const char TEXT_FPU_MC68881[] PROGMEM;
 extern const char TEXT_CPU_68000[]   PROGMEM;
+extern const char TEXT_CPU_68010[]   PROGMEM;
 extern const char TEXT_FPU_68881[]   PROGMEM;
 using common::TEXT_none;
 
@@ -179,6 +182,15 @@ using common::TEXT_REG_PC;
 extern const char TEXT_REG_SR[] PROGMEM;
 extern const char TEXT_REG_CCR[] PROGMEM;
 extern const char TEXT_REG_USP[] PROGMEM;
+
+// MC68010
+extern const char TEXT_MOVEC[] PROGMEM;
+extern const char TEXT_MOVES[] PROGMEM;
+extern const char TEXT_RTD[]   PROGMEM;
+
+extern const char TEXT_REG_DFC[] PROGMEM;
+extern const char TEXT_REG_SFC[] PROGMEM;
+extern const char TEXT_REG_VBR[] PROGMEM;
 
 // MC68881
 using common::TEXT_FABS;

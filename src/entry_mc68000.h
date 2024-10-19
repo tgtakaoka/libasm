@@ -70,7 +70,6 @@ enum AddrMode : uint8_t {
     M_IMDAT = 8 + 4,  // #imm: Immediate Data
 
     M_ERROR = 64,  // TODO: Remove
-    M_LABEL = 65,  // label
 
     // for assembler operand parsing
     M_NONE = 16,   // no operand
@@ -94,35 +93,41 @@ enum AddrMode : uint8_t {
     M_IM8 = 34,    // 8-bit Immediate
     M_IMVEC = 35,  // 3-bit Trap Vector
     M_IMDSP = 36,  // 16-bit Signed Displacement
+    M_LABEL = 37,  // label
+
+    // MC68010
+    M_CREG = 38,  // Control register: SFC, DFC, USP, VBR
 
     // MC68881
-    M_FPREG = 37,  // FPn: Floatng point data register
-    M_FPMLT = 38,  // FMOVEM.X register list; FPn
-    M_FCMLT = 39,  // FMOVEM.L register list; FPCR/FPSR/FPIAR
-    M_FSICO = 40,  // FPSINCOS FPc:FPs
-    M_KDREG = 41,  // <ea>{Dn}
-    M_KFACT = 42,  // <ea>{#k}
-    M_FPCR = 43,   // FPCR register
-    M_FPSR = 44,   // FPSR register
-    M_FPIAR = 45,  // FPIAR register
-    M_IMROM = 46,  // MC68881 ROM constant
-    M_REL32 = 47,  // 32-bit Relative; 1111|ccc|01s|___|___: s=0 16bit, s=1 32bit
-    M_IMFLT = 48,  // Floating point immediate
+    M_FPREG = 39,  // FPn: Floatng point data register
+    M_FPMLT = 40,  // FMOVEM.X register list; FPn
+    M_FCMLT = 41,  // FMOVEM.L register list; FPCR/FPSR/FPIAR
+    M_FSICO = 42,  // FPSINCOS FPc:FPs
+    M_KDREG = 43,  // <ea>{Dn}
+    M_KFACT = 44,  // <ea>{#k}
+    M_FPCR = 45,   // FPCR register
+    M_FPSR = 46,   // FPSR register
+    M_FPIAR = 47,  // FPIAR register
+    M_IMROM = 48,  // MC68881 ROM constant
+    M_REL32 = 49,  // 32-bit Relative; 1111|ccc|01s|___|___: s=0 16bit, s=1 32bit
+    M_IMFLT = 50,  // Floating point immediate
 };
 
 enum OprPos : uint8_t {
-    OP_10 = 0,   // __LIBASM___|___|___|mmm|rrr
-    OP_23 = 1,   // __LIBASM___|rrr|mmm|___|___
-    OP__0 = 2,   // __LIBASM___|___|___|___|rrr
-    OP__3 = 3,   // __LIBASM___|rrr|___|___|___
-    OP___ = 4,   // __LIBASM___|___|___|___|___
-    EX_RX = 5,   // __LIBASM__|xxx|___|_______ : format or source register
-    EX_RY = 6,   // __LIBASM__|___|yyy|_______ : destination register
-    EX_SC = 7,   // __LIBASM__|___|sss|____ccc : FPSINCOS
-    EX_SL = 8,   // __LIBASM__|___|__|ffffffff : static register list
-    EX_DL = 9,   // __LIBASM__|___|___|rrr____ : dynamic register list
-    EX_SK = 10,  // __LIBASM__|___|___|kkkkkkk : static k-factor
-    EX_DK = 11,  // __LIBASM__|___|___|rrr____ : dynamic k-factor
+    OP_10 = 0,   // __|___|___|mmm|rrr
+    OP_23 = 1,   // __|rrr|mmm|___|___
+    OP__0 = 2,   // __|___|___|___|rrr
+    OP__3 = 3,   // __|rrr|___|___|___
+    OP___ = 4,   // __|___|___|___|___
+    EX_RX = 5,   // __|xxx|___|_______ : format or source register
+    EX_RY = 6,   // __|___|yyy|_______ : destination register
+    EX_SC = 7,   // __|___|sss|____ccc : FPSINCOS
+    EX_SL = 8,   // __|___|__|ffffffff : static register list
+    EX_DL = 9,   // __|___|___|rrr____ : dynamic register list
+    EX_SK = 10,  // __|___|___|kkkkkkk : static k-factor
+    EX_DK = 11,  // __|___|___|rrr____ : dynamic k-factor
+    EX_RR = 12,  // a|rrr|____________ : Dn/An
+    EX_RC = 13,  // _____|cccccccccccc : Control register
 };
 
 struct Entry final : entry::Base<Config::opcode_t> {
@@ -159,8 +164,76 @@ struct Entry final : entry::Base<Config::opcode_t> {
             _dst = static_cast<uint8_t>(dst);
         }
         void setInsnSize(InsnSize size) { _attr = _size(oprSize(), size); }
+        Config::opcode_t insnMask() const {
+            return insnMask(dst()) | insnMask(src()) | insnMask(dstPos()) | insnMask(srcPos()) |
+                   insnMask(oprSize());
+        }
         Config::opcode_t postMask() const { return postMask(dstPos()) | postMask(srcPos()); }
-        static Config::opcode_t postMask(OprPos pos);
+
+        static Config::opcode_t insnMask(AddrMode mode) {
+            if (mode == M_IM8 || mode == M_REL8)
+                return 0xFF;
+            if (mode == M_IMVEC)
+                return 0xF;
+            if (mode == M_IM3)
+                return 07000;
+            if (mode == M_KFACT || mode == M_KDREG)
+                return 00077;  // OP_10
+            return 0;
+        }
+
+        static Config::opcode_t insnMask(OprSize size) {
+            switch (size) {
+            case SZ_DATA:
+                return (3 << 6);
+            case SZ_ADDR:
+                return (1 << 6);
+            case SZ_ADR8:
+                return (1 << 8);
+            default:
+                return 0;
+            }
+        }
+
+        static Config::opcode_t insnMask(OprPos pos) {
+            static constexpr Config::opcode_t BITS[] PROGMEM = {
+                    00077,  // OP_10 = 0,  // ____|___|___|mmm|rrr
+                    07700,  // OP_23 = 1,  // ____|rrr|mmm|___|___
+                    00007,  // OP__0 = 2,  // ____|___|___|___|rrr
+                    07000,  // OP__3 = 3,  // ____|rrr|___|___|___
+                    00000,  // OP___ = 4,  // ____|___|___|___|___
+                    00000,  // EX_RX = 5,  // ___|xxx|___|_______ : format or source register
+                    00000,  // EX_RY = 6,  // ___|___|yyy|_______ : destination register
+                    00000,  // EX_SC = 7,  // ___|___|sss|____ccc : FPSINCOS
+                    00000,  // EX_SL = 8,  // ___|___|__|ffffffff : static register list
+                    00000,  // EX_DL = 9,  // ___|___|___|rrr____ : dynamic register list/k-factor
+                    00000,  // EX_SK = 10, // ___|___|___|kkkkkkk : static k-factor
+                    00000,  // EX_DK = 11, // ___|___|___|rrr____ : dynamic register list/k-factor
+                    00000,  // EX_RR = 12, // a|rrr|_____________ : Dn/An
+                    00000,  // EX_RC = 13, // _____|ccccccccccccc : Control register
+            };
+            return pgm_read_word(&BITS[pos]);
+        }
+
+        static Config::opcode_t postMask(OprPos pos) {
+            static constexpr Config::opcode_t BITS[] PROGMEM = {
+                    0x0000,  // OP_10 = 0,  // ____|___|___|mmm|rrr
+                    0x0000,  // OP_23 = 1,  // ____|rrr|mmm|___|___
+                    0x0000,  // OP__0 = 2,  // ____|___|___|___|rrr
+                    0x0000,  // OP__3 = 3,  // ____|rrr|___|___|___
+                    0x0000,  // OP___ = 4,  // ____|___|___|___|___
+                    0x1C00,  // EX_RX = 5,  // ___|xxx|___|_______ : format or source register
+                    0x0380,  // EX_RY = 6,  // ___|___|yyy|_______ : destination register
+                    0x0387,  // EX_SC = 7,  // ___|___|sss|____ccc : FPSINCOS
+                    0x00FF,  // EX_SL = 8,  // ___|___|__|ffffffff : static register list
+                    0x0070,  // EX_DL = 9,  // ___|___|___|rrr____ : dynamic register list/k-factor
+                    0x007F,  // EX_SK = 10, // ___|___|___|kkkkkkk : static k-factor
+                    0x0070,  // EX_DK = 11, // ___|___|___|rrr____ : dynamic register list/k-factor
+                    0x7000,  // EX_RR = 12, // a|rrr|_____________ : Dn/An
+                    0x0FFF,  // EX_RC = 13, // _____|ccccccccccccc : Control register
+            };
+            return pgm_read_word(&BITS[pos]);
+        }
 
     private:
         static constexpr uint8_t _pos(OprPos src, OprPos dst) {
