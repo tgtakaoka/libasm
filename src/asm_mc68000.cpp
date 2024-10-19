@@ -110,7 +110,7 @@ int8_t modePos(OprPos pos) {
     // clang-format off
     static constexpr int8_t BITNO[] PROGMEM = {
         3, 6, -1, -1, -1,
-        -1, -1, -1, -1, -1, -1, -1,
+        -1, -1, -1, -1, -1, -1, -1, -1, -1,
     };
     // clang-format on
     return static_cast<int8_t>(pgm_read_byte(&BITNO[pos]));
@@ -120,7 +120,7 @@ int8_t regPos(OprPos pos) {
     // clang-format off
     static constexpr int8_t BITNO[] PROGMEM = {
         0, 9, 0, 9, -1,
-        -1, -1, -1, -1, -1, -1, -1,
+        -1, -1, -1, -1, -1, -1, -1, -1, -1,
     };
     // clang-format on
     return static_cast<int8_t>(pgm_read_byte(&BITNO[pos]));
@@ -130,7 +130,7 @@ int8_t postPos(OprPos pos) {
     // clang-format off
     static constexpr int8_t BITNO[] PROGMEM = {
         -1, -1, -1, -1, -1,
-        10, 7, 7, 0, 4, 0, 4,
+        10, 7, 7, 0, 4, 0, 4, 12, 0,
     };
     // clang-format on
     return static_cast<int8_t>(pgm_read_byte(&BITNO[pos]));
@@ -387,10 +387,16 @@ Error AsmMc68000::encodeOperand(
             if (size == SZ_DUBL || size == SZ_XTND || size == SZ_PBCD)
                 insn.setErrorIf(op, ILLEGAL_SIZE);
         }
+        if (post_gp >= 0)
+            insn.embedPostfix(encodeGeneralRegNo(op.reg) << post_gp);
         break;
     case M_AREG:
-        if (size == SZ_BYTE)
+        if (post_gp >= 0) {
+            // MOVES.B An is OK
+            insn.embedPostfix(encodeGeneralRegNo(op.reg) << post_gp);
+        } else if (size == SZ_BYTE) {
             insn.setErrorIf(op, OPERAND_NOT_ALLOWED);
+        }
         break;
     case M_INDX:
         encodeBriefExtension(insn, op, static_cast<Config::ptrdiff_t>(val32));
@@ -487,6 +493,11 @@ Error AsmMc68000::encodeOperand(
         /* Fall-through */
     case M_FCMLT:
         encodeFloatControlList(insn, op);
+        break;
+    case M_USP:
+    case M_CREG:
+        if (post_gp == 0)
+            insn.embedPostfix(encodeControlRegNo(op.reg));
         break;
     default:
         break;
@@ -791,6 +802,8 @@ Error AsmMc68000::parseOperand(StrScanner &scan, Operand &op) const {
             op.mode = M_FPSR;
         } else if (op.reg == REG_FPIAR) {
             op.mode = M_FPIAR;
+        } else if (isControlReg(op.reg)) {
+            op.mode = M_CREG;
         } else {
             return op.setError(p, REGISTER_NOT_ALLOWED);
         }

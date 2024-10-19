@@ -24,6 +24,10 @@ using namespace libasm::test;
 DisMc68000 dis68000;
 Disassembler &disassembler(dis68000);
 
+static bool mc68010() {
+    return strcmp_P("68010", disassembler.config().cpu_P()) == 0;
+}
+
 #if defined(LIBASM_DIS_NOFLOAT)
 #define TFLT(insn, opr, hex, ...) ERRT(insn, hex, FLOAT_NOT_SUPPORTED, hex, __VA_ARGS__)
 #define EFLT(insn, opr, error, at, hex, ...) ERRT(insn, hex, FLOAT_NOT_SUPPORTED, hex, __VA_ARGS__)
@@ -48,6 +52,12 @@ void test_cpu() {
 
     EQUALS("cpu MC68000", true,    disassembler.setCpu("MC68000"));
     EQUALS_P("cpu MC68000", "68000", disassembler.config().cpu_P());
+
+    EQUALS("cpu 68010", true,    disassembler.setCpu("68010"));
+    EQUALS_P("cpu 68010", "68010", disassembler.config().cpu_P());
+
+    EQUALS("cpu MC68010", true,    disassembler.setCpu("MC68010"));
+    EQUALS_P("cpu MC68010", "68010", disassembler.config().cpu_P());
 }
 
 static void test_data_move() {
@@ -478,6 +488,86 @@ static void test_data_move() {
     // MOVEP (d16,An),Dn: 000|Dn|Sz|1|An, SZ:W=4/L=5
     TEST("MOVEP.W", "($1234,A2), D7", 0007412, 0x1234);
     TEST("MOVEP.L", "($1234,A2), D7", 0007512, 0x1234);
+
+    if (mc68010()) {
+        UNKN(/* MOVES.B D0, */              007000);
+        UNKN(/* MOVES.B A1, */              007011);
+        TEST("MOVES.B", "(A2), D1",         007022, 0x1000);
+        TEST("MOVES.B", "(A3)+, A2",        007033, 0xA000);
+        TEST("MOVES.B", "-(A4), D3",        007044, 0x3000);
+        TEST("MOVES.B", "($1234,A5), A4",   007055, 0xC000, 0x1234);
+        TEST("MOVES.B", "(18,A6,D3.W), D5", 007066, 0x5000, 0x3012);
+        TEST("MOVES.B", "($001234).W, A6",  007070, 0xE000, 0x1234);
+        TEST("MOVES.B", "($123456).L, D7",  007071, 0x7000, 0x0012, 0x3456);
+        UNKN(/* MOVES.B (d16,PC), */        007072);
+        UNKN(/* MOVES.B (d8,PC,Xn), */      007073);
+        UNKN(/* MOVES.B #nnn, */            007074);
+        UNKN(/* MOVES.W D0, */              007100);
+        UNKN(/* MOVES.W A1, */              007111);
+        TEST("MOVES.W", "(A2), D1",         007122, 0x1000);
+        TEST("MOVES.W", "(A3)+, A2",        007133, 0xA000);
+        TEST("MOVES.W", "-(A4), D3",        007144, 0x3000);
+        TEST("MOVES.W", "($1234,A5), A4",   007155, 0xC000, 0x1234);
+        TEST("MOVES.W", "(18,A6,D3.W), D5", 007166, 0x5000, 0x3012);
+        TEST("MOVES.W", "($001234).W, A6",  007170, 0xE000, 0x1234);
+        TEST("MOVES.W", "($123456).L, D7",  007171, 0x7000, 0x0012, 0x3456);
+        UNKN(/* MOVES.W (d16,PC), */        007172);
+        UNKN(/* MOVES.W (d8,PC,Xn), */      007173);
+        UNKN(/* MOVES.W #nnn, */            007174);
+        UNKN(/* MOVES.L D0, */              007200);
+        UNKN(/* MOVES.L A1, */              007211);
+        TEST("MOVES.L", "(A2), D1",         007222, 0x1000);
+        TEST("MOVES.L", "(A3)+, A2",        007233, 0xA000);
+        TEST("MOVES.L", "-(A4), D3",        007244, 0x3000);
+        TEST("MOVES.L", "($1234,A5), A4",   007255, 0xC000, 0x1234);
+        TEST("MOVES.L", "(18,A6,D3.W), D5", 007266, 0x5000, 0x3012);
+        TEST("MOVES.L", "($001234).W, A6",  007270, 0xE000, 0x1234);
+        TEST("MOVES.L", "($123456).L, D7",  007271, 0x7000, 0x0012, 0x3456);
+        UNKN(/* MOVES.L (d16,PC), */        007272);
+        UNKN(/* MOVES.L (d8,PC,Xn), */      007273);
+        UNKN(/* MOVES.L #nnn, */            007274);
+
+        UNKN(/* MOVES.B , D0 */             007000);
+        UNKN(/* MOVES.B , A1 */             007011);
+        TEST("MOVES.B", "D1, (A2)",         007022, 0x1800);
+        TEST("MOVES.B", "A2, (A3)+",        007033, 0xA800);
+        TEST("MOVES.B", "D3, -(A4)",        007044, 0x3800);
+        TEST("MOVES.B", "A4, ($1234,A5)",   007055, 0xC800, 0x1234);
+        TEST("MOVES.B", "D5, (18,A6,D3.W)", 007066, 0x5800, 0x3012);
+        TEST("MOVES.B", "A6, ($001234).W",  007070, 0xE800, 0x1234);
+        TEST("MOVES.B", "D7, ($123456).L",  007071, 0x7800, 0x0012, 0x3456);
+        UNKN(/* MOVES.B , (d16,PC) */       007072);
+        UNKN(/* MOVES.B , (d8,PC,Xn) */     007073);
+        UNKN(/* MOVES.B , #nnn */           007074);
+        UNKN(/* MOVES.W , D0 */             007000);
+        UNKN(/* MOVES.W , A1 */             007011);
+        TEST("MOVES.W", "D1, (A2)",         007122, 0x1800);
+        TEST("MOVES.W", "A2, (A3)+",        007133, 0xA800);
+        TEST("MOVES.W", "D3, -(A4)",        007144, 0x3800);
+        TEST("MOVES.W", "A4, ($1234,A5)",   007155, 0xC800, 0x1234);
+        TEST("MOVES.W", "D5, (18,A6,D3.W)", 007166, 0x5800, 0x3012);
+        TEST("MOVES.W", "A6, ($001234).W",  007170, 0xE800, 0x1234);
+        TEST("MOVES.W", "D7, ($123456).L",  007171, 0x7800, 0x0012, 0x3456);
+        UNKN(/* MOVES.W , (d16,PC) */       007172);
+        UNKN(/* MOVES.W , (d8,PC,Xn) */     007173);
+        UNKN(/* MOVES.W , #nnn */           007174);
+        UNKN(/* MOVES.L , D0 */             007200);
+        UNKN(/* MOVES.L , A1 */             007211);
+        TEST("MOVES.L", "D1, (A2)",         007222, 0x1800);
+        TEST("MOVES.L", "A2, (A3)+",        007233, 0xA800);
+        TEST("MOVES.L", "D3, -(A4)",        007244, 0x3800);
+        TEST("MOVES.L", "A4, ($1234,A5)",   007255, 0xC800, 0x1234);
+        TEST("MOVES.L", "D5, (18,A6,D3.W)", 007266, 0x5800, 0x3012);
+        TEST("MOVES.L", "A6, ($001234).W",  007270, 0xE800, 0x1234);
+        TEST("MOVES.L", "D7, ($123456).L",  007271, 0x7800, 0x0012, 0x3456);
+        UNKN(/* MOVES.L , (d16,PC) */       007272);
+        UNKN(/* MOVES.L , (d8,PC,Xn) */     007273);
+        UNKN(/* MOVES.L , #nnn */           007274);
+    } else {
+        UNKN(007000);
+        UNKN(007100);
+        UNKN(007200);
+    }
 
     // MOVEQ #nn,Dn: 007|Dn|000 + nn
     TEST("MOVEQ", "#0, D0",    0070000 | 0x00);
@@ -2180,15 +2270,6 @@ static void test_program() {
     TEST("JSR", "(*+18,PC,D3.L)", 0047273, 0x3810);
     UNKN(                         0047274); // #$1234
 
-    // NOP
-    TEST("NOP", "", 047161);
-
-    // RTR
-    TEST("RTR", "", 047167);
-
-    // RTS
-    TEST("RTS", "", 047165);
-
     // TST dst: 0045|Sz|M|Rn, Sz:B=0/W=1/L=2
     TEST("TST.B", "D2",           0045002);
     UNKN(                         0045012); // A2
@@ -2280,11 +2361,47 @@ static void test_system() {
     // RESET
     TEST("RESET", "", 047160);
 
-    // RTE
-    TEST("RTE", "", 047163);
+    // NOP
+    TEST("NOP", "", 047161);
 
     // STOP #nn
     TEST("STOP", "#$1234", 047162, 0x1234);
+
+    // RTE
+    TEST("RTE", "", 047163);
+
+    // RTD #nn
+    if (mc68010()) {
+        TEST("RTD", "#$1234", 047164, 0x1234);
+    } else {
+        UNKN(                 047164);
+    }
+
+    // RTS
+    TEST("RTS", "", 047165);
+
+    // TRAPV
+    TEST("TRAPV", "", 047166);
+
+    // RTR
+    TEST("RTR", "", 047167);
+
+    // MOVEC
+    if (mc68010()) {
+        TEST("MOVEC", "SFC, D1", 047172, 0x1000);
+        TEST("MOVEC", "DFC, A2", 047172, 0xA001);
+        TEST("MOVEC", "USP, D3", 047172, 0x3800);
+        TEST("MOVEC", "VBR, A4", 047172, 0xC801);
+        ERRT("MOVEC", ", A0", ILLEGAL_REGISTER, ", A0", 047172, 0x8002);
+        TEST("MOVEC", "D5, SFC", 047173, 0x5000);
+        TEST("MOVEC", "A6, DFC", 047173, 0xE001);
+        TEST("MOVEC", "D7, USP", 047173, 0x7800);
+        TEST("MOVEC", "A0, VBR", 047173, 0x8801);
+        ERRT("MOVEC", "A0, ", ILLEGAL_REGISTER, "", 047173, 0x8802);
+    } else {
+        UNKN(047172);
+        UNKN(047173);
+    }
 
     // CHK src,Dn: 004|Dn|Sz|M|Rn, Sz:W=6/L=7
     TEST("CHK.W", "D2, D7",             0047602);
@@ -2306,9 +2423,6 @@ static void test_system() {
     // TRAP #nn
     TEST("TRAP", "#0",  0047100);
     TEST("TRAP", "#15", 0047117);
-
-    // TRAPV
-    TEST("TRAPV", "", 047166);
 
     // ANDI #nn,CCR
     TEST("ANDI", "#$34, CCR", 0001074, 0x0034);

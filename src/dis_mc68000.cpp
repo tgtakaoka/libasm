@@ -493,6 +493,8 @@ uint8_t regVal(const DisInsn &insn, OprPos pos) {
     case EX_DL:
     case EX_DK:
         return (post >> 4) & 7;
+    case EX_RR:
+        return (post >> 12) & 7;
     default:
         return 0;
     }
@@ -531,6 +533,7 @@ void DisMc68000::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode, Opr
         if (size == SZ_DUBL || size == SZ_XTND || size == SZ_PBCD)
             insn.setErrorIf(out, ILLEGAL_SIZE);
     }
+    RegName reg;
     switch (mode) {
     case M_AREG:
     case M_PDEC:
@@ -648,6 +651,10 @@ void DisMc68000::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode, Opr
     case M_IMROM:
         outHex(out.letter('#'), insn.postfix() & 0x7F, 7, false);
         break;
+    case M_CREG:
+        if ((reg = decodeControlReg(insn.postfix())) == REG_UNDEF)
+            insn.setErrorIf(out, ILLEGAL_REGISTER);
+        outRegName(out, reg);
     default:
         break;
     }

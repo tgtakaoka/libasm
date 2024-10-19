@@ -18,13 +18,14 @@
 #define __LIBASM_REG_BASE_H__
 
 #include <ctype.h>
-
 #include "config_host.h"
-#include "str_buffer.h"
-#include "str_scanner.h"
 #include "table_base.h"
 
 namespace libasm {
+
+struct StrBuffer;
+struct StrScanner;
+
 namespace reg {
 
 static inline bool isIdLetter(char c) {
@@ -43,7 +44,7 @@ struct NameEntry {
     }
     int8_t name() const { return pgm_read_byte(&_name_P); }
 
-    StrBuffer &outText(StrBuffer &out) const { return out.text_P(text_P()); }
+    StrBuffer &outText(StrBuffer &out) const;
 
 private:
     const /*PROGMEM*/ char *const _text_P;

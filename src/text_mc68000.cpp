@@ -21,9 +21,12 @@ namespace text {
 namespace mc68000 {
 
 // clang-format off
+constexpr char TEXT_MC68000_LIST[] PROGMEM = "MC68000, MC68010";
 constexpr char TEXT_CPU_MC68000[] PROGMEM = "MC68000";
+constexpr char TEXT_CPU_MC68010[] PROGMEM = "MC68010";
 constexpr char TEXT_FPU_MC68881[] PROGMEM = "MC68881";
 constexpr char TEXT_CPU_68000[]   PROGMEM = "68000";
+constexpr char TEXT_CPU_68010[]   PROGMEM = "68010";
 constexpr char TEXT_FPU_68881[]   PROGMEM = "68881";
 
 // MC68000 instructions
@@ -173,6 +176,15 @@ constexpr char TEXT_REG_A7[] PROGMEM = "A7";
 constexpr char TEXT_REG_SR[] PROGMEM = "SR";
 constexpr char TEXT_REG_CCR[] PROGMEM = "CCR";
 constexpr char TEXT_REG_USP[] PROGMEM = "USP";
+
+// MC68010
+constexpr char TEXT_MOVEC[] PROGMEM = "MOVEC";
+constexpr char TEXT_MOVES[] PROGMEM = "MOVES";
+constexpr char TEXT_RTD[]   PROGMEM = "RTD";
+
+constexpr char TEXT_REG_DFC[] PROGMEM = "DFC";
+constexpr char TEXT_REG_SFC[] PROGMEM = "SFC";
+constexpr char TEXT_REG_VBR[] PROGMEM = "VBR";
 
 // MC68881
 // constexpr char TEXT_FABS[]      PROGMEM = "FABS";

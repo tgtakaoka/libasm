@@ -17,6 +17,8 @@
 #include "reg_base.h"
 #include <ctype.h>
 #include <string.h>
+#include "str_buffer.h"
+#include "str_scanner.h"
 
 namespace libasm {
 namespace reg {
@@ -49,6 +51,10 @@ bool isPrefixLetter(char c) {
 }
 
 }  // namespace
+
+StrBuffer &NameEntry::outText(StrBuffer &out) const {
+    return out.text_P(text_P());
+}
 
 const NameEntry *NameTable::searchName(int8_t name) const {
     return _table.linearSearch(name, nameMatcher, 0);
