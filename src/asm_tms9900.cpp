@@ -15,9 +15,9 @@
  */
 
 #include "asm_tms9900.h"
-
+#include "ibm_float.h"
 #include "table_tms9900.h"
-#include "text_common.h"
+#include "text_tms9900.h"
 
 namespace libasm {
 namespace tms9900 {
@@ -25,6 +25,7 @@ namespace tms9900 {
 using namespace pseudo;
 using namespace reg;
 using namespace text::common;
+using namespace text::tms9900;
 
 namespace {
 
@@ -238,6 +239,44 @@ Error AsmTms9900::parseOperand(StrScanner &scan, Operand &op) const {
     op.mode = M_IMM;
     scan = p;
     return OK;
+}
+
+Error AsmTms9900::defineFloatConstant(StrScanner &scan, AsmInsn &insn, ErrorAt &_error) const {
+    ErrorAt error;
+    do {
+        scan.skipSpaces();
+        ErrorAt exprErr;
+        auto p = scan;
+        const auto val = parseExpr(p, exprErr);
+        if (!endOfLine(p) && *p != ',') {
+            error.setErrorIf(scan, ILLEGAL_CONSTANT);
+            break;
+        }
+        if (exprErr.hasError()) {
+            error.setErrorIf(exprErr);
+            break;
+        }
+#if defined(LIBASM_ASM_NOFLOAT)
+        (void)val;
+        exprErr.setErrorIf(scan, FLOAT_NOT_SUPPORTED);
+        insn.emitUint32(0);
+#else
+        ibm_float32_t f32;
+        exprErr.setErrorIf(scan, f32.set(val.getFloat()));
+        exprErr.setErrorIf(scan, insn.emitUint32(f32.bits()));
+#endif
+        scan = p;
+        if (error.setErrorIf(exprErr) == NO_MEMORY)
+            break;
+    } while (scan.skipSpaces().expect(','));
+    return _error.setError(error);
+}
+
+Error AsmTms9900::processPseudo(StrScanner &scan, Insn &_insn) {
+    AsmInsn insn(_insn);
+    if (strcasecmp_P(insn.name(), TEXT_SINGLE) == 0)
+        return defineFloatConstant(scan, insn, _insn);
+    return Assembler::processPseudo(scan, _insn);
 }
 
 Error AsmTms9900::encodeImpl(StrScanner &scan, Insn &_insn) const {

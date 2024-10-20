@@ -26,13 +26,13 @@ void set_up() {}
 
 void tear_down() {}
 
-void test_asm_tms9900() {
+void test_asm_tms99110() {
     PREP_ASM(tms9900::AsmTms9900, IntelDirective);
 
     driver.setUpperHex(false);
 
-    ASM("tms99105",
-            R"(        cpu   tms99105
+    ASM("tms99110",
+            R"(        cpu   tms99110
 * comment line
         aorg  >9abc          set location
         am    @>4a4b(r1), @>4c4d(r1)
@@ -44,8 +44,10 @@ label1: byte  4, 5, 6, 7     8 is comment
         even                 align
 label2: ab    @label1, @label2
         jmp   label2;        loop
+        mr    @f1
+f1:     single 7.8125e-03
 )",
-            R"(          0 :                            cpu   tms99105
+            R"(          0 :                            cpu   tms99110
           0 :                    * comment line
        9abc :                            aorg  >9abc          set location
        9abc : 002a 4861 4a4b             am    @>4a4b(r1), @>4c4d(r1)
@@ -58,34 +60,38 @@ label2: ab    @label1, @label2
        9ad0 :                            even                 align
        9ad0 : b820 9ac7 9ad0     label2: ab    @label1, @label2
        9ad6 : 10fc                       jmp   label2;        loop
+       9ad8 : 0d20 9adc                  mr    @f1
+       9adc : 3f20 0000          f1:     single 7.8125e-03
 )");
 }
 
-void test_dis_tms9900() {
+void test_dis_tms99110() {
     PREP_DIS(tms9900::DisTms9900);
 
     driver.setUpperHex(false);
 
-    DIS16("tms99105", 0x9abc,
-            R"(      cpu   99105
+    DIS16("tms99110", 0x9abc,
+            R"(      cpu   99110
       org   >9abc
       am    @>4a4b(r1), @>4c4d(r1)
 * test.bin: error: Unknown instruction
 *     9ac4 : 0383
+      ar    @>9ac8
 )",
-            R"(       0 :                            cpu   99105
+            R"(       0 :                            cpu   99110
     9abc :                            org   >9abc
     9abc : 002a 4861 4a4b             am    @>4a4b(r1), @>4c4d(r1)
     9ac2 : 4c4d
 test.bin: error: Unknown instruction
     9ac4 : 0383
+    9ac6 : 0c60 9ac8                  ar    @>9ac8
 )",
-            0x002a, 0x4861, 0x4a4b, 0x4c4d, 0x0383);
+          0x002a, 0x4861, 0x4a4b, 0x4c4d, 0x0383, 0x0c60, 0x9ac8);
 }
 
 void run_tests() {
-    RUN_TEST(test_asm_tms9900);
-    RUN_TEST(test_dis_tms9900);
+    RUN_TEST(test_asm_tms99110);
+    RUN_TEST(test_dis_tms99110);
 }
 
 }  // namespace test

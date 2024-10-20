@@ -137,6 +137,8 @@ extern const char TEXT_NEGR[] PROGMEM;
 using common::TEXT_SR;
 using common::TEXT_STR;
 
+extern const char TEXT_SINGLE[] PROGMEM;
+
 // clang-format on
 }  // namespace tms9900
 }  // namespace text
