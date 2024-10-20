@@ -134,6 +134,8 @@ constexpr char TEXT_NEGR[] PROGMEM = "NEGR";
 // constexpr char TEXT_SR[]   PROGMEM = "SR";
 // constexpr char TEXT_STR[]  PROGMEM = "STR";
 
+constexpr char TEXT_SINGLE[] PROGMEM = "SINGLE";
+
 // clang-format on
 }  // namespace tms9900
 }  // namespace text

@@ -771,6 +771,17 @@ static void test_data_constant() {
     ERRT("DC C'TEXT",      MISSING_CLOSING_QUOTE, "C'TEXT");
     ERRT("DC 'TEXT",       MISSING_CLOSING_QUOTE, "'TEXT");
     ERUS("DC 1, UNDEF, 2", "UNDEF, 2", 0x0001, 0x0000, 0x0002);
+#if defined(LIBASM_ASM_NOFLOAT)
+    ERRT("DC -1.0, 42.0, 7.8125e-03", FLOAT_NOT_SUPPORTED, "-1.0, 42.0, 7.8125e-03",
+         0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000);
+    ERRT("DC 1.0, UNDEF + 0.0, 2.0", FLOAT_NOT_SUPPORTED, "1.0, UNDEF + 0.0, 2.0",
+         0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000);
+#else
+    TEST("DC -1.0, 42.0, 7.8125e-03",
+         0xC110, 0x0000, 0x422A, 0x0000, 0x3F20, 0x0000);
+    ERUS("DC 1.0, UNDEF + 0.0, 2.0", "UNDEF + 0.0, 2.0",
+         0x4110, 0x0000, 0x0000, 0x0000, 0x4120, 0x0000);
+#endif
 
     ERRT("DC C'"
          "1234567890" "1234567890" "1234567890" "1234567890" "1234567890" "1234567890"

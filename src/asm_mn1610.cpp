@@ -15,7 +15,7 @@
  */
 
 #include "asm_mn1610.h"
-
+#include "ibm_float.h"
 #include "table_mn1610.h"
 #include "text_common.h"
 
@@ -32,7 +32,6 @@ namespace {
 constexpr char TEXT_LOC[] PROGMEM = "loc";
 
 constexpr Pseudo PSEUDOS[] PROGMEM = {
-    {TEXT_DC,  &Assembler::defineDataConstant, Assembler::DATA_WORD},
     {TEXT_DS,  &Assembler::allocateSpaces,     Assembler::DATA_WORD},
     {TEXT_LOC, &Assembler::defineOrigin},
 };
@@ -339,6 +338,63 @@ Error AsmMn1610::parseOperand(StrScanner &scan, Operand &op) const {
         return OK;
     }
     return op.setError(UNKNOWN_OPERAND);
+}
+
+Error AsmMn1610::defineDataConstant(StrScanner &scan, AsmInsn &insn, ErrorAt &_error) const {
+    ErrorAt error;
+    do {
+        scan.skipSpaces();
+        ErrorAt strErr;
+        auto end = scan;
+        const auto err = isString(end, strErr);
+        if (err == OK) {
+            generateString(scan, end, insn.insnBase(), DATA_WORD, strErr);
+            if (error.setErrorIf(strErr) == NO_MEMORY)
+                break;
+            continue;
+        }
+        ErrorAt exprErr;
+        auto p = scan;
+        const auto val = parseExpr(p, exprErr);
+        if (!endOfLine(p) && *p != ',') {
+            if (strErr.getError()) {
+                error.setErrorIf(strErr);
+            } else {
+                error.setErrorIf(scan, ILLEGAL_CONSTANT);
+            }
+            break;
+        }
+        if (exprErr.hasError()) {
+            error.setErrorIf(strErr.getError() ? strErr : exprErr);
+            break;
+        }
+        if (val.isInteger()) {
+            if (val.overflowUint16())
+                exprErr.setErrorIf(scan, OVERFLOW_RANGE);
+            exprErr.setErrorIf(scan, insn.emitUint16(val.getUnsigned()));
+        } else {
+#if defined(LIBASM_ASM_NOFLOAT)
+            (void)val;
+            exprErr.setErrorIf(scan, FLOAT_NOT_SUPPORTED);
+            insn.emitUint32(0);
+#else
+            ibm_float32_t f32;
+            exprErr.setErrorIf(scan, f32.set(val.getFloat()));
+            exprErr.setErrorIf(scan, insn.emitUint32(f32.bits()));
+#endif
+        }
+        scan = p;
+        if (error.setErrorIf(exprErr) == NO_MEMORY)
+            break;
+    } while (scan.skipSpaces().expect(','));
+    return _error.setError(error);
+}
+
+Error AsmMn1610::processPseudo(StrScanner &scan, Insn &_insn) {
+    AsmInsn insn(_insn);
+    if (strcasecmp_P(insn.name(), TEXT_DC) == 0)
+        return defineDataConstant(scan, insn, _insn);
+    return Assembler::processPseudo(scan, _insn);
 }
 
 Error AsmMn1610::encodeImpl(StrScanner &scan, Insn &_insn) const {

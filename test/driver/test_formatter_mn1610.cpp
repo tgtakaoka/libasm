@@ -56,13 +56,17 @@ void test_asm_mn1613() {
     ASM("mn1613",
             R"(        cpu   mn1613
 * comment line
-        org   x'34567'
+        loc   x'34567'
         mvwi  str, x'5678', skp
+        fa    dr0, (r2)
+f1:     dc    7.8125e-03
 )",
             R"(          0 :                            cpu   mn1613
           0 :                    * comment line
-      34567 :                            org   x'34567'
+      34567 :                            loc   x'34567'
       34567 : 7e1f 5678                  mvwi  str, x'5678', skp
+      34569 : 6f0d                       fa    dr0, (r2)
+      3456a : 3f20 0000          f1:     dc    7.8125e-03
 )");
 }
 

@@ -35,6 +35,8 @@ private:
     void encodeModeReg(AsmInsn &insn, const Operand &op, AddrMode mode) const;
     void encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode) const;
 
+    Error defineFloatConstant(StrScanner &scan, AsmInsn &insn, ErrorAt &_error) const;
+    Error processPseudo(StrScanner &scan, Insn &_insn) override;
     Error encodeImpl(StrScanner &scan, Insn &insn) const override;
     const ConfigBase &config() const override { return *this; }
     ConfigSetter &configSetter() override { return *this; }

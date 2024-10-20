@@ -34,6 +34,8 @@ private:
     void encodeGenericAddress(AsmInsn &insn, const Operand &op) const;
     void encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode) const;
 
+    Error defineDataConstant(StrScanner &scan, AsmInsn &insn, ErrorAt &_error) const;
+    Error processPseudo(StrScanner &scan, Insn &_insn) override;
     Error encodeImpl(StrScanner &scan, Insn &insn) const override;
     const ConfigBase &config() const override { return *this; }
     ConfigSetter &configSetter() override { return *this; }
