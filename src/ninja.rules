@@ -11,7 +11,8 @@ build float80_base.o:    cxx ${root}/src/float80_base.cpp
 build float80_hard.o:    cxx ${root}/src/float80_hard.cpp
 build float80_soft.o:    cxx ${root}/src/float80_soft.cpp
 build formatters.o:      cxx ${root}/src/formatters.cpp
-build ieee_float.o:       cxx ${root}/src/ieee_float.cpp
+build ibm_float.o:       cxx ${root}/src/ibm_float.cpp
+build ieee_float.o:      cxx ${root}/src/ieee_float.cpp
 build insn_base.o:       cxx ${root}/src/insn_base.cpp
 build operators.o:       cxx ${root}/src/operators.cpp
 build option_base.o:     cxx ${root}/src/option_base.cpp

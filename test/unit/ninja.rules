@@ -8,6 +8,7 @@ build test_float32.o:      cxx ${root}/test/unit/test_float32.cpp
 build test_float64.o:      cxx ${root}/test/unit/test_float64.cpp
 build test_float80_hard.o: cxx ${root}/test/unit/test_float80_hard.cpp
 build test_float80_soft.o: cxx ${root}/test/unit/test_float80_soft.cpp
+build test_ibm_float.o:    cxx ${root}/test/unit/test_ibm_float.cpp
 build test_reg_base.o:     cxx ${root}/test/unit/test_reg_base.cpp
 build test_str_buffer.o:   cxx ${root}/test/unit/test_str_buffer.cpp
 build test_str_scanner.o:  cxx ${root}/test/unit/test_str_scanner.cpp

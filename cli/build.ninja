@@ -25,7 +25,7 @@ build asm: link asm.o $
   parsers.o reg_base.o str_buffer.o str_scanner.o symbol_store.o $
   text_common.o value.o value_formatter.o value_parser.o $
   fixed64.o ieee_float.o float80_base.o float80_hard.o float80_soft.o $
-  dec_float.o $
+  dec_float.o ibm_float.o $
   asm_cdp1802.o  reg_cdp1802.o  table_cdp1802.o  text_cdp1802.o  $
   asm_f3850.o    reg_f3850.o    table_f3850.o    text_f3850.o    $
   asm_i8048.o    reg_i8048.o    table_i8048.o    text_i8048.o    $
@@ -60,7 +60,7 @@ build dis: link dis.o $
   list_formatter.o moto_srec.o option_base.o reg_base.o str_buffer.o $
   str_scanner.o text_common.o value.o value_formatter.o $
   fixed64.o ieee_float.o float80_base.o float80_hard.o float80_soft.o $
-  dec_float.o $
+  dec_float.o ibm_float.o $
   dis_cdp1802.o  reg_cdp1802.o  table_cdp1802.o  text_cdp1802.o  $
   dis_f3850.o    reg_f3850.o    table_f3850.o    text_f3850.o    $
   dis_i8048.o    reg_i8048.o    table_i8048.o    text_i8048.o    $
