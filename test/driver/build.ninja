@@ -40,7 +40,7 @@ build test_asm_formatter: test test_asm_formatter.o $
   error_reporter.o value_formatter.o value.o value_parser.o parsers.o $
   operators.o option_base.o str_buffer.o str_scanner.o text_common.o $
   fixed64.o ieee_float.o float80_base.o float80_hard.o float80_soft.o $
-  dec_float.o $
+  dec_float.o ibm_float.o $
   asm_i8080.o   reg_i8080.o   table_i8080.o   text_i8080.o $
   asm_ins8060.o reg_ins8060.o table_ins8060.o text_ins8060.o $
   asm_mc6809.o  reg_mc6809.o  table_mc6809.o  text_mc6809.o $
@@ -56,7 +56,7 @@ build test_formatter_cdp1802: test test_formatter_cdp1802.o $
   parsers.o reg_base.o str_buffer.o str_scanner.o symbol_store.o $
   text_common.o value.o value_formatter.o value_parser.o $
   fixed64.o ieee_float.o float80_base.o float80_hard.o float80_soft.o $
-  dec_float.o test_driver_helper.o test_asserter.o
+  dec_float.o ibm_float.o test_driver_helper.o test_asserter.o
 
 build test_formatter_f3850: test test_formatter_f3850.o $
   asm_f3850.o dis_f3850.o reg_f3850.o table_f3850.o text_f3850.o $
@@ -67,7 +67,7 @@ build test_formatter_f3850: test test_formatter_f3850.o $
   parsers.o reg_base.o str_buffer.o str_scanner.o symbol_store.o $
   text_common.o value.o value_formatter.o value_parser.o $
   fixed64.o ieee_float.o float80_base.o float80_hard.o float80_soft.o $
-  dec_float.o test_driver_helper.o test_asserter.o
+  dec_float.o ibm_float.o test_driver_helper.o test_asserter.o
 
 build test_formatter_i8048: test test_formatter_i8048.o $
   asm_i8048.o dis_i8048.o reg_i8048.o table_i8048.o text_i8048.o $
@@ -78,7 +78,7 @@ build test_formatter_i8048: test test_formatter_i8048.o $
   parsers.o reg_base.o str_buffer.o str_scanner.o symbol_store.o $
   text_common.o value.o value_formatter.o value_parser.o $
   fixed64.o ieee_float.o float80_base.o float80_hard.o float80_soft.o $
-  dec_float.o test_driver_helper.o test_asserter.o
+  dec_float.o ibm_float.o test_driver_helper.o test_asserter.o
 
 build test_formatter_i8051: test test_formatter_i8051.o $
   asm_i8051.o dis_i8051.o reg_i8051.o table_i8051.o text_i8051.o $
@@ -89,7 +89,7 @@ build test_formatter_i8051: test test_formatter_i8051.o $
   parsers.o reg_base.o str_buffer.o str_scanner.o symbol_store.o $
   text_common.o value.o value_formatter.o value_parser.o $
   fixed64.o ieee_float.o float80_base.o float80_hard.o float80_soft.o $
-  dec_float.o test_driver_helper.o test_asserter.o
+  dec_float.o ibm_float.o test_driver_helper.o test_asserter.o
 
 build test_formatter_i8080: test test_formatter_i8080.o $
   asm_i8080.o dis_i8080.o reg_i8080.o table_i8080.o text_i8080.o $
@@ -100,7 +100,7 @@ build test_formatter_i8080: test test_formatter_i8080.o $
   parsers.o reg_base.o str_buffer.o str_scanner.o symbol_store.o $
   text_common.o value.o value_formatter.o value_parser.o $
   fixed64.o ieee_float.o float80_base.o float80_hard.o float80_soft.o $
-  dec_float.o test_driver_helper.o test_asserter.o
+  dec_float.o ibm_float.o test_driver_helper.o test_asserter.o
 
 build test_formatter_i8086: test test_formatter_i8086.o $
   asm_i8086.o dis_i8086.o reg_i8086.o table_i8086.o text_i8086.o $
@@ -111,7 +111,7 @@ build test_formatter_i8086: test test_formatter_i8086.o $
   parsers.o reg_base.o str_buffer.o str_scanner.o symbol_store.o $
   text_common.o value.o value_formatter.o value_parser.o $
   fixed64.o ieee_float.o float80_base.o float80_hard.o float80_soft.o $
-  dec_float.o test_driver_helper.o test_asserter.o
+  dec_float.o ibm_float.o test_driver_helper.o test_asserter.o
 
 build test_formatter_i8096: test test_formatter_i8096.o $
   asm_i8096.o dis_i8096.o reg_i8096.o table_i8096.o text_i8096.o $
@@ -122,7 +122,7 @@ build test_formatter_i8096: test test_formatter_i8096.o $
   parsers.o reg_base.o str_buffer.o str_scanner.o symbol_store.o $
   text_common.o value.o value_formatter.o value_parser.o $
   fixed64.o ieee_float.o float80_base.o float80_hard.o float80_soft.o $
-  dec_float.o test_driver_helper.o test_asserter.o
+  dec_float.o ibm_float.o test_driver_helper.o test_asserter.o
 
 build test_formatter_ins8060: test test_formatter_ins8060.o $
   asm_ins8060.o dis_ins8060.o reg_ins8060.o table_ins8060.o text_ins8060.o $
@@ -133,7 +133,7 @@ build test_formatter_ins8060: test test_formatter_ins8060.o $
   parsers.o reg_base.o str_buffer.o str_scanner.o symbol_store.o $
   text_common.o value.o value_formatter.o value_parser.o $
   fixed64.o ieee_float.o float80_base.o float80_hard.o float80_soft.o $
-  dec_float.o test_driver_helper.o test_asserter.o
+  dec_float.o ibm_float.o test_driver_helper.o test_asserter.o
 
 build test_formatter_ins8070: test test_formatter_ins8070.o $
   asm_ins8070.o dis_ins8070.o reg_ins8070.o table_ins8070.o text_ins8070.o $
@@ -144,7 +144,7 @@ build test_formatter_ins8070: test test_formatter_ins8070.o $
   parsers.o reg_base.o str_buffer.o str_scanner.o symbol_store.o $
   text_common.o value.o value_formatter.o value_parser.o $
   fixed64.o ieee_float.o float80_base.o float80_hard.o float80_soft.o $
-  dec_float.o test_driver_helper.o test_asserter.o
+  dec_float.o ibm_float.o test_driver_helper.o test_asserter.o
 
 build test_formatter_mc6800: test test_formatter_mc6800.o $
   asm_mc6800.o dis_mc6800.o reg_mc6800.o table_mc6800.o text_mc6800.o $
@@ -155,7 +155,7 @@ build test_formatter_mc6800: test test_formatter_mc6800.o $
   parsers.o reg_base.o str_buffer.o str_scanner.o symbol_store.o $
   text_common.o value.o value_formatter.o value_parser.o $
   fixed64.o ieee_float.o float80_base.o float80_hard.o float80_soft.o $
-  dec_float.o test_driver_helper.o test_asserter.o
+  dec_float.o ibm_float.o test_driver_helper.o test_asserter.o
 
 build test_formatter_mc68000: test test_formatter_mc68000.o $
   asm_mc68000.o dis_mc68000.o reg_mc68000.o table_mc68000.o text_mc68000.o $
@@ -166,7 +166,7 @@ build test_formatter_mc68000: test test_formatter_mc68000.o $
   parsers.o reg_base.o str_buffer.o str_scanner.o symbol_store.o $
   text_common.o value.o value_formatter.o value_parser.o $
   fixed64.o ieee_float.o float80_base.o float80_hard.o float80_soft.o $
-  dec_float.o test_driver_helper.o test_asserter.o
+  dec_float.o ibm_float.o test_driver_helper.o test_asserter.o
 
 build test_formatter_mc6805: test test_formatter_mc6805.o $
   asm_mc6805.o dis_mc6805.o reg_mc6805.o table_mc6805.o text_mc6805.o $
@@ -177,7 +177,7 @@ build test_formatter_mc6805: test test_formatter_mc6805.o $
   parsers.o reg_base.o str_buffer.o str_scanner.o symbol_store.o $
   text_common.o value.o value_formatter.o value_parser.o $
   fixed64.o ieee_float.o float80_base.o float80_hard.o float80_soft.o $
-  dec_float.o test_driver_helper.o test_asserter.o
+  dec_float.o ibm_float.o test_driver_helper.o test_asserter.o
 
 build test_formatter_mc6809: test test_formatter_mc6809.o $
   asm_mc6809.o dis_mc6809.o reg_mc6809.o table_mc6809.o text_mc6809.o $
@@ -188,7 +188,7 @@ build test_formatter_mc6809: test test_formatter_mc6809.o $
   parsers.o reg_base.o str_buffer.o str_scanner.o symbol_store.o $
   text_common.o value.o value_formatter.o value_parser.o $
   fixed64.o ieee_float.o float80_base.o float80_hard.o float80_soft.o $
-  dec_float.o test_driver_helper.o test_asserter.o
+  dec_float.o ibm_float.o test_driver_helper.o test_asserter.o
 
 build test_formatter_mn1610: test test_formatter_mn1610.o $
   asm_mn1610.o dis_mn1610.o reg_mn1610.o table_mn1610.o text_mn1610.o $
@@ -199,7 +199,7 @@ build test_formatter_mn1610: test test_formatter_mn1610.o $
   parsers.o reg_base.o str_buffer.o str_scanner.o symbol_store.o $
   text_common.o value.o value_formatter.o value_parser.o $
   fixed64.o ieee_float.o float80_base.o float80_hard.o float80_soft.o $
-  dec_float.o test_driver_helper.o test_asserter.o
+  dec_float.o ibm_float.o test_driver_helper.o test_asserter.o
 
 build test_formatter_mos6502: test test_formatter_mos6502.o $
   asm_mos6502.o dis_mos6502.o reg_mos6502.o table_mos6502.o text_mos6502.o $
@@ -210,7 +210,7 @@ build test_formatter_mos6502: test test_formatter_mos6502.o $
   parsers.o reg_base.o str_buffer.o str_scanner.o symbol_store.o $
   text_common.o value.o value_formatter.o value_parser.o $
   fixed64.o ieee_float.o float80_base.o float80_hard.o float80_soft.o $
-  dec_float.o test_driver_helper.o test_asserter.o
+  dec_float.o ibm_float.o test_driver_helper.o test_asserter.o
 
 build test_formatter_ns32000: test test_formatter_ns32000.o $
   asm_ns32000.o dis_ns32000.o reg_ns32000.o table_ns32000.o text_ns32000.o $
@@ -221,7 +221,7 @@ build test_formatter_ns32000: test test_formatter_ns32000.o $
   parsers.o reg_base.o str_buffer.o str_scanner.o symbol_store.o $
   text_common.o value.o value_formatter.o value_parser.o $
   fixed64.o ieee_float.o float80_base.o float80_hard.o float80_soft.o $
-  dec_float.o test_driver_helper.o test_asserter.o
+  dec_float.o ibm_float.o test_driver_helper.o test_asserter.o
 
 build test_formatter_pdp11: test test_formatter_pdp11.o $
   asm_pdp11.o dis_pdp11.o reg_pdp11.o table_pdp11.o text_pdp11.o $
@@ -232,7 +232,7 @@ build test_formatter_pdp11: test test_formatter_pdp11.o $
   parsers.o reg_base.o str_buffer.o str_scanner.o symbol_store.o $
   text_common.o value.o value_formatter.o value_parser.o $
   fixed64.o ieee_float.o float80_base.o float80_hard.o float80_soft.o $
-  dec_float.o test_driver_helper.o test_asserter.o
+  dec_float.o ibm_float.o test_driver_helper.o test_asserter.o
 
 build test_formatter_pdp8: test test_formatter_pdp8.o $
   asm_pdp8.o dis_pdp8.o reg_pdp8.o table_pdp8.o text_pdp8.o $
@@ -243,7 +243,7 @@ build test_formatter_pdp8: test test_formatter_pdp8.o $
   parsers.o reg_base.o str_buffer.o str_scanner.o symbol_store.o $
   text_common.o value.o value_formatter.o value_parser.o $
   fixed64.o ieee_float.o float80_base.o float80_hard.o float80_soft.o $
-  dec_float.o test_driver_helper.o test_asserter.o
+  dec_float.o ibm_float.o test_driver_helper.o test_asserter.o
 
 build test_formatter_scn2650: test test_formatter_scn2650.o $
   asm_scn2650.o dis_scn2650.o reg_scn2650.o table_scn2650.o text_scn2650.o $
@@ -254,7 +254,7 @@ build test_formatter_scn2650: test test_formatter_scn2650.o $
   parsers.o reg_base.o str_buffer.o str_scanner.o symbol_store.o $
   text_common.o value.o value_formatter.o value_parser.o $
   fixed64.o ieee_float.o float80_base.o float80_hard.o float80_soft.o $
-  dec_float.o test_driver_helper.o test_asserter.o
+  dec_float.o ibm_float.o test_driver_helper.o test_asserter.o
 
 build test_formatter_tlcs90: test test_formatter_tlcs90.o $
   asm_tlcs90.o dis_tlcs90.o reg_tlcs90.o table_tlcs90.o text_tlcs90.o $
@@ -265,7 +265,7 @@ build test_formatter_tlcs90: test test_formatter_tlcs90.o $
   parsers.o reg_base.o str_buffer.o str_scanner.o symbol_store.o $
   text_common.o value.o value_formatter.o value_parser.o $
   fixed64.o ieee_float.o float80_base.o float80_hard.o float80_soft.o $
-  dec_float.o test_driver_helper.o test_asserter.o
+  dec_float.o ibm_float.o test_driver_helper.o test_asserter.o
 
 build test_formatter_tms32010: test test_formatter_tms32010.o $
   asm_tms32010.o dis_tms32010.o reg_tms32010.o table_tms32010.o text_tms32010.o $
@@ -276,7 +276,7 @@ build test_formatter_tms32010: test test_formatter_tms32010.o $
   parsers.o reg_base.o str_buffer.o str_scanner.o symbol_store.o $
   text_common.o value.o value_formatter.o value_parser.o $
   fixed64.o ieee_float.o float80_base.o float80_hard.o float80_soft.o $
-  dec_float.o test_driver_helper.o test_asserter.o
+  dec_float.o ibm_float.o test_driver_helper.o test_asserter.o
 
 build test_formatter_tms7000: test test_formatter_tms7000.o $
   asm_tms7000.o dis_tms7000.o reg_tms7000.o table_tms7000.o text_tms7000.o $
@@ -287,7 +287,7 @@ build test_formatter_tms7000: test test_formatter_tms7000.o $
   parsers.o reg_base.o str_buffer.o str_scanner.o symbol_store.o $
   text_common.o value.o value_formatter.o value_parser.o $
   fixed64.o ieee_float.o float80_base.o float80_hard.o float80_soft.o $
-  dec_float.o test_driver_helper.o test_asserter.o
+  dec_float.o ibm_float.o test_driver_helper.o test_asserter.o
 
 build test_formatter_tms9900: test test_formatter_tms9900.o $
   asm_tms9900.o dis_tms9900.o reg_tms9900.o table_tms9900.o text_tms9900.o $
@@ -298,7 +298,7 @@ build test_formatter_tms9900: test test_formatter_tms9900.o $
   parsers.o reg_base.o str_buffer.o str_scanner.o symbol_store.o $
   text_common.o value.o value_formatter.o value_parser.o $
   fixed64.o ieee_float.o float80_base.o float80_hard.o float80_soft.o $
-  dec_float.o test_driver_helper.o test_asserter.o
+  dec_float.o ibm_float.o test_driver_helper.o test_asserter.o
 
 build test_formatter_z8: test test_formatter_z8.o $
   asm_z8.o dis_z8.o reg_z8.o table_z8.o text_z8.o $
@@ -309,7 +309,7 @@ build test_formatter_z8: test test_formatter_z8.o $
   parsers.o reg_base.o str_buffer.o str_scanner.o symbol_store.o $
   text_common.o value.o value_formatter.o value_parser.o $
   fixed64.o ieee_float.o float80_base.o float80_hard.o float80_soft.o $
-  dec_float.o test_driver_helper.o test_asserter.o
+  dec_float.o ibm_float.o test_driver_helper.o test_asserter.o
 
 build test_formatter_z80: test test_formatter_z80.o $
   asm_z80.o dis_z80.o reg_z80.o table_z80.o text_z80.o $
@@ -320,7 +320,7 @@ build test_formatter_z80: test test_formatter_z80.o $
   parsers.o reg_base.o str_buffer.o str_scanner.o symbol_store.o $
   text_common.o value.o value_formatter.o value_parser.o $
   fixed64.o ieee_float.o float80_base.o float80_hard.o float80_soft.o $
-  dec_float.o test_driver_helper.o test_asserter.o
+  dec_float.o ibm_float.o test_driver_helper.o test_asserter.o
 
 build test_formatter_z8000: test test_formatter_z8000.o $
   asm_z8000.o dis_z8000.o reg_z8000.o table_z8000.o text_z8000.o $
@@ -331,7 +331,7 @@ build test_formatter_z8000: test test_formatter_z8000.o $
   parsers.o reg_base.o str_buffer.o str_scanner.o symbol_store.o $
   text_common.o value.o value_formatter.o value_parser.o $
   fixed64.o ieee_float.o float80_base.o float80_hard.o float80_soft.o $
-  dec_float.o test_driver_helper.o test_asserter.o
+  dec_float.o ibm_float.o test_driver_helper.o test_asserter.o
 
 build test: phony test_helpers test_bin_memory test_intel_hex test_moto_srec $
   test_asm_formatter $

@@ -27,7 +27,7 @@ build test_asm_cdp1802: run test_asm_cdp1802.o $
   option_base.o parsers.o reg_base.o str_buffer.o str_scanner.o $
   text_common.o value.o value_parser.o $
   fixed64.o ieee_float.o float80_base.o float80_hard.o float80_soft.o $
-  dec_float.o test_asm_helper.o test_asserter.o
+  dec_float.o ibm_float.o test_asm_helper.o test_asserter.o
 build test_dis_cdp1802: run test_dis_cdp1802.o $
   dis_cdp1802.o reg_cdp1802.o table_cdp1802.o text_cdp1802.o $
   dis_base.o config_base.o error_reporter.o formatters.o insn_base.o $
@@ -50,7 +50,7 @@ build test_asm_f3850: run test_asm_f3850.o $
   option_base.o parsers.o reg_base.o str_buffer.o str_scanner.o $
   text_common.o value.o value_parser.o $
   fixed64.o ieee_float.o float80_base.o float80_hard.o float80_soft.o $
-  dec_float.o test_asm_helper.o test_asserter.o
+  dec_float.o ibm_float.o test_asm_helper.o test_asserter.o
 build test_dis_f3850: run test_dis_f3850.o $
   dis_f3850.o reg_f3850.o table_f3850.o text_f3850.o $
   dis_base.o config_base.o error_reporter.o formatters.o insn_base.o $
@@ -73,7 +73,7 @@ build test_asm_i8048: run test_asm_i8048.o $
   option_base.o parsers.o reg_base.o str_buffer.o str_scanner.o $
   text_common.o value.o value_parser.o $
   fixed64.o ieee_float.o float80_base.o float80_hard.o float80_soft.o $
-  dec_float.o test_asm_helper.o test_asserter.o
+  dec_float.o ibm_float.o test_asm_helper.o test_asserter.o
 build test_dis_i8048: run test_dis_i8048.o $
   dis_i8048.o reg_i8048.o table_i8048.o text_i8048.o $
   dis_base.o config_base.o error_reporter.o formatters.o insn_base.o $
@@ -96,7 +96,7 @@ build test_asm_i8051: run test_asm_i8051.o $
   option_base.o parsers.o reg_base.o str_buffer.o str_scanner.o $
   text_common.o value.o value_parser.o $
   fixed64.o ieee_float.o float80_base.o float80_hard.o float80_soft.o $
-  dec_float.o test_asm_helper.o test_asserter.o
+  dec_float.o ibm_float.o test_asm_helper.o test_asserter.o
 build test_dis_i8051: run test_dis_i8051.o $
   dis_i8051.o reg_i8051.o table_i8051.o text_i8051.o $
   dis_base.o config_base.o error_reporter.o formatters.o insn_base.o $
@@ -119,7 +119,7 @@ build test_asm_i8080: run test_asm_i8080.o $
   option_base.o parsers.o reg_base.o str_buffer.o str_scanner.o $
   text_common.o value.o value_parser.o $
   fixed64.o ieee_float.o float80_base.o float80_hard.o float80_soft.o $
-  dec_float.o test_asm_helper.o test_asserter.o
+  dec_float.o ibm_float.o test_asm_helper.o test_asserter.o
 build test_dis_i8080: run test_dis_i8080.o $
   dis_i8080.o reg_i8080.o table_i8080.o text_i8080.o $
   dis_base.o config_base.o error_reporter.o formatters.o insn_base.o $
@@ -142,7 +142,7 @@ build test_asm_i8086: run test_asm_i8086.o $
   option_base.o parsers.o reg_base.o str_buffer.o str_scanner.o $
   text_common.o value.o value_parser.o $
   fixed64.o ieee_float.o float80_base.o float80_hard.o float80_soft.o $
-  dec_float.o test_asm_helper.o test_asserter.o
+  dec_float.o ibm_float.o test_asm_helper.o test_asserter.o
 build test_dis_i8086: run test_dis_i8086.o $
   dis_i8086.o reg_i8086.o table_i8086.o text_i8086.o $
   dis_base.o config_base.o error_reporter.o formatters.o insn_base.o $
@@ -165,7 +165,7 @@ build test_asm_i8096: run test_asm_i8096.o $
   option_base.o parsers.o reg_base.o str_buffer.o str_scanner.o $
   text_common.o value.o value_parser.o $
   fixed64.o ieee_float.o float80_base.o float80_hard.o float80_soft.o $
-  dec_float.o test_asm_helper.o test_asserter.o
+  dec_float.o ibm_float.o test_asm_helper.o test_asserter.o
 build test_dis_i8096: run test_dis_i8096.o $
   dis_i8096.o reg_i8096.o table_i8096.o text_i8096.o $
   dis_base.o config_base.o error_reporter.o formatters.o insn_base.o $
@@ -188,7 +188,7 @@ build test_asm_ins8060: run test_asm_ins8060.o $
   option_base.o parsers.o reg_base.o str_buffer.o str_scanner.o $
   text_common.o value.o value_parser.o $
   fixed64.o ieee_float.o float80_base.o float80_hard.o float80_soft.o $
-  dec_float.o test_asm_helper.o test_asserter.o
+  dec_float.o ibm_float.o test_asm_helper.o test_asserter.o
 build test_dis_ins8060: run test_dis_ins8060.o $
   dis_ins8060.o reg_ins8060.o table_ins8060.o text_ins8060.o $
   dis_base.o config_base.o error_reporter.o formatters.o insn_base.o $
@@ -211,7 +211,7 @@ build test_asm_ins8070: run test_asm_ins8070.o $
   option_base.o parsers.o reg_base.o str_buffer.o str_scanner.o $
   text_common.o value.o value_parser.o $
   fixed64.o ieee_float.o float80_base.o float80_hard.o float80_soft.o $
-  dec_float.o test_asm_helper.o test_asserter.o
+  dec_float.o ibm_float.o test_asm_helper.o test_asserter.o
 build test_dis_ins8070: run test_dis_ins8070.o $
   dis_ins8070.o reg_ins8070.o table_ins8070.o text_ins8070.o $
   dis_base.o config_base.o error_reporter.o formatters.o insn_base.o $
@@ -234,7 +234,7 @@ build test_asm_mc6800: run test_asm_mc6800.o $
   option_base.o parsers.o reg_base.o str_buffer.o str_scanner.o $
   text_common.o value.o value_parser.o $
   fixed64.o ieee_float.o float80_base.o float80_hard.o float80_soft.o $
-  dec_float.o test_asm_helper.o test_asserter.o
+  dec_float.o ibm_float.o test_asm_helper.o test_asserter.o
 build test_dis_mc6800: run test_dis_mc6800.o $
   dis_mc6800.o reg_mc6800.o table_mc6800.o text_mc6800.o $
   dis_base.o config_base.o error_reporter.o formatters.o insn_base.o $
@@ -257,7 +257,7 @@ build test_asm_mc68000: run test_asm_mc68000.o $
   option_base.o parsers.o reg_base.o str_buffer.o str_scanner.o $
   text_common.o value.o value_parser.o $
   fixed64.o ieee_float.o float80_base.o float80_hard.o float80_soft.o $
-  dec_float.o test_asm_helper.o test_asserter.o
+  dec_float.o ibm_float.o test_asm_helper.o test_asserter.o
 build test_dis_mc68000: run test_dis_mc68000.o $
   dis_mc68000.o reg_mc68000.o table_mc68000.o text_mc68000.o $
   dis_base.o config_base.o error_reporter.o formatters.o insn_base.o $
@@ -280,7 +280,7 @@ build test_asm_mc6805: run test_asm_mc6805.o $
   option_base.o parsers.o reg_base.o str_buffer.o str_scanner.o $
   text_common.o value.o value_parser.o $
   fixed64.o ieee_float.o float80_base.o float80_hard.o float80_soft.o $
-  dec_float.o test_asm_helper.o test_asserter.o
+  dec_float.o ibm_float.o test_asm_helper.o test_asserter.o
 build test_dis_mc6805: run test_dis_mc6805.o $
   dis_mc6805.o reg_mc6805.o table_mc6805.o text_mc6805.o $
   dis_base.o config_base.o error_reporter.o formatters.o insn_base.o $
@@ -303,7 +303,7 @@ build test_asm_mc6809: run test_asm_mc6809.o $
   option_base.o parsers.o reg_base.o str_buffer.o str_scanner.o $
   text_common.o value.o value_parser.o $
   fixed64.o ieee_float.o float80_base.o float80_hard.o float80_soft.o $
-  dec_float.o test_asm_helper.o test_asserter.o
+  dec_float.o ibm_float.o test_asm_helper.o test_asserter.o
 build test_dis_mc6809: run test_dis_mc6809.o $
   dis_mc6809.o reg_mc6809.o table_mc6809.o text_mc6809.o $
   dis_base.o config_base.o error_reporter.o formatters.o insn_base.o $
@@ -326,7 +326,7 @@ build test_asm_mn1610: run test_asm_mn1610.o $
   option_base.o parsers.o reg_base.o str_buffer.o str_scanner.o $
   text_common.o value.o value_parser.o $
   fixed64.o ieee_float.o float80_base.o float80_hard.o float80_soft.o $
-  dec_float.o test_asm_helper.o test_asserter.o
+  dec_float.o ibm_float.o test_asm_helper.o test_asserter.o
 build test_dis_mn1610: run test_dis_mn1610.o $
   dis_mn1610.o reg_mn1610.o table_mn1610.o text_mn1610.o $
   dis_base.o config_base.o error_reporter.o formatters.o insn_base.o $
@@ -349,7 +349,7 @@ build test_asm_mos6502: run test_asm_mos6502.o $
   option_base.o parsers.o reg_base.o str_buffer.o str_scanner.o $
   text_common.o value.o value_parser.o $
   fixed64.o ieee_float.o float80_base.o float80_hard.o float80_soft.o $
-  dec_float.o test_asm_helper.o test_asserter.o
+  dec_float.o ibm_float.o test_asm_helper.o test_asserter.o
 build test_dis_mos6502: run test_dis_mos6502.o $
   dis_mos6502.o reg_mos6502.o table_mos6502.o text_mos6502.o $
   dis_base.o config_base.o error_reporter.o formatters.o insn_base.o $
@@ -372,7 +372,7 @@ build test_asm_ns32000: run test_asm_ns32000.o $
   option_base.o parsers.o reg_base.o str_buffer.o str_scanner.o $
   text_common.o value.o value_parser.o $
   fixed64.o ieee_float.o float80_base.o float80_hard.o float80_soft.o $
-  dec_float.o test_asm_helper.o test_asserter.o
+  dec_float.o ibm_float.o test_asm_helper.o test_asserter.o
 build test_dis_ns32000: run test_dis_ns32000.o $
   dis_ns32000.o reg_ns32000.o table_ns32000.o text_ns32000.o $
   dis_base.o config_base.o error_reporter.o formatters.o insn_base.o $
@@ -395,9 +395,9 @@ build test_asm_pdp11: run test_asm_pdp11.o $
   option_base.o parsers.o reg_base.o str_buffer.o str_scanner.o $
   text_common.o value.o value_parser.o $
   fixed64.o ieee_float.o float80_base.o float80_hard.o float80_soft.o $
-  dec_float.o test_asm_helper.o test_asserter.o
+  dec_float.o ibm_float.o test_asm_helper.o test_asserter.o
 build test_dis_pdp11: run test_dis_pdp11.o $
-  dis_pdp11.o reg_pdp11.o table_pdp11.o text_pdp11.o dec_float.o $
+  dis_pdp11.o reg_pdp11.o table_pdp11.o text_pdp11.o dec_float.o ibm_float.o $
   dis_base.o config_base.o error_reporter.o formatters.o insn_base.o $
   option_base.o reg_base.o str_buffer.o str_scanner.o text_common.o value.o $
   value_formatter.o $
@@ -418,7 +418,7 @@ build test_asm_pdp8: run test_asm_pdp8.o $
   option_base.o parsers.o reg_base.o str_buffer.o str_scanner.o $
   text_common.o value.o value_parser.o $
   fixed64.o ieee_float.o float80_base.o float80_hard.o float80_soft.o $
-  dec_float.o test_asm_helper.o test_asserter.o
+  dec_float.o ibm_float.o test_asm_helper.o test_asserter.o
 build test_dis_pdp8: run test_dis_pdp8.o $
   dis_pdp8.o reg_pdp8.o table_pdp8.o text_pdp8.o $
   dis_base.o config_base.o error_reporter.o formatters.o insn_base.o $
@@ -441,7 +441,7 @@ build test_asm_scn2650: run test_asm_scn2650.o $
   option_base.o parsers.o reg_base.o str_buffer.o str_scanner.o $
   text_common.o value.o value_parser.o $
   fixed64.o ieee_float.o float80_base.o float80_hard.o float80_soft.o $
-  dec_float.o test_asm_helper.o test_asserter.o
+  dec_float.o ibm_float.o test_asm_helper.o test_asserter.o
 build test_dis_scn2650: run test_dis_scn2650.o $
   dis_scn2650.o reg_scn2650.o table_scn2650.o text_scn2650.o $
   dis_base.o config_base.o error_reporter.o formatters.o insn_base.o $
@@ -464,7 +464,7 @@ build test_asm_tlcs90: run test_asm_tlcs90.o $
   option_base.o parsers.o reg_base.o str_buffer.o str_scanner.o $
   text_common.o value.o value_parser.o $
   fixed64.o ieee_float.o float80_base.o float80_hard.o float80_soft.o $
-  dec_float.o test_asm_helper.o test_asserter.o
+  dec_float.o ibm_float.o test_asm_helper.o test_asserter.o
 build test_dis_tlcs90: run test_dis_tlcs90.o $
   dis_tlcs90.o reg_tlcs90.o table_tlcs90.o text_tlcs90.o $
   dis_base.o config_base.o error_reporter.o formatters.o insn_base.o $
@@ -487,7 +487,7 @@ build test_asm_tms32010: run test_asm_tms32010.o $
   option_base.o parsers.o reg_base.o str_buffer.o str_scanner.o $
   text_common.o value.o value_parser.o $
   fixed64.o ieee_float.o float80_base.o float80_hard.o float80_soft.o $
-  dec_float.o test_asm_helper.o test_asserter.o
+  dec_float.o ibm_float.o test_asm_helper.o test_asserter.o
 build test_dis_tms32010: run test_dis_tms32010.o $
   dis_tms32010.o reg_tms32010.o table_tms32010.o text_tms32010.o $
   dis_base.o config_base.o error_reporter.o formatters.o insn_base.o $
@@ -510,7 +510,7 @@ build test_asm_tms7000: run test_asm_tms7000.o $
   option_base.o parsers.o reg_base.o str_buffer.o str_scanner.o $
   text_common.o value.o value_parser.o $
   fixed64.o ieee_float.o float80_base.o float80_hard.o float80_soft.o $
-  dec_float.o test_asm_helper.o test_asserter.o
+  dec_float.o ibm_float.o test_asm_helper.o test_asserter.o
 build test_dis_tms7000: run test_dis_tms7000.o $
   dis_tms7000.o reg_tms7000.o table_tms7000.o text_tms7000.o $
   dis_base.o config_base.o error_reporter.o formatters.o insn_base.o $
@@ -533,7 +533,7 @@ build test_asm_tms9900: run test_asm_tms9900.o $
   option_base.o parsers.o reg_base.o str_buffer.o str_scanner.o $
   text_common.o value.o value_parser.o $
   fixed64.o ieee_float.o float80_base.o float80_hard.o float80_soft.o $
-  dec_float.o test_asm_helper.o test_asserter.o
+  dec_float.o ibm_float.o test_asm_helper.o test_asserter.o
 build test_dis_tms9900: run test_dis_tms9900.o $
   dis_tms9900.o reg_tms9900.o table_tms9900.o text_tms9900.o $
   dis_base.o config_base.o error_reporter.o formatters.o insn_base.o $
@@ -556,7 +556,7 @@ build test_asm_z8: run test_asm_z8.o $
   option_base.o parsers.o reg_base.o str_buffer.o str_scanner.o $
   text_common.o value.o value_parser.o $
   fixed64.o ieee_float.o float80_base.o float80_hard.o float80_soft.o $
-  dec_float.o test_asm_helper.o test_asserter.o
+  dec_float.o ibm_float.o test_asm_helper.o test_asserter.o
 build test_dis_z8: run test_dis_z8.o $
   dis_z8.o reg_z8.o table_z8.o text_z8.o $
   dis_base.o config_base.o error_reporter.o formatters.o insn_base.o $
@@ -579,7 +579,7 @@ build test_asm_z80: run test_asm_z80.o $
   option_base.o parsers.o reg_base.o str_buffer.o str_scanner.o $
   text_common.o value.o value_parser.o $
   fixed64.o ieee_float.o float80_base.o float80_hard.o float80_soft.o $
-  dec_float.o test_asm_helper.o test_asserter.o
+  dec_float.o ibm_float.o test_asm_helper.o test_asserter.o
 build test_dis_z80: run test_dis_z80.o $
   dis_z80.o reg_z80.o table_z80.o text_z80.o $
   dis_base.o config_base.o error_reporter.o formatters.o insn_base.o $
@@ -602,7 +602,7 @@ build test_asm_z8000: run test_asm_z8000.o $
   option_base.o parsers.o reg_base.o str_buffer.o str_scanner.o $
   text_common.o value.o value_parser.o $
   fixed64.o ieee_float.o float80_base.o float80_hard.o float80_soft.o $
-  dec_float.o test_asm_helper.o test_asserter.o
+  dec_float.o ibm_float.o test_asm_helper.o test_asserter.o
 build test_dis_z8000: run test_dis_z8000.o $
   dis_z8000.o reg_z8000.o table_z8000.o text_z8000.o $
   dis_base.o config_base.o error_reporter.o formatters.o insn_base.o $
@@ -624,37 +624,37 @@ build test_expr_base: run test_expr_base.o $
   parsers.o str_buffer.o str_scanner.o test_asserter.o test_expr_helper.o $
   value_formatter.o value.o value_parser.o text_common.o $
   fixed64.o ieee_float.o float80_base.o float80_hard.o float80_soft.o $
-  dec_float.o
+  dec_float.o ibm_float.o
 build test_expr_fairchild: run test_expr_fairchild.o $
   config_base.o error_reporter.o formatters.o operators.o option_base.o $
   parsers.o str_buffer.o str_scanner.o test_asserter.o test_expr_helper.o $
   value_formatter.o value.o value_parser.o text_common.o $
   fixed64.o ieee_float.o float80_base.o float80_hard.o float80_soft.o $
-  dec_float.o
+  dec_float.o ibm_float.o
 build test_expr_intel: run test_expr_intel.o $
   config_base.o error_reporter.o formatters.o operators.o option_base.o $
   parsers.o str_buffer.o str_scanner.o test_asserter.o test_expr_helper.o $
   value_formatter.o value.o value_parser.o text_common.o $
   fixed64.o ieee_float.o float80_base.o float80_hard.o float80_soft.o $
-  dec_float.o
+  dec_float.o ibm_float.o
 build test_expr_motorola: run test_expr_motorola.o $
   config_base.o error_reporter.o formatters.o operators.o option_base.o $
   parsers.o str_buffer.o str_scanner.o test_asserter.o test_expr_helper.o $
   value_formatter.o value.o value_parser.o text_common.o $
   fixed64.o ieee_float.o float80_base.o float80_hard.o float80_soft.o $
-  dec_float.o
+  dec_float.o ibm_float.o
 build test_expr_national: run test_expr_national.o $
   config_base.o error_reporter.o formatters.o operators.o option_base.o $
   parsers.o str_buffer.o str_scanner.o test_asserter.o test_expr_helper.o $
   value_formatter.o value.o value_parser.o text_common.o $
   fixed64.o ieee_float.o float80_base.o float80_hard.o float80_soft.o $
-  dec_float.o
+  dec_float.o ibm_float.o
 build test_expr_zilog: run test_expr_zilog.o $
   config_base.o error_reporter.o formatters.o operators.o option_base.o $
   parsers.o str_buffer.o str_scanner.o test_asserter.o test_expr_helper.o $
   value_formatter.o value.o value_parser.o text_common.o $
   fixed64.o ieee_float.o float80_base.o float80_hard.o float80_soft.o $
-  dec_float.o
+  dec_float.o ibm_float.o
 
 build test_cdp1802:  phony test_asm_cdp1802  test_dis_cdp1802
 build test_f3850:    phony test_asm_f3850    test_dis_f3850
