@@ -110,13 +110,11 @@ __float32 __float32::compose(bool negative, int_fast16_t exp, fixed64_t &sig) {
     exp = normalize(exp, sig);
     if (exp > EXP_BASE)
         return infinity(negative);
-    auto sigval = sig.value();
+    const auto sigval = sig.value(MANT_DIG);
     if (sigval == 0)
         return zero(negative);
     if (exp < -EXP_BASE)
         return __float32(negative ? SGN_MASK : 0, UINT32_C(1));
-    sigval <<= 1;  // discard hidden MSB
-    sigval >>= 64 - TAG_POS;
     return bits(negative, exp + EXP_BASE, sigval);
 }
 
@@ -208,13 +206,11 @@ __float64 __float64::compose(bool negative, int_fast16_t exp, fixed64_t &sig) {
     exp = normalize(exp, sig);
     if (exp > EXP_BASE)
         return infinity(negative);
-    auto sigval = sig.value();
+    const auto sigval = sig.value(MANT_DIG);
     if (sigval == 0)
         return zero(negative);
     if (exp < -EXP_BASE)
         return __float64(negative ? SGN_MASK : 0, UINT64_C(1));
-    sigval <<= 1;  // discard hidden MSB
-    sigval >>= 64 - TAG_POS;
     return bits(negative, exp + EXP_BASE, sigval);
 }
 

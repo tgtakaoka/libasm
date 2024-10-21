@@ -49,7 +49,7 @@ __float80_soft &__float80_soft::set(uint64_t u64) {
         fixed64_t sig;
         const auto exp = sig.set(u64).normalize() + 63;
         _tag = exp + EXP_BASE;
-        _sig = sig.value();
+        _sig = sig.value(MANT_DIG);
     }
     return *this;
 }
@@ -417,7 +417,7 @@ __float80_soft __float80_soft::compose(bool negative, int_fast16_t exp, fixed64_
     exp = normalize(exp, sig);
     if (exp > EXP_BASE)
         return infinity(negative);
-    const auto sigval = sig.value();
+    const auto sigval = sig.value(MANT_DIG);
     if (sigval == 0)
         return zero(negative);
     if (exp < -EXP_BASE)

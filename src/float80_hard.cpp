@@ -106,10 +106,10 @@ __float80_hard __float80_hard::compose(bool negative, int_fast16_t exp, fixed64_
     exp = normalize(exp, sig);
     if (exp > EXP_BASE)
         return infinity(negative);
-    const auto significand = sig.value();
-    if (exp < -EXP_BASE || significand == 0)
+    const auto sigval = sig.value(MANT_DIG);
+    if (exp < -EXP_BASE || sigval == 0)
         return zero(negative);
-    return bits(negative, exp + EXP_BASE, significand);
+    return bits(negative, exp + EXP_BASE, sigval);
 }
 
 __float80_hard __float80_hard::bits(bool sign, uint16_t exp, uint64_t sig) {

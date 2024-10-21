@@ -51,11 +51,10 @@ Error __dec_float16::set(const float80_t &f80) {
     auto ieee_exp = f80.decompose(sig);
     sig.round_off(MANT_DIG);
     ieee_exp += sig.normalize();
-    const auto ieee_sig = sig.value();  // has explicit MSB
+    auto dec_sig = sig.value(MANT_DIG);  // has explicit MSB
     // DEC float fraction is [0.5 .. 1.0)
     // IEEE float fraction is [1.0 .. 2.0)
     auto dec_exp = ieee_exp + 1;
-    auto dec_sig = ieee_sig << 1;  // discard hidden MSB
     if (dec_exp >= EXP_BASE) {
         error = OVERFLOW_RANGE;
         dec_exp = -EXP_BASE;  // dec_sig = 0
@@ -64,7 +63,6 @@ Error __dec_float16::set(const float80_t &f80) {
         dec_exp = -EXP_BASE;
         dec_sig = 0;
     }
-    dec_sig >>= 64 - TAG_POS;
     _u16 = bits(f80.isNegative(), dec_exp + EXP_BASE, dec_sig);
     return error;
 }
@@ -117,11 +115,10 @@ Error __dec_float32::set(const float80_t &f80) {
     auto ieee_exp = f80.decompose(sig);
     sig.round_off(MANT_DIG);
     ieee_exp += sig.normalize();
-    const auto ieee_sig = sig.value();  // has explicit MSB
+    auto dec_sig = sig.value(MANT_DIG);  // has explicit MSB
     // DEC float fraction is [0.5 .. 1.0)
     // IEEE float fraction is [1.0 .. 2.0)
     auto dec_exp = ieee_exp + 1;
-    auto dec_sig = ieee_sig << 1;  // discard hidden MSB
     if (dec_exp >= EXP_BASE) {
         error = OVERFLOW_RANGE;
         dec_exp = -EXP_BASE;  // dec_sig = 0
@@ -130,7 +127,6 @@ Error __dec_float32::set(const float80_t &f80) {
         dec_exp = -EXP_BASE;
         dec_sig = 0;
     }
-    dec_sig >>= 64 - TAG_POS;
     _u32 = bits(f80.isNegative(), dec_exp + EXP_BASE, dec_sig);
     return error;
 }
@@ -187,11 +183,10 @@ Error __dec_float64::set(const float80_t &f80) {
     auto ieee_exp = f80.decompose(sig);
     sig.round_off(MANT_DIG);
     ieee_exp += sig.normalize();
-    const auto ieee_sig = sig.value();  // has explicit MSB
+    auto dec_sig = sig.value(MANT_DIG);  // has explicit MSB
     // DEC float fraction is [0.5 .. 1.0)
     // IEEE float fraction is [1.0 .. 2.0)
     auto dec_exp = ieee_exp + 1;
-    auto dec_sig = ieee_sig << 1;  // discard hidden MSB
     if (dec_exp >= EXP_BASE) {
         error = OVERFLOW_RANGE;
         dec_exp = -EXP_BASE;  // dec_sig = 0
@@ -200,7 +195,6 @@ Error __dec_float64::set(const float80_t &f80) {
         dec_exp = -EXP_BASE;
         dec_sig = 0;
     }
-    dec_sig >>= 64 - TAG_POS;
     _u64 = bits(f80.isNegative(), dec_exp + EXP_BASE, dec_sig);
     return error;
 }

@@ -57,8 +57,8 @@ Error __ibm_float32::set(const float80_t &f80) {
         sig.shift_right(1);
     }
     sig.round_off(MANT_DIG);
+    auto ibm_sig = sig.value(MANT_DIG);  // has explicit MSB
     auto ibm_exp = ieee_exp / 4;
-    auto ibm_sig = sig.value() >> (64 - TAG_POS);  // has explicit MSB
     if (ibm_exp >= EXP_BASE) {
         error = OVERFLOW_RANGE;
         ibm_exp = -EXP_BASE;  // ibm_sig = 0
@@ -132,8 +132,8 @@ Error __ibm_float64::set(const float80_t &f80) {
         sig.shift_right(1);
     }
     sig.round_off(MANT_DIG);
+    auto ibm_sig = sig.value(MANT_DIG);  // has explicit MSB
     auto ibm_exp = ieee_exp / 4;
-    auto ibm_sig = sig.value() >> (64 - TAG_POS);  // has explicit MSB
     if (ibm_exp >= EXP_BASE) {
         error = OVERFLOW_RANGE;
         ibm_exp = -EXP_BASE;  // ibm_sig = 0

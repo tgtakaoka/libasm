@@ -54,7 +54,8 @@ struct __fixed64 {
     __fixed64 &operator=(const __fixed64 &u64) = default;
 
     __fixed64 &set(uint64_t sig, uint16_t low = 0);
-    uint64_t value() const;
+    /** Extract most significant |bits| */
+    uint64_t value(uint_fast8_t bits = _DIG) const;
     uint16_t get_high() const;
     void clear_high();
 
@@ -129,6 +130,7 @@ private:
     static constexpr auto _MSW = 4;   // most significant
     static constexpr auto _HIGH = 5;  // high guard
     static constexpr auto _SIZE = _HIGH + 1;
+    static constexpr auto _DIG = _BITS * (_MSW - _LSW + 1);
     uint16_t _v[_SIZE];
 
     uint16_t get_low() const;

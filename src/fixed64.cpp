@@ -55,14 +55,15 @@ void __fixed64::clear_high() {
     _v[_HIGH] = 0;
 }
 
-uint64_t __fixed64::value() const {
+uint64_t __fixed64::value(uint_fast8_t bits) const {
     uint64_t u64 = _v[_MSW];
     u64 <<= _BITS;
     u64 |= _v[_MSW - 1];
     u64 <<= _BITS;
     u64 |= _v[_LSW + 1];
     u64 <<= _BITS;
-    return u64 | _v[_LSW];
+    u64 |= _v[_LSW];
+    return u64 >> (64 - bits);
 }
 
 uint16_t __fixed64::get_low() const {
@@ -102,7 +103,7 @@ __fixed64 __fixed64::operator/(const __fixed64 &rhs) const {
 }
 
 bool __fixed64::zero() const {
-    return value() == 0 && get_low() == 0;
+    return value(64) == 0 && get_low() == 0;
 }
 
 bool __fixed64::negative() const {
