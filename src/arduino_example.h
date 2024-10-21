@@ -143,7 +143,7 @@ protected:
         if (!isAsm() && strncasecmp_P(line, PSTR("ORG"), 3) == 0) {
             const auto org = skipSpaces(line + 3);
             if (*org) {
-                uint32_t addr;
+                uint32_t addr = 0;
                 const auto p = StrMemory::readNumber(org, &addr);
                 if (p == org) {
                     _cli.println(F("illegal ORG address"));

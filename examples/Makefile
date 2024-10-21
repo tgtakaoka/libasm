@@ -38,6 +38,7 @@ EXS = \
 	mn1610   \
 	mos6502  \
 	ns32000  \
+	pdp11    \
 	pdp8     \
 	scn2650  \
 	tlcs90   \
