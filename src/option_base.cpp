@@ -139,6 +139,8 @@ constexpr char OPT_TEXT_FPU[] PROGMEM = "fpu";
 constexpr char OPT_DESC_FPU[] PROGMEM = "floating point co-processor";
 constexpr char OPT_BOOL_IMPLICIT_WORD[] PROGMEM = "implicit-word";
 constexpr char OPT_DESC_IMPLICIT_WORD[] PROGMEM = "unknown instruction defines word";
+constexpr char OPT_BOOL_ZILOG_SYNTAX[] PROGMEM = "zilog-syntax";
+constexpr char OPT_DESC_ZILOG_SYNTAX[] PROGMEM = "Use Zilog syntax";
 
 }  // namespace option
 }  // namespace text

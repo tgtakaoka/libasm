@@ -15,7 +15,6 @@
  */
 
 #include "table_i8080.h"
-
 #include "entry_i8080.h"
 #include "entry_table.h"
 #include "text_i8080.h"
@@ -29,6 +28,8 @@ namespace i8080 {
     { _opc, Entry::Flags::create(_dst, _src), _name }
 #define E1(_opc, _name, _dst) E2(_opc, _name, _dst, M_NONE)
 #define E0(_opc, _name) E1(_opc, _name, M_NONE)
+#define U2(_opc, _name, _dst, _src) \
+    { _opc, Entry::Flags::undef(_dst, _src), _name }
 
 // clang-format off
 static constexpr Entry TABLE_I8080[] PROGMEM = {
@@ -55,15 +56,15 @@ static constexpr Entry TABLE_I8080[] PROGMEM = {
     E0(0x37, TEXT_STC),
     E0(0x3F, TEXT_CMC),
     E0(0x76, TEXT_HLT),
-    E2(0x40, TEXT_MOV,  M_DST,  M_REG),
-    E1(0x80, TEXT_ADD,  M_REG),
-    E1(0x88, TEXT_ADC,  M_REG),
-    E1(0x90, TEXT_SUB,  M_REG),
-    E1(0x98, TEXT_SBB,  M_REG),
-    E1(0xA0, TEXT_ANA,  M_REG),
-    E1(0xA8, TEXT_XRA,  M_REG),
-    E1(0xB0, TEXT_ORA,  M_REG),
-    E1(0xB8, TEXT_CMP,  M_REG),
+    E2(0x40, TEXT_MOV,  M_DST,  M_SRC),
+    E1(0x80, TEXT_ADD,  M_SRC),
+    E1(0x88, TEXT_ADC,  M_SRC),
+    E1(0x90, TEXT_SUB,  M_SRC),
+    E1(0x98, TEXT_SBB,  M_SRC),
+    E1(0xA0, TEXT_ANA,  M_SRC),
+    E1(0xA8, TEXT_XRA,  M_SRC),
+    E1(0xB0, TEXT_ORA,  M_SRC),
+    E1(0xB8, TEXT_CMP,  M_SRC),
     E0(0xC0, TEXT_RNZ),
     E0(0xC8, TEXT_RZ),
     E0(0xD0, TEXT_RNC),
@@ -193,6 +194,152 @@ static constexpr uint8_t INDEX_I8080[] PROGMEM = {
      55,  // TEXT_XTHL
 };
 
+static constexpr Entry TABLE_Z8080[] PROGMEM = {
+    E0(0x00, TEXT_NOP),
+    E2(0x01, TEXT_LD,   M_PTR, M_IM16),
+    E2(0x09, TEXT_ADD,  R_HL,  M_PTR),
+    E2(0x02, TEXT_LD,   M_IDX, R_A),
+    E2(0x0A, TEXT_LD,   R_A,   M_IDX),
+    E2(0x22, TEXT_LD,   M_ABS, R_HL),
+    E2(0x2A, TEXT_LD,   R_HL,  M_ABS),
+    E2(0x32, TEXT_LD,   M_ABS, R_A),
+    E2(0x3A, TEXT_LD,   R_A,   M_ABS),
+    E1(0x03, TEXT_INC,  M_PTR),
+    E1(0x0B, TEXT_DEC,  M_PTR),
+    E1(0x04, TEXT_INC,  M_DST),
+    E1(0x05, TEXT_DEC,  M_DST),
+    E2(0x06, TEXT_LD,   M_DST, M_IM8),
+    E0(0x07, TEXT_RLCA),
+    E0(0x0F, TEXT_RRCA),
+    E0(0x17, TEXT_RLA),
+    E0(0x1F, TEXT_RRA),
+    E0(0x27, TEXT_DAA),
+    E0(0x2F, TEXT_CPL),
+    E0(0x37, TEXT_SCF),
+    E0(0x3F, TEXT_CCF),
+    E0(0x76, TEXT_HALT),
+    U2(0x76, TEXT_LD,   I_HL,  I_HL),
+    E2(0x40, TEXT_LD,   M_DST, M_SRC),
+    E2(0x80, TEXT_ADD,  R_A,   M_SRC),
+    E2(0x88, TEXT_ADC,  R_A,   M_SRC),
+    E2(0x90, TEXT_SUB,  R_A,   M_SRC),
+    E1(0x90, TEXT_SUB,  M_SRC),
+    E2(0x98, TEXT_SBC,  R_A,   M_SRC),
+    E2(0xA0, TEXT_AND,  R_A,   M_SRC),
+    E1(0xA0, TEXT_AND,  M_SRC),
+    E2(0xA8, TEXT_XOR,  R_A,   M_SRC),
+    E1(0xA8, TEXT_XOR,  M_SRC),
+    E2(0xB0, TEXT_OR,   R_A,   M_SRC),
+    E1(0xB0, TEXT_OR,   M_SRC),
+    E2(0xB8, TEXT_CP,   R_A,   M_SRC),
+    E1(0xB8, TEXT_CP,   M_SRC),
+    E1(0xC0, TEXT_RET,  M_CC),
+    E1(0xC1, TEXT_POP,  M_STK),
+    E0(0xC9, TEXT_RET),
+    E2(0xF9, TEXT_LD,   R_SP,  R_HL),
+    E2(0xC2, TEXT_JP,   M_CC,  M_IM16),
+    E1(0xC3, TEXT_JP,   M_IM16),
+    E1(0xE9, TEXT_JP,   I_HL),
+    E2(0xD3, TEXT_OUT,  M_IOA, R_A),
+    E2(0xDB, TEXT_IN,   R_A,   M_IOA),
+    E2(0xE3, TEXT_EX,   I_SP,  R_HL),
+    E2(0xE3, TEXT_EX,   R_HL,  I_SP),
+    E2(0xEB, TEXT_EX,   R_DE,  R_HL),
+    E2(0xEB, TEXT_EX,   R_HL,  R_DE),
+    E0(0xF3, TEXT_DI),
+    E0(0xFB, TEXT_EI),
+    E2(0xC4, TEXT_CALL, M_CC,  M_IM16),
+    E1(0xC5, TEXT_PUSH, M_STK),
+    E1(0xCD, TEXT_CALL, M_IM16),
+    E2(0xC6, TEXT_ADD,  R_A,   M_IM8),
+    E2(0xCE, TEXT_ADC,  R_A,   M_IM8),
+    E2(0xD6, TEXT_SUB,  R_A,   M_IM8),
+    E1(0xD6, TEXT_SUB,  M_IM8),
+    E2(0xDE, TEXT_SBC,  R_A,   M_IM8),
+    E2(0xE6, TEXT_AND,  R_A,   M_IM8),
+    E1(0xE6, TEXT_AND,  M_IM8),
+    E2(0xEE, TEXT_XOR,  R_A,   M_IM8),
+    E1(0xEE, TEXT_XOR,  M_IM8),
+    E2(0xF6, TEXT_OR,   R_A,   M_IM8),
+    E1(0xF6, TEXT_OR,   M_IM8),
+    E2(0xFE, TEXT_CP,   R_A,   M_IM8),
+    E1(0xFE, TEXT_CP,   M_IM8),
+    E1(0xC7, TEXT_RST,  M_VEC),
+};
+
+static constexpr uint8_t INDEX_Z8080[] PROGMEM = {
+     26,  // TEXT_ADC
+     57,  // TEXT_ADC
+      2,  // TEXT_ADD
+     25,  // TEXT_ADD
+     56,  // TEXT_ADD
+     30,  // TEXT_AND
+     31,  // TEXT_AND
+     61,  // TEXT_AND
+     62,  // TEXT_AND
+     53,  // TEXT_CALL
+     55,  // TEXT_CALL
+     21,  // TEXT_CCF
+     36,  // TEXT_CP
+     37,  // TEXT_CP
+     67,  // TEXT_CP
+     68,  // TEXT_CP
+     19,  // TEXT_CPL
+     18,  // TEXT_DAA
+     10,  // TEXT_DEC
+     12,  // TEXT_DEC
+     51,  // TEXT_DI
+     52,  // TEXT_EI
+     47,  // TEXT_EX
+     48,  // TEXT_EX
+     49,  // TEXT_EX
+     50,  // TEXT_EX
+     22,  // TEXT_HALT
+     46,  // TEXT_IN
+      9,  // TEXT_INC
+     11,  // TEXT_INC
+     42,  // TEXT_JP
+     43,  // TEXT_JP
+     44,  // TEXT_JP
+      1,  // TEXT_LD
+      3,  // TEXT_LD
+      4,  // TEXT_LD
+      5,  // TEXT_LD
+      6,  // TEXT_LD
+      7,  // TEXT_LD
+      8,  // TEXT_LD
+     13,  // TEXT_LD
+     23,  // TEXT_LD
+     24,  // TEXT_LD
+     41,  // TEXT_LD
+      0,  // TEXT_NOP
+     34,  // TEXT_OR
+     35,  // TEXT_OR
+     65,  // TEXT_OR
+     66,  // TEXT_OR
+     45,  // TEXT_OUT
+     39,  // TEXT_POP
+     54,  // TEXT_PUSH
+     38,  // TEXT_RET
+     40,  // TEXT_RET
+     16,  // TEXT_RLA
+     14,  // TEXT_RLCA
+     17,  // TEXT_RRA
+     15,  // TEXT_RRCA
+     69,  // TEXT_RST
+     29,  // TEXT_SBC
+     60,  // TEXT_SBC
+     20,  // TEXT_SCF
+     27,  // TEXT_SUB
+     28,  // TEXT_SUB
+     58,  // TEXT_SUB
+     59,  // TEXT_SUB
+     32,  // TEXT_XOR
+     33,  // TEXT_XOR
+     63,  // TEXT_XOR
+     64,  // TEXT_XOR
+};
+
 static constexpr Entry TABLE_I8085[] PROGMEM = {
     E0(0x20, TEXT_RIM),
     E0(0x30, TEXT_SIM),
@@ -201,6 +348,16 @@ static constexpr Entry TABLE_I8085[] PROGMEM = {
 static constexpr uint8_t INDEX_I8085[] PROGMEM = {
       0,  // TEXT_RIM
       1,  // TEXT_SIM
+};
+
+static constexpr Entry TABLE_Z8085[] PROGMEM = {
+    E2(0x20, TEXT_LD, R_A,  R_IM),
+    E2(0x30, TEXT_LD, R_IM, R_A),
+};
+
+static constexpr uint8_t INDEX_Z8085[] PROGMEM = {
+      0,  // TEXT_LD
+      1,  // TEXT_LD
 };
 
 static constexpr Entry TABLE_V30EMU[] PROGMEM = {
@@ -221,9 +378,18 @@ static constexpr EntryPage I8080_PAGES[] PROGMEM = {
         {0x00, ARRAY_RANGE(TABLE_I8080), ARRAY_RANGE(INDEX_I8080)},
 };
 
+static constexpr EntryPage Z8080_PAGES[] PROGMEM = {
+        {0x00, ARRAY_RANGE(TABLE_Z8080), ARRAY_RANGE(INDEX_Z8080)},
+};
+
 static constexpr EntryPage I8085_PAGES[] PROGMEM = {
         {0x00, ARRAY_RANGE(TABLE_I8080), ARRAY_RANGE(INDEX_I8080)},
         {0x00, ARRAY_RANGE(TABLE_I8085), ARRAY_RANGE(INDEX_I8085)},
+};
+
+static constexpr EntryPage Z8085_PAGES[] PROGMEM = {
+        {0x00, ARRAY_RANGE(TABLE_Z8080), ARRAY_RANGE(INDEX_Z8080)},
+        {0x00, ARRAY_RANGE(TABLE_Z8085), ARRAY_RANGE(INDEX_Z8085)},
 };
 
 static constexpr EntryPage V30EMU_PAGES[] PROGMEM = {
@@ -231,67 +397,115 @@ static constexpr EntryPage V30EMU_PAGES[] PROGMEM = {
         {0xED, ARRAY_RANGE(TABLE_V30EMU), ARRAY_RANGE(INDEX_V30EMU)},
 };
 
+static constexpr EntryPage Z30EMU_PAGES[] PROGMEM = {
+        {0x00, ARRAY_RANGE(TABLE_Z8080), ARRAY_RANGE(INDEX_Z8080)},
+        {0xED, ARRAY_RANGE(TABLE_V30EMU), ARRAY_RANGE(INDEX_V30EMU)},
+};
+
 using Cpu = entry::CpuBase<CpuType, EntryPage>;
 
-static constexpr Cpu CPU_TABLE[] PROGMEM = {
+static constexpr Cpu INTEL_TABLE[] PROGMEM = {
         {I8080, TEXT_CPU_8080, ARRAY_RANGE(I8080_PAGES)},
         {I8085, TEXT_CPU_8085, ARRAY_RANGE(I8085_PAGES)},
         {V30EMU, TEXT_CPU_V30EMU, ARRAY_RANGE(V30EMU_PAGES)},
 };
 
-static const Cpu *cpu(CpuType cpuType) {
-    return Cpu::search(cpuType, ARRAY_RANGE(CPU_TABLE));
+static constexpr Cpu ZILOG_TABLE[] PROGMEM = {
+        {I8080, TEXT_CPU_8080, ARRAY_RANGE(Z8080_PAGES)},
+        {I8085, TEXT_CPU_8085, ARRAY_RANGE(Z8085_PAGES)},
+        {V30EMU, TEXT_CPU_V30EMU, ARRAY_RANGE(Z30EMU_PAGES)},
+};
+
+static const Cpu *cpu(CpuType cpuType, bool zilog) {
+    return zilog ? Cpu::search(cpuType, ARRAY_RANGE(ZILOG_TABLE))
+                 : Cpu::search(cpuType, ARRAY_RANGE(INTEL_TABLE));
 }
 
-static bool acceptMode(AddrMode opr, AddrMode table) {
+static bool acceptIntelMode(AddrMode opr, AddrMode table) {
     if (opr == table)
         return true;
-    if (opr == M_REG)
+    if (opr == M_SRC)
         return table == M_DST;
-    if (opr == M_IDX || opr == M_REGH)
-        return table == M_PTR || table == M_STK || table == M_REG || table == M_DST;
+    if (opr == M_IDX || opr == R_H)
+        return table == M_PTR || table == M_STK || table == M_SRC || table == M_DST;
     if (opr == M_IM16)
         return table == M_IM8 || table == M_ABS || table == M_IOA || table == M_VEC;
     return false;
 }
 
-static bool acceptModes(AsmInsn &insn, const Entry *entry) {
+static bool acceptIntelModes(AsmInsn &insn, const Entry *entry) {
     const auto table = entry->readFlags();
-    return acceptMode(insn.dstOp.mode, table.dst()) && acceptMode(insn.srcOp.mode, table.src());
+    return acceptIntelMode(insn.dstOp.mode, table.dst()) &&
+           acceptIntelMode(insn.srcOp.mode, table.src());
 }
 
-Error TableI8080::searchName(CpuType cpuType, AsmInsn &insn) const {
-    cpu(cpuType)->searchName(insn, acceptModes);
+static bool acceptZilogMode(AddrMode opr, AddrMode table) {
+    if (opr == table)
+        return true;
+    if (opr == M_SRC || opr == R_A)
+        return table == M_DST || table == M_SRC || table == M_DST || table == M_SRC;
+    if (opr == I_HL)
+        return table == M_SRC || table == M_DST;
+    if (opr == R_C)
+        return table == M_SRC || table == M_DST || table == M_CC;
+    if (opr == R_BC || opr == R_DE)
+        return table == M_PTR || table == M_STK;
+    if (opr == R_HL)
+        return table == M_PTR || table == M_STK;
+    if (opr == R_SP)
+        return table == M_PTR;
+    if (opr == R_AF)
+        return table == M_STK;
+    if (opr == M_IM16)
+        return table == M_IM8 || table == M_VEC;
+    if (opr == M_ABS)
+        return table == M_IOA;
+    return false;
+}
+
+static bool acceptZilogModes(AsmInsn &insn, const Entry *entry) {
+    const auto table = entry->readFlags();
+    if (acceptZilogMode(insn.dstOp.mode, table.dst()) &&
+            acceptZilogMode(insn.srcOp.mode, table.src())) {
+        if (table.undefined())
+            insn.setErrorIf(OPERAND_NOT_ALLOWED);
+        return true;
+    }
+    return false;
+}
+
+Error TableI8080::searchName(CpuType cpuType, AsmInsn &insn, bool zilog) const {
+    auto acceptModes = zilog ? acceptZilogModes : acceptIntelModes;
+    cpu(cpuType, zilog)->searchName(insn, acceptModes);
     return insn.getError();
 }
 
-static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page) {
-    UNUSED(page);
+static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *) {
     auto opc = insn.opCode();
     const auto &flags = entry->readFlags();
     const auto dst = flags.dst();
     const auto src = flags.src();
-    if (dst == M_REG || src == M_REG)
+    if (dst == M_SRC || src == M_SRC)
         opc &= ~07;
     if (dst == M_DST)
         opc &= ~070;
-    if (dst == M_PTR || dst == M_STK) {
+    if (dst == M_PTR || dst == M_STK || src == M_PTR || dst == M_STK) {
         opc &= ~0x30;
-    } else if (dst == M_IDX) {
+    } else if (dst == M_IDX || src == M_IDX) {
         opc &= ~0x10;
-    } else if (dst == M_VEC) {
+    } else if (dst == M_CC || dst == M_VEC) {
         opc &= ~070;
     }
     return opc == entry->readOpCode();
 }
 
-Error TableI8080::searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) const {
-    cpu(cpuType)->searchOpCode(insn, out, matchOpCode);
+Error TableI8080::searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out, bool zilog) const {
+    cpu(cpuType, zilog)->searchOpCode(insn, out, matchOpCode);
     return insn.getError();
 }
 
 bool TableI8080::isPrefix(CpuType cpuType, Config::opcode_t code) const {
-    return cpu(cpuType)->isPrefix(code);
+    return cpuType == V30EMU && code == 0xED;
 }
 
 const /*PROGMEM*/ char *TableI8080::listCpu_P() const {
@@ -299,11 +513,11 @@ const /*PROGMEM*/ char *TableI8080::listCpu_P() const {
 }
 
 const /*PROGMEM*/ char *TableI8080::cpuName_P(CpuType cpuType) const {
-    return cpu(cpuType)->name_P();
+    return cpu(cpuType, false)->name_P();
 }
 
 Error TableI8080::searchCpuName(StrScanner &name, CpuType &cpuType) const {
-    auto t = Cpu::search(name, ARRAY_RANGE(CPU_TABLE));
+    auto t = Cpu::search(name, ARRAY_RANGE(INTEL_TABLE));
     if (t) {
         cpuType = t->readCpuType();
     } else {

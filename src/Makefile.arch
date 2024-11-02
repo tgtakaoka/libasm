@@ -53,7 +53,7 @@ TGT_cdp1802  = cdp1802 cdp1804 cdp1804a
 TGT_f3850    = f3850
 TGT_i8048    = i8039 i8048 i80c39 i80c48 msm80c39 msm80c48
 TGT_i8051    = i8051
-TGT_i8080    = i8080 i8085 v30emu
+TGT_i8080    = i8080 i8085 v30emu i8080_z80syn i8085_z80syn v30emu_z80syn
 TGT_i8086    = i8086 i80186 v30
 TGT_i8096    = i8096
 TGT_ins8060  = ins8060
@@ -73,7 +73,7 @@ TGT_tms32010 = tms32010
 TGT_tms7000  = tms7000
 TGT_tms9900  = tms9900 tms9980 tms9995 tms99105 tms99110
 TGT_z8000    = z8001 z8002 z8k1 z8k2
-TGT_z80      = z80 i8080_z80syn i8085_z80syn v30emu_z80syn
+TGT_z80      = z80
 TGT_z8       = z8 z86c z88
 
 # CPU for each target

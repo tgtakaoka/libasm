@@ -33,6 +33,7 @@ struct GenDriver : TestGenerator::Formatter {
     void pseudo(const char *name, const char *operands);
     int close();
     bool generateGas() const { return _generateGas; }
+    bool generateZilog() const { return _generateZilog; }
 
 private:
     Disassembler &_disassembler;
@@ -45,6 +46,7 @@ private:
     std::string _cpu;
     bool _includeTarget;
     bool _generateGas;
+    bool _generateZilog;
     bool _dump;
     FILE *_output;
     FILE *_list;

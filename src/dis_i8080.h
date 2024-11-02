@@ -27,7 +27,17 @@ namespace i8080 {
 struct DisI8080 final : Disassembler, Config {
     DisI8080(const ValueFormatter::Plugins &plugins = defaultPlugins());
 
+    void reset() override;
+
+    Error setZilogSyntax(bool enable);
+
 private:
+    const BoolOption<DisI8080> _opt_zilog;
+
+    bool _zilogSyntax;
+
+    void outIndexReg(StrBuffer &out, uint8_t num) const;
+    void outDataReg(StrBuffer &out, uint8_t num) const;
     void decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) const;
 
     Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) const override;

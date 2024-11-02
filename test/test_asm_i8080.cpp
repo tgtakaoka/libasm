@@ -58,7 +58,7 @@ void test_cpu() {
     EQUALS_P("cpu v30emu", "V30EMU", assembler.config().cpu_P());
 }
 
-static void test_move_inherent() {
+static void intel_move_inherent() {
     TEST("mov b,b", 0x40);
     TEST("MOV B,C", 0x41);
     TEST("MOV B,D", 0x42);
@@ -151,7 +151,106 @@ static void test_move_inherent() {
     }
 }
 
-static void test_move_immediate() {
+static void zilog_move_inherent() {
+    TEST("z80syntax on");
+
+    TEST("LD B,B", 0x40);
+    TEST("LD B,C", 0x41);
+    TEST("LD B,D", 0x42);
+    TEST("LD B,E", 0x43);
+    TEST("LD B,H", 0x44);
+    TEST("LD B,L", 0x45);
+    TEST("ld b,(hl)", 0x46);
+    TEST("LD B,A", 0x47);
+
+    TEST("LD C,B", 0x48);
+    TEST("LD C,C", 0x49);
+    TEST("LD C,D", 0x4A);
+    TEST("LD C,E", 0x4B);
+    TEST("LD C,H", 0x4C);
+    TEST("LD C,L", 0x4D);
+    TEST("LD C,(HL)", 0x4E);
+    TEST("LD C,A", 0x4F);
+
+    TEST("LD D,B", 0x50);
+    TEST("LD D,C", 0x51);
+    TEST("LD D,D", 0x52);
+    TEST("LD D,E", 0x53);
+    TEST("LD D,H", 0x54);
+    TEST("LD D,L", 0x55);
+    TEST("LD D,(HL)", 0x56);
+    TEST("LD D,A", 0x57);
+
+    TEST("LD E,B", 0x58);
+    TEST("LD E,C", 0x59);
+    TEST("LD E,D", 0x5A);
+    TEST("LD E,E", 0x5B);
+    TEST("LD E,H", 0x5C);
+    TEST("LD E,L", 0x5D);
+    TEST("LD E,(HL)", 0x5E);
+    TEST("LD E,A", 0x5F);
+
+    TEST("LD H,B", 0x60);
+    TEST("LD H,C", 0x61);
+    TEST("LD H,D", 0x62);
+    TEST("LD H,E", 0x63);
+    TEST("LD H,H", 0x64);
+    TEST("LD H,L", 0x65);
+    TEST("LD H,(HL)", 0x66);
+    TEST("LD H,A", 0x67);
+
+    TEST("LD L,B", 0x68);
+    TEST("LD L,C", 0x69);
+    TEST("LD L,D", 0x6A);
+    TEST("LD L,E", 0x6B);
+    TEST("LD L,H", 0x6C);
+    TEST("LD L,L", 0x6D);
+    TEST("LD L,(HL)", 0x6E);
+    TEST("LD L,A", 0x6F);
+
+    TEST("LD (HL),B", 0x70);
+    TEST("LD (HL),C", 0x71);
+    TEST("LD (HL),D", 0x72);
+    TEST("LD (HL),E", 0x73);
+    TEST("LD (HL),H", 0x74);
+    TEST("LD (HL),L", 0x75);
+    ERRT("LD (HL),(HL)", OPERAND_NOT_ALLOWED, "(HL),(HL)");
+    TEST("LD (HL),A", 0x77);
+
+    TEST("LD A,B", 0x78);
+    TEST("LD A,C", 0x79);
+    TEST("LD A,D", 0x7A);
+    TEST("LD A,E", 0x7B);
+    TEST("LD A,H", 0x7C);
+    TEST("LD A,L", 0x7D);
+    TEST("LD A,(HL)", 0x7E);
+    TEST("LD A,A", 0x7F);
+
+    TEST("LD (BC),A", 0x02);
+    TEST("LD (DE),A", 0x12);
+    TEST("LD A,(BC)", 0x0A);
+    TEST("LD A,(DE)", 0x1A);
+
+    if (is8085()) {
+        // i8085
+        TEST("LD A,IM", 0x20);
+        TEST("LD IM,A", 0x30);
+        ERUI("RETEM");
+        ERUI("CALLN 40H");
+    } else if (v30emu()) {
+        ERRT("LD A,IM", OPERAND_NOT_ALLOWED, "A,IM");
+        ERRT("LD IM,A", OPERAND_NOT_ALLOWED, "IM,A");
+        TEST("RETEM",     0xED, 0xFD);
+        TEST("CALLN 40H", 0xED, 0xED, 0x40);
+    } else {
+        ERRT("LD A,IM", OPERAND_NOT_ALLOWED, "A,IM");
+        ERRT("LD IM,A", OPERAND_NOT_ALLOWED, "IM,A");
+        ERUI("RETEM");
+        ERUI("CALLN 40H");
+    }
+}
+
+static void intel_move_immediate() {
     TEST("MVI B,0F6H", 0x06, 0xF6);
     TEST("MVI C,9FH",  0x0E, 0x9F);
     TEST("MVI D,58",   0x16, 0x3A);
@@ -178,7 +277,36 @@ static void test_move_immediate() {
     TEST("LXI SP,?6789", 0x31, 0x89, 0x67);
 }
 
-static void test_move_direct() {
+static void zilog_move_immediate() {
+    TEST("z80syntax on");
+
+    TEST("LD B,0F6H", 0x06, 0xF6);
+    TEST("LD C,9FH",  0x0E, 0x9F);
+    TEST("LD D,3AH",  0x16, 0x3A);
+    TEST("LD E,80H",  0x1E, 0x80);
+    TEST("LD H,0F6H", 0x26, 0xF6);
+    TEST("LD L,0F6H", 0x2E, 0xF6);
+    TEST("LD (HL),0F6H", 0x36, 0xF6);
+    TEST("LD A,0FEH", 0x3E, 0xFE);
+    TEST("LD A,-1",   0x3E, 0xFF);
+    TEST("LD A,255",  0x3E, 0xFF);
+    ERRT("LD A,256",  OVERFLOW_RANGE, "256",  0x3E, 0x00);
+    TEST("LD A,-128", 0x3E, 0x80);
+    ERRT("LD A,-129", OVERFLOW_RANGE, "-129", 0x3E, 0x7F);
+
+    TEST("LD BC,0BEEFH", 0x01, 0xEF, 0xBE);
+    TEST("LD DE,1234H",  0x11, 0x34, 0x12);
+    TEST("LD HL,0BEEFH", 0x21, 0xEF, 0xBE);
+    TEST("LD SP,6789H",  0x31, 0x89, 0x67);
+
+    symtab.intern(-1,  "minus_1");
+    symtab.intern(255, "?max255");
+
+    TEST("LD B, minus_1", 0x06, 0xFF);
+    TEST("LD C, ?max255", 0x0E, 0xFF);
+}
+
+static void intel_move_direct() {
     TEST("STA 9ABCH", 0x32, 0xBC, 0x9A);
     TEST("LDA 1234H", 0x3A, 0x34, 0x12);
 
@@ -197,7 +325,17 @@ static void test_move_direct() {
     TEST("LHLD label5678", 0x2A, 0x78, 0x56);
 }
 
-static void test_stack_op() {
+static void zilog_move_direct() {
+    TEST("z80syntax on");
+
+    TEST("LD (9ABCH),A", 0x32, 0xBC, 0x9A);
+    TEST("LD A,(1234H)", 0x3A, 0x34, 0x12);
+
+    TEST("LD (0ABCDH),HL", 0x22, 0xCD, 0xAB);
+    TEST("LD HL,(5678H)",  0x2A, 0x78, 0x56);
+}
+
+static void intel_stack_op() {
     TEST("PUSH B",   0xC5);
     TEST("PUSH D",   0xD5);
     TEST("PUSH H",   0xE5);
@@ -213,7 +351,27 @@ static void test_stack_op() {
     TEST("XCHG",  0xEB);
 }
 
-static void test_jump_call() {
+static void zilog_stack_op() {
+    TEST("z80syntax on");
+
+    TEST("PUSH BC", 0xC5);
+    TEST("PUSH DE", 0xD5);
+    TEST("PUSH HL", 0xE5);
+    TEST("PUSH AF", 0xF5);
+    TEST("POP BC", 0xC1);
+    TEST("POP DE", 0xD1);
+    TEST("POP HL", 0xE1);
+    TEST("POP AF", 0xF1);
+
+    TEST("EX (SP),HL", 0xE3);
+    TEST("EX HL,(SP)", 0xE3);
+    TEST("JP (HL)",    0xE9);
+    TEST("LD SP,HL",   0xF9);
+    TEST("ex de,hl",   0xEB);
+    TEST("EX HL,DE",   0xEB);
+}
+
+static void intel_jump_call() {
     TEST("JMP 1234H", 0xC3, 0x34, 0x12);
     TEST("JNZ 1234H", 0xC2, 0x34, 0x12);
     TEST("JZ 1234H",  0xCA, 0x34, 0x12);
@@ -251,7 +409,41 @@ static void test_jump_call() {
     TEST("CC  label1234", 0xDC, 0x34, 0x12);
 }
 
-static void test_incr_decr() {
+static void zilog_jump_call() {
+    TEST("z80syntax on");
+
+    TEST("JP 1234H",    0xC3, 0x34, 0x12);
+    TEST("jp nz,1234h", 0xC2, 0x34, 0x12);
+    TEST("JP Z,1234H",  0xCA, 0x34, 0x12);
+    TEST("JP NC,1234H", 0xD2, 0x34, 0x12);
+    TEST("JP C,1234H",  0xDA, 0x34, 0x12);
+    TEST("JP PO,1234H", 0xE2, 0x34, 0x12);
+    TEST("JP PE,1234H", 0xEA, 0x34, 0x12);
+    TEST("JP P,1234H",  0xF2, 0x34, 0x12);
+    TEST("JP M,1234H",  0xFA, 0x34, 0x12);
+
+    TEST("CALL 1234H",    0xCD, 0x34, 0x12);
+    TEST("CALL NZ,1234H", 0xC4, 0x34, 0x12);
+    TEST("CALL Z,1234H",  0xCC, 0x34, 0x12);
+    TEST("CALL NC,1234H", 0xD4, 0x34, 0x12);
+    TEST("CALL C,1234H",  0xDC, 0x34, 0x12);
+    TEST("CALL PO,1234H", 0xE4, 0x34, 0x12);
+    TEST("CALL PE,1234H", 0xEC, 0x34, 0x12);
+    TEST("CALL P,1234H",  0xF4, 0x34, 0x12);
+    TEST("CALL M,1234H",  0xFC, 0x34, 0x12);
+
+    TEST("RET",    0xC9);
+    TEST("RET NZ", 0xC0);
+    TEST("RET Z",  0xC8);
+    TEST("RET NC", 0xD0);
+    TEST("RET C",  0xD8);
+    TEST("RET PO", 0xE0);
+    TEST("RET PE", 0xE8);
+    TEST("RET P",  0xF0);
+    TEST("RET M",  0xF8);
+}
+
+static void intel_incr_decr() {
     TEST("INR B", 0x04);
     TEST("INR C", 0x0C);
     TEST("INR D", 0x14);
@@ -278,20 +470,40 @@ static void test_incr_decr() {
     TEST("DCX D",  0x1B);
     TEST("DCX H",  0x2B);
     TEST("DCX SP", 0x3B);
-
-    TEST("RST 0", 0xC7);
-    TEST("RST 1", 0xCF);
-    TEST("RST 2", 0xD7);
-    TEST("RST 3", 0xDF);
-    TEST("RST 4", 0xE7);
-    TEST("RST 5", 0xEF);
-    TEST("RST 6", 0xF7);
-    TEST("RST 7", 0xFF);
-    ERRT("RST -1", OVERFLOW_RANGE, "-1", 0xFF);
-    ERRT("RST 8",  OVERFLOW_RANGE, "8",  0xC7);
 }
 
-static void test_alu_register() {
+static void zilog_incr_decr() {
+    TEST("z80syntax on");
+
+    TEST("INC B", 0x04);
+    TEST("INC C", 0x0C);
+    TEST("INC D", 0x14);
+    TEST("INC E", 0x1C);
+    TEST("INC H", 0x24);
+    TEST("INC L", 0x2C);
+    TEST("INC (HL)",0x34);
+    TEST("INC A", 0x3C);
+
+    TEST("DEC B", 0x05);
+    TEST("DEC C", 0x0D);
+    TEST("DEC D", 0x15);
+    TEST("DEC E", 0x1D);
+    TEST("DEC H", 0x25);
+    TEST("DEC L", 0x2D);
+    TEST("DEC (HL)",0x35);
+    TEST("DEC A", 0x3D);
+
+    TEST("INC BC", 0x03);
+    TEST("INC DE", 0x13);
+    TEST("INC HL", 0x23);
+    TEST("INC SP", 0x33);
+    TEST("DEC BC", 0x0B);
+    TEST("DEC DE", 0x1B);
+    TEST("DEC HL", 0x2B);
+    TEST("DEC SP", 0x3B);
+}
+
+static void intel_alu_register() {
     TEST("ADD B", 0x80);
     TEST("ADD C", 0x81);
     TEST("ADD D", 0x82);
@@ -364,29 +576,134 @@ static void test_alu_register() {
     TEST("CMP M", 0xBE);
     TEST("CMP A", 0xBF);
 
-    TEST("RLC", 0x07);
-    TEST("RRC", 0x0F);
-    TEST("RAL", 0x17);
-    TEST("RAR", 0x1F);
-
-    TEST("DAA", 0x27);
-    TEST("CMA", 0x2F);
-    TEST("STC", 0x37);
-    TEST("CMC", 0x3F);
-
     TEST("DAD B",  0x09);
     TEST("DAD D",  0x19);
     TEST("DAD H",  0x29);
     TEST("DAD SP", 0x39);
-
-    TEST("DI",  0xF3);
-    TEST("EI",  0xFB);
-
-    TEST("NOP", 0x00);
-    TEST("HLT", 0x76);
 }
 
-static void test_alu_immediate() {
+static void zilog_alu_register() {
+    TEST("z80syntax on");
+
+    TEST("ADD A,B", 0x80);
+    TEST("ADD A,C", 0x81);
+    TEST("ADD A,D", 0x82);
+    TEST("ADD A,E", 0x83);
+    TEST("ADD A,H", 0x84);
+    TEST("ADD A,L", 0x85);
+    TEST("ADD A,(HL)", 0x86);
+    TEST("ADD A,A", 0x87);
+
+    TEST("ADC A,B", 0x88);
+    TEST("ADC A,C", 0x89);
+    TEST("ADC A,D", 0x8A);
+    TEST("ADC A,E", 0x8B);
+    TEST("ADC A,H", 0x8C);
+    TEST("ADC A,L", 0x8D);
+    TEST("ADC A,(HL)", 0x8E);
+    TEST("ADC A,A", 0x8F);
+
+    TEST("SUB A,B", 0x90);
+    TEST("SUB A,C", 0x91);
+    TEST("SUB A,D", 0x92);
+    TEST("SUB A,E", 0x93);
+    TEST("SUB A,H", 0x94);
+    TEST("SUB A,L", 0x95);
+    TEST("SUB A,(HL)", 0x96);
+    TEST("SUB A,A", 0x97);
+    TEST("SUB B", 0x90);
+    TEST("SUB C", 0x91);
+    TEST("SUB D", 0x92);
+    TEST("SUB E", 0x93);
+    TEST("SUB H", 0x94);
+    TEST("SUB L", 0x95);
+    TEST("SUB (HL)", 0x96);
+    TEST("SUB A", 0x97);
+
+    TEST("SBC A,B", 0x98);
+    TEST("SBC A,C", 0x99);
+    TEST("SBC A,D", 0x9A);
+    TEST("SBC A,E", 0x9B);
+    TEST("SBC A,H", 0x9C);
+    TEST("SBC A,L", 0x9D);
+    TEST("SBC A,(HL)", 0x9E);
+    TEST("SBC A,A", 0x9F);
+
+    TEST("AND A,B", 0xA0);
+    TEST("AND A,C", 0xA1);
+    TEST("AND A,D", 0xA2);
+    TEST("AND A,E", 0xA3);
+    TEST("AND A,H", 0xA4);
+    TEST("AND A,L", 0xA5);
+    TEST("AND A,(HL)", 0xA6);
+    TEST("AND A,A", 0xA7);
+    TEST("AND B", 0xA0);
+    TEST("AND C", 0xA1);
+    TEST("AND D", 0xA2);
+    TEST("AND E", 0xA3);
+    TEST("AND H", 0xA4);
+    TEST("AND L", 0xA5);
+    TEST("AND (HL)", 0xA6);
+    TEST("AND A", 0xA7);
+
+    TEST("XOR A,B", 0xA8);
+    TEST("XOR A,C", 0xA9);
+    TEST("XOR A,D", 0xAA);
+    TEST("XOR A,E", 0xAB);
+    TEST("XOR A,H", 0xAC);
+    TEST("XOR A,L", 0xAD);
+    TEST("XOR A,(HL)", 0xAE);
+    TEST("XOR A,A", 0xAF);
+    TEST("XOR B", 0xA8);
+    TEST("XOR C", 0xA9);
+    TEST("XOR D", 0xAA);
+    TEST("XOR E", 0xAB);
+    TEST("XOR H", 0xAC);
+    TEST("XOR L", 0xAD);
+    TEST("XOR (HL)", 0xAE);
+    TEST("XOR A", 0xAF);
+
+    TEST("OR A,B", 0xB0);
+    TEST("OR A,C", 0xB1);
+    TEST("OR A,D", 0xB2);
+    TEST("OR A,E", 0xB3);
+    TEST("OR A,H", 0xB4);
+    TEST("OR A,L", 0xB5);
+    TEST("OR A,(HL)", 0xB6);
+    TEST("OR A,A", 0xB7);
+    TEST("OR B", 0xB0);
+    TEST("OR C", 0xB1);
+    TEST("OR D", 0xB2);
+    TEST("OR E", 0xB3);
+    TEST("OR H", 0xB4);
+    TEST("OR L", 0xB5);
+    TEST("OR (HL)", 0xB6);
+    TEST("OR A", 0xB7);
+
+    TEST("CP A,B", 0xB8);
+    TEST("CP A,C", 0xB9);
+    TEST("CP A,D", 0xBA);
+    TEST("CP A,E", 0xBB);
+    TEST("CP A,H", 0xBC);
+    TEST("CP A,L", 0xBD);
+    TEST("CP A,(HL)", 0xBE);
+    TEST("CP A,A", 0xBF);
+    TEST("CP B", 0xB8);
+    TEST("CP C", 0xB9);
+    TEST("CP D", 0xBA);
+    TEST("CP E", 0xBB);
+    TEST("CP H", 0xBC);
+    TEST("CP L", 0xBD);
+    TEST("CP (HL)", 0xBE);
+    TEST("CP A", 0xBF);
+
+    TEST("ADD HL,BC", 0x09);
+    TEST("ADD HL,DE", 0x19);
+    TEST("ADD HL,HL", 0x29);
+    TEST("ADD HL,SP", 0x39);
+}
+
+static void intel_alu_immediate() {
     TEST("ADI 10B", 0xC6, 0x02);
     TEST("ACI 255", 0xCE, 0xFF);
     ERRT("ACI 256", OVERFLOW_RANGE, "256", 0xCE, 0x00);
@@ -401,11 +718,136 @@ static void test_alu_immediate() {
     TEST("CPI -128", 0xFE, 0x80);
 }
 
-static void test_io() {
+static void zilog_alu_immediate() {
+    TEST("z80syntax on");
+
+    TEST("ADD A,10B",  0xC6, 0x02);
+    TEST("ADC A,255",  0xCE, 0xFF);
+    TEST("SUB A,-2",   0xD6, 0xFE);
+    TEST("SBC A,177O", 0xDE, 0x7F);
+    TEST("AND A,~0FH", 0xE6, 0xF0);
+    TEST("XOR A,~001B",0xEE, 0xFE);
+    TEST("OR  A,+127", 0xF6, 0x7F);
+    TEST("CP  A,-128", 0xFE, 0x80);
+    TEST("SUB -2",   0xD6, 0xFE);
+    TEST("AND ~0FH", 0xE6, 0xF0);
+    TEST("XOR ~001B",0xEE, 0xFE);
+    TEST("OR  +127", 0xF6, 0x7F);
+    TEST("CP  -128", 0xFE, 0x80);
+}
+
+static void intel_io() {
     TEST("OUT 0F1H", 0xD3, 0xF1);
     TEST("IN  0F0H", 0xDB, 0xF0);
     ERRT("OUT 101H", OVERFLOW_RANGE, "101H", 0xD3, 0x01);
     ERRT("IN  -1",   OVERFLOW_RANGE, "-1",   0xDB, 0xFF);
+}
+
+static void zilog_io() {
+    TEST("z80syntax on");
+
+    TEST("OUT (0F1H),A", 0xD3, 0xF1);
+    TEST("IN A,(0F0H)",  0xDB, 0xF0);
+    ERRT("IN A,(-1)",    OVERFLOW_RANGE, "(-1)",  0xDB, 0xFF);
+    ERRT("IN A,(256)",   OVERFLOW_RANGE, "(256)", 0xDB, 0x00);
+}
+
+static void intel_inherent() {
+    TEST("DI",  0xF3);
+    TEST("EI",  0xFB);
+
+    TEST("NOP", 0x00);
+    TEST("HLT", 0x76);
+
+    TEST("RLC", 0x07);
+    TEST("RRC", 0x0F);
+    TEST("RAL", 0x17);
+    TEST("RAR", 0x1F);
+
+    TEST("DAA", 0x27);
+    TEST("CMA", 0x2F);
+    TEST("STC", 0x37);
+    TEST("CMC", 0x3F);
+}
+
+static void zilog_inherent() {
+    TEST("z80syntax on");
+
+    TEST("DI", 0xF3);
+    TEST("EI", 0xFB);
+
+    TEST("NOP",  0x00);
+    TEST("HALT", 0x76);
+
+    TEST("RLCA", 0x07);
+    TEST("RRCA", 0x0F);
+    TEST("RLA", 0x17);
+    TEST("RRA", 0x1F);
+
+    TEST("DAA", 0x27);
+    TEST("CPL", 0x2F);
+    TEST("SCF", 0x37);
+    TEST("CCF", 0x3F);
+}
+
+static void intel_restart() {
+    TEST("RST 0", 0xC7);
+    TEST("RST 1", 0xCF);
+    TEST("RST 2", 0xD7);
+    TEST("RST 3", 0xDF);
+    TEST("RST 4", 0xE7);
+    TEST("RST 5", 0xEF);
+    TEST("RST 6", 0xF7);
+    TEST("RST 7", 0xFF);
+    ERRT("RST -1", OVERFLOW_RANGE, "-1", 0xFF);
+    ERRT("RST 8",  OVERFLOW_RANGE, "8",  0xC7);
+}
+
+static void zilog_restart() {
+    TEST("z80syntax on");
+
+    TEST("RST 00H", 0xC7);
+    TEST("RST 08H", 0xCF);
+    TEST("RST 10H", 0xD7);
+    TEST("RST 18H", 0xDF);
+    TEST("RST 20H", 0xE7);
+    TEST("RST 28H", 0xEF);
+    TEST("RST 30H", 0xF7);
+    TEST("RST 38H", 0xFF);
+    ERRT("RST 39H", ILLEGAL_OPERAND, "39H", 0xC7);
+    ERRT("RST 40H", ILLEGAL_OPERAND, "40H", 0xC7);
+    ERRT("RST -1",  ILLEGAL_OPERAND, "-1",  0xC7);
+}
+
+static void intel_undef() {
+    ERUS("MVI  B,UNDEF", "UNDEF", 0x06, 0x00);
+    ERUS("LXI  B,UNDEF", "UNDEF", 0x01, 0x00, 0x00);
+    ERUS("STA  UNDEF", "UNDEF", 0x32, 0x00, 0x00);
+    ERUS("SHLD UNDEF", "UNDEF", 0x22, 0x00, 0x00);
+    ERUS("JMP  UNDEF", "UNDEF", 0xC3, 0x00, 0x00);
+    ERUS("CALL UNDEF", "UNDEF", 0xCD, 0x00, 0x00);
+    ERUS("ADI  UNDEF", "UNDEF", 0xC6, 0x00);
+    ERUS("OUT  UNDEF", "UNDEF", 0xD3, 0x00);
+    ERUS("IN   UNDEF", "UNDEF", 0xDB, 0x00);
+}
+
+static void zilog_undef() {
+    TEST("z80syntax on");
+
+    ERUS("LD  B,UNDEF",   "UNDEF",     0x06, 0x00);
+    ERUS("LD BC,UNDEF",   "UNDEF",     0x01, 0x00, 0x00);
+    ERUS("LD (UNDEF),A",  "UNDEF),A",  0x32, 0x00, 0x00);
+    ERUS("LD A,(UNDEF)",  "UNDEF)",    0x3A, 0x00, 0x00);
+    ERUS("LD (UNDEF),HL", "UNDEF),HL", 0x22, 0x00, 0x00);
+    ERUS("LD HL,(UNDEF)", "UNDEF)",    0x2A, 0x00, 0x00);
+    ERUS("JP    UNDEF",   "UNDEF",     0xC3, 0x00, 0x00);
+    ERUS("JP NZ,UNDEF",   "UNDEF",     0xC2, 0x00, 0x00);
+    ERUS("CALL    UNDEF", "UNDEF",     0xCD, 0x00, 0x00);
+    ERUS("CALL NZ,UNDEF", "UNDEF",     0xC4, 0x00, 0x00);
+    ERUS("ADD  A,UNDEF",  "UNDEF",     0xC6, 0x00);
+    ERUS("OUT (UNDEF),A", "UNDEF),A",  0xD3, 0x00);
+    ERUS("IN  A,(UNDEF)", "UNDEF)",    0xDB, 0x00);
+    ERUS("RST UNDEF",     "UNDEF",     0xC7);
 }
 
 static void test_comment() {
@@ -424,18 +866,6 @@ static void test_comment() {
     COMM("DW -128, 255 ; comment", "; comment", 0x80, 0xFF, 0xFF, 0x00);
 }
 
-static void test_undef() {
-    ERUS("MVI  B,UNDEF", "UNDEF", 0x06, 0x00);
-    ERUS("LXI  B,UNDEF", "UNDEF", 0x01, 0x00, 0x00);
-    ERUS("STA  UNDEF", "UNDEF", 0x32, 0x00, 0x00);
-    ERUS("SHLD UNDEF", "UNDEF", 0x22, 0x00, 0x00);
-    ERUS("JMP  UNDEF", "UNDEF", 0xC3, 0x00, 0x00);
-    ERUS("CALL UNDEF", "UNDEF", 0xCD, 0x00, 0x00);
-    ERUS("ADI  UNDEF", "UNDEF", 0xC6, 0x00);
-    ERUS("OUT  UNDEF", "UNDEF", 0xD3, 0x00);
-    ERUS("IN   UNDEF", "UNDEF", 0xDB, 0x00);
-}
-
 static void test_data_constant() {
     TEST("DB -128, 255", 0x80, 0xFF);
     TEST(R"(DB 'A', '"')", 0x41, 0x22);
@@ -447,8 +877,22 @@ static void test_data_constant() {
     TEST("DW -128, 255", 0x80, 0xFF, 0xFF, 0x00);
     TEST("DW 'A''B'",    0x41, 0x27, 0x42, 0x00);
     ERRT("DW 'A''B",     MISSING_CLOSING_QUOTE, "'A''B");
+    TEST("DEFB -128, 255", 0x80, 0xFF);
+    TEST(R"(DEFB 'A', '"')", 0x41, 0x22);
+    TEST("DEFB '9'-'0'",   0x09);
+    TEST("DEFB ''''",      0x27);
+    ERRT("DEFB '''",       MISSING_CLOSING_QUOTE, "'''");
+    TEST("DEFB 'A''B',0",  0x41, 0x27, 0x42, 0x00);
+    ERRT("DEFB 'A''B,0",   MISSING_CLOSING_QUOTE, "'A''B,0");
+    TEST("DEFW -128, 255", 0x80, 0xFF, 0xFF, 0x00);
+    TEST("DEFW 'A''B'",    0x41, 0x27, 0x42, 0x00);
+    ERRT("DEFW 'A''B",     MISSING_CLOSING_QUOTE, "'A''B");
+    TEST(R"(DEFM 'A''B"C')", 0x41, 0x27, 0x42, 0x22, 0x43);
     ERUS("DB 1, UNDEF, 2", "UNDEF, 2", 0x01, 0x00, 0x02);
     ERUS("DW 1, UNDEF, 2", "UNDEF, 2", 0x01, 0x00, 0x00, 0x00, 0x02, 0x00);
+    ERUS("DEFB 1, UNDEF, 2", "UNDEF, 2", 0x01, 0x00, 0x02);
+    ERUS("DEFM 1, UNDEF, 2", "UNDEF, 2", 0x01, 0x00, 0x02);
+    ERUS("DEFW 1, UNDEF, 2", "UNDEF, 2", 0x01, 0x00, 0x00, 0x00, 0x02, 0x00);
 
     ERRT("DB '"
          "1234567890" "1234567890" "1234567890" "1234567890" "1234567890" "1234567890"
@@ -476,22 +920,35 @@ static void test_data_constant() {
          0x34, 0x12, 0x78, 0x56, 0xBC, 0x9A, 0xF0, 0xDE, 0x34, 0x12, 0x78, 0x56, 0xBC, 0x9A, 0xF0, 0xDE,
          0x34, 0x12, 0x78, 0x56, 0xBC, 0x9A, 0xF0, 0xDE, 0x34, 0x12, 0x78, 0x56, 0xBC, 0x9A, 0xDE, 0x00);
 }
-
 // clang-format on
 
 void run_tests(const char *cpu) {
     assembler.setCpu(cpu);
-    RUN_TEST(test_move_inherent);
-    RUN_TEST(test_move_immediate);
-    RUN_TEST(test_move_direct);
-    RUN_TEST(test_stack_op);
-    RUN_TEST(test_jump_call);
-    RUN_TEST(test_incr_decr);
-    RUN_TEST(test_alu_register);
-    RUN_TEST(test_alu_immediate);
-    RUN_TEST(test_io);
+    RUN_TEST(intel_move_inherent);
+    RUN_TEST(intel_move_immediate);
+    RUN_TEST(intel_move_direct);
+    RUN_TEST(intel_stack_op);
+    RUN_TEST(intel_jump_call);
+    RUN_TEST(intel_incr_decr);
+    RUN_TEST(intel_alu_register);
+    RUN_TEST(intel_alu_immediate);
+    RUN_TEST(intel_io);
+    RUN_TEST(intel_inherent);
+    RUN_TEST(intel_restart);
+    RUN_TEST(intel_undef);
+    RUN_TEST(zilog_move_inherent);
+    RUN_TEST(zilog_move_immediate);
+    RUN_TEST(zilog_move_direct);
+    RUN_TEST(zilog_stack_op);
+    RUN_TEST(zilog_jump_call);
+    RUN_TEST(zilog_incr_decr);
+    RUN_TEST(zilog_alu_register);
+    RUN_TEST(zilog_alu_immediate);
+    RUN_TEST(zilog_io);
+    RUN_TEST(zilog_inherent);
+    RUN_TEST(zilog_restart);
+    RUN_TEST(zilog_undef);
     RUN_TEST(test_comment);
-    RUN_TEST(test_undef);
     RUN_TEST(test_data_constant);
 }
 

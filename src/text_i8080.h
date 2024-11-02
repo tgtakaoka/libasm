@@ -126,8 +126,40 @@ using common::TEXT_REG_L;
 extern const char TEXT_REG_M[]   PROGMEM;
 using common::TEXT_REG_SP;
 using common::TEXT_REG_PSW;
-// clang-format on
 
+// zilog syntax
+using common::TEXT_AND;
+using common::TEXT_CCF;
+using common::TEXT_CPL;
+using common::TEXT_DEC;
+using common::TEXT_EX;
+using common::TEXT_HALT;
+using common::TEXT_INC;
+using common::TEXT_LD;
+using common::TEXT_OR;
+using common::TEXT_RLA;
+using common::TEXT_RLCA;
+using common::TEXT_RRA;
+using common::TEXT_RRCA;
+using common::TEXT_SBC;
+using common::TEXT_SCF;
+using common::TEXT_XOR;
+
+using common::TEXT_REG_AF;
+using common::TEXT_REG_BC;
+using common::TEXT_REG_DE;
+using common::TEXT_REG_HL;
+extern const char TEXT_REG_IM[]  PROGMEM;
+using common::TEXT_CC_NZ;
+using common::TEXT_CC_Z;
+using common::TEXT_CC_NC;
+using common::TEXT_CC_C;
+using common::TEXT_CC_PO;
+using common::TEXT_CC_PE;
+using common::TEXT_CC_P;
+using common::TEXT_CC_M;
+
+// clang-format on
 }  // namespace i8080
 }  // namespace text
 }  // namespace libasm

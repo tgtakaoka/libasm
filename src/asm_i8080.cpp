@@ -15,7 +15,6 @@
  */
 
 #include "asm_i8080.h"
-
 #include "table_i8080.h"
 #include "text_common.h"
 
@@ -25,14 +24,19 @@ namespace i8080 {
 using namespace pseudo;
 using namespace reg;
 using namespace text::common;
+using namespace text::option;
 
 namespace {
 
 // clang-format off
 constexpr Pseudo PSEUDOS[] PROGMEM = {
-    {TEXT_DB, &Assembler::defineDataConstant, Assembler::DATA_BYTE},
-    {TEXT_DS, &Assembler::allocateSpaces,     Assembler::DATA_BYTE},
-    {TEXT_DW, &Assembler::defineDataConstant, Assembler::DATA_WORD},
+    {TEXT_DB,   &Assembler::defineDataConstant, Assembler::DATA_BYTE},
+    {TEXT_DEFB, &Assembler::defineDataConstant, Assembler::DATA_BYTE},
+    {TEXT_DEFM, &Assembler::defineDataConstant, Assembler::DATA_BYTE},
+    {TEXT_DEFS, &Assembler::allocateSpaces,     Assembler::DATA_BYTE},
+    {TEXT_DEFW, &Assembler::defineDataConstant, Assembler::DATA_WORD},
+    {TEXT_DS,   &Assembler::allocateSpaces,     Assembler::DATA_BYTE},
+    {TEXT_DW,   &Assembler::defineDataConstant, Assembler::DATA_WORD},
 };
 // clang-format on
 PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
@@ -51,12 +55,25 @@ const ValueParser::Plugins &AsmI8080::defaultPlugins() {
 }
 
 AsmI8080::AsmI8080(const ValueParser::Plugins &plugins)
-    : Assembler(plugins, PSEUDO_TABLE), Config(TABLE) {
+    : Assembler(plugins, PSEUDO_TABLE, &_opt_zilog),
+      Config(TABLE),
+      _opt_zilog(this, &AsmI8080::setZilogSyntax, OPT_BOOL_ZILOG_SYNTAX, OPT_DESC_ZILOG_SYNTAX) {
     reset();
+}
+
+void AsmI8080::reset() {
+    Assembler::reset();
+    setZilogSyntax(false);
+}
+
+Error AsmI8080::setZilogSyntax(bool enable) {
+    _zilogSyntax = enable;
+    return OK;
 }
 
 void AsmI8080::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode) const {
     insn.setErrorIf(op);
+    uint16_t val16 = op.val.getUnsigned();
     switch (mode) {
     case M_IOA:
         if (op.val.overflow(UINT8_MAX))
@@ -65,11 +82,11 @@ void AsmI8080::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode) co
     case M_IM8:
         if (op.val.overflowUint8())
             insn.setErrorIf(op, OVERFLOW_RANGE);
-        insn.emitOperand8(op.val.getUnsigned());
+        insn.emitOperand8(val16);
         return;
     case M_IM16:
     case M_ABS:
-        insn.emitOperand16(op.val.getUnsigned());
+        insn.emitOperand16(val16);
         return;
     case M_PTR:
         insn.embed(encodePointerReg(op.reg) << 4);
@@ -80,33 +97,125 @@ void AsmI8080::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode) co
     case M_IDX:
         insn.embed(encodeIndexReg(op.reg) << 4);
         return;
-    case M_REG:
+    case M_SRC:
         insn.embed(encodeDataReg(op.reg));
         return;
     case M_DST:
         insn.embed(encodeDataReg(op.reg) << 3);
         return;
     case M_VEC:
-        if (op.val.overflow(7))
-            insn.setErrorIf(op, OVERFLOW_RANGE);
-        insn.embed((op.val.getUnsigned() & 7) << 3);
+        if (_zilogSyntax) {
+            if ((val16 & ~0x38) != 0) {
+                val16 &= ~0x38;
+                insn.setErrorIf(op, ILLEGAL_OPERAND);
+            }
+            insn.embed(val16);
+        } else {
+            if (op.val.overflow(7))
+                insn.setErrorIf(op, OVERFLOW_RANGE);
+            insn.embed((val16 & 7) << 3);
+        }
+        return;
+    case M_CC:
+        insn.embed(val16 << 3);
         return;
     default:
         return;
     }
 }
 
-Error AsmI8080::parseOperand(StrScanner &scan, Operand &op) const {
+Error AsmI8080::parseZilogOperand(StrScanner &scan, Operand &op) const {
     auto p = scan.skipSpaces();
     op.setAt(p);
     if (endOfLine(p))
         return OK;
 
-    op.reg = parseRegName(p);
+    // 'C' is either C-reg or C-condition
+    auto a = p;
+    const auto reg = parseRegName(a, true);
+    if (reg == REG_C) {
+        op.mode = R_C;
+        op.reg = REG_C;
+        op.val.setUnsigned(encodeCcName(CC_C));
+        scan = a;
+        return OK;
+    }
+
+    const auto cc = parseCcName(p);
+    if (cc != CC_UNDEF) {
+        op.mode = M_CC;
+        op.val.setUnsigned(encodeCcName(cc));
+        scan = p;
+        return OK;
+    }
+
+    op.reg = parseRegName(p, true);
+    if (op.reg != REG_UNDEF) {
+        switch (op.reg) {
+        case REG_B:
+        case REG_D:
+        case REG_E:
+        case REG_H:
+        case REG_L:
+            op.mode = M_SRC;
+            break;
+        default:
+            op.mode = AddrMode(op.reg + R_BASE);
+            break;
+        }
+        scan = p;
+        return OK;
+    }
+    if (p.expect('(')) {
+        const auto regp = p.skipSpaces();
+        op.reg = parseRegName(p, true);
+        if (op.reg == REG_UNDEF) {
+            op.val = parseInteger(p, op, ')');
+            if (op.hasError())
+                return op.getError();
+            if (!p.skipSpaces().expect(')'))
+                return op.setError(p, MISSING_CLOSING_PAREN);
+            op.mode = M_ABS;
+            scan = p;
+            return OK;
+        }
+        if (p.skipSpaces().expect(')')) {
+            switch (op.reg) {
+            case REG_BC:
+            case REG_DE:
+                op.mode = M_IDX;
+                break;
+            case REG_HL:
+            case REG_SP:
+                op.mode = AddrMode(op.reg + I_BASE);
+                break;
+            default:
+                return op.setError(regp, REGISTER_NOT_ALLOWED);
+            }
+            scan = p;
+            return OK;
+        }
+        return op.setError(UNKNOWN_OPERAND);
+    }
+    op.val = parseInteger(p, op);
+    if (op.hasError())
+        return op.getError();
+    op.mode = M_IM16;
+    scan = p;
+    return OK;
+}
+
+Error AsmI8080::parseIntelOperand(StrScanner &scan, Operand &op) const {
+    auto p = scan.skipSpaces();
+    op.setAt(p);
+    if (endOfLine(p))
+        return OK;
+
+    op.reg = parseRegName(p, _zilogSyntax);
     if (op.reg != REG_UNDEF) {
         switch (op.reg) {
         case REG_H:
-            op.mode = M_REGH;
+            op.mode = R_H;
             break;
         case REG_SP:
             op.mode = M_PTR;
@@ -119,7 +228,7 @@ Error AsmI8080::parseOperand(StrScanner &scan, Operand &op) const {
             op.mode = M_IDX;
             break;
         default:
-            op.mode = M_REG;
+            op.mode = M_SRC;
             break;
         }
         scan = p;
@@ -133,6 +242,19 @@ Error AsmI8080::parseOperand(StrScanner &scan, Operand &op) const {
     return OK;
 }
 
+Error AsmI8080::parseOperand(StrScanner &scan, Operand &op) const {
+    return _zilogSyntax ? parseZilogOperand(scan, op) : parseIntelOperand(scan, op);
+}
+
+Error AsmI8080::processPseudo(StrScanner &scan, Insn &insn) {
+    const auto at = scan;
+    if (strcasecmp_P(insn.name(), PSTR("Z80SYNTAX")) == 0) {
+        const auto error = _opt_zilog.set(scan);
+        return error ? insn.setErrorIf(at, error) : OK;
+    }
+    return Assembler::processPseudo(scan, insn);
+}
+
 Error AsmI8080::encodeImpl(StrScanner &scan, Insn &_insn) const {
     AsmInsn insn(_insn);
     if (parseOperand(scan, insn.dstOp) && insn.dstOp.hasError())
@@ -143,7 +265,7 @@ Error AsmI8080::encodeImpl(StrScanner &scan, Insn &_insn) const {
         scan.skipSpaces();
     }
 
-    if (_insn.setErrorIf(insn.dstOp, TABLE.searchName(cpuType(), insn)))
+    if (_insn.setErrorIf(insn.dstOp, TABLE.searchName(cpuType(), insn, _zilogSyntax)))
         return _insn.getError();
 
     encodeOperand(insn, insn.dstOp, insn.dst());

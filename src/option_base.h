@@ -175,6 +175,8 @@ extern const char OPT_TEXT_FPU[] PROGMEM;
 extern const char OPT_DESC_FPU[] PROGMEM;
 extern const char OPT_BOOL_IMPLICIT_WORD[] PROGMEM;
 extern const char OPT_DESC_IMPLICIT_WORD[] PROGMEM;
+extern const char OPT_BOOL_ZILOG_SYNTAX[] PROGMEM;
+extern const char OPT_DESC_ZILOG_SYNTAX[] PROGMEM;
 
 }  // namespace option
 }  // namespace text

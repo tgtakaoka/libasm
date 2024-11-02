@@ -123,8 +123,23 @@ constexpr char TEXT_SIM[]  PROGMEM = "SIM";
 constexpr char TEXT_REG_M[]   PROGMEM  = "M";
 // constexpr char TEXT_REG_SP[]  PROGMEM = "SP";
 // constexpr char TEXT_REG_PSW[] PROGMEM = "PSW";
-// clang-format on
 
+// Zilog syntax
+// constexpr char TEXT_REG_AF[]  PROGMEM = "AF";
+// constexpr char TEXT_REG_BC[]  PROGMEM = "BC";
+// constexpr char TEXT_REG_DE[]  PROGMEM = "DE";
+// constexpr char TEXT_REG_HL[]  PROGMEM = "HL";
+constexpr char TEXT_REG_IM[] PROGMEM = "IM";
+// constexpr char TEXT_CC_NZ[] PROGMEM = "NZ";
+// constexpr char TEXT_CC_Z[]  PROGMEM = "Z";
+// constexpr char TEXT_CC_NC[] PROGMEM = "NC";
+// constexpr char TEXT_CC_C[]  PROGMEM = "C";
+// constexpr char TEXT_CC_PO[] PROGMEM = "PO";
+// constexpr char TEXT_CC_PE[] PROGMEM = "PE";
+// constexpr char TEXT_CC_P[]  PROGMEM = "P";
+// constexpr char TEXT_CC_M[]  PROGMEM = "M";
+
+// clang-format on
 }  // namespace i8080
 }  // namespace text
 }  // namespace libasm

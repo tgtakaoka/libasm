@@ -26,6 +26,8 @@ int main(int argc, const char **argv) {
     if (driver.main(argc, argv))
         return 1;
 
+    if (driver.generateZilog())
+        dis8080.setOption("zilog-syntax", "on");
     TestGenerator generator(driver, dis8080, 0x0100);
     generator.generate();
 

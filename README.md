@@ -108,6 +108,7 @@ It can generate Intel HEX or Motorola S-Record output.
       --setrp1          : set register pointer 1 (int: Z8)
       --short-direct    : enable optimizing direct addressing (bool: Z8001)
       --use-register    : enable register name Rn (bool: 1802)
+      --zilog-syntax    : Use Zilog syntax (bool: 8080)
 
 ## Disassembler command line interface
 
@@ -154,6 +155,7 @@ It can read Intel HEX or Motorola S-Record input.
       --use-register   : use register name Rn (bool: 1802)
       --use-sharp      : use # (default =) for immediate (bool: 8070)
       --work-register  : prefer work register name than alias address (bool: Z8)
+      --zilog-syntax   : Use Zilog syntax (bool: 8080)
 
 ## Supported host environment
 

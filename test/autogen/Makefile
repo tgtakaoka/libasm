@@ -33,6 +33,8 @@ INC_targets  = \
     mn1610 mn1613 tms7000 tms9980 j11 t11
 # target which for GNU assembler
 GAS_targets  = m68k m68k10 z8k1 z8k2 ns32k
+# target which is Zilog syntax
+Z80SYN_targets = i8080_z80syn i8085_z80syn v30emu_z80syn
 
 # suffix of generating file
 define out-inc # target
@@ -47,7 +49,8 @@ define gas-out
 $(filter $(1),$(GAS_targets))
 endef
 define gen-opt
-$(if $(call gas-out,$(1)),-g,$(if $(call out-inc,$(1)),-i -u,-u))
+$(if $(call gas-out,$(1)),-g,$(if $(call out-inc,$(1)),-i -u,-u)) \
+$(if $(filter $(1),$(Z80SYN_targets)),-z)
 endef
 
 # make rule for auto generation file

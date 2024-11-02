@@ -121,6 +121,7 @@ int GenDriver::parseOption(int argc, const char **argv) {
     _uppercase = false;
     _includeTarget = false;
     _generateGas = false;
+    _generateZilog = false;
     _dump = false;
     for (int i = 1; i < argc; i++) {
         const char *opt = argv[i];
@@ -157,6 +158,9 @@ int GenDriver::parseOption(int argc, const char **argv) {
             case 'g':
                 _generateGas = true;
                 break;
+            case 'z':
+                _generateZilog = true;
+                break;
             case 'h':
                 _upper_hex = false;
                 break;
@@ -185,17 +189,18 @@ int GenDriver::usage() const {
     const /* PROGMEM */ auto list_P = _disassembler.config().listCpu_P();
     char listCpu[strlen_P(list_P) + 1];
     strcpy_P(listCpu, list_P);
-    fprintf(stderr,
-            "usage: %s [-o <output>] [-l <list>]\n"
-            " options:\n"
-            "  -o <output> : output file\n"
-            "  -l <list>   : list file\n"
-            "  -C          : CPU variant: %s\n"
-            "  -i          : include target; no cpu and org directive\n"
-            "  -g          : output GNU as compatible\n"
-            "  -h          : use lower case letter for hexadecimal\n"
-            "  -u          : use upper case letter for output\n"
-            "  -d          : dump debug info\n",
+    fprintf(stderr, R"(usage: %s [-o <output>] [-l <list>]
+options:
+  -o <output> : output file
+  -l <list>   : list file
+  -C          : CPU variant: %s
+  -i          : include target; no cpu and org directive
+  -g          : output GNU as compatible
+  -z          : output Zilog sytax
+  -h          : use lower case letter for hexadecimal
+  -u          : use upper case letter for output
+  -d          : dump debug info
+)",
             _progname, listCpu);
     return 2;
 }

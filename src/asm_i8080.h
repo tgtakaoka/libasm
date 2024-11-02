@@ -27,11 +27,22 @@ namespace i8080 {
 struct AsmI8080 final : Assembler, Config {
     AsmI8080(const ValueParser::Plugins &plugins = defaultPlugins());
 
+    void reset() override;
+
+    Error setZilogSyntax(bool enable);
+
 private:
+    const BoolOption<AsmI8080> _opt_zilog;
+
+    bool _zilogSyntax;
+
+    Error parseIntelOperand(StrScanner &scan, Operand &op) const;
+    Error parseZilogOperand(StrScanner &scan, Operand &op) const;
     Error parseOperand(StrScanner &scan, Operand &op) const;
 
     void encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode) const;
 
+    Error processPseudo(StrScanner &scan, Insn &insn) override;
     Error encodeImpl(StrScanner &scan, Insn &insn) const override;
     const ConfigBase &config() const override { return *this; }
     ConfigSetter &configSetter() override { return *this; }
