@@ -30,9 +30,9 @@ jobs:
           - vendor: MightyCore
             arch: avr
             name: 1284
-          # - vendor: DxCore
-          #   arch: megaavr
-          #   name: avrda
+          - vendor: DxCore
+            arch: megaavr
+            name: avrda
           - vendor: teensy
             arch: avr
             name: teensy41
@@ -41,18 +41,21 @@ jobs:
             board:
               vendor: MightyCore
           # - index: https://drazzy.com/package_drazzy.com_index.json
-          #   board:
-          #     vendor: DxCore
+          - index: https://descartes.net/package_drazzy.com_index.json
+            board:
+              vendor: DxCore
           - index: https://www.pjrc.com/teensy/package_teensy_index.json
             board:
               vendor: teensy
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+      - name: Install Arduino CLI
+        uses: arduino/setup-arduino-cli@v2
       - name: Compile examples
         uses: arduino/compile-sketches@v1
         with:
-          cli-version: "0.33.0"
+          cli-version: "1.0.4"
           fqbn: ${{matrix.board.vendor}}:${{matrix.board.arch}}:${{matrix.board.name}}
           platforms: |
             - source-url: ${{matrix.index}}
