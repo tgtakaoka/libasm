@@ -69,8 +69,6 @@ struct AsmDirective : ErrorAt {
 
     virtual BinEncoder &defaultEncoder() const;
 
-    static bool is8080(const /* PROGMEM */ char *cpu_P);
-
 protected:
     Assembler &_assembler;
     CpuSwitcher *_switcher;
@@ -95,7 +93,6 @@ protected:
     Error setVariable(StrScanner &scan, Context &context);
     Error includeFile(StrScanner &scan, Context &context);
     Error switchCpu(StrScanner &scan, Context &context);
-    Error switchIntelZilog(StrScanner &scan, Context &context);
     Error endAssemble(StrScanner &scan, Context &context);
     Error defineFunction(StrScanner &scan, Context &context);
 

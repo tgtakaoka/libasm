@@ -84,14 +84,9 @@ bool AsmDriver::setCpu(const char *cpu) {
 }
 
 bool AsmDriver::restrictCpu(const char *cpu) {
-    const /* PROGMEM */ char *cpu_P = _current->cpu_P();
     if (setCpu(cpu)) {
         _directives.clear();
         _directives.push_back(_current);
-        if (AsmDirective::is8080(cpu_P)) {
-            if (setCpu("Z80"))
-                _directives.push_back(_current);
-        }
         return true;
     }
     return false;

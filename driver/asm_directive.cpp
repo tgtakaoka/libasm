@@ -265,34 +265,6 @@ Error AsmDirective::switchCpu(StrScanner &scan, Context &context) {
     return setOK();
 }
 
-bool AsmDirective::is8080(const /* PROGMEM */ char *cpu_P) {
-    return strcmp_P("8080", cpu_P) == 0 || strcmp_P("8085", cpu_P) == 0 ||
-           strcasecmp_P("V30EMU", cpu_P) == 0;
-}
-
-Error AsmDirective::switchIntelZilog(StrScanner &scan, Context &context) {
-    const /* PROGMEM */ char *cpu_P = _assembler.config().cpu_P();
-    if (!is8080(cpu_P))
-        return setError(UNKNOWN_DIRECTIVE);
-    char buffer[20];
-    StrBuffer cpu{buffer, sizeof(buffer)};
-    cpu.text_P(cpu_P);
-    StrScanner option;
-    _assembler.parser().readSymbol(scan, option);
-    if (option.iequals_P(PSTR("on"))) {
-        if (!_switcher->setCpu("Z80"))
-            return setError(UNSUPPORTED_CPU);
-        cpu.text("zilog");
-        _switcher->setCpu(cpu.str());
-    } else if (option.iequals_P(PSTR("off"))) {
-        if (!_switcher->setCpu("8080"))
-            return setError(UNSUPPORTED_CPU);
-        _switcher->setCpu(cpu.str());
-    } else
-        return setError(option, UNKNOWN_OPERAND);
-    return setOK();
-}
-
 Error AsmDirective::endAssemble(StrScanner &scan, Context &context) {
     return END_ASSEMBLE;
 }
@@ -303,9 +275,7 @@ BinEncoder &MotorolaDirective::defaultEncoder() const {
     return MotoSrec::encoder();
 }
 
-IntelDirective::IntelDirective(Assembler &assembler) : AsmDirective(assembler) {
-    registerPseudo(".z80syntax", &IntelDirective::switchIntelZilog);
-}
+IntelDirective::IntelDirective(Assembler &assembler) : AsmDirective(assembler) {}
 
 MostekDirective::MostekDirective(Assembler &assembler) : MotorolaDirective(assembler) {
     registerPseudo("=", &MostekDirective::defineConstant);

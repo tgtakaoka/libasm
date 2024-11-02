@@ -201,8 +201,6 @@ void test_switch_cpu() {
         lxi   d, 5678H
         z80syntax on
         ld    bc, 9abcH
-        cpu   i8080zilog
-        ld    bc, 9abcH
         z80syntax off
         lxi   d, 5678H
         cpu   65816
@@ -225,15 +223,13 @@ void test_switch_cpu() {
        1006 : 11 78 56                   lxi   d, 5678H
        1009 :                            z80syntax on
        1009 : 01 BC 9A                   ld    bc, 9abcH
-       100C :                            cpu   i8080zilog
-       100C : 01 BC 9A                   ld    bc, 9abcH
-       100F :                            z80syntax off
-       100F : 11 78 56                   lxi   d, 5678H
-       1012 :                            cpu   65816
-       1012 :                            longa on
-       1012 :                            longi off
-       1012 : A9 34 12                   lda   #$1234
-       1015 : A2 12                      ldx   #$12
+       100C :                            z80syntax off
+       100C : 11 78 56                   lxi   d, 5678H
+       100F :                            cpu   65816
+       100F :                            longa on
+       100F :                            longi off
+       100F : A9 34 12                   lda   #$1234
+       1012 : A2 12                      ldx   #$12
      123456 :                            *=$123456
      123456 :                            longa off
      123456 :                            longi on
