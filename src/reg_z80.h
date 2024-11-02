@@ -50,8 +50,6 @@ enum RegName : int8_t {
     // Other registers
     REG_I = 0 + 16,
     REG_R = 1 + 16,
-    // 8085
-    REG_IM = 0 + 18,
 };
 
 enum CcName : int8_t {

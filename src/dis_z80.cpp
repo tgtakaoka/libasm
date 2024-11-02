@@ -153,7 +153,6 @@ void DisZ80::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) const {
     case R_AFP:
     case R_I:
     case R_R:
-    case R_IM:
         outRegName(out, RegName(mode - R_BASE));
         break;
     case I_PTR:

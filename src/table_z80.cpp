@@ -15,7 +15,6 @@
  */
 
 #include "table_z80.h"
-
 #include "entry_table.h"
 #include "entry_z80.h"
 #include "text_z80.h"
@@ -178,16 +177,6 @@ static constexpr uint8_t INDEX_I8080[] PROGMEM = {
      33,  // TEXT_XOR
      63,  // TEXT_XOR
      64,  // TEXT_XOR
-};
-
-static constexpr Entry TABLE_I8085[] PROGMEM = {
-    E2(0x20, TEXT_LD, R_A,  R_IM),
-    E2(0x30, TEXT_LD, R_IM, R_A),
-};
-
-static constexpr uint8_t INDEX_I8085[] PROGMEM = {
-      0,  // TEXT_LD
-      1,  // TEXT_LD
 };
 
 static constexpr Entry TABLE_Z80[] PROGMEM = {
@@ -387,50 +376,23 @@ static constexpr uint8_t INDEX_IX[] PROGMEM = {
      18,  // TEXT_XOR
      19,  // TEXT_XOR
 };
-
-static constexpr Entry TABLE_V30EMU[] PROGMEM = {
-    E1(0xED, TEXT_CALLN, M_IM8),
-    E0(0xFD, TEXT_RETEM),
-};
-
-static constexpr uint8_t INDEX_V30EMU[] PROGMEM = {
-      0,  // TEXT_CALLN
-      1,  // TEXT_RETEM
-};
 // clang-format on
 
 using EntryPage = entry::PrefixTableBase<Entry>;
 
-static constexpr EntryPage I8080_PAGES[] PROGMEM = {
-        {0x00, ARRAY_RANGE(TABLE_I8080), ARRAY_RANGE(INDEX_I8080)},
-};
-
-static constexpr EntryPage I8085_PAGES[] PROGMEM = {
-        {0x00, ARRAY_RANGE(TABLE_I8080), ARRAY_RANGE(INDEX_I8080)},
-        {0x00, ARRAY_RANGE(TABLE_I8085), ARRAY_RANGE(INDEX_I8085)},
-};
-
 static constexpr EntryPage Z80_PAGES[] PROGMEM = {
-        {0x00, ARRAY_RANGE(TABLE_Z80), ARRAY_RANGE(INDEX_Z80)},
         {0x00, ARRAY_RANGE(TABLE_I8080), ARRAY_RANGE(INDEX_I8080)},
+        {0x00, ARRAY_RANGE(TABLE_Z80), ARRAY_RANGE(INDEX_Z80)},
         {0xCB, ARRAY_RANGE(TABLE_CB), ARRAY_RANGE(INDEX_CB)},
         {0xED, ARRAY_RANGE(TABLE_ED), ARRAY_RANGE(INDEX_ED)},
         {TableZ80::PREFIX_IX, ARRAY_RANGE(TABLE_IX), ARRAY_RANGE(INDEX_IX)},
         {TableZ80::PREFIX_IY, ARRAY_RANGE(TABLE_IX), ARRAY_RANGE(INDEX_IX)},
 };
 
-static constexpr EntryPage V30EMU_PAGES[] PROGMEM = {
-        {0xED, ARRAY_RANGE(TABLE_V30EMU), ARRAY_RANGE(INDEX_V30EMU)},
-        {0x00, ARRAY_RANGE(TABLE_I8080), ARRAY_RANGE(INDEX_I8080)},
-};
-
 using Cpu = entry::CpuBase<CpuType, EntryPage>;
 
 static constexpr Cpu CPU_TABLE[] PROGMEM = {
         {Z80, TEXT_CPU_Z80, ARRAY_RANGE(Z80_PAGES)},
-        {I8080, TEXT_CPU_8080, ARRAY_RANGE(I8080_PAGES)},
-        {I8085, TEXT_CPU_8085, ARRAY_RANGE(I8085_PAGES)},
-        {V30EMU, TEXT_CPU_V30EMU, ARRAY_RANGE(V30EMU_PAGES)},
 };
 
 static const Cpu *cpu(CpuType cpuType) {
@@ -530,7 +492,7 @@ bool TableZ80::isPrefix(CpuType cpuType, Config::opcode_t code) const {
 }
 
 const /*PROGMEM*/ char *TableZ80::listCpu_P() const {
-    return TEXT_Z80_LIST;
+    return TEXT_CPU_Z80;
 }
 
 const /*PROGMEM*/ char *TableZ80::cpuName_P(CpuType cpuType) const {
@@ -542,25 +504,6 @@ Error TableZ80::searchCpuName(StrScanner &name, CpuType &cpuType) const {
     if (t) {
         cpuType = t->readCpuType();
         return OK;
-    }
-    if (name.iexpectText_P(TEXT_CPU_V30EMU)) {
-        if (name.size() == 0 || name.iexpect('z')) {
-            cpuType = V30EMU;
-            return OK;
-        }
-    } else {
-        name.iexpect('i');
-        if (name.iexpectText_P(TEXT_CPU_8080)) {
-            if (name.size() == 0 || name.iexpect('z')) {
-                cpuType = I8080;
-                return OK;
-            }
-        } else if (name.iexpectText_P(TEXT_CPU_8085)) {
-            if (name.size() == 0 || name.iexpect('z')) {
-                cpuType = I8085;
-                return OK;
-            }
-        }
     }
     return UNSUPPORTED_CPU;
 }

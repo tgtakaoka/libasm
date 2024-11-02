@@ -24,22 +24,6 @@ using namespace libasm::test;
 DisZ80 disz80;
 Disassembler &disassembler(disz80);
 
-static bool isZ80() {
-    return strcmp_P("Z80", disassembler.config().cpu_P()) == 0;
-}
-
-static bool is8085() {
-    return strcmp_P("8085", disassembler.config().cpu_P()) == 0;
-}
-
-static bool is8080() {
-    return strcmp_P("8080", disassembler.config().cpu_P()) == 0;
-}
-
-static bool v30emu() {
-    return strcmp_P("V30EMU", disassembler.config().cpu_P()) == 0;
-}
-
 static void set_up() {
     disassembler.reset();
 }
@@ -50,38 +34,8 @@ static void tear_down() {
 
 // clang-format off
 void test_cpu() {
-    EQUALS("cpu 8080", true, disassembler.setCpu("8080"));
-    EQUALS_P("get cpu", "8080", disassembler.config().cpu_P());
-
-    EQUALS("cpu 8085", true, disassembler.setCpu("8085"));
-    EQUALS_P("get cpu", "8085", disassembler.config().cpu_P());
-
-    EQUALS("cpu I8080", true, disassembler.setCpu("I8080"));
-    EQUALS_P("get cpu", "8080", disassembler.config().cpu_P());
-
-    EQUALS("cpu I8085", true, disassembler.setCpu("I8085"));
-    EQUALS_P("get cpu", "8085", disassembler.config().cpu_P());
-
-    EQUALS("cpu v30emu", true, disassembler.setCpu("v30emu"));
-    EQUALS_P("get cpu", "V30EMU", disassembler.config().cpu_P());
-
     EQUALS("cpu Z80", true, disassembler.setCpu("z80"));
     EQUALS_P("get cpu", "Z80", disassembler.config().cpu_P());
-
-    EQUALS("cpu 8080zilog", true, disassembler.setCpu("8080Z"));
-    EQUALS_P("get cpu", "8080", disassembler.config().cpu_P());
-
-    EQUALS("cpu 8085zilog", true, disassembler.setCpu("8085z"));
-    EQUALS_P("get cpu", "8085", disassembler.config().cpu_P());
-
-    EQUALS("cpu i8080zilog", true, disassembler.setCpu("i8080Zilog"));
-    EQUALS_P("get cpu", "8080", disassembler.config().cpu_P());
-
-    EQUALS("cpu i8085zilog", true, disassembler.setCpu("i8085zilog"));
-    EQUALS_P("get cpu", "8085", disassembler.config().cpu_P());
-
-    EQUALS("cpu V30EMUzilog", true, disassembler.setCpu("V30EMUzilog"));
-    EQUALS_P("get cpu", "V30EMU", disassembler.config().cpu_P());
 }
 
 static void test_move_inherent() {
@@ -158,29 +112,27 @@ static void test_move_inherent() {
     TEST("LD", "A, (BC)", 0x0A);
     TEST("LD", "A, (DE)", 0x1A);
 
-    if (isZ80()) {
-        TEST("LD", "I, A", 0xED, 0x47);
-        TEST("LD", "R, A", 0xED, 0x4F);
-        TEST("LD", "A, I", 0xED, 0x57);
-        TEST("LD", "A, R", 0xED, 0x5F);
+    TEST("LD", "I, A", 0xED, 0x47);
+    TEST("LD", "R, A", 0xED, 0x4F);
+    TEST("LD", "A, I", 0xED, 0x57);
+    TEST("LD", "A, R", 0xED, 0x5F);
 
-        TEST("LDI",  "",  0xED, 0xA0);
-        TEST("LDD",  "",  0xED, 0xA8);
-        TEST("LDIR", "",  0xED, 0xB0);
-        TEST("LDDR", "",  0xED, 0xB8);
-        TEST("CPI",  "",  0xED, 0xA1);
-        TEST("CPD",  "",  0xED, 0xA9);
-        TEST("CPIR", "",  0xED, 0xB1);
-        TEST("CPDR", "",  0xED, 0xB9);
-        TEST("INI",  "",  0xED, 0xA2);
-        TEST("IND",  "",  0xED, 0xAA);
-        TEST("INIR", "",  0xED, 0xB2);
-        TEST("INDR", "",  0xED, 0xBA);
-        TEST("OUTI", "",  0xED, 0xA3);
-        TEST("OUTD", "",  0xED, 0xAB);
-        TEST("OTIR", "",  0xED, 0xB3);
-        TEST("OTDR", "",  0xED, 0xBB);
-    }
+    TEST("LDI",  "",  0xED, 0xA0);
+    TEST("LDD",  "",  0xED, 0xA8);
+    TEST("LDIR", "",  0xED, 0xB0);
+    TEST("LDDR", "",  0xED, 0xB8);
+    TEST("CPI",  "",  0xED, 0xA1);
+    TEST("CPD",  "",  0xED, 0xA9);
+    TEST("CPIR", "",  0xED, 0xB1);
+    TEST("CPDR", "",  0xED, 0xB9);
+    TEST("INI",  "",  0xED, 0xA2);
+    TEST("IND",  "",  0xED, 0xAA);
+    TEST("INIR", "",  0xED, 0xB2);
+    TEST("INDR", "",  0xED, 0xBA);
+    TEST("OUTI", "",  0xED, 0xA3);
+    TEST("OUTD", "",  0xED, 0xAB);
+    TEST("OTIR", "",  0xED, 0xB3);
+    TEST("OTDR", "",  0xED, 0xBB);
 }
 
 static void test_move_immediate() {
@@ -209,17 +161,15 @@ static void test_move_direct() {
     TEST("LD", "(0ABCDH), HL", 0x22, 0xCD, 0xAB);
     TEST("LD", "HL, (5678H)",  0x2A, 0x78, 0x56);
 
-    if (isZ80()) {
-        TEST("LD", "(0ABCDH), BC", 0xED, 0x43, 0xCD, 0xAB);
-        TEST("LD", "(0ABCDH), DE", 0xED, 0x53, 0xCD, 0xAB);
-        TEST("LD", "(0ABCDH), SP", 0xED, 0x73, 0xCD, 0xAB);
-        TEST("LD", "BC, (5678H)",  0xED, 0x4B, 0x78, 0x56);
-        TEST("LD", "DE, (5678H)",  0xED, 0x5B, 0x78, 0x56);
-        TEST("LD", "SP, (5678H)",            0xED, 0x7B, 0x78, 0x56);
-        NMEM("LD", "SP, (0078H)",  "0078H)", 0xED, 0x7B, 0x78);
-        NMEM("LD", "SP, (0000H)",  "0000H)", 0xED, 0x7B);
-        NMEM("",   "",                   "", 0xED);
-    }
+    TEST("LD", "(0ABCDH), BC", 0xED, 0x43, 0xCD, 0xAB);
+    TEST("LD", "(0ABCDH), DE", 0xED, 0x53, 0xCD, 0xAB);
+    TEST("LD", "(0ABCDH), SP", 0xED, 0x73, 0xCD, 0xAB);
+    TEST("LD", "BC, (5678H)",  0xED, 0x4B, 0x78, 0x56);
+    TEST("LD", "DE, (5678H)",  0xED, 0x5B, 0x78, 0x56);
+    TEST("LD", "SP, (5678H)",            0xED, 0x7B, 0x78, 0x56);
+    NMEM("LD", "SP, (0078H)",  "0078H)", 0xED, 0x7B, 0x78);
+    NMEM("LD", "SP, (0000H)",  "0000H)", 0xED, 0x7B);
+    NMEM("",   "",                   "", 0xED);
 }
 
 static void test_stack_op() {
@@ -237,13 +187,8 @@ static void test_stack_op() {
     TEST("LD", "SP, HL",   0xF9);
     TEST("EX", "DE, HL",   0xEB);
 
-    if (isZ80()) {
-        TEST("EX", "AF, AF'", 0x08);
-        TEST("EXX", "",       0xD9);
-    } else {
-        UNKN(0x08);
-        UNKN(0xD9);
-    }
+    TEST("EX", "AF, AF'", 0x08);
+    TEST("EXX", "",       0xD9);
 }
 
 static void test_jump_call() {
@@ -277,16 +222,12 @@ static void test_jump_call() {
     TEST("RET",  "P",  0xF0);
     TEST("RET",  "M",  0xF8);
 
-    if (isZ80()) {
-        TEST("RETN", "",  0xED, 0x45);
-        TEST("RETI", "",  0xED, 0x4D);
+    TEST("RETN", "",  0xED, 0x45);
+    TEST("RETI", "",  0xED, 0x4D);
 
-        TEST("IM",   "0", 0xED, 0x46);
-        TEST("IM",   "1", 0xED, 0x56);
-        TEST("IM",   "2", 0xED, 0x5E);
-    } else if (v30emu()) {
-        TEST("CALLN", "40H", 0xED, 0xED, 0x40);
-    }
+    TEST("IM",   "0", 0xED, 0x46);
+    TEST("IM",   "1", 0xED, 0x56);
+    TEST("IM",   "2", 0xED, 0x5E);
 }
 
 static void test_incr_decr() {
@@ -396,16 +337,14 @@ static void test_alu_register() {
     TEST("ADD", "HL, HL", 0x29);
     TEST("ADD", "HL, SP", 0x39);
 
-    if (isZ80()) {
-        TEST("ADC", "HL, BC", 0xED, 0x4A);
-        TEST("ADC", "HL, DE", 0xED, 0x5A);
-        TEST("ADC", "HL, HL", 0xED, 0x6A);
-        TEST("ADC", "HL, SP", 0xED, 0x7A);
-        TEST("SBC", "HL, BC", 0xED, 0x42);
-        TEST("SBC", "HL, DE", 0xED, 0x52);
-        TEST("SBC", "HL, HL", 0xED, 0x62);
-        TEST("SBC", "HL, SP", 0xED, 0x72);
-    }
+    TEST("ADC", "HL, BC", 0xED, 0x4A);
+    TEST("ADC", "HL, DE", 0xED, 0x5A);
+    TEST("ADC", "HL, HL", 0xED, 0x6A);
+    TEST("ADC", "HL, SP", 0xED, 0x7A);
+    TEST("SBC", "HL, BC", 0xED, 0x42);
+    TEST("SBC", "HL, DE", 0xED, 0x52);
+    TEST("SBC", "HL, HL", 0xED, 0x62);
+    TEST("SBC", "HL, SP", 0xED, 0x72);
 }
 
 static void test_alu_immediate() {
@@ -423,23 +362,21 @@ static void test_io() {
     TEST("OUT", "(0F1H), A", 0xD3, 0xF1);
     TEST("IN",  "A, (0F0H)", 0xDB, 0xF0);
 
-    if (isZ80()) {
-        TEST("IN",  "B, (C)", 0xED, 0x40);
-        TEST("IN",  "C, (C)", 0xED, 0x48);
-        TEST("IN",  "D, (C)", 0xED, 0x50);
-        TEST("IN",  "E, (C)", 0xED, 0x58);
-        TEST("IN",  "H, (C)", 0xED, 0x60);
-        TEST("IN",  "L, (C)", 0xED, 0x68);
-        TEST("IN",  "A, (C)", 0xED, 0x78);
+    TEST("IN",  "B, (C)", 0xED, 0x40);
+    TEST("IN",  "C, (C)", 0xED, 0x48);
+    TEST("IN",  "D, (C)", 0xED, 0x50);
+    TEST("IN",  "E, (C)", 0xED, 0x58);
+    TEST("IN",  "H, (C)", 0xED, 0x60);
+    TEST("IN",  "L, (C)", 0xED, 0x68);
+    TEST("IN",  "A, (C)", 0xED, 0x78);
 
-        TEST("OUT", "(C), B", 0xED, 0x41);
-        TEST("OUT", "(C), C", 0xED, 0x49);
-        TEST("OUT", "(C), D", 0xED, 0x51);
-        TEST("OUT", "(C), E", 0xED, 0x59);
-        TEST("OUT", "(C), H", 0xED, 0x61);
-        TEST("OUT", "(C), L", 0xED, 0x69);
-        TEST("OUT", "(C), A", 0xED, 0x79);
-    }
+    TEST("OUT", "(C), B", 0xED, 0x41);
+    TEST("OUT", "(C), C", 0xED, 0x49);
+    TEST("OUT", "(C), D", 0xED, 0x51);
+    TEST("OUT", "(C), E", 0xED, 0x59);
+    TEST("OUT", "(C), H", 0xED, 0x61);
+    TEST("OUT", "(C), L", 0xED, 0x69);
+    TEST("OUT", "(C), A", 0xED, 0x79);
 }
 
 static void test_inherent() {
@@ -459,17 +396,7 @@ static void test_inherent() {
     TEST("SCF", "", 0x37);
     TEST("CCF", "", 0x3F);
 
-    if (is8085()) {
-        TEST("LD", "A, IM", 0x20);
-        TEST("LD", "IM, A", 0x30);
-    } else if (is8080()) {
-        UNKN(0x20);
-        UNKN(0x30);
-    }
-
-    if (isZ80()) {
-        TEST("NEG", "", 0xED, 0x44);
-    }
+    TEST("NEG", "", 0xED, 0x44);
 }
 
 static void test_restart() {
@@ -481,310 +408,253 @@ static void test_restart() {
     TEST("RST", "28H", 0xEF);
     TEST("RST", "30H", 0xF7);
     TEST("RST", "38H", 0xFF);
-
-    if (v30emu()) {
-        TEST("RETEM", "", 0xED, 0xFD);
-    }
 }
 
 static void test_relative() {
-    if (isZ80()) {
-        ATEST(0x1000, "DJNZ", "1000H",    0x10, 0xFE);
-        ATEST(0x1000, "JR",   "1000H",    0x18, 0xFE);
-        ATEST(0x1000, "JR",   "NZ, 1004H", 0x20, 0x02);
-        ATEST(0x1000, "JR",   "Z, 1081H",  0x28, 0x7F);
-        ATEST(0x1000, "JR",   "NC, 0F82H", 0x30, 0x80);
-        ATEST(0x1000, "JR",   "C, 0F82H",  0x38, 0x80);
+    ATEST(0x1000, "DJNZ", "1000H",    0x10, 0xFE);
+    ATEST(0x1000, "JR",   "1000H",    0x18, 0xFE);
+    ATEST(0x1000, "JR",   "NZ, 1004H", 0x20, 0x02);
+    ATEST(0x1000, "JR",   "Z, 1081H",  0x28, 0x7F);
+    ATEST(0x1000, "JR",   "NC, 0F82H", 0x30, 0x80);
+    ATEST(0x1000, "JR",   "C, 0F82H",  0x38, 0x80);
 
-        disassembler.setOption("relative", "on");
-        ATEST(0x2000, "JR", "$-126", 0x18, 0x80);
-        ATEST(0x2000, "JR", "$",     0x18, 0xFE);
-        ATEST(0x2000, "JR", "$+2",   0x18, 0x00);
-        ATEST(0x2000, "JR", "$+129", 0x18, 0x7F);
-    } else {
-        UNKN(0x10);
-        UNKN(0x18);
-        if (!is8085()) UNKN(0x20);
-        UNKN(0x28);
-        if (!is8085()) UNKN(0x30);
-        UNKN(0x38);
-    }
+    disassembler.setOption("relative", "on");
+    ATEST(0x2000, "JR", "$-126", 0x18, 0x80);
+    ATEST(0x2000, "JR", "$",     0x18, 0xFE);
+    ATEST(0x2000, "JR", "$+2",   0x18, 0x00);
+    ATEST(0x2000, "JR", "$+129", 0x18, 0x7F);
 }
 
 static void test_shift() {
-    if (isZ80()) {
-        TEST("RLC", "B", 0xCB, 0x00);
-        TEST("RLC", "C", 0xCB, 0x01);
-        TEST("RLC", "D", 0xCB, 0x02);
-        TEST("RLC", "E", 0xCB, 0x03);
-        TEST("RLC", "H", 0xCB, 0x04);
-        TEST("RLC", "L", 0xCB, 0x05);
-        TEST("RLC", "(HL)", 0xCB, 0x06);
-        TEST("RLC", "A", 0xCB, 0x07);
+    TEST("RLC", "B", 0xCB, 0x00);
+    TEST("RLC", "C", 0xCB, 0x01);
+    TEST("RLC", "D", 0xCB, 0x02);
+    TEST("RLC", "E", 0xCB, 0x03);
+    TEST("RLC", "H", 0xCB, 0x04);
+    TEST("RLC", "L", 0xCB, 0x05);
+    TEST("RLC", "(HL)", 0xCB, 0x06);
+    TEST("RLC", "A", 0xCB, 0x07);
 
-        TEST("RRC", "B", 0xCB, 0x08);
-        TEST("RRC", "C", 0xCB, 0x09);
-        TEST("RRC", "D", 0xCB, 0x0A);
-        TEST("RRC", "E", 0xCB, 0x0B);
-        TEST("RRC", "H", 0xCB, 0x0C);
-        TEST("RRC", "L", 0xCB, 0x0D);
-        TEST("RRC", "(HL)", 0xCB, 0x0E);
-        TEST("RRC", "A", 0xCB, 0x0F);
+    TEST("RRC", "B", 0xCB, 0x08);
+    TEST("RRC", "C", 0xCB, 0x09);
+    TEST("RRC", "D", 0xCB, 0x0A);
+    TEST("RRC", "E", 0xCB, 0x0B);
+    TEST("RRC", "H", 0xCB, 0x0C);
+    TEST("RRC", "L", 0xCB, 0x0D);
+    TEST("RRC", "(HL)", 0xCB, 0x0E);
+    TEST("RRC", "A", 0xCB, 0x0F);
 
-        TEST("RL",  "B", 0xCB, 0x10);
-        TEST("RL",  "C", 0xCB, 0x11);
-        TEST("RL",  "D", 0xCB, 0x12);
-        TEST("RL",  "E", 0xCB, 0x13);
-        TEST("RL",  "H", 0xCB, 0x14);
-        TEST("RL",  "L", 0xCB, 0x15);
-        TEST("RL",  "(HL)", 0xCB, 0x16);
-        TEST("RL",  "A", 0xCB, 0x17);
+    TEST("RL",  "B", 0xCB, 0x10);
+    TEST("RL",  "C", 0xCB, 0x11);
+    TEST("RL",  "D", 0xCB, 0x12);
+    TEST("RL",  "E", 0xCB, 0x13);
+    TEST("RL",  "H", 0xCB, 0x14);
+    TEST("RL",  "L", 0xCB, 0x15);
+    TEST("RL",  "(HL)", 0xCB, 0x16);
+    TEST("RL",  "A", 0xCB, 0x17);
 
-        TEST("RR",  "B", 0xCB, 0x18);
-        TEST("RR",  "C", 0xCB, 0x19);
-        TEST("RR",  "D", 0xCB, 0x1A);
-        TEST("RR",  "E", 0xCB, 0x1B);
-        TEST("RR",  "H", 0xCB, 0x1C);
-        TEST("RR",  "L", 0xCB, 0x1D);
-        TEST("RR",  "(HL)", 0xCB, 0x1E);
-        TEST("RR",  "A", 0xCB, 0x1F);
+    TEST("RR",  "B", 0xCB, 0x18);
+    TEST("RR",  "C", 0xCB, 0x19);
+    TEST("RR",  "D", 0xCB, 0x1A);
+    TEST("RR",  "E", 0xCB, 0x1B);
+    TEST("RR",  "H", 0xCB, 0x1C);
+    TEST("RR",  "L", 0xCB, 0x1D);
+    TEST("RR",  "(HL)", 0xCB, 0x1E);
+    TEST("RR",  "A", 0xCB, 0x1F);
 
-        TEST("SLA", "B", 0xCB, 0x20);
-        TEST("SLA", "C", 0xCB, 0x21);
-        TEST("SLA", "D", 0xCB, 0x22);
-        TEST("SLA", "E", 0xCB, 0x23);
-        TEST("SLA", "H", 0xCB, 0x24);
-        TEST("SLA", "L", 0xCB, 0x25);
-        TEST("SLA", "(HL)", 0xCB, 0x26);
-        TEST("SLA", "A", 0xCB, 0x27);
+    TEST("SLA", "B", 0xCB, 0x20);
+    TEST("SLA", "C", 0xCB, 0x21);
+    TEST("SLA", "D", 0xCB, 0x22);
+    TEST("SLA", "E", 0xCB, 0x23);
+    TEST("SLA", "H", 0xCB, 0x24);
+    TEST("SLA", "L", 0xCB, 0x25);
+    TEST("SLA", "(HL)", 0xCB, 0x26);
+    TEST("SLA", "A", 0xCB, 0x27);
 
-        TEST("SRA", "B", 0xCB, 0x28);
-        TEST("SRA", "C", 0xCB, 0x29);
-        TEST("SRA", "D", 0xCB, 0x2A);
-        TEST("SRA", "E", 0xCB, 0x2B);
-        TEST("SRA", "H", 0xCB, 0x2C);
-        TEST("SRA", "L", 0xCB, 0x2D);
-        TEST("SRA", "(HL)", 0xCB, 0x2E);
-        TEST("SRA", "A", 0xCB, 0x2F);
+    TEST("SRA", "B", 0xCB, 0x28);
+    TEST("SRA", "C", 0xCB, 0x29);
+    TEST("SRA", "D", 0xCB, 0x2A);
+    TEST("SRA", "E", 0xCB, 0x2B);
+    TEST("SRA", "H", 0xCB, 0x2C);
+    TEST("SRA", "L", 0xCB, 0x2D);
+    TEST("SRA", "(HL)", 0xCB, 0x2E);
+    TEST("SRA", "A", 0xCB, 0x2F);
 
-        TEST("SRL", "B", 0xCB, 0x38);
-        TEST("SRL", "C", 0xCB, 0x39);
-        TEST("SRL", "D", 0xCB, 0x3A);
-        TEST("SRL", "E", 0xCB, 0x3B);
-        TEST("SRL", "H", 0xCB, 0x3C);
-        TEST("SRL", "L", 0xCB, 0x3D);
-        TEST("SRL", "(HL)", 0xCB, 0x3E);
-        TEST("SRL", "A", 0xCB, 0x3F);
+    TEST("SRL", "B", 0xCB, 0x38);
+    TEST("SRL", "C", 0xCB, 0x39);
+    TEST("SRL", "D", 0xCB, 0x3A);
+    TEST("SRL", "E", 0xCB, 0x3B);
+    TEST("SRL", "H", 0xCB, 0x3C);
+    TEST("SRL", "L", 0xCB, 0x3D);
+    TEST("SRL", "(HL)", 0xCB, 0x3E);
+    TEST("SRL", "A", 0xCB, 0x3F);
 
-        TEST("RRD", "", 0xED, 0x67);
-        TEST("RLD", "", 0xED, 0x6F);
-    }
+    TEST("RRD", "", 0xED, 0x67);
+    TEST("RLD", "", 0xED, 0x6F);
 }
 
 static void test_bitop() {
-    if (isZ80()) {
-        TEST("BIT", "0, B", 0xCB, 0x40);
-        TEST("BIT", "1, C", 0xCB, 0x49);
-        TEST("BIT", "2, D", 0xCB, 0x52);
-        TEST("BIT", "3, E", 0xCB, 0x5B);
-        TEST("BIT", "4, H", 0xCB, 0x64);
-        TEST("BIT", "5, L", 0xCB, 0x6D);
-        TEST("BIT", "6, (HL)", 0xCB, 0x76);
-        TEST("BIT", "7, A", 0xCB, 0x7F);
+    TEST("BIT", "0, B", 0xCB, 0x40);
+    TEST("BIT", "1, C", 0xCB, 0x49);
+    TEST("BIT", "2, D", 0xCB, 0x52);
+    TEST("BIT", "3, E", 0xCB, 0x5B);
+    TEST("BIT", "4, H", 0xCB, 0x64);
+    TEST("BIT", "5, L", 0xCB, 0x6D);
+    TEST("BIT", "6, (HL)", 0xCB, 0x76);
+    TEST("BIT", "7, A", 0xCB, 0x7F);
 
-        TEST("RES", "0, B", 0xCB, 0x80);
-        TEST("RES", "1, C", 0xCB, 0x89);
-        TEST("RES", "2, D", 0xCB, 0x92);
-        TEST("RES", "3, E", 0xCB, 0x9B);
-        TEST("RES", "4, H", 0xCB, 0xA4);
-        TEST("RES", "5, L", 0xCB, 0xAD);
-        TEST("RES", "6, (HL)", 0xCB, 0xB6);
-        TEST("RES", "7, A", 0xCB, 0xBF);
+    TEST("RES", "0, B", 0xCB, 0x80);
+    TEST("RES", "1, C", 0xCB, 0x89);
+    TEST("RES", "2, D", 0xCB, 0x92);
+    TEST("RES", "3, E", 0xCB, 0x9B);
+    TEST("RES", "4, H", 0xCB, 0xA4);
+    TEST("RES", "5, L", 0xCB, 0xAD);
+    TEST("RES", "6, (HL)", 0xCB, 0xB6);
+    TEST("RES", "7, A", 0xCB, 0xBF);
 
-        TEST("SET", "0, B", 0xCB, 0xC0);
-        TEST("SET", "1, C", 0xCB, 0xC9);
-        TEST("SET", "2, D", 0xCB, 0xD2);
-        TEST("SET", "3, E", 0xCB, 0xDB);
-        TEST("SET", "4, H", 0xCB, 0xE4);
-        TEST("SET", "5, L", 0xCB, 0xED);
-        TEST("SET", "6, (HL)", 0xCB, 0xF6);
-        TEST("SET", "7, A", 0xCB, 0xFF);
-    } else {
-        UNKN(0xCB);
-    }
+    TEST("SET", "0, B", 0xCB, 0xC0);
+    TEST("SET", "1, C", 0xCB, 0xC9);
+    TEST("SET", "2, D", 0xCB, 0xD2);
+    TEST("SET", "3, E", 0xCB, 0xDB);
+    TEST("SET", "4, H", 0xCB, 0xE4);
+    TEST("SET", "5, L", 0xCB, 0xED);
+    TEST("SET", "6, (HL)", 0xCB, 0xF6);
+    TEST("SET", "7, A", 0xCB, 0xFF);
 }
 
 static void test_index_registers() {
-    if (isZ80()) {
-        TEST("ADD", "IX, BC", 0xDD, 0x09);
-        TEST("ADD", "IX, DE", 0xDD, 0x19);
-        TEST("ADD", "IX, IX", 0xDD, 0x29);
-        TEST("ADD", "IX, SP", 0xDD, 0x39);
-        TEST("LD",  "IX, 0ABCDH",   0xDD, 0x21, 0xCD, 0xAB);
-        TEST("LD",  "(0ABCDH), IX", 0xDD, 0x22, 0xCD, 0xAB);
-        TEST("LD",  "IX, (5678H)",  0xDD, 0x2A, 0x78, 0x56);
-        TEST("INC", "IX", 0xDD, 0x23);
-        TEST("DEC", "IX", 0xDD, 0x2B);
-        TEST("POP", "IX", 0xDD, 0xE1);
-        TEST("PUSH","IX", 0xDD, 0xE5);
-        TEST("EX",  "(SP), IX", 0xDD, 0xE3);
-        TEST("JP",  "(IX)",     0xDD, 0xE9);
-        TEST("LD",  "SP, IX",   0xDD, 0xF9);
+    TEST("ADD", "IX, BC", 0xDD, 0x09);
+    TEST("ADD", "IX, DE", 0xDD, 0x19);
+    TEST("ADD", "IX, IX", 0xDD, 0x29);
+    TEST("ADD", "IX, SP", 0xDD, 0x39);
+    TEST("LD",  "IX, 0ABCDH",   0xDD, 0x21, 0xCD, 0xAB);
+    TEST("LD",  "(0ABCDH), IX", 0xDD, 0x22, 0xCD, 0xAB);
+    TEST("LD",  "IX, (5678H)",  0xDD, 0x2A, 0x78, 0x56);
+    TEST("INC", "IX", 0xDD, 0x23);
+    TEST("DEC", "IX", 0xDD, 0x2B);
+    TEST("POP", "IX", 0xDD, 0xE1);
+    TEST("PUSH","IX", 0xDD, 0xE5);
+    TEST("EX",  "(SP), IX", 0xDD, 0xE3);
+    TEST("JP",  "(IX)",     0xDD, 0xE9);
+    TEST("LD",  "SP, IX",   0xDD, 0xF9);
 
-        TEST("ADD", "IY, BC", 0xFD, 0x09);
-        TEST("ADD", "IY, DE", 0xFD, 0x19);
-        TEST("ADD", "IY, IY", 0xFD, 0x29);
-        TEST("ADD", "IY, SP", 0xFD, 0x39);
-        TEST("LD",  "IY, 0ABCDH",   0xFD, 0x21, 0xCD, 0xAB);
-        TEST("LD",  "(0ABCDH), IY", 0xFD, 0x22, 0xCD, 0xAB);
-        TEST("LD",  "IY, (5678H)",  0xFD, 0x2A, 0x78, 0x56);
-        TEST("INC", "IY", 0xFD, 0x23);
-        TEST("DEC", "IY", 0xFD, 0x2B);
-        TEST("POP", "IY", 0xFD, 0xE1);
-        TEST("PUSH","IY", 0xFD, 0xE5);
-        TEST("EX",  "(SP), IY", 0xFD, 0xE3);
-        TEST("JP",  "(IY)",     0xFD, 0xE9);
-        TEST("LD",  "SP, IY",   0xFD, 0xF9);
-    } else {
-        UNKN(0xDD);
-        UNKN(0xFD);
-    }
+    TEST("ADD", "IY, BC", 0xFD, 0x09);
+    TEST("ADD", "IY, DE", 0xFD, 0x19);
+    TEST("ADD", "IY, IY", 0xFD, 0x29);
+    TEST("ADD", "IY, SP", 0xFD, 0x39);
+    TEST("LD",  "IY, 0ABCDH",   0xFD, 0x21, 0xCD, 0xAB);
+    TEST("LD",  "(0ABCDH), IY", 0xFD, 0x22, 0xCD, 0xAB);
+    TEST("LD",  "IY, (5678H)",  0xFD, 0x2A, 0x78, 0x56);
+    TEST("INC", "IY", 0xFD, 0x23);
+    TEST("DEC", "IY", 0xFD, 0x2B);
+    TEST("POP", "IY", 0xFD, 0xE1);
+    TEST("PUSH","IY", 0xFD, 0xE5);
+    TEST("EX",  "(SP), IY", 0xFD, 0xE3);
+    TEST("JP",  "(IY)",     0xFD, 0xE9);
+    TEST("LD",  "SP, IY",   0xFD, 0xF9);
 }
 
 static void test_indexed() {
-    if (isZ80()) {
-        TEST("INC", "(IX+2)", 0xDD, 0x34, 0x02);
-        TEST("DEC", "(IX+2)", 0xDD, 0x35, 0x02);
-        NMEM("DEC", "(IX+0)", "+0)", 0xDD, 0x35);
+    TEST("INC", "(IX+2)", 0xDD, 0x34, 0x02);
+    TEST("DEC", "(IX+2)", 0xDD, 0x35, 0x02);
+    NMEM("DEC", "(IX+0)", "+0)", 0xDD, 0x35);
 
-        TEST("LD", "B, (IX+2)", 0xDD, 0x46, 0x02);
-        TEST("LD", "C, (IX+2)", 0xDD, 0x4E, 0x02);
-        TEST("LD", "D, (IX+2)", 0xDD, 0x56, 0x02);
-        TEST("LD", "E, (IX+2)", 0xDD, 0x5E, 0x02);
-        TEST("LD", "H, (IX+2)", 0xDD, 0x66, 0x02);
-        TEST("LD", "L, (IX+2)", 0xDD, 0x6E, 0x02);
-        TEST("LD", "A, (IX+2)", 0xDD, 0x7E, 0x02);
+    TEST("LD", "B, (IX+2)", 0xDD, 0x46, 0x02);
+    TEST("LD", "C, (IX+2)", 0xDD, 0x4E, 0x02);
+    TEST("LD", "D, (IX+2)", 0xDD, 0x56, 0x02);
+    TEST("LD", "E, (IX+2)", 0xDD, 0x5E, 0x02);
+    TEST("LD", "H, (IX+2)", 0xDD, 0x66, 0x02);
+    TEST("LD", "L, (IX+2)", 0xDD, 0x6E, 0x02);
+    TEST("LD", "A, (IX+2)", 0xDD, 0x7E, 0x02);
 
-        TEST("LD", "(IX+2), B", 0xDD, 0x70, 0x02);
-        TEST("LD", "(IX+2), C", 0xDD, 0x71, 0x02);
-        TEST("LD", "(IX+2), D", 0xDD, 0x72, 0x02);
-        TEST("LD", "(IX+0), E", 0xDD, 0x73, 0x00);
-        TEST("LD", "(IX+2), H", 0xDD, 0x74, 0x02);
-        TEST("LD", "(IX+2), L", 0xDD, 0x75, 0x02);
-        TEST("LD", "(IX+2), A", 0xDD, 0x77, 0x02);
+    TEST("LD", "(IX+2), B", 0xDD, 0x70, 0x02);
+    TEST("LD", "(IX+2), C", 0xDD, 0x71, 0x02);
+    TEST("LD", "(IX+2), D", 0xDD, 0x72, 0x02);
+    TEST("LD", "(IX+0), E", 0xDD, 0x73, 0x00);
+    TEST("LD", "(IX+2), H", 0xDD, 0x74, 0x02);
+    TEST("LD", "(IX+2), L", 0xDD, 0x75, 0x02);
+    TEST("LD", "(IX+2), A", 0xDD, 0x77, 0x02);
 
-        TEST("LD", "(IX+2), 0F6H",        0xDD, 0x36, 0x02, 0xF6);
-        NMEM("LD", "(IX+2), 0",      "0", 0xDD, 0x36, 0x02);
-        NMEM("LD", "(IX+0), 0", "+0), 0", 0xDD, 0x36);
-        NMEM("",   "",                "", 0xDD);
+    TEST("LD", "(IX+2), 0F6H",        0xDD, 0x36, 0x02, 0xF6);
+    NMEM("LD", "(IX+2), 0",      "0", 0xDD, 0x36, 0x02);
+    NMEM("LD", "(IX+0), 0", "+0), 0", 0xDD, 0x36);
+    NMEM("",   "",                "", 0xDD);
 
-        TEST("ADD", "A, (IX+2)", 0xDD, 0x86, 0x02);
-        TEST("ADC", "A, (IX+2)", 0xDD, 0x8E, 0x02);
-        TEST("SUB", "A, (IX+2)", 0xDD, 0x96, 0x02);
-        TEST("SBC", "A, (IX+2)", 0xDD, 0x9E, 0x02);
-        TEST("AND", "A, (IX+2)", 0xDD, 0xA6, 0x02);
-        TEST("XOR", "A, (IX+2)", 0xDD, 0xAE, 0x02);
-        TEST("OR",  "A, (IX+2)", 0xDD, 0xB6, 0x02);
-        TEST("CP",  "A, (IX+2)", 0xDD, 0xBE, 0x02);
+    TEST("ADD", "A, (IX+2)", 0xDD, 0x86, 0x02);
+    TEST("ADC", "A, (IX+2)", 0xDD, 0x8E, 0x02);
+    TEST("SUB", "A, (IX+2)", 0xDD, 0x96, 0x02);
+    TEST("SBC", "A, (IX+2)", 0xDD, 0x9E, 0x02);
+    TEST("AND", "A, (IX+2)", 0xDD, 0xA6, 0x02);
+    TEST("XOR", "A, (IX+2)", 0xDD, 0xAE, 0x02);
+    TEST("OR",  "A, (IX+2)", 0xDD, 0xB6, 0x02);
+    TEST("CP",  "A, (IX+2)", 0xDD, 0xBE, 0x02);
 
-        TEST("INC", "(IY-2)",   0xFD, 0x34, 0xFE);
-        TEST("DEC", "(IY-2)",   0xFD, 0x35, 0xFE);
+    TEST("INC", "(IY-2)",   0xFD, 0x34, 0xFE);
+    TEST("DEC", "(IY-2)",   0xFD, 0x35, 0xFE);
 
-        TEST("LD", "B, (IY-2)", 0xFD, 0x46, 0xFE);
-        TEST("LD", "C, (IY-2)", 0xFD, 0x4E, 0xFE);
-        TEST("LD", "D, (IY-2)", 0xFD, 0x56, 0xFE);
-        TEST("LD", "E, (IY-2)", 0xFD, 0x5E, 0xFE);
-        TEST("LD", "H, (IY-2)", 0xFD, 0x66, 0xFE);
-        TEST("LD", "L, (IY-2)", 0xFD, 0x6E, 0xFE);
-        TEST("LD", "A, (IY-2)", 0xFD, 0x7E, 0xFE);
+    TEST("LD", "B, (IY-2)", 0xFD, 0x46, 0xFE);
+    TEST("LD", "C, (IY-2)", 0xFD, 0x4E, 0xFE);
+    TEST("LD", "D, (IY-2)", 0xFD, 0x56, 0xFE);
+    TEST("LD", "E, (IY-2)", 0xFD, 0x5E, 0xFE);
+    TEST("LD", "H, (IY-2)", 0xFD, 0x66, 0xFE);
+    TEST("LD", "L, (IY-2)", 0xFD, 0x6E, 0xFE);
+    TEST("LD", "A, (IY-2)", 0xFD, 0x7E, 0xFE);
 
-        TEST("LD", "(IY-2), B", 0xFD, 0x70, 0xFE);
-        TEST("LD", "(IY-2), C", 0xFD, 0x71, 0xFE);
-        TEST("LD", "(IY-2), D", 0xFD, 0x72, 0xFE);
-        TEST("LD", "(IY-2), E", 0xFD, 0x73, 0xFE);
-        TEST("LD", "(IY-2), H", 0xFD, 0x74, 0xFE);
-        TEST("LD", "(IY-2), L", 0xFD, 0x75, 0xFE);
-        TEST("LD", "(IY-2), A", 0xFD, 0x77, 0xFE);
+    TEST("LD", "(IY-2), B", 0xFD, 0x70, 0xFE);
+    TEST("LD", "(IY-2), C", 0xFD, 0x71, 0xFE);
+    TEST("LD", "(IY-2), D", 0xFD, 0x72, 0xFE);
+    TEST("LD", "(IY-2), E", 0xFD, 0x73, 0xFE);
+    TEST("LD", "(IY-2), H", 0xFD, 0x74, 0xFE);
+    TEST("LD", "(IY-2), L", 0xFD, 0x75, 0xFE);
+    TEST("LD", "(IY-2), A", 0xFD, 0x77, 0xFE);
 
-        TEST("LD", "(IY-2), 0F6H", 0xFD, 0x36, 0xFE, 0xF6);
+    TEST("LD", "(IY-2), 0F6H", 0xFD, 0x36, 0xFE, 0xF6);
 
-        TEST("ADD", "A, (IY-2)", 0xFD, 0x86, 0xFE);
-        TEST("ADC", "A, (IY-2)", 0xFD, 0x8E, 0xFE);
-        TEST("SUB", "A, (IY-2)", 0xFD, 0x96, 0xFE);
-        TEST("SBC", "A, (IY-2)", 0xFD, 0x9E, 0xFE);
-        TEST("AND", "A, (IY-2)", 0xFD, 0xA6, 0xFE);
-        TEST("XOR", "A, (IY-2)", 0xFD, 0xAE, 0xFE);
-        TEST("OR",  "A, (IY-2)", 0xFD, 0xB6, 0xFE);
-        TEST("CP",  "A, (IY-2)", 0xFD, 0xBE, 0xFE);
-    } else {
-        UNKN(0xDD);
-        UNKN(0xFD);
-    }
+    TEST("ADD", "A, (IY-2)", 0xFD, 0x86, 0xFE);
+    TEST("ADC", "A, (IY-2)", 0xFD, 0x8E, 0xFE);
+    TEST("SUB", "A, (IY-2)", 0xFD, 0x96, 0xFE);
+    TEST("SBC", "A, (IY-2)", 0xFD, 0x9E, 0xFE);
+    TEST("AND", "A, (IY-2)", 0xFD, 0xA6, 0xFE);
+    TEST("XOR", "A, (IY-2)", 0xFD, 0xAE, 0xFE);
+    TEST("OR",  "A, (IY-2)", 0xFD, 0xB6, 0xFE);
+    TEST("CP",  "A, (IY-2)", 0xFD, 0xBE, 0xFE);
 }
 
 static void test_shift_indexed() {
-    if (isZ80()) {
-        TEST("RLC", "(IX+127)", 0xDD, 0xCB, 0x7F, 0x06);
-        TEST("RRC", "(IX+127)", 0xDD, 0xCB, 0x7F, 0x0E);
-        TEST("RL",  "(IX+127)", 0xDD, 0xCB, 0x7F, 0x16);
-        TEST("RR",  "(IX+127)", 0xDD, 0xCB, 0x7F, 0x1E);
-        TEST("SLA", "(IX+127)", 0xDD, 0xCB, 0x7F, 0x26);
-        TEST("SRA", "(IX+127)", 0xDD, 0xCB, 0x7F, 0x2E);
-        TEST("SRL", "(IX+127)", 0xDD, 0xCB, 0x7F, 0x3E);
-        NMEM("",    "",     "", 0xDD, 0xCB, 0x7F);
-        NMEM("",    "",     "", 0xDD, 0xCB);
-        NMEM("",    "",     "", 0xDD);
+    TEST("RLC", "(IX+127)", 0xDD, 0xCB, 0x7F, 0x06);
+    TEST("RRC", "(IX+127)", 0xDD, 0xCB, 0x7F, 0x0E);
+    TEST("RL",  "(IX+127)", 0xDD, 0xCB, 0x7F, 0x16);
+    TEST("RR",  "(IX+127)", 0xDD, 0xCB, 0x7F, 0x1E);
+    TEST("SLA", "(IX+127)", 0xDD, 0xCB, 0x7F, 0x26);
+    TEST("SRA", "(IX+127)", 0xDD, 0xCB, 0x7F, 0x2E);
+    TEST("SRL", "(IX+127)", 0xDD, 0xCB, 0x7F, 0x3E);
+    NMEM("",    "",     "", 0xDD, 0xCB, 0x7F);
+    NMEM("",    "",     "", 0xDD, 0xCB);
+    NMEM("",    "",     "", 0xDD);
 
-        TEST("RLC", "(IY-128)", 0xFD, 0xCB, 0x80, 0x06);
-        TEST("RRC", "(IY-128)", 0xFD, 0xCB, 0x80, 0x0E);
-        TEST("RL",  "(IY-128)", 0xFD, 0xCB, 0x80, 0x16);
-        TEST("RR",  "(IY-128)", 0xFD, 0xCB, 0x80, 0x1E);
-        TEST("SLA", "(IY-128)", 0xFD, 0xCB, 0x80, 0x26);
-        TEST("SRA", "(IY-128)", 0xFD, 0xCB, 0x80, 0x2E);
-        TEST("SRL", "(IY-128)", 0xFD, 0xCB, 0x80, 0x3E);
-    } else {
-        UNKN(0xDD);
-        UNKN(0xFD);
-    }
+    TEST("RLC", "(IY-128)", 0xFD, 0xCB, 0x80, 0x06);
+    TEST("RRC", "(IY-128)", 0xFD, 0xCB, 0x80, 0x0E);
+    TEST("RL",  "(IY-128)", 0xFD, 0xCB, 0x80, 0x16);
+    TEST("RR",  "(IY-128)", 0xFD, 0xCB, 0x80, 0x1E);
+    TEST("SLA", "(IY-128)", 0xFD, 0xCB, 0x80, 0x26);
+    TEST("SRA", "(IY-128)", 0xFD, 0xCB, 0x80, 0x2E);
+    TEST("SRL", "(IY-128)", 0xFD, 0xCB, 0x80, 0x3E);
 }
 
 static void test_bitop_indexed() {
-    if (isZ80()) {
-        TEST("BIT", "0, (IX-128)", 0xDD, 0xCB, 0x80, 0x46);
-        TEST("RES", "1, (IX-128)", 0xDD, 0xCB, 0x80, 0x8E);
-        TEST("SET", "2, (IX-128)", 0xDD, 0xCB, 0x80, 0xD6);
+    TEST("BIT", "0, (IX-128)", 0xDD, 0xCB, 0x80, 0x46);
+    TEST("RES", "1, (IX-128)", 0xDD, 0xCB, 0x80, 0x8E);
+    TEST("SET", "2, (IX-128)", 0xDD, 0xCB, 0x80, 0xD6);
 
-        TEST("BIT", "5, (IY+127)", 0xFD, 0xCB, 0x7F, 0x6E);
-        TEST("RES", "6, (IY+127)", 0xFD, 0xCB, 0x7F, 0xB6);
-        TEST("SET", "7, (IY+127)", 0xFD, 0xCB, 0x7F, 0xFE);
-        NMEM("",    "",  "",       0xFD, 0xCB, 0x7F);
-        NMEM("",    "",  "",       0xFD, 0xCB);
-        NMEM("",    "",  "",       0xFD);
-    } else {
-        UNKN(0xDD);
-        UNKN(0xFD);
-    }
+    TEST("BIT", "5, (IY+127)", 0xFD, 0xCB, 0x7F, 0x6E);
+    TEST("RES", "6, (IY+127)", 0xFD, 0xCB, 0x7F, 0xB6);
+    TEST("SET", "7, (IY+127)", 0xFD, 0xCB, 0x7F, 0xFE);
+    NMEM("",    "",  "",       0xFD, 0xCB, 0x7F);
+    NMEM("",    "",  "",       0xFD, 0xCB);
+    NMEM("",    "",  "",       0xFD);
 }
 
-static void test_illegal_i8080() {
-    if (is8080()) {
-        UNKN(0x20);
-        UNKN(0x30);
-    }
-    UNKN(0x08);
-    UNKN(0x10);
-    UNKN(0x18);
-    UNKN(0x28);
-    UNKN(0x38);
-    UNKN(0xD9);
-    UNKN(0xDD);
-    if (!v30emu()) {
-        UNKN(0xED);
-        UNKN(0xFD);
-    }
-}
-
-static void test_illegal_z80() {
+static void test_illegal() {
     for (Config::opcode_t opc = 0x30; opc < 0x38; opc++)
         UNKN(0xCB, opc);
     for (Config::opcode_t opc = 0x00; opc < 0x40; opc++)
@@ -863,10 +733,7 @@ void run_tests(const char *cpu) {
     RUN_TEST(test_indexed);
     RUN_TEST(test_shift_indexed);
     RUN_TEST(test_bitop_indexed);
-    if (is8080() || is8085() || v30emu())
-        RUN_TEST(test_illegal_i8080);
-    if (isZ80())
-        RUN_TEST(test_illegal_z80);
+    RUN_TEST(test_illegal);
 }
 
 // Local Variables:

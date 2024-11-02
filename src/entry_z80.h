@@ -62,7 +62,6 @@ enum AddrMode : uint8_t {
     R_AFP = R_BASE + REG_AFP,
     R_C = R_BASE + REG_C,  // or CC_C
     R_A = R_BASE + REG_A,
-    R_IM = R_BASE + REG_IM,  // i8085
     I_BASE = R_BASE + 18,
     I_HL = I_BASE + REG_HL,  // (HL)
     I_SP = I_BASE + REG_SP,  // (SP)

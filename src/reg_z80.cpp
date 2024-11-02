@@ -43,7 +43,6 @@ constexpr NameEntry REG_ENTRIES[] PROGMEM = {
     { TEXT_REG_H,   REG_H   },
     { TEXT_REG_HL,  REG_HL  },
     { TEXT_REG_I,   REG_I   },
-    { TEXT_REG_IM,  REG_IM  },
     { TEXT_REG_IX,  REG_IX  },
     { TEXT_REG_IY,  REG_IY  },
     { TEXT_REG_L,   REG_L   },

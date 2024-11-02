@@ -21,11 +21,7 @@ namespace text {
 namespace z80 {
 
 // clang-format off
-constexpr char TEXT_Z80_LIST[]   PROGMEM = "Z80, i8080, i8085, V30EMU";
 constexpr char TEXT_CPU_Z80[]    PROGMEM = "Z80";
-// constexpr char TEXT_CPU_8080[]   PROGMEM = "8080";
-// constexpr char TEXT_CPU_8085[]   PROGMEM = "8085";
-// constexpr char TEXT_CPU_V30EMU[] PROGMEM = "V30EMU";
 
 // constexpr char TEXT_ADC[]  PROGMEM = "ADC";
 // constexpr char TEXT_ADD[]  PROGMEM = "ADD";
@@ -96,10 +92,6 @@ constexpr char TEXT_RETN[] PROGMEM = "RETN";
 // constexpr char TEXT_SUB[]  PROGMEM = "SUB";
 // constexpr char TEXT_XOR[]  PROGMEM = "XOR";
 
-// V30EMU
-// constexpr char TEXT_CALLN[] PROGMEM = "CALLN";
-// constexpr char TEXT_RETEM[] PROGMEM = "RETEM";
-
 // constexpr char TEXT_REG_BC[]  PROGMEM = "BC";
 // constexpr char TEXT_REG_DE[]  PROGMEM = "DE";
 // constexpr char TEXT_REG_HL[]  PROGMEM = "HL";
@@ -115,7 +107,6 @@ constexpr char TEXT_RETN[] PROGMEM = "RETN";
 // constexpr char TEXT_REG_E[]   PROGMEM = "E";
 // constexpr char TEXT_REG_H[]   PROGMEM = "H";
 // constexpr char TEXT_REG_L[]   PROGMEM = "L";
-constexpr char TEXT_REG_IM[]  PROGMEM = "IM";
 constexpr char TEXT_REG_R[]   PROGMEM = "R";
 // constexpr char TEXT_REG_I[]   PROGMEM = "I";
 
