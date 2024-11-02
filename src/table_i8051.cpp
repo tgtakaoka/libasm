@@ -15,7 +15,6 @@
  */
 
 #include "table_i8051.h"
-
 #include "entry_i8051.h"
 #include "entry_table.h"
 #include "text_i8051.h"
@@ -273,8 +272,7 @@ static constexpr Cpu CPU_TABLE[] PROGMEM = {
         {I8051, TEXT_CPU_8051, ARRAY_RANGE(I8051_PAGES)},
 };
 
-static const Cpu *cpu(CpuType cpuType) {
-    UNUSED(cpuType);
+static const Cpu *cpu(CpuType) {
     return &CPU_TABLE[0];
 }
 
@@ -299,8 +297,7 @@ Error TableI8051::searchName(CpuType cpuType, AsmInsn &insn) const {
     return insn.getError();
 }
 
-static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page) {
-    UNUSED(page);
+static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *) {
     auto opc = insn.opCode();
     auto flags = entry->readFlags();
     auto dst = flags.dst();

@@ -15,7 +15,6 @@
  */
 
 #include "table_scn2650.h"
-
 #include "entry_scn2650.h"
 #include "entry_table.h"
 #include "text_scn2650.h"
@@ -219,14 +218,11 @@ static constexpr Cpu CPU_TABLE[] PROGMEM = {
         {SCN2650, TEXT_CPU_2650, ARRAY_RANGE(SCN2650_PAGES)},
 };
 
-static const Cpu *cpu(CpuType cpuType) {
-    UNUSED(cpuType);
+static const Cpu *cpu(CpuType) {
     return &CPU_TABLE[0];
 }
 
-static bool acceptAll(AsmInsn &insn, const Entry *entry) {
-    UNUSED(insn);
-    UNUSED(entry);
+static bool acceptAll(AsmInsn &, const Entry *) {
     return true;
 }
 
@@ -262,8 +258,7 @@ Error TableScn2650::searchName(CpuType cpuType, AsmInsn &insn) const {
     return insn.getError();
 }
 
-static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page) {
-    UNUSED(page);
+static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *) {
     auto opc = insn.opCode();
     const auto flags = entry->readFlags();
     const auto mode1 = flags.mode1();

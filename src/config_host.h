@@ -25,7 +25,6 @@
 #define ARRAY_BEGIN(array) (&(array)[0])
 #define ARRAY_END(array) (&(array)[sizeof(array) / sizeof(array[0])])
 #define ARRAY_RANGE(array) ARRAY_BEGIN(array), ARRAY_END(array)
-#define UNUSED(var) (void)(var)
 
 template <typename CLASS>
 struct Singleton {

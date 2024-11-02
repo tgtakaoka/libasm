@@ -15,7 +15,6 @@
  */
 
 #include "table_i8048.h"
-
 #include "entry_i8048.h"
 #include "entry_table.h"
 #include "text_i8048.h"
@@ -308,8 +307,7 @@ Error TableI8048::searchName(CpuType cpuType, AsmInsn &insn) const {
     return insn.getError();
 }
 
-static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page) {
-    UNUSED(page);
+static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *) {
     auto opc = insn.opCode();
     const auto flags = entry->readFlags();
     const auto dst = flags.dst();

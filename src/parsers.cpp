@@ -550,8 +550,7 @@ Error Pdp8LetterParser::parseLetter(StrScanner &scan, char &letter) const {
     return NOT_AN_EXPECTED;
 }
 
-char Pdp8LetterParser::readLetter(StrScanner &scan, ErrorAt &error, char delim) const {
-    UNUSED(delim);
+char Pdp8LetterParser::readLetter(StrScanner &scan, ErrorAt &error, char) const {
     const auto c = *scan;
     if (c == 0 || (c >= 0x60 && c < 0x7F)) {
         error.setErrorIf(ILLEGAL_CONSTANT);  // no lowercase letter

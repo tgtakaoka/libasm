@@ -15,7 +15,6 @@
  */
 
 #include "table_z8.h"
-
 #include "entry_table.h"
 #include "entry_z8.h"
 #include "text_z8.h"
@@ -565,8 +564,7 @@ static bool matchPostByte(Config::opcode_t post, PostFormat format) {
     }
 }
 
-static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page) {
-    UNUSED(page);
+static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *) {
     auto opc = insn.opCode();
     const auto flags = entry->readFlags();
     if (flags.dstPos() == OP_CODE || flags.srcPos() == OP_CODE)

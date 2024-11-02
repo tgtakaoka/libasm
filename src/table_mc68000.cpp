@@ -15,7 +15,6 @@
  */
 
 #include "table_mc68000.h"
-
 #include "entry_mc68000.h"
 #include "entry_table.h"
 #include "text_mc68000.h"

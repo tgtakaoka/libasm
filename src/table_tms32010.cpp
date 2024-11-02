@@ -15,7 +15,6 @@
  */
 
 #include "table_tms32010.h"
-
 #include "entry_table.h"
 #include "entry_tms32010.h"
 #include "text_tms32010.h"
@@ -209,8 +208,7 @@ Error TableTms32010::searchName(CpuType cpuType, AsmInsn &insn) const {
     return insn.getError();
 }
 
-static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page) {
-    UNUSED(page);
+static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *) {
     auto opc = insn.opCode();
     const auto flags = entry->readFlags();
     const auto mode1 = flags.mode1();

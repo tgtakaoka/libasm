@@ -15,7 +15,6 @@
  */
 
 #include "table_pdp8.h"
-
 #include "entry_pdp8.h"
 #include "entry_table.h"
 #include "text_pdp8.h"
@@ -394,9 +393,7 @@ static const Cpu *cpu(CpuType cpuType) {
     return Cpu::search(cpuType, ARRAY_RANGE(CPU_TABLE));
 }
 
-static bool acceptAll(AsmInsn &insn, const Entry *entry) {
-    UNUSED(insn);
-    UNUSED(entry);
+static bool acceptAll(AsmInsn &, const Entry *) {
     return true;
 }
 
@@ -422,7 +419,6 @@ static bool pageMatcher(DisInsn &insn, const EntryPage *page) {
 }
 
 static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page) {
-    UNUSED(page);
     const auto flags = entry->readFlags();
     const auto mask = flags.bits() | flags.selector() | page->readGroupMask();
     const auto masked = insn.opCode() & mask;

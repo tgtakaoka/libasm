@@ -15,7 +15,6 @@
  */
 
 #include "table_mos6502.h"
-
 #include "entry_mos6502.h"
 #include "entry_table.h"
 #include "text_mos6502.h"
@@ -714,9 +713,7 @@ static const Cpu *cpu(CpuType cpuType) {
     return Cpu::search(cpuType, ARRAY_RANGE(CPU_TABLE));
 }
 
-static bool acceptAll(AsmInsn &insn, const Entry *entry) {
-    UNUSED(insn);
-    UNUSED(entry);
+static bool acceptAll(AsmInsn &, const Entry *) {
     return true;
 }
 
@@ -755,8 +752,7 @@ Error TableMos6502::searchName(CpuType cpuType, AsmInsn &insn) const {
     return insn.getError();
 }
 
-static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page) {
-    UNUSED(page);
+static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *) {
     const auto opCode = entry->readOpCode();
     if (insn.opCode() != opCode || opCode == TableMos6502::WDM)
         return false;

@@ -15,7 +15,6 @@
  */
 
 #include "table_z8000.h"
-
 #include "entry_table.h"
 #include "entry_z8000.h"
 #include "text_z8000.h"
@@ -562,8 +561,7 @@ Error TableZ8000::searchName(CpuType cpuType, AsmInsn &insn) const {
     return insn.getError();
 }
 
-static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page) {
-    UNUSED(page);
+static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *) {
     const auto flags = entry->readFlags();
     const auto cf = flags.codeFormat();
     const auto opc = insn.opCode();

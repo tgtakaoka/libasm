@@ -15,7 +15,6 @@
  */
 
 #include "table_tlcs90.h"
-
 #include "entry_table.h"
 #include "entry_tlcs90.h"
 #include "text_tlcs90.h"
@@ -567,8 +566,7 @@ static constexpr Cpu CPU_TABLE[] PROGMEM = {
         {TLCS90, TEXT_CPU_TLCS90, ARRAY_RANGE(TLCS90_PAGES)},
 };
 
-static const Cpu *cpu(CpuType cpuType) {
-    UNUSED(cpuType);
+static const Cpu *cpu(CpuType) {
     return &CPU_TABLE[0];
 }
 
@@ -650,8 +648,7 @@ static bool invalidPrefixCode(Config::opcode_t prefix, AddrMode mode) {
     return false;
 }
 
-static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page) {
-    UNUSED(page);
+static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *) {
     auto opc = insn.opCode();
     const auto flags = entry->readFlags();
     const auto dst = flags.dst();

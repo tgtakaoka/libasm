@@ -141,8 +141,7 @@ Error Assembler::setCpu(StrScanner &scan) {
     return configSetter().setCpuName(scan);
 }
 
-Error Assembler::setFpu(StrScanner &scan) {
-    UNUSED(scan);
+Error Assembler::setFpu(StrScanner &) {
     return UNSUPPORTED_CPU;
 }
 
@@ -157,9 +156,7 @@ Error Assembler::setOption(const StrScanner &name, StrScanner &text) {
     return options().setOption(name, text);
 }
 
-Error Assembler::setOption(StrScanner &scan, Insn &insn, uint8_t extra) {
-    UNUSED(insn);
-    UNUSED(extra);
+Error Assembler::setOption(StrScanner &scan, Insn &insn, uint8_t) {
     // parse "name", "text" in |scan|
     auto p = scan.skipSpaces();
     const auto dquote = p.expect('"');
@@ -175,8 +172,7 @@ Error Assembler::setOption(StrScanner &scan, Insn &insn, uint8_t extra) {
     return OK;
 }
 
-Error Assembler::defineOrigin(StrScanner &scan, Insn &insn, uint8_t extra) {
-    UNUSED(extra);
+Error Assembler::defineOrigin(StrScanner &scan, Insn &insn, uint8_t) {
     auto p = scan;
     ErrorAt error;
     const auto value = parseExpr(p, error);

@@ -76,8 +76,7 @@ Error AsmPdp8::setImplicitWord(bool enable) {
     return OK;
 }
 
-Error AsmPdp8::defineDoubleDecimal(StrScanner &scan, Insn &insn, uint8_t extra) {
-    UNUSED(extra);
+Error AsmPdp8::defineDoubleDecimal(StrScanner &scan, Insn &insn, uint8_t) {
     const auto radix = _inputRadix;
     setInputRadix(RADIX_10);
     const auto save = scan;
@@ -95,8 +94,7 @@ Error AsmPdp8::defineDoubleDecimal(StrScanner &scan, Insn &insn, uint8_t extra) 
     return insn.getError();
 }
 
-Error AsmPdp8::alignOnPage(StrScanner &scan, Insn &insn, uint8_t extra) {
-    UNUSED(extra);
+Error AsmPdp8::alignOnPage(StrScanner &scan, Insn &insn, uint8_t) {
     auto p = scan.skipSpaces();
     auto page = pageOf(insn.address());
     if (endOfLine(p)) {
@@ -115,8 +113,7 @@ Error AsmPdp8::alignOnPage(StrScanner &scan, Insn &insn, uint8_t extra) {
     return OK;
 }
 
-Error AsmPdp8::defineField(StrScanner &scan, Insn &insn, uint8_t extra) {
-    UNUSED(extra);
+Error AsmPdp8::defineField(StrScanner &scan, Insn &insn, uint8_t) {
     auto p = scan.skipSpaces();
     const auto field = parseInteger(p, insn).getUnsigned();
     if (insn.getError())

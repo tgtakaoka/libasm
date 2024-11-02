@@ -15,7 +15,6 @@
  */
 
 #include "table_ns32000.h"
-
 #include "entry_ns32000.h"
 #include "entry_table.h"
 #include "text_ns32000.h"
@@ -899,8 +898,7 @@ static constexpr Cpu CPU_TABLE[] PROGMEM = {
         {NS32032, TEXT_CPU_32032, ARRAY_RANGE(NS32032_PAGES)},
 };
 
-static const Cpu *cpu(CpuType cpuType) {
-    UNUSED(cpuType);
+static const Cpu *cpu(CpuType) {
     return &CPU_TABLE[0];
 }
 

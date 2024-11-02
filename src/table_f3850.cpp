@@ -15,7 +15,6 @@
  */
 
 #include "table_f3850.h"
-
 #include "entry_f3850.h"
 #include "entry_table.h"
 #include "text_f3850.h"
@@ -203,14 +202,11 @@ static constexpr Cpu CPU_TABLE[] PROGMEM = {
         {F3850, TEXT_CPU_3850, ARRAY_RANGE(F3850_PAGES)},
 };
 
-static const Cpu *cpu(CpuType cpuType) {
-    UNUSED(cpuType);
+static const Cpu *cpu(CpuType) {
     return &CPU_TABLE[0];
 }
 
-static bool acceptAll(AsmInsn &insn, const Entry *entry) {
-    UNUSED(insn);
-    UNUSED(entry);
+static bool acceptAll(AsmInsn &, const Entry *) {
     return true;
 }
 
@@ -241,8 +237,7 @@ Error TableF3850::searchName(CpuType cpuType, AsmInsn &insn) const {
     return insn.getError();
 }
 
-static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page) {
-    UNUSED(page);
+static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *) {
     auto opCode = insn.opCode();
     const auto flags = entry->readFlags();
     const auto mode1 = flags.mode1();

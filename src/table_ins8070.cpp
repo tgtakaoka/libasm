@@ -15,7 +15,6 @@
  */
 
 #include "table_ins8070.h"
-
 #include "entry_ins8070.h"
 #include "entry_table.h"
 #include "text_ins8070.h"
@@ -195,8 +194,7 @@ static constexpr Cpu CPU_TABLE[] PROGMEM = {
         {INS8070, TEXT_CPU_8070, ARRAY_RANGE(INS8070_PAGES)},
 };
 
-static const Cpu *cpu(CpuType cpuType) {
-    UNUSED(cpuType);
+static const Cpu *cpu(CpuType) {
     return &CPU_TABLE[0];
 }
 
@@ -249,8 +247,7 @@ static Config::opcode_t maskCode(AddrMode mode) {
     }
 }
 
-static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page) {
-    UNUSED(page);
+static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *) {
     auto opCode = insn.opCode();
     const auto flags = entry->readFlags();
     opCode &= maskCode(flags.dst());

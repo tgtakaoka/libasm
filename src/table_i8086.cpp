@@ -15,7 +15,6 @@
  */
 
 #include "table_i8086.h"
-
 #include "entry_i8086.h"
 #include "entry_table.h"
 #include "text_i8086.h"
@@ -1358,7 +1357,6 @@ Config::opcode_t TableI8086::segOverridePrefix(RegName name) const {
 }
 
 static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page) {
-    UNUSED(page);
     auto opc = insn.opCode();
     const auto flags = entry->readFlags();
     const auto dstPos = flags.dstPos();

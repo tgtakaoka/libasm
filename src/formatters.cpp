@@ -1,4 +1,3 @@
-#include <stdio.h>
 /*
  * Copyright 2023 Tadashi G. Takaoka
  *
@@ -19,8 +18,7 @@
 
 namespace libasm {
 
-StrBuffer &DecFormatter::format(StrBuffer &out, uint32_t val, uint8_t bits) const {
-    UNUSED(bits);
+StrBuffer &DecFormatter::format(StrBuffer &out, uint32_t val, uint8_t) const {
     const auto start = out.mark();
     return outDec(out, val).reverse(start);
 }

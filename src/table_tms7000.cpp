@@ -15,7 +15,6 @@
  */
 
 #include "table_tms7000.h"
-
 #include "entry_table.h"
 #include "entry_tms7000.h"
 #include "text_tms7000.h"
@@ -474,14 +473,11 @@ static constexpr Cpu CPU_TABLE[] PROGMEM = {
         {TMS7000, TEXT_CPU_TMS7000, ARRAY_RANGE(TMS7000_PAGES)},
 };
 
-static const Cpu *cpu(CpuType cpuType) {
-    UNUSED(cpuType);
+static const Cpu *cpu(CpuType) {
     return &CPU_TABLE[0];
 }
 
-static bool acceptAll(AsmInsn &insn, const Entry *entry) {
-    UNUSED(insn);
-    UNUSED(entry);
+static bool acceptAll(AsmInsn &, const Entry *) {
     return true;
 }
 
@@ -515,8 +511,7 @@ Error TableTms7000::searchName(CpuType cpuType, AsmInsn &insn) const {
     return insn.getError();
 }
 
-static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page) {
-    UNUSED(page);
+static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *) {
     const auto opc = insn.opCode();
     const auto flags = entry->readFlags();
     const auto src = flags.src();

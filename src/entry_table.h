@@ -129,8 +129,7 @@ struct CpuBase {
     /** Tempalte specialization of |readCode| for non-prefixed TableBase */
     template <typename INSN, typename ENTRY, typename PAGE,
             typename enable_if<!is_base_of<PrefixTableBase<ENTRY>, PAGE>::value>::type * = nullptr>
-    static void defaultReadCode(INSN &insn, const ENTRY *entry_P, const PAGE *page_P) {
-        UNUSED(page_P);
+    static void defaultReadCode(INSN &insn, const ENTRY *entry_P, const PAGE *) {
         insn.setOpCode(entry_P->readOpCode());
         insn.setFlags(entry_P->readFlags());
     }
@@ -139,17 +138,13 @@ struct CpuBase {
     template <typename INSN, typename ENTRY, typename PAGE,
             typename enable_if<is_base_of<PrefixTableBase<ENTRY>, PAGE>::value>::type * = nullptr>
     static void defaultReadCode(INSN &insn, const ENTRY *entry_P, const PAGE *page_P) {
-        UNUSED(page_P);
         insn.setPrefix(page_P->readPrefix());
         insn.setOpCode(entry_P->readOpCode());
         insn.setFlags(entry_P->readFlags());
     }
 
     template <typename INSN>
-    static void defaultPageSetup(INSN &insn, const ENTRY_PAGE *page_P) {
-        UNUSED(insn);
-        UNUSED(page_P);
-    }
+    static void defaultPageSetup(INSN &, const ENTRY_PAGE *) {}
 
     /**
      * Binary search an entry from all instruction |_pages| table where an entry has |insn.name()|
@@ -178,8 +173,7 @@ struct CpuBase {
 
     template <typename INSN, typename ENTRY>
     static void defaultReadName(
-            INSN &insn, const ENTRY *entry_P, StrBuffer &out, const ENTRY_PAGE *page_P) {
-        UNUSED(page_P);
+            INSN &insn, const ENTRY *entry_P, StrBuffer &out, const ENTRY_PAGE *) {
         insn.setFlags(entry_P->readFlags());
         auto save{out};
         insn.nameBuffer().reset().over(out).text_P(entry_P->name_P()).over(insn.nameBuffer());
@@ -196,9 +190,7 @@ struct CpuBase {
     template <typename INSN, typename PAGE,
             typename enable_if<!is_base_of_template<PrefixTableBase, PAGE>::value>::type * =
                     nullptr>
-    static bool defaultPageMatcher(INSN &insn, const PAGE *page_P) {
-        UNUSED(insn);
-        UNUSED(page_P);
+    static bool defaultPageMatcher(INSN &, const PAGE *) {
         return true;
     }
 
