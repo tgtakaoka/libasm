@@ -26,6 +26,7 @@ namespace mos6502 {
 using namespace reg;
 using namespace text::common;
 using namespace text::mos6502;
+using namespace text::option;
 
 namespace {
 

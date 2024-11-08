@@ -182,11 +182,6 @@ constexpr char TEXT_ORAL[] PROGMEM = "ORAL";
 constexpr char TEXT_SBCL[] PROGMEM = "SBCL";
 constexpr char TEXT_STAL[] PROGMEM = "STAL";
 
-constexpr char OPT_BOOL_LONGA[] PROGMEM = "longa";
-constexpr char OPT_DESC_LONGA[] PROGMEM = "enable 16-bit accumulator";
-constexpr char OPT_BOOL_LONGI[] PROGMEM = "longi";
-constexpr char OPT_DESC_LONGI[] PROGMEM = "enable 16-bit index registers";
-
 // clang-format on
 
 }  // namespace mos6502

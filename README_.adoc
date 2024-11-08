@@ -91,7 +91,7 @@ usage: asm [-o <output>] [-l <list>] <input>
   -S[<bytes>]       : output Motorola S-Record format
   -H[<bytes>]       : output Intel HEX format
                     : optional <bytes> specifies data record length (max 32)
-  -h                : use lowe case letter for hexadecimal
+  -h                : use lower case letter for hexadecimal
   -n                : output line number to list file
   -v                : print progress verbosely
   --<name>=<vale>   : extra options (<type> [, <CPU>])
@@ -99,18 +99,12 @@ usage: asm [-o <output>] [-l <list>] <input>
   --smart-branch    : optimize branch instruction (bool)
   --fpu             : floating point co-processor (text: 8086, 68000, 32032)
   --implicit-word   : unknown instruction defines word (bool: 6100, J11)
-  --longa           : enable 16-bit accumulator (bool: 6502)
-  --longi           : enable 16-bit index registers (bool: 6502)
   --optimize-index  : optimize zero index (bool: Z8)
-  --optimize-segment: enable optimizing segment override (bool: 8086)
+  --optimize-segment: optimize segment override (bool: 8086)
   --pc-bits         : program counter width in bit, default 13 (int: 6805)
   --pmmu            : memory management unit (text: 32032)
   --reg-alias       : emit register alias regarding setrp value (bool: Z8)
-  --setdp           : set direct page register (int: 6809)
-  --setrp           : set register pointer (int: Z8)
-  --setrp0          : set register pointer 0 (int: Z8)
-  --setrp1          : set register pointer 1 (int: Z8)
-  --short-direct    : enable optimizing direct addressing (bool: Z8001)
+  --short-direct    : optimize direct addressing (bool: Z8001)
   --use-register    : enable register name Rn (bool: 1802)
   --zilog-syntax    : Use Zilog syntax (bool: 8080)
 ----

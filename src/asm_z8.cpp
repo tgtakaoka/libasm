@@ -31,14 +31,11 @@ namespace {
 // clang-format off
 constexpr char OPT_BOOL_ALIAS[]  PROGMEM = "reg-alias";
 constexpr char OPT_DESC_ALIAS[]  PROGMEM = "emit register alias regarding setrp value";
-constexpr char OPT_INT_SETRP[]   PROGMEM = "setrp";
-constexpr char OPT_DESC_SETRP[]  PROGMEM = "set register pointer";
-constexpr char OPT_INT_SETRP0[]  PROGMEM = "setrp0";
-constexpr char OPT_DESC_SETRP0[] PROGMEM = "set register pointer 0";
-constexpr char OPT_INT_SETRP1[]  PROGMEM = "setrp1";
-constexpr char OPT_DESC_SETRP1[] PROGMEM = "set register pointer 1";
 constexpr char OPT_BOOL_OPTIMIZE_INDEX[] PROGMEM = "optimize-index";
 constexpr char OPT_DESC_OPTIMIZE_INDEX[] PROGMEM = "optimize zero index";
+constexpr char OPT_INT_SETRP[]   PROGMEM = "setrp";
+constexpr char OPT_INT_SETRP0[]  PROGMEM = "setrp0";
+constexpr char OPT_INT_SETRP1[]  PROGMEM = "setrp1";
 
 constexpr Pseudo PSEUDOS[] PROGMEM = {
     {TEXT_DB, &Assembler::defineDataConstant, Assembler::DATA_BYTE},
@@ -61,13 +58,13 @@ const ValueParser::Plugins &AsmZ8::defaultPlugins() {
 AsmZ8::AsmZ8(const ValueParser::Plugins &plugins)
     : Assembler(plugins, PSEUDO_TABLE, &_opt_reg_alias),
       Config(TABLE),
-      _opt_reg_alias(this, &AsmZ8::setRegAlias, OPT_BOOL_ALIAS, OPT_DESC_ALIAS, &_opt_setrp),
-      _opt_setrp(this, &AsmZ8::setRegPointer, OPT_INT_SETRP, OPT_DESC_SETRP, &_opt_setrp0),
-      _opt_setrp0(this, &AsmZ8::setRegPointer0, OPT_INT_SETRP0, OPT_DESC_SETRP0, &_opt_setrp1),
-      _opt_setrp1(
-              this, &AsmZ8::setRegPointer1, OPT_INT_SETRP1, OPT_DESC_SETRP1, &_opt_optimize_index),
+      _opt_reg_alias(
+	      this, &AsmZ8::setRegAlias, OPT_BOOL_ALIAS, OPT_DESC_ALIAS, &_opt_optimize_index),
       _opt_optimize_index(
-              this, &AsmZ8::setOptimizeIndex, OPT_BOOL_OPTIMIZE_INDEX, OPT_DESC_OPTIMIZE_INDEX) {
+              this, &AsmZ8::setOptimizeIndex, OPT_BOOL_OPTIMIZE_INDEX, OPT_DESC_OPTIMIZE_INDEX),
+      _opt_setrp(this, &AsmZ8::setRegPointer, OPT_INT_SETRP),
+      _opt_setrp0(this, &AsmZ8::setRegPointer0, OPT_INT_SETRP0),
+      _opt_setrp1(this, &AsmZ8::setRegPointer1, OPT_INT_SETRP1) {
     reset();
 }
 

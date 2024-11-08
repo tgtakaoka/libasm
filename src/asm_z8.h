@@ -37,10 +37,10 @@ struct AsmZ8 final : Assembler, Config {
 
 private:
     const BoolOption<AsmZ8> _opt_reg_alias;
+    const BoolOption<AsmZ8> _opt_optimize_index;
     const IntOption<AsmZ8> _opt_setrp;
     const IntOption<AsmZ8> _opt_setrp0;
     const IntOption<AsmZ8> _opt_setrp1;
-    const BoolOption<AsmZ8> _opt_optimize_index;
 
     bool _regAlias;
     int16_t _regPointer0;

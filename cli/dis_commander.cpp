@@ -152,19 +152,19 @@ int DisCommander::usage() {
         list += cpuSep + buf;
     }
     fprintf(stderr,
-            "libasm disassembler (version " LIBASM_VERSION_STRING
-            ")\n"
-            "usage: %s%s [-o <output>] [-l <list>] <input>\n"
-            "  -C <CPU>         : target CPU%s\n"
-            "  -o <output>      : output file\n"
-            "  -l <list>        : list file\n"
-            "  <input>          : file can be Motorola S-Record or Intel HEX format\n"
-            "  -A start[,end]   : disassemble start address and optional end address\n"
-            "  -r               : use program counter relative notation\n"
-            "  -h               : use lower case letter for hexadecimal\n"
-            "  -u               : use upper case letter for output\n"
-            "  -v               : print progress verbosely\n",
-            _prog_name, cpuOption, list.c_str());
+            R"(libasm disassembler (version %s)
+usage: %s%s [-o <output>] [-l <list>] <input>
+  -C <CPU>         : target CPU%s
+  -o <output>      : output file
+  -l <list>        : list file
+  <input>          : file can be Motorola S-Record or Intel HEX format
+  -A start[,end]   : disassemble start address and optional end address
+  -r               : use program counter relative notation
+  -h               : use lower case letter for hexadecimal
+  -u               : use upper case letter for output
+  -v               : print progress verbosely
+)",
+            LIBASM_VERSION_STRING, _prog_name, cpuOption, list.c_str());
     bool longOptions = false;
     for (const auto *dis : _driver)
         longOptions |= (dis->commonOptions().head() || dis->options().head());

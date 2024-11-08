@@ -30,7 +30,6 @@ namespace {
 
 // clang-format off
 constexpr char OPT_INT_SETDP[]  PROGMEM = "setdp";
-constexpr char OPT_DESC_SETDP[] PROGMEM = "set direct page register";
 
 constexpr Pseudo PSEUDOS[] PROGMEM = {
     {TEXT_FCB, &Assembler::defineDataConstant, Assembler::DATA_BYTE_NO_STRING},
@@ -48,9 +47,9 @@ const ValueParser::Plugins &AsmMc6809::defaultPlugins() {
 }
 
 AsmMc6809::AsmMc6809(const ValueParser::Plugins &plugins)
-    : Assembler(plugins, PSEUDO_TABLE, &_opt_setdp),
+    : Assembler(plugins, PSEUDO_TABLE),
       Config(TABLE),
-      _opt_setdp(this, &AsmMc6809::setDirectPage, OPT_INT_SETDP, OPT_DESC_SETDP) {
+      _opt_setdp(this, &AsmMc6809::setDirectPage, OPT_INT_SETDP) {
     reset();
 }
 

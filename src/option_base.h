@@ -64,7 +64,7 @@ struct BoolOption : public OptionBase {
     using Setter = Error (APP::*)(bool);
 
     constexpr BoolOption(APP *app, Setter setter, const /*PROGMEM*/ char *name_P,
-            const /*PROGMEM*/ char *desc_P, const OptionBase *next = nullptr)
+            const /*PROGMEM*/ char *desc_P = nullptr, const OptionBase *next = nullptr)
         : OptionBase(name_P, desc_P, OPT_BOOL, next), _app(app), _setter(setter) {}
 
     template <typename A, typename enable_if<is_base_of<Assembler, A>::value>::type * = nullptr>
@@ -92,7 +92,7 @@ struct IntOption : public OptionBase {
     using Setter = Error (APP::*)(int32_t);
 
     constexpr IntOption(APP *app, Setter setter, const /*PROGMEM*/ char *name_P,
-            const /*PROGMEM*/ char *desc_P, const OptionBase *next = nullptr)
+            const /*PROGMEM*/ char *desc_P = nullptr, const OptionBase *next = nullptr)
         : OptionBase(name_P, desc_P, OPT_INT, next), _app(app), _setter(setter) {}
 
     template <typename A, typename enable_if<is_base_of<Assembler, A>::value>::type * = nullptr>
@@ -120,7 +120,7 @@ struct CharOption : public OptionBase {
     using Setter = Error (APP::*)(char);
 
     constexpr CharOption(APP *app, Setter setter, const /*PROGMEM*/ char *name_P,
-            const /*PROGMEM*/ char *desc_P, const OptionBase *next = nullptr)
+            const /*PROGMEM*/ char *desc_P = nullptr, const OptionBase *next = nullptr)
         : OptionBase(name_P, desc_P, OPT_CHAR, next), _app(app), _setter(setter) {}
 
     Error set(StrScanner &scan) const override {
@@ -139,7 +139,7 @@ struct TextOption : public OptionBase {
     using Setter = Error (APP::*)(StrScanner &scan);
 
     constexpr TextOption(APP *app, Setter setter, const /*PROGMEM*/ char *name_P,
-            const /*PROGMEM*/ char *desc_P, const OptionBase *next = nullptr)
+            const /*PROGMEM*/ char *desc_P = nullptr, const OptionBase *next = nullptr)
         : OptionBase(name_P, desc_P, OPT_TEXT, next), _app(app), _setter(setter) {}
 
     Error set(StrScanner &scan) const override {
@@ -173,6 +173,10 @@ extern const char OPT_BOOL_GNU_AS[] PROGMEM;
 extern const char OPT_DESC_GNU_AS[] PROGMEM;
 extern const char OPT_TEXT_FPU[] PROGMEM;
 extern const char OPT_DESC_FPU[] PROGMEM;
+extern const char OPT_BOOL_LONGA[] PROGMEM;
+extern const char OPT_DESC_LONGA[] PROGMEM;
+extern const char OPT_BOOL_LONGI[] PROGMEM;
+extern const char OPT_DESC_LONGI[] PROGMEM;
 extern const char OPT_BOOL_IMPLICIT_WORD[] PROGMEM;
 extern const char OPT_DESC_IMPLICIT_WORD[] PROGMEM;
 extern const char OPT_BOOL_ZILOG_SYNTAX[] PROGMEM;

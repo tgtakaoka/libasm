@@ -32,7 +32,7 @@ namespace {
 
 // clang-format off
 constexpr char OPT_BOOL_OPTIMIZE_SEGMENT[] PROGMEM = "optimize-segment";
-constexpr char OPT_DESC_OPTIMIZE_SEGMENT[] PROGMEM = "enable optimizing segment override";
+constexpr char OPT_DESC_OPTIMIZE_SEGMENT[] PROGMEM = "optimize segment override";
 
 constexpr char TEXT_DQ[] PROGMEM = "dq";
 constexpr char TEXT_DT[] PROGMEM = "dt";

@@ -30,7 +30,7 @@ namespace {
 
 // clang-format off
 constexpr char OPT_BOOL_SHORT_DIRECT[] PROGMEM = "short-direct";
-constexpr char OPT_DESC_SHORT_DIRECT[] PROGMEM = "enable optimizing direct addressing";
+constexpr char OPT_DESC_SHORT_DIRECT[] PROGMEM = "optimize direct addressing";
 
 constexpr char TEXT_LONG[]   PROGMEM = "long";
 constexpr char TEXT_STRING[] PROGMEM = "string";

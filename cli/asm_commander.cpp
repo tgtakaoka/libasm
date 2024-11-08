@@ -157,20 +157,19 @@ int AsmCommander::usage() {
         list += cpuSep + buf;
     }
     fprintf(stderr,
-            "libasm assembler (version " LIBASM_VERSION_STRING
-            ")\n"
-            "usage: %s [-o <output>] [-l <list>] <input>\n"
-            "  -C <CPU>          : target CPU%s\n"
-            "  -o <output>       : output file\n"
-            "  -l <list>         : list file\n"
-            "  -S[<bytes>]       : output Motorola S-Record format\n"
-            "  -H[<bytes>]       : output Intel HEX format\n"
-            "                    : optional <bytes> specifies data record length "
-            "(max 32)\n"
-            "  -h                : use lowe case letter for hexadecimal\n"
-            "  -n                : output line number to list file\n"
-            "  -v                : print progress verbosely\n",
-            _prog_name, list.c_str());
+            R"(libasm assembler (version %s)
+usage: %s [-o <output>] [-l <list>] <input>
+  -C <CPU>          : target CPU%s
+  -o <output>       : output file
+  -l <list>         : list file
+  -S[<bytes>]       : output Motorola S-Record format
+  -H[<bytes>]       : output Intel HEX format
+                    : optional <bytes> specifies data record length (max 32)
+  -h                : use lower case letter for hexadecimal
+  -n                : output line number to list file
+  -v                : print progress verbosely
+)",
+            LIBASM_VERSION_STRING, _prog_name, list.c_str());
     bool longOptions = false;
     for (const auto *dir : _driver)
         longOptions |= (dir->commonOptions().head() || dir->options().head());
