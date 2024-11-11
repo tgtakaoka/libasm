@@ -789,23 +789,23 @@
       EXTSL  RQ0
       EXTS   RR0
       RLB    RH0, #1
-      SLLB   RH0, #0
       SRLB   RH0, #8
+      SLLB   RH0, #0
       SDLB   RH0, R0
       RRB    RH0, #1
       RLCB   RH0, #1
-      SLAB   RH0, #0
       SRAB   RH0, #8
+      SLAB   RH0, #0
       SDAB   RH0, R0
       RRCB   RH0, #1
       RLB    RL0, #1
-      SLLB   RL0, #0
       SRLB   RL0, #8
+      SLLB   RL0, #0
       SDLB   RL0, R0
       RRB    RL0, #1
       RLCB   RL0, #1
-      SLAB   RL0, #0
       SRAB   RL0, #8
+      SLAB   RL0, #0
       SDAB   RL0, R0
       RRCB   RL0, #1
       RL     R0, #1

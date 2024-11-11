@@ -613,23 +613,23 @@
       extsl  rq0
       exts   rr0
       rlb    rh0, #1
-      sllb   rh0, #0
       srlb   rh0, #8
+      sllb   rh0, #0
       sdlb   rh0, r0
       rrb    rh0, #1
       rlcb   rh0, #1
-      slab   rh0, #0
       srab   rh0, #8
+      slab   rh0, #0
       sdab   rh0, r0
       rrcb   rh0, #1
       rlb    rl0, #1
-      sllb   rl0, #0
       srlb   rl0, #8
+      sllb   rl0, #0
       sdlb   rl0, r0
       rrb    rl0, #1
       rlcb   rl0, #1
-      slab   rl0, #0
       srab   rl0, #8
+      slab   rl0, #0
       sdab   rl0, r0
       rrcb   rl0, #1
       rl     r0, #1
