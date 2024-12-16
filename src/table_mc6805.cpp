@@ -25,12 +25,11 @@ namespace libasm {
 namespace mc6805 {
 
 #define E3(_opc, _name, _opr1, _opr2, _opr3) \
-    { _opc, Entry::Flags::create(_opr1, _opr2, _opr3), _name }
+    {_opc, Entry::Flags::create(_opr1, _opr2, _opr3), _name}
 #define E2(_opc, _name, _opr1, _opr2) E3(_opc, _name, _opr1, _opr2, M_NONE)
 #define E1(_opc, _name, _opr1) E2(_opc, _name, _opr1, M_NONE)
 #define E0(_opc, _name) E1(_opc, _name, M_NONE)
-#define U1(_opc, _name, _opr1) \
-    { _opc, Entry::Flags::undef(_opr1), _name }
+#define U1(_opc, _name, _opr1) {_opc, Entry::Flags::undef(_opr1), _name}
 
 // clang-format off
 static constexpr Entry MC6805_TABLE[] PROGMEM = {
@@ -236,23 +235,211 @@ static constexpr Entry MC68HC05_TABLE[] PROGMEM = {
 static constexpr uint8_t MC68HC05_INDEX[] PROGMEM = {
       0,  // TEXT_MUL
 };
+
+static constexpr Entry MC68HC08_TABLE[] PROGMEM = {
+    E1(0x35, TEXT_STHX,  M_DIR),
+    E1(0x45, TEXT_LDHX,  M_IM16),
+    E1(0x55, TEXT_LDHX,  M_DIR),
+    E1(0x65, TEXT_CPHX,  M_IM16),
+    E1(0x75, TEXT_CPHX,  M_DIR),
+    E2(0x4E, TEXT_MOV,   M_DIR,  M_DIR),
+    E2(0x5E, TEXT_MOV,   M_DIR,  M_IX0P), // for disassembler
+    E1(0x5E, TEXT_MOV,   M_IX1P),         // for assembler
+    E2(0x6E, TEXT_MOV,   M_IMM,  M_DIR),
+    E2(0x7E, TEXT_MOV,   M_IX0P, M_DIR),
+    E1(0xA7, TEXT_AIS,   M_SIM8),
+    E1(0xAF, TEXT_AIX,   M_SIM8),
+    E0(0x52, TEXT_DIV),
+    E0(0x62, TEXT_NSA),
+    E0(0x72, TEXT_DAA),
+    E0(0x84, TEXT_TAP),
+    E0(0x85, TEXT_TPA),
+    E0(0x86, TEXT_PULA),
+    E0(0x87, TEXT_PSHA),
+    E0(0x88, TEXT_PULX),
+    E0(0x89, TEXT_PSHX),
+    E0(0x8A, TEXT_PULH),
+    E0(0x8B, TEXT_PSHH),
+    E0(0x8C, TEXT_CLRH),
+    E0(0x94, TEXT_TXS),
+    E0(0x95, TEXT_TSX),
+    E1(0x90, TEXT_BGE,   M_REL),
+    E1(0x91, TEXT_BLT,   M_REL),
+    E1(0x92, TEXT_BGT,   M_REL),
+    E1(0x93, TEXT_BLE,   M_REL),
+    E2(0x3B, TEXT_DBNZ,  M_DIR,  M_REL),
+    E1(0x4B, TEXT_DBNZA, M_REL),
+    E1(0x5B, TEXT_DBNZX, M_REL),
+    E2(0x6B, TEXT_DBNZ,  M_IX1,  M_REL),
+    E2(0x7B, TEXT_DBNZ,  M_IX0,  M_REL),
+    E2(0x7B, TEXT_DBNZ,  M_REGX, M_REL),
+    E2(0x31, TEXT_CBEQ,  M_DIR,  M_REL),
+    E2(0x41, TEXT_CBEQA, M_IMM,  M_REL),
+    E2(0x51, TEXT_CBEQX, M_IMM,  M_REL),
+    E2(0x61, TEXT_CBEQ,  M_IX1P, M_REL),
+    E2(0x71, TEXT_CBEQ,  M_IX0P, M_REL),
+};
+
+static constexpr uint8_t MC68HC08_INDEX[] PROGMEM = {
+     10,  // TEXT_AIS
+     11,  // TEXT_AIX
+     26,  // TEXT_BGE
+     28,  // TEXT_BGT
+     29,  // TEXT_BLE
+     27,  // TEXT_BLT
+     36,  // TEXT_CBEQ
+     39,  // TEXT_CBEQ
+     40,  // TEXT_CBEQ
+     37,  // TEXT_CBEQA
+     38,  // TEXT_CBEQX
+     23,  // TEXT_CLRH
+      3,  // TEXT_CPHX
+      4,  // TEXT_CPHX
+     14,  // TEXT_DAA
+     30,  // TEXT_DBNZ
+     33,  // TEXT_DBNZ
+     34,  // TEXT_DBNZ
+     35,  // TEXT_DBNZ
+     31,  // TEXT_DBNZA
+     32,  // TEXT_DBNZX
+     12,  // TEXT_DIV
+      1,  // TEXT_LDHX
+      2,  // TEXT_LDHX
+      5,  // TEXT_MOV
+      6,  // TEXT_MOV
+      7,  // TEXT_MOV
+      8,  // TEXT_MOV
+      9,  // TEXT_MOV
+     13,  // TEXT_NSA
+     18,  // TEXT_PSHA
+     22,  // TEXT_PSHH
+     20,  // TEXT_PSHX
+     17,  // TEXT_PULA
+     21,  // TEXT_PULH
+     19,  // TEXT_PULX
+      0,  // TEXT_STHX
+     15,  // TEXT_TAP
+     16,  // TEXT_TPA
+     25,  // TEXT_TSX
+     24,  // TEXT_TXS
+};
+
+static constexpr Entry MC68HC08_P9E[] PROGMEM = {
+    E1(0x60, TEXT_NEG,  M_SP1),
+    E2(0x61, TEXT_CBEQ, M_SP1,  M_REL),
+    E1(0x63, TEXT_COM,  M_SP1),
+    E1(0x64, TEXT_LSR,  M_SP1),
+    E1(0x66, TEXT_ROR,  M_SP1),
+    E1(0x67, TEXT_ASR,  M_SP1),
+    E1(0x68, TEXT_ASL,  M_SP1),
+    E1(0x68, TEXT_LSL,  M_SP1),
+    E1(0x69, TEXT_ROL,  M_SP1),
+    E1(0x6A, TEXT_DEC,  M_SP1),
+    E2(0x6B, TEXT_DBNZ, M_SP1,  M_REL),
+    E1(0x6C, TEXT_INC,  M_SP1),
+    E1(0x6D, TEXT_TST,  M_SP1),
+    E1(0x6F, TEXT_CLR,  M_SP1),
+    E1(0xE0, TEXT_SUB,  M_SP1),
+    E1(0xE1, TEXT_CMP,  M_SP1),
+    E1(0xE2, TEXT_SBC,  M_SP1),
+    E1(0xE3, TEXT_CPX,  M_SP1),
+    E1(0xE4, TEXT_AND,  M_SP1),
+    E1(0xE5, TEXT_BIT,  M_SP1),
+    E1(0xE6, TEXT_LDA,  M_SP1),
+    E1(0xE7, TEXT_STA,  M_SP1),
+    E1(0xE8, TEXT_EOR,  M_SP1),
+    E1(0xE9, TEXT_ADC,  M_SP1),
+    E1(0xEA, TEXT_ORA,  M_SP1),
+    E1(0xEB, TEXT_ADD,  M_SP1),
+    E1(0xEE, TEXT_LDX,  M_SP1),
+    E1(0xEF, TEXT_STX,  M_SP1),
+    E1(0xD0, TEXT_SUB,  M_SP2),
+    E1(0xD1, TEXT_CMP,  M_SP2),
+    E1(0xD2, TEXT_SBC,  M_SP2),
+    E1(0xD3, TEXT_CPX,  M_SP2),
+    E1(0xD4, TEXT_AND,  M_SP2),
+    E1(0xD5, TEXT_BIT,  M_SP2),
+    E1(0xD6, TEXT_LDA,  M_SP2),
+    E1(0xD7, TEXT_STA,  M_SP2),
+    E1(0xD8, TEXT_EOR,  M_SP2),
+    E1(0xD9, TEXT_ADC,  M_SP2),
+    E1(0xDA, TEXT_ORA,  M_SP2),
+    E1(0xDB, TEXT_ADD,  M_SP2),
+    E1(0xDE, TEXT_LDX,  M_SP2),
+    E1(0xDF, TEXT_STX,  M_SP2),
+};
+
+static constexpr uint8_t MC68HC08_I9E[] PROGMEM = {
+     23,  // TEXT_ADC
+     37,  // TEXT_ADC
+     25,  // TEXT_ADD
+     39,  // TEXT_ADD
+     18,  // TEXT_AND
+     32,  // TEXT_AND
+      6,  // TEXT_ASL
+      5,  // TEXT_ASR
+     19,  // TEXT_BIT
+     33,  // TEXT_BIT
+      1,  // TEXT_CBEQ
+     13,  // TEXT_CLR
+     15,  // TEXT_CMP
+     29,  // TEXT_CMP
+      2,  // TEXT_COM
+     17,  // TEXT_CPX
+     31,  // TEXT_CPX
+     10,  // TEXT_DBNZ
+      9,  // TEXT_DEC
+     22,  // TEXT_EOR
+     36,  // TEXT_EOR
+     11,  // TEXT_INC
+     20,  // TEXT_LDA
+     34,  // TEXT_LDA
+     26,  // TEXT_LDX
+     40,  // TEXT_LDX
+      7,  // TEXT_LSL
+      3,  // TEXT_LSR
+      0,  // TEXT_NEG
+     24,  // TEXT_ORA
+     38,  // TEXT_ORA
+      8,  // TEXT_ROL
+      4,  // TEXT_ROR
+     16,  // TEXT_SBC
+     30,  // TEXT_SBC
+     21,  // TEXT_STA
+     35,  // TEXT_STA
+     27,  // TEXT_STX
+     41,  // TEXT_STX
+     14,  // TEXT_SUB
+     28,  // TEXT_SUB
+     12,  // TEXT_TST
+};
+
 // clang-format on
 
-using EntryPage = entry::TableBase<Entry>;
+using EntryPage = entry::PrefixTableBase<Entry>;
 
 static constexpr EntryPage MC6805_PAGES[] PROGMEM = {
-        {ARRAY_RANGE(MC6805_TABLE), ARRAY_RANGE(MC6805_INDEX)},
+        {0x00, ARRAY_RANGE(MC6805_TABLE), ARRAY_RANGE(MC6805_INDEX)},
 };
 
 static constexpr EntryPage MC146805_PAGES[] PROGMEM = {
-        {ARRAY_RANGE(MC6805_TABLE), ARRAY_RANGE(MC6805_INDEX)},
-        {ARRAY_RANGE(MC146805_TABLE), ARRAY_RANGE(MC146805_INDEX)},
+        {0x00, ARRAY_RANGE(MC6805_TABLE), ARRAY_RANGE(MC6805_INDEX)},
+        {0x00, ARRAY_RANGE(MC146805_TABLE), ARRAY_RANGE(MC146805_INDEX)},
 };
 
 static constexpr EntryPage MC68HC05_PAGES[] PROGMEM = {
-        {ARRAY_RANGE(MC6805_TABLE), ARRAY_RANGE(MC6805_INDEX)},
-        {ARRAY_RANGE(MC146805_TABLE), ARRAY_RANGE(MC146805_INDEX)},
-        {ARRAY_RANGE(MC68HC05_TABLE), ARRAY_RANGE(MC68HC05_INDEX)},
+        {0x00, ARRAY_RANGE(MC6805_TABLE), ARRAY_RANGE(MC6805_INDEX)},
+        {0x00, ARRAY_RANGE(MC146805_TABLE), ARRAY_RANGE(MC146805_INDEX)},
+        {0x00, ARRAY_RANGE(MC68HC05_TABLE), ARRAY_RANGE(MC68HC05_INDEX)},
+};
+
+static constexpr EntryPage MC68HC08_PAGES[] PROGMEM = {
+        {0x00, ARRAY_RANGE(MC68HC08_TABLE), ARRAY_RANGE(MC68HC08_INDEX)},
+        // Above definitions overrides unknown instructions defined below.
+        {0x00, ARRAY_RANGE(MC6805_TABLE), ARRAY_RANGE(MC6805_INDEX)},
+        {0x00, ARRAY_RANGE(MC146805_TABLE), ARRAY_RANGE(MC146805_INDEX)},
+        {0x00, ARRAY_RANGE(MC68HC05_TABLE), ARRAY_RANGE(MC68HC05_INDEX)},
+        {0x9E, ARRAY_RANGE(MC68HC08_P9E), ARRAY_RANGE(MC68HC08_I9E)},
 };
 
 using Cpu = entry::CpuBase<CpuType, EntryPage>;
@@ -261,6 +448,7 @@ static constexpr Cpu CPU_TABLE[] PROGMEM = {
         {MC6805, TEXT_CPU_6805, ARRAY_RANGE(MC6805_PAGES)},
         {MC146805, TEXT_CPU_146805, ARRAY_RANGE(MC146805_PAGES)},
         {MC68HC05, TEXT_CPU_68HC05, ARRAY_RANGE(MC68HC05_PAGES)},
+        {MC68HC08, TEXT_CPU_68HC08, ARRAY_RANGE(MC68HC08_PAGES)},
 };
 
 static const Cpu *cpu(CpuType cpuType) {
@@ -280,14 +468,16 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
     if (opr == table)
         return true;
     if (table == M_GEN)
-        return opr == M_BNO || opr == M_IMM || opr == M_DIR || opr == M_EXT || opr == M_IDX ||
+        return opr == M_BNO || opr == M_IMM || opr == M_DIR || opr == M_EXT || opr == M_IX1 ||
                opr == M_IX0 || opr == M_IX2;
     if (table == M_MEM)
-        return opr == M_BNO || opr == M_DIR || opr == M_IDX || opr == M_IX0;
+        return opr == M_BNO || opr == M_DIR || opr == M_IX1 || opr == M_IX0;
     if (opr == M_EXT)
         return table == M_REL;
     if (opr == M_DIR)
         return table == M_REL || table == M_EXT;
+    if (opr == M_IMM)
+        return table == M_IM16 || table == M_SIM8;
     if (opr == M_BNO)
         return table == M_REL || table == M_DIR || table == M_EXT;
     return false;
@@ -332,6 +522,10 @@ Error TableMc6805::searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) 
         insn.setErrorIf(UNKNOWN_INSTRUCTION);
     }
     return insn.getError();
+}
+
+bool TableMc6805::isPrefix(CpuType cpuType, Config::opcode_t code) const {
+    return cpu(cpuType)->isPrefix(code);
 }
 
 const /*PROGMEM*/ char *TableMc6805::listCpu_P() const {

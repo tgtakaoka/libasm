@@ -26,9 +26,10 @@ enum CpuType : uint8_t {
     MC6805,
     MC146805,
     MC68HC05,
+    MC68HC08,
 };
 
-struct Config : ConfigImpl<CpuType, ADDRESS_16BIT, ADDRESS_BYTE, OPCODE_8BIT, ENDIAN_BIG, 3, 5> {
+struct Config : ConfigImpl<CpuType, ADDRESS_16BIT, ADDRESS_BYTE, OPCODE_8BIT, ENDIAN_BIG, 4, 5> {
     Config(const InsnTable<CpuType> &table) : ConfigImpl(table, MC6805) {}
 };
 

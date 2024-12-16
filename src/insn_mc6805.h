@@ -25,7 +25,7 @@
 namespace libasm {
 namespace mc6805 {
 
-struct EntryInsn : EntryInsnBase<Config, Entry> {
+struct EntryInsn : EntryInsnPrefix<Config, Entry> {
     AddrMode mode1() const { return flags().mode1(); }
     AddrMode mode2() const { return flags().mode2(); }
     AddrMode mode3() const { return flags().mode3(); }
@@ -43,16 +43,14 @@ struct AsmInsn final : AsmInsnImpl<Config>, EntryInsn {
 
     Operand op1, op2, op3;
 
-    void emitInsn() { emitByte(opCode(), 0); }
+    void emitInsn();
     void emitOperand8(uint8_t val8) { emitByte(val8, operandPos()); }
     void emitOperand16(uint16_t val16) { emitUint16(val16, operandPos()); }
 
 private:
     uint8_t operandPos() const {
-        uint8_t pos = length();
-        if (pos == 0)
-            pos = 1;
-        return pos;
+        auto pos = length();
+        return pos ? pos : (hasPrefix() ? 2 : 1);
     }
 };
 

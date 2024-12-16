@@ -31,6 +31,7 @@ struct TableMc6805 final : InsnTable<CpuType> {
     bool hasOperand(CpuType, AsmInsn &insn) const;
     Error searchName(CpuType, AsmInsn &insn) const;
     Error searchOpCode(CpuType, DisInsn &insn, StrBuffer &out) const;
+    bool isPrefix(CpuType, Config::opcode_t code) const;
 };
 
 extern const TableMc6805 TABLE;

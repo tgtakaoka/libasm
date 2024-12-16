@@ -151,7 +151,7 @@ extern const char TEXT_DACI[] PROGMEM;
 extern const char TEXT_DADC[] PROGMEM;
 extern const char TEXT_DADD[] PROGMEM;
 extern const char TEXT_DADI[] PROGMEM;
-extern const char TEXT_DBNZ[] PROGMEM;
+using common::TEXT_DBNZ;
 extern const char TEXT_DSAV[] PROGMEM;
 extern const char TEXT_DSBI[] PROGMEM;
 extern const char TEXT_DSM[]  PROGMEM;

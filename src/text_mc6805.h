@@ -28,6 +28,7 @@ extern const char TEXT_MC6805_LIST[] PROGMEM;
 extern const char TEXT_CPU_6805[] PROGMEM;
 extern const char TEXT_CPU_146805[] PROGMEM;
 extern const char TEXT_CPU_68HC05[] PROGMEM;
+extern const char TEXT_CPU_68HC08[] PROGMEM;
 
 using common::TEXT_ADC;
 using common::TEXT_ADD;
@@ -118,6 +119,38 @@ using common::TEXT_TSTA;
 extern const char TEXT_TSTX[] PROGMEM;
 using common::TEXT_TXA;
 using common::TEXT_WAIT;
+
+// MC68HC08
+extern const char TEXT_AIS[]   PROGMEM;
+extern const char TEXT_AIX[]   PROGMEM;
+using common::TEXT_BGE;
+using common::TEXT_BGT;
+using common::TEXT_BLE;
+using common::TEXT_BLT;
+extern const char TEXT_CBEQA[] PROGMEM;
+extern const char TEXT_CBEQ[]  PROGMEM;
+extern const char TEXT_CBEQX[] PROGMEM;
+extern const char TEXT_CLRH[]  PROGMEM;
+extern const char TEXT_CPHX[]  PROGMEM;
+using common::TEXT_DAA;
+using common::TEXT_DBNZ;
+extern const char TEXT_DBNZA[] PROGMEM;
+extern const char TEXT_DBNZX[] PROGMEM;
+using common::TEXT_DIV;
+extern const char TEXT_LDHX[]  PROGMEM;
+using common::TEXT_MOV;
+extern const char TEXT_NSA[]   PROGMEM;
+using common::TEXT_PSHA;
+extern const char TEXT_PSHH[]  PROGMEM;
+using common::TEXT_PSHX;
+using common::TEXT_PULA;
+extern const char TEXT_PULH[]  PROGMEM;
+using common::TEXT_PULX;
+extern const char TEXT_STHX[]  PROGMEM;
+using common::TEXT_TAP;
+using common::TEXT_TPA;
+using common::TEXT_TSX;
+using common::TEXT_TXS;
 // clang-format on
 
 }  // namespace mc6805

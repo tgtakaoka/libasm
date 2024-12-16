@@ -28,6 +28,7 @@ namespace mc6805 {
 enum RegName : int8_t {
     REG_UNDEF = 0,
     REG_X = 'X',
+    REG_SP = 'S',
 };
 
 namespace reg {

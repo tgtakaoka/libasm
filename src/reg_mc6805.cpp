@@ -15,7 +15,6 @@
  */
 
 #include "reg_mc6805.h"
-
 #include "reg_base.h"
 
 using namespace libasm::reg;
@@ -30,11 +29,19 @@ RegName parseRegName(StrScanner &scan) {
         scan = p;
         return REG_X;
     }
+    if (p.iexpect('S') && p.iexpect('P') && !isIdLetter(*p)) {
+        scan = p;
+        return REG_SP;
+    }
     return REG_UNDEF;
 }
 
 StrBuffer &outRegName(StrBuffer &out, RegName name) {
-    return out.letter(char(name));
+    if (name == REG_X)
+        return out.letter('X');
+    if (name == REG_SP)
+        return out.letter('S').letter('P');
+    return out;
 }
 
 }  // namespace reg

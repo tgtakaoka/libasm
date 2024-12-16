@@ -32,6 +32,10 @@ static bool m68hc05() {
     return strcmp_P("68HC05", assembler.config().cpu_P()) == 0;
 }
 
+static bool m68hc08() {
+    return strcmp_P("68HC08", assembler.config().cpu_P()) == 0;
+}
+
 static void set_up() {
     assembler.reset();
 }
@@ -51,6 +55,9 @@ void test_cpu() {
     EQUALS("cpu 68HC05", true,   assembler.setCpu("68hc05"));
     EQUALS_P("cpu 68HC05", "68HC05", assembler.config().cpu_P());
 
+    EQUALS("cpu 68HC08", true,   assembler.setCpu("68hc08"));
+    EQUALS_P("cpu 68HC08", "68HC08", assembler.config().cpu_P());
+
     EQUALS("cpu MC6805", true,   assembler.setCpu("mc6805"));
     EQUALS_P("cpu MC6805", "6805", assembler.config().cpu_P());
 
@@ -59,6 +66,9 @@ void test_cpu() {
 
     EQUALS("cpu MC68HC05", true,   assembler.setCpu("mc68hc05"));
     EQUALS_P("cpu MC68HC05", "68HC05", assembler.config().cpu_P());
+
+    EQUALS("cpu MC68HC08", true,   assembler.setCpu("mc68hc08"));
+    EQUALS_P("cpu MC68HC08", "68HC08", assembler.config().cpu_P());
 }
 
 static void test_inherent() {
@@ -73,8 +83,7 @@ static void test_inherent() {
     TEST("SWI", 0x83);
     TEST("TAX",  0x97);
     TEST("TXA",  0x9F);
-    if (m146805() || m68hc05()) {
-        // MC146805/MC68HC05
+    if (m146805() || m68hc05() || m68hc08()) {
         TEST("WAIT", 0x8F);
     } else {
         ERUI("WAIT");
@@ -104,22 +113,37 @@ static void test_inherent() {
     TEST("TSTX", 0x5D);
     TEST("CLRX", 0x5F);
 
-    if (m68hc05()) {
-        // MC68HC05
+    if (m68hc05() || m68hc08()) {
         TEST("MUL",  0x42);
     } else {
         ERUI("MUL");
     }
-    if (m146805() || m68hc05()) {
-        // MC146805/MC68HC05
+    if (m146805() || m68hc05() || m68hc08()) {
         TEST("STOP", 0x8E);
     } else {
         ERUI("STOP");
+    }
+    if (m68hc08()) {
+        TEST("DIV",  0x52);
+        TEST("NSA",  0x62);
+        TEST("DAA",  0x72);
+        TEST("TAP",  0x84);
+        TEST("TPA",  0x85);
+        TEST("PULA", 0x86);
+        TEST("PSHA", 0x87);
+        TEST("PULX", 0x88);
+        TEST("PSHX", 0x89);
+        TEST("PULH", 0x8A);
+        TEST("PSHH", 0x8B);
+        TEST("CLRH", 0x8C);
+        TEST("TXS",  0x94);
+        TEST("TSX",  0x95);
     }
 }
 
 static void test_relative() {
     ATEST(0x1000, "BRA $1002", 0x20, 0x00);
+    ATEST(0x1000, "BRN $1081", 0x21, 0x7F);
     ATEST(0x1000, "BHI $1004", 0x22, 0x02);
     ATEST(0x1000, "BLS $0F82", 0x23, 0x80);
     ATEST(0x1000, "BHS $1081", 0x24, 0x7F);
@@ -140,8 +164,25 @@ static void test_relative() {
     ATEST(0x1000, "BSR $1042", 0xAD, 0x40);
     ATEST(0x1000, "BSR *+$42", 0xAD, 0x40);
 
-    AERRT(0x1FF0, "BRA $2000", OVERFLOW_RANGE, "$2000", 0x20, 0x0E);
-    ATEST(0x1000, "BRN $1081", 0x21, 0x7F);
+    if (m68hc08()) {
+        ATEST(0x1000, "BGE $1081", 0x90, 0x7F);
+        ATEST(0x1000, "BLT $0F82", 0x91, 0x80);
+        ATEST(0x1000, "BGT $1081", 0x92, 0x7F);
+        ATEST(0x1000, "BLE $0F82", 0x93, 0x80);
+
+        ATEST(0x1000, "CBEQ  $90, $1003",    0x31, 0x90, 0x00);
+        ATEST(0x1000, "CBEQA #$90, $1082",   0x41, 0x90, 0x7F);
+        ATEST(0x1000, "CBEQX #$90, $0F83",   0x51, 0x90, 0x80);
+        ATEST(0x1000, "CBEQ  144,X+, $1004", 0x61, 0x90, 0x01);
+        ATEST(0x1000, "CBEQ  X+, $1000",     0x71, 0xFE);
+
+        ATEST(0x1000, "DBNZ  $90, $1003",   0x3B, 0x90, 0x00);
+        ATEST(0x1000, "DBNZA $1081",        0x4B, 0x7F);
+        ATEST(0x1000, "DBNZX $0F82",        0x5B, 0x80);
+        ATEST(0x1000, "DBNZ  144,X, $1004", 0x6B, 0x90, 0x01);
+        ATEST(0x1000, "DBNZ  ,X, $1000",    0x7B, 0xFE);
+        ATEST(0x1000, "DBNZ  X, $1000",     0x7B, 0xFE);
+    }
 
     symtab.intern(0x0F82, "sub0F82");
     symtab.intern(0x1081, "sub1081");
@@ -169,6 +210,21 @@ static void test_immediate() {
     TEST("CPX #$90", 0xA3, 0x90);
     TEST("LDX #$90", 0xAE, 0x90);
     ERRT("STX #$90", OPERAND_NOT_ALLOWED, "#$90");
+
+    if (m68hc08()) {
+        TEST("LDHX #$1234", 0x45, 0x12, 0x34);
+        TEST("CPHX #$1234", 0x65, 0x12, 0x34);
+        TEST("AIS #2",    0xA7, 0x02);
+        TEST("AIX #1",    0xAF, 0x01);
+        TEST("AIS #-2",   0xA7, 0xFE);
+        TEST("AIX #-1",   0xAF, 0xFF);
+        TEST("AIS #$7F",  0xA7, 0x7F);
+        TEST("AIX #$7F",  0xAF, 0x7F);
+        TEST("AIS #-$80", 0xA7, 0x80);
+        TEST("AIX #-$80", 0xAF, 0x80);
+        ERRT("AIS #128",   OVERFLOW_RANGE, "#128",  0xA7, 0x80);
+        ERRT("AIX #-129",  OVERFLOW_RANGE, "#-129", 0xAF, 0x7F);
+    }
 
     ERRT("BSR #$90", OPERAND_NOT_ALLOWED, "#$90");
     ERRT("JSR #$90", OPERAND_NOT_ALLOWED, "#$90");
@@ -211,6 +267,16 @@ static void test_direct() {
     TEST("LDX $90", 0xBE, 0x90);
     TEST("STX $90", 0xBF, 0x90);
 
+    if (m68hc08()) {
+        TEST("STHX $90", 0x35, 0x90);
+        TEST("LDHX $90", 0x55, 0x90);
+        TEST("CPHX $90", 0x75, 0x90);
+        TEST("MOV $90, $40",  0x4E, 0x90, 0x40);
+        TEST("MOV $90, X+",   0x5E, 0x90);
+        TEST("MOV #$90, $40", 0x6E, 0x90, 0x40);
+        TEST("MOV X+, $40",   0x7E, 0x40);
+    }
+
     TEST("JSR $90", 0xBD, 0x90);
 
     symtab.intern(0x10, "dir_10");
@@ -249,7 +315,13 @@ static void test_extended() {
     TEST("ADC >$0090", 0xC9, 0x00, 0x90);
     TEST("ORA >$0090", 0xCA, 0x00, 0x90);
     TEST("ADD  $1FFF", 0xCB, 0x1F, 0xFF);
-    ERRT("SUB  $2000", OVERFLOW_RANGE, "$2000", 0xC0, 0x20, 0x00);
+    if (m68hc08()) {
+        TEST("SUB  $2000", 0xC0, 0x20, 0x00);
+        TEST("ADD  $FFFF", 0xCB, 0xFF, 0xFF);
+    } else {
+        ERRT("SUB  $2000", OVERFLOW_RANGE, "$2000", 0xC0, 0x20, 0x00);
+        ERRT("ADD  $FFFF", OVERFLOW_RANGE, "$FFFF", 0xCB, 0xFF, 0xFF);
+    }
 
     TEST("CPX $1ABC", 0xC3, 0x1A, 0xBC);
     TEST("LDX $1ABC", 0xCE, 0x1A, 0xBC);
@@ -258,9 +330,15 @@ static void test_extended() {
     TEST("JMP >$0034", 0xCC, 0x00, 0x34);
     TEST("JSR  $1234", 0xCD, 0x12, 0x34);
 
-    ERRT("CPX $2000", OVERFLOW_RANGE, "$2000", 0xC3, 0x20, 0x00);
-    ERRT("JMP $4000", OVERFLOW_RANGE, "$4000", 0xCC, 0x40, 0x00);
-    ERRT("JSR $8000", OVERFLOW_RANGE, "$8000", 0xCD, 0x80, 0x00);
+    if (m68hc08()) {
+        TEST("CPX $2000", 0xC3, 0x20, 0x00);
+        TEST("JMP $4000", 0xCC, 0x40, 0x00);
+        TEST("JSR $8000", 0xCD, 0x80, 0x00);
+    } else {
+        ERRT("CPX $2000", OVERFLOW_RANGE, "$2000", 0xC3, 0x20, 0x00);
+        ERRT("JMP $4000", OVERFLOW_RANGE, "$4000", 0xCC, 0x40, 0x00);
+        ERRT("JSR $8000", OVERFLOW_RANGE, "$8000", 0xCD, 0x80, 0x00);
+    }
 
     symtab.intern(0x0090, "ext0090");
     symtab.intern(0x1ABC, "ext1ABC");
@@ -277,22 +355,42 @@ static void test_extended() {
     TEST("JSR  ext0090", 0xBD, 0x90);
 
     TEST(R"(option "pc-bits", "11")"); // MC68HC05J for instance
-    TEST(         "LDA $07FF",                          0xC6, 0x07, 0xFF);
-    ERRT(         "LDA $0800", OVERFLOW_RANGE, "$0800", 0xC6, 0x08, 0x00);
-    ATEST(0x07F0, "BSR $07FF",                          0xAD, 0x0D);
-    AERRT(0x07F0, "BSR $0800", OVERFLOW_RANGE, "$0800", 0xAD, 0x0E);
+    if (m68hc08()) {
+        TEST(         "LDA $0800", 0xC6, 0x08, 0x00);
+        ATEST(0x07F0, "BSR $0800", 0xAD, 0x0E);
+    } else {
+        TEST(         "LDA $07FF",                          0xC6, 0x07, 0xFF);
+        ERRT(         "LDA $0800", OVERFLOW_RANGE, "$0800", 0xC6, 0x08, 0x00);
+        ATEST(0x07F0, "BSR $07FF",                          0xAD, 0x0D);
+        AERRT(0x07F0, "BSR $0800", OVERFLOW_RANGE, "$0800", 0xAD, 0x0E);
+    }
 
     TEST(R"(option "pc-bits", 0)");  // Most of MC68HC05 has 13bits PC.
-    TEST(         "LDA $1FFF",                          0xC6, 0x1F, 0xFF);
-    ERRT(         "LDA $2000", OVERFLOW_RANGE, "$2000", 0xC6, 0x20, 0x00);
-    ATEST(0x1FF0, "BSR $1FFF",                          0xAD, 0x0D);
-    AERRT(0x1FF0, "BSR $2000", OVERFLOW_RANGE, "$2000", 0xAD, 0x0E);
+    if (m68hc08()) {
+        TEST(         "LDA $2000", 0xC6, 0x20, 0x00);
+        ATEST(0x1FF0, "BSR $2000", 0xAD, 0x0E);
+    } else {
+        TEST(         "LDA $1FFF",                          0xC6, 0x1F, 0xFF);
+        ERRT(         "LDA $2000", OVERFLOW_RANGE, "$2000", 0xC6, 0x20, 0x00);
+        ATEST(0x1FF0, "BSR $1FFF",                          0xAD, 0x0D);
+        AERRT(0x1FF0, "BSR $2000", OVERFLOW_RANGE, "$2000", 0xAD, 0x0E);
+    }
 
     assembler.setOption("pc-bits", "14"); // MC68HC05X for instance
-    TEST(         "LDA $3FFF",                          0xC6, 0x3F, 0xFF);
-    ERRT(         "LDA $4000", OVERFLOW_RANGE, "$4000", 0xC6, 0x40, 0x00);
-    ATEST(0x3FF0, "BSR $3FFF",                          0xAD, 0x0D);
-    AERRT(0x3FF0, "BSR $4000", OVERFLOW_RANGE, "$4000", 0xAD, 0x0E);
+    if (m68hc08()) {
+        TEST(         "LDA $4000", 0xC6, 0x40, 0x00);
+        ATEST(0x3FF0, "BSR $4000", 0xAD, 0x0E);
+    } else {
+        TEST(         "LDA $3FFF",                          0xC6, 0x3F, 0xFF);
+        ERRT(         "LDA $4000", OVERFLOW_RANGE, "$4000", 0xC6, 0x40, 0x00);
+        ATEST(0x3FF0, "BSR $3FFF",                          0xAD, 0x0D);
+        AERRT(0x3FF0, "BSR $4000", OVERFLOW_RANGE, "$4000", 0xAD, 0x0E);
+    }
+
+    if (m68hc08()) {
+        TEST(         "LDA $FFFF",                          0xC6, 0xFF, 0xFF);
+        AERRT(0xFFF0, "BSR $0000", OVERFLOW_RANGE, "$0000", 0xAD, 0x0E);
+    }
 }
 
 static void test_indexed() {
@@ -384,6 +482,56 @@ static void test_indexed() {
     TEST("JMP <0,X",  0xEC, 0x00);
     TEST("JSR 255,X", 0xED, 0xFF);
 
+    if (m68hc08()) {
+        TEST("NEG 0,SP",   0x9E, 0x60, 0x00);
+        TEST("NEG <0,SP",  0x9E, 0x60, 0x00);
+        ERRT("NEG >0,SP",  OPERAND_NOT_ALLOWED, ">0,SP");
+        TEST("COM 255,SP", 0x9E, 0x63, 0xFF);
+        ERRT("COM 256,SP", OPERAND_NOT_ALLOWED, "256,SP");
+        TEST("LSR 1,SP",   0x9E, 0x64, 0x01);
+        TEST("ROR 2,SP",   0x9E, 0x66, 0x02);
+        TEST("ASR 3,SP",   0x9E, 0x67, 0x03);
+        TEST("ASL 4,SP",   0x9E, 0x68, 0x04);
+        TEST("ROL 5,SP",   0x9E, 0x69, 0x05);
+        TEST("DEC 6,SP",   0x9E, 0x6A, 0x06);
+        TEST("INC 127,SP", 0x9E, 0x6C, 0x7F);
+        TEST("TST 128,SP", 0x9E, 0x6D, 0x80);
+        TEST("CLR 255,SP", 0x9E, 0x6F, 0xFF);
+
+        TEST("SUB 0,SP",   0x9E, 0xE0, 0x00);
+        TEST("SUB <0,SP",  0x9E, 0xE0, 0x00);
+        TEST("SUB >0,SP",  0x9E, 0xD0, 0x00, 0x00);
+        TEST("CMP 255,SP", 0x9E, 0xE1, 0xFF);
+        TEST("CMP 256,SP", 0x9E, 0xD1, 0x01, 0x00);
+        TEST("SBC 1,SP",   0x9E, 0xE2, 0x01);
+        TEST("AND 2,SP",   0x9E, 0xE4, 0x02);
+        TEST("BIT 3,SP",   0x9E, 0xE5, 0x03);
+        TEST("LDA 4,SP",   0x9E, 0xE6, 0x04);
+        TEST("STA 5,SP",   0x9E, 0xE7, 0x05);
+        TEST("EOR 6,SP",   0x9E, 0xE8, 0x06);
+        TEST("ADC 127,SP", 0x9E, 0xE9, 0x7F);
+        TEST("ORA 128,SP", 0x9E, 0xEA, 0x80);
+        TEST("ADD 255,SP", 0x9E, 0xEB, 0xFF);
+        TEST("CPX 127,SP", 0x9E, 0xE3, 0x7F);
+        TEST("LDX 128,SP", 0x9E, 0xEE, 0x80);
+        TEST("STX 255,SP", 0x9E, 0xEF, 0xFF);
+
+        TEST("SUB >$000,SP", 0x9E, 0xD0, 0x00, 0x00);
+        TEST("CMP >$0FF,SP", 0x9E, 0xD1, 0x00, 0xFF);
+        TEST("SBC $0100,SP", 0x9E, 0xD2, 0x01, 0x00);
+        TEST("AND $0200,SP", 0x9E, 0xD4, 0x02, 0x00);
+        TEST("BIT $0400,SP", 0x9E, 0xD5, 0x04, 0x00);
+        TEST("LDA $0800,SP", 0x9E, 0xD6, 0x08, 0x00);
+        TEST("STA $1000,SP", 0x9E, 0xD7, 0x10, 0x00);
+        TEST("EOR $2000,SP", 0x9E, 0xD8, 0x20, 0x00);
+        TEST("ADC $4000,SP", 0x9E, 0xD9, 0x40, 0x00);
+        TEST("ORA $8000,SP", 0x9E, 0xDA, 0x80, 0x00);
+        TEST("ADD $FFFF,SP", 0x9E, 0xDB, 0xFF, 0xFF);
+        TEST("CPX >$0000,SP", 0x9E, 0xD3, 0x00, 0x00);
+        TEST("LDX >$0000,SP", 0x9E, 0xDE, 0x00, 0x00);
+        TEST("STX >$0002,SP", 0x9E, 0xDF, 0x00, 0x02);
+    }
+
     symtab.intern(0,   ".offset0");
     symtab.intern(128, "offset128");
     symtab.intern(255, "offset255");
@@ -458,6 +606,82 @@ static void test_undef() {
     ERUS("BRA UNDEF+2", "UNDEF+2", 0x20, 0x00);
     ERUS("BRA 2+UNDEF", "UNDEF",   0x20, 0x00);
     ERUS("BSR UNDEF",   "UNDEF",   0xAD, 0x00);
+    ERUS("BSET UNDEF,$23", "UNDEF,$23", 0x10, 0x23);
+    ERUS("BCLR UNDEF,$23", "UNDEF,$23", 0x11, 0x23);
+    ERUS("BSET 7,UNDEF",   "UNDEF",     0x1E, 0x00);
+    ERUS("BCLR 7,UNDEF",   "UNDEF",     0x1F, 0x00);
+    ERUS("BSET UNDEF,UNDEF", "UNDEF,UNDEF", 0x10, 0x00);
+    ERUS("BCLR UNDEF,UNDEF", "UNDEF,UNDEF", 0x11, 0x00);
+    AERRT(0x1000, "BRCLR UNDEF,$23,$0F83",
+          UNDEFINED_SYMBOL, "UNDEF,$23,$0F83",   0x01, 0x23, 0x80);
+    AERRT(0x1000, "BRSET UNDEF,$23,$1082",
+          UNDEFINED_SYMBOL, "UNDEF,$23,$1082",   0x00, 0x23, 0x7F);
+    AERRT(0x1000, "BRSET 1,UNDEF,$1082",
+          UNDEFINED_SYMBOL, "UNDEF,$1082",       0x02, 0x00, 0x7F);
+    AERRT(0x1000, "BRSET 2,$23,UNDEF",
+          UNDEFINED_SYMBOL, "UNDEF",             0x04, 0x23, 0x00);
+    AERRT(0x1000, "BRSET UNDEF,UNDEF,$1082",
+          UNDEFINED_SYMBOL, "UNDEF,UNDEF,$1082", 0x00, 0x00, 0x7F);
+    AERRT(0x1000, "BRSET UNDEF,$23,UNDEF",
+          UNDEFINED_SYMBOL, "UNDEF,$23,UNDEF",   0x00, 0x23, 0x00);
+    AERRT(0x1000, "BRSET 3,UNDEF,UNDEF",
+          UNDEFINED_SYMBOL, "UNDEF,UNDEF",       0x06, 0x00, 0x00);
+    AERRT(0x1000, "BRSET UNDEF,UNDEF,UNDEF",
+          UNDEFINED_SYMBOL, "UNDEF,UNDEF,UNDEF", 0x00, 0x00, 0x00);
+
+    if (m68hc08()) {
+        ERUS("LDHX #UNDEF", "UNDEF", 0x45, 0x00, 0x00);
+        ERUS("AIX #UNDEF",  "UNDEF", 0xAF, 0x00);
+        ERUS("MOV UNDEF,$40", "UNDEF,$40",     0x4E, 0x00, 0x40);
+        ERUS("MOV $90,UNDEF", "UNDEF",         0x4E, 0x90, 0x00);
+        ERUS("MOV UNDEF,UNDEF", "UNDEF,UNDEF", 0x4E, 0x00, 0x00);
+        ERUS("MOV #UNDEF,$40", "UNDEF,$40",     0x6E, 0x00, 0x40);
+        ERUS("MOV #$90,UNDEF", "UNDEF",         0x6E, 0x90, 0x00);
+        ERUS("MOV #UNDEF,UNDEF", "UNDEF,UNDEF", 0x6E, 0x00, 0x00);
+        ERUS("MOV UNDEF,X+", "UNDEF,X+", 0x5E, 0x00);
+        ERUS("MOV X+,UNDEF", "UNDEF",    0x7E, 0x00);
+        AERRT(0x1000, "CBEQ  UNDEF,$1082",
+              UNDEFINED_SYMBOL, "UNDEF,$1082", 0x31, 0x00, 0x7F);
+        AERRT(0x1000, "CBEQ  $90,UNDEF",
+              UNDEFINED_SYMBOL, "UNDEF",       0x31, 0x90, 0x00);
+        AERRT(0x1000, "CBEQ  UNDEF,UNDEF",
+              UNDEFINED_SYMBOL, "UNDEF,UNDEF", 0x31, 0x00, 0x00);
+        AERRT(0x1000, "CBEQA #UNDEF,$1082",
+              UNDEFINED_SYMBOL, "UNDEF,$1082", 0x41, 0x00, 0x7F);
+        AERRT(0x1000, "CBEQA #$90,UNDEF",
+              UNDEFINED_SYMBOL, "UNDEF",       0x41, 0x90, 0x00);
+        AERRT(0x1000, "CBEQA #UNDEF,UNDEF",
+              UNDEFINED_SYMBOL, "UNDEF,UNDEF", 0x41, 0x00, 0x00);
+        AERRT(0x1000, "CBEQX #UNDEF,$1082",
+              UNDEFINED_SYMBOL, "UNDEF,$1082", 0x51, 0x00, 0x7F);
+        AERRT(0x1000, "CBEQX #$90,UNDEF",
+              UNDEFINED_SYMBOL, "UNDEF",       0x51, 0x90, 0x00);
+        AERRT(0x1000, "CBEQX #UNDEF,UNDEF",
+              UNDEFINED_SYMBOL, "UNDEF,UNDEF", 0x51, 0x00, 0x00);
+        AERRT(0x1000, "CBEQ  UNDEF,X+,$1082",
+              UNDEFINED_SYMBOL, "UNDEF,X+,$1082", 0x61, 0x00, 0x7F);
+        AERRT(0x1000, "CBEQ  $90,X+,UNDEF",
+              UNDEFINED_SYMBOL, "UNDEF",          0x61, 0x90, 0x00);
+        AERRT(0x1000, "CBEQ  UNDEF,X+,UNDEF",
+              UNDEFINED_SYMBOL, "UNDEF,X+,UNDEF", 0x61, 0x00, 0x00);
+        AERRT(0x1000, "CBEQ  X+,UNDEF", UNDEFINED_SYMBOL, "UNDEF", 0x71, 0x00);
+
+        AERRT(0x1000, "DBNZ  UNDEF,$1082",
+              UNDEFINED_SYMBOL, "UNDEF,$1082", 0x3B, 0x00, 0x7F);
+        AERRT(0x1000, "DBNZ  $90,UNDEF",
+              UNDEFINED_SYMBOL, "UNDEF",       0x3B, 0x90, 0x00);
+        AERRT(0x1000, "DBNZ  UNDEF,UNDEF",
+              UNDEFINED_SYMBOL, "UNDEF,UNDEF", 0x3B, 0x00, 0x00);
+        AERRT(0x1000, "DBNZ  UNDEF,X,$1082",
+              UNDEFINED_SYMBOL, "UNDEF,X,$1082", 0x6B, 0x00, 0x7F);
+        AERRT(0x1000, "DBNZ  $90,X,UNDEF",
+              UNDEFINED_SYMBOL, "UNDEF",         0x6B, 0x90, 0x00);
+        AERRT(0x1000, "DBNZ  UNDEF,X,UNDEF",
+              UNDEFINED_SYMBOL, "UNDEF,X,UNDEF", 0x6B, 0x00, 0x00);
+        AERRT(0x1000, "DBNZA UNDEF",   UNDEFINED_SYMBOL, "UNDEF", 0x4B, 0x00);
+        AERRT(0x1000, "DBNZX UNDEF",   UNDEFINED_SYMBOL, "UNDEF", 0x5B, 0x00);
+        AERRT(0x1000, "DBNZ  X,UNDEF", UNDEFINED_SYMBOL, "UNDEF", 0x7B, 0x00);
+    }
 }
 
 static void test_data_constant() {

@@ -21,10 +21,11 @@ namespace text {
 namespace mc6805 {
 
 // clang-format off
-constexpr char TEXT_MC6805_LIST[] PROGMEM = "MC6805, MC146805, MC68HC05";
+constexpr char TEXT_MC6805_LIST[] PROGMEM = "MC6805, MC146805, MC68HC05, MC68HC08";
 constexpr char TEXT_CPU_6805[] PROGMEM = "6805";
 constexpr char TEXT_CPU_146805[] PROGMEM = "146805";
 constexpr char TEXT_CPU_68HC05[] PROGMEM = "68HC05";
+constexpr char TEXT_CPU_68HC08[] PROGMEM = "68HC08";
 
 // constexpr char TEXT_ADC[]  PROGMEM = "ADC";
 // constexpr char TEXT_ADD[]  PROGMEM = "ADD";
@@ -115,6 +116,38 @@ constexpr char TEXT_RSP[]  PROGMEM = "RSP";
 constexpr char TEXT_TSTX[] PROGMEM = "TSTX";
 // constexpr char TEXT_TXA[]  PROGMEM = "TXA";
 // constexpr char TEXT_WAIT[] PROGMEM = "WAIT";
+
+// MC68HC08
+constexpr char TEXT_AIS[]   PROGMEM = "AIS";
+constexpr char TEXT_AIX[]   PROGMEM = "AIX";
+// constexpr char TEXT_BGE[]   PROGMEM = "BGE";
+// constexpr char TEXT_BGT[]   PROGMEM = "BGT";
+// constexpr char TEXT_BLE[]   PROGMEM = "BLE";
+// constexpr char TEXT_BLT[]   PROGMEM = "BLT";
+constexpr char TEXT_CBEQA[] PROGMEM = "CBEQA";
+constexpr char TEXT_CBEQ[]  PROGMEM = "CBEQ";
+constexpr char TEXT_CBEQX[] PROGMEM = "CBEQX";
+constexpr char TEXT_CLRH[]  PROGMEM = "CLRH";
+constexpr char TEXT_CPHX[]  PROGMEM = "CPHX";
+// constexpr char TEXT_DAA[]   PROGMEM = "DAA";
+// constexpr char TEXT_DBNZ[]  PROGMEM = "DBNZ";
+constexpr char TEXT_DBNZA[] PROGMEM = "DBNZA";
+constexpr char TEXT_DBNZX[] PROGMEM = "DBNZX";
+// constexpr char TEXT_DIV[]   PROGMEM = "DIV";
+constexpr char TEXT_LDHX[]  PROGMEM = "LDHX";
+// constexpr char TEXT_MOV[]   PROGMEM = "MOV";
+constexpr char TEXT_NSA[]   PROGMEM = "NSA";
+// constexpr char TEXT_PSHA[]  PROGMEM = "PSHA";
+constexpr char TEXT_PSHH[]  PROGMEM = "PSHH";
+// constexpr char TEXT_PSHX[]  PROGMEM = "PSHX";
+// constexpr char TEXT_PULA[]  PROGMEM = "PULA";
+constexpr char TEXT_PULH[]  PROGMEM = "PULH";
+// constexpr char TEXT_PULX[]  PROGMEM = "PULX";
+constexpr char TEXT_STHX[]  PROGMEM = "STHX";
+// constexpr char TEXT_TAP[]   PROGMEM = "TAP";
+// constexpr char TEXT_TPA[]   PROGMEM = "TPA";
+// constexpr char TEXT_TSX[]   PROGMEM = "TSX";
+// constexpr char TEXT_TXS[]   PROGMEM = "TXS";
 // clang-format on
 
 }  // namespace mc6805

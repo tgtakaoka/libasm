@@ -15,7 +15,6 @@
  */
 
 #include "dis_mc6805.h"
-
 #include "reg_mc6805.h"
 #include "table_mc6805.h"
 
@@ -85,18 +84,22 @@ void DisMc6805::decodeExtended(DisInsn &insn, StrBuffer &out) const {
 void DisMc6805::decodeIndexed(DisInsn &insn, StrBuffer &out, AddrMode mode) const {
     if (mode == M_IX0) {
         outRegName(out.letter(','), REG_X);
-    } else if (mode == M_IX2) {
-        const uint16_t disp16 = insn.readUint16();
-        if (disp16 < 0x100)
-            out.letter('>');
-        outAbsAddr(out, disp16, ADDRESS_16BIT).letter(',');
-        outRegName(out, REG_X);
-    } else {
+    } else if (mode == M_IX0P) {
+        outRegName(out, REG_X).letter('+');
+    } else if (mode == M_IX1 || mode == M_IX1P || mode == M_SP1) {
         const uint8_t disp8 = insn.readByte();
         if (disp8 == 0)
             out.letter('<');
         outDec(out, disp8, 8).letter(',');
-        outRegName(out, REG_X);
+        outRegName(out, mode == M_SP1 ? REG_SP : REG_X);
+        if (mode == M_IX1P)
+            out.letter('+');
+    } else if (mode == M_IX2 || mode == M_SP2) {
+        const uint16_t disp16 = insn.readUint16();
+        if (disp16 < 0x100)
+            out.letter('>');
+        outAbsAddr(out, disp16, ADDRESS_16BIT).letter(',');
+        outRegName(out, mode == M_SP2 ? REG_SP : REG_X);
     }
 }
 
@@ -127,7 +130,7 @@ void DisMc6805::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) cons
             break;
         case 0x60:
         case 0xE0:
-            decodeIndexed(insn, out, M_IDX);
+            decodeIndexed(insn, out, M_IX1);
             break;
         default:
             decodeIndexed(insn, out, M_IX0);
@@ -141,10 +144,17 @@ void DisMc6805::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) cons
         break;
     case M_EXT:
         return decodeExtended(insn, out);
-    case M_IDX:
+    case M_IX1:
     case M_IX0:
     case M_IX2:
+    case M_IX0P:
+    case M_IX1P:
+    case M_SP1:
+    case M_SP2:
         decodeIndexed(insn, out, mode);
+        break;
+    case M_REGX:
+        outRegName(out, REG_X);  // only for DBNZ X,rel8
         break;
     case M_REL:
         decodeRelative(insn, out);
@@ -152,6 +162,14 @@ void DisMc6805::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) cons
     case M_IMM:
         out.letter('#');
         outHex(out, insn.readByte(), 8);
+        break;
+    case M_IM16:
+        out.letter('#');
+        outHex(out, insn.readUint16(), 16);
+        break;
+    case M_SIM8:
+        out.letter('#');
+        outHex(out, insn.readByte(), -8);
         break;
     case M_BNO:
         outHex(out, (insn.opCode() >> 1) & 7, 3);
@@ -163,7 +181,14 @@ void DisMc6805::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) cons
 
 Error DisMc6805::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) const {
     DisInsn insn(_insn, memory, out);
-    insn.setOpCode(insn.readByte());
+    const auto opc = insn.readByte();
+    insn.setOpCode(opc);
+    if (TABLE.isPrefix(cpuType(), opc)) {
+        insn.setPrefix(opc);
+        insn.setOpCode(insn.readByte());
+        if (insn.getError())
+            return _insn.setError(insn);
+    }
     if (TABLE.searchOpCode(cpuType(), insn, out))
         return _insn.setError(insn);
 

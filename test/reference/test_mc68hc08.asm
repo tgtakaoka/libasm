@@ -1,4 +1,4 @@
-;;; Copyright 2021 Tadashi G. Takaoka
+;;; Copyright 2024 Tadashi G. Takaoka
 ;;;
 ;;; Licensed under the Apache License, Version 2.0 (the "License");
 ;;; you may not use this file except in compliance with the License.
@@ -12,7 +12,8 @@
 ;;; See the License for the specific language governing permissions and
 ;;; limitations under the License.
 
-        cpu     68HC05
+        cpu     68HC08
         org     $0100
-abs:    equ     $1000
+abs:    equ     $C000
         include "test_mc68hc05.inc"
+        include "test_mc68hc08.inc"
