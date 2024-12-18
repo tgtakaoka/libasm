@@ -31,6 +31,8 @@
 namespace libasm {
 
 struct Assembler {
+    virtual ~Assembler() {}
+
     Error encode(const char *line, Insn &insn, const SymbolTable *symtab = nullptr);
     virtual const ConfigBase &config() const = 0;
     virtual void reset();

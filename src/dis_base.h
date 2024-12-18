@@ -36,6 +36,8 @@
 namespace libasm {
 
 struct Disassembler {
+    virtual ~Disassembler() {}
+
     Error decode(DisMemory &memory, Insn &insn, char *operands, size_t size,
             SymbolTable *symtab = nullptr);
     virtual const ConfigBase &config() const = 0;
