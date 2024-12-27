@@ -112,7 +112,7 @@ Error AsmTms7000::parseOperand(StrScanner &scan, Operand &op) const {
         }
         if (op.hasError())
             return op.getError();
-        op.mode = op.val.overflowUint8() ? M_IM16 : M_IM8;
+        op.mode = M_IM16;
         scan = p;
         return OK;
     }
@@ -184,19 +184,29 @@ void AsmTms7000::emitRelative(AsmInsn &insn, const Operand &op) const {
 void AsmTms7000::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode) const {
     insn.setErrorIf(op);
     switch (mode) {
+    case M_IM8:
+        if (op.val.overflowUint8())
+            insn.setErrorIf(op, OVERFLOW_RANGE);
+        insn.emitOperand8(op.val.getUnsigned());
+        break;
     case M_RN:
     case M_PN:
-    case M_IM8:
     case M_IDIR:
         insn.emitOperand8(op.val.getUnsigned());
         break;
     case M_REL:
         emitRelative(insn, op);
         break;
+    case M_IM16:
+        if (op.val.overflowUint16())
+            insn.setErrorIf(op, OVERFLOW_RANGE);
+        insn.emitOperand16(op.val.getUnsigned());
+        break;
     case M_ABS:
     case M_BIDX:
-    case M_IM16:
     case M_BIMM:
+        if (op.val.overflow(UINT16_MAX))
+            insn.setErrorIf(op, OVERFLOW_RANGE);
         insn.emitOperand16(op.val.getUnsigned());
         break;
     case M_TRAP:

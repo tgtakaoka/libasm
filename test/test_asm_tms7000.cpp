@@ -152,7 +152,7 @@ void test_register() {
     TEST("ADC %5AH, B",    0x59, 0x5A);
     TEST("ADC %122, R123", 0x79, 0x7A, 0x7B);
     ERRT("ADC %122, >123", OPERAND_NOT_ALLOWED, "%122, >123");
-    ERRT("ADC %>122, 123", OPERAND_NOT_ALLOWED, "%>122, 123");
+    ERRT("ADC %>122, 123", OVERFLOW_RANGE, "%>122, 123", 0x79, 0x22, 0x7B);
 
     TEST("ADD B, A",       0x68);
     TEST("ADD A, B",       0x38, 0x00);
@@ -163,6 +163,7 @@ void test_register() {
     TEST("ADD R73, R74",   0x48, 0x49, 0x4A);
     TEST("ADD %?11001, A", 0x28, 0x19);
     TEST("ADD %>59, B",    0x58, 0x59);
+    TEST("ADD %-59, B",    0x58, 0xC5);
     TEST("ADD %>79, R122", 0x78, 0x79, 0x7A);
 
     TEST("AND B, A",       0x63);

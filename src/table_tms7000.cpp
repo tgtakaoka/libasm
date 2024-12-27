@@ -491,8 +491,8 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
         return true;
     if (opr == M_A || opr == M_B)
         return table == M_RN;
-    if (opr == M_IM8)
-        return table == M_IM16;
+    if (opr == M_IM16)
+        return table == M_IM8;
     if (opr == M_ADRR)
         return table == M_RN || table == M_REL || table == M_TRAP;
     if (opr == M_ADRP)
