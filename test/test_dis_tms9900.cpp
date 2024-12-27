@@ -171,6 +171,8 @@ static void test_cnt_reg() {
 static void test_src() {
     TEST("BLWP", "@>3876",  0x0420, 0x3876);
     NMEM("BLWP", "@0", "0", 0x0420);
+    TEST("RT",   "",        0x045B);
+    TEST("B",    "*R12",    0x045C);
     TEST("B",    "R13",     0x044D);
     TEST("X",    "*R10",    0x049A);
     TEST("CLR",  "*R12+",   0x04FC);
@@ -393,7 +395,7 @@ static void test_dst_src() {
 }
 
 static void test_rel() {
-    ATEST(0x1000, "JMP", ">1002", 0x1000);
+    ATEST(0x1000, "JMP", ">1004", 0x1001);
     ATEST(0x1000, "JLT", ">1000", 0x11FF);
     ATEST(0x1000, "JLE", ">1100", 0x127F);
     ATEST(0x1000, "JEQ", ">0F02", 0x1380);
@@ -410,15 +412,15 @@ static void test_rel() {
     disassembler.setOption("relative", "true");
     ATEST(0x1000, "JMP", "$-254", 0x1080);
     ATEST(0x1000, "JMP", "$",     0x10FF);
-    ATEST(0x1000, "JMP", "$+2",   0x1000);
     ATEST(0x1000, "JMP", "$+256", 0x107F);
+    ATEST(0x1000, "NOP", "",      0x1000);
 
     symtab.intern(0x0F02, "sym0F02");
     symtab.intern(0x1000, "sym1000");
-    symtab.intern(0x1002, "sym1002");
+    symtab.intern(0x1004, "sym1004");
     symtab.intern(0x1100, "sym1100");
 
-    ATEST(0x1000, "JMP", "sym1002", 0x1000);
+    ATEST(0x1000, "JMP", "sym1004", 0x1001);
     ATEST(0x1000, "JLT", "sym1000", 0x11FF);
     ATEST(0x1000, "JLE", "sym1100", 0x127F);
     ATEST(0x1000, "JEQ", "sym0F02", 0x1380);

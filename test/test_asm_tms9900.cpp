@@ -193,6 +193,8 @@ static void test_src() {
     TEST("SETO R12",    0x070C);
     TEST("ABS  @8(R3)", 0x0763, 0x0008);
     ERRT("ABS  @8(R0)", REGISTER_NOT_ALLOWED, "R0)");
+    TEST("RT",          0x045B);
+    TEST("B    *R11",   0x045B);
 
     if (is9995()) {
         // TMS9995, TMS99105, TMS99110
@@ -381,6 +383,7 @@ static void test_dst_src() {
 }
 
 static void test_rel() {
+    ATEST(0x1000, "NOP",       0x1000);
     ATEST(0x1000, "JMP >1002", 0x1000);
     ATEST(0x1000, "JLT >1000", 0x11FF);
     ATEST(0x1000, "JLE >1100", 0x127F);
