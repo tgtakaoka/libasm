@@ -117,7 +117,7 @@ void AsmMos6502::encodeRelative(AsmInsn &insn, AddrMode mode, const Operand &op)
     const auto len = insn.length();
     const auto base = insn.address() + (len ? len : 1) + 1;
     const auto target = op.getError() ? base : op.val.getUnsigned();
-    if (bankModel())
+    if (cpuType() == W65C816)
         insn.setErrorIf(op, checkAddr(target, insn.address(), 16));
     const auto smartBranch = _smartBranch && maySmartBranch(insn, cpuType());
     if (mode == M_REL && !smartBranch) {
@@ -132,7 +132,7 @@ void AsmMos6502::encodeRelative(AsmInsn &insn, AddrMode mode, const Operand &op)
     long_branch:
         const auto base = insn.address() + 3;
         const auto target = op.getError() ? base : op.val.getUnsigned();
-        if (bankModel())
+        if (cpuType() == W65C816)
             insn.setErrorIf(op, checkAddr(target, insn.address(), 16));
         const auto delta = branchDelta(base, target, insn, op);
         insn.emitOperand16(delta);

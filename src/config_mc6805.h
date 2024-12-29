@@ -31,6 +31,8 @@ enum CpuType : uint8_t {
 
 struct Config : ConfigImpl<CpuType, ADDRESS_16BIT, ADDRESS_BYTE, OPCODE_8BIT, ENDIAN_BIG, 4, 5> {
     Config(const InsnTable<CpuType> &table) : ConfigImpl(table, MC6805) {}
+
+    uint8_t codeMax() const override { return cpuType() == MC68HC08 ? 4 : 3; }
 };
 
 }  // namespace mc6805

@@ -50,15 +50,15 @@ void test_dis_z8() {
     driver.setUpperHex(false);
 
     DIS8("z8", 0xabcd,
-            R"(      cpu     z8
-      org     %abcd
-      ld      r12, %c9(r8)
+            R"(      cpu   z8
+      org   %abcd
+      ld    r12, %c9(r8)
 ; test.bin: error: Unknown instruction
 ;     abd0 : 0f
 )",
-            R"(       0 :                            cpu     z8
-    abcd :                            org     %abcd
-    abcd : c7 c8 c9                   ld      r12, %c9(r8)
+            R"(       0 :                            cpu   z8
+    abcd :                            org   %abcd
+    abcd : c7 c8 c9                   ld    r12, %c9(r8)
 test.bin: error: Unknown instruction
     abd0 : 0f
 )",

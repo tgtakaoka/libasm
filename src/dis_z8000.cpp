@@ -136,14 +136,14 @@ void DisZ8000::decodeGeneralRegister(
         checkRegisterOverlap(insn, out);
 
     RegName reg;
-    if (!decodeRegNum(segmentedModel(), num, size, reg))
+    if (!decodeRegNum(cpuType() == Z8001, num, size, reg))
         insn.setErrorIf(out, ILLEGAL_REGISTER);
     outRegName(out, reg);
 }
 
 void DisZ8000::decodeControlRegister(
         DisInsn &insn, StrBuffer &out, uint8_t ctlNum, OprSize size) const {
-    const auto reg = decodeCtlReg(segmentedModel(), ctlNum);
+    const auto reg = decodeCtlReg(cpuType() == Z8001, ctlNum);
     if (reg == REG_UNDEF)
         insn.setErrorIf(out, UNKNOWN_REGISTER);
     if (size == SZ_BYTE && reg != REG_FLAGS)
@@ -201,7 +201,7 @@ void DisZ8000::decodeGenericAddressing(
 void DisZ8000::decodeDirectAddress(DisInsn &insn, StrBuffer &out, AddrMode mode) const {
     const auto align = mode == M_DA && (insn.size() == SZ_WORD || insn.size() == SZ_QUAD);
     const auto val16 = insn.readUint16();
-    if (segmentedModel()) {
+    if (cpuType() == Z8001) {
         const auto seg = (val16 >> 8) & 0x7F;
         uint16_t disp = val16 & 0xFF;
         auto shortDirect = _shortDirect && !_gnuAs;
@@ -390,15 +390,15 @@ Error DisZ8000::checkRegisterOverlap(DisInsn &insn, StrBuffer &out) const {
     const auto dsize = registerSize(insn, dmode);
     const auto ssize = registerSize(insn, smode);
     RegName dst, src;
-    decodeRegNum(segmentedModel(), dnum, dsize, dst);
-    decodeRegNum(segmentedModel(), snum, ssize, src);
+    decodeRegNum(cpuType() == Z8001, dnum, dsize, dst);
+    decodeRegNum(cpuType() == Z8001, snum, ssize, src);
     if (checkOverlap(dst, src))
         insn.setErrorIf(out, REGISTERS_OVERLAPPED);
 
     if (pass == 2 && insn.isThreeRegsInsn()) {
         const auto cnum = modePos(insn, OP_P8);
         RegName cnt;
-        decodeRegNum(segmentedModel(), cnum, SZ_WORD, cnt);
+        decodeRegNum(cpuType() == Z8001, cnum, SZ_WORD, cnt);
         if (dst != REG_ILLEGAL && src != REG_ILLEGAL && checkOverlap(dst, src, cnt))
             insn.setErrorIf(out, REGISTERS_OVERLAPPED);
     }

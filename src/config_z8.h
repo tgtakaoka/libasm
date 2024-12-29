@@ -32,6 +32,9 @@ struct Config : ConfigImpl<CpuType, ADDRESS_16BIT, ADDRESS_BYTE, OPCODE_8BIT, EN
     Config(const InsnTable<CpuType> &table) : ConfigImpl(table, Z8) {}
 
     bool isSuper8() const { return cpuType() == SUPER8; }
+
+    uint8_t codeMax() const override { return isSuper8() ? 4 : 3; }
+    uint8_t nameMax() const override { return isSuper8() ? 6 : 4; }
 };
 
 }  // namespace z8

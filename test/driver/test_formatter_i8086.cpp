@@ -78,15 +78,15 @@ void test_dis_i8086() {
     driver.setUpperHex(false);
 
     DIS8("i8086", 0xbcdef,
-         R"(      cpu    8086
-      org    0bcdefh
-      test   word ptr [bp+di+0feffh], 0bbaah
+         R"(      cpu     8086
+      org     0bcdefh
+      test    word ptr [bp+di+0feffh], 0bbaah
 ; test.bin: error: Unknown instruction
 ;    bcdf5 : d1 f7
 )",
-         R"(       0 :                            cpu    8086
-   bcdef :                            org    0bcdefh
-   bcdef : f7 83 ff fe aa bb          test   word ptr [bp+di+0feffh], 0bbaah
+         R"(       0 :                            cpu     8086
+   bcdef :                            org     0bcdefh
+   bcdef : f7 83 ff fe aa bb          test    word ptr [bp+di+0feffh], 0bbaah
 test.bin: error: Unknown instruction
    bcdf5 : d1 f7
 )",

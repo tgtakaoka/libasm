@@ -154,7 +154,7 @@ void DisMos6502::decodeRelative(DisInsn &insn, StrBuffer &out, AddrMode mode) co
                                         : static_cast<int8_t>(insn.readByte());
     const auto base = insn.address() + insn.length();
     const auto target = base + delta;
-    if (bankModel()) {
+    if (cpuType() == W65C816) {
         insn.setErrorIf(out, checkAddr(target, insn.address(), 16));
     } else {
         insn.setErrorIf(out, checkAddr(target));

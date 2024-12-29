@@ -36,6 +36,9 @@ struct Config : ConfigImpl<CpuType, ADDRESS_16BIT, ADDRESS_BYTE, OPCODE_16BIT, E
     AddressWidth addressWidth() const override {
         return cpuType() == TMS9980 ? ADDRESS_14BIT : ADDRESS_16BIT;
     }
+    uint8_t codeMax() const override {
+        return cpuType() == TMS99105 || cpuType() == TMS99110 ? 8 : 6;
+    }
 };
 
 }  // namespace tms9900

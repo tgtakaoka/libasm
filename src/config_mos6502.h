@@ -33,11 +33,10 @@ enum CpuType : uint8_t {
 struct Config : ConfigImpl<CpuType, ADDRESS_24BIT, ADDRESS_BYTE, OPCODE_8BIT, ENDIAN_LITTLE, 4, 4> {
     Config(const InsnTable<CpuType> &table) : ConfigImpl(table, MOS6502) {}
 
-    bool bankModel() const { return cpuType() == W65C816; }
-
     AddressWidth addressWidth() const override {
-        return bankModel() ? ADDRESS_24BIT : ADDRESS_16BIT;
+        return cpuType() == W65C816 ? ADDRESS_24BIT : ADDRESS_16BIT;
     }
+    uint8_t codeMax() const override { return cpuType() == W65C816 ? 4 : 3; }
 };
 
 }  // namespace mos6502

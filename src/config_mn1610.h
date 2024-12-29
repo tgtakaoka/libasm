@@ -28,12 +28,15 @@ enum CpuType : uint8_t {
     MN1613A,
 };
 
-struct Config : ConfigImpl<CpuType, ADDRESS_18BIT, ADDRESS_WORD, OPCODE_16BIT, ENDIAN_BIG, 4, 4> {
+struct Config : ConfigImpl<CpuType, ADDRESS_20BIT, ADDRESS_WORD, OPCODE_16BIT, ENDIAN_BIG, 4, 4> {
     Config(const InsnTable<CpuType> &table) : ConfigImpl(table, MN1610) {}
 
     AddressWidth addressWidth() const override {
-        return cpuType() == MN1610 ? ADDRESS_16BIT : ADDRESS_18BIT;
+        if (cpuType() == MN1610)
+            return ADDRESS_16BIT;
+        return cpuType() == MN1613 ? ADDRESS_18BIT : ADDRESS_20BIT;
     }
+    uint8_t codeMax() const override { return cpuType() == MN1610 ? 2 : 4; }
 };
 
 }  // namespace mn1610

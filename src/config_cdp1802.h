@@ -29,7 +29,9 @@ enum CpuType : uint8_t {
 };
 
 struct Config : ConfigImpl<CpuType, ADDRESS_16BIT, ADDRESS_BYTE, OPCODE_8BIT, ENDIAN_BIG, 4, 4> {
-    Config(const InsnTable<CpuType> &table) : ConfigImpl(table, CDP1802){};
+    Config(const InsnTable<CpuType> &table) : ConfigImpl(table, CDP1802) {};
+
+    uint8_t codeMax() const override { return cpuType() == CDP1802 ? 3 : 4; }
 };
 
 }  // namespace cdp1802

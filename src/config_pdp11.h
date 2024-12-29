@@ -28,8 +28,11 @@ enum CpuType : uint8_t {
 };
 
 struct Config
-    : ConfigImpl<CpuType, ADDRESS_16BIT, ADDRESS_BYTE, OPCODE_16BIT, ENDIAN_LITTLE, 6, 10> {
+    : ConfigImpl<CpuType, ADDRESS_16BIT, ADDRESS_BYTE, OPCODE_16BIT, ENDIAN_LITTLE, 10, 6> {
     Config(const InsnTable<CpuType> &table) : ConfigImpl(table, J11) {}
+
+    uint8_t codeMax() const override { return cpuType() == T11 ? 8 : 10; }
+    uint8_t nameMax() const override { return cpuType() == T11 ? 5 : 6; }
 };
 
 }  // namespace pdp11

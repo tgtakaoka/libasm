@@ -100,7 +100,7 @@ using common::TEXT_EOR;
 using common::TEXT_EORI;
 using common::TEXT_EXG;
 using common::TEXT_EXT;
-extern const char TEXT_ILLEG[] PROGMEM;
+extern const char TEXT_ILLEGAL[] PROGMEM;
 using common::TEXT_JMP;
 using common::TEXT_JSR;
 using common::TEXT_LEA;

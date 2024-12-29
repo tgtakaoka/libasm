@@ -90,7 +90,7 @@ void AsmZ8000::emitRegister(AsmInsn &insn, OprPos pos, RegName reg) const {
 
 void AsmZ8000::emitIndirectRegister(
         AsmInsn &insn, const Operand &op, OprPos pos, RegName reg) const {
-    if (segmentedModel()) {
+    if (cpuType() == Z8001) {
         if (!isLongReg(reg))
             insn.setErrorIf(op, REGISTER_NOT_ALLOWED);
     } else {
@@ -180,7 +180,7 @@ void AsmZ8000::emitDirectAddress(AsmInsn &insn, AddrMode mode, const Operand &op
     const auto align = mode == M_DA && (insn.size() == SZ_WORD || insn.size() == SZ_QUAD);
     const auto addr = op.val.getUnsigned();
     insn.setErrorIf(op, checkAddr(addr, align));
-    if (segmentedModel()) {
+    if (cpuType() == Z8001) {
         const uint16_t seg = (addr >> 8) & 0x7F00;
         const uint16_t disp = addr;
         const auto autoShortDirect = _autoShortDirect && op.isOK();
@@ -202,7 +202,7 @@ void AsmZ8000::emitDirectAddress(AsmInsn &insn, AddrMode mode, const Operand &op
 void AsmZ8000::emitRelative(AsmInsn &insn, AddrMode mode, const Operand &op) const {
     const auto base = insn.address() + (mode == M_RA ? 4 : 2);
     const auto target = op.getError() ? base : op.val.getUnsigned();
-    if (segmentedModel())
+    if (cpuType() == Z8001)
         insn.setErrorIf(op, checkAddr(target, insn.address(), 16));
     if (mode == M_RA) {
         insn.setErrorIf(op, checkAddr(target, insn.size() == SZ_WORD || insn.size() == SZ_QUAD));
@@ -275,7 +275,7 @@ void AsmZ8000::emitCtlRegister(AsmInsn &insn, OprPos pos, const Operand &op) con
         insn.setErrorIf(op, ILLEGAL_SIZE);
     if (insn.size() == SZ_WORD && op.reg == REG_FLAGS)
         insn.setErrorIf(op, ILLEGAL_SIZE);
-    auto data = encodeCtlReg(segmentedModel(), op.reg);
+    auto data = encodeCtlReg(cpuType() == Z8001, op.reg);
     if (data < 0) {
         insn.setErrorIf(op, ILLEGAL_REGISTER);
         data = 0;
@@ -417,7 +417,7 @@ void AsmZ8000::checkRegisterOverlap(
         insn.setErrorIf(srcOp, REGISTER_NOT_ALLOWED);
     if (insn.isTranslateInsn()) {
         // Original content of RH1 are lost, so that R1 must not be used as dst/src.
-        if (!segmentedModel()) {
+        if (!cpuType() == Z8001) {
             if (dstOp.reg == REG_R1)
                 insn.setErrorIf(dstOp, REGISTER_NOT_ALLOWED);
             if (srcOp.reg == REG_R1)
