@@ -54,8 +54,10 @@ void test_cpu() {
 void test_memory_reference() {
     constexpr uint16_t IA = 0400;
     ATEST(04000, "AND 0022",   00000|0022);
+    ATEST(04000, "AND Z 0022", 00000|0022);
     ATEST(04000, "AND 0022+7", 00000|0031);
     ATEST(04000, "AND I 0043", 00000|0043|IA);
+    ATEST(04000, "AND I Z 0043", 00000|0043|IA);
     ATEST(04000, "TAD 0064",   01000|0064);
     ATEST(04000, "TAD I 0105", 01000|0105|IA);
     ATEST(04000, "ISZ 0170",   02000|0170);
@@ -70,6 +72,8 @@ void test_memory_reference() {
     constexpr uint16_t MP = 0200;
     ATEST(04000, "AND 4022",   00000|0022|MP);
     ATEST(04000, "AND I 4043", 00000|0043|MP|IA);
+    AERRT(04000, "AND Z 4022",   OPERAND_NOT_ALLOWED, "4022", 00000);
+    AERRT(04000, "AND I Z 4043", OPERAND_NOT_ALLOWED, "4043", 00000);
     ATEST(04000, "TAD 4064",   01000|0064|MP);
     ATEST(04000, "TAD I 4105", 01000|0105|MP|IA);
     ATEST(04000, "ISZ 4126",   02000|0126|MP);
@@ -92,7 +96,9 @@ void test_memory_reference() {
     symtab.intern(04020, "label4020");
 
     ATEST(04000, "AND zero020",     00000|0020);
+    ATEST(04000, "AND z zero020",   00000|0020);
     ATEST(04000, "AND i auto017",   00000|0017|IA);
+    ATEST(04000, "AND i z auto017", 00000|0017|IA);
     ATEST(04000, "AND i label4017", 00000|0017|MP|IA);
     ATEST(04000, "AND label4020",   00000|0020|MP);
 }

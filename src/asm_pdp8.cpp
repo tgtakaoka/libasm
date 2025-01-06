@@ -128,15 +128,20 @@ Error AsmPdp8::defineField(StrScanner &scan, Insn &insn, uint8_t) {
 
 Error AsmPdp8::parseMemReferenceOperand(StrScanner &scan, AsmInsn &insn) const {
     auto p = scan;
-    const auto indir = p.iexpect('i') && p.expect(' ');
-    if (!indir)
-        p = scan;
+    const auto indir = p.iexpectWord_P(PSTR("i"));
+    if (indir)
+        p.skipSpaces();
+    const auto zerop = p.iexpectWord_P(PSTR("z"));  // optional
+    if (zerop)
+        p.skipSpaces();
 
     const auto at = p;
     const auto addr = parseInteger(p, insn).getUnsigned();
     if (insn.hasError())
         return insn.getError();
 
+    if (zerop && pageOf(addr) != 0)
+        return insn.setError(at, OPERAND_NOT_ALLOWED);
     if (indir)
         insn.embed(0400);
     if (pageOf(addr) == 0) {
