@@ -15,15 +15,13 @@
  */
 
 #include "asm_directive.h"
-
+#include <algorithm>
+#include <cstring>
 #include "asm_driver.h"
 #include "asm_sources.h"
 #include "intel_hex.h"
 #include "moto_srec.h"
 #include "str_scanner.h"
-
-#include <algorithm>
-#include <cstring>
 
 namespace libasm {
 namespace driver {
@@ -77,10 +75,6 @@ Radix AsmDirective::listRadix() const {
 
 uint32_t AsmDirective::currentLocation() const {
     return _assembler.currentLocation();
-}
-
-void AsmDirective::setListRadix(Radix listRadix) {
-    _assembler.setListRadix(listRadix);
 }
 
 Error AsmDirective::encode(StrScanner &scan, Insn &insn, Context &context) {

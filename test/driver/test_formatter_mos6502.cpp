@@ -64,7 +64,7 @@ void test_asm_w65816() {
     PREP_ASM(mos6502::AsmMos6502, MostekDirective);
 
     driver.setUpperHex(false);
-    driver.setOption("smart-branch", "on");
+    options.set("smart-branch", "on");
 
     ASM("w65c816",
             R"(        cpu   w65c816

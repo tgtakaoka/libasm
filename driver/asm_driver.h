@@ -42,6 +42,7 @@ struct AsmDriver final : CpuSwitcher {
 
     void setUpperHex(bool upperHex);
     void setLineNumber(bool enable);
+    void reset();
     void setOption(const char *name, const char *value);
 
     int assemble(AsmSources &sources, BinMemory &memory, TextPrinter &listout,

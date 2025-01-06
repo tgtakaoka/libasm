@@ -14,13 +14,12 @@
  * limitations under the License.
  */
 
-#include "test_formatter_helper.h"
-
 #include "asm_i8080.h"
 #include "asm_ins8060.h"
 #include "asm_mc6809.h"
 #include "asm_mos6502.h"
 #include "asm_z80.h"
+#include "test_formatter_helper.h"
 
 namespace libasm {
 namespace driver {
@@ -176,7 +175,6 @@ label3: equ   1       * comment
 mc6809:4:25: error: Undefined symbol: "comment"
        1000 : =0                 label3: equ   1       * comment
 )");
-
 }
 
 void test_switch_cpu() {
@@ -190,6 +188,7 @@ void test_switch_cpu() {
     ZilogDirective dirz80(asmz80);
     AsmDriver driver{&dir6809, &dir6502, &dir8080, &dirz80};
     TestSources sources;
+    Options options;
 
     ASM("switch cpu",
             R"(        cpu   mc6809
@@ -245,10 +244,10 @@ void test_list_radix() {
     ZilogDirective dirz80(asmz80);
     AsmDriver driver{&dir6502, &dirz80};
     TestSources sources;
+    Options options;
 
-    ASM("list-radix",
-            R"(        option "list-radix", 8
-        cpu   z80
+    ASM("list-radix", R"(        cpu   z80
+        option "list-radix", 8
         org   1234Q
         ld    hl, 1234H
         option "list-radix", 16
@@ -263,8 +262,8 @@ void test_list_radix() {
         cpu   z80
         res   0, (iy-128)
 )",
-            R"(          0 :                            option "list-radix", 8
-          0 :                            cpu   z80
+            R"(          0 :                            cpu   z80
+          0 :                            option "list-radix", 8
        1234 :                            org   1234Q
        1234 : 041 064 022                ld    hl, 1234H
         29F :                            option "list-radix", 16
@@ -277,7 +276,7 @@ void test_list_radix() {
        3456 :                            *=@3456
        3456 : 242 022                    ldx   #$12
        3460 :                            cpu   z80
-       3460 : 375 313 200 206            res   0, (iy-128)
+        730 : FD CB 80 86                res   0, (iy-128)
 )");
 }
 
@@ -371,7 +370,7 @@ void test_include() {
 
     driver.setUpperHex(true);
     driver.setLineNumber(true);
-    driver.setOption("smart-branch", "on");
+    options.set("smart-branch", "on");
 
     ASM("mc6809",
             R"(        cpu   mc6809

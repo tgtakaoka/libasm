@@ -15,15 +15,13 @@
  */
 
 #include "asm_commander.h"
-
+#include <cstring>
 #include "asm_directive.h"
 #include "file_printer.h"
 #include "file_sources.h"
 #include "intel_hex.h"
 #include "moto_srec.h"
 #include "stored_printer.h"
-
-#include <cstring>
 
 namespace libasm {
 namespace cli {
@@ -60,12 +58,12 @@ int AsmCommander::assemble() {
             fprintf(stderr, "%s: Pass %d\n", _input_name, ++pass);
         prev.swap(memory);
         symbols.copy(_driver.symbols());
-        _driver.symbols().clearFunctions();
         memory.clear();
         listout.clear();
         errorout.clear();
         _driver.setUpperHex(_upper_hex);
         _driver.setLineNumber(_line_number);
+        _driver.reset();
         for (const auto &it : _options) {
             _driver.setOption(it.first.c_str(), it.second.c_str());
         }
@@ -174,8 +172,7 @@ usage: %s [-o <output>] [-l <list>] <input>
     for (const auto *dir : _driver)
         longOptions |= (dir->commonOptions().head() || dir->options().head());
     if (longOptions) {
-        fprintf(stderr,
-                "  --<name>=<vale>   : extra options (<type> [, <CPU>])\n");
+        fprintf(stderr, "  --<name>=<vale>   : extra options (<type> [, <CPU>])\n");
         const auto dir = *_driver.begin();
         for (const auto *opt = dir->commonOptions().head(); opt; opt = opt->next()) {
             fprintf(stderr, "  --%-16s: %s (%s)\n", opt->name_P(), opt->description_P(),

@@ -17,6 +17,8 @@
 #ifndef __LIBASM_TEST_FORMATTER_HELPER_H__
 #define __LIBASM_TEST_FORMATTER_HELPER_H__
 
+#include <map>
+#include <string>
 #include "asm_directive.h"
 #include "asm_driver.h"
 #include "dis_driver.h"
@@ -26,11 +28,29 @@
 #include "test_reader.h"
 #include "test_sources.h"
 
+namespace libasm {
+namespace driver {
+namespace test {
+struct Options {
+    void set(const char *name, const char *value) { _opts.emplace(name, value); }
+    void set(AsmDriver &driver) const {
+        for (auto &it : _opts)
+            driver.setOption(it.first.c_str(), it.second.c_str());
+    };
+
+private:
+    std::map<std::string, std::string> _opts;
+};
+}  // namespace test
+}  // namespace driver
+}  // namespace libasm
+
 #define PREP_ASM(type_of_assembler, type_of_directive) \
     type_of_assembler assembler;                       \
     type_of_directive directive{assembler};            \
     AsmDriver driver{&directive};                      \
-    TestSources sources
+    TestSources sources;                               \
+    Options options
 
 #define ASM(_cpu, _source, _expected)                                                   \
     do {                                                                                \
@@ -43,12 +63,14 @@
         StoredPrinter list, error;                                                      \
         bool reportError = false;                                                       \
         do {                                                                            \
+            sources.open(source.name().c_str());                                        \
             prev.swap(memory);                                                          \
-            memory.clear();                                                             \
             symbols.copy(driver.symbols());                                             \
+            memory.clear();                                                             \
             list.clear();                                                               \
             error.clear();                                                              \
-            sources.open(source.name().c_str());                                        \
+            driver.reset();                                                             \
+            options.set(driver);                                                        \
             driver.setCpu(_cpu);                                                        \
             driver.assemble(sources, memory, list, error, reportError);                 \
             reportError = true;                                                         \

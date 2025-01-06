@@ -30,7 +30,7 @@ void test_asm_i8096() {
     PREP_ASM(i8096::AsmI8096, IntelDirective);
 
     driver.setUpperHex(false);
-    driver.setOption("smart-branch", "on");
+    options.set("smart-branch", "on");
 
     ASM("i8096",
             R"(        cpu   i8096

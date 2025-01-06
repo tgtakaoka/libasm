@@ -40,7 +40,7 @@ void test_asm_mc6809() {
 
     driver.setUpperHex(true);
     driver.setLineNumber(true);
-    driver.setOption("smart-branch", "on");
+    options.set("smart-branch", "on");
 
     ASM("mc6809",
             R"(        cpu   mc6809

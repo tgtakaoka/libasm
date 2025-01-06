@@ -53,15 +53,14 @@ symbol  =     x'1234'
        abd7 : c0 ab 23                   lbr   x'ab23'
 )");
 
-    driver.setOption("use-register", "on");
-    driver.setOption("smart-branch", "on");
+    options.set("use-register", "on");
+    options.set("smart-branch", "on");
 
     ASM("cdp1804",
             R"(        org   x'abcd'
         scal  r3, x'8485'
         lbr   x'ab23'
-        br    x'ac23'
-)",
+        br    x'ac23')",
             R"(       abcd :                            org   x'abcd'
        abcd : 68 83 84 85                scal  r3, x'8485'
        abd1 : 30 23                      lbr   x'ab23'

@@ -15,26 +15,21 @@
  */
 
 #include "asm_driver.h"
-
+#include <algorithm>
+#include <cstring>
 #include "asm_directive.h"
 #include "asm_formatter.h"
 #include "asm_sources.h"
-
-#include <algorithm>
-#include <cstring>
 
 namespace libasm {
 namespace driver {
 
 AsmDriver::AsmDriver(std::initializer_list<AsmDirective *> directives)
-    : _directives(), _current(nullptr), _symbols(), _origin(0) {
-    for (auto dir : directives) {
-        dir->reset(*this);
-        _directives.push_back(dir);
-    }
+    : _directives(directives), _current(nullptr), _symbols(), _origin(0) {
     _current = _directives.front();
     setUpperHex(true);
     setLineNumber(false);
+    reset();
 }
 
 namespace {
@@ -74,9 +69,7 @@ std::list<std::string> AsmDriver::listCpu() const {
 bool AsmDriver::setCpu(const char *cpu) {
     for (auto dir : _directives) {
         if (dir->setCpu(cpu)) {
-            const auto *prev = _current;
             _current = dir;
-            dir->setListRadix(prev->listRadix());
             return true;
         }
     }
@@ -98,6 +91,13 @@ void AsmDriver::setUpperHex(bool upperHex) {
 
 void AsmDriver::setLineNumber(bool lineNumber) {
     _lineNumber = lineNumber;
+}
+
+void AsmDriver::reset() {
+    symbols().clearFunctions();
+    for (auto dir : _directives) {
+        dir->reset(*this);
+    }
 }
 
 void AsmDriver::setOption(const char *name, const char *value) {
@@ -137,7 +137,7 @@ int AsmDriver::assemble(AsmSources &sources, BinMemory &memory, TextPrinter &lis
             _origin = directive.currentLocation();
 
         formatter.set(*line, directive, config, &context.value);
-        formatter.setListRadix(current()->listRadix());
+        formatter.setListRadix(directive.listRadix());
         if (formatter.hasError())
             ++errors;
         while (formatter.hasNextLine()) {

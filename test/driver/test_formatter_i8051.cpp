@@ -30,7 +30,7 @@ void test_asm_i8051() {
     PREP_ASM(i8051::AsmI8051, IntelDirective);
 
     driver.setUpperHex(false);
-    driver.setOption("smart-branch", "on");
+    options.set("smart-branch", "on");
 
     ASM("i8051",
             R"(        cpu   i8051

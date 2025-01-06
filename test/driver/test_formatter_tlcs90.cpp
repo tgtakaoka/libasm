@@ -30,7 +30,7 @@ void test_asm_tlcs90() {
     PREP_ASM(tlcs90::AsmTlcs90, ZilogDirective);
 
     driver.setUpperHex(false);
-    driver.setOption("smart-branch", "on");
+    options.set("smart-branch", "on");
 
     ASM("tlcs90",
             R"(        cpu   tlcs90
