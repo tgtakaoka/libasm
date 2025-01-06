@@ -76,6 +76,12 @@ Error AsmPdp8::setImplicitWord(bool enable) {
     return OK;
 }
 
+namespace {
+Error emitUint12(Insn &insn, uint16_t data) {
+    return insn.emitUint16Be(data & 07777);
+}
+}  // namespace
+
 Error AsmPdp8::defineDoubleDecimal(StrScanner &scan, Insn &insn, uint8_t) {
     const auto radix = _inputRadix;
     setInputRadix(RADIX_10);
@@ -87,8 +93,8 @@ Error AsmPdp8::defineDoubleDecimal(StrScanner &scan, Insn &insn, uint8_t) {
         insn.setErrorIf(save, OVERFLOW_RANGE);
     if (!insn.hasError()) {
         const auto val24 = val.getUnsigned();
-        insn.setErrorIf(insn.emitUint16Be((val24 >> 12) & 07777));
-        insn.setErrorIf(insn.emitUint16Be(val24 & 07777));
+        insn.setErrorIf(emitUint12(insn, val24 >> 12));
+        insn.setErrorIf(emitUint12(insn, val24));
     }
     setInputRadix(radix);
     return insn.getError();
@@ -280,7 +286,7 @@ Error AsmPdp8::defineDec6String(StrScanner &scan, Insn &insn) {
             if (c == 0)
                 return insn.setErrorIf(p, MISSING_CLOSING_DELIMITER);
             uint8_t dec6 = (c < 0x40) ? c : c - 0x40;
-            if (c < 0x20 || c >= 0x60) {
+            if (c <= 0x20 || c >= 0x60) {
                 error.setErrorIf(p, ILLEGAL_CONSTANT);
                 dec6 = 0;
             }
@@ -288,15 +294,15 @@ Error AsmPdp8::defineDec6String(StrScanner &scan, Insn &insn) {
                 val = static_cast<uint16_t>(dec6) << 6;
             } else {
                 val |= dec6;
-                error.setErrorIf(p, insn.emitUint16Be(val));
+                error.setErrorIf(p, emitUint12(insn, val));
             }
             ++p;
             count++;
         }
         if (count % 2 == 0) {
-            error.setErrorIf(p, insn.emitUint16Be(0));
+            error.setErrorIf(p, emitUint12(insn, 0));
         } else {
-            error.setErrorIf(p, insn.emitUint16Be(val));
+            error.setErrorIf(p, emitUint12(insn, val));
         }
         scan = p;
     } while (scan.skipSpaces().expect(','));

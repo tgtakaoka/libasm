@@ -36,11 +36,12 @@ struct EntryInsn : EntryInsnBase<Config, Entry> {
 struct AsmInsn final : AsmInsnImpl<Config>, EntryInsn {
     AsmInsn(Insn &insn) : AsmInsnImpl(insn) {}
 
-    void emitInsn() { emitUint16(opCode()); }
+    void emitInsn() { emitUint16(opCode() & 07777); }
 };
 
 struct DisInsn final : DisInsnImpl<Config>, EntryInsn {
     DisInsn(Insn &insn, DisMemory &memory, const StrBuffer &out) : DisInsnImpl(insn, memory, out) {}
+    uint16_t readUint12() { return readUint16() & 07777; }
 };
 
 }  // namespace pdp8

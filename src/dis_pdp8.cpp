@@ -42,7 +42,7 @@ void DisPdp8::reset() {
 
 Error DisPdp8::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) const {
     DisInsn insn(_insn, memory, out);
-    const auto opc = insn.readUint16();
+    const auto opc = insn.readUint12();
     insn.setOpCode(opc);
     if (TABLE.searchOpCode(cpuType(), insn, out))
         return _insn.setError(insn);
