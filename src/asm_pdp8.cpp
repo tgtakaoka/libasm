@@ -280,7 +280,7 @@ Error AsmPdp8::defineDec6String(StrScanner &scan, Insn &insn) {
             if (c == 0)
                 return insn.setErrorIf(p, MISSING_CLOSING_DELIMITER);
             uint8_t dec6 = (c < 0x40) ? c : c - 0x40;
-            if (c < 0x20 || c >= 0x60) {
+            if (c <= 0x20 || c >= 0x60) {
                 error.setErrorIf(p, ILLEGAL_CONSTANT);
                 dec6 = 0;
             }
