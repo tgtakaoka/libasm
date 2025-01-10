@@ -155,6 +155,8 @@ static void test_reg_imm() {
         // TMS99105, TMS99110
         TEST("BLSK R3,>4567",   0x00B3, 0x4567);
         TEST("BLSK R3,sym1234", 0x00B3, 0x1234);
+        TEST("BLSK R3,@>4567",   0x00B3, 0x4567);
+        TEST("BLSK R3,@sym1234", 0x00B3, 0x1234);
     } else {
         ERUI("BLSK R3,>4567");
     }

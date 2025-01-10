@@ -115,6 +115,7 @@ void AsmTms9900::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode) 
     auto val16 = op.val.getUnsigned();
     switch (mode) {
     case M_IMM:
+    case M_SYBL:
         insn.emitOperand16(val16);
         break;
     case M_REG:

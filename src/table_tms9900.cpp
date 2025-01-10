@@ -200,6 +200,7 @@ static constexpr Entry TABLE_TMS99105[] PROGMEM = {
     E2(0x0029, TEXT_SM,   M_SRC2, M_DST4),
     E2(0x002A, TEXT_AM,   M_SRC2, M_DST4),
     E2(0x00B0, TEXT_BLSK, M_REG,  M_IMM),
+    E2(0x00B0, TEXT_BLSK, M_REG,  M_SYBL),
     E1(0x0140, TEXT_BIND, M_SRC),
     E2(0x0C09, TEXT_TMB,  M_SRC2, M_BIT0),
     E2(0x0C0A, TEXT_TCMB, M_SRC2, M_BIT0),
@@ -214,16 +215,17 @@ static constexpr Entry TABLE_TMS99105[] PROGMEM = {
 
 static constexpr uint8_t INDEX_TMS99105[] PROGMEM = {
       3,  // TEXT_AM
-      5,  // TEXT_BIND
+      6,  // TEXT_BIND
       4,  // TEXT_BLSK
-      9,  // TEXT_EVAD
-     10,  // TEXT_RTWP
+      5,  // TEXT_BLSK
+     10,  // TEXT_EVAD
+     11,  // TEXT_RTWP
       1,  // TEXT_SLAM
       2,  // TEXT_SM
       0,  // TEXT_SRAM
-      7,  // TEXT_TCMB
-      6,  // TEXT_TMB
-      8,  // TEXT_TSMB
+      8,  // TEXT_TCMB
+      7,  // TEXT_TMB
+      9,  // TEXT_TSMB
 };
 
 static constexpr Entry TABLE_TMS99110[] PROGMEM = {
