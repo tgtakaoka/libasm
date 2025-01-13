@@ -177,7 +177,12 @@ private:
     const ConfigBase &config() const { return isAsm() ? _asm->config() : _dis->config(); }
     uint32_t addrMax() const { return 1UL << uint8_t(config().addressWidth()); }
     uint8_t addrUnit() const { return uint8_t(config().addressUnit()); }
-    uint8_t addrDigits() const { return ((uint8_t(config().addressWidth()) + 3) & -4) / 4; }
+    Radix listRadix() const { return isAsm() ? _asm->listRadix() : _dis->listRadix(); }
+    uint8_t numDigits(uint8_t bits) const {
+        const auto digit = (listRadix() == 8) ? 3 : 4;
+        return bits / digit + ((bits % digit) == 0 ? 0 : 1);
+    }
+    uint8_t addrDigits() const { return numDigits(config().addressWidth()); }
 
     static void handleLine(char *line, uintptr_t extra, State state) {
         (void)state;
@@ -202,13 +207,12 @@ private:
         _cli.print(isAsm() ? F("ASM:") : F("DIS:"));
         _cli.print(FSTR(cpu_P()));
         _cli.print(':');
-        printAddress(_origin);
-        _cli.print(F("> "));
+        printAddress(_origin, '>');
         _cli.readLine(handleLine, reinterpret_cast<uintptr_t>(this), buffer, sizeof(buffer));
     }
 
     void printAddress(uint32_t addr, char suffix = 0) {
-        _cli.printHex(addr, addrDigits());
+        _cli.printNum(addr, listRadix(), addrDigits());
         if (suffix)
             _cli.print(suffix);
     }
@@ -225,28 +229,24 @@ private:
 
     uint8_t printData(const uint8_t *bytes, uint8_t pos, uint8_t max) {
         _cli.print(' ');
-        if (config().opCodeWidth() == OPCODE_8BIT) {
-            if (pos < max) {
-                _cli.printHex(bytes[pos], 2);
-            } else {
-                _cli.print(F("  "));
-            }
-            return 1;
-        }
-        // OPCODE_16BIT
+        const auto bits = config().opCodeWidth();
+        const auto digits = numDigits(bits);
         if (pos < max) {
             uint16_t val = bytes[pos];
-            const uint32_t next = bytes[pos + 1];
-            if (config().endian() == ENDIAN_BIG) {
-                val = (val << 8) | next;
-            } else {
-                val |= (next << 8);
+            if (bits > OPCODE_8BIT) {
+                const uint16_t next = bytes[pos + 1];
+                if (config().endian() == ENDIAN_BIG) {
+                    val = (val << 8) | next;
+                } else {
+                    val |= (next << 8);
+                }
             }
-            _cli.printHex(val, 4);
+            _cli.printNum(val, listRadix(), digits);
         } else {
-            _cli.print(F("    "));
+            for (auto i = 0; i < digits; i++)
+                _cli.print(' ');
         }
-        return 2;
+        return bits == OPCODE_8BIT ? 1 : 2;
     }
 
     void printBytes(const uint8_t *bytes, uint8_t length) {
@@ -256,38 +256,22 @@ private:
     }
 
     void printBytes(const Insn &insn, const char *operands) {
-        auto addr = insn.address();
-        printAddress(addr, ':');
-        const auto *bytes = insn.bytes();
-        auto length = insn.length();
-        const auto bytesPerLine = 6;
-        if (length < bytesPerLine) {
-            printBytes(bytes, length);
-            for (auto i = length; i < bytesPerLine;) {
-                i += printData(bytes, i, length);
-            }
-        } else {
-            printBytes(bytes, bytesPerLine);
-        }
-        _cli.print(' ');
-        printInsn(insn, operands);
-        _cli.println();
-        if (length <= bytesPerLine)
-            return;
-        length -= bytesPerLine;
-        do {
-            addr += bytesPerLine / addrUnit();
-            bytes += bytesPerLine;
-            printAddress(addr, ':');
-            if (length < bytesPerLine) {
-                printBytes(bytes, length);
-                length = 0;
-            } else {
-                printBytes(bytes, bytesPerLine);
-                length -= bytesPerLine;
+        constexpr auto chunk = 6;
+        const auto codeMax = config().codeMax();
+        const auto step = codeMax < chunk ? codeMax : chunk;
+        for (auto i = 0; i < insn.length(); i += step) {
+            printAddress(insn.address() + i / addrUnit(), ':');
+            auto len = insn.length() - i;
+            if (len >= step)
+                len = step;
+            printBytes(insn.bytes() + i, len);
+            if (i == 0) {
+                _cli.print(F("  "));
+                _cli.printStr(insn.name(), -config().nameMax());
+                _cli.printStr(operands);
             }
             _cli.println();
-        } while (length);
+        }
     }
 
     void assemble(Assembler *assembler, const char *line) {
@@ -304,7 +288,7 @@ private:
             _cli.println();
             if (insn.address() == _origin) {
                 _origin += insn.length() / addrUnit();
-                _origin &= max - 1;
+                _origin &= max;
             } else {
                 _origin = insn.address();
             }

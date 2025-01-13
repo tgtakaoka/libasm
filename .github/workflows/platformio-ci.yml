@@ -74,7 +74,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install --upgrade platformio
       - name: Install library dependency
-        run: pio lib install libcli@1.3.0
+        run: pio lib install libcli@1.4.2
       - name: Run PlatformIO
         run: pio ci --lib="." --board=ATmega1284P --board=AVR128DA48 --board=teensy41
         env:

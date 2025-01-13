@@ -55,7 +55,6 @@ jobs:
       - name: Compile examples
         uses: arduino/compile-sketches@v1
         with:
-          cli-version: "1.0.4"
           fqbn: ${{matrix.board.vendor}}:${{matrix.board.arch}}:${{matrix.board.name}}
           platforms: |
             - source-url: ${{matrix.index}}
@@ -65,4 +64,4 @@ jobs:
           libraries: |
             - source-path: ./
             - name: libcli
-              version: 1.3.0
+              version: 1.4.2
