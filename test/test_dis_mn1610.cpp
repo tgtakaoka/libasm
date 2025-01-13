@@ -25,21 +25,21 @@ using namespace libasm::test;
 DisMn1610 dis1610;
 Disassembler &disassembler(dis1610);
 
-static bool is1610() {
+bool is1610() {
     return strcmp_P("MN1610", disassembler.config().cpu_P()) == 0;
 }
 
-static bool is1613() {
+bool is1613() {
     return strcmp_P("MN1613", disassembler.config().cpu_P()) == 0 ||
            strcmp_P("MN1613A", disassembler.config().cpu_P()) == 0;
 }
 
-static void set_up() {
+void set_up() {
     disassembler.reset();
     disassembler.setOption("relative", "on");
 }
 
-static void tear_down() {
+void tear_down() {
     symtab.reset();
 }
 
@@ -64,7 +64,7 @@ void test_cpu() {
     EQUALS_P("cpu MN1613A", "MN1613A", disassembler.config().cpu_P());
 }
 
-static void test_transfer() {
+void test_transfer() {
     TEST("L",  "R1, X'10'",       0xC000|(0<<11)|(1<<8)|0x10);
     TEST("L",  "R2, *-128",       0xC000|(1<<11)|(2<<8)|0x80);
     TEST("L",  "R3, (X'FF')",     0xC000|(2<<11)|(3<<8)|0xFF);
@@ -187,7 +187,7 @@ static void test_transfer() {
     }
 }
 
-static void test_integer() {
+void test_integer() {
     TEST("A", "R0, STR, SKP", 0x5808|(0<<8)|(1<<4)|6);
     TEST("A", "R1, SP, M",    0x5808|(1<<8)|(2<<4)|5);
     TEST("A", "R2, R4, PZ",   0x5808|(2<<8)|(3<<4)|4);
@@ -328,7 +328,7 @@ static void test_integer() {
     }
 }
 
-static void test_float() {
+void test_float() {
     if (is1613()) {
         TEST("FA", "DR0, (R1), EZ",  0x6F0C|(8<<4)|0);
         TEST("FA", "DR0, (R2), ENZ", 0x6F0C|(9<<4)|1);
@@ -358,7 +358,7 @@ static void test_float() {
     }
 }
 
-static void test_logical() {
+void test_logical() {
     TEST("AND", "R0, STR, SKP", 0x6808|(0<<8)|(1<<4)|6);
     TEST("AND", "R1, SP, M",    0x6808|(1<<8)|(2<<4)|5);
     TEST("AND", "R2, R4, PZ",   0x6808|(2<<8)|(3<<4)|4);
@@ -431,7 +431,7 @@ static void test_logical() {
     }
 }
 
-static void test_branch() {
+void test_branch() {
     TEST("B", "X'10'",       0xC700|(0<<11)|0x10);
     TEST("B", "*-128",       0xC700|(1<<11)|0x80);
     TEST("B", "(X'FF')",     0xC700|(2<<11)|0xFF);
@@ -478,7 +478,7 @@ static void test_branch() {
     }
 }
 
-static void test_bitops() {
+void test_bitops() {
     TEST("TBIT", "R0, 1",       0x2800|(0<<8)|(0<<4)|1);
     TEST("TBIT", "R1, 0, SKP",  0x2800|(1<<8)|(1<<4)|0);
     TEST("TBIT", "R2, 2, Z",    0x2800|(2<<8)|(4<<4)|2);
@@ -549,7 +549,7 @@ static void test_bitops() {
     }
 }
 
-static void test_misc() {
+void test_misc() {
     TEST("RD", "R0, X'34'",  0x1800|(0<<8)|0x34);
     TEST("RD", "R1, X'34'",  0x1800|(1<<8)|0x34);
     TEST("RD", "R2, X'34'",  0x1800|(2<<8)|0x34);
@@ -668,7 +668,7 @@ static void test_misc() {
     }
 }
 
-static void test_formatter() {
+void test_formatter() {
     disassembler.setOption("c-style", "on");
     TEST("L",  "R1, 0x10",   0xC000|(0<<11)|(1<<8)|0x10);
     disassembler.setOption("intel-hex", "on");
@@ -688,7 +688,7 @@ static void test_formatter() {
 }
 // clang-format on
 
-static void test_illegal_mn1610() {
+void test_illegal_mn1610() {
     for (Config::opcode_t opc = 0x0000; opc < 0x0800; opc++)
         UNKN(opc);
 
@@ -735,7 +735,7 @@ static void test_illegal_mn1610() {
     }
 }
 
-static void test_illegal_mn1613() {
+void test_illegal_mn1613() {
     for (Config::opcode_t opc = 0x0000; opc < 0x0800; opc++) {
         UNKN(opc);
     }

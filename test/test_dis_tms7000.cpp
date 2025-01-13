@@ -24,11 +24,11 @@ using namespace libasm::test;
 DisTms7000 dis7000;
 Disassembler &disassembler(dis7000);
 
-static void set_up() {
+void set_up() {
     disassembler.reset();
 }
 
-static void tear_down() {
+void tear_down() {
     symtab.reset();
 }
 

@@ -24,30 +24,29 @@ using namespace libasm::test;
 DisZ8 disz8;
 Disassembler &disassembler(disz8);
 
-static bool z86c() {
+bool z86c() {
     return strcmp_P("Z86C", disassembler.config().cpu_P()) == 0;
 }
 
-static bool z86() {
+bool z86() {
     return strcmp_P("Z8", disassembler.config().cpu_P()) == 0 || z86c();
 }
 
-static bool z88() {
+bool z88() {
     return strcmp_P("Z88", disassembler.config().cpu_P()) == 0;
 }
 
-static uint8_t R(uint8_t n) {
+uint8_t R(uint8_t n) {
     if (z88())
         return 0xC0 + n;
     return 0xE0 + n;
 }
 
-static void set_up() {
+void set_up() {
     disassembler.reset();
-    disassembler.setOption("relative", "disable");
 }
 
-static void tear_down() {
+void tear_down() {
     symtab.reset();
 }
 
@@ -69,7 +68,7 @@ void test_cpu() {
     EQUALS_P("cpu Z88C00", "Z88", disassembler.config().cpu_P());
 }
 
-static void test_implied() {
+void test_implied() {
     TEST("DI",   "", 0x8F);
     TEST("EI",   "", 0x9F);
     TEST("RET",  "", 0xAF);
@@ -85,7 +84,7 @@ static void test_implied() {
     }
 }
 
-static void test_absolute() {
+void test_absolute() {
     symtab.intern(0x7E7F, "sym7E7F");
     symtab.intern(0xD7D8, "symD7D8");
 
@@ -114,7 +113,7 @@ static void test_absolute() {
     }
 }
 
-static void test_relative() {
+void test_relative() {
     symtab.intern(0x106E, "sym106E");
     symtab.intern(0x0F8E, "sym0F8E");
 
@@ -174,7 +173,7 @@ static void test_relative() {
     }
 }
 
-static void test_operand_in_opcode() {
+void test_operand_in_opcode() {
     TEST("LD", "R0, >%09", 0x08, 0x09);
     TEST("LD", "R1, >%0F", 0x18, 0x0F);
     TEST("LD", "R2, >%00", 0x28, 0x00);
@@ -246,7 +245,7 @@ static void test_operand_in_opcode() {
     TEST("INC", "R15", 0xFE);
 }
 
-static void test_one_operand() {
+void test_one_operand() {
     TEST("DEC",  ">%01", 0x00, 0x01);
     TEST("DEC",  "R1",   0x00, R(1));
     TEST("DEC",  "@%05",        0x01, 0x05);
@@ -337,7 +336,7 @@ static void test_one_operand() {
     }
 }
 
-static void test_two_operands() {
+void test_two_operands() {
     TEST("ADD", "R0, R3",     0x02, 0x03);
     TEST("ADD", "R4, @R5",    0x03, 0x45);
     TEST("ADD", "%78, %56",   0x04, 0x56, 0x78);
@@ -582,7 +581,7 @@ static void test_two_operands() {
     }
 }
 
-static void test_indexed() {
+void test_indexed() {
     if (z86()) {
         TEST("LD", "R12, %C9(R8)", 0xC7, 0xC8, 0xC9);
         TEST("LD", "%D9(R8), R13", 0xD7, 0xD8, 0xD9);
@@ -613,7 +612,7 @@ static void test_indexed() {
     }
 }
 
-static void test_setrp() {
+void test_setrp() {
     if (z86()) {
         TEST("SRP", "#%30",                             0x31, 0x30);
         ERRT("SRP", "#%31", OPERAND_NOT_ALLOWED, "%31", 0x31, 0x31);
@@ -653,7 +652,7 @@ static void test_setrp() {
     }
 }
 
-static void test_bit_operation() {
+void test_bit_operation() {
     TEST("BITC", "R5, #4",       0x57, 0x58);
     TEST("BITR", "R7, #4",       0x77, 0x78);
     TEST("BITS", "R8, #4",       0x77, 0x89);
@@ -682,7 +681,7 @@ static void test_bit_operation() {
     TEST("BTJRT", "$, R3, #4", 0x37, 0x39, 0xFD);
 }
 
-static void test_illegal_z8() {
+void test_illegal_z8() {
     const uint8_t illegals[] = {
         0x0F, 0x1F, 0x2F, 0x3F, 0x4F, 0x5F, 0x6F, 0x7F,
         0x84, 0x85, 0x86, 0x87,
@@ -696,7 +695,7 @@ static void test_illegal_z8() {
         UNKN(illegals[idx]);
 }
 
-static void test_illegal_z86c() {
+void test_illegal_z86c() {
     const uint8_t illegals[] = {
         0x0F, 0x1F, 0x2F, 0x3F, 0x4F, 0x5F,
         0x84, 0x85, 0x86, 0x87,
@@ -710,7 +709,7 @@ static void test_illegal_z86c() {
         UNKN(illegals[idx]);
 }
 
-static void test_illegal_z88() {
+void test_illegal_z88() {
     const uint8_t illegals[] = {
         0x6F, 0x7F, 0xD5,
     };

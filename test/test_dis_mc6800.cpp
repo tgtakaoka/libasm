@@ -25,32 +25,31 @@ using namespace libasm::test;
 DisMc6800 dis6800;
 Disassembler &disassembler(dis6800);
 
-static bool mb8861() {
+bool mb8861() {
     return strcasecmp_P("MB8861", disassembler.config().cpu_P()) == 0;
 }
 
-static bool m6800() {
+bool m6800() {
     return strcmp_P("6800", disassembler.config().cpu_P()) == 0 || mb8861();
 }
 
-static bool hd6301() {
+bool hd6301() {
     return strcmp_P("6301", disassembler.config().cpu_P()) == 0;
 }
 
-static bool m68hc11() {
+bool m68hc11() {
     return strcmp_P("6811", disassembler.config().cpu_P()) == 0;
 }
 
-static bool m6801() {
+bool m6801() {
     return strcmp_P("6801", disassembler.config().cpu_P()) == 0 || hd6301() || m68hc11();
 }
 
-static void set_up() {
+void set_up() {
     disassembler.reset();
-    disassembler.setOption("relative", "no");
 }
 
-static void tear_down() {
+void tear_down() {
     symtab.reset();
 }
 
@@ -87,7 +86,7 @@ void test_cpu() {
     EQUALS_P("cpu MC68HC11", "6811", disassembler.config().cpu_P());
 }
 
-static void test_inherent() {
+void test_inherent() {
     TEST("NOP", "", 0x01);
     TEST("TAP", "", 0x06);
     TEST("TPA", "", 0x07);
@@ -178,7 +177,7 @@ static void test_inherent() {
     }
 }
 
-static void test_immediate() {
+void test_immediate() {
     TEST("SUBA", "#$90", 0x80, 0x90);
     TEST("CMPA", "#$90", 0x81, 0x90);
     TEST("SBCA", "#$90", 0x82, 0x90);
@@ -253,7 +252,7 @@ static void test_immediate() {
     }
 }
 
-static void test_direct() {
+void test_direct() {
     TEST("SUBA", "$90", 0x90, 0x90);
     TEST("CMPA", "$90", 0x91, 0x90);
     TEST("SBCA", "$90", 0x92, 0x90);
@@ -330,7 +329,7 @@ static void test_direct() {
     }
 }
 
-static void test_extended() {
+void test_extended() {
     TEST("NEG", ">$0000", 0x70, 0x00, 0x00);
     TEST("COM", ">$0009", 0x73, 0x00, 0x09);
     TEST("LSR", ">$0034", 0x74, 0x00, 0x34);
@@ -433,7 +432,7 @@ static void test_extended() {
     }
 }
 
-static void test_indexed() {
+void test_indexed() {
     TEST("NEG", "0,X",  0x60, 0x00);
     TEST("COM", "0,X",  0x63, 0x00);
     TEST("LSR", "1,X",   0x64, 0x01);
@@ -527,7 +526,7 @@ static void test_indexed() {
     }
 }
 
-static void test_indexed_y() {
+void test_indexed_y() {
     if (m68hc11()) {
         // MC68HC11
         TEST("NEG", "0,Y", 0x18, 0x60, 0x00);
@@ -612,7 +611,7 @@ static void test_indexed_y() {
     }
 }
 
-static void test_relative() {
+void test_relative() {
     ATEST(0x1000, "BRA", "$1002", 0x20, 0x00);
     AERRT(0x0010, "BRA", "$FF92", OVERFLOW_RANGE, "$FF92", 0x20, 0x80);
     AERRT(0xFFF0, "BRA", "$0071", OVERFLOW_RANGE, "$0071", 0x20, 0x7F);
@@ -658,7 +657,7 @@ static void test_relative() {
     ATEST(0x2000, "BSR", "*+129", 0x8D, 0x7F);
 }
 
-static void test_bit_ops() {
+void test_bit_ops() {
     if (m68hc11()) {
         // MC68HC11
         TEST("BSET", "$90, #$88",   0x14, 0x90, 0x88);
@@ -762,7 +761,7 @@ static void test_bit_ops() {
     }
 }
 
-static void test_illegal_mc6800() {
+void test_illegal_mc6800() {
     static constexpr Config::opcode_t illegals[] = {
         0x00, 0x02, 0x03, 0x04, 0x05,
         0x12, 0x13, 0x14, 0x15, 0x18, 0x1A, 0x1C, 0x1D, 0x1E, 0x1F,
@@ -777,7 +776,7 @@ static void test_illegal_mc6800() {
         UNKN(opc);
 }
 
-static void test_illegal_mb8861() {
+void test_illegal_mb8861() {
     static constexpr Config::opcode_t illegals[] = {
         0x00, 0x02, 0x03, 0x04, 0x05,
         0x12, 0x13, 0x14, 0x15, 0x18, 0x1A, 0x1C, 0x1D, 0x1E, 0x1F,
@@ -792,7 +791,7 @@ static void test_illegal_mb8861() {
         UNKN(opc);
 }
 
-static void test_illegal_mc6801() {
+void test_illegal_mc6801() {
     static constexpr Config::opcode_t illegals[] = {
         0x00, 0x02, 0x03,
         0x12, 0x13, 0x14, 0x15, 0x18, 0x1A, 0x1C, 0x1D, 0x1E, 0x1F,
@@ -805,7 +804,7 @@ static void test_illegal_mc6801() {
         UNKN(opc);
 }
 
-static void test_illegal_hd6301() {
+void test_illegal_hd6301() {
     static constexpr Config::opcode_t illegals[] = {
         0x00, 0x02, 0x03,
         0x12, 0x13, 0x14, 0x15, 0x1C, 0x1D, 0x1E, 0x1F,
@@ -817,7 +816,7 @@ static void test_illegal_hd6301() {
         UNKN(opc);
 }
 
-static void test_illegal_mc68hc11() {
+void test_illegal_mc68hc11() {
     static constexpr Config::opcode_t p00_illegals[] = {
         0x00,
         0x41, 0x42, 0x45, 0x4B, 0x4E, 0x51, 0x52, 0x55, 0x5B, 0x5E,

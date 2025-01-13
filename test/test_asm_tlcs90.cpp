@@ -24,11 +24,11 @@ using namespace libasm::test;
 AsmTlcs90 asm90;
 Assembler &assembler(asm90);
 
-static void set_up() {
+void set_up() {
     assembler.reset();
 }
 
-static void tear_down() {
+void tear_down() {
     symtab.reset();
 }
 
@@ -38,7 +38,7 @@ void test_cpu() {
     EQUALS_P("get cpu", "TLCS90", assembler.config().cpu_P());
 }
 
-static void test_8bit_transfer() {
+void test_8bit_transfer() {
     TEST("LD B,34H",      0x30, 0x34);
     TEST("LD B,-128",     0x30, 0x80);
     ERRT("LD B,-129",     OVERFLOW_RANGE, "-129", 0x30, 0x7F);
@@ -305,7 +305,7 @@ static void test_8bit_transfer() {
     TEST("LD B, max?255", 0x30, 0xFF);
 }
 
-static void test_16bit_transfer() {
+void test_16bit_transfer() {
     TEST("LD BC,1234H",    0x38, 0x34, 0x12);
     TEST("LD BC,-1",       0x38, 0xFF, 0xFF);
     TEST("LD BC,BC",       0xF8, 0x38);
@@ -563,7 +563,7 @@ static void test_16bit_transfer() {
     ATEST(0x1000, "LDAR HL, 9001H", 0x17, 0xFF, 0x7F);
 }
 
-static void test_exchange() {
+void test_exchange() {
     TEST("EX (BC),BC",     0xE0, 0x50);
     TEST("EX (DE),BC",     0xE1, 0x50);
     TEST("EX (HL),BC",     0xE2, 0x50);
@@ -643,7 +643,7 @@ static void test_exchange() {
     TEST("EX (HL+A),SP",   0xF3, 0x56);
 }
 
-static void test_block() {
+void test_block() {
     TEST("LDI",  0xFE, 0x58);
     TEST("LDIR", 0xFE, 0x59);
     TEST("LDD",  0xFE, 0x5A);
@@ -654,7 +654,7 @@ static void test_block() {
     TEST("CPDR", 0xFE, 0x5F);
 }
 
-static void test_8bit_arithmetic() {
+void test_8bit_arithmetic() {
     TEST("DAA A", 0x0B);
     TEST("CPL A", 0x10);
     TEST("NEG A", 0x11);
@@ -1015,7 +1015,7 @@ static void test_8bit_arithmetic() {
     TEST("DECX (0FF34H)", 0x0F, 0x34);
 }
 
-static void test_16bit_arithmetic() {
+void test_16bit_arithmetic() {
     TEST("MUL HL,B",        0xF8, 0x12);
     TEST("MUL HL,C",        0xF9, 0x12);
     TEST("MUL HL,D",        0xFA, 0x12);
@@ -1317,7 +1317,7 @@ static void test_16bit_arithmetic() {
     TEST("DECW (HL+A)",   0xF3, 0x9F);
 }
 
-static void test_cpu_control() {
+void test_cpu_control() {
     TEST("RCF",  0x0C);
     TEST("SCF",  0x0D);
     TEST("CCF",  0x0E);
@@ -1328,7 +1328,7 @@ static void test_cpu_control() {
     TEST("SWI",  0xFF);
 }
 
-static void test_shift_rotate() {
+void test_shift_rotate() {
     TEST("RLCA",         0xA0);
     TEST("RLC B",        0xF8, 0xA0);
     TEST("RLC C",        0xF9, 0xA0);
@@ -1524,7 +1524,7 @@ static void test_shift_rotate() {
     TEST("RRD (HL+A)",   0xF3, 0x11);
 }
 
-static void test_bitops() {
+void test_bitops() {
     TEST("BIT 0,B",        0xF8, 0xA8);
     TEST("BIT 1,C",        0xF9, 0xA9);
     TEST("BIT 2,D",        0xFA, 0xAA);
@@ -1608,7 +1608,7 @@ static void test_bitops() {
     TEST("TSET 2,(HL+A)",   0xF3, 0x1A);
 }
 
-static void test_jump_call() {
+void test_jump_call() {
     ATEST(0x1000, "JR F,$+2",     0xC0, 0x00);
     ATEST(0x1000, "JR LT,$",      0xC1, 0xFE);
     ATEST(0x1000, "JR LE,$-126",  0xC2, 0x80);
@@ -1771,7 +1771,7 @@ static void test_jump_call() {
     AERRT(0x1000, "JRL $+8002H", OVERFLOW_RANGE, "$+8002H", 0x1B, 0x00, 0x80);
 }
 
-static void test_comment() {
+void test_comment() {
     COMM("LD B , ( BC )      ; comment", "; comment", 0xE0, 0x28);
     COMM("LD B , ( 1234H )   ; comment", "; comment", 0xE3, 0x34, 0x12, 0x28);
     COMM("LD B , ( IX + 34H ); comment", "; comment", 0xF0, 0x34, 0x28);
@@ -1786,7 +1786,7 @@ static void test_comment() {
     COMM("DL 12345678H ; comment", "; comment", 0x78, 0x56, 0x34, 0x12);
 }
 
-static void test_error() {
+void test_error() {
     ERRT("LD B,BC",       OPERAND_NOT_ALLOWED,   "B,BC");
     ERRT("LD B,(B)",      REGISTER_NOT_ALLOWED,  "B)");
     ERRT("LD B,(BC+34H)", REGISTER_NOT_ALLOWED,  "BC+34H)");
@@ -1799,7 +1799,7 @@ static void test_error() {
     ERRT("LD B,(HL+A",    MISSING_CLOSING_PAREN, "");
 }
 
-static void test_undef() {
+void test_undef() {
     ERUS("LD B,UNDEF",       "UNDEF",     0x30, 0x00);
     ERUS("LD B,(UNDEF)",     "UNDEF)",    0xE7, 0x00, 0x28);
     ERUS("LD B,(SP+UNDEF)",  "UNDEF)",    0xF2, 0x00, 0x28);
@@ -1826,7 +1826,7 @@ static void test_undef() {
     ERUS("JR  UNDEF", "UNDEF", 0x1B, 0x00, 0x00);
 }
 
-static void test_data_constant() {
+void test_data_constant() {
     TEST("DB -128, 255", 0x80, 0xFF);
     TEST(R"(DB 'A', '"')", 0x41, 0x22);
     TEST("DB '9'-'0'",   0x09);

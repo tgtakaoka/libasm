@@ -30,16 +30,16 @@ Disassembler &disassembler(dispdp11);
 #define TFLT(insn, opr, oct, ...) TEST(insn, opr, __VA_ARGS__)
 #endif
 
-static bool dcj11() {
+bool dcj11() {
     return strcmp_P("J11", disassembler.config().cpu_P()) == 0;
 }
 
-static void set_up() {
+void set_up() {
     disassembler.reset();
     disassembler.setOption("relative", "true");
 }
 
-static void tear_down() {
+void tear_down() {
     symtab.reset();
 }
 

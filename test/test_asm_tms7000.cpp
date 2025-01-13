@@ -24,14 +24,11 @@ using namespace libasm::test;
 AsmTms7000 asm7000;
 Assembler &assembler(asm7000);
 
-static void set_up() {
+void set_up() {
     assembler.reset();
-    assembler.setCpu("TMS7000");
-    assembler.setOption("use-scratchpad", "no");
-    assembler.setOption("relative", "off");
 }
 
-static void tear_down() {
+void tear_down() {
     symtab.reset();
 }
 

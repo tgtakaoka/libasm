@@ -24,11 +24,11 @@ using namespace libasm::test;
 AsmScn2650 asm2650;
 Assembler &assembler(asm2650);
 
-static void set_up() {
+void set_up() {
     assembler.reset();
 }
 
-static void tear_down() {
+void tear_down() {
     symtab.reset();
 }
 
@@ -41,7 +41,7 @@ void test_cpu() {
     EQUALS_P("cpu scn2650", "2650", assembler.config().cpu_P());
 }
 
-static void test_load_store() {
+void test_load_store() {
     TEST("lodz,r0", 0x60);
     TEST("LODZ,R1", 0x01);
     TEST("LODZ,R2", 0x02);
@@ -134,7 +134,7 @@ static void test_load_store() {
     TEST("STRA,R0 *H'0F01',R3",   0xCF, 0xEF, 0x01);
 }
 
-static void test_arithmetic() {
+void test_arithmetic() {
     TEST("ADDZ,R0", 0x80);
     TEST("ADDZ,R1", 0x81);
     TEST("ADDZ,R2", 0x82);
@@ -231,7 +231,7 @@ static void test_arithmetic() {
     TEST("DAR,R3", 0x97);
 }
 
-static void test_logical() {
+void test_logical() {
     ERRT("ANDZ,R0", OPERAND_NOT_ALLOWED, "R0");
     TEST("ANDZ,R1", 0x41);
     TEST("ANDZ,R2", 0x42);
@@ -368,7 +368,7 @@ static void test_logical() {
     TEST("EORA,R0 *H'1F01',R3",   0x2F, 0xFF, 0x01);
 }
 
-static void test_rotate_compare() {
+void test_rotate_compare() {
     TEST("COMZ,R0", 0xE0);
     TEST("COMZ,R1", 0xE1);
     TEST("COMZ,R2", 0xE2);
@@ -424,7 +424,7 @@ static void test_rotate_compare() {
     TEST("RRL,R3", 0xD3);
 }
 
-static void test_branch() {
+void test_branch() {
     ATEST(0x1000, "bctr,eq  $+h'1b'", 0x18, 0x19);
     ATEST(0x1000, "BCTR,EQ *$+H'1C'", 0x18, 0x9A);
     ATEST(0x1000, "BCTR,GT  $+H'1C'", 0x19, 0x1A);
@@ -522,7 +522,7 @@ static void test_branch() {
     ATEST(0x1000, "BXA *H'7FFF',R3", 0x9F, 0xFF, 0xFF);
 }
 
-static void test_subroutine() {
+void test_subroutine() {
     ATEST(0x1000, "BSTR,EQ  $+H'1B'", 0x38, 0x19);
     ATEST(0x1000, "BSTR,EQ *$+H'1C'", 0x38, 0x9A);
     ATEST(0x1000, "BSTR,GT  $+H'1C'", 0x39, 0x1A);
@@ -596,7 +596,7 @@ static void test_subroutine() {
     TEST("RETE,UN", 0x37);
 }
 
-static void test_io() {
+void test_io() {
     TEST("WRTD,R0", 0xF0);
     TEST("WRTD,R1", 0xF1);
     TEST("WRTD,R2", 0xF2);
@@ -625,7 +625,7 @@ static void test_io() {
     TEST("REDE,R3 H'58'", 0x57, 0x58);
 }
 
-static void test_misc() {
+void test_misc() {
     TEST("HALT", 0x40);
     TEST("NOP",  0xC0);
     TEST("TMI,R0 H'F5'", 0xF4, 0xF5);
@@ -645,7 +645,7 @@ static void test_misc() {
     TEST("TPSL H'B6'", 0xB5, 0xB6);
 }
 
-static void test_comment() {
+void test_comment() {
     COMM("NOP    ; comment", "; comment", 0xC0);
     COMM("WRTD,R0; comment", "; comment", 0xF0);
     COMM("NOP                comment", "comment", 0xC0);
@@ -661,7 +661,7 @@ static void test_comment() {
     COMM("ALIT A'TEXT'  comment", "comment", 0x54, 0x45, 0x58, 0x54);
 }
 
-static void test_undef() {
+void test_undef() {
     ERUS("LODI,R0  UNDEF",      "UNDEF",      0x04, 0x00);
     ERUS("LODR,R1  UNDEF",      "UNDEF",      0x09, 0x00);
     ERUS("LODA,R2  UNDEF",      "UNDEF",      0x0E, 0x00, 0x00);
@@ -699,7 +699,7 @@ static void test_undef() {
     ERUS("TPSU    UNDEF", "UNDEF", 0xB4, 0x00);
 }
 
-static void test_error() {
+void test_error() {
     ERRT("LODA,R1 H'1345',R2,+", OPERAND_NOT_ALLOWED, "R1 H'1345',R2,+");
     ERRT("STRZ,R0", OPERAND_NOT_ALLOWED, "R0");
     ERRT("ANDZ,R0", OPERAND_NOT_ALLOWED, "R0");
@@ -740,7 +740,7 @@ static void test_error() {
     AERRT(0x3000, "BSXA H'FFFF',R3", OVERFLOW_RANGE, "H'FFFF',R3", 0xBF, 0xFF, 0xFF);
 }
 
-static void test_data_constant() {
+void test_data_constant() {
     TEST("DATA -128,255",  0x80, 0xFF);
     TEST("DATA -129,256",  0x7F, 0x00);
     TEST("ACON 1",         0x00, 0x01);

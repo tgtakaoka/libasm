@@ -24,15 +24,15 @@ using namespace libasm::test;
 AsmZ8 asmz8;
 Assembler &assembler(asmz8);
 
-static bool z86c() {
+bool z86c() {
     return strcmp_P("Z86C", assembler.config().cpu_P()) == 0;
 }
 
-static bool z86() {
+bool z86() {
     return strcmp_P("Z8", assembler.config().cpu_P()) == 0 || z86c();
 }
 
-static bool z88() {
+bool z88() {
     return strcmp_P("Z88", assembler.config().cpu_P()) == 0;
 }
 
@@ -49,17 +49,17 @@ static bool z88() {
     if (z88())                    \
     ERRT(src, error, at, __VA_ARGS__)
 
-static uint8_t R(uint8_t n) {
+uint8_t R(uint8_t n) {
     if (z88())
         return 0xC0 + n;
     return 0xE0 + n;
 }
 
-static void set_up() {
+void set_up() {
     assembler.reset();
 }
 
-static void tear_down() {
+void tear_down() {
     symtab.reset();
 }
 
@@ -81,7 +81,7 @@ static void tear_down() {
     EQUALS_P("cpu Z88C00", "Z88", assembler.config().cpu_P());
 }
 
-static void test_implied() {
+void test_implied() {
     TZ88("NEXT",  0x0F);
     TZ88("ENTER", 0x1F);
     TZ88("EXIT",  0x2F);
@@ -114,7 +114,7 @@ static void test_implied() {
     TEST("NOP",  0xFF);
 }
 
-static void test_absolute() {
+void test_absolute() {
     symtab.intern(0x7E7F, "$s.7E7F");
     symtab.intern(0x8e8F, "?s_8E8F");
     symtab.intern(0xDEDF, ".s?DEDF");
@@ -139,7 +139,7 @@ static void test_absolute() {
     TZ86("CALL  _s$D7D8", 0xD6, 0xD7, 0xD8);
 }
 
-static void test_relative() {
+void test_relative() {
     symtab.intern(0x106E, "?s$106E");
     symtab.intern(0x0F8E, ".s_0F8E");
     symtab.intern(0x1040, "rx40");
@@ -193,7 +193,7 @@ static void test_relative() {
     EZ86("CPIJNE R3,@R13,$", UNKNOWN_INSTRUCTION, "CPIJNE R3,@R13,$");
 }
 
-static void test_operand_in_opcode() {
+void test_operand_in_opcode() {
     TEST("LD  R0,>%09", 0x08, 0x09);
     TEST("LD  R0,R9",   0x08, R(9));
     TEST("LD  R1,>%0F", 0x18, 0x0F);
@@ -275,7 +275,7 @@ static void test_operand_in_opcode() {
     TEST("INC R15", 0xFE);
 }
 
-static void test_one_operand() {
+void test_one_operand() {
     TEST("DEC >%01", 0x00, 0x01);
     ERRT("DEC -1",   OPERAND_NOT_ALLOWED, "-1");
     ERRT("DEC 256",  OPERAND_NOT_ALLOWED, "256");
@@ -379,7 +379,7 @@ static void test_one_operand() {
     }
 }
 
-static void test_two_operands() {
+void test_two_operands() {
     TEST("ADD R0,R3",     0x02, 0x03);
     TEST("ADD R4,@R5",    0x03, 0x45);
     TEST("ADD %78,%56",   0x04, 0x56, 0x78);
@@ -630,7 +630,7 @@ static void test_two_operands() {
     TZ88("POPUI  R2, @R3",  0x93, 0xC3, 0xC2);
 }
 
-static void test_indexed() {
+void test_indexed() {
     TZ86("LD R12,%C9(R8)",  0xC7, 0xC8, 0xC9);
     TZ88("LD R12,%C9(R8)",  0x87, 0xC8, 0xC9);
     TZ86("LD %D9(R8),R13",  0xD7, 0xD8, 0xD9);
@@ -732,7 +732,7 @@ static void test_indexed() {
     TZ88("LDE   @RR4,  R3", 0xD3, 0x35);
 }
 
-static void test_bit_operation() {
+void test_bit_operation() {
     TEST("BITC R5,#4", 0x57, 0x58);
     TEST("BITR R7,#4", 0x77, 0x78);
     TEST("BITS R8,#4", 0x77, 0x89);
@@ -760,7 +760,7 @@ static void test_bit_operation() {
     TEST("BTJRT $,R3,#4", 0x37, 0x39, 0xFD);
 }
 
-static void test_setrp() {
+void test_setrp() {
     TEST("SETRP -1");
     TEST("LD  %01,R4",   0x49, 0x01);
     TEST("LD  %01,%0E",  0xE4, 0x0E, 0x01);
@@ -942,7 +942,7 @@ static void test_setrp() {
     TZ88("SRP1 #%18",                              0x31, 0x19);
 }
 
-static void test_comment() {
+void test_comment() {
     COMM(" RET             ; comment", "; comment", 0xAF);
     COMM(" JP  ULE , %3E3F ; comment", "; comment", 0x3D, 0x3E, 0x3F);
     COMM(" JP  %8E8F       ; comment", "; comment", 0x8D, 0x8E, 0x8F);
@@ -977,7 +977,7 @@ static void test_comment() {
     COMM("DL %12345678 ; comment", "; comment", 0x12, 0x34, 0x56, 0x78);
 }
 
-static void test_undef() {
+void test_undef() {
     ERUS("JP C,UNDEF", "UNDEF", 0x7D, 0x00, 0x00);
     ERUS("JP   UNDEF", "UNDEF", 0x8D, 0x00, 0x00);
     if (z86()) {
@@ -1005,7 +1005,7 @@ static void test_undef() {
     }
 }
 
-static void test_error() {
+void test_error() {
     ERRT("JP   @11",    OPERAND_NOT_ALLOWED, "@11");
     ERRT("CALL @0e5h",  OPERAND_NOT_ALLOWED, "@0e5h");
     ERRT("JP   @r0",    OPERAND_NOT_ALLOWED, "@r0");
@@ -1021,7 +1021,7 @@ static void test_error() {
     EZ88("BXOR R2,R8,#-1", ILLEGAL_BIT_NUMBER, "#-1", 0x27, 0x2E, 0xC8);
 }
 
-static void test_data_constant() {
+void test_data_constant() {
     TEST("DB -128, 255", 0x80, 0xFF);
     TEST(R"(DB 'A', '"')", 0x41, 0x22);
     TEST("DB '9'-'0'",   0x09);

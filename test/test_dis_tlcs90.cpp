@@ -24,11 +24,11 @@ using namespace libasm::test;
 DisTlcs90 dis90;
 Disassembler &disassembler(dis90);
 
-static void set_up() {
+void set_up() {
     disassembler.reset();
 }
 
-static void tear_down() {
+void tear_down() {
     symtab.reset();
 }
 
@@ -38,7 +38,7 @@ void test_cpu() {
     EQUALS_P("get cpu", "TLCS90", disassembler.config().cpu_P());
 }
 
-static void test_8bit_transfer() {
+void test_8bit_transfer() {
     // LD A, r
     TEST("LD", "A, B", 0x20);
     TEST("LD", "A, C", 0x21);
@@ -337,7 +337,7 @@ static void test_8bit_transfer() {
     TEST("LD", "(0FF78H), 9AH", 0x37, 0x78, 0x9A);
 }
 
-static void test_16bit_transfer() {
+void test_16bit_transfer() {
     // LD HL, rr
     TEST("LD", "HL, BC", 0x40);
     TEST("LD", "HL, DE", 0x41);
@@ -657,7 +657,7 @@ static void test_16bit_transfer() {
     ATEST(0x1000, "LDAR", "HL, 9001H", 0x17, 0xFF, 0x7F);
 }
 
-static void test_exchange() {
+void test_exchange() {
     TEST("EX", "DE, HL",  0x08);
     TEST("EX", "AF, AF'", 0x09);
     TEST("EXX", "",       0x0A);
@@ -745,7 +745,7 @@ static void test_exchange() {
     TEST("EX", "(0FFBCH), SP", 0xE7, 0xBC, 0x56);
 }
 
-static void test_block() {
+void test_block() {
     TEST("LDI",  "", 0xFE, 0x58);
     TEST("LDIR", "", 0xFE, 0x59);
     TEST("LDD",  "", 0xFE, 0x5A);
@@ -756,7 +756,7 @@ static void test_block() {
     TEST("CPDR", "", 0xFE, 0x5F);
 }
 
-static void test_8bit_arithmetic() {
+void test_8bit_arithmetic() {
     TEST("DAA", "A", 0x0B);
     TEST("CPL", "A", 0x10);
     TEST("NEG", "A", 0x11);
@@ -1127,7 +1127,7 @@ static void test_8bit_arithmetic() {
     TEST("DECX", "(0FF12H)", 0x0F, 0x12);
 }
 
-static void test_16bit_arithmetic() {
+void test_16bit_arithmetic() {
     TEST("ADD", "HL, BC", 0xF8, 0x70);
     TEST("ADD", "HL, DE", 0xF9, 0x70);
     TEST("ADD", "HL, HL", 0xFA, 0x70);
@@ -1399,7 +1399,7 @@ static void test_16bit_arithmetic() {
     TEST("DECW", "(HL+A)",   0xF3, 0x9F);
 }
 
-static void test_cpu_control() {
+void test_cpu_control() {
     TEST("NOP",  "", 0x00);
     TEST("HALT", "", 0x01);
     TEST("DI",   "", 0x02);
@@ -1410,7 +1410,7 @@ static void test_cpu_control() {
     TEST("SWI",  "", 0xFF);
 }
 
-static void test_shift_rotate() {
+void test_shift_rotate() {
     TEST("RLCA", "", 0xA0);
     TEST("RLC", "B", 0xF8, 0xA0);
     TEST("RLC", "C", 0xF9, 0xA0);
@@ -1606,7 +1606,7 @@ static void test_shift_rotate() {
     TEST("RRD", "(HL+A)",   0xF3, 0x11);
 }
 
-static void test_bitops() {
+void test_bitops() {
     TEST("BIT", "0, B", 0xF8, 0xA8);
     TEST("BIT", "1, C", 0xF9, 0xA9);
     TEST("BIT", "2, D", 0xFA, 0xAA);
@@ -1692,7 +1692,7 @@ static void test_bitops() {
     TEST("TSET", "3, (HL+A)",   0xF3, 0x1B);
 }
 
-static void test_jump_call() {
+void test_jump_call() {
     ATEST(0x1000, "JR",  "F, 1002H",   0xC0, 0x00);
     ATEST(0x1000, "JR",  "LT, 1000H",  0xC1, 0xFE);
     ATEST(0x1000, "JR",  "LE, 0F82H",  0xC2, 0x80);
@@ -1795,7 +1795,7 @@ static void test_jump_call() {
 }
 // clang-format on
 
-static int prefix_operand(const Config::opcode_t prefix) {
+int prefix_operand(const Config::opcode_t prefix) {
     if (prefix == 0xE3 || prefix == 0xEB)
         return 2;  // extended
     if (prefix == 0xE7 || prefix == 0xEF)
@@ -1807,7 +1807,7 @@ static int prefix_operand(const Config::opcode_t prefix) {
     return 0;
 }
 
-static void assert_prefix(const Config::opcode_t prefix, const Config::opcode_t opc) {
+void assert_prefix(const Config::opcode_t prefix, const Config::opcode_t opc) {
     if ((prefix >= 0xE0 && prefix <= 0xE7) || (prefix >= 0xF0 && prefix <= 0xF3)) {
         // TABLE_SRC
         if (opc >= 0x10 && opc <= 0x1F && opc != 0x17)
@@ -1890,7 +1890,7 @@ static void assert_prefix(const Config::opcode_t prefix, const Config::opcode_t 
 }
 
 // clang-format off
-static void test_illegal() {
+void test_illegal() {
     static constexpr Config::opcode_t illegals[] = {
         0x04, 0x05, 0x06,
         0x3B,

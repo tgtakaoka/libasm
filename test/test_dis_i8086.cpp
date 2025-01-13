@@ -24,23 +24,23 @@ using namespace libasm::test;
 DisI8086 dis8086;
 Disassembler &disassembler(dis8086);
 
-static bool v30() {
+bool v30() {
     return strcmp_P("V30", disassembler.config().cpu_P()) == 0;
 }
 
-static bool is80186() {
+bool is80186() {
     return strcmp_P("80186", disassembler.config().cpu_P()) == 0 || v30();
 }
 
-static bool is8086() {
+bool is8086() {
     return strcmp_P("8086", disassembler.config().cpu_P()) == 0;
 }
 
-static void set_up() {
+void set_up() {
     disassembler.reset();
 }
 
-static void tear_down() {
+void tear_down() {
     symtab.reset();
 }
 
@@ -62,7 +62,7 @@ void test_cpu() {
     EQUALS_P("cpu V30", "V30", disassembler.config().cpu_P());
 }
 
-static void test_data_transfer() {
+void test_data_transfer() {
     TEST("MOV", "AL, CL",            0x88, 0310);
     TEST("MOV", "DL, BL",            0x88, 0332);
     TEST("MOV", "AH, CH",            0x88, 0354);
@@ -241,7 +241,7 @@ static void test_data_transfer() {
     TEST("POPF",  "", 0x9D);
 }
 
-static void test_arithmetic() {
+void test_arithmetic() {
     TEST("ADD", "AL, CL",            0x00, 0310);
     TEST("ADD", "DL, BL",            0x00, 0332);
     TEST("ADD", "AH, CH",            0x00, 0354);
@@ -754,7 +754,7 @@ static void test_arithmetic() {
     TEST("CWD", "", 0x99);
 }
 
-static void test_logic() {
+void test_logic() {
     TEST("NOT", "CH",                     0xF6, 0325);
     TEST("NOT", "BYTE PTR [SI]",          0xF6, 0024);
     TEST("NOT", "BYTE PTR [1234H]",       0xF6, 0026, 0x34, 0x12);
@@ -1485,7 +1485,7 @@ static void test_logic() {
     }
 }
 
-static void test_string_manipulation() {
+void test_string_manipulation() {
     disassembler.setOption("string-insn", "false");
     TEST("REPNE", "", 0xF2);
     TEST("REP",   "", 0xF3);
@@ -1568,7 +1568,7 @@ static void test_string_manipulation() {
     }
 }
 
-static void test_control_transfer() {
+void test_control_transfer() {
     disassembler.setOption("relative", "off");
 
     ATEST(0x01000, "CALL", "01082H",                             0xE8, 0x7F, 0x00);
@@ -1689,7 +1689,7 @@ static void test_control_transfer() {
     }
 }
 
-static void test_processor_control() {
+void test_processor_control() {
     TEST("CLC",  "", 0xF8);
     TEST("CMC",  "", 0xF5);
     TEST("STC",  "", 0xF9);
@@ -1703,7 +1703,7 @@ static void test_processor_control() {
     TEST("NOP",  "", 0x90);
 }
 
-static void test_segment_override() {
+void test_segment_override() {
     TEST("SEGES", "", 0x26);
     TEST("SEGCS", "", 0x2E);
     TEST("SEGSS", "", 0x36);
@@ -1785,7 +1785,7 @@ static void test_segment_override() {
 
 #if !defined(LIBASM_I8086_NOFPU)
 
-static void test_float() {
+void test_float() {
     TEST("FINIT", "", 0x9B, 0xDB, 0xE3);
 
     TEST("FLDCW", "[SI]",          0x9B, 0xD9, 0054);
@@ -2327,7 +2327,7 @@ static void test_float() {
     TEST("FFREE", "ST(7)", 0x9B, 0xDD, 0xC7);
 }
 
-static void test_float_nowait() {
+void test_float_nowait() {
     TEST("FNINIT", "",      0xDB, 0xE3);
     TEST("FNLDCW", "[SI]",  0xD9, 0054);
     TEST("FNSTCW", "[SI]",  0xD9, 0074);
@@ -2446,7 +2446,7 @@ static void test_float_nowait() {
 
 // clang-format on
 
-static void test_illegal() {
+void test_illegal() {
     if (v30()) {
         for (Config::opcode_t opc = 0; opc < 0xFF; opc++) {
             if (opc >= 0x12 && opc < 0x18)

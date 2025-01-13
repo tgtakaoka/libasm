@@ -24,13 +24,11 @@ using namespace libasm::test;
 DisF3850 dis3850;
 Disassembler &disassembler(dis3850);
 
-static void set_up() {
+void set_up() {
     disassembler.reset();
-    disassembler.setCpu("F3850");
-    disassembler.setOption("relative", "off");
 }
 
-static void tear_down() {
+void tear_down() {
     symtab.reset();
 }
 

@@ -24,11 +24,11 @@ using namespace libasm::test;
 AsmZ80 asz80;
 Assembler &assembler(asz80);
 
-static void set_up() {
+void set_up() {
     assembler.reset();
 }
 
-static void tear_down() {
+void tear_down() {
     symtab.reset();
 }
 
@@ -38,7 +38,7 @@ void test_cpu() {
     EQUALS_P("get cpu", "Z80", assembler.config().cpu_P());
 }
 
-static void test_move_inherent() {
+void test_move_inherent() {
     TEST("LD B,B", 0x40);
     TEST("LD B,C", 0x41);
     TEST("LD B,D", 0x42);
@@ -139,7 +139,7 @@ static void test_move_inherent() {
     TEST("OTDR", 0xED, 0xBB);
 }
 
-static void test_move_immediate() {
+void test_move_immediate() {
     TEST("LD B,0F6H", 0x06, 0xF6);
     TEST("LD C,9FH",  0x0E, 0x9F);
     TEST("LD D,3AH",  0x16, 0x3A);
@@ -167,7 +167,7 @@ static void test_move_immediate() {
     TEST("LD C, max?255", 0x0E, 0xFF);
 }
 
-static void test_move_direct() {
+void test_move_direct() {
     TEST("LD (9ABCH),A", 0x32, 0xBC, 0x9A);
     TEST("LD A,(1234H)", 0x3A, 0x34, 0x12);
 
@@ -182,7 +182,7 @@ static void test_move_direct() {
     TEST("LD SP,(05678H)", 0xED, 0x7B, 0x78, 0x56);
 }
 
-static void test_stack_op() {
+void test_stack_op() {
     TEST("PUSH BC", 0xC5);
     TEST("PUSH DE", 0xD5);
     TEST("PUSH HL", 0xE5);
@@ -203,7 +203,7 @@ static void test_stack_op() {
     TEST("EXX",       0xD9);
 }
 
-static void test_jump_call() {
+void test_jump_call() {
     TEST("JP 1234H",    0xC3, 0x34, 0x12);
     TEST("jp nz,1234h", 0xC2, 0x34, 0x12);
     TEST("JP Z,1234H",  0xCA, 0x34, 0x12);
@@ -244,7 +244,7 @@ static void test_jump_call() {
     ERRT("IM -1", ILLEGAL_OPERAND, "-1", 0xED, 0x46);
 }
 
-static void test_incr_decr() {
+void test_incr_decr() {
     TEST("INC B", 0x04);
     TEST("INC C", 0x0C);
     TEST("INC D", 0x14);
@@ -273,7 +273,7 @@ static void test_incr_decr() {
     TEST("DEC SP", 0x3B);
 }
 
-static void test_alu_register() {
+void test_alu_register() {
     TEST("ADD A,B", 0x80);
     TEST("ADD A,C", 0x81);
     TEST("ADD A,D", 0x82);
@@ -401,7 +401,7 @@ static void test_alu_register() {
     TEST("SBC HL,SP", 0xED, 0x72);
 }
 
-static void test_alu_immediate() {
+void test_alu_immediate() {
     TEST("ADD A,10B",  0xC6, 0x02);
     TEST("ADC A,255",  0xCE, 0xFF);
     TEST("SUB A,-2",   0xD6, 0xFE);
@@ -417,7 +417,7 @@ static void test_alu_immediate() {
     TEST("CP  -128", 0xFE, 0x80);
 }
 
-static void test_io() {
+void test_io() {
     TEST("OUT (0F1H),A", 0xD3, 0xF1);
     TEST("IN A,(0F0H)",  0xDB, 0xF0);
     ERRT("IN A,(-1)",    OVERFLOW_RANGE, "(-1)",  0xDB, 0xFF);
@@ -442,7 +442,7 @@ static void test_io() {
     TEST("OUT (C),A", 0xED, 0x79);
 }
 
-static void test_inherent() {
+void test_inherent() {
     TEST("DI", 0xF3);
     TEST("EI", 0xFB);
 
@@ -462,7 +462,7 @@ static void test_inherent() {
     TEST("NEG", 0xED, 0x44);
 }
 
-static void test_restart() {
+void test_restart() {
     TEST("RST 00H", 0xC7);
     TEST("RST 08H", 0xCF);
     TEST("RST 10H", 0xD7);
@@ -476,7 +476,7 @@ static void test_restart() {
     ERRT("RST -1",  ILLEGAL_OPERAND, "-1",  0xC7);
 }
 
-static void test_relative() {
+void test_relative() {
     ATEST(0x1000, "DJNZ 1000H",  0x10, 0xFE);
     ATEST(0x1000, "DJNZ 1081H",  0x10, 0x7F);
     ATEST(0x1000, "DJNZ 0F82H",  0x10, 0x80);
@@ -494,7 +494,7 @@ static void test_relative() {
     ATEST(0x1000, "JR $+80H",    0x18, 0x7E);
 }
 
-static void test_shift() {
+void test_shift() {
     TEST("RLC B", 0xCB, 0x00);
     TEST("RLC C", 0xCB, 0x01);
     TEST("RLC D", 0xCB, 0x02);
@@ -562,7 +562,7 @@ static void test_shift() {
     TEST("RLD", 0xED, 0x6F);
 }
 
-static void test_bitop() {
+void test_bitop() {
     TEST("BIT 0,B", 0xCB, 0x40);
     TEST("BIT 1,C", 0xCB, 0x49);
     TEST("BIT 2,D", 0xCB, 0x52);
@@ -593,7 +593,7 @@ static void test_bitop() {
     TEST("SET 7,A", 0xCB, 0xFF);
 }
 
-static void test_index_registers() {
+void test_index_registers() {
     TEST("ADD IX,BC", 0xDD, 0x09);
     TEST("ADD IX,DE", 0xDD, 0x19);
     TEST("ADD IX,IX", 0xDD, 0x29);
@@ -625,7 +625,7 @@ static void test_index_registers() {
     TEST("LD SP,IY",   0xFD, 0xF9);
 }
 
-static void test_indexed() {
+void test_indexed() {
     TEST("INC (IX+2)",   0xDD, 0x34, 0x02);
     TEST("DEC (IX+2)",   0xDD, 0x35, 0x02);
     ERRT("INC (IX+128)", OVERFLOW_RANGE, "(IX+128)", 0xDD, 0x34, 0x80);
@@ -701,7 +701,7 @@ static void test_indexed() {
     TEST("CP  (IY-2)", 0xFD, 0xBE, 0xFE);
 }
 
-static void test_shift_indexed() {
+void test_shift_indexed() {
     TEST("RLC (IX+127)", 0xDD, 0xCB, 0x7F, 0x06);
     TEST("RRC (IX+127)", 0xDD, 0xCB, 0x7F, 0x0E);
     TEST("RL  (IX+127)", 0xDD, 0xCB, 0x7F, 0x16);
@@ -722,7 +722,7 @@ static void test_shift_indexed() {
     TEST("SRL (IY-128)", 0xFD, 0xCB, 0x80, 0x3E);
 }
 
-static void test_bitop_indexed() {
+void test_bitop_indexed() {
     TEST("BIT 0,(IX-128)", 0xDD, 0xCB, 0x80, 0x46);
     TEST("RES 1,(IX-128)", 0xDD, 0xCB, 0x80, 0x8E);
     TEST("SET 2,(IX-128)", 0xDD, 0xCB, 0x80, 0xD6);
@@ -736,7 +736,7 @@ static void test_bitop_indexed() {
     TEST("SET 7,(IY+127)", 0xFD, 0xCB, 0x7F, 0xFE);
 }
 
-static void test_comment() {
+void test_comment() {
     COMM("RST 18H        ; comment", "; comment", 0xDF);
     COMM("LD B , B       ; comment", "; comment", 0x40);
     COMM("NOP            ; comment", "; comment", 0x00);
@@ -762,7 +762,7 @@ static void test_comment() {
     ACOMM(0x1000, "JR NZ , 1004H; comment", "; comment", 0x20, 0x02);
 }
 
-static void test_undefined_symbol() {
+void test_undefined_symbol() {
     ERUS("LD  B,UNDEF",   "UNDEF",     0x06, 0x00);
     ERUS("LD BC,UNDEF",   "UNDEF",     0x01, 0x00, 0x00);
     ERUS("LD (UNDEF),A",  "UNDEF),A",  0x32, 0x00, 0x00);
@@ -806,7 +806,7 @@ static void test_undefined_symbol() {
     COMM("DEFW -128, 255 ; comment", "; comment", 0x80, 0xFF, 0xFF, 0x00);
 }
 
-static void test_data_constant() {
+void test_data_constant() {
     TEST("DB -128, 255", 0x80, 0xFF);
     TEST(R"(DB 'A', '"')", 0x41, 0x22);
     TEST("DB '9'-'0'",   0x09);

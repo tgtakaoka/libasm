@@ -24,11 +24,11 @@ using namespace libasm::test;
 AsmI8096 asm8096;
 Assembler &assembler(asm8096);
 
-static void set_up() {
+void set_up() {
     assembler.reset();
 }
 
-static void tear_down() {
+void tear_down() {
     symtab.reset();
 }
 
@@ -42,7 +42,7 @@ void test_cpu() {
 }
 
 
-static void test_2_operands() {
+void test_2_operands() {
     TEST("ADD   52, 18",                                  0x64, 0x12, 0x34);
     ERRT("ADD   52, 19",   OPERAND_NOT_ALIGNED, "19",     0x64, 0x13, 0x34);
     ERRT("ADD   53, 18",   OPERAND_NOT_ALIGNED, "53, 18", 0x64, 0x12, 0x35);
@@ -193,7 +193,7 @@ static void test_2_operands() {
     TEST("XORB  69, 3423H[18]",   0x97, 0x13, 0x23, 0x34, 0x45);
 }
 
-static void test_3_operands() {
+void test_3_operands() {
     TEST("ADD   86, 52, 18",                                    0x44, 0x12, 0x34, 0x56);
     ERRT("ADD   86, 52, 19", OPERAND_NOT_ALIGNED, "19",         0x44, 0x13, 0x34, 0x56);
     ERRT("ADD   86, 53, 18", OPERAND_NOT_ALIGNED, "53, 18",     0x44, 0x12, 0x35, 0x56);
@@ -273,7 +273,7 @@ static void test_3_operands() {
     TEST("ANDB  86, 69, 3423H[18]",   0x53, 0x13, 0x23, 0x34, 0x45, 0x56);
 }
 
-static void test_move() {
+void test_move() {
     TEST("LD    52, 18",                                0xA0, 0x12, 0x34);
     ERRT("LD    52, 19", OPERAND_NOT_ALIGNED, "19",     0xA0, 0x13, 0x34);
     ERRT("LD    53, 18", OPERAND_NOT_ALIGNED, "53, 18", 0xA0, 0x12, 0x35);
@@ -354,7 +354,7 @@ static void test_move() {
     TEST("LD    86, #A_?9", 0xA1, 0x34, 0x12, 0x56);
 }
 
-static void test_branch() {
+void test_branch() {
     ATEST(0x2000, "SJMP 2002H",   0x20, 0x00);
     ATEST(0x2000, "SJMP 2200H",   0x21, 0xFE);
     ATEST(0x2000, "SJMP 2202H",   0x22, 0x00);
@@ -452,7 +452,7 @@ static void test_branch() {
     AERRT(0x2000, "JBS 18, -1, 2003H", ILLEGAL_BIT_NUMBER, "-1, 2003H", 0x3F, 0x12, 0x00);
 }
 
-static void test_smart_branch() {
+void test_smart_branch() {
     TEST("option smart-branch, on");
 
     ATEST(0x2000, "SJMP 2002H", 0x20, 0x00);
@@ -509,7 +509,7 @@ static void test_smart_branch() {
     AERRT(0x2000, "JBS 18, 7, 1F82H", OPERAND_TOO_FAR, "1F82H", 0x3F, 0x12, 0x7F);
 }
 
-static void test_modify() {
+void test_modify() {
     TEST("DEC  6",                           0x05, 0x06);
     ERRT("DEC  9", OPERAND_NOT_ALIGNED, "9", 0x05, 0x09);
     TEST("DECB 7", 0x15, 0x07);
@@ -559,7 +559,7 @@ static void test_modify() {
     ERRT("NORML 23, 19", OPERAND_NOT_ALIGNED, "23, 19", 0x0F, 0x13, 0x17);
 }
 
-static void test_control() {
+void test_control() {
     TEST("SETC  ",  0xF9);
     TEST("CLRC  ",  0xF8);
     TEST("CLRVT ",  0xFC);
@@ -571,7 +571,7 @@ static void test_control() {
     TEST("TRAP  ",  0xF7);
 }
 
-static void test_comment() {
+void test_comment() {
     COMM("SUB 52, 18         ; comment", "; comment", 0x68, 0x12, 0x34);
     COMM("SUB 86, #3412H     ; comment", "; comment", 0x69, 0x12, 0x34, 0x56);
     COMM("SUB 52, [18]       ; comment", "; comment", 0x6A, 0x12, 0x34);
@@ -583,7 +583,7 @@ static void test_comment() {
     COMM("DCL 12345678H  ; comment", "; comment", 0x78, 0x56, 0x34, 0x12);
 }
 
-static void test_undef() {
+void test_undef() {
     ERUS("SKIP UNDEF", "UNDEF", 0x00, 0x00);
 
     ERUS("ADD UNDEF, 18",      "UNDEF, 18",      0x64, 0x12, 0x00);
@@ -624,7 +624,7 @@ static void test_undef() {
     AERUS(0x2000, "LCALL UNDEF", "UNDEF", 0xEF, 0x00, 0x00);
 }
 
-static void test_data_constant() {
+void test_data_constant() {
     TEST("DCB -128, 255", 0x80, 0xFF);
     TEST(R"(DCB 'A', '"')", 0x41, 0x22);
     TEST("DCB '9'-'0'",   0x09);

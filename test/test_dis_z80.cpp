@@ -24,11 +24,11 @@ using namespace libasm::test;
 DisZ80 disz80;
 Disassembler &disassembler(disz80);
 
-static void set_up() {
+void set_up() {
     disassembler.reset();
 }
 
-static void tear_down() {
+void tear_down() {
     symtab.reset();
 }
 
@@ -38,7 +38,7 @@ void test_cpu() {
     EQUALS_P("get cpu", "Z80", disassembler.config().cpu_P());
 }
 
-static void test_move_inherent() {
+void test_move_inherent() {
     TEST("LD", "B, B", 0x40);
     TEST("LD", "B, C", 0x41);
     TEST("LD", "B, D", 0x42);
@@ -135,7 +135,7 @@ static void test_move_inherent() {
     TEST("OTDR", "",  0xED, 0xBB);
 }
 
-static void test_move_immediate() {
+void test_move_immediate() {
     TEST("LD", "B, 0F6H", 0x06, 0xF6);
     TEST("LD", "C, 9FH",  0x0E, 0x9F);
     TEST("LD", "D, 3AH",  0x16, 0x3A);
@@ -154,7 +154,7 @@ static void test_move_immediate() {
     NMEM("LD", "SP, 0",         "0", 0x31);
 }
 
-static void test_move_direct() {
+void test_move_direct() {
     TEST("LD", "(9ABCH), A", 0x32, 0xBC, 0x9A);
     TEST("LD", "A, (1234H)", 0x3A, 0x34, 0x12);
 
@@ -172,7 +172,7 @@ static void test_move_direct() {
     NMEM("",   "",                   "", 0xED);
 }
 
-static void test_stack_op() {
+void test_stack_op() {
     TEST("PUSH", "BC", 0xC5);
     TEST("PUSH", "DE", 0xD5);
     TEST("PUSH", "HL", 0xE5);
@@ -191,7 +191,7 @@ static void test_stack_op() {
     TEST("EXX", "",       0xD9);
 }
 
-static void test_jump_call() {
+void test_jump_call() {
     TEST("JP", "1234H",  0xC3, 0x34, 0x12);
     TEST("JP", "NZ, 1234H",  0xC2, 0x34, 0x12);
     TEST("JP",  "Z, 1234H",  0xCA, 0x34, 0x12);
@@ -230,7 +230,7 @@ static void test_jump_call() {
     TEST("IM",   "2", 0xED, 0x5E);
 }
 
-static void test_incr_decr() {
+void test_incr_decr() {
     TEST("INC", "B",   0x04);
     TEST("INC", "C",   0x0C);
     TEST("INC", "D",   0x14);
@@ -259,7 +259,7 @@ static void test_incr_decr() {
     TEST("DEC", "SP", 0x3B);
 }
 
-static void test_alu_register() {
+void test_alu_register() {
     TEST("ADD", "A, B", 0x80);
     TEST("ADD", "A, C", 0x81);
     TEST("ADD", "A, D", 0x82);
@@ -347,7 +347,7 @@ static void test_alu_register() {
     TEST("SBC", "HL, SP", 0xED, 0x72);
 }
 
-static void test_alu_immediate() {
+void test_alu_immediate() {
     TEST("ADD", "A, 1",    0xC6, 0x01);
     TEST("ADC", "A, 0FFH", 0xCE, 0xFF);
     TEST("SUB", "A, 2",    0xD6, 0x02);
@@ -358,7 +358,7 @@ static void test_alu_immediate() {
     TEST("CP",  "A, 0",    0xFE, 0x00);
 }
 
-static void test_io() {
+void test_io() {
     TEST("OUT", "(0F1H), A", 0xD3, 0xF1);
     TEST("IN",  "A, (0F0H)", 0xDB, 0xF0);
 
@@ -379,7 +379,7 @@ static void test_io() {
     TEST("OUT", "(C), A", 0xED, 0x79);
 }
 
-static void test_inherent() {
+void test_inherent() {
     TEST("DI",   "", 0xF3);
     TEST("EI",   "", 0xFB);
 
@@ -399,7 +399,7 @@ static void test_inherent() {
     TEST("NEG", "", 0xED, 0x44);
 }
 
-static void test_restart() {
+void test_restart() {
     TEST("RST", "0",   0xC7);
     TEST("RST", "8",   0xCF);
     TEST("RST", "16",  0xD7);
@@ -410,7 +410,7 @@ static void test_restart() {
     TEST("RST", "38H", 0xFF);
 }
 
-static void test_relative() {
+void test_relative() {
     ATEST(0x1000, "DJNZ", "1000H",    0x10, 0xFE);
     ATEST(0x1000, "JR",   "1000H",    0x18, 0xFE);
     ATEST(0x1000, "JR",   "NZ, 1004H", 0x20, 0x02);
@@ -425,7 +425,7 @@ static void test_relative() {
     ATEST(0x2000, "JR", "$+129", 0x18, 0x7F);
 }
 
-static void test_shift() {
+void test_shift() {
     TEST("RLC", "B", 0xCB, 0x00);
     TEST("RLC", "C", 0xCB, 0x01);
     TEST("RLC", "D", 0xCB, 0x02);
@@ -493,7 +493,7 @@ static void test_shift() {
     TEST("RLD", "", 0xED, 0x6F);
 }
 
-static void test_bitop() {
+void test_bitop() {
     TEST("BIT", "0, B", 0xCB, 0x40);
     TEST("BIT", "1, C", 0xCB, 0x49);
     TEST("BIT", "2, D", 0xCB, 0x52);
@@ -522,7 +522,7 @@ static void test_bitop() {
     TEST("SET", "7, A", 0xCB, 0xFF);
 }
 
-static void test_index_registers() {
+void test_index_registers() {
     TEST("ADD", "IX, BC", 0xDD, 0x09);
     TEST("ADD", "IX, DE", 0xDD, 0x19);
     TEST("ADD", "IX, IX", 0xDD, 0x29);
@@ -554,7 +554,7 @@ static void test_index_registers() {
     TEST("LD",  "SP, IY",   0xFD, 0xF9);
 }
 
-static void test_indexed() {
+void test_indexed() {
     TEST("INC", "(IX+2)", 0xDD, 0x34, 0x02);
     TEST("DEC", "(IX+2)", 0xDD, 0x35, 0x02);
     NMEM("DEC", "(IX+0)", "+0)", 0xDD, 0x35);
@@ -620,7 +620,7 @@ static void test_indexed() {
     TEST("CP",  "A, (IY-2)", 0xFD, 0xBE, 0xFE);
 }
 
-static void test_shift_indexed() {
+void test_shift_indexed() {
     TEST("RLC", "(IX+127)", 0xDD, 0xCB, 0x7F, 0x06);
     TEST("RRC", "(IX+127)", 0xDD, 0xCB, 0x7F, 0x0E);
     TEST("RL",  "(IX+127)", 0xDD, 0xCB, 0x7F, 0x16);
@@ -641,7 +641,7 @@ static void test_shift_indexed() {
     TEST("SRL", "(IY-128)", 0xFD, 0xCB, 0x80, 0x3E);
 }
 
-static void test_bitop_indexed() {
+void test_bitop_indexed() {
     TEST("BIT", "0, (IX-128)", 0xDD, 0xCB, 0x80, 0x46);
     TEST("RES", "1, (IX-128)", 0xDD, 0xCB, 0x80, 0x8E);
     TEST("SET", "2, (IX-128)", 0xDD, 0xCB, 0x80, 0xD6);
@@ -654,7 +654,7 @@ static void test_bitop_indexed() {
     NMEM("",    "",  "",       0xFD);
 }
 
-static void test_illegal() {
+void test_illegal() {
     for (Config::opcode_t opc = 0x30; opc < 0x38; opc++)
         UNKN(0xCB, opc);
     for (Config::opcode_t opc = 0x00; opc < 0x40; opc++)

@@ -25,32 +25,31 @@ using namespace libasm::test;
 DisTms9900 dis9900;
 Disassembler &disassembler(dis9900);
 
-static bool is99110() {
+bool is99110() {
     return strcmp_P("99110", disassembler.config().cpu_P()) == 0;
 }
 
-static bool is99105() {
+bool is99105() {
     return strcmp_P("99105", disassembler.config().cpu_P()) == 0;
 }
 
-static bool is9980() {
+bool is9980() {
     return strcmp_P("9980", disassembler.config().cpu_P()) == 0;
 }
 
-static bool is9900() {
+bool is9900() {
     return strcmp_P("9900", disassembler.config().cpu_P()) == 0 || is9980();
 }
 
-static bool is9995() {
+bool is9995() {
     return strcmp_P("9995", disassembler.config().cpu_P()) == 0;
 }
 
-static void set_up() {
+void set_up() {
     disassembler.reset();
-    disassembler.setOption("relative", "false");
 }
 
-static void tear_down() {
+void tear_down() {
     symtab.reset();
 }
 
@@ -81,7 +80,7 @@ void test_cpu() {
     EQUALS_P("cpu TMS99105", "99105", disassembler.config().cpu_P());
 }
 
-static void test_inh() {
+void test_inh() {
     TEST("IDLE", "", 0x0340);
     TEST("RSET", "", 0x0360);
     TEST("RTWP", "", 0x0380);
@@ -115,7 +114,7 @@ static void test_inh() {
     }
 }
 
-static void test_imm() {
+void test_imm() {
     TEST("LWPI", ">1234",  0x02E0, 0x1234);
     TEST("LIMI", ">89AB",  0x0300, 0x89AB);
     NMEM("LIMI", "0", "0", 0x0300);
@@ -127,7 +126,7 @@ static void test_imm() {
     TEST("LIMI", "sym89AB", 0x0300, 0x89AB);
 }
 
-static void test_reg() {
+void test_reg() {
     TEST("STWP", "R14", 0x02AE);
     TEST("STST", "R15", 0x02CF);
 
@@ -141,7 +140,7 @@ static void test_reg() {
     }
 }
 
-static void test_reg_imm() {
+void test_reg_imm() {
     TEST("LI",   "R0, 0",       0x0200, 0x0000);
     TEST("AI",   "R1, 10",      0x0221, 0x000A);
     TEST("ANDI", "R8, >00FF",   0x0248, 0x00FF);
@@ -161,14 +160,14 @@ static void test_reg_imm() {
     }
 }
 
-static void test_cnt_reg() {
+void test_cnt_reg() {
     TEST("SRA",  "R1, R0",  0x0801);
     TEST("SRL",  "R4, 12",  0x09C4);
     TEST("SLA",  "R8, 4",   0x0A48);
     TEST("SRC",  "R9, 15",  0x0BF9);
 }
 
-static void test_src() {
+void test_src() {
     TEST("BLWP", "@>3876",  0x0420, 0x3876);
     NMEM("BLWP", "@0", "0", 0x0420);
     TEST("RT",   "",        0x045B);
@@ -261,7 +260,7 @@ static void test_src() {
     }
 }
 
-static void test_reg_src() {
+void test_reg_src() {
     TEST("COC", "R1, R2",         0x2081);
     TEST("CZC", "@>1234(R3), R7", 0x25E3, 0x1234);
     TEST("XOR", "@2(R5), R4",     0x2925, 0x0002);
@@ -275,7 +274,7 @@ static void test_reg_src() {
     TEST("XOR", "@offset2(R5), R4", 0x2925, 0x0002);
 }
 
-static void test_cnt_src() {
+void test_cnt_src() {
     TEST("LDCR", "*R13+, 16",  0x303D);
     TEST("STCR", "@2(R4), 15", 0x37E4, 0x0002);
 
@@ -304,7 +303,7 @@ static void test_cnt_src() {
     }
 }
 
-static void test_xop_src() {
+void test_xop_src() {
     TEST("XOP",  "@>3876, 0",  0x2C20, 0x3876);
     TEST("XOP",  "@>3876, 15", 0x2FE0, 0x3876);
 
@@ -317,7 +316,7 @@ static void test_xop_src() {
     TEST("XOP",  "@>1234(R1), xop10", 0x2EA1, 0x1234);
 }
 
-static void test_dst_src() {
+void test_dst_src() {
     TEST("SZC",  "@>1234(R10), @>5678(R11)", 0x4AEA, 0x1234, 0x5678);
     TEST("SZCB", "@>1234, @>3456",           0x5820, 0x1234, 0x3456);
     TEST("S",    "*R10, *R11",               0x66DA);
@@ -394,7 +393,7 @@ static void test_dst_src() {
     }
 }
 
-static void test_rel() {
+void test_rel() {
     ATEST(0x1000, "JMP", ">1004", 0x1001);
     ATEST(0x1000, "JLT", ">1000", 0x11FF);
     ATEST(0x1000, "JLE", ">1100", 0x127F);
@@ -426,7 +425,7 @@ static void test_rel() {
     ATEST(0x1000, "JEQ", "sym0F02", 0x1380);
 }
 
-static void test_cru_off() {
+void test_cru_off() {
     TEST("SBO", "0",    0x1D00);
     TEST("SBZ", "127",  0x1E7F);
     TEST("TB",  "-128", 0x1F80);
@@ -446,15 +445,15 @@ struct illegal_range {
 };
 
 // 2 words instructions
-static constexpr Config::opcode_t SRAM = 0x001C;
-static constexpr Config::opcode_t SLAM = 0x001D;
-static constexpr Config::opcode_t SM   = 0x0029;
-static constexpr Config::opcode_t AM   = 0x002A;
-static constexpr Config::opcode_t TMB  = 0x0C09;
-static constexpr Config::opcode_t TCMB = 0x0C0A;
-static constexpr Config::opcode_t TSMB = 0x0C0B;
+constexpr Config::opcode_t SRAM = 0x001C;
+constexpr Config::opcode_t SLAM = 0x001D;
+constexpr Config::opcode_t SM   = 0x0029;
+constexpr Config::opcode_t AM   = 0x002A;
+constexpr Config::opcode_t TMB  = 0x0C09;
+constexpr Config::opcode_t TCMB = 0x0C0A;
+constexpr Config::opcode_t TSMB = 0x0C0B;
 
-static void test_illegal_tms9900() {
+void test_illegal_tms9900() {
     static constexpr illegal_range mids[] = {
         { 0x0000, 0x01ff },
         { 0x0210, 0x021f }, { 0x0230, 0x023f }, { 0x0250, 0x025f }, { 0x0270, 0x027f },
@@ -470,7 +469,7 @@ static void test_illegal_tms9900() {
     }
 }
 
-static void test_illegal_tms9995() {
+void test_illegal_tms9995() {
     static constexpr illegal_range mids[] = {
         { 0x0000, 0x007f }, { 0x00A0, 0x017f },
         { 0x0210, 0x021f }, { 0x0230, 0x023f }, { 0x0250, 0x025f }, { 0x0270, 0x027f },
@@ -486,7 +485,7 @@ static void test_illegal_tms9995() {
     }
 }
 
-static void test_illegal_tms99105() {
+void test_illegal_tms99105() {
     static constexpr illegal_range mids[] = {
         { 0x0000, 0x001b }, { 0x001e, 0x0028 }, { 0x002b, 0x007f }, { 0x00a0, 0x00af },
         { 0x00c0, 0x00ff },
@@ -523,7 +522,7 @@ static void test_illegal_tms99105() {
     }
 }
 
-static void test_illegal_tms99110() {
+void test_illegal_tms99110() {
     static constexpr illegal_range mids[] = {
         { 0x0000, 0x001b }, { 0x001e, 0x0028 }, { 0x002b, 0x007f }, { 0x00a0, 0x00af },
         { 0x00c0, 0x00ff },

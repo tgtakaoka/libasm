@@ -24,15 +24,15 @@ using namespace libasm::test;
 DisPdp8 dispdp8;
 Disassembler &disassembler(dispdp8);
 
-static bool hd6120() {
+bool hd6120() {
     return strcmp_P("6120", disassembler.config().cpu_P()) == 0;
 }
 
-static void set_up() {
+void set_up() {
     disassembler.reset();
 }
 
-static void tear_down() {
+void tear_down() {
     symtab.reset();
 }
 

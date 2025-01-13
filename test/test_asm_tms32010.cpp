@@ -24,15 +24,15 @@ using namespace libasm::test;
 AsmTms32010 asm32010;
 Assembler &assembler(asm32010);
 
-static bool is32010() {
+bool is32010() {
     return strcmp_P("32010", assembler.config().cpu_P()) == 0;
 }
 
-static void set_up() {
+void set_up() {
     assembler.reset();
 }
 
-static void tear_down() {
+void tear_down() {
     symtab.reset();
 }
 
@@ -45,7 +45,7 @@ void test_cpu() {
     EQUALS_P("cpu TMS32010", "32010", assembler.config().cpu_P());
 }
 
-static void test_accumrator() {
+void test_accumrator() {
     TEST("ABS", 0x7F88);
 
     TEST("ADD 70H",         0x0070);
@@ -242,7 +242,7 @@ static void test_accumrator() {
     TEST("ZALS *+, AR0", 0x66A0);
 }
 
-static void test_auxiliary() {
+void test_auxiliary() {
     TEST("LAR AR0, 70H",     0x3870);
     TEST("LAR 0,   70H",     0x3870);
     ERRT("LAR 2,   70H",     OPERAND_NOT_ALLOWED, "2,   70H");
@@ -309,7 +309,7 @@ static void test_auxiliary() {
     TEST("SAR AR1, *+, AR0", 0x31A0);
 }
 
-static void test_multiply() {
+void test_multiply() {
     TEST("APAC", 0x7F8F);
 
     TEST("LT 70H",     0x6A70);
@@ -357,7 +357,7 @@ static void test_multiply() {
     TEST("SPAC", 0x7F90);
 }
 
-static void test_branch() {
+void test_branch() {
     TEST("B 000H",  0xF900, 0x0000);
     TEST("B 001H",  0xF900, 0x0001);
     TEST("B 002H",  0xF900, 0x0002);
@@ -395,7 +395,7 @@ static void test_branch() {
     TEST("RET",  0x7F8D);
 }
 
-static void test_control() {
+void test_control() {
     TEST("DINT", 0x7F81);
     TEST("EINT", 0x7F82);
     TEST("NOP",  0x7F80);
@@ -430,7 +430,7 @@ static void test_control() {
     TEST("SST *+, AR0", 0x7CA0);
 }
 
-static void test_dataio() {
+void test_dataio() {
     TEST("DMOV 00H",     0x6900);
     TEST("DMOV 70H",     0x6970);
     TEST("DMOV *",       0x6988);
@@ -503,7 +503,7 @@ static void test_dataio() {
     ERUS("OUT *+, PA7, UNDEF", "UNDEF", 0x4FA0);
 }
 
-static void test_comment() {
+void test_comment() {
     COMM("ADDH 70H     ; comment", "; comment", 0x6070);
     COMM("ADDH *       ; comment", "; comment", 0x6088);
     COMM("ADDH *-      ; comment", "; comment", 0x6098);
@@ -519,7 +519,7 @@ static void test_comment() {
     COMM(R"(.string "TEXT" ; comment)", "; comment", 0x4554, 0x5458);
 }
 
-static void test_undef() {
+void test_undef() {
     ERUS("ADDH *+, UNDEF",    "UNDEF",        0x60A0);
     ERUS("LAC UNDEF",         "UNDEF",        0x2000);
     ERUS("LAC UNDEF, 15",     "UNDEF, 15",    0x2F00);
@@ -528,7 +528,7 @@ static void test_undef() {
     ERUS("LAC *, UNDEF, AR0", "UNDEF, AR0",   0x2080);
 }
 
-static void test_data_constant() {
+void test_data_constant() {
     BTEST(".byte -128, 255",    0x80, 0x00, 0xFF, 0x00);
     BTEST(".byte 1234H",        0x34, 0x00);
     BTEST(".word -128, 256",    0x80, 0xFF, 0x00, 0x01);

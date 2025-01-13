@@ -40,11 +40,11 @@ Assembler &assembler(asm32k);
 #define LNG3_2(insn, opr, op1, op2, op3, ...) TEST(insn " " opr, op1, op2, op3, __VA_ARGS__)
 #endif
 
-static void set_up() {
+void set_up() {
     assembler.reset();
 }
 
-static void tear_down() {
+void tear_down() {
     symtab.reset();
 }
 
@@ -73,7 +73,7 @@ static void tear_down() {
     ERRT("pmmu ns32081", UNKNOWN_OPERAND, "ns32081");
 }
 
-static void test_format_0() {
+void test_format_0() {
     ATEST(0x100000, "BEQ .",            0x0A, 0x00);
     ATEST(0x100000, "BNE .+63",         0x1A, 0x3F);
     ATEST(0x100000, "BCS .+64",         0x2A, 0x80, 0x40);
@@ -97,7 +97,7 @@ static void test_format_0() {
     AERRT(0xFFFFFF, "BLS .-520093696",  OVERFLOW_RANGE, ".-520093696",  0x5A, 0xE1, 0x00, 0x00, 0x00);
 }
 
-static void test_format_1() {
+void test_format_1() {
     TEST("BSR .+16", 0x02, 0x10);
 
     TEST("RET  16", 0x12, 0x10);
@@ -134,7 +134,7 @@ static void test_format_1() {
     ERRT("RET -520093697", OVERFLOW_RANGE, "-520093697", 0x12, 0xE1, 0x00, 0x00, 0x00);
 }
 
-static void test_format_2() {
+void test_format_2() {
     TEST("ADDQB -8,R0", 0x0C, 0x04);
     TEST("ADDQW 7,R1",  0x8D, 0x0B);
     TEST("ADDQD -8,R2", 0x0F, 0x14);
@@ -222,7 +222,7 @@ static void test_format_2() {
     ATEST(0x10000, "SGED 0xFFF1(PC)", 0xBF, 0xDE, 0x71);
 }
 
-static void test_format_3() {
+void test_format_3() {
     TEST("BICPSRB 0xA2",  0x7C, 0xA1, 0xA2);
     TEST("BISPSRB 0xA2",  0x7C, 0xA3, 0xA2);
     TEST("ADJSPD -4(FP)", 0x7F, 0xC5, 0x7C);
@@ -232,7 +232,7 @@ static void test_format_3() {
     TEST("JUMP 0(-8(FP))", 0x7F, 0x82, 0x78, 0x00);
 }
 
-static void test_format_4() {
+void test_format_4() {
     TEST("MOVB  R0,R1",    0x54, 0x00);
     TEST("MOVW  R2,R3",    0xD5, 0x10);
     TEST("MOVD  R0,8(SB)", 0x97, 0x06, 0x08);
@@ -278,7 +278,7 @@ static void test_format_4() {
     TEST("ADDR  4(FP),R0", 0x27, 0xC0, 0x04);
 }
 
-static void test_format_5() {
+void test_format_5() {
     TEST("CMPSB []",    0x0E, 0x04, 0x00);
     TEST("CMPSB   ",    0x0E, 0x04, 0x00);
     TEST("MOVST [ ]",   0x0E, 0x80, 0x00);
@@ -297,7 +297,7 @@ static void test_format_5() {
     TEST("SETCFG []",      0x0E, 0x0B, 0x00);
 }
 
-static void test_format_6() {
+void test_format_6() {
     TEST("ABSB R5,R6",    0x4E, 0xB0, 0x29);
     TEST("ABSD 8(SP),R7", 0x4E, 0xF3, 0xC9, 0x08);
     TEST("ADDPB 5(SB),TOS", 0x4E, 0xFC, 0xD5, 0x05);
@@ -320,7 +320,7 @@ static void test_format_6() {
     TEST("SUBPD 0x00000099,R1", 0x4E, 0x6F, 0xA0, 0x00, 0x00, 0x00, 0x99);
 }
 
-static void test_format_7() {
+void test_format_7() {
     TEST("CMPMW 10(R0),16(R1),4", 0xCE, 0x45, 0x42, 0x0A, 0x10, 0x06);
     TEST("DEIB R1,R0", 0xCE, 0x2C, 0x08);
     TEST("DEIW R3,R2", 0xCE, 0xAD, 0x18);
@@ -367,7 +367,7 @@ static void test_format_7() {
     ERRT("MEID R5,R7", REGISTER_NOT_ALIGNED, "R7", 0xCE, 0xE7, 0x29);
 }
 
-static void test_format_8() {
+void test_format_8() {
     TEST("CHECKB R0,4(SB),R2",    0xEE, 0x80, 0xD0, 0x04);
     TEST("CVTP   R0,0x20(SB),R2", 0x6E, 0x83, 0xD0, 0x20);
     TEST("FFSB   -4(FP),TOS",     0x6E, 0xC4, 0xC5, 0x7C);
@@ -388,7 +388,7 @@ static void test_format_8() {
 
 #if !defined(LIBASM_NS32000_NOFPU)
 
-static void test_format_9_fpu() {
+void test_format_9_fpu() {
     TEST("FPU NS32081");
 
     TEST("MOVF F1,8(SB)",   0xBE, 0x85, 0x0E, 0x08);
@@ -480,7 +480,7 @@ static void test_format_9_fpu() {
     ERUI("SFSR TOS");
 }
 
-static void test_format_11_fpu() {
+void test_format_11_fpu() {
     TEST("FPU NS32081");
 
     TEST("ABSF F1,F5",     0xBE, 0x75, 0x09);
@@ -529,7 +529,7 @@ static void test_format_11_fpu() {
 
 #if !defined(LIBASM_NS32000_NOMMU)
 
-static void test_format_8_mmu() {
+void test_format_8_mmu() {
     TEST("PMMU NS32082");
 
     TEST("MOVSUB 5(SP),9(SB)", 0xAE, 0x8C, 0xCE, 0x05, 0x09);
@@ -541,7 +541,7 @@ static void test_format_8_mmu() {
     ERUI("MOVUSB 9(SB),5(SP)");
 }
 
-static void test_format_14_mmu() {
+void test_format_14_mmu() {
     TEST("PMMU NS32082");
 
     TEST("LMR PTB1,R0", 0x1E, 0x8B, 0x06);
@@ -558,7 +558,7 @@ static void test_format_14_mmu() {
 }
 #endif
 
-static void test_generic_addressing() {
+void test_generic_addressing() {
 #if !defined(LIBASM_NS32000_NOFPU)
     TEST("FPU NS32081");
 #endif
@@ -696,7 +696,7 @@ static void test_generic_addressing() {
     TEST("INSB R0, *+3, 0(R0)[R2:B], 4", 0xAE, 0x00, 0xDF, 0x42, 0x03, 0x00, 0x04);
 }
 
-static void test_comment() {
+void test_comment() {
 #if !defined(LIBASM_NS32000_NOFPU)
     TEST("FPU NS32081");
 #endif
@@ -762,7 +762,7 @@ static void test_comment() {
 #endif
 }
 
-static void test_undef() {
+void test_undef() {
     ERUS("ADDB UNDEF(R2), R0",          "UNDEF(R2), R0",           0x00, 0x50, 0x00);
     ERUS("ADDB UNDEF(4(FP)), R0",       "UNDEF(4(FP)), R0",        0x00, 0x80, 0x04, 0x00);
     ERUS("ADDB 2(UNDEF(FP)), R0",       "UNDEF(FP)), R0",          0x00, 0x80, 0x00, 0x02);
@@ -821,7 +821,7 @@ static void test_undef() {
 #endif
 }
 
-static void test_data_constant() {
+void test_data_constant() {
     TEST(".byte   -128, 255",    0x80, 0xFF);
     TEST(R"(.byte 'A', '"')",    0x41, 0x22);
     TEST(".byte   '9'-'0'",      0x09);

@@ -24,28 +24,28 @@ using namespace libasm::test;
 DisI8048 dis8048;
 Disassembler &disassembler(dis8048);
 
-static bool isCmos() {
+bool isCmos() {
     const /* PROGMEM */ auto cpu_P = disassembler.config().cpu_P();
     return strcmp_P("80C39", cpu_P) == 0 || strcmp_P("80C48", cpu_P) == 0 ||
            strcmp_P("MSM80C39", cpu_P) == 0 || strcmp_P("MSM80C48", cpu_P) == 0;
 }
 
-static bool is8048() {
+bool is8048() {
     const /* PROGMEM */ auto cpu_P = disassembler.config().cpu_P();
     return strcmp_P("8048", cpu_P) == 0 || strcmp_P("80C48", cpu_P) == 0 ||
            strcmp_P("MSM80C48", cpu_P) == 0;
 }
 
-static bool isOki() {
+bool isOki() {
     const /* PROGMEM */ auto cpu_P = disassembler.config().cpu_P();
     return strcmp_P("MSM80C39", cpu_P) == 0 || strcmp_P("MSM80C48", cpu_P) == 0;
 }
 
-static void set_up() {
+void set_up() {
     disassembler.reset();
 }
 
-static void tear_down() {
+void tear_down() {
     symtab.reset();
 }
 
@@ -82,7 +82,7 @@ void test_cpu() {
     EQUALS_P("cpu msm80c48", "MSM80C48", disassembler.config().cpu_P());
 }
 
-static void test_accumlator() {
+void test_accumlator() {
     TEST("ADD", "A, R0",  0x68);
     TEST("ADD", "A, R1",  0x69);
     TEST("ADD", "A, R2",  0x6A);
@@ -156,7 +156,7 @@ static void test_accumlator() {
     TEST("RRC",  "A", 0x67);
 }
 
-static void test_io() {
+void test_io() {
     TEST("IN",   "A, P1", 0x09);
     TEST("IN",   "A, P2", 0x0A);
     if (isOki()) {
@@ -206,7 +206,7 @@ static void test_io() {
     TEST("ORLD", "P7, A", 0x8F);
 }
 
-static void test_register() {
+void test_register() {
     TEST("INC", "R0", 0x18);
     TEST("INC", "R1", 0x19);
     TEST("INC", "R2", 0x1A);
@@ -236,7 +236,7 @@ static void test_register() {
     }
 }
 
-static void test_branch() {
+void test_branch() {
     TEST("JMP",  "712H", 0xE4, 0x12);
     TEST("JMP",  "034H", 0x04, 0x34);
     TEST("JMPP", "@A",   0xB3);
@@ -283,7 +283,7 @@ static void test_branch() {
     ATEST(0xC00, "JB", "7, 0C34H", 0xF2, 0x34);
 }
 
-static void test_subroutine() {
+void test_subroutine() {
     TEST("CALL", "712H",         0xF4, 0x12);
     TEST("CALL", "034H",         0x14, 0x34);
     NMEM("CALL", "000H", "000H", 0x14);
@@ -291,7 +291,7 @@ static void test_subroutine() {
     TEST("RETR", "", 0x93);
 }
 
-static void test_flag() {
+void test_flag() {
     TEST("CLR", "C",  0x97);
     TEST("CLR", "F0", 0x85);
     TEST("CLR", "F1", 0xA5);
@@ -301,7 +301,7 @@ static void test_flag() {
     TEST("CPL", "F1", 0xB5);
 }
 
-static void test_move() {
+void test_move() {
     TEST("MOV", "A, R0",  0xF8);
     TEST("MOV", "A, R1",  0xF9);
     TEST("MOV", "A, R2",  0xFA);
@@ -368,7 +368,7 @@ static void test_move() {
     }
 }
 
-static void test_timer_counter() {
+void test_timer_counter() {
     TEST("MOV", "A, T", 0x42);
     TEST("MOV", "T, A", 0x62);
 
@@ -380,7 +380,7 @@ static void test_timer_counter() {
     TEST("DIS", "TCNTI", 0x35);
 }
 
-static void test_control() {
+void test_control() {
     TEST("EN",  "I", 0x05);
     TEST("DIS", "I", 0x15);
 
@@ -410,7 +410,7 @@ static void test_control() {
     }
 }
 
-static void test_illegal() {
+void test_illegal() {
     if (!isCmos())
         UNKN(0x01);             // HALT
     if (!is8048()) {

@@ -24,19 +24,19 @@ using namespace libasm::test;
 AsmCdp1802 asm1802;
 Assembler &assembler(asm1802);
 
-static bool cdp1804() {
+bool cdp1804() {
     return strcmp_P("1804", assembler.config().cpu_P()) == 0;
 }
 
-static bool cdp1804a() {
+bool cdp1804a() {
     return strcmp_P("1804A", assembler.config().cpu_P()) == 0;
 }
 
-static void set_up() {
+void set_up() {
     assembler.reset();
 }
 
-static void tear_down() {
+void tear_down() {
     symtab.reset();
 }
 
@@ -61,7 +61,7 @@ void test_cpu() {
     EQUALS_P("cpu CDP1804A", "1804A", assembler.config().cpu_P());
 }
 
-static void test_mem_ref() {
+void test_mem_ref() {
     // Load Immediate
     TEST("LDI 18",           0xF8, 0x12);
     TEST("LDI -128",         0xF8, 0x80);
@@ -219,7 +219,7 @@ static void test_mem_ref() {
     TEST("SEP CALL", 0xD4);
 }
 
-static void test_reg_op() {
+void test_reg_op() {
     // Increment reg N
     TEST("INC  0", 0x10);
     TEST("INC  1", 0x11);
@@ -391,7 +391,7 @@ static void test_reg_op() {
     }
 }
 
-static void test_logic_op() {
+void test_logic_op() {
     TEST("OR",       0xF1);
     TEST("ORI 34H",  0xF9, 0x34);
     TEST("ORI -128", 0xF9, 0x80);
@@ -407,7 +407,7 @@ static void test_logic_op() {
     TEST("SHLC",     0x7E);
 }
 
-static void test_arith_op() {
+void test_arith_op() {
     TEST("ADD",       0xF4);
     TEST("ADI 89H",   0xFC, 0x89);
     TEST("ADI -128",  0xFC, 0x80);
@@ -450,7 +450,7 @@ static void test_arith_op() {
     TEST("ADI pos254", 0xFC, 0xFE);
 }
 
-static void test_branch() {
+void test_branch() {
     ATEST(0x1000, "BR  1031H", 0x30, 0x31);
     ATEST(0x1000, "BZ  1033H", 0x32, 0x33);
     ATEST(0x1000, "BNZ 103BH", 0x3A, 0x3B);
@@ -548,7 +548,7 @@ static void test_branch() {
     ATEST(0x12FE, "LBR  1234H",  0xC0, 0x12, 0x34);
 }
 
-static void test_control() {
+void test_control() {
     TEST("IDL", 0x00);
     TEST("NOP", 0xC4);
 
@@ -595,7 +595,7 @@ static void test_control() {
     TEST("MARK", 0x79);
 }
 
-static void test_timer() {
+void test_timer() {
     TEST("LDC",  0x68, 0x06);
     TEST("GEC",  0x68, 0x08);
     TEST("STPC", 0x68, 0x00);
@@ -608,7 +608,7 @@ static void test_timer() {
     TEST("ETQ",  0x68, 0x09);
 }
 
-static void test_intr() {
+void test_intr() {
     TEST("RET", 0x70);
     TEST("DIS", 0x71);
     TEST("SAV", 0x78);
@@ -631,7 +631,7 @@ static void test_intr() {
     }
 }
 
-static void test_io() {
+void test_io() {
     TEST("OUT 1", 0x61);
     TEST("OUT 2", 0x62);
     TEST("OUT 3", 0x63);
@@ -658,7 +658,7 @@ static void test_io() {
     TEST("INP STDIN", 0x69);
 }
 
-static void test_call() {
+void test_call() {
     TEST("SCAL  0,1234H", 0x68, 0x80, 0x12, 0x34);
     TEST("SCAL  1,1234H", 0x68, 0x81, 0x12, 0x34);
     TEST("SCAL  2,1234H", 0x68, 0x82, 0x12, 0x34);
@@ -698,7 +698,7 @@ static void test_call() {
     ERRT("SRET -1", ILLEGAL_REGISTER, "-1", 0x68, 0x97);
 }
 
-static void test_comment() {
+void test_comment() {
     COMM("NOP; comment",     "; comment", 0xC4);
     COMM("RET    ; comment", "; comment", 0x70);
     COMM("LDN  1 ; comment", "; comment", 0x01);
@@ -712,7 +712,7 @@ static void test_comment() {
     COMM("DC 'TEXT' ;'comment'",  ";'comment'", 0x54, 0x45, 0x58, 0x54);
 }
 
-static void test_undef() {
+void test_undef() {
     ERUS("LDN UNDEF", "UNDEF", 0x07); // Default work register
     ERUS("OUT UNDEF", "UNDEF", 0x61); // Default IO
     ERUS("INP UNDEF", "UNDEF", 0x69); // Default IO
@@ -736,7 +736,7 @@ static void test_undef() {
     AERUS(0x1234, "LBR UNDEF", "UNDEF", 0xC0, 0x00, 0x00);
 }
 
-static void test_usereg() {
+void test_usereg() {
     symtab.intern(10, "R10");
     assembler.setOption("use-register", "no");
 
@@ -800,7 +800,7 @@ static void test_usereg() {
     }
 }
 
-static void test_data_constant() {
+void test_data_constant() {
     TEST("DC -128, 255",   0x80, 0xFF);
     TEST("DC -129, 256",   0xFF, 0x7F, 0x01, 0x00);
     TEST("DC A(-128), A(255)", 0xFF, 0x80, 0x00, 0xFF);

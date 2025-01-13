@@ -24,17 +24,16 @@ using namespace libasm::test;
 DisZ8000 dis8000;
 Disassembler &disassembler(dis8000);
 
-static bool z8001() {
+bool z8001() {
     return strcmp_P("Z8001", disassembler.config().cpu_P()) == 0;
 }
 
-static void set_up() {
+void set_up() {
     disassembler.reset();
-    disassembler.setOption("relative", "false");
     disassembler.setOption("segmented-addr", "false");
 }
 
-static void tear_down() {
+void tear_down() {
     symtab.reset();
 }
 
@@ -47,7 +46,7 @@ void test_cpu() {
     EQUALS_P("cpu Z8002", "Z8002", disassembler.config().cpu_P());
 }
 
-static void test_load_and_exchange() {
+void test_load_and_exchange() {
     // Clear
     TEST("CLR",  "R2",  0x8D28);
     TEST("CLRB", "RH2", 0x8C28);
@@ -493,7 +492,7 @@ static void test_load_and_exchange() {
     }
 }
 
-static void test_arithmetic() {
+void test_arithmetic() {
     // Add with Carry
     TEST("ADC",  "R1, R2",   0xB521);
     TEST("ADCB", "RH1, RL1", 0xB491);
@@ -770,7 +769,7 @@ static void test_arithmetic() {
     }
 }
 
-static void test_logical() {
+void test_logical() {
     // And
     TEST("AND",  "R1, R2",   0x8721);
     TEST("ANDB", "RH1, RL1", 0x8691);
@@ -902,7 +901,7 @@ static void test_logical() {
     }
 }
 
-static void test_program_control() {
+void test_program_control() {
     // Call Procedure
     if (z8001()) {
         TEST("CALL", "@RR2",          0x1F20);
@@ -1185,7 +1184,7 @@ static void test_program_control() {
     TEST("SC", "#%FF", 0x7FFF);
 }
 
-static void test_bit_manipulation() {
+void test_bit_manipulation() {
     // Bit Test
     TEST("BIT", "R2, #1", 0xA721);
     TEST("BIT", "R2, R8", 0x2708, 0x0200);
@@ -1345,7 +1344,7 @@ static void test_bit_manipulation() {
     TEST("TCCB", "NC, RH0",  0xAE0F);
 }
 
-static void test_rotate() {
+void test_rotate() {
     // Rotate Left
     TEST("RL",  "R1, #1",  0xB310);
     TEST("RL",  "R8, #2",  0xB382);
@@ -1377,7 +1376,7 @@ static void test_rotate() {
     TEST("RRDB", "RL7, RH7", 0xBC7F);
 }
 
-static void test_shift() {
+void test_shift() {
     // Shift Dynamic Arithmetic
     TEST("SDA",  "R1, R2",   0xB31B, 0x0200);
     NMEM("SDA",  "", "",     0xB31B);
@@ -1441,7 +1440,7 @@ static void test_shift() {
     ERRT("SRLL", "RR2, #33", ILLEGAL_OPERAND, "33", 0xB325, 0xFFDF);
 }
 
-static void test_compare_block() {
+void test_compare_block() {
     // Compare and Decrement
     // @RR0 and @R0 must not be used as source register. The destination and
     // counter register have no restriction. The source, destination, and
@@ -1594,7 +1593,7 @@ static void test_compare_block() {
     }
 }
 
-static void test_block_transfer() {
+void test_block_transfer() {
     // Load and Decrement
     if (z8001()) {
         TEST("LDD",  "@RR2, @RR4, R6", 0xBB49, 0x0628);
@@ -1762,7 +1761,7 @@ static void test_block_transfer() {
     }
 }
 
-static void test_compare_string() {
+void test_compare_string() {
     // Compare String and Decrement
     // @RR0 and @R0 mus not be used as source and destination registers. The
     // counter register has no restriction. The source, destination, and
@@ -1867,7 +1866,7 @@ static void test_compare_string() {
     }
 }
 
-static void test_translation() {
+void test_translation() {
     // Translate and Decrement
     // Original content of RH1 are lost. R0/R1 or RR0 must not be used as a soure or destination
     // R1 should not be used as a counter as welll
@@ -2090,7 +2089,7 @@ static void test_translation() {
 }
 
 
-static void test_input() {
+void test_input() {
     // Input
     TEST("IN",  "R1, @R2",  0x3D21);
     TEST("INB", "RH1, @R2", 0x3C21);
@@ -2306,7 +2305,7 @@ static void test_input() {
     }
 }
 
-static void test_output() {
+void test_output() {
     // Output
     TEST("OUT",  "@R2, R1",  0x3F21);
     TEST("OUTB", "@R2, RH1", 0x3E21);
@@ -2521,7 +2520,7 @@ static void test_output() {
     }
 }
 
-static void test_cpu_conrtol() {
+void test_cpu_conrtol() {
     // Complement Flag
     ERRT("COMFLG", "", OPCODE_HAS_NO_EFFECT, "", 0x8D05);
     TEST("COMFLG", "P",       0x8D15);
@@ -2645,7 +2644,7 @@ static void test_cpu_conrtol() {
     TEST("SETFLG", "C,Z,S,P", 0x8DF1);
 }
 
-static void test_direct_address() {
+void test_direct_address() {
     disassembler.setOption("short-direct", "on");
     TEST("CLR", "|%120034|",     0x4D08, 0x1234);
     TEST("CLR",  "%561234",      0x4D08, 0xD600, 0x1234);

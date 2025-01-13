@@ -22,7 +22,7 @@
 namespace libasm {
 namespace gen {
 
-static inline bool isXdigits(const char *&r, const char *p) {
+inline bool isXdigits(const char *&r, const char *p) {
     if (!isxdigit(*p++))
         return false;
     while (isxdigit(*p))
@@ -31,7 +31,7 @@ static inline bool isXdigits(const char *&r, const char *p) {
     return true;
 }
 
-static inline bool isDigits(const char *&r, const char *p) {
+inline bool isDigits(const char *&r, const char *p) {
     if (!isdigit(*p++))
         return false;
     while (isdigit(*p))
@@ -40,7 +40,7 @@ static inline bool isDigits(const char *&r, const char *p) {
     return true;
 }
 
-static bool isFloat(const char *p, const char *&r) {
+bool isFloat(const char *p, const char *&r) {
     const char *s = p;
     if (*s == '-')
         ++s;
@@ -61,7 +61,7 @@ static bool isFloat(const char *p, const char *&r) {
     return false;
 }
 
-static bool isNumber(const char *p, const char *&r) {
+bool isNumber(const char *p, const char *&r) {
     const char *s;
     if (p[0] == '0' && toupper(p[1]) == 'X' && isXdigits(s, p + 2)) {
         r = s;
@@ -83,7 +83,7 @@ static bool isNumber(const char *p, const char *&r) {
     return false;
 }
 
-static bool isNs32kSize(char c) {
+bool isNs32kSize(char c) {
     c = toupper(c);
     return c == 'B' || c == 'W' || c == 'D' || c == 'Q';
 }

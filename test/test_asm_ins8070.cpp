@@ -24,11 +24,11 @@ using namespace libasm::test;
 AsmIns8070 asm8070;
 Assembler &assembler(asm8070);
 
-static void set_up() {
+void set_up() {
     assembler.reset();
 }
 
-static void tear_down() {
+void tear_down() {
     symtab.reset();
 }
 
@@ -41,7 +41,7 @@ void test_cpu() {
     EQUALS_P("cpu INS8070", "8070", assembler.config().cpu_P());
 }
 
-static void test_implied() {
+void test_implied() {
     TEST("NOP  ",      0x00);
     TEST("xch  a,e",   0x01);
     TEST("XCH  E,A",   0x01);
@@ -113,7 +113,7 @@ static void test_implied() {
     TEST("SUB  A,E",   0x78);
 }
 
-static void test_immediate() {
+void test_immediate() {
     TEST("AND S,=0x12", 0x39, 0x12);
     TEST("AND S,=-128", 0x39, 0x80);
     TEST("AND S,=255",  0x39, 0xFF);
@@ -160,7 +160,7 @@ static void test_immediate() {
     ATEST(0x1000, "LD  T,=$sym1234-$", 0xA4, 0x34, 0x02);
 }
 
-static void test_absolute() {
+void test_absolute() {
     TEST("JSR 0x1234", 0x20, 0x33, 0x12);
     TEST("JMP 0x1234", 0x24, 0x33, 0x12);
     ATEST(0x1000, "JMP .+3", 0x24, 0x02, 0x10);
@@ -171,7 +171,7 @@ static void test_absolute() {
     TEST("JMP sym1234", 0x24, 0x33, 0x12);
 }
 
-static void test_direct() {
+void test_direct() {
     TEST("LD  EA,0xFF34", 0x85, 0x34);
     TEST("ST  EA,0xFF34", 0x8D, 0x34);
     TEST("ILD A,0xFF34",  0x95, 0x34);
@@ -198,7 +198,7 @@ static void test_direct() {
     TEST("LD  A,dir34",  0xC5, 0x34);
 }
 
-static void test_relative() {
+void test_relative() {
     ATEST(0x1000, "BP  0x1000", 0x64, 0xFE);
     ATEST(0x1100, "BZ  0x1082", 0x6C, 0x80);
     ATEST(0x1000, "BRA 0x1081", 0x74, 0x7F);
@@ -219,7 +219,7 @@ static void test_relative() {
     ATEST(0x1000, "BRA $9",      0x74, 0x07);
 }
 
-static void test_indexed() {
+void test_indexed() {
     TEST("BP  0,P2",    0x66, 0x00);
     TEST("BP  -128,P3", 0x67, 0x80);
     TEST("BZ  127,P2",  0x6E, 0x7F);
@@ -334,7 +334,7 @@ static void test_indexed() {
     TEST(         "SUB A,pos127,P2",   0xFA, 0x7F);
 }
 
-static void test_auto_indexed() {
+void test_auto_indexed() {
     TEST("LD  EA,@-128,P2", 0x86, 0x80);
     TEST("LD  EA,@127,P3",  0x87, 0x7F);
     ERRT("LD  EA,@-129,P2", OVERFLOW_RANGE, "@-129,P2", 0x86, 0x7F);
@@ -397,7 +397,7 @@ static void test_auto_indexed() {
     TEST("SUB A,@neg1,P3",   0xFF, 0xFF);
 }
 
-static void test_func() {
+void test_func() {
     symtab.intern(0x1FFF, "stack");
     symtab.intern(0x1000, "main");
     symtab.intern(0x3210, "func");
@@ -408,7 +408,7 @@ static void test_func() {
     TEST("PLI P3, =ADDR(func)", 0x23, 0x0F, 0x32); // addr(func) == 0x320F
 }
 
-static void test_comment() {
+void test_comment() {
     COMM("NOP        ; comment", "; comment", 0x00);
     COMM("XCH  A , E ; comment", "; comment", 0x01);
     COMM("PUSH EA    ; comment", "; comment", 0x08);
@@ -431,7 +431,7 @@ static void test_comment() {
     COMM(".ADDR X'1000     ; comment", "; comment", 0xFF, 0x0F);
 }
 
-static void test_undef() {
+void test_undef() {
     ERUS("AND S,=UNDEF",  "UNDEF",  0x39, 0x00);
     ERUS("ADD A,=UNDEF",  "UNDEF",  0xF4, 0x00);
     ERUS("PLI P2,=UNDEF", "UNDEF", 0x22, 0x00, 0x00);
@@ -449,7 +449,7 @@ static void test_undef() {
     AERUS(0x1000, "JMP UNDEF",       "UNDEF",    0x24, 0x00, 0x00);
 }
 
-static void test_error() {
+void test_error() {
     ERRT("LD A,@@1,P3", NOT_AN_EXPECTED, "@1,P3");
     ERRT("LD A,@#1",    NOT_AN_EXPECTED, "#1");
     ERRT("LD A,@=1",    NOT_AN_EXPECTED, "=1");
@@ -459,7 +459,7 @@ static void test_error() {
     ERRT("LD A,1,(EA)", UNKNOWN_OPERAND,    "(EA)");
 }
 
-static void test_data_constant() {
+void test_data_constant() {
     TEST(".byte  -128, 255", 0x80, 0xFF);
     TEST(R"(.byte  'A', '"')", 0x41, 0x22);
     TEST(".byte  '9'-'0'",   0x09);

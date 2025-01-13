@@ -24,12 +24,11 @@ using namespace libasm::test;
 DisIns8060 dis8060;
 Disassembler &disassembler(dis8060);
 
-static void set_up() {
+void set_up() {
     disassembler.reset();
-    disassembler.setOption("relative", "disable");
 }
 
-static void tear_down() {
+void tear_down() {
     symtab.reset();
 }
 
@@ -45,7 +44,7 @@ void test_cpu() {
     EQUALS_P("cpu INS8060", "SC/MP", disassembler.config().cpu_P());
 }
 
-static void test_inherent() {
+void test_inherent() {
     TEST("HALT", "", 0x00);
     TEST("XAE",  "", 0x01);
     TEST("CCL",  "", 0x02);
@@ -69,7 +68,7 @@ static void test_inherent() {
     TEST("CAE",  "", 0x78);
 }
 
-static void test_pointer() {
+void test_pointer() {
     TEST("XPAL", "PC", 0x30);
     TEST("XPAL", "P1", 0x31);
     TEST("XPAL", "P2", 0x32);
@@ -84,11 +83,11 @@ static void test_pointer() {
     TEST("XPPC", "P3", 0x3F);
 }
 
-static void test_immediate() {
+void test_immediate() {
     TEST("DLY", "18", 0x8F, 0x12);
 }
 
-static void test_jump() {
+void test_jump() {
     ATEST(0x1000, "JMP", "X'1000", 0x90, 0xFE);
     ATEST(0x1000, "JP",  "X'1081", 0x94, 0x7F);
     ATEST(0x1000, "JZ",  "X'1F83", 0x98, 0x81); // 4kB page boundary
@@ -121,7 +120,7 @@ static void test_jump() {
     ATEST(0x2FF0, "JMP", "X'2071", 0x90, 0x7F); // 4kB page boundary
 }
 
-static void test_incr_decr() {
+void test_incr_decr() {
     ATEST(0x1000, "ILD", "X'1000", 0xA8, 0xFF);
     ATEST(0x1000, "ILD", "X'1F82", 0xA8, 0x81); // 4kB page boundary
     ATEST(0x1000, "ILD", "X'1F81", 0xA8, 0x80); // 4kB page boundary
@@ -151,7 +150,7 @@ static void test_incr_decr() {
     TEST("ILD", "disp0x81(P3)", 0xAB, 0x81);
 }
 
-static void test_alu() {
+void test_alu() {
     ATEST(0x1000, "LD", "X'1000", 0xC0, 0xFF);
     ATEST(0x1000, "LD", "X'1F82", 0xC0, 0x81); // 4kB page boundary
     ATEST(0x1000, "LD", "X'1F81", 0xC0, 0x80); // 4kB page boundary
@@ -194,7 +193,7 @@ static void test_alu() {
     ATEST(0x2FF0, "LD", "X'2070", 0xC0, 0x7F); // 4kB page boundary
 }
 
-static void test_alu_immediate() {
+void test_alu_immediate() {
     TEST("LDI", "0",    0xC4, 0x00);
     TEST("ANI", "X'FF", 0xD4, 0xFF);
     TEST("ORI", "1",    0xDC, 0x01);
@@ -209,7 +208,7 @@ static void test_alu_immediate() {
     TEST("LDI", "minus1", 0xC4, 0xFF);
 }
 
-static void test_page_boundary() {
+void test_page_boundary() {
     ATEST(0x1000, "LD", "X'1000", 0xC0, 0xFF);
     ATEST(0x1000, "LD", "X'1FFF", 0xC0, 0xFE);
     ATEST(0x1FFC, "LD", "X'1FFF", 0xC0, 0x02);
@@ -224,7 +223,7 @@ static void test_page_boundary() {
     AERRT(0x1FFF, "LDI", "0", OVERWRAP_SEGMENT, "", 0xC4, 0x00);
 }
 
-static void test_formatter() {
+void test_formatter() {
     disassembler.setOption("c-style", "on");
     TEST("LDI", "0",    0xC4, 0x00);
     TEST("ANI", "0xFF", 0xD4, 0xFF);
@@ -240,7 +239,7 @@ static void test_formatter() {
     ATEST(0x1FFC, "LD", "0x1000", 0xC0, 0x03);
 }
 
-static void test_illegal() {
+void test_illegal() {
     static constexpr Config::opcode_t illegals[] = {
         0x09, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F,
         0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17,

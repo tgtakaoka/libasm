@@ -24,11 +24,11 @@ using namespace libasm::test;
 DisI8096 dis8096;
 Disassembler &disassembler(dis8096);
 
-static void set_up() {
+void set_up() {
     disassembler.reset();
 }
 
-static void tear_down() {
+void tear_down() {
     symtab.reset();
 }
 
@@ -41,7 +41,7 @@ void test_cpu() {
     EQUALS_P("cpu i8096", "8096", disassembler.config().cpu_P());
 }
 
-static void test_2_operands() {
+void test_2_operands() {
     TEST("ADD",   "52, 18",                                0x64, 0x12, 0x34);
     ERRT("ADD",   "53, 18", OPERAND_NOT_ALIGNED, "53, 18", 0x64, 0x12, 0x35);
     ERRT("ADD",   "52, 19", OPERAND_NOT_ALIGNED,     "19", 0x64, 0x13, 0x34);
@@ -229,7 +229,7 @@ static void test_2_operands() {
     TEST("XORB",  "69, 3423H[18]",   0x97, 0x13, 0x23, 0x34, 0x45);
 }
 
-static void test_3_operands() {
+void test_3_operands() {
     TEST("ADD",   "86, 52, 18",          0x44, 0x12, 0x34, 0x56);
     TEST("ADD",   "120, 86, #3412H",     0x45, 0x12, 0x34, 0x56, 0x78);
     TEST("ADD",   "86, 52, [18]",        0x46, 0x12, 0x34, 0x56);
@@ -311,7 +311,7 @@ static void test_3_operands() {
     TEST("ANDB",  "86, 69, 3423H[18]",   0x53, 0x13, 0x23, 0x34, 0x45, 0x56);
 }
 
-static void test_move() {
+void test_move() {
     TEST("LD",    "52, 18",           0xA0, 0x12, 0x34);
     TEST("LD",    "86, #3412H",       0xA1, 0x12, 0x34, 0x56);
     TEST("LD",    "52, [18]",         0xA2, 0x12, 0x34);
@@ -378,7 +378,7 @@ static void test_move() {
     TEST("POPF",  "", 0xF3);
 }
 
-static void test_jump() {
+void test_jump() {
     ATEST(0x2000, "SJMP", "2002H",  0x20, 0x00);
     ATEST(0x2000, "SJMP", "2200H",  0x21, 0xFE);
     ATEST(0x2000, "SJMP", "2202H",  0x22, 0x00);
@@ -462,7 +462,7 @@ static void test_jump() {
     ATEST(0x2000, "JBS", "18, 7, 2003H", 0x3F, 0x12, 0x00);
 }
 
-static void test_jump_relative() {
+void test_jump_relative() {
     disassembler.setOption("relative", "on");
 
     ATEST(0x2000, "SJMP", "$+2",     0x20, 0x00);
@@ -540,7 +540,7 @@ static void test_jump_relative() {
     ATEST(0x2000, "JBS", "18, 7, $+3",   0x3F, 0x12, 0x00);
 }
 
-static void test_modify() {
+void test_modify() {
     TEST("DEC",  "6",                           0x05, 0x06);
     ERRT("DEC",  "7", OPERAND_NOT_ALIGNED, "7", 0x05, 0x07);
     TEST("DECB", "6", 0x15, 0x06);
@@ -592,7 +592,7 @@ static void test_modify() {
     ERRT("NORML", "23, 19", OPERAND_NOT_ALIGNED, "23, 19", 0x0F, 0x13, 0x17);
 }
 
-static void test_control() {
+void test_control() {
     TEST("SETC",  "",  0xF9);
     TEST("CLRC",  "",  0xF8);
     TEST("CLRVT", "",  0xFC);
@@ -604,7 +604,7 @@ static void test_control() {
     TEST("TRAP",  "",  0xF7);
 }
 
-static void test_absolute() {
+void test_absolute() {
     TEST("ADD",   "120, 5634H[0]",      0x67, 0x01, 0x34, 0x56, 0x78);
     TEST("ADD",   "154, 120, 5634H[0]", 0x47, 0x01, 0x34, 0x56, 0x78, 0x9A);
     TEST("LDB",   "235, 0ECEDH[0]",     0xB3, 0x01, 0xED, 0xEC, 0xEB);
@@ -622,7 +622,7 @@ static void test_absolute() {
 }
 // clang-format on
 
-static void test_illegal() {
+void test_illegal() {
     UNKN(0x04);
     UNKN(0x0B);
     UNKN(0x10);

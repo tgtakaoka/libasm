@@ -25,16 +25,15 @@ using namespace libasm::test;
 DisTms32010 dis32010;
 Disassembler &disassembler(dis32010);
 
-static bool is32010() {
+bool is32010() {
     return strcmp_P("32010", disassembler.config().cpu_P()) == 0;
 }
 
-static void set_up() {
+void set_up() {
     disassembler.reset();
-    disassembler.setOption("relative", "no");
 }
 
-static void tear_down() {
+void tear_down() {
     symtab.reset();
 }
 
@@ -53,7 +52,7 @@ void test_cpu() {
 }
 
 // clang-format off
-static void test_accumrator() {
+void test_accumrator() {
     TEST("ABS", "",    0x7F88);
 
     TEST("ADD", "70H",         0x0070);
@@ -270,7 +269,7 @@ static void test_accumrator() {
     TEST("ZALS", "*+, AR0", 0x66A0);
 }
 
-static void test_auxiliary() {
+void test_auxiliary() {
     TEST("LAR", "AR0, 70H",     0x3870);
     TEST("LAR", "AR0, *",       0x3888);
     TEST("LAR", "AR0, *-",      0x3898);
@@ -327,7 +326,7 @@ static void test_auxiliary() {
     TEST("SAR", "AR1, *+, AR0", 0x31A0);
 }
 
-static void test_multiply() {
+void test_multiply() {
     TEST("APAC", "", 0x7F8F);
 
     TEST("LT", "70H",     0x6A70);
@@ -373,7 +372,7 @@ static void test_multiply() {
     TEST("SPAC", "", 0x7F90);
 }
 
-static void test_branch() {
+void test_branch() {
     TEST("B", "000H",  0xF900, 0x0000);
     TEST("B", "001H",  0xF900, 0x0001);
     TEST("B", "002H",  0xF900, 0x0002);
@@ -408,7 +407,7 @@ static void test_branch() {
     TEST("RET",  "", 0x7F8D);
 }
 
-static void test_control() {
+void test_control() {
     TEST("DINT", "", 0x7F81);
     TEST("EINT", "", 0x7F82);
     TEST("NOP",  "", 0x7F80);
@@ -441,7 +440,7 @@ static void test_control() {
     TEST("SST", "*+, AR0", 0x7CA0);
 }
 
-static void test_dataio() {
+void test_dataio() {
     TEST("DMOV", "00H",     0x6900);
     TEST("DMOV", "70H",     0x6970);
     TEST("DMOV", "*",       0x6988);
@@ -520,14 +519,14 @@ static void test_dataio() {
     TEST("OUT", "*+, PA7, AR1", 0x4FA1);
 }
 
-static void assert_low8s(Config::opcode_t base) {
+void assert_low8s(Config::opcode_t base) {
     for (auto low8 = 0x00; low8 < 0x100; low8++) {
         const Config::opcode_t opc = base | low8;
         UNKN(opc);
     }
 }
 
-static void assert_indirect(Config::opcode_t base) {
+void assert_indirect(Config::opcode_t base) {
     static constexpr uint8_t valids[] = {
         0x80, // *, AR0
         0x81, // *, AR1
@@ -551,7 +550,7 @@ static void assert_indirect(Config::opcode_t base) {
     }
 }
 
-static void test_illegal() {
+void test_illegal() {
     // ADD, SUB, LAC
     static constexpr Config::opcode_t mam_ls4[] = { 0x0000, 0x1000, 0x2000, };
     for (const auto base : mam_ls4) {

@@ -24,12 +24,11 @@ using namespace libasm::test;
 AsmI8051 asm8051;
 Assembler &assembler(asm8051);
 
-static void set_up() {
+void set_up() {
     assembler.reset();
-    assembler.setCpu("8051");
 }
 
-static void tear_down() {
+void tear_down() {
     symtab.reset();
 }
 
@@ -42,13 +41,13 @@ void test_cpu() {
     EQUALS_P("cpu I8051", "8051", assembler.config().cpu_P());
 }
 
-static void test_implied() {
+void test_implied() {
     TEST("NOP",  0x00);
     TEST("RET",  0x22);
     TEST("RETI", 0x32);
 }
 
-static void test_regs() {
+void test_regs() {
     TEST("rr   a", 0x03);
     TEST("INC  A", 0x04);
     TEST("RRC  A", 0x13);
@@ -70,7 +69,7 @@ static void test_regs() {
     TEST("INC DPTR", 0xA3);
 }
 
-static void test_regr() {
+void test_regr() {
     TEST("INC R0", 0x08);
     TEST("INC R1", 0x09);
     TEST("INC R2", 0x0A);
@@ -163,7 +162,7 @@ static void test_regr() {
     ERUS("INC R8", "R8", 0x05, 0x00);
 }
 
-static void test_indirect() {
+void test_indirect() {
     TEST("JMP  @A+DPTR",   0x73);
     TEST("MOVC A,@A+PC",   0x83);
     TEST("MOVC A,@A+DPTR", 0x93);
@@ -203,7 +202,7 @@ static void test_indirect() {
     ERRT("MOV @R8,A", UNKNOWN_OPERAND, "@R8,A");
 }
 
-static void test_immediate() {
+void test_immediate() {
     TEST("ADD  A,#25H",   0x24, 0x25);
     TEST("ADD  A,#-128",  0x24, 0x80);
     TEST("ADD  A,#255",   0x24, 0xFF);
@@ -251,7 +250,7 @@ static void test_immediate() {
     TEST("MOV DPTR,#sym1234", 0x90, 0x12, 0x34);
 }
 
-static void test_relative() {
+void test_relative() {
     ATEST(0x1000, "JBC 22H.1,1015H", 0x10, 0x11, 0x12);
     ATEST(0x1000, "JB  24H.1,1025H", 0x20, 0x21, 0x22);
     ATEST(0x1000, "JNB 26H.1,1035H", 0x30, 0x31, 0x32);
@@ -314,7 +313,7 @@ static void test_relative() {
     AERRT(0x1000, "DJNZ counter,sym1083", OPERAND_TOO_FAR, "sym1083", 0xD5, 0x40, 0x80);
 }
 
-static void test_bit_address() {
+void test_bit_address() {
     TEST("JBC 22H.1,$+15H", 0x10, 0x11, 0x12);
     TEST("JB  24H.1,$+25H", 0x20, 0x21, 0x22);
     TEST("JNB 26H.1,$+35H", 0x30, 0x31, 0x32);
@@ -361,7 +360,7 @@ static void test_bit_address() {
     }
 }
 
-static void test_direct() {
+void test_direct() {
     TEST("INC  06H",    0x05, 0x06);
     TEST("DEC  16H",    0x15, 0x16);
     ERRT("DEC  100H",   OVERFLOW_RANGE, "100H", 0x15, 0x00);
@@ -420,7 +419,7 @@ static void test_direct() {
     TEST("MOV  @R0,regE0", 0xA6, 0xE0);
 }
 
-static void test_jump() {
+void test_jump() {
     ATEST(0x1000, "AJMP  1002H", 0x01, 0x02);
     ATEST(0x1800, "AJMP  1922H", 0x21, 0x22);
     ATEST(0x1000, "AJMP  1242H", 0x41, 0x42);
@@ -468,7 +467,7 @@ static void test_jump() {
     ATEST(0x1000, "LCALL 1802H", 0x12, 0x18, 0x02);
 }
 
-static void test_comment() {
+void test_comment() {
     COMM("NOP       ; comment",      "; comment", 0x00);
     COMM("SWAP A    ; comment",      "; comment", 0xC4);
     COMM("INC  DPTR ; comment",      "; comment", 0xA3);
@@ -497,7 +496,7 @@ static void test_comment() {
     COMM("DW -128, 255 ; comment", "; comment", 0xFF, 0x80, 0x00, 0xFF);
 }
 
-static void test_undef() {
+void test_undef() {
     ERUS("ADD A,#UNDEF",     "UNDEF",        0x24, 0x00);
     ERUS("ORL UNDEF,#45H",   "UNDEF,#45H",   0x43, 0x00, 0x45);
     ERUS("ORL 44H,#UNDEF",   "UNDEF",        0x43, 0x44, 0x00);
@@ -560,7 +559,7 @@ static void test_undef() {
     ERUS("LCALL UNDEF", "UNDEF", 0x12, 0x00, 0x00);
 }
 
-static void test_data_constant() {
+void test_data_constant() {
     TEST("DB -128, 255", 0x80, 0xFF);
     TEST(R"(DB 'A', '"')", 0x41, 0x22);
     TEST("DB '9'-'0'",   0x09);

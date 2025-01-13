@@ -30,19 +30,19 @@ void set_up() {}
 void tear_down() {}
 
 // clang-format off
-static const uint8_t block1[] = {
+const uint8_t block1[] = {
     0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88,
     0x99, 0xaa, 0xbb, 0xcc, 0xdd, 0xee, 0xff, 0x00,
     0x12, 0x34,
 };
-static const uint8_t block2[] = {
+const uint8_t block2[] = {
     0x12, 0x34, 0x56, 0x78, 0x9a, 0xbc, 0xde, 0xf0,
     0xfe, 0xdc, 0xba, 0x98, 0x76, 0x54, 0x32, 0x10,
     0x45, 0x67, 0x89,
 };
 // clang-format on
 
-static void writeBlock(BinMemory &memory, uint32_t base, const uint8_t *data, size_t size) {
+void writeBlock(BinMemory &memory, uint32_t base, const uint8_t *data, size_t size) {
     for (size_t i = 0; i < size; i++)
         memory.writeByte(base + i, data[i]);
 }

@@ -24,23 +24,23 @@ using namespace libasm::test;
 AsmI8086 asm8086;
 Assembler &assembler(asm8086);
 
-static bool v30() {
+bool v30() {
     return strcmp_P("V30", assembler.config().cpu_P()) == 0;
 }
 
-static bool is80186() {
+bool is80186() {
     return strcmp_P("80186", assembler.config().cpu_P()) == 0 || v30();
 }
 
-static bool is8086() {
+bool is8086() {
     return strcmp_P("8086", assembler.config().cpu_P()) == 0;
 }
 
-static void set_up() {
+void set_up() {
     assembler.reset();
 }
 
-static void tear_down() {
+void tear_down() {
     symtab.reset();
 }
 
@@ -62,7 +62,7 @@ void test_cpu() {
     EQUALS_P("cpu C30", "V30", assembler.config().cpu_P());
 }
 
-static void test_data_transfer() {
+void test_data_transfer() {
     TEST("mov al,cl",            0x8A, 0301);
     TEST("MOV DL,BL",            0x8A, 0323);
     TEST("MOV AH,CH",            0x8A, 0345);
@@ -293,7 +293,7 @@ static void test_data_transfer() {
     TEST("MOV AX, A_@?9", 0270, 0x34, 0x12);
 }
 
-static void test_arithmetic() {
+void test_arithmetic() {
     TEST("ADD AL,CL",            0x02, 0301);
     TEST("ADD DL,BL",            0x02, 0323);
     TEST("ADD AH,CH",            0x02, 0345);
@@ -806,7 +806,7 @@ static void test_arithmetic() {
     TEST("CWD", 0x99);
 }
 
-static void test_logic() {
+void test_logic() {
     TEST("NOT CH",                     0xF6, 0325);
     TEST("NOT BYTE PTR [SI]",          0xF6, 0024);
     TEST("NOT BYTE PTR [1234H]",       0xF6, 0026, 0x34, 0x12);
@@ -1601,7 +1601,7 @@ static void test_logic() {
     }
 }
 
-static void test_string_manipulation() {
+void test_string_manipulation() {
     TEST("REPNE", 0xF2);
     TEST("REPNZ", 0xF2);
     TEST("REPE",  0xF3);
@@ -1721,7 +1721,7 @@ static void test_string_manipulation() {
     }
 }
 
-static void test_control_transfer() {
+void test_control_transfer() {
     ATEST(0x01000, "CALL 01082H",                             0xE8, 0x7F, 0x00);
     ATEST(0x01000, "CALL 09002H",                             0xE8, 0xFF, 0x7F);
     AERRT(0xFF000, "CALL $+8002H", OVERFLOW_RANGE, "$+8002H", 0xE8, 0xFF, 0x7F);
@@ -1872,7 +1872,7 @@ static void test_control_transfer() {
     }
 }
 
-static void test_processor_control() {
+void test_processor_control() {
     TEST("CLC ", 0xF8);
     TEST("CMC ", 0xF5);
     TEST("STC ", 0xF9);
@@ -1886,7 +1886,7 @@ static void test_processor_control() {
     TEST("NOP ", 0x90);
 }
 
-static void test_segment_override() {
+void test_segment_override() {
     TEST("MOV ES:[BX],AH",    0x26, 0x88, 0047);
     TEST("MOV ES:[BP],AH",    0x26, 0x88, 0146, 0x00);
     TEST("MOV ES:[SI],AH",    0x26, 0x88, 0044);
@@ -1982,7 +1982,7 @@ static void test_segment_override() {
 
 #if !defined(LIBASM_I8086_NOFPU)
 
-static void test_float() {
+void test_float() {
     TEST("FPU 8087");
 
     TEST("FINIT", 0x9B, 0xDB, 0xE3);
@@ -2532,7 +2532,7 @@ static void test_float() {
     TEST("FWAIT",       0x9B);
 }
 
-static void test_float_nowait() {
+void test_float_nowait() {
     TEST("FPU 8087");
 
     TEST("FNINIT",       0xDB, 0xE3);
@@ -2653,7 +2653,7 @@ static void test_float_nowait() {
 
 #endif
 
-static void test_undef() {
+void test_undef() {
     ERUS("MOV [UNDEF],BH",       "UNDEF],BH", 0x88, 0076, 0x00, 0x00);
     ERUS("MOV [DI+UNDEF],AL",    "UNDEF],AL", 0x88, 0205, 0x00, 0x00);
     ERUS("MOV [BP+UNDEF],CL",    "UNDEF],CL", 0x88, 0216, 0x00, 0x00);
@@ -2717,7 +2717,7 @@ static void test_undef() {
     ERUS("INT UNDEF", "UNDEF", 0xCD, 0x00);
 }
 
-static void test_comment() {
+void test_comment() {
     COMM("MOV AH , CH                 ; comment", "; comment", 0x8A, 0345);
     COMM("MOV [ SI ] , DH             ; comment", "; comment", 0x88, 0064);
     COMM("MOV [ 1234H ] , BH          ; comment", "; comment", 0x88, 0076, 0x34, 0x12);
@@ -2755,7 +2755,7 @@ static void test_comment() {
 #endif
 }
 
-static void test_error() {
+void test_error() {
     ERRT("LEA BX,CX", OPERAND_NOT_ALLOWED, "BX,CX");
     ERRT("LDS BX,CX", OPERAND_NOT_ALLOWED, "BX,CX");
     ERRT("LES BX,CX", OPERAND_NOT_ALLOWED, "BX,CX");
@@ -2837,7 +2837,7 @@ static void test_error() {
     }
 }
 
-static void test_data_constant() {
+void test_data_constant() {
     TEST("DB -128, 255", 0x80, 0xFF);
     TEST(R"(DB 'A', '"')", 0x41, 0x22);
     TEST("DB '9'-'0'",   0x09);

@@ -24,12 +24,11 @@ using namespace libasm::test;
 DisScn2650 dis2650;
 Disassembler &disassembler(dis2650);
 
-static void set_up() {
+void set_up() {
     disassembler.reset();
-    disassembler.setCpu("2650");
 }
 
-static void tear_down() {
+void tear_down() {
     symtab.reset();
 }
 
@@ -635,7 +634,7 @@ void test_misc() {
     TEST("TPSL", "H'B6'", 0xB5, 0xB6);
 }
 
-static void test_illegal() {
+void test_illegal() {
     UNKN(0x00);
     UNKN(0x10);
     UNKN(0x11);

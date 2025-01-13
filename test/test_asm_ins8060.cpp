@@ -24,11 +24,11 @@ using namespace libasm::test;
 AsmIns8060 asm8060;
 Assembler &assembler(asm8060);
 
-static void set_up() {
+void set_up() {
     assembler.reset();
 }
 
-static void tear_down() {
+void tear_down() {
     symtab.reset();
 }
 
@@ -44,7 +44,7 @@ void test_cpu() {
     EQUALS_P("cpu INS8060", "SC/MP", assembler.config().cpu_P());
 }
 
-static void test_inherent() {
+void test_inherent() {
     TEST("HALT", 0x00);
     TEST("XAE",  0x01);
     TEST("CCL",  0x02);
@@ -68,7 +68,7 @@ static void test_inherent() {
     TEST("CAE",  0x78);
 }
 
-static void test_pointer() {
+void test_pointer() {
     TEST("xpal pc", 0x30);
     TEST("XPAL P1", 0x31);
     TEST("XPAL P2", 0x32);
@@ -83,11 +83,11 @@ static void test_pointer() {
     TEST("XPPC P3", 0x3F);
 }
 
-static void test_immediate() {
+void test_immediate() {
     TEST("DLY 0x12", 0x8F, 0x12);
 }
 
-static void test_jump() {
+void test_jump() {
     ATEST(0x1000, "JMP 0x1000",  0x90, 0xFE);
     ATEST(0x1000, "JP  0x1081",  0x94, 0x7F);
     ATEST(0x1000, "JMP x'1000",  0x90, 0xFE);
@@ -126,7 +126,7 @@ static void test_jump() {
     TEST("JMP E(P3)",        0x93, 0x80);
 }
 
-static void test_incr_decr() {
+void test_incr_decr() {
     ATEST(0x1000, "ILD 0x1000", 0xA8, 0xFF);
     ERRT("ILD @1(P1)",   OPERAND_NOT_ALLOWED, "@1(P1)");
     ERRT("DLD @E(P1)",   OPERAND_NOT_ALLOWED, "@E(P1)");
@@ -160,7 +160,7 @@ static void test_incr_decr() {
     TEST("ILD disp0x81(P3)", 0xAB, 0x81);
 }
 
-static void test_alu() {
+void test_alu() {
     ATEST(0x1000, "LD 0x1000", 0xC0, 0xFF);
     TEST("LD 127(P2)",                               0xC2, 0x7F);
     ERRT("LD 128(P2)",   OVERFLOW_RANGE, "128(P2)",  0xC2, 0x80);
@@ -197,7 +197,7 @@ static void test_alu() {
     TEST("OR  @disp0x81(P3)", 0xDF, 0x81);
 }
 
-static void test_alu_immediate() {
+void test_alu_immediate() {
     TEST("LDI 0",                            0xC4, 0x00);
     TEST("LDI 255",                          0xC4, 0xFF);
     ERRT("LDI 256",  OVERFLOW_RANGE, "256",  0xC4, 0x00);
@@ -218,7 +218,7 @@ static void test_alu_immediate() {
     ATEST(0x1024, "LDI L($)+$minus1", 0xC4, 0x23);
 }
 
-static void test_page_boundary() {
+void test_page_boundary() {
     ATEST(0x1FFE, "LDI 0",                        0xC4, 0x00);
     AERRT(0x1FFF, "LDI 0", OVERWRAP_SEGMENT, "0", 0xC4, 0x00);
 
@@ -247,7 +247,7 @@ static void test_page_boundary() {
     AERRT(0x1FF0, "JZ 0x1072", OPERAND_TOO_FAR,  "0x1072", 0x98, 0x80);
 }
 
-static void test_func() {
+void test_func() {
     symtab.intern(0x1FFF, "stack");
     symtab.intern(0x1000, "main");
     symtab.intern(0x3210, "func");
@@ -260,7 +260,7 @@ static void test_func() {
     TEST("LDI H(addr(func))", 0xC4, 0x32);
 }
 
-static void test_comment() {
+void test_comment() {
     symtab.intern(-127, "m127");
     symtab.intern(127,  "p127");
 
@@ -279,7 +279,7 @@ static void test_comment() {
     COMM(".ADDR X'1000     ; comment", "; comment", 0xFF, 0x1F);
 }
 
-static void test_undef() {
+void test_undef() {
     ERUS("DLY UNDEF", "UNDEF", 0x8F, 0x00);
     ERUS("LD  UNDEF", "UNDEF", 0xC0, 0x00);
     ERUS("LD  UNDEF(PC)", "UNDEF(PC)", 0xC0, 0x00);
@@ -290,7 +290,7 @@ static void test_undef() {
     ERUS("JMP UNDEF", "UNDEF", 0x90, 0x00);
 }
 
-static void test_error() {
+void test_error() {
     ERUS("LD (P3)", "P3)", 0xC0, 0x00);
     ERUS("LD (E)",  "E)",  0xC0, 0x00);
     ERRT("LD 1(E)", UNKNOWN_OPERAND, "1(E)");
@@ -298,7 +298,7 @@ static void test_error() {
     ERRT("LD 1(P3 ;comment", MISSING_CLOSING_PAREN, " ;comment");
 }
 
-static void test_data_constant() {
+void test_data_constant() {
     TEST(".byte  -128, 255", 0x80, 0xFF);
     TEST(R"(.byte  'A', '"')", 0x41, 0x22);
     TEST(".byte  '9'-'0'",   0x09);

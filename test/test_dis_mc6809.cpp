@@ -24,20 +24,19 @@ using namespace libasm::test;
 DisMc6809 dis6809;
 Disassembler &disassembler(dis6809);
 
-static bool is6809() {
+bool is6809() {
     return strcmp_P("6809", disassembler.config().cpu_P()) == 0;
 }
 
-static bool is6309() {
+bool is6309() {
     return strcmp("6309", disassembler.config().cpu_P()) == 0;
 }
 
-static void set_up() {
+void set_up() {
     disassembler.reset();
-    disassembler.setOption("relative", "no");
 }
 
-static void tear_down() {
+void tear_down() {
     symtab.reset();
 }
 
@@ -56,7 +55,7 @@ void test_cpu() {
     EQUALS_P("cpu HD6309", "6309", disassembler.config().cpu_P());
 }
 
-static void test_inherent() {
+void test_inherent() {
     TEST("NOP",  "", 0x12);
     TEST("SYNC", "", 0x13);
     TEST("DAA",  "", 0x19);
@@ -126,7 +125,7 @@ static void test_inherent() {
     }
 }
 
-static void test_immediate() {
+void test_immediate() {
     TEST("ORCC", "#1",   0x1A, 0x01);
     TEST("ORCC", "#16",  0x1A, 0x10);
     TEST("ORCC", "#$FF", 0x1A, 0xFF);
@@ -226,7 +225,7 @@ static void test_immediate() {
     TEST("LDS",  "#dir90A0", 0x10, 0xCE, 0x90, 0xA0);
 }
 
-static void test_direct() {
+void test_direct() {
     TEST("NEG",  "$00", 0x00, 0x00);
     TEST("COM", "$09", 0x03, 0x09);
     TEST("LSR", "$10", 0x04, 0x10);
@@ -348,7 +347,7 @@ static void test_direct() {
     }
 }
 
-static void test_extended() {
+void test_extended() {
     TEST("NEG", ">$0000", 0x70, 0x00, 0x00);
     TEST("COM", ">$0009", 0x73, 0x00, 0x09);
     TEST("LSR", ">$0034", 0x74, 0x00, 0x34);
@@ -473,7 +472,7 @@ static void test_extended() {
     }
 }
 
-static void test_indexed() {
+void test_indexed() {
     TEST("LEAX", ",Y", 0x30, 0xA4);
     TEST("LEAY", ",U", 0x31, 0xC4);
     TEST("LEAU", ",S", 0x33, 0xE4);
@@ -581,7 +580,7 @@ static void test_indexed() {
     }
 }
 
-static void test_indexed_mode() {
+void test_indexed_mode() {
     TEST("LDA", ",X",   0xA6, 0x84);
     TEST("LDA", ",Y",   0xA6, 0xA4);
     TEST("LDA", ",U",   0xA6, 0xC4);
@@ -859,7 +858,7 @@ static void test_indexed_mode() {
     ATEST(0x1000, "LDA",  "[label1234]",                 0xA6, 0x9F, 0x12, 0x34);
 }
 
-static void test_indexed_error() {
+void test_indexed_error() {
     // nnnn,PCR and [nnnn,PCR] has don't care bits.
     TEST("LDA",   "$0003,PCR",  0xA6, 0x8C, 0x00);
     TEST("LDA",   "$0003,PCR",  0xA6, 0xAC, 0x00);
@@ -879,7 +878,7 @@ static void test_indexed_error() {
     TEST("LDA", "[>$0004,PCR]", 0xA6, 0xFD, 0x00, 0x00);
 }
 
-static void test_relative() {
+void test_relative() {
     ATEST(0x1000, "BRA", "$1002",                 0x20, 0x00);
     ATEST(0x1000, "BRN", "$1000",                 0x21, 0xFE);
     AERRT(0x0010, "BRA", "$FF92", OVERFLOW_RANGE, "$FF92", 0x20, 0x80);
@@ -953,7 +952,7 @@ static void test_relative() {
     AERRT(0x9000, "LBSR", "*+$8002", OVERFLOW_RANGE, "*+$8002", 0x17, 0x7F, 0xFF);
 }
 
-static void test_stack() {
+void test_stack() {
     TEST("PSHS", "A", 0x34, 0x02);
     TEST("PULS", "A", 0x35, 0x02);
     TEST("PSHU", "A", 0x36, 0x02);
@@ -986,7 +985,7 @@ static void test_stack() {
     TEST("PULU", "",   0x37, 0x00);
 }
 
-static void test_register() {
+void test_register() {
     TEST("EXG", "A, B",   0x1E, 0x89);
     TEST("EXG", "B, CC",  0x1E, 0x9A);
     TEST("EXG", "CC, DP", 0x1E, 0xAB);
@@ -1062,7 +1061,7 @@ static void test_register() {
     }
 }
 
-static void test_transfer() {
+void test_transfer() {
     TEST("TFM", "X+, Y+", 0x11, 0x38, 0x12);
     TEST("TFM", "Y-, U-", 0x11, 0x39, 0x23);
     TEST("TFM", "U+, S",  0x11, 0x3A, 0x34);
@@ -1081,7 +1080,7 @@ static void test_transfer() {
     ERRT("TFM", "D+, F+",  ILLEGAL_REGISTER,      "F+", 0x11, 0x38, 0x0F);
 }
 
-static void test_bit_position() {
+void test_bit_position() {
     TEST("BAND",  "A.1, $34.2", 0x11, 0x30, 0x51, 0x34);
     TEST("BIAND", "A.1, $34.2", 0x11, 0x31, 0x51, 0x34);
     TEST("BOR",   "A.1, $34.2", 0x11, 0x32, 0x51, 0x34);
@@ -1108,7 +1107,7 @@ static void test_bit_position() {
     TEST("LDBT", "B.2, <dir34.4",  0x11, 0x36, 0xA2, 0x34);
 }
 
-static void test_illegal_mc6809() {
+void test_illegal_mc6809() {
     static constexpr Config::opcode_t p00_illegals[] = {
         0x01, 0x02, 0x05, 0x0b,
         0x14, 0x15, 0x18, 0x1b,
@@ -1179,7 +1178,7 @@ static void test_illegal_mc6809() {
         ERRT("LDA", "", UNKNOWN_POSTBYTE, "", 0xA6, post);
 }
 
-static void test_illegal_hd6309() {
+void test_illegal_hd6309() {
     static constexpr Config::opcode_t p00_illegals[] = {
         0x15, 0x1b,
         0x38, 0x3e,

@@ -24,12 +24,11 @@ using namespace libasm::test;
 DisIns8070 dis8070;
 Disassembler &disassembler(dis8070);
 
-static void set_up() {
+void set_up() {
     disassembler.reset();
-    disassembler.setOption("relative", "off");
 }
 
-static void tear_down() {
+void tear_down() {
     symtab.reset();
 }
 
@@ -42,7 +41,7 @@ void test_cpu() {
     EQUALS_P("cpu INS8070", "8070", disassembler.config().cpu_P());
 }
 
-static void test_implied() {
+void test_implied() {
     TEST("NOP",  "",       0x00);
     TEST("XCH",  "A, E",   0x01);
     TEST("LD",   "A, S",   0x06);
@@ -106,7 +105,7 @@ static void test_implied() {
     TEST("SUB",  "A, E",   0x78);
 }
 
-static void test_immediate() {
+void test_immediate() {
     TEST("AND", "S, =18",   0x39, 0x12);
     TEST("OR",  "S, =X'34", 0x3B, 0x34);
     TEST("LD",  "A, =18",   0xC4, 0x12);
@@ -148,7 +147,7 @@ static void test_immediate() {
     TEST("PLI", "P2, #sym1234", 0x22, 0x34, 0x12);
 }
 
-static void test_absolute() {
+void test_absolute() {
     TEST("JSR", "X'1234", 0x20, 0x33, 0x12);
     TEST("JMP", "X'1234",           0x24, 0x33, 0x12);
     NMEM("JMP", "X'0034", "X'0034", 0x24, 0x33);
@@ -160,7 +159,7 @@ static void test_absolute() {
     TEST("JMP", "sym1234", 0x24, 0x33, 0x12);
 }
 
-static void test_direct() {
+void test_direct() {
     TEST("LD",  "EA, X'FF34", 0x85, 0x34);
     TEST("ST",  "EA, X'FF34", 0x8D, 0x34);
     TEST("ILD", "A, X'FF34",  0x95, 0x34);
@@ -188,7 +187,7 @@ static void test_direct() {
     TEST("LD",  "A, dir34",  0xC5, 0x34);
 }
 
-static void test_relative() {
+void test_relative() {
     ATEST(0x1000, "BP",  "X'1000", 0x64, 0xFE);
     ATEST(0x1100, "BZ",  "X'1082", 0x6C, 0x80);
     ATEST(0x1000, "BRA", "X'1081", 0x74, 0x7F);
@@ -213,7 +212,7 @@ static void test_relative() {
     ATEST(0x2000, "BRA", "$+129", 0x74, 0x7F);
 }
 
-static void test_indexed() {
+void test_indexed() {
     TEST("BP",  "0,P2",    0x66, 0x00);
     TEST("BP",  "-128,P3", 0x67, 0x80);
     TEST("BZ",  "127,P2",  0x6E, 0x7F);
@@ -307,7 +306,7 @@ static void test_indexed() {
     ATEST(0x2000, "LD",  "EA, $+128,PC", 0x80, 0x7F);
 }
 
-static void test_auto_indexed() {
+void test_auto_indexed() {
     TEST("LD",  "EA, @-128,P2", 0x86, 0x80);
     TEST("LD",  "EA, @127,P3",  0x87, 0x7F);
     TEST("ST",  "EA, @-128,P2", 0x8E, 0x80);
@@ -350,7 +349,7 @@ static void test_auto_indexed() {
     TEST("SUB", "A, @neg1,P3",   0xFF, 0xFF);
 }
 
-static void test_formatter() {
+void test_formatter() {
     disassembler.setOption("c-style", "on");
     TEST("XOR", "A, =0x55",  0xE4, 0x55);
 
@@ -370,7 +369,7 @@ static void test_formatter() {
     TEST("LD",  "P2, =X'1234", 0x26, 0x34, 0x12);
 }
 
-static void test_illegal() {
+void test_illegal() {
     static constexpr Config::opcode_t illegals[] = {
         0x02, 0x03, 0x04, 0x05,
         0x21, 0x28, 0x29, 0x2A, 0x2B,

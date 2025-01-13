@@ -24,19 +24,19 @@ using namespace libasm::test;
 DisCdp1802 dis1802;
 Disassembler &disassembler(dis1802);
 
-static bool cdp1804() {
+bool cdp1804() {
     return strcmp_P("1804", disassembler.config().cpu_P()) == 0;
 }
 
-static bool cdp1804a() {
+bool cdp1804a() {
     return strcmp_P("1804A", disassembler.config().cpu_P()) == 0;
 }
 
-static void set_up() {
+void set_up() {
     disassembler.reset();
 }
 
-static void tear_down() {
+void tear_down() {
     symtab.reset();
 }
 
@@ -61,7 +61,7 @@ void test_cpu() {
     EQUALS_P("cpu CDP1804A", "1804A", disassembler.config().cpu_P());
 }
 
-static void test_mem_ref() {
+void test_mem_ref() {
     // Load Immediate
     TEST("LDI", "18",   0xF8, 0x12);
 
@@ -195,7 +195,7 @@ static void test_mem_ref() {
     TEST("SEP", "CALL", 0xD4);
 }
 
-static void test_reg_op() {
+void test_reg_op() {
     // Increment reg N
     TEST("INC", "0",  0x10);
     TEST("INC", "1",  0x11);
@@ -350,7 +350,7 @@ static void test_reg_op() {
     }
 }
 
-static void test_logic_op() {
+void test_logic_op() {
     TEST("OR",   "",       0xF1);
     TEST("ORI",  "X'34'",  0xF9, 0x34);
     NMEM("ORI",  "0", "0", 0xF9);
@@ -365,7 +365,7 @@ static void test_logic_op() {
     TEST("SHLC", "",      0x7E);
 }
 
-static void test_arith_op() {
+void test_arith_op() {
     TEST("ADD",  "",       0xF4);
     TEST("ADI",  "X'89'",  0xFC, 0x89);
     NMEM("ADI",  "0", "0", 0xFC);
@@ -398,7 +398,7 @@ static void test_arith_op() {
     TEST("ADI", "pos254", 0xFC, 0xFE);
 }
 
-static void test_branch() {
+void test_branch() {
     ATEST(0x1000, "BR",  "X'1031'", 0x30, 0x31);
     ATEST(0x1000, "BZ",  "X'1033'", 0x32, 0x33);
     ATEST(0x1000, "BNZ", "X'103B'", 0x3A, 0x3B);
@@ -455,7 +455,7 @@ static void test_branch() {
     TEST("LBNF", "sym1131", 0xCB, 0x11, 0x31);
 }
 
-static void test_control() {
+void test_control() {
     TEST("IDL",  "", 0x00);
     TEST("NOP",  "", 0xC4);
 
@@ -498,7 +498,7 @@ static void test_control() {
     TEST("MARK", "", 0x79);
 }
 
-static void test_timer() {
+void test_timer() {
     TEST("LDC",  "", 0x68, 0x06);
     TEST("GEC",  "", 0x68, 0x08);
     TEST("STPC", "", 0x68, 0x00);
@@ -511,7 +511,7 @@ static void test_timer() {
     TEST("ETQ",  "", 0x68, 0x09);
 }
 
-static void test_intr() {
+void test_intr() {
     TEST("RET", "", 0x70);
     TEST("DIS", "", 0x71);
     TEST("SAV", "", 0x78);
@@ -527,7 +527,7 @@ static void test_intr() {
     }
 }
 
-static void test_io() {
+void test_io() {
     TEST("OUT", "1", 0x61);
     TEST("OUT", "2", 0x62);
     TEST("OUT", "3", 0x63);
@@ -548,7 +548,7 @@ static void test_io() {
     TEST("INP", "STDIN", 0x69);
 }
 
-static void test_call() {
+void test_call() {
     TEST("SCAL", "0, X'1234'",  0x68, 0x80, 0x12, 0x34);
     TEST("SCAL", "1, X'1234'",  0x68, 0x81, 0x12, 0x34);
     TEST("SCAL", "2, X'1234'",  0x68, 0x82, 0x12, 0x34);
@@ -587,7 +587,7 @@ static void test_call() {
     TEST("SRET", "15", 0x68, 0x9F);
 }
 
-static void test_reg() {
+void test_reg() {
     disassembler.setOption("use-register", "on");
 
     TEST("LDN", "R1",  0x01);
@@ -615,11 +615,11 @@ static void test_reg() {
     }
 }
 
-static void test_illegal_cdp1802() {
+void test_illegal_cdp1802() {
     UNKN(0x68);
 }
 
-static void test_illegal_cdp1804() {
+void test_illegal_cdp1804() {
     NMEM("", "", "", 0x68);
 
     static constexpr Config::opcode_t illegals[] = {
@@ -648,7 +648,7 @@ static void test_illegal_cdp1804() {
         UNKN(0x68, opc);
 }
 
-static void test_illegal_cdp1804a() {
+void test_illegal_cdp1804a() {
     NMEM("", "", "", 0x68);
 
     static constexpr Config::opcode_t illegals[] = {

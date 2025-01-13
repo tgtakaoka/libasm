@@ -24,28 +24,28 @@ using namespace libasm::test;
 AsmI8048 asm8048;
 Assembler &assembler(asm8048);
 
-static bool isCmos() {
+bool isCmos() {
     const /* PROGMEM */ auto cpu_P = assembler.config().cpu_P();
     return strcmp_P("80C39", cpu_P) == 0 || strcmp_P("80C48", cpu_P) == 0 ||
            strcmp_P("MSM80C39", cpu_P) == 0 || strcmp_P("MSM80C48", cpu_P) == 0;
 }
 
-static bool is8048() {
+bool is8048() {
     const /* PROGMEM */ auto cpu_P = assembler.config().cpu_P();
     return strcmp_P("8048", cpu_P) == 0 || strcmp_P("80C48", cpu_P) == 0 ||
            strcmp_P("MSM80C48", cpu_P) == 0;
 }
 
-static bool isOki() {
+bool isOki() {
     const /* PROGMEM */ auto cpu_P = assembler.config().cpu_P();
     return strcmp_P("MSM80C39", cpu_P) == 0 || strcmp_P("MSM80C48", cpu_P) == 0;
 }
 
-static void set_up() {
+void set_up() {
     assembler.reset();
 }
 
-static void tear_down() {
+void tear_down() {
     symtab.reset();
 }
 
@@ -82,7 +82,7 @@ void test_cpu() {
     EQUALS_P("cpu msm80c48", "MSM80C48", assembler.config().cpu_P());
 }
 
-static void test_accumlator() {
+void test_accumlator() {
     TEST("add a, r0",  0x68);
     TEST("ADD A, R1",  0x69);
     TEST("ADD A, R2",  0x6A);
@@ -161,7 +161,7 @@ static void test_accumlator() {
     TEST("RRC  A", 0x67);
 }
 
-static void test_io() {
+void test_io() {
     ERRT("IN   A, P0", OPERAND_NOT_ALLOWED, "A, P0");
     TEST("IN   A, P1", 0x09);
     TEST("IN   A, P2", 0x0A);
@@ -240,7 +240,7 @@ static void test_io() {
     TEST("ORLD P7, A", 0x8F);
 }
 
-static void test_register() {
+void test_register() {
     TEST("INC R0", 0x18);
     TEST("INC R1", 0x19);
     TEST("INC R2", 0x1A);
@@ -270,7 +270,7 @@ static void test_register() {
     }
 }
 
-static void test_branch() {
+void test_branch() {
     TEST("JMP  712H", 0xE4, 0x12);
     TEST("JMP  034H", 0x04, 0x34);
     TEST("JMPP @A",   0xB3);
@@ -324,14 +324,14 @@ static void test_branch() {
     AERRT(0xC00, "JB 8, 0C34H",  ILLEGAL_BIT_NUMBER, "8, 0C34H",  0x12, 0x34);
 }
 
-static void test_subroutine() {
+void test_subroutine() {
     ATEST(0x700, "CALL 712H", 0xF4, 0x12);
     ATEST(0x000, "CALL 034H", 0x14, 0x34);
     TEST("RET  ", 0x83);
     TEST("RETR ", 0x93);
 }
 
-static void test_flag() {
+void test_flag() {
     TEST("CLR C",  0x97);
     TEST("CLR F0", 0x85);
     TEST("CLR F1", 0xA5);
@@ -341,7 +341,7 @@ static void test_flag() {
     TEST("CPL F1", 0xB5);
 }
 
-static void test_move() {
+void test_move() {
     TEST("MOV A, R0",  0xF8);
     TEST("MOV A, R1",  0xF9);
     TEST("MOV A, R2",  0xFA);
@@ -407,7 +407,7 @@ static void test_move() {
     }
 }
 
-static void test_timer_counter() {
+void test_timer_counter() {
     TEST("MOV A, T", 0x42);
     TEST("MOV T, A", 0x62);
 
@@ -419,7 +419,7 @@ static void test_timer_counter() {
     TEST("DIS TCNTI", 0x35);
 }
 
-static void test_control() {
+void test_control() {
     TEST("EN  I", 0x05);
     TEST("DIS I", 0x15);
 
@@ -449,20 +449,20 @@ static void test_control() {
     }
 }
 
-static void test_comment() {
+void test_comment() {
     COMM("ADDC A, R0; comment", "; comment",  0x78);
     COMM("DB -128, 255 ; comment", "; comment", 0x80, 0xFF);
     COMM("DW 'A''B'    ; comment", "; comment", 0x41, 0x27, 0x42, 0x00);
 }
 
-static void test_undef() {
+void test_undef() {
     ERUS("ADDC A, #UNDEF", "UNDEF", 0x13, 0x00);
     ERUS("JMP UNDEF",      "UNDEF", 0x04, 0x00);
     ERUS("DJNZ R0, UNDEF", "UNDEF", 0xE8, 0x00);
     ERUS("CALL UNDEF",     "UNDEF", 0x14, 0x00);
 }
 
-static void test_data_constant() {
+void test_data_constant() {
     TEST("DB -128, 255", 0x80, 0xFF);
     TEST(R"(DB 'A', '"')", 0x41, 0x22);
     TEST("DB '9'-'0'",   0x09);

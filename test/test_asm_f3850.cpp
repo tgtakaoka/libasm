@@ -24,13 +24,11 @@ using namespace libasm::test;
 AsmF3850 asm3850;
 Assembler &assembler(asm3850);
 
-static void set_up() {
+void set_up() {
   assembler.reset();
-  assembler.setCpu("F3850");
-  assembler.setOption("relative", "off");
 }
 
-static void tear_down() {
+void tear_down() {
     symtab.reset();
 }
 

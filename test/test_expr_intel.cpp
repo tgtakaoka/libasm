@@ -25,14 +25,14 @@ const ValueParser parser{ValueParser::Plugins::intel()};
 
 const ValueFormatter formatter{ValueFormatter::Plugins::intel()};
 
-static void set_up() {}
+void set_up() {}
 
-static void tear_down() {
+void tear_down() {
     symtab.reset();
 }
 
 // clang-format off
-static void test_char_constant() {
+void test_char_constant() {
     E8("'a'",   0x61);
     E8("'a'+5", 0x66);
     E8("5+'a'", 0x66);
@@ -48,7 +48,7 @@ static void test_char_constant() {
     E32("'a'", 0x61);
 }
 
-static void test_dec_constant() {
+void test_dec_constant() {
     E8("0",   0x00);
     E8("127", 0x7f);
     E8("128", 0x80);
@@ -69,7 +69,7 @@ static void test_dec_constant() {
     X32("9999999999D", OVERFLOW_RANGE, "9999999999D", "");
 }
 
-static void test_hex_constant() {
+void test_hex_constant() {
     E8("0H",   0x00);
     E8("7fH",  0x7f);
     E8("80H",  0x80);
@@ -103,7 +103,7 @@ static void test_hex_constant() {
     X32("0x100000000", OVERFLOW_RANGE, "0x100000000", "");
 }
 
-static void test_oct_constant() {
+void test_oct_constant() {
     E8("0O",   0x00);
     E8("177O", 0x7f);
     E8("200Q", 0x80);
@@ -129,7 +129,7 @@ static void test_oct_constant() {
     X32("040000000000", OVERFLOW_RANGE, "040000000000", "");
 }
 
-static void test_bin_constant() {
+void test_bin_constant() {
     E8("0B",         0x00);
     E8("01111111b",  0x7f);
     E8("10000000B",  0x80);
@@ -155,7 +155,7 @@ static void test_bin_constant() {
     X32("0b100000000000000000000000000000000", OVERFLOW_RANGE, "0b100000000000000000000000000000000", "");
 }
 
-static void test_unary_operator() {
+void test_unary_operator() {
     E8("NOT +0",    0xFF);
     E8("NOT (1|8)", 0xF6);
     E8("NOT -1",    0x00);
@@ -181,7 +181,7 @@ static void test_unary_operator() {
     E32("LOW MSW 12345678H", 0x34);  // LOW (MSW 12345678H)
 }
 
-static void test_binary_operator() {
+void test_binary_operator() {
     E8("( 20) * ( 3)", 60);
     E8("( 20) * (-3)", -60);
     E8("(-20) * ( 3)", -60);
@@ -247,7 +247,7 @@ static void test_binary_operator() {
     E32("0b0110 XOR 0xffffffff", 0xfffffff9);
 }
 
-static void test_precedence() {
+void test_precedence() {
     E16("1+2-3+4",    4);
     E16("1+2*3+4",   11);
     E16("1+2-7/3",    1);
@@ -299,7 +299,7 @@ static void test_precedence() {
     E8("(1 XOR 3) SHL 3", 16);
 }
 
-static void test_current_address() {
+void test_current_address() {
     context.currentLocation = 0x1000;
     E16("$",        0x1000);
     E16("$+2",      0x1002);
@@ -315,7 +315,7 @@ static void test_current_address() {
     E16("($-table)/2", 0x080);
 }
 
-static void test_scan() {
+void test_scan() {
     SERR('|', "|1+2|",        0,        "|1+2|", NOT_AN_EXPECTED, "|1+2|");
     SCAN('|', "1+2|3+4",      3,        "|3+4");
     SCAN('|', "1+(2|3)+4|5",  8,        "|5");
@@ -331,14 +331,14 @@ static void test_scan() {
     SCAN('B', "1012BBX",      1012,     "BBX");
 }
 
-static void test_errors() {
+void test_errors() {
     EXPR("0ABCGH", 0,     "ABCGH");
     EXPR("01778O", 0177,  "8O");
     EXPR("01012B", 01012, "B");
     EXPR("56789A", 56789, "A");
 }
 
-static void test_comment() {
+void test_comment() {
     EXPR(" - 1 ", -1, "");
     EXPR(" + 1 ",  1, "");
     EXPR(" ~ 0 ", -1, "");
@@ -346,7 +346,7 @@ static void test_comment() {
     EXPR(" ( 1 + 2 ) * 3 ", 9, "");
 }
 
-static void test_formatter_8bit() {
+void test_formatter_8bit() {
     DEC(0,    8, "0");
     DEC(32,   8, "32");
     DEC(128,  8, "128");
@@ -558,7 +558,7 @@ static void test_formatter_8bit() {
     URHEX(-256, -8, "0");
 }
 
-static void test_formatter_16bit() {
+void test_formatter_16bit() {
     DEC(0,        16, "0");
     DEC(32,       16, "32");
     DEC(0x8000,   16, "32768");
@@ -666,7 +666,7 @@ static void test_formatter_16bit() {
     RHEX(-0x10000, -16, "0");
 }
 
-static void test_formatter_24bit() {
+void test_formatter_24bit() {
     DEC(0,           24, "0");
     DEC(32,          24, "32");
     DEC(0x800000,    24, "8388608");
@@ -774,7 +774,7 @@ static void test_formatter_24bit() {
     RHEX(-0x1000000, -24, "0");
 }
 
-static void test_formatter_32bit() {
+void test_formatter_32bit() {
     DEC(0,            32, "0");
     DEC(32,           32, "32");
     DEC(0x80000000,   32, "2147483648");

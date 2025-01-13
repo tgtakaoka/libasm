@@ -24,27 +24,27 @@ using namespace libasm::test;
 AsmMos6502 as6502;
 Assembler &assembler(as6502);
 
-static bool m6502() {
+bool m6502() {
     return strcmp_P("6502", assembler.config().cpu_P()) == 0;
 }
 
-static bool r65c02() {
+bool r65c02() {
     return strcmp_P("65C02", assembler.config().cpu_P()) == 0;
 }
 
-static bool w65c02s() {
+bool w65c02s() {
     return strcmp_P("W65C02S", assembler.config().cpu_P()) == 0;
 }
 
-static bool w65c816() {
+bool w65c816() {
     return strcmp_P("65816", assembler.config().cpu_P()) == 0;
 }
 
-static void set_up() {
+void set_up() {
     assembler.reset();
 }
 
-static void tear_down() {
+void tear_down() {
     symtab.reset();
 }
 
@@ -87,7 +87,7 @@ void test_cpu() {
     EQUALS_P("cpu w65c816s", "65816", assembler.config().cpu_P());
 }
 
-static void test_impl() {
+void test_impl() {
     TEST("BRK", 0x00);
     TEST("RTI", 0x40);
     TEST("RTS", 0x60);
@@ -170,7 +170,7 @@ static void test_impl() {
     }
 }
 
-static void test_accm() {
+void test_accm() {
     // MOS6502
     TEST("ASL A", 0x0A);
     TEST("ROL A", 0x2A);
@@ -187,7 +187,7 @@ static void test_accm() {
     }
 }
 
-static void test_imm() {
+void test_imm() {
     // MOS6502
     TEST("LDY #0",    0xA0, 0x00);
     TEST("LDX #16",   0xA2, 0x10);
@@ -278,7 +278,7 @@ static void test_imm() {
     }
 }
 
-static void test_zpg() {
+void test_zpg() {
     // MOS6502
     TEST("BIT $10", 0x24, 0x10);
     TEST("ORA $10", 0x05, 0x10);
@@ -333,7 +333,7 @@ static void test_zpg() {
     }
 }
 
-static void test_zpg_indexed() {
+void test_zpg_indexed() {
     // MOS6502
     TEST("ora $10,x", 0x15, 0x10);
     TEST("AND $10,X", 0x35, 0x10);
@@ -386,7 +386,7 @@ static void test_zpg_indexed() {
     }
 }
 
-static void test_zpg_long() {
+void test_zpg_long() {
     if (w65c816()) {
         TEST("ORA [$10]", 0x07, 0x10);
         TEST("AND [$10]", 0x27, 0x10);
@@ -437,7 +437,7 @@ static void test_zpg_long() {
     }
 }
 
-static void test_sp_rel() {
+void test_sp_rel() {
     if (w65c816()) {
         TEST("LDA ($10,S),Y", 0xB3, 0x10);
         TEST("STA ($10,S),Y", 0x93, 0x10);
@@ -467,7 +467,7 @@ static void test_sp_rel() {
     }
 }
 
-static void test_abs() {
+void test_abs() {
     // MOS6502
     TEST("BIT $1234", 0x2C, 0x34, 0x12);
     TEST("ORA $1234", 0x0D, 0x34, 0x12);
@@ -533,7 +533,7 @@ static void test_abs() {
     }
 }
 
-static void test_abs_long() {
+void test_abs_long() {
     if (w65c816()) {
         TEST("ORA $123456", 0x0F, 0x56, 0x34, 0x12);
         TEST("AND $123456", 0x2F, 0x56, 0x34, 0x12);
@@ -591,7 +591,7 @@ static void test_abs_long() {
     }
 }
 
-static void test_abs_indexed() {
+void test_abs_indexed() {
     // MOS6502
     TEST("ORA $1234,X", 0x1D, 0x34, 0x12);
     TEST("AND $1234,X", 0x3D, 0x34, 0x12);
@@ -652,7 +652,7 @@ static void test_abs_indexed() {
     }
 }
 
-static void test_abs_idir() {
+void test_abs_idir() {
     symtab.intern(0x0010, "abs0010");
     symtab.intern(0x1234, "abs1234");
 
@@ -664,7 +664,7 @@ static void test_abs_idir() {
 
 }
 
-static void test_abs_indexed_idir() {
+void test_abs_indexed_idir() {
     symtab.intern(0x0010, "abs0010");
     symtab.intern(0x1234, "abs1234");
 
@@ -694,7 +694,7 @@ static void test_abs_indexed_idir() {
     }
 }
 
-static void test_zpg_idir() {
+void test_zpg_idir() {
     if (m6502()) {
         ERRT("ORA ($10)", OPERAND_NOT_ALLOWED, "($10)");
         ERRT("AND ($10)", OPERAND_NOT_ALLOWED, "($10)");
@@ -722,7 +722,7 @@ static void test_zpg_idir() {
     }
 }
 
-static void test_zpg_indexed_idir() {
+void test_zpg_indexed_idir() {
     // MOS6502
     TEST("ORA ($10,X)", 0x01, 0x10);
     TEST("AND ($10,X)", 0x21, 0x10);
@@ -739,7 +739,7 @@ static void test_zpg_indexed_idir() {
     TEST("LDA (zero10,X)", 0xA1, 0x10);
 }
 
-static void test_zpg_idir_indexed() {
+void test_zpg_idir_indexed() {
     // MOS6502
     TEST("ORA ($10),Y", 0x11, 0x10);
     TEST("AND ($10),Y", 0x31, 0x10);
@@ -756,7 +756,7 @@ static void test_zpg_idir_indexed() {
     TEST("LDA (zero10),Y", 0xB1, 0x10);
 }
 
-static void test_rel() {
+void test_rel() {
     // MOS6502
     ATEST(0x1000, "BPL $1002", 0x10, 0x00);
     ATEST(0x1000, "BMI $1000", 0x30, 0xFE);
@@ -874,7 +874,7 @@ static void test_rel() {
     }
 }
 
-static void test_bitop() {
+void test_bitop() {
     if (r65c02() || w65c02s()) {
         TEST("RMB0 $10", 0x07, 0x10);
         TEST("RMB1 $10", 0x17, 0x10);
@@ -917,7 +917,7 @@ static void test_bitop() {
     }
 }
 
-static void test_zpg_rel() {
+void test_zpg_rel() {
     if (r65c02() || w65c02s()) {
         ATEST(0x1000, "BBR0 $10,$1003", 0x0F, 0x10, 0x00);
         ATEST(0x1000, "BBR1 $10,$1000", 0x1F, 0x10, 0xFD);
@@ -966,7 +966,7 @@ static void test_zpg_rel() {
     }
 }
 
-static void test_comment() {
+void test_comment() {
     // MOS6502
     COMM("BRK  ; comment", "; comment", 0x00);
     COMM("ASL A; comment", "; comment", 0x0A);
@@ -998,7 +998,7 @@ static void test_comment() {
     COMM("FDB -128, 255 comment", "comment", 0x80, 0xFF, 0xFF, 0x00);
 }
 
-static void test_undef() {
+void test_undef() {
     // MOS6502
     ERUS("LDA #UNDEF", "UNDEF", 0xA9, 0x00);
     ERUS("JSR  UNDEF", "UNDEF", 0x20, 0x00, 0x00);
@@ -1082,7 +1082,7 @@ static void test_undef() {
     }
 }
 
-static void test_error() {
+void test_error() {
     if (w65c816()) {
         ERRT("SBC  [$10],X",   REGISTER_NOT_ALLOWED, "X");
         ERRT("ORAL ($10),X",   REGISTER_NOT_ALLOWED, "X");
@@ -1107,7 +1107,7 @@ static void test_error() {
     }
 }
 
-static void test_data_constant() {
+void test_data_constant() {
     TEST(".BYTE -128, 255", 0x80, 0xFF);
     TEST(R"(.BYTE 'A', '"')", 0x41, 0x22);
     TEST(".BYTE '9'-'0'",   0x09);

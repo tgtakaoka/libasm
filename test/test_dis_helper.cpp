@@ -30,7 +30,7 @@ namespace test {
 TestAsserter asserter;
 TestSymtab symtab;
 
-static char actual_opr[128];
+char actual_opr[128];
 
 void dis_assert(const char *file, int line, const ErrorAt &error, const ArrayMemory &memory,
         const char *expected_name, const char *expected_opr) {

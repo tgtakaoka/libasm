@@ -24,23 +24,23 @@ using namespace libasm::test;
 AsmMc6805 asm6805;
 Assembler &assembler(asm6805);
 
-static bool m146805() {
+bool m146805() {
     return strcmp_P("146805", assembler.config().cpu_P()) == 0;
 }
 
-static bool m68hc05() {
+bool m68hc05() {
     return strcmp_P("68HC05", assembler.config().cpu_P()) == 0;
 }
 
-static bool m68hc08() {
+bool m68hc08() {
     return strcmp_P("68HC08", assembler.config().cpu_P()) == 0;
 }
 
-static void set_up() {
+void set_up() {
     assembler.reset();
 }
 
-static void tear_down() {
+void tear_down() {
     symtab.reset();
 }
 
@@ -71,7 +71,7 @@ void test_cpu() {
     EQUALS_P("cpu MC68HC08", "68HC08", assembler.config().cpu_P());
 }
 
-static void test_inherent() {
+void test_inherent() {
     TEST("NOP", 0x9D);
     TEST("CLC", 0x98);
     TEST("SEC", 0x99);
@@ -141,7 +141,7 @@ static void test_inherent() {
     }
 }
 
-static void test_relative() {
+void test_relative() {
     ATEST(0x1000, "BRA $1002", 0x20, 0x00);
     ATEST(0x1000, "BRN $1081", 0x21, 0x7F);
     ATEST(0x1000, "BHI $1004", 0x22, 0x02);
@@ -192,7 +192,7 @@ static void test_relative() {
     ATEST(0x1000, "BRN sub0F82", 0x21, 0x80);
 }
 
-static void test_immediate() {
+void test_immediate() {
     TEST("SUB #$90",  0xA0, 0x90);
     TEST("CMP #$90",  0xA1, 0x90);
     TEST("SBC #$90",  0xA2, 0x90);
@@ -238,7 +238,7 @@ static void test_immediate() {
     TEST("LDX #dir90A0&$FF", 0xAE, 0xA0);
 }
 
-static void test_direct() {
+void test_direct() {
     TEST("NEG $90", 0x30, 0x90);
     TEST("COM $90", 0x33, 0x90);
     TEST("LSR $90", 0x34, 0x90);
@@ -291,7 +291,7 @@ static void test_direct() {
     TEST("STX <dir$22", 0xBF, 0x22);
 }
 
-static void test_extended() {
+void test_extended() {
     ERRT("NEG >$0000", OPERAND_NOT_ALLOWED, ">$0000");
     ERRT("COM >$0009", OPERAND_NOT_ALLOWED, ">$0009");
     ERRT("LSR >$0034", OPERAND_NOT_ALLOWED, ">$0034");
@@ -393,7 +393,7 @@ static void test_extended() {
     }
 }
 
-static void test_indexed() {
+void test_indexed() {
     TEST("neg   0,x", 0x70);
     TEST("COM  <0,X", 0x63, 0x00);
     TEST("LSR   1,X", 0x64, 0x01);
@@ -544,7 +544,7 @@ static void test_indexed() {
     TEST("JSR offset255,X", 0xED, 0xFF);
 }
 
-static void test_bit_ops() {
+void test_bit_ops() {
     TEST("BSET 0, $23", 0x10, 0x23);
     TEST("BSET 7, $89", 0x1E, 0x89);
     TEST("BCLR 0, $23", 0x11, 0x23);
@@ -568,7 +568,7 @@ static void test_bit_ops() {
     TEST("BSET   6,$90", 0x1C, 0x90);
 }
 
-static void test_comment() {
+void test_comment() {
     symtab.intern(255,    "sym255");
     symtab.intern(0x1234, "sym1234");
 
@@ -591,7 +591,7 @@ static void test_comment() {
     COMM("FCC ;TEXT;    comment", "comment", 0x54, 0x45, 0x58, 0x54);
 }
 
-static void test_undef() {
+void test_undef() {
     ERUS("LDA  #UNDEF",  "UNDEF", 0xA6, 0x00);
     ERUS("LDX  #UNDEF",  "UNDEF", 0xAE, 0x00);
     ERUS("NEG  UNDEF",   "UNDEF", 0x30, 0x00);
@@ -684,7 +684,7 @@ static void test_undef() {
     }
 }
 
-static void test_data_constant() {
+void test_data_constant() {
     TEST("FCB -128, 255", 0x80, 0xFF);
     TEST(R"(FCB 'A', '"')", 0x41, 0x22);
     TEST("FCB '9'-'0'",   0x09);

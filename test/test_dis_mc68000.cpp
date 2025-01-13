@@ -24,7 +24,7 @@ using namespace libasm::test;
 DisMc68000 dis68000;
 Disassembler &disassembler(dis68000);
 
-static bool mc68010() {
+bool mc68010() {
     return strcmp_P("68010", disassembler.config().cpu_P()) == 0;
 }
 
@@ -36,12 +36,12 @@ static bool mc68010() {
 #define EFLT(insn, opr, error, at, hex, ...) ERRT(insn, opr, error, at, __VA_ARGS__)
 #endif
 
-static void set_up() {
+void set_up() {
     disassembler.reset();
     disassembler.setOption("relative", "true");
 }
 
-static void tear_down() {
+void tear_down() {
     symtab.reset();
 }
 
@@ -60,7 +60,7 @@ void test_cpu() {
     EQUALS_P("cpu MC68010", "68010", disassembler.config().cpu_P());
 }
 
-static void test_data_move() {
+void test_data_move() {
     // EXG Rx,Ry
     TEST("EXG", "D1, D2", 0141502); // 014|Dx|50|Dy
     TEST("EXG", "A1, A2", 0141512); // 014|Ax|51|Ay
@@ -594,7 +594,7 @@ static void test_data_move() {
     TEST("UNLK", "A7", 0047137);
 }
 
-static void test_integer() {
+void test_integer() {
     // ADD Dn,dst: 015|Dn|Sz|M|Rn, Sz:B=4/W=5/L=6
     TEST("ADDX.B", "D2, D7",          0157402); // ADDX.B
     TEST("ADDX.B", "-(A2), -(A7)",    0157412); // ADDX.B
@@ -1253,7 +1253,7 @@ static void test_integer() {
     TEST("SUBX.L", "-(A2), -(A3)", 0113612);
 }
 
-static void test_logical() {
+void test_logical() {
     // AND src,Dn: 014|Dn|Sz|M|Rn, Sz:B=0/W=1/L=2
     TEST("AND.B", "D2, D7",             0147002);
     UNKN(                               0147012); // A2, D7
@@ -1597,7 +1597,7 @@ static void test_logical() {
     UNKN(                                     0000274); // #$3456789A, #$12345678
 }
 
-static void test_shift_rotate() {
+void test_shift_rotate() {
     // ASL Dx,Dy: 016|Dx|Sz|4|Dy, Sz:B=4/W=5/L=6
     TEST("ASL.B", "D2, D7", 0162447);
     TEST("ASL.W", "D2, D7", 0162547);
@@ -1795,7 +1795,7 @@ static void test_shift_rotate() {
     TEST("SWAP", "D7", 0044107);
 }
 
-static void test_bit() {
+void test_bit() {
     // BCHG Dx,dst: 000|Dx|5|M|Rn
     TEST("BCHG.L", "D7, D2",           0007502);
     TEST("MOVEP.L", "($1234,A2), D7",  0007512, 0x1234); // MOVEP.L
@@ -1916,7 +1916,7 @@ static void test_bit() {
     UNKN(                                0004074); // #6, #$34
 }
 
-static void test_bcd() {
+void test_bcd() {
     // ABCD Dx,Dy: 014|Dy|40|Dx
     TEST("ABCD", "D2, D7", 0147402);
 
@@ -1944,7 +1944,7 @@ static void test_bcd() {
     TEST("SBCD", "-(A2), -(A7)", 0107412);
 }
 
-static void test_program() {
+void test_program() {
     disassembler.setOption("relative", "true");
 
     // Bcc label: 006|cc|disp
@@ -2309,7 +2309,7 @@ static void test_program() {
     UNKN(                         0045274); // #$12345678
 }
 
-static void test_system() {
+void test_system() {
     // ANDI #nn,SR
     TEST("ANDI", "#$1234, SR", 0001174, 0x1234);
 
@@ -2451,7 +2451,7 @@ static void test_system() {
     TEST("ORI", "#$34, CCR", 0000074, 0x0034);
 }
 
-static void test_multiproc() {
+void test_multiproc() {
     // TAS dst: 00453|M|Rn
     TEST("TAS", "D2",           0045302);
     UNKN(                       0045312); // A2
@@ -2469,7 +2469,7 @@ static void test_multiproc() {
 
 #if !defined(LIBASM_MC68000_NOFPU)
 
-static void test_float_move() {
+void test_float_move() {
     TEST("FMOVE.X", "FP0, FP1",            0xF200,     0x0000|(0<<10)|(1<<7));
     TEST("FMOVE.X", "FP2, FP2",            0xF200,     0x0000|(2<<10)|(2<<7));
 
@@ -2779,7 +2779,7 @@ static void test_float_move() {
          0xF200|074, 0x4000|(6<<10)|(4<<7), 0x0023);
 }
 
-static void test_float_arithmetic() {
+void test_float_arithmetic() {
     TEST("FINT.X", "FP0, FP1",            0xF200,     0x0001|(0<<10)|(1<<7));
     TEST("FINT.X", "FP2",                 0xF200,     0x0001|(2<<10)|(2<<7));
     TEST("FINT.L", "D2, FP3",             0xF200|002, 0x4001|(0<<10)|(3<<7));
@@ -4055,7 +4055,7 @@ static void test_float_arithmetic() {
          0xF200|074, 0x403A|(5<<10), 0xC020, 0x8000, 0x0000, 0x0000);
 }
 
-static void test_float_branch() {
+void test_float_branch() {
     TEST("FBF",    "*+$1234",    0xF280, 0x1232);
     TEST("FBEQ",   "*+$1234",    0xF281, 0x1232);
     TEST("FBOGT",  "*+$1234",    0xF282, 0x1232);
@@ -4129,7 +4129,7 @@ static void test_float_branch() {
     TEST("FBEQL", ".+0x001234",    0xF2C1, 0x0000, 0x1232);
 }
 
-static void test_float_trap() {
+void test_float_trap() {
     TEST("FSF", "D2",              0xF240|002, 0x0000);
     TEST("FDBF", "D2, *+$1234",    0xF240|012, 0x0000, 0x1230);
     TEST("FSF", "(A2)",            0xF240|022, 0x0000);
@@ -4547,7 +4547,7 @@ static void test_float_trap() {
     TEST("FTRAPST",   "",           0xF240|074, 0x001F);
 }
 
-static void test_float_system() {
+void test_float_system() {
     UNKN(0xF340|002);
     UNKN(0xF340|014);
     TEST("FRESTORE", "(A6)",           0xF340|026);

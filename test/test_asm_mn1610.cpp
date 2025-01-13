@@ -24,19 +24,19 @@ using namespace libasm::test;
 AsmMn1610 as1610;
 Assembler &assembler(as1610);
 
-static bool is1613() {
+bool is1613() {
     return strcmp_P("MN1613", assembler.config().cpu_P()) == 0;
 }
 
-static bool is1613a() {
+bool is1613a() {
     return strcmp_P("MN1613A", assembler.config().cpu_P()) == 0;
 }
 
-static void set_up() {
+void set_up() {
     assembler.reset();
 }
 
-static void tear_down() {
+void tear_down() {
     symtab.reset();
 }
 
@@ -61,7 +61,7 @@ void test_cpu() {
     EQUALS_P("cpu MN1613A", "MN1613A", assembler.config().cpu_P());
 }
 
-static void test_transfer() {
+void test_transfer() {
     TEST(         "l r1, 0x10",            0xC000|(0<<11)|(1<<8)|0x10);
     TEST(         "L R1, X'10'",           0xC000|(0<<11)|(1<<8)|0x10);
     ERRT(         "L STR, 0x10",           OPERAND_NOT_ALLOWED, "STR, 0x10");
@@ -210,7 +210,7 @@ static void test_transfer() {
     }
 }
 
-static void test_integer() {
+void test_integer() {
     TEST("A R0, STR, SKP", 0x5808|(0<<8)|(1<<4)|6);
     TEST("A R1, SP, M",    0x5808|(1<<8)|(2<<4)|5);
     TEST("A R2, R4, PZ",   0x5808|(2<<8)|(3<<4)|4);
@@ -366,7 +366,7 @@ static void test_integer() {
     }
 }
 
-static void test_float() {
+void test_float() {
     if (is1613() || is1613a()) {
         TEST("FA DR0, (R1), EZ",  0x6F0C|(8<<4)|0);
         ERRT("FA DR1, (R1), EZ",  OPERAND_NOT_ALLOWED, "DR1, (R1), EZ");
@@ -400,7 +400,7 @@ static void test_float() {
     }
 }
 
-static void test_logical() {
+void test_logical() {
     TEST("AND R0, STR, SKP", 0x6808|(0<<8)|(1<<4)|6);
     TEST("AND R1, SP, M",    0x6808|(1<<8)|(2<<4)|5);
     TEST("AND R2, R4, PZ",   0x6808|(2<<8)|(3<<4)|4);
@@ -473,7 +473,7 @@ static void test_logical() {
     }
 }
 
-static void test_branch() {
+void test_branch() {
     TEST(         "B 0x10",       0xC700|(0<<11)|0x10);
     ATEST(0x1000, "B *-128",      0xC700|(1<<11)|0x80);
     TEST(         "B (0xFF)",     0xC700|(2<<11)|0xFF);
@@ -518,7 +518,7 @@ static void test_branch() {
     }
 }
 
-static void test_bitops() {
+void test_bitops() {
     TEST("TBIT R0, 1",       0x2800|(0<<8)|(0<<4)|1);
     TEST("TBIT R1, 0, SKP",  0x2800|(1<<8)|(1<<4)|0);
     TEST("TBIT R2, 2, Z",    0x2800|(2<<8)|(4<<4)|2);
@@ -591,7 +591,7 @@ static void test_bitops() {
     }
 }
 
-static void test_misc() {
+void test_misc() {
     TEST("RD R0, 0x34",  0x1800|(0<<8)|0x34);
     TEST("RD R1, 0x34",  0x1800|(1<<8)|0x34);
     TEST("RD R2, 0x34",  0x1800|(2<<8)|0x34);
@@ -713,7 +713,7 @@ static void test_misc() {
     }
 }
 
-static void test_comment() {
+void test_comment() {
     ACOMM(0x1000, "L R2, * - 128    ; comment", "; comment", 0xC000|(1<<11)|(2<<8)|0x80);
     ACOMM(0x1000, "L R2, -128 ( IC ); comment", "; comment", 0xC000|(1<<11)|(2<<8)|0x80);
     ACOMM(0x1000, "L R2, * - 128               comment", "comment", 0xC000|(1<<11)|(2<<8)|0x80);
@@ -738,7 +738,7 @@ static void test_comment() {
     COMM("DC 'TEXT'   comment", "comment", 0x5445, 0x5854);
 }
 
-static void test_undef() {
+void test_undef() {
     symtab.intern(0x1020, "SYM1020");
     ATEST(0x1000, "L R2, SYM1020",                       0xC000|(1<<11)|(2<<8)|0x20);
     AERUS(0x1000, "L R2, UNDEF",         "UNDEF",        0xC000|(0<<11)|(2<<8)|0x00);
@@ -757,7 +757,7 @@ static void test_undef() {
     }
 }
 
-static void test_data_constant() {
+void test_data_constant() {
     TEST("DC -128,255",    0xFF80, 0x00FF);
     TEST("DC -129,256",    0xFF7F, 0x0100);
     TEST("DC C'TEXTa'",    0x5445, 0x5854, 0x6100);

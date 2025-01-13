@@ -24,12 +24,11 @@ using namespace libasm::test;
 DisI8051 dis8051;
 Disassembler &disassembler(dis8051);
 
-static void set_up() {
+void set_up() {
     disassembler.reset();
-    disassembler.setCpu("8051");
 }
 
-static void tear_down() {
+void tear_down() {
     symtab.reset();
 }
 
@@ -42,13 +41,13 @@ void test_cpu() {
     EQUALS_P("cpu I8051", "8051", disassembler.config().cpu_P());
 }
 
-static void test_implied() {
+void test_implied() {
     TEST("NOP",  "", 0x00);
     TEST("RET",  "", 0x22);
     TEST("RETI", "", 0x32);
 }
 
-static void test_regs() {
+void test_regs() {
     TEST("RR",   "A", 0x03);
     TEST("INC",  "A", 0x04);
     TEST("RRC",  "A", 0x13);
@@ -70,7 +69,7 @@ static void test_regs() {
     TEST("INC",  "DPTR", 0xA3);
 }
 
-static void test_regr() {
+void test_regr() {
     TEST("INC",  "R0", 0x08);
     TEST("INC",  "R1", 0x09);
     TEST("INC",  "R2", 0x0A);
@@ -161,7 +160,7 @@ static void test_regr() {
     TEST("MOV",  "R7, A", 0xFF);
 }
 
-static void test_indirect() {
+void test_indirect() {
     TEST("JMP",  "@A+DPTR",    0x73);
     TEST("MOVC", "A, @A+PC",   0x83);
     TEST("MOVC", "A, @A+DPTR", 0x93);
@@ -198,7 +197,7 @@ static void test_indirect() {
     TEST("MOV",  "@R1, A", 0xF7);
 }
 
-static void test_immediate() {
+void test_immediate() {
     TEST("ADD",  "A, #25H", 0x24, 0x25);
     TEST("ADDC", "A, #35H", 0x34, 0x35);
     TEST("ORL",  "A, #45H", 0x44, 0x45);
@@ -230,7 +229,7 @@ static void test_immediate() {
     NMEM("MOV", "DPTR, #0000H", "0000H", 0x90);
 }
 
-static void test_relative() {
+void test_relative() {
     ATEST(0x1000, "JBC", "22H.1, 1015H", 0x10, 0x11, 0x12);
     ATEST(0x1000, "JB",  "24H.1, 1025H", 0x20, 0x21, 0x22);
     ATEST(0x1000, "JNB", "26H.1, 1035H",                 0x30, 0x31, 0x32);
@@ -293,7 +292,7 @@ static void test_relative() {
     ATEST(0x2000, "DJNZ", "R0, $+129", 0xD8, 0x7F);
 }
 
-static void test_bit_address() {
+void test_bit_address() {
     disassembler.setOption("relative", "true");
     TEST("JBC", "22H.1, $+21", 0x10, 0x11, 0x12);
     TEST("JB",  "24H.1, $+37", 0x20, 0x21, 0x22);
@@ -312,7 +311,7 @@ static void test_bit_address() {
     NMEM("ANL",  "C, /20H.0", "20H.0", 0xB0);
 }
 
-static void test_direct() {
+void test_direct() {
     TEST("INC",  "06H",    0x05, 0x06);
     TEST("DEC",  "16H",    0x15, 0x16);
     TEST("ADD",  "A, 26H",  0x25, 0x26);
@@ -361,7 +360,7 @@ static void test_direct() {
     TEST("POP",  "0D1H", 0xD0, 0xD1);
 }
 
-static void test_page() {
+void test_page() {
     ATEST(0x1000, "AJMP",  "1002H", 0x01, 0x02);
     ATEST(0x1800, "AJMP",  "1922H", 0x21, 0x22);
     ATEST(0x1000, "AJMP",  "1242H", 0x41, 0x42);
@@ -388,14 +387,14 @@ static void test_page() {
     ATEST(0x1FFF, "ACALL", "2002H", 0x11, 0x02);
 }
 
-static void test_absolute() {
+void test_absolute() {
     TEST("LJMP",  "0304H", 0x02, 0x03, 0x04);
     TEST("LCALL", "1314H",          0x12, 0x13, 0x14);
     NMEM("LCALL", "1300H", "1300H", 0x12, 0x13);
     NMEM("LCALL", "0000H", "0000H", 0x12);
 }
 
-static void test_illegal() {
+void test_illegal() {
     UNKN(0xA5);
 }
 // clang-format on

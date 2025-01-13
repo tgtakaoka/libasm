@@ -24,27 +24,27 @@ using namespace libasm::test;
 AsmTms9900 as9900;
 Assembler &assembler(as9900);
 
-static bool is99110() {
+bool is99110() {
     return strcmp_P("99110", assembler.config().cpu_P()) == 0;
 }
 
-static bool is991xx() {
+bool is991xx() {
     return strcmp_P("99105", assembler.config().cpu_P()) == 0 || is99110();
 }
 
-static bool is9995() {
+bool is9995() {
     return strcmp_P("9995", assembler.config().cpu_P()) == 0 || is991xx();
 }
 
-static bool is9980() {
+bool is9980() {
     return strcmp_P("9980", assembler.config().cpu_P()) == 0;
 }
 
-static void set_up() {
+void set_up() {
     assembler.reset();
 }
 
-static void tear_down() {
+void tear_down() {
     symtab.reset();
 }
 
@@ -75,7 +75,7 @@ void test_cpu() {
     EQUALS_P("cpu tms99105", "99105", assembler.config().cpu_P());
 }
 
-static void test_inh() {
+void test_inh() {
     TEST("IDLE", 0x0340);
     TEST("RSET", 0x0360);
     TEST("RTWP", 0x0380);
@@ -111,7 +111,7 @@ static void test_inh() {
     }
 }
 
-static void test_imm() {
+void test_imm() {
     TEST("LWPI >1234", 0x02E0, 0x1234);
     TEST("LIMI >89AB", 0x0300, 0x89AB);
 
@@ -122,7 +122,7 @@ static void test_imm() {
     TEST("LIMI sym89AB", 0x0300, 0x89AB);
 }
 
-static void test_reg() {
+void test_reg() {
     TEST("stwp r14", 0x02AE);
     TEST("STST R15", 0x02CF);
 
@@ -136,7 +136,7 @@ static void test_reg() {
     }
 }
 
-static void test_reg_imm() {
+void test_reg_imm() {
     TEST("LI   R0, >0000",    0x0200, 0x0000);
     TEST("AI   R1, +1",       0x0221, 0x0001);
     TEST("ANDI R8, >00FF",    0x0248, 0x00FF);
@@ -162,7 +162,7 @@ static void test_reg_imm() {
     }
 }
 
-static void test_cnt_reg() {
+void test_cnt_reg() {
     TEST("SRA R1,R0", 0x0801);
     TEST("SRL R4,12", 0x09C4);
     TEST("SLA R8,4",  0x0A48);
@@ -170,7 +170,7 @@ static void test_cnt_reg() {
     ERRT("SRC R9,16", OVERFLOW_RANGE, "16", 0x0B09);
 }
 
-static void test_src() {
+void test_src() {
     TEST("BLWP @>1000", 0x0420, 0x1000);
     TEST("BLWP @>3FFE", 0x0420, 0x3FFE);
     ERRT("BLWP @>3FFF", OPERAND_NOT_ALIGNED, "@>3FFF", 0x0420, 0x3FFF);
@@ -269,7 +269,7 @@ static void test_src() {
     }
 }
 
-static void test_reg_src() {
+void test_reg_src() {
     TEST("COC R1,R2",         0x2081);
     TEST("CZC @>1234(R3),R7", 0x25E3, 0x1234);
     TEST("XOR @2(R5),R4",     0x2925, 0x0002);
@@ -283,7 +283,7 @@ static void test_reg_src() {
     TEST("XOR @offset2(R5),R4", 0x2925, 0x0002);
 }
 
-static void test_cnt_src() {
+void test_cnt_src() {
     TEST("LDCR *R13+,16",  0x303D);
     TEST("STCR @2(R4),15",                       0x37E4, 0x0002);
     ERRT("STCR @2(R4),17", OVERFLOW_RANGE, "17", 0x3464, 0x0002);
@@ -310,7 +310,7 @@ static void test_cnt_src() {
     }
 }
 
-static void test_xop_src() {
+void test_xop_src() {
     TEST("XOP @>1234,0",                             0x2C20, 0x1234);
     TEST("XOP @>1234,15",                            0x2FE0, 0x1234);
     ERRT("XOP @>1234,16", OVERFLOW_RANGE,      "16", 0x2C20, 0x1234);
@@ -324,7 +324,7 @@ static void test_xop_src() {
     TEST("XOP @>1234(R1),xop10", 0x2EA1, 0x1234);
 }
 
-static void test_dst_src() {
+void test_dst_src() {
     TEST("SZC  @>1234(R10),@>5678(R11)", 0x4AEA, 0x1234, 0x5678);
     TEST("SZC  @>1235(R10),@>5679(R11)", 0x4AEA, 0x1235, 0x5679);
     TEST("SZC  @>1234,@>3456",                                        0x4820, 0x1234, 0x3456);
@@ -384,7 +384,7 @@ static void test_dst_src() {
     }
 }
 
-static void test_rel() {
+void test_rel() {
     ATEST(0x1000, "NOP",       0x1000);
     ATEST(0x1000, "JMP >1002", 0x1000);
     ATEST(0x1000, "JLT >1000", 0x11FF);
@@ -417,7 +417,7 @@ static void test_rel() {
     ATEST(0x1000, "JEQ sym0F02", 0x1380);
 }
 
-static void test_cru_off() {
+void test_cru_off() {
     TEST("SBO 0",    0x1D00);
     TEST("SBZ >7F",  0x1E7F);
     TEST("TB  -128", 0x1F80);
@@ -431,7 +431,7 @@ static void test_cru_off() {
     TEST("TB offm128", 0x1F80);
 }
 
-static void test_comment() {
+void test_comment() {
     COMM("IDLE      ; comment", "; comment", 0x0340);
     COMM("LWPI >1234; comment", "; comment", 0x02E0, 0x1234);
     COMM("IDLE         comment", "comment", 0x0340);
@@ -457,7 +457,7 @@ static void test_comment() {
     COMM("DATA -128, 255 comment", "comment", 0xFF80, 0x00FF);
 }
 
-static void test_undef() {
+void test_undef() {
     ERUS("LWPI UNDEF",    "UNDEF", 0x02E0, 0x0000);
     ERUS("LI   R0,UNDEF", "UNDEF", 0x0200, 0x0000);
     ERUS("SRL  R4,UNDEF", "UNDEF", 0x0904);
@@ -479,7 +479,7 @@ static void test_undef() {
     AERUS(0x1000, "JNE UNDEF", "UNDEF", 0x1600);
 }
 
-static void test_data_constant() {
+void test_data_constant() {
     BTEST("BYTE -128, 255", 0x80, 0xFF);
     BTEST(R"(BYTE 'A', '"')", 0x41, 0x22);
     BTEST("BYTE '9'-'0'",   0x09);

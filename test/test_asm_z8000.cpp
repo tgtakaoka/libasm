@@ -24,16 +24,15 @@ using namespace libasm::test;
 AsmZ8000 asm8000;
 Assembler &assembler(asm8000);
 
-static bool z8001() {
+bool z8001() {
     return strcmp_P("Z8001", assembler.config().cpu_P()) == 0;
 }
 
-static void set_up() {
+void set_up() {
     assembler.reset();
-    assembler.setOption("short-direct", "enable");
 }
 
-static void tear_down() {
+void tear_down() {
     symtab.reset();
 }
 
@@ -46,7 +45,7 @@ void test_cpu() {
     EQUALS_P("cpu Z8002", "Z8002", assembler.config().cpu_P());
 }
 
-static void test_load_and_exchange() {
+void test_load_and_exchange() {
     // Clear
     TEST("clr  r2",  0x8D28);
     TEST("clrb rh2", 0x8C28);
@@ -474,7 +473,7 @@ static void test_load_and_exchange() {
     }
 }
 
-static void test_arithmetic() {
+void test_arithmetic() {
     // Add with Carry
     TEST("ADC  R1,R2",   0xB521);
     TEST("ADCB RH1,RL1", 0xB491);
@@ -763,7 +762,7 @@ static void test_arithmetic() {
     }
 }
 
-static void test_logical() {
+void test_logical() {
     // And
     TEST("AND  R1,R2",   0x8721);
     TEST("ANDB RH1,RL1", 0x8691);
@@ -895,7 +894,7 @@ static void test_logical() {
     }
 }
 
-static void test_program_control() {
+void test_program_control() {
     // Call Procedure
     if (z8001()) {
         TEST("CALL @RR2",        0x1F20);
@@ -1215,7 +1214,7 @@ static void test_program_control() {
     TEST("SC #%FF", 0x7FFF);
 }
 
-static void test_bit_manipulation() {
+void test_bit_manipulation() {
     // Bit Test
     TEST("BIT  R2,#1",  0xA721);
     TEST("BIT  R2,R8",  0x2708, 0x0200);
@@ -1355,7 +1354,7 @@ static void test_bit_manipulation() {
     TEST("TCCB NC,RH0",  0xAE0F);
 }
 
-static void test_rotate() {
+void test_rotate() {
     // Rotate Left
     TEST("RL  R1,#1",  0xB310);
     TEST("RL  R8,#2",  0xB382);
@@ -1389,7 +1388,7 @@ static void test_rotate() {
     TEST("RRDB RL7,RH7", 0xBC7F);
 }
 
-static void test_shift() {
+void test_shift() {
     // Shift Dynamic Arithmetic
     TEST("SDA  R1,R2",   0xB31B, 0x0200);
     TEST("SDAB RL1,R15", 0xB29B, 0x0F00);
@@ -1445,7 +1444,7 @@ static void test_shift() {
     ERRT("SRLL R2,#33",  OVERFLOW_RANGE, "#33", 0xB325, 0xFFDF);
 }
 
-static void test_compare_block() {
+void test_compare_block() {
     // Compare and Decrement
     // @RR0 and @R0 must not be used as source register. The destination and
     // counter register have no restriction. The source, destination, and
@@ -1583,7 +1582,7 @@ static void test_compare_block() {
 
 }
 
-static void test_block_transfer() {
+void test_block_transfer() {
     // Load and Decrement
     if (z8001()) {
         TEST("LDD  @RR2,@RR4,R6", 0xBB49, 0x0628);
@@ -1717,7 +1716,7 @@ static void test_block_transfer() {
     }
 }
 
-static void test_compare_string() {
+void test_compare_string() {
     // Compare String and Decrement
     // @RR0 and @R0 mus not be used as source and destination registers. The
     // counter register has no restriction. The source, destination, and
@@ -1806,7 +1805,7 @@ static void test_compare_string() {
     }
 }
 
-static void test_translation() {
+void test_translation() {
     // Translate and Decrement
     // Original content of RH1 are lost. R0/R1 or RR0 must not be used as a soure or destination
     // R1 should not be used as a counter as welll
@@ -1994,7 +1993,7 @@ static void test_translation() {
     }
 }
 
-static void test_input() {
+void test_input() {
     // Input
     TEST("IN  R1,@R2",     0x3D21);
     TEST("INB RH1,@R2",    0x3C21);
@@ -2152,7 +2151,7 @@ static void test_input() {
     }
 }
 
-static void test_output() {
+void test_output() {
     // Output
     TEST("OUT  @R2,R1",     0x3F21);
     TEST("OUTB @R2,RH1",    0x3E21);
@@ -2310,7 +2309,7 @@ static void test_output() {
     }
 }
 
-static void test_cpu_conrtol() {
+void test_cpu_conrtol() {
     // Complement Flag
     ERRT("COMFLG",         OPCODE_HAS_NO_EFFECT, "", 0x8D05);
     TEST("COMFLG P",       0x8D15);
@@ -2470,7 +2469,7 @@ static void test_cpu_conrtol() {
     TEST("SETFLG C,Z,S,V", 0x8DF1);
 }
 
-static void test_short_direct() {
+void test_short_direct() {
     symtab.intern(0x0034, "soff");
     symtab.intern(0x1234, "loff");
     symtab.intern(0x56,   "snum");
@@ -2549,7 +2548,7 @@ static void test_short_direct() {
     ERRT("CLR |<<snum>>loff|(R2)  ; long offset",  OVERFLOW_RANGE, "|<<snum>>loff|(R2)  ; long offset", 0x4D28, 0x5634);
 }
 
-static void test_comment() {
+void test_comment() {
     COMM("ADD R1 , # %1234 ; comment", "; comment", 0x0101, 0x1234);
     if (z8001()) {
         COMM("EXB  RL1 , %1234 ( R2 ) ; comment", "; comment", 0x6C29 ,0x8000, 0x1234);
@@ -2568,7 +2567,7 @@ static void test_comment() {
     COMM("long %12345678 ; comment", "; comment", 0x1234, 0x5678);
 }
 
-static void test_undefined_symbol() {
+void test_undefined_symbol() {
     ERUS("LDB RH2,#UNDEF", "UNDEF", 0xC200);
     ERUS("LD  R2,#UNDEF",  "UNDEF", 0x2102, 0x0000);
     ERUS("LDL RR2,#UNDEF", "UNDEF", 0x1402, 0x0000, 0x0000);
@@ -2660,7 +2659,7 @@ static void test_undefined_symbol() {
     ERUS("OUT #UNDEF,R1", "UNDEF,R1", 0x3B16, 0x0000);
 }
 
-static void test_data_constant() {
+void test_data_constant() {
     BTEST("byte -128, 255",  0x80, 0xFF);
     BTEST(R"(byte 'A', '"')", 0x41, 0x22);
     BTEST("byte '9'-'0'",    0x09);

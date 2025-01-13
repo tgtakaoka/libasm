@@ -23,7 +23,7 @@ using namespace libasm::test;
 AsmMc68000 as68000;
 Assembler &assembler(as68000);
 
-static bool mc68010() {
+bool mc68010() {
     return strcmp_P("68010", assembler.config().cpu_P()) == 0;
 }
 
@@ -43,11 +43,11 @@ static bool mc68010() {
 #define FLTP(insn, opr, opc, post, ...) TEST(insn " " opr, opc, post, __VA_ARGS__)
 #endif
 
-static void set_up() {
+void set_up() {
     assembler.reset();
 }
 
-static void tear_down() {
+void tear_down() {
     symtab.reset();
 }
 
@@ -66,7 +66,7 @@ void test_cpu() {
     EQUALS_P("cpu mc68010", "68010", assembler.config().cpu_P());
 }
 
-static void test_data_move() {
+void test_data_move() {
     // EXG Rx,Ry
     TEST("exg   d1,d2", 0141502); // 014|Dx|50|Dy
     ERRT("EXG.B D1,D2", OPERAND_NOT_ALLOWED, "D1,D2");
@@ -740,7 +740,7 @@ static void test_data_move() {
     TEST("MOVE.W #data$34,(.offset,A6)", 0036574, 0x0034, 0x5678);
 }
 
-static void test_integer() {
+void test_integer() {
     // ADD Dn,dst: 015|Dn|Sz|M|Rn, Sz:B=4/W=5/L=6
     TEST("ADD.B D7,D2",            0152007);
     ERRT("ADD.B D7,A2",            OPERAND_NOT_ALLOWED, "D7,A2");
@@ -1411,7 +1411,7 @@ static void test_integer() {
     TEST("SUBX.L -(A2),-(A3)", 0113612);
 }
 
-static void test_logical() {
+void test_logical() {
     // AND src,Dn: 014|Dn|Sz|M|Rn, Sz:B=0/W=1/L=2
     TEST("AND.B D2,D7",              0147002);
     ERRT("AND.B A2",                 OPERAND_NOT_ALLOWED, "A2");
@@ -1755,7 +1755,7 @@ static void test_logical() {
     ERRT("ORI.L #$3456789A,#$1234",        OPERAND_NOT_ALLOWED, "#$3456789A,#$1234");
 }
 
-static void test_shift_rotate() {
+void test_shift_rotate() {
     // ASL Dx,Dy: 016|Dx|Sz|4|Dy, Sz:B=4/W=5/L=6
     TEST("ASL.B D2,D7", 0162447);
     TEST("ASL.W D2,D7", 0162547);
@@ -1967,7 +1967,7 @@ static void test_shift_rotate() {
     ERRT("SWAP A0", OPERAND_NOT_ALLOWED, "A0");
 }
 
-static void test_bit() {
+void test_bit() {
     // BCHG Dx,dst: 000|Dx|5|M|Rn
     TEST("BCHG   D7,D2",            0007502);
     ERRT("BCHG.B D7,D2",            OPERAND_NOT_ALLOWED, "D7,D2");
@@ -2373,7 +2373,7 @@ static void test_bit() {
     ERRT("BTST.L #6,#$1234",          OPERAND_NOT_ALLOWED, "#6,#$1234");
 }
 
-static void test_bcd() {
+void test_bcd() {
     // ABCD Dx,Dy: 014|Dy|40|Dx
     TEST("ABCD D2,D7", 0147402);
 
@@ -2401,7 +2401,7 @@ static void test_bcd() {
     TEST("SBCD -(A2),-(A7)", 0107412);
 }
 
-static void test_program() {
+void test_program() {
     // Bcc label: 006|cc|disp
     TEST("BRA *", 0060000 | 0x000 | 0xFE);
     TEST("BRA *", 0060000 | 0x000 | 0xFE);
@@ -2767,7 +2767,7 @@ static void test_program() {
     ERRT("TST.L #$1234",         OPERAND_NOT_ALLOWED, "#$1234");
 }
 
-static void test_system() {
+void test_system() {
     // ANDI #nn,SR
     TEST("andi #$1234,sr", 0001174, 0x1234);
 
@@ -2915,7 +2915,7 @@ static void test_system() {
     TEST("ORI.B #$34,CCR", 0000074, 0x0034);
 }
 
-static void test_multiproc() {
+void test_multiproc() {
     // TAS dst: 00453|M|Rn
     TEST("TAS D2",            0045302);
     ERRT("TAS A2",            OPERAND_NOT_ALLOWED, "A2");
@@ -2931,7 +2931,7 @@ static void test_multiproc() {
     ERRT("TAS #$1234",        OPERAND_NOT_ALLOWED, "#$1234");
 }
 
-static void test_areg_alias() {
+void test_areg_alias() {
     TEST("ADDI.W #0,A0", 0150374, 0x0000);          // ADDA.W #0,A0
     TEST("ADDI.L #0,A0", 0150774, 0x0000, 0x0000);  // ADDA.L #0,A0
     TEST("SUBI.W #0,A0", 0110374, 0x0000);          // SUBA.W #0,A0
@@ -2970,7 +2970,7 @@ static void test_areg_alias() {
 
 #if !defined(LIBASM_MC68000_NOFPU)
 
-static void test_float_move() {
+void test_float_move() {
     TEST("FPU MC68881");
 
     TEST("FMOVE.X FP0, FP1",            0xF200,     0x0000|(0<<10)|(1<<7));
@@ -3237,7 +3237,7 @@ static void test_float_move() {
     ERRT("FMOVECR.X #$81, FP7", OVERFLOW_RANGE, "#$81, FP7", 0xF200, 0x5C00|(7<<7)|0x01);
 }
 
-static void test_float_arithmetic() {
+void test_float_arithmetic() {
     TEST("FPU MC68881");
 
     TEST("FINT.X FP0, FP1",            0xF200,     0x0001|(0<<10)|(1<<7));
@@ -4463,7 +4463,7 @@ static void test_float_arithmetic() {
          0xC020, 0x8000, 0x0000, 0x0000);
 }
 
-static void test_float_branch() {
+void test_float_branch() {
     TEST("FPU MC68881");
 
     TEST("FBF    *+$1234",    0xF280, 0x1232);
@@ -4545,7 +4545,7 @@ static void test_float_branch() {
     AERRT(0x10000, "FBST $12345678",  OVERFLOW_RANGE, "$12345678", 0xF2DF, 0x1233, 0x5676);
 }
 
-static void test_float_trap() {
+void test_float_trap() {
     TEST("FPU MC68881");
 
     TEST("FSF D2",              0xF240|002, 0x0000);
@@ -4965,7 +4965,7 @@ static void test_float_trap() {
     TEST("FTRAPST",              0xF240|074, 0x001F);
 }
 
-static void test_float_system() {
+void test_float_system() {
     TEST("FPU ON");
 
     ERRT("FRESTORE D2",             OPERAND_NOT_ALLOWED, "D2");
@@ -4997,7 +4997,7 @@ static void test_float_system() {
 
 #endif
 
-static void test_comment() {
+void test_comment() {
     COMM("NOP           ; comment", "; comment", 0047161);
     COMM("ORI  # 0 , CCR; comment", "; comment", 0000074, 0x0000);
     COMM("NOP             comment", "comment", 0047161);
@@ -5043,7 +5043,7 @@ static void test_comment() {
 #endif
 }
 
-static void test_undef() {
+void test_undef() {
     ERUS("ORI  #UNDEF,CCR",       "UNDEF,CCR",       0000074, 0x0000);
     ERUS("ANDI #UNDEF,SR",        "UNDEF,SR",        0001174, 0x0000);
     ERUS("MOVE (UNDEF),D1",       "UNDEF),D1",       0031070, 0x0000);
@@ -5065,7 +5065,7 @@ static void test_undef() {
     AERUS(0x1000, "MOVEA (UNDEF,PC,D1.L),A1", "UNDEF,PC,D1.L),A1", 0031173, 0x1800);
 }
 
-static void test_data_constant() {
+void test_data_constant() {
     BTEST("DC.B -128, 255", 0x80, 0xFF);
     BTEST(R"(DC.B 'A', '"')", 0x41, 0x22);
     BTEST("DC.B '9'-'0'",   0x09);

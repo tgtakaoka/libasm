@@ -24,33 +24,31 @@ using namespace libasm::test;
 DisMos6502 dis6502;
 Disassembler &disassembler(dis6502);
 
-static bool m6502() {
+bool m6502() {
     return strcmp_P("6502", disassembler.config().cpu_P()) == 0;
 }
 
-static bool g65sc02() {
+bool g65sc02() {
     return strcmp_P("65SC02", disassembler.config().cpu_P()) == 0;
 }
 
-static bool r65c02() {
+bool r65c02() {
     return strcmp_P("65C02", disassembler.config().cpu_P()) == 0;
 }
 
-static bool w65c02s() {
+bool w65c02s() {
     return strcmp_P("W65C02S", disassembler.config().cpu_P()) == 0;
 }
 
-static bool w65c816() {
+bool w65c816() {
     return strcmp_P("65816", disassembler.config().cpu_P()) == 0;
 }
 
-static void set_up() {
+void set_up() {
     disassembler.reset();
-    disassembler.setOption("relative", "no");
-    disassembler.setOption("indirect-long", "on");
 }
 
-static void tear_down() {
+void tear_down() {
     symtab.reset();
 }
 
@@ -93,7 +91,7 @@ void test_cpu() {
     EQUALS_P("cpu W65C816S", "65816", disassembler.config().cpu_P());
 }
 
-static void test_impl() {
+void test_impl() {
     // MOS6502
     TEST("BRK", "", 0x00);
     TEST("RTI", "", 0x40);
@@ -161,7 +159,7 @@ static void test_impl() {
     }
 }
 
-static void test_accm() {
+void test_accm() {
     // MOS6502
     TEST("ASL", "A", 0x0A);
     TEST("ROL", "A", 0x2A);
@@ -178,7 +176,7 @@ static void test_accm() {
     }
 }
 
-static void test_imm() {
+void test_imm() {
     // MOS6502
     TEST("LDY", "#0",   0xA0, 0x00);
     TEST("LDX", "#9",   0xA2, 0x09);
@@ -223,7 +221,7 @@ static void test_imm() {
     }
 }
 
-static void test_long_imm() {
+void test_long_imm() {
     disassembler.setOption("longa", "disable");
     disassembler.setOption("longi", "enable");
 
@@ -291,7 +289,7 @@ static void test_long_imm() {
     }
 }
 
-static void test_zpg() {
+void test_zpg() {
     // MOS6502
     TEST("BIT", "$10", 0x24, 0x10);
     TEST("ORA", "$10", 0x05, 0x10);
@@ -345,7 +343,7 @@ static void test_zpg() {
     }
 }
 
-static void test_zpg_indexed() {
+void test_zpg_indexed() {
     // MOS6502
     TEST("ORA", "$00,X", 0x15, 0x00);
     TEST("AND", "$09,X", 0x35, 0x09);
@@ -397,7 +395,7 @@ static void test_zpg_indexed() {
     }
 }
 
-static void test_zpg_long() {
+void test_zpg_long() {
     if (w65c816()) {
         // W65C816
         TEST("ORA", "[$10]", 0x07, 0x10);
@@ -453,7 +451,7 @@ static void test_zpg_long() {
     }
 }
 
-static void test_sp_rel() {
+void test_sp_rel() {
     if (w65c816()) {
         // W65C816
         TEST("ORA", "$10,S", 0x03, 0x10);
@@ -478,7 +476,7 @@ static void test_sp_rel() {
     }
 }
 
-static void test_abs() {
+void test_abs() {
     // MOS6502
     TEST("BIT",  "$1234", 0x2C, 0x34, 0x12);
     TEST("ORA",  "$1234", 0x0D, 0x34, 0x12);
@@ -550,7 +548,7 @@ static void test_abs() {
     }
 }
 
-static void test_abs_long() {
+void test_abs_long() {
     if (w65c816()) {
         // W65C816
         TEST("ORA", "$123456", 0x0F, 0x56, 0x34, 0x12);
@@ -608,7 +606,7 @@ static void test_abs_long() {
     }
 }
 
-static void test_abs_indexed() {
+void test_abs_indexed() {
     // MOS6502
     TEST("ORA", ">$0000,X", 0x1D, 0x00, 0x00);
     TEST("AND", ">$0009,X", 0x3D, 0x09, 0x00);
@@ -670,7 +668,7 @@ static void test_abs_indexed() {
     }
 }
 
-static void test_abs_idir() {
+void test_abs_idir() {
     // MOS6502
     TEST("JMP", "(>$0009)",   0x6C, 0x09, 0x00);
     TEST("JMP" , "($1235)",            0x6C, 0x35, 0x12);
@@ -684,7 +682,7 @@ static void test_abs_idir() {
     TEST("JMP", "(>abs1234)", 0x6C, 0x34, 0x12);
 }
 
-static void test_abs_indexed_idir() {
+void test_abs_indexed_idir() {
     symtab.intern(0x0010, "abs0010");
     symtab.intern(0x1234, "abs1234");
 
@@ -704,7 +702,7 @@ static void test_abs_indexed_idir() {
     }
 }
 
-static void test_zpg_idir() {
+void test_zpg_idir() {
     if (!m6502()) {
         // G65SC02
         TEST("ORA", "($00)", 0x12, 0x00);
@@ -733,7 +731,7 @@ static void test_zpg_idir() {
     }
 }
 
-static void test_zpg_indexed_idir() {
+void test_zpg_indexed_idir() {
     // MOS6502
     TEST("ORA", "($00,X)", 0x01, 0x00);
     TEST("AND", "($09,X)", 0x21, 0x09);
@@ -750,7 +748,7 @@ static void test_zpg_indexed_idir() {
     TEST("LDA", "(<zero10,X)", 0xA1, 0x10);
 }
 
-static void test_zpg_idir_indexed() {
+void test_zpg_idir_indexed() {
     // MOS6502
     TEST("ORA", "($00),Y", 0x11, 0x00);
     TEST("AND", "($09),Y", 0x31, 0x09);
@@ -767,7 +765,7 @@ static void test_zpg_idir_indexed() {
     TEST("LDA", "(<zero10),Y", 0xB1, 0x10);
 }
 
-static void test_rel() {
+void test_rel() {
     if (w65c816()) {
         // W65C816
         ATEST(0x001000, "BPL", "$001002", 0x10, 0x00);
@@ -841,7 +839,7 @@ static void test_rel() {
     }
 }
 
-static void test_bitop() {
+void test_bitop() {
     if (m6502() || g65sc02()) {
         UNKN(0x07);
         UNKN(0x17);
@@ -886,7 +884,7 @@ static void test_bitop() {
     }
 }
 
-static void test_zpg_rel() {
+void test_zpg_rel() {
     if (m6502() || g65sc02()) {
         UNKN(0x0F);
         UNKN(0x1F);
@@ -937,7 +935,7 @@ static void test_zpg_rel() {
     }
 }
 
-static void test_illegal_mos6502() {
+void test_illegal_mos6502() {
     static constexpr Config::opcode_t illegals[] = {
         0x80,
         0x02, 0x12, 0x22, 0x32, 0x42, 0x52, 0x62, 0x72,
@@ -960,7 +958,7 @@ static void test_illegal_mos6502() {
         UNKN(opc);
 }
 
-static void test_illegal_g65sc02() {
+void test_illegal_g65sc02() {
     static constexpr Config::opcode_t illegals[] = {
         0x02, 0x22, 0x42, 0x62, 0x82, 0xC2, 0xE2,
         0x03, 0x13, 0x23, 0x33, 0x43, 0x53, 0x63, 0x73,
@@ -978,7 +976,7 @@ static void test_illegal_g65sc02() {
         UNKN(opc);
 }
 
-static void test_illegal_r65c02() {
+void test_illegal_r65c02() {
     static constexpr Config::opcode_t illegals[] = {
         0x02, 0x22, 0x42, 0x62, 0x82, 0xC2, 0xE2,
         0x03, 0x13, 0x23, 0x33, 0x43, 0x53, 0x63, 0x73,
@@ -992,7 +990,7 @@ static void test_illegal_r65c02() {
         UNKN(opc);
 }
 
-static void test_illegal_w65c02s() {
+void test_illegal_w65c02s() {
     static constexpr Config::opcode_t illegals[] = {
         0x02, 0x22, 0x42, 0x62, 0x82, 0xC2, 0xE2,
         0x03, 0x13, 0x23, 0x33, 0x43, 0x53, 0x63, 0x73,

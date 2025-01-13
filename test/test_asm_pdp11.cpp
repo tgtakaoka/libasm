@@ -32,16 +32,17 @@ Assembler &assembler(asmpdp11);
 #define FLTF(insn, opr, opc, ...) TEST(insn " " opr, opc, __VA_ARGS__)
 #define FLTD(insn, opr, opc, ...) TEST(insn " " opr, opc, __VA_ARGS__)
 #endif
-static bool dcj11() {
+
+bool dcj11() {
     return strcasecmp_P("J11", assembler.config().cpu_P()) == 0;
 }
 
-static void set_up() {
+void set_up() {
     assembler.reset();
-    assembler.setOption("relative", "true");
+    assembler.setOption("implicit-word", "off");
 }
 
-static void tear_down() {
+void tear_down() {
     symtab.reset();
 }
 
@@ -829,7 +830,7 @@ void test_floating_point() {
     FLTF("CMPF", "#0.5, AC2", 0173627, 0x4000, 0x0000);
 }
 
-static void test_undef() {
+void test_undef() {
     ERUS("MOV %UNDEF, %1",       "UNDEF, %1", 0010001);
     ERUS("MOV %2-1, (%UNDEF+1)", "UNDEF+1)",  0010110);
     ERUS("CMP R2, #UNDEF",       "UNDEF",     0020227, 000000);
@@ -857,7 +858,7 @@ static void test_undef() {
     }
 }
 
-static void test_data_constant() {
+void test_data_constant() {
     BTEST(".byte   -127., -127, 255, 255.", 0x81, (uint8_t)-0127, 0255, 0xFF);
     BTEST(R"(.byte 'A, '")",     0x41, 0x22);
     BTEST(".byte   '9-'0",       0x09);

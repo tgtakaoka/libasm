@@ -24,15 +24,16 @@ using namespace libasm::test;
 AsmPdp8 asmpdp8;
 Assembler &assembler(asmpdp8);
 
-static bool hd6120() {
+bool hd6120() {
     return strcmp_P("6120", assembler.config().cpu_P()) == 0;
 }
 
-static void set_up() {
+void set_up() {
     assembler.reset();
+    assembler.setOption("implicit-word", "off");
 }
 
-static void tear_down() {
+void tear_down() {
     symtab.reset();
 }
 

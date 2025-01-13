@@ -25,7 +25,7 @@ namespace gen {
 GenDriver::GenDriver(Disassembler &disassembler)
     : _disassembler(disassembler), _formatter(disassembler, "TestGenerator") {}
 
-static const char *basename(const char *str, char sep_char = '/') {
+const char *basename(const char *str, char sep_char = '/') {
     const char *sep = strrchr(str, sep_char);
     return sep ? sep + 1 : str;
 }

@@ -23,16 +23,16 @@ const ValueParser parser{ValueParser::Plugins::defaultPlugins()};
 
 const ValueFormatter formatter{ValueFormatter::Plugins::cstyle()};
 
-static void set_up() {
+void set_up() {
     context.defaultRadix = RADIX_10;
 }
 
-static void tear_down() {
+void tear_down() {
     symtab.reset();
 }
 
 // clang-format off
-static void test_char_constant() {
+void test_char_constant() {
     E8("'a'",   0x61);
     E8("'a'+5", 0x66);
     E8("5+'a'", 0x66);
@@ -48,7 +48,7 @@ static void test_char_constant() {
     E32("'a'", 0x61);
 }
 
-static void test_dec_constant() {
+void test_dec_constant() {
     E8("0",   0x00);
     E8("127", 0x7f);
     E8("128", 0x80);
@@ -78,7 +78,7 @@ static void test_dec_constant() {
     E32("101", 0b101);
 }
 
-static void test_hex_constant() {
+void test_hex_constant() {
     E8("0x0",   0x00);
     E8("0x7f",  0x7f);
     E8("0x80",  0x80);
@@ -99,7 +99,7 @@ static void test_hex_constant() {
     X32("0x7FFFFFFFF", OVERFLOW_RANGE, "0x7FFFFFFFF", "");
 }
 
-static void test_oct_constant() {
+void test_oct_constant() {
     E8("0177", 0x7f);
     E8("0200", 0x80);
     E8("0377", 0xff);
@@ -119,7 +119,7 @@ static void test_oct_constant() {
     X32("047777777777", OVERFLOW_RANGE, "047777777777", "");
 }
 
-static void test_bin_constant() {
+void test_bin_constant() {
     E8("0b0",         0x00);
     E8("0b01111111",  0x7f);
     E8("0b10000000",  0x80);
@@ -140,7 +140,7 @@ static void test_bin_constant() {
     X32("0b111111111111111111111111111111111", OVERFLOW_RANGE, "0b111111111111111111111111111111111", "");
 }
 
-static void test_unary_operator() {
+void test_unary_operator() {
     E8("-1",   0xff);
     E8("-128", 0x80);
     X8("-129", OVERFLOW_RANGE, "-129", "");
@@ -193,7 +193,7 @@ static void test_unary_operator() {
     E32("!~!-1", 0);
 }
 
-static void test_binary_operator() {
+void test_binary_operator() {
     E8("( 2)+( 3)",  5);
     E8("( 2)+(-3)", -1);
     E8("(-2)+( 3)",  1);
@@ -296,7 +296,7 @@ static void test_binary_operator() {
     E32("0 || !2 || 0", 0);
 }
 
-static void test_precedence() {
+void test_precedence() {
     E16("1+2-3+4",    4);
     E16("1+2*3+4",   11);
     E16("1+2-7/3",    1); // 1-2-(7/3)
@@ -384,7 +384,7 @@ static void test_precedence() {
     E32("(1 || 1)&& 0",  0);
 }
 
-static void test_overflow() {
+void test_overflow() {
     E8("0x1000-0x1080", -128);
     X8("0x1000-0x1081", OVERFLOW_RANGE, "0x1000-0x1081", "");
     E8("0x10ff-0x1000", 255);
@@ -405,7 +405,7 @@ static void test_overflow() {
     E16("(-0x2000)+0xE000", 0xC000);
 }
 
-static void test_symbol() {
+void test_symbol() {
     X32("100 / (1 - 1)",      DIVIDE_BY_ZERO,   "/ (1 - 1)", "");
     X32("100 / symbol",       UNDEFINED_SYMBOL, "symbol", "");
     X32("100 / (symbol - 1)", UNDEFINED_SYMBOL, "symbol - 1)", "");
@@ -418,7 +418,7 @@ static void test_symbol() {
     X32("100 / (symbol - 1)", DIVIDE_BY_ZERO, "/ (symbol - 1)", "");
 }
 
-static void test_current_address() {
+void test_current_address() {
     context.currentLocation = 0x1000;
     E16("$",       0x1000);
     E16("$+2",     0x1002);
@@ -434,7 +434,7 @@ static void test_current_address() {
     E16("($-table)/2", 0x080);
 }
 
-static void test_function() {
+void test_function() {
     // clang-format on
     static const struct : Functor {
         int8_t nargs() const override { return 0; }
@@ -490,7 +490,7 @@ static void test_function() {
     X32("-",  MISSING_OPERAND, "-", "");
 }
 
-static void test_scan() {
+void test_scan() {
     SERR('|', "|1+2|",        0,        "|1+2|", NOT_AN_EXPECTED, "|1+2|");
     SCAN('|', "1+2|3+4",      3,        "|3+4");
     SCAN('|', "1+(2|3)+4|5",  8,        "|5");
@@ -501,7 +501,7 @@ static void test_scan() {
     SCAN('b', "0b1010b0",     0xA,      "b0");
 }
 
-static void test_errors() {
+void test_errors() {
     X32("undef",   UNDEFINED_SYMBOL, "undef", "");
     X32("+undef",  UNDEFINED_SYMBOL, "undef", "");
     X32("-undef",  UNDEFINED_SYMBOL, "undef", "");
@@ -531,7 +531,7 @@ static void test_errors() {
     X32("100%0", DIVIDE_BY_ZERO, "%0", "");
 }
 
-static void test_comment() {
+void test_comment() {
     EXPR(" - 1 ", -1, "");
     EXPR(" + 1 ",  1, "");
     EXPR(" ~ 0 ", -1, "");
@@ -539,7 +539,7 @@ static void test_comment() {
     EXPR(" ( 1 + 2 ) * 3 ", 9, "");
 }
 
-static void test_formatter_8bit() {
+void test_formatter_8bit() {
     DEC(0,     8, "0");
     DEC(32,    8, "32");
     DEC(128,   8, "128");
@@ -750,7 +750,7 @@ static void test_formatter_8bit() {
     URHEX(-256, -8, "0");
 }
 
-static void test_formatter_16bit() {
+void test_formatter_16bit() {
     DEC(0,         16, "0");
     DEC(32,        16, "32");
     DEC(0x8000,    16, "32768");
@@ -858,7 +858,7 @@ static void test_formatter_16bit() {
     RHEX(-0x10000, -16, "0");
 }
 
-static void test_formatter_24bit() {
+void test_formatter_24bit() {
     DEC(0,           24, "0");
     DEC(32,          24, "32");
     DEC(0x800000,    24, "8388608");
@@ -966,7 +966,7 @@ static void test_formatter_24bit() {
     RHEX(-0x1000000, -24, "0");
 }
 
-static void test_formatter_32bit() {
+void test_formatter_32bit() {
     DEC(0,            32, "0");
     DEC(32,           32, "32");
     DEC(0x80000000,   32, "2147483648");
@@ -1079,7 +1079,7 @@ static void test_formatter_32bit() {
     URHEX(-0xffffffff, 32, "1");
 }
 
-static void test_formatter_9bit() {
+void test_formatter_9bit() {
     BIN(-128 *2, -9, "-0b100000000");
     BIN(   0 *2, -9, "0b000000000");
     BIN(+127 *2, -9, "0b011111110");
@@ -1093,7 +1093,7 @@ static void test_formatter_9bit() {
     HEX(+127 *2, -9, "0x0fe");
 }
 
-static void test_formatter_13bit() {
+void test_formatter_13bit() {
     BIN(-2048 *2, -13, "-0b1000000000000");
     BIN(    0 *2, -13, "0b0000000000000");
     BIN(+2047 *2, -13, "0b0111111111110");
@@ -1107,7 +1107,7 @@ static void test_formatter_13bit() {
     HEX(+2047 *2, -13, "0x0ffe");
 }
 
-static void test_formatter_bare_hex() {
+void test_formatter_bare_hex() {
     const ValueFormatter formatter;
 
     HEX(0,    8, "00");

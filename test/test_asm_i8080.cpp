@@ -24,19 +24,19 @@ using namespace libasm::test;
 AsmI8080 as8080;
 Assembler &assembler(as8080);
 
-static bool is8085() {
+bool is8085() {
     return strcmp_P("8085", assembler.config().cpu_P()) == 0;
 }
 
-static bool v30emu() {
+bool v30emu() {
     return strcasecmp_P("V30EMU", assembler.config().cpu_P()) == 0;
 }
 
-static void set_up() {
+void set_up() {
     assembler.reset();
 }
 
-static void tear_down() {
+void tear_down() {
     symtab.reset();
 }
 
@@ -58,7 +58,7 @@ void test_cpu() {
     EQUALS_P("cpu v30emu", "V30EMU", assembler.config().cpu_P());
 }
 
-static void intel_move_inherent() {
+void intel_move_inherent() {
     TEST("mov b,b", 0x40);
     TEST("MOV B,C", 0x41);
     TEST("MOV B,D", 0x42);
@@ -151,7 +151,7 @@ static void intel_move_inherent() {
     }
 }
 
-static void zilog_move_inherent() {
+void zilog_move_inherent() {
     TEST("z80syntax on");
 
     TEST("LD B,B", 0x40);
@@ -250,7 +250,7 @@ static void zilog_move_inherent() {
     }
 }
 
-static void intel_move_immediate() {
+void intel_move_immediate() {
     TEST("MVI B,0F6H", 0x06, 0xF6);
     TEST("MVI C,9FH",  0x0E, 0x9F);
     TEST("MVI D,58",   0x16, 0x3A);
@@ -277,7 +277,7 @@ static void intel_move_immediate() {
     TEST("LXI SP,?6789", 0x31, 0x89, 0x67);
 }
 
-static void zilog_move_immediate() {
+void zilog_move_immediate() {
     TEST("z80syntax on");
 
     TEST("LD B,0F6H", 0x06, 0xF6);
@@ -306,7 +306,7 @@ static void zilog_move_immediate() {
     TEST("LD C, ?max255", 0x0E, 0xFF);
 }
 
-static void intel_move_direct() {
+void intel_move_direct() {
     TEST("STA 9ABCH", 0x32, 0xBC, 0x9A);
     TEST("LDA 1234H", 0x3A, 0x34, 0x12);
 
@@ -325,7 +325,7 @@ static void intel_move_direct() {
     TEST("LHLD label5678", 0x2A, 0x78, 0x56);
 }
 
-static void zilog_move_direct() {
+void zilog_move_direct() {
     TEST("z80syntax on");
 
     TEST("LD (9ABCH),A", 0x32, 0xBC, 0x9A);
@@ -335,7 +335,7 @@ static void zilog_move_direct() {
     TEST("LD HL,(5678H)",  0x2A, 0x78, 0x56);
 }
 
-static void intel_stack_op() {
+void intel_stack_op() {
     TEST("PUSH B",   0xC5);
     TEST("PUSH D",   0xD5);
     TEST("PUSH H",   0xE5);
@@ -351,7 +351,7 @@ static void intel_stack_op() {
     TEST("XCHG",  0xEB);
 }
 
-static void zilog_stack_op() {
+void zilog_stack_op() {
     TEST("z80syntax on");
 
     TEST("PUSH BC", 0xC5);
@@ -371,7 +371,7 @@ static void zilog_stack_op() {
     TEST("EX HL,DE",   0xEB);
 }
 
-static void intel_jump_call() {
+void intel_jump_call() {
     TEST("JMP 1234H", 0xC3, 0x34, 0x12);
     TEST("JNZ 1234H", 0xC2, 0x34, 0x12);
     TEST("JZ 1234H",  0xCA, 0x34, 0x12);
@@ -409,7 +409,7 @@ static void intel_jump_call() {
     TEST("CC  label1234", 0xDC, 0x34, 0x12);
 }
 
-static void zilog_jump_call() {
+void zilog_jump_call() {
     TEST("z80syntax on");
 
     TEST("JP 1234H",    0xC3, 0x34, 0x12);
@@ -443,7 +443,7 @@ static void zilog_jump_call() {
     TEST("RET M",  0xF8);
 }
 
-static void intel_incr_decr() {
+void intel_incr_decr() {
     TEST("INR B", 0x04);
     TEST("INR C", 0x0C);
     TEST("INR D", 0x14);
@@ -472,7 +472,7 @@ static void intel_incr_decr() {
     TEST("DCX SP", 0x3B);
 }
 
-static void zilog_incr_decr() {
+void zilog_incr_decr() {
     TEST("z80syntax on");
 
     TEST("INC B", 0x04);
@@ -503,7 +503,7 @@ static void zilog_incr_decr() {
     TEST("DEC SP", 0x3B);
 }
 
-static void intel_alu_register() {
+void intel_alu_register() {
     TEST("ADD B", 0x80);
     TEST("ADD C", 0x81);
     TEST("ADD D", 0x82);
@@ -582,7 +582,7 @@ static void intel_alu_register() {
     TEST("DAD SP", 0x39);
 }
 
-static void zilog_alu_register() {
+void zilog_alu_register() {
     TEST("z80syntax on");
 
     TEST("ADD A,B", 0x80);
@@ -703,7 +703,7 @@ static void zilog_alu_register() {
     TEST("ADD HL,SP", 0x39);
 }
 
-static void intel_alu_immediate() {
+void intel_alu_immediate() {
     TEST("ADI 10B", 0xC6, 0x02);
     TEST("ACI 255", 0xCE, 0xFF);
     ERRT("ACI 256", OVERFLOW_RANGE, "256", 0xCE, 0x00);
@@ -718,7 +718,7 @@ static void intel_alu_immediate() {
     TEST("CPI -128", 0xFE, 0x80);
 }
 
-static void zilog_alu_immediate() {
+void zilog_alu_immediate() {
     TEST("z80syntax on");
 
     TEST("ADD A,10B",  0xC6, 0x02);
@@ -736,14 +736,14 @@ static void zilog_alu_immediate() {
     TEST("CP  -128", 0xFE, 0x80);
 }
 
-static void intel_io() {
+void intel_io() {
     TEST("OUT 0F1H", 0xD3, 0xF1);
     TEST("IN  0F0H", 0xDB, 0xF0);
     ERRT("OUT 101H", OVERFLOW_RANGE, "101H", 0xD3, 0x01);
     ERRT("IN  -1",   OVERFLOW_RANGE, "-1",   0xDB, 0xFF);
 }
 
-static void zilog_io() {
+void zilog_io() {
     TEST("z80syntax on");
 
     TEST("OUT (0F1H),A", 0xD3, 0xF1);
@@ -752,7 +752,7 @@ static void zilog_io() {
     ERRT("IN A,(256)",   OVERFLOW_RANGE, "(256)", 0xDB, 0x00);
 }
 
-static void intel_inherent() {
+void intel_inherent() {
     TEST("DI",  0xF3);
     TEST("EI",  0xFB);
 
@@ -770,7 +770,7 @@ static void intel_inherent() {
     TEST("CMC", 0x3F);
 }
 
-static void zilog_inherent() {
+void zilog_inherent() {
     TEST("z80syntax on");
 
     TEST("DI", 0xF3);
@@ -790,7 +790,7 @@ static void zilog_inherent() {
     TEST("CCF", 0x3F);
 }
 
-static void intel_restart() {
+void intel_restart() {
     TEST("RST 0", 0xC7);
     TEST("RST 1", 0xCF);
     TEST("RST 2", 0xD7);
@@ -803,7 +803,7 @@ static void intel_restart() {
     ERRT("RST 8",  OVERFLOW_RANGE, "8",  0xC7);
 }
 
-static void zilog_restart() {
+void zilog_restart() {
     TEST("z80syntax on");
 
     TEST("RST 00H", 0xC7);
@@ -819,7 +819,7 @@ static void zilog_restart() {
     ERRT("RST -1",  ILLEGAL_OPERAND, "-1",  0xC7);
 }
 
-static void intel_undef() {
+void intel_undef() {
     ERUS("MVI  B,UNDEF", "UNDEF", 0x06, 0x00);
     ERUS("LXI  B,UNDEF", "UNDEF", 0x01, 0x00, 0x00);
     ERUS("STA  UNDEF", "UNDEF", 0x32, 0x00, 0x00);
@@ -831,7 +831,7 @@ static void intel_undef() {
     ERUS("IN   UNDEF", "UNDEF", 0xDB, 0x00);
 }
 
-static void zilog_undef() {
+void zilog_undef() {
     TEST("z80syntax on");
 
     ERUS("LD  B,UNDEF",   "UNDEF",     0x06, 0x00);
@@ -850,7 +850,7 @@ static void zilog_undef() {
     ERUS("RST UNDEF",     "UNDEF",     0xC7);
 }
 
-static void test_comment() {
+void test_comment() {
     COMM("RST 1    ; comment", "; comment", 0xCF);
     COMM("MOV B,B  ; comment", "; comment", 0x40);
     COMM("STAX B   ; comment", "; comment", 0x02);
@@ -866,7 +866,7 @@ static void test_comment() {
     COMM("DW -128, 255 ; comment", "; comment", 0x80, 0xFF, 0xFF, 0x00);
 }
 
-static void test_data_constant() {
+void test_data_constant() {
     TEST("DB -128, 255", 0x80, 0xFF);
     TEST(R"(DB 'A', '"')", 0x41, 0x22);
     TEST("DB '9'-'0'",   0x09);

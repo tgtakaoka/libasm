@@ -24,15 +24,15 @@ using namespace libasm::test;
 AsmMc6809 as6809;
 Assembler &assembler(as6809);
 
-static bool is6309() {
+bool is6309() {
     return strcmp_P("6309", assembler.config().cpu_P()) == 0;
 }
 
-static void set_up() {
+void set_up() {
     assembler.reset();
 }
 
-static void tear_down() {
+void tear_down() {
     symtab.reset();
 }
 
@@ -51,7 +51,7 @@ void test_cpu() {
     EQUALS_P("cpu hd6309", "6309", assembler.config().cpu_P());
 }
 
-static void test_inherent() {
+void test_inherent() {
     TEST("NOP",  0x12);
     TEST("SYNC", 0x13);
     TEST("DAA",  0x19);
@@ -148,7 +148,7 @@ static void test_inherent() {
     }
 }
 
-static void test_stack() {
+void test_stack() {
     TEST("PSHS CC", 0x34, 0x01);
     TEST("PSHS A",  0x34, 0x02);
     TEST("PSHS B",  0x34, 0x04);
@@ -224,7 +224,7 @@ static void test_stack() {
     ERRT("PSHS U,V", REGISTER_NOT_ALLOWED, "V", 0x34, 0x40);
 }
 
-static void test_register() {
+void test_register() {
     TEST("TFR A,B",   0x1F, 0x89);
     TEST("TFR B,CC",  0x1F, 0x9A);
     TEST("TFR CC,DP", 0x1F, 0xAB);
@@ -330,7 +330,7 @@ static void test_register() {
     }
 }
 
-static void test_relative() {
+void test_relative() {
     ATEST(0x1000, "BRA $1002", 0x20, 0x00);
     ATEST(0x1000, "BRN $1000", 0x21, 0xFE);
     AERRT(0x0010, "BRA $FF92", OVERFLOW_RANGE, "$FF92", 0x20, 0x80);
@@ -428,7 +428,7 @@ static void test_relative() {
     AERRT(0x1000, "LBSR sub$9003", OVERFLOW_RANGE, "sub$9003", 0x17, 0x80, 0x00);
 }
 
-static void test_immediate() {
+void test_immediate() {
     TEST("ORCC  #%10", 0x1A, 0x02);
     TEST("ANDCC #~1",  0x1C, 0xFE);
     TEST("CWAI  #$EF", 0x3C, 0xEF);
@@ -561,7 +561,7 @@ static void test_immediate() {
     }
 }
 
-static void test_direct() {
+void test_direct() {
     TEST("NEG $10", 0x00, 0x10);
     TEST("COM $10", 0x03, 0x10);
     TEST("LSR $10", 0x04, 0x10);
@@ -772,7 +772,7 @@ static void test_direct() {
     }
 }
 
-static void test_extended() {
+void test_extended() {
     TEST("NEG $1234", 0x70, 0x12, 0x34);
     TEST("COM $1234", 0x73, 0x12, 0x34);
     TEST("LSR $1234", 0x74, 0x12, 0x34);
@@ -928,7 +928,7 @@ static void test_extended() {
     }
 }
 
-static void test_indexed() {
+void test_indexed() {
     TEST("LEAX ,Y", 0x30, 0xA4);
     TEST("LEAY ,U", 0x31, 0xC4);
     TEST("LEAU ,S", 0x33, 0xE4);
@@ -1069,7 +1069,7 @@ static void test_indexed() {
     }
 }
 
-static void test_indexed_mode() {
+void test_indexed_mode() {
     TEST("LDA   ,X", 0xA6, 0x84);
     TEST("LDA   ,Y", 0xA6, 0xA4);
     TEST("LDA   ,U", 0xA6, 0xC4);
@@ -1405,7 +1405,7 @@ static void test_indexed_mode() {
     ATEST(0x1000, "LDA [label1234]", 0xA6, 0x9F, 0x12, 0x34);
 }
 
-static void test_transfer() {
+void test_transfer() {
     if (is6309()) {
         TEST("TFM X+, Y+", 0x11, 0x38, 0x12);
         TEST("TFM Y-, U-", 0x11, 0x39, 0x23);
@@ -1428,7 +1428,7 @@ static void test_transfer() {
     }
 }
 
-static void test_bit_position() {
+void test_bit_position() {
     if (is6309()) {
         TEST("BAND  A.1,$34.2",                                     0x11, 0x30, 0x51, 0x34);
         ERRT("BAND  A.9,$34.2",   ILLEGAL_BIT_NUMBER, ".9,$34.2",   0x11, 0x30, 0x51, 0x34);
@@ -1492,7 +1492,7 @@ static void test_bit_position() {
     }
 }
 
-static void test_comment() {
+void test_comment() {
     COMM("NOP   ; comment", "; comment", 0x12);
     COMM("PSHS A; comment", "; comment", 0x34, 0x02);
     COMM("NOP      comment", "comment", 0x12);
@@ -1534,7 +1534,7 @@ static void test_comment() {
     COMM("FCC ;TEXT;    comment", "comment", 0x54, 0x45, 0x58, 0x54);
 }
 
-static void test_error() {
+void test_error() {
     ERRT("LDA , S",       UNKNOWN_OPERAND, ", S");
     ERRT("LDA , X+",      UNKNOWN_OPERAND, ", X+");
     ERRT("LDA , X++",     UNKNOWN_OPERAND, ", X++");
@@ -1581,7 +1581,7 @@ static void test_error() {
     }
 }
 
-static void test_undef() {
+void test_undef() {
     ERUS("LDA  #UNDEF", "UNDEF", 0x86, 0x00);
     ERUS("SUBD #UNDEF", "UNDEF", 0x83, 0x00, 0x00);
     ERUS("NEG   UNDEF", "UNDEF", 0x00, 0x00);
@@ -1638,7 +1638,7 @@ static void test_undef() {
     ERUS("LBCC UNDEF", "UNDEF", 0x10, 0x24, 0x00, 0x00);
 }
 
-static void test_data_constant() {
+void test_data_constant() {
     TEST("FCB -128, 255", 0x80, 0xFF);
     TEST(R"(FCB 'A', '"')", 0x41, 0x22);
     TEST("FCB '9'-'0'",   0x09);

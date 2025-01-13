@@ -25,24 +25,23 @@ using namespace libasm::test;
 DisMc6805 dis6805;
 Disassembler &disassembler(dis6805);
 
-static bool m146805() {
+bool m146805() {
     return strcmp_P("146805", disassembler.config().cpu_P()) == 0;
 }
 
-static bool m68hc05() {
+bool m68hc05() {
     return strcmp_P("68HC05", disassembler.config().cpu_P()) == 0;
 }
 
-static bool m68hc08() {
+bool m68hc08() {
     return strcmp_P("68HC08", disassembler.config().cpu_P()) == 0;
 }
 
-static void set_up() {
+void set_up() {
     disassembler.reset();
-    disassembler.setOption("relative", "no");
 }
 
-static void tear_down() {
+void tear_down() {
     symtab.reset();
 }
 
@@ -73,7 +72,7 @@ void test_cpu() {
     EQUALS_P("cpu MC68GC08", "68HC08", disassembler.config().cpu_P());
 }
 
-static void test_inherent() {
+void test_inherent() {
     TEST("NOP", "", 0x9D);
     TEST("CLC", "", 0x98);
     TEST("SEC", "", 0x99);
@@ -132,7 +131,7 @@ static void test_inherent() {
     TEST("CLRX", "", 0x5F);
 }
 
-static void test_immediate() {
+void test_immediate() {
     TEST("SUB", "#$90", 0xA0, 0x90);
     TEST("CMP", "#$90", 0xA1, 0x90);
     TEST("SBC", "#$90", 0xA2, 0x90);
@@ -169,7 +168,7 @@ static void test_immediate() {
     TEST("LDX", "#dir90", 0xAE, 0x90);
 }
 
-static void test_direct() {
+void test_direct() {
     TEST("NEG", "$90", 0x30, 0x90);
     TEST("COM", "$90", 0x33, 0x90);
     TEST("LSR", "$90", 0x34, 0x90);
@@ -222,7 +221,7 @@ static void test_direct() {
     TEST("STX", "<dir22", 0xBF, 0x22);
 }
 
-static void test_extended() {
+void test_extended() {
     TEST("SUB", "$1ABC", 0xC0, 0x1A, 0xBC);
     TEST("CMP", "$1ABC", 0xC1, 0x1A, 0xBC);
     TEST("SBC", "$1ABC", 0xC2, 0x1A, 0xBC);
@@ -275,7 +274,7 @@ static void test_extended() {
     AERRT(0x3FF0, "BSR", "$0000", OVERFLOW_RANGE, "$0000", 0xAD, 0x0E);
 }
 
-static void test_indexed() {
+void test_indexed() {
     TEST("NEG", "<0,X",  0x60, 0x00);
     TEST("COM", "<0,X",  0x63, 0x00);
     TEST("LSR", "1,X",   0x64, 0x01);
@@ -417,7 +416,7 @@ static void test_indexed() {
     TEST("JSR", "offset256,X", 0xDD, 0x01, 0x00);
 }
 
-static void test_relative() {
+void test_relative() {
     ATEST(0x1000, "BRA", "$1002", 0x20, 0x00);
     ATEST(0x1000, "BHI", "$1004", 0x22, 0x02);
     ATEST(0x1000, "BLS", "$1002", 0x23, 0x00);
@@ -472,7 +471,7 @@ static void test_relative() {
     AERRT(0x1FF0, "BSR", "*+16", OVERFLOW_RANGE, "*+16", 0xAD, 0x0E);
 }
 
-static void test_bit_ops() {
+void test_bit_ops() {
     TEST("BSET", "0, $90", 0x10, 0x90);
     TEST("BSET", "7, $90", 0x1E, 0x90);
     TEST("BCLR", "0, $90", 0x11, 0x90);
@@ -502,7 +501,7 @@ static void test_bit_ops() {
     ATEST(0x1000, "BRCLR", "bp6, <dir90, sym0F83", 0x0D, 0x90, 0x80);
 }
 
-static void test_illegal() {
+void test_illegal() {
     if (m68hc08()) {
         static constexpr Config::opcode_t illegals[] = {
             0x32, 0x3E, 0x82, 0x8D, 0x96, 0xAC,

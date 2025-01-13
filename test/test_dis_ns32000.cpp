@@ -33,13 +33,13 @@ Disassembler &disassembler(dis32k);
 #define EFLT(insn, opr, error, at, hex, ...) ERRT(insn, opr, error, at, __VA_ARGS__)
 #endif
 
-static void set_up() {
+void set_up() {
     disassembler.reset();
     disassembler.setOption("relative", "enable");
     disassembler.setOption("c-style", "enable");
 }
 
-static void tear_down() {
+void tear_down() {
     symtab.reset();
 }
 
@@ -52,7 +52,7 @@ void test_cpu() {
     EQUALS_P("cpu 32032", "32032", disassembler.config().cpu_P());
 }
 
-static void test_format_0() {
+void test_format_0() {
     disassembler.setOption("relative", "on");
     ATEST(0x001000, "BEQ", ".",      0x0A, 0x00);
     ATEST(0x001000, "BNE", ".+10",   0x1A, 0x0A);
@@ -79,7 +79,7 @@ static void test_format_0() {
     ANMEM(0x000000, "BLS", ".",            ".",            0x5A, 0xC0);
 }
 
-static void test_format_1() {
+void test_format_1() {
     TEST("BSR", ".+16", 0x02, 0x10);
 
     TEST("RET",  "16", 0x12, 0x10);
@@ -113,7 +113,7 @@ static void test_format_1() {
     ERRT("RET", "-0x20000000", ILLEGAL_CONSTANT, "-0x20000000", 0x12, 0xE0, 0x00, 0x00, 0x00);
 }
 
-static void test_format_2() {
+void test_format_2() {
     TEST("ADDQB", "-8, R0", 0x0C, 0x04);
     TEST("ADDQW", "7, R1",  0x8D, 0x0B);
     TEST("ADDQD", "-8, R2", 0x0F, 0x14);
@@ -289,7 +289,7 @@ static void test_format_2() {
     TEST("SFCD", "-8(-9(EXT))", 0xBF, 0xB4, 0x77, 0x78);
 }
 
-static void test_format_3() {
+void test_format_3() {
     TEST("BICPSRB", "0xA2",  0x7C, 0xA1, 0xA2);
     TEST("BISPSRB", "0xA2",  0x7C, 0xA3, 0xA2);
     TEST("ADJSPD", "-4(FP)", 0x7F, 0xC5, 0x7C);
@@ -302,7 +302,7 @@ static void test_format_3() {
     ATEST(0x100000, "CASEB",  "0x100004(PC)[R7:B]", 0x7C, 0xE7, 0xDF, 0x04);
 }
 
-static void test_format_4() {
+void test_format_4() {
     TEST("MOVB",  "R0, R1",    0x54, 0x00);
     TEST("MOVW",  "R2, R3",    0xD5, 0x10);
     TEST("MOVD",  "R0, 8(SB)", 0x97, 0x06, 0x08);
@@ -347,7 +347,7 @@ static void test_format_4() {
     TEST("ADDR",  "4(FP), R0", 0x27, 0xC0, 0x04);
 }
 
-static void test_format_5() {
+void test_format_5() {
     TEST("CMPSB", "",    0x0E, 0x04, 0x00);
     UNKN(                0x0E, 0x04, 0x80);
     UNKN(                0x0E, 0x04, 0x40);
@@ -390,7 +390,7 @@ static void test_format_5() {
     UNKN(                     0x0E, 0x0B, 0x08);
 }
 
-static void test_format_6() {
+void test_format_6() {
     TEST("ABSB",  "R5, R6",        0x4E, 0xB0, 0x29);
     TEST("ABSD",  "8(SP), R7",     0x4E, 0xF3, 0xC9, 0x08);
     TEST("ADDPB", "5(SB), TOS",    0x4E, 0xFC, 0xD5, 0x05);
@@ -413,7 +413,7 @@ static void test_format_6() {
     TEST("SUBPD", "0x00000099, R1", 0x4E, 0x6F, 0xA0, 0x00, 0x00, 0x00, 0x99);
 }
 
-static void test_format_7() {
+void test_format_7() {
     TEST("CMPMW", "10(R0), 16(R1), 4", 0xCE, 0x45, 0x42, 0x0A, 0x10, 0x06);
     TEST("DEIB",  "R1, R0", 0xCE, 0x2C, 0x08);
     TEST("DEIW",  "R3, R2", 0xCE, 0xAD, 0x18);
@@ -465,7 +465,7 @@ static void test_format_7() {
     ERRT("MEID", "R5, R7", REGISTER_NOT_ALIGNED, "R7", 0xCE, 0xE7, 0x29);
 }
 
-static void test_format_8() {
+void test_format_8() {
     TEST("CHECKB", "R0, 4(SB), R2",       0xEE, 0x80, 0xD0, 0x04);
     TEST("CVTP",   "R0, 32(SB), R2",      0x6E, 0x83, 0xD0, 0x20);
     TEST("FFSB",   "-4(FP), TOS",         0x6E, 0xC4, 0xC5, 0x7C);
@@ -495,7 +495,7 @@ static void test_format_8() {
 
 #if !defined(LIBASM_NS32000_NOFPU)
 
-static void test_format_9_fpu() {
+void test_format_9_fpu() {
     TEST("MOVF", "F1, 8(SB)", 0xBE, 0x85, 0x0E, 0x08);
     TEST("MOVL", "F2, 8(SB)", 0xBE, 0x84, 0x16, 0x08);
     TFLT("MOVF", "NAN, F1",  "0x0000C07F, F1", 0xBE, 0x45, 0xA0, 0x7F, 0xC0, 0x00, 0x00);
@@ -556,7 +556,7 @@ static void test_format_9_fpu() {
     ERRT("TRUNCLD", "F1, R5",   REGISTER_NOT_ALIGNED, "F1, R5",     0x3E, 0x6B, 0x09);
 }
 
-static void test_format_11_fpu() {
+void test_format_11_fpu() {
     TEST("ABSF", "F1, F5",     0xBE, 0x75, 0x09);
     TEST("ABSL", "F2, F4",     0xBE, 0x34, 0x11);
     TEST("ADDF", "F3, F7",     0xBE, 0xC1, 0x19);
@@ -614,12 +614,12 @@ static void test_format_11_fpu() {
 
 #if !defined(LIBASM_NS32000_NOMMU)
 
-static void test_format_8_mmu() {
+void test_format_8_mmu() {
     TEST("MOVSUB", "5(SP), 9(SB)",        0xAE, 0x8C, 0xCE, 0x05, 0x09);
     TEST("MOVUSB", "9(SB), 5(SP)",        0xAE, 0x5C, 0xD6, 0x09, 0x05);
 }
 
-static void test_format_14_mmu() {
+void test_format_14_mmu() {
     TEST("LMR", "BPR0, R1",                           0x1E, 0x0B, 0x08);
     TEST("LMR", "BPR1, R2",                           0x1E, 0x8B, 0x10);
     ERRT("LMR",     ", R3", UNKNOWN_REGISTER, ", R3", 0x1E, 0x0B, 0x19);
@@ -665,7 +665,7 @@ static void test_format_14_mmu() {
 }
 #endif
 
-static void test_generic_addressing() {
+void test_generic_addressing() {
     // Register
     TEST("ADDW", "R1, R2", 0x81, 0x08);
 #if !defined(LIBASM_NS32000_NOFPU)
@@ -812,7 +812,7 @@ static void test_generic_addressing() {
     TEST("ADDW", "10(R2), -8(-6(EXT))",    0x81, 0x55, 0x0A, 0x7A, 0x78);
 }
 
-static void test_formatter() {
+void test_formatter() {
     disassembler.setCStyle(false);
     ATEST(0x800000, "BGT", ".-X'00800000", 0x6A, 0xFF, 0x80, 0x00, 0x00);
     ATEST(0x000000, "BLS", ".+X'00FFFFFF", 0x5A, 0xC0, 0xFF, 0xFF, 0xFF);
@@ -847,7 +847,7 @@ static void test_formatter() {
 }
 // clang-format on
 
-static const CpuSpec SPEC{NS32032,
+const CpuSpec SPEC{NS32032,
 #if defined(LIBASM_NS32000_NOFPU)
         FPU_NONE,
 #else
@@ -860,7 +860,7 @@ static const CpuSpec SPEC{NS32032,
 #endif
 };
 
-static void assert_unknown(
+void assert_unknown(
         const char *file, int line, Config::opcode_t opc, Config::opcode_t prefix) {
     if (TABLE.isPrefixCode(SPEC, prefix)) {
         __VASSERT(file, line, UNKNOWN_INSTRUCTION, "", 0x0000, "", "", prefix, opc);
@@ -869,13 +869,13 @@ static void assert_unknown(
     }
 }
 
-static void assert_unknown(const char *file, int line, Config::opcode_t opc) {
+void assert_unknown(const char *file, int line, Config::opcode_t opc) {
     __VASSERT(file, line, UNKNOWN_INSTRUCTION, "", 0x0000, "", "", opc);
 }
 
 #define UNKNOWN(...) assert_unknown(__FILE__, __LINE__, __VA_ARGS__)
 
-static void test_illegal() {
+void test_illegal() {
     // Format 0: |cond|1010|
     UNKN(0xFA);
 
