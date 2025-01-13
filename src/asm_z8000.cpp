@@ -64,7 +64,7 @@ AsmZ8000::AsmZ8000(const ValueParser::Plugins &plugins)
 
 void AsmZ8000::reset() {
     Assembler::reset();
-    setShortDirect(false);
+    setShortDirect(true);
 }
 
 Error AsmZ8000::setShortDirect(bool enable) {

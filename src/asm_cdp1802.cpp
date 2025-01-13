@@ -61,7 +61,7 @@ AsmCdp1802::AsmCdp1802(const ValueParser::Plugins &plugins)
 
 void AsmCdp1802::reset() {
     Assembler::reset();
-    setUseReg(false);
+    setUseReg(true);
 }
 
 Error AsmCdp1802::setUseReg(bool enable) {

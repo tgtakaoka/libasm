@@ -68,7 +68,7 @@ void AsmPdp8::reset() {
     Assembler::reset();
     setInputRadix(RADIX_8);
     setListRadix(RADIX_8);
-    setImplicitWord(false);
+    setImplicitWord(true);
 }
 
 Error AsmPdp8::setImplicitWord(bool enable) {
