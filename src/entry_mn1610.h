@@ -41,7 +41,7 @@ enum AddrMode : uint8_t {
     M_RD = 12,    // Destination register: R0-R4, X0-X1, SP, STR
     M_RDG = 13,   // Destination register: R0-R4, X0-X1, SP (no STR)
     M_RS = 14,    // Source register: R0-R4, X0-X1, SP, STR
-    M_RSG = 15,   // Source register: R0-R4, X0-X1, SP, STR (no STR)
+    M_RSG = 15,   // Source register: R0-R4, X0-X1, SP (no STR)
     M_SB = 16,    // Segment base register: CSRB, SSRB, TSR0, TSR1
     M_RB = 17,    // Segment base register: M_SB, OSR0-OSR3
     M_RBW = 18,   // Segment base register: M_RB without CSBR
@@ -59,6 +59,7 @@ enum AddrMode : uint8_t {
     M_INDX = 30,  // v(r)
     M_IXID = 31,  // (v(r))
     M_IDIX = 32,  // (v)(r)
+    M_RDS = 33,   // Destination/Source register: R0-R4, X0-X1, SP, STR
 };
 
 struct Entry final : entry::Base<Config::opcode_t> {

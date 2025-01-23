@@ -35,6 +35,7 @@ constexpr char TEXT_BAL[]  PROGMEM = "BAL";
 constexpr char TEXT_BSWP[] PROGMEM = "BSWP";
 // constexpr char TEXT_CB[]   PROGMEM = "CB";
 // constexpr char TEXT_C[]    PROGMEM = "C";
+// constexpr char TEXT_CLR[]  PROGMEM = "CLR";
 constexpr char TEXT_DMS[]  PROGMEM = "DMS";
 constexpr char TEXT_DSWP[] PROGMEM = "DSWP";
 // constexpr char TEXT_EOR[]  PROGMEM = "EOR";
@@ -59,6 +60,7 @@ constexpr char TEXT_SI[]   PROGMEM = "SI";
 // constexpr char TEXT_SR[]   PROGMEM = "SR";
 // constexpr char TEXT_ST[]   PROGMEM = "ST";
 constexpr char TEXT_TBIT[] PROGMEM = "TBIT";
+// constexpr char TEXT_TST[]  PROGMEM = "TST";
 constexpr char TEXT_WT[]   PROGMEM = "WT";
 
 // MN1613

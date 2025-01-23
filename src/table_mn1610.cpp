@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-#include "table_mn1610.h"
 #include "entry_mn1610.h"
 #include "entry_table.h"
+#include "table_mn1610.h"
 #include "text_mn1610.h"
 
 using namespace libasm::text::mn1610;
@@ -25,7 +25,7 @@ namespace libasm {
 namespace mn1610 {
 
 #define E4(_opc, _name, _opr1, _opr2, _opr3, _opr4) \
-    { _opc, Entry::Flags::create(_opr1, _opr2, _opr3, _opr4), _name }
+    {_opc, Entry::Flags::create(_opr1, _opr2, _opr3, _opr4), _name}
 #define E3(_opc, _name, _opr1, _opr2, _opr3) E4(_opc, _name, _opr1, _opr2, _opr3, M_NONE)
 #define E2(_opc, _name, _opr1, _opr2) E3(_opc, _name, _opr1, _opr2, M_NONE)
 #define E1(_opc, _name, _opr1) E2(_opc, _name, _opr1, M_NONE)
@@ -79,6 +79,8 @@ static constexpr Entry TABLE_MN1610[] PROGMEM = {
         E1(0xC600, TEXT_IMS,  M_GEN),
         E1(0xC700, TEXT_B,    M_GEN),
         E2(0xC000, TEXT_L,    M_RDG,  M_GEN),
+        E2(0x6000, TEXT_CLR,  M_RDS,  M_SKIP),
+        E2(0x6008, TEXT_TST,  M_RDS,  M_SKIP),
 };
 
 static constexpr uint8_t INDEX_MN1610[] PROGMEM = {
@@ -90,6 +92,7 @@ static constexpr uint8_t INDEX_MN1610[] PROGMEM = {
      21,  // TEXT_BSWP
      13,  // TEXT_C
      12,  // TEXT_CB
+     30,  // TEXT_CLR
      24,  // TEXT_DMS
      20,  // TEXT_DSWP
      16,  // TEXT_EOR
@@ -111,6 +114,7 @@ static constexpr uint8_t INDEX_MN1610[] PROGMEM = {
       4,  // TEXT_SR
      26,  // TEXT_ST
       7,  // TEXT_TBIT
+     31,  // TEXT_TST
       1,  // TEXT_WT
 };
 
@@ -311,6 +315,8 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
         return opr == M_R0 || opr == M_RDG;
     case M_RDG:
         return opr == M_R0;
+    case M_RDS:
+        return opr == M_R0 || opr == M_RD || opr == M_RDG;
     case M_RS:
         return opr == M_R0 || opr == M_RDG || opr == M_RD;
     case M_RSG:
@@ -363,7 +369,7 @@ static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *) {
     if (mode1 == M_GEN || mode2 == M_GEN)
         opc &= ~((7 << 11) | 0xFF);
     const auto dstReg = (opc >> 8) & 7;
-    if (mode1 == M_RD) {
+    if (mode1 == M_RD || mode1 == M_RDS) {
         if (dstReg == 7)
             return false;
         opc &= ~(7 << 8);
@@ -374,7 +380,7 @@ static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *) {
         opc &= ~(7 << 8);
     }
     const auto srcReg = opc & 7;
-    if (mode1 == M_RS || mode2 == M_RS) {
+    if (mode1 == M_RS || mode2 == M_RS || mode1 == M_RDS) {
         if (srcReg == 7)
             return false;
         opc &= ~7;
@@ -414,7 +420,7 @@ static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *) {
             return false;
         opc &= ~(7 << 4);
     }
-    if (mode3 == M_SKIP || mode4 == M_SKIP)
+    if (mode2 == M_SKIP || mode3 == M_SKIP || mode4 == M_SKIP)
         opc &= ~(0xF << 4);
     if (mode2 == M_IM8 || mode2 == M_IOA)
         opc &= ~0xFF;

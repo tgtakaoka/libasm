@@ -105,6 +105,7 @@ void DisMn1610::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) cons
         break;
     case M_RD:
     case M_RDG:
+    case M_RDS:
         outRegister(out, decodeRegNum(opc >> 8), mode);
         break;
     case M_RS:

@@ -38,6 +38,7 @@ using common::TEXT_B;
 extern const char TEXT_BSWP[] PROGMEM;
 using common::TEXT_CB;
 using common::TEXT_C;
+using common::TEXT_CLR;
 extern const char TEXT_DMS[]  PROGMEM;
 extern const char TEXT_DSWP[] PROGMEM;
 using common::TEXT_EOR;
@@ -62,6 +63,7 @@ using common::TEXT_S;
 using common::TEXT_SR;
 using common::TEXT_ST;
 extern const char TEXT_TBIT[] PROGMEM;
+using common::TEXT_TST;
 extern const char TEXT_WT[]   PROGMEM;
 
 // MN1613

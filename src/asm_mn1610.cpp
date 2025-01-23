@@ -133,6 +133,9 @@ void AsmMn1610::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode) c
     case M_RS:
         insn.embed(encodeGeneric(op.reg));
         break;
+    case M_RDS:
+        insn.embed((encodeGeneric(op.reg) << 8) | encodeGeneric(op.reg));
+        break;
     case M_RBW:
         if (op.reg == REG_CSBR)
             insn.setErrorIf(op, REGISTER_NOT_ALLOWED);
