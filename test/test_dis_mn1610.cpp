@@ -84,11 +84,11 @@ void test_transfer() {
 
     disassembler.setOption("relative", "off");
     if (is1610()) {
-        ATEST(0x1000, "L", "R2, X'0F80'-*(IC)",    0xC000|(1<<11)|(2<<8)|0x80);
-        ATEST(0x1000, "L", "R4, (X'107F'-*(IC))",  0xC000|(3<<11)|(4<<8)|0x7F);
+        ATEST(0x1000, "L", "R2, X'0F80'",    0xC000|(1<<11)|(2<<8)|0x80);
+        ATEST(0x1000, "L", "R4, (X'107F')",  0xC000|(3<<11)|(4<<8)|0x7F);
     } else {
-        ATEST(0x1000, "L", "R2, X'00F80'-*(IC)",   0xC000|(1<<11)|(2<<8)|0x80);
-        ATEST(0x1000, "L", "R4, (X'0107F'-*(IC))", 0xC000|(3<<11)|(4<<8)|0x7F);
+        ATEST(0x1000, "L", "R2, X'00F80'",   0xC000|(1<<11)|(2<<8)|0x80);
+        ATEST(0x1000, "L", "R4, (X'0107F')", 0xC000|(3<<11)|(4<<8)|0x7F);
     }
     disassembler.setOption("relative", "enable");
 

@@ -71,12 +71,7 @@ void DisMn1610::outGenericAddr(StrBuffer &out, Config::opcode_t opc, Config::uin
         out.letter('(');
         // Fall-through
     case 1:
-        if (_relativeTarget) {
-            outRelAddr(out, target, base, 8);
-        } else {
-            outAbsAddr(out, target).letter('-').letter(_curSym);
-            outRegName(out.letter('('), REG_IC).letter(')');
-        }
+        outRelAddr(out, target, base, 8);
         if (mode == 3)
             out.letter(')');
         break;
