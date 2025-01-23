@@ -225,7 +225,7 @@ Error AsmMn1610::parseOperand(StrScanner &scan, Operand &op) const {
     auto p = scan.skipSpaces();
     op.setAt(p);
 
-    op.cc = parseCcName(p);
+    op.cc = parseCcName(p, parser());
     if (op.cc != CC_UNDEF) {
         if (isSkip(op.cc)) {
             op.mode = M_SKIP;
@@ -244,7 +244,7 @@ Error AsmMn1610::parseOperand(StrScanner &scan, Operand &op) const {
     if (indir || preDec)
         ++t;
     const auto r = t;
-    op.reg = parseRegName(t);
+    op.reg = parseRegName(t, parser());
     if (op.reg != REG_UNDEF) {
         // r, (r), -(r), (r)+
         t.skipSpaces();
@@ -308,7 +308,7 @@ Error AsmMn1610::parseOperand(StrScanner &scan, Operand &op) const {
     }
     if (p.expect('(')) {
         // v(r), (v(r))
-        op.reg = parseRegName(p.skipSpaces());
+        op.reg = parseRegName(p.skipSpaces(), parser());
         if (op.reg == REG_UNDEF)
             return op.setError(p, UNKNOWN_OPERAND);
         if (!p.skipSpaces().expect(')'))
@@ -325,7 +325,7 @@ Error AsmMn1610::parseOperand(StrScanner &scan, Operand &op) const {
     auto rp = p;
     // (v)(r)
     if (rp.skipSpaces().expect('(')) {
-        op.reg = parseRegName(rp.skipSpaces());
+        op.reg = parseRegName(rp.skipSpaces(), parser());
         if (op.reg != REG_UNDEF) {
             if (!rp.skipSpaces().expect(')'))
                 return op.setError(rp, MISSING_CLOSING_PAREN);

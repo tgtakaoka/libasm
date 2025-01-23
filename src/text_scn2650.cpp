@@ -104,6 +104,11 @@ constexpr char TEXT_WRTE[] PROGMEM = "WRTE";
 constexpr char TEXT_ZBRR[] PROGMEM = "ZBRR";
 constexpr char TEXT_ZBSR[] PROGMEM = "ZBSR";
 
+// constexpr char TEXT_REG_R0[]  PROGMEM = "R0";
+// constexpr char TEXT_REG_R1[]  PROGMEM = "R1";
+// constexpr char TEXT_REG_R2[]  PROGMEM = "R2";
+// constexpr char TEXT_REG_R3[]  PROGMEM = "R3";
+
 // constexpr char TEXT_CC_EQ[] PROGMEM = "EQ";
 // constexpr char TEXT_CC_GT[] PROGMEM = "GT";
 // constexpr char TEXT_CC_LT[] PROGMEM = "LT";

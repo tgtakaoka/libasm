@@ -18,12 +18,14 @@
 #define __LIBASM_REG_INS8060_H__
 
 #include <stdint.h>
-
 #include "config_ins8060.h"
 #include "str_buffer.h"
 #include "str_scanner.h"
 
 namespace libasm {
+
+struct ValueParser;
+
 namespace ins8060 {
 
 enum RegName : int8_t {
@@ -48,7 +50,7 @@ constexpr Config::uintptr_t offset(Config::uintptr_t addr) {
     return addr & 0xFFF;
 }
 
-RegName parseRegName(StrScanner &scan);
+RegName parseRegName(StrScanner &scan, const ValueParser &parser);
 StrBuffer &outRegName(StrBuffer &out, RegName name);
 
 bool isPointerReg(RegName name);

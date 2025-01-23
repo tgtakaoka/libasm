@@ -119,10 +119,10 @@ Error AsmI8086::parseStringInst(StrScanner &scan, Operand &op) const {
 
 Error AsmI8086::parsePointerSize(StrScanner &scan, Operand &op) const {
     auto p = scan;
-    const auto reg = parseRegName(p);
+    const auto reg = parseRegName(p, parser());
     if (reg > REG_PTR) {
         // Pointer size override
-        if (parseRegName(p.skipSpaces()) == REG_PTR) {
+        if (parseRegName(p.skipSpaces(), parser()) == REG_PTR) {
             op.ptr = reg;
             scan = p.skipSpaces();
             return OK;
@@ -134,7 +134,7 @@ Error AsmI8086::parsePointerSize(StrScanner &scan, Operand &op) const {
 
 void AsmI8086::parseSegmentOverride(StrScanner &scan, Operand &op) const {
     auto p = scan;
-    const auto reg = parseRegName(p);
+    const auto reg = parseRegName(p, parser());
     if (isSegmentReg(reg)) {
         // Segment Override
         if (p.skipSpaces().expect(':')) {
@@ -146,7 +146,7 @@ void AsmI8086::parseSegmentOverride(StrScanner &scan, Operand &op) const {
 
 void AsmI8086::parseBaseRegister(StrScanner &scan, Operand &op) const {
     auto p = scan;
-    const auto reg = parseRegName(p);
+    const auto reg = parseRegName(p, parser());
     if (reg == REG_BX || reg == REG_BP) {
         op.reg = reg;
         scan = p.skipSpaces();
@@ -160,7 +160,7 @@ void AsmI8086::parseIndexRegister(StrScanner &scan, Operand &op) const {
             return;
         p.skipSpaces();
     }
-    const auto reg = parseRegName(p);
+    const auto reg = parseRegName(p, parser());
     if (reg == REG_SI || reg == REG_DI) {
         op.index = reg;
         scan = p.skipSpaces();
@@ -229,7 +229,7 @@ Error AsmI8086::parseOperand(StrScanner &scan, Operand &op) const {
         return op.setError(UNKNOWN_OPERAND);
 
     auto a = p;
-    const auto reg = parseRegName(a);
+    const auto reg = parseRegName(a, parser());
     if (isGeneralReg(reg)) {
         op.reg = reg;
         switch (reg) {

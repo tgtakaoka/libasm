@@ -15,9 +15,9 @@
  */
 
 #include "reg_ns32000.h"
-
 #include "reg_base.h"
 #include "text_ns32000.h"
+#include "value_parser.h"
 
 using namespace libasm::reg;
 using namespace libasm::text::ns32000;
@@ -90,9 +90,14 @@ PROGMEM constexpr NameTable CONFIG_TABLE{ARRAY_RANGE(CONFIG_ENTRIES)};
 // clang-format on
 }  // namespace
 
-RegName parseRegName(StrScanner &scan) {
-    const auto *entry = REG_TABLE.searchText(scan);
-    return entry ? RegName(entry->name()) : REG_UNDEF;
+RegName parseRegName(StrScanner &scan, const ValueParser &parser) {
+    auto p = scan;
+    const auto *entry = REG_TABLE.searchText(parser.readRegName(p));
+    if (entry) {
+        scan = p;
+        return RegName(entry->name());
+    }
+    return REG_UNDEF;
 }
 
 StrBuffer &outRegName(StrBuffer &out, RegName name) {
@@ -125,9 +130,14 @@ bool isRegPair(RegName name) {
     return num >= 0 && num < 16 && num % 2 == 0;
 }
 
-PregName parsePregName(StrScanner &scan) {
-    const auto *entry = PREG_TABLE.searchText(scan);
-    return entry ? PregName(entry->name()) : PREG_UNDEF;
+PregName parsePregName(StrScanner &scan, const ValueParser &parser) {
+    auto p = scan;
+    const auto *entry = PREG_TABLE.searchText(parser.readRegName(p));
+    if (entry) {
+        scan = p;
+        return PregName(entry->name());
+    }
+    return PREG_UNDEF;
 }
 
 StrBuffer &outPregName(StrBuffer &out, PregName name) {
@@ -148,9 +158,14 @@ uint8_t encodePregName(PregName name) {
     return uint8_t(name);
 }
 
-MregName parseMregName(StrScanner &scan) {
-    const auto *entry = MREG_TABLE.searchText(scan);
-    return entry ? MregName(entry->name()) : MREG_UNDEF;
+MregName parseMregName(StrScanner &scan, const ValueParser &parser) {
+    auto p = scan;
+    const auto *entry = MREG_TABLE.searchText(parser.readRegName(p));
+    if (entry) {
+        scan = p;
+        return MregName(entry->name());
+    }
+    return MREG_UNDEF;
 }
 
 StrBuffer &outMregName(StrBuffer &out, MregName name) {
@@ -169,9 +184,14 @@ uint8_t encodeMregName(MregName name) {
     return uint8_t(name);
 }
 
-ConfigName parseConfigName(StrScanner &scan) {
-    const auto *entry = CONFIG_TABLE.searchText(scan);
-    return entry ? ConfigName(entry->name()) : CONFIG_UNDEF;
+ConfigName parseConfigName(StrScanner &scan, const ValueParser &parser) {
+    auto p = scan;
+    const auto *entry = CONFIG_TABLE.searchText(parser.readRegName(p));
+    if (entry) {
+        scan = p;
+        return ConfigName(entry->name());
+    }
+    return CONFIG_UNDEF;
 }
 
 StrBuffer &outConfigNames(StrBuffer &out, uint8_t configs) {
@@ -224,7 +244,7 @@ OprSize parseIndexSize(StrScanner &scan) {
 }
 
 OprSize decodeIndexSize(uint8_t num) {
-    static constexpr OprSize sizes[] = { SZ_BYTE, SZ_WORD, SZ_QUAD, SZ_OCTA };
+    static constexpr OprSize sizes[] = {SZ_BYTE, SZ_WORD, SZ_QUAD, SZ_OCTA};
     return sizes[num & 3];
 }
 

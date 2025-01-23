@@ -122,7 +122,7 @@ Error AsmIns8060::parseOperand(StrScanner &scan, Operand &op) const {
     }
 
     const auto autoDisp = p.expect('@');
-    const auto reg = parseRegName(p);
+    const auto reg = parseRegName(p, parser());
     if (reg == REG_E) {
         op.index = REG_E;
     } else if (reg != REG_UNDEF) {
@@ -136,7 +136,7 @@ Error AsmIns8060::parseOperand(StrScanner &scan, Operand &op) const {
             return op.getError();
     }
     if (p.skipSpaces().expect('(')) {
-        const auto base = parseRegName(p);
+        const auto base = parseRegName(p, parser());
         if (!isPointerReg(base))
             return op.setError(scan, UNKNOWN_OPERAND);
         if (!p.expect(')'))

@@ -68,10 +68,10 @@ Error AsmI8051::parseOperand(StrScanner &scan, Operand &op) const {
         return op.setError(UNKNOWN_OPERAND);
 
     const auto regp = p;
-    op.reg = parseRegName(p);
+    op.reg = parseRegName(p, parser());
     if (op.reg != REG_UNDEF) {
         if (indir && op.reg == REG_A && p.expect('+')) {
-            const auto base = parseRegName(p);
+            const auto base = parseRegName(p, parser());
             if (base == REG_DPTR || base == REG_PC) {
                 op.mode = (base == REG_DPTR) ? M_INDXD : M_INDXP;
                 scan = p;

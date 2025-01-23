@@ -61,7 +61,7 @@ Error AsmF3850::parseOperand(StrScanner &scan, Operand &op) const {
     op.setAt(scan.skipSpaces());
     auto p = scan;
 
-    auto reg = parseRegName(p);
+    auto reg = parseRegName(p, parser());
     if (reg != REG_UNDEF) {
         if (int8_t(reg) < int8_t(REG_alias)) {
             op.mode = AddrMode(uint8_t(reg));

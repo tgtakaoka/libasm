@@ -18,12 +18,14 @@
 #define __LIBASM_REG_Z8000_H__
 
 #include <stdint.h>
-
 #include "entry_z8000.h"
 #include "str_buffer.h"
 #include "str_scanner.h"
 
 namespace libasm {
+
+struct ValueParser;
+
 namespace z8000 {
 
 enum RegName : int8_t {
@@ -146,17 +148,17 @@ bool isWordReg(RegName name);
 bool isLongReg(RegName name);
 bool isQuadReg(RegName name);
 
-RegName parseCtlReg(StrScanner &scan);
+RegName parseCtlReg(StrScanner &scan, const ValueParser &parser);
 RegName decodeCtlReg(bool segmentedModel, uint8_t num);
 bool isCtlReg(RegName name);
 int8_t encodeCtlReg(bool segmentedModel, RegName name);
 
-CcName parseCcName(StrScanner &scan);
+CcName parseCcName(StrScanner &scan, const ValueParser &parser);
 StrBuffer &outCcName(StrBuffer &out, CcName name);
 uint8_t encodeCcName(CcName name);
 CcName decodeCcNum(uint8_t num);
 
-FlagName parseFlagName(StrScanner &scan);
+FlagName parseFlagName(StrScanner &scan, const ValueParser &parser);
 StrBuffer &outFlagNames(StrBuffer &out, uint8_t flags);
 uint8_t encodeFlagName(FlagName name);
 

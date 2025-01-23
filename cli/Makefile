@@ -45,17 +45,17 @@ OBJS_com = \
     fixed64.o ieee_float.o float80_base.o float80_hard.o float80_soft.o \
     dec_float.o ibm_float.o str_buffer.o str_scanner.o option_base.o \
     error_reporter.o insn_base.o formatters.o value_formatter.o \
+    value.o value_parser.o parsers.o operators.o \
     $(foreach a,$(ARCHS),$(OBJS_$(a))) \
     bin_memory.o bin_decoder.o bin_encoder.o intel_hex.o moto_srec.o \
     file_reader.o file_printer.o list_formatter.o text_common.o
 OBJS_asm = \
     asm.o asm_commander.o asm_driver.o asm_directive.o asm_formatter.o \
-    asm_base.o config_base.o reg_base.o value.o value_parser.o parsers.o \
-    operators.o function_store.o symbol_store.o \
+    asm_base.o config_base.o reg_base.o function_store.o symbol_store.o \
     $(foreach a,$(ARCHS),$(if $(wildcard ../src/asm_$(a).cpp),asm_$(a).o))
 OBJS_dis = \
     dis.o dis_commander.o dis_driver.o dis_formatter.o dis_base.o \
-    config_base.o reg_base.o value.o \
+    config_base.o reg_base.o \
     $(foreach a,$(ARCHS),$(if $(wildcard ../src/dis_$(a).cpp),dis_$(a).o))
 OBJS_bin = $(BINS:=.o)
 $(eval $(foreach a,$(ARCHS),$(call objs-arch,$(a))))

@@ -18,11 +18,13 @@
 #define __LIBASM_REG_Z8_H__
 
 #include <stdint.h>
-
 #include "str_buffer.h"
 #include "str_scanner.h"
 
 namespace libasm {
+
+struct ValueParser;
+
 namespace z8 {
 
 enum RegName : int8_t {
@@ -89,7 +91,7 @@ uint8_t encodeRegName(RegName name);
 RegName decodeRegNum(uint8_t num);
 RegName decodePairRegNum(uint8_t num);
 
-CcName parseCcName(StrScanner &scan);
+CcName parseCcName(StrScanner &scan, const ValueParser &parser);
 StrBuffer &outCcName(StrBuffer &out, CcName name);
 uint8_t encodeCcName(CcName name);
 CcName decodeCcNum(uint8_t num);

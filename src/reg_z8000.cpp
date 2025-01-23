@@ -15,9 +15,9 @@
  */
 
 #include "reg_z8000.h"
-
 #include "reg_base.h"
 #include "text_z8000.h"
+#include "value_parser.h"
 
 using namespace libasm::text::z8000;
 using namespace libasm::reg;
@@ -204,9 +204,14 @@ bool isNonSegCtlReg(RegName name) {
     return name == REG_PSAP || name == REG_NSP;
 }
 
-RegName parseCtlReg(StrScanner &scan) {
-    const auto *entry = CTL_TABLE.searchText(scan);
-    return entry ? RegName(entry->name()) : REG_UNDEF;
+RegName parseCtlReg(StrScanner &scan, const ValueParser &parser) {
+    auto p = scan;
+    const auto *entry = CTL_TABLE.searchText(parser.readRegName(p));
+    if (entry) {
+        scan = p;
+        return RegName(entry->name());
+    }
+    return REG_UNDEF;
 }
 
 StrBuffer &outCtlName(StrBuffer &out, RegName name) {
@@ -258,9 +263,14 @@ uint8_t encodeIntrName(IntrName name) {
     return uint8_t(name);
 }
 
-CcName parseCcName(StrScanner &scan) {
-    const auto *entry = CC_TABLE.searchText(scan);
-    return entry ? CcName(entry->name()) : CC_UNDEF;
+CcName parseCcName(StrScanner &scan, const ValueParser &parser) {
+    auto p = scan;
+    const auto *entry = CC_TABLE.searchText(parser.readRegName(p));
+    if (entry) {
+        scan = p;
+        return CcName(entry->name());
+    }
+    return CC_UNDEF;
 }
 
 uint8_t encodeCcName(CcName name) {
@@ -276,9 +286,14 @@ StrBuffer &outCcName(StrBuffer &out, CcName name) {
     return entry ? entry->outText(out) : out;
 }
 
-FlagName parseFlagName(StrScanner &scan) {
-    const auto *entry = FLAG_TABLE.searchText(scan);
-    return entry ? FlagName(entry->name()) : FLAG_UNDEF;
+FlagName parseFlagName(StrScanner &scan, const ValueParser &parser) {
+    auto p = scan;
+    const auto *entry = FLAG_TABLE.searchText(parser.readRegName(p));
+    if (entry) {
+        scan = p;
+        return FlagName(entry->name());
+    }
+    return FLAG_UNDEF;
 }
 
 StrBuffer &outFlagNames(StrBuffer &out, uint8_t flags) {

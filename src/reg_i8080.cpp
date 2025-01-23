@@ -15,9 +15,9 @@
  */
 
 #include "reg_i8080.h"
-
 #include "reg_base.h"
 #include "text_i8080.h"
+#include "value_parser.h"
 
 using namespace libasm::text::i8080;
 using namespace libasm::reg;
@@ -78,9 +78,15 @@ PROGMEM constexpr NameTable CC_TABLE{ARRAY_RANGE(CC_ENTRIES)};
 // clang-format on
 }  // namespace
 
-RegName parseRegName(StrScanner &scan, bool zilog) {
-    const auto *entry = zilog ? ZILOG_TABLE.searchText(scan) : INTEL_TABLE.searchText(scan);
-    return entry ? RegName(entry->name()) : REG_UNDEF;
+RegName parseRegName(StrScanner &scan, bool zilog, const ValueParser &parser) {
+    auto p = scan;
+    const auto name = parser.readRegName(p);
+    const auto *entry = zilog ? ZILOG_TABLE.searchText(name) : INTEL_TABLE.searchText(name);
+    if (entry) {
+        scan = p;
+        return RegName(entry->name());
+    }
+    return REG_UNDEF;
 }
 
 StrBuffer &outRegName(StrBuffer &out, RegName name, bool indirect) {
@@ -109,7 +115,8 @@ bool isPointerReg(RegName name) {
 
 uint8_t encodePointerReg(RegName name) {
     if (name >= REG_BC)
-        return uint8_t(name) - 8;;
+        return uint8_t(name) - 8;
+    ;
     return (uint8_t(name) >> 1);
 }
 
@@ -180,9 +187,14 @@ RegName decodeDataReg(uint8_t num) {
     return RegName(num & 7);
 }
 
-CcName parseCcName(StrScanner &scan) {
-    const auto *entry = CC_TABLE.searchText(scan);
-    return entry ? CcName(entry->name()) : CC_UNDEF;
+CcName parseCcName(StrScanner &scan, const ValueParser &parser) {
+    auto p = scan;
+    const auto *entry = CC_TABLE.searchText(parser.readRegName(p));
+    if (entry) {
+        scan = p;
+        return CcName(entry->name());
+    }
+    return CC_UNDEF;
 }
 
 StrBuffer &outCcName(StrBuffer &out, const CcName name) {

@@ -132,7 +132,7 @@ Error AsmI8080::parseZilogOperand(StrScanner &scan, Operand &op) const {
 
     // 'C' is either C-reg or C-condition
     auto a = p;
-    const auto reg = parseRegName(a, true);
+    const auto reg = parseRegName(a, true, parser());
     if (reg == REG_C) {
         op.mode = R_C;
         op.reg = REG_C;
@@ -141,7 +141,7 @@ Error AsmI8080::parseZilogOperand(StrScanner &scan, Operand &op) const {
         return OK;
     }
 
-    const auto cc = parseCcName(p);
+    const auto cc = parseCcName(p, parser());
     if (cc != CC_UNDEF) {
         op.mode = M_CC;
         op.val.setUnsigned(encodeCcName(cc));
@@ -149,7 +149,7 @@ Error AsmI8080::parseZilogOperand(StrScanner &scan, Operand &op) const {
         return OK;
     }
 
-    op.reg = parseRegName(p, true);
+    op.reg = parseRegName(p, true, parser());
     if (op.reg != REG_UNDEF) {
         switch (op.reg) {
         case REG_B:
@@ -168,7 +168,7 @@ Error AsmI8080::parseZilogOperand(StrScanner &scan, Operand &op) const {
     }
     if (p.expect('(')) {
         const auto regp = p.skipSpaces();
-        op.reg = parseRegName(p, true);
+        op.reg = parseRegName(p, true, parser());
         if (op.reg == REG_UNDEF) {
             op.val = parseInteger(p, op, ')');
             if (op.hasError())
@@ -211,7 +211,7 @@ Error AsmI8080::parseIntelOperand(StrScanner &scan, Operand &op) const {
     if (endOfLine(p))
         return OK;
 
-    op.reg = parseRegName(p, _zilogSyntax);
+    op.reg = parseRegName(p, _zilogSyntax, parser());
     if (op.reg != REG_UNDEF) {
         switch (op.reg) {
         case REG_H:

@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-#include "reg_base.h"
 #include <ctype.h>
 #include <string.h>
+#include "reg_base.h"
 #include "str_buffer.h"
 #include "str_scanner.h"
 
@@ -30,24 +30,12 @@ bool nameMatcher(int8_t &name, const NameEntry *item, int) {
 }
 
 int textMatcher(StrScanner &symbol, const NameEntry *item) {
-    const auto *text_P = item->text_P();
+    const auto text_P = item->text_P();
     const auto res = strncasecmp_P(symbol.str(), text_P, symbol.size());
-    // |symbol| diffrs |item|.
     if (res)
         return res;
-    // |symbol| length may be shorter than |item|.
-    return symbol.size() < strlen_P(text_P) ? -1 : 0;
-}
-
-// Some architrectures have registers whose name contains a single
-// quote, such as AFP'.  Some architrectures represent constant
-// using prefix and surrounded by single quotes, such as C'x'.
-bool isNameLetter(char c) {
-    return isalnum(c) || c == '\'';
-}
-
-bool isPrefixLetter(char c) {
-    return isalpha(c);
+    // |item| may be longer than |symbol|.
+    return pgm_read_byte(text_P + symbol.size()) ? -1 : 0;
 }
 
 }  // namespace
@@ -60,23 +48,11 @@ const NameEntry *NameTable::searchName(int8_t name) const {
     return _table.linearSearch(name, nameMatcher, 0);
 }
 
-const NameEntry *NameTable::searchText(StrScanner &scan) const {
-    return searchSymbol(scan, isNameLetter);
-}
-
-const NameEntry *NameTable::searchPrefix(StrScanner &scan) const {
-    return searchSymbol(scan, isPrefixLetter);
-}
-
-const NameEntry *NameTable::searchSymbol(StrScanner &scan, bool (*predicator)(char)) const {
-    auto symbol = scan;
-    auto next = symbol.takeWhile(predicator);
+const NameEntry *NameTable::searchText(const StrScanner &symbol) const {
     if (symbol.size() == 0)
         return nullptr;
-    const auto *entry = _table.binarySearch(symbol, textMatcher);
-    if (entry)
-        scan = next;
-    return entry;
+    auto text = symbol;
+    return _table.binarySearch(text, textMatcher);
 }
 
 int16_t parseRegNumber(StrScanner &scan) {

@@ -15,9 +15,9 @@
  */
 
 #include "reg_f3850.h"
-
 #include "reg_base.h"
 #include "text_f3850.h"
+#include "value_parser.h"
 
 using namespace libasm::text::f3850;
 using namespace libasm::reg;
@@ -56,9 +56,14 @@ PROGMEM constexpr NameTable TABLE{ARRAY_RANGE(REG_ENTRIES)};
 // clang-format on
 }  // namespace
 
-RegName parseRegName(StrScanner &scan) {
-    const auto *entry = TABLE.searchText(scan);
-    return entry ? RegName(entry->name()) : REG_UNDEF;
+RegName parseRegName(StrScanner &scan, const ValueParser &parser) {
+    auto p = scan;
+    const auto *entry = TABLE.searchText(parser.readRegName(p));
+    if (entry) {
+        scan = p;
+        return RegName(entry->name());
+    }
+    return REG_UNDEF;
 }
 
 RegName decodeRegName(uint8_t opc) {

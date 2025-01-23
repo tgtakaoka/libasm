@@ -18,12 +18,14 @@
 #define __LIBASM_REG_PDP11_H__
 
 #include <stdint.h>
-
 #include "entry_pdp11.h"
 #include "str_buffer.h"
 #include "str_scanner.h"
 
 namespace libasm {
+
+struct ValueParser;
+
 namespace pdp11 {
 
 enum RegName : int8_t {
@@ -48,7 +50,7 @@ enum RegName : int8_t {
 
 namespace reg {
 
-RegName parseRegName(StrScanner &scan);
+RegName parseRegName(StrScanner &scan, const ValueParser &parser);
 StrBuffer &outRegName(StrBuffer &out, RegName name);
 bool isGeneralReg(RegName name);
 bool isAc03Reg(RegName name);

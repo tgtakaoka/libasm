@@ -456,7 +456,7 @@ int8_t AsmZ8000::parseFlagNames(StrScanner &scan) const {
         return 0;
     int8_t num = 0;
     while (true) {
-        const auto flag = parseFlagName(p);
+        const auto flag = parseFlagName(p, parser());
         if (flag == FLAG_UNDEF)
             return -1;
         num |= encodeFlagName(flag);
@@ -566,13 +566,13 @@ Error AsmZ8000::parseOperand(StrScanner &scan, Operand &op) const {
         scan = p;
         return OK;
     }
-    op.reg = parseCtlReg(p);
+    op.reg = parseCtlReg(p, parser());
     if (op.reg != REG_UNDEF) {
         op.mode = M_CTL;
         scan = p;
         return OK;
     }
-    op.cc = parseCcName(p);
+    op.cc = parseCcName(p, parser());
     if (op.cc != CC_UNDEF) {
         // 'C' and 'Z' are parsed as M_CC, though these can be M_FLAG.
         auto a = scan;

@@ -18,11 +18,13 @@
 #define __LIBASM_REG_MN1610_H__
 
 #include <stdint.h>
-
 #include "str_buffer.h"
 #include "str_scanner.h"
 
 namespace libasm {
+
+struct ValueParser;
+
 namespace mn1610 {
 
 enum RegName : int8_t {
@@ -96,7 +98,7 @@ enum CcName : int8_t {
 
 namespace reg {
 
-RegName parseRegName(StrScanner &scan);
+RegName parseRegName(StrScanner &scan, const ValueParser &parser);
 bool isGeneric(RegName name);
 bool isIndex(RegName name);
 bool isIndirect(RegName name);
@@ -117,7 +119,7 @@ RegName decodeHardware(uint8_t num);
 RegName decodeSpecial(uint8_t num);
 StrBuffer &outRegName(StrBuffer &out, RegName name);
 
-CcName parseCcName(StrScanner &scan);
+CcName parseCcName(StrScanner &scan, const ValueParser &parser);
 bool isSkip(CcName name);
 bool isCop(CcName name);
 bool isEop(CcName name);

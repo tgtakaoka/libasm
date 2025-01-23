@@ -18,12 +18,14 @@
 #define __LIBASM_REG_I8086_H__
 
 #include <stdint.h>
-
 #include "entry_i8086.h"
 #include "str_buffer.h"
 #include "str_scanner.h"
 
 namespace libasm {
+
+struct ValueParser;
+
 namespace i8086 {
 
 enum RegName : int8_t {
@@ -71,7 +73,7 @@ enum RegName : int8_t {
 
 namespace reg {
 
-RegName parseRegName(StrScanner &scan);
+RegName parseRegName(StrScanner &scan, const ValueParser &parser);
 StrBuffer &outRegName(StrBuffer &out, RegName name);
 
 RegName decodeByteReg(uint8_t num);

@@ -429,6 +429,28 @@ Error ValueParser::readSymbol(StrScanner &scan, StrScanner &symbol) const {
     return NOT_AN_EXPECTED;
 }
 
+StrScanner ValueParser::readRegName(StrScanner &scan, bool period) const {
+    auto reg = scan;
+    if (_symbol.symbolLetter(*reg++, true)) {
+        // The single quote is part of register name, for example
+        // "AF'" in Z80.  Also a number prefix can be conflict with
+        // register name, for example H'xx' and H in F3850.  The
+        // period letter is used as suffix of register name, for
+        // example Dn.W as register size in MC68000 and A.n as bit
+        // number of register in HD6309.
+        if (period) {
+            scan = reg.takeWhile(
+                    [this](char c) { return (_symbol.symbolLetter(c) || c == '\'') && c != '.'; });
+        } else {
+            scan = reg.takeWhile([this](char c) { return _symbol.symbolLetter(c) || c == '\''; });
+        }
+        --reg;
+    } else {
+        reg.empty();
+    }
+    return reg;
+}
+
 Error ValueParser::readLabel(StrScanner &scan, StrScanner &label) const {
     label = scan;
     if (_symbol.symbolLetter(*label++, true)) {

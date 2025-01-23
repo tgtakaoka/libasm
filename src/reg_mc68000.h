@@ -24,6 +24,7 @@ namespace libasm {
 
 struct StrBuffer;
 struct StrScanner;
+struct ValueParser;
 
 namespace mc68000 {
 
@@ -93,7 +94,7 @@ struct BriefExt {
 
 namespace reg {
 
-RegName parseRegName(StrScanner &scan);
+RegName parseRegName(StrScanner &scan, const ValueParser &parser);
 StrBuffer &outRegName(StrBuffer &out, RegName name);
 bool isDataReg(RegName name);
 bool isAddrReg(RegName name);

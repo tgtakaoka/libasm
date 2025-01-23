@@ -18,11 +18,13 @@
 #define __LIBASM_REG_TLCS90_H__
 
 #include <stdint.h>
-
 #include "str_buffer.h"
 #include "str_scanner.h"
 
 namespace libasm {
+
+struct ValueParser;
+
 namespace tlcs90 {
 
 enum RegName : int8_t {
@@ -79,7 +81,7 @@ enum CcName : int8_t {
 
 namespace reg {
 
-RegName parseRegName(StrScanner &scan);
+RegName parseRegName(StrScanner &scan, const ValueParser &parser);
 StrBuffer &outRegName(StrBuffer &out, RegName name);
 bool isReg16(RegName name);
 bool isRegIndex(RegName name);
@@ -96,7 +98,7 @@ RegName decodeIndexReg(uint8_t num);
 uint8_t encodeStackReg(RegName name);
 RegName decodeStackReg(uint8_t num);
 
-CcName parseCcName(StrScanner &scan);
+CcName parseCcName(StrScanner &scan, const ValueParser &parser);
 StrBuffer &outCcName(StrBuffer &out, CcName cc);
 uint8_t encodeCcName(CcName name);
 CcName decodeCcName(uint8_t num);

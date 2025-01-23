@@ -18,11 +18,13 @@
 #define __LIBASM_REG_F3850_H__
 
 #include <stdint.h>
-
 #include "str_buffer.h"
 #include "str_scanner.h"
 
 namespace libasm {
+
+struct ValueParser;
+
 namespace f3850 {
 
 enum RegName : int8_t {
@@ -51,7 +53,7 @@ enum RegName : int8_t {
 
 namespace reg {
 
-RegName parseRegName(StrScanner &scan);
+RegName parseRegName(StrScanner &scan, const ValueParser &parser);
 RegName decodeRegName(uint8_t opc);
 StrBuffer &outRegName(StrBuffer &out, RegName name);
 

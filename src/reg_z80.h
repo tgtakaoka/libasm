@@ -18,12 +18,14 @@
 #define __LIBASM_REG_Z80_H__
 
 #include <stdint.h>
-
 #include "config_z80.h"
 #include "str_buffer.h"
 #include "str_scanner.h"
 
 namespace libasm {
+
+struct ValueParser;
+
 namespace z80 {
 
 enum RegName : int8_t {
@@ -66,7 +68,7 @@ enum CcName : int8_t {
 
 namespace reg {
 
-RegName parseRegName(StrScanner &scan);
+RegName parseRegName(StrScanner &scan, const ValueParser &parser);
 StrBuffer &outRegName(StrBuffer &out, RegName name);
 
 uint8_t encodeDataReg(RegName name);
@@ -84,7 +86,7 @@ RegName decodeIndirectBase(uint8_t num);
 
 RegName decodeIndexReg(Config::opcode_t prefix);
 
-CcName parseCcName(StrScanner &scan);
+CcName parseCcName(StrScanner &scan, const ValueParser &parser);
 StrBuffer &outCcName(StrBuffer &out, CcName cc);
 bool isCc4Name(CcName name);
 uint8_t encodeCcName(CcName name);

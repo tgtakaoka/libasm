@@ -18,12 +18,14 @@
 #define __LIBASM_REG_SCN2650_H__
 
 #include <stdint.h>
-
 #include "config_scn2650.h"
 #include "str_buffer.h"
 #include "str_scanner.h"
 
 namespace libasm {
+
+struct ValueParser;
+
 namespace scn2650 {
 
 enum RegName : int8_t {
@@ -56,12 +58,12 @@ constexpr Config::uintptr_t inpage(const Config::uintptr_t addr, const Config::p
     return page(addr) | offset(addr + delta);
 }
 
-RegName parseRegName(StrScanner &scan);
+RegName parseRegName(StrScanner &scan, const ValueParser &parser);
 uint8_t encodeRegName(RegName name);
 RegName decodeRegName(uint8_t opc);
 StrBuffer &outRegName(StrBuffer &out, RegName name);
 
-CcName parseCcName(StrScanner &scan);
+CcName parseCcName(StrScanner &scan, const ValueParser &parser);
 uint8_t encodeCcName(CcName name);
 CcName decodeCcName(uint8_t opc);
 StrBuffer &outCcName(StrBuffer &out, const CcName name);

@@ -144,7 +144,7 @@ Error AsmNs32000::parseConfigNames(StrScanner &scan, Operand &op) const {
     while (true) {
         if (p.expect(']'))
             break;
-        const auto name = parseConfigName(p);
+        const auto name = parseConfigName(p, parser());
         if (name == CONFIG_UNDEF)
             return UNKNOWN_OPERAND;
         configs |= uint8_t(name);
@@ -165,7 +165,7 @@ Error AsmNs32000::parseRegisterList(StrScanner &scan, Operand &op) const {
     uint8_t list = 0;
     uint8_t n = 0;
     while (true) {
-        const auto name = parseRegName(p);
+        const auto name = parseRegName(p, parser());
         if (!isGeneric(name))
             return UNKNOWN_OPERAND;
         list |= 1U << encodeRegName(name);
@@ -225,7 +225,7 @@ Error AsmNs32000::parseBaseOperand(StrScanner &scan, Operand &op) const {
         return OK;
     }
 
-    const auto preg = parsePregName(p);
+    const auto preg = parsePregName(p, parser());
     if (preg != PREG_UNDEF) {
         op.val.setUnsigned(encodePregName(preg));
         op.mode = M_PREG;
@@ -233,7 +233,7 @@ Error AsmNs32000::parseBaseOperand(StrScanner &scan, Operand &op) const {
         return OK;
     }
 
-    const auto mreg = parseMregName(p);
+    const auto mreg = parseMregName(p, parser());
     if (mreg != MREG_UNDEF) {
         op.val.setUnsigned(encodeMregName(mreg));
         op.mode = M_MREG;
@@ -241,7 +241,7 @@ Error AsmNs32000::parseBaseOperand(StrScanner &scan, Operand &op) const {
         return OK;
     }
 
-    auto reg = parseRegName(p);
+    auto reg = parseRegName(p, parser());
     if (reg != REG_UNDEF) {
         if (isGeneric(reg)) {
             op.reg = reg;
@@ -307,7 +307,7 @@ Error AsmNs32000::parseBaseOperand(StrScanner &scan, Operand &op) const {
     if (!p.expect('('))
         return op.setError(p, UNKNOWN_OPERAND);
     const auto r = p;
-    reg = parseRegName(p);
+    reg = parseRegName(p, parser());
     if (reg != REG_UNDEF) {
         if (!p.expect(')'))
             return op.setErrorIf(p, MISSING_CLOSING_PAREN);
@@ -335,7 +335,7 @@ Error AsmNs32000::parseBaseOperand(StrScanner &scan, Operand &op) const {
     if (!p.skipSpaces().expect('('))
         return op.setErrorIf(p, UNKNOWN_OPERAND);
     const auto x = p;
-    reg = parseRegName(p);
+    reg = parseRegName(p, parser());
     if (reg != REG_UNDEF) {
         if (!p.expect(')'))
             return op.setErrorIf(p, MISSING_CLOSING_PAREN);
@@ -361,7 +361,7 @@ Error AsmNs32000::parseOperand(StrScanner &scan, Operand &op) const {
         if (!p.skipSpaces().expect('['))
             return OK;
         const auto indexp = p;
-        const auto index = parseRegName(p);
+        const auto index = parseRegName(p, parser());
         if (!isGeneric(index))
             return op.setError(indexp, UNKNOWN_OPERAND);
         if (!p.skipSpaces().expect(':'))

@@ -124,7 +124,7 @@ Error AsmZ8::parseOperand(StrScanner &scan, Operand &op) const {
         return OK;
     }
 
-    op.cc = parseCcName(p);
+    op.cc = parseCcName(p, parser());
     if (op.cc != CC_UNDEF) {
         op.mode = M_cc;
         scan = p;

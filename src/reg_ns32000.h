@@ -18,12 +18,14 @@
 #define __LIBASM_REG_NS32000_H__
 
 #include <stdint.h>
-
 #include "entry_ns32000.h"
 #include "str_buffer.h"
 #include "str_scanner.h"
 
 namespace libasm {
+
+struct ValueParser;
+
 namespace ns32000 {
 
 enum RegName : int8_t {
@@ -93,7 +95,7 @@ enum StrOptName : int8_t {
 
 namespace reg {
 
-RegName parseRegName(StrScanner &scan);
+RegName parseRegName(StrScanner &scan, const ValueParser &parser);
 StrBuffer &outRegName(StrBuffer &out, RegName name);
 uint8_t encodeRegName(RegName name);
 bool isGeneric(RegName name);
@@ -101,23 +103,23 @@ RegName decodeRegName(uint8_t num, bool floating = false);
 bool isFloat(RegName name);
 bool isRegPair(RegName name);
 
-PregName parsePregName(StrScanner &scan);
+PregName parsePregName(StrScanner &scan, const ValueParser &parser);
 StrBuffer &outPregName(StrBuffer &out, PregName name);
 PregName decodePregName(uint8_t num);
 uint8_t encodePregName(PregName name);
 
-MregName parseMregName(StrScanner &scan);
+MregName parseMregName(StrScanner &scan, const ValueParser &parser);
 StrBuffer &outMregName(StrBuffer &out, MregName name);
 MregName decodeMregName(uint8_t num);
 uint8_t encodeMregName(MregName name);
 
-ConfigName parseConfigName(StrScanner &scan);
+ConfigName parseConfigName(StrScanner &scan, const ValueParser &parser);
 StrBuffer &outConfigNames(StrBuffer &out, uint8_t configs);
 
 StrOptName parseStrOptName(StrScanner &scan);
 
 OprSize parseIndexSize(StrScanner &scan);
-OprSize decodeIndexSize(uint8_t num);    
+OprSize decodeIndexSize(uint8_t num);
 char indexSizeChar(OprSize size);
 
 }  // namespace reg

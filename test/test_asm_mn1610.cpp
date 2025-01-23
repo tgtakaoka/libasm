@@ -761,6 +761,10 @@ void test_comment() {
 }
 
 void test_undef() {
+    ERUS("SBIT STR, STR_IRQ1", "STR_IRQ1", 0x3800|(6<<8)|(0<<4)|0);
+    ERUS("ST R0, UNDEF(X0)", "UNDEF(X0)",  0x8000|(4<<11)|(0<<8)|0);
+    ERUS("ST R1, UNDEF(X1)", "UNDEF(X1)",  0x8000|(5<<11)|(1<<8)|0);
+
     symtab.intern(0x1020, "SYM1020");
     ATEST(0x1000, "L R2, SYM1020",                       0xC000|(1<<11)|(2<<8)|0x20);
     AERUS(0x1000, "L R2, UNDEF",         "UNDEF",        0xC000|(0<<11)|(2<<8)|0x00);

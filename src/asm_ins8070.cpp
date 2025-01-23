@@ -153,7 +153,7 @@ Error AsmIns8070::parseOperand(StrScanner &scan, Operand &op) const {
         return OK;
     }
 
-    const RegName reg = parseRegName(p);
+    const RegName reg = parseRegName(p, parser());
     if (reg != REG_UNDEF) {
         AddrMode mode;
         switch (reg) {
@@ -200,7 +200,7 @@ Error AsmIns8070::parseOperand(StrScanner &scan, Operand &op) const {
         if (!autoIndex)
             autoIndex = p.expect('@');
         const auto ptrp = p;
-        const auto ptr = parseRegName(p);
+        const auto ptr = parseRegName(p, parser());
         if (ptr == REG_UNDEF)
             return op.setError(ptrp, UNKNOWN_OPERAND);
         if (!isPointerReg(ptr))

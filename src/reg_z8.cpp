@@ -15,9 +15,9 @@
  */
 
 #include "reg_z8.h"
-
 #include "reg_base.h"
 #include "text_z8.h"
+#include "value_parser.h"
 
 using namespace libasm::reg;
 using namespace libasm::text::z8;
@@ -106,9 +106,14 @@ StrBuffer &outRegName(StrBuffer &out, RegName name) {
                            : out.letter('R').int16(name - REG_R0);
 }
 
-CcName parseCcName(StrScanner &scan) {
-    const auto *entry = CC_TABLE.searchText(scan);
-    return entry ? CcName(entry->name()) : CC_UNDEF;
+CcName parseCcName(StrScanner &scan, const ValueParser &parser) {
+    auto p = scan;
+    const auto *entry = CC_TABLE.searchText(parser.readRegName(p));
+    if (entry) {
+        scan = p;
+        return CcName(entry->name());
+    }
+    return CC_UNDEF;
 }
 
 StrBuffer &outCcName(StrBuffer &out, CcName name) {

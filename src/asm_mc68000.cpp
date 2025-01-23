@@ -517,7 +517,7 @@ void AsmMc68000::encodeFloatControlList(AsmInsn &insn, const Operand &op) const 
     auto reg = REG_UNDEF;
     for (;;) {
         auto a = p;
-        reg = parseRegName(a);
+        reg = parseRegName(a, parser());
         if (!isFloatControlReg(reg))
             insn.setErrorIf(p, REGISTER_NOT_ALLOWED);
         insn.embedPostfix(1 << encodeFloatControlRegPos(reg));
@@ -566,14 +566,14 @@ void AsmMc68000::encodeFloatRegisterList(AsmInsn &insn, const Operand &op) const
         auto p = op.list;
         for (;;) {
             auto a = p;
-            const auto start = parseRegName(a);
+            const auto start = parseRegName(a, parser());
             if (!isFloatReg(start))
                 insn.setErrorIf(p, REGISTER_NOT_ALLOWED);
             auto s = encodeFloatRegPos(start);
             auto e = s;
             if (a.skipSpaces().expect('-')) {
                 p = a.skipSpaces();
-                const auto last = parseRegName(a);
+                const auto last = parseRegName(a, parser());
                 if (!isFloatReg(last))
                     insn.setErrorIf(p, REGISTER_NOT_ALLOWED);
                 e = encodeFloatRegPos(last);
@@ -608,14 +608,14 @@ void AsmMc68000::encodeRegisterList(AsmInsn &insn, const Operand &op, bool rever
     uint16_t bits = 0;
     for (;;) {
         auto a = p;
-        const auto start = parseRegName(a);
+        const auto start = parseRegName(a, parser());
         if (!isGeneralReg(start))
             insn.setErrorIf(p, REGISTER_NOT_ALLOWED);
         auto s = encodeGeneralRegPos(start);
         auto e = s;
         if (a.skipSpaces().expect('-')) {
             p = a.skipSpaces();
-            const auto last = parseRegName(a);
+            const auto last = parseRegName(a, parser());
             if (!isGeneralReg(last))
                 insn.setErrorIf(p, REGISTER_NOT_ALLOWED);
             e = encodeGeneralRegPos(last);
@@ -656,7 +656,7 @@ Error AsmMc68000::parseKFactor(StrScanner &scan, Operand &op) const {
             }
             op.kMode = M_KFACT;
         } else {
-            op.kDreg = parseRegName(p);
+            op.kDreg = parseRegName(p, parser());
             if (isDataReg(op.kDreg)) {
                 op.kMode = M_KDREG;
             } else {
@@ -697,7 +697,7 @@ Error AsmMc68000::parseOperand(StrScanner &scan, Operand &op) const {
     if (pdec)
         p = a;
     if (p.expect('(')) {
-        op.reg = parseRegName(p.skipSpaces());
+        op.reg = parseRegName(p.skipSpaces(), parser());
         if (isAddrReg(op.reg)) {
             if (!p.skipSpaces().expect(')'))
                 return op.setError(MISSING_CLOSING_PAREN);
@@ -732,7 +732,7 @@ Error AsmMc68000::parseOperand(StrScanner &scan, Operand &op) const {
         }
         if (p.expect(',')) {
             a = p.skipSpaces();
-            op.reg = parseRegName(a);
+            op.reg = parseRegName(a, parser());
             if (!isAddrReg(op.reg) && op.reg != REG_PC)
                 return op.setError(a, REGISTER_NOT_ALLOWED);
             if (a.skipSpaces().expect(')')) {
@@ -743,7 +743,7 @@ Error AsmMc68000::parseOperand(StrScanner &scan, Operand &op) const {
             if (!a.expect(','))
                 return op.setError(a, MISSING_COMMA);
             p = a.skipSpaces();
-            op.indexReg = parseRegName(p);
+            op.indexReg = parseRegName(p, parser());
             if (!isGeneralReg(op.indexReg))
                 return op.setError(UNKNOWN_OPERAND);
             op.indexSize = parseSize(p);
@@ -760,7 +760,7 @@ Error AsmMc68000::parseOperand(StrScanner &scan, Operand &op) const {
         return op.setError(UNKNOWN_OPERAND);
     }
 
-    op.reg = parseRegName(a = p);
+    op.reg = parseRegName(a = p, parser());
     if (op.reg != REG_UNDEF) {
         a.skipSpaces();
         if ((*a == '/' || *a == '-') &&
@@ -783,7 +783,7 @@ Error AsmMc68000::parseOperand(StrScanner &scan, Operand &op) const {
             op.mode = M_DREG;
         } else if (isFloatReg(op.reg)) {
             if (a.skipSpaces().expect(':')) {
-                op.indexReg = parseRegName(a);
+                op.indexReg = parseRegName(a, parser());
                 if (!isFloatReg(op.indexReg))
                     return op.setErrorIf(p, UNKNOWN_OPERAND);
                 op.mode = M_FSICO;

@@ -18,11 +18,13 @@
 #define __LIBASM_REG_MOS6502_H__
 
 #include <stdint.h>
-
 #include "str_buffer.h"
 #include "str_scanner.h"
 
 namespace libasm {
+
+struct ValueParser;
+
 namespace mos6502 {
 
 enum RegName : int8_t {
@@ -35,7 +37,7 @@ enum RegName : int8_t {
 
 namespace reg {
 
-RegName parseRegName(StrScanner &scan);
+RegName parseRegName(StrScanner &scan, const ValueParser &parser);
 StrBuffer &outRegName(StrBuffer &out, RegName name);
 
 }  // namespace reg

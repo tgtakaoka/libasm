@@ -17,6 +17,7 @@
 #include "reg_mc68000.h"
 #include "reg_base.h"
 #include "text_mc68000.h"
+#include "value_parser.h"
 
 using namespace libasm::reg;
 using namespace libasm::text::mc68000;
@@ -70,9 +71,15 @@ PROGMEM constexpr NameTable TABLE{ARRAY_RANGE(REG_ENTRIES)};
 // clang-format on
 }  // namespace
 
-RegName parseRegName(StrScanner &scan) {
-    const auto *entry = TABLE.searchText(scan);
-    return entry ? RegName(entry->name()) : REG_UNDEF;
+RegName parseRegName(StrScanner &scan, const ValueParser &parser) {
+    auto p = scan;
+    // exclude register size '.[WL]' at end of register name
+    const auto *entry = TABLE.searchText(parser.readRegName(p, true));
+    if (entry) {
+        scan = p;
+        return RegName(entry->name());
+    }
+    return REG_UNDEF;
 }
 
 StrBuffer &outRegName(StrBuffer &out, RegName name) {

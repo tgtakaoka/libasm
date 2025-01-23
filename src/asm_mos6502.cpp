@@ -299,7 +299,7 @@ Error AsmMos6502::parseOperand(StrScanner &scan, Operand &op, char &indirect) co
         return op.getError();
     const auto indirectFlags = op.mode;
 
-    const auto reg = parseRegName(p.skipSpaces());
+    const auto reg = parseRegName(p.skipSpaces(), parser());
     if (reg != REG_UNDEF) {
         op.mode = regName2AddrMode(reg);
     } else {

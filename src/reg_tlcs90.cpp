@@ -15,9 +15,9 @@
  */
 
 #include "reg_tlcs90.h"
-
 #include "reg_base.h"
 #include "text_tlcs90.h"
+#include "value_parser.h"
 
 using namespace libasm::reg;
 using namespace libasm::text::tlcs90;
@@ -79,9 +79,14 @@ PROGMEM constexpr NameTable CC_TABLE{ARRAY_RANGE(CC_ENTRIES)};
 // clang-format on
 }  // namespace
 
-RegName parseRegName(StrScanner &scan) {
-    const auto *entry = REG_TABLE.searchText(scan);
-    return entry ? RegName(entry->name()) : REG_UNDEF;
+RegName parseRegName(StrScanner &scan, const ValueParser &parser) {
+    auto p = scan;
+    const auto *entry = REG_TABLE.searchText(parser.readRegName(p));
+    if (entry) {
+        scan = p;
+        return RegName(entry->name());
+    }
+    return REG_UNDEF;
 }
 
 StrBuffer &outRegName(StrBuffer &out, RegName name) {
@@ -145,9 +150,14 @@ RegName decodeIndexReg(uint8_t num) {
     return RegName(num + 4);
 }
 
-CcName parseCcName(StrScanner &scan) {
-    const auto *entry = CC_TABLE.searchText(scan);
-    return entry ? CcName(entry->name()) : CC_UNDEF;
+CcName parseCcName(StrScanner &scan, const ValueParser &parser) {
+    auto p = scan;
+    const auto *entry = CC_TABLE.searchText(parser.readRegName(p));
+    if (entry) {
+        scan = p;
+        return CcName(entry->name());
+    }
+    return CC_UNDEF;
 }
 
 StrBuffer &outCcName(StrBuffer &out, const CcName name) {

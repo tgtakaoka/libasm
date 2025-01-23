@@ -18,11 +18,13 @@
 #define __LIBASM_REG_I8080_H__
 
 #include <stdint.h>
-
 #include "str_buffer.h"
 #include "str_scanner.h"
 
 namespace libasm {
+
+struct ValueParser;
+
 namespace i8080 {
 
 enum RegName : int8_t {
@@ -61,7 +63,7 @@ enum CcName : int8_t {
 
 namespace reg {
 
-RegName parseRegName(StrScanner &scan, bool zilog);
+RegName parseRegName(StrScanner &scan, bool zilog, const ValueParser &parser);
 StrBuffer &outRegName(StrBuffer &out, RegName name, bool indirect = false);
 
 bool isPointerReg(RegName name);
@@ -78,7 +80,7 @@ RegName decodeStackReg(uint8_t num, bool zilog);
 RegName decodeIndexReg(uint8_t num, bool zilog);
 RegName decodeDataReg(uint8_t num);
 
-CcName parseCcName(StrScanner &scan);
+CcName parseCcName(StrScanner &scan, const ValueParser &parser);
 StrBuffer &outCcName(StrBuffer &out, CcName cc);
 uint8_t encodeCcName(CcName name);
 CcName decodeCcName(uint8_t num);

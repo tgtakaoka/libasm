@@ -15,9 +15,9 @@
  */
 
 #include "reg_mc6809.h"
-
 #include "reg_base.h"
 #include "text_mc6809.h"
+#include "value_parser.h"
 
 using namespace libasm::reg;
 using namespace libasm::text::mc6809;
@@ -62,12 +62,18 @@ constexpr RegName USER_STACK_REGS[8] PROGMEM = {
 // clang-format on
 }  // namespace
 
-RegName parseRegName(StrScanner &scan) {
-    const auto *entry = TABLE.searchText(scan);
-    if (entry)
+RegName parseRegName(StrScanner &scan, const ValueParser &parser) {
+    auto p = scan;
+    // exclude bit position '.n' at end of register name
+    const auto *entry = TABLE.searchText(parser.readRegName(p, true));
+    if (entry) {
+        scan = p;
         return RegName(entry->name());
+    }
     if (scan.iexpectWord_P(PSTR("SP")))
         return REG_S;
+    if (scan.iexpectWord_P(TEXT_REG_0))
+        return REG_0;
     return REG_UNDEF;
 }
 

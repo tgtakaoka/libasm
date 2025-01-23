@@ -181,7 +181,7 @@ Error AsmZ80::parseOperand(StrScanner &scan, Operand &op) const {
 
     // 'C' is either C-reg or C-condition
     auto a = p;
-    const auto reg = parseRegName(a);
+    const auto reg = parseRegName(a, parser());
     if (reg == REG_C) {
         op.mode = R_C;
         op.reg = REG_C;
@@ -190,7 +190,7 @@ Error AsmZ80::parseOperand(StrScanner &scan, Operand &op) const {
         return OK;
     }
 
-    const auto cc = parseCcName(p);
+    const auto cc = parseCcName(p, parser());
     if (cc != CC_UNDEF) {
         op.mode = isCc4Name(cc) ? M_CC4 : M_CC8;
         op.val.setUnsigned(encodeCcName(cc));
@@ -198,7 +198,7 @@ Error AsmZ80::parseOperand(StrScanner &scan, Operand &op) const {
         return OK;
     }
 
-    op.reg = parseRegName(p);
+    op.reg = parseRegName(p, parser());
     if (op.reg != REG_UNDEF) {
         switch (op.reg) {
         case REG_IX:
@@ -227,7 +227,7 @@ Error AsmZ80::parseOperand(StrScanner &scan, Operand &op) const {
     }
     if (p.expect('(')) {
         const auto regp = p.skipSpaces();
-        op.reg = parseRegName(p);
+        op.reg = parseRegName(p, parser());
         if (op.reg == REG_UNDEF) {
             op.val = parseInteger(p, op, ')');
             if (op.hasError())

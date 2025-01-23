@@ -68,13 +68,13 @@ Error AsmScn2650::parseOperand(StrScanner &scan, Operand &op) const {
         return OK;
 
     auto p = scan;
-    op.reg = parseRegName(p);
+    op.reg = parseRegName(p, parser());
     if (op.reg != REG_UNDEF) {
         op.mode = op.reg == REG_R0 ? M_REG0 : M_R123;
         scan = p;
         return OK;
     }
-    op.cc = parseCcName(p);
+    op.cc = parseCcName(p, parser());
     if (op.cc != CC_UNDEF) {
         op.mode = op.cc == CC_UN ? M_CCVN : M_C012;
         scan = p;
@@ -86,7 +86,7 @@ Error AsmScn2650::parseOperand(StrScanner &scan, Operand &op) const {
     if (op.hasError())
         return op.getError();
     if (p.expect(',')) {
-        op.reg = parseRegName(p.skipSpaces());
+        op.reg = parseRegName(p.skipSpaces(), parser());
         if (op.reg == REG_UNDEF)
             return op.setError(UNKNOWN_OPERAND);
         if (p.skipSpaces().expect(',')) {

@@ -68,7 +68,7 @@ Error AsmI8048::parseOperand(StrScanner &scan, Operand &op) const {
         return op.setError(UNKNOWN_OPERAND);
 
     const auto regp = p;
-    op.reg = parseRegName(p);
+    op.reg = parseRegName(p, parser());
     if (op.reg != REG_UNDEF) {
         if (indir) {
             switch (op.reg) {

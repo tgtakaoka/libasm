@@ -166,7 +166,7 @@ Error AsmTlcs90::parseOperand(StrScanner &scan, Operand &op) const {
     if (endOfLine(p))
         return OK;
 
-    const auto cc = parseCcName(p);
+    const auto cc = parseCcName(p, parser());
     if (cc != CC_UNDEF) {
         op.mode = M_CC;
         op.cc = cc;
@@ -181,7 +181,7 @@ Error AsmTlcs90::parseOperand(StrScanner &scan, Operand &op) const {
 
     const auto paren = p.expect('(') ? ')' : 0;
     const auto regAt = p.skipSpaces();
-    const auto reg = parseRegName(p);
+    const auto reg = parseRegName(p, parser());
     if (reg == REG_UNDEF) {
         op.val = parseInteger(p, op, paren);
         if (op.hasError())
@@ -211,7 +211,7 @@ Error AsmTlcs90::parseOperand(StrScanner &scan, Operand &op) const {
     if (disp) {
         if (reg == REG_HL && disp == '+') {
             const auto idxAt = p.skipSpaces();
-            const auto idx = parseRegName(p);
+            const auto idx = parseRegName(p, parser());
             if (idx != REG_UNDEF) {
                 if (idx != REG_A)
                     return op.setError(idxAt, REGISTER_NOT_ALLOWED);

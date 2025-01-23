@@ -59,6 +59,7 @@ build dis: link dis.o $
   file_printer.o file_reader.o formatters.o insn_base.o intel_hex.o $
   list_formatter.o moto_srec.o option_base.o reg_base.o str_buffer.o $
   str_scanner.o text_common.o value.o value_formatter.o $
+  value_parser.o parsers.o operators.o $
   fixed64.o ieee_float.o float80_base.o float80_hard.o float80_soft.o $
   dec_float.o ibm_float.o $
   dis_cdp1802.o  reg_cdp1802.o  table_cdp1802.o  text_cdp1802.o  $

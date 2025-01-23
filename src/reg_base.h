@@ -68,22 +68,13 @@ struct NameTable {
     const NameEntry *searchName(int8_t name) const;
 
     /**
-     * Return pointer to an entrey which has |scan| as
-     * NameEntry::text_P, then advance |scan| including alphanumerics
-     * and single quote letters. Otherwise return |nullptr|.
+     * Return pointer to an entrey which has |symbol| as
+     * NameEntry::text_P. Otherwise return |nullptr|.
      */
-    const NameEntry *searchText(StrScanner &scan) const;
-
-    /**
-     * Similar to searchText(StrScanner&) but checks only alphabet
-     * letters in |scan|.
-     */
-    const NameEntry *searchPrefix(StrScanner &scan) const;
+    const NameEntry *searchText(const StrScanner &symbol) const;
 
 private:
     const table::Table<NameEntry> _table;
-
-    const NameEntry *searchSymbol(StrScanner &scan, bool (*)(char)) const;
 };
 
 /**

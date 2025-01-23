@@ -99,7 +99,7 @@ RegName AsmPdp11::parseRegExpr(StrScanner &scan, Operand &op, char delim) const 
         scan = p;
         return decodeGeneralReg(regno.getUnsigned());
     }
-    return parseRegName(scan);
+    return parseRegName(scan, parser());
 }
 
 // Check register deferred mode: -(Rn), (Rn), (Rn)+

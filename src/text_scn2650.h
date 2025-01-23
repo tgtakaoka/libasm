@@ -105,6 +105,11 @@ extern const char TEXT_WRTE[] PROGMEM;
 extern const char TEXT_ZBRR[] PROGMEM;
 extern const char TEXT_ZBSR[] PROGMEM;
 
+using common::TEXT_REG_R0;
+using common::TEXT_REG_R1;
+using common::TEXT_REG_R2;
+using common::TEXT_REG_R3;
+
 using common::TEXT_CC_EQ;
 using common::TEXT_CC_GT;
 using common::TEXT_CC_LT;

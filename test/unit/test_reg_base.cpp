@@ -26,7 +26,7 @@ namespace test {
     do {                                                  \
         const auto *actual = TABLE.searchName(name);      \
         asserter.isNull(__FILE__, __LINE__, msg, actual); \
-    } while (0);
+    } while (0)
 
 #define HAS_NAME(msg, name, expected)                                             \
     do {                                                                          \
@@ -34,25 +34,23 @@ namespace test {
         asserter.isNotNull(__FILE__, __LINE__, msg, actual);                      \
         if (actual)                                                               \
             asserter.equals(__FILE__, __LINE__, msg, expected, actual->text_P()); \
-    } while (0);
+    } while (0)
 
-#define NON_TEXT(msg, line)                                         \
-    do {                                                            \
-        StrScanner scan{line};                                      \
-        const auto *actual = TABLE.searchText(scan);                \
-        asserter.isNull(__FILE__, __LINE__, msg, actual);           \
-        asserter.equals(__FILE__, __LINE__, msg, line, scan.str()); \
-    } while (0);
+#define NON_TEXT(msg, sym)                                \
+    do {                                                  \
+        StrScanner symbol{sym};                           \
+        const auto *actual = TABLE.searchText(symbol);    \
+        asserter.isNull(__FILE__, __LINE__, msg, actual); \
+    } while (0)
 
-#define HAS_TEXT(msg, line, expected, expectedNext)                             \
+#define HAS_TEXT(msg, sym, expected)                                            \
     do {                                                                        \
-        StrScanner scan(line);                                                  \
-        const auto *actual = TABLE.searchText(scan);                            \
+        StrScanner symbol{sym};                                                 \
+        const auto *actual = TABLE.searchText(symbol);                          \
         asserter.isNotNull(__FILE__, __LINE__, msg, actual);                    \
         if (actual)                                                             \
             asserter.equals(__FILE__, __LINE__, msg, expected, actual->name()); \
-        asserter.equals(__FILE__, __LINE__, msg, expectedNext, scan.str());     \
-    } while (0);
+    } while (0)
 
 void set_up() {}
 
@@ -92,6 +90,7 @@ constexpr char TEXT_REG_D5[]  PROGMEM = "D5";
 constexpr char TEXT_REG_D6[]  PROGMEM = "D6";
 constexpr char TEXT_REG_D7[]  PROGMEM = "D7";
 constexpr char TEXT_REG_DR0[] PROGMEM = "DR0";
+constexpr char TEXT_REG_H[]   PROGMEM = "H";
 constexpr char TEXT_REG_P[]   PROGMEM = "P";
 constexpr char TEXT_REG_P1[]  PROGMEM = "P1";
 constexpr char TEXT_REG_P2[]  PROGMEM = "P2";
@@ -111,10 +110,11 @@ enum : int8_t {
     REG_D6,     // 11
     REG_D7,     // 12
     REG_DR0,    // 13
-    REG_P,      // 14
-    REG_P1,     // 15
-    REG_P2,     // 16
-    REG_SP,     // 17
+    REG_H,      // 14
+    REG_P,      // 15
+    REG_P1,     // 16
+    REG_P2,     // 17
+    REG_SP,     // 18
 };
 
 constexpr NameEntry ENTRIES[] PROGMEM = {
@@ -131,6 +131,7 @@ constexpr NameEntry ENTRIES[] PROGMEM = {
     { TEXT_REG_D6,  REG_D6  },
     { TEXT_REG_D7,  REG_D7  },
     { TEXT_REG_DR0, REG_DR0 },
+    { TEXT_REG_H,   REG_H   },
     { TEXT_REG_P,   REG_P   },
     { TEXT_REG_P1,  REG_P1  },
     { TEXT_REG_P2,  REG_P2  },
@@ -171,31 +172,37 @@ void test_searchName() {
 void test_searchText() {
     static PROGMEM constexpr NameTable TABLE{ARRAY_RANGE(ENTRIES)};
 
-    HAS_TEXT("searchText A",   "A ",   REG_A,   " ");
-    NON_TEXT("searchText AB",  "AB,X");
-    HAS_TEXT("searchText af",  "af,",  REG_AF,  ",");
-    HAS_TEXT("searchText AF'", "AF';", REG_AFP, ";");
-    HAS_TEXT("searchText A,F", "A,F",  REG_A,   ",F");
+    HAS_TEXT("searchText A",   "A",   REG_A);
+    NON_TEXT("searchText AB",  "AB");
+    HAS_TEXT("searchText af",  "af",  REG_AF);
+    HAS_TEXT("searchText AF'", "AF'", REG_AFP);
+    NON_TEXT("searchText AF0", "AF0");
     NON_TEXT("searchText A'F", "A'F");
 
+    NON_TEXT("searchText C",   "C");
+    NON_TEXT("searchText CC",  "CC");
+    HAS_TEXT("searchText CCR", "CCR", REG_CCR);
+    NON_TEXT("searchText CCR", "CCR'");
+    NON_TEXT("searchText CCR", "CCRX");
 
-    NON_TEXT("searchText C",   "C  ; comment");
-    NON_TEXT("searchText CC",  "CC ; comment");
-    HAS_TEXT("searchText CCR", "CCR; comment", REG_CCR, "; comment");
-
-    NON_TEXT("searchText D",   "D,X");
-    HAS_TEXT("searchText D0",  "D0,P",  REG_D0, ",P");
-    HAS_TEXT("searchText D7",  "D7,D0", REG_D7, ",D0");
-    NON_TEXT("searchText D8",  "D8,X");
+    NON_TEXT("searchText D",   "D");
+    HAS_TEXT("searchText D0",  "D0",  REG_D0);
     NON_TEXT("searchText D01", "D01");
+    NON_TEXT("searchText D0A", "D0A");
+    HAS_TEXT("searchText D7",  "D7",  REG_D7);
+    NON_TEXT("searchText D71",  "D71");
+    NON_TEXT("searchText D7Z",  "D7Z");
 
-    HAS_TEXT("searchText DR0", "DR0,SP", REG_DR0, ",SP");
-    NON_TEXT("searchText DR1", "DR1,PC");
+    HAS_TEXT("searchText DR0", "DR0", REG_DR0);
+    NON_TEXT("searchText DR1", "DR1");
 
-    HAS_TEXT("searchText P",   "P,P2", REG_P,  ",P2");
-    HAS_TEXT("searchText P1",  "P1,X", REG_P1, ",X");
-    HAS_TEXT("searchText P2",  "P2,Y", REG_P2, ",Y");
-    NON_TEXT("searchText P3",  "P3,Z");
+    HAS_TEXT("searchText H",  "H", REG_H);
+    NON_TEXT("searchText H'", "H'");
+
+    HAS_TEXT("searchText P",   "P",  REG_P);
+    HAS_TEXT("searchText P1",  "P1", REG_P1);
+    HAS_TEXT("searchText P2",  "P2", REG_P2);
+    NON_TEXT("searchText P3",  "P3");
     NON_TEXT("searchText P12", "P12");
     NON_TEXT("searchText P2A", "P2A");
 }

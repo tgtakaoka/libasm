@@ -223,7 +223,7 @@ void AsmMc6809::encodeRegisterList(AsmInsn &insn, const Operand &op) const {
     auto p = op.list;
     while (true) {
         const auto r = p;
-        auto reg = parseRegName(p);
+        auto reg = parseRegName(p, parser());
         if (reg == REG_UNDEF)
             insn.setErrorIf(p, UNKNOWN_OPERAND);
         const auto bit = encodeStackReg(reg, userStack);
@@ -357,7 +357,7 @@ bool AsmMc6809::parseBitPosition(StrScanner &scan, Operand &op) const {
 
         auto r = p;
         // Exclude register list or index addressing
-        const auto reg = parseRegName(r);
+        const auto reg = parseRegName(r, parser());
         if (reg == REG_0) {
             // Constant zero is paresd as REG_0
             op.extra = 0;
@@ -443,7 +443,7 @@ Error AsmMc6809::parseOperand(StrScanner &scan, Operand &op, AddrMode hint) cons
         indexBits = 0;  // ,X
     }
 
-    const auto index = parseRegName(p);
+    const auto index = parseRegName(p, parser());
     if (index != REG_UNDEF) {
         auto a = p;
         if (hint == M_RBIT) {
@@ -519,7 +519,7 @@ Error AsmMc6809::parseOperand(StrScanner &scan, Operand &op, AddrMode hint) cons
     }
     if (indexBits)
         p.skipSpaces();
-    const auto base = parseRegName(p);
+    const auto base = parseRegName(p, parser());
     if (base == REG_UNDEF)
         return op.setError(UNKNOWN_OPERAND);
     // Just after |base| register
@@ -563,7 +563,7 @@ Error AsmMc6809::parseOperand(StrScanner &scan, Operand &op, AddrMode hint) cons
         op.extra = 2;  // multiple registers
         while (true) {
             auto end = p;
-            if (parseRegName(p.skipSpaces()) != REG_UNDEF) {
+            if (parseRegName(p.skipSpaces(), parser()) != REG_UNDEF) {
                 end = p;
                 if (p.skipSpaces().expect(','))
                     continue;
