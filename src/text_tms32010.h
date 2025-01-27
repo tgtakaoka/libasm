@@ -89,6 +89,10 @@ using common::TEXT_XOR;
 extern const char TEXT_ZAC[]  PROGMEM;
 extern const char TEXT_ZALH[] PROGMEM;
 extern const char TEXT_ZALS[] PROGMEM;
+
+extern const char TEXT_REG_AR[] PROGMEM;
+extern const char TEXT_REG_PA[] PROGMEM;
+
 // clang-format on
 
 }  // namespace tms32010

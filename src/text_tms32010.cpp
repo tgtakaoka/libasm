@@ -86,6 +86,9 @@ constexpr char TEXT_TBLW[] PROGMEM = "TBLW";
 constexpr char TEXT_ZAC[]  PROGMEM = "ZAC";
 constexpr char TEXT_ZALH[] PROGMEM = "ZALH";
 constexpr char TEXT_ZALS[] PROGMEM = "ZALS";
+
+constexpr char TEXT_REG_AR[] PROGMEM = "AR";
+constexpr char TEXT_REG_PA[] PROGMEM = "PA";
 // clang-format on
 
 }  // namespace tms32010

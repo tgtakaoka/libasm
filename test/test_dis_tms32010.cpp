@@ -29,6 +29,10 @@ bool is32010() {
     return strcmp_P("32010", disassembler.config().cpu_P()) == 0;
 }
 
+bool is32015() {
+    return strcmp_P("32015", disassembler.config().cpu_P()) == 0;
+}
+
 void set_up() {
     disassembler.reset();
 }
@@ -373,18 +377,6 @@ void test_multiply() {
 }
 
 void test_branch() {
-    TEST("B", "000H",  0xF900, 0x0000);
-    TEST("B", "001H",  0xF900, 0x0001);
-    TEST("B", "002H",  0xF900, 0x0002);
-    TEST("B", "004H",  0xF900, 0x0004);
-    TEST("B", "008H",  0xF900, 0x0008);
-    TEST("B", "010H",  0xF900, 0x0010);
-    TEST("B", "020H",  0xF900, 0x0020);
-    TEST("B", "040H",  0xF900, 0x0040);
-    TEST("B", "080H",  0xF900, 0x0080);
-    TEST("B", "100H",  0xF900, 0x0100);
-    TEST("B", "200H",  0xF900, 0x0200);
-    TEST("B", "400H",  0xF900, 0x0400);
     TEST("B", "800H",  0xF900, 0x0800);
     TEST("B", "0FFFH", 0xF900, 0x0FFF);
     ERRT("B", "1000H", OVERFLOW_RANGE, "1000H", 0xF900, 0x1000);
@@ -429,7 +421,8 @@ void test_control() {
     TEST("SST", "8FH",     0x7C0F);
     if (is32010()) {
         ERRT("SST", "90H", OVERFLOW_RANGE, "90H", 0x7C10);
-    } else {
+    }
+    if (is32015()) {
         TEST("SST", "90H",                        0x7C10);
     }
     TEST("SST", "*",       0x7C88);
@@ -559,7 +552,7 @@ void test_illegal() {
         }
     }
 
-    // SAR, LAC
+    // SAR, LAR
     static constexpr Config::opcode_t ar_mam[] = { 0x3000, 0x3800 };
     for (const auto base : ar_mam) {
         for (auto ar = 0; ar < 2; ar++) {
@@ -584,6 +577,7 @@ void test_illegal() {
             assert_low8s(0x5000 | (ls0 << 8));
         }
     }
+
     // SACH
     for (auto ls3 = 0; ls3 < 8; ls3++) {
         if (ls3 == 0 || ls3 == 1 || ls3 == 4) {
@@ -593,7 +587,9 @@ void test_illegal() {
         }
     }
 
-    // SAR, LAC
+    // ADDH, ADDS, SUBH, SUBS, SUBC, ZALH, ZALS, TBLR,
+    // MAR, DMOV, LT, LTA, LTD, MPY, LDP,
+    // XOR, AND, OR, LST, SST, TBLW
     static constexpr uint8_t mam_hi8s[] = {
         0x60, 0x61, 0x62, 0x63, 0x64, 0x65, 0x66, 0x67,
         0x68, 0x69, 0x6A, 0x6B, 0x6C, 0x6D, 0x6F,

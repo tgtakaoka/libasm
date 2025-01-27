@@ -57,29 +57,9 @@ AsmTms32010::AsmTms32010(const ValueParser::Plugins &plugins)
     reset();
 }
 
-namespace {
-
-AddrMode constantType(uint16_t val) {
-    if (val == 0)
-        return M_LS0;
-    if (val == 1)
-        return M_DPK;
-    if (val == 4)
-        return M_LS3;
-    if (val < 8)
-        return M_IM3;
-    if (val < 16)
-        return M_LS4;
-    if (val < 0x100)
-        return M_IM8;
-    return M_IM13;
-}
-
-}  // namespace
-
 void AsmTms32010::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode) const {
     insn.setErrorIf(op);
-    static constexpr Config::opcode_t SST = 0x7C00;
+    auto val = op.val.getUnsigned();
     switch (mode) {
     case M_MAM:
         switch (op.mode) {
@@ -93,44 +73,80 @@ void AsmTms32010::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode)
             insn.embed(0x98);
             break;
         default:
-            if (op.val.getUnsigned() > dataMemoryLimit())
+            if (!validDmAddr(insn.opCode(), val))
                 insn.setErrorIf(op, OVERFLOW_RANGE);
-            if (insn.opCode() == SST && op.val.getUnsigned() < 0x80)
-                insn.setErrorIf(op, OVERFLOW_RANGE);
-            insn.embed(op.val.getUnsigned() & 0x7F);
+            insn.embed(val & 0x7F);
             break;
         }
         break;
+    case M_LS0:
+        if (val)
+            insn.setErrorIf(op, ILLEGAL_CONSTANT);
+        break;
     case M_LS3:
-    case M_LS4:
+        if (!(val == 0 || val == 1 || val == 4))
+            insn.setErrorIf(op, ILLEGAL_CONSTANT);
+        // Fall-through
     case M_PA:
-        insn.embed(op.val.getUnsigned() << 8);
+        if (!isPA(decodePA(val))) {
+            val &= maxPA();
+            insn.setErrorIf(op, OVERFLOW_RANGE);
+        }
+        // Fall-through
+    case M_LS4:
+        if (op.val.overflow(15)) {
+            val &= 15;
+            insn.setErrorIf(op, OVERFLOW_RANGE);
+        }
+        insn.embed(val << 8);
         break;
     case M_NARP:
-        if (op.mode == M_NONE)
-            break;
-        insn.setOpCode(insn.opCode() & ~8);
-        insn.embed(op.val.getUnsigned());
+        if (op.mode != M_NONE) {
+            if (!isAR(decodeAR(val))) {
+                val &= maxAR();
+                insn.setErrorIf(op, UNKNOWN_REGISTER);
+            }
+            insn.setOpCode(insn.opCode() & ~8);
+            insn.embed(val);
+        }
         break;
     case M_AR:
-        insn.embed(op.val.getUnsigned() << 8);
+        if (!isAR(decodeAR(val))) {
+            val &= maxAR();
+            insn.setErrorIf(op, UNKNOWN_REGISTER);
+        }
+        insn.embed(val << 8);
         break;
     case M_ARK:
-    case M_DPK:
-        insn.embed(op.val.getUnsigned());
+        if (!isAR(decodeAR(val))) {
+            val &= maxAR();
+            insn.setErrorIf(op, UNKNOWN_REGISTER);
+        }
+        insn.embed(val);
+        break;
+    case M_IM1:
+        if (op.val.overflow(1)) {
+            val &= 1;
+            insn.setErrorIf(op, OVERFLOW_RANGE);
+        }
+        insn.embed(val);
         break;
     case M_IM8:
-        insn.embed(op.val.getUnsigned());
+        if (op.val.overflow(UINT8_MAX)) {
+            val &= UINT8_MAX;
+            insn.setErrorIf(op, OVERFLOW_RANGE);
+        }
+        insn.embed(val);
         break;
     case M_IM13:
         if (op.val.overflow(0x0FFF, -0x1000))
             insn.setErrorIf(op, OVERFLOW_RANGE);
-        insn.embed(op.val.getUnsigned() & 0x1FFF);
+        insn.embed(val & 0x1FFF);
         break;
-    case M_PMA:
+    case M_PM12:
         if (op.val.overflow(0x0FFF))
             insn.setErrorIf(op, OVERFLOW_RANGE);
-        insn.emitOperand16(op.val.getUnsigned() & 0x0FFF);
+        insn.emitOperand16(val & 0x0FFF);
         break;
     default:
         break;
@@ -156,13 +172,8 @@ Error AsmTms32010::parseOperand(StrScanner &scan, Operand &op) const {
     }
     op.reg = parseRegName(p);
     if (op.reg != REG_UNDEF) {
-        if (isAuxiliary(op.reg)) {
-            op.mode = M_AR;
-            op.val.setUnsigned(int8_t(op.reg) - int8_t(REG_AR0));
-        } else {
-            op.mode = M_PA;
-            op.val.setUnsigned(int8_t(op.reg) - int8_t(REG_PA0));
-        }
+        op.mode = isAR(op.reg) ? M_AR : M_PA;
+        op.val.setUnsigned(encodeRegName(op.reg));
         scan = p;
         return OK;
     }
@@ -170,7 +181,7 @@ Error AsmTms32010::parseOperand(StrScanner &scan, Operand &op) const {
     op.val = parseInteger(p, op);
     if (op.hasError())
         return op.getError();
-    op.mode = constantType(op.val.getUnsigned());
+    op.mode = M_CNST;
     scan = p;
     return OK;
 }

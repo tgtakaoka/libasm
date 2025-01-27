@@ -30,6 +30,7 @@ struct DisTms32010 final : Disassembler, Config {
 private:
     StrBuffer &outDirect(StrBuffer &out, DisInsn &insn) const;
     StrBuffer &outIndirect(StrBuffer &out, uint8_t mam) const;
+    StrBuffer &outModifyAR(StrBuffer &out, uint8_t mam) const;
     StrBuffer &outNextArp(StrBuffer &out, uint8_t mam) const;
     StrBuffer &outShiftCount(StrBuffer &out, uint8_t count, uint8_t mam) const;
     StrBuffer &outProgramAddress(StrBuffer &out, DisInsn &insn) const;

@@ -41,43 +41,52 @@ DisTms32010::DisTms32010(const ValueFormatter::Plugins &plugins)
 }
 
 StrBuffer &DisTms32010::outDirect(StrBuffer &out, DisInsn &insn) const {
-    // Store Status Register can access Data Page 1 only.
-    static constexpr uint8_t SST = 0x7C;
-    const auto opc = insn.opCode();
-    uint8_t dma = opc & 0x7F;
-    if ((opc >> 8) == SST) {
-        dma |= (1 << 7);
-        if (dma > dataMemoryLimit())
-            insn.setErrorIf(out, OVERFLOW_RANGE);
-    }
+    const auto dma = toDmAddr(insn.opCode());
+    if (!validDmAddr(insn.opCode(), dma))
+        insn.setErrorIf(out, OVERFLOW_RANGE);
     outAbsAddr(out, dma, 8);
     return out;
 }
 
 StrBuffer &DisTms32010::outIndirect(StrBuffer &out, uint8_t mam) const {
+    const auto modify = (mam >> 4) & 7;
     out.letter('*');
-    if (mam & 0x20)
-        return out.letter('+');
-    if (mam & 0x10)
+    if (modify == 4 || modify == 7)
+        out.text_P(PSTR("BR0"));
+    if (modify == 5 || modify == 6)
+        out.letter('0');
+    if (modify == 1 || modify == 4 || modify == 5)
         return out.letter('-');
+    if (modify == 2 || modify == 6 || modify == 7)
+        return out.letter('+');
     return out;
 }
 
+StrBuffer &DisTms32010::outModifyAR(StrBuffer &out, uint8_t mam) const {
+    const auto modify = (mam >> 4) & 7;
+    if (modify)
+        out.comma();
+    return modify == 0 ? out : outIndirect(out, mam);
+}
+
+namespace {
+bool hasNarp(uint_fast8_t mam) {
+    if ((mam & 0x80) == 0)
+        return false;
+    const auto narp = mam & 8;
+    return narp == 0;
+}
+}  // namespace
+
 StrBuffer &DisTms32010::outNextArp(StrBuffer &out, uint8_t mam) const {
-    if ((mam & 0x80) && (mam & 8) == 0) {
-        const RegName arp = (mam & 1) == 0 ? REG_AR0 : REG_AR1;
-        outRegName(out.comma(), arp);
-    }
+    if (hasNarp(mam))
+        outRegName(out.comma(), decodeAR(mam & maxAR()));
     return out;
 }
 
 StrBuffer &DisTms32010::outShiftCount(StrBuffer &out, uint8_t count, uint8_t mam) const {
-    const bool indir = mam & (1 << 7);
-    const bool nar = (mam & (1 << 3)) == 0;
-    if (count || (indir && nar)) {
-        out.comma();
-        outDec(out, count, 4);
-    }
+    if (count || hasNarp(mam))
+        outDec(out.comma(), count, 4);
     return out;
 }
 
@@ -89,10 +98,10 @@ StrBuffer &DisTms32010::outProgramAddress(StrBuffer &out, DisInsn &insn) const {
 }
 
 void DisTms32010::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) const {
-    const Config::opcode_t opc = insn.opCode();
+    const auto opc = insn.opCode();
     switch (mode) {
     case M_MAM:
-        if (opc & (1 << 7)) {
+        if (opc & 0x80) {
             outIndirect(out, opc);
         } else {
             outDirect(out, insn);
@@ -109,15 +118,15 @@ void DisTms32010::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) co
         outShiftCount(out, (opc >> 8) & 7, opc);
         break;
     case M_AR:
-        outRegName(out, (opc & (1 << 8)) == 0 ? REG_AR0 : REG_AR1);
+        outRegName(out, decodeAR((opc >> 8) & maxAR()));
         break;
     case M_PA:
-        outRegName(out, RegName(((opc >> 8) & 7) + int8_t(REG_PA0)));
+        outRegName(out, decodePA((opc >> 8) & maxPA()));
         break;
     case M_ARK:
-        outRegName(out, (opc & 1) == 0 ? REG_AR0 : REG_AR1);
+        outRegName(out, decodeAR(opc & maxAR()));
         break;
-    case M_DPK:
+    case M_IM1:
         out.letter((opc & 1) == 0 ? '0' : '1');
         break;
     case M_IM8:
@@ -127,7 +136,7 @@ void DisTms32010::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) co
         // Sign extends 13-bit number as 0x1000 is a sign bit.
         outDec(out, signExtend(opc, 13), -13);
         break;
-    case M_PMA:
+    case M_PM12:
         outProgramAddress(out, insn);
         break;
     default:

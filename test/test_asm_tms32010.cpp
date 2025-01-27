@@ -28,6 +28,10 @@ bool is32010() {
     return strcmp_P("32010", assembler.config().cpu_P()) == 0;
 }
 
+bool is32015() {
+    return strcmp_P("32015", assembler.config().cpu_P()) == 0;
+}
+
 void set_up() {
     assembler.reset();
 }
@@ -41,8 +45,14 @@ void test_cpu() {
     EQUALS("cpu 32010", true,   assembler.setCpu("32010"));
     EQUALS_P("cpu 32010", "32010", assembler.config().cpu_P());
 
+    EQUALS("cpu 32015", true,   assembler.setCpu("32015"));
+    EQUALS_P("cpu 32015", "32015", assembler.config().cpu_P());
+
     EQUALS("cpu TMS32010", true,   assembler.setCpu("TMS32010"));
     EQUALS_P("cpu TMS32010", "32010", assembler.config().cpu_P());
+
+    EQUALS("cpu TMS32015", true,   assembler.setCpu("TMS32015"));
+    EQUALS_P("cpu TMS32015", "32015", assembler.config().cpu_P());
 }
 
 void test_accumrator() {
@@ -52,19 +62,20 @@ void test_accumrator() {
     TEST("ADD 8FH",         0x000F);
     if (is32010()) {
         ERRT("ADD 090H", OVERFLOW_RANGE, "090H", 0x0010);
-    } else {
+    }
+    if (is32015()) {
         TEST("ADD 090H",                         0x0010);
     }
-    ERRT("ADD 0100H",       OPERAND_NOT_ALLOWED, "0100H");
-    ERUS("ADD UNDEF",       "UNDEF",       0x0000);
-    TEST("ADD 70H, 15",     0x0F70);
-    ERRT("ADD 70H, 16",     OPERAND_NOT_ALLOWED, "70H, 16");
-    ERUS("ADD 70H, UNDEF",  "UNDEF",  0x0070);
-    ERUS("ADD UNDEF, 15",   "UNDEF, 15",   0x0F00);
+    ERRT("ADD 0100H",       OVERFLOW_RANGE, "0100H", 0x0000);
+    ERUS("ADD UNDEF",       "UNDEF",                 0x0000);
+    TEST("ADD 70H, 15",                           0x0F70);
+    ERRT("ADD 70H, 16",     OVERFLOW_RANGE, "16", 0x0070);
+    ERUS("ADD 70H, UNDEF",  "UNDEF",              0x0070);
+    ERUS("ADD UNDEF, 15",   "UNDEF, 15", 0x0F00);
     TEST("add *, 0, ar0",   0x0080);
     TEST("ADD *, 0, AR1",   0x0081);
     TEST("ADD *, 0, 0",     0x0080);
-    ERRT("ADD *, 0, 2",     OPERAND_NOT_ALLOWED, "*, 0, 2");
+    ERRT("ADD *, 0, 2",     UNKNOWN_REGISTER, "2", 0x0080);
     TEST("ADD *",           0x0088);
     TEST("ADD *-",          0x0098);
     TEST("ADD *+",          0x00A8);
@@ -72,7 +83,7 @@ void test_accumrator() {
     TEST("ADD *-, 2",       0x0298);
     TEST("ADD *+, 3",       0x03A8);
     TEST("ADD *, 0, AR0",   0x0080);
-    ERRT("ADD *, -1, AR0",  OPERAND_NOT_ALLOWED, "*, -1, AR0");
+    ERRT("ADD *, -1, AR0",  OVERFLOW_RANGE, "-1, AR0", 0x0F80);
     ERUS("ADD *, UNDEF, AR1", "UNDEF, AR1", 0x0081);
     TEST("ADD *, 4, AR1",   0x0481);
     TEST("ADD *-, 4, AR0",  0x0490);
@@ -143,12 +154,12 @@ void test_accumrator() {
     TEST("SACH 70H",        0x5870);
     TEST("SACH 70H, 0",     0x5870);
     TEST("SACH 70H, 1",     0x5970);
-    ERRT("SACH 70H, 2",     OPERAND_NOT_ALLOWED, "70H, 2");
-    ERRT("SACH 70H, 3",     OPERAND_NOT_ALLOWED, "70H, 3");
+    ERRT("SACH 70H, 2",     ILLEGAL_CONSTANT, "2", 0x5A70);
+    ERRT("SACH 70H, 3",     ILLEGAL_CONSTANT, "3", 0x5B70);
     TEST("SACH 70H, 4",     0x5C70);
-    ERRT("SACH 70H, 5",     OPERAND_NOT_ALLOWED, "70H, 5");
-    ERRT("SACH 70H, 6",     OPERAND_NOT_ALLOWED, "70H, 6");
-    ERRT("SACH 70H, 7",     OPERAND_NOT_ALLOWED, "70H, 7");
+    ERRT("SACH 70H, 5",     ILLEGAL_CONSTANT, "5", 0x5D70);
+    ERRT("SACH 70H, 6",     ILLEGAL_CONSTANT, "6", 0x5E70);
+    ERRT("SACH 70H, 7",     ILLEGAL_CONSTANT, "7", 0x5F70);
     TEST("SACH *, 0, AR0",  0x5880);
     TEST("SACH *, 0, AR1",  0x5881);
     TEST("SACH *",          0x5888);
@@ -166,7 +177,7 @@ void test_accumrator() {
 
     TEST("SACL 70H",        0x5070);
     TEST("SACL 70H, 0",     0x5070);
-    ERRT("SACL 70H, 1",     OPERAND_NOT_ALLOWED, "70H, 1");
+    ERRT("SACL 70H, 1",     ILLEGAL_CONSTANT, "1", 0x5070);
     TEST("SACL *",          0x5088);
     TEST("SACL *-",         0x5098);
     TEST("SACL *+",         0x50A8);
@@ -245,7 +256,7 @@ void test_accumrator() {
 void test_auxiliary() {
     TEST("LAR AR0, 70H",     0x3870);
     TEST("LAR 0,   70H",     0x3870);
-    ERRT("LAR 2,   70H",     OPERAND_NOT_ALLOWED, "2,   70H");
+    ERRT("LAR 2,   70H",     UNKNOWN_REGISTER, "2,   70H", 0x3870);
     TEST("LAR AR0, *",       0x3888);
     TEST("LAR AR0, *-",      0x3898);
     TEST("LAR AR0, *+",      0x38A8);
@@ -264,14 +275,14 @@ void test_auxiliary() {
     TEST("LARK AR0, 255", 0x70FF);
     TEST("LARK AR1, 128", 0x7180);
     TEST("LARK 0,   255", 0x70FF);
-    ERRT("LARK 1,   256", OPERAND_NOT_ALLOWED, "1,   256");
-    ERRT("LARK 2,   128", OPERAND_NOT_ALLOWED, "2,   128");
+    ERRT("LARK 1,   256", OVERFLOW_RANGE, "256", 0x7100);
+    ERRT("LARK 2,   128", UNKNOWN_REGISTER, "2,   128", 0x7080);
 
     TEST("LARP AR0", 0x6880);
     TEST("LARP AR1", 0x6881);
     TEST("LARP 0",   0x6880);
     TEST("LARP 1",   0x6881);
-    ERRT("LARP 2",   OPERAND_NOT_ALLOWED, "2");
+    ERRT("LARP 2",   UNKNOWN_REGISTER, "2", 0x6880);
 
     TEST("LDP 70H",     0x6F70);
     TEST("LDP *",       0x6F88);
@@ -283,7 +294,7 @@ void test_auxiliary() {
 
     TEST("LDPK 0", 0x6E00);
     TEST("LDPK 1", 0x6E01);
-    ERRT("LDPK 2", OPERAND_NOT_ALLOWED, "2");
+    ERRT("LDPK 2", OVERFLOW_RANGE, "2", 0x6E00);
 
     TEST("MAR  70H",     0x6870);
     TEST("MAR  *",       0x6888);
@@ -373,7 +384,7 @@ void test_branch() {
     TEST("B 800H",  0xF900, 0x0800);
     TEST("B 0FFFH", 0xF900, 0x0FFF);
     TEST("B $+80H", 0xF900, 0x0080);
-    ERUS("B UNDEF", "UNDEF", 0xF900, 0x0000);
+    ERRT("B UNDEF", UNDEFINED_SYMBOL, "UNDEF", 0xF900, 0x0000);
     ERRT("B 1000H", OVERFLOW_RANGE, "1000H", 0xF900, 0x0000);
     ERRT("B 2000H", OVERFLOW_RANGE, "2000H", 0xF900, 0x0000);
     ERRT("B 4000H", OVERFLOW_RANGE, "4000H", 0xF900, 0x0000);
@@ -389,7 +400,7 @@ void test_branch() {
     TEST("BV   900H",  0xF500, 0x0900);
     TEST("BZ   900H",  0xFF00, 0x0900);
     TEST("CALL 900H",  0xF800, 0x0900);
-    ERUS("CALL UNDEF", "UNDEF", 0xF800, 0x0000);
+    ERRT("CALL UNDEF", UNDEFINED_SYMBOL, "UNDEF", 0xF800, 0x0000);
 
     TEST("CALA", 0x7F8C);
     TEST("RET",  0x7F8D);
@@ -414,13 +425,14 @@ void test_control() {
     TEST("LST *+, AR0", 0x7BA0);
 
     ERRT("SST 00H",     OVERFLOW_RANGE, "00H", 0x7C00);
-    ERRT("SST 7FH",     OVERFLOW_RANGE, "7FH", 0x7C7F);
+    ERRT("SST 10H", OVERFLOW_RANGE, "10H", 0x7C10);
     TEST("SST 80H",     0x7C00);
     TEST("SST 8FH",     0x7C0F);
     if (is32010()) {
-        ERRT("SST 090H", OVERFLOW_RANGE, "090H", 0x7C10);
-    } else {
-        TEST("SST 090H",                         0x7C10);
+        ERRT("SST 90H", OVERFLOW_RANGE, "90H", 0x7C10);
+    }
+    if (is32015()) {
+        TEST("SST 90H", 0x7C10);
     }
     TEST("SST *",       0x7C88);
     TEST("SST *-",      0x7C98);
@@ -462,7 +474,7 @@ void test_dataio() {
     TEST("IN 70H, PA7",     0x4770);
     TEST("IN 70H, 0",       0x4070);
     TEST("IN 70H, 7",       0x4770);
-    ERRT("IN 70H, 8",       OPERAND_NOT_ALLOWED, "70H, 8");
+    ERRT("IN 70H, 8",       OVERFLOW_RANGE, "8", 0x4070);
     TEST("IN *, PA0, AR0",  0x4080);
     TEST("IN *, PA7, AR1",  0x4781);
     TEST("IN *, 0,   0",    0x4080);
@@ -497,10 +509,10 @@ void test_dataio() {
     TEST("OUT *+, PA7, AR0", 0x4FA0);
     TEST("OUT *+, PA7, AR1", 0x4FA1);
 
-    ERUS("OUT *+, UNDEF, AR0", "UNDEF, AR0", 0x48A0);
-    ERUS("OUT *+, PA7, UNDEF", "UNDEF", 0x4FA0);
-    ERUS("OUT *+, UNDEF, AR1", "UNDEF, AR1", 0x48A1);
-    ERUS("OUT *+, PA7, UNDEF", "UNDEF", 0x4FA0);
+    ERRT("OUT *+, UNDEF, AR0", UNDEFINED_SYMBOL, "UNDEF, AR0", 0x48A0);
+    ERRT("OUT *+, PA7, UNDEF", UNDEFINED_SYMBOL, "UNDEF",      0x4FA0);
+    ERRT("OUT *+, UNDEF, AR1", UNDEFINED_SYMBOL, "UNDEF, AR1", 0x48A1);
+    ERRT("OUT *+, PA7, UNDEF", UNDEFINED_SYMBOL, "UNDEF",      0x4FA0);
 }
 
 void test_comment() {
@@ -520,27 +532,29 @@ void test_comment() {
 }
 
 void test_undef() {
-    ERUS("ADDH *+, UNDEF",    "UNDEF",        0x60A0);
-    ERUS("LAC UNDEF",         "UNDEF",        0x2000);
-    ERUS("LAC UNDEF, 15",     "UNDEF, 15",    0x2F00);
-    ERUS("LAC 70H, UNDEF",    "UNDEF",        0x2070);
-    ERUS("LAC UNDEF, UNDEF",  "UNDEF, UNDEF", 0x2000);
-    ERUS("LAC *, UNDEF, AR0", "UNDEF, AR0",   0x2080);
+    ERRT("ADDH *+, UNDEF",    UNDEFINED_SYMBOL, "UNDEF",        0x60A0);
+    ERRT("LAC UNDEF",         UNDEFINED_SYMBOL, "UNDEF",        0x2000);
+    ERRT("LAC UNDEF, 15",     UNDEFINED_SYMBOL, "UNDEF, 15",    0x2F00);
+    ERRT("LAC 70H, UNDEF",    UNDEFINED_SYMBOL, "UNDEF",        0x2070);
+    ERRT("LAC UNDEF, UNDEF",  UNDEFINED_SYMBOL, "UNDEF, UNDEF", 0x2000);
+    ERRT("LAC *, UNDEF, AR1", UNDEFINED_SYMBOL, "UNDEF, AR1",   0x2081);
 }
 
 void test_data_constant() {
-    BTEST(".byte -128, 255",    0x80, 0x00, 0xFF, 0x00);
-    BTEST(".byte 1234H",        0x34, 0x00);
-    BTEST(".word -128, 256",    0x80, 0xFF, 0x00, 0x01);
-    BTEST(".long 12345678H",    0x78, 0x56, 0x34, 0x12);
+    TEST(".byte -128, 255",     0x0080, 0x00FF);
+    TEST(".byte 1234H",         0x0034);
+    TEST(".word -128, 256",     0xFF80, 0x0100);
+    TEST(".long 12345678H",     0x5678, 0x1234);
     BTEST(R"(.byte '''','"')",  0x27, 0x00, 0x22, 0x00);
     BTEST(R"(.byte "ABC")",     0x41, 0x42, 0x43, 0x00);
     BTEST(R"(.word "ABC")",     0x41, 0x42, 0x43, 0x00);
     BTEST(R"(.long "ABC")",     0x41, 0x42, 0x43, 0x00);
     BTEST(R"(.string "A""B")",  0x41, 0x22, 0x42, 0x00);
     ERRT(R"(.string "A""B)",    MISSING_CLOSING_DQUOTE, R"("A""B)");
-    BERRT(".byte 1, UNDEF, 2", UNDEFINED_SYMBOL, "UNDEF, 2", 0x01, 0x00, 0x00, 0x00, 0x02, 0x00);
-    BERRT(".word 1, UNDEF, 2", UNDEFINED_SYMBOL, "UNDEF, 2", 0x01, 0x00, 0x00, 0x00, 0x02, 0x00);
+    BERRT(".byte 1, UNDEF, 2", UNDEFINED_SYMBOL, "UNDEF, 2",
+         0x01, 0x00, 0x00, 0x00, 0x02, 0x00);
+    BERRT(".word 1, UNDEF, 2", UNDEFINED_SYMBOL, "UNDEF, 2",
+         0x01, 0x00, 0x00, 0x00, 0x02, 0x00);
     BERRT(".long 1, UNDEF, 2", UNDEFINED_SYMBOL, "UNDEF, 2",
           0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0x00, 0x00, 0x00);
 

@@ -26,24 +26,24 @@ namespace libasm {
 namespace tms32010 {
 
 enum AddrMode : uint8_t {
-    // T=table, P=parser. Sorted by constant range from M_LS0 to M_IM13.
+    // T=table, P=parser. M_IM1~M_CNST must be a constant.
     M_NONE = 0,   // TP: No operand
-    M_LS0 = 1,    // TP: [0] 0 left shift (SACL)     ---- -000 ---- ----
-    M_DPK = 2,    // TP: [0-1] Data memory page      ---- ---- ---- ---d
-    M_ARK = 3,    // T_: [0-1] Auxiliary register    ---- ---- ---- ---a
-    M_AR = 4,     // TP: AR[0-1] Auxiliary register  ---- ---a ---- ----
-    M_NARP = 5,   // T_: AR[0-1] Next ARP            ---- ---- 10id n00a
-    M_LS3 = 6,    // TP: [0-1,4] 3-bit left shift    ---- -XXX ---- ----
-    M_IM3 = 7,    // _P: [0-7] 3-bit unsigned
-    M_PA = 8,     // TP: PA[0-7] Port Address        ---- -AAA ---- ----
-    M_LS4 = 9,    // TP: [0-15]  4-bit left shift    ---- SSSS ---- ----
-    M_IM8 = 10,   // TP: [0-255] 8-bit unsigned      ---- ---- KKKK KKKK
-    M_MAM = 11,   // T_: [0-255] Memory addressing mode      ---- ---- Immm mmmm
-    M_PMA = 12,   // TP: [0-4095] Program address    ---- PPPP PPPP PPPP
-    M_IM13 = 13,  // TP: [-4096-4095] 13-bit signed  ---K KKKK KKKK KKKK
-    M_ARP = 14,   // _P: "*"   Indirect addressing
-    M_INC = 15,   // _P: "*+"  Indirect then auto increment addressing
-    M_DEC = 16,   // _P: "*-"  Indirect then auto decrement addressing
+    M_IM1 = 1,    // T_: 1-bit unsigned immediate    ---- ---- ---- ---k
+    M_IM8 = 3,    // T_: 8-bit unsigned immediate    ---- ---- kkkk kkkk
+    M_IM13 = 5,   // T_: 13-bit signed immediate     ---k kkkk kkkk kkkk
+    M_NARP = 7,   // T_: Next ARP                    ---- ---- ---- xyyy
+    M_ARK = 8,    // T_: 3-bit AR register           ---- ---- ---- -rrr
+    M_AR = 9,     // TP: AR[0-7] Auxiliary register  ---- -rrr ---- ----
+    M_PA = 10,    // TP: PA[0-15] Port address       ---- pppp ---- ----
+    M_LS0 = 11,   // T_: 0 constant for SACL         ---- -000 ---- ----
+    M_LS3 = 12,   // T_: 3-bit left shift            ---- -xxx ---- ----
+    M_LS4 = 13,   // T_: 4-bit left shift            ---- ssss ---- ----
+    M_PM12 = 15,  // T_: 12-bit program address      ---- pppp pppp pppp
+    M_CNST = 17,  // _P: constant
+    M_MAM = 18,   // T_: Direct address or M_IND     ---- ---- ixxx xxxx
+    M_ARP = 21,   // _P: "*"   Indirect addressing
+    M_INC = 22,   // _P: "*+"  Indirect then auto increment addressing
+    M_DEC = 23,   // _P: "*-"  Indirect then auto decrement addressing
 };
 
 struct Entry final : entry::Base<Config::opcode_t> {

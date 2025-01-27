@@ -56,7 +56,7 @@ constexpr Entry TABLE_TMS32010[] PROGMEM = {
     E2(0x6B00, TEXT_LTD,  M_MAM,  M_NARP),
     E2(0x6C00, TEXT_LTA,  M_MAM,  M_NARP),
     E2(0x6D00, TEXT_MPY,  M_MAM,  M_NARP),
-    E1(0x6E00, TEXT_LDPK, M_DPK),
+    E1(0x6E00, TEXT_LDPK, M_IM1),
     E2(0x6F00, TEXT_LDP,  M_MAM,  M_NARP),
     E2(0x7000, TEXT_LARK, M_AR,   M_IM8),
     E2(0x7800, TEXT_XOR,  M_MAM,  M_NARP),
@@ -81,17 +81,17 @@ constexpr Entry TABLE_TMS32010[] PROGMEM = {
     E0(0x7F9C, TEXT_PUSH),
     E0(0x7F9D, TEXT_POP),
     E1(0x8000, TEXT_MPYK, M_IM13),
-    E1(0xF400, TEXT_BANZ, M_PMA),
-    E1(0xF500, TEXT_BV,   M_PMA),
-    E1(0xF600, TEXT_BIOZ, M_PMA),
-    E1(0xF800, TEXT_CALL, M_PMA),
-    E1(0xF900, TEXT_B,    M_PMA),
-    E1(0xFA00, TEXT_BLZ,  M_PMA),
-    E1(0xFB00, TEXT_BLEZ, M_PMA),
-    E1(0xFC00, TEXT_BGZ,  M_PMA),
-    E1(0xFD00, TEXT_BGEZ, M_PMA),
-    E1(0xFE00, TEXT_BNZ,  M_PMA),
-    E1(0xFF00, TEXT_BZ,   M_PMA),
+    E1(0xF400, TEXT_BANZ, M_PM12),
+    E1(0xF500, TEXT_BV,   M_PM12),
+    E1(0xF600, TEXT_BIOZ, M_PM12),
+    E1(0xF800, TEXT_CALL, M_PM12),
+    E1(0xF900, TEXT_B,    M_PM12),
+    E1(0xFA00, TEXT_BLZ,  M_PM12),
+    E1(0xFB00, TEXT_BLEZ, M_PM12),
+    E1(0xFC00, TEXT_BGZ,  M_PM12),
+    E1(0xFD00, TEXT_BGEZ, M_PM12),
+    E1(0xFE00, TEXT_BNZ,  M_PM12),
+    E1(0xFF00, TEXT_BZ,   M_PM12),
 };
 
 constexpr uint8_t INDEX_TMS32010[] PROGMEM = {
@@ -156,6 +156,7 @@ constexpr uint8_t INDEX_TMS32010[] PROGMEM = {
      14,  // TEXT_ZALH
      15,  // TEXT_ZALS
 };
+
 // clang-format on
 
 using EntryPage = entry::TableBase<Entry>;
@@ -180,20 +181,12 @@ bool acceptMode(AddrMode opr, AddrMode table) {
         return true;
     if (opr == M_NONE)  // These can be ommitted.
         return table == M_LS0 || table == M_LS3 || table == M_LS4 || table == M_NARP;
-    if (opr == M_AR)  // ARn can be used as 0,1
+    if (opr == M_AR)
         return table == M_ARK || table == M_NARP;
-    if (opr == M_PA)  // PAn can not match other than itself.
-        return false;
     if (opr == M_ARP || opr == M_INC || opr == M_DEC)
         return table == M_MAM;
-    if (opr == M_IM13 && table == M_PMA)
-        return true;
-    // Compare constant range.
-    auto tv = uint8_t(table);
-    if (tv >= uint8_t(M_LS0) && tv <= uint8_t(M_IM13)) {
-        const uint8_t ov = uint8_t(opr);
-        return tv >= ov;
-    }
+    if (opr == M_CNST)
+        return table == M_MAM || (table >= M_IM1 && table < M_CNST);
     return false;
 }
 
@@ -213,34 +206,48 @@ bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *) {
     const auto flags = entry->readFlags();
     const auto mode1 = flags.mode1();
     const auto mode2 = flags.mode2();
+    const auto mode3 = flags.mode3();
+    if ((opc & 0x80) != 0 && (mode2 == M_NARP || mode3 == M_NARP)) {
+        const auto narp = (opc & 8);
+        const auto ar = (opc & 7);
+        if (opc & 0x46)
+            return false;  // check reserved bits
+        if (narp && ar)
+            return false;  // check no next ARP
+        opc &= ~0xF;
+    }
+
+    if ((opc & 0x80) != 0 && (mode1 == M_MAM || mode2 == M_MAM)) {
+        const auto modify = (opc >> 4) & 7;
+        if (modify == 3)
+            return false;  // Don't allow both increment and decrement.
+        opc &= ~0x70;
+    }
+    if (mode1 == M_MAM || mode2 == M_MAM)
+        opc &= ~0xFF;
+
     if (mode1 == M_IM8 || mode2 == M_IM8) {
         opc &= ~0xFF;
-    } else if (mode1 == M_MAM || mode2 == M_MAM) {
-        if ((opc & (1 << 7)) == 0) {
-            opc &= ~0x7F;  // Direct addressing
-        } else {
-            if (opc & 0x46)
-                return false;  // check reserved bits
-            if (((opc >> 4) & 3) == 3)
-                return false;  // Don't allow both increment and decrement.
-            if ((opc & 8) && (opc & 7))
-                return false;  // no next ARP check
-            opc &= ~0xB9;      // Indirect addressing
-        }
+    } else if (mode1 == M_IM1) {
+        opc &= ~1;
     } else if (mode1 == M_IM13) {
         opc &= ~0x1FFF;
     }
+
+    const auto maxAR = 1;
     if (mode1 == M_AR)
-        opc &= ~(1 << 8);
-    if (mode1 == M_ARK || mode1 == M_DPK)
-        opc &= ~(1 << 0);
+        opc &= ~(maxAR << 8);
+    if (mode1 == M_ARK)
+        opc &= ~(maxAR << 0);
+    if (mode2 == M_PA) {
+        const auto maxPA = 7;
+        opc &= ~(maxPA << 8);
+    }
     if (mode2 == M_LS4)
         opc &= ~(0xF << 8);
-    if (mode2 == M_PA)
-        opc &= ~(7 << 8);
     if (mode2 == M_LS3) {
         const auto shift = (opc >> 8) & 7;
-        if (shift < 2 || shift == 4) {
+        if (shift == 0 || shift == 1 || shift == 4) {
             opc &= ~(7 << 8);
         } else {
             return false;
@@ -263,11 +270,10 @@ const /*PROGMEM*/ char *TableTms32010::cpuName_P(CpuType cpuType) const {
 }
 
 Error TableTms32010::searchCpuName(StrScanner &name, CpuType &cpuType) const {
-    name.iexpectText_P(TEXT_TMS32010_LIST, 3);
-    if (name.iequals_P(TEXT_CPU_32010)) {
-        cpuType = TMS32010;
-    } else if (name.iequals_P(TEXT_CPU_32015)) {
-        cpuType = TMS32015;
+    name.iexpectText_P(TEXT_TMS32010_LIST, 3);  // Ignore "TMS" if exist
+    const auto t = Cpu::search(name, ARRAY_RANGE(CPU_TABLE));
+    if (t) {
+        cpuType = t->readCpuType();
     } else {
         return UNSUPPORTED_CPU;
     }

@@ -6,7 +6,7 @@ function get_text {
 
 function list_files {
     for f in $(grep -lPow '(?<=^extern const char )'"$1" text_*.h); do
-        printf "%-15s" $f
+        printf "%-16s" $f
     done
     echo
 }
