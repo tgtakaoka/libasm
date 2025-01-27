@@ -24,13 +24,12 @@ using namespace libasm::text::f3850;
 namespace libasm {
 namespace f3850 {
 
-#define E2(_opc, _name, _mode1, _mode2) \
-    { _opc, Entry::Flags::create(_mode1, _mode2), _name }
+#define E2(_opc, _name, _mode1, _mode2) {_opc, Entry::Flags::create(_mode1, _mode2), _name}
 #define E1(_opc, _name, _mode1) E2(_opc, _name, _mode1, M_NONE)
 #define E0(_opc, _name) E1(_opc, _name, M_NONE)
 
 // clang-format off
-static constexpr Entry TABLE_3850[] PROGMEM = {
+constexpr Entry TABLE_3850[] PROGMEM = {
     E2(0x00, TEXT_LR,  M_A,    M_KU),
     E2(0x01, TEXT_LR,  M_A,    M_KL),
     E2(0x02, TEXT_LR,  M_A,    M_QU),
@@ -109,7 +108,7 @@ static constexpr Entry TABLE_3850[] PROGMEM = {
     E1(0xF0, TEXT_NS,   M_REG),
 };
 
-static constexpr uint8_t INDEX_3850[] PROGMEM = {
+constexpr uint8_t INDEX_3850[] PROGMEM = {
      61,  // TEXT_ADC
      36,  // TEXT_AI
      55,  // TEXT_AM
@@ -192,30 +191,26 @@ static constexpr uint8_t INDEX_3850[] PROGMEM = {
 
 using EntryPage = entry::TableBase<Entry>;
 
-static constexpr EntryPage F3850_PAGES[] PROGMEM = {
+constexpr EntryPage F3850_PAGES[] PROGMEM = {
         {ARRAY_RANGE(TABLE_3850), ARRAY_RANGE(INDEX_3850)},
 };
 
 using Cpu = entry::CpuBase<CpuType, EntryPage>;
 
-static constexpr Cpu CPU_TABLE[] PROGMEM = {
+constexpr Cpu CPU_TABLE[] PROGMEM = {
         {F3850, TEXT_CPU_3850, ARRAY_RANGE(F3850_PAGES)},
 };
 
-static const Cpu *cpu(CpuType) {
+const Cpu *cpu(CpuType) {
     return &CPU_TABLE[0];
 }
 
-static bool acceptAll(AsmInsn &, const Entry *) {
-    return true;
-}
-
-bool TableF3850::hasOperand(CpuType cpuType, AsmInsn &insn) const {
-    cpu(cpuType)->searchName(insn, acceptAll);
+bool hasOperand(CpuType cpuType, AsmInsn &insn) {
+    cpu(cpuType)->searchName(insn, Cpu::acceptAll<AsmInsn, Entry>);
     return insn.isOK() && insn.mode1() != M_NONE;
 }
 
-static bool acceptMode(AddrMode opr, AddrMode table) {
+bool acceptMode(AddrMode opr, AddrMode table) {
     if (opr == table)
         return true;
     if (opr == M_J)
@@ -227,17 +222,17 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
     return false;
 }
 
-static bool acceptModes(AsmInsn &insn, const Entry *entry) {
+bool acceptModes(AsmInsn &insn, const Entry *entry) {
     const auto table = entry->readFlags();
     return acceptMode(insn.op1.mode, table.mode1()) && acceptMode(insn.op2.mode, table.mode2());
 }
 
-Error TableF3850::searchName(CpuType cpuType, AsmInsn &insn) const {
+Error searchName(CpuType cpuType, AsmInsn &insn) {
     cpu(cpuType)->searchName(insn, acceptModes);
     return insn.getError();
 }
 
-static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *) {
+bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *) {
     auto opCode = insn.opCode();
     const auto flags = entry->readFlags();
     const auto mode1 = flags.mode1();
@@ -250,7 +245,7 @@ static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *) {
     return opCode == entry->readOpCode();
 }
 
-Error TableF3850::searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) const {
+Error searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) {
     cpu(cpuType)->searchOpCode(insn, out, matchOpCode);
     return insn.getError();
 }

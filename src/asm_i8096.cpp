@@ -15,7 +15,6 @@
  */
 
 #include "asm_i8096.h"
-
 #include "reg_i8096.h"
 #include "table_i8096.h"
 #include "text_common.h"
@@ -270,8 +269,8 @@ Error AsmI8096::encodeImpl(StrScanner &scan, Insn &_insn) const {
         scan.skipSpaces();
     }
 
-    if (_insn.setErrorIf(insn.dstOp, TABLE.searchName(cpuType(), insn)))
-        return _insn.getError();
+    if (searchName(cpuType(), insn))
+        return _insn.setError(insn.dstOp, insn);
 
     const auto jbx_djnz = insn.src2() == M_REL8 || insn.src1() == M_REL8;
     if (!jbx_djnz) {

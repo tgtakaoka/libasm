@@ -518,13 +518,13 @@ Error DisNs32000::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) con
     DisInsn insn(_insn, memory, out);
     const auto opc = insn.readByte();
     insn.setOpCode(opc);
-    if (TABLE.isPrefixCode(_cpuSpec, opc)) {
+    if (isPrefixCode(_cpuSpec, opc)) {
         insn.setPrefix(opc);
         insn.setOpCode(insn.readByte());
         if (insn.getError())
             return _insn.setError(insn);
     }
-    if (TABLE.searchOpCode(_cpuSpec, insn, out))
+    if (searchOpCode(_cpuSpec, insn, out))
         return _insn.setError(insn);
 
     const auto srcIdxError = readIndexByte(insn, insn.src(), insn.srcPos());

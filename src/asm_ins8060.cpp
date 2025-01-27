@@ -15,7 +15,6 @@
  */
 
 #include "asm_ins8060.h"
-
 #include "table_ins8060.h"
 #include "text_common.h"
 
@@ -179,8 +178,8 @@ Error AsmIns8060::encodeImpl(StrScanner &scan, Insn &_insn) const {
         return _insn.setError(insn.op);
     scan.skipSpaces();
 
-    if (_insn.setErrorIf(insn.op, TABLE.searchName(cpuType(), insn)))
-        return _insn.getError();
+    if (searchName(cpuType(), insn))
+        return _insn.setError(insn.op, insn);
 
     insn.setErrorIf(insn.op);
     switch (insn.addrMode()) {

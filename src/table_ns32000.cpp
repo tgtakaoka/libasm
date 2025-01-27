@@ -24,11 +24,8 @@ using namespace libasm::text::ns32000;
 namespace libasm {
 namespace ns32000 {
 
-#define E4(_opc, _name, _sz, _srcm, _dstm, _srcp, _dstp, _ex1m, _ex2m, _ex1p, _ex2p)             \
-    {                                                                                            \
-        _opc, Entry::Flags::create(_srcm, _srcp, _dstm, _dstp, _ex1m, _ex1p, _ex2m, _ex2p, _sz), \
-                _name                                                                            \
-    }
+#define E4(_opc, _name, _sz, _srcm, _dstm, _srcp, _dstp, _ex1m, _ex2m, _ex1p, _ex2p) \
+    {_opc, Entry::Flags::create(_srcm, _srcp, _dstm, _dstp, _ex1m, _ex1p, _ex2m, _ex2p, _sz), _name}
 #define E3(_opc, _name, _sz, _srcm, _dstm, _srcp, _dstp, _ex1m, _ex1p) \
     E4(_opc, _name, _sz, _srcm, _dstm, _srcp, _dstp, _ex1m, EM2_NONE, _ex1p, EP2_NONE)
 #define E2(_opc, _name, _sz, _srcm, _dstm, _srcp, _dstp) \
@@ -41,7 +38,7 @@ namespace ns32000 {
 
 // clang-format off
 // Format 0: |cond|1010|
-static constexpr Entry FORMAT_0[] PROGMEM = {
+constexpr Entry FORMAT_0[] PROGMEM = {
     E1(0x0A, TEXT_BEQ, SZ_NONE, M_REL, P_DISP),
     E1(0x1A, TEXT_BNE, SZ_NONE, M_REL, P_DISP),
     E1(0x2A, TEXT_BCS, SZ_NONE, M_REL, P_DISP),
@@ -58,7 +55,7 @@ static constexpr Entry FORMAT_0[] PROGMEM = {
     E1(0xDA, TEXT_BGE, SZ_NONE, M_REL, P_DISP),
     E1(0xEA, TEXT_BR,  SZ_NONE, M_REL, P_DISP),
 };
-static constexpr uint8_t INDEX_0[] PROGMEM = {
+constexpr uint8_t INDEX_0[] PROGMEM = {
       3,  // TEXT_BCC
       2,  // TEXT_BCS
       0,  // TEXT_BEQ
@@ -77,7 +74,7 @@ static constexpr uint8_t INDEX_0[] PROGMEM = {
 };
 
 // Format 1: |_op_|0010|
-static constexpr Entry FORMAT_1[] PROGMEM = {
+constexpr Entry FORMAT_1[] PROGMEM = {
     E1(0x02, TEXT_BSR,     SZ_NONE,   M_REL, P_DISP),
     E1(0x12, TEXT_RET,     SZ_NONE,   M_DISP, P_DISP),
     E1(0x22, TEXT_CXP,     SZ_NONE,   M_DISP, P_DISP),
@@ -95,7 +92,7 @@ static constexpr Entry FORMAT_1[] PROGMEM = {
     E0(0xE2, TEXT_SVC),
     E0(0xF2, TEXT_BPT),
 };
-static constexpr uint8_t INDEX_1[] PROGMEM = {
+constexpr uint8_t INDEX_1[] PROGMEM = {
      15,  // TEXT_BPT
       0,  // TEXT_BSR
       2,  // TEXT_CXP
@@ -115,7 +112,7 @@ static constexpr uint8_t INDEX_1[] PROGMEM = {
 };
 
 // Format 4: |gen1_|gen| |2_|_op_|ii|
-static constexpr Entry FORMAT_4[] PROGMEM = {
+constexpr Entry FORMAT_4[] PROGMEM = {
     E2(0x00, TEXT_ADDB,   SZ_BYTE, M_GENR, M_GENW, P_GEN1, P_GEN2),
     E2(0x01, TEXT_ADDW,   SZ_WORD, M_GENR, M_GENW, P_GEN1, P_GEN2),
     E2(0x03, TEXT_ADDD,   SZ_QUAD, M_GENR, M_GENW, P_GEN1, P_GEN2),
@@ -151,7 +148,7 @@ static constexpr Entry FORMAT_4[] PROGMEM = {
     E2(0x39, TEXT_XORW,   SZ_WORD, M_GENR, M_GENW, P_GEN1, P_GEN2),
     E2(0x3B, TEXT_XORD,   SZ_QUAD, M_GENR, M_GENW, P_GEN1, P_GEN2),
 };
-static constexpr uint8_t INDEX_4[] PROGMEM = {
+constexpr uint8_t INDEX_4[] PROGMEM = {
       0,  // TEXT_ADDB
       9,  // TEXT_ADDCB
      11,  // TEXT_ADDCD
@@ -189,7 +186,7 @@ static constexpr uint8_t INDEX_4[] PROGMEM = {
 };
 
 // Format 2: |_gen_|sho| |t|_op|11|ii|
-static constexpr Entry FORMAT_2_0[] PROGMEM = {
+constexpr Entry FORMAT_2_0[] PROGMEM = {
     E2(0x0C, TEXT_ADDQB, SZ_BYTE, M_INT4, M_GENW, P_SHORT, P_GEN1),
     E2(0x0D, TEXT_ADDQW, SZ_WORD, M_INT4, M_GENW, P_SHORT, P_GEN1),
     E2(0x0F, TEXT_ADDQD, SZ_QUAD, M_INT4, M_GENW, P_SHORT, P_GEN1),
@@ -210,7 +207,7 @@ static constexpr Entry FORMAT_2_0[] PROGMEM = {
     E2(0x6F, TEXT_LPRD,  SZ_QUAD, M_PREG, M_GENR, P_SHORT, P_GEN1),
 };
 // Format 2: |_gen_|con| |d|011|11|ii|
-static constexpr Entry FORMAT_2_1[] PROGMEM = {
+constexpr Entry FORMAT_2_1[] PROGMEM = {
     E1(0x00, TEXT_SEQB, SZ_BYTE, M_GENW, P_GEN1),
     E1(0x01, TEXT_SCSB, SZ_BYTE, M_GENW, P_GEN1),
     E1(0x02, TEXT_SHIB, SZ_BYTE, M_GENW, P_GEN1),
@@ -219,7 +216,7 @@ static constexpr Entry FORMAT_2_1[] PROGMEM = {
     E1(0x05, TEXT_SLOB, SZ_BYTE, M_GENW, P_GEN1),
     E1(0x06, TEXT_SLTB, SZ_BYTE, M_GENW, P_GEN1),
 };
-static constexpr Entry FORMAT_2_2[] PROGMEM = {
+constexpr Entry FORMAT_2_2[] PROGMEM = {
     E1(0x00, TEXT_SNEB, SZ_BYTE, M_GENW, P_GEN1),
     E1(0x01, TEXT_SCCB, SZ_BYTE, M_GENW, P_GEN1),
     E1(0x02, TEXT_SLSB, SZ_BYTE, M_GENW, P_GEN1),
@@ -228,7 +225,7 @@ static constexpr Entry FORMAT_2_2[] PROGMEM = {
     E1(0x05, TEXT_SHSB, SZ_BYTE, M_GENW, P_GEN1),
     E1(0x06, TEXT_SGEB, SZ_BYTE, M_GENW, P_GEN1),
 };
-static constexpr Entry FORMAT_2_3[] PROGMEM = {
+constexpr Entry FORMAT_2_3[] PROGMEM = {
     E1(0x00, TEXT_SEQW, SZ_WORD, M_GENW, P_GEN1),
     E1(0x01, TEXT_SCSW, SZ_WORD, M_GENW, P_GEN1),
     E1(0x02, TEXT_SHIW, SZ_WORD, M_GENW, P_GEN1),
@@ -237,7 +234,7 @@ static constexpr Entry FORMAT_2_3[] PROGMEM = {
     E1(0x05, TEXT_SLOW, SZ_WORD, M_GENW, P_GEN1),
     E1(0x06, TEXT_SLTW, SZ_WORD, M_GENW, P_GEN1),
 };
-static constexpr Entry FORMAT_2_4[] PROGMEM = {
+constexpr Entry FORMAT_2_4[] PROGMEM = {
     E1(0x00, TEXT_SNEW, SZ_WORD, M_GENW, P_GEN1),
     E1(0x01, TEXT_SCCW, SZ_WORD, M_GENW, P_GEN1),
     E1(0x02, TEXT_SLSW, SZ_WORD, M_GENW, P_GEN1),
@@ -246,7 +243,7 @@ static constexpr Entry FORMAT_2_4[] PROGMEM = {
     E1(0x05, TEXT_SHSW, SZ_WORD, M_GENW, P_GEN1),
     E1(0x06, TEXT_SGEW, SZ_WORD, M_GENW, P_GEN1),
 };
-static constexpr Entry FORMAT_2_5[] PROGMEM = {
+constexpr Entry FORMAT_2_5[] PROGMEM = {
     E1(0x00, TEXT_SEQD, SZ_QUAD, M_GENW, P_GEN1),
     E1(0x01, TEXT_SCSD, SZ_QUAD, M_GENW, P_GEN1),
     E1(0x02, TEXT_SHID, SZ_QUAD, M_GENW, P_GEN1),
@@ -255,7 +252,7 @@ static constexpr Entry FORMAT_2_5[] PROGMEM = {
     E1(0x05, TEXT_SLOD, SZ_QUAD, M_GENW, P_GEN1),
     E1(0x06, TEXT_SLTD, SZ_QUAD, M_GENW, P_GEN1),
 };
-static constexpr Entry FORMAT_2_6[] PROGMEM = {
+constexpr Entry FORMAT_2_6[] PROGMEM = {
     E1(0x00, TEXT_SNED, SZ_QUAD, M_GENW, P_GEN1),
     E1(0x01, TEXT_SCCD, SZ_QUAD, M_GENW, P_GEN1),
     E1(0x02, TEXT_SLSD, SZ_QUAD, M_GENW, P_GEN1),
@@ -264,7 +261,7 @@ static constexpr Entry FORMAT_2_6[] PROGMEM = {
     E1(0x05, TEXT_SHSD, SZ_QUAD, M_GENW, P_GEN1),
     E1(0x06, TEXT_SGED, SZ_QUAD, M_GENW, P_GEN1),
 };
-static constexpr uint8_t INDEX_2_0[] PROGMEM = {
+constexpr uint8_t INDEX_2_0[] PROGMEM = {
       9,  // TEXT_ACBB
      11,  // TEXT_ACBD
      10,  // TEXT_ACBW
@@ -284,7 +281,7 @@ static constexpr uint8_t INDEX_2_0[] PROGMEM = {
       8,  // TEXT_SPRD
       7,  // TEXT_SPRW
 };
-static constexpr uint8_t INDEX_2_1[] PROGMEM = {
+constexpr uint8_t INDEX_2_1[] PROGMEM = {
       1,  // TEXT_SCSB
       0,  // TEXT_SEQB
       4,  // TEXT_SFSB
@@ -293,7 +290,7 @@ static constexpr uint8_t INDEX_2_1[] PROGMEM = {
       5,  // TEXT_SLOB
       6,  // TEXT_SLTB
 };
-static constexpr uint8_t INDEX_2_2[] PROGMEM = {
+constexpr uint8_t INDEX_2_2[] PROGMEM = {
       1,  // TEXT_SCCB
       4,  // TEXT_SFCB
       6,  // TEXT_SGEB
@@ -302,7 +299,7 @@ static constexpr uint8_t INDEX_2_2[] PROGMEM = {
       2,  // TEXT_SLSB
       0,  // TEXT_SNEB
 };
-static constexpr uint8_t INDEX_2_3[] PROGMEM = {
+constexpr uint8_t INDEX_2_3[] PROGMEM = {
       1,  // TEXT_SCSW
       0,  // TEXT_SEQW
       4,  // TEXT_SFSW
@@ -311,7 +308,7 @@ static constexpr uint8_t INDEX_2_3[] PROGMEM = {
       5,  // TEXT_SLOW
       6,  // TEXT_SLTW
 };
-static constexpr uint8_t INDEX_2_4[] PROGMEM = {
+constexpr uint8_t INDEX_2_4[] PROGMEM = {
       1,  // TEXT_SCCW
       4,  // TEXT_SFCW
       6,  // TEXT_SGEW
@@ -320,7 +317,7 @@ static constexpr uint8_t INDEX_2_4[] PROGMEM = {
       2,  // TEXT_SLSW
       0,  // TEXT_SNEW
 };
-static constexpr uint8_t INDEX_2_5[] PROGMEM = {
+constexpr uint8_t INDEX_2_5[] PROGMEM = {
       1,  // TEXT_SCSD
       0,  // TEXT_SEQD
       4,  // TEXT_SFSD
@@ -329,7 +326,7 @@ static constexpr uint8_t INDEX_2_5[] PROGMEM = {
       5,  // TEXT_SLOD
       6,  // TEXT_SLTD
 };
-static constexpr uint8_t INDEX_2_6[] PROGMEM = {
+constexpr uint8_t INDEX_2_6[] PROGMEM = {
       1,  // TEXT_SCCD
       4,  // TEXT_SFCD
       6,  // TEXT_SGED
@@ -340,38 +337,38 @@ static constexpr uint8_t INDEX_2_6[] PROGMEM = {
 };
 
 // Format 3: |_gen_|_op| |011111|ii|
-static constexpr Entry FORMAT_3_1[] PROGMEM = {
+constexpr Entry FORMAT_3_1[] PROGMEM = {
     E1(0x01, TEXT_BICPSRB, SZ_BYTE, M_GENR, P_GEN1),
     E1(0x03, TEXT_BISPSRB, SZ_BYTE, M_GENR, P_GEN1),
     E1(0x05, TEXT_ADJSPB,  SZ_BYTE, M_GENR, P_GEN1),
     E1(0x07, TEXT_CASEB,   SZ_BYTE, M_GENR, P_GEN1),
 };
-static constexpr Entry FORMAT_3_2[] PROGMEM = {
+constexpr Entry FORMAT_3_2[] PROGMEM = {
     E1(0x01, TEXT_BICPSRW, SZ_WORD, M_GENR, P_GEN1),
     E1(0x03, TEXT_BISPSRW, SZ_WORD, M_GENR, P_GEN1),
     E1(0x05, TEXT_ADJSPW,  SZ_WORD, M_GENR, P_GEN1),
     E1(0x07, TEXT_CASEW,   SZ_WORD, M_GENR, P_GEN1),
 };
-static constexpr Entry FORMAT_3_3[] PROGMEM = {
+constexpr Entry FORMAT_3_3[] PROGMEM = {
     E1(0x00, TEXT_CXPD,   SZ_QUAD, M_GENA, P_GEN1),
     E1(0x02, TEXT_JUMP,   SZ_QUAD, M_GENA, P_GEN1),
     E1(0x05, TEXT_ADJSPD, SZ_QUAD, M_GENR, P_GEN1),
     E1(0x06, TEXT_JSR,    SZ_QUAD, M_GENA, P_GEN1),
     E1(0x07, TEXT_CASED,  SZ_QUAD, M_GENR, P_GEN1),
 };
-static constexpr uint8_t INDEX_3_1[] PROGMEM = {
+constexpr uint8_t INDEX_3_1[] PROGMEM = {
       2,  // TEXT_ADJSPB
       0,  // TEXT_BICPSRB
       1,  // TEXT_BISPSRB
       3,  // TEXT_CASEB
 };
-static constexpr uint8_t INDEX_3_2[] PROGMEM = {
+constexpr uint8_t INDEX_3_2[] PROGMEM = {
       2,  // TEXT_ADJSPW
       0,  // TEXT_BICPSRW
       1,  // TEXT_BISPSRW
       3,  // TEXT_CASEW
 };
-static constexpr uint8_t INDEX_3_3[] PROGMEM = {
+constexpr uint8_t INDEX_3_3[] PROGMEM = {
       2,  // TEXT_ADJSPD
       4,  // TEXT_CASED
       0,  // TEXT_CXPD
@@ -380,11 +377,11 @@ static constexpr uint8_t INDEX_3_3[] PROGMEM = {
 };
 
 // Format 5: |00000|sho| |t|0|_op_|ii| |0000|1110|
-static constexpr Entry FORMAT_5_0[] PROGMEM = {
+constexpr Entry FORMAT_5_0[] PROGMEM = {
     E2(0x0B, TEXT_SETCFG, SZ_NONE, M_CONF, M_ZERO, P_SHORT, P_GEN1),
 };
 // Format 5: |00000|fla| |g|0|_op_|ii| |0000|1110|
-static constexpr Entry FORMAT_5_1[] PROGMEM = {
+constexpr Entry FORMAT_5_1[] PROGMEM = {
     E2(0x00, TEXT_MOVSB, SZ_BYTE, M_SOPT, M_ZERO, P_SHORT, P_GEN1),
     E2(0x01, TEXT_MOVSW, SZ_WORD, M_SOPT, M_ZERO, P_SHORT, P_GEN1),
     E2(0x03, TEXT_MOVSD, SZ_QUAD, M_SOPT, M_ZERO, P_SHORT, P_GEN1),
@@ -398,10 +395,10 @@ static constexpr Entry FORMAT_5_1[] PROGMEM = {
     E2(0x0F, TEXT_SKPSD, SZ_QUAD, M_SOPT, M_ZERO, P_SHORT, P_GEN1),
     E2(0x8C, TEXT_SKPST, SZ_BYTE, M_SOPT, M_ZERO, P_SHORT, P_GEN1),
 };
-static constexpr uint8_t INDEX_5_0[] PROGMEM = {
+constexpr uint8_t INDEX_5_0[] PROGMEM = {
       0,  // TEXT_SETCFG
 };
-static constexpr uint8_t INDEX_5_1[] PROGMEM = {
+constexpr uint8_t INDEX_5_1[] PROGMEM = {
       4,  // TEXT_CMPSB
       6,  // TEXT_CMPSD
       7,  // TEXT_CMPST
@@ -417,7 +414,7 @@ static constexpr uint8_t INDEX_5_1[] PROGMEM = {
 };
 
 // Format 6: |gen1_|gen| |2_|_op_|ii| |0100|1110|
-static constexpr Entry FORMAT_6[] PROGMEM = {
+constexpr Entry FORMAT_6[] PROGMEM = {
     E2(0x00, TEXT_ROTB,   SZ_BYTE, M_GENC, M_GENW, P_GEN1, P_GEN2),
     E2(0x01, TEXT_ROTW,   SZ_WORD, M_GENC, M_GENW, P_GEN1, P_GEN2),
     E2(0x03, TEXT_ROTD,   SZ_QUAD, M_GENC, M_GENW, P_GEN1, P_GEN2),
@@ -461,7 +458,7 @@ static constexpr Entry FORMAT_6[] PROGMEM = {
     E2(0x3D, TEXT_ADDPW,  SZ_WORD, M_GENR, M_GENW, P_GEN1, P_GEN2),
     E2(0x3F, TEXT_ADDPD,  SZ_QUAD, M_GENR, M_GENW, P_GEN1, P_GEN2),
 };
-static constexpr uint8_t INDEX_6[] PROGMEM = {
+constexpr uint8_t INDEX_6[] PROGMEM = {
      30,  // TEXT_ABSB
      32,  // TEXT_ABSD
      31,  // TEXT_ABSW
@@ -507,7 +504,7 @@ static constexpr uint8_t INDEX_6[] PROGMEM = {
 };
 
 // Format 7: |gen1_|gen| |2_|_op_|ii| |1100|1110|
-static constexpr Entry FORMAT_7[] PROGMEM = {
+constexpr Entry FORMAT_7[] PROGMEM = {
     E3(0x00, TEXT_MOVMB,  SZ_BYTE, M_GENA, M_GENA, P_GEN1, P_GEN2, M_LEN16,  P_DISP),
     E3(0x01, TEXT_MOVMW,  SZ_WORD, M_GENA, M_GENA, P_GEN1, P_GEN2, M_LEN16,  P_DISP),
     E3(0x03, TEXT_MOVMD,  SZ_QUAD, M_GENA, M_GENA, P_GEN1, P_GEN2, M_LEN16,  P_DISP),
@@ -549,7 +546,7 @@ static constexpr Entry FORMAT_7[] PROGMEM = {
     E2(0x3D, TEXT_DIVW,   SZ_WORD, M_GENR, M_GENW, P_GEN1, P_GEN2),
     E2(0x3F, TEXT_DIVD,   SZ_QUAD, M_GENR, M_GENW, P_GEN1, P_GEN2),
 };
-static constexpr uint8_t INDEX_7[] PROGMEM = {
+constexpr uint8_t INDEX_7[] PROGMEM = {
       3,  // TEXT_CMPMB
       5,  // TEXT_CMPMD
       4,  // TEXT_CMPMW
@@ -592,7 +589,7 @@ static constexpr uint8_t INDEX_7[] PROGMEM = {
 };
 
 // Format 8: |gen1_|gen| |2_|reg|o|ii| |op|10|1110|
-static constexpr Entry FORMAT_8_1[] PROGMEM = {
+constexpr Entry FORMAT_8_1[] PROGMEM = {
     E4(0x00, TEXT_EXTB,   SZ_BYTE, M_GREG, M_GENW, P_REG, P_GEN1, M_GENW, EM2_LEN32, P_GEN2, EP2_DISP),
     E4(0x01, TEXT_EXTW,   SZ_WORD, M_GREG, M_GENW, P_REG, P_GEN1, M_GENW, EM2_LEN32, P_GEN2, EP2_DISP),
     E4(0x03, TEXT_EXTD,   SZ_QUAD, M_GREG, M_GENW, P_REG, P_GEN1, M_GENW, EM2_LEN32, P_GEN2, EP2_DISP),
@@ -600,25 +597,25 @@ static constexpr Entry FORMAT_8_1[] PROGMEM = {
     E3(0x05, TEXT_INDEXW, SZ_WORD, M_GREG, M_GENR, P_REG, P_GEN1, M_GENR,  P_GEN2),
     E3(0x07, TEXT_INDEXD, SZ_QUAD, M_GREG, M_GENR, P_REG, P_GEN1, M_GENR,  P_GEN2),
 };
-static constexpr Entry FORMAT_8_2[] PROGMEM = {
+constexpr Entry FORMAT_8_2[] PROGMEM = {
     E3(0x03, TEXT_CVTP, SZ_QUAD, M_GREG, M_GENA, P_REG,  P_GEN1,  M_GENW, P_GEN2),
 };
-static constexpr Entry FORMAT_8_2_1[] PROGMEM = {
+constexpr Entry FORMAT_8_2_1[] PROGMEM = {
     E2(0x04, TEXT_FFSB, SZ_BYTE, M_GENR, M_GENW, P_GEN1, P_GEN2),
     E2(0x05, TEXT_FFSW, SZ_WORD, M_GENR, M_GENW, P_GEN1, P_GEN2),
     E2(0x07, TEXT_FFSD, SZ_QUAD, M_GENR, M_GENW, P_GEN1, P_GEN2),
 };
-static constexpr Entry FORMAT_8_3[] PROGMEM = {
+constexpr Entry FORMAT_8_3[] PROGMEM = {
     E4(0x00, TEXT_INSB, SZ_BYTE, M_GREG, M_GENR, P_REG, P_GEN1, M_GENW, EM2_LEN32, P_GEN2, EP2_DISP),
     E4(0x01, TEXT_INSW, SZ_WORD, M_GREG, M_GENR, P_REG, P_GEN1, M_GENW, EM2_LEN32, P_GEN2, EP2_DISP),
     E4(0x03, TEXT_INSD, SZ_QUAD, M_GREG, M_GENR, P_REG, P_GEN1, M_GENW, EM2_LEN32, P_GEN2, EP2_DISP),
 };
-static constexpr Entry FORMAT_8_4[] PROGMEM = {
+constexpr Entry FORMAT_8_4[] PROGMEM = {
     E3(0x00, TEXT_CHECKB, SZ_BYTE, M_GREG, M_GENA, P_REG, P_GEN1, M_GENR, P_GEN2),
     E3(0x01, TEXT_CHECKW, SZ_WORD, M_GREG, M_GENA, P_REG, P_GEN1, M_GENR, P_GEN2),
     E3(0x03, TEXT_CHECKD, SZ_QUAD, M_GREG, M_GENA, P_REG, P_GEN1, M_GENR, P_GEN2),
 };
-static constexpr uint8_t INDEX_8_1[] PROGMEM = {
+constexpr uint8_t INDEX_8_1[] PROGMEM = {
       0,  // TEXT_EXTB
       2,  // TEXT_EXTD
       1,  // TEXT_EXTW
@@ -626,27 +623,27 @@ static constexpr uint8_t INDEX_8_1[] PROGMEM = {
       5,  // TEXT_INDEXD
       4,  // TEXT_INDEXW
 };
-static constexpr uint8_t INDEX_8_2[] PROGMEM = {
+constexpr uint8_t INDEX_8_2[] PROGMEM = {
       0,  // TEXT_CVTP
 };
-static constexpr uint8_t INDEX_8_2_1[] PROGMEM = {
+constexpr uint8_t INDEX_8_2_1[] PROGMEM = {
       0,  // TEXT_FFSB
       2,  // TEXT_FFSD
       1,  // TEXT_FFSW
 };
-static constexpr uint8_t INDEX_8_3[] PROGMEM = {
+constexpr uint8_t INDEX_8_3[] PROGMEM = {
       0,  // TEXT_INSB
       2,  // TEXT_INSD
       1,  // TEXT_INSW
 };
-static constexpr uint8_t INDEX_8_4[] PROGMEM = {
+constexpr uint8_t INDEX_8_4[] PROGMEM = {
       0,  // TEXT_CHECKB
       2,  // TEXT_CHECKD
       1,  // TEXT_CHECKW
 };
 
 #if !defined(LIBASM_NS32000_NOMMU)
-static constexpr Entry FORMAT_8_3_1_MMU[] PROGMEM = {
+constexpr Entry FORMAT_8_3_1_MMU[] PROGMEM = {
     E2(0x0C, TEXT_MOVSUB, SZ_BYTE, M_GENA, M_GENA, P_GEN1, P_GEN2),
     E2(0x0D, TEXT_MOVSUW, SZ_WORD, M_GENA, M_GENA, P_GEN1, P_GEN2),
     E2(0x0F, TEXT_MOVSUD, SZ_QUAD, M_GENA, M_GENA, P_GEN1, P_GEN2),
@@ -654,7 +651,7 @@ static constexpr Entry FORMAT_8_3_1_MMU[] PROGMEM = {
     E2(0x1D, TEXT_MOVUSW, SZ_WORD, M_GENA, M_GENA, P_GEN1, P_GEN2),
     E2(0x1F, TEXT_MOVUSD, SZ_QUAD, M_GENA, M_GENA, P_GEN1, P_GEN2),
 };
-static constexpr uint8_t INDEX_8_3_1_MMU[] PROGMEM = {
+constexpr uint8_t INDEX_8_3_1_MMU[] PROGMEM = {
       0,  // TEXT_MOVSUB
       2,  // TEXT_MOVSUD
       1,  // TEXT_MOVSUW
@@ -667,7 +664,7 @@ static constexpr uint8_t INDEX_8_3_1_MMU[] PROGMEM = {
 #if !defined(LIBASM_NS32000_NOFPU)
 
 // Format 9: |gen1_|gen| |2_|_op|f|ii| |0011|1110|
-static constexpr Entry FORMAT_9_FPU[] PROGMEM = {
+constexpr Entry FORMAT_9_FPU[] PROGMEM = {
     // gen2 must be register pair
     W2(0x00, TEXT_MOVBL,   SZ_BYTE, M_GENR, M_FENW, P_GEN1, P_GEN2, false, true),
     W2(0x01, TEXT_MOVWL,   SZ_WORD, M_GENR, M_FENW, P_GEN1, P_GEN2, false, true),
@@ -700,7 +697,7 @@ static constexpr Entry FORMAT_9_FPU[] PROGMEM = {
     E2(0x3D, TEXT_FLOORFW, SZ_QUAD, M_FENR, M_GENW, P_GEN1, P_GEN2),
     E2(0x3F, TEXT_FLOORFD, SZ_QUAD, M_FENR, M_GENW, P_GEN1, P_GEN2),
 };
-static constexpr uint8_t INDEX_9_FPU[] PROGMEM = {
+constexpr uint8_t INDEX_9_FPU[] PROGMEM = {
      25,  // TEXT_FLOORFB
      27,  // TEXT_FLOORFD
      26,  // TEXT_FLOORFW
@@ -732,7 +729,7 @@ static constexpr uint8_t INDEX_9_FPU[] PROGMEM = {
 };
 
 // Format 11: |gen1_|gen| |2_|_op_|0f| |1011|1110|
-static constexpr Entry FORMAT_11_FPU[] PROGMEM = {
+constexpr Entry FORMAT_11_FPU[] PROGMEM = {
     E2(0x00, TEXT_ADDL, SZ_OCTA, M_FENR, M_FENW, P_GEN1, P_GEN2),
     E2(0x01, TEXT_ADDF, SZ_QUAD, M_FENR, M_FENW, P_GEN1, P_GEN2),
     E2(0x04, TEXT_MOVL, SZ_OCTA, M_FENR, M_FENW, P_GEN1, P_GEN2),
@@ -750,7 +747,7 @@ static constexpr Entry FORMAT_11_FPU[] PROGMEM = {
     E2(0x34, TEXT_ABSL, SZ_OCTA, M_FENR, M_FENW, P_GEN1, P_GEN2),
     E2(0x35, TEXT_ABSF, SZ_QUAD, M_FENR, M_FENW, P_GEN1, P_GEN2),
 };
-static constexpr uint8_t INDEX_11_FPU[] PROGMEM = {
+constexpr uint8_t INDEX_11_FPU[] PROGMEM = {
      15,  // TEXT_ABSF
      14,  // TEXT_ABSL
       1,  // TEXT_ADDF
@@ -773,19 +770,19 @@ static constexpr uint8_t INDEX_11_FPU[] PROGMEM = {
 
 #if !defined(LIBASM_NS32000_NOMMU)
 // Format 14: |gen1_|sho| |t|0|_op_|ii| |0001|1110|
-static constexpr Entry FORMAT_14_1_MMU[] PROGMEM = {
+constexpr Entry FORMAT_14_1_MMU[] PROGMEM = {
     E2(0x03, TEXT_RDVAL, SZ_QUAD, M_GENA, M_ZERO, P_GEN1, P_GEN2),
     E2(0x07, TEXT_WRVAL, SZ_QUAD, M_GENA, M_ZERO, P_GEN1, P_GEN2),
 };
-static constexpr Entry FORMAT_14_2_MMU[] PROGMEM = {
+constexpr Entry FORMAT_14_2_MMU[] PROGMEM = {
     E2(0x0B, TEXT_LMR, SZ_QUAD, M_MREG, M_GENR, P_SHORT, P_GEN1),
     E2(0x0F, TEXT_SMR, SZ_QUAD, M_MREG, M_GENW, P_SHORT, P_GEN1),
 };
-static constexpr uint8_t INDEX_14_1_MMU[] PROGMEM = {
+constexpr uint8_t INDEX_14_1_MMU[] PROGMEM = {
       0,  // TEXT_RDVAL
       1,  // TEXT_WRVAL
 };
-static constexpr uint8_t INDEX_14_2_MMU[] PROGMEM = {
+constexpr uint8_t INDEX_14_2_MMU[] PROGMEM = {
       0,  // TEXT_LMR
       1,  // TEXT_SMR
 };
@@ -807,7 +804,7 @@ private:
 };
 
 // Standard Instructions
-static constexpr EntryPage NS32032_PAGES[] PROGMEM = {
+constexpr EntryPage NS32032_PAGES[] PROGMEM = {
         {0x00, 0x00, 0, ARRAY_RANGE(FORMAT_0), ARRAY_RANGE(INDEX_0)},
         {0x00, 0x00, 0, ARRAY_RANGE(FORMAT_1), ARRAY_RANGE(INDEX_1)},
         {0x00, 0xC0, 1, ARRAY_RANGE(FORMAT_4), ARRAY_RANGE(INDEX_4)},
@@ -834,7 +831,7 @@ static constexpr EntryPage NS32032_PAGES[] PROGMEM = {
 
 #if !defined(LIBASM_NS32000_NOFPU)
 // Floating point instructions
-static constexpr EntryPage NS32081_PAGES[] PROGMEM = {
+constexpr EntryPage NS32081_PAGES[] PROGMEM = {
         {0x3E, 0xC0, 1, ARRAY_RANGE(FORMAT_9_FPU), ARRAY_RANGE(INDEX_9_FPU)},
         {0xBE, 0xC0, 1, ARRAY_RANGE(FORMAT_11_FPU), ARRAY_RANGE(INDEX_11_FPU)},
 };
@@ -842,91 +839,52 @@ static constexpr EntryPage NS32081_PAGES[] PROGMEM = {
 
 #if !defined(LIBASM_NS32000_NOMMU)
 // Memory management instructions
-static constexpr EntryPage NS32082_PAGES[] PROGMEM = {
+constexpr EntryPage NS32082_PAGES[] PROGMEM = {
         {0xAE, 0xC0, 1, ARRAY_RANGE(FORMAT_8_3_1_MMU), ARRAY_RANGE(INDEX_8_3_1_MMU)},
         {0x1E, 0x00, 1, ARRAY_RANGE(FORMAT_14_1_MMU), ARRAY_RANGE(INDEX_14_1_MMU)},
         {0x1E, 0x80, 1, ARRAY_RANGE(FORMAT_14_2_MMU), ARRAY_RANGE(INDEX_14_2_MMU)},
 };
 #endif
 
-template <typename CPUTYPE>
-using ProcessorBase = entry::CpuBase<CPUTYPE, EntryPage>;
+using Cpu = entry::CpuBase<CpuType, EntryPage>;
 
-template <typename CPUTYPE>
-struct Processor : ProcessorBase<CPUTYPE> {
-    constexpr Processor(CPUTYPE cpuType, const /* PROGMEM */ char *name_P, const EntryPage *head_P,
-            const EntryPage *tail_P)
-        : ProcessorBase<CPUTYPE>(cpuType, name_P, head_P, tail_P) {}
-
-    static void pageSetup(AsmInsn &insn, const EntryPage *page) {
-        insn.setPostfix(0, page->readPost() != 0);
-    }
-
-    Error searchName(AsmInsn &insn, bool (*accept)(AsmInsn &, const Entry *)) const {
-        ProcessorBase<CPUTYPE>::searchName(insn, accept, pageSetup);
-        return insn.getError();
-    }
-
-    Error searchOpCode(DisInsn &insn, StrBuffer &out,
-            bool (*matchOpCode)(DisInsn &, const Entry *, const EntryPage *),
-            void (*readName)(DisInsn &, const Entry *, StrBuffer &, const EntryPage *)) const {
-        const auto entry = ProcessorBase<CPUTYPE>::searchOpCode(
-                insn, out, matchOpCode, ProcessorBase<CPUTYPE>::defaultPageMatcher, readName);
-        if (entry && insn.hasPostfix())
-            insn.setPostfix(insn.readByte());
-        return insn.getError();
-    }
-};
-
-struct Cpu : Processor<CpuType> {
-    constexpr Cpu(CpuType cpuType, const /* PROGMEM */ char *name_P, const EntryPage *table,
-            const EntryPage *end)
-        : Processor<CpuType>(cpuType, name_P, table, end) {}
-};
-struct Fpu : Processor<FpuType> {
-    constexpr Fpu(FpuType fpuType, const /* PROGMEM */ char *name_P, const EntryPage *table,
-            const EntryPage *end)
-        : Processor<FpuType>(fpuType, name_P, table, end) {}
-};
-struct Mmu : Processor<MmuType> {
-    constexpr Mmu(MmuType mmuType, const /* PROGMEM */ char *name_P, const EntryPage *table,
-            const EntryPage *end)
-        : Processor<MmuType>(mmuType, name_P, table, end) {}
-};
-
-static constexpr Cpu CPU_TABLE[] PROGMEM = {
+constexpr Cpu CPU_TABLE[] PROGMEM = {
         {NS32032, TEXT_CPU_32032, ARRAY_RANGE(NS32032_PAGES)},
 };
 
-static const Cpu *cpu(CpuType) {
+const Cpu *cpu(CpuType) {
     return &CPU_TABLE[0];
 }
 
 #define EMPTY_RANGE(a) ARRAY_BEGIN(a), ARRAY_BEGIN(a)
 
 #if !defined(LIBASM_NS32000_NOFPU)
-static constexpr Fpu FPU_TABLE[] PROGMEM = {
+using Fpu = entry::CpuBase<FpuType, EntryPage>;
+
+constexpr Fpu FPU_TABLE[] PROGMEM = {
         {FPU_NS32081, TEXT_FPU_NS32081, ARRAY_RANGE(NS32081_PAGES)},
         {FPU_NONE, TEXT_none, EMPTY_RANGE(NS32081_PAGES)},
 };
 
-static const Fpu *fpu(FpuType fpuType) {
+const Fpu *fpu(FpuType fpuType) {
     return Fpu::search(fpuType, ARRAY_RANGE(FPU_TABLE));
 }
 #endif
 
 #if !defined(LIBASM_NS32000_NOMMU)
-static constexpr Mmu MMU_TABLE[] PROGMEM = {
+using Mmu = entry::CpuBase<MmuType, EntryPage>;
+
+constexpr Mmu MMU_TABLE[] PROGMEM = {
         {MMU_NS32082, TEXT_MMU_NS32082, ARRAY_RANGE(NS32082_PAGES)},
         {MMU_NONE, TEXT_none, EMPTY_RANGE(NS32082_PAGES)},
 };
 
-static const Mmu *mmu(MmuType mmuType) {
+const Mmu *mmu(MmuType mmuType) {
     return Mmu::search(mmuType, ARRAY_RANGE(MMU_TABLE));
 }
 #endif
 
-static bool acceptMode(AddrMode opr, AddrMode table) {
+bool acceptMode(AddrMode opr, AddrMode table) {
     if (opr == table)
         return true;
     if (opr == M_GREG)
@@ -946,49 +904,61 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
     return false;
 }
 
-static bool acceptModes(AsmInsn &insn, const Entry *entry) {
+bool acceptModes(AsmInsn &insn, const Entry *entry) {
     const auto table = entry->readFlags();
     return acceptMode(insn.srcOp.mode, table.src()) && acceptMode(insn.dstOp.mode, table.dst()) &&
            acceptMode(insn.ex1Op.mode, table.ex1()) && acceptMode(insn.ex2Op.mode, table.ex2());
 }
 
-Error TableNs32000::searchName(const CpuSpec &cpuSpec, AsmInsn &insn) const {
-    cpu(cpuSpec.cpu)->searchName(insn, acceptModes);
+void pageSetup(AsmInsn &insn, const EntryPage *page) {
+    insn.setPostfix(0, page->readPost() != 0);
+}
+
+Error searchName(const CpuSpec &cpuSpec, AsmInsn &insn) {
+    cpu(cpuSpec.cpu)->searchName(insn, acceptModes, pageSetup);
 #if !defined(LIBASM_NS32000_NOFPU)
     if (insn.getError() == UNKNOWN_INSTRUCTION)
-        fpu(cpuSpec.fpu)->searchName(insn, acceptModes);
+        fpu(cpuSpec.fpu)->searchName(insn, acceptModes, pageSetup);
 #endif
 #if !defined(LIBASM_NS32000_NOMMU)
     if (insn.getError() == UNKNOWN_INSTRUCTION)
-        mmu(cpuSpec.mmu)->searchName(insn, acceptModes);
+        mmu(cpuSpec.mmu)->searchName(insn, acceptModes, pageSetup);
 #endif
     return insn.getError();
 }
 
-static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page) {
+bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page) {
     return (insn.opCode() & ~page->readMask()) == entry->readOpCode();
 }
 
-static void readEntryName(
-        DisInsn &insn, const Entry *entry, StrBuffer &out, const EntryPage *page) {
+void readEntryName(DisInsn &insn, const Entry *entry, StrBuffer &out, const EntryPage *page) {
     Cpu::defaultReadName(insn, entry, out, page);
     insn.setPostfix(0, page->readPost() != 0);
 }
 
-Error TableNs32000::searchOpCode(const CpuSpec &cpuSpec, DisInsn &insn, StrBuffer &out) const {
-    cpu(cpuSpec.cpu)->searchOpCode(insn, out, matchOpCode, readEntryName);
+template <typename CPU>
+Error searchCode(const CPU *cpu, DisInsn &insn, StrBuffer &out) {
+    const auto entry =
+            cpu->searchOpCode(insn, out, matchOpCode, Cpu::defaultPageMatcher, readEntryName);
+    if (entry && insn.hasPostfix())
+        insn.setPostfix(insn.readByte());
+    return insn.getError();
+}
+
+Error searchOpCode(const CpuSpec &cpuSpec, DisInsn &insn, StrBuffer &out) {
+    searchCode(cpu(cpuSpec.cpu), insn, out);
 #if !defined(LIBASM_NS32000_NOFPU)
     if (insn.getError() == UNKNOWN_INSTRUCTION)
-        fpu(cpuSpec.fpu)->searchOpCode(insn, out, matchOpCode, readEntryName);
+        searchCode(fpu(cpuSpec.fpu), insn, out);
 #endif
 #if !defined(LIBASM_NS32000_NOMMU)
     if (insn.getError() == UNKNOWN_INSTRUCTION)
-        mmu(cpuSpec.mmu)->searchOpCode(insn, out, matchOpCode, readEntryName);
+        searchCode(mmu(cpuSpec.mmu), insn, out);
 #endif
     return insn.getError();
 }
 
-bool TableNs32000::isPrefixCode(const CpuSpec &cpuSpec, uint8_t code) const {
+bool isPrefixCode(const CpuSpec &cpuSpec, uint8_t code) {
     return
 #if !defined(LIBASM_NS32000_NOFPU)
             fpu(cpuSpec.fpu)->isPrefix(code) ||

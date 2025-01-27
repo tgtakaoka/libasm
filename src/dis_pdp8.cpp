@@ -15,7 +15,6 @@
  */
 
 #include "dis_pdp8.h"
-
 #include "reg_pdp8.h"
 #include "table_pdp8.h"
 
@@ -44,7 +43,7 @@ Error DisPdp8::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) const 
     DisInsn insn(_insn, memory, out);
     const auto opc = insn.readUint12();
     insn.setOpCode(opc);
-    if (TABLE.searchOpCode(cpuType(), insn, out))
+    if (searchOpCode(cpuType(), insn, out))
         return _insn.setError(insn);
     const auto mode = insn.mode();
     if (mode == M_MEM) {

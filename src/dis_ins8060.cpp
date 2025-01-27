@@ -15,7 +15,6 @@
  */
 
 #include "dis_ins8060.h"
-
 #include "reg_ins8060.h"
 #include "table_ins8060.h"
 
@@ -75,7 +74,7 @@ void DisIns8060::decodeIndx(DisInsn &insn, StrBuffer &out, bool hasMode) const {
 Error DisIns8060::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) const {
     DisInsn insn(_insn, memory, out);
     insn.setOpCode(insn.readByte());
-    if (TABLE.searchOpCode(cpuType(), insn, out))
+    if (searchOpCode(cpuType(), insn, out))
         return _insn.setError(insn);
 
     switch (insn.addrMode()) {

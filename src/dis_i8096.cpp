@@ -15,7 +15,6 @@
  */
 
 #include "dis_i8096.h"
-
 #include "reg_i8096.h"
 #include "table_i8096.h"
 
@@ -223,13 +222,13 @@ Error DisI8096::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) const
     DisInsn insn(_insn, memory, out);
     const auto opc = insn.readByte();
     insn.setOpCode(opc);
-    if (TABLE.isPrefix(cpuType(), opc)) {
+    if (isPrefix(cpuType(), opc)) {
         insn.setPrefix(opc);
         insn.setOpCode(insn.readByte());
         if (insn.getError())
             return _insn.setError(insn);
     }
-    if (TABLE.searchOpCode(cpuType(), insn, out))
+    if (searchOpCode(cpuType(), insn, out))
         return _insn.setErrorIf(insn);
 
     const auto jbx_djnz = insn.src2() == M_REL8 || insn.src1() == M_REL8;

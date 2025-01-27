@@ -15,7 +15,6 @@
  */
 
 #include "dis_z8.h"
-
 #include "reg_z8.h"
 #include "table_z8.h"
 
@@ -330,7 +329,7 @@ void DisZ8::decodeOperand(DisInsn &insn, StrBuffer &out, Operand &op) const {
 Error DisZ8::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) const {
     DisInsn insn(_insn, memory, out);
     insn.setOpCode(insn.readByte());
-    if (TABLE.searchOpCode(cpuType(), insn, out))
+    if (searchOpCode(cpuType(), insn, out))
         return _insn.setError(insn);
 
     Operand dstOp, srcOp, extOp;

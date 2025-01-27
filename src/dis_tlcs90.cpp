@@ -15,7 +15,6 @@
  */
 
 #include "dis_tlcs90.h"
-
 #include "reg_tlcs90.h"
 #include "table_tlcs90.h"
 
@@ -162,12 +161,12 @@ Error DisTlcs90::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) cons
     insn.setOpCode(opc);
     Operand prefixOp;
     insn.setPrefixMode(M_NONE);
-    if (TABLE.isPrefix(cpuType(), opc, prefixOp.mode)) {
+    if (isPrefix(cpuType(), opc, prefixOp.mode)) {
         insn.setPrefixMode(prefixOp.mode);
         if (insn.readOpCode(prefixOp))
             return _insn.setError(insn);
     }
-    if (TABLE.searchOpCode(cpuType(), insn, prefixOp, out))
+    if (searchOpCode(cpuType(), insn, prefixOp, out))
         return _insn.setError(insn);
 
     const auto dst = insn.dst();

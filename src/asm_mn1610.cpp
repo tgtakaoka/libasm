@@ -402,7 +402,7 @@ Error AsmMn1610::processPseudo(StrScanner &scan, Insn &_insn) {
 
 Error AsmMn1610::encodeImpl(StrScanner &scan, Insn &_insn) const {
     AsmInsn insn(_insn);
-    if (TABLE.hasOperand(cpuType(), insn)) {
+    if (hasOperand(cpuType(), insn)) {
         if (parseOperand(scan, insn.op1) && insn.op1.hasError())
             return _insn.setError(insn.op1);
         if (scan.skipSpaces().expect(',')) {
@@ -420,8 +420,8 @@ Error AsmMn1610::encodeImpl(StrScanner &scan, Insn &_insn) const {
     }
     scan.skipSpaces();
 
-    if (_insn.setErrorIf(insn.op1, TABLE.searchName(cpuType(), insn)))
-        return _insn.getError();
+    if (searchName(cpuType(), insn))
+        return _insn.setError(insn.op1, insn);
 
     encodeOperand(insn, insn.op1, insn.mode1());
     encodeOperand(insn, insn.op2, insn.mode2());

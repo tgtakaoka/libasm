@@ -15,7 +15,6 @@
  */
 
 #include "dis_ins8070.h"
-
 #include "reg_ins8070.h"
 #include "table_ins8070.h"
 
@@ -160,7 +159,7 @@ void DisIns8070::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) con
 Error DisIns8070::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) const {
     DisInsn insn(_insn, memory, out);
     insn.setOpCode(insn.readByte());
-    if (TABLE.searchOpCode(cpuType(), insn, out))
+    if (searchOpCode(cpuType(), insn, out))
         return _insn.setError(insn);
 
     decodeOperand(insn, out, insn.dst());

@@ -265,8 +265,8 @@ Error AsmI8080::encodeImpl(StrScanner &scan, Insn &_insn) const {
         scan.skipSpaces();
     }
 
-    if (_insn.setErrorIf(insn.dstOp, TABLE.searchName(cpuType(), insn, _zilogSyntax)))
-        return _insn.getError();
+    if (searchName(cpuType(), insn, _zilogSyntax))
+        return _insn.setError(insn.dstOp, insn);
 
     encodeOperand(insn, insn.dstOp, insn.dst());
     encodeOperand(insn, insn.srcOp, insn.src());

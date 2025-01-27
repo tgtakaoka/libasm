@@ -15,7 +15,6 @@
  */
 
 #include "dis_tms32010.h"
-
 #include "reg_tms32010.h"
 #include "table_tms32010.h"
 #include "text_common.h"
@@ -139,7 +138,7 @@ void DisTms32010::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) co
 Error DisTms32010::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) const {
     DisInsn insn(_insn, memory, out);
     insn.setOpCode(insn.readUint16());
-    if (TABLE.searchOpCode(cpuType(), insn, out))
+    if (searchOpCode(cpuType(), insn, out))
         return _insn.setError(insn);
 
     decodeOperand(insn, out, insn.mode1());

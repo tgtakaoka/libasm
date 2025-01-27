@@ -15,7 +15,6 @@
  */
 
 #include "asm_tms32010.h"
-
 #include "table_tms32010.h"
 #include "text_common.h"
 
@@ -191,8 +190,8 @@ Error AsmTms32010::encodeImpl(StrScanner &scan, Insn &_insn) const {
         scan.skipSpaces();
     }
 
-    if (_insn.setErrorIf(insn.op1, TABLE.searchName(cpuType(), insn)))
-        return _insn.getError();
+    if (searchName(cpuType(), insn))
+        return _insn.setError(insn.op1, insn);
 
     encodeOperand(insn, insn.op1, insn.mode1());
     encodeOperand(insn, insn.op2, insn.mode2());

@@ -15,7 +15,6 @@
  */
 
 #include "dis_i8051.h"
-
 #include "reg_i8051.h"
 #include "table_i8051.h"
 
@@ -60,7 +59,7 @@ void DisI8051::decodeRReg(DisInsn &insn, StrBuffer &out, AddrMode mode) const {
 void DisI8051::decodeAddress(DisInsn &insn, StrBuffer &out, AddrMode mode) const {
     if (mode == M_ADR8) {
         const auto addr = insn.readByte();
-        if (TABLE.invalidDirect(insn.opCode(), addr))
+        if (invalidDirect(insn.opCode(), addr))
             insn.setErrorIf(out, OPERAND_NOT_ALLOWED);
         outAbsAddr(out, addr, 8);
     } else if (mode == M_ADR11) {
@@ -135,7 +134,7 @@ void DisI8051::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) const
 Error DisI8051::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) const {
     DisInsn insn(_insn, memory, out);
     insn.setOpCode(insn.readByte());
-    if (TABLE.searchOpCode(cpuType(), insn, out))
+    if (searchOpCode(cpuType(), insn, out))
         return _insn.setError(insn);
 
     const auto dst = insn.dst();

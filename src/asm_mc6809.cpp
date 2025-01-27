@@ -15,7 +15,6 @@
  */
 
 #include "asm_mc6809.h"
-
 #include "table_mc6809.h"
 #include "text_common.h"
 
@@ -182,10 +181,9 @@ void AsmMc6809::encodeIndexed(AsmInsn &insn, const Operand &op) const {
         }
         spec.size = size;
     }
-    const auto postSpec = TABLE.searchPostSpec(cpuType(), spec);
-    if (postSpec < 0)
+    if (searchPostSpec(cpuType(), spec))
         insn.setErrorIf(op, UNKNOWN_OPERAND);
-    uint8_t post = postSpec;
+    uint8_t post = spec.post;
     const auto size = spec.size;
     if (size == 5)
         post |= disp & 0x1F;
@@ -587,7 +585,7 @@ Error AsmMc6809::processPseudo(StrScanner &scan, Insn &insn) {
 
 Error AsmMc6809::encodeImpl(StrScanner &scan, Insn &_insn) const {
     AsmInsn insn(_insn);
-    auto error = TABLE.hasName(cpuType(), insn);
+    auto error = hasName(cpuType(), insn);
     if (error)
         return _insn.setError(error);
 
@@ -601,8 +599,8 @@ Error AsmMc6809::encodeImpl(StrScanner &scan, Insn &_insn) const {
     }
     scan.skipSpaces();
 
-    if (_insn.setErrorIf(insn.op1, TABLE.searchName(cpuType(), insn)))
-        return _insn.getError();
+    if (searchName(cpuType(), insn))
+        return _insn.setError(insn.op1, insn);
 
     const auto mode1 = insn.mode1();
     if (mode1 == M_RTFM) {

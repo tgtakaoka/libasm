@@ -27,13 +27,13 @@ struct TableI8080 final : InsnTable<CpuType> {
     const /*PROGMEM*/ char *listCpu_P() const override;
     const /*PROGMEM*/ char *cpuName_P(CpuType cpuType) const override;
     Error searchCpuName(StrScanner &name, CpuType &cpuType) const override;
-
-    Error searchName(CpuType, AsmInsn &insn, bool zilog) const;
-    Error searchOpCode(CpuType, DisInsn &insn, StrBuffer &out, bool zilog) const;
-    bool isPrefix(CpuType, Config::opcode_t code) const;
 };
 
 extern const TableI8080 TABLE;
+
+Error searchName(CpuType, AsmInsn &insn, bool zilog);
+Error searchOpCode(CpuType, DisInsn &insn, StrBuffer &out, bool zilog);
+bool isPrefix(CpuType, Config::opcode_t code);
 
 }  // namespace i8080
 }  // namespace libasm

@@ -972,7 +972,7 @@ Error AsmMc68000::encodeImpl(StrScanner &scan, Insn &_insn) const {
     if (isize == ISZ_ERROR)
         return _insn.setError(scan, ILLEGAL_SIZE);
 
-    if (TABLE.hasOperand(_cpuSpec, insn)) {
+    if (hasOperand(_cpuSpec, insn)) {
         if (parseOperand(scan, insn.srcOp) && insn.srcOp.hasError())
             return _insn.setError(insn.srcOp);
         if (scan.skipSpaces().expect(',')) {
@@ -986,8 +986,8 @@ Error AsmMc68000::encodeImpl(StrScanner &scan, Insn &_insn) const {
     }
     scan.skipSpaces();
 
-    if (_insn.setErrorIf(insn.srcOp, TABLE.searchName(_cpuSpec, insn)))
-        return _insn.getError();
+    if (searchName(_cpuSpec, insn))
+        return _insn.setError(insn.srcOp, insn);
 
     insn.setErrorIf(insn.srcOp);
     insn.setErrorIf(insn.dstOp);

@@ -107,7 +107,7 @@ Error AsmI8086::parseStringInst(StrScanner &scan, Operand &op) const {
     Insn _insn(0);
     AsmInsn insn(_insn);
     insn.nameBuffer().text(opr);
-    if (TABLE.searchName(_cpuSpec, insn))
+    if (searchName(_cpuSpec, insn))
         return UNKNOWN_INSTRUCTION;
     if (!insn.stringInst())
         return UNKNOWN_INSTRUCTION;
@@ -435,7 +435,7 @@ uint8_t Operand::encodeR_m() const {
 Config::opcode_t AsmI8086::encodeSegmentOverride(RegName seg, RegName base) const {
     if (seg == REG_UNDEF)
         return 0;
-    const Config::opcode_t segPrefix = TABLE.segOverridePrefix(seg);
+    const Config::opcode_t segPrefix = segOverridePrefix(seg);
     if (_optimizeSegment) {
         if (base == REG_BP || base == REG_SP)
             return seg == REG_SS ? 0 : segPrefix;
@@ -587,7 +587,7 @@ void AsmI8086::emitStringOperand(
     if (seg == REG_ES && op.seg != REG_ES)
         insn.setErrorIf(op, ILLEGAL_SEGMENT);
     if (seg == REG_DS && op.seg != REG_UNDEF && op.seg != REG_DS)
-        insn.setSegment(TABLE.segOverridePrefix(op.seg));
+        insn.setSegment(segOverridePrefix(op.seg));
 }
 
 void AsmI8086::emitStringInst(AsmInsn &insn, const Operand &dst, const Operand &src) const {
@@ -759,8 +759,8 @@ Error AsmI8086::encodeImpl(StrScanner &scan, Insn &_insn) const {
         scan.skipSpaces();
     }
 
-    if (_insn.setErrorIf(insn.dstOp, TABLE.searchName(_cpuSpec, insn)))
-        return _insn.getError();
+    if (searchName(_cpuSpec, insn))
+        return _insn.setError(insn.dstOp, insn);
     insn.prepairModReg();
 
     if (insn.stringInst()) {

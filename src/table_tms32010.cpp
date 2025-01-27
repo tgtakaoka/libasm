@@ -25,13 +25,13 @@ namespace libasm {
 namespace tms32010 {
 
 #define E3(_opc, _name, _opr1, _opr2, _opr3) \
-    { _opc, Entry::Flags::create(_opr1, _opr2, _opr3), _name }
+    {_opc, Entry::Flags::create(_opr1, _opr2, _opr3), _name}
 #define E2(_opc, _name, _opr1, _opr2) E3(_opc, _name, _opr1, _opr2, M_NONE)
 #define E1(_opc, _name, _opr1) E2(_opc, _name, _opr1, M_NONE)
 #define E0(_opc, _name) E1(_opc, _name, M_NONE)
 
 // clang-format off
-static constexpr Entry TABLE_TMS32010[] PROGMEM = {
+constexpr Entry TABLE_TMS32010[] PROGMEM = {
     E3(0x0000, TEXT_ADD,  M_MAM,  M_LS4,  M_NARP),
     E3(0x1000, TEXT_SUB,  M_MAM,  M_LS4,  M_NARP),
     E3(0x2000, TEXT_LAC,  M_MAM,  M_LS4,  M_NARP),
@@ -94,7 +94,7 @@ static constexpr Entry TABLE_TMS32010[] PROGMEM = {
     E1(0xFF00, TEXT_BZ,   M_PMA),
 };
 
-static constexpr uint8_t INDEX_TMS32010[] PROGMEM = {
+constexpr uint8_t INDEX_TMS32010[] PROGMEM = {
      37,  // TEXT_ABS
       0,  // TEXT_ADD
       9,  // TEXT_ADDH
@@ -160,22 +160,22 @@ static constexpr uint8_t INDEX_TMS32010[] PROGMEM = {
 
 using EntryPage = entry::TableBase<Entry>;
 
-static constexpr EntryPage TMS32010_PAGES[] PROGMEM = {
+constexpr EntryPage TMS32010_PAGES[] PROGMEM = {
         {ARRAY_RANGE(TABLE_TMS32010), ARRAY_RANGE(INDEX_TMS32010)},
 };
 
 using Cpu = entry::CpuBase<CpuType, EntryPage>;
 
-static constexpr Cpu CPU_TABLE[] PROGMEM = {
+constexpr Cpu CPU_TABLE[] PROGMEM = {
         {TMS32010, TEXT_CPU_32010, ARRAY_RANGE(TMS32010_PAGES)},
         {TMS32015, TEXT_CPU_32015, ARRAY_RANGE(TMS32010_PAGES)},
 };
 
-static const Cpu *cpu(CpuType cpuType) {
+const Cpu *cpu(CpuType cpuType) {
     return Cpu::search(cpuType, ARRAY_RANGE(CPU_TABLE));
 }
 
-static bool acceptMode(AddrMode opr, AddrMode table) {
+bool acceptMode(AddrMode opr, AddrMode table) {
     if (opr == table)
         return true;
     if (opr == M_NONE)  // These can be ommitted.
@@ -197,18 +197,18 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
     return false;
 }
 
-static bool acceptModes(AsmInsn &insn, const Entry *entry) {
+bool acceptModes(AsmInsn &insn, const Entry *entry) {
     const auto table = entry->readFlags();
     return acceptMode(insn.op1.mode, table.mode1()) && acceptMode(insn.op2.mode, table.mode2()) &&
            acceptMode(insn.op3.mode, table.mode3());
 }
 
-Error TableTms32010::searchName(CpuType cpuType, AsmInsn &insn) const {
+Error searchName(CpuType cpuType, AsmInsn &insn) {
     cpu(cpuType)->searchName(insn, acceptModes);
     return insn.getError();
 }
 
-static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *) {
+bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *) {
     auto opc = insn.opCode();
     const auto flags = entry->readFlags();
     const auto mode1 = flags.mode1();
@@ -224,8 +224,8 @@ static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *) {
             if (((opc >> 4) & 3) == 3)
                 return false;  // Don't allow both increment and decrement.
             if ((opc & 8) && (opc & 7))
-                return false;   // no next ARP check
-            opc &= ~0xB9;  // Indirect addressing
+                return false;  // no next ARP check
+            opc &= ~0xB9;      // Indirect addressing
         }
     } else if (mode1 == M_IM13) {
         opc &= ~0x1FFF;
@@ -249,7 +249,7 @@ static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *) {
     return opc == entry->readOpCode();
 }
 
-Error TableTms32010::searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) const {
+Error searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) {
     cpu(cpuType)->searchOpCode(insn, out, matchOpCode);
     return insn.getError();
 }

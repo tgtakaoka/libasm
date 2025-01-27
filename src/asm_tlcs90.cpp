@@ -15,7 +15,6 @@
  */
 
 #include "asm_tlcs90.h"
-
 #include "table_tlcs90.h"
 #include "text_common.h"
 
@@ -265,8 +264,8 @@ Error AsmTlcs90::encodeImpl(StrScanner &scan, Insn &_insn) const {
         scan.skipSpaces();
     }
 
-    if (_insn.setErrorIf(insn.dstOp, TABLE.searchName(cpuType(), insn)))
-        return _insn.getError();
+    if (searchName(cpuType(), insn))
+        return _insn.setError(insn.dstOp, insn);
 
     const auto pre = insn.pre();
     const auto dst = insn.dst();

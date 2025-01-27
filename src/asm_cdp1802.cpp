@@ -15,7 +15,6 @@
  */
 
 #include "asm_cdp1802.h"
-
 #include "reg_cdp1802.h"
 #include "table_cdp1802.h"
 #include "text_common.h"
@@ -195,8 +194,8 @@ Error AsmCdp1802::encodeImpl(StrScanner &scan, Insn &_insn) const {
         scan.skipSpaces();
     }
 
-    if (_insn.setErrorIf(insn.op1, TABLE.searchName(cpuType(), insn)))
-        return _insn.getError();
+    if (searchName(cpuType(), insn))
+        return _insn.setError(insn.op1, insn);
 
     emitOperand(insn, insn.mode1(), insn.op1);
     if (insn.mode2() == M_ADDR) {

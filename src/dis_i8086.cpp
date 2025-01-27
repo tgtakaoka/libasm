@@ -15,7 +15,6 @@
  */
 
 #include "dis_i8086.h"
-
 #include "reg_i8086.h"
 #include "table_i8086.h"
 
@@ -254,7 +253,7 @@ void DisI8086::decodeMemReg(DisInsn &insn, StrBuffer &out, AddrMode mode, OprPos
         outRegister(out, decodeRegister(insn, regMode, pos));
     } else {
         const auto r_m = insn.modReg() & 07;
-        outMemReg(insn, out, TABLE.overrideSeg(insn.segment()), mod, r_m);
+        outMemReg(insn, out, overrideSeg(insn.segment()), mod, r_m);
     }
 }
 
@@ -266,7 +265,7 @@ void DisI8086::decodeRepeatStr(DisInsn &insn, StrBuffer &out) const {
         if (insn.getError())
             return;
         istr.setOpCode(opc);
-        if (TABLE.searchOpCode(_cpuSpec, istr, out))
+        if (searchOpCode(_cpuSpec, istr, out))
             insn.setErrorIf(istr);
         if (!istr.stringInst()) {
             istr.nameBuffer().reset();
@@ -326,7 +325,7 @@ void DisI8086::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode, OprPo
         break;
     case M_BDIR:
     case M_WDIR:
-        outMemReg(insn, out, TABLE.overrideSeg(insn.segment()), 0, 6);
+        outMemReg(insn, out, overrideSeg(insn.segment()), 0, 6);
         break;
     case M_REL:
     case M_REL8:
@@ -376,7 +375,7 @@ bool validSegOverride(const DisInsn &insn) {
 
 void DisI8086::decodeStringInst(DisInsn &insn, StrBuffer &out) const {
     if (insn.segment()) {
-        const auto seg = TABLE.overrideSeg(insn.segment());
+        const auto seg = overrideSeg(insn.segment());
         switch (insn.opCode() & ~1) {
         case 0xA4:  // MOVS ES:[DI],DS:[SI]
         case 0x20:  // ADD4S ES:[DI],DS:[SI]
@@ -408,7 +407,7 @@ Error DisI8086::readCodes(DisInsn &insn) const {
     if (opc == DisInsn::FWAIT) {
         const auto fpuInst = insn.readByte();
         if (insn.isOK()) {
-            if (TABLE.isPrefix(_cpuSpec.fpu, fpuInst)) {
+            if (isPrefix(_cpuSpec.fpu, fpuInst)) {
                 insn.setFwait();
                 opc = fpuInst;
             } else {
@@ -418,11 +417,11 @@ Error DisI8086::readCodes(DisInsn &insn) const {
         }
         insn.setOK();
     }
-    if (!_segOverrideInsn && TABLE.isSegmentPrefix(opc)) {
+    if (!_segOverrideInsn && isSegmentPrefix(opc)) {
         insn.setSegment(opc);
         opc = insn.readByte();
     }
-    if (TABLE.isPrefix(_cpuSpec.cpu, opc) || TABLE.isPrefix(_cpuSpec.fpu, opc)) {
+    if (isPrefix(_cpuSpec.cpu, opc) || isPrefix(_cpuSpec.fpu, opc)) {
         insn.setPrefix(opc);
         opc = insn.readByte();
     }
@@ -446,7 +445,7 @@ Error DisI8086::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) const
     DisInsn insn(_insn, memory, out);
     if (readCodes(insn))
         return _insn.setError(insn);
-    if (TABLE.searchOpCode(_cpuSpec, insn, out))
+    if (searchOpCode(_cpuSpec, insn, out))
         return _insn.setError(insn);
 
     insn.readModReg();

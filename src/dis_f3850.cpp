@@ -15,7 +15,6 @@
  */
 
 #include "dis_f3850.h"
-
 #include "reg_f3850.h"
 #include "table_f3850.h"
 #include "text_common.h"
@@ -102,7 +101,7 @@ void DisF3850::decodeOperand(DisInsn& insn, StrBuffer& out, AddrMode mode) const
 Error DisF3850::decodeImpl(DisMemory& memory, Insn& _insn, StrBuffer& out) const {
     DisInsn insn(_insn, memory, out);
     insn.setOpCode(insn.readByte());
-    if (TABLE.searchOpCode(cpuType(), insn, out))
+    if (searchOpCode(cpuType(), insn, out))
         return _insn.setError(insn);
 
     const auto mode1 = insn.mode1();

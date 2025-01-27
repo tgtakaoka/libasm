@@ -24,17 +24,15 @@ using namespace libasm::text::i8096;
 namespace libasm {
 namespace i8096 {
 
-#define E3(_opc, _name, _dst, _src1, _src2) \
-    { _opc, Entry::Flags::create(_dst, _src1, _src2), _name }
+#define E3(_opc, _name, _dst, _src1, _src2) {_opc, Entry::Flags::create(_dst, _src1, _src2), _name}
 #define E2(_opc, _name, _dst, _src1) E3(_opc, _name, _dst, _src1, M_NONE)
 #define E1(_opc, _name, _dst) E2(_opc, _name, _dst, M_NONE)
 #define E0(_opc, _name) E1(_opc, _name, M_NONE)
-#define U2(_opc, _name, _dst, _src1) \
-    { _opc, Entry::Flags::undef(_dst, _src1), _name }
+#define U2(_opc, _name, _dst, _src1) {_opc, Entry::Flags::undef(_dst, _src1), _name}
 #define U1(_opc, _name, _dst) U2(_opc, _name, _dst, M_NONE)
 
 // clang-format off
-static constexpr Entry TABLE_00[] PROGMEM = {
+constexpr Entry TABLE_00[] PROGMEM = {
     E2(0x64, TEXT_ADD,   M_WREG,  M_WAOP),
     E3(0x44, TEXT_ADD,   M_WREG,  M_WREG,  M_WAOP),
     E2(0x74, TEXT_ADDB,  M_BREG,  M_BAOP),
@@ -134,7 +132,7 @@ static constexpr Entry TABLE_00[] PROGMEM = {
     E2(0x94, TEXT_XORB,  M_BREG,  M_BAOP),
 };
 
-static constexpr uint8_t INDEX_00[] PROGMEM = {
+constexpr uint8_t INDEX_00[] PROGMEM = {
       0,  // TEXT_ADD
       1,  // TEXT_ADD
       2,  // TEXT_ADDB
@@ -234,7 +232,7 @@ static constexpr uint8_t INDEX_00[] PROGMEM = {
      96,  // TEXT_XORB
 };
 
-static constexpr Entry TABLE_FE[] PROGMEM = {
+constexpr Entry TABLE_FE[] PROGMEM = {
     E2(0x8C, TEXT_DIV,   M_LREG,  M_WAOP),
     E2(0x9C, TEXT_DIVB,  M_WREG,  M_BAOP),
     E2(0x6C, TEXT_MUL,   M_LREG,  M_WAOP),
@@ -243,7 +241,7 @@ static constexpr Entry TABLE_FE[] PROGMEM = {
     E3(0x5C, TEXT_MULB,  M_WREG,  M_BREG,  M_BAOP),
 };
 
-static constexpr uint8_t INDEX_FE[] PROGMEM = {
+constexpr uint8_t INDEX_FE[] PROGMEM = {
       0,  // TEXT_DIV
       1,  // TEXT_DIVB
       2,  // TEXT_MUL
@@ -255,22 +253,22 @@ static constexpr uint8_t INDEX_FE[] PROGMEM = {
 
 using EntryPage = entry::PrefixTableBase<Entry>;
 
-static constexpr EntryPage I8096_PAGES[] PROGMEM = {
+constexpr EntryPage I8096_PAGES[] PROGMEM = {
         {0x00, ARRAY_RANGE(TABLE_00), ARRAY_RANGE(INDEX_00)},
         {0xFE, ARRAY_RANGE(TABLE_FE), ARRAY_RANGE(INDEX_FE)},
 };
 
 using Cpu = entry::CpuBase<CpuType, EntryPage>;
 
-static constexpr Cpu CPU_TABLE[] PROGMEM = {
+constexpr Cpu CPU_TABLE[] PROGMEM = {
         {I8096, TEXT_CPU_8096, ARRAY_RANGE(I8096_PAGES)},
 };
 
-static const Cpu *cpu(CpuType) {
+const Cpu *cpu(CpuType) {
     return &CPU_TABLE[0];
 }
 
-static bool acceptMode(AddrMode opr, AddrMode table) {
+bool acceptMode(AddrMode opr, AddrMode table) {
     if (opr == table)
         return true;
     if (opr == M_ADDR)
@@ -286,7 +284,7 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
     return false;
 }
 
-static bool acceptModes(AsmInsn &insn, const Entry *entry) {
+bool acceptModes(AsmInsn &insn, const Entry *entry) {
     const auto table = entry->readFlags();
     if (acceptMode(insn.dstOp.mode, table.dst()) && acceptMode(insn.src1Op.mode, table.src1()) &&
             acceptMode(insn.src2Op.mode, table.src2())) {
@@ -297,12 +295,12 @@ static bool acceptModes(AsmInsn &insn, const Entry *entry) {
     return false;
 }
 
-Error TableI8096::searchName(CpuType cpuType, AsmInsn &insn) const {
+Error searchName(CpuType cpuType, AsmInsn &insn) {
     cpu(cpuType)->searchName(insn, acceptModes);
     return insn.getError();
 }
 
-static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *) {
+bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *) {
     auto opc = insn.opCode();
     const auto flags = entry->readFlags();
     const auto dst = flags.dst();
@@ -317,7 +315,7 @@ static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *) {
     return opc == entry->readOpCode();
 }
 
-Error TableI8096::searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) const {
+Error searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) {
     const auto entry = cpu(cpuType)->searchOpCode(insn, out, matchOpCode);
     if (entry && entry->readFlags().undefined()) {
         insn.nameBuffer().reset();
@@ -326,7 +324,7 @@ Error TableI8096::searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) c
     return insn.getError();
 }
 
-bool TableI8096::isPrefix(CpuType cpuType, Config::opcode_t code) const {
+bool isPrefix(CpuType cpuType, Config::opcode_t code) {
     return cpu(cpuType)->isPrefix(code);
 }
 

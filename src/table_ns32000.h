@@ -27,13 +27,13 @@ struct TableNs32000 final : InsnTable<CpuType> {
     const /*PROGMEM*/ char *listCpu_P() const override;
     const /*PROGMEM*/ char *cpuName_P(CpuType cpuType) const override;
     Error searchCpuName(StrScanner &name, CpuType &cpuType) const override;
-
-    Error searchName(const CpuSpec &, AsmInsn &insn) const;
-    Error searchOpCode(const CpuSpec &, DisInsn &insn, StrBuffer &out) const;
-    bool isPrefixCode(const CpuSpec &, Config::opcode_t opCode) const;
 };
 
 extern const TableNs32000 TABLE;
+
+Error searchName(const CpuSpec &, AsmInsn &insn);
+Error searchOpCode(const CpuSpec &, DisInsn &insn, StrBuffer &out);
+bool isPrefixCode(const CpuSpec &, Config::opcode_t opCode);
 
 }  // namespace ns32000
 }  // namespace libasm

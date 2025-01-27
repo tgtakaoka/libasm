@@ -862,7 +862,7 @@ const CpuSpec SPEC{NS32032,
 
 void assert_unknown(
         const char *file, int line, Config::opcode_t opc, Config::opcode_t prefix) {
-    if (TABLE.isPrefixCode(SPEC, prefix)) {
+    if (isPrefixCode(SPEC, prefix)) {
         __VASSERT(file, line, UNKNOWN_INSTRUCTION, "", 0x0000, "", "", prefix, opc);
     } else {
         __VASSERT(file, line, UNKNOWN_INSTRUCTION, "", 0x0000, "", "", prefix);

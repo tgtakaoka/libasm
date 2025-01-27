@@ -15,7 +15,6 @@
  */
 
 #include "asm_z8000.h"
-
 #include "table_z8000.h"
 #include "text_common.h"
 
@@ -640,8 +639,8 @@ Error AsmZ8000::encodeImpl(StrScanner &scan, Insn &_insn) const {
         scan.skipSpaces();
     }
 
-    if (_insn.setErrorIf(insn.dstOp, TABLE.searchName(cpuType(), insn)))
-        return _insn.getError();
+    if (searchName(cpuType(), insn))
+        return _insn.setError(insn.dstOp, insn);
 
     if (insn.isThreeRegsInsn())
         checkRegisterOverlap(insn, insn.dstOp, insn.srcOp, insn.ex1Op);

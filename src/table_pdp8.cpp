@@ -24,35 +24,34 @@ using namespace libasm::text::pdp8;
 namespace libasm {
 namespace pdp8 {
 
-#define E(_opc, _name, _mode, _bits) \
-    { _opc, Entry::Flags::create(_mode, _bits), _name }
+#define E(_opc, _name, _mode, _bits) {_opc, Entry::Flags::create(_mode, _bits), _name}
 #define C(_opc, _name, _mode, _bits, _selector) \
-    { _opc, Entry::Flags::create(_mode, _bits, _selector), _name }
+    {_opc, Entry::Flags::create(_mode, _bits, _selector), _name}
 #define M(_opc, _name, _mode, _bits, _selector) \
-    { _opc, Entry::Flags::create(_mode, _bits, _selector, true), _name }
+    {_opc, Entry::Flags::create(_mode, _bits, _selector, true), _name}
 
 // clang-format off
 
 /** Bit mask to extract |groupId| from |opCode| */
-static constexpr Config::opcode_t MASK_MEM = 07000;
-static constexpr Config::opcode_t MASK_GR1 = 07400;
-static constexpr Config::opcode_t MASK_GR2 = 07401;
-static constexpr Config::opcode_t MASK_GR3 = 07401;
-static constexpr Config::opcode_t MASK_MEX = 07704;
-static constexpr Config::opcode_t MASK_I20 = 07704;
-static constexpr Config::opcode_t MASK_IOT = 07000;
+constexpr Config::opcode_t MASK_MEM = 07000;
+constexpr Config::opcode_t MASK_GR1 = 07400;
+constexpr Config::opcode_t MASK_GR2 = 07401;
+constexpr Config::opcode_t MASK_GR3 = 07401;
+constexpr Config::opcode_t MASK_MEX = 07704;
+constexpr Config::opcode_t MASK_I20 = 07704;
+constexpr Config::opcode_t MASK_IOT = 07000;
 /** Trunk of |opCode| to identify group */
-static constexpr Config::opcode_t GID_MEM = 0; // wildcard
-static constexpr Config::opcode_t GID_GR1 = 07000;
-static constexpr Config::opcode_t GID_GR2 = 07400;
-static constexpr Config::opcode_t GID_GR3 = 07401;
-static constexpr Config::opcode_t GID_MEX = 06200;
-static constexpr Config::opcode_t GID_I20 = 06204;
-static constexpr Config::opcode_t GID_IOT = 06000;
+constexpr Config::opcode_t GID_MEM = 0; // wildcard
+constexpr Config::opcode_t GID_GR1 = 07000;
+constexpr Config::opcode_t GID_GR2 = 07400;
+constexpr Config::opcode_t GID_GR3 = 07401;
+constexpr Config::opcode_t GID_MEX = 06200;
+constexpr Config::opcode_t GID_I20 = 06204;
+constexpr Config::opcode_t GID_IOT = 06000;
 /** Clear variable part mask */
-static constexpr Config::opcode_t CLEAR_MEX = 00070;
+constexpr Config::opcode_t CLEAR_MEX = 00070;
 
-static constexpr Entry IM6100_MEM[] PROGMEM = {
+constexpr Entry IM6100_MEM[] PROGMEM = {
     E(00000, TEXT_AND,  M_MEM, 0),
     E(01000, TEXT_TAD,  M_MEM, 0),
     E(02000, TEXT_ISZ,  M_MEM, 0),
@@ -61,7 +60,7 @@ static constexpr Entry IM6100_MEM[] PROGMEM = {
     E(05000, TEXT_JMP,  M_MEM, 0),
 };
 
-static constexpr uint8_t INDEX_IM6100_MEM[] PROGMEM = {
+constexpr uint8_t INDEX_IM6100_MEM[] PROGMEM = {
       0,  // TEXT_AND
       3,  // TEXT_DCA
       2,  // TEXT_ISZ
@@ -70,16 +69,16 @@ static constexpr uint8_t INDEX_IM6100_MEM[] PROGMEM = {
       1,  // TEXT_TAD
 };
 
-static constexpr uint8_t CLA = 0200;
-static constexpr uint8_t CLL = 0100;
-static constexpr uint8_t CMA = 0040;
-static constexpr uint8_t CML = 0020;
-static constexpr uint8_t R1 = 0010; // RAL/RTL
-static constexpr uint8_t R2 = 0004; // RAR/RTR
-static constexpr uint8_t R3 = 0002; // BSW
-static constexpr uint8_t IAC = 0001;
+constexpr uint8_t CLA = 0200;
+constexpr uint8_t CLL = 0100;
+constexpr uint8_t CMA = 0040;
+constexpr uint8_t CML = 0020;
+constexpr uint8_t R1 = 0010; // RAL/RTL
+constexpr uint8_t R2 = 0004; // RAR/RTR
+constexpr uint8_t R3 = 0002; // BSW
+constexpr uint8_t IAC = 0001;
 
-static constexpr Entry IM6100_GR1[] PROGMEM = {
+constexpr Entry IM6100_GR1[] PROGMEM = {
     C(07000, TEXT_NOP,  M_GR1, CLA|CLL|CMA|CML|IAC, R1|R2|R3),
     C(07204, TEXT_GLK,  M_GR1, CLA|R1|R2|R3, 0),
     C(07120, TEXT_STL,  M_GR1, CLL|CML, 0),
@@ -97,7 +96,7 @@ static constexpr Entry IM6100_GR1[] PROGMEM = {
     C(07001, TEXT_IAC,  M_GR1, IAC, 0),      // Logical sequence 3
 };
 
-static constexpr uint8_t INDEX_IM6100_GR1[] PROGMEM = {
+constexpr uint8_t INDEX_IM6100_GR1[] PROGMEM = {
       9,  // TEXT_BSW
       6,  // TEXT_CIA
       4,  // TEXT_CLA
@@ -115,7 +114,7 @@ static constexpr uint8_t INDEX_IM6100_GR1[] PROGMEM = {
       2,  // TEXT_STL
 };
 
-static constexpr Entry HD6120_GR1[] PROGMEM = {
+constexpr Entry HD6120_GR1[] PROGMEM = {
     C(07000, TEXT_NOP,  M_GR1, CLA|CLL|CMA|CML|IAC, R1|R2|R3),
     C(07204, TEXT_GLK,  M_GR1, CLA|R1|R2|R3, 0),
     C(07120, TEXT_STL,  M_GR1, CLL|CML, 0),
@@ -134,7 +133,7 @@ static constexpr Entry HD6120_GR1[] PROGMEM = {
     C(07001, TEXT_IAC,  M_GR1, IAC, 0),      // Logical sequence 3
 };
 
-static constexpr uint8_t INDEX_HD6120_GR1[] PROGMEM = {
+constexpr uint8_t INDEX_HD6120_GR1[] PROGMEM = {
       9,  // TEXT_BSW
       6,  // TEXT_CIA
       4,  // TEXT_CLA
@@ -153,17 +152,17 @@ static constexpr uint8_t INDEX_HD6120_GR1[] PROGMEM = {
       2,  // TEXT_STL
 };
 
-static constexpr uint8_t SMA = 0100;
-static constexpr uint8_t SPA = 0100;
-static constexpr uint8_t SZA = 0040;
-static constexpr uint8_t SNA = 0040;
-static constexpr uint8_t SNL = 0020;
-static constexpr uint8_t SZL = 0020;
-static constexpr uint8_t B08 = 0010;
-static constexpr uint8_t OSR = 0004;
-static constexpr uint8_t HLT = 0002;
+constexpr uint8_t SMA = 0100;
+constexpr uint8_t SPA = 0100;
+constexpr uint8_t SZA = 0040;
+constexpr uint8_t SNA = 0040;
+constexpr uint8_t SNL = 0020;
+constexpr uint8_t SZL = 0020;
+constexpr uint8_t B08 = 0010;
+constexpr uint8_t OSR = 0004;
+constexpr uint8_t HLT = 0002;
 
-static constexpr Entry IM6100_GR2[] PROGMEM = {
+constexpr Entry IM6100_GR2[] PROGMEM = {
     E(07400, TEXT_NOP,  M_GR2, CLA|SMA|SZA|SNL|B08|OSR|HLT),
     E(07410, TEXT_SKP,  M_GR2, SMA|SZA|SNL|B08),
     C(07500, TEXT_SMA,  M_GR2, SMA, B08), // Logical sequence 1
@@ -178,7 +177,7 @@ static constexpr Entry IM6100_GR2[] PROGMEM = {
     C(07402, TEXT_HLT,  M_GR2, HLT, 0), // Logical sequence 3
 };
 
-static constexpr uint8_t INDEX_IM6100_GR2[] PROGMEM = {
+constexpr uint8_t INDEX_IM6100_GR2[] PROGMEM = {
       9,  // TEXT_CLA
      11,  // TEXT_HLT
       8,  // TEXT_LAS
@@ -193,10 +192,10 @@ static constexpr uint8_t INDEX_IM6100_GR2[] PROGMEM = {
       7,  // TEXT_SZL
 };
 
-static constexpr uint8_t MQA = 0100;
-static constexpr uint8_t MQL = 0020;
+constexpr uint8_t MQA = 0100;
+constexpr uint8_t MQL = 0020;
 
-static constexpr Entry IM6100_GR3[] PROGMEM = {
+constexpr Entry IM6100_GR3[] PROGMEM = {
     E(07401, TEXT_NOP,  M_GR3, CLA|MQA|MQL),
     C(07701, TEXT_ACL,  M_GR3, CLA|MQA, MQL),
     C(07621, TEXT_CAM,  M_GR3, CLA|MQL, MQA),
@@ -206,7 +205,7 @@ static constexpr Entry IM6100_GR3[] PROGMEM = {
     C(07421, TEXT_MQL,  M_GR3, MQL, 0), // Logical sequence 3
 };
 
-static constexpr uint8_t INDEX_IM6100_GR3[] PROGMEM = {
+constexpr uint8_t INDEX_IM6100_GR3[] PROGMEM = {
       1,  // TEXT_ACL
       2,  // TEXT_CAM
       3,  // TEXT_CLA
@@ -216,7 +215,7 @@ static constexpr uint8_t INDEX_IM6100_GR3[] PROGMEM = {
       4,  // TEXT_SWP
 };
 
-static constexpr Entry IM6100_IOT[] PROGMEM = {
+constexpr Entry IM6100_IOT[] PROGMEM = {
     E(06000, TEXT_SKON, M_CMP, 00777),
     E(06001, TEXT_ION,  M_CMP, 00777),
     E(06002, TEXT_IOF,  M_CMP, 00777),
@@ -228,7 +227,7 @@ static constexpr Entry IM6100_IOT[] PROGMEM = {
     E(06000, TEXT_IOT,  M_IOT, 0),
 };
 
-static constexpr uint8_t INDEX_IM6100_IOT[] PROGMEM = {
+constexpr uint8_t INDEX_IM6100_IOT[] PROGMEM = {
       7,  // TEXT_CAF
       4,  // TEXT_GTF
       2,  // TEXT_IOF
@@ -240,21 +239,21 @@ static constexpr uint8_t INDEX_IM6100_IOT[] PROGMEM = {
       3,  // TEXT_SRQ
 };
 
-static constexpr uint8_t CDF = 0001;
-static constexpr uint8_t CIF = 0002;
-static constexpr uint8_t B09 = 0004;
+constexpr uint8_t CDF = 0001;
+constexpr uint8_t CIF = 0002;
+constexpr uint8_t B09 = 0004;
 
-static constexpr Entry HD6120_MEX[] PROGMEM = {
+constexpr Entry HD6120_MEX[] PROGMEM = {
     C(06201, TEXT_CDF,  M_MEX, CDF, B09),
     C(06202, TEXT_CIF,  M_MEX, CIF, B09),
 };
 
-static constexpr uint8_t INDEX_HD6120_MEX[] PROGMEM = {
+constexpr uint8_t INDEX_HD6120_MEX[] PROGMEM = {
       0,  // TEXT_CDF
       1,  // TEXT_CIF
 };
 
-static constexpr Entry HD6120_I20[] PROGMEM = {
+constexpr Entry HD6120_I20[] PROGMEM = {
     E(06205, TEXT_PPC1, M_CMP, 00073),
     E(06245, TEXT_PPC2, M_CMP, 00073),
     E(06215, TEXT_PAC1, M_CMP, 00073),
@@ -279,7 +278,7 @@ static constexpr Entry HD6120_I20[] PROGMEM = {
     E(06236, TEXT_PR3,  M_CMP, 00073),
 };
 
-static constexpr uint8_t INDEX_HD6120_I20[] PROGMEM = {
+constexpr uint8_t INDEX_HD6120_I20[] PROGMEM = {
      13,  // TEXT_GCF
      10,  // TEXT_LSP1
      11,  // TEXT_LSP2
@@ -318,55 +317,60 @@ struct EntryPage : entry::TableBase<Entry> {
           _groupId_P(groupId) {}
 
     Config::opcode_t appendMicros(
-            const DisInsn &insn, Config::opcode_t micros, StrBuffer &out) const {
-        const auto gmask = readGroupMask();
-        auto clearMask = insn.selector();
-        bool addSep = false;
-        const auto *tail = _entries.readTail();
-        for (const auto *entry = _entries.readHead(); micros && entry != tail; entry++) {
-            const auto flags = entry->readFlags();
-            if (!flags.combination())
-                continue;
-            const auto mask = flags.bits() | flags.selector();
-            if ((micros & mask) == (entry->readOpCode() & ~gmask)) {
-                micros &= ~flags.bits();
-                clearMask |= flags.selector();
-                if (addSep)
-                    out.letter(' ');
-                out.text_P(entry->name_P());
-                addSep = true;
-            }
-        }
-        return micros & ~clearMask;
-    }
+            const DisInsn &insn, Config::opcode_t micros, StrBuffer &out) const;
 
 private:
     const Config::opcode_t _groupMask_P;
     const Config::opcode_t _groupId_P;
 };
 
+Config::opcode_t EntryPage::appendMicros(
+        const DisInsn &insn, Config::opcode_t micros, StrBuffer &out) const {
+    const auto gmask = readGroupMask();
+    auto clearMask = insn.selector();
+    bool addSep = false;
+    const auto *tail = _entries.readTail();
+    for (const auto *entry = _entries.readHead(); micros && entry != tail; entry++) {
+        const auto flags = entry->readFlags();
+        if (!flags.combination())
+            continue;
+        const auto mask = flags.bits() | flags.selector();
+        if ((micros & mask) == (entry->readOpCode() & ~gmask)) {
+            micros &= ~flags.bits();
+            clearMask |= flags.selector();
+            if (addSep)
+                out.letter(' ');
+            out.text_P(entry->name_P());
+            addSep = true;
+        }
+    }
+    return micros & ~clearMask;
+}
+
 struct Cpu : entry::CpuBase<CpuType, EntryPage> {
     constexpr Cpu(CpuType cpuType, const /*PROGMEM*/ char *name_P, const EntryPage *head_P,
             const EntryPage *tail_P)
         : CpuBase(cpuType, name_P, head_P, tail_P) {}
 
-    void appendMicros(DisInsn &insn, StrBuffer &out) const {
-        auto micros = insn.opCode() & ~insn.bits();
-        const auto *pageTail = _pages.readTail();
-        for (const auto *page = _pages.readHead(); page != pageTail; page++) {
-            if (page->readGroup() == insn.mode()) {
-                micros &= ~page->readGroupMask();
-                if (insn.mode() == M_MEX)
-                    micros &= ~CLEAR_MEX;
-                micros = page->appendMicros(insn, micros, out);
-            }
-        }
-        if (micros)
-            insn.setErrorIf(INVALID_INSTRUCTION);
-    };
+    void appendMicros(DisInsn &insn, StrBuffer &out) const;
 };
 
-static constexpr EntryPage IM6100_PAGES[] PROGMEM = {
+void Cpu::appendMicros(DisInsn &insn, StrBuffer &out) const {
+    auto micros = insn.opCode() & ~insn.bits();
+    const auto *pageTail = _pages.readTail();
+    for (const auto *page = _pages.readHead(); page != pageTail; page++) {
+        if (page->readGroup() == insn.mode()) {
+            micros &= ~page->readGroupMask();
+            if (insn.mode() == M_MEX)
+                micros &= ~CLEAR_MEX;
+            micros = page->appendMicros(insn, micros, out);
+        }
+    }
+    if (micros)
+        insn.setErrorIf(INVALID_INSTRUCTION);
+}
+
+constexpr EntryPage IM6100_PAGES[] PROGMEM = {
         {ARRAY_RANGE(IM6100_GR1), ARRAY_RANGE(INDEX_IM6100_GR1), MASK_GR1, GID_GR1},
         {ARRAY_RANGE(IM6100_GR2), ARRAY_RANGE(INDEX_IM6100_GR2), MASK_GR2, GID_GR2},
         {ARRAY_RANGE(IM6100_GR3), ARRAY_RANGE(INDEX_IM6100_GR3), MASK_GR3, GID_GR3},
@@ -374,7 +378,7 @@ static constexpr EntryPage IM6100_PAGES[] PROGMEM = {
         {ARRAY_RANGE(IM6100_MEM), ARRAY_RANGE(INDEX_IM6100_MEM), MASK_MEM, GID_MEM},
 };
 
-static constexpr EntryPage HD6120_PAGES[] PROGMEM = {
+constexpr EntryPage HD6120_PAGES[] PROGMEM = {
         {ARRAY_RANGE(HD6120_GR1), ARRAY_RANGE(INDEX_HD6120_GR1), MASK_GR1, GID_GR1},
         {ARRAY_RANGE(IM6100_GR1), ARRAY_RANGE(INDEX_IM6100_GR1), MASK_GR1, GID_GR1},
         {ARRAY_RANGE(IM6100_GR2), ARRAY_RANGE(INDEX_IM6100_GR2), MASK_GR2, GID_GR2},
@@ -385,47 +389,43 @@ static constexpr EntryPage HD6120_PAGES[] PROGMEM = {
         {ARRAY_RANGE(IM6100_MEM), ARRAY_RANGE(INDEX_IM6100_MEM), MASK_MEM, GID_MEM},
 };
 
-static constexpr Cpu CPU_TABLE[] PROGMEM = {
+constexpr Cpu CPU_TABLE[] PROGMEM = {
         {IM6100, TEXT_CPU_6100, ARRAY_RANGE(IM6100_PAGES)},
         {HD6120, TEXT_CPU_6120, ARRAY_RANGE(HD6120_PAGES)},
 };
-static const Cpu *cpu(CpuType cpuType) {
+const Cpu *cpu(CpuType cpuType) {
     return Cpu::search(cpuType, ARRAY_RANGE(CPU_TABLE));
 }
 
-static bool acceptAll(AsmInsn &, const Entry *) {
-    return true;
-}
-
-Error TablePdp8::searchName(CpuType cpuType, AsmInsn &insn) const {
-    cpu(cpuType)->searchName(insn, acceptAll);
+Error searchName(CpuType cpuType, AsmInsn &insn) {
+    cpu(cpuType)->searchName(insn, Cpu::acceptAll<AsmInsn, Entry>);
     return insn.getError();
 }
 
-static bool acceptSameMode(AsmInsn &insn, const Entry *entry) {
+bool acceptSameMode(AsmInsn &insn, const Entry *entry) {
     return insn.mode() == entry->readFlags().mode();
 }
 
-Error TablePdp8::searchMicro(CpuType cpuType, AsmInsn &micro, AddrMode mode) const {
+Error searchMicro(CpuType cpuType, AsmInsn &micro, AddrMode mode) {
     micro.setOK();
     micro.setAddrMode(mode);
     cpu(cpuType)->searchName(micro, acceptSameMode);
     return micro.getError();
 }
 
-static bool pageMatcher(DisInsn &insn, const EntryPage *page) {
+bool pageMatcher(DisInsn &insn, const EntryPage *page) {
     const auto groupId = page->readGroupId();
     return (insn.opCode() & page->readGroupMask()) == groupId || groupId == 0;
 }
 
-static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page) {
+bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page) {
     const auto flags = entry->readFlags();
     const auto mask = flags.bits() | flags.selector() | page->readGroupMask();
     const auto masked = insn.opCode() & mask;
     return masked == entry->readOpCode();
 }
 
-Error TablePdp8::searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) const {
+Error searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) {
     const auto *entry = cpu(cpuType)->searchOpCode(insn, out, matchOpCode, pageMatcher);
     if (entry) {
         const auto mode = insn.mode();

@@ -25,13 +25,12 @@ using namespace libasm::tlcs90::reg;
 namespace libasm {
 namespace tlcs90 {
 
-#define E2(_opc, _name, _dst, _src) \
-    { _opc, Entry::Flags::create(_dst, _src), _name }
+#define E2(_opc, _name, _dst, _src) {_opc, Entry::Flags::create(_dst, _src), _name}
 #define E1(_opc, _name, _dst) E2(_opc, _name, _dst, M_NONE)
 #define E0(_opc, _name) E1(_opc, _name, M_NONE)
 
 // clang-format off
-static constexpr Entry TABLE_TLCS90[] PROGMEM = {
+constexpr Entry TABLE_TLCS90[] PROGMEM = {
     E0(0x00, TEXT_NOP),
     E0(0x01, TEXT_HALT),
     E0(0x02, TEXT_DI),
@@ -130,7 +129,7 @@ static constexpr Entry TABLE_TLCS90[] PROGMEM = {
     E0(0xFF, TEXT_SWI),
 };
 
-static constexpr uint8_t INDEX_TLCS90[] PROGMEM = {
+constexpr uint8_t INDEX_TLCS90[] PROGMEM = {
      43,  // TEXT_ADC
      51,  // TEXT_ADC
      59,  // TEXT_ADC
@@ -229,7 +228,7 @@ static constexpr uint8_t INDEX_TLCS90[] PROGMEM = {
      71,  // TEXT_XOR
 };
 
-static constexpr Entry TABLE_SRC[] PROGMEM = {
+constexpr Entry TABLE_SRC[] PROGMEM = {
     E1(0x10, TEXT_RLD,  M_DST),
     E1(0x11, TEXT_RRD,  M_DST),
     E2(0x12, TEXT_MUL,  R_HL,    M_SRC),
@@ -273,7 +272,7 @@ static constexpr Entry TABLE_SRC[] PROGMEM = {
     E2(0xB8, TEXT_SET,  M_BIT,   M_SRC),
 };
 
-static constexpr uint8_t INDEX_SRC[] PROGMEM = {
+constexpr uint8_t INDEX_SRC[] PROGMEM = {
      11,  // TEXT_ADC
      19,  // TEXT_ADC
       4,  // TEXT_ADD
@@ -317,7 +316,7 @@ static constexpr uint8_t INDEX_SRC[] PROGMEM = {
      23,  // TEXT_XOR
 };
 
-static constexpr Entry TABLE_DST[] PROGMEM = {
+constexpr Entry TABLE_DST[] PROGMEM = {
     E2(0x20, TEXT_LD,   M_DST,   M_REG8),
     E2(0x37, TEXT_LD,   M_DST,   M_IMM8),
     E2(0x3F, TEXT_LDW,  M_DST,   M_IMM16),
@@ -332,7 +331,7 @@ static constexpr Entry TABLE_DST[] PROGMEM = {
     E2(0x6F, TEXT_CP,   M_DST,   M_IMM8),
 };
 
-static constexpr uint8_t INDEX_DST[] PROGMEM = {
+constexpr uint8_t INDEX_DST[] PROGMEM = {
       5,  // TEXT_ADC
       4,  // TEXT_ADD
       8,  // TEXT_AND
@@ -347,7 +346,7 @@ static constexpr uint8_t INDEX_DST[] PROGMEM = {
       9,  // TEXT_XOR
 };
 
-static constexpr Entry TABLE_REG[] PROGMEM = {
+constexpr Entry TABLE_REG[] PROGMEM = {
     E2(0x12, TEXT_MUL,  R_HL,    M_SRC),
     E2(0x13, TEXT_DIV,  R_HL,    M_SRC),
     E2(0x18, TEXT_TSET, M_BIT,   M_SRC),
@@ -391,7 +390,7 @@ static constexpr Entry TABLE_REG[] PROGMEM = {
     E2(0x77, TEXT_CP,   R_HL,    M_SRC16),
 };
 
-static constexpr uint8_t INDEX_REG[] PROGMEM = {
+constexpr uint8_t INDEX_REG[] PROGMEM = {
       5,  // TEXT_ADC
      13,  // TEXT_ADC
      34,  // TEXT_ADC
@@ -435,40 +434,40 @@ static constexpr uint8_t INDEX_REG[] PROGMEM = {
      38,  // TEXT_XOR
 };
 
-static constexpr Entry TABLE_LDA[] PROGMEM = {
+constexpr Entry TABLE_LDA[] PROGMEM = {
     E2(0x38, TEXT_LDA,  M_REG16, M_SRC),
 };
 
 
-static constexpr uint8_t INDEX_LDA[] PROGMEM = {
+constexpr uint8_t INDEX_LDA[] PROGMEM = {
       0,  // TEXT_LDA
 };
 
-static constexpr Entry TABLE_JMP[] PROGMEM = {
+constexpr Entry TABLE_JMP[] PROGMEM = {
     E2(0xC0, TEXT_JP,   M_CC,    M_SRC),
     E1(0xC8, TEXT_JP,   M_DST),
     E2(0xD0, TEXT_CALL, M_CC,    M_SRC),
     E1(0xD8, TEXT_CALL, M_DST),
 };
 
-static constexpr uint8_t INDEX_JMP[] PROGMEM = {
+constexpr uint8_t INDEX_JMP[] PROGMEM = {
       2,  // TEXT_CALL
       3,  // TEXT_CALL
       0,  // TEXT_JP
       1,  // TEXT_JP
 };
 
-static constexpr Entry TABLE_COND[] PROGMEM = {
+constexpr Entry TABLE_COND[] PROGMEM = {
     E0(0xD8, TEXT_RET),
     E1(0xD0, TEXT_RET,  M_CC),
 };
 
-static constexpr uint8_t INDEX_COND[] PROGMEM = {
+constexpr uint8_t INDEX_COND[] PROGMEM = {
       0,  // TEXT_RET
       1,  // TEXT_RET
 };
 
-static constexpr Entry TABLE_BLOCK[] PROGMEM = {
+constexpr Entry TABLE_BLOCK[] PROGMEM = {
     E0(0x58, TEXT_LDI),
     E0(0x59, TEXT_LDIR),
     E0(0x5A, TEXT_LDD),
@@ -479,7 +478,7 @@ static constexpr Entry TABLE_BLOCK[] PROGMEM = {
     E0(0x5F, TEXT_CPDR),
 };
 
-static constexpr uint8_t INDEX_BLOCK[] PROGMEM = {
+constexpr uint8_t INDEX_BLOCK[] PROGMEM = {
       6,  // TEXT_CPD
       7,  // TEXT_CPDR
       4,  // TEXT_CPI
@@ -493,24 +492,7 @@ static constexpr uint8_t INDEX_BLOCK[] PROGMEM = {
 
 struct EntryPage : entry::PrefixTableBase<Entry> {
     AddrMode readPrefixMode() const { return AddrMode(pgm_read_byte(&_mode_P)); }
-    bool prefixMatcher(Config::opcode_t code) const {
-        const auto pre = readPrefix();
-        const auto reg = code & 7;
-        switch (readPrefixMode()) {
-        case M_IND:
-        case M_REG16:
-            return (code & ~7) == pre && reg != 3 && reg != 7;
-        case M_IDX:
-        case M_IXPD:
-            return (code & ~3) == pre && reg != 3;
-        case M_REG8:
-            return (code & ~7) == pre && reg != 7;
-        case M_CC:
-            return (code & ~0xF) == pre;
-        default:
-            return code == pre;
-        }
-    }
+    bool prefixMatcher(Config::opcode_t code) const;
 
     constexpr EntryPage(Config::opcode_t prefix, AddrMode mode, const Entry *head_P,
             const Entry *tail_P, const uint8_t *index_P, const uint8_t *itail_P)
@@ -520,8 +502,27 @@ private:
     const AddrMode _mode_P;
 };
 
+bool EntryPage::prefixMatcher(Config::opcode_t code) const {
+    const auto pre = readPrefix();
+    const auto reg = code & 7;
+    switch (readPrefixMode()) {
+    case M_IND:
+    case M_REG16:
+        return (code & ~7) == pre && reg != 3 && reg != 7;
+    case M_IDX:
+    case M_IXPD:
+        return (code & ~3) == pre && reg != 3;
+    case M_REG8:
+        return (code & ~7) == pre && reg != 7;
+    case M_CC:
+        return (code & ~0xF) == pre;
+    default:
+        return code == pre;
+    }
+}
+
 // clang-format off
-static constexpr EntryPage TLCS90_PAGES[] PROGMEM = {
+constexpr EntryPage TLCS90_PAGES[] PROGMEM = {
     {0x00, M_NONE,  ARRAY_RANGE(TABLE_TLCS90), ARRAY_RANGE(INDEX_TLCS90)},
     {0xE7, M_DIR,   ARRAY_RANGE(TABLE_SRC),    ARRAY_RANGE(INDEX_SRC)}, // src (FFnn)
     {0xE3, M_EXT,   ARRAY_RANGE(TABLE_SRC),    ARRAY_RANGE(INDEX_SRC)}, // src (nnnn)
@@ -550,27 +551,29 @@ struct Cpu : entry::CpuBase<CpuType, EntryPage> {
             const EntryPage *tail_P)
         : CpuBase(cpuType, name_P, head_P, tail_P) {}
 
-    bool isPrefix(Config::opcode_t code, AddrMode &prefixMode) const {
-        const auto *tail = _pages.readTail();
-        for (auto page = _pages.readHead(); page < tail; page++) {
-            if (page->readPrefix() && page->prefixMatcher(code)) {
-                prefixMode = page->readPrefixMode();
-                return true;
-            }
-        }
-        return false;
-    }
+    bool isPrefix(Config::opcode_t code, AddrMode &prefixMode) const;
 };
 
-static constexpr Cpu CPU_TABLE[] PROGMEM = {
+bool Cpu::isPrefix(Config::opcode_t code, AddrMode &prefixMode) const {
+    const auto *tail = _pages.readTail();
+    for (auto page = _pages.readHead(); page < tail; page++) {
+        if (page->readPrefix() && page->prefixMatcher(code)) {
+            prefixMode = page->readPrefixMode();
+            return true;
+        }
+    }
+    return false;
+}
+
+constexpr Cpu CPU_TABLE[] PROGMEM = {
         {TLCS90, TEXT_CPU_TLCS90, ARRAY_RANGE(TLCS90_PAGES)},
 };
 
-static const Cpu *cpu(CpuType) {
+const Cpu *cpu(CpuType) {
     return &CPU_TABLE[0];
 }
 
-static bool acceptMode(AddrMode opr, AddrMode table) {
+bool acceptMode(AddrMode opr, AddrMode table) {
     if (opr == table)
         return true;
     if (opr == R_A)
@@ -592,11 +595,11 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
     return false;
 }
 
-static void pageSetup(AsmInsn &insn, const EntryPage *page) {
+void pageSetup(AsmInsn &insn, const EntryPage *page) {
     insn.setPrefixMode(page->readPrefixMode());
 }
 
-static bool acceptModes(AsmInsn &insn, const Entry *entry) {
+bool acceptModes(AsmInsn &insn, const Entry *entry) {
     const auto table = entry->readFlags();
     const auto tableDst = table.dst();
     const auto tableSrc = table.src();
@@ -605,7 +608,7 @@ static bool acceptModes(AsmInsn &insn, const Entry *entry) {
     return acceptMode(insn.dstOp.mode, dst) && acceptMode(insn.srcOp.mode, src);
 }
 
-static void readCode(AsmInsn &insn, const Entry *entry, const EntryPage *page) {
+void readCode(AsmInsn &insn, const Entry *entry, const EntryPage *page) {
     Cpu::defaultReadCode(insn, entry, page);
 
     // Update prefix mode.
@@ -624,12 +627,12 @@ static void readCode(AsmInsn &insn, const Entry *entry, const EntryPage *page) {
     }
 }
 
-Error TableTlcs90::searchName(CpuType cpuType, AsmInsn &insn) const {
+Error searchName(CpuType cpuType, AsmInsn &insn) {
     cpu(cpuType)->searchName(insn, acceptModes, pageSetup, readCode);
     return insn.getError();
 }
 
-static bool prefixMatcher(DisInsn &insn, const EntryPage *page) {
+bool prefixMatcher(DisInsn &insn, const EntryPage *page) {
     if (page->prefixMatcher(insn.prefix())) {
         insn.setPrefixMode(page->readPrefixMode());
         return true;
@@ -637,7 +640,7 @@ static bool prefixMatcher(DisInsn &insn, const EntryPage *page) {
     return false;
 }
 
-static bool invalidPrefixCode(Config::opcode_t prefix, AddrMode mode) {
+bool invalidPrefixCode(Config::opcode_t prefix, AddrMode mode) {
     const auto reg = prefix & 7;
     if (mode == M_REG8 && reg == 7)
         return true;  // accept B,C,D,E,H,L,A only
@@ -648,7 +651,7 @@ static bool invalidPrefixCode(Config::opcode_t prefix, AddrMode mode) {
     return false;
 }
 
-static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *) {
+bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *) {
     auto opc = insn.opCode();
     const auto flags = entry->readFlags();
     const auto dst = flags.dst();
@@ -666,8 +669,7 @@ static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *) {
     return opc == entry->readOpCode();
 }
 
-Error TableTlcs90::searchOpCode(
-        CpuType cpuType, DisInsn &insn, Operand &prefixOp, StrBuffer &out) const {
+Error searchOpCode(CpuType cpuType, DisInsn &insn, Operand &prefixOp, StrBuffer &out) {
     cpu(cpuType)->searchOpCode(insn, out, matchOpCode, prefixMatcher);
     // Resolve shared prefix for M_REG16 with M_REG8 here.
     if (insn.src() == M_SRC16) {
@@ -682,7 +684,7 @@ Error TableTlcs90::searchOpCode(
     return insn.getError();
 }
 
-bool TableTlcs90::isPrefix(CpuType cpuType, Config::opcode_t code, AddrMode &mode) const {
+bool isPrefix(CpuType cpuType, Config::opcode_t code, AddrMode &mode) {
     return cpu(cpuType)->isPrefix(code, mode);
 }
 

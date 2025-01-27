@@ -25,13 +25,13 @@ namespace libasm {
 namespace mos6502 {
 
 #define E3(_opc, _name, _opr1, _opr2, _opr3) \
-    { _opc, Entry::Flags::create(_opr1, _opr2, _opr3), _name }
+    {_opc, Entry::Flags::create(_opr1, _opr2, _opr3), _name}
 #define E2(_opc, _name, _opr1, _opr2) E3(_opc, _name, _opr1, _opr2, M_NONE)
 #define E1(_opc, _name, _opr1) E2(_opc, _name, _opr1, M_NONE)
 #define E0(_opc, _name) E1(_opc, _name, M_NONE)
 
 // clang-format off
-static constexpr Entry MOS6502_TABLE[] PROGMEM = {
+constexpr Entry MOS6502_TABLE[] PROGMEM = {
     E0(0x00, TEXT_BRK),
     E0(0x40, TEXT_RTI),
     E0(0x60, TEXT_RTS),
@@ -185,7 +185,7 @@ static constexpr Entry MOS6502_TABLE[] PROGMEM = {
     E1(0xF0, TEXT_BEQ, M_REL),
 };
 
-static constexpr uint8_t MOS6502_INDEX[] PROGMEM = {
+constexpr uint8_t MOS6502_INDEX[] PROGMEM = {
      36,  // TEXT_ADC
      44,  // TEXT_ADC
      64,  // TEXT_ADC
@@ -339,7 +339,7 @@ static constexpr uint8_t MOS6502_INDEX[] PROGMEM = {
      12,  // TEXT_TYA
 };
 
-static constexpr Entry G65SC02_TABLE[] PROGMEM = {
+constexpr Entry G65SC02_TABLE[] PROGMEM = {
     E0(0x5A, TEXT_PHY),
     E0(0x7A, TEXT_PLY),
     E0(0xDA, TEXT_PHX),
@@ -369,7 +369,7 @@ static constexpr Entry G65SC02_TABLE[] PROGMEM = {
     E1(0x80, TEXT_BRA, M_REL),
 };
 
-static constexpr uint8_t G65SC02_INDEX[] PROGMEM = {
+constexpr uint8_t G65SC02_INDEX[] PROGMEM = {
      21,  // TEXT_ADC
      19,  // TEXT_AND
       6,  // TEXT_BIT
@@ -399,7 +399,7 @@ static constexpr uint8_t G65SC02_INDEX[] PROGMEM = {
      12,  // TEXT_TSB
 };
 
-static constexpr Entry R65C02_TABLE[] PROGMEM = {
+constexpr Entry R65C02_TABLE[] PROGMEM = {
     E2(0x0F, TEXT_BBR0, M_DPG, M_REL),
     E2(0x1F, TEXT_BBR1, M_DPG, M_REL),
     E2(0x2F, TEXT_BBR2, M_DPG, M_REL),
@@ -434,7 +434,7 @@ static constexpr Entry R65C02_TABLE[] PROGMEM = {
     E1(0xF7, TEXT_SMB7, M_DPG),
 };
 
-static constexpr uint8_t R65C02_INDEX[] PROGMEM = {
+constexpr uint8_t R65C02_INDEX[] PROGMEM = {
       0,  // TEXT_BBR0
       1,  // TEXT_BBR1
       2,  // TEXT_BBR2
@@ -469,17 +469,17 @@ static constexpr uint8_t R65C02_INDEX[] PROGMEM = {
      31,  // TEXT_SMB7
 };
 
-static constexpr Entry W65C02S_TABLE[] PROGMEM = {
+constexpr Entry W65C02S_TABLE[] PROGMEM = {
     E0(0xCB, TEXT_WAI),
     E0(0xDB, TEXT_STP),
 };
 
-static constexpr uint8_t W65C02S_INDEX[] PROGMEM = {
+constexpr uint8_t W65C02S_INDEX[] PROGMEM = {
       1,  // TEXT_STP
       0,  // TEXT_WAI
 };
 
-static constexpr Entry W65C816_TABLE[] PROGMEM = {
+constexpr Entry W65C816_TABLE[] PROGMEM = {
     E0(0x0B, TEXT_PHD),
     E0(0x1B, TEXT_TCS),
     E0(0x2B, TEXT_PLD),
@@ -575,7 +575,7 @@ static constexpr Entry W65C816_TABLE[] PROGMEM = {
     E2(0xF7, TEXT_SBCL, I_DPG, M_REGY),
 };
 
-static constexpr uint8_t W65C816_INDEX[] PROGMEM = {
+constexpr uint8_t W65C816_INDEX[] PROGMEM = {
      46,  // TEXT_ADC
      47,  // TEXT_ADC
      48,  // TEXT_ADC
@@ -674,25 +674,25 @@ static constexpr uint8_t W65C816_INDEX[] PROGMEM = {
 
 using EntryPage = entry::TableBase<Entry>;
 
-static constexpr EntryPage MOS6502_PAGES[] PROGMEM = {
+constexpr EntryPage MOS6502_PAGES[] PROGMEM = {
         {ARRAY_RANGE(MOS6502_TABLE), ARRAY_RANGE(MOS6502_INDEX)},
 };
-static constexpr EntryPage G65SC02_PAGES[] PROGMEM = {
+constexpr EntryPage G65SC02_PAGES[] PROGMEM = {
         {ARRAY_RANGE(MOS6502_TABLE), ARRAY_RANGE(MOS6502_INDEX)},
         {ARRAY_RANGE(G65SC02_TABLE), ARRAY_RANGE(G65SC02_INDEX)},
 };
-static constexpr EntryPage R65C02_PAGES[] PROGMEM = {
+constexpr EntryPage R65C02_PAGES[] PROGMEM = {
         {ARRAY_RANGE(MOS6502_TABLE), ARRAY_RANGE(MOS6502_INDEX)},
         {ARRAY_RANGE(G65SC02_TABLE), ARRAY_RANGE(G65SC02_INDEX)},
         {ARRAY_RANGE(R65C02_TABLE), ARRAY_RANGE(R65C02_INDEX)},
 };
-static constexpr EntryPage W65C02S_PAGES[] PROGMEM = {
+constexpr EntryPage W65C02S_PAGES[] PROGMEM = {
         {ARRAY_RANGE(MOS6502_TABLE), ARRAY_RANGE(MOS6502_INDEX)},
         {ARRAY_RANGE(G65SC02_TABLE), ARRAY_RANGE(G65SC02_INDEX)},
         {ARRAY_RANGE(R65C02_TABLE), ARRAY_RANGE(R65C02_INDEX)},
         {ARRAY_RANGE(W65C02S_TABLE), ARRAY_RANGE(W65C02S_INDEX)},
 };
-static constexpr EntryPage W65C816_PAGES[] PROGMEM = {
+constexpr EntryPage W65C816_PAGES[] PROGMEM = {
         {ARRAY_RANGE(MOS6502_TABLE), ARRAY_RANGE(MOS6502_INDEX)},
         {ARRAY_RANGE(G65SC02_TABLE), ARRAY_RANGE(G65SC02_INDEX)},
         {ARRAY_RANGE(W65C02S_TABLE), ARRAY_RANGE(W65C02S_INDEX)},
@@ -701,7 +701,7 @@ static constexpr EntryPage W65C816_PAGES[] PROGMEM = {
 
 using Cpu = entry::CpuBase<CpuType, EntryPage>;
 
-static constexpr Cpu CPU_TABLE[] PROGMEM = {
+constexpr Cpu CPU_TABLE[] PROGMEM = {
         {MOS6502, TEXT_CPU_6502, ARRAY_RANGE(MOS6502_PAGES)},
         {G65SC02, TEXT_CPU_65SC02, ARRAY_RANGE(G65SC02_PAGES)},
         {R65C02, TEXT_CPU_65C02, ARRAY_RANGE(R65C02_PAGES)},
@@ -709,20 +709,16 @@ static constexpr Cpu CPU_TABLE[] PROGMEM = {
         {W65C816, TEXT_CPU_65816, ARRAY_RANGE(W65C816_PAGES)},
 };
 
-static const Cpu *cpu(CpuType cpuType) {
+const Cpu *cpu(CpuType cpuType) {
     return Cpu::search(cpuType, ARRAY_RANGE(CPU_TABLE));
 }
 
-static bool acceptAll(AsmInsn &, const Entry *) {
-    return true;
-}
-
-bool TableMos6502::hasOperand(CpuType cpuType, AsmInsn &insn) const {
-    cpu(cpuType)->searchName(insn, acceptAll);
+bool hasOperand(CpuType cpuType, AsmInsn &insn) {
+    cpu(cpuType)->searchName(insn, Cpu::acceptAll<AsmInsn, Entry>);
     return insn.isOK() && insn.mode1() != M_NONE;
 }
 
-static bool acceptMode(AddrMode opr, AddrMode table) {
+bool acceptMode(AddrMode opr, AddrMode table) {
     if (opr == table)
         return true;
     if (opr == M_IMA)
@@ -741,18 +737,18 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
     return false;
 }
 
-static bool acceptModes(AsmInsn &insn, const Entry *entry) {
+bool acceptModes(AsmInsn &insn, const Entry *entry) {
     const auto table = entry->readFlags();
     return acceptMode(insn.op1.mode, table.mode1()) && acceptMode(insn.op2.mode, table.mode2()) &&
            acceptMode(insn.op3.mode, table.mode3());
 }
 
-Error TableMos6502::searchName(CpuType cpuType, AsmInsn &insn) const {
+Error searchName(CpuType cpuType, AsmInsn &insn) {
     cpu(cpuType)->searchName(insn, acceptModes);
     return insn.getError();
 }
 
-static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *) {
+bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *) {
     const auto opCode = entry->readOpCode();
     if (insn.opCode() != opCode || opCode == TableMos6502::WDM)
         return false;
@@ -762,7 +758,7 @@ static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *) {
     return true;
 }
 
-Error TableMos6502::searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) const {
+Error searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) {
     cpu(cpuType)->searchOpCode(insn, out, matchOpCode);
     return insn.getError();
 }

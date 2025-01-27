@@ -15,7 +15,6 @@
  */
 
 #include "dis_mos6502.h"
-
 #include "reg_mos6502.h"
 #include "table_mos6502.h"
 #include "text_mos6502.h"
@@ -217,7 +216,7 @@ Error DisMos6502::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) con
     const auto opCode = insn.readByte();
     insn.setOpCode(opCode);
     insn.setAllowIndirectLong(_useIndirectLong);
-    if (TABLE.searchOpCode(cpuType(), insn, out))
+    if (searchOpCode(cpuType(), insn, out))
         return _insn.setError(insn);
 
     const auto mode1 = insn.mode1();

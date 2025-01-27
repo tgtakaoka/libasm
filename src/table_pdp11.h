@@ -27,13 +27,13 @@ struct TablePdp11 final : InsnTable<CpuType> {
     const /*PROGMEM*/ char *listCpu_P() const override;
     const /*PROGMEM*/ char *cpuName_P(CpuType cpuType) const override;
     Error searchCpuName(StrScanner &name, CpuType &cpuType) const override;
-
-    Error hasName(CpuType, AsmInsn &insn) const;
-    Error searchName(CpuType, AsmInsn &insn) const;
-    Error searchOpCode(CpuType, DisInsn &insn, StrBuffer &out) const;
 };
 
 extern const TablePdp11 TABLE;
+
+Error hasName(CpuType, AsmInsn &insn);
+Error searchName(CpuType, AsmInsn &insn);
+Error searchOpCode(CpuType, DisInsn &insn, StrBuffer &out);
 
 }  // namespace pdp11
 }  // namespace libasm

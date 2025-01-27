@@ -15,7 +15,6 @@
  */
 
 #include "dis_z80.h"
-
 #include "reg_z80.h"
 #include "table_z80.h"
 
@@ -57,7 +56,7 @@ void DisZ80::decodeIndexedBitOp(DisInsn &insn, StrBuffer &out) const {
     ixBit.setPrefix(insn.opCode());
     ixBit.setOpCode(opc);
     ixBit.nameBuffer().reset();
-    if (TABLE.searchOpCode(cpuType(), ixBit, out)) {
+    if (searchOpCode(cpuType(), ixBit, out)) {
         insn.nameBuffer().reset();
         insn.setErrorIf(out, UNKNOWN_INSTRUCTION);
         return;
@@ -175,13 +174,13 @@ Error DisZ80::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) const {
     DisInsn insn(_insn, memory, out);
     const auto opc = insn.readByte();
     insn.setOpCode(opc);
-    if (TABLE.isPrefix(cpuType(), opc)) {
+    if (isPrefix(cpuType(), opc)) {
         insn.setPrefix(opc);
         insn.setOpCode(insn.readByte());
         if (insn.getError())
             return _insn.setError(insn);
     }
-    if (TABLE.searchOpCode(cpuType(), insn, out))
+    if (searchOpCode(cpuType(), insn, out))
         return _insn.setError(insn);
 
     const auto dst = insn.dst();

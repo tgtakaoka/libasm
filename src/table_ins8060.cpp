@@ -24,12 +24,11 @@ using namespace libasm::text::ins8060;
 namespace libasm {
 namespace ins8060 {
 
-#define E1(_opc, _name, _mode) \
-    { _opc, Entry::Flags::create(_mode), _name }
+#define E1(_opc, _name, _mode) {_opc, Entry::Flags::create(_mode), _name}
 #define E0(_opc, _name) E1(_opc, _name, M_NONE)
 
 // clang-format off
-static constexpr Entry TABLE_INS8060[] PROGMEM = {
+constexpr Entry TABLE_INS8060[] PROGMEM = {
     E0(0x00, TEXT_HALT),
     E0(0x01, TEXT_XAE),
     E0(0x02, TEXT_CCL),
@@ -79,7 +78,7 @@ static constexpr Entry TABLE_INS8060[] PROGMEM = {
     E1(0xF8, TEXT_CAD,  M_INDX),
 };
 
-static constexpr uint8_t INDEX_INS8060[] PROGMEM = {
+constexpr uint8_t INDEX_INS8060[] PROGMEM = {
      44,  // TEXT_ADD
      22,  // TEXT_ADE
      43,  // TEXT_ADI
@@ -132,21 +131,21 @@ static constexpr uint8_t INDEX_INS8060[] PROGMEM = {
 
 using EntryPage = entry::TableBase<Entry>;
 
-static constexpr EntryPage INS8060_PAGES[] PROGMEM = {
+constexpr EntryPage INS8060_PAGES[] PROGMEM = {
         {ARRAY_RANGE(TABLE_INS8060), ARRAY_RANGE(INDEX_INS8060)},
 };
 
 using Cpu = entry::CpuBase<CpuType, EntryPage>;
 
-static constexpr Cpu CPU_TABLE[] PROGMEM = {
+constexpr Cpu CPU_TABLE[] PROGMEM = {
         {INS8060, TEXT_CPU_SCMP, ARRAY_RANGE(INS8060_PAGES)},
 };
 
-static const Cpu *cpu(CpuType) {
+const Cpu *cpu(CpuType) {
     return &CPU_TABLE[0];
 }
 
-static bool acceptMode(AsmInsn &insn, const Entry *entry) {
+bool acceptMode(AsmInsn &insn, const Entry *entry) {
     const auto opr = insn.op.mode;
     const auto table = entry->readFlags().mode();
     if (opr == table)
@@ -158,12 +157,12 @@ static bool acceptMode(AsmInsn &insn, const Entry *entry) {
     return false;
 }
 
-Error TableIns8060::searchName(CpuType cpuType, AsmInsn &insn) const {
+Error searchName(CpuType cpuType, AsmInsn &insn) {
     cpu(cpuType)->searchName(insn, acceptMode);
     return insn.getError();
 }
 
-static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *) {
+bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *) {
     auto opc = insn.opCode();
     const auto mode = entry->readFlags().mode();
     if (mode == M_INDX) {
@@ -174,7 +173,7 @@ static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *) {
     return opc == entry->readOpCode();
 }
 
-Error TableIns8060::searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) const {
+Error searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) {
     cpu(cpuType)->searchOpCode(insn, out, matchOpCode);
     if (insn.addrMode() == M_UNDEF) {
         insn.nameBuffer().reset();

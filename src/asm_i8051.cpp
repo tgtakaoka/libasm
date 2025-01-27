@@ -15,7 +15,6 @@
  */
 
 #include "asm_i8051.h"
-
 #include "table_i8051.h"
 #include "text_common.h"
 
@@ -245,7 +244,7 @@ void AsmI8051::encodeOperand(AsmInsn &insn, AddrMode mode, const Operand &op) co
     case M_NOTAD:
         if (op.val.overflow(UINT8_MAX))
             insn.setErrorIf(op, mode == M_ADR8 ? OVERFLOW_RANGE : NOT_BIT_ADDRESSABLE);
-        if (TABLE.invalidDirect(insn.opCode(), op.val.getUnsigned()))
+        if (invalidDirect(insn.opCode(), op.val.getUnsigned()))
             insn.setErrorIf(op, OPERAND_NOT_ALLOWED);
         insn.emitOperand8(op.val.getUnsigned());
         break;
@@ -269,8 +268,8 @@ Error AsmI8051::encodeImpl(StrScanner &scan, Insn &_insn) const {
         scan.skipSpaces();
     }
 
-    if (_insn.setErrorIf(insn.dstOp, TABLE.searchName(cpuType(), insn)))
-        return _insn.getError();
+    if (searchName(cpuType(), insn))
+        return _insn.setError(insn.dstOp, insn);
 
     const auto dst = insn.dst();
     const auto src = insn.src();

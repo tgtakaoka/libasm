@@ -259,7 +259,7 @@ void AsmMc6805::emitOperand(AsmInsn &insn, AddrMode mode, const Operand &op) con
 
 Error AsmMc6805::encodeImpl(StrScanner &scan, Insn &_insn) const {
     AsmInsn insn(_insn);
-    if (TABLE.hasOperand(cpuType(), insn)) {
+    if (hasOperand(cpuType(), insn)) {
         if (parseOperand(scan, insn.op1) && insn.op1.hasError())
             return _insn.setError(insn.op1);
         if (scan.skipSpaces().expect(',')) {
@@ -273,8 +273,8 @@ Error AsmMc6805::encodeImpl(StrScanner &scan, Insn &_insn) const {
     }
     scan.skipSpaces();
 
-    if (_insn.setErrorIf(insn.op1, TABLE.searchName(cpuType(), insn)))
-        return _insn.getError();
+    if (searchName(cpuType(), insn))
+        return _insn.setError(insn.op1, insn);
 
     if (insn.mode1() == M_BNO)
         insn.embed((insn.op1.val.getUnsigned() & 7) << 1);

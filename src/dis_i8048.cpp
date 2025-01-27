@@ -15,7 +15,6 @@
  */
 
 #include "dis_i8048.h"
-
 #include "reg_i8048.h"
 #include "table_i8048.h"
 
@@ -122,7 +121,7 @@ void DisI8048::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) const
 Error DisI8048::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) const {
     DisInsn insn(_insn, memory, out);
     insn.setOpCode(insn.readByte());
-    if (TABLE.searchOpCode(cpuType(), insn, out))
+    if (searchOpCode(cpuType(), insn, out))
         return _insn.setError(insn);
 
     const auto dst = insn.dst();

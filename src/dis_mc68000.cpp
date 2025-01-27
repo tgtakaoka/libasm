@@ -710,7 +710,7 @@ Error DisMc68000::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) con
     DisInsn insn(_insn, memory, out);
     const auto opc = insn.readUint16();
     insn.setOpCode(opc);
-    if (TABLE.searchOpCode(_cpuSpec, insn, out))
+    if (searchOpCode(_cpuSpec, insn, out))
         return _insn.setError(insn);
 
     const auto osize = decodeSize(insn);

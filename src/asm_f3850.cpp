@@ -15,7 +15,6 @@
  */
 
 #include "asm_f3850.h"
-
 #include "reg_f3850.h"
 #include "table_f3850.h"
 #include "text_common.h"
@@ -163,7 +162,7 @@ void AsmF3850::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode) co
 
 Error AsmF3850::encodeImpl(StrScanner &scan, Insn &_insn) const {
     AsmInsn insn(_insn);
-    if (TABLE.hasOperand(cpuType(), insn)) {
+    if (hasOperand(cpuType(), insn)) {
         if (parseOperand(scan, insn.op1) && insn.op1.hasError())
             return _insn.setError(insn.op1);
         if (scan.skipSpaces().expect(',')) {
@@ -173,8 +172,8 @@ Error AsmF3850::encodeImpl(StrScanner &scan, Insn &_insn) const {
     }
     scan.skipSpaces();
 
-    if (_insn.setErrorIf(insn.op1, TABLE.searchName(cpuType(), insn)))
-        return _insn.getError();
+    if (searchName(cpuType(), insn))
+        return _insn.setError(insn.op1, insn);
 
     encodeOperand(insn, insn.op1, insn.mode1());
     encodeOperand(insn, insn.op2, insn.mode2());

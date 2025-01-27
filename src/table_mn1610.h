@@ -18,7 +18,6 @@
 #define __LIBASM_TABLE_MN1610_H__
 
 #include "config_mn1610.h"
-#include "entry_table.h"
 #include "insn_mn1610.h"
 
 namespace libasm {
@@ -28,13 +27,13 @@ struct TableMn1610 final : InsnTable<CpuType> {
     const /*PROGMEM*/ char *listCpu_P() const override;
     const /*PROGMEM*/ char *cpuName_P(CpuType cpuType) const override;
     Error searchCpuName(StrScanner &name, CpuType &cpuType) const override;
-
-    bool hasOperand(CpuType, AsmInsn &insn) const;
-    Error searchName(CpuType, AsmInsn &insn) const;
-    Error searchOpCode(CpuType, DisInsn &insn, StrBuffer &out) const;
 };
 
 extern const TableMn1610 TABLE;
+
+bool hasOperand(CpuType, AsmInsn &insn);
+Error searchName(CpuType, AsmInsn &insn);
+Error searchOpCode(CpuType, DisInsn &insn, StrBuffer &out);
 
 }  // namespace mn1610
 }  // namespace libasm

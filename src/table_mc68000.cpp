@@ -25,20 +25,20 @@ namespace libasm {
 namespace mc68000 {
 
 #define E2(_opc, _name, _isize, _src, _dst, _srcp, _dstp, _osize) \
-    { _opc, Entry::Flags::create(_src, _dst, _srcp, _dstp, _osize, _isize), _name }
+    {_opc, Entry::Flags::create(_src, _dst, _srcp, _dstp, _osize, _isize), _name}
 #define E1(_opc, _name, _isize, _src, _srcp, _osize) \
     E2(_opc, _name, _isize, _src, M_NONE, _srcp, OP___, _osize)
 #define E0(_opc, _name) E1(_opc, _name, ISZ_NONE, M_NONE, OP___, SZ_NONE)
 #define A2(_opc, _name, _isize, _src, _dst, _srcp, _dstp, _osize) \
     E2(_opc, _name, _isize, _src, _dst, _srcp, _dstp, _osize)
 #define P2(_opc, _name, _isize, _src, _dst, _srcp, _dstp, _osize, _postVal) \
-    { _opc, Entry::Flags::create(_src, _dst, _srcp, _dstp, _osize, _isize, _postVal), _name }
+    {_opc, Entry::Flags::create(_src, _dst, _srcp, _dstp, _osize, _isize, _postVal), _name}
 #define P1(_opc, _name, _isize, _src, _srcp, _osize, _post) \
     P2(_opc, _name, _isize, _src, M_NONE, _srcp, OP___, _osize, _post)
 #define P0(_opc, _name, _post) P1(_opc, _name, ISZ_NONE, M_NONE, OP___, SZ_NONE, _post)
 
 // clang-format off
-static constexpr Entry MC68000_TABLE[] PROGMEM = {
+constexpr Entry MC68000_TABLE[] PROGMEM = {
     E2(0000074, TEXT_ORI,   ISZ_NONE, M_IMDAT, M_CCR,   OP___, OP___, SZ_BYTE),
     E2(0000174, TEXT_ORI,   ISZ_NONE, M_IMDAT, M_SR,    OP___, OP___, SZ_WORD),
     E2(0000000, TEXT_ORI,   ISZ_DATA, M_IMDAT, M_WDATA, OP___, OP_10, SZ_DATA),
@@ -248,7 +248,7 @@ static constexpr Entry MC68000_TABLE[] PROGMEM = {
     A2(0150374, TEXT_ADDI,  ISZ_DATA, M_IMDAT, M_AREG,  OP___, OP__3, SZ_ADR8),
 };
 
-static constexpr uint8_t MC68000_INDEX[] PROGMEM = {
+constexpr uint8_t MC68000_INDEX[] PROGMEM = {
     164,  // TEXT_ABCD
     165,  // TEXT_ABCD
     174,  // TEXT_ADD
@@ -458,7 +458,7 @@ static constexpr uint8_t MC68000_INDEX[] PROGMEM = {
      52,  // TEXT_UNLK
 };
 
-static constexpr Entry MC68010_TABLE[] PROGMEM = {
+constexpr Entry MC68010_TABLE[] PROGMEM = {
     E1(0047164, TEXT_RTD,   ISZ_NONE, M_IMDAT, OP___, SZ_WORD),
     P2(0047172, TEXT_MOVEC, ISZ_NONE, M_CREG,  M_DREG,  EX_RC, EX_RR, SZ_LONG, 0x0000),
     P2(0047172, TEXT_MOVEC, ISZ_NONE, M_CREG,  M_AREG,  EX_RC, EX_RR, SZ_LONG, 0x8000),
@@ -470,7 +470,7 @@ static constexpr Entry MC68010_TABLE[] PROGMEM = {
     P2(0007000, TEXT_MOVES, ISZ_DATA, M_AREG,  M_WMEM,  EX_RR, OP_10, SZ_DATA, 0x8800),
 };
 
-static constexpr uint8_t MC68010_INDEX[] PROGMEM = {
+constexpr uint8_t MC68010_INDEX[] PROGMEM = {
       1,  // TEXT_MOVEC
       2,  // TEXT_MOVEC
       3,  // TEXT_MOVEC
@@ -484,7 +484,7 @@ static constexpr uint8_t MC68010_INDEX[] PROGMEM = {
 
 #if !defined(LIBASM_MC68000_NOFPU)
 
-static constexpr Entry MC68881_ARITH[] PROGMEM = {
+constexpr Entry MC68881_ARITH[] PROGMEM = {
     P2(0xF000, TEXT_FMOVE,   ISZ_FIXD, M_FPREG, M_FPREG, EX_RX, EX_RY, SZ_XTND, 0x0000),
     P2(0xF000, TEXT_FINT,    ISZ_FIXD, M_FPREG, M_FPREG, EX_RX, EX_RY, SZ_XTND, 0x0001),
     P2(0xF000, TEXT_FSINH,   ISZ_FIXD, M_FPREG, M_FPREG, EX_RX, EX_RY, SZ_XTND, 0x0002),
@@ -618,7 +618,7 @@ static constexpr Entry MC68881_ARITH[] PROGMEM = {
     E1(0xF140, TEXT_FRESTORE, ISZ_NONE, M_IADDR, OP_10, SZ_NONE),
 };
 
-static constexpr uint8_t MC68881_ARITH_INDEX[] PROGMEM = {
+constexpr uint8_t MC68881_ARITH_INDEX[] PROGMEM = {
      19,  // TEXT_FABS
      57,  // TEXT_FABS
     121,  // TEXT_FABS
@@ -752,7 +752,7 @@ static constexpr uint8_t MC68881_ARITH_INDEX[] PROGMEM = {
     116,  // TEXT_FTWOTOX
 };
 
-static constexpr Entry MC68881_BRANCH[] PROGMEM = {
+constexpr Entry MC68881_BRANCH[] PROGMEM = {
     E1(0xF0C0, TEXT_FBF,      ISZ_NONE, M_REL32, OP___, SZ_LONG),
     E1(0xF0C1, TEXT_FBEQ,     ISZ_NONE, M_REL32, OP___, SZ_LONG),
     E1(0xF0C2, TEXT_FBOGT,    ISZ_NONE, M_REL32, OP___, SZ_LONG),
@@ -851,7 +851,7 @@ static constexpr Entry MC68881_BRANCH[] PROGMEM = {
     P2(0xF048, TEXT_FDBST,    ISZ_NONE, M_DREG,  M_REL16, OP__0, OP___, SZ_WORD, 0x001F),
 };
 
-static constexpr uint8_t MC68881_BRANCH_INDEX[] PROGMEM = {
+constexpr uint8_t MC68881_BRANCH_INDEX[] PROGMEM = {
       1,  // TEXT_FBEQ
      33,  // TEXT_FBEQ
       0,  // TEXT_FBF
@@ -950,7 +950,7 @@ static constexpr uint8_t MC68881_BRANCH_INDEX[] PROGMEM = {
      72,  // TEXT_FDBUN
 };
 
-static constexpr Entry MC68881_TRAP[] = {
+constexpr Entry MC68881_TRAP[] = {
     P1(0xF040, TEXT_FSF,      ISZ_NONE, M_WDATA, OP_10, SZ_BYTE, 0x0000),
     P1(0xF040, TEXT_FSEQ,     ISZ_NONE, M_WDATA, OP_10, SZ_BYTE, 0x0001),
     P1(0xF040, TEXT_FSOGT,    ISZ_NONE, M_WDATA, OP_10, SZ_BYTE, 0x0002),
@@ -1081,7 +1081,7 @@ static constexpr Entry MC68881_TRAP[] = {
     P0(0xF07C, TEXT_FTRAPST,   0x001F),
 };
 
-static constexpr uint8_t MC68881_TRAP_INDEX[] PROGMEM = {
+constexpr uint8_t MC68881_TRAP_INDEX[] PROGMEM = {
       1,  // TEXT_FSEQ
       0,  // TEXT_FSF
      19,  // TEXT_FSGE
@@ -1217,74 +1217,59 @@ static constexpr uint8_t MC68881_TRAP_INDEX[] PROGMEM = {
 
 using EntryPage = entry::TableBase<Entry>;
 
-template <typename CPUTYPE, typename ENTRYPAGE>
-using Processor = entry::CpuBase<CPUTYPE, ENTRYPAGE>;
-
-struct Cpu : Processor<CpuType, EntryPage> {
-    constexpr Cpu(CpuType cpuType, const /* PROGMEM */ char *name_P, const EntryPage *head_P,
-            const EntryPage *tail_P)
-        : Processor<CpuType, EntryPage>(cpuType, name_P, head_P, tail_P) {}
-};
-
-struct Fpu : Processor<FpuType, EntryPage> {
-    constexpr Fpu(FpuType fpuType, const /* PROGMEM */ char *name_P, const EntryPage *head_P,
-            const EntryPage *tail_P)
-        : Processor<FpuType, EntryPage>(fpuType, name_P, head_P, tail_P) {}
-};
-
-static constexpr EntryPage MC68000_PAGES[] PROGMEM = {
+constexpr EntryPage MC68000_PAGES[] PROGMEM = {
         {ARRAY_RANGE(MC68000_TABLE), ARRAY_RANGE(MC68000_INDEX)},
 };
 
-static constexpr EntryPage MC68010_PAGES[] PROGMEM = {
+constexpr EntryPage MC68010_PAGES[] PROGMEM = {
         {ARRAY_RANGE(MC68000_TABLE), ARRAY_RANGE(MC68000_INDEX)},
         {ARRAY_RANGE(MC68010_TABLE), ARRAY_RANGE(MC68010_INDEX)},
 };
 
 #if !defined(LIBASM_MC68000_NOFPU)
-static constexpr EntryPage MC68881_PAGES[] PROGMEM = {
+constexpr EntryPage MC68881_PAGES[] PROGMEM = {
         {ARRAY_RANGE(MC68881_ARITH), ARRAY_RANGE(MC68881_ARITH_INDEX)},
         {ARRAY_RANGE(MC68881_BRANCH), ARRAY_RANGE(MC68881_BRANCH_INDEX)},
         {ARRAY_RANGE(MC68881_TRAP), ARRAY_RANGE(MC68881_TRAP_INDEX)},
 };
 #endif
 
-static constexpr Cpu CPU_TABLE[] PROGMEM = {
+using Cpu = entry::CpuBase<CpuType, EntryPage>;
+
+constexpr Cpu CPU_TABLE[] PROGMEM = {
         {MC68000, TEXT_CPU_68000, ARRAY_RANGE(MC68000_PAGES)},
         {MC68010, TEXT_CPU_68010, ARRAY_RANGE(MC68010_PAGES)},
 };
 
-static const Cpu *cpu(CpuType cpuType) {
+const Cpu *cpu(CpuType cpuType) {
     return Cpu::search(cpuType, ARRAY_RANGE(CPU_TABLE));
 }
 
 #define EMPTY_RANGE(a) ARRAY_BEGIN(a), ARRAY_BEGIN(a)
 
 #if !defined(LIBASM_MC68000_NOFPU)
-static constexpr Fpu FPU_TABLE[] PROGMEM = {
+using Fpu = entry::CpuBase<FpuType, EntryPage>;
+
+constexpr Fpu FPU_TABLE[] PROGMEM = {
         {FPU_MC68881, TEXT_FPU_68881, ARRAY_RANGE(MC68881_PAGES)},
         {FPU_NONE, TEXT_none, EMPTY_RANGE(MC68881_PAGES)},
 };
 
-static const Fpu *fpu(FpuType fpuType) {
+const Fpu *fpu(FpuType fpuType) {
     return Fpu::search(fpuType, ARRAY_RANGE(FPU_TABLE));
 }
 #endif
 
-static bool acceptAll(AsmInsn &, const Entry *) {
-    return true;
-}
-
-bool TableMc68000::hasOperand(const CpuSpec &cpuSpec, AsmInsn &insn) const {
-    cpu(cpuSpec.cpu)->searchName(insn, acceptAll);
+bool hasOperand(const CpuSpec &cpuSpec, AsmInsn &insn) {
+    cpu(cpuSpec.cpu)->searchName(insn, Cpu::acceptAll<AsmInsn, Entry>);
 #if !defined(LIBASM_MC68000_NOFPU)
     if (!insn.isOK())
-        fpu(cpuSpec.fpu)->searchName(insn, acceptAll);
+        fpu(cpuSpec.fpu)->searchName(insn, Cpu::acceptAll<AsmInsn, Entry>);
 #endif
     return insn.isOK() && insn.src() != M_NONE;
 }
 
-static bool acceptMode(AddrMode opr, AddrMode table, OprSize size) {
+bool acceptMode(AddrMode opr, AddrMode table, OprSize size) {
     if (opr == table)
         return true;
     if (opr == M_DREG)
@@ -1321,7 +1306,7 @@ static bool acceptMode(AddrMode opr, AddrMode table, OprSize size) {
     return false;
 }
 
-static bool acceptSize(const AsmInsn &insn, const Entry::Flags &flags) {
+bool acceptSize(const AsmInsn &insn, const Entry::Flags &flags) {
     const auto insnSize = insn.insnSize();
     const auto opr = flags.oprSize();
     if (insnSize == InsnSize(opr))
@@ -1345,13 +1330,13 @@ static bool acceptSize(const AsmInsn &insn, const Entry::Flags &flags) {
     return false;
 }
 
-static bool acceptModes(AsmInsn &insn, const Entry *entry) {
+bool acceptModes(AsmInsn &insn, const Entry *entry) {
     const auto table = entry->readFlags();
     return acceptMode(insn.srcOp.mode, table.src(), table.oprSize()) &&
            acceptMode(insn.dstOp.mode, table.dst(), table.oprSize()) && acceptSize(insn, table);
 }
 
-Error TableMc68000::searchName(const CpuSpec &cpuSpec, AsmInsn &insn) const {
+Error searchName(const CpuSpec &cpuSpec, AsmInsn &insn) {
     cpu(cpuSpec.cpu)->searchName(insn, acceptModes);
 #if !defined(LIBASM_MC68000_NOFPU)
     if (insn.getError() == UNKNOWN_INSTRUCTION) {
@@ -1363,7 +1348,7 @@ Error TableMc68000::searchName(const CpuSpec &cpuSpec, AsmInsn &insn) const {
     return insn.getError();
 }
 
-static bool invalidModeReg(Config::opcode_t opc, AddrMode addrMode, OprPos pos, OprSize size) {
+bool invalidModeReg(Config::opcode_t opc, AddrMode addrMode, OprPos pos, OprSize size) {
     uint8_t mode, reg;
     if (pos == OP_10 || addrMode == M_KFACT || addrMode == M_KDREG) {
         mode = (opc >> 3) & 7;
@@ -1419,11 +1404,11 @@ static bool invalidModeReg(Config::opcode_t opc, AddrMode addrMode, OprPos pos, 
     return reg >= 2;
 }
 
-static bool invalidSize(Config::opcode_t opc, OprSize size) {
+bool invalidSize(Config::opcode_t opc, OprSize size) {
     return size == SZ_DATA && ((opc >> 6) & 3) == 3;
 }
 
-static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *) {
+bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *) {
     auto opc = insn.opCode();
     const auto flags = entry->readFlags();
     opc &= ~flags.insnMask();
@@ -1455,7 +1440,7 @@ static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *) {
     return true;
 }
 
-Error TableMc68000::searchOpCode(const CpuSpec &cpuSpec, DisInsn &insn, StrBuffer &out) const {
+Error searchOpCode(const CpuSpec &cpuSpec, DisInsn &insn, StrBuffer &out) {
     cpu(cpuSpec.cpu)->searchOpCode(insn, out, matchOpCode);
 #if !defined(LIBASM_MC68000_NOFPU)
     if (insn.getError() == UNKNOWN_INSTRUCTION) {

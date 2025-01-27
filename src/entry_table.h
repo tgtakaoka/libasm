@@ -126,18 +126,25 @@ struct CpuBase {
         return strcasecmp_P(insn.name(), entry_P->name_P());
     }
 
+    template <typename INSN, typename ENTRY>
+    static bool acceptAll(INSN &, const ENTRY *) {
+        return true;
+    }
+
     /** Tempalte specialization of |readCode| for non-prefixed TableBase */
-    template <typename INSN, typename ENTRY, typename PAGE,
-            typename enable_if<!is_base_of<PrefixTableBase<ENTRY>, PAGE>::value>::type * = nullptr>
-    static void defaultReadCode(INSN &insn, const ENTRY *entry_P, const PAGE *) {
+    template <typename INSN, typename ENTRY,
+            typename enable_if<!is_base_of<PrefixTableBase<ENTRY>, ENTRY_PAGE>::value>::type * =
+                    nullptr>
+    static void defaultReadCode(INSN &insn, const ENTRY *entry_P, const ENTRY_PAGE *) {
         insn.setOpCode(entry_P->readOpCode());
         insn.setFlags(entry_P->readFlags());
     }
 
     /** Template specialization of |readCode| for PrefixTableBase */
-    template <typename INSN, typename ENTRY, typename PAGE,
-            typename enable_if<is_base_of<PrefixTableBase<ENTRY>, PAGE>::value>::type * = nullptr>
-    static void defaultReadCode(INSN &insn, const ENTRY *entry_P, const PAGE *page_P) {
+    template <typename INSN, typename ENTRY,
+            typename enable_if<is_base_of<PrefixTableBase<ENTRY>, ENTRY_PAGE>::value>::type * =
+                    nullptr>
+    static void defaultReadCode(INSN &insn, const ENTRY *entry_P, const ENTRY_PAGE *page_P) {
         insn.setPrefix(page_P->readPrefix());
         insn.setOpCode(entry_P->readOpCode());
         insn.setFlags(entry_P->readFlags());
@@ -173,7 +180,7 @@ struct CpuBase {
 
     template <typename INSN, typename ENTRY>
     static void defaultReadName(
-            INSN &insn, const ENTRY *entry_P, StrBuffer &out, const ENTRY_PAGE *) {
+            INSN &insn, const ENTRY *entry_P, StrBuffer &out, const ENTRY_PAGE * = nullptr) {
         insn.setFlags(entry_P->readFlags());
         auto save{out};
         insn.nameBuffer().reset().over(out).text_P(entry_P->name_P()).over(insn.nameBuffer());

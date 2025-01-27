@@ -25,7 +25,7 @@ namespace libasm {
 namespace z8 {
 
 #define E3(_opc, _name, _postFormat, _dst, _src, _ext, _dstPos, _srcPos, _extPos) \
-    { _opc, Entry::Flags::create(_dst, _src, _ext, _postFormat, _dstPos, _srcPos, _extPos), _name }
+    {_opc, Entry::Flags::create(_dst, _src, _ext, _postFormat, _dstPos, _srcPos, _extPos), _name}
 #define E2(_opc, _name, _postFormat, _dst, _src, _dstPos, _srcPos) \
     E3(_opc, _name, _postFormat, _dst, _src, M_NONE, _dstPos, _srcPos, OP_NONE)
 #define E1(_opc, _name, _postFormat, _dst, _dstPos) \
@@ -33,7 +33,7 @@ namespace z8 {
 #define E0(_opc, _name, _postFormat) E1(_opc, _name, _postFormat, M_NONE, OP_NONE)
 
 // clang-format off
-static constexpr Entry TABLE_COMMON[] PROGMEM = {
+constexpr Entry TABLE_COMMON[] PROGMEM = {
     E2(0x08, TEXT_LD,   PF_NONE, M_r,   M_R,  OP_CODE, OP_BYT1),
     E2(0x09, TEXT_LD,   PF_NONE, M_R,   M_r,  OP_BYT1, OP_CODE),
     E2(0x0C, TEXT_LD,   PF_NONE, M_r,   M_IM, OP_CODE, OP_BYT1),
@@ -138,7 +138,7 @@ static constexpr Entry TABLE_COMMON[] PROGMEM = {
     E0(0xFF, TEXT_NOP,  PF_NONE),
 };
 
-static constexpr uint8_t INDEX_COMMON[] PROGMEM = {
+constexpr uint8_t INDEX_COMMON[] PROGMEM = {
      18,  // TEXT_ADC
      19,  // TEXT_ADC
      20,  // TEXT_ADC
@@ -243,7 +243,7 @@ static constexpr uint8_t INDEX_COMMON[] PROGMEM = {
      62,  // TEXT_XOR
 };
 
-static constexpr Entry TABLE_Z8[] PROGMEM = {
+constexpr Entry TABLE_Z8[] PROGMEM = {
     E1(0x31, TEXT_SRP,  PF_NONE, M_IM,  OP_BYT1),
     E2(0x07, TEXT_ADD,  PF_NONE, M_IR,  M_IM,  OP_BYT1, OP_BYT2),
     E2(0x17, TEXT_ADC,  PF_NONE, M_IR,  M_IM,  OP_BYT1, OP_BYT2),
@@ -272,7 +272,7 @@ static constexpr Entry TABLE_Z8[] PROGMEM = {
     E1(0xD4, TEXT_CALL, PF_NONE, M_IRR, OP_BYT1),
 };
 
-static constexpr uint8_t INDEX_Z8[] PROGMEM = {
+constexpr uint8_t INDEX_Z8[] PROGMEM = {
       2,  // TEXT_ADC
       1,  // TEXT_ADD
       6,  // TEXT_AND
@@ -301,17 +301,17 @@ static constexpr uint8_t INDEX_Z8[] PROGMEM = {
      10,  // TEXT_XOR
 };
 
-static constexpr Entry TABLE_Z86C[] PROGMEM = {
+constexpr Entry TABLE_Z86C[] PROGMEM = {
     E0(0x6F, TEXT_STOP, PF_NONE),
     E0(0x7F, TEXT_HALT, PF_NONE),
 };
 
-static constexpr uint8_t INDEX_Z86C[] PROGMEM = {
+constexpr uint8_t INDEX_Z86C[] PROGMEM = {
       1,  // TEXT_HALT
       0,  // TEXT_STOP
 };
 
-static constexpr Entry TABLE_SUPER8[] PROGMEM = {
+constexpr Entry TABLE_SUPER8[] PROGMEM = {
     E0(0x0F, TEXT_NEXT,   PF_NONE),
     E0(0x1F, TEXT_ENTER,  PF_NONE),
     E0(0x2F, TEXT_EXIT,   PF_NONE),
@@ -343,7 +343,7 @@ static constexpr Entry TABLE_SUPER8[] PROGMEM = {
     E3(0xD2, TEXT_CPIJNE, PF_NONE, M_r,   M_Ir,  M_RA, OP_B1LO, OP_B1HI, OP_BYT2),
 };
 
-static constexpr uint8_t INDEX_SUPER8[] PROGMEM = {
+constexpr uint8_t INDEX_SUPER8[] PROGMEM = {
       6,  // TEXT_CALL
       7,  // TEXT_CALL
       8,  // TEXT_CALL
@@ -375,7 +375,7 @@ static constexpr uint8_t INDEX_SUPER8[] PROGMEM = {
       3,  // TEXT_WFI
 };
 
-static constexpr Entry TABLE_SUPER8_POST[] PROGMEM {
+constexpr Entry TABLE_SUPER8_POST[] PROGMEM {
     E2(0xA7, TEXT_LDC,   PF4_0, M_r,   M_DA,  OP_B1HI, OP_W2LE), // dst: r0 not allowed
     E2(0xA7, TEXT_LDE,   PF4_1, M_r,   M_DA,  OP_B1HI, OP_W2LE), // dst: r0 not allowed
     E2(0xB7, TEXT_LDC,   PF4_0, M_DA,  M_r,   OP_W2LE, OP_B1HI), // src: r0 not allowed
@@ -419,7 +419,7 @@ static constexpr Entry TABLE_SUPER8_POST[] PROGMEM {
     E3(0x37, TEXT_BTJRT, PF1_1, M_RA,  M_r,   M_IMb, OP_BYT2, OP_B1HI, OP_B1LO),
 };
 
-static constexpr uint8_t INDEX_SUPER8_POST[] PROGMEM {
+constexpr uint8_t INDEX_SUPER8_POST[] PROGMEM {
      37,  // TEXT_BAND
      38,  // TEXT_BAND
      27,  // TEXT_BCP
@@ -466,18 +466,18 @@ static constexpr uint8_t INDEX_SUPER8_POST[] PROGMEM {
 
 using EntryPage = entry::TableBase<Entry>;
 
-static constexpr EntryPage Z8_PAGES[] PROGMEM = {
+constexpr EntryPage Z8_PAGES[] PROGMEM = {
         {ARRAY_RANGE(TABLE_Z8), ARRAY_RANGE(INDEX_Z8)},
         {ARRAY_RANGE(TABLE_COMMON), ARRAY_RANGE(INDEX_COMMON)},
 };
 
-static constexpr EntryPage Z86C_PAGES[] PROGMEM = {
+constexpr EntryPage Z86C_PAGES[] PROGMEM = {
         {ARRAY_RANGE(TABLE_Z8), ARRAY_RANGE(INDEX_Z8)},
         {ARRAY_RANGE(TABLE_COMMON), ARRAY_RANGE(INDEX_COMMON)},
         {ARRAY_RANGE(TABLE_Z86C), ARRAY_RANGE(INDEX_Z86C)},
 };
 
-static constexpr EntryPage SUPER8_PAGES[] PROGMEM = {
+constexpr EntryPage SUPER8_PAGES[] PROGMEM = {
         {ARRAY_RANGE(TABLE_SUPER8), ARRAY_RANGE(INDEX_SUPER8)},
         {ARRAY_RANGE(TABLE_SUPER8_POST), ARRAY_RANGE(INDEX_SUPER8_POST)},
         {ARRAY_RANGE(TABLE_COMMON), ARRAY_RANGE(INDEX_COMMON)},
@@ -485,17 +485,17 @@ static constexpr EntryPage SUPER8_PAGES[] PROGMEM = {
 
 using Cpu = entry::CpuBase<CpuType, EntryPage>;
 
-static constexpr Cpu CPU_TABLE[] PROGMEM = {
+constexpr Cpu CPU_TABLE[] PROGMEM = {
         {Z8, TEXT_CPU_Z8, ARRAY_RANGE(Z8_PAGES)},
         {Z86C, TEXT_CPU_Z86C, ARRAY_RANGE(Z86C_PAGES)},
         {SUPER8, TEXT_CPU_Z88, ARRAY_RANGE(SUPER8_PAGES)},
 };
 
-static const Cpu *cpu(CpuType cpuType) {
+const Cpu *cpu(CpuType cpuType) {
     return Cpu::search(cpuType, ARRAY_RANGE(CPU_TABLE));
 }
 
-static bool acceptMode(AddrMode opr, AddrMode table) {
+bool acceptMode(AddrMode opr, AddrMode table) {
     if (opr == table)
         return true;
     if (opr == M_IM)
@@ -532,18 +532,18 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
     return false;
 }
 
-static bool acceptModes(AsmInsn &insn, const Entry *entry) {
+bool acceptModes(AsmInsn &insn, const Entry *entry) {
     const auto table = entry->readFlags();
     return acceptMode(insn.dstOp.mode, table.dst()) && acceptMode(insn.srcOp.mode, table.src()) &&
            acceptMode(insn.extOp.mode, table.ext());
 }
 
-Error TableZ8::searchName(CpuType cpuType, AsmInsn &insn) const {
+Error searchName(CpuType cpuType, AsmInsn &insn) {
     cpu(cpuType)->searchName(insn, acceptModes);
     return insn.getError();
 }
 
-static bool matchPostByte(Config::opcode_t post, PostFormat format) {
+bool matchPostByte(Config::opcode_t post, PostFormat format) {
     switch (format) {
     case PF1_0:
         return (post & 1) == 0;
@@ -564,7 +564,7 @@ static bool matchPostByte(Config::opcode_t post, PostFormat format) {
     }
 }
 
-static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *) {
+bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *) {
     auto opc = insn.opCode();
     const auto flags = entry->readFlags();
     if (flags.dstPos() == OP_CODE || flags.srcPos() == OP_CODE)
@@ -579,7 +579,7 @@ static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *) {
     return false;
 }
 
-Error TableZ8::searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) const {
+Error searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) {
     cpu(cpuType)->searchOpCode(insn, out, matchOpCode);
     return insn.getError();
 }

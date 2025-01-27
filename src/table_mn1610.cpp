@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
+#include "table_mn1610.h"
 #include "entry_mn1610.h"
 #include "entry_table.h"
-#include "table_mn1610.h"
 #include "text_mn1610.h"
 
 using namespace libasm::text::mn1610;
@@ -32,7 +32,7 @@ namespace mn1610 {
 #define E0(_opc, _name) E1(_opc, _name, M_NONE)
 
 // clang-format off
-static constexpr Entry TABLE_COMMON[] PROGMEM = {
+constexpr Entry TABLE_COMMON[] PROGMEM = {
         E0(0x2000, TEXT_H),
         E0(0x2003, TEXT_RET),
         E1(0x2001, TEXT_PUSH, M_RD),
@@ -40,7 +40,7 @@ static constexpr Entry TABLE_COMMON[] PROGMEM = {
         E1(0x2004, TEXT_LPSW, M_ILVL),
 };
 
-static constexpr uint8_t INDEX_COMMON[] PROGMEM = {
+constexpr uint8_t INDEX_COMMON[] PROGMEM = {
       0,  // TEXT_H
       4,  // TEXT_LPSW
       3,  // TEXT_POP
@@ -48,7 +48,7 @@ static constexpr uint8_t INDEX_COMMON[] PROGMEM = {
       1,  // TEXT_RET
 };
 
-static constexpr Entry TABLE_MN1610[] PROGMEM = {
+constexpr Entry TABLE_MN1610[] PROGMEM = {
         E2(0x0800, TEXT_MVI,  M_RD,   M_IM8),
         E2(0x1000, TEXT_WT,   M_RD,   M_IOA),
         E2(0x1800, TEXT_RD,   M_RD,   M_IOA),
@@ -83,7 +83,7 @@ static constexpr Entry TABLE_MN1610[] PROGMEM = {
         E2(0x6008, TEXT_TST,  M_RDS,  M_SKIP),
 };
 
-static constexpr uint8_t INDEX_MN1610[] PROGMEM = {
+constexpr uint8_t INDEX_MN1610[] PROGMEM = {
      15,  // TEXT_A
      11,  // TEXT_AI
      19,  // TEXT_AND
@@ -118,7 +118,7 @@ static constexpr uint8_t INDEX_MN1610[] PROGMEM = {
       1,  // TEXT_WT
 };
 
-static constexpr Entry TABLE_MN1613[] PROGMEM = {
+constexpr Entry TABLE_MN1613[] PROGMEM = {
         E2(0x0F07, TEXT_LB,   M_RBW,  M_ABS),
         E2(0x0F00, TEXT_SETB, M_RS,   M_RBW),
         E2(0x0F0F, TEXT_LS,   M_RP,   M_ABS),
@@ -194,7 +194,7 @@ static constexpr Entry TABLE_MN1613[] PROGMEM = {
         E3(0x780F, TEXT_MVWI, M_RD,   M_IM16, M_SKIP),
 };
 
-static constexpr uint8_t INDEX_MN1613[] PROGMEM = {
+constexpr uint8_t INDEX_MN1613[] PROGMEM = {
      40,  // TEXT_AD
      41,  // TEXT_AD
      65,  // TEXT_ANDI
@@ -273,12 +273,12 @@ static constexpr uint8_t INDEX_MN1613[] PROGMEM = {
 
 using EntryPage = entry::TableBase<Entry>;
 
-static constexpr EntryPage MN1610_PAGES[] PROGMEM = {
+constexpr EntryPage MN1610_PAGES[] PROGMEM = {
         {ARRAY_RANGE(TABLE_COMMON), ARRAY_RANGE(INDEX_COMMON)},
         {ARRAY_RANGE(TABLE_MN1610), ARRAY_RANGE(INDEX_MN1610)},
 };
 
-static constexpr EntryPage MN1613_PAGES[] PROGMEM = {
+constexpr EntryPage MN1613_PAGES[] PROGMEM = {
         {ARRAY_RANGE(TABLE_COMMON), ARRAY_RANGE(INDEX_COMMON)},
         {ARRAY_RANGE(TABLE_MN1613), ARRAY_RANGE(INDEX_MN1613)},
         {ARRAY_RANGE(TABLE_MN1610), ARRAY_RANGE(INDEX_MN1610)},
@@ -286,26 +286,22 @@ static constexpr EntryPage MN1613_PAGES[] PROGMEM = {
 
 using Cpu = entry::CpuBase<CpuType, EntryPage>;
 
-static constexpr Cpu CPU_TABLE[] PROGMEM = {
+constexpr Cpu CPU_TABLE[] PROGMEM = {
         {MN1610, TEXT_CPU_MN1610, ARRAY_RANGE(MN1610_PAGES)},
         {MN1613, TEXT_CPU_MN1613, ARRAY_RANGE(MN1613_PAGES)},
         {MN1613A, TEXT_CPU_MN1613A, ARRAY_RANGE(MN1613_PAGES)},
 };
 
-static const Cpu *cpu(CpuType cpuType) {
+const Cpu *cpu(CpuType cpuType) {
     return Cpu::search(cpuType, ARRAY_RANGE(CPU_TABLE));
 }
 
-static bool acceptAll(AsmInsn &, const Entry *) {
-    return true;
-}
-
-bool TableMn1610::hasOperand(CpuType cpuType, AsmInsn &insn) const {
-    cpu(cpuType)->searchName(insn, acceptAll);
+bool hasOperand(CpuType cpuType, AsmInsn &insn) {
+    cpu(cpuType)->searchName(insn, Cpu::acceptAll<AsmInsn, Entry>);
     return insn.isOK() && insn.mode1() != M_NONE;
 }
 
-static bool acceptMode(AddrMode opr, AddrMode table) {
+bool acceptMode(AddrMode opr, AddrMode table) {
     if (table == opr)
         return true;
     switch (table) {
@@ -348,18 +344,18 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
     }
 }
 
-static bool acceptModes(AsmInsn &insn, const Entry *entry) {
+bool acceptModes(AsmInsn &insn, const Entry *entry) {
     const auto table = entry->readFlags();
     return acceptMode(insn.op1.mode, table.mode1()) && acceptMode(insn.op2.mode, table.mode2()) &&
            acceptMode(insn.op3.mode, table.mode3()) && acceptMode(insn.op4.mode, table.mode4());
 }
 
-Error TableMn1610::searchName(CpuType cpuType, AsmInsn &insn) const {
+Error searchName(CpuType cpuType, AsmInsn &insn) {
     cpu(cpuType)->searchName(insn, acceptModes);
     return insn.getError();
 }
 
-static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *) {
+bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *) {
     auto opc = insn.opCode();
     const auto flags = entry->readFlags();
     const auto mode1 = flags.mode1();
@@ -433,7 +429,7 @@ static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *) {
     return opc == entry->readOpCode();
 }
 
-Error TableMn1610::searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) const {
+Error searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) {
     cpu(cpuType)->searchOpCode(insn, out, matchOpCode);
     return insn.getError();
 }

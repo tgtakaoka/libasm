@@ -24,11 +24,8 @@ using namespace libasm::text::z8000;
 namespace libasm {
 namespace z8000 {
 
-#define X4(_opc, _name, _cf, _sz, _dst, _src, _dstf, _srcf, _ex1, _ex2, _postFormat)             \
-    {                                                                                            \
-        _opc, Entry::Flags::create(_dst, _dstf, _src, _srcf, _ex1, _ex2, _postFormat, _cf, _sz), \
-                _name                                                                            \
-    }
+#define X4(_opc, _name, _cf, _sz, _dst, _src, _dstf, _srcf, _ex1, _ex2, _postFormat) \
+    {_opc, Entry::Flags::create(_dst, _dstf, _src, _srcf, _ex1, _ex2, _postFormat, _cf, _sz), _name}
 #define X3(_opc, _name, _cf, _sz, _dst, _src, _dstf, _srcf, _ex1, _postFormat) \
     X4(_opc, _name, _cf, _sz, _dst, _src, _dstf, _srcf, _ex1, E2_NONE, _postFormat)
 #define X2(_opc, _name, _cf, _sz, _dst, _src, _dstf, _srcf, _postFormat) \
@@ -39,7 +36,7 @@ namespace z8000 {
 #define E0(_opc, _name, _cf) E1(_opc, _name, _cf, SZ_NONE, M_NONE, OP_NO)
 
 // clang-format off
-static constexpr Entry TABLE_Z8000[] PROGMEM = {
+constexpr Entry TABLE_Z8000[] PROGMEM = {
     E2(0xC000, TEXT_LDB,    CF_0FFF, SZ_BYTE, M_R,    M_IM8,  OP_C8, OP_C0),
     E1(0xD000, TEXT_CALR,   CF_0FFF, SZ_NONE, M_RA12,         OP_C0),
     E2(0xE000, TEXT_JR,     CF_0FFF, SZ_NONE, M_CC,   M_RA8,  OP_C8, OP_C0),
@@ -274,7 +271,7 @@ static constexpr Entry TABLE_Z8000[] PROGMEM = {
     X4(0xBB0E, TEXT_CPSDR,  CF_00F0, SZ_WORD, M_IR,   M_IR,   OP_P4, OP_C4, E1_WR, E2_CC, PF_0XXX),
 };
 
-static constexpr uint8_t INDEX_Z8000[] PROGMEM = {
+constexpr uint8_t INDEX_Z8000[] PROGMEM = {
      88,  // TEXT_ADC
      87,  // TEXT_ADCB
      95,  // TEXT_ADD
@@ -512,22 +509,22 @@ static constexpr uint8_t INDEX_Z8000[] PROGMEM = {
 
 using EntryPage = entry::TableBase<Entry>;
 
-static constexpr EntryPage Z8000_PAGES[] PROGMEM = {
+constexpr EntryPage Z8000_PAGES[] PROGMEM = {
         {ARRAY_RANGE(TABLE_Z8000), ARRAY_RANGE(INDEX_Z8000)},
 };
 
 using Cpu = entry::CpuBase<CpuType, EntryPage>;
 
-static constexpr Cpu CPU_TABLE[] PROGMEM = {
+constexpr Cpu CPU_TABLE[] PROGMEM = {
         {Z8001, TEXT_CPU_Z8001, ARRAY_RANGE(Z8000_PAGES)},
         {Z8002, TEXT_CPU_Z8002, ARRAY_RANGE(Z8000_PAGES)},
 };
 
-static const Cpu *cpu(CpuType cpuType) {
+const Cpu *cpu(CpuType cpuType) {
     return Cpu::search(cpuType, ARRAY_RANGE(CPU_TABLE));
 }
 
-static bool acceptMode(AddrMode opr, AddrMode table) {
+bool acceptMode(AddrMode opr, AddrMode table) {
     if (opr == table)
         return true;
     if (opr == M_R)
@@ -550,18 +547,18 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
     return false;
 }
 
-static bool acceptModes(AsmInsn &insn, const Entry *entry) {
+bool acceptModes(AsmInsn &insn, const Entry *entry) {
     const auto table = entry->readFlags();
     return acceptMode(insn.dstOp.mode, table.dst()) && acceptMode(insn.srcOp.mode, table.src()) &&
            acceptMode(insn.ex1Op.mode, table.ex1()) && acceptMode(insn.ex2Op.mode, table.ex2());
 }
 
-Error TableZ8000::searchName(CpuType cpuType, AsmInsn &insn) const {
+Error searchName(CpuType cpuType, AsmInsn &insn) {
     cpu(cpuType)->searchName(insn, acceptModes);
     return insn.getError();
 }
 
-static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *) {
+bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *) {
     const auto flags = entry->readFlags();
     const auto cf = flags.codeFormat();
     const auto opc = insn.opCode();
@@ -578,16 +575,16 @@ static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *) {
     return true;
 }
 
-Error TableZ8000::searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) const {
+Error searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) {
     cpu(cpuType)->searchOpCode(insn, out, matchOpCode);
     return insn.getError();
 }
 
-Error TableZ8000::searchOpCodeAlias(CpuType cpuType, DisInsn &insn, StrBuffer &out) const {
+Error searchOpCodeAlias(CpuType cpuType, DisInsn &insn, StrBuffer &out) {
     auto entry = cpu(cpuType)->searchOpCode(insn, out, matchOpCode);
     if (entry) {
         entry++;
-        Cpu::defaultReadName(insn, entry, out, nullptr);
+        Cpu::defaultReadName(insn, entry, out);
     }
     return insn.getError();
 }

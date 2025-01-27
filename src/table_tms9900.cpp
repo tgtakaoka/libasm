@@ -24,15 +24,13 @@ using namespace libasm::text::tms9900;
 namespace libasm {
 namespace tms9900 {
 
-#define E2(_opc, _name, _src, _dst) \
-    { _opc, Entry::Flags::create(_src, _dst), _name }
-#define B2(_opc, _name, _src, _dst) \
-    { _opc, Entry::Flags::create(_src, _dst, true), _name }
+#define E2(_opc, _name, _src, _dst) {_opc, Entry::Flags::create(_src, _dst), _name}
+#define B2(_opc, _name, _src, _dst) {_opc, Entry::Flags::create(_src, _dst, true), _name}
 #define E1(_opc, _name, _src) E2(_opc, _name, _src, M_NONE)
 #define E0(_opc, _name) E1(_opc, _name, M_NONE)
 
 // clang-format off
-static constexpr Entry TABLE_TMS9900[] PROGMEM = {
+constexpr Entry TABLE_TMS9900[] PROGMEM = {
     E2(0x0200, TEXT_LI,   M_REG,  M_IMM),
     E2(0x0220, TEXT_AI,   M_REG,  M_IMM),
     E2(0x0240, TEXT_ANDI, M_REG,  M_IMM),
@@ -106,7 +104,7 @@ static constexpr Entry TABLE_TMS9900[] PROGMEM = {
     B2(0xF000, TEXT_SOCB, M_SRC,  M_DST),
 };
 
-static constexpr uint8_t INDEX_TMS9900[] PROGMEM = {
+constexpr uint8_t INDEX_TMS9900[] PROGMEM = {
      65,  // TEXT_A
      66,  // TEXT_AB
      30,  // TEXT_ABS
@@ -180,21 +178,21 @@ static constexpr uint8_t INDEX_TMS9900[] PROGMEM = {
      53,  // TEXT_XOR
 };
 
-static constexpr Entry TABLE_TMS9995[] PROGMEM = {
+constexpr Entry TABLE_TMS9995[] PROGMEM = {
     E1(0x0080, TEXT_LST,  M_REG),
     E1(0x0090, TEXT_LWP,  M_REG),
     E1(0x0180, TEXT_DIVS, M_SRC),
     E1(0x01C0, TEXT_MPYS, M_SRC),
 };
 
-static constexpr uint8_t INDEX_TMS9995[] PROGMEM = {
+constexpr uint8_t INDEX_TMS9995[] PROGMEM = {
       2,  // TEXT_DIVS
       0,  // TEXT_LST
       1,  // TEXT_LWP
       3,  // TEXT_MPYS
 };
 
-static constexpr Entry TABLE_TMS99105[] PROGMEM = {
+constexpr Entry TABLE_TMS99105[] PROGMEM = {
     E2(0x001C, TEXT_SRAM, M_SRC2, M_CNT4),
     E2(0x001D, TEXT_SLAM, M_SRC2, M_CNT4),
     E2(0x0029, TEXT_SM,   M_SRC2, M_DST4),
@@ -213,7 +211,7 @@ static constexpr Entry TABLE_TMS99105[] PROGMEM = {
     E1(0x0384, TEXT_RTWP, M_RTWP),
 };
 
-static constexpr uint8_t INDEX_TMS99105[] PROGMEM = {
+constexpr uint8_t INDEX_TMS99105[] PROGMEM = {
       3,  // TEXT_AM
       6,  // TEXT_BIND
       4,  // TEXT_BLSK
@@ -228,7 +226,7 @@ static constexpr uint8_t INDEX_TMS99105[] PROGMEM = {
       9,  // TEXT_TSMB
 };
 
-static constexpr Entry TABLE_TMS99110[] PROGMEM = {
+constexpr Entry TABLE_TMS99110[] PROGMEM = {
     E0(0x0780, TEXT_LDS),
     E0(0x07C0, TEXT_LDD),
     E0(0x0C00, TEXT_CRI),
@@ -246,7 +244,7 @@ static constexpr Entry TABLE_TMS99110[] PROGMEM = {
     E2(0x0302, TEXT_MM,  M_SRC2, M_DST0),
 };
 
-static constexpr uint8_t INDEX_TMS99110[] PROGMEM = {
+constexpr uint8_t INDEX_TMS99110[] PROGMEM = {
       6,  // TEXT_AR
       5,  // TEXT_CER
       7,  // TEXT_CIR
@@ -268,22 +266,22 @@ static constexpr uint8_t INDEX_TMS99110[] PROGMEM = {
 
 using EntryPage = entry::TableBase<Entry>;
 
-static constexpr EntryPage TMS9900_PAGES[] PROGMEM = {
+constexpr EntryPage TMS9900_PAGES[] PROGMEM = {
         {ARRAY_RANGE(TABLE_TMS9900), ARRAY_RANGE(INDEX_TMS9900)},
 };
 
-static constexpr EntryPage TMS9995_PAGES[] PROGMEM = {
+constexpr EntryPage TMS9995_PAGES[] PROGMEM = {
         {ARRAY_RANGE(TABLE_TMS9900), ARRAY_RANGE(INDEX_TMS9900)},
         {ARRAY_RANGE(TABLE_TMS9995), ARRAY_RANGE(INDEX_TMS9995)},
 };
 
-static constexpr EntryPage TMS99105_PAGES[] PROGMEM = {
+constexpr EntryPage TMS99105_PAGES[] PROGMEM = {
         {ARRAY_RANGE(TABLE_TMS99105), ARRAY_RANGE(INDEX_TMS99105)},
         {ARRAY_RANGE(TABLE_TMS9900), ARRAY_RANGE(INDEX_TMS9900)},
         {ARRAY_RANGE(TABLE_TMS9995), ARRAY_RANGE(INDEX_TMS9995)},
 };
 
-static constexpr EntryPage TMS99110_PAGES[] PROGMEM = {
+constexpr EntryPage TMS99110_PAGES[] PROGMEM = {
         {ARRAY_RANGE(TABLE_TMS99105), ARRAY_RANGE(INDEX_TMS99105)},
         {ARRAY_RANGE(TABLE_TMS9900), ARRAY_RANGE(INDEX_TMS9900)},
         {ARRAY_RANGE(TABLE_TMS9995), ARRAY_RANGE(INDEX_TMS9995)},
@@ -292,7 +290,7 @@ static constexpr EntryPage TMS99110_PAGES[] PROGMEM = {
 
 using Cpu = entry::CpuBase<CpuType, EntryPage>;
 
-static constexpr Cpu CPU_TABLE[] PROGMEM = {
+constexpr Cpu CPU_TABLE[] PROGMEM = {
         {TMS9900, TEXT_CPU_9900, ARRAY_RANGE(TMS9900_PAGES)},
         {TMS9980, TEXT_CPU_9980, ARRAY_RANGE(TMS9900_PAGES)},
         {TMS9995, TEXT_CPU_9995, ARRAY_RANGE(TMS9995_PAGES)},
@@ -300,20 +298,16 @@ static constexpr Cpu CPU_TABLE[] PROGMEM = {
         {TMS99110, TEXT_CPU_99110, ARRAY_RANGE(TMS99110_PAGES)},
 };
 
-static const Cpu *cpu(CpuType cpuType) {
+const Cpu *cpu(CpuType cpuType) {
     return Cpu::search(cpuType, ARRAY_RANGE(CPU_TABLE));
 }
 
-static bool acceptAll(AsmInsn &, const Entry *) {
-    return true;
-}
-
-bool TableTms9900::hasOperand(CpuType cpuType, AsmInsn &insn) const {
-    cpu(cpuType)->searchName(insn, acceptAll);
+bool hasOperand(CpuType cpuType, AsmInsn &insn) {
+    cpu(cpuType)->searchName(insn, Cpu::acceptAll<AsmInsn, Entry>);
     return insn.isOK() && insn.src() != M_NONE;
 }
 
-static bool acceptMode(AddrMode opr, AddrMode table) {
+bool acceptMode(AddrMode opr, AddrMode table) {
     if (opr == table)
         return true;
     if (opr == M_IREG || opr == M_INCR || opr == M_SYBL || opr == M_INDX)
@@ -328,17 +322,17 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
     return false;
 }
 
-static bool acceptModes(AsmInsn &insn, const Entry *entry) {
+bool acceptModes(AsmInsn &insn, const Entry *entry) {
     const auto table = entry->readFlags();
     return acceptMode(insn.srcOp.mode, table.src()) && acceptMode(insn.dstOp.mode, table.dst());
 }
 
-Error TableTms9900::searchName(CpuType cpuType, AsmInsn &insn) const {
+Error searchName(CpuType cpuType, AsmInsn &insn) {
     cpu(cpuType)->searchName(insn, acceptModes);
     return insn.getError();
 }
 
-static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *) {
+bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *) {
     auto opCode = insn.opCode();
     const auto flags = entry->readFlags();
     const auto src = flags.src();
@@ -359,7 +353,7 @@ static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *) {
     return opCode == entry->readOpCode();
 }
 
-Error TableTms9900::searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) const {
+Error searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) {
     cpu(cpuType)->searchOpCode(insn, out, matchOpCode);
     return insn.getError();
 }

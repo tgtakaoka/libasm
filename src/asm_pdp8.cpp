@@ -15,7 +15,6 @@
  */
 
 #include "asm_pdp8.h"
-
 #include "reg_pdp8.h"
 #include "table_pdp8.h"
 #include "text_common.h"
@@ -220,9 +219,9 @@ Error AsmPdp8::parseMemExtensionOperand(StrScanner &scan, AsmInsn &insn) const {
         if (_parser.readInstruction(p, name) != OK)
             return parseField(scan, insn);
         micro.nameBuffer().reset().text(name);
-        if (TABLE.searchName(cpuType(), micro) != OK)
+        if (searchName(cpuType(), micro) != OK)
             return parseField(scan, insn);
-        if (TABLE.searchMicro(cpuType(), micro, M_MEX) != OK)
+        if (searchMicro(cpuType(), micro, M_MEX) != OK)
             return parseField(scan, insn);
         insn.setErrorIf(scan, encodeMicro(insn, micro, done));
         scan = p;
@@ -242,10 +241,12 @@ Error AsmPdp8::parseOperateOperand(StrScanner &scan, AsmInsn &insn) const {
         if (_parser.readInstruction(p, name) != OK)
             return insn.setError(at, UNKNOWN_INSTRUCTION);
         micro.nameBuffer().reset().text(name);
-        if (insn.setErrorIf(at, TABLE.searchName(cpuType(), micro)) == UNKNOWN_INSTRUCTION)
+        if (searchName(cpuType(), micro) == UNKNOWN_INSTRUCTION) {
+            insn.setErrorIf(at, micro);
             continue;
+        }
         if (mode != M_NONE) {
-            TABLE.searchMicro(cpuType(), micro, mode);
+            searchMicro(cpuType(), micro, mode);
             if (micro.isOK()) {
                 insn.setErrorIf(at, encodeMicro(insn, micro, done));
             } else if (micro.getError() == OPERAND_NOT_ALLOWED) {
@@ -257,7 +258,7 @@ Error AsmPdp8::parseOperateOperand(StrScanner &scan, AsmInsn &insn) const {
         }
         auto m = M_GR1;
         for (;;) {
-            TABLE.searchMicro(cpuType(), micro, m);
+            searchMicro(cpuType(), micro, m);
             if (micro.isOK()) {
                 mode = m;
                 insn.setErrorIf(at, encodeMicro(insn, micro, done));
@@ -328,7 +329,7 @@ Error AsmPdp8::processPseudo(StrScanner &scan, Insn &insn) {
 
 Error AsmPdp8::encodeImpl(StrScanner &scan, Insn &_insn) const {
     AsmInsn insn(_insn);
-    const auto error = TABLE.searchName(cpuType(), insn);
+    const auto error = searchName(cpuType(), insn);
     if (_implicitWord && error != OK) {
         StrScanner p = _insn.errorAt();
         insn.setOK();  // clear UNKNOWN_INSTRUCTION

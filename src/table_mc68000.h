@@ -27,13 +27,13 @@ struct TableMc68000 final : InsnTable<CpuType> {
     const /*PROGMEM*/ char *listCpu_P() const override;
     const /*PROGMEM*/ char *cpuName_P(CpuType cpuType) const override;
     Error searchCpuName(StrScanner &name, CpuType &cpuType) const override;
-
-    bool hasOperand(const CpuSpec &, AsmInsn &insn) const;
-    Error searchName(const CpuSpec &, AsmInsn &insn) const;
-    Error searchOpCode(const CpuSpec &, DisInsn &insn, StrBuffer &out) const;
 };
 
 extern const TableMc68000 TABLE;
+
+bool hasOperand(const CpuSpec &, AsmInsn &insn);
+Error searchName(const CpuSpec &, AsmInsn &insn);
+Error searchOpCode(const CpuSpec &, DisInsn &insn, StrBuffer &out);
 
 }  // namespace mc68000
 }  // namespace libasm

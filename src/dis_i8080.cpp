@@ -116,13 +116,13 @@ Error DisI8080::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) const
     DisInsn insn(_insn, memory, out);
     const auto opc = insn.readByte();
     insn.setOpCode(opc);
-    if (TABLE.isPrefix(cpuType(), opc)) {
+    if (isPrefix(cpuType(), opc)) {
         insn.setPrefix(opc);
         insn.setOpCode(insn.readByte());
         if (insn.getError())
             return _insn.setError(insn);
     }
-    if (TABLE.searchOpCode(cpuType(), insn, out, _zilogSyntax))
+    if (searchOpCode(cpuType(), insn, out, _zilogSyntax))
         return _insn.setError(insn);
 
     const auto dst = insn.dst();

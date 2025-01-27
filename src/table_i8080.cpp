@@ -24,15 +24,13 @@ using namespace libasm::text::i8080;
 namespace libasm {
 namespace i8080 {
 
-#define E2(_opc, _name, _dst, _src) \
-    { _opc, Entry::Flags::create(_dst, _src), _name }
+#define E2(_opc, _name, _dst, _src) {_opc, Entry::Flags::create(_dst, _src), _name}
 #define E1(_opc, _name, _dst) E2(_opc, _name, _dst, M_NONE)
 #define E0(_opc, _name) E1(_opc, _name, M_NONE)
-#define U2(_opc, _name, _dst, _src) \
-    { _opc, Entry::Flags::undef(_dst, _src), _name }
+#define U2(_opc, _name, _dst, _src) {_opc, Entry::Flags::undef(_dst, _src), _name}
 
 // clang-format off
-static constexpr Entry TABLE_I8080[] PROGMEM = {
+constexpr Entry TABLE_I8080[] PROGMEM = {
     E0(0x00, TEXT_NOP),
     E2(0x01, TEXT_LXI,  M_PTR,  M_IM16),
     E1(0x09, TEXT_DAD,  M_PTR),
@@ -113,7 +111,7 @@ static constexpr Entry TABLE_I8080[] PROGMEM = {
     E1(0xC7, TEXT_RST,  M_VEC),
 };
 
-static constexpr uint8_t INDEX_I8080[] PROGMEM = {
+constexpr uint8_t INDEX_I8080[] PROGMEM = {
      70,  // TEXT_ACI
      25,  // TEXT_ADC
      24,  // TEXT_ADD
@@ -194,7 +192,7 @@ static constexpr uint8_t INDEX_I8080[] PROGMEM = {
      55,  // TEXT_XTHL
 };
 
-static constexpr Entry TABLE_Z8080[] PROGMEM = {
+constexpr Entry TABLE_Z8080[] PROGMEM = {
     E0(0x00, TEXT_NOP),
     E2(0x01, TEXT_LD,   M_PTR, M_IM16),
     E2(0x09, TEXT_ADD,  R_HL,  M_PTR),
@@ -267,7 +265,7 @@ static constexpr Entry TABLE_Z8080[] PROGMEM = {
     E1(0xC7, TEXT_RST,  M_VEC),
 };
 
-static constexpr uint8_t INDEX_Z8080[] PROGMEM = {
+constexpr uint8_t INDEX_Z8080[] PROGMEM = {
      26,  // TEXT_ADC
      57,  // TEXT_ADC
       2,  // TEXT_ADD
@@ -340,32 +338,32 @@ static constexpr uint8_t INDEX_Z8080[] PROGMEM = {
      64,  // TEXT_XOR
 };
 
-static constexpr Entry TABLE_I8085[] PROGMEM = {
+constexpr Entry TABLE_I8085[] PROGMEM = {
     E0(0x20, TEXT_RIM),
     E0(0x30, TEXT_SIM),
 };
 
-static constexpr uint8_t INDEX_I8085[] PROGMEM = {
+constexpr uint8_t INDEX_I8085[] PROGMEM = {
       0,  // TEXT_RIM
       1,  // TEXT_SIM
 };
 
-static constexpr Entry TABLE_Z8085[] PROGMEM = {
+constexpr Entry TABLE_Z8085[] PROGMEM = {
     E2(0x20, TEXT_LD, R_A,  R_IM),
     E2(0x30, TEXT_LD, R_IM, R_A),
 };
 
-static constexpr uint8_t INDEX_Z8085[] PROGMEM = {
+constexpr uint8_t INDEX_Z8085[] PROGMEM = {
       0,  // TEXT_LD
       1,  // TEXT_LD
 };
 
-static constexpr Entry TABLE_V30EMU[] PROGMEM = {
+constexpr Entry TABLE_V30EMU[] PROGMEM = {
     E1(0xED, TEXT_CALLN, M_IM8),
     E0(0xFD, TEXT_RETEM),
 };
 
-static constexpr uint8_t INDEX_V30EMU[] PROGMEM = {
+constexpr uint8_t INDEX_V30EMU[] PROGMEM = {
       0,  // TEXT_CALLN
       1,  // TEXT_RETEM
 };
@@ -374,54 +372,54 @@ static constexpr uint8_t INDEX_V30EMU[] PROGMEM = {
 
 using EntryPage = entry::PrefixTableBase<Entry>;
 
-static constexpr EntryPage I8080_PAGES[] PROGMEM = {
+constexpr EntryPage I8080_PAGES[] PROGMEM = {
         {0x00, ARRAY_RANGE(TABLE_I8080), ARRAY_RANGE(INDEX_I8080)},
 };
 
-static constexpr EntryPage Z8080_PAGES[] PROGMEM = {
+constexpr EntryPage Z8080_PAGES[] PROGMEM = {
         {0x00, ARRAY_RANGE(TABLE_Z8080), ARRAY_RANGE(INDEX_Z8080)},
 };
 
-static constexpr EntryPage I8085_PAGES[] PROGMEM = {
+constexpr EntryPage I8085_PAGES[] PROGMEM = {
         {0x00, ARRAY_RANGE(TABLE_I8080), ARRAY_RANGE(INDEX_I8080)},
         {0x00, ARRAY_RANGE(TABLE_I8085), ARRAY_RANGE(INDEX_I8085)},
 };
 
-static constexpr EntryPage Z8085_PAGES[] PROGMEM = {
+constexpr EntryPage Z8085_PAGES[] PROGMEM = {
         {0x00, ARRAY_RANGE(TABLE_Z8080), ARRAY_RANGE(INDEX_Z8080)},
         {0x00, ARRAY_RANGE(TABLE_Z8085), ARRAY_RANGE(INDEX_Z8085)},
 };
 
-static constexpr EntryPage V30EMU_PAGES[] PROGMEM = {
+constexpr EntryPage V30EMU_PAGES[] PROGMEM = {
         {0x00, ARRAY_RANGE(TABLE_I8080), ARRAY_RANGE(INDEX_I8080)},
         {0xED, ARRAY_RANGE(TABLE_V30EMU), ARRAY_RANGE(INDEX_V30EMU)},
 };
 
-static constexpr EntryPage Z30EMU_PAGES[] PROGMEM = {
+constexpr EntryPage Z30EMU_PAGES[] PROGMEM = {
         {0x00, ARRAY_RANGE(TABLE_Z8080), ARRAY_RANGE(INDEX_Z8080)},
         {0xED, ARRAY_RANGE(TABLE_V30EMU), ARRAY_RANGE(INDEX_V30EMU)},
 };
 
 using Cpu = entry::CpuBase<CpuType, EntryPage>;
 
-static constexpr Cpu INTEL_TABLE[] PROGMEM = {
+constexpr Cpu INTEL_TABLE[] PROGMEM = {
         {I8080, TEXT_CPU_8080, ARRAY_RANGE(I8080_PAGES)},
         {I8085, TEXT_CPU_8085, ARRAY_RANGE(I8085_PAGES)},
         {V30EMU, TEXT_CPU_V30EMU, ARRAY_RANGE(V30EMU_PAGES)},
 };
 
-static constexpr Cpu ZILOG_TABLE[] PROGMEM = {
+constexpr Cpu ZILOG_TABLE[] PROGMEM = {
         {I8080, TEXT_CPU_8080, ARRAY_RANGE(Z8080_PAGES)},
         {I8085, TEXT_CPU_8085, ARRAY_RANGE(Z8085_PAGES)},
         {V30EMU, TEXT_CPU_V30EMU, ARRAY_RANGE(Z30EMU_PAGES)},
 };
 
-static const Cpu *cpu(CpuType cpuType, bool zilog) {
+const Cpu *cpu(CpuType cpuType, bool zilog) {
     return zilog ? Cpu::search(cpuType, ARRAY_RANGE(ZILOG_TABLE))
                  : Cpu::search(cpuType, ARRAY_RANGE(INTEL_TABLE));
 }
 
-static bool acceptIntelMode(AddrMode opr, AddrMode table) {
+bool acceptIntelMode(AddrMode opr, AddrMode table) {
     if (opr == table)
         return true;
     if (opr == M_SRC)
@@ -433,13 +431,13 @@ static bool acceptIntelMode(AddrMode opr, AddrMode table) {
     return false;
 }
 
-static bool acceptIntelModes(AsmInsn &insn, const Entry *entry) {
+bool acceptIntelModes(AsmInsn &insn, const Entry *entry) {
     const auto table = entry->readFlags();
     return acceptIntelMode(insn.dstOp.mode, table.dst()) &&
            acceptIntelMode(insn.srcOp.mode, table.src());
 }
 
-static bool acceptZilogMode(AddrMode opr, AddrMode table) {
+bool acceptZilogMode(AddrMode opr, AddrMode table) {
     if (opr == table)
         return true;
     if (opr == M_SRC || opr == R_A)
@@ -463,7 +461,7 @@ static bool acceptZilogMode(AddrMode opr, AddrMode table) {
     return false;
 }
 
-static bool acceptZilogModes(AsmInsn &insn, const Entry *entry) {
+bool acceptZilogModes(AsmInsn &insn, const Entry *entry) {
     const auto table = entry->readFlags();
     if (acceptZilogMode(insn.dstOp.mode, table.dst()) &&
             acceptZilogMode(insn.srcOp.mode, table.src())) {
@@ -474,13 +472,13 @@ static bool acceptZilogModes(AsmInsn &insn, const Entry *entry) {
     return false;
 }
 
-Error TableI8080::searchName(CpuType cpuType, AsmInsn &insn, bool zilog) const {
+Error searchName(CpuType cpuType, AsmInsn &insn, bool zilog) {
     auto acceptModes = zilog ? acceptZilogModes : acceptIntelModes;
     cpu(cpuType, zilog)->searchName(insn, acceptModes);
     return insn.getError();
 }
 
-static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *) {
+bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *) {
     auto opc = insn.opCode();
     const auto &flags = entry->readFlags();
     const auto dst = flags.dst();
@@ -499,12 +497,12 @@ static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *) {
     return opc == entry->readOpCode();
 }
 
-Error TableI8080::searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out, bool zilog) const {
+Error searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out, bool zilog) {
     cpu(cpuType, zilog)->searchOpCode(insn, out, matchOpCode);
     return insn.getError();
 }
 
-bool TableI8080::isPrefix(CpuType cpuType, Config::opcode_t code) const {
+bool isPrefix(CpuType cpuType, Config::opcode_t code) {
     return cpuType == V30EMU && code == 0xED;
 }
 

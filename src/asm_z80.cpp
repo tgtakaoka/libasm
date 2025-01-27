@@ -15,7 +15,6 @@
  */
 
 #include "asm_z80.h"
-
 #include "table_z80.h"
 #include "text_common.h"
 
@@ -67,7 +66,7 @@ void AsmZ80::encodeRelative(AsmInsn &insn, const Operand &op) const {
     insn.emitOperand8(delta);
 }
 
-static void encodeIndexReg(AsmInsn &insn, RegName ixReg) {
+void encodeIndexReg(AsmInsn &insn, RegName ixReg) {
     insn.setPrefix((ixReg == REG_IX) ? TableZ80::PREFIX_IX : TableZ80::PREFIX_IY);
 }
 
@@ -291,8 +290,8 @@ Error AsmZ80::encodeImpl(StrScanner &scan, Insn &_insn) const {
         scan.skipSpaces();
     }
 
-    if (_insn.setErrorIf(insn.dstOp, TABLE.searchName(cpuType(), insn)))
-        return _insn.getError();
+    if (searchName(cpuType(), insn))
+        return _insn.setError(insn.dstOp, insn);
 
     encodeOperand(insn, insn.dstOp, insn.dst(), insn.srcOp);
     encodeOperand(insn, insn.srcOp, insn.src(), insn.dstOp);

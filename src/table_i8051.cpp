@@ -24,14 +24,13 @@ using namespace libasm::text::i8051;
 namespace libasm {
 namespace i8051 {
 
-#define E3(_opc, _name, _dst, _src, _ext) \
-    { _opc, Entry::Flags::create(_dst, _src, _ext), _name }
+#define E3(_opc, _name, _dst, _src, _ext) {_opc, Entry::Flags::create(_dst, _src, _ext), _name}
 #define E2(_opc, _name, _dst, _src) E3(_opc, _name, _dst, _src, M_NONE)
 #define E1(_opc, _name, _dst) E2(_opc, _name, _dst, M_NONE)
 #define E0(_opc, _name) E1(_opc, _name, M_NONE)
 
 // clang-format off
-static constexpr Entry TABLE_I8051[] PROGMEM = {
+constexpr Entry TABLE_I8051[] PROGMEM = {
     E0(0x00, TEXT_NOP),
     E1(0x01, TEXT_AJMP,  M_ADR11),
     E1(0x02, TEXT_LJMP,  M_ADR16),
@@ -145,7 +144,7 @@ static constexpr Entry TABLE_I8051[] PROGMEM = {
     E2(0xF8, TEXT_MOV,   M_RREG,  M_AREG),
 };
 
-static constexpr uint8_t INDEX_I8051[] PROGMEM = {
+constexpr uint8_t INDEX_I8051[] PROGMEM = {
       9,  // TEXT_ACALL
      19,  // TEXT_ADD
      20,  // TEXT_ADD
@@ -262,21 +261,21 @@ static constexpr uint8_t INDEX_I8051[] PROGMEM = {
 
 using EntryPage = entry::TableBase<Entry>;
 
-static constexpr EntryPage I8051_PAGES[] PROGMEM = {
+constexpr EntryPage I8051_PAGES[] PROGMEM = {
         {ARRAY_RANGE(TABLE_I8051), ARRAY_RANGE(INDEX_I8051)},
 };
 
 using Cpu = entry::CpuBase<CpuType, EntryPage>;
 
-static constexpr Cpu CPU_TABLE[] PROGMEM = {
+constexpr Cpu CPU_TABLE[] PROGMEM = {
         {I8051, TEXT_CPU_8051, ARRAY_RANGE(I8051_PAGES)},
 };
 
-static const Cpu *cpu(CpuType) {
+const Cpu *cpu(CpuType) {
     return &CPU_TABLE[0];
 }
 
-static bool acceptMode(AddrMode opr, AddrMode table) {
+bool acceptMode(AddrMode opr, AddrMode table) {
     if (opr == table)
         return true;
     if (opr == M_IMM16)
@@ -286,18 +285,18 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
     return false;
 }
 
-static bool acceptModes(AsmInsn &insn, const Entry *entry) {
+bool acceptModes(AsmInsn &insn, const Entry *entry) {
     const auto table = entry->readFlags();
     return acceptMode(insn.dstOp.mode, table.dst()) && acceptMode(insn.srcOp.mode, table.src()) &&
            acceptMode(insn.extOp.mode, table.ext());
 }
 
-Error TableI8051::searchName(CpuType cpuType, AsmInsn &insn) const {
+Error searchName(CpuType cpuType, AsmInsn &insn) {
     cpu(cpuType)->searchName(insn, acceptModes);
     return insn.getError();
 }
 
-static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *) {
+bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *) {
     auto opc = insn.opCode();
     auto flags = entry->readFlags();
     auto dst = flags.dst();
@@ -312,12 +311,12 @@ static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *) {
     return opc == entry->readOpCode();
 }
 
-Error TableI8051::searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) const {
+Error searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) {
     cpu(cpuType)->searchOpCode(insn, out, matchOpCode);
     return insn.getError();
 }
 
-bool TableI8051::invalidDirect(Config::opcode_t opc, uint16_t addr) const {
+bool invalidDirect(Config::opcode_t opc, uint16_t addr) {
     // MOV A, ACC is not a valid instruction
     return opc == 0xE5 && addr == 0xE0;
 }

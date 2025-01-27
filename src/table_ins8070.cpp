@@ -24,18 +24,15 @@ using namespace libasm::text::ins8070;
 namespace libasm {
 namespace ins8070 {
 
-#define E2(_opc, _name, _dst, _src, _size) \
-    { _opc, Entry::Flags::create(_dst, _src, _size), _name }
+#define E2(_opc, _name, _dst, _src, _size) {_opc, Entry::Flags::create(_dst, _src, _size), _name}
 #define E1(_opc, _name, _dst, _size) E2(_opc, _name, _dst, M_NONE, _size)
 #define E0(_opc, _name) E1(_opc, _name, M_NONE, SZ_NONE)
-#define X1(_opc, _name, _dst) \
-    { _opc, Entry::Flags::exec(_dst), _name }
-#define U2(_opc, _name, _dst, _src) \
-    { _opc, Entry::Flags::undef(_dst, _src), _name }
+#define X1(_opc, _name, _dst) {_opc, Entry::Flags::exec(_dst), _name}
+#define U2(_opc, _name, _dst, _src) {_opc, Entry::Flags::undef(_dst, _src), _name}
 #define U1(_opc, _name, _dst) U2(_opc, _name, _dst, M_NONE)
 
 // clang-format off
-static constexpr Entry TABLE_INS8070[] PROGMEM = {
+constexpr Entry TABLE_INS8070[] PROGMEM = {
     E0(0x00, TEXT_NOP),
     E2(0x01, TEXT_XCH,  M_AR,   M_ER,   SZ_BYTE),
     E2(0x01, TEXT_XCH,  M_ER,   M_AR,   SZ_BYTE),
@@ -108,7 +105,7 @@ static constexpr Entry TABLE_INS8070[] PROGMEM = {
     E2(0xF8, TEXT_SUB,  M_AR,   M_GEN,  SZ_BYTE),
 };
 
-static constexpr uint8_t INDEX_INS8070[] PROGMEM = {
+constexpr uint8_t INDEX_INS8070[] PROGMEM = {
      46,  // TEXT_ADD
      60,  // TEXT_ADD
      68,  // TEXT_ADD
@@ -184,21 +181,21 @@ static constexpr uint8_t INDEX_INS8070[] PROGMEM = {
 
 using EntryPage = entry::TableBase<Entry>;
 
-static constexpr EntryPage INS8070_PAGES[] PROGMEM = {
+constexpr EntryPage INS8070_PAGES[] PROGMEM = {
         {ARRAY_RANGE(TABLE_INS8070), ARRAY_RANGE(INDEX_INS8070)},
 };
 
 using Cpu = entry::CpuBase<CpuType, EntryPage>;
 
-static constexpr Cpu CPU_TABLE[] PROGMEM = {
+constexpr Cpu CPU_TABLE[] PROGMEM = {
         {INS8070, TEXT_CPU_8070, ARRAY_RANGE(INS8070_PAGES)},
 };
 
-static const Cpu *cpu(CpuType) {
+const Cpu *cpu(CpuType) {
     return &CPU_TABLE[0];
 }
 
-static bool acceptMode(AddrMode opr, AddrMode table) {
+bool acceptMode(AddrMode opr, AddrMode table) {
     if (opr == table)
         return true;
     if (opr == M_ADR)
@@ -216,7 +213,7 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
     return false;
 }
 
-static bool acceptModes(AsmInsn &insn, const Entry *entry) {
+bool acceptModes(AsmInsn &insn, const Entry *entry) {
     const auto table = entry->readFlags();
     if (acceptMode(insn.dstOp.mode, table.dst()) && acceptMode(insn.srcOp.mode, table.src())) {
         if (table.undefined())
@@ -226,12 +223,12 @@ static bool acceptModes(AsmInsn &insn, const Entry *entry) {
     return false;
 }
 
-Error TableIns8070::searchName(CpuType cpuType, AsmInsn &insn) const {
+Error searchName(CpuType cpuType, AsmInsn &insn) {
     cpu(cpuType)->searchName(insn, acceptModes);
     return insn.getError();
 }
 
-static Config::opcode_t maskCode(AddrMode mode) {
+Config::opcode_t maskCode(AddrMode mode) {
     switch (mode) {
     case M_VEC:
         return ~0x0F;
@@ -247,7 +244,7 @@ static Config::opcode_t maskCode(AddrMode mode) {
     }
 }
 
-static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *) {
+bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *) {
     auto opCode = insn.opCode();
     const auto flags = entry->readFlags();
     opCode &= maskCode(flags.dst());
@@ -255,7 +252,7 @@ static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *) {
     return opCode == entry->readOpCode();
 }
 
-Error TableIns8070::searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) const {
+Error searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) {
     auto entry = cpu(cpuType)->searchOpCode(insn, out, matchOpCode);
     if (entry && entry->readFlags().undefined()) {
         insn.nameBuffer().reset();

@@ -31,27 +31,28 @@ struct PostSpec {
     RegName base;
     int8_t size;
     bool indir;
+    uint8_t maybe;
+    int16_t post;
 
     PostSpec() {}
     constexpr PostSpec(RegName _index, RegName _base, int8_t _size, bool _indir)
-        : index(_index), base(_base), size(_size), indir(_indir) {}
+        : index(_index), base(_base), size(_size), indir(_indir), maybe(0), post(0) {}
 };
 
 struct TableMc6809 final : InsnTable<CpuType> {
     const /*PROGMEM*/ char *listCpu_P() const override;
     const /*PROGMEM*/ char *cpuName_P(CpuType cpuType) const override;
     Error searchCpuName(StrScanner &name, CpuType &cpuType) const override;
-
-    Error hasName(CpuType, AsmInsn &insn) const;
-    Error searchName(CpuType, AsmInsn &insn) const;
-    Error searchOpCode(CpuType, DisInsn &insn, StrBuffer &out) const;
-    bool isPrefix(CpuType, Config::opcode_t code) const;
-
-    Error searchPostByte(CpuType, Config::opcode_t post, PostSpec &spec) const;
-    int16_t searchPostSpec(CpuType, PostSpec &spec) const;
 };
 
 extern const TableMc6809 TABLE;
+
+Error hasName(CpuType, AsmInsn &insn);
+Error searchName(CpuType, AsmInsn &insn);
+Error searchOpCode(CpuType, DisInsn &insn, StrBuffer &out);
+bool isPrefix(CpuType, Config::opcode_t code);
+Error searchPostByte(CpuType, Config::opcode_t post, PostSpec &spec);
+Error searchPostSpec(CpuType, PostSpec &spec);
 
 }  // namespace mc6809
 }  // namespace libasm

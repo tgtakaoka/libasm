@@ -18,7 +18,6 @@
 #define __LIBASM_TABLE_I8086_H__
 
 #include "config_i8086.h"
-#include "entry_table.h"
 #include "insn_i8086.h"
 #include "reg_i8086.h"
 
@@ -29,17 +28,17 @@ struct TableI8086 final : InsnTable<CpuType> {
     const /*PROGMEM*/ char *listCpu_P() const override;
     const /*PROGMEM*/ char *cpuName_P(CpuType cpuType) const override;
     Error searchCpuName(StrScanner &name, CpuType &cpuType) const override;
-
-    Error searchName(const CpuSpec &, AsmInsn &insn) const;
-    Error searchOpCode(const CpuSpec &, DisInsn &insn, StrBuffer &out) const;
-    bool isPrefix(CpuType, Config::opcode_t code) const;
-    bool isPrefix(FpuType, Config::opcode_t code) const;
-    bool isSegmentPrefix(Config::opcode_t opcode) const;
-    RegName overrideSeg(Config::opcode_t opcode) const;
-    Config::opcode_t segOverridePrefix(RegName name) const;
 };
 
 extern const TableI8086 TABLE;
+
+Error searchName(const CpuSpec &, AsmInsn &insn);
+Error searchOpCode(const CpuSpec &, DisInsn &insn, StrBuffer &out);
+bool isPrefix(CpuType, Config::opcode_t code);
+bool isPrefix(FpuType, Config::opcode_t code);
+bool isSegmentPrefix(Config::opcode_t opcode);
+RegName overrideSeg(Config::opcode_t opcode);
+Config::opcode_t segOverridePrefix(RegName name);
 
 }  // namespace i8086
 }  // namespace libasm

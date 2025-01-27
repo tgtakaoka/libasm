@@ -18,7 +18,6 @@
 #define __LIBASM_TABLE_Z8_H__
 
 #include "config_z8.h"
-#include "entry_table.h"
 #include "insn_z8.h"
 
 namespace libasm {
@@ -29,13 +28,13 @@ struct TableZ8 final : InsnTable<CpuType> {
     const /*PROGMEM*/ char *cpuName_P(CpuType cpuType) const override;
     Error searchCpuName(StrScanner &name, CpuType &cpuType) const override;
 
-    Error searchName(CpuType, AsmInsn &insn) const;
-    Error searchOpCode(CpuType, DisInsn &insn, StrBuffer &out) const;
-
     static constexpr Config::opcode_t SRP = 0x31;
 };
 
 extern const TableZ8 TABLE;
+
+Error searchName(CpuType, AsmInsn &insn);
+Error searchOpCode(CpuType, DisInsn &insn, StrBuffer &out);
 
 }  // namespace z8
 }  // namespace libasm

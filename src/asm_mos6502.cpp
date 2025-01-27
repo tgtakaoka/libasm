@@ -15,7 +15,6 @@
  */
 
 #include "asm_mos6502.h"
-
 #include "reg_mos6502.h"
 #include "table_mos6502.h"
 #include "text_mos6502.h"
@@ -346,7 +345,7 @@ bool maybeStackRelativeIndirect(CpuType cpuType, AddrMode mode3) {
 Error AsmMos6502::encodeImpl(StrScanner &scan, Insn &_insn) const {
     AsmInsn insn(_insn);
     char indirect = 0;
-    if (TABLE.hasOperand(cpuType(), insn)) {
+    if (hasOperand(cpuType(), insn)) {
         if (parseOperand(scan, insn.op1, indirect) && insn.op1.hasError())
             return _insn.setError(insn.op1);
         if (scan.skipSpaces().expect(',')) {
@@ -363,7 +362,7 @@ Error AsmMos6502::encodeImpl(StrScanner &scan, Insn &_insn) const {
     }
     scan.skipSpaces();
 
-    const auto error = TABLE.searchName(cpuType(), insn);
+    const auto error = searchName(cpuType(), insn);
     if (error == OPERAND_NOT_ALLOWED) {
         if (hasRegister(insn.op1.mode))
             return _insn.setError(insn.op1, REGISTER_NOT_ALLOWED);

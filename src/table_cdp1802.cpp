@@ -24,13 +24,12 @@ using namespace libasm::text::cdp1802;
 namespace libasm {
 namespace cdp1802 {
 
-#define E2(_opc, _name, _op1, _op2) \
-    { _opc, Entry::Flags::create(_op1, _op2), _name }
+#define E2(_opc, _name, _op1, _op2) {_opc, Entry::Flags::create(_op1, _op2), _name}
 #define E1(_opc, _name, _op1) E2(_opc, _name, _op1, M_NONE)
 #define E0(_opc, _name) E1(_opc, _name, M_NONE)
 
 // clang-format off
-static constexpr Entry TABLE_CDP1802[] PROGMEM = {
+constexpr Entry TABLE_CDP1802[] PROGMEM = {
     E0(0x00, TEXT_IDL),
     E1(0x00, TEXT_LDN,  M_REG1),
     E1(0x10, TEXT_INC,  M_REGN),
@@ -124,7 +123,7 @@ static constexpr Entry TABLE_CDP1802[] PROGMEM = {
     E1(0xFF, TEXT_SMI,  M_IMM8),
 };
 
-static constexpr uint8_t INDEX_CDP1802[] PROGMEM = {
+constexpr uint8_t INDEX_CDP1802[] PROGMEM = {
      34,  // TEXT_ADC
      43,  // TEXT_ADCI
      79,  // TEXT_ADD
@@ -218,7 +217,7 @@ static constexpr uint8_t INDEX_CDP1802[] PROGMEM = {
      86,  // TEXT_XRI
 };
 
-static constexpr Entry TABLE_CDP1804[] PROGMEM = {
+constexpr Entry TABLE_CDP1804[] PROGMEM = {
     E0(0x00, TEXT_STPC),
     E0(0x01, TEXT_DTC),
     E0(0x02, TEXT_SPM2),
@@ -243,7 +242,7 @@ static constexpr Entry TABLE_CDP1804[] PROGMEM = {
     E2(0xC0, TEXT_RLDI, M_REGN, M_ADDR),
 };
 
-static constexpr uint8_t INDEX_CDP1804[] PROGMEM = {
+constexpr uint8_t INDEX_CDP1804[] PROGMEM = {
      14,  // TEXT_BCI
      15,  // TEXT_BXI
      13,  // TEXT_CID
@@ -268,7 +267,7 @@ static constexpr uint8_t INDEX_CDP1804[] PROGMEM = {
      10,  // TEXT_XIE
 };
 
-static constexpr Entry TABLE_CDP1804A[] PROGMEM = {
+constexpr Entry TABLE_CDP1804A[] PROGMEM = {
     E2(0x20, TEXT_DBNZ, M_REGN, M_ADDR),
     E0(0x74, TEXT_DADC),
     E0(0x76, TEXT_DSAV),
@@ -281,7 +280,7 @@ static constexpr Entry TABLE_CDP1804A[] PROGMEM = {
     E1(0xFF, TEXT_DSMI, M_IMM8),
 };
 
-static constexpr uint8_t INDEX_CDP1804A[] PROGMEM = {
+constexpr uint8_t INDEX_CDP1804A[] PROGMEM = {
       4,  // TEXT_DACI
       1,  // TEXT_DADC
       6,  // TEXT_DADD
@@ -297,16 +296,16 @@ static constexpr uint8_t INDEX_CDP1804A[] PROGMEM = {
 
 using EntryPage = entry::PrefixTableBase<Entry>;
 
-static constexpr EntryPage CDP1802_PAGES[] PROGMEM = {
+constexpr EntryPage CDP1802_PAGES[] PROGMEM = {
         {0x00, ARRAY_RANGE(TABLE_CDP1802), ARRAY_RANGE(INDEX_CDP1802)},
 };
 
-static constexpr EntryPage CDP1804_PAGES[] PROGMEM = {
+constexpr EntryPage CDP1804_PAGES[] PROGMEM = {
         {0x00, ARRAY_RANGE(TABLE_CDP1802), ARRAY_RANGE(INDEX_CDP1802)},
         {0x68, ARRAY_RANGE(TABLE_CDP1804), ARRAY_RANGE(INDEX_CDP1804)},
 };
 
-static constexpr EntryPage CDP1804A_PAGES[] PROGMEM = {
+constexpr EntryPage CDP1804A_PAGES[] PROGMEM = {
         {0x00, ARRAY_RANGE(TABLE_CDP1802), ARRAY_RANGE(INDEX_CDP1802)},
         {0x68, ARRAY_RANGE(TABLE_CDP1804), ARRAY_RANGE(INDEX_CDP1804)},
         {0x68, ARRAY_RANGE(TABLE_CDP1804A), ARRAY_RANGE(INDEX_CDP1804A)},
@@ -314,17 +313,17 @@ static constexpr EntryPage CDP1804A_PAGES[] PROGMEM = {
 
 using Cpu = entry::CpuBase<CpuType, EntryPage>;
 
-static constexpr Cpu CPU_TABLE[] PROGMEM = {
+constexpr Cpu CPU_TABLE[] PROGMEM = {
         {CDP1802, TEXT_CPU_1802, ARRAY_RANGE(CDP1802_PAGES)},
         {CDP1804, TEXT_CPU_1804, ARRAY_RANGE(CDP1804_PAGES)},
         {CDP1804A, TEXT_CPU_1804A, ARRAY_RANGE(CDP1804A_PAGES)},
 };
 
-static const Cpu *cpu(CpuType cpuType) {
+const Cpu *cpu(CpuType cpuType) {
     return Cpu::search(cpuType, ARRAY_RANGE(CPU_TABLE));
 }
 
-static bool acceptMode(AddrMode opr, AddrMode table) {
+bool acceptMode(AddrMode opr, AddrMode table) {
     if (opr == table)
         return true;
     if (opr == M_REGN)
@@ -335,17 +334,17 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
     return false;
 }
 
-static bool acceptModes(AsmInsn &insn, const Entry *entry) {
+bool acceptModes(AsmInsn &insn, const Entry *entry) {
     const auto table = entry->readFlags();
     return acceptMode(insn.op1.mode, table.mode1()) && acceptMode(insn.op2.mode, table.mode2());
 }
 
-Error TableCdp1802::searchName(CpuType cpuType, AsmInsn &insn) const {
+Error searchName(CpuType cpuType, AsmInsn &insn) {
     cpu(cpuType)->searchName(insn, acceptModes);
     return insn.getError();
 }
 
-static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *) {
+bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *) {
     auto opc = insn.opCode();
     auto flags = entry->readFlags();
     auto mode = flags.mode1();
@@ -359,12 +358,12 @@ static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *) {
     return opc == entry->readOpCode();
 }
 
-Error TableCdp1802::searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) const {
+Error searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) {
     cpu(cpuType)->searchOpCode(insn, out, matchOpCode);
     return insn.getError();
 }
 
-bool TableCdp1802::isPrefix(CpuType cpuType, Config::opcode_t code) const {
+bool isPrefix(CpuType cpuType, Config::opcode_t code) {
     return cpu(cpuType)->isPrefix(code);
 }
 

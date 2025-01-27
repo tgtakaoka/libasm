@@ -24,13 +24,12 @@ using namespace libasm::text::i8048;
 namespace libasm {
 namespace i8048 {
 
-#define E2(_opc, _name, _dst, _src) \
-    { _opc, Entry::Flags::create(_dst, _src), _name }
+#define E2(_opc, _name, _dst, _src) {_opc, Entry::Flags::create(_dst, _src), _name}
 #define E1(_opc, _name, _dst) E2(_opc, _name, _dst, M_NONE)
 #define E0(_opc, _name) E1(_opc, _name, M_NONE)
 
 // clang-format off
-static constexpr Entry TABLE_I8039[] PROGMEM = {
+constexpr Entry TABLE_I8039[] PROGMEM = {
     E2(0x68, TEXT_ADD,  M_A,    M_R),
     E2(0x60, TEXT_ADD,  M_A,    M_IR),
     E2(0x03, TEXT_ADD,  M_A,    M_IMM8),
@@ -121,7 +120,7 @@ static constexpr Entry TABLE_I8039[] PROGMEM = {
     E0(0x00, TEXT_NOP),
 };
 
-static constexpr uint8_t INDEX_I8039[] PROGMEM = {
+constexpr uint8_t INDEX_I8039[] PROGMEM = {
       0,  // TEXT_ADD
       1,  // TEXT_ADD
       2,  // TEXT_ADD
@@ -212,29 +211,29 @@ static constexpr uint8_t INDEX_I8039[] PROGMEM = {
      14,  // TEXT_XRL
 };
 
-static constexpr Entry TABLE_I8048[] PROGMEM = {
+constexpr Entry TABLE_I8048[] PROGMEM = {
     E2(0x08, TEXT_INS,  M_A,    M_BUS),
     E2(0x02, TEXT_OUTL, M_BUS,  M_A),
     E2(0x98, TEXT_ANL,  M_BUS,  M_BIT8),
     E2(0x88, TEXT_ORL,  M_BUS,  M_BIT8),
 };
 
-static constexpr uint8_t INDEX_I8048[] PROGMEM = {
+constexpr uint8_t INDEX_I8048[] PROGMEM = {
       2,  // TEXT_ANL
       0,  // TEXT_INS
       3,  // TEXT_ORL
       1,  // TEXT_OUTL
 };
 
-static constexpr Entry TABLE_I80C39[] PROGMEM = {
+constexpr Entry TABLE_I80C39[] PROGMEM = {
     E0(0x01, TEXT_HALT),
 };
 
-static constexpr uint8_t INDEX_I80C39[] PROGMEM = {
+constexpr uint8_t INDEX_I80C39[] PROGMEM = {
       0,  // TEXT_HALT
 };
 
-static constexpr Entry TABLE_MSM80C39[] PROGMEM = {
+constexpr Entry TABLE_MSM80C39[] PROGMEM = {
     E2(0x63, TEXT_MOV,   M_A,  M_P1),
     E2(0x73, TEXT_MOV,   M_A,  M_P2),
     E1(0xC0, TEXT_DEC,   M_IR),
@@ -247,7 +246,7 @@ static constexpr Entry TABLE_MSM80C39[] PROGMEM = {
     E0(0xE2, TEXT_FRES),
 };
 
-static constexpr uint8_t INDEX_MSM80C39[] PROGMEM = {
+constexpr uint8_t INDEX_MSM80C39[] PROGMEM = {
       2,  // TEXT_DEC
       3,  // TEXT_DJNZ
       7,  // TEXT_FLT
@@ -263,7 +262,7 @@ static constexpr uint8_t INDEX_MSM80C39[] PROGMEM = {
 
 using EntryPage = entry::TableBase<Entry>;
 
-static constexpr EntryPage INST_PAGES[] PROGMEM = {
+constexpr EntryPage INST_PAGES[] PROGMEM = {
         {ARRAY_RANGE(TABLE_I8048), ARRAY_RANGE(INDEX_I8048)},        // 0
         {ARRAY_RANGE(TABLE_I8039), ARRAY_RANGE(INDEX_I8039)},        // 1
         {ARRAY_RANGE(TABLE_I80C39), ARRAY_RANGE(INDEX_I80C39)},      // 2
@@ -272,20 +271,20 @@ static constexpr EntryPage INST_PAGES[] PROGMEM = {
 
 using Cpu = entry::CpuBase<CpuType, EntryPage>;
 
-static constexpr Cpu CPU_TABLE[] PROGMEM = {
-    {I8039, TEXT_CPU_8039, &INST_PAGES[1], &INST_PAGES[2]},
-    {I80C39, TEXT_CPU_80C39, &INST_PAGES[1], &INST_PAGES[3]},
-    {MSM80C39, TEXT_CPU_MSM80C39, &INST_PAGES[1], &INST_PAGES[4]},
-    {I8048, TEXT_CPU_8048, &INST_PAGES[0], &INST_PAGES[2]},
-    {I80C48, TEXT_CPU_80C48, &INST_PAGES[0], &INST_PAGES[3]},
-    {MSM80C48, TEXT_CPU_MSM80C48, &INST_PAGES[0], &INST_PAGES[4]},
+constexpr Cpu CPU_TABLE[] PROGMEM = {
+        {I8039, TEXT_CPU_8039, &INST_PAGES[1], &INST_PAGES[2]},
+        {I80C39, TEXT_CPU_80C39, &INST_PAGES[1], &INST_PAGES[3]},
+        {MSM80C39, TEXT_CPU_MSM80C39, &INST_PAGES[1], &INST_PAGES[4]},
+        {I8048, TEXT_CPU_8048, &INST_PAGES[0], &INST_PAGES[2]},
+        {I80C48, TEXT_CPU_80C48, &INST_PAGES[0], &INST_PAGES[3]},
+        {MSM80C48, TEXT_CPU_MSM80C48, &INST_PAGES[0], &INST_PAGES[4]},
 };
 
-static const Cpu *cpu(CpuType cpuType) {
+const Cpu *cpu(CpuType cpuType) {
     return Cpu::search(cpuType, ARRAY_RANGE(CPU_TABLE));
 }
 
-static bool acceptMode(AddrMode opr, AddrMode table) {
+bool acceptMode(AddrMode opr, AddrMode table) {
     if (opr == table)
         return true;
     if (opr == M_IMM8)
@@ -297,17 +296,17 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
     return false;
 }
 
-static bool acceptModes(AsmInsn &insn, const Entry *entry) {
+bool acceptModes(AsmInsn &insn, const Entry *entry) {
     const auto table = entry->readFlags();
     return acceptMode(insn.dstOp.mode, table.dst()) && acceptMode(insn.srcOp.mode, table.src());
 }
 
-Error TableI8048::searchName(CpuType cpuType, AsmInsn &insn) const {
+Error searchName(CpuType cpuType, AsmInsn &insn) {
     cpu(cpuType)->searchName(insn, acceptModes);
     return insn.getError();
 }
 
-static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *) {
+bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *) {
     auto opc = insn.opCode();
     const auto flags = entry->readFlags();
     const auto dst = flags.dst();
@@ -331,7 +330,7 @@ static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *) {
     return opc == entry->readOpCode();
 }
 
-Error TableI8048::searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) const {
+Error searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) {
     cpu(cpuType)->searchOpCode(insn, out, matchOpCode);
     return insn.getError();
 }

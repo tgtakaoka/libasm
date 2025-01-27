@@ -727,8 +727,8 @@ Error AsmNs32000::encodeImpl(StrScanner &scan, Insn &_insn) const {
         scan.skipSpaces();
     }
 
-    if (_insn.setErrorIf(insn.srcOp, TABLE.searchName(_cpuSpec, insn)))
-        return _insn.getError();
+    if (searchName(_cpuSpec, insn))
+        return _insn.setError(insn.srcOp, insn);
 
     insn.setErrorIf(insn.srcOp);
     insn.setErrorIf(insn.dstOp);

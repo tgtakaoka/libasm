@@ -510,7 +510,7 @@ Error AsmPdp11::processPseudo(StrScanner &scan, Insn &_insn) {
 
 Error AsmPdp11::encodeImpl(StrScanner &scan, Insn &_insn) const {
     AsmInsn insn(_insn);
-    const auto error = TABLE.hasName(cpuType(), insn);
+    const auto error = hasName(cpuType(), insn);
     if (_implicitWord && error != OK) {
         StrScanner p = _insn.errorAt();
         insn.setOK();  // clear UNKNOWN_INSTRUCTION
@@ -531,8 +531,8 @@ Error AsmPdp11::encodeImpl(StrScanner &scan, Insn &_insn) const {
             scan.skipSpaces();
         }
 
-        if (_insn.setErrorIf(insn.srcOp, TABLE.searchName(cpuType(), insn)))
-            return _insn.getError();
+        if (searchName(cpuType(), insn))
+            return _insn.setError(insn.srcOp, insn);
         insn.setErrorIf(insn.srcOp);
         insn.setErrorIf(insn.dstOp);
         encodeOperand(insn, insn.srcOp, insn.src(), insn.srcPos());

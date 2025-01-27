@@ -15,7 +15,6 @@
  */
 
 #include "asm_z8.h"
-
 #include "table_z8.h"
 #include "text_common.h"
 
@@ -59,7 +58,7 @@ AsmZ8::AsmZ8(const ValueParser::Plugins &plugins)
     : Assembler(plugins, PSEUDO_TABLE, &_opt_reg_alias),
       Config(TABLE),
       _opt_reg_alias(
-	      this, &AsmZ8::setRegAlias, OPT_BOOL_ALIAS, OPT_DESC_ALIAS, &_opt_optimize_index),
+              this, &AsmZ8::setRegAlias, OPT_BOOL_ALIAS, OPT_DESC_ALIAS, &_opt_optimize_index),
       _opt_optimize_index(
               this, &AsmZ8::setOptimizeIndex, OPT_BOOL_OPTIMIZE_INDEX, OPT_DESC_OPTIMIZE_INDEX),
       _opt_setrp(this, &AsmZ8::setRegPointer, OPT_INT_SETRP),
@@ -409,8 +408,8 @@ Error AsmZ8::encodeImpl(StrScanner &scan, Insn &_insn) const {
         scan.skipSpaces();
     }
 
-    if (_insn.setErrorIf(insn.dstOp, TABLE.searchName(cpuType(), insn)))
-        return _insn.getError();
+    if (searchName(cpuType(), insn))
+        return _insn.setError(insn.dstOp, insn);
 
     encodeOperand(insn, insn.dst(), insn.dstPos(), insn.dstOp);
     encodeOperand(insn, insn.src(), insn.srcPos(), insn.srcOp);

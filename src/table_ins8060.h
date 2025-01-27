@@ -18,7 +18,6 @@
 #define __LIBASM_TABLE_INS8060_H__
 
 #include "config_ins8060.h"
-#include "entry_table.h"
 #include "insn_ins8060.h"
 
 namespace libasm {
@@ -28,12 +27,12 @@ struct TableIns8060 final : InsnTable<CpuType> {
     const /*PROGMEM*/ char *listCpu_P() const override;
     const /*PROGMEM*/ char *cpuName_P(CpuType cpuType) const override;
     Error searchCpuName(StrScanner &name, CpuType &cpuType) const override;
-
-    Error searchName(CpuType, AsmInsn &insn) const;
-    Error searchOpCode(CpuType, DisInsn &insn, StrBuffer &out) const;
 };
 
 extern const TableIns8060 TABLE;
+
+Error searchName(CpuType, AsmInsn &insn);
+Error searchOpCode(CpuType, DisInsn &insn, StrBuffer &out);
 
 }  // namespace ins8060
 }  // namespace libasm

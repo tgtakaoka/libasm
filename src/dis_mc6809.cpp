@@ -15,7 +15,6 @@
  */
 
 #include "dis_mc6809.h"
-
 #include "reg_mc6809.h"
 #include "table_mc6809.h"
 
@@ -58,7 +57,7 @@ void DisMc6809::decodeExtended(DisInsn &insn, StrBuffer &out) const {
 void DisMc6809::decodeIndexed(DisInsn &insn, StrBuffer &out) const {
     const auto post = insn.readPostfix();
     PostSpec spec;
-    if (TABLE.searchPostByte(cpuType(), post, spec)) {
+    if (searchPostByte(cpuType(), post, spec)) {
         insn.setErrorIf(out, UNKNOWN_POSTBYTE);
         return;
     }
@@ -303,13 +302,13 @@ Error DisMc6809::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) cons
     DisInsn insn(_insn, memory, out);
     const auto opc = insn.readByte();
     insn.setOpCode(opc);
-    if (TABLE.isPrefix(cpuType(), opc)) {
+    if (isPrefix(cpuType(), opc)) {
         insn.setPrefix(opc);
         insn.setOpCode(insn.readByte());
         if (insn.getError())
             return _insn.setError(insn);
     }
-    if (TABLE.searchOpCode(cpuType(), insn, out))
+    if (searchOpCode(cpuType(), insn, out))
         return _insn.setError(insn);
 
     decodeOperand(insn, out, insn.mode1());

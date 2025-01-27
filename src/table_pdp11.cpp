@@ -15,7 +15,6 @@
  */
 
 #include "table_pdp11.h"
-
 #include "entry_pdp11.h"
 #include "entry_table.h"
 #include "text_pdp11.h"
@@ -26,12 +25,12 @@ namespace libasm {
 namespace pdp11 {
 
 #define E2(_opc, _size, _name, _src, _spos, _dst, _dpos) \
-    { _opc, Entry::Flags::create(_size, _src, _spos, _dst, _dpos), _name }
+    {_opc, Entry::Flags::create(_size, _src, _spos, _dst, _dpos), _name}
 #define E1(_opc, _size, _name, _src, _spos) E2(_opc, _size, _name, _src, _spos, M_NONE, P_NONE)
 #define E0(_opc, _size, _name) E1(_opc, _size, _name, M_NONE, P_NONE)
 
 // clang-format off
-static constexpr Entry TABLE_BASE[] PROGMEM = {
+constexpr Entry TABLE_BASE[] PROGMEM = {
     E2(0010000, SZ_WORD, TEXT_MOV,   M_GENS, P_7700, M_GEND, P_0077),
     E2(0110000, SZ_BYTE, TEXT_MOVB,  M_GENS, P_7700, M_GEND, P_0077),
     E2(0020000, SZ_WORD, TEXT_CMP,   M_GENS, P_7700, M_GENS, P_0077),
@@ -119,7 +118,7 @@ static constexpr Entry TABLE_BASE[] PROGMEM = {
     E0(0000260, SZ_NONE, TEXT_NOP),
 };
 
-static constexpr uint8_t INDEX_BASE[] PROGMEM = {
+constexpr uint8_t INDEX_BASE[] PROGMEM = {
      25,  // TEXT_ADC
      26,  // TEXT_ADCB
      10,  // TEXT_ADD
@@ -205,35 +204,35 @@ static constexpr uint8_t INDEX_BASE[] PROGMEM = {
      12,  // TEXT_XOR
 };
 
-static constexpr Entry TABLE_EIS[] PROGMEM = {
+constexpr Entry TABLE_EIS[] PROGMEM = {
     E2(0070000, SZ_INTG, TEXT_MUL,   M_GENS, P_0077, M_GENR, P_0700),
     E2(0071000, SZ_INTG, TEXT_DIV,   M_GENS, P_0077, M_GENR, P_0700),
     E2(0072000, SZ_WORD, TEXT_ASH,   M_GENS, P_0077, M_GENR, P_0700),
     E2(0073000, SZ_WORD, TEXT_ASHC,  M_GENS, P_0077, M_GENR, P_0700),
 };
 
-static constexpr uint8_t INDEX_EIS[] PROGMEM = {
+constexpr uint8_t INDEX_EIS[] PROGMEM = {
       2,  // TEXT_ASH
       3,  // TEXT_ASHC
       1,  // TEXT_DIV
       0,  // TEXT_MUL
 };
 
-static constexpr Entry TABLE_MFPMTP[] PROGMEM = {
+constexpr Entry TABLE_MFPMTP[] PROGMEM = {
     E1(0006500, SZ_WORD, TEXT_MFPI,  M_GENA, P_0077),
     E1(0106500, SZ_WORD, TEXT_MFPD,  M_GENA, P_0077),
     E1(0006600, SZ_WORD, TEXT_MTPI,  M_GENA, P_0077),
     E1(0106600, SZ_WORD, TEXT_MTPD,  M_GENA, P_0077),
 };
 
-static constexpr uint8_t INDEX_MFPMTP[] PROGMEM = {
+constexpr uint8_t INDEX_MFPMTP[] PROGMEM = {
       1,  // TEXT_MFPD
       0,  // TEXT_MFPI
       3,  // TEXT_MTPD
       2,  // TEXT_MTPI
 };
 
-static constexpr Entry TABLE_J11[] PROGMEM = {
+constexpr Entry TABLE_J11[] PROGMEM = {
     E1(0006400, SZ_NONE, TEXT_MARK,  M_IMM6, P_0077),
     E1(0007000, SZ_WORD, TEXT_CSM,   M_GENS, P_0077),
     E1(0000230, SZ_NONE, TEXT_SPL,   M_IMM3, P_0007),
@@ -241,7 +240,7 @@ static constexpr Entry TABLE_J11[] PROGMEM = {
     E1(0007300, SZ_WORD, TEXT_WRTLCK, M_GENA, P_0077),
 };
 
-static constexpr uint8_t INDEX_J11[] PROGMEM = {
+constexpr uint8_t INDEX_J11[] PROGMEM = {
       1,  // TEXT_CSM
       0,  // TEXT_MARK
       2,  // TEXT_SPL
@@ -249,7 +248,7 @@ static constexpr uint8_t INDEX_J11[] PROGMEM = {
       4,  // TEXT_WRTLCK
 };
 
-static constexpr Entry TABLE_FP11[] PROGMEM = {
+constexpr Entry TABLE_FP11[] PROGMEM = {
     E0(0170000, SZ_NONE, TEXT_CFCC),
     E0(0170011, SZ_NONE, TEXT_SETD),
     E0(0170001, SZ_NONE, TEXT_SETF),
@@ -298,7 +297,7 @@ static constexpr Entry TABLE_FP11[] PROGMEM = {
     E1(0170500, SZ_FLOT, TEXT_TSTF,  M_GENF, P_0077),
 };
 
-static constexpr uint8_t INDEX_FP11[] PROGMEM = {
+constexpr uint8_t INDEX_FP11[] PROGMEM = {
      10,  // TEXT_ABSD
      28,  // TEXT_ABSF
      11,  // TEXT_ADDD
@@ -351,7 +350,7 @@ static constexpr uint8_t INDEX_FP11[] PROGMEM = {
 
 using EntryPage = entry::TableBase<Entry>;
 
-static constexpr EntryPage DCJ11_PAGES[] PROGMEM = {
+constexpr EntryPage DCJ11_PAGES[] PROGMEM = {
         {ARRAY_RANGE(TABLE_BASE), ARRAY_RANGE(INDEX_BASE)},
         {ARRAY_RANGE(TABLE_EIS), ARRAY_RANGE(INDEX_EIS)},
         {ARRAY_RANGE(TABLE_J11), ARRAY_RANGE(INDEX_J11)},
@@ -359,26 +358,26 @@ static constexpr EntryPage DCJ11_PAGES[] PROGMEM = {
         {ARRAY_RANGE(TABLE_MFPMTP), ARRAY_RANGE(INDEX_MFPMTP)},
 };
 
-static constexpr EntryPage DCT11_PAGES[] PROGMEM = {
+constexpr EntryPage DCT11_PAGES[] PROGMEM = {
         {ARRAY_RANGE(TABLE_BASE), ARRAY_RANGE(INDEX_BASE)},
 };
 
 using Cpu = entry::CpuBase<CpuType, EntryPage>;
 
-static constexpr Cpu CPU_TABLE[] PROGMEM = {
+constexpr Cpu CPU_TABLE[] PROGMEM = {
         {J11, TEXT_CPU_J11, ARRAY_RANGE(DCJ11_PAGES)},
         {T11, TEXT_CPU_T11, ARRAY_RANGE(DCT11_PAGES)},
 };
 
-static const Cpu *cpu(CpuType cpuType) {
+const Cpu *cpu(CpuType cpuType) {
     return Cpu::search(cpuType, ARRAY_RANGE(CPU_TABLE));
 }
 
-static bool isGeneralMode(AddrMode mode) {
+bool isGeneralMode(AddrMode mode) {
     return mode >= M_GENS && mode <= M_GENG;
 }
 
-static bool acceptMode(AddrMode opr, AddrMode table) {
+bool acceptMode(AddrMode opr, AddrMode table) {
     if (table == M_NONE)
         return opr == M_NONE;
     if (table == M_GENR)
@@ -393,26 +392,22 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
     return false;
 }
 
-static bool acceptModes(AsmInsn &insn, const Entry *entry) {
+bool acceptModes(AsmInsn &insn, const Entry *entry) {
     const auto table = entry->readFlags();
     return acceptMode(insn.srcOp.mode, table.src()) && acceptMode(insn.dstOp.mode, table.dst());
 }
 
-Error TablePdp11::searchName(CpuType cpuType, AsmInsn &insn) const {
+Error searchName(CpuType cpuType, AsmInsn &insn) {
     cpu(cpuType)->searchName(insn, acceptModes);
     return insn.getError();
 }
 
-static bool acceptAll(AsmInsn &, const Entry *) {
-    return true;
-}
-
-Error TablePdp11::hasName(CpuType cpuType, AsmInsn &insn) const {
-    cpu(cpuType)->searchName(insn, acceptAll);
+Error hasName(CpuType cpuType, AsmInsn &insn) {
+    cpu(cpuType)->searchName(insn, Cpu::acceptAll<AsmInsn, Entry>);
     return insn.getError();
 }
 
-static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *) {
+bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *) {
     auto opc = insn.opCode();
     const auto flags = entry->readFlags();
     opc &= ~Entry::insnMask(flags.srcPos());
@@ -420,7 +415,7 @@ static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *) {
     return opc == entry->readOpCode();
 }
 
-Error TablePdp11::searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) const {
+Error searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) {
     cpu(cpuType)->searchOpCode(insn, out, matchOpCode);
     return insn.getError();
 }

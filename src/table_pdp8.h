@@ -19,7 +19,6 @@
 
 #include "config_pdp8.h"
 #include "insn_pdp8.h"
-#include "str_buffer.h"
 
 namespace libasm {
 namespace pdp8 {
@@ -28,13 +27,13 @@ struct TablePdp8 final : InsnTable<CpuType> {
     const /*PROGMEM*/ char *listCpu_P() const override;
     const /*PROGMEM*/ char *cpuName_P(CpuType cpuType) const override;
     Error searchCpuName(StrScanner &name, CpuType &cpuType) const override;
-
-    Error searchName(CpuType, AsmInsn &insn) const;
-    Error searchMicro(CpuType, AsmInsn &micro, AddrMode mode) const;
-    Error searchOpCode(CpuType, DisInsn &insn, StrBuffer &out) const;
 };
 
 extern const TablePdp8 TABLE;
+
+Error searchName(CpuType, AsmInsn &insn);
+Error searchMicro(CpuType, AsmInsn &micro, AddrMode mode);
+Error searchOpCode(CpuType, DisInsn &insn, StrBuffer &out);
 
 }  // namespace pdp8
 }  // namespace libasm

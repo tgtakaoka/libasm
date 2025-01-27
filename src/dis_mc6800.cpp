@@ -15,7 +15,6 @@
  */
 
 #include "dis_mc6800.h"
-
 #include "reg_mc6800.h"
 #include "table_mc6800.h"
 
@@ -80,7 +79,7 @@ void DisMc6800::decodeBitNumber(DisInsn &insn, StrBuffer &out) const {
     const bool aim = (insn.opCode() & 0xF) == 1;
     const int8_t bitNum = bitNumber(aim ? ~val8 : val8);
     if (bitNum >= 0) {
-        TABLE.searchOpCodeAlias(cpuType(), insn, out);
+        searchOpCodeAlias(cpuType(), insn, out);
         outHex(out, bitNum, 3);
     } else {
         outHex(out.letter('#'), val8, 8);
@@ -145,13 +144,13 @@ Error DisMc6800::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) cons
     DisInsn insn(_insn, memory, out);
     const auto opc = insn.readByte();
     insn.setOpCode(opc);
-    if (TABLE.isPrefix(cpuType(), opc)) {
+    if (isPrefix(cpuType(), opc)) {
         insn.setPrefix(opc);
         insn.setOpCode(insn.readByte());
         if (insn.getError())
             return _insn.setError(insn);
     }
-    if (TABLE.searchOpCode(cpuType(), insn, out))
+    if (searchOpCode(cpuType(), insn, out))
         return _insn.setError(insn);
 
     decodeOperand(insn, out, insn.mode1());

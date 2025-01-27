@@ -15,7 +15,6 @@
  */
 
 #include "dis_tms7000.h"
-
 #include "reg_tms7000.h"
 #include "table_tms7000.h"
 #include "text_tms7000.h"
@@ -116,7 +115,7 @@ Error DisTms7000::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) con
     DisInsn insn(_insn, memory, out);
     const auto opCode = insn.readByte();
     insn.setOpCode(opCode);
-    if (TABLE.searchOpCode(cpuType(), insn, out))
+    if (searchOpCode(cpuType(), insn, out))
         return _insn.setError(insn);
 
     decodeOperand(insn, out, insn.src());

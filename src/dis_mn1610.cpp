@@ -15,7 +15,6 @@
  */
 
 #include "dis_mn1610.h"
-
 #include "reg_mn1610.h"
 #include "table_mn1610.h"
 #include "text_common.h"
@@ -199,7 +198,7 @@ Error DisMn1610::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) cons
     DisInsn insn(_insn, memory, out);
     const auto opc = insn.readUint16();
     insn.setOpCode(opc);
-    if (TABLE.searchOpCode(cpuType(), insn, out))
+    if (searchOpCode(cpuType(), insn, out))
         return _insn.setError(insn);
 
     decodeOperand(insn, out, insn.mode1());

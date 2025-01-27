@@ -15,7 +15,6 @@
  */
 
 #include "asm_scn2650.h"
-
 #include "table_scn2650.h"
 #include "text_common.h"
 
@@ -214,7 +213,7 @@ void AsmScn2650::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode) 
 Error AsmScn2650::encodeImpl(StrScanner &scan, Insn &_insn) const {
     AsmInsn insn(_insn);
     const auto comma = scan.expect(',');
-    if (TABLE.hasOperand(cpuType(), insn)) {
+    if (hasOperand(cpuType(), insn)) {
         if (!comma)
             scan.skipSpaces();
         if (parseOperand(scan, insn.op1) && insn.op1.hasError())
@@ -228,8 +227,8 @@ Error AsmScn2650::encodeImpl(StrScanner &scan, Insn &_insn) const {
     }
     scan.skipSpaces();
 
-    if (_insn.setErrorIf(insn.op1, TABLE.searchName(cpuType(), insn)))
-        return _insn.getError();
+    if (searchName(cpuType(), insn))
+        return _insn.setError(insn.op1, insn);
 
     const auto mode1 = insn.mode1();
     if (comma && (mode1 == M_REGN || mode1 == M_REG0 || mode1 == M_R123))

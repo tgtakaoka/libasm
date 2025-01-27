@@ -28,15 +28,15 @@ struct TableZ80 final : InsnTable<CpuType> {
     const /*PROGMEM*/ char *cpuName_P(CpuType cpuType) const override;
     Error searchCpuName(StrScanner &name, CpuType &cpuType) const override;
 
-    Error searchName(CpuType, AsmInsn &insn) const;
-    Error searchOpCode(CpuType, DisInsn &insn, StrBuffer &out) const;
-    bool isPrefix(CpuType, Config::opcode_t code) const;
-
     static constexpr Config::opcode_t PREFIX_IX = 0xDD;
     static constexpr Config::opcode_t PREFIX_IY = 0xFD;
 };
 
 extern const TableZ80 TABLE;
+
+Error searchName(CpuType, AsmInsn &insn);
+Error searchOpCode(CpuType, DisInsn &insn, StrBuffer &out);
+bool isPrefix(CpuType, Config::opcode_t code);
 
 }  // namespace z80
 }  // namespace libasm

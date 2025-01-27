@@ -83,7 +83,7 @@ void DisZ8000::decodeImmediate(DisInsn &insn, StrBuffer &out, AddrMode mode, Opr
         const auto count =
                 (size == SZ_BYTE) ? static_cast<int8_t>(data) : static_cast<int16_t>(data);
         if (count < 0) {
-            TABLE.searchOpCodeAlias(cpuType(), insn, out);
+            searchOpCodeAlias(cpuType(), insn, out);
             data = -count;
         }
         if (size == SZ_BYTE && data > 8)
@@ -415,7 +415,7 @@ StrBuffer &DisZ8000::outComma(
 Error DisZ8000::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) const {
     DisInsn insn(_insn, memory, out);
     insn.setOpCode(insn.readUint16());
-    if (TABLE.searchOpCode(cpuType(), insn, out))
+    if (searchOpCode(cpuType(), insn, out))
         return _insn.setError(insn);
 
     const auto dst = insn.dst();

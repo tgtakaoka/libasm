@@ -32,7 +32,7 @@ namespace mc6805 {
 #define U1(_opc, _name, _opr1) {_opc, Entry::Flags::undef(_opr1), _name}
 
 // clang-format off
-static constexpr Entry MC6805_TABLE[] PROGMEM = {
+constexpr Entry MC6805_TABLE[] PROGMEM = {
     E1(0x20, TEXT_BRA,  M_REL),
     E1(0x21, TEXT_BRN,  M_REL),
     E1(0x22, TEXT_BHI,  M_REL),
@@ -125,7 +125,7 @@ static constexpr Entry MC6805_TABLE[] PROGMEM = {
     E3(0x01, TEXT_BRCLR, M_BNO, M_DIR, M_REL),
 };
 
-static constexpr uint8_t MC6805_INDEX[] PROGMEM = {
+constexpr uint8_t MC6805_INDEX[] PROGMEM = {
      64,  // TEXT_ADC
      66,  // TEXT_ADD
      58,  // TEXT_AND
@@ -218,25 +218,25 @@ static constexpr uint8_t MC6805_INDEX[] PROGMEM = {
      85,  // TEXT_TXA
 };
 
-static constexpr Entry MC146805_TABLE[] PROGMEM = {
+constexpr Entry MC146805_TABLE[] PROGMEM = {
     E0(0x8E, TEXT_STOP),
     E0(0x8F, TEXT_WAIT),
 };
 
-static constexpr uint8_t MC146805_INDEX[] PROGMEM = {
+constexpr uint8_t MC146805_INDEX[] PROGMEM = {
       0,  // TEXT_STOP
       1,  // TEXT_WAIT
 };
 
-static constexpr Entry MC68HC05_TABLE[] PROGMEM = {
+constexpr Entry MC68HC05_TABLE[] PROGMEM = {
     E0(0x42, TEXT_MUL),
 };
 
-static constexpr uint8_t MC68HC05_INDEX[] PROGMEM = {
+constexpr uint8_t MC68HC05_INDEX[] PROGMEM = {
       0,  // TEXT_MUL
 };
 
-static constexpr Entry MC68HC08_TABLE[] PROGMEM = {
+constexpr Entry MC68HC08_TABLE[] PROGMEM = {
     E1(0x35, TEXT_STHX,  M_DIR),
     E1(0x45, TEXT_LDHX,  M_IM16),
     E1(0x55, TEXT_LDHX,  M_DIR),
@@ -280,7 +280,7 @@ static constexpr Entry MC68HC08_TABLE[] PROGMEM = {
     E2(0x71, TEXT_CBEQ,  M_IX0P, M_REL),
 };
 
-static constexpr uint8_t MC68HC08_INDEX[] PROGMEM = {
+constexpr uint8_t MC68HC08_INDEX[] PROGMEM = {
      10,  // TEXT_AIS
      11,  // TEXT_AIX
      26,  // TEXT_BGE
@@ -324,7 +324,7 @@ static constexpr uint8_t MC68HC08_INDEX[] PROGMEM = {
      24,  // TEXT_TXS
 };
 
-static constexpr Entry MC68HC08_P9E[] PROGMEM = {
+constexpr Entry MC68HC08_P9E[] PROGMEM = {
     E1(0x60, TEXT_NEG,  M_SP1),
     E2(0x61, TEXT_CBEQ, M_SP1,  M_REL),
     E1(0x63, TEXT_COM,  M_SP1),
@@ -369,7 +369,7 @@ static constexpr Entry MC68HC08_P9E[] PROGMEM = {
     E1(0xDF, TEXT_STX,  M_SP2),
 };
 
-static constexpr uint8_t MC68HC08_I9E[] PROGMEM = {
+constexpr uint8_t MC68HC08_I9E[] PROGMEM = {
      23,  // TEXT_ADC
      37,  // TEXT_ADC
      25,  // TEXT_ADD
@@ -418,22 +418,22 @@ static constexpr uint8_t MC68HC08_I9E[] PROGMEM = {
 
 using EntryPage = entry::PrefixTableBase<Entry>;
 
-static constexpr EntryPage MC6805_PAGES[] PROGMEM = {
+constexpr EntryPage MC6805_PAGES[] PROGMEM = {
         {0x00, ARRAY_RANGE(MC6805_TABLE), ARRAY_RANGE(MC6805_INDEX)},
 };
 
-static constexpr EntryPage MC146805_PAGES[] PROGMEM = {
+constexpr EntryPage MC146805_PAGES[] PROGMEM = {
         {0x00, ARRAY_RANGE(MC6805_TABLE), ARRAY_RANGE(MC6805_INDEX)},
         {0x00, ARRAY_RANGE(MC146805_TABLE), ARRAY_RANGE(MC146805_INDEX)},
 };
 
-static constexpr EntryPage MC68HC05_PAGES[] PROGMEM = {
+constexpr EntryPage MC68HC05_PAGES[] PROGMEM = {
         {0x00, ARRAY_RANGE(MC6805_TABLE), ARRAY_RANGE(MC6805_INDEX)},
         {0x00, ARRAY_RANGE(MC146805_TABLE), ARRAY_RANGE(MC146805_INDEX)},
         {0x00, ARRAY_RANGE(MC68HC05_TABLE), ARRAY_RANGE(MC68HC05_INDEX)},
 };
 
-static constexpr EntryPage MC68HC08_PAGES[] PROGMEM = {
+constexpr EntryPage MC68HC08_PAGES[] PROGMEM = {
         {0x00, ARRAY_RANGE(MC68HC08_TABLE), ARRAY_RANGE(MC68HC08_INDEX)},
         // Above definitions overrides unknown instructions defined below.
         {0x00, ARRAY_RANGE(MC6805_TABLE), ARRAY_RANGE(MC6805_INDEX)},
@@ -444,27 +444,23 @@ static constexpr EntryPage MC68HC08_PAGES[] PROGMEM = {
 
 using Cpu = entry::CpuBase<CpuType, EntryPage>;
 
-static constexpr Cpu CPU_TABLE[] PROGMEM = {
+constexpr Cpu CPU_TABLE[] PROGMEM = {
         {MC6805, TEXT_CPU_6805, ARRAY_RANGE(MC6805_PAGES)},
         {MC146805, TEXT_CPU_146805, ARRAY_RANGE(MC146805_PAGES)},
         {MC68HC05, TEXT_CPU_68HC05, ARRAY_RANGE(MC68HC05_PAGES)},
         {MC68HC08, TEXT_CPU_68HC08, ARRAY_RANGE(MC68HC08_PAGES)},
 };
 
-static const Cpu *cpu(CpuType cpuType) {
+const Cpu *cpu(CpuType cpuType) {
     return Cpu::search(cpuType, ARRAY_RANGE(CPU_TABLE));
 }
 
-static bool acceptAll(AsmInsn &, const Entry *) {
-    return true;
-}
-
-bool TableMc6805::hasOperand(CpuType cpuType, AsmInsn &insn) const {
-    cpu(cpuType)->searchName(insn, acceptAll);
+bool hasOperand(CpuType cpuType, AsmInsn &insn) {
+    cpu(cpuType)->searchName(insn, Cpu::acceptAll<AsmInsn, Entry>);
     return insn.isOK() && insn.mode1() != M_NONE;
 }
 
-static bool acceptMode(AddrMode opr, AddrMode table) {
+bool acceptMode(AddrMode opr, AddrMode table) {
     if (opr == table)
         return true;
     if (table == M_GEN)
@@ -483,7 +479,7 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
     return false;
 }
 
-static bool acceptModes(AsmInsn &insn, const Entry *entry) {
+bool acceptModes(AsmInsn &insn, const Entry *entry) {
     const auto table = entry->readFlags();
     if (acceptMode(insn.op1.mode, table.mode1()) && acceptMode(insn.op2.mode, table.mode2()) &&
             acceptMode(insn.op3.mode, table.mode3())) {
@@ -494,12 +490,12 @@ static bool acceptModes(AsmInsn &insn, const Entry *entry) {
     return false;
 }
 
-Error TableMc6805::searchName(CpuType cpuType, AsmInsn &insn) const {
+Error searchName(CpuType cpuType, AsmInsn &insn) {
     cpu(cpuType)->searchName(insn, acceptModes);
     return insn.getError();
 }
 
-static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *) {
+bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *) {
     auto opCode = insn.opCode();
     const auto flags = entry->readFlags();
     const auto mode1 = flags.mode1();
@@ -515,7 +511,7 @@ static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *) {
     return opCode == entry->readOpCode();
 }
 
-Error TableMc6805::searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) const {
+Error searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) {
     auto entry = cpu(cpuType)->searchOpCode(insn, out, matchOpCode);
     if (entry && entry->readFlags().undefined()) {
         insn.nameBuffer().reset();
@@ -524,7 +520,7 @@ Error TableMc6805::searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) 
     return insn.getError();
 }
 
-bool TableMc6805::isPrefix(CpuType cpuType, Config::opcode_t code) const {
+bool isPrefix(CpuType cpuType, Config::opcode_t code) {
     return cpu(cpuType)->isPrefix(code);
 }
 

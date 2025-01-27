@@ -24,13 +24,12 @@ using namespace libasm::text::scn2650;
 namespace libasm {
 namespace scn2650 {
 
-#define E2(_opc, _name, _mode1, _mode2) \
-    { _opc, Entry::Flags::create(_mode1, _mode2), _name }
+#define E2(_opc, _name, _mode1, _mode2) {_opc, Entry::Flags::create(_mode1, _mode2), _name}
 #define E1(_opc, _name, _mode1) E2(_opc, _name, _mode1, M_NONE)
 #define E0(_opc, _name) E1(_opc, _name, M_NONE)
 
 // clang-format off
-static constexpr Entry TABLE_2650[] PROGMEM = {
+constexpr Entry TABLE_2650[] PROGMEM = {
     E1(0x00, TEXT_LODZ, M_R123),
     E2(0x04, TEXT_LODI, M_REGN, M_IMM8),
     E2(0x08, TEXT_LODR, M_REGN, M_REL7),
@@ -117,7 +116,7 @@ static constexpr Entry TABLE_2650[] PROGMEM = {
     E2(0xFC, TEXT_BDRA, M_REGN, M_AB15),
 };
 
-static constexpr uint8_t INDEX_2650[] PROGMEM = {
+constexpr uint8_t INDEX_2650[] PROGMEM = {
      45,  // TEXT_ADDA
      46,  // TEXT_ADDA
      43,  // TEXT_ADDI
@@ -208,30 +207,26 @@ static constexpr uint8_t INDEX_2650[] PROGMEM = {
 
 using EntryPage = entry::TableBase<Entry>;
 
-static constexpr EntryPage SCN2650_PAGES[] PROGMEM = {
+constexpr EntryPage SCN2650_PAGES[] PROGMEM = {
         {ARRAY_RANGE(TABLE_2650), ARRAY_RANGE(INDEX_2650)},
 };
 
 using Cpu = entry::CpuBase<CpuType, EntryPage>;
 
-static constexpr Cpu CPU_TABLE[] PROGMEM = {
+constexpr Cpu CPU_TABLE[] PROGMEM = {
         {SCN2650, TEXT_CPU_2650, ARRAY_RANGE(SCN2650_PAGES)},
 };
 
-static const Cpu *cpu(CpuType) {
+const Cpu *cpu(CpuType) {
     return &CPU_TABLE[0];
 }
 
-static bool acceptAll(AsmInsn &, const Entry *) {
-    return true;
-}
-
-bool TableScn2650::hasOperand(CpuType cpuType, AsmInsn &insn) const {
-    cpu(cpuType)->searchName(insn, acceptAll);
+bool hasOperand(CpuType cpuType, AsmInsn &insn) {
+    cpu(cpuType)->searchName(insn, Cpu::acceptAll<AsmInsn, Entry>);
     return insn.isOK() && insn.mode1() != M_NONE;
 }
 
-static bool acceptMode(AddrMode opr, AddrMode table) {
+bool acceptMode(AddrMode opr, AddrMode table) {
     if (opr == table)
         return true;
     if (opr == M_REG0 || opr == M_R123)
@@ -248,17 +243,17 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
     return false;
 }
 
-static bool acceptModes(AsmInsn &insn, const Entry *entry) {
+bool acceptModes(AsmInsn &insn, const Entry *entry) {
     const auto table = entry->readFlags();
     return acceptMode(insn.op1.mode, table.mode1()) && acceptMode(insn.op2.mode, table.mode2());
 }
 
-Error TableScn2650::searchName(CpuType cpuType, AsmInsn &insn) const {
+Error searchName(CpuType cpuType, AsmInsn &insn) {
     cpu(cpuType)->searchName(insn, acceptModes);
     return insn.getError();
 }
 
-static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *) {
+bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *) {
     auto opc = insn.opCode();
     const auto flags = entry->readFlags();
     const auto mode1 = flags.mode1();
@@ -275,7 +270,7 @@ static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *) {
     return opc == entry->readOpCode();
 }
 
-Error TableScn2650::searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) const {
+Error searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) {
     cpu(cpuType)->searchOpCode(insn, out, matchOpCode);
     return insn.getError();
 }

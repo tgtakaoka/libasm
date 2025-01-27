@@ -15,7 +15,6 @@
  */
 
 #include "asm_i8048.h"
-
 #include "table_i8048.h"
 #include "text_common.h"
 
@@ -241,8 +240,8 @@ Error AsmI8048::encodeImpl(StrScanner &scan, Insn &_insn) const {
         scan.skipSpaces();
     }
 
-    if (_insn.setErrorIf(insn.dstOp, TABLE.searchName(cpuType(), insn)))
-        return _insn.getError();
+    if (searchName(cpuType(), insn))
+        return _insn.setError(insn.dstOp, insn);
 
     encodeOperand(insn, insn.dst(), insn.dstOp);
     encodeOperand(insn, insn.src(), insn.srcOp);

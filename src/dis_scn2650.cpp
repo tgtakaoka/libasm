@@ -15,7 +15,6 @@
  */
 
 #include "dis_scn2650.h"
-
 #include "reg_scn2650.h"
 #include "table_scn2650.h"
 #include "text_common.h"
@@ -145,7 +144,7 @@ Error DisScn2650::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) con
     DisInsn insn(_insn, memory, out);
     const auto opCode = insn.readByte();
     insn.setOpCode(opCode);
-    if (TABLE.searchOpCode(cpuType(), insn, out))
+    if (searchOpCode(cpuType(), insn, out))
         return _insn.setError(insn);
 
     decodeOperand(insn, out, insn.mode1());

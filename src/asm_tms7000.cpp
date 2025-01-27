@@ -15,7 +15,6 @@
  */
 
 #include "asm_tms7000.h"
-
 #include "reg_tms7000.h"
 #include "table_tms7000.h"
 #include "text_common.h"
@@ -223,7 +222,7 @@ void AsmTms7000::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode) 
 
 Error AsmTms7000::encodeImpl(StrScanner &scan, Insn &_insn) const {
     AsmInsn insn(_insn);
-    if (TABLE.hasOperand(cpuType(), insn)) {
+    if (hasOperand(cpuType(), insn)) {
         if (parseOperand(scan, insn.srcOp) && insn.srcOp.hasError())
             return _insn.setError(insn.srcOp);
         if (scan.skipSpaces().expect(',')) {
@@ -237,8 +236,8 @@ Error AsmTms7000::encodeImpl(StrScanner &scan, Insn &_insn) const {
     }
     scan.skipSpaces();
 
-    if (_insn.setErrorIf(insn.srcOp, TABLE.searchName(cpuType(), insn)))
-        return _insn.getError();
+    if (searchName(cpuType(), insn))
+        return _insn.setError(insn.srcOp, insn);
 
     encodeOperand(insn, insn.srcOp, insn.src());
     encodeOperand(insn, insn.dstOp, insn.dst());

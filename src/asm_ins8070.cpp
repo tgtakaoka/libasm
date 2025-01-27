@@ -15,7 +15,6 @@
  */
 
 #include "asm_ins8070.h"
-
 #include "table_ins8070.h"
 #include "text_common.h"
 
@@ -248,8 +247,8 @@ Error AsmIns8070::encodeImpl(StrScanner &scan, Insn &_insn) const {
         scan.skipSpaces();
     }
 
-    if (_insn.setErrorIf(insn.dstOp, TABLE.searchName(cpuType(), insn)))
-        return _insn.getError();
+    if (searchName(cpuType(), insn))
+        return _insn.setError(insn.dstOp, insn);
 
     emitOperand(insn, insn.dst(), insn.dstOp);
     emitOperand(insn, insn.src(), insn.srcOp);

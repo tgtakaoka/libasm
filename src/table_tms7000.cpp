@@ -25,13 +25,13 @@ namespace libasm {
 namespace tms7000 {
 
 #define E3(_opc, _name, _opr1, _opr2, _opr3) \
-    { _opc, Entry::Flags::create(_opr1, _opr2, _opr3), _name }
+    {_opc, Entry::Flags::create(_opr1, _opr2, _opr3), _name}
 #define E2(_opc, _name, _opr1, _opr2) E3(_opc, _name, _opr1, _opr2, M_NONE)
 #define E1(_opc, _name, _opr1) E2(_opc, _name, _opr1, M_NONE)
 #define E0(_opc, _name) E1(_opc, _name, M_NONE)
 
 // clang-format off
-static constexpr Entry TMS7000_TABLE[] PROGMEM = {
+constexpr Entry TMS7000_TABLE[] PROGMEM = {
 	E0(0x00, TEXT_NOP),
 	E0(0x01, TEXT_IDLE),
 	E0(0x05, TEXT_EINT),
@@ -245,7 +245,7 @@ static constexpr Entry TMS7000_TABLE[] PROGMEM = {
 	E1(0xE8, TEXT_TRAP,  M_TRAP),
 };
 
-static constexpr uint8_t TMS7000_INDEX[] PROGMEM = {
+constexpr uint8_t TMS7000_INDEX[] PROGMEM = {
      21,  // TEXT_ADC
      35,  // TEXT_ADC
      49,  // TEXT_ADC
@@ -463,30 +463,26 @@ static constexpr uint8_t TMS7000_INDEX[] PROGMEM = {
 
 using EntryPage = entry::TableBase<Entry>;
 
-static constexpr EntryPage TMS7000_PAGES[] PROGMEM = {
+constexpr EntryPage TMS7000_PAGES[] PROGMEM = {
         {ARRAY_RANGE(TMS7000_TABLE), ARRAY_RANGE(TMS7000_INDEX)},
 };
 
 using Cpu = entry::CpuBase<CpuType, EntryPage>;
 
-static constexpr Cpu CPU_TABLE[] PROGMEM = {
+constexpr Cpu CPU_TABLE[] PROGMEM = {
         {TMS7000, TEXT_CPU_TMS7000, ARRAY_RANGE(TMS7000_PAGES)},
 };
 
-static const Cpu *cpu(CpuType) {
+const Cpu *cpu(CpuType) {
     return &CPU_TABLE[0];
 }
 
-static bool acceptAll(AsmInsn &, const Entry *) {
-    return true;
-}
-
-bool TableTms7000::hasOperand(CpuType cpuType, AsmInsn &insn) const {
-    cpu(cpuType)->searchName(insn, acceptAll);
+bool hasOperand(CpuType cpuType, AsmInsn &insn) {
+    cpu(cpuType)->searchName(insn, Cpu::acceptAll<AsmInsn, Entry>);
     return insn.isOK() && insn.src() != M_NONE;
 }
 
-static bool acceptMode(AddrMode opr, AddrMode table) {
+bool acceptMode(AddrMode opr, AddrMode table) {
     if (opr == table)
         return true;
     if (opr == M_A || opr == M_B)
@@ -500,18 +496,18 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
     return false;
 }
 
-static bool acceptModes(AsmInsn &insn, const Entry *entry) {
+bool acceptModes(AsmInsn &insn, const Entry *entry) {
     const auto table = entry->readFlags();
     return acceptMode(insn.srcOp.mode, table.src()) && acceptMode(insn.dstOp.mode, table.dst()) &&
            acceptMode(insn.extOp.mode, table.ext());
 }
 
-Error TableTms7000::searchName(CpuType cpuType, AsmInsn &insn) const {
+Error searchName(CpuType cpuType, AsmInsn &insn) {
     cpu(cpuType)->searchName(insn, acceptModes);
     return insn.getError();
 }
 
-static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *) {
+bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *) {
     const auto opc = insn.opCode();
     const auto flags = entry->readFlags();
     const auto src = flags.src();
@@ -520,7 +516,7 @@ static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *) {
     return opc == entry->readOpCode();
 }
 
-Error TableTms7000::searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) const {
+Error searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) {
     cpu(cpuType)->searchOpCode(insn, out, matchOpCode);
     return insn.getError();
 }

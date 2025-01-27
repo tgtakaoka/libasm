@@ -28,15 +28,15 @@ struct TableMos6502 final : InsnTable<CpuType> {
     const /*PROGMEM*/ char *cpuName_P(CpuType cpuType) const override;
     Error searchCpuName(StrScanner &name, CpuType &cpuType) const override;
 
-    bool hasOperand(CpuType, AsmInsn &insn) const;
-    Error searchName(CpuType, AsmInsn &insn) const;
-    Error searchOpCode(CpuType, DisInsn &insn, StrBuffer &out) const;
-
     static constexpr Config::opcode_t WDM = 0x42;
     static constexpr Config::opcode_t JSL = 0x22;
 };
 
 extern const TableMos6502 TABLE;
+
+bool hasOperand(CpuType, AsmInsn &insn);
+Error searchName(CpuType, AsmInsn &insn);
+Error searchOpCode(CpuType, DisInsn &insn, StrBuffer &out);
 
 }  // namespace mos6502
 }  // namespace libasm

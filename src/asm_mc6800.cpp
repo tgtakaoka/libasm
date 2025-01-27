@@ -15,7 +15,6 @@
  */
 
 #include "asm_mc6800.h"
-
 #include "reg_mc6800.h"
 #include "table_mc6800.h"
 #include "text_common.h"
@@ -186,7 +185,7 @@ void AsmMc6800::emitOperand(AsmInsn &insn, AddrMode mode, const Operand &op) con
 
 Error AsmMc6800::encodeImpl(StrScanner &scan, Insn &_insn) const {
     AsmInsn insn(_insn);
-    if (TABLE.hasOperand(cpuType(), insn)) {
+    if (hasOperand(cpuType(), insn)) {
         if (parseOperand(scan, insn.op1) && insn.op1.hasError())
             return _insn.setError(insn.op1);
         if (scan.skipSpaces().expect(',')) {
@@ -200,8 +199,8 @@ Error AsmMc6800::encodeImpl(StrScanner &scan, Insn &_insn) const {
     }
     scan.skipSpaces();
 
-    if (_insn.setErrorIf(insn.op1, TABLE.searchName(cpuType(), insn)))
-        return _insn.getError();
+    if (searchName(cpuType(), insn))
+        return _insn.setError(insn.op1, insn);
 
     emitOperand(insn, insn.mode1(), insn.op1);
     emitOperand(insn, insn.mode2(), insn.op2);
