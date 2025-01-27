@@ -27,7 +27,20 @@ namespace tms32010 {
 struct DisTms32010 final : Disassembler, Config {
     DisTms32010(const ValueFormatter::Plugins &plugins = defaultPlugins());
 
+    void reset() override;
+
+    Error setUseAuxName(bool enable);
+    Error setUsePortName(bool enable);
+
 private:
+    const BoolOption<DisTms32010> _opt_useAuxName;
+    const BoolOption<DisTms32010> _opt_usePortName;
+
+    bool _useAuxName;
+    bool _usePortName;
+
+    StrBuffer &outAuxiliary(StrBuffer &out, uint_fast8_t no) const;
+    StrBuffer &outPort(StrBuffer &out, uint_fast8_t no) const;
     StrBuffer &outDirect(StrBuffer &out, DisInsn &insn) const;
     StrBuffer &outIndirect(StrBuffer &out, uint8_t mam) const;
     StrBuffer &outModifyAR(StrBuffer &out, uint8_t mam) const;
@@ -35,6 +48,7 @@ private:
     StrBuffer &outShiftCount(StrBuffer &out, uint8_t count, uint8_t mam) const;
     StrBuffer &outProgramAddress(StrBuffer &out, DisInsn &insn) const;
     void decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) const;
+    bool hasValue(DisInsn &insn, AddrMode mode) const;
 
     Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) const override;
     const ConfigBase &config() const override { return *this; }

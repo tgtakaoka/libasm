@@ -29,8 +29,11 @@ enum AddrMode : uint8_t {
     // T=table, P=parser. M_IM1~M_CNST must be a constant.
     M_NONE = 0,   // TP: No operand
     M_IM1 = 1,    // T_: 1-bit unsigned immediate    ---- ---- ---- ---k
+    M_IM2 = 2,    // T_: 2-bit unsigned immediate    ---- ---- ---- --kk
     M_IM8 = 3,    // T_: 8-bit unsigned immediate    ---- ---- kkkk kkkk
+    M_IM9 = 4,    // T_: 9-bit unsigned immediate    ---- ---k kkkk kkkk
     M_IM13 = 5,   // T_: 13-bit signed immediate     ---k kkkk kkkk kkkk
+    M_IM16 = 6,   // T_: 16-bit unsigned immediate
     M_NARP = 7,   // T_: Next ARP                    ---- ---- ---- xyyy
     M_ARK = 8,    // T_: 3-bit AR register           ---- ---- ---- -rrr
     M_AR = 9,     // TP: AR[0-7] Auxiliary register  ---- -rrr ---- ----
@@ -38,12 +41,20 @@ enum AddrMode : uint8_t {
     M_LS0 = 11,   // T_: 0 constant for SACL         ---- -000 ---- ----
     M_LS3 = 12,   // T_: 3-bit left shift            ---- -xxx ---- ----
     M_LS4 = 13,   // T_: 4-bit left shift            ---- ssss ---- ----
+    M_BIT = 14,   // T_: 4-bit bit position          ---- bbbb ---- ----
     M_PM12 = 15,  // T_: 12-bit program address      ---- pppp pppp pppp
+    M_PM16 = 16,  // T_: 16-bit program address
     M_CNST = 17,  // _P: constant
     M_MAM = 18,   // T_: Direct address or M_IND     ---- ---- ixxx xxxx
+    M_IND = 19,   // T_: Indirect addressing         ---- ---- 1vpm ----
+    M_MAR = 20,   // T_: Modify AR                   ---- ---- 1vpm ----
     M_ARP = 21,   // _P: "*"   Indirect addressing
     M_INC = 22,   // _P: "*+"  Indirect then auto increment addressing
     M_DEC = 23,   // _P: "*-"  Indirect then auto decrement addressing
+    M_INC0 = 24,  // _P: "*0+"  Indirect then auto increment by AR0 addressing
+    M_DEC0 = 25,  // _P: "*0-"  Indirect then auto decrement by AR0 addressing
+    M_IBR0 = 26,  // _P: "*BR+"  Indirect then auto increment by bit-reverse AR0 addressing
+    M_DBR0 = 27,  // _P: "*BR-"  Indirect then auto decrement by bit-reverse AR0 addressing
 };
 
 struct Entry final : entry::Base<Config::opcode_t> {

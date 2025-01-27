@@ -21,9 +21,12 @@ namespace text {
 namespace tms32010 {
 
 // clang-format off
-constexpr char TEXT_TMS32010_LIST[] PROGMEM = "TMS32010, TMS32015";
+constexpr char TEXT_TMS32010_LIST[] PROGMEM = "TMS32010, TMS32015, TMS32020, TMS320C25, TMS320C26";
 constexpr char TEXT_CPU_32010[] PROGMEM = "32010";
 constexpr char TEXT_CPU_32015[] PROGMEM = "32015";
+constexpr char TEXT_CPU_32020[] PROGMEM = "32020";
+constexpr char TEXT_CPU_320C25[] PROGMEM = "320C25";
+constexpr char TEXT_CPU_320C26[] PROGMEM = "320C26";
 
 // TMS32010
 // constexpr char TEXT_ABS[]  PROGMEM = "ABS";
@@ -87,8 +90,89 @@ constexpr char TEXT_ZAC[]  PROGMEM = "ZAC";
 constexpr char TEXT_ZALH[] PROGMEM = "ZALH";
 constexpr char TEXT_ZALS[] PROGMEM = "ZALS";
 
+// TMS32020
+constexpr char TEXT_ADDT[] PROGMEM = "ADDT";
+constexpr char TEXT_ADLK[] PROGMEM = "ADLK";
+constexpr char TEXT_ANDK[] PROGMEM = "ANDK";
+constexpr char TEXT_BACC[] PROGMEM = "BACC";
+constexpr char TEXT_BBNZ[] PROGMEM = "BBNZ";
+constexpr char TEXT_BBZ[]  PROGMEM = "BBZ";
+// constexpr char TEXT_BIT[]  PROGMEM = "BIT";
+constexpr char TEXT_BITT[] PROGMEM = "BITT";
+constexpr char TEXT_BLKD[] PROGMEM = "BLKD";
+constexpr char TEXT_BLKP[] PROGMEM = "BLKP";
+constexpr char TEXT_BNV[]  PROGMEM = "BNV";
+// constexpr char TEXT_CMPL[] PROGMEM = "CMPL";
+// constexpr char TEXT_CMPR[] PROGMEM = "CMPR";
+constexpr char TEXT_CNFD[] PROGMEM = "CNFD";
+constexpr char TEXT_CNFP[] PROGMEM = "CNFP";
+constexpr char TEXT_FORT[] PROGMEM = "FORT";
+// constexpr char TEXT_IDLE[] PROGMEM = "IDLE";
+constexpr char TEXT_LACT[] PROGMEM = "LACT";
+constexpr char TEXT_LALK[] PROGMEM = "LALK";
+constexpr char TEXT_LPH[]  PROGMEM = "LPH";
+constexpr char TEXT_LRLK[] PROGMEM = "LRLK";
+constexpr char TEXT_LST1[] PROGMEM = "LST1";
+constexpr char TEXT_LTP[]  PROGMEM = "LTP";
+constexpr char TEXT_LTS[]  PROGMEM = "LTS";
+constexpr char TEXT_MAC[]  PROGMEM = "MAC";
+constexpr char TEXT_MACD[] PROGMEM = "MACD";
+// constexpr char TEXT_NEG[]  PROGMEM = "NEG";
+constexpr char TEXT_NORM[] PROGMEM = "NORM";
+constexpr char TEXT_ORK[]  PROGMEM = "ORK";
+constexpr char TEXT_POPD[] PROGMEM = "POPD";
+constexpr char TEXT_PSHD[] PROGMEM = "PSHD";
+constexpr char TEXT_RPT[]  PROGMEM = "RPT";
+constexpr char TEXT_RPTK[] PROGMEM = "RPTK";
+constexpr char TEXT_RSXM[] PROGMEM = "RSXM";
+constexpr char TEXT_RTXM[] PROGMEM = "RTXM";
+constexpr char TEXT_RXF[]  PROGMEM = "RXF";
+constexpr char TEXT_SBLK[] PROGMEM = "SBLK";
+constexpr char TEXT_SFL[]  PROGMEM = "SFL";
+constexpr char TEXT_SFR[]  PROGMEM = "SFR";
+constexpr char TEXT_SPM[]  PROGMEM = "SPM";
+constexpr char TEXT_SQRA[] PROGMEM = "SQRA";
+constexpr char TEXT_SQRS[] PROGMEM = "SQRS";
+constexpr char TEXT_SST1[] PROGMEM = "SST1";
+constexpr char TEXT_SSXM[] PROGMEM = "SSXM";
+constexpr char TEXT_SUBT[] PROGMEM = "SUBT";
+constexpr char TEXT_STXM[] PROGMEM = "STXM";
+constexpr char TEXT_SXF[]  PROGMEM = "SXF";
+// constexpr char TEXT_TRAP[] PROGMEM = "TRAP";
+constexpr char TEXT_XORK[] PROGMEM = "XORK";
+
+// TMS320C25
+// constexpr char TEXT_ADDC[] PROGMEM = "ADDC";
+constexpr char TEXT_ADDK[] PROGMEM = "ADDK";
+constexpr char TEXT_ADRK[] PROGMEM = "ADRK";
+// constexpr char TEXT_BC[]   PROGMEM = "BC";
+// constexpr char TEXT_BNC[]  PROGMEM = "BNC";
+constexpr char TEXT_MPYA[] PROGMEM = "MPYA";
+// constexpr char TEXT_MPYS[] PROGMEM = "MPYS";
+constexpr char TEXT_MPYU[] PROGMEM = "MPYU";
+// constexpr char TEXT_RC[]   PROGMEM = "RC";
+constexpr char TEXT_RFSM[] PROGMEM = "RFSM";
+constexpr char TEXT_RHM[]  PROGMEM = "RHM";
+// constexpr char TEXT_ROL[]  PROGMEM = "ROL";
+// constexpr char TEXT_ROR[]  PROGMEM = "ROR";
+constexpr char TEXT_RTC[]  PROGMEM = "RTC";
+constexpr char TEXT_SBRK[] PROGMEM = "SBRK";
+// constexpr char TEXT_SC[]   PROGMEM = "SC";
+constexpr char TEXT_SFSM[] PROGMEM = "SFSM";
+constexpr char TEXT_SHM[]  PROGMEM = "SHM";
+constexpr char TEXT_SPH[]  PROGMEM = "SPH";
+// constexpr char TEXT_SPL[]  PROGMEM = "SPL";
+constexpr char TEXT_STC[]  PROGMEM = "STC";
+// constexpr char TEXT_SUBB[] PROGMEM = "SUBB";
+constexpr char TEXT_SUBK[] PROGMEM = "SUBK";
+constexpr char TEXT_ZALR[] PROGMEM = "ZALR";
+
+// TMS320C26
+constexpr char TEXT_CONF[]  = "CONF";
+
 constexpr char TEXT_REG_AR[] PROGMEM = "AR";
 constexpr char TEXT_REG_PA[] PROGMEM = "PA";
+
 // clang-format on
 
 }  // namespace tms32010

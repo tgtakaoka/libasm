@@ -30,6 +30,9 @@ struct AsmTms32010 final : Assembler, Config {
 private:
     Error parseOperand(StrScanner &scan, Operand &op) const;
 
+    void encodeIndirect(AsmInsn &insn, const Operand &op) const;
+    void encodeDirect(AsmInsn &insn, const Operand &op) const;
+    void encodeNextAR(AsmInsn &insn, const Operand &op) const;
     void encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode) const;
 
     Error encodeImpl(StrScanner &scan, Insn &insn) const override;

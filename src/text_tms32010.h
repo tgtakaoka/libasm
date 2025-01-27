@@ -27,6 +27,9 @@ namespace tms32010 {
 extern const char TEXT_TMS32010_LIST[]  PROGMEM;
 extern const char TEXT_CPU_32010[] PROGMEM;
 extern const char TEXT_CPU_32015[] PROGMEM;
+extern const char TEXT_CPU_32020[]  PROGMEM;
+extern const char TEXT_CPU_320C25[] PROGMEM;
+extern const char TEXT_CPU_320C26[] PROGMEM;
 
 // TMS32010
 using common::TEXT_ABS;
@@ -90,6 +93,86 @@ extern const char TEXT_ZAC[]  PROGMEM;
 extern const char TEXT_ZALH[] PROGMEM;
 extern const char TEXT_ZALS[] PROGMEM;
 
+// TMS32020
+extern const char TEXT_ADDT[] PROGMEM;
+extern const char TEXT_ADLK[] PROGMEM;
+extern const char TEXT_ANDK[] PROGMEM;
+extern const char TEXT_BACC[] PROGMEM;
+extern const char TEXT_BBNZ[] PROGMEM;
+extern const char TEXT_BBZ[]  PROGMEM;
+using common::TEXT_BIT;
+extern const char TEXT_BITT[] PROGMEM;
+extern const char TEXT_BLKD[] PROGMEM;
+extern const char TEXT_BLKP[] PROGMEM;
+extern const char TEXT_BNV[]  PROGMEM;
+using common::TEXT_CMPL;
+using common::TEXT_CMPR;
+extern const char TEXT_CNFD[] PROGMEM;
+extern const char TEXT_CNFP[] PROGMEM;
+extern const char TEXT_FORT[] PROGMEM;
+using common::TEXT_IDLE;
+extern const char TEXT_LACT[] PROGMEM;
+extern const char TEXT_LALK[] PROGMEM;
+extern const char TEXT_LPH[]  PROGMEM;
+extern const char TEXT_LRLK[] PROGMEM;
+extern const char TEXT_LST1[] PROGMEM;
+extern const char TEXT_LTP[]  PROGMEM;
+extern const char TEXT_LTS[]  PROGMEM;
+extern const char TEXT_MAC[]  PROGMEM;
+extern const char TEXT_MACD[] PROGMEM;
+using common::TEXT_NEG;
+extern const char TEXT_NORM[] PROGMEM;
+extern const char TEXT_ORK[]  PROGMEM;
+extern const char TEXT_POPD[] PROGMEM;
+extern const char TEXT_PSHD[] PROGMEM;
+extern const char TEXT_RPT[]  PROGMEM;
+extern const char TEXT_RPTK[] PROGMEM;
+extern const char TEXT_RSXM[] PROGMEM;
+extern const char TEXT_RTXM[] PROGMEM;
+extern const char TEXT_RXF[]  PROGMEM;
+extern const char TEXT_SBLK[] PROGMEM;
+extern const char TEXT_SFL[]  PROGMEM;
+extern const char TEXT_SFR[]  PROGMEM;
+extern const char TEXT_SPM[]  PROGMEM;
+extern const char TEXT_SQRA[] PROGMEM;
+extern const char TEXT_SQRS[] PROGMEM;
+extern const char TEXT_SST1[] PROGMEM;
+extern const char TEXT_SSXM[] PROGMEM;
+extern const char TEXT_SUBT[] PROGMEM;
+extern const char TEXT_STXM[] PROGMEM;
+extern const char TEXT_SXF[]  PROGMEM;
+using common::TEXT_TRAP;
+extern const char TEXT_XORK[] PROGMEM;
+
+// TMS320C25
+using common::TEXT_ADDC;
+extern const char TEXT_ADDK[] PROGMEM;
+extern const char TEXT_ADRK[] PROGMEM;
+using common::TEXT_BC;
+using common::TEXT_BNC;
+extern const char TEXT_MPYA[] PROGMEM;
+using common::TEXT_MPYS;
+extern const char TEXT_MPYU[] PROGMEM;
+using common::TEXT_RC;
+extern const char TEXT_RFSM[] PROGMEM;
+extern const char TEXT_RHM[]  PROGMEM;
+using common::TEXT_ROL;
+using common::TEXT_ROR;
+extern const char TEXT_RTC[]  PROGMEM;
+extern const char TEXT_SBRK[] PROGMEM;
+using common::TEXT_SC;
+extern const char TEXT_SFSM[] PROGMEM;
+extern const char TEXT_SHM[]  PROGMEM;
+extern const char TEXT_SPH[]  PROGMEM;
+using common::TEXT_SPL;
+extern const char TEXT_STC[]  PROGMEM;
+using common::TEXT_SUBB;
+extern const char TEXT_SUBK[] PROGMEM;
+extern const char TEXT_ZALR[] PROGMEM;
+
+// TMS320C26
+extern const char TEXT_CONF[] PROGMEM;
+
 extern const char TEXT_REG_AR[] PROGMEM;
 extern const char TEXT_REG_PA[] PROGMEM;
 
@@ -100,7 +183,6 @@ extern const char TEXT_REG_PA[] PROGMEM;
 }  // namespace libasm
 
 #endif  // __LIBASM_TEXT_TMS32010__
-
 // Local Variables:
 // mode: c++
 // c-basic-offset: 4

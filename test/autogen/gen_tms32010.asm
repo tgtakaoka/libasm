@@ -49,20 +49,20 @@
       LAR   AR0, *-
       LAR   AR0, *+, AR0
       LAR   AR0, *+
-      IN    00H, PA0
-      IN    *, PA0, AR0
-      IN    *, PA0
-      IN    *-, PA0, AR0
-      IN    *-, PA0
-      IN    *+, PA0, AR0
-      IN    *+, PA0
-      OUT   00H, PA0
-      OUT   *, PA0, AR0
-      OUT   *, PA0
-      OUT   *-, PA0, AR0
-      OUT   *-, PA0
-      OUT   *+, PA0, AR0
-      OUT   *+, PA0
+      IN    00H, 0
+      IN    *, 0, AR0
+      IN    *, 0
+      IN    *-, 0, AR0
+      IN    *-, 0
+      IN    *+, 0, AR0
+      IN    *+, 0
+      OUT   00H, 0
+      OUT   *, 0, AR0
+      OUT   *, 0
+      OUT   *-, 0, AR0
+      OUT   *-, 0
+      OUT   *+, 0, AR0
+      OUT   *+, 0
       SACL  00H
       SACL  *, 0, AR0
       SACL  *

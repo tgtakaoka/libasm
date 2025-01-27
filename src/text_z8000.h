@@ -155,7 +155,7 @@ extern const char TEXT_RRCB[]   PROGMEM;
 extern const char TEXT_RRDB[]   PROGMEM;
 using common::TEXT_SBC;
 using common::TEXT_SBCB;
-extern const char TEXT_SC[]     PROGMEM;
+using common::TEXT_SC;
 extern const char TEXT_SDA[]    PROGMEM;
 extern const char TEXT_SDAB[]   PROGMEM;
 extern const char TEXT_SDAL[]   PROGMEM;

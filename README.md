@@ -79,9 +79,10 @@ It can generate Intel HEX or Motorola S-Record output.
          MC68HC08 MC6809 HD6309 MOS6502 R65C02 G65SC02 W65C02S W65C816S i8039
          i8048 i80C39 i80C48 MSM80C39 MSM80C48 i8051 i8080 i8085 V30EMU Z80 Z8
          Z86C Z88 TLCS90 INS8060 INS8070 CDP1802 CDP1804 CDP1804A SCN2650
-         F3850 IM6100 HD6120 TMS7000 TMS32010 TMS32015 i8086 i80186 V30 i8096
-         MC68000 MC68010 TMS9900 TMS9980 TMS9995 TMS99105 TMS99110 Z8001 Z8002
-         NS32032 MN1610 MN1613 MN1613A J11 T11
+         F3850 IM6100 HD6120 TMS7000 TMS32010 TMS32015 TMS32020 TMS320C25
+         TMS320C26 i8086 i80186 V30 i8096 MC68000 MC68010 TMS9900 TMS9980
+         TMS9995 TMS99105 TMS99110 Z8001 Z8002 NS32032 MN1610 MN1613 MN1613A
+         J11 T11
       -o <output>       : output file
       -l <list>         : list file
       -S[<bytes>]       : output Motorola S-Record format
@@ -116,9 +117,10 @@ It can read Intel HEX or Motorola S-Record input.
          MC68HC08 MC6809 HD6309 MOS6502 R65C02 G65SC02 W65C02S W65C816S i8039
          i8048 i80C39 i80C48 MSM80C39 MSM80C48 i8051 i8080 i8085 V30EMU Z80 Z8
          Z86C Z88 TLCS90 INS8060 INS8070 CDP1802 CDP1804 CDP1804A SCN2650
-         F3850 IM6100 HD6120 TMS7000 TMS32010 TMS32015 i8086 i80186 V30 i8096
-         MC68000 MC68010 TMS9900 TMS9980 TMS9995 TMS99105 TMS99110 Z8001 Z8002
-         NS32032 MN1610 MN1613 MN1613A J11 T11
+         F3850 IM6100 HD6120 TMS7000 TMS32010 TMS32015 TMS32020 TMS320C25
+         TMS320C26 i8086 i80186 V30 i8096 MC68000 MC68010 TMS9900 TMS9980
+         TMS9995 TMS99105 TMS99110 Z8001 Z8002 NS32032 MN1610 MN1613 MN1613A
+         J11 T11
       -o <output>      : output file
       -l <list>        : list file
       <input>          : file can be Motorola S-Record or Intel HEX format
@@ -146,6 +148,8 @@ It can read Intel HEX or Motorola S-Record input.
       --short-direct   : use |addr| for short direct notation (bool: Z8001)
       --string-insn    : string instruction as repeat operand (bool: 8086)
       --use-absolute   : zero register indexing as absolute addressing (bool: 8096)
+      --use-aux-name   : use aux register name ARn (bool: 32010)
+      --use-port-name  : use port name PAn (bool: 32010)
       --use-register   : use register name Rn (bool: 1802)
       --use-sharp      : use # (default =) for immediate (bool: 8070)
       --work-register  : prefer work register name than alias address (bool: Z8)

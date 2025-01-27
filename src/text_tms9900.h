@@ -105,7 +105,7 @@ extern const char TEXT_XOP[]  PROGMEM;
 using common::TEXT_XOR;
 
 // TMS9995
-extern const char TEXT_MPYS[] PROGMEM;
+using common::TEXT_MPYS;
 using common::TEXT_DIVS;
 using common::TEXT_LST;
 extern const char TEXT_LWP[]  PROGMEM;

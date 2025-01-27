@@ -57,34 +57,67 @@ AsmTms32010::AsmTms32010(const ValueParser::Plugins &plugins)
     reset();
 }
 
+void AsmTms32010::encodeIndirect(AsmInsn &insn, const Operand &op) const {
+    static constexpr uint8_t MAR[] PROGMEM = {
+            0x80,  // M_ARP: *
+            0xA0,  // M_INC: *+
+            0x90,  // M_DEC: *-
+            0xE0,  // M_INC0: *0+
+            0xD0,  // M_DEC0: *0-
+            0xF0,  // M_IBR0: *BR0+
+            0xC0,  // M_DBR0: *BR0-
+    };
+    if (op.mode >= M_ARP)
+        insn.embed(pgm_read_byte(&MAR[op.mode - M_ARP]));
+}
+
+void AsmTms32010::encodeDirect(AsmInsn &insn, const Operand &op) const {
+    const auto dma = op.val.getUnsigned();
+    if (op.val.isNegative() || !validDmAddr(insn.opCode(), dma))
+        insn.setErrorIf(op, OVERFLOW_RANGE);
+    insn.embed(dma & 0x7F);
+}
+
+void AsmTms32010::encodeNextAR(AsmInsn &insn, const Operand &op) const {
+    if ((insn.opCode() & 0x80) == 0)
+        return;
+    if (op.mode == M_NONE) {
+        if (is3201x())
+            insn.embed(8);
+        return;
+    }
+    auto val = op.val.getUnsigned();
+    if (!isAR(decodeAR(val))) {
+        val &= maxAR();
+        insn.setErrorIf(op, UNKNOWN_REGISTER);
+    }
+    if (is3202x())
+        insn.embed(8);
+    insn.embed(val);
+}
+
 void AsmTms32010::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode) const {
     insn.setErrorIf(op);
     auto val = op.val.getUnsigned();
+    auto max = UINT16_MAX;
     switch (mode) {
     case M_MAM:
-        switch (op.mode) {
-        case M_ARP:
-            insn.embed(0x88);
-            break;
-        case M_INC:
-            insn.embed(0xA8);
-            break;
-        case M_DEC:
-            insn.embed(0x98);
-            break;
-        default:
-            if (!validDmAddr(insn.opCode(), val))
-                insn.setErrorIf(op, OVERFLOW_RANGE);
-            insn.embed(val & 0x7F);
-            break;
+        if (op.mode == M_CNST) {
+            encodeDirect(insn, op);
+        } else {
+            encodeIndirect(insn, op);
         }
+        break;
+    case M_IND:
+    case M_MAR:
+        encodeIndirect(insn, op);
         break;
     case M_LS0:
         if (val)
             insn.setErrorIf(op, ILLEGAL_CONSTANT);
         break;
     case M_LS3:
-        if (!(val == 0 || val == 1 || val == 4))
+        if (!is320C2x() && !(val == 0 || val == 1 || val == 4))
             insn.setErrorIf(op, ILLEGAL_CONSTANT);
         // Fall-through
     case M_PA:
@@ -98,55 +131,62 @@ void AsmTms32010::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode)
             val &= 15;
             insn.setErrorIf(op, OVERFLOW_RANGE);
         }
+    embed_hi8:
         insn.embed(val << 8);
         break;
     case M_NARP:
-        if (op.mode != M_NONE) {
-            if (!isAR(decodeAR(val))) {
-                val &= maxAR();
-                insn.setErrorIf(op, UNKNOWN_REGISTER);
-            }
-            insn.setOpCode(insn.opCode() & ~8);
-            insn.embed(val);
-        }
+        encodeNextAR(insn, op);
         break;
     case M_AR:
-        if (!isAR(decodeAR(val))) {
-            val &= maxAR();
-            insn.setErrorIf(op, UNKNOWN_REGISTER);
-        }
-        insn.embed(val << 8);
-        break;
     case M_ARK:
         if (!isAR(decodeAR(val))) {
             val &= maxAR();
             insn.setErrorIf(op, UNKNOWN_REGISTER);
         }
-        insn.embed(val);
-        break;
+        if (mode == M_AR)
+            goto embed_hi8;
+        goto embed_const;
     case M_IM1:
-        if (op.val.overflow(1)) {
-            val &= 1;
+        max = 1;
+    check_const:
+        if (op.val.overflow(max)) {
+            val &= max;
             insn.setErrorIf(op, OVERFLOW_RANGE);
         }
+    embed_const:
         insn.embed(val);
         break;
+    case M_IM2:
+        max = 3;
+        goto check_const;
+    case M_BIT:
+        max = 15;
+        goto embed_hi8;
     case M_IM8:
-        if (op.val.overflow(UINT8_MAX)) {
-            val &= UINT8_MAX;
-            insn.setErrorIf(op, OVERFLOW_RANGE);
-        }
-        insn.embed(val);
-        break;
+        max = UINT8_MAX;
+        goto check_const;
+    case M_IM9:
+        max = 0x1FF;
+        goto check_const;
     case M_IM13:
         if (op.val.overflow(0x0FFF, -0x1000))
             insn.setErrorIf(op, OVERFLOW_RANGE);
         insn.embed(val & 0x1FFF);
         break;
     case M_PM12:
-        if (op.val.overflow(0x0FFF))
+        if (op.val.overflow(0x0FFF)) {
+            val &= 0x0FFF;
             insn.setErrorIf(op, OVERFLOW_RANGE);
-        insn.emitOperand16(val & 0x0FFF);
+        }
+        // Fall-through
+    case M_PM16:
+        if (op.val.overflow(UINT16_MAX))
+            insn.setErrorIf(op, OVERFLOW_RANGE);
+        // Fall-through
+    case M_IM16:
+        if (op.val.overflowUint16())
+            insn.setErrorIf(op, OVERFLOW_RANGE);
+        insn.emitOperand16(val);
         break;
     default:
         break;
@@ -160,11 +200,20 @@ Error AsmTms32010::parseOperand(StrScanner &scan, Operand &op) const {
         return OK;
 
     if (p.expect('*')) {
+        auto s = p;
+        const auto br = p.iexpect('B') && p.iexpect('R');
+        if (!br)
+            p = s;
+        const auto ar0 = p.expect('0');
+        if (br && !ar0)
+            return op.setErrorIf(UNKNOWN_OPERAND);
         if (p.expect('+')) {
-            op.mode = M_INC;
+            op.mode = ar0 ? (br ? M_IBR0 : M_INC0) : M_INC;
         } else if (p.expect('-')) {
-            op.mode = M_DEC;
+            op.mode = ar0 ? (br ? M_DBR0 : M_DEC0) : M_DEC;
         } else {
+            if (br || ar0)
+                return op.setErrorIf(UNKNOWN_OPERAND);
             op.mode = M_ARP;
         }
         scan = p;

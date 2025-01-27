@@ -101,7 +101,7 @@ constexpr char TEXT_XOP[]  PROGMEM = "XOP";
 // constexpr char TEXT_XOR[]  PROGMEM = "XOR";
 
 // TMS9995
-constexpr char TEXT_MPYS[] PROGMEM = "MPYS";
+// constexpr char TEXT_MPYS[] PROGMEM = "MPYS";
 // constexpr char TEXT_DIVS[] PROGMEM = "DIVS";
 // constexpr char TEXT_LST[]  PROGMEM = "LST";
 constexpr char TEXT_LWP[]  PROGMEM = "LWP";

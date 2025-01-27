@@ -82,7 +82,7 @@ using common::TEXT_POP;
 using common::TEXT_PUSH;
 using common::TEXT_RAL;
 using common::TEXT_RAR;
-extern const char TEXT_RC[]   PROGMEM;
+using common::TEXT_RC;
 using common::TEXT_RET;
 using common::TEXT_RLC;
 extern const char TEXT_RM[]   PROGMEM;

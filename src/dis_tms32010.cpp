@@ -25,6 +25,15 @@ namespace tms32010 {
 using namespace reg;
 using namespace text::common;
 
+namespace {
+
+const char OPT_BOOL_USE_REG_NAME[] PROGMEM = "use-aux-name";
+const char OPT_DESC_USE_REG_NAME[] PROGMEM = "use aux register name ARn";
+const char OPT_BOOL_USE_PORT_NAME[] PROGMEM = "use-port-name";
+const char OPT_DESC_USE_PORT_NAME[] PROGMEM = "use port name PAn";
+
+}  // namespace
+
 const ValueFormatter::Plugins &DisTms32010::defaultPlugins() {
     static const struct final : ValueFormatter::Plugins {
         const HexFormatter &hex() const override { return _hex; }
@@ -36,8 +45,29 @@ const ValueFormatter::Plugins &DisTms32010::defaultPlugins() {
 }
 
 DisTms32010::DisTms32010(const ValueFormatter::Plugins &plugins)
-    : Disassembler(plugins), Config(TABLE) {
+    : Disassembler(plugins, &_opt_useAuxName),
+      Config(TABLE),
+      _opt_useAuxName(this, &DisTms32010::setUseAuxName, OPT_BOOL_USE_REG_NAME,
+              OPT_DESC_USE_REG_NAME, &_opt_usePortName),
+      _opt_usePortName(
+              this, &DisTms32010::setUsePortName, OPT_BOOL_USE_PORT_NAME, OPT_DESC_USE_PORT_NAME) {
     reset();
+}
+
+void DisTms32010::reset() {
+    Disassembler::reset();
+    setUseAuxName(true);
+    setUsePortName(true);
+}
+
+Error DisTms32010::setUseAuxName(bool enable) {
+    _useAuxName = enable;
+    return OK;
+}
+
+Error DisTms32010::setUsePortName(bool enable) {
+    _usePortName = enable;
+    return OK;
 }
 
 StrBuffer &DisTms32010::outDirect(StrBuffer &out, DisInsn &insn) const {
@@ -62,39 +92,41 @@ StrBuffer &DisTms32010::outIndirect(StrBuffer &out, uint8_t mam) const {
     return out;
 }
 
-StrBuffer &DisTms32010::outModifyAR(StrBuffer &out, uint8_t mam) const {
-    const auto modify = (mam >> 4) & 7;
-    if (modify)
-        out.comma();
-    return modify == 0 ? out : outIndirect(out, mam);
+StrBuffer &DisTms32010::outAuxiliary(StrBuffer &out, uint_fast8_t no) const {
+    no &= maxAR();
+    if (_useAuxName)
+        return outRegName(out, decodeAR(no));
+    return outDec(out, no, 3);
 }
 
-namespace {
-bool hasNarp(uint_fast8_t mam) {
-    if ((mam & 0x80) == 0)
-        return false;
-    const auto narp = mam & 8;
-    return narp == 0;
-}
-}  // namespace
-
-StrBuffer &DisTms32010::outNextArp(StrBuffer &out, uint8_t mam) const {
-    if (hasNarp(mam))
-        outRegName(out.comma(), decodeAR(mam & maxAR()));
-    return out;
-}
-
-StrBuffer &DisTms32010::outShiftCount(StrBuffer &out, uint8_t count, uint8_t mam) const {
-    if (count || hasNarp(mam))
-        outDec(out.comma(), count, 4);
-    return out;
-}
+StrBuffer &DisTms32010::outPort(StrBuffer &out, uint_fast8_t no) const {
+    no &= maxPA();
+    if (_usePortName)
+        return outRegName(out, decodePA(no));
+    return outDec(out, no, 4);
+};
 
 StrBuffer &DisTms32010::outProgramAddress(StrBuffer &out, DisInsn &insn) const {
     const auto pma = insn.readUint16();
     const auto error = insn.setErrorIf(out, checkAddr(pma));
     outAbsAddr(out, pma, error ? ADDRESS_16BIT : 0);
     return out;
+}
+
+bool DisTms32010::hasValue(DisInsn &insn, AddrMode mode) const {
+    const auto opc = insn.opCode();
+    if (mode == M_NARP) {
+        return is3201x() ? (opc & 0x88) == 0x80 : (opc & 0x88) == 0x88;
+    } else if (mode == M_LS3) {
+        return ((opc >> 8) & 7) != 0;
+    } else if (mode == M_LS4) {
+        return ((opc >> 8) & 0xF) != 0;
+    } else if (mode == M_MAR) {
+        return (opc & 0xF0) != 0x80;
+    } else if (mode == M_LS0) {
+        return false;
+    }
+    return mode != M_NONE;
 }
 
 void DisTms32010::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) const {
@@ -107,30 +139,39 @@ void DisTms32010::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) co
             outDirect(out, insn);
         }
         break;
+    case M_IND:
+    case M_MAR:
+        outIndirect(out, opc);
+        break;
     case M_NARP:
-        outNextArp(out, opc);
+    case M_ARK:
+        outAuxiliary(out, opc);
         break;
     case M_LS4:
-        outShiftCount(out, (opc >> 8) & 0xF, opc);
+    case M_BIT:
+        outDec(out, opc >> 8, 4);
         break;
     case M_LS3:
     case M_LS0:
-        outShiftCount(out, (opc >> 8) & 7, opc);
+        outDec(out, opc >> 8, 3);
         break;
     case M_AR:
-        outRegName(out, decodeAR((opc >> 8) & maxAR()));
+        outAuxiliary(out, opc >> 8);
         break;
     case M_PA:
-        outRegName(out, decodePA((opc >> 8) & maxPA()));
-        break;
-    case M_ARK:
-        outRegName(out, decodeAR(opc & maxAR()));
+        outPort(out, opc >> 8);
         break;
     case M_IM1:
         out.letter((opc & 1) == 0 ? '0' : '1');
         break;
+    case M_IM2:
+        outHex(out, opc & 3, 2);
+        break;
     case M_IM8:
         outDec(out, static_cast<uint8_t>(opc), 8);
+        break;
+    case M_IM9:
+        outHex(out, opc & 0x1FF, 9, false);
         break;
     case M_IM13:
         // Sign extends 13-bit number as 0x1000 is a sign bit.
@@ -138,6 +179,12 @@ void DisTms32010::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) co
         break;
     case M_PM12:
         outProgramAddress(out, insn);
+        break;
+    case M_IM16:
+        outHex(out, insn.readUint16(), 16);
+        break;
+    case M_PM16:
+        outAbsAddr(out, insn.readUint16());
         break;
     default:
         break;
@@ -153,12 +200,12 @@ Error DisTms32010::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) co
     decodeOperand(insn, out, insn.mode1());
     const auto mode2 = insn.mode2();
     if (mode2 != M_NONE) {
-        if (!(mode2 == M_LS4 || mode2 == M_LS3 || mode2 == M_LS0 || mode2 == M_NARP))
-            out.comma();
-        decodeOperand(insn, out, mode2);
         const auto mode3 = insn.mode3();
-        if (mode3 != M_NONE)
-            decodeOperand(insn, out, mode3);
+        if (hasValue(insn, mode2) || hasValue(insn, mode3)) {
+            decodeOperand(insn, out.comma(), mode2);
+            if (mode3 != M_NONE && hasValue(insn, mode3))
+                decodeOperand(insn, out.comma(), mode3);
+        }
     }
     return _insn.setError(insn);
 }

@@ -26,6 +26,7 @@ int main(int argc, const char **argv) {
     if (driver.main(argc, argv))
         return 1;
 
+    dis32010.setOption("use-port-name", "off");
     TestGenerator generator(driver, dis32010, 0x0100);
     generator.generate();
 

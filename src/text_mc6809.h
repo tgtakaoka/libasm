@@ -197,7 +197,7 @@ using common::TEXT_CLRF;
 extern const char TEXT_CLRW[]  PROGMEM;
 extern const char TEXT_CMPE[]  PROGMEM;
 using common::TEXT_CMPF;
-extern const char TEXT_CMPR[]  PROGMEM;
+using common::TEXT_CMPR;
 using common::TEXT_CMPW;
 using common::TEXT_COMD;
 extern const char TEXT_COME[]  PROGMEM;
