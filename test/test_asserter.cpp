@@ -177,9 +177,10 @@ void TestAsserter::equals(const char *file, const int line, const char *message,
 }
 
 void TestAsserter::equals(const char *file, const int line, const char *message,
-        const ArrayMemory &expected, const uint8_t actual[], size_t actual_len) {
+        const ArrayMemory &expected, const uint8_t actual[], size_t actual_len, Radix radix) {
+    const auto endian = expected.endian();
     size_t i;
-    auto it = expected.iterator();
+    auto it = expected.iterator(endian);
     for (i = 0, it.rewind(); i < actual_len && it.hasNext(); i++) {
         if (it.readByte() != actual[i])
             break;
@@ -189,18 +190,33 @@ void TestAsserter::equals(const char *file, const int line, const char *message,
         return;
     }
     _fail_count++;
+    const auto unit = expected.unit();
+    const auto word = (unit == ADDRESS_WORD) || (expected.word());
+    const auto fmt8 = (radix == RADIX_8) ? "%03" PRIo8 : "%02" PRIX8;
+    const auto fmt16 = (radix == RADIX_8) ? "%06" PRIo16 : "%04" PRIX16;
+
     printf("%s:%d: %s: expected [", file, line, message);
     for (i = 0, it.rewind(); it.hasNext(); i++) {
         if (i)
             printf(" ");
-        printf("%02" PRIX8, it.readByte());
+        if (word) {
+            printf(fmt16, it.readUint16());
+        } else {
+            printf(fmt8, it.readByte());
+        }
     }
     printf("]\n");
+    const ArrayMemory mem(0, actual, actual_len, endian, unit);
+    auto m = mem.iterator(endian);
     printf("%s:%d: %s:   actual [", file, line, message);
-    for (i = 0; i < actual_len; i++) {
+    for (i = 0; m.hasNext(); i++) {
         if (i)
             printf(" ");
-        printf("%02" PRIX8, actual[i]);
+        if (word) {
+            printf(fmt16, m.readUint16());
+        } else {
+            printf(fmt8, m.readByte());
+        }
     }
     printf("]\n");
 }

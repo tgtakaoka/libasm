@@ -34,7 +34,7 @@ char actual_opr[128];
 
 void dis_assert(const char *file, int line, const ErrorAt &error, const ArrayMemory &memory,
         const char *expected_name, const char *expected_opr) {
-    Insn insn(memory.origin() / disassembler.config().addressUnit());
+    Insn insn(memory.origin());
     auto mem = memory.iterator();
     disassembler.decode(mem, insn, actual_opr, sizeof(actual_opr), &symtab);
 
@@ -42,7 +42,8 @@ void dis_assert(const char *file, int line, const ErrorAt &error, const ArrayMem
     asserter.equals(file, line, "error at", error.errorAt(), insn.errorAt());
     asserter.equals(file, line, expected_name, expected_name, insn);
     asserter.equals(file, line, expected_name, expected_opr, actual_opr);
-    asserter.equals(file, line, expected_name, memory, insn.bytes(), insn.length());
+    asserter.equals(file, line, expected_name, memory, insn.bytes(), insn.length(),
+            disassembler.listRadix());
 }
 
 bool test_failed;

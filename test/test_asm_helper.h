@@ -44,23 +44,21 @@ void run_test(void (*test)(), const char *name, void (*set_up)(), void (*tear_do
     asserter.equals_P(__FILE__, __LINE__, msg, expected, actual_P)
 #define __VASSERT(file, line, err, at, addr, src, ...)                            \
     do {                                                                          \
-        const auto unit = assembler.config().addressUnit();                       \
-        const auto endian = assembler.config().endian();                          \
         const Config::opcode_t expected[] = {__VA_ARGS__};                        \
-        const ArrayMemory memory(addr *unit, expected, sizeof(expected), endian); \
+        const auto endian = assembler.config().endian();                          \
+        const auto unit = assembler.config().addressUnit();                       \
+        const ArrayMemory memory(addr, expected, sizeof(expected), endian, unit); \
         ErrorAt error;                                                            \
         error.setError(at, err);                                                  \
         asm_assert(file, line, error, src, memory);                               \
     } while (0)
-#define __BVASSERT(file, line, err, at, addr, src, ...)                           \
-    do {                                                                          \
-        const auto unit = assembler.config().addressUnit();                       \
-        const auto endian = assembler.config().endian();                          \
-        const uint8_t expected[] = {__VA_ARGS__};                                 \
-        const ArrayMemory memory(addr *unit, expected, sizeof(expected), endian); \
-        ErrorAt error;                                                            \
-        error.setError(at, err);                                                  \
-        asm_assert(file, line, error, src, memory);                               \
+#define __BVASSERT(file, line, err, at, addr, src, ...)             \
+    do {                                                            \
+        const uint8_t expected[] = {__VA_ARGS__};                   \
+        const ArrayMemory memory(addr, expected, sizeof(expected)); \
+        ErrorAt error;                                              \
+        error.setError(at, err);                                    \
+        asm_assert(file, line, error, src, memory);                 \
     } while (0)
 #define VASSERT(error, at, addr, src, ...) \
     __VASSERT(__FILE__, __LINE__, error, at, addr, src, ##__VA_ARGS__)

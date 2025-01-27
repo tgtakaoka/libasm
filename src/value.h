@@ -18,20 +18,13 @@
 #define __LIBASM_VALUE_H__
 
 #include <stdint.h>
+#include "config_base.h"
 #include "error_reporter.h"
 #include "float80.h"
 
 namespace libasm {
 
 struct StrScanner;
-
-enum Radix : uint8_t {
-    RADIX_NONE = 0,
-    RADIX_2 = 2,
-    RADIX_8 = 8,
-    RADIX_10 = 10,
-    RADIX_16 = 16,
-};
 
 struct Value {
 #if defined(LIBASM_ASM_NOFLOAT)

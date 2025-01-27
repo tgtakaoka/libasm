@@ -26,49 +26,85 @@
 namespace libasm {
 
 /**
- * Byte addressable memory from array constant
+ * Byte/Word addressable memory from array constant
  */
 struct ArrayMemory {
     /** DisMemory interface of ArrayMemory */
     struct Iterator : DisMemory {
         bool hasNext() const override { return _index < _memory.size(); }
 
+        uint16_t readUint16() {
+            uint16_t word = readByte();
+            if (_endian == ENDIAN_BIG) {
+                word = (word << 8) | readByte();
+            } else {
+                word |= readByte() << 8;
+            }
+            return word;
+        }
+
         /** rewind to the first byte */
         void rewind() {
-            DisMemory::resetAddress(_memory.origin());
+            DisMemory::resetAddress(_memory.origin() * _memory.unit());
             _index = 0;
         }
 
     private:
         friend ArrayMemory;
-        Iterator(const ArrayMemory &memory)
-            : DisMemory(memory.origin()), _memory(memory), _index(0) {}
-        uint8_t nextByte() override { return _memory.byteAt(_memory.origin() + _index++); }
+        Iterator(const ArrayMemory &memory, Endian endian)
+            : DisMemory(memory.origin() * memory.unit()),
+              _memory(memory),
+              _endian(endian),
+              _index(0) {}
+
+        uint8_t nextByte() override {
+            return _memory.byteAt(_memory.origin() * _memory.unit() + _index++);
+        }
 
         const ArrayMemory &_memory;
+        const Endian _endian;
         size_t _index;
     };
 
     /** Construct byte addressable memory from uint8_t array */
-    ArrayMemory(
-            uint32_t origin, const uint8_t *bytes, size_t sizeof_bytes, Endian endian = ENDIAN_BIG)
-        : _origin(origin), _bytes(bytes), _words(nullptr), _size(sizeof_bytes), _endian(endian) {}
+    ArrayMemory(uint32_t origin, const uint8_t *bytes, size_t sizeof_bytes,
+            Endian endian = ENDIAN_BIG, AddressUnit = ADDRESS_BYTE)
+        : _origin(origin),
+          _bytes(bytes),
+          _words(nullptr),
+          _size(sizeof_bytes),
+          _endian(endian),
+          _unit(ADDRESS_BYTE) {}
 
-    /** Construct byte addressable memory from uint16_t array with specified endian */
-    ArrayMemory(uint32_t origin, const uint16_t *words, size_t sizeof_words, Endian endian)
-        : _origin(origin), _bytes(nullptr), _words(words), _size(sizeof_words), _endian(endian) {}
+    /** Construct byte/word addressable memory from uint16_t array */
+    ArrayMemory(uint32_t origin, const uint16_t *words, size_t sizeof_words, Endian endian,
+            AddressUnit unit)
+        : _origin(origin * unit),
+          _bytes(nullptr),
+          _words(words),
+          _size(sizeof_words),
+          _endian(endian),
+          _unit(unit) {}
 
-    /** byte address of the first byte */
-    uint32_t origin() const { return _origin; }
+    /** byte address of the first byte/word */
+    uint32_t origin() const { return _origin / _unit; }
 
-    /** byte address of the last byte */
-    uint32_t end() const { return _origin + size() - 1; }
+    /** byte address of the last byte/word */
+    uint32_t end() const { return (_origin + size()) / _unit - 1; }
 
     /** memory size in byte */
     size_t size() const { return _size; }
 
-    /** returns DisMemory interface */
-    Iterator iterator() const { return Iterator(*this); }
+    bool word() const { return _words != nullptr; }
+
+    /** endianess */
+    Endian endian() const { return _endian; }
+
+    /** memory size in byte */
+    AddressUnit unit() const { return _unit; }
+
+    /** returns DisMemory interface with specified endian */
+    Iterator iterator(Endian endian = ENDIAN_BIG) const { return Iterator(*this, endian); }
 
     /** returns byte at address |addr|, otherwise zero */
     uint8_t byteAt(uint32_t addr) const {
@@ -78,12 +114,10 @@ struct ArrayMemory {
         if (_bytes)
             return _bytes[offset];
         const uint16_t word = _words[offset / 2];
-        const uint8_t hi = word >> 8;
-        const uint8_t lo = word;
-        if (offset % 2 == 0) {
-            return _endian == ENDIAN_BIG ? hi : lo;
+        if (_endian == ENDIAN_BIG) {
+            return (offset % 2) == 0 ? (word >> 8) : word;
         } else {
-            return _endian == ENDIAN_BIG ? lo : hi;
+            return (offset % 2) == 0 ? word : (word >> 8);
         }
     }
 
@@ -95,6 +129,7 @@ private:
     /** size in byte */
     const size_t _size;
     const Endian _endian;
+    const AddressUnit _unit;
 };
 
 }  // namespace libasm

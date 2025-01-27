@@ -84,7 +84,7 @@ struct TestAsserter {
 
     /** assert uint8_t[] with ArrayMemory */
     void equals(const char *file, const int line, const char *message, const ArrayMemory &expected,
-            const uint8_t actual[], size_t actual_len);
+            const uint8_t actual[], size_t actual_len, Radix radix = RADIX_16);
 
     /** assert const char* is not equal */
     void not_equals(const char *file, int line, const char *message, const char *expected,

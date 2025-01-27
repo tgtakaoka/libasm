@@ -46,10 +46,10 @@ void run_test(void (*test)(), const char *name, void (*set_up)(), void (*tear_do
     asserter.not_equals(__FILE__, __LINE__, msg, expected, actual)
 #define __VASSERT(file, line, err, at, addr, name, opr, ...)                \
     do {                                                                    \
-        const auto unit = disassembler.config().addressUnit();              \
-        const auto endian = disassembler.config().endian();                 \
         const Config::opcode_t codes[] = {__VA_ARGS__};                     \
-        const ArrayMemory memory(addr *unit, codes, sizeof(codes), endian); \
+        const auto endian = disassembler.config().endian();                 \
+        const auto unit = disassembler.config().addressUnit();              \
+        const ArrayMemory memory(addr, codes, sizeof(codes), endian, unit); \
         ErrorAt error;                                                      \
         error.setError(at, err);                                            \
         dis_assert(file, line, error, memory, name, opr);                   \

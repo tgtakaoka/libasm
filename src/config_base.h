@@ -56,6 +56,14 @@ enum Endian : uint8_t {
     ENDIAN_LITTLE,
 };
 
+enum Radix : uint8_t {
+    RADIX_NONE = 0,
+    RADIX_2 = 2,
+    RADIX_8 = 8,
+    RADIX_10 = 10,
+    RADIX_16 = 16,
+};
+
 enum Size : uint8_t {
     SZ_NONE = 0,
     SZ_BYTE = 1,  // 1 byte
