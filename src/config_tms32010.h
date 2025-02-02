@@ -52,8 +52,8 @@ protected:
 
     uint_fast8_t maxAR() const { return is3201x() ? 1 : 7; }
     uint_fast8_t maxPA() const { return is3201x() ? 7 : 15; }
-    bool isAR(RegName name) const { return name >= REG_AR0 && name <= REG_AR0 + maxAR(); }
-    bool isPA(RegName name) const { return name >= REG_PA0 && name <= REG_PA0 + maxPA(); }
+    bool isAR(RegName name) const { return name >= REG_AR0 && name <= RegName(REG_AR0 + maxAR()); }
+    bool isPA(RegName name) const { return name >= REG_PA0 && name <= RegName(REG_PA0 + maxPA()); }
     RegName decodeAR(uint32_t r) const { return r <= maxAR() ? RegName(r + REG_AR0) : REG_UNDEF; }
     RegName decodePA(uint32_t r) const { return r <= maxPA() ? RegName(r + REG_PA0) : REG_UNDEF; }
 
