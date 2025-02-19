@@ -215,7 +215,7 @@ bool acceptMode(AddrMode opr, AddrMode table) {
         return true;
     if (opr == M_J)
         return table == M_REG;
-    if (opr == M_C1 || opr == M_C4 || opr == M_IM3 || opr == M_IM4 || opr == M_IM8 || opr == M_ADDR)
+    if (opr == M_ADDR)
         return table == M_C1 || table == M_C4 || table == M_IM3 || table == M_IM4 ||
                table == M_IM8 || table == M_ADDR || table == M_REL || table == M_REG ||
                table == M_IOS || table == M_IOA;

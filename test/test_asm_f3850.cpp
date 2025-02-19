@@ -61,7 +61,11 @@ void test_accumlator() {
     TEST("LIS 15", 0x7F);
     ERRT("LIS 16", OVERFLOW_RANGE, "16", 0x70);
     TEST("LI  0",      0x20, 0x00);
+    TEST("LI -1",      0x20, 0xFF);
+    TEST("LI -128",    0x20, 0x80);
     TEST("LI  H'FF'",  0x20, 0xFF);
+    ERRT("LI  256",     OVERFLOW_RANGE, "256",  0x20, 0x00);
+    ERRT("LI -129",     OVERFLOW_RANGE, "-129", 0x20, 0x7F);
     TEST("NI  1",      0x21, 0x01);
     TEST("NI  -D'2'",  0x21, 0xFE);
     TEST("OI  $FE",    0x22, 0xFE);
@@ -209,6 +213,8 @@ void test_branch() {
     ATEST(0x1000, "BT  5, H'1002'", 0x85, 0x01);
     ATEST(0x1000, "BT  6, H'1002'", 0x86, 0x01);
     ATEST(0x1000, "BT  7, H'1002'", 0x87, 0x01);
+    AERRT(0x1000, "BT  8, H'1002'", OVERFLOW_RANGE, "8, H'1002'",  0x80, 0x01);
+    AERRT(0x1000, "BT -1, H'1002'", OVERFLOW_RANGE, "-1, H'1002'", 0x87, 0x01);
     ATEST(0x1000, "BR7 H'1002'",    0x8F, 0x01);
 
     ATEST(0x1000, "BR  H'1002'",     0x90, 0x01);
@@ -228,6 +234,8 @@ void test_branch() {
     ATEST(0x1000, "BF  14, H'1002'", 0x9E, 0x01);
     ATEST(0x1000, "BF  15, H'1002'", 0x9F, 0x01);
     ATEST(0x1000, "BF  15, *+H'80'", 0x9F, 0x7F);
+    AERRT(0x1000, "BF  16, H'1002'", OVERFLOW_RANGE, "16, H'1002'", 0x90, 0x01);
+    AERRT(0x1000, "BF  -1, H'1002'", OVERFLOW_RANGE, "-1, H'1002'", 0x9F, 0x01);
 }
 
 void test_io() {
@@ -243,6 +251,8 @@ void test_io() {
     ERRT("IN   3",  OPERAND_NOT_ALLOWED, "3", 0x26, 0x03);
     TEST("IN   4",     0x26, 0x04);
     TEST("IN   H'FF'", 0x26, 0xFF);
+    ERRT("IN   256",   OVERFLOW_RANGE, "256", 0x26, 0x00);
+    ERRT("IN   -1",    OVERFLOW_RANGE, "-1",  0x26, 0xFF);
     TEST("OUTS 0",  0xB0);
     TEST("OUTS 1",  0xB1);
     ERRT("OUTS 2",  OPERAND_NOT_ALLOWED, "2", 0xB2);
@@ -254,7 +264,9 @@ void test_io() {
     ERRT("OUT  2",  OPERAND_NOT_ALLOWED, "2", 0x27, 0x02);
     ERRT("OUT  3",  OPERAND_NOT_ALLOWED, "3", 0x27, 0x03);
     TEST("OUT  4",  0x27, 0x04);
-    TEST("OUT  H'AB'", 0x27, 0xAB);
+    TEST("OUT  255", 0x27, 0xFF);
+    ERRT("OUT  256", OVERFLOW_RANGE, "256", 0x27, 0x00);
+    ERRT("OUT  -1",  OVERFLOW_RANGE, "-1",  0x27, 0xFF);
 }
 
 void test_control() {

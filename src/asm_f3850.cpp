@@ -77,22 +77,7 @@ Error AsmF3850::parseOperand(StrScanner &scan, Operand &op) const {
     op.val = parseInteger(p.skipSpaces(), op);
     if (op.hasError())
         return op.getError();
-    const auto v = op.val.getSigned();
-    if (v == 1) {
-        op.mode = M_C1;
-    } else if (v == 4) {
-        op.mode = M_C4;
-    } else if (op.val.overflow(7)) {
-        op.mode = M_IM3;
-    } else if (op.val.overflow(15)) {
-        op.mode = M_IM4;
-    } else if (!op.val.overflowUint8()) {
-        op.mode = M_IM8;
-    } else if (!op.val.overflowUint16()) {
-        op.mode = M_ADDR;
-    } else {
-        op.setError(OVERFLOW_RANGE);
-    }
+    op.mode = M_ADDR;
     scan = p;
     return OK;
 }
@@ -141,8 +126,10 @@ void AsmF3850::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode) co
         insn.embed(v & 0xF);
         break;
     case M_IOA:
-        if (op.isOK() && !op.val.overflow(3, 0))
+        if (op.isOK() && !op.val.overflow(3))
             insn.setErrorIf(op, OPERAND_NOT_ALLOWED);
+        if (op.val.overflow(255))
+            insn.setErrorIf(op, OVERFLOW_RANGE);
         /* Fall-through */
     case M_IM8:
         if (op.val.overflowUint8())
