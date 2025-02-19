@@ -186,8 +186,9 @@ Error AsmDirective::defineSymbol(
             return setError(symbol, DUPLICATE_LABEL);
     }
 
+    auto parserCtx = _assembler.parserContext(&context.symbols);
     ErrorAt error;
-    context.value = _assembler.parseExpr(scan, error);
+    context.value = _assembler.parser().eval(scan, error, parserCtx);
     if (error.hasError()) {
         context.value.clear();
         return setError(scan, error);

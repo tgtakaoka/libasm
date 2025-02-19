@@ -118,8 +118,12 @@ Value Assembler::parseInteger(StrScanner &expr, ErrorAt &error, char delim) cons
     return value;
 }
 
+ParserContext Assembler::parserContext(const SymbolTable *symtab, char delim) const {
+    return ParserContext{_currentLocation, symtab, delim, _inputRadix};
+}
+
 Value Assembler::parseExpr(StrScanner &expr, ErrorAt &error, char delim) const {
-    ParserContext context{_currentLocation, _symtab, delim, _inputRadix};
+    auto context = parserContext(_symtab, delim);
     return _parser.eval(expr, error, context);
 }
 

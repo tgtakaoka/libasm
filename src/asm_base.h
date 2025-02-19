@@ -38,6 +38,7 @@ struct Assembler {
     virtual void reset();
 
     const ValueParser &parser() const { return _parser; }
+    ParserContext parserContext(const SymbolTable *symtab, char delim = 0) const;
     bool endOfLine(StrScanner &scan) const { return _parser.endOfLine(scan); }
     /** Parse |expr| text as an integer expression and get value. */
     Value parseInteger(StrScanner &expr, ErrorAt &error, char delim = 0) const;
