@@ -30,6 +30,9 @@ extern const char TEXT_CPU_MC68010[] PROGMEM;
 extern const char TEXT_FPU_MC68881[] PROGMEM;
 extern const char TEXT_CPU_68000[]   PROGMEM;
 extern const char TEXT_CPU_68010[]   PROGMEM;
+extern const char TEXT_CPU_68020[]   PROGMEM;
+extern const char TEXT_CPU_68030[]   PROGMEM;
+extern const char TEXT_CPU_68040[]   PROGMEM;
 extern const char TEXT_FPU_68881[]   PROGMEM;
 using common::TEXT_none;
 
@@ -192,7 +195,70 @@ extern const char TEXT_REG_DFC[] PROGMEM;
 extern const char TEXT_REG_SFC[] PROGMEM;
 extern const char TEXT_REG_VBR[] PROGMEM;
 
-// MC68881
+// MC68020
+extern const char TEXT_BFCHG[] PROGMEM;
+extern const char TEXT_BFCLR[] PROGMEM;
+extern const char TEXT_BFEXTS[] PROGMEM;
+extern const char TEXT_BFEXTU[] PROGMEM;
+extern const char TEXT_BFFFO[] PROGMEM;
+extern const char TEXT_BFINS[] PROGMEM;
+extern const char TEXT_BFSET[] PROGMEM;
+extern const char TEXT_BFTST[] PROGMEM;
+extern const char TEXT_CALLM[] PROGMEM;
+extern const char TEXT_CAS[] PROGMEM;
+extern const char TEXT_CAS2[] PROGMEM;
+extern const char TEXT_CHK2[] PROGMEM;
+extern const char TEXT_CMP2[] PROGMEM;
+extern const char TEXT_DIVSL[] PROGMEM;
+extern const char TEXT_DIVUL[] PROGMEM;
+extern const char TEXT_EXTB[] PROGMEM;
+extern const char TEXT_MOVEC[] PROGMEM;
+extern const char TEXT_PACK[] PROGMEM;
+extern const char TEXT_RTM[] PROGMEM;
+extern const char TEXT_UNPK[] PROGMEM;
+
+extern const char TEXT_REG_CAAR[] PROGMEM;
+extern const char TEXT_REG_CACR[] PROGMEM;
+extern const char TEXT_REG_MSP[] PROGMEM;
+
+// MC68030
+extern const char TEXT_BKPT[] PROGMEM;
+extern const char TEXT_PFLUSH[] PROGMEM;
+extern const char TEXT_PFLUSHA[] PROGMEM;
+extern const char TEXT_PLOAD[] PROGMEM;
+extern const char TEXT_PMOVE[] PROGMEM;
+extern const char TEXT_PTEST[] PROGMEM;
+
+extern const char TEXT_REG_TT0[] PROGMEM;
+extern const char TEXT_REG_TT1[] PROGMEM;
+
+// MC68040
+extern const char TEXT_CINV[] PROGMEM;
+extern const char TEXT_CPUSH[] PROGMEM;
+extern const char TEXT_MOVE16[] PROGMEM;
+extern const char TEXT_FSABS[] PROGMEM;
+extern const char TEXT_FDABS[] PROGMEM;
+extern const char TEXT_FSADD[] PROGMEM;
+extern const char TEXT_FDADD[] PROGMEM;
+extern const char TEXT_FSDIV[] PROGMEM;
+extern const char TEXT_FDDIV[] PROGMEM;
+extern const char TEXT_FSMOVE[] PROGMEM;
+extern const char TEXT_FDMOVE[] PROGMEM;
+extern const char TEXT_FSMUL[] PROGMEM;
+extern const char TEXT_FDMUL[] PROGMEM;
+extern const char TEXT_FSNEG[] PROGMEM;
+extern const char TEXT_FDNEG[] PROGMEM;
+extern const char TEXT_FSSQRT[] PROGMEM;
+extern const char TEXT_FDSQRT[] PROGMEM;
+extern const char TEXT_FSSUB[] PROGMEM;
+extern const char TEXT_FDSUB[] PROGMEM;
+
+extern const char TEXT_REG_DTT0[] PROGMEM;
+extern const char TEXT_REG_DTT1[] PROGMEM;
+extern const char TEXT_REG_ITT0[] PROGMEM;
+extern const char TEXT_REG_ITT1[] PROGMEM;
+
+// MC68881, MC68040
 using common::TEXT_FABS;
 extern const char TEXT_FACOS[]     PROGMEM;
 using common::TEXT_FADD;

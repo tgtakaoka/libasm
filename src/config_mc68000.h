@@ -28,6 +28,9 @@ namespace mc68000 {
 enum CpuType : uint8_t {
     MC68000,
     MC68010,
+    MC68020,
+    MC68030,
+    MC68040,
 };
 
 enum FpuType : uint8_t {
