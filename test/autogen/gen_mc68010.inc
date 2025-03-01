@@ -763,6 +763,7 @@
       NBCD    ($004939).W
       NBCD    ($3A4A3B).L
       SWAP    D0
+      BKPT    #0
       PEA     (A0)
       PEA     ($4969,A0)
       PEA     ($71,A0,D4.L)

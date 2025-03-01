@@ -178,6 +178,7 @@ constexpr char TEXT_REG_A7[] PROGMEM = "A7";
 // constexpr char TEXT_REG_USP[] PROGMEM = "USP";
 
 // MC68010
+constexpr char TEXT_BKPT[]  PROGMEM = "BKPT";
 constexpr char TEXT_MOVEC[] PROGMEM = "MOVEC";
 constexpr char TEXT_MOVES[] PROGMEM = "MOVES";
 constexpr char TEXT_RTD[]   PROGMEM = "RTD";

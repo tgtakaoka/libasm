@@ -567,9 +567,15 @@ void DisMc68000::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode, Opr
         decodeEffectiveAddr(insn, out, M_DREG, decodeDataReg(r), size);
         break;
     case M_IM3:
-        r = (insn.opCode() >> 9) & 7;
-        if (r == 0)
-            r = 8;
+        if (pos == OP__3) {
+            // ADDQ/SUBQ/shift/rotate
+            r = (insn.opCode() >> 9) & 7;
+            if (r == 0)
+                r = 8;
+        } else if (pos == OP__0) {
+            // BKPT
+            r = insn.opCode() & 7;
+        }
         outDec(out.letter('#'), r, 4);
         break;
     case M_IM8:

@@ -175,8 +175,6 @@ struct Entry final : entry::Base<Config::opcode_t> {
                 return 0xFF;
             if (mode == M_IMVEC)
                 return 0xF;
-            if (mode == M_IM3)
-                return 07000;
             if (mode == M_KFACT || mode == M_KDREG)
                 return 00077;  // OP_10
             return 0;

@@ -24,6 +24,10 @@ using namespace libasm::test;
 DisMc68000 dis68000;
 Disassembler &disassembler(dis68000);
 
+bool mc68k00() {
+    return strcmp_P("68000", disassembler.config().cpu_P()) == 0;
+}
+
 bool mc68010() {
     return strcmp_P("68010", disassembler.config().cpu_P()) == 0;
 }
@@ -577,7 +581,11 @@ void test_data_move() {
 
     // PEA src: 00441|M|Rn
     TEST("SWAP", "D2",            0044102); // SWAP
-    UNKN(                         0044112); // A2
+    if (mc68k00()) {
+        UNKN(                     0044112); // A2
+    } else {
+        TEST("BKPT", "#2",        0044112);
+    }
     TEST("PEA", "(A2)",           0044122);
     UNKN(                         0044132); // (A2)+
     UNKN(                         0044142); // -(A2)

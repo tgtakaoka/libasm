@@ -23,6 +23,10 @@ using namespace libasm::test;
 AsmMc68000 as68000;
 Assembler &assembler(as68000);
 
+bool mc68k00() {
+    return strcmp_P("68000", assembler.config().cpu_P()) == 0;
+}
+
 bool mc68010() {
     return strcmp_P("68010", assembler.config().cpu_P()) == 0;
 }
@@ -2860,6 +2864,14 @@ void test_system() {
         ERRT("MOVEC D1, CCR", OPERAND_NOT_ALLOWED, "D1, CCR");
     } else {
         ERUI("MOVEC VBR, A4");
+    }
+
+    if (mc68k00()) {
+        ERUI("BKPT #0");
+    } else {
+        TEST("BKPT #0", 0044110);
+        TEST("BKPT #7", 0044117);
+        ERRT("BKPT #8", OVERFLOW_RANGE, "#8", 0044110);
     }
 
     // CHK src,Dn: 004|Dn|Sz|M|Rn, Sz:W=6/L=7

@@ -184,6 +184,7 @@ using common::TEXT_REG_SR;
 using common::TEXT_REG_USP;
 
 // MC68010
+extern const char TEXT_BKPT[]  PROGMEM;
 extern const char TEXT_MOVEC[] PROGMEM;
 extern const char TEXT_MOVES[] PROGMEM;
 extern const char TEXT_RTD[]   PROGMEM;
