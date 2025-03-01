@@ -436,13 +436,22 @@ Error AsmMc68000::encodeOperand(
             break;
         }
         if (mode == M_IM3) {
-            // "Zero means 2^3" unsigned 3-bit.
-            if (op.val.overflow(8))
-                insn.setErrorIf(op, OVERFLOW_RANGE);
-            if (op.val.isZero())
-                insn.setErrorIf(op, OPERAND_NOT_ALLOWED);
-            const auto count = (val32 & 7);  // 8 is encoded to 0.
-            insn.embed(count << 9);
+            if (pos == OP__3) {
+                // ADDQ/SUBQ/shift/rotate
+                // "Zero means 2^3" unsigned 3-bit.
+                if (op.val.overflow(8))
+                    insn.setErrorIf(op, OVERFLOW_RANGE);
+                if (op.val.isZero())
+                    insn.setErrorIf(op, OPERAND_NOT_ALLOWED);
+                const auto count = (val32 & 7);  // 8 is encoded to 0.
+                insn.embed(count << 9);
+            } else if (pos == OP__0) {
+                // BKPT
+                if (op.val.overflow(7))
+                    insn.setErrorIf(op, OVERFLOW_RANGE);
+                const auto vector = (val32 & 7);
+                insn.embed(vector);
+            }
             break;
         }
         if (mode == M_IM8) {
