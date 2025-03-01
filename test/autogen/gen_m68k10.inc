@@ -2617,6 +2617,7 @@
       nbcd    (0x4939).w
       nbcd    (0x4a3b).l
       swap    d0
+      bkpt    #0
       pea     (a0)
       pea     (0x4969,a0)
       pea     (-0x8000,a0)
