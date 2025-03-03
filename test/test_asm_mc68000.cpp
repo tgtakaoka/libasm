@@ -2922,6 +2922,35 @@ void test_system() {
     ERRT("MOVE ($234567).L,CCR",    OPERAND_NOT_ALIGNED, "($234567).L,CCR",  0042371, 0x0023, 0x4567);
     ERRT("MOVE (*+$1235,PC),CCR",   OPERAND_NOT_ALIGNED, "(*+$1235,PC),CCR", 0042372, 0x1233);
 
+    // MOVE CCR,dst: 00413|M|R
+    if (mc68k00()) {
+        ERRT("MOVE CCR,D2",             OPERAND_NOT_ALLOWED, "CCR,D2");
+        ERRT("MOVE CCR,A2",             OPERAND_NOT_ALLOWED, "CCR,A2");
+        ERRT("MOVE CCR,(A2)",           OPERAND_NOT_ALLOWED, "CCR,(A2)");
+        ERRT("MOVE CCR,(A2)+",          OPERAND_NOT_ALLOWED, "CCR,(A2)+");
+        ERRT("MOVE CCR,-(A2)",          OPERAND_NOT_ALLOWED, "CCR,-(A2)");
+        ERRT("MOVE CCR,($1234,A2)",     OPERAND_NOT_ALLOWED, "CCR,($1234,A2)");
+        ERRT("MOVE CCR,($12,A2,D3.W)",  OPERAND_NOT_ALLOWED, "CCR,($12,A2,D3.W)");
+        ERRT("MOVE CCR,($001234).W",    OPERAND_NOT_ALLOWED, "CCR,($001234).W");
+        ERRT("MOVE CCR,($234566).L",    OPERAND_NOT_ALLOWED, "CCR,($234566).L");
+        ERRT("MOVE CCR,(*+$1234,PC)",   OPERAND_NOT_ALLOWED, "CCR,(*+$1234,PC)");
+        ERRT("MOVE CCR,(*-16,PC,D3.L)", OPERAND_NOT_ALLOWED, "CCR,(*-16,PC,D3.L)");
+        ERRT("MOVE CCR,#$1234",         OPERAND_NOT_ALLOWED, "CCR,#$1234");
+    } else {
+        TEST("MOVE CCR,D2",             0041302);
+        ERRT("MOVE CCR,A2",             OPERAND_NOT_ALLOWED, "CCR,A2");
+        TEST("MOVE CCR,(A2)",           0041322);
+        TEST("MOVE CCR,(A2)+",          0041332);
+        TEST("MOVE CCR,-(A2)",          0041342);
+        TEST("MOVE CCR,($1234,A2)",     0041352, 0x1234);
+        TEST("MOVE CCR,($12,A2,D3.W)",  0041362, 0x3012);
+        TEST("MOVE CCR,($001234).W",    0041370, 0x1234);
+        TEST("MOVE CCR,($234566).L",    0041371, 0x0023, 0x4566);
+        ERRT("MOVE CCR,(*+$1234,PC)",   OPERAND_NOT_ALLOWED, "CCR,(*+$1234,PC)");
+        ERRT("MOVE CCR,(*-16,PC,D3.L)", OPERAND_NOT_ALLOWED, "CCR,(*-16,PC,D3.L)");
+        ERRT("MOVE CCR,#$1234",         OPERAND_NOT_ALLOWED, "CCR,#$1234");
+    }
+
     // ORI #nn,CCR
     TEST("ORI   #$34,CCR", 0000074, 0x0034);
     TEST("ORI.B #$34,CCR", 0000074, 0x0034);
