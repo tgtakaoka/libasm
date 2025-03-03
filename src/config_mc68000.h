@@ -28,6 +28,7 @@ namespace mc68000 {
 enum CpuType : uint8_t {
     MC68000,
     MC68010,
+    MC68020,
 };
 
 enum FpuType : uint8_t {
@@ -57,6 +58,9 @@ struct Config
                   1) {
     }
 
+    AddressWidth addressWidth() const override {
+        return firstGen() ? ADDRESS_24BIT : ADDRESS_32BIT;
+    }
     uint8_t codeMax() const override { return _cpuSpec.fpu == FPU_NONE ? 6 : 16; }
 
     void setCpuType(CpuType cpuType) override {
@@ -69,6 +73,8 @@ struct Config
 
 protected:
     CpuSpec _cpuSpec;
+
+    bool firstGen() const { return _cpuSpec.cpu == MC68000 || _cpuSpec.cpu == MC68010; }
 };
 
 }  // namespace mc68000
