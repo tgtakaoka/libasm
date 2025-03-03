@@ -2423,10 +2423,15 @@ void test_program() {
     TEST("BGE *", 0060000 | 0xC00 | 0xFE);
     TEST("BLT *", 0060000 | 0xD00 | 0xFE);
     TEST("BGT *", 0060000 | 0xE00 | 0xFE);
-    ATEST(0x010000, "BLE *-$7E", 0060000 | 0xF00 | 0x80);
-    ATEST(0x010000, "BLE *+$80", 0060000 | 0xF00 | 0x7E);
-    ATEST(0x010000, "BLE *-$80", 0060000 | 0xF00, 0xFF7E);
-    ATEST(0x010000, "BLE *+$82", 0060000 | 0xF00, 0x0080);
+    ATEST(0x010000, "BLE *-$7E",   0060000 | 0xF00 | 0x80);
+    ATEST(0x010000, "BLE *+$80",   0060000 | 0xF00 | 0x7E);
+    ATEST(0x010000, "BLE.W *-$7E", 0060000 | 0xF00, 0xFF80);
+    ATEST(0x010000, "BLE.L *+$80", 0060000 | 0xF00, 0x007E);
+    ATEST(0x010000, "BLE *-$80",   0060000 | 0xF00, 0xFF7E);
+    ATEST(0x010000, "BLE *+$82",   0060000 | 0xF00, 0x0080);
+    AERRT(0x010000, "BLE.B *-$80", OPERAND_TOO_FAR, "*-$80", 0060000 | 0xF00 | 0x7E);
+    AERRT(0x010000, "BLE.S *+$82", OPERAND_TOO_FAR, "*+$82", 0060000 | 0xF00 | 0x80);
+    AERRT(0x010000, "BLE.X *+$80", ILLEGAL_SIZE, "BLE.X *+$80", 0060000 | 0xF00 | 0x7E);
     AERRT(0x010000, "BLE *-$8000", OPERAND_TOO_FAR, "*-$8000", 0060000 | 0xF00, 0x7FFE);
     AERRT(0x010000, "BLE *+$8002", OPERAND_TOO_FAR, "*+$8002", 0060000 | 0xF00, 0x8000);
     AERRT(0x001000, "BLE *-$1002", OVERFLOW_RANGE,  "*-$1002", 0060000 | 0xF00, 0xEFFC);
@@ -2676,7 +2681,7 @@ void test_program() {
     AERRT(0x10000, "BRA.B *-$80",   OPERAND_TOO_FAR,   "*-$80", 0060000 | 0x7E);
     AERRT(0x10000, "BRA.B *+$82",   OPERAND_TOO_FAR,   "*+$82", 0060000 | 0x80);
     AERRT(0x10000, "BRA.S *+$82",   OPERAND_TOO_FAR,   "*+$82", 0060000 | 0x80);
-    AERRT(0x10000, "BRA.X *+$82",  ILLEGAL_SIZE, "BRA.X *+$82", 0060000 | 0x00);
+    AERRT(0x10000, "BRA.X *+$82",  ILLEGAL_SIZE, "BRA.X *+$82", 0060000 | 0x80);
 
     // BSR label: 00604|disp
     AERRT(0x010000, "BSR   *-$8000", OPERAND_TOO_FAR, "*-$8000", 0060400, 0x7FFE);
@@ -4541,11 +4546,12 @@ void test_float_branch() {
     TEST("FBSNE  *+$1234",    0xF29E, 0x1232);
     TEST("FBST   *+$1234",    0xF29F, 0x1232);
     ERRT("FBST   *-$00FE",  OVERFLOW_RANGE, "*-$00FE", 0xF29F, 0xFF00);
-    TEST("FBST.W *+$70",                               0xF29F, 0x006E);
-    TEST("FBST.L *+$70",                               0xF29F, 0x006E);
-    TEST("FBST.X *+$70",                               0xF2DF, 0x0000, 0x006E);
-    ERRT("FBST.B *+$70", ILLEGAL_SIZE, "FBST.B *+$70", 0xF29F, 0x006E);
-    ERRT("FBST.S *+$70", ILLEGAL_SIZE, "FBST.S *+$70", 0xF29F, 0x006E);
+    TEST("FBST   *+$123456",  0xF2DF, 0x0012, 0x3454);
+    TEST("FBST.W *+$70",      0xF29F, 0x006E);
+    TEST("FBST.L *+$70",      0xF29F, 0x006E);
+    TEST("FBST.X *+$70",      0xF2DF, 0x0000, 0x006E);
+    ERRT("FBST.B *+$70", ILLEGAL_SIZE, "FBST.B *+$70", 0xF2DF, 0x0000, 0x006E);
+    ERRT("FBST.S *+$70", ILLEGAL_SIZE, "FBST.S *+$70", 0xF2DF, 0x0000, 0x006E);
 
     TEST("FBF    *+$123456",    0xF2C0, 0x0012, 0x3454);
     TEST("FBEQ.X *+$001234",    0xF2C1, 0x0000, 0x1232);

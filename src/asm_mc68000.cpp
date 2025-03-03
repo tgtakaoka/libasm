@@ -200,63 +200,71 @@ void AsmMc68000::encodeDisplacement(
 }
 
 void AsmMc68000::encodeRelativeAddr(AsmInsn &insn, AddrMode mode, const Operand &op) const {
-    // FDxx has different base address
-    const auto base = insn.address() + (insn.hasPostVal() ? 4 : 2);
-    const auto target = op.getError() ? base : op.val.getUnsigned();
+    // FDBcc has different base address
+    const auto FDBcc = insn.hasPostVal();
+    const Config::uintptr_t base = insn.address() + (FDBcc ? 4 : 2);
+    const Config::uintptr_t target = op.getError() ? base : op.val.getUnsigned();
     insn.setErrorIf(op, checkAddr(target, true));
-    ErrorAt error;
-    // the branchDelta() uses addressWidth(), which is 24 bit, to
-    // check the range of |delta|. It is not suitable for
-    // M_REL32. Record errors in |error| then copy it to |insn| if
-    // any.
-    const auto delta = branchDelta(base, target, error, op);
-    const auto insnSize = insn.insnSize();
+    const Config::ptrdiff_t delta = target - base;
+    // Catch overwrap case
+    if ((delta < 0 && target >= base) || (delta >= 0 && target < base))
+        insn.setErrorIf(op, OVERFLOW_RANGE);
+    auto type = mode;
+    const auto size = insn.insnSize();
     if (mode == M_REL8) {
-        if (insnSize == ISZ_NONE) {
+        if (size == ISZ_NONE) {
+            if (overflowDelta(delta, 16))
+                insn.setErrorIf(op, OPERAND_TOO_FAR);
             if (overflowDelta(delta, 8))
-                goto rel16;
-            insn.embed(static_cast<uint8_t>(delta));
-        } else if (insnSize == ISZ_BYTE || insnSize == ISZ_SNGL) {
+                type = M_REL16;
+        } else if (size == ISZ_BYTE || size == ISZ_SNGL) {
+            // Mnemonics has suffix 'B' or 'S'
+            type = M_REL8;
             if (overflowDelta(delta, 8))
-                error.setErrorIf(op, OPERAND_TOO_FAR);
-            insn.embed(static_cast<uint8_t>(delta));
-        } else if (insnSize == ISZ_WORD || insnSize == ISZ_LONG) {
-            goto rel16;
+                insn.setErrorIf(op, OPERAND_TOO_FAR);
+        } else if (size == ISZ_WORD || size == ISZ_LONG) {
+            // Mnemonics has suffix 'W' or 'L'
+            type = M_REL16;
         } else {
-            error.setErrorIf(ILLEGAL_SIZE);
+            type = M_NONE;
         }
     } else if (mode == M_REL16) {
-        if (insnSize == ISZ_NONE || insnSize == ISZ_WORD || insnSize == ISZ_LONG) {
-        rel16:
+        if (size == ISZ_NONE || size == ISZ_WORD || size == ISZ_LONG) {
+            // Mnemonics has suffix 'W' or 'L'
             if (overflowDelta(delta, 16))
-                error.setErrorIf(op, OPERAND_TOO_FAR);
+                insn.setErrorIf(op, OPERAND_TOO_FAR);
         } else {
-            error.setErrorIf(ILLEGAL_SIZE);
+            type = M_NONE;
         }
-        insn.emitOperand16(delta);
-    } else if (mode == M_REL32) {
-        if (insnSize == ISZ_NONE) {
+    } else {  // mode == M_REL32
+        if (size == ISZ_NONE) {
             if (!overflowDelta(delta, 16))
-                goto rel32_16;
-            goto rel32;
-        } else if (insnSize == ISZ_WORD || insnSize == ISZ_LONG) {
+                type = M_REL16;
+            insn.setErrorIf(OK);  // never overflow
+        } else if (size == ISZ_WORD || size == ISZ_LONG) {
+            // Mnemonics has suffix 'W' or 'L'
+            type = M_REL16;
             if (overflowDelta(delta, 16))
-                error.setErrorIf(op, OPERAND_TOO_FAR);
-        rel32_16:
-            insn.setOpCode(insn.opCode() & ~(1 << 6));  // M_REL16
-            insn.emitOperand16(static_cast<uint16_t>(delta));
-        } else if (insnSize == ISZ_LONG || insnSize == ISZ_XTND) {
-        rel32:
-            error.setOK();                      // M_REL32 never overflow.
-            insn.embed(1 << 6);                 // M_REL32
-            insn.emitOperand32(target - base);  // 32 bit delta
+                insn.setErrorIf(op, OPERAND_TOO_FAR);
+        } else if (size == ISZ_XTND) {
+            // Mnemonics has suffix ''X'
         } else {
-            error.setErrorIf(ILLEGAL_SIZE);
-            goto rel32_16;
+            type = M_NONE;
         }
     }
-    // Copy error if any
-    insn.setErrorIf(error);
+    if (type == M_NONE) {
+        insn.setErrorIf(op, ILLEGAL_SIZE);
+        type = mode;
+    }
+    if (type == M_REL8) {
+        insn.embed(static_cast<uint8_t>(delta));
+    } else if (type == M_REL16) {
+        insn.emitOperand16(delta);
+    } else {  // type == M_REL32
+        insn.emitOperand32(delta);
+        if (mode == M_REL32)
+            insn.embed(1 << 6);  // set SIZE bit
+    }
 }
 
 void AsmMc68000::encodeImmediate(AsmInsn &insn, const Operand &op, OprSize size) const {
@@ -485,10 +493,6 @@ Error AsmMc68000::encodeOperand(
         encodeImmediate(insn, op, size);
         break;
     case M_LABEL:
-        if (size == SZ_BYTE && mode == M_REL16)
-            insn.setErrorIf(op, ILLEGAL_SIZE);
-        if (size == SZ_WORD && mode == M_REL8)
-            mode = M_REL16;
         encodeRelativeAddr(insn, mode, op);
         break;
     case M_FPREG:

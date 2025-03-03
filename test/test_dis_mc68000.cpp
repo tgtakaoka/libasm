@@ -1972,6 +1972,21 @@ void test_program() {
     ATEST(0x10000, "BLT", "*", 0060000 | 0xD00 | 0xFE);
     ATEST(0x10000, "BGT", "*", 0060000 | 0xE00 | 0xFE);
     ATEST(0x10000, "BLE", "*", 0060000 | 0xF00 | 0xFE);
+    ATEST(0x10000, "BRA.W", "*",       0060000 | 0x000, 0xFFFE);
+    ATEST(0x10000, "BRA.W", "*+$0080", 0060000 | 0x000, 0x007E);
+    ATEST(0x10000, "BRA.W", "*-$007E", 0060000 | 0x000, 0xFF80);
+    ATEST(0x10000, "BRA",   "*+$8000", 0060000 | 0x000, 0x7FFE);
+    ATEST(0x10000, "BRA",   "*-$7FFE", 0060000 | 0x000, 0x8000);
+    disassembler.setOption("gnu-as", "on");
+    ATEST(0x10000, "BRAS", ".",       0060000 | 0x000 | 0xFE);
+    ATEST(0x10000, "BRAS", ".+128",   0060000 | 0x000 | 0x7E);
+    ATEST(0x10000, "BRAS", ".-126",   0060000 | 0x000 | 0x80);
+    ATEST(0x10000, "BRA",  ".",       0060000 | 0x000, 0xFFFE);
+    ATEST(0x10000, "BRA", ".+0x0080", 0060000 | 0x000, 0x007E);
+    ATEST(0x10000, "BRA", ".-0x007E", 0060000 | 0x000, 0xFF80);
+    ATEST(0x10000, "BRA", ".+0x8000", 0060000 | 0x000, 0x7FFE);
+    ATEST(0x10000, "BRA", ".-0x7FFE", 0060000 | 0x000, 0x8000);
+    disassembler.setOption("gnu-as", "off");
 
     // DBcc Dn,labelL 005|cc|31|Dn
     ATEST(0x10000, "DBRA", "D2, *-$7FFE",                      0050312 | 0x100, 0x8000);
@@ -4140,7 +4155,7 @@ void test_float_branch() {
     TEST("FBNGT",  "*+$1234",    0xF29D, 0x1232);
     TEST("FBSNE",  "*+$1234",    0xF29E, 0x1232);
     TEST("FBST",   "*+$1234",    0xF29F, 0x1232);
-    ERRT("FBST",   "*-$00FE", OVERFLOW_RANGE, "*-$00FE", 0xF29F, 0xFF00);
+    ERRT("FBST",   "*-$000000FE", OVERFLOW_RANGE, "*-$000000FE", 0xF29F, 0xFF00);
 
     TEST("FBF",    "*+$123456",    0xF2C0, 0x0012, 0x3454);
     TEST("FBEQ.L", "*+$001234",    0xF2C1, 0x0000, 0x1232);
