@@ -460,6 +460,7 @@ constexpr uint8_t MC68000_INDEX[] PROGMEM = {
 
 constexpr Entry MC68010_TABLE[] PROGMEM = {
     E1(0044110, TEXT_BKPT,  ISZ_NONE, M_IM3,   OP__0, SZ_NONE),
+    E2(0041300, TEXT_MOVE,  ISZ_FIXD, M_CCR,   M_WDATA, OP___, OP_10, SZ_WORD),
     E1(0047164, TEXT_RTD,   ISZ_NONE, M_IMDAT, OP___, SZ_WORD),
     P2(0047172, TEXT_MOVEC, ISZ_NONE, M_CREG,  M_DREG,  EX_RC, EX_RR, SZ_LONG, 0x0000),
     P2(0047172, TEXT_MOVEC, ISZ_NONE, M_CREG,  M_AREG,  EX_RC, EX_RR, SZ_LONG, 0x8000),
@@ -473,15 +474,16 @@ constexpr Entry MC68010_TABLE[] PROGMEM = {
 
 constexpr uint8_t MC68010_INDEX[] PROGMEM = {
       0,  // TEXT_BKPT
-      2,  // TEXT_MOVEC
+      1,  // TEXT_MOVE
       3,  // TEXT_MOVEC
       4,  // TEXT_MOVEC
       5,  // TEXT_MOVEC
-      6,  // TEXT_MOVES
+      6,  // TEXT_MOVEC
       7,  // TEXT_MOVES
       8,  // TEXT_MOVES
       9,  // TEXT_MOVES
-      1,  // TEXT_RTD
+     10,  // TEXT_MOVES
+      2,  // TEXT_RTD
 };
 
 #if !defined(LIBASM_MC68000_NOFPU)

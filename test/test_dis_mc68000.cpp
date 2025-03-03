@@ -2455,6 +2455,31 @@ void test_system() {
     TEST("MOVE.W", "(*-16,PC,D3.L), CCR",                    0042373, 0x38EE);
     TEST("MOVE.W", "#$34, CCR",                              0042374, 0x0034);
 
+    // MOVE CCR,dst: 00413|M|R
+    if (mc68k00()) {
+        UNKN(0041302);
+        UNKN(0041312);
+        UNKN(0041332);
+        UNKN(0041342);
+        UNKN(0041352);
+        UNKN(0041362);
+        UNKN(0041370);
+        UNKN(0041371);
+    } else {
+        TEST("MOVE.W", "CCR, D2",           0041302);
+        UNKN(0041312);          // A2
+        TEST("MOVE.W", "CCR, (A2)",         0041322);
+        TEST("MOVE.W", "CCR, (A2)+",        0041332);
+        TEST("MOVE.W", "CCR, -(A2)",        0041342);
+        TEST("MOVE.W", "CCR, ($1234,A2)",   0041352, 0x1234);
+        TEST("MOVE.W", "CCR, (18,A2,D3.W)", 0041362, 0x3012);
+        TEST("MOVE.W", "CCR, ($001234).W",  0041370, 0x1234);
+        TEST("MOVE.W", "CCR, ($234566).L",  0041371, 0x0023, 0x4566);
+        UNKN(0041372);          // (disp,PC)
+        UNKN(0041373);          // (disp,PC,Xn)
+        UNKN(0041374);          // #imm
+    }
+
     // ORI #nn,CCR
     TEST("ORI", "#$34, CCR", 0000074, 0x0034);
 }

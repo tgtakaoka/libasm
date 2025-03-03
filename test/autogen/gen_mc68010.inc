@@ -684,6 +684,22 @@
       CLR.L   (-$4F,A0,D4.W)
       CLR.L   ($0043BA).W
       CLR.L   ($BA44BC).L
+      MOVE.W  CCR, D0
+      MOVE.W  CCR, (A0)
+      MOVE.W  CCR, (A0)+
+      MOVE.W  CCR, -(A0)
+      MOVE.W  CCR, ($43E9,A0)
+      MOVE.W  CCR, (-$8000,A0)
+      MOVE.W  CCR, (-15,A0,D4.W)
+      MOVE.W  CCR, (0,A0,D4.W)
+      MOVE.W  CCR, (0,A0,D4.L)
+      MOVE.W  CCR, (-$80,A0,D4.L)
+      MOVE.W  CCR, (0,A0,A0.W)
+      MOVE.W  CCR, (-$80,A0,A0.W)
+      MOVE.W  CCR, (0,A0,A0.L)
+      MOVE.W  CCR, (-$80,A0,A0.L)
+      MOVE.W  CCR, ($0043FA).W
+      MOVE.W  CCR, ($FA44FC).L
       NEG.B   D0
       NEG.B   (A0)
       NEG.B   (A0)+
