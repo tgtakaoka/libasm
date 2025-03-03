@@ -288,45 +288,52 @@ void DisMc68000::decodeEffectiveAddr(
 }
 
 void DisMc68000::decodeRelative(DisInsn &insn, StrBuffer &out, AddrMode mode) const {
-    // FDxx has different base address
-    const auto base = insn.address() + (insn.hasPostVal() ? 4 : 2);
-    if (mode == M_REL32 && (insn.opCode() & (1 << 6)) == 0)
-        mode = M_REL16;
+    auto type = mode;
     if (mode == M_REL32) {
-        const auto delta = static_cast<int32_t>(insn.readUint32());
-        auto save{out};
-        insn.nameBuffer().over(out);
-        if (!overflowDelta(delta, 16)) {
-            if (!_gnuAs)
-                out.letter('.').letter('L');
-        }
-        if (_gnuAs)
-            out.letter('L');
-        out.over(insn.nameBuffer());
-        save.over(out);
-        const auto target = base + delta;
-        insn.setErrorIf(out, checkAddr(target, true));
-        outRelAddr(out, target, insn.address(), insn.isOK() ? addressWidth() : 32);
-        return;
+        // FBcc
+        const auto size16 = (insn.opCode() & 0x40) == 0;
+        if (size16)
+            type = M_REL16;
     }
-    const auto rel8 = (mode == M_REL8) ? static_cast<int8_t>(insn.opCode() & 0xFF) : 0;
-    const auto delta = rel8 ? static_cast<int8_t>(rel8) : static_cast<int16_t>(insn.readUint16());
     if (mode == M_REL8) {
-        auto save{out};
-        insn.nameBuffer().over(out);
-        if (_gnuAs) {
-            if (rel8)
-                out.letter('S');
-        } else {
-            if (rel8 == 0 && !overflowDelta(delta, 8))
-                out.letter('.').letter('W');
-        }
-        out.over(insn.nameBuffer());
-        save.over(out);
+        const auto rel8 = insn.opCode() & 0xFF;
+        if (rel8 == 0)
+            type = M_REL16;
     }
-    const auto target = base + delta;
+    // FDBcc has different base address
+    const auto FDBcc = insn.hasPostVal();
+    const Config::uintptr_t base = insn.address() + (FDBcc ? 4 : 2);
+    auto bits = 8;
+    Config::ptrdiff_t delta = 0;
+    if (type == M_REL32) {
+        bits = addressWidth();
+        delta = static_cast<int32_t>(insn.readUint32());
+        if (_gnuAs) {
+            insn.appendName(out, 'L');
+        } else if (!overflowDelta(delta, 16)) {
+            insn.appendName(out, '.');
+            insn.appendName(out, 'L');
+        }
+    } else if (type == M_REL16) {
+        bits = 16;
+        delta = static_cast<int16_t>(insn.readUint16());
+        if (!_gnuAs && mode == M_REL8 && !overflowDelta(delta, 8)) {
+            insn.appendName(out, '.');
+            insn.appendName(out, 'W');
+        }
+    } else {  // type == M_REL8
+        delta = static_cast<int8_t>(insn.opCode() & 0xFF);
+        if (_gnuAs)
+            insn.appendName(out, 'S');
+    }
+    const Config::uintptr_t target = base + delta;
     insn.setErrorIf(out, checkAddr(target, true));
-    outRelAddr(out, target, insn.address(), rel8 ? 8 : 16);
+    // Cactch overwrap case
+    if ((delta < 0 && target >= base) || (delta >= 0 && target < base))
+        insn.setErrorIf(out, OVERFLOW_RANGE);
+    if (insn.getError() == OVERFLOW_RANGE)
+        bits = 32;
+    outRelAddr(out, target, insn.address(), bits);
 }
 
 namespace {
@@ -345,7 +352,8 @@ StrBuffer &outMoveMltRegs(StrBuffer &out, RegName start, RegName last, char suff
 }
 
 StrBuffer &outMoveMltRegList(StrBuffer &out, uint16_t list, DisInsn &insn) {
-    const auto push = AddrMode((insn.opCode() >> 3) & 7) == M_PDEC;
+    EaMc68000 ea(SZ_NONE, insn.opCode() >> 3, 0);
+    const auto push = ea.mode == M_PDEC;
     if (list == 0)
         insn.setErrorIf(out, OPCODE_HAS_NO_EFFECT);
     int8_t start = -1;
@@ -712,6 +720,13 @@ char decodeInsnSize(const DisInsn &insn, OprSize osize) {
     return sizeSuffix(size);
 }
 
+void DisInsn::appendName(StrBuffer &out, char c) {
+    auto save{out};
+    nameBuffer().over(out);
+    out.letter(c).over(nameBuffer());
+    save.over(out);
+}
+
 Error DisMc68000::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) const {
     DisInsn insn(_insn, memory, out);
     const auto opc = insn.readUint16();
@@ -722,12 +737,9 @@ Error DisMc68000::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) con
     const auto osize = decodeSize(insn);
     const auto suffix = decodeInsnSize(insn, osize);
     if (suffix) {
-        auto save{out};
-        insn.nameBuffer().over(out);
         if (!_gnuAs)
-            out.letter('.');
-        out.letter(suffix).over(insn.nameBuffer());
-        save.over(out);
+            insn.appendName(out, '.');
+        insn.appendName(out, suffix);
     }
 
     const auto dst = insn.dst();
