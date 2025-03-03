@@ -27,9 +27,11 @@ namespace mc68000 {
 extern const char TEXT_MC68000_LIST[] PROGMEM;
 extern const char TEXT_CPU_MC68000[] PROGMEM;
 extern const char TEXT_CPU_MC68010[] PROGMEM;
+extern const char TEXT_CPU_MC68020[] PROGMEM;
 extern const char TEXT_FPU_MC68881[] PROGMEM;
 extern const char TEXT_CPU_68000[]   PROGMEM;
 extern const char TEXT_CPU_68010[]   PROGMEM;
+extern const char TEXT_CPU_68020[]   PROGMEM;
 extern const char TEXT_FPU_68881[]   PROGMEM;
 using common::TEXT_none;
 
