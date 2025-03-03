@@ -86,8 +86,8 @@ enum AddrMode : uint8_t {
     M_JADDR = 27,  // Jumpable Address:        (An)            /(*,An)/(Abs)/(*,PC)
     M_IADDR = 28,  // Increment Address:       (An)/(An)+      /(*,An)/(Abs)/(*,PC)
     M_DADDR = 29,  // Decrement Address:       (An)/     /-(An)/(*,An)/(Abs)
-    M_REL16 = 30,  // 16-bit Relative
-    M_REL8 = 31,   // 8/16-bit Relative
+    M_REL8 = 30,   // 8/16-bit Relative (Bcc)
+    M_REL16 = 31,  // 16-bit Relative (DBcc/FDBcc)
     M_IMBIT = 32,  // Bit number: #0~#7/#15/#31
     M_IM3 = 33,    // 3-bit Immediate: #1~#8
     M_IM8 = 34,    // 8-bit Immediate
@@ -109,7 +109,7 @@ enum AddrMode : uint8_t {
     M_FPSR = 46,   // FPSR register
     M_FPIAR = 47,  // FPIAR register
     M_IMROM = 48,  // MC68881 ROM constant
-    M_REL32 = 49,  // 32-bit Relative; 1111|ccc|01s|___|___: s=0 16bit, s=1 32bit
+    M_REL32 = 49,  // 32-bit Relative; 1111|ccc|01s|___|___: s=0 16bit, s=1 32bit (FBcc)
     M_IMFLT = 50,  // Floating point immediate
 };
 
@@ -173,6 +173,8 @@ struct Entry final : entry::Base<Config::opcode_t> {
         static Config::opcode_t insnMask(AddrMode mode) {
             if (mode == M_IM8 || mode == M_REL8)
                 return 0xFF;
+            if (mode == M_REL32)
+                return 0x40;
             if (mode == M_IMVEC)
                 return 0xF;
             if (mode == M_KFACT || mode == M_KDREG)
