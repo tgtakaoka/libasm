@@ -31,6 +31,47 @@ bool mc68010() {
     return strcmp_P("68010", assembler.config().cpu_P()) == 0;
 }
 
+bool firstGen() {
+    return mc68k00() || mc68010();
+}
+
+/**
+ * Test helper for Absolute Short addressing mode.
+ * Substitute |mark| in |text| with |word| into |line|.
+ */
+void subst(char *line, const char *text, const char *mark, const char *word, bool firstGen) {
+    const auto len = strlen(mark);
+    while (*text) {
+        if (strncmp(text, mark, len) == 0) {
+            text += 2;
+            *line = 0;
+            // Sign extend short address to full width address.
+            strcat(line, firstGen ? "$FF" : "$FFFF");
+            strcat(line, word);
+            line += strlen(line);
+        } else {
+            *line++ = *text++;
+        }
+    }
+    *line = 0;
+}
+
+#define ABSW(text_, word, ...)                      \
+    do {                                            \
+        char text[128];                             \
+        subst(text, text_, "@W", word, firstGen()); \
+        TEST(text, __VA_ARGS__);                    \
+    } while (0)
+
+#define ERRW(text_, word, error, errat_, ...)         \
+    do {                                              \
+        char text[128];                               \
+        char errat[128];                              \
+        subst(text, text_, "@W", word, firstGen());   \
+        subst(errat, errat_, "@W", word, firstGen()); \
+        ERRT(text, error, errat, __VA_ARGS__);        \
+    } while (0)
+
 #if defined(LIBASM_ASM_NOFLOAT)
 #define FLTS(insn, opr, opc, post, ...) \
     ERRT(insn " " opr, FLOAT_NOT_SUPPORTED, opr, opc, post, 0, 0)
@@ -68,6 +109,12 @@ void test_cpu() {
 
     EQUALS("cpu mc68010", true,    assembler.setCpu("mc68010"));
     EQUALS_P("cpu mc68010", "68010", assembler.config().cpu_P());
+
+    EQUALS("cpu 68020", true,    assembler.setCpu("68020"));
+    EQUALS_P("cpu 68020", "68020", assembler.config().cpu_P());
+
+    EQUALS("cpu mc68020", true,    assembler.setCpu("mc68020"));
+    EQUALS_P("cpu mc68020", "68020", assembler.config().cpu_P());
 }
 
 void test_data_move() {
@@ -98,7 +145,7 @@ void test_data_move() {
     ERRT("LEA -(A2)",              OPERAND_NOT_ALLOWED, "-(A2)");
     TEST("LEA ($1234,A2),A1",      0041752, 0x1234);
     TEST("LEA ($12,A2,D3.W),A1",   0041762, 0x3012);
-    TEST("LEA ($FFFF00).W,A1",     0041770, 0xFF00);
+    ABSW("LEA (@W).W,A1", "FF00",  0041770, 0xFF00);
     TEST("LEA ($001234).L,A1",     0041771, 0x0000, 0x1234);
     TEST("LEA (*+$1234,PC),A1",    0041772, 0x1232);
     TEST("lea (*+$12,pc,a3.l),a1", 0041773, 0xB810);
@@ -151,14 +198,14 @@ void test_data_move() {
     TEST("MOVE.B (-32769),D7",        0017071, 0xFFFF, 0x7FFF);
     ERRT("MOVE.B (-32769).W,D7",      OVERFLOW_RANGE, "(-32769).W,D7", 0017070, 0x7FFF);
     TEST("MOVE.B (-32769).L,D7",      0017071, 0xFFFF, 0x7FFF);
-    TEST("MOVE.B ($FFFFFF),D7",       0017070, 0xFFFF);
-    TEST("MOVE.B ($FFFFFF).W,D7",     0017070, 0xFFFF);
+    ABSW("MOVE.B (@W),D7", "FFFF",    0017070, 0xFFFF);
+    ABSW("MOVE.B (@W).W,D7", "FFFF",  0017070, 0xFFFF);
     TEST("MOVE.B ($FFFFFF).L,D7",     0017071, 0x00FF, 0xFFFF);
-    TEST("MOVE.B ($FF8000),D7",       0017070, 0x8000);
-    TEST("MOVE.B ($FF8000).W,D7",     0017070, 0x8000);
+    ABSW("MOVE.B (@W),D7", "8000",    0017070, 0x8000);
+    ABSW("MOVE.B (@W).W,D7", "8000",  0017070, 0x8000);
     TEST("MOVE.B ($FF8000).L,D7",     0017071, 0x00FF, 0x8000);
     TEST("MOVE.B ($FF7FFF),D7",       0017071, 0x00FF, 0x7FFF);
-    ERRT("MOVE.B ($FF7FFF).W,D7",     OVERFLOW_RANGE, "($FF7FFF).W,D7", 017070, 0x7FFF);
+    ERRW("MOVE.B (@W).W,D7", "7FFF",  OVERFLOW_RANGE, "(@W).W,D7", 017070, 0x7FFF);
     TEST("MOVE.B ($FF7FFF).L,D7",     0017071, 0x00FF, 0x7FFF);
     TEST("MOVE.B ($1000000),D7",      0017071, 0x0100, 0x0000);
     ERRT("MOVE.B ($1000000).W,D7",    OVERFLOW_RANGE, "($1000000).W,D7", 017070, 0x0000);
@@ -185,7 +232,7 @@ void test_data_move() {
     TEST("MOVE.W -(A2),D7",           0037042);
     TEST("MOVE.W ($1234,A2),D7",      0037052, 0x1234);
     TEST("MOVE.W ($12,A2,D3.L),D7",   0037062, 0x3812);
-    TEST("MOVE.W ($FFFFFE).W,D7",     0037070, 0xFFFE);
+    ABSW("MOVE.W (@W).W,D7", "FFFE",  0037070, 0xFFFE);
     TEST("MOVE.W ($123456).L,D7",     0037071, 0x0012, 0x3456);
     TEST("MOVE.W (*+$1234,PC),D7",    0037072, 0x1232);
     TEST("MOVE.W (*+$12,PC,D3.W),D7", 0037073, 0x3010);
@@ -201,7 +248,7 @@ void test_data_move() {
     TEST("MOVE.L -(A2),D7",           0027042);
     TEST("MOVE.L ($1234,A2),D7",      0027052, 0x1234);
     TEST("MOVE.L ($12,A2,D3.L),D7",   0027062, 0x3812);
-    TEST("MOVE.L ($FFFFFC).W,D7",     0027070, 0xFFFC);
+    ABSW("MOVE.L (@W).W,D7", "FFFC",  0027070, 0xFFFC);
     TEST("MOVE.L ($123454).L,D7",     0027071, 0x0012, 0x3454);
     TEST("MOVE.L (*+$1234,PC),D7",    0027072, 0x1232);
     TEST("MOVE.L (*+$12,PC,D3.W),D7", 0027073, 0x3010);
@@ -213,7 +260,7 @@ void test_data_move() {
     TEST("MOVE.B -(A2),(A6)",           0016242);
     TEST("MOVE.B ($1234,A2),(A6)",      0016252, 0x1234);
     TEST("MOVE.B ($12,A2,D3.L),(A6)",   0016262, 0x3812);
-    TEST("MOVE.B ($FFFFFF).W,(A6)",     0016270, 0xFFFF);
+    ABSW("MOVE.B (@W).W,(A6)", "FFFF",  0016270, 0xFFFF);
     TEST("MOVE.B ($123456).L,(A6)",     0016271, 0x0012, 0x3456);
     TEST("MOVE.B (*+$1234,PC),(A6)",    0016272, 0x1232);
     TEST("MOVE.B (*+$12,PC,D3.W),(A6)", 0016273, 0x3010);
@@ -225,7 +272,7 @@ void test_data_move() {
     TEST("MOVE.W -(A2),(A6)",           0036242);
     TEST("MOVE.W ($1234,A2),(A6)",      0036252, 0x1234);
     TEST("MOVE.W ($12,A2,D3.L),(A6)",   0036262, 0x3812);
-    TEST("MOVE.W ($FFFFFE).W,(A6)",     0036270, 0xFFFE);
+    ABSW("MOVE.W (@W).W,(A6)", "FFFE",  0036270, 0xFFFE);
     TEST("MOVE.W ($123456).L,(A6)",     0036271, 0x0012, 0x3456);
     TEST("MOVE.W (*+$1234,PC),(A6)",    0036272, 0x1232);
     TEST("MOVE.W (*+$12,PC,D3.W),(A6)", 0036273, 0x3010);
@@ -237,7 +284,7 @@ void test_data_move() {
     TEST("MOVE.L -(A2),(A6)",           0026242);
     TEST("MOVE.L ($1234,A2),(A6)",      0026252, 0x1234);
     TEST("MOVE.L ($12,A2,D3.L),(A6)",   0026262, 0x3812);
-    TEST("MOVE.L ($FFFFFC).W,(A6)",     0026270, 0xFFFC);
+    ABSW("MOVE.L (@W).W,(A6)", "FFFC",  0026270, 0xFFFC);
     TEST("MOVE.L ($123454).L,(A6)",     0026271, 0x0012, 0x3454);
     TEST("MOVE.L (*+$1234,PC),(A6)",    0026272, 0x1232);
     TEST("MOVE.L (*+$12,PC,D3.W),(A6)", 0026273, 0x3010);
@@ -249,7 +296,7 @@ void test_data_move() {
     TEST("MOVE.B -(A2),(A6)+",           0016342);
     TEST("MOVE.B ($1234,A2),(A6)+",      0016352, 0x1234);
     TEST("MOVE.B ($12,A2,D3.L),(A6)+",   0016362, 0x3812);
-    TEST("MOVE.B ($FFFFFF).W,(A6)+",     0016370, 0xFFFF);
+    ABSW("MOVE.B (@W).W,(A6)+", "FFFF",  0016370, 0xFFFF);
     TEST("MOVE.B ($123456).L,(A6)+",     0016371, 0x0012, 0x3456);
     TEST("MOVE.B (*+$1234,PC),(A6)+",    0016372, 0x1232);
     TEST("MOVE.B (*+$12,PC,D3.W),(A6)+", 0016373, 0x3010);
@@ -261,7 +308,7 @@ void test_data_move() {
     TEST("MOVE.W -(A2),(A6)+",           0036342);
     TEST("MOVE.W ($1234,A2),(A6)+",      0036352, 0x1234);
     TEST("MOVE.W ($12,A2,D3.L),(A6)+",   0036362, 0x3812);
-    TEST("MOVE.W ($FFFFFE).W,(A6)+",     0036370, 0xFFFE);
+    ABSW("MOVE.W (@W).W,(A6)+", "FFFE",  0036370, 0xFFFE);
     TEST("MOVE.W ($123456).L,(A6)+",     0036371, 0x0012, 0x3456);
     TEST("MOVE.W (*+$1234,PC),(A6)+",    0036372, 0x1232);
     TEST("MOVE.W (*+$12,PC,D3.W),(A6)+", 0036373, 0x3010);
@@ -273,7 +320,7 @@ void test_data_move() {
     TEST("MOVE.L -(A2),(A6)+",           0026342);
     TEST("MOVE.L ($1234,A2),(A6)+",      0026352, 0x1234);
     TEST("MOVE.L ($12,A2,D3.L),(A6)+",   0026362, 0x3812);
-    TEST("MOVE.L ($FFFFFC).W,(A6)+",     0026370, 0xFFFC);
+    ABSW("MOVE.L (@W).W,(A6)+", "FFFC",  0026370, 0xFFFC);
     TEST("MOVE.L ($123454).L,(A6)+",     0026371, 0x0012, 0x3454);
     TEST("MOVE.L (*+$1234,PC),(A6)+",    0026372, 0x1232);
     TEST("MOVE.L (*+$12,PC,D3.W),(A6)+", 0026373, 0x3010);
@@ -285,7 +332,7 @@ void test_data_move() {
     TEST("MOVE.B -(A2),-(A6)",           0016442);
     TEST("MOVE.B ($1234,A2),-(A6)",      0016452, 0x1234);
     TEST("MOVE.B ($12,A2,D3.L),-(A6)",   0016462, 0x3812);
-    TEST("MOVE.B ($FFFFFF).W,-(A6)",     0016470, 0xFFFF);
+    ABSW("MOVE.B (@W).W,-(A6)", "FFFF",  0016470, 0xFFFF);
     TEST("MOVE.B ($123456).L,-(A6)",     0016471, 0x0012, 0x3456);
     TEST("MOVE.B (*+$1234,PC),-(A6)",    0016472, 0x1232);
     TEST("MOVE.B (*+$12,PC,D3.W),-(A6)", 0016473, 0x3010);
@@ -297,7 +344,7 @@ void test_data_move() {
     TEST("MOVE.W -(A2),-(A6)",           0036442);
     TEST("MOVE.W ($1234,A2),-(A6)",      0036452, 0x1234);
     TEST("MOVE.W ($12,A2,D3.L),-(A6)",   0036462, 0x3812);
-    TEST("MOVE.W ($FFFFFE).W,-(A6)",     0036470, 0xFFFE);
+    ABSW("MOVE.W (@W).W,-(A6)", "FFFE",  0036470, 0xFFFE);
     TEST("MOVE.W ($123456).L,-(A6)",     0036471, 0x0012, 0x3456);
     TEST("MOVE.W (*+$1234,PC),-(A6)",    0036472, 0x1232);
     TEST("MOVE.W (*+$12,PC,D3.W),-(A6)", 0036473, 0x3010);
@@ -309,7 +356,7 @@ void test_data_move() {
     TEST("MOVE.L -(A2),-(A6)",           0026442);
     TEST("MOVE.L ($1234,A2),-(A6)",      0026452, 0x1234);
     TEST("MOVE.L ($12,A2,D3.L),-(A6)",   0026462, 0x3812);
-    TEST("MOVE.L ($FFFFFC).W,-(A6)",     0026470, 0xFFFC);
+    ABSW("MOVE.L (@W).W,-(A6)", "FFFC",  0026470, 0xFFFC);
     TEST("MOVE.L ($123454).L,-(A6)",     0026471, 0x0012, 0x3454);
     TEST("MOVE.L (*+$1234,PC),-(A6)",    0026472, 0x1232);
     TEST("MOVE.L (*+$14,PC,D3.W),-(A6)", 0026473, 0x3012);
@@ -321,7 +368,7 @@ void test_data_move() {
     TEST("MOVE.B -(A2),($5678,A6)",           0016542, 0x5678);
     TEST("MOVE.B ($1234,A2),($5678,A6)",      0016552, 0x1234, 0x5678);
     TEST("MOVE.B ($12,A2,D3.L),($5678,A6)",   0016562, 0x3812, 0x5678);
-    TEST("MOVE.B ($FFFFFF).W,($5678,A6)",     0016570, 0xFFFF, 0x5678);
+    ABSW("MOVE.B (@W),($5678,A6)", "FFFF",    0016570, 0xFFFF, 0x5678);
     TEST("MOVE.B ($123456).L,($5678,A6)",     0016571, 0x0012, 0x3456, 0x5678);
     TEST("MOVE.B (*+$1234,PC),($5678,A6)",    0016572, 0x1232, 0x5678);
     TEST("MOVE.B (*+$12,PC,D3.W),($5678,A6)", 0016573, 0x3010, 0x5678);
@@ -333,7 +380,7 @@ void test_data_move() {
     TEST("MOVE.W -(A2),($5678,A6)",           0036542, 0x5678);
     TEST("MOVE.W ($1234,A2),($5678,A6)",      0036552, 0x1234, 0x5678);
     TEST("MOVE.W ($12,A2,D3.L),($5678,A6)",   0036562, 0x3812, 0x5678);
-    TEST("MOVE.W ($FFFFFE).W,($5678,A6)",     0036570, 0xFFFE, 0x5678);
+    ABSW("MOVE.W (@W).W,($5678,A6)", "FFFE",  0036570, 0xFFFE, 0x5678);
     TEST("MOVE.W ($123456).L,($5678,A6)",     0036571, 0x0012, 0x3456, 0x5678);
     TEST("MOVE.W (*+$1234,PC),($5678,A6)",    0036572, 0x1232, 0x5678);
     TEST("MOVE.W (*+$12,PC,D3.W),($5678,A6)", 0036573, 0x3010, 0x5678);
@@ -345,7 +392,7 @@ void test_data_move() {
     TEST("MOVE.L -(A2),($5678,A6)",           0026542, 0x5678);
     TEST("MOVE.L ($1234,A2),($5678,A6)",      0026552, 0x1234, 0x5678);
     TEST("MOVE.L ($12,A2,D3.L),($5678,A6)",   0026562, 0x3812, 0x5678);
-    TEST("MOVE.L ($FFFFFC).W,($5678,A6)",     0026570, 0xFFFC, 0x5678);
+    ABSW("MOVE.L (@W).W,($5678,A6)", "FFFC",  0026570, 0xFFFC, 0x5678);
     TEST("MOVE.L ($123454).L,($5678,A6)",     0026571, 0x0012, 0x3454, 0x5678);
     TEST("MOVE.L (*+$1234,PC),($5678,A6)",    0026572, 0x1232, 0x5678);
     TEST("MOVE.L (*+$12,PC,D3.W),($5678,A6)", 0026573, 0x3010, 0x5678);
@@ -357,7 +404,7 @@ void test_data_move() {
     TEST("MOVE.B -(A2),($56,A6,D5.W)",           0016642, 0x5056);
     TEST("MOVE.B ($1234,A2),($56,A6,D5.W)",      0016652, 0x1234, 0x5056);
     TEST("MOVE.B ($12,A2,D3.L),($56,A6,D5.W)",   0016662, 0x3812, 0x5056);
-    TEST("MOVE.B ($FFFFFF).W,($56,A6,D5.W)",     0016670, 0xFFFF, 0x5056);
+    ABSW("MOVE.B (@W).W,($56,A6,D5.W)", "FFFF",  0016670, 0xFFFF, 0x5056);
     TEST("MOVE.B ($123456).L,($56,A6,D5.W)",     0016671, 0x0012, 0x3456, 0x5056);
     TEST("MOVE.B (*+$1234,PC),($56,A6,D5.W)",    0016672, 0x1232, 0x5056);
     TEST("MOVE.B (*+$12,PC,D3.W),($56,A6,D5.W)", 0016673, 0x3010, 0x5056);
@@ -369,7 +416,7 @@ void test_data_move() {
     TEST("MOVE.W -(A2),($56,A6,D5.W)",           0036642, 0x5056);
     TEST("MOVE.W ($1234,A2),($56,A6,D5.W)",      0036652, 0x1234, 0x5056);
     TEST("MOVE.W ($12,A2,D3.L),($56,A6,D5.W)",   0036662, 0x3812, 0x5056);
-    TEST("MOVE.W ($FFFFFE).W,($56,A6,D5.W)",     0036670, 0xFFFE, 0x5056);
+    ABSW("MOVE.W (@W).W,($56,A6,D5.W)", "FFFE",  0036670, 0xFFFE, 0x5056);
     TEST("MOVE.W ($123456).L,($56,A6,D5.W)",     0036671, 0x0012, 0x3456, 0x5056);
     TEST("MOVE.W (*+$1234,PC),($56,A6,D5.W)",    0036672, 0x1232, 0x5056);
     TEST("MOVE.W (*+$12,PC,D3.W),($56,A6,D5.W)", 0036673, 0x3010, 0x5056);
@@ -381,7 +428,7 @@ void test_data_move() {
     TEST("MOVE.L -(A2),($56,A6,D5.W)",           0026642, 0x5056);
     TEST("MOVE.L ($1234,A2),($56,A6,D5.W)",      0026652, 0x1234, 0x5056);
     TEST("MOVE.L ($12,A2,D3.L),($56,A6,D5.W)",   0026662, 0x3812, 0x5056);
-    TEST("MOVE.L ($FFFFFC).W,($56,A6,D5.W)",     0026670, 0xFFFC, 0x5056);
+    ABSW("MOVE.L (@W).W,($56,A6,D5.W)", "FFFC",  0026670, 0xFFFC, 0x5056);
     TEST("MOVE.L ($123454).L,($56,A6,D5.W)",     0026671, 0x0012, 0x3454, 0x5056);
     TEST("MOVE.L (*+$1234,PC),($56,A6,D5.W)",    0026672, 0x1232, 0x5056);
     TEST("MOVE.L (*+$12,PC,D3.W),($56,A6,D5.W)", 0026673, 0x3010, 0x5056);
@@ -393,7 +440,7 @@ void test_data_move() {
     TEST("MOVE.B -(A2),($005678).W",           0010742, 0x5678);
     TEST("MOVE.B ($1234,A2),($005678).W",      0010752, 0x1234, 0x5678);
     TEST("MOVE.B ($12,A2,D3.L),($005678).W",   0010762, 0x3812, 0x5678);
-    TEST("MOVE.B ($FFFFFF).W,($005678).W",     0010770, 0xFFFF, 0x5678);
+    ABSW("MOVE.B (@W).W,($005678).W", "FFFF",  0010770, 0xFFFF, 0x5678);
     TEST("MOVE.B ($123456).L,($005678).W",     0010771, 0x0012, 0x3456, 0x5678);
     TEST("MOVE.B (*+$1234,PC),($005678).W",    0010772, 0x1232, 0x5678);
     TEST("MOVE.B (*+$12,PC,D3.W),($005678).W", 0010773, 0x3010, 0x5678);
@@ -405,7 +452,7 @@ void test_data_move() {
     TEST("MOVE.W -(A2),($005678).W",           0030742, 0x5678);
     TEST("MOVE.W ($1234,A2),($005678).W",      0030752, 0x1234, 0x5678);
     TEST("MOVE.W ($12,A2,D3.L),($005678).W",   0030762, 0x3812, 0x5678);
-    TEST("MOVE.W ($FFFFFE).W,($005678).W",     0030770, 0xFFFE, 0x5678);
+    ABSW("MOVE.W (@W).W,($005678).W", "FFFE",  0030770, 0xFFFE, 0x5678);
     TEST("MOVE.W ($123456).L,($005678).W",     0030771, 0x0012, 0x3456, 0x5678);
     TEST("MOVE.W (*+$1234,PC),($005678).W",    0030772, 0x1232, 0x5678);
     TEST("MOVE.W (*+$12,PC,D3.W),($005678).W", 0030773, 0x3010, 0x5678);
@@ -417,7 +464,7 @@ void test_data_move() {
     TEST("MOVE.L -(A2),($005678).W",           0020742, 0x5678);
     TEST("MOVE.L ($1234,A2),($005678).W",      0020752, 0x1234, 0x5678);
     TEST("MOVE.L ($12,A2,D3.L),($005678).W",   0020762, 0x3812, 0x5678);
-    TEST("MOVE.L ($FFFFFC).W,($005678).W",     0020770, 0xFFFC, 0x5678);
+    ABSW("MOVE.L (@W).W,($005678).W", "FFFC",  0020770, 0xFFFC, 0x5678);
     TEST("MOVE.L ($123454).L,($005678).W",     0020771, 0x0012, 0x3454, 0x5678);
     TEST("MOVE.L (*+$1234,PC),($005678).W",    0020772, 0x1232, 0x5678);
     TEST("MOVE.L (*+$12,PC,D3.W),($005678).W", 0020773, 0x3010, 0x5678);
@@ -429,7 +476,7 @@ void test_data_move() {
     TEST("MOVE.B -(A2),($56789A).L",           0011742, 0x0056, 0x789A);
     TEST("MOVE.B ($1234,A2),($56789A).L",      0011752, 0x1234, 0x0056, 0x789A);
     TEST("MOVE.B ($12,A2,D3.L),($56789A).L",   0011762, 0x3812, 0x0056, 0x789A);
-    TEST("MOVE.B ($FFFFFF).W,($56789A).L",     0011770, 0xFFFF, 0x0056, 0x789A);
+    ABSW("MOVE.B (@W).W,($56789A).L", "FFFF",  0011770, 0xFFFF, 0x0056, 0x789A);
     TEST("MOVE.B ($123456).L,($56789A).L",     0011771, 0x0012, 0x3456, 0x0056, 0x789A);
     TEST("MOVE.B (*+$1234,PC),($56789A).L",    0011772, 0x1232, 0x0056, 0x789A);
     TEST("MOVE.B (*+$12,PC,D3.W),($56789A).L", 0011773, 0x3010, 0x0056, 0x789A);
@@ -441,7 +488,7 @@ void test_data_move() {
     TEST("MOVE.W -(A2),($56789A).L",           0031742, 0x0056, 0x789A);
     TEST("MOVE.W ($1234,A2),($56789A).L",      0031752, 0x1234, 0x0056, 0x789A);
     TEST("MOVE.W ($12,A2,D3.L),($56789A).L",   0031762, 0x3812, 0x0056, 0x789A);
-    TEST("MOVE.W ($FFFFFE).W,($56789A).L",     0031770, 0xFFFE, 0x0056, 0x789A);
+    ABSW("MOVE.W (@W).W,($56789A).L", "FFFE",  0031770, 0xFFFE, 0x0056, 0x789A);
     TEST("MOVE.W ($123456).L,($56789A).L",     0031771, 0x0012, 0x3456, 0x0056, 0x789A);
     TEST("MOVE.W (*+$1234,PC),($56789A).L",    0031772, 0x1232, 0x0056, 0x789A);
     TEST("MOVE.W (*+$12,PC,D3.W),($56789A).L", 0031773, 0x3010, 0x0056, 0x789A);
@@ -453,7 +500,7 @@ void test_data_move() {
     TEST("MOVE.L -(A2),($567898).L",           0021742, 0x0056, 0x7898);
     TEST("MOVE.L ($1234,A2),($567898).L",      0021752, 0x1234, 0x0056, 0x7898);
     TEST("MOVE.L ($12,A2,D3.L),($567898).L",   0021762, 0x3812, 0x0056, 0x7898);
-    TEST("MOVE.L ($FFFFFC).W,($567898).L",     0021770, 0xFFFC, 0x0056, 0x7898);
+    ABSW("MOVE.L (@W).W,($567898).L", "FFFC",  0021770, 0xFFFC, 0x0056, 0x7898);
     TEST("MOVE.L ($123454).L,($567898).L",     0021771, 0x0012, 0x3454, 0x0056, 0x7898);
     TEST("MOVE.L (*+$1234,PC),($567898).L",    0021772, 0x1232, 0x0056, 0x7898);
     TEST("MOVE.L (*+$12,PC,D3.W),($567898).L", 0021773, 0x3010, 0x0056, 0x7898);
@@ -470,7 +517,7 @@ void test_data_move() {
     TEST("MOVEA.W -(A2),A6",           0036142);
     TEST("MOVEA.W ($1234,A2),A6",      0036152, 0x1234);
     TEST("MOVEA.W ($12,A2,D3.L),A6",   0036162, 0x3812);
-    TEST("MOVEA.W ($FFFFFE).W,A6",     0036170, 0xFFFE);
+    ABSW("MOVEA.W (@W).W,A6", "FFFE",  0036170, 0xFFFE);
     TEST("MOVEA.W ($123456).L,A6",     0036171, 0x0012, 0x3456);
     TEST("MOVEA.W (*+$1234,PC),A6",    0036172, 0x1232);
     TEST("MOVEA.W (*+$12,PC,D3.W),A6", 0036173, 0x3010);
@@ -482,7 +529,7 @@ void test_data_move() {
     TEST("MOVEA.L -(A2),A6",           0026142);
     TEST("MOVEA.L ($1234,A2),A6",      0026152, 0x1234);
     TEST("MOVEA.L ($12,A2,D3.L),A6",   0026162, 0x3812);
-    TEST("MOVEA.L ($FFFFFC).W,A6",     0026170, 0xFFFC);
+    ABSW("MOVEA.L (@W).W,A6", "FFFC",  0026170, 0xFFFC);
     TEST("MOVEA.L ($123454).L,A6",     0026171, 0x0012, 0x3454);
     TEST("MOVEA.L (*+$1234,PC),A6",    0026172, 0x1232);
     TEST("MOVEA.L (*+$12,PC,D3.W),A6", 0026173, 0x3010);
@@ -496,7 +543,7 @@ void test_data_move() {
     TEST("MOVEM.W D0-D6,-(A2)",         0044242, 0xFE00);
     TEST("MOVEM.W D0-D6,($1234,A2)",    0044252, 0x007F, 0x1234);
     TEST("MOVEM.W D0-D6,($12,A2,A3.L)", 0044262, 0x007F, 0xB812);
-    TEST("MOVEM.W D0-D6,($FFFEDC).W",   0044270, 0x007F, 0xFEDC);
+    ABSW("MOVEM.W D0-D6,(@W).W", "FEDC", 0044270, 0x007F, 0xFEDC);
     TEST("MOVEM.W D0-D6,($123456).L",   0044271, 0x007F, 0x0012, 0x3456);
     ERRT("MOVEM.W D0-D6,($1234,PC)",    OPERAND_NOT_ALLOWED, "D0-D6,($1234,PC)");
     ERRT("MOVEM.W D0-D6,($12,PC,D3)",   OPERAND_NOT_ALLOWED, "D0-D6,($12,PC,D3)");
@@ -512,7 +559,7 @@ void test_data_move() {
     TEST("MOVEM.L D1/A0,-(A2)",         0044342, 0x4080);
     TEST("MOVEM.L D1/A0,($1234,A2)",    0044352, 0x0102, 0x1234);
     TEST("MOVEM.L D1/A0,($12,A2,A3.L)", 0044362, 0x0102, 0xB812);
-    TEST("MOVEM.L D1/A0,($FFFEDC).W",   0044370, 0x0102, 0xFEDC);
+    ABSW("MOVEM.L D1/A0,(@W).W", "FEDC", 0044370, 0x0102, 0xFEDC);
     TEST("MOVEM.L D1/A0,($123454).L",   0044371, 0x0102, 0x0012, 0x3454);
     ERRT("MOVEM.L D1/A0,($1234,PC)",    OPERAND_NOT_ALLOWED, "D1/A0,($1234,PC)");
     ERRT("MOVEM.L D1/A0,($12,PC,A3)",   OPERAND_NOT_ALLOWED, "D1/A0,($12,PC,A3)");
@@ -530,7 +577,7 @@ void test_data_move() {
     ERRT("MOVEM.W -(A2),A3-A6",           OPERAND_NOT_ALLOWED, "-(A2),A3-A6");
     TEST("MOVEM.W ($1234,A2),A3-A6",      0046252, 0x7800, 0x1234);
     TEST("MOVEM.W ($12,A2,D3.W),A3-A6",   0046262, 0x7800, 0x3012);
-    TEST("MOVEM.W ($FFFEDC).W,A3-A6",     0046270, 0x7800, 0xFEDC);
+    ABSW("MOVEM.W (@W).W,A3-A6", "FEDC",  0046270, 0x7800, 0xFEDC);
     TEST("MOVEM.W ($123456).L,A3-A6",     0046271, 0x7800, 0x0012, 0x3456);
     TEST("MOVEM.W (*+$1234,PC),A3-A6",    0046272, 0x7800, 0x1230);
     TEST("MOVEM.W (*+$12,PC,D3.L),A3-A6", 0046273, 0x7800, 0x380E);
@@ -546,7 +593,7 @@ void test_data_move() {
     ERRT("MOVEM.L -(A2),A3-A6",           OPERAND_NOT_ALLOWED, "-(A2),A3-A6");
     TEST("MOVEM.L ($1234,A2),A3-A6",      0046352, 0x7800, 0x1234);
     TEST("MOVEM.L ($12,A2,D3.W),A3-A6",   0046362, 0x7800, 0x3012);
-    TEST("MOVEM.L ($FFFEDC).W,A3-A6",     0046370, 0x7800, 0xFEDC);
+    ABSW("MOVEM.L (@W).W,A3-A6", "FEDC",  0046370, 0x7800, 0xFEDC);
     TEST("MOVEM.L ($123454).L,A3-A6",     0046371, 0x7800, 0x0012, 0x3454);
     TEST("MOVEM.L (*+$1234,PC),A3-A6",    0046372, 0x7800, 0x1230);
     TEST("MOVEM.L (*+$12,PC,D3.L),A3-A6", 0046373, 0x7800, 0x380E);
@@ -608,7 +655,11 @@ void test_data_move() {
     ERRT("MOVEP.L (*+$12,PC,D3),D7", OPERAND_NOT_ALLOWED, "(*+$12,PC,D3),D7");
     ERRT("MOVEP.L #$1234,D7",        OPERAND_NOT_ALLOWED, "#$1234,D7");
 
-    if (mc68010()) {
+    if (mc68k00()) {
+        ERUI("MOVES.B D3, -(A4)");
+        ERUI("MOVES.W D3, -(A4)");
+        ERUI("MOVES.L D3, -(A4)");
+    } else {
         ERRT("MOVES.B D0, D1", OPERAND_NOT_ALLOWED, "D0, D1");
         ERRT("MOVES.B A1, A2", OPERAND_NOT_ALLOWED, "A1, A2");
         TEST("MOVES.B (A2), D1",         007022, 0x1000);
@@ -682,10 +733,6 @@ void test_data_move() {
         ERRT("MOVES.L A0, ($1234,PC)",  OPERAND_NOT_ALLOWED, "A0, ($1234,PC)");
         ERRT("MOVES.L D1, ($12,PC,A2)", OPERAND_NOT_ALLOWED, "D1, ($12,PC,A2)");
         ERRT("MOVES.L A2, #$1234",      OPERAND_NOT_ALLOWED, "A2, #$1234");
-    } else {
-        ERUI("MOVES.B D3, -(A4)");
-        ERUI("MOVES.W D3, -(A4)");
-        ERUI("MOVES.L D3, -(A4)");
     }
 
     // MOVEQ #nn,Dn: 007|Dn|000 + nn
@@ -714,7 +761,7 @@ void test_data_move() {
     ERRT("PEA -(A2)",           OPERAND_NOT_ALLOWED, "-(A2)");
     TEST("PEA ($1234,A2)",      0044152, 0x1234);
     TEST("PEA ($12,A2,D3.W)",   0044162, 0x3012);
-    TEST("PEA ($FFFF00).W",     0044170, 0xFF00);
+    ABSW("PEA (@W).W", "FF00",  0044170, 0xFF00);
     TEST("PEA ($001234).L",     0044171, 0x0000, 0x1234);
     TEST("PEA (*+$1234,PC)",    0044172, 0x1232);
     TEST("PEA (*+$12,PC,A3.L)", 0044173, 0xB810);
@@ -753,7 +800,7 @@ void test_integer() {
     TEST("ADD.B D7,-(A2)",         0157442);
     TEST("ADD.B D7,($1234,A2)",    0157452, 0x1234);
     TEST("ADD.B D7,($12,A2,D3.L)", 0157462, 0x3812);
-    TEST("ADD.B D7,($FFFFFF).W",   0157470, 0xFFFF);
+    ABSW("ADD.B D7,(@W).W", "FFFF", 0157470, 0xFFFF);
     TEST("ADD.B D7,($123456).L",   0157471, 0x0012, 0x3456);
     ERRT("ADD.B D7,(*+$1234,PC)",  OPERAND_NOT_ALLOWED, "D7,(*+$1234,PC)");
     ERRT("ADD.B D7,(*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "D7,(*+$12,PC,D3)");
@@ -765,7 +812,7 @@ void test_integer() {
     TEST("ADD.W D7,-(A2)",         0157542);
     TEST("ADD.W D7,($1234,A2)",    0157552, 0x1234);
     TEST("ADD.W D7,($12,A2,D3.L)", 0157562, 0x3812);
-    TEST("ADD.W D7,($FFFFFE).W",   0157570, 0xFFFE);
+    ABSW("ADD.W D7,(@W).W", "FFFE", 0157570, 0xFFFE);
     TEST("ADD.W D7,($123456).L",   0157571, 0x0012, 0x3456);
     ERRT("ADD.W D7,(*+$1234,PC)",  OPERAND_NOT_ALLOWED, "D7,(*+$1234,PC)");
     ERRT("ADD.W D7,(*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "D7,(*+$12,PC,D3)");
@@ -777,7 +824,7 @@ void test_integer() {
     TEST("ADD.L D7,-(A2)",         0157642);
     TEST("ADD.L D7,($1234,A2)",    0157652, 0x1234);
     TEST("ADD.L D7,($12,A2,D3.L)", 0157662, 0x3812);
-    TEST("ADD.L D7,($FFFFFC).W",   0157670, 0xFFFC);
+    ABSW("ADD.L D7,(@W).W", "FFFC", 0157670, 0xFFFC);
     TEST("ADD.L D7,($123454).L",   0157671, 0x0012, 0x3454);
     ERRT("ADD.L D7,(*+$1234,PC)",  OPERAND_NOT_ALLOWED, "D7,(*+$1234,PC)");
     ERRT("ADD.L D7,(*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "D7,(*+$12,PC,D3)");
@@ -791,7 +838,7 @@ void test_integer() {
     TEST("ADD.B -(A2),D7",           0157042);
     TEST("ADD.B ($1234,A2),D7",      0157052, 0x1234);
     TEST("ADD.B ($12,A2,D3.L),D7",   0157062, 0x3812);
-    TEST("ADD.B ($FFFFFF).W,D7",     0157070, 0xFFFF);
+    ABSW("ADD.B (@W).W,D7", "FFFF",  0157070, 0xFFFF);
     TEST("ADD.B ($123456).L,D7",     0157071, 0x0012, 0x3456);
     TEST("ADD.B (*+$1234,PC),D7",    0157072, 0x1232);
     TEST("ADD.B (*+$12,PC,D3.W),D7", 0157073, 0x3010);
@@ -803,7 +850,7 @@ void test_integer() {
     TEST("ADD.W -(A2),D7",           0157142);
     TEST("ADD.W ($1234,A2),D7",      0157152, 0x1234);
     TEST("ADD.W ($12,A2,D3.L),D7",   0157162, 0x3812);
-    TEST("ADD.W ($FFFFFE).W,D7",     0157170, 0xFFFE);
+    ABSW("ADD.W (@W).W,D7", "FFFE",  0157170, 0xFFFE);
     TEST("ADD.W ($123456).L,D7",     0157171, 0x0012, 0x3456);
     TEST("ADD.W (*+$1234,PC),D7",    0157172, 0x1232);
     TEST("ADD.W (*+$12,PC,D3.W),D7", 0157173, 0x3010);
@@ -815,7 +862,7 @@ void test_integer() {
     TEST("ADD.L -(A2),D7",           0157242);
     TEST("ADD.L ($1234,A2),D7",      0157252, 0x1234);
     TEST("ADD.L ($12,A2,D3.L),D7",   0157262, 0x3812);
-    TEST("ADD.L ($FFFFFC).W,D7",     0157270, 0xFFFC);
+    ABSW("ADD.L (@W).W,D7", "FFFC",  0157270, 0xFFFC);
     TEST("ADD.L ($123454).L,D7",     0157271, 0x0012, 0x3454);
     TEST("ADD.L (*+$1234,PC),D7",    0157272, 0x1232);
     TEST("ADD.L (*+$12,PC,D3.W),D7", 0157273, 0x3010);
@@ -829,7 +876,7 @@ void test_integer() {
     TEST("ADDA.W -(A2),A6",           0156342);
     TEST("ADDA.W ($1234,A2),A6",      0156352, 0x1234);
     TEST("ADDA.W ($12,A2,D3.L),A6",   0156362, 0x3812);
-    TEST("ADDA.W ($FFFFFE).W,A6",     0156370, 0xFFFE);
+    ABSW("ADDA.W (@W).W,A6", "FFFE",  0156370, 0xFFFE);
     TEST("ADDA.W ($123456).L,A6",     0156371, 0x0012, 0x3456);
     TEST("ADDA.W (*+$1234,PC),A6",    0156372, 0x1232);
     TEST("ADDA.W (*+$12,PC,D3.W),A6", 0156373, 0x3010);
@@ -841,7 +888,7 @@ void test_integer() {
     TEST("ADDA.L -(A2),A6",           0156742);
     TEST("ADDA.L ($1234,A2),A6",      0156752, 0x1234);
     TEST("ADDA.L ($12,A2,D3.L),A6",   0156762, 0x3812);
-    TEST("ADDA.L ($FFFFFC).W,A6",     0156770, 0xFFFC);
+    ABSW("ADDA.L (@W).W,A6", "FFFC",  0156770, 0xFFFC);
     TEST("ADDA.L ($123454).L,A6",     0156771, 0x0012, 0x3454);
     TEST("ADDA.L (*+$1234,PC),A6",    0156772, 0x1232);
     TEST("ADDA.L (*+$12,PC,D3.W),A6", 0156773, 0x3010);
@@ -989,7 +1036,7 @@ void test_integer() {
     TEST("CMP.B -(A2),D7",           0137042);
     TEST("CMP.B ($1234,A2),D7",      0137052, 0x1234);
     TEST("CMP.B ($12,A2,D3.L),D7",   0137062, 0x3812);
-    TEST("CMP.B ($FFFFFF).W,D7",     0137070, 0xFFFF);
+    ABSW("CMP.B (@W).W,D7", "FFFF",  0137070, 0xFFFF);
     TEST("CMP.B ($123456).L,D7",     0137071, 0x0012, 0x3456);
     TEST("CMP.B (*+$1234,PC),D7",    0137072, 0x1232);
     TEST("CMP.B (*+$12,PC,D3.W),D7", 0137073, 0x3010);
@@ -1001,7 +1048,7 @@ void test_integer() {
     TEST("CMP.W -(A2),D7",           0137142);
     TEST("CMP.W ($1234,A2),D7",      0137152, 0x1234);
     TEST("CMP.W ($12,A2,D3.L),D7",   0137162, 0x3812);
-    TEST("CMP.W ($FFFFFE).W,D7",     0137170, 0xFFFE);
+    ABSW("CMP.W (@W).W,D7", "FFFE",  0137170, 0xFFFE);
     TEST("CMP.W ($123456).L,D7",     0137171, 0x0012, 0x3456);
     TEST("CMP.W (*+$1234,PC),D7",    0137172, 0x1232);
     TEST("CMP.W (*+$12,PC,D3.W),D7", 0137173, 0x3010);
@@ -1013,7 +1060,7 @@ void test_integer() {
     TEST("CMP.L -(A2),D7",           0137242);
     TEST("CMP.L ($1234,A2),D7",      0137252, 0x1234);
     TEST("CMP.L ($12,A2,D3.L),D7",   0137262, 0x3812);
-    TEST("CMP.L ($FFFFFC).W,D7",     0137270, 0xFFFC);
+    ABSW("CMP.L (@W).W,D7", "FFFC",  0137270, 0xFFFC);
     TEST("CMP.L ($123454).L,D7",     0137271, 0x0012, 0x3454);
     TEST("CMP.L (*+$1234,PC),D7",    0137272, 0x1232);
     TEST("CMP.L (*+$12,PC,D3.W),D7", 0137273, 0x3010);
@@ -1027,7 +1074,7 @@ void test_integer() {
     TEST("CMPA.W -(A2),A6",           0136342);
     TEST("CMPA.W ($1234,A2),A6",      0136352, 0x1234);
     TEST("CMPA.W ($12,A2,D3.L),A6",   0136362, 0x3812);
-    TEST("CMPA.W ($FFFFFE).W,A6",     0136370, 0xFFFE);
+    ABSW("CMPA.W (@W).W,A6", "FFFE",  0136370, 0xFFFE);
     TEST("CMPA.W ($123456).L,A6",     0136371, 0x0012, 0x3456);
     TEST("CMPA.W (*+$1234,PC),A6",    0136372, 0x1232);
     TEST("CMPA.W (*+$12,PC,D3.W),A6", 0136373, 0x3010);
@@ -1039,7 +1086,7 @@ void test_integer() {
     TEST("CMPA.L -(A2),A6",           0136742);
     TEST("CMPA.L ($1234,A2),A6",      0136752, 0x1234);
     TEST("CMPA.L ($12,A2,D3.L),A6",   0136762, 0x3812);
-    TEST("CMPA.L ($FFFFFC).W,A6",     0136770, 0xFFFC);
+    ABSW("CMPA.L (@W).W,A6", "FFFC",  0136770, 0xFFFC);
     TEST("CMPA.L ($123454).L,A6",     0136771, 0x0012, 0x3454);
     TEST("CMPA.L (*+$1234,PC),A6",    0136772, 0x1232);
     TEST("CMPA.L (*+$12,PC,D3.W),A6", 0136773, 0x3010);
@@ -1097,7 +1144,7 @@ void test_integer() {
     TEST("DIVS.W -(A2),D7",           0107742);
     TEST("DIVS.W ($1234,A2),D7",      0107752, 0x1234);
     TEST("DIVS.W ($12,A2,D3.L),D7",   0107762, 0x3812);
-    TEST("DIVS.W ($FFFFFE).W,D7",     0107770, 0xFFFE);
+    ABSW("DIVS.W (@W).W,D7", "FFFE",  0107770, 0xFFFE);
     TEST("DIVS.W ($123456).L,D7",     0107771, 0x0012, 0x3456);
     TEST("DIVS.W (*+$1234,PC),D7",    0107772, 0x1232);
     TEST("DIVS.W (*+$12,PC,D3.W),D7", 0107773, 0x3010);
@@ -1111,7 +1158,7 @@ void test_integer() {
     TEST("DIVU.W -(A2),D7",           0107342);
     TEST("DIVU.W ($1234,A2),D7",      0107352, 0x1234);
     TEST("DIVU.W ($12,A2,D3.L),D7",   0107362, 0x3812);
-    TEST("DIVU.W ($FFFFFE).W,D7",     0107370, 0xFFFE);
+    ABSW("DIVU.W (@W).W,D7", "FFFE",  0107370, 0xFFFE);
     TEST("DIVU.W ($123456).L,D7",     0107371, 0x0012, 0x3456);
     TEST("DIVU.W (*+$1234,PC),D7",    0107372, 0x1232);
     TEST("DIVU.W (*+$12,PC,D3.W),D7", 0107373, 0x3010);
@@ -1130,7 +1177,7 @@ void test_integer() {
     TEST("MULS.W -(A2),D7",           0147742);
     TEST("MULS.W ($1234,A2),D7",      0147752, 0x1234);
     TEST("MULS.W ($12,A2,D3.L),D7",   0147762, 0x3812);
-    TEST("MULS.W ($FFFFFE).W,D7",     0147770, 0xFFFE);
+    ABSW("MULS.W (@W).W,D7", "FFFE",  0147770, 0xFFFE);
     TEST("MULS.W ($123456).L,D7",     0147771, 0x0012, 0x3456);
     TEST("MULS.W (*+$1234,PC),D7",    0147772, 0x1232);
     TEST("MULS.W (*+$12,PC,D3.W),D7", 0147773, 0x3010);
@@ -1144,7 +1191,7 @@ void test_integer() {
     TEST("MULU.W -(A2),D7",           0147342);
     TEST("MULU.W ($1234,A2),D7",      0147352, 0x1234);
     TEST("MULU.W ($12,A2,D3.L),D7",   0147362, 0x3812);
-    TEST("MULU.W ($FFFFFE).W,D7",     0147370, 0xFFFE);
+    ABSW("MULU.W (@W).W,D7", "FFFE",  0147370, 0xFFFE);
     TEST("MULU.W ($123456).L,D7",     0147371, 0x0012, 0x3456);
     TEST("MULU.W (*+$1234,PC),D7",    0147372, 0x1232);
     TEST("MULU.W (*+$12,PC,D3.W),D7", 0147373, 0x3010);
@@ -1234,7 +1281,7 @@ void test_integer() {
     TEST("SUB.B -(A2),D7",           0117042);
     TEST("SUB.B ($1234,A2),D7",      0117052, 0x1234);
     TEST("SUB.B ($12,A2,D3.L),D7",   0117062, 0x3812);
-    TEST("SUB.B ($FFFFFF).W,D7",     0117070, 0xFFFF);
+    ABSW("SUB.B (@W).W,D7", "FFFF",  0117070, 0xFFFF);
     TEST("SUB.B ($123456).L,D7",     0117071, 0x0012, 0x3456);
     TEST("SUB.B (*+$1234,PC),D7",    0117072, 0x1232);
     TEST("SUB.B (*+$12,PC,D3.W),D7", 0117073, 0x3010);
@@ -1246,7 +1293,7 @@ void test_integer() {
     TEST("SUB.W -(A2),D7",           0117142);
     TEST("SUB.W ($1234,A2),D7",      0117152, 0x1234);
     TEST("SUB.W ($12,A2,D3.L),D7",   0117162, 0x3812);
-    TEST("SUB.W ($FFFFFE).W,D7",     0117170, 0xFFFE);
+    ABSW("SUB.W (@W).W,D7", "FFFE",  0117170, 0xFFFE);
     TEST("SUB.W ($123456).L,D7",     0117171, 0x0012, 0x3456);
     TEST("SUB.W (*+$1234,PC),D7",    0117172, 0x1232);
     TEST("SUB.W (*+$12,PC,D3.W),D7", 0117173, 0x3010);
@@ -1258,7 +1305,7 @@ void test_integer() {
     TEST("SUB.L -(A2),D7",           0117242);
     TEST("SUB.L ($1234,A2),D7",      0117252, 0x1234);
     TEST("SUB.L ($12,A2,D3.L),D7",   0117262, 0x3812);
-    TEST("SUB.L ($FFFFFC).W,D7",     0117270, 0xFFFC);
+    ABSW("SUB.L (@W).W,D7", "FFFC",  0117270, 0xFFFC);
     TEST("SUB.L ($123454).L,D7",     0117271, 0x0012, 0x3454);
     TEST("SUB.L (*+$1234,PC),D7",    0117272, 0x1232);
     TEST("SUB.L (*+$12,PC,D3.W),D7", 0117273, 0x3010);
@@ -1272,7 +1319,7 @@ void test_integer() {
     TEST("SUB.B D7,-(A2)",         0117442);
     TEST("SUB.B D7,($1234,A2)",    0117452, 0x1234);
     TEST("SUB.B D7,($12,A2,D3.L)", 0117462, 0x3812);
-    TEST("SUB.B D7,($FFFFFF).W",   0117470, 0xFFFF);
+    ABSW("SUB.B D7,(@W).W", "FFFF", 0117470, 0xFFFF);
     TEST("SUB.B D7,($123456).L",   0117471, 0x0012, 0x3456);
     ERRT("SUB.B D7,(*+$1234,PC)",  OPERAND_NOT_ALLOWED, "D7,(*+$1234,PC)");
     ERRT("SUB.B D7,(*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "D7,(*+$12,PC,D3)");
@@ -1284,7 +1331,7 @@ void test_integer() {
     TEST("SUB.W D7,-(A2)",         0117542);
     TEST("SUB.W D7,($1234,A2)",    0117552, 0x1234);
     TEST("SUB.W D7,($12,A2,D3.L)", 0117562, 0x3812);
-    TEST("SUB.W D7,($FFFFFE).W",   0117570, 0xFFFE);
+    ABSW("SUB.W D7,(@W).W", "FFFE", 0117570, 0xFFFE);
     TEST("SUB.W D7,($123456).L",   0117571, 0x0012, 0x3456);
     ERRT("SUB.W (*+$1234,PC)",     OPERAND_NOT_ALLOWED, "(*+$1234,PC)");
     ERRT("SUB.W (*+$12,PC,D3)",    OPERAND_NOT_ALLOWED, "(*+$12,PC,D3)");
@@ -1296,7 +1343,7 @@ void test_integer() {
     TEST("SUB.L D7,-(A2)",         0117642);
     TEST("SUB.L D7,($1234,A2)",    0117652, 0x1234);
     TEST("SUB.L D7,($12,A2,D3.L)", 0117662, 0x3812);
-    TEST("SUB.L D7,($FFFFFC).W",   0117670, 0xFFFC);
+    ABSW("SUB.L D7,(@W).W", "FFFC", 0117670, 0xFFFC);
     TEST("SUB.L D7,($123454).L",   0117671, 0x0012, 0x3454);
     ERRT("SUB.L D7,(*+$1234,PC)",  OPERAND_NOT_ALLOWED, "D7,(*+$1234,PC)");
     ERRT("SUB.L D7,(*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "D7,(*+$12,PC,D3)");
@@ -1310,7 +1357,7 @@ void test_integer() {
     TEST("SUBA.W -(A2),A6",           0116342);
     TEST("SUBA.W ($1234,A2),A6",      0116352, 0x1234);
     TEST("SUBA.W ($12,A2,D3.L),A6",   0116362, 0x3812);
-    TEST("SUBA.W ($FFFFFE).W,A6",     0116370, 0xFFFE);
+    ABSW("SUBA.W (@W).W,A6", "FFFE",  0116370, 0xFFFE);
     TEST("SUBA.W ($123456).L,A6",     0116371, 0x0012, 0x3456);
     TEST("SUBA.W (*+$1234,PC),A6",    0116372, 0x1232);
     TEST("SUBA.W (*+$12,PC,D3.W),A6", 0116373, 0x3010);
@@ -1322,7 +1369,7 @@ void test_integer() {
     TEST("SUBA.L -(A2),A6",           0116742);
     TEST("SUBA.L ($1234,A2),A6",      0116752, 0x1234);
     TEST("SUBA.L ($12,A2,D3.L),A6",   0116762, 0x3812);
-    TEST("SUBA.L ($FFFFFC).W,A6",     0116770, 0xFFFC);
+    ABSW("SUBA.L (@W).W,A6", "FFFC",  0116770, 0xFFFC);
     TEST("SUBA.L ($123454).L,A6",     0116771, 0x0012, 0x3454);
     TEST("SUBA.L (*+$1234,PC),A6",    0116772, 0x1232);
     TEST("SUBA.L (*+$12,PC,D3.W),A6", 0116773, 0x3010);
@@ -1424,7 +1471,7 @@ void test_logical() {
     TEST("AND.B -(A2),D7",           0147042);
     TEST("AND.B ($1234,A2),D7",      0147052, 0x1234);
     TEST("AND.B ($12,A2,D3.L),D7",   0147062, 0x3812);
-    TEST("AND.B ($FFFFFF).W,D7",     0147070, 0xFFFF);
+    ABSW("AND.B (@W).W,D7", "FFFF",  0147070, 0xFFFF);
     TEST("AND.B ($123456).L,D7",     0147071, 0x0012, 0x3456);
     TEST("AND.B (*+$1234,PC),D7",    0147072, 0x1232);
     TEST("AND.B (*+$12,PC,D3.W),D7", 0147073, 0x3010);
@@ -1436,7 +1483,7 @@ void test_logical() {
     TEST("AND.W -(A2),D7",           0147142);
     TEST("AND.W ($1234,A2),D7",      0147152, 0x1234);
     TEST("AND.W ($12,A2,D3.L),D7",   0147162, 0x3812);
-    TEST("AND.W ($FFFFFE).W,D7",     0147170, 0xFFFE);
+    ABSW("AND.W (@W).W,D7", "FFFE",  0147170, 0xFFFE);
     TEST("AND.W ($123456).L,D7",     0147171, 0x0012, 0x3456);
     TEST("AND.W (*+$1234,PC),D7",    0147172, 0x1232);
     TEST("AND.W (*+$12,PC,D3.W),D7", 0147173, 0x3010);
@@ -1448,7 +1495,7 @@ void test_logical() {
     TEST("AND.L -(A2),D7",           0147242);
     TEST("AND.L ($1234,A2),D7",      0147252, 0x1234);
     TEST("AND.L ($12,A2,D3.L),D7",   0147262, 0x3812);
-    TEST("AND.L ($FFFFFC).W,D7",     0147270, 0xFFFC);
+    ABSW("AND.L (@W).W,D7", "FFFC",  0147270, 0xFFFC);
     TEST("AND.L ($123454).L,D7",     0147271, 0x0012, 0x3454);
     TEST("AND.L (*+$1234,PC),D7",    0147272, 0x1232);
     TEST("AND.L (*+$12,PC,D3.W),D7", 0147273, 0x3010);
@@ -1462,7 +1509,7 @@ void test_logical() {
     TEST("AND.B D7,-(A2)",         0147442);
     TEST("AND.B D7,($1234,A2)",    0147452, 0x1234);
     TEST("AND.B D7,($12,A2,D3.L)", 0147462, 0x3812);
-    TEST("AND.B D7,($FFFFFF).W",   0147470, 0xFFFF);
+    ABSW("AND.B D7,(@W).W", "FFFF", 0147470, 0xFFFF);
     TEST("AND.B D7,($123456).L",   0147471, 0x0012, 0x3456);
     ERRT("AND.B D7,(*+$1234,PC)",  OPERAND_NOT_ALLOWED, "D7,(*+$1234,PC)");
     ERRT("AND.B D7,(*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "D7,(*+$12,PC,D3)");
@@ -1474,7 +1521,7 @@ void test_logical() {
     TEST("AND.W D7,-(A2)",         0147542);
     TEST("AND.W D7,($1234,A2)",    0147552, 0x1234);
     TEST("AND.W D7,($12,A2,D3.L)", 0147562, 0x3812);
-    TEST("AND.W D7,($FFFFFE).W",   0147570, 0xFFFE);
+    ABSW("AND.W D7,(@W).W", "FFFE", 0147570, 0xFFFE);
     TEST("AND.W D7,($123456).L",   0147571, 0x0012, 0x3456);
     ERRT("AND.W D7,(*+$1234,PC)",  OPERAND_NOT_ALLOWED, "D7,(*+$1234,PC)");
     ERRT("AND.W D7,(*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "D7,(*+$12,PC,D3)");
@@ -1486,7 +1533,7 @@ void test_logical() {
     TEST("AND.L D7,-(A2)",         0147642);
     TEST("AND.L D7,($1234,A2)",    0147652, 0x1234);
     TEST("AND.L D7,($12,A2,D3.L)", 0147662, 0x3812);
-    TEST("AND.L D7,($FFFFFC).W",   0147670, 0xFFFC);
+    ABSW("AND.L D7,(@W).W", "FFFC", 0147670, 0xFFFC);
     TEST("AND.L D7,($123454).L",   0147671, 0x0012, 0x3454);
     ERRT("AND.L D7,(*+$1234,PC)",  OPERAND_NOT_ALLOWED, "D7,(*+$1234,PC)");
     ERRT("AND.L D7,(*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "D7,(*+$12,PC,D3)");
@@ -1538,7 +1585,7 @@ void test_logical() {
     TEST("EOR.B D7,-(A2)",         0137442);
     TEST("EOR.B D7,($1234,A2)",    0137452, 0x1234);
     TEST("EOR.B D7,($12,A2,D3.L)", 0137462, 0x3812);
-    TEST("EOR.B D7,($FFFFFF).W",   0137470, 0xFFFF);
+    ABSW("EOR.B D7,(@W).W", "FFFF", 0137470, 0xFFFF);
     TEST("EOR.B D7,($123456).L",   0137471, 0x0012, 0x3456);
     ERRT("EOR.B D7,(*+$1234,PC)",  OPERAND_NOT_ALLOWED, "D7,(*+$1234,PC)");
     ERRT("EOR.B D7,(*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "D7,(*+$12,PC,D3)");
@@ -1550,7 +1597,7 @@ void test_logical() {
     TEST("EOR.W D7,-(A2)",         0137542);
     TEST("EOR.W D7,($1234,A2)",    0137552, 0x1234);
     TEST("EOR.W D7,($12,A2,D3.L)", 0137562, 0x3812);
-    TEST("EOR.W D7,($FFFFFE).W",   0137570, 0xFFFE);
+    ABSW("EOR.W D7,(@W).W", "FFFE", 0137570, 0xFFFE);
     TEST("EOR.W D7,($123456).L",   0137571, 0x0012, 0x3456);
     ERRT("EOR.W D7,(*+$1234,PC)",  OPERAND_NOT_ALLOWED, "D7,(*+$1234,PC)");
     ERRT("EOR.W D7,(*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "D7,(*+$12,PC,D3)");
@@ -1562,7 +1609,7 @@ void test_logical() {
     TEST("EOR.L D7,-(A2)",         0137642);
     TEST("EOR.L D7,($1234,A2)",    0137652, 0x1234);
     TEST("EOR.L D7,($12,A2,D3.L)", 0137662, 0x3812);
-    TEST("EOR.L D7,($FFFFFC).W",   0137670, 0xFFFC);
+    ABSW("EOR.L D7,(@W).W", "FFFC", 0137670, 0xFFFC);
     TEST("EOR.L D7,($123454).L",   0137671, 0x0012, 0x3454);
     ERRT("EOR.L D7,(*+$1234,PC)",  OPERAND_NOT_ALLOWED, "D7,(*+$1234,PC)");
     ERRT("EOR.L D7,(*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "D7,(*+$12,PC,D3)");
@@ -1652,7 +1699,7 @@ void test_logical() {
     TEST("OR.B -(A2),D7",           0107042);
     TEST("OR.B ($1234,A2),D7",      0107052, 0x1234);
     TEST("OR.B ($12,A2,D3.L),D7",   0107062, 0x3812);
-    TEST("OR.B ($FFFFFF).W,D7",     0107070, 0xFFFF);
+    ABSW("OR.B (@W).W,D7", "FFFF",  0107070, 0xFFFF);
     TEST("OR.B ($123456).L,D7",     0107071, 0x0012, 0x3456);
     TEST("OR.B (*+$1234,PC),D7",    0107072, 0x1232);
     TEST("OR.B (*+$12,PC,D3.W),D7", 0107073, 0x3010);
@@ -1664,7 +1711,7 @@ void test_logical() {
     TEST("OR.W -(A2),D7",           0107142);
     TEST("OR.W ($1234,A2),D7",      0107152, 0x1234);
     TEST("OR.W ($12,A2,D3.L),D7",   0107162, 0x3812);
-    TEST("OR.W ($FFFFFE).W,D7",     0107170, 0xFFFE);
+    ABSW("OR.W (@W).W,D7", "FFFE",  0107170, 0xFFFE);
     TEST("OR.W ($123456).L,D7",     0107171, 0x0012, 0x3456);
     TEST("OR.W (*+$1234,PC),D7",    0107172, 0x1232);
     TEST("OR.W (*+$12,PC,D3.W),D7", 0107173, 0x3010);
@@ -1676,7 +1723,7 @@ void test_logical() {
     TEST("OR.L -(A2),D7",           0107242);
     TEST("OR.L ($1234,A2),D7",      0107252, 0x1234);
     TEST("OR.L ($12,A2,D3.L),D7",   0107262, 0x3812);
-    TEST("OR.L ($FFFFFC).W,D7",     0107270, 0xFFFC);
+    ABSW("OR.L (@W).W,D7", "FFFC",  0107270, 0xFFFC);
     TEST("OR.L ($123454).L,D7",     0107271, 0x0012, 0x3454);
     TEST("OR.L (*+$1234,PC),D7",    0107272, 0x1232);
     TEST("OR.L (*+$12,PC,D3.W),D7", 0107273, 0x3010);
@@ -1690,7 +1737,7 @@ void test_logical() {
     TEST("OR.B D7,-(A2)",         0107442);
     TEST("OR.B D7,($1234,A2)",    0107452, 0x1234);
     TEST("OR.B D7,($12,A2,D3.L)", 0107462, 0x3812);
-    TEST("OR.B D7,($FFFFFF).W",   0107470, 0xFFFF);
+    ABSW("OR.B D7,(@W).W", "FFFF", 0107470, 0xFFFF);
     TEST("OR.B D7,($123456).L",   0107471, 0x0012, 0x3456);
     ERRT("OR.B D7,(*+$1234,PC)",  OPERAND_NOT_ALLOWED, "D7,(*+$1234,PC)");
     ERRT("OR.B D7,(*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "D7,(*+$12,PC,D3)");
@@ -1702,7 +1749,7 @@ void test_logical() {
     TEST("OR.W D7,-(A2)",         0107542);
     TEST("OR.W D7,($1234,A2)",    0107552, 0x1234);
     TEST("OR.W D7,($12,A2,D3.L)", 0107562, 0x3812);
-    TEST("OR.W D7,($FFFFFE).W",   0107570, 0xFFFE);
+    ABSW("OR.W D7,(@W).W", "FFFE", 0107570, 0xFFFE);
     TEST("OR.W D7,($123456).L",   0107571, 0x0012, 0x3456);
     ERRT("OR.W D7,(*+$1234,PC)",  OPERAND_NOT_ALLOWED, "D7,(*+$1234,PC)");
     ERRT("OR.W D7,(*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "D7,(*+$12,PC,D3)");
@@ -1714,7 +1761,7 @@ void test_logical() {
     TEST("OR.L D7,-(A2)",         0107642);
     TEST("OR.L D7,($1234,A2)",    0107652, 0x1234);
     TEST("OR.L D7,($12,A2,D3.L)", 0107662, 0x3812);
-    TEST("OR.L D7,($FFFFFC).W",   0107670, 0xFFFC);
+    ABSW("OR.L D7,(@W).W", "FFFC", 0107670, 0xFFFC);
     TEST("OR.L D7,($123454).L",   0107671, 0x0012, 0x3454);
     ERRT("OR.L D7,(*+$1234,PC)",  OPERAND_NOT_ALLOWED, "D7,(*+$1234,PC)");
     ERRT("OR.L D7,(*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "D7,(*+$12,PC,D3)");
@@ -2435,7 +2482,11 @@ void test_program() {
     AERRT(0x010000, "BLE *-$8000", OPERAND_TOO_FAR, "*-$8000", 0060000 | 0xF00, 0x7FFE);
     AERRT(0x010000, "BLE *+$8002", OPERAND_TOO_FAR, "*+$8002", 0060000 | 0xF00, 0x8000);
     AERRT(0x001000, "BLE *-$1002", OVERFLOW_RANGE,  "*-$1002", 0060000 | 0xF00, 0xEFFC);
-    AERRT(0xFFF000, "BLE *+$1000", OVERFLOW_RANGE,  "*+$1000", 0060000 | 0xF00, 0x0FFE);
+    if (firstGen()) {
+        AERRT(0xFFF000, "BLE *+$1000", OVERFLOW_RANGE,  "*+$1000", 0060000 | 0xF00, 0x0FFE);
+    } else {
+        ATEST(0xFFF000, "BLE *+$1000", 0060000 | 0xF00, 0x0FFE);
+    }
 
     // DBcc Dn,labelL 005|cc|31|Dn
     ATEST(0x010000, "DBRA   D2,*-$7FFE", 0050312 | 0x100, 0x8000);
@@ -2447,7 +2498,11 @@ void test_program() {
     AERRT(0x010000, "DBRA   D2,*-$8000", OPERAND_TOO_FAR, "*-$8000", 0050312 | 0x100, 0x7FFE);
     AERRT(0x010000, "DBRA   D2,*+$8002", OPERAND_TOO_FAR, "*+$8002", 0050312 | 0x100, 0x8000);
     AERRT(0x001000, "DBRA   D2,*-$1002", OVERFLOW_RANGE,  "*-$1002", 0050312 | 0x100, 0xEFFC);
-    AERRT(0xFFF000, "DBRA   D2,*+$1000", OVERFLOW_RANGE,  "*+$1000", 0050312 | 0x100, 0x0FFE);
+    if (firstGen()) {
+        AERRT(0xFFF000, "DBRA   D2,*+$1000", OVERFLOW_RANGE,  "*+$1000", 0050312 | 0x100, 0x0FFE);
+    } else {
+        ATEST(0xFFF000, "DBRA   D2,*+$1000", 0050312 | 0x100, 0x0FFE);
+    }
     AERRT(0x010000, "DBRA   D2,*+3",     OPERAND_NOT_ALIGNED, "*+3", 0050312 | 0x100, 0x0001);
     AERRT(0x010000, "DBRA   D2,*-3",     OPERAND_NOT_ALIGNED, "*-3", 0050312 | 0x100, 0xFFFB);
     AERRT(0x010000, "DBRA.B D2,*-2",  ILLEGAL_SIZE, "DBRA.B D2,*-2", 0050312 | 0x100, 0xFFFC);
@@ -2699,7 +2754,11 @@ void test_program() {
     ATEST(0x010000, "BSR.W *+$8000", 0060400, 0x7FFE);
     AERRT(0x010000, "BSR   *+$8002", OPERAND_TOO_FAR, "*+$8002", 0060400, 0x8000);
     AERRT(0x001000, "BSR   *-$1002", OVERFLOW_RANGE,  "*-$1002", 0060400, 0xEFFC);
-    AERRT(0xFFF000, "BSR   *+$1000", OVERFLOW_RANGE,  "*+$1000", 0060400, 0x0FFE);
+    if (firstGen()) {
+        AERRT(0xFFF000, "BSR *+$1000", OVERFLOW_RANGE,  "*+$1000", 0060400, 0x0FFE);
+    } else {
+        ATEST(0xFFF000, "BSR *+$1000", 0060400, 0x0FFE);
+    }
     AERRT(0x010000, "BSR   *+3",     OPERAND_NOT_ALIGNED, "*+3", 0060400 | 0x01);
     AERRT(0x010000, "BSR   *-3",     OPERAND_NOT_ALIGNED, "*-3", 0060400 | 0xFB);
 
@@ -2840,10 +2899,10 @@ void test_system() {
     TEST("RTE", 047163);
 
     // RTD
-    if (mc68010()) {
-        TEST("RTD #$1234", 047164, 0x1234);
-    } else {
+    if (mc68k00()) {
         ERUI("RTD #$1234");
+    } else {
+        TEST("RTD #$1234", 047164, 0x1234);
     }
 
     // RTS
@@ -2856,7 +2915,9 @@ void test_system() {
     TEST("RTR", 047167);
 
     // MOVEC
-    if (mc68010()) {
+    if (mc68k00()) {
+        ERUI("MOVEC VBR, A4");
+    } else {
         TEST("MOVEC SFC, D1", 047172, 0x1000);
         TEST("MOVEC DFC, A2", 047172, 0xA001);
         TEST("MOVEC USP, D3", 047172, 0x3800);
@@ -2867,8 +2928,6 @@ void test_system() {
         TEST("MOVEC D7, USP", 047173, 0x7800);
         TEST("MOVEC A0, VBR", 047173, 0x8801);
         ERRT("MOVEC D1, CCR", OPERAND_NOT_ALLOWED, "D1, CCR");
-    } else {
-        ERUI("MOVEC VBR, A4");
     }
 
     if (mc68k00()) {
@@ -2888,7 +2947,7 @@ void test_system() {
     TEST("CHK.W -(A2),D7",           0047642);
     TEST("CHK.W ($1234,A2),D7",      0047652, 0x1234);
     TEST("CHK.W ($12,A2,D3.L),D7",   0047662, 0x3812);
-    TEST("CHK.W ($FFFFFE).W,D7",     0047670, 0xFFFE);
+    ABSW("CHK.W (@W).W,D7", "FFFE",  0047670, 0xFFFE);
     TEST("CHK.W ($123456).L,D7",     0047671, 0x0012, 0x3456);
     TEST("CHK.W (*+$1234,PC),D7",    0047672, 0x1232);
     TEST("CHK.W (*+$12,PC,D3.W),D7", 0047673, 0x3010);
@@ -2995,7 +3054,7 @@ void test_areg_alias() {
     TEST("MOVE.W -(A2),A6",           0036142);
     TEST("MOVE.W ($1234,A2),A6",      0036152, 0x1234);
     TEST("MOVE.W ($12,A2,D3.L),A6",   0036162, 0x3812);
-    TEST("MOVE.W ($FFFFFE).W,A6",     0036170, 0xFFFE);
+    ABSW("MOVE.W (@W).W,A6", "FFFE",  0036170, 0xFFFE);
     TEST("MOVE.W ($123456).L,A6",     0036171, 0x0012, 0x3456);
     TEST("MOVE.W (*+$1234,PC),A6",    0036172, 0x1232);
     TEST("MOVE.W (*+$12,PC,D3.W),A6", 0036173, 0x3010);
@@ -3007,7 +3066,7 @@ void test_areg_alias() {
     TEST("MOVE.L -(A2),A6",           0026142);
     TEST("MOVE.L ($1234,A2),A6",      0026152, 0x1234);
     TEST("MOVE.L ($12,A2,D3.L),A6",   0026162, 0x3812);
-    TEST("MOVE.L ($FFFFFC).W,A6",     0026170, 0xFFFC);
+    ABSW("MOVE.L (@W).W,A6", "FFFC",  0026170, 0xFFFC);
     TEST("MOVE.L ($123454).L,A6",     0026171, 0x0012, 0x3454);
     TEST("MOVE.L (*+$1234,PC),A6",    0026172, 0x1232);
     TEST("MOVE.L (*+$12,PC,D3.W),A6", 0026173, 0x3010);
@@ -3185,8 +3244,8 @@ void test_float_move() {
     TEST("FMOVE.L ($56,A3,D2.L), FPSR",  0xF200|063, 0x8800, 0x2856);
     TEST("FMOVE.L ($67,A4,A3.W), FPIAR", 0xF200|064, 0x8400, 0xB067);
     TEST("FMOVE.L ($00789A).W, FPCR",  0xF200|070, 0x9000, 0x789A);
-    TEST("FMOVE.L ($FF89AA).W, FPSR",  0xF200|070, 0x8800, 0x89AA);
-    TEST("FMOVE.L ($FF9ABC).W, FPIAR", 0xF200|070, 0x8400, 0x9ABC);
+    ABSW("FMOVE.L (@W).W, FPSR", "89AA", 0xF200|070, 0x8800, 0x89AA);
+    ABSW("FMOVE.L (@W).W, FPIAR", "9ABC", 0xF200|070, 0x8400, 0x9ABC);
     TEST("FMOVE.L ($ABCDEE).L, FPCR",  0xF200|071, 0x9000, 0x00AB, 0xCDEE);
     TEST("FMOVE.L ($BCDEF0).L, FPSR",  0xF200|071, 0x8800, 0x00BC, 0xDEF0);
     TEST("FMOVE.L ($CDEF00).L, FPIAR", 0xF200|071, 0x8400, 0x00CD, 0xEF00);
@@ -3222,8 +3281,8 @@ void test_float_move() {
     TEST("FMOVE.L FPSR, ($56,A3,D2.L)",  0xF200|063, 0xA800, 0x2856);
     TEST("FMOVE.L FPIAR, ($67,A4,A3.W)", 0xF200|064, 0xA400, 0xB067);
     TEST("FMOVE.L FPCR, ($00789A).W",    0xF200|070, 0xB000, 0x789A);
-    TEST("FMOVE.L FPSR, ($FF89AA).W",    0xF200|070, 0xA800, 0x89AA);
-    TEST("FMOVE.L FPIAR, ($FF9ABC).W",   0xF200|070, 0xA400, 0x9ABC);
+    ABSW("FMOVE.L FPSR, (@W).W", "89AA", 0xF200|070, 0xA800, 0x89AA);
+    ABSW("FMOVE.L FPIAR, (@W).W", "9ABC", 0xF200|070, 0xA400, 0x9ABC);
     TEST("FMOVE.L FPCR, ($ABCDEE).L",    0xF200|071, 0xB000, 0x00AB, 0xCDEE);
     TEST("FMOVE.L FPSR, ($BCDEF0).L",    0xF200|071, 0xA800, 0x00BC, 0xDEF0);
     TEST("FMOVE.L FPIAR, ($CDEF00).L",   0xF200|071, 0xA400, 0x00CD, 0xEF00);
@@ -4589,7 +4648,11 @@ void test_float_branch() {
     TEST("FBST   *+$123456",    0xF2DF, 0x0012, 0x3454);
     ATEST(0x10000, "FBST   $723456",  0xF2DF, 0x0071, 0x3454);
     ATEST(0x10000, "FBST   $F23456",  0xF2DF, 0x00F1, 0x3454);
-    AERRT(0x10000, "FBST $12345678",  OVERFLOW_RANGE, "$12345678", 0xF2DF, 0x1233, 0x5676);
+    if (firstGen()) {
+        AERRT(0x10000, "FBST $12345678", OVERFLOW_RANGE, "$12345678", 0xF2DF, 0x1233, 0x5676);
+    } else {
+        ATEST(0x10000, "FBST $12345678", 0xF2DF, 0x1233, 0x5676);
+    }
 }
 
 void test_float_trap() {
