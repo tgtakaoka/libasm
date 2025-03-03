@@ -684,6 +684,22 @@
       clrl    (-0x4f,a0,d4.w)
       clrl    (0x43ba).w
       clrl    (0x44bc).l
+      movew   ccr, d0
+      movew   ccr, (a0)
+      movew   ccr, (a0)+
+      movew   ccr, -(a0)
+      movew   ccr, (0x43e9,a0)
+      movew   ccr, (-0x8000,a0)
+      movew   ccr, (-15,a0,d4.w)
+      movew   ccr, (0,a0,d4.w)
+      movew   ccr, (0,a0,d4.l)
+      movew   ccr, (-0x80,a0,d4.l)
+      movew   ccr, (0,a0,a0.w)
+      movew   ccr, (-0x80,a0,a0.w)
+      movew   ccr, (0,a0,a0.l)
+      movew   ccr, (-0x80,a0,a0.l)
+      movew   ccr, (0x43fa).w
+      movew   ccr, (0x44fc).l
       negb    d0
       negb    (a0)
       negb    (a0)+
