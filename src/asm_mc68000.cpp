@@ -338,14 +338,7 @@ bool inFloatOperand(const AsmInsn &insn, AddrMode mode) {
 }
 }  // namespace
 
-Error AsmMc68000::encodeOperand(
-        AsmInsn &insn, OprSize size, const Operand &op, AddrMode mode, OprPos pos) const {
-    if (mode == M_NONE) {
-        if (op.mode != M_NONE)
-            insn.setErrorIf(op, UNKNOWN_OPERAND);
-        return insn.getError();
-    }
-
+int_fast8_t AsmMc68000::encodeAddrMode(AsmInsn &insn, const Operand &op, OprPos pos) const {
     const auto mode_gp = modePos(pos);
     if (mode_gp >= 0) {
         const auto m = EaMc68000::encodeMode(op.mode);
@@ -365,18 +358,30 @@ Error AsmMc68000::encodeOperand(
         if (insn.dstPos() == EX_DL || EaMc68000::encodeMode(insn.dstOp.mode) != M_PDEC)
             insn.embedPostfix(0x1000);
     }
+    return post_gp;
+}
 
-    const auto val32 = op.val.getUnsigned();
+Error AsmMc68000::encodeOperand(
+        AsmInsn &insn, OprSize size, const Operand &op, AddrMode mode, OprPos pos) const {
+    if (mode == M_NONE) {
+        if (op.mode != M_NONE)
+            insn.setErrorIf(op, UNKNOWN_OPERAND);
+        return insn.getError();
+    }
+    auto val32 = op.val.getUnsigned();
     switch (op.mode) {
-    case M_DREG:
+    case M_DREG: {
         if (inFloatOperand(insn, mode)) {
             if (size == SZ_DUBL || size == SZ_XTND || size == SZ_PBCD)
                 insn.setErrorIf(op, ILLEGAL_SIZE);
         }
+        const auto post_gp = encodeAddrMode(insn, op, pos);
         if (post_gp >= 0)
             insn.embedPostfix(encodeGeneralRegNo(op.reg) << post_gp);
         break;
-    case M_AREG:
+    }
+    case M_AREG: {
+        const auto post_gp = encodeAddrMode(insn, op, pos);
         if (post_gp >= 0) {
             // MOVES.B An is OK
             insn.embedPostfix(encodeGeneralRegNo(op.reg) << post_gp);
@@ -384,21 +389,23 @@ Error AsmMc68000::encodeOperand(
             insn.setErrorIf(op, OPERAND_NOT_ALLOWED);
         }
         break;
-    case M_INDX:
-        encodeBriefExtension(insn, op, static_cast<Config::ptrdiff_t>(val32));
-        break;
-    case M_PCIDX:
-        encodeBriefExtension(insn, op, op.offset(insn));
+    }
+    case M_AIND:
+    case M_PINC:
+    case M_PDEC:
+        encodeAddrMode(insn, op, pos);
         break;
     case M_DISP:
+        encodeAddrMode(insn, op, pos);
         encodeDisplacement(insn, op, static_cast<Config::ptrdiff_t>(val32));
         break;
-    case M_PCDSP:
-        insn.setErrorIf(op, checkAlignment(insn, size, op));
-        encodeDisplacement(insn, op, op.offset(insn));
+    case M_INDX:
+        encodeAddrMode(insn, op, pos);
+        encodeBriefExtension(insn, op, static_cast<Config::ptrdiff_t>(val32));
         break;
     case M_AWORD:
     case M_ALONG:
+        encodeAddrMode(insn, op, pos);
         insn.setErrorIf(op, checkAlignment(insn, size, op));
         if (op.mode == M_AWORD) {
             insn.emitOperand16(val32);
@@ -406,9 +413,28 @@ Error AsmMc68000::encodeOperand(
             insn.emitOperand32(val32);
         }
         break;
+    case M_PCDSP:
+        encodeAddrMode(insn, op, pos);
+        insn.setErrorIf(op, checkAlignment(insn, size, op));
+        encodeDisplacement(insn, op, op.offset(insn));
+        break;
+    case M_PCIDX:
+        encodeAddrMode(insn, op, pos);
+        encodeBriefExtension(insn, op, op.offset(insn));
+        break;
     case M_IMDAT:
-        if (mode == M_IMBIT)
+        if (mode == M_IMBIT) {
+            if (size == SZ_BYTE && op.val.overflow(7)) {
+                insn.setErrorIf(insn.srcOp, ILLEGAL_BIT_NUMBER);
+                val32 &= 7;
+            }
+            if (insn.oprSize() == SZ_LONG && op.val.overflow(31)) {
+                insn.setErrorIf(insn.srcOp, ILLEGAL_BIT_NUMBER);
+                val32 &= 0x1F;
+            }
+            insn.emitOperand16(val32);
             break;
+        }
         if (mode == M_IM3) {
             // "Zero means 2^3" unsigned 3-bit.
             if (op.val.overflow(8))
@@ -446,6 +472,7 @@ Error AsmMc68000::encodeOperand(
         }
         /* Fall-through */
     case M_IMFLT:
+        encodeAddrMode(insn, op, pos);
         encodeImmediate(insn, op, size);
         break;
     case M_LABEL:
@@ -458,10 +485,15 @@ Error AsmMc68000::encodeOperand(
     case M_FPREG:
         if (mode == M_FPMLT) {
             encodeFloatRegisterList(insn, op);
-        } else if (post_gp >= 0) {
-            insn.embedPostfix(encodeFloatRegNo(op.reg) << post_gp);
-            if (insn.dst() == M_NONE)
-                insn.embedPostfix(encodeFloatRegNo(op.reg) << postPos(EX_RY));
+        } else {
+            const auto post_gp = encodeAddrMode(insn, op, pos);
+            if (post_gp >= 0) {
+                insn.embedPostfix(encodeFloatRegNo(op.reg) << post_gp);
+                if (insn.dst() == M_NONE) {
+                    // Float instruction which omits destination register
+                    insn.embedPostfix(encodeFloatRegNo(op.reg) << postPos(EX_RY));
+                }
+            }
         }
         break;
     case M_FSICO:
@@ -482,7 +514,7 @@ Error AsmMc68000::encodeOperand(
         break;
     case M_USP:
     case M_CREG:
-        if (post_gp == 0)
+        if (postPos(pos) == 0)
             insn.embedPostfix(encodeControlRegNo(op.reg));
         break;
     default:
@@ -979,26 +1011,11 @@ Error AsmMc68000::encodeImpl(StrScanner &scan, Insn &_insn) const {
     insn.setErrorIf(insn.dstOp);
     const auto src = insn.src();
     const auto dst = insn.dst();
+    // Register list must be just after instruction code
     if (src == M_MULT)
         encodeRegisterList(insn, insn.srcOp, insn.dstOp.mode == M_PDEC);
     if (dst == M_MULT)
         encodeRegisterList(insn, insn.dstOp);
-    if (src == M_IMBIT) {
-        auto bitno = insn.srcOp.val.getUnsigned();
-        if (insn.srcOp.mode != M_IMDAT) {
-            insn.setErrorIf(insn.srcOp, OPERAND_NOT_ALLOWED);
-            bitno = 0;
-        }
-        if (insn.oprSize() == SZ_BYTE && bitno >= 8) {
-            insn.setErrorIf(insn.srcOp, ILLEGAL_BIT_NUMBER);
-            bitno &= 7;
-        }
-        if (insn.oprSize() == SZ_LONG && bitno >= 32) {
-            insn.setErrorIf(insn.srcOp, ILLEGAL_BIT_NUMBER);
-            bitno &= 0x1F;
-        }
-        insn.emitOperand16(bitno);
-    }
     const auto osize = (isize == ISZ_NONE) ? insn.oprSize() : OprSize(isize);
     emitOprSize(insn, isize);
     encodeOperand(insn, osize, insn.srcOp, src, insn.srcPos());
