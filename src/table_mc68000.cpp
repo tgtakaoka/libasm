@@ -1141,6 +1141,7 @@ using Cpu = entry::CpuBase<CpuType, EntryPage>;
 constexpr Cpu CPU_TABLE[] PROGMEM = {
         {MC68000, TEXT_CPU_68000, ARRAY_RANGE(MC68000_PAGES)},
         {MC68010, TEXT_CPU_68010, ARRAY_RANGE(MC68010_PAGES)},
+        {MC68020, TEXT_CPU_68020, ARRAY_RANGE(MC68010_PAGES)},
 };
 
 const Cpu *cpu(CpuType cpuType) {
