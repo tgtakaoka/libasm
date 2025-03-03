@@ -113,6 +113,7 @@ struct DecimalString {
 struct DisInsn final : DisInsnImpl<Config>, EntryInsn {
     DisInsn(Insn &insn, DisMemory &memory, const StrBuffer &out) : DisInsnImpl(insn, memory, out) {}
     InsnSize insnSize() const { return flags().insnSize(); }
+    void appendName(StrBuffer &out, char c);
 
     void readPostfix() {
         if (!hasPostfix())
