@@ -32,6 +32,10 @@ bool mc68010() {
     return strcmp_P("68010", disassembler.config().cpu_P()) == 0;
 }
 
+bool mc68020() {
+    return strcmp_P("68020", disassembler.config().cpu_P()) == 0;
+}
+
 bool firstGen() {
     return mc68k00() || mc68010();
 }
@@ -2073,6 +2077,12 @@ void test_program() {
     ATEST(0x10000, "BRA", ".-0x7FFE", 0060000 | 0x000, 0x8000);
     disassembler.setOption("gnu-as", "off");
 
+    if (firstGen()) {
+        AERRT(0x10000, "BRA", "*+1", OPERAND_NOT_ALIGNED, "*+1", 0060000 | 0x000 | 0xFF);
+    } else {
+        ATEST(0x10000, "BRA.L", "*+2", 0060000 | 0x000 | 0xFF, 0x0000, 0x0000);
+    }
+
     // DBcc Dn,labelL 005|cc|31|Dn
     ATEST(0x10000, "DBRA", "D2, *-$7FFE",                      0050312 | 0x100, 0x8000);
     ATEST(0x10000, "DBRA", "D2, *-$007E",                      0050312 | 0x100, 0xFF80);
@@ -2304,7 +2314,11 @@ void test_program() {
     ATEST(0x10000, "BRA", "*+$8000",   0060000, 0x7FFE);
     AERRT(0x10000, "BRA", "*-$7FFD", OPERAND_NOT_ALIGNED, "*-$7FFD", 0060000, 0x8001);
     AERRT(0x10000, "BRA", "*-125",   OPERAND_NOT_ALIGNED, "*-125",   0060000 | 0x81);
-    AERRT(0x10000, "BRA", "*+1",     OPERAND_NOT_ALIGNED, "*+1",     0060000 | 0xFF);
+    if (firstGen()) {
+        AERRT(0x10000, "BRA", "*+1", OPERAND_NOT_ALIGNED, "*+1",     0060000 | 0xFF);
+    } else {
+        ATEST(0x10000, "BRA.L", "*", 0060000 | 0xFF, 0xFFFF, 0xFFFE);
+    }
     AERRT(0x10000, "BRA", "*+3",     OPERAND_NOT_ALIGNED, "*+3",     0060000 | 0x01);
     AERRT(0x10000, "BRA", "*+129",   OPERAND_NOT_ALIGNED, "*+129",   0060000 | 0x7F);
     AERRT(0x10000, "BRA", "*+$8001", OPERAND_NOT_ALIGNED, "*+$8001", 0060000, 0x7FFF);
@@ -2321,7 +2335,11 @@ void test_program() {
     ATEST(0x10000, "BSR",   "*+$8000", 0060400, 0x7FFE);
     AERRT(0x10000, "BSR", "*-$7FFD", OPERAND_NOT_ALIGNED, "*-$7FFD", 0060400, 0x8001);
     AERRT(0x10000, "BSR", "*-125",   OPERAND_NOT_ALIGNED, "*-125",   0060400 | 0x81);
-    AERRT(0x10000, "BSR", "*+1",     OPERAND_NOT_ALIGNED, "*+1",     0060400 | 0xFF);
+    if (firstGen()) {
+        AERRT(0x10000, "BSR", "*+1", OPERAND_NOT_ALIGNED, "*+1",     0060400 | 0xFF);
+    } else {
+        ATEST(0x10000, "BSR.L", "*+6", 0060400 | 0xFF, 0x0000, 0x0004);
+    }
     AERRT(0x10000, "BSR", "*+3",     OPERAND_NOT_ALIGNED, "*+3",     0060400 | 0x01);
     AERRT(0x10000, "BSR", "*+129",   OPERAND_NOT_ALIGNED, "*+129",   0060400 | 0x7F);
     AERRT(0x10000, "BSR", "*+$8001", OPERAND_NOT_ALIGNED, "*+$8001", 0060400, 0x7FFF);
@@ -2337,6 +2355,9 @@ void test_program() {
     ATEST(0x10000, "BRAS", ".+128",    0060000 | 0x7E);
     ATEST(0x10000, "BRA",  ".+0x0080", 0060000, 0x007E);
     ATEST(0x10000, "BRA",  ".+0x8000", 0060000, 0x7FFE);
+    if (!firstGen()) {
+        ATEST(0x10000, "BRAL", ".", 0060000 | 0xFF, 0xFFFF, 0xFFFE);
+    }
 
     ATEST(0x10000, "BSR",  ".-0x7FFE", 0060400, 0x8000);
     ATEST(0x10000, "BSR",  ".-0x007E", 0060400, 0xFF80);
@@ -2347,6 +2368,9 @@ void test_program() {
     ATEST(0x10000, "BSRS", ".+128",    0060400 | 0x7E);
     ATEST(0x10000, "BSR",  ".+0x0080", 0060400, 0x007E);
     ATEST(0x10000, "BSR",  ".+0x8000", 0060400, 0x7FFE);
+    if (!firstGen()) {
+        ATEST(0x10000, "BSRL", ".+6", 0060400 | 0xFF, 0x0000, 0x0004);
+    }
 
     disassembler.setOption("gnu-as", "off");
 
