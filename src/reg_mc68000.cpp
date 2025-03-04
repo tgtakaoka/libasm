@@ -30,40 +30,40 @@ namespace {
 // clang-format off
 
 constexpr NameEntry REG_ENTRIES[] PROGMEM = {
-    { TEXT_REG_A0,    REG_A0  },
-    { TEXT_REG_A1,    REG_A1  },
-    { TEXT_REG_A2,    REG_A2  },
-    { TEXT_REG_A3,    REG_A3  },
-    { TEXT_REG_A4,    REG_A4  },
-    { TEXT_REG_A5,    REG_A5  },
-    { TEXT_REG_A6,    REG_A6  },
-    { TEXT_REG_A7,    REG_A7  },
-    { TEXT_REG_CCR,   REG_CCR },
-    { TEXT_REG_D0,    REG_D0  },
-    { TEXT_REG_D1,    REG_D1  },
-    { TEXT_REG_D2,    REG_D2  },
-    { TEXT_REG_D3,    REG_D3  },
-    { TEXT_REG_D4,    REG_D4  },
-    { TEXT_REG_D5,    REG_D5  },
-    { TEXT_REG_D6,    REG_D6  },
-    { TEXT_REG_D7,    REG_D7  },
-    { TEXT_REG_DFC,   REG_DFC },
-    { TEXT_REG_FP0,   REG_FP0 },
-    { TEXT_REG_FP1,   REG_FP1 },
-    { TEXT_REG_FP2,   REG_FP2 },
-    { TEXT_REG_FP3,   REG_FP3 },
-    { TEXT_REG_FP4,   REG_FP4 },
-    { TEXT_REG_FP5,   REG_FP5 },
-    { TEXT_REG_FP6,   REG_FP6 },
-    { TEXT_REG_FP7,   REG_FP7 },
-    { TEXT_REG_FPCR,  REG_FPCR },
+    { TEXT_REG_A0,    REG_A0    },
+    { TEXT_REG_A1,    REG_A1    },
+    { TEXT_REG_A2,    REG_A2    },
+    { TEXT_REG_A3,    REG_A3    },
+    { TEXT_REG_A4,    REG_A4    },
+    { TEXT_REG_A5,    REG_A5    },
+    { TEXT_REG_A6,    REG_A6    },
+    { TEXT_REG_A7,    REG_A7    },
+    { TEXT_REG_CCR,   REG_CCR   },
+    { TEXT_REG_D0,    REG_D0    },
+    { TEXT_REG_D1,    REG_D1    },
+    { TEXT_REG_D2,    REG_D2    },
+    { TEXT_REG_D3,    REG_D3    },
+    { TEXT_REG_D4,    REG_D4    },
+    { TEXT_REG_D5,    REG_D5    },
+    { TEXT_REG_D6,    REG_D6    },
+    { TEXT_REG_D7,    REG_D7    },
+    { TEXT_REG_DFC,   REG_DFC   },
+    { TEXT_REG_FP0,   REG_FP0   },
+    { TEXT_REG_FP1,   REG_FP1   },
+    { TEXT_REG_FP2,   REG_FP2   },
+    { TEXT_REG_FP3,   REG_FP3   },
+    { TEXT_REG_FP4,   REG_FP4   },
+    { TEXT_REG_FP5,   REG_FP5   },
+    { TEXT_REG_FP6,   REG_FP6   },
+    { TEXT_REG_FP7,   REG_FP7   },
+    { TEXT_REG_FPCR,  REG_FPCR  },
     { TEXT_REG_FPIAR, REG_FPIAR },
-    { TEXT_REG_FPSR,  REG_FPSR },
-    { TEXT_REG_PC,    REG_PC  },
-    { TEXT_REG_SFC,   REG_SFC },
-    { TEXT_REG_SR,    REG_SR  },
-    { TEXT_REG_USP,   REG_USP },
-    { TEXT_REG_VBR,   REG_VBR },
+    { TEXT_REG_FPSR,  REG_FPSR  },
+    { TEXT_REG_PC,    REG_PC    },
+    { TEXT_REG_SFC,   REG_SFC   },
+    { TEXT_REG_SR,    REG_SR    },
+    { TEXT_REG_USP,   REG_USP   },
+    { TEXT_REG_VBR,   REG_VBR   },
 };
 
 PROGMEM constexpr NameTable TABLE{ARRAY_RANGE(REG_ENTRIES)};
@@ -136,31 +136,27 @@ Config::opcode_t encodeControlRegNo(RegName name) {
     }
 }
 
-Config::opcode_t encodeFloatRegNo(RegName name) {
-    return int8_t(name) & 7;
+uint_fast8_t encodeGeneralRegPos(RegName name) {
+    return uint_fast8_t(name);
 }
 
-uint8_t encodeGeneralRegPos(RegName name) {
-    return uint8_t(name);
-}
-
-uint8_t encodeFloatRegPos(RegName name) {
+uint_fast8_t encodeFloatRegPos(RegName name) {
     return REG_FP7 - int8_t(name);
 }
 
-uint8_t encodeFloatControlRegPos(RegName name) {
-    return REG_FPIAR - int8_t(name) + 10;
+uint_fast8_t encodeFloatControlRegPos(RegName name) {
+    return REG_FPIAR - int_fast8_t(name) + 10;
 }
 
-RegName decodeGeneralReg(uint8_t regno) {
+RegName decodeGeneralReg(uint_fast8_t regno) {
     return RegName(regno & 0xF);
 }
 
-RegName decodeDataReg(uint8_t regno) {
+RegName decodeDataReg(uint_fast8_t regno) {
     return RegName(regno & 7);
 }
 
-RegName decodeAddrReg(uint8_t regno) {
+RegName decodeAddrReg(uint_fast8_t regno) {
     return RegName((regno & 7) + 8);
 }
 
@@ -206,7 +202,7 @@ InsnSize parseSize(StrScanner &scan) {
     return ISZ_NONE;
 }
 
-uint8_t sizeNameLen(OprSize size) {
+uint_fast8_t sizeNameLen(OprSize size) {
     return size == SZ_NONE ? 0 : 2;
 }
 
@@ -231,35 +227,69 @@ char sizeSuffix(OprSize size) {
     }
 }
 
-}  // namespace reg
+namespace {
+constexpr uint8_t MODE_REG[] = {
+        000,  // M_NONE
+        000,  // M_DREG
+        010,  // M_AREG
+        020,  // M_AIND
+        030,  // M_PINC
+        040,  // M_PDEC
+        050,  // M_DISP
+        060,  // M_INDX
+        074,  // M_IMDAT
+        074,  // M_IMFLT
+        070,  // M_AWORD
+        071,  // M_ALONG
+        072,  // M_PCDSP
+        073,  // M_PCIDX
+};
 
-Config::opcode_t EaMc68000::encodeMode(AddrMode mode) {
-    if (mode == M_IMFLT)
-        mode = M_IMDAT;
-    const auto m = static_cast<uint8_t>(mode);
-    return m >= 8 ? 7 : m;
+static const AddrMode REG2MODE[] = {
+        M_AWORD,  // 0
+        M_ALONG,  // 1
+        M_PCDSP,  // 2
+        M_PCIDX,  // 3
+        M_IMDAT,  // 4
+        M_NONE,   // 5
+        M_NONE,   // 6
+        M_NONE,   // 7
+};
+}  // namespace
+
+uint_fast8_t encodeAddrMode(AddrMode mode) {
+    if (mode <= M_PCIDX)
+        return MODE_REG[mode] >> 3;
+    return 0;
 }
 
-Config::opcode_t EaMc68000::encodeRegNo(AddrMode mode, RegName reg) {
-    if (mode == M_IMFLT)
-        mode = M_IMDAT;
-    const auto m = static_cast<uint8_t>(mode);
-    if (m < 8)
-        return reg::encodeGeneralRegNo(reg);
-    return m - 8;
+uint_fast8_t encodeRegNo(AddrMode mode, RegName reg) {
+    if (mode >= M_DREG && mode <= M_INDX)
+        return encodeGeneralRegNo(reg);
+    if (mode <= M_PCIDX)
+        return MODE_REG[mode] & 7;
+    return 0;
 }
 
-EaMc68000::EaMc68000(OprSize size_, uint8_t raw_mode, uint8_t regno) {
+AddrMode decodeAddrMode(uint_fast8_t mode, uint_fast8_t regno) {
+    mode &= 7;
+    if (mode < 7)
+        return AddrMode(mode + M_DREG);
     regno &= 7;
-    size = size_;
-    if ((raw_mode &= 7) == 7) {
-        mode = (regno < 5) ? AddrMode(regno + 8) : M_ERROR;
-        reg = REG_UNDEF;
-    } else {
-        mode = AddrMode(raw_mode);
-        reg = (mode == M_DREG) ? reg::decodeDataReg(regno) : reg::decodeAddrReg(regno);
-    }
+    return REG2MODE[regno];
 }
+
+RegName decodeRegNo(uint_fast8_t mode, uint_fast8_t regno) {
+    mode &= 7;
+    regno &= 7;
+    if (mode == 0)
+        return decodeDataReg(regno);
+    if (mode >= 1 && mode < 7)
+        return decodeAddrReg(regno);
+    return REG_UNDEF;
+}
+
+}  // namespace reg
 
 OprSize BriefExt::indexSize() const {
     return (word & 0x800) ? SZ_LONG : SZ_WORD;
@@ -269,7 +299,7 @@ RegName BriefExt::index() const {
     return reg::decodeGeneralReg(word >> 12);
 }
 
-uint8_t BriefExt::disp() const {
+uint_fast8_t BriefExt::disp() const {
     return static_cast<uint8_t>(word);
 }
 
