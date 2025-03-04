@@ -72,24 +72,13 @@ enum RegName : int8_t {
     REG_VBR = 32 + 3,
 };
 
-struct EaMc68000 {
-    EaMc68000(OprSize size, uint8_t mode, uint8_t regno);
-
-    static Config::opcode_t encodeMode(AddrMode mode);
-    static Config::opcode_t encodeRegNo(AddrMode mode, RegName reg);
-
-    OprSize size;
-    AddrMode mode;
-    RegName reg;
-};
-
 // Brief extension word.
 struct BriefExt {
     uint16_t word;
 
     OprSize indexSize() const;
     RegName index() const;
-    uint8_t disp() const;
+    uint_fast8_t disp() const;
 };
 
 namespace reg {
@@ -104,17 +93,21 @@ bool isFloatReg(RegName name);
 bool isFloatControlReg(RegName name);
 Config::opcode_t encodeGeneralRegNo(RegName name);
 Config::opcode_t encodeControlRegNo(RegName name);
-Config::opcode_t encodeFloatRegNo(RegName name);
-uint8_t encodeGeneralRegPos(RegName name);
-uint8_t encodeFloatRegPos(RegName name);
-uint8_t encodeFloatControlRegPos(RegName name);
-RegName decodeGeneralReg(uint8_t regno);
-RegName decodeDataReg(uint8_t regno);
-RegName decodeAddrReg(uint8_t regno);
+uint_fast8_t encodeGeneralRegPos(RegName name);
+uint_fast8_t encodeFloatRegPos(RegName name);
+uint_fast8_t encodeFloatControlRegPos(RegName name);
+RegName decodeGeneralReg(uint_fast8_t regno);
+RegName decodeDataReg(uint_fast8_t regno);
+RegName decodeAddrReg(uint_fast8_t regno);
 RegName decodeControlReg(Config::opcode_t regno);
 
+uint_fast8_t encodeAddrMode(AddrMode mode);
+uint_fast8_t encodeRegNo(AddrMode mode, RegName reg);
+AddrMode decodeAddrMode(uint_fast8_t mode, uint_fast8_t regno);
+RegName decodeRegNo(uint_fast8_t mode, uint_fast8_t regno);
+
 InsnSize parseSize(StrScanner &scan);
-uint8_t sizeNameLen(OprSize size);
+uint_fast8_t sizeNameLen(OprSize size);
 char sizeSuffix(OprSize size);
 
 }  // namespace reg
