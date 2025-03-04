@@ -137,37 +137,28 @@ void test_data_move() {
     TEST("EXG.L A2,D1", 0141612); // 014|Dx|61|Ay
 
     // LEA ea,Ad: 004|An|7|M|Rn
-    ERRT("LEA D2,A1",              OPERAND_NOT_ALLOWED, "D2,A1");
-    ERRT("LEA A2,A1",              OPERAND_NOT_ALLOWED, "A2,A1");
+    ERRT("LEA D2,A1",              OPERAND_NOT_ALLOWED, "D2,A1", 0041700);
+    ERRT("LEA A2,A1",              OPERAND_NOT_ALLOWED, "A2,A1", 0041700);
     TEST("LEA (A2),A1",            0041722);
     TEST("LEA.L (A2),A1",          0041722);
-    ERRT("LEA (A2)+",              OPERAND_NOT_ALLOWED, "(A2)+");
-    ERRT("LEA -(A2)",              OPERAND_NOT_ALLOWED, "-(A2)");
+    ERRT("LEA (A2)+,A1",           OPERAND_NOT_ALLOWED, "(A2)+,A1", 0041700);
+    ERRT("LEA -(A2),A1",           OPERAND_NOT_ALLOWED, "-(A2),A1", 0041700);
     TEST("LEA ($1234,A2),A1",      0041752, 0x1234);
     TEST("LEA ($12,A2,D3.W),A1",   0041762, 0x3012);
     ABSW("LEA (@W).W,A1", "FF00",  0041770, 0xFF00);
     TEST("LEA ($001234).L,A1",     0041771, 0x0000, 0x1234);
     TEST("LEA (*+$1234,PC),A1",    0041772, 0x1232);
     TEST("lea (*+$12,pc,a3.l),a1", 0041773, 0xB810);
-    ERRT("LEA #$1234",             OPERAND_NOT_ALLOWED, "#$1234");
+    ERRT("LEA #$1234,A1",          OPERAND_NOT_ALLOWED, "#$1234,A1", 0041700);
 
     // LINK An,#nn: 004712|An
-    ERRT("LINK A3,D2",              OPERAND_NOT_ALLOWED, "A3,D2");
-    ERRT("LINK A3,(A2)",            OPERAND_NOT_ALLOWED, "A3,(A2)");
-    ERRT("LINK A3,(A2)+",           OPERAND_NOT_ALLOWED, "A3,(A2)+");
-    ERRT("LINK A3,-(A2)",           OPERAND_NOT_ALLOWED, "A3,-(A2)");
-    ERRT("LINK A3,($1234,A2)",      OPERAND_NOT_ALLOWED, "A3,($1234,A2)");
-    ERRT("LINK A3,($12,A2,D3.W)",   OPERAND_NOT_ALLOWED, "A3,($12,A2,D3.W)");
-    ERRT("LINK A3,($FFFF00).W",     OPERAND_NOT_ALLOWED, "A3,($FFFF00).W");
-    ERRT("LINK A3,($001234).L",     OPERAND_NOT_ALLOWED, "A3,($001234).L");
-    ERRT("LINK A3,(*+$1234,PC)",    OPERAND_NOT_ALLOWED, "A3,(*+$1234,PC)");
-    ERRT("LINK A3,(*+$12,PC,A3.L)", OPERAND_NOT_ALLOWED, "A3,(*+$12,PC,A3.L)");
-    TEST("LINK A3,#$1234",          0047123, 0x1234);
-    TEST("LINK A3,#-16",            0047123, 0xFFF0);
+    ERRT("LINK A3,D2",     OPERAND_NOT_ALLOWED, "A3,D2");
+    TEST("LINK A3,#$1234", 0047123, 0x1234);
+    TEST("LINK A3,#-16",   0047123, 0xFFF0);
 
     // MOVE src,dst: 00|Sz|Rd|Md|Ms|Rs, Sz:B=1/W=3/L=2
     TEST("MOVE.B D2,D7",              0017002);
-    ERRT("MOVE.B A2,D7",              OPERAND_NOT_ALLOWED, "A2,D7");
+    ERRT("MOVE.B A2,D7",              OPERAND_NOT_ALLOWED, "A2,D7", 0017000);
     TEST("MOVE.B (A2),D7",            0017022);
     TEST("MOVE.B (A2)+,D7",           0017032);
     TEST("MOVE.B -(A2),D7",           0017042);
@@ -254,7 +245,7 @@ void test_data_move() {
     TEST("MOVE.L (*+$12,PC,D3.W),D7", 0027073, 0x3010);
     TEST("MOVE.L #$00345678,D7",      0027074, 0x0034, 0x5678);
     TEST("MOVE.B D2,(A6)",              0016202);
-    ERRT("MOVE.B A2,(A6)",              OPERAND_NOT_ALLOWED, "A2,(A6)");
+    ERRT("MOVE.B A2,(A6)",              OPERAND_NOT_ALLOWED, "A2,(A6)", 0016200);
     TEST("MOVE.B (A2),(A6)",            0016222);
     TEST("MOVE.B (A2)+,(A6)",           0016232);
     TEST("MOVE.B -(A2),(A6)",           0016242);
@@ -290,7 +281,7 @@ void test_data_move() {
     TEST("MOVE.L (*+$12,PC,D3.W),(A6)", 0026273, 0x3010);
     TEST("MOVE.L #$00345678,(A6)",      0026274, 0x0034, 0x5678);
     TEST("MOVE.B D2,(A6)+",              0016302);
-    ERRT("MOVE.B A2,(A6)+",              OPERAND_NOT_ALLOWED, "A2,(A6)+");
+    ERRT("MOVE.B A2,(A6)+",              OPERAND_NOT_ALLOWED, "A2,(A6)+", 0016300);
     TEST("MOVE.B (A2),(A6)+",            0016322);
     TEST("MOVE.B (A2)+,(A6)+",           0016332);
     TEST("MOVE.B -(A2),(A6)+",           0016342);
@@ -326,7 +317,7 @@ void test_data_move() {
     TEST("MOVE.L (*+$12,PC,D3.W),(A6)+", 0026373, 0x3010);
     TEST("MOVE.L #$00345678,(A6)+",      0026374, 0x0034, 0x5678);
     TEST("MOVE.B D2,-(A6)",              0016402);
-    ERRT("MOVE.B A2,-(A6)",              OPERAND_NOT_ALLOWED, "A2,-(A6)");
+    ERRT("MOVE.B A2,-(A6)",              OPERAND_NOT_ALLOWED, "A2,-(A6)", 0016400);
     TEST("MOVE.B (A2),-(A6)",            0016422);
     TEST("MOVE.B (A2)+,-(A6)",           0016432);
     TEST("MOVE.B -(A2),-(A6)",           0016442);
@@ -362,7 +353,7 @@ void test_data_move() {
     TEST("MOVE.L (*+$14,PC,D3.W),-(A6)", 0026473, 0x3012);
     TEST("MOVE.L #$00345678,-(A6)",      0026474, 0x0034, 0x5678);
     TEST("MOVE.B D2,($5678,A6)",              0016502, 0x5678);
-    ERRT("MOVE.B A2,($5678,A6)",              OPERAND_NOT_ALLOWED, "A2,($5678,A6)");
+    ERRT("MOVE.B A2,($5678,A6)",              OPERAND_NOT_ALLOWED, "A2,($5678,A6)", 0016500, 0x5678);
     TEST("MOVE.B (A2),($5678,A6)",            0016522, 0x5678);
     TEST("MOVE.B (A2)+,($5678,A6)",           0016532, 0x5678);
     TEST("MOVE.B -(A2),($5678,A6)",           0016542, 0x5678);
@@ -398,7 +389,7 @@ void test_data_move() {
     TEST("MOVE.L (*+$12,PC,D3.W),($5678,A6)", 0026573, 0x3010, 0x5678);
     TEST("MOVE.L #$00345678,($5678,A6)",      0026574, 0x0034, 0x5678, 0x5678);
     TEST("MOVE.B D2,($56,A6,D5.W)",              0016602, 0x5056);
-    ERRT("MOVE.B A2,($56,A6,D5.W)",              OPERAND_NOT_ALLOWED, "A2,($56,A6,D5.W)");
+    ERRT("MOVE.B A2,($56,A6,D5.W)",              OPERAND_NOT_ALLOWED, "A2,($56,A6,D5.W)", 0016600, 0x5056);
     TEST("MOVE.B (A2),($56,A6,D5.W)",            0016622, 0x5056);
     TEST("MOVE.B (A2)+,($56,A6,D5.W)",           0016632, 0x5056);
     TEST("MOVE.B -(A2),($56,A6,D5.W)",           0016642, 0x5056);
@@ -434,7 +425,7 @@ void test_data_move() {
     TEST("MOVE.L (*+$12,PC,D3.W),($56,A6,D5.W)", 0026673, 0x3010, 0x5056);
     TEST("MOVE.L #$00345678,($56,A6,D5.W)",      0026674, 0x0034, 0x5678, 0x5056);
     TEST("MOVE.B D2,($005678).W",              0010702, 0x5678);
-    ERRT("MOVE.B A2,($005678).W",              OPERAND_NOT_ALLOWED, "A2,($005678).W");
+    ERRT("MOVE.B A2,($005678).W",              OPERAND_NOT_ALLOWED, "A2,($005678).W", 0010700, 0x5678);
     TEST("MOVE.B (A2),($005678).W",            0010722, 0x5678);
     TEST("MOVE.B (A2)+,($005678).W",           0010732, 0x5678);
     TEST("MOVE.B -(A2),($005678).W",           0010742, 0x5678);
@@ -470,7 +461,7 @@ void test_data_move() {
     TEST("MOVE.L (*+$12,PC,D3.W),($005678).W", 0020773, 0x3010, 0x5678);
     TEST("MOVE.L #$00345678,($005678).W",      0020774, 0x0034, 0x5678, 0x5678);
     TEST("MOVE.B D2,($56789A).L",              0011702, 0x0056, 0x789A);
-    ERRT("MOVE.B A2,D2",                       OPERAND_NOT_ALLOWED, "A2,D2");
+    ERRT("MOVE.B A2,D2",                       OPERAND_NOT_ALLOWED, "A2,D2", 0012000);
     TEST("MOVE.B (A2),($56789A).L",            0011722, 0x0056, 0x789A);
     TEST("MOVE.B (A2)+,($56789A).L",           0011732, 0x0056, 0x789A);
     TEST("MOVE.B -(A2),($56789A).L",           0011742, 0x0056, 0x789A);
@@ -505,9 +496,9 @@ void test_data_move() {
     TEST("MOVE.L (*+$1234,PC),($567898).L",    0021772, 0x1232, 0x0056, 0x7898);
     TEST("MOVE.L (*+$12,PC,D3.W),($567898).L", 0021773, 0x3010, 0x0056, 0x7898);
     TEST("MOVE.L #$00345678,($567898).L",      0021774, 0x0034, 0x5678, 0x0056, 0x7898);
-    ERRT("MOVE.B D2,($1234,PC)",  OPERAND_NOT_ALLOWED, "D2,($1234,PC)");
-    ERRT("MOVE.B D2,($12,PC,D3)", OPERAND_NOT_ALLOWED, "D2,($12,PC,D3)");
-    ERRT("MOVE.B D2,#$34",        OPERAND_NOT_ALLOWED, "D2,#$34");
+    ERRT("MOVE.B D2,($1234,PC)",  OPERAND_NOT_ALLOWED, "($1234,PC)",  0010002);
+    ERRT("MOVE.B D2,($12,PC,D3)", OPERAND_NOT_ALLOWED, "($12,PC,D3)", 0010002);
+    ERRT("MOVE.B D2,#$34",        OPERAND_NOT_ALLOWED, "#$34",        0010002);
 
     // MOVEA src,An: 00|Sz|An|1|M|Rn, Sz:W=3/L=2
     TEST("MOVEA.W D2,A6",              0036102);
@@ -536,68 +527,68 @@ void test_data_move() {
     TEST("MOVEA.L #$00345678,A6",      0026174, 0x0034, 0x5678);
 
     // MOVEM list,dst: 0044|Sz|Md|Rd, Sz:W=2/L=3, list=A7|...|D0, -(An)=D0|...|A7
-    ERRT("MOVEM.W D0-D6,D2",            OPERAND_NOT_ALLOWED, "D0-D6,D2");
-    ERRT("MOVEM.W D0-D6,A2",            OPERAND_NOT_ALLOWED, "D0-D6,A2");
+    ERRT("MOVEM.W D0-D6,D2",            OPERAND_NOT_ALLOWED, "D2", 0044200);
+    ERRT("MOVEM.W D0-D6,A2",            OPERAND_NOT_ALLOWED, "A2", 0044200);
     TEST("MOVEM.W D0-D6,(A2)",          0044222, 0x007F);
-    ERRT("MOVEM.W D0-D6,(A2)+",         OPERAND_NOT_ALLOWED, "D0-D6,(A2)+");
+    ERRT("MOVEM.W D0-D6,(A2)+",         OPERAND_NOT_ALLOWED, "(A2)+", 0044200);
     TEST("MOVEM.W D0-D6,-(A2)",         0044242, 0xFE00);
     TEST("MOVEM.W D0-D6,($1234,A2)",    0044252, 0x007F, 0x1234);
     TEST("MOVEM.W D0-D6,($12,A2,A3.L)", 0044262, 0x007F, 0xB812);
     ABSW("MOVEM.W D0-D6,(@W).W", "FEDC", 0044270, 0x007F, 0xFEDC);
     TEST("MOVEM.W D0-D6,($123456).L",   0044271, 0x007F, 0x0012, 0x3456);
-    ERRT("MOVEM.W D0-D6,($1234,PC)",    OPERAND_NOT_ALLOWED, "D0-D6,($1234,PC)");
-    ERRT("MOVEM.W D0-D6,($12,PC,D3)",   OPERAND_NOT_ALLOWED, "D0-D6,($12,PC,D3)");
-    ERRT("MOVEM.W D0-D6,#$1234",        OPERAND_NOT_ALLOWED, "D0-D6,#$1234");
+    ERRT("MOVEM.W D0-D6,($1234,PC)",    OPERAND_NOT_ALLOWED, "($1234,PC)",  0044200);
+    ERRT("MOVEM.W D0-D6,($12,PC,D3)",   OPERAND_NOT_ALLOWED, "($12,PC,D3)", 0044200);
+    ERRT("MOVEM.W D0-D6,#$1234",        OPERAND_NOT_ALLOWED, "#$1234",      0044200);
     TEST("MOVEM.W D0,(A2)",             0044222, 0x0001);
     TEST("MOVEM.W A0,(A2)",             0044222, 0x0100);
     TEST("MOVEM.W D0,-(A2)",            0044242, 0x8000);
     TEST("MOVEM.W A0,-(A2)",            0044242, 0x0080);
-    ERRT("MOVEM.L D1/A0,D2",            OPERAND_NOT_ALLOWED, "D1/A0,D2");
-    ERRT("MOVEM.L D1/A0,A2",            OPERAND_NOT_ALLOWED, "D1/A0,A2");
+    ERRT("MOVEM.L D1/A0,D2",            OPERAND_NOT_ALLOWED, "D2", 0044300);
+    ERRT("MOVEM.L D1/A0,A2",            OPERAND_NOT_ALLOWED, "A2", 0044300);
     TEST("MOVEM.L D1/A0,(A2)",          0044322, 0x0102);
-    ERRT("MOVEM.L D1/A0,(A2)+",         OPERAND_NOT_ALLOWED, "D1/A0,(A2)+");
+    ERRT("MOVEM.L D1/A0,(A2)+",         OPERAND_NOT_ALLOWED, "(A2)+", 0044300);
     TEST("MOVEM.L D1/A0,-(A2)",         0044342, 0x4080);
     TEST("MOVEM.L D1/A0,($1234,A2)",    0044352, 0x0102, 0x1234);
     TEST("MOVEM.L D1/A0,($12,A2,A3.L)", 0044362, 0x0102, 0xB812);
     ABSW("MOVEM.L D1/A0,(@W).W", "FEDC", 0044370, 0x0102, 0xFEDC);
     TEST("MOVEM.L D1/A0,($123454).L",   0044371, 0x0102, 0x0012, 0x3454);
-    ERRT("MOVEM.L D1/A0,($1234,PC)",    OPERAND_NOT_ALLOWED, "D1/A0,($1234,PC)");
-    ERRT("MOVEM.L D1/A0,($12,PC,A3)",   OPERAND_NOT_ALLOWED, "D1/A0,($12,PC,A3)");
-    ERRT("MOVEM.L D1/A0,#$1234",        OPERAND_NOT_ALLOWED, "D1/A0,#$1234");
+    ERRT("MOVEM.L D1/A0,($1234,PC)",    OPERAND_NOT_ALLOWED, "($1234,PC)",  0044300);
+    ERRT("MOVEM.L D1/A0,($12,PC,A3)",   OPERAND_NOT_ALLOWED, "($12,PC,A3)", 0044300);
+    ERRT("MOVEM.L D1/A0,#$1234",        OPERAND_NOT_ALLOWED, "#$1234",      0044300);
     TEST("MOVEM.L D0,(A2)",             0044322, 0x0001);
     TEST("MOVEM.L A0,(A2)",             0044322, 0x0100);
     TEST("MOVEM.L D0,-(A2)",            0044342, 0x8000);
     TEST("MOVEM.L A0,-(A2)",            0044342, 0x0080);
 
     // MOVEM src,list: 0046|Sz|Md|Rd, Sz:W=2/L=3, list=A7|...|D0
-    ERRT("MOVEM.W D2,A3-A6",              OPERAND_NOT_ALLOWED, "D2,A3-A6");
-    ERRT("MOVEM.W A2,A3-A6",              OPERAND_NOT_ALLOWED, "A2,A3-A6");
+    ERRT("MOVEM.W D2,A3-A6",              OPERAND_NOT_ALLOWED, "D2,A3-A6", 0046200);
+    ERRT("MOVEM.W A2,A3-A6",              OPERAND_NOT_ALLOWED, "A2,A3-A6", 0046200);
     TEST("MOVEM.W (A2),A3-A6",            0046222, 0x7800);
     TEST("MOVEM.W (A2)+,A3-A6",           0046232, 0x7800);
-    ERRT("MOVEM.W -(A2),A3-A6",           OPERAND_NOT_ALLOWED, "-(A2),A3-A6");
+    ERRT("MOVEM.W -(A2),A3-A6",           OPERAND_NOT_ALLOWED, "-(A2),A3-A6", 0046200);
     TEST("MOVEM.W ($1234,A2),A3-A6",      0046252, 0x7800, 0x1234);
     TEST("MOVEM.W ($12,A2,D3.W),A3-A6",   0046262, 0x7800, 0x3012);
     ABSW("MOVEM.W (@W).W,A3-A6", "FEDC",  0046270, 0x7800, 0xFEDC);
     TEST("MOVEM.W ($123456).L,A3-A6",     0046271, 0x7800, 0x0012, 0x3456);
     TEST("MOVEM.W (*+$1234,PC),A3-A6",    0046272, 0x7800, 0x1230);
     TEST("MOVEM.W (*+$12,PC,D3.L),A3-A6", 0046273, 0x7800, 0x380E);
-    ERRT("MOVEM.W #$1234,A3-A6",          OPERAND_NOT_ALLOWED, "#$1234,A3-A6");
+    ERRT("MOVEM.W #$1234,A3-A6",          OPERAND_NOT_ALLOWED, "#$1234,A3-A6", 0046200);
     TEST("MOVEM.W (A2),D0",               0046222, 0x0001);
     TEST("MOVEM.W (A2),A0",               0046222, 0x0100);
     TEST("MOVEM.W (A2)+,D0",              0046232, 0x0001);
     TEST("MOVEM.W (A2)+,A0",              0046232, 0x0100);
-    ERRT("MOVEM.L D2,A3-A6",              OPERAND_NOT_ALLOWED, "D2,A3-A6");
-    ERRT("MOVEM.L A2,A3-A6",              OPERAND_NOT_ALLOWED, "A2,A3-A6");
+    ERRT("MOVEM.L D2,A3-A6",              OPERAND_NOT_ALLOWED, "D2,A3-A6", 0046300);
+    ERRT("MOVEM.L A2,A3-A6",              OPERAND_NOT_ALLOWED, "A2,A3-A6", 0046300);
     TEST("MOVEM.L (A2),A3-A6",            0046322, 0x7800);
     TEST("MOVEM.L (A2)+,A3-A6",           0046332, 0x7800);
-    ERRT("MOVEM.L -(A2),A3-A6",           OPERAND_NOT_ALLOWED, "-(A2),A3-A6");
+    ERRT("MOVEM.L -(A2),A3-A6",           OPERAND_NOT_ALLOWED, "-(A2),A3-A6", 0046300);
     TEST("MOVEM.L ($1234,A2),A3-A6",      0046352, 0x7800, 0x1234);
     TEST("MOVEM.L ($12,A2,D3.W),A3-A6",   0046362, 0x7800, 0x3012);
     ABSW("MOVEM.L (@W).W,A3-A6", "FEDC",  0046370, 0x7800, 0xFEDC);
     TEST("MOVEM.L ($123454).L,A3-A6",     0046371, 0x7800, 0x0012, 0x3454);
     TEST("MOVEM.L (*+$1234,PC),A3-A6",    0046372, 0x7800, 0x1230);
     TEST("MOVEM.L (*+$12,PC,D3.L),A3-A6", 0046373, 0x7800, 0x380E);
-    ERRT("MOVEM.L #$1234,A3-A6",          OPERAND_NOT_ALLOWED, "#$1234,A3-A6");
+    ERRT("MOVEM.L #$1234,A3-A6",          OPERAND_NOT_ALLOWED, "#$1234,A3-A6", 0046300);
     TEST("MOVEM.L (A2),D0",               0046322, 0x0001);
     TEST("MOVEM.L (A2),A0",               0046322, 0x0100);
     TEST("MOVEM.L (A2)+,D0",              0046332, 0x0001);
@@ -660,8 +651,8 @@ void test_data_move() {
         ERUI("MOVES.W D3, -(A4)");
         ERUI("MOVES.L D3, -(A4)");
     } else {
-        ERRT("MOVES.B D0, D1", OPERAND_NOT_ALLOWED, "D0, D1");
-        ERRT("MOVES.B A1, A2", OPERAND_NOT_ALLOWED, "A1, A2");
+        ERRT("MOVES.B D0, D1", OPERAND_NOT_ALLOWED, "D0, D1", 0x0E00, 0x1000);
+        ERRT("MOVES.B A1, A2", OPERAND_NOT_ALLOWED, "A1, A2", 0x0E00, 0xA000);
         TEST("MOVES.B (A2), D1",         007022, 0x1000);
         TEST("MOVES.B (A3)+, A2",        007033, 0xA000);
         TEST("MOVES.B -(A4), D3",        007044, 0x3000);
@@ -669,11 +660,11 @@ void test_data_move() {
         TEST("MOVES.B (18,A6,D3.W), D5", 007066, 0x5000, 0x3012);
         TEST("MOVES.B ($001234).W, A6",  007070, 0xE000, 0x1234);
         TEST("MOVES.B ($123456).L, D7",  007071, 0x7000, 0x0012, 0x3456);
-        ERRT("MOVES.B ($1234,PC), A0",   OPERAND_NOT_ALLOWED, "($1234,PC), A0");
-        ERRT("MOVES.B ($12,PC,A2), D1",  OPERAND_NOT_ALLOWED, "($12,PC,A2), D1");
-        ERRT("MOVES.B #$1234, A2",       OPERAND_NOT_ALLOWED, "#$1234, A2");
-        ERRT("MOVES.W D0, D1", OPERAND_NOT_ALLOWED, "D0, D1");
-        ERRT("MOVES.W A1, A2", OPERAND_NOT_ALLOWED, "A1, A2");
+        ERRT("MOVES.B ($1234,PC), A0",   OPERAND_NOT_ALLOWED, "($1234,PC), A0",  0x0E00, 0x8000);
+        ERRT("MOVES.B ($12,PC,A2), D1",  OPERAND_NOT_ALLOWED, "($12,PC,A2), D1", 0x0E00, 0x1000);
+        ERRT("MOVES.B #$1234, A2",       OPERAND_NOT_ALLOWED, "#$1234, A2",      0x0E00, 0xA000);
+        ERRT("MOVES.W D0, D1", OPERAND_NOT_ALLOWED, "D0, D1", 0x0E40, 0x1000);
+        ERRT("MOVES.W A1, A2", OPERAND_NOT_ALLOWED, "A1, A2", 0x0E40, 0xA000);
         TEST("MOVES.W (A2), D1",         007122, 0x1000);
         TEST("MOVES.W (A3)+, A2",        007133, 0xA000);
         TEST("MOVES.W -(A4), D3",        007144, 0x3000);
@@ -681,11 +672,11 @@ void test_data_move() {
         TEST("MOVES.W (18,A6,D3.W), D5", 007166, 0x5000, 0x3012);
         TEST("MOVES.W ($001234).W, A6",  007170, 0xE000, 0x1234);
         TEST("MOVES.W ($123456).L, D7",  007171, 0x7000, 0x0012, 0x3456);
-        ERRT("MOVES.W ($1234,PC), A0",  OPERAND_NOT_ALLOWED, "($1234,PC), A0");
-        ERRT("MOVES.W ($12,PC,A2), D1", OPERAND_NOT_ALLOWED, "($12,PC,A2), D1");
-        ERRT("MOVES.W #$1234, A2",      OPERAND_NOT_ALLOWED, "#$1234, A2");
-        ERRT("MOVES.L D0, D1", OPERAND_NOT_ALLOWED, "D0, D1");
-        ERRT("MOVES.L A1, A2", OPERAND_NOT_ALLOWED, "A1, A2");
+        ERRT("MOVES.W ($1234,PC), A0",  OPERAND_NOT_ALLOWED, "($1234,PC), A0",  0x0E40, 0x8000);
+        ERRT("MOVES.W ($12,PC,A2), D1", OPERAND_NOT_ALLOWED, "($12,PC,A2), D1", 0x0E40, 0x1000);
+        ERRT("MOVES.W #$1234, A2",      OPERAND_NOT_ALLOWED, "#$1234, A2",      0x0E40, 0xA000);
+        ERRT("MOVES.L D0, D1", OPERAND_NOT_ALLOWED, "D0, D1", 0x0E80, 0x1000);
+        ERRT("MOVES.L A1, A2", OPERAND_NOT_ALLOWED, "A1, A2", 0x0E80, 0xA000);
         TEST("MOVES.L (A2), D1",         007222, 0x1000);
         TEST("MOVES.L (A3)+, A2",        007233, 0xA000);
         TEST("MOVES.L -(A4), D3",        007244, 0x3000);
@@ -693,12 +684,12 @@ void test_data_move() {
         TEST("MOVES.L (18,A6,D3.W), D5", 007266, 0x5000, 0x3012);
         TEST("MOVES.L ($001234).W, A6",  007270, 0xE000, 0x1234);
         TEST("MOVES.L ($123456).L, D7",  007271, 0x7000, 0x0012, 0x3456);
-        ERRT("MOVES.L ($1234,PC), A0",  OPERAND_NOT_ALLOWED, "($1234,PC), A0");
-        ERRT("MOVES.L ($12,PC,A2), D1", OPERAND_NOT_ALLOWED, "($12,PC,A2), D1");
-        ERRT("MOVES.L #$1234, A2",      OPERAND_NOT_ALLOWED, "#$1234, A2");
+        ERRT("MOVES.L ($1234,PC), A0",  OPERAND_NOT_ALLOWED, "($1234,PC), A0",  0x0E80, 0x8000);
+        ERRT("MOVES.L ($12,PC,A2), D1", OPERAND_NOT_ALLOWED, "($12,PC,A2), D1", 0x0E80, 0x1000);
+        ERRT("MOVES.L #$1234, A2",      OPERAND_NOT_ALLOWED, "#$1234, A2",      0x0E80, 0xA000);
 
-        ERRT("MOVES.B D1, D0", OPERAND_NOT_ALLOWED, "D1, D0");
-        ERRT("MOVES.B A2, A1", OPERAND_NOT_ALLOWED, "A2, A1");
+        ERRT("MOVES.B D1, D0", OPERAND_NOT_ALLOWED, "D1, D0", 0x0E00, 0x0000);
+        ERRT("MOVES.B A2, A1", OPERAND_NOT_ALLOWED, "A2, A1", 0x0E00, 0x9000);
         TEST("MOVES.B D1, (A2)",         007022, 0x1800);
         TEST("MOVES.B A2, (A3)+",        007033, 0xA800);
         TEST("MOVES.B D3, -(A4)",        007044, 0x3800);
@@ -706,11 +697,11 @@ void test_data_move() {
         TEST("MOVES.B D5, (18,A6,D3.W)", 007066, 0x5800, 0x3012);
         TEST("MOVES.B A6, ($001234).W",  007070, 0xE800, 0x1234);
         TEST("MOVES.B D7, ($123456).L",  007071, 0x7800, 0x0012, 0x3456);
-        ERRT("MOVES.B A0, ($1234,PC)",  OPERAND_NOT_ALLOWED, "A0, ($1234,PC)");
-        ERRT("MOVES.B D1, ($12,PC,A2)", OPERAND_NOT_ALLOWED, "D1, ($12,PC,A2)");
-        ERRT("MOVES.B A2, #$1234",      OPERAND_NOT_ALLOWED, "A2, #$1234");
-        ERRT("MOVES.W D1, D0", OPERAND_NOT_ALLOWED, "D1, D0");
-        ERRT("MOVES.W A2, A1", OPERAND_NOT_ALLOWED, "A2, A1");
+        ERRT("MOVES.B A0, ($1234,PC)",  OPERAND_NOT_ALLOWED, "($1234,PC)",  0x0E00, 0x8800);
+        ERRT("MOVES.B D1, ($12,PC,A2)", OPERAND_NOT_ALLOWED, "($12,PC,A2)", 0x0E00, 0x1800);
+        ERRT("MOVES.B A2, #$1234",      OPERAND_NOT_ALLOWED, "#$1234",      0x0E00, 0xA800);
+        ERRT("MOVES.W D1, D0", OPERAND_NOT_ALLOWED, "D1, D0", 0x0E40, 0x0000);
+        ERRT("MOVES.W A2, A1", OPERAND_NOT_ALLOWED, "A2, A1", 0x0E40, 0x9000);
         TEST("MOVES.W D1, (A2)",         007122, 0x1800);
         TEST("MOVES.W A2, (A3)+",        007133, 0xA800);
         TEST("MOVES.W D3, -(A4)",        007144, 0x3800);
@@ -718,11 +709,11 @@ void test_data_move() {
         TEST("MOVES.W D5, (18,A6,D3.W)", 007166, 0x5800, 0x3012);
         TEST("MOVES.W A6, ($001234).W",  007170, 0xE800, 0x1234);
         TEST("MOVES.W D7, ($123456).L",  007171, 0x7800, 0x0012, 0x3456);
-        ERRT("MOVES.W A0, ($1234,PC)",   OPERAND_NOT_ALLOWED, "A0, ($1234,PC)");
-        ERRT("MOVES.W D1, ($12,PC,A2)",  OPERAND_NOT_ALLOWED, "D1, ($12,PC,A2)");
-        ERRT("MOVES.W A2, #$1234",       OPERAND_NOT_ALLOWED, "A2, #$1234");
-        ERRT("MOVES.L D1, D0", OPERAND_NOT_ALLOWED, "D1, D0");
-        ERRT("MOVES.L A2, A1", OPERAND_NOT_ALLOWED, "A2, A1");
+        ERRT("MOVES.W A0, ($1234,PC)",   OPERAND_NOT_ALLOWED, "($1234,PC)",  0x0E40, 0x8800);
+        ERRT("MOVES.W D1, ($12,PC,A2)",  OPERAND_NOT_ALLOWED, "($12,PC,A2)", 0x0E40, 0x1800);
+        ERRT("MOVES.W A2, #$1234",       OPERAND_NOT_ALLOWED, "#$1234",      0x0E40, 0xA800);
+        ERRT("MOVES.L D1, D0", OPERAND_NOT_ALLOWED, "D1, D0", 0x0E80, 0x0000);
+        ERRT("MOVES.L A2, A1", OPERAND_NOT_ALLOWED, "A2, A1", 0x0E80, 0x9000);
         TEST("MOVES.L D1, (A2)",         007222, 0x1800);
         TEST("MOVES.L A2, (A3)+",        007233, 0xA800);
         TEST("MOVES.L D3, -(A4)",        007244, 0x3800);
@@ -730,9 +721,9 @@ void test_data_move() {
         TEST("MOVES.L D5, (18,A6,D3.W)", 007266, 0x5800, 0x3012);
         TEST("MOVES.L A6, ($001234).W",  007270, 0xE800, 0x1234);
         TEST("MOVES.L D7, ($123456).L",  007271, 0x7800, 0x0012, 0x3456);
-        ERRT("MOVES.L A0, ($1234,PC)",  OPERAND_NOT_ALLOWED, "A0, ($1234,PC)");
-        ERRT("MOVES.L D1, ($12,PC,A2)", OPERAND_NOT_ALLOWED, "D1, ($12,PC,A2)");
-        ERRT("MOVES.L A2, #$1234",      OPERAND_NOT_ALLOWED, "A2, #$1234");
+        ERRT("MOVES.L A0, ($1234,PC)",  OPERAND_NOT_ALLOWED, "($1234,PC)",  0x0E80, 0x8800);
+        ERRT("MOVES.L D1, ($12,PC,A2)", OPERAND_NOT_ALLOWED, "($12,PC,A2)", 0x0E80, 0x1800);
+        ERRT("MOVES.L A2, #$1234",      OPERAND_NOT_ALLOWED, "#$1234",      0x0E80, 0xA800);
     }
 
     // MOVEQ #nn,Dn: 007|Dn|000 + nn
@@ -754,18 +745,18 @@ void test_data_move() {
     ERRT("MOVEQ #-$81,D0",         OVERFLOW_RANGE, "#-$81,D0", 0070000 | 0x7F);
 
     // PEA src: 00441|M|Rn
-    ERRT("PEA D2",              OPERAND_NOT_ALLOWED, "D2");
-    ERRT("PEA A2",              OPERAND_NOT_ALLOWED, "A2");
+    ERRT("PEA D2",              OPERAND_NOT_ALLOWED, "D2", 0044100);
+    ERRT("PEA A2",              OPERAND_NOT_ALLOWED, "A2", 0044100);
     TEST("PEA (A2)",            0044122);
-    ERRT("PEA (A2)+",           OPERAND_NOT_ALLOWED, "(A2)+");
-    ERRT("PEA -(A2)",           OPERAND_NOT_ALLOWED, "-(A2)");
+    ERRT("PEA (A2)+",           OPERAND_NOT_ALLOWED, "(A2)+", 0044100);
+    ERRT("PEA -(A2)",           OPERAND_NOT_ALLOWED, "-(A2)", 0044100);
     TEST("PEA ($1234,A2)",      0044152, 0x1234);
     TEST("PEA ($12,A2,D3.W)",   0044162, 0x3012);
     ABSW("PEA (@W).W", "FF00",  0044170, 0xFF00);
     TEST("PEA ($001234).L",     0044171, 0x0000, 0x1234);
     TEST("PEA (*+$1234,PC)",    0044172, 0x1232);
     TEST("PEA (*+$12,PC,A3.L)", 0044173, 0xB810);
-    ERRT("PEA #$1234",          OPERAND_NOT_ALLOWED, "#$1234");
+    ERRT("PEA #$1234",          OPERAND_NOT_ALLOWED, "#$1234", 0044100);
 
     // UNLK An: 004713|An
     ERRT("UNLK D2",              OPERAND_NOT_ALLOWED, "D2");
@@ -794,7 +785,7 @@ void test_data_move() {
 void test_integer() {
     // ADD Dn,dst: 015|Dn|Sz|M|Rn, Sz:B=4/W=5/L=6
     TEST("ADD.B D7,D2",            0152007);
-    ERRT("ADD.B D7,A2",            OPERAND_NOT_ALLOWED, "D7,A2");
+    ERRT("ADD.B D7,A2",            OPERAND_NOT_ALLOWED, "A2", 0157400);
     TEST("ADD.B D7,(A2)",          0157422);
     TEST("ADD.B D7,(A2)+",         0157432);
     TEST("ADD.B D7,-(A2)",         0157442);
@@ -802,9 +793,9 @@ void test_integer() {
     TEST("ADD.B D7,($12,A2,D3.L)", 0157462, 0x3812);
     ABSW("ADD.B D7,(@W).W", "FFFF", 0157470, 0xFFFF);
     TEST("ADD.B D7,($123456).L",   0157471, 0x0012, 0x3456);
-    ERRT("ADD.B D7,(*+$1234,PC)",  OPERAND_NOT_ALLOWED, "D7,(*+$1234,PC)");
-    ERRT("ADD.B D7,(*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "D7,(*+$12,PC,D3)");
-    ERRT("ADD.B D7,#$1234",        OPERAND_NOT_ALLOWED, "D7,#$1234");
+    ERRT("ADD.B D7,(*+$1234,PC)",  OPERAND_NOT_ALLOWED, "(*+$1234,PC)",  0157400);
+    ERRT("ADD.B D7,(*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "(*+$12,PC,D3)", 0157400);
+    ERRT("ADD.B D7,#$1234",        OPERAND_NOT_ALLOWED, "#$1234",        0157400);
     TEST("ADD.W D7,D2",            0152107);
     TEST("ADD.W D7,A2",            0152307); // ADDA.W
     TEST("ADD.W D7,(A2)",          0157522);
@@ -814,9 +805,9 @@ void test_integer() {
     TEST("ADD.W D7,($12,A2,D3.L)", 0157562, 0x3812);
     ABSW("ADD.W D7,(@W).W", "FFFE", 0157570, 0xFFFE);
     TEST("ADD.W D7,($123456).L",   0157571, 0x0012, 0x3456);
-    ERRT("ADD.W D7,(*+$1234,PC)",  OPERAND_NOT_ALLOWED, "D7,(*+$1234,PC)");
-    ERRT("ADD.W D7,(*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "D7,(*+$12,PC,D3)");
-    ERRT("ADD.W D7,#$1234",        OPERAND_NOT_ALLOWED, "D7,#$1234");
+    ERRT("ADD.W D7,(*+$1234,PC)",  OPERAND_NOT_ALLOWED, "(*+$1234,PC)",  0157500);
+    ERRT("ADD.W D7,(*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "(*+$12,PC,D3)", 0157500);
+    ERRT("ADD.W D7,#$1234",        OPERAND_NOT_ALLOWED, "#$1234",        0157500);
     TEST("ADD.L D7,D2",            0152207);
     TEST("ADD.L D7,A2",            0152707); // ADDA.L;
     TEST("ADD.L D7,(A2)",          0157622);
@@ -826,9 +817,9 @@ void test_integer() {
     TEST("ADD.L D7,($12,A2,D3.L)", 0157662, 0x3812);
     ABSW("ADD.L D7,(@W).W", "FFFC", 0157670, 0xFFFC);
     TEST("ADD.L D7,($123454).L",   0157671, 0x0012, 0x3454);
-    ERRT("ADD.L D7,(*+$1234,PC)",  OPERAND_NOT_ALLOWED, "D7,(*+$1234,PC)");
-    ERRT("ADD.L D7,(*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "D7,(*+$12,PC,D3)");
-    ERRT("ADD.L D7,#$1234",        OPERAND_NOT_ALLOWED, "D7,#$1234");
+    ERRT("ADD.L D7,(*+$1234,PC)",  OPERAND_NOT_ALLOWED, "(*+$1234,PC)",  0157600);
+    ERRT("ADD.L D7,(*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "(*+$12,PC,D3)", 0157600);
+    ERRT("ADD.L D7,#$1234",        OPERAND_NOT_ALLOWED, "#$1234",        0157600);
 
     // ADD src,Dn: 015|Dn|Sz|M|Rn, Sz:B=0/W=1/L=2
     TEST("ADD.B D2,D7",              0157002);
@@ -896,7 +887,7 @@ void test_integer() {
 
     // ADDI #$1234,dst: 0003|Sz|M|Rn, Sz:B=0/W=1/L=2
     TEST("ADDI.B #$12,D2",            0003002, 0x0012);
-    ERRT("ADDI.B #$12,A2",            OPERAND_NOT_ALLOWED, "#$12,A2");
+    ERRT("ADDI.B #$12,A2",            OPERAND_NOT_ALLOWED, "A2", 0003000);
     TEST("ADDI.B #$12,(A2)",          0003022, 0x0012);
     TEST("ADDI.B #$12,(A2)+",         0003032, 0x0012);
     TEST("ADDI.B #$12,-(A2)",         0003042, 0x0012);
@@ -904,9 +895,9 @@ void test_integer() {
     TEST("ADDI.B #$12,($12,A2,D3.W)", 0003062, 0x0012, 0x3012);
     TEST("ADDI.B #$12,($001234).W",   0003070, 0x0012, 0x1234);
     TEST("ADDI.B #$12,($123456).L",   0003071, 0x0012, 0x0012, 0x3456);
-    ERRT("ADDI.B #$12,(*+$1234,PC)",  OPERAND_NOT_ALLOWED, "#$12,(*+$1234,PC)");
-    ERRT("ADDI.B #$12,(*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "#$12,(*+$12,PC,D3)");
-    ERRT("ADDI.B #$12,#$1234",        OPERAND_NOT_ALLOWED, "#$12,#$1234");
+    ERRT("ADDI.B #$12,(*+$1234,PC)",  OPERAND_NOT_ALLOWED, "(*+$1234,PC)",  0003000);
+    ERRT("ADDI.B #$12,(*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "(*+$12,PC,D3)", 0003000);
+    ERRT("ADDI.B #$12,#$1234",        OPERAND_NOT_ALLOWED, "#$1234",        0003000);
     TEST("ADDI.W #$5678,D2",            0003102, 0x5678);
     TEST("ADDI.W #$5678,A2",            0152374, 0x5678); // ADDA.W
     TEST("ADDI.W #$5678,(A2)",          0003122, 0x5678);
@@ -916,9 +907,9 @@ void test_integer() {
     TEST("ADDI.W #$5678,($12,A2,D3.W)", 0003162, 0x5678, 0x3012);
     TEST("ADDI.W #$5678,($001234).W",   0003170, 0x5678, 0x1234);
     TEST("ADDI.W #$5678,($123456).L",   0003171, 0x5678, 0x0012, 0x3456);
-    ERRT("ADDI.W #$5678,(*+$1234,PC)",  OPERAND_NOT_ALLOWED, "#$5678,(*+$1234,PC)");
-    ERRT("ADDI.W #$5678,(*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "#$5678,(*+$12,PC,D3)");
-    ERRT("ADDI.W #$5678,#$1234",        OPERAND_NOT_ALLOWED, "#$5678,#$1234");
+    ERRT("ADDI.W #$5678,(*+$1234,PC)",  OPERAND_NOT_ALLOWED, "(*+$1234,PC)",  0003100);
+    ERRT("ADDI.W #$5678,(*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "(*+$12,PC,D3)", 0003100);
+    ERRT("ADDI.W #$5678,#$1234",        OPERAND_NOT_ALLOWED, "#$1234",        0003100);
     TEST("ADDI.L #$3456789A,D2",            0003202, 0x3456, 0x789A);
     TEST("ADDI.L #$3456789A,A2",            0152774, 0x3456, 0x789A); // ADDA.L
     TEST("ADDI.L #$3456789A,(A2)",          0003222, 0x3456, 0x789A);
@@ -928,9 +919,9 @@ void test_integer() {
     TEST("ADDI.L #$3456789A,($12,A2,D3.W)", 0003262, 0x3456, 0x789A, 0x3012);
     TEST("ADDI.L #$3456789A,($001234).W",   0003270, 0x3456, 0x789A, 0x1234);
     TEST("ADDI.L #$34567898,($123454).L",   0003271, 0x3456, 0x7898, 0x0012, 0x3454);
-    ERRT("ADDI.L #$3456789A,(*+$1234,PC)",  OPERAND_NOT_ALLOWED, "#$3456789A,(*+$1234,PC)");
-    ERRT("ADDI.L #$3456789A,(*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "#$3456789A,(*+$12,PC,D3)");
-    ERRT("ADDI.L #$3456789A,#$1234",        OPERAND_NOT_ALLOWED, "#$3456789A,#$1234");
+    ERRT("ADDI.L #$3456789A,(*+$1234,PC)",  OPERAND_NOT_ALLOWED, "(*+$1234,PC)",  0003200);
+    ERRT("ADDI.L #$3456789A,(*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "(*+$12,PC,D3)", 0003200);
+    ERRT("ADDI.L #$3456789A,#$1234",        OPERAND_NOT_ALLOWED, "#$1234",        0003200);
 
     // ADDQ #nn,dst: 005|nn|Sz|M|Rn, Sz:B=0/W=1/L=2
     ERRT("ADDQ.B #0,D2",            OPERAND_NOT_ALLOWED, "#0,D2", 0050002);
@@ -952,9 +943,9 @@ void test_integer() {
     TEST("ADDQ.B #8,($12,A2,D3.W)", 0050062, 0x3012);
     TEST("ADDQ.B #8,($001234).W",   0050070, 0x1234);
     TEST("ADDQ.B #8,($123456).L",   0050071, 0x0012, 0x3456);
-    ERRT("ADDQ.B #8,(*+$1234,PC)",  OPERAND_NOT_ALLOWED, "#8,(*+$1234,PC)");
-    ERRT("ADDQ.B #8,(*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "#8,(*+$12,PC,D3)");
-    ERRT("ADDQ.B #8,#$1234",        OPERAND_NOT_ALLOWED, "#8,#$1234");
+    ERRT("ADDQ.B #8,(*+$1234,PC)",  OPERAND_NOT_ALLOWED, "(*+$1234,PC)",  0050000);
+    ERRT("ADDQ.B #8,(*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "(*+$12,PC,D3)", 0050000);
+    ERRT("ADDQ.B #8,#$1234",        OPERAND_NOT_ALLOWED, "#$1234",        0050000);
     TEST("ADDQ.W #8,D2",            0050102);
     TEST("ADDQ.W #8,A2",            0050112);
     TEST("ADDQ.W #8,(A2)",          0050122);
@@ -964,9 +955,9 @@ void test_integer() {
     TEST("ADDQ.W #8,($12,A2,D3.W)", 0050162, 0x3012);
     TEST("ADDQ.W #8,($001234).W",   0050170, 0x1234);
     TEST("ADDQ.W #8,($123456).L",   0050171, 0x0012, 0x3456);
-    ERRT("ADDQ.W #8,(*+$1234,PC)",  OPERAND_NOT_ALLOWED, "#8,(*+$1234,PC)");
-    ERRT("ADDQ.W #8,(*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "#8,(*+$12,PC,D3)");
-    ERRT("ADDQ.W #8,#$1234",        OPERAND_NOT_ALLOWED, "#8,#$1234");
+    ERRT("ADDQ.W #8,(*+$1234,PC)",  OPERAND_NOT_ALLOWED, "(*+$1234,PC)",  0050100);
+    ERRT("ADDQ.W #8,(*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "(*+$12,PC,D3)", 0050100);
+    ERRT("ADDQ.W #8,#$1234",        OPERAND_NOT_ALLOWED, "#$1234",        0050100);
     TEST("ADDQ.L #8,D2",            0050202);
     TEST("ADDQ.L #8,A2",            0050212);
     TEST("ADDQ.L #8,(A2)",          0050222);
@@ -976,9 +967,9 @@ void test_integer() {
     TEST("ADDQ.L #8,($12,A2,D3.W)", 0050262, 0x3012);
     TEST("ADDQ.L #8,($001234).W",   0050270, 0x1234);
     TEST("ADDQ.L #8,($123454).L",   0050271, 0x0012, 0x3454);
-    ERRT("ADDQ.L #8,(*+$1234,PC)",  OPERAND_NOT_ALLOWED, "#8,(*+$1234,PC)");
-    ERRT("ADDQ.L #8,(*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "#8,(*+$12,PC,D3)");
-    ERRT("ADDQ.L #8,#$1234",        OPERAND_NOT_ALLOWED, "#8,#$1234");
+    ERRT("ADDQ.L #8,(*+$1234,PC)",  OPERAND_NOT_ALLOWED, "(*+$1234,PC)",  0050200);
+    ERRT("ADDQ.L #8,(*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "(*+$12,PC,D3)", 0050200);
+    ERRT("ADDQ.L #8,#$1234",        OPERAND_NOT_ALLOWED, "#$1234",        0050200);
 
     // ADDX Dx,Dy: 015|Dx|Sz|0|Dy, Sz:B=4/W=5/L=6
     TEST("ADDX.B D2,D3", 0153402);
@@ -992,7 +983,7 @@ void test_integer() {
 
     // CLR dst: 0041|Sz|M|Rn, Sz:B=0/W=1/L=2
     TEST("CLR.B D2",            0041002);
-    ERRT("CLR.B A2",            OPERAND_NOT_ALLOWED, "A2");
+    ERRT("CLR.B A2",            OPERAND_NOT_ALLOWED, "A2", 0041000);
     TEST("CLR.B (A2)",          0041022);
     TEST("CLR.B (A2)+",         0041032);
     TEST("CLR.B -(A2)",         0041042);
@@ -1000,11 +991,11 @@ void test_integer() {
     TEST("CLR.B ($12,A2,D3.W)", 0041062, 0x3012);
     TEST("CLR.B ($001234).W",   0041070, 0x1234);
     TEST("CLR.B ($123456).L",   0041071, 0x0012, 0x3456);
-    ERRT("CLR.B (*+$1234,PC)",  OPERAND_NOT_ALLOWED, "(*+$1234,PC)");
-    ERRT("CLR.B (*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "(*+$12,PC,D3)");
-    ERRT("CLR.B #$1234",        OPERAND_NOT_ALLOWED, "#$1234");
+    ERRT("CLR.B (*+$1234,PC)",  OPERAND_NOT_ALLOWED, "(*+$1234,PC)",  0041000);
+    ERRT("CLR.B (*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "(*+$12,PC,D3)", 0041000);
+    ERRT("CLR.B #$1234",        OPERAND_NOT_ALLOWED, "#$1234",        0041000);
     TEST("CLR.W D2",            0041102);
-    ERRT("CLR.W A2",            OPERAND_NOT_ALLOWED, "A2");
+    ERRT("CLR.W A2",            OPERAND_NOT_ALLOWED, "A2", 0041100);
     TEST("CLR.W (A2)",          0041122);
     TEST("CLR.W (A2)+",         0041132);
     TEST("CLR.W -(A2)",         0041142);
@@ -1012,11 +1003,11 @@ void test_integer() {
     TEST("CLR.W ($12,A2,D3.W)", 0041162, 0x3012);
     TEST("CLR.W ($001234).W",   0041170, 0x1234);
     TEST("CLR.W ($123456).L",   0041171, 0x0012, 0x3456);
-    ERRT("CLR.W (*+$1234,PC)",  OPERAND_NOT_ALLOWED, "(*+$1234,PC)");
-    ERRT("CLR.W (*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "(*+$12,PC,D3)");
-    ERRT("CLR.W #$1234",        OPERAND_NOT_ALLOWED, "#$1234");
+    ERRT("CLR.W (*+$1234,PC)",  OPERAND_NOT_ALLOWED, "(*+$1234,PC)",  0041100);
+    ERRT("CLR.W (*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "(*+$12,PC,D3)", 0041100);
+    ERRT("CLR.W #$1234",        OPERAND_NOT_ALLOWED, "#$1234",        0041100);
     TEST("CLR.L D2",            0041202);
-    ERRT("CLR.L A2",            OPERAND_NOT_ALLOWED, "A2");
+    ERRT("CLR.L A2",            OPERAND_NOT_ALLOWED, "A2", 0041200);
     TEST("CLR.L (A2)",          0041222);
     TEST("CLR.L (A2)+",         0041232);
     TEST("CLR.L -(A2)",         0041242);
@@ -1024,9 +1015,9 @@ void test_integer() {
     TEST("CLR.L ($12,A2,D3.W)", 0041262, 0x3012);
     TEST("CLR.L ($001234).W",   0041270, 0x1234);
     TEST("CLR.L ($123454).L",   0041271, 0x0012, 0x3454);
-    ERRT("CLR.L (*+$1234,PC)",  OPERAND_NOT_ALLOWED, "(*+$1234,PC)");
-    ERRT("CLR.L (*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "(*+$12,PC,D3)");
-    ERRT("CLR.L #$1234",        OPERAND_NOT_ALLOWED, "#$1234");
+    ERRT("CLR.L (*+$1234,PC)",  OPERAND_NOT_ALLOWED, "(*+$1234,PC)",  0041200);
+    ERRT("CLR.L (*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "(*+$12,PC,D3)", 0041200);
+    ERRT("CLR.L #$1234",        OPERAND_NOT_ALLOWED, "#$1234",        0041200);
 
     // CMP src,Dn: 013|Dn|Sz|M|Rn, Sz:B=0/W=1/L=2
     TEST("CMP.B D2,D7",              0137002);
@@ -1094,7 +1085,7 @@ void test_integer() {
 
     // CMPI #nn,dst: 0006|Sz|M|Rn, Sz:B=0/W=1/L=2
     TEST("CMPI.B #$12,D2",            0006002, 0x0012);
-    ERRT("CMPI.B #$12,A2",            OPERAND_NOT_ALLOWED, "#$12,A2");
+    ERRT("CMPI.B #$12,A2",            OPERAND_NOT_ALLOWED, "A2", 0006000);
     TEST("CMPI.B #$12,(A2)",          0006022, 0x0012);
     TEST("CMPI.B #$12,(A2)+",         0006032, 0x0012);
     TEST("CMPI.B #$12,-(A2)",         0006042, 0x0012);
@@ -1102,9 +1093,9 @@ void test_integer() {
     TEST("CMPI.B #$12,($12,A2,D3.W)", 0006062, 0x0012, 0x3012);
     TEST("CMPI.B #$12,($001234).W",   0006070, 0x0012, 0x1234);
     TEST("CMPI.B #$12,($123456).L",   0006071, 0x0012, 0x0012, 0x3456);
-    ERRT("CMPI.B #$12,(*+$1234,PC)",  OPERAND_NOT_ALLOWED, "#$12,(*+$1234,PC)");
-    ERRT("CMPI.B #$12,(*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "#$12,(*+$12,PC,D3)");
-    ERRT("CMPI.B #$12,#$1234",        OPERAND_NOT_ALLOWED, "#$12,#$1234");
+    ERRT("CMPI.B #$12,(*+$1234,PC)",  OPERAND_NOT_ALLOWED, "(*+$1234,PC)",  0006000);
+    ERRT("CMPI.B #$12,(*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "(*+$12,PC,D3)", 0006000);
+    ERRT("CMPI.B #$12,#$1234",        OPERAND_NOT_ALLOWED, "#$1234",        0006000);
     TEST("CMPI.W #$5678,D2",               0006102, 0x5678);
     TEST("CMPI.W #$5678,A2",               0132374, 0x5678); // CMPA.W
     TEST("CMPI.W #$5678,(A2)",             0006122, 0x5678);
@@ -1114,9 +1105,9 @@ void test_integer() {
     TEST("CMPI.W #$5678,($12,A2,D3.W)",    0006162, 0x5678, 0x3012);
     TEST("CMPI.W #$5678,($001234).W",      0006170, 0x5678, 0x1234);
     TEST("CMPI.W #$5678,($123456).L",      0006171, 0x5678, 0x0012, 0x3456);
-    ERRT("CMPI.L #$3456789A,(*+$1234,PC)",  OPERAND_NOT_ALLOWED, "#$3456789A,(*+$1234,PC)");
-    ERRT("CMPI.L #$3456789A,(*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "#$3456789A,(*+$12,PC,D3)");
-    ERRT("CMPI.L #$3456789A,#$1234",        OPERAND_NOT_ALLOWED, "#$3456789A,#$1234");
+    ERRT("CMPI.L #$3456789A,(*+$1234,PC)",  OPERAND_NOT_ALLOWED, "(*+$1234,PC)",  0006200);
+    ERRT("CMPI.L #$3456789A,(*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "(*+$12,PC,D3)", 0006200);
+    ERRT("CMPI.L #$3456789A,#$1234",        OPERAND_NOT_ALLOWED, "#$1234",        0006200);
     TEST("CMPI.L #$3456789A,D2",            0006202, 0x3456, 0x789A);
     TEST("CMPI.L #$3456789A,A2",            0132774, 0x3456, 0x789A); // CMPA.L
     TEST("CMPI.L #$3456789A,(A2)",          0006222, 0x3456, 0x789A);
@@ -1126,9 +1117,9 @@ void test_integer() {
     TEST("CMPI.L #$3456789A,($12,A2,D3.W)", 0006262, 0x3456, 0x789A, 0x3012);
     TEST("CMPI.L #$3456789A,($001234).W",   0006270, 0x3456, 0x789A, 0x1234);
     TEST("CMPI.L #$3456789A,($123454).L",   0006271, 0x3456, 0x789A, 0x0012, 0x3454);
-    ERRT("CMPI.L #$3456789A,(*+$1234,PC)",  OPERAND_NOT_ALLOWED, "#$3456789A,(*+$1234,PC)");
-    ERRT("CMPI.L #$3456789A,(*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "#$3456789A,(*+$12,PC,D3)");
-    ERRT("CMPI.L #$3456789A,#$1234",        OPERAND_NOT_ALLOWED, "#$3456789A,#$1234");
+    ERRT("CMPI.L #$3456789A,(*+$1234,PC)",  OPERAND_NOT_ALLOWED, "(*+$1234,PC)",  0006200);
+    ERRT("CMPI.L #$3456789A,(*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "(*+$12,PC,D3)", 0006200);
+    ERRT("CMPI.L #$3456789A,#$1234",        OPERAND_NOT_ALLOWED, "#$1234",        0006200);
 
     // CMPM (Ay)+,(Ax)+: 013|Ax|Sz|1|Ay, Sz:B=4/W=5/L=6
     TEST("CMPM.B (A2)+,(A7)+", 0137412);
@@ -1138,7 +1129,7 @@ void test_integer() {
 
     // DIVS src,Dn: 010|Dn|7|M|Rn
     TEST("DIVS.W D2,D7",              0107702);
-    ERRT("DIVS.W A2,D7",              OPERAND_NOT_ALLOWED, "A2,D7");
+    ERRT("DIVS.W A2,D7",              OPERAND_NOT_ALLOWED, "A2,D7", 0107700);
     TEST("DIVS.W (A2),D7",            0107722);
     TEST("DIVS.W (A2)+,D7",           0107732);
     TEST("DIVS.W -(A2),D7",           0107742);
@@ -1152,7 +1143,7 @@ void test_integer() {
 
     // DIVU src,Dn: 010|Dn|3|M|Rn
     TEST("DIVU.W D2,D7",              0107302);
-    ERRT("DIVU.W A2,D7",              OPERAND_NOT_ALLOWED, "A2,D7");
+    ERRT("DIVU.W A2,D7",              OPERAND_NOT_ALLOWED, "A2,D7", 0107300);
     TEST("DIVU.W (A2),D7",            0107322);
     TEST("DIVU.W (A2)+,D7",           0107332);
     TEST("DIVU.W -(A2),D7",           0107342);
@@ -1171,7 +1162,7 @@ void test_integer() {
 
     // MULS src,Dn: 014|Dn|7|M|Rn
     TEST("MULS.W D2,D7",              0147702);
-    ERRT("MULS.W A2,D7",              OPERAND_NOT_ALLOWED, "A2,D7");
+    ERRT("MULS.W A2,D7",              OPERAND_NOT_ALLOWED, "A2,D7", 0147700);
     TEST("MULS.W (A2),D7",            0147722);
     TEST("MULS.W (A2)+,D7",           0147732);
     TEST("MULS.W -(A2),D7",           0147742);
@@ -1185,7 +1176,7 @@ void test_integer() {
 
     // MULU src,Dn: 014|Dn|3|M|Rn
     TEST("MULU.W D2,D7",              0147302);
-    ERRT("MULU.W A2,D7",              OPERAND_NOT_ALLOWED, "A2,D7");
+    ERRT("MULU.W A2,D7",              OPERAND_NOT_ALLOWED, "A2,D7", 0147300);
     TEST("MULU.W (A2),D7",            0147322);
     TEST("MULU.W (A2)+,D7",           0147332);
     TEST("MULU.W -(A2),D7",           0147342);
@@ -1199,7 +1190,7 @@ void test_integer() {
 
     // NEG dst: 0042|Sz|M|Rn, Sz:B=0/W=1/L=2
     TEST("NEG.B D2",            0042002);
-    ERRT("NEG.B A2",            OPERAND_NOT_ALLOWED, "A2");
+    ERRT("NEG.B A2",            OPERAND_NOT_ALLOWED, "A2", 0042000);
     TEST("NEG.B (A2)",          0042022);
     TEST("NEG.B (A2)+",         0042032);
     TEST("NEG.B -(A2)",         0042042);
@@ -1207,11 +1198,11 @@ void test_integer() {
     TEST("NEG.B ($12,A2,D3.W)", 0042062, 0x3012);
     TEST("NEG.B ($001234).W",   0042070, 0x1234);
     TEST("NEG.B ($123456).L",   0042071, 0x0012, 0x3456);
-    ERRT("NEG.B (*+$1234,PC)",  OPERAND_NOT_ALLOWED, "(*+$1234,PC)");
-    ERRT("NEG.B (*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "(*+$12,PC,D3)");
-    ERRT("NEG.B #$1234",        OPERAND_NOT_ALLOWED, "#$1234");
+    ERRT("NEG.B (*+$1234,PC)",  OPERAND_NOT_ALLOWED, "(*+$1234,PC)",  0042000);
+    ERRT("NEG.B (*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "(*+$12,PC,D3)", 0042000);
+    ERRT("NEG.B #$1234",        OPERAND_NOT_ALLOWED, "#$1234",        0042000);
     TEST("NEG.W D2",            0042102);
-    ERRT("NEG.W A2",            OPERAND_NOT_ALLOWED, "A2");
+    ERRT("NEG.W A2",            OPERAND_NOT_ALLOWED, "A2", 0042100);
     TEST("NEG.W (A2)",          0042122);
     TEST("NEG.W (A2)+",         0042132);
     TEST("NEG.W -(A2)",         0042142);
@@ -1219,11 +1210,11 @@ void test_integer() {
     TEST("NEG.W ($12,A2,D3.W)", 0042162, 0x3012);
     TEST("NEG.W ($001234).W",   0042170, 0x1234);
     TEST("NEG.W ($123456).L",   0042171, 0x0012, 0x3456);
-    ERRT("NEG.W (*+$1234,PC)",  OPERAND_NOT_ALLOWED, "(*+$1234,PC)");
-    ERRT("NEG.W (*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "(*+$12,PC,D3)");
-    ERRT("NEG.W #$1234",        OPERAND_NOT_ALLOWED, "#$1234");
+    ERRT("NEG.W (*+$1234,PC)",  OPERAND_NOT_ALLOWED, "(*+$1234,PC)",  0042100);
+    ERRT("NEG.W (*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "(*+$12,PC,D3)", 0042100);
+    ERRT("NEG.W #$1234",        OPERAND_NOT_ALLOWED, "#$1234",        0042100);
     TEST("NEG.L D2",            0042202);
-    ERRT("NEG.L A2",            OPERAND_NOT_ALLOWED, "A2");
+    ERRT("NEG.L A2",            OPERAND_NOT_ALLOWED, "A2", 0042200);
     TEST("NEG.L (A2)",          0042222);
     TEST("NEG.L (A2)+",         0042232);
     TEST("NEG.L -(A2)",         0042242);
@@ -1231,13 +1222,13 @@ void test_integer() {
     TEST("NEG.L ($12,A2,D3.W)", 0042262, 0x3012);
     TEST("NEG.L ($001234).W",   0042270, 0x1234);
     TEST("NEG.L ($123454).L",   0042271, 0x0012, 0x3454);
-    ERRT("NEG.L (*+$1234,PC)",  OPERAND_NOT_ALLOWED, "(*+$1234,PC)");
-    ERRT("NEG.L (*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "(*+$12,PC,D3)");
-    ERRT("NEG.L #$1234",        OPERAND_NOT_ALLOWED, "#$1234");
+    ERRT("NEG.L (*+$1234,PC)",  OPERAND_NOT_ALLOWED, "(*+$1234,PC)",  0042200);
+    ERRT("NEG.L (*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "(*+$12,PC,D3)", 0042200);
+    ERRT("NEG.L #$1234",        OPERAND_NOT_ALLOWED, "#$1234",        0042200);
 
     // NEGX dst: 0040|Sz|M|Rn, Sz:B=0/W=1/L=2
     TEST("NEGX.B D2",            0040002);
-    ERRT("NEGX.B A2",            OPERAND_NOT_ALLOWED, "A2");
+    ERRT("NEGX.B A2",            OPERAND_NOT_ALLOWED, "A2", 0040000);
     TEST("NEGX.B (A2)",          0040022);
     TEST("NEGX.B (A2)+",         0040032);
     TEST("NEGX.B -(A2)",         0040042);
@@ -1245,11 +1236,11 @@ void test_integer() {
     TEST("NEGX.B ($12,A2,D3.W)", 0040062, 0x3012);
     TEST("NEGX.B ($001234).W",   0040070, 0x1234);
     TEST("NEGX.B ($123456).L",   0040071, 0x0012, 0x3456);
-    ERRT("NEGX.B (*+$1234,PC)",  OPERAND_NOT_ALLOWED, "(*+$1234,PC)");
-    ERRT("NEGX.B (*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "(*+$12,PC,D3)");
-    ERRT("NEGX.B #$1234",        OPERAND_NOT_ALLOWED, "#$1234");
+    ERRT("NEGX.B (*+$1234,PC)",  OPERAND_NOT_ALLOWED, "(*+$1234,PC)",  0040000);
+    ERRT("NEGX.B (*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "(*+$12,PC,D3)", 0040000);
+    ERRT("NEGX.B #$1234",        OPERAND_NOT_ALLOWED, "#$1234",        0040000);
     TEST("NEGX.W D2",            0040102);
-    ERRT("NEGX.W A2",            OPERAND_NOT_ALLOWED, "A2");
+    ERRT("NEGX.W A2",            OPERAND_NOT_ALLOWED, "A2", 0040100);
     TEST("NEGX.W (A2)",          0040122);
     TEST("NEGX.W (A2)+",         0040132);
     TEST("NEGX.W -(A2)",         0040142);
@@ -1257,11 +1248,11 @@ void test_integer() {
     TEST("NEGX.W ($12,A2,D3.W)", 0040162, 0x3012);
     TEST("NEGX.W ($001234).W",   0040170, 0x1234);
     TEST("NEGX.W ($123456).L",   0040171, 0x0012, 0x3456);
-    ERRT("NEGX.W (*+$1234,PC)",  OPERAND_NOT_ALLOWED, "(*+$1234,PC)");
-    ERRT("NEGX.W (*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "(*+$12,PC,D3)");
-    ERRT("NEGX.W #$1234",        OPERAND_NOT_ALLOWED, "#$1234");
+    ERRT("NEGX.W (*+$1234,PC)",  OPERAND_NOT_ALLOWED, "(*+$1234,PC)",  0040100);
+    ERRT("NEGX.W (*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "(*+$12,PC,D3)", 0040100);
+    ERRT("NEGX.W #$1234",        OPERAND_NOT_ALLOWED, "#$1234",        0040100);
     TEST("NEGX.L D2",            0040202);
-    ERRT("NEGX.L A2",            OPERAND_NOT_ALLOWED, "A2");
+    ERRT("NEGX.L A2",            OPERAND_NOT_ALLOWED, "A2", 0040200);
     TEST("NEGX.L (A2)",          0040222);
     TEST("NEGX.L (A2)+",         0040232);
     TEST("NEGX.L -(A2)",         0040242);
@@ -1269,9 +1260,9 @@ void test_integer() {
     TEST("NEGX.L ($12,A2,D3.W)", 0040262, 0x3012);
     TEST("NEGX.L ($001234).W",   0040270, 0x1234);
     TEST("NEGX.L ($123454).L",   0040271, 0x0012, 0x3454);
-    ERRT("NEGX.L (*+$1234,PC)",  OPERAND_NOT_ALLOWED, "(*+$1234,PC)");
-    ERRT("NEGX.L (*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "(*+$12,PC,D3)");
-    ERRT("NEGX.L #$1234",        OPERAND_NOT_ALLOWED, "#$1234");
+    ERRT("NEGX.L (*+$1234,PC)",  OPERAND_NOT_ALLOWED, "(*+$1234,PC)",  0040200);
+    ERRT("NEGX.L (*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "(*+$12,PC,D3)", 0040200);
+    ERRT("NEGX.L #$1234",        OPERAND_NOT_ALLOWED, "#$1234",        0040200);
 
     // SUB src,Dn: 011|Dn|Sz|M|Rn, Sz:B=0/W=1/L=2
     TEST("SUB.B D2,D7",              0117002);
@@ -1313,7 +1304,7 @@ void test_integer() {
 
     // SUB Dn,dst: 011|Dn|Sz|M|Rn, Sz:B=4/W=5/L=6
     TEST("SUB.B D7,D2",            0112007);
-    ERRT("SUB.B D7,A2",            OPERAND_NOT_ALLOWED, "D7,A2");
+    ERRT("SUB.B D7,A2",            OPERAND_NOT_ALLOWED, "A2", 0117400);
     TEST("SUB.B D7,(A2)",          0117422);
     TEST("SUB.B D7,(A2)+",         0117432);
     TEST("SUB.B D7,-(A2)",         0117442);
@@ -1321,9 +1312,9 @@ void test_integer() {
     TEST("SUB.B D7,($12,A2,D3.L)", 0117462, 0x3812);
     ABSW("SUB.B D7,(@W).W", "FFFF", 0117470, 0xFFFF);
     TEST("SUB.B D7,($123456).L",   0117471, 0x0012, 0x3456);
-    ERRT("SUB.B D7,(*+$1234,PC)",  OPERAND_NOT_ALLOWED, "D7,(*+$1234,PC)");
-    ERRT("SUB.B D7,(*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "D7,(*+$12,PC,D3)");
-    ERRT("SUB.B D7,#$1234",        OPERAND_NOT_ALLOWED, "D7,#$1234");
+    ERRT("SUB.B D7,(*+$1234,PC)",  OPERAND_NOT_ALLOWED, "(*+$1234,PC)",  0117400);
+    ERRT("SUB.B D7,(*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "(*+$12,PC,D3)", 0117400);
+    ERRT("SUB.B D7,#$1234",        OPERAND_NOT_ALLOWED, "#$1234",        0117400);
     TEST("SUB.W D7,D2",            0112107);
     TEST("SUB.W D7,A2",            0112307); // SUBA.W
     TEST("SUB.W D7,(A2)",          0117522);
@@ -1345,9 +1336,9 @@ void test_integer() {
     TEST("SUB.L D7,($12,A2,D3.L)", 0117662, 0x3812);
     ABSW("SUB.L D7,(@W).W", "FFFC", 0117670, 0xFFFC);
     TEST("SUB.L D7,($123454).L",   0117671, 0x0012, 0x3454);
-    ERRT("SUB.L D7,(*+$1234,PC)",  OPERAND_NOT_ALLOWED, "D7,(*+$1234,PC)");
-    ERRT("SUB.L D7,(*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "D7,(*+$12,PC,D3)");
-    ERRT("SUB.L D7,#$1234",        OPERAND_NOT_ALLOWED, "D7,#$1234");
+    ERRT("SUB.L D7,(*+$1234,PC)",  OPERAND_NOT_ALLOWED, "(*+$1234,PC)",  0117600);
+    ERRT("SUB.L D7,(*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "(*+$12,PC,D3)", 0117600);
+    ERRT("SUB.L D7,#$1234",        OPERAND_NOT_ALLOWED, "#$1234",        0117600);
 
     // SUBA src,An: 011|An|Sz|M|Rn, Sz:W=3/L=7
     TEST("SUBA.W D2,A6",              0116302);
@@ -1377,7 +1368,7 @@ void test_integer() {
 
     // SUBI #nn,dst: 0002|Sz|M|Rn, SZ:B=0/W=1/L=2
     TEST("SUBI.B #$12,D2",            0002002, 0x0012);
-    ERRT("SUBI.B #$12,A2",            OPERAND_NOT_ALLOWED, "#$12,A2");
+    ERRT("SUBI.B #$12,A2",            OPERAND_NOT_ALLOWED, "A2", 0002000);
     TEST("SUBI.B #$12,(A2)",          0002022, 0x0012);
     TEST("SUBI.B #$12,(A2)+",         0002032, 0x0012);
     TEST("SUBI.B #$12,-(A2)",         0002042, 0x0012);
@@ -1385,9 +1376,9 @@ void test_integer() {
     TEST("SUBI.B #$12,($12,A2,D3.W)", 0002062, 0x0012, 0x3012);
     TEST("SUBI.B #$12,($001234).W",   0002070, 0x0012, 0x1234);
     TEST("SUBI.B #$12,($123456).L",   0002071, 0x0012, 0x0012, 0x3456);
-    ERRT("SUBI.B #$12,(*+$1234,PC)",  OPERAND_NOT_ALLOWED, "#$12,(*+$1234,PC)");
-    ERRT("SUBI.B #$12,(*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "#$12,(*+$12,PC,D3)");
-    ERRT("SUBI.B #$12,#$1234",        OPERAND_NOT_ALLOWED, "#$12,#$1234");
+    ERRT("SUBI.B #$12,(*+$1234,PC)",  OPERAND_NOT_ALLOWED, "(*+$1234,PC)",  0002000);
+    ERRT("SUBI.B #$12,(*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "(*+$12,PC,D3)", 0002000);
+    ERRT("SUBI.B #$12,#$1234",        OPERAND_NOT_ALLOWED, "#$1234",        0002000);
     TEST("SUBI.W #$5678,D2",            0002102, 0x5678);
     TEST("SUBI.W #$5678,A2",            0112374, 0x5678); // SUBA.W
     TEST("SUBI.W #$5678,(A2)",          0002122, 0x5678);
@@ -1397,9 +1388,9 @@ void test_integer() {
     TEST("SUBI.W #$5678,($12,A2,D3.W)", 0002162, 0x5678, 0x3012);
     TEST("SUBI.W #$5678,($001234).W",   0002170, 0x5678, 0x1234);
     TEST("SUBI.W #$5678,($123456).L",   0002171, 0x5678, 0x0012, 0x3456);
-    ERRT("SUBI.W #$5678,(*+$1234,PC)",  OPERAND_NOT_ALLOWED, "#$5678,(*+$1234,PC)");
-    ERRT("SUBI.W #$5678,(*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "#$5678,(*+$12,PC,D3)");
-    ERRT("SUBI.W #$5678,#$1234",        OPERAND_NOT_ALLOWED, "#$5678,#$1234");
+    ERRT("SUBI.W #$5678,(*+$1234,PC)",  OPERAND_NOT_ALLOWED, "(*+$1234,PC)",  0002100);
+    ERRT("SUBI.W #$5678,(*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "(*+$12,PC,D3)", 0002100);
+    ERRT("SUBI.W #$5678,#$1234",        OPERAND_NOT_ALLOWED, "#$1234",        0002100);
     TEST("SUBI.L #$3456789A,D2",            0002202, 0x3456, 0x789A);
     TEST("SUBI.L #$3456789A,A2",            0112774, 0x3456, 0x789A); // SUBA.L
     TEST("SUBI.L #$3456789A,(A2)",          0002222, 0x3456, 0x789A);
@@ -1409,9 +1400,9 @@ void test_integer() {
     TEST("SUBI.L #$3456789A,($12,A2,D3.W)", 0002262, 0x3456, 0x789A, 0x3012);
     TEST("SUBI.L #$3456789A,($001234).W",   0002270, 0x3456, 0x789A, 0x1234);
     TEST("SUBI.L #$3456789A,($123454).L",   0002271, 0x3456, 0x789A, 0x0012, 0x3454);
-    ERRT("SUBI.L #$3456789A,(*+$1234,PC)",  OPERAND_NOT_ALLOWED, "#$3456789A,(*+$1234,PC)");
-    ERRT("SUBI.L #$3456789A,(*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "#$3456789A,(*+$12,PC,D3)");
-    ERRT("SUBI.L #$3456789A,#$1234",        OPERAND_NOT_ALLOWED, "#$3456789A,#$1234");
+    ERRT("SUBI.L #$3456789A,(*+$1234,PC)",  OPERAND_NOT_ALLOWED, "(*+$1234,PC)",  0002200);
+    ERRT("SUBI.L #$3456789A,(*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "(*+$12,PC,D3)", 0002200);
+    ERRT("SUBI.L #$3456789A,#$1234",        OPERAND_NOT_ALLOWED, "#$1234",        0002200);
 
     // SUBQ #nn,dst: 005|nn|Sz|M\En, Sz:B=4/W=5/L=6
     TEST("SUBQ.B #8,D2",            0050402);
@@ -1423,9 +1414,9 @@ void test_integer() {
     TEST("SUBQ.B #8,($12,A2,D3.W)", 0050462, 0x3012);
     TEST("SUBQ.B #8,($001234).W",   0050470, 0x1234);
     TEST("SUBQ.B #8,($123456).L",   0050471, 0x0012, 0x3456);
-    ERRT("SUBQ.B #8,(*+$1234,PC)",  OPERAND_NOT_ALLOWED, "#8,(*+$1234,PC)");
-    ERRT("SUBQ.B #8,(*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "#8,(*+$12,PC,D3)");
-    ERRT("SUBQ.B #8,#$1234",        OPERAND_NOT_ALLOWED, "#8,#$1234");
+    ERRT("SUBQ.B #8,(*+$1234,PC)",  OPERAND_NOT_ALLOWED, "(*+$1234,PC)",  0050400);
+    ERRT("SUBQ.B #8,(*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "(*+$12,PC,D3)", 0050400);
+    ERRT("SUBQ.B #8,#$1234",        OPERAND_NOT_ALLOWED, "#$1234",        0050400);
     TEST("SUBQ.W #8,D2",            0050502);
     TEST("SUBQ.W #8,A2",            0050512);
     TEST("SUBQ.W #8,(A2)",          0050522);
@@ -1435,9 +1426,9 @@ void test_integer() {
     TEST("SUBQ.W #8,($12,A2,D3.W)", 0050562, 0x3012);
     TEST("SUBQ.W #8,($001234).W",   0050570, 0x1234);
     TEST("SUBQ.W #8,($123456).L",   0050571, 0x0012, 0x3456);
-    ERRT("SUBQ.W #8,(*+$1234,PC)",  OPERAND_NOT_ALLOWED, "#8,(*+$1234,PC)");
-    ERRT("SUBQ.W #8,(*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "#8,(*+$12,PC,D3)");
-    ERRT("SUBQ.W #8,#$1234",        OPERAND_NOT_ALLOWED, "#8,#$1234");
+    ERRT("SUBQ.W #8,(*+$1234,PC)",  OPERAND_NOT_ALLOWED, "(*+$1234,PC)",  0050500);
+    ERRT("SUBQ.W #8,(*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "(*+$12,PC,D3)", 0050500);
+    ERRT("SUBQ.W #8,#$1234",        OPERAND_NOT_ALLOWED, "#$1234",        0050500);
     TEST("SUBQ.L #8,D2",            0050602);
     TEST("SUBQ.L #8,A2",            0050612);
     TEST("SUBQ.L #8,(A2)",          0050622);
@@ -1447,9 +1438,9 @@ void test_integer() {
     TEST("SUBQ.L #8,($12,A2,D3.W)", 0050662, 0x3012);
     TEST("SUBQ.L #8,($001234).W",   0050670, 0x1234);
     TEST("SUBQ.L #8,($123454).L",   0050671, 0x0012, 0x3454);
-    ERRT("SUBQ.L #8,(*+$1234,PC)",  OPERAND_NOT_ALLOWED, "#8,(*+$1234,PC)");
-    ERRT("SUBQ.L #8,(*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "#8,(*+$12,PC,D3)");
-    ERRT("SUBQ.L #8,#$1234",        OPERAND_NOT_ALLOWED, "#8,#$1234");
+    ERRT("SUBQ.L #8,(*+$1234,PC)",  OPERAND_NOT_ALLOWED, "(*+$1234,PC)",  0050600);
+    ERRT("SUBQ.L #8,(*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "(*+$12,PC,D3)", 0050600);
+    ERRT("SUBQ.L #8,#$1234",        OPERAND_NOT_ALLOWED, "#$1234",        0050600);
 
     // SUBX Dx,Dy: 011|Dy|Sz|0|Dx, Sz:B=4/W=5/L=6
     TEST("SUBX.B D2,D3", 0113402);
@@ -1477,7 +1468,7 @@ void test_logical() {
     TEST("AND.B (*+$12,PC,D3.W),D7", 0147073, 0x3010);
     TEST("AND.B #$34,D7",            0147074, 0x0034);
     TEST("AND.W D2,D7",              0147102);
-    ERRT("AND.W A2,D7",              OPERAND_NOT_ALLOWED, "A2,D7");
+    ERRT("AND.W A2,D7",              OPERAND_NOT_ALLOWED, "A2,D7", 0147100);
     TEST("AND.W (A2),D7",            0147122);
     TEST("AND.W (A2)+,D7",           0147132);
     TEST("AND.W -(A2),D7",           0147142);
@@ -1489,7 +1480,7 @@ void test_logical() {
     TEST("AND.W (*+$12,PC,D3.W),D7", 0147173, 0x3010);
     TEST("AND.W #$0034,D7",          0147174, 0x0034);
     TEST("AND.L D2,D7",              0147202);
-    ERRT("AND.L A2,D7",              OPERAND_NOT_ALLOWED, "A2,D7");
+    ERRT("AND.L A2,D7",              OPERAND_NOT_ALLOWED, "A2,D7", 0147200);
     TEST("AND.L (A2),D7",            0147222);
     TEST("AND.L (A2)+,D7",           0147232);
     TEST("AND.L -(A2),D7",           0147242);
@@ -1503,7 +1494,7 @@ void test_logical() {
 
     // AND Dn.dst: 014|Dn|Sz|M|Rn, Sz:B=4/W=5/L=6
     TEST("AND.B D7,D2",            0142007);
-    ERRT("AND.B D7,A2",            OPERAND_NOT_ALLOWED, "D7,A2");
+    ERRT("AND.B D7,A2",            OPERAND_NOT_ALLOWED, "A2", 0147400);
     TEST("AND.B D7,(A2)",          0147422);
     TEST("AND.B D7,(A2)+",         0147432);
     TEST("AND.B D7,-(A2)",         0147442);
@@ -1511,11 +1502,11 @@ void test_logical() {
     TEST("AND.B D7,($12,A2,D3.L)", 0147462, 0x3812);
     ABSW("AND.B D7,(@W).W", "FFFF", 0147470, 0xFFFF);
     TEST("AND.B D7,($123456).L",   0147471, 0x0012, 0x3456);
-    ERRT("AND.B D7,(*+$1234,PC)",  OPERAND_NOT_ALLOWED, "D7,(*+$1234,PC)");
-    ERRT("AND.B D7,(*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "D7,(*+$12,PC,D3)");
-    ERRT("AND.B D7,#$1234",        OPERAND_NOT_ALLOWED, "D7,#$1234");
+    ERRT("AND.B D7,(*+$1234,PC)",  OPERAND_NOT_ALLOWED, "(*+$1234,PC)",  0147400);
+    ERRT("AND.B D7,(*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "(*+$12,PC,D3)", 0147400);
+    ERRT("AND.B D7,#$1234",        OPERAND_NOT_ALLOWED, "#$1234",        0147400);
     TEST("AND.W D7,D2",            0142107);
-    ERRT("AND.W D7,A7",            OPERAND_NOT_ALLOWED, "D7,A7");
+    ERRT("AND.W D7,A7",            OPERAND_NOT_ALLOWED, "A7", 0147500);
     TEST("AND.W D7,(A2)",          0147522);
     TEST("AND.W D7,(A2)+",         0147532);
     TEST("AND.W D7,-(A2)",         0147542);
@@ -1523,11 +1514,11 @@ void test_logical() {
     TEST("AND.W D7,($12,A2,D3.L)", 0147562, 0x3812);
     ABSW("AND.W D7,(@W).W", "FFFE", 0147570, 0xFFFE);
     TEST("AND.W D7,($123456).L",   0147571, 0x0012, 0x3456);
-    ERRT("AND.W D7,(*+$1234,PC)",  OPERAND_NOT_ALLOWED, "D7,(*+$1234,PC)");
-    ERRT("AND.W D7,(*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "D7,(*+$12,PC,D3)");
-    ERRT("AND.W D7,#$1234",        OPERAND_NOT_ALLOWED, "D7,#$1234");
+    ERRT("AND.W D7,(*+$1234,PC)",  OPERAND_NOT_ALLOWED, "(*+$1234,PC)",  0147500);
+    ERRT("AND.W D7,(*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "(*+$12,PC,D3)", 0147500);
+    ERRT("AND.W D7,#$1234",        OPERAND_NOT_ALLOWED, "#$1234",        0147500);
     TEST("AND.L D7,D2",            0142207);
-    ERRT("AND.L D7,A2",            OPERAND_NOT_ALLOWED, "D7,A2");
+    ERRT("AND.L D7,A2",            OPERAND_NOT_ALLOWED, "A2", 0147600);
     TEST("AND.L D7,(A2)",          0147622);
     TEST("AND.L D7,(A2)+",         0147632);
     TEST("AND.L D7,-(A2)",         0147642);
@@ -1535,13 +1526,13 @@ void test_logical() {
     TEST("AND.L D7,($12,A2,D3.L)", 0147662, 0x3812);
     ABSW("AND.L D7,(@W).W", "FFFC", 0147670, 0xFFFC);
     TEST("AND.L D7,($123454).L",   0147671, 0x0012, 0x3454);
-    ERRT("AND.L D7,(*+$1234,PC)",  OPERAND_NOT_ALLOWED, "D7,(*+$1234,PC)");
-    ERRT("AND.L D7,(*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "D7,(*+$12,PC,D3)");
-    ERRT("AND.L D7,#$1234",        OPERAND_NOT_ALLOWED, "D7,#$1234");
+    ERRT("AND.L D7,(*+$1234,PC)",  OPERAND_NOT_ALLOWED, "(*+$1234,PC)",  0147600);
+    ERRT("AND.L D7,(*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "(*+$12,PC,D3)", 0147600);
+    ERRT("AND.L D7,#$1234",        OPERAND_NOT_ALLOWED, "#$1234",        0147600);
 
     // ANDI #nn,dst: 0001|Sz|M|Rn, Sz:B=0/W=1/L=2
     TEST("ANDI.B #$12,D2",            0001002, 0x0012);
-    ERRT("ANDI.B #$12,A2",            OPERAND_NOT_ALLOWED, "#$12,A2");
+    ERRT("ANDI.B #$12,A2",            OPERAND_NOT_ALLOWED, "A2", 0001000);
     TEST("ANDI.B #$12,(A2)",          0001022, 0x0012);
     TEST("ANDI.B #$12,(A2)+",         0001032, 0x0012);
     TEST("ANDI.B #$12,-(A2)",         0001042, 0x0012);
@@ -1549,11 +1540,11 @@ void test_logical() {
     TEST("ANDI.B #$12,($12,A2,D3.W)", 0001062, 0x0012, 0x3012);
     TEST("ANDI.B #$12,($001234).W",   0001070, 0x0012, 0x1234);
     TEST("ANDI.B #$12,($123456).L",   0001071, 0x0012, 0x0012, 0x3456);
-    ERRT("ANDI.B #$12,(*+$1234,PC)",  OPERAND_NOT_ALLOWED, "#$12,(*+$1234,PC)");
-    ERRT("ANDI.B #$12,(*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "#$12,(*+$12,PC,D3)");
-    ERRT("ANDI.B #$12,#$1234",        OPERAND_NOT_ALLOWED, "#$12,#$1234");
+    ERRT("ANDI.B #$12,(*+$1234,PC)",  OPERAND_NOT_ALLOWED, "(*+$1234,PC)",  0001000);
+    ERRT("ANDI.B #$12,(*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "(*+$12,PC,D3)", 0001000);
+    ERRT("ANDI.B #$12,#$1234",        OPERAND_NOT_ALLOWED, "#$1234",        0001000);
     TEST("ANDI.W #$5678,D2",            0001102, 0x5678);
-    ERRT("ANDI.W #$5678,A2",            OPERAND_NOT_ALLOWED, "#$5678,A2");
+    ERRT("ANDI.W #$5678,A2",            OPERAND_NOT_ALLOWED, "A2", 0001100);
     TEST("ANDI.W #$5678,(A2)",          0001122, 0x5678);
     TEST("ANDI.W #$5678,(A2)+",         0001132, 0x5678);
     TEST("ANDI.W #$5678,-(A2)",         0001142, 0x5678);
@@ -1561,11 +1552,11 @@ void test_logical() {
     TEST("ANDI.W #$5678,($12,A2,D3.W)", 0001162, 0x5678, 0x3012);
     TEST("ANDI.W #$5678,($001234).W",   0001170, 0x5678, 0x1234);
     TEST("ANDI.W #$5678,($123456).L",   0001171, 0x5678, 0x0012, 0x3456);
-    ERRT("ANDI.W #$5678,(*+$1234,PC)",  OPERAND_NOT_ALLOWED, "#$5678,(*+$1234,PC)");
-    ERRT("ANDI.W #$5678,(*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "#$5678,(*+$12,PC,D3)");
-    ERRT("ANDI.W #$5678,#$1234",        OPERAND_NOT_ALLOWED, "#$5678,#$1234");
+    ERRT("ANDI.W #$5678,(*+$1234,PC)",  OPERAND_NOT_ALLOWED, "(*+$1234,PC)",  0001100);
+    ERRT("ANDI.W #$5678,(*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "(*+$12,PC,D3)", 0001100);
+    ERRT("ANDI.W #$5678,#$1234",        OPERAND_NOT_ALLOWED, "#$1234",        0001100);
     TEST("ANDI.L #$3456789A,D2",            0001202, 0x3456, 0x789A);
-    ERRT("ANDI.L #$3456789A,A2",            OPERAND_NOT_ALLOWED, "#$3456789A,A2");
+    ERRT("ANDI.L #$3456789A,A2",            OPERAND_NOT_ALLOWED, "A2", 0001200);
     TEST("ANDI.L #$3456789A,(A2)",          0001222, 0x3456, 0x789A);
     TEST("ANDI.L #$3456789A,(A2)+",         0001232, 0x3456, 0x789A);
     TEST("ANDI.L #$3456789A,-(A2)",         0001242, 0x3456, 0x789A);
@@ -1573,13 +1564,13 @@ void test_logical() {
     TEST("ANDI.L #$3456789A,($12,A2,D3.W)", 0001262, 0x3456, 0x789A, 0x3012);
     TEST("ANDI.L #$3456789A,($001234).W",   0001270, 0x3456, 0x789A, 0x1234);
     TEST("ANDI.L #$34567898,($123454).L",   0001271, 0x3456, 0x7898, 0x0012, 0x3454);
-    ERRT("ANDI.L #$3456789A,(*+$1234,PC)",  OPERAND_NOT_ALLOWED, "#$3456789A,(*+$1234,PC)");
-    ERRT("ANDI.L #$3456789A,(*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "#$3456789A,(*+$12,PC,D3)");
-    ERRT("ANDI.L #$3456789A,#$1234",        OPERAND_NOT_ALLOWED, "#$3456789A,#$1234");
+    ERRT("ANDI.L #$3456789A,(*+$1234,PC)",  OPERAND_NOT_ALLOWED, "(*+$1234,PC)",  0001200);
+    ERRT("ANDI.L #$3456789A,(*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "(*+$12,PC,D3)", 0001200);
+    ERRT("ANDI.L #$3456789A,#$1234",        OPERAND_NOT_ALLOWED, "#$1234",        0001200);
 
     // EOR Dn,dst: 013|Dn|Sz|M|Rn, Sz:B=4/W=5/L=6
     TEST("EOR.B D7,D2",            0137402);
-    ERRT("EOR.B D7,A2",            OPERAND_NOT_ALLOWED, "D7,A2");
+    ERRT("EOR.B D7,A2",            OPERAND_NOT_ALLOWED, "A2", 0137400);
     TEST("EOR.B D7,(A2)",          0137422);
     TEST("EOR.B D7,(A2)+",         0137432);
     TEST("EOR.B D7,-(A2)",         0137442);
@@ -1587,11 +1578,11 @@ void test_logical() {
     TEST("EOR.B D7,($12,A2,D3.L)", 0137462, 0x3812);
     ABSW("EOR.B D7,(@W).W", "FFFF", 0137470, 0xFFFF);
     TEST("EOR.B D7,($123456).L",   0137471, 0x0012, 0x3456);
-    ERRT("EOR.B D7,(*+$1234,PC)",  OPERAND_NOT_ALLOWED, "D7,(*+$1234,PC)");
-    ERRT("EOR.B D7,(*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "D7,(*+$12,PC,D3)");
-    ERRT("EOR.B #$12,#$1234",      OPERAND_NOT_ALLOWED, "#$12,#$1234");
+    ERRT("EOR.B D7,(*+$1234,PC)",  OPERAND_NOT_ALLOWED, "(*+$1234,PC)",  0137400);
+    ERRT("EOR.B D7,(*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "(*+$12,PC,D3)", 0137400);
+    ERRT("EOR.B D7,#$1234",        OPERAND_NOT_ALLOWED, "#$1234",        0137400);
     TEST("EOR.W D7,D2",            0137502);
-    ERRT("EOR.W D7,A2",            OPERAND_NOT_ALLOWED, "D7,A2");
+    ERRT("EOR.W D7,A2",            OPERAND_NOT_ALLOWED, "A2", 0137500);
     TEST("EOR.W D7,(A2)",          0137522);
     TEST("EOR.W D7,(A2)+",         0137532);
     TEST("EOR.W D7,-(A2)",         0137542);
@@ -1599,11 +1590,11 @@ void test_logical() {
     TEST("EOR.W D7,($12,A2,D3.L)", 0137562, 0x3812);
     ABSW("EOR.W D7,(@W).W", "FFFE", 0137570, 0xFFFE);
     TEST("EOR.W D7,($123456).L",   0137571, 0x0012, 0x3456);
-    ERRT("EOR.W D7,(*+$1234,PC)",  OPERAND_NOT_ALLOWED, "D7,(*+$1234,PC)");
-    ERRT("EOR.W D7,(*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "D7,(*+$12,PC,D3)");
-    ERRT("EOR.W D7,#$1234",        OPERAND_NOT_ALLOWED, "D7,#$1234");
+    ERRT("EOR.W D7,(*+$1234,PC)",  OPERAND_NOT_ALLOWED, "(*+$1234,PC)",  0137500);
+    ERRT("EOR.W D7,(*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "(*+$12,PC,D3)", 0137500);
+    ERRT("EOR.W D7,#$1234",        OPERAND_NOT_ALLOWED, "#$1234",        0137500);
     TEST("EOR.L D7,D2",            0137602);
-    ERRT("EOR.L D7,A2",            OPERAND_NOT_ALLOWED, "D7,A2");
+    ERRT("EOR.L D7,A2",            OPERAND_NOT_ALLOWED, "A2", 0137600);
     TEST("EOR.L D7,(A2)",          0137622);
     TEST("EOR.L D7,(A2)+",         0137632);
     TEST("EOR.L D7,-(A2)",         0137642);
@@ -1611,13 +1602,13 @@ void test_logical() {
     TEST("EOR.L D7,($12,A2,D3.L)", 0137662, 0x3812);
     ABSW("EOR.L D7,(@W).W", "FFFC", 0137670, 0xFFFC);
     TEST("EOR.L D7,($123454).L",   0137671, 0x0012, 0x3454);
-    ERRT("EOR.L D7,(*+$1234,PC)",  OPERAND_NOT_ALLOWED, "D7,(*+$1234,PC)");
-    ERRT("EOR.L D7,(*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "D7,(*+$12,PC,D3)");
-    ERRT("EOR.L D7,#$1234",        OPERAND_NOT_ALLOWED, "D7,#$1234");
+    ERRT("EOR.L D7,(*+$1234,PC)",  OPERAND_NOT_ALLOWED, "(*+$1234,PC)",  0137600);
+    ERRT("EOR.L D7,(*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "(*+$12,PC,D3)", 0137600);
+    ERRT("EOR.L D7,#$1234",        OPERAND_NOT_ALLOWED, "#$1234",        0137600);
 
     // EORI #nn,dst: 0005|Sz|M|Rn, Sz:B=0/W=1/L=2
     TEST("EORI.B #$12,D2",            0005002, 0x0012);
-    ERRT("EORI.B #$12,A2",            OPERAND_NOT_ALLOWED, "#$12,A2");
+    ERRT("EORI.B #$12,A2",            OPERAND_NOT_ALLOWED, "A2", 0005000);
     TEST("EORI.B #$12,(A2)",          0005022, 0x0012);
     TEST("EORI.B #$12,(A2)+",         0005032, 0x0012);
     TEST("EORI.B #$12,-(A2)",         0005042, 0x0012);
@@ -1625,11 +1616,11 @@ void test_logical() {
     TEST("EORI.B #$12,($12,A2,D3.W)", 0005062, 0x0012, 0x3012);
     TEST("EORI.B #$12,($001234).W",   0005070, 0x0012, 0x1234);
     TEST("EORI.B #$12,($123456).L",   0005071, 0x0012, 0x0012, 0x3456);
-    ERRT("EORI.B #$12,(*+$1234,PC)",  OPERAND_NOT_ALLOWED, "#$12,(*+$1234,PC)");
-    ERRT("EORI.B #$12,(*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "#$12,(*+$12,PC,D3)");
-    ERRT("EORI.B #$12,#$1234",        OPERAND_NOT_ALLOWED, "#$12,#$1234");
+    ERRT("EORI.B #$12,(*+$1234,PC)",  OPERAND_NOT_ALLOWED, "(*+$1234,PC)",  0005000);
+    ERRT("EORI.B #$12,(*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "(*+$12,PC,D3)", 0005000);
+    ERRT("EORI.B #$12,#$1234",        OPERAND_NOT_ALLOWED, "#$1234",        0005000);
     TEST("EORI.W #$5678,D2",            0005102, 0x5678);
-    ERRT("EORI.W #$5678,A2",            OPERAND_NOT_ALLOWED, "#$5678,A2");
+    ERRT("EORI.W #$5678,A2",            OPERAND_NOT_ALLOWED, "A2", 0005100);
     TEST("EORI.W #$5678,(A2)",          0005122, 0x5678);
     TEST("EORI.W #$5678,(A2)+",         0005132, 0x5678);
     TEST("EORI.W #$5678,-(A2)",         0005142, 0x5678);
@@ -1637,11 +1628,11 @@ void test_logical() {
     TEST("EORI.W #$5678,($12,A2,D3.W)", 0005162, 0x5678, 0x3012);
     TEST("EORI.W #$5678,($001234).W",   0005170, 0x5678, 0x1234);
     TEST("EORI.W #$5678,($123456).L",   0005171, 0x5678, 0x0012, 0x3456);
-    ERRT("EORI.W #$5678,(*+$1234,PC)",  OPERAND_NOT_ALLOWED, "#$5678,(*+$1234,PC)");
-    ERRT("EORI.W #$5678,(*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "#$5678,(*+$12,PC,D3)");
-    ERRT("EORI.W #$5678,#$1234",        OPERAND_NOT_ALLOWED, "#$5678,#$1234");
+    ERRT("EORI.W #$5678,(*+$1234,PC)",  OPERAND_NOT_ALLOWED, "(*+$1234,PC)",  0005100);
+    ERRT("EORI.W #$5678,(*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "(*+$12,PC,D3)", 0005100);
+    ERRT("EORI.W #$5678,#$1234",        OPERAND_NOT_ALLOWED, "#$1234",        0005100);
     TEST("EORI.L #$3456789A,D2",            0005202, 0x3456, 0x789A);
-    ERRT("EORI.L #$3456789A,A2",            OPERAND_NOT_ALLOWED, "#$3456789A,A2");
+    ERRT("EORI.L #$3456789A,A2",            OPERAND_NOT_ALLOWED, "A2", 0005200);
     TEST("EORI.L #$3456789A,(A2)",          0005222, 0x3456, 0x789A);
     TEST("EORI.L #$3456789A,(A2)+",         0005232, 0x3456, 0x789A);
     TEST("EORI.L #$3456789A,-(A2)",         0005242, 0x3456, 0x789A);
@@ -1649,13 +1640,13 @@ void test_logical() {
     TEST("EORI.L #$3456789A,($12,A2,D3.W)", 0005262, 0x3456, 0x789A, 0x3012);
     TEST("EORI.L #$3456789A,($001234).W",   0005270, 0x3456, 0x789A, 0x1234);
     TEST("EORI.L #$34567898,($123454).L",   0005271, 0x3456, 0x7898, 0x0012, 0x3454);
-    ERRT("EORI.L #$3456789A,(*+$1234,PC)",  OPERAND_NOT_ALLOWED, "#$3456789A,(*+$1234,PC)");
-    ERRT("EORI.L #$3456789A,(*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "#$3456789A,(*+$12,PC,D3)");
-    ERRT("EORI.L #$3456789A,#$1234",        OPERAND_NOT_ALLOWED, "#$3456789A,#$1234");
+    ERRT("EORI.L #$3456789A,(*+$1234,PC)",  OPERAND_NOT_ALLOWED, "(*+$1234,PC)",  0005200);
+    ERRT("EORI.L #$3456789A,(*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "(*+$12,PC,D3)", 0005200);
+    ERRT("EORI.L #$3456789A,#$1234",        OPERAND_NOT_ALLOWED, "#$1234",        0005200);
 
     // NOT dst: 0043|Sz|M|Rn, Sz:B=0/W=1/L=2
     TEST("NOT.B D2",            0043002);
-    ERRT("NOT.B A2",            OPERAND_NOT_ALLOWED, "A2");
+    ERRT("NOT.B A2",            OPERAND_NOT_ALLOWED, "A2", 0043000);
     TEST("NOT.B (A2)",          0043022);
     TEST("NOT.B (A2)+",         0043032);
     TEST("NOT.B -(A2)",         0043042);
@@ -1663,11 +1654,11 @@ void test_logical() {
     TEST("NOT.B ($12,A2,D3.W)", 0043062, 0x3012);
     TEST("NOT.B ($001234).W",   0043070, 0x1234);
     TEST("NOT.B ($123456).L",   0043071, 0x0012, 0x3456);
-    ERRT("NOT.B (*+$1234,PC)",  OPERAND_NOT_ALLOWED, "(*+$1234,PC)");
-    ERRT("NOT.B (*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "(*+$12,PC,D3)");
-    ERRT("NOT.B #$1234",        OPERAND_NOT_ALLOWED, "#$1234");
+    ERRT("NOT.B (*+$1234,PC)",  OPERAND_NOT_ALLOWED, "(*+$1234,PC)",  0043000);
+    ERRT("NOT.B (*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "(*+$12,PC,D3)", 0043000);
+    ERRT("NOT.B #$1234",        OPERAND_NOT_ALLOWED, "#$1234",        0043000);
     TEST("NOT.W D2",            0043102);
-    ERRT("NOT.W A2",            OPERAND_NOT_ALLOWED, "A2");
+    ERRT("NOT.W A2",            OPERAND_NOT_ALLOWED, "A2", 0043100);
     TEST("NOT.W (A2)",          0043122);
     TEST("NOT.W (A2)+",         0043132);
     TEST("NOT.W -(A2)",         0043142);
@@ -1675,11 +1666,11 @@ void test_logical() {
     TEST("NOT.W ($12,A2,D3.W)", 0043162, 0x3012);
     TEST("NOT.W ($001234).W",   0043170, 0x1234);
     TEST("NOT.W ($123456).L",   0043171, 0x0012, 0x3456);
-    ERRT("NOT.W (*+$1234,PC)",  OPERAND_NOT_ALLOWED, "(*+$1234,PC)");
-    ERRT("NOT.W (*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "(*+$12,PC,D3)");
-    ERRT("NOT.W #$1234",        OPERAND_NOT_ALLOWED, "#$1234");
+    ERRT("NOT.W (*+$1234,PC)",  OPERAND_NOT_ALLOWED, "(*+$1234,PC)",  0043100);
+    ERRT("NOT.W (*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "(*+$12,PC,D3)", 0043100);
+    ERRT("NOT.W #$1234",        OPERAND_NOT_ALLOWED, "#$1234",        0043100);
     TEST("NOT.L D2",            0043202);
-    ERRT("NOT.L A2",            OPERAND_NOT_ALLOWED, "A2");
+    ERRT("NOT.L A2",            OPERAND_NOT_ALLOWED, "A2", 0043200);
     TEST("NOT.L (A2)",          0043222);
     TEST("NOT.L (A2)+",         0043232);
     TEST("NOT.L -(A2)",         0043242);
@@ -1687,13 +1678,13 @@ void test_logical() {
     TEST("NOT.L ($12,A2,D3.W)", 0043262, 0x3012);
     TEST("NOT.L ($001234).W",   0043270, 0x1234);
     TEST("NOT.L ($123454).L",   0043271, 0x0012, 0x3454);
-    ERRT("NOT.L (*+$1234,PC)",  OPERAND_NOT_ALLOWED, "(*+$1234,PC)");
-    ERRT("NOT.L (*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "(*+$12,PC,D3)");
-    ERRT("NOT.L #$1234",        OPERAND_NOT_ALLOWED, "#$1234");
+    ERRT("NOT.L (*+$1234,PC)",  OPERAND_NOT_ALLOWED, "(*+$1234,PC)",  0043200);
+    ERRT("NOT.L (*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "(*+$12,PC,D3)", 0043200);
+    ERRT("NOT.L #$1234",        OPERAND_NOT_ALLOWED, "#$1234",        0043200);
 
     // OR src,Dn, 010|Dn|Sz|M|Rn, Sz:B=0/W=1/L=2
     TEST("OR.B D2,D7",              0107002);
-    ERRT("OR.B D2,A2",              OPERAND_NOT_ALLOWED, "D2,A2");
+    ERRT("OR.B D2,A2",              OPERAND_NOT_ALLOWED, "A2", 0102400);
     TEST("OR.B (A2),D7",            0107022);
     TEST("OR.B (A2)+,D7",           0107032);
     TEST("OR.B -(A2),D7",           0107042);
@@ -1705,7 +1696,7 @@ void test_logical() {
     TEST("OR.B (*+$12,PC,D3.W),D7", 0107073, 0x3010);
     TEST("OR.B #$34,D7",            0107074, 0x0034);
     TEST("OR.W D2,D7",              0107102);
-    ERRT("OR.W A2,D7",              OPERAND_NOT_ALLOWED, "A2,D7");
+    ERRT("OR.W A2,D7",              OPERAND_NOT_ALLOWED, "A2,D7", 0107100);
     TEST("OR.W (A2),D7",            0107122);
     TEST("OR.W (A2)+,D7",           0107132);
     TEST("OR.W -(A2),D7",           0107142);
@@ -1717,7 +1708,7 @@ void test_logical() {
     TEST("OR.W (*+$12,PC,D3.W),D7", 0107173, 0x3010);
     TEST("OR.W #$0034,D7",          0107174, 0x0034);
     TEST("OR.L D2,D7",              0107202);
-    ERRT("OR.L A2,D7",              OPERAND_NOT_ALLOWED, "A2,D7");
+    ERRT("OR.L A2,D7",              OPERAND_NOT_ALLOWED, "A2,D7", 0107200);
     TEST("OR.L (A2),D7",            0107222);
     TEST("OR.L (A2)+,D7",           0107232);
     TEST("OR.L -(A2),D7",           0107242);
@@ -1731,7 +1722,7 @@ void test_logical() {
 
     // OR Dn,dst: 010|Dn|Sz|M|Rn, Sz:B=4/W=5/L=6
     TEST("OR.B D7,D2",            0102007);
-    ERRT("OR.B D7,A2",            OPERAND_NOT_ALLOWED, "D7,A2");
+    ERRT("OR.B D7,A2",            OPERAND_NOT_ALLOWED, "A2", 0107400);
     TEST("OR.B D7,(A2)",          0107422);
     TEST("OR.B D7,(A2)+",         0107432);
     TEST("OR.B D7,-(A2)",         0107442);
@@ -1739,11 +1730,11 @@ void test_logical() {
     TEST("OR.B D7,($12,A2,D3.L)", 0107462, 0x3812);
     ABSW("OR.B D7,(@W).W", "FFFF", 0107470, 0xFFFF);
     TEST("OR.B D7,($123456).L",   0107471, 0x0012, 0x3456);
-    ERRT("OR.B D7,(*+$1234,PC)",  OPERAND_NOT_ALLOWED, "D7,(*+$1234,PC)");
-    ERRT("OR.B D7,(*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "D7,(*+$12,PC,D3)");
-    ERRT("OR.B D7,#$1234",        OPERAND_NOT_ALLOWED, "D7,#$1234");
+    ERRT("OR.B D7,(*+$1234,PC)",  OPERAND_NOT_ALLOWED, "(*+$1234,PC)",  0107400);
+    ERRT("OR.B D7,(*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "(*+$12,PC,D3)", 0107400);
+    ERRT("OR.B D7,#$1234",        OPERAND_NOT_ALLOWED, "#$1234",        0107400);
     TEST("OR.W D7,D2",            0102107);
-    ERRT("OR.W D7,A2",            OPERAND_NOT_ALLOWED, "D7,A2");
+    ERRT("OR.W D7,A2",            OPERAND_NOT_ALLOWED, "A2", 0107500);
     TEST("OR.W D7,(A2)",          0107522);
     TEST("OR.W D7,(A2)+",         0107532);
     TEST("OR.W D7,-(A2)",         0107542);
@@ -1751,11 +1742,11 @@ void test_logical() {
     TEST("OR.W D7,($12,A2,D3.L)", 0107562, 0x3812);
     ABSW("OR.W D7,(@W).W", "FFFE", 0107570, 0xFFFE);
     TEST("OR.W D7,($123456).L",   0107571, 0x0012, 0x3456);
-    ERRT("OR.W D7,(*+$1234,PC)",  OPERAND_NOT_ALLOWED, "D7,(*+$1234,PC)");
-    ERRT("OR.W D7,(*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "D7,(*+$12,PC,D3)");
-    ERRT("OR.W D7,#$1234",        OPERAND_NOT_ALLOWED, "D7,#$1234");
+    ERRT("OR.W D7,(*+$1234,PC)",  OPERAND_NOT_ALLOWED, "(*+$1234,PC)",  0107500);
+    ERRT("OR.W D7,(*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "(*+$12,PC,D3)", 0107500);
+    ERRT("OR.W D7,#$1234",        OPERAND_NOT_ALLOWED, "#$1234",        0107500);
     TEST("OR.L D7,D2",            0102207);
-    ERRT("OR.L D7,A2",            OPERAND_NOT_ALLOWED, "D7,A2");
+    ERRT("OR.L D7,A2",            OPERAND_NOT_ALLOWED, "A2", 0107600);
     TEST("OR.L D7,(A2)",          0107622);
     TEST("OR.L D7,(A2)+",         0107632);
     TEST("OR.L D7,-(A2)",         0107642);
@@ -1763,13 +1754,13 @@ void test_logical() {
     TEST("OR.L D7,($12,A2,D3.L)", 0107662, 0x3812);
     ABSW("OR.L D7,(@W).W", "FFFC", 0107670, 0xFFFC);
     TEST("OR.L D7,($123454).L",   0107671, 0x0012, 0x3454);
-    ERRT("OR.L D7,(*+$1234,PC)",  OPERAND_NOT_ALLOWED, "D7,(*+$1234,PC)");
-    ERRT("OR.L D7,(*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "D7,(*+$12,PC,D3)");
-    ERRT("OR.L D7,#$1234",        OPERAND_NOT_ALLOWED, "D7,#$1234");
+    ERRT("OR.L D7,(*+$1234,PC)",  OPERAND_NOT_ALLOWED, "(*+$1234,PC)",  0107600);
+    ERRT("OR.L D7,(*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "(*+$12,PC,D3)", 0107600);
+    ERRT("OR.L D7,#$1234",        OPERAND_NOT_ALLOWED, "#$1234",        0107600);
 
     // ORI #nn,dst: 0000|Sz|M|Rn, Sz:B=0/W=1/L=2
     TEST("ORI.B #$12,D2",            0000002, 0x0012);
-    ERRT("ORI.B #$12,A2",            OPERAND_NOT_ALLOWED, "#$12,A2");
+    ERRT("ORI.B #$12,A2",            OPERAND_NOT_ALLOWED, "A2", 0000000);
     TEST("ORI.B #$12,(A2)",          0000022, 0x0012);
     TEST("ORI.B #$12,(A2)+",         000032, 0x0012);
     TEST("ORI.B #$12,-(A2)",         0000042, 0x0012);
@@ -1777,11 +1768,11 @@ void test_logical() {
     TEST("ORI.B #$12,($12,A2,D3.W)", 0000062, 0x0012, 0x3012);
     TEST("ORI.B #$12,($001234).W",   0000070, 0x0012, 0x1234);
     TEST("ORI.B #$12,($123456).L",   0000071, 0x0012, 0x0012, 0x3456);
-    ERRT("ORI.B #$12,(*+$1234,PC)",  OPERAND_NOT_ALLOWED, "#$12,(*+$1234,PC)");
-    ERRT("ORI.B #$12,(*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "#$12,(*+$12,PC,D3)");
-    ERRT("ORI.B #$12,#$1234",        OPERAND_NOT_ALLOWED, "#$12,#$1234");
+    ERRT("ORI.B #$12,(*+$1234,PC)",  OPERAND_NOT_ALLOWED, "(*+$1234,PC)",  0000000);
+    ERRT("ORI.B #$12,(*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "(*+$12,PC,D3)", 0000000);
+    ERRT("ORI.B #$12,#$1234",        OPERAND_NOT_ALLOWED, "#$1234",        0000000);
     TEST("ORI.W #$5678,D2",            0000102, 0x5678);
-    ERRT("ORI.W #$5678,A2",            OPERAND_NOT_ALLOWED, "#$5678,A2");
+    ERRT("ORI.W #$5678,A2",            OPERAND_NOT_ALLOWED, "A2", 0000100);
     TEST("ORI.W #$5678,(A2)",          0000122, 0x5678);
     TEST("ORI.W #$5678,(A2)+",         0000132, 0x5678);
     TEST("ORI.W #$5678,-(A2)",         0000142, 0x5678);
@@ -1789,11 +1780,11 @@ void test_logical() {
     TEST("ORI.W #$5678,($12,A2,D3.W)", 0000162, 0x5678, 0x3012);
     TEST("ORI.W #$5678,($001234).W",   0000170, 0x5678, 0x1234);
     TEST("ORI.W #$5678,($123456).L",   0000171, 0x5678, 0x0012, 0x3456);
-    ERRT("ORI.W #$5678,(*+$1234,PC)",  OPERAND_NOT_ALLOWED, "#$5678,(*+$1234,PC)");
-    ERRT("ORI.W #$5678,(*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "#$5678,(*+$12,PC,D3)");
-    ERRT("ORI.W #$5678,#$1234",        OPERAND_NOT_ALLOWED, "#$5678,#$1234");
+    ERRT("ORI.W #$5678,(*+$1234,PC)",  OPERAND_NOT_ALLOWED, "(*+$1234,PC)",  0000100);
+    ERRT("ORI.W #$5678,(*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "(*+$12,PC,D3)", 0000100);
+    ERRT("ORI.W #$5678,#$1234",        OPERAND_NOT_ALLOWED, "#$1234",        0000100);
     TEST("ORI.L #$3456789A,D2",            0000202, 0x3456, 0x789A);
-    ERRT("ORI.L #$3456789A,A2",            OPERAND_NOT_ALLOWED, "#$3456789A,A2");
+    ERRT("ORI.L #$3456789A,A2",            OPERAND_NOT_ALLOWED, "A2", 0000200);
     TEST("ORI.L #$3456789A,(A2)",          0000222, 0x3456, 0x789A);
     TEST("ORI.L #$3456789A,(A2)+",         0000232, 0x3456, 0x789A);
     TEST("ORI.L #$3456789A,-(A2)",         0000242, 0x3456, 0x789A);
@@ -1801,9 +1792,9 @@ void test_logical() {
     TEST("ORI.L #$3456789A,($12,A2,D3.W)", 0000262, 0x3456, 0x789A, 0x3012);
     TEST("ORI.L #$3456789A,($001234).W",   0000270, 0x3456, 0x789A, 0x1234);
     TEST("ORI.L #$34567898,($123454).L",   0000271, 0x3456, 0x7898, 0x0012, 0x3454);
-    ERRT("ORI.L #$3456789A,(*+$1234,PC)",  OPERAND_NOT_ALLOWED, "#$3456789A,(*+$1234,PC)");
-    ERRT("ORI.L #$3456789A,(*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "#$3456789A,(*+$12,PC,D3)");
-    ERRT("ORI.L #$3456789A,#$1234",        OPERAND_NOT_ALLOWED, "#$3456789A,#$1234");
+    ERRT("ORI.L #$3456789A,(*+$1234,PC)",  OPERAND_NOT_ALLOWED, "(*+$1234,PC)",  0000200);
+    ERRT("ORI.L #$3456789A,(*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "(*+$12,PC,D3)", 0000200);
+    ERRT("ORI.L #$3456789A,#$1234",        OPERAND_NOT_ALLOWED, "#$1234",        0000200);
 }
 
 void test_shift_rotate() {
@@ -1822,8 +1813,8 @@ void test_shift_rotate() {
     ERRT("ASL.B #-1,D7", OVERFLOW_RANGE, "#-1,D7", 0167407);
 
     // ASL dst: 01607|M|Rn
-    ERRT("ASL D2",            OPERAND_NOT_ALLOWED, "D2");
-    ERRT("ASL A2",            OPERAND_NOT_ALLOWED, "A2");
+    ERRT("ASL D2",            OPERAND_NOT_ALLOWED, "D2", 0160700);
+    ERRT("ASL A2",            OPERAND_NOT_ALLOWED, "A2", 0160700);
     TEST("ASL   (A2)",        0160722);
     TEST("ASL.W (A2)",        0160722);
     TEST("ASL (A2)+",         0160732);
@@ -1832,9 +1823,9 @@ void test_shift_rotate() {
     TEST("ASL ($23,A2,D3.L)", 0160762, 0x3823);
     TEST("ASL ($002346).W",   0160770, 0x2346);
     TEST("ASL ($234568).L",   0160771, 0x0023, 0x4568);
-    ERRT("ASL (*+$1234,PC)",  OPERAND_NOT_ALLOWED, "(*+$1234,PC)");
-    ERRT("ASL (*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "(*+$12,PC,D3)");
-    ERRT("ASL #$1234",        OPERAND_NOT_ALLOWED, "#$1234");
+    ERRT("ASL (*+$1234,PC)",  OPERAND_NOT_ALLOWED, "(*+$1234,PC)",  0160700);
+    ERRT("ASL (*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "(*+$12,PC,D3)", 0160700);
+    ERRT("ASL #$1234",        OPERAND_NOT_ALLOWED, "#$1234",        0160700);
 
     // ASR Dx,Dy: 016|Dx|Sz|4|Dy, Sz:B=0/W=1/L=2
     TEST("ASR.B D2,D7", 0162047);
@@ -1847,8 +1838,8 @@ void test_shift_rotate() {
     TEST("ASR.L #8,D7", 0160207);
 
     // ASR dst: 01603|M|Rn
-    ERRT("ASR D2",            OPERAND_NOT_ALLOWED, "D2");
-    ERRT("ASR A2",            OPERAND_NOT_ALLOWED, "A2");
+    ERRT("ASR D2",            OPERAND_NOT_ALLOWED, "D2", 0160300);
+    ERRT("ASR A2",            OPERAND_NOT_ALLOWED, "A2", 0160300);
     TEST("ASR (A2)",          0160322);
     TEST("ASR   (A2)+",       0160332);
     TEST("ASR.W (A2)+",       0160332);
@@ -1857,9 +1848,9 @@ void test_shift_rotate() {
     TEST("ASR ($23,A2,D3.L)", 0160362, 0x3823);
     TEST("ASR ($002346).W",   0160370, 0x2346);
     TEST("ASR ($234568).L",   0160371, 0x0023, 0x4568);
-    ERRT("ASR (*+$1234,PC)",  OPERAND_NOT_ALLOWED, "(*+$1234,PC)");
-    ERRT("ASR (*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "(*+$12,PC,D3)");
-    ERRT("ASR #$1234",        OPERAND_NOT_ALLOWED, "#$1234");
+    ERRT("ASR (*+$1234,PC)",  OPERAND_NOT_ALLOWED, "(*+$1234,PC)",  0160300);
+    ERRT("ASR (*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "(*+$12,PC,D3)", 0160300);
+    ERRT("ASR #$1234",        OPERAND_NOT_ALLOWED, "#$1234",        0160300);
 
     // LSL Dx,Dy: 016|Dx|Sz|5|Dy, Sz:B=4/W=5/L=6
     TEST("LSL.B D2,D7", 0162457);
@@ -1872,8 +1863,8 @@ void test_shift_rotate() {
     TEST("LSL.L #8,D7", 0160617);
 
     // LSL dst: 01617|M|Rn
-    ERRT("LSL D2",            OPERAND_NOT_ALLOWED, "D2");
-    ERRT("LSL A2",            OPERAND_NOT_ALLOWED, "A2");
+    ERRT("LSL D2",            OPERAND_NOT_ALLOWED, "D2", 0161700);
+    ERRT("LSL A2",            OPERAND_NOT_ALLOWED, "A2", 0161700);
     TEST("LSL (A2)",          0161722);
     TEST("LSL (A2)+",         0161732);
     TEST("LSL   -(A2)",       0161742);
@@ -1882,9 +1873,9 @@ void test_shift_rotate() {
     TEST("LSL ($23,A2,D3.L)", 0161762, 0x3823);
     TEST("LSL ($002346).W",   0161770, 0x2346);
     TEST("LSL ($234568).L",   0161771, 0x0023, 0x4568);
-    ERRT("LSL (*+$1234,PC)",  OPERAND_NOT_ALLOWED, "(*+$1234,PC)");
-    ERRT("LSL (*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "(*+$12,PC,D3)");
-    ERRT("LSL #$1234",        OPERAND_NOT_ALLOWED, "#$1234");
+    ERRT("LSL (*+$1234,PC)",  OPERAND_NOT_ALLOWED, "(*+$1234,PC)",  0161700);
+    ERRT("LSL (*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "(*+$12,PC,D3)", 0161700);
+    ERRT("LSL #$1234",        OPERAND_NOT_ALLOWED, "#$1234",        0161700);
 
     // LSR Dx,Dy: 016|Dx|Sz|5|Dy, Sz:B=0/W=1/L=2
     TEST("LSR.B D2,D7", 0162057);
@@ -1897,8 +1888,8 @@ void test_shift_rotate() {
     TEST("LSR.L #8,D7", 0160217);
 
     // LSR dst: 01613|M|Rn
-    ERRT("LSR D2",            OPERAND_NOT_ALLOWED, "D2");
-    ERRT("LSR A2",            OPERAND_NOT_ALLOWED, "A2");
+    ERRT("LSR D2",            OPERAND_NOT_ALLOWED, "D2", 0161300);
+    ERRT("LSR A2",            OPERAND_NOT_ALLOWED, "A2", 0161300);
     TEST("LSR (A2)",          0161322);
     TEST("LSR (A2)+",         0161332);
     TEST("LSR -(A2)",         0161342);
@@ -1907,9 +1898,9 @@ void test_shift_rotate() {
     TEST("LSR ($23,A2,D3.L)", 0161362, 0x3823);
     TEST("LSR ($002346).W",   0161370, 0x2346);
     TEST("LSR ($234568).L",   0161371, 0x0023, 0x4568);
-    ERRT("LSR (*+$1234,PC)",  OPERAND_NOT_ALLOWED, "(*+$1234,PC)");
-    ERRT("LSR (*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "(*+$12,PC,D3)");
-    ERRT("LSR #$1234",        OPERAND_NOT_ALLOWED, "#$1234");
+    ERRT("LSR (*+$1234,PC)",  OPERAND_NOT_ALLOWED, "(*+$1234,PC)",  0161300);
+    ERRT("LSR (*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "(*+$12,PC,D3)", 0161300);
+    ERRT("LSR #$1234",        OPERAND_NOT_ALLOWED, "#$1234",        0161300);
 
     // ROL Dx,Dy: 016|Dx|Sz|7|Dy, Sz:B=4/W=5/L=6
     TEST("ROL.B D2,D7", 0162477);
@@ -1922,8 +1913,8 @@ void test_shift_rotate() {
     TEST("ROL.L #8,D7", 0160637);
 
     // ROL dst: 01637|M|Rn
-    ERRT("ROL D2",            OPERAND_NOT_ALLOWED, "D2");
-    ERRT("ROL A2",            OPERAND_NOT_ALLOWED, "A2");
+    ERRT("ROL D2",            OPERAND_NOT_ALLOWED, "D2", 0163700);
+    ERRT("ROL A2",            OPERAND_NOT_ALLOWED, "A2", 0163700);
     TEST("ROL   (A2)",        0163722);
     TEST("ROL.W (A2)",        0163722);
     TEST("ROL (A2)+",         0163732);
@@ -1932,9 +1923,9 @@ void test_shift_rotate() {
     TEST("ROL ($23,A2,D3.L)", 0163762, 0x3823);
     TEST("ROL ($002346).W",   0163770, 0x2346);
     TEST("ROL ($234568).L",   0163771, 0x0023, 0x4568);
-    ERRT("ROL (*+$1234,PC)",  OPERAND_NOT_ALLOWED, "(*+$1234,PC)");
-    ERRT("ROL (*+$12,PC,D3)",  OPERAND_NOT_ALLOWED, "(*+$12,PC,D3)");
-    ERRT("ROL #$1234",        OPERAND_NOT_ALLOWED, "#$1234");
+    ERRT("ROL (*+$1234,PC)",  OPERAND_NOT_ALLOWED, "(*+$1234,PC)",   0163700);
+    ERRT("ROL (*+$12,PC,D3)",  OPERAND_NOT_ALLOWED, "(*+$12,PC,D3)", 0163700);
+    ERRT("ROL #$1234",        OPERAND_NOT_ALLOWED, "#$1234",         0163700);
 
     // ROR Dx,Dy: 016|Dx|Sz|7|Dy, Sz:B=0/W=1/L=2
     TEST("ROR.B D2,D7", 0162077);
@@ -1947,8 +1938,8 @@ void test_shift_rotate() {
     TEST("ROR.L #8,D7", 0160237);
 
     // ROR dst: 01633|M|Rn
-    ERRT("ROR D2",            OPERAND_NOT_ALLOWED, "D2");
-    ERRT("ROR A2",            OPERAND_NOT_ALLOWED, "A2");
+    ERRT("ROR D2",            OPERAND_NOT_ALLOWED, "D2", 0163300);
+    ERRT("ROR A2",            OPERAND_NOT_ALLOWED, "A2", 0163300);
     TEST("ROR (A2)",          0163322);
     TEST("ROR   (A2)+",       0163332);
     TEST("ROR.W (A2)+",       0163332);
@@ -1957,9 +1948,9 @@ void test_shift_rotate() {
     TEST("ROR ($23,A2,D3.L)", 0163362, 0x3823);
     TEST("ROR ($002346).W",   0163370, 0x2346);
     TEST("ROR ($234568).L",   0163371, 0x0023, 0x4568);
-    ERRT("ROR (*+$1234,PC)",  OPERAND_NOT_ALLOWED, "(*+$1234,PC)");
-    ERRT("ROR (*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "(*+$12,PC,D3)");
-    ERRT("ROR #$1234",        OPERAND_NOT_ALLOWED, "#$1234");
+    ERRT("ROR (*+$1234,PC)",  OPERAND_NOT_ALLOWED, "(*+$1234,PC)",  0163300);
+    ERRT("ROR (*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "(*+$12,PC,D3)", 0163300);
+    ERRT("ROR #$1234",        OPERAND_NOT_ALLOWED, "#$1234",        0163300);
 
     // ROXL Dx,Dy: 016|Dx|Sz|6|Dy, Sz:B=4/W=5/L=6
     TEST("ROXL.B D2,D7", 0162467);
@@ -1972,8 +1963,8 @@ void test_shift_rotate() {
     TEST("ROXL.L #8,D7", 0160627);
 
     // ROXL dst: 01627|M|Rn
-    ERRT("ROXL D2",            OPERAND_NOT_ALLOWED, "D2");
-    ERRT("ROXL A2",            OPERAND_NOT_ALLOWED, "A2");
+    ERRT("ROXL D2",            OPERAND_NOT_ALLOWED, "D2", 0162700);
+    ERRT("ROXL A2",            OPERAND_NOT_ALLOWED, "A2", 0162700);
     TEST("ROXL (A2)",          0162722);
     TEST("ROXL (A2)+",         0162732);
     TEST("ROXL   -(A2)",       0162742);
@@ -1982,9 +1973,9 @@ void test_shift_rotate() {
     TEST("ROXL ($23,A2,D3.L)", 0162762, 0x3823);
     TEST("ROXL ($002346).W",   0162770, 0x2346);
     TEST("ROXL ($234568).L",   0162771, 0x0023, 0x4568);
-    ERRT("ROXL (*+$1234,PC)",  OPERAND_NOT_ALLOWED, "(*+$1234,PC)");
-    ERRT("ROXL (*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "(*+$12,PC,D3)");
-    ERRT("ROXL #$1234",        OPERAND_NOT_ALLOWED, "#$1234");
+    ERRT("ROXL (*+$1234,PC)",  OPERAND_NOT_ALLOWED, "(*+$1234,PC)",  0162700);
+    ERRT("ROXL (*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "(*+$12,PC,D3)", 0162700);
+    ERRT("ROXL #$1234",        OPERAND_NOT_ALLOWED, "#$1234",        0162700);
 
     // ROXR Dx,Dy: 016|Dx|Sz|6|Dy, Sz:B=0/W=1/L=2
     TEST("ROXR.B D2,D7", 0162067);
@@ -1997,8 +1988,8 @@ void test_shift_rotate() {
     TEST("ROXR.L #8,D7", 0160227);
 
     // ROXR dst: 01623|M|Rn
-    ERRT("ROXR D2",            OPERAND_NOT_ALLOWED, "D2");
-    ERRT("ROXR A2",            OPERAND_NOT_ALLOWED, "A2");
+    ERRT("ROXR D2",            OPERAND_NOT_ALLOWED, "D2", 0162300);
+    ERRT("ROXR A2",            OPERAND_NOT_ALLOWED, "A2", 0162300);
     TEST("ROXR   (A2)",        0162322);
     TEST("ROXR.W (A2)",        0162322);
     TEST("ROXR (A2)+",         0162332);
@@ -2007,9 +1998,9 @@ void test_shift_rotate() {
     TEST("ROXR ($23,A2,D3.L)", 0162362, 0x3823);
     TEST("ROXR ($002346).W",   0162370, 0x2346);
     TEST("ROXR ($234568).L",   0162371, 0x0023, 0x4568);
-    ERRT("ROXR (*+$1234,PC)",  OPERAND_NOT_ALLOWED, "(*+$1234,PC)");
-    ERRT("ROXR (*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "(*+$12,PC,D3)");
-    ERRT("ROXR #$1234",        OPERAND_NOT_ALLOWED, "#$1234");
+    ERRT("ROXR (*+$1234,PC)",  OPERAND_NOT_ALLOWED, "(*+$1234,PC)",  0162300);
+    ERRT("ROXR (*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "(*+$12,PC,D3)", 0162300);
+    ERRT("ROXR #$1234",        OPERAND_NOT_ALLOWED, "#$1234",        0162300);
 
     // SWAP Dn: 004410|Dn
     TEST("SWAP   D0", 0044100);
@@ -2021,11 +2012,11 @@ void test_shift_rotate() {
 void test_bit() {
     // BCHG Dx,dst: 000|Dx|5|M|Rn
     TEST("BCHG   D7,D2",            0007502);
-    ERRT("BCHG.B D7,D2",            OPERAND_NOT_ALLOWED, "D7,D2");
+    ERRT("BCHG.B D7,D2",            OPERAND_NOT_ALLOWED, "D2", 0007500);
     ERRT("BCHG.W D7,D2",            OPERAND_NOT_ALLOWED, "D7,D2");
     TEST("BCHG.L D7,D2",            0007502);
-    ERRT("BCHG   D7,A2",            OPERAND_NOT_ALLOWED, "D7,A2");
-    ERRT("BCHG.B D7,A2",            OPERAND_NOT_ALLOWED, "D7,A2");
+    ERRT("BCHG   D7,A2",            OPERAND_NOT_ALLOWED, "A2", 0007500);
+    ERRT("BCHG.B D7,A2",            OPERAND_NOT_ALLOWED, "A2", 0007500);
     ERRT("BCHG.W D7,A2",            OPERAND_NOT_ALLOWED, "D7,A2");
     ERRT("BCHG.L D7,A2",            OPERAND_NOT_ALLOWED, "D7,A2");
     TEST("BCHG   D7,(A2)",          0007522);
@@ -2056,27 +2047,27 @@ void test_bit() {
     TEST("BCHG.B D7,($012345).L",   0007571, 0x0001, 0x2345);
     ERRT("BCHG.W D7,($012345).L",   OPERAND_NOT_ALLOWED, "D7,($012345).L");
     ERRT("BCHG.L D7,($012345).L",   OPERAND_NOT_ALLOWED, "D7,($012345).L");
-    ERRT("BCHG   D7,(*+$1234,PC)",  OPERAND_NOT_ALLOWED, "D7,(*+$1234,PC)");
-    ERRT("BCHG.B D7,(*+$1234,PC)",  OPERAND_NOT_ALLOWED, "D7,(*+$1234,PC)");
+    ERRT("BCHG   D7,(*+$1234,PC)",  OPERAND_NOT_ALLOWED, "(*+$1234,PC)", 0007500);
+    ERRT("BCHG.B D7,(*+$1234,PC)",  OPERAND_NOT_ALLOWED, "(*+$1234,PC)", 0007500);
     ERRT("BCHG.W D7,(*+$1234,PC)",  OPERAND_NOT_ALLOWED, "D7,(*+$1234,PC)");
     ERRT("BCHG.L D7,(*+$1234,PC)",  OPERAND_NOT_ALLOWED, "D7,(*+$1234,PC)");
-    ERRT("BCHG   D7,(*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "D7,(*+$12,PC,D3)");
+    ERRT("BCHG   D7,(*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "(*+$12,PC,D3)", 0007500);
     ERRT("BCHG.W D7,(*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "D7,(*+$12,PC,D3)");
     ERRT("BCHG.L D7,(*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "D7,(*+$12,PC,D3)");
-    ERRT("BCHG   D7,(*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "D7,(*+$12,PC,D3)");
-    ERRT("BCHG   D7,#$1234",        OPERAND_NOT_ALLOWED, "D7,#$1234");
-    ERRT("BCHG.B D7,#$1234",        OPERAND_NOT_ALLOWED, "D7,#$1234");
+    ERRT("BCHG   D7,(*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "(*+$12,PC,D3)", 0007500);
+    ERRT("BCHG   D7,#$1234",        OPERAND_NOT_ALLOWED, "#$1234", 0007500);
+    ERRT("BCHG.B D7,#$1234",        OPERAND_NOT_ALLOWED, "#$1234", 0007500);
     ERRT("BCHG.W D7,#$1234",        OPERAND_NOT_ALLOWED, "D7,#$1234");
     ERRT("BCHG.L D7,#$1234",        OPERAND_NOT_ALLOWED, "D7,#$1234");
 
     // BCHG #n,dst: 00041|M|Rn
     TEST("BCHG   #0,D2",            0004102, 0x0000);
-    ERRT("BCHG.B #0,D2",            OPERAND_NOT_ALLOWED, "#0,D2");
+    ERRT("BCHG.B #0,D2",            OPERAND_NOT_ALLOWED, "D2", 0004100);
     ERRT("BCHG.W #0,D2",            OPERAND_NOT_ALLOWED, "#0,D2");
     TEST("BCHG.L #0,D2",            0004102, 0x0000);
     TEST("BCHG.L #31,D2",           0004102, 0x001F);
     ERRT("BCHG.L #32,D2",           ILLEGAL_BIT_NUMBER,  "#32,D2", 0004102, 0x0000);
-    ERRT("BCHG   #0,A2",            OPERAND_NOT_ALLOWED, "#0,A2");
+    ERRT("BCHG   #0,A2",            OPERAND_NOT_ALLOWED, "A2", 0004100);
     ERRT("BCHG.L #0,A2",            OPERAND_NOT_ALLOWED, "#0,A2");
     ERRT("BCHG.W #0,A2",            OPERAND_NOT_ALLOWED, "#0,A2");
     ERRT("BCHG.L #0,A2",            OPERAND_NOT_ALLOWED, "#0,A2");
@@ -2109,26 +2100,26 @@ void test_bit() {
     TEST("BCHG.B #1,($012345).L",   0004171, 0x0001, 0x0001, 0x2345);
     ERRT("BCHG.W #1,($012345).L",   OPERAND_NOT_ALLOWED, "#1,($012345).L");
     ERRT("BCHG.L #1,($012345).L",   OPERAND_NOT_ALLOWED, "#1,($012345).L");
-    ERRT("BCHG   #1,(*+$1234,PC)",  OPERAND_NOT_ALLOWED, "#1,(*+$1234,PC)");
+    ERRT("BCHG   #1,(*+$1234,PC)",  OPERAND_NOT_ALLOWED, "(*+$1234,PC)", 0004100);
     ERRT("BCHG.L #1,(*+$1234,PC)",  OPERAND_NOT_ALLOWED, "#1,(*+$1234,PC)");
     ERRT("BCHG.W #1,(*+$1234,PC)",  OPERAND_NOT_ALLOWED, "#1,(*+$1234,PC)");
     ERRT("BCHG.L #1,(*+$1234,PC)",  OPERAND_NOT_ALLOWED, "#1,(*+$1234,PC)");
-    ERRT("BCHG   #2,(*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "#2,(*+$12,PC,D3)");
+    ERRT("BCHG   #2,(*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "(*+$12,PC,D3)", 0004100);
     ERRT("BCHG.L #2,(*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "#2,(*+$12,PC,D3)");
     ERRT("BCHG.W #2,(*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "#2,(*+$12,PC,D3)");
     ERRT("BCHG.L #2,(*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "#2,(*+$12,PC,D3)");
-    ERRT("BCHG   #3,#$1234",        OPERAND_NOT_ALLOWED, "#3,#$1234");
+    ERRT("BCHG   #3,#$1234",        OPERAND_NOT_ALLOWED, "#$1234", 0004100);
     ERRT("BCHG.L #3,#$1234",        OPERAND_NOT_ALLOWED, "#3,#$1234");
     ERRT("BCHG.W #3,#$1234",        OPERAND_NOT_ALLOWED, "#3,#$1234");
     ERRT("BCHG.L #3,#$1234",        OPERAND_NOT_ALLOWED, "#3,#$1234");
 
     // BCLR Dx,dst: 000|Dx|6|M|Rn
     TEST("BCLR   D7,D2",            0007602);
-    ERRT("BCLR.B D7,D2",            OPERAND_NOT_ALLOWED, "D7,D2");
+    ERRT("BCLR.B D7,D2",            OPERAND_NOT_ALLOWED, "D2", 0007600);
     ERRT("BCLR.W D7,D2",            OPERAND_NOT_ALLOWED, "D7,D2");
     TEST("BCLR.L D7,D2",            0007602);
-    ERRT("BCLR   D7,A2",            OPERAND_NOT_ALLOWED, "D7,A2");
-    ERRT("BCLR.B D7,A2",            OPERAND_NOT_ALLOWED, "D7,A2");
+    ERRT("BCLR   D7,A2",            OPERAND_NOT_ALLOWED, "A2", 0007600);
+    ERRT("BCLR.B D7,A2",            OPERAND_NOT_ALLOWED, "A2", 0007600);
     ERRT("BCLR.W D7,A2",            OPERAND_NOT_ALLOWED, "D7,A2");
     ERRT("BCLR.L D7,A2",            OPERAND_NOT_ALLOWED, "D7,A2");
     ERRT("BCLR.L D7,A2",            OPERAND_NOT_ALLOWED, "D7,A2");
@@ -2160,26 +2151,26 @@ void test_bit() {
     TEST("BCLR.B D7,($012345).L",   0007671, 0x0001, 0x2345);
     ERRT("BCLR.W D7,($012345).L",   OPERAND_NOT_ALLOWED, "D7,($012345).L");
     ERRT("BCLR.L D7,($012345).L",   OPERAND_NOT_ALLOWED, "D7,($012345).L");
-    ERRT("BCLR   D7,(*+$1234,PC)",  OPERAND_NOT_ALLOWED, "D7,(*+$1234,PC)");
-    ERRT("BCLR.B D7,(*+$1234,PC)",  OPERAND_NOT_ALLOWED, "D7,(*+$1234,PC)");
+    ERRT("BCLR   D7,(*+$1234,PC)",  OPERAND_NOT_ALLOWED, "(*+$1234,PC)", 0007600);
+    ERRT("BCLR.B D7,(*+$1234,PC)",  OPERAND_NOT_ALLOWED, "(*+$1234,PC)", 0007600);
     ERRT("BCLR.W D7,(*+$1234,PC)",  OPERAND_NOT_ALLOWED, "D7,(*+$1234,PC)");
     ERRT("BCLR.L D7,(*+$1234,PC)",  OPERAND_NOT_ALLOWED, "D7,(*+$1234,PC)");
-    ERRT("BCLR   D7,(*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "D7,(*+$12,PC,D3)");
-    ERRT("BCLR.B D7,(*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "D7,(*+$12,PC,D3)");
+    ERRT("BCLR   D7,(*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "(*+$12,PC,D3)", 0007600);
+    ERRT("BCLR.B D7,(*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "(*+$12,PC,D3)", 0007600);
     ERRT("BCLR.W D7,(*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "D7,(*+$12,PC,D3)");
     ERRT("BCLR.L D7,(*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "D7,(*+$12,PC,D3)");
-    ERRT("BCLR   D7,#$1234",        OPERAND_NOT_ALLOWED, "D7,#$1234");
-    ERRT("BCLR.B D7,#$1234",        OPERAND_NOT_ALLOWED, "D7,#$1234");
+    ERRT("BCLR   D7,#$1234",        OPERAND_NOT_ALLOWED, "#$1234", 0007600);
+    ERRT("BCLR.B D7,#$1234",        OPERAND_NOT_ALLOWED, "#$1234", 0007600);
     ERRT("BCLR.W D7,#$1234",        OPERAND_NOT_ALLOWED, "D7,#$1234");
     ERRT("BCLR.L D7,#$1234",        OPERAND_NOT_ALLOWED, "D7,#$1234");
 
     // BCLR #n,dst: 00042|M|Rn
     TEST("BCLR   #0,D2",            0004202, 0x0000);
-    ERRT("BCLR.B #0,D2",            OPERAND_NOT_ALLOWED, "#0,D2");
+    ERRT("BCLR.B #0,D2",            OPERAND_NOT_ALLOWED, "D2", 0004200);
     ERRT("BCLR.W #0,D2",            OPERAND_NOT_ALLOWED, "#0,D2");
     TEST("BCLR.L #0,D2",            0004202, 0x0000);
-    ERRT("BCLR   #1,A2",            OPERAND_NOT_ALLOWED, "#1,A2");
-    ERRT("BCLR.B #1,A2",            OPERAND_NOT_ALLOWED, "#1,A2");
+    ERRT("BCLR   #1,A2",            OPERAND_NOT_ALLOWED, "A2", 0004200);
+    ERRT("BCLR.B #1,A2",            OPERAND_NOT_ALLOWED, "A2", 0004200);
     ERRT("BCLR.W #1,A2",            OPERAND_NOT_ALLOWED, "#1,A2");
     ERRT("BCLR.L #1,A2",            OPERAND_NOT_ALLOWED, "#1,A2");
     TEST("BCLR   #7,(A2)",          0004222, 0x0007);
@@ -2210,26 +2201,26 @@ void test_bit() {
     TEST("BCLR.B #1,($012345).L",   0004271, 0x0001, 0x0001, 0x2345);
     ERRT("BCLR.W #1,($012345).L",   OPERAND_NOT_ALLOWED, "#1,($012345).L");
     ERRT("BCLR.L #1,($012345).L",   OPERAND_NOT_ALLOWED, "#1,($012345).L");
-    ERRT("BCLR   #4,(*+$1234,PC)",  OPERAND_NOT_ALLOWED, "#4,(*+$1234,PC)");
-    ERRT("BCLR.B #4,(*+$1234,PC)",  OPERAND_NOT_ALLOWED, "#4,(*+$1234,PC)");
+    ERRT("BCLR   #4,(*+$1234,PC)",  OPERAND_NOT_ALLOWED, "(*+$1234,PC)", 0004200);
+    ERRT("BCLR.B #4,(*+$1234,PC)",  OPERAND_NOT_ALLOWED, "(*+$1234,PC)", 0004200);
     ERRT("BCLR.W #4,(*+$1234,PC)",  OPERAND_NOT_ALLOWED, "#4,(*+$1234,PC)");
     ERRT("BCLR.L #4,(*+$1234,PC)",  OPERAND_NOT_ALLOWED, "#4,(*+$1234,PC)");
-    ERRT("BCLR   #5,(*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "#5,(*+$12,PC,D3)");
-    ERRT("BCLR.B #5,(*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "#5,(*+$12,PC,D3)");
+    ERRT("BCLR   #5,(*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "(*+$12,PC,D3)", 0004200);
+    ERRT("BCLR.B #5,(*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "(*+$12,PC,D3)", 0004200);
     ERRT("BCLR.W #5,(*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "#5,(*+$12,PC,D3)");
     ERRT("BCLR.L #5,(*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "#5,(*+$12,PC,D3)");
-    ERRT("BCLR   #6,#$1234",        OPERAND_NOT_ALLOWED, "#6,#$1234");
-    ERRT("BCLR.B #6,#$1234",        OPERAND_NOT_ALLOWED, "#6,#$1234");
+    ERRT("BCLR   #6,#$1234",        OPERAND_NOT_ALLOWED, "#$1234", 0004200);
+    ERRT("BCLR.B #6,#$1234",        OPERAND_NOT_ALLOWED, "#$1234", 0004200);
     ERRT("BCLR.W #6,#$1234",        OPERAND_NOT_ALLOWED, "#6,#$1234");
     ERRT("BCLR.L #6,#$1234",        OPERAND_NOT_ALLOWED, "#6,#$1234");
 
     // BSET Dx,dst: 000|Dx|7|M|Rn
     TEST("BSET   D7,D2",            0007702);
-    ERRT("BSET.B D7,D2",            OPERAND_NOT_ALLOWED, "D7,D2");
+    ERRT("BSET.B D7,D2",            OPERAND_NOT_ALLOWED, "D2", 0007700);
     ERRT("BSET.W D7,D2",            OPERAND_NOT_ALLOWED, "D7,D2");
     TEST("BSET.L D7,D2",            0007702);
-    ERRT("BSET   D7,A2",            OPERAND_NOT_ALLOWED, "D7,A2");
-    ERRT("BSET.B D7,A2",            OPERAND_NOT_ALLOWED, "D7,A2");
+    ERRT("BSET   D7,A2",            OPERAND_NOT_ALLOWED, "A2", 0007700);
+    ERRT("BSET.B D7,A2",            OPERAND_NOT_ALLOWED, "A2", 0007700);
     ERRT("BSET.W D7,A2",            OPERAND_NOT_ALLOWED, "D7,A2");
     ERRT("BSET.L D7,A2",            OPERAND_NOT_ALLOWED, "D7,A2");
     TEST("BSET   D7,(A2)",          0007722);
@@ -2260,26 +2251,26 @@ void test_bit() {
     TEST("BSET.B D7,($012345).L",   0007771, 0x0001, 0x2345);
     ERRT("BSET.W D7,($012345).L",   OPERAND_NOT_ALLOWED, "D7,($012345).L");
     ERRT("BSET.L D7,($012345).L",   OPERAND_NOT_ALLOWED, "D7,($012345).L");
-    ERRT("BSET   D7,(*+$1234,PC)",  OPERAND_NOT_ALLOWED, "D7,(*+$1234,PC)");
-    ERRT("BSET.B D7,(*+$1234,PC)",  OPERAND_NOT_ALLOWED, "D7,(*+$1234,PC)");
+    ERRT("BSET   D7,(*+$1234,PC)",  OPERAND_NOT_ALLOWED, "(*+$1234,PC)", 0007700);
+    ERRT("BSET.B D7,(*+$1234,PC)",  OPERAND_NOT_ALLOWED, "(*+$1234,PC)", 0007700);
     ERRT("BSET.W D7,(*+$1234,PC)",  OPERAND_NOT_ALLOWED, "D7,(*+$1234,PC)");
     ERRT("BSET.L D7,(*+$1234,PC)",  OPERAND_NOT_ALLOWED, "D7,(*+$1234,PC)");
-    ERRT("BSET   D7,(*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "D7,(*+$12,PC,D3)");
-    ERRT("BSET.B D7,(*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "D7,(*+$12,PC,D3)");
+    ERRT("BSET   D7,(*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "(*+$12,PC,D3)", 0007700);
+    ERRT("BSET.B D7,(*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "(*+$12,PC,D3)", 0007700);
     ERRT("BSET.W D7,(*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "D7,(*+$12,PC,D3)");
     ERRT("BSET.L D7,(*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "D7,(*+$12,PC,D3)");
-    ERRT("BSET   D7,#$1234",        OPERAND_NOT_ALLOWED, "D7,#$1234");
-    ERRT("BSET.B D7,#$1234",        OPERAND_NOT_ALLOWED, "D7,#$1234");
+    ERRT("BSET   D7,#$1234",        OPERAND_NOT_ALLOWED, "#$1234", 0007700);
+    ERRT("BSET.B D7,#$1234",        OPERAND_NOT_ALLOWED, "#$1234", 0007700);
     ERRT("BSET.W D7,#$1234",        OPERAND_NOT_ALLOWED, "D7,#$1234");
     ERRT("BSET.L D7,#$1234",        OPERAND_NOT_ALLOWED, "D7,#$1234");
 
     // BSET #n,dst: 00043|M|Rn
     TEST("BSET   #0,D2",            0004302, 0x0000);
-    ERRT("BSET.B #0,D2",            OPERAND_NOT_ALLOWED, "#0,D2");
+    ERRT("BSET.B #0,D2",            OPERAND_NOT_ALLOWED, "D2", 0004300);
     ERRT("BSET.W #0,D2",            OPERAND_NOT_ALLOWED, "#0,D2");
     TEST("BSET.L #0,D2",            0004302, 0x0000);
-    ERRT("BSET   #1,A2",            OPERAND_NOT_ALLOWED, "#1,A2");
-    ERRT("BSET.B #1,A2",            OPERAND_NOT_ALLOWED, "#1,A2");
+    ERRT("BSET   #1,A2",            OPERAND_NOT_ALLOWED, "A2", 0004300);
+    ERRT("BSET.B #1,A2",            OPERAND_NOT_ALLOWED, "A2", 0004300);
     ERRT("BSET.W #1,A2",            OPERAND_NOT_ALLOWED, "#1,A2");
     ERRT("BSET.L #1,A2",            OPERAND_NOT_ALLOWED, "#1,A2");
     TEST("BSET   #7,(A2)",          0004322, 0x0007);
@@ -2310,26 +2301,26 @@ void test_bit() {
     TEST("BSET.B #1,($012345).L",   0004371, 0x0001, 0x0001, 0x2345);
     ERRT("BSET.W #1,($012345).L",   OPERAND_NOT_ALLOWED, "#1,($012345).L");
     ERRT("BSET.L #1,($012345).L",   OPERAND_NOT_ALLOWED, "#1,($012345).L");
-    ERRT("BSET   #3,(*+$1234,PC)",  OPERAND_NOT_ALLOWED, "#3,(*+$1234,PC)");
-    ERRT("BSET.B #3,(*+$1234,PC)",  OPERAND_NOT_ALLOWED, "#3,(*+$1234,PC)");
+    ERRT("BSET   #3,(*+$1234,PC)",  OPERAND_NOT_ALLOWED, "(*+$1234,PC)", 0004300);
+    ERRT("BSET.B #3,(*+$1234,PC)",  OPERAND_NOT_ALLOWED, "(*+$1234,PC)", 0004300);
     ERRT("BSET.W #3,(*+$1234,PC)",  OPERAND_NOT_ALLOWED, "#3,(*+$1234,PC)");
     ERRT("BSET.L #3,(*+$1234,PC)",  OPERAND_NOT_ALLOWED, "#3,(*+$1234,PC)");
-    ERRT("BSET   #4,(*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "#4,(*+$12,PC,D3)");
-    ERRT("BSET.B #4,(*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "#4,(*+$12,PC,D3)");
+    ERRT("BSET   #4,(*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "(*+$12,PC,D3)", 0004300);
+    ERRT("BSET.B #4,(*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "(*+$12,PC,D3)", 0004300);
     ERRT("BSET.W #4,(*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "#4,(*+$12,PC,D3)");
     ERRT("BSET.L #4,(*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "#4,(*+$12,PC,D3)");
-    ERRT("BSET   #5,#$1234",        OPERAND_NOT_ALLOWED, "#5,#$1234");
-    ERRT("BSET.B #5,#$1234",        OPERAND_NOT_ALLOWED, "#5,#$1234");
+    ERRT("BSET   #5,#$1234",        OPERAND_NOT_ALLOWED, "#$1234", 0004300);
+    ERRT("BSET.B #5,#$1234",        OPERAND_NOT_ALLOWED, "#$1234", 0004300);
     ERRT("BSET.W #5,#$1234",        OPERAND_NOT_ALLOWED, "#5,#$1234");
     ERRT("BSET.L #5,#$1234",        OPERAND_NOT_ALLOWED, "#5,#$1234");
 
     // BTST Dx,dst: 000|Dx|4|M|Rn
     TEST("BTST   D7,D2",              0007402);
-    ERRT("BTST.B D7,D2",              OPERAND_NOT_ALLOWED, "D7,D2");
+    ERRT("BTST.B D7,D2",              OPERAND_NOT_ALLOWED, "D2", 0007400);
     ERRT("BTST.W D7,D2",              OPERAND_NOT_ALLOWED, "D7,D2");
     TEST("BTST.L D7,D2",              0007402);
-    ERRT("BTST   D7,A2",              OPERAND_NOT_ALLOWED, "D7,A2");
-    ERRT("BTST.B D7,A2",              OPERAND_NOT_ALLOWED, "D7,A2");
+    ERRT("BTST   D7,A2",              OPERAND_NOT_ALLOWED, "A2", 0007400);
+    ERRT("BTST.B D7,A2",              OPERAND_NOT_ALLOWED, "A2", 0007400);
     ERRT("BTST.W D7,A2",              OPERAND_NOT_ALLOWED, "D7,A2");
     ERRT("BTST.L D7,A2",              OPERAND_NOT_ALLOWED, "D7,A2");
     TEST("BTST   D7,(A2)",            0007422);
@@ -2368,20 +2359,20 @@ void test_bit() {
     TEST("BTST.B D7,(*+$23,PC,D3.L)", 0007473, 0x3821);
     ERRT("BTST.W D7,(*+$23,PC,D3.L)", OPERAND_NOT_ALLOWED, "D7,(*+$23,PC,D3.L)");
     ERRT("BTST.L D7,(*+$23,PC,D3.L)", OPERAND_NOT_ALLOWED, "D7,(*+$23,PC,D3.L)");
-    ERRT("BTST   D7,#$12",            OPERAND_NOT_ALLOWED, "D7,#$12");
-    ERRT("BTST.B D7,#$12",            OPERAND_NOT_ALLOWED, "D7,#$12");
+    ERRT("BTST   D7,#$12",            OPERAND_NOT_ALLOWED, "#$12", 0007400);
+    ERRT("BTST.B D7,#$12",            OPERAND_NOT_ALLOWED, "#$12", 0007400);
     ERRT("BTST.W D7,#$12",            OPERAND_NOT_ALLOWED, "D7,#$12");
     ERRT("BTST.L D7,#$12",            OPERAND_NOT_ALLOWED, "D7,#$12");
 
     // BTST #n,dst: 00040|M|Rn
     TEST("BTST   #0,D2",              0004002, 0x0000);
-    ERRT("BTST.B #0,D2",              OPERAND_NOT_ALLOWED, "#0,D2");
+    ERRT("BTST.B #0,D2",              OPERAND_NOT_ALLOWED, "D2", 0004000);
     ERRT("BTST.W #0,D2",              OPERAND_NOT_ALLOWED, "#0,D2");
     TEST("BTST.L #0,D2",              0004002, 0x0000);
-    ERRT("BTST   #1,A2",              OPERAND_NOT_ALLOWED, "#1,A2");
-    ERRT("BTST.B #1,A2",              OPERAND_NOT_ALLOWED, "#1,A2");
+    ERRT("BTST   #1,A2",              OPERAND_NOT_ALLOWED, "A2", 0004000);
+    ERRT("BTST.B #1,A2",              OPERAND_NOT_ALLOWED, "A2", 0004000);
     ERRT("BTST.W #1,A2",              OPERAND_NOT_ALLOWED, "#1,A2");
-    ERRT("BTST.B #1,A2",              OPERAND_NOT_ALLOWED, "#1,A2");
+    ERRT("BTST.B #1,A2",              OPERAND_NOT_ALLOWED, "A2", 0004000);
     TEST("BTST   #7,(A2)",            0004022, 0x0007);
     TEST("BTST.B #7,(A2)",            0004022, 0x0007);
     ERRT("BTST.W #7,(A2)",            OPERAND_NOT_ALLOWED, "#7,(A2)");
@@ -2418,8 +2409,8 @@ void test_bit() {
     TEST("BTST.B #7,(*+$23,PC,D3.L)", 0004073, 0x0007, 0x381F);
     ERRT("BTST.W #7,(*+$23,PC,D3.L)", OPERAND_NOT_ALLOWED, "#7,(*+$23,PC,D3.L)");
     ERRT("BTST.L #7,(*+$23,PC,D3.L)", OPERAND_NOT_ALLOWED, "#7,(*+$23,PC,D3.L)");
-    ERRT("BTST   #6,#$1234",          OPERAND_NOT_ALLOWED, "#6,#$1234");
-    ERRT("BTST.B #6,#$1234",          OPERAND_NOT_ALLOWED, "#6,#$1234");
+    ERRT("BTST   #6,#$1234",          OPERAND_NOT_ALLOWED, "#$1234", 0004000);
+    ERRT("BTST.B #6,#$1234",          OPERAND_NOT_ALLOWED, "#$1234", 0004000);
     ERRT("BTST.W #6,#$1234",          OPERAND_NOT_ALLOWED, "#6,#$1234");
     ERRT("BTST.L #6,#$1234",          OPERAND_NOT_ALLOWED, "#6,#$1234");
 }
@@ -2433,7 +2424,7 @@ void test_bcd() {
 
     // NBCD dst: 00440|M|Rn
     TEST("NBCD D2",            0044002);
-    ERRT("NBCD A2",            OPERAND_NOT_ALLOWED, "A2");
+    ERRT("NBCD A2",            OPERAND_NOT_ALLOWED, "A2", 0044000);
     TEST("NBCD (A2)",          0044022);
     TEST("NBCD (A2)+",         0044032);
     TEST("NBCD -(A2)",         0044042);
@@ -2441,9 +2432,9 @@ void test_bcd() {
     TEST("NBCD ($12,A2,D3.W)", 0044062, 0x3012);
     TEST("NBCD ($001234).W",   0044070, 0x1234);
     TEST("NBCD ($123456).L",   0044071, 0x0012, 0x3456);
-    ERRT("NBCD (*+$1234,PC)",  OPERAND_NOT_ALLOWED, "(*+$1234,PC)");
-    ERRT("NBCD (*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "(*+$12,PC,D3)");
-    ERRT("NBCD #$1234",        OPERAND_NOT_ALLOWED, "#$1234");
+    ERRT("NBCD (*+$1234,PC)",  OPERAND_NOT_ALLOWED, "(*+$1234,PC)",  0044000);
+    ERRT("NBCD (*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "(*+$12,PC,D3)", 0044000);
+    ERRT("NBCD #$1234",        OPERAND_NOT_ALLOWED, "#$1234",        0044000);
 
     // SBCD Dx,Dy: 010|Dy|40|Dx
     TEST("SBCD D2,D7", 0107402);
@@ -2526,7 +2517,7 @@ void test_program() {
 
     // Scc dst: 005|cc|3|M|Rn
     TEST("ST D2",            0050302 | 0x000);
-    ERRT("ST A2",            OPERAND_NOT_ALLOWED, "A2");
+    ERRT("ST A2",            OPERAND_NOT_ALLOWED, "A2", 0050300);
     TEST("ST (A2)",          0050322 | 0x000);
     TEST("ST (A2)+",         0050332 | 0x000);
     TEST("ST -(A2)",         0050342 | 0x000);
@@ -2534,11 +2525,11 @@ void test_program() {
     TEST("ST ($12,A2,D3.W)", 0050362 | 0x000, 0x3012);
     TEST("ST ($001234).W",   0050370 | 0x000, 0x1234);
     TEST("ST ($123456).L",   0050371 | 0x000, 0x0012, 0x3456);
-    ERRT("ST (*+$1234,PC)",  OPERAND_NOT_ALLOWED, "(*+$1234,PC)");
-    ERRT("ST (*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "(*+$12,PC,D3)");
-    ERRT("ST #$1234",        OPERAND_NOT_ALLOWED, "#$1234");
+    ERRT("ST (*+$1234,PC)",  OPERAND_NOT_ALLOWED, "(*+$1234,PC)",  0050300);
+    ERRT("ST (*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "(*+$12,PC,D3)", 0050300);
+    ERRT("ST #$1234",        OPERAND_NOT_ALLOWED, "#$1234",        0050300);
     TEST("SF D2",            0050302 | 0x100);
-    ERRT("SF A2",            OPERAND_NOT_ALLOWED, "A2");
+    ERRT("SF A2",            OPERAND_NOT_ALLOWED, "A2", 0050700);
     TEST("SF (A2)",          0050322 | 0x100);
     TEST("SF (A2)+",         0050332 | 0x100);
     TEST("SF -(A2)",         0050342 | 0x100);
@@ -2546,11 +2537,11 @@ void test_program() {
     TEST("SF ($12,A2,D3.W)", 0050362 | 0x100, 0x3012);
     TEST("SF ($001234).W",   0050370 | 0x100, 0x1234);
     TEST("SF ($123456).L",   0050371 | 0x100, 0x0012, 0x3456);
-    ERRT("SF (*+$1234,PC)",  OPERAND_NOT_ALLOWED, "(*+$1234,PC)");
-    ERRT("SF (*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "(*+$12,PC,D3)");
-    ERRT("SF #$1234",        OPERAND_NOT_ALLOWED, "#$1234");
+    ERRT("SF (*+$1234,PC)",  OPERAND_NOT_ALLOWED, "(*+$1234,PC)",  0050700);
+    ERRT("SF (*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "(*+$12,PC,D3)", 0050700);
+    ERRT("SF #$1234",        OPERAND_NOT_ALLOWED, "#$1234",        0050700);
     TEST("SHI D2",            0050302 | 0x200);
-    ERRT("SHI A2",            OPERAND_NOT_ALLOWED, "A2");
+    ERRT("SHI A2",            OPERAND_NOT_ALLOWED, "A2", 0051300);
     TEST("SHI (A2)",          0050322 | 0x200);
     TEST("SHI (A2)+",         0050332 | 0x200);
     TEST("SHI -(A2)",         0050342 | 0x200);
@@ -2558,11 +2549,11 @@ void test_program() {
     TEST("SHI ($12,A2,D3.W)", 0050362 | 0x200, 0x3012);
     TEST("SHI ($001234).W",   0050370 | 0x200, 0x1234);
     TEST("SHI ($123456).L",   0050371 | 0x200, 0x0012, 0x3456);
-    ERRT("SHI (*+$1234,PC)",  OPERAND_NOT_ALLOWED, "(*+$1234,PC)");
-    ERRT("SHI (*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "(*+$12,PC,D3)");
-    ERRT("SHI #$1234",        OPERAND_NOT_ALLOWED, "#$1234");
+    ERRT("SHI (*+$1234,PC)",  OPERAND_NOT_ALLOWED, "(*+$1234,PC)",  0051300);
+    ERRT("SHI (*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "(*+$12,PC,D3)", 0051300);
+    ERRT("SHI #$1234",        OPERAND_NOT_ALLOWED, "#$1234",        0051300);
     TEST("SLS D2",            0050302 | 0x300);
-    ERRT("SLS A2",            OPERAND_NOT_ALLOWED, "A2");
+    ERRT("SLS A2",            OPERAND_NOT_ALLOWED, "A2", 0051700);
     TEST("SLS (A2)",          0050322 | 0x300);
     TEST("SLS (A2)+",         0050332 | 0x300);
     TEST("SLS -(A2)",         0050342 | 0x300);
@@ -2570,11 +2561,11 @@ void test_program() {
     TEST("SLS ($12,A2,D3.W)", 0050362 | 0x300, 0x3012);
     TEST("SLS ($001234).W",   0050370 | 0x300, 0x1234);
     TEST("SLS ($123456).L",   0050371 | 0x300, 0x0012, 0x3456);
-    ERRT("SLS (*+$1234,PC)",  OPERAND_NOT_ALLOWED, "(*+$1234,PC)");
-    ERRT("SLS (*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "(*+$12,PC,D3)");
-    ERRT("SLS #$1234",        OPERAND_NOT_ALLOWED, "#$1234");
+    ERRT("SLS (*+$1234,PC)",  OPERAND_NOT_ALLOWED, "(*+$1234,PC)",  0051700);
+    ERRT("SLS (*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "(*+$12,PC,D3)", 0051700);
+    ERRT("SLS #$1234",        OPERAND_NOT_ALLOWED, "#$1234",        0051700);
     TEST("SCC D2",            0050302 | 0x400);
-    ERRT("SCC A2",            OPERAND_NOT_ALLOWED, "A2");
+    ERRT("SCC A2",            OPERAND_NOT_ALLOWED, "A2", 0052300);
     TEST("SCC (A2)",          0050322 | 0x400);
     TEST("SCC (A2)+",         0050332 | 0x400);
     TEST("SCC -(A2)",         0050342 | 0x400);
@@ -2582,11 +2573,11 @@ void test_program() {
     TEST("SCC ($12,A2,D3.W)", 0050362 | 0x400, 0x3012);
     TEST("SCC ($001234).W",   0050370 | 0x400, 0x1234);
     TEST("SCC ($123456).L",   0050371 | 0x400, 0x0012, 0x3456);
-    ERRT("SCC (*+$1234,PC)",  OPERAND_NOT_ALLOWED, "(*+$1234,PC)");
-    ERRT("SCC (*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "(*+$12,PC,D3)");
-    ERRT("SCC #$1234",        OPERAND_NOT_ALLOWED, "#$1234");
+    ERRT("SCC (*+$1234,PC)",  OPERAND_NOT_ALLOWED, "(*+$1234,PC)",  0052300);
+    ERRT("SCC (*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "(*+$12,PC,D3)", 0052300);
+    ERRT("SCC #$1234",        OPERAND_NOT_ALLOWED, "#$1234",        0052300);
     TEST("SCS D2",            0050302 | 0x500);
-    ERRT("SCS A2",            OPERAND_NOT_ALLOWED, "A2");
+    ERRT("SCS A2",            OPERAND_NOT_ALLOWED, "A2", 0052700);
     TEST("SCS (A2)",          0050322 | 0x500);
     TEST("SCS (A2)+",         0050332 | 0x500);
     TEST("SCS -(A2)",         0050342 | 0x500);
@@ -2594,11 +2585,11 @@ void test_program() {
     TEST("SCS ($12,A2,D3.W)", 0050362 | 0x500, 0x3012);
     TEST("SCS ($001234).W",   0050370 | 0x500, 0x1234);
     TEST("SCS ($123456).L",   0050371 | 0x500, 0x0012, 0x3456);
-    ERRT("SCS (*+$1234,PC)",  OPERAND_NOT_ALLOWED, "(*+$1234,PC)");
-    ERRT("SCS (*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "(*+$12,PC,D3)");
-    ERRT("SCS #$1234",        OPERAND_NOT_ALLOWED, "#$1234");
+    ERRT("SCS (*+$1234,PC)",  OPERAND_NOT_ALLOWED, "(*+$1234,PC)",  0052700);
+    ERRT("SCS (*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "(*+$12,PC,D3)", 0052700);
+    ERRT("SCS #$1234",        OPERAND_NOT_ALLOWED, "#$1234",        0052700);
     TEST("SNE D2",            0050302 | 0x600);
-    ERRT("SNE A2",            OPERAND_NOT_ALLOWED, "A2");
+    ERRT("SNE A2",            OPERAND_NOT_ALLOWED, "A2", 0053300);
     TEST("SNE (A2)",          0050322 | 0x600);
     TEST("SNE (A2)+",         0050332 | 0x600);
     TEST("SNE -(A2)",         0050342 | 0x600);
@@ -2606,11 +2597,11 @@ void test_program() {
     TEST("SNE ($12,A2,D3.W)", 0050362 | 0x600, 0x3012);
     TEST("SNE ($001234).W",   0050370 | 0x600, 0x1234);
     TEST("SNE ($123456).L",   0050371 | 0x600, 0x0012, 0x3456);
-    ERRT("SNE (*+$1234,PC)",  OPERAND_NOT_ALLOWED, "(*+$1234,PC)");
-    ERRT("SNE (*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "(*+$12,PC,D3)");
-    ERRT("SNE #$1234",        OPERAND_NOT_ALLOWED, "#$1234");
+    ERRT("SNE (*+$1234,PC)",  OPERAND_NOT_ALLOWED, "(*+$1234,PC)",  0053300);
+    ERRT("SNE (*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "(*+$12,PC,D3)", 0053300);
+    ERRT("SNE #$1234",        OPERAND_NOT_ALLOWED, "#$1234",        0053300);
     TEST("SEQ D2",            0050302 | 0x700);
-    ERRT("SEQ A2",            OPERAND_NOT_ALLOWED, "A2");
+    ERRT("SEQ A2",            OPERAND_NOT_ALLOWED, "A2", 0053700);
     TEST("SEQ (A2)",          0050322 | 0x700);
     TEST("SEQ (A2)+",         0050332 | 0x700);
     TEST("SEQ -(A2)",         0050342 | 0x700);
@@ -2618,11 +2609,11 @@ void test_program() {
     TEST("SEQ ($12,A2,D3.W)", 0050362 | 0x700, 0x3012);
     TEST("SEQ ($001234).W",   0050370 | 0x700, 0x1234);
     TEST("SEQ ($123456).L",   0050371 | 0x700, 0x0012, 0x3456);
-    ERRT("SEQ (*+$1234,PC)",  OPERAND_NOT_ALLOWED, "(*+$1234,PC)");
-    ERRT("SEQ (*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "(*+$12,PC,D3)");
-    ERRT("SEQ #$1234",        OPERAND_NOT_ALLOWED, "#$1234");
+    ERRT("SEQ (*+$1234,PC)",  OPERAND_NOT_ALLOWED, "(*+$1234,PC)",  0053700);
+    ERRT("SEQ (*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "(*+$12,PC,D3)", 0053700);
+    ERRT("SEQ #$1234",        OPERAND_NOT_ALLOWED, "#$1234",        0053700);
     TEST("SVC D2",            0050302 | 0x800);
-    ERRT("SVC A2",            OPERAND_NOT_ALLOWED, "A2");
+    ERRT("SVC A2",            OPERAND_NOT_ALLOWED, "A2", 0054300);
     TEST("SVC (A2)",          0050322 | 0x800);
     TEST("SVC (A2)+",         0050332 | 0x800);
     TEST("SVC -(A2)",         0050342 | 0x800);
@@ -2630,11 +2621,11 @@ void test_program() {
     TEST("SVC ($12,A2,D3.W)", 0050362 | 0x800, 0x3012);
     TEST("SVC ($001234).W",   0050370 | 0x800, 0x1234);
     TEST("SVC ($123456).L",   0050371 | 0x800, 0x0012, 0x3456);
-    ERRT("SVC (*+$1234,PC)",  OPERAND_NOT_ALLOWED, "(*+$1234,PC)");
-    ERRT("SVC (*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "(*+$12,PC,D3)");
-    ERRT("SVC #$1234",        OPERAND_NOT_ALLOWED, "#$1234");
+    ERRT("SVC (*+$1234,PC)",  OPERAND_NOT_ALLOWED, "(*+$1234,PC)",  0054300);
+    ERRT("SVC (*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "(*+$12,PC,D3)", 0054300);
+    ERRT("SVC #$1234",        OPERAND_NOT_ALLOWED, "#$1234",        0054300);
     TEST("SVS D2",            0050302 | 0x900);
-    ERRT("SVS A2",            OPERAND_NOT_ALLOWED, "A2");
+    ERRT("SVS A2",            OPERAND_NOT_ALLOWED, "A2", 0054700);
     TEST("SVS (A2)",          0050322 | 0x900);
     TEST("SVS (A2)+",         0050332 | 0x900);
     TEST("SVS -(A2)",         0050342 | 0x900);
@@ -2642,11 +2633,11 @@ void test_program() {
     TEST("SVS ($12,A2,D3.W)", 0050362 | 0x900, 0x3012);
     TEST("SVS ($001234).W",   0050370 | 0x900, 0x1234);
     TEST("SVS ($123456).L",   0050371 | 0x900, 0x0012, 0x3456);
-    ERRT("SVS (*+$1234,PC)",  OPERAND_NOT_ALLOWED, "(*+$1234,PC)");
-    ERRT("SVS (*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "(*+$12,PC,D3)");
-    ERRT("SVS #$1234",        OPERAND_NOT_ALLOWED, "#$1234");
+    ERRT("SVS (*+$1234,PC)",  OPERAND_NOT_ALLOWED, "(*+$1234,PC)",  0054700);
+    ERRT("SVS (*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "(*+$12,PC,D3)", 0054700);
+    ERRT("SVS #$1234",        OPERAND_NOT_ALLOWED, "#$1234",        0054700);
     TEST("SPL D2",            0050302 | 0xA00);
-    ERRT("SPL A2",            OPERAND_NOT_ALLOWED, "A2");
+    ERRT("SPL A2",            OPERAND_NOT_ALLOWED, "A2", 0055300);
     TEST("SPL (A2)",          0050322 | 0xA00);
     TEST("SPL (A2)+",         0050332 | 0xA00);
     TEST("SPL -(A2)",         0050342 | 0xA00);
@@ -2654,11 +2645,11 @@ void test_program() {
     TEST("SPL ($12,A2,D3.W)", 0050362 | 0xA00, 0x3012);
     TEST("SPL ($001234).W",   0050370 | 0xA00, 0x1234);
     TEST("SPL ($123456).L",   0050371 | 0xA00, 0x0012, 0x3456);
-    ERRT("SPL (*+$1234,PC)",  OPERAND_NOT_ALLOWED, "(*+$1234,PC)");
-    ERRT("SPL (*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "(*+$12,PC,D3)");
-    ERRT("SPL #$1234",        OPERAND_NOT_ALLOWED, "#$1234");
+    ERRT("SPL (*+$1234,PC)",  OPERAND_NOT_ALLOWED, "(*+$1234,PC)",  0055300);
+    ERRT("SPL (*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "(*+$12,PC,D3)", 0055300);
+    ERRT("SPL #$1234",        OPERAND_NOT_ALLOWED, "#$1234",        0055300);
     TEST("SMI D2",            0050302 | 0xB00);
-    ERRT("SMI A2",            OPERAND_NOT_ALLOWED, "A2");
+    ERRT("SMI A2",            OPERAND_NOT_ALLOWED, "A2", 0055700);
     TEST("SMI (A2)",          0050322 | 0xB00);
     TEST("SMI (A2)+",         0050332 | 0xB00);
     TEST("SMI -(A2)",         0050342 | 0xB00);
@@ -2666,11 +2657,11 @@ void test_program() {
     TEST("SMI ($12,A2,D3.W)", 0050362 | 0xB00, 0x3012);
     TEST("SMI ($001234).W",   0050370 | 0xB00, 0x1234);
     TEST("SMI ($123456).L",   0050371 | 0xB00, 0x0012, 0x3456);
-    ERRT("SMI (*+$1234,PC)",  OPERAND_NOT_ALLOWED, "(*+$1234,PC)");
-    ERRT("SMI (*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "(*+$12,PC,D3)");
-    ERRT("SMI #$1234",        OPERAND_NOT_ALLOWED, "#$1234");
+    ERRT("SMI (*+$1234,PC)",  OPERAND_NOT_ALLOWED, "(*+$1234,PC)",  0055700);
+    ERRT("SMI (*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "(*+$12,PC,D3)", 0055700);
+    ERRT("SMI #$1234",        OPERAND_NOT_ALLOWED, "#$1234",        0055700);
     TEST("SGE D2",            0050302 | 0xC00);
-    ERRT("SGE A2",            OPERAND_NOT_ALLOWED, "A2");
+    ERRT("SGE A2",            OPERAND_NOT_ALLOWED, "A2", 0056300);
     TEST("SGE (A2)",          0050322 | 0xC00);
     TEST("SGE (A2)+",         0050332 | 0xC00);
     TEST("SGE -(A2)",         0050342 | 0xC00);
@@ -2678,11 +2669,11 @@ void test_program() {
     TEST("SGE ($12,A2,D3.W)", 0050362 | 0xC00, 0x3012);
     TEST("SGE ($001234).W",   0050370 | 0xC00, 0x1234);
     TEST("SGE ($123456).L",   0050371 | 0xC00, 0x0012, 0x3456);
-    ERRT("SGE (*+$1234,PC)",  OPERAND_NOT_ALLOWED, "(*+$1234,PC)");
-    ERRT("SGE (*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "(*+$12,PC,D3)");
-    ERRT("SGE #$1234",        OPERAND_NOT_ALLOWED, "#$1234");
+    ERRT("SGE (*+$1234,PC)",  OPERAND_NOT_ALLOWED, "(*+$1234,PC)",  0056300);
+    ERRT("SGE (*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "(*+$12,PC,D3)", 0056300);
+    ERRT("SGE #$1234",        OPERAND_NOT_ALLOWED, "#$1234",        0056300);
     TEST("SLT D2",            0050302 | 0xD00);
-    ERRT("SLT A2",            OPERAND_NOT_ALLOWED, "A2");
+    ERRT("SLT A2",            OPERAND_NOT_ALLOWED, "A2", 0056700);
     TEST("SLT (A2)",          0050322 | 0xD00);
     TEST("SLT (A2)+",         0050332 | 0xD00);
     TEST("SLT -(A2)",         0050342 | 0xD00);
@@ -2690,11 +2681,11 @@ void test_program() {
     TEST("SLT ($12,A2,D3.W)", 0050362 | 0xD00, 0x3012);
     TEST("SLT ($001234).W",   0050370 | 0xD00, 0x1234);
     TEST("SLT ($123456).L",   0050371 | 0xD00, 0x0012, 0x3456);
-    ERRT("SLT (*+$1234,PC)",  OPERAND_NOT_ALLOWED, "(*+$1234,PC)");
-    ERRT("SLT (*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "(*+$12,PC,D3)");
-    ERRT("SLT #$1234",        OPERAND_NOT_ALLOWED, "#$1234");
+    ERRT("SLT (*+$1234,PC)",  OPERAND_NOT_ALLOWED, "(*+$1234,PC)",  0056700);
+    ERRT("SLT (*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "(*+$12,PC,D3)", 0056700);
+    ERRT("SLT #$1234",        OPERAND_NOT_ALLOWED, "#$1234",        0056700);
     TEST("SGT D2",            0050302 | 0xE00);
-    ERRT("SGT A2",            OPERAND_NOT_ALLOWED, "A2");
+    ERRT("SGT A2",            OPERAND_NOT_ALLOWED, "A2", 0057300);
     TEST("SGT (A2)",          0050322 | 0xE00);
     TEST("SGT (A2)+",         0050332 | 0xE00);
     TEST("SGT -(A2)",         0050342 | 0xE00);
@@ -2702,11 +2693,11 @@ void test_program() {
     TEST("SGT ($12,A2,D3.W)", 0050362 | 0xE00, 0x3012);
     TEST("SGT ($001234).W",   0050370 | 0xE00, 0x1234);
     TEST("SGT ($123456).L",   0050371 | 0xE00, 0x0012, 0x3456);
-    ERRT("SGT (*+$1234,PC)",  OPERAND_NOT_ALLOWED, "(*+$1234,PC)");
-    ERRT("SGT (*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "(*+$12,PC,D3)");
-    ERRT("SGT #$1234",        OPERAND_NOT_ALLOWED, "#$1234");
+    ERRT("SGT (*+$1234,PC)",  OPERAND_NOT_ALLOWED, "(*+$1234,PC)",  0057300);
+    ERRT("SGT (*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "(*+$12,PC,D3)", 0057300);
+    ERRT("SGT #$1234",        OPERAND_NOT_ALLOWED, "#$1234",        0057300);
     TEST("SLE D2",            0050302 | 0xF00);
-    ERRT("SLE A2",            OPERAND_NOT_ALLOWED, "A2");
+    ERRT("SLE A2",            OPERAND_NOT_ALLOWED, "A2", 0057700);
     TEST("SLE (A2)",          0050322 | 0xF00);
     TEST("SLE (A2)+",         0050332 | 0xF00);
     TEST("SLE -(A2)",         0050342 | 0xF00);
@@ -2714,9 +2705,9 @@ void test_program() {
     TEST("SLE ($12,A2,D3.W)", 0050362 | 0xF00, 0x3012);
     TEST("SLE ($001234).W",   0050370 | 0xF00, 0x1234);
     TEST("SLE ($123456).L",   0050371 | 0xF00, 0x0012, 0x3456);
-    ERRT("SLE (*+$1234,PC)",  OPERAND_NOT_ALLOWED, "(*+$1234,PC)");
-    ERRT("SLE (*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "(*+$12,PC,D3)");
-    ERRT("SLE #$1234",        OPERAND_NOT_ALLOWED, "#$1234");
+    ERRT("SLE (*+$1234,PC)",  OPERAND_NOT_ALLOWED, "(*+$1234,PC)",  0057700);
+    ERRT("SLE (*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "(*+$12,PC,D3)", 0057700);
+    ERRT("SLE #$1234",        OPERAND_NOT_ALLOWED, "#$1234",        0057700);
 
     // BRA label: 00600|disp
     ATEST(0x10000, "BRA   *-$7FFE", 0060000, 0x8000);
@@ -2763,42 +2754,42 @@ void test_program() {
     AERRT(0x010000, "BSR   *-3",     OPERAND_NOT_ALIGNED, "*-3", 0060400 | 0xFB);
 
     // JMP dst: 00473|M|Rn
-    ERRT("JMP D2",              OPERAND_NOT_ALLOWED, "D2");
-    ERRT("JMP A2",              OPERAND_NOT_ALLOWED, "A2");
+    ERRT("JMP D2",              OPERAND_NOT_ALLOWED, "D2", 0047300);
+    ERRT("JMP A2",              OPERAND_NOT_ALLOWED, "A2", 0047300);
     TEST("JMP (A2)",            0047322);
-    ERRT("JMP (A2)+",           OPERAND_NOT_ALLOWED, "(A2)+");
-    ERRT("JMP -(A2)",           OPERAND_NOT_ALLOWED, "-(A2)");
+    ERRT("JMP (A2)+",           OPERAND_NOT_ALLOWED, "(A2)+", 0047300);
+    ERRT("JMP -(A2)",           OPERAND_NOT_ALLOWED, "-(A2)", 0047300);
     TEST("JMP ($1234,A2)",      0047352, 0x1234);
     TEST("JMP ($12,A2,D3.W)",   0047362, 0x3012);
     TEST("JMP ($001234).W",     0047370, 0x1234);
     TEST("JMP ($123456).L",     0047371, 0x0012, 0x3456);
     TEST("JMP (*+$1234,PC)",    0047372, 0x1232);
     TEST("JMP (*+$12,PC,D3.L)", 0047373, 0x3810);
-    ERRT("JMP #$1234",          OPERAND_NOT_ALLOWED, "#$1234");
+    ERRT("JMP #$1234",          OPERAND_NOT_ALLOWED, "#$1234", 0047300);
     ERRT("JMP ($003455).W",     OPERAND_NOT_ALIGNED, "($003455).W",  0047370, 0x3455);
     ERRT("JMP ($123455).L",     OPERAND_NOT_ALIGNED, "($123455).L",  0047371, 0x0012, 0x3455);
     ERRT("JMP (*+$1235,PC)",    OPERAND_NOT_ALIGNED, "(*+$1235,PC)", 0047372, 0x1233);
 
     // JSR dst, 00472|M|Rn
-    ERRT("JSR D2",              OPERAND_NOT_ALLOWED, "D2");
-    ERRT("JSR A2",              OPERAND_NOT_ALLOWED, "A2");
+    ERRT("JSR D2",              OPERAND_NOT_ALLOWED, "D2", 0047200);
+    ERRT("JSR A2",              OPERAND_NOT_ALLOWED, "A2", 0047200);
     TEST("JSR (A2)",            0047222);
-    ERRT("JSR (A2)+",           OPERAND_NOT_ALLOWED, "(A2)+");
-    ERRT("JSR -(A2)",           OPERAND_NOT_ALLOWED, "-(A2)");
+    ERRT("JSR (A2)+",           OPERAND_NOT_ALLOWED, "(A2)+", 0047200);
+    ERRT("JSR -(A2)",           OPERAND_NOT_ALLOWED, "-(A2)", 0047200);
     TEST("JSR ($1234,A2)",      0047252, 0x1234);
     TEST("JSR ($12,A2,D3.W)",   0047262, 0x3012);
     TEST("JSR ($001234).W",     0047270, 0x1234);
     TEST("JSR ($123456).L",     0047271, 0x0012, 0x3456);
     TEST("JSR (*+$1234,PC)",    0047272, 0x1232);
     TEST("JSR (*+$12,PC,D3.L)", 0047273, 0x3810);
-    ERRT("JSR #$1234",          OPERAND_NOT_ALLOWED, "#$1234");
+    ERRT("JSR #$1234",          OPERAND_NOT_ALLOWED, "#$1234", 0047200);
     ERRT("JSR ($003455).W",     OPERAND_NOT_ALIGNED, "($003455).W",  0047270, 0x3455);
     ERRT("JSR ($123455).L",     OPERAND_NOT_ALIGNED, "($123455).L",  0047271, 0x0012, 0x3455);
     ERRT("JSR (*+$1235,PC)",    OPERAND_NOT_ALIGNED, "(*+$1235,PC)", 0047272, 0x1233);
 
     // TST dst: 0045|Sz|M|Rn, Sz:B=0/W=1/L=2
     TEST("TST.B D2",             0045002);
-    ERRT("TST.B A2",             OPERAND_NOT_ALLOWED, "A2");
+    ERRT("TST.B A2",             OPERAND_NOT_ALLOWED, "A2", 0045000);
     TEST("TST.B (A2)",           0045022);
     TEST("TST.B (A2)+",          0045032);
     TEST("TST.B -(A2)",          0045042);
@@ -2806,11 +2797,11 @@ void test_program() {
     TEST("TST.B ($12,A2,D3.W)",  0045062, 0x3012);
     TEST("TST.B ($001234).W",    0045070, 0x1234);
     TEST("TST.B ($123456).L",    0045071, 0x0012, 0x3456);
-    ERRT("TST.B (*+$1234,PC)",   OPERAND_NOT_ALLOWED, "(*+$1234,PC)");
-    ERRT("TST.B (*-16,PC,D3.L)", OPERAND_NOT_ALLOWED, "(*-16,PC,D3.L)");
-    ERRT("TST.B #$12",           OPERAND_NOT_ALLOWED, "#$12");
+    ERRT("TST.B (*+$1234,PC)",   OPERAND_NOT_ALLOWED, "(*+$1234,PC)",   0045000);
+    ERRT("TST.B (*-16,PC,D3.L)", OPERAND_NOT_ALLOWED, "(*-16,PC,D3.L)", 0045000);
+    ERRT("TST.B #$12",           OPERAND_NOT_ALLOWED, "#$12",           0045000);
     TEST("TST.W D2",             0045102);
-    ERRT("TST.W A2",             OPERAND_NOT_ALLOWED, "A2");
+    ERRT("TST.W A2",             OPERAND_NOT_ALLOWED, "A2", 0045100);
     TEST("TST.W (A2)",           0045122);
     TEST("TST.W (A2)+",          0045132);
     TEST("TST.W -(A2)",          0045142);
@@ -2818,11 +2809,11 @@ void test_program() {
     TEST("TST.W ($12,A2,D3.W)",  0045162, 0x3012);
     TEST("TST.W ($001234).W",    0045170, 0x1234);
     TEST("TST.W ($123456).L",    0045171, 0x0012, 0x3456);
-    ERRT("TST.W (*+$1234,PC)",   OPERAND_NOT_ALLOWED, "(*+$1234,PC)");
-    ERRT("TST.W (*-16,PC,D3.L)", OPERAND_NOT_ALLOWED, "(*-16,PC,D3.L)");
-    ERRT("TST.W #$1234",         OPERAND_NOT_ALLOWED, "#$1234");
+    ERRT("TST.W (*+$1234,PC)",   OPERAND_NOT_ALLOWED, "(*+$1234,PC)",   0045100);
+    ERRT("TST.W (*-16,PC,D3.L)", OPERAND_NOT_ALLOWED, "(*-16,PC,D3.L)", 0045100);
+    ERRT("TST.W #$1234",         OPERAND_NOT_ALLOWED, "#$1234",         0045100);
     TEST("TST.L D2",             0045202);
-    ERRT("TST.L A2",             OPERAND_NOT_ALLOWED, "A2");
+    ERRT("TST.L A2",             OPERAND_NOT_ALLOWED, "A2", 0045200);
     TEST("TST.L (A2)",           0045222);
     TEST("TST.L (A2)+",          0045232);
     TEST("TST.L -(A2)",          0045242);
@@ -2830,9 +2821,9 @@ void test_program() {
     TEST("TST.L ($12,A2,D3.W)",  0045262, 0x3012);
     TEST("TST.L ($001234).W",    0045270, 0x1234);
     TEST("TST.L ($123454).L",    0045271, 0x0012, 0x3454);
-    ERRT("TST.L (*+$1234,PC)",   OPERAND_NOT_ALLOWED, "(*+$1234,PC)");
-    ERRT("TST.L (*-16,PC,D3.L)", OPERAND_NOT_ALLOWED, "(*-16,PC,D3.L)");
-    ERRT("TST.L #$1234",         OPERAND_NOT_ALLOWED, "#$1234");
+    ERRT("TST.L (*+$1234,PC)",   OPERAND_NOT_ALLOWED, "(*+$1234,PC)",   0045200);
+    ERRT("TST.L (*-16,PC,D3.L)", OPERAND_NOT_ALLOWED, "(*-16,PC,D3.L)", 0045200);
+    ERRT("TST.L #$1234",         OPERAND_NOT_ALLOWED, "#$1234",         0045200);
 }
 
 void test_system() {
@@ -2844,7 +2835,7 @@ void test_system() {
 
     // MOVE src,SR: 00433|M|Rn
     TEST("MOVE D2,SR",             0043302);
-    ERRT("MOVE A2,SR",             OPERAND_NOT_ALLOWED, "A2,SR");
+    ERRT("MOVE A2,SR",             OPERAND_NOT_ALLOWED, "A2,SR", 0043300);
     TEST("MOVE (A2),SR",           0043322);
     TEST("MOVE (A2)+,SR",          0043332);
     TEST("MOVE -(A2),SR",          0043342);
@@ -2861,7 +2852,7 @@ void test_system() {
 
     // MOVE SR,dst: 00403|M|Rn
     TEST("MOVE SR,D2",            0040302);
-    ERRT("MOVE SR,A2",            OPERAND_NOT_ALLOWED, "SR,A2");
+    ERRT("MOVE SR,A2",            OPERAND_NOT_ALLOWED, "A2", 0040300);
     TEST("MOVE SR,(A2)",          0040322);
     TEST("MOVE SR,(A2)+",         0040332);
     TEST("MOVE SR,-(A2)",         0040342);
@@ -2869,9 +2860,9 @@ void test_system() {
     TEST("MOVE SR,($12,A2,D3.W)", 0040362, 0x3012);
     TEST("MOVE SR,($001234).W",   0040370, 0x1234);
     TEST("MOVE SR,($234568).L",   0040371, 0x0023, 0x4568);
-    ERRT("MOVE SR,(*+$1234,PC)",  OPERAND_NOT_ALLOWED, "SR,(*+$1234,PC)");
-    ERRT("MOVE SR,(*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "SR,(*+$12,PC,D3)");
-    ERRT("MOVE SR,#$1234",        OPERAND_NOT_ALLOWED, "SR,#$1234");
+    ERRT("MOVE SR,(*+$1234,PC)",  OPERAND_NOT_ALLOWED, "(*+$1234,PC)",  0040300);
+    ERRT("MOVE SR,(*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "(*+$12,PC,D3)", 0040300);
+    ERRT("MOVE SR,#$1234",        OPERAND_NOT_ALLOWED, "#$1234",        0040300);
     ERRT("MOVE SR,($001235).W",   OPERAND_NOT_ALIGNED, "($001235).W",  0040370, 0x1235);
     ERRT("MOVE SR,($234567).L",   OPERAND_NOT_ALIGNED, "($234567).L",  0040371, 0x0023, 0x4567);
 
@@ -2941,7 +2932,7 @@ void test_system() {
     // CHK src,Dn: 004|Dn|Sz|M|Rn, Sz:W=6/L=7
     TEST("CHK   D2,D7",              0047602);
     TEST("CHK.W D2,D7",              0047602);
-    ERRT("CHK.W A2,D7",              OPERAND_NOT_ALLOWED, "A2,D7");
+    ERRT("CHK.W A2,D7",              OPERAND_NOT_ALLOWED, "A2,D7", 0047600);
     TEST("CHK.W (A2),D7",            0047622);
     TEST("CHK.W (A2)+,D7",           0047632);
     TEST("CHK.W -(A2),D7",           0047642);
@@ -2970,7 +2961,7 @@ void test_system() {
 
     // MOVE src,CCR: 00423|M|R
     TEST("MOVE D2,CCR",             0042302);
-    ERRT("MOVE A2,CCR",             OPERAND_NOT_ALLOWED, "A2,CCR");
+    ERRT("MOVE A2,CCR",             OPERAND_NOT_ALLOWED, "A2,CCR", 0042300);
     TEST("MOVE   (A2),CCR",         0042322);
     TEST("MOVE.W (A2),CCR",         0042322);
     TEST("MOVE (A2)+,CCR",          0042332);
@@ -3002,7 +2993,7 @@ void test_system() {
         ERRT("MOVE CCR,#$1234",         OPERAND_NOT_ALLOWED, "CCR,#$1234");
     } else {
         TEST("MOVE CCR,D2",             0041302);
-        ERRT("MOVE CCR,A2",             OPERAND_NOT_ALLOWED, "CCR,A2");
+        ERRT("MOVE CCR,A2",             OPERAND_NOT_ALLOWED, "A2", 0041300);
         TEST("MOVE CCR,(A2)",           0041322);
         TEST("MOVE CCR,(A2)+",          0041332);
         TEST("MOVE CCR,-(A2)",          0041342);
@@ -3010,9 +3001,9 @@ void test_system() {
         TEST("MOVE CCR,($12,A2,D3.W)",  0041362, 0x3012);
         TEST("MOVE CCR,($001234).W",    0041370, 0x1234);
         TEST("MOVE CCR,($234566).L",    0041371, 0x0023, 0x4566);
-        ERRT("MOVE CCR,(*+$1234,PC)",   OPERAND_NOT_ALLOWED, "CCR,(*+$1234,PC)");
-        ERRT("MOVE CCR,(*-16,PC,D3.L)", OPERAND_NOT_ALLOWED, "CCR,(*-16,PC,D3.L)");
-        ERRT("MOVE CCR,#$1234",         OPERAND_NOT_ALLOWED, "CCR,#$1234");
+        ERRT("MOVE CCR,(*+$1234,PC)",   OPERAND_NOT_ALLOWED, "(*+$1234,PC)",   0041300);
+        ERRT("MOVE CCR,(*-16,PC,D3.L)", OPERAND_NOT_ALLOWED, "(*-16,PC,D3.L)", 0041300);
+        ERRT("MOVE CCR,#$1234",         OPERAND_NOT_ALLOWED, "#$1234",         0041300);
     }
 
     // ORI #nn,CCR
@@ -3023,7 +3014,7 @@ void test_system() {
 void test_multiproc() {
     // TAS dst: 00453|M|Rn
     TEST("TAS D2",            0045302);
-    ERRT("TAS A2",            OPERAND_NOT_ALLOWED, "A2");
+    ERRT("TAS A2",            OPERAND_NOT_ALLOWED, "A2", 0045300);
     TEST("TAS (A2)",          0045322);
     TEST("TAS (A2)+",         0045332);
     TEST("TAS -(A2)",         0045342);
@@ -3031,9 +3022,9 @@ void test_multiproc() {
     TEST("TAS ($12,A2,D3.W)", 0045362, 0x3012);
     TEST("TAS ($001235).W",   0045370, 0x1235);
     TEST("TAS ($123457).L",   0045371, 0x0012, 0x3457);
-    ERRT("TAS (*+$1234,PC)",  OPERAND_NOT_ALLOWED, "(*+$1234,PC)");
-    ERRT("TAS (*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "(*+$12,PC,D3)");
-    ERRT("TAS #$1234",        OPERAND_NOT_ALLOWED, "#$1234");
+    ERRT("TAS (*+$1234,PC)",  OPERAND_NOT_ALLOWED, "(*+$1234,PC)",  0045300);
+    ERRT("TAS (*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "(*+$12,PC,D3)", 0045300);
+    ERRT("TAS #$1234",        OPERAND_NOT_ALLOWED, "#$1234",        0045300);
 }
 
 void test_areg_alias() {
@@ -3091,8 +3082,8 @@ void test_float_move() {
     ERRT("FMOVE.D D2, FP3", ILLEGAL_SIZE, "FMOVE.D D2, FP3",
                                         0xF200|002, 0x4000|(5<<10)|(3<<7));
     TEST("FMOVE.B D2, FP3",             0xF200|002, 0x4000|(6<<10)|(3<<7));
-    ERRT("FMOVE.L A4, FP5",             OPERAND_NOT_ALLOWED, "A4, FP5");
-    ERRT("FMOVE.S A4, FP5",             OPERAND_NOT_ALLOWED, "A4, FP5");
+    ERRT("FMOVE.L A4, FP5",             OPERAND_NOT_ALLOWED, "A4, FP5", 0xF200, 0x4280);
+    ERRT("FMOVE.S A4, FP5",             OPERAND_NOT_ALLOWED, "A4, FP5", 0xF200, 0x4680);
     TEST("FMOVE.X (A6), FP7",           0xF200|026, 0x4000|(2<<10)|(7<<7));
     TEST("FMOVE.P (A0)+, FP1",          0xF200|030, 0x4000|(3<<10)|(1<<7));
     TEST("FMOVE.W -(A2), FP3",          0xF200|042, 0x4000|(4<<10)|(3<<7));
@@ -3123,8 +3114,8 @@ void test_float_move() {
                                         0xF200|002, 0x6000|(3<<10)|(3<<7));
     ERRT("FMOVE.D FP3, D2", ILLEGAL_SIZE, "FMOVE.D FP3, D2",
                                         0xF200|002, 0x6000|(5<<10)|(3<<7));
-    ERRT("FMOVE.L FP5, A4",             OPERAND_NOT_ALLOWED, "FP5, A4");
-    ERRT("FMOVE.S FP5, A4",             OPERAND_NOT_ALLOWED, "FP5, A4");
+    ERRT("FMOVE.L FP5, A4",             OPERAND_NOT_ALLOWED, "A4", 0xF200, 0x6280);
+    ERRT("FMOVE.S FP5, A4",             OPERAND_NOT_ALLOWED, "A4", 0XF200, 0x6680);
     TEST("FMOVE.X FP7, (A6)",           0xF200|026, 0x6000|(2<<10)|(7<<7));
     TEST("FMOVE.P FP1, (A0)+",          0xF200|030, 0x6000|(3<<10)|(1<<7)|17);
     TEST("FMOVE.W FP3, -(A2)",          0xF200|042, 0x6000|(4<<10)|(3<<7));
@@ -3149,26 +3140,26 @@ void test_float_move() {
                                             0xF200|066, 0x6000|(3<<10)|(0<<7)|17, 0x7023);
     TEST("FMOVE.P FP1, ($004566).W{#-10}",  0xF200|070, 0x6000|(3<<10)|(1<<7)|(-10 & 0x7F), 0x4566);
     TEST("FMOVE.P FP2, ($56789A).L{#10}",   0xF200|071, 0x6000|(3<<10)|(2<<7)|10, 0x0056, 0x789A);
-    ERRT("FMOVE.X FP3, (*+$1234,PC)",    OPERAND_NOT_ALLOWED, "FP3, (*+$1234,PC)");
-    ERRT("FMOVE.P FP5, (*+90,PC,A4.L)",  OPERAND_NOT_ALLOWED, "FP5, (*+90,PC,A4.L)");
-    ERRT("FMOVE.L FP6, #$6789ABCD",      OPERAND_NOT_ALLOWED, "FP6, #$6789ABCD");
-    ERRT("FMOVE.W FP2, #$1234",          OPERAND_NOT_ALLOWED, "FP2, #$1234");
-    ERRT("FMOVE.B FP4, #$23",            OPERAND_NOT_ALLOWED, "FP4, #$23");
-    ERRT("FMOVE.S FP7, #7.88999976E-10", OPERAND_NOT_ALLOWED, "FP7, #7.88999976E-10");
-    ERRT("FMOVE.X FP0, #-89000000032",   OPERAND_NOT_ALLOWED, "FP0, #-89000000032");
-    ERRT("FMOVE.P FP1, #9.12E20",        OPERAND_NOT_ALLOWED, "FP1, #9.12E20");
-    ERRT("FMOVE.D FP3, #-8.25",          OPERAND_NOT_ALLOWED, "FP3, #-8.25");
+    ERRT("FMOVE.X FP3, (*+$1234,PC)",    OPERAND_NOT_ALLOWED, "(*+$1234,PC)",   0xF200, 0x6980);
+    ERRT("FMOVE.P FP5, (*+90,PC,A4.L)",  OPERAND_NOT_ALLOWED, "(*+90,PC,A4.L)", 0xF200, 0x6E80);
+    ERRT("FMOVE.L FP6, #$6789ABCD",      OPERAND_NOT_ALLOWED, "#$6789ABCD",     0xF200, 0x6300);
+    ERRT("FMOVE.W FP2, #$1234",          OPERAND_NOT_ALLOWED, "#$1234",         0xF200, 0x7100);
+    ERRT("FMOVE.B FP4, #$23",            OPERAND_NOT_ALLOWED, "#$23",           0xF200, 0x7A00);
+    ERRT("FMOVE.S FP7, #7.88999976E-10", OPERAND_NOT_ALLOWED, "#7.88999976E-10", 0xF200, 0x6780);
+    ERRT("FMOVE.X FP0, #-89000000032",   OPERAND_NOT_ALLOWED, "#-89000000032",  0xF200, 0x6800);
+    ERRT("FMOVE.P FP1, #9.12E20",        OPERAND_NOT_ALLOWED, "#9.12E20",       0xF200, 0x6C80);
+    ERRT("FMOVE.D FP3, #-8.25",          OPERAND_NOT_ALLOWED, "#-8.25",         0xF200, 0x7580);
 
-    ERRT("FMOVEM.X D0, FP0",             OPERAND_NOT_ALLOWED, "D0, FP0");
-    ERRT("FMOVEM.X D0, FP0/FP4-FP7",     OPERAND_NOT_ALLOWED, "D0, FP0/FP4-FP7");
-    ERRT("FMOVEM.X A1, FP0",             OPERAND_NOT_ALLOWED, "A1, FP0");
-    ERRT("FMOVEM.X A1, FP0/FP4-FP7",     OPERAND_NOT_ALLOWED, "A1, FP0/FP4-FP7");
+    ERRT("FMOVEM.X D0, FP0",             OPERAND_NOT_ALLOWED, "D0, FP0",         0xF200, 0xD080);
+    ERRT("FMOVEM.X D0, FP0/FP4-FP7",     OPERAND_NOT_ALLOWED, "D0, FP0/FP4-FP7", 0xF200, 0xD08F);
+    ERRT("FMOVEM.X A1, FP0",             OPERAND_NOT_ALLOWED, "A1, FP0",         0xF200, 0xD080);
+    ERRT("FMOVEM.X A1, FP0/FP4-FP7",     OPERAND_NOT_ALLOWED, "A1, FP0/FP4-FP7", 0xF200, 0xD08F);
     TEST("FMOVEM.X (A6), FP0",           0xF200|026, 0xD000|0x80);
     TEST("FMOVEM.X (A6), FP0/FP4-FP7",   0xF200|026, 0xD000|0x8F);
     TEST("FMOVEM.X (A0)+, FP7",          0xF200|030, 0xD000|0x01);
     TEST("FMOVEM.X (A0)+, FP0/FP4-FP7",  0xF200|030, 0xD000|0x8F);
-    ERRT("FMOVEM.X -(A2), FP3",          OPERAND_NOT_ALLOWED, "-(A2), FP3");
-    ERRT("FMOVEM.X -(A2), FP0/FP4-FP7",  OPERAND_NOT_ALLOWED, "-(A2), FP0/FP4-FP7");
+    ERRT("FMOVEM.X -(A2), FP3",          OPERAND_NOT_ALLOWED, "-(A2), FP3",         0xF200, 0xD010);
+    ERRT("FMOVEM.X -(A2), FP0/FP4-FP7",  OPERAND_NOT_ALLOWED, "-(A2), FP0/FP4-FP7", 0xF200, 0xD08F);
     TEST("FMOVEM.X ($1234,A4), FP3",     0xF200|054, 0xD000|0x10, 0x1234);
     TEST("FMOVEM.X ($1234,A4), FP3-FP5", 0xF200|054, 0xD000|0x1C, 0x1234);
     TEST("FMOVEM.X ($23,A6,D7.W), FP3",  0xF200|066, 0xD000|0x10, 0x7023);
@@ -3176,51 +3167,51 @@ void test_float_move() {
     TEST("FMOVEM.X ($56789A).L, FP5",    0xF200|071, 0xD000|0x04, 0x0056, 0x789A);
     TEST("FMOVEM.X (*+$1234,PC), FP6",   0xF200|072, 0xD000|0x02, 0x1230);
     TEST("FMOVEM.X (*+90,PC,A4.L), FP7", 0xF200|073, 0xD000|0x01, 0xC856);
-    ERRT("FMOVEM.X #$1234, FP3",         OPERAND_NOT_ALLOWED, "#$1234, FP3");
+    ERRT("FMOVEM.X #$1234, FP3",         OPERAND_NOT_ALLOWED, "#$1234, FP3", 0xF200, 0xD010);
 
-    ERRT("FMOVEM.X D0, D1",             OPERAND_NOT_ALLOWED, "D0, D1");
-    ERRT("FMOVEM.X A1, D2",             OPERAND_NOT_ALLOWED, "A1, D2");
+    ERRT("FMOVEM.X D0, D1",             OPERAND_NOT_ALLOWED, "D1",     0xF200, 0xF800);
+    ERRT("FMOVEM.X A1, D2",             OPERAND_NOT_ALLOWED, "A1, D2", 0xF200, 0xD820);
     TEST("FMOVEM.X (A6), D1",           0xF200|026, 0xD800|(1<<4));
     TEST("FMOVEM.X (A0)+, D2",          0xF200|030, 0xD800|(2<<4));
-    ERRT("FMOVEM.X -(A2), D2",          OPERAND_NOT_ALLOWED, "-(A2), D2");
+    ERRT("FMOVEM.X -(A2), D2",          OPERAND_NOT_ALLOWED, "-(A2), D2", 0xF200, 0xD820);
     TEST("FMOVEM.X ($1234,A4), D3",     0xF200|054, 0xD800|(3<<4), 0x1234);
     TEST("FMOVEM.X ($23,A6,D7.W), D4",  0xF200|066, 0xD800|(4<<4), 0x7023);
     TEST("FMOVEM.X ($004566).W, D5",    0xF200|070, 0xD800|(5<<4), 0x4566);
     TEST("FMOVEM.X ($56789A).L, D6",    0xF200|071, 0xD800|(6<<4), 0x0056, 0x789A);
     TEST("FMOVEM.X (*+$1234,PC), D7",   0xF200|072, 0xD800|(7<<4), 0x1230);
     TEST("FMOVEM.X (*+90,PC,A4.L), D0", 0xF200|073, 0xD800|(0<<0), 0xC856);
-    ERRT("FMOVEM.X #$1234, D2",         OPERAND_NOT_ALLOWED, "#$1234, D2");
+    ERRT("FMOVEM.X #$1234, D2",         OPERAND_NOT_ALLOWED, "#$1234, D2", 0xF200, 0xD820);
 
-    ERRT("FMOVEM.X FP0, D7",             OPERAND_NOT_ALLOWED, "FP0, D7");
-    ERRT("FMOVEM.X FP0-FP3, D7",         OPERAND_NOT_ALLOWED, "FP0-FP3, D7");
-    ERRT("FMOVEM.X FP1, A4",             OPERAND_NOT_ALLOWED, "FP1, A4");
-    ERRT("FMOVEM.X FP1/FP4, A4",         OPERAND_NOT_ALLOWED, "FP1/FP4, A4");
+    ERRT("FMOVEM.X FP0, D7",             OPERAND_NOT_ALLOWED, "D7", 0xF200, 0xF080);
+    ERRT("FMOVEM.X FP0-FP3, D7",         OPERAND_NOT_ALLOWED, "D7", 0xF200, 0xF0F0);
+    ERRT("FMOVEM.X FP1, A4",             OPERAND_NOT_ALLOWED, "A4", 0xF200, 0xF040);
+    ERRT("FMOVEM.X FP1/FP4, A4",         OPERAND_NOT_ALLOWED, "A4", 0xF200, 0xF048);
     TEST("FMOVEM.X FP0/FP6, (A6)",       0xF200|026, 0xF000|0x82);
     TEST("FMOVEM.X FP0/FP4-FP7, (A6)",   0xF200|026, 0xF000|0x8F);
-    ERRT("FMOVEM.X FP3, (A3)+",          OPERAND_NOT_ALLOWED, "FP3, (A3)+");
-    ERRT("FMOVEM.X FP0/FP4-FP7, (A3)+",  OPERAND_NOT_ALLOWED, "FP0/FP4-FP7, (A3)+");
+    ERRT("FMOVEM.X FP3, (A3)+",          OPERAND_NOT_ALLOWED, "(A3)+", 0xF200, 0xF010);
+    ERRT("FMOVEM.X FP0/FP4-FP7, (A3)+",  OPERAND_NOT_ALLOWED, "(A3)+", 0xF200, 0xF08F);
     TEST("FMOVEM.X FP0/FP4-FP7, -(A2)",  0xF200|042, 0xE000|0xF1);
     TEST("FMOVEM.X FP0, -(A2)",          0xF200|042, 0xE000|0x01);
     TEST("FMOVEM.X FP3-FP5, ($1234,A4)", 0xF200|054, 0xF000|0x1C, 0x1234);
     TEST("FMOVEM.X FP2, ($23,A6,D7.W)",  0xF200|066, 0xF000|0x20, 0x7023);
     TEST("FMOVEM.X FP1, ($004566).W",    0xF200|070, 0xF000|0x40, 0x4566);
     TEST("FMOVEM.X FP0, ($56789A).L",    0xF200|071, 0xF000|0x80, 0x0056, 0x789A);
-    ERRT("FMOVEM.X FP3, (*+$1234,PC)",   OPERAND_NOT_ALLOWED, "FP3, (*+$1234,PC)");
-    ERRT("FMOVEM.X FP3, (*+76,PC,D4.W)", OPERAND_NOT_ALLOWED, "FP3, (*+76,PC,D4.W)");
-    ERRT("FMOVEM.X FP3, #$1234",         OPERAND_NOT_ALLOWED, "FP3, #$1234");
+    ERRT("FMOVEM.X FP3, (*+$1234,PC)",   OPERAND_NOT_ALLOWED, "(*+$1234,PC)",   0xF200, 0xF010);
+    ERRT("FMOVEM.X FP3, (*+76,PC,D4.W)", OPERAND_NOT_ALLOWED, "(*+76,PC,D4.W)", 0xF200, 0xF010);
+    ERRT("FMOVEM.X FP3, #$1234",         OPERAND_NOT_ALLOWED, "#$1234",         0xF200, 0xF010);
 
-    ERRT("FMOVEM.X D1, D7",             OPERAND_NOT_ALLOWED, "D1, D7");
-    ERRT("FMOVEM.X D1, A4",             OPERAND_NOT_ALLOWED, "D1, A4");
+    ERRT("FMOVEM.X D1, D7",             OPERAND_NOT_ALLOWED, "D7", 0xF200, 0xF810);
+    ERRT("FMOVEM.X D1, A4",             OPERAND_NOT_ALLOWED, "A4", 0xF200, 0xF810);
     TEST("FMOVEM.X D1, (A6)",           0xF200|026, 0xF800|(1<<4));
-    ERRT("FMOVEM.X D1, (A0)+",          OPERAND_NOT_ALLOWED, "D1, (A0)+");
+    ERRT("FMOVEM.X D1, (A0)+",          OPERAND_NOT_ALLOWED, "(A0)+", 0xF200, 0xF810);
     TEST("FMOVEM.X D2, -(A2)",          0xF200|042, 0xE800|(2<<4));
     TEST("FMOVEM.X D3, ($1234,A4)",     0xF200|054, 0xF800|(3<<4), 0x1234);
     TEST("FMOVEM.X D4, ($23,A6,D7.W)",  0xF200|066, 0xF800|(4<<4), 0x7023);
     TEST("FMOVEM.X D5, ($004566).W",    0xF200|070, 0xF800|(5<<4), 0x4566);
     TEST("FMOVEM.X D6, ($56789A).L",    0xF200|071, 0xF800|(6<<4), 0x0056, 0x789A);
-    ERRT("FMOVEM.X D1, (*+$1234,PC)",   OPERAND_NOT_ALLOWED, "D1, (*+$1234,PC)");
-    ERRT("FMOVEM.X D1, (*+76,PC,D4.L)", OPERAND_NOT_ALLOWED, "D1, (*+76,PC,D4.L)");
-    ERRT("FMOVEM.X D1, #$1234",         OPERAND_NOT_ALLOWED, "D1, #$1234");
+    ERRT("FMOVEM.X D1, (*+$1234,PC)",   OPERAND_NOT_ALLOWED, "(*+$1234,PC)",   0xF200, 0xF810);
+    ERRT("FMOVEM.X D1, (*+76,PC,D4.L)", OPERAND_NOT_ALLOWED, "(*+76,PC,D4.L)", 0xF200, 0xF810);
+    ERRT("FMOVEM.X D1, #$1234",         OPERAND_NOT_ALLOWED, "#$1234",         0xF200, 0xF810);
 
     TEST("FMOVE.L D0, FPCR",     0xF200|000, 0x9000);
     TEST("FMOVE.L D1, FPSR",     0xF200|001, 0x8800);
@@ -3286,15 +3277,15 @@ void test_float_move() {
     TEST("FMOVE.L FPCR, ($ABCDEE).L",    0xF200|071, 0xB000, 0x00AB, 0xCDEE);
     TEST("FMOVE.L FPSR, ($BCDEF0).L",    0xF200|071, 0xA800, 0x00BC, 0xDEF0);
     TEST("FMOVE.L FPIAR, ($CDEF00).L",   0xF200|071, 0xA400, 0x00CD, 0xEF00);
-    ERRT("FMOVE.L FPCR, (*+$1234,PC)",   OPERAND_NOT_ALLOWED, "FPCR, (*+$1234,PC)");
-    ERRT("FMOVE.L FPSR, (*+$1234,PC)",   OPERAND_NOT_ALLOWED, "FPSR, (*+$1234,PC)");
-    ERRT("FMOVE.L FPIAR, (*+$1234,PC)",  OPERAND_NOT_ALLOWED, "FPIAR, (*+$1234,PC)");
-    ERRT("FMOVE.L FPCR, (*+76,PC,D4.W)", OPERAND_NOT_ALLOWED, "FPCR, (*+76,PC,D4.W)");
-    ERRT("FMOVE.L FPSR, (*+76,PC,D4.L)", OPERAND_NOT_ALLOWED, "FPSR, (*+76,PC,D4.L)");
-    ERRT("FMOVE.L FPIAR,(*+76,PC,A4.W)", OPERAND_NOT_ALLOWED, "FPIAR,(*+76,PC,A4.W)");
-    ERRT("FMOVE.L FPCR, #$1234",         OPERAND_NOT_ALLOWED, "FPCR, #$1234");
-    ERRT("FMOVE.L FPSR, #$1234",         OPERAND_NOT_ALLOWED, "FPSR, #$1234");
-    ERRT("FMOVE.L FPIAR, #$1234",        OPERAND_NOT_ALLOWED, "FPIAR, #$1234");
+    ERRT("FMOVE.L FPCR, (*+$1234,PC)",   OPERAND_NOT_ALLOWED, "(*+$1234,PC)", 0xF200, 0xB000);
+    ERRT("FMOVE.L FPSR, (*+$1234,PC)",   OPERAND_NOT_ALLOWED, "(*+$1234,PC)", 0xF200, 0xA800);
+    ERRT("FMOVE.L FPIAR, (*+$1234,PC)",  OPERAND_NOT_ALLOWED, "(*+$1234,PC)", 0xF200, 0xA400);
+    ERRT("FMOVE.L FPCR, (*+76,PC,D4.W)", OPERAND_NOT_ALLOWED, "(*+76,PC,D4.W)", 0xF200, 0xB000);
+    ERRT("FMOVE.L FPSR, (*+76,PC,D4.L)", OPERAND_NOT_ALLOWED, "(*+76,PC,D4.L)", 0xF200, 0xA800);
+    ERRT("FMOVE.L FPIAR,(*+76,PC,A4.W)", OPERAND_NOT_ALLOWED, "(*+76,PC,A4.W)", 0xF200, 0xA400);
+    ERRT("FMOVE.L FPCR, #$1234",         OPERAND_NOT_ALLOWED, "#$1234", 0xF200, 0xB000);
+    ERRT("FMOVE.L FPSR, #$1234",         OPERAND_NOT_ALLOWED, "#$1234", 0xF200, 0xA800);
+    ERRT("FMOVE.L FPIAR, #$1234",        OPERAND_NOT_ALLOWED, "#$1234", 0xF200, 0xA400);
 
     TEST("FMOVEM.L D0, FPCR",       0xF200|000, 0x9000);
     TEST("FMOVEM.L D1, FPSR",       0xF200|001, 0x8800);
@@ -3311,9 +3302,9 @@ void test_float_move() {
     TEST("FMOVEM.L FPCR/FPIAR, ($34,A7,D2.W)",    0xF200|067, 0xB400, 0x2034);
     TEST("FMOVEM.L FPCR/FPSR/FPIAR, ($005678).W", 0xF200|070, 0xBC00, 0x5678);
     TEST("FMOVEM.L FPCR/FPSR, ($6789AA).L",       0xF200|071, 0xB800, 0x0067, 0x89AA);
-    ERRT("FMOVEM.L FPSR/FPIAR, (*+$1234,PC)",     OPERAND_NOT_ALLOWED, "FPSR/FPIAR, (*+$1234,PC)");
-    ERRT("FMOVEM.L FPCR/FPIAR, (*+76,PC,A4.L)",   OPERAND_NOT_ALLOWED, "FPCR/FPIAR, (*+76,PC,A4.L)");
-    ERRT("FMOVEM.L FPCR/FPSR/FPIAR, #$1234",      OPERAND_NOT_ALLOWED, "FPCR/FPSR/FPIAR, #$1234");
+    ERRT("FMOVEM.L FPSR/FPIAR, (*+$1234,PC)",   OPERAND_NOT_ALLOWED, "(*+$1234,PC)",   0xF200, 0xAC00);
+    ERRT("FMOVEM.L FPCR/FPIAR, (*+76,PC,A4.L)", OPERAND_NOT_ALLOWED, "(*+76,PC,A4.L)", 0xF200, 0xB400);
+    ERRT("FMOVEM.L FPCR/FPSR/FPIAR, #$1234",    OPERAND_NOT_ALLOWED, "#$1234",         0xF200, 0xBC00);
 
     TEST("FMOVEM.L D0, FPCR",       0xF200|000, 0x9000);
     TEST("FMOVEM.L D1, FPSR",       0xF200|001, 0x8800);
@@ -3357,7 +3348,7 @@ void test_float_arithmetic() {
     ERRT("FINT.D D2, FP3", ILLEGAL_SIZE, "FINT.D D2, FP3",
                                        0xF200|002, 0x4001|(5<<10)|(3<<7));
     TEST("FINT.B D2, FP3",             0xF200|002, 0x4001|(6<<10)|(3<<7));
-    ERRT("FINT.S A4, FP5",             OPERAND_NOT_ALLOWED, "A4, FP5");
+    ERRT("FINT.S A4, FP5",             OPERAND_NOT_ALLOWED, "A4, FP5", 0xF200, 0x4681);
     TEST("FINT.X (A6), FP7",           0xF200|026, 0x4001|(2<<10)|(7<<7));
     TEST("FINT.P (A0)+, FP1",          0xF200|030, 0x4001|(3<<10)|(1<<7));
     TEST("FINT.W -(A2), FP3",          0xF200|042, 0x4001|(4<<10)|(3<<7));
@@ -3390,7 +3381,7 @@ void test_float_arithmetic() {
     ERRT("FSINH.D D2, FP3", ILLEGAL_SIZE, "FSINH.D D2, FP3",
                                         0xF200|002, 0x4002|(5<<10)|(3<<7));
     TEST("FSINH.B D2, FP3",             0xF200|002, 0x4002|(6<<10)|(3<<7));
-    ERRT("FSINH.S A4, FP5",             OPERAND_NOT_ALLOWED, "A4, FP5");
+    ERRT("FSINH.S A4, FP5",             OPERAND_NOT_ALLOWED, "A4, FP5", 0xF200, 0x4682);
     TEST("FSINH.X (A6), FP7",           0xF200|026, 0x4002|(2<<10)|(7<<7));
     TEST("FSINH.P (A0)+, FP1",          0xF200|030, 0x4002|(3<<10)|(1<<7));
     TEST("FSINH.W -(A2), FP3",          0xF200|042, 0x4002|(4<<10)|(3<<7));
@@ -3423,7 +3414,7 @@ void test_float_arithmetic() {
     ERRT("FINTRZ.D D2, FP3", ILLEGAL_SIZE, "FINTRZ.D D2, FP3",
                                          0xF200|002, 0x4003|(5<<10)|(3<<7));
     TEST("FINTRZ.B D2, FP3",             0xF200|002, 0x4003|(6<<10)|(3<<7));
-    ERRT("FINTRZ.S A4, FP5",             OPERAND_NOT_ALLOWED, "A4, FP5");
+    ERRT("FINTRZ.S A4, FP5",             OPERAND_NOT_ALLOWED, "A4, FP5", 0xF200, 0x4683);
     TEST("FINTRZ.X (A6), FP7",           0xF200|026, 0x4003|(2<<10)|(7<<7));
     TEST("FINTRZ.P (A0)+, FP1",          0xF200|030, 0x4003|(3<<10)|(1<<7));
     TEST("FINTRZ.W -(A2), FP3",          0xF200|042, 0x4003|(4<<10)|(3<<7));
@@ -3456,7 +3447,7 @@ void test_float_arithmetic() {
                                         0xF200|002, 0x4004|(3<<10)|(3<<7));
     ERRT("FSQRT.D D2, FP3", ILLEGAL_SIZE, "FSQRT.D D2, FP3",
                                         0xF200|002, 0x4004|(5<<10)|(3<<7));
-    ERRT("FSQRT.S A4, FP5",             OPERAND_NOT_ALLOWED, "A4, FP5");
+    ERRT("FSQRT.S A4, FP5",             OPERAND_NOT_ALLOWED, "A4, FP5", 0xF200, 0x4684);
     TEST("FSQRT.X (A6), FP7",           0xF200|026, 0x4004|(2<<10)|(7<<7));
     TEST("FSQRT.P (A0)+, FP1",          0xF200|030, 0x4004|(3<<10)|(1<<7));
     TEST("FSQRT.W -(A2), FP3",          0xF200|042, 0x4004|(4<<10)|(3<<7));
@@ -3489,7 +3480,7 @@ void test_float_arithmetic() {
     ERRT("FLOGNP1.D D2, FP3", ILLEGAL_SIZE, "FLOGNP1.D D2, FP3",
                                           0xF200|002, 0x4006|(5<<10)|(3<<7));
     TEST("FLOGNP1.B D2, FP3",             0xF200|002, 0x4006|(6<<10)|(3<<7));
-    ERRT("FLOGNP1.S A4, FP5",             OPERAND_NOT_ALLOWED, "A4, FP5");
+    ERRT("FLOGNP1.S A4, FP5",             OPERAND_NOT_ALLOWED, "A4, FP5", 0xF200, 0x4686);
     TEST("FLOGNP1.X (A6), FP7",           0xF200|026, 0x4006|(2<<10)|(7<<7));
     TEST("FLOGNP1.P (A0)+, FP1",          0xF200|030, 0x4006|(3<<10)|(1<<7));
     TEST("FLOGNP1.W -(A2), FP3",          0xF200|042, 0x4006|(4<<10)|(3<<7));
@@ -3522,7 +3513,7 @@ void test_float_arithmetic() {
     ERRT("FETOXM1.D D2, FP3", ILLEGAL_SIZE, "FETOXM1.D D2, FP3",
                                           0xF200|002, 0x4008|(5<<10)|(3<<7));
     TEST("FETOXM1.B D2, FP3",             0xF200|002, 0x4008|(6<<10)|(3<<7));
-    ERRT("FETOXM1.S A4, FP5",             OPERAND_NOT_ALLOWED, "A4, FP5");
+    ERRT("FETOXM1.S A4, FP5",             OPERAND_NOT_ALLOWED, "A4, FP5", 0xF200, 0x4688);
     TEST("FETOXM1.X (A6), FP7",           0xF200|026, 0x4008|(2<<10)|(7<<7));
     TEST("FETOXM1.P (A0)+, FP1",          0xF200|030, 0x4008|(3<<10)|(1<<7));
     TEST("FETOXM1.W -(A2), FP3",          0xF200|042, 0x4008|(4<<10)|(3<<7));
@@ -3555,7 +3546,7 @@ void test_float_arithmetic() {
     ERRT("FTANH.D D2, FP3", ILLEGAL_SIZE, "FTANH.D D2, FP3",
                                         0xF200|002, 0x4009|(5<<10)|(3<<7));
     TEST("FTANH.B D2, FP3",             0xF200|002, 0x4009|(6<<10)|(3<<7));
-    ERRT("FTANH.S A4, FP5",             OPERAND_NOT_ALLOWED, "A4, FP5");
+    ERRT("FTANH.S A4, FP5",             OPERAND_NOT_ALLOWED, "A4, FP5", 0xF200, 0x4689);
     TEST("FTANH.X (A6), FP7",           0xF200|026, 0x4009|(2<<10)|(7<<7));
     TEST("FTANH.P (A0)+, FP1",          0xF200|030, 0x4009|(3<<10)|(1<<7));
     TEST("FTANH.W -(A2), FP3",          0xF200|042, 0x4009|(4<<10)|(3<<7));
@@ -3588,7 +3579,7 @@ void test_float_arithmetic() {
     ERRT("FATAN.D D2, FP3", ILLEGAL_SIZE, "FATAN.D D2, FP3",
                                         0xF200|002, 0x400A|(5<<10)|(3<<7));
     TEST("FATAN.B D2, FP3",             0xF200|002, 0x400A|(6<<10)|(3<<7));
-    ERRT("FATAN.S A4, FP5",             OPERAND_NOT_ALLOWED, "A4, FP5");
+    ERRT("FATAN.S A4, FP5",             OPERAND_NOT_ALLOWED, "A4, FP5", 0xF200, 0x468A);
     TEST("FATAN.X (A6), FP7",           0xF200|026, 0x400A|(2<<10)|(7<<7));
     TEST("FATAN.P (A0)+, FP1",          0xF200|030, 0x400A|(3<<10)|(1<<7));
     TEST("FATAN.W -(A2), FP3",          0xF200|042, 0x400A|(4<<10)|(3<<7));
@@ -3621,7 +3612,7 @@ void test_float_arithmetic() {
     ERRT("FASIN.D D2, FP3", ILLEGAL_SIZE, "FASIN.D D2, FP3",
                                         0xF200|002, 0x400C|(5<<10)|(3<<7));
     TEST("FASIN.B D2, FP3",             0xF200|002, 0x400C|(6<<10)|(3<<7));
-    ERRT("FASIN.S A4, FP5",             OPERAND_NOT_ALLOWED, "A4, FP5");
+    ERRT("FASIN.S A4, FP5",             OPERAND_NOT_ALLOWED, "A4, FP5", 0xF200, 0x468C);
     TEST("FASIN.X (A6), FP7",           0xF200|026, 0x400C|(2<<10)|(7<<7));
     TEST("FASIN.P (A0)+, FP1",          0xF200|030, 0x400C|(3<<10)|(1<<7));
     TEST("FASIN.W -(A2), FP3",          0xF200|042, 0x400C|(4<<10)|(3<<7));
@@ -3654,7 +3645,7 @@ void test_float_arithmetic() {
     ERRT("FATANH.D D2, FP3", ILLEGAL_SIZE, "FATANH.D D2, FP3",
                                          0xF200|002, 0x400D|(5<<10)|(3<<7));
     TEST("FATANH.B D2, FP3",             0xF200|002, 0x400D|(6<<10)|(3<<7));
-    ERRT("FATANH.S A4, FP5",             OPERAND_NOT_ALLOWED, "A4, FP5");
+    ERRT("FATANH.S A4, FP5",             OPERAND_NOT_ALLOWED, "A4, FP5", 0xF200, 0x468D);
     TEST("FATANH.X (A6), FP7",           0xF200|026, 0x400D|(2<<10)|(7<<7));
     TEST("FATANH.P (A0)+, FP1",          0xF200|030, 0x400D|(3<<10)|(1<<7));
     TEST("FATANH.W -(A2), FP3",          0xF200|042, 0x400D|(4<<10)|(3<<7));
@@ -3687,7 +3678,7 @@ void test_float_arithmetic() {
     ERRT("FSIN.D D2, FP3", ILLEGAL_SIZE, "FSIN.D D2, FP3",
                                        0xF200|002, 0x400E|(5<<10)|(3<<7));
     TEST("FSIN.B D2, FP3",             0xF200|002, 0x400E|(6<<10)|(3<<7));
-    ERRT("FSIN.S A4, FP5",             OPERAND_NOT_ALLOWED, "A4, FP5");
+    ERRT("FSIN.S A4, FP5",             OPERAND_NOT_ALLOWED, "A4, FP5", 0xF200, 0x468E);
     TEST("FSIN.X (A6), FP7",           0xF200|026, 0x400E|(2<<10)|(7<<7));
     TEST("FSIN.P (A0)+, FP1",          0xF200|030, 0x400E|(3<<10)|(1<<7));
     TEST("FSIN.W -(A2), FP3",          0xF200|042, 0x400E|(4<<10)|(3<<7));
@@ -3720,7 +3711,7 @@ void test_float_arithmetic() {
     ERRT("FTAN.D D2, FP3", ILLEGAL_SIZE, "FTAN.D D2, FP3",
                                        0xF200|002, 0x400F|(5<<10)|(3<<7));
     TEST("FTAN.B D2, FP3",             0xF200|002, 0x400F|(6<<10)|(3<<7));
-    ERRT("FTAN.S A4, FP5",             OPERAND_NOT_ALLOWED, "A4, FP5");
+    ERRT("FTAN.S A4, FP5",             OPERAND_NOT_ALLOWED, "A4, FP5", 0xF200, 0x468F);
     TEST("FTAN.X (A6), FP7",           0xF200|026, 0x400F|(2<<10)|(7<<7));
     TEST("FTAN.P (A0)+, FP1",          0xF200|030, 0x400F|(3<<10)|(1<<7));
     TEST("FTAN.W -(A2), FP3",          0xF200|042, 0x400F|(4<<10)|(3<<7));
@@ -3753,7 +3744,7 @@ void test_float_arithmetic() {
     ERRT("FETOX.D D2, FP3", ILLEGAL_SIZE, "FETOX.D D2, FP3",
                                         0xF200|002, 0x4010|(5<<10)|(3<<7));
     TEST("FETOX.B D2, FP3",             0xF200|002, 0x4010|(6<<10)|(3<<7));
-    ERRT("FETOX.S A4, FP5",             OPERAND_NOT_ALLOWED, "A4, FP5");
+    ERRT("FETOX.S A4, FP5",             OPERAND_NOT_ALLOWED, "A4, FP5", 0xF200, 0x4690);
     TEST("FETOX.X (A6), FP7",           0xF200|026, 0x4010|(2<<10)|(7<<7));
     TEST("FETOX.P (A0)+, FP1",          0xF200|030, 0x4010|(3<<10)|(1<<7));
     TEST("FETOX.W -(A2), FP3",          0xF200|042, 0x4010|(4<<10)|(3<<7));
@@ -3786,7 +3777,7 @@ void test_float_arithmetic() {
     ERRT("FTWOTOX.D D2, FP3", ILLEGAL_SIZE, "FTWOTOX.D D2, FP3",
                                           0xF200|002, 0x4011|(5<<10)|(3<<7));
     TEST("FTWOTOX.B D2, FP3",             0xF200|002, 0x4011|(6<<10)|(3<<7));
-    ERRT("FTWOTOX.S A4, FP5",             OPERAND_NOT_ALLOWED, "A4, FP5");
+    ERRT("FTWOTOX.S A4, FP5",             OPERAND_NOT_ALLOWED, "A4, FP5", 0xF200, 0x4691);
     TEST("FTWOTOX.X (A6), FP7",           0xF200|026, 0x4011|(2<<10)|(7<<7));
     TEST("FTWOTOX.P (A0)+, FP1",          0xF200|030, 0x4011|(3<<10)|(1<<7));
     TEST("FTWOTOX.W -(A2), FP3",          0xF200|042, 0x4011|(4<<10)|(3<<7));
@@ -3819,7 +3810,7 @@ void test_float_arithmetic() {
     ERRT("FTENTOX.D D2, FP3", ILLEGAL_SIZE, "FTENTOX.D D2, FP3",
                                           0xF200|002, 0x4012|(5<<10)|(3<<7));
     TEST("FTENTOX.B D2, FP3",             0xF200|002, 0x4012|(6<<10)|(3<<7));
-    ERRT("FTENTOX.S A4, FP5",             OPERAND_NOT_ALLOWED, "A4, FP5");
+    ERRT("FTENTOX.S A4, FP5",             OPERAND_NOT_ALLOWED, "A4, FP5", 0xF200, 0x4692);
     TEST("FTENTOX.X (A6), FP7",           0xF200|026, 0x4012|(2<<10)|(7<<7));
     TEST("FTENTOX.P (A0)+, FP1",          0xF200|030, 0x4012|(3<<10)|(1<<7));
     TEST("FTENTOX.W -(A2), FP3",          0xF200|042, 0x4012|(4<<10)|(3<<7));
@@ -3852,7 +3843,7 @@ void test_float_arithmetic() {
     ERRT("FLOGN.D D2, FP3", ILLEGAL_SIZE, "FLOGN.D D2, FP3",
                                         0xF200|002, 0x4014|(5<<10)|(3<<7));
     TEST("FLOGN.B D2, FP3",             0xF200|002, 0x4014|(6<<10)|(3<<7));
-    ERRT("FLOGN.S A4, FP5",             OPERAND_NOT_ALLOWED, "A4, FP5");
+    ERRT("FLOGN.S A4, FP5",             OPERAND_NOT_ALLOWED, "A4, FP5", 0xF200, 0x4694);
     TEST("FLOGN.X (A6), FP7",           0xF200|026, 0x4014|(2<<10)|(7<<7));
     TEST("FLOGN.P (A0)+, FP1",          0xF200|030, 0x4014|(3<<10)|(1<<7));
     TEST("FLOGN.W -(A2), FP3",          0xF200|042, 0x4014|(4<<10)|(3<<7));
@@ -3885,7 +3876,7 @@ void test_float_arithmetic() {
     ERRT("FLOG10.D D2, FP3", ILLEGAL_SIZE, "FLOG10.D D2, FP3",
                                          0xF200|002, 0x4015|(5<<10)|(3<<7));
     TEST("FLOG10.B D2, FP3",             0xF200|002, 0x4015|(6<<10)|(3<<7));
-    ERRT("FLOG10.S A4, FP5",             OPERAND_NOT_ALLOWED, "A4, FP5");
+    ERRT("FLOG10.S A4, FP5",             OPERAND_NOT_ALLOWED, "A4, FP5", 0xF200, 0x4695);
     TEST("FLOG10.X (A6), FP7",           0xF200|026, 0x4015|(2<<10)|(7<<7));
     TEST("FLOG10.P (A0)+, FP1",          0xF200|030, 0x4015|(3<<10)|(1<<7));
     TEST("FLOG10.W -(A2), FP3",          0xF200|042, 0x4015|(4<<10)|(3<<7));
@@ -3918,7 +3909,7 @@ void test_float_arithmetic() {
     ERRT("FLOG2.D D2, FP3", ILLEGAL_SIZE, "FLOG2.D D2, FP3",
                                         0xF200|002, 0x4016|(5<<10)|(3<<7));
     TEST("FLOG2.B D2, FP3",             0xF200|002, 0x4016|(6<<10)|(3<<7));
-    ERRT("FLOG2.S A4, FP5",             OPERAND_NOT_ALLOWED, "A4, FP5");
+    ERRT("FLOG2.S A4, FP5",             OPERAND_NOT_ALLOWED, "A4, FP5", 0xF200, 0x4696);
     TEST("FLOG2.X (A6), FP7",           0xF200|026, 0x4016|(2<<10)|(7<<7));
     TEST("FLOG2.P (A0)+, FP1",          0xF200|030, 0x4016|(3<<10)|(1<<7));
     TEST("FLOG2.W -(A2), FP3",          0xF200|042, 0x4016|(4<<10)|(3<<7));
@@ -3951,7 +3942,7 @@ void test_float_arithmetic() {
     ERRT("FABS.D D2, FP3", ILLEGAL_SIZE, "FABS.D D2, FP3",
                                        0xF200|002, 0x4018|(5<<10)|(3<<7));
     TEST("FABS.B D2, FP3",             0xF200|002, 0x4018|(6<<10)|(3<<7));
-    ERRT("FABS.S A4, FP5",             OPERAND_NOT_ALLOWED, "A4, FP5");
+    ERRT("FABS.S A4, FP5",             OPERAND_NOT_ALLOWED, "A4, FP5", 0xF200, 0x4698);
     TEST("FABS.X (A6), FP7",           0xF200|026, 0x4018|(2<<10)|(7<<7));
     TEST("FABS.P (A0)+, FP1",          0xF200|030, 0x4018|(3<<10)|(1<<7));
     TEST("FABS.W -(A2), FP3",          0xF200|042, 0x4018|(4<<10)|(3<<7));
@@ -3984,7 +3975,7 @@ void test_float_arithmetic() {
     ERRT("FCOSH.D D2, FP3", ILLEGAL_SIZE, "FCOSH.D D2, FP3",
                                         0xF200|002, 0x4019|(5<<10)|(3<<7));
     TEST("FCOSH.B D2, FP3",             0xF200|002, 0x4019|(6<<10)|(3<<7));
-    ERRT("FCOSH.S A4, FP5",             OPERAND_NOT_ALLOWED, "A4, FP5");
+    ERRT("FCOSH.S A4, FP5",             OPERAND_NOT_ALLOWED, "A4, FP5", 0xF200, 0x4699);
     TEST("FCOSH.X (A6), FP7",           0xF200|026, 0x4019|(2<<10)|(7<<7));
     TEST("FCOSH.P (A0)+, FP1",          0xF200|030, 0x4019|(3<<10)|(1<<7));
     TEST("FCOSH.W -(A2), FP3",          0xF200|042, 0x4019|(4<<10)|(3<<7));
@@ -4017,7 +4008,7 @@ void test_float_arithmetic() {
     ERRT("FNEG.D D2, FP3", ILLEGAL_SIZE, "FNEG.D D2, FP3",
                                        0xF200|002, 0x401A|(5<<10)|(3<<7));
     TEST("FNEG.B D2, FP3",             0xF200|002, 0x401A|(6<<10)|(3<<7));
-    ERRT("FNEG.S A4, FP5",             OPERAND_NOT_ALLOWED, "A4, FP5");
+    ERRT("FNEG.S A4, FP5",             OPERAND_NOT_ALLOWED, "A4, FP5", 0xF200, 0x469A);
     TEST("FNEG.X (A6), FP7",           0xF200|026, 0x401A|(2<<10)|(7<<7));
     TEST("FNEG.P (A0)+, FP1",          0xF200|030, 0x401A|(3<<10)|(1<<7));
     TEST("FNEG.W -(A2), FP3",          0xF200|042, 0x401A|(4<<10)|(3<<7));
@@ -4050,7 +4041,7 @@ void test_float_arithmetic() {
     ERRT("FACOS.D D2, FP3", ILLEGAL_SIZE, "FACOS.D D2, FP3",
                                         0xF200|002, 0x401C|(5<<10)|(3<<7));
     TEST("FACOS.B D2, FP3",             0xF200|002, 0x401C|(6<<10)|(3<<7));
-    ERRT("FACOS.S A4, FP5",             OPERAND_NOT_ALLOWED, "A4, FP5");
+    ERRT("FACOS.S A4, FP5",             OPERAND_NOT_ALLOWED, "A4, FP5", 0xF200, 0x469C);
     TEST("FACOS.X (A6), FP7",           0xF200|026, 0x401C|(2<<10)|(7<<7));
     TEST("FACOS.P (A0)+, FP1",          0xF200|030, 0x401C|(3<<10)|(1<<7));
     TEST("FACOS.W -(A2), FP3",          0xF200|042, 0x401C|(4<<10)|(3<<7));
@@ -4083,7 +4074,7 @@ void test_float_arithmetic() {
     ERRT("FCOS.D D2, FP3", ILLEGAL_SIZE, "FCOS.D D2, FP3",
                                        0xF200|002, 0x401D|(5<<10)|(3<<7));
     TEST("FCOS.B D2, FP3",             0xF200|002, 0x401D|(6<<10)|(3<<7));
-    ERRT("FCOS.S A4, FP5",             OPERAND_NOT_ALLOWED, "A4, FP5");
+    ERRT("FCOS.S A4, FP5",             OPERAND_NOT_ALLOWED, "A4, FP5", 0xF200, 0x469D);
     TEST("FCOS.X (A6), FP7",           0xF200|026, 0x401D|(2<<10)|(7<<7));
     TEST("FCOS.P (A0)+, FP1",          0xF200|030, 0x401D|(3<<10)|(1<<7));
     TEST("FCOS.W -(A2), FP3",          0xF200|042, 0x401D|(4<<10)|(3<<7));
@@ -4116,7 +4107,7 @@ void test_float_arithmetic() {
     ERRT("FGETEXP.D D2, FP3", ILLEGAL_SIZE, "FGETEXP.D D2, FP3",
                                           0xF200|002, 0x401E|(5<<10)|(3<<7));
     TEST("FGETEXP.B D2, FP3",             0xF200|002, 0x401E|(6<<10)|(3<<7));
-    ERRT("FGETEXP.S A4, FP5",             OPERAND_NOT_ALLOWED, "A4, FP5");
+    ERRT("FGETEXP.S A4, FP5",             OPERAND_NOT_ALLOWED, "A4, FP5", 0xF200, 0x469E);
     TEST("FGETEXP.X (A6), FP7",           0xF200|026, 0x401E|(2<<10)|(7<<7));
     TEST("FGETEXP.P (A0)+, FP1",          0xF200|030, 0x401E|(3<<10)|(1<<7));
     TEST("FGETEXP.W -(A2), FP3",          0xF200|042, 0x401E|(4<<10)|(3<<7));
@@ -4149,7 +4140,7 @@ void test_float_arithmetic() {
     ERRT("FGETMAN.D D2, FP3", ILLEGAL_SIZE, "FGETMAN.D D2, FP3",
                                           0xF200|002, 0x401F|(5<<10)|(3<<7));
     TEST("FGETMAN.B D2, FP3",             0xF200|002, 0x401F|(6<<10)|(3<<7));
-    ERRT("FGETMAN.S A4, FP5",             OPERAND_NOT_ALLOWED, "A4, FP5");
+    ERRT("FGETMAN.S A4, FP5",             OPERAND_NOT_ALLOWED, "A4, FP5", 0xF200, 0x469F);
     TEST("FGETMAN.X (A6), FP7",           0xF200|026, 0x401F|(2<<10)|(7<<7));
     TEST("FGETMAN.P (A0)+, FP1",          0xF200|030, 0x401F|(3<<10)|(1<<7));
     TEST("FGETMAN.W -(A2), FP3",          0xF200|042, 0x401F|(4<<10)|(3<<7));
@@ -4182,7 +4173,7 @@ void test_float_arithmetic() {
     ERRT("FDIV.D D2, FP3", ILLEGAL_SIZE, "FDIV.D D2, FP3",
                                        0xF200|002, 0x4020|(5<<10)|(3<<7));
     TEST("FDIV.B D2, FP3",             0xF200|002, 0x4020|(6<<10)|(3<<7));
-    ERRT("FDIV.S A4, FP5",             OPERAND_NOT_ALLOWED, "A4, FP5");
+    ERRT("FDIV.S A4, FP5",             OPERAND_NOT_ALLOWED, "A4, FP5", 0xF200, 0x46A0);
     TEST("FDIV.X (A6), FP7",           0xF200|026, 0x4020|(2<<10)|(7<<7));
     TEST("FDIV.P (A0)+, FP1",          0xF200|030, 0x4020|(3<<10)|(1<<7));
     TEST("FDIV.W -(A2), FP3",          0xF200|042, 0x4020|(4<<10)|(3<<7));
@@ -4215,7 +4206,7 @@ void test_float_arithmetic() {
     ERRT("FMOD.D D2, FP3", ILLEGAL_SIZE, "FMOD.D D2, FP3",
                                        0xF200|002, 0x4021|(5<<10)|(3<<7));
     TEST("FMOD.B D2, FP3",             0xF200|002, 0x4021|(6<<10)|(3<<7));
-    ERRT("FMOD.S A4, FP5",             OPERAND_NOT_ALLOWED, "A4, FP5");
+    ERRT("FMOD.S A4, FP5",             OPERAND_NOT_ALLOWED, "A4, FP5", 0xF200, 0x46A1);
     TEST("FMOD.X (A6), FP7",           0xF200|026, 0x4021|(2<<10)|(7<<7));
     TEST("FMOD.P (A0)+, FP1",          0xF200|030, 0x4021|(3<<10)|(1<<7));
     TEST("FMOD.W -(A2), FP3",          0xF200|042, 0x4021|(4<<10)|(3<<7));
@@ -4248,7 +4239,7 @@ void test_float_arithmetic() {
     ERRT("FADD.D D2, FP3", ILLEGAL_SIZE, "FADD.D D2, FP3",
                                        0xF200|002, 0x4022|(5<<10)|(3<<7));
     TEST("FADD.B D2, FP3",             0xF200|002, 0x4022|(6<<10)|(3<<7));
-    ERRT("FADD.S A4, FP5",             OPERAND_NOT_ALLOWED, "A4, FP5");
+    ERRT("FADD.S A4, FP5",             OPERAND_NOT_ALLOWED, "A4, FP5", 0xF200, 0x46A2);
     TEST("FADD.X (A6), FP7",           0xF200|026, 0x4022|(2<<10)|(7<<7));
     TEST("FADD.P (A0)+, FP1",          0xF200|030, 0x4022|(3<<10)|(1<<7));
     TEST("FADD.W -(A2), FP3",          0xF200|042, 0x4022|(4<<10)|(3<<7));
@@ -4281,7 +4272,7 @@ void test_float_arithmetic() {
     ERRT("FMUL.D D2, FP3", ILLEGAL_SIZE, "FMUL.D D2, FP3",
                                        0xF200|002, 0x4023|(5<<10)|(3<<7));
     TEST("FMUL.B D2, FP3",             0xF200|002, 0x4023|(6<<10)|(3<<7));
-    ERRT("FMUL.S A4, FP5",             OPERAND_NOT_ALLOWED, "A4, FP5");
+    ERRT("FMUL.S A4, FP5",             OPERAND_NOT_ALLOWED, "A4, FP5", 0xF200, 0x46A3);
     TEST("FMUL.X (A6), FP7",           0xF200|026, 0x4023|(2<<10)|(7<<7));
     TEST("FMUL.P (A0)+, FP1",          0xF200|030, 0x4023|(3<<10)|(1<<7));
     TEST("FMUL.W -(A2), FP3",          0xF200|042, 0x4023|(4<<10)|(3<<7));
@@ -4314,7 +4305,7 @@ void test_float_arithmetic() {
     ERRT("FSGLDIV.D D2, FP3", ILLEGAL_SIZE, "FSGLDIV.D D2, FP3",
                                           0xF200|002, 0x4024|(5<<10)|(3<<7));
     TEST("FSGLDIV.B D2, FP3",             0xF200|002, 0x4024|(6<<10)|(3<<7));
-    ERRT("FSGLDIV.S A4, FP5",             OPERAND_NOT_ALLOWED, "A4, FP5");
+    ERRT("FSGLDIV.S A4, FP5",             OPERAND_NOT_ALLOWED, "A4, FP5", 0xF200, 0x46A4);
     TEST("FSGLDIV.X (A6), FP7",           0xF200|026, 0x4024|(2<<10)|(7<<7));
     TEST("FSGLDIV.P (A0)+, FP1",          0xF200|030, 0x4024|(3<<10)|(1<<7));
     TEST("FSGLDIV.W -(A2), FP3",          0xF200|042, 0x4024|(4<<10)|(3<<7));
@@ -4347,7 +4338,7 @@ void test_float_arithmetic() {
     ERRT("FREM.D D2, FP3", ILLEGAL_SIZE, "FREM.D D2, FP3",
                                        0xF200|002, 0x4025|(5<<10)|(3<<7));
     TEST("FREM.B D2, FP3",             0xF200|002, 0x4025|(6<<10)|(3<<7));
-    ERRT("FREM.S A4, FP5",             OPERAND_NOT_ALLOWED, "A4, FP5");
+    ERRT("FREM.S A4, FP5",             OPERAND_NOT_ALLOWED, "A4, FP5", 0xF200, 0x46A5);
     TEST("FREM.X (A6), FP7",           0xF200|026, 0x4025|(2<<10)|(7<<7));
     TEST("FREM.P (A0)+, FP1",          0xF200|030, 0x4025|(3<<10)|(1<<7));
     TEST("FREM.W -(A2), FP3",          0xF200|042, 0x4025|(4<<10)|(3<<7));
@@ -4380,7 +4371,7 @@ void test_float_arithmetic() {
     ERRT("FSCALE.D D2, FP3", ILLEGAL_SIZE, "FSCALE.D D2, FP3",
                                          0xF200|002, 0x4026|(5<<10)|(3<<7));
     TEST("FSCALE.B D2, FP3",             0xF200|002, 0x4026|(6<<10)|(3<<7));
-    ERRT("FSCALE.S A4, FP5",             OPERAND_NOT_ALLOWED, "A4, FP5");
+    ERRT("FSCALE.S A4, FP5",             OPERAND_NOT_ALLOWED, "A4, FP5", 0xF200, 0x46A6);
     TEST("FSCALE.X (A6), FP7",           0xF200|026, 0x4026|(2<<10)|(7<<7));
     TEST("FSCALE.P (A0)+, FP1",          0xF200|030, 0x4026|(3<<10)|(1<<7));
     TEST("FSCALE.W -(A2), FP3",          0xF200|042, 0x4026|(4<<10)|(3<<7));
@@ -4413,7 +4404,7 @@ void test_float_arithmetic() {
     ERRT("FSGLMUL.D D2, FP3", ILLEGAL_SIZE, "FSGLMUL.D D2, FP3",
                                           0xF200|002, 0x4027|(5<<10)|(3<<7));
     TEST("FSGLMUL.B D2, FP3",             0xF200|002, 0x4027|(6<<10)|(3<<7));
-    ERRT("FSGLMUL.S A4, FP5",             OPERAND_NOT_ALLOWED, "A4, FP5");
+    ERRT("FSGLMUL.S A4, FP5",             OPERAND_NOT_ALLOWED, "A4, FP5", 0xF200, 0x46A7);
     TEST("FSGLMUL.X (A6), FP7",           0xF200|026, 0x4027|(2<<10)|(7<<7));
     TEST("FSGLMUL.P (A0)+, FP1",          0xF200|030, 0x4027|(3<<10)|(1<<7));
     TEST("FSGLMUL.W -(A2), FP3",          0xF200|042, 0x4027|(4<<10)|(3<<7));
@@ -4446,7 +4437,7 @@ void test_float_arithmetic() {
     ERRT("FSUB.D D2, FP3", ILLEGAL_SIZE, "FSUB.D D2, FP3",
                                        0xF200|002, 0x4028|(5<<10)|(3<<7));
     TEST("FSUB.B D2, FP3",             0xF200|002, 0x4028|(6<<10)|(3<<7));
-    ERRT("FSUB.S A4, FP5",             OPERAND_NOT_ALLOWED, "A4, FP5");
+    ERRT("FSUB.S A4, FP5",             OPERAND_NOT_ALLOWED, "A4, FP5", 0xF200, 0x46A8);
     TEST("FSUB.X (A6), FP7",           0xF200|026, 0x4028|(2<<10)|(7<<7));
     TEST("FSUB.P (A0)+, FP1",          0xF200|030, 0x4028|(3<<10)|(1<<7));
     TEST("FSUB.W -(A2), FP3",          0xF200|042, 0x4028|(4<<10)|(3<<7));
@@ -4479,7 +4470,7 @@ void test_float_arithmetic() {
     ERRT("FSINCOS.D D2, FP4:FP3", ILLEGAL_SIZE, "FSINCOS.D D2, FP4:FP3",
                                               0xF200|002, 0x4034|(5<<10)|(3<<7));
     TEST("FSINCOS.B D2, FP4:FP3",             0xF200|002, 0x4034|(6<<10)|(3<<7));
-    ERRT("FSINCOS.S A4, FP2:FP5",             OPERAND_NOT_ALLOWED, "A4, FP2:FP5");
+    ERRT("FSINCOS.S A4, FP2:FP5",             OPERAND_NOT_ALLOWED, "A4, FP2:FP5", 0xF200, 0x46B2);
     TEST("FSINCOS.X (A6), FP0:FP7",           0xF200|026, 0x4030|(2<<10)|(7<<7));
     TEST("FSINCOS.P (A0)+, FP7:FP1",          0xF200|030, 0x4037|(3<<10)|(1<<7));
     TEST("FSINCOS.W -(A2), FP6:FP3",          0xF200|042, 0x4036|(4<<10)|(3<<7));
@@ -4513,7 +4504,7 @@ void test_float_arithmetic() {
     ERRT("FCMP.D D2, FP3", ILLEGAL_SIZE, "FCMP.D D2, FP3",
                                        0xF200|002, 0x4038|(5<<10)|(3<<7));
     TEST("FCMP.B D2, FP3",             0xF200|002, 0x4038|(6<<10)|(3<<7));
-    ERRT("FCMP.S A4, FP5",             OPERAND_NOT_ALLOWED, "A4, FP5");
+    ERRT("FCMP.S A4, FP5",             OPERAND_NOT_ALLOWED, "A4, FP5", 0xF200, 0x46B8);
     TEST("FCMP.X (A6), FP7",           0xF200|026, 0x4038|(2<<10)|(7<<7));
     TEST("FCMP.P (A0)+, FP1",          0xF200|030, 0x4038|(3<<10)|(1<<7));
     TEST("FCMP.W -(A2), FP3",          0xF200|042, 0x4038|(4<<10)|(3<<7));
@@ -4546,7 +4537,7 @@ void test_float_arithmetic() {
     ERRT("FTST.D D2", ILLEGAL_SIZE, "FTST.D D2",
                                   0xF200|002, 0x403A|(5<<10));
     TEST("FTST.B D2",             0xF200|002, 0x403A|(6<<10));
-    ERRT("FTST.S A4",             OPERAND_NOT_ALLOWED, "A4");
+    ERRT("FTST.S A4",             OPERAND_NOT_ALLOWED, "A4", 0xF200, 0x443A);
     TEST("FTST.X (A6)",           0xF200|026, 0x403A|(2<<10));
     TEST("FTST.P (A0)+",          0xF200|030, 0x403A|(3<<10));
     TEST("FTST.W -(A2)",          0xF200|042, 0x403A|(4<<10));
@@ -5078,31 +5069,31 @@ void test_float_trap() {
 void test_float_system() {
     TEST("FPU ON");
 
-    ERRT("FRESTORE D2",             OPERAND_NOT_ALLOWED, "D2");
-    ERRT("FRESTORE A4",             OPERAND_NOT_ALLOWED, "A4");
+    ERRT("FRESTORE D2",             OPERAND_NOT_ALLOWED, "D2", 0xF340);
+    ERRT("FRESTORE A4",             OPERAND_NOT_ALLOWED, "A4", 0xF340);
     TEST("FRESTORE (A6)",           0xF340|026);
     TEST("FRESTORE (A0)+",          0xF340|030);
-    ERRT("FRESTORE -(A2)",          OPERAND_NOT_ALLOWED, "-(A2)");
+    ERRT("FRESTORE -(A2)",          OPERAND_NOT_ALLOWED, "-(A2)", 0xF340);
     TEST("FRESTORE ($1234,A4)",     0xF340|054, 0x1234);
     TEST("FRESTORE ($23,A6,D7.W)",  0xF340|066, 0x7023);
     TEST("FRESTORE ($004566).W",    0xF340|070, 0x4566);
     TEST("FRESTORE ($56789A).L",    0xF340|071, 0x0056, 0x789A);
     TEST("FRESTORE (*+$1234,PC)",   0xF340|072, 0x1232);
     TEST("FRESTORE (*+90,PC,A4.L)", 0xF340|073, 0xC858);
-    ERRT("FRESTORE #$6789ABCD",     OPERAND_NOT_ALLOWED, "#$6789ABCD");
+    ERRT("FRESTORE #$6789ABCD",     OPERAND_NOT_ALLOWED, "#$6789ABCD", 0xF340);
 
-    ERRT("FSAVE D2",             OPERAND_NOT_ALLOWED, "D2");
-    ERRT("FSAVE A4",             OPERAND_NOT_ALLOWED, "A4");
+    ERRT("FSAVE D2",             OPERAND_NOT_ALLOWED, "D2", 0xF300);
+    ERRT("FSAVE A4",             OPERAND_NOT_ALLOWED, "A4", 0xF300);
     TEST("FSAVE (A6)",           0xF300|026);
-    ERRT("FSAVE (A0)+",          OPERAND_NOT_ALLOWED, "(A0)+");
+    ERRT("FSAVE (A0)+",          OPERAND_NOT_ALLOWED, "(A0)+", 0xF300);
     TEST("FSAVE -(A2)",          0xF300|042);
     TEST("FSAVE ($1234,A4)",     0xF300|054, 0x1234);
     TEST("FSAVE ($23,A6,D7.W)",  0xF300|066, 0x7023);
     TEST("FSAVE ($004566).W",    0xF300|070, 0x4566);
     TEST("FSAVE ($56789A).L",    0xF300|071, 0x0056, 0x789A);
-    ERRT("FSAVE (*+$1234,PC)",   OPERAND_NOT_ALLOWED, "(*+$1234,PC)");
-    ERRT("FSAVE (*+90,PC,A4.L)", OPERAND_NOT_ALLOWED, "(*+90,PC,A4.L)");
-    ERRT("FSAVE #$6789ABCD",     OPERAND_NOT_ALLOWED, "#$6789ABCD");
+    ERRT("FSAVE (*+$1234,PC)",   OPERAND_NOT_ALLOWED, "(*+$1234,PC)",   0xF300);
+    ERRT("FSAVE (*+90,PC,A4.L)", OPERAND_NOT_ALLOWED, "(*+90,PC,A4.L)", 0xF300);
+    ERRT("FSAVE #$6789ABCD",     OPERAND_NOT_ALLOWED, "#$6789ABCD",     0xF300);
 }
 
 #endif

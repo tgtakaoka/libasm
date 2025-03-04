@@ -45,11 +45,17 @@ constexpr Entry MC68000_TABLE[] PROGMEM = {
     E2(0001074, TEXT_ANDI,  ISZ_NONE, M_IMDAT, M_CCR,   OP___, OP___, SZ_BYTE),
     E2(0001174, TEXT_ANDI,  ISZ_NONE, M_IMDAT, M_SR,    OP___, OP___, SZ_WORD),
     E2(0001000, TEXT_ANDI,  ISZ_DATA, M_IMDAT, M_WDATA, OP___, OP_10, SZ_DATA),
+    E2(0110300, TEXT_SUBA,  ISZ_DATA, M_RADDR, M_AREG,  OP_10, OP__3, SZ_ADR8),
+    A2(0110374, TEXT_SUBI,  ISZ_DATA, M_IMDAT, M_AREG,  OP___, OP__3, SZ_ADR8),
     E2(0002000, TEXT_SUBI,  ISZ_DATA, M_IMDAT, M_WDATA, OP___, OP_10, SZ_DATA),
+    E2(0150300, TEXT_ADDA,  ISZ_DATA, M_RADDR, M_AREG,  OP_10, OP__3, SZ_ADR8),
+    A2(0150374, TEXT_ADDI,  ISZ_DATA, M_IMDAT, M_AREG,  OP___, OP__3, SZ_ADR8),
     E2(0003000, TEXT_ADDI,  ISZ_DATA, M_IMDAT, M_WDATA, OP___, OP_10, SZ_DATA),
     E2(0005074, TEXT_EORI,  ISZ_NONE, M_IMDAT, M_CCR,   OP___, OP___, SZ_BYTE),
     E2(0005174, TEXT_EORI,  ISZ_NONE, M_IMDAT, M_SR,    OP___, OP___, SZ_WORD),
     E2(0005000, TEXT_EORI,  ISZ_DATA, M_IMDAT, M_WDATA, OP___, OP_10, SZ_DATA),
+    E2(0130300, TEXT_CMPA,  ISZ_DATA, M_RADDR, M_AREG,  OP_10, OP__3, SZ_ADR8),
+    A2(0130374, TEXT_CMPI,  ISZ_DATA, M_IMDAT, M_AREG,  OP___, OP__3, SZ_ADR8),
     E2(0006000, TEXT_CMPI,  ISZ_DATA, M_IMDAT, M_WDATA, OP___, OP_10, SZ_DATA),
     E2(0004000, TEXT_BTST,  ISZ_FIXD, M_IMBIT, M_DREG,  OP___, OP__0, SZ_LONG),
     E2(0004000, TEXT_BTST,  ISZ_FIXD, M_IMBIT, M_RMEM,  OP___, OP_10, SZ_BYTE),
@@ -72,6 +78,8 @@ constexpr Entry MC68000_TABLE[] PROGMEM = {
     E2(0020100, TEXT_MOVEA, ISZ_LONG, M_RADDR, M_AREG,  OP_10, OP__3, SZ_LONG),
     E2(0030100, TEXT_MOVEA, ISZ_WORD, M_RADDR, M_AREG,  OP_10, OP__3, SZ_WORD),
     E2(0030100, TEXT_MOVEA, ISZ_FIXD, M_RADDR, M_AREG,  OP_10, OP__3, SZ_WORD),
+    A2(0020100, TEXT_MOVE,  ISZ_LONG, M_RADDR, M_AREG,  OP_10, OP__3, SZ_LONG),
+    A2(0030100, TEXT_MOVE,  ISZ_WORD, M_RADDR, M_AREG,  OP_10, OP__3, SZ_WORD),
     E2(0042300, TEXT_MOVE,  ISZ_FIXD, M_RDATA, M_CCR,   OP_10, OP___, SZ_WORD),
     E2(0040300, TEXT_MOVE,  ISZ_FIXD, M_SR,    M_WDATA, OP___, OP_10, SZ_WORD),
     E2(0043300, TEXT_MOVE,  ISZ_FIXD, M_RDATA, M_SR,    OP_10, OP___, SZ_WORD),
@@ -172,12 +180,11 @@ constexpr Entry MC68000_TABLE[] PROGMEM = {
     E2(0100400, TEXT_SBCD,  ISZ_NONE, M_DREG,  M_DREG,  OP__0, OP__3, SZ_BYTE),
     E2(0100410, TEXT_SBCD,  ISZ_NONE, M_PDEC,  M_PDEC,  OP__0, OP__3, SZ_BYTE),
     E2(0100400, TEXT_OR,    ISZ_DATA, M_DREG,  M_WMEM,  OP__3, OP_10, SZ_DATA),
-    E2(0110300, TEXT_SUBA,  ISZ_DATA, M_RADDR, M_AREG,  OP_10, OP__3, SZ_ADR8),
     E2(0110400, TEXT_SUBX,  ISZ_DATA, M_DREG,  M_DREG,  OP__0, OP__3, SZ_DATA),
     E2(0110410, TEXT_SUBX,  ISZ_DATA, M_PDEC,  M_PDEC,  OP__0, OP__3, SZ_DATA),
+    A2(0110300, TEXT_SUB,   ISZ_DATA, M_RADDR, M_AREG,  OP_10, OP__3, SZ_ADR8),
     E2(0110000, TEXT_SUB,   ISZ_DATA, M_RADDR, M_DREG,  OP_10, OP__3, SZ_DATA),
     E2(0110400, TEXT_SUB,   ISZ_DATA, M_DREG,  M_WMEM,  OP__3, OP_10, SZ_DATA),
-    E2(0130300, TEXT_CMPA,  ISZ_DATA, M_RADDR, M_AREG,  OP_10, OP__3, SZ_ADR8),
     E2(0130000, TEXT_CMP,   ISZ_DATA, M_RADDR, M_DREG,  OP_10, OP__3, SZ_DATA),
     E2(0130410, TEXT_CMPM,  ISZ_DATA, M_PINC,  M_PINC,  OP__0, OP__3, SZ_DATA),
     E2(0130400, TEXT_EOR,   ISZ_DATA, M_DREG,  M_WDATA, OP__3, OP_10, SZ_DATA),
@@ -191,9 +198,9 @@ constexpr Entry MC68000_TABLE[] PROGMEM = {
     E2(0140610, TEXT_EXG,   ISZ_NONE, M_DREG,  M_AREG,  OP__3, OP__0, SZ_LONG),
     E2(0140610, TEXT_EXG,   ISZ_NONE, M_AREG,  M_DREG,  OP__0, OP__3, SZ_LONG),
     E2(0140400, TEXT_AND,   ISZ_DATA, M_DREG,  M_WMEM,  OP__3, OP_10, SZ_DATA),
-    E2(0150300, TEXT_ADDA,  ISZ_DATA, M_RADDR, M_AREG,  OP_10, OP__3, SZ_ADR8),
     E2(0150400, TEXT_ADDX,  ISZ_DATA, M_DREG,  M_DREG,  OP__0, OP__3, SZ_DATA),
     E2(0150410, TEXT_ADDX,  ISZ_DATA, M_PDEC,  M_PDEC,  OP__0, OP__3, SZ_DATA),
+    A2(0150300, TEXT_ADD,   ISZ_DATA, M_RADDR, M_AREG,  OP_10, OP__3, SZ_ADR8),
     E2(0150000, TEXT_ADD,   ISZ_DATA, M_RADDR, M_DREG,  OP_10, OP__3, SZ_DATA),
     E2(0150400, TEXT_ADD,   ISZ_DATA, M_DREG,  M_WMEM,  OP__3, OP_10, SZ_DATA),
     E1(0160300, TEXT_ASR,   ISZ_DATA, M_WMEM,  OP_10, SZ_WORD),
@@ -220,204 +227,197 @@ constexpr Entry MC68000_TABLE[] PROGMEM = {
     E2(0160070, TEXT_ROR,   ISZ_DATA, M_DREG,  M_DREG,  OP__3, OP__0, SZ_DATA),
     E2(0160430, TEXT_ROL,   ISZ_DATA, M_IM3,   M_DREG,  OP__3, OP__0, SZ_DATA),
     E2(0160470, TEXT_ROL,   ISZ_DATA, M_DREG,  M_DREG,  OP__3, OP__0, SZ_DATA),
-    A2(0020100, TEXT_MOVE,  ISZ_LONG, M_RADDR, M_AREG,  OP_10, OP__3, SZ_LONG),
-    A2(0030100, TEXT_MOVE,  ISZ_WORD, M_RADDR, M_AREG,  OP_10, OP__3, SZ_WORD),
-    A2(0110300, TEXT_SUB,   ISZ_DATA, M_RADDR, M_AREG,  OP_10, OP__3, SZ_ADR8),
-    A2(0110374, TEXT_SUBI,  ISZ_DATA, M_IMDAT, M_AREG,  OP___, OP__3, SZ_ADR8),
-    A2(0130374, TEXT_CMPI,  ISZ_DATA, M_IMDAT, M_AREG,  OP___, OP__3, SZ_ADR8),
-    A2(0150300, TEXT_ADD,   ISZ_DATA, M_RADDR, M_AREG,  OP_10, OP__3, SZ_ADR8),
-    A2(0150374, TEXT_ADDI,  ISZ_DATA, M_IMDAT, M_AREG,  OP___, OP__3, SZ_ADR8),
 };
 
 constexpr uint8_t MC68000_INDEX[] PROGMEM = {
-    145,  // TEXT_ABCD
-    146,  // TEXT_ABCD
-    155,  // TEXT_ADD
-    156,  // TEXT_ADD
-    186,  // TEXT_ADD
-    152,  // TEXT_ADDA
-      7,  // TEXT_ADDI
-    187,  // TEXT_ADDI
-    105,  // TEXT_ADDQ
-    153,  // TEXT_ADDX
-    154,  // TEXT_ADDX
-    144,  // TEXT_AND
+    152,  // TEXT_ABCD
+    153,  // TEXT_ABCD
+    161,  // TEXT_ADD
+    162,  // TEXT_ADD
+    163,  // TEXT_ADD
+      9,  // TEXT_ADDA
+     10,  // TEXT_ADDI
+     11,  // TEXT_ADDI
+    113,  // TEXT_ADDQ
+    159,  // TEXT_ADDX
+    160,  // TEXT_ADDX
     151,  // TEXT_AND
+    158,  // TEXT_AND
       3,  // TEXT_ANDI
       4,  // TEXT_ANDI
       5,  // TEXT_ANDI
-    158,  // TEXT_ASL
-    167,  // TEXT_ASL
-    168,  // TEXT_ASL
-    157,  // TEXT_ASR
-    165,  // TEXT_ASR
-    166,  // TEXT_ASR
-    112,  // TEXT_BCC
-     14,  // TEXT_BCHG
-     15,  // TEXT_BCHG
-     24,  // TEXT_BCHG
-     25,  // TEXT_BCHG
-     16,  // TEXT_BCLR
-     17,  // TEXT_BCLR
-     26,  // TEXT_BCLR
-     27,  // TEXT_BCLR
-    114,  // TEXT_BCS
-    117,  // TEXT_BEQ
-    122,  // TEXT_BGE
-    124,  // TEXT_BGT
-    110,  // TEXT_BHI
-    113,  // TEXT_BHS
-    125,  // TEXT_BLE
-    115,  // TEXT_BLO
-    111,  // TEXT_BLS
-    123,  // TEXT_BLT
-    121,  // TEXT_BMI
-    116,  // TEXT_BNE
-    120,  // TEXT_BPL
-    107,  // TEXT_BRA
-     18,  // TEXT_BSET
-     19,  // TEXT_BSET
-     28,  // TEXT_BSET
-     29,  // TEXT_BSET
-    109,  // TEXT_BSR
-    108,  // TEXT_BT
-     12,  // TEXT_BTST
-     13,  // TEXT_BTST
-     22,  // TEXT_BTST
-     23,  // TEXT_BTST
-    118,  // TEXT_BVC
-    119,  // TEXT_BVS
-     67,  // TEXT_CHK
-     40,  // TEXT_CLR
-    139,  // TEXT_CMP
-    138,  // TEXT_CMPA
-     11,  // TEXT_CMPI
-    185,  // TEXT_CMPI
-    140,  // TEXT_CMPM
-     73,  // TEXT_DBCC
-     75,  // TEXT_DBCS
-     78,  // TEXT_DBEQ
-     70,  // TEXT_DBF
-     83,  // TEXT_DBGE
-     85,  // TEXT_DBGT
-     71,  // TEXT_DBHI
-     74,  // TEXT_DBHS
-     86,  // TEXT_DBLE
-     76,  // TEXT_DBLO
-     72,  // TEXT_DBLS
-     84,  // TEXT_DBLT
-     82,  // TEXT_DBMI
-     77,  // TEXT_DBNE
-     81,  // TEXT_DBPL
-     69,  // TEXT_DBRA
-     68,  // TEXT_DBT
-     79,  // TEXT_DBVC
-     80,  // TEXT_DBVS
-    128,  // TEXT_DIVS
-    127,  // TEXT_DIVU
-    141,  // TEXT_EOR
-      8,  // TEXT_EORI
-      9,  // TEXT_EORI
-     10,  // TEXT_EORI
-    147,  // TEXT_EXG
-    148,  // TEXT_EXG
-    149,  // TEXT_EXG
-    150,  // TEXT_EXG
-     43,  // TEXT_EXT
-     47,  // TEXT_ILLEGAL
-     63,  // TEXT_JMP
-     62,  // TEXT_JSR
-     66,  // TEXT_LEA
-     51,  // TEXT_LINK
-    160,  // TEXT_LSL
-    171,  // TEXT_LSL
-    172,  // TEXT_LSL
-    159,  // TEXT_LSR
-    169,  // TEXT_LSR
-    170,  // TEXT_LSR
-     33,  // TEXT_MOVE
-     34,  // TEXT_MOVE
-     35,  // TEXT_MOVE
-     36,  // TEXT_MOVE
-     37,  // TEXT_MOVE
-     38,  // TEXT_MOVE
-     53,  // TEXT_MOVE
-     54,  // TEXT_MOVE
-    181,  // TEXT_MOVE
-    182,  // TEXT_MOVE
-     30,  // TEXT_MOVEA
-     31,  // TEXT_MOVEA
-     32,  // TEXT_MOVEA
-     64,  // TEXT_MOVEM
-     65,  // TEXT_MOVEM
-     20,  // TEXT_MOVEP
-     21,  // TEXT_MOVEP
-    126,  // TEXT_MOVEQ
-    143,  // TEXT_MULS
-    142,  // TEXT_MULU
-     44,  // TEXT_NBCD
-     41,  // TEXT_NEG
-     39,  // TEXT_NEGX
-     56,  // TEXT_NOP
-     42,  // TEXT_NOT
-    129,  // TEXT_OR
-    132,  // TEXT_OR
+    165,  // TEXT_ASL
+    174,  // TEXT_ASL
+    175,  // TEXT_ASL
+    164,  // TEXT_ASR
+    172,  // TEXT_ASR
+    173,  // TEXT_ASR
+    120,  // TEXT_BCC
+     20,  // TEXT_BCHG
+     21,  // TEXT_BCHG
+     30,  // TEXT_BCHG
+     31,  // TEXT_BCHG
+     22,  // TEXT_BCLR
+     23,  // TEXT_BCLR
+     32,  // TEXT_BCLR
+     33,  // TEXT_BCLR
+    122,  // TEXT_BCS
+    125,  // TEXT_BEQ
+    130,  // TEXT_BGE
+    132,  // TEXT_BGT
+    118,  // TEXT_BHI
+    121,  // TEXT_BHS
+    133,  // TEXT_BLE
+    123,  // TEXT_BLO
+    119,  // TEXT_BLS
+    131,  // TEXT_BLT
+    129,  // TEXT_BMI
+    124,  // TEXT_BNE
+    128,  // TEXT_BPL
+    115,  // TEXT_BRA
+     24,  // TEXT_BSET
+     25,  // TEXT_BSET
+     34,  // TEXT_BSET
+     35,  // TEXT_BSET
+    117,  // TEXT_BSR
+    116,  // TEXT_BT
+     18,  // TEXT_BTST
+     19,  // TEXT_BTST
+     28,  // TEXT_BTST
+     29,  // TEXT_BTST
+    126,  // TEXT_BVC
+    127,  // TEXT_BVS
+     75,  // TEXT_CHK
+     48,  // TEXT_CLR
+    146,  // TEXT_CMP
+     15,  // TEXT_CMPA
+     16,  // TEXT_CMPI
+     17,  // TEXT_CMPI
+    147,  // TEXT_CMPM
+     81,  // TEXT_DBCC
+     83,  // TEXT_DBCS
+     86,  // TEXT_DBEQ
+     78,  // TEXT_DBF
+     91,  // TEXT_DBGE
+     93,  // TEXT_DBGT
+     79,  // TEXT_DBHI
+     82,  // TEXT_DBHS
+     94,  // TEXT_DBLE
+     84,  // TEXT_DBLO
+     80,  // TEXT_DBLS
+     92,  // TEXT_DBLT
+     90,  // TEXT_DBMI
+     85,  // TEXT_DBNE
+     89,  // TEXT_DBPL
+     77,  // TEXT_DBRA
+     76,  // TEXT_DBT
+     87,  // TEXT_DBVC
+     88,  // TEXT_DBVS
+    136,  // TEXT_DIVS
+    135,  // TEXT_DIVU
+    148,  // TEXT_EOR
+     12,  // TEXT_EORI
+     13,  // TEXT_EORI
+     14,  // TEXT_EORI
+    154,  // TEXT_EXG
+    155,  // TEXT_EXG
+    156,  // TEXT_EXG
+    157,  // TEXT_EXG
+     51,  // TEXT_EXT
+     55,  // TEXT_ILLEGAL
+     71,  // TEXT_JMP
+     70,  // TEXT_JSR
+     74,  // TEXT_LEA
+     59,  // TEXT_LINK
+    167,  // TEXT_LSL
+    178,  // TEXT_LSL
+    179,  // TEXT_LSL
+    166,  // TEXT_LSR
+    176,  // TEXT_LSR
+    177,  // TEXT_LSR
+     39,  // TEXT_MOVE
+     40,  // TEXT_MOVE
+     41,  // TEXT_MOVE
+     42,  // TEXT_MOVE
+     43,  // TEXT_MOVE
+     44,  // TEXT_MOVE
+     45,  // TEXT_MOVE
+     46,  // TEXT_MOVE
+     61,  // TEXT_MOVE
+     62,  // TEXT_MOVE
+     36,  // TEXT_MOVEA
+     37,  // TEXT_MOVEA
+     38,  // TEXT_MOVEA
+     72,  // TEXT_MOVEM
+     73,  // TEXT_MOVEM
+     26,  // TEXT_MOVEP
+     27,  // TEXT_MOVEP
+    134,  // TEXT_MOVEQ
+    150,  // TEXT_MULS
+    149,  // TEXT_MULU
+     52,  // TEXT_NBCD
+     49,  // TEXT_NEG
+     47,  // TEXT_NEGX
+     64,  // TEXT_NOP
+     50,  // TEXT_NOT
+    137,  // TEXT_OR
+    140,  // TEXT_OR
       0,  // TEXT_ORI
       1,  // TEXT_ORI
       2,  // TEXT_ORI
-     46,  // TEXT_PEA
-     55,  // TEXT_RESET
-    164,  // TEXT_ROL
-    179,  // TEXT_ROL
-    180,  // TEXT_ROL
-    163,  // TEXT_ROR
-    177,  // TEXT_ROR
-    178,  // TEXT_ROR
-    162,  // TEXT_ROXL
-    175,  // TEXT_ROXL
-    176,  // TEXT_ROXL
-    161,  // TEXT_ROXR
-    173,  // TEXT_ROXR
-    174,  // TEXT_ROXR
-     58,  // TEXT_RTE
-     61,  // TEXT_RTR
-     59,  // TEXT_RTS
-    130,  // TEXT_SBCD
-    131,  // TEXT_SBCD
-     91,  // TEXT_SCC
-     93,  // TEXT_SCS
-     96,  // TEXT_SEQ
-     88,  // TEXT_SF
-    101,  // TEXT_SGE
-    103,  // TEXT_SGT
-     89,  // TEXT_SHI
-     92,  // TEXT_SHS
-    104,  // TEXT_SLE
-     94,  // TEXT_SLO
-     90,  // TEXT_SLS
-    102,  // TEXT_SLT
-    100,  // TEXT_SMI
-     95,  // TEXT_SNE
-     99,  // TEXT_SPL
-     87,  // TEXT_ST
-     57,  // TEXT_STOP
-    136,  // TEXT_SUB
-    137,  // TEXT_SUB
-    183,  // TEXT_SUB
-    133,  // TEXT_SUBA
-      6,  // TEXT_SUBI
-    184,  // TEXT_SUBI
-    106,  // TEXT_SUBQ
-    134,  // TEXT_SUBX
-    135,  // TEXT_SUBX
-     97,  // TEXT_SVC
-     98,  // TEXT_SVS
-     45,  // TEXT_SWAP
-     48,  // TEXT_TAS
-     50,  // TEXT_TRAP
-     60,  // TEXT_TRAPV
-     49,  // TEXT_TST
-     52,  // TEXT_UNLK
+     54,  // TEXT_PEA
+     63,  // TEXT_RESET
+    171,  // TEXT_ROL
+    186,  // TEXT_ROL
+    187,  // TEXT_ROL
+    170,  // TEXT_ROR
+    184,  // TEXT_ROR
+    185,  // TEXT_ROR
+    169,  // TEXT_ROXL
+    182,  // TEXT_ROXL
+    183,  // TEXT_ROXL
+    168,  // TEXT_ROXR
+    180,  // TEXT_ROXR
+    181,  // TEXT_ROXR
+     66,  // TEXT_RTE
+     69,  // TEXT_RTR
+     67,  // TEXT_RTS
+    138,  // TEXT_SBCD
+    139,  // TEXT_SBCD
+     99,  // TEXT_SCC
+    101,  // TEXT_SCS
+    104,  // TEXT_SEQ
+     96,  // TEXT_SF
+    109,  // TEXT_SGE
+    111,  // TEXT_SGT
+     97,  // TEXT_SHI
+    100,  // TEXT_SHS
+    112,  // TEXT_SLE
+    102,  // TEXT_SLO
+     98,  // TEXT_SLS
+    110,  // TEXT_SLT
+    108,  // TEXT_SMI
+    103,  // TEXT_SNE
+    107,  // TEXT_SPL
+     95,  // TEXT_ST
+     65,  // TEXT_STOP
+    143,  // TEXT_SUB
+    144,  // TEXT_SUB
+    145,  // TEXT_SUB
+      6,  // TEXT_SUBA
+      7,  // TEXT_SUBI
+      8,  // TEXT_SUBI
+    114,  // TEXT_SUBQ
+    141,  // TEXT_SUBX
+    142,  // TEXT_SUBX
+    105,  // TEXT_SVC
+    106,  // TEXT_SVS
+     53,  // TEXT_SWAP
+     56,  // TEXT_TAS
+     58,  // TEXT_TRAP
+     68,  // TEXT_TRAPV
+     57,  // TEXT_TST
+     60,  // TEXT_UNLK
 };
 
 constexpr Entry MC68010_TABLE[] PROGMEM = {
@@ -1172,34 +1172,26 @@ bool hasOperand(const CpuSpec &cpuSpec, AsmInsn &insn) {
     return insn.isOK() && insn.src() != M_NONE;
 }
 
+bool genericAddressing(AddrMode mode) {
+    return mode >= M_RADDR && mode <= M_DADDR;
+}
+
 bool acceptMode(AddrMode opr, AddrMode table, OprSize size) {
     if (opr == table)
         return true;
     if (opr == M_DREG)
-        return table == M_RADDR || table == M_RDATA || table == M_WADDR || table == M_WDATA ||
-               table == M_MULT;
+        return genericAddressing(table) || table == M_MULT;
     if (opr == M_AREG)
-        return table == M_RADDR || table == M_WADDR || table == M_MULT;
-    if (opr == M_AIND || opr == M_DISP || opr == M_INDX || opr == M_AWORD || opr == M_ALONG)
-        return table == M_RADDR || table == M_RDATA || table == M_WADDR || table == M_WDATA ||
-               table == M_RMEM || table == M_WMEM || table == M_JADDR || table == M_IADDR ||
-               table == M_DADDR;
-    if (opr == M_PINC)
-        return table == M_RADDR || table == M_RDATA || table == M_WADDR || table == M_WDATA ||
-               table == M_RMEM || table == M_WMEM || table == M_IADDR;
-    if (opr == M_PDEC)
-        return table == M_RADDR || table == M_RDATA || table == M_WADDR || table == M_WDATA ||
-               table == M_RMEM || table == M_WMEM || table == M_DADDR;
+        return genericAddressing(table) || table == M_MULT;
+    if (opr >= M_AIND && opr <= M_PCIDX)
+        return genericAddressing(table);
+    if (opr == M_IMDAT)
+        return genericAddressing(table) || table == M_IMBIT || table == M_IM3 || table == M_IM8 ||
+               table == M_IMVEC || table == M_IMDSP || table == M_IMROM;
     if (opr == M_LABEL)
         return table == M_REL8 || table == M_REL16 || table == M_REL32;
-    if (opr == M_PCDSP || opr == M_PCIDX)
-        return table == M_RADDR || table == M_RDATA || table == M_RMEM || table == M_JADDR ||
-               table == M_IADDR;
-    if (opr == M_IMDAT)
-        return table == M_RADDR || table == M_RDATA || table == M_IMBIT || table == M_IM3 ||
-               table == M_IM8 || table == M_IMVEC || table == M_IMDSP || table == M_IMROM;
     if (opr == M_IMFLT)
-        return table == M_RDATA && size == SZ_FDAT;
+        return genericAddressing(table) && size == SZ_FDAT;
     if (opr == M_FPREG)
         return table == M_FPMLT;
     if (opr == M_FPCR || opr == M_FPSR || opr == M_FPIAR)
