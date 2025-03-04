@@ -297,8 +297,10 @@ void DisMc68000::decodeRelative(DisInsn &insn, StrBuffer &out, AddrMode mode) co
     }
     if (mode == M_REL8) {
         const auto rel8 = insn.opCode() & 0xFF;
-        if (rel8 == 0)
+        if (rel8 == 0x00)
             type = M_REL16;
+        if (rel8 == 0xFF && hasLongBranch())
+            type = M_REL32;
     }
     // FDBcc has different base address
     const auto FDBcc = insn.hasPostVal();
@@ -312,7 +314,7 @@ void DisMc68000::decodeRelative(DisInsn &insn, StrBuffer &out, AddrMode mode) co
             insn.appendName(out, 'L');
         } else if (!overflowDelta(delta, 16)) {
             insn.appendName(out, '.');
-            insn.appendName(out, 'L');
+            insn.appendName(out, 'X');
         }
     } else if (type == M_REL16) {
         bits = 16;

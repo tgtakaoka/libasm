@@ -38,6 +38,7 @@ private:
 
     void encodeBriefExtension(AsmInsn &insn, const Operand &op, Config::ptrdiff_t disp) const;
     void encodeDisplacement(AsmInsn &insn, const Operand &op, Config::ptrdiff_t disp) const;
+    AddrMode branchType(AddrMode mode, InsnSize size, Config::ptrdiff_t delta) const;
     void encodeRelativeAddr(AsmInsn &insn, AddrMode mode, const Operand &op) const;
     void encodeImmediate(AsmInsn &insn, const Operand &op, OprSize size) const;
     void encodeFloatControlList(AsmInsn &insn, const Operand &o) const;

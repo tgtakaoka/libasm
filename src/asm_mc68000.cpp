@@ -199,6 +199,41 @@ void AsmMc68000::encodeDisplacement(
     insn.emitOperand16(disp);
 }
 
+AddrMode AsmMc68000::branchType(AddrMode mode, InsnSize size, Config::ptrdiff_t delta) const {
+    if (mode == M_REL8) {
+        if (size == ISZ_NONE) {
+            if (!overflowDelta(delta, 8))
+                return M_REL8;
+            if (!overflowDelta(delta, 16))
+                return M_REL16;
+            return hasLongBranch() ? M_REL32 : M_REL8;
+        }
+        // Mnemonics has suffix 'B' or 'S'
+        if (size == ISZ_BYTE || size == ISZ_SNGL)
+            return M_REL8;
+        // Mnemonics has suffix 'W' or 'L'
+        if (size == ISZ_WORD || size == ISZ_LONG)
+            return M_REL16;
+        // Mnemonics has suffix 'X'
+        if (size == ISZ_XTND && hasLongBranch())
+            return M_REL32;
+    } else if (mode == M_REL16) {
+        // Mnemonics has suffix 'W' or 'L'
+        if (size == ISZ_NONE || size == ISZ_WORD || size == ISZ_LONG)
+            return M_REL16;
+    } else {  // mode == M_REL32
+        if (size == ISZ_NONE)
+            return overflowDelta(delta, 16) ? M_REL32 : M_REL16;
+        // Mnemonics has suffix 'W' or 'L'
+        if (size == ISZ_WORD || size == ISZ_LONG)
+            return M_REL16;
+        // Mnemonics has suffix ''X'
+        if (size == ISZ_XTND)
+            return M_REL32;
+    }
+    return M_NONE;
+}
+
 void AsmMc68000::encodeRelativeAddr(AsmInsn &insn, AddrMode mode, const Operand &op) const {
     // FDBcc has different base address
     const auto FDBcc = insn.hasPostVal();
@@ -209,61 +244,26 @@ void AsmMc68000::encodeRelativeAddr(AsmInsn &insn, AddrMode mode, const Operand 
     // Catch overwrap case
     if ((delta < 0 && target >= base) || (delta >= 0 && target < base))
         insn.setErrorIf(op, OVERFLOW_RANGE);
-    auto type = mode;
-    const auto size = insn.insnSize();
-    if (mode == M_REL8) {
-        if (size == ISZ_NONE) {
-            if (overflowDelta(delta, 16))
-                insn.setErrorIf(op, OPERAND_TOO_FAR);
-            if (overflowDelta(delta, 8))
-                type = M_REL16;
-        } else if (size == ISZ_BYTE || size == ISZ_SNGL) {
-            // Mnemonics has suffix 'B' or 'S'
-            type = M_REL8;
-            if (overflowDelta(delta, 8))
-                insn.setErrorIf(op, OPERAND_TOO_FAR);
-        } else if (size == ISZ_WORD || size == ISZ_LONG) {
-            // Mnemonics has suffix 'W' or 'L'
-            type = M_REL16;
-        } else {
-            type = M_NONE;
-        }
-    } else if (mode == M_REL16) {
-        if (size == ISZ_NONE || size == ISZ_WORD || size == ISZ_LONG) {
-            // Mnemonics has suffix 'W' or 'L'
-            if (overflowDelta(delta, 16))
-                insn.setErrorIf(op, OPERAND_TOO_FAR);
-        } else {
-            type = M_NONE;
-        }
-    } else {  // mode == M_REL32
-        if (size == ISZ_NONE) {
-            if (!overflowDelta(delta, 16))
-                type = M_REL16;
-            insn.setErrorIf(OK);  // never overflow
-        } else if (size == ISZ_WORD || size == ISZ_LONG) {
-            // Mnemonics has suffix 'W' or 'L'
-            type = M_REL16;
-            if (overflowDelta(delta, 16))
-                insn.setErrorIf(op, OPERAND_TOO_FAR);
-        } else if (size == ISZ_XTND) {
-            // Mnemonics has suffix ''X'
-        } else {
-            type = M_NONE;
-        }
-    }
+    auto type = branchType(mode, insn.insnSize(), delta);
     if (type == M_NONE) {
         insn.setErrorIf(op, ILLEGAL_SIZE);
         type = mode;
     }
     if (type == M_REL8) {
+        if (overflowDelta(delta, 8))
+            insn.setErrorIf(op, OPERAND_TOO_FAR);
         insn.embed(static_cast<uint8_t>(delta));
     } else if (type == M_REL16) {
+        if (overflowDelta(delta, 16))
+            insn.setErrorIf(op, OPERAND_TOO_FAR);
         insn.emitOperand16(delta);
     } else {  // type == M_REL32
         insn.emitOperand32(delta);
-        if (mode == M_REL32)
+        if (mode == M_REL8) {
+            insn.embed(0xFF);
+        } else if (mode == M_REL32) {
             insn.embed(1 << 6);  // set SIZE bit
+        }
     }
 }
 

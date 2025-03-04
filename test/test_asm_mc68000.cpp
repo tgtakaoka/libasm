@@ -766,7 +766,7 @@ void test_data_move() {
     ERRT("UNLK -(A2)",           OPERAND_NOT_ALLOWED, "-(A2)");
     ERRT("UNLK ($1234,A2)",      OPERAND_NOT_ALLOWED, "($1234,A2)");
     ERRT("UNLK ($12,A2,D3.W)",   OPERAND_NOT_ALLOWED, "($12,A2,D3.W)");
-    ERRT("UNLK ($FFFF00).W",     OPERAND_NOT_ALLOWED, "($FFFF00).W");
+    ERRT("UNLK ($7F00).W",       OPERAND_NOT_ALLOWED, "($7F00).W");
     ERRT("UNLK ($001234).L",     OPERAND_NOT_ALLOWED, "($001234).L");
     ERRT("UNLK (*+$1234,PC)",    OPERAND_NOT_ALLOWED, "(*+$1234,PC)");
     ERRT("UNLK (*+$12,PC,A3.L)", OPERAND_NOT_ALLOWED, "(*+$12,PC,A3.L)");
@@ -2469,9 +2469,15 @@ void test_program() {
     ATEST(0x010000, "BLE *+$82",   0060000 | 0xF00, 0x0080);
     AERRT(0x010000, "BLE.B *-$80", OPERAND_TOO_FAR, "*-$80", 0060000 | 0xF00 | 0x7E);
     AERRT(0x010000, "BLE.S *+$82", OPERAND_TOO_FAR, "*+$82", 0060000 | 0xF00 | 0x80);
-    AERRT(0x010000, "BLE.X *+$80", ILLEGAL_SIZE, "BLE.X *+$80", 0060000 | 0xF00 | 0x7E);
-    AERRT(0x010000, "BLE *-$8000", OPERAND_TOO_FAR, "*-$8000", 0060000 | 0xF00, 0x7FFE);
-    AERRT(0x010000, "BLE *+$8002", OPERAND_TOO_FAR, "*+$8002", 0060000 | 0xF00, 0x8000);
+    if (firstGen()) {
+        AERRT(0x010000, "BLE.X *+$80", ILLEGAL_SIZE, "BLE.X *+$80", 0060000 | 0xF00 | 0x7E);
+        AERRT(0x010000, "BLE *-$8000", OPERAND_TOO_FAR, "*-$8000", 0060000 | 0xF00 | 0xFE);
+        AERRT(0x010000, "BLE *+$8002", OPERAND_TOO_FAR, "*+$8002", 0060000 | 0xF00 | 0x00);
+    } else {
+        ATEST(0x010000, "BLE.X *+$80", 0060000 | 0xF00 | 0xFF, 0x0000, 0x007E);
+        ATEST(0x010000, "BLE *-$8000", 0060000 | 0xF00 | 0xFF, 0xFFFF, 0x7FFE);
+        ATEST(0x010000, "BLE *+$8002", 0060000 | 0xF00 | 0xFF, 0x0000, 0x8000);
+    }
     AERRT(0x001000, "BLE *-$1002", OVERFLOW_RANGE,  "*-$1002", 0060000 | 0xF00, 0xEFFC);
     if (firstGen()) {
         AERRT(0xFFF000, "BLE *+$1000", OVERFLOW_RANGE,  "*+$1000", 0060000 | 0xF00, 0x0FFE);
@@ -2727,10 +2733,18 @@ void test_program() {
     AERRT(0x10000, "BRA.B *-$80",   OPERAND_TOO_FAR,   "*-$80", 0060000 | 0x7E);
     AERRT(0x10000, "BRA.B *+$82",   OPERAND_TOO_FAR,   "*+$82", 0060000 | 0x80);
     AERRT(0x10000, "BRA.S *+$82",   OPERAND_TOO_FAR,   "*+$82", 0060000 | 0x80);
-    AERRT(0x10000, "BRA.X *+$82",  ILLEGAL_SIZE, "BRA.X *+$82", 0060000 | 0x80);
+    if (firstGen()) {
+        AERRT(0x10000, "BRA.X *+$82",  ILLEGAL_SIZE, "BRA.X *+$82", 0060000 | 0x80);
+    } else {
+        ATEST(0x10000, "BRA.X *+$82",  0060000 | 0xFF, 0x0000, 0x0080);
+    }
 
     // BSR label: 00604|disp
-    AERRT(0x010000, "BSR   *-$8000", OPERAND_TOO_FAR, "*-$8000", 0060400, 0x7FFE);
+    if (firstGen()) {
+        AERRT(0x010000, "BSR *-$8000", OPERAND_TOO_FAR, "*-$8000", 0060400 | 0xFE);
+    } else {
+        ATEST(0x010000, "BSR *-$8000", 0060400 | 0xFF, 0xFFFF, 0x7FFE);
+    }
     ATEST(0x010000, "BSR   *-$7FFE", 0060400, 0x8000);
     ATEST(0x010000, "BSR   *-$80",   0060400, 0xFF7E);
     ATEST(0x010000, "BSR.W *-$007E", 0060400, 0xFF80);
@@ -2743,7 +2757,11 @@ void test_program() {
     ATEST(0x010000, "BSR.W *+$80"  , 0060400, 0x007E);
     ATEST(0x010000, "BSR   *+$82",   0060400, 0x0080);
     ATEST(0x010000, "BSR.W *+$8000", 0060400, 0x7FFE);
-    AERRT(0x010000, "BSR   *+$8002", OPERAND_TOO_FAR, "*+$8002", 0060400, 0x8000);
+    if (firstGen()) {
+        AERRT(0x010000, "BSR *+$8002", OPERAND_TOO_FAR, "*+$8002", 0060400 | 0x00);
+    } else {
+        ATEST(0x010000, "BSR *+$8002", 0060400 | 0xFF, 0x0000, 0x8000);
+    }
     AERRT(0x001000, "BSR   *-$1002", OVERFLOW_RANGE,  "*-$1002", 0060400, 0xEFFC);
     if (firstGen()) {
         AERRT(0xFFF000, "BSR *+$1000", OVERFLOW_RANGE,  "*+$1000", 0060400, 0x0FFE);
@@ -4664,6 +4682,11 @@ void test_float_trap() {
 
     TEST("FSEQ D2",              0xF240|002, 0x0001);
     TEST("FDBEQ D2, *+$1234",    0xF240|012, 0x0001, 0x1230);
+    TEST("FDBEQ.L D2, *+$1234",  0xF240|012, 0x0001, 0x1230);
+    TEST("FDBEQ.W D2, *+$1234",  0xF240|012, 0x0001, 0x1230);
+    ERRT("FDBEQ.B D2, *+$1234",  ILLEGAL_SIZE, "FDBEQ.B D2, *+$1234", 0xF240|012, 0x0001, 0x1230);
+    ERRT("FDBEQ.S D2, *+$1234",  ILLEGAL_SIZE, "FDBEQ.S D2, *+$1234", 0xF240|012, 0x0001, 0x1230);
+    ERRT("FDBEQ.X D2, *+$1234",  ILLEGAL_SIZE, "FDBEQ.X D2, *+$1234", 0xF240|012, 0x0001, 0x1230);
     TEST("FSEQ (A2)",            0xF240|022, 0x0001);
     TEST("FSEQ (A2)+",           0xF240|032, 0x0001);
     TEST("FSEQ -(A2)",           0xF240|042, 0x0001);

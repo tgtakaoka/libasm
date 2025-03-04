@@ -71,6 +71,7 @@ protected:
     CpuSpec _cpuSpec;
 
     bool firstGen() const { return _cpuSpec.cpu == MC68000 || _cpuSpec.cpu == MC68010; }
+    bool hasLongBranch() const { return !firstGen(); }
 };
 
 }  // namespace mc68000
