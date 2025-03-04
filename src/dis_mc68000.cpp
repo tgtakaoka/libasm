@@ -59,7 +59,7 @@ StrBuffer &outOprSize(StrBuffer &out, OprSize size) {
 
 }  // namespace
 
-void DisMc68000::decodeImmediateData(DisInsn &insn, StrBuffer &out, OprSize size) const {
+void DisMc68000::outImmediateData(DisInsn &insn, StrBuffer &out, OprSize size) const {
 #if defined(LIBASM_DIS_NOFLOAT) && !defined(LIBASM_MC68000_NOFPU)
     const auto *at = out.mark();
 #endif
@@ -223,14 +223,14 @@ StrBuffer &DisMc68000::outDecimalString(StrBuffer &out, const DecimalString &v) 
 
 #endif
 
-void DisMc68000::decodeEffectiveAddr(
-        DisInsn &insn, StrBuffer &out, uint8_t mode, RegName reg, OprSize size) const {
+void DisMc68000::outEffectiveAddr(
+        DisInsn &insn, StrBuffer &out, AddrMode mode, RegName reg, OprSize size) const {
     if (mode == M_DREG || mode == M_AREG) {
         outRegName(out, reg);
         return;
     }
     if (mode == M_IMDAT) {
-        decodeImmediateData(insn, out, size);
+        outImmediateData(insn, out, size);
         return;
     }
 
@@ -354,8 +354,8 @@ StrBuffer &outMoveMltRegs(StrBuffer &out, RegName start, RegName last, char suff
 }
 
 StrBuffer &outMoveMltRegList(StrBuffer &out, uint16_t list, DisInsn &insn) {
-    EaMc68000 ea(SZ_NONE, insn.opCode() >> 3, 0);
-    const auto push = ea.mode == M_PDEC;
+    const auto mode = decodeAddrMode(insn.opCode() >> 3, 0);
+    const auto push = mode == M_PDEC;
     if (list == 0)
         insn.setErrorIf(out, OPCODE_HAS_NO_EFFECT);
     int8_t start = -1;
@@ -429,26 +429,26 @@ bool needsFmoveLongCheck(AddrMode mode) {
     return mode == M_FCMLT || mode == M_FPCR || mode == M_FPSR || mode == M_FPIAR;
 }
 
-void checkFmovemMode(DisInsn &insn, const EaMc68000 &ea, StrBuffer &out) {
+void checkFmovemMode(DisInsn &insn, AddrMode mode, StrBuffer &out) {
     const auto src = insn.src();
     const auto dst = insn.dst();
     if (needsFmoveXtendCheck(src, insn.srcPos()) || needsFmoveXtendCheck(dst, insn.dstPos())) {
         const auto decrement = (insn.postfix() & 0x1000) == 0;
-        if (decrement && ea.mode != M_PDEC)
+        if (decrement && mode != M_PDEC)
             insn.setErrorIf(out, ILLEGAL_OPERAND_MODE);
-        if (!decrement && ea.mode == M_PDEC)
+        if (!decrement && mode == M_PDEC)
             insn.setErrorIf(out, ILLEGAL_OPERAND_MODE);
     } else if (needsFmoveLongCheck(src) || needsFmoveLongCheck(dst)) {
         const auto list = (insn.postfix() >> 10) & 7;
         const auto single = (list == 4 || list == 2 || list == 1);
         // Single FPCR/FPSR/FPIAR can move to Dn
-        if (ea.mode == M_DREG && !single)
+        if (mode == M_DREG && !single)
             insn.setErrorIf(out, ILLEGAL_OPERAND_MODE);
         // Single FPIAR can move to An
-        if (ea.mode == M_AREG && list != 1)
+        if (mode == M_AREG && list != 1)
             insn.setErrorIf(out, ILLEGAL_OPERAND_MODE);
         // Immediate can move to a single register
-        if (ea.mode == M_IMDAT && !single)
+        if (mode == M_IMDAT && !single)
             insn.setErrorIf(out, ILLEGAL_OPERAND_MODE);
     }
 }
@@ -517,13 +517,13 @@ bool isFloatOpOnSameFpreg(const DisInsn &insn) {
            regVal(insn, insn.srcPos()) == regVal(insn, insn.dstPos());
 }
 
-bool inFloatOperand(const DisInsn &insn, AddrMode mode) {
-    if (mode == M_RDATA) {
+bool inFloatOperand(const DisInsn &insn, AddrMode type) {
+    if (type == M_RDATA) {
         const auto dst = insn.dst();
         // Dn,FPn || Dn,FPc:FPs || FTST Dn
         return dst == M_FPREG || dst == M_FSICO || dst == M_NONE;
     }
-    if (mode == M_WDATA || mode == M_KFACT || mode == M_KDREG) {
+    if (type == M_WDATA || type == M_KFACT || type == M_KDREG) {
         // FPn,Dn
         return insn.src() == M_FPREG;
     }
@@ -532,63 +532,61 @@ bool inFloatOperand(const DisInsn &insn, AddrMode mode) {
 
 }  // namespace
 
-void DisMc68000::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode, OprPos pos,
+void DisMc68000::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode type, OprPos pos,
         OprSize size, uint16_t opr16, Error opr16Error) const {
-    if (mode == M_KDREG || mode == M_KFACT)
+    if (type == M_KDREG || type == M_KFACT)
         pos = OP_10;
-    auto m = modeVal(insn, pos);
-    auto r = regVal(insn, pos);
-    EaMc68000 ea(size, m, r);
-    if (ea.mode == M_DREG && inFloatOperand(insn, mode)) {
+    const auto m = modeVal(insn, pos);
+    const auto r = regVal(insn, pos);
+    const auto mode = decodeAddrMode(m, r);
+    if (mode == M_DREG && inFloatOperand(insn, type)) {
         if (size == SZ_DUBL || size == SZ_XTND || size == SZ_PBCD)
             insn.setErrorIf(out, ILLEGAL_SIZE);
     }
     RegName reg;
-    switch (mode) {
+    switch (type) {
+    case M_DREG:
+        outEffectiveAddr(insn, out, type, decodeDataReg(r), size);
+        break;
     case M_AREG:
     case M_PDEC:
     case M_PINC:
     case M_DISP:
-        decodeEffectiveAddr(insn, out, mode, decodeAddrReg(r), size);
+        outEffectiveAddr(insn, out, type, decodeAddrReg(r), size);
         break;
-    case M_DADDR:
-    case M_IADDR:
     case M_RADDR:
     case M_WADDR:
-        checkFmovemMode(insn, ea, out);
+    case M_IADDR:
+    case M_DADDR:
+        checkFmovemMode(insn, mode, out);
         /* Fall-through */
-    case M_JADDR:
-    case M_WDATA:
-    case M_WMEM:
     case M_RDATA:
+    case M_WDATA:
     case M_RMEM:
+    case M_WMEM:
+    case M_JADDR:
     case M_KDREG:
     case M_KFACT:
-        decodeEffectiveAddr(insn, out, ea.mode, ea.reg, size);
+        outEffectiveAddr(insn, out, mode, decodeRegNo(m, r), size);
         if (insn.getError())
             break;
-        if (mode == M_KDREG) {
+        if (type == M_KDREG) {
             const auto dreg = decodeDataReg((insn.postfix() >> 4) & 7);
             outRegName(out.letter('{'), dreg).letter('}');
-        } else if (mode == M_KFACT) {
+        } else if (type == M_KFACT) {
             const auto kfactor = insn.postfix() & 0x7F;
             outDec(out.letter('{').letter('#'), kfactor, -7).letter('}');
         }
         break;
-    case M_DREG:
-        decodeEffectiveAddr(insn, out, M_DREG, decodeDataReg(r), size);
-        break;
     case M_IM3:
         if (pos == OP__3) {
             // ADDQ/SUBQ/shift/rotate
-            r = (insn.opCode() >> 9) & 7;
-            if (r == 0)
-                r = 8;
+            const auto im3 = (r == 0) ? 8 : r;
+            outDec(out.letter('#'), im3, 4);
         } else if (pos == OP__0) {
             // BKPT
-            r = insn.opCode() & 7;
+            outDec(out.letter('#'), r, 3);
         }
-        outDec(out.letter('#'), r, 4);
         break;
     case M_IM8:
         outHex(out.letter('#'), insn.opCode(), -8);
@@ -607,7 +605,7 @@ void DisMc68000::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode, Opr
         outDec(out, opr16, 16);
         break;
     case M_IMDAT:
-        decodeImmediateData(insn, out, size);
+        outImmediateData(insn, out, size);
         break;
     case M_IMVEC:
         outDec(out.letter('#'), insn.opCode() & 0xF, 4);
@@ -646,7 +644,7 @@ void DisMc68000::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode, Opr
     case M_REL8:
     case M_REL16:
     case M_REL32:
-        decodeRelative(insn, out, mode);
+        decodeRelative(insn, out, type);
         break;
     case M_FPREG:
         outRegName(out, RegName(REG_FP0 + r));

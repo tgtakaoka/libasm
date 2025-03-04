@@ -1183,15 +1183,15 @@ bool acceptMode(AddrMode opr, AddrMode table, OprSize size) {
         return genericAddressing(table) || table == M_MULT;
     if (opr == M_AREG)
         return genericAddressing(table) || table == M_MULT;
-    if (opr >= M_AIND && opr <= M_PCIDX)
-        return genericAddressing(table);
     if (opr == M_IMDAT)
         return genericAddressing(table) || table == M_IMBIT || table == M_IM3 || table == M_IM8 ||
                table == M_IMVEC || table == M_IMDSP || table == M_IMROM;
-    if (opr == M_LABEL)
-        return table == M_REL8 || table == M_REL16 || table == M_REL32;
     if (opr == M_IMFLT)
         return genericAddressing(table) && size == SZ_FDAT;
+    if (opr >= M_AIND && opr <= M_PCIDX)
+        return genericAddressing(table);
+    if (opr == M_LABEL)
+        return table == M_REL8 || table == M_REL16 || table == M_REL32;
     if (opr == M_FPREG)
         return table == M_FPMLT;
     if (opr == M_FPCR || opr == M_FPSR || opr == M_FPIAR)

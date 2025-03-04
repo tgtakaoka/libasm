@@ -165,13 +165,14 @@ void emitOprSize(AsmInsn &insn, InsnSize isize) {
             0, 6, 4, 0, 0, 0, 0, 0, 1, 5, 2, 3, 0,
         };
         // clang-format on
-        insn.embedPostfix(static_cast<Config::opcode_t>(pgm_read_byte(&FSIZES[isize])) << 10);
+        const auto fsize = pgm_read_byte(&FSIZES[isize]);
+        insn.embedPostfix(fsize << 10);
         return;
     }
 }
 
 Error AsmMc68000::checkAlignment(AsmInsn &insn, OprSize size, const Operand &op) const {
-    const auto val32 = op.val.getUnsigned();
+    const auto val32 = op.addr.disp.getUnsigned();
     if (size == SZ_WORD && (val32 % 2))
         return insn.setError(op, OPERAND_NOT_ALIGNED);
     if (size == SZ_LONG && (val32 % 2))
@@ -179,24 +180,39 @@ Error AsmMc68000::checkAlignment(AsmInsn &insn, OprSize size, const Operand &op)
     return OK;
 }
 
-void AsmMc68000::encodeBriefExtension(
-        AsmInsn &insn, const Operand &op, Config::ptrdiff_t disp) const {
-    if (overflowDelta(disp, 8))
+namespace {
+Value pcrelOffset(const AsmInsn &insn, const Operand &op) {
+    if (op.getError())
+        return Value();
+    auto len = insn.length();
+    if (len == 0)
+        len = sizeof(Config::opcode_t);
+    if (insn.hasPostVal() && len < 4)
+        len = 4;
+    Value base;
+    base.setUnsigned(insn.address() + len);
+    return op.addr.disp - base;
+}
+}  // namespace
+
+void AsmMc68000::encodeBriefExtension(AsmInsn &insn, const Operand &op) const {
+    const auto disp = (op.addr.base == REG_PC) ? pcrelOffset(insn, op) : op.addr.disp;
+    if (disp.overflowInt8())
         insn.setErrorIf(op, OVERFLOW_RANGE);
-    uint16_t ext = static_cast<uint8_t>(disp);
-    ext |= encodeGeneralRegNo(op.indexReg) << 12;
-    if (isAddrReg(op.indexReg))
+    uint16_t ext = static_cast<uint8_t>(disp.getSigned());
+    ext |= encodeGeneralRegNo(op.addr.index) << 12;
+    if (isAddrReg(op.addr.index))
         ext |= (1 << 15);
-    if (op.indexSize == ISZ_LONG)
+    if (op.addr.indexSize == ISZ_LONG)
         ext |= (1 << 11);
     insn.emitOperand16(ext);
 }
 
-void AsmMc68000::encodeDisplacement(
-        AsmInsn &insn, const Operand &op, Config::ptrdiff_t disp) const {
-    if (overflowDelta(disp, 16))
+void AsmMc68000::encodeDisplacement(AsmInsn &insn, const Operand &op) const {
+    const auto disp = (op.addr.base == REG_PC) ? pcrelOffset(insn, op) : op.addr.disp;
+    if (disp.overflowInt16())
         insn.setErrorIf(op, OVERFLOW_RANGE);
-    insn.emitOperand16(disp);
+    insn.emitOperand16(disp.getSigned());
 }
 
 AddrMode AsmMc68000::branchType(AddrMode mode, InsnSize size, Config::ptrdiff_t delta) const {
@@ -320,17 +336,6 @@ void AsmMc68000::encodeImmediate(AsmInsn &insn, const Operand &op, OprSize size)
     }
 }
 
-Config::uintptr_t Operand::offset(const AsmInsn &insn) const {
-    if (getError())
-        return 0;
-    auto len = insn.length();
-    if (len == 0)
-        len = sizeof(Config::opcode_t);
-    if (insn.hasPostVal() && len < 4)
-        len = 4;
-    return val.getUnsigned() - (insn.address() + len);
-}
-
 namespace {
 bool inFloatOperand(const AsmInsn &insn, AddrMode mode) {
     if (mode == M_RDATA) {
@@ -346,26 +351,22 @@ bool inFloatOperand(const AsmInsn &insn, AddrMode mode) {
 }
 }  // namespace
 
-int_fast8_t AsmMc68000::encodeAddrMode(AsmInsn &insn, const Operand &op, OprPos pos) const {
+int_fast8_t AsmMc68000::encodeModeReg(AsmInsn &insn, AddrMode mode, RegName reg, OprPos pos) const {
     const auto mode_gp = modePos(pos);
     if (mode_gp >= 0) {
-        const auto m = EaMc68000::encodeMode(op.mode);
+        const auto m = encodeAddrMode(mode);
         insn.embed(m << mode_gp);
     }
 
     const auto reg_gp = regPos(pos);
     if (reg_gp >= 0) {
-        const auto r = EaMc68000::encodeRegNo(op.mode, op.reg);
+        const auto r = encodeRegNo(mode, reg);
         insn.embed(r << reg_gp);
     }
 
     const auto post_gp = postPos(pos);
-    if (pos == EX_DL) {
-        if (op.mode == M_DREG)
-            insn.embedPostfix(encodeGeneralRegNo(op.reg) << post_gp);
-        if (insn.dstPos() == EX_DL || EaMc68000::encodeMode(insn.dstOp.mode) != M_PDEC)
-            insn.embedPostfix(0x1000);
-    }
+    if (post_gp >= 0)
+        insn.embedPostfix(encodeGeneralRegNo(reg) << post_gp);
     return post_gp;
 }
 
@@ -376,9 +377,10 @@ Error AsmMc68000::encodeOperand(
             insn.setErrorIf(op, UNKNOWN_OPERAND);
         return insn.getError();
     }
-    auto val32 = op.val.getUnsigned();
+    if (mode == M_MULT)
+        return insn.getError();
     switch (op.mode) {
-    case M_DREG: {
+    case M_DREG:
         if (mode >= M_RMEM) {
             insn.reset();
             return insn.setErrorIf(op, OPERAND_NOT_ALLOWED);
@@ -387,58 +389,59 @@ Error AsmMc68000::encodeOperand(
             if (size == SZ_DUBL || size == SZ_XTND || size == SZ_PBCD)
                 insn.setErrorIf(op, ILLEGAL_SIZE);
         }
-        const auto post_gp = encodeAddrMode(insn, op, pos);
-        if (post_gp >= 0)
-            insn.embedPostfix(encodeGeneralRegNo(op.reg) << post_gp);
+        encodeModeReg(insn, op.mode, op.reg, pos);
+        if (pos == EX_DL) {
+            if (insn.dstPos() == EX_DL || insn.dstOp.mode != M_PDEC)
+                insn.embedPostfix(0x1000);
+        }
         break;
-    }
     case M_AREG: {
         if (mode == M_RDATA || mode >= M_WDATA) {
             insn.reset();
             return insn.setErrorIf(op, OPERAND_NOT_ALLOWED);
         }
-        const auto post_gp = encodeAddrMode(insn, op, pos);
-        if (post_gp >= 0) {
-            // MOVES.B An is OK
-            insn.embedPostfix(encodeGeneralRegNo(op.reg) << post_gp);
-        } else if (size == SZ_BYTE) {
+        const auto post_gp = encodeModeReg(insn, op.mode, op.reg, pos);
+        if (post_gp < 0 && size == SZ_BYTE) {
+            // Address register can't be accessed as BYTE.
             insn.setErrorIf(op, OPERAND_NOT_ALLOWED);
+        } else {
+            // But "MOVES.B An,<ea>" is OK
         }
         break;
     }
     case M_AIND:
-        encodeAddrMode(insn, op, pos);
+        encodeModeReg(insn, op.mode, op.addr.base, pos);
         break;
     case M_PINC:
         if (mode == M_JADDR || mode == M_DADDR) {
             insn.reset();
             return insn.setErrorIf(op, OPERAND_NOT_ALLOWED);
         }
-        encodeAddrMode(insn, op, pos);
+        encodeModeReg(insn, op.mode, op.addr.base, pos);
         break;
     case M_PDEC:
         if (mode == M_JADDR || mode == M_IADDR) {
             insn.reset();
             return insn.setErrorIf(op, OPERAND_NOT_ALLOWED);
         }
-        encodeAddrMode(insn, op, pos);
+        encodeModeReg(insn, op.mode, op.addr.base, pos);
         break;
     case M_DISP:
-        encodeAddrMode(insn, op, pos);
-        encodeDisplacement(insn, op, static_cast<Config::ptrdiff_t>(val32));
+        encodeModeReg(insn, op.mode, op.addr.base, pos);
+        encodeDisplacement(insn, op);
         break;
     case M_INDX:
-        encodeAddrMode(insn, op, pos);
-        encodeBriefExtension(insn, op, static_cast<Config::ptrdiff_t>(val32));
+        encodeModeReg(insn, op.mode, op.addr.base, pos);
+        encodeBriefExtension(insn, op);
         break;
     case M_AWORD:
     case M_ALONG:
-        encodeAddrMode(insn, op, pos);
+        encodeModeReg(insn, op.mode, op.addr.base, pos);
         insn.setErrorIf(op, checkAlignment(insn, size, op));
         if (op.mode == M_AWORD) {
-            insn.emitOperand16(val32);
+            insn.emitOperand16(op.addr.disp.getSigned());
         } else {
-            insn.emitOperand32(val32);
+            insn.emitOperand32(op.addr.disp.getSigned());
         }
         break;
     case M_PCDSP:
@@ -446,47 +449,48 @@ Error AsmMc68000::encodeOperand(
             insn.reset();
             return insn.setErrorIf(op, OPERAND_NOT_ALLOWED);
         }
-        encodeAddrMode(insn, op, pos);
+        encodeModeReg(insn, op.mode, op.addr.base, pos);
         insn.setErrorIf(op, checkAlignment(insn, size, op));
-        encodeDisplacement(insn, op, op.offset(insn));
+        encodeDisplacement(insn, op);
         break;
     case M_PCIDX:
         if (mode == M_WADDR || mode == M_WDATA || mode == M_WMEM || mode == M_DADDR) {
             insn.reset();
             return insn.setErrorIf(op, OPERAND_NOT_ALLOWED);
         }
-        encodeAddrMode(insn, op, pos);
-        encodeBriefExtension(insn, op, op.offset(insn));
+        encodeModeReg(insn, op.mode, op.addr.base, pos);
+        encodeBriefExtension(insn, op);
         break;
     case M_IMDAT:
         if (mode == M_IMBIT) {
+            uint_fast8_t bit = op.val.getUnsigned();
             if (size == SZ_BYTE && op.val.overflow(7)) {
                 insn.setErrorIf(insn.srcOp, ILLEGAL_BIT_NUMBER);
-                val32 &= 7;
+                bit &= 7;
             }
             if (insn.oprSize() == SZ_LONG && op.val.overflow(31)) {
                 insn.setErrorIf(insn.srcOp, ILLEGAL_BIT_NUMBER);
-                val32 &= 0x1F;
+                bit &= 0x1F;
             }
-            insn.emitOperand16(val32);
+            insn.emitOperand16(bit);
             break;
         }
         if (mode == M_IM3) {
             if (pos == OP__3) {
                 // ADDQ/SUBQ/shift/rotate
                 // "Zero means 2^3" unsigned 3-bit.
+                uint_fast8_t data = op.val.getUnsigned();
                 if (op.val.overflow(8))
                     insn.setErrorIf(op, OVERFLOW_RANGE);
                 if (op.val.isZero())
                     insn.setErrorIf(op, OPERAND_NOT_ALLOWED);
-                const auto count = (val32 & 7);  // 8 is encoded to 0.
-                insn.embed(count << 9);
+                insn.embed((data & 7) << 9);  // 8 is encoded to 0.
             } else if (pos == OP__0) {
                 // BKPT
+                uint_fast8_t vector = op.val.getUnsigned();
                 if (op.val.overflow(7))
                     insn.setErrorIf(op, OVERFLOW_RANGE);
-                const auto vector = (val32 & 7);
-                insn.embed(vector);
+                insn.embed(vector & 7);
             }
             break;
         }
@@ -494,25 +498,27 @@ Error AsmMc68000::encodeOperand(
             // Signed 8-bit.
             if (op.val.overflowInt8())
                 insn.setErrorIf(op, OVERFLOW_RANGE);
-            insn.embed(static_cast<uint8_t>(val32));
+            insn.embed(static_cast<uint8_t>(op.val.getUnsigned()));
             break;
         }
         if (mode == M_IMROM) {
-            if (op.val.overflow(INT8_MAX))
+            uint_fast8_t crom = op.val.getUnsigned();
+            if (op.val.overflow(0x7F))
                 insn.setErrorIf(op, OVERFLOW_RANGE);
-            insn.embedPostfix(val32 & 0x7F);
+            insn.embedPostfix(crom & 0x7F);
             break;
         }
         if (mode == M_IMVEC) {
+            uint_fast8_t vector = op.val.getUnsigned();
             if (op.val.overflow(15))
                 insn.setErrorIf(op, OVERFLOW_RANGE);
-            insn.embed(static_cast<uint8_t>(val32 & 0xF));
+            insn.embed(vector & 0xF);
             break;
         }
         if (mode == M_IMDSP) {
             if (op.val.overflowInt16())
                 insn.setErrorIf(op, OVERFLOW_RANGE);
-            insn.emitOperand16(static_cast<uint16_t>(val32));
+            insn.emitOperand16(op.val.getUnsigned());
             break;
         }
         /* Fall-through */
@@ -521,7 +527,7 @@ Error AsmMc68000::encodeOperand(
             insn.reset();
             return insn.setErrorIf(op, OPERAND_NOT_ALLOWED);
         }
-        encodeAddrMode(insn, op, pos);
+        encodeModeReg(insn, op.mode, REG_UNDEF, pos);
         encodeImmediate(insn, op, size);
         break;
     case M_LABEL:
@@ -531,19 +537,17 @@ Error AsmMc68000::encodeOperand(
         if (mode == M_FPMLT) {
             encodeFloatRegisterList(insn, op);
         } else {
-            const auto post_gp = encodeAddrMode(insn, op, pos);
-            if (post_gp >= 0) {
-                insn.embedPostfix(encodeFloatRegNo(op.reg) << post_gp);
-                if (insn.dst() == M_NONE) {
-                    // Float instruction which omits destination register
-                    insn.embedPostfix(encodeFloatRegNo(op.reg) << postPos(EX_RY));
-                }
+            const auto post_gp = encodeModeReg(insn, op.mode, op.reg, pos);
+            if (post_gp >= 0 && insn.dst() == M_NONE) {
+                // Float instruction which omits destination register
+                const auto regy = encodeGeneralRegNo(op.reg) << postPos(EX_RY);
+                insn.embedPostfix(regy);
             }
         }
         break;
     case M_FSICO:
-        insn.embedPostfix(encodeFloatRegNo(op.reg));                         // FPc
-        insn.embedPostfix(encodeFloatRegNo(op.indexReg) << postPos(EX_SC));  // FPs
+        insn.embedPostfix(encodeGeneralRegNo(op.reg));                     // FPc
+        insn.embedPostfix(encodeGeneralRegNo(op.reg2) << postPos(EX_SC));  // FPs
         break;
     case M_FPMLT:
         encodeFloatRegisterList(insn, op);
@@ -576,7 +580,7 @@ Error AsmMc68000::encodeOperand(
 
 void AsmMc68000::encodeFloatControlList(AsmInsn &insn, const Operand &op) const {
     auto p = op.list;
-    uint8_t n = 0;
+    uint_fast8_t n = 0;
     auto reg = REG_UNDEF;
     for (;;) {
         auto a = p;
@@ -600,19 +604,19 @@ void AsmMc68000::encodeFloatControlList(AsmInsn &insn, const Operand &op) const 
 
 namespace {
 
-void swapRegPos(uint8_t &s, uint8_t &e) {
+void swapRegPos(uint_fast8_t &s, uint_fast8_t &e) {
     const auto t = s;
     s = e;
     e = t;
 }
 
-uint8_t reverseUint8(uint8_t bits) {
+uint_fast8_t reverseUint8(uint_fast8_t bits) {
     bits = (bits & 0x55) << 1 | (bits & 0xAA) >> 1;
     bits = (bits & 0x33) << 2 | (bits & 0xCC) >> 2;
     return bits << 4 | bits >> 4;
 }
 
-uint16_t reverseUint16(uint16_t bits) {
+uint_fast16_t reverseUint16(uint_fast16_t bits) {
     bits = (bits & 0x5555) << 1 | (bits & 0xAAAA) >> 1;
     bits = (bits & 0x3333) << 2 | (bits & 0xCCCC) >> 2;
     bits = (bits & 0x0F0F) << 4 | (bits & 0xF0F0) >> 4;
@@ -622,7 +626,7 @@ uint16_t reverseUint16(uint16_t bits) {
 }  // namespace
 
 void AsmMc68000::encodeFloatRegisterList(AsmInsn &insn, const Operand &op) const {
-    uint8_t bits = 0;
+    uint_fast8_t bits = 0;
     if (op.mode == M_FPREG) {
         bits = 1 << encodeFloatRegPos(op.reg);
     } else {
@@ -644,7 +648,7 @@ void AsmMc68000::encodeFloatRegisterList(AsmInsn &insn, const Operand &op) const
             if (s > e)
                 swapRegPos(s, e);
             for (auto i = s; i <= e; i++) {
-                const uint8_t bm = 1 << i;
+                const uint_fast8_t bm = 1 << i;
                 if (bits & bm)
                     insn.setErrorIf(p, DUPLICATE_REGISTER);
                 bits |= bm;
@@ -658,7 +662,7 @@ void AsmMc68000::encodeFloatRegisterList(AsmInsn &insn, const Operand &op) const
             break;
         }
     }
-    const auto dstMode = EaMc68000::encodeMode(insn.dstOp.mode);
+    const auto dstMode = insn.dstOp.mode;
     if (insn.src() == M_FPMLT && dstMode == M_PDEC)
         bits = reverseUint8(bits);
     insn.embedPostfix(bits);
@@ -668,7 +672,7 @@ void AsmMc68000::encodeFloatRegisterList(AsmInsn &insn, const Operand &op) const
 
 void AsmMc68000::encodeRegisterList(AsmInsn &insn, const Operand &op, bool reverse) const {
     auto p = op.list;
-    uint16_t bits = 0;
+    uint_fast16_t bits = 0;
     for (;;) {
         auto a = p;
         const auto start = parseRegName(a, parser());
@@ -686,7 +690,7 @@ void AsmMc68000::encodeRegisterList(AsmInsn &insn, const Operand &op, bool rever
         if (s > e)
             swapRegPos(s, e);
         for (auto i = s; i <= e; i++) {
-            const uint16_t bm = 1 << i;
+            const uint_fast16_t bm = 1 << i;
             if (bits & bm)
                 insn.setErrorIf(p, DUPLICATE_REGISTER);
             bits |= bm;
@@ -755,13 +759,14 @@ Error AsmMc68000::parseOperand(StrScanner &scan, Operand &op) const {
         scan = p;
         return OK;
     }
+
     auto a = p;
     const auto pdec = (*a++ == '-' && *a == '(');
     if (pdec)
         p = a;
     if (p.expect('(')) {
-        op.reg = parseRegName(p.skipSpaces(), parser());
-        if (isAddrReg(op.reg)) {
+        op.addr.base = parseRegName(p, parser());
+        if (isAddrReg(op.addr.base)) {
             if (!p.skipSpaces().expect(')'))
                 return op.setError(MISSING_CLOSING_PAREN);
             if (pdec) {
@@ -774,13 +779,13 @@ Error AsmMc68000::parseOperand(StrScanner &scan, Operand &op) const {
             scan = p;
             return OK;
         }
-        op.val = parseInteger(p, op, ')');
+        op.addr.disp = parseInteger(p, op, ')');
         if (op.hasError())
             return op.getError();
-        const auto val32 = op.val.getUnsigned();
+        const auto val32 = op.addr.disp.getUnsigned();
         if (p.skipSpaces().expect(')')) {
             const auto size = parseSize(p.skipSpaces());
-            auto over16 = op.val.overflowInt16();
+            auto over16 = op.addr.disp.overflowInt16();
             if (over16) {
                 // check if it is near the end of address space.
                 const auto max = 1UL << uint8_t(addressWidth());
@@ -795,28 +800,28 @@ Error AsmMc68000::parseOperand(StrScanner &scan, Operand &op) const {
         }
         if (p.expect(',')) {
             a = p.skipSpaces();
-            op.reg = parseRegName(a, parser());
-            if (!isAddrReg(op.reg) && op.reg != REG_PC)
+            op.addr.base = parseRegName(a, parser());
+            if (!isAddrReg(op.addr.base) && op.addr.base != REG_PC)
                 return op.setError(a, REGISTER_NOT_ALLOWED);
             if (a.skipSpaces().expect(')')) {
-                op.mode = (op.reg == REG_PC) ? M_PCDSP : M_DISP;
+                op.mode = (op.addr.base == REG_PC) ? M_PCDSP : M_DISP;
                 scan = a;
                 return OK;
             }
             if (!a.expect(','))
                 return op.setError(a, MISSING_COMMA);
             p = a.skipSpaces();
-            op.indexReg = parseRegName(p, parser());
-            if (!isGeneralReg(op.indexReg))
+            op.addr.index = parseRegName(p, parser());
+            if (!isGeneralReg(op.addr.index))
                 return op.setError(UNKNOWN_OPERAND);
-            op.indexSize = parseSize(p);
-            if (op.indexSize == ISZ_ERROR)
+            op.addr.indexSize = parseSize(p);
+            if (op.addr.indexSize == ISZ_ERROR)
                 return op.setError(UNKNOWN_OPERAND);
-            if (op.indexSize == ISZ_NONE)
-                op.indexSize = ISZ_WORD;
+            if (op.addr.indexSize == ISZ_NONE)
+                op.addr.indexSize = ISZ_WORD;
             if (!p.skipSpaces().expect(')'))
                 return op.setError(p, MISSING_CLOSING_PAREN);
-            op.mode = (op.reg == REG_PC) ? M_PCIDX : M_INDX;
+            op.mode = (op.addr.base == REG_PC) ? M_PCIDX : M_INDX;
             scan = p;
             return OK;
         }
@@ -846,8 +851,8 @@ Error AsmMc68000::parseOperand(StrScanner &scan, Operand &op) const {
             op.mode = M_DREG;
         } else if (isFloatReg(op.reg)) {
             if (a.skipSpaces().expect(':')) {
-                op.indexReg = parseRegName(a, parser());
-                if (!isFloatReg(op.indexReg))
+                op.reg2 = parseRegName(a, parser());
+                if (!isFloatReg(op.reg2))
                     return op.setErrorIf(p, UNKNOWN_OPERAND);
                 op.mode = M_FSICO;
             } else {
@@ -894,9 +899,9 @@ InsnSize AsmInsn::parseInsnSize() {
 
 namespace {
 
-uint64_t convert2pbcd(uint64_t bin, uint8_t digits) {
+uint64_t convert2pbcd(uint64_t bin, uint_fast8_t digits) {
     uint64_t pbcd = 0;
-    uint8_t shift = 0;
+    uint_fast8_t shift = 0;
     while (digits-- > 0) {
         pbcd |= (bin % 10) << shift;
         bin /= 10;
@@ -907,13 +912,13 @@ uint64_t convert2pbcd(uint64_t bin, uint8_t digits) {
 
 }  // namespace
 
-Error AsmInsn::emitExtendedReal(const float80_t &value, uint8_t pos) {
+Error AsmInsn::emitExtendedReal(const float80_t &value, uint_fast8_t pos) {
     emitUint16(value.tag(), pos);
     emitUint16(0, pos + 2);
     return emitUint64(value.significand(), pos + 4);
 }
 
-Error AsmInsn::emitDecimalString(const float80_t &value, uint8_t pos) {
+Error AsmInsn::emitDecimalString(const float80_t &value, uint_fast8_t pos) {
     if (value.isInf()) {
     infinity:
         const auto tag = (value.tag() & float80_t::SGN_MASK) | float80_t::EXP_MASK;

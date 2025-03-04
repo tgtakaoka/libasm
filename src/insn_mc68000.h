@@ -36,13 +36,21 @@ struct EntryInsn : EntryInsnPostfix<Config, Entry> {
     Config::opcode_t postVal() const { return flags().postVal(); }
 };
 
-struct AsmInsn;
+struct Addressing {
+    Value &disp;
+    RegName &base;
+    RegName &index;
+    InsnSize indexSize;
+    Addressing(Value &val, RegName &reg, RegName &reg2)
+        : disp(val), base(reg), index(reg2), indexSize(ISZ_NONE) {}
+};
+
 struct Operand final : ErrorAt {
     AddrMode mode;
-    RegName reg;
-    RegName indexReg;
-    InsnSize indexSize;
     Value val;
+    RegName reg;
+    RegName reg2;
+    Addressing addr;
     StrScanner list;
     AddrMode kMode;
     union {
@@ -51,13 +59,12 @@ struct Operand final : ErrorAt {
     };
     Operand()
         : mode(M_NONE),
-          reg(REG_UNDEF),
-          indexReg(REG_UNDEF),
-          indexSize(ISZ_NONE),
           val(),
+          reg(REG_UNDEF),
+          reg2(REG_UNDEF),
+          addr(val, reg, reg2),
           list(),
           kMode(M_NONE) {}
-    Config::uintptr_t offset(const AsmInsn &insn) const;
 };
 
 struct AsmInsn final : AsmInsnImpl<Config>, EntryInsn {
@@ -76,10 +83,14 @@ struct AsmInsn final : AsmInsnImpl<Config>, EntryInsn {
     Error emitOperand32(uint32_t val32) { return emitUint32(val32, operandPos()); }
     Error emitOperand64(uint64_t val64) { return emitUint64(val64, operandPos()); }
 #if !defined(LIBASM_ASM_NOFLOAT) && !defined(LIBASM_MC68000_NOFPU)
-    Error emitFloat32(const float80_t &val80, uint8_t pos) { return emitFloat32Be(val80, pos); }
-    Error emitFloat64(const float80_t &val80, uint8_t pos) { return emitFloat64Be(val80, pos); }
-    Error emitExtendedReal(const float80_t &val80, uint8_t pos);
-    Error emitDecimalString(const float80_t &val80, uint8_t pos);
+    Error emitFloat32(const float80_t &val80, uint_fast8_t pos) {
+        return emitFloat32Be(val80, pos);
+    }
+    Error emitFloat64(const float80_t &val80, uint_fast8_t pos) {
+        return emitFloat64Be(val80, pos);
+    }
+    Error emitExtendedReal(const float80_t &val80, uint_fast8_t pos);
+    Error emitDecimalString(const float80_t &val80, uint_fast8_t pos);
 #endif
     uint8_t operandPos() const {
         auto pos = length();
