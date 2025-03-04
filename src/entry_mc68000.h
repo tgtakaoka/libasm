@@ -56,61 +56,58 @@ enum InsnSize : uint8_t {
 };
 
 enum AddrMode : uint8_t {
-    M_DREG = 0,       // Dn: Data Register Direct
-    M_AREG = 1,       // An: Address Register Direct
-    M_AIND = 2,       // (An): Address Register Indirect
-    M_PINC = 3,       // (An)+: Address Register Indirect with Postincrement
-    M_PDEC = 4,       // -(An): Address Register Indirect with Predecrement
-    M_DISP = 5,       // (d16,An): Address Register Indirect with Displacement
-    M_INDX = 6,       // (d8,An,Xn): Address Register Indirect with Index
-    M_AWORD = 8 + 0,  // (xxxx).W: Absolute Short Addressing
-    M_ALONG = 8 + 1,  // (xxxx).L: Absolute Long Addressing
-    M_PCDSP = 8 + 2,  // (d16,PC): Program Counter Indirect with Displacement
-    M_PCIDX = 8 + 3,  // (d8,PC,Xn): Program Counter Indirect with Index
-    M_IMDAT = 8 + 4,  // #imm: Immediate Data
-
-    M_ERROR = 64,  // TODO: Remove
-
-    // for assembler operand parsing
-    M_NONE = 16,   // no operand
-    M_MULT = 17,   // MOVEM register list
-    M_SR = 18,     // SR register
-    M_CCR = 19,    // CCR register
-    M_USP = 20,    // USP register
-    M_RADDR = 21,  // Readable Address:  Dn/An/(An)/(An)+/-(An)/(*,An)/(Abs)/(*,PC)/#xxxx
-    M_RDATA = 22,  // Readable Data:     Dn   /(An)/(An)+/-(An)/(*,An)/(Abs)/(*,PC)/#xxxx
-    M_WADDR = 23,  // Readable Address:  Dn/An/(An)/(An)+/-(An)/(*,An)/(Abs)
-    M_WDATA = 24,  // Writable Data:     Dn   /(An)/(An)+/-(An)/(*.An)/(Abs)
-    M_RMEM = 25,   // Readable Memory:         (An)/(An)+/-(An)/(*,An)/(Abs)/(*,PC)
-    M_WMEM = 26,   // Writable Memory:         (An)/(An)+/-(An)/(*,An)/(Abs)
-    M_JADDR = 27,  // Jumpable Address:        (An)            /(*,An)/(Abs)/(*,PC)
-    M_IADDR = 28,  // Increment Address:       (An)/(An)+      /(*,An)/(Abs)/(*,PC)
-    M_DADDR = 29,  // Decrement Address:       (An)/     /-(An)/(*,An)/(Abs)
-    M_REL8 = 30,   // 8/16-bit Relative (Bcc)
-    M_REL16 = 31,  // 16-bit Relative (DBcc/FDBcc)
-    M_IMBIT = 32,  // Bit number: #0~#7/#15/#31
-    M_IM3 = 33,    // 3-bit Immediate: #1~#8
-    M_IM8 = 34,    // 8-bit Immediate
-    M_IMVEC = 35,  // 3-bit Trap Vector
-    M_IMDSP = 36,  // 16-bit Signed Displacement
-    M_LABEL = 37,  // label
-
+    M_NONE = 0,
+    // for assembler operand parsing; M_DREG-M_INDX must be contiguous and in this order.
+    M_DREG = 1,    // Dn: Data Register Direct
+    M_AREG = 2,    // An: Address Register Direct
+    M_AIND = 3,    // (An): Address Register Indirect
+    M_PINC = 4,    // (An)+: Address Register Indirect with Postincrement
+    M_PDEC = 5,    // -(An): Address Register Indirect with Predecrement
+    M_DISP = 6,    // (d16,An): Address Register Indirect with Displacement
+    M_INDX = 7,    // (d8,An,Xn.SIZE): Address Register Indirect with Index
+    M_IMDAT = 8,   // #imm: Immediate Data
+    M_IMFLT = 9,   // #imm: Floating point immediate
+    M_AWORD = 10,  // (xxxx).W: Absolute Short Addressing
+    M_ALONG = 11,  // (xxxx).L: Absolute Long Addressing
+    M_PCDSP = 12,  // (d16,PC): Program Counter Indirect with Displacement
+    M_PCIDX = 13,  // (d8,PC,Xn.SIZE): Program Counter Indirect with Index
+    // for instruction table; M_RADDR-M_DADDR must be contigous.
+    M_RADDR = 14,  // Readable Address:  Dn/An/(An)/(An)+/-(An)/(*,An)/(Abs)/(*,PC)/#xxxx
+    M_RDATA = 15,  // Readable Data:     Dn   /(An)/(An)+/-(An)/(*,An)/(Abs)/(*,PC)/#xxxx
+    M_WADDR = 16,  // Readable Address:  Dn/An/(An)/(An)+/-(An)/(*,An)/(Abs)
+    M_WDATA = 17,  // Writable Data:     Dn   /(An)/(An)+/-(An)/(*.An)/(Abs)
+    M_RMEM = 18,   // Readable Memory:         (An)/(An)+/-(An)/(*,An)/(Abs)/(*,PC)
+    M_WMEM = 19,   // Writable Memory:         (An)/(An)+/-(An)/(*,An)/(Abs)
+    M_JADDR = 20,  // Jumpable Address:        (An)            /(*,An)/(Abs)/(*,PC)
+    M_IADDR = 21,  // Increment Address:       (An)/(An)+      /(*,An)/(Abs)/(*,PC)
+    M_DADDR = 22,  // Decrement Address:       (An)/     /-(An)/(*,An)/(Abs)
+    // for instruction table
+    M_REL8 = 23,   // 8/16-bit Relative (Bcc)
+    M_REL16 = 24,  // 16-bit Relative (DBcc/FDBcc)
+    M_IMBIT = 25,  // Bit number: #0~#7/#15/#31
+    M_IM3 = 26,    // 3-bit Immediate: #1~#8
+    M_IM8 = 27,    // 8-bit Immediate
+    M_IMVEC = 28,  // 3-bit Trap Vector
+    M_IMDSP = 29,  // 16-bit Signed Displacement
+    M_LABEL = 30,  // label
+    M_MULT = 31,   // MOVEM register list
+    M_SR = 32,     // SR register
+    M_CCR = 33,    // CCR register
+    M_USP = 34,    // USP register
     // MC68010
-    M_CREG = 38,  // Control register: SFC, DFC, USP, VBR
-
+    M_CREG = 35,  // Control register: SFC, DFC, USP, VBR
     // MC68881
-    M_FPREG = 39,  // FPn: Floatng point data register
-    M_FPMLT = 40,  // FMOVEM.X register list; FPn
-    M_FCMLT = 41,  // FMOVEM.L register list; FPCR/FPSR/FPIAR
-    M_FSICO = 42,  // FPSINCOS FPc:FPs
-    M_KDREG = 43,  // <ea>{Dn}
-    M_KFACT = 44,  // <ea>{#k}
-    M_FPCR = 45,   // FPCR register
-    M_FPSR = 46,   // FPSR register
-    M_FPIAR = 47,  // FPIAR register
-    M_IMROM = 48,  // MC68881 ROM constant
-    M_REL32 = 49,  // 32-bit Relative; 1111|ccc|01s|___|___: s=0 16bit, s=1 32bit (FBcc)
-    M_IMFLT = 50,  // Floating point immediate
+    M_FPREG = 36,  // FPn: Floatng point data register
+    M_FPMLT = 37,  // FMOVEM.X register list; FPn
+    M_FCMLT = 38,  // FMOVEM.L register list; FPCR/FPSR/FPIAR
+    M_FSICO = 39,  // FPSINCOS FPc:FPs
+    M_KDREG = 40,  // <ea>{Dn}
+    M_KFACT = 41,  // <ea>{#k}
+    M_FPCR = 42,   // FPCR register
+    M_FPSR = 43,   // FPSR register
+    M_FPIAR = 44,  // FPIAR register
+    M_IMROM = 45,  // MC68881 ROM constant
+    M_REL32 = 46,  // 32-bit Relative; 1111|ccc|01s|___|___: s=0 16bit, s=1 32bit (FBcc)
 };
 
 enum OprPos : uint8_t {
