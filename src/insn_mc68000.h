@@ -76,10 +76,14 @@ struct AsmInsn final : AsmInsnImpl<Config>, EntryInsn {
     Error emitOperand32(uint32_t val32) { return emitUint32(val32, operandPos()); }
     Error emitOperand64(uint64_t val64) { return emitUint64(val64, operandPos()); }
 #if !defined(LIBASM_ASM_NOFLOAT) && !defined(LIBASM_MC68000_NOFPU)
-    Error emitFloat32(const float80_t &val80, uint8_t pos) { return emitFloat32Be(val80, pos); }
-    Error emitFloat64(const float80_t &val80, uint8_t pos) { return emitFloat64Be(val80, pos); }
-    Error emitExtendedReal(const float80_t &val80, uint8_t pos);
-    Error emitDecimalString(const float80_t &val80, uint8_t pos);
+    Error emitFloat32(const float80_t &val80, uint_fast8_t pos) {
+        return emitFloat32Be(val80, pos);
+    }
+    Error emitFloat64(const float80_t &val80, uint_fast8_t pos) {
+        return emitFloat64Be(val80, pos);
+    }
+    Error emitExtendedReal(const float80_t &val80, uint_fast8_t pos);
+    Error emitDecimalString(const float80_t &val80, uint_fast8_t pos);
 #endif
     uint8_t operandPos() const {
         auto pos = length();

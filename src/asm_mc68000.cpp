@@ -179,7 +179,8 @@ void emitOprSize(AsmInsn &insn, InsnSize isize) {
             0, 6, 4, 0, 0, 0, 0, 0, 1, 5, 2, 3, 0,
         };
         // clang-format on
-        insn.embedPostfix(static_cast<Config::opcode_t>(pgm_read_byte(&FSIZES[isize])) << 10);
+        const auto fsize = pgm_read_byte(&FSIZES[isize]);
+        insn.embedPostfix(fsize << 10);
         return;
     }
 }
@@ -360,16 +361,16 @@ bool inFloatOperand(const AsmInsn &insn, AddrMode mode) {
 }
 }  // namespace
 
-int_fast8_t AsmMc68000::encodeAddrMode(AsmInsn &insn, const Operand &op, OprPos pos) const {
+int_fast8_t AsmMc68000::encodeEffectiveAddr(AsmInsn &insn, const Operand &op, OprPos pos) const {
     const auto mode_gp = modePos(pos);
     if (mode_gp >= 0) {
-        const auto m = EaMc68000::encodeMode(op.mode);
+        const auto m = encodeAddrMode(op.mode);
         insn.embed(m << mode_gp);
     }
 
     const auto reg_gp = regPos(pos);
     if (reg_gp >= 0) {
-        const auto r = EaMc68000::encodeRegNo(op.mode, op.reg);
+        const auto r = encodeRegNo(op.mode, op.reg);
         insn.embed(r << reg_gp);
     }
 
@@ -377,7 +378,7 @@ int_fast8_t AsmMc68000::encodeAddrMode(AsmInsn &insn, const Operand &op, OprPos 
     if (pos == EX_DL) {
         if (op.mode == M_DREG)
             insn.embedPostfix(encodeGeneralRegNo(op.reg) << post_gp);
-        if (insn.dstPos() == EX_DL || EaMc68000::encodeMode(insn.dstOp.mode) != M_PDEC)
+        if (insn.dstPos() == EX_DL || insn.dstOp.mode != M_PDEC)
             insn.embedPostfix(0x1000);
     }
     return post_gp;
@@ -390,6 +391,8 @@ Error AsmMc68000::encodeOperand(
             insn.setErrorIf(op, UNKNOWN_OPERAND);
         return insn.getError();
     }
+    if (mode == M_MULT)
+        return insn.getError();
     auto val32 = op.val.getUnsigned();
     switch (op.mode) {
     case M_DREG: {
@@ -401,7 +404,7 @@ Error AsmMc68000::encodeOperand(
             if (size == SZ_DUBL || size == SZ_XTND || size == SZ_PBCD)
                 insn.setErrorIf(op, ILLEGAL_SIZE);
         }
-        const auto post_gp = encodeAddrMode(insn, op, pos);
+        const auto post_gp = encodeEffectiveAddr(insn, op, pos);
         if (post_gp >= 0)
             insn.embedPostfix(encodeGeneralRegNo(op.reg) << post_gp);
         break;
@@ -411,7 +414,7 @@ Error AsmMc68000::encodeOperand(
             insn.reset();
             return insn.setErrorIf(op, OPERAND_NOT_ALLOWED);
         }
-        const auto post_gp = encodeAddrMode(insn, op, pos);
+        const auto post_gp = encodeEffectiveAddr(insn, op, pos);
         if (post_gp >= 0) {
             // MOVES.B An is OK
             insn.embedPostfix(encodeGeneralRegNo(op.reg) << post_gp);
@@ -421,33 +424,33 @@ Error AsmMc68000::encodeOperand(
         break;
     }
     case M_AIND:
-        encodeAddrMode(insn, op, pos);
+        encodeEffectiveAddr(insn, op, pos);
         break;
     case M_PINC:
         if (mode == M_JADDR || mode == M_DADDR) {
             insn.reset();
             return insn.setErrorIf(op, OPERAND_NOT_ALLOWED);
         }
-        encodeAddrMode(insn, op, pos);
+        encodeEffectiveAddr(insn, op, pos);
         break;
     case M_PDEC:
         if (mode == M_JADDR || mode == M_IADDR) {
             insn.reset();
             return insn.setErrorIf(op, OPERAND_NOT_ALLOWED);
         }
-        encodeAddrMode(insn, op, pos);
+        encodeEffectiveAddr(insn, op, pos);
         break;
     case M_DISP:
-        encodeAddrMode(insn, op, pos);
+        encodeEffectiveAddr(insn, op, pos);
         encodeDisplacement(insn, op, static_cast<Config::ptrdiff_t>(val32));
         break;
     case M_INDX:
-        encodeAddrMode(insn, op, pos);
+        encodeEffectiveAddr(insn, op, pos);
         encodeBriefExtension(insn, op, static_cast<Config::ptrdiff_t>(val32));
         break;
     case M_AWORD:
     case M_ALONG:
-        encodeAddrMode(insn, op, pos);
+        encodeEffectiveAddr(insn, op, pos);
         insn.setErrorIf(op, checkAlignment(insn, size, op));
         if (op.mode == M_AWORD) {
             insn.emitOperand16(val32);
@@ -460,7 +463,7 @@ Error AsmMc68000::encodeOperand(
             insn.reset();
             return insn.setErrorIf(op, OPERAND_NOT_ALLOWED);
         }
-        encodeAddrMode(insn, op, pos);
+        encodeEffectiveAddr(insn, op, pos);
         insn.setErrorIf(op, checkAlignment(insn, size, op));
         encodeDisplacement(insn, op, op.offset(insn));
         break;
@@ -469,7 +472,7 @@ Error AsmMc68000::encodeOperand(
             insn.reset();
             return insn.setErrorIf(op, OPERAND_NOT_ALLOWED);
         }
-        encodeAddrMode(insn, op, pos);
+        encodeEffectiveAddr(insn, op, pos);
         encodeBriefExtension(insn, op, op.offset(insn));
         break;
     case M_IMDAT:
@@ -535,7 +538,7 @@ Error AsmMc68000::encodeOperand(
             insn.reset();
             return insn.setErrorIf(op, OPERAND_NOT_ALLOWED);
         }
-        encodeAddrMode(insn, op, pos);
+        encodeEffectiveAddr(insn, op, pos);
         encodeImmediate(insn, op, size);
         break;
     case M_LABEL:
@@ -545,12 +548,14 @@ Error AsmMc68000::encodeOperand(
         if (mode == M_FPMLT) {
             encodeFloatRegisterList(insn, op);
         } else {
-            const auto post_gp = encodeAddrMode(insn, op, pos);
+            const auto post_gp = encodeEffectiveAddr(insn, op, pos);
             if (post_gp >= 0) {
-                insn.embedPostfix(encodeFloatRegNo(op.reg) << post_gp);
+                const auto regx = encodeFloatRegNo(op.reg) << post_gp;
+                insn.embedPostfix(regx);
                 if (insn.dst() == M_NONE) {
                     // Float instruction which omits destination register
-                    insn.embedPostfix(encodeFloatRegNo(op.reg) << postPos(EX_RY));
+                    const auto regy = encodeFloatRegNo(op.reg) << postPos(EX_RY);
+                    insn.embedPostfix(regy);
                 }
             }
         }
@@ -590,7 +595,7 @@ Error AsmMc68000::encodeOperand(
 
 void AsmMc68000::encodeFloatControlList(AsmInsn &insn, const Operand &op) const {
     auto p = op.list;
-    uint8_t n = 0;
+    uint_fast8_t n = 0;
     auto reg = REG_UNDEF;
     for (;;) {
         auto a = p;
@@ -614,19 +619,19 @@ void AsmMc68000::encodeFloatControlList(AsmInsn &insn, const Operand &op) const 
 
 namespace {
 
-void swapRegPos(uint8_t &s, uint8_t &e) {
+void swapRegPos(uint_fast8_t &s, uint_fast8_t &e) {
     const auto t = s;
     s = e;
     e = t;
 }
 
-uint8_t reverseUint8(uint8_t bits) {
+uint_fast8_t reverseUint8(uint_fast8_t bits) {
     bits = (bits & 0x55) << 1 | (bits & 0xAA) >> 1;
     bits = (bits & 0x33) << 2 | (bits & 0xCC) >> 2;
     return bits << 4 | bits >> 4;
 }
 
-uint16_t reverseUint16(uint16_t bits) {
+uint_fast16_t reverseUint16(uint_fast16_t bits) {
     bits = (bits & 0x5555) << 1 | (bits & 0xAAAA) >> 1;
     bits = (bits & 0x3333) << 2 | (bits & 0xCCCC) >> 2;
     bits = (bits & 0x0F0F) << 4 | (bits & 0xF0F0) >> 4;
@@ -636,7 +641,7 @@ uint16_t reverseUint16(uint16_t bits) {
 }  // namespace
 
 void AsmMc68000::encodeFloatRegisterList(AsmInsn &insn, const Operand &op) const {
-    uint8_t bits = 0;
+    uint_fast8_t bits = 0;
     if (op.mode == M_FPREG) {
         bits = 1 << encodeFloatRegPos(op.reg);
     } else {
@@ -658,7 +663,7 @@ void AsmMc68000::encodeFloatRegisterList(AsmInsn &insn, const Operand &op) const
             if (s > e)
                 swapRegPos(s, e);
             for (auto i = s; i <= e; i++) {
-                const uint8_t bm = 1 << i;
+                const uint_fast8_t bm = 1 << i;
                 if (bits & bm)
                     insn.setErrorIf(p, DUPLICATE_REGISTER);
                 bits |= bm;
@@ -672,7 +677,7 @@ void AsmMc68000::encodeFloatRegisterList(AsmInsn &insn, const Operand &op) const
             break;
         }
     }
-    const auto dstMode = EaMc68000::encodeMode(insn.dstOp.mode);
+    const auto dstMode = insn.dstOp.mode;
     if (insn.src() == M_FPMLT && dstMode == M_PDEC)
         bits = reverseUint8(bits);
     insn.embedPostfix(bits);
@@ -682,7 +687,7 @@ void AsmMc68000::encodeFloatRegisterList(AsmInsn &insn, const Operand &op) const
 
 void AsmMc68000::encodeRegisterList(AsmInsn &insn, const Operand &op, bool reverse) const {
     auto p = op.list;
-    uint16_t bits = 0;
+    uint_fast16_t bits = 0;
     for (;;) {
         auto a = p;
         const auto start = parseRegName(a, parser());
@@ -700,7 +705,7 @@ void AsmMc68000::encodeRegisterList(AsmInsn &insn, const Operand &op, bool rever
         if (s > e)
             swapRegPos(s, e);
         for (auto i = s; i <= e; i++) {
-            const uint16_t bm = 1 << i;
+            const uint_fast16_t bm = 1 << i;
             if (bits & bm)
                 insn.setErrorIf(p, DUPLICATE_REGISTER);
             bits |= bm;
@@ -908,9 +913,9 @@ InsnSize AsmInsn::parseInsnSize() {
 
 namespace {
 
-uint64_t convert2pbcd(uint64_t bin, uint8_t digits) {
+uint64_t convert2pbcd(uint64_t bin, uint_fast8_t digits) {
     uint64_t pbcd = 0;
-    uint8_t shift = 0;
+    uint_fast8_t shift = 0;
     while (digits-- > 0) {
         pbcd |= (bin % 10) << shift;
         bin /= 10;
@@ -921,13 +926,13 @@ uint64_t convert2pbcd(uint64_t bin, uint8_t digits) {
 
 }  // namespace
 
-Error AsmInsn::emitExtendedReal(const float80_t &value, uint8_t pos) {
+Error AsmInsn::emitExtendedReal(const float80_t &value, uint_fast8_t pos) {
     emitUint16(value.tag(), pos);
     emitUint16(0, pos + 2);
     return emitUint64(value.significand(), pos + 4);
 }
 
-Error AsmInsn::emitDecimalString(const float80_t &value, uint8_t pos) {
+Error AsmInsn::emitDecimalString(const float80_t &value, uint_fast8_t pos) {
     if (value.isInf()) {
     infinity:
         const auto tag = (value.tag() & float80_t::SGN_MASK) | float80_t::EXP_MASK;

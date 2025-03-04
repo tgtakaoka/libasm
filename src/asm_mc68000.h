@@ -46,7 +46,7 @@ private:
     void encodeFloatControlList(AsmInsn &insn, const Operand &o) const;
     void encodeFloatRegisterList(AsmInsn &insn, const Operand &o) const;
     void encodeRegisterList(AsmInsn &insn, const Operand &op, bool reverse = false) const;
-    int_fast8_t encodeAddrMode(AsmInsn &insn, const Operand &op, OprPos pos) const;
+    int_fast8_t encodeEffectiveAddr(AsmInsn &insn, const Operand &op, OprPos pos) const;
     Error encodeOperand(
             AsmInsn &insn, OprSize size, const Operand &op, AddrMode mode, OprPos pos) const;
 
