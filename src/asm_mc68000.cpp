@@ -379,6 +379,10 @@ Error AsmMc68000::encodeOperand(
     auto val32 = op.val.getUnsigned();
     switch (op.mode) {
     case M_DREG: {
+        if (mode >= M_RMEM) {
+            insn.reset();
+            return insn.setErrorIf(op, OPERAND_NOT_ALLOWED);
+        }
         if (inFloatOperand(insn, mode)) {
             if (size == SZ_DUBL || size == SZ_XTND || size == SZ_PBCD)
                 insn.setErrorIf(op, ILLEGAL_SIZE);
@@ -389,6 +393,10 @@ Error AsmMc68000::encodeOperand(
         break;
     }
     case M_AREG: {
+        if (mode == M_RDATA || mode >= M_WDATA) {
+            insn.reset();
+            return insn.setErrorIf(op, OPERAND_NOT_ALLOWED);
+        }
         const auto post_gp = encodeAddrMode(insn, op, pos);
         if (post_gp >= 0) {
             // MOVES.B An is OK
@@ -399,8 +407,20 @@ Error AsmMc68000::encodeOperand(
         break;
     }
     case M_AIND:
+        encodeAddrMode(insn, op, pos);
+        break;
     case M_PINC:
+        if (mode == M_JADDR || mode == M_DADDR) {
+            insn.reset();
+            return insn.setErrorIf(op, OPERAND_NOT_ALLOWED);
+        }
+        encodeAddrMode(insn, op, pos);
+        break;
     case M_PDEC:
+        if (mode == M_JADDR || mode == M_IADDR) {
+            insn.reset();
+            return insn.setErrorIf(op, OPERAND_NOT_ALLOWED);
+        }
         encodeAddrMode(insn, op, pos);
         break;
     case M_DISP:
@@ -422,11 +442,19 @@ Error AsmMc68000::encodeOperand(
         }
         break;
     case M_PCDSP:
+        if (mode == M_WADDR || mode == M_WDATA || mode == M_WMEM || mode == M_DADDR) {
+            insn.reset();
+            return insn.setErrorIf(op, OPERAND_NOT_ALLOWED);
+        }
         encodeAddrMode(insn, op, pos);
         insn.setErrorIf(op, checkAlignment(insn, size, op));
         encodeDisplacement(insn, op, op.offset(insn));
         break;
     case M_PCIDX:
+        if (mode == M_WADDR || mode == M_WDATA || mode == M_WMEM || mode == M_DADDR) {
+            insn.reset();
+            return insn.setErrorIf(op, OPERAND_NOT_ALLOWED);
+        }
         encodeAddrMode(insn, op, pos);
         encodeBriefExtension(insn, op, op.offset(insn));
         break;
@@ -489,6 +517,10 @@ Error AsmMc68000::encodeOperand(
         }
         /* Fall-through */
     case M_IMFLT:
+        if (mode >= M_WADDR) {
+            insn.reset();
+            return insn.setErrorIf(op, OPERAND_NOT_ALLOWED);
+        }
         encodeAddrMode(insn, op, pos);
         encodeImmediate(insn, op, size);
         break;
