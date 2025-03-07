@@ -393,6 +393,7 @@ extern const char TEXT_SJMP[]  PROGMEM;
 extern const char TEXT_SKP[]   PROGMEM;
 extern const char TEXT_SLA[]   PROGMEM;
 extern const char TEXT_SLL[]   PROGMEM;
+extern const char TEXT_SLP[]   PROGMEM;
 extern const char TEXT_SL[]    PROGMEM;
 extern const char TEXT_SMI[]   PROGMEM;
 extern const char TEXT_SM[]    PROGMEM;

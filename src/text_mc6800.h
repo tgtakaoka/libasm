@@ -188,7 +188,7 @@ extern const char TEXT_BTGL[] PROGMEM;
 using common::TEXT_BTST;
 using common::TEXT_EIM;
 using common::TEXT_OIM;
-extern const char TEXT_SLP[]  PROGMEM;
+using common::TEXT_SLP;
 using common::TEXT_TIM;
 extern const char TEXT_XGDX[] PROGMEM;
 

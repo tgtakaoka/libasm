@@ -24,6 +24,7 @@ namespace z80 {
 
 enum CpuType : uint8_t {
     Z80,
+    Z180,
 };
 
 struct Config : ConfigImpl<CpuType, ADDRESS_16BIT, ADDRESS_BYTE, OPCODE_8BIT, ENDIAN_LITTLE, 4, 5> {
