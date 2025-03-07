@@ -67,7 +67,7 @@ struct Disassembler {
      * Convert |val| as |addrWidth| bit absolute address. Use default configured address width when
      * |addrWdith| is omitted. Output symbol label when |val| is in symbol table.
      */
-    StrBuffer &outAbsAddr(StrBuffer &out, uint32_t val, uint8_t addrWidth = 0) const;
+    virtual StrBuffer &outAbsAddr(StrBuffer &out, uint32_t val, uint8_t addrWidth = 0) const;
 
 private:
     const ValueFormatter _formatter;

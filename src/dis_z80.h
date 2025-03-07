@@ -36,6 +36,7 @@ private:
     void decodeRelative(DisInsn &insn, StrBuffer &out) const;
     void decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) const;
 
+    StrBuffer &outAbsAddr(StrBuffer &out, uint32_t val, uint8_t addrWidth = 0) const override;
     Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) const override;
     const ConfigBase &config() const override { return *this; }
     ConfigSetter &configSetter() override { return *this; }

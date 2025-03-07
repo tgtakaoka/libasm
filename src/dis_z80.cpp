@@ -161,6 +161,12 @@ void DisZ80::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) const {
     }
 }
 
+StrBuffer &DisZ80::outAbsAddr(StrBuffer &out, uint32_t val, uint8_t addrWidth) const {
+    if (val <= UINT16_MAX)
+        addrWidth = ADDRESS_16BIT;
+    return Disassembler::outAbsAddr(out, val, addrWidth);
+}
+
 Error DisZ80::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) const {
     DisInsn insn(_insn, memory, out);
     auto opc = insn.readByte();

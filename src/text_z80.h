@@ -24,7 +24,9 @@ namespace text {
 namespace z80 {
 
 // clang-format off
-extern const char TEXT_CPU_Z80[]    PROGMEM;
+extern const char TEXT_CPU_LIST[] PROGMEM;
+extern const char TEXT_CPU_Z80[]  PROGMEM;
+extern const char TEXT_CPU_Z180[] PROGMEM;
 
 using common::TEXT_ADC;
 using common::TEXT_ADD;
@@ -95,6 +97,18 @@ using common::TEXT_SRA;
 using common::TEXT_SRL;
 using common::TEXT_SUB;
 using common::TEXT_XOR;
+
+// Z180
+extern const char TEXT_MLT[]   PROGMEM;
+using common::TEXT_TST;
+extern const char TEXT_TSTIO[] PROGMEM;
+extern const char TEXT_IN0[]   PROGMEM;
+extern const char TEXT_OTDM[]  PROGMEM;
+extern const char TEXT_OTDMR[] PROGMEM;
+extern const char TEXT_OTIM[]  PROGMEM;
+extern const char TEXT_OTIMR[] PROGMEM;
+extern const char TEXT_OUT0[]  PROGMEM;
+using common::TEXT_SLP;
 
 using common::TEXT_REG_BC;
 using common::TEXT_REG_DE;
