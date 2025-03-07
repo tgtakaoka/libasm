@@ -36,13 +36,23 @@ struct EntryInsn : EntryInsnPostfix<Config, Entry> {
     Config::opcode_t postVal() const { return flags().postVal(); }
 };
 
+struct Indexing {
+    RegName reg;
+    InsnSize size;  // index register size
+    Indexing() : reg(REG_UNDEF), size(ISZ_NONE) {}
+};
+
+struct Displacement {
+    bool none;  // no displacement specified
+    Value value;
+    Displacement() : none(true), value() {}
+};
+
 struct Addressing {
-    Value &disp;
-    RegName &base;
-    RegName &index;
-    InsnSize indexSize;
-    Addressing(Value &val, RegName &reg, RegName &reg2)
-        : disp(val), base(reg), index(reg2), indexSize(ISZ_NONE) {}
+    RegName base;
+    Displacement disp;
+    Indexing index;
+    Addressing() : base(REG_UNDEF) {}
 };
 
 struct Operand final : ErrorAt {
@@ -58,13 +68,7 @@ struct Operand final : ErrorAt {
         RegName kDreg;
     };
     Operand()
-        : mode(M_NONE),
-          val(),
-          reg(REG_UNDEF),
-          reg2(REG_UNDEF),
-          addr(val, reg, reg2),
-          list(),
-          kMode(M_NONE) {}
+        : mode(M_NONE), val(), reg(REG_UNDEF), reg2(REG_UNDEF), addr(), list(), kMode(M_NONE) {}
 };
 
 struct AsmInsn final : AsmInsnImpl<Config>, EntryInsn {

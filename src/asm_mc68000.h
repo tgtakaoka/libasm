@@ -32,15 +32,20 @@ struct AsmMc68000 final : Assembler, Config {
 private:
     const TextOption<Config> _opt_fpu;
 
+    Error parseDisplacement(StrScanner &scan, Displacement &disp, ErrorAt &error, char delim) const;
+    Error parseIndexing(StrScanner &scan, Indexing &index, ErrorAt &error) const;
+    Error parseAddressing(StrScanner &scan, Addressing &addr, ErrorAt &error, char delim) const;
     Error parseOperand(StrScanner &scan, Operand &op) const;
     Error parseKFactor(StrScanner &scan, Operand &op) const;
-    Error checkAlignment(AsmInsn &insn, OprSize size, const Operand &op) const;
+    Error checkAlignment(AsmInsn &insn, OprSize size, const Value &val, const ErrorAt &) const;
 
-    void encodeBriefExtension(AsmInsn &insn, const Operand &op) const;
-    void encodeDisplacement(AsmInsn &insn, const Operand &op) const;
+    void encodeBriefExtension(AsmInsn &insn, const Addressing &addr, const ErrorAt &) const;
+    void encodeDisplacement(AsmInsn &insn, const Addressing &addr, const ErrorAt &) const;
     AddrMode branchType(AddrMode mode, InsnSize size, Config::ptrdiff_t delta) const;
     void encodeRelativeAddr(AsmInsn &insn, AddrMode mode, const Operand &op) const;
     void encodeImmediate(AsmInsn &insn, const Operand &op, OprSize size) const;
+    void encodeAbsoluteMode(AsmInsn &insn, OprSize size, OprPos pos, const Addressing &addr,
+            const ErrorAt &at) const;
     void encodeFloatControlList(AsmInsn &insn, const Operand &o) const;
     void encodeFloatRegisterList(AsmInsn &insn, const Operand &o) const;
     void encodeRegisterList(AsmInsn &insn, const Operand &op, bool reverse = false) const;
