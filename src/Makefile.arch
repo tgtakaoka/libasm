@@ -73,7 +73,7 @@ TGT_tms32010 = tms32010 tms320c25 tms320c26
 TGT_tms7000  = tms7000
 TGT_tms9900  = tms9900 tms9980 tms9995 tms99105 tms99110
 TGT_z8000    = z8001 z8002 z8k1 z8k2
-TGT_z80      = z80
+TGT_z80      = z80 z180
 TGT_z8       = z8 z86c z88
 
 # CPU for each target
@@ -137,6 +137,7 @@ CPU_v30emu_z80syn = V30EMU
 CPU_v30      = V30
 CPU_w65c02s  = W65C02S
 CPU_w65c816  = 65816
+CPU_z180     = Z180
 CPU_z8001    = Z8001
 CPU_z8002    = Z8002
 CPU_z80      = Z80

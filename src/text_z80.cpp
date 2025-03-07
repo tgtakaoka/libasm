@@ -21,7 +21,9 @@ namespace text {
 namespace z80 {
 
 // clang-format off
-constexpr char TEXT_CPU_Z80[]    PROGMEM = "Z80";
+constexpr char TEXT_CPU_LIST[] PROGMEM = "Z80, Z180";
+constexpr char TEXT_CPU_Z80[]  PROGMEM = "Z80";
+constexpr char TEXT_CPU_Z180[] PROGMEM = "Z180";
 
 // constexpr char TEXT_ADC[]  PROGMEM = "ADC";
 // constexpr char TEXT_ADD[]  PROGMEM = "ADD";
@@ -91,6 +93,18 @@ constexpr char TEXT_RETN[] PROGMEM = "RETN";
 // constexpr char TEXT_SRL[]  PROGMEM = "SRL";
 // constexpr char TEXT_SUB[]  PROGMEM = "SUB";
 // constexpr char TEXT_XOR[]  PROGMEM = "XOR";
+
+// Z180
+constexpr char TEXT_MLT[]   PROGMEM = "MLT";
+// constexpr char TEXT_TST[]   PROGMEM = "TST";
+constexpr char TEXT_TSTIO[] PROGMEM = "TSTIO";
+constexpr char TEXT_IN0[]   PROGMEM = "IN0";
+constexpr char TEXT_OTDM[]  PROGMEM = "OTDM";
+constexpr char TEXT_OTDMR[] PROGMEM = "OTDMR";
+constexpr char TEXT_OTIM[]  PROGMEM = "OTIM";
+constexpr char TEXT_OTIMR[] PROGMEM = "OTIMR";
+constexpr char TEXT_OUT0[]  PROGMEM = "OUT0";
+// constexpr char TEXT_SLP[]   PROGMEM = "SLP";
 
 // constexpr char TEXT_REG_BC[]  PROGMEM = "BC";
 // constexpr char TEXT_REG_DE[]  PROGMEM = "DE";

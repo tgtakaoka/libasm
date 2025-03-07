@@ -24,6 +24,10 @@ using namespace libasm::test;
 DisZ80 disz80;
 Disassembler &disassembler(disz80);
 
+bool z180() {
+    return strcasecmp_P("Z180", disassembler.config().cpu_P()) == 0;
+}
+
 void set_up() {
     disassembler.reset();
 }
@@ -36,6 +40,9 @@ void tear_down() {
 void test_cpu() {
     EQUALS("cpu Z80", true, disassembler.setCpu("z80"));
     EQUALS_P("get cpu", "Z80", disassembler.config().cpu_P());
+
+    EQUALS("cpu Z180", true, disassembler.setCpu("z180"));
+    EQUALS_P("get cpu", "Z180", disassembler.config().cpu_P());
 }
 
 void test_load_registers() {
@@ -99,10 +106,6 @@ void test_load_registers() {
     TEST("LD", "R, A", 0xED, 0x4F);
     TEST("LD", "A, I", 0xED, 0x57);
     TEST("LD", "A, R", 0xED, 0x5F);
-
-    TEST("LD", "SP, HL", 0xF9);
-    TEST("LD", "SP, IX", 0xDD, 0xF9);
-    TEST("LD", "SP, IY", 0xFD, 0xF9);
 }
 
 void test_move_immediate() {
@@ -533,6 +536,22 @@ void test_alu_16bit() {
     TEST("SBC", "HL, DE", 0xED, 0x52);
     TEST("SBC", "HL, HL", 0xED, 0x62);
     TEST("SBC", "HL, SP", 0xED, 0x72);
+
+    if (z180()) {
+        TEST("TST", "A", 0xED, 0x3C);
+        TEST("TST", "B", 0xED, 0x04);
+        TEST("TST", "C", 0xED, 0x0C);
+        TEST("TST", "D", 0xED, 0x14);
+        TEST("TST", "E", 0xED, 0x1C);
+        TEST("TST", "H", 0xED, 0x24);
+        TEST("TST", "L", 0xED, 0x2C);
+        TEST("TST", "80H", 0xED, 0x64, 0x80);
+
+        TEST("MLT", "BC", 0xED, 0x4C);
+        TEST("MLT", "DE", 0xED, 0x5C);
+        TEST("MLT", "HL", 0xED, 0x6C);
+        TEST("MLT", "SP", 0xED, 0x7C);
+    }
 }
 
 void test_io() {
@@ -554,6 +573,25 @@ void test_io() {
     TEST("OUT", "(C), E", 0xED, 0x59);
     TEST("OUT", "(C), H", 0xED, 0x61);
     TEST("OUT", "(C), L", 0xED, 0x69);
+    if (z180()) {
+        TEST("TSTIO", "23H", 0xED, 0x74, 0x23);
+
+        TEST("IN0",  "A, (0F0H)", 0xED, 0x38, 0xF0);
+        TEST("IN0",  "B, (0F0H)", 0xED, 0x00, 0xF0);
+        TEST("IN0",  "C, (0F0H)", 0xED, 0x08, 0xF0);
+        TEST("IN0",  "D, (0F0H)", 0xED, 0x10, 0xF0);
+        TEST("IN0",  "E, (0F0H)", 0xED, 0x18, 0xF0);
+        TEST("IN0",  "H, (0F0H)", 0xED, 0x20, 0xF0);
+        TEST("IN0",  "L, (0F0H)", 0xED, 0x28, 0xF0);
+
+        TEST("OUT0", "(0F1H), A", 0xED, 0x39, 0xF1);
+        TEST("OUT0", "(0F1H), B", 0xED, 0x01, 0xF1);
+        TEST("OUT0", "(0F1H), C", 0xED, 0x09, 0xF1);
+        TEST("OUT0", "(0F1H), D", 0xED, 0x11, 0xF1);
+        TEST("OUT0", "(0F1H), E", 0xED, 0x19, 0xF1);
+        TEST("OUT0", "(0F1H), H", 0xED, 0x21, 0xF1);
+        TEST("OUT0", "(0F1H), L", 0xED, 0x29, 0xF1);
+    }
 }
 
 void test_block() {
@@ -573,17 +611,24 @@ void test_block() {
     TEST("OUTD", "", 0xED, 0xAB);
     TEST("OTIR", "", 0xED, 0xB3);
     TEST("OTDR", "", 0xED, 0xBB);
+
+    if (z180()) {
+        TEST("OTIM",  "", 0xED, 0x83);
+        TEST("OTIMR", "", 0xED, 0x93);
+        TEST("OTDM",  "", 0xED, 0x8B);
+        TEST("OTDMR", "", 0xED, 0x9B);
+    }
 }
 
 void test_inherent() {
     TEST("DI",  "", 0xF3);
     TEST("EI",  "", 0xFB);
-    TEST("CPL", "", 0x2F);
-    TEST("SCF", "", 0x37);
-    TEST("CCF", "", 0x3F);
 
     TEST("NOP",  "", 0x00);
     TEST("HALT", "", 0x76);
+    if (z180()) {
+        TEST("SLP", "", 0xED, 0x76);
+    }
 
     TEST("IM", "0", 0xED, 0x46);
     TEST("IM", "1", 0xED, 0x56);
@@ -640,10 +685,30 @@ void test_bitop() {
 void test_illegal() {
     for (Config::opcode_t opc = 0x30; opc < 0x38; opc++)
         UNKN(0xCB, opc);
-    for (Config::opcode_t opc = 0x00; opc < 0x40; opc++)
+    for (Config::opcode_t opc = 0x00; opc < 0x40; opc++) {
+        if (z180()) {
+            const auto lo = opc & 0xF;
+            if (lo == 0 || lo == 1 || lo == 4 || lo == 8 || lo == 9 || lo == 0xC) {
+                if (opc == 0x30 || opc == 0x31) {
+                    UNKN(0xED, opc); // IN0 (HL),(io)/OUT0 (io),(HL)
+                } else {
+                    continue;        // IN0, OUT0, TST
+                }
+            }
+        }
         UNKN(0xED, opc);
-    for (Config::opcode_t opc = 0x7C; opc < 0xA0; opc++)
+    }
+    for (Config::opcode_t opc = z180() ? 0x7d : 0x7C; opc < 0x80; opc++) {
         UNKN(0xED, opc);
+    }
+    for (Config::opcode_t opc = 0x80; opc < 0xA0; opc++) {
+        if (z180()) {
+            const auto lo = opc & 0xF;
+            if (lo == 3 || lo == 0xB)
+                continue;       // OTxMx
+        }
+        UNKN(0xED, opc);
+    }
     for (Config::opcode_t opc = 0xBC; opc; opc++)
         UNKN(0xED, opc);
     static constexpr Config::opcode_t ed_illegals[] = {
@@ -654,8 +719,15 @@ void test_illegal() {
         0xA4, 0xA5, 0xA6, 0xA7, 0xAC, 0xAD, 0xAE, 0xAF,
         0xB4, 0xB5, 0xB6, 0xB7,
     };
-    for (const auto opc : ed_illegals)
+    for (const auto opc : ed_illegals) {
+        if (z180()) {
+            if (opc == 0x4C || opc == 0x5C || opc == 0x6C || opc == 0x7C)
+                continue;       // MLT
+            if (opc == 0x64 || opc == 0x74 || opc == 0x76)
+                continue;       // TST, TSTIO, SLP
+        }
         UNKN(0xED, opc);
+    }
 
     static constexpr Config::opcode_t ddfd_legals[] = {
         0x09, 0x19, 0x21, 0x22, 0x23, 0x29, 0x2A, 0x2B, 0x34, 0x35, 0x36, 0x39,

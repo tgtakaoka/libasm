@@ -185,7 +185,7 @@ constexpr char TEXT_BTGL[] PROGMEM = "BTGL";
 // constexpr char TEXT_BTST[] PROGMEM = "BTST";
 // constexpr char TEXT_EIM[]  PROGMEM = "EIM";
 // constexpr char TEXT_OIM[]  PROGMEM = "OIM";
-constexpr char TEXT_SLP[]  PROGMEM = "SLP";
+// constexpr char TEXT_SLP[]  PROGMEM = "SLP";
 // constexpr char TEXT_TIM[]  PROGMEM = "TIM";
 constexpr char TEXT_XGDX[] PROGMEM = "XGDX";
  

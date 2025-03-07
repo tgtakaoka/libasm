@@ -376,6 +376,36 @@ constexpr uint8_t INDEX_IDXBIT[] PROGMEM = {
       5,  // TEXT_SRA
       6,  // TEXT_SRL
 };
+
+// Z180 ED:xx
+constexpr Entry TABLE_Z180_EXT[] PROGMEM = {
+    E1(0x4C, TEXT_MLT,    M_R16),
+    E1(0x04, TEXT_TST,    M_DST),
+    E1(0x64, TEXT_TST,    M_IM8),
+    E1(0x74, TEXT_TSTIO,  M_IM8),
+    E2(0x00, TEXT_IN0,    M_DR8, M_IOA),
+    E2(0x01, TEXT_OUT0,   M_IOA, M_DR8),
+    E0(0x83, TEXT_OTIM),
+    E0(0x93, TEXT_OTIMR),
+    E0(0x8B, TEXT_OTDM),
+    E0(0x9B, TEXT_OTDMR),
+    E0(0x76, TEXT_SLP),
+};
+
+constexpr uint8_t INDEX_Z180_EXT[] PROGMEM = {
+      4,  // TEXT_IN0
+      0,  // TEXT_MLT
+      8,  // TEXT_OTDM
+      9,  // TEXT_OTDMR
+      6,  // TEXT_OTIM
+      7,  // TEXT_OTIMR
+      5,  // TEXT_OUT0
+     10,  // TEXT_SLP
+      1,  // TEXT_TST
+      2,  // TEXT_TST
+      3,  // TEXT_TSTIO
+};
+
 // clang-format on
 
 using EntryPage = entry::PrefixTableBase<Entry>;
@@ -390,10 +420,22 @@ constexpr EntryPage Z80_PAGES[] PROGMEM = {
         {TableZ80::IYBIT, ARRAY_RANGE(TABLE_IDXBIT), ARRAY_RANGE(INDEX_IDXBIT)},
 };
 
+constexpr EntryPage Z180_PAGES[] PROGMEM = {
+        {0x0000, ARRAY_RANGE(TABLE_Z80), ARRAY_RANGE(INDEX_Z80)},
+        {TableZ80::EXT, ARRAY_RANGE(TABLE_EXT), ARRAY_RANGE(INDEX_EXT)},
+        {TableZ80::EXT, ARRAY_RANGE(TABLE_Z180_EXT), ARRAY_RANGE(INDEX_Z180_EXT)},
+        {TableZ80::BIT, ARRAY_RANGE(TABLE_BIT), ARRAY_RANGE(INDEX_BIT)},
+        {TableZ80::IX, ARRAY_RANGE(TABLE_IDX), ARRAY_RANGE(INDEX_IDX)},
+        {TableZ80::IY, ARRAY_RANGE(TABLE_IDX), ARRAY_RANGE(INDEX_IDX)},
+        {TableZ80::IXBIT, ARRAY_RANGE(TABLE_IDXBIT), ARRAY_RANGE(INDEX_IDXBIT)},
+        {TableZ80::IYBIT, ARRAY_RANGE(TABLE_IDXBIT), ARRAY_RANGE(INDEX_IDXBIT)},
+};
+
 using Cpu = entry::CpuBase<CpuType, EntryPage>;
 
 constexpr Cpu CPU_TABLE[] PROGMEM = {
-        {Z80, TEXT_CPU_Z80, ARRAY_RANGE(Z80_PAGES)},
+        {Z80,  TEXT_CPU_Z80,  ARRAY_RANGE(Z80_PAGES)},
+        {Z180, TEXT_CPU_Z180, ARRAY_RANGE(Z180_PAGES)},
 };
 
 const Cpu *cpu(CpuType cpuType) {
@@ -496,7 +538,7 @@ bool EntryInsn::ixBit() const {
 }
 
 const /*PROGMEM*/ char *TableZ80::listCpu_P() const {
-    return TEXT_CPU_Z80;
+    return TEXT_CPU_LIST;
 }
 
 const /*PROGMEM*/ char *TableZ80::cpuName_P(CpuType cpuType) const {

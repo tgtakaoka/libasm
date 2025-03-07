@@ -84,9 +84,69 @@ test.bin: error: Unknown instruction
             0xfd, 0xcb, 0x80, 0x86, 0xdd, 0xcb, 0x00, 0xef);
 }
 
+void test_asm_z180() {
+    PREP_ASM(z80::AsmZ80, ZilogDirective);
+
+    TestReader inc("data/db.inc");
+    sources.add(inc);
+    inc.add(R"(        defw  1234H, 5678H, 9ABCH
+        defb  'a,', 'bc''de', 0   ; DB requires surrounding quotes
+        defs  2                   ; DS allocate spaces
+data1:  equ   8AH
+data2:  defm  'A', '''', 'C'+80H, 'a''c'
+)");
+
+    driver.setUpperHex(false);
+
+    ASM("z180",
+            R"(        cpu   z180
+; comment line
+        org   0abcdeh
+        include "data/db.inc"
+        res   0, (iy-128)
+        set   7, (ix+127)
+        ld    A, low data2
+)",
+            R"(          0 :                            cpu   z180
+          0 :                    ; comment line
+      abcde :                            org   0abcdeh
+      abcde :                            include "data/db.inc"
+(1)   abcde : 34 12 78 56 bc 9a          defw  1234H, 5678H, 9ABCH
+(1)   abce4 : 61 2c 62 63 27 64          defb  'a,', 'bc''de', 0   ; DB requires surrounding quotes
+      abcea : 65 00
+(1)   abcec :                            defs  2                   ; DS allocate spaces
+(1)   abcee : =8a                data1:  equ   8AH
+(1)   abcee : 41 27 c3 61 27 63  data2:  defm  'A', '''', 'C'+80H, 'a''c'
+      abcf4 : fd cb 80 86                res   0, (iy-128)
+      abcf8 : dd cb 7f fe                set   7, (ix+127)
+      abcfc : 3e ee                      ld    A, low data2
+)");
+}
+
+void test_dis_z180() {
+    PREP_DIS(z80::DisZ80);
+
+    DIS8("z180", 0xabcde,
+            R"(      cpu   z180
+      org   0ABCDEH
+      res   0, (iy-128)
+; test.bin: error: Unknown instruction
+;    ABCE2 : DD CB 00 EF
+)",
+            R"(       0 :                            cpu   z180
+   ABCDE :                            org   0ABCDEH
+   ABCDE : FD CB 80 86                res   0, (iy-128)
+test.bin: error: Unknown instruction
+   ABCE2 : DD CB 00 EF
+)",
+            0xfd, 0xcb, 0x80, 0x86, 0xdd, 0xcb, 0x00, 0xef);
+}
+
 void run_tests() {
     RUN_TEST(test_asm_z80);
     RUN_TEST(test_dis_z80);
+    RUN_TEST(test_asm_z180);
+    RUN_TEST(test_dis_z180);
 }
 
 }  // namespace test

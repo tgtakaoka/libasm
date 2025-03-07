@@ -50,8 +50,10 @@ StrBuffer &DisZ80::outDataReg(StrBuffer &out, RegName reg) const {
 void DisZ80::decodeRelative(DisInsn &insn, StrBuffer &out) const {
     const auto delta = static_cast<int8_t>(insn.readByte());
     const auto base = insn.address() + insn.length();
-    const auto target = base + delta;
-    insn.setErrorIf(out, checkAddr(target));
+    auto target = base + delta;
+    if ((base & ~UINT16_MAX) != (target & ~UINT16_MAX))
+        insn.setErrorIf(out, OVERFLOW_RANGE);
+    target &= UINT16_MAX;
     outRelAddr(out, target, insn.address(), 8);
 }
 
@@ -159,6 +161,12 @@ void DisZ80::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) const {
     default:
         break;
     }
+}
+
+StrBuffer &DisZ80::outAbsAddr(StrBuffer &out, uint32_t val, uint8_t addrWidth) const {
+    if (val <= UINT16_MAX)
+        addrWidth = ADDRESS_16BIT;
+    return Disassembler::outAbsAddr(out, val, addrWidth);
 }
 
 Error DisZ80::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) const {

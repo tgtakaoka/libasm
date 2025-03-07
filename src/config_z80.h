@@ -24,10 +24,15 @@ namespace z80 {
 
 enum CpuType : uint8_t {
     Z80,
+    Z180,
 };
 
 struct Config : ConfigImpl<CpuType, ADDRESS_16BIT, ADDRESS_BYTE, OPCODE_8BIT, ENDIAN_LITTLE, 4, 5> {
     Config(const InsnTable<CpuType> &table) : ConfigImpl(table, Z80) {}
+
+    AddressWidth addressWidth() const override {
+        return cpuType() == Z80 ? ADDRESS_16BIT : ADDRESS_20BIT;
+    }
 };
 
 }  // namespace z80

@@ -390,6 +390,7 @@ constexpr char TEXT_SJMP[]  PROGMEM = "SJMP";
 constexpr char TEXT_SKP[]   PROGMEM = "SKP";
 constexpr char TEXT_SLA[]   PROGMEM = "SLA";
 constexpr char TEXT_SLL[]   PROGMEM = "SLL";
+constexpr char TEXT_SLP[]   PROGMEM = "SLP";
 constexpr char TEXT_SL[]    PROGMEM = "SL";
 constexpr char TEXT_SMI[]   PROGMEM = "SMI";
 constexpr char TEXT_SM[]    PROGMEM = "SM";
