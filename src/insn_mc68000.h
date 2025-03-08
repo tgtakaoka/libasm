@@ -36,10 +36,19 @@ struct EntryInsn : EntryInsnPostfix<Config, Entry> {
     Config::opcode_t postVal() const { return flags().postVal(); }
 };
 
+enum IndexScale : int8_t {
+    SCALE_NONE = -1,
+    SCALE_1 = 0,
+    SCALE_2 = 1,
+    SCALE_4 = 2,
+    SCALE_8 = 3,
+};
+
 struct Indexing {
     RegName reg;
     InsnSize size;  // index register size
-    Indexing() : reg(REG_UNDEF), size(ISZ_NONE) {}
+    IndexScale scale;
+    Indexing() : reg(REG_UNDEF), size(ISZ_NONE), scale(SCALE_NONE) {}
 };
 
 struct Displacement {
@@ -49,10 +58,14 @@ struct Displacement {
 };
 
 struct Addressing {
+    bool indirect;
     RegName base;
-    Displacement disp;
     Indexing index;
-    Addressing() : base(REG_UNDEF) {}
+    Displacement disp;
+    Displacement outer;
+    InsnSize absSize;
+    Addressing() : indirect(false), base(REG_UNDEF), absSize(ISZ_NONE) {}
+    const char *str() const;
 };
 
 struct Operand final : ErrorAt {
