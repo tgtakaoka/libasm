@@ -775,55 +775,88 @@ Error AsmMc68000::parseKFactor(StrScanner &scan, Operand &op) const {
 Error AsmMc68000::parseDisplacement(
         StrScanner &scan, Displacement &disp, ErrorAt &error, char delim) const {
     auto p = scan;
-    if (disp.none) {
-        disp.value = parseInteger(p, error, delim);
-        if (error.hasError())
-            return error.getError();
-        disp.none = false;
+    disp.value = parseInteger(p, error, delim);
+    if (error.hasError())
+        return error.getError();
+    disp.none = false;
+    scan = p;
+    return OK;
+}
+
+Error AsmMc68000::parseIndexScale(
+        StrScanner &scan, Indexing &index, ErrorAt &error, char delim) const {
+    auto p = scan;
+    if (p.skipSpaces().expect('*')) {
+        ErrorAt err;
+        const auto value = parseInteger(p, err, delim);
+        if (err.getError())  // undefined sysmbol is error
+            return error.setError(err);
+        const auto scale = value.getUnsigned();
+        if (scale == 1) {
+            index.scale = SCALE_1;
+        } else if (scale == 2) {
+            index.scale = SCALE_2;
+        } else if (scale == 4) {
+            index.scale = SCALE_4;
+        } else if (scale == 8) {
+            index.scale = SCALE_8;
+        } else {
+            return error.setErrorIf(scan, ILLEGAL_SIZE);
+        }
         scan = p;
-        return OK;
     }
     return OK;
 }
 
-Error AsmMc68000::parseIndexing(StrScanner &scan, Indexing &index, ErrorAt &error) const {
+Error AsmMc68000::parseIndexSuffix(
+        StrScanner &scan, Indexing &index, ErrorAt &error, char delim) const {
     auto p = scan;
-    const auto at = p;
-    const auto reg = parseRegName(p, parser());
-    if (reg == REG_UNDEF)
-        return OK;
-    if (index.reg == REG_UNDEF && isGeneralReg(reg)) {
-        index.reg = reg;
-        index.size = parseSize(p);
-        if (index.size == ISZ_ERROR)
-            return error.setErrorIf(p, ILLEGAL_SIZE);
-        if (index.size == ISZ_NONE)
-            index.size = ISZ_WORD;
-        scan = p;
-        return OK;
-    }
-    return error.setErrorIf(at, REGISTER_NOT_ALLOWED);
+    index.size = parseSize(p);
+    if (index.size == ISZ_ERROR)
+        return error.setErrorIf(p, ILLEGAL_SIZE);
+    if (index.size == ISZ_NONE)
+        index.size = ISZ_WORD;
+    if (parseIndexScale(p, index, error, delim))
+        return error.getError();
+    scan = p;
+    return OK;
 }
 
 Error AsmMc68000::parseAddressing(
         StrScanner &scan, Addressing &addr, ErrorAt &error, char delim) const {
+    const auto indirect = (delim == ']');
     auto p = scan;
     do {
-        if (*p.skipSpaces() == delim)
-            break;
-        if (addr.base == REG_UNDEF) {
-            const auto reg = parseRegName(p, parser());
-            if (isAddrReg(reg) || reg == REG_PC) {
-                addr.base = reg;
-                continue;
-            }
+        const auto at = p;
+        const auto reg = parseRegName(p, parser());
+        if (isAddrReg(reg)) {
+        } else if (isDataReg(reg)) {
+        } else if (reg == REG_PC) {
+        } else if (reg != REG_UNDEF) {
+            return error.setError(at, REGISTER_NOT_ALLOWED);
+        } else if (*p == '[' && !indirect && !addr.indirect) {
+            if (parseAddressing(scan, addr, error, ']'))
+                return error.getError();
+            addr.indirect = true;
+        } else if (addr.disp.none) {
+            parseDisplacement(p, addr.disp, error, delim);
+            if (error.hasError())
+                return error.getError();
         }
-        parseIndexing(p, addr.index, error);
-        parseDisplacement(p, addr.disp, error, delim);
-        if (error.hasError())
-            return error.getError();
     } while (p.skipSpaces().expect(','));
-    scan = p.skipSpaces();
+    if (!p.expect(delim)) {
+        const auto code = indirect ? MISSING_CLOSING_BRACKET : MISSING_CLOSING_PAREN;
+        return error.setErrorIf(p, code);
+    }
+    if (!indirect) {
+        if (!addr.indirect && addr.base == REG_UNDEF && addr.index.reg == REG_UNDEF &&
+                !addr.disp.none) {
+            addr.absSize = parseSize(p.skipSpaces());
+            if (addr.absSize == ISZ_ERROR)
+                return error.setErrorIf(p, ILLEGAL_SIZE);
+        }
+    }
+    scan = p;
     return OK;
 }
 
@@ -885,9 +918,6 @@ Error AsmMc68000::parseOperand(StrScanner &scan, Operand &op) const {
         if (pdec || pinc)
             return op.setErrorIf(at, UNKNOWN_OPERAND);
         if (op.addr.base == REG_UNDEF && !op.addr.disp.none) {
-            op.addr.index.size = parseSize(p.skipSpaces());
-            if (op.addr.index.size == ISZ_ERROR)
-                return op.setErrorIf(p, ILLEGAL_SIZE);
             op.mode = M_ALONG;
             scan = p;
             return OK;
