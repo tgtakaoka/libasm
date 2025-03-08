@@ -341,7 +341,7 @@ void AsmMc68000::encodeImmediate(AsmInsn &insn, const Operand &op, OprSize size)
 
 void AsmMc68000::encodeAbsoluteMode(
         AsmInsn &insn, OprSize size, OprPos pos, const Addressing &addr, const ErrorAt &at) const {
-    auto addrSize = addr.index.size;
+    auto addrSize = addr.absSize;
     auto abs = addr.disp.value.getSigned();
     const auto max = (UINT32_C(1) << addressWidth()) - 1;
     if (!addr.disp.value.overflow(max))
@@ -760,55 +760,150 @@ Error AsmMc68000::parseKFactor(StrScanner &scan, Operand &op) const {
 Error AsmMc68000::parseDisplacement(
         StrScanner &scan, Displacement &disp, ErrorAt &error, char delim) const {
     auto p = scan;
-    if (disp.none) {
-        disp.value = parseInteger(p, error, delim);
-        if (error.hasError())
-            return error.getError();
-        disp.none = false;
+    disp.value = parseInteger(p, error, delim);
+    if (error.hasError())
+        return error.getError();
+    scan = p;
+    return OK;
+}
+
+Error AsmMc68000::parseIndexScale(
+        StrScanner &scan, Indexing &index, ErrorAt &error, char delim) const {
+    auto p = scan;
+    if (p.skipSpaces().expect('*')) {
+        ErrorAt err;
+        const auto value = parseInteger(p, err, delim);
+        if (err.getError())  // undefined sysmbol is error
+            return error.setError(err);
+        const auto scale = value.getUnsigned();
+        if (scale == 1) {
+            index.scale = SCALE_1;
+        } else if (scale == 2) {
+            index.scale = SCALE_2;
+        } else if (scale == 4) {
+            index.scale = SCALE_4;
+        } else if (scale == 8) {
+            index.scale = SCALE_8;
+        } else {
+            return error.setErrorIf(scan, ILLEGAL_SIZE);
+        }
         scan = p;
-        return OK;
     }
     return OK;
 }
 
-Error AsmMc68000::parseIndexing(StrScanner &scan, Indexing &index, ErrorAt &error) const {
+Error AsmMc68000::parseIndexSuffix(
+        StrScanner &scan, Indexing &index, ErrorAt &error, char delim) const {
     auto p = scan;
-    const auto at = p;
-    const auto reg = parseRegName(p, parser());
-    if (reg == REG_UNDEF)
-        return OK;
-    if (index.reg == REG_UNDEF && isGeneralReg(reg)) {
-        index.reg = reg;
-        index.size = parseSize(p);
-        if (index.size == ISZ_ERROR)
-            return error.setErrorIf(p, ILLEGAL_SIZE);
-        if (index.size == ISZ_NONE)
-            index.size = ISZ_WORD;
-        scan = p;
-        return OK;
-    }
-    return error.setErrorIf(at, REGISTER_NOT_ALLOWED);
+    index.size = parseSize(p);
+    if (index.size == ISZ_ERROR)
+        return error.setErrorIf(p, ILLEGAL_SIZE);
+    if (index.size == ISZ_NONE)
+        index.size = ISZ_WORD;
+    if (parseIndexScale(p, index, error, delim))
+        return error.getError();
+    scan = p;
+    return OK;
 }
+
+#if defined(LIBASM_DEBUG_VALUE)
+const char *Addressing::str() const {
+    static char buf[128];
+    StrBuffer out(buf, sizeof(buf));
+    out.letter('(');
+    if (indirect)
+        out.letter('[');
+    const char *delim = "";
+    if (!disp.none) {
+        out.text("disp=").hex(disp.value.getUnsigned(), 8);
+        delim = ",";
+    }
+    if (base != REG_UNDEF) {
+        outRegName(out.text(delim).text("base="), base);
+        delim = ",";
+    }
+    if (index.reg != REG_UNDEF) {
+        outRegName(out.text(delim).text("index="), index.reg);
+        if (index.size != ISZ_NONE)
+            out.letter('.').letter(sizeSuffix(OprSize(index.size)));
+        if (index.scale != SCALE_NONE)
+            out.letter('*').dec(static_cast<uint8_t>(index.scale));
+        delim = ",";
+    }
+    if (indirect)
+        out.letter(']');
+    if (!outer.none)
+        out.text(delim).text("outer=").hex(outer.value.getUnsigned(), 8);
+    out.letter(')');
+    if (absSize != ISZ_NONE)
+        out.letter('.').letter(sizeSuffix(OprSize(absSize)));
+    return out.str();
+}
+#else
+const char *Addressing::str() const {
+    return "";
+}
+#endif
 
 Error AsmMc68000::parseAddressing(
         StrScanner &scan, Addressing &addr, ErrorAt &error, char delim) const {
+    const auto indirect = (delim == ']');
     auto p = scan;
     do {
-        if (*p.skipSpaces() == delim)
-            break;
-        if (addr.base == REG_UNDEF) {
-            const auto reg = parseRegName(p, parser());
-            if (isAddrReg(reg) || reg == REG_PC) {
+        const auto at = p.skipSpaces();
+        const auto reg = parseRegName(p, parser());
+        if (isAddrReg(reg)) {
+            if (addr.base == REG_UNDEF) {
                 addr.base = reg;
-                continue;
+            } else if (addr.index.reg == REG_UNDEF) {
+                addr.index.reg = reg;
+                if (parseIndexSuffix(p, addr.index, error, delim))
+                    return error.getError();
+            } else {
+                return error.setError(at, REGISTER_NOT_ALLOWED);
             }
+        } else if (isDataReg(reg)) {
+            if (addr.index.reg == REG_UNDEF) {
+                addr.index.reg = reg;
+                if (parseIndexSuffix(p, addr.index, error, delim))
+                    return error.getError();
+            } else {
+                return error.setError(at, REGISTER_NOT_ALLOWED);
+            }
+        } else if (reg == REG_PC) {
+            if (addr.base == REG_UNDEF) {
+                addr.base = reg;
+            } else {
+                return error.setError(at, REGISTER_NOT_ALLOWED);
+            }
+        } else if (reg != REG_UNDEF) {
+            return error.setError(at, REGISTER_NOT_ALLOWED);
+        } else if (!indirect && !addr.indirect && p.expect('[')) {
+            if (parseAddressing(p, addr, error, ']'))
+                return error.getError();
+            addr.indirect = true;
+        } else {
+            auto &disp = addr.indirect ? addr.outer : addr.disp;
+            if (!disp.none)
+                return error.setErrorIf(at, UNKNOWN_OPERAND);
+            if (parseDisplacement(p, disp, error, delim))
+                return error.getError();
+            disp.none = false;
         }
-        parseIndexing(p, addr.index, error);
-        parseDisplacement(p, addr.disp, error, delim);
-        if (error.hasError())
-            return error.getError();
     } while (p.skipSpaces().expect(','));
-    scan = p.skipSpaces();
+    if (!p.expect(delim)) {
+        const auto code = indirect ? MISSING_CLOSING_BRACKET : MISSING_CLOSING_PAREN;
+        return error.setErrorIf(p, code);
+    }
+    if (!indirect) {
+        if (!addr.indirect && addr.base == REG_UNDEF && addr.index.reg == REG_UNDEF &&
+                !addr.disp.none) {
+            addr.absSize = parseSize(p.skipSpaces());
+            if (addr.absSize == ISZ_ERROR)
+                return error.setErrorIf(p, ILLEGAL_SIZE);
+        }
+    }
+    scan = p;
     return OK;
 }
 
@@ -849,8 +944,6 @@ Error AsmMc68000::parseOperand(StrScanner &scan, Operand &op) const {
         parseAddressing(p, op.addr, op, ')');
         if (op.hasError())
             return op.getError();
-        if (!p.expect(')'))
-            return op.setErrorIf(p, MISSING_CLOSING_PAREN);
         if (!pdec)
             at = p;
         const auto pinc = p.expect('+');
@@ -870,9 +963,6 @@ Error AsmMc68000::parseOperand(StrScanner &scan, Operand &op) const {
         if (pdec || pinc)
             return op.setErrorIf(at, UNKNOWN_OPERAND);
         if (op.addr.base == REG_UNDEF && !op.addr.disp.none) {
-            op.addr.index.size = parseSize(p.skipSpaces());
-            if (op.addr.index.size == ISZ_ERROR)
-                return op.setErrorIf(p, ILLEGAL_SIZE);
             op.mode = M_ALONG;
             scan = p;
             return OK;

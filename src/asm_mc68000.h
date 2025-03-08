@@ -33,7 +33,8 @@ private:
     const TextOption<Config> _opt_fpu;
 
     Error parseDisplacement(StrScanner &scan, Displacement &disp, ErrorAt &error, char delim) const;
-    Error parseIndexing(StrScanner &scan, Indexing &index, ErrorAt &error) const;
+    Error parseIndexScale(StrScanner &scan, Indexing &index, ErrorAt &error, char delim) const;
+    Error parseIndexSuffix(StrScanner &scan, Indexing &index, ErrorAt &error, char delim) const;
     Error parseAddressing(StrScanner &scan, Addressing &addr, ErrorAt &error, char delim) const;
     Error parseOperand(StrScanner &scan, Operand &op) const;
     Error parseKFactor(StrScanner &scan, Operand &op) const;
