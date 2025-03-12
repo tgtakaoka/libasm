@@ -309,12 +309,12 @@ template <typename Conf, typename Entry>
 struct EntryInsnPrefix : virtual EntryInsnBase<Conf, Entry> {
     EntryInsnPrefix() : _prefix(0) {}
     using opcode_t = typename Conf::opcode_t;
-    void setPrefix(opcode_t prefix) { _prefix = prefix; }
+    void setPrefix(uint16_t prefix) { _prefix = prefix; }
     bool hasPrefix() const { return _prefix != 0; }
-    opcode_t prefix() const { return _prefix; }
+    uint16_t prefix() const { return _prefix; }
 
 private:
-    opcode_t _prefix;
+    uint16_t _prefix;
 };
 
 template <typename Conf, typename Entry>

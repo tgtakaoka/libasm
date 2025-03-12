@@ -66,15 +66,15 @@ protected:
  */
 template <typename ENTRY>
 struct PrefixTableBase : TableBase<ENTRY> {
-    constexpr PrefixTableBase(uint8_t prefix, const /* PROGMEM */ ENTRY *head_P,
+    constexpr PrefixTableBase(uint16_t prefix, const /* PROGMEM */ ENTRY *head_P,
             const /* PROGMEM */ ENTRY *tail_P, const /* PROGMEM */ uint8_t *index_P,
             const /* PROGMEM */ uint8_t *itail_P)
         : TableBase<ENTRY>(head_P, tail_P, index_P, itail_P), _prefix_P(prefix) {}
 
-    uint8_t readPrefix() const { return pgm_read_byte(&_prefix_P); }
+    uint16_t readPrefix() const { return pgm_read_word(&_prefix_P); }
 
 private:
-    const /* PROGMEM */ uint8_t _prefix_P;
+    const /* PROGMEM */ uint16_t _prefix_P;
 };
 
 /**
@@ -109,7 +109,7 @@ struct CpuBase {
             const /* PROGMEM */ ENTRY_PAGE *head_P, const /* PROGMEM */ ENTRY_PAGE *tail_P)
         : _pages(head_P, tail_P), _cpuType_P(cpuType), _name_P(name_P) {}
 
-    bool isPrefix(uint8_t code) const {
+    bool isPrefix(uint16_t code) const {
         const auto *tail = _pages.readTail();
         for (const auto *page = _pages.readHead(); page < tail; page++) {
             const auto prefix = page->readPrefix();
