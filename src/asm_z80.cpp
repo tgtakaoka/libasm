@@ -57,22 +57,111 @@ AsmZ80::AsmZ80(const ValueParser::Plugins &plugins)
     reset();
 }
 
-void AsmZ80::encodeRelative(AsmInsn &insn, const Operand &op) const {
-    const auto base = insn.address() + 2;
-    const auto target = op.getError() ? base : op.val.getUnsigned();
-    const auto delta = branchDelta(base, target, insn, op);
-    if (overflowDelta(delta, 8))
-        insn.setErrorIf(op, OPERAND_TOO_FAR);
-    insn.emitOperand8(delta);
+void AsmZ80::encodeRelative(AsmInsn &insn, const Operand &op, AddrMode mode) const {
+    const auto deltaLen = (mode == M_REL8) ? 1 : 2;
+    uint32_t base = insn.address() + insn.operandPos() + deltaLen;
+    if (insn.src() == M_IM8) {
+        base += 1;
+    } else if (insn.src() == M_IM16) {
+        base += 2;
+    } else if (insn.src() == M_EPU) {
+        base += 4;
+    }
+    uint32_t target = 0;
+    int32_t delta = 0;
+    if (mode == M_PCDX) {
+        delta = op.val.getSigned();
+        target = base + delta;
+        mode = M_REL16;
+    } else {
+        target = op.getError() ? base : op.val.getUnsigned();
+        delta = branchDelta(base, target, insn, op);
+    }
+    if ((base & ~UINT16_MAX) != (target & ~UINT16_MAX))
+        insn.setErrorIf(op, OVERFLOW_RANGE);
+    if (mode == M_REL8) {
+        if (overflowDelta(delta, 8))
+            insn.setErrorIf(op, OPERAND_TOO_FAR);
+        insn.emitOperand8(delta);
+    } else if (mode == M_REL16) {
+        if (overflowDelta(delta, 16))
+            insn.setErrorIf(op, OPERAND_TOO_FAR);
+        insn.emitOperand16(delta);
+    }
 }
 
+void AsmZ80::encodeAbsolute(AsmInsn &insn, const Operand &op) const {
+    if (op.val.overflow(UINT16_MAX))
+        insn.setErrorIf(op, OVERFLOW_RANGE);
+    insn.emitOperand16(op.val.getUnsigned());
+}
+
+void AsmZ80::encodeMemoryPointer(AsmInsn &insn, const Operand &op) const {
+    if (op.mode == M_ABS) {
+        insn.embed(0x10);
+        encodeAbsolute(insn, op);
+    }
+}
+
+namespace {
 void encodeIndexReg(AsmInsn &insn, RegName ixReg) {
-    if (insn.ixBit()) {
-        const auto prefix = (ixReg == REG_IX) ? TableZ80::IXBIT : TableZ80::IYBIT;
-        insn.setPrefix(prefix);
+    const auto ix = (ixReg == REG_IX) ? TableZ80::IX : TableZ80::IY;
+    auto prefix = insn.prefix();
+    if (prefix < 0x100) {
+        prefix = ix;
     } else {
-        const auto prefix = (ixReg == REG_IX) ? TableZ80::IX : TableZ80::IY;
-        insn.setPrefix(prefix);
+        prefix &= 0xFF;
+        prefix |= (ix << 8);
+    }
+    insn.setPrefix(prefix);
+}
+}  // namespace
+
+void AsmZ80::encodeLongIndex(AsmInsn &insn, const Operand &op) const {
+    if (op.val.overflowInt16())
+        insn.setErrorIf(op, OVERFLOW_RANGE);
+    insn.embed(op.reg == REG_IX ? 0x00 : 0x10);
+    insn.emitOperand16(op.val.getUnsigned());
+}
+
+void AsmZ80::encodeBaseIndex(AsmInsn &insn, const Operand &op, AddrMode mode) const {
+    if (op.reg == REG_SP) {
+        if (op.val.overflowUint16())
+            insn.setErrorIf(op, OVERFLOW_RANGE);
+        insn.emitOperand16(op.val.getUnsigned());
+    } else {
+        const auto type = (op.reg == REG_HL) ? (op.idx == REG_IX ? 1 : 2) : 3;
+        if (mode == M_BIXH) {
+            insn.embed(type << 3);
+        } else {
+            insn.embed(type);
+        }
+    }
+}
+
+void AsmZ80::encodePointerIndex(AsmInsn &insn, const Operand &op, AddrMode mode) const {
+    if (op.mode == M_REL16 || op.mode == M_PCDX) {
+        encodeRelative(insn, op, op.mode);
+    } else {
+        if (op.val.overflowUint16())
+            insn.setErrorIf(op, OVERFLOW_RANGE);
+        const auto type = (op.reg == REG_HL) ? 3 : (op.reg == REG_IX ? 1 : 2);
+        if (mode == M_PIXH) {
+            insn.embed(type << 3);
+        } else {
+            insn.embed(type);
+        }
+        insn.emitOperand16(op.val.getUnsigned());
+    }
+}
+
+void AsmZ80::encodeFullIndex(AsmInsn &insn, const Operand &op) const {
+    if (op.mode == M_BDX || op.mode == M_SPDX) {
+        encodeBaseIndex(insn, op, M_BIXH);
+    } else if (op.mode == M_IDX8 || op.mode == M_IDX16 || op.mode == M_PDX || op.mode == M_REL16 ||
+               op.mode == M_PCDX) {
+        insn.embed(0x20);
+        encodePointerIndex(insn, op, M_PIXH);
     }
 }
 
@@ -92,6 +181,7 @@ void AsmZ80::encodeOperand(
         insn.emitOperand8(val16);
         break;
     case M_IDX:
+    case M_IDX8:
         if (op.val.overflowInt8())
             insn.setErrorIf(op, OVERFLOW_RANGE);
         insn.emitOperand8(val16);
@@ -100,12 +190,36 @@ void AsmZ80::encodeOperand(
     case I_IDX:
         encodeIndexReg(insn, op.reg);
         break;
+    case R_DXY:
+    case R_SXY:
+        if (op.reg == REG_IXL || op.reg == REG_IYL)
+            insn.embed(mode == R_DXY ? 8 : 1);
+        encodeIndexReg(insn, (op.reg == REG_IXH || op.reg == REG_IXL) ? REG_IX : REG_IY);
+        break;
+    case M_IDX16:
+        encodeLongIndex(insn, op);
+        break;
+    case M_MPTR:
+        encodeMemoryPointer(insn, op);
+        break;
+    case M_BIXH:
+    case M_BIXL:
+        encodeBaseIndex(insn, op, mode);
+        break;
+    case M_PIXH:
+    case M_PIXL:
+        encodePointerIndex(insn, op, mode);
+        break;
+    case M_FIDX:
+        encodeFullIndex(insn, op);
+        break;
     case M_IM16:
     case M_ABS:
         insn.emitOperand16(val16);
         break;
-    case M_REL:
-        return encodeRelative(insn, op);
+    case M_REL8:
+    case M_REL16:
+        return encodeRelative(insn, op, mode);
     case M_CC4:
     case M_CC8:
         insn.embed(static_cast<uint8_t>(val16) << 3);
@@ -115,6 +229,8 @@ void AsmZ80::encodeOperand(
         insn.embed(encodePointerReg(op.reg) << 4);
         break;
     case M_R16X:
+        if (op.reg == REG_HL)
+            insn.setErrorIf(op, REGISTER_NOT_ALLOWED);
         insn.embed(encodePointerRegIx(op.reg, other.reg) << 4);
         break;
     case M_STK:
@@ -123,12 +239,20 @@ void AsmZ80::encodeOperand(
     case I_PTR:
         insn.embed(encodeIndirectBase(op.reg) << 4);
         break;
-    case M_SRC:
+    case M_SR8X:
+        if (op.reg == REG_H || op.reg == REG_L)
+            insn.setErrorIf(op, REGISTER_NOT_ALLOWED);
+        // Fall-though
     case M_SR8:
+    case M_SRC:
         insn.embed(encodeDataReg(op.reg));
         break;
-    case M_DST:
+    case M_DR8X:
+        if (op.reg == REG_H || op.reg == REG_L)
+            insn.setErrorIf(op, REGISTER_NOT_ALLOWED);
+        // Fall-though
     case M_DR8:
+    case M_DST:
         insn.embed(encodeDataReg(op.reg) << 3);
         break;
     case R_R:
@@ -156,16 +280,26 @@ void AsmZ80::encodeOperand(
         case 2:
             insn.embed(3 << 3);
             break;
+        case 3:
+            if (z280()) {
+                insn.embed(1 << 3);
+                break;
+            }
+            // Fall-through
         default:
             insn.setErrorIf(op, ILLEGAL_OPERAND);
             break;
         }
+        break;
+    case M_EPU:
+        insn.emitOperand32(op.val.getUnsigned());
+        break;
     default:
         break;
     }
 }
 
-Error AsmZ80::parseOperand(StrScanner &scan, Operand &op) const {
+Error AsmZ80::parseOperand(StrScanner &scan, Operand &op, const AsmInsn &insn) const {
     auto p = scan.skipSpaces();
     op.setAt(p);
     if (endOfLine(p))
@@ -197,6 +331,12 @@ Error AsmZ80::parseOperand(StrScanner &scan, Operand &op) const {
         case REG_IY:
             op.mode = R_IDX;
             break;
+        case REG_IXH:
+        case REG_IXL:
+        case REG_IYH:
+        case REG_IYL:
+            op.mode = R_DXY;
+            break;
         case REG_I:
             op.mode = R_I;
             break;
@@ -206,8 +346,6 @@ Error AsmZ80::parseOperand(StrScanner &scan, Operand &op) const {
         case REG_B:
         case REG_D:
         case REG_E:
-        case REG_H:
-        case REG_L:
             op.mode = M_SR8;
             break;
         default:
@@ -215,6 +353,14 @@ Error AsmZ80::parseOperand(StrScanner &scan, Operand &op) const {
             break;
         }
         scan = p;
+        return OK;
+    }
+    if (z280() && p.expect('<')) {
+        op.val = parseInteger(p.skipSpaces(), op, '>');
+        if (!p.skipSpaces().expect('>'))
+            return op.setErrorIf(p, MISSING_CLOSING_DELIMITER);
+        scan = p;
+        op.mode = M_REL16;
         return OK;
     }
     if (p.expect('(')) {
@@ -252,16 +398,42 @@ Error AsmZ80::parseOperand(StrScanner &scan, Operand &op) const {
             return OK;
         }
         if (*p == '+' || *p == '-') {
-            if (op.reg == REG_IX || op.reg == REG_IY) {
+            auto idxp = p;
+            idxp++;
+            op.idx = parseRegName(idxp.skipSpaces(), parser());
+            if (op.idx == REG_UNDEF) {
                 op.val = parseInteger(p, op, ')');
                 if (op.hasError())
                     return op.getError();
-                if (!p.skipSpaces().expect(')'))
-                    return op.setError(p, MISSING_CLOSING_PAREN);
-                scan = p;
-                op.mode = M_IDX;
-                return OK;
+                if (isIndexReg(op.reg)) {
+                    op.mode = z80() ? M_IDX8 : (op.val.overflowInt8() ? M_IDX16 : M_IDX8);
+                } else if (op.reg == REG_HL) {
+                    op.mode = M_PDX;
+                } else if (op.reg == REG_SP) {
+                    op.mode = M_SPDX;
+                } else if (op.reg == REG_PC) {
+                    op.mode = M_PCDX;
+                } else {
+                    return op.setErrorIf(regp, REGISTER_NOT_ALLOWED);
+                }
+            } else {
+                if (*p == '-')
+                    return op.setErrorIf(p, UNKNOWN_OPERAND);
+                if (op.reg == REG_HL && isIndexReg(op.idx)) {
+                    op.mode = M_BDX;
+                } else if (op.reg == REG_IX && op.idx == REG_IY) {
+                    op.mode = M_BDX;
+                } else if (op.reg == REG_HL || op.reg == REG_IX) {
+                    return op.setErrorIf(idxp, REGISTER_NOT_ALLOWED);
+                } else {
+                    return op.setErrorIf(regp, REGISTER_NOT_ALLOWED);
+                }
+                p = idxp;
             }
+            if (!p.skipSpaces().expect(')'))
+                return op.setError(p, MISSING_CLOSING_PAREN);
+            scan = p;
+            return OK;
         }
         return op.setError(UNKNOWN_OPERAND);
     }
@@ -298,10 +470,10 @@ uint_fast8_t AsmInsn::operandPos() const {
 
 Error AsmZ80::encodeImpl(StrScanner &scan, Insn &_insn) const {
     AsmInsn insn(_insn);
-    if (parseOperand(scan, insn.dstOp) && insn.dstOp.hasError())
+    if (parseOperand(scan, insn.dstOp, insn) && insn.dstOp.hasError())
         return _insn.setError(insn.dstOp);
     if (scan.skipSpaces().expect(',')) {
-        if (parseOperand(scan, insn.srcOp) && insn.srcOp.hasError())
+        if (parseOperand(scan, insn.srcOp, insn) && insn.srcOp.hasError())
             return _insn.setError(insn.srcOp);
         scan.skipSpaces();
     }
