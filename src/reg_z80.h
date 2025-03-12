@@ -32,26 +32,34 @@ enum RegName : int8_t {
     REG_UNDEF = -1,
     // 16-bit registers
     // Pointer registers
-    REG_BC = 0 + 0,
-    REG_DE = 1 + 0,
-    REG_HL = 2 + 0,
-    REG_SP = 3 + 0,
-    REG_IX = 4 + 0,
-    REG_IY = 5 + 0,
-    REG_AF = 6 + 0,
-    REG_AFP = 7 + 0,
+    REG_BC = 0,
+    REG_DE = 1,
+    REG_HL = 2,
+    REG_SP = 3,
+    REG_IX = 4,
+    REG_IY = 5,
+    REG_AF = 6,
+    REG_AFP = 7,
+    REG_USP = 8,  // Z280
+    REG_PC = 9,   // Z280
     // 8-bit registers
     // Data registers
-    REG_B = 0 + 8,
-    REG_C = 1 + 8,
-    REG_D = 2 + 8,
-    REG_E = 3 + 8,
-    REG_H = 4 + 8,
-    REG_L = 5 + 8,
-    REG_A = 7 + 8,
+    REG_B = 10,
+    REG_C = 11,
+    REG_D = 12,
+    REG_E = 13,
+    REG_H = 14,
+    REG_L = 15,
+    REG_A = 17,    // Missing 16 is (HL)
+    REG_IXH = 18,  // Z280
+    REG_IXL = 19,  // Z280
+    REG_IYH = 20,  // Z280
+    REG_IYL = 21,  // Z280
+    // 32-bit regitsers
+    REG_DEHL = 22,  // Z280
     // Other registers
-    REG_I = 0 + 16,
-    REG_R = 1 + 16,
+    REG_I = 23,
+    REG_R = 24,
 };
 
 enum CcName : int8_t {
@@ -64,6 +72,12 @@ enum CcName : int8_t {
     CC_PE = 5,
     CC_P = 6,
     CC_M = 7,
+    // alias (Z280)
+    CC_alias = 8,
+    CC_NV = CC_PO + CC_alias,
+    CC_V = CC_PE + CC_alias,
+    CC_NS = CC_P + CC_alias,
+    CC_S = CC_M + CC_alias,
 };
 
 namespace reg {
@@ -86,6 +100,7 @@ RegName decodeIndirectBase(uint8_t num);
 CcName parseCcName(StrScanner &scan, const ValueParser &parser);
 StrBuffer &outCcName(StrBuffer &out, CcName cc);
 bool isCc4Name(CcName name);
+bool isCcAlias(CcName name);
 uint8_t encodeCcName(CcName name);
 CcName decodeCcName(uint8_t num);
 
