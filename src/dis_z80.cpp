@@ -35,38 +35,63 @@ StrBuffer &DisZ80::outIndirectReg(StrBuffer &out, RegName reg) const {
     return outRegName(out.letter('('), reg).letter(')');
 }
 
-StrBuffer &DisZ80::outIndexOffset(StrBuffer &out, int8_t offset) const {
-    if (offset >= 0)
-        out.letter('+');
-    return outDec(out, offset, -8);
-}
-
 StrBuffer &DisZ80::outDataReg(StrBuffer &out, RegName reg) const {
     if (reg == REG_HL)
         return outIndirectReg(out, reg);
     return outRegName(out, reg);
 }
 
-void DisZ80::decodeRelative(DisInsn &insn, StrBuffer &out) const {
-    const auto delta = static_cast<int8_t>(insn.readByte());
-    const auto base = insn.address() + insn.length();
-    auto target = base + delta;
-    if ((base & ~UINT16_MAX) != (target & ~UINT16_MAX))
+void DisZ80::decodeAbsolute(DisInsn &insn, StrBuffer &out) const {
+    outAbsAddr(out.letter('('), insn.readUint16()).letter(')');
+}
+
+void DisZ80::decodeRelative(DisInsn &insn, StrBuffer &out, AddrMode mode) const {
+    int_fast8_t bits = 0;
+    int32_t delta = 0;
+    if (mode == M_REL8) {
+        bits = 8;
+        delta = static_cast<int8_t>(insn.readByte());
+    } else if (mode == M_REL16) {
+        bits = 16;
+        delta = static_cast<int16_t>(insn.readUint16());
+    }
+    uint32_t base = insn.address() + insn.length();
+    if (insn.src() == M_IM8) {
+        base += 1;              // <rel16>, im8
+    } else if (insn.src() == M_IM16) {
+        base += 2;              // <rel16>, im16
+    } else if (insn.src() == M_EPU) {
+        base += 4;              // <rel16>, EPU template
+    }
+    uint32_t target = base + delta;
+    if ((base & ~UINT16_MAX) != (target & ~UINT16_MAX)) {
         insn.setErrorIf(out, OVERFLOW_RANGE);
-    target &= UINT16_MAX;
-    outRelAddr(out, target, insn.address(), 8);
+        if (z280()) {
+            target &= UINT32_C(0xFFFFFF);
+        } else if (z180()) {
+            target &= UINT32_C(0xFFFFF);
+        } else {
+            target &= UINT16_MAX;
+        }
+    }
+    insn.setErrorIf(out, checkAddr(target));
+    if (z280() && mode == M_REL16)
+        out.letter('<');
+    outRelAddr(out, target, insn.address(), bits);
+    if (z280() && mode == M_REL16)
+        out.letter('>');
 }
 
 namespace {
 RegName decodeIndexReg(uint16_t prefix) {
-    if (prefix == TableZ80::IX || prefix == TableZ80::IXBIT)
+    if (prefix == TableZ80::IX || prefix == TableZ80::IXEXT || prefix == TableZ80::IXBIT)
         return REG_IX;
-    if (prefix == TableZ80::IY || prefix == TableZ80::IYBIT)
+    if (prefix == TableZ80::IY || prefix == TableZ80::IYEXT || prefix == TableZ80::IYBIT)
         return REG_IY;
     return REG_UNDEF;
 }
 
-RegName decodePointerReg(uint8_t num, uint16_t prefix) {
+RegName decodePointerReg(uint_fast8_t num, uint16_t prefix) {
     const auto name = RegName(num & 3);
     if (name == REG_HL) {
         const auto ix = decodeIndexReg(prefix);
@@ -74,7 +99,68 @@ RegName decodePointerReg(uint8_t num, uint16_t prefix) {
     }
     return name;
 }
+
+uint_fast8_t decodeInterruptMode(uint_fast8_t opc) {
+    static const uint8_t MODE[] = {0, 3, 1, 2};
+    return MODE[(opc >> 3) & 3];
+}
 }  // namespace
+
+void DisZ80::decodeShortIndex(DisInsn &insn, StrBuffer &out, RegName base) const {
+    const auto disp = insn.ixBit() ? insn.ixoff : static_cast<int8_t>(insn.readByte());
+    outRegName(out.letter('('), base);
+    if (disp >= 0)
+        out.letter('+');
+    outDec(out, disp, -8).letter(')');
+}
+
+void DisZ80::decodeLongIndex(DisInsn &insn, StrBuffer &out, RegName base) const {
+    const auto disp = static_cast<int16_t>(insn.readUint16());
+    outRegName(out.letter('('), base);
+    if (disp >= 0)
+        out.letter('+');
+    outHex(out, disp, -16).letter(')');
+}
+
+void DisZ80::decodeMemoryPointer(DisInsn &insn, StrBuffer &out) const {
+    if (insn.opCode() & 0x10) {
+        decodeAbsolute(insn, out);
+    } else {
+        outIndirectReg(out, REG_HL);
+    }
+}
+
+void DisZ80::decodeBaseIndex(DisInsn &insn, StrBuffer &out, AddrMode mode) const {
+    const auto opc = insn.opCode();
+    const auto type = (mode == M_BIXL ? opc : (opc >> 3)) & 3;
+    if (type == 0) {
+        decodeLongIndex(insn, out, REG_SP);
+    } else {
+        static constexpr RegName BASE[] = {REG_SP, REG_HL, REG_HL, REG_IX};
+        static constexpr RegName INDEX[] = {REG_UNDEF, REG_IX, REG_IY, REG_IY};
+        outRegName(out.letter('('), BASE[type]);
+        outRegName(out.letter('+'), INDEX[type]).letter(')');
+    }
+}
+
+void DisZ80::decodePointerIndex(DisInsn &insn, StrBuffer &out, AddrMode mode) const {
+    const auto opc = insn.opCode();
+    const auto type = (mode == M_PIXL ? opc : (opc >> 3)) & 3;
+    if (type == 0) {
+        decodeRelative(insn, out, M_REL16);
+    } else {
+        static constexpr RegName BASE[] = {REG_UNDEF, REG_IX, REG_IY, REG_HL};
+        decodeLongIndex(insn, out, BASE[type]);
+    }
+}
+
+void DisZ80::decodeFullIndex(DisInsn &insn, StrBuffer &out) const {
+    if (insn.opCode() & 0x20) {
+        decodePointerIndex(insn, out, M_PIXH);
+    } else {
+        decodeBaseIndex(insn, out, M_BIXH);
+    }
+}
 
 void DisZ80::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) const {
     auto opc = insn.opCode();
@@ -85,17 +171,36 @@ void DisZ80::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) const {
     case M_IM16:
         outHex(out, insn.readUint16(), 16);
         break;
+    case M_EPU:
+        outHex(out, insn.readUint32(), 32);
+        break;
     case M_ABS:
-        out.letter('(');
-        outAbsAddr(out, insn.readUint16()).letter(')');
+        decodeAbsolute(insn, out);
         break;
     case M_IOA:
         out.letter('(');
         outHex(out, insn.readByte(), 8).letter(')');
         break;
     case M_IDX:
-        outRegName(out.letter('('), decodeIndexReg(insn.prefix()));
-        outIndexOffset(out, insn.ixBit() ? insn.ixoff : insn.readByte()).letter(')');
+    case M_IDX8:
+        decodeShortIndex(insn, out, decodeIndexReg(insn.prefix()));
+        break;
+    case M_IDX16:
+        decodeLongIndex(insn, out, (opc & 0x10) == 0 ? REG_IX : REG_IY);
+        break;
+    case M_MPTR:
+        decodeMemoryPointer(insn, out);
+        break;
+    case M_BIXH:
+    case M_BIXL:
+        decodeBaseIndex(insn, out, mode);
+        break;
+    case M_PIXH:
+    case M_PIXL:
+        decodePointerIndex(insn, out, mode);
+        break;
+    case M_FIDX:
+        decodeFullIndex(insn, out);
         break;
     case M_CC4:
         outCcName(out, decodeCcName((opc >> 3) & 3));
@@ -103,10 +208,13 @@ void DisZ80::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) const {
     case M_CC8:
         outCcName(out, decodeCcName(opc >> 3));
         break;
-    case M_REL:
-        decodeRelative(insn, out);
+    case M_REL8:
+    case M_REL16:
+        decodeRelative(insn, out, mode);
         break;
     case M_R16:
+        outRegName(out, decodePointerReg(opc >> 4, 0));
+        break;
     case M_NOHL:
     case M_R16X:
         outRegName(out, decodePointerReg(opc >> 4, insn.prefix()));
@@ -116,10 +224,12 @@ void DisZ80::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) const {
         break;
     case M_SRC:
     case M_SR8:
+    case M_SR8X:
         outDataReg(out, decodeDataReg(opc));
         break;
     case M_DST:
     case M_DR8:
+    case M_DR8X:
         outDataReg(out, decodeDataReg(opc >> 3));
         break;
     case M_VEC:
@@ -129,22 +239,35 @@ void DisZ80::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) const {
         outHex(out, (opc >> 3) & 7, 3);
         break;
     case M_IMMD:
-        opc = (opc >> 3) & 3;
-        if (opc)
-            opc--;
-        out.letter(opc + '0');
+        opc = decodeInterruptMode(opc);
+        if (z80() && opc == 3) {
+            insn.setErrorIf(UNKNOWN_INSTRUCTION);
+        } else {
+            out.letter(opc + '0');
+        }
         break;
     case R_IDX:
         outRegName(out, decodeIndexReg(insn.prefix()));
         break;
+    case R_DXY:
+    case R_SXY: {
+        const auto ix = decodeIndexReg(insn.prefix());
+        const auto hilo = (opc & (mode == R_DXY ? 8 : 1)) ? 'L' : 'H';
+        outRegName(out, ix).letter(hilo);
+        break;
+    }
     case R_A:
+    case R_H:
+    case R_L:
     case R_DE:
     case R_HL:
     case R_SP:
     case R_AF:
     case R_AFP:
+    case R_DEHL:
     case R_I:
     case R_R:
+    case R_USP:
         outRegName(out, RegName(mode - R_BASE));
         break;
     case I_PTR:
@@ -195,6 +318,8 @@ Error DisZ80::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) const {
     const auto src = insn.src();
     if (src != M_NONE)
         decodeOperand(insn, out.comma(), src);
+    if (insn.getError() == UNKNOWN_INSTRUCTION)
+        insn.nameBuffer().reset();
     return _insn.setError(insn);
 }
 
