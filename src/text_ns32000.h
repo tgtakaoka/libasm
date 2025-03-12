@@ -124,7 +124,7 @@ extern const char TEXT_DEIW[]    PROGMEM;
 extern const char TEXT_DIA[]     PROGMEM;
 using common::TEXT_DIVB;
 using common::TEXT_DIVD;
-extern const char TEXT_DIVW[]    PROGMEM;
+using common::TEXT_DIVW;
 using common::TEXT_ENTER;
 using common::TEXT_EXIT;
 using common::TEXT_EXTB;

@@ -30,10 +30,16 @@ struct DisZ80 final : Disassembler, Config {
 
 private:
     StrBuffer &outIndirectReg(StrBuffer &out, RegName reg) const;
-    StrBuffer &outIndexOffset(StrBuffer &out, int8_t offset) const;
     StrBuffer &outDataReg(StrBuffer &out, RegName reg) const;
 
-    void decodeRelative(DisInsn &insn, StrBuffer &out) const;
+    void decodeAbsolute(DisInsn &insn, StrBuffer &out) const;
+    void decodeRelative(DisInsn &insn, StrBuffer &out, AddrMode mode) const;
+    void decodeShortIndex(DisInsn &insn, StrBuffer &out, RegName base) const;
+    void decodeLongIndex(DisInsn &insn, StrBuffer &out, RegName base) const;
+    void decodeMemoryPointer(DisInsn &insn, StrBuffer &out) const;
+    void decodeBaseIndex(DisInsn &insn, StrBuffer &out, AddrMode mode) const;
+    void decodePointerIndex(DisInsn &insn, StrBuffer &out, AddrMode mode) const;
+    void decodeFullIndex(DisInsn &insn, StrBuffer &out) const;
     void decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) const;
 
     StrBuffer &outAbsAddr(StrBuffer &out, uint32_t val, uint8_t addrWidth = 0) const override;

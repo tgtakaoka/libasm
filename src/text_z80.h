@@ -27,6 +27,7 @@ namespace z80 {
 extern const char TEXT_CPU_LIST[] PROGMEM;
 extern const char TEXT_CPU_Z80[]  PROGMEM;
 extern const char TEXT_CPU_Z180[] PROGMEM;
+extern const char TEXT_CPU_Z280[] PROGMEM;
 
 using common::TEXT_ADC;
 using common::TEXT_ADD;
@@ -110,6 +111,48 @@ extern const char TEXT_OTIMR[] PROGMEM;
 extern const char TEXT_OUT0[]  PROGMEM;
 using common::TEXT_SLP;
 
+// Z280
+using common::TEXT_ADDW;
+extern const char TEXT_CPW[]    PROGMEM;
+using common::TEXT_DECW;
+using common::TEXT_DIV;
+using common::TEXT_DIVU;
+extern const char TEXT_DIVUW[]  PROGMEM;
+using common::TEXT_DIVW;
+extern const char TEXT_EPUF[]   PROGMEM;
+extern const char TEXT_EPUI[]   PROGMEM;
+extern const char TEXT_EPUM[]   PROGMEM;
+using common::TEXT_EXTS;
+using common::TEXT_INCW;
+extern const char TEXT_INDRW[]  PROGMEM;
+extern const char TEXT_INDW[]   PROGMEM;
+extern const char TEXT_INIRW[]  PROGMEM;
+extern const char TEXT_INIW[]   PROGMEM;
+extern const char TEXT_INW[]    PROGMEM;
+extern const char TEXT_JAF[]    PROGMEM;
+extern const char TEXT_JAR[]    PROGMEM;
+using common::TEXT_LDA;
+using common::TEXT_LDCTL;
+extern const char TEXT_LDUD[]   PROGMEM;
+extern const char TEXT_LDUP[]   PROGMEM;
+using common::TEXT_LDW;
+extern const char TEXT_MEPU[]   PROGMEM;
+using common::TEXT_MULT;
+extern const char TEXT_MULTU[]  PROGMEM;
+extern const char TEXT_MULTUW[] PROGMEM;
+extern const char TEXT_MULTW[]  PROGMEM;
+extern const char TEXT_OTDRW[]  PROGMEM;
+extern const char TEXT_OTIRW[]  PROGMEM;
+extern const char TEXT_OUTDW[]  PROGMEM;
+extern const char TEXT_OUTIW[]  PROGMEM;
+extern const char TEXT_OUTW[]   PROGMEM;
+extern const char TEXT_PCACHE[] PROGMEM;
+extern const char TEXT_RETIL[]  PROGMEM;
+using common::TEXT_SC;
+using common::TEXT_SUBW;
+using common::TEXT_TSET;
+extern const char TEXT_TSTI[]   PROGMEM;
+
 using common::TEXT_REG_BC;
 using common::TEXT_REG_DE;
 using common::TEXT_REG_HL;
@@ -127,6 +170,14 @@ using common::TEXT_REG_L;
 extern const char TEXT_REG_R[]   PROGMEM;
 using common::TEXT_REG_I;
 
+// Z280
+extern const char TEXT_REG_DEHL[] PROGMEM;
+extern const char TEXT_REG_IXH[]  PROGMEM;
+extern const char TEXT_REG_IXL[]  PROGMEM;
+extern const char TEXT_REG_IYH[]  PROGMEM;
+extern const char TEXT_REG_IYL[]  PROGMEM;
+using common::TEXT_REG_USP;
+
 using common::TEXT_CC_NZ;
 using common::TEXT_CC_Z;
 using common::TEXT_CC_NC;
@@ -135,6 +186,13 @@ using common::TEXT_CC_PO;
 using common::TEXT_CC_PE;
 using common::TEXT_CC_P;
 using common::TEXT_CC_M;
+
+// Z280
+extern const char TEXT_CC_NS[] PROGMEM;
+extern const char TEXT_CC_NV[] PROGMEM;
+extern const char TEXT_CC_S[]  PROGMEM;
+extern const char TEXT_CC_V[]  PROGMEM;
+
 // clang-format on
 
 }  // namespace z80

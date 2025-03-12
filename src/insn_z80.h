@@ -35,8 +35,9 @@ struct EntryInsn : EntryInsnPrefix<Config, Entry> {
 struct Operand final : ErrorAt {
     AddrMode mode;
     RegName reg;
+    RegName idx;
     Value val;
-    Operand() : mode(M_NONE), reg(REG_UNDEF), val() {}
+    Operand() : mode(M_NONE), reg(REG_UNDEF), idx(REG_UNDEF), val() {}
 };
 
 struct AsmInsn final : AsmInsnImpl<Config>, EntryInsn {
@@ -47,8 +48,7 @@ struct AsmInsn final : AsmInsnImpl<Config>, EntryInsn {
     void emitInsn();
     void emitOperand8(uint8_t val8) { emitByte(val8, operandPos()); }
     void emitOperand16(uint16_t val16) { emitUint16(val16, operandPos()); }
-
-private:
+    void emitOperand32(uint32_t val32) { emitUint32(val32, operandPos()); }
     uint_fast8_t operandPos() const;
 };
 
@@ -56,7 +56,7 @@ struct DisInsn final : DisInsnImpl<Config>, EntryInsn {
     DisInsn(Insn &insn, DisMemory &memory, const StrBuffer &out) : DisInsnImpl(insn, memory, out) {}
     DisInsn(DisInsn &o) : DisInsnImpl(o) {}
 
-    uint8_t ixoff;  // index offset for ixBit() instruction
+    int8_t ixoff;  // index offset for ixBit() instruction
 };
 
 }  // namespace z80

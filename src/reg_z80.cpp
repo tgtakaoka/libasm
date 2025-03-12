@@ -21,6 +21,7 @@
 #include "value_parser.h"
 
 using namespace libasm::text::z80;
+using namespace libasm::text::common;
 using namespace libasm::reg;
 
 namespace libasm {
@@ -31,32 +32,43 @@ namespace {
 // clang-format off
 
 constexpr NameEntry REG_ENTRIES[] PROGMEM = {
-    { TEXT_REG_A,   REG_A   },
-    { TEXT_REG_AF,  REG_AF  },
-    { TEXT_REG_B,   REG_B   },
-    { TEXT_REG_BC,  REG_BC  },
-    { TEXT_REG_C,   REG_C   },
-    { TEXT_REG_D,   REG_D   },
-    { TEXT_REG_DE,  REG_DE  },
-    { TEXT_REG_E,   REG_E   },
-    { TEXT_REG_H,   REG_H   },
-    { TEXT_REG_HL,  REG_HL  },
-    { TEXT_REG_I,   REG_I   },
-    { TEXT_REG_IX,  REG_IX  },
-    { TEXT_REG_IY,  REG_IY  },
-    { TEXT_REG_L,   REG_L   },
-    { TEXT_REG_R,   REG_R   },
-    { TEXT_REG_SP,  REG_SP  },
+    { TEXT_REG_A,    REG_A    },
+    { TEXT_REG_AF,   REG_AF   },
+    { TEXT_REG_B,    REG_B    },
+    { TEXT_REG_BC,   REG_BC   },
+    { TEXT_REG_C,    REG_C    },
+    { TEXT_REG_D,    REG_D    },
+    { TEXT_REG_DE,   REG_DE   },
+    { TEXT_REG_DEHL, REG_DEHL },
+    { TEXT_REG_E,    REG_E    },
+    { TEXT_REG_H,    REG_H    },
+    { TEXT_REG_HL,   REG_HL   },
+    { TEXT_REG_I,    REG_I    },
+    { TEXT_REG_IX,   REG_IX   },
+    { TEXT_REG_IXH,  REG_IXH  },
+    { TEXT_REG_IXL,  REG_IXL  },
+    { TEXT_REG_IY,   REG_IY   },
+    { TEXT_REG_IYH,  REG_IYH  },
+    { TEXT_REG_IYL,  REG_IYL  },
+    { TEXT_REG_L,    REG_L    },
+    { TEXT_REG_PC,   REG_PC   },
+    { TEXT_REG_R,    REG_R    },
+    { TEXT_REG_SP,   REG_SP   },
+    { TEXT_REG_USP,  REG_USP  },
 };
 
 constexpr NameEntry CC_ENTRIES[] PROGMEM = {
     { TEXT_CC_C,  CC_C  },
     { TEXT_CC_M,  CC_M  },
     { TEXT_CC_NC, CC_NC },
+    { TEXT_CC_NS, CC_NS },
+    { TEXT_CC_NV, CC_NV },
     { TEXT_CC_NZ, CC_NZ },
     { TEXT_CC_P,  CC_P  },
     { TEXT_CC_PE, CC_PE },
     { TEXT_CC_PO, CC_PO },
+    { TEXT_CC_S,  CC_S  },
+    { TEXT_CC_V,  CC_V  },
     { TEXT_CC_Z,  CC_Z  },
 };
 
@@ -91,18 +103,18 @@ uint8_t encodeDataReg(RegName name) {
     // we have to map REG_HL to register number 6.
     if (name == REG_HL)
         return 6;
-    return int8_t(name) - 8;
+    return int8_t(name) - REG_B;
 }
 
 RegName decodeDataReg(uint8_t num) {
     // REG_HL represents (HL).
     if ((num &= 7) == 6)
         return REG_HL;
-    return RegName(num + 8);
+    return RegName(num + REG_B);
 }
 
 uint8_t encodePointerReg(RegName name) {
-    return int8_t(name);
+    return int8_t(name) - REG_BC;
 }
 
 uint8_t encodePointerRegIx(RegName name, RegName ix) {
@@ -112,21 +124,25 @@ uint8_t encodePointerRegIx(RegName name, RegName ix) {
 uint8_t encodeStackReg(RegName name) {
     if (name == REG_AF)
         return 3;
-    return uint8_t(name);
+    return uint8_t(name) - REG_BC;
 }
 
 RegName decodeStackReg(uint8_t num) {
     if ((num &= 3) == 3)
         return REG_AF;
-    return RegName(num);
+    return RegName(num + REG_BC);
 }
 
 uint8_t encodeIndirectBase(RegName name) {
-    return uint8_t(name);
+    return uint8_t(name - REG_BC);
 }
 
 RegName decodeIndirectBase(uint8_t num) {
-    return RegName(num & 1);
+    return RegName((num & 1) + REG_BC);
+}
+
+bool isIndexReg(RegName name) {
+    return name == REG_IX || name == REG_IY;
 }
 
 CcName parseCcName(StrScanner &scan, const ValueParser &parser) {
@@ -139,7 +155,7 @@ CcName parseCcName(StrScanner &scan, const ValueParser &parser) {
     return CC_UNDEF;
 }
 
-StrBuffer &outCcName(StrBuffer &out, const CcName name) {
+StrBuffer &outCcName(StrBuffer &out, CcName name) {
     const auto *entry = CC_TABLE.searchName(name);
     return entry ? entry->outText(out) : out;
 }
@@ -149,7 +165,13 @@ bool isCc4Name(CcName name) {
     return num >= 0 && num < 4;
 }
 
-uint8_t encodeCcName(const CcName name) {
+bool isCcAlias(CcName name) {
+    return name >= CC_alias;
+}
+
+uint8_t encodeCcName(CcName name) {
+    if (isCcAlias(name))
+        return encodeCcName(CcName(name - CC_alias));
     return uint8_t(name);
 }
 
