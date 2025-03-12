@@ -175,7 +175,7 @@ constexpr char TEXT_REG_A7[] PROGMEM = "A7";
 // constexpr char TEXT_REG_PC[] PROGMEM = "PC";
 constexpr char TEXT_REG_SR[] PROGMEM = "SR";
 constexpr char TEXT_REG_CCR[] PROGMEM = "CCR";
-constexpr char TEXT_REG_USP[] PROGMEM = "USP";
+// constexpr char TEXT_REG_USP[] PROGMEM = "USP";
 
 // MC68010
 constexpr char TEXT_MOVEC[] PROGMEM = "MOVEC";
