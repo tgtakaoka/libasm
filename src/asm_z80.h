@@ -30,7 +30,13 @@ struct AsmZ80 final : Assembler, Config {
 private:
     Error parseOperand(StrScanner &scan, Operand &op) const;
 
-    void encodeRelative(AsmInsn &insn, const Operand &op) const;
+    void encodeRelative(AsmInsn &insn, const Operand &op, AddrMode mode) const;
+    void encodeAbsolute(AsmInsn &insn, const Operand &op) const;
+    void encodeMemoryPointer(AsmInsn &insn, const Operand &op) const;
+    void encodeLongIndex(AsmInsn &insn, const Operand &op) const;
+    void encodeBaseIndex(AsmInsn &insn, const Operand &op, AddrMode mode) const;
+    void encodePointerIndex(AsmInsn &insn, const Operand &op, AddrMode mode) const;
+    void encodeFullIndex(AsmInsn &insn, const Operand &op) const;
     void encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode, const Operand &other) const;
 
     Error encodeImpl(StrScanner &scan, Insn &insn) const override;
