@@ -47,7 +47,6 @@ enum AddrMode : uint8_t {
     M_VEC = 17,   // |..|vvv|...|: vector 0~7
     M_BIT = 18,   // |..|bbb|...|: bit 0-7
     M_IMMD = 19,  // |...|mm|...|: interrupt mode 0-2
-    T_IXB = 20,   // DD/FD CB nn xx
     I_PTR = 21,   // |...|i|....|: (BC)/(DE)
     I_IDX = 22,   // (IX)/(IY)
     R_IDX = 26,   // IX/IY
@@ -74,20 +73,15 @@ struct Entry final : entry::Base<Config::opcode_t> {
         uint8_t _src;
 
         static constexpr Flags create(AddrMode dst, AddrMode src) {
-            return Flags{dst_attr(dst, false), src_attr(src)};
-        }
-
-        static constexpr Flags ixbit(AddrMode dst, AddrMode src) {
-            return Flags{dst_attr(dst, true), src_attr(src)};
+            return Flags{dst_attr(dst), src_attr(src)};
         }
 
         AddrMode dst() const { return AddrMode(_dst & mode_gm); }
         AddrMode src() const { return AddrMode(_src & mode_gm); }
-        bool indexBit() const { return _dst & ixbit_bm; }
 
     private:
-        static constexpr uint8_t dst_attr(AddrMode mode, bool ixbit) {
-            return static_cast<uint8_t>(static_cast<uint8_t>(mode) | (ixbit ? ixbit_bm : 0));
+        static constexpr uint8_t dst_attr(AddrMode mode) {
+            return static_cast<uint8_t>(static_cast<uint8_t>(mode));
         }
         static constexpr uint8_t src_attr(AddrMode mode) {
             return static_cast<uint8_t>(static_cast<uint8_t>(mode));
@@ -95,9 +89,6 @@ struct Entry final : entry::Base<Config::opcode_t> {
 
         // |_dst|, |_src|
         static constexpr uint8_t mode_gm = 0x7F;
-        // |_dst|
-        static constexpr int ixbit_bp = 7;
-        static constexpr uint8_t ixbit_bm = (1 << ixbit_bp);
     };
 
     constexpr Entry(Config::opcode_t opCode, Flags flags, const /* PROGMEM */ char *name_P)

@@ -1,7 +1,7 @@
 /*
  * Copyright 2020 Tadashi G. Takaoka
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
+t * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
@@ -27,11 +27,9 @@ namespace z80 {
 #define E2(_opc, _name, _dst, _src) {_opc, Entry::Flags::create(_dst, _src), _name}
 #define E1(_opc, _name, _dst) E2(_opc, _name, _dst, M_NONE)
 #define E0(_opc, _name) E1(_opc, _name, M_NONE)
-#define I2(_opc, _name, _dst, _src) {_opc, Entry::Flags::ixbit(_dst, _src), _name}
-#define I1(_opc, _name, _dst) I2(_opc, _name, _dst, M_NONE)
 
 // clang-format off
-constexpr Entry TABLE_I8080[] PROGMEM = {
+constexpr Entry TABLE_Z80[] PROGMEM = {
     E0(0x00, TEXT_NOP),
     E2(0x01, TEXT_LD,   M_R16, M_IM16),
     E2(0x09, TEXT_ADD,  R_HL,  M_R16),
@@ -102,9 +100,14 @@ constexpr Entry TABLE_I8080[] PROGMEM = {
     E2(0xFE, TEXT_CP,   R_A,   M_IM8),
     E1(0xFE, TEXT_CP,   M_IM8),
     E1(0xC7, TEXT_RST,  M_VEC),
+    E2(0x08, TEXT_EX,   R_AF,  R_AFP),
+    E1(0x10, TEXT_DJNZ, M_REL),
+    E2(0x20, TEXT_JR,   M_CC4, M_REL),
+    E1(0x18, TEXT_JR,   M_REL),
+    E0(0xD9, TEXT_EXX),
 };
 
-constexpr uint8_t INDEX_I8080[] PROGMEM = {
+constexpr uint8_t INDEX_Z80[] PROGMEM = {
      26,  // TEXT_ADC
      57,  // TEXT_ADC
       2,  // TEXT_ADD
@@ -126,11 +129,14 @@ constexpr uint8_t INDEX_I8080[] PROGMEM = {
      10,  // TEXT_DEC
      12,  // TEXT_DEC
      51,  // TEXT_DI
+     71,  // TEXT_DJNZ
      52,  // TEXT_EI
      47,  // TEXT_EX
      48,  // TEXT_EX
      49,  // TEXT_EX
      50,  // TEXT_EX
+     70,  // TEXT_EX
+     74,  // TEXT_EXX
      22,  // TEXT_HALT
      46,  // TEXT_IN
       9,  // TEXT_INC
@@ -138,6 +144,8 @@ constexpr uint8_t INDEX_I8080[] PROGMEM = {
      42,  // TEXT_JP
      43,  // TEXT_JP
      44,  // TEXT_JP
+     72,  // TEXT_JR
+     73,  // TEXT_JR
       1,  // TEXT_LD
       3,  // TEXT_LD
       4,  // TEXT_LD
@@ -177,23 +185,7 @@ constexpr uint8_t INDEX_I8080[] PROGMEM = {
      64,  // TEXT_XOR
 };
 
-constexpr Entry TABLE_Z80[] PROGMEM = {
-    E2(0x08, TEXT_EX,   R_AF,  R_AFP),
-    E1(0x10, TEXT_DJNZ, M_REL),
-    E2(0x20, TEXT_JR,   M_CC4, M_REL),
-    E1(0x18, TEXT_JR,   M_REL),
-    E0(0xD9, TEXT_EXX),
-};
-
-constexpr uint8_t INDEX_Z80[] PROGMEM = {
-      1,  // TEXT_DJNZ
-      0,  // TEXT_EX
-      4,  // TEXT_EXX
-      2,  // TEXT_JR
-      3,  // TEXT_JR
-};
-
-constexpr Entry TABLE_CB[] PROGMEM = {
+constexpr Entry TABLE_BIT[] PROGMEM = {
     E1(0x00, TEXT_RLC, M_SRC),
     E1(0x08, TEXT_RRC, M_SRC),
     E1(0x10, TEXT_RL,  M_SRC),
@@ -204,42 +196,22 @@ constexpr Entry TABLE_CB[] PROGMEM = {
     E2(0x40, TEXT_BIT, M_BIT, M_SRC),
     E2(0x80, TEXT_RES, M_BIT, M_SRC),
     E2(0xC0, TEXT_SET, M_BIT, M_SRC),
-    I1(0x06, TEXT_RLC, M_IDX),
-    I1(0x0E, TEXT_RRC, M_IDX),
-    I1(0x16, TEXT_RL,  M_IDX),
-    I1(0x1E, TEXT_RR,  M_IDX),
-    I1(0x26, TEXT_SLA, M_IDX),
-    I1(0x2E, TEXT_SRA, M_IDX),
-    I1(0x3E, TEXT_SRL, M_IDX),
-    I2(0x46, TEXT_BIT, M_BIT, M_IDX),
-    I2(0x86, TEXT_RES, M_BIT, M_IDX),
-    I2(0xC6, TEXT_SET, M_BIT, M_IDX),
 };
 
-constexpr uint8_t INDEX_CB[] PROGMEM = {
+constexpr uint8_t INDEX_BIT[] PROGMEM = {
       7,  // TEXT_BIT
-     17,  // TEXT_BIT
       8,  // TEXT_RES
-     18,  // TEXT_RES
       2,  // TEXT_RL
-     12,  // TEXT_RL
       0,  // TEXT_RLC
-     10,  // TEXT_RLC
       3,  // TEXT_RR
-     13,  // TEXT_RR
       1,  // TEXT_RRC
-     11,  // TEXT_RRC
       9,  // TEXT_SET
-     19,  // TEXT_SET
       4,  // TEXT_SLA
-     14,  // TEXT_SLA
       5,  // TEXT_SRA
-     15,  // TEXT_SRA
       6,  // TEXT_SRL
-     16,  // TEXT_SRL
 };
 
-constexpr Entry TABLE_ED[] PROGMEM = {
+constexpr Entry TABLE_EXT[] PROGMEM = {
     E2(0x40, TEXT_IN,   M_DR8, I_C),
     E2(0x41, TEXT_OUT,  I_C,    M_DR8),
     E2(0x42, TEXT_SBC,  R_HL,   M_R16),
@@ -274,7 +246,7 @@ constexpr Entry TABLE_ED[] PROGMEM = {
     E0(0xBB, TEXT_OTDR),
 };
 
-constexpr uint8_t INDEX_ED[] PROGMEM = {
+constexpr uint8_t INDEX_EXT[] PROGMEM = {
       3,  // TEXT_ADC
      21,  // TEXT_CPD
      23,  // TEXT_CPDR
@@ -334,7 +306,6 @@ constexpr Entry TABLE_IX[] PROGMEM = {
     E1(0xB6, TEXT_OR,   M_IDX),
     E2(0xBE, TEXT_CP,   R_A,   M_IDX),
     E1(0xBE, TEXT_CP,   M_IDX),
-    E2(0xCB, TEXT_BIT,  T_IXB, T_IXB),  // to TABLE_CB[]
     E1(0xE1, TEXT_POP,  R_IDX),
     E1(0xE9, TEXT_JP,   I_IDX),
     E2(0xF9, TEXT_LD,   R_SP,  R_IDX),
@@ -348,43 +319,69 @@ constexpr uint8_t INDEX_IX[] PROGMEM = {
      11,  // TEXT_ADD
      16,  // TEXT_AND
      17,  // TEXT_AND
-     24,  // TEXT_BIT
      22,  // TEXT_CP
      23,  // TEXT_CP
       5,  // TEXT_DEC
       7,  // TEXT_DEC
-     28,  // TEXT_EX
+     27,  // TEXT_EX
       4,  // TEXT_INC
       6,  // TEXT_INC
-     26,  // TEXT_JP
+     25,  // TEXT_JP
       1,  // TEXT_LD
       2,  // TEXT_LD
       3,  // TEXT_LD
       8,  // TEXT_LD
       9,  // TEXT_LD
      10,  // TEXT_LD
-     27,  // TEXT_LD
+     26,  // TEXT_LD
      20,  // TEXT_OR
      21,  // TEXT_OR
-     25,  // TEXT_POP
-     29,  // TEXT_PUSH
+     24,  // TEXT_POP
+     28,  // TEXT_PUSH
      15,  // TEXT_SBC
      13,  // TEXT_SUB
      14,  // TEXT_SUB
      18,  // TEXT_XOR
      19,  // TEXT_XOR
 };
+
+constexpr Entry TABLE_IXBIT[] PROGMEM = {
+    E1(0x06, TEXT_RLC, M_IDX),
+    E1(0x0E, TEXT_RRC, M_IDX),
+    E1(0x16, TEXT_RL,  M_IDX),
+    E1(0x1E, TEXT_RR,  M_IDX),
+    E1(0x26, TEXT_SLA, M_IDX),
+    E1(0x2E, TEXT_SRA, M_IDX),
+    E1(0x3E, TEXT_SRL, M_IDX),
+    E2(0x46, TEXT_BIT, M_BIT, M_IDX),
+    E2(0x86, TEXT_RES, M_BIT, M_IDX),
+    E2(0xC6, TEXT_SET, M_BIT, M_IDX),
+};
+
+constexpr uint8_t INDEX_IXBIT[] PROGMEM = {
+      7,  // TEXT_BIT
+      8,  // TEXT_RES
+      2,  // TEXT_RL
+      0,  // TEXT_RLC
+      3,  // TEXT_RR
+      1,  // TEXT_RRC
+      9,  // TEXT_SET
+      4,  // TEXT_SLA
+      5,  // TEXT_SRA
+      6,  // TEXT_SRL
+};
 // clang-format on
 
 using EntryPage = entry::PrefixTableBase<Entry>;
 
 constexpr EntryPage Z80_PAGES[] PROGMEM = {
-        {0x00, ARRAY_RANGE(TABLE_I8080), ARRAY_RANGE(INDEX_I8080)},
-        {0x00, ARRAY_RANGE(TABLE_Z80), ARRAY_RANGE(INDEX_Z80)},
-        {0xCB, ARRAY_RANGE(TABLE_CB), ARRAY_RANGE(INDEX_CB)},
-        {0xED, ARRAY_RANGE(TABLE_ED), ARRAY_RANGE(INDEX_ED)},
-        {TableZ80::PREFIX_IX, ARRAY_RANGE(TABLE_IX), ARRAY_RANGE(INDEX_IX)},
-        {TableZ80::PREFIX_IY, ARRAY_RANGE(TABLE_IX), ARRAY_RANGE(INDEX_IX)},
+        {0x0000, ARRAY_RANGE(TABLE_Z80), ARRAY_RANGE(INDEX_Z80)},
+        {TableZ80::EXT, ARRAY_RANGE(TABLE_EXT), ARRAY_RANGE(INDEX_EXT)},
+        {TableZ80::BIT, ARRAY_RANGE(TABLE_BIT), ARRAY_RANGE(INDEX_BIT)},
+        {TableZ80::IX, ARRAY_RANGE(TABLE_IX), ARRAY_RANGE(INDEX_IX)},
+        {TableZ80::IY, ARRAY_RANGE(TABLE_IX), ARRAY_RANGE(INDEX_IX)},
+        {TableZ80::IXBIT, ARRAY_RANGE(TABLE_IXBIT), ARRAY_RANGE(INDEX_IXBIT)},
+        {TableZ80::IYBIT, ARRAY_RANGE(TABLE_IXBIT), ARRAY_RANGE(INDEX_IXBIT)},
 };
 
 using Cpu = entry::CpuBase<CpuType, EntryPage>;
@@ -484,8 +481,12 @@ Error searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) {
     return insn.getError();
 }
 
-bool isPrefix(CpuType cpuType, Config::opcode_t code) {
+bool isPrefix(CpuType cpuType, uint16_t code) {
     return cpu(cpuType)->isPrefix(code);
+}
+
+bool EntryInsn::ixBit() const {
+    return (prefix() == TableZ80::IXBIT || prefix() == TableZ80::IYBIT);
 }
 
 const /*PROGMEM*/ char *TableZ80::listCpu_P() const {

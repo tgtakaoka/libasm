@@ -76,15 +76,12 @@ RegName decodeDataReg(uint8_t num);
 
 uint8_t encodePointerReg(RegName name);
 uint8_t encodePointerRegIx(RegName name, RegName ix);
-RegName decodePointerReg(uint8_t num, Config::opcode_t prefix);
 
 uint8_t encodeStackReg(RegName name);
 RegName decodeStackReg(uint8_t num);
 
 uint8_t encodeIndirectBase(RegName name);
 RegName decodeIndirectBase(uint8_t num);
-
-RegName decodeIndexReg(Config::opcode_t prefix);
 
 CcName parseCcName(StrScanner &scan, const ValueParser &parser);
 StrBuffer &outCcName(StrBuffer &out, CcName cc);

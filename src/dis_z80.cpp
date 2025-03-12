@@ -47,34 +47,6 @@ StrBuffer &DisZ80::outDataReg(StrBuffer &out, RegName reg) const {
     return outRegName(out, reg);
 }
 
-void DisZ80::decodeIndexedBitOp(DisInsn &insn, StrBuffer &out) const {
-    const auto offset = static_cast<int8_t>(insn.readByte());
-    const auto offsetError = insn.getError();
-    const auto opc = insn.readByte();
-
-    DisInsn ixBit(insn);  // |ixBit| will share internal implementation with |insn|
-    ixBit.setPrefix(insn.opCode());
-    ixBit.setOpCode(opc);
-    ixBit.nameBuffer().reset();
-    if (searchOpCode(cpuType(), ixBit, out)) {
-        insn.nameBuffer().reset();
-        insn.setErrorIf(out, UNKNOWN_INSTRUCTION);
-        return;
-    }
-
-    if (decodeDataReg(opc) == REG_HL) {
-        if (ixBit.dst() == M_BIT)
-            outHex(out, (opc >> 3) & 7, 3).comma();
-        outRegName(out.letter('('), decodeIndexReg(insn.prefix()));
-        if (offsetError)
-            insn.setErrorIf(out, offsetError);
-        outIndexOffset(out, offset).letter(')');
-    } else {
-        insn.nameBuffer().reset();
-        insn.setErrorIf(out, UNKNOWN_INSTRUCTION);
-    }
-}
-
 void DisZ80::decodeRelative(DisInsn &insn, StrBuffer &out) const {
     const auto delta = static_cast<int8_t>(insn.readByte());
     const auto base = insn.address() + insn.length();
@@ -82,6 +54,25 @@ void DisZ80::decodeRelative(DisInsn &insn, StrBuffer &out) const {
     insn.setErrorIf(out, checkAddr(target));
     outRelAddr(out, target, insn.address(), 8);
 }
+
+namespace {
+RegName decodeIndexReg(uint16_t prefix) {
+    if (prefix == TableZ80::IX || prefix == TableZ80::IXBIT)
+        return REG_IX;
+    if (prefix == TableZ80::IY || prefix == TableZ80::IYBIT)
+        return REG_IY;
+    return REG_UNDEF;
+}
+
+RegName decodePointerReg(uint8_t num, uint16_t prefix) {
+    const auto name = RegName(num & 3);
+    if (name == REG_HL) {
+        const auto ix = decodeIndexReg(prefix);
+        return ix == REG_UNDEF ? name : ix;
+    }
+    return name;
+}
+}  // namespace
 
 void DisZ80::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) const {
     auto opc = insn.opCode();
@@ -102,7 +93,7 @@ void DisZ80::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) const {
         break;
     case M_IDX:
         outRegName(out.letter('('), decodeIndexReg(insn.prefix()));
-        outIndexOffset(out, insn.readByte()).letter(')');
+        outIndexOffset(out, insn.ixBit() ? insn.ixoff : insn.readByte()).letter(')');
         break;
     case M_CC4:
         outCcName(out, decodeCcName((opc >> 3) & 3));
@@ -163,7 +154,7 @@ void DisZ80::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) const {
     case I_HL:
     case I_SP:
     case I_C:
-        outIndirectReg(out,RegName(mode - I_BASE));
+        outIndirectReg(out, RegName(mode - I_BASE));
         break;
     default:
         break;
@@ -172,26 +163,30 @@ void DisZ80::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) const {
 
 Error DisZ80::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) const {
     DisInsn insn(_insn, memory, out);
-    const auto opc = insn.readByte();
-    insn.setOpCode(opc);
+    auto opc = insn.readByte();
     if (isPrefix(cpuType(), opc)) {
         insn.setPrefix(opc);
-        insn.setOpCode(insn.readByte());
-        if (insn.getError())
-            return _insn.setError(insn);
+        opc = insn.readByte();
+        auto prefix = (insn.prefix() << 8) | opc;
+        if (isPrefix(cpuType(), prefix)) {
+            insn.setPrefix(prefix);
+            opc = insn.readByte();
+            if (insn.ixBit()) {
+                insn.ixoff = opc;
+                opc = insn.readByte();
+            }
+        }
     }
+    insn.setOpCode(opc);
+    if (insn.getError())
+        return _insn.setError(insn);
     if (searchOpCode(cpuType(), insn, out))
         return _insn.setError(insn);
 
-    const auto dst = insn.dst();
-    if (dst == T_IXB) {
-        decodeIndexedBitOp(insn, out);
-    } else if (dst != M_NONE) {
-        decodeOperand(insn, out, dst);
-        const auto src = insn.src();
-        if (src != M_NONE)
-            decodeOperand(insn, out.comma(), src);
-    }
+    decodeOperand(insn, out, insn.dst());
+    const auto src = insn.src();
+    if (src != M_NONE)
+        decodeOperand(insn, out.comma(), src);
     return _insn.setError(insn);
 }
 

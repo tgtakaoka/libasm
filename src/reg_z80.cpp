@@ -105,15 +105,6 @@ uint8_t encodePointerRegIx(RegName name, RegName ix) {
     return encodePointerReg(name == ix ? REG_HL : name);
 }
 
-RegName decodePointerReg(uint8_t num, Config::opcode_t prefix) {
-    const auto name = RegName(num & 3);
-    if (name == REG_HL) {
-        const auto ix = decodeIndexReg(prefix);
-        return ix == REG_UNDEF ? name : ix;
-    }
-    return name;
-}
-
 uint8_t encodeStackReg(RegName name) {
     if (name == REG_AF)
         return 3;
@@ -132,14 +123,6 @@ uint8_t encodeIndirectBase(RegName name) {
 
 RegName decodeIndirectBase(uint8_t num) {
     return RegName(num & 1);
-}
-
-RegName decodeIndexReg(Config::opcode_t prefix) {
-    if (prefix == TableZ80::PREFIX_IX)
-        return REG_IX;
-    if (prefix == TableZ80::PREFIX_IY)
-        return REG_IY;
-    return REG_UNDEF;
 }
 
 CcName parseCcName(StrScanner &scan, const ValueParser &parser) {

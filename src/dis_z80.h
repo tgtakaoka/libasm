@@ -33,7 +33,6 @@ private:
     StrBuffer &outIndexOffset(StrBuffer &out, int8_t offset) const;
     StrBuffer &outDataReg(StrBuffer &out, RegName reg) const;
 
-    void decodeIndexedBitOp(DisInsn &insn, StrBuffer &out) const;
     void decodeRelative(DisInsn &insn, StrBuffer &out) const;
     void decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) const;
 

@@ -67,16 +67,13 @@ void AsmZ80::encodeRelative(AsmInsn &insn, const Operand &op) const {
 }
 
 void encodeIndexReg(AsmInsn &insn, RegName ixReg) {
-    insn.setPrefix((ixReg == REG_IX) ? TableZ80::PREFIX_IX : TableZ80::PREFIX_IY);
-}
-
-void AsmZ80::encodeIndexedBitOp(AsmInsn &insn, const Operand &op) const {
-    const auto opc = insn.opCode();           // Bit opcode.
-    insn.setOpCode(insn.prefix());            // Make 0xCB prefix as opcode.
-    encodeIndexReg(insn, op.reg);             // Add 0xDD/0xFD prefix
-    insn.emitOperand8(op.val.getUnsigned());  // Index offset.
-    insn.emitOperand8(opc);                   // Bit opcode.
-    insn.emitInsn();
+    if (insn.ixBit()) {
+        const auto prefix = (ixReg == REG_IX) ? TableZ80::IXBIT : TableZ80::IYBIT;
+        insn.setPrefix(prefix);
+    } else {
+        const auto prefix = (ixReg == REG_IX) ? TableZ80::IX : TableZ80::IY;
+        insn.setPrefix(prefix);
+    }
 }
 
 void AsmZ80::encodeOperand(
@@ -97,10 +94,6 @@ void AsmZ80::encodeOperand(
     case M_IDX:
         if (op.val.overflowInt8())
             insn.setErrorIf(op, OVERFLOW_RANGE);
-        if (insn.indexBit()) {
-            encodeIndexedBitOp(insn, op);
-            break;
-        }
         insn.emitOperand8(val16);
         /* Fall-through */
     case R_IDX:
@@ -280,6 +273,29 @@ Error AsmZ80::parseOperand(StrScanner &scan, Operand &op) const {
     return OK;
 }
 
+void AsmInsn::emitInsn() {
+    uint_fast8_t pos = 0;
+    if (hasPrefix()) {
+        const auto pre = prefix();
+        if (pre >= 0x100)
+            emitByte(pre >> 8, pos++);
+        emitByte(pre, pos++);
+    }
+    if (ixBit()) {
+        emitByte(opCode());
+    } else {
+        emitByte(opCode(), pos);
+    }
+}
+
+uint_fast8_t AsmInsn::operandPos() const {
+    if (ixBit())
+        return 2;
+    const auto opcodeLen = !hasPrefix() ? 1 : (prefix() < 0x100 ? 2 : 3);
+    const auto pos = length();
+    return pos < opcodeLen ? opcodeLen : pos;
+}
+
 Error AsmZ80::encodeImpl(StrScanner &scan, Insn &_insn) const {
     AsmInsn insn(_insn);
     if (parseOperand(scan, insn.dstOp) && insn.dstOp.hasError())
@@ -295,8 +311,7 @@ Error AsmZ80::encodeImpl(StrScanner &scan, Insn &_insn) const {
 
     encodeOperand(insn, insn.dstOp, insn.dst(), insn.srcOp);
     encodeOperand(insn, insn.srcOp, insn.src(), insn.dstOp);
-    if (!insn.indexBit())
-        insn.emitInsn();
+    insn.emitInsn();
     return _insn.setError(insn);
 }
 
