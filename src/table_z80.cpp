@@ -185,6 +185,7 @@ constexpr uint8_t INDEX_Z80[] PROGMEM = {
      64,  // TEXT_XOR
 };
 
+// CB:xx
 constexpr Entry TABLE_BIT[] PROGMEM = {
     E1(0x00, TEXT_RLC, M_SRC),
     E1(0x08, TEXT_RRC, M_SRC),
@@ -211,6 +212,7 @@ constexpr uint8_t INDEX_BIT[] PROGMEM = {
       6,  // TEXT_SRL
 };
 
+// ED:xx
 constexpr Entry TABLE_EXT[] PROGMEM = {
     E2(0x40, TEXT_IN,   M_DR8, I_C),
     E2(0x41, TEXT_OUT,  I_C,    M_DR8),
@@ -281,7 +283,8 @@ constexpr uint8_t INDEX_EXT[] PROGMEM = {
       2,  // TEXT_SBC
 };
 
-constexpr Entry TABLE_IX[] PROGMEM = {
+// Table for DD:xx, FD:xx
+constexpr Entry TABLE_IDX[] PROGMEM = {
     E2(0x09, TEXT_ADD,  R_IDX, M_R16X),
     E2(0x21, TEXT_LD,   R_IDX, M_IM16),
     E2(0x22, TEXT_LD,   M_ABS, R_IDX),
@@ -313,7 +316,7 @@ constexpr Entry TABLE_IX[] PROGMEM = {
     E1(0xE5, TEXT_PUSH, R_IDX),
 };
 
-constexpr uint8_t INDEX_IX[] PROGMEM = {
+constexpr uint8_t INDEX_IDX[] PROGMEM = {
      12,  // TEXT_ADC
       0,  // TEXT_ADD
      11,  // TEXT_ADD
@@ -345,7 +348,8 @@ constexpr uint8_t INDEX_IX[] PROGMEM = {
      19,  // TEXT_XOR
 };
 
-constexpr Entry TABLE_IXBIT[] PROGMEM = {
+// DD:CB:dd:xx, FD:CB:dd:xx
+constexpr Entry TABLE_IDXBIT[] PROGMEM = {
     E1(0x06, TEXT_RLC, M_IDX),
     E1(0x0E, TEXT_RRC, M_IDX),
     E1(0x16, TEXT_RL,  M_IDX),
@@ -358,7 +362,7 @@ constexpr Entry TABLE_IXBIT[] PROGMEM = {
     E2(0xC6, TEXT_SET, M_BIT, M_IDX),
 };
 
-constexpr uint8_t INDEX_IXBIT[] PROGMEM = {
+constexpr uint8_t INDEX_IDXBIT[] PROGMEM = {
       7,  // TEXT_BIT
       8,  // TEXT_RES
       2,  // TEXT_RL
@@ -378,10 +382,10 @@ constexpr EntryPage Z80_PAGES[] PROGMEM = {
         {0x0000, ARRAY_RANGE(TABLE_Z80), ARRAY_RANGE(INDEX_Z80)},
         {TableZ80::EXT, ARRAY_RANGE(TABLE_EXT), ARRAY_RANGE(INDEX_EXT)},
         {TableZ80::BIT, ARRAY_RANGE(TABLE_BIT), ARRAY_RANGE(INDEX_BIT)},
-        {TableZ80::IX, ARRAY_RANGE(TABLE_IX), ARRAY_RANGE(INDEX_IX)},
-        {TableZ80::IY, ARRAY_RANGE(TABLE_IX), ARRAY_RANGE(INDEX_IX)},
-        {TableZ80::IXBIT, ARRAY_RANGE(TABLE_IXBIT), ARRAY_RANGE(INDEX_IXBIT)},
-        {TableZ80::IYBIT, ARRAY_RANGE(TABLE_IXBIT), ARRAY_RANGE(INDEX_IXBIT)},
+        {TableZ80::IX, ARRAY_RANGE(TABLE_IDX), ARRAY_RANGE(INDEX_IDX)},
+        {TableZ80::IY, ARRAY_RANGE(TABLE_IDX), ARRAY_RANGE(INDEX_IDX)},
+        {TableZ80::IXBIT, ARRAY_RANGE(TABLE_IDXBIT), ARRAY_RANGE(INDEX_IDXBIT)},
+        {TableZ80::IYBIT, ARRAY_RANGE(TABLE_IDXBIT), ARRAY_RANGE(INDEX_IDXBIT)},
 };
 
 using Cpu = entry::CpuBase<CpuType, EntryPage>;

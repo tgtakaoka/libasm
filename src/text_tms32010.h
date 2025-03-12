@@ -165,7 +165,7 @@ extern const char TEXT_SFSM[] PROGMEM;
 extern const char TEXT_SHM[]  PROGMEM;
 extern const char TEXT_SPH[]  PROGMEM;
 using common::TEXT_SPL;
-extern const char TEXT_STC[]  PROGMEM;
+using common::TEXT_STC;
 using common::TEXT_SUBB;
 extern const char TEXT_SUBK[] PROGMEM;
 extern const char TEXT_ZALR[] PROGMEM;
