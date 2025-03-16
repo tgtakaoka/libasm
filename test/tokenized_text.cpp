@@ -197,7 +197,7 @@ std::string TokenizedText::tokenize(const char *text) {
             // reduce index size variants of NS32000; [Rn:B], [Rn:W], [Rn:D] and [Rn:Q]
             t.push_back(':');
             t.push_back('s');
-            t.push_back(']');
+            t.push_back(b[2]);
             b += 3;
         } else {
             t.push_back(*b++);

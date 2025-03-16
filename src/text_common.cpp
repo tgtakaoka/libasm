@@ -585,8 +585,10 @@ constexpr char TEXT_ORG[]   PROGMEM = "org";
 constexpr char TEXT_RMB[]   PROGMEM = "rmb";
 constexpr char TEXT_TEXT[]  PROGMEM = "text";
 
+constexpr char PSTR_NULL[]    PROGMEM = "";
 constexpr char PSTR_AT[]      PROGMEM = "@";
 constexpr char PSTR_DOLLAR[]  PROGMEM = "$";
+constexpr char PSTR_COMMA[]   PROGMEM = ",";
 constexpr char PSTR_DOT[]     PROGMEM = ".";
 constexpr char PSTR_SEMI[]    PROGMEM = ";";
 constexpr char PSTR_SHARP[]   PROGMEM = "#";
