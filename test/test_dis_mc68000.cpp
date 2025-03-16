@@ -2500,6 +2500,25 @@ void test_multiproc() {
     TEST("ILLEGAL", "",         0045374); // ILLEGAL
 }
 
+void test_extension() {
+    TEST("LEA", "(18,A2,D3.W), A1",                                       0041762, 0x3012);
+    ERRT("LEA", "(18,A2,D3.W), A1", UNKNOWN_POSTBYTE, "(18,A2,D3.W), A1", 0041762, 0x3112);
+    ERRT("LEA", "(18,A2,D3.W), A1", UNKNOWN_POSTBYTE, "(18,A2,D3.W), A1", 0041762, 0x3212);
+    ERRT("LEA", "(18,A2,D3.W), A1", UNKNOWN_POSTBYTE, "(18,A2,D3.W), A1", 0041762, 0x3312);
+    ERRT("LEA", "(18,A2,D3.W), A1", UNKNOWN_POSTBYTE, "(18,A2,D3.W), A1", 0041762, 0x3412);
+    ERRT("LEA", "(18,A2,D3.W), A1", UNKNOWN_POSTBYTE, "(18,A2,D3.W), A1", 0041762, 0x3512);
+    ERRT("LEA", "(18,A2,D3.W), A1", UNKNOWN_POSTBYTE, "(18,A2,D3.W), A1", 0041762, 0x3612);
+    ERRT("LEA", "(18,A2,D3.W), A1", UNKNOWN_POSTBYTE, "(18,A2,D3.W), A1", 0041762, 0x3712);
+    TEST("LEA", "(18,A2,D3.L), A1",                                       0041762, 0x3812);
+    ERRT("LEA", "(18,A2,D3.L), A1", UNKNOWN_POSTBYTE, "(18,A2,D3.L), A1", 0041762, 0x3912);
+    ERRT("LEA", "(18,A2,D3.L), A1", UNKNOWN_POSTBYTE, "(18,A2,D3.L), A1", 0041762, 0x3A12);
+    ERRT("LEA", "(18,A2,D3.L), A1", UNKNOWN_POSTBYTE, "(18,A2,D3.L), A1", 0041762, 0x3B12);
+    ERRT("LEA", "(18,A2,D3.L), A1", UNKNOWN_POSTBYTE, "(18,A2,D3.L), A1", 0041762, 0x3C12);
+    ERRT("LEA", "(18,A2,D3.L), A1", UNKNOWN_POSTBYTE, "(18,A2,D3.L), A1", 0041762, 0x3D12);
+    ERRT("LEA", "(18,A2,D3.L), A1", UNKNOWN_POSTBYTE, "(18,A2,D3.L), A1", 0041762, 0x3E12);
+    ERRT("LEA", "(18,A2,D3.L), A1", UNKNOWN_POSTBYTE, "(18,A2,D3.L), A1", 0041762, 0x3F12);
+}
+
 #if !defined(LIBASM_MC68000_NOFPU)
 
 void test_float_move() {
@@ -4622,6 +4641,7 @@ void run_tests(const char *cpu) {
     RUN_TEST(test_program);
     RUN_TEST(test_system);
     RUN_TEST(test_multiproc);
+    RUN_TEST(test_extension);
 #if !defined(LIBASM_MC68000_NOFPU)
     RUN_TEST(test_float_move);
     RUN_TEST(test_float_arithmetic);
