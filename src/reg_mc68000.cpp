@@ -88,33 +88,27 @@ StrBuffer &outRegName(StrBuffer &out, RegName name) {
 }
 
 bool isDataReg(RegName name) {
-    const auto num = int8_t(name);
-    return num >= REG_D0 && num <= REG_D7;
+    return name >= REG_D0 && name <= REG_D7;
 }
 
 bool isAddrReg(RegName name) {
-    const auto num = int8_t(name);
-    return num >= REG_A0 && num <= REG_A7;
+    return name >= REG_A0 && name <= REG_A7;
 }
 
 bool isGeneralReg(RegName name) {
-    const auto num = int8_t(name);
-    return num >= REG_D0 && num <= REG_A7;
+    return name >= REG_D0 && name <= REG_A7;
 }
 
 bool isControlReg(RegName name) {
-    const auto num = int8_t(name);
-    return num >= REG_SFC;
+    return name >= REG_SFC;
 }
 
 bool isFloatReg(RegName name) {
-    const auto num = int8_t(name);
-    return num >= REG_FP0 && num <= REG_FP7;
+    return name >= REG_FP0 && name <= REG_FP7;
 }
 
 bool isFloatControlReg(RegName name) {
-    const auto num = int8_t(name);
-    return num >= REG_FPCR && num <= REG_FPIAR;
+    return name >= REG_FPCR && name <= REG_FPIAR;
 }
 
 Config::opcode_t encodeGeneralRegNo(RegName name) {
@@ -200,6 +194,16 @@ InsnSize parseSize(StrScanner &scan) {
         return size;
     }
     return ISZ_NONE;
+}
+
+InsnSize parseIndexSize(StrScanner &scan) {
+    auto p = scan;
+    const auto size = parseSize(p);
+    if (size == ISZ_NONE || size == ISZ_WORD || size == ISZ_LONG) {
+        scan = p;
+        return size;
+    }
+    return ISZ_ERROR;
 }
 
 uint_fast8_t sizeNameLen(OprSize size) {
@@ -290,19 +294,6 @@ RegName decodeRegNo(uint_fast8_t mode, uint_fast8_t regno) {
 }
 
 }  // namespace reg
-
-OprSize BriefExt::indexSize() const {
-    return (word & 0x800) ? SZ_LONG : SZ_WORD;
-}
-
-RegName BriefExt::index() const {
-    return reg::decodeGeneralReg(word >> 12);
-}
-
-uint_fast8_t BriefExt::disp() const {
-    return static_cast<uint8_t>(word);
-}
-
 }  // namespace mc68000
 }  // namespace libasm
 

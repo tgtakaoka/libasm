@@ -83,9 +83,30 @@ bool isNumber(const char *p, const char *&r) {
     return false;
 }
 
-bool isNs32kSize(char c) {
-    c = toupper(c);
-    return c == 'B' || c == 'W' || c == 'D' || c == 'Q';
+bool isNs32kScale(const char *p) {
+    if (p[1] == ']') {
+        const auto c = toupper(*p);
+        return c == 'B' || c == 'W' || c == 'D' || c == 'Q';
+    }
+    return false;
+}
+
+bool isM68kSize(const char *p) {
+    const auto c = toupper(*p);
+    if (c == 'W' || c == 'L') {
+        const auto delim = p[1];
+        return delim == ')' || delim == ']' || delim == ',';
+    }
+    return false;
+}
+
+bool isM68kScale(const char *p) {
+    const auto c = *p;
+    if (c == '2' || c == '4' || c == '8') {
+        const auto delim = p[1];
+        return delim == ')' || delim == ']' || delim == ',';
+    }
+    return false;
 }
 
 TokenizedText::TokenizedText(const char *text) : _tokens(tokenize(text)), _count(0) {}
@@ -104,6 +125,18 @@ std::string TokenizedText::tokenize(const char *text) {
             t.push_back('+');
             t.push_back('e');
             b = tmp;
+        } else if (b[0] == '.' && isM68kSize(b + 1)) {
+            // reduce index size variants of MC680xx; Xn.W and Xn.L
+            t.push_back('.');
+            t.push_back('s');
+            t.push_back(b[2]);
+            b += 3;
+        } else if (b[0] == '*' && isM68kScale(b + 1)) {
+            // reduce index scale variants of MC680xx; *2,*4,*8
+            t.push_back('*');
+            t.push_back('s');
+            t.push_back(b[2]);
+            b += 3;
         } else if (((b[0] == '-' && isNumber(b + 1, tmp)) || isNumber(b, tmp)) &&
                    (*tmp == '(' || *tmp == ')')) {
             // reduce displacement variants of NS32000; -n(...) and n(...), (-n) and (n)
@@ -118,11 +151,11 @@ std::string TokenizedText::tokenize(const char *text) {
             t.push_back('+');
             t.push_back('n');
             b = tmp + 1;
-        } else if (b[0] == ':' && isNs32kSize(b[1]) && b[2] == ']') {
-            // reduce index size variants of NS32000; [Rn:B], [Rn:W], [Rn:D] and [Rn:Q]
+        } else if (b[0] == ':' && isNs32kScale(b + 1)) {
+            // reduce index scale variants of NS32000; [Rn:B], [Rn:W], [Rn:D] and [Rn:Q]
             t.push_back(':');
             t.push_back('s');
-            t.push_back(']');
+            t.push_back(b[2]);
             b += 3;
         } else if (*b == '/') {
             // reduce MOVEM variants of MC68000; Rn/Rn and Rn-Rn
