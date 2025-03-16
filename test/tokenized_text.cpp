@@ -206,7 +206,7 @@ std::string TokenizedText::tokenize(const char *text) {
             // reduce index size variants of NS32000; [Rn:B], [Rn:W], [Rn:D] and [Rn:Q]
             t.push_back(':');
             t.push_back('s');
-            t.push_back(']');
+            t.push_back(b[2]);
             b += 3;
         } else if (isX86Seg(b)) {
             // reduce segment override of 80x86; ES:, CS:, SS:, DS:

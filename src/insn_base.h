@@ -227,7 +227,7 @@ struct AsmInsnBase : ErrorAt {
     }
 #endif
 
-protected:
+    //protected:
     Insn &_insn;
 };
 
