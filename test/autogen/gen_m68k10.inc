@@ -8,12 +8,8 @@
       orib    #0x29, (-0x8000,a0)
       orib    #0x31, (0,a0,d0.l)
       orib    #0x31, (-0x80,a0,d0.l)
-      orib    #0x31, (0,a0,d1.w)
-      orib    #0x31, (-0x80,a0,d1.w)
       orib    #0x31, (0,a0,a0.w)
       orib    #0x31, (-0x80,a0,a0.w)
-      orib    #0x31, (0,a0,a0.l)
-      orib    #0x31, (-0x80,a0,a0.l)
       orib    #0x39, (0x023a).w
       orib    #0x3a, (0x033c).l
       ori     #0x3d, ccr
@@ -25,12 +21,8 @@
       oriw    #0x0169, (-0x8000,a0)
       oriw    #0x0171, (0,a0,d0.l)
       oriw    #0x0171, (-0x80,a0,d0.l)
-      oriw    #0x0171, (0,a0,d1.w)
-      oriw    #0x0171, (-0x80,a0,d1.w)
       oriw    #0x0171, (0,a0,a0.w)
       oriw    #0x0171, (-0x80,a0,a0.w)
-      oriw    #0x0171, (0,a0,a0.l)
-      oriw    #0x0171, (-0x80,a0,a0.l)
       oriw    #0x0179, (0x027a).w
       oriw    #0x017a, (0x037c).l
       ori     #0x017d, sr
@@ -42,12 +34,8 @@
       oril    #0x01a902aa, (-0x8000,a0)
       oril    #0x01b102b2, (0,a0,d0.l)
       oril    #0x01b102b2, (-0x80,a0,d0.l)
-      oril    #0x01b102b2, (0,a0,d1.w)
-      oril    #0x01b102b2, (-0x80,a0,d1.w)
       oril    #0x01b102b2, (0,a0,a0.w)
       oril    #0x01b102b2, (-0x80,a0,a0.w)
-      oril    #0x01b102b2, (0,a0,a0.l)
-      oril    #0x01b102b2, (-0x80,a0,a0.l)
       oril    #0x01b902ba, (0x03bc).w
       oril    #0x01ba02bb, (0x04be).l
       btstl   d0, d0
@@ -60,12 +48,8 @@
       btstb   d0, (-0x8000,a0)
       btstb   d0, (0,a0,d0.l)
       btstb   d0, (-0x80,a0,d0.l)
-      btstb   d0, (0,a0,d1.w)
-      btstb   d0, (-0x80,a0,d1.w)
       btstb   d0, (0,a0,a0.w)
       btstb   d0, (-0x80,a0,a0.w)
-      btstb   d0, (0,a0,a0.l)
-      btstb   d0, (-0x80,a0,a0.l)
       btstb   d0, (0x0239).w
       btstb   d0, (0x033b).l
       btstb   d0, (.+0x023d,pc)
@@ -74,15 +58,9 @@
       btstb   d0, (.+2,pc,d0.l)
       btstb   d0, (.-126,pc,d0.l)
       btstb   d0, (.,pc,d0.l)
-      btstb   d0, (.+2,pc,d1.w)
-      btstb   d0, (.-126,pc,d1.w)
-      btstb   d0, (.,pc,d1.w)
       btstb   d0, (.+2,pc,a0.w)
       btstb   d0, (.-126,pc,a0.w)
       btstb   d0, (.,pc,a0.w)
-      btstb   d0, (.+2,pc,a0.l)
-      btstb   d0, (.-126,pc,a0.l)
-      btstb   d0, (.,pc,a0.l)
       bchgl   d0, d0
       movepl  (0x0249,a0), d0
       movepl  (-0x8000,a0), d0
@@ -93,12 +71,8 @@
       bchgb   d0, (-0x8000,a0)
       bchgb   d0, (0,a0,d0.l)
       bchgb   d0, (-0x80,a0,d0.l)
-      bchgb   d0, (0,a0,d1.w)
-      bchgb   d0, (-0x80,a0,d1.w)
       bchgb   d0, (0,a0,a0.w)
       bchgb   d0, (-0x80,a0,a0.w)
-      bchgb   d0, (0,a0,a0.l)
-      bchgb   d0, (-0x80,a0,a0.l)
       bchgb   d0, (0x0279).w
       bchgb   d0, (0x037b).l
       bclrl   d0, d0
@@ -111,12 +85,8 @@
       bclrb   d0, (-0x8000,a0)
       bclrb   d0, (0,a0,d0.l)
       bclrb   d0, (-0x80,a0,d0.l)
-      bclrb   d0, (0,a0,d1.w)
-      bclrb   d0, (-0x80,a0,d1.w)
       bclrb   d0, (0,a0,a0.w)
       bclrb   d0, (-0x80,a0,a0.w)
-      bclrb   d0, (0,a0,a0.l)
-      bclrb   d0, (-0x80,a0,a0.l)
       bclrb   d0, (0x02b9).w
       bclrb   d0, (0x03bb).l
       bsetl   d0, d0
@@ -129,12 +99,8 @@
       bsetb   d0, (-0x8000,a0)
       bsetb   d0, (0,a0,d0.l)
       bsetb   d0, (-0x80,a0,d0.l)
-      bsetb   d0, (0,a0,d1.w)
-      bsetb   d0, (-0x80,a0,d1.w)
       bsetb   d0, (0,a0,a0.w)
       bsetb   d0, (-0x80,a0,a0.w)
-      bsetb   d0, (0,a0,a0.l)
-      bsetb   d0, (-0x80,a0,a0.l)
       bsetb   d0, (0x02f9).w
       bsetb   d0, (0x03fb).l
       andib   #1, d0
@@ -145,12 +111,8 @@
       andib   #0x29, (-0x8000,a0)
       andib   #0x31, (0,a0,d0.l)
       andib   #0x31, (-0x80,a0,d0.l)
-      andib   #0x31, (0,a0,d1.w)
-      andib   #0x31, (-0x80,a0,d1.w)
       andib   #0x31, (0,a0,a0.w)
       andib   #0x31, (-0x80,a0,a0.w)
-      andib   #0x31, (0,a0,a0.l)
-      andib   #0x31, (-0x80,a0,a0.l)
       andib   #0x39, (0x043a).w
       andib   #0x3a, (0x053c).l
       andi    #0x3d, ccr
@@ -162,12 +124,8 @@
       andiw   #0x0369, (-0x8000,a0)
       andiw   #0x0371, (0,a0,d0.l)
       andiw   #0x0371, (-0x80,a0,d0.l)
-      andiw   #0x0371, (0,a0,d1.w)
-      andiw   #0x0371, (-0x80,a0,d1.w)
       andiw   #0x0371, (0,a0,a0.w)
       andiw   #0x0371, (-0x80,a0,a0.w)
-      andiw   #0x0371, (0,a0,a0.l)
-      andiw   #0x0371, (-0x80,a0,a0.l)
       andiw   #0x0379, (0x047a).w
       andiw   #0x037a, (0x057c).l
       andi    #0x037d, sr
@@ -179,12 +137,8 @@
       andil   #0x03a904aa, (-0x8000,a0)
       andil   #0x03b104b2, (0,a0,d0.l)
       andil   #0x03b104b2, (-0x80,a0,d0.l)
-      andil   #0x03b104b2, (0,a0,d1.w)
-      andil   #0x03b104b2, (-0x80,a0,d1.w)
       andil   #0x03b104b2, (0,a0,a0.w)
       andil   #0x03b104b2, (-0x80,a0,a0.w)
-      andil   #0x03b104b2, (0,a0,a0.l)
-      andil   #0x03b104b2, (-0x80,a0,a0.l)
       andil   #0x03b904ba, (0x05bc).w
       andil   #0x03ba04bb, (0x06be).l
       subib   #1, d0
@@ -195,12 +149,8 @@
       subib   #0x29, (-0x8000,a0)
       subib   #0x31, (0,a0,d0.l)
       subib   #0x31, (-0x80,a0,d0.l)
-      subib   #0x31, (0,a0,d1.w)
-      subib   #0x31, (-0x80,a0,d1.w)
       subib   #0x31, (0,a0,a0.w)
       subib   #0x31, (-0x80,a0,a0.w)
-      subib   #0x31, (0,a0,a0.l)
-      subib   #0x31, (-0x80,a0,a0.l)
       subib   #0x39, (0x063a).w
       subib   #0x3a, (0x073c).l
       subiw   #0x0541, d0
@@ -211,12 +161,8 @@
       subiw   #0x0569, (-0x8000,a0)
       subiw   #0x0571, (0,a0,d0.l)
       subiw   #0x0571, (-0x80,a0,d0.l)
-      subiw   #0x0571, (0,a0,d1.w)
-      subiw   #0x0571, (-0x80,a0,d1.w)
       subiw   #0x0571, (0,a0,a0.w)
       subiw   #0x0571, (-0x80,a0,a0.w)
-      subiw   #0x0571, (0,a0,a0.l)
-      subiw   #0x0571, (-0x80,a0,a0.l)
       subiw   #0x0579, (0x067a).w
       subiw   #0x057a, (0x077c).l
       subil   #0x05810682, d0
@@ -227,12 +173,8 @@
       subil   #0x05a906aa, (-0x8000,a0)
       subil   #0x05b106b2, (0,a0,d0.l)
       subil   #0x05b106b2, (-0x80,a0,d0.l)
-      subil   #0x05b106b2, (0,a0,d1.w)
-      subil   #0x05b106b2, (-0x80,a0,d1.w)
       subil   #0x05b106b2, (0,a0,a0.w)
       subil   #0x05b106b2, (-0x80,a0,a0.w)
-      subil   #0x05b106b2, (0,a0,a0.l)
-      subil   #0x05b106b2, (-0x80,a0,a0.l)
       subil   #0x05b906ba, (0x07bc).w
       subil   #0x05ba06bb, (0x08be).l
       addib   #1, d0
@@ -243,12 +185,8 @@
       addib   #0x29, (-0x8000,a0)
       addib   #0x31, (0x32,a0,d0.l)
       addib   #0x31, (-0x80,a0,d0.l)
-      addib   #0x31, (0,a0,d1.w)
-      addib   #0x31, (-0x80,a0,d1.w)
       addib   #0x31, (0,a0,a0.w)
       addib   #0x31, (-0x80,a0,a0.w)
-      addib   #0x31, (0,a0,a0.l)
-      addib   #0x31, (-0x80,a0,a0.l)
       addib   #0x39, (0x083a).w
       addib   #0x3a, (0x093c).l
       addiw   #0x0741, d0
@@ -259,12 +197,8 @@
       addiw   #0x0769, (-0x8000,a0)
       addiw   #0x0771, (0x72,a0,d0.l)
       addiw   #0x0771, (-0x80,a0,d0.l)
-      addiw   #0x0771, (0,a0,d1.w)
-      addiw   #0x0771, (-0x80,a0,d1.w)
       addiw   #0x0771, (0,a0,a0.w)
       addiw   #0x0771, (-0x80,a0,a0.w)
-      addiw   #0x0771, (0,a0,a0.l)
-      addiw   #0x0771, (-0x80,a0,a0.l)
       addiw   #0x0779, (0x087a).w
       addiw   #0x077a, (0x097c).l
       addil   #0x07810882, d0
@@ -275,12 +209,8 @@
       addil   #0x07a908aa, (-0x8000,a0)
       addil   #0x07b108b2, (0,a0,d1.w)
       addil   #0x07b108b2, (-0x80,a0,d1.w)
-      addil   #0x07b108b2, (0,a0,d1.l)
-      addil   #0x07b108b2, (-0x80,a0,d1.l)
       addil   #0x07b108b2, (0,a0,a0.w)
       addil   #0x07b108b2, (-0x80,a0,a0.w)
-      addil   #0x07b108b2, (0,a0,a0.l)
-      addil   #0x07b108b2, (-0x80,a0,a0.l)
       addil   #0x07b908ba, (0x09bc).w
       addil   #0x07ba08bb, (0x0abe).l
       btstl   #0, d0
@@ -291,12 +221,8 @@
       btstb   #0, (-0x8000,a0)
       btstb   #0, (0,a0,d0.l)
       btstb   #0, (-0x80,a0,d0.l)
-      btstb   #0, (0,a0,d1.w)
-      btstb   #0, (-0x80,a0,d1.w)
       btstb   #0, (0,a0,a0.w)
       btstb   #0, (-0x80,a0,a0.w)
-      btstb   #0, (0,a0,a0.l)
-      btstb   #0, (-0x80,a0,a0.l)
       btstb   #0, (0x0101).w
       btstb   #0, (0x0202).l
       btstb   #0, (.+0x0105,pc)
@@ -305,15 +231,9 @@
       btstb   #0, (.+4,pc,d0.l)
       btstb   #0, (.-124,pc,d0.l)
       btstb   #0, (.,pc,d0.l)
-      btstb   #0, (.+4,pc,d1.w)
-      btstb   #0, (.-124,pc,d1.w)
-      btstb   #0, (.,pc,d1.w)
       btstb   #0, (.+4,pc,a0.w)
       btstb   #0, (.-124,pc,a0.w)
       btstb   #0, (.,pc,a0.w)
-      btstb   #0, (.+4,pc,a0.l)
-      btstb   #0, (.-124,pc,a0.l)
-      btstb   #0, (.,pc,a0.l)
       bchgl   #0, d0
       bchgb   #0, (a0)
       bchgb   #0, (a0)+
@@ -322,12 +242,8 @@
       bchgb   #0, (-0x8000,a0)
       bchgb   #0, (0,a0,d0.l)
       bchgb   #0, (-0x80,a0,d0.l)
-      bchgb   #0, (0,a0,d1.w)
-      bchgb   #0, (-0x80,a0,d1.w)
       bchgb   #0, (0,a0,a0.w)
       bchgb   #0, (-0x80,a0,a0.w)
-      bchgb   #0, (0,a0,a0.l)
-      bchgb   #0, (-0x80,a0,a0.l)
       bchgb   #0, (0x0101).w
       bchgb   #0, (0x0202).l
       bclrl   #0, d0
@@ -338,12 +254,8 @@
       bclrb   #0, (-0x8000,a0)
       bclrb   #0, (0,a0,d0.l)
       bclrb   #0, (-0x80,a0,d0.l)
-      bclrb   #0, (0,a0,d1.w)
-      bclrb   #0, (-0x80,a0,d1.w)
       bclrb   #0, (0,a0,a0.w)
       bclrb   #0, (-0x80,a0,a0.w)
-      bclrb   #0, (0,a0,a0.l)
-      bclrb   #0, (-0x80,a0,a0.l)
       bclrb   #0, (0x0101).w
       bclrb   #0, (0x0202).l
       bsetl   #0, d0
@@ -354,12 +266,8 @@
       bsetb   #0, (-0x8000,a0)
       bsetb   #0, (0,a0,d0.l)
       bsetb   #0, (-0x80,a0,d0.l)
-      bsetb   #0, (0,a0,d1.w)
-      bsetb   #0, (-0x80,a0,d1.w)
       bsetb   #0, (0,a0,a0.w)
       bsetb   #0, (-0x80,a0,a0.w)
-      bsetb   #0, (0,a0,a0.l)
-      bsetb   #0, (-0x80,a0,a0.l)
       bsetb   #0, (0x0101).w
       bsetb   #0, (0x0202).l
       eorib   #1, d0
@@ -370,12 +278,8 @@
       eorib   #0x29, (-0x8000,a0)
       eorib   #0x31, (0,a0,d1.w)
       eorib   #0x31, (-0x80,a0,d1.w)
-      eorib   #0x31, (0,a0,d1.l)
-      eorib   #0x31, (-0x80,a0,d1.l)
       eorib   #0x31, (0,a0,a0.w)
       eorib   #0x31, (-0x80,a0,a0.w)
-      eorib   #0x31, (0,a0,a0.l)
-      eorib   #0x31, (-0x80,a0,a0.l)
       eorib   #0x39, (0x0c3a).w
       eorib   #0x3a, (0x0d3c).l
       eori    #0x3d, ccr
@@ -387,12 +291,8 @@
       eoriw   #0x0b69, (-0x8000,a0)
       eoriw   #0x0b71, (0,a0,d1.w)
       eoriw   #0x0b71, (-0x80,a0,d1.w)
-      eoriw   #0x0b71, (0,a0,d1.l)
-      eoriw   #0x0b71, (-0x80,a0,d1.l)
       eoriw   #0x0b71, (0,a0,a0.w)
       eoriw   #0x0b71, (-0x80,a0,a0.w)
-      eoriw   #0x0b71, (0,a0,a0.l)
-      eoriw   #0x0b71, (-0x80,a0,a0.l)
       eoriw   #0x0b79, (0x0c7a).w
       eoriw   #0x0b7a, (0x0d7c).l
       eori    #0x0b7d, sr
@@ -404,12 +304,8 @@
       eoril   #0x0ba90caa, (-0x8000,a0)
       eoril   #0x0bb10cb2, (0,a0,d1.w)
       eoril   #0x0bb10cb2, (-0x80,a0,d1.w)
-      eoril   #0x0bb10cb2, (0,a0,d1.l)
-      eoril   #0x0bb10cb2, (-0x80,a0,d1.l)
       eoril   #0x0bb10cb2, (0,a0,a0.w)
       eoril   #0x0bb10cb2, (-0x80,a0,a0.w)
-      eoril   #0x0bb10cb2, (0,a0,a0.l)
-      eoril   #0x0bb10cb2, (-0x80,a0,a0.l)
       eoril   #0x0bb90cba, (0x0dbc).w
       eoril   #0x0bba0cbb, (0x0ebe).l
       cmpib   #1, d0
@@ -420,12 +316,8 @@
       cmpib   #0x29, (-0x8000,a0)
       cmpib   #0x31, (0,a0,d1.w)
       cmpib   #0x31, (-0x80,a0,d1.w)
-      cmpib   #0x31, (0,a0,d1.l)
-      cmpib   #0x31, (-0x80,a0,d1.l)
       cmpib   #0x31, (0,a0,a0.w)
       cmpib   #0x31, (-0x80,a0,a0.w)
-      cmpib   #0x31, (0,a0,a0.l)
-      cmpib   #0x31, (-0x80,a0,a0.l)
       cmpib   #0x39, (0x0e3a).w
       cmpib   #0x3a, (0x0f3c).l
       cmpiw   #0x0d41, d0
@@ -436,12 +328,8 @@
       cmpiw   #0x0d69, (-0x8000,a0)
       cmpiw   #0x0d71, (0,a0,d1.w)
       cmpiw   #0x0d71, (-0x80,a0,d1.w)
-      cmpiw   #0x0d71, (0,a0,d1.l)
-      cmpiw   #0x0d71, (-0x80,a0,d1.l)
       cmpiw   #0x0d71, (0,a0,a0.w)
       cmpiw   #0x0d71, (-0x80,a0,a0.w)
-      cmpiw   #0x0d71, (0,a0,a0.l)
-      cmpiw   #0x0d71, (-0x80,a0,a0.l)
       cmpiw   #0x0d79, (0x0e7a).w
       cmpiw   #0x0d7a, (0x0f7c).l
       cmpil   #0x0d810e82, d0
@@ -452,12 +340,8 @@
       cmpil   #0x0da90eaa, (-0x8000,a0)
       cmpil   #0x0db10eb2, (0,a0,d1.w)
       cmpil   #0x0db10eb2, (-0x80,a0,d1.w)
-      cmpil   #0x0db10eb2, (0,a0,d1.l)
-      cmpil   #0x0db10eb2, (-0x80,a0,d1.l)
       cmpil   #0x0db10eb2, (0,a0,a0.w)
       cmpil   #0x0db10eb2, (-0x80,a0,a0.w)
-      cmpil   #0x0db10eb2, (0,a0,a0.l)
-      cmpil   #0x0db10eb2, (-0x80,a0,a0.l)
       cmpil   #0x0db90eba, (0x0fbc).w
       cmpil   #0x0dba0ebb, (0x10be).l
       movesb  (a0), d1
@@ -482,36 +366,20 @@
       movesb  a0, (0,a0)
       movesb  (0,a0,d1.l), d1
       movesb  (-0x80,a0,d1.l), d1
-      movesb  (0,a0,d2.w), d1
-      movesb  (-0x80,a0,d2.w), d1
       movesb  (0,a0,a0.w), d1
       movesb  (-0x80,a0,a0.w), d1
-      movesb  (0,a0,a0.l), d1
-      movesb  (-0x80,a0,a0.l), d1
       movesb  d1, (0,a0,d2.w)
       movesb  d1, (-0x80,a0,d2.w)
-      movesb  d1, (0,a0,d2.l)
-      movesb  d1, (-0x80,a0,d2.l)
       movesb  d1, (0,a0,a0.w)
       movesb  d1, (-0x80,a0,a0.w)
-      movesb  d1, (0,a0,a0.l)
-      movesb  d1, (-0x80,a0,a0.l)
       movesb  (0,a0,a0.l), a0
       movesb  (-0x80,a0,a0.l), a0
-      movesb  (0,a0,a1.w), a0
-      movesb  (-0x80,a0,a1.w), a0
       movesb  (0,a0,d0.w), a0
       movesb  (-0x80,a0,d0.w), a0
-      movesb  (0,a0,d0.l), a0
-      movesb  (-0x80,a0,d0.l), a0
       movesb  a0, (0,a0,a1.w)
       movesb  a0, (-0x80,a0,a1.w)
-      movesb  a0, (0,a0,a1.l)
-      movesb  a0, (-0x80,a0,a1.l)
       movesb  a0, (0,a0,d0.w)
       movesb  a0, (-0x80,a0,d0.w)
-      movesb  a0, (0,a0,d0.l)
-      movesb  a0, (-0x80,a0,d0.l)
       movesb  (0x1101).w, d1
       movesb  d1, (0x1901).w
       movesb  (0x8101).w, a0
@@ -542,36 +410,20 @@
       movesw  a0, (0,a0)
       movesw  (0,a0,d1.l), d1
       movesw  (-0x80,a0,d1.l), d1
-      movesw  (0,a0,d2.w), d1
-      movesw  (-0x80,a0,d2.w), d1
       movesw  (0,a0,a0.w), d1
       movesw  (-0x80,a0,a0.w), d1
-      movesw  (0,a0,a0.l), d1
-      movesw  (-0x80,a0,a0.l), d1
       movesw  d1, (0,a0,d2.w)
       movesw  d1, (-0x80,a0,d2.w)
-      movesw  d1, (0,a0,d2.l)
-      movesw  d1, (-0x80,a0,d2.l)
       movesw  d1, (0,a0,a0.w)
       movesw  d1, (-0x80,a0,a0.w)
-      movesw  d1, (0,a0,a0.l)
-      movesw  d1, (-0x80,a0,a0.l)
       movesw  (0,a0,a0.l), a0
       movesw  (-0x80,a0,a0.l), a0
-      movesw  (0,a0,a1.w), a0
-      movesw  (-0x80,a0,a1.w), a0
       movesw  (0,a0,d0.w), a0
       movesw  (-0x80,a0,d0.w), a0
-      movesw  (0,a0,d0.l), a0
-      movesw  (-0x80,a0,d0.l), a0
       movesw  a0, (0,a0,a1.w)
       movesw  a0, (-0x80,a0,a1.w)
-      movesw  a0, (0,a0,a1.l)
-      movesw  a0, (-0x80,a0,a1.l)
       movesw  a0, (0,a0,d0.w)
       movesw  a0, (-0x80,a0,d0.w)
-      movesw  a0, (0,a0,d0.l)
-      movesw  a0, (-0x80,a0,d0.l)
       movesw  (0x1102).w, d1
       movesw  d1, (0x1902).w
       movesw  (0x8102).w, a0
@@ -602,36 +454,20 @@
       movesl  a0, (0,a0)
       movesl  (0,a0,d1.l), d1
       movesl  (-0x80,a0,d1.l), d1
-      movesl  (0,a0,d2.w), d1
-      movesl  (-0x80,a0,d2.w), d1
       movesl  (0,a0,a0.w), d1
       movesl  (-0x80,a0,a0.w), d1
-      movesl  (0,a0,a0.l), d1
-      movesl  (-0x80,a0,a0.l), d1
       movesl  d1, (0,a0,d2.w)
       movesl  d1, (-0x80,a0,d2.w)
-      movesl  d1, (0,a0,d2.l)
-      movesl  d1, (-0x80,a0,d2.l)
       movesl  d1, (0,a0,a0.w)
       movesl  d1, (-0x80,a0,a0.w)
-      movesl  d1, (0,a0,a0.l)
-      movesl  d1, (-0x80,a0,a0.l)
       movesl  (0,a0,a0.l), a0
       movesl  (-0x80,a0,a0.l), a0
-      movesl  (0,a0,a1.w), a0
-      movesl  (-0x80,a0,a1.w), a0
       movesl  (0,a0,d0.w), a0
       movesl  (-0x80,a0,d0.w), a0
-      movesl  (0,a0,d0.l), a0
-      movesl  (-0x80,a0,d0.l), a0
       movesl  a0, (0,a0,a1.w)
       movesl  a0, (-0x80,a0,a1.w)
-      movesl  a0, (0,a0,a1.l)
-      movesl  a0, (-0x80,a0,a1.l)
       movesl  a0, (0,a0,d0.w)
       movesl  a0, (-0x80,a0,d0.w)
-      movesl  a0, (0,a0,d0.l)
-      movesl  a0, (-0x80,a0,d0.l)
       movesl  (0x1102).w, d1
       movesl  d1, (0x1902).w
       movesl  (0x8102).w, a0
@@ -648,12 +484,8 @@
       moveb   (-0x8000,a0), d0
       moveb   (0,a0,d1.l), d0
       moveb   (-0x80,a0,d1.l), d0
-      moveb   (0,a0,d2.w), d0
-      moveb   (-0x80,a0,d2.w), d0
       moveb   (0,a0,a0.w), d0
       moveb   (-0x80,a0,a0.w), d0
-      moveb   (0,a0,a0.l), d0
-      moveb   (-0x80,a0,a0.l), d0
       moveb   (0x1139).w, d0
       moveb   (0x123b).l, d0
       moveb   (.+0x113d,pc), d0
@@ -662,15 +494,9 @@
       moveb   (.+2,pc,d1.l), d0
       moveb   (.-126,pc,d1.l), d0
       moveb   (.,pc,d1.l), d0
-      moveb   (.+2,pc,d2.w), d0
-      moveb   (.-126,pc,d2.w), d0
-      moveb   (.,pc,d2.w), d0
       moveb   (.+2,pc,a0.w), d0
       moveb   (.-126,pc,a0.w), d0
       moveb   (.,pc,a0.w), d0
-      moveb   (.+2,pc,a0.l), d0
-      moveb   (.-126,pc,a0.l), d0
-      moveb   (.,pc,a0.l), d0
       moveb   #0x3d, d0
       moveb   d0, (a0)
       moveb   (a0), (a0)
@@ -680,12 +506,8 @@
       moveb   (-0x8000,a0), (a0)
       moveb   (0,a0,d1.l), (a0)
       moveb   (-0x80,a0,d1.l), (a0)
-      moveb   (0,a0,d2.w), (a0)
-      moveb   (-0x80,a0,d2.w), (a0)
       moveb   (0,a0,a0.w), (a0)
       moveb   (-0x80,a0,a0.w), (a0)
-      moveb   (0,a0,a0.l), (a0)
-      moveb   (-0x80,a0,a0.l), (a0)
       moveb   (0x11b9).w, (a0)
       moveb   (0x12bb).l, (a0)
       moveb   (.+0x11bd,pc), (a0)
@@ -694,15 +516,9 @@
       moveb   (.+2,pc,d1.l), (a0)
       moveb   (.-126,pc,d1.l), (a0)
       moveb   (.,pc,d1.l), (a0)
-      moveb   (.+2,pc,d2.w), (a0)
-      moveb   (.-126,pc,d2.w), (a0)
-      moveb   (.,pc,d2.w), (a0)
       moveb   (.+2,pc,a0.w), (a0)
       moveb   (.-126,pc,a0.w), (a0)
       moveb   (.,pc,a0.w), (a0)
-      moveb   (.+2,pc,a0.l), (a0)
-      moveb   (.-126,pc,a0.l), (a0)
-      moveb   (.,pc,a0.l), (a0)
       moveb   #0xbd, (a0)
       moveb   d0, (a0)+
       moveb   (a0), (a0)+
@@ -712,12 +528,8 @@
       moveb   (-0x8000,a0), (a0)+
       moveb   (0,a0,d1.l), (a0)+
       moveb   (-0x80,a0,d1.l), (a0)+
-      moveb   (0,a0,d2.w), (a0)+
-      moveb   (-0x80,a0,d2.w), (a0)+
       moveb   (0,a0,a0.w), (a0)+
       moveb   (-0x80,a0,a0.w), (a0)+
-      moveb   (0,a0,a0.l), (a0)+
-      moveb   (-0x80,a0,a0.l), (a0)+
       moveb   (0x11f9).w, (a0)+
       moveb   (0x12fb).l, (a0)+
       moveb   (.+0x11fd,pc), (a0)+
@@ -726,15 +538,9 @@
       moveb   (.+2,pc,d1.l), (a0)+
       moveb   (.-126,pc,d1.l), (a0)+
       moveb   (.,pc,d1.l), (a0)+
-      moveb   (.+2,pc,d2.w), (a0)+
-      moveb   (.-126,pc,d2.w), (a0)+
-      moveb   (.,pc,d2.w), (a0)+
       moveb   (.+2,pc,a0.w), (a0)+
       moveb   (.-126,pc,a0.w), (a0)+
       moveb   (.,pc,a0.w), (a0)+
-      moveb   (.+2,pc,a0.l), (a0)+
-      moveb   (.-126,pc,a0.l), (a0)+
-      moveb   (.,pc,a0.l), (a0)+
       moveb   #0xfd, (a0)+
       moveb   d0, -(a0)
       moveb   (a0), -(a0)
@@ -744,12 +550,8 @@
       moveb   (-0x8000,a0), -(a0)
       moveb   (0,a0,d1.l), -(a0)
       moveb   (-0x80,a0,d1.l), -(a0)
-      moveb   (0,a0,d2.w), -(a0)
-      moveb   (-0x80,a0,d2.w), -(a0)
       moveb   (0,a0,a0.w), -(a0)
       moveb   (-0x80,a0,a0.w), -(a0)
-      moveb   (0,a0,a0.l), -(a0)
-      moveb   (-0x80,a0,a0.l), -(a0)
       moveb   (0x1239).w, -(a0)
       moveb   (0x133b).l, -(a0)
       moveb   (.+0x123d,pc), -(a0)
@@ -758,15 +560,9 @@
       moveb   (.+2,pc,d1.l), -(a0)
       moveb   (.-126,pc,d1.l), -(a0)
       moveb   (.,pc,d1.l), -(a0)
-      moveb   (.+2,pc,d2.w), -(a0)
-      moveb   (.-126,pc,d2.w), -(a0)
-      moveb   (.,pc,d2.w), -(a0)
       moveb   (.+2,pc,a0.w), -(a0)
       moveb   (.-126,pc,a0.w), -(a0)
       moveb   (.,pc,a0.w), -(a0)
-      moveb   (.+2,pc,a0.l), -(a0)
-      moveb   (.-126,pc,a0.l), -(a0)
-      moveb   (.,pc,a0.l), -(a0)
       moveb   #0x3d, -(a0)
       moveb   d0, (0x1241,a0)
       moveb   d0, (-0x8000,a0)
@@ -784,18 +580,10 @@
       moveb   (0,a0,d1.l), (-0x8000,a0)
       moveb   (-0x80,a0,d1.l), (0x1981,a0)
       moveb   (-0x80,a0,d1.l), (-0x8000,a0)
-      moveb   (0,a0,d2.w), (0x2101,a0)
-      moveb   (0,a0,d2.w), (-0x8000,a0)
-      moveb   (-0x80,a0,d2.w), (0x2181,a0)
-      moveb   (-0x80,a0,d2.w), (-0x8000,a0)
       moveb   (0,a0,a0.w), (-0x7eff,a0)
       moveb   (0,a0,a0.w), (0,a0)
       moveb   (-0x80,a0,a0.w), (-0x7e7f,a0)
       moveb   (-0x80,a0,a0.w), (0,a0)
-      moveb   (0,a0,a0.l), (-0x76ff,a0)
-      moveb   (0,a0,a0.l), (0,a0)
-      moveb   (-0x80,a0,a0.l), (-0x767f,a0)
-      moveb   (-0x80,a0,a0.l), (0,a0)
       moveb   (0x1279).w, (0x137a,a0)
       moveb   (0x1279).w, (-0x8000,a0)
       moveb   (0x137b).l, (0x147c,a0)
@@ -812,282 +600,102 @@
       moveb   (.-126,pc,d1.l), (-0x8000,a0)
       moveb   (.,pc,d1.l), (0x19ff,a0)
       moveb   (.,pc,d1.l), (-0x8000,a0)
-      moveb   (.+2,pc,d2.w), (0x2101,a0)
-      moveb   (.+2,pc,d2.w), (-0x8000,a0)
-      moveb   (.-126,pc,d2.w), (0x2181,a0)
-      moveb   (.-126,pc,d2.w), (-0x8000,a0)
-      moveb   (.,pc,d2.w), (0x21ff,a0)
-      moveb   (.,pc,d2.w), (-0x8000,a0)
       moveb   (.+2,pc,a0.w), (-0x7eff,a0)
       moveb   (.+2,pc,a0.w), (0,a0)
       moveb   (.-126,pc,a0.w), (-0x7e7f,a0)
       moveb   (.-126,pc,a0.w), (0,a0)
       moveb   (.,pc,a0.w), (-0x7e01,a0)
       moveb   (.,pc,a0.w), (0,a0)
-      moveb   (.+2,pc,a0.l), (-0x76ff,a0)
-      moveb   (.+2,pc,a0.l), (0,a0)
-      moveb   (.-126,pc,a0.l), (-0x767f,a0)
-      moveb   (.-126,pc,a0.l), (0,a0)
-      moveb   (.,pc,a0.l), (-0x7601,a0)
-      moveb   (.,pc,a0.l), (0,a0)
       moveb   #0x7d, (0x137e,a0)
       moveb   #0x7d, (-0x8000,a0)
       moveb   d0, (0,a0,d1.l)
       moveb   d0, (-0x80,a0,d1.l)
-      moveb   d0, (0,a0,d2.w)
-      moveb   d0, (-0x80,a0,d2.w)
       moveb   d0, (0,a0,a0.w)
       moveb   d0, (-0x80,a0,a0.w)
-      moveb   d0, (0,a0,a0.l)
-      moveb   d0, (-0x80,a0,a0.l)
       moveb   (a0), (0,a0,d1.l)
       moveb   (a0), (-0x80,a0,d1.l)
-      moveb   (a0), (0,a0,d2.w)
-      moveb   (a0), (-0x80,a0,d2.w)
       moveb   (a0), (0,a0,a0.w)
       moveb   (a0), (-0x80,a0,a0.w)
-      moveb   (a0), (0,a0,a0.l)
-      moveb   (a0), (-0x80,a0,a0.l)
       moveb   (a0)+, (0,a0,d1.l)
       moveb   (a0)+, (-0x80,a0,d1.l)
-      moveb   (a0)+, (0,a0,d2.w)
-      moveb   (a0)+, (-0x80,a0,d2.w)
       moveb   (a0)+, (0,a0,a0.w)
       moveb   (a0)+, (-0x80,a0,a0.w)
-      moveb   (a0)+, (0,a0,a0.l)
-      moveb   (a0)+, (-0x80,a0,a0.l)
       moveb   -(a0), (0,a0,d1.l)
       moveb   -(a0), (-0x80,a0,d1.l)
-      moveb   -(a0), (0,a0,d2.w)
-      moveb   -(a0), (-0x80,a0,d2.w)
       moveb   -(a0), (0,a0,a0.w)
       moveb   -(a0), (-0x80,a0,a0.w)
-      moveb   -(a0), (0,a0,a0.l)
-      moveb   -(a0), (-0x80,a0,a0.l)
       moveb   (0x12a9,a0), (0,a0,d1.l)
       moveb   (0x12a9,a0), (-0x80,a0,d1.l)
-      moveb   (0x12a9,a0), (0,a0,d2.w)
-      moveb   (0x12a9,a0), (-0x80,a0,d2.w)
       moveb   (0x12a9,a0), (0,a0,a0.w)
       moveb   (0x12a9,a0), (-0x80,a0,a0.w)
-      moveb   (0x12a9,a0), (0,a0,a0.l)
-      moveb   (0x12a9,a0), (-0x80,a0,a0.l)
       moveb   (-0x8000,a0), (0,a0,a0.l)
       moveb   (-0x8000,a0), (-0x80,a0,a0.l)
-      moveb   (-0x8000,a0), (0,a0,a1.w)
-      moveb   (-0x8000,a0), (-0x80,a0,a1.w)
       moveb   (-0x8000,a0), (0,a0,d0.w)
       moveb   (-0x8000,a0), (-0x80,a0,d0.w)
-      moveb   (-0x8000,a0), (0,a0,d0.l)
-      moveb   (-0x8000,a0), (-0x80,a0,d0.l)
       moveb   (0,a0,d1.l), (0,a0,d2.w)
       moveb   (0,a0,d1.l), (-0x80,a0,d2.w)
-      moveb   (0,a0,d1.l), (0,a0,d2.l)
-      moveb   (0,a0,d1.l), (-0x80,a0,d2.l)
       moveb   (0,a0,d1.l), (0,a0,a0.w)
       moveb   (0,a0,d1.l), (-0x80,a0,a0.w)
-      moveb   (0,a0,d1.l), (0,a0,a0.l)
-      moveb   (0,a0,d1.l), (-0x80,a0,a0.l)
       moveb   (-0x80,a0,d1.l), (0,a0,d2.w)
       moveb   (-0x80,a0,d1.l), (-0x80,a0,d2.w)
-      moveb   (-0x80,a0,d1.l), (0,a0,d2.l)
-      moveb   (-0x80,a0,d1.l), (-0x80,a0,d2.l)
       moveb   (-0x80,a0,d1.l), (0,a0,a0.w)
       moveb   (-0x80,a0,d1.l), (-0x80,a0,a0.w)
-      moveb   (-0x80,a0,d1.l), (0,a0,a0.l)
-      moveb   (-0x80,a0,d1.l), (-0x80,a0,a0.l)
-      moveb   (0,a0,d2.w), (0,a0,d2.l)
-      moveb   (0,a0,d2.w), (-0x80,a0,d2.l)
-      moveb   (0,a0,d2.w), (0,a0,d3.w)
-      moveb   (0,a0,d2.w), (-0x80,a0,d3.w)
-      moveb   (0,a0,d2.w), (0,a0,a0.w)
-      moveb   (0,a0,d2.w), (-0x80,a0,a0.w)
-      moveb   (0,a0,d2.w), (0,a0,a0.l)
-      moveb   (0,a0,d2.w), (-0x80,a0,a0.l)
-      moveb   (-0x80,a0,d2.w), (0,a0,d2.l)
-      moveb   (-0x80,a0,d2.w), (-0x80,a0,d2.l)
-      moveb   (-0x80,a0,d2.w), (0,a0,d3.w)
-      moveb   (-0x80,a0,d2.w), (-0x80,a0,d3.w)
-      moveb   (-0x80,a0,d2.w), (0,a0,a0.w)
-      moveb   (-0x80,a0,d2.w), (-0x80,a0,a0.w)
-      moveb   (-0x80,a0,d2.w), (0,a0,a0.l)
-      moveb   (-0x80,a0,d2.w), (-0x80,a0,a0.l)
       moveb   (0,a0,a0.w), (0,a0,a0.l)
       moveb   (0,a0,a0.w), (-0x80,a0,a0.l)
-      moveb   (0,a0,a0.w), (0,a0,a1.w)
-      moveb   (0,a0,a0.w), (-0x80,a0,a1.w)
       moveb   (0,a0,a0.w), (0,a0,d0.w)
       moveb   (0,a0,a0.w), (-0x80,a0,d0.w)
-      moveb   (0,a0,a0.w), (0,a0,d0.l)
-      moveb   (0,a0,a0.w), (-0x80,a0,d0.l)
       moveb   (-0x80,a0,a0.w), (0,a0,a0.l)
       moveb   (-0x80,a0,a0.w), (-0x80,a0,a0.l)
-      moveb   (-0x80,a0,a0.w), (0,a0,a1.w)
-      moveb   (-0x80,a0,a0.w), (-0x80,a0,a1.w)
       moveb   (-0x80,a0,a0.w), (0,a0,d0.w)
       moveb   (-0x80,a0,a0.w), (-0x80,a0,d0.w)
-      moveb   (-0x80,a0,a0.w), (0,a0,d0.l)
-      moveb   (-0x80,a0,a0.w), (-0x80,a0,d0.l)
-      moveb   (0,a0,a0.l), (0,a0,a1.w)
-      moveb   (0,a0,a0.l), (-0x80,a0,a1.w)
-      moveb   (0,a0,a0.l), (0,a0,a1.l)
-      moveb   (0,a0,a0.l), (-0x80,a0,a1.l)
-      moveb   (0,a0,a0.l), (0,a0,d0.w)
-      moveb   (0,a0,a0.l), (-0x80,a0,d0.w)
-      moveb   (0,a0,a0.l), (0,a0,d0.l)
-      moveb   (0,a0,a0.l), (-0x80,a0,d0.l)
-      moveb   (-0x80,a0,a0.l), (0,a0,a1.w)
-      moveb   (-0x80,a0,a0.l), (-0x80,a0,a1.w)
-      moveb   (-0x80,a0,a0.l), (0,a0,a1.l)
-      moveb   (-0x80,a0,a0.l), (-0x80,a0,a1.l)
-      moveb   (-0x80,a0,a0.l), (0,a0,d0.w)
-      moveb   (-0x80,a0,a0.l), (-0x80,a0,d0.w)
-      moveb   (-0x80,a0,a0.l), (0,a0,d0.l)
-      moveb   (-0x80,a0,a0.l), (-0x80,a0,d0.l)
       moveb   (0x12b9).w, (0,a0,d1.l)
       moveb   (0x12b9).w, (-0x80,a0,d1.l)
-      moveb   (0x12b9).w, (0,a0,d2.w)
-      moveb   (0x12b9).w, (-0x80,a0,d2.w)
       moveb   (0x12b9).w, (0,a0,a0.w)
       moveb   (0x12b9).w, (-0x80,a0,a0.w)
-      moveb   (0x12b9).w, (0,a0,a0.l)
-      moveb   (0x12b9).w, (-0x80,a0,a0.l)
       moveb   (0x13bb).l, (0,a0,d1.l)
       moveb   (0x13bb).l, (-0x80,a0,d1.l)
-      moveb   (0x13bb).l, (0,a0,d2.w)
-      moveb   (0x13bb).l, (-0x80,a0,d2.w)
       moveb   (0x13bb).l, (0,a0,a0.w)
       moveb   (0x13bb).l, (-0x80,a0,a0.w)
-      moveb   (0x13bb).l, (0,a0,a0.l)
-      moveb   (0x13bb).l, (-0x80,a0,a0.l)
       moveb   (.+0x12bd,pc), (0,a0,d1.l)
       moveb   (.+0x12bd,pc), (-0x80,a0,d1.l)
-      moveb   (.+0x12bd,pc), (0,a0,d2.w)
-      moveb   (.+0x12bd,pc), (-0x80,a0,d2.w)
       moveb   (.+0x12bd,pc), (0,a0,a0.w)
       moveb   (.+0x12bd,pc), (-0x80,a0,a0.w)
-      moveb   (.+0x12bd,pc), (0,a0,a0.l)
-      moveb   (.+0x12bd,pc), (-0x80,a0,a0.l)
       moveb   (.-0x7ffe,pc), (0,a0,a0.l)
       moveb   (.-0x7ffe,pc), (-0x80,a0,a0.l)
-      moveb   (.-0x7ffe,pc), (0,a0,a1.w)
-      moveb   (.-0x7ffe,pc), (-0x80,a0,a1.w)
       moveb   (.-0x7ffe,pc), (0,a0,d0.w)
       moveb   (.-0x7ffe,pc), (-0x80,a0,d0.w)
-      moveb   (.-0x7ffe,pc), (0,a0,d0.l)
-      moveb   (.-0x7ffe,pc), (-0x80,a0,d0.l)
       moveb   (.,pc), (-1,a0,d0.w)
       moveb   (.,pc), (0,a0,d0.l)
-      moveb   (.,pc), (-0x80,a0,d0.l)
-      moveb   (.,pc), (0,a0,d1.w)
       moveb   (.,pc), (0,a0,a0.w)
       moveb   (.,pc), (-0x80,a0,a0.w)
-      moveb   (.,pc), (0,a0,a0.l)
-      moveb   (.,pc), (-0x80,a0,a0.l)
       moveb   (.+2,pc,d1.l), (0,a0,d2.w)
       moveb   (.+2,pc,d1.l), (-0x80,a0,d2.w)
-      moveb   (.+2,pc,d1.l), (0,a0,d2.l)
-      moveb   (.+2,pc,d1.l), (-0x80,a0,d2.l)
       moveb   (.+2,pc,d1.l), (0,a0,a0.w)
       moveb   (.+2,pc,d1.l), (-0x80,a0,a0.w)
-      moveb   (.+2,pc,d1.l), (0,a0,a0.l)
-      moveb   (.+2,pc,d1.l), (-0x80,a0,a0.l)
       moveb   (.-126,pc,d1.l), (0,a0,d2.w)
       moveb   (.-126,pc,d1.l), (-0x80,a0,d2.w)
-      moveb   (.-126,pc,d1.l), (0,a0,d2.l)
-      moveb   (.-126,pc,d1.l), (-0x80,a0,d2.l)
       moveb   (.-126,pc,d1.l), (0,a0,a0.w)
       moveb   (.-126,pc,d1.l), (-0x80,a0,a0.w)
-      moveb   (.-126,pc,d1.l), (0,a0,a0.l)
-      moveb   (.-126,pc,d1.l), (-0x80,a0,a0.l)
       moveb   (.,pc,d1.l), (0,a0,d2.w)
       moveb   (.,pc,d1.l), (-0x80,a0,d2.w)
-      moveb   (.,pc,d1.l), (0,a0,d2.l)
-      moveb   (.,pc,d1.l), (-0x80,a0,d2.l)
       moveb   (.,pc,d1.l), (0,a0,a0.w)
       moveb   (.,pc,d1.l), (-0x80,a0,a0.w)
-      moveb   (.,pc,d1.l), (0,a0,a0.l)
-      moveb   (.,pc,d1.l), (-0x80,a0,a0.l)
-      moveb   (.+2,pc,d2.w), (0,a0,d2.l)
-      moveb   (.+2,pc,d2.w), (-0x80,a0,d2.l)
-      moveb   (.+2,pc,d2.w), (0,a0,d3.w)
-      moveb   (.+2,pc,d2.w), (-0x80,a0,d3.w)
-      moveb   (.+2,pc,d2.w), (0,a0,a0.w)
-      moveb   (.+2,pc,d2.w), (-0x80,a0,a0.w)
-      moveb   (.+2,pc,d2.w), (0,a0,a0.l)
-      moveb   (.+2,pc,d2.w), (-0x80,a0,a0.l)
-      moveb   (.-126,pc,d2.w), (0,a0,d2.l)
-      moveb   (.-126,pc,d2.w), (-0x80,a0,d2.l)
-      moveb   (.-126,pc,d2.w), (0,a0,d3.w)
-      moveb   (.-126,pc,d2.w), (-0x80,a0,d3.w)
-      moveb   (.-126,pc,d2.w), (0,a0,a0.w)
-      moveb   (.-126,pc,d2.w), (-0x80,a0,a0.w)
-      moveb   (.-126,pc,d2.w), (0,a0,a0.l)
-      moveb   (.-126,pc,d2.w), (-0x80,a0,a0.l)
-      moveb   (.,pc,d2.w), (0,a0,d2.l)
-      moveb   (.,pc,d2.w), (-0x80,a0,d2.l)
-      moveb   (.,pc,d2.w), (0,a0,d3.w)
-      moveb   (.,pc,d2.w), (-0x80,a0,d3.w)
-      moveb   (.,pc,d2.w), (0,a0,a0.w)
-      moveb   (.,pc,d2.w), (-0x80,a0,a0.w)
-      moveb   (.,pc,d2.w), (0,a0,a0.l)
-      moveb   (.,pc,d2.w), (-0x80,a0,a0.l)
       moveb   (.+2,pc,a0.w), (0,a0,a0.l)
       moveb   (.+2,pc,a0.w), (-0x80,a0,a0.l)
-      moveb   (.+2,pc,a0.w), (0,a0,a1.w)
-      moveb   (.+2,pc,a0.w), (-0x80,a0,a1.w)
       moveb   (.+2,pc,a0.w), (0,a0,d0.w)
       moveb   (.+2,pc,a0.w), (-0x80,a0,d0.w)
-      moveb   (.+2,pc,a0.w), (0,a0,d0.l)
-      moveb   (.+2,pc,a0.w), (-0x80,a0,d0.l)
       moveb   (.-126,pc,a0.w), (0,a0,a0.l)
       moveb   (.-126,pc,a0.w), (-0x80,a0,a0.l)
-      moveb   (.-126,pc,a0.w), (0,a0,a1.w)
-      moveb   (.-126,pc,a0.w), (-0x80,a0,a1.w)
       moveb   (.-126,pc,a0.w), (0,a0,d0.w)
       moveb   (.-126,pc,a0.w), (-0x80,a0,d0.w)
-      moveb   (.-126,pc,a0.w), (0,a0,d0.l)
-      moveb   (.-126,pc,a0.w), (-0x80,a0,d0.l)
       moveb   (.,pc,a0.w), (0,a0,a0.l)
       moveb   (.,pc,a0.w), (-0x80,a0,a0.l)
-      moveb   (.,pc,a0.w), (0,a0,a1.w)
-      moveb   (.,pc,a0.w), (-0x80,a0,a1.w)
       moveb   (.,pc,a0.w), (0,a0,d0.w)
       moveb   (.,pc,a0.w), (-0x80,a0,d0.w)
-      moveb   (.,pc,a0.w), (0,a0,d0.l)
-      moveb   (.,pc,a0.w), (-0x80,a0,d0.l)
-      moveb   (.+2,pc,a0.l), (0,a0,a1.w)
-      moveb   (.+2,pc,a0.l), (-0x80,a0,a1.w)
-      moveb   (.+2,pc,a0.l), (0,a0,a1.l)
-      moveb   (.+2,pc,a0.l), (-0x80,a0,a1.l)
-      moveb   (.+2,pc,a0.l), (0,a0,d0.w)
-      moveb   (.+2,pc,a0.l), (-0x80,a0,d0.w)
-      moveb   (.+2,pc,a0.l), (0,a0,d0.l)
-      moveb   (.+2,pc,a0.l), (-0x80,a0,d0.l)
-      moveb   (.-126,pc,a0.l), (0,a0,a1.w)
-      moveb   (.-126,pc,a0.l), (-0x80,a0,a1.w)
-      moveb   (.-126,pc,a0.l), (0,a0,a1.l)
-      moveb   (.-126,pc,a0.l), (-0x80,a0,a1.l)
-      moveb   (.-126,pc,a0.l), (0,a0,d0.w)
-      moveb   (.-126,pc,a0.l), (-0x80,a0,d0.w)
-      moveb   (.-126,pc,a0.l), (0,a0,d0.l)
-      moveb   (.-126,pc,a0.l), (-0x80,a0,d0.l)
-      moveb   (.,pc,a0.l), (0,a0,a1.w)
-      moveb   (.,pc,a0.l), (-0x80,a0,a1.w)
-      moveb   (.,pc,a0.l), (0,a0,a1.l)
-      moveb   (.,pc,a0.l), (-0x80,a0,a1.l)
-      moveb   (.,pc,a0.l), (0,a0,d0.w)
-      moveb   (.,pc,a0.l), (-0x80,a0,d0.w)
-      moveb   (.,pc,a0.l), (0,a0,d0.l)
-      moveb   (.,pc,a0.l), (-0x80,a0,d0.l)
       moveb   #0xbd, (0,a0,d1.l)
       moveb   #0xbd, (-0x80,a0,d1.l)
-      moveb   #0xbd, (0,a0,d2.w)
-      moveb   #0xbd, (-0x80,a0,d2.w)
       moveb   #0xbd, (0,a0,a0.w)
       moveb   #0xbd, (-0x80,a0,a0.w)
-      moveb   #0xbd, (0,a0,a0.l)
-      moveb   #0xbd, (-0x80,a0,a0.l)
       moveb   d0, (0x12c1).w
       moveb   (a0), (0x12d1).w
       moveb   (a0)+, (0x12d9).w
@@ -1096,12 +704,8 @@
       moveb   (-0x7f3f,a0), (0x81c2).w
       moveb   (0,a0,d1.l), (0x1901).w
       moveb   (-0x80,a0,d1.l), (0x1981).w
-      moveb   (0,a0,d2.w), (0x2101).w
-      moveb   (-0x80,a0,d2.w), (0x2181).w
       moveb   (0,a0,a0.w), (0x8101).w
       moveb   (-0x80,a0,a0.w), (0x8181).w
-      moveb   (0,a0,a0.l), (0x8901).w
-      moveb   (-0x80,a0,a0.l), (0x8981).w
       moveb   (0x12f9).w, (0x13fa).w
       moveb   (0x13fb).l, (0x14fc).w
       moveb   (.+0x12fd,pc), (0x13fc).w
@@ -1109,15 +713,9 @@
       moveb   (.+2,pc,d1.l), (0x1901).w
       moveb   (.-126,pc,d1.l), (0x1981).w
       moveb   (.,pc,d1.l), (0x19ff).w
-      moveb   (.+2,pc,d2.w), (0x2101).w
-      moveb   (.-126,pc,d2.w), (0x2181).w
-      moveb   (.,pc,d2.w), (0x21ff).w
       moveb   (.+2,pc,a0.w), (0x8101).w
       moveb   (.-126,pc,a0.w), (0x8181).w
       moveb   (.,pc,a0.w), (0x81ff).w
-      moveb   (.+2,pc,a0.l), (0x8901).w
-      moveb   (.-126,pc,a0.l), (0x8981).w
-      moveb   (.,pc,a0.l), (0x89ff).w
       moveb   #0xfd, (0x13fe).w
       moveb   d0, (0x15c2).l
       moveb   (a0), (0x15d2).l
@@ -1127,12 +725,8 @@
       moveb   (-0x7f42,a0), (0x82c0).l
       moveb   (0,a0,d1.l), (0x1a02).l
       moveb   (-0x80,a0,d1.l), (0x1a82).l
-      moveb   (0,a0,d2.w), (0x2202).l
-      moveb   (-0x80,a0,d2.w), (0x2282).l
       moveb   (0,a0,a0.w), (0x8202).l
       moveb   (-0x80,a0,a0.w), (0x8282).l
-      moveb   (0,a0,a0.l), (0x8a02).l
-      moveb   (-0x80,a0,a0.l), (0x8a82).l
       moveb   (0x14f9).w, (0x16fb).l
       moveb   (0x15fb).l, (0x17fd).l
       moveb   (.+0x14fd,pc), (0x16fd).l
@@ -1140,15 +734,9 @@
       moveb   (.+2,pc,d1.l), (0x1a02).l
       moveb   (.-126,pc,d1.l), (0x1a82).l
       moveb   (.,pc,d1.l), (0x1b00).l
-      moveb   (.+2,pc,d2.w), (0x2202).l
-      moveb   (.-126,pc,d2.w), (0x2282).l
-      moveb   (.,pc,d2.w), (0x2300).l
       moveb   (.+2,pc,a0.w), (0x8202).l
       moveb   (.-126,pc,a0.w), (0x8282).l
       moveb   (.,pc,a0.w), (0x8300).l
-      moveb   (.+2,pc,a0.l), (0x8a02).l
-      moveb   (.-126,pc,a0.l), (0x8a82).l
-      moveb   (.,pc,a0.l), (0x8b00).l
       moveb   #0xfd, (0x16ff).l
       movel   d0, d0
       movel   a0, d0
@@ -1159,12 +747,8 @@
       movel   (-0x8000,a0), d0
       movel   (0,a0,d2.l), d0
       movel   (-0x80,a0,d2.l), d0
-      movel   (0,a0,d3.w), d0
-      movel   (-0x80,a0,d3.w), d0
       movel   (0,a0,a0.w), d0
       movel   (-0x80,a0,a0.w), d0
-      movel   (0,a0,a0.l), d0
-      movel   (-0x80,a0,a0.l), d0
       movel   (0x213a).w, d0
       movel   (0x223c).l, d0
       movel   (.+0x213e,pc), d0
@@ -1173,15 +757,9 @@
       movel   (.+2,pc,d2.l), d0
       movel   (.-126,pc,d2.l), d0
       movel   (.,pc,d2.l), d0
-      movel   (.+2,pc,d3.w), d0
-      movel   (.-126,pc,d3.w), d0
-      movel   (.,pc,d3.w), d0
       movel   (.+2,pc,a0.w), d0
       movel   (.-126,pc,a0.w), d0
       movel   (.,pc,a0.w), d0
-      movel   (.+2,pc,a0.l), d0
-      movel   (.-126,pc,a0.l), d0
-      movel   (.,pc,a0.l), d0
       movel   #0x213d223e, d0
       moveal  d0, a0
       moveal  a0, a0
@@ -1192,12 +770,8 @@
       moveal  (-0x8000,a0), a0
       moveal  (0,a0,d2.l), a0
       moveal  (-0x80,a0,d2.l), a0
-      moveal  (0,a0,d3.w), a0
-      moveal  (-0x80,a0,d3.w), a0
       moveal  (0,a0,a0.w), a0
       moveal  (-0x80,a0,a0.w), a0
-      moveal  (0,a0,a0.l), a0
-      moveal  (-0x80,a0,a0.l), a0
       moveal  (0x217a).w, a0
       moveal  (0x227c).l, a0
       moveal  (.+0x217e,pc), a0
@@ -1206,15 +780,9 @@
       moveal  (.+2,pc,d2.l), a0
       moveal  (.-126,pc,d2.l), a0
       moveal  (.,pc,d2.l), a0
-      moveal  (.+2,pc,d3.w), a0
-      moveal  (.-126,pc,d3.w), a0
-      moveal  (.,pc,d3.w), a0
       moveal  (.+2,pc,a0.w), a0
       moveal  (.-126,pc,a0.w), a0
       moveal  (.,pc,a0.w), a0
-      moveal  (.+2,pc,a0.l), a0
-      moveal  (.-126,pc,a0.l), a0
-      moveal  (.,pc,a0.l), a0
       moveal  #0x217d227e, a0
       movel   d0, (a0)
       movel   a0, (a0)
@@ -1225,12 +793,8 @@
       movel   (-0x8000,a0), (a0)
       movel   (0,a0,d2.l), (a0)
       movel   (-0x80,a0,d2.l), (a0)
-      movel   (0,a0,d3.w), (a0)
-      movel   (-0x80,a0,d3.w), (a0)
       movel   (0,a0,a0.w), (a0)
       movel   (-0x80,a0,a0.w), (a0)
-      movel   (0,a0,a0.l), (a0)
-      movel   (-0x80,a0,a0.l), (a0)
       movel   (0x21ba).w, (a0)
       movel   (0x22bc).l, (a0)
       movel   (.+0x21be,pc), (a0)
@@ -1239,15 +803,9 @@
       movel   (.+2,pc,d2.l), (a0)
       movel   (.-126,pc,d2.l), (a0)
       movel   (.,pc,d2.l), (a0)
-      movel   (.+2,pc,d3.w), (a0)
-      movel   (.-126,pc,d3.w), (a0)
-      movel   (.,pc,d3.w), (a0)
       movel   (.+2,pc,a0.w), (a0)
       movel   (.-126,pc,a0.w), (a0)
       movel   (.,pc,a0.w), (a0)
-      movel   (.+2,pc,a0.l), (a0)
-      movel   (.-126,pc,a0.l), (a0)
-      movel   (.,pc,a0.l), (a0)
       movel   #0x21bd22be, (a0)
       movel   d0, (a0)+
       movel   a0, (a0)+
@@ -1258,12 +816,8 @@
       movel   (-0x8000,a0), (a0)+
       movel   (0,a0,d2.l), (a0)+
       movel   (-0x80,a0,d2.l), (a0)+
-      movel   (0,a0,d3.w), (a0)+
-      movel   (-0x80,a0,d3.w), (a0)+
       movel   (0,a0,a0.w), (a0)+
       movel   (-0x80,a0,a0.w), (a0)+
-      movel   (0,a0,a0.l), (a0)+
-      movel   (-0x80,a0,a0.l), (a0)+
       movel   (0x21fa).w, (a0)+
       movel   (0x22fc).l, (a0)+
       movel   (.+0x21fe,pc), (a0)+
@@ -1272,15 +826,9 @@
       movel   (.+2,pc,d2.l), (a0)+
       movel   (.-126,pc,d2.l), (a0)+
       movel   (.,pc,d2.l), (a0)+
-      movel   (.+2,pc,d3.w), (a0)+
-      movel   (.-126,pc,d3.w), (a0)+
-      movel   (.,pc,d3.w), (a0)+
       movel   (.+2,pc,a0.w), (a0)+
       movel   (.-126,pc,a0.w), (a0)+
       movel   (.,pc,a0.w), (a0)+
-      movel   (.+2,pc,a0.l), (a0)+
-      movel   (.-126,pc,a0.l), (a0)+
-      movel   (.,pc,a0.l), (a0)+
       movel   #0x21fd22fe, (a0)+
       movel   d0, -(a0)
       movel   a0, -(a0)
@@ -1291,12 +839,8 @@
       movel   (-0x8000,a0), -(a0)
       movel   (0,a0,d2.l), -(a0)
       movel   (-0x80,a0,d2.l), -(a0)
-      movel   (0,a0,d3.w), -(a0)
-      movel   (-0x80,a0,d3.w), -(a0)
       movel   (0,a0,a0.w), -(a0)
       movel   (-0x80,a0,a0.w), -(a0)
-      movel   (0,a0,a0.l), -(a0)
-      movel   (-0x80,a0,a0.l), -(a0)
       movel   (0x223a).w, -(a0)
       movel   (0x233c).l, -(a0)
       movel   (.+0x223e,pc), -(a0)
@@ -1305,15 +849,9 @@
       movel   (.+2,pc,d2.l), -(a0)
       movel   (.-126,pc,d2.l), -(a0)
       movel   (.,pc,d2.l), -(a0)
-      movel   (.+2,pc,d3.w), -(a0)
-      movel   (.-126,pc,d3.w), -(a0)
-      movel   (.,pc,d3.w), -(a0)
       movel   (.+2,pc,a0.w), -(a0)
       movel   (.-126,pc,a0.w), -(a0)
       movel   (.,pc,a0.w), -(a0)
-      movel   (.+2,pc,a0.l), -(a0)
-      movel   (.-126,pc,a0.l), -(a0)
-      movel   (.,pc,a0.l), -(a0)
       movel   #0x223d233e, -(a0)
       movel   d0, (0x2241,a0)
       movel   d0, (-0x8000,a0)
@@ -1333,18 +871,10 @@
       movel   (0,a0,d2.l), (-0x8000,a0)
       movel   (-0x80,a0,d2.l), (0x2981,a0)
       movel   (-0x80,a0,d2.l), (-0x8000,a0)
-      movel   (0,a0,d3.w), (0x3101,a0)
-      movel   (0,a0,d3.w), (-0x8000,a0)
-      movel   (-0x80,a0,d3.w), (0x3181,a0)
-      movel   (-0x80,a0,d3.w), (-0x8000,a0)
       movel   (0,a0,a0.w), (-0x7eff,a0)
       movel   (0,a0,a0.w), (0,a0)
       movel   (-0x80,a0,a0.w), (-0x7e7f,a0)
       movel   (-0x80,a0,a0.w), (0,a0)
-      movel   (0,a0,a0.l), (-0x76ff,a0)
-      movel   (0,a0,a0.l), (0,a0)
-      movel   (-0x80,a0,a0.l), (-0x767f,a0)
-      movel   (-0x80,a0,a0.l), (0,a0)
       movel   (0x227a).w, (0x237b,a0)
       movel   (0x227a).w, (-0x8000,a0)
       movel   (0x237c).l, (0x247d,a0)
@@ -1361,290 +891,106 @@
       movel   (.-126,pc,d2.l), (-0x8000,a0)
       movel   (.,pc,d2.l), (0x29ff,a0)
       movel   (.,pc,d2.l), (-0x8000,a0)
-      movel   (.+2,pc,d3.w), (0x3101,a0)
-      movel   (.+2,pc,d3.w), (-0x8000,a0)
-      movel   (.-126,pc,d3.w), (0x3181,a0)
-      movel   (.-126,pc,d3.w), (-0x8000,a0)
-      movel   (.,pc,d3.w), (0x31ff,a0)
-      movel   (.,pc,d3.w), (-0x8000,a0)
       movel   (.+2,pc,a0.w), (-0x7eff,a0)
       movel   (.+2,pc,a0.w), (0,a0)
       movel   (.-126,pc,a0.w), (-0x7e7f,a0)
       movel   (.-126,pc,a0.w), (0,a0)
       movel   (.,pc,a0.w), (-0x7e01,a0)
       movel   (.,pc,a0.w), (0,a0)
-      movel   (.+2,pc,a0.l), (-0x76ff,a0)
-      movel   (.+2,pc,a0.l), (0,a0)
-      movel   (.-126,pc,a0.l), (-0x767f,a0)
-      movel   (.-126,pc,a0.l), (0,a0)
-      movel   (.,pc,a0.l), (-0x7601,a0)
-      movel   (.,pc,a0.l), (0,a0)
       movel   #0x227d237e, (0x247f,a0)
       movel   #0x227d237e, (-0x8000,a0)
       movel   d0, (0,a0,d2.l)
       movel   d0, (-0x80,a0,d2.l)
-      movel   d0, (0,a0,d3.w)
-      movel   d0, (-0x80,a0,d3.w)
       movel   d0, (0,a0,a0.w)
       movel   d0, (-0x80,a0,a0.w)
-      movel   d0, (0,a0,a0.l)
-      movel   d0, (-0x80,a0,a0.l)
       movel   a0, (0,a0,d2.l)
       movel   a0, (-0x80,a0,d2.l)
-      movel   a0, (0,a0,d3.w)
-      movel   a0, (-0x80,a0,d3.w)
       movel   a0, (0,a0,a0.w)
       movel   a0, (-0x80,a0,a0.w)
-      movel   a0, (0,a0,a0.l)
-      movel   a0, (-0x80,a0,a0.l)
       movel   (a0), (0,a0,d2.l)
       movel   (a0), (-0x80,a0,d2.l)
-      movel   (a0), (0,a0,d3.w)
-      movel   (a0), (-0x80,a0,d3.w)
       movel   (a0), (0,a0,a0.w)
       movel   (a0), (-0x80,a0,a0.w)
-      movel   (a0), (0,a0,a0.l)
-      movel   (a0), (-0x80,a0,a0.l)
       movel   (a0)+, (0,a0,d2.l)
       movel   (a0)+, (-0x80,a0,d2.l)
-      movel   (a0)+, (0,a0,d3.w)
-      movel   (a0)+, (-0x80,a0,d3.w)
       movel   (a0)+, (0,a0,a0.w)
       movel   (a0)+, (-0x80,a0,a0.w)
-      movel   (a0)+, (0,a0,a0.l)
-      movel   (a0)+, (-0x80,a0,a0.l)
       movel   -(a0), (0,a0,d2.l)
       movel   -(a0), (-0x80,a0,d2.l)
-      movel   -(a0), (0,a0,d3.w)
-      movel   -(a0), (-0x80,a0,d3.w)
       movel   -(a0), (0,a0,a0.w)
       movel   -(a0), (-0x80,a0,a0.w)
-      movel   -(a0), (0,a0,a0.l)
-      movel   -(a0), (-0x80,a0,a0.l)
       movel   (0x22a9,a0), (0,a0,d2.l)
       movel   (0x22a9,a0), (-0x80,a0,d2.l)
-      movel   (0x22a9,a0), (0,a0,d3.w)
-      movel   (0x22a9,a0), (-0x80,a0,d3.w)
       movel   (0x22a9,a0), (0,a0,a0.w)
       movel   (0x22a9,a0), (-0x80,a0,a0.w)
-      movel   (0x22a9,a0), (0,a0,a0.l)
-      movel   (0x22a9,a0), (-0x80,a0,a0.l)
       movel   (-0x8000,a0), (0,a0,a0.l)
       movel   (-0x8000,a0), (-0x80,a0,a0.l)
-      movel   (-0x8000,a0), (0,a0,a1.w)
-      movel   (-0x8000,a0), (-0x80,a0,a1.w)
       movel   (-0x8000,a0), (0,a0,d0.w)
       movel   (-0x8000,a0), (-0x80,a0,d0.w)
-      movel   (-0x8000,a0), (0,a0,d0.l)
-      movel   (-0x8000,a0), (-0x80,a0,d0.l)
       movel   (0,a0,d2.l), (0,a0,d3.w)
       movel   (0,a0,d2.l), (-0x80,a0,d3.w)
-      movel   (0,a0,d2.l), (0,a0,d3.l)
-      movel   (0,a0,d2.l), (-0x80,a0,d3.l)
       movel   (0,a0,d2.l), (0,a0,a0.w)
       movel   (0,a0,d2.l), (-0x80,a0,a0.w)
-      movel   (0,a0,d2.l), (0,a0,a0.l)
-      movel   (0,a0,d2.l), (-0x80,a0,a0.l)
       movel   (-0x80,a0,d2.l), (0,a0,d3.w)
       movel   (-0x80,a0,d2.l), (-0x80,a0,d3.w)
-      movel   (-0x80,a0,d2.l), (0,a0,d3.l)
-      movel   (-0x80,a0,d2.l), (-0x80,a0,d3.l)
       movel   (-0x80,a0,d2.l), (0,a0,a0.w)
       movel   (-0x80,a0,d2.l), (-0x80,a0,a0.w)
-      movel   (-0x80,a0,d2.l), (0,a0,a0.l)
-      movel   (-0x80,a0,d2.l), (-0x80,a0,a0.l)
-      movel   (0,a0,d3.w), (0,a0,d3.l)
-      movel   (0,a0,d3.w), (-0x80,a0,d3.l)
-      movel   (0,a0,d3.w), (0,a0,d4.w)
-      movel   (0,a0,d3.w), (-0x80,a0,d4.w)
-      movel   (0,a0,d3.w), (0,a0,a0.w)
-      movel   (0,a0,d3.w), (-0x80,a0,a0.w)
-      movel   (0,a0,d3.w), (0,a0,a0.l)
-      movel   (0,a0,d3.w), (-0x80,a0,a0.l)
-      movel   (-0x80,a0,d3.w), (0,a0,d3.l)
-      movel   (-0x80,a0,d3.w), (-0x80,a0,d3.l)
-      movel   (-0x80,a0,d3.w), (0,a0,d4.w)
-      movel   (-0x80,a0,d3.w), (-0x80,a0,d4.w)
-      movel   (-0x80,a0,d3.w), (0,a0,a0.w)
-      movel   (-0x80,a0,d3.w), (-0x80,a0,a0.w)
-      movel   (-0x80,a0,d3.w), (0,a0,a0.l)
-      movel   (-0x80,a0,d3.w), (-0x80,a0,a0.l)
       movel   (0,a0,a0.w), (0,a0,a0.l)
       movel   (0,a0,a0.w), (-0x80,a0,a0.l)
-      movel   (0,a0,a0.w), (0,a0,a1.w)
-      movel   (0,a0,a0.w), (-0x80,a0,a1.w)
       movel   (0,a0,a0.w), (0,a0,d0.w)
       movel   (0,a0,a0.w), (-0x80,a0,d0.w)
-      movel   (0,a0,a0.w), (0,a0,d0.l)
-      movel   (0,a0,a0.w), (-0x80,a0,d0.l)
       movel   (-0x80,a0,a0.w), (0,a0,a0.l)
       movel   (-0x80,a0,a0.w), (-0x80,a0,a0.l)
-      movel   (-0x80,a0,a0.w), (0,a0,a1.w)
-      movel   (-0x80,a0,a0.w), (-0x80,a0,a1.w)
       movel   (-0x80,a0,a0.w), (0,a0,d0.w)
       movel   (-0x80,a0,a0.w), (-0x80,a0,d0.w)
-      movel   (-0x80,a0,a0.w), (0,a0,d0.l)
-      movel   (-0x80,a0,a0.w), (-0x80,a0,d0.l)
-      movel   (0,a0,a0.l), (0,a0,a1.w)
-      movel   (0,a0,a0.l), (-0x80,a0,a1.w)
-      movel   (0,a0,a0.l), (0,a0,a1.l)
-      movel   (0,a0,a0.l), (-0x80,a0,a1.l)
-      movel   (0,a0,a0.l), (0,a0,d0.w)
-      movel   (0,a0,a0.l), (-0x80,a0,d0.w)
-      movel   (0,a0,a0.l), (0,a0,d0.l)
-      movel   (0,a0,a0.l), (-0x80,a0,d0.l)
-      movel   (-0x80,a0,a0.l), (0,a0,a1.w)
-      movel   (-0x80,a0,a0.l), (-0x80,a0,a1.w)
-      movel   (-0x80,a0,a0.l), (0,a0,a1.l)
-      movel   (-0x80,a0,a0.l), (-0x80,a0,a1.l)
-      movel   (-0x80,a0,a0.l), (0,a0,d0.w)
-      movel   (-0x80,a0,a0.l), (-0x80,a0,d0.w)
-      movel   (-0x80,a0,a0.l), (0,a0,d0.l)
-      movel   (-0x80,a0,a0.l), (-0x80,a0,d0.l)
       movel   (0x22ba).w, (0,a0,d2.l)
       movel   (0x22ba).w, (-0x80,a0,d2.l)
-      movel   (0x22ba).w, (0,a0,d3.w)
-      movel   (0x22ba).w, (-0x80,a0,d3.w)
       movel   (0x22ba).w, (0,a0,a0.w)
       movel   (0x22ba).w, (-0x80,a0,a0.w)
-      movel   (0x22ba).w, (0,a0,a0.l)
-      movel   (0x22ba).w, (-0x80,a0,a0.l)
       movel   (0x23bc).l, (0,a0,d2.l)
       movel   (0x23bc).l, (-0x80,a0,d2.l)
-      movel   (0x23bc).l, (0,a0,d3.w)
-      movel   (0x23bc).l, (-0x80,a0,d3.w)
       movel   (0x23bc).l, (0,a0,a0.w)
       movel   (0x23bc).l, (-0x80,a0,a0.w)
-      movel   (0x23bc).l, (0,a0,a0.l)
-      movel   (0x23bc).l, (-0x80,a0,a0.l)
       movel   (.+0x22be,pc), (0,a0,d2.l)
       movel   (.+0x22be,pc), (-0x80,a0,d2.l)
-      movel   (.+0x22be,pc), (0,a0,d3.w)
-      movel   (.+0x22be,pc), (-0x80,a0,d3.w)
       movel   (.+0x22be,pc), (0,a0,a0.w)
       movel   (.+0x22be,pc), (-0x80,a0,a0.w)
-      movel   (.+0x22be,pc), (0,a0,a0.l)
-      movel   (.+0x22be,pc), (-0x80,a0,a0.l)
       movel   (.-0x7ffe,pc), (0,a0,a0.l)
       movel   (.-0x7ffe,pc), (-0x80,a0,a0.l)
-      movel   (.-0x7ffe,pc), (0,a0,a1.w)
-      movel   (.-0x7ffe,pc), (-0x80,a0,a1.w)
       movel   (.-0x7ffe,pc), (0,a0,d0.w)
       movel   (.-0x7ffe,pc), (-0x80,a0,d0.w)
-      movel   (.-0x7ffe,pc), (0,a0,d0.l)
-      movel   (.-0x7ffe,pc), (-0x80,a0,d0.l)
       movel   (.,pc), (-1,a0,d0.w)
       movel   (.,pc), (0,a0,d0.l)
-      movel   (.,pc), (-0x80,a0,d0.l)
-      movel   (.,pc), (0,a0,d1.w)
       movel   (.,pc), (0,a0,a0.w)
       movel   (.,pc), (-0x80,a0,a0.w)
-      movel   (.,pc), (0,a0,a0.l)
-      movel   (.,pc), (-0x80,a0,a0.l)
       movel   (.+2,pc,d2.l), (0,a0,d3.w)
       movel   (.+2,pc,d2.l), (-0x80,a0,d3.w)
-      movel   (.+2,pc,d2.l), (0,a0,d3.l)
-      movel   (.+2,pc,d2.l), (-0x80,a0,d3.l)
       movel   (.+2,pc,d2.l), (0,a0,a0.w)
       movel   (.+2,pc,d2.l), (-0x80,a0,a0.w)
-      movel   (.+2,pc,d2.l), (0,a0,a0.l)
-      movel   (.+2,pc,d2.l), (-0x80,a0,a0.l)
       movel   (.-126,pc,d2.l), (0,a0,d3.w)
       movel   (.-126,pc,d2.l), (-0x80,a0,d3.w)
-      movel   (.-126,pc,d2.l), (0,a0,d3.l)
-      movel   (.-126,pc,d2.l), (-0x80,a0,d3.l)
       movel   (.-126,pc,d2.l), (0,a0,a0.w)
       movel   (.-126,pc,d2.l), (-0x80,a0,a0.w)
-      movel   (.-126,pc,d2.l), (0,a0,a0.l)
-      movel   (.-126,pc,d2.l), (-0x80,a0,a0.l)
       movel   (.,pc,d2.l), (0,a0,d3.w)
       movel   (.,pc,d2.l), (-0x80,a0,d3.w)
-      movel   (.,pc,d2.l), (0,a0,d3.l)
-      movel   (.,pc,d2.l), (-0x80,a0,d3.l)
       movel   (.,pc,d2.l), (0,a0,a0.w)
       movel   (.,pc,d2.l), (-0x80,a0,a0.w)
-      movel   (.,pc,d2.l), (0,a0,a0.l)
-      movel   (.,pc,d2.l), (-0x80,a0,a0.l)
-      movel   (.+2,pc,d3.w), (0,a0,d3.l)
-      movel   (.+2,pc,d3.w), (-0x80,a0,d3.l)
-      movel   (.+2,pc,d3.w), (0,a0,d4.w)
-      movel   (.+2,pc,d3.w), (-0x80,a0,d4.w)
-      movel   (.+2,pc,d3.w), (0,a0,a0.w)
-      movel   (.+2,pc,d3.w), (-0x80,a0,a0.w)
-      movel   (.+2,pc,d3.w), (0,a0,a0.l)
-      movel   (.+2,pc,d3.w), (-0x80,a0,a0.l)
-      movel   (.-126,pc,d3.w), (0,a0,d3.l)
-      movel   (.-126,pc,d3.w), (-0x80,a0,d3.l)
-      movel   (.-126,pc,d3.w), (0,a0,d4.w)
-      movel   (.-126,pc,d3.w), (-0x80,a0,d4.w)
-      movel   (.-126,pc,d3.w), (0,a0,a0.w)
-      movel   (.-126,pc,d3.w), (-0x80,a0,a0.w)
-      movel   (.-126,pc,d3.w), (0,a0,a0.l)
-      movel   (.-126,pc,d3.w), (-0x80,a0,a0.l)
-      movel   (.,pc,d3.w), (0,a0,d3.l)
-      movel   (.,pc,d3.w), (-0x80,a0,d3.l)
-      movel   (.,pc,d3.w), (0,a0,d4.w)
-      movel   (.,pc,d3.w), (-0x80,a0,d4.w)
-      movel   (.,pc,d3.w), (0,a0,a0.w)
-      movel   (.,pc,d3.w), (-0x80,a0,a0.w)
-      movel   (.,pc,d3.w), (0,a0,a0.l)
-      movel   (.,pc,d3.w), (-0x80,a0,a0.l)
       movel   (.+2,pc,a0.w), (0,a0,a0.l)
       movel   (.+2,pc,a0.w), (-0x80,a0,a0.l)
-      movel   (.+2,pc,a0.w), (0,a0,a1.w)
-      movel   (.+2,pc,a0.w), (-0x80,a0,a1.w)
       movel   (.+2,pc,a0.w), (0,a0,d0.w)
       movel   (.+2,pc,a0.w), (-0x80,a0,d0.w)
-      movel   (.+2,pc,a0.w), (0,a0,d0.l)
-      movel   (.+2,pc,a0.w), (-0x80,a0,d0.l)
       movel   (.-126,pc,a0.w), (0,a0,a0.l)
       movel   (.-126,pc,a0.w), (-0x80,a0,a0.l)
-      movel   (.-126,pc,a0.w), (0,a0,a1.w)
-      movel   (.-126,pc,a0.w), (-0x80,a0,a1.w)
       movel   (.-126,pc,a0.w), (0,a0,d0.w)
       movel   (.-126,pc,a0.w), (-0x80,a0,d0.w)
-      movel   (.-126,pc,a0.w), (0,a0,d0.l)
-      movel   (.-126,pc,a0.w), (-0x80,a0,d0.l)
       movel   (.,pc,a0.w), (0,a0,a0.l)
       movel   (.,pc,a0.w), (-0x80,a0,a0.l)
-      movel   (.,pc,a0.w), (0,a0,a1.w)
-      movel   (.,pc,a0.w), (-0x80,a0,a1.w)
       movel   (.,pc,a0.w), (0,a0,d0.w)
       movel   (.,pc,a0.w), (-0x80,a0,d0.w)
-      movel   (.,pc,a0.w), (0,a0,d0.l)
-      movel   (.,pc,a0.w), (-0x80,a0,d0.l)
-      movel   (.+2,pc,a0.l), (0,a0,a1.w)
-      movel   (.+2,pc,a0.l), (-0x80,a0,a1.w)
-      movel   (.+2,pc,a0.l), (0,a0,a1.l)
-      movel   (.+2,pc,a0.l), (-0x80,a0,a1.l)
-      movel   (.+2,pc,a0.l), (0,a0,d0.w)
-      movel   (.+2,pc,a0.l), (-0x80,a0,d0.w)
-      movel   (.+2,pc,a0.l), (0,a0,d0.l)
-      movel   (.+2,pc,a0.l), (-0x80,a0,d0.l)
-      movel   (.-126,pc,a0.l), (0,a0,a1.w)
-      movel   (.-126,pc,a0.l), (-0x80,a0,a1.w)
-      movel   (.-126,pc,a0.l), (0,a0,a1.l)
-      movel   (.-126,pc,a0.l), (-0x80,a0,a1.l)
-      movel   (.-126,pc,a0.l), (0,a0,d0.w)
-      movel   (.-126,pc,a0.l), (-0x80,a0,d0.w)
-      movel   (.-126,pc,a0.l), (0,a0,d0.l)
-      movel   (.-126,pc,a0.l), (-0x80,a0,d0.l)
-      movel   (.,pc,a0.l), (0,a0,a1.w)
-      movel   (.,pc,a0.l), (-0x80,a0,a1.w)
-      movel   (.,pc,a0.l), (0,a0,a1.l)
-      movel   (.,pc,a0.l), (-0x80,a0,a1.l)
-      movel   (.,pc,a0.l), (0,a0,d0.w)
-      movel   (.,pc,a0.l), (-0x80,a0,d0.w)
-      movel   (.,pc,a0.l), (0,a0,d0.l)
-      movel   (.,pc,a0.l), (-0x80,a0,d0.l)
       movel   #0x22bd23be, (0,a0,d2.l)
       movel   #0x22bd23be, (-0x80,a0,d2.l)
-      movel   #0x22bd23be, (0,a0,d3.w)
-      movel   #0x22bd23be, (-0x80,a0,d3.w)
       movel   #0x22bd23be, (0,a0,a0.w)
       movel   #0x22bd23be, (-0x80,a0,a0.w)
-      movel   #0x22bd23be, (0,a0,a0.l)
-      movel   #0x22bd23be, (-0x80,a0,a0.l)
       movel   d0, (0x22c2).w
       movel   a0, (0x22ca).w
       movel   (a0), (0x22d2).w
@@ -1654,12 +1000,8 @@
       movel   (-0x7f5e,a0), (0x81a4).w
       movel   (0,a0,d2.l), (0x2902).w
       movel   (-0x80,a0,d2.l), (0x2982).w
-      movel   (0,a0,d3.w), (0x3102).w
-      movel   (-0x80,a0,d3.w), (0x3182).w
       movel   (0,a0,a0.w), (0x8102).w
       movel   (-0x80,a0,a0.w), (0x8182).w
-      movel   (0,a0,a0.l), (0x8902).w
-      movel   (-0x80,a0,a0.l), (0x8982).w
       movel   (0x22fa).w, (0x23fc).w
       movel   (0x23fc).l, (0x24fe).w
       movel   (.+0x22fe,pc), (0x23fe).w
@@ -1667,15 +1009,9 @@
       movel   (.+2,pc,d2.l), (0x2902).w
       movel   (.-126,pc,d2.l), (0x2982).w
       movel   (.,pc,d2.l), (0x2a00).w
-      movel   (.+2,pc,d3.w), (0x3102).w
-      movel   (.-126,pc,d3.w), (0x3182).w
-      movel   (.,pc,d3.w), (0x3200).w
       movel   (.+2,pc,a0.w), (0x8102).w
       movel   (.-126,pc,a0.w), (0x8182).w
       movel   (.,pc,a0.w), (0x8200).w
-      movel   (.+2,pc,a0.l), (0x8902).w
-      movel   (.-126,pc,a0.l), (0x8982).w
-      movel   (.,pc,a0.l), (0x8a00).w
       movel   #0x22fd23fe, (0x2500).w
       movel   d0, (0x25c2).l
       movel   a0, (0x25ca).l
@@ -1686,12 +1022,8 @@
       movel   (-0x7f62,a0), (0x82a0).l
       movel   (0,a0,d2.l), (0x2a02).l
       movel   (-0x80,a0,d2.l), (0x2a82).l
-      movel   (0,a0,d3.w), (0x3202).l
-      movel   (-0x80,a0,d3.w), (0x3282).l
       movel   (0,a0,a0.w), (0x8202).l
       movel   (-0x80,a0,a0.w), (0x8282).l
-      movel   (0,a0,a0.l), (0x8a02).l
-      movel   (-0x80,a0,a0.l), (0x8a82).l
       movel   (0x24fa).w, (0x26fc).l
       movel   (0x25fc).l, (0x27fe).l
       movel   (.+0x24fe,pc), (0x26fe).l
@@ -1699,15 +1031,9 @@
       movel   (.+2,pc,d2.l), (0x2a02).l
       movel   (.-126,pc,d2.l), (0x2a82).l
       movel   (.,pc,d2.l), (0x2b00).l
-      movel   (.+2,pc,d3.w), (0x3202).l
-      movel   (.-126,pc,d3.w), (0x3282).l
-      movel   (.,pc,d3.w), (0x3300).l
       movel   (.+2,pc,a0.w), (0x8202).l
       movel   (.-126,pc,a0.w), (0x8282).l
       movel   (.,pc,a0.w), (0x8300).l
-      movel   (.+2,pc,a0.l), (0x8a02).l
-      movel   (.-126,pc,a0.l), (0x8a82).l
-      movel   (.,pc,a0.l), (0x8b00).l
       movel   #0x24fd25fe, (0x2800).l
       movew   d0, d0
       movew   a0, d0
@@ -1718,12 +1044,8 @@
       movew   (-0x8000,a0), d0
       movew   (0,a0,d3.l), d0
       movew   (-0x80,a0,d3.l), d0
-      movew   (0,a0,d4.w), d0
-      movew   (-0x80,a0,d4.w), d0
       movew   (0,a0,a0.w), d0
       movew   (-0x80,a0,a0.w), d0
-      movew   (0,a0,a0.l), d0
-      movew   (-0x80,a0,a0.l), d0
       movew   (0x313a).w, d0
       movew   (0x323c).l, d0
       movew   (.+0x313e,pc), d0
@@ -1732,15 +1054,9 @@
       movew   (.+2,pc,d3.l), d0
       movew   (.-126,pc,d3.l), d0
       movew   (.,pc,d3.l), d0
-      movew   (.+2,pc,d4.w), d0
-      movew   (.-126,pc,d4.w), d0
-      movew   (.,pc,d4.w), d0
       movew   (.+2,pc,a0.w), d0
       movew   (.-126,pc,a0.w), d0
       movew   (.,pc,a0.w), d0
-      movew   (.+2,pc,a0.l), d0
-      movew   (.-126,pc,a0.l), d0
-      movew   (.,pc,a0.l), d0
       movew   #0x313d, d0
       moveaw  d0, a0
       moveaw  a0, a0
@@ -1751,12 +1067,8 @@
       moveaw  (-0x8000,a0), a0
       moveaw  (0,a0,d3.l), a0
       moveaw  (-0x80,a0,d3.l), a0
-      moveaw  (0,a0,d4.w), a0
-      moveaw  (-0x80,a0,d4.w), a0
       moveaw  (0,a0,a0.w), a0
       moveaw  (-0x80,a0,a0.w), a0
-      moveaw  (0,a0,a0.l), a0
-      moveaw  (-0x80,a0,a0.l), a0
       moveaw  (0x317a).w, a0
       moveaw  (0x327c).l, a0
       moveaw  (.+0x317e,pc), a0
@@ -1765,15 +1077,9 @@
       moveaw  (.+2,pc,d3.l), a0
       moveaw  (.-126,pc,d3.l), a0
       moveaw  (.,pc,d3.l), a0
-      moveaw  (.+2,pc,d4.w), a0
-      moveaw  (.-126,pc,d4.w), a0
-      moveaw  (.,pc,d4.w), a0
       moveaw  (.+2,pc,a0.w), a0
       moveaw  (.-126,pc,a0.w), a0
       moveaw  (.,pc,a0.w), a0
-      moveaw  (.+2,pc,a0.l), a0
-      moveaw  (.-126,pc,a0.l), a0
-      moveaw  (.,pc,a0.l), a0
       moveaw  #0x317d, a0
       movew   d0, (a0)
       movew   a0, (a0)
@@ -1784,12 +1090,8 @@
       movew   (-0x8000,a0), (a0)
       movew   (0,a0,d3.l), (a0)
       movew   (-0x80,a0,d3.l), (a0)
-      movew   (0,a0,d4.w), (a0)
-      movew   (-0x80,a0,d4.w), (a0)
       movew   (0,a0,a0.w), (a0)
       movew   (-0x80,a0,a0.w), (a0)
-      movew   (0,a0,a0.l), (a0)
-      movew   (-0x80,a0,a0.l), (a0)
       movew   (0x31ba).w, (a0)
       movew   (0x32bc).l, (a0)
       movew   (.+0x31be,pc), (a0)
@@ -1798,15 +1100,9 @@
       movew   (.+2,pc,d3.l), (a0)
       movew   (.-126,pc,d3.l), (a0)
       movew   (.,pc,d3.l), (a0)
-      movew   (.+2,pc,d4.w), (a0)
-      movew   (.-126,pc,d4.w), (a0)
-      movew   (.,pc,d4.w), (a0)
       movew   (.+2,pc,a0.w), (a0)
       movew   (.-126,pc,a0.w), (a0)
       movew   (.,pc,a0.w), (a0)
-      movew   (.+2,pc,a0.l), (a0)
-      movew   (.-126,pc,a0.l), (a0)
-      movew   (.,pc,a0.l), (a0)
       movew   #0x31bd, (a0)
       movew   d0, (a0)+
       movew   a0, (a0)+
@@ -1817,12 +1113,8 @@
       movew   (-0x8000,a0), (a0)+
       movew   (0,a0,d3.l), (a0)+
       movew   (-0x80,a0,d3.l), (a0)+
-      movew   (0,a0,d4.w), (a0)+
-      movew   (-0x80,a0,d4.w), (a0)+
       movew   (0,a0,a0.w), (a0)+
       movew   (-0x80,a0,a0.w), (a0)+
-      movew   (0,a0,a0.l), (a0)+
-      movew   (-0x80,a0,a0.l), (a0)+
       movew   (0x31fa).w, (a0)+
       movew   (0x32fc).l, (a0)+
       movew   (.+0x31fe,pc), (a0)+
@@ -1831,15 +1123,9 @@
       movew   (.+2,pc,d3.l), (a0)+
       movew   (.-126,pc,d3.l), (a0)+
       movew   (.,pc,d3.l), (a0)+
-      movew   (.+2,pc,d4.w), (a0)+
-      movew   (.-126,pc,d4.w), (a0)+
-      movew   (.,pc,d4.w), (a0)+
       movew   (.+2,pc,a0.w), (a0)+
       movew   (.-126,pc,a0.w), (a0)+
       movew   (.,pc,a0.w), (a0)+
-      movew   (.+2,pc,a0.l), (a0)+
-      movew   (.-126,pc,a0.l), (a0)+
-      movew   (.,pc,a0.l), (a0)+
       movew   #0x31fd, (a0)+
       movew   d0, -(a0)
       movew   a0, -(a0)
@@ -1850,12 +1136,8 @@
       movew   (-0x8000,a0), -(a0)
       movew   (0,a0,d3.l), -(a0)
       movew   (-0x80,a0,d3.l), -(a0)
-      movew   (0,a0,d4.w), -(a0)
-      movew   (-0x80,a0,d4.w), -(a0)
       movew   (0,a0,a0.w), -(a0)
       movew   (-0x80,a0,a0.w), -(a0)
-      movew   (0,a0,a0.l), -(a0)
-      movew   (-0x80,a0,a0.l), -(a0)
       movew   (0x323a).w, -(a0)
       movew   (0x333c).l, -(a0)
       movew   (.+0x323e,pc), -(a0)
@@ -1864,15 +1146,9 @@
       movew   (.+2,pc,d3.l), -(a0)
       movew   (.-126,pc,d3.l), -(a0)
       movew   (.,pc,d3.l), -(a0)
-      movew   (.+2,pc,d4.w), -(a0)
-      movew   (.-126,pc,d4.w), -(a0)
-      movew   (.,pc,d4.w), -(a0)
       movew   (.+2,pc,a0.w), -(a0)
       movew   (.-126,pc,a0.w), -(a0)
       movew   (.,pc,a0.w), -(a0)
-      movew   (.+2,pc,a0.l), -(a0)
-      movew   (.-126,pc,a0.l), -(a0)
-      movew   (.,pc,a0.l), -(a0)
       movew   #0x323d, -(a0)
       movew   d0, (0x3241,a0)
       movew   d0, (-0x8000,a0)
@@ -1892,18 +1168,10 @@
       movew   (0,a0,d3.l), (-0x8000,a0)
       movew   (-0x80,a0,d3.l), (0x3981,a0)
       movew   (-0x80,a0,d3.l), (-0x8000,a0)
-      movew   (0,a0,d4.w), (0x4101,a0)
-      movew   (0,a0,d4.w), (-0x8000,a0)
-      movew   (-0x80,a0,d4.w), (0x4181,a0)
-      movew   (-0x80,a0,d4.w), (-0x8000,a0)
       movew   (0,a0,a0.w), (-0x7eff,a0)
       movew   (0,a0,a0.w), (0,a0)
       movew   (-0x80,a0,a0.w), (-0x7e7f,a0)
       movew   (-0x80,a0,a0.w), (0,a0)
-      movew   (0,a0,a0.l), (-0x76ff,a0)
-      movew   (0,a0,a0.l), (0,a0)
-      movew   (-0x80,a0,a0.l), (-0x767f,a0)
-      movew   (-0x80,a0,a0.l), (0,a0)
       movew   (0x327a).w, (0x337b,a0)
       movew   (0x327a).w, (-0x8000,a0)
       movew   (0x337c).l, (0x347d,a0)
@@ -1920,290 +1188,106 @@
       movew   (.-126,pc,d3.l), (-0x8000,a0)
       movew   (.,pc,d3.l), (0x39ff,a0)
       movew   (.,pc,d3.l), (-0x8000,a0)
-      movew   (.+2,pc,d4.w), (0x4101,a0)
-      movew   (.+2,pc,d4.w), (-0x8000,a0)
-      movew   (.-126,pc,d4.w), (0x4181,a0)
-      movew   (.-126,pc,d4.w), (-0x8000,a0)
-      movew   (.,pc,d4.w), (0x41ff,a0)
-      movew   (.,pc,d4.w), (-0x8000,a0)
       movew   (.+2,pc,a0.w), (-0x7eff,a0)
       movew   (.+2,pc,a0.w), (0,a0)
       movew   (.-126,pc,a0.w), (-0x7e7f,a0)
       movew   (.-126,pc,a0.w), (0,a0)
       movew   (.,pc,a0.w), (-0x7e01,a0)
       movew   (.,pc,a0.w), (0,a0)
-      movew   (.+2,pc,a0.l), (-0x76ff,a0)
-      movew   (.+2,pc,a0.l), (0,a0)
-      movew   (.-126,pc,a0.l), (-0x767f,a0)
-      movew   (.-126,pc,a0.l), (0,a0)
-      movew   (.,pc,a0.l), (-0x7601,a0)
-      movew   (.,pc,a0.l), (0,a0)
       movew   #0x327d, (0x337e,a0)
       movew   #0x327d, (-0x8000,a0)
       movew   d0, (0,a0,d3.l)
       movew   d0, (-0x80,a0,d3.l)
-      movew   d0, (0,a0,d4.w)
-      movew   d0, (-0x80,a0,d4.w)
       movew   d0, (0,a0,a0.w)
       movew   d0, (-0x80,a0,a0.w)
-      movew   d0, (0,a0,a0.l)
-      movew   d0, (-0x80,a0,a0.l)
       movew   a0, (0,a0,d3.l)
       movew   a0, (-0x80,a0,d3.l)
-      movew   a0, (0,a0,d4.w)
-      movew   a0, (-0x80,a0,d4.w)
       movew   a0, (0,a0,a0.w)
       movew   a0, (-0x80,a0,a0.w)
-      movew   a0, (0,a0,a0.l)
-      movew   a0, (-0x80,a0,a0.l)
       movew   (a0), (0,a0,d3.l)
       movew   (a0), (-0x80,a0,d3.l)
-      movew   (a0), (0,a0,d4.w)
-      movew   (a0), (-0x80,a0,d4.w)
       movew   (a0), (0,a0,a0.w)
       movew   (a0), (-0x80,a0,a0.w)
-      movew   (a0), (0,a0,a0.l)
-      movew   (a0), (-0x80,a0,a0.l)
       movew   (a0)+, (0,a0,d3.l)
       movew   (a0)+, (-0x80,a0,d3.l)
-      movew   (a0)+, (0,a0,d4.w)
-      movew   (a0)+, (-0x80,a0,d4.w)
       movew   (a0)+, (0,a0,a0.w)
       movew   (a0)+, (-0x80,a0,a0.w)
-      movew   (a0)+, (0,a0,a0.l)
-      movew   (a0)+, (-0x80,a0,a0.l)
       movew   -(a0), (0,a0,d3.l)
       movew   -(a0), (-0x80,a0,d3.l)
-      movew   -(a0), (0,a0,d4.w)
-      movew   -(a0), (-0x80,a0,d4.w)
       movew   -(a0), (0,a0,a0.w)
       movew   -(a0), (-0x80,a0,a0.w)
-      movew   -(a0), (0,a0,a0.l)
-      movew   -(a0), (-0x80,a0,a0.l)
       movew   (0x32a9,a0), (0,a0,d3.l)
       movew   (0x32a9,a0), (-0x80,a0,d3.l)
-      movew   (0x32a9,a0), (0,a0,d4.w)
-      movew   (0x32a9,a0), (-0x80,a0,d4.w)
       movew   (0x32a9,a0), (0,a0,a0.w)
       movew   (0x32a9,a0), (-0x80,a0,a0.w)
-      movew   (0x32a9,a0), (0,a0,a0.l)
-      movew   (0x32a9,a0), (-0x80,a0,a0.l)
       movew   (-0x8000,a0), (0,a0,a0.l)
       movew   (-0x8000,a0), (-0x80,a0,a0.l)
-      movew   (-0x8000,a0), (0,a0,a1.w)
-      movew   (-0x8000,a0), (-0x80,a0,a1.w)
       movew   (-0x8000,a0), (0,a0,d0.w)
       movew   (-0x8000,a0), (-0x80,a0,d0.w)
-      movew   (-0x8000,a0), (0,a0,d0.l)
-      movew   (-0x8000,a0), (-0x80,a0,d0.l)
       movew   (0,a0,d3.l), (0,a0,d4.w)
       movew   (0,a0,d3.l), (-0x80,a0,d4.w)
-      movew   (0,a0,d3.l), (0,a0,d4.l)
-      movew   (0,a0,d3.l), (-0x80,a0,d4.l)
       movew   (0,a0,d3.l), (0,a0,a0.w)
       movew   (0,a0,d3.l), (-0x80,a0,a0.w)
-      movew   (0,a0,d3.l), (0,a0,a0.l)
-      movew   (0,a0,d3.l), (-0x80,a0,a0.l)
       movew   (-0x80,a0,d3.l), (0,a0,d4.w)
       movew   (-0x80,a0,d3.l), (-0x80,a0,d4.w)
-      movew   (-0x80,a0,d3.l), (0,a0,d4.l)
-      movew   (-0x80,a0,d3.l), (-0x80,a0,d4.l)
       movew   (-0x80,a0,d3.l), (0,a0,a0.w)
       movew   (-0x80,a0,d3.l), (-0x80,a0,a0.w)
-      movew   (-0x80,a0,d3.l), (0,a0,a0.l)
-      movew   (-0x80,a0,d3.l), (-0x80,a0,a0.l)
-      movew   (0,a0,d4.w), (0,a0,d4.l)
-      movew   (0,a0,d4.w), (-0x80,a0,d4.l)
-      movew   (0,a0,d4.w), (0,a0,d5.w)
-      movew   (0,a0,d4.w), (-0x80,a0,d5.w)
-      movew   (0,a0,d4.w), (0,a0,a0.w)
-      movew   (0,a0,d4.w), (-0x80,a0,a0.w)
-      movew   (0,a0,d4.w), (0,a0,a0.l)
-      movew   (0,a0,d4.w), (-0x80,a0,a0.l)
-      movew   (-0x80,a0,d4.w), (0,a0,d4.l)
-      movew   (-0x80,a0,d4.w), (-0x80,a0,d4.l)
-      movew   (-0x80,a0,d4.w), (0,a0,d5.w)
-      movew   (-0x80,a0,d4.w), (-0x80,a0,d5.w)
-      movew   (-0x80,a0,d4.w), (0,a0,a0.w)
-      movew   (-0x80,a0,d4.w), (-0x80,a0,a0.w)
-      movew   (-0x80,a0,d4.w), (0,a0,a0.l)
-      movew   (-0x80,a0,d4.w), (-0x80,a0,a0.l)
       movew   (0,a0,a0.w), (0,a0,a0.l)
       movew   (0,a0,a0.w), (-0x80,a0,a0.l)
-      movew   (0,a0,a0.w), (0,a0,a1.w)
-      movew   (0,a0,a0.w), (-0x80,a0,a1.w)
       movew   (0,a0,a0.w), (0,a0,d0.w)
       movew   (0,a0,a0.w), (-0x80,a0,d0.w)
-      movew   (0,a0,a0.w), (0,a0,d0.l)
-      movew   (0,a0,a0.w), (-0x80,a0,d0.l)
       movew   (-0x80,a0,a0.w), (0,a0,a0.l)
       movew   (-0x80,a0,a0.w), (-0x80,a0,a0.l)
-      movew   (-0x80,a0,a0.w), (0,a0,a1.w)
-      movew   (-0x80,a0,a0.w), (-0x80,a0,a1.w)
       movew   (-0x80,a0,a0.w), (0,a0,d0.w)
       movew   (-0x80,a0,a0.w), (-0x80,a0,d0.w)
-      movew   (-0x80,a0,a0.w), (0,a0,d0.l)
-      movew   (-0x80,a0,a0.w), (-0x80,a0,d0.l)
-      movew   (0,a0,a0.l), (0,a0,a1.w)
-      movew   (0,a0,a0.l), (-0x80,a0,a1.w)
-      movew   (0,a0,a0.l), (0,a0,a1.l)
-      movew   (0,a0,a0.l), (-0x80,a0,a1.l)
-      movew   (0,a0,a0.l), (0,a0,d0.w)
-      movew   (0,a0,a0.l), (-0x80,a0,d0.w)
-      movew   (0,a0,a0.l), (0,a0,d0.l)
-      movew   (0,a0,a0.l), (-0x80,a0,d0.l)
-      movew   (-0x80,a0,a0.l), (0,a0,a1.w)
-      movew   (-0x80,a0,a0.l), (-0x80,a0,a1.w)
-      movew   (-0x80,a0,a0.l), (0,a0,a1.l)
-      movew   (-0x80,a0,a0.l), (-0x80,a0,a1.l)
-      movew   (-0x80,a0,a0.l), (0,a0,d0.w)
-      movew   (-0x80,a0,a0.l), (-0x80,a0,d0.w)
-      movew   (-0x80,a0,a0.l), (0,a0,d0.l)
-      movew   (-0x80,a0,a0.l), (-0x80,a0,d0.l)
       movew   (0x32ba).w, (0,a0,d3.l)
       movew   (0x32ba).w, (-0x80,a0,d3.l)
-      movew   (0x32ba).w, (0,a0,d4.w)
-      movew   (0x32ba).w, (-0x80,a0,d4.w)
       movew   (0x32ba).w, (0,a0,a0.w)
       movew   (0x32ba).w, (-0x80,a0,a0.w)
-      movew   (0x32ba).w, (0,a0,a0.l)
-      movew   (0x32ba).w, (-0x80,a0,a0.l)
       movew   (0x33bc).l, (0,a0,d3.l)
       movew   (0x33bc).l, (-0x80,a0,d3.l)
-      movew   (0x33bc).l, (0,a0,d4.w)
-      movew   (0x33bc).l, (-0x80,a0,d4.w)
       movew   (0x33bc).l, (0,a0,a0.w)
       movew   (0x33bc).l, (-0x80,a0,a0.w)
-      movew   (0x33bc).l, (0,a0,a0.l)
-      movew   (0x33bc).l, (-0x80,a0,a0.l)
       movew   (.+0x32be,pc), (0,a0,d3.l)
       movew   (.+0x32be,pc), (-0x80,a0,d3.l)
-      movew   (.+0x32be,pc), (0,a0,d4.w)
-      movew   (.+0x32be,pc), (-0x80,a0,d4.w)
       movew   (.+0x32be,pc), (0,a0,a0.w)
       movew   (.+0x32be,pc), (-0x80,a0,a0.w)
-      movew   (.+0x32be,pc), (0,a0,a0.l)
-      movew   (.+0x32be,pc), (-0x80,a0,a0.l)
       movew   (.-0x7ffe,pc), (0,a0,a0.l)
       movew   (.-0x7ffe,pc), (-0x80,a0,a0.l)
-      movew   (.-0x7ffe,pc), (0,a0,a1.w)
-      movew   (.-0x7ffe,pc), (-0x80,a0,a1.w)
       movew   (.-0x7ffe,pc), (0,a0,d0.w)
       movew   (.-0x7ffe,pc), (-0x80,a0,d0.w)
-      movew   (.-0x7ffe,pc), (0,a0,d0.l)
-      movew   (.-0x7ffe,pc), (-0x80,a0,d0.l)
       movew   (.,pc), (-1,a0,d0.w)
       movew   (.,pc), (0,a0,d0.l)
-      movew   (.,pc), (-0x80,a0,d0.l)
-      movew   (.,pc), (0,a0,d1.w)
       movew   (.,pc), (0,a0,a0.w)
       movew   (.,pc), (-0x80,a0,a0.w)
-      movew   (.,pc), (0,a0,a0.l)
-      movew   (.,pc), (-0x80,a0,a0.l)
       movew   (.+2,pc,d3.l), (0,a0,d4.w)
       movew   (.+2,pc,d3.l), (-0x80,a0,d4.w)
-      movew   (.+2,pc,d3.l), (0,a0,d4.l)
-      movew   (.+2,pc,d3.l), (-0x80,a0,d4.l)
       movew   (.+2,pc,d3.l), (0,a0,a0.w)
       movew   (.+2,pc,d3.l), (-0x80,a0,a0.w)
-      movew   (.+2,pc,d3.l), (0,a0,a0.l)
-      movew   (.+2,pc,d3.l), (-0x80,a0,a0.l)
       movew   (.-126,pc,d3.l), (0,a0,d4.w)
       movew   (.-126,pc,d3.l), (-0x80,a0,d4.w)
-      movew   (.-126,pc,d3.l), (0,a0,d4.l)
-      movew   (.-126,pc,d3.l), (-0x80,a0,d4.l)
       movew   (.-126,pc,d3.l), (0,a0,a0.w)
       movew   (.-126,pc,d3.l), (-0x80,a0,a0.w)
-      movew   (.-126,pc,d3.l), (0,a0,a0.l)
-      movew   (.-126,pc,d3.l), (-0x80,a0,a0.l)
       movew   (.,pc,d3.l), (0,a0,d4.w)
       movew   (.,pc,d3.l), (-0x80,a0,d4.w)
-      movew   (.,pc,d3.l), (0,a0,d4.l)
-      movew   (.,pc,d3.l), (-0x80,a0,d4.l)
       movew   (.,pc,d3.l), (0,a0,a0.w)
       movew   (.,pc,d3.l), (-0x80,a0,a0.w)
-      movew   (.,pc,d3.l), (0,a0,a0.l)
-      movew   (.,pc,d3.l), (-0x80,a0,a0.l)
-      movew   (.+2,pc,d4.w), (0,a0,d4.l)
-      movew   (.+2,pc,d4.w), (-0x80,a0,d4.l)
-      movew   (.+2,pc,d4.w), (0,a0,d5.w)
-      movew   (.+2,pc,d4.w), (-0x80,a0,d5.w)
-      movew   (.+2,pc,d4.w), (0,a0,a0.w)
-      movew   (.+2,pc,d4.w), (-0x80,a0,a0.w)
-      movew   (.+2,pc,d4.w), (0,a0,a0.l)
-      movew   (.+2,pc,d4.w), (-0x80,a0,a0.l)
-      movew   (.-126,pc,d4.w), (0,a0,d4.l)
-      movew   (.-126,pc,d4.w), (-0x80,a0,d4.l)
-      movew   (.-126,pc,d4.w), (0,a0,d5.w)
-      movew   (.-126,pc,d4.w), (-0x80,a0,d5.w)
-      movew   (.-126,pc,d4.w), (0,a0,a0.w)
-      movew   (.-126,pc,d4.w), (-0x80,a0,a0.w)
-      movew   (.-126,pc,d4.w), (0,a0,a0.l)
-      movew   (.-126,pc,d4.w), (-0x80,a0,a0.l)
-      movew   (.,pc,d4.w), (0,a0,d4.l)
-      movew   (.,pc,d4.w), (-0x80,a0,d4.l)
-      movew   (.,pc,d4.w), (0,a0,d5.w)
-      movew   (.,pc,d4.w), (-0x80,a0,d5.w)
-      movew   (.,pc,d4.w), (0,a0,a0.w)
-      movew   (.,pc,d4.w), (-0x80,a0,a0.w)
-      movew   (.,pc,d4.w), (0,a0,a0.l)
-      movew   (.,pc,d4.w), (-0x80,a0,a0.l)
       movew   (.+2,pc,a0.w), (0,a0,a0.l)
       movew   (.+2,pc,a0.w), (-0x80,a0,a0.l)
-      movew   (.+2,pc,a0.w), (0,a0,a1.w)
-      movew   (.+2,pc,a0.w), (-0x80,a0,a1.w)
       movew   (.+2,pc,a0.w), (0,a0,d0.w)
       movew   (.+2,pc,a0.w), (-0x80,a0,d0.w)
-      movew   (.+2,pc,a0.w), (0,a0,d0.l)
-      movew   (.+2,pc,a0.w), (-0x80,a0,d0.l)
       movew   (.-126,pc,a0.w), (0,a0,a0.l)
       movew   (.-126,pc,a0.w), (-0x80,a0,a0.l)
-      movew   (.-126,pc,a0.w), (0,a0,a1.w)
-      movew   (.-126,pc,a0.w), (-0x80,a0,a1.w)
       movew   (.-126,pc,a0.w), (0,a0,d0.w)
       movew   (.-126,pc,a0.w), (-0x80,a0,d0.w)
-      movew   (.-126,pc,a0.w), (0,a0,d0.l)
-      movew   (.-126,pc,a0.w), (-0x80,a0,d0.l)
       movew   (.,pc,a0.w), (0,a0,a0.l)
       movew   (.,pc,a0.w), (-0x80,a0,a0.l)
-      movew   (.,pc,a0.w), (0,a0,a1.w)
-      movew   (.,pc,a0.w), (-0x80,a0,a1.w)
       movew   (.,pc,a0.w), (0,a0,d0.w)
       movew   (.,pc,a0.w), (-0x80,a0,d0.w)
-      movew   (.,pc,a0.w), (0,a0,d0.l)
-      movew   (.,pc,a0.w), (-0x80,a0,d0.l)
-      movew   (.+2,pc,a0.l), (0,a0,a1.w)
-      movew   (.+2,pc,a0.l), (-0x80,a0,a1.w)
-      movew   (.+2,pc,a0.l), (0,a0,a1.l)
-      movew   (.+2,pc,a0.l), (-0x80,a0,a1.l)
-      movew   (.+2,pc,a0.l), (0,a0,d0.w)
-      movew   (.+2,pc,a0.l), (-0x80,a0,d0.w)
-      movew   (.+2,pc,a0.l), (0,a0,d0.l)
-      movew   (.+2,pc,a0.l), (-0x80,a0,d0.l)
-      movew   (.-126,pc,a0.l), (0,a0,a1.w)
-      movew   (.-126,pc,a0.l), (-0x80,a0,a1.w)
-      movew   (.-126,pc,a0.l), (0,a0,a1.l)
-      movew   (.-126,pc,a0.l), (-0x80,a0,a1.l)
-      movew   (.-126,pc,a0.l), (0,a0,d0.w)
-      movew   (.-126,pc,a0.l), (-0x80,a0,d0.w)
-      movew   (.-126,pc,a0.l), (0,a0,d0.l)
-      movew   (.-126,pc,a0.l), (-0x80,a0,d0.l)
-      movew   (.,pc,a0.l), (0,a0,a1.w)
-      movew   (.,pc,a0.l), (-0x80,a0,a1.w)
-      movew   (.,pc,a0.l), (0,a0,a1.l)
-      movew   (.,pc,a0.l), (-0x80,a0,a1.l)
-      movew   (.,pc,a0.l), (0,a0,d0.w)
-      movew   (.,pc,a0.l), (-0x80,a0,d0.w)
-      movew   (.,pc,a0.l), (0,a0,d0.l)
-      movew   (.,pc,a0.l), (-0x80,a0,d0.l)
       movew   #0x32bd, (0,a0,d3.l)
       movew   #0x32bd, (-0x80,a0,d3.l)
-      movew   #0x32bd, (0,a0,d4.w)
-      movew   #0x32bd, (-0x80,a0,d4.w)
       movew   #0x32bd, (0,a0,a0.w)
       movew   #0x32bd, (-0x80,a0,a0.w)
-      movew   #0x32bd, (0,a0,a0.l)
-      movew   #0x32bd, (-0x80,a0,a0.l)
       movew   d0, (0x32c2).w
       movew   a0, (0x32ca).w
       movew   (a0), (0x32d2).w
@@ -2213,12 +1297,8 @@
       movew   (-0x7f7e,a0), (0x8184).w
       movew   (0,a0,d3.l), (0x3902).w
       movew   (-0x80,a0,d3.l), (0x3982).w
-      movew   (0,a0,d4.w), (0x4102).w
-      movew   (-0x80,a0,d4.w), (0x4182).w
       movew   (0,a0,a0.w), (0x8102).w
       movew   (-0x80,a0,a0.w), (0x8182).w
-      movew   (0,a0,a0.l), (0x8902).w
-      movew   (-0x80,a0,a0.l), (0x8982).w
       movew   (0x32fa).w, (0x33fc).w
       movew   (0x33fc).l, (0x34fe).w
       movew   (.+0x32fe,pc), (0x33fe).w
@@ -2226,15 +1306,9 @@
       movew   (.+2,pc,d3.l), (0x3902).w
       movew   (.-126,pc,d3.l), (0x3982).w
       movew   (.,pc,d3.l), (0x3a00).w
-      movew   (.+2,pc,d4.w), (0x4102).w
-      movew   (.-126,pc,d4.w), (0x4182).w
-      movew   (.,pc,d4.w), (0x4200).w
       movew   (.+2,pc,a0.w), (0x8102).w
       movew   (.-126,pc,a0.w), (0x8182).w
       movew   (.,pc,a0.w), (0x8200).w
-      movew   (.+2,pc,a0.l), (0x8902).w
-      movew   (.-126,pc,a0.l), (0x8982).w
-      movew   (.,pc,a0.l), (0x8a00).w
       movew   #0x32fd, (0x33fe).w
       movew   d0, (0x35c2).l
       movew   a0, (0x35ca).l
@@ -2245,12 +1319,8 @@
       movew   (-0x7f82,a0), (0x8280).l
       movew   (0,a0,d3.l), (0x3a02).l
       movew   (-0x80,a0,d3.l), (0x3a82).l
-      movew   (0,a0,d4.w), (0x4202).l
-      movew   (-0x80,a0,d4.w), (0x4282).l
       movew   (0,a0,a0.w), (0x8202).l
       movew   (-0x80,a0,a0.w), (0x8282).l
-      movew   (0,a0,a0.l), (0x8a02).l
-      movew   (-0x80,a0,a0.l), (0x8a82).l
       movew   (0x34fa).w, (0x36fc).l
       movew   (0x35fc).l, (0x37fe).l
       movew   (.+0x34fe,pc), (0x36fe).l
@@ -2258,15 +1328,9 @@
       movew   (.+2,pc,d3.l), (0x3a02).l
       movew   (.-126,pc,d3.l), (0x3a82).l
       movew   (.,pc,d3.l), (0x3b00).l
-      movew   (.+2,pc,d4.w), (0x4202).l
-      movew   (.-126,pc,d4.w), (0x4282).l
-      movew   (.,pc,d4.w), (0x4300).l
       movew   (.+2,pc,a0.w), (0x8202).l
       movew   (.-126,pc,a0.w), (0x8282).l
       movew   (.,pc,a0.w), (0x8300).l
-      movew   (.+2,pc,a0.l), (0x8a02).l
-      movew   (.-126,pc,a0.l), (0x8a82).l
-      movew   (.,pc,a0.l), (0x8b00).l
       movew   #0x34fd, (0x3700).l
       negxb   d0
       negxb   (a0)
@@ -2276,12 +1340,8 @@
       negxb   (-0x8000,a0)
       negxb   (0,a0,d4.l)
       negxb   (-0x80,a0,d4.l)
-      negxb   (0,a0,d5.w)
-      negxb   (-0x80,a0,d5.w)
       negxb   (0,a0,a0.w)
       negxb   (-0x80,a0,a0.w)
-      negxb   (0,a0,a0.l)
-      negxb   (-0x80,a0,a0.l)
       negxb   (0x4139).w
       negxb   (0x423b).l
       negxw   d0
@@ -2292,12 +1352,8 @@
       negxw   (-0x8000,a0)
       negxw   (0,a0,d4.l)
       negxw   (-0x80,a0,d4.l)
-      negxw   (0,a0,d5.w)
-      negxw   (-0x80,a0,d5.w)
       negxw   (0,a0,a0.w)
       negxw   (-0x80,a0,a0.w)
-      negxw   (0,a0,a0.l)
-      negxw   (-0x80,a0,a0.l)
       negxw   (0x417a).w
       negxw   (0x427c).l
       negxl   d0
@@ -2308,12 +1364,8 @@
       negxl   (-0x8000,a0)
       negxl   (0,a0,d4.l)
       negxl   (-0x80,a0,d4.l)
-      negxl   (0,a0,d5.w)
-      negxl   (-0x80,a0,d5.w)
       negxl   (0,a0,a0.w)
       negxl   (-0x80,a0,a0.w)
-      negxl   (0,a0,a0.l)
-      negxl   (-0x80,a0,a0.l)
       negxl   (0x41ba).w
       negxl   (0x42bc).l
       movew   sr, d0
@@ -2324,12 +1376,8 @@
       movew   sr, (-0x8000,a0)
       movew   sr, (0,a0,d4.l)
       movew   sr, (-0x80,a0,d4.l)
-      movew   sr, (0,a0,d5.w)
-      movew   sr, (-0x80,a0,d5.w)
       movew   sr, (0,a0,a0.w)
       movew   sr, (-0x80,a0,a0.w)
-      movew   sr, (0,a0,a0.l)
-      movew   sr, (-0x80,a0,a0.l)
       movew   sr, (0x41fa).w
       movew   sr, (0x42fc).l
       chkw    d0, d0
@@ -2340,12 +1388,8 @@
       chkw    (-0x8000,a0), d0
       chkw    (0,a0,d4.l), d0
       chkw    (-0x80,a0,d4.l), d0
-      chkw    (0,a0,d5.w), d0
-      chkw    (-0x80,a0,d5.w), d0
       chkw    (0,a0,a0.w), d0
       chkw    (-0x80,a0,a0.w), d0
-      chkw    (0,a0,a0.l), d0
-      chkw    (-0x80,a0,a0.l), d0
       chkw    (0x42ba).w, d0
       chkw    (0x43bc).l, d0
       chkw    (.+0x42be,pc), d0
@@ -2354,27 +1398,17 @@
       chkw    (.+2,pc,d4.l), d0
       chkw    (.-126,pc,d4.l), d0
       chkw    (.,pc,d4.l), d0
-      chkw    (.+2,pc,d5.w), d0
-      chkw    (.-126,pc,d5.w), d0
-      chkw    (.,pc,d5.w), d0
       chkw    (.+2,pc,a0.w), d0
       chkw    (.-126,pc,a0.w), d0
       chkw    (.,pc,a0.w), d0
-      chkw    (.+2,pc,a0.l), d0
-      chkw    (.-126,pc,a0.l), d0
-      chkw    (.,pc,a0.l), d0
       chkw    #0x42bd, d0
       lea     (a0), a0
       lea     (0x42e9,a0), a0
       lea     (-0x8000,a0), a0
       lea     (0,a0,d4.l), a0
       lea     (-0x80,a0,d4.l), a0
-      lea     (0,a0,d5.w), a0
-      lea     (-0x80,a0,d5.w), a0
       lea     (0,a0,a0.w), a0
       lea     (-0x80,a0,a0.w), a0
-      lea     (0,a0,a0.l), a0
-      lea     (-0x80,a0,a0.l), a0
       lea     (0x42fa).w, a0
       lea     (0x43fc).l, a0
       lea     (.+0x42fe,pc), a0
@@ -2383,15 +1417,9 @@
       lea     (.+2,pc,d4.l), a0
       lea     (.-126,pc,d4.l), a0
       lea     (.,pc,d4.l), a0
-      lea     (.+2,pc,d5.w), a0
-      lea     (.-126,pc,d5.w), a0
-      lea     (.,pc,d5.w), a0
       lea     (.+2,pc,a0.w), a0
       lea     (.-126,pc,a0.w), a0
       lea     (.,pc,a0.w), a0
-      lea     (.+2,pc,a0.l), a0
-      lea     (.-126,pc,a0.l), a0
-      lea     (.,pc,a0.l), a0
       clrb    d0
       clrb    (a0)
       clrb    (a0)+
@@ -2400,12 +1428,8 @@
       clrb    (-0x8000,a0)
       clrb    (0,a0,d4.l)
       clrb    (-0x80,a0,d4.l)
-      clrb    (0,a0,d5.w)
-      clrb    (-0x80,a0,d5.w)
       clrb    (0,a0,a0.w)
       clrb    (-0x80,a0,a0.w)
-      clrb    (0,a0,a0.l)
-      clrb    (-0x80,a0,a0.l)
       clrb    (0x4339).w
       clrb    (0x443b).l
       clrw    d0
@@ -2416,12 +1440,8 @@
       clrw    (-0x8000,a0)
       clrw    (0,a0,d4.l)
       clrw    (-0x80,a0,d4.l)
-      clrw    (0,a0,d5.w)
-      clrw    (-0x80,a0,d5.w)
       clrw    (0,a0,a0.w)
       clrw    (-0x80,a0,a0.w)
-      clrw    (0,a0,a0.l)
-      clrw    (-0x80,a0,a0.l)
       clrw    (0x437a).w
       clrw    (0x447c).l
       clrl    d0
@@ -2432,12 +1452,8 @@
       clrl    (-0x8000,a0)
       clrl    (0,a0,d4.l)
       clrl    (-0x80,a0,d4.l)
-      clrl    (0,a0,d5.w)
-      clrl    (-0x80,a0,d5.w)
       clrl    (0,a0,a0.w)
       clrl    (-0x80,a0,a0.w)
-      clrl    (0,a0,a0.l)
-      clrl    (-0x80,a0,a0.l)
       clrl    (0x43ba).w
       clrl    (0x44bc).l
       movew   ccr, d0
@@ -2448,12 +1464,8 @@
       movew   ccr, (-0x8000,a0)
       movew   ccr, (0,a0,d4.l)
       movew   ccr, (-0x80,a0,d4.l)
-      movew   ccr, (0,a0,d5.w)
-      movew   ccr, (-0x80,a0,d5.w)
       movew   ccr, (0,a0,a0.w)
       movew   ccr, (-0x80,a0,a0.w)
-      movew   ccr, (0,a0,a0.l)
-      movew   ccr, (-0x80,a0,a0.l)
       movew   ccr, (0x43fa).w
       movew   ccr, (0x44fc).l
       negb    d0
@@ -2464,12 +1476,8 @@
       negb    (-0x8000,a0)
       negb    (0,a0,d4.l)
       negb    (-0x80,a0,d4.l)
-      negb    (0,a0,d5.w)
-      negb    (-0x80,a0,d5.w)
       negb    (0,a0,a0.w)
       negb    (-0x80,a0,a0.w)
-      negb    (0,a0,a0.l)
-      negb    (-0x80,a0,a0.l)
       negb    (0x4539).w
       negb    (0x463b).l
       negw    d0
@@ -2480,12 +1488,8 @@
       negw    (-0x8000,a0)
       negw    (0,a0,d4.l)
       negw    (-0x80,a0,d4.l)
-      negw    (0,a0,d5.w)
-      negw    (-0x80,a0,d5.w)
       negw    (0,a0,a0.w)
       negw    (-0x80,a0,a0.w)
-      negw    (0,a0,a0.l)
-      negw    (-0x80,a0,a0.l)
       negw    (0x457a).w
       negw    (0x467c).l
       negl    d0
@@ -2496,12 +1500,8 @@
       negl    (-0x8000,a0)
       negl    (0,a0,d4.l)
       negl    (-0x80,a0,d4.l)
-      negl    (0,a0,d5.w)
-      negl    (-0x80,a0,d5.w)
       negl    (0,a0,a0.w)
       negl    (-0x80,a0,a0.w)
-      negl    (0,a0,a0.l)
-      negl    (-0x80,a0,a0.l)
       negl    (0x45ba).w
       negl    (0x46bc).l
       movew   d0, ccr
@@ -2512,12 +1512,8 @@
       movew   (-0x8000,a0), ccr
       movew   (0,a0,d4.l), ccr
       movew   (-0x80,a0,d4.l), ccr
-      movew   (0,a0,d5.w), ccr
-      movew   (-0x80,a0,d5.w), ccr
       movew   (0,a0,a0.w), ccr
       movew   (-0x80,a0,a0.w), ccr
-      movew   (0,a0,a0.l), ccr
-      movew   (-0x80,a0,a0.l), ccr
       movew   (0x45fa).w, ccr
       movew   (0x46fc).l, ccr
       movew   (.+0x45fe,pc), ccr
@@ -2526,15 +1522,9 @@
       movew   (.+2,pc,d4.l), ccr
       movew   (.-126,pc,d4.l), ccr
       movew   (.,pc,d4.l), ccr
-      movew   (.+2,pc,d5.w), ccr
-      movew   (.-126,pc,d5.w), ccr
-      movew   (.,pc,d5.w), ccr
       movew   (.+2,pc,a0.w), ccr
       movew   (.-126,pc,a0.w), ccr
       movew   (.,pc,a0.w), ccr
-      movew   (.+2,pc,a0.l), ccr
-      movew   (.-126,pc,a0.l), ccr
-      movew   (.,pc,a0.l), ccr
       movew   #0xfd, ccr
       notb    d0
       notb    (a0)
@@ -2544,12 +1534,8 @@
       notb    (-0x8000,a0)
       notb    (0,a0,d4.l)
       notb    (-0x80,a0,d4.l)
-      notb    (0,a0,d5.w)
-      notb    (-0x80,a0,d5.w)
       notb    (0,a0,a0.w)
       notb    (-0x80,a0,a0.w)
-      notb    (0,a0,a0.l)
-      notb    (-0x80,a0,a0.l)
       notb    (0x4739).w
       notb    (0x483b).l
       notw    d0
@@ -2560,12 +1546,8 @@
       notw    (-0x8000,a0)
       notw    (0,a0,d4.l)
       notw    (-0x80,a0,d4.l)
-      notw    (0,a0,d5.w)
-      notw    (-0x80,a0,d5.w)
       notw    (0,a0,a0.w)
       notw    (-0x80,a0,a0.w)
-      notw    (0,a0,a0.l)
-      notw    (-0x80,a0,a0.l)
       notw    (0x477a).w
       notw    (0x487c).l
       notl    d0
@@ -2576,12 +1558,8 @@
       notl    (-0x8000,a0)
       notl    (0,a0,d4.l)
       notl    (-0x80,a0,d4.l)
-      notl    (0,a0,d5.w)
-      notl    (-0x80,a0,d5.w)
       notl    (0,a0,a0.w)
       notl    (-0x80,a0,a0.w)
-      notl    (0,a0,a0.l)
-      notl    (-0x80,a0,a0.l)
       notl    (0x47ba).w
       notl    (0x48bc).l
       movew   d0, sr
@@ -2592,12 +1570,8 @@
       movew   (-0x8000,a0), sr
       movew   (0,a0,d4.l), sr
       movew   (-0x80,a0,d4.l), sr
-      movew   (0,a0,d5.w), sr
-      movew   (-0x80,a0,d5.w), sr
       movew   (0,a0,a0.w), sr
       movew   (-0x80,a0,a0.w), sr
-      movew   (0,a0,a0.l), sr
-      movew   (-0x80,a0,a0.l), sr
       movew   (0x47fa).w, sr
       movew   (0x48fc).l, sr
       movew   (.+0x47fe,pc), sr
@@ -2606,15 +1580,9 @@
       movew   (.+2,pc,d4.l), sr
       movew   (.-126,pc,d4.l), sr
       movew   (.,pc,d4.l), sr
-      movew   (.+2,pc,d5.w), sr
-      movew   (.-126,pc,d5.w), sr
-      movew   (.,pc,d5.w), sr
       movew   (.+2,pc,a0.w), sr
       movew   (.-126,pc,a0.w), sr
       movew   (.,pc,a0.w), sr
-      movew   (.+2,pc,a0.l), sr
-      movew   (.-126,pc,a0.l), sr
-      movew   (.,pc,a0.l), sr
       movew   #0x47fd, sr
       nbcd    d0
       nbcd    (a0)
@@ -2624,12 +1592,8 @@
       nbcd    (-0x8000,a0)
       nbcd    (0,a0,d5.w)
       nbcd    (-0x80,a0,d5.w)
-      nbcd    (0,a0,d5.l)
-      nbcd    (-0x80,a0,d5.l)
       nbcd    (0,a0,a0.w)
       nbcd    (-0x80,a0,a0.w)
-      nbcd    (0,a0,a0.l)
-      nbcd    (-0x80,a0,a0.l)
       nbcd    (0x4939).w
       nbcd    (0x4a3b).l
       swap    d0
@@ -2639,12 +1603,8 @@
       pea     (-0x8000,a0)
       pea     (0,a0,d5.w)
       pea     (-0x80,a0,d5.w)
-      pea     (0,a0,d5.l)
-      pea     (-0x80,a0,d5.l)
       pea     (0,a0,a0.w)
       pea     (-0x80,a0,a0.w)
-      pea     (0,a0,a0.l)
-      pea     (-0x80,a0,a0.l)
       pea     (0x497a).w
       pea     (0x4a7c).l
       pea     (.+0x497e,pc)
@@ -2653,15 +1613,9 @@
       pea     (.+2,pc,d5.w)
       pea     (.-126,pc,d5.w)
       pea     (.,pc,d5.w)
-      pea     (.+2,pc,d5.l)
-      pea     (.-126,pc,d5.l)
-      pea     (.,pc,d5.l)
       pea     (.+2,pc,a0.w)
       pea     (.-126,pc,a0.w)
       pea     (.,pc,a0.w)
-      pea     (.+2,pc,a0.l)
-      pea     (.-126,pc,a0.l)
-      pea     (.,pc,a0.l)
       extw    d0
       movemw  d0/d4/d7-a0/a3/a6, (a0)
       movemw  d0-d1/d4/d7-a0/a3/a6, (a0)
@@ -2851,380 +1805,188 @@
       movemw  d0-d1/d3-d4/d6-d7/a1-a2/a4-a5/a7, (0,a3)
       movemw  d0/d4-d5/d7-a0/a3/a6, (0,a0,d5.w)
       movemw  d0/d4-d5/d7-a0/a3/a6, (-0x80,a0,d5.w)
-      movemw  d0/d4-d5/d7-a0/a3/a6, (0,a0,d5.l)
-      movemw  d0/d4-d5/d7-a0/a3/a6, (-0x80,a0,d5.l)
       movemw  d0/d4-d5/d7-a0/a3/a6, (0,a0,a0.w)
       movemw  d0/d4-d5/d7-a0/a3/a6, (-0x80,a0,a0.w)
-      movemw  d0/d4-d5/d7-a0/a3/a6, (0,a0,a0.l)
-      movemw  d0/d4-d5/d7-a0/a3/a6, (-0x80,a0,a0.l)
       movemw  d0-d1/d4-d5/d7-a0/a3/a6, (0,a0,d5.w)
       movemw  d0-d1/d4-d5/d7-a0/a3/a6, (-0x80,a0,d5.w)
-      movemw  d0-d1/d4-d5/d7-a0/a3/a6, (0,a0,d5.l)
-      movemw  d0-d1/d4-d5/d7-a0/a3/a6, (-0x80,a0,d5.l)
       movemw  d0-d1/d4-d5/d7-a0/a3/a6, (0,a0,a0.w)
       movemw  d0-d1/d4-d5/d7-a0/a3/a6, (-0x80,a0,a0.w)
-      movemw  d0-d1/d4-d5/d7-a0/a3/a6, (0,a0,a0.l)
-      movemw  d0-d1/d4-d5/d7-a0/a3/a6, (-0x80,a0,a0.l)
       movemw  d3-d5/d7-a0/a3/a6, (0,a0,d5.w)
       movemw  d3-d5/d7-a0/a3/a6, (-0x80,a0,d5.w)
-      movemw  d3-d5/d7-a0/a3/a6, (0,a0,d5.l)
-      movemw  d3-d5/d7-a0/a3/a6, (-0x80,a0,d5.l)
       movemw  d3-d5/d7-a0/a3/a6, (0,a0,a0.w)
       movemw  d3-d5/d7-a0/a3/a6, (-0x80,a0,a0.w)
-      movemw  d3-d5/d7-a0/a3/a6, (0,a0,a0.l)
-      movemw  d3-d5/d7-a0/a3/a6, (-0x80,a0,a0.l)
       movemw  d6-a0/a3/a6, (0,a0,d5.w)
       movemw  d6-a0/a3/a6, (-0x80,a0,d5.w)
-      movemw  d6-a0/a3/a6, (0,a0,d5.l)
-      movemw  d6-a0/a3/a6, (-0x80,a0,d5.l)
       movemw  d6-a0/a3/a6, (0,a0,a0.w)
       movemw  d6-a0/a3/a6, (-0x80,a0,a0.w)
-      movemw  d6-a0/a3/a6, (0,a0,a0.l)
-      movemw  d6-a0/a3/a6, (-0x80,a0,a0.l)
       movemw  d0/d6-a0/a3/a6, (0,a0,d5.w)
       movemw  d0/d6-a0/a3/a6, (-0x80,a0,d5.w)
-      movemw  d0/d6-a0/a3/a6, (0,a0,d5.l)
-      movemw  d0/d6-a0/a3/a6, (-0x80,a0,d5.l)
       movemw  d0/d6-a0/a3/a6, (0,a0,a0.w)
       movemw  d0/d6-a0/a3/a6, (-0x80,a0,a0.w)
-      movemw  d0/d6-a0/a3/a6, (0,a0,a0.l)
-      movemw  d0/d6-a0/a3/a6, (-0x80,a0,a0.l)
       movemw  a1/a3/a6, (0,a0,d5.w)
       movemw  a1/a3/a6, (-0x80,a0,d5.w)
-      movemw  a1/a3/a6, (0,a0,d5.l)
-      movemw  a1/a3/a6, (-0x80,a0,d5.l)
       movemw  a1/a3/a6, (0,a0,a0.w)
       movemw  a1/a3/a6, (-0x80,a0,a0.w)
-      movemw  a1/a3/a6, (0,a0,a0.l)
-      movemw  a1/a3/a6, (-0x80,a0,a0.l)
       movemw  d0-d1/d3-d4/d6-d7/a1/a3/a6, (0,a0,d5.w)
       movemw  d0-d1/d3-d4/d6-d7/a1/a3/a6, (-0x80,a0,d5.w)
-      movemw  d0-d1/d3-d4/d6-d7/a1/a3/a6, (0,a0,d5.l)
-      movemw  d0-d1/d3-d4/d6-d7/a1/a3/a6, (-0x80,a0,d5.l)
       movemw  d0-d1/d3-d4/d6-d7/a1/a3/a6, (0,a0,a0.w)
       movemw  d0-d1/d3-d4/d6-d7/a1/a3/a6, (-0x80,a0,a0.w)
-      movemw  d0-d1/d3-d4/d6-d7/a1/a3/a6, (0,a0,a0.l)
-      movemw  d0-d1/d3-d4/d6-d7/a1/a3/a6, (-0x80,a0,a0.l)
       movemw  a0-a1/a3/a6, (0,a0,d5.w)
       movemw  a0-a1/a3/a6, (-0x80,a0,d5.w)
-      movemw  a0-a1/a3/a6, (0,a0,d5.l)
-      movemw  a0-a1/a3/a6, (-0x80,a0,d5.l)
       movemw  a0-a1/a3/a6, (0,a0,a0.w)
       movemw  a0-a1/a3/a6, (-0x80,a0,a0.w)
-      movemw  a0-a1/a3/a6, (0,a0,a0.l)
-      movemw  a0-a1/a3/a6, (-0x80,a0,a0.l)
       movemw  d0/a0-a1/a3/a6, (0,a0,d5.w)
       movemw  d0/a0-a1/a3/a6, (-0x80,a0,d5.w)
-      movemw  d0/a0-a1/a3/a6, (0,a0,d5.l)
-      movemw  d0/a0-a1/a3/a6, (-0x80,a0,d5.l)
       movemw  d0/a0-a1/a3/a6, (0,a0,a0.w)
       movemw  d0/a0-a1/a3/a6, (-0x80,a0,a0.w)
-      movemw  d0/a0-a1/a3/a6, (0,a0,a0.l)
-      movemw  d0/a0-a1/a3/a6, (-0x80,a0,a0.l)
       movemw  d0-d1/a0-a1/a3/a6, (0,a0,d5.w)
       movemw  d0-d1/a0-a1/a3/a6, (-0x80,a0,d5.w)
-      movemw  d0-d1/a0-a1/a3/a6, (0,a0,d5.l)
-      movemw  d0-d1/a0-a1/a3/a6, (-0x80,a0,d5.l)
       movemw  d0-d1/a0-a1/a3/a6, (0,a0,a0.w)
       movemw  d0-d1/a0-a1/a3/a6, (-0x80,a0,a0.w)
-      movemw  d0-d1/a0-a1/a3/a6, (0,a0,a0.l)
-      movemw  d0-d1/a0-a1/a3/a6, (-0x80,a0,a0.l)
       movemw  d0-d1/d3/a0-a1/a3/a6, (0,a0,d5.w)
       movemw  d0-d1/d3/a0-a1/a3/a6, (-0x80,a0,d5.w)
-      movemw  d0-d1/d3/a0-a1/a3/a6, (0,a0,d5.l)
-      movemw  d0-d1/d3/a0-a1/a3/a6, (-0x80,a0,d5.l)
       movemw  d0-d1/d3/a0-a1/a3/a6, (0,a0,a0.w)
       movemw  d0-d1/d3/a0-a1/a3/a6, (-0x80,a0,a0.w)
-      movemw  d0-d1/d3/a0-a1/a3/a6, (0,a0,a0.l)
-      movemw  d0-d1/d3/a0-a1/a3/a6, (-0x80,a0,a0.l)
       movemw  d0-d1/d3-d4/a0-a1/a3/a6, (0,a0,d5.w)
       movemw  d0-d1/d3-d4/a0-a1/a3/a6, (-0x80,a0,d5.w)
-      movemw  d0-d1/d3-d4/a0-a1/a3/a6, (0,a0,d5.l)
-      movemw  d0-d1/d3-d4/a0-a1/a3/a6, (-0x80,a0,d5.l)
       movemw  d0-d1/d3-d4/a0-a1/a3/a6, (0,a0,a0.w)
       movemw  d0-d1/d3-d4/a0-a1/a3/a6, (-0x80,a0,a0.w)
-      movemw  d0-d1/d3-d4/a0-a1/a3/a6, (0,a0,a0.l)
-      movemw  d0-d1/d3-d4/a0-a1/a3/a6, (-0x80,a0,a0.l)
       movemw  d0-d1/d3-d4/d6/a0-a1/a3/a6, (0,a0,d5.w)
       movemw  d0-d1/d3-d4/d6/a0-a1/a3/a6, (-0x80,a0,d5.w)
-      movemw  d0-d1/d3-d4/d6/a0-a1/a3/a6, (0,a0,d5.l)
-      movemw  d0-d1/d3-d4/d6/a0-a1/a3/a6, (-0x80,a0,d5.l)
       movemw  d0-d1/d3-d4/d6/a0-a1/a3/a6, (0,a0,a0.w)
       movemw  d0-d1/d3-d4/d6/a0-a1/a3/a6, (-0x80,a0,a0.w)
-      movemw  d0-d1/d3-d4/d6/a0-a1/a3/a6, (0,a0,a0.l)
-      movemw  d0-d1/d3-d4/d6/a0-a1/a3/a6, (-0x80,a0,a0.l)
       movemw  d7-a3/a6, (-0x7f,a0,d5.w)
       movemw  d7-a3/a6, (0,a0,d5.l)
-      movemw  d7-a3/a6, (-0x80,a0,d5.l)
-      movemw  d7-a3/a6, (0,a0,d6.w)
       movemw  d7-a3/a6, (0,a0,a0.w)
       movemw  d7-a3/a6, (-0x80,a0,a0.w)
-      movemw  d7-a3/a6, (0,a0,a0.l)
-      movemw  d7-a3/a6, (-0x80,a0,a0.l)
       movemw  d0/d7-a3/a6, (-0x7e,a0,d5.w)
       movemw  d0/d7-a3/a6, (0,a0,d5.l)
-      movemw  d0/d7-a3/a6, (-0x80,a0,d5.l)
-      movemw  d0/d7-a3/a6, (0,a0,d6.w)
       movemw  d0/d7-a3/a6, (0,a0,a0.w)
       movemw  d0/d7-a3/a6, (-0x80,a0,a0.w)
-      movemw  d0/d7-a3/a6, (0,a0,a0.l)
-      movemw  d0/d7-a3/a6, (-0x80,a0,a0.l)
       movemw  d0-d1/d7-a3/a6, (-0x7c,a0,d5.w)
       movemw  d0-d1/d7-a3/a6, (0,a0,d5.l)
-      movemw  d0-d1/d7-a3/a6, (-0x80,a0,d5.l)
-      movemw  d0-d1/d7-a3/a6, (0,a0,d6.w)
       movemw  d0-d1/d7-a3/a6, (0,a0,a0.w)
       movemw  d0-d1/d7-a3/a6, (-0x80,a0,a0.w)
-      movemw  d0-d1/d7-a3/a6, (0,a0,a0.l)
-      movemw  d0-d1/d7-a3/a6, (-0x80,a0,a0.l)
       movemw  d0-d1/d3/d7-a3/a6, (-0x74,a0,d5.w)
       movemw  d0-d1/d3/d7-a3/a6, (0,a0,d5.l)
-      movemw  d0-d1/d3/d7-a3/a6, (-0x80,a0,d5.l)
-      movemw  d0-d1/d3/d7-a3/a6, (0,a0,d6.w)
       movemw  d0-d1/d3/d7-a3/a6, (0,a0,a0.w)
       movemw  d0-d1/d3/d7-a3/a6, (-0x80,a0,a0.w)
-      movemw  d0-d1/d3/d7-a3/a6, (0,a0,a0.l)
-      movemw  d0-d1/d3/d7-a3/a6, (-0x80,a0,a0.l)
       movemw  d0-d1/d3-d4/d7-a3/a6, (-0x64,a0,d5.w)
       movemw  d0-d1/d3-d4/d7-a3/a6, (0,a0,d5.l)
-      movemw  d0-d1/d3-d4/d7-a3/a6, (-0x80,a0,d5.l)
-      movemw  d0-d1/d3-d4/d7-a3/a6, (0,a0,d6.w)
       movemw  d0-d1/d3-d4/d7-a3/a6, (0,a0,a0.w)
       movemw  d0-d1/d3-d4/d7-a3/a6, (-0x80,a0,a0.w)
-      movemw  d0-d1/d3-d4/d7-a3/a6, (0,a0,a0.l)
-      movemw  d0-d1/d3-d4/d7-a3/a6, (-0x80,a0,a0.l)
       movemw  a4/a6, (0,a0,d5.l)
       movemw  a4/a6, (-0x80,a0,d5.l)
-      movemw  a4/a6, (0,a0,d6.w)
-      movemw  a4/a6, (-0x80,a0,d6.w)
       movemw  a4/a6, (0,a0,a0.w)
       movemw  a4/a6, (-0x80,a0,a0.w)
-      movemw  a4/a6, (0,a0,a0.l)
-      movemw  a4/a6, (-0x80,a0,a0.l)
       movemw  d0-d1/d3-d4/d6-d7/a4/a6, (0,a0,d5.l)
       movemw  d0-d1/d3-d4/d6-d7/a4/a6, (-0x80,a0,d5.l)
-      movemw  d0-d1/d3-d4/d6-d7/a4/a6, (0,a0,d6.w)
-      movemw  d0-d1/d3-d4/d6-d7/a4/a6, (-0x80,a0,d6.w)
       movemw  d0-d1/d3-d4/d6-d7/a4/a6, (0,a0,a0.w)
       movemw  d0-d1/d3-d4/d6-d7/a4/a6, (-0x80,a0,a0.w)
-      movemw  d0-d1/d3-d4/d6-d7/a4/a6, (0,a0,a0.l)
-      movemw  d0-d1/d3-d4/d6-d7/a4/a6, (-0x80,a0,a0.l)
       movemw  d0-d1/d3-d4/d6-d7/a1-a2/a4/a6, (0,a0,d5.l)
       movemw  d0-d1/d3-d4/d6-d7/a1-a2/a4/a6, (-0x80,a0,d5.l)
-      movemw  d0-d1/d3-d4/d6-d7/a1-a2/a4/a6, (0,a0,d6.w)
-      movemw  d0-d1/d3-d4/d6-d7/a1-a2/a4/a6, (-0x80,a0,d6.w)
       movemw  d0-d1/d3-d4/d6-d7/a1-a2/a4/a6, (0,a0,a0.w)
       movemw  d0-d1/d3-d4/d6-d7/a1-a2/a4/a6, (-0x80,a0,a0.w)
-      movemw  d0-d1/d3-d4/d6-d7/a1-a2/a4/a6, (0,a0,a0.l)
-      movemw  d0-d1/d3-d4/d6-d7/a1-a2/a4/a6, (-0x80,a0,a0.l)
       movemw  a0-a1/a3-a4/a6, (0,a0,d6.w)
       movemw  a0-a1/a3-a4/a6, (-0x80,a0,d6.w)
-      movemw  a0-a1/a3-a4/a6, (0,a0,d6.l)
-      movemw  a0-a1/a3-a4/a6, (-0x80,a0,d6.l)
       movemw  a0-a1/a3-a4/a6, (0,a0,a0.w)
       movemw  a0-a1/a3-a4/a6, (-0x80,a0,a0.w)
-      movemw  a0-a1/a3-a4/a6, (0,a0,a0.l)
-      movemw  a0-a1/a3-a4/a6, (-0x80,a0,a0.l)
       movemw  d0/a0-a1/a3-a4/a6, (0,a0,d6.w)
       movemw  d0/a0-a1/a3-a4/a6, (-0x80,a0,d6.w)
-      movemw  d0/a0-a1/a3-a4/a6, (0,a0,d6.l)
-      movemw  d0/a0-a1/a3-a4/a6, (-0x80,a0,d6.l)
       movemw  d0/a0-a1/a3-a4/a6, (0,a0,a0.w)
       movemw  d0/a0-a1/a3-a4/a6, (-0x80,a0,a0.w)
-      movemw  d0/a0-a1/a3-a4/a6, (0,a0,a0.l)
-      movemw  d0/a0-a1/a3-a4/a6, (-0x80,a0,a0.l)
       movemw  d0-d1/a0-a1/a3-a4/a6, (0,a0,d6.w)
       movemw  d0-d1/a0-a1/a3-a4/a6, (-0x80,a0,d6.w)
-      movemw  d0-d1/a0-a1/a3-a4/a6, (0,a0,d6.l)
-      movemw  d0-d1/a0-a1/a3-a4/a6, (-0x80,a0,d6.l)
       movemw  d0-d1/a0-a1/a3-a4/a6, (0,a0,a0.w)
       movemw  d0-d1/a0-a1/a3-a4/a6, (-0x80,a0,a0.w)
-      movemw  d0-d1/a0-a1/a3-a4/a6, (0,a0,a0.l)
-      movemw  d0-d1/a0-a1/a3-a4/a6, (-0x80,a0,a0.l)
       movemw  d0-d1/d3/a0-a1/a3-a4/a6, (0,a0,d6.w)
       movemw  d0-d1/d3/a0-a1/a3-a4/a6, (-0x80,a0,d6.w)
-      movemw  d0-d1/d3/a0-a1/a3-a4/a6, (0,a0,d6.l)
-      movemw  d0-d1/d3/a0-a1/a3-a4/a6, (-0x80,a0,d6.l)
       movemw  d0-d1/d3/a0-a1/a3-a4/a6, (0,a0,a0.w)
       movemw  d0-d1/d3/a0-a1/a3-a4/a6, (-0x80,a0,a0.w)
-      movemw  d0-d1/d3/a0-a1/a3-a4/a6, (0,a0,a0.l)
-      movemw  d0-d1/d3/a0-a1/a3-a4/a6, (-0x80,a0,a0.l)
       movemw  d0-d1/d3-d4/a0-a1/a3-a4/a6, (0,a0,d6.w)
       movemw  d0-d1/d3-d4/a0-a1/a3-a4/a6, (-0x80,a0,d6.w)
-      movemw  d0-d1/d3-d4/a0-a1/a3-a4/a6, (0,a0,d6.l)
-      movemw  d0-d1/d3-d4/a0-a1/a3-a4/a6, (-0x80,a0,d6.l)
       movemw  d0-d1/d3-d4/a0-a1/a3-a4/a6, (0,a0,a0.w)
       movemw  d0-d1/d3-d4/a0-a1/a3-a4/a6, (-0x80,a0,a0.w)
-      movemw  d0-d1/d3-d4/a0-a1/a3-a4/a6, (0,a0,a0.l)
-      movemw  d0-d1/d3-d4/a0-a1/a3-a4/a6, (-0x80,a0,a0.l)
       movemw  d0-d1/d3-d4/d6/a0-a1/a3-a4/a6, (0,a0,d6.w)
       movemw  d0-d1/d3-d4/d6/a0-a1/a3-a4/a6, (-0x80,a0,d6.w)
-      movemw  d0-d1/d3-d4/d6/a0-a1/a3-a4/a6, (0,a0,d6.l)
-      movemw  d0-d1/d3-d4/d6/a0-a1/a3-a4/a6, (-0x80,a0,d6.l)
       movemw  d0-d1/d3-d4/d6/a0-a1/a3-a4/a6, (0,a0,a0.w)
       movemw  d0-d1/d3-d4/d6/a0-a1/a3-a4/a6, (-0x80,a0,a0.w)
-      movemw  d0-d1/d3-d4/d6/a0-a1/a3-a4/a6, (0,a0,a0.l)
-      movemw  d0-d1/d3-d4/d6/a0-a1/a3-a4/a6, (-0x80,a0,a0.l)
       movemw  d7-a6, (-0x7f,a0,a0.w)
       movemw  d7-a6, (0,a0,a0.l)
-      movemw  d7-a6, (-0x80,a0,a0.l)
-      movemw  d7-a6, (0,a0,a1.w)
       movemw  d7-a6, (0,a0,d0.w)
       movemw  d7-a6, (-0x80,a0,d0.w)
-      movemw  d7-a6, (0,a0,d0.l)
-      movemw  d7-a6, (-0x80,a0,d0.l)
       movemw  d0/d7-a6, (-0x7e,a0,a0.w)
       movemw  d0/d7-a6, (0,a0,a0.l)
-      movemw  d0/d7-a6, (-0x80,a0,a0.l)
-      movemw  d0/d7-a6, (0,a0,a1.w)
       movemw  d0/d7-a6, (0,a0,d0.w)
       movemw  d0/d7-a6, (-0x80,a0,d0.w)
-      movemw  d0/d7-a6, (0,a0,d0.l)
-      movemw  d0/d7-a6, (-0x80,a0,d0.l)
       movemw  d0-d1/d7-a6, (-0x7c,a0,a0.w)
       movemw  d0-d1/d7-a6, (0,a0,a0.l)
-      movemw  d0-d1/d7-a6, (-0x80,a0,a0.l)
-      movemw  d0-d1/d7-a6, (0,a0,a1.w)
       movemw  d0-d1/d7-a6, (0,a0,d0.w)
       movemw  d0-d1/d7-a6, (-0x80,a0,d0.w)
-      movemw  d0-d1/d7-a6, (0,a0,d0.l)
-      movemw  d0-d1/d7-a6, (-0x80,a0,d0.l)
       movemw  d0-d1/d3/d7-a6, (-0x74,a0,a0.w)
       movemw  d0-d1/d3/d7-a6, (0,a0,a0.l)
-      movemw  d0-d1/d3/d7-a6, (-0x80,a0,a0.l)
-      movemw  d0-d1/d3/d7-a6, (0,a0,a1.w)
       movemw  d0-d1/d3/d7-a6, (0,a0,d0.w)
       movemw  d0-d1/d3/d7-a6, (-0x80,a0,d0.w)
-      movemw  d0-d1/d3/d7-a6, (0,a0,d0.l)
-      movemw  d0-d1/d3/d7-a6, (-0x80,a0,d0.l)
       movemw  d0-d1/d3-d4/d7-a6, (-0x64,a0,a0.w)
       movemw  d0-d1/d3-d4/d7-a6, (0,a0,a0.l)
-      movemw  d0-d1/d3-d4/d7-a6, (-0x80,a0,a0.l)
-      movemw  d0-d1/d3-d4/d7-a6, (0,a0,a1.w)
       movemw  d0-d1/d3-d4/d7-a6, (0,a0,d0.w)
       movemw  d0-d1/d3-d4/d7-a6, (-0x80,a0,d0.w)
-      movemw  d0-d1/d3-d4/d7-a6, (0,a0,d0.l)
-      movemw  d0-d1/d3-d4/d7-a6, (-0x80,a0,d0.l)
       movemw  a7, (0,a0,a0.l)
       movemw  a7, (-0x80,a0,a0.l)
-      movemw  a7, (0,a0,a1.w)
-      movemw  a7, (-0x80,a0,a1.w)
       movemw  a7, (0,a0,d0.w)
       movemw  a7, (-0x80,a0,d0.w)
-      movemw  a7, (0,a0,d0.l)
-      movemw  a7, (-0x80,a0,d0.l)
       movemw  d0-d1/d3-d4/d6-d7/a7, (0,a0,a0.l)
       movemw  d0-d1/d3-d4/d6-d7/a7, (-0x80,a0,a0.l)
-      movemw  d0-d1/d3-d4/d6-d7/a7, (0,a0,a1.w)
-      movemw  d0-d1/d3-d4/d6-d7/a7, (-0x80,a0,a1.w)
       movemw  d0-d1/d3-d4/d6-d7/a7, (0,a0,d0.w)
       movemw  d0-d1/d3-d4/d6-d7/a7, (-0x80,a0,d0.w)
-      movemw  d0-d1/d3-d4/d6-d7/a7, (0,a0,d0.l)
-      movemw  d0-d1/d3-d4/d6-d7/a7, (-0x80,a0,d0.l)
       movemw  d0-d1/d3-d4/d6-d7/a1-a2/a4-a5/a7, (0,a0,a3.l)
       movemw  d0-d1/d3-d4/d6-d7/a1-a2/a4-a5/a7, (-0x80,a0,a3.l)
-      movemw  d0-d1/d3-d4/d6-d7/a1-a2/a4-a5/a7, (0,a0,a4.w)
-      movemw  d0-d1/d3-d4/d6-d7/a1-a2/a4-a5/a7, (-0x80,a0,a4.w)
       movemw  d0-d1/d3-d4/d6-d7/a1-a2/a4-a5/a7, (0,a0,d0.w)
       movemw  d0-d1/d3-d4/d6-d7/a1-a2/a4-a5/a7, (-0x80,a0,d0.w)
-      movemw  d0-d1/d3-d4/d6-d7/a1-a2/a4-a5/a7, (0,a0,d0.l)
-      movemw  d0-d1/d3-d4/d6-d7/a1-a2/a4-a5/a7, (-0x80,a0,d0.l)
-      movemw  a0-a1/a3-a4/a6-a7, (0,a0,a6.w)
-      movemw  a0-a1/a3-a4/a6-a7, (-0x80,a0,a6.w)
-      movemw  a0-a1/a3-a4/a6-a7, (0,a0,a6.l)
-      movemw  a0-a1/a3-a4/a6-a7, (-0x80,a0,a6.l)
-      movemw  a0-a1/a3-a4/a6-a7, (0,a0,d0.w)
-      movemw  a0-a1/a3-a4/a6-a7, (-0x80,a0,d0.w)
-      movemw  a0-a1/a3-a4/a6-a7, (0,a0,d0.l)
-      movemw  a0-a1/a3-a4/a6-a7, (-0x80,a0,d0.l)
-      movemw  d0/a0-a1/a3-a4/a6-a7, (0,a0,a6.w)
-      movemw  d0/a0-a1/a3-a4/a6-a7, (-0x80,a0,a6.w)
-      movemw  d0/a0-a1/a3-a4/a6-a7, (0,a0,a6.l)
-      movemw  d0/a0-a1/a3-a4/a6-a7, (-0x80,a0,a6.l)
-      movemw  d0/a0-a1/a3-a4/a6-a7, (0,a0,d0.w)
-      movemw  d0/a0-a1/a3-a4/a6-a7, (-0x80,a0,d0.w)
-      movemw  d0/a0-a1/a3-a4/a6-a7, (0,a0,d0.l)
-      movemw  d0/a0-a1/a3-a4/a6-a7, (-0x80,a0,d0.l)
-      movemw  d0-d1/a0-a1/a3-a4/a6-a7, (0,a0,a6.w)
-      movemw  d0-d1/a0-a1/a3-a4/a6-a7, (-0x80,a0,a6.w)
-      movemw  d0-d1/a0-a1/a3-a4/a6-a7, (0,a0,a6.l)
-      movemw  d0-d1/a0-a1/a3-a4/a6-a7, (-0x80,a0,a6.l)
-      movemw  d0-d1/a0-a1/a3-a4/a6-a7, (0,a0,d0.w)
-      movemw  d0-d1/a0-a1/a3-a4/a6-a7, (-0x80,a0,d0.w)
-      movemw  d0-d1/a0-a1/a3-a4/a6-a7, (0,a0,d0.l)
-      movemw  d0-d1/a0-a1/a3-a4/a6-a7, (-0x80,a0,d0.l)
-      movemw  d0-d1/d3/a0-a1/a3-a4/a6-a7, (0,a0,a6.w)
-      movemw  d0-d1/d3/a0-a1/a3-a4/a6-a7, (-0x80,a0,a6.w)
-      movemw  d0-d1/d3/a0-a1/a3-a4/a6-a7, (0,a0,a6.l)
-      movemw  d0-d1/d3/a0-a1/a3-a4/a6-a7, (-0x80,a0,a6.l)
-      movemw  d0-d1/d3/a0-a1/a3-a4/a6-a7, (0,a0,d0.w)
-      movemw  d0-d1/d3/a0-a1/a3-a4/a6-a7, (-0x80,a0,d0.w)
-      movemw  d0-d1/d3/a0-a1/a3-a4/a6-a7, (0,a0,d0.l)
-      movemw  d0-d1/d3/a0-a1/a3-a4/a6-a7, (-0x80,a0,d0.l)
-      movemw  d0-d1/d3-d4/a0-a1/a3-a4/a6-a7, (0,a0,a6.w)
-      movemw  d0-d1/d3-d4/a0-a1/a3-a4/a6-a7, (-0x80,a0,a6.w)
-      movemw  d0-d1/d3-d4/a0-a1/a3-a4/a6-a7, (0,a0,a6.l)
-      movemw  d0-d1/d3-d4/a0-a1/a3-a4/a6-a7, (-0x80,a0,a6.l)
-      movemw  d0-d1/d3-d4/a0-a1/a3-a4/a6-a7, (0,a0,d0.w)
-      movemw  d0-d1/d3-d4/a0-a1/a3-a4/a6-a7, (-0x80,a0,d0.w)
-      movemw  d0-d1/d3-d4/a0-a1/a3-a4/a6-a7, (0,a0,d0.l)
-      movemw  d0-d1/d3-d4/a0-a1/a3-a4/a6-a7, (-0x80,a0,d0.l)
+      movemw  d1-d2/d4-d5/a0-a1/a3-a4/a6-a7, (0,a0,a6.w)
+      movemw  d1-d2/d4-d5/a0-a1/a3-a4/a6-a7, (-0x80,a0,a6.w)
+      movemw  d1-d2/d4-d5/a0-a1/a3-a4/a6-a7, (0,a0,d0.w)
+      movemw  d1-d2/d4-d5/a0-a1/a3-a4/a6-a7, (-0x80,a0,d0.w)
+      movemw  d3-d5/a0-a1/a3-a4/a6-a7, (0,a0,a6.w)
+      movemw  d3-d5/a0-a1/a3-a4/a6-a7, (-0x80,a0,a6.w)
+      movemw  d3-d5/a0-a1/a3-a4/a6-a7, (0,a0,d0.w)
+      movemw  d3-d5/a0-a1/a3-a4/a6-a7, (-0x80,a0,d0.w)
+      movemw  d0/d3-d5/a0-a1/a3-a4/a6-a7, (0,a0,a6.w)
+      movemw  d0/d3-d5/a0-a1/a3-a4/a6-a7, (-0x80,a0,a6.w)
+      movemw  d0/d3-d5/a0-a1/a3-a4/a6-a7, (0,a0,d0.w)
+      movemw  d0/d3-d5/a0-a1/a3-a4/a6-a7, (-0x80,a0,d0.w)
+      movemw  d6/a0-a1/a3-a4/a6-a7, (0,a0,a6.w)
+      movemw  d6/a0-a1/a3-a4/a6-a7, (-0x80,a0,a6.w)
+      movemw  d6/a0-a1/a3-a4/a6-a7, (0,a0,d0.w)
+      movemw  d6/a0-a1/a3-a4/a6-a7, (-0x80,a0,d0.w)
       movemw  d0-d1/d3-d4/d6/a0-a1/a3-a4/a6-a7, (0,a0,a6.w)
       movemw  d0-d1/d3-d4/d6/a0-a1/a3-a4/a6-a7, (-0x80,a0,a6.w)
-      movemw  d0-d1/d3-d4/d6/a0-a1/a3-a4/a6-a7, (0,a0,a6.l)
-      movemw  d0-d1/d3-d4/d6/a0-a1/a3-a4/a6-a7, (-0x80,a0,a6.l)
       movemw  d0-d1/d3-d4/d6/a0-a1/a3-a4/a6-a7, (0,a0,d0.w)
       movemw  d0-d1/d3-d4/d6/a0-a1/a3-a4/a6-a7, (-0x80,a0,d0.w)
-      movemw  d0-d1/d3-d4/d6/a0-a1/a3-a4/a6-a7, (0,a0,d0.l)
-      movemw  d0-d1/d3-d4/d6/a0-a1/a3-a4/a6-a7, (-0x80,a0,d0.l)
+      movemw  d0, (0,a0,d0.l)
+      movemw  d0, (-0x80,a0,d0.l)
+      movemw  d0, (0,a0,a0.w)
+      movemw  d0, (-0x80,a0,a0.w)
+      movemw  d0-d1, (0,a0,d0.l)
+      movemw  d0-d1, (-0x80,a0,d0.l)
+      movemw  d0-d1, (0,a0,a0.w)
+      movemw  d0-d1, (-0x80,a0,a0.w)
+      movemw  d0-d1/d3, (0,a0,d0.l)
+      movemw  d0-d1/d3, (-0x80,a0,d0.l)
+      movemw  d0-d1/d3, (0,a0,a0.w)
+      movemw  d0-d1/d3, (-0x80,a0,a0.w)
       movemw  d0-d1/d3-d4, (0,a0,d0.l)
       movemw  d0-d1/d3-d4, (-0x80,a0,d0.l)
-      movemw  d0-d1/d3-d4, (0,a0,d1.w)
-      movemw  d0-d1/d3-d4, (-0x80,a0,d1.w)
       movemw  d0-d1/d3-d4, (0,a0,a0.w)
       movemw  d0-d1/d3-d4, (-0x80,a0,a0.w)
-      movemw  d0-d1/d3-d4, (0,a0,a0.l)
-      movemw  d0-d1/d3-d4, (-0x80,a0,a0.l)
-      movemw  d2-d4, (0,a0,d0.l)
-      movemw  d2-d4, (-0x80,a0,d0.l)
-      movemw  d2-d4, (0,a0,d1.w)
-      movemw  d2-d4, (-0x80,a0,d1.w)
-      movemw  d2-d4, (0,a0,a0.w)
-      movemw  d2-d4, (-0x80,a0,a0.w)
-      movemw  d2-d4, (0,a0,a0.l)
-      movemw  d2-d4, (-0x80,a0,a0.l)
-      movemw  d0/d2-d4, (0,a0,d0.l)
-      movemw  d0/d2-d4, (-0x80,a0,d0.l)
-      movemw  d0/d2-d4, (0,a0,d1.w)
-      movemw  d0/d2-d4, (-0x80,a0,d1.w)
-      movemw  d0/d2-d4, (0,a0,a0.w)
-      movemw  d0/d2-d4, (-0x80,a0,a0.w)
-      movemw  d0/d2-d4, (0,a0,a0.l)
-      movemw  d0/d2-d4, (-0x80,a0,a0.l)
-      movemw  d5, (0,a0,d0.l)
-      movemw  d5, (-0x80,a0,d0.l)
-      movemw  d5, (0,a0,d1.w)
-      movemw  d5, (-0x80,a0,d1.w)
-      movemw  d5, (0,a0,a0.w)
-      movemw  d5, (-0x80,a0,a0.w)
-      movemw  d5, (0,a0,a0.l)
-      movemw  d5, (-0x80,a0,a0.l)
       movemw  d0-d1/d3-d4/d6, (0,a0,d0.l)
       movemw  d0-d1/d3-d4/d6, (-0x80,a0,d0.l)
-      movemw  d0-d1/d3-d4/d6, (0,a0,d1.w)
-      movemw  d0-d1/d3-d4/d6, (-0x80,a0,d1.w)
       movemw  d0-d1/d3-d4/d6, (0,a0,a0.w)
       movemw  d0-d1/d3-d4/d6, (-0x80,a0,a0.w)
-      movemw  d0-d1/d3-d4/d6, (0,a0,a0.l)
-      movemw  d0-d1/d3-d4/d6, (-0x80,a0,a0.l)
       movemw  d0-d1/d3-d4/d6-d7, (0,a0,d0.l)
       movemw  d0-d1/d3-d4/d6-d7, (-0x80,a0,d0.l)
-      movemw  d0-d1/d3-d4/d6-d7, (0,a0,d1.w)
-      movemw  d0-d1/d3-d4/d6-d7, (-0x80,a0,d1.w)
       movemw  d0-d1/d3-d4/d6-d7, (0,a0,a0.w)
       movemw  d0-d1/d3-d4/d6-d7, (-0x80,a0,a0.w)
-      movemw  d0-d1/d3-d4/d6-d7, (0,a0,a0.l)
-      movemw  d0-d1/d3-d4/d6-d7, (-0x80,a0,a0.l)
       movemw  d0/d3-d5/d7-a0/a3/a6, (0x4aba).w
       movemw  d0-d1/d3-d5/d7-a0/a3/a6, (0x4abc).w
       movemw  d2-d5/d7-a0/a3/a6, (0x4abe).w
@@ -3500,380 +2262,188 @@
       moveml  d0-d1/d3-d4/d6-d7, (-0x8000,a0)
       moveml  d0/d4-a0/a3/a6, (0,a0,d5.w)
       moveml  d0/d4-a0/a3/a6, (-0x80,a0,d5.w)
-      moveml  d0/d4-a0/a3/a6, (0,a0,d5.l)
-      moveml  d0/d4-a0/a3/a6, (-0x80,a0,d5.l)
       moveml  d0/d4-a0/a3/a6, (0,a0,a0.w)
       moveml  d0/d4-a0/a3/a6, (-0x80,a0,a0.w)
-      moveml  d0/d4-a0/a3/a6, (0,a0,a0.l)
-      moveml  d0/d4-a0/a3/a6, (-0x80,a0,a0.l)
       moveml  d0-d1/d4-a0/a3/a6, (0,a0,d5.w)
       moveml  d0-d1/d4-a0/a3/a6, (-0x80,a0,d5.w)
-      moveml  d0-d1/d4-a0/a3/a6, (0,a0,d5.l)
-      moveml  d0-d1/d4-a0/a3/a6, (-0x80,a0,d5.l)
       moveml  d0-d1/d4-a0/a3/a6, (0,a0,a0.w)
       moveml  d0-d1/d4-a0/a3/a6, (-0x80,a0,a0.w)
-      moveml  d0-d1/d4-a0/a3/a6, (0,a0,a0.l)
-      moveml  d0-d1/d4-a0/a3/a6, (-0x80,a0,a0.l)
       moveml  d3-a0/a3/a6, (0,a0,d5.w)
       moveml  d3-a0/a3/a6, (-0x80,a0,d5.w)
-      moveml  d3-a0/a3/a6, (0,a0,d5.l)
-      moveml  d3-a0/a3/a6, (-0x80,a0,d5.l)
       moveml  d3-a0/a3/a6, (0,a0,a0.w)
       moveml  d3-a0/a3/a6, (-0x80,a0,a0.w)
-      moveml  d3-a0/a3/a6, (0,a0,a0.l)
-      moveml  d3-a0/a3/a6, (-0x80,a0,a0.l)
       moveml  a1/a3/a6, (0,a0,d5.w)
       moveml  a1/a3/a6, (-0x80,a0,d5.w)
-      moveml  a1/a3/a6, (0,a0,d5.l)
-      moveml  a1/a3/a6, (-0x80,a0,d5.l)
       moveml  a1/a3/a6, (0,a0,a0.w)
       moveml  a1/a3/a6, (-0x80,a0,a0.w)
-      moveml  a1/a3/a6, (0,a0,a0.l)
-      moveml  a1/a3/a6, (-0x80,a0,a0.l)
       moveml  d0-d1/d3-d4/a1/a3/a6, (0,a0,d5.w)
       moveml  d0-d1/d3-d4/a1/a3/a6, (-0x80,a0,d5.w)
-      moveml  d0-d1/d3-d4/a1/a3/a6, (0,a0,d5.l)
-      moveml  d0-d1/d3-d4/a1/a3/a6, (-0x80,a0,d5.l)
       moveml  d0-d1/d3-d4/a1/a3/a6, (0,a0,a0.w)
       moveml  d0-d1/d3-d4/a1/a3/a6, (-0x80,a0,a0.w)
-      moveml  d0-d1/d3-d4/a1/a3/a6, (0,a0,a0.l)
-      moveml  d0-d1/d3-d4/a1/a3/a6, (-0x80,a0,a0.l)
       moveml  d0-d1/d3-d4/d6/a1/a3/a6, (0,a0,d5.w)
       moveml  d0-d1/d3-d4/d6/a1/a3/a6, (-0x80,a0,d5.w)
-      moveml  d0-d1/d3-d4/d6/a1/a3/a6, (0,a0,d5.l)
-      moveml  d0-d1/d3-d4/d6/a1/a3/a6, (-0x80,a0,d5.l)
       moveml  d0-d1/d3-d4/d6/a1/a3/a6, (0,a0,a0.w)
       moveml  d0-d1/d3-d4/d6/a1/a3/a6, (-0x80,a0,a0.w)
-      moveml  d0-d1/d3-d4/d6/a1/a3/a6, (0,a0,a0.l)
-      moveml  d0-d1/d3-d4/d6/a1/a3/a6, (-0x80,a0,a0.l)
       moveml  d0-d1/d3-d4/d6-d7/a1/a3/a6, (0,a0,d5.w)
       moveml  d0-d1/d3-d4/d6-d7/a1/a3/a6, (-0x80,a0,d5.w)
-      moveml  d0-d1/d3-d4/d6-d7/a1/a3/a6, (0,a0,d5.l)
-      moveml  d0-d1/d3-d4/d6-d7/a1/a3/a6, (-0x80,a0,d5.l)
       moveml  d0-d1/d3-d4/d6-d7/a1/a3/a6, (0,a0,a0.w)
       moveml  d0-d1/d3-d4/d6-d7/a1/a3/a6, (-0x80,a0,a0.w)
-      moveml  d0-d1/d3-d4/d6-d7/a1/a3/a6, (0,a0,a0.l)
-      moveml  d0-d1/d3-d4/d6-d7/a1/a3/a6, (-0x80,a0,a0.l)
       moveml  a0-a1/a3/a6, (0,a0,d5.w)
       moveml  a0-a1/a3/a6, (-0x80,a0,d5.w)
-      moveml  a0-a1/a3/a6, (0,a0,d5.l)
-      moveml  a0-a1/a3/a6, (-0x80,a0,d5.l)
       moveml  a0-a1/a3/a6, (0,a0,a0.w)
       moveml  a0-a1/a3/a6, (-0x80,a0,a0.w)
-      moveml  a0-a1/a3/a6, (0,a0,a0.l)
-      moveml  a0-a1/a3/a6, (-0x80,a0,a0.l)
       moveml  d0/a0-a1/a3/a6, (0,a0,d5.w)
       moveml  d0/a0-a1/a3/a6, (-0x80,a0,d5.w)
-      moveml  d0/a0-a1/a3/a6, (0,a0,d5.l)
-      moveml  d0/a0-a1/a3/a6, (-0x80,a0,d5.l)
       moveml  d0/a0-a1/a3/a6, (0,a0,a0.w)
       moveml  d0/a0-a1/a3/a6, (-0x80,a0,a0.w)
-      moveml  d0/a0-a1/a3/a6, (0,a0,a0.l)
-      moveml  d0/a0-a1/a3/a6, (-0x80,a0,a0.l)
       moveml  d0-d1/a0-a1/a3/a6, (0,a0,d5.w)
       moveml  d0-d1/a0-a1/a3/a6, (-0x80,a0,d5.w)
-      moveml  d0-d1/a0-a1/a3/a6, (0,a0,d5.l)
-      moveml  d0-d1/a0-a1/a3/a6, (-0x80,a0,d5.l)
       moveml  d0-d1/a0-a1/a3/a6, (0,a0,a0.w)
       moveml  d0-d1/a0-a1/a3/a6, (-0x80,a0,a0.w)
-      moveml  d0-d1/a0-a1/a3/a6, (0,a0,a0.l)
-      moveml  d0-d1/a0-a1/a3/a6, (-0x80,a0,a0.l)
       moveml  d0-d1/d3/a0-a1/a3/a6, (0,a0,d5.w)
       moveml  d0-d1/d3/a0-a1/a3/a6, (-0x80,a0,d5.w)
-      moveml  d0-d1/d3/a0-a1/a3/a6, (0,a0,d5.l)
-      moveml  d0-d1/d3/a0-a1/a3/a6, (-0x80,a0,d5.l)
       moveml  d0-d1/d3/a0-a1/a3/a6, (0,a0,a0.w)
       moveml  d0-d1/d3/a0-a1/a3/a6, (-0x80,a0,a0.w)
-      moveml  d0-d1/d3/a0-a1/a3/a6, (0,a0,a0.l)
-      moveml  d0-d1/d3/a0-a1/a3/a6, (-0x80,a0,a0.l)
       moveml  d0-d1/d3-d4/a0-a1/a3/a6, (0,a0,d5.w)
       moveml  d0-d1/d3-d4/a0-a1/a3/a6, (-0x80,a0,d5.w)
-      moveml  d0-d1/d3-d4/a0-a1/a3/a6, (0,a0,d5.l)
-      moveml  d0-d1/d3-d4/a0-a1/a3/a6, (-0x80,a0,d5.l)
       moveml  d0-d1/d3-d4/a0-a1/a3/a6, (0,a0,a0.w)
       moveml  d0-d1/d3-d4/a0-a1/a3/a6, (-0x80,a0,a0.w)
-      moveml  d0-d1/d3-d4/a0-a1/a3/a6, (0,a0,a0.l)
-      moveml  d0-d1/d3-d4/a0-a1/a3/a6, (-0x80,a0,a0.l)
       moveml  d0-d1/d3-d4/d6/a0-a1/a3/a6, (0,a0,d5.w)
       moveml  d0-d1/d3-d4/d6/a0-a1/a3/a6, (-0x80,a0,d5.w)
-      moveml  d0-d1/d3-d4/d6/a0-a1/a3/a6, (0,a0,d5.l)
-      moveml  d0-d1/d3-d4/d6/a0-a1/a3/a6, (-0x80,a0,d5.l)
       moveml  d0-d1/d3-d4/d6/a0-a1/a3/a6, (0,a0,a0.w)
       moveml  d0-d1/d3-d4/d6/a0-a1/a3/a6, (-0x80,a0,a0.w)
-      moveml  d0-d1/d3-d4/d6/a0-a1/a3/a6, (0,a0,a0.l)
-      moveml  d0-d1/d3-d4/d6/a0-a1/a3/a6, (-0x80,a0,a0.l)
       moveml  d7-a3/a6, (-0x7f,a0,d5.w)
       moveml  d7-a3/a6, (0,a0,d5.l)
-      moveml  d7-a3/a6, (-0x80,a0,d5.l)
-      moveml  d7-a3/a6, (0,a0,d6.w)
       moveml  d7-a3/a6, (0,a0,a0.w)
       moveml  d7-a3/a6, (-0x80,a0,a0.w)
-      moveml  d7-a3/a6, (0,a0,a0.l)
-      moveml  d7-a3/a6, (-0x80,a0,a0.l)
       moveml  d0/d7-a3/a6, (-0x7e,a0,d5.w)
       moveml  d0/d7-a3/a6, (0,a0,d5.l)
-      moveml  d0/d7-a3/a6, (-0x80,a0,d5.l)
-      moveml  d0/d7-a3/a6, (0,a0,d6.w)
       moveml  d0/d7-a3/a6, (0,a0,a0.w)
       moveml  d0/d7-a3/a6, (-0x80,a0,a0.w)
-      moveml  d0/d7-a3/a6, (0,a0,a0.l)
-      moveml  d0/d7-a3/a6, (-0x80,a0,a0.l)
       moveml  d0-d1/d7-a3/a6, (-0x7c,a0,d5.w)
       moveml  d0-d1/d7-a3/a6, (0,a0,d5.l)
-      moveml  d0-d1/d7-a3/a6, (-0x80,a0,d5.l)
-      moveml  d0-d1/d7-a3/a6, (0,a0,d6.w)
       moveml  d0-d1/d7-a3/a6, (0,a0,a0.w)
       moveml  d0-d1/d7-a3/a6, (-0x80,a0,a0.w)
-      moveml  d0-d1/d7-a3/a6, (0,a0,a0.l)
-      moveml  d0-d1/d7-a3/a6, (-0x80,a0,a0.l)
       moveml  d0-d1/d3/d7-a3/a6, (-0x74,a0,d5.w)
       moveml  d0-d1/d3/d7-a3/a6, (0,a0,d5.l)
-      moveml  d0-d1/d3/d7-a3/a6, (-0x80,a0,d5.l)
-      moveml  d0-d1/d3/d7-a3/a6, (0,a0,d6.w)
       moveml  d0-d1/d3/d7-a3/a6, (0,a0,a0.w)
       moveml  d0-d1/d3/d7-a3/a6, (-0x80,a0,a0.w)
-      moveml  d0-d1/d3/d7-a3/a6, (0,a0,a0.l)
-      moveml  d0-d1/d3/d7-a3/a6, (-0x80,a0,a0.l)
       moveml  d0-d1/d3-d4/d7-a3/a6, (-0x64,a0,d5.w)
       moveml  d0-d1/d3-d4/d7-a3/a6, (0,a0,d5.l)
-      moveml  d0-d1/d3-d4/d7-a3/a6, (-0x80,a0,d5.l)
-      moveml  d0-d1/d3-d4/d7-a3/a6, (0,a0,d6.w)
       moveml  d0-d1/d3-d4/d7-a3/a6, (0,a0,a0.w)
       moveml  d0-d1/d3-d4/d7-a3/a6, (-0x80,a0,a0.w)
-      moveml  d0-d1/d3-d4/d7-a3/a6, (0,a0,a0.l)
-      moveml  d0-d1/d3-d4/d7-a3/a6, (-0x80,a0,a0.l)
       moveml  a4/a6, (0,a0,d5.l)
       moveml  a4/a6, (-0x80,a0,d5.l)
-      moveml  a4/a6, (0,a0,d6.w)
-      moveml  a4/a6, (-0x80,a0,d6.w)
       moveml  a4/a6, (0,a0,a0.w)
       moveml  a4/a6, (-0x80,a0,a0.w)
-      moveml  a4/a6, (0,a0,a0.l)
-      moveml  a4/a6, (-0x80,a0,a0.l)
       moveml  d0-d1/d3-d4/d6-d7/a4/a6, (0,a0,d5.l)
       moveml  d0-d1/d3-d4/d6-d7/a4/a6, (-0x80,a0,d5.l)
-      moveml  d0-d1/d3-d4/d6-d7/a4/a6, (0,a0,d6.w)
-      moveml  d0-d1/d3-d4/d6-d7/a4/a6, (-0x80,a0,d6.w)
       moveml  d0-d1/d3-d4/d6-d7/a4/a6, (0,a0,a0.w)
       moveml  d0-d1/d3-d4/d6-d7/a4/a6, (-0x80,a0,a0.w)
-      moveml  d0-d1/d3-d4/d6-d7/a4/a6, (0,a0,a0.l)
-      moveml  d0-d1/d3-d4/d6-d7/a4/a6, (-0x80,a0,a0.l)
       moveml  d0-d1/d3-d4/d6-d7/a1-a2/a4/a6, (0,a0,d5.l)
       moveml  d0-d1/d3-d4/d6-d7/a1-a2/a4/a6, (-0x80,a0,d5.l)
-      moveml  d0-d1/d3-d4/d6-d7/a1-a2/a4/a6, (0,a0,d6.w)
-      moveml  d0-d1/d3-d4/d6-d7/a1-a2/a4/a6, (-0x80,a0,d6.w)
       moveml  d0-d1/d3-d4/d6-d7/a1-a2/a4/a6, (0,a0,a0.w)
       moveml  d0-d1/d3-d4/d6-d7/a1-a2/a4/a6, (-0x80,a0,a0.w)
-      moveml  d0-d1/d3-d4/d6-d7/a1-a2/a4/a6, (0,a0,a0.l)
-      moveml  d0-d1/d3-d4/d6-d7/a1-a2/a4/a6, (-0x80,a0,a0.l)
-      moveml  a0-a1/a3-a4/a6, (0,a0,d6.w)
-      moveml  a0-a1/a3-a4/a6, (-0x80,a0,d6.w)
-      moveml  a0-a1/a3-a4/a6, (0,a0,d6.l)
-      moveml  a0-a1/a3-a4/a6, (-0x80,a0,d6.l)
-      moveml  a0-a1/a3-a4/a6, (0,a0,a0.w)
-      moveml  a0-a1/a3-a4/a6, (-0x80,a0,a0.w)
-      moveml  a0-a1/a3-a4/a6, (0,a0,a0.l)
-      moveml  a0-a1/a3-a4/a6, (-0x80,a0,a0.l)
-      moveml  d0/a0-a1/a3-a4/a6, (0,a0,d6.w)
-      moveml  d0/a0-a1/a3-a4/a6, (-0x80,a0,d6.w)
-      moveml  d0/a0-a1/a3-a4/a6, (0,a0,d6.l)
-      moveml  d0/a0-a1/a3-a4/a6, (-0x80,a0,d6.l)
-      moveml  d0/a0-a1/a3-a4/a6, (0,a0,a0.w)
-      moveml  d0/a0-a1/a3-a4/a6, (-0x80,a0,a0.w)
-      moveml  d0/a0-a1/a3-a4/a6, (0,a0,a0.l)
-      moveml  d0/a0-a1/a3-a4/a6, (-0x80,a0,a0.l)
-      moveml  d0-d1/a0-a1/a3-a4/a6, (0,a0,d6.w)
-      moveml  d0-d1/a0-a1/a3-a4/a6, (-0x80,a0,d6.w)
-      moveml  d0-d1/a0-a1/a3-a4/a6, (0,a0,d6.l)
-      moveml  d0-d1/a0-a1/a3-a4/a6, (-0x80,a0,d6.l)
-      moveml  d0-d1/a0-a1/a3-a4/a6, (0,a0,a0.w)
-      moveml  d0-d1/a0-a1/a3-a4/a6, (-0x80,a0,a0.w)
-      moveml  d0-d1/a0-a1/a3-a4/a6, (0,a0,a0.l)
-      moveml  d0-d1/a0-a1/a3-a4/a6, (-0x80,a0,a0.l)
-      moveml  d0-d1/d3/a0-a1/a3-a4/a6, (0,a0,d6.w)
-      moveml  d0-d1/d3/a0-a1/a3-a4/a6, (-0x80,a0,d6.w)
-      moveml  d0-d1/d3/a0-a1/a3-a4/a6, (0,a0,d6.l)
-      moveml  d0-d1/d3/a0-a1/a3-a4/a6, (-0x80,a0,d6.l)
-      moveml  d0-d1/d3/a0-a1/a3-a4/a6, (0,a0,a0.w)
-      moveml  d0-d1/d3/a0-a1/a3-a4/a6, (-0x80,a0,a0.w)
-      moveml  d0-d1/d3/a0-a1/a3-a4/a6, (0,a0,a0.l)
-      moveml  d0-d1/d3/a0-a1/a3-a4/a6, (-0x80,a0,a0.l)
-      moveml  d0-d1/d3-d4/a0-a1/a3-a4/a6, (0,a0,d6.w)
-      moveml  d0-d1/d3-d4/a0-a1/a3-a4/a6, (-0x80,a0,d6.w)
-      moveml  d0-d1/d3-d4/a0-a1/a3-a4/a6, (0,a0,d6.l)
-      moveml  d0-d1/d3-d4/a0-a1/a3-a4/a6, (-0x80,a0,d6.l)
-      moveml  d0-d1/d3-d4/a0-a1/a3-a4/a6, (0,a0,a0.w)
-      moveml  d0-d1/d3-d4/a0-a1/a3-a4/a6, (-0x80,a0,a0.w)
-      moveml  d0-d1/d3-d4/a0-a1/a3-a4/a6, (0,a0,a0.l)
-      moveml  d0-d1/d3-d4/a0-a1/a3-a4/a6, (-0x80,a0,a0.l)
+      moveml  d1-d2/d4-d5/a0-a1/a3-a4/a6, (0,a0,d6.w)
+      moveml  d1-d2/d4-d5/a0-a1/a3-a4/a6, (-0x80,a0,d6.w)
+      moveml  d1-d2/d4-d5/a0-a1/a3-a4/a6, (0,a0,a0.w)
+      moveml  d1-d2/d4-d5/a0-a1/a3-a4/a6, (-0x80,a0,a0.w)
+      moveml  d3-d5/a0-a1/a3-a4/a6, (0,a0,d6.w)
+      moveml  d3-d5/a0-a1/a3-a4/a6, (-0x80,a0,d6.w)
+      moveml  d3-d5/a0-a1/a3-a4/a6, (0,a0,a0.w)
+      moveml  d3-d5/a0-a1/a3-a4/a6, (-0x80,a0,a0.w)
+      moveml  d0/d3-d5/a0-a1/a3-a4/a6, (0,a0,d6.w)
+      moveml  d0/d3-d5/a0-a1/a3-a4/a6, (-0x80,a0,d6.w)
+      moveml  d0/d3-d5/a0-a1/a3-a4/a6, (0,a0,a0.w)
+      moveml  d0/d3-d5/a0-a1/a3-a4/a6, (-0x80,a0,a0.w)
+      moveml  d6/a0-a1/a3-a4/a6, (0,a0,d6.w)
+      moveml  d6/a0-a1/a3-a4/a6, (-0x80,a0,d6.w)
+      moveml  d6/a0-a1/a3-a4/a6, (0,a0,a0.w)
+      moveml  d6/a0-a1/a3-a4/a6, (-0x80,a0,a0.w)
       moveml  d0-d1/d3-d4/d6/a0-a1/a3-a4/a6, (0,a0,d6.w)
       moveml  d0-d1/d3-d4/d6/a0-a1/a3-a4/a6, (-0x80,a0,d6.w)
-      moveml  d0-d1/d3-d4/d6/a0-a1/a3-a4/a6, (0,a0,d6.l)
-      moveml  d0-d1/d3-d4/d6/a0-a1/a3-a4/a6, (-0x80,a0,d6.l)
       moveml  d0-d1/d3-d4/d6/a0-a1/a3-a4/a6, (0,a0,a0.w)
       moveml  d0-d1/d3-d4/d6/a0-a1/a3-a4/a6, (-0x80,a0,a0.w)
-      moveml  d0-d1/d3-d4/d6/a0-a1/a3-a4/a6, (0,a0,a0.l)
-      moveml  d0-d1/d3-d4/d6/a0-a1/a3-a4/a6, (-0x80,a0,a0.l)
       moveml  d7-a6, (-0x7f,a0,a0.w)
       moveml  d7-a6, (0,a0,a0.l)
-      moveml  d7-a6, (-0x80,a0,a0.l)
-      moveml  d7-a6, (0,a0,a1.w)
       moveml  d7-a6, (0,a0,d0.w)
       moveml  d7-a6, (-0x80,a0,d0.w)
-      moveml  d7-a6, (0,a0,d0.l)
-      moveml  d7-a6, (-0x80,a0,d0.l)
       moveml  d0/d7-a6, (-0x7e,a0,a0.w)
       moveml  d0/d7-a6, (0,a0,a0.l)
-      moveml  d0/d7-a6, (-0x80,a0,a0.l)
-      moveml  d0/d7-a6, (0,a0,a1.w)
       moveml  d0/d7-a6, (0,a0,d0.w)
       moveml  d0/d7-a6, (-0x80,a0,d0.w)
-      moveml  d0/d7-a6, (0,a0,d0.l)
-      moveml  d0/d7-a6, (-0x80,a0,d0.l)
       moveml  d0-d1/d7-a6, (-0x7c,a0,a0.w)
       moveml  d0-d1/d7-a6, (0,a0,a0.l)
-      moveml  d0-d1/d7-a6, (-0x80,a0,a0.l)
-      moveml  d0-d1/d7-a6, (0,a0,a1.w)
       moveml  d0-d1/d7-a6, (0,a0,d0.w)
       moveml  d0-d1/d7-a6, (-0x80,a0,d0.w)
-      moveml  d0-d1/d7-a6, (0,a0,d0.l)
-      moveml  d0-d1/d7-a6, (-0x80,a0,d0.l)
       moveml  d0-d1/d3/d7-a6, (-0x74,a0,a0.w)
       moveml  d0-d1/d3/d7-a6, (0,a0,a0.l)
-      moveml  d0-d1/d3/d7-a6, (-0x80,a0,a0.l)
-      moveml  d0-d1/d3/d7-a6, (0,a0,a1.w)
       moveml  d0-d1/d3/d7-a6, (0,a0,d0.w)
       moveml  d0-d1/d3/d7-a6, (-0x80,a0,d0.w)
-      moveml  d0-d1/d3/d7-a6, (0,a0,d0.l)
-      moveml  d0-d1/d3/d7-a6, (-0x80,a0,d0.l)
       moveml  d0-d1/d3-d4/d7-a6, (-0x64,a0,a0.w)
       moveml  d0-d1/d3-d4/d7-a6, (0,a0,a0.l)
-      moveml  d0-d1/d3-d4/d7-a6, (-0x80,a0,a0.l)
-      moveml  d0-d1/d3-d4/d7-a6, (0,a0,a1.w)
       moveml  d0-d1/d3-d4/d7-a6, (0,a0,d0.w)
       moveml  d0-d1/d3-d4/d7-a6, (-0x80,a0,d0.w)
-      moveml  d0-d1/d3-d4/d7-a6, (0,a0,d0.l)
-      moveml  d0-d1/d3-d4/d7-a6, (-0x80,a0,d0.l)
       moveml  a7, (0,a0,a0.l)
       moveml  a7, (-0x80,a0,a0.l)
-      moveml  a7, (0,a0,a1.w)
-      moveml  a7, (-0x80,a0,a1.w)
       moveml  a7, (0,a0,d0.w)
       moveml  a7, (-0x80,a0,d0.w)
-      moveml  a7, (0,a0,d0.l)
-      moveml  a7, (-0x80,a0,d0.l)
       moveml  d0-d1/d3-d4/d6-d7/a7, (0,a0,a0.l)
       moveml  d0-d1/d3-d4/d6-d7/a7, (-0x80,a0,a0.l)
-      moveml  d0-d1/d3-d4/d6-d7/a7, (0,a0,a1.w)
-      moveml  d0-d1/d3-d4/d6-d7/a7, (-0x80,a0,a1.w)
       moveml  d0-d1/d3-d4/d6-d7/a7, (0,a0,d0.w)
       moveml  d0-d1/d3-d4/d6-d7/a7, (-0x80,a0,d0.w)
-      moveml  d0-d1/d3-d4/d6-d7/a7, (0,a0,d0.l)
-      moveml  d0-d1/d3-d4/d6-d7/a7, (-0x80,a0,d0.l)
+      moveml  a1-a2/a4-a5/a7, (0,a0,a3.l)
+      moveml  a1-a2/a4-a5/a7, (-0x80,a0,a3.l)
+      moveml  a1-a2/a4-a5/a7, (0,a0,d0.w)
+      moveml  a1-a2/a4-a5/a7, (-0x80,a0,d0.w)
       moveml  d0-d1/d3-d4/d6-d7/a1-a2/a4-a5/a7, (0,a0,a3.l)
       moveml  d0-d1/d3-d4/d6-d7/a1-a2/a4-a5/a7, (-0x80,a0,a3.l)
-      moveml  d0-d1/d3-d4/d6-d7/a1-a2/a4-a5/a7, (0,a0,a4.w)
-      moveml  d0-d1/d3-d4/d6-d7/a1-a2/a4-a5/a7, (-0x80,a0,a4.w)
       moveml  d0-d1/d3-d4/d6-d7/a1-a2/a4-a5/a7, (0,a0,d0.w)
       moveml  d0-d1/d3-d4/d6-d7/a1-a2/a4-a5/a7, (-0x80,a0,d0.w)
-      moveml  d0-d1/d3-d4/d6-d7/a1-a2/a4-a5/a7, (0,a0,d0.l)
-      moveml  d0-d1/d3-d4/d6-d7/a1-a2/a4-a5/a7, (-0x80,a0,d0.l)
-      moveml  a0-a1/a3-a4/a6-a7, (0,a0,a6.w)
-      moveml  a0-a1/a3-a4/a6-a7, (-0x80,a0,a6.w)
-      moveml  a0-a1/a3-a4/a6-a7, (0,a0,a6.l)
-      moveml  a0-a1/a3-a4/a6-a7, (-0x80,a0,a6.l)
-      moveml  a0-a1/a3-a4/a6-a7, (0,a0,d0.w)
-      moveml  a0-a1/a3-a4/a6-a7, (-0x80,a0,d0.w)
-      moveml  a0-a1/a3-a4/a6-a7, (0,a0,d0.l)
-      moveml  a0-a1/a3-a4/a6-a7, (-0x80,a0,d0.l)
-      moveml  d0/a0-a1/a3-a4/a6-a7, (0,a0,a6.w)
-      moveml  d0/a0-a1/a3-a4/a6-a7, (-0x80,a0,a6.w)
-      moveml  d0/a0-a1/a3-a4/a6-a7, (0,a0,a6.l)
-      moveml  d0/a0-a1/a3-a4/a6-a7, (-0x80,a0,a6.l)
-      moveml  d0/a0-a1/a3-a4/a6-a7, (0,a0,d0.w)
-      moveml  d0/a0-a1/a3-a4/a6-a7, (-0x80,a0,d0.w)
-      moveml  d0/a0-a1/a3-a4/a6-a7, (0,a0,d0.l)
-      moveml  d0/a0-a1/a3-a4/a6-a7, (-0x80,a0,d0.l)
-      moveml  d0-d1/a0-a1/a3-a4/a6-a7, (0,a0,a6.w)
-      moveml  d0-d1/a0-a1/a3-a4/a6-a7, (-0x80,a0,a6.w)
-      moveml  d0-d1/a0-a1/a3-a4/a6-a7, (0,a0,a6.l)
-      moveml  d0-d1/a0-a1/a3-a4/a6-a7, (-0x80,a0,a6.l)
-      moveml  d0-d1/a0-a1/a3-a4/a6-a7, (0,a0,d0.w)
-      moveml  d0-d1/a0-a1/a3-a4/a6-a7, (-0x80,a0,d0.w)
-      moveml  d0-d1/a0-a1/a3-a4/a6-a7, (0,a0,d0.l)
-      moveml  d0-d1/a0-a1/a3-a4/a6-a7, (-0x80,a0,d0.l)
-      moveml  d0-d1/d3/a0-a1/a3-a4/a6-a7, (0,a0,a6.w)
-      moveml  d0-d1/d3/a0-a1/a3-a4/a6-a7, (-0x80,a0,a6.w)
-      moveml  d0-d1/d3/a0-a1/a3-a4/a6-a7, (0,a0,a6.l)
-      moveml  d0-d1/d3/a0-a1/a3-a4/a6-a7, (-0x80,a0,a6.l)
-      moveml  d0-d1/d3/a0-a1/a3-a4/a6-a7, (0,a0,d0.w)
-      moveml  d0-d1/d3/a0-a1/a3-a4/a6-a7, (-0x80,a0,d0.w)
-      moveml  d0-d1/d3/a0-a1/a3-a4/a6-a7, (0,a0,d0.l)
-      moveml  d0-d1/d3/a0-a1/a3-a4/a6-a7, (-0x80,a0,d0.l)
+      moveml  d0-d2/d4/a0-a1/a3-a4/a6-a7, (0,a0,a6.w)
+      moveml  d0-d2/d4/a0-a1/a3-a4/a6-a7, (-0x80,a0,a6.w)
+      moveml  d0-d2/d4/a0-a1/a3-a4/a6-a7, (0,a0,d0.w)
+      moveml  d0-d2/d4/a0-a1/a3-a4/a6-a7, (-0x80,a0,d0.w)
+      moveml  d3-d4/a0-a1/a3-a4/a6-a7, (0,a0,a6.w)
+      moveml  d3-d4/a0-a1/a3-a4/a6-a7, (-0x80,a0,a6.w)
+      moveml  d3-d4/a0-a1/a3-a4/a6-a7, (0,a0,d0.w)
+      moveml  d3-d4/a0-a1/a3-a4/a6-a7, (-0x80,a0,d0.w)
       moveml  d0-d1/d3-d4/a0-a1/a3-a4/a6-a7, (0,a0,a6.w)
       moveml  d0-d1/d3-d4/a0-a1/a3-a4/a6-a7, (-0x80,a0,a6.w)
-      moveml  d0-d1/d3-d4/a0-a1/a3-a4/a6-a7, (0,a0,a6.l)
-      moveml  d0-d1/d3-d4/a0-a1/a3-a4/a6-a7, (-0x80,a0,a6.l)
       moveml  d0-d1/d3-d4/a0-a1/a3-a4/a6-a7, (0,a0,d0.w)
       moveml  d0-d1/d3-d4/a0-a1/a3-a4/a6-a7, (-0x80,a0,d0.w)
-      moveml  d0-d1/d3-d4/a0-a1/a3-a4/a6-a7, (0,a0,d0.l)
-      moveml  d0-d1/d3-d4/a0-a1/a3-a4/a6-a7, (-0x80,a0,d0.l)
+      moveml  d5/a0-a1/a3-a4/a6-a7, (0,a0,a6.w)
+      moveml  d5/a0-a1/a3-a4/a6-a7, (-0x80,a0,a6.w)
+      moveml  d5/a0-a1/a3-a4/a6-a7, (0,a0,d0.w)
+      moveml  d5/a0-a1/a3-a4/a6-a7, (-0x80,a0,d0.w)
       moveml  d0-d1/d3-d4/d6/a0-a1/a3-a4/a6-a7, (0,a0,a6.w)
       moveml  d0-d1/d3-d4/d6/a0-a1/a3-a4/a6-a7, (-0x80,a0,a6.w)
-      moveml  d0-d1/d3-d4/d6/a0-a1/a3-a4/a6-a7, (0,a0,a6.l)
-      moveml  d0-d1/d3-d4/d6/a0-a1/a3-a4/a6-a7, (-0x80,a0,a6.l)
       moveml  d0-d1/d3-d4/d6/a0-a1/a3-a4/a6-a7, (0,a0,d0.w)
       moveml  d0-d1/d3-d4/d6/a0-a1/a3-a4/a6-a7, (-0x80,a0,d0.w)
-      moveml  d0-d1/d3-d4/d6/a0-a1/a3-a4/a6-a7, (0,a0,d0.l)
-      moveml  d0-d1/d3-d4/d6/a0-a1/a3-a4/a6-a7, (-0x80,a0,d0.l)
+      moveml  d0, (0,a0,d0.l)
+      moveml  d0, (-0x80,a0,d0.l)
+      moveml  d0, (0,a0,a0.w)
+      moveml  d0, (-0x80,a0,a0.w)
+      moveml  d0-d1, (0,a0,d0.l)
+      moveml  d0-d1, (-0x80,a0,d0.l)
+      moveml  d0-d1, (0,a0,a0.w)
+      moveml  d0-d1, (-0x80,a0,a0.w)
+      moveml  d0-d1/d3, (0,a0,d0.l)
+      moveml  d0-d1/d3, (-0x80,a0,d0.l)
+      moveml  d0-d1/d3, (0,a0,a0.w)
+      moveml  d0-d1/d3, (-0x80,a0,a0.w)
       moveml  d0-d1/d3-d4, (0,a0,d0.l)
       moveml  d0-d1/d3-d4, (-0x80,a0,d0.l)
-      moveml  d0-d1/d3-d4, (0,a0,d1.w)
-      moveml  d0-d1/d3-d4, (-0x80,a0,d1.w)
       moveml  d0-d1/d3-d4, (0,a0,a0.w)
       moveml  d0-d1/d3-d4, (-0x80,a0,a0.w)
-      moveml  d0-d1/d3-d4, (0,a0,a0.l)
-      moveml  d0-d1/d3-d4, (-0x80,a0,a0.l)
-      moveml  d2-d4, (0,a0,d0.l)
-      moveml  d2-d4, (-0x80,a0,d0.l)
-      moveml  d2-d4, (0,a0,d1.w)
-      moveml  d2-d4, (-0x80,a0,d1.w)
-      moveml  d2-d4, (0,a0,a0.w)
-      moveml  d2-d4, (-0x80,a0,a0.w)
-      moveml  d2-d4, (0,a0,a0.l)
-      moveml  d2-d4, (-0x80,a0,a0.l)
-      moveml  d0/d2-d4, (0,a0,d0.l)
-      moveml  d0/d2-d4, (-0x80,a0,d0.l)
-      moveml  d0/d2-d4, (0,a0,d1.w)
-      moveml  d0/d2-d4, (-0x80,a0,d1.w)
-      moveml  d0/d2-d4, (0,a0,a0.w)
-      moveml  d0/d2-d4, (-0x80,a0,a0.w)
-      moveml  d0/d2-d4, (0,a0,a0.l)
-      moveml  d0/d2-d4, (-0x80,a0,a0.l)
-      moveml  d5, (0,a0,d0.l)
-      moveml  d5, (-0x80,a0,d0.l)
-      moveml  d5, (0,a0,d1.w)
-      moveml  d5, (-0x80,a0,d1.w)
-      moveml  d5, (0,a0,a0.w)
-      moveml  d5, (-0x80,a0,a0.w)
-      moveml  d5, (0,a0,a0.l)
-      moveml  d5, (-0x80,a0,a0.l)
       moveml  d0-d1/d3-d4/d6, (0,a0,d0.l)
       moveml  d0-d1/d3-d4/d6, (-0x80,a0,d0.l)
-      moveml  d0-d1/d3-d4/d6, (0,a0,d1.w)
-      moveml  d0-d1/d3-d4/d6, (-0x80,a0,d1.w)
       moveml  d0-d1/d3-d4/d6, (0,a0,a0.w)
       moveml  d0-d1/d3-d4/d6, (-0x80,a0,a0.w)
-      moveml  d0-d1/d3-d4/d6, (0,a0,a0.l)
-      moveml  d0-d1/d3-d4/d6, (-0x80,a0,a0.l)
       moveml  d0-d1/d3-d4/d6-d7, (0,a0,d0.l)
       moveml  d0-d1/d3-d4/d6-d7, (-0x80,a0,d0.l)
-      moveml  d0-d1/d3-d4/d6-d7, (0,a0,d1.w)
-      moveml  d0-d1/d3-d4/d6-d7, (-0x80,a0,d1.w)
       moveml  d0-d1/d3-d4/d6-d7, (0,a0,a0.w)
       moveml  d0-d1/d3-d4/d6-d7, (-0x80,a0,a0.w)
-      moveml  d0-d1/d3-d4/d6-d7, (0,a0,a0.l)
-      moveml  d0-d1/d3-d4/d6-d7, (-0x80,a0,a0.l)
       moveml  d0/d3-a0/a3/a6, (0x4afa).w
       moveml  d0-d1/d3-a0/a3/a6, (0x4afc).w
       moveml  d2-a0/a3/a6, (0x4afe).w
@@ -3966,12 +2536,8 @@
       tstb    (-0x8000,a0)
       tstb    (0,a0,d5.w)
       tstb    (-0x80,a0,d5.w)
-      tstb    (0,a0,d5.l)
-      tstb    (-0x80,a0,d5.l)
       tstb    (0,a0,a0.w)
       tstb    (-0x80,a0,a0.w)
-      tstb    (0,a0,a0.l)
-      tstb    (-0x80,a0,a0.l)
       tstb    (0x4b39).w
       tstb    (0x4c3b).l
       tstw    d0
@@ -3982,12 +2548,8 @@
       tstw    (-0x8000,a0)
       tstw    (0,a0,d5.w)
       tstw    (-0x80,a0,d5.w)
-      tstw    (0,a0,d5.l)
-      tstw    (-0x80,a0,d5.l)
       tstw    (0,a0,a0.w)
       tstw    (-0x80,a0,a0.w)
-      tstw    (0,a0,a0.l)
-      tstw    (-0x80,a0,a0.l)
       tstw    (0x4b7a).w
       tstw    (0x4c7c).l
       tstl    d0
@@ -3998,12 +2560,8 @@
       tstl    (-0x8000,a0)
       tstl    (0,a0,d5.w)
       tstl    (-0x80,a0,d5.w)
-      tstl    (0,a0,d5.l)
-      tstl    (-0x80,a0,d5.l)
       tstl    (0,a0,a0.w)
       tstl    (-0x80,a0,a0.w)
-      tstl    (0,a0,a0.l)
-      tstl    (-0x80,a0,a0.l)
       tstl    (0x4bba).w
       tstl    (0x4cbc).l
       tas     d0
@@ -4014,12 +2572,8 @@
       tas     (-0x8000,a0)
       tas     (0,a0,d5.w)
       tas     (-0x80,a0,d5.w)
-      tas     (0,a0,d5.l)
-      tas     (-0x80,a0,d5.l)
       tas     (0,a0,a0.w)
       tas     (-0x80,a0,a0.w)
-      tas     (0,a0,a0.l)
-      tas     (-0x80,a0,a0.l)
       tas     (0x4bf9).w
       tas     (0x4cfb).l
       illegal
@@ -4209,380 +2763,188 @@
       movemw  (-0x8000,a0), d0-d1/d3-d4/d6-d7
       movemw  (0,a0,d5.w), d0/d4-d5/d7-a0/a2-a3/a6
       movemw  (-0x80,a0,d5.w), d0/d4-d5/d7-a0/a2-a3/a6
-      movemw  (0,a0,d5.l), d0/d4-d5/d7-a0/a2-a3/a6
-      movemw  (-0x80,a0,d5.l), d0/d4-d5/d7-a0/a2-a3/a6
       movemw  (0,a0,a0.w), d0/d4-d5/d7-a0/a2-a3/a6
       movemw  (-0x80,a0,a0.w), d0/d4-d5/d7-a0/a2-a3/a6
-      movemw  (0,a0,a0.l), d0/d4-d5/d7-a0/a2-a3/a6
-      movemw  (-0x80,a0,a0.l), d0/d4-d5/d7-a0/a2-a3/a6
       movemw  (0,a0,d5.w), d0-d1/d4-d5/d7-a0/a2-a3/a6
       movemw  (-0x80,a0,d5.w), d0-d1/d4-d5/d7-a0/a2-a3/a6
-      movemw  (0,a0,d5.l), d0-d1/d4-d5/d7-a0/a2-a3/a6
-      movemw  (-0x80,a0,d5.l), d0-d1/d4-d5/d7-a0/a2-a3/a6
       movemw  (0,a0,a0.w), d0-d1/d4-d5/d7-a0/a2-a3/a6
       movemw  (-0x80,a0,a0.w), d0-d1/d4-d5/d7-a0/a2-a3/a6
-      movemw  (0,a0,a0.l), d0-d1/d4-d5/d7-a0/a2-a3/a6
-      movemw  (-0x80,a0,a0.l), d0-d1/d4-d5/d7-a0/a2-a3/a6
       movemw  (0,a0,d5.w), d3-d5/d7-a0/a2-a3/a6
       movemw  (-0x80,a0,d5.w), d3-d5/d7-a0/a2-a3/a6
-      movemw  (0,a0,d5.l), d3-d5/d7-a0/a2-a3/a6
-      movemw  (-0x80,a0,d5.l), d3-d5/d7-a0/a2-a3/a6
       movemw  (0,a0,a0.w), d3-d5/d7-a0/a2-a3/a6
       movemw  (-0x80,a0,a0.w), d3-d5/d7-a0/a2-a3/a6
-      movemw  (0,a0,a0.l), d3-d5/d7-a0/a2-a3/a6
-      movemw  (-0x80,a0,a0.l), d3-d5/d7-a0/a2-a3/a6
       movemw  (0,a0,d5.w), d6-a0/a2-a3/a6
       movemw  (-0x80,a0,d5.w), d6-a0/a2-a3/a6
-      movemw  (0,a0,d5.l), d6-a0/a2-a3/a6
-      movemw  (-0x80,a0,d5.l), d6-a0/a2-a3/a6
       movemw  (0,a0,a0.w), d6-a0/a2-a3/a6
       movemw  (-0x80,a0,a0.w), d6-a0/a2-a3/a6
-      movemw  (0,a0,a0.l), d6-a0/a2-a3/a6
-      movemw  (-0x80,a0,a0.l), d6-a0/a2-a3/a6
       movemw  (0,a0,d5.w), d0/d6-a0/a2-a3/a6
       movemw  (-0x80,a0,d5.w), d0/d6-a0/a2-a3/a6
-      movemw  (0,a0,d5.l), d0/d6-a0/a2-a3/a6
-      movemw  (-0x80,a0,d5.l), d0/d6-a0/a2-a3/a6
       movemw  (0,a0,a0.w), d0/d6-a0/a2-a3/a6
       movemw  (-0x80,a0,a0.w), d0/d6-a0/a2-a3/a6
-      movemw  (0,a0,a0.l), d0/d6-a0/a2-a3/a6
-      movemw  (-0x80,a0,a0.l), d0/d6-a0/a2-a3/a6
       movemw  (0,a0,d5.w), a1-a3/a6
       movemw  (-0x80,a0,d5.w), a1-a3/a6
-      movemw  (0,a0,d5.l), a1-a3/a6
-      movemw  (-0x80,a0,d5.l), a1-a3/a6
       movemw  (0,a0,a0.w), a1-a3/a6
       movemw  (-0x80,a0,a0.w), a1-a3/a6
-      movemw  (0,a0,a0.l), a1-a3/a6
-      movemw  (-0x80,a0,a0.l), a1-a3/a6
       movemw  (0,a0,d5.w), d0/a1-a3/a6
       movemw  (-0x80,a0,d5.w), d0/a1-a3/a6
-      movemw  (0,a0,d5.l), d0/a1-a3/a6
-      movemw  (-0x80,a0,d5.l), d0/a1-a3/a6
       movemw  (0,a0,a0.w), d0/a1-a3/a6
       movemw  (-0x80,a0,a0.w), d0/a1-a3/a6
-      movemw  (0,a0,a0.l), d0/a1-a3/a6
-      movemw  (-0x80,a0,a0.l), d0/a1-a3/a6
       movemw  (0,a0,d5.w), d0-d1/a1-a3/a6
       movemw  (-0x80,a0,d5.w), d0-d1/a1-a3/a6
-      movemw  (0,a0,d5.l), d0-d1/a1-a3/a6
-      movemw  (-0x80,a0,d5.l), d0-d1/a1-a3/a6
       movemw  (0,a0,a0.w), d0-d1/a1-a3/a6
       movemw  (-0x80,a0,a0.w), d0-d1/a1-a3/a6
-      movemw  (0,a0,a0.l), d0-d1/a1-a3/a6
-      movemw  (-0x80,a0,a0.l), d0-d1/a1-a3/a6
       movemw  (0,a0,d5.w), d0-d1/d3/a1-a3/a6
       movemw  (-0x80,a0,d5.w), d0-d1/d3/a1-a3/a6
-      movemw  (0,a0,d5.l), d0-d1/d3/a1-a3/a6
-      movemw  (-0x80,a0,d5.l), d0-d1/d3/a1-a3/a6
       movemw  (0,a0,a0.w), d0-d1/d3/a1-a3/a6
       movemw  (-0x80,a0,a0.w), d0-d1/d3/a1-a3/a6
-      movemw  (0,a0,a0.l), d0-d1/d3/a1-a3/a6
-      movemw  (-0x80,a0,a0.l), d0-d1/d3/a1-a3/a6
       movemw  (0,a0,d5.w), d0-d1/d3-d4/a1-a3/a6
       movemw  (-0x80,a0,d5.w), d0-d1/d3-d4/a1-a3/a6
-      movemw  (0,a0,d5.l), d0-d1/d3-d4/a1-a3/a6
-      movemw  (-0x80,a0,d5.l), d0-d1/d3-d4/a1-a3/a6
       movemw  (0,a0,a0.w), d0-d1/d3-d4/a1-a3/a6
       movemw  (-0x80,a0,a0.w), d0-d1/d3-d4/a1-a3/a6
-      movemw  (0,a0,a0.l), d0-d1/d3-d4/a1-a3/a6
-      movemw  (-0x80,a0,a0.l), d0-d1/d3-d4/a1-a3/a6
       movemw  (0,a0,d5.w), d0-d1/d3-d4/d6/a1-a3/a6
       movemw  (-0x80,a0,d5.w), d0-d1/d3-d4/d6/a1-a3/a6
-      movemw  (0,a0,d5.l), d0-d1/d3-d4/d6/a1-a3/a6
-      movemw  (-0x80,a0,d5.l), d0-d1/d3-d4/d6/a1-a3/a6
       movemw  (0,a0,a0.w), d0-d1/d3-d4/d6/a1-a3/a6
       movemw  (-0x80,a0,a0.w), d0-d1/d3-d4/d6/a1-a3/a6
-      movemw  (0,a0,a0.l), d0-d1/d3-d4/d6/a1-a3/a6
-      movemw  (-0x80,a0,a0.l), d0-d1/d3-d4/d6/a1-a3/a6
       movemw  (0,a0,d5.w), d0-d1/d3-d4/d6-d7/a1-a3/a6
       movemw  (-0x80,a0,d5.w), d0-d1/d3-d4/d6-d7/a1-a3/a6
-      movemw  (0,a0,d5.l), d0-d1/d3-d4/d6-d7/a1-a3/a6
-      movemw  (-0x80,a0,d5.l), d0-d1/d3-d4/d6-d7/a1-a3/a6
       movemw  (0,a0,a0.w), d0-d1/d3-d4/d6-d7/a1-a3/a6
       movemw  (-0x80,a0,a0.w), d0-d1/d3-d4/d6-d7/a1-a3/a6
-      movemw  (0,a0,a0.l), d0-d1/d3-d4/d6-d7/a1-a3/a6
-      movemw  (-0x80,a0,a0.l), d0-d1/d3-d4/d6-d7/a1-a3/a6
       movemw  (-0x7f,a0,d5.w), d7-a3/a6
       movemw  (0,a0,d5.l), d7-a3/a6
-      movemw  (-0x80,a0,d5.l), d7-a3/a6
-      movemw  (0,a0,d6.w), d7-a3/a6
       movemw  (0,a0,a0.w), d7-a3/a6
       movemw  (-0x80,a0,a0.w), d7-a3/a6
-      movemw  (0,a0,a0.l), d7-a3/a6
-      movemw  (-0x80,a0,a0.l), d7-a3/a6
       movemw  (-0x7e,a0,d5.w), d0/d7-a3/a6
       movemw  (0,a0,d5.l), d0/d7-a3/a6
-      movemw  (-0x80,a0,d5.l), d0/d7-a3/a6
-      movemw  (0,a0,d6.w), d0/d7-a3/a6
       movemw  (0,a0,a0.w), d0/d7-a3/a6
       movemw  (-0x80,a0,a0.w), d0/d7-a3/a6
-      movemw  (0,a0,a0.l), d0/d7-a3/a6
-      movemw  (-0x80,a0,a0.l), d0/d7-a3/a6
       movemw  (-0x7c,a0,d5.w), d0-d1/d7-a3/a6
       movemw  (0,a0,d5.l), d0-d1/d7-a3/a6
-      movemw  (-0x80,a0,d5.l), d0-d1/d7-a3/a6
-      movemw  (0,a0,d6.w), d0-d1/d7-a3/a6
       movemw  (0,a0,a0.w), d0-d1/d7-a3/a6
       movemw  (-0x80,a0,a0.w), d0-d1/d7-a3/a6
-      movemw  (0,a0,a0.l), d0-d1/d7-a3/a6
-      movemw  (-0x80,a0,a0.l), d0-d1/d7-a3/a6
       movemw  (-0x74,a0,d5.w), d0-d1/d3/d7-a3/a6
       movemw  (0,a0,d5.l), d0-d1/d3/d7-a3/a6
-      movemw  (-0x80,a0,d5.l), d0-d1/d3/d7-a3/a6
-      movemw  (0,a0,d6.w), d0-d1/d3/d7-a3/a6
       movemw  (0,a0,a0.w), d0-d1/d3/d7-a3/a6
       movemw  (-0x80,a0,a0.w), d0-d1/d3/d7-a3/a6
-      movemw  (0,a0,a0.l), d0-d1/d3/d7-a3/a6
-      movemw  (-0x80,a0,a0.l), d0-d1/d3/d7-a3/a6
       movemw  (-0x64,a0,d5.w), d0-d1/d3-d4/d7-a3/a6
       movemw  (0,a0,d5.l), d0-d1/d3-d4/d7-a3/a6
-      movemw  (-0x80,a0,d5.l), d0-d1/d3-d4/d7-a3/a6
-      movemw  (0,a0,d6.w), d0-d1/d3-d4/d7-a3/a6
       movemw  (0,a0,a0.w), d0-d1/d3-d4/d7-a3/a6
       movemw  (-0x80,a0,a0.w), d0-d1/d3-d4/d7-a3/a6
-      movemw  (0,a0,a0.l), d0-d1/d3-d4/d7-a3/a6
-      movemw  (-0x80,a0,a0.l), d0-d1/d3-d4/d7-a3/a6
       movemw  (0,a0,d5.l), a4/a6
       movemw  (-0x80,a0,d5.l), a4/a6
-      movemw  (0,a0,d6.w), a4/a6
-      movemw  (-0x80,a0,d6.w), a4/a6
       movemw  (0,a0,a0.w), a4/a6
       movemw  (-0x80,a0,a0.w), a4/a6
-      movemw  (0,a0,a0.l), a4/a6
-      movemw  (-0x80,a0,a0.l), a4/a6
       movemw  (0,a0,d5.l), d0-d1/d3-d4/d6-d7/a4/a6
       movemw  (-0x80,a0,d5.l), d0-d1/d3-d4/d6-d7/a4/a6
-      movemw  (0,a0,d6.w), d0-d1/d3-d4/d6-d7/a4/a6
-      movemw  (-0x80,a0,d6.w), d0-d1/d3-d4/d6-d7/a4/a6
       movemw  (0,a0,a0.w), d0-d1/d3-d4/d6-d7/a4/a6
       movemw  (-0x80,a0,a0.w), d0-d1/d3-d4/d6-d7/a4/a6
-      movemw  (0,a0,a0.l), d0-d1/d3-d4/d6-d7/a4/a6
-      movemw  (-0x80,a0,a0.l), d0-d1/d3-d4/d6-d7/a4/a6
       movemw  (0,a0,d5.l), a0-a1/a4/a6
       movemw  (-0x80,a0,d5.l), a0-a1/a4/a6
-      movemw  (0,a0,d6.w), a0-a1/a4/a6
-      movemw  (-0x80,a0,d6.w), a0-a1/a4/a6
       movemw  (0,a0,a0.w), a0-a1/a4/a6
       movemw  (-0x80,a0,a0.w), a0-a1/a4/a6
-      movemw  (0,a0,a0.l), a0-a1/a4/a6
-      movemw  (-0x80,a0,a0.l), a0-a1/a4/a6
       movemw  (0,a0,d5.l), d0-d1/d3-d4/d6-d7/a1-a2/a4/a6
       movemw  (-0x80,a0,d5.l), d0-d1/d3-d4/d6-d7/a1-a2/a4/a6
-      movemw  (0,a0,d6.w), d0-d1/d3-d4/d6-d7/a1-a2/a4/a6
-      movemw  (-0x80,a0,d6.w), d0-d1/d3-d4/d6-d7/a1-a2/a4/a6
       movemw  (0,a0,a0.w), d0-d1/d3-d4/d6-d7/a1-a2/a4/a6
       movemw  (-0x80,a0,a0.w), d0-d1/d3-d4/d6-d7/a1-a2/a4/a6
-      movemw  (0,a0,a0.l), d0-d1/d3-d4/d6-d7/a1-a2/a4/a6
-      movemw  (-0x80,a0,a0.l), d0-d1/d3-d4/d6-d7/a1-a2/a4/a6
       movemw  (0,a0,d6.w), a0-a1/a3-a4/a6
       movemw  (-0x80,a0,d6.w), a0-a1/a3-a4/a6
-      movemw  (0,a0,d6.l), a0-a1/a3-a4/a6
-      movemw  (-0x80,a0,d6.l), a0-a1/a3-a4/a6
       movemw  (0,a0,a0.w), a0-a1/a3-a4/a6
       movemw  (-0x80,a0,a0.w), a0-a1/a3-a4/a6
-      movemw  (0,a0,a0.l), a0-a1/a3-a4/a6
-      movemw  (-0x80,a0,a0.l), a0-a1/a3-a4/a6
       movemw  (0,a0,d6.w), d0/a0-a1/a3-a4/a6
       movemw  (-0x80,a0,d6.w), d0/a0-a1/a3-a4/a6
-      movemw  (0,a0,d6.l), d0/a0-a1/a3-a4/a6
-      movemw  (-0x80,a0,d6.l), d0/a0-a1/a3-a4/a6
       movemw  (0,a0,a0.w), d0/a0-a1/a3-a4/a6
       movemw  (-0x80,a0,a0.w), d0/a0-a1/a3-a4/a6
-      movemw  (0,a0,a0.l), d0/a0-a1/a3-a4/a6
-      movemw  (-0x80,a0,a0.l), d0/a0-a1/a3-a4/a6
       movemw  (0,a0,d6.w), d0-d1/a0-a1/a3-a4/a6
       movemw  (-0x80,a0,d6.w), d0-d1/a0-a1/a3-a4/a6
-      movemw  (0,a0,d6.l), d0-d1/a0-a1/a3-a4/a6
-      movemw  (-0x80,a0,d6.l), d0-d1/a0-a1/a3-a4/a6
       movemw  (0,a0,a0.w), d0-d1/a0-a1/a3-a4/a6
       movemw  (-0x80,a0,a0.w), d0-d1/a0-a1/a3-a4/a6
-      movemw  (0,a0,a0.l), d0-d1/a0-a1/a3-a4/a6
-      movemw  (-0x80,a0,a0.l), d0-d1/a0-a1/a3-a4/a6
       movemw  (0,a0,d6.w), d0-d1/d3/a0-a1/a3-a4/a6
       movemw  (-0x80,a0,d6.w), d0-d1/d3/a0-a1/a3-a4/a6
-      movemw  (0,a0,d6.l), d0-d1/d3/a0-a1/a3-a4/a6
-      movemw  (-0x80,a0,d6.l), d0-d1/d3/a0-a1/a3-a4/a6
       movemw  (0,a0,a0.w), d0-d1/d3/a0-a1/a3-a4/a6
       movemw  (-0x80,a0,a0.w), d0-d1/d3/a0-a1/a3-a4/a6
-      movemw  (0,a0,a0.l), d0-d1/d3/a0-a1/a3-a4/a6
-      movemw  (-0x80,a0,a0.l), d0-d1/d3/a0-a1/a3-a4/a6
       movemw  (0,a0,d6.w), d0-d1/d3-d4/a0-a1/a3-a4/a6
       movemw  (-0x80,a0,d6.w), d0-d1/d3-d4/a0-a1/a3-a4/a6
-      movemw  (0,a0,d6.l), d0-d1/d3-d4/a0-a1/a3-a4/a6
-      movemw  (-0x80,a0,d6.l), d0-d1/d3-d4/a0-a1/a3-a4/a6
       movemw  (0,a0,a0.w), d0-d1/d3-d4/a0-a1/a3-a4/a6
       movemw  (-0x80,a0,a0.w), d0-d1/d3-d4/a0-a1/a3-a4/a6
-      movemw  (0,a0,a0.l), d0-d1/d3-d4/a0-a1/a3-a4/a6
-      movemw  (-0x80,a0,a0.l), d0-d1/d3-d4/a0-a1/a3-a4/a6
       movemw  (0,a0,d6.w), d0-d1/d3-d4/d6/a0-a1/a3-a4/a6
       movemw  (-0x80,a0,d6.w), d0-d1/d3-d4/d6/a0-a1/a3-a4/a6
-      movemw  (0,a0,d6.l), d0-d1/d3-d4/d6/a0-a1/a3-a4/a6
-      movemw  (-0x80,a0,d6.l), d0-d1/d3-d4/d6/a0-a1/a3-a4/a6
       movemw  (0,a0,a0.w), d0-d1/d3-d4/d6/a0-a1/a3-a4/a6
       movemw  (-0x80,a0,a0.w), d0-d1/d3-d4/d6/a0-a1/a3-a4/a6
-      movemw  (0,a0,a0.l), d0-d1/d3-d4/d6/a0-a1/a3-a4/a6
-      movemw  (-0x80,a0,a0.l), d0-d1/d3-d4/d6/a0-a1/a3-a4/a6
       movemw  (-0x7f,a0,a0.w), d7-a6
       movemw  (0,a0,a0.l), d7-a6
-      movemw  (-0x80,a0,a0.l), d7-a6
-      movemw  (0,a0,a1.w), d7-a6
       movemw  (0,a0,d0.w), d7-a6
       movemw  (-0x80,a0,d0.w), d7-a6
-      movemw  (0,a0,d0.l), d7-a6
-      movemw  (-0x80,a0,d0.l), d7-a6
       movemw  (-0x7e,a0,a0.w), d0/d7-a6
       movemw  (0,a0,a0.l), d0/d7-a6
-      movemw  (-0x80,a0,a0.l), d0/d7-a6
-      movemw  (0,a0,a1.w), d0/d7-a6
       movemw  (0,a0,d0.w), d0/d7-a6
       movemw  (-0x80,a0,d0.w), d0/d7-a6
-      movemw  (0,a0,d0.l), d0/d7-a6
-      movemw  (-0x80,a0,d0.l), d0/d7-a6
       movemw  (-0x7c,a0,a0.w), d0-d1/d7-a6
       movemw  (0,a0,a0.l), d0-d1/d7-a6
-      movemw  (-0x80,a0,a0.l), d0-d1/d7-a6
-      movemw  (0,a0,a1.w), d0-d1/d7-a6
       movemw  (0,a0,d0.w), d0-d1/d7-a6
       movemw  (-0x80,a0,d0.w), d0-d1/d7-a6
-      movemw  (0,a0,d0.l), d0-d1/d7-a6
-      movemw  (-0x80,a0,d0.l), d0-d1/d7-a6
       movemw  (-0x74,a0,a0.w), d0-d1/d3/d7-a6
       movemw  (0,a0,a0.l), d0-d1/d3/d7-a6
-      movemw  (-0x80,a0,a0.l), d0-d1/d3/d7-a6
-      movemw  (0,a0,a1.w), d0-d1/d3/d7-a6
       movemw  (0,a0,d0.w), d0-d1/d3/d7-a6
       movemw  (-0x80,a0,d0.w), d0-d1/d3/d7-a6
-      movemw  (0,a0,d0.l), d0-d1/d3/d7-a6
-      movemw  (-0x80,a0,d0.l), d0-d1/d3/d7-a6
       movemw  (-0x64,a0,a0.w), d0-d1/d3-d4/d7-a6
       movemw  (0,a0,a0.l), d0-d1/d3-d4/d7-a6
-      movemw  (-0x80,a0,a0.l), d0-d1/d3-d4/d7-a6
-      movemw  (0,a0,a1.w), d0-d1/d3-d4/d7-a6
       movemw  (0,a0,d0.w), d0-d1/d3-d4/d7-a6
       movemw  (-0x80,a0,d0.w), d0-d1/d3-d4/d7-a6
-      movemw  (0,a0,d0.l), d0-d1/d3-d4/d7-a6
-      movemw  (-0x80,a0,d0.l), d0-d1/d3-d4/d7-a6
       movemw  (0,a0,a0.l), a7
       movemw  (-0x80,a0,a0.l), a7
-      movemw  (0,a0,a1.w), a7
-      movemw  (-0x80,a0,a1.w), a7
       movemw  (0,a0,d0.w), a7
       movemw  (-0x80,a0,d0.w), a7
-      movemw  (0,a0,d0.l), a7
-      movemw  (-0x80,a0,d0.l), a7
       movemw  (0,a0,a0.l), d0-d1/d3-d4/d6-d7/a7
       movemw  (-0x80,a0,a0.l), d0-d1/d3-d4/d6-d7/a7
-      movemw  (0,a0,a1.w), d0-d1/d3-d4/d6-d7/a7
-      movemw  (-0x80,a0,a1.w), d0-d1/d3-d4/d6-d7/a7
       movemw  (0,a0,d0.w), d0-d1/d3-d4/d6-d7/a7
       movemw  (-0x80,a0,d0.w), d0-d1/d3-d4/d6-d7/a7
-      movemw  (0,a0,d0.l), d0-d1/d3-d4/d6-d7/a7
-      movemw  (-0x80,a0,d0.l), d0-d1/d3-d4/d6-d7/a7
       movemw  (0,a0,a3.l), d0-d1/d3-d4/d6-d7/a1-a2/a4-a5/a7
       movemw  (-0x80,a0,a3.l), d0-d1/d3-d4/d6-d7/a1-a2/a4-a5/a7
-      movemw  (0,a0,a4.w), d0-d1/d3-d4/d6-d7/a1-a2/a4-a5/a7
-      movemw  (-0x80,a0,a4.w), d0-d1/d3-d4/d6-d7/a1-a2/a4-a5/a7
       movemw  (0,a0,d0.w), d0-d1/d3-d4/d6-d7/a1-a2/a4-a5/a7
       movemw  (-0x80,a0,d0.w), d0-d1/d3-d4/d6-d7/a1-a2/a4-a5/a7
-      movemw  (0,a0,d0.l), d0-d1/d3-d4/d6-d7/a1-a2/a4-a5/a7
-      movemw  (-0x80,a0,d0.l), d0-d1/d3-d4/d6-d7/a1-a2/a4-a5/a7
-      movemw  (0,a0,a6.w), a0-a1/a3-a4/a6-a7
-      movemw  (-0x80,a0,a6.w), a0-a1/a3-a4/a6-a7
-      movemw  (0,a0,a6.l), a0-a1/a3-a4/a6-a7
-      movemw  (-0x80,a0,a6.l), a0-a1/a3-a4/a6-a7
-      movemw  (0,a0,d0.w), a0-a1/a3-a4/a6-a7
-      movemw  (-0x80,a0,d0.w), a0-a1/a3-a4/a6-a7
-      movemw  (0,a0,d0.l), a0-a1/a3-a4/a6-a7
-      movemw  (-0x80,a0,d0.l), a0-a1/a3-a4/a6-a7
-      movemw  (0,a0,a6.w), d0/a0-a1/a3-a4/a6-a7
-      movemw  (-0x80,a0,a6.w), d0/a0-a1/a3-a4/a6-a7
-      movemw  (0,a0,a6.l), d0/a0-a1/a3-a4/a6-a7
-      movemw  (-0x80,a0,a6.l), d0/a0-a1/a3-a4/a6-a7
-      movemw  (0,a0,d0.w), d0/a0-a1/a3-a4/a6-a7
-      movemw  (-0x80,a0,d0.w), d0/a0-a1/a3-a4/a6-a7
-      movemw  (0,a0,d0.l), d0/a0-a1/a3-a4/a6-a7
-      movemw  (-0x80,a0,d0.l), d0/a0-a1/a3-a4/a6-a7
-      movemw  (0,a0,a6.w), d0-d1/a0-a1/a3-a4/a6-a7
-      movemw  (-0x80,a0,a6.w), d0-d1/a0-a1/a3-a4/a6-a7
-      movemw  (0,a0,a6.l), d0-d1/a0-a1/a3-a4/a6-a7
-      movemw  (-0x80,a0,a6.l), d0-d1/a0-a1/a3-a4/a6-a7
-      movemw  (0,a0,d0.w), d0-d1/a0-a1/a3-a4/a6-a7
-      movemw  (-0x80,a0,d0.w), d0-d1/a0-a1/a3-a4/a6-a7
-      movemw  (0,a0,d0.l), d0-d1/a0-a1/a3-a4/a6-a7
-      movemw  (-0x80,a0,d0.l), d0-d1/a0-a1/a3-a4/a6-a7
-      movemw  (0,a0,a6.w), d0-d1/d3/a0-a1/a3-a4/a6-a7
-      movemw  (-0x80,a0,a6.w), d0-d1/d3/a0-a1/a3-a4/a6-a7
-      movemw  (0,a0,a6.l), d0-d1/d3/a0-a1/a3-a4/a6-a7
-      movemw  (-0x80,a0,a6.l), d0-d1/d3/a0-a1/a3-a4/a6-a7
-      movemw  (0,a0,d0.w), d0-d1/d3/a0-a1/a3-a4/a6-a7
-      movemw  (-0x80,a0,d0.w), d0-d1/d3/a0-a1/a3-a4/a6-a7
-      movemw  (0,a0,d0.l), d0-d1/d3/a0-a1/a3-a4/a6-a7
-      movemw  (-0x80,a0,d0.l), d0-d1/d3/a0-a1/a3-a4/a6-a7
+      movemw  (0,a0,a6.w), d0/d3-d4/a0-a1/a3-a4/a6-a7
+      movemw  (-0x80,a0,a6.w), d0/d3-d4/a0-a1/a3-a4/a6-a7
+      movemw  (0,a0,d0.w), d0/d3-d4/a0-a1/a3-a4/a6-a7
+      movemw  (-0x80,a0,d0.w), d0/d3-d4/a0-a1/a3-a4/a6-a7
       movemw  (0,a0,a6.w), d0-d1/d3-d4/a0-a1/a3-a4/a6-a7
       movemw  (-0x80,a0,a6.w), d0-d1/d3-d4/a0-a1/a3-a4/a6-a7
-      movemw  (0,a0,a6.l), d0-d1/d3-d4/a0-a1/a3-a4/a6-a7
-      movemw  (-0x80,a0,a6.l), d0-d1/d3-d4/a0-a1/a3-a4/a6-a7
       movemw  (0,a0,d0.w), d0-d1/d3-d4/a0-a1/a3-a4/a6-a7
       movemw  (-0x80,a0,d0.w), d0-d1/d3-d4/a0-a1/a3-a4/a6-a7
-      movemw  (0,a0,d0.l), d0-d1/d3-d4/a0-a1/a3-a4/a6-a7
-      movemw  (-0x80,a0,d0.l), d0-d1/d3-d4/a0-a1/a3-a4/a6-a7
+      movemw  (0,a0,a6.w), d2-d4/a0-a1/a3-a4/a6-a7
+      movemw  (-0x80,a0,a6.w), d2-d4/a0-a1/a3-a4/a6-a7
+      movemw  (0,a0,d0.w), d2-d4/a0-a1/a3-a4/a6-a7
+      movemw  (-0x80,a0,d0.w), d2-d4/a0-a1/a3-a4/a6-a7
+      movemw  (0,a0,a6.w), d5/a0-a1/a3-a4/a6-a7
+      movemw  (-0x80,a0,a6.w), d5/a0-a1/a3-a4/a6-a7
+      movemw  (0,a0,d0.w), d5/a0-a1/a3-a4/a6-a7
+      movemw  (-0x80,a0,d0.w), d5/a0-a1/a3-a4/a6-a7
       movemw  (0,a0,a6.w), d0-d1/d3-d4/d6/a0-a1/a3-a4/a6-a7
       movemw  (-0x80,a0,a6.w), d0-d1/d3-d4/d6/a0-a1/a3-a4/a6-a7
-      movemw  (0,a0,a6.l), d0-d1/d3-d4/d6/a0-a1/a3-a4/a6-a7
-      movemw  (-0x80,a0,a6.l), d0-d1/d3-d4/d6/a0-a1/a3-a4/a6-a7
       movemw  (0,a0,d0.w), d0-d1/d3-d4/d6/a0-a1/a3-a4/a6-a7
       movemw  (-0x80,a0,d0.w), d0-d1/d3-d4/d6/a0-a1/a3-a4/a6-a7
-      movemw  (0,a0,d0.l), d0-d1/d3-d4/d6/a0-a1/a3-a4/a6-a7
-      movemw  (-0x80,a0,d0.l), d0-d1/d3-d4/d6/a0-a1/a3-a4/a6-a7
+      movemw  (0,a0,d0.l), d0
+      movemw  (-0x80,a0,d0.l), d0
+      movemw  (0,a0,a0.w), d0
+      movemw  (-0x80,a0,a0.w), d0
+      movemw  (0,a0,d0.l), d0-d1
+      movemw  (-0x80,a0,d0.l), d0-d1
+      movemw  (0,a0,a0.w), d0-d1
+      movemw  (-0x80,a0,a0.w), d0-d1
+      movemw  (0,a0,d0.l), d0-d1/d3
+      movemw  (-0x80,a0,d0.l), d0-d1/d3
+      movemw  (0,a0,a0.w), d0-d1/d3
+      movemw  (-0x80,a0,a0.w), d0-d1/d3
       movemw  (0,a0,d0.l), d0-d1/d3-d4
       movemw  (-0x80,a0,d0.l), d0-d1/d3-d4
-      movemw  (0,a0,d1.w), d0-d1/d3-d4
-      movemw  (-0x80,a0,d1.w), d0-d1/d3-d4
       movemw  (0,a0,a0.w), d0-d1/d3-d4
       movemw  (-0x80,a0,a0.w), d0-d1/d3-d4
-      movemw  (0,a0,a0.l), d0-d1/d3-d4
-      movemw  (-0x80,a0,a0.l), d0-d1/d3-d4
-      movemw  (0,a0,d0.l), d2-d4
-      movemw  (-0x80,a0,d0.l), d2-d4
-      movemw  (0,a0,d1.w), d2-d4
-      movemw  (-0x80,a0,d1.w), d2-d4
-      movemw  (0,a0,a0.w), d2-d4
-      movemw  (-0x80,a0,a0.w), d2-d4
-      movemw  (0,a0,a0.l), d2-d4
-      movemw  (-0x80,a0,a0.l), d2-d4
-      movemw  (0,a0,d0.l), d0/d2-d4
-      movemw  (-0x80,a0,d0.l), d0/d2-d4
-      movemw  (0,a0,d1.w), d0/d2-d4
-      movemw  (-0x80,a0,d1.w), d0/d2-d4
-      movemw  (0,a0,a0.w), d0/d2-d4
-      movemw  (-0x80,a0,a0.w), d0/d2-d4
-      movemw  (0,a0,a0.l), d0/d2-d4
-      movemw  (-0x80,a0,a0.l), d0/d2-d4
-      movemw  (0,a0,d0.l), d5
-      movemw  (-0x80,a0,d0.l), d5
-      movemw  (0,a0,d1.w), d5
-      movemw  (-0x80,a0,d1.w), d5
-      movemw  (0,a0,a0.w), d5
-      movemw  (-0x80,a0,a0.w), d5
-      movemw  (0,a0,a0.l), d5
-      movemw  (-0x80,a0,a0.l), d5
       movemw  (0,a0,d0.l), d0-d1/d3-d4/d6
       movemw  (-0x80,a0,d0.l), d0-d1/d3-d4/d6
-      movemw  (0,a0,d1.w), d0-d1/d3-d4/d6
-      movemw  (-0x80,a0,d1.w), d0-d1/d3-d4/d6
       movemw  (0,a0,a0.w), d0-d1/d3-d4/d6
       movemw  (-0x80,a0,a0.w), d0-d1/d3-d4/d6
-      movemw  (0,a0,a0.l), d0-d1/d3-d4/d6
-      movemw  (-0x80,a0,a0.l), d0-d1/d3-d4/d6
       movemw  (0,a0,d0.l), d0-d1/d3-d4/d6-d7
       movemw  (-0x80,a0,d0.l), d0-d1/d3-d4/d6-d7
-      movemw  (0,a0,d1.w), d0-d1/d3-d4/d6-d7
-      movemw  (-0x80,a0,d1.w), d0-d1/d3-d4/d6-d7
       movemw  (0,a0,a0.w), d0-d1/d3-d4/d6-d7
       movemw  (-0x80,a0,a0.w), d0-d1/d3-d4/d6-d7
-      movemw  (0,a0,a0.l), d0-d1/d3-d4/d6-d7
-      movemw  (-0x80,a0,a0.l), d0-d1/d3-d4/d6-d7
       movemw  (0x4eba).w, d0/d3-d5/d7-a0/a2-a3/a6
       movemw  (0x4ebc).w, d0-d1/d3-d5/d7-a0/a2-a3/a6
       movemw  (0x4ebe).w, d2-d5/d7-a0/a2-a3/a6
@@ -4806,543 +3168,279 @@
       movemw  (.+4,pc,d5.w), d2-d5/d7-a0/a2-a3/a6
       movemw  (.-124,pc,d5.w), d2-d5/d7-a0/a2-a3/a6
       movemw  (.,pc,d5.w), d2-d5/d7-a0/a2-a3/a6
-      movemw  (.+4,pc,d5.l), d2-d5/d7-a0/a2-a3/a6
-      movemw  (.-124,pc,d5.l), d2-d5/d7-a0/a2-a3/a6
-      movemw  (.,pc,d5.l), d2-d5/d7-a0/a2-a3/a6
       movemw  (.+4,pc,a0.w), d2-d5/d7-a0/a2-a3/a6
       movemw  (.-124,pc,a0.w), d2-d5/d7-a0/a2-a3/a6
       movemw  (.,pc,a0.w), d2-d5/d7-a0/a2-a3/a6
-      movemw  (.+4,pc,a0.l), d2-d5/d7-a0/a2-a3/a6
-      movemw  (.-124,pc,a0.l), d2-d5/d7-a0/a2-a3/a6
-      movemw  (.,pc,a0.l), d2-d5/d7-a0/a2-a3/a6
       movemw  (.+4,pc,d5.w), d0/d2-d5/d7-a0/a2-a3/a6
       movemw  (.-124,pc,d5.w), d0/d2-d5/d7-a0/a2-a3/a6
       movemw  (.,pc,d5.w), d0/d2-d5/d7-a0/a2-a3/a6
-      movemw  (.+4,pc,d5.l), d0/d2-d5/d7-a0/a2-a3/a6
-      movemw  (.-124,pc,d5.l), d0/d2-d5/d7-a0/a2-a3/a6
-      movemw  (.,pc,d5.l), d0/d2-d5/d7-a0/a2-a3/a6
       movemw  (.+4,pc,a0.w), d0/d2-d5/d7-a0/a2-a3/a6
       movemw  (.-124,pc,a0.w), d0/d2-d5/d7-a0/a2-a3/a6
       movemw  (.,pc,a0.w), d0/d2-d5/d7-a0/a2-a3/a6
-      movemw  (.+4,pc,a0.l), d0/d2-d5/d7-a0/a2-a3/a6
-      movemw  (.-124,pc,a0.l), d0/d2-d5/d7-a0/a2-a3/a6
-      movemw  (.,pc,a0.l), d0/d2-d5/d7-a0/a2-a3/a6
       movemw  (.+4,pc,d5.w), d6-a0/a2-a3/a6
       movemw  (.-124,pc,d5.w), d6-a0/a2-a3/a6
       movemw  (.,pc,d5.w), d6-a0/a2-a3/a6
-      movemw  (.+4,pc,d5.l), d6-a0/a2-a3/a6
-      movemw  (.-124,pc,d5.l), d6-a0/a2-a3/a6
-      movemw  (.,pc,d5.l), d6-a0/a2-a3/a6
       movemw  (.+4,pc,a0.w), d6-a0/a2-a3/a6
       movemw  (.-124,pc,a0.w), d6-a0/a2-a3/a6
       movemw  (.,pc,a0.w), d6-a0/a2-a3/a6
-      movemw  (.+4,pc,a0.l), d6-a0/a2-a3/a6
-      movemw  (.-124,pc,a0.l), d6-a0/a2-a3/a6
-      movemw  (.,pc,a0.l), d6-a0/a2-a3/a6
       movemw  (.+4,pc,d5.w), d0/d6-a0/a2-a3/a6
       movemw  (.-124,pc,d5.w), d0/d6-a0/a2-a3/a6
       movemw  (.,pc,d5.w), d0/d6-a0/a2-a3/a6
-      movemw  (.+4,pc,d5.l), d0/d6-a0/a2-a3/a6
-      movemw  (.-124,pc,d5.l), d0/d6-a0/a2-a3/a6
-      movemw  (.,pc,d5.l), d0/d6-a0/a2-a3/a6
       movemw  (.+4,pc,a0.w), d0/d6-a0/a2-a3/a6
       movemw  (.-124,pc,a0.w), d0/d6-a0/a2-a3/a6
       movemw  (.,pc,a0.w), d0/d6-a0/a2-a3/a6
-      movemw  (.+4,pc,a0.l), d0/d6-a0/a2-a3/a6
-      movemw  (.-124,pc,a0.l), d0/d6-a0/a2-a3/a6
-      movemw  (.,pc,a0.l), d0/d6-a0/a2-a3/a6
       movemw  (.+4,pc,d5.w), d0-d1/d3-d4/d6-a0/a2-a3/a6
       movemw  (.-124,pc,d5.w), d0-d1/d3-d4/d6-a0/a2-a3/a6
       movemw  (.,pc,d5.w), d0-d1/d3-d4/d6-a0/a2-a3/a6
-      movemw  (.+4,pc,d5.l), d0-d1/d3-d4/d6-a0/a2-a3/a6
-      movemw  (.-124,pc,d5.l), d0-d1/d3-d4/d6-a0/a2-a3/a6
-      movemw  (.,pc,d5.l), d0-d1/d3-d4/d6-a0/a2-a3/a6
       movemw  (.+4,pc,a0.w), d0-d1/d3-d4/d6-a0/a2-a3/a6
       movemw  (.-124,pc,a0.w), d0-d1/d3-d4/d6-a0/a2-a3/a6
       movemw  (.,pc,a0.w), d0-d1/d3-d4/d6-a0/a2-a3/a6
-      movemw  (.+4,pc,a0.l), d0-d1/d3-d4/d6-a0/a2-a3/a6
-      movemw  (.-124,pc,a0.l), d0-d1/d3-d4/d6-a0/a2-a3/a6
-      movemw  (.,pc,a0.l), d0-d1/d3-d4/d6-a0/a2-a3/a6
       movemw  (.+4,pc,d5.w), a1-a3/a6
       movemw  (.-124,pc,d5.w), a1-a3/a6
       movemw  (.,pc,d5.w), a1-a3/a6
-      movemw  (.+4,pc,d5.l), a1-a3/a6
-      movemw  (.-124,pc,d5.l), a1-a3/a6
-      movemw  (.,pc,d5.l), a1-a3/a6
       movemw  (.+4,pc,a0.w), a1-a3/a6
       movemw  (.-124,pc,a0.w), a1-a3/a6
       movemw  (.,pc,a0.w), a1-a3/a6
-      movemw  (.+4,pc,a0.l), a1-a3/a6
-      movemw  (.-124,pc,a0.l), a1-a3/a6
-      movemw  (.,pc,a0.l), a1-a3/a6
       movemw  (.+4,pc,d5.w), d0/a1-a3/a6
       movemw  (.-124,pc,d5.w), d0/a1-a3/a6
       movemw  (.,pc,d5.w), d0/a1-a3/a6
-      movemw  (.+4,pc,d5.l), d0/a1-a3/a6
-      movemw  (.-124,pc,d5.l), d0/a1-a3/a6
-      movemw  (.,pc,d5.l), d0/a1-a3/a6
       movemw  (.+4,pc,a0.w), d0/a1-a3/a6
       movemw  (.-124,pc,a0.w), d0/a1-a3/a6
       movemw  (.,pc,a0.w), d0/a1-a3/a6
-      movemw  (.+4,pc,a0.l), d0/a1-a3/a6
-      movemw  (.-124,pc,a0.l), d0/a1-a3/a6
-      movemw  (.,pc,a0.l), d0/a1-a3/a6
       movemw  (.+4,pc,d5.w), d0-d1/a1-a3/a6
       movemw  (.-124,pc,d5.w), d0-d1/a1-a3/a6
       movemw  (.,pc,d5.w), d0-d1/a1-a3/a6
-      movemw  (.+4,pc,d5.l), d0-d1/a1-a3/a6
-      movemw  (.-124,pc,d5.l), d0-d1/a1-a3/a6
-      movemw  (.,pc,d5.l), d0-d1/a1-a3/a6
       movemw  (.+4,pc,a0.w), d0-d1/a1-a3/a6
       movemw  (.-124,pc,a0.w), d0-d1/a1-a3/a6
       movemw  (.,pc,a0.w), d0-d1/a1-a3/a6
-      movemw  (.+4,pc,a0.l), d0-d1/a1-a3/a6
-      movemw  (.-124,pc,a0.l), d0-d1/a1-a3/a6
-      movemw  (.,pc,a0.l), d0-d1/a1-a3/a6
       movemw  (.+4,pc,d5.w), d0-d1/d3/a1-a3/a6
       movemw  (.-124,pc,d5.w), d0-d1/d3/a1-a3/a6
       movemw  (.,pc,d5.w), d0-d1/d3/a1-a3/a6
-      movemw  (.+4,pc,d5.l), d0-d1/d3/a1-a3/a6
-      movemw  (.-124,pc,d5.l), d0-d1/d3/a1-a3/a6
-      movemw  (.,pc,d5.l), d0-d1/d3/a1-a3/a6
       movemw  (.+4,pc,a0.w), d0-d1/d3/a1-a3/a6
       movemw  (.-124,pc,a0.w), d0-d1/d3/a1-a3/a6
       movemw  (.,pc,a0.w), d0-d1/d3/a1-a3/a6
-      movemw  (.+4,pc,a0.l), d0-d1/d3/a1-a3/a6
-      movemw  (.-124,pc,a0.l), d0-d1/d3/a1-a3/a6
-      movemw  (.,pc,a0.l), d0-d1/d3/a1-a3/a6
       movemw  (.+4,pc,d5.w), d0-d1/d3-d4/a1-a3/a6
       movemw  (.-124,pc,d5.w), d0-d1/d3-d4/a1-a3/a6
       movemw  (.,pc,d5.w), d0-d1/d3-d4/a1-a3/a6
-      movemw  (.+4,pc,d5.l), d0-d1/d3-d4/a1-a3/a6
-      movemw  (.-124,pc,d5.l), d0-d1/d3-d4/a1-a3/a6
-      movemw  (.,pc,d5.l), d0-d1/d3-d4/a1-a3/a6
       movemw  (.+4,pc,a0.w), d0-d1/d3-d4/a1-a3/a6
       movemw  (.-124,pc,a0.w), d0-d1/d3-d4/a1-a3/a6
       movemw  (.,pc,a0.w), d0-d1/d3-d4/a1-a3/a6
-      movemw  (.+4,pc,a0.l), d0-d1/d3-d4/a1-a3/a6
-      movemw  (.-124,pc,a0.l), d0-d1/d3-d4/a1-a3/a6
-      movemw  (.,pc,a0.l), d0-d1/d3-d4/a1-a3/a6
       movemw  (.+4,pc,d5.w), d0-d1/d3-d4/d6/a1-a3/a6
       movemw  (.-124,pc,d5.w), d0-d1/d3-d4/d6/a1-a3/a6
       movemw  (.,pc,d5.w), d0-d1/d3-d4/d6/a1-a3/a6
-      movemw  (.+4,pc,d5.l), d0-d1/d3-d4/d6/a1-a3/a6
-      movemw  (.-124,pc,d5.l), d0-d1/d3-d4/d6/a1-a3/a6
-      movemw  (.,pc,d5.l), d0-d1/d3-d4/d6/a1-a3/a6
       movemw  (.+4,pc,a0.w), d0-d1/d3-d4/d6/a1-a3/a6
       movemw  (.-124,pc,a0.w), d0-d1/d3-d4/d6/a1-a3/a6
       movemw  (.,pc,a0.w), d0-d1/d3-d4/d6/a1-a3/a6
-      movemw  (.+4,pc,a0.l), d0-d1/d3-d4/d6/a1-a3/a6
-      movemw  (.-124,pc,a0.l), d0-d1/d3-d4/d6/a1-a3/a6
-      movemw  (.,pc,a0.l), d0-d1/d3-d4/d6/a1-a3/a6
       movemw  (.+4,pc,d5.w), d0-d1/d3-d4/d6-d7/a1-a3/a6
       movemw  (.-124,pc,d5.w), d0-d1/d3-d4/d6-d7/a1-a3/a6
       movemw  (.,pc,d5.w), d0-d1/d3-d4/d6-d7/a1-a3/a6
-      movemw  (.+4,pc,d5.l), d0-d1/d3-d4/d6-d7/a1-a3/a6
-      movemw  (.-124,pc,d5.l), d0-d1/d3-d4/d6-d7/a1-a3/a6
-      movemw  (.,pc,d5.l), d0-d1/d3-d4/d6-d7/a1-a3/a6
       movemw  (.+4,pc,a0.w), d0-d1/d3-d4/d6-d7/a1-a3/a6
       movemw  (.-124,pc,a0.w), d0-d1/d3-d4/d6-d7/a1-a3/a6
       movemw  (.,pc,a0.w), d0-d1/d3-d4/d6-d7/a1-a3/a6
-      movemw  (.+4,pc,a0.l), d0-d1/d3-d4/d6-d7/a1-a3/a6
-      movemw  (.-124,pc,a0.l), d0-d1/d3-d4/d6-d7/a1-a3/a6
-      movemw  (.,pc,a0.l), d0-d1/d3-d4/d6-d7/a1-a3/a6
       movemw  (.-123,pc,d5.w), d7-a3/a6
       movemw  (.,pc,d5.w), d7-a3/a6
       movemw  (.+1,pc,d5.w), d7-a3/a6
-      movemw  (.+4,pc,d5.l), d7-a3/a6
-      movemw  (.-124,pc,d5.l), d7-a3/a6
-      movemw  (.,pc,d5.l), d7-a3/a6
       movemw  (.+4,pc,a0.w), d7-a3/a6
       movemw  (.-124,pc,a0.w), d7-a3/a6
       movemw  (.,pc,a0.w), d7-a3/a6
-      movemw  (.+4,pc,a0.l), d7-a3/a6
-      movemw  (.-124,pc,a0.l), d7-a3/a6
-      movemw  (.,pc,a0.l), d7-a3/a6
       movemw  (.-122,pc,d5.w), d0/d7-a3/a6
       movemw  (.,pc,d5.w), d0/d7-a3/a6
       movemw  (.+1,pc,d5.w), d0/d7-a3/a6
-      movemw  (.+4,pc,d5.l), d0/d7-a3/a6
-      movemw  (.-124,pc,d5.l), d0/d7-a3/a6
-      movemw  (.,pc,d5.l), d0/d7-a3/a6
       movemw  (.+4,pc,a0.w), d0/d7-a3/a6
       movemw  (.-124,pc,a0.w), d0/d7-a3/a6
       movemw  (.,pc,a0.w), d0/d7-a3/a6
-      movemw  (.+4,pc,a0.l), d0/d7-a3/a6
-      movemw  (.-124,pc,a0.l), d0/d7-a3/a6
-      movemw  (.,pc,a0.l), d0/d7-a3/a6
       movemw  (.-120,pc,d5.w), d0-d1/d7-a3/a6
       movemw  (.,pc,d5.w), d0-d1/d7-a3/a6
       movemw  (.+1,pc,d5.w), d0-d1/d7-a3/a6
-      movemw  (.+4,pc,d5.l), d0-d1/d7-a3/a6
-      movemw  (.-124,pc,d5.l), d0-d1/d7-a3/a6
-      movemw  (.,pc,d5.l), d0-d1/d7-a3/a6
       movemw  (.+4,pc,a0.w), d0-d1/d7-a3/a6
       movemw  (.-124,pc,a0.w), d0-d1/d7-a3/a6
       movemw  (.,pc,a0.w), d0-d1/d7-a3/a6
-      movemw  (.+4,pc,a0.l), d0-d1/d7-a3/a6
-      movemw  (.-124,pc,a0.l), d0-d1/d7-a3/a6
-      movemw  (.,pc,a0.l), d0-d1/d7-a3/a6
       movemw  (.-112,pc,d5.w), d0-d1/d3/d7-a3/a6
       movemw  (.,pc,d5.w), d0-d1/d3/d7-a3/a6
       movemw  (.+1,pc,d5.w), d0-d1/d3/d7-a3/a6
-      movemw  (.+4,pc,d5.l), d0-d1/d3/d7-a3/a6
-      movemw  (.-124,pc,d5.l), d0-d1/d3/d7-a3/a6
-      movemw  (.,pc,d5.l), d0-d1/d3/d7-a3/a6
       movemw  (.+4,pc,a0.w), d0-d1/d3/d7-a3/a6
       movemw  (.-124,pc,a0.w), d0-d1/d3/d7-a3/a6
       movemw  (.,pc,a0.w), d0-d1/d3/d7-a3/a6
-      movemw  (.+4,pc,a0.l), d0-d1/d3/d7-a3/a6
-      movemw  (.-124,pc,a0.l), d0-d1/d3/d7-a3/a6
-      movemw  (.,pc,a0.l), d0-d1/d3/d7-a3/a6
       movemw  (.-96,pc,d5.w), d0-d1/d3-d4/d7-a3/a6
       movemw  (.,pc,d5.w), d0-d1/d3-d4/d7-a3/a6
       movemw  (.+1,pc,d5.w), d0-d1/d3-d4/d7-a3/a6
-      movemw  (.+4,pc,d5.l), d0-d1/d3-d4/d7-a3/a6
-      movemw  (.-124,pc,d5.l), d0-d1/d3-d4/d7-a3/a6
-      movemw  (.,pc,d5.l), d0-d1/d3-d4/d7-a3/a6
       movemw  (.+4,pc,a0.w), d0-d1/d3-d4/d7-a3/a6
       movemw  (.-124,pc,a0.w), d0-d1/d3-d4/d7-a3/a6
       movemw  (.,pc,a0.w), d0-d1/d3-d4/d7-a3/a6
-      movemw  (.+4,pc,a0.l), d0-d1/d3-d4/d7-a3/a6
-      movemw  (.-124,pc,a0.l), d0-d1/d3-d4/d7-a3/a6
-      movemw  (.,pc,a0.l), d0-d1/d3-d4/d7-a3/a6
       movemw  (.+4,pc,d5.l), a4/a6
       movemw  (.-124,pc,d5.l), a4/a6
       movemw  (.,pc,d5.l), a4/a6
-      movemw  (.+4,pc,d6.w), a4/a6
-      movemw  (.-124,pc,d6.w), a4/a6
-      movemw  (.,pc,d6.w), a4/a6
       movemw  (.+4,pc,a0.w), a4/a6
       movemw  (.-124,pc,a0.w), a4/a6
       movemw  (.,pc,a0.w), a4/a6
-      movemw  (.+4,pc,a0.l), a4/a6
-      movemw  (.-124,pc,a0.l), a4/a6
-      movemw  (.,pc,a0.l), a4/a6
       movemw  (.+4,pc,d5.l), d0-d1/d3-d4/d6-d7/a4/a6
       movemw  (.-124,pc,d5.l), d0-d1/d3-d4/d6-d7/a4/a6
       movemw  (.,pc,d5.l), d0-d1/d3-d4/d6-d7/a4/a6
-      movemw  (.+4,pc,d6.w), d0-d1/d3-d4/d6-d7/a4/a6
-      movemw  (.-124,pc,d6.w), d0-d1/d3-d4/d6-d7/a4/a6
-      movemw  (.,pc,d6.w), d0-d1/d3-d4/d6-d7/a4/a6
       movemw  (.+4,pc,a0.w), d0-d1/d3-d4/d6-d7/a4/a6
       movemw  (.-124,pc,a0.w), d0-d1/d3-d4/d6-d7/a4/a6
       movemw  (.,pc,a0.w), d0-d1/d3-d4/d6-d7/a4/a6
-      movemw  (.+4,pc,a0.l), d0-d1/d3-d4/d6-d7/a4/a6
-      movemw  (.-124,pc,a0.l), d0-d1/d3-d4/d6-d7/a4/a6
-      movemw  (.,pc,a0.l), d0-d1/d3-d4/d6-d7/a4/a6
       movemw  (.+4,pc,d5.l), a0-a1/a4/a6
       movemw  (.-124,pc,d5.l), a0-a1/a4/a6
       movemw  (.,pc,d5.l), a0-a1/a4/a6
-      movemw  (.+4,pc,d6.w), a0-a1/a4/a6
-      movemw  (.-124,pc,d6.w), a0-a1/a4/a6
-      movemw  (.,pc,d6.w), a0-a1/a4/a6
       movemw  (.+4,pc,a0.w), a0-a1/a4/a6
       movemw  (.-124,pc,a0.w), a0-a1/a4/a6
       movemw  (.,pc,a0.w), a0-a1/a4/a6
-      movemw  (.+4,pc,a0.l), a0-a1/a4/a6
-      movemw  (.-124,pc,a0.l), a0-a1/a4/a6
-      movemw  (.,pc,a0.l), a0-a1/a4/a6
       movemw  (.+4,pc,d5.l), d0-d1/d3-d4/d6-d7/a1-a2/a4/a6
       movemw  (.-124,pc,d5.l), d0-d1/d3-d4/d6-d7/a1-a2/a4/a6
       movemw  (.,pc,d5.l), d0-d1/d3-d4/d6-d7/a1-a2/a4/a6
-      movemw  (.+4,pc,d6.w), d0-d1/d3-d4/d6-d7/a1-a2/a4/a6
-      movemw  (.-124,pc,d6.w), d0-d1/d3-d4/d6-d7/a1-a2/a4/a6
-      movemw  (.,pc,d6.w), d0-d1/d3-d4/d6-d7/a1-a2/a4/a6
       movemw  (.+4,pc,a0.w), d0-d1/d3-d4/d6-d7/a1-a2/a4/a6
       movemw  (.-124,pc,a0.w), d0-d1/d3-d4/d6-d7/a1-a2/a4/a6
       movemw  (.,pc,a0.w), d0-d1/d3-d4/d6-d7/a1-a2/a4/a6
-      movemw  (.+4,pc,a0.l), d0-d1/d3-d4/d6-d7/a1-a2/a4/a6
-      movemw  (.-124,pc,a0.l), d0-d1/d3-d4/d6-d7/a1-a2/a4/a6
-      movemw  (.,pc,a0.l), d0-d1/d3-d4/d6-d7/a1-a2/a4/a6
-      movemw  (.+4,pc,d6.w), a0-a1/a3-a4/a6
-      movemw  (.-124,pc,d6.w), a0-a1/a3-a4/a6
-      movemw  (.,pc,d6.w), a0-a1/a3-a4/a6
-      movemw  (.+4,pc,d6.l), a0-a1/a3-a4/a6
-      movemw  (.-124,pc,d6.l), a0-a1/a3-a4/a6
-      movemw  (.,pc,d6.l), a0-a1/a3-a4/a6
-      movemw  (.+4,pc,a0.w), a0-a1/a3-a4/a6
-      movemw  (.-124,pc,a0.w), a0-a1/a3-a4/a6
-      movemw  (.,pc,a0.w), a0-a1/a3-a4/a6
-      movemw  (.+4,pc,a0.l), a0-a1/a3-a4/a6
-      movemw  (.-124,pc,a0.l), a0-a1/a3-a4/a6
-      movemw  (.,pc,a0.l), a0-a1/a3-a4/a6
-      movemw  (.+4,pc,d6.w), d0/a0-a1/a3-a4/a6
-      movemw  (.-124,pc,d6.w), d0/a0-a1/a3-a4/a6
-      movemw  (.,pc,d6.w), d0/a0-a1/a3-a4/a6
-      movemw  (.+4,pc,d6.l), d0/a0-a1/a3-a4/a6
-      movemw  (.-124,pc,d6.l), d0/a0-a1/a3-a4/a6
-      movemw  (.,pc,d6.l), d0/a0-a1/a3-a4/a6
-      movemw  (.+4,pc,a0.w), d0/a0-a1/a3-a4/a6
-      movemw  (.-124,pc,a0.w), d0/a0-a1/a3-a4/a6
-      movemw  (.,pc,a0.w), d0/a0-a1/a3-a4/a6
-      movemw  (.+4,pc,a0.l), d0/a0-a1/a3-a4/a6
-      movemw  (.-124,pc,a0.l), d0/a0-a1/a3-a4/a6
-      movemw  (.,pc,a0.l), d0/a0-a1/a3-a4/a6
-      movemw  (.+4,pc,d6.w), d0-d1/a0-a1/a3-a4/a6
-      movemw  (.-124,pc,d6.w), d0-d1/a0-a1/a3-a4/a6
-      movemw  (.,pc,d6.w), d0-d1/a0-a1/a3-a4/a6
-      movemw  (.+4,pc,d6.l), d0-d1/a0-a1/a3-a4/a6
-      movemw  (.-124,pc,d6.l), d0-d1/a0-a1/a3-a4/a6
-      movemw  (.,pc,d6.l), d0-d1/a0-a1/a3-a4/a6
-      movemw  (.+4,pc,a0.w), d0-d1/a0-a1/a3-a4/a6
-      movemw  (.-124,pc,a0.w), d0-d1/a0-a1/a3-a4/a6
-      movemw  (.,pc,a0.w), d0-d1/a0-a1/a3-a4/a6
-      movemw  (.+4,pc,a0.l), d0-d1/a0-a1/a3-a4/a6
-      movemw  (.-124,pc,a0.l), d0-d1/a0-a1/a3-a4/a6
-      movemw  (.,pc,a0.l), d0-d1/a0-a1/a3-a4/a6
-      movemw  (.+4,pc,d6.w), d0-d1/d3/a0-a1/a3-a4/a6
-      movemw  (.-124,pc,d6.w), d0-d1/d3/a0-a1/a3-a4/a6
-      movemw  (.,pc,d6.w), d0-d1/d3/a0-a1/a3-a4/a6
-      movemw  (.+4,pc,d6.l), d0-d1/d3/a0-a1/a3-a4/a6
-      movemw  (.-124,pc,d6.l), d0-d1/d3/a0-a1/a3-a4/a6
-      movemw  (.,pc,d6.l), d0-d1/d3/a0-a1/a3-a4/a6
-      movemw  (.+4,pc,a0.w), d0-d1/d3/a0-a1/a3-a4/a6
-      movemw  (.-124,pc,a0.w), d0-d1/d3/a0-a1/a3-a4/a6
-      movemw  (.,pc,a0.w), d0-d1/d3/a0-a1/a3-a4/a6
-      movemw  (.+4,pc,a0.l), d0-d1/d3/a0-a1/a3-a4/a6
-      movemw  (.-124,pc,a0.l), d0-d1/d3/a0-a1/a3-a4/a6
-      movemw  (.,pc,a0.l), d0-d1/d3/a0-a1/a3-a4/a6
-      movemw  (.+4,pc,d6.w), d0-d1/d3-d4/a0-a1/a3-a4/a6
-      movemw  (.-124,pc,d6.w), d0-d1/d3-d4/a0-a1/a3-a4/a6
-      movemw  (.,pc,d6.w), d0-d1/d3-d4/a0-a1/a3-a4/a6
-      movemw  (.+4,pc,d6.l), d0-d1/d3-d4/a0-a1/a3-a4/a6
-      movemw  (.-124,pc,d6.l), d0-d1/d3-d4/a0-a1/a3-a4/a6
-      movemw  (.,pc,d6.l), d0-d1/d3-d4/a0-a1/a3-a4/a6
-      movemw  (.+4,pc,a0.w), d0-d1/d3-d4/a0-a1/a3-a4/a6
-      movemw  (.-124,pc,a0.w), d0-d1/d3-d4/a0-a1/a3-a4/a6
-      movemw  (.,pc,a0.w), d0-d1/d3-d4/a0-a1/a3-a4/a6
-      movemw  (.+4,pc,a0.l), d0-d1/d3-d4/a0-a1/a3-a4/a6
-      movemw  (.-124,pc,a0.l), d0-d1/d3-d4/a0-a1/a3-a4/a6
-      movemw  (.,pc,a0.l), d0-d1/d3-d4/a0-a1/a3-a4/a6
+      movemw  (.+4,pc,d6.w), d0-d4/a0-a1/a3-a4/a6
+      movemw  (.-124,pc,d6.w), d0-d4/a0-a1/a3-a4/a6
+      movemw  (.,pc,d6.w), d0-d4/a0-a1/a3-a4/a6
+      movemw  (.+4,pc,a0.w), d0-d4/a0-a1/a3-a4/a6
+      movemw  (.-124,pc,a0.w), d0-d4/a0-a1/a3-a4/a6
+      movemw  (.,pc,a0.w), d0-d4/a0-a1/a3-a4/a6
+      movemw  (.+4,pc,d6.w), d5/a0-a1/a3-a4/a6
+      movemw  (.-124,pc,d6.w), d5/a0-a1/a3-a4/a6
+      movemw  (.,pc,d6.w), d5/a0-a1/a3-a4/a6
+      movemw  (.+4,pc,a0.w), d5/a0-a1/a3-a4/a6
+      movemw  (.-124,pc,a0.w), d5/a0-a1/a3-a4/a6
+      movemw  (.,pc,a0.w), d5/a0-a1/a3-a4/a6
+      movemw  (.+4,pc,d6.w), d0-d1/d5/a0-a1/a3-a4/a6
+      movemw  (.-124,pc,d6.w), d0-d1/d5/a0-a1/a3-a4/a6
+      movemw  (.,pc,d6.w), d0-d1/d5/a0-a1/a3-a4/a6
+      movemw  (.+4,pc,a0.w), d0-d1/d5/a0-a1/a3-a4/a6
+      movemw  (.-124,pc,a0.w), d0-d1/d5/a0-a1/a3-a4/a6
+      movemw  (.,pc,a0.w), d0-d1/d5/a0-a1/a3-a4/a6
+      movemw  (.+4,pc,d6.w), d0-d1/d3/d5/a0-a1/a3-a4/a6
+      movemw  (.-124,pc,d6.w), d0-d1/d3/d5/a0-a1/a3-a4/a6
+      movemw  (.,pc,d6.w), d0-d1/d3/d5/a0-a1/a3-a4/a6
+      movemw  (.+4,pc,a0.w), d0-d1/d3/d5/a0-a1/a3-a4/a6
+      movemw  (.-124,pc,a0.w), d0-d1/d3/d5/a0-a1/a3-a4/a6
+      movemw  (.,pc,a0.w), d0-d1/d3/d5/a0-a1/a3-a4/a6
       movemw  (.+4,pc,d6.w), d0-d1/d3-d4/d6/a0-a1/a3-a4/a6
       movemw  (.-124,pc,d6.w), d0-d1/d3-d4/d6/a0-a1/a3-a4/a6
       movemw  (.,pc,d6.w), d0-d1/d3-d4/d6/a0-a1/a3-a4/a6
-      movemw  (.+4,pc,d6.l), d0-d1/d3-d4/d6/a0-a1/a3-a4/a6
-      movemw  (.-124,pc,d6.l), d0-d1/d3-d4/d6/a0-a1/a3-a4/a6
-      movemw  (.,pc,d6.l), d0-d1/d3-d4/d6/a0-a1/a3-a4/a6
       movemw  (.+4,pc,a0.w), d0-d1/d3-d4/d6/a0-a1/a3-a4/a6
       movemw  (.-124,pc,a0.w), d0-d1/d3-d4/d6/a0-a1/a3-a4/a6
       movemw  (.,pc,a0.w), d0-d1/d3-d4/d6/a0-a1/a3-a4/a6
-      movemw  (.+4,pc,a0.l), d0-d1/d3-d4/d6/a0-a1/a3-a4/a6
-      movemw  (.-124,pc,a0.l), d0-d1/d3-d4/d6/a0-a1/a3-a4/a6
-      movemw  (.,pc,a0.l), d0-d1/d3-d4/d6/a0-a1/a3-a4/a6
       movemw  (.-123,pc,a0.w), d7-a6
       movemw  (.,pc,a0.w), d7-a6
       movemw  (.+1,pc,a0.w), d7-a6
-      movemw  (.+4,pc,a0.l), d7-a6
-      movemw  (.-124,pc,a0.l), d7-a6
-      movemw  (.,pc,a0.l), d7-a6
       movemw  (.+4,pc,d0.w), d7-a6
       movemw  (.-124,pc,d0.w), d7-a6
       movemw  (.,pc,d0.w), d7-a6
-      movemw  (.+4,pc,d0.l), d7-a6
-      movemw  (.-124,pc,d0.l), d7-a6
-      movemw  (.,pc,d0.l), d7-a6
       movemw  (.-122,pc,a0.w), d0/d7-a6
       movemw  (.,pc,a0.w), d0/d7-a6
       movemw  (.+1,pc,a0.w), d0/d7-a6
-      movemw  (.+4,pc,a0.l), d0/d7-a6
-      movemw  (.-124,pc,a0.l), d0/d7-a6
-      movemw  (.,pc,a0.l), d0/d7-a6
       movemw  (.+4,pc,d0.w), d0/d7-a6
       movemw  (.-124,pc,d0.w), d0/d7-a6
       movemw  (.,pc,d0.w), d0/d7-a6
-      movemw  (.+4,pc,d0.l), d0/d7-a6
-      movemw  (.-124,pc,d0.l), d0/d7-a6
-      movemw  (.,pc,d0.l), d0/d7-a6
       movemw  (.-120,pc,a0.w), d0-d1/d7-a6
       movemw  (.,pc,a0.w), d0-d1/d7-a6
       movemw  (.+1,pc,a0.w), d0-d1/d7-a6
-      movemw  (.+4,pc,a0.l), d0-d1/d7-a6
-      movemw  (.-124,pc,a0.l), d0-d1/d7-a6
-      movemw  (.,pc,a0.l), d0-d1/d7-a6
       movemw  (.+4,pc,d0.w), d0-d1/d7-a6
       movemw  (.-124,pc,d0.w), d0-d1/d7-a6
       movemw  (.,pc,d0.w), d0-d1/d7-a6
-      movemw  (.+4,pc,d0.l), d0-d1/d7-a6
-      movemw  (.-124,pc,d0.l), d0-d1/d7-a6
-      movemw  (.,pc,d0.l), d0-d1/d7-a6
       movemw  (.-112,pc,a0.w), d0-d1/d3/d7-a6
       movemw  (.,pc,a0.w), d0-d1/d3/d7-a6
       movemw  (.+1,pc,a0.w), d0-d1/d3/d7-a6
-      movemw  (.+4,pc,a0.l), d0-d1/d3/d7-a6
-      movemw  (.-124,pc,a0.l), d0-d1/d3/d7-a6
-      movemw  (.,pc,a0.l), d0-d1/d3/d7-a6
       movemw  (.+4,pc,d0.w), d0-d1/d3/d7-a6
       movemw  (.-124,pc,d0.w), d0-d1/d3/d7-a6
       movemw  (.,pc,d0.w), d0-d1/d3/d7-a6
-      movemw  (.+4,pc,d0.l), d0-d1/d3/d7-a6
-      movemw  (.-124,pc,d0.l), d0-d1/d3/d7-a6
-      movemw  (.,pc,d0.l), d0-d1/d3/d7-a6
       movemw  (.-96,pc,a0.w), d0-d1/d3-d4/d7-a6
       movemw  (.,pc,a0.w), d0-d1/d3-d4/d7-a6
       movemw  (.+1,pc,a0.w), d0-d1/d3-d4/d7-a6
-      movemw  (.+4,pc,a0.l), d0-d1/d3-d4/d7-a6
-      movemw  (.-124,pc,a0.l), d0-d1/d3-d4/d7-a6
-      movemw  (.,pc,a0.l), d0-d1/d3-d4/d7-a6
       movemw  (.+4,pc,d0.w), d0-d1/d3-d4/d7-a6
       movemw  (.-124,pc,d0.w), d0-d1/d3-d4/d7-a6
       movemw  (.,pc,d0.w), d0-d1/d3-d4/d7-a6
-      movemw  (.+4,pc,d0.l), d0-d1/d3-d4/d7-a6
-      movemw  (.-124,pc,d0.l), d0-d1/d3-d4/d7-a6
-      movemw  (.,pc,d0.l), d0-d1/d3-d4/d7-a6
       movemw  (.+4,pc,a0.l), a7
       movemw  (.-124,pc,a0.l), a7
       movemw  (.,pc,a0.l), a7
-      movemw  (.+4,pc,a1.w), a7
-      movemw  (.-124,pc,a1.w), a7
-      movemw  (.,pc,a1.w), a7
       movemw  (.+4,pc,d0.w), a7
       movemw  (.-124,pc,d0.w), a7
       movemw  (.,pc,d0.w), a7
-      movemw  (.+4,pc,d0.l), a7
-      movemw  (.-124,pc,d0.l), a7
-      movemw  (.,pc,d0.l), a7
       movemw  (.+4,pc,a0.l), d0-d1/d3-d4/d6-d7/a7
       movemw  (.-124,pc,a0.l), d0-d1/d3-d4/d6-d7/a7
       movemw  (.,pc,a0.l), d0-d1/d3-d4/d6-d7/a7
-      movemw  (.+4,pc,a1.w), d0-d1/d3-d4/d6-d7/a7
-      movemw  (.-124,pc,a1.w), d0-d1/d3-d4/d6-d7/a7
-      movemw  (.,pc,a1.w), d0-d1/d3-d4/d6-d7/a7
       movemw  (.+4,pc,d0.w), d0-d1/d3-d4/d6-d7/a7
       movemw  (.-124,pc,d0.w), d0-d1/d3-d4/d6-d7/a7
       movemw  (.,pc,d0.w), d0-d1/d3-d4/d6-d7/a7
-      movemw  (.+4,pc,d0.l), d0-d1/d3-d4/d6-d7/a7
-      movemw  (.-124,pc,d0.l), d0-d1/d3-d4/d6-d7/a7
-      movemw  (.,pc,d0.l), d0-d1/d3-d4/d6-d7/a7
+      movemw  (.+4,pc,a3.l), a1-a2/a4-a5/a7
+      movemw  (.-124,pc,a3.l), a1-a2/a4-a5/a7
+      movemw  (.,pc,a3.l), a1-a2/a4-a5/a7
+      movemw  (.+4,pc,d0.w), a1-a2/a4-a5/a7
+      movemw  (.-124,pc,d0.w), a1-a2/a4-a5/a7
+      movemw  (.,pc,d0.w), a1-a2/a4-a5/a7
       movemw  (.+4,pc,a3.l), d0-d1/d3-d4/d6-d7/a1-a2/a4-a5/a7
       movemw  (.-124,pc,a3.l), d0-d1/d3-d4/d6-d7/a1-a2/a4-a5/a7
       movemw  (.,pc,a3.l), d0-d1/d3-d4/d6-d7/a1-a2/a4-a5/a7
-      movemw  (.+4,pc,a4.w), d0-d1/d3-d4/d6-d7/a1-a2/a4-a5/a7
-      movemw  (.-124,pc,a4.w), d0-d1/d3-d4/d6-d7/a1-a2/a4-a5/a7
-      movemw  (.,pc,a4.w), d0-d1/d3-d4/d6-d7/a1-a2/a4-a5/a7
       movemw  (.+4,pc,d0.w), d0-d1/d3-d4/d6-d7/a1-a2/a4-a5/a7
       movemw  (.-124,pc,d0.w), d0-d1/d3-d4/d6-d7/a1-a2/a4-a5/a7
       movemw  (.,pc,d0.w), d0-d1/d3-d4/d6-d7/a1-a2/a4-a5/a7
-      movemw  (.+4,pc,d0.l), d0-d1/d3-d4/d6-d7/a1-a2/a4-a5/a7
-      movemw  (.-124,pc,d0.l), d0-d1/d3-d4/d6-d7/a1-a2/a4-a5/a7
-      movemw  (.,pc,d0.l), d0-d1/d3-d4/d6-d7/a1-a2/a4-a5/a7
-      movemw  (.+4,pc,a6.w), d1-d2/d4/d6/a0-a1/a3-a4/a6-a7
-      movemw  (.-124,pc,a6.w), d1-d2/d4/d6/a0-a1/a3-a4/a6-a7
-      movemw  (.,pc,a6.w), d1-d2/d4/d6/a0-a1/a3-a4/a6-a7
-      movemw  (.+4,pc,a6.l), d1-d2/d4/d6/a0-a1/a3-a4/a6-a7
-      movemw  (.-124,pc,a6.l), d1-d2/d4/d6/a0-a1/a3-a4/a6-a7
-      movemw  (.,pc,a6.l), d1-d2/d4/d6/a0-a1/a3-a4/a6-a7
-      movemw  (.+4,pc,d0.w), d1-d2/d4/d6/a0-a1/a3-a4/a6-a7
-      movemw  (.-124,pc,d0.w), d1-d2/d4/d6/a0-a1/a3-a4/a6-a7
-      movemw  (.,pc,d0.w), d1-d2/d4/d6/a0-a1/a3-a4/a6-a7
-      movemw  (.+4,pc,d0.l), d1-d2/d4/d6/a0-a1/a3-a4/a6-a7
-      movemw  (.-124,pc,d0.l), d1-d2/d4/d6/a0-a1/a3-a4/a6-a7
-      movemw  (.,pc,d0.l), d1-d2/d4/d6/a0-a1/a3-a4/a6-a7
-      movemw  (.+4,pc,a6.w), d3-d4/d6/a0-a1/a3-a4/a6-a7
-      movemw  (.-124,pc,a6.w), d3-d4/d6/a0-a1/a3-a4/a6-a7
-      movemw  (.,pc,a6.w), d3-d4/d6/a0-a1/a3-a4/a6-a7
-      movemw  (.+4,pc,a6.l), d3-d4/d6/a0-a1/a3-a4/a6-a7
-      movemw  (.-124,pc,a6.l), d3-d4/d6/a0-a1/a3-a4/a6-a7
-      movemw  (.,pc,a6.l), d3-d4/d6/a0-a1/a3-a4/a6-a7
-      movemw  (.+4,pc,d0.w), d3-d4/d6/a0-a1/a3-a4/a6-a7
-      movemw  (.-124,pc,d0.w), d3-d4/d6/a0-a1/a3-a4/a6-a7
-      movemw  (.,pc,d0.w), d3-d4/d6/a0-a1/a3-a4/a6-a7
-      movemw  (.+4,pc,d0.l), d3-d4/d6/a0-a1/a3-a4/a6-a7
-      movemw  (.-124,pc,d0.l), d3-d4/d6/a0-a1/a3-a4/a6-a7
-      movemw  (.,pc,d0.l), d3-d4/d6/a0-a1/a3-a4/a6-a7
+      movemw  (.+4,pc,a6.w), d0/d2-d3/a0-a1/a3-a4/a6-a7
+      movemw  (.-124,pc,a6.w), d0/d2-d3/a0-a1/a3-a4/a6-a7
+      movemw  (.,pc,a6.w), d0/d2-d3/a0-a1/a3-a4/a6-a7
+      movemw  (.+4,pc,d0.w), d0/d2-d3/a0-a1/a3-a4/a6-a7
+      movemw  (.-124,pc,d0.w), d0/d2-d3/a0-a1/a3-a4/a6-a7
+      movemw  (.,pc,d0.w), d0/d2-d3/a0-a1/a3-a4/a6-a7
+      movemw  (.+4,pc,a6.w), d1-d3/a0-a1/a3-a4/a6-a7
+      movemw  (.-124,pc,a6.w), d1-d3/a0-a1/a3-a4/a6-a7
+      movemw  (.,pc,a6.w), d1-d3/a0-a1/a3-a4/a6-a7
+      movemw  (.+4,pc,d0.w), d1-d3/a0-a1/a3-a4/a6-a7
+      movemw  (.-124,pc,d0.w), d1-d3/a0-a1/a3-a4/a6-a7
+      movemw  (.,pc,d0.w), d1-d3/a0-a1/a3-a4/a6-a7
+      movemw  (.+4,pc,a6.w), d4/a0-a1/a3-a4/a6-a7
+      movemw  (.-124,pc,a6.w), d4/a0-a1/a3-a4/a6-a7
+      movemw  (.,pc,a6.w), d4/a0-a1/a3-a4/a6-a7
+      movemw  (.+4,pc,d0.w), d4/a0-a1/a3-a4/a6-a7
+      movemw  (.-124,pc,d0.w), d4/a0-a1/a3-a4/a6-a7
+      movemw  (.,pc,d0.w), d4/a0-a1/a3-a4/a6-a7
+      movemw  (.+4,pc,a6.w), d0-d1/d3-d4/a0-a1/a3-a4/a6-a7
+      movemw  (.-124,pc,a6.w), d0-d1/d3-d4/a0-a1/a3-a4/a6-a7
+      movemw  (.,pc,a6.w), d0-d1/d3-d4/a0-a1/a3-a4/a6-a7
+      movemw  (.+4,pc,d0.w), d0-d1/d3-d4/a0-a1/a3-a4/a6-a7
+      movemw  (.-124,pc,d0.w), d0-d1/d3-d4/a0-a1/a3-a4/a6-a7
+      movemw  (.,pc,d0.w), d0-d1/d3-d4/a0-a1/a3-a4/a6-a7
       movemw  (.+4,pc,a6.w), d0-d1/d3-d4/d6/a0-a1/a3-a4/a6-a7
       movemw  (.-124,pc,a6.w), d0-d1/d3-d4/d6/a0-a1/a3-a4/a6-a7
       movemw  (.,pc,a6.w), d0-d1/d3-d4/d6/a0-a1/a3-a4/a6-a7
-      movemw  (.+4,pc,a6.l), d0-d1/d3-d4/d6/a0-a1/a3-a4/a6-a7
-      movemw  (.-124,pc,a6.l), d0-d1/d3-d4/d6/a0-a1/a3-a4/a6-a7
-      movemw  (.,pc,a6.l), d0-d1/d3-d4/d6/a0-a1/a3-a4/a6-a7
       movemw  (.+4,pc,d0.w), d0-d1/d3-d4/d6/a0-a1/a3-a4/a6-a7
       movemw  (.-124,pc,d0.w), d0-d1/d3-d4/d6/a0-a1/a3-a4/a6-a7
       movemw  (.,pc,d0.w), d0-d1/d3-d4/d6/a0-a1/a3-a4/a6-a7
-      movemw  (.+4,pc,d0.l), d0-d1/d3-d4/d6/a0-a1/a3-a4/a6-a7
-      movemw  (.-124,pc,d0.l), d0-d1/d3-d4/d6/a0-a1/a3-a4/a6-a7
-      movemw  (.,pc,d0.l), d0-d1/d3-d4/d6/a0-a1/a3-a4/a6-a7
-      movemw  (.+4,pc,a6.w), d5-d6/a0-a1/a3-a4/a6-a7
-      movemw  (.-124,pc,a6.w), d5-d6/a0-a1/a3-a4/a6-a7
-      movemw  (.,pc,a6.w), d5-d6/a0-a1/a3-a4/a6-a7
-      movemw  (.+4,pc,a6.l), d5-d6/a0-a1/a3-a4/a6-a7
-      movemw  (.-124,pc,a6.l), d5-d6/a0-a1/a3-a4/a6-a7
-      movemw  (.,pc,a6.l), d5-d6/a0-a1/a3-a4/a6-a7
-      movemw  (.+4,pc,d0.w), d5-d6/a0-a1/a3-a4/a6-a7
-      movemw  (.-124,pc,d0.w), d5-d6/a0-a1/a3-a4/a6-a7
-      movemw  (.,pc,d0.w), d5-d6/a0-a1/a3-a4/a6-a7
-      movemw  (.+4,pc,d0.l), d5-d6/a0-a1/a3-a4/a6-a7
-      movemw  (.-124,pc,d0.l), d5-d6/a0-a1/a3-a4/a6-a7
-      movemw  (.,pc,d0.l), d5-d6/a0-a1/a3-a4/a6-a7
-      movemw  (.+4,pc,d0.l), d0
-      movemw  (.-124,pc,d0.l), d0
-      movemw  (.,pc,d0.l), d0
-      movemw  (.+4,pc,d1.w), d0
-      movemw  (.-124,pc,d1.w), d0
-      movemw  (.,pc,d1.w), d0
-      movemw  (.+4,pc,a0.w), d0
-      movemw  (.-124,pc,a0.w), d0
-      movemw  (.,pc,a0.w), d0
-      movemw  (.+4,pc,a0.l), d0
-      movemw  (.-124,pc,a0.l), d0
-      movemw  (.,pc,a0.l), d0
-      movemw  (.+4,pc,d0.l), d0-d1
-      movemw  (.-124,pc,d0.l), d0-d1
-      movemw  (.,pc,d0.l), d0-d1
-      movemw  (.+4,pc,d1.w), d0-d1
-      movemw  (.-124,pc,d1.w), d0-d1
-      movemw  (.,pc,d1.w), d0-d1
-      movemw  (.+4,pc,a0.w), d0-d1
-      movemw  (.-124,pc,a0.w), d0-d1
-      movemw  (.,pc,a0.w), d0-d1
-      movemw  (.+4,pc,a0.l), d0-d1
-      movemw  (.-124,pc,a0.l), d0-d1
-      movemw  (.,pc,a0.l), d0-d1
-      movemw  (.+4,pc,d0.l), d0-d1/d3
-      movemw  (.-124,pc,d0.l), d0-d1/d3
-      movemw  (.,pc,d0.l), d0-d1/d3
-      movemw  (.+4,pc,d1.w), d0-d1/d3
-      movemw  (.-124,pc,d1.w), d0-d1/d3
-      movemw  (.,pc,d1.w), d0-d1/d3
-      movemw  (.+4,pc,a0.w), d0-d1/d3
-      movemw  (.-124,pc,a0.w), d0-d1/d3
-      movemw  (.,pc,a0.w), d0-d1/d3
-      movemw  (.+4,pc,a0.l), d0-d1/d3
-      movemw  (.-124,pc,a0.l), d0-d1/d3
-      movemw  (.,pc,a0.l), d0-d1/d3
-      movemw  (.+4,pc,d0.l), d0-d1/d3-d4
-      movemw  (.-124,pc,d0.l), d0-d1/d3-d4
-      movemw  (.,pc,d0.l), d0-d1/d3-d4
-      movemw  (.+4,pc,d1.w), d0-d1/d3-d4
-      movemw  (.-124,pc,d1.w), d0-d1/d3-d4
-      movemw  (.,pc,d1.w), d0-d1/d3-d4
-      movemw  (.+4,pc,a0.w), d0-d1/d3-d4
-      movemw  (.-124,pc,a0.w), d0-d1/d3-d4
-      movemw  (.,pc,a0.w), d0-d1/d3-d4
-      movemw  (.+4,pc,a0.l), d0-d1/d3-d4
-      movemw  (.-124,pc,a0.l), d0-d1/d3-d4
-      movemw  (.,pc,a0.l), d0-d1/d3-d4
-      movemw  (.+4,pc,d0.l), d0-d1/d3-d4/d6
-      movemw  (.-124,pc,d0.l), d0-d1/d3-d4/d6
-      movemw  (.,pc,d0.l), d0-d1/d3-d4/d6
-      movemw  (.+4,pc,d1.w), d0-d1/d3-d4/d6
-      movemw  (.-124,pc,d1.w), d0-d1/d3-d4/d6
-      movemw  (.,pc,d1.w), d0-d1/d3-d4/d6
-      movemw  (.+4,pc,a0.w), d0-d1/d3-d4/d6
-      movemw  (.-124,pc,a0.w), d0-d1/d3-d4/d6
-      movemw  (.,pc,a0.w), d0-d1/d3-d4/d6
-      movemw  (.+4,pc,a0.l), d0-d1/d3-d4/d6
-      movemw  (.-124,pc,a0.l), d0-d1/d3-d4/d6
-      movemw  (.,pc,a0.l), d0-d1/d3-d4/d6
+      movemw  (.+4,pc,d0.l), d0-d1/d3-d6
+      movemw  (.-124,pc,d0.l), d0-d1/d3-d6
+      movemw  (.,pc,d0.l), d0-d1/d3-d6
+      movemw  (.+4,pc,a0.w), d0-d1/d3-d6
+      movemw  (.-124,pc,a0.w), d0-d1/d3-d6
+      movemw  (.,pc,a0.w), d0-d1/d3-d6
+      movemw  (.+4,pc,d0.l), d2-d6
+      movemw  (.-124,pc,d0.l), d2-d6
+      movemw  (.,pc,d0.l), d2-d6
+      movemw  (.+4,pc,a0.w), d2-d6
+      movemw  (.-124,pc,a0.w), d2-d6
+      movemw  (.,pc,a0.w), d2-d6
+      movemw  (.+4,pc,d0.l), d0/d2-d6
+      movemw  (.-124,pc,d0.l), d0/d2-d6
+      movemw  (.,pc,d0.l), d0/d2-d6
+      movemw  (.+4,pc,a0.w), d0/d2-d6
+      movemw  (.-124,pc,a0.w), d0/d2-d6
+      movemw  (.,pc,a0.w), d0/d2-d6
+      movemw  (.+4,pc,d0.l), d7
+      movemw  (.-124,pc,d0.l), d7
+      movemw  (.,pc,d0.l), d7
+      movemw  (.+4,pc,a0.w), d7
+      movemw  (.-124,pc,a0.w), d7
+      movemw  (.,pc,a0.w), d7
+      movemw  (.+4,pc,d0.l), d0-d1/d3-d4/d7
+      movemw  (.-124,pc,d0.l), d0-d1/d3-d4/d7
+      movemw  (.,pc,d0.l), d0-d1/d3-d4/d7
+      movemw  (.+4,pc,a0.w), d0-d1/d3-d4/d7
+      movemw  (.-124,pc,a0.w), d0-d1/d3-d4/d7
+      movemw  (.,pc,a0.w), d0-d1/d3-d4/d7
       movemw  (.+4,pc,d0.l), d0-d1/d3-d4/d6-d7
       movemw  (.-124,pc,d0.l), d0-d1/d3-d4/d6-d7
       movemw  (.,pc,d0.l), d0-d1/d3-d4/d6-d7
-      movemw  (.+4,pc,d1.w), d0-d1/d3-d4/d6-d7
-      movemw  (.-124,pc,d1.w), d0-d1/d3-d4/d6-d7
-      movemw  (.,pc,d1.w), d0-d1/d3-d4/d6-d7
       movemw  (.+4,pc,a0.w), d0-d1/d3-d4/d6-d7
       movemw  (.-124,pc,a0.w), d0-d1/d3-d4/d6-d7
       movemw  (.,pc,a0.w), d0-d1/d3-d4/d6-d7
-      movemw  (.+4,pc,a0.l), d0-d1/d3-d4/d6-d7
-      movemw  (.-124,pc,a0.l), d0-d1/d3-d4/d6-d7
-      movemw  (.,pc,a0.l), d0-d1/d3-d4/d6-d7
       moveml  (a0), d0/d4/d6-a0/a2-a3/a6
       moveml  (a0), d0-d1/d4/d6-a0/a2-a3/a6
       moveml  (a0), d0-d1/d3-d4/d6-a0/a2-a3/a6
@@ -5531,380 +3629,188 @@
       moveml  (-0x8000,a0), d0-d1/d3-d4/d6-d7
       moveml  (0,a0,d5.w), d0/d4-a0/a2-a3/a6
       moveml  (-0x80,a0,d5.w), d0/d4-a0/a2-a3/a6
-      moveml  (0,a0,d5.l), d0/d4-a0/a2-a3/a6
-      moveml  (-0x80,a0,d5.l), d0/d4-a0/a2-a3/a6
       moveml  (0,a0,a0.w), d0/d4-a0/a2-a3/a6
       moveml  (-0x80,a0,a0.w), d0/d4-a0/a2-a3/a6
-      moveml  (0,a0,a0.l), d0/d4-a0/a2-a3/a6
-      moveml  (-0x80,a0,a0.l), d0/d4-a0/a2-a3/a6
       moveml  (0,a0,d5.w), d0-d1/d4-a0/a2-a3/a6
       moveml  (-0x80,a0,d5.w), d0-d1/d4-a0/a2-a3/a6
-      moveml  (0,a0,d5.l), d0-d1/d4-a0/a2-a3/a6
-      moveml  (-0x80,a0,d5.l), d0-d1/d4-a0/a2-a3/a6
       moveml  (0,a0,a0.w), d0-d1/d4-a0/a2-a3/a6
       moveml  (-0x80,a0,a0.w), d0-d1/d4-a0/a2-a3/a6
-      moveml  (0,a0,a0.l), d0-d1/d4-a0/a2-a3/a6
-      moveml  (-0x80,a0,a0.l), d0-d1/d4-a0/a2-a3/a6
       moveml  (0,a0,d5.w), d3-a0/a2-a3/a6
       moveml  (-0x80,a0,d5.w), d3-a0/a2-a3/a6
-      moveml  (0,a0,d5.l), d3-a0/a2-a3/a6
-      moveml  (-0x80,a0,d5.l), d3-a0/a2-a3/a6
       moveml  (0,a0,a0.w), d3-a0/a2-a3/a6
       moveml  (-0x80,a0,a0.w), d3-a0/a2-a3/a6
-      moveml  (0,a0,a0.l), d3-a0/a2-a3/a6
-      moveml  (-0x80,a0,a0.l), d3-a0/a2-a3/a6
       moveml  (0,a0,d5.w), a1-a3/a6
       moveml  (-0x80,a0,d5.w), a1-a3/a6
-      moveml  (0,a0,d5.l), a1-a3/a6
-      moveml  (-0x80,a0,d5.l), a1-a3/a6
       moveml  (0,a0,a0.w), a1-a3/a6
       moveml  (-0x80,a0,a0.w), a1-a3/a6
-      moveml  (0,a0,a0.l), a1-a3/a6
-      moveml  (-0x80,a0,a0.l), a1-a3/a6
       moveml  (0,a0,d5.w), d0/a1-a3/a6
       moveml  (-0x80,a0,d5.w), d0/a1-a3/a6
-      moveml  (0,a0,d5.l), d0/a1-a3/a6
-      moveml  (-0x80,a0,d5.l), d0/a1-a3/a6
       moveml  (0,a0,a0.w), d0/a1-a3/a6
       moveml  (-0x80,a0,a0.w), d0/a1-a3/a6
-      moveml  (0,a0,a0.l), d0/a1-a3/a6
-      moveml  (-0x80,a0,a0.l), d0/a1-a3/a6
       moveml  (0,a0,d5.w), d0-d1/a1-a3/a6
       moveml  (-0x80,a0,d5.w), d0-d1/a1-a3/a6
-      moveml  (0,a0,d5.l), d0-d1/a1-a3/a6
-      moveml  (-0x80,a0,d5.l), d0-d1/a1-a3/a6
       moveml  (0,a0,a0.w), d0-d1/a1-a3/a6
       moveml  (-0x80,a0,a0.w), d0-d1/a1-a3/a6
-      moveml  (0,a0,a0.l), d0-d1/a1-a3/a6
-      moveml  (-0x80,a0,a0.l), d0-d1/a1-a3/a6
       moveml  (0,a0,d5.w), d0-d1/d3/a1-a3/a6
       moveml  (-0x80,a0,d5.w), d0-d1/d3/a1-a3/a6
-      moveml  (0,a0,d5.l), d0-d1/d3/a1-a3/a6
-      moveml  (-0x80,a0,d5.l), d0-d1/d3/a1-a3/a6
       moveml  (0,a0,a0.w), d0-d1/d3/a1-a3/a6
       moveml  (-0x80,a0,a0.w), d0-d1/d3/a1-a3/a6
-      moveml  (0,a0,a0.l), d0-d1/d3/a1-a3/a6
-      moveml  (-0x80,a0,a0.l), d0-d1/d3/a1-a3/a6
       moveml  (0,a0,d5.w), d0-d1/d3-d4/a1-a3/a6
       moveml  (-0x80,a0,d5.w), d0-d1/d3-d4/a1-a3/a6
-      moveml  (0,a0,d5.l), d0-d1/d3-d4/a1-a3/a6
-      moveml  (-0x80,a0,d5.l), d0-d1/d3-d4/a1-a3/a6
       moveml  (0,a0,a0.w), d0-d1/d3-d4/a1-a3/a6
       moveml  (-0x80,a0,a0.w), d0-d1/d3-d4/a1-a3/a6
-      moveml  (0,a0,a0.l), d0-d1/d3-d4/a1-a3/a6
-      moveml  (-0x80,a0,a0.l), d0-d1/d3-d4/a1-a3/a6
       moveml  (0,a0,d5.w), d0-d1/d3-d4/d6/a1-a3/a6
       moveml  (-0x80,a0,d5.w), d0-d1/d3-d4/d6/a1-a3/a6
-      moveml  (0,a0,d5.l), d0-d1/d3-d4/d6/a1-a3/a6
-      moveml  (-0x80,a0,d5.l), d0-d1/d3-d4/d6/a1-a3/a6
       moveml  (0,a0,a0.w), d0-d1/d3-d4/d6/a1-a3/a6
       moveml  (-0x80,a0,a0.w), d0-d1/d3-d4/d6/a1-a3/a6
-      moveml  (0,a0,a0.l), d0-d1/d3-d4/d6/a1-a3/a6
-      moveml  (-0x80,a0,a0.l), d0-d1/d3-d4/d6/a1-a3/a6
       moveml  (0,a0,d5.w), d0-d1/d3-d4/d6-d7/a1-a3/a6
       moveml  (-0x80,a0,d5.w), d0-d1/d3-d4/d6-d7/a1-a3/a6
-      moveml  (0,a0,d5.l), d0-d1/d3-d4/d6-d7/a1-a3/a6
-      moveml  (-0x80,a0,d5.l), d0-d1/d3-d4/d6-d7/a1-a3/a6
       moveml  (0,a0,a0.w), d0-d1/d3-d4/d6-d7/a1-a3/a6
       moveml  (-0x80,a0,a0.w), d0-d1/d3-d4/d6-d7/a1-a3/a6
-      moveml  (0,a0,a0.l), d0-d1/d3-d4/d6-d7/a1-a3/a6
-      moveml  (-0x80,a0,a0.l), d0-d1/d3-d4/d6-d7/a1-a3/a6
       moveml  (-0x7f,a0,d5.w), d7-a3/a6
       moveml  (0,a0,d5.l), d7-a3/a6
-      moveml  (-0x80,a0,d5.l), d7-a3/a6
-      moveml  (0,a0,d6.w), d7-a3/a6
       moveml  (0,a0,a0.w), d7-a3/a6
       moveml  (-0x80,a0,a0.w), d7-a3/a6
-      moveml  (0,a0,a0.l), d7-a3/a6
-      moveml  (-0x80,a0,a0.l), d7-a3/a6
       moveml  (-0x7e,a0,d5.w), d0/d7-a3/a6
       moveml  (0,a0,d5.l), d0/d7-a3/a6
-      moveml  (-0x80,a0,d5.l), d0/d7-a3/a6
-      moveml  (0,a0,d6.w), d0/d7-a3/a6
       moveml  (0,a0,a0.w), d0/d7-a3/a6
       moveml  (-0x80,a0,a0.w), d0/d7-a3/a6
-      moveml  (0,a0,a0.l), d0/d7-a3/a6
-      moveml  (-0x80,a0,a0.l), d0/d7-a3/a6
       moveml  (-0x7c,a0,d5.w), d0-d1/d7-a3/a6
       moveml  (0,a0,d5.l), d0-d1/d7-a3/a6
-      moveml  (-0x80,a0,d5.l), d0-d1/d7-a3/a6
-      moveml  (0,a0,d6.w), d0-d1/d7-a3/a6
       moveml  (0,a0,a0.w), d0-d1/d7-a3/a6
       moveml  (-0x80,a0,a0.w), d0-d1/d7-a3/a6
-      moveml  (0,a0,a0.l), d0-d1/d7-a3/a6
-      moveml  (-0x80,a0,a0.l), d0-d1/d7-a3/a6
       moveml  (-0x74,a0,d5.w), d0-d1/d3/d7-a3/a6
       moveml  (0,a0,d5.l), d0-d1/d3/d7-a3/a6
-      moveml  (-0x80,a0,d5.l), d0-d1/d3/d7-a3/a6
-      moveml  (0,a0,d6.w), d0-d1/d3/d7-a3/a6
       moveml  (0,a0,a0.w), d0-d1/d3/d7-a3/a6
       moveml  (-0x80,a0,a0.w), d0-d1/d3/d7-a3/a6
-      moveml  (0,a0,a0.l), d0-d1/d3/d7-a3/a6
-      moveml  (-0x80,a0,a0.l), d0-d1/d3/d7-a3/a6
       moveml  (-0x64,a0,d5.w), d0-d1/d3-d4/d7-a3/a6
       moveml  (0,a0,d5.l), d0-d1/d3-d4/d7-a3/a6
-      moveml  (-0x80,a0,d5.l), d0-d1/d3-d4/d7-a3/a6
-      moveml  (0,a0,d6.w), d0-d1/d3-d4/d7-a3/a6
       moveml  (0,a0,a0.w), d0-d1/d3-d4/d7-a3/a6
       moveml  (-0x80,a0,a0.w), d0-d1/d3-d4/d7-a3/a6
-      moveml  (0,a0,a0.l), d0-d1/d3-d4/d7-a3/a6
-      moveml  (-0x80,a0,a0.l), d0-d1/d3-d4/d7-a3/a6
       moveml  (0,a0,d5.l), a4/a6
       moveml  (-0x80,a0,d5.l), a4/a6
-      moveml  (0,a0,d6.w), a4/a6
-      moveml  (-0x80,a0,d6.w), a4/a6
       moveml  (0,a0,a0.w), a4/a6
       moveml  (-0x80,a0,a0.w), a4/a6
-      moveml  (0,a0,a0.l), a4/a6
-      moveml  (-0x80,a0,a0.l), a4/a6
       moveml  (0,a0,d5.l), d0-d1/d3-d4/d6-d7/a4/a6
       moveml  (-0x80,a0,d5.l), d0-d1/d3-d4/d6-d7/a4/a6
-      moveml  (0,a0,d6.w), d0-d1/d3-d4/d6-d7/a4/a6
-      moveml  (-0x80,a0,d6.w), d0-d1/d3-d4/d6-d7/a4/a6
       moveml  (0,a0,a0.w), d0-d1/d3-d4/d6-d7/a4/a6
       moveml  (-0x80,a0,a0.w), d0-d1/d3-d4/d6-d7/a4/a6
-      moveml  (0,a0,a0.l), d0-d1/d3-d4/d6-d7/a4/a6
-      moveml  (-0x80,a0,a0.l), d0-d1/d3-d4/d6-d7/a4/a6
       moveml  (0,a0,d5.l), a0-a1/a4/a6
       moveml  (-0x80,a0,d5.l), a0-a1/a4/a6
-      moveml  (0,a0,d6.w), a0-a1/a4/a6
-      moveml  (-0x80,a0,d6.w), a0-a1/a4/a6
       moveml  (0,a0,a0.w), a0-a1/a4/a6
       moveml  (-0x80,a0,a0.w), a0-a1/a4/a6
-      moveml  (0,a0,a0.l), a0-a1/a4/a6
-      moveml  (-0x80,a0,a0.l), a0-a1/a4/a6
       moveml  (0,a0,d5.l), d0-d1/d3-d4/a0-a1/a4/a6
       moveml  (-0x80,a0,d5.l), d0-d1/d3-d4/a0-a1/a4/a6
-      moveml  (0,a0,d6.w), d0-d1/d3-d4/a0-a1/a4/a6
-      moveml  (-0x80,a0,d6.w), d0-d1/d3-d4/a0-a1/a4/a6
       moveml  (0,a0,a0.w), d0-d1/d3-d4/a0-a1/a4/a6
       moveml  (-0x80,a0,a0.w), d0-d1/d3-d4/a0-a1/a4/a6
-      moveml  (0,a0,a0.l), d0-d1/d3-d4/a0-a1/a4/a6
-      moveml  (-0x80,a0,a0.l), d0-d1/d3-d4/a0-a1/a4/a6
       moveml  (0,a0,d5.l), d0-d1/d3-d4/d6/a0-a1/a4/a6
       moveml  (-0x80,a0,d5.l), d0-d1/d3-d4/d6/a0-a1/a4/a6
-      moveml  (0,a0,d6.w), d0-d1/d3-d4/d6/a0-a1/a4/a6
-      moveml  (-0x80,a0,d6.w), d0-d1/d3-d4/d6/a0-a1/a4/a6
       moveml  (0,a0,a0.w), d0-d1/d3-d4/d6/a0-a1/a4/a6
       moveml  (-0x80,a0,a0.w), d0-d1/d3-d4/d6/a0-a1/a4/a6
-      moveml  (0,a0,a0.l), d0-d1/d3-d4/d6/a0-a1/a4/a6
-      moveml  (-0x80,a0,a0.l), d0-d1/d3-d4/d6/a0-a1/a4/a6
       moveml  (0,a0,d5.l), d0-d1/d3-d4/d6-d7/a1-a2/a4/a6
       moveml  (-0x80,a0,d5.l), d0-d1/d3-d4/d6-d7/a1-a2/a4/a6
-      moveml  (0,a0,d6.w), d0-d1/d3-d4/d6-d7/a1-a2/a4/a6
-      moveml  (-0x80,a0,d6.w), d0-d1/d3-d4/d6-d7/a1-a2/a4/a6
       moveml  (0,a0,a0.w), d0-d1/d3-d4/d6-d7/a1-a2/a4/a6
       moveml  (-0x80,a0,a0.w), d0-d1/d3-d4/d6-d7/a1-a2/a4/a6
-      moveml  (0,a0,a0.l), d0-d1/d3-d4/d6-d7/a1-a2/a4/a6
-      moveml  (-0x80,a0,a0.l), d0-d1/d3-d4/d6-d7/a1-a2/a4/a6
       moveml  (0,a0,d6.w), a0-a1/a3-a4/a6
       moveml  (-0x80,a0,d6.w), a0-a1/a3-a4/a6
-      moveml  (0,a0,d6.l), a0-a1/a3-a4/a6
-      moveml  (-0x80,a0,d6.l), a0-a1/a3-a4/a6
       moveml  (0,a0,a0.w), a0-a1/a3-a4/a6
       moveml  (-0x80,a0,a0.w), a0-a1/a3-a4/a6
-      moveml  (0,a0,a0.l), a0-a1/a3-a4/a6
-      moveml  (-0x80,a0,a0.l), a0-a1/a3-a4/a6
       moveml  (0,a0,d6.w), d0/a0-a1/a3-a4/a6
       moveml  (-0x80,a0,d6.w), d0/a0-a1/a3-a4/a6
-      moveml  (0,a0,d6.l), d0/a0-a1/a3-a4/a6
-      moveml  (-0x80,a0,d6.l), d0/a0-a1/a3-a4/a6
       moveml  (0,a0,a0.w), d0/a0-a1/a3-a4/a6
       moveml  (-0x80,a0,a0.w), d0/a0-a1/a3-a4/a6
-      moveml  (0,a0,a0.l), d0/a0-a1/a3-a4/a6
-      moveml  (-0x80,a0,a0.l), d0/a0-a1/a3-a4/a6
       moveml  (0,a0,d6.w), d0-d1/a0-a1/a3-a4/a6
       moveml  (-0x80,a0,d6.w), d0-d1/a0-a1/a3-a4/a6
-      moveml  (0,a0,d6.l), d0-d1/a0-a1/a3-a4/a6
-      moveml  (-0x80,a0,d6.l), d0-d1/a0-a1/a3-a4/a6
       moveml  (0,a0,a0.w), d0-d1/a0-a1/a3-a4/a6
       moveml  (-0x80,a0,a0.w), d0-d1/a0-a1/a3-a4/a6
-      moveml  (0,a0,a0.l), d0-d1/a0-a1/a3-a4/a6
-      moveml  (-0x80,a0,a0.l), d0-d1/a0-a1/a3-a4/a6
       moveml  (0,a0,d6.w), d0-d1/d3/a0-a1/a3-a4/a6
       moveml  (-0x80,a0,d6.w), d0-d1/d3/a0-a1/a3-a4/a6
-      moveml  (0,a0,d6.l), d0-d1/d3/a0-a1/a3-a4/a6
-      moveml  (-0x80,a0,d6.l), d0-d1/d3/a0-a1/a3-a4/a6
       moveml  (0,a0,a0.w), d0-d1/d3/a0-a1/a3-a4/a6
       moveml  (-0x80,a0,a0.w), d0-d1/d3/a0-a1/a3-a4/a6
-      moveml  (0,a0,a0.l), d0-d1/d3/a0-a1/a3-a4/a6
-      moveml  (-0x80,a0,a0.l), d0-d1/d3/a0-a1/a3-a4/a6
       moveml  (0,a0,d6.w), d0-d1/d3-d4/a0-a1/a3-a4/a6
       moveml  (-0x80,a0,d6.w), d0-d1/d3-d4/a0-a1/a3-a4/a6
-      moveml  (0,a0,d6.l), d0-d1/d3-d4/a0-a1/a3-a4/a6
-      moveml  (-0x80,a0,d6.l), d0-d1/d3-d4/a0-a1/a3-a4/a6
       moveml  (0,a0,a0.w), d0-d1/d3-d4/a0-a1/a3-a4/a6
       moveml  (-0x80,a0,a0.w), d0-d1/d3-d4/a0-a1/a3-a4/a6
-      moveml  (0,a0,a0.l), d0-d1/d3-d4/a0-a1/a3-a4/a6
-      moveml  (-0x80,a0,a0.l), d0-d1/d3-d4/a0-a1/a3-a4/a6
       moveml  (0,a0,d6.w), d0-d1/d3-d4/d6/a0-a1/a3-a4/a6
       moveml  (-0x80,a0,d6.w), d0-d1/d3-d4/d6/a0-a1/a3-a4/a6
-      moveml  (0,a0,d6.l), d0-d1/d3-d4/d6/a0-a1/a3-a4/a6
-      moveml  (-0x80,a0,d6.l), d0-d1/d3-d4/d6/a0-a1/a3-a4/a6
       moveml  (0,a0,a0.w), d0-d1/d3-d4/d6/a0-a1/a3-a4/a6
       moveml  (-0x80,a0,a0.w), d0-d1/d3-d4/d6/a0-a1/a3-a4/a6
-      moveml  (0,a0,a0.l), d0-d1/d3-d4/d6/a0-a1/a3-a4/a6
-      moveml  (-0x80,a0,a0.l), d0-d1/d3-d4/d6/a0-a1/a3-a4/a6
       moveml  (-0x7f,a0,a0.w), d7-a6
       moveml  (0,a0,a0.l), d7-a6
-      moveml  (-0x80,a0,a0.l), d7-a6
-      moveml  (0,a0,a1.w), d7-a6
       moveml  (0,a0,d0.w), d7-a6
       moveml  (-0x80,a0,d0.w), d7-a6
-      moveml  (0,a0,d0.l), d7-a6
-      moveml  (-0x80,a0,d0.l), d7-a6
       moveml  (-0x7e,a0,a0.w), d0/d7-a6
       moveml  (0,a0,a0.l), d0/d7-a6
-      moveml  (-0x80,a0,a0.l), d0/d7-a6
-      moveml  (0,a0,a1.w), d0/d7-a6
       moveml  (0,a0,d0.w), d0/d7-a6
       moveml  (-0x80,a0,d0.w), d0/d7-a6
-      moveml  (0,a0,d0.l), d0/d7-a6
-      moveml  (-0x80,a0,d0.l), d0/d7-a6
       moveml  (-0x7c,a0,a0.w), d0-d1/d7-a6
       moveml  (0,a0,a0.l), d0-d1/d7-a6
-      moveml  (-0x80,a0,a0.l), d0-d1/d7-a6
-      moveml  (0,a0,a1.w), d0-d1/d7-a6
       moveml  (0,a0,d0.w), d0-d1/d7-a6
       moveml  (-0x80,a0,d0.w), d0-d1/d7-a6
-      moveml  (0,a0,d0.l), d0-d1/d7-a6
-      moveml  (-0x80,a0,d0.l), d0-d1/d7-a6
       moveml  (-0x74,a0,a0.w), d0-d1/d3/d7-a6
       moveml  (0,a0,a0.l), d0-d1/d3/d7-a6
-      moveml  (-0x80,a0,a0.l), d0-d1/d3/d7-a6
-      moveml  (0,a0,a1.w), d0-d1/d3/d7-a6
       moveml  (0,a0,d0.w), d0-d1/d3/d7-a6
       moveml  (-0x80,a0,d0.w), d0-d1/d3/d7-a6
-      moveml  (0,a0,d0.l), d0-d1/d3/d7-a6
-      moveml  (-0x80,a0,d0.l), d0-d1/d3/d7-a6
       moveml  (-0x64,a0,a0.w), d0-d1/d3-d4/d7-a6
       moveml  (0,a0,a0.l), d0-d1/d3-d4/d7-a6
-      moveml  (-0x80,a0,a0.l), d0-d1/d3-d4/d7-a6
-      moveml  (0,a0,a1.w), d0-d1/d3-d4/d7-a6
       moveml  (0,a0,d0.w), d0-d1/d3-d4/d7-a6
       moveml  (-0x80,a0,d0.w), d0-d1/d3-d4/d7-a6
-      moveml  (0,a0,d0.l), d0-d1/d3-d4/d7-a6
-      moveml  (-0x80,a0,d0.l), d0-d1/d3-d4/d7-a6
       moveml  (0,a0,a0.l), a7
       moveml  (-0x80,a0,a0.l), a7
-      moveml  (0,a0,a1.w), a7
-      moveml  (-0x80,a0,a1.w), a7
       moveml  (0,a0,d0.w), a7
       moveml  (-0x80,a0,d0.w), a7
-      moveml  (0,a0,d0.l), a7
-      moveml  (-0x80,a0,d0.l), a7
       moveml  (0,a0,a0.l), d0-d1/d3-d4/d6-d7/a7
       moveml  (-0x80,a0,a0.l), d0-d1/d3-d4/d6-d7/a7
-      moveml  (0,a0,a1.w), d0-d1/d3-d4/d6-d7/a7
-      moveml  (-0x80,a0,a1.w), d0-d1/d3-d4/d6-d7/a7
       moveml  (0,a0,d0.w), d0-d1/d3-d4/d6-d7/a7
       moveml  (-0x80,a0,d0.w), d0-d1/d3-d4/d6-d7/a7
-      moveml  (0,a0,d0.l), d0-d1/d3-d4/d6-d7/a7
-      moveml  (-0x80,a0,d0.l), d0-d1/d3-d4/d6-d7/a7
       moveml  (0,a0,a3.l), d0-d1/d3-d4/d6-d7/a1-a2/a4-a5/a7
       moveml  (-0x80,a0,a3.l), d0-d1/d3-d4/d6-d7/a1-a2/a4-a5/a7
-      moveml  (0,a0,a4.w), d0-d1/d3-d4/d6-d7/a1-a2/a4-a5/a7
-      moveml  (-0x80,a0,a4.w), d0-d1/d3-d4/d6-d7/a1-a2/a4-a5/a7
       moveml  (0,a0,d0.w), d0-d1/d3-d4/d6-d7/a1-a2/a4-a5/a7
       moveml  (-0x80,a0,d0.w), d0-d1/d3-d4/d6-d7/a1-a2/a4-a5/a7
-      moveml  (0,a0,d0.l), d0-d1/d3-d4/d6-d7/a1-a2/a4-a5/a7
-      moveml  (-0x80,a0,d0.l), d0-d1/d3-d4/d6-d7/a1-a2/a4-a5/a7
-      moveml  (0,a0,a6.w), a0-a1/a3-a4/a6-a7
-      moveml  (-0x80,a0,a6.w), a0-a1/a3-a4/a6-a7
-      moveml  (0,a0,a6.l), a0-a1/a3-a4/a6-a7
-      moveml  (-0x80,a0,a6.l), a0-a1/a3-a4/a6-a7
-      moveml  (0,a0,d0.w), a0-a1/a3-a4/a6-a7
-      moveml  (-0x80,a0,d0.w), a0-a1/a3-a4/a6-a7
-      moveml  (0,a0,d0.l), a0-a1/a3-a4/a6-a7
-      moveml  (-0x80,a0,d0.l), a0-a1/a3-a4/a6-a7
-      moveml  (0,a0,a6.w), d0/a0-a1/a3-a4/a6-a7
-      moveml  (-0x80,a0,a6.w), d0/a0-a1/a3-a4/a6-a7
-      moveml  (0,a0,a6.l), d0/a0-a1/a3-a4/a6-a7
-      moveml  (-0x80,a0,a6.l), d0/a0-a1/a3-a4/a6-a7
-      moveml  (0,a0,d0.w), d0/a0-a1/a3-a4/a6-a7
-      moveml  (-0x80,a0,d0.w), d0/a0-a1/a3-a4/a6-a7
-      moveml  (0,a0,d0.l), d0/a0-a1/a3-a4/a6-a7
-      moveml  (-0x80,a0,d0.l), d0/a0-a1/a3-a4/a6-a7
-      moveml  (0,a0,a6.w), d0-d1/a0-a1/a3-a4/a6-a7
-      moveml  (-0x80,a0,a6.w), d0-d1/a0-a1/a3-a4/a6-a7
-      moveml  (0,a0,a6.l), d0-d1/a0-a1/a3-a4/a6-a7
-      moveml  (-0x80,a0,a6.l), d0-d1/a0-a1/a3-a4/a6-a7
-      moveml  (0,a0,d0.w), d0-d1/a0-a1/a3-a4/a6-a7
-      moveml  (-0x80,a0,d0.w), d0-d1/a0-a1/a3-a4/a6-a7
-      moveml  (0,a0,d0.l), d0-d1/a0-a1/a3-a4/a6-a7
-      moveml  (-0x80,a0,d0.l), d0-d1/a0-a1/a3-a4/a6-a7
-      moveml  (0,a0,a6.w), d0-d1/d3/a0-a1/a3-a4/a6-a7
-      moveml  (-0x80,a0,a6.w), d0-d1/d3/a0-a1/a3-a4/a6-a7
-      moveml  (0,a0,a6.l), d0-d1/d3/a0-a1/a3-a4/a6-a7
-      moveml  (-0x80,a0,a6.l), d0-d1/d3/a0-a1/a3-a4/a6-a7
-      moveml  (0,a0,d0.w), d0-d1/d3/a0-a1/a3-a4/a6-a7
-      moveml  (-0x80,a0,d0.w), d0-d1/d3/a0-a1/a3-a4/a6-a7
-      moveml  (0,a0,d0.l), d0-d1/d3/a0-a1/a3-a4/a6-a7
-      moveml  (-0x80,a0,d0.l), d0-d1/d3/a0-a1/a3-a4/a6-a7
-      moveml  (0,a0,a6.w), d0-d1/d3-d4/a0-a1/a3-a4/a6-a7
-      moveml  (-0x80,a0,a6.w), d0-d1/d3-d4/a0-a1/a3-a4/a6-a7
-      moveml  (0,a0,a6.l), d0-d1/d3-d4/a0-a1/a3-a4/a6-a7
-      moveml  (-0x80,a0,a6.l), d0-d1/d3-d4/a0-a1/a3-a4/a6-a7
-      moveml  (0,a0,d0.w), d0-d1/d3-d4/a0-a1/a3-a4/a6-a7
-      moveml  (-0x80,a0,d0.w), d0-d1/d3-d4/a0-a1/a3-a4/a6-a7
-      moveml  (0,a0,d0.l), d0-d1/d3-d4/a0-a1/a3-a4/a6-a7
-      moveml  (-0x80,a0,d0.l), d0-d1/d3-d4/a0-a1/a3-a4/a6-a7
+      moveml  (0,a0,a6.w), d4-d5/a0-a1/a3-a4/a6-a7
+      moveml  (-0x80,a0,a6.w), d4-d5/a0-a1/a3-a4/a6-a7
+      moveml  (0,a0,d0.w), d4-d5/a0-a1/a3-a4/a6-a7
+      moveml  (-0x80,a0,d0.w), d4-d5/a0-a1/a3-a4/a6-a7
+      moveml  (0,a0,a6.w), d0/d4-d5/a0-a1/a3-a4/a6-a7
+      moveml  (-0x80,a0,a6.w), d0/d4-d5/a0-a1/a3-a4/a6-a7
+      moveml  (0,a0,d0.w), d0/d4-d5/a0-a1/a3-a4/a6-a7
+      moveml  (-0x80,a0,d0.w), d0/d4-d5/a0-a1/a3-a4/a6-a7
+      moveml  (0,a0,a6.w), d0-d1/d4-d5/a0-a1/a3-a4/a6-a7
+      moveml  (-0x80,a0,a6.w), d0-d1/d4-d5/a0-a1/a3-a4/a6-a7
+      moveml  (0,a0,d0.w), d0-d1/d4-d5/a0-a1/a3-a4/a6-a7
+      moveml  (-0x80,a0,d0.w), d0-d1/d4-d5/a0-a1/a3-a4/a6-a7
+      moveml  (0,a0,a6.w), d6/a0-a1/a3-a4/a6-a7
+      moveml  (-0x80,a0,a6.w), d6/a0-a1/a3-a4/a6-a7
+      moveml  (0,a0,d0.w), d6/a0-a1/a3-a4/a6-a7
+      moveml  (-0x80,a0,d0.w), d6/a0-a1/a3-a4/a6-a7
       moveml  (0,a0,a6.w), d0-d1/d3-d4/d6/a0-a1/a3-a4/a6-a7
       moveml  (-0x80,a0,a6.w), d0-d1/d3-d4/d6/a0-a1/a3-a4/a6-a7
-      moveml  (0,a0,a6.l), d0-d1/d3-d4/d6/a0-a1/a3-a4/a6-a7
-      moveml  (-0x80,a0,a6.l), d0-d1/d3-d4/d6/a0-a1/a3-a4/a6-a7
       moveml  (0,a0,d0.w), d0-d1/d3-d4/d6/a0-a1/a3-a4/a6-a7
       moveml  (-0x80,a0,d0.w), d0-d1/d3-d4/d6/a0-a1/a3-a4/a6-a7
-      moveml  (0,a0,d0.l), d0-d1/d3-d4/d6/a0-a1/a3-a4/a6-a7
-      moveml  (-0x80,a0,d0.l), d0-d1/d3-d4/d6/a0-a1/a3-a4/a6-a7
+      moveml  (0,a0,d0.l), d0
+      moveml  (-0x80,a0,d0.l), d0
+      moveml  (0,a0,a0.w), d0
+      moveml  (-0x80,a0,a0.w), d0
+      moveml  (0,a0,d0.l), d0-d1
+      moveml  (-0x80,a0,d0.l), d0-d1
+      moveml  (0,a0,a0.w), d0-d1
+      moveml  (-0x80,a0,a0.w), d0-d1
+      moveml  (0,a0,d0.l), d0-d1/d3
+      moveml  (-0x80,a0,d0.l), d0-d1/d3
+      moveml  (0,a0,a0.w), d0-d1/d3
+      moveml  (-0x80,a0,a0.w), d0-d1/d3
       moveml  (0,a0,d0.l), d0-d1/d3-d4
       moveml  (-0x80,a0,d0.l), d0-d1/d3-d4
-      moveml  (0,a0,d1.w), d0-d1/d3-d4
-      moveml  (-0x80,a0,d1.w), d0-d1/d3-d4
       moveml  (0,a0,a0.w), d0-d1/d3-d4
       moveml  (-0x80,a0,a0.w), d0-d1/d3-d4
-      moveml  (0,a0,a0.l), d0-d1/d3-d4
-      moveml  (-0x80,a0,a0.l), d0-d1/d3-d4
-      moveml  (0,a0,d0.l), d2-d4
-      moveml  (-0x80,a0,d0.l), d2-d4
-      moveml  (0,a0,d1.w), d2-d4
-      moveml  (-0x80,a0,d1.w), d2-d4
-      moveml  (0,a0,a0.w), d2-d4
-      moveml  (-0x80,a0,a0.w), d2-d4
-      moveml  (0,a0,a0.l), d2-d4
-      moveml  (-0x80,a0,a0.l), d2-d4
-      moveml  (0,a0,d0.l), d0/d2-d4
-      moveml  (-0x80,a0,d0.l), d0/d2-d4
-      moveml  (0,a0,d1.w), d0/d2-d4
-      moveml  (-0x80,a0,d1.w), d0/d2-d4
-      moveml  (0,a0,a0.w), d0/d2-d4
-      moveml  (-0x80,a0,a0.w), d0/d2-d4
-      moveml  (0,a0,a0.l), d0/d2-d4
-      moveml  (-0x80,a0,a0.l), d0/d2-d4
-      moveml  (0,a0,d0.l), d5
-      moveml  (-0x80,a0,d0.l), d5
-      moveml  (0,a0,d1.w), d5
-      moveml  (-0x80,a0,d1.w), d5
-      moveml  (0,a0,a0.w), d5
-      moveml  (-0x80,a0,a0.w), d5
-      moveml  (0,a0,a0.l), d5
-      moveml  (-0x80,a0,a0.l), d5
       moveml  (0,a0,d0.l), d0-d1/d3-d4/d6
       moveml  (-0x80,a0,d0.l), d0-d1/d3-d4/d6
-      moveml  (0,a0,d1.w), d0-d1/d3-d4/d6
-      moveml  (-0x80,a0,d1.w), d0-d1/d3-d4/d6
       moveml  (0,a0,a0.w), d0-d1/d3-d4/d6
       moveml  (-0x80,a0,a0.w), d0-d1/d3-d4/d6
-      moveml  (0,a0,a0.l), d0-d1/d3-d4/d6
-      moveml  (-0x80,a0,a0.l), d0-d1/d3-d4/d6
       moveml  (0,a0,d0.l), d0-d1/d3-d4/d6-d7
       moveml  (-0x80,a0,d0.l), d0-d1/d3-d4/d6-d7
-      moveml  (0,a0,d1.w), d0-d1/d3-d4/d6-d7
-      moveml  (-0x80,a0,d1.w), d0-d1/d3-d4/d6-d7
       moveml  (0,a0,a0.w), d0-d1/d3-d4/d6-d7
       moveml  (-0x80,a0,a0.w), d0-d1/d3-d4/d6-d7
-      moveml  (0,a0,a0.l), d0-d1/d3-d4/d6-d7
-      moveml  (-0x80,a0,a0.l), d0-d1/d3-d4/d6-d7
       moveml  (0x4efa).w, d0/d3-a0/a2-a3/a6
       moveml  (0x4efc).w, d0-d1/d3-a0/a2-a3/a6
       moveml  (0x4efe).w, d2-a0/a2-a3/a6
@@ -6123,543 +4029,279 @@
       moveml  (.+4,pc,d5.w), d2-a0/a2-a3/a6
       moveml  (.-124,pc,d5.w), d2-a0/a2-a3/a6
       moveml  (.,pc,d5.w), d2-a0/a2-a3/a6
-      moveml  (.+4,pc,d5.l), d2-a0/a2-a3/a6
-      moveml  (.-124,pc,d5.l), d2-a0/a2-a3/a6
-      moveml  (.,pc,d5.l), d2-a0/a2-a3/a6
       moveml  (.+4,pc,a0.w), d2-a0/a2-a3/a6
       moveml  (.-124,pc,a0.w), d2-a0/a2-a3/a6
       moveml  (.,pc,a0.w), d2-a0/a2-a3/a6
-      moveml  (.+4,pc,a0.l), d2-a0/a2-a3/a6
-      moveml  (.-124,pc,a0.l), d2-a0/a2-a3/a6
-      moveml  (.,pc,a0.l), d2-a0/a2-a3/a6
       moveml  (.+4,pc,d5.w), d0/d2-a0/a2-a3/a6
       moveml  (.-124,pc,d5.w), d0/d2-a0/a2-a3/a6
       moveml  (.,pc,d5.w), d0/d2-a0/a2-a3/a6
-      moveml  (.+4,pc,d5.l), d0/d2-a0/a2-a3/a6
-      moveml  (.-124,pc,d5.l), d0/d2-a0/a2-a3/a6
-      moveml  (.,pc,d5.l), d0/d2-a0/a2-a3/a6
       moveml  (.+4,pc,a0.w), d0/d2-a0/a2-a3/a6
       moveml  (.-124,pc,a0.w), d0/d2-a0/a2-a3/a6
       moveml  (.,pc,a0.w), d0/d2-a0/a2-a3/a6
-      moveml  (.+4,pc,a0.l), d0/d2-a0/a2-a3/a6
-      moveml  (.-124,pc,a0.l), d0/d2-a0/a2-a3/a6
-      moveml  (.,pc,a0.l), d0/d2-a0/a2-a3/a6
       moveml  (.+4,pc,d5.w), a1-a3/a6
       moveml  (.-124,pc,d5.w), a1-a3/a6
       moveml  (.,pc,d5.w), a1-a3/a6
-      moveml  (.+4,pc,d5.l), a1-a3/a6
-      moveml  (.-124,pc,d5.l), a1-a3/a6
-      moveml  (.,pc,d5.l), a1-a3/a6
       moveml  (.+4,pc,a0.w), a1-a3/a6
       moveml  (.-124,pc,a0.w), a1-a3/a6
       moveml  (.,pc,a0.w), a1-a3/a6
-      moveml  (.+4,pc,a0.l), a1-a3/a6
-      moveml  (.-124,pc,a0.l), a1-a3/a6
-      moveml  (.,pc,a0.l), a1-a3/a6
       moveml  (.+4,pc,d5.w), d0/a1-a3/a6
       moveml  (.-124,pc,d5.w), d0/a1-a3/a6
       moveml  (.,pc,d5.w), d0/a1-a3/a6
-      moveml  (.+4,pc,d5.l), d0/a1-a3/a6
-      moveml  (.-124,pc,d5.l), d0/a1-a3/a6
-      moveml  (.,pc,d5.l), d0/a1-a3/a6
       moveml  (.+4,pc,a0.w), d0/a1-a3/a6
       moveml  (.-124,pc,a0.w), d0/a1-a3/a6
       moveml  (.,pc,a0.w), d0/a1-a3/a6
-      moveml  (.+4,pc,a0.l), d0/a1-a3/a6
-      moveml  (.-124,pc,a0.l), d0/a1-a3/a6
-      moveml  (.,pc,a0.l), d0/a1-a3/a6
       moveml  (.+4,pc,d5.w), d0-d1/a1-a3/a6
       moveml  (.-124,pc,d5.w), d0-d1/a1-a3/a6
       moveml  (.,pc,d5.w), d0-d1/a1-a3/a6
-      moveml  (.+4,pc,d5.l), d0-d1/a1-a3/a6
-      moveml  (.-124,pc,d5.l), d0-d1/a1-a3/a6
-      moveml  (.,pc,d5.l), d0-d1/a1-a3/a6
       moveml  (.+4,pc,a0.w), d0-d1/a1-a3/a6
       moveml  (.-124,pc,a0.w), d0-d1/a1-a3/a6
       moveml  (.,pc,a0.w), d0-d1/a1-a3/a6
-      moveml  (.+4,pc,a0.l), d0-d1/a1-a3/a6
-      moveml  (.-124,pc,a0.l), d0-d1/a1-a3/a6
-      moveml  (.,pc,a0.l), d0-d1/a1-a3/a6
       moveml  (.+4,pc,d5.w), d0-d1/d3/a1-a3/a6
       moveml  (.-124,pc,d5.w), d0-d1/d3/a1-a3/a6
       moveml  (.,pc,d5.w), d0-d1/d3/a1-a3/a6
-      moveml  (.+4,pc,d5.l), d0-d1/d3/a1-a3/a6
-      moveml  (.-124,pc,d5.l), d0-d1/d3/a1-a3/a6
-      moveml  (.,pc,d5.l), d0-d1/d3/a1-a3/a6
       moveml  (.+4,pc,a0.w), d0-d1/d3/a1-a3/a6
       moveml  (.-124,pc,a0.w), d0-d1/d3/a1-a3/a6
       moveml  (.,pc,a0.w), d0-d1/d3/a1-a3/a6
-      moveml  (.+4,pc,a0.l), d0-d1/d3/a1-a3/a6
-      moveml  (.-124,pc,a0.l), d0-d1/d3/a1-a3/a6
-      moveml  (.,pc,a0.l), d0-d1/d3/a1-a3/a6
       moveml  (.+4,pc,d5.w), d0-d1/d3-d4/a1-a3/a6
       moveml  (.-124,pc,d5.w), d0-d1/d3-d4/a1-a3/a6
       moveml  (.,pc,d5.w), d0-d1/d3-d4/a1-a3/a6
-      moveml  (.+4,pc,d5.l), d0-d1/d3-d4/a1-a3/a6
-      moveml  (.-124,pc,d5.l), d0-d1/d3-d4/a1-a3/a6
-      moveml  (.,pc,d5.l), d0-d1/d3-d4/a1-a3/a6
       moveml  (.+4,pc,a0.w), d0-d1/d3-d4/a1-a3/a6
       moveml  (.-124,pc,a0.w), d0-d1/d3-d4/a1-a3/a6
       moveml  (.,pc,a0.w), d0-d1/d3-d4/a1-a3/a6
-      moveml  (.+4,pc,a0.l), d0-d1/d3-d4/a1-a3/a6
-      moveml  (.-124,pc,a0.l), d0-d1/d3-d4/a1-a3/a6
-      moveml  (.,pc,a0.l), d0-d1/d3-d4/a1-a3/a6
       moveml  (.+4,pc,d5.w), d0-d1/d3-d4/d6/a1-a3/a6
       moveml  (.-124,pc,d5.w), d0-d1/d3-d4/d6/a1-a3/a6
       moveml  (.,pc,d5.w), d0-d1/d3-d4/d6/a1-a3/a6
-      moveml  (.+4,pc,d5.l), d0-d1/d3-d4/d6/a1-a3/a6
-      moveml  (.-124,pc,d5.l), d0-d1/d3-d4/d6/a1-a3/a6
-      moveml  (.,pc,d5.l), d0-d1/d3-d4/d6/a1-a3/a6
       moveml  (.+4,pc,a0.w), d0-d1/d3-d4/d6/a1-a3/a6
       moveml  (.-124,pc,a0.w), d0-d1/d3-d4/d6/a1-a3/a6
       moveml  (.,pc,a0.w), d0-d1/d3-d4/d6/a1-a3/a6
-      moveml  (.+4,pc,a0.l), d0-d1/d3-d4/d6/a1-a3/a6
-      moveml  (.-124,pc,a0.l), d0-d1/d3-d4/d6/a1-a3/a6
-      moveml  (.,pc,a0.l), d0-d1/d3-d4/d6/a1-a3/a6
       moveml  (.+4,pc,d5.w), d0-d1/d3-d4/d6-d7/a1-a3/a6
       moveml  (.-124,pc,d5.w), d0-d1/d3-d4/d6-d7/a1-a3/a6
       moveml  (.,pc,d5.w), d0-d1/d3-d4/d6-d7/a1-a3/a6
-      moveml  (.+4,pc,d5.l), d0-d1/d3-d4/d6-d7/a1-a3/a6
-      moveml  (.-124,pc,d5.l), d0-d1/d3-d4/d6-d7/a1-a3/a6
-      moveml  (.,pc,d5.l), d0-d1/d3-d4/d6-d7/a1-a3/a6
       moveml  (.+4,pc,a0.w), d0-d1/d3-d4/d6-d7/a1-a3/a6
       moveml  (.-124,pc,a0.w), d0-d1/d3-d4/d6-d7/a1-a3/a6
       moveml  (.,pc,a0.w), d0-d1/d3-d4/d6-d7/a1-a3/a6
-      moveml  (.+4,pc,a0.l), d0-d1/d3-d4/d6-d7/a1-a3/a6
-      moveml  (.-124,pc,a0.l), d0-d1/d3-d4/d6-d7/a1-a3/a6
-      moveml  (.,pc,a0.l), d0-d1/d3-d4/d6-d7/a1-a3/a6
       moveml  (.-123,pc,d5.w), d7-a3/a6
       moveml  (.,pc,d5.w), d7-a3/a6
       moveml  (.+1,pc,d5.w), d7-a3/a6
-      moveml  (.+4,pc,d5.l), d7-a3/a6
-      moveml  (.-124,pc,d5.l), d7-a3/a6
-      moveml  (.,pc,d5.l), d7-a3/a6
       moveml  (.+4,pc,a0.w), d7-a3/a6
       moveml  (.-124,pc,a0.w), d7-a3/a6
       moveml  (.,pc,a0.w), d7-a3/a6
-      moveml  (.+4,pc,a0.l), d7-a3/a6
-      moveml  (.-124,pc,a0.l), d7-a3/a6
-      moveml  (.,pc,a0.l), d7-a3/a6
       moveml  (.-122,pc,d5.w), d0/d7-a3/a6
       moveml  (.,pc,d5.w), d0/d7-a3/a6
       moveml  (.+1,pc,d5.w), d0/d7-a3/a6
-      moveml  (.+4,pc,d5.l), d0/d7-a3/a6
-      moveml  (.-124,pc,d5.l), d0/d7-a3/a6
-      moveml  (.,pc,d5.l), d0/d7-a3/a6
       moveml  (.+4,pc,a0.w), d0/d7-a3/a6
       moveml  (.-124,pc,a0.w), d0/d7-a3/a6
       moveml  (.,pc,a0.w), d0/d7-a3/a6
-      moveml  (.+4,pc,a0.l), d0/d7-a3/a6
-      moveml  (.-124,pc,a0.l), d0/d7-a3/a6
-      moveml  (.,pc,a0.l), d0/d7-a3/a6
       moveml  (.-120,pc,d5.w), d0-d1/d7-a3/a6
       moveml  (.,pc,d5.w), d0-d1/d7-a3/a6
       moveml  (.+1,pc,d5.w), d0-d1/d7-a3/a6
-      moveml  (.+4,pc,d5.l), d0-d1/d7-a3/a6
-      moveml  (.-124,pc,d5.l), d0-d1/d7-a3/a6
-      moveml  (.,pc,d5.l), d0-d1/d7-a3/a6
       moveml  (.+4,pc,a0.w), d0-d1/d7-a3/a6
       moveml  (.-124,pc,a0.w), d0-d1/d7-a3/a6
       moveml  (.,pc,a0.w), d0-d1/d7-a3/a6
-      moveml  (.+4,pc,a0.l), d0-d1/d7-a3/a6
-      moveml  (.-124,pc,a0.l), d0-d1/d7-a3/a6
-      moveml  (.,pc,a0.l), d0-d1/d7-a3/a6
       moveml  (.-112,pc,d5.w), d0-d1/d3/d7-a3/a6
       moveml  (.,pc,d5.w), d0-d1/d3/d7-a3/a6
       moveml  (.+1,pc,d5.w), d0-d1/d3/d7-a3/a6
-      moveml  (.+4,pc,d5.l), d0-d1/d3/d7-a3/a6
-      moveml  (.-124,pc,d5.l), d0-d1/d3/d7-a3/a6
-      moveml  (.,pc,d5.l), d0-d1/d3/d7-a3/a6
       moveml  (.+4,pc,a0.w), d0-d1/d3/d7-a3/a6
       moveml  (.-124,pc,a0.w), d0-d1/d3/d7-a3/a6
       moveml  (.,pc,a0.w), d0-d1/d3/d7-a3/a6
-      moveml  (.+4,pc,a0.l), d0-d1/d3/d7-a3/a6
-      moveml  (.-124,pc,a0.l), d0-d1/d3/d7-a3/a6
-      moveml  (.,pc,a0.l), d0-d1/d3/d7-a3/a6
       moveml  (.-96,pc,d5.w), d0-d1/d3-d4/d7-a3/a6
       moveml  (.,pc,d5.w), d0-d1/d3-d4/d7-a3/a6
       moveml  (.+1,pc,d5.w), d0-d1/d3-d4/d7-a3/a6
-      moveml  (.+4,pc,d5.l), d0-d1/d3-d4/d7-a3/a6
-      moveml  (.-124,pc,d5.l), d0-d1/d3-d4/d7-a3/a6
-      moveml  (.,pc,d5.l), d0-d1/d3-d4/d7-a3/a6
       moveml  (.+4,pc,a0.w), d0-d1/d3-d4/d7-a3/a6
       moveml  (.-124,pc,a0.w), d0-d1/d3-d4/d7-a3/a6
       moveml  (.,pc,a0.w), d0-d1/d3-d4/d7-a3/a6
-      moveml  (.+4,pc,a0.l), d0-d1/d3-d4/d7-a3/a6
-      moveml  (.-124,pc,a0.l), d0-d1/d3-d4/d7-a3/a6
-      moveml  (.,pc,a0.l), d0-d1/d3-d4/d7-a3/a6
       moveml  (.+4,pc,d5.l), a4/a6
       moveml  (.-124,pc,d5.l), a4/a6
       moveml  (.,pc,d5.l), a4/a6
-      moveml  (.+4,pc,d6.w), a4/a6
-      moveml  (.-124,pc,d6.w), a4/a6
-      moveml  (.,pc,d6.w), a4/a6
       moveml  (.+4,pc,a0.w), a4/a6
       moveml  (.-124,pc,a0.w), a4/a6
       moveml  (.,pc,a0.w), a4/a6
-      moveml  (.+4,pc,a0.l), a4/a6
-      moveml  (.-124,pc,a0.l), a4/a6
-      moveml  (.,pc,a0.l), a4/a6
       moveml  (.+4,pc,d5.l), d0-d1/d3-d4/d6-d7/a4/a6
       moveml  (.-124,pc,d5.l), d0-d1/d3-d4/d6-d7/a4/a6
       moveml  (.,pc,d5.l), d0-d1/d3-d4/d6-d7/a4/a6
-      moveml  (.+4,pc,d6.w), d0-d1/d3-d4/d6-d7/a4/a6
-      moveml  (.-124,pc,d6.w), d0-d1/d3-d4/d6-d7/a4/a6
-      moveml  (.,pc,d6.w), d0-d1/d3-d4/d6-d7/a4/a6
       moveml  (.+4,pc,a0.w), d0-d1/d3-d4/d6-d7/a4/a6
       moveml  (.-124,pc,a0.w), d0-d1/d3-d4/d6-d7/a4/a6
       moveml  (.,pc,a0.w), d0-d1/d3-d4/d6-d7/a4/a6
-      moveml  (.+4,pc,a0.l), d0-d1/d3-d4/d6-d7/a4/a6
-      moveml  (.-124,pc,a0.l), d0-d1/d3-d4/d6-d7/a4/a6
-      moveml  (.,pc,a0.l), d0-d1/d3-d4/d6-d7/a4/a6
       moveml  (.+4,pc,d5.l), a0-a1/a4/a6
       moveml  (.-124,pc,d5.l), a0-a1/a4/a6
       moveml  (.,pc,d5.l), a0-a1/a4/a6
-      moveml  (.+4,pc,d6.w), a0-a1/a4/a6
-      moveml  (.-124,pc,d6.w), a0-a1/a4/a6
-      moveml  (.,pc,d6.w), a0-a1/a4/a6
       moveml  (.+4,pc,a0.w), a0-a1/a4/a6
       moveml  (.-124,pc,a0.w), a0-a1/a4/a6
       moveml  (.,pc,a0.w), a0-a1/a4/a6
-      moveml  (.+4,pc,a0.l), a0-a1/a4/a6
-      moveml  (.-124,pc,a0.l), a0-a1/a4/a6
-      moveml  (.,pc,a0.l), a0-a1/a4/a6
       moveml  (.+4,pc,d5.l), d0-d1/d3/a0-a1/a4/a6
       moveml  (.-124,pc,d5.l), d0-d1/d3/a0-a1/a4/a6
       moveml  (.,pc,d5.l), d0-d1/d3/a0-a1/a4/a6
-      moveml  (.+4,pc,d6.w), d0-d1/d3/a0-a1/a4/a6
-      moveml  (.-124,pc,d6.w), d0-d1/d3/a0-a1/a4/a6
-      moveml  (.,pc,d6.w), d0-d1/d3/a0-a1/a4/a6
       moveml  (.+4,pc,a0.w), d0-d1/d3/a0-a1/a4/a6
       moveml  (.-124,pc,a0.w), d0-d1/d3/a0-a1/a4/a6
       moveml  (.,pc,a0.w), d0-d1/d3/a0-a1/a4/a6
-      moveml  (.+4,pc,a0.l), d0-d1/d3/a0-a1/a4/a6
-      moveml  (.-124,pc,a0.l), d0-d1/d3/a0-a1/a4/a6
-      moveml  (.,pc,a0.l), d0-d1/d3/a0-a1/a4/a6
       moveml  (.+4,pc,d5.l), d0-d1/d3-d4/a0-a1/a4/a6
       moveml  (.-124,pc,d5.l), d0-d1/d3-d4/a0-a1/a4/a6
       moveml  (.,pc,d5.l), d0-d1/d3-d4/a0-a1/a4/a6
-      moveml  (.+4,pc,d6.w), d0-d1/d3-d4/a0-a1/a4/a6
-      moveml  (.-124,pc,d6.w), d0-d1/d3-d4/a0-a1/a4/a6
-      moveml  (.,pc,d6.w), d0-d1/d3-d4/a0-a1/a4/a6
       moveml  (.+4,pc,a0.w), d0-d1/d3-d4/a0-a1/a4/a6
       moveml  (.-124,pc,a0.w), d0-d1/d3-d4/a0-a1/a4/a6
       moveml  (.,pc,a0.w), d0-d1/d3-d4/a0-a1/a4/a6
-      moveml  (.+4,pc,a0.l), d0-d1/d3-d4/a0-a1/a4/a6
-      moveml  (.-124,pc,a0.l), d0-d1/d3-d4/a0-a1/a4/a6
-      moveml  (.,pc,a0.l), d0-d1/d3-d4/a0-a1/a4/a6
       moveml  (.+4,pc,d5.l), d0-d1/d3-d4/d6/a0-a1/a4/a6
       moveml  (.-124,pc,d5.l), d0-d1/d3-d4/d6/a0-a1/a4/a6
       moveml  (.,pc,d5.l), d0-d1/d3-d4/d6/a0-a1/a4/a6
-      moveml  (.+4,pc,d6.w), d0-d1/d3-d4/d6/a0-a1/a4/a6
-      moveml  (.-124,pc,d6.w), d0-d1/d3-d4/d6/a0-a1/a4/a6
-      moveml  (.,pc,d6.w), d0-d1/d3-d4/d6/a0-a1/a4/a6
       moveml  (.+4,pc,a0.w), d0-d1/d3-d4/d6/a0-a1/a4/a6
       moveml  (.-124,pc,a0.w), d0-d1/d3-d4/d6/a0-a1/a4/a6
       moveml  (.,pc,a0.w), d0-d1/d3-d4/d6/a0-a1/a4/a6
-      moveml  (.+4,pc,a0.l), d0-d1/d3-d4/d6/a0-a1/a4/a6
-      moveml  (.-124,pc,a0.l), d0-d1/d3-d4/d6/a0-a1/a4/a6
-      moveml  (.,pc,a0.l), d0-d1/d3-d4/d6/a0-a1/a4/a6
       moveml  (.+4,pc,d5.l), d0-d1/d3-d4/d6-d7/a1-a2/a4/a6
       moveml  (.-124,pc,d5.l), d0-d1/d3-d4/d6-d7/a1-a2/a4/a6
       moveml  (.,pc,d5.l), d0-d1/d3-d4/d6-d7/a1-a2/a4/a6
-      moveml  (.+4,pc,d6.w), d0-d1/d3-d4/d6-d7/a1-a2/a4/a6
-      moveml  (.-124,pc,d6.w), d0-d1/d3-d4/d6-d7/a1-a2/a4/a6
-      moveml  (.,pc,d6.w), d0-d1/d3-d4/d6-d7/a1-a2/a4/a6
       moveml  (.+4,pc,a0.w), d0-d1/d3-d4/d6-d7/a1-a2/a4/a6
       moveml  (.-124,pc,a0.w), d0-d1/d3-d4/d6-d7/a1-a2/a4/a6
       moveml  (.,pc,a0.w), d0-d1/d3-d4/d6-d7/a1-a2/a4/a6
-      moveml  (.+4,pc,a0.l), d0-d1/d3-d4/d6-d7/a1-a2/a4/a6
-      moveml  (.-124,pc,a0.l), d0-d1/d3-d4/d6-d7/a1-a2/a4/a6
-      moveml  (.,pc,a0.l), d0-d1/d3-d4/d6-d7/a1-a2/a4/a6
-      moveml  (.+4,pc,d6.w), a0-a1/a3-a4/a6
-      moveml  (.-124,pc,d6.w), a0-a1/a3-a4/a6
-      moveml  (.,pc,d6.w), a0-a1/a3-a4/a6
-      moveml  (.+4,pc,d6.l), a0-a1/a3-a4/a6
-      moveml  (.-124,pc,d6.l), a0-a1/a3-a4/a6
-      moveml  (.,pc,d6.l), a0-a1/a3-a4/a6
-      moveml  (.+4,pc,a0.w), a0-a1/a3-a4/a6
-      moveml  (.-124,pc,a0.w), a0-a1/a3-a4/a6
-      moveml  (.,pc,a0.w), a0-a1/a3-a4/a6
-      moveml  (.+4,pc,a0.l), a0-a1/a3-a4/a6
-      moveml  (.-124,pc,a0.l), a0-a1/a3-a4/a6
-      moveml  (.,pc,a0.l), a0-a1/a3-a4/a6
-      moveml  (.+4,pc,d6.w), d0/a0-a1/a3-a4/a6
-      moveml  (.-124,pc,d6.w), d0/a0-a1/a3-a4/a6
-      moveml  (.,pc,d6.w), d0/a0-a1/a3-a4/a6
-      moveml  (.+4,pc,d6.l), d0/a0-a1/a3-a4/a6
-      moveml  (.-124,pc,d6.l), d0/a0-a1/a3-a4/a6
-      moveml  (.,pc,d6.l), d0/a0-a1/a3-a4/a6
-      moveml  (.+4,pc,a0.w), d0/a0-a1/a3-a4/a6
-      moveml  (.-124,pc,a0.w), d0/a0-a1/a3-a4/a6
-      moveml  (.,pc,a0.w), d0/a0-a1/a3-a4/a6
-      moveml  (.+4,pc,a0.l), d0/a0-a1/a3-a4/a6
-      moveml  (.-124,pc,a0.l), d0/a0-a1/a3-a4/a6
-      moveml  (.,pc,a0.l), d0/a0-a1/a3-a4/a6
-      moveml  (.+4,pc,d6.w), d0-d1/a0-a1/a3-a4/a6
-      moveml  (.-124,pc,d6.w), d0-d1/a0-a1/a3-a4/a6
-      moveml  (.,pc,d6.w), d0-d1/a0-a1/a3-a4/a6
-      moveml  (.+4,pc,d6.l), d0-d1/a0-a1/a3-a4/a6
-      moveml  (.-124,pc,d6.l), d0-d1/a0-a1/a3-a4/a6
-      moveml  (.,pc,d6.l), d0-d1/a0-a1/a3-a4/a6
-      moveml  (.+4,pc,a0.w), d0-d1/a0-a1/a3-a4/a6
-      moveml  (.-124,pc,a0.w), d0-d1/a0-a1/a3-a4/a6
-      moveml  (.,pc,a0.w), d0-d1/a0-a1/a3-a4/a6
-      moveml  (.+4,pc,a0.l), d0-d1/a0-a1/a3-a4/a6
-      moveml  (.-124,pc,a0.l), d0-d1/a0-a1/a3-a4/a6
-      moveml  (.,pc,a0.l), d0-d1/a0-a1/a3-a4/a6
-      moveml  (.+4,pc,d6.w), d0-d1/d3/a0-a1/a3-a4/a6
-      moveml  (.-124,pc,d6.w), d0-d1/d3/a0-a1/a3-a4/a6
-      moveml  (.,pc,d6.w), d0-d1/d3/a0-a1/a3-a4/a6
-      moveml  (.+4,pc,d6.l), d0-d1/d3/a0-a1/a3-a4/a6
-      moveml  (.-124,pc,d6.l), d0-d1/d3/a0-a1/a3-a4/a6
-      moveml  (.,pc,d6.l), d0-d1/d3/a0-a1/a3-a4/a6
-      moveml  (.+4,pc,a0.w), d0-d1/d3/a0-a1/a3-a4/a6
-      moveml  (.-124,pc,a0.w), d0-d1/d3/a0-a1/a3-a4/a6
-      moveml  (.,pc,a0.w), d0-d1/d3/a0-a1/a3-a4/a6
-      moveml  (.+4,pc,a0.l), d0-d1/d3/a0-a1/a3-a4/a6
-      moveml  (.-124,pc,a0.l), d0-d1/d3/a0-a1/a3-a4/a6
-      moveml  (.,pc,a0.l), d0-d1/d3/a0-a1/a3-a4/a6
-      moveml  (.+4,pc,d6.w), d0-d1/d3-d4/a0-a1/a3-a4/a6
-      moveml  (.-124,pc,d6.w), d0-d1/d3-d4/a0-a1/a3-a4/a6
-      moveml  (.,pc,d6.w), d0-d1/d3-d4/a0-a1/a3-a4/a6
-      moveml  (.+4,pc,d6.l), d0-d1/d3-d4/a0-a1/a3-a4/a6
-      moveml  (.-124,pc,d6.l), d0-d1/d3-d4/a0-a1/a3-a4/a6
-      moveml  (.,pc,d6.l), d0-d1/d3-d4/a0-a1/a3-a4/a6
-      moveml  (.+4,pc,a0.w), d0-d1/d3-d4/a0-a1/a3-a4/a6
-      moveml  (.-124,pc,a0.w), d0-d1/d3-d4/a0-a1/a3-a4/a6
-      moveml  (.,pc,a0.w), d0-d1/d3-d4/a0-a1/a3-a4/a6
-      moveml  (.+4,pc,a0.l), d0-d1/d3-d4/a0-a1/a3-a4/a6
-      moveml  (.-124,pc,a0.l), d0-d1/d3-d4/a0-a1/a3-a4/a6
-      moveml  (.,pc,a0.l), d0-d1/d3-d4/a0-a1/a3-a4/a6
+      moveml  (.+4,pc,d6.w), d4-d5/a0-a1/a3-a4/a6
+      moveml  (.-124,pc,d6.w), d4-d5/a0-a1/a3-a4/a6
+      moveml  (.,pc,d6.w), d4-d5/a0-a1/a3-a4/a6
+      moveml  (.+4,pc,a0.w), d4-d5/a0-a1/a3-a4/a6
+      moveml  (.-124,pc,a0.w), d4-d5/a0-a1/a3-a4/a6
+      moveml  (.,pc,a0.w), d4-d5/a0-a1/a3-a4/a6
+      moveml  (.+4,pc,d6.w), d0/d4-d5/a0-a1/a3-a4/a6
+      moveml  (.-124,pc,d6.w), d0/d4-d5/a0-a1/a3-a4/a6
+      moveml  (.,pc,d6.w), d0/d4-d5/a0-a1/a3-a4/a6
+      moveml  (.+4,pc,a0.w), d0/d4-d5/a0-a1/a3-a4/a6
+      moveml  (.-124,pc,a0.w), d0/d4-d5/a0-a1/a3-a4/a6
+      moveml  (.,pc,a0.w), d0/d4-d5/a0-a1/a3-a4/a6
+      moveml  (.+4,pc,d6.w), d0-d1/d4-d5/a0-a1/a3-a4/a6
+      moveml  (.-124,pc,d6.w), d0-d1/d4-d5/a0-a1/a3-a4/a6
+      moveml  (.,pc,d6.w), d0-d1/d4-d5/a0-a1/a3-a4/a6
+      moveml  (.+4,pc,a0.w), d0-d1/d4-d5/a0-a1/a3-a4/a6
+      moveml  (.-124,pc,a0.w), d0-d1/d4-d5/a0-a1/a3-a4/a6
+      moveml  (.,pc,a0.w), d0-d1/d4-d5/a0-a1/a3-a4/a6
+      moveml  (.+4,pc,d6.w), d6/a0-a1/a3-a4/a6
+      moveml  (.-124,pc,d6.w), d6/a0-a1/a3-a4/a6
+      moveml  (.,pc,d6.w), d6/a0-a1/a3-a4/a6
+      moveml  (.+4,pc,a0.w), d6/a0-a1/a3-a4/a6
+      moveml  (.-124,pc,a0.w), d6/a0-a1/a3-a4/a6
+      moveml  (.,pc,a0.w), d6/a0-a1/a3-a4/a6
       moveml  (.+4,pc,d6.w), d0-d1/d3-d4/d6/a0-a1/a3-a4/a6
       moveml  (.-124,pc,d6.w), d0-d1/d3-d4/d6/a0-a1/a3-a4/a6
       moveml  (.,pc,d6.w), d0-d1/d3-d4/d6/a0-a1/a3-a4/a6
-      moveml  (.+4,pc,d6.l), d0-d1/d3-d4/d6/a0-a1/a3-a4/a6
-      moveml  (.-124,pc,d6.l), d0-d1/d3-d4/d6/a0-a1/a3-a4/a6
-      moveml  (.,pc,d6.l), d0-d1/d3-d4/d6/a0-a1/a3-a4/a6
       moveml  (.+4,pc,a0.w), d0-d1/d3-d4/d6/a0-a1/a3-a4/a6
       moveml  (.-124,pc,a0.w), d0-d1/d3-d4/d6/a0-a1/a3-a4/a6
       moveml  (.,pc,a0.w), d0-d1/d3-d4/d6/a0-a1/a3-a4/a6
-      moveml  (.+4,pc,a0.l), d0-d1/d3-d4/d6/a0-a1/a3-a4/a6
-      moveml  (.-124,pc,a0.l), d0-d1/d3-d4/d6/a0-a1/a3-a4/a6
-      moveml  (.,pc,a0.l), d0-d1/d3-d4/d6/a0-a1/a3-a4/a6
       moveml  (.-123,pc,a0.w), d7-a6
       moveml  (.,pc,a0.w), d7-a6
       moveml  (.+1,pc,a0.w), d7-a6
-      moveml  (.+4,pc,a0.l), d7-a6
-      moveml  (.-124,pc,a0.l), d7-a6
-      moveml  (.,pc,a0.l), d7-a6
       moveml  (.+4,pc,d0.w), d7-a6
       moveml  (.-124,pc,d0.w), d7-a6
       moveml  (.,pc,d0.w), d7-a6
-      moveml  (.+4,pc,d0.l), d7-a6
-      moveml  (.-124,pc,d0.l), d7-a6
-      moveml  (.,pc,d0.l), d7-a6
       moveml  (.-122,pc,a0.w), d0/d7-a6
       moveml  (.,pc,a0.w), d0/d7-a6
       moveml  (.+1,pc,a0.w), d0/d7-a6
-      moveml  (.+4,pc,a0.l), d0/d7-a6
-      moveml  (.-124,pc,a0.l), d0/d7-a6
-      moveml  (.,pc,a0.l), d0/d7-a6
       moveml  (.+4,pc,d0.w), d0/d7-a6
       moveml  (.-124,pc,d0.w), d0/d7-a6
       moveml  (.,pc,d0.w), d0/d7-a6
-      moveml  (.+4,pc,d0.l), d0/d7-a6
-      moveml  (.-124,pc,d0.l), d0/d7-a6
-      moveml  (.,pc,d0.l), d0/d7-a6
       moveml  (.-120,pc,a0.w), d0-d1/d7-a6
       moveml  (.,pc,a0.w), d0-d1/d7-a6
       moveml  (.+1,pc,a0.w), d0-d1/d7-a6
-      moveml  (.+4,pc,a0.l), d0-d1/d7-a6
-      moveml  (.-124,pc,a0.l), d0-d1/d7-a6
-      moveml  (.,pc,a0.l), d0-d1/d7-a6
       moveml  (.+4,pc,d0.w), d0-d1/d7-a6
       moveml  (.-124,pc,d0.w), d0-d1/d7-a6
       moveml  (.,pc,d0.w), d0-d1/d7-a6
-      moveml  (.+4,pc,d0.l), d0-d1/d7-a6
-      moveml  (.-124,pc,d0.l), d0-d1/d7-a6
-      moveml  (.,pc,d0.l), d0-d1/d7-a6
       moveml  (.-112,pc,a0.w), d0-d1/d3/d7-a6
       moveml  (.,pc,a0.w), d0-d1/d3/d7-a6
       moveml  (.+1,pc,a0.w), d0-d1/d3/d7-a6
-      moveml  (.+4,pc,a0.l), d0-d1/d3/d7-a6
-      moveml  (.-124,pc,a0.l), d0-d1/d3/d7-a6
-      moveml  (.,pc,a0.l), d0-d1/d3/d7-a6
       moveml  (.+4,pc,d0.w), d0-d1/d3/d7-a6
       moveml  (.-124,pc,d0.w), d0-d1/d3/d7-a6
       moveml  (.,pc,d0.w), d0-d1/d3/d7-a6
-      moveml  (.+4,pc,d0.l), d0-d1/d3/d7-a6
-      moveml  (.-124,pc,d0.l), d0-d1/d3/d7-a6
-      moveml  (.,pc,d0.l), d0-d1/d3/d7-a6
       moveml  (.-96,pc,a0.w), d0-d1/d3-d4/d7-a6
       moveml  (.,pc,a0.w), d0-d1/d3-d4/d7-a6
       moveml  (.+1,pc,a0.w), d0-d1/d3-d4/d7-a6
-      moveml  (.+4,pc,a0.l), d0-d1/d3-d4/d7-a6
-      moveml  (.-124,pc,a0.l), d0-d1/d3-d4/d7-a6
-      moveml  (.,pc,a0.l), d0-d1/d3-d4/d7-a6
       moveml  (.+4,pc,d0.w), d0-d1/d3-d4/d7-a6
       moveml  (.-124,pc,d0.w), d0-d1/d3-d4/d7-a6
       moveml  (.,pc,d0.w), d0-d1/d3-d4/d7-a6
-      moveml  (.+4,pc,d0.l), d0-d1/d3-d4/d7-a6
-      moveml  (.-124,pc,d0.l), d0-d1/d3-d4/d7-a6
-      moveml  (.,pc,d0.l), d0-d1/d3-d4/d7-a6
       moveml  (.+4,pc,a0.l), a7
       moveml  (.-124,pc,a0.l), a7
       moveml  (.,pc,a0.l), a7
-      moveml  (.+4,pc,a1.w), a7
-      moveml  (.-124,pc,a1.w), a7
-      moveml  (.,pc,a1.w), a7
       moveml  (.+4,pc,d0.w), a7
       moveml  (.-124,pc,d0.w), a7
       moveml  (.,pc,d0.w), a7
-      moveml  (.+4,pc,d0.l), a7
-      moveml  (.-124,pc,d0.l), a7
-      moveml  (.,pc,d0.l), a7
       moveml  (.+4,pc,a0.l), d0-d1/d3-d4/d6-d7/a7
       moveml  (.-124,pc,a0.l), d0-d1/d3-d4/d6-d7/a7
       moveml  (.,pc,a0.l), d0-d1/d3-d4/d6-d7/a7
-      moveml  (.+4,pc,a1.w), d0-d1/d3-d4/d6-d7/a7
-      moveml  (.-124,pc,a1.w), d0-d1/d3-d4/d6-d7/a7
-      moveml  (.,pc,a1.w), d0-d1/d3-d4/d6-d7/a7
       moveml  (.+4,pc,d0.w), d0-d1/d3-d4/d6-d7/a7
       moveml  (.-124,pc,d0.w), d0-d1/d3-d4/d6-d7/a7
       moveml  (.,pc,d0.w), d0-d1/d3-d4/d6-d7/a7
-      moveml  (.+4,pc,d0.l), d0-d1/d3-d4/d6-d7/a7
-      moveml  (.-124,pc,d0.l), d0-d1/d3-d4/d6-d7/a7
-      moveml  (.,pc,d0.l), d0-d1/d3-d4/d6-d7/a7
+      moveml  (.+4,pc,a3.l), a1-a2/a4-a5/a7
+      moveml  (.-124,pc,a3.l), a1-a2/a4-a5/a7
+      moveml  (.,pc,a3.l), a1-a2/a4-a5/a7
+      moveml  (.+4,pc,d0.w), a1-a2/a4-a5/a7
+      moveml  (.-124,pc,d0.w), a1-a2/a4-a5/a7
+      moveml  (.,pc,d0.w), a1-a2/a4-a5/a7
       moveml  (.+4,pc,a3.l), d0-d1/d3-d4/d6-d7/a1-a2/a4-a5/a7
       moveml  (.-124,pc,a3.l), d0-d1/d3-d4/d6-d7/a1-a2/a4-a5/a7
       moveml  (.,pc,a3.l), d0-d1/d3-d4/d6-d7/a1-a2/a4-a5/a7
-      moveml  (.+4,pc,a4.w), d0-d1/d3-d4/d6-d7/a1-a2/a4-a5/a7
-      moveml  (.-124,pc,a4.w), d0-d1/d3-d4/d6-d7/a1-a2/a4-a5/a7
-      moveml  (.,pc,a4.w), d0-d1/d3-d4/d6-d7/a1-a2/a4-a5/a7
       moveml  (.+4,pc,d0.w), d0-d1/d3-d4/d6-d7/a1-a2/a4-a5/a7
       moveml  (.-124,pc,d0.w), d0-d1/d3-d4/d6-d7/a1-a2/a4-a5/a7
       moveml  (.,pc,d0.w), d0-d1/d3-d4/d6-d7/a1-a2/a4-a5/a7
-      moveml  (.+4,pc,d0.l), d0-d1/d3-d4/d6-d7/a1-a2/a4-a5/a7
-      moveml  (.-124,pc,d0.l), d0-d1/d3-d4/d6-d7/a1-a2/a4-a5/a7
-      moveml  (.,pc,d0.l), d0-d1/d3-d4/d6-d7/a1-a2/a4-a5/a7
-      moveml  (.+4,pc,a6.w), d1-d2/d4/d6/a0-a1/a3-a4/a6-a7
-      moveml  (.-124,pc,a6.w), d1-d2/d4/d6/a0-a1/a3-a4/a6-a7
-      moveml  (.,pc,a6.w), d1-d2/d4/d6/a0-a1/a3-a4/a6-a7
-      moveml  (.+4,pc,a6.l), d1-d2/d4/d6/a0-a1/a3-a4/a6-a7
-      moveml  (.-124,pc,a6.l), d1-d2/d4/d6/a0-a1/a3-a4/a6-a7
-      moveml  (.,pc,a6.l), d1-d2/d4/d6/a0-a1/a3-a4/a6-a7
-      moveml  (.+4,pc,d0.w), d1-d2/d4/d6/a0-a1/a3-a4/a6-a7
-      moveml  (.-124,pc,d0.w), d1-d2/d4/d6/a0-a1/a3-a4/a6-a7
-      moveml  (.,pc,d0.w), d1-d2/d4/d6/a0-a1/a3-a4/a6-a7
-      moveml  (.+4,pc,d0.l), d1-d2/d4/d6/a0-a1/a3-a4/a6-a7
-      moveml  (.-124,pc,d0.l), d1-d2/d4/d6/a0-a1/a3-a4/a6-a7
-      moveml  (.,pc,d0.l), d1-d2/d4/d6/a0-a1/a3-a4/a6-a7
-      moveml  (.+4,pc,a6.w), d3-d4/d6/a0-a1/a3-a4/a6-a7
-      moveml  (.-124,pc,a6.w), d3-d4/d6/a0-a1/a3-a4/a6-a7
-      moveml  (.,pc,a6.w), d3-d4/d6/a0-a1/a3-a4/a6-a7
-      moveml  (.+4,pc,a6.l), d3-d4/d6/a0-a1/a3-a4/a6-a7
-      moveml  (.-124,pc,a6.l), d3-d4/d6/a0-a1/a3-a4/a6-a7
-      moveml  (.,pc,a6.l), d3-d4/d6/a0-a1/a3-a4/a6-a7
-      moveml  (.+4,pc,d0.w), d3-d4/d6/a0-a1/a3-a4/a6-a7
-      moveml  (.-124,pc,d0.w), d3-d4/d6/a0-a1/a3-a4/a6-a7
-      moveml  (.,pc,d0.w), d3-d4/d6/a0-a1/a3-a4/a6-a7
-      moveml  (.+4,pc,d0.l), d3-d4/d6/a0-a1/a3-a4/a6-a7
-      moveml  (.-124,pc,d0.l), d3-d4/d6/a0-a1/a3-a4/a6-a7
-      moveml  (.,pc,d0.l), d3-d4/d6/a0-a1/a3-a4/a6-a7
+      moveml  (.+4,pc,a6.w), d0/d2-d3/a0-a1/a3-a4/a6-a7
+      moveml  (.-124,pc,a6.w), d0/d2-d3/a0-a1/a3-a4/a6-a7
+      moveml  (.,pc,a6.w), d0/d2-d3/a0-a1/a3-a4/a6-a7
+      moveml  (.+4,pc,d0.w), d0/d2-d3/a0-a1/a3-a4/a6-a7
+      moveml  (.-124,pc,d0.w), d0/d2-d3/a0-a1/a3-a4/a6-a7
+      moveml  (.,pc,d0.w), d0/d2-d3/a0-a1/a3-a4/a6-a7
+      moveml  (.+4,pc,a6.w), d1-d3/a0-a1/a3-a4/a6-a7
+      moveml  (.-124,pc,a6.w), d1-d3/a0-a1/a3-a4/a6-a7
+      moveml  (.,pc,a6.w), d1-d3/a0-a1/a3-a4/a6-a7
+      moveml  (.+4,pc,d0.w), d1-d3/a0-a1/a3-a4/a6-a7
+      moveml  (.-124,pc,d0.w), d1-d3/a0-a1/a3-a4/a6-a7
+      moveml  (.,pc,d0.w), d1-d3/a0-a1/a3-a4/a6-a7
+      moveml  (.+4,pc,a6.w), d4/a0-a1/a3-a4/a6-a7
+      moveml  (.-124,pc,a6.w), d4/a0-a1/a3-a4/a6-a7
+      moveml  (.,pc,a6.w), d4/a0-a1/a3-a4/a6-a7
+      moveml  (.+4,pc,d0.w), d4/a0-a1/a3-a4/a6-a7
+      moveml  (.-124,pc,d0.w), d4/a0-a1/a3-a4/a6-a7
+      moveml  (.,pc,d0.w), d4/a0-a1/a3-a4/a6-a7
+      moveml  (.+4,pc,a6.w), d0-d1/d3-d4/a0-a1/a3-a4/a6-a7
+      moveml  (.-124,pc,a6.w), d0-d1/d3-d4/a0-a1/a3-a4/a6-a7
+      moveml  (.,pc,a6.w), d0-d1/d3-d4/a0-a1/a3-a4/a6-a7
+      moveml  (.+4,pc,d0.w), d0-d1/d3-d4/a0-a1/a3-a4/a6-a7
+      moveml  (.-124,pc,d0.w), d0-d1/d3-d4/a0-a1/a3-a4/a6-a7
+      moveml  (.,pc,d0.w), d0-d1/d3-d4/a0-a1/a3-a4/a6-a7
       moveml  (.+4,pc,a6.w), d0-d1/d3-d4/d6/a0-a1/a3-a4/a6-a7
       moveml  (.-124,pc,a6.w), d0-d1/d3-d4/d6/a0-a1/a3-a4/a6-a7
       moveml  (.,pc,a6.w), d0-d1/d3-d4/d6/a0-a1/a3-a4/a6-a7
-      moveml  (.+4,pc,a6.l), d0-d1/d3-d4/d6/a0-a1/a3-a4/a6-a7
-      moveml  (.-124,pc,a6.l), d0-d1/d3-d4/d6/a0-a1/a3-a4/a6-a7
-      moveml  (.,pc,a6.l), d0-d1/d3-d4/d6/a0-a1/a3-a4/a6-a7
       moveml  (.+4,pc,d0.w), d0-d1/d3-d4/d6/a0-a1/a3-a4/a6-a7
       moveml  (.-124,pc,d0.w), d0-d1/d3-d4/d6/a0-a1/a3-a4/a6-a7
       moveml  (.,pc,d0.w), d0-d1/d3-d4/d6/a0-a1/a3-a4/a6-a7
-      moveml  (.+4,pc,d0.l), d0-d1/d3-d4/d6/a0-a1/a3-a4/a6-a7
-      moveml  (.-124,pc,d0.l), d0-d1/d3-d4/d6/a0-a1/a3-a4/a6-a7
-      moveml  (.,pc,d0.l), d0-d1/d3-d4/d6/a0-a1/a3-a4/a6-a7
-      moveml  (.+4,pc,a6.w), d5-d6/a0-a1/a3-a4/a6-a7
-      moveml  (.-124,pc,a6.w), d5-d6/a0-a1/a3-a4/a6-a7
-      moveml  (.,pc,a6.w), d5-d6/a0-a1/a3-a4/a6-a7
-      moveml  (.+4,pc,a6.l), d5-d6/a0-a1/a3-a4/a6-a7
-      moveml  (.-124,pc,a6.l), d5-d6/a0-a1/a3-a4/a6-a7
-      moveml  (.,pc,a6.l), d5-d6/a0-a1/a3-a4/a6-a7
-      moveml  (.+4,pc,d0.w), d5-d6/a0-a1/a3-a4/a6-a7
-      moveml  (.-124,pc,d0.w), d5-d6/a0-a1/a3-a4/a6-a7
-      moveml  (.,pc,d0.w), d5-d6/a0-a1/a3-a4/a6-a7
-      moveml  (.+4,pc,d0.l), d5-d6/a0-a1/a3-a4/a6-a7
-      moveml  (.-124,pc,d0.l), d5-d6/a0-a1/a3-a4/a6-a7
-      moveml  (.,pc,d0.l), d5-d6/a0-a1/a3-a4/a6-a7
-      moveml  (.+4,pc,d0.l), d0
-      moveml  (.-124,pc,d0.l), d0
-      moveml  (.,pc,d0.l), d0
-      moveml  (.+4,pc,d1.w), d0
-      moveml  (.-124,pc,d1.w), d0
-      moveml  (.,pc,d1.w), d0
-      moveml  (.+4,pc,a0.w), d0
-      moveml  (.-124,pc,a0.w), d0
-      moveml  (.,pc,a0.w), d0
-      moveml  (.+4,pc,a0.l), d0
-      moveml  (.-124,pc,a0.l), d0
-      moveml  (.,pc,a0.l), d0
-      moveml  (.+4,pc,d0.l), d0-d1
-      moveml  (.-124,pc,d0.l), d0-d1
-      moveml  (.,pc,d0.l), d0-d1
-      moveml  (.+4,pc,d1.w), d0-d1
-      moveml  (.-124,pc,d1.w), d0-d1
-      moveml  (.,pc,d1.w), d0-d1
-      moveml  (.+4,pc,a0.w), d0-d1
-      moveml  (.-124,pc,a0.w), d0-d1
-      moveml  (.,pc,a0.w), d0-d1
-      moveml  (.+4,pc,a0.l), d0-d1
-      moveml  (.-124,pc,a0.l), d0-d1
-      moveml  (.,pc,a0.l), d0-d1
-      moveml  (.+4,pc,d0.l), d0-d1/d3
-      moveml  (.-124,pc,d0.l), d0-d1/d3
-      moveml  (.,pc,d0.l), d0-d1/d3
-      moveml  (.+4,pc,d1.w), d0-d1/d3
-      moveml  (.-124,pc,d1.w), d0-d1/d3
-      moveml  (.,pc,d1.w), d0-d1/d3
-      moveml  (.+4,pc,a0.w), d0-d1/d3
-      moveml  (.-124,pc,a0.w), d0-d1/d3
-      moveml  (.,pc,a0.w), d0-d1/d3
-      moveml  (.+4,pc,a0.l), d0-d1/d3
-      moveml  (.-124,pc,a0.l), d0-d1/d3
-      moveml  (.,pc,a0.l), d0-d1/d3
-      moveml  (.+4,pc,d0.l), d0-d1/d3-d4
-      moveml  (.-124,pc,d0.l), d0-d1/d3-d4
-      moveml  (.,pc,d0.l), d0-d1/d3-d4
-      moveml  (.+4,pc,d1.w), d0-d1/d3-d4
-      moveml  (.-124,pc,d1.w), d0-d1/d3-d4
-      moveml  (.,pc,d1.w), d0-d1/d3-d4
-      moveml  (.+4,pc,a0.w), d0-d1/d3-d4
-      moveml  (.-124,pc,a0.w), d0-d1/d3-d4
-      moveml  (.,pc,a0.w), d0-d1/d3-d4
-      moveml  (.+4,pc,a0.l), d0-d1/d3-d4
-      moveml  (.-124,pc,a0.l), d0-d1/d3-d4
-      moveml  (.,pc,a0.l), d0-d1/d3-d4
-      moveml  (.+4,pc,d0.l), d0-d1/d3-d4/d6
-      moveml  (.-124,pc,d0.l), d0-d1/d3-d4/d6
-      moveml  (.,pc,d0.l), d0-d1/d3-d4/d6
-      moveml  (.+4,pc,d1.w), d0-d1/d3-d4/d6
-      moveml  (.-124,pc,d1.w), d0-d1/d3-d4/d6
-      moveml  (.,pc,d1.w), d0-d1/d3-d4/d6
-      moveml  (.+4,pc,a0.w), d0-d1/d3-d4/d6
-      moveml  (.-124,pc,a0.w), d0-d1/d3-d4/d6
-      moveml  (.,pc,a0.w), d0-d1/d3-d4/d6
-      moveml  (.+4,pc,a0.l), d0-d1/d3-d4/d6
-      moveml  (.-124,pc,a0.l), d0-d1/d3-d4/d6
-      moveml  (.,pc,a0.l), d0-d1/d3-d4/d6
+      moveml  (.+4,pc,d0.l), d0-d1/d3-d6
+      moveml  (.-124,pc,d0.l), d0-d1/d3-d6
+      moveml  (.,pc,d0.l), d0-d1/d3-d6
+      moveml  (.+4,pc,a0.w), d0-d1/d3-d6
+      moveml  (.-124,pc,a0.w), d0-d1/d3-d6
+      moveml  (.,pc,a0.w), d0-d1/d3-d6
+      moveml  (.+4,pc,d0.l), d2-d6
+      moveml  (.-124,pc,d0.l), d2-d6
+      moveml  (.,pc,d0.l), d2-d6
+      moveml  (.+4,pc,a0.w), d2-d6
+      moveml  (.-124,pc,a0.w), d2-d6
+      moveml  (.,pc,a0.w), d2-d6
+      moveml  (.+4,pc,d0.l), d0/d2-d6
+      moveml  (.-124,pc,d0.l), d0/d2-d6
+      moveml  (.,pc,d0.l), d0/d2-d6
+      moveml  (.+4,pc,a0.w), d0/d2-d6
+      moveml  (.-124,pc,a0.w), d0/d2-d6
+      moveml  (.,pc,a0.w), d0/d2-d6
+      moveml  (.+4,pc,d0.l), d7
+      moveml  (.-124,pc,d0.l), d7
+      moveml  (.,pc,d0.l), d7
+      moveml  (.+4,pc,a0.w), d7
+      moveml  (.-124,pc,a0.w), d7
+      moveml  (.,pc,a0.w), d7
+      moveml  (.+4,pc,d0.l), d0-d1/d3-d4/d7
+      moveml  (.-124,pc,d0.l), d0-d1/d3-d4/d7
+      moveml  (.,pc,d0.l), d0-d1/d3-d4/d7
+      moveml  (.+4,pc,a0.w), d0-d1/d3-d4/d7
+      moveml  (.-124,pc,a0.w), d0-d1/d3-d4/d7
+      moveml  (.,pc,a0.w), d0-d1/d3-d4/d7
       moveml  (.+4,pc,d0.l), d0-d1/d3-d4/d6-d7
       moveml  (.-124,pc,d0.l), d0-d1/d3-d4/d6-d7
       moveml  (.,pc,d0.l), d0-d1/d3-d4/d6-d7
-      moveml  (.+4,pc,d1.w), d0-d1/d3-d4/d6-d7
-      moveml  (.-124,pc,d1.w), d0-d1/d3-d4/d6-d7
-      moveml  (.,pc,d1.w), d0-d1/d3-d4/d6-d7
       moveml  (.+4,pc,a0.w), d0-d1/d3-d4/d6-d7
       moveml  (.-124,pc,a0.w), d0-d1/d3-d4/d6-d7
       moveml  (.,pc,a0.w), d0-d1/d3-d4/d6-d7
-      moveml  (.+4,pc,a0.l), d0-d1/d3-d4/d6-d7
-      moveml  (.-124,pc,a0.l), d0-d1/d3-d4/d6-d7
-      moveml  (.,pc,a0.l), d0-d1/d3-d4/d6-d7
       trap    #0
       link    a0, #0x4f51
       link    a0, #-0x8000
@@ -6695,12 +4337,8 @@
       jsr     (-0x8000,a0)
       jsr     (0,a0,d5.w)
       jsr     (-0x80,a0,d5.w)
-      jsr     (0,a0,d5.l)
-      jsr     (-0x80,a0,d5.l)
       jsr     (0,a0,a0.w)
       jsr     (-0x80,a0,a0.w)
-      jsr     (0,a0,a0.l)
-      jsr     (-0x80,a0,a0.l)
       jsr     (0x4fba).w
       jsr     (0x50bc).l
       jsr     (.+0x4fbe,pc)
@@ -6709,26 +4347,16 @@
       jsr     (.+2,pc,d5.w)
       jsr     (.-126,pc,d5.w)
       jsr     (.,pc,d5.w)
-      jsr     (.+2,pc,d5.l)
-      jsr     (.-126,pc,d5.l)
-      jsr     (.,pc,d5.l)
       jsr     (.+2,pc,a0.w)
       jsr     (.-126,pc,a0.w)
       jsr     (.,pc,a0.w)
-      jsr     (.+2,pc,a0.l)
-      jsr     (.-126,pc,a0.l)
-      jsr     (.,pc,a0.l)
       jmp     (a0)
       jmp     (0x4fe9,a0)
       jmp     (-0x8000,a0)
       jmp     (0,a0,d5.w)
       jmp     (-0x80,a0,d5.w)
-      jmp     (0,a0,d5.l)
-      jmp     (-0x80,a0,d5.l)
       jmp     (0,a0,a0.w)
       jmp     (-0x80,a0,a0.w)
-      jmp     (0,a0,a0.l)
-      jmp     (-0x80,a0,a0.l)
       jmp     (0x4ffa).w
       jmp     (0x50fc).l
       jmp     (.+0x4ffe,pc)
@@ -6737,15 +4365,9 @@
       jmp     (.+2,pc,d5.w)
       jmp     (.-126,pc,d5.w)
       jmp     (.,pc,d5.w)
-      jmp     (.+2,pc,d5.l)
-      jmp     (.-126,pc,d5.l)
-      jmp     (.,pc,d5.l)
       jmp     (.+2,pc,a0.w)
       jmp     (.-126,pc,a0.w)
       jmp     (.,pc,a0.w)
-      jmp     (.+2,pc,a0.l)
-      jmp     (.-126,pc,a0.l)
-      jmp     (.,pc,a0.l)
       addqb   #8, d0
       addqb   #8, (a0)
       addqb   #8, (a0)+
@@ -6754,12 +4376,8 @@
       addqb   #8, (-0x8000,a0)
       addqb   #8, (0,a0,d5.l)
       addqb   #8, (-0x80,a0,d5.l)
-      addqb   #8, (0,a0,d6.w)
-      addqb   #8, (-0x80,a0,d6.w)
       addqb   #8, (0,a0,a0.w)
       addqb   #8, (-0x80,a0,a0.w)
-      addqb   #8, (0,a0,a0.l)
-      addqb   #8, (-0x80,a0,a0.l)
       addqb   #8, (0x5139).w
       addqb   #8, (0x523b).l
       addqw   #8, d0
@@ -6771,12 +4389,8 @@
       addqw   #8, (-0x8000,a0)
       addqw   #8, (0,a0,d5.l)
       addqw   #8, (-0x80,a0,d5.l)
-      addqw   #8, (0,a0,d6.w)
-      addqw   #8, (-0x80,a0,d6.w)
       addqw   #8, (0,a0,a0.w)
       addqw   #8, (-0x80,a0,a0.w)
-      addqw   #8, (0,a0,a0.l)
-      addqw   #8, (-0x80,a0,a0.l)
       addqw   #8, (0x517a).w
       addqw   #8, (0x527c).l
       addql   #8, d0
@@ -6788,12 +4402,8 @@
       addql   #8, (-0x8000,a0)
       addql   #8, (0,a0,d5.l)
       addql   #8, (-0x80,a0,d5.l)
-      addql   #8, (0,a0,d6.w)
-      addql   #8, (-0x80,a0,d6.w)
       addql   #8, (0,a0,a0.w)
       addql   #8, (-0x80,a0,a0.w)
-      addql   #8, (0,a0,a0.l)
-      addql   #8, (-0x80,a0,a0.l)
       addql   #8, (0x51ba).w
       addql   #8, (0x52bc).l
       st      d0
@@ -6807,12 +4417,8 @@
       st      (-0x8000,a0)
       st      (0,a0,d5.l)
       st      (-0x80,a0,d5.l)
-      st      (0,a0,d6.w)
-      st      (-0x80,a0,d6.w)
       st      (0,a0,a0.w)
       st      (-0x80,a0,a0.w)
-      st      (0,a0,a0.l)
-      st      (-0x80,a0,a0.l)
       st      (0x51f9).w
       st      (0x52fb).l
       subqb   #8, d0
@@ -6823,12 +4429,8 @@
       subqb   #8, (-0x8000,a0)
       subqb   #8, (0,a0,d5.l)
       subqb   #8, (-0x80,a0,d5.l)
-      subqb   #8, (0,a0,d6.w)
-      subqb   #8, (-0x80,a0,d6.w)
       subqb   #8, (0,a0,a0.w)
       subqb   #8, (-0x80,a0,a0.w)
-      subqb   #8, (0,a0,a0.l)
-      subqb   #8, (-0x80,a0,a0.l)
       subqb   #8, (0x5239).w
       subqb   #8, (0x533b).l
       subqw   #8, d0
@@ -6840,12 +4442,8 @@
       subqw   #8, (-0x8000,a0)
       subqw   #8, (0,a0,d5.l)
       subqw   #8, (-0x80,a0,d5.l)
-      subqw   #8, (0,a0,d6.w)
-      subqw   #8, (-0x80,a0,d6.w)
       subqw   #8, (0,a0,a0.w)
       subqw   #8, (-0x80,a0,a0.w)
-      subqw   #8, (0,a0,a0.l)
-      subqw   #8, (-0x80,a0,a0.l)
       subqw   #8, (0x527a).w
       subqw   #8, (0x537c).l
       subql   #8, d0
@@ -6857,12 +4455,8 @@
       subql   #8, (-0x8000,a0)
       subql   #8, (0,a0,d5.l)
       subql   #8, (-0x80,a0,d5.l)
-      subql   #8, (0,a0,d6.w)
-      subql   #8, (-0x80,a0,d6.w)
       subql   #8, (0,a0,a0.w)
       subql   #8, (-0x80,a0,a0.w)
-      subql   #8, (0,a0,a0.l)
-      subql   #8, (-0x80,a0,a0.l)
       subql   #8, (0x52ba).w
       subql   #8, (0x53bc).l
       sf      d0
@@ -6876,12 +4470,8 @@
       sf      (-0x8000,a0)
       sf      (0,a0,d5.l)
       sf      (-0x80,a0,d5.l)
-      sf      (0,a0,d6.w)
-      sf      (-0x80,a0,d6.w)
       sf      (0,a0,a0.w)
       sf      (-0x80,a0,a0.w)
-      sf      (0,a0,a0.l)
-      sf      (-0x80,a0,a0.l)
       sf      (0x52f9).w
       sf      (0x53fb).l
       shi     d0
@@ -6895,12 +4485,8 @@
       shi     (-0x8000,a0)
       shi     (0,a0,d5.l)
       shi     (-0x80,a0,d5.l)
-      shi     (0,a0,d6.w)
-      shi     (-0x80,a0,d6.w)
       shi     (0,a0,a0.w)
       shi     (-0x80,a0,a0.w)
-      shi     (0,a0,a0.l)
-      shi     (-0x80,a0,a0.l)
       shi     (0x53f9).w
       shi     (0x54fb).l
       sls     d0
@@ -6914,12 +4500,8 @@
       sls     (-0x8000,a0)
       sls     (0,a0,d5.l)
       sls     (-0x80,a0,d5.l)
-      sls     (0,a0,d6.w)
-      sls     (-0x80,a0,d6.w)
       sls     (0,a0,a0.w)
       sls     (-0x80,a0,a0.w)
-      sls     (0,a0,a0.l)
-      sls     (-0x80,a0,a0.l)
       sls     (0x54f9).w
       sls     (0x55fb).l
       scc     d0
@@ -6933,12 +4515,8 @@
       scc     (-0x8000,a0)
       scc     (0,a0,d5.l)
       scc     (-0x80,a0,d5.l)
-      scc     (0,a0,d6.w)
-      scc     (-0x80,a0,d6.w)
       scc     (0,a0,a0.w)
       scc     (-0x80,a0,a0.w)
-      scc     (0,a0,a0.l)
-      scc     (-0x80,a0,a0.l)
       scc     (0x55f9).w
       scc     (0x56fb).l
       scs     d0
@@ -6952,12 +4530,8 @@
       scs     (-0x8000,a0)
       scs     (0,a0,d5.l)
       scs     (-0x80,a0,d5.l)
-      scs     (0,a0,d6.w)
-      scs     (-0x80,a0,d6.w)
       scs     (0,a0,a0.w)
       scs     (-0x80,a0,a0.w)
-      scs     (0,a0,a0.l)
-      scs     (-0x80,a0,a0.l)
       scs     (0x56f9).w
       scs     (0x57fb).l
       sne     d0
@@ -6971,12 +4545,8 @@
       sne     (-0x8000,a0)
       sne     (0,a0,d5.l)
       sne     (-0x80,a0,d5.l)
-      sne     (0,a0,d6.w)
-      sne     (-0x80,a0,d6.w)
       sne     (0,a0,a0.w)
       sne     (-0x80,a0,a0.w)
-      sne     (0,a0,a0.l)
-      sne     (-0x80,a0,a0.l)
       sne     (0x57f9).w
       sne     (0x58fb).l
       seq     d0
@@ -6990,12 +4560,8 @@
       seq     (-0x8000,a0)
       seq     (-15,a0,d5.l)
       seq     (0,a0,d6.w)
-      seq     (-0x80,a0,d6.w)
-      seq     (0,a0,d6.l)
       seq     (0,a0,a0.w)
       seq     (-0x80,a0,a0.w)
-      seq     (0,a0,a0.l)
-      seq     (-0x80,a0,a0.l)
       seq     (0x58f9).w
       seq     (0x59fb).l
       svc     d0
@@ -7009,12 +4575,8 @@
       svc     (-0x8000,a0)
       svc     (0,a0,d6.w)
       svc     (-0x80,a0,d6.w)
-      svc     (0,a0,d6.l)
-      svc     (-0x80,a0,d6.l)
       svc     (0,a0,a0.w)
       svc     (-0x80,a0,a0.w)
-      svc     (0,a0,a0.l)
-      svc     (-0x80,a0,a0.l)
       svc     (0x59f9).w
       svc     (0x5afb).l
       svs     d0
@@ -7028,12 +4590,8 @@
       svs     (-0x8000,a0)
       svs     (0,a0,d6.w)
       svs     (-0x80,a0,d6.w)
-      svs     (0,a0,d6.l)
-      svs     (-0x80,a0,d6.l)
       svs     (0,a0,a0.w)
       svs     (-0x80,a0,a0.w)
-      svs     (0,a0,a0.l)
-      svs     (-0x80,a0,a0.l)
       svs     (0x5af9).w
       svs     (0x5bfb).l
       spl     d0
@@ -7047,12 +4605,8 @@
       spl     (-0x8000,a0)
       spl     (0,a0,d6.w)
       spl     (-0x80,a0,d6.w)
-      spl     (0,a0,d6.l)
-      spl     (-0x80,a0,d6.l)
       spl     (0,a0,a0.w)
       spl     (-0x80,a0,a0.w)
-      spl     (0,a0,a0.l)
-      spl     (-0x80,a0,a0.l)
       spl     (0x5bf9).w
       spl     (0x5cfb).l
       smi     d0
@@ -7066,12 +4620,8 @@
       smi     (-0x8000,a0)
       smi     (0,a0,d6.w)
       smi     (-0x80,a0,d6.w)
-      smi     (0,a0,d6.l)
-      smi     (-0x80,a0,d6.l)
       smi     (0,a0,a0.w)
       smi     (-0x80,a0,a0.w)
-      smi     (0,a0,a0.l)
-      smi     (-0x80,a0,a0.l)
       smi     (0x5cf9).w
       smi     (0x5dfb).l
       sge     d0
@@ -7085,12 +4635,8 @@
       sge     (-0x8000,a0)
       sge     (0,a0,d6.w)
       sge     (-0x80,a0,d6.w)
-      sge     (0,a0,d6.l)
-      sge     (-0x80,a0,d6.l)
       sge     (0,a0,a0.w)
       sge     (-0x80,a0,a0.w)
-      sge     (0,a0,a0.l)
-      sge     (-0x80,a0,a0.l)
       sge     (0x5df9).w
       sge     (0x5efb).l
       slt     d0
@@ -7104,12 +4650,8 @@
       slt     (-0x8000,a0)
       slt     (0,a0,d6.w)
       slt     (-0x80,a0,d6.w)
-      slt     (0,a0,d6.l)
-      slt     (-0x80,a0,d6.l)
       slt     (0,a0,a0.w)
       slt     (-0x80,a0,a0.w)
-      slt     (0,a0,a0.l)
-      slt     (-0x80,a0,a0.l)
       slt     (0x5ef9).w
       slt     (0x5ffb).l
       sgt     d0
@@ -7123,12 +4665,8 @@
       sgt     (-0x8000,a0)
       sgt     (0,a0,d6.w)
       sgt     (-0x80,a0,d6.w)
-      sgt     (0,a0,d6.l)
-      sgt     (-0x80,a0,d6.l)
       sgt     (0,a0,a0.w)
       sgt     (-0x80,a0,a0.w)
-      sgt     (0,a0,a0.l)
-      sgt     (-0x80,a0,a0.l)
       sgt     (0x5ff9).w
       sgt     (0x60fb).l
       sle     d0
@@ -7142,12 +4680,8 @@
       sle     (-0x8000,a0)
       sle     (-15,a0,d6.w)
       sle     (0,a0,d6.l)
-      sle     (-0x80,a0,d6.l)
-      sle     (0,a0,d7.w)
       sle     (0,a0,a0.w)
       sle     (-0x80,a0,a0.w)
-      sle     (0,a0,a0.l)
-      sle     (-0x80,a0,a0.l)
       sle     (0x60f9).w
       sle     (0x61fb).l
       bra     .+0x6104
@@ -7256,12 +4790,8 @@
       orb     (0,a0), d0
       orb     (0,a0,a0.l), d0
       orb     (-0x80,a0,a0.l), d0
-      orb     (0,a0,a1.w), d0
-      orb     (-0x80,a0,a1.w), d0
       orb     (0,a0,d0.w), d0
       orb     (-0x80,a0,d0.w), d0
-      orb     (0,a0,d0.l), d0
-      orb     (-0x80,a0,d0.l), d0
       orb     (0x8139).w, d0
       orb     (0x823b).l, d0
       orb     (.-0x7ec3,pc), d0
@@ -7270,15 +4800,9 @@
       orb     (.+2,pc,a0.l), d0
       orb     (.-126,pc,a0.l), d0
       orb     (.,pc,a0.l), d0
-      orb     (.+2,pc,a1.w), d0
-      orb     (.-126,pc,a1.w), d0
-      orb     (.,pc,a1.w), d0
       orb     (.+2,pc,d0.w), d0
       orb     (.-126,pc,d0.w), d0
       orb     (.,pc,d0.w), d0
-      orb     (.+2,pc,d0.l), d0
-      orb     (.-126,pc,d0.l), d0
-      orb     (.,pc,d0.l), d0
       orb     #0x3d, d0
       orw     d0, d0
       orw     (a0), d0
@@ -7288,12 +4812,8 @@
       orw     (0,a0), d0
       orw     (0,a0,a0.l), d0
       orw     (-0x80,a0,a0.l), d0
-      orw     (0,a0,a1.w), d0
-      orw     (-0x80,a0,a1.w), d0
       orw     (0,a0,d0.w), d0
       orw     (-0x80,a0,d0.w), d0
-      orw     (0,a0,d0.l), d0
-      orw     (-0x80,a0,d0.l), d0
       orw     (0x817a).w, d0
       orw     (0x827c).l, d0
       orw     (.-0x7e82,pc), d0
@@ -7302,15 +4822,9 @@
       orw     (.+2,pc,a0.l), d0
       orw     (.-126,pc,a0.l), d0
       orw     (.,pc,a0.l), d0
-      orw     (.+2,pc,a1.w), d0
-      orw     (.-126,pc,a1.w), d0
-      orw     (.,pc,a1.w), d0
       orw     (.+2,pc,d0.w), d0
       orw     (.-126,pc,d0.w), d0
       orw     (.,pc,d0.w), d0
-      orw     (.+2,pc,d0.l), d0
-      orw     (.-126,pc,d0.l), d0
-      orw     (.,pc,d0.l), d0
       orw     #0x817d, d0
       orl     d0, d0
       orl     (a0), d0
@@ -7320,12 +4834,8 @@
       orl     (0,a0), d0
       orl     (0,a0,a0.l), d0
       orl     (-0x80,a0,a0.l), d0
-      orl     (0,a0,a1.w), d0
-      orl     (-0x80,a0,a1.w), d0
       orl     (0,a0,d0.w), d0
       orl     (-0x80,a0,d0.w), d0
-      orl     (0,a0,d0.l), d0
-      orl     (-0x80,a0,d0.l), d0
       orl     (0x81ba).w, d0
       orl     (0x82bc).l, d0
       orl     (.-0x7e42,pc), d0
@@ -7334,15 +4844,9 @@
       orl     (.+2,pc,a0.l), d0
       orl     (.-126,pc,a0.l), d0
       orl     (.,pc,a0.l), d0
-      orl     (.+2,pc,a1.w), d0
-      orl     (.-126,pc,a1.w), d0
-      orl     (.,pc,a1.w), d0
       orl     (.+2,pc,d0.w), d0
       orl     (.-126,pc,d0.w), d0
       orl     (.,pc,d0.w), d0
-      orl     (.+2,pc,d0.l), d0
-      orl     (.-126,pc,d0.l), d0
-      orl     (.,pc,d0.l), d0
       orl     #0x81bd82be, d0
       divuw   d0, d0
       divuw   (a0), d0
@@ -7352,12 +4856,8 @@
       divuw   (0,a0), d0
       divuw   (0,a0,a0.l), d0
       divuw   (-0x80,a0,a0.l), d0
-      divuw   (0,a0,a1.w), d0
-      divuw   (-0x80,a0,a1.w), d0
       divuw   (0,a0,d0.w), d0
       divuw   (-0x80,a0,d0.w), d0
-      divuw   (0,a0,d0.l), d0
-      divuw   (-0x80,a0,d0.l), d0
       divuw   (0x81fa).w, d0
       divuw   (0x82fc).l, d0
       divuw   (.-0x7e02,pc), d0
@@ -7366,15 +4866,9 @@
       divuw   (.+2,pc,a0.l), d0
       divuw   (.-126,pc,a0.l), d0
       divuw   (.,pc,a0.l), d0
-      divuw   (.+2,pc,a1.w), d0
-      divuw   (.-126,pc,a1.w), d0
-      divuw   (.,pc,a1.w), d0
       divuw   (.+2,pc,d0.w), d0
       divuw   (.-126,pc,d0.w), d0
       divuw   (.,pc,d0.w), d0
-      divuw   (.+2,pc,d0.l), d0
-      divuw   (.-126,pc,d0.l), d0
-      divuw   (.,pc,d0.l), d0
       divuw   #0x81fd, d0
       sbcd    d0, d0
       sbcd    -(a0), -(a0)
@@ -7385,12 +4879,8 @@
       orb     d0, (0,a0)
       orb     d0, (0,a0,a0.l)
       orb     d0, (-0x80,a0,a0.l)
-      orb     d0, (0,a0,a1.w)
-      orb     d0, (-0x80,a0,a1.w)
       orb     d0, (0,a0,d0.w)
       orb     d0, (-0x80,a0,d0.w)
-      orb     d0, (0,a0,d0.l)
-      orb     d0, (-0x80,a0,d0.l)
       orb     d0, (0x8239).w
       orb     d0, (0x833b).l
       orw     d0, (a0)
@@ -7400,12 +4890,8 @@
       orw     d0, (0,a0)
       orw     d0, (0,a0,a0.l)
       orw     d0, (-0x80,a0,a0.l)
-      orw     d0, (0,a0,a1.w)
-      orw     d0, (-0x80,a0,a1.w)
       orw     d0, (0,a0,d0.w)
       orw     d0, (-0x80,a0,d0.w)
-      orw     d0, (0,a0,d0.l)
-      orw     d0, (-0x80,a0,d0.l)
       orw     d0, (0x827a).w
       orw     d0, (0x837c).l
       orl     d0, (a0)
@@ -7415,12 +4901,8 @@
       orl     d0, (0,a0)
       orl     d0, (0,a0,a0.l)
       orl     d0, (-0x80,a0,a0.l)
-      orl     d0, (0,a0,a1.w)
-      orl     d0, (-0x80,a0,a1.w)
       orl     d0, (0,a0,d0.w)
       orl     d0, (-0x80,a0,d0.w)
-      orl     d0, (0,a0,d0.l)
-      orl     d0, (-0x80,a0,d0.l)
       orl     d0, (0x82ba).w
       orl     d0, (0x83bc).l
       divsw   d0, d0
@@ -7431,12 +4913,8 @@
       divsw   (0,a0), d0
       divsw   (0,a0,a0.l), d0
       divsw   (-0x80,a0,a0.l), d0
-      divsw   (0,a0,a1.w), d0
-      divsw   (-0x80,a0,a1.w), d0
       divsw   (0,a0,d0.w), d0
       divsw   (-0x80,a0,d0.w), d0
-      divsw   (0,a0,d0.l), d0
-      divsw   (-0x80,a0,d0.l), d0
       divsw   (0x82fa).w, d0
       divsw   (0x83fc).l, d0
       divsw   (.-0x7d02,pc), d0
@@ -7445,15 +4923,9 @@
       divsw   (.+2,pc,a0.l), d0
       divsw   (.-126,pc,a0.l), d0
       divsw   (.,pc,a0.l), d0
-      divsw   (.+2,pc,a1.w), d0
-      divsw   (.-126,pc,a1.w), d0
-      divsw   (.,pc,a1.w), d0
       divsw   (.+2,pc,d0.w), d0
       divsw   (.-126,pc,d0.w), d0
       divsw   (.,pc,d0.w), d0
-      divsw   (.+2,pc,d0.l), d0
-      divsw   (.-126,pc,d0.l), d0
-      divsw   (.,pc,d0.l), d0
       divsw   #0x82fd, d0
       subb    d0, d0
       subb    (a0), d0
@@ -7463,12 +4935,8 @@
       subb    (0,a0), d0
       subb    (0,a0,a1.l), d0
       subb    (-0x80,a0,a1.l), d0
-      subb    (0,a0,a2.w), d0
-      subb    (-0x80,a0,a2.w), d0
       subb    (0,a0,d0.w), d0
       subb    (-0x80,a0,d0.w), d0
-      subb    (0,a0,d0.l), d0
-      subb    (-0x80,a0,d0.l), d0
       subb    (0x9139).w, d0
       subb    (0x923b).l, d0
       subb    (.-0x6ec3,pc), d0
@@ -7477,15 +4945,9 @@
       subb    (.+2,pc,a1.l), d0
       subb    (.-126,pc,a1.l), d0
       subb    (.,pc,a1.l), d0
-      subb    (.+2,pc,a2.w), d0
-      subb    (.-126,pc,a2.w), d0
-      subb    (.,pc,a2.w), d0
       subb    (.+2,pc,d0.w), d0
       subb    (.-126,pc,d0.w), d0
       subb    (.,pc,d0.w), d0
-      subb    (.+2,pc,d0.l), d0
-      subb    (.-126,pc,d0.l), d0
-      subb    (.,pc,d0.l), d0
       subb    #0x3d, d0
       subw    d0, d0
       subw    a0, d0
@@ -7496,12 +4958,8 @@
       subw    (0,a0), d0
       subw    (0,a0,a1.l), d0
       subw    (-0x80,a0,a1.l), d0
-      subw    (0,a0,a2.w), d0
-      subw    (-0x80,a0,a2.w), d0
       subw    (0,a0,d0.w), d0
       subw    (-0x80,a0,d0.w), d0
-      subw    (0,a0,d0.l), d0
-      subw    (-0x80,a0,d0.l), d0
       subw    (0x917a).w, d0
       subw    (0x927c).l, d0
       subw    (.-0x6e82,pc), d0
@@ -7510,15 +4968,9 @@
       subw    (.+2,pc,a1.l), d0
       subw    (.-126,pc,a1.l), d0
       subw    (.,pc,a1.l), d0
-      subw    (.+2,pc,a2.w), d0
-      subw    (.-126,pc,a2.w), d0
-      subw    (.,pc,a2.w), d0
       subw    (.+2,pc,d0.w), d0
       subw    (.-126,pc,d0.w), d0
       subw    (.,pc,d0.w), d0
-      subw    (.+2,pc,d0.l), d0
-      subw    (.-126,pc,d0.l), d0
-      subw    (.,pc,d0.l), d0
       subw    #0x917d, d0
       subl    d0, d0
       subl    a0, d0
@@ -7529,12 +4981,8 @@
       subl    (0,a0), d0
       subl    (0,a0,a1.l), d0
       subl    (-0x80,a0,a1.l), d0
-      subl    (0,a0,a2.w), d0
-      subl    (-0x80,a0,a2.w), d0
       subl    (0,a0,d0.w), d0
       subl    (-0x80,a0,d0.w), d0
-      subl    (0,a0,d0.l), d0
-      subl    (-0x80,a0,d0.l), d0
       subl    (0x91ba).w, d0
       subl    (0x92bc).l, d0
       subl    (.-0x6e42,pc), d0
@@ -7543,15 +4991,9 @@
       subl    (.+2,pc,a1.l), d0
       subl    (.-126,pc,a1.l), d0
       subl    (.,pc,a1.l), d0
-      subl    (.+2,pc,a2.w), d0
-      subl    (.-126,pc,a2.w), d0
-      subl    (.,pc,a2.w), d0
       subl    (.+2,pc,d0.w), d0
       subl    (.-126,pc,d0.w), d0
       subl    (.,pc,d0.w), d0
-      subl    (.+2,pc,d0.l), d0
-      subl    (.-126,pc,d0.l), d0
-      subl    (.,pc,d0.l), d0
       subl    #0x91bd92be, d0
       subaw   d0, a0
       subaw   a0, a0
@@ -7562,12 +5004,8 @@
       subaw   (0,a0), a0
       subaw   (0,a0,a1.l), a0
       subaw   (-0x80,a0,a1.l), a0
-      subaw   (0,a0,a2.w), a0
-      subaw   (-0x80,a0,a2.w), a0
       subaw   (0,a0,d0.w), a0
       subaw   (-0x80,a0,d0.w), a0
-      subaw   (0,a0,d0.l), a0
-      subaw   (-0x80,a0,d0.l), a0
       subaw   (0x91fa).w, a0
       subaw   (0x92fc).l, a0
       subaw   (.-0x6e02,pc), a0
@@ -7576,15 +5014,9 @@
       subaw   (.+2,pc,a1.l), a0
       subaw   (.-126,pc,a1.l), a0
       subaw   (.,pc,a1.l), a0
-      subaw   (.+2,pc,a2.w), a0
-      subaw   (.-126,pc,a2.w), a0
-      subaw   (.,pc,a2.w), a0
       subaw   (.+2,pc,d0.w), a0
       subaw   (.-126,pc,d0.w), a0
       subaw   (.,pc,d0.w), a0
-      subaw   (.+2,pc,d0.l), a0
-      subaw   (.-126,pc,d0.l), a0
-      subaw   (.,pc,d0.l), a0
       subaw   #0x91fd, a0
       subxb   d0, d0
       subxb   -(a0), -(a0)
@@ -7595,12 +5027,8 @@
       subb    d0, (0,a0)
       subb    d0, (0,a0,a1.l)
       subb    d0, (-0x80,a0,a1.l)
-      subb    d0, (0,a0,a2.w)
-      subb    d0, (-0x80,a0,a2.w)
       subb    d0, (0,a0,d0.w)
       subb    d0, (-0x80,a0,d0.w)
-      subb    d0, (0,a0,d0.l)
-      subb    d0, (-0x80,a0,d0.l)
       subb    d0, (0x9239).w
       subb    d0, (0x933b).l
       subxw   d0, d0
@@ -7612,12 +5040,8 @@
       subw    d0, (0,a0)
       subw    d0, (0,a0,a1.l)
       subw    d0, (-0x80,a0,a1.l)
-      subw    d0, (0,a0,a2.w)
-      subw    d0, (-0x80,a0,a2.w)
       subw    d0, (0,a0,d0.w)
       subw    d0, (-0x80,a0,d0.w)
-      subw    d0, (0,a0,d0.l)
-      subw    d0, (-0x80,a0,d0.l)
       subw    d0, (0x927a).w
       subw    d0, (0x937c).l
       subxl   d0, d0
@@ -7629,12 +5053,8 @@
       subl    d0, (0,a0)
       subl    d0, (0,a0,a1.l)
       subl    d0, (-0x80,a0,a1.l)
-      subl    d0, (0,a0,a2.w)
-      subl    d0, (-0x80,a0,a2.w)
       subl    d0, (0,a0,d0.w)
       subl    d0, (-0x80,a0,d0.w)
-      subl    d0, (0,a0,d0.l)
-      subl    d0, (-0x80,a0,d0.l)
       subl    d0, (0x92ba).w
       subl    d0, (0x93bc).l
       subal   d0, a0
@@ -7646,12 +5066,8 @@
       subal   (0,a0), a0
       subal   (0,a0,a1.l), a0
       subal   (-0x80,a0,a1.l), a0
-      subal   (0,a0,a2.w), a0
-      subal   (-0x80,a0,a2.w), a0
       subal   (0,a0,d0.w), a0
       subal   (-0x80,a0,d0.w), a0
-      subal   (0,a0,d0.l), a0
-      subal   (-0x80,a0,d0.l), a0
       subal   (0x92fa).w, a0
       subal   (0x93fc).l, a0
       subal   (.-0x6d02,pc), a0
@@ -7660,15 +5076,9 @@
       subal   (.+2,pc,a1.l), a0
       subal   (.-126,pc,a1.l), a0
       subal   (.,pc,a1.l), a0
-      subal   (.+2,pc,a2.w), a0
-      subal   (.-126,pc,a2.w), a0
-      subal   (.,pc,a2.w), a0
       subal   (.+2,pc,d0.w), a0
       subal   (.-126,pc,d0.w), a0
       subal   (.,pc,d0.w), a0
-      subal   (.+2,pc,d0.l), a0
-      subal   (.-126,pc,d0.l), a0
-      subal   (.,pc,d0.l), a0
       subal   #0x92fd93fe, a0
       cmpb    d0, d0
       cmpb    (a0), d0
@@ -7678,12 +5088,8 @@
       cmpb    (0,a0), d0
       cmpb    (0,a0,a3.l), d0
       cmpb    (-0x80,a0,a3.l), d0
-      cmpb    (0,a0,a4.w), d0
-      cmpb    (-0x80,a0,a4.w), d0
       cmpb    (0,a0,d0.w), d0
       cmpb    (-0x80,a0,d0.w), d0
-      cmpb    (0,a0,d0.l), d0
-      cmpb    (-0x80,a0,d0.l), d0
       cmpb    (0xb139).w, d0
       cmpb    (0xb23b).l, d0
       cmpb    (.-0x4ec3,pc), d0
@@ -7692,15 +5098,9 @@
       cmpb    (.+2,pc,a3.l), d0
       cmpb    (.-126,pc,a3.l), d0
       cmpb    (.,pc,a3.l), d0
-      cmpb    (.+2,pc,a4.w), d0
-      cmpb    (.-126,pc,a4.w), d0
-      cmpb    (.,pc,a4.w), d0
       cmpb    (.+2,pc,d0.w), d0
       cmpb    (.-126,pc,d0.w), d0
       cmpb    (.,pc,d0.w), d0
-      cmpb    (.+2,pc,d0.l), d0
-      cmpb    (.-126,pc,d0.l), d0
-      cmpb    (.,pc,d0.l), d0
       cmpb    #0x3d, d0
       cmpw    d0, d0
       cmpw    a0, d0
@@ -7711,12 +5111,8 @@
       cmpw    (0,a0), d0
       cmpw    (0,a0,a3.l), d0
       cmpw    (-0x80,a0,a3.l), d0
-      cmpw    (0,a0,a4.w), d0
-      cmpw    (-0x80,a0,a4.w), d0
       cmpw    (0,a0,d0.w), d0
       cmpw    (-0x80,a0,d0.w), d0
-      cmpw    (0,a0,d0.l), d0
-      cmpw    (-0x80,a0,d0.l), d0
       cmpw    (0xb17a).w, d0
       cmpw    (0xb27c).l, d0
       cmpw    (.-0x4e82,pc), d0
@@ -7725,15 +5121,9 @@
       cmpw    (.+2,pc,a3.l), d0
       cmpw    (.-126,pc,a3.l), d0
       cmpw    (.,pc,a3.l), d0
-      cmpw    (.+2,pc,a4.w), d0
-      cmpw    (.-126,pc,a4.w), d0
-      cmpw    (.,pc,a4.w), d0
       cmpw    (.+2,pc,d0.w), d0
       cmpw    (.-126,pc,d0.w), d0
       cmpw    (.,pc,d0.w), d0
-      cmpw    (.+2,pc,d0.l), d0
-      cmpw    (.-126,pc,d0.l), d0
-      cmpw    (.,pc,d0.l), d0
       cmpw    #0xb17d, d0
       cmpl    d0, d0
       cmpl    a0, d0
@@ -7744,12 +5134,8 @@
       cmpl    (0,a0), d0
       cmpl    (0,a0,a3.l), d0
       cmpl    (-0x80,a0,a3.l), d0
-      cmpl    (0,a0,a4.w), d0
-      cmpl    (-0x80,a0,a4.w), d0
       cmpl    (0,a0,d0.w), d0
       cmpl    (-0x80,a0,d0.w), d0
-      cmpl    (0,a0,d0.l), d0
-      cmpl    (-0x80,a0,d0.l), d0
       cmpl    (0xb1ba).w, d0
       cmpl    (0xb2bc).l, d0
       cmpl    (.-0x4e42,pc), d0
@@ -7758,15 +5144,9 @@
       cmpl    (.+2,pc,a3.l), d0
       cmpl    (.-126,pc,a3.l), d0
       cmpl    (.,pc,a3.l), d0
-      cmpl    (.+2,pc,a4.w), d0
-      cmpl    (.-126,pc,a4.w), d0
-      cmpl    (.,pc,a4.w), d0
       cmpl    (.+2,pc,d0.w), d0
       cmpl    (.-126,pc,d0.w), d0
       cmpl    (.,pc,d0.w), d0
-      cmpl    (.+2,pc,d0.l), d0
-      cmpl    (.-126,pc,d0.l), d0
-      cmpl    (.,pc,d0.l), d0
       cmpl    #0xb1bdb2be, d0
       cmpaw   d0, a0
       cmpaw   a0, a0
@@ -7777,12 +5157,8 @@
       cmpaw   (0,a0), a0
       cmpaw   (0,a0,a3.l), a0
       cmpaw   (-0x80,a0,a3.l), a0
-      cmpaw   (0,a0,a4.w), a0
-      cmpaw   (-0x80,a0,a4.w), a0
       cmpaw   (0,a0,d0.w), a0
       cmpaw   (-0x80,a0,d0.w), a0
-      cmpaw   (0,a0,d0.l), a0
-      cmpaw   (-0x80,a0,d0.l), a0
       cmpaw   (0xb1fa).w, a0
       cmpaw   (0xb2fc).l, a0
       cmpaw   (.-0x4e02,pc), a0
@@ -7791,15 +5167,9 @@
       cmpaw   (.+2,pc,a3.l), a0
       cmpaw   (.-126,pc,a3.l), a0
       cmpaw   (.,pc,a3.l), a0
-      cmpaw   (.+2,pc,a4.w), a0
-      cmpaw   (.-126,pc,a4.w), a0
-      cmpaw   (.,pc,a4.w), a0
       cmpaw   (.+2,pc,d0.w), a0
       cmpaw   (.-126,pc,d0.w), a0
       cmpaw   (.,pc,d0.w), a0
-      cmpaw   (.+2,pc,d0.l), a0
-      cmpaw   (.-126,pc,d0.l), a0
-      cmpaw   (.,pc,d0.l), a0
       cmpaw   #0xb1fd, a0
       eorb    d0, d0
       cmpmb   (a0)+, (a0)+
@@ -7810,12 +5180,8 @@
       eorb    d0, (0,a0)
       eorb    d0, (0,a0,a3.l)
       eorb    d0, (-0x80,a0,a3.l)
-      eorb    d0, (0,a0,a4.w)
-      eorb    d0, (-0x80,a0,a4.w)
       eorb    d0, (0,a0,d0.w)
       eorb    d0, (-0x80,a0,d0.w)
-      eorb    d0, (0,a0,d0.l)
-      eorb    d0, (-0x80,a0,d0.l)
       eorb    d0, (0xb239).w
       eorb    d0, (0xb33b).l
       eorw    d0, d0
@@ -7827,12 +5193,8 @@
       eorw    d0, (0,a0)
       eorw    d0, (0,a0,a3.l)
       eorw    d0, (-0x80,a0,a3.l)
-      eorw    d0, (0,a0,a4.w)
-      eorw    d0, (-0x80,a0,a4.w)
       eorw    d0, (0,a0,d0.w)
       eorw    d0, (-0x80,a0,d0.w)
-      eorw    d0, (0,a0,d0.l)
-      eorw    d0, (-0x80,a0,d0.l)
       eorw    d0, (0xb27a).w
       eorw    d0, (0xb37c).l
       eorl    d0, d0
@@ -7844,12 +5206,8 @@
       eorl    d0, (0,a0)
       eorl    d0, (0,a0,a3.l)
       eorl    d0, (-0x80,a0,a3.l)
-      eorl    d0, (0,a0,a4.w)
-      eorl    d0, (-0x80,a0,a4.w)
       eorl    d0, (0,a0,d0.w)
       eorl    d0, (-0x80,a0,d0.w)
-      eorl    d0, (0,a0,d0.l)
-      eorl    d0, (-0x80,a0,d0.l)
       eorl    d0, (0xb2ba).w
       eorl    d0, (0xb3bc).l
       cmpal   d0, a0
@@ -7861,12 +5219,8 @@
       cmpal   (0,a0), a0
       cmpal   (0,a0,a3.l), a0
       cmpal   (-0x80,a0,a3.l), a0
-      cmpal   (0,a0,a4.w), a0
-      cmpal   (-0x80,a0,a4.w), a0
       cmpal   (0,a0,d0.w), a0
       cmpal   (-0x80,a0,d0.w), a0
-      cmpal   (0,a0,d0.l), a0
-      cmpal   (-0x80,a0,d0.l), a0
       cmpal   (0xb2fa).w, a0
       cmpal   (0xb3fc).l, a0
       cmpal   (.-0x4d02,pc), a0
@@ -7875,15 +5229,9 @@
       cmpal   (.+2,pc,a3.l), a0
       cmpal   (.-126,pc,a3.l), a0
       cmpal   (.,pc,a3.l), a0
-      cmpal   (.+2,pc,a4.w), a0
-      cmpal   (.-126,pc,a4.w), a0
-      cmpal   (.,pc,a4.w), a0
       cmpal   (.+2,pc,d0.w), a0
       cmpal   (.-126,pc,d0.w), a0
       cmpal   (.,pc,d0.w), a0
-      cmpal   (.+2,pc,d0.l), a0
-      cmpal   (.-126,pc,d0.l), a0
-      cmpal   (.,pc,d0.l), a0
       cmpal   #0xb2fdb3fe, a0
       andb    d0, d0
       andb    (a0), d0
@@ -7893,12 +5241,8 @@
       andb    (0,a0), d0
       andb    (0,a0,a4.l), d0
       andb    (-0x80,a0,a4.l), d0
-      andb    (0,a0,a5.w), d0
-      andb    (-0x80,a0,a5.w), d0
       andb    (0,a0,d0.w), d0
       andb    (-0x80,a0,d0.w), d0
-      andb    (0,a0,d0.l), d0
-      andb    (-0x80,a0,d0.l), d0
       andb    (0xc139).w, d0
       andb    (0xc23b).l, d0
       andb    (.-0x3ec3,pc), d0
@@ -7907,15 +5251,9 @@
       andb    (.+2,pc,a4.l), d0
       andb    (.-126,pc,a4.l), d0
       andb    (.,pc,a4.l), d0
-      andb    (.+2,pc,a5.w), d0
-      andb    (.-126,pc,a5.w), d0
-      andb    (.,pc,a5.w), d0
       andb    (.+2,pc,d0.w), d0
       andb    (.-126,pc,d0.w), d0
       andb    (.,pc,d0.w), d0
-      andb    (.+2,pc,d0.l), d0
-      andb    (.-126,pc,d0.l), d0
-      andb    (.,pc,d0.l), d0
       andb    #0x3d, d0
       andw    d0, d0
       andw    (a0), d0
@@ -7925,12 +5263,8 @@
       andw    (0,a0), d0
       andw    (0,a0,a4.l), d0
       andw    (-0x80,a0,a4.l), d0
-      andw    (0,a0,a5.w), d0
-      andw    (-0x80,a0,a5.w), d0
       andw    (0,a0,d0.w), d0
       andw    (-0x80,a0,d0.w), d0
-      andw    (0,a0,d0.l), d0
-      andw    (-0x80,a0,d0.l), d0
       andw    (0xc17a).w, d0
       andw    (0xc27c).l, d0
       andw    (.-0x3e82,pc), d0
@@ -7939,15 +5273,9 @@
       andw    (.+2,pc,a4.l), d0
       andw    (.-126,pc,a4.l), d0
       andw    (.,pc,a4.l), d0
-      andw    (.+2,pc,a5.w), d0
-      andw    (.-126,pc,a5.w), d0
-      andw    (.,pc,a5.w), d0
       andw    (.+2,pc,d0.w), d0
       andw    (.-126,pc,d0.w), d0
       andw    (.,pc,d0.w), d0
-      andw    (.+2,pc,d0.l), d0
-      andw    (.-126,pc,d0.l), d0
-      andw    (.,pc,d0.l), d0
       andw    #0xc17d, d0
       andl    d0, d0
       andl    (a0), d0
@@ -7957,12 +5285,8 @@
       andl    (0,a0), d0
       andl    (0,a0,a4.l), d0
       andl    (-0x80,a0,a4.l), d0
-      andl    (0,a0,a5.w), d0
-      andl    (-0x80,a0,a5.w), d0
       andl    (0,a0,d0.w), d0
       andl    (-0x80,a0,d0.w), d0
-      andl    (0,a0,d0.l), d0
-      andl    (-0x80,a0,d0.l), d0
       andl    (0xc1ba).w, d0
       andl    (0xc2bc).l, d0
       andl    (.-0x3e42,pc), d0
@@ -7971,15 +5295,9 @@
       andl    (.+2,pc,a4.l), d0
       andl    (.-126,pc,a4.l), d0
       andl    (.,pc,a4.l), d0
-      andl    (.+2,pc,a5.w), d0
-      andl    (.-126,pc,a5.w), d0
-      andl    (.,pc,a5.w), d0
       andl    (.+2,pc,d0.w), d0
       andl    (.-126,pc,d0.w), d0
       andl    (.,pc,d0.w), d0
-      andl    (.+2,pc,d0.l), d0
-      andl    (.-126,pc,d0.l), d0
-      andl    (.,pc,d0.l), d0
       andl    #0xc1bdc2be, d0
       muluw   d0, d0
       muluw   (a0), d0
@@ -7989,12 +5307,8 @@
       muluw   (0,a0), d0
       muluw   (0,a0,a4.l), d0
       muluw   (-0x80,a0,a4.l), d0
-      muluw   (0,a0,a5.w), d0
-      muluw   (-0x80,a0,a5.w), d0
       muluw   (0,a0,d0.w), d0
       muluw   (-0x80,a0,d0.w), d0
-      muluw   (0,a0,d0.l), d0
-      muluw   (-0x80,a0,d0.l), d0
       muluw   (0xc1fa).w, d0
       muluw   (0xc2fc).l, d0
       muluw   (.-0x3e02,pc), d0
@@ -8003,15 +5317,9 @@
       muluw   (.+2,pc,a4.l), d0
       muluw   (.-126,pc,a4.l), d0
       muluw   (.,pc,a4.l), d0
-      muluw   (.+2,pc,a5.w), d0
-      muluw   (.-126,pc,a5.w), d0
-      muluw   (.,pc,a5.w), d0
       muluw   (.+2,pc,d0.w), d0
       muluw   (.-126,pc,d0.w), d0
       muluw   (.,pc,d0.w), d0
-      muluw   (.+2,pc,d0.l), d0
-      muluw   (.-126,pc,d0.l), d0
-      muluw   (.,pc,d0.l), d0
       muluw   #0xc1fd, d0
       abcd    d0, d0
       abcd    -(a0), -(a0)
@@ -8022,12 +5330,8 @@
       andb    d0, (0,a0)
       andb    d0, (0,a0,a4.l)
       andb    d0, (-0x80,a0,a4.l)
-      andb    d0, (0,a0,a5.w)
-      andb    d0, (-0x80,a0,a5.w)
       andb    d0, (0,a0,d0.w)
       andb    d0, (-0x80,a0,d0.w)
-      andb    d0, (0,a0,d0.l)
-      andb    d0, (-0x80,a0,d0.l)
       andb    d0, (0xc239).w
       andb    d0, (0xc33b).l
       exg     d0, d0
@@ -8039,12 +5343,8 @@
       andw    d0, (0,a0)
       andw    d0, (0,a0,a4.l)
       andw    d0, (-0x80,a0,a4.l)
-      andw    d0, (0,a0,a5.w)
-      andw    d0, (-0x80,a0,a5.w)
       andw    d0, (0,a0,d0.w)
       andw    d0, (-0x80,a0,d0.w)
-      andw    d0, (0,a0,d0.l)
-      andw    d0, (-0x80,a0,d0.l)
       andw    d0, (0xc27a).w
       andw    d0, (0xc37c).l
       exg     d0, a0
@@ -8055,12 +5355,8 @@
       andl    d0, (0,a0)
       andl    d0, (0,a0,a4.l)
       andl    d0, (-0x80,a0,a4.l)
-      andl    d0, (0,a0,a5.w)
-      andl    d0, (-0x80,a0,a5.w)
       andl    d0, (0,a0,d0.w)
       andl    d0, (-0x80,a0,d0.w)
-      andl    d0, (0,a0,d0.l)
-      andl    d0, (-0x80,a0,d0.l)
       andl    d0, (0xc2ba).w
       andl    d0, (0xc3bc).l
       mulsw   d0, d0
@@ -8071,12 +5367,8 @@
       mulsw   (0,a0), d0
       mulsw   (0,a0,a4.l), d0
       mulsw   (-0x80,a0,a4.l), d0
-      mulsw   (0,a0,a5.w), d0
-      mulsw   (-0x80,a0,a5.w), d0
       mulsw   (0,a0,d0.w), d0
       mulsw   (-0x80,a0,d0.w), d0
-      mulsw   (0,a0,d0.l), d0
-      mulsw   (-0x80,a0,d0.l), d0
       mulsw   (0xc2fa).w, d0
       mulsw   (0xc3fc).l, d0
       mulsw   (.-0x3d02,pc), d0
@@ -8085,15 +5377,9 @@
       mulsw   (.+2,pc,a4.l), d0
       mulsw   (.-126,pc,a4.l), d0
       mulsw   (.,pc,a4.l), d0
-      mulsw   (.+2,pc,a5.w), d0
-      mulsw   (.-126,pc,a5.w), d0
-      mulsw   (.,pc,a5.w), d0
       mulsw   (.+2,pc,d0.w), d0
       mulsw   (.-126,pc,d0.w), d0
       mulsw   (.,pc,d0.w), d0
-      mulsw   (.+2,pc,d0.l), d0
-      mulsw   (.-126,pc,d0.l), d0
-      mulsw   (.,pc,d0.l), d0
       mulsw   #0xc2fd, d0
       addb    d0, d0
       addb    (a0), d0
@@ -8103,12 +5389,8 @@
       addb    (0,a0), d0
       addb    (0,a0,a5.l), d0
       addb    (-0x80,a0,a5.l), d0
-      addb    (0,a0,a6.w), d0
-      addb    (-0x80,a0,a6.w), d0
       addb    (0,a0,d0.w), d0
       addb    (-0x80,a0,d0.w), d0
-      addb    (0,a0,d0.l), d0
-      addb    (-0x80,a0,d0.l), d0
       addb    (0xd139).w, d0
       addb    (0xd23b).l, d0
       addb    (.-0x2ec3,pc), d0
@@ -8117,15 +5399,9 @@
       addb    (.+2,pc,a5.l), d0
       addb    (.-126,pc,a5.l), d0
       addb    (.,pc,a5.l), d0
-      addb    (.+2,pc,a6.w), d0
-      addb    (.-126,pc,a6.w), d0
-      addb    (.,pc,a6.w), d0
       addb    (.+2,pc,d0.w), d0
       addb    (.-126,pc,d0.w), d0
       addb    (.,pc,d0.w), d0
-      addb    (.+2,pc,d0.l), d0
-      addb    (.-126,pc,d0.l), d0
-      addb    (.,pc,d0.l), d0
       addb    #0x3d, d0
       addw    d0, d0
       addw    a0, d0
@@ -8136,12 +5412,8 @@
       addw    (0,a0), d0
       addw    (0,a0,a5.l), d0
       addw    (-0x80,a0,a5.l), d0
-      addw    (0,a0,a6.w), d0
-      addw    (-0x80,a0,a6.w), d0
       addw    (0,a0,d0.w), d0
       addw    (-0x80,a0,d0.w), d0
-      addw    (0,a0,d0.l), d0
-      addw    (-0x80,a0,d0.l), d0
       addw    (0xd17a).w, d0
       addw    (0xd27c).l, d0
       addw    (.-0x2e82,pc), d0
@@ -8150,15 +5422,9 @@
       addw    (.+2,pc,a5.l), d0
       addw    (.-126,pc,a5.l), d0
       addw    (.,pc,a5.l), d0
-      addw    (.+2,pc,a6.w), d0
-      addw    (.-126,pc,a6.w), d0
-      addw    (.,pc,a6.w), d0
       addw    (.+2,pc,d0.w), d0
       addw    (.-126,pc,d0.w), d0
       addw    (.,pc,d0.w), d0
-      addw    (.+2,pc,d0.l), d0
-      addw    (.-126,pc,d0.l), d0
-      addw    (.,pc,d0.l), d0
       addw    #0xd17d, d0
       addl    d0, d0
       addl    a0, d0
@@ -8169,12 +5435,8 @@
       addl    (0,a0), d0
       addl    (0,a0,a5.l), d0
       addl    (-0x80,a0,a5.l), d0
-      addl    (0,a0,a6.w), d0
-      addl    (-0x80,a0,a6.w), d0
       addl    (0,a0,d0.w), d0
       addl    (-0x80,a0,d0.w), d0
-      addl    (0,a0,d0.l), d0
-      addl    (-0x80,a0,d0.l), d0
       addl    (0xd1ba).w, d0
       addl    (0xd2bc).l, d0
       addl    (.-0x2e42,pc), d0
@@ -8183,15 +5445,9 @@
       addl    (.+2,pc,a5.l), d0
       addl    (.-126,pc,a5.l), d0
       addl    (.,pc,a5.l), d0
-      addl    (.+2,pc,a6.w), d0
-      addl    (.-126,pc,a6.w), d0
-      addl    (.,pc,a6.w), d0
       addl    (.+2,pc,d0.w), d0
       addl    (.-126,pc,d0.w), d0
       addl    (.,pc,d0.w), d0
-      addl    (.+2,pc,d0.l), d0
-      addl    (.-126,pc,d0.l), d0
-      addl    (.,pc,d0.l), d0
       addl    #0xd1bdd2be, d0
       addaw   d0, a0
       addaw   a0, a0
@@ -8202,12 +5458,8 @@
       addaw   (0,a0), a0
       addaw   (0,a0,a5.l), a0
       addaw   (-0x80,a0,a5.l), a0
-      addaw   (0,a0,a6.w), a0
-      addaw   (-0x80,a0,a6.w), a0
       addaw   (0,a0,d0.w), a0
       addaw   (-0x80,a0,d0.w), a0
-      addaw   (0,a0,d0.l), a0
-      addaw   (-0x80,a0,d0.l), a0
       addaw   (0xd1fa).w, a0
       addaw   (0xd2fc).l, a0
       addaw   (.-0x2e02,pc), a0
@@ -8216,15 +5468,9 @@
       addaw   (.+2,pc,a5.l), a0
       addaw   (.-126,pc,a5.l), a0
       addaw   (.,pc,a5.l), a0
-      addaw   (.+2,pc,a6.w), a0
-      addaw   (.-126,pc,a6.w), a0
-      addaw   (.,pc,a6.w), a0
       addaw   (.+2,pc,d0.w), a0
       addaw   (.-126,pc,d0.w), a0
       addaw   (.,pc,d0.w), a0
-      addaw   (.+2,pc,d0.l), a0
-      addaw   (.-126,pc,d0.l), a0
-      addaw   (.,pc,d0.l), a0
       addaw   #0xd1fd, a0
       addxb   d0, d0
       addxb   -(a0), -(a0)
@@ -8235,12 +5481,8 @@
       addb    d0, (0,a0)
       addb    d0, (0,a0,a5.l)
       addb    d0, (-0x80,a0,a5.l)
-      addb    d0, (0,a0,a6.w)
-      addb    d0, (-0x80,a0,a6.w)
       addb    d0, (0,a0,d0.w)
       addb    d0, (-0x80,a0,d0.w)
-      addb    d0, (0,a0,d0.l)
-      addb    d0, (-0x80,a0,d0.l)
       addb    d0, (0xd239).w
       addb    d0, (0xd33b).l
       addxw   d0, d0
@@ -8252,12 +5494,8 @@
       addw    d0, (0,a0)
       addw    d0, (0,a0,a5.l)
       addw    d0, (-0x80,a0,a5.l)
-      addw    d0, (0,a0,a6.w)
-      addw    d0, (-0x80,a0,a6.w)
       addw    d0, (0,a0,d0.w)
       addw    d0, (-0x80,a0,d0.w)
-      addw    d0, (0,a0,d0.l)
-      addw    d0, (-0x80,a0,d0.l)
       addw    d0, (0xd27a).w
       addw    d0, (0xd37c).l
       addxl   d0, d0
@@ -8269,12 +5507,8 @@
       addl    d0, (0,a0)
       addl    d0, (0,a0,a5.l)
       addl    d0, (-0x80,a0,a5.l)
-      addl    d0, (0,a0,a6.w)
-      addl    d0, (-0x80,a0,a6.w)
       addl    d0, (0,a0,d0.w)
       addl    d0, (-0x80,a0,d0.w)
-      addl    d0, (0,a0,d0.l)
-      addl    d0, (-0x80,a0,d0.l)
       addl    d0, (0xd2ba).w
       addl    d0, (0xd3bc).l
       addal   d0, a0
@@ -8286,12 +5520,8 @@
       addal   (0,a0), a0
       addal   (0,a0,a5.l), a0
       addal   (-0x80,a0,a5.l), a0
-      addal   (0,a0,a6.w), a0
-      addal   (-0x80,a0,a6.w), a0
       addal   (0,a0,d0.w), a0
       addal   (-0x80,a0,d0.w), a0
-      addal   (0,a0,d0.l), a0
-      addal   (-0x80,a0,d0.l), a0
       addal   (0xd2fa).w, a0
       addal   (0xd3fc).l, a0
       addal   (.-0x2d02,pc), a0
@@ -8300,15 +5530,9 @@
       addal   (.+2,pc,a5.l), a0
       addal   (.-126,pc,a5.l), a0
       addal   (.,pc,a5.l), a0
-      addal   (.+2,pc,a6.w), a0
-      addal   (.-126,pc,a6.w), a0
-      addal   (.,pc,a6.w), a0
       addal   (.+2,pc,d0.w), a0
       addal   (.-126,pc,d0.w), a0
       addal   (.,pc,d0.w), a0
-      addal   (.+2,pc,d0.l), a0
-      addal   (.-126,pc,d0.l), a0
-      addal   (.,pc,d0.l), a0
       addal   #0xd2fdd3fe, a0
       asrb    #8, d0
       lsrb    #8, d0
@@ -8341,12 +5565,8 @@
       asrw    (0,a0)
       asrw    (0,a0,a6.l)
       asrw    (-0x80,a0,a6.l)
-      asrw    (0,a0,a7.w)
-      asrw    (-0x80,a0,a7.w)
       asrw    (0,a0,d0.w)
       asrw    (-0x80,a0,d0.w)
-      asrw    (0,a0,d0.l)
-      asrw    (-0x80,a0,d0.l)
       asrw    (0xe1fa).w
       asrw    (0xe2fc).l
       aslb    #8, d0
@@ -8380,12 +5600,8 @@
       aslw    (0,a0)
       aslw    (0,a0,a6.l)
       aslw    (-0x80,a0,a6.l)
-      aslw    (0,a0,a7.w)
-      aslw    (-0x80,a0,a7.w)
       aslw    (0,a0,d0.w)
       aslw    (-0x80,a0,d0.w)
-      aslw    (0,a0,d0.l)
-      aslw    (-0x80,a0,d0.l)
       aslw    (0xe2fa).w
       aslw    (0xe3fc).l
       lsrw    (a0)
@@ -8395,12 +5611,8 @@
       lsrw    (0,a0)
       lsrw    (0,a0,a6.l)
       lsrw    (-0x80,a0,a6.l)
-      lsrw    (0,a0,a7.w)
-      lsrw    (-0x80,a0,a7.w)
       lsrw    (0,a0,d0.w)
       lsrw    (-0x80,a0,d0.w)
-      lsrw    (0,a0,d0.l)
-      lsrw    (-0x80,a0,d0.l)
       lsrw    (0xe3fa).w
       lsrw    (0xe4fc).l
       lslw    (a0)
@@ -8410,12 +5622,8 @@
       lslw    (0,a0)
       lslw    (0,a0,a6.l)
       lslw    (-0x80,a0,a6.l)
-      lslw    (0,a0,a7.w)
-      lslw    (-0x80,a0,a7.w)
       lslw    (0,a0,d0.w)
       lslw    (-0x80,a0,d0.w)
-      lslw    (0,a0,d0.l)
-      lslw    (-0x80,a0,d0.l)
       lslw    (0xe4fa).w
       lslw    (0xe5fc).l
       roxrw   (a0)
@@ -8425,12 +5633,8 @@
       roxrw   (0,a0)
       roxrw   (0,a0,a6.l)
       roxrw   (-0x80,a0,a6.l)
-      roxrw   (0,a0,a7.w)
-      roxrw   (-0x80,a0,a7.w)
       roxrw   (0,a0,d0.w)
       roxrw   (-0x80,a0,d0.w)
-      roxrw   (0,a0,d0.l)
-      roxrw   (-0x80,a0,d0.l)
       roxrw   (0xe5fa).w
       roxrw   (0xe6fc).l
       roxlw   (a0)
@@ -8440,12 +5644,8 @@
       roxlw   (0,a0)
       roxlw   (0,a0,a6.l)
       roxlw   (-0x80,a0,a6.l)
-      roxlw   (0,a0,a7.w)
-      roxlw   (-0x80,a0,a7.w)
       roxlw   (0,a0,d0.w)
       roxlw   (-0x80,a0,d0.w)
-      roxlw   (0,a0,d0.l)
-      roxlw   (-0x80,a0,d0.l)
       roxlw   (0xe6fa).w
       roxlw   (0xe7fc).l
       rorw    (a0)
@@ -8455,12 +5655,8 @@
       rorw    (0,a0)
       rorw    (0,a0,a6.l)
       rorw    (-0x80,a0,a6.l)
-      rorw    (0,a0,a7.w)
-      rorw    (-0x80,a0,a7.w)
       rorw    (0,a0,d0.w)
       rorw    (-0x80,a0,d0.w)
-      rorw    (0,a0,d0.l)
-      rorw    (-0x80,a0,d0.l)
       rorw    (0xe7fa).w
       rorw    (0xe8fc).l
       rolw    (a0)
@@ -8470,12 +5666,8 @@
       rolw    (0,a0)
       rolw    (-15,a0,a6.l)
       rolw    (0,a0,a7.w)
-      rolw    (-0x80,a0,a7.w)
-      rolw    (0,a0,a7.l)
       rolw    (0,a0,d0.w)
       rolw    (-0x80,a0,d0.w)
-      rolw    (0,a0,d0.l)
-      rolw    (-0x80,a0,d0.l)
       rolw    (0xe8fa).w
       rolw    (0xe9fc).l
       fmovex  fp0, fp0
@@ -10209,2418 +7401,1210 @@
       fmovemx fp0-fp1/fp3-fp4/fp6-fp7, (0,a0)
       fmovemx d0, (0,a0,d0.w)
       fmovemx d0, (-0x80,a0,d0.w)
-      fmovemx d0, (0,a0,d0.l)
-      fmovemx d0, (-0x80,a0,d0.l)
       fmovemx d0, (0,a0,a0.w)
       fmovemx d0, (-0x80,a0,a0.w)
-      fmovemx d0, (0,a0,a0.l)
-      fmovemx d0, (-0x80,a0,a0.l)
       fmovel  (0,a0,d4.l), fp0
       fmovel  (-0x80,a0,d4.l), fp0
-      fmovel  (0,a0,d5.w), fp0
-      fmovel  (-0x80,a0,d5.w), fp0
       fmovel  (0,a0,a0.w), fp0
       fmovel  (-0x80,a0,a0.w), fp0
-      fmovel  (0,a0,a0.l), fp0
-      fmovel  (-0x80,a0,a0.l), fp0
       fintl   (0,a0,d4.l), fp0
       fintl   (-0x80,a0,d4.l), fp0
-      fintl   (0,a0,d5.w), fp0
-      fintl   (-0x80,a0,d5.w), fp0
       fintl   (0,a0,a0.w), fp0
       fintl   (-0x80,a0,a0.w), fp0
-      fintl   (0,a0,a0.l), fp0
-      fintl   (-0x80,a0,a0.l), fp0
       fsinhl  (0,a0,d4.l), fp0
       fsinhl  (-0x80,a0,d4.l), fp0
-      fsinhl  (0,a0,d5.w), fp0
-      fsinhl  (-0x80,a0,d5.w), fp0
       fsinhl  (0,a0,a0.w), fp0
       fsinhl  (-0x80,a0,a0.w), fp0
-      fsinhl  (0,a0,a0.l), fp0
-      fsinhl  (-0x80,a0,a0.l), fp0
       fintrzl (0,a0,d4.l), fp0
       fintrzl (-0x80,a0,d4.l), fp0
-      fintrzl (0,a0,d5.w), fp0
-      fintrzl (-0x80,a0,d5.w), fp0
       fintrzl (0,a0,a0.w), fp0
       fintrzl (-0x80,a0,a0.w), fp0
-      fintrzl (0,a0,a0.l), fp0
-      fintrzl (-0x80,a0,a0.l), fp0
       fsqrtl  (0,a0,d4.l), fp0
       fsqrtl  (-0x80,a0,d4.l), fp0
-      fsqrtl  (0,a0,d5.w), fp0
-      fsqrtl  (-0x80,a0,d5.w), fp0
       fsqrtl  (0,a0,a0.w), fp0
       fsqrtl  (-0x80,a0,a0.w), fp0
-      fsqrtl  (0,a0,a0.l), fp0
-      fsqrtl  (-0x80,a0,a0.l), fp0
       flognp1l    (0,a0,d4.l), fp0
       flognp1l    (-0x80,a0,d4.l), fp0
-      flognp1l    (0,a0,d5.w), fp0
-      flognp1l    (-0x80,a0,d5.w), fp0
       flognp1l    (0,a0,a0.w), fp0
       flognp1l    (-0x80,a0,a0.w), fp0
-      flognp1l    (0,a0,a0.l), fp0
-      flognp1l    (-0x80,a0,a0.l), fp0
       fetoxm1l    (0,a0,d4.l), fp0
       fetoxm1l    (-0x80,a0,d4.l), fp0
-      fetoxm1l    (0,a0,d5.w), fp0
-      fetoxm1l    (-0x80,a0,d5.w), fp0
       fetoxm1l    (0,a0,a0.w), fp0
       fetoxm1l    (-0x80,a0,a0.w), fp0
-      fetoxm1l    (0,a0,a0.l), fp0
-      fetoxm1l    (-0x80,a0,a0.l), fp0
       ftanhl  (0,a0,d4.l), fp0
       ftanhl  (-0x80,a0,d4.l), fp0
-      ftanhl  (0,a0,d5.w), fp0
-      ftanhl  (-0x80,a0,d5.w), fp0
       ftanhl  (0,a0,a0.w), fp0
       ftanhl  (-0x80,a0,a0.w), fp0
-      ftanhl  (0,a0,a0.l), fp0
-      ftanhl  (-0x80,a0,a0.l), fp0
       fatanl  (0,a0,d4.l), fp0
       fatanl  (-0x80,a0,d4.l), fp0
-      fatanl  (0,a0,d5.w), fp0
-      fatanl  (-0x80,a0,d5.w), fp0
       fatanl  (0,a0,a0.w), fp0
       fatanl  (-0x80,a0,a0.w), fp0
-      fatanl  (0,a0,a0.l), fp0
-      fatanl  (-0x80,a0,a0.l), fp0
       fasinl  (0,a0,d4.l), fp0
       fasinl  (-0x80,a0,d4.l), fp0
-      fasinl  (0,a0,d5.w), fp0
-      fasinl  (-0x80,a0,d5.w), fp0
       fasinl  (0,a0,a0.w), fp0
       fasinl  (-0x80,a0,a0.w), fp0
-      fasinl  (0,a0,a0.l), fp0
-      fasinl  (-0x80,a0,a0.l), fp0
       fatanhl (0,a0,d4.l), fp0
       fatanhl (-0x80,a0,d4.l), fp0
-      fatanhl (0,a0,d5.w), fp0
-      fatanhl (-0x80,a0,d5.w), fp0
       fatanhl (0,a0,a0.w), fp0
       fatanhl (-0x80,a0,a0.w), fp0
-      fatanhl (0,a0,a0.l), fp0
-      fatanhl (-0x80,a0,a0.l), fp0
       fsinl   (0,a0,d4.l), fp0
       fsinl   (-0x80,a0,d4.l), fp0
-      fsinl   (0,a0,d5.w), fp0
-      fsinl   (-0x80,a0,d5.w), fp0
       fsinl   (0,a0,a0.w), fp0
       fsinl   (-0x80,a0,a0.w), fp0
-      fsinl   (0,a0,a0.l), fp0
-      fsinl   (-0x80,a0,a0.l), fp0
       ftanl   (0,a0,d4.l), fp0
       ftanl   (-0x80,a0,d4.l), fp0
-      ftanl   (0,a0,d5.w), fp0
-      ftanl   (-0x80,a0,d5.w), fp0
       ftanl   (0,a0,a0.w), fp0
       ftanl   (-0x80,a0,a0.w), fp0
-      ftanl   (0,a0,a0.l), fp0
-      ftanl   (-0x80,a0,a0.l), fp0
       fetoxl  (0,a0,d4.l), fp0
       fetoxl  (-0x80,a0,d4.l), fp0
-      fetoxl  (0,a0,d5.w), fp0
-      fetoxl  (-0x80,a0,d5.w), fp0
       fetoxl  (0,a0,a0.w), fp0
       fetoxl  (-0x80,a0,a0.w), fp0
-      fetoxl  (0,a0,a0.l), fp0
-      fetoxl  (-0x80,a0,a0.l), fp0
       ftwotoxl    (0,a0,d4.l), fp0
       ftwotoxl    (-0x80,a0,d4.l), fp0
-      ftwotoxl    (0,a0,d5.w), fp0
-      ftwotoxl    (-0x80,a0,d5.w), fp0
       ftwotoxl    (0,a0,a0.w), fp0
       ftwotoxl    (-0x80,a0,a0.w), fp0
-      ftwotoxl    (0,a0,a0.l), fp0
-      ftwotoxl    (-0x80,a0,a0.l), fp0
       ftentoxl    (0,a0,d4.l), fp0
       ftentoxl    (-0x80,a0,d4.l), fp0
-      ftentoxl    (0,a0,d5.w), fp0
-      ftentoxl    (-0x80,a0,d5.w), fp0
       ftentoxl    (0,a0,a0.w), fp0
       ftentoxl    (-0x80,a0,a0.w), fp0
-      ftentoxl    (0,a0,a0.l), fp0
-      ftentoxl    (-0x80,a0,a0.l), fp0
       flognl  (0,a0,d4.l), fp0
       flognl  (-0x80,a0,d4.l), fp0
-      flognl  (0,a0,d5.w), fp0
-      flognl  (-0x80,a0,d5.w), fp0
       flognl  (0,a0,a0.w), fp0
       flognl  (-0x80,a0,a0.w), fp0
-      flognl  (0,a0,a0.l), fp0
-      flognl  (-0x80,a0,a0.l), fp0
       flog10l (0,a0,d4.l), fp0
       flog10l (-0x80,a0,d4.l), fp0
-      flog10l (0,a0,d5.w), fp0
-      flog10l (-0x80,a0,d5.w), fp0
       flog10l (0,a0,a0.w), fp0
       flog10l (-0x80,a0,a0.w), fp0
-      flog10l (0,a0,a0.l), fp0
-      flog10l (-0x80,a0,a0.l), fp0
       flog2l  (0,a0,d4.l), fp0
       flog2l  (-0x80,a0,d4.l), fp0
-      flog2l  (0,a0,d5.w), fp0
-      flog2l  (-0x80,a0,d5.w), fp0
       flog2l  (0,a0,a0.w), fp0
       flog2l  (-0x80,a0,a0.w), fp0
-      flog2l  (0,a0,a0.l), fp0
-      flog2l  (-0x80,a0,a0.l), fp0
       fabsl   (0,a0,d4.l), fp0
       fabsl   (-0x80,a0,d4.l), fp0
-      fabsl   (0,a0,d5.w), fp0
-      fabsl   (-0x80,a0,d5.w), fp0
       fabsl   (0,a0,a0.w), fp0
       fabsl   (-0x80,a0,a0.w), fp0
-      fabsl   (0,a0,a0.l), fp0
-      fabsl   (-0x80,a0,a0.l), fp0
       fcoshl  (0,a0,d4.l), fp0
       fcoshl  (-0x80,a0,d4.l), fp0
-      fcoshl  (0,a0,d5.w), fp0
-      fcoshl  (-0x80,a0,d5.w), fp0
       fcoshl  (0,a0,a0.w), fp0
       fcoshl  (-0x80,a0,a0.w), fp0
-      fcoshl  (0,a0,a0.l), fp0
-      fcoshl  (-0x80,a0,a0.l), fp0
       fnegl   (0,a0,d4.l), fp0
       fnegl   (-0x80,a0,d4.l), fp0
-      fnegl   (0,a0,d5.w), fp0
-      fnegl   (-0x80,a0,d5.w), fp0
       fnegl   (0,a0,a0.w), fp0
       fnegl   (-0x80,a0,a0.w), fp0
-      fnegl   (0,a0,a0.l), fp0
-      fnegl   (-0x80,a0,a0.l), fp0
       facosl  (0,a0,d4.l), fp0
       facosl  (-0x80,a0,d4.l), fp0
-      facosl  (0,a0,d5.w), fp0
-      facosl  (-0x80,a0,d5.w), fp0
       facosl  (0,a0,a0.w), fp0
       facosl  (-0x80,a0,a0.w), fp0
-      facosl  (0,a0,a0.l), fp0
-      facosl  (-0x80,a0,a0.l), fp0
       fcosl   (0,a0,d4.l), fp0
       fcosl   (-0x80,a0,d4.l), fp0
-      fcosl   (0,a0,d5.w), fp0
-      fcosl   (-0x80,a0,d5.w), fp0
       fcosl   (0,a0,a0.w), fp0
       fcosl   (-0x80,a0,a0.w), fp0
-      fcosl   (0,a0,a0.l), fp0
-      fcosl   (-0x80,a0,a0.l), fp0
       fgetexpl    (0,a0,d4.l), fp0
       fgetexpl    (-0x80,a0,d4.l), fp0
-      fgetexpl    (0,a0,d5.w), fp0
-      fgetexpl    (-0x80,a0,d5.w), fp0
       fgetexpl    (0,a0,a0.w), fp0
       fgetexpl    (-0x80,a0,a0.w), fp0
-      fgetexpl    (0,a0,a0.l), fp0
-      fgetexpl    (-0x80,a0,a0.l), fp0
       fgetmanl    (0,a0,d4.l), fp0
       fgetmanl    (-0x80,a0,d4.l), fp0
-      fgetmanl    (0,a0,d5.w), fp0
-      fgetmanl    (-0x80,a0,d5.w), fp0
       fgetmanl    (0,a0,a0.w), fp0
       fgetmanl    (-0x80,a0,a0.w), fp0
-      fgetmanl    (0,a0,a0.l), fp0
-      fgetmanl    (-0x80,a0,a0.l), fp0
       fdivl   (0,a0,d4.l), fp0
       fdivl   (-0x80,a0,d4.l), fp0
-      fdivl   (0,a0,d5.w), fp0
-      fdivl   (-0x80,a0,d5.w), fp0
       fdivl   (0,a0,a0.w), fp0
       fdivl   (-0x80,a0,a0.w), fp0
-      fdivl   (0,a0,a0.l), fp0
-      fdivl   (-0x80,a0,a0.l), fp0
       fmodl   (0,a0,d4.l), fp0
       fmodl   (-0x80,a0,d4.l), fp0
-      fmodl   (0,a0,d5.w), fp0
-      fmodl   (-0x80,a0,d5.w), fp0
       fmodl   (0,a0,a0.w), fp0
       fmodl   (-0x80,a0,a0.w), fp0
-      fmodl   (0,a0,a0.l), fp0
-      fmodl   (-0x80,a0,a0.l), fp0
       faddl   (0,a0,d4.l), fp0
       faddl   (-0x80,a0,d4.l), fp0
-      faddl   (0,a0,d5.w), fp0
-      faddl   (-0x80,a0,d5.w), fp0
       faddl   (0,a0,a0.w), fp0
       faddl   (-0x80,a0,a0.w), fp0
-      faddl   (0,a0,a0.l), fp0
-      faddl   (-0x80,a0,a0.l), fp0
       fmull   (0,a0,d4.l), fp0
       fmull   (-0x80,a0,d4.l), fp0
-      fmull   (0,a0,d5.w), fp0
-      fmull   (-0x80,a0,d5.w), fp0
       fmull   (0,a0,a0.w), fp0
       fmull   (-0x80,a0,a0.w), fp0
-      fmull   (0,a0,a0.l), fp0
-      fmull   (-0x80,a0,a0.l), fp0
       fsgldivl    (0,a0,d4.l), fp0
       fsgldivl    (-0x80,a0,d4.l), fp0
-      fsgldivl    (0,a0,d5.w), fp0
-      fsgldivl    (-0x80,a0,d5.w), fp0
       fsgldivl    (0,a0,a0.w), fp0
       fsgldivl    (-0x80,a0,a0.w), fp0
-      fsgldivl    (0,a0,a0.l), fp0
-      fsgldivl    (-0x80,a0,a0.l), fp0
       freml   (0,a0,d4.l), fp0
       freml   (-0x80,a0,d4.l), fp0
-      freml   (0,a0,d5.w), fp0
-      freml   (-0x80,a0,d5.w), fp0
       freml   (0,a0,a0.w), fp0
       freml   (-0x80,a0,a0.w), fp0
-      freml   (0,a0,a0.l), fp0
-      freml   (-0x80,a0,a0.l), fp0
       fscalel (0,a0,d4.l), fp0
       fscalel (-0x80,a0,d4.l), fp0
-      fscalel (0,a0,d5.w), fp0
-      fscalel (-0x80,a0,d5.w), fp0
       fscalel (0,a0,a0.w), fp0
       fscalel (-0x80,a0,a0.w), fp0
-      fscalel (0,a0,a0.l), fp0
-      fscalel (-0x80,a0,a0.l), fp0
       fsglmull    (0,a0,d4.l), fp0
       fsglmull    (-0x80,a0,d4.l), fp0
-      fsglmull    (0,a0,d5.w), fp0
-      fsglmull    (-0x80,a0,d5.w), fp0
       fsglmull    (0,a0,a0.w), fp0
       fsglmull    (-0x80,a0,a0.w), fp0
-      fsglmull    (0,a0,a0.l), fp0
-      fsglmull    (-0x80,a0,a0.l), fp0
       fsubl   (0,a0,d4.l), fp0
       fsubl   (-0x80,a0,d4.l), fp0
-      fsubl   (0,a0,d5.w), fp0
-      fsubl   (-0x80,a0,d5.w), fp0
       fsubl   (0,a0,a0.w), fp0
       fsubl   (-0x80,a0,a0.w), fp0
-      fsubl   (0,a0,a0.l), fp0
-      fsubl   (-0x80,a0,a0.l), fp0
       fsincosl    (0,a0,d4.l), fp0:fp0
       fsincosl    (-0x80,a0,d4.l), fp0:fp0
-      fsincosl    (0,a0,d5.w), fp0:fp0
-      fsincosl    (-0x80,a0,d5.w), fp0:fp0
       fsincosl    (0,a0,a0.w), fp0:fp0
       fsincosl    (-0x80,a0,a0.w), fp0:fp0
-      fsincosl    (0,a0,a0.l), fp0:fp0
-      fsincosl    (-0x80,a0,a0.l), fp0:fp0
       fcmpl   (0,a0,d4.l), fp0
       fcmpl   (-0x80,a0,d4.l), fp0
-      fcmpl   (0,a0,d5.w), fp0
-      fcmpl   (-0x80,a0,d5.w), fp0
       fcmpl   (0,a0,a0.w), fp0
       fcmpl   (-0x80,a0,a0.w), fp0
-      fcmpl   (0,a0,a0.l), fp0
-      fcmpl   (-0x80,a0,a0.l), fp0
       ftstl   (0,a0,d4.l)
       ftstl   (-0x80,a0,d4.l)
-      ftstl   (0,a0,d5.w)
-      ftstl   (-0x80,a0,d5.w)
       ftstl   (0,a0,a0.w)
       ftstl   (-0x80,a0,a0.w)
-      ftstl   (0,a0,a0.l)
-      ftstl   (-0x80,a0,a0.l)
       fmoves  (0,a0,d4.l), fp0
       fmoves  (-0x80,a0,d4.l), fp0
-      fmoves  (0,a0,d5.w), fp0
-      fmoves  (-0x80,a0,d5.w), fp0
       fmoves  (0,a0,a0.w), fp0
       fmoves  (-0x80,a0,a0.w), fp0
-      fmoves  (0,a0,a0.l), fp0
-      fmoves  (-0x80,a0,a0.l), fp0
       fints   (0,a0,d4.l), fp0
       fints   (-0x80,a0,d4.l), fp0
-      fints   (0,a0,d5.w), fp0
-      fints   (-0x80,a0,d5.w), fp0
       fints   (0,a0,a0.w), fp0
       fints   (-0x80,a0,a0.w), fp0
-      fints   (0,a0,a0.l), fp0
-      fints   (-0x80,a0,a0.l), fp0
       fsinhs  (0,a0,d4.l), fp0
       fsinhs  (-0x80,a0,d4.l), fp0
-      fsinhs  (0,a0,d5.w), fp0
-      fsinhs  (-0x80,a0,d5.w), fp0
       fsinhs  (0,a0,a0.w), fp0
       fsinhs  (-0x80,a0,a0.w), fp0
-      fsinhs  (0,a0,a0.l), fp0
-      fsinhs  (-0x80,a0,a0.l), fp0
       fintrzs (0,a0,d4.l), fp0
       fintrzs (-0x80,a0,d4.l), fp0
-      fintrzs (0,a0,d5.w), fp0
-      fintrzs (-0x80,a0,d5.w), fp0
       fintrzs (0,a0,a0.w), fp0
       fintrzs (-0x80,a0,a0.w), fp0
-      fintrzs (0,a0,a0.l), fp0
-      fintrzs (-0x80,a0,a0.l), fp0
       fsqrts  (0,a0,d4.l), fp0
       fsqrts  (-0x80,a0,d4.l), fp0
-      fsqrts  (0,a0,d5.w), fp0
-      fsqrts  (-0x80,a0,d5.w), fp0
       fsqrts  (0,a0,a0.w), fp0
       fsqrts  (-0x80,a0,a0.w), fp0
-      fsqrts  (0,a0,a0.l), fp0
-      fsqrts  (-0x80,a0,a0.l), fp0
       flognp1s    (0,a0,d4.l), fp0
       flognp1s    (-0x80,a0,d4.l), fp0
-      flognp1s    (0,a0,d5.w), fp0
-      flognp1s    (-0x80,a0,d5.w), fp0
       flognp1s    (0,a0,a0.w), fp0
       flognp1s    (-0x80,a0,a0.w), fp0
-      flognp1s    (0,a0,a0.l), fp0
-      flognp1s    (-0x80,a0,a0.l), fp0
       fetoxm1s    (0,a0,d4.l), fp0
       fetoxm1s    (-0x80,a0,d4.l), fp0
-      fetoxm1s    (0,a0,d5.w), fp0
-      fetoxm1s    (-0x80,a0,d5.w), fp0
       fetoxm1s    (0,a0,a0.w), fp0
       fetoxm1s    (-0x80,a0,a0.w), fp0
-      fetoxm1s    (0,a0,a0.l), fp0
-      fetoxm1s    (-0x80,a0,a0.l), fp0
       ftanhs  (0,a0,d4.l), fp0
       ftanhs  (-0x80,a0,d4.l), fp0
-      ftanhs  (0,a0,d5.w), fp0
-      ftanhs  (-0x80,a0,d5.w), fp0
       ftanhs  (0,a0,a0.w), fp0
       ftanhs  (-0x80,a0,a0.w), fp0
-      ftanhs  (0,a0,a0.l), fp0
-      ftanhs  (-0x80,a0,a0.l), fp0
       fatans  (0,a0,d4.l), fp0
       fatans  (-0x80,a0,d4.l), fp0
-      fatans  (0,a0,d5.w), fp0
-      fatans  (-0x80,a0,d5.w), fp0
       fatans  (0,a0,a0.w), fp0
       fatans  (-0x80,a0,a0.w), fp0
-      fatans  (0,a0,a0.l), fp0
-      fatans  (-0x80,a0,a0.l), fp0
       fasins  (0,a0,d4.l), fp0
       fasins  (-0x80,a0,d4.l), fp0
-      fasins  (0,a0,d5.w), fp0
-      fasins  (-0x80,a0,d5.w), fp0
       fasins  (0,a0,a0.w), fp0
       fasins  (-0x80,a0,a0.w), fp0
-      fasins  (0,a0,a0.l), fp0
-      fasins  (-0x80,a0,a0.l), fp0
       fatanhs (0,a0,d4.l), fp0
       fatanhs (-0x80,a0,d4.l), fp0
-      fatanhs (0,a0,d5.w), fp0
-      fatanhs (-0x80,a0,d5.w), fp0
       fatanhs (0,a0,a0.w), fp0
       fatanhs (-0x80,a0,a0.w), fp0
-      fatanhs (0,a0,a0.l), fp0
-      fatanhs (-0x80,a0,a0.l), fp0
       fsins   (0,a0,d4.l), fp0
       fsins   (-0x80,a0,d4.l), fp0
-      fsins   (0,a0,d5.w), fp0
-      fsins   (-0x80,a0,d5.w), fp0
       fsins   (0,a0,a0.w), fp0
       fsins   (-0x80,a0,a0.w), fp0
-      fsins   (0,a0,a0.l), fp0
-      fsins   (-0x80,a0,a0.l), fp0
       ftans   (0,a0,d4.l), fp0
       ftans   (-0x80,a0,d4.l), fp0
-      ftans   (0,a0,d5.w), fp0
-      ftans   (-0x80,a0,d5.w), fp0
       ftans   (0,a0,a0.w), fp0
       ftans   (-0x80,a0,a0.w), fp0
-      ftans   (0,a0,a0.l), fp0
-      ftans   (-0x80,a0,a0.l), fp0
       fetoxs  (0,a0,d4.l), fp0
       fetoxs  (-0x80,a0,d4.l), fp0
-      fetoxs  (0,a0,d5.w), fp0
-      fetoxs  (-0x80,a0,d5.w), fp0
       fetoxs  (0,a0,a0.w), fp0
       fetoxs  (-0x80,a0,a0.w), fp0
-      fetoxs  (0,a0,a0.l), fp0
-      fetoxs  (-0x80,a0,a0.l), fp0
       ftwotoxs    (0,a0,d4.l), fp0
       ftwotoxs    (-0x80,a0,d4.l), fp0
-      ftwotoxs    (0,a0,d5.w), fp0
-      ftwotoxs    (-0x80,a0,d5.w), fp0
       ftwotoxs    (0,a0,a0.w), fp0
       ftwotoxs    (-0x80,a0,a0.w), fp0
-      ftwotoxs    (0,a0,a0.l), fp0
-      ftwotoxs    (-0x80,a0,a0.l), fp0
       ftentoxs    (0,a0,d4.l), fp0
       ftentoxs    (-0x80,a0,d4.l), fp0
-      ftentoxs    (0,a0,d5.w), fp0
-      ftentoxs    (-0x80,a0,d5.w), fp0
       ftentoxs    (0,a0,a0.w), fp0
       ftentoxs    (-0x80,a0,a0.w), fp0
-      ftentoxs    (0,a0,a0.l), fp0
-      ftentoxs    (-0x80,a0,a0.l), fp0
       flogns  (0,a0,d4.l), fp0
       flogns  (-0x80,a0,d4.l), fp0
-      flogns  (0,a0,d5.w), fp0
-      flogns  (-0x80,a0,d5.w), fp0
       flogns  (0,a0,a0.w), fp0
       flogns  (-0x80,a0,a0.w), fp0
-      flogns  (0,a0,a0.l), fp0
-      flogns  (-0x80,a0,a0.l), fp0
       flog10s (0,a0,d4.l), fp0
       flog10s (-0x80,a0,d4.l), fp0
-      flog10s (0,a0,d5.w), fp0
-      flog10s (-0x80,a0,d5.w), fp0
       flog10s (0,a0,a0.w), fp0
       flog10s (-0x80,a0,a0.w), fp0
-      flog10s (0,a0,a0.l), fp0
-      flog10s (-0x80,a0,a0.l), fp0
       flog2s  (0,a0,d4.l), fp0
       flog2s  (-0x80,a0,d4.l), fp0
-      flog2s  (0,a0,d5.w), fp0
-      flog2s  (-0x80,a0,d5.w), fp0
       flog2s  (0,a0,a0.w), fp0
       flog2s  (-0x80,a0,a0.w), fp0
-      flog2s  (0,a0,a0.l), fp0
-      flog2s  (-0x80,a0,a0.l), fp0
       fabss   (0,a0,d4.l), fp0
       fabss   (-0x80,a0,d4.l), fp0
-      fabss   (0,a0,d5.w), fp0
-      fabss   (-0x80,a0,d5.w), fp0
       fabss   (0,a0,a0.w), fp0
       fabss   (-0x80,a0,a0.w), fp0
-      fabss   (0,a0,a0.l), fp0
-      fabss   (-0x80,a0,a0.l), fp0
       fcoshs  (0,a0,d4.l), fp0
       fcoshs  (-0x80,a0,d4.l), fp0
-      fcoshs  (0,a0,d5.w), fp0
-      fcoshs  (-0x80,a0,d5.w), fp0
       fcoshs  (0,a0,a0.w), fp0
       fcoshs  (-0x80,a0,a0.w), fp0
-      fcoshs  (0,a0,a0.l), fp0
-      fcoshs  (-0x80,a0,a0.l), fp0
       fnegs   (0,a0,d4.l), fp0
       fnegs   (-0x80,a0,d4.l), fp0
-      fnegs   (0,a0,d5.w), fp0
-      fnegs   (-0x80,a0,d5.w), fp0
       fnegs   (0,a0,a0.w), fp0
       fnegs   (-0x80,a0,a0.w), fp0
-      fnegs   (0,a0,a0.l), fp0
-      fnegs   (-0x80,a0,a0.l), fp0
       facoss  (0,a0,d4.l), fp0
       facoss  (-0x80,a0,d4.l), fp0
-      facoss  (0,a0,d5.w), fp0
-      facoss  (-0x80,a0,d5.w), fp0
       facoss  (0,a0,a0.w), fp0
       facoss  (-0x80,a0,a0.w), fp0
-      facoss  (0,a0,a0.l), fp0
-      facoss  (-0x80,a0,a0.l), fp0
       fcoss   (0,a0,d4.l), fp0
       fcoss   (-0x80,a0,d4.l), fp0
-      fcoss   (0,a0,d5.w), fp0
-      fcoss   (-0x80,a0,d5.w), fp0
       fcoss   (0,a0,a0.w), fp0
       fcoss   (-0x80,a0,a0.w), fp0
-      fcoss   (0,a0,a0.l), fp0
-      fcoss   (-0x80,a0,a0.l), fp0
       fgetexps    (0,a0,d4.l), fp0
       fgetexps    (-0x80,a0,d4.l), fp0
-      fgetexps    (0,a0,d5.w), fp0
-      fgetexps    (-0x80,a0,d5.w), fp0
       fgetexps    (0,a0,a0.w), fp0
       fgetexps    (-0x80,a0,a0.w), fp0
-      fgetexps    (0,a0,a0.l), fp0
-      fgetexps    (-0x80,a0,a0.l), fp0
       fgetmans    (0,a0,d4.l), fp0
       fgetmans    (-0x80,a0,d4.l), fp0
-      fgetmans    (0,a0,d5.w), fp0
-      fgetmans    (-0x80,a0,d5.w), fp0
       fgetmans    (0,a0,a0.w), fp0
       fgetmans    (-0x80,a0,a0.w), fp0
-      fgetmans    (0,a0,a0.l), fp0
-      fgetmans    (-0x80,a0,a0.l), fp0
       fdivs   (0,a0,d4.l), fp0
       fdivs   (-0x80,a0,d4.l), fp0
-      fdivs   (0,a0,d5.w), fp0
-      fdivs   (-0x80,a0,d5.w), fp0
       fdivs   (0,a0,a0.w), fp0
       fdivs   (-0x80,a0,a0.w), fp0
-      fdivs   (0,a0,a0.l), fp0
-      fdivs   (-0x80,a0,a0.l), fp0
       fmods   (0,a0,d4.l), fp0
       fmods   (-0x80,a0,d4.l), fp0
-      fmods   (0,a0,d5.w), fp0
-      fmods   (-0x80,a0,d5.w), fp0
       fmods   (0,a0,a0.w), fp0
       fmods   (-0x80,a0,a0.w), fp0
-      fmods   (0,a0,a0.l), fp0
-      fmods   (-0x80,a0,a0.l), fp0
       fadds   (0,a0,d4.l), fp0
       fadds   (-0x80,a0,d4.l), fp0
-      fadds   (0,a0,d5.w), fp0
-      fadds   (-0x80,a0,d5.w), fp0
       fadds   (0,a0,a0.w), fp0
       fadds   (-0x80,a0,a0.w), fp0
-      fadds   (0,a0,a0.l), fp0
-      fadds   (-0x80,a0,a0.l), fp0
       fmuls   (0,a0,d4.l), fp0
       fmuls   (-0x80,a0,d4.l), fp0
-      fmuls   (0,a0,d5.w), fp0
-      fmuls   (-0x80,a0,d5.w), fp0
       fmuls   (0,a0,a0.w), fp0
       fmuls   (-0x80,a0,a0.w), fp0
-      fmuls   (0,a0,a0.l), fp0
-      fmuls   (-0x80,a0,a0.l), fp0
       fsgldivs    (0,a0,d4.l), fp0
       fsgldivs    (-0x80,a0,d4.l), fp0
-      fsgldivs    (0,a0,d5.w), fp0
-      fsgldivs    (-0x80,a0,d5.w), fp0
       fsgldivs    (0,a0,a0.w), fp0
       fsgldivs    (-0x80,a0,a0.w), fp0
-      fsgldivs    (0,a0,a0.l), fp0
-      fsgldivs    (-0x80,a0,a0.l), fp0
       frems   (0,a0,d4.l), fp0
       frems   (-0x80,a0,d4.l), fp0
-      frems   (0,a0,d5.w), fp0
-      frems   (-0x80,a0,d5.w), fp0
       frems   (0,a0,a0.w), fp0
       frems   (-0x80,a0,a0.w), fp0
-      frems   (0,a0,a0.l), fp0
-      frems   (-0x80,a0,a0.l), fp0
       fscales (0,a0,d4.l), fp0
       fscales (-0x80,a0,d4.l), fp0
-      fscales (0,a0,d5.w), fp0
-      fscales (-0x80,a0,d5.w), fp0
       fscales (0,a0,a0.w), fp0
       fscales (-0x80,a0,a0.w), fp0
-      fscales (0,a0,a0.l), fp0
-      fscales (-0x80,a0,a0.l), fp0
       fsglmuls    (0,a0,d4.l), fp0
       fsglmuls    (-0x80,a0,d4.l), fp0
-      fsglmuls    (0,a0,d5.w), fp0
-      fsglmuls    (-0x80,a0,d5.w), fp0
       fsglmuls    (0,a0,a0.w), fp0
       fsglmuls    (-0x80,a0,a0.w), fp0
-      fsglmuls    (0,a0,a0.l), fp0
-      fsglmuls    (-0x80,a0,a0.l), fp0
       fsubs   (0,a0,d4.l), fp0
       fsubs   (-0x80,a0,d4.l), fp0
-      fsubs   (0,a0,d5.w), fp0
-      fsubs   (-0x80,a0,d5.w), fp0
       fsubs   (0,a0,a0.w), fp0
       fsubs   (-0x80,a0,a0.w), fp0
-      fsubs   (0,a0,a0.l), fp0
-      fsubs   (-0x80,a0,a0.l), fp0
       fsincoss    (0,a0,d4.l), fp0:fp0
       fsincoss    (-0x80,a0,d4.l), fp0:fp0
-      fsincoss    (0,a0,d5.w), fp0:fp0
-      fsincoss    (-0x80,a0,d5.w), fp0:fp0
       fsincoss    (0,a0,a0.w), fp0:fp0
       fsincoss    (-0x80,a0,a0.w), fp0:fp0
-      fsincoss    (0,a0,a0.l), fp0:fp0
-      fsincoss    (-0x80,a0,a0.l), fp0:fp0
       fcmps   (0,a0,d4.l), fp0
       fcmps   (-0x80,a0,d4.l), fp0
-      fcmps   (0,a0,d5.w), fp0
-      fcmps   (-0x80,a0,d5.w), fp0
       fcmps   (0,a0,a0.w), fp0
       fcmps   (-0x80,a0,a0.w), fp0
-      fcmps   (0,a0,a0.l), fp0
-      fcmps   (-0x80,a0,a0.l), fp0
       ftsts   (0,a0,d4.l)
       ftsts   (-0x80,a0,d4.l)
-      ftsts   (0,a0,d5.w)
-      ftsts   (-0x80,a0,d5.w)
       ftsts   (0,a0,a0.w)
       ftsts   (-0x80,a0,a0.w)
-      ftsts   (0,a0,a0.l)
-      ftsts   (-0x80,a0,a0.l)
       fmovex  (0,a0,d5.w), fp0
       fmovex  (-0x80,a0,d5.w), fp0
-      fmovex  (0,a0,d5.l), fp0
-      fmovex  (-0x80,a0,d5.l), fp0
       fmovex  (0,a0,a0.w), fp0
       fmovex  (-0x80,a0,a0.w), fp0
-      fmovex  (0,a0,a0.l), fp0
-      fmovex  (-0x80,a0,a0.l), fp0
       fintx   (0,a0,d5.w), fp0
       fintx   (-0x80,a0,d5.w), fp0
-      fintx   (0,a0,d5.l), fp0
-      fintx   (-0x80,a0,d5.l), fp0
       fintx   (0,a0,a0.w), fp0
       fintx   (-0x80,a0,a0.w), fp0
-      fintx   (0,a0,a0.l), fp0
-      fintx   (-0x80,a0,a0.l), fp0
       fsinhx  (0,a0,d5.w), fp0
       fsinhx  (-0x80,a0,d5.w), fp0
-      fsinhx  (0,a0,d5.l), fp0
-      fsinhx  (-0x80,a0,d5.l), fp0
       fsinhx  (0,a0,a0.w), fp0
       fsinhx  (-0x80,a0,a0.w), fp0
-      fsinhx  (0,a0,a0.l), fp0
-      fsinhx  (-0x80,a0,a0.l), fp0
       fintrzx (0,a0,d5.w), fp0
       fintrzx (-0x80,a0,d5.w), fp0
-      fintrzx (0,a0,d5.l), fp0
-      fintrzx (-0x80,a0,d5.l), fp0
       fintrzx (0,a0,a0.w), fp0
       fintrzx (-0x80,a0,a0.w), fp0
-      fintrzx (0,a0,a0.l), fp0
-      fintrzx (-0x80,a0,a0.l), fp0
       fsqrtx  (0,a0,d5.w), fp0
       fsqrtx  (-0x80,a0,d5.w), fp0
-      fsqrtx  (0,a0,d5.l), fp0
-      fsqrtx  (-0x80,a0,d5.l), fp0
       fsqrtx  (0,a0,a0.w), fp0
       fsqrtx  (-0x80,a0,a0.w), fp0
-      fsqrtx  (0,a0,a0.l), fp0
-      fsqrtx  (-0x80,a0,a0.l), fp0
       flognp1x    (0,a0,d5.w), fp0
       flognp1x    (-0x80,a0,d5.w), fp0
-      flognp1x    (0,a0,d5.l), fp0
-      flognp1x    (-0x80,a0,d5.l), fp0
       flognp1x    (0,a0,a0.w), fp0
       flognp1x    (-0x80,a0,a0.w), fp0
-      flognp1x    (0,a0,a0.l), fp0
-      flognp1x    (-0x80,a0,a0.l), fp0
       fetoxm1x    (0,a0,d5.w), fp0
       fetoxm1x    (-0x80,a0,d5.w), fp0
-      fetoxm1x    (0,a0,d5.l), fp0
-      fetoxm1x    (-0x80,a0,d5.l), fp0
       fetoxm1x    (0,a0,a0.w), fp0
       fetoxm1x    (-0x80,a0,a0.w), fp0
-      fetoxm1x    (0,a0,a0.l), fp0
-      fetoxm1x    (-0x80,a0,a0.l), fp0
       ftanhx  (0,a0,d5.w), fp0
       ftanhx  (-0x80,a0,d5.w), fp0
-      ftanhx  (0,a0,d5.l), fp0
-      ftanhx  (-0x80,a0,d5.l), fp0
       ftanhx  (0,a0,a0.w), fp0
       ftanhx  (-0x80,a0,a0.w), fp0
-      ftanhx  (0,a0,a0.l), fp0
-      ftanhx  (-0x80,a0,a0.l), fp0
       fatanx  (0,a0,d5.w), fp0
       fatanx  (-0x80,a0,d5.w), fp0
-      fatanx  (0,a0,d5.l), fp0
-      fatanx  (-0x80,a0,d5.l), fp0
       fatanx  (0,a0,a0.w), fp0
       fatanx  (-0x80,a0,a0.w), fp0
-      fatanx  (0,a0,a0.l), fp0
-      fatanx  (-0x80,a0,a0.l), fp0
       fasinx  (0,a0,d5.w), fp0
       fasinx  (-0x80,a0,d5.w), fp0
-      fasinx  (0,a0,d5.l), fp0
-      fasinx  (-0x80,a0,d5.l), fp0
       fasinx  (0,a0,a0.w), fp0
       fasinx  (-0x80,a0,a0.w), fp0
-      fasinx  (0,a0,a0.l), fp0
-      fasinx  (-0x80,a0,a0.l), fp0
       fatanhx (0,a0,d5.w), fp0
       fatanhx (-0x80,a0,d5.w), fp0
-      fatanhx (0,a0,d5.l), fp0
-      fatanhx (-0x80,a0,d5.l), fp0
       fatanhx (0,a0,a0.w), fp0
       fatanhx (-0x80,a0,a0.w), fp0
-      fatanhx (0,a0,a0.l), fp0
-      fatanhx (-0x80,a0,a0.l), fp0
       fsinx   (0,a0,d5.w), fp0
       fsinx   (-0x80,a0,d5.w), fp0
-      fsinx   (0,a0,d5.l), fp0
-      fsinx   (-0x80,a0,d5.l), fp0
       fsinx   (0,a0,a0.w), fp0
       fsinx   (-0x80,a0,a0.w), fp0
-      fsinx   (0,a0,a0.l), fp0
-      fsinx   (-0x80,a0,a0.l), fp0
       ftanx   (0,a0,d5.w), fp0
       ftanx   (-0x80,a0,d5.w), fp0
-      ftanx   (0,a0,d5.l), fp0
-      ftanx   (-0x80,a0,d5.l), fp0
       ftanx   (0,a0,a0.w), fp0
       ftanx   (-0x80,a0,a0.w), fp0
-      ftanx   (0,a0,a0.l), fp0
-      ftanx   (-0x80,a0,a0.l), fp0
       fetoxx  (0,a0,d5.w), fp0
       fetoxx  (-0x80,a0,d5.w), fp0
-      fetoxx  (0,a0,d5.l), fp0
-      fetoxx  (-0x80,a0,d5.l), fp0
       fetoxx  (0,a0,a0.w), fp0
       fetoxx  (-0x80,a0,a0.w), fp0
-      fetoxx  (0,a0,a0.l), fp0
-      fetoxx  (-0x80,a0,a0.l), fp0
       ftwotoxx    (0,a0,d5.w), fp0
       ftwotoxx    (-0x80,a0,d5.w), fp0
-      ftwotoxx    (0,a0,d5.l), fp0
-      ftwotoxx    (-0x80,a0,d5.l), fp0
       ftwotoxx    (0,a0,a0.w), fp0
       ftwotoxx    (-0x80,a0,a0.w), fp0
-      ftwotoxx    (0,a0,a0.l), fp0
-      ftwotoxx    (-0x80,a0,a0.l), fp0
       ftentoxx    (0,a0,d5.w), fp0
       ftentoxx    (-0x80,a0,d5.w), fp0
-      ftentoxx    (0,a0,d5.l), fp0
-      ftentoxx    (-0x80,a0,d5.l), fp0
       ftentoxx    (0,a0,a0.w), fp0
       ftentoxx    (-0x80,a0,a0.w), fp0
-      ftentoxx    (0,a0,a0.l), fp0
-      ftentoxx    (-0x80,a0,a0.l), fp0
       flognx  (0,a0,d5.w), fp0
       flognx  (-0x80,a0,d5.w), fp0
-      flognx  (0,a0,d5.l), fp0
-      flognx  (-0x80,a0,d5.l), fp0
       flognx  (0,a0,a0.w), fp0
       flognx  (-0x80,a0,a0.w), fp0
-      flognx  (0,a0,a0.l), fp0
-      flognx  (-0x80,a0,a0.l), fp0
       flog10x (0,a0,d5.w), fp0
       flog10x (-0x80,a0,d5.w), fp0
-      flog10x (0,a0,d5.l), fp0
-      flog10x (-0x80,a0,d5.l), fp0
       flog10x (0,a0,a0.w), fp0
       flog10x (-0x80,a0,a0.w), fp0
-      flog10x (0,a0,a0.l), fp0
-      flog10x (-0x80,a0,a0.l), fp0
       flog2x  (0,a0,d5.w), fp0
       flog2x  (-0x80,a0,d5.w), fp0
-      flog2x  (0,a0,d5.l), fp0
-      flog2x  (-0x80,a0,d5.l), fp0
       flog2x  (0,a0,a0.w), fp0
       flog2x  (-0x80,a0,a0.w), fp0
-      flog2x  (0,a0,a0.l), fp0
-      flog2x  (-0x80,a0,a0.l), fp0
       fabsx   (0,a0,d5.w), fp0
       fabsx   (-0x80,a0,d5.w), fp0
-      fabsx   (0,a0,d5.l), fp0
-      fabsx   (-0x80,a0,d5.l), fp0
       fabsx   (0,a0,a0.w), fp0
       fabsx   (-0x80,a0,a0.w), fp0
-      fabsx   (0,a0,a0.l), fp0
-      fabsx   (-0x80,a0,a0.l), fp0
       fcoshx  (0,a0,d5.w), fp0
       fcoshx  (-0x80,a0,d5.w), fp0
-      fcoshx  (0,a0,d5.l), fp0
-      fcoshx  (-0x80,a0,d5.l), fp0
       fcoshx  (0,a0,a0.w), fp0
       fcoshx  (-0x80,a0,a0.w), fp0
-      fcoshx  (0,a0,a0.l), fp0
-      fcoshx  (-0x80,a0,a0.l), fp0
       fnegx   (0,a0,d5.w), fp0
       fnegx   (-0x80,a0,d5.w), fp0
-      fnegx   (0,a0,d5.l), fp0
-      fnegx   (-0x80,a0,d5.l), fp0
       fnegx   (0,a0,a0.w), fp0
       fnegx   (-0x80,a0,a0.w), fp0
-      fnegx   (0,a0,a0.l), fp0
-      fnegx   (-0x80,a0,a0.l), fp0
       facosx  (0,a0,d5.w), fp0
       facosx  (-0x80,a0,d5.w), fp0
-      facosx  (0,a0,d5.l), fp0
-      facosx  (-0x80,a0,d5.l), fp0
       facosx  (0,a0,a0.w), fp0
       facosx  (-0x80,a0,a0.w), fp0
-      facosx  (0,a0,a0.l), fp0
-      facosx  (-0x80,a0,a0.l), fp0
       fcosx   (0,a0,d5.w), fp0
       fcosx   (-0x80,a0,d5.w), fp0
-      fcosx   (0,a0,d5.l), fp0
-      fcosx   (-0x80,a0,d5.l), fp0
       fcosx   (0,a0,a0.w), fp0
       fcosx   (-0x80,a0,a0.w), fp0
-      fcosx   (0,a0,a0.l), fp0
-      fcosx   (-0x80,a0,a0.l), fp0
       fgetexpx    (0,a0,d5.w), fp0
       fgetexpx    (-0x80,a0,d5.w), fp0
-      fgetexpx    (0,a0,d5.l), fp0
-      fgetexpx    (-0x80,a0,d5.l), fp0
       fgetexpx    (0,a0,a0.w), fp0
       fgetexpx    (-0x80,a0,a0.w), fp0
-      fgetexpx    (0,a0,a0.l), fp0
-      fgetexpx    (-0x80,a0,a0.l), fp0
       fgetmanx    (0,a0,d5.w), fp0
       fgetmanx    (-0x80,a0,d5.w), fp0
-      fgetmanx    (0,a0,d5.l), fp0
-      fgetmanx    (-0x80,a0,d5.l), fp0
       fgetmanx    (0,a0,a0.w), fp0
       fgetmanx    (-0x80,a0,a0.w), fp0
-      fgetmanx    (0,a0,a0.l), fp0
-      fgetmanx    (-0x80,a0,a0.l), fp0
       fdivx   (0,a0,d5.w), fp0
       fdivx   (-0x80,a0,d5.w), fp0
-      fdivx   (0,a0,d5.l), fp0
-      fdivx   (-0x80,a0,d5.l), fp0
       fdivx   (0,a0,a0.w), fp0
       fdivx   (-0x80,a0,a0.w), fp0
-      fdivx   (0,a0,a0.l), fp0
-      fdivx   (-0x80,a0,a0.l), fp0
       fmodx   (0,a0,d5.w), fp0
       fmodx   (-0x80,a0,d5.w), fp0
-      fmodx   (0,a0,d5.l), fp0
-      fmodx   (-0x80,a0,d5.l), fp0
       fmodx   (0,a0,a0.w), fp0
       fmodx   (-0x80,a0,a0.w), fp0
-      fmodx   (0,a0,a0.l), fp0
-      fmodx   (-0x80,a0,a0.l), fp0
       faddx   (0,a0,d5.w), fp0
       faddx   (-0x80,a0,d5.w), fp0
-      faddx   (0,a0,d5.l), fp0
-      faddx   (-0x80,a0,d5.l), fp0
       faddx   (0,a0,a0.w), fp0
       faddx   (-0x80,a0,a0.w), fp0
-      faddx   (0,a0,a0.l), fp0
-      faddx   (-0x80,a0,a0.l), fp0
       fmulx   (0,a0,d5.w), fp0
       fmulx   (-0x80,a0,d5.w), fp0
-      fmulx   (0,a0,d5.l), fp0
-      fmulx   (-0x80,a0,d5.l), fp0
       fmulx   (0,a0,a0.w), fp0
       fmulx   (-0x80,a0,a0.w), fp0
-      fmulx   (0,a0,a0.l), fp0
-      fmulx   (-0x80,a0,a0.l), fp0
       fsgldivx    (0,a0,d5.w), fp0
       fsgldivx    (-0x80,a0,d5.w), fp0
-      fsgldivx    (0,a0,d5.l), fp0
-      fsgldivx    (-0x80,a0,d5.l), fp0
       fsgldivx    (0,a0,a0.w), fp0
       fsgldivx    (-0x80,a0,a0.w), fp0
-      fsgldivx    (0,a0,a0.l), fp0
-      fsgldivx    (-0x80,a0,a0.l), fp0
       fremx   (0,a0,d5.w), fp0
       fremx   (-0x80,a0,d5.w), fp0
-      fremx   (0,a0,d5.l), fp0
-      fremx   (-0x80,a0,d5.l), fp0
       fremx   (0,a0,a0.w), fp0
       fremx   (-0x80,a0,a0.w), fp0
-      fremx   (0,a0,a0.l), fp0
-      fremx   (-0x80,a0,a0.l), fp0
       fscalex (0,a0,d5.w), fp0
       fscalex (-0x80,a0,d5.w), fp0
-      fscalex (0,a0,d5.l), fp0
-      fscalex (-0x80,a0,d5.l), fp0
       fscalex (0,a0,a0.w), fp0
       fscalex (-0x80,a0,a0.w), fp0
-      fscalex (0,a0,a0.l), fp0
-      fscalex (-0x80,a0,a0.l), fp0
       fsglmulx    (0,a0,d5.w), fp0
       fsglmulx    (-0x80,a0,d5.w), fp0
-      fsglmulx    (0,a0,d5.l), fp0
-      fsglmulx    (-0x80,a0,d5.l), fp0
       fsglmulx    (0,a0,a0.w), fp0
       fsglmulx    (-0x80,a0,a0.w), fp0
-      fsglmulx    (0,a0,a0.l), fp0
-      fsglmulx    (-0x80,a0,a0.l), fp0
       fsubx   (0,a0,d5.w), fp0
       fsubx   (-0x80,a0,d5.w), fp0
-      fsubx   (0,a0,d5.l), fp0
-      fsubx   (-0x80,a0,d5.l), fp0
       fsubx   (0,a0,a0.w), fp0
       fsubx   (-0x80,a0,a0.w), fp0
-      fsubx   (0,a0,a0.l), fp0
-      fsubx   (-0x80,a0,a0.l), fp0
       fsincosx    (0,a0,d5.w), fp0:fp0
       fsincosx    (-0x80,a0,d5.w), fp0:fp0
-      fsincosx    (0,a0,d5.l), fp0:fp0
-      fsincosx    (-0x80,a0,d5.l), fp0:fp0
       fsincosx    (0,a0,a0.w), fp0:fp0
       fsincosx    (-0x80,a0,a0.w), fp0:fp0
-      fsincosx    (0,a0,a0.l), fp0:fp0
-      fsincosx    (-0x80,a0,a0.l), fp0:fp0
       fcmpx   (0,a0,d5.w), fp0
       fcmpx   (-0x80,a0,d5.w), fp0
-      fcmpx   (0,a0,d5.l), fp0
-      fcmpx   (-0x80,a0,d5.l), fp0
       fcmpx   (0,a0,a0.w), fp0
       fcmpx   (-0x80,a0,a0.w), fp0
-      fcmpx   (0,a0,a0.l), fp0
-      fcmpx   (-0x80,a0,a0.l), fp0
       ftstx   (0,a0,d5.w)
       ftstx   (-0x80,a0,d5.w)
-      ftstx   (0,a0,d5.l)
-      ftstx   (-0x80,a0,d5.l)
       ftstx   (0,a0,a0.w)
       ftstx   (-0x80,a0,a0.w)
-      ftstx   (0,a0,a0.l)
-      ftstx   (-0x80,a0,a0.l)
       fmovep  (0,a0,d5.w), fp0
       fmovep  (-0x80,a0,d5.w), fp0
-      fmovep  (0,a0,d5.l), fp0
-      fmovep  (-0x80,a0,d5.l), fp0
       fmovep  (0,a0,a0.w), fp0
       fmovep  (-0x80,a0,a0.w), fp0
-      fmovep  (0,a0,a0.l), fp0
-      fmovep  (-0x80,a0,a0.l), fp0
       fintp   (0,a0,d5.w), fp0
       fintp   (-0x80,a0,d5.w), fp0
-      fintp   (0,a0,d5.l), fp0
-      fintp   (-0x80,a0,d5.l), fp0
       fintp   (0,a0,a0.w), fp0
       fintp   (-0x80,a0,a0.w), fp0
-      fintp   (0,a0,a0.l), fp0
-      fintp   (-0x80,a0,a0.l), fp0
       fsinhp  (0,a0,d5.w), fp0
       fsinhp  (-0x80,a0,d5.w), fp0
-      fsinhp  (0,a0,d5.l), fp0
-      fsinhp  (-0x80,a0,d5.l), fp0
       fsinhp  (0,a0,a0.w), fp0
       fsinhp  (-0x80,a0,a0.w), fp0
-      fsinhp  (0,a0,a0.l), fp0
-      fsinhp  (-0x80,a0,a0.l), fp0
       fintrzp (0,a0,d5.w), fp0
       fintrzp (-0x80,a0,d5.w), fp0
-      fintrzp (0,a0,d5.l), fp0
-      fintrzp (-0x80,a0,d5.l), fp0
       fintrzp (0,a0,a0.w), fp0
       fintrzp (-0x80,a0,a0.w), fp0
-      fintrzp (0,a0,a0.l), fp0
-      fintrzp (-0x80,a0,a0.l), fp0
       fsqrtp  (0,a0,d5.w), fp0
       fsqrtp  (-0x80,a0,d5.w), fp0
-      fsqrtp  (0,a0,d5.l), fp0
-      fsqrtp  (-0x80,a0,d5.l), fp0
       fsqrtp  (0,a0,a0.w), fp0
       fsqrtp  (-0x80,a0,a0.w), fp0
-      fsqrtp  (0,a0,a0.l), fp0
-      fsqrtp  (-0x80,a0,a0.l), fp0
       flognp1p    (0,a0,d5.w), fp0
       flognp1p    (-0x80,a0,d5.w), fp0
-      flognp1p    (0,a0,d5.l), fp0
-      flognp1p    (-0x80,a0,d5.l), fp0
       flognp1p    (0,a0,a0.w), fp0
       flognp1p    (-0x80,a0,a0.w), fp0
-      flognp1p    (0,a0,a0.l), fp0
-      flognp1p    (-0x80,a0,a0.l), fp0
       fetoxm1p    (0,a0,d5.w), fp0
       fetoxm1p    (-0x80,a0,d5.w), fp0
-      fetoxm1p    (0,a0,d5.l), fp0
-      fetoxm1p    (-0x80,a0,d5.l), fp0
       fetoxm1p    (0,a0,a0.w), fp0
       fetoxm1p    (-0x80,a0,a0.w), fp0
-      fetoxm1p    (0,a0,a0.l), fp0
-      fetoxm1p    (-0x80,a0,a0.l), fp0
       ftanhp  (0,a0,d5.w), fp0
       ftanhp  (-0x80,a0,d5.w), fp0
-      ftanhp  (0,a0,d5.l), fp0
-      ftanhp  (-0x80,a0,d5.l), fp0
       ftanhp  (0,a0,a0.w), fp0
       ftanhp  (-0x80,a0,a0.w), fp0
-      ftanhp  (0,a0,a0.l), fp0
-      ftanhp  (-0x80,a0,a0.l), fp0
       fatanp  (0,a0,d5.w), fp0
       fatanp  (-0x80,a0,d5.w), fp0
-      fatanp  (0,a0,d5.l), fp0
-      fatanp  (-0x80,a0,d5.l), fp0
       fatanp  (0,a0,a0.w), fp0
       fatanp  (-0x80,a0,a0.w), fp0
-      fatanp  (0,a0,a0.l), fp0
-      fatanp  (-0x80,a0,a0.l), fp0
       fasinp  (0,a0,d5.w), fp0
       fasinp  (-0x80,a0,d5.w), fp0
-      fasinp  (0,a0,d5.l), fp0
-      fasinp  (-0x80,a0,d5.l), fp0
       fasinp  (0,a0,a0.w), fp0
       fasinp  (-0x80,a0,a0.w), fp0
-      fasinp  (0,a0,a0.l), fp0
-      fasinp  (-0x80,a0,a0.l), fp0
       fatanhp (0,a0,d5.w), fp0
       fatanhp (-0x80,a0,d5.w), fp0
-      fatanhp (0,a0,d5.l), fp0
-      fatanhp (-0x80,a0,d5.l), fp0
       fatanhp (0,a0,a0.w), fp0
       fatanhp (-0x80,a0,a0.w), fp0
-      fatanhp (0,a0,a0.l), fp0
-      fatanhp (-0x80,a0,a0.l), fp0
       fsinp   (0,a0,d5.w), fp0
       fsinp   (-0x80,a0,d5.w), fp0
-      fsinp   (0,a0,d5.l), fp0
-      fsinp   (-0x80,a0,d5.l), fp0
       fsinp   (0,a0,a0.w), fp0
       fsinp   (-0x80,a0,a0.w), fp0
-      fsinp   (0,a0,a0.l), fp0
-      fsinp   (-0x80,a0,a0.l), fp0
       ftanp   (0,a0,d5.w), fp0
       ftanp   (-0x80,a0,d5.w), fp0
-      ftanp   (0,a0,d5.l), fp0
-      ftanp   (-0x80,a0,d5.l), fp0
       ftanp   (0,a0,a0.w), fp0
       ftanp   (-0x80,a0,a0.w), fp0
-      ftanp   (0,a0,a0.l), fp0
-      ftanp   (-0x80,a0,a0.l), fp0
       fetoxp  (0,a0,d5.w), fp0
       fetoxp  (-0x80,a0,d5.w), fp0
-      fetoxp  (0,a0,d5.l), fp0
-      fetoxp  (-0x80,a0,d5.l), fp0
       fetoxp  (0,a0,a0.w), fp0
       fetoxp  (-0x80,a0,a0.w), fp0
-      fetoxp  (0,a0,a0.l), fp0
-      fetoxp  (-0x80,a0,a0.l), fp0
       ftwotoxp    (0,a0,d5.w), fp0
       ftwotoxp    (-0x80,a0,d5.w), fp0
-      ftwotoxp    (0,a0,d5.l), fp0
-      ftwotoxp    (-0x80,a0,d5.l), fp0
       ftwotoxp    (0,a0,a0.w), fp0
       ftwotoxp    (-0x80,a0,a0.w), fp0
-      ftwotoxp    (0,a0,a0.l), fp0
-      ftwotoxp    (-0x80,a0,a0.l), fp0
       ftentoxp    (0,a0,d5.w), fp0
       ftentoxp    (-0x80,a0,d5.w), fp0
-      ftentoxp    (0,a0,d5.l), fp0
-      ftentoxp    (-0x80,a0,d5.l), fp0
       ftentoxp    (0,a0,a0.w), fp0
       ftentoxp    (-0x80,a0,a0.w), fp0
-      ftentoxp    (0,a0,a0.l), fp0
-      ftentoxp    (-0x80,a0,a0.l), fp0
       flognp  (0,a0,d5.w), fp0
       flognp  (-0x80,a0,d5.w), fp0
-      flognp  (0,a0,d5.l), fp0
-      flognp  (-0x80,a0,d5.l), fp0
       flognp  (0,a0,a0.w), fp0
       flognp  (-0x80,a0,a0.w), fp0
-      flognp  (0,a0,a0.l), fp0
-      flognp  (-0x80,a0,a0.l), fp0
       flog10p (0,a0,d5.w), fp0
       flog10p (-0x80,a0,d5.w), fp0
-      flog10p (0,a0,d5.l), fp0
-      flog10p (-0x80,a0,d5.l), fp0
       flog10p (0,a0,a0.w), fp0
       flog10p (-0x80,a0,a0.w), fp0
-      flog10p (0,a0,a0.l), fp0
-      flog10p (-0x80,a0,a0.l), fp0
       flog2p  (0,a0,d5.w), fp0
       flog2p  (-0x80,a0,d5.w), fp0
-      flog2p  (0,a0,d5.l), fp0
-      flog2p  (-0x80,a0,d5.l), fp0
       flog2p  (0,a0,a0.w), fp0
       flog2p  (-0x80,a0,a0.w), fp0
-      flog2p  (0,a0,a0.l), fp0
-      flog2p  (-0x80,a0,a0.l), fp0
       fabsp   (0,a0,d5.w), fp0
       fabsp   (-0x80,a0,d5.w), fp0
-      fabsp   (0,a0,d5.l), fp0
-      fabsp   (-0x80,a0,d5.l), fp0
       fabsp   (0,a0,a0.w), fp0
       fabsp   (-0x80,a0,a0.w), fp0
-      fabsp   (0,a0,a0.l), fp0
-      fabsp   (-0x80,a0,a0.l), fp0
       fcoshp  (0,a0,d5.w), fp0
       fcoshp  (-0x80,a0,d5.w), fp0
-      fcoshp  (0,a0,d5.l), fp0
-      fcoshp  (-0x80,a0,d5.l), fp0
       fcoshp  (0,a0,a0.w), fp0
       fcoshp  (-0x80,a0,a0.w), fp0
-      fcoshp  (0,a0,a0.l), fp0
-      fcoshp  (-0x80,a0,a0.l), fp0
       fnegp   (0,a0,d5.w), fp0
       fnegp   (-0x80,a0,d5.w), fp0
-      fnegp   (0,a0,d5.l), fp0
-      fnegp   (-0x80,a0,d5.l), fp0
       fnegp   (0,a0,a0.w), fp0
       fnegp   (-0x80,a0,a0.w), fp0
-      fnegp   (0,a0,a0.l), fp0
-      fnegp   (-0x80,a0,a0.l), fp0
       facosp  (0,a0,d5.w), fp0
       facosp  (-0x80,a0,d5.w), fp0
-      facosp  (0,a0,d5.l), fp0
-      facosp  (-0x80,a0,d5.l), fp0
       facosp  (0,a0,a0.w), fp0
       facosp  (-0x80,a0,a0.w), fp0
-      facosp  (0,a0,a0.l), fp0
-      facosp  (-0x80,a0,a0.l), fp0
       fcosp   (0,a0,d5.w), fp0
       fcosp   (-0x80,a0,d5.w), fp0
-      fcosp   (0,a0,d5.l), fp0
-      fcosp   (-0x80,a0,d5.l), fp0
       fcosp   (0,a0,a0.w), fp0
       fcosp   (-0x80,a0,a0.w), fp0
-      fcosp   (0,a0,a0.l), fp0
-      fcosp   (-0x80,a0,a0.l), fp0
       fgetexpp    (0,a0,d5.w), fp0
       fgetexpp    (-0x80,a0,d5.w), fp0
-      fgetexpp    (0,a0,d5.l), fp0
-      fgetexpp    (-0x80,a0,d5.l), fp0
       fgetexpp    (0,a0,a0.w), fp0
       fgetexpp    (-0x80,a0,a0.w), fp0
-      fgetexpp    (0,a0,a0.l), fp0
-      fgetexpp    (-0x80,a0,a0.l), fp0
       fgetmanp    (0,a0,d5.w), fp0
       fgetmanp    (-0x80,a0,d5.w), fp0
-      fgetmanp    (0,a0,d5.l), fp0
-      fgetmanp    (-0x80,a0,d5.l), fp0
       fgetmanp    (0,a0,a0.w), fp0
       fgetmanp    (-0x80,a0,a0.w), fp0
-      fgetmanp    (0,a0,a0.l), fp0
-      fgetmanp    (-0x80,a0,a0.l), fp0
       fdivp   (0,a0,d5.w), fp0
       fdivp   (-0x80,a0,d5.w), fp0
-      fdivp   (0,a0,d5.l), fp0
-      fdivp   (-0x80,a0,d5.l), fp0
       fdivp   (0,a0,a0.w), fp0
       fdivp   (-0x80,a0,a0.w), fp0
-      fdivp   (0,a0,a0.l), fp0
-      fdivp   (-0x80,a0,a0.l), fp0
       fmodp   (0,a0,d5.w), fp0
       fmodp   (-0x80,a0,d5.w), fp0
-      fmodp   (0,a0,d5.l), fp0
-      fmodp   (-0x80,a0,d5.l), fp0
       fmodp   (0,a0,a0.w), fp0
       fmodp   (-0x80,a0,a0.w), fp0
-      fmodp   (0,a0,a0.l), fp0
-      fmodp   (-0x80,a0,a0.l), fp0
       faddp   (0,a0,d5.w), fp0
       faddp   (-0x80,a0,d5.w), fp0
-      faddp   (0,a0,d5.l), fp0
-      faddp   (-0x80,a0,d5.l), fp0
       faddp   (0,a0,a0.w), fp0
       faddp   (-0x80,a0,a0.w), fp0
-      faddp   (0,a0,a0.l), fp0
-      faddp   (-0x80,a0,a0.l), fp0
       fmulp   (0,a0,d5.w), fp0
       fmulp   (-0x80,a0,d5.w), fp0
-      fmulp   (0,a0,d5.l), fp0
-      fmulp   (-0x80,a0,d5.l), fp0
       fmulp   (0,a0,a0.w), fp0
       fmulp   (-0x80,a0,a0.w), fp0
-      fmulp   (0,a0,a0.l), fp0
-      fmulp   (-0x80,a0,a0.l), fp0
       fsgldivp    (0,a0,d5.w), fp0
       fsgldivp    (-0x80,a0,d5.w), fp0
-      fsgldivp    (0,a0,d5.l), fp0
-      fsgldivp    (-0x80,a0,d5.l), fp0
       fsgldivp    (0,a0,a0.w), fp0
       fsgldivp    (-0x80,a0,a0.w), fp0
-      fsgldivp    (0,a0,a0.l), fp0
-      fsgldivp    (-0x80,a0,a0.l), fp0
       fremp   (0,a0,d5.w), fp0
       fremp   (-0x80,a0,d5.w), fp0
-      fremp   (0,a0,d5.l), fp0
-      fremp   (-0x80,a0,d5.l), fp0
       fremp   (0,a0,a0.w), fp0
       fremp   (-0x80,a0,a0.w), fp0
-      fremp   (0,a0,a0.l), fp0
-      fremp   (-0x80,a0,a0.l), fp0
       fscalep (0,a0,d5.w), fp0
       fscalep (-0x80,a0,d5.w), fp0
-      fscalep (0,a0,d5.l), fp0
-      fscalep (-0x80,a0,d5.l), fp0
       fscalep (0,a0,a0.w), fp0
       fscalep (-0x80,a0,a0.w), fp0
-      fscalep (0,a0,a0.l), fp0
-      fscalep (-0x80,a0,a0.l), fp0
       fsglmulp    (0,a0,d5.w), fp0
       fsglmulp    (-0x80,a0,d5.w), fp0
-      fsglmulp    (0,a0,d5.l), fp0
-      fsglmulp    (-0x80,a0,d5.l), fp0
       fsglmulp    (0,a0,a0.w), fp0
       fsglmulp    (-0x80,a0,a0.w), fp0
-      fsglmulp    (0,a0,a0.l), fp0
-      fsglmulp    (-0x80,a0,a0.l), fp0
       fsubp   (0,a0,d5.w), fp0
       fsubp   (-0x80,a0,d5.w), fp0
-      fsubp   (0,a0,d5.l), fp0
-      fsubp   (-0x80,a0,d5.l), fp0
       fsubp   (0,a0,a0.w), fp0
       fsubp   (-0x80,a0,a0.w), fp0
-      fsubp   (0,a0,a0.l), fp0
-      fsubp   (-0x80,a0,a0.l), fp0
       fsincosp    (0,a0,d5.w), fp0:fp0
       fsincosp    (-0x80,a0,d5.w), fp0:fp0
-      fsincosp    (0,a0,d5.l), fp0:fp0
-      fsincosp    (-0x80,a0,d5.l), fp0:fp0
       fsincosp    (0,a0,a0.w), fp0:fp0
       fsincosp    (-0x80,a0,a0.w), fp0:fp0
-      fsincosp    (0,a0,a0.l), fp0:fp0
-      fsincosp    (-0x80,a0,a0.l), fp0:fp0
       fcmpp   (0,a0,d5.w), fp0
       fcmpp   (-0x80,a0,d5.w), fp0
-      fcmpp   (0,a0,d5.l), fp0
-      fcmpp   (-0x80,a0,d5.l), fp0
       fcmpp   (0,a0,a0.w), fp0
       fcmpp   (-0x80,a0,a0.w), fp0
-      fcmpp   (0,a0,a0.l), fp0
-      fcmpp   (-0x80,a0,a0.l), fp0
       ftstp   (0,a0,d5.w)
       ftstp   (-0x80,a0,d5.w)
-      ftstp   (0,a0,d5.l)
-      ftstp   (-0x80,a0,d5.l)
       ftstp   (0,a0,a0.w)
       ftstp   (-0x80,a0,a0.w)
-      ftstp   (0,a0,a0.l)
-      ftstp   (-0x80,a0,a0.l)
       fmovew  (0,a0,d5.l), fp0
       fmovew  (-0x80,a0,d5.l), fp0
-      fmovew  (0,a0,d6.w), fp0
-      fmovew  (-0x80,a0,d6.w), fp0
       fmovew  (0,a0,a0.w), fp0
       fmovew  (-0x80,a0,a0.w), fp0
-      fmovew  (0,a0,a0.l), fp0
-      fmovew  (-0x80,a0,a0.l), fp0
       fintw   (0,a0,d5.l), fp0
       fintw   (-0x80,a0,d5.l), fp0
-      fintw   (0,a0,d6.w), fp0
-      fintw   (-0x80,a0,d6.w), fp0
       fintw   (0,a0,a0.w), fp0
       fintw   (-0x80,a0,a0.w), fp0
-      fintw   (0,a0,a0.l), fp0
-      fintw   (-0x80,a0,a0.l), fp0
       fsinhw  (0,a0,d5.l), fp0
       fsinhw  (-0x80,a0,d5.l), fp0
-      fsinhw  (0,a0,d6.w), fp0
-      fsinhw  (-0x80,a0,d6.w), fp0
       fsinhw  (0,a0,a0.w), fp0
       fsinhw  (-0x80,a0,a0.w), fp0
-      fsinhw  (0,a0,a0.l), fp0
-      fsinhw  (-0x80,a0,a0.l), fp0
       fintrzw (0,a0,d5.l), fp0
       fintrzw (-0x80,a0,d5.l), fp0
-      fintrzw (0,a0,d6.w), fp0
-      fintrzw (-0x80,a0,d6.w), fp0
       fintrzw (0,a0,a0.w), fp0
       fintrzw (-0x80,a0,a0.w), fp0
-      fintrzw (0,a0,a0.l), fp0
-      fintrzw (-0x80,a0,a0.l), fp0
       fsqrtw  (0,a0,d5.l), fp0
       fsqrtw  (-0x80,a0,d5.l), fp0
-      fsqrtw  (0,a0,d6.w), fp0
-      fsqrtw  (-0x80,a0,d6.w), fp0
       fsqrtw  (0,a0,a0.w), fp0
       fsqrtw  (-0x80,a0,a0.w), fp0
-      fsqrtw  (0,a0,a0.l), fp0
-      fsqrtw  (-0x80,a0,a0.l), fp0
       flognp1w    (0,a0,d5.l), fp0
       flognp1w    (-0x80,a0,d5.l), fp0
-      flognp1w    (0,a0,d6.w), fp0
-      flognp1w    (-0x80,a0,d6.w), fp0
       flognp1w    (0,a0,a0.w), fp0
       flognp1w    (-0x80,a0,a0.w), fp0
-      flognp1w    (0,a0,a0.l), fp0
-      flognp1w    (-0x80,a0,a0.l), fp0
       fetoxm1w    (0,a0,d5.l), fp0
       fetoxm1w    (-0x80,a0,d5.l), fp0
-      fetoxm1w    (0,a0,d6.w), fp0
-      fetoxm1w    (-0x80,a0,d6.w), fp0
       fetoxm1w    (0,a0,a0.w), fp0
       fetoxm1w    (-0x80,a0,a0.w), fp0
-      fetoxm1w    (0,a0,a0.l), fp0
-      fetoxm1w    (-0x80,a0,a0.l), fp0
       ftanhw  (0,a0,d5.l), fp0
       ftanhw  (-0x80,a0,d5.l), fp0
-      ftanhw  (0,a0,d6.w), fp0
-      ftanhw  (-0x80,a0,d6.w), fp0
       ftanhw  (0,a0,a0.w), fp0
       ftanhw  (-0x80,a0,a0.w), fp0
-      ftanhw  (0,a0,a0.l), fp0
-      ftanhw  (-0x80,a0,a0.l), fp0
       fatanw  (0,a0,d5.l), fp0
       fatanw  (-0x80,a0,d5.l), fp0
-      fatanw  (0,a0,d6.w), fp0
-      fatanw  (-0x80,a0,d6.w), fp0
       fatanw  (0,a0,a0.w), fp0
       fatanw  (-0x80,a0,a0.w), fp0
-      fatanw  (0,a0,a0.l), fp0
-      fatanw  (-0x80,a0,a0.l), fp0
       fasinw  (0,a0,d5.l), fp0
       fasinw  (-0x80,a0,d5.l), fp0
-      fasinw  (0,a0,d6.w), fp0
-      fasinw  (-0x80,a0,d6.w), fp0
       fasinw  (0,a0,a0.w), fp0
       fasinw  (-0x80,a0,a0.w), fp0
-      fasinw  (0,a0,a0.l), fp0
-      fasinw  (-0x80,a0,a0.l), fp0
       fatanhw (0,a0,d5.l), fp0
       fatanhw (-0x80,a0,d5.l), fp0
-      fatanhw (0,a0,d6.w), fp0
-      fatanhw (-0x80,a0,d6.w), fp0
       fatanhw (0,a0,a0.w), fp0
       fatanhw (-0x80,a0,a0.w), fp0
-      fatanhw (0,a0,a0.l), fp0
-      fatanhw (-0x80,a0,a0.l), fp0
       fsinw   (0,a0,d5.l), fp0
       fsinw   (-0x80,a0,d5.l), fp0
-      fsinw   (0,a0,d6.w), fp0
-      fsinw   (-0x80,a0,d6.w), fp0
       fsinw   (0,a0,a0.w), fp0
       fsinw   (-0x80,a0,a0.w), fp0
-      fsinw   (0,a0,a0.l), fp0
-      fsinw   (-0x80,a0,a0.l), fp0
       ftanw   (0,a0,d5.l), fp0
       ftanw   (-0x80,a0,d5.l), fp0
-      ftanw   (0,a0,d6.w), fp0
-      ftanw   (-0x80,a0,d6.w), fp0
       ftanw   (0,a0,a0.w), fp0
       ftanw   (-0x80,a0,a0.w), fp0
-      ftanw   (0,a0,a0.l), fp0
-      ftanw   (-0x80,a0,a0.l), fp0
       fetoxw  (0,a0,d5.l), fp0
       fetoxw  (-0x80,a0,d5.l), fp0
-      fetoxw  (0,a0,d6.w), fp0
-      fetoxw  (-0x80,a0,d6.w), fp0
       fetoxw  (0,a0,a0.w), fp0
       fetoxw  (-0x80,a0,a0.w), fp0
-      fetoxw  (0,a0,a0.l), fp0
-      fetoxw  (-0x80,a0,a0.l), fp0
       ftwotoxw    (0,a0,d5.l), fp0
       ftwotoxw    (-0x80,a0,d5.l), fp0
-      ftwotoxw    (0,a0,d6.w), fp0
-      ftwotoxw    (-0x80,a0,d6.w), fp0
       ftwotoxw    (0,a0,a0.w), fp0
       ftwotoxw    (-0x80,a0,a0.w), fp0
-      ftwotoxw    (0,a0,a0.l), fp0
-      ftwotoxw    (-0x80,a0,a0.l), fp0
       ftentoxw    (0,a0,d5.l), fp0
       ftentoxw    (-0x80,a0,d5.l), fp0
-      ftentoxw    (0,a0,d6.w), fp0
-      ftentoxw    (-0x80,a0,d6.w), fp0
       ftentoxw    (0,a0,a0.w), fp0
       ftentoxw    (-0x80,a0,a0.w), fp0
-      ftentoxw    (0,a0,a0.l), fp0
-      ftentoxw    (-0x80,a0,a0.l), fp0
       flognw  (0,a0,d5.l), fp0
       flognw  (-0x80,a0,d5.l), fp0
-      flognw  (0,a0,d6.w), fp0
-      flognw  (-0x80,a0,d6.w), fp0
       flognw  (0,a0,a0.w), fp0
       flognw  (-0x80,a0,a0.w), fp0
-      flognw  (0,a0,a0.l), fp0
-      flognw  (-0x80,a0,a0.l), fp0
       flog10w (0,a0,d5.l), fp0
       flog10w (-0x80,a0,d5.l), fp0
-      flog10w (0,a0,d6.w), fp0
-      flog10w (-0x80,a0,d6.w), fp0
       flog10w (0,a0,a0.w), fp0
       flog10w (-0x80,a0,a0.w), fp0
-      flog10w (0,a0,a0.l), fp0
-      flog10w (-0x80,a0,a0.l), fp0
       flog2w  (0,a0,d5.l), fp0
       flog2w  (-0x80,a0,d5.l), fp0
-      flog2w  (0,a0,d6.w), fp0
-      flog2w  (-0x80,a0,d6.w), fp0
       flog2w  (0,a0,a0.w), fp0
       flog2w  (-0x80,a0,a0.w), fp0
-      flog2w  (0,a0,a0.l), fp0
-      flog2w  (-0x80,a0,a0.l), fp0
       fabsw   (0,a0,d5.l), fp0
       fabsw   (-0x80,a0,d5.l), fp0
-      fabsw   (0,a0,d6.w), fp0
-      fabsw   (-0x80,a0,d6.w), fp0
       fabsw   (0,a0,a0.w), fp0
       fabsw   (-0x80,a0,a0.w), fp0
-      fabsw   (0,a0,a0.l), fp0
-      fabsw   (-0x80,a0,a0.l), fp0
       fcoshw  (0,a0,d5.l), fp0
       fcoshw  (-0x80,a0,d5.l), fp0
-      fcoshw  (0,a0,d6.w), fp0
-      fcoshw  (-0x80,a0,d6.w), fp0
       fcoshw  (0,a0,a0.w), fp0
       fcoshw  (-0x80,a0,a0.w), fp0
-      fcoshw  (0,a0,a0.l), fp0
-      fcoshw  (-0x80,a0,a0.l), fp0
       fnegw   (0,a0,d5.l), fp0
       fnegw   (-0x80,a0,d5.l), fp0
-      fnegw   (0,a0,d6.w), fp0
-      fnegw   (-0x80,a0,d6.w), fp0
       fnegw   (0,a0,a0.w), fp0
       fnegw   (-0x80,a0,a0.w), fp0
-      fnegw   (0,a0,a0.l), fp0
-      fnegw   (-0x80,a0,a0.l), fp0
       facosw  (0,a0,d5.l), fp0
       facosw  (-0x80,a0,d5.l), fp0
-      facosw  (0,a0,d6.w), fp0
-      facosw  (-0x80,a0,d6.w), fp0
       facosw  (0,a0,a0.w), fp0
       facosw  (-0x80,a0,a0.w), fp0
-      facosw  (0,a0,a0.l), fp0
-      facosw  (-0x80,a0,a0.l), fp0
       fcosw   (0,a0,d5.l), fp0
       fcosw   (-0x80,a0,d5.l), fp0
-      fcosw   (0,a0,d6.w), fp0
-      fcosw   (-0x80,a0,d6.w), fp0
       fcosw   (0,a0,a0.w), fp0
       fcosw   (-0x80,a0,a0.w), fp0
-      fcosw   (0,a0,a0.l), fp0
-      fcosw   (-0x80,a0,a0.l), fp0
       fgetexpw    (0,a0,d5.l), fp0
       fgetexpw    (-0x80,a0,d5.l), fp0
-      fgetexpw    (0,a0,d6.w), fp0
-      fgetexpw    (-0x80,a0,d6.w), fp0
       fgetexpw    (0,a0,a0.w), fp0
       fgetexpw    (-0x80,a0,a0.w), fp0
-      fgetexpw    (0,a0,a0.l), fp0
-      fgetexpw    (-0x80,a0,a0.l), fp0
       fgetmanw    (0,a0,d5.l), fp0
       fgetmanw    (-0x80,a0,d5.l), fp0
-      fgetmanw    (0,a0,d6.w), fp0
-      fgetmanw    (-0x80,a0,d6.w), fp0
       fgetmanw    (0,a0,a0.w), fp0
       fgetmanw    (-0x80,a0,a0.w), fp0
-      fgetmanw    (0,a0,a0.l), fp0
-      fgetmanw    (-0x80,a0,a0.l), fp0
       fdivw   (0,a0,d5.l), fp0
       fdivw   (-0x80,a0,d5.l), fp0
-      fdivw   (0,a0,d6.w), fp0
-      fdivw   (-0x80,a0,d6.w), fp0
       fdivw   (0,a0,a0.w), fp0
       fdivw   (-0x80,a0,a0.w), fp0
-      fdivw   (0,a0,a0.l), fp0
-      fdivw   (-0x80,a0,a0.l), fp0
       fmodw   (0,a0,d5.l), fp0
       fmodw   (-0x80,a0,d5.l), fp0
-      fmodw   (0,a0,d6.w), fp0
-      fmodw   (-0x80,a0,d6.w), fp0
       fmodw   (0,a0,a0.w), fp0
       fmodw   (-0x80,a0,a0.w), fp0
-      fmodw   (0,a0,a0.l), fp0
-      fmodw   (-0x80,a0,a0.l), fp0
       faddw   (0,a0,d5.l), fp0
       faddw   (-0x80,a0,d5.l), fp0
-      faddw   (0,a0,d6.w), fp0
-      faddw   (-0x80,a0,d6.w), fp0
       faddw   (0,a0,a0.w), fp0
       faddw   (-0x80,a0,a0.w), fp0
-      faddw   (0,a0,a0.l), fp0
-      faddw   (-0x80,a0,a0.l), fp0
       fmulw   (0,a0,d5.l), fp0
       fmulw   (-0x80,a0,d5.l), fp0
-      fmulw   (0,a0,d6.w), fp0
-      fmulw   (-0x80,a0,d6.w), fp0
       fmulw   (0,a0,a0.w), fp0
       fmulw   (-0x80,a0,a0.w), fp0
-      fmulw   (0,a0,a0.l), fp0
-      fmulw   (-0x80,a0,a0.l), fp0
       fsgldivw    (0,a0,d5.l), fp0
       fsgldivw    (-0x80,a0,d5.l), fp0
-      fsgldivw    (0,a0,d6.w), fp0
-      fsgldivw    (-0x80,a0,d6.w), fp0
       fsgldivw    (0,a0,a0.w), fp0
       fsgldivw    (-0x80,a0,a0.w), fp0
-      fsgldivw    (0,a0,a0.l), fp0
-      fsgldivw    (-0x80,a0,a0.l), fp0
       fremw   (0,a0,d5.l), fp0
       fremw   (-0x80,a0,d5.l), fp0
-      fremw   (0,a0,d6.w), fp0
-      fremw   (-0x80,a0,d6.w), fp0
       fremw   (0,a0,a0.w), fp0
       fremw   (-0x80,a0,a0.w), fp0
-      fremw   (0,a0,a0.l), fp0
-      fremw   (-0x80,a0,a0.l), fp0
       fscalew (0,a0,d5.l), fp0
       fscalew (-0x80,a0,d5.l), fp0
-      fscalew (0,a0,d6.w), fp0
-      fscalew (-0x80,a0,d6.w), fp0
       fscalew (0,a0,a0.w), fp0
       fscalew (-0x80,a0,a0.w), fp0
-      fscalew (0,a0,a0.l), fp0
-      fscalew (-0x80,a0,a0.l), fp0
       fsglmulw    (0,a0,d5.l), fp0
       fsglmulw    (-0x80,a0,d5.l), fp0
-      fsglmulw    (0,a0,d6.w), fp0
-      fsglmulw    (-0x80,a0,d6.w), fp0
       fsglmulw    (0,a0,a0.w), fp0
       fsglmulw    (-0x80,a0,a0.w), fp0
-      fsglmulw    (0,a0,a0.l), fp0
-      fsglmulw    (-0x80,a0,a0.l), fp0
       fsubw   (0,a0,d5.l), fp0
       fsubw   (-0x80,a0,d5.l), fp0
-      fsubw   (0,a0,d6.w), fp0
-      fsubw   (-0x80,a0,d6.w), fp0
       fsubw   (0,a0,a0.w), fp0
       fsubw   (-0x80,a0,a0.w), fp0
-      fsubw   (0,a0,a0.l), fp0
-      fsubw   (-0x80,a0,a0.l), fp0
       fsincosw    (0,a0,d5.l), fp0:fp0
       fsincosw    (-0x80,a0,d5.l), fp0:fp0
-      fsincosw    (0,a0,d6.w), fp0:fp0
-      fsincosw    (-0x80,a0,d6.w), fp0:fp0
       fsincosw    (0,a0,a0.w), fp0:fp0
       fsincosw    (-0x80,a0,a0.w), fp0:fp0
-      fsincosw    (0,a0,a0.l), fp0:fp0
-      fsincosw    (-0x80,a0,a0.l), fp0:fp0
       fcmpw   (0,a0,d5.l), fp0
       fcmpw   (-0x80,a0,d5.l), fp0
-      fcmpw   (0,a0,d6.w), fp0
-      fcmpw   (-0x80,a0,d6.w), fp0
       fcmpw   (0,a0,a0.w), fp0
       fcmpw   (-0x80,a0,a0.w), fp0
-      fcmpw   (0,a0,a0.l), fp0
-      fcmpw   (-0x80,a0,a0.l), fp0
       ftstw   (0,a0,d5.l)
       ftstw   (-0x80,a0,d5.l)
-      ftstw   (0,a0,d6.w)
-      ftstw   (-0x80,a0,d6.w)
       ftstw   (0,a0,a0.w)
       ftstw   (-0x80,a0,a0.w)
-      ftstw   (0,a0,a0.l)
-      ftstw   (-0x80,a0,a0.l)
       fmoved  (0,a0,d5.l), fp0
       fmoved  (-0x80,a0,d5.l), fp0
-      fmoved  (0,a0,d6.w), fp0
-      fmoved  (-0x80,a0,d6.w), fp0
       fmoved  (0,a0,a0.w), fp0
       fmoved  (-0x80,a0,a0.w), fp0
-      fmoved  (0,a0,a0.l), fp0
-      fmoved  (-0x80,a0,a0.l), fp0
       fintd   (0,a0,d5.l), fp0
       fintd   (-0x80,a0,d5.l), fp0
-      fintd   (0,a0,d6.w), fp0
-      fintd   (-0x80,a0,d6.w), fp0
       fintd   (0,a0,a0.w), fp0
       fintd   (-0x80,a0,a0.w), fp0
-      fintd   (0,a0,a0.l), fp0
-      fintd   (-0x80,a0,a0.l), fp0
       fsinhd  (0,a0,d5.l), fp0
       fsinhd  (-0x80,a0,d5.l), fp0
-      fsinhd  (0,a0,d6.w), fp0
-      fsinhd  (-0x80,a0,d6.w), fp0
       fsinhd  (0,a0,a0.w), fp0
       fsinhd  (-0x80,a0,a0.w), fp0
-      fsinhd  (0,a0,a0.l), fp0
-      fsinhd  (-0x80,a0,a0.l), fp0
       fintrzd (0,a0,d5.l), fp0
       fintrzd (-0x80,a0,d5.l), fp0
-      fintrzd (0,a0,d6.w), fp0
-      fintrzd (-0x80,a0,d6.w), fp0
       fintrzd (0,a0,a0.w), fp0
       fintrzd (-0x80,a0,a0.w), fp0
-      fintrzd (0,a0,a0.l), fp0
-      fintrzd (-0x80,a0,a0.l), fp0
       fsqrtd  (0,a0,d5.l), fp0
       fsqrtd  (-0x80,a0,d5.l), fp0
-      fsqrtd  (0,a0,d6.w), fp0
-      fsqrtd  (-0x80,a0,d6.w), fp0
       fsqrtd  (0,a0,a0.w), fp0
       fsqrtd  (-0x80,a0,a0.w), fp0
-      fsqrtd  (0,a0,a0.l), fp0
-      fsqrtd  (-0x80,a0,a0.l), fp0
       flognp1d    (0,a0,d5.l), fp0
       flognp1d    (-0x80,a0,d5.l), fp0
-      flognp1d    (0,a0,d6.w), fp0
-      flognp1d    (-0x80,a0,d6.w), fp0
       flognp1d    (0,a0,a0.w), fp0
       flognp1d    (-0x80,a0,a0.w), fp0
-      flognp1d    (0,a0,a0.l), fp0
-      flognp1d    (-0x80,a0,a0.l), fp0
       fetoxm1d    (0,a0,d5.l), fp0
       fetoxm1d    (-0x80,a0,d5.l), fp0
-      fetoxm1d    (0,a0,d6.w), fp0
-      fetoxm1d    (-0x80,a0,d6.w), fp0
       fetoxm1d    (0,a0,a0.w), fp0
       fetoxm1d    (-0x80,a0,a0.w), fp0
-      fetoxm1d    (0,a0,a0.l), fp0
-      fetoxm1d    (-0x80,a0,a0.l), fp0
       ftanhd  (0,a0,d5.l), fp0
       ftanhd  (-0x80,a0,d5.l), fp0
-      ftanhd  (0,a0,d6.w), fp0
-      ftanhd  (-0x80,a0,d6.w), fp0
       ftanhd  (0,a0,a0.w), fp0
       ftanhd  (-0x80,a0,a0.w), fp0
-      ftanhd  (0,a0,a0.l), fp0
-      ftanhd  (-0x80,a0,a0.l), fp0
       fatand  (0,a0,d5.l), fp0
       fatand  (-0x80,a0,d5.l), fp0
-      fatand  (0,a0,d6.w), fp0
-      fatand  (-0x80,a0,d6.w), fp0
       fatand  (0,a0,a0.w), fp0
       fatand  (-0x80,a0,a0.w), fp0
-      fatand  (0,a0,a0.l), fp0
-      fatand  (-0x80,a0,a0.l), fp0
       fasind  (0,a0,d5.l), fp0
       fasind  (-0x80,a0,d5.l), fp0
-      fasind  (0,a0,d6.w), fp0
-      fasind  (-0x80,a0,d6.w), fp0
       fasind  (0,a0,a0.w), fp0
       fasind  (-0x80,a0,a0.w), fp0
-      fasind  (0,a0,a0.l), fp0
-      fasind  (-0x80,a0,a0.l), fp0
       fatanhd (0,a0,d5.l), fp0
       fatanhd (-0x80,a0,d5.l), fp0
-      fatanhd (0,a0,d6.w), fp0
-      fatanhd (-0x80,a0,d6.w), fp0
       fatanhd (0,a0,a0.w), fp0
       fatanhd (-0x80,a0,a0.w), fp0
-      fatanhd (0,a0,a0.l), fp0
-      fatanhd (-0x80,a0,a0.l), fp0
       fsind   (0,a0,d5.l), fp0
       fsind   (-0x80,a0,d5.l), fp0
-      fsind   (0,a0,d6.w), fp0
-      fsind   (-0x80,a0,d6.w), fp0
       fsind   (0,a0,a0.w), fp0
       fsind   (-0x80,a0,a0.w), fp0
-      fsind   (0,a0,a0.l), fp0
-      fsind   (-0x80,a0,a0.l), fp0
       ftand   (0,a0,d5.l), fp0
       ftand   (-0x80,a0,d5.l), fp0
-      ftand   (0,a0,d6.w), fp0
-      ftand   (-0x80,a0,d6.w), fp0
       ftand   (0,a0,a0.w), fp0
       ftand   (-0x80,a0,a0.w), fp0
-      ftand   (0,a0,a0.l), fp0
-      ftand   (-0x80,a0,a0.l), fp0
       fetoxd  (0,a0,d5.l), fp0
       fetoxd  (-0x80,a0,d5.l), fp0
-      fetoxd  (0,a0,d6.w), fp0
-      fetoxd  (-0x80,a0,d6.w), fp0
       fetoxd  (0,a0,a0.w), fp0
       fetoxd  (-0x80,a0,a0.w), fp0
-      fetoxd  (0,a0,a0.l), fp0
-      fetoxd  (-0x80,a0,a0.l), fp0
       ftwotoxd    (0,a0,d5.l), fp0
       ftwotoxd    (-0x80,a0,d5.l), fp0
-      ftwotoxd    (0,a0,d6.w), fp0
-      ftwotoxd    (-0x80,a0,d6.w), fp0
       ftwotoxd    (0,a0,a0.w), fp0
       ftwotoxd    (-0x80,a0,a0.w), fp0
-      ftwotoxd    (0,a0,a0.l), fp0
-      ftwotoxd    (-0x80,a0,a0.l), fp0
       ftentoxd    (0,a0,d5.l), fp0
       ftentoxd    (-0x80,a0,d5.l), fp0
-      ftentoxd    (0,a0,d6.w), fp0
-      ftentoxd    (-0x80,a0,d6.w), fp0
       ftentoxd    (0,a0,a0.w), fp0
       ftentoxd    (-0x80,a0,a0.w), fp0
-      ftentoxd    (0,a0,a0.l), fp0
-      ftentoxd    (-0x80,a0,a0.l), fp0
       flognd  (0,a0,d5.l), fp0
       flognd  (-0x80,a0,d5.l), fp0
-      flognd  (0,a0,d6.w), fp0
-      flognd  (-0x80,a0,d6.w), fp0
       flognd  (0,a0,a0.w), fp0
       flognd  (-0x80,a0,a0.w), fp0
-      flognd  (0,a0,a0.l), fp0
-      flognd  (-0x80,a0,a0.l), fp0
       flog10d (0,a0,d5.l), fp0
       flog10d (-0x80,a0,d5.l), fp0
-      flog10d (0,a0,d6.w), fp0
-      flog10d (-0x80,a0,d6.w), fp0
       flog10d (0,a0,a0.w), fp0
       flog10d (-0x80,a0,a0.w), fp0
-      flog10d (0,a0,a0.l), fp0
-      flog10d (-0x80,a0,a0.l), fp0
       flog2d  (0,a0,d5.l), fp0
       flog2d  (-0x80,a0,d5.l), fp0
-      flog2d  (0,a0,d6.w), fp0
-      flog2d  (-0x80,a0,d6.w), fp0
       flog2d  (0,a0,a0.w), fp0
       flog2d  (-0x80,a0,a0.w), fp0
-      flog2d  (0,a0,a0.l), fp0
-      flog2d  (-0x80,a0,a0.l), fp0
       fabsd   (0,a0,d5.l), fp0
       fabsd   (-0x80,a0,d5.l), fp0
-      fabsd   (0,a0,d6.w), fp0
-      fabsd   (-0x80,a0,d6.w), fp0
       fabsd   (0,a0,a0.w), fp0
       fabsd   (-0x80,a0,a0.w), fp0
-      fabsd   (0,a0,a0.l), fp0
-      fabsd   (-0x80,a0,a0.l), fp0
       fcoshd  (0,a0,d5.l), fp0
       fcoshd  (-0x80,a0,d5.l), fp0
-      fcoshd  (0,a0,d6.w), fp0
-      fcoshd  (-0x80,a0,d6.w), fp0
       fcoshd  (0,a0,a0.w), fp0
       fcoshd  (-0x80,a0,a0.w), fp0
-      fcoshd  (0,a0,a0.l), fp0
-      fcoshd  (-0x80,a0,a0.l), fp0
       fnegd   (0,a0,d5.l), fp0
       fnegd   (-0x80,a0,d5.l), fp0
-      fnegd   (0,a0,d6.w), fp0
-      fnegd   (-0x80,a0,d6.w), fp0
       fnegd   (0,a0,a0.w), fp0
       fnegd   (-0x80,a0,a0.w), fp0
-      fnegd   (0,a0,a0.l), fp0
-      fnegd   (-0x80,a0,a0.l), fp0
       facosd  (0,a0,d5.l), fp0
       facosd  (-0x80,a0,d5.l), fp0
-      facosd  (0,a0,d6.w), fp0
-      facosd  (-0x80,a0,d6.w), fp0
       facosd  (0,a0,a0.w), fp0
       facosd  (-0x80,a0,a0.w), fp0
-      facosd  (0,a0,a0.l), fp0
-      facosd  (-0x80,a0,a0.l), fp0
       fcosd   (0,a0,d5.l), fp0
       fcosd   (-0x80,a0,d5.l), fp0
-      fcosd   (0,a0,d6.w), fp0
-      fcosd   (-0x80,a0,d6.w), fp0
       fcosd   (0,a0,a0.w), fp0
       fcosd   (-0x80,a0,a0.w), fp0
-      fcosd   (0,a0,a0.l), fp0
-      fcosd   (-0x80,a0,a0.l), fp0
       fgetexpd    (0,a0,d5.l), fp0
       fgetexpd    (-0x80,a0,d5.l), fp0
-      fgetexpd    (0,a0,d6.w), fp0
-      fgetexpd    (-0x80,a0,d6.w), fp0
       fgetexpd    (0,a0,a0.w), fp0
       fgetexpd    (-0x80,a0,a0.w), fp0
-      fgetexpd    (0,a0,a0.l), fp0
-      fgetexpd    (-0x80,a0,a0.l), fp0
       fgetmand    (0,a0,d5.l), fp0
       fgetmand    (-0x80,a0,d5.l), fp0
-      fgetmand    (0,a0,d6.w), fp0
-      fgetmand    (-0x80,a0,d6.w), fp0
       fgetmand    (0,a0,a0.w), fp0
       fgetmand    (-0x80,a0,a0.w), fp0
-      fgetmand    (0,a0,a0.l), fp0
-      fgetmand    (-0x80,a0,a0.l), fp0
       fdivd   (0,a0,d5.l), fp0
       fdivd   (-0x80,a0,d5.l), fp0
-      fdivd   (0,a0,d6.w), fp0
-      fdivd   (-0x80,a0,d6.w), fp0
       fdivd   (0,a0,a0.w), fp0
       fdivd   (-0x80,a0,a0.w), fp0
-      fdivd   (0,a0,a0.l), fp0
-      fdivd   (-0x80,a0,a0.l), fp0
       fmodd   (0,a0,d5.l), fp0
       fmodd   (-0x80,a0,d5.l), fp0
-      fmodd   (0,a0,d6.w), fp0
-      fmodd   (-0x80,a0,d6.w), fp0
       fmodd   (0,a0,a0.w), fp0
       fmodd   (-0x80,a0,a0.w), fp0
-      fmodd   (0,a0,a0.l), fp0
-      fmodd   (-0x80,a0,a0.l), fp0
       faddd   (0,a0,d5.l), fp0
       faddd   (-0x80,a0,d5.l), fp0
-      faddd   (0,a0,d6.w), fp0
-      faddd   (-0x80,a0,d6.w), fp0
       faddd   (0,a0,a0.w), fp0
       faddd   (-0x80,a0,a0.w), fp0
-      faddd   (0,a0,a0.l), fp0
-      faddd   (-0x80,a0,a0.l), fp0
       fmuld   (0,a0,d5.l), fp0
       fmuld   (-0x80,a0,d5.l), fp0
-      fmuld   (0,a0,d6.w), fp0
-      fmuld   (-0x80,a0,d6.w), fp0
       fmuld   (0,a0,a0.w), fp0
       fmuld   (-0x80,a0,a0.w), fp0
-      fmuld   (0,a0,a0.l), fp0
-      fmuld   (-0x80,a0,a0.l), fp0
       fsgldivd    (0,a0,d5.l), fp0
       fsgldivd    (-0x80,a0,d5.l), fp0
-      fsgldivd    (0,a0,d6.w), fp0
-      fsgldivd    (-0x80,a0,d6.w), fp0
       fsgldivd    (0,a0,a0.w), fp0
       fsgldivd    (-0x80,a0,a0.w), fp0
-      fsgldivd    (0,a0,a0.l), fp0
-      fsgldivd    (-0x80,a0,a0.l), fp0
       fremd   (0,a0,d5.l), fp0
       fremd   (-0x80,a0,d5.l), fp0
-      fremd   (0,a0,d6.w), fp0
-      fremd   (-0x80,a0,d6.w), fp0
       fremd   (0,a0,a0.w), fp0
       fremd   (-0x80,a0,a0.w), fp0
-      fremd   (0,a0,a0.l), fp0
-      fremd   (-0x80,a0,a0.l), fp0
       fscaled (0,a0,d5.l), fp0
       fscaled (-0x80,a0,d5.l), fp0
-      fscaled (0,a0,d6.w), fp0
-      fscaled (-0x80,a0,d6.w), fp0
       fscaled (0,a0,a0.w), fp0
       fscaled (-0x80,a0,a0.w), fp0
-      fscaled (0,a0,a0.l), fp0
-      fscaled (-0x80,a0,a0.l), fp0
       fsglmuld    (0,a0,d5.l), fp0
       fsglmuld    (-0x80,a0,d5.l), fp0
-      fsglmuld    (0,a0,d6.w), fp0
-      fsglmuld    (-0x80,a0,d6.w), fp0
       fsglmuld    (0,a0,a0.w), fp0
       fsglmuld    (-0x80,a0,a0.w), fp0
-      fsglmuld    (0,a0,a0.l), fp0
-      fsglmuld    (-0x80,a0,a0.l), fp0
       fsubd   (0,a0,d5.l), fp0
       fsubd   (-0x80,a0,d5.l), fp0
-      fsubd   (0,a0,d6.w), fp0
-      fsubd   (-0x80,a0,d6.w), fp0
       fsubd   (0,a0,a0.w), fp0
       fsubd   (-0x80,a0,a0.w), fp0
-      fsubd   (0,a0,a0.l), fp0
-      fsubd   (-0x80,a0,a0.l), fp0
       fsincosd    (0,a0,d5.l), fp0:fp0
       fsincosd    (-0x80,a0,d5.l), fp0:fp0
-      fsincosd    (0,a0,d6.w), fp0:fp0
-      fsincosd    (-0x80,a0,d6.w), fp0:fp0
       fsincosd    (0,a0,a0.w), fp0:fp0
       fsincosd    (-0x80,a0,a0.w), fp0:fp0
-      fsincosd    (0,a0,a0.l), fp0:fp0
-      fsincosd    (-0x80,a0,a0.l), fp0:fp0
       fcmpd   (0,a0,d5.l), fp0
       fcmpd   (-0x80,a0,d5.l), fp0
-      fcmpd   (0,a0,d6.w), fp0
-      fcmpd   (-0x80,a0,d6.w), fp0
       fcmpd   (0,a0,a0.w), fp0
       fcmpd   (-0x80,a0,a0.w), fp0
-      fcmpd   (0,a0,a0.l), fp0
-      fcmpd   (-0x80,a0,a0.l), fp0
       ftstd   (0,a0,d5.l)
       ftstd   (-0x80,a0,d5.l)
-      ftstd   (0,a0,d6.w)
-      ftstd   (-0x80,a0,d6.w)
       ftstd   (0,a0,a0.w)
       ftstd   (-0x80,a0,a0.w)
-      ftstd   (0,a0,a0.l)
-      ftstd   (-0x80,a0,a0.l)
       fmoveb  (0,a0,d6.w), fp0
       fmoveb  (-0x80,a0,d6.w), fp0
-      fmoveb  (0,a0,d6.l), fp0
-      fmoveb  (-0x80,a0,d6.l), fp0
       fmoveb  (0,a0,a0.w), fp0
       fmoveb  (-0x80,a0,a0.w), fp0
-      fmoveb  (0,a0,a0.l), fp0
-      fmoveb  (-0x80,a0,a0.l), fp0
       fintb   (0,a0,d6.w), fp0
       fintb   (-0x80,a0,d6.w), fp0
-      fintb   (0,a0,d6.l), fp0
-      fintb   (-0x80,a0,d6.l), fp0
       fintb   (0,a0,a0.w), fp0
       fintb   (-0x80,a0,a0.w), fp0
-      fintb   (0,a0,a0.l), fp0
-      fintb   (-0x80,a0,a0.l), fp0
       fsinhb  (0,a0,d6.w), fp0
       fsinhb  (-0x80,a0,d6.w), fp0
-      fsinhb  (0,a0,d6.l), fp0
-      fsinhb  (-0x80,a0,d6.l), fp0
       fsinhb  (0,a0,a0.w), fp0
       fsinhb  (-0x80,a0,a0.w), fp0
-      fsinhb  (0,a0,a0.l), fp0
-      fsinhb  (-0x80,a0,a0.l), fp0
       fintrzb (0,a0,d6.w), fp0
       fintrzb (-0x80,a0,d6.w), fp0
-      fintrzb (0,a0,d6.l), fp0
-      fintrzb (-0x80,a0,d6.l), fp0
       fintrzb (0,a0,a0.w), fp0
       fintrzb (-0x80,a0,a0.w), fp0
-      fintrzb (0,a0,a0.l), fp0
-      fintrzb (-0x80,a0,a0.l), fp0
       fsqrtb  (0,a0,d6.w), fp0
       fsqrtb  (-0x80,a0,d6.w), fp0
-      fsqrtb  (0,a0,d6.l), fp0
-      fsqrtb  (-0x80,a0,d6.l), fp0
       fsqrtb  (0,a0,a0.w), fp0
       fsqrtb  (-0x80,a0,a0.w), fp0
-      fsqrtb  (0,a0,a0.l), fp0
-      fsqrtb  (-0x80,a0,a0.l), fp0
       flognp1b    (0,a0,d6.w), fp0
       flognp1b    (-0x80,a0,d6.w), fp0
-      flognp1b    (0,a0,d6.l), fp0
-      flognp1b    (-0x80,a0,d6.l), fp0
       flognp1b    (0,a0,a0.w), fp0
       flognp1b    (-0x80,a0,a0.w), fp0
-      flognp1b    (0,a0,a0.l), fp0
-      flognp1b    (-0x80,a0,a0.l), fp0
       fetoxm1b    (0,a0,d6.w), fp0
       fetoxm1b    (-0x80,a0,d6.w), fp0
-      fetoxm1b    (0,a0,d6.l), fp0
-      fetoxm1b    (-0x80,a0,d6.l), fp0
       fetoxm1b    (0,a0,a0.w), fp0
       fetoxm1b    (-0x80,a0,a0.w), fp0
-      fetoxm1b    (0,a0,a0.l), fp0
-      fetoxm1b    (-0x80,a0,a0.l), fp0
       ftanhb  (0,a0,d6.w), fp0
       ftanhb  (-0x80,a0,d6.w), fp0
-      ftanhb  (0,a0,d6.l), fp0
-      ftanhb  (-0x80,a0,d6.l), fp0
       ftanhb  (0,a0,a0.w), fp0
       ftanhb  (-0x80,a0,a0.w), fp0
-      ftanhb  (0,a0,a0.l), fp0
-      ftanhb  (-0x80,a0,a0.l), fp0
       fatanb  (0,a0,d6.w), fp0
       fatanb  (-0x80,a0,d6.w), fp0
-      fatanb  (0,a0,d6.l), fp0
-      fatanb  (-0x80,a0,d6.l), fp0
       fatanb  (0,a0,a0.w), fp0
       fatanb  (-0x80,a0,a0.w), fp0
-      fatanb  (0,a0,a0.l), fp0
-      fatanb  (-0x80,a0,a0.l), fp0
       fasinb  (0,a0,d6.w), fp0
       fasinb  (-0x80,a0,d6.w), fp0
-      fasinb  (0,a0,d6.l), fp0
-      fasinb  (-0x80,a0,d6.l), fp0
       fasinb  (0,a0,a0.w), fp0
       fasinb  (-0x80,a0,a0.w), fp0
-      fasinb  (0,a0,a0.l), fp0
-      fasinb  (-0x80,a0,a0.l), fp0
       fatanhb (0,a0,d6.w), fp0
       fatanhb (-0x80,a0,d6.w), fp0
-      fatanhb (0,a0,d6.l), fp0
-      fatanhb (-0x80,a0,d6.l), fp0
       fatanhb (0,a0,a0.w), fp0
       fatanhb (-0x80,a0,a0.w), fp0
-      fatanhb (0,a0,a0.l), fp0
-      fatanhb (-0x80,a0,a0.l), fp0
       fsinb   (0,a0,d6.w), fp0
       fsinb   (-0x80,a0,d6.w), fp0
-      fsinb   (0,a0,d6.l), fp0
-      fsinb   (-0x80,a0,d6.l), fp0
       fsinb   (0,a0,a0.w), fp0
       fsinb   (-0x80,a0,a0.w), fp0
-      fsinb   (0,a0,a0.l), fp0
-      fsinb   (-0x80,a0,a0.l), fp0
       ftanb   (0,a0,d6.w), fp0
       ftanb   (-0x80,a0,d6.w), fp0
-      ftanb   (0,a0,d6.l), fp0
-      ftanb   (-0x80,a0,d6.l), fp0
       ftanb   (0,a0,a0.w), fp0
       ftanb   (-0x80,a0,a0.w), fp0
-      ftanb   (0,a0,a0.l), fp0
-      ftanb   (-0x80,a0,a0.l), fp0
       fetoxb  (0,a0,d6.w), fp0
       fetoxb  (-0x80,a0,d6.w), fp0
-      fetoxb  (0,a0,d6.l), fp0
-      fetoxb  (-0x80,a0,d6.l), fp0
       fetoxb  (0,a0,a0.w), fp0
       fetoxb  (-0x80,a0,a0.w), fp0
-      fetoxb  (0,a0,a0.l), fp0
-      fetoxb  (-0x80,a0,a0.l), fp0
       ftwotoxb    (0,a0,d6.w), fp0
       ftwotoxb    (-0x80,a0,d6.w), fp0
-      ftwotoxb    (0,a0,d6.l), fp0
-      ftwotoxb    (-0x80,a0,d6.l), fp0
       ftwotoxb    (0,a0,a0.w), fp0
       ftwotoxb    (-0x80,a0,a0.w), fp0
-      ftwotoxb    (0,a0,a0.l), fp0
-      ftwotoxb    (-0x80,a0,a0.l), fp0
       ftentoxb    (0,a0,d6.w), fp0
       ftentoxb    (-0x80,a0,d6.w), fp0
-      ftentoxb    (0,a0,d6.l), fp0
-      ftentoxb    (-0x80,a0,d6.l), fp0
       ftentoxb    (0,a0,a0.w), fp0
       ftentoxb    (-0x80,a0,a0.w), fp0
-      ftentoxb    (0,a0,a0.l), fp0
-      ftentoxb    (-0x80,a0,a0.l), fp0
       flognb  (0,a0,d6.w), fp0
       flognb  (-0x80,a0,d6.w), fp0
-      flognb  (0,a0,d6.l), fp0
-      flognb  (-0x80,a0,d6.l), fp0
       flognb  (0,a0,a0.w), fp0
       flognb  (-0x80,a0,a0.w), fp0
-      flognb  (0,a0,a0.l), fp0
-      flognb  (-0x80,a0,a0.l), fp0
       flog10b (0,a0,d6.w), fp0
       flog10b (-0x80,a0,d6.w), fp0
-      flog10b (0,a0,d6.l), fp0
-      flog10b (-0x80,a0,d6.l), fp0
       flog10b (0,a0,a0.w), fp0
       flog10b (-0x80,a0,a0.w), fp0
-      flog10b (0,a0,a0.l), fp0
-      flog10b (-0x80,a0,a0.l), fp0
       flog2b  (0,a0,d6.w), fp0
       flog2b  (-0x80,a0,d6.w), fp0
-      flog2b  (0,a0,d6.l), fp0
-      flog2b  (-0x80,a0,d6.l), fp0
       flog2b  (0,a0,a0.w), fp0
       flog2b  (-0x80,a0,a0.w), fp0
-      flog2b  (0,a0,a0.l), fp0
-      flog2b  (-0x80,a0,a0.l), fp0
       fabsb   (0,a0,d6.w), fp0
       fabsb   (-0x80,a0,d6.w), fp0
-      fabsb   (0,a0,d6.l), fp0
-      fabsb   (-0x80,a0,d6.l), fp0
       fabsb   (0,a0,a0.w), fp0
       fabsb   (-0x80,a0,a0.w), fp0
-      fabsb   (0,a0,a0.l), fp0
-      fabsb   (-0x80,a0,a0.l), fp0
       fcoshb  (0,a0,d6.w), fp0
       fcoshb  (-0x80,a0,d6.w), fp0
-      fcoshb  (0,a0,d6.l), fp0
-      fcoshb  (-0x80,a0,d6.l), fp0
       fcoshb  (0,a0,a0.w), fp0
       fcoshb  (-0x80,a0,a0.w), fp0
-      fcoshb  (0,a0,a0.l), fp0
-      fcoshb  (-0x80,a0,a0.l), fp0
       fnegb   (0,a0,d6.w), fp0
       fnegb   (-0x80,a0,d6.w), fp0
-      fnegb   (0,a0,d6.l), fp0
-      fnegb   (-0x80,a0,d6.l), fp0
       fnegb   (0,a0,a0.w), fp0
       fnegb   (-0x80,a0,a0.w), fp0
-      fnegb   (0,a0,a0.l), fp0
-      fnegb   (-0x80,a0,a0.l), fp0
       facosb  (0,a0,d6.w), fp0
       facosb  (-0x80,a0,d6.w), fp0
-      facosb  (0,a0,d6.l), fp0
-      facosb  (-0x80,a0,d6.l), fp0
       facosb  (0,a0,a0.w), fp0
       facosb  (-0x80,a0,a0.w), fp0
-      facosb  (0,a0,a0.l), fp0
-      facosb  (-0x80,a0,a0.l), fp0
       fcosb   (0,a0,d6.w), fp0
       fcosb   (-0x80,a0,d6.w), fp0
-      fcosb   (0,a0,d6.l), fp0
-      fcosb   (-0x80,a0,d6.l), fp0
       fcosb   (0,a0,a0.w), fp0
       fcosb   (-0x80,a0,a0.w), fp0
-      fcosb   (0,a0,a0.l), fp0
-      fcosb   (-0x80,a0,a0.l), fp0
       fgetexpb    (0,a0,d6.w), fp0
       fgetexpb    (-0x80,a0,d6.w), fp0
-      fgetexpb    (0,a0,d6.l), fp0
-      fgetexpb    (-0x80,a0,d6.l), fp0
       fgetexpb    (0,a0,a0.w), fp0
       fgetexpb    (-0x80,a0,a0.w), fp0
-      fgetexpb    (0,a0,a0.l), fp0
-      fgetexpb    (-0x80,a0,a0.l), fp0
       fgetmanb    (0,a0,d6.w), fp0
       fgetmanb    (-0x80,a0,d6.w), fp0
-      fgetmanb    (0,a0,d6.l), fp0
-      fgetmanb    (-0x80,a0,d6.l), fp0
       fgetmanb    (0,a0,a0.w), fp0
       fgetmanb    (-0x80,a0,a0.w), fp0
-      fgetmanb    (0,a0,a0.l), fp0
-      fgetmanb    (-0x80,a0,a0.l), fp0
       fdivb   (0,a0,d6.w), fp0
       fdivb   (-0x80,a0,d6.w), fp0
-      fdivb   (0,a0,d6.l), fp0
-      fdivb   (-0x80,a0,d6.l), fp0
       fdivb   (0,a0,a0.w), fp0
       fdivb   (-0x80,a0,a0.w), fp0
-      fdivb   (0,a0,a0.l), fp0
-      fdivb   (-0x80,a0,a0.l), fp0
       fmodb   (0,a0,d6.w), fp0
       fmodb   (-0x80,a0,d6.w), fp0
-      fmodb   (0,a0,d6.l), fp0
-      fmodb   (-0x80,a0,d6.l), fp0
       fmodb   (0,a0,a0.w), fp0
       fmodb   (-0x80,a0,a0.w), fp0
-      fmodb   (0,a0,a0.l), fp0
-      fmodb   (-0x80,a0,a0.l), fp0
       faddb   (0,a0,d6.w), fp0
       faddb   (-0x80,a0,d6.w), fp0
-      faddb   (0,a0,d6.l), fp0
-      faddb   (-0x80,a0,d6.l), fp0
       faddb   (0,a0,a0.w), fp0
       faddb   (-0x80,a0,a0.w), fp0
-      faddb   (0,a0,a0.l), fp0
-      faddb   (-0x80,a0,a0.l), fp0
       fmulb   (0,a0,d6.w), fp0
       fmulb   (-0x80,a0,d6.w), fp0
-      fmulb   (0,a0,d6.l), fp0
-      fmulb   (-0x80,a0,d6.l), fp0
       fmulb   (0,a0,a0.w), fp0
       fmulb   (-0x80,a0,a0.w), fp0
-      fmulb   (0,a0,a0.l), fp0
-      fmulb   (-0x80,a0,a0.l), fp0
       fsgldivb    (0,a0,d6.w), fp0
       fsgldivb    (-0x80,a0,d6.w), fp0
-      fsgldivb    (0,a0,d6.l), fp0
-      fsgldivb    (-0x80,a0,d6.l), fp0
       fsgldivb    (0,a0,a0.w), fp0
       fsgldivb    (-0x80,a0,a0.w), fp0
-      fsgldivb    (0,a0,a0.l), fp0
-      fsgldivb    (-0x80,a0,a0.l), fp0
       fremb   (0,a0,d6.w), fp0
       fremb   (-0x80,a0,d6.w), fp0
-      fremb   (0,a0,d6.l), fp0
-      fremb   (-0x80,a0,d6.l), fp0
       fremb   (0,a0,a0.w), fp0
       fremb   (-0x80,a0,a0.w), fp0
-      fremb   (0,a0,a0.l), fp0
-      fremb   (-0x80,a0,a0.l), fp0
       fscaleb (0,a0,d6.w), fp0
       fscaleb (-0x80,a0,d6.w), fp0
-      fscaleb (0,a0,d6.l), fp0
-      fscaleb (-0x80,a0,d6.l), fp0
       fscaleb (0,a0,a0.w), fp0
       fscaleb (-0x80,a0,a0.w), fp0
-      fscaleb (0,a0,a0.l), fp0
-      fscaleb (-0x80,a0,a0.l), fp0
       fsglmulb    (0,a0,d6.w), fp0
       fsglmulb    (-0x80,a0,d6.w), fp0
-      fsglmulb    (0,a0,d6.l), fp0
-      fsglmulb    (-0x80,a0,d6.l), fp0
       fsglmulb    (0,a0,a0.w), fp0
       fsglmulb    (-0x80,a0,a0.w), fp0
-      fsglmulb    (0,a0,a0.l), fp0
-      fsglmulb    (-0x80,a0,a0.l), fp0
       fsubb   (0,a0,d6.w), fp0
       fsubb   (-0x80,a0,d6.w), fp0
-      fsubb   (0,a0,d6.l), fp0
-      fsubb   (-0x80,a0,d6.l), fp0
       fsubb   (0,a0,a0.w), fp0
       fsubb   (-0x80,a0,a0.w), fp0
-      fsubb   (0,a0,a0.l), fp0
-      fsubb   (-0x80,a0,a0.l), fp0
       fsincosb    (0,a0,d6.w), fp0:fp0
       fsincosb    (-0x80,a0,d6.w), fp0:fp0
-      fsincosb    (0,a0,d6.l), fp0:fp0
-      fsincosb    (-0x80,a0,d6.l), fp0:fp0
       fsincosb    (0,a0,a0.w), fp0:fp0
       fsincosb    (-0x80,a0,a0.w), fp0:fp0
-      fsincosb    (0,a0,a0.l), fp0:fp0
-      fsincosb    (-0x80,a0,a0.l), fp0:fp0
       fcmpb   (0,a0,d6.w), fp0
       fcmpb   (-0x80,a0,d6.w), fp0
-      fcmpb   (0,a0,d6.l), fp0
-      fcmpb   (-0x80,a0,d6.l), fp0
       fcmpb   (0,a0,a0.w), fp0
       fcmpb   (-0x80,a0,a0.w), fp0
-      fcmpb   (0,a0,a0.l), fp0
-      fcmpb   (-0x80,a0,a0.l), fp0
       ftstb   (0,a0,d6.w)
       ftstb   (-0x80,a0,d6.w)
-      ftstb   (0,a0,d6.l)
-      ftstb   (-0x80,a0,d6.l)
       ftstb   (0,a0,a0.w)
       ftstb   (-0x80,a0,a0.w)
-      ftstb   (0,a0,a0.l)
-      ftstb   (-0x80,a0,a0.l)
       fmovel  fp0, (0,a0,d6.l)
       fmovel  fp0, (-0x80,a0,d6.l)
-      fmovel  fp0, (0,a0,d7.w)
-      fmovel  fp0, (-0x80,a0,d7.w)
       fmovel  fp0, (0,a0,a0.w)
       fmovel  fp0, (-0x80,a0,a0.w)
-      fmovel  fp0, (0,a0,a0.l)
-      fmovel  fp0, (-0x80,a0,a0.l)
       fmoves  fp0, (0,a0,d6.l)
       fmoves  fp0, (-0x80,a0,d6.l)
-      fmoves  fp0, (0,a0,d7.w)
-      fmoves  fp0, (-0x80,a0,d7.w)
       fmoves  fp0, (0,a0,a0.w)
       fmoves  fp0, (-0x80,a0,a0.w)
-      fmoves  fp0, (0,a0,a0.l)
-      fmoves  fp0, (-0x80,a0,a0.l)
       fmovex  fp0, (0,a0,d7.w)
       fmovex  fp0, (-0x80,a0,d7.w)
-      fmovex  fp0, (0,a0,d7.l)
-      fmovex  fp0, (-0x80,a0,d7.l)
       fmovex  fp0, (0,a0,a0.w)
       fmovex  fp0, (-0x80,a0,a0.w)
-      fmovex  fp0, (0,a0,a0.l)
-      fmovex  fp0, (-0x80,a0,a0.l)
       fmovep  fp0, (0,a0,d7.w){#0}
       fmovep  fp0, (-0x80,a0,d7.w){#0}
-      fmovep  fp0, (0,a0,d7.l){#0}
-      fmovep  fp0, (-0x80,a0,d7.l){#0}
       fmovep  fp0, (0,a0,a0.w){#0}
       fmovep  fp0, (-0x80,a0,a0.w){#0}
-      fmovep  fp0, (0,a0,a0.l){#0}
-      fmovep  fp0, (-0x80,a0,a0.l){#0}
-      fmovep  fp6, (0x41,a0,d7.w){#-64}
-      fmovep  fp6, (-0x80,a0,d7.w){#-64}
-      fmovew  fp0, (0,a0,d7.l)
-      fmovew  fp0, (-0x80,a0,d7.l)
-      fmovew  fp0, (0,a0,a0.w)
-      fmovew  fp0, (-0x80,a0,a0.w)
-      fmovew  fp0, (0,a0,a0.l)
-      fmovew  fp0, (-0x80,a0,a0.l)
-      fmovew  fp0, (0,a0,d0.w)
-      fmovew  fp0, (-0x80,a0,d0.w)
+      fmovew  fp1, (0,a0,d7.l)
+      fmovew  fp1, (-0x80,a0,d7.l)
+      fmovew  fp1, (0,a0,a0.w)
+      fmovew  fp1, (-0x80,a0,a0.w)
       fmoved  fp0, (0,a0,d7.l)
       fmoved  fp0, (-0x80,a0,d7.l)
       fmoved  fp0, (0,a0,a0.w)
       fmoved  fp0, (-0x80,a0,a0.w)
-      fmoved  fp0, (0,a0,a0.l)
-      fmoved  fp0, (-0x80,a0,a0.l)
-      fmoved  fp0, (0,a0,d0.w)
-      fmoved  fp0, (-0x80,a0,d0.w)
       fmoveb  fp0, (0,a0,a0.w)
       fmoveb  fp0, (-0x80,a0,a0.w)
-      fmoveb  fp0, (0,a0,a0.l)
-      fmoveb  fp0, (-0x80,a0,a0.l)
       fmoveb  fp0, (0,a0,d0.w)
       fmoveb  fp0, (-0x80,a0,d0.w)
-      fmoveb  fp0, (0,a0,d0.l)
-      fmoveb  fp0, (-0x80,a0,d0.l)
-      fmovep  fp7, (-0x4f,a0,a0.w){d3}
-      fmovep  fp7, (0,a0,a0.l){d3}
-      fmovep  fp7, (-0x80,a0,a0.l){d3}
-      fmovep  fp7, (0,a0,a1.w){d3}
+      fmovep  fp6, (0x31,a0,a0.w){d3}
+      fmovep  fp6, (-0x80,a0,a0.w){d3}
       fmovel  (0,a0,a0.l), fpiar
       fmovel  (-0x80,a0,a0.l), fpiar
-      fmovel  (0,a0,a1.w), fpiar
-      fmovel  (-0x80,a0,a1.w), fpiar
       fmovel  (0,a0,d0.w), fpiar
       fmovel  (-0x80,a0,d0.w), fpiar
-      fmovel  (0,a0,d0.l), fpiar
-      fmovel  (-0x80,a0,d0.l), fpiar
       fmovel  (0,a0,a1.w), fpsr
       fmovel  (-0x80,a0,a1.w), fpsr
-      fmovel  (0,a0,a1.l), fpsr
-      fmovel  (-0x80,a0,a1.l), fpsr
       fmovel  (0,a0,d0.w), fpsr
       fmovel  (-0x80,a0,d0.w), fpsr
-      fmovel  (0,a0,d0.l), fpsr
-      fmovel  (-0x80,a0,d0.l), fpsr
       fmoveml (0,a0,a1.w), fpsr/fpiar
       fmoveml (-0x80,a0,a1.w), fpsr/fpiar
-      fmoveml (0,a0,a1.l), fpsr/fpiar
-      fmoveml (-0x80,a0,a1.l), fpsr/fpiar
       fmoveml (0,a0,d0.w), fpsr/fpiar
       fmoveml (-0x80,a0,d0.w), fpsr/fpiar
-      fmoveml (0,a0,d0.l), fpsr/fpiar
-      fmoveml (-0x80,a0,d0.l), fpsr/fpiar
       fmovel  (0,a0,a1.l), fpcr
       fmovel  (-0x80,a0,a1.l), fpcr
-      fmovel  (0,a0,a2.w), fpcr
-      fmovel  (-0x80,a0,a2.w), fpcr
       fmovel  (0,a0,d0.w), fpcr
       fmovel  (-0x80,a0,d0.w), fpcr
-      fmovel  (0,a0,d0.l), fpcr
-      fmovel  (-0x80,a0,d0.l), fpcr
       fmoveml (0,a0,a1.l), fpcr/fpiar
       fmoveml (-0x80,a0,a1.l), fpcr/fpiar
-      fmoveml (0,a0,a2.w), fpcr/fpiar
-      fmoveml (-0x80,a0,a2.w), fpcr/fpiar
       fmoveml (0,a0,d0.w), fpcr/fpiar
       fmoveml (-0x80,a0,d0.w), fpcr/fpiar
-      fmoveml (0,a0,d0.l), fpcr/fpiar
-      fmoveml (-0x80,a0,d0.l), fpcr/fpiar
       fmoveml (0,a0,a2.w), fpcr/fpsr
       fmoveml (-0x80,a0,a2.w), fpcr/fpsr
-      fmoveml (0,a0,a2.l), fpcr/fpsr
-      fmoveml (-0x80,a0,a2.l), fpcr/fpsr
       fmoveml (0,a0,d0.w), fpcr/fpsr
       fmoveml (-0x80,a0,d0.w), fpcr/fpsr
-      fmoveml (0,a0,d0.l), fpcr/fpsr
-      fmoveml (-0x80,a0,d0.l), fpcr/fpsr
       fmoveml (0,a0,a2.w), fpcr/fpsr/fpiar
       fmoveml (-0x80,a0,a2.w), fpcr/fpsr/fpiar
-      fmoveml (0,a0,a2.l), fpcr/fpsr/fpiar
-      fmoveml (-0x80,a0,a2.l), fpcr/fpsr/fpiar
       fmoveml (0,a0,d0.w), fpcr/fpsr/fpiar
       fmoveml (-0x80,a0,d0.w), fpcr/fpsr/fpiar
-      fmoveml (0,a0,d0.l), fpcr/fpsr/fpiar
-      fmoveml (-0x80,a0,d0.l), fpcr/fpsr/fpiar
       fmovel  fpiar, (0,a0,a2.l)
       fmovel  fpiar, (-0x80,a0,a2.l)
-      fmovel  fpiar, (0,a0,a3.w)
-      fmovel  fpiar, (-0x80,a0,a3.w)
       fmovel  fpiar, (0,a0,d0.w)
       fmovel  fpiar, (-0x80,a0,d0.w)
-      fmovel  fpiar, (0,a0,d0.l)
-      fmovel  fpiar, (-0x80,a0,d0.l)
       fmovel  fpsr, (0,a0,a3.w)
       fmovel  fpsr, (-0x80,a0,a3.w)
-      fmovel  fpsr, (0,a0,a3.l)
-      fmovel  fpsr, (-0x80,a0,a3.l)
       fmovel  fpsr, (0,a0,d0.w)
       fmovel  fpsr, (-0x80,a0,d0.w)
-      fmovel  fpsr, (0,a0,d0.l)
-      fmovel  fpsr, (-0x80,a0,d0.l)
       fmoveml fpsr/fpiar, (0,a0,a3.w)
       fmoveml fpsr/fpiar, (-0x80,a0,a3.w)
-      fmoveml fpsr/fpiar, (0,a0,a3.l)
-      fmoveml fpsr/fpiar, (-0x80,a0,a3.l)
       fmoveml fpsr/fpiar, (0,a0,d0.w)
       fmoveml fpsr/fpiar, (-0x80,a0,d0.w)
-      fmoveml fpsr/fpiar, (0,a0,d0.l)
-      fmoveml fpsr/fpiar, (-0x80,a0,d0.l)
       fmovel  fpcr, (0,a0,a3.l)
       fmovel  fpcr, (-0x80,a0,a3.l)
-      fmovel  fpcr, (0,a0,a4.w)
-      fmovel  fpcr, (-0x80,a0,a4.w)
       fmovel  fpcr, (0,a0,d0.w)
       fmovel  fpcr, (-0x80,a0,d0.w)
-      fmovel  fpcr, (0,a0,d0.l)
-      fmovel  fpcr, (-0x80,a0,d0.l)
       fmoveml fpcr/fpiar, (0,a0,a3.l)
       fmoveml fpcr/fpiar, (-0x80,a0,a3.l)
-      fmoveml fpcr/fpiar, (0,a0,a4.w)
-      fmoveml fpcr/fpiar, (-0x80,a0,a4.w)
       fmoveml fpcr/fpiar, (0,a0,d0.w)
       fmoveml fpcr/fpiar, (-0x80,a0,d0.w)
-      fmoveml fpcr/fpiar, (0,a0,d0.l)
-      fmoveml fpcr/fpiar, (-0x80,a0,d0.l)
       fmoveml fpcr/fpsr, (0,a0,a4.w)
       fmoveml fpcr/fpsr, (-0x80,a0,a4.w)
-      fmoveml fpcr/fpsr, (0,a0,a4.l)
-      fmoveml fpcr/fpsr, (-0x80,a0,a4.l)
       fmoveml fpcr/fpsr, (0,a0,d0.w)
       fmoveml fpcr/fpsr, (-0x80,a0,d0.w)
-      fmoveml fpcr/fpsr, (0,a0,d0.l)
-      fmoveml fpcr/fpsr, (-0x80,a0,d0.l)
       fmoveml fpcr/fpsr/fpiar, (0,a0,a4.w)
       fmoveml fpcr/fpsr/fpiar, (-0x80,a0,a4.w)
-      fmoveml fpcr/fpsr/fpiar, (0,a0,a4.l)
-      fmoveml fpcr/fpsr/fpiar, (-0x80,a0,a4.l)
       fmoveml fpcr/fpsr/fpiar, (0,a0,d0.w)
       fmoveml fpcr/fpsr/fpiar, (-0x80,a0,d0.w)
-      fmoveml fpcr/fpsr/fpiar, (0,a0,d0.l)
-      fmoveml fpcr/fpsr/fpiar, (-0x80,a0,d0.l)
       fmovemx (0,a0,a5.l), fp7
       fmovemx (-0x80,a0,a5.l), fp7
-      fmovemx (0,a0,a6.w), fp7
-      fmovemx (-0x80,a0,a6.w), fp7
       fmovemx (0,a0,d0.w), fp7
       fmovemx (-0x80,a0,d0.w), fp7
-      fmovemx (0,a0,d0.l), fp7
-      fmovemx (-0x80,a0,d0.l), fp7
       fmovemx (0,a0,a5.l), fp6-fp7
       fmovemx (-0x80,a0,a5.l), fp6-fp7
-      fmovemx (0,a0,a6.w), fp6-fp7
-      fmovemx (-0x80,a0,a6.w), fp6-fp7
       fmovemx (0,a0,d0.w), fp6-fp7
       fmovemx (-0x80,a0,d0.w), fp6-fp7
-      fmovemx (0,a0,d0.l), fp6-fp7
-      fmovemx (-0x80,a0,d0.l), fp6-fp7
       fmovemx (0,a0,a5.l), fp4/fp6-fp7
       fmovemx (-0x80,a0,a5.l), fp4/fp6-fp7
-      fmovemx (0,a0,a6.w), fp4/fp6-fp7
-      fmovemx (-0x80,a0,a6.w), fp4/fp6-fp7
       fmovemx (0,a0,d0.w), fp4/fp6-fp7
       fmovemx (-0x80,a0,d0.w), fp4/fp6-fp7
-      fmovemx (0,a0,d0.l), fp4/fp6-fp7
-      fmovemx (-0x80,a0,d0.l), fp4/fp6-fp7
       fmovemx (0,a0,a5.l), fp3-fp4/fp6-fp7
       fmovemx (-0x80,a0,a5.l), fp3-fp4/fp6-fp7
-      fmovemx (0,a0,a6.w), fp3-fp4/fp6-fp7
-      fmovemx (-0x80,a0,a6.w), fp3-fp4/fp6-fp7
       fmovemx (0,a0,d0.w), fp3-fp4/fp6-fp7
       fmovemx (-0x80,a0,d0.w), fp3-fp4/fp6-fp7
-      fmovemx (0,a0,d0.l), fp3-fp4/fp6-fp7
-      fmovemx (-0x80,a0,d0.l), fp3-fp4/fp6-fp7
       fmovemx (0,a0,a5.l), fp1/fp3-fp4/fp6-fp7
       fmovemx (-0x80,a0,a5.l), fp1/fp3-fp4/fp6-fp7
-      fmovemx (0,a0,a6.w), fp1/fp3-fp4/fp6-fp7
-      fmovemx (-0x80,a0,a6.w), fp1/fp3-fp4/fp6-fp7
       fmovemx (0,a0,d0.w), fp1/fp3-fp4/fp6-fp7
       fmovemx (-0x80,a0,d0.w), fp1/fp3-fp4/fp6-fp7
-      fmovemx (0,a0,d0.l), fp1/fp3-fp4/fp6-fp7
-      fmovemx (-0x80,a0,d0.l), fp1/fp3-fp4/fp6-fp7
       fmovemx (0,a0,a5.l), fp0-fp1/fp3-fp4/fp6-fp7
       fmovemx (-0x80,a0,a5.l), fp0-fp1/fp3-fp4/fp6-fp7
-      fmovemx (0,a0,a6.w), fp0-fp1/fp3-fp4/fp6-fp7
-      fmovemx (-0x80,a0,a6.w), fp0-fp1/fp3-fp4/fp6-fp7
       fmovemx (0,a0,d0.w), fp0-fp1/fp3-fp4/fp6-fp7
       fmovemx (-0x80,a0,d0.w), fp0-fp1/fp3-fp4/fp6-fp7
-      fmovemx (0,a0,d0.l), fp0-fp1/fp3-fp4/fp6-fp7
-      fmovemx (-0x80,a0,d0.l), fp0-fp1/fp3-fp4/fp6-fp7
       fmovemx (0,a0,a6.w), d0
       fmovemx (-0x80,a0,a6.w), d0
-      fmovemx (0,a0,a6.l), d0
-      fmovemx (-0x80,a0,a6.l), d0
       fmovemx (0,a0,d0.w), d0
       fmovemx (-0x80,a0,d0.w), d0
-      fmovemx (0,a0,d0.l), d0
-      fmovemx (-0x80,a0,d0.l), d0
       fmovemx fp7, (0,a0,a7.l)
       fmovemx fp7, (-0x80,a0,a7.l)
       fmovemx fp7, (0,a0,d0.w)
       fmovemx fp7, (-0x80,a0,d0.w)
-      fmovemx fp7, (0,a0,d0.l)
-      fmovemx fp7, (-0x80,a0,d0.l)
-      fmovemx fp7, (0,a0,a0.w)
-      fmovemx fp7, (-0x80,a0,a0.w)
       fmovemx fp6-fp7, (0,a0,a7.l)
       fmovemx fp6-fp7, (-0x80,a0,a7.l)
       fmovemx fp6-fp7, (0,a0,d0.w)
       fmovemx fp6-fp7, (-0x80,a0,d0.w)
-      fmovemx fp6-fp7, (0,a0,d0.l)
-      fmovemx fp6-fp7, (-0x80,a0,d0.l)
-      fmovemx fp6-fp7, (0,a0,a0.w)
-      fmovemx fp6-fp7, (-0x80,a0,a0.w)
       fmovemx fp4/fp6-fp7, (0,a0,a7.l)
       fmovemx fp4/fp6-fp7, (-0x80,a0,a7.l)
       fmovemx fp4/fp6-fp7, (0,a0,d0.w)
       fmovemx fp4/fp6-fp7, (-0x80,a0,d0.w)
-      fmovemx fp4/fp6-fp7, (0,a0,d0.l)
-      fmovemx fp4/fp6-fp7, (-0x80,a0,d0.l)
-      fmovemx fp4/fp6-fp7, (0,a0,a0.w)
-      fmovemx fp4/fp6-fp7, (-0x80,a0,a0.w)
       fmovemx fp3-fp4/fp6-fp7, (0,a0,a7.l)
       fmovemx fp3-fp4/fp6-fp7, (-0x80,a0,a7.l)
       fmovemx fp3-fp4/fp6-fp7, (0,a0,d0.w)
       fmovemx fp3-fp4/fp6-fp7, (-0x80,a0,d0.w)
-      fmovemx fp3-fp4/fp6-fp7, (0,a0,d0.l)
-      fmovemx fp3-fp4/fp6-fp7, (-0x80,a0,d0.l)
-      fmovemx fp3-fp4/fp6-fp7, (0,a0,a0.w)
-      fmovemx fp3-fp4/fp6-fp7, (-0x80,a0,a0.w)
       fmovemx fp1/fp3-fp4/fp6-fp7, (0,a0,a7.l)
       fmovemx fp1/fp3-fp4/fp6-fp7, (-0x80,a0,a7.l)
       fmovemx fp1/fp3-fp4/fp6-fp7, (0,a0,d0.w)
       fmovemx fp1/fp3-fp4/fp6-fp7, (-0x80,a0,d0.w)
-      fmovemx fp1/fp3-fp4/fp6-fp7, (0,a0,d0.l)
-      fmovemx fp1/fp3-fp4/fp6-fp7, (-0x80,a0,d0.l)
-      fmovemx fp1/fp3-fp4/fp6-fp7, (0,a0,a0.w)
-      fmovemx fp1/fp3-fp4/fp6-fp7, (-0x80,a0,a0.w)
       fmovemx fp0-fp1/fp3-fp4/fp6-fp7, (0,a0,a7.l)
       fmovemx fp0-fp1/fp3-fp4/fp6-fp7, (-0x80,a0,a7.l)
       fmovemx fp0-fp1/fp3-fp4/fp6-fp7, (0,a0,d0.w)
       fmovemx fp0-fp1/fp3-fp4/fp6-fp7, (-0x80,a0,d0.w)
-      fmovemx fp0-fp1/fp3-fp4/fp6-fp7, (0,a0,d0.l)
-      fmovemx fp0-fp1/fp3-fp4/fp6-fp7, (-0x80,a0,d0.l)
-      fmovemx fp0-fp1/fp3-fp4/fp6-fp7, (0,a0,a0.w)
-      fmovemx fp0-fp1/fp3-fp4/fp6-fp7, (-0x80,a0,a0.w)
       fmovemx d0, (0xf902).w
       fmovel  (0x4102).w, fp0
       fintl   (0x4102).w, fp0
@@ -14070,3363 +10054,1683 @@
       fmovel  (.+4,pc,d4.l), fp0
       fmovel  (.-124,pc,d4.l), fp0
       fmovel  (.,pc,d4.l), fp0
-      fmovel  (.+4,pc,d5.w), fp0
-      fmovel  (.-124,pc,d5.w), fp0
-      fmovel  (.,pc,d5.w), fp0
       fmovel  (.+4,pc,a0.w), fp0
       fmovel  (.-124,pc,a0.w), fp0
       fmovel  (.,pc,a0.w), fp0
-      fmovel  (.+4,pc,a0.l), fp0
-      fmovel  (.-124,pc,a0.l), fp0
-      fmovel  (.,pc,a0.l), fp0
       fintl   (.+4,pc,d4.l), fp0
       fintl   (.-124,pc,d4.l), fp0
       fintl   (.,pc,d4.l), fp0
-      fintl   (.+4,pc,d5.w), fp0
-      fintl   (.-124,pc,d5.w), fp0
-      fintl   (.,pc,d5.w), fp0
       fintl   (.+4,pc,a0.w), fp0
       fintl   (.-124,pc,a0.w), fp0
       fintl   (.,pc,a0.w), fp0
-      fintl   (.+4,pc,a0.l), fp0
-      fintl   (.-124,pc,a0.l), fp0
-      fintl   (.,pc,a0.l), fp0
       fsinhl  (.+4,pc,d4.l), fp0
       fsinhl  (.-124,pc,d4.l), fp0
       fsinhl  (.,pc,d4.l), fp0
-      fsinhl  (.+4,pc,d5.w), fp0
-      fsinhl  (.-124,pc,d5.w), fp0
-      fsinhl  (.,pc,d5.w), fp0
       fsinhl  (.+4,pc,a0.w), fp0
       fsinhl  (.-124,pc,a0.w), fp0
       fsinhl  (.,pc,a0.w), fp0
-      fsinhl  (.+4,pc,a0.l), fp0
-      fsinhl  (.-124,pc,a0.l), fp0
-      fsinhl  (.,pc,a0.l), fp0
       fintrzl (.+4,pc,d4.l), fp0
       fintrzl (.-124,pc,d4.l), fp0
       fintrzl (.,pc,d4.l), fp0
-      fintrzl (.+4,pc,d5.w), fp0
-      fintrzl (.-124,pc,d5.w), fp0
-      fintrzl (.,pc,d5.w), fp0
       fintrzl (.+4,pc,a0.w), fp0
       fintrzl (.-124,pc,a0.w), fp0
       fintrzl (.,pc,a0.w), fp0
-      fintrzl (.+4,pc,a0.l), fp0
-      fintrzl (.-124,pc,a0.l), fp0
-      fintrzl (.,pc,a0.l), fp0
       fsqrtl  (.+4,pc,d4.l), fp0
       fsqrtl  (.-124,pc,d4.l), fp0
       fsqrtl  (.,pc,d4.l), fp0
-      fsqrtl  (.+4,pc,d5.w), fp0
-      fsqrtl  (.-124,pc,d5.w), fp0
-      fsqrtl  (.,pc,d5.w), fp0
       fsqrtl  (.+4,pc,a0.w), fp0
       fsqrtl  (.-124,pc,a0.w), fp0
       fsqrtl  (.,pc,a0.w), fp0
-      fsqrtl  (.+4,pc,a0.l), fp0
-      fsqrtl  (.-124,pc,a0.l), fp0
-      fsqrtl  (.,pc,a0.l), fp0
       flognp1l    (.+4,pc,d4.l), fp0
       flognp1l    (.-124,pc,d4.l), fp0
       flognp1l    (.,pc,d4.l), fp0
-      flognp1l    (.+4,pc,d5.w), fp0
-      flognp1l    (.-124,pc,d5.w), fp0
-      flognp1l    (.,pc,d5.w), fp0
       flognp1l    (.+4,pc,a0.w), fp0
       flognp1l    (.-124,pc,a0.w), fp0
       flognp1l    (.,pc,a0.w), fp0
-      flognp1l    (.+4,pc,a0.l), fp0
-      flognp1l    (.-124,pc,a0.l), fp0
-      flognp1l    (.,pc,a0.l), fp0
       fetoxm1l    (.+4,pc,d4.l), fp0
       fetoxm1l    (.-124,pc,d4.l), fp0
       fetoxm1l    (.,pc,d4.l), fp0
-      fetoxm1l    (.+4,pc,d5.w), fp0
-      fetoxm1l    (.-124,pc,d5.w), fp0
-      fetoxm1l    (.,pc,d5.w), fp0
       fetoxm1l    (.+4,pc,a0.w), fp0
       fetoxm1l    (.-124,pc,a0.w), fp0
       fetoxm1l    (.,pc,a0.w), fp0
-      fetoxm1l    (.+4,pc,a0.l), fp0
-      fetoxm1l    (.-124,pc,a0.l), fp0
-      fetoxm1l    (.,pc,a0.l), fp0
       ftanhl  (.+4,pc,d4.l), fp0
       ftanhl  (.-124,pc,d4.l), fp0
       ftanhl  (.,pc,d4.l), fp0
-      ftanhl  (.+4,pc,d5.w), fp0
-      ftanhl  (.-124,pc,d5.w), fp0
-      ftanhl  (.,pc,d5.w), fp0
       ftanhl  (.+4,pc,a0.w), fp0
       ftanhl  (.-124,pc,a0.w), fp0
       ftanhl  (.,pc,a0.w), fp0
-      ftanhl  (.+4,pc,a0.l), fp0
-      ftanhl  (.-124,pc,a0.l), fp0
-      ftanhl  (.,pc,a0.l), fp0
       fatanl  (.+4,pc,d4.l), fp0
       fatanl  (.-124,pc,d4.l), fp0
       fatanl  (.,pc,d4.l), fp0
-      fatanl  (.+4,pc,d5.w), fp0
-      fatanl  (.-124,pc,d5.w), fp0
-      fatanl  (.,pc,d5.w), fp0
       fatanl  (.+4,pc,a0.w), fp0
       fatanl  (.-124,pc,a0.w), fp0
       fatanl  (.,pc,a0.w), fp0
-      fatanl  (.+4,pc,a0.l), fp0
-      fatanl  (.-124,pc,a0.l), fp0
-      fatanl  (.,pc,a0.l), fp0
       fasinl  (.+4,pc,d4.l), fp0
       fasinl  (.-124,pc,d4.l), fp0
       fasinl  (.,pc,d4.l), fp0
-      fasinl  (.+4,pc,d5.w), fp0
-      fasinl  (.-124,pc,d5.w), fp0
-      fasinl  (.,pc,d5.w), fp0
       fasinl  (.+4,pc,a0.w), fp0
       fasinl  (.-124,pc,a0.w), fp0
       fasinl  (.,pc,a0.w), fp0
-      fasinl  (.+4,pc,a0.l), fp0
-      fasinl  (.-124,pc,a0.l), fp0
-      fasinl  (.,pc,a0.l), fp0
       fatanhl (.+4,pc,d4.l), fp0
       fatanhl (.-124,pc,d4.l), fp0
       fatanhl (.,pc,d4.l), fp0
-      fatanhl (.+4,pc,d5.w), fp0
-      fatanhl (.-124,pc,d5.w), fp0
-      fatanhl (.,pc,d5.w), fp0
       fatanhl (.+4,pc,a0.w), fp0
       fatanhl (.-124,pc,a0.w), fp0
       fatanhl (.,pc,a0.w), fp0
-      fatanhl (.+4,pc,a0.l), fp0
-      fatanhl (.-124,pc,a0.l), fp0
-      fatanhl (.,pc,a0.l), fp0
       fsinl   (.+4,pc,d4.l), fp0
       fsinl   (.-124,pc,d4.l), fp0
       fsinl   (.,pc,d4.l), fp0
-      fsinl   (.+4,pc,d5.w), fp0
-      fsinl   (.-124,pc,d5.w), fp0
-      fsinl   (.,pc,d5.w), fp0
       fsinl   (.+4,pc,a0.w), fp0
       fsinl   (.-124,pc,a0.w), fp0
       fsinl   (.,pc,a0.w), fp0
-      fsinl   (.+4,pc,a0.l), fp0
-      fsinl   (.-124,pc,a0.l), fp0
-      fsinl   (.,pc,a0.l), fp0
       ftanl   (.+4,pc,d4.l), fp0
       ftanl   (.-124,pc,d4.l), fp0
       ftanl   (.,pc,d4.l), fp0
-      ftanl   (.+4,pc,d5.w), fp0
-      ftanl   (.-124,pc,d5.w), fp0
-      ftanl   (.,pc,d5.w), fp0
       ftanl   (.+4,pc,a0.w), fp0
       ftanl   (.-124,pc,a0.w), fp0
       ftanl   (.,pc,a0.w), fp0
-      ftanl   (.+4,pc,a0.l), fp0
-      ftanl   (.-124,pc,a0.l), fp0
-      ftanl   (.,pc,a0.l), fp0
       fetoxl  (.+4,pc,d4.l), fp0
       fetoxl  (.-124,pc,d4.l), fp0
       fetoxl  (.,pc,d4.l), fp0
-      fetoxl  (.+4,pc,d5.w), fp0
-      fetoxl  (.-124,pc,d5.w), fp0
-      fetoxl  (.,pc,d5.w), fp0
       fetoxl  (.+4,pc,a0.w), fp0
       fetoxl  (.-124,pc,a0.w), fp0
       fetoxl  (.,pc,a0.w), fp0
-      fetoxl  (.+4,pc,a0.l), fp0
-      fetoxl  (.-124,pc,a0.l), fp0
-      fetoxl  (.,pc,a0.l), fp0
       ftwotoxl    (.+4,pc,d4.l), fp0
       ftwotoxl    (.-124,pc,d4.l), fp0
       ftwotoxl    (.,pc,d4.l), fp0
-      ftwotoxl    (.+4,pc,d5.w), fp0
-      ftwotoxl    (.-124,pc,d5.w), fp0
-      ftwotoxl    (.,pc,d5.w), fp0
       ftwotoxl    (.+4,pc,a0.w), fp0
       ftwotoxl    (.-124,pc,a0.w), fp0
       ftwotoxl    (.,pc,a0.w), fp0
-      ftwotoxl    (.+4,pc,a0.l), fp0
-      ftwotoxl    (.-124,pc,a0.l), fp0
-      ftwotoxl    (.,pc,a0.l), fp0
       ftentoxl    (.+4,pc,d4.l), fp0
       ftentoxl    (.-124,pc,d4.l), fp0
       ftentoxl    (.,pc,d4.l), fp0
-      ftentoxl    (.+4,pc,d5.w), fp0
-      ftentoxl    (.-124,pc,d5.w), fp0
-      ftentoxl    (.,pc,d5.w), fp0
       ftentoxl    (.+4,pc,a0.w), fp0
       ftentoxl    (.-124,pc,a0.w), fp0
       ftentoxl    (.,pc,a0.w), fp0
-      ftentoxl    (.+4,pc,a0.l), fp0
-      ftentoxl    (.-124,pc,a0.l), fp0
-      ftentoxl    (.,pc,a0.l), fp0
       flognl  (.+4,pc,d4.l), fp0
       flognl  (.-124,pc,d4.l), fp0
       flognl  (.,pc,d4.l), fp0
-      flognl  (.+4,pc,d5.w), fp0
-      flognl  (.-124,pc,d5.w), fp0
-      flognl  (.,pc,d5.w), fp0
       flognl  (.+4,pc,a0.w), fp0
       flognl  (.-124,pc,a0.w), fp0
       flognl  (.,pc,a0.w), fp0
-      flognl  (.+4,pc,a0.l), fp0
-      flognl  (.-124,pc,a0.l), fp0
-      flognl  (.,pc,a0.l), fp0
       flog10l (.+4,pc,d4.l), fp0
       flog10l (.-124,pc,d4.l), fp0
       flog10l (.,pc,d4.l), fp0
-      flog10l (.+4,pc,d5.w), fp0
-      flog10l (.-124,pc,d5.w), fp0
-      flog10l (.,pc,d5.w), fp0
       flog10l (.+4,pc,a0.w), fp0
       flog10l (.-124,pc,a0.w), fp0
       flog10l (.,pc,a0.w), fp0
-      flog10l (.+4,pc,a0.l), fp0
-      flog10l (.-124,pc,a0.l), fp0
-      flog10l (.,pc,a0.l), fp0
       flog2l  (.+4,pc,d4.l), fp0
       flog2l  (.-124,pc,d4.l), fp0
       flog2l  (.,pc,d4.l), fp0
-      flog2l  (.+4,pc,d5.w), fp0
-      flog2l  (.-124,pc,d5.w), fp0
-      flog2l  (.,pc,d5.w), fp0
       flog2l  (.+4,pc,a0.w), fp0
       flog2l  (.-124,pc,a0.w), fp0
       flog2l  (.,pc,a0.w), fp0
-      flog2l  (.+4,pc,a0.l), fp0
-      flog2l  (.-124,pc,a0.l), fp0
-      flog2l  (.,pc,a0.l), fp0
       fabsl   (.+4,pc,d4.l), fp0
       fabsl   (.-124,pc,d4.l), fp0
       fabsl   (.,pc,d4.l), fp0
-      fabsl   (.+4,pc,d5.w), fp0
-      fabsl   (.-124,pc,d5.w), fp0
-      fabsl   (.,pc,d5.w), fp0
       fabsl   (.+4,pc,a0.w), fp0
       fabsl   (.-124,pc,a0.w), fp0
       fabsl   (.,pc,a0.w), fp0
-      fabsl   (.+4,pc,a0.l), fp0
-      fabsl   (.-124,pc,a0.l), fp0
-      fabsl   (.,pc,a0.l), fp0
       fcoshl  (.+4,pc,d4.l), fp0
       fcoshl  (.-124,pc,d4.l), fp0
       fcoshl  (.,pc,d4.l), fp0
-      fcoshl  (.+4,pc,d5.w), fp0
-      fcoshl  (.-124,pc,d5.w), fp0
-      fcoshl  (.,pc,d5.w), fp0
       fcoshl  (.+4,pc,a0.w), fp0
       fcoshl  (.-124,pc,a0.w), fp0
       fcoshl  (.,pc,a0.w), fp0
-      fcoshl  (.+4,pc,a0.l), fp0
-      fcoshl  (.-124,pc,a0.l), fp0
-      fcoshl  (.,pc,a0.l), fp0
       fnegl   (.+4,pc,d4.l), fp0
       fnegl   (.-124,pc,d4.l), fp0
       fnegl   (.,pc,d4.l), fp0
-      fnegl   (.+4,pc,d5.w), fp0
-      fnegl   (.-124,pc,d5.w), fp0
-      fnegl   (.,pc,d5.w), fp0
       fnegl   (.+4,pc,a0.w), fp0
       fnegl   (.-124,pc,a0.w), fp0
       fnegl   (.,pc,a0.w), fp0
-      fnegl   (.+4,pc,a0.l), fp0
-      fnegl   (.-124,pc,a0.l), fp0
-      fnegl   (.,pc,a0.l), fp0
       facosl  (.+4,pc,d4.l), fp0
       facosl  (.-124,pc,d4.l), fp0
       facosl  (.,pc,d4.l), fp0
-      facosl  (.+4,pc,d5.w), fp0
-      facosl  (.-124,pc,d5.w), fp0
-      facosl  (.,pc,d5.w), fp0
       facosl  (.+4,pc,a0.w), fp0
       facosl  (.-124,pc,a0.w), fp0
       facosl  (.,pc,a0.w), fp0
-      facosl  (.+4,pc,a0.l), fp0
-      facosl  (.-124,pc,a0.l), fp0
-      facosl  (.,pc,a0.l), fp0
       fcosl   (.+4,pc,d4.l), fp0
       fcosl   (.-124,pc,d4.l), fp0
       fcosl   (.,pc,d4.l), fp0
-      fcosl   (.+4,pc,d5.w), fp0
-      fcosl   (.-124,pc,d5.w), fp0
-      fcosl   (.,pc,d5.w), fp0
       fcosl   (.+4,pc,a0.w), fp0
       fcosl   (.-124,pc,a0.w), fp0
       fcosl   (.,pc,a0.w), fp0
-      fcosl   (.+4,pc,a0.l), fp0
-      fcosl   (.-124,pc,a0.l), fp0
-      fcosl   (.,pc,a0.l), fp0
       fgetexpl    (.+4,pc,d4.l), fp0
       fgetexpl    (.-124,pc,d4.l), fp0
       fgetexpl    (.,pc,d4.l), fp0
-      fgetexpl    (.+4,pc,d5.w), fp0
-      fgetexpl    (.-124,pc,d5.w), fp0
-      fgetexpl    (.,pc,d5.w), fp0
       fgetexpl    (.+4,pc,a0.w), fp0
       fgetexpl    (.-124,pc,a0.w), fp0
       fgetexpl    (.,pc,a0.w), fp0
-      fgetexpl    (.+4,pc,a0.l), fp0
-      fgetexpl    (.-124,pc,a0.l), fp0
-      fgetexpl    (.,pc,a0.l), fp0
       fgetmanl    (.+4,pc,d4.l), fp0
       fgetmanl    (.-124,pc,d4.l), fp0
       fgetmanl    (.,pc,d4.l), fp0
-      fgetmanl    (.+4,pc,d5.w), fp0
-      fgetmanl    (.-124,pc,d5.w), fp0
-      fgetmanl    (.,pc,d5.w), fp0
       fgetmanl    (.+4,pc,a0.w), fp0
       fgetmanl    (.-124,pc,a0.w), fp0
       fgetmanl    (.,pc,a0.w), fp0
-      fgetmanl    (.+4,pc,a0.l), fp0
-      fgetmanl    (.-124,pc,a0.l), fp0
-      fgetmanl    (.,pc,a0.l), fp0
       fdivl   (.+4,pc,d4.l), fp0
       fdivl   (.-124,pc,d4.l), fp0
       fdivl   (.,pc,d4.l), fp0
-      fdivl   (.+4,pc,d5.w), fp0
-      fdivl   (.-124,pc,d5.w), fp0
-      fdivl   (.,pc,d5.w), fp0
       fdivl   (.+4,pc,a0.w), fp0
       fdivl   (.-124,pc,a0.w), fp0
       fdivl   (.,pc,a0.w), fp0
-      fdivl   (.+4,pc,a0.l), fp0
-      fdivl   (.-124,pc,a0.l), fp0
-      fdivl   (.,pc,a0.l), fp0
       fmodl   (.+4,pc,d4.l), fp0
       fmodl   (.-124,pc,d4.l), fp0
       fmodl   (.,pc,d4.l), fp0
-      fmodl   (.+4,pc,d5.w), fp0
-      fmodl   (.-124,pc,d5.w), fp0
-      fmodl   (.,pc,d5.w), fp0
       fmodl   (.+4,pc,a0.w), fp0
       fmodl   (.-124,pc,a0.w), fp0
       fmodl   (.,pc,a0.w), fp0
-      fmodl   (.+4,pc,a0.l), fp0
-      fmodl   (.-124,pc,a0.l), fp0
-      fmodl   (.,pc,a0.l), fp0
       faddl   (.+4,pc,d4.l), fp0
       faddl   (.-124,pc,d4.l), fp0
       faddl   (.,pc,d4.l), fp0
-      faddl   (.+4,pc,d5.w), fp0
-      faddl   (.-124,pc,d5.w), fp0
-      faddl   (.,pc,d5.w), fp0
       faddl   (.+4,pc,a0.w), fp0
       faddl   (.-124,pc,a0.w), fp0
       faddl   (.,pc,a0.w), fp0
-      faddl   (.+4,pc,a0.l), fp0
-      faddl   (.-124,pc,a0.l), fp0
-      faddl   (.,pc,a0.l), fp0
       fmull   (.+4,pc,d4.l), fp0
       fmull   (.-124,pc,d4.l), fp0
       fmull   (.,pc,d4.l), fp0
-      fmull   (.+4,pc,d5.w), fp0
-      fmull   (.-124,pc,d5.w), fp0
-      fmull   (.,pc,d5.w), fp0
       fmull   (.+4,pc,a0.w), fp0
       fmull   (.-124,pc,a0.w), fp0
       fmull   (.,pc,a0.w), fp0
-      fmull   (.+4,pc,a0.l), fp0
-      fmull   (.-124,pc,a0.l), fp0
-      fmull   (.,pc,a0.l), fp0
       fsgldivl    (.+4,pc,d4.l), fp0
       fsgldivl    (.-124,pc,d4.l), fp0
       fsgldivl    (.,pc,d4.l), fp0
-      fsgldivl    (.+4,pc,d5.w), fp0
-      fsgldivl    (.-124,pc,d5.w), fp0
-      fsgldivl    (.,pc,d5.w), fp0
       fsgldivl    (.+4,pc,a0.w), fp0
       fsgldivl    (.-124,pc,a0.w), fp0
       fsgldivl    (.,pc,a0.w), fp0
-      fsgldivl    (.+4,pc,a0.l), fp0
-      fsgldivl    (.-124,pc,a0.l), fp0
-      fsgldivl    (.,pc,a0.l), fp0
       freml   (.+4,pc,d4.l), fp0
       freml   (.-124,pc,d4.l), fp0
       freml   (.,pc,d4.l), fp0
-      freml   (.+4,pc,d5.w), fp0
-      freml   (.-124,pc,d5.w), fp0
-      freml   (.,pc,d5.w), fp0
       freml   (.+4,pc,a0.w), fp0
       freml   (.-124,pc,a0.w), fp0
       freml   (.,pc,a0.w), fp0
-      freml   (.+4,pc,a0.l), fp0
-      freml   (.-124,pc,a0.l), fp0
-      freml   (.,pc,a0.l), fp0
       fscalel (.+4,pc,d4.l), fp0
       fscalel (.-124,pc,d4.l), fp0
       fscalel (.,pc,d4.l), fp0
-      fscalel (.+4,pc,d5.w), fp0
-      fscalel (.-124,pc,d5.w), fp0
-      fscalel (.,pc,d5.w), fp0
       fscalel (.+4,pc,a0.w), fp0
       fscalel (.-124,pc,a0.w), fp0
       fscalel (.,pc,a0.w), fp0
-      fscalel (.+4,pc,a0.l), fp0
-      fscalel (.-124,pc,a0.l), fp0
-      fscalel (.,pc,a0.l), fp0
       fsglmull    (.+4,pc,d4.l), fp0
       fsglmull    (.-124,pc,d4.l), fp0
       fsglmull    (.,pc,d4.l), fp0
-      fsglmull    (.+4,pc,d5.w), fp0
-      fsglmull    (.-124,pc,d5.w), fp0
-      fsglmull    (.,pc,d5.w), fp0
       fsglmull    (.+4,pc,a0.w), fp0
       fsglmull    (.-124,pc,a0.w), fp0
       fsglmull    (.,pc,a0.w), fp0
-      fsglmull    (.+4,pc,a0.l), fp0
-      fsglmull    (.-124,pc,a0.l), fp0
-      fsglmull    (.,pc,a0.l), fp0
       fsubl   (.+4,pc,d4.l), fp0
       fsubl   (.-124,pc,d4.l), fp0
       fsubl   (.,pc,d4.l), fp0
-      fsubl   (.+4,pc,d5.w), fp0
-      fsubl   (.-124,pc,d5.w), fp0
-      fsubl   (.,pc,d5.w), fp0
       fsubl   (.+4,pc,a0.w), fp0
       fsubl   (.-124,pc,a0.w), fp0
       fsubl   (.,pc,a0.w), fp0
-      fsubl   (.+4,pc,a0.l), fp0
-      fsubl   (.-124,pc,a0.l), fp0
-      fsubl   (.,pc,a0.l), fp0
       fsincosl    (.+4,pc,d4.l), fp0:fp0
       fsincosl    (.-124,pc,d4.l), fp0:fp0
       fsincosl    (.,pc,d4.l), fp0:fp0
-      fsincosl    (.+4,pc,d5.w), fp0:fp0
-      fsincosl    (.-124,pc,d5.w), fp0:fp0
-      fsincosl    (.,pc,d5.w), fp0:fp0
       fsincosl    (.+4,pc,a0.w), fp0:fp0
       fsincosl    (.-124,pc,a0.w), fp0:fp0
       fsincosl    (.,pc,a0.w), fp0:fp0
-      fsincosl    (.+4,pc,a0.l), fp0:fp0
-      fsincosl    (.-124,pc,a0.l), fp0:fp0
-      fsincosl    (.,pc,a0.l), fp0:fp0
       fcmpl   (.+4,pc,d4.l), fp0
       fcmpl   (.-124,pc,d4.l), fp0
       fcmpl   (.,pc,d4.l), fp0
-      fcmpl   (.+4,pc,d5.w), fp0
-      fcmpl   (.-124,pc,d5.w), fp0
-      fcmpl   (.,pc,d5.w), fp0
       fcmpl   (.+4,pc,a0.w), fp0
       fcmpl   (.-124,pc,a0.w), fp0
       fcmpl   (.,pc,a0.w), fp0
-      fcmpl   (.+4,pc,a0.l), fp0
-      fcmpl   (.-124,pc,a0.l), fp0
-      fcmpl   (.,pc,a0.l), fp0
       ftstl   (.+4,pc,d4.l)
       ftstl   (.-124,pc,d4.l)
       ftstl   (.,pc,d4.l)
-      ftstl   (.+4,pc,d5.w)
-      ftstl   (.-124,pc,d5.w)
-      ftstl   (.,pc,d5.w)
       ftstl   (.+4,pc,a0.w)
       ftstl   (.-124,pc,a0.w)
       ftstl   (.,pc,a0.w)
-      ftstl   (.+4,pc,a0.l)
-      ftstl   (.-124,pc,a0.l)
-      ftstl   (.,pc,a0.l)
       fmoves  (.+4,pc,d4.l), fp0
       fmoves  (.-124,pc,d4.l), fp0
       fmoves  (.,pc,d4.l), fp0
-      fmoves  (.+4,pc,d5.w), fp0
-      fmoves  (.-124,pc,d5.w), fp0
-      fmoves  (.,pc,d5.w), fp0
       fmoves  (.+4,pc,a0.w), fp0
       fmoves  (.-124,pc,a0.w), fp0
       fmoves  (.,pc,a0.w), fp0
-      fmoves  (.+4,pc,a0.l), fp0
-      fmoves  (.-124,pc,a0.l), fp0
-      fmoves  (.,pc,a0.l), fp0
       fints   (.+4,pc,d4.l), fp0
       fints   (.-124,pc,d4.l), fp0
       fints   (.,pc,d4.l), fp0
-      fints   (.+4,pc,d5.w), fp0
-      fints   (.-124,pc,d5.w), fp0
-      fints   (.,pc,d5.w), fp0
       fints   (.+4,pc,a0.w), fp0
       fints   (.-124,pc,a0.w), fp0
       fints   (.,pc,a0.w), fp0
-      fints   (.+4,pc,a0.l), fp0
-      fints   (.-124,pc,a0.l), fp0
-      fints   (.,pc,a0.l), fp0
       fsinhs  (.+4,pc,d4.l), fp0
       fsinhs  (.-124,pc,d4.l), fp0
       fsinhs  (.,pc,d4.l), fp0
-      fsinhs  (.+4,pc,d5.w), fp0
-      fsinhs  (.-124,pc,d5.w), fp0
-      fsinhs  (.,pc,d5.w), fp0
       fsinhs  (.+4,pc,a0.w), fp0
       fsinhs  (.-124,pc,a0.w), fp0
       fsinhs  (.,pc,a0.w), fp0
-      fsinhs  (.+4,pc,a0.l), fp0
-      fsinhs  (.-124,pc,a0.l), fp0
-      fsinhs  (.,pc,a0.l), fp0
       fintrzs (.+4,pc,d4.l), fp0
       fintrzs (.-124,pc,d4.l), fp0
       fintrzs (.,pc,d4.l), fp0
-      fintrzs (.+4,pc,d5.w), fp0
-      fintrzs (.-124,pc,d5.w), fp0
-      fintrzs (.,pc,d5.w), fp0
       fintrzs (.+4,pc,a0.w), fp0
       fintrzs (.-124,pc,a0.w), fp0
       fintrzs (.,pc,a0.w), fp0
-      fintrzs (.+4,pc,a0.l), fp0
-      fintrzs (.-124,pc,a0.l), fp0
-      fintrzs (.,pc,a0.l), fp0
       fsqrts  (.+4,pc,d4.l), fp0
       fsqrts  (.-124,pc,d4.l), fp0
       fsqrts  (.,pc,d4.l), fp0
-      fsqrts  (.+4,pc,d5.w), fp0
-      fsqrts  (.-124,pc,d5.w), fp0
-      fsqrts  (.,pc,d5.w), fp0
       fsqrts  (.+4,pc,a0.w), fp0
       fsqrts  (.-124,pc,a0.w), fp0
       fsqrts  (.,pc,a0.w), fp0
-      fsqrts  (.+4,pc,a0.l), fp0
-      fsqrts  (.-124,pc,a0.l), fp0
-      fsqrts  (.,pc,a0.l), fp0
       flognp1s    (.+4,pc,d4.l), fp0
       flognp1s    (.-124,pc,d4.l), fp0
       flognp1s    (.,pc,d4.l), fp0
-      flognp1s    (.+4,pc,d5.w), fp0
-      flognp1s    (.-124,pc,d5.w), fp0
-      flognp1s    (.,pc,d5.w), fp0
       flognp1s    (.+4,pc,a0.w), fp0
       flognp1s    (.-124,pc,a0.w), fp0
       flognp1s    (.,pc,a0.w), fp0
-      flognp1s    (.+4,pc,a0.l), fp0
-      flognp1s    (.-124,pc,a0.l), fp0
-      flognp1s    (.,pc,a0.l), fp0
       fetoxm1s    (.+4,pc,d4.l), fp0
       fetoxm1s    (.-124,pc,d4.l), fp0
       fetoxm1s    (.,pc,d4.l), fp0
-      fetoxm1s    (.+4,pc,d5.w), fp0
-      fetoxm1s    (.-124,pc,d5.w), fp0
-      fetoxm1s    (.,pc,d5.w), fp0
       fetoxm1s    (.+4,pc,a0.w), fp0
       fetoxm1s    (.-124,pc,a0.w), fp0
       fetoxm1s    (.,pc,a0.w), fp0
-      fetoxm1s    (.+4,pc,a0.l), fp0
-      fetoxm1s    (.-124,pc,a0.l), fp0
-      fetoxm1s    (.,pc,a0.l), fp0
       ftanhs  (.+4,pc,d4.l), fp0
       ftanhs  (.-124,pc,d4.l), fp0
       ftanhs  (.,pc,d4.l), fp0
-      ftanhs  (.+4,pc,d5.w), fp0
-      ftanhs  (.-124,pc,d5.w), fp0
-      ftanhs  (.,pc,d5.w), fp0
       ftanhs  (.+4,pc,a0.w), fp0
       ftanhs  (.-124,pc,a0.w), fp0
       ftanhs  (.,pc,a0.w), fp0
-      ftanhs  (.+4,pc,a0.l), fp0
-      ftanhs  (.-124,pc,a0.l), fp0
-      ftanhs  (.,pc,a0.l), fp0
       fatans  (.+4,pc,d4.l), fp0
       fatans  (.-124,pc,d4.l), fp0
       fatans  (.,pc,d4.l), fp0
-      fatans  (.+4,pc,d5.w), fp0
-      fatans  (.-124,pc,d5.w), fp0
-      fatans  (.,pc,d5.w), fp0
       fatans  (.+4,pc,a0.w), fp0
       fatans  (.-124,pc,a0.w), fp0
       fatans  (.,pc,a0.w), fp0
-      fatans  (.+4,pc,a0.l), fp0
-      fatans  (.-124,pc,a0.l), fp0
-      fatans  (.,pc,a0.l), fp0
       fasins  (.+4,pc,d4.l), fp0
       fasins  (.-124,pc,d4.l), fp0
       fasins  (.,pc,d4.l), fp0
-      fasins  (.+4,pc,d5.w), fp0
-      fasins  (.-124,pc,d5.w), fp0
-      fasins  (.,pc,d5.w), fp0
       fasins  (.+4,pc,a0.w), fp0
       fasins  (.-124,pc,a0.w), fp0
       fasins  (.,pc,a0.w), fp0
-      fasins  (.+4,pc,a0.l), fp0
-      fasins  (.-124,pc,a0.l), fp0
-      fasins  (.,pc,a0.l), fp0
       fatanhs (.+4,pc,d4.l), fp0
       fatanhs (.-124,pc,d4.l), fp0
       fatanhs (.,pc,d4.l), fp0
-      fatanhs (.+4,pc,d5.w), fp0
-      fatanhs (.-124,pc,d5.w), fp0
-      fatanhs (.,pc,d5.w), fp0
       fatanhs (.+4,pc,a0.w), fp0
       fatanhs (.-124,pc,a0.w), fp0
       fatanhs (.,pc,a0.w), fp0
-      fatanhs (.+4,pc,a0.l), fp0
-      fatanhs (.-124,pc,a0.l), fp0
-      fatanhs (.,pc,a0.l), fp0
       fsins   (.+4,pc,d4.l), fp0
       fsins   (.-124,pc,d4.l), fp0
       fsins   (.,pc,d4.l), fp0
-      fsins   (.+4,pc,d5.w), fp0
-      fsins   (.-124,pc,d5.w), fp0
-      fsins   (.,pc,d5.w), fp0
       fsins   (.+4,pc,a0.w), fp0
       fsins   (.-124,pc,a0.w), fp0
       fsins   (.,pc,a0.w), fp0
-      fsins   (.+4,pc,a0.l), fp0
-      fsins   (.-124,pc,a0.l), fp0
-      fsins   (.,pc,a0.l), fp0
       ftans   (.+4,pc,d4.l), fp0
       ftans   (.-124,pc,d4.l), fp0
       ftans   (.,pc,d4.l), fp0
-      ftans   (.+4,pc,d5.w), fp0
-      ftans   (.-124,pc,d5.w), fp0
-      ftans   (.,pc,d5.w), fp0
       ftans   (.+4,pc,a0.w), fp0
       ftans   (.-124,pc,a0.w), fp0
       ftans   (.,pc,a0.w), fp0
-      ftans   (.+4,pc,a0.l), fp0
-      ftans   (.-124,pc,a0.l), fp0
-      ftans   (.,pc,a0.l), fp0
       fetoxs  (.+4,pc,d4.l), fp0
       fetoxs  (.-124,pc,d4.l), fp0
       fetoxs  (.,pc,d4.l), fp0
-      fetoxs  (.+4,pc,d5.w), fp0
-      fetoxs  (.-124,pc,d5.w), fp0
-      fetoxs  (.,pc,d5.w), fp0
       fetoxs  (.+4,pc,a0.w), fp0
       fetoxs  (.-124,pc,a0.w), fp0
       fetoxs  (.,pc,a0.w), fp0
-      fetoxs  (.+4,pc,a0.l), fp0
-      fetoxs  (.-124,pc,a0.l), fp0
-      fetoxs  (.,pc,a0.l), fp0
       ftwotoxs    (.+4,pc,d4.l), fp0
       ftwotoxs    (.-124,pc,d4.l), fp0
       ftwotoxs    (.,pc,d4.l), fp0
-      ftwotoxs    (.+4,pc,d5.w), fp0
-      ftwotoxs    (.-124,pc,d5.w), fp0
-      ftwotoxs    (.,pc,d5.w), fp0
       ftwotoxs    (.+4,pc,a0.w), fp0
       ftwotoxs    (.-124,pc,a0.w), fp0
       ftwotoxs    (.,pc,a0.w), fp0
-      ftwotoxs    (.+4,pc,a0.l), fp0
-      ftwotoxs    (.-124,pc,a0.l), fp0
-      ftwotoxs    (.,pc,a0.l), fp0
       ftentoxs    (.+4,pc,d4.l), fp0
       ftentoxs    (.-124,pc,d4.l), fp0
       ftentoxs    (.,pc,d4.l), fp0
-      ftentoxs    (.+4,pc,d5.w), fp0
-      ftentoxs    (.-124,pc,d5.w), fp0
-      ftentoxs    (.,pc,d5.w), fp0
       ftentoxs    (.+4,pc,a0.w), fp0
       ftentoxs    (.-124,pc,a0.w), fp0
       ftentoxs    (.,pc,a0.w), fp0
-      ftentoxs    (.+4,pc,a0.l), fp0
-      ftentoxs    (.-124,pc,a0.l), fp0
-      ftentoxs    (.,pc,a0.l), fp0
       flogns  (.+4,pc,d4.l), fp0
       flogns  (.-124,pc,d4.l), fp0
       flogns  (.,pc,d4.l), fp0
-      flogns  (.+4,pc,d5.w), fp0
-      flogns  (.-124,pc,d5.w), fp0
-      flogns  (.,pc,d5.w), fp0
       flogns  (.+4,pc,a0.w), fp0
       flogns  (.-124,pc,a0.w), fp0
       flogns  (.,pc,a0.w), fp0
-      flogns  (.+4,pc,a0.l), fp0
-      flogns  (.-124,pc,a0.l), fp0
-      flogns  (.,pc,a0.l), fp0
       flog10s (.+4,pc,d4.l), fp0
       flog10s (.-124,pc,d4.l), fp0
       flog10s (.,pc,d4.l), fp0
-      flog10s (.+4,pc,d5.w), fp0
-      flog10s (.-124,pc,d5.w), fp0
-      flog10s (.,pc,d5.w), fp0
       flog10s (.+4,pc,a0.w), fp0
       flog10s (.-124,pc,a0.w), fp0
       flog10s (.,pc,a0.w), fp0
-      flog10s (.+4,pc,a0.l), fp0
-      flog10s (.-124,pc,a0.l), fp0
-      flog10s (.,pc,a0.l), fp0
       flog2s  (.+4,pc,d4.l), fp0
       flog2s  (.-124,pc,d4.l), fp0
       flog2s  (.,pc,d4.l), fp0
-      flog2s  (.+4,pc,d5.w), fp0
-      flog2s  (.-124,pc,d5.w), fp0
-      flog2s  (.,pc,d5.w), fp0
       flog2s  (.+4,pc,a0.w), fp0
       flog2s  (.-124,pc,a0.w), fp0
       flog2s  (.,pc,a0.w), fp0
-      flog2s  (.+4,pc,a0.l), fp0
-      flog2s  (.-124,pc,a0.l), fp0
-      flog2s  (.,pc,a0.l), fp0
       fabss   (.+4,pc,d4.l), fp0
       fabss   (.-124,pc,d4.l), fp0
       fabss   (.,pc,d4.l), fp0
-      fabss   (.+4,pc,d5.w), fp0
-      fabss   (.-124,pc,d5.w), fp0
-      fabss   (.,pc,d5.w), fp0
       fabss   (.+4,pc,a0.w), fp0
       fabss   (.-124,pc,a0.w), fp0
       fabss   (.,pc,a0.w), fp0
-      fabss   (.+4,pc,a0.l), fp0
-      fabss   (.-124,pc,a0.l), fp0
-      fabss   (.,pc,a0.l), fp0
       fcoshs  (.+4,pc,d4.l), fp0
       fcoshs  (.-124,pc,d4.l), fp0
       fcoshs  (.,pc,d4.l), fp0
-      fcoshs  (.+4,pc,d5.w), fp0
-      fcoshs  (.-124,pc,d5.w), fp0
-      fcoshs  (.,pc,d5.w), fp0
       fcoshs  (.+4,pc,a0.w), fp0
       fcoshs  (.-124,pc,a0.w), fp0
       fcoshs  (.,pc,a0.w), fp0
-      fcoshs  (.+4,pc,a0.l), fp0
-      fcoshs  (.-124,pc,a0.l), fp0
-      fcoshs  (.,pc,a0.l), fp0
       fnegs   (.+4,pc,d4.l), fp0
       fnegs   (.-124,pc,d4.l), fp0
       fnegs   (.,pc,d4.l), fp0
-      fnegs   (.+4,pc,d5.w), fp0
-      fnegs   (.-124,pc,d5.w), fp0
-      fnegs   (.,pc,d5.w), fp0
       fnegs   (.+4,pc,a0.w), fp0
       fnegs   (.-124,pc,a0.w), fp0
       fnegs   (.,pc,a0.w), fp0
-      fnegs   (.+4,pc,a0.l), fp0
-      fnegs   (.-124,pc,a0.l), fp0
-      fnegs   (.,pc,a0.l), fp0
       facoss  (.+4,pc,d4.l), fp0
       facoss  (.-124,pc,d4.l), fp0
       facoss  (.,pc,d4.l), fp0
-      facoss  (.+4,pc,d5.w), fp0
-      facoss  (.-124,pc,d5.w), fp0
-      facoss  (.,pc,d5.w), fp0
       facoss  (.+4,pc,a0.w), fp0
       facoss  (.-124,pc,a0.w), fp0
       facoss  (.,pc,a0.w), fp0
-      facoss  (.+4,pc,a0.l), fp0
-      facoss  (.-124,pc,a0.l), fp0
-      facoss  (.,pc,a0.l), fp0
       fcoss   (.+4,pc,d4.l), fp0
       fcoss   (.-124,pc,d4.l), fp0
       fcoss   (.,pc,d4.l), fp0
-      fcoss   (.+4,pc,d5.w), fp0
-      fcoss   (.-124,pc,d5.w), fp0
-      fcoss   (.,pc,d5.w), fp0
       fcoss   (.+4,pc,a0.w), fp0
       fcoss   (.-124,pc,a0.w), fp0
       fcoss   (.,pc,a0.w), fp0
-      fcoss   (.+4,pc,a0.l), fp0
-      fcoss   (.-124,pc,a0.l), fp0
-      fcoss   (.,pc,a0.l), fp0
       fgetexps    (.+4,pc,d4.l), fp0
       fgetexps    (.-124,pc,d4.l), fp0
       fgetexps    (.,pc,d4.l), fp0
-      fgetexps    (.+4,pc,d5.w), fp0
-      fgetexps    (.-124,pc,d5.w), fp0
-      fgetexps    (.,pc,d5.w), fp0
       fgetexps    (.+4,pc,a0.w), fp0
       fgetexps    (.-124,pc,a0.w), fp0
       fgetexps    (.,pc,a0.w), fp0
-      fgetexps    (.+4,pc,a0.l), fp0
-      fgetexps    (.-124,pc,a0.l), fp0
-      fgetexps    (.,pc,a0.l), fp0
       fgetmans    (.+4,pc,d4.l), fp0
       fgetmans    (.-124,pc,d4.l), fp0
       fgetmans    (.,pc,d4.l), fp0
-      fgetmans    (.+4,pc,d5.w), fp0
-      fgetmans    (.-124,pc,d5.w), fp0
-      fgetmans    (.,pc,d5.w), fp0
       fgetmans    (.+4,pc,a0.w), fp0
       fgetmans    (.-124,pc,a0.w), fp0
       fgetmans    (.,pc,a0.w), fp0
-      fgetmans    (.+4,pc,a0.l), fp0
-      fgetmans    (.-124,pc,a0.l), fp0
-      fgetmans    (.,pc,a0.l), fp0
       fdivs   (.+4,pc,d4.l), fp0
       fdivs   (.-124,pc,d4.l), fp0
       fdivs   (.,pc,d4.l), fp0
-      fdivs   (.+4,pc,d5.w), fp0
-      fdivs   (.-124,pc,d5.w), fp0
-      fdivs   (.,pc,d5.w), fp0
       fdivs   (.+4,pc,a0.w), fp0
       fdivs   (.-124,pc,a0.w), fp0
       fdivs   (.,pc,a0.w), fp0
-      fdivs   (.+4,pc,a0.l), fp0
-      fdivs   (.-124,pc,a0.l), fp0
-      fdivs   (.,pc,a0.l), fp0
       fmods   (.+4,pc,d4.l), fp0
       fmods   (.-124,pc,d4.l), fp0
       fmods   (.,pc,d4.l), fp0
-      fmods   (.+4,pc,d5.w), fp0
-      fmods   (.-124,pc,d5.w), fp0
-      fmods   (.,pc,d5.w), fp0
       fmods   (.+4,pc,a0.w), fp0
       fmods   (.-124,pc,a0.w), fp0
       fmods   (.,pc,a0.w), fp0
-      fmods   (.+4,pc,a0.l), fp0
-      fmods   (.-124,pc,a0.l), fp0
-      fmods   (.,pc,a0.l), fp0
       fadds   (.+4,pc,d4.l), fp0
       fadds   (.-124,pc,d4.l), fp0
       fadds   (.,pc,d4.l), fp0
-      fadds   (.+4,pc,d5.w), fp0
-      fadds   (.-124,pc,d5.w), fp0
-      fadds   (.,pc,d5.w), fp0
       fadds   (.+4,pc,a0.w), fp0
       fadds   (.-124,pc,a0.w), fp0
       fadds   (.,pc,a0.w), fp0
-      fadds   (.+4,pc,a0.l), fp0
-      fadds   (.-124,pc,a0.l), fp0
-      fadds   (.,pc,a0.l), fp0
       fmuls   (.+4,pc,d4.l), fp0
       fmuls   (.-124,pc,d4.l), fp0
       fmuls   (.,pc,d4.l), fp0
-      fmuls   (.+4,pc,d5.w), fp0
-      fmuls   (.-124,pc,d5.w), fp0
-      fmuls   (.,pc,d5.w), fp0
       fmuls   (.+4,pc,a0.w), fp0
       fmuls   (.-124,pc,a0.w), fp0
       fmuls   (.,pc,a0.w), fp0
-      fmuls   (.+4,pc,a0.l), fp0
-      fmuls   (.-124,pc,a0.l), fp0
-      fmuls   (.,pc,a0.l), fp0
       fsgldivs    (.+4,pc,d4.l), fp0
       fsgldivs    (.-124,pc,d4.l), fp0
       fsgldivs    (.,pc,d4.l), fp0
-      fsgldivs    (.+4,pc,d5.w), fp0
-      fsgldivs    (.-124,pc,d5.w), fp0
-      fsgldivs    (.,pc,d5.w), fp0
       fsgldivs    (.+4,pc,a0.w), fp0
       fsgldivs    (.-124,pc,a0.w), fp0
       fsgldivs    (.,pc,a0.w), fp0
-      fsgldivs    (.+4,pc,a0.l), fp0
-      fsgldivs    (.-124,pc,a0.l), fp0
-      fsgldivs    (.,pc,a0.l), fp0
       frems   (.+4,pc,d4.l), fp0
       frems   (.-124,pc,d4.l), fp0
       frems   (.,pc,d4.l), fp0
-      frems   (.+4,pc,d5.w), fp0
-      frems   (.-124,pc,d5.w), fp0
-      frems   (.,pc,d5.w), fp0
       frems   (.+4,pc,a0.w), fp0
       frems   (.-124,pc,a0.w), fp0
       frems   (.,pc,a0.w), fp0
-      frems   (.+4,pc,a0.l), fp0
-      frems   (.-124,pc,a0.l), fp0
-      frems   (.,pc,a0.l), fp0
       fscales (.+4,pc,d4.l), fp0
       fscales (.-124,pc,d4.l), fp0
       fscales (.,pc,d4.l), fp0
-      fscales (.+4,pc,d5.w), fp0
-      fscales (.-124,pc,d5.w), fp0
-      fscales (.,pc,d5.w), fp0
       fscales (.+4,pc,a0.w), fp0
       fscales (.-124,pc,a0.w), fp0
       fscales (.,pc,a0.w), fp0
-      fscales (.+4,pc,a0.l), fp0
-      fscales (.-124,pc,a0.l), fp0
-      fscales (.,pc,a0.l), fp0
       fsglmuls    (.+4,pc,d4.l), fp0
       fsglmuls    (.-124,pc,d4.l), fp0
       fsglmuls    (.,pc,d4.l), fp0
-      fsglmuls    (.+4,pc,d5.w), fp0
-      fsglmuls    (.-124,pc,d5.w), fp0
-      fsglmuls    (.,pc,d5.w), fp0
       fsglmuls    (.+4,pc,a0.w), fp0
       fsglmuls    (.-124,pc,a0.w), fp0
       fsglmuls    (.,pc,a0.w), fp0
-      fsglmuls    (.+4,pc,a0.l), fp0
-      fsglmuls    (.-124,pc,a0.l), fp0
-      fsglmuls    (.,pc,a0.l), fp0
       fsubs   (.+4,pc,d4.l), fp0
       fsubs   (.-124,pc,d4.l), fp0
       fsubs   (.,pc,d4.l), fp0
-      fsubs   (.+4,pc,d5.w), fp0
-      fsubs   (.-124,pc,d5.w), fp0
-      fsubs   (.,pc,d5.w), fp0
       fsubs   (.+4,pc,a0.w), fp0
       fsubs   (.-124,pc,a0.w), fp0
       fsubs   (.,pc,a0.w), fp0
-      fsubs   (.+4,pc,a0.l), fp0
-      fsubs   (.-124,pc,a0.l), fp0
-      fsubs   (.,pc,a0.l), fp0
       fsincoss    (.+4,pc,d4.l), fp0:fp0
       fsincoss    (.-124,pc,d4.l), fp0:fp0
       fsincoss    (.,pc,d4.l), fp0:fp0
-      fsincoss    (.+4,pc,d5.w), fp0:fp0
-      fsincoss    (.-124,pc,d5.w), fp0:fp0
-      fsincoss    (.,pc,d5.w), fp0:fp0
       fsincoss    (.+4,pc,a0.w), fp0:fp0
       fsincoss    (.-124,pc,a0.w), fp0:fp0
       fsincoss    (.,pc,a0.w), fp0:fp0
-      fsincoss    (.+4,pc,a0.l), fp0:fp0
-      fsincoss    (.-124,pc,a0.l), fp0:fp0
-      fsincoss    (.,pc,a0.l), fp0:fp0
       fcmps   (.+4,pc,d4.l), fp0
       fcmps   (.-124,pc,d4.l), fp0
       fcmps   (.,pc,d4.l), fp0
-      fcmps   (.+4,pc,d5.w), fp0
-      fcmps   (.-124,pc,d5.w), fp0
-      fcmps   (.,pc,d5.w), fp0
       fcmps   (.+4,pc,a0.w), fp0
       fcmps   (.-124,pc,a0.w), fp0
       fcmps   (.,pc,a0.w), fp0
-      fcmps   (.+4,pc,a0.l), fp0
-      fcmps   (.-124,pc,a0.l), fp0
-      fcmps   (.,pc,a0.l), fp0
       ftsts   (.+4,pc,d4.l)
       ftsts   (.-124,pc,d4.l)
       ftsts   (.,pc,d4.l)
-      ftsts   (.+4,pc,d5.w)
-      ftsts   (.-124,pc,d5.w)
-      ftsts   (.,pc,d5.w)
       ftsts   (.+4,pc,a0.w)
       ftsts   (.-124,pc,a0.w)
       ftsts   (.,pc,a0.w)
-      ftsts   (.+4,pc,a0.l)
-      ftsts   (.-124,pc,a0.l)
-      ftsts   (.,pc,a0.l)
       fmovex  (.+4,pc,d5.w), fp0
       fmovex  (.-124,pc,d5.w), fp0
       fmovex  (.,pc,d5.w), fp0
-      fmovex  (.+4,pc,d5.l), fp0
-      fmovex  (.-124,pc,d5.l), fp0
-      fmovex  (.,pc,d5.l), fp0
       fmovex  (.+4,pc,a0.w), fp0
       fmovex  (.-124,pc,a0.w), fp0
       fmovex  (.,pc,a0.w), fp0
-      fmovex  (.+4,pc,a0.l), fp0
-      fmovex  (.-124,pc,a0.l), fp0
-      fmovex  (.,pc,a0.l), fp0
       fintx   (.+4,pc,d5.w), fp0
       fintx   (.-124,pc,d5.w), fp0
       fintx   (.,pc,d5.w), fp0
-      fintx   (.+4,pc,d5.l), fp0
-      fintx   (.-124,pc,d5.l), fp0
-      fintx   (.,pc,d5.l), fp0
       fintx   (.+4,pc,a0.w), fp0
       fintx   (.-124,pc,a0.w), fp0
       fintx   (.,pc,a0.w), fp0
-      fintx   (.+4,pc,a0.l), fp0
-      fintx   (.-124,pc,a0.l), fp0
-      fintx   (.,pc,a0.l), fp0
       fsinhx  (.+4,pc,d5.w), fp0
       fsinhx  (.-124,pc,d5.w), fp0
       fsinhx  (.,pc,d5.w), fp0
-      fsinhx  (.+4,pc,d5.l), fp0
-      fsinhx  (.-124,pc,d5.l), fp0
-      fsinhx  (.,pc,d5.l), fp0
       fsinhx  (.+4,pc,a0.w), fp0
       fsinhx  (.-124,pc,a0.w), fp0
       fsinhx  (.,pc,a0.w), fp0
-      fsinhx  (.+4,pc,a0.l), fp0
-      fsinhx  (.-124,pc,a0.l), fp0
-      fsinhx  (.,pc,a0.l), fp0
       fintrzx (.+4,pc,d5.w), fp0
       fintrzx (.-124,pc,d5.w), fp0
       fintrzx (.,pc,d5.w), fp0
-      fintrzx (.+4,pc,d5.l), fp0
-      fintrzx (.-124,pc,d5.l), fp0
-      fintrzx (.,pc,d5.l), fp0
       fintrzx (.+4,pc,a0.w), fp0
       fintrzx (.-124,pc,a0.w), fp0
       fintrzx (.,pc,a0.w), fp0
-      fintrzx (.+4,pc,a0.l), fp0
-      fintrzx (.-124,pc,a0.l), fp0
-      fintrzx (.,pc,a0.l), fp0
       fsqrtx  (.+4,pc,d5.w), fp0
       fsqrtx  (.-124,pc,d5.w), fp0
       fsqrtx  (.,pc,d5.w), fp0
-      fsqrtx  (.+4,pc,d5.l), fp0
-      fsqrtx  (.-124,pc,d5.l), fp0
-      fsqrtx  (.,pc,d5.l), fp0
       fsqrtx  (.+4,pc,a0.w), fp0
       fsqrtx  (.-124,pc,a0.w), fp0
       fsqrtx  (.,pc,a0.w), fp0
-      fsqrtx  (.+4,pc,a0.l), fp0
-      fsqrtx  (.-124,pc,a0.l), fp0
-      fsqrtx  (.,pc,a0.l), fp0
       flognp1x    (.+4,pc,d5.w), fp0
       flognp1x    (.-124,pc,d5.w), fp0
       flognp1x    (.,pc,d5.w), fp0
-      flognp1x    (.+4,pc,d5.l), fp0
-      flognp1x    (.-124,pc,d5.l), fp0
-      flognp1x    (.,pc,d5.l), fp0
       flognp1x    (.+4,pc,a0.w), fp0
       flognp1x    (.-124,pc,a0.w), fp0
       flognp1x    (.,pc,a0.w), fp0
-      flognp1x    (.+4,pc,a0.l), fp0
-      flognp1x    (.-124,pc,a0.l), fp0
-      flognp1x    (.,pc,a0.l), fp0
       fetoxm1x    (.+4,pc,d5.w), fp0
       fetoxm1x    (.-124,pc,d5.w), fp0
       fetoxm1x    (.,pc,d5.w), fp0
-      fetoxm1x    (.+4,pc,d5.l), fp0
-      fetoxm1x    (.-124,pc,d5.l), fp0
-      fetoxm1x    (.,pc,d5.l), fp0
       fetoxm1x    (.+4,pc,a0.w), fp0
       fetoxm1x    (.-124,pc,a0.w), fp0
       fetoxm1x    (.,pc,a0.w), fp0
-      fetoxm1x    (.+4,pc,a0.l), fp0
-      fetoxm1x    (.-124,pc,a0.l), fp0
-      fetoxm1x    (.,pc,a0.l), fp0
       ftanhx  (.+4,pc,d5.w), fp0
       ftanhx  (.-124,pc,d5.w), fp0
       ftanhx  (.,pc,d5.w), fp0
-      ftanhx  (.+4,pc,d5.l), fp0
-      ftanhx  (.-124,pc,d5.l), fp0
-      ftanhx  (.,pc,d5.l), fp0
       ftanhx  (.+4,pc,a0.w), fp0
       ftanhx  (.-124,pc,a0.w), fp0
       ftanhx  (.,pc,a0.w), fp0
-      ftanhx  (.+4,pc,a0.l), fp0
-      ftanhx  (.-124,pc,a0.l), fp0
-      ftanhx  (.,pc,a0.l), fp0
       fatanx  (.+4,pc,d5.w), fp0
       fatanx  (.-124,pc,d5.w), fp0
       fatanx  (.,pc,d5.w), fp0
-      fatanx  (.+4,pc,d5.l), fp0
-      fatanx  (.-124,pc,d5.l), fp0
-      fatanx  (.,pc,d5.l), fp0
       fatanx  (.+4,pc,a0.w), fp0
       fatanx  (.-124,pc,a0.w), fp0
       fatanx  (.,pc,a0.w), fp0
-      fatanx  (.+4,pc,a0.l), fp0
-      fatanx  (.-124,pc,a0.l), fp0
-      fatanx  (.,pc,a0.l), fp0
       fasinx  (.+4,pc,d5.w), fp0
       fasinx  (.-124,pc,d5.w), fp0
       fasinx  (.,pc,d5.w), fp0
-      fasinx  (.+4,pc,d5.l), fp0
-      fasinx  (.-124,pc,d5.l), fp0
-      fasinx  (.,pc,d5.l), fp0
       fasinx  (.+4,pc,a0.w), fp0
       fasinx  (.-124,pc,a0.w), fp0
       fasinx  (.,pc,a0.w), fp0
-      fasinx  (.+4,pc,a0.l), fp0
-      fasinx  (.-124,pc,a0.l), fp0
-      fasinx  (.,pc,a0.l), fp0
       fatanhx (.+4,pc,d5.w), fp0
       fatanhx (.-124,pc,d5.w), fp0
       fatanhx (.,pc,d5.w), fp0
-      fatanhx (.+4,pc,d5.l), fp0
-      fatanhx (.-124,pc,d5.l), fp0
-      fatanhx (.,pc,d5.l), fp0
       fatanhx (.+4,pc,a0.w), fp0
       fatanhx (.-124,pc,a0.w), fp0
       fatanhx (.,pc,a0.w), fp0
-      fatanhx (.+4,pc,a0.l), fp0
-      fatanhx (.-124,pc,a0.l), fp0
-      fatanhx (.,pc,a0.l), fp0
       fsinx   (.+4,pc,d5.w), fp0
       fsinx   (.-124,pc,d5.w), fp0
       fsinx   (.,pc,d5.w), fp0
-      fsinx   (.+4,pc,d5.l), fp0
-      fsinx   (.-124,pc,d5.l), fp0
-      fsinx   (.,pc,d5.l), fp0
       fsinx   (.+4,pc,a0.w), fp0
       fsinx   (.-124,pc,a0.w), fp0
       fsinx   (.,pc,a0.w), fp0
-      fsinx   (.+4,pc,a0.l), fp0
-      fsinx   (.-124,pc,a0.l), fp0
-      fsinx   (.,pc,a0.l), fp0
       ftanx   (.+4,pc,d5.w), fp0
       ftanx   (.-124,pc,d5.w), fp0
       ftanx   (.,pc,d5.w), fp0
-      ftanx   (.+4,pc,d5.l), fp0
-      ftanx   (.-124,pc,d5.l), fp0
-      ftanx   (.,pc,d5.l), fp0
       ftanx   (.+4,pc,a0.w), fp0
       ftanx   (.-124,pc,a0.w), fp0
       ftanx   (.,pc,a0.w), fp0
-      ftanx   (.+4,pc,a0.l), fp0
-      ftanx   (.-124,pc,a0.l), fp0
-      ftanx   (.,pc,a0.l), fp0
       fetoxx  (.+4,pc,d5.w), fp0
       fetoxx  (.-124,pc,d5.w), fp0
       fetoxx  (.,pc,d5.w), fp0
-      fetoxx  (.+4,pc,d5.l), fp0
-      fetoxx  (.-124,pc,d5.l), fp0
-      fetoxx  (.,pc,d5.l), fp0
       fetoxx  (.+4,pc,a0.w), fp0
       fetoxx  (.-124,pc,a0.w), fp0
       fetoxx  (.,pc,a0.w), fp0
-      fetoxx  (.+4,pc,a0.l), fp0
-      fetoxx  (.-124,pc,a0.l), fp0
-      fetoxx  (.,pc,a0.l), fp0
       ftwotoxx    (.+4,pc,d5.w), fp0
       ftwotoxx    (.-124,pc,d5.w), fp0
       ftwotoxx    (.,pc,d5.w), fp0
-      ftwotoxx    (.+4,pc,d5.l), fp0
-      ftwotoxx    (.-124,pc,d5.l), fp0
-      ftwotoxx    (.,pc,d5.l), fp0
       ftwotoxx    (.+4,pc,a0.w), fp0
       ftwotoxx    (.-124,pc,a0.w), fp0
       ftwotoxx    (.,pc,a0.w), fp0
-      ftwotoxx    (.+4,pc,a0.l), fp0
-      ftwotoxx    (.-124,pc,a0.l), fp0
-      ftwotoxx    (.,pc,a0.l), fp0
       ftentoxx    (.+4,pc,d5.w), fp0
       ftentoxx    (.-124,pc,d5.w), fp0
       ftentoxx    (.,pc,d5.w), fp0
-      ftentoxx    (.+4,pc,d5.l), fp0
-      ftentoxx    (.-124,pc,d5.l), fp0
-      ftentoxx    (.,pc,d5.l), fp0
       ftentoxx    (.+4,pc,a0.w), fp0
       ftentoxx    (.-124,pc,a0.w), fp0
       ftentoxx    (.,pc,a0.w), fp0
-      ftentoxx    (.+4,pc,a0.l), fp0
-      ftentoxx    (.-124,pc,a0.l), fp0
-      ftentoxx    (.,pc,a0.l), fp0
       flognx  (.+4,pc,d5.w), fp0
       flognx  (.-124,pc,d5.w), fp0
       flognx  (.,pc,d5.w), fp0
-      flognx  (.+4,pc,d5.l), fp0
-      flognx  (.-124,pc,d5.l), fp0
-      flognx  (.,pc,d5.l), fp0
       flognx  (.+4,pc,a0.w), fp0
       flognx  (.-124,pc,a0.w), fp0
       flognx  (.,pc,a0.w), fp0
-      flognx  (.+4,pc,a0.l), fp0
-      flognx  (.-124,pc,a0.l), fp0
-      flognx  (.,pc,a0.l), fp0
       flog10x (.+4,pc,d5.w), fp0
       flog10x (.-124,pc,d5.w), fp0
       flog10x (.,pc,d5.w), fp0
-      flog10x (.+4,pc,d5.l), fp0
-      flog10x (.-124,pc,d5.l), fp0
-      flog10x (.,pc,d5.l), fp0
       flog10x (.+4,pc,a0.w), fp0
       flog10x (.-124,pc,a0.w), fp0
       flog10x (.,pc,a0.w), fp0
-      flog10x (.+4,pc,a0.l), fp0
-      flog10x (.-124,pc,a0.l), fp0
-      flog10x (.,pc,a0.l), fp0
       flog2x  (.+4,pc,d5.w), fp0
       flog2x  (.-124,pc,d5.w), fp0
       flog2x  (.,pc,d5.w), fp0
-      flog2x  (.+4,pc,d5.l), fp0
-      flog2x  (.-124,pc,d5.l), fp0
-      flog2x  (.,pc,d5.l), fp0
       flog2x  (.+4,pc,a0.w), fp0
       flog2x  (.-124,pc,a0.w), fp0
       flog2x  (.,pc,a0.w), fp0
-      flog2x  (.+4,pc,a0.l), fp0
-      flog2x  (.-124,pc,a0.l), fp0
-      flog2x  (.,pc,a0.l), fp0
       fabsx   (.+4,pc,d5.w), fp0
       fabsx   (.-124,pc,d5.w), fp0
       fabsx   (.,pc,d5.w), fp0
-      fabsx   (.+4,pc,d5.l), fp0
-      fabsx   (.-124,pc,d5.l), fp0
-      fabsx   (.,pc,d5.l), fp0
       fabsx   (.+4,pc,a0.w), fp0
       fabsx   (.-124,pc,a0.w), fp0
       fabsx   (.,pc,a0.w), fp0
-      fabsx   (.+4,pc,a0.l), fp0
-      fabsx   (.-124,pc,a0.l), fp0
-      fabsx   (.,pc,a0.l), fp0
       fcoshx  (.+4,pc,d5.w), fp0
       fcoshx  (.-124,pc,d5.w), fp0
       fcoshx  (.,pc,d5.w), fp0
-      fcoshx  (.+4,pc,d5.l), fp0
-      fcoshx  (.-124,pc,d5.l), fp0
-      fcoshx  (.,pc,d5.l), fp0
       fcoshx  (.+4,pc,a0.w), fp0
       fcoshx  (.-124,pc,a0.w), fp0
       fcoshx  (.,pc,a0.w), fp0
-      fcoshx  (.+4,pc,a0.l), fp0
-      fcoshx  (.-124,pc,a0.l), fp0
-      fcoshx  (.,pc,a0.l), fp0
       fnegx   (.+4,pc,d5.w), fp0
       fnegx   (.-124,pc,d5.w), fp0
       fnegx   (.,pc,d5.w), fp0
-      fnegx   (.+4,pc,d5.l), fp0
-      fnegx   (.-124,pc,d5.l), fp0
-      fnegx   (.,pc,d5.l), fp0
       fnegx   (.+4,pc,a0.w), fp0
       fnegx   (.-124,pc,a0.w), fp0
       fnegx   (.,pc,a0.w), fp0
-      fnegx   (.+4,pc,a0.l), fp0
-      fnegx   (.-124,pc,a0.l), fp0
-      fnegx   (.,pc,a0.l), fp0
       facosx  (.+4,pc,d5.w), fp0
       facosx  (.-124,pc,d5.w), fp0
       facosx  (.,pc,d5.w), fp0
-      facosx  (.+4,pc,d5.l), fp0
-      facosx  (.-124,pc,d5.l), fp0
-      facosx  (.,pc,d5.l), fp0
       facosx  (.+4,pc,a0.w), fp0
       facosx  (.-124,pc,a0.w), fp0
       facosx  (.,pc,a0.w), fp0
-      facosx  (.+4,pc,a0.l), fp0
-      facosx  (.-124,pc,a0.l), fp0
-      facosx  (.,pc,a0.l), fp0
       fcosx   (.+4,pc,d5.w), fp0
       fcosx   (.-124,pc,d5.w), fp0
       fcosx   (.,pc,d5.w), fp0
-      fcosx   (.+4,pc,d5.l), fp0
-      fcosx   (.-124,pc,d5.l), fp0
-      fcosx   (.,pc,d5.l), fp0
       fcosx   (.+4,pc,a0.w), fp0
       fcosx   (.-124,pc,a0.w), fp0
       fcosx   (.,pc,a0.w), fp0
-      fcosx   (.+4,pc,a0.l), fp0
-      fcosx   (.-124,pc,a0.l), fp0
-      fcosx   (.,pc,a0.l), fp0
       fgetexpx    (.+4,pc,d5.w), fp0
       fgetexpx    (.-124,pc,d5.w), fp0
       fgetexpx    (.,pc,d5.w), fp0
-      fgetexpx    (.+4,pc,d5.l), fp0
-      fgetexpx    (.-124,pc,d5.l), fp0
-      fgetexpx    (.,pc,d5.l), fp0
       fgetexpx    (.+4,pc,a0.w), fp0
       fgetexpx    (.-124,pc,a0.w), fp0
       fgetexpx    (.,pc,a0.w), fp0
-      fgetexpx    (.+4,pc,a0.l), fp0
-      fgetexpx    (.-124,pc,a0.l), fp0
-      fgetexpx    (.,pc,a0.l), fp0
       fgetmanx    (.+4,pc,d5.w), fp0
       fgetmanx    (.-124,pc,d5.w), fp0
       fgetmanx    (.,pc,d5.w), fp0
-      fgetmanx    (.+4,pc,d5.l), fp0
-      fgetmanx    (.-124,pc,d5.l), fp0
-      fgetmanx    (.,pc,d5.l), fp0
       fgetmanx    (.+4,pc,a0.w), fp0
       fgetmanx    (.-124,pc,a0.w), fp0
       fgetmanx    (.,pc,a0.w), fp0
-      fgetmanx    (.+4,pc,a0.l), fp0
-      fgetmanx    (.-124,pc,a0.l), fp0
-      fgetmanx    (.,pc,a0.l), fp0
       fdivx   (.+4,pc,d5.w), fp0
       fdivx   (.-124,pc,d5.w), fp0
       fdivx   (.,pc,d5.w), fp0
-      fdivx   (.+4,pc,d5.l), fp0
-      fdivx   (.-124,pc,d5.l), fp0
-      fdivx   (.,pc,d5.l), fp0
       fdivx   (.+4,pc,a0.w), fp0
       fdivx   (.-124,pc,a0.w), fp0
       fdivx   (.,pc,a0.w), fp0
-      fdivx   (.+4,pc,a0.l), fp0
-      fdivx   (.-124,pc,a0.l), fp0
-      fdivx   (.,pc,a0.l), fp0
       fmodx   (.+4,pc,d5.w), fp0
       fmodx   (.-124,pc,d5.w), fp0
       fmodx   (.,pc,d5.w), fp0
-      fmodx   (.+4,pc,d5.l), fp0
-      fmodx   (.-124,pc,d5.l), fp0
-      fmodx   (.,pc,d5.l), fp0
       fmodx   (.+4,pc,a0.w), fp0
       fmodx   (.-124,pc,a0.w), fp0
       fmodx   (.,pc,a0.w), fp0
-      fmodx   (.+4,pc,a0.l), fp0
-      fmodx   (.-124,pc,a0.l), fp0
-      fmodx   (.,pc,a0.l), fp0
       faddx   (.+4,pc,d5.w), fp0
       faddx   (.-124,pc,d5.w), fp0
       faddx   (.,pc,d5.w), fp0
-      faddx   (.+4,pc,d5.l), fp0
-      faddx   (.-124,pc,d5.l), fp0
-      faddx   (.,pc,d5.l), fp0
       faddx   (.+4,pc,a0.w), fp0
       faddx   (.-124,pc,a0.w), fp0
       faddx   (.,pc,a0.w), fp0
-      faddx   (.+4,pc,a0.l), fp0
-      faddx   (.-124,pc,a0.l), fp0
-      faddx   (.,pc,a0.l), fp0
       fmulx   (.+4,pc,d5.w), fp0
       fmulx   (.-124,pc,d5.w), fp0
       fmulx   (.,pc,d5.w), fp0
-      fmulx   (.+4,pc,d5.l), fp0
-      fmulx   (.-124,pc,d5.l), fp0
-      fmulx   (.,pc,d5.l), fp0
       fmulx   (.+4,pc,a0.w), fp0
       fmulx   (.-124,pc,a0.w), fp0
       fmulx   (.,pc,a0.w), fp0
-      fmulx   (.+4,pc,a0.l), fp0
-      fmulx   (.-124,pc,a0.l), fp0
-      fmulx   (.,pc,a0.l), fp0
       fsgldivx    (.+4,pc,d5.w), fp0
       fsgldivx    (.-124,pc,d5.w), fp0
       fsgldivx    (.,pc,d5.w), fp0
-      fsgldivx    (.+4,pc,d5.l), fp0
-      fsgldivx    (.-124,pc,d5.l), fp0
-      fsgldivx    (.,pc,d5.l), fp0
       fsgldivx    (.+4,pc,a0.w), fp0
       fsgldivx    (.-124,pc,a0.w), fp0
       fsgldivx    (.,pc,a0.w), fp0
-      fsgldivx    (.+4,pc,a0.l), fp0
-      fsgldivx    (.-124,pc,a0.l), fp0
-      fsgldivx    (.,pc,a0.l), fp0
       fremx   (.+4,pc,d5.w), fp0
       fremx   (.-124,pc,d5.w), fp0
       fremx   (.,pc,d5.w), fp0
-      fremx   (.+4,pc,d5.l), fp0
-      fremx   (.-124,pc,d5.l), fp0
-      fremx   (.,pc,d5.l), fp0
       fremx   (.+4,pc,a0.w), fp0
       fremx   (.-124,pc,a0.w), fp0
       fremx   (.,pc,a0.w), fp0
-      fremx   (.+4,pc,a0.l), fp0
-      fremx   (.-124,pc,a0.l), fp0
-      fremx   (.,pc,a0.l), fp0
       fscalex (.+4,pc,d5.w), fp0
       fscalex (.-124,pc,d5.w), fp0
       fscalex (.,pc,d5.w), fp0
-      fscalex (.+4,pc,d5.l), fp0
-      fscalex (.-124,pc,d5.l), fp0
-      fscalex (.,pc,d5.l), fp0
       fscalex (.+4,pc,a0.w), fp0
       fscalex (.-124,pc,a0.w), fp0
       fscalex (.,pc,a0.w), fp0
-      fscalex (.+4,pc,a0.l), fp0
-      fscalex (.-124,pc,a0.l), fp0
-      fscalex (.,pc,a0.l), fp0
       fsglmulx    (.+4,pc,d5.w), fp0
       fsglmulx    (.-124,pc,d5.w), fp0
       fsglmulx    (.,pc,d5.w), fp0
-      fsglmulx    (.+4,pc,d5.l), fp0
-      fsglmulx    (.-124,pc,d5.l), fp0
-      fsglmulx    (.,pc,d5.l), fp0
       fsglmulx    (.+4,pc,a0.w), fp0
       fsglmulx    (.-124,pc,a0.w), fp0
       fsglmulx    (.,pc,a0.w), fp0
-      fsglmulx    (.+4,pc,a0.l), fp0
-      fsglmulx    (.-124,pc,a0.l), fp0
-      fsglmulx    (.,pc,a0.l), fp0
       fsubx   (.+4,pc,d5.w), fp0
       fsubx   (.-124,pc,d5.w), fp0
       fsubx   (.,pc,d5.w), fp0
-      fsubx   (.+4,pc,d5.l), fp0
-      fsubx   (.-124,pc,d5.l), fp0
-      fsubx   (.,pc,d5.l), fp0
       fsubx   (.+4,pc,a0.w), fp0
       fsubx   (.-124,pc,a0.w), fp0
       fsubx   (.,pc,a0.w), fp0
-      fsubx   (.+4,pc,a0.l), fp0
-      fsubx   (.-124,pc,a0.l), fp0
-      fsubx   (.,pc,a0.l), fp0
       fsincosx    (.+4,pc,d5.w), fp0:fp0
       fsincosx    (.-124,pc,d5.w), fp0:fp0
       fsincosx    (.,pc,d5.w), fp0:fp0
-      fsincosx    (.+4,pc,d5.l), fp0:fp0
-      fsincosx    (.-124,pc,d5.l), fp0:fp0
-      fsincosx    (.,pc,d5.l), fp0:fp0
       fsincosx    (.+4,pc,a0.w), fp0:fp0
       fsincosx    (.-124,pc,a0.w), fp0:fp0
       fsincosx    (.,pc,a0.w), fp0:fp0
-      fsincosx    (.+4,pc,a0.l), fp0:fp0
-      fsincosx    (.-124,pc,a0.l), fp0:fp0
-      fsincosx    (.,pc,a0.l), fp0:fp0
       fcmpx   (.+4,pc,d5.w), fp0
       fcmpx   (.-124,pc,d5.w), fp0
       fcmpx   (.,pc,d5.w), fp0
-      fcmpx   (.+4,pc,d5.l), fp0
-      fcmpx   (.-124,pc,d5.l), fp0
-      fcmpx   (.,pc,d5.l), fp0
       fcmpx   (.+4,pc,a0.w), fp0
       fcmpx   (.-124,pc,a0.w), fp0
       fcmpx   (.,pc,a0.w), fp0
-      fcmpx   (.+4,pc,a0.l), fp0
-      fcmpx   (.-124,pc,a0.l), fp0
-      fcmpx   (.,pc,a0.l), fp0
       ftstx   (.+4,pc,d5.w)
       ftstx   (.-124,pc,d5.w)
       ftstx   (.,pc,d5.w)
-      ftstx   (.+4,pc,d5.l)
-      ftstx   (.-124,pc,d5.l)
-      ftstx   (.,pc,d5.l)
       ftstx   (.+4,pc,a0.w)
       ftstx   (.-124,pc,a0.w)
       ftstx   (.,pc,a0.w)
-      ftstx   (.+4,pc,a0.l)
-      ftstx   (.-124,pc,a0.l)
-      ftstx   (.,pc,a0.l)
       fmovep  (.+4,pc,d5.w), fp0
       fmovep  (.-124,pc,d5.w), fp0
       fmovep  (.,pc,d5.w), fp0
-      fmovep  (.+4,pc,d5.l), fp0
-      fmovep  (.-124,pc,d5.l), fp0
-      fmovep  (.,pc,d5.l), fp0
       fmovep  (.+4,pc,a0.w), fp0
       fmovep  (.-124,pc,a0.w), fp0
       fmovep  (.,pc,a0.w), fp0
-      fmovep  (.+4,pc,a0.l), fp0
-      fmovep  (.-124,pc,a0.l), fp0
-      fmovep  (.,pc,a0.l), fp0
       fintp   (.+4,pc,d5.w), fp0
       fintp   (.-124,pc,d5.w), fp0
       fintp   (.,pc,d5.w), fp0
-      fintp   (.+4,pc,d5.l), fp0
-      fintp   (.-124,pc,d5.l), fp0
-      fintp   (.,pc,d5.l), fp0
       fintp   (.+4,pc,a0.w), fp0
       fintp   (.-124,pc,a0.w), fp0
       fintp   (.,pc,a0.w), fp0
-      fintp   (.+4,pc,a0.l), fp0
-      fintp   (.-124,pc,a0.l), fp0
-      fintp   (.,pc,a0.l), fp0
       fsinhp  (.+4,pc,d5.w), fp0
       fsinhp  (.-124,pc,d5.w), fp0
       fsinhp  (.,pc,d5.w), fp0
-      fsinhp  (.+4,pc,d5.l), fp0
-      fsinhp  (.-124,pc,d5.l), fp0
-      fsinhp  (.,pc,d5.l), fp0
       fsinhp  (.+4,pc,a0.w), fp0
       fsinhp  (.-124,pc,a0.w), fp0
       fsinhp  (.,pc,a0.w), fp0
-      fsinhp  (.+4,pc,a0.l), fp0
-      fsinhp  (.-124,pc,a0.l), fp0
-      fsinhp  (.,pc,a0.l), fp0
       fintrzp (.+4,pc,d5.w), fp0
       fintrzp (.-124,pc,d5.w), fp0
       fintrzp (.,pc,d5.w), fp0
-      fintrzp (.+4,pc,d5.l), fp0
-      fintrzp (.-124,pc,d5.l), fp0
-      fintrzp (.,pc,d5.l), fp0
       fintrzp (.+4,pc,a0.w), fp0
       fintrzp (.-124,pc,a0.w), fp0
       fintrzp (.,pc,a0.w), fp0
-      fintrzp (.+4,pc,a0.l), fp0
-      fintrzp (.-124,pc,a0.l), fp0
-      fintrzp (.,pc,a0.l), fp0
       fsqrtp  (.+4,pc,d5.w), fp0
       fsqrtp  (.-124,pc,d5.w), fp0
       fsqrtp  (.,pc,d5.w), fp0
-      fsqrtp  (.+4,pc,d5.l), fp0
-      fsqrtp  (.-124,pc,d5.l), fp0
-      fsqrtp  (.,pc,d5.l), fp0
       fsqrtp  (.+4,pc,a0.w), fp0
       fsqrtp  (.-124,pc,a0.w), fp0
       fsqrtp  (.,pc,a0.w), fp0
-      fsqrtp  (.+4,pc,a0.l), fp0
-      fsqrtp  (.-124,pc,a0.l), fp0
-      fsqrtp  (.,pc,a0.l), fp0
       flognp1p    (.+4,pc,d5.w), fp0
       flognp1p    (.-124,pc,d5.w), fp0
       flognp1p    (.,pc,d5.w), fp0
-      flognp1p    (.+4,pc,d5.l), fp0
-      flognp1p    (.-124,pc,d5.l), fp0
-      flognp1p    (.,pc,d5.l), fp0
       flognp1p    (.+4,pc,a0.w), fp0
       flognp1p    (.-124,pc,a0.w), fp0
       flognp1p    (.,pc,a0.w), fp0
-      flognp1p    (.+4,pc,a0.l), fp0
-      flognp1p    (.-124,pc,a0.l), fp0
-      flognp1p    (.,pc,a0.l), fp0
       fetoxm1p    (.+4,pc,d5.w), fp0
       fetoxm1p    (.-124,pc,d5.w), fp0
       fetoxm1p    (.,pc,d5.w), fp0
-      fetoxm1p    (.+4,pc,d5.l), fp0
-      fetoxm1p    (.-124,pc,d5.l), fp0
-      fetoxm1p    (.,pc,d5.l), fp0
       fetoxm1p    (.+4,pc,a0.w), fp0
       fetoxm1p    (.-124,pc,a0.w), fp0
       fetoxm1p    (.,pc,a0.w), fp0
-      fetoxm1p    (.+4,pc,a0.l), fp0
-      fetoxm1p    (.-124,pc,a0.l), fp0
-      fetoxm1p    (.,pc,a0.l), fp0
       ftanhp  (.+4,pc,d5.w), fp0
       ftanhp  (.-124,pc,d5.w), fp0
       ftanhp  (.,pc,d5.w), fp0
-      ftanhp  (.+4,pc,d5.l), fp0
-      ftanhp  (.-124,pc,d5.l), fp0
-      ftanhp  (.,pc,d5.l), fp0
       ftanhp  (.+4,pc,a0.w), fp0
       ftanhp  (.-124,pc,a0.w), fp0
       ftanhp  (.,pc,a0.w), fp0
-      ftanhp  (.+4,pc,a0.l), fp0
-      ftanhp  (.-124,pc,a0.l), fp0
-      ftanhp  (.,pc,a0.l), fp0
       fatanp  (.+4,pc,d5.w), fp0
       fatanp  (.-124,pc,d5.w), fp0
       fatanp  (.,pc,d5.w), fp0
-      fatanp  (.+4,pc,d5.l), fp0
-      fatanp  (.-124,pc,d5.l), fp0
-      fatanp  (.,pc,d5.l), fp0
       fatanp  (.+4,pc,a0.w), fp0
       fatanp  (.-124,pc,a0.w), fp0
       fatanp  (.,pc,a0.w), fp0
-      fatanp  (.+4,pc,a0.l), fp0
-      fatanp  (.-124,pc,a0.l), fp0
-      fatanp  (.,pc,a0.l), fp0
       fasinp  (.+4,pc,d5.w), fp0
       fasinp  (.-124,pc,d5.w), fp0
       fasinp  (.,pc,d5.w), fp0
-      fasinp  (.+4,pc,d5.l), fp0
-      fasinp  (.-124,pc,d5.l), fp0
-      fasinp  (.,pc,d5.l), fp0
       fasinp  (.+4,pc,a0.w), fp0
       fasinp  (.-124,pc,a0.w), fp0
       fasinp  (.,pc,a0.w), fp0
-      fasinp  (.+4,pc,a0.l), fp0
-      fasinp  (.-124,pc,a0.l), fp0
-      fasinp  (.,pc,a0.l), fp0
       fatanhp (.+4,pc,d5.w), fp0
       fatanhp (.-124,pc,d5.w), fp0
       fatanhp (.,pc,d5.w), fp0
-      fatanhp (.+4,pc,d5.l), fp0
-      fatanhp (.-124,pc,d5.l), fp0
-      fatanhp (.,pc,d5.l), fp0
       fatanhp (.+4,pc,a0.w), fp0
       fatanhp (.-124,pc,a0.w), fp0
       fatanhp (.,pc,a0.w), fp0
-      fatanhp (.+4,pc,a0.l), fp0
-      fatanhp (.-124,pc,a0.l), fp0
-      fatanhp (.,pc,a0.l), fp0
       fsinp   (.+4,pc,d5.w), fp0
       fsinp   (.-124,pc,d5.w), fp0
       fsinp   (.,pc,d5.w), fp0
-      fsinp   (.+4,pc,d5.l), fp0
-      fsinp   (.-124,pc,d5.l), fp0
-      fsinp   (.,pc,d5.l), fp0
       fsinp   (.+4,pc,a0.w), fp0
       fsinp   (.-124,pc,a0.w), fp0
       fsinp   (.,pc,a0.w), fp0
-      fsinp   (.+4,pc,a0.l), fp0
-      fsinp   (.-124,pc,a0.l), fp0
-      fsinp   (.,pc,a0.l), fp0
       ftanp   (.+4,pc,d5.w), fp0
       ftanp   (.-124,pc,d5.w), fp0
       ftanp   (.,pc,d5.w), fp0
-      ftanp   (.+4,pc,d5.l), fp0
-      ftanp   (.-124,pc,d5.l), fp0
-      ftanp   (.,pc,d5.l), fp0
       ftanp   (.+4,pc,a0.w), fp0
       ftanp   (.-124,pc,a0.w), fp0
       ftanp   (.,pc,a0.w), fp0
-      ftanp   (.+4,pc,a0.l), fp0
-      ftanp   (.-124,pc,a0.l), fp0
-      ftanp   (.,pc,a0.l), fp0
       fetoxp  (.+4,pc,d5.w), fp0
       fetoxp  (.-124,pc,d5.w), fp0
       fetoxp  (.,pc,d5.w), fp0
-      fetoxp  (.+4,pc,d5.l), fp0
-      fetoxp  (.-124,pc,d5.l), fp0
-      fetoxp  (.,pc,d5.l), fp0
       fetoxp  (.+4,pc,a0.w), fp0
       fetoxp  (.-124,pc,a0.w), fp0
       fetoxp  (.,pc,a0.w), fp0
-      fetoxp  (.+4,pc,a0.l), fp0
-      fetoxp  (.-124,pc,a0.l), fp0
-      fetoxp  (.,pc,a0.l), fp0
       ftwotoxp    (.+4,pc,d5.w), fp0
       ftwotoxp    (.-124,pc,d5.w), fp0
       ftwotoxp    (.,pc,d5.w), fp0
-      ftwotoxp    (.+4,pc,d5.l), fp0
-      ftwotoxp    (.-124,pc,d5.l), fp0
-      ftwotoxp    (.,pc,d5.l), fp0
       ftwotoxp    (.+4,pc,a0.w), fp0
       ftwotoxp    (.-124,pc,a0.w), fp0
       ftwotoxp    (.,pc,a0.w), fp0
-      ftwotoxp    (.+4,pc,a0.l), fp0
-      ftwotoxp    (.-124,pc,a0.l), fp0
-      ftwotoxp    (.,pc,a0.l), fp0
       ftentoxp    (.+4,pc,d5.w), fp0
       ftentoxp    (.-124,pc,d5.w), fp0
       ftentoxp    (.,pc,d5.w), fp0
-      ftentoxp    (.+4,pc,d5.l), fp0
-      ftentoxp    (.-124,pc,d5.l), fp0
-      ftentoxp    (.,pc,d5.l), fp0
       ftentoxp    (.+4,pc,a0.w), fp0
       ftentoxp    (.-124,pc,a0.w), fp0
       ftentoxp    (.,pc,a0.w), fp0
-      ftentoxp    (.+4,pc,a0.l), fp0
-      ftentoxp    (.-124,pc,a0.l), fp0
-      ftentoxp    (.,pc,a0.l), fp0
       flognp  (.+4,pc,d5.w), fp0
       flognp  (.-124,pc,d5.w), fp0
       flognp  (.,pc,d5.w), fp0
-      flognp  (.+4,pc,d5.l), fp0
-      flognp  (.-124,pc,d5.l), fp0
-      flognp  (.,pc,d5.l), fp0
       flognp  (.+4,pc,a0.w), fp0
       flognp  (.-124,pc,a0.w), fp0
       flognp  (.,pc,a0.w), fp0
-      flognp  (.+4,pc,a0.l), fp0
-      flognp  (.-124,pc,a0.l), fp0
-      flognp  (.,pc,a0.l), fp0
       flog10p (.+4,pc,d5.w), fp0
       flog10p (.-124,pc,d5.w), fp0
       flog10p (.,pc,d5.w), fp0
-      flog10p (.+4,pc,d5.l), fp0
-      flog10p (.-124,pc,d5.l), fp0
-      flog10p (.,pc,d5.l), fp0
       flog10p (.+4,pc,a0.w), fp0
       flog10p (.-124,pc,a0.w), fp0
       flog10p (.,pc,a0.w), fp0
-      flog10p (.+4,pc,a0.l), fp0
-      flog10p (.-124,pc,a0.l), fp0
-      flog10p (.,pc,a0.l), fp0
       flog2p  (.+4,pc,d5.w), fp0
       flog2p  (.-124,pc,d5.w), fp0
       flog2p  (.,pc,d5.w), fp0
-      flog2p  (.+4,pc,d5.l), fp0
-      flog2p  (.-124,pc,d5.l), fp0
-      flog2p  (.,pc,d5.l), fp0
       flog2p  (.+4,pc,a0.w), fp0
       flog2p  (.-124,pc,a0.w), fp0
       flog2p  (.,pc,a0.w), fp0
-      flog2p  (.+4,pc,a0.l), fp0
-      flog2p  (.-124,pc,a0.l), fp0
-      flog2p  (.,pc,a0.l), fp0
       fabsp   (.+4,pc,d5.w), fp0
       fabsp   (.-124,pc,d5.w), fp0
       fabsp   (.,pc,d5.w), fp0
-      fabsp   (.+4,pc,d5.l), fp0
-      fabsp   (.-124,pc,d5.l), fp0
-      fabsp   (.,pc,d5.l), fp0
       fabsp   (.+4,pc,a0.w), fp0
       fabsp   (.-124,pc,a0.w), fp0
       fabsp   (.,pc,a0.w), fp0
-      fabsp   (.+4,pc,a0.l), fp0
-      fabsp   (.-124,pc,a0.l), fp0
-      fabsp   (.,pc,a0.l), fp0
       fcoshp  (.+4,pc,d5.w), fp0
       fcoshp  (.-124,pc,d5.w), fp0
       fcoshp  (.,pc,d5.w), fp0
-      fcoshp  (.+4,pc,d5.l), fp0
-      fcoshp  (.-124,pc,d5.l), fp0
-      fcoshp  (.,pc,d5.l), fp0
       fcoshp  (.+4,pc,a0.w), fp0
       fcoshp  (.-124,pc,a0.w), fp0
       fcoshp  (.,pc,a0.w), fp0
-      fcoshp  (.+4,pc,a0.l), fp0
-      fcoshp  (.-124,pc,a0.l), fp0
-      fcoshp  (.,pc,a0.l), fp0
       fnegp   (.+4,pc,d5.w), fp0
       fnegp   (.-124,pc,d5.w), fp0
       fnegp   (.,pc,d5.w), fp0
-      fnegp   (.+4,pc,d5.l), fp0
-      fnegp   (.-124,pc,d5.l), fp0
-      fnegp   (.,pc,d5.l), fp0
       fnegp   (.+4,pc,a0.w), fp0
       fnegp   (.-124,pc,a0.w), fp0
       fnegp   (.,pc,a0.w), fp0
-      fnegp   (.+4,pc,a0.l), fp0
-      fnegp   (.-124,pc,a0.l), fp0
-      fnegp   (.,pc,a0.l), fp0
       facosp  (.+4,pc,d5.w), fp0
       facosp  (.-124,pc,d5.w), fp0
       facosp  (.,pc,d5.w), fp0
-      facosp  (.+4,pc,d5.l), fp0
-      facosp  (.-124,pc,d5.l), fp0
-      facosp  (.,pc,d5.l), fp0
       facosp  (.+4,pc,a0.w), fp0
       facosp  (.-124,pc,a0.w), fp0
       facosp  (.,pc,a0.w), fp0
-      facosp  (.+4,pc,a0.l), fp0
-      facosp  (.-124,pc,a0.l), fp0
-      facosp  (.,pc,a0.l), fp0
       fcosp   (.+4,pc,d5.w), fp0
       fcosp   (.-124,pc,d5.w), fp0
       fcosp   (.,pc,d5.w), fp0
-      fcosp   (.+4,pc,d5.l), fp0
-      fcosp   (.-124,pc,d5.l), fp0
-      fcosp   (.,pc,d5.l), fp0
       fcosp   (.+4,pc,a0.w), fp0
       fcosp   (.-124,pc,a0.w), fp0
       fcosp   (.,pc,a0.w), fp0
-      fcosp   (.+4,pc,a0.l), fp0
-      fcosp   (.-124,pc,a0.l), fp0
-      fcosp   (.,pc,a0.l), fp0
       fgetexpp    (.+4,pc,d5.w), fp0
       fgetexpp    (.-124,pc,d5.w), fp0
       fgetexpp    (.,pc,d5.w), fp0
-      fgetexpp    (.+4,pc,d5.l), fp0
-      fgetexpp    (.-124,pc,d5.l), fp0
-      fgetexpp    (.,pc,d5.l), fp0
       fgetexpp    (.+4,pc,a0.w), fp0
       fgetexpp    (.-124,pc,a0.w), fp0
       fgetexpp    (.,pc,a0.w), fp0
-      fgetexpp    (.+4,pc,a0.l), fp0
-      fgetexpp    (.-124,pc,a0.l), fp0
-      fgetexpp    (.,pc,a0.l), fp0
       fgetmanp    (.+4,pc,d5.w), fp0
       fgetmanp    (.-124,pc,d5.w), fp0
       fgetmanp    (.,pc,d5.w), fp0
-      fgetmanp    (.+4,pc,d5.l), fp0
-      fgetmanp    (.-124,pc,d5.l), fp0
-      fgetmanp    (.,pc,d5.l), fp0
       fgetmanp    (.+4,pc,a0.w), fp0
       fgetmanp    (.-124,pc,a0.w), fp0
       fgetmanp    (.,pc,a0.w), fp0
-      fgetmanp    (.+4,pc,a0.l), fp0
-      fgetmanp    (.-124,pc,a0.l), fp0
-      fgetmanp    (.,pc,a0.l), fp0
       fdivp   (.+4,pc,d5.w), fp0
       fdivp   (.-124,pc,d5.w), fp0
       fdivp   (.,pc,d5.w), fp0
-      fdivp   (.+4,pc,d5.l), fp0
-      fdivp   (.-124,pc,d5.l), fp0
-      fdivp   (.,pc,d5.l), fp0
       fdivp   (.+4,pc,a0.w), fp0
       fdivp   (.-124,pc,a0.w), fp0
       fdivp   (.,pc,a0.w), fp0
-      fdivp   (.+4,pc,a0.l), fp0
-      fdivp   (.-124,pc,a0.l), fp0
-      fdivp   (.,pc,a0.l), fp0
       fmodp   (.+4,pc,d5.w), fp0
       fmodp   (.-124,pc,d5.w), fp0
       fmodp   (.,pc,d5.w), fp0
-      fmodp   (.+4,pc,d5.l), fp0
-      fmodp   (.-124,pc,d5.l), fp0
-      fmodp   (.,pc,d5.l), fp0
       fmodp   (.+4,pc,a0.w), fp0
       fmodp   (.-124,pc,a0.w), fp0
       fmodp   (.,pc,a0.w), fp0
-      fmodp   (.+4,pc,a0.l), fp0
-      fmodp   (.-124,pc,a0.l), fp0
-      fmodp   (.,pc,a0.l), fp0
       faddp   (.+4,pc,d5.w), fp0
       faddp   (.-124,pc,d5.w), fp0
       faddp   (.,pc,d5.w), fp0
-      faddp   (.+4,pc,d5.l), fp0
-      faddp   (.-124,pc,d5.l), fp0
-      faddp   (.,pc,d5.l), fp0
       faddp   (.+4,pc,a0.w), fp0
       faddp   (.-124,pc,a0.w), fp0
       faddp   (.,pc,a0.w), fp0
-      faddp   (.+4,pc,a0.l), fp0
-      faddp   (.-124,pc,a0.l), fp0
-      faddp   (.,pc,a0.l), fp0
       fmulp   (.+4,pc,d5.w), fp0
       fmulp   (.-124,pc,d5.w), fp0
       fmulp   (.,pc,d5.w), fp0
-      fmulp   (.+4,pc,d5.l), fp0
-      fmulp   (.-124,pc,d5.l), fp0
-      fmulp   (.,pc,d5.l), fp0
       fmulp   (.+4,pc,a0.w), fp0
       fmulp   (.-124,pc,a0.w), fp0
       fmulp   (.,pc,a0.w), fp0
-      fmulp   (.+4,pc,a0.l), fp0
-      fmulp   (.-124,pc,a0.l), fp0
-      fmulp   (.,pc,a0.l), fp0
       fsgldivp    (.+4,pc,d5.w), fp0
       fsgldivp    (.-124,pc,d5.w), fp0
       fsgldivp    (.,pc,d5.w), fp0
-      fsgldivp    (.+4,pc,d5.l), fp0
-      fsgldivp    (.-124,pc,d5.l), fp0
-      fsgldivp    (.,pc,d5.l), fp0
       fsgldivp    (.+4,pc,a0.w), fp0
       fsgldivp    (.-124,pc,a0.w), fp0
       fsgldivp    (.,pc,a0.w), fp0
-      fsgldivp    (.+4,pc,a0.l), fp0
-      fsgldivp    (.-124,pc,a0.l), fp0
-      fsgldivp    (.,pc,a0.l), fp0
       fremp   (.+4,pc,d5.w), fp0
       fremp   (.-124,pc,d5.w), fp0
       fremp   (.,pc,d5.w), fp0
-      fremp   (.+4,pc,d5.l), fp0
-      fremp   (.-124,pc,d5.l), fp0
-      fremp   (.,pc,d5.l), fp0
       fremp   (.+4,pc,a0.w), fp0
       fremp   (.-124,pc,a0.w), fp0
       fremp   (.,pc,a0.w), fp0
-      fremp   (.+4,pc,a0.l), fp0
-      fremp   (.-124,pc,a0.l), fp0
-      fremp   (.,pc,a0.l), fp0
       fscalep (.+4,pc,d5.w), fp0
       fscalep (.-124,pc,d5.w), fp0
       fscalep (.,pc,d5.w), fp0
-      fscalep (.+4,pc,d5.l), fp0
-      fscalep (.-124,pc,d5.l), fp0
-      fscalep (.,pc,d5.l), fp0
       fscalep (.+4,pc,a0.w), fp0
       fscalep (.-124,pc,a0.w), fp0
       fscalep (.,pc,a0.w), fp0
-      fscalep (.+4,pc,a0.l), fp0
-      fscalep (.-124,pc,a0.l), fp0
-      fscalep (.,pc,a0.l), fp0
       fsglmulp    (.+4,pc,d5.w), fp0
       fsglmulp    (.-124,pc,d5.w), fp0
       fsglmulp    (.,pc,d5.w), fp0
-      fsglmulp    (.+4,pc,d5.l), fp0
-      fsglmulp    (.-124,pc,d5.l), fp0
-      fsglmulp    (.,pc,d5.l), fp0
       fsglmulp    (.+4,pc,a0.w), fp0
       fsglmulp    (.-124,pc,a0.w), fp0
       fsglmulp    (.,pc,a0.w), fp0
-      fsglmulp    (.+4,pc,a0.l), fp0
-      fsglmulp    (.-124,pc,a0.l), fp0
-      fsglmulp    (.,pc,a0.l), fp0
       fsubp   (.+4,pc,d5.w), fp0
       fsubp   (.-124,pc,d5.w), fp0
       fsubp   (.,pc,d5.w), fp0
-      fsubp   (.+4,pc,d5.l), fp0
-      fsubp   (.-124,pc,d5.l), fp0
-      fsubp   (.,pc,d5.l), fp0
       fsubp   (.+4,pc,a0.w), fp0
       fsubp   (.-124,pc,a0.w), fp0
       fsubp   (.,pc,a0.w), fp0
-      fsubp   (.+4,pc,a0.l), fp0
-      fsubp   (.-124,pc,a0.l), fp0
-      fsubp   (.,pc,a0.l), fp0
       fsincosp    (.+4,pc,d5.w), fp0:fp0
       fsincosp    (.-124,pc,d5.w), fp0:fp0
       fsincosp    (.,pc,d5.w), fp0:fp0
-      fsincosp    (.+4,pc,d5.l), fp0:fp0
-      fsincosp    (.-124,pc,d5.l), fp0:fp0
-      fsincosp    (.,pc,d5.l), fp0:fp0
       fsincosp    (.+4,pc,a0.w), fp0:fp0
       fsincosp    (.-124,pc,a0.w), fp0:fp0
       fsincosp    (.,pc,a0.w), fp0:fp0
-      fsincosp    (.+4,pc,a0.l), fp0:fp0
-      fsincosp    (.-124,pc,a0.l), fp0:fp0
-      fsincosp    (.,pc,a0.l), fp0:fp0
       fcmpp   (.+4,pc,d5.w), fp0
       fcmpp   (.-124,pc,d5.w), fp0
       fcmpp   (.,pc,d5.w), fp0
-      fcmpp   (.+4,pc,d5.l), fp0
-      fcmpp   (.-124,pc,d5.l), fp0
-      fcmpp   (.,pc,d5.l), fp0
       fcmpp   (.+4,pc,a0.w), fp0
       fcmpp   (.-124,pc,a0.w), fp0
       fcmpp   (.,pc,a0.w), fp0
-      fcmpp   (.+4,pc,a0.l), fp0
-      fcmpp   (.-124,pc,a0.l), fp0
-      fcmpp   (.,pc,a0.l), fp0
       ftstp   (.+4,pc,d5.w)
       ftstp   (.-124,pc,d5.w)
       ftstp   (.,pc,d5.w)
-      ftstp   (.+4,pc,d5.l)
-      ftstp   (.-124,pc,d5.l)
-      ftstp   (.,pc,d5.l)
       ftstp   (.+4,pc,a0.w)
       ftstp   (.-124,pc,a0.w)
       ftstp   (.,pc,a0.w)
-      ftstp   (.+4,pc,a0.l)
-      ftstp   (.-124,pc,a0.l)
-      ftstp   (.,pc,a0.l)
       fmovew  (.+4,pc,d5.l), fp0
       fmovew  (.-124,pc,d5.l), fp0
       fmovew  (.,pc,d5.l), fp0
-      fmovew  (.+4,pc,d6.w), fp0
-      fmovew  (.-124,pc,d6.w), fp0
-      fmovew  (.,pc,d6.w), fp0
       fmovew  (.+4,pc,a0.w), fp0
       fmovew  (.-124,pc,a0.w), fp0
       fmovew  (.,pc,a0.w), fp0
-      fmovew  (.+4,pc,a0.l), fp0
-      fmovew  (.-124,pc,a0.l), fp0
-      fmovew  (.,pc,a0.l), fp0
       fintw   (.+4,pc,d5.l), fp0
       fintw   (.-124,pc,d5.l), fp0
       fintw   (.,pc,d5.l), fp0
-      fintw   (.+4,pc,d6.w), fp0
-      fintw   (.-124,pc,d6.w), fp0
-      fintw   (.,pc,d6.w), fp0
       fintw   (.+4,pc,a0.w), fp0
       fintw   (.-124,pc,a0.w), fp0
       fintw   (.,pc,a0.w), fp0
-      fintw   (.+4,pc,a0.l), fp0
-      fintw   (.-124,pc,a0.l), fp0
-      fintw   (.,pc,a0.l), fp0
       fsinhw  (.+4,pc,d5.l), fp0
       fsinhw  (.-124,pc,d5.l), fp0
       fsinhw  (.,pc,d5.l), fp0
-      fsinhw  (.+4,pc,d6.w), fp0
-      fsinhw  (.-124,pc,d6.w), fp0
-      fsinhw  (.,pc,d6.w), fp0
       fsinhw  (.+4,pc,a0.w), fp0
       fsinhw  (.-124,pc,a0.w), fp0
       fsinhw  (.,pc,a0.w), fp0
-      fsinhw  (.+4,pc,a0.l), fp0
-      fsinhw  (.-124,pc,a0.l), fp0
-      fsinhw  (.,pc,a0.l), fp0
       fintrzw (.+4,pc,d5.l), fp0
       fintrzw (.-124,pc,d5.l), fp0
       fintrzw (.,pc,d5.l), fp0
-      fintrzw (.+4,pc,d6.w), fp0
-      fintrzw (.-124,pc,d6.w), fp0
-      fintrzw (.,pc,d6.w), fp0
       fintrzw (.+4,pc,a0.w), fp0
       fintrzw (.-124,pc,a0.w), fp0
       fintrzw (.,pc,a0.w), fp0
-      fintrzw (.+4,pc,a0.l), fp0
-      fintrzw (.-124,pc,a0.l), fp0
-      fintrzw (.,pc,a0.l), fp0
       fsqrtw  (.+4,pc,d5.l), fp0
       fsqrtw  (.-124,pc,d5.l), fp0
       fsqrtw  (.,pc,d5.l), fp0
-      fsqrtw  (.+4,pc,d6.w), fp0
-      fsqrtw  (.-124,pc,d6.w), fp0
-      fsqrtw  (.,pc,d6.w), fp0
       fsqrtw  (.+4,pc,a0.w), fp0
       fsqrtw  (.-124,pc,a0.w), fp0
       fsqrtw  (.,pc,a0.w), fp0
-      fsqrtw  (.+4,pc,a0.l), fp0
-      fsqrtw  (.-124,pc,a0.l), fp0
-      fsqrtw  (.,pc,a0.l), fp0
       flognp1w    (.+4,pc,d5.l), fp0
       flognp1w    (.-124,pc,d5.l), fp0
       flognp1w    (.,pc,d5.l), fp0
-      flognp1w    (.+4,pc,d6.w), fp0
-      flognp1w    (.-124,pc,d6.w), fp0
-      flognp1w    (.,pc,d6.w), fp0
       flognp1w    (.+4,pc,a0.w), fp0
       flognp1w    (.-124,pc,a0.w), fp0
       flognp1w    (.,pc,a0.w), fp0
-      flognp1w    (.+4,pc,a0.l), fp0
-      flognp1w    (.-124,pc,a0.l), fp0
-      flognp1w    (.,pc,a0.l), fp0
       fetoxm1w    (.+4,pc,d5.l), fp0
       fetoxm1w    (.-124,pc,d5.l), fp0
       fetoxm1w    (.,pc,d5.l), fp0
-      fetoxm1w    (.+4,pc,d6.w), fp0
-      fetoxm1w    (.-124,pc,d6.w), fp0
-      fetoxm1w    (.,pc,d6.w), fp0
       fetoxm1w    (.+4,pc,a0.w), fp0
       fetoxm1w    (.-124,pc,a0.w), fp0
       fetoxm1w    (.,pc,a0.w), fp0
-      fetoxm1w    (.+4,pc,a0.l), fp0
-      fetoxm1w    (.-124,pc,a0.l), fp0
-      fetoxm1w    (.,pc,a0.l), fp0
       ftanhw  (.+4,pc,d5.l), fp0
       ftanhw  (.-124,pc,d5.l), fp0
       ftanhw  (.,pc,d5.l), fp0
-      ftanhw  (.+4,pc,d6.w), fp0
-      ftanhw  (.-124,pc,d6.w), fp0
-      ftanhw  (.,pc,d6.w), fp0
       ftanhw  (.+4,pc,a0.w), fp0
       ftanhw  (.-124,pc,a0.w), fp0
       ftanhw  (.,pc,a0.w), fp0
-      ftanhw  (.+4,pc,a0.l), fp0
-      ftanhw  (.-124,pc,a0.l), fp0
-      ftanhw  (.,pc,a0.l), fp0
       fatanw  (.+4,pc,d5.l), fp0
       fatanw  (.-124,pc,d5.l), fp0
       fatanw  (.,pc,d5.l), fp0
-      fatanw  (.+4,pc,d6.w), fp0
-      fatanw  (.-124,pc,d6.w), fp0
-      fatanw  (.,pc,d6.w), fp0
       fatanw  (.+4,pc,a0.w), fp0
       fatanw  (.-124,pc,a0.w), fp0
       fatanw  (.,pc,a0.w), fp0
-      fatanw  (.+4,pc,a0.l), fp0
-      fatanw  (.-124,pc,a0.l), fp0
-      fatanw  (.,pc,a0.l), fp0
       fasinw  (.+4,pc,d5.l), fp0
       fasinw  (.-124,pc,d5.l), fp0
       fasinw  (.,pc,d5.l), fp0
-      fasinw  (.+4,pc,d6.w), fp0
-      fasinw  (.-124,pc,d6.w), fp0
-      fasinw  (.,pc,d6.w), fp0
       fasinw  (.+4,pc,a0.w), fp0
       fasinw  (.-124,pc,a0.w), fp0
       fasinw  (.,pc,a0.w), fp0
-      fasinw  (.+4,pc,a0.l), fp0
-      fasinw  (.-124,pc,a0.l), fp0
-      fasinw  (.,pc,a0.l), fp0
       fatanhw (.+4,pc,d5.l), fp0
       fatanhw (.-124,pc,d5.l), fp0
       fatanhw (.,pc,d5.l), fp0
-      fatanhw (.+4,pc,d6.w), fp0
-      fatanhw (.-124,pc,d6.w), fp0
-      fatanhw (.,pc,d6.w), fp0
       fatanhw (.+4,pc,a0.w), fp0
       fatanhw (.-124,pc,a0.w), fp0
       fatanhw (.,pc,a0.w), fp0
-      fatanhw (.+4,pc,a0.l), fp0
-      fatanhw (.-124,pc,a0.l), fp0
-      fatanhw (.,pc,a0.l), fp0
       fsinw   (.+4,pc,d5.l), fp0
       fsinw   (.-124,pc,d5.l), fp0
       fsinw   (.,pc,d5.l), fp0
-      fsinw   (.+4,pc,d6.w), fp0
-      fsinw   (.-124,pc,d6.w), fp0
-      fsinw   (.,pc,d6.w), fp0
       fsinw   (.+4,pc,a0.w), fp0
       fsinw   (.-124,pc,a0.w), fp0
       fsinw   (.,pc,a0.w), fp0
-      fsinw   (.+4,pc,a0.l), fp0
-      fsinw   (.-124,pc,a0.l), fp0
-      fsinw   (.,pc,a0.l), fp0
       ftanw   (.+4,pc,d5.l), fp0
       ftanw   (.-124,pc,d5.l), fp0
       ftanw   (.,pc,d5.l), fp0
-      ftanw   (.+4,pc,d6.w), fp0
-      ftanw   (.-124,pc,d6.w), fp0
-      ftanw   (.,pc,d6.w), fp0
       ftanw   (.+4,pc,a0.w), fp0
       ftanw   (.-124,pc,a0.w), fp0
       ftanw   (.,pc,a0.w), fp0
-      ftanw   (.+4,pc,a0.l), fp0
-      ftanw   (.-124,pc,a0.l), fp0
-      ftanw   (.,pc,a0.l), fp0
       fetoxw  (.+4,pc,d5.l), fp0
       fetoxw  (.-124,pc,d5.l), fp0
       fetoxw  (.,pc,d5.l), fp0
-      fetoxw  (.+4,pc,d6.w), fp0
-      fetoxw  (.-124,pc,d6.w), fp0
-      fetoxw  (.,pc,d6.w), fp0
       fetoxw  (.+4,pc,a0.w), fp0
       fetoxw  (.-124,pc,a0.w), fp0
       fetoxw  (.,pc,a0.w), fp0
-      fetoxw  (.+4,pc,a0.l), fp0
-      fetoxw  (.-124,pc,a0.l), fp0
-      fetoxw  (.,pc,a0.l), fp0
       ftwotoxw    (.+4,pc,d5.l), fp0
       ftwotoxw    (.-124,pc,d5.l), fp0
       ftwotoxw    (.,pc,d5.l), fp0
-      ftwotoxw    (.+4,pc,d6.w), fp0
-      ftwotoxw    (.-124,pc,d6.w), fp0
-      ftwotoxw    (.,pc,d6.w), fp0
       ftwotoxw    (.+4,pc,a0.w), fp0
       ftwotoxw    (.-124,pc,a0.w), fp0
       ftwotoxw    (.,pc,a0.w), fp0
-      ftwotoxw    (.+4,pc,a0.l), fp0
-      ftwotoxw    (.-124,pc,a0.l), fp0
-      ftwotoxw    (.,pc,a0.l), fp0
       ftentoxw    (.+4,pc,d5.l), fp0
       ftentoxw    (.-124,pc,d5.l), fp0
       ftentoxw    (.,pc,d5.l), fp0
-      ftentoxw    (.+4,pc,d6.w), fp0
-      ftentoxw    (.-124,pc,d6.w), fp0
-      ftentoxw    (.,pc,d6.w), fp0
       ftentoxw    (.+4,pc,a0.w), fp0
       ftentoxw    (.-124,pc,a0.w), fp0
       ftentoxw    (.,pc,a0.w), fp0
-      ftentoxw    (.+4,pc,a0.l), fp0
-      ftentoxw    (.-124,pc,a0.l), fp0
-      ftentoxw    (.,pc,a0.l), fp0
       flognw  (.+4,pc,d5.l), fp0
       flognw  (.-124,pc,d5.l), fp0
       flognw  (.,pc,d5.l), fp0
-      flognw  (.+4,pc,d6.w), fp0
-      flognw  (.-124,pc,d6.w), fp0
-      flognw  (.,pc,d6.w), fp0
       flognw  (.+4,pc,a0.w), fp0
       flognw  (.-124,pc,a0.w), fp0
       flognw  (.,pc,a0.w), fp0
-      flognw  (.+4,pc,a0.l), fp0
-      flognw  (.-124,pc,a0.l), fp0
-      flognw  (.,pc,a0.l), fp0
       flog10w (.+4,pc,d5.l), fp0
       flog10w (.-124,pc,d5.l), fp0
       flog10w (.,pc,d5.l), fp0
-      flog10w (.+4,pc,d6.w), fp0
-      flog10w (.-124,pc,d6.w), fp0
-      flog10w (.,pc,d6.w), fp0
       flog10w (.+4,pc,a0.w), fp0
       flog10w (.-124,pc,a0.w), fp0
       flog10w (.,pc,a0.w), fp0
-      flog10w (.+4,pc,a0.l), fp0
-      flog10w (.-124,pc,a0.l), fp0
-      flog10w (.,pc,a0.l), fp0
       flog2w  (.+4,pc,d5.l), fp0
       flog2w  (.-124,pc,d5.l), fp0
       flog2w  (.,pc,d5.l), fp0
-      flog2w  (.+4,pc,d6.w), fp0
-      flog2w  (.-124,pc,d6.w), fp0
-      flog2w  (.,pc,d6.w), fp0
       flog2w  (.+4,pc,a0.w), fp0
       flog2w  (.-124,pc,a0.w), fp0
       flog2w  (.,pc,a0.w), fp0
-      flog2w  (.+4,pc,a0.l), fp0
-      flog2w  (.-124,pc,a0.l), fp0
-      flog2w  (.,pc,a0.l), fp0
       fabsw   (.+4,pc,d5.l), fp0
       fabsw   (.-124,pc,d5.l), fp0
       fabsw   (.,pc,d5.l), fp0
-      fabsw   (.+4,pc,d6.w), fp0
-      fabsw   (.-124,pc,d6.w), fp0
-      fabsw   (.,pc,d6.w), fp0
       fabsw   (.+4,pc,a0.w), fp0
       fabsw   (.-124,pc,a0.w), fp0
       fabsw   (.,pc,a0.w), fp0
-      fabsw   (.+4,pc,a0.l), fp0
-      fabsw   (.-124,pc,a0.l), fp0
-      fabsw   (.,pc,a0.l), fp0
       fcoshw  (.+4,pc,d5.l), fp0
       fcoshw  (.-124,pc,d5.l), fp0
       fcoshw  (.,pc,d5.l), fp0
-      fcoshw  (.+4,pc,d6.w), fp0
-      fcoshw  (.-124,pc,d6.w), fp0
-      fcoshw  (.,pc,d6.w), fp0
       fcoshw  (.+4,pc,a0.w), fp0
       fcoshw  (.-124,pc,a0.w), fp0
       fcoshw  (.,pc,a0.w), fp0
-      fcoshw  (.+4,pc,a0.l), fp0
-      fcoshw  (.-124,pc,a0.l), fp0
-      fcoshw  (.,pc,a0.l), fp0
       fnegw   (.+4,pc,d5.l), fp0
       fnegw   (.-124,pc,d5.l), fp0
       fnegw   (.,pc,d5.l), fp0
-      fnegw   (.+4,pc,d6.w), fp0
-      fnegw   (.-124,pc,d6.w), fp0
-      fnegw   (.,pc,d6.w), fp0
       fnegw   (.+4,pc,a0.w), fp0
       fnegw   (.-124,pc,a0.w), fp0
       fnegw   (.,pc,a0.w), fp0
-      fnegw   (.+4,pc,a0.l), fp0
-      fnegw   (.-124,pc,a0.l), fp0
-      fnegw   (.,pc,a0.l), fp0
       facosw  (.+4,pc,d5.l), fp0
       facosw  (.-124,pc,d5.l), fp0
       facosw  (.,pc,d5.l), fp0
-      facosw  (.+4,pc,d6.w), fp0
-      facosw  (.-124,pc,d6.w), fp0
-      facosw  (.,pc,d6.w), fp0
       facosw  (.+4,pc,a0.w), fp0
       facosw  (.-124,pc,a0.w), fp0
       facosw  (.,pc,a0.w), fp0
-      facosw  (.+4,pc,a0.l), fp0
-      facosw  (.-124,pc,a0.l), fp0
-      facosw  (.,pc,a0.l), fp0
       fcosw   (.+4,pc,d5.l), fp0
       fcosw   (.-124,pc,d5.l), fp0
       fcosw   (.,pc,d5.l), fp0
-      fcosw   (.+4,pc,d6.w), fp0
-      fcosw   (.-124,pc,d6.w), fp0
-      fcosw   (.,pc,d6.w), fp0
       fcosw   (.+4,pc,a0.w), fp0
       fcosw   (.-124,pc,a0.w), fp0
       fcosw   (.,pc,a0.w), fp0
-      fcosw   (.+4,pc,a0.l), fp0
-      fcosw   (.-124,pc,a0.l), fp0
-      fcosw   (.,pc,a0.l), fp0
       fgetexpw    (.+4,pc,d5.l), fp0
       fgetexpw    (.-124,pc,d5.l), fp0
       fgetexpw    (.,pc,d5.l), fp0
-      fgetexpw    (.+4,pc,d6.w), fp0
-      fgetexpw    (.-124,pc,d6.w), fp0
-      fgetexpw    (.,pc,d6.w), fp0
       fgetexpw    (.+4,pc,a0.w), fp0
       fgetexpw    (.-124,pc,a0.w), fp0
       fgetexpw    (.,pc,a0.w), fp0
-      fgetexpw    (.+4,pc,a0.l), fp0
-      fgetexpw    (.-124,pc,a0.l), fp0
-      fgetexpw    (.,pc,a0.l), fp0
       fgetmanw    (.+4,pc,d5.l), fp0
       fgetmanw    (.-124,pc,d5.l), fp0
       fgetmanw    (.,pc,d5.l), fp0
-      fgetmanw    (.+4,pc,d6.w), fp0
-      fgetmanw    (.-124,pc,d6.w), fp0
-      fgetmanw    (.,pc,d6.w), fp0
       fgetmanw    (.+4,pc,a0.w), fp0
       fgetmanw    (.-124,pc,a0.w), fp0
       fgetmanw    (.,pc,a0.w), fp0
-      fgetmanw    (.+4,pc,a0.l), fp0
-      fgetmanw    (.-124,pc,a0.l), fp0
-      fgetmanw    (.,pc,a0.l), fp0
       fdivw   (.+4,pc,d5.l), fp0
       fdivw   (.-124,pc,d5.l), fp0
       fdivw   (.,pc,d5.l), fp0
-      fdivw   (.+4,pc,d6.w), fp0
-      fdivw   (.-124,pc,d6.w), fp0
-      fdivw   (.,pc,d6.w), fp0
       fdivw   (.+4,pc,a0.w), fp0
       fdivw   (.-124,pc,a0.w), fp0
       fdivw   (.,pc,a0.w), fp0
-      fdivw   (.+4,pc,a0.l), fp0
-      fdivw   (.-124,pc,a0.l), fp0
-      fdivw   (.,pc,a0.l), fp0
       fmodw   (.+4,pc,d5.l), fp0
       fmodw   (.-124,pc,d5.l), fp0
       fmodw   (.,pc,d5.l), fp0
-      fmodw   (.+4,pc,d6.w), fp0
-      fmodw   (.-124,pc,d6.w), fp0
-      fmodw   (.,pc,d6.w), fp0
       fmodw   (.+4,pc,a0.w), fp0
       fmodw   (.-124,pc,a0.w), fp0
       fmodw   (.,pc,a0.w), fp0
-      fmodw   (.+4,pc,a0.l), fp0
-      fmodw   (.-124,pc,a0.l), fp0
-      fmodw   (.,pc,a0.l), fp0
       faddw   (.+4,pc,d5.l), fp0
       faddw   (.-124,pc,d5.l), fp0
       faddw   (.,pc,d5.l), fp0
-      faddw   (.+4,pc,d6.w), fp0
-      faddw   (.-124,pc,d6.w), fp0
-      faddw   (.,pc,d6.w), fp0
       faddw   (.+4,pc,a0.w), fp0
       faddw   (.-124,pc,a0.w), fp0
       faddw   (.,pc,a0.w), fp0
-      faddw   (.+4,pc,a0.l), fp0
-      faddw   (.-124,pc,a0.l), fp0
-      faddw   (.,pc,a0.l), fp0
       fmulw   (.+4,pc,d5.l), fp0
       fmulw   (.-124,pc,d5.l), fp0
       fmulw   (.,pc,d5.l), fp0
-      fmulw   (.+4,pc,d6.w), fp0
-      fmulw   (.-124,pc,d6.w), fp0
-      fmulw   (.,pc,d6.w), fp0
       fmulw   (.+4,pc,a0.w), fp0
       fmulw   (.-124,pc,a0.w), fp0
       fmulw   (.,pc,a0.w), fp0
-      fmulw   (.+4,pc,a0.l), fp0
-      fmulw   (.-124,pc,a0.l), fp0
-      fmulw   (.,pc,a0.l), fp0
       fsgldivw    (.+4,pc,d5.l), fp0
       fsgldivw    (.-124,pc,d5.l), fp0
       fsgldivw    (.,pc,d5.l), fp0
-      fsgldivw    (.+4,pc,d6.w), fp0
-      fsgldivw    (.-124,pc,d6.w), fp0
-      fsgldivw    (.,pc,d6.w), fp0
       fsgldivw    (.+4,pc,a0.w), fp0
       fsgldivw    (.-124,pc,a0.w), fp0
       fsgldivw    (.,pc,a0.w), fp0
-      fsgldivw    (.+4,pc,a0.l), fp0
-      fsgldivw    (.-124,pc,a0.l), fp0
-      fsgldivw    (.,pc,a0.l), fp0
       fremw   (.+4,pc,d5.l), fp0
       fremw   (.-124,pc,d5.l), fp0
       fremw   (.,pc,d5.l), fp0
-      fremw   (.+4,pc,d6.w), fp0
-      fremw   (.-124,pc,d6.w), fp0
-      fremw   (.,pc,d6.w), fp0
       fremw   (.+4,pc,a0.w), fp0
       fremw   (.-124,pc,a0.w), fp0
       fremw   (.,pc,a0.w), fp0
-      fremw   (.+4,pc,a0.l), fp0
-      fremw   (.-124,pc,a0.l), fp0
-      fremw   (.,pc,a0.l), fp0
       fscalew (.+4,pc,d5.l), fp0
       fscalew (.-124,pc,d5.l), fp0
       fscalew (.,pc,d5.l), fp0
-      fscalew (.+4,pc,d6.w), fp0
-      fscalew (.-124,pc,d6.w), fp0
-      fscalew (.,pc,d6.w), fp0
       fscalew (.+4,pc,a0.w), fp0
       fscalew (.-124,pc,a0.w), fp0
       fscalew (.,pc,a0.w), fp0
-      fscalew (.+4,pc,a0.l), fp0
-      fscalew (.-124,pc,a0.l), fp0
-      fscalew (.,pc,a0.l), fp0
       fsglmulw    (.+4,pc,d5.l), fp0
       fsglmulw    (.-124,pc,d5.l), fp0
       fsglmulw    (.,pc,d5.l), fp0
-      fsglmulw    (.+4,pc,d6.w), fp0
-      fsglmulw    (.-124,pc,d6.w), fp0
-      fsglmulw    (.,pc,d6.w), fp0
       fsglmulw    (.+4,pc,a0.w), fp0
       fsglmulw    (.-124,pc,a0.w), fp0
       fsglmulw    (.,pc,a0.w), fp0
-      fsglmulw    (.+4,pc,a0.l), fp0
-      fsglmulw    (.-124,pc,a0.l), fp0
-      fsglmulw    (.,pc,a0.l), fp0
       fsubw   (.+4,pc,d5.l), fp0
       fsubw   (.-124,pc,d5.l), fp0
       fsubw   (.,pc,d5.l), fp0
-      fsubw   (.+4,pc,d6.w), fp0
-      fsubw   (.-124,pc,d6.w), fp0
-      fsubw   (.,pc,d6.w), fp0
       fsubw   (.+4,pc,a0.w), fp0
       fsubw   (.-124,pc,a0.w), fp0
       fsubw   (.,pc,a0.w), fp0
-      fsubw   (.+4,pc,a0.l), fp0
-      fsubw   (.-124,pc,a0.l), fp0
-      fsubw   (.,pc,a0.l), fp0
       fsincosw    (.+4,pc,d5.l), fp0:fp0
       fsincosw    (.-124,pc,d5.l), fp0:fp0
       fsincosw    (.,pc,d5.l), fp0:fp0
-      fsincosw    (.+4,pc,d6.w), fp0:fp0
-      fsincosw    (.-124,pc,d6.w), fp0:fp0
-      fsincosw    (.,pc,d6.w), fp0:fp0
       fsincosw    (.+4,pc,a0.w), fp0:fp0
       fsincosw    (.-124,pc,a0.w), fp0:fp0
       fsincosw    (.,pc,a0.w), fp0:fp0
-      fsincosw    (.+4,pc,a0.l), fp0:fp0
-      fsincosw    (.-124,pc,a0.l), fp0:fp0
-      fsincosw    (.,pc,a0.l), fp0:fp0
       fcmpw   (.+4,pc,d5.l), fp0
       fcmpw   (.-124,pc,d5.l), fp0
       fcmpw   (.,pc,d5.l), fp0
-      fcmpw   (.+4,pc,d6.w), fp0
-      fcmpw   (.-124,pc,d6.w), fp0
-      fcmpw   (.,pc,d6.w), fp0
       fcmpw   (.+4,pc,a0.w), fp0
       fcmpw   (.-124,pc,a0.w), fp0
       fcmpw   (.,pc,a0.w), fp0
-      fcmpw   (.+4,pc,a0.l), fp0
-      fcmpw   (.-124,pc,a0.l), fp0
-      fcmpw   (.,pc,a0.l), fp0
       ftstw   (.+4,pc,d5.l)
       ftstw   (.-124,pc,d5.l)
       ftstw   (.,pc,d5.l)
-      ftstw   (.+4,pc,d6.w)
-      ftstw   (.-124,pc,d6.w)
-      ftstw   (.,pc,d6.w)
       ftstw   (.+4,pc,a0.w)
       ftstw   (.-124,pc,a0.w)
       ftstw   (.,pc,a0.w)
-      ftstw   (.+4,pc,a0.l)
-      ftstw   (.-124,pc,a0.l)
-      ftstw   (.,pc,a0.l)
       fmoved  (.+4,pc,d5.l), fp0
       fmoved  (.-124,pc,d5.l), fp0
       fmoved  (.,pc,d5.l), fp0
-      fmoved  (.+4,pc,d6.w), fp0
-      fmoved  (.-124,pc,d6.w), fp0
-      fmoved  (.,pc,d6.w), fp0
       fmoved  (.+4,pc,a0.w), fp0
       fmoved  (.-124,pc,a0.w), fp0
       fmoved  (.,pc,a0.w), fp0
-      fmoved  (.+4,pc,a0.l), fp0
-      fmoved  (.-124,pc,a0.l), fp0
-      fmoved  (.,pc,a0.l), fp0
       fintd   (.+4,pc,d5.l), fp0
       fintd   (.-124,pc,d5.l), fp0
       fintd   (.,pc,d5.l), fp0
-      fintd   (.+4,pc,d6.w), fp0
-      fintd   (.-124,pc,d6.w), fp0
-      fintd   (.,pc,d6.w), fp0
       fintd   (.+4,pc,a0.w), fp0
       fintd   (.-124,pc,a0.w), fp0
       fintd   (.,pc,a0.w), fp0
-      fintd   (.+4,pc,a0.l), fp0
-      fintd   (.-124,pc,a0.l), fp0
-      fintd   (.,pc,a0.l), fp0
       fsinhd  (.+4,pc,d5.l), fp0
       fsinhd  (.-124,pc,d5.l), fp0
       fsinhd  (.,pc,d5.l), fp0
-      fsinhd  (.+4,pc,d6.w), fp0
-      fsinhd  (.-124,pc,d6.w), fp0
-      fsinhd  (.,pc,d6.w), fp0
       fsinhd  (.+4,pc,a0.w), fp0
       fsinhd  (.-124,pc,a0.w), fp0
       fsinhd  (.,pc,a0.w), fp0
-      fsinhd  (.+4,pc,a0.l), fp0
-      fsinhd  (.-124,pc,a0.l), fp0
-      fsinhd  (.,pc,a0.l), fp0
       fintrzd (.+4,pc,d5.l), fp0
       fintrzd (.-124,pc,d5.l), fp0
       fintrzd (.,pc,d5.l), fp0
-      fintrzd (.+4,pc,d6.w), fp0
-      fintrzd (.-124,pc,d6.w), fp0
-      fintrzd (.,pc,d6.w), fp0
       fintrzd (.+4,pc,a0.w), fp0
       fintrzd (.-124,pc,a0.w), fp0
       fintrzd (.,pc,a0.w), fp0
-      fintrzd (.+4,pc,a0.l), fp0
-      fintrzd (.-124,pc,a0.l), fp0
-      fintrzd (.,pc,a0.l), fp0
       fsqrtd  (.+4,pc,d5.l), fp0
       fsqrtd  (.-124,pc,d5.l), fp0
       fsqrtd  (.,pc,d5.l), fp0
-      fsqrtd  (.+4,pc,d6.w), fp0
-      fsqrtd  (.-124,pc,d6.w), fp0
-      fsqrtd  (.,pc,d6.w), fp0
       fsqrtd  (.+4,pc,a0.w), fp0
       fsqrtd  (.-124,pc,a0.w), fp0
       fsqrtd  (.,pc,a0.w), fp0
-      fsqrtd  (.+4,pc,a0.l), fp0
-      fsqrtd  (.-124,pc,a0.l), fp0
-      fsqrtd  (.,pc,a0.l), fp0
       flognp1d    (.+4,pc,d5.l), fp0
       flognp1d    (.-124,pc,d5.l), fp0
       flognp1d    (.,pc,d5.l), fp0
-      flognp1d    (.+4,pc,d6.w), fp0
-      flognp1d    (.-124,pc,d6.w), fp0
-      flognp1d    (.,pc,d6.w), fp0
       flognp1d    (.+4,pc,a0.w), fp0
       flognp1d    (.-124,pc,a0.w), fp0
       flognp1d    (.,pc,a0.w), fp0
-      flognp1d    (.+4,pc,a0.l), fp0
-      flognp1d    (.-124,pc,a0.l), fp0
-      flognp1d    (.,pc,a0.l), fp0
       fetoxm1d    (.+4,pc,d5.l), fp0
       fetoxm1d    (.-124,pc,d5.l), fp0
       fetoxm1d    (.,pc,d5.l), fp0
-      fetoxm1d    (.+4,pc,d6.w), fp0
-      fetoxm1d    (.-124,pc,d6.w), fp0
-      fetoxm1d    (.,pc,d6.w), fp0
       fetoxm1d    (.+4,pc,a0.w), fp0
       fetoxm1d    (.-124,pc,a0.w), fp0
       fetoxm1d    (.,pc,a0.w), fp0
-      fetoxm1d    (.+4,pc,a0.l), fp0
-      fetoxm1d    (.-124,pc,a0.l), fp0
-      fetoxm1d    (.,pc,a0.l), fp0
       ftanhd  (.+4,pc,d5.l), fp0
       ftanhd  (.-124,pc,d5.l), fp0
       ftanhd  (.,pc,d5.l), fp0
-      ftanhd  (.+4,pc,d6.w), fp0
-      ftanhd  (.-124,pc,d6.w), fp0
-      ftanhd  (.,pc,d6.w), fp0
       ftanhd  (.+4,pc,a0.w), fp0
       ftanhd  (.-124,pc,a0.w), fp0
       ftanhd  (.,pc,a0.w), fp0
-      ftanhd  (.+4,pc,a0.l), fp0
-      ftanhd  (.-124,pc,a0.l), fp0
-      ftanhd  (.,pc,a0.l), fp0
       fatand  (.+4,pc,d5.l), fp0
       fatand  (.-124,pc,d5.l), fp0
       fatand  (.,pc,d5.l), fp0
-      fatand  (.+4,pc,d6.w), fp0
-      fatand  (.-124,pc,d6.w), fp0
-      fatand  (.,pc,d6.w), fp0
       fatand  (.+4,pc,a0.w), fp0
       fatand  (.-124,pc,a0.w), fp0
       fatand  (.,pc,a0.w), fp0
-      fatand  (.+4,pc,a0.l), fp0
-      fatand  (.-124,pc,a0.l), fp0
-      fatand  (.,pc,a0.l), fp0
       fasind  (.+4,pc,d5.l), fp0
       fasind  (.-124,pc,d5.l), fp0
       fasind  (.,pc,d5.l), fp0
-      fasind  (.+4,pc,d6.w), fp0
-      fasind  (.-124,pc,d6.w), fp0
-      fasind  (.,pc,d6.w), fp0
       fasind  (.+4,pc,a0.w), fp0
       fasind  (.-124,pc,a0.w), fp0
       fasind  (.,pc,a0.w), fp0
-      fasind  (.+4,pc,a0.l), fp0
-      fasind  (.-124,pc,a0.l), fp0
-      fasind  (.,pc,a0.l), fp0
       fatanhd (.+4,pc,d5.l), fp0
       fatanhd (.-124,pc,d5.l), fp0
       fatanhd (.,pc,d5.l), fp0
-      fatanhd (.+4,pc,d6.w), fp0
-      fatanhd (.-124,pc,d6.w), fp0
-      fatanhd (.,pc,d6.w), fp0
       fatanhd (.+4,pc,a0.w), fp0
       fatanhd (.-124,pc,a0.w), fp0
       fatanhd (.,pc,a0.w), fp0
-      fatanhd (.+4,pc,a0.l), fp0
-      fatanhd (.-124,pc,a0.l), fp0
-      fatanhd (.,pc,a0.l), fp0
       fsind   (.+4,pc,d5.l), fp0
       fsind   (.-124,pc,d5.l), fp0
       fsind   (.,pc,d5.l), fp0
-      fsind   (.+4,pc,d6.w), fp0
-      fsind   (.-124,pc,d6.w), fp0
-      fsind   (.,pc,d6.w), fp0
       fsind   (.+4,pc,a0.w), fp0
       fsind   (.-124,pc,a0.w), fp0
       fsind   (.,pc,a0.w), fp0
-      fsind   (.+4,pc,a0.l), fp0
-      fsind   (.-124,pc,a0.l), fp0
-      fsind   (.,pc,a0.l), fp0
       ftand   (.+4,pc,d5.l), fp0
       ftand   (.-124,pc,d5.l), fp0
       ftand   (.,pc,d5.l), fp0
-      ftand   (.+4,pc,d6.w), fp0
-      ftand   (.-124,pc,d6.w), fp0
-      ftand   (.,pc,d6.w), fp0
       ftand   (.+4,pc,a0.w), fp0
       ftand   (.-124,pc,a0.w), fp0
       ftand   (.,pc,a0.w), fp0
-      ftand   (.+4,pc,a0.l), fp0
-      ftand   (.-124,pc,a0.l), fp0
-      ftand   (.,pc,a0.l), fp0
       fetoxd  (.+4,pc,d5.l), fp0
       fetoxd  (.-124,pc,d5.l), fp0
       fetoxd  (.,pc,d5.l), fp0
-      fetoxd  (.+4,pc,d6.w), fp0
-      fetoxd  (.-124,pc,d6.w), fp0
-      fetoxd  (.,pc,d6.w), fp0
       fetoxd  (.+4,pc,a0.w), fp0
       fetoxd  (.-124,pc,a0.w), fp0
       fetoxd  (.,pc,a0.w), fp0
-      fetoxd  (.+4,pc,a0.l), fp0
-      fetoxd  (.-124,pc,a0.l), fp0
-      fetoxd  (.,pc,a0.l), fp0
       ftwotoxd    (.+4,pc,d5.l), fp0
       ftwotoxd    (.-124,pc,d5.l), fp0
       ftwotoxd    (.,pc,d5.l), fp0
-      ftwotoxd    (.+4,pc,d6.w), fp0
-      ftwotoxd    (.-124,pc,d6.w), fp0
-      ftwotoxd    (.,pc,d6.w), fp0
       ftwotoxd    (.+4,pc,a0.w), fp0
       ftwotoxd    (.-124,pc,a0.w), fp0
       ftwotoxd    (.,pc,a0.w), fp0
-      ftwotoxd    (.+4,pc,a0.l), fp0
-      ftwotoxd    (.-124,pc,a0.l), fp0
-      ftwotoxd    (.,pc,a0.l), fp0
       ftentoxd    (.+4,pc,d5.l), fp0
       ftentoxd    (.-124,pc,d5.l), fp0
       ftentoxd    (.,pc,d5.l), fp0
-      ftentoxd    (.+4,pc,d6.w), fp0
-      ftentoxd    (.-124,pc,d6.w), fp0
-      ftentoxd    (.,pc,d6.w), fp0
       ftentoxd    (.+4,pc,a0.w), fp0
       ftentoxd    (.-124,pc,a0.w), fp0
       ftentoxd    (.,pc,a0.w), fp0
-      ftentoxd    (.+4,pc,a0.l), fp0
-      ftentoxd    (.-124,pc,a0.l), fp0
-      ftentoxd    (.,pc,a0.l), fp0
       flognd  (.+4,pc,d5.l), fp0
       flognd  (.-124,pc,d5.l), fp0
       flognd  (.,pc,d5.l), fp0
-      flognd  (.+4,pc,d6.w), fp0
-      flognd  (.-124,pc,d6.w), fp0
-      flognd  (.,pc,d6.w), fp0
       flognd  (.+4,pc,a0.w), fp0
       flognd  (.-124,pc,a0.w), fp0
       flognd  (.,pc,a0.w), fp0
-      flognd  (.+4,pc,a0.l), fp0
-      flognd  (.-124,pc,a0.l), fp0
-      flognd  (.,pc,a0.l), fp0
       flog10d (.+4,pc,d5.l), fp0
       flog10d (.-124,pc,d5.l), fp0
       flog10d (.,pc,d5.l), fp0
-      flog10d (.+4,pc,d6.w), fp0
-      flog10d (.-124,pc,d6.w), fp0
-      flog10d (.,pc,d6.w), fp0
       flog10d (.+4,pc,a0.w), fp0
       flog10d (.-124,pc,a0.w), fp0
       flog10d (.,pc,a0.w), fp0
-      flog10d (.+4,pc,a0.l), fp0
-      flog10d (.-124,pc,a0.l), fp0
-      flog10d (.,pc,a0.l), fp0
       flog2d  (.+4,pc,d5.l), fp0
       flog2d  (.-124,pc,d5.l), fp0
       flog2d  (.,pc,d5.l), fp0
-      flog2d  (.+4,pc,d6.w), fp0
-      flog2d  (.-124,pc,d6.w), fp0
-      flog2d  (.,pc,d6.w), fp0
       flog2d  (.+4,pc,a0.w), fp0
       flog2d  (.-124,pc,a0.w), fp0
       flog2d  (.,pc,a0.w), fp0
-      flog2d  (.+4,pc,a0.l), fp0
-      flog2d  (.-124,pc,a0.l), fp0
-      flog2d  (.,pc,a0.l), fp0
       fabsd   (.+4,pc,d5.l), fp0
       fabsd   (.-124,pc,d5.l), fp0
       fabsd   (.,pc,d5.l), fp0
-      fabsd   (.+4,pc,d6.w), fp0
-      fabsd   (.-124,pc,d6.w), fp0
-      fabsd   (.,pc,d6.w), fp0
       fabsd   (.+4,pc,a0.w), fp0
       fabsd   (.-124,pc,a0.w), fp0
       fabsd   (.,pc,a0.w), fp0
-      fabsd   (.+4,pc,a0.l), fp0
-      fabsd   (.-124,pc,a0.l), fp0
-      fabsd   (.,pc,a0.l), fp0
       fcoshd  (.+4,pc,d5.l), fp0
       fcoshd  (.-124,pc,d5.l), fp0
       fcoshd  (.,pc,d5.l), fp0
-      fcoshd  (.+4,pc,d6.w), fp0
-      fcoshd  (.-124,pc,d6.w), fp0
-      fcoshd  (.,pc,d6.w), fp0
       fcoshd  (.+4,pc,a0.w), fp0
       fcoshd  (.-124,pc,a0.w), fp0
       fcoshd  (.,pc,a0.w), fp0
-      fcoshd  (.+4,pc,a0.l), fp0
-      fcoshd  (.-124,pc,a0.l), fp0
-      fcoshd  (.,pc,a0.l), fp0
       fnegd   (.+4,pc,d5.l), fp0
       fnegd   (.-124,pc,d5.l), fp0
       fnegd   (.,pc,d5.l), fp0
-      fnegd   (.+4,pc,d6.w), fp0
-      fnegd   (.-124,pc,d6.w), fp0
-      fnegd   (.,pc,d6.w), fp0
       fnegd   (.+4,pc,a0.w), fp0
       fnegd   (.-124,pc,a0.w), fp0
       fnegd   (.,pc,a0.w), fp0
-      fnegd   (.+4,pc,a0.l), fp0
-      fnegd   (.-124,pc,a0.l), fp0
-      fnegd   (.,pc,a0.l), fp0
       facosd  (.+4,pc,d5.l), fp0
       facosd  (.-124,pc,d5.l), fp0
       facosd  (.,pc,d5.l), fp0
-      facosd  (.+4,pc,d6.w), fp0
-      facosd  (.-124,pc,d6.w), fp0
-      facosd  (.,pc,d6.w), fp0
       facosd  (.+4,pc,a0.w), fp0
       facosd  (.-124,pc,a0.w), fp0
       facosd  (.,pc,a0.w), fp0
-      facosd  (.+4,pc,a0.l), fp0
-      facosd  (.-124,pc,a0.l), fp0
-      facosd  (.,pc,a0.l), fp0
       fcosd   (.+4,pc,d5.l), fp0
       fcosd   (.-124,pc,d5.l), fp0
       fcosd   (.,pc,d5.l), fp0
-      fcosd   (.+4,pc,d6.w), fp0
-      fcosd   (.-124,pc,d6.w), fp0
-      fcosd   (.,pc,d6.w), fp0
       fcosd   (.+4,pc,a0.w), fp0
       fcosd   (.-124,pc,a0.w), fp0
       fcosd   (.,pc,a0.w), fp0
-      fcosd   (.+4,pc,a0.l), fp0
-      fcosd   (.-124,pc,a0.l), fp0
-      fcosd   (.,pc,a0.l), fp0
       fgetexpd    (.+4,pc,d5.l), fp0
       fgetexpd    (.-124,pc,d5.l), fp0
       fgetexpd    (.,pc,d5.l), fp0
-      fgetexpd    (.+4,pc,d6.w), fp0
-      fgetexpd    (.-124,pc,d6.w), fp0
-      fgetexpd    (.,pc,d6.w), fp0
       fgetexpd    (.+4,pc,a0.w), fp0
       fgetexpd    (.-124,pc,a0.w), fp0
       fgetexpd    (.,pc,a0.w), fp0
-      fgetexpd    (.+4,pc,a0.l), fp0
-      fgetexpd    (.-124,pc,a0.l), fp0
-      fgetexpd    (.,pc,a0.l), fp0
       fgetmand    (.+4,pc,d5.l), fp0
       fgetmand    (.-124,pc,d5.l), fp0
       fgetmand    (.,pc,d5.l), fp0
-      fgetmand    (.+4,pc,d6.w), fp0
-      fgetmand    (.-124,pc,d6.w), fp0
-      fgetmand    (.,pc,d6.w), fp0
       fgetmand    (.+4,pc,a0.w), fp0
       fgetmand    (.-124,pc,a0.w), fp0
       fgetmand    (.,pc,a0.w), fp0
-      fgetmand    (.+4,pc,a0.l), fp0
-      fgetmand    (.-124,pc,a0.l), fp0
-      fgetmand    (.,pc,a0.l), fp0
       fdivd   (.+4,pc,d5.l), fp0
       fdivd   (.-124,pc,d5.l), fp0
       fdivd   (.,pc,d5.l), fp0
-      fdivd   (.+4,pc,d6.w), fp0
-      fdivd   (.-124,pc,d6.w), fp0
-      fdivd   (.,pc,d6.w), fp0
       fdivd   (.+4,pc,a0.w), fp0
       fdivd   (.-124,pc,a0.w), fp0
       fdivd   (.,pc,a0.w), fp0
-      fdivd   (.+4,pc,a0.l), fp0
-      fdivd   (.-124,pc,a0.l), fp0
-      fdivd   (.,pc,a0.l), fp0
       fmodd   (.+4,pc,d5.l), fp0
       fmodd   (.-124,pc,d5.l), fp0
       fmodd   (.,pc,d5.l), fp0
-      fmodd   (.+4,pc,d6.w), fp0
-      fmodd   (.-124,pc,d6.w), fp0
-      fmodd   (.,pc,d6.w), fp0
       fmodd   (.+4,pc,a0.w), fp0
       fmodd   (.-124,pc,a0.w), fp0
       fmodd   (.,pc,a0.w), fp0
-      fmodd   (.+4,pc,a0.l), fp0
-      fmodd   (.-124,pc,a0.l), fp0
-      fmodd   (.,pc,a0.l), fp0
       faddd   (.+4,pc,d5.l), fp0
       faddd   (.-124,pc,d5.l), fp0
       faddd   (.,pc,d5.l), fp0
-      faddd   (.+4,pc,d6.w), fp0
-      faddd   (.-124,pc,d6.w), fp0
-      faddd   (.,pc,d6.w), fp0
       faddd   (.+4,pc,a0.w), fp0
       faddd   (.-124,pc,a0.w), fp0
       faddd   (.,pc,a0.w), fp0
-      faddd   (.+4,pc,a0.l), fp0
-      faddd   (.-124,pc,a0.l), fp0
-      faddd   (.,pc,a0.l), fp0
       fmuld   (.+4,pc,d5.l), fp0
       fmuld   (.-124,pc,d5.l), fp0
       fmuld   (.,pc,d5.l), fp0
-      fmuld   (.+4,pc,d6.w), fp0
-      fmuld   (.-124,pc,d6.w), fp0
-      fmuld   (.,pc,d6.w), fp0
       fmuld   (.+4,pc,a0.w), fp0
       fmuld   (.-124,pc,a0.w), fp0
       fmuld   (.,pc,a0.w), fp0
-      fmuld   (.+4,pc,a0.l), fp0
-      fmuld   (.-124,pc,a0.l), fp0
-      fmuld   (.,pc,a0.l), fp0
       fsgldivd    (.+4,pc,d5.l), fp0
       fsgldivd    (.-124,pc,d5.l), fp0
       fsgldivd    (.,pc,d5.l), fp0
-      fsgldivd    (.+4,pc,d6.w), fp0
-      fsgldivd    (.-124,pc,d6.w), fp0
-      fsgldivd    (.,pc,d6.w), fp0
       fsgldivd    (.+4,pc,a0.w), fp0
       fsgldivd    (.-124,pc,a0.w), fp0
       fsgldivd    (.,pc,a0.w), fp0
-      fsgldivd    (.+4,pc,a0.l), fp0
-      fsgldivd    (.-124,pc,a0.l), fp0
-      fsgldivd    (.,pc,a0.l), fp0
       fremd   (.+4,pc,d5.l), fp0
       fremd   (.-124,pc,d5.l), fp0
       fremd   (.,pc,d5.l), fp0
-      fremd   (.+4,pc,d6.w), fp0
-      fremd   (.-124,pc,d6.w), fp0
-      fremd   (.,pc,d6.w), fp0
       fremd   (.+4,pc,a0.w), fp0
       fremd   (.-124,pc,a0.w), fp0
       fremd   (.,pc,a0.w), fp0
-      fremd   (.+4,pc,a0.l), fp0
-      fremd   (.-124,pc,a0.l), fp0
-      fremd   (.,pc,a0.l), fp0
       fscaled (.+4,pc,d5.l), fp0
       fscaled (.-124,pc,d5.l), fp0
       fscaled (.,pc,d5.l), fp0
-      fscaled (.+4,pc,d6.w), fp0
-      fscaled (.-124,pc,d6.w), fp0
-      fscaled (.,pc,d6.w), fp0
       fscaled (.+4,pc,a0.w), fp0
       fscaled (.-124,pc,a0.w), fp0
       fscaled (.,pc,a0.w), fp0
-      fscaled (.+4,pc,a0.l), fp0
-      fscaled (.-124,pc,a0.l), fp0
-      fscaled (.,pc,a0.l), fp0
       fsglmuld    (.+4,pc,d5.l), fp0
       fsglmuld    (.-124,pc,d5.l), fp0
       fsglmuld    (.,pc,d5.l), fp0
-      fsglmuld    (.+4,pc,d6.w), fp0
-      fsglmuld    (.-124,pc,d6.w), fp0
-      fsglmuld    (.,pc,d6.w), fp0
       fsglmuld    (.+4,pc,a0.w), fp0
       fsglmuld    (.-124,pc,a0.w), fp0
       fsglmuld    (.,pc,a0.w), fp0
-      fsglmuld    (.+4,pc,a0.l), fp0
-      fsglmuld    (.-124,pc,a0.l), fp0
-      fsglmuld    (.,pc,a0.l), fp0
       fsubd   (.+4,pc,d5.l), fp0
       fsubd   (.-124,pc,d5.l), fp0
       fsubd   (.,pc,d5.l), fp0
-      fsubd   (.+4,pc,d6.w), fp0
-      fsubd   (.-124,pc,d6.w), fp0
-      fsubd   (.,pc,d6.w), fp0
       fsubd   (.+4,pc,a0.w), fp0
       fsubd   (.-124,pc,a0.w), fp0
       fsubd   (.,pc,a0.w), fp0
-      fsubd   (.+4,pc,a0.l), fp0
-      fsubd   (.-124,pc,a0.l), fp0
-      fsubd   (.,pc,a0.l), fp0
       fsincosd    (.+4,pc,d5.l), fp0:fp0
       fsincosd    (.-124,pc,d5.l), fp0:fp0
       fsincosd    (.,pc,d5.l), fp0:fp0
-      fsincosd    (.+4,pc,d6.w), fp0:fp0
-      fsincosd    (.-124,pc,d6.w), fp0:fp0
-      fsincosd    (.,pc,d6.w), fp0:fp0
       fsincosd    (.+4,pc,a0.w), fp0:fp0
       fsincosd    (.-124,pc,a0.w), fp0:fp0
       fsincosd    (.,pc,a0.w), fp0:fp0
-      fsincosd    (.+4,pc,a0.l), fp0:fp0
-      fsincosd    (.-124,pc,a0.l), fp0:fp0
-      fsincosd    (.,pc,a0.l), fp0:fp0
       fcmpd   (.+4,pc,d5.l), fp0
       fcmpd   (.-124,pc,d5.l), fp0
       fcmpd   (.,pc,d5.l), fp0
-      fcmpd   (.+4,pc,d6.w), fp0
-      fcmpd   (.-124,pc,d6.w), fp0
-      fcmpd   (.,pc,d6.w), fp0
       fcmpd   (.+4,pc,a0.w), fp0
       fcmpd   (.-124,pc,a0.w), fp0
       fcmpd   (.,pc,a0.w), fp0
-      fcmpd   (.+4,pc,a0.l), fp0
-      fcmpd   (.-124,pc,a0.l), fp0
-      fcmpd   (.,pc,a0.l), fp0
       ftstd   (.+4,pc,d5.l)
       ftstd   (.-124,pc,d5.l)
       ftstd   (.,pc,d5.l)
-      ftstd   (.+4,pc,d6.w)
-      ftstd   (.-124,pc,d6.w)
-      ftstd   (.,pc,d6.w)
       ftstd   (.+4,pc,a0.w)
       ftstd   (.-124,pc,a0.w)
       ftstd   (.,pc,a0.w)
-      ftstd   (.+4,pc,a0.l)
-      ftstd   (.-124,pc,a0.l)
-      ftstd   (.,pc,a0.l)
       fmoveb  (.+4,pc,d6.w), fp0
       fmoveb  (.-124,pc,d6.w), fp0
       fmoveb  (.,pc,d6.w), fp0
-      fmoveb  (.+4,pc,d6.l), fp0
-      fmoveb  (.-124,pc,d6.l), fp0
-      fmoveb  (.,pc,d6.l), fp0
       fmoveb  (.+4,pc,a0.w), fp0
       fmoveb  (.-124,pc,a0.w), fp0
       fmoveb  (.,pc,a0.w), fp0
-      fmoveb  (.+4,pc,a0.l), fp0
-      fmoveb  (.-124,pc,a0.l), fp0
-      fmoveb  (.,pc,a0.l), fp0
       fintb   (.+4,pc,d6.w), fp0
       fintb   (.-124,pc,d6.w), fp0
       fintb   (.,pc,d6.w), fp0
-      fintb   (.+4,pc,d6.l), fp0
-      fintb   (.-124,pc,d6.l), fp0
-      fintb   (.,pc,d6.l), fp0
       fintb   (.+4,pc,a0.w), fp0
       fintb   (.-124,pc,a0.w), fp0
       fintb   (.,pc,a0.w), fp0
-      fintb   (.+4,pc,a0.l), fp0
-      fintb   (.-124,pc,a0.l), fp0
-      fintb   (.,pc,a0.l), fp0
       fsinhb  (.+4,pc,d6.w), fp0
       fsinhb  (.-124,pc,d6.w), fp0
       fsinhb  (.,pc,d6.w), fp0
-      fsinhb  (.+4,pc,d6.l), fp0
-      fsinhb  (.-124,pc,d6.l), fp0
-      fsinhb  (.,pc,d6.l), fp0
       fsinhb  (.+4,pc,a0.w), fp0
       fsinhb  (.-124,pc,a0.w), fp0
       fsinhb  (.,pc,a0.w), fp0
-      fsinhb  (.+4,pc,a0.l), fp0
-      fsinhb  (.-124,pc,a0.l), fp0
-      fsinhb  (.,pc,a0.l), fp0
       fintrzb (.+4,pc,d6.w), fp0
       fintrzb (.-124,pc,d6.w), fp0
       fintrzb (.,pc,d6.w), fp0
-      fintrzb (.+4,pc,d6.l), fp0
-      fintrzb (.-124,pc,d6.l), fp0
-      fintrzb (.,pc,d6.l), fp0
       fintrzb (.+4,pc,a0.w), fp0
       fintrzb (.-124,pc,a0.w), fp0
       fintrzb (.,pc,a0.w), fp0
-      fintrzb (.+4,pc,a0.l), fp0
-      fintrzb (.-124,pc,a0.l), fp0
-      fintrzb (.,pc,a0.l), fp0
       fsqrtb  (.+4,pc,d6.w), fp0
       fsqrtb  (.-124,pc,d6.w), fp0
       fsqrtb  (.,pc,d6.w), fp0
-      fsqrtb  (.+4,pc,d6.l), fp0
-      fsqrtb  (.-124,pc,d6.l), fp0
-      fsqrtb  (.,pc,d6.l), fp0
       fsqrtb  (.+4,pc,a0.w), fp0
       fsqrtb  (.-124,pc,a0.w), fp0
       fsqrtb  (.,pc,a0.w), fp0
-      fsqrtb  (.+4,pc,a0.l), fp0
-      fsqrtb  (.-124,pc,a0.l), fp0
-      fsqrtb  (.,pc,a0.l), fp0
       flognp1b    (.+4,pc,d6.w), fp0
       flognp1b    (.-124,pc,d6.w), fp0
       flognp1b    (.,pc,d6.w), fp0
-      flognp1b    (.+4,pc,d6.l), fp0
-      flognp1b    (.-124,pc,d6.l), fp0
-      flognp1b    (.,pc,d6.l), fp0
       flognp1b    (.+4,pc,a0.w), fp0
       flognp1b    (.-124,pc,a0.w), fp0
       flognp1b    (.,pc,a0.w), fp0
-      flognp1b    (.+4,pc,a0.l), fp0
-      flognp1b    (.-124,pc,a0.l), fp0
-      flognp1b    (.,pc,a0.l), fp0
       fetoxm1b    (.+4,pc,d6.w), fp0
       fetoxm1b    (.-124,pc,d6.w), fp0
       fetoxm1b    (.,pc,d6.w), fp0
-      fetoxm1b    (.+4,pc,d6.l), fp0
-      fetoxm1b    (.-124,pc,d6.l), fp0
-      fetoxm1b    (.,pc,d6.l), fp0
       fetoxm1b    (.+4,pc,a0.w), fp0
       fetoxm1b    (.-124,pc,a0.w), fp0
       fetoxm1b    (.,pc,a0.w), fp0
-      fetoxm1b    (.+4,pc,a0.l), fp0
-      fetoxm1b    (.-124,pc,a0.l), fp0
-      fetoxm1b    (.,pc,a0.l), fp0
       ftanhb  (.+4,pc,d6.w), fp0
       ftanhb  (.-124,pc,d6.w), fp0
       ftanhb  (.,pc,d6.w), fp0
-      ftanhb  (.+4,pc,d6.l), fp0
-      ftanhb  (.-124,pc,d6.l), fp0
-      ftanhb  (.,pc,d6.l), fp0
       ftanhb  (.+4,pc,a0.w), fp0
       ftanhb  (.-124,pc,a0.w), fp0
       ftanhb  (.,pc,a0.w), fp0
-      ftanhb  (.+4,pc,a0.l), fp0
-      ftanhb  (.-124,pc,a0.l), fp0
-      ftanhb  (.,pc,a0.l), fp0
       fatanb  (.+4,pc,d6.w), fp0
       fatanb  (.-124,pc,d6.w), fp0
       fatanb  (.,pc,d6.w), fp0
-      fatanb  (.+4,pc,d6.l), fp0
-      fatanb  (.-124,pc,d6.l), fp0
-      fatanb  (.,pc,d6.l), fp0
       fatanb  (.+4,pc,a0.w), fp0
       fatanb  (.-124,pc,a0.w), fp0
       fatanb  (.,pc,a0.w), fp0
-      fatanb  (.+4,pc,a0.l), fp0
-      fatanb  (.-124,pc,a0.l), fp0
-      fatanb  (.,pc,a0.l), fp0
       fasinb  (.+4,pc,d6.w), fp0
       fasinb  (.-124,pc,d6.w), fp0
       fasinb  (.,pc,d6.w), fp0
-      fasinb  (.+4,pc,d6.l), fp0
-      fasinb  (.-124,pc,d6.l), fp0
-      fasinb  (.,pc,d6.l), fp0
       fasinb  (.+4,pc,a0.w), fp0
       fasinb  (.-124,pc,a0.w), fp0
       fasinb  (.,pc,a0.w), fp0
-      fasinb  (.+4,pc,a0.l), fp0
-      fasinb  (.-124,pc,a0.l), fp0
-      fasinb  (.,pc,a0.l), fp0
       fatanhb (.+4,pc,d6.w), fp0
       fatanhb (.-124,pc,d6.w), fp0
       fatanhb (.,pc,d6.w), fp0
-      fatanhb (.+4,pc,d6.l), fp0
-      fatanhb (.-124,pc,d6.l), fp0
-      fatanhb (.,pc,d6.l), fp0
       fatanhb (.+4,pc,a0.w), fp0
       fatanhb (.-124,pc,a0.w), fp0
       fatanhb (.,pc,a0.w), fp0
-      fatanhb (.+4,pc,a0.l), fp0
-      fatanhb (.-124,pc,a0.l), fp0
-      fatanhb (.,pc,a0.l), fp0
       fsinb   (.+4,pc,d6.w), fp0
       fsinb   (.-124,pc,d6.w), fp0
       fsinb   (.,pc,d6.w), fp0
-      fsinb   (.+4,pc,d6.l), fp0
-      fsinb   (.-124,pc,d6.l), fp0
-      fsinb   (.,pc,d6.l), fp0
       fsinb   (.+4,pc,a0.w), fp0
       fsinb   (.-124,pc,a0.w), fp0
       fsinb   (.,pc,a0.w), fp0
-      fsinb   (.+4,pc,a0.l), fp0
-      fsinb   (.-124,pc,a0.l), fp0
-      fsinb   (.,pc,a0.l), fp0
       ftanb   (.+4,pc,d6.w), fp0
       ftanb   (.-124,pc,d6.w), fp0
       ftanb   (.,pc,d6.w), fp0
-      ftanb   (.+4,pc,d6.l), fp0
-      ftanb   (.-124,pc,d6.l), fp0
-      ftanb   (.,pc,d6.l), fp0
       ftanb   (.+4,pc,a0.w), fp0
       ftanb   (.-124,pc,a0.w), fp0
       ftanb   (.,pc,a0.w), fp0
-      ftanb   (.+4,pc,a0.l), fp0
-      ftanb   (.-124,pc,a0.l), fp0
-      ftanb   (.,pc,a0.l), fp0
       fetoxb  (.+4,pc,d6.w), fp0
       fetoxb  (.-124,pc,d6.w), fp0
       fetoxb  (.,pc,d6.w), fp0
-      fetoxb  (.+4,pc,d6.l), fp0
-      fetoxb  (.-124,pc,d6.l), fp0
-      fetoxb  (.,pc,d6.l), fp0
       fetoxb  (.+4,pc,a0.w), fp0
       fetoxb  (.-124,pc,a0.w), fp0
       fetoxb  (.,pc,a0.w), fp0
-      fetoxb  (.+4,pc,a0.l), fp0
-      fetoxb  (.-124,pc,a0.l), fp0
-      fetoxb  (.,pc,a0.l), fp0
       ftwotoxb    (.+4,pc,d6.w), fp0
       ftwotoxb    (.-124,pc,d6.w), fp0
       ftwotoxb    (.,pc,d6.w), fp0
-      ftwotoxb    (.+4,pc,d6.l), fp0
-      ftwotoxb    (.-124,pc,d6.l), fp0
-      ftwotoxb    (.,pc,d6.l), fp0
       ftwotoxb    (.+4,pc,a0.w), fp0
       ftwotoxb    (.-124,pc,a0.w), fp0
       ftwotoxb    (.,pc,a0.w), fp0
-      ftwotoxb    (.+4,pc,a0.l), fp0
-      ftwotoxb    (.-124,pc,a0.l), fp0
-      ftwotoxb    (.,pc,a0.l), fp0
       ftentoxb    (.+4,pc,d6.w), fp0
       ftentoxb    (.-124,pc,d6.w), fp0
       ftentoxb    (.,pc,d6.w), fp0
-      ftentoxb    (.+4,pc,d6.l), fp0
-      ftentoxb    (.-124,pc,d6.l), fp0
-      ftentoxb    (.,pc,d6.l), fp0
       ftentoxb    (.+4,pc,a0.w), fp0
       ftentoxb    (.-124,pc,a0.w), fp0
       ftentoxb    (.,pc,a0.w), fp0
-      ftentoxb    (.+4,pc,a0.l), fp0
-      ftentoxb    (.-124,pc,a0.l), fp0
-      ftentoxb    (.,pc,a0.l), fp0
       flognb  (.+4,pc,d6.w), fp0
       flognb  (.-124,pc,d6.w), fp0
       flognb  (.,pc,d6.w), fp0
-      flognb  (.+4,pc,d6.l), fp0
-      flognb  (.-124,pc,d6.l), fp0
-      flognb  (.,pc,d6.l), fp0
       flognb  (.+4,pc,a0.w), fp0
       flognb  (.-124,pc,a0.w), fp0
       flognb  (.,pc,a0.w), fp0
-      flognb  (.+4,pc,a0.l), fp0
-      flognb  (.-124,pc,a0.l), fp0
-      flognb  (.,pc,a0.l), fp0
       flog10b (.+4,pc,d6.w), fp0
       flog10b (.-124,pc,d6.w), fp0
       flog10b (.,pc,d6.w), fp0
-      flog10b (.+4,pc,d6.l), fp0
-      flog10b (.-124,pc,d6.l), fp0
-      flog10b (.,pc,d6.l), fp0
       flog10b (.+4,pc,a0.w), fp0
       flog10b (.-124,pc,a0.w), fp0
       flog10b (.,pc,a0.w), fp0
-      flog10b (.+4,pc,a0.l), fp0
-      flog10b (.-124,pc,a0.l), fp0
-      flog10b (.,pc,a0.l), fp0
       flog2b  (.+4,pc,d6.w), fp0
       flog2b  (.-124,pc,d6.w), fp0
       flog2b  (.,pc,d6.w), fp0
-      flog2b  (.+4,pc,d6.l), fp0
-      flog2b  (.-124,pc,d6.l), fp0
-      flog2b  (.,pc,d6.l), fp0
       flog2b  (.+4,pc,a0.w), fp0
       flog2b  (.-124,pc,a0.w), fp0
       flog2b  (.,pc,a0.w), fp0
-      flog2b  (.+4,pc,a0.l), fp0
-      flog2b  (.-124,pc,a0.l), fp0
-      flog2b  (.,pc,a0.l), fp0
       fabsb   (.+4,pc,d6.w), fp0
       fabsb   (.-124,pc,d6.w), fp0
       fabsb   (.,pc,d6.w), fp0
-      fabsb   (.+4,pc,d6.l), fp0
-      fabsb   (.-124,pc,d6.l), fp0
-      fabsb   (.,pc,d6.l), fp0
       fabsb   (.+4,pc,a0.w), fp0
       fabsb   (.-124,pc,a0.w), fp0
       fabsb   (.,pc,a0.w), fp0
-      fabsb   (.+4,pc,a0.l), fp0
-      fabsb   (.-124,pc,a0.l), fp0
-      fabsb   (.,pc,a0.l), fp0
       fcoshb  (.+4,pc,d6.w), fp0
       fcoshb  (.-124,pc,d6.w), fp0
       fcoshb  (.,pc,d6.w), fp0
-      fcoshb  (.+4,pc,d6.l), fp0
-      fcoshb  (.-124,pc,d6.l), fp0
-      fcoshb  (.,pc,d6.l), fp0
       fcoshb  (.+4,pc,a0.w), fp0
       fcoshb  (.-124,pc,a0.w), fp0
       fcoshb  (.,pc,a0.w), fp0
-      fcoshb  (.+4,pc,a0.l), fp0
-      fcoshb  (.-124,pc,a0.l), fp0
-      fcoshb  (.,pc,a0.l), fp0
       fnegb   (.+4,pc,d6.w), fp0
       fnegb   (.-124,pc,d6.w), fp0
       fnegb   (.,pc,d6.w), fp0
-      fnegb   (.+4,pc,d6.l), fp0
-      fnegb   (.-124,pc,d6.l), fp0
-      fnegb   (.,pc,d6.l), fp0
       fnegb   (.+4,pc,a0.w), fp0
       fnegb   (.-124,pc,a0.w), fp0
       fnegb   (.,pc,a0.w), fp0
-      fnegb   (.+4,pc,a0.l), fp0
-      fnegb   (.-124,pc,a0.l), fp0
-      fnegb   (.,pc,a0.l), fp0
       facosb  (.+4,pc,d6.w), fp0
       facosb  (.-124,pc,d6.w), fp0
       facosb  (.,pc,d6.w), fp0
-      facosb  (.+4,pc,d6.l), fp0
-      facosb  (.-124,pc,d6.l), fp0
-      facosb  (.,pc,d6.l), fp0
       facosb  (.+4,pc,a0.w), fp0
       facosb  (.-124,pc,a0.w), fp0
       facosb  (.,pc,a0.w), fp0
-      facosb  (.+4,pc,a0.l), fp0
-      facosb  (.-124,pc,a0.l), fp0
-      facosb  (.,pc,a0.l), fp0
       fcosb   (.+4,pc,d6.w), fp0
       fcosb   (.-124,pc,d6.w), fp0
       fcosb   (.,pc,d6.w), fp0
-      fcosb   (.+4,pc,d6.l), fp0
-      fcosb   (.-124,pc,d6.l), fp0
-      fcosb   (.,pc,d6.l), fp0
       fcosb   (.+4,pc,a0.w), fp0
       fcosb   (.-124,pc,a0.w), fp0
       fcosb   (.,pc,a0.w), fp0
-      fcosb   (.+4,pc,a0.l), fp0
-      fcosb   (.-124,pc,a0.l), fp0
-      fcosb   (.,pc,a0.l), fp0
       fgetexpb    (.+4,pc,d6.w), fp0
       fgetexpb    (.-124,pc,d6.w), fp0
       fgetexpb    (.,pc,d6.w), fp0
-      fgetexpb    (.+4,pc,d6.l), fp0
-      fgetexpb    (.-124,pc,d6.l), fp0
-      fgetexpb    (.,pc,d6.l), fp0
       fgetexpb    (.+4,pc,a0.w), fp0
       fgetexpb    (.-124,pc,a0.w), fp0
       fgetexpb    (.,pc,a0.w), fp0
-      fgetexpb    (.+4,pc,a0.l), fp0
-      fgetexpb    (.-124,pc,a0.l), fp0
-      fgetexpb    (.,pc,a0.l), fp0
       fgetmanb    (.+4,pc,d6.w), fp0
       fgetmanb    (.-124,pc,d6.w), fp0
       fgetmanb    (.,pc,d6.w), fp0
-      fgetmanb    (.+4,pc,d6.l), fp0
-      fgetmanb    (.-124,pc,d6.l), fp0
-      fgetmanb    (.,pc,d6.l), fp0
       fgetmanb    (.+4,pc,a0.w), fp0
       fgetmanb    (.-124,pc,a0.w), fp0
       fgetmanb    (.,pc,a0.w), fp0
-      fgetmanb    (.+4,pc,a0.l), fp0
-      fgetmanb    (.-124,pc,a0.l), fp0
-      fgetmanb    (.,pc,a0.l), fp0
       fdivb   (.+4,pc,d6.w), fp0
       fdivb   (.-124,pc,d6.w), fp0
       fdivb   (.,pc,d6.w), fp0
-      fdivb   (.+4,pc,d6.l), fp0
-      fdivb   (.-124,pc,d6.l), fp0
-      fdivb   (.,pc,d6.l), fp0
       fdivb   (.+4,pc,a0.w), fp0
       fdivb   (.-124,pc,a0.w), fp0
       fdivb   (.,pc,a0.w), fp0
-      fdivb   (.+4,pc,a0.l), fp0
-      fdivb   (.-124,pc,a0.l), fp0
-      fdivb   (.,pc,a0.l), fp0
       fmodb   (.+4,pc,d6.w), fp0
       fmodb   (.-124,pc,d6.w), fp0
       fmodb   (.,pc,d6.w), fp0
-      fmodb   (.+4,pc,d6.l), fp0
-      fmodb   (.-124,pc,d6.l), fp0
-      fmodb   (.,pc,d6.l), fp0
       fmodb   (.+4,pc,a0.w), fp0
       fmodb   (.-124,pc,a0.w), fp0
       fmodb   (.,pc,a0.w), fp0
-      fmodb   (.+4,pc,a0.l), fp0
-      fmodb   (.-124,pc,a0.l), fp0
-      fmodb   (.,pc,a0.l), fp0
       faddb   (.+4,pc,d6.w), fp0
       faddb   (.-124,pc,d6.w), fp0
       faddb   (.,pc,d6.w), fp0
-      faddb   (.+4,pc,d6.l), fp0
-      faddb   (.-124,pc,d6.l), fp0
-      faddb   (.,pc,d6.l), fp0
       faddb   (.+4,pc,a0.w), fp0
       faddb   (.-124,pc,a0.w), fp0
       faddb   (.,pc,a0.w), fp0
-      faddb   (.+4,pc,a0.l), fp0
-      faddb   (.-124,pc,a0.l), fp0
-      faddb   (.,pc,a0.l), fp0
       fmulb   (.+4,pc,d6.w), fp0
       fmulb   (.-124,pc,d6.w), fp0
       fmulb   (.,pc,d6.w), fp0
-      fmulb   (.+4,pc,d6.l), fp0
-      fmulb   (.-124,pc,d6.l), fp0
-      fmulb   (.,pc,d6.l), fp0
       fmulb   (.+4,pc,a0.w), fp0
       fmulb   (.-124,pc,a0.w), fp0
       fmulb   (.,pc,a0.w), fp0
-      fmulb   (.+4,pc,a0.l), fp0
-      fmulb   (.-124,pc,a0.l), fp0
-      fmulb   (.,pc,a0.l), fp0
       fsgldivb    (.+4,pc,d6.w), fp0
       fsgldivb    (.-124,pc,d6.w), fp0
       fsgldivb    (.,pc,d6.w), fp0
-      fsgldivb    (.+4,pc,d6.l), fp0
-      fsgldivb    (.-124,pc,d6.l), fp0
-      fsgldivb    (.,pc,d6.l), fp0
       fsgldivb    (.+4,pc,a0.w), fp0
       fsgldivb    (.-124,pc,a0.w), fp0
       fsgldivb    (.,pc,a0.w), fp0
-      fsgldivb    (.+4,pc,a0.l), fp0
-      fsgldivb    (.-124,pc,a0.l), fp0
-      fsgldivb    (.,pc,a0.l), fp0
       fremb   (.+4,pc,d6.w), fp0
       fremb   (.-124,pc,d6.w), fp0
       fremb   (.,pc,d6.w), fp0
-      fremb   (.+4,pc,d6.l), fp0
-      fremb   (.-124,pc,d6.l), fp0
-      fremb   (.,pc,d6.l), fp0
       fremb   (.+4,pc,a0.w), fp0
       fremb   (.-124,pc,a0.w), fp0
       fremb   (.,pc,a0.w), fp0
-      fremb   (.+4,pc,a0.l), fp0
-      fremb   (.-124,pc,a0.l), fp0
-      fremb   (.,pc,a0.l), fp0
       fscaleb (.+4,pc,d6.w), fp0
       fscaleb (.-124,pc,d6.w), fp0
       fscaleb (.,pc,d6.w), fp0
-      fscaleb (.+4,pc,d6.l), fp0
-      fscaleb (.-124,pc,d6.l), fp0
-      fscaleb (.,pc,d6.l), fp0
       fscaleb (.+4,pc,a0.w), fp0
       fscaleb (.-124,pc,a0.w), fp0
       fscaleb (.,pc,a0.w), fp0
-      fscaleb (.+4,pc,a0.l), fp0
-      fscaleb (.-124,pc,a0.l), fp0
-      fscaleb (.,pc,a0.l), fp0
       fsglmulb    (.+4,pc,d6.w), fp0
       fsglmulb    (.-124,pc,d6.w), fp0
       fsglmulb    (.,pc,d6.w), fp0
-      fsglmulb    (.+4,pc,d6.l), fp0
-      fsglmulb    (.-124,pc,d6.l), fp0
-      fsglmulb    (.,pc,d6.l), fp0
       fsglmulb    (.+4,pc,a0.w), fp0
       fsglmulb    (.-124,pc,a0.w), fp0
       fsglmulb    (.,pc,a0.w), fp0
-      fsglmulb    (.+4,pc,a0.l), fp0
-      fsglmulb    (.-124,pc,a0.l), fp0
-      fsglmulb    (.,pc,a0.l), fp0
       fsubb   (.+4,pc,d6.w), fp0
       fsubb   (.-124,pc,d6.w), fp0
       fsubb   (.,pc,d6.w), fp0
-      fsubb   (.+4,pc,d6.l), fp0
-      fsubb   (.-124,pc,d6.l), fp0
-      fsubb   (.,pc,d6.l), fp0
       fsubb   (.+4,pc,a0.w), fp0
       fsubb   (.-124,pc,a0.w), fp0
       fsubb   (.,pc,a0.w), fp0
-      fsubb   (.+4,pc,a0.l), fp0
-      fsubb   (.-124,pc,a0.l), fp0
-      fsubb   (.,pc,a0.l), fp0
       fsincosb    (.+4,pc,d6.w), fp0:fp0
       fsincosb    (.-124,pc,d6.w), fp0:fp0
       fsincosb    (.,pc,d6.w), fp0:fp0
-      fsincosb    (.+4,pc,d6.l), fp0:fp0
-      fsincosb    (.-124,pc,d6.l), fp0:fp0
-      fsincosb    (.,pc,d6.l), fp0:fp0
       fsincosb    (.+4,pc,a0.w), fp0:fp0
       fsincosb    (.-124,pc,a0.w), fp0:fp0
       fsincosb    (.,pc,a0.w), fp0:fp0
-      fsincosb    (.+4,pc,a0.l), fp0:fp0
-      fsincosb    (.-124,pc,a0.l), fp0:fp0
-      fsincosb    (.,pc,a0.l), fp0:fp0
       fcmpb   (.+4,pc,d6.w), fp0
       fcmpb   (.-124,pc,d6.w), fp0
       fcmpb   (.,pc,d6.w), fp0
-      fcmpb   (.+4,pc,d6.l), fp0
-      fcmpb   (.-124,pc,d6.l), fp0
-      fcmpb   (.,pc,d6.l), fp0
       fcmpb   (.+4,pc,a0.w), fp0
       fcmpb   (.-124,pc,a0.w), fp0
       fcmpb   (.,pc,a0.w), fp0
-      fcmpb   (.+4,pc,a0.l), fp0
-      fcmpb   (.-124,pc,a0.l), fp0
-      fcmpb   (.,pc,a0.l), fp0
       ftstb   (.+4,pc,d6.w)
       ftstb   (.-124,pc,d6.w)
       ftstb   (.,pc,d6.w)
-      ftstb   (.+4,pc,d6.l)
-      ftstb   (.-124,pc,d6.l)
-      ftstb   (.,pc,d6.l)
       ftstb   (.+4,pc,a0.w)
       ftstb   (.-124,pc,a0.w)
       ftstb   (.,pc,a0.w)
-      ftstb   (.+4,pc,a0.l)
-      ftstb   (.-124,pc,a0.l)
-      ftstb   (.,pc,a0.l)
       fmovel  (.+4,pc,a0.l), fpiar
       fmovel  (.-124,pc,a0.l), fpiar
       fmovel  (.,pc,a0.l), fpiar
-      fmovel  (.+4,pc,a1.w), fpiar
-      fmovel  (.-124,pc,a1.w), fpiar
-      fmovel  (.,pc,a1.w), fpiar
       fmovel  (.+4,pc,d0.w), fpiar
       fmovel  (.-124,pc,d0.w), fpiar
       fmovel  (.,pc,d0.w), fpiar
-      fmovel  (.+4,pc,d0.l), fpiar
-      fmovel  (.-124,pc,d0.l), fpiar
-      fmovel  (.,pc,d0.l), fpiar
       fmovel  (.+4,pc,a1.w), fpsr
       fmovel  (.-124,pc,a1.w), fpsr
       fmovel  (.,pc,a1.w), fpsr
-      fmovel  (.+4,pc,a1.l), fpsr
-      fmovel  (.-124,pc,a1.l), fpsr
-      fmovel  (.,pc,a1.l), fpsr
       fmovel  (.+4,pc,d0.w), fpsr
       fmovel  (.-124,pc,d0.w), fpsr
       fmovel  (.,pc,d0.w), fpsr
-      fmovel  (.+4,pc,d0.l), fpsr
-      fmovel  (.-124,pc,d0.l), fpsr
-      fmovel  (.,pc,d0.l), fpsr
       fmoveml (.+4,pc,a1.w), fpsr/fpiar
       fmoveml (.-124,pc,a1.w), fpsr/fpiar
       fmoveml (.,pc,a1.w), fpsr/fpiar
-      fmoveml (.+4,pc,a1.l), fpsr/fpiar
-      fmoveml (.-124,pc,a1.l), fpsr/fpiar
-      fmoveml (.,pc,a1.l), fpsr/fpiar
       fmoveml (.+4,pc,d0.w), fpsr/fpiar
       fmoveml (.-124,pc,d0.w), fpsr/fpiar
       fmoveml (.,pc,d0.w), fpsr/fpiar
-      fmoveml (.+4,pc,d0.l), fpsr/fpiar
-      fmoveml (.-124,pc,d0.l), fpsr/fpiar
-      fmoveml (.,pc,d0.l), fpsr/fpiar
       fmovel  (.+4,pc,a1.l), fpcr
       fmovel  (.-124,pc,a1.l), fpcr
       fmovel  (.,pc,a1.l), fpcr
-      fmovel  (.+4,pc,a2.w), fpcr
-      fmovel  (.-124,pc,a2.w), fpcr
-      fmovel  (.,pc,a2.w), fpcr
       fmovel  (.+4,pc,d0.w), fpcr
       fmovel  (.-124,pc,d0.w), fpcr
       fmovel  (.,pc,d0.w), fpcr
-      fmovel  (.+4,pc,d0.l), fpcr
-      fmovel  (.-124,pc,d0.l), fpcr
-      fmovel  (.,pc,d0.l), fpcr
       fmoveml (.+4,pc,a1.l), fpcr/fpiar
       fmoveml (.-124,pc,a1.l), fpcr/fpiar
       fmoveml (.,pc,a1.l), fpcr/fpiar
-      fmoveml (.+4,pc,a2.w), fpcr/fpiar
-      fmoveml (.-124,pc,a2.w), fpcr/fpiar
-      fmoveml (.,pc,a2.w), fpcr/fpiar
       fmoveml (.+4,pc,d0.w), fpcr/fpiar
       fmoveml (.-124,pc,d0.w), fpcr/fpiar
       fmoveml (.,pc,d0.w), fpcr/fpiar
-      fmoveml (.+4,pc,d0.l), fpcr/fpiar
-      fmoveml (.-124,pc,d0.l), fpcr/fpiar
-      fmoveml (.,pc,d0.l), fpcr/fpiar
       fmoveml (.+4,pc,a2.w), fpcr/fpsr
       fmoveml (.-124,pc,a2.w), fpcr/fpsr
       fmoveml (.,pc,a2.w), fpcr/fpsr
-      fmoveml (.+4,pc,a2.l), fpcr/fpsr
-      fmoveml (.-124,pc,a2.l), fpcr/fpsr
-      fmoveml (.,pc,a2.l), fpcr/fpsr
       fmoveml (.+4,pc,d0.w), fpcr/fpsr
       fmoveml (.-124,pc,d0.w), fpcr/fpsr
       fmoveml (.,pc,d0.w), fpcr/fpsr
-      fmoveml (.+4,pc,d0.l), fpcr/fpsr
-      fmoveml (.-124,pc,d0.l), fpcr/fpsr
-      fmoveml (.,pc,d0.l), fpcr/fpsr
       fmoveml (.+4,pc,a2.w), fpcr/fpsr/fpiar
       fmoveml (.-124,pc,a2.w), fpcr/fpsr/fpiar
       fmoveml (.,pc,a2.w), fpcr/fpsr/fpiar
-      fmoveml (.+4,pc,a2.l), fpcr/fpsr/fpiar
-      fmoveml (.-124,pc,a2.l), fpcr/fpsr/fpiar
-      fmoveml (.,pc,a2.l), fpcr/fpsr/fpiar
       fmoveml (.+4,pc,d0.w), fpcr/fpsr/fpiar
       fmoveml (.-124,pc,d0.w), fpcr/fpsr/fpiar
       fmoveml (.,pc,d0.w), fpcr/fpsr/fpiar
-      fmoveml (.+4,pc,d0.l), fpcr/fpsr/fpiar
-      fmoveml (.-124,pc,d0.l), fpcr/fpsr/fpiar
-      fmoveml (.,pc,d0.l), fpcr/fpsr/fpiar
       fmovemx (.+4,pc,a5.l), fp7
       fmovemx (.-124,pc,a5.l), fp7
       fmovemx (.,pc,a5.l), fp7
-      fmovemx (.+4,pc,a6.w), fp7
-      fmovemx (.-124,pc,a6.w), fp7
-      fmovemx (.,pc,a6.w), fp7
       fmovemx (.+4,pc,d0.w), fp7
       fmovemx (.-124,pc,d0.w), fp7
       fmovemx (.,pc,d0.w), fp7
-      fmovemx (.+4,pc,d0.l), fp7
-      fmovemx (.-124,pc,d0.l), fp7
-      fmovemx (.,pc,d0.l), fp7
       fmovemx (.+4,pc,a5.l), fp6-fp7
       fmovemx (.-124,pc,a5.l), fp6-fp7
       fmovemx (.,pc,a5.l), fp6-fp7
-      fmovemx (.+4,pc,a6.w), fp6-fp7
-      fmovemx (.-124,pc,a6.w), fp6-fp7
-      fmovemx (.,pc,a6.w), fp6-fp7
       fmovemx (.+4,pc,d0.w), fp6-fp7
       fmovemx (.-124,pc,d0.w), fp6-fp7
       fmovemx (.,pc,d0.w), fp6-fp7
-      fmovemx (.+4,pc,d0.l), fp6-fp7
-      fmovemx (.-124,pc,d0.l), fp6-fp7
-      fmovemx (.,pc,d0.l), fp6-fp7
       fmovemx (.+4,pc,a5.l), fp4/fp6-fp7
       fmovemx (.-124,pc,a5.l), fp4/fp6-fp7
       fmovemx (.,pc,a5.l), fp4/fp6-fp7
-      fmovemx (.+4,pc,a6.w), fp4/fp6-fp7
-      fmovemx (.-124,pc,a6.w), fp4/fp6-fp7
-      fmovemx (.,pc,a6.w), fp4/fp6-fp7
       fmovemx (.+4,pc,d0.w), fp4/fp6-fp7
       fmovemx (.-124,pc,d0.w), fp4/fp6-fp7
       fmovemx (.,pc,d0.w), fp4/fp6-fp7
-      fmovemx (.+4,pc,d0.l), fp4/fp6-fp7
-      fmovemx (.-124,pc,d0.l), fp4/fp6-fp7
-      fmovemx (.,pc,d0.l), fp4/fp6-fp7
       fmovemx (.+4,pc,a5.l), fp3-fp4/fp6-fp7
       fmovemx (.-124,pc,a5.l), fp3-fp4/fp6-fp7
       fmovemx (.,pc,a5.l), fp3-fp4/fp6-fp7
-      fmovemx (.+4,pc,a6.w), fp3-fp4/fp6-fp7
-      fmovemx (.-124,pc,a6.w), fp3-fp4/fp6-fp7
-      fmovemx (.,pc,a6.w), fp3-fp4/fp6-fp7
       fmovemx (.+4,pc,d0.w), fp3-fp4/fp6-fp7
       fmovemx (.-124,pc,d0.w), fp3-fp4/fp6-fp7
       fmovemx (.,pc,d0.w), fp3-fp4/fp6-fp7
-      fmovemx (.+4,pc,d0.l), fp3-fp4/fp6-fp7
-      fmovemx (.-124,pc,d0.l), fp3-fp4/fp6-fp7
-      fmovemx (.,pc,d0.l), fp3-fp4/fp6-fp7
       fmovemx (.+4,pc,a5.l), fp1/fp3-fp4/fp6-fp7
       fmovemx (.-124,pc,a5.l), fp1/fp3-fp4/fp6-fp7
       fmovemx (.,pc,a5.l), fp1/fp3-fp4/fp6-fp7
-      fmovemx (.+4,pc,a6.w), fp1/fp3-fp4/fp6-fp7
-      fmovemx (.-124,pc,a6.w), fp1/fp3-fp4/fp6-fp7
-      fmovemx (.,pc,a6.w), fp1/fp3-fp4/fp6-fp7
       fmovemx (.+4,pc,d0.w), fp1/fp3-fp4/fp6-fp7
       fmovemx (.-124,pc,d0.w), fp1/fp3-fp4/fp6-fp7
       fmovemx (.,pc,d0.w), fp1/fp3-fp4/fp6-fp7
-      fmovemx (.+4,pc,d0.l), fp1/fp3-fp4/fp6-fp7
-      fmovemx (.-124,pc,d0.l), fp1/fp3-fp4/fp6-fp7
-      fmovemx (.,pc,d0.l), fp1/fp3-fp4/fp6-fp7
       fmovemx (.+4,pc,a5.l), fp0-fp1/fp3-fp4/fp6-fp7
       fmovemx (.-124,pc,a5.l), fp0-fp1/fp3-fp4/fp6-fp7
       fmovemx (.,pc,a5.l), fp0-fp1/fp3-fp4/fp6-fp7
-      fmovemx (.+4,pc,a6.w), fp0-fp1/fp3-fp4/fp6-fp7
-      fmovemx (.-124,pc,a6.w), fp0-fp1/fp3-fp4/fp6-fp7
-      fmovemx (.,pc,a6.w), fp0-fp1/fp3-fp4/fp6-fp7
       fmovemx (.+4,pc,d0.w), fp0-fp1/fp3-fp4/fp6-fp7
       fmovemx (.-124,pc,d0.w), fp0-fp1/fp3-fp4/fp6-fp7
       fmovemx (.,pc,d0.w), fp0-fp1/fp3-fp4/fp6-fp7
-      fmovemx (.+4,pc,d0.l), fp0-fp1/fp3-fp4/fp6-fp7
-      fmovemx (.-124,pc,d0.l), fp0-fp1/fp3-fp4/fp6-fp7
-      fmovemx (.,pc,d0.l), fp0-fp1/fp3-fp4/fp6-fp7
       fmovemx (.+4,pc,a6.w), d0
       fmovemx (.-124,pc,a6.w), d0
       fmovemx (.,pc,a6.w), d0
-      fmovemx (.+4,pc,a6.l), d0
-      fmovemx (.-124,pc,a6.l), d0
-      fmovemx (.,pc,a6.l), d0
       fmovemx (.+4,pc,d0.w), d0
       fmovemx (.-124,pc,d0.w), d0
       fmovemx (.,pc,d0.w), d0
-      fmovemx (.+4,pc,d0.l), d0
-      fmovemx (.-124,pc,d0.l), d0
-      fmovemx (.,pc,d0.l), d0
       fmovel  #0x41014202, fp0
       fintl   #0x41024203, fp0
       fsinhl  #0x41034204, fp0
@@ -17986,260 +12290,132 @@
       fsst    (-0x8000,a0)
       fsf     (0,a0,d0.l)
       fsf     (-0x80,a0,d0.l)
-      fsf     (0,a0,d1.w)
-      fsf     (-0x80,a0,d1.w)
       fsf     (0,a0,a0.w)
       fsf     (-0x80,a0,a0.w)
-      fsf     (0,a0,a0.l)
-      fsf     (-0x80,a0,a0.l)
       fseq    (0,a0,d0.l)
       fseq    (-0x80,a0,d0.l)
-      fseq    (0,a0,d1.w)
-      fseq    (-0x80,a0,d1.w)
       fseq    (0,a0,a0.w)
       fseq    (-0x80,a0,a0.w)
-      fseq    (0,a0,a0.l)
-      fseq    (-0x80,a0,a0.l)
       fsogt   (0,a0,d0.l)
       fsogt   (-0x80,a0,d0.l)
-      fsogt   (0,a0,d1.w)
-      fsogt   (-0x80,a0,d1.w)
       fsogt   (0,a0,a0.w)
       fsogt   (-0x80,a0,a0.w)
-      fsogt   (0,a0,a0.l)
-      fsogt   (-0x80,a0,a0.l)
       fsoge   (0,a0,d0.l)
       fsoge   (-0x80,a0,d0.l)
-      fsoge   (0,a0,d1.w)
-      fsoge   (-0x80,a0,d1.w)
       fsoge   (0,a0,a0.w)
       fsoge   (-0x80,a0,a0.w)
-      fsoge   (0,a0,a0.l)
-      fsoge   (-0x80,a0,a0.l)
       fsolt   (0,a0,d0.l)
       fsolt   (-0x80,a0,d0.l)
-      fsolt   (0,a0,d1.w)
-      fsolt   (-0x80,a0,d1.w)
       fsolt   (0,a0,a0.w)
       fsolt   (-0x80,a0,a0.w)
-      fsolt   (0,a0,a0.l)
-      fsolt   (-0x80,a0,a0.l)
       fsole   (0,a0,d0.l)
       fsole   (-0x80,a0,d0.l)
-      fsole   (0,a0,d1.w)
-      fsole   (-0x80,a0,d1.w)
       fsole   (0,a0,a0.w)
       fsole   (-0x80,a0,a0.w)
-      fsole   (0,a0,a0.l)
-      fsole   (-0x80,a0,a0.l)
       fsogl   (0,a0,d0.l)
       fsogl   (-0x80,a0,d0.l)
-      fsogl   (0,a0,d1.w)
-      fsogl   (-0x80,a0,d1.w)
       fsogl   (0,a0,a0.w)
       fsogl   (-0x80,a0,a0.w)
-      fsogl   (0,a0,a0.l)
-      fsogl   (-0x80,a0,a0.l)
       fsor    (0,a0,d0.l)
       fsor    (-0x80,a0,d0.l)
-      fsor    (0,a0,d1.w)
-      fsor    (-0x80,a0,d1.w)
       fsor    (0,a0,a0.w)
       fsor    (-0x80,a0,a0.w)
-      fsor    (0,a0,a0.l)
-      fsor    (-0x80,a0,a0.l)
       fsun    (0,a0,d0.l)
       fsun    (-0x80,a0,d0.l)
-      fsun    (0,a0,d1.w)
-      fsun    (-0x80,a0,d1.w)
       fsun    (0,a0,a0.w)
       fsun    (-0x80,a0,a0.w)
-      fsun    (0,a0,a0.l)
-      fsun    (-0x80,a0,a0.l)
       fsueq   (0,a0,d0.l)
       fsueq   (-0x80,a0,d0.l)
-      fsueq   (0,a0,d1.w)
-      fsueq   (-0x80,a0,d1.w)
       fsueq   (0,a0,a0.w)
       fsueq   (-0x80,a0,a0.w)
-      fsueq   (0,a0,a0.l)
-      fsueq   (-0x80,a0,a0.l)
       fsugt   (0,a0,d0.l)
       fsugt   (-0x80,a0,d0.l)
-      fsugt   (0,a0,d1.w)
-      fsugt   (-0x80,a0,d1.w)
       fsugt   (0,a0,a0.w)
       fsugt   (-0x80,a0,a0.w)
-      fsugt   (0,a0,a0.l)
-      fsugt   (-0x80,a0,a0.l)
       fsuge   (0,a0,d0.l)
       fsuge   (-0x80,a0,d0.l)
-      fsuge   (0,a0,d1.w)
-      fsuge   (-0x80,a0,d1.w)
       fsuge   (0,a0,a0.w)
       fsuge   (-0x80,a0,a0.w)
-      fsuge   (0,a0,a0.l)
-      fsuge   (-0x80,a0,a0.l)
       fsult   (0,a0,d0.l)
       fsult   (-0x80,a0,d0.l)
-      fsult   (0,a0,d1.w)
-      fsult   (-0x80,a0,d1.w)
       fsult   (0,a0,a0.w)
       fsult   (-0x80,a0,a0.w)
-      fsult   (0,a0,a0.l)
-      fsult   (-0x80,a0,a0.l)
       fsule   (0,a0,d0.l)
       fsule   (-0x80,a0,d0.l)
-      fsule   (0,a0,d1.w)
-      fsule   (-0x80,a0,d1.w)
       fsule   (0,a0,a0.w)
       fsule   (-0x80,a0,a0.w)
-      fsule   (0,a0,a0.l)
-      fsule   (-0x80,a0,a0.l)
       fsne    (0,a0,d0.l)
       fsne    (-0x80,a0,d0.l)
-      fsne    (0,a0,d1.w)
-      fsne    (-0x80,a0,d1.w)
       fsne    (0,a0,a0.w)
       fsne    (-0x80,a0,a0.w)
-      fsne    (0,a0,a0.l)
-      fsne    (-0x80,a0,a0.l)
       fst     (0,a0,d0.l)
       fst     (-0x80,a0,d0.l)
-      fst     (0,a0,d1.w)
-      fst     (-0x80,a0,d1.w)
       fst     (0,a0,a0.w)
       fst     (-0x80,a0,a0.w)
-      fst     (0,a0,a0.l)
-      fst     (-0x80,a0,a0.l)
       fssf    (0,a0,d0.l)
       fssf    (-0x80,a0,d0.l)
-      fssf    (0,a0,d1.w)
-      fssf    (-0x80,a0,d1.w)
       fssf    (0,a0,a0.w)
       fssf    (-0x80,a0,a0.w)
-      fssf    (0,a0,a0.l)
-      fssf    (-0x80,a0,a0.l)
       fsseq   (0,a0,d0.l)
       fsseq   (-0x80,a0,d0.l)
-      fsseq   (0,a0,d1.w)
-      fsseq   (-0x80,a0,d1.w)
       fsseq   (0,a0,a0.w)
       fsseq   (-0x80,a0,a0.w)
-      fsseq   (0,a0,a0.l)
-      fsseq   (-0x80,a0,a0.l)
       fsgt    (0,a0,d0.l)
       fsgt    (-0x80,a0,d0.l)
-      fsgt    (0,a0,d1.w)
-      fsgt    (-0x80,a0,d1.w)
       fsgt    (0,a0,a0.w)
       fsgt    (-0x80,a0,a0.w)
-      fsgt    (0,a0,a0.l)
-      fsgt    (-0x80,a0,a0.l)
       fsge    (0,a0,d0.l)
       fsge    (-0x80,a0,d0.l)
-      fsge    (0,a0,d1.w)
-      fsge    (-0x80,a0,d1.w)
       fsge    (0,a0,a0.w)
       fsge    (-0x80,a0,a0.w)
-      fsge    (0,a0,a0.l)
-      fsge    (-0x80,a0,a0.l)
       fslt    (0,a0,d0.l)
       fslt    (-0x80,a0,d0.l)
-      fslt    (0,a0,d1.w)
-      fslt    (-0x80,a0,d1.w)
       fslt    (0,a0,a0.w)
       fslt    (-0x80,a0,a0.w)
-      fslt    (0,a0,a0.l)
-      fslt    (-0x80,a0,a0.l)
       fsle    (0,a0,d0.l)
       fsle    (-0x80,a0,d0.l)
-      fsle    (0,a0,d1.w)
-      fsle    (-0x80,a0,d1.w)
       fsle    (0,a0,a0.w)
       fsle    (-0x80,a0,a0.w)
-      fsle    (0,a0,a0.l)
-      fsle    (-0x80,a0,a0.l)
       fsgl    (0,a0,d0.l)
       fsgl    (-0x80,a0,d0.l)
-      fsgl    (0,a0,d1.w)
-      fsgl    (-0x80,a0,d1.w)
       fsgl    (0,a0,a0.w)
       fsgl    (-0x80,a0,a0.w)
-      fsgl    (0,a0,a0.l)
-      fsgl    (-0x80,a0,a0.l)
       fsgle   (0,a0,d0.l)
       fsgle   (-0x80,a0,d0.l)
-      fsgle   (0,a0,d1.w)
-      fsgle   (-0x80,a0,d1.w)
       fsgle   (0,a0,a0.w)
       fsgle   (-0x80,a0,a0.w)
-      fsgle   (0,a0,a0.l)
-      fsgle   (-0x80,a0,a0.l)
       fsngle  (0,a0,d0.l)
       fsngle  (-0x80,a0,d0.l)
-      fsngle  (0,a0,d1.w)
-      fsngle  (-0x80,a0,d1.w)
       fsngle  (0,a0,a0.w)
       fsngle  (-0x80,a0,a0.w)
-      fsngle  (0,a0,a0.l)
-      fsngle  (-0x80,a0,a0.l)
       fsngl   (0,a0,d0.l)
       fsngl   (-0x80,a0,d0.l)
-      fsngl   (0,a0,d1.w)
-      fsngl   (-0x80,a0,d1.w)
       fsngl   (0,a0,a0.w)
       fsngl   (-0x80,a0,a0.w)
-      fsngl   (0,a0,a0.l)
-      fsngl   (-0x80,a0,a0.l)
       fsnle   (0,a0,d0.l)
       fsnle   (-0x80,a0,d0.l)
-      fsnle   (0,a0,d1.w)
-      fsnle   (-0x80,a0,d1.w)
       fsnle   (0,a0,a0.w)
       fsnle   (-0x80,a0,a0.w)
-      fsnle   (0,a0,a0.l)
-      fsnle   (-0x80,a0,a0.l)
       fsnlt   (0,a0,d0.l)
       fsnlt   (-0x80,a0,d0.l)
-      fsnlt   (0,a0,d1.w)
-      fsnlt   (-0x80,a0,d1.w)
       fsnlt   (0,a0,a0.w)
       fsnlt   (-0x80,a0,a0.w)
-      fsnlt   (0,a0,a0.l)
-      fsnlt   (-0x80,a0,a0.l)
       fsnge   (0,a0,d0.l)
       fsnge   (-0x80,a0,d0.l)
-      fsnge   (0,a0,d1.w)
-      fsnge   (-0x80,a0,d1.w)
       fsnge   (0,a0,a0.w)
       fsnge   (-0x80,a0,a0.w)
-      fsnge   (0,a0,a0.l)
-      fsnge   (-0x80,a0,a0.l)
       fsngt   (0,a0,d0.l)
       fsngt   (-0x80,a0,d0.l)
-      fsngt   (0,a0,d1.w)
-      fsngt   (-0x80,a0,d1.w)
       fsngt   (0,a0,a0.w)
       fsngt   (-0x80,a0,a0.w)
-      fsngt   (0,a0,a0.l)
-      fsngt   (-0x80,a0,a0.l)
       fssne   (0,a0,d0.l)
       fssne   (-0x80,a0,d0.l)
-      fssne   (0,a0,d1.w)
-      fssne   (-0x80,a0,d1.w)
       fssne   (0,a0,a0.w)
       fssne   (-0x80,a0,a0.w)
-      fssne   (0,a0,a0.l)
-      fssne   (-0x80,a0,a0.l)
       fsst    (0,a0,d0.l)
       fsst    (-0x80,a0,d0.l)
-      fsst    (0,a0,d1.w)
-      fsst    (-0x80,a0,d1.w)
       fsst    (0,a0,a0.w)
       fsst    (-0x80,a0,a0.w)
-      fsst    (0,a0,a0.l)
-      fsst    (-0x80,a0,a0.l)
       fsf     (0x0101).w
       fseq    (0x0102).w
       fsogt   (0x0103).w
@@ -18536,10 +12712,6 @@
       fsave   (-0x80,a0,a7.l)
       fsave   (0,a0,d0.w)
       fsave   (-0x80,a0,d0.w)
-      fsave   (0,a0,d0.l)
-      fsave   (-0x80,a0,d0.l)
-      fsave   (0,a0,a0.w)
-      fsave   (-0x80,a0,a0.w)
       fsave   (0xf43a).w
       fsave   (0xf53c).l
       frestore    (a0)
@@ -18550,10 +12722,6 @@
       frestore    (-0x80,a0,a7.l)
       frestore    (0,a0,d0.w)
       frestore    (-0x80,a0,d0.w)
-      frestore    (0,a0,d0.l)
-      frestore    (-0x80,a0,d0.l)
-      frestore    (0,a0,a0.w)
-      frestore    (-0x80,a0,a0.w)
       frestore    (0xf47a).w
       frestore    (0xf57c).l
       frestore    (.-0x0b82,pc)
@@ -18565,9 +12733,3 @@
       frestore    (.+2,pc,d0.w)
       frestore    (.-126,pc,d0.w)
       frestore    (.,pc,d0.w)
-      frestore    (.+2,pc,d0.l)
-      frestore    (.-126,pc,d0.l)
-      frestore    (.,pc,d0.l)
-      frestore    (.+2,pc,a0.w)
-      frestore    (.-126,pc,a0.w)
-      frestore    (.,pc,a0.w)
