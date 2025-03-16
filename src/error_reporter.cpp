@@ -94,6 +94,8 @@ const /*PROGMEM*/ char *ErrorReporter::errorText_P(Error error) {
         return PSTR("Missing closing bracket");
     case ILLEGAL_COMBINATION:
         return PSTR("Illegal combination");
+    case ADDRESSING_NOT_ALLOWED:
+        return PSTR("Addressing mode not allowed");
 
     // ValueParser
     case ILLEGAL_CONSTANT:

@@ -39,6 +39,11 @@ private:
     StrBuffer &outExtendedReal(StrBuffer &buf, const ExtendedReal &v) const;
     StrBuffer &outDecimalString(StrBuffer &buf, const DecimalString &v) const;
 #endif
+    const char *outDisplacement(DisInsn &insn, StrBuffer &out, RegName base, uint_fast8_t bdSize,
+            const char *delim) const;
+    const char *outIndexReg(StrBuffer &out, uint16_t ext, const char *delim) const;
+    void decodeBriefExtension(DisInsn &insn, StrBuffer &out, uint16_t ext, RegName base) const;
+    void decodeFullExtension(DisInsn &insn, StrBuffer &out, uint16_t ext, RegName base) const;
     void decodeRelative(DisInsn &insn, StrBuffer &out, AddrMode mode) const;
     void decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode, OprPos pos, OprSize size,
             uint16_t opr16 = 0, Error opr16Error = OK) const;

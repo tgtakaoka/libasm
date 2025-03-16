@@ -165,13 +165,27 @@ void test_data_move() {
     TEST("MOVE.B ($1234,A2),D7",      0017052, 0x1234);
     TEST("MOVE.B (-$8000,A2),D7",     0017052, 0x8000);
     TEST("MOVE.B ($7FFF,A2),D7",      0017052, 0x7FFF);
-    ERRT("MOVE.B (-$8001,A2),D7",     OVERFLOW_RANGE, "(-$8001,A2),D7", 0017052, 0x7FFF);
-    ERRT("MOVE.B ($8000,A2),D7",      OVERFLOW_RANGE, "($8000,A2),D7",  0017052, 0x8000);
+    if (firstGen()) {
+        ERRT("MOVE.B (-$8001,A2),D7",
+             OVERFLOW_RANGE, "-$8001,A2),D7", 0017052, 0x7FFF);
+        ERRT("MOVE.B ($8000,A2),D7",
+             OVERFLOW_RANGE, "$8000,A2),D7",  0017052, 0x8000);
+    } else {
+        TEST("MOVE.B (-$8001,A2),D7",         0017062, 0x0170, 0xFFFF, 0x7FFF);
+        TEST("MOVE.B ($8000,A2),D7",          0017062, 0x0170, 0x0000, 0x8000);
+    }
     TEST("MOVE.B ($12,A2,D3.L),D7",   0017062, 0x3812);
     TEST("MOVE.B (-$80,A2,D3.L),D7",  0017062, 0x3880);
     TEST("MOVE.B ($7F,A2,D3.L),D7",   0017062, 0x387F);
-    ERRT("MOVE.B (-$81,A2,D3.L),D7",  OVERFLOW_RANGE, "(-$81,A2,D3.L),D7", 0017062, 0x387F);
-    ERRT("MOVE.B ($80,A2,D3.L),D7",   OVERFLOW_RANGE, "($80,A2,D3.L),D7",  0017062, 0x3880);
+    if (firstGen()) {
+        ERRT("MOVE.B (-$81,A2,D3.L),D7",
+             OVERFLOW_RANGE, "-$81,A2,D3.L),D7", 0017062, 0x387F);
+        ERRT("MOVE.B ($80,A2,D3.L),D7",
+             OVERFLOW_RANGE, "$80,A2,D3.L),D7",  0017062, 0x3880);
+    } else {
+        TEST("MOVE.B (-$81,A2,D3.L),D7",         0017062, 0x3920, 0xFF7F);
+        TEST("MOVE.B ($80,A2,D3.L),D7",          0017062, 0x3920, 0x0080);
+    }
     TEST("MOVE.B ($1234).W,D7",       0017070, 0x1234);
     TEST("MOVE.B ($123456).L,D7",     0017071, 0x0012, 0x3456);
     TEST("MOVE.B (32767),D7",         0017070, 0x7FFF);
@@ -205,12 +219,26 @@ void test_data_move() {
     TEST("MOVE.B (*+$12,PC,D3.W),D7", 0017073, 0x3010);
     TEST("MOVE.B (*-$7FFE,PC),D7",    0017072, 0x8000);
     TEST("MOVE.B (*+$8001,PC),D7",    0017072, 0x7FFF);
-    ERRT("MOVE.B (*-$7FFF,PC),D7",    OVERFLOW_RANGE, "(*-$7FFF,PC),D7", 0017072, 0x7FFF);
-    ERRT("MOVE.B (*+$8002,PC),D7",    OVERFLOW_RANGE, "(*+$8002,PC),D7", 0017072, 0x8000);
+    if (firstGen()) {
+        ERRT("MOVE.B (*-$7FFF,PC),D7",
+             OVERFLOW_RANGE, "*-$7FFF,PC),D7", 0017072, 0x7FFF);
+        ERRT("MOVE.B (*+$8002,PC),D7",
+             OVERFLOW_RANGE, "*+$8002,PC),D7", 0017072, 0x8000);
+    } else {
+        TEST("MOVE.B (*-$7FFF,PC),D7",         0017073, 0x0170, 0xFFFF, 0x7FFF);
+        TEST("MOVE.B (*+$8002,PC),D7",         0017073, 0x0170, 0x0000, 0x8000);
+    }
     TEST("MOVE.B (*-$7E,PC,D3),D7",   0017073, 0x3080);
     TEST("MOVE.B (*+$81,PC,D3),D7",   0017073, 0x307F);
-    ERRT("MOVE.B (*-$7F,PC,D3),D7",   OVERFLOW_RANGE, "(*-$7F,PC,D3),D7", 0017073, 0x307F);
-    ERRT("MOVE.B (*+$82,PC,D3),D7",   OVERFLOW_RANGE, "(*+$82,PC,D3),D7", 0017073, 0x3080);
+    if (firstGen()) {
+        ERRT("MOVE.B (*-$7F,PC,D3),D7",
+             OVERFLOW_RANGE, "*-$7F,PC,D3),D7", 0017073, 0x307F);
+        ERRT("MOVE.B (*+$82,PC,D3),D7",
+             OVERFLOW_RANGE, "*+$82,PC,D3),D7", 0017073, 0x3080);
+    } else {
+        TEST("MOVE.B (*-$7F,PC,D3),D7",         0017073, 0x3120, 0xFF7F);
+        TEST("MOVE.B (*+$82,PC,D3),D7",         0017073, 0x3120, 0x0080);
+    }
     TEST("MOVE.B #$34,D7",            0017074, 0x0034);
     TEST("MOVE.B #$FF,D7",            0017074, 0x00FF);
     TEST("MOVE.B #-$80,D7",           0017074, 0x0080);
@@ -5121,6 +5149,172 @@ void test_float_system() {
 
 #endif
 
+void test_extension() {
+    if (firstGen()) {
+        ERRT("LEA ($8000,A2),A1",      OVERFLOW_RANGE, "$8000,A2),A1",      0041752, 0x8000);
+        ERRT("LEA (-$81,A2,D3.W),A1",  OVERFLOW_RANGE, "-$81,A2,D3.W),A1",  0041762, 0x307F);
+        ERRT("LEA (*-$8000,PC),A1",    OVERFLOW_RANGE, "*-$8000,PC),A1",    0041772, 0x7FFE);
+        ERRT("LEA (*+$82,PC,A3.L),A1", OVERFLOW_RANGE, "*+$82,PC,A3.L),A1", 0041773, 0xB880);
+        TEST("LEA (18,A2,D3.W),A1",                                     0041762, 0x3012);
+        ERRT("LEA (18,A2,D3.W*2),A1", ADDRESSING_NOT_ALLOWED, "*2),A1", 0041762, 0x3212);
+        ERRT("LEA (18,A2,D3.W*4),A1", ADDRESSING_NOT_ALLOWED, "*4),A1", 0041762, 0x3412);
+        ERRT("LEA (18,A2,D3.W*8),A1", ADDRESSING_NOT_ALLOWED, "*8),A1", 0041762, 0x3612);
+        TEST("LEA (18,A2,D3.L),A1",                                     0041762, 0x3812);
+        ERRT("LEA (18,A2,D3.L*2),A1", ADDRESSING_NOT_ALLOWED, "*2),A1", 0041762, 0x3A12);
+        ERRT("LEA (18,A2,D3.L*4),A1", ADDRESSING_NOT_ALLOWED, "*4),A1", 0041762, 0x3C12);
+        ERRT("LEA (18,A2,D3.L*8),A1", ADDRESSING_NOT_ALLOWED, "*8),A1", 0041762, 0x3E12);
+        TEST("LEA (18,A2,A3.W),A1",                                     0041762, 0xB012);
+        ERRT("LEA (18,A2,A3.W*2),A1", ADDRESSING_NOT_ALLOWED, "*2),A1", 0041762, 0xB212);
+        ERRT("LEA (18,A2,A3.W*4),A1", ADDRESSING_NOT_ALLOWED, "*4),A1", 0041762, 0xB412);
+        ERRT("LEA (18,A2,A3.W*8),A1", ADDRESSING_NOT_ALLOWED, "*8),A1", 0041762, 0xB612);
+        TEST("LEA (18,A2,A3.L),A1",                                     0041762, 0xB812);
+        ERRT("LEA (18,A2,A3.L*2),A1", ADDRESSING_NOT_ALLOWED, "*2),A1", 0041762, 0xBA12);
+        ERRT("LEA (18,A2,A3.L*4),A1", ADDRESSING_NOT_ALLOWED, "*4),A1", 0041762, 0xBC12);
+        ERRT("LEA (18,A2,A3.L*8),A1", ADDRESSING_NOT_ALLOWED, "*8),A1", 0041762, 0xBE12);
+        ERRT("LEA (D3.W),A1",       ADDRESSING_NOT_ALLOWED, "D3.W),A1", 0041760, 0x3000);
+        ERRT("LEA (A3.W),A1",       ADDRESSING_NOT_ALLOWED, "A3.W),A1", 0041760, 0xB000);
+        ERRT("LEA ($1234,D3.W),A1", ADDRESSING_NOT_ALLOWED, "D3.W),A1", 0041760, 0x3034);
+        ERRT("LEA ($1234,A3.W),A1", ADDRESSING_NOT_ALLOWED, "A3.W),A1", 0041760, 0xB034);
+        TEST("LEA (A2,D3.W),A1",                                        0041762, 0x3000);
+        TEST("LEA (A2,A3.L),A1",                                        0041762, 0xB800);
+        ERRT("LEA ([D3.W]),A1",  ADDRESSING_NOT_ALLOWED, "[D3.W]),A1",  0041760, 0x3000);
+        ERRT("LEA ([A3.W]),A1",  ADDRESSING_NOT_ALLOWED, "[A3.W]),A1",  0041760, 0xB000);
+        ERRT("LEA ([D3.W],$5678),A1",
+             ADDRESSING_NOT_ALLOWED,                "[D3.W],$5678),A1", 0041760, 0x3000);
+        ERRT("LEA ([$1234,A3.W]),A1",
+             ADDRESSING_NOT_ALLOWED,                "[$1234,A3.W]),A1", 0041760, 0xB034);
+        ERRT("LEA ([$1234,D3.W],$5678),A1",
+             ADDRESSING_NOT_ALLOWED,          "[$1234,D3.W],$5678),A1", 0041760, 0x3034);
+        ERRT("LEA ([A2,D3.W]),A1",
+             ADDRESSING_NOT_ALLOWED,                   "[A2,D3.W]),A1", 0041762, 0x3000);
+        ERRT("LEA ([A2,A3.W],$5678),A1",
+             ADDRESSING_NOT_ALLOWED,             "[A2,A3.W],$5678),A1", 0041762, 0xB000);
+        ERRT("LEA ([$1234,A2,D3.W]),A1",
+             ADDRESSING_NOT_ALLOWED,             "[$1234,A2,D3.W]),A1", 0041762, 0x3034);
+        ERRT("LEA ([$1234,A2,A3.W],$5678),A1",
+             ADDRESSING_NOT_ALLOWED,       "[$1234,A2,A3.W],$5678),A1", 0041762, 0xB034);
+        ERRT("LEA ([*+$1234,PC,D3.W]),A1",
+             ADDRESSING_NOT_ALLOWED,           "[*+$1234,PC,D3.W]),A1", 0041773, 0x3032);
+        ERRT("LEA ([*+$1234,PC,A3.W],$5678),A1",
+             ADDRESSING_NOT_ALLOWED,     "[*+$1234,PC,A3.W],$5678),A1", 0041773, 0xB032);
+        ERRT("LEA ([$1234]),A1", ADDRESSING_NOT_ALLOWED, "[$1234]),A1", 0041760, 0x0034);
+        ERRT("LEA ([$1234],$5678),A1",
+             ADDRESSING_NOT_ALLOWED,               "[$1234],$5678),A1", 0041760, 0x0034);
+        ERRT("LEA ([$1234],D3.W),A1",
+             ADDRESSING_NOT_ALLOWED,                "[$1234],D3.W),A1", 0041760, 0x3034);
+        ERRT("LEA ([$1234],A3.W,$5678),A1",
+             ADDRESSING_NOT_ALLOWED,          "[$1234],A3.W,$5678),A1", 0041760, 0xB034);
+        ERRT("LEA ([A2]),A1",       ADDRESSING_NOT_ALLOWED, "[A2]),A1", 0041762, 0x0000);
+        ERRT("LEA ([A2],$5678),A1",
+             ADDRESSING_NOT_ALLOWED,                  "[A2],$5678),A1", 0041762, 0x0000);
+        ERRT("LEA ([A2],D3.W),A1",
+             ADDRESSING_NOT_ALLOWED,                   "[A2],D3.W),A1", 0041762, 0x3000);
+        ERRT("LEA ([A2],A3.W,$5678),A1",
+             ADDRESSING_NOT_ALLOWED,             "[A2],A3.W,$5678),A1", 0041762, 0xB000);
+        ERRT("LEA ([$1234,A2]),A1",
+             ADDRESSING_NOT_ALLOWED,                  "[$1234,A2]),A1", 0041762, 0x0034);
+        ERRT("LEA ([$1234,A2],$5678),A1",
+             ADDRESSING_NOT_ALLOWED,            "[$1234,A2],$5678),A1", 0041762, 0x0034);
+        ERRT("LEA ([$1234,A2],D3.W),A1",
+             ADDRESSING_NOT_ALLOWED,             "[$1234,A2],D3.W),A1", 0041762, 0x3034);
+        ERRT("LEA ([$1234,A2],A3.W,$5678),A1",
+             ADDRESSING_NOT_ALLOWED,       "[$1234,A2],A3.W,$5678),A1", 0041762, 0xB034);
+        ERRT("LEA ([*+$1234,PC]),A1",
+             ADDRESSING_NOT_ALLOWED,                "[*+$1234,PC]),A1", 0041773, 0x0032);
+        ERRT("LEA ([*+$1234,PC],$5678),A1",
+             ADDRESSING_NOT_ALLOWED,          "[*+$1234,PC],$5678),A1", 0041773, 0x0032);
+        ERRT("LEA ([*+$1234,PC],D3.W),A1",
+             ADDRESSING_NOT_ALLOWED,           "[*+$1234,PC],D3.W),A1", 0041773, 0x3032);
+        ERRT("LEA ([*+$1234,PC],A3.W,$5678),A1",
+             ADDRESSING_NOT_ALLOWED,     "[*+$1234,PC],A3.W,$5678),A1", 0041773, 0xB032);
+    } else {
+        TEST("LEA (18,A2,D3.W*1),A1", 0041762, 0x3012);
+        TEST("LEA (18,A2,D3.W*2),A1", 0041762, 0x3212);
+        TEST("LEA (18,A2,D3.W*4),A1", 0041762, 0x3412);
+        TEST("LEA (18,A2,D3.W*8),A1", 0041762, 0x3612);
+        TEST("LEA (18,A2,D3.L*1),A1", 0041762, 0x3812);
+        TEST("LEA (18,A2,D3.L*2),A1", 0041762, 0x3A12);
+        TEST("LEA (18,A2,D3.L*4),A1", 0041762, 0x3C12);
+        TEST("LEA (18,A2,D3.L*8),A1", 0041762, 0x3E12);
+        TEST("LEA (18,A2,A3.W*1),A1", 0041762, 0xB012);
+        TEST("LEA (18,A2,A3.W*2),A1", 0041762, 0xB212);
+        TEST("LEA (18,A2,A3.W*4),A1", 0041762, 0xB412);
+        TEST("LEA (18,A2,A3.W*8),A1", 0041762, 0xB612);
+        TEST("LEA (18,A2,A3.L*1),A1", 0041762, 0xB812);
+        TEST("LEA (18,A2,A3.L*2),A1", 0041762, 0xBA12);
+        TEST("LEA (18,A2,A3.L*4),A1", 0041762, 0xBC12);
+        TEST("LEA (18,A2,A3.L*8),A1", 0041762, 0xBE12);
+        TEST("LEA (D3.W),A1",                    0041760, 0x3190);
+        TEST("LEA (A3.W),A1",                    0041760, 0xB190);
+        TEST("LEA ($1234,D3.W),A1",              0041760, 0x31A0, 0x1234);
+        TEST("LEA ($1234,A3.W),A1",              0041760, 0xB1A0, 0x1234);
+        TEST("LEA (A2,D3),A1",                   0041762, 0x3000);
+        TEST("LEA (A2,A3),A1",                   0041762, 0xB000);
+        TEST("LEA (A2,D3*2),A1",                 0041762, 0x3200);
+        TEST("LEA (A2,A3*8),A1",                 0041762, 0xB600);
+        TEST("LEA ($1234,A2,D3.W),A1",           0041762, 0x3120, 0x1234);
+        TEST("LEA ($1234,A2,A3.W),A1",           0041762, 0xB120, 0x1234);
+        TEST("LEA (*+2,PC),A1",                  0041772, 0x0000);
+        TEST("LEA (*+$1234,PC),A1",              0041772, 0x1232);
+        TEST("LEA (*+$1234,PC,D3.W),A1",         0041773, 0x3120, 0x1232);
+        TEST("LEA (*+$1234,PC,A3.W),A1",         0041773, 0xB120, 0x1232);
+        TEST("LEA ([D3.W]),A1",                  0041760, 0x3191);
+        TEST("LEA ([A3.W]),A1",                  0041760, 0xB191);
+        TEST("LEA ([D3.W],$5678),A1",            0041760, 0x3192, 0x5678);
+        TEST("LEA ([A3.W],$5678),A1",            0041760, 0xB192, 0x5678);
+        TEST("LEA ([$1234,D3.W]),A1",            0041760, 0x31A1, 0x1234);
+        TEST("LEA ([$1234,A3.W]),A1",            0041760, 0xB1A1, 0x1234);
+        TEST("LEA ([$1234,D3.W],$5678),A1",      0041760, 0x31A2, 0x1234, 0x5678);
+        TEST("LEA ([$1234,A3.W],$5678),A1",      0041760, 0xB1A2, 0x1234, 0x5678);
+        TEST("LEA ([A2,D3.W]),A1",               0041762, 0x3111);
+        TEST("LEA ([A2,A3.W]),A1",               0041762, 0xB111);
+        TEST("LEA ([A2,D3.W],$5678),A1",         0041762, 0x3112, 0x5678);
+        TEST("LEA ([A2,A3.W],$5678),A1",         0041762, 0xB112, 0x5678);
+        TEST("LEA ([$1234,A2,D3.W]),A1",         0041762, 0x3121, 0x1234);
+        TEST("LEA ([$1234,A2,A3.W]),A1",         0041762, 0xB121, 0x1234);
+        TEST("LEA ([$1234,A2,D3.W],$5678),A1",   0041762, 0x3122, 0x1234, 0x5678);
+        TEST("LEA ([$1234,A2,A3.W],$5678),A1",   0041762, 0xB122, 0x1234, 0x5678);
+        TEST("LEA ([*+2,PC,D3.W]),A1",           0041773, 0x3111);
+        TEST("LEA ([*+2,PC,A3.W]),A1",           0041773, 0xB111);
+        TEST("LEA ([*+2,PC,D3.W],$5678),A1",     0041773, 0x3112, 0x5678);
+        TEST("LEA ([*+2,PC,A3.W],$5678),A1",     0041773, 0xB112, 0x5678);
+        TEST("LEA ([*+$1234,PC,D3.W]),A1",       0041773, 0x3121, 0x1232);
+        TEST("LEA ([*+$1234,PC,A3.W]),A1",       0041773, 0xB121, 0x1232);
+        TEST("LEA ([*+$1234,PC,D3.W],$5678),A1", 0041773, 0x3122, 0x1232, 0x5678);
+        TEST("LEA ([*+$1234,PC,A3.W],$5678),A1", 0041773, 0xB122, 0x1232, 0x5678);
+        TEST("LEA ([$1234]),A1",                 0041760, 0x01E1, 0x1234);
+        TEST("LEA ([$1234],$5678),A1",           0041760, 0x01E2, 0x1234, 0x5678);
+        TEST("LEA ([$1234],D3.W),A1",            0041760, 0x31A5, 0x1234);
+        TEST("LEA ([$1234],A3.W),A1",            0041760, 0xB1A5, 0x1234);
+        TEST("LEA ([$1234],D3.W,$5678),A1",      0041760, 0x31A6, 0x1234, 0x5678);
+        TEST("LEA ([$1234],A3.W,$5678),A1",      0041760, 0xB1A6, 0x1234, 0x5678);
+        TEST("LEA ([A2]),A1",                    0041762, 0x0151);
+        TEST("LEA ([A2],$5678),A1",              0041762, 0x0152, 0x5678);
+        TEST("LEA ([A2],D3.W),A1",               0041762, 0x3115);
+        TEST("LEA ([A2],A3.W),A1",               0041762, 0xB115);
+        TEST("LEA ([A2],D3.W,$5678),A1",         0041762, 0x3116, 0x5678);
+        TEST("LEA ([A2],A3.W,$5678),A1",         0041762, 0xB116, 0x5678);
+        TEST("LEA ([$1234,A2]),A1",              0041762, 0x0161, 0x1234);
+        TEST("LEA ([$1234,A2],$5678),A1",        0041762, 0x0162, 0x1234, 0x5678);
+        TEST("LEA ([$1234,A2],D3.W),A1",         0041762, 0x3125, 0x1234);
+        TEST("LEA ([$1234,A2],A3.W),A1",         0041762, 0xB125, 0x1234);
+        TEST("LEA ([$1234,A2],D3.W,$5678),A1",   0041762, 0x3126, 0x1234, 0x5678);
+        TEST("LEA ([$1234,A2],A3.W,$5678),A1",   0041762, 0xB126, 0x1234, 0x5678);
+        TEST("LEA ([*+2,PC]),A1",                0041773, 0x0151);
+        TEST("LEA ([*+2,PC],$5678),A1",          0041773, 0x0152, 0x5678);
+        TEST("LEA ([*+2,PC],D3.W),A1",           0041773, 0x3115);
+        TEST("LEA ([*+2,PC],A3.W),A1",           0041773, 0xB115);
+        TEST("LEA ([*+2,PC],D3.W,$5678),A1",     0041773, 0x3116, 0x5678);
+        TEST("LEA ([*+2,PC],A3.W,$5678),A1",     0041773, 0xB116, 0x5678);
+        TEST("LEA ([*+$1234,PC]),A1",            0041773, 0x0161, 0x1232);
+        TEST("LEA ([*+$1234,PC],$5678),A1",      0041773, 0x0162, 0x1232, 0x5678);
+        TEST("LEA ([*+$1234,PC],D3.W),A1",       0041773, 0x3125, 0x1232);
+        TEST("LEA ([*+$1234,PC],A3.W),A1",       0041773, 0xB125, 0x1232);
+        TEST("LEA ([*+$1234,PC],D3.W,$5678),A1", 0041773, 0x3126, 0x1232, 0x5678);
+        TEST("LEA ([*+$1234,PC],A3.W,$5678),A1", 0041773, 0xB126, 0x1232, 0x5678);
+    }
+}
+
 void test_comment() {
     COMM("NOP           ; comment", "; comment", 0047161);
     COMM("ORI  # 0 , CCR; comment", "; comment", 0000074, 0x0000);
@@ -5270,7 +5464,7 @@ void test_data_constant() {
          0, 0, 0, 0, 0, 0);
     ERRT("DC.P -0.225",           FLOAT_NOT_SUPPORTED, "-0.225",
          0, 0, 0, 0, 0, 0);
-    
+
     ERRT( "DC.S 1, UNDEF, 2",     FLOAT_NOT_SUPPORTED, "1, UNDEF, 2",
           0, 0, 0, 0, 0, 0);
     ERRT( "DC.D 1, UNDEF, 2",     FLOAT_NOT_SUPPORTED, "1, UNDEF, 2",
@@ -5347,6 +5541,7 @@ void run_tests(const char *cpu) {
     RUN_TEST(test_float_trap);
     RUN_TEST(test_float_system);
 #endif
+    RUN_TEST(test_extension);
     RUN_TEST(test_comment);
     RUN_TEST(test_undef);
     RUN_TEST(test_data_constant);

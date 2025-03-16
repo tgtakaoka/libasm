@@ -72,15 +72,6 @@ enum RegName : int8_t {
     REG_VBR = 32 + 3,
 };
 
-// Brief extension word.
-struct BriefExt {
-    uint16_t word;
-
-    OprSize indexSize() const;
-    RegName index() const;
-    uint_fast8_t disp() const;
-};
-
 namespace reg {
 
 RegName parseRegName(StrScanner &scan, const ValueParser &parser);
@@ -107,6 +98,7 @@ AddrMode decodeAddrMode(uint_fast8_t mode, uint_fast8_t regno);
 RegName decodeRegNo(uint_fast8_t mode, uint_fast8_t regno);
 
 InsnSize parseSize(StrScanner &scan);
+InsnSize parseIndexSize(StrScanner &scan);
 uint_fast8_t sizeNameLen(OprSize size);
 char sizeSuffix(OprSize size);
 

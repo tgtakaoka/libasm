@@ -721,6 +721,7 @@ extern const char TEXT_TEXT[]  PROGMEM;
 
 extern const char PSTR_AT[]      PROGMEM; // "*"
 extern const char PSTR_DOLLAR[]  PROGMEM; // "$"
+extern const char PSTR_COMMA[]   PROGMEM; // ","
 extern const char PSTR_DOT[]     PROGMEM; // "."
 extern const char PSTR_SEMI[]    PROGMEM; // ";"
 extern const char PSTR_SHARP[]   PROGMEM; // "#"

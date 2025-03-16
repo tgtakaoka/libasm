@@ -40,8 +40,9 @@ private:
     Error parseKFactor(StrScanner &scan, Operand &op) const;
     Error checkAlignment(AsmInsn &insn, OprSize size, const Value &val, const ErrorAt &) const;
 
-    void encodeBriefExtension(AsmInsn &insn, const Addressing &addr, const ErrorAt &) const;
-    void encodeDisplacement(AsmInsn &insn, const Addressing &addr, const ErrorAt &) const;
+    void encodeBriefExtension(AsmInsn &insn, const Addressing &addr) const;
+    void encodeFullExtension(AsmInsn &insn, const Addressing &addr) const;
+    void encodeEffectiveAddress(AsmInsn &insn, const Operand &op, OprPos pos) const;
     AddrMode branchType(AddrMode mode, InsnSize size, Config::ptrdiff_t delta) const;
     void encodeRelativeAddr(AsmInsn &insn, AddrMode mode, const Operand &op) const;
     void encodeImmediate(AsmInsn &insn, const Operand &op, OprSize size) const;

@@ -45,19 +45,26 @@ enum IndexScale : int8_t {
 };
 
 struct Indexing {
+    StrScanner at;
     RegName reg;
     InsnSize size;  // index register size
+    StrScanner scaleAt;
     IndexScale scale;
-    Indexing() : reg(REG_UNDEF), size(ISZ_NONE), scale(SCALE_NONE) {}
+    bool post;
+    explicit Indexing(RegName index = REG_UNDEF) : reg(index), size(ISZ_NONE), scale(SCALE_NONE), post(false) {}
+    const char *str() const;
 };
 
 struct Displacement {
-    bool none;  // no displacement specified
+    bool none;
+    StrScanner at;
     Value value;
-    Displacement() : none(true), value() {}
+    Displacement() : none(true) {}
+    const char *str() const;
 };
 
 struct Addressing {
+    StrScanner indirectAt;
     bool indirect;
     RegName base;
     Indexing index;

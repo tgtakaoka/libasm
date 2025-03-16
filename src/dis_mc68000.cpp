@@ -223,6 +223,102 @@ StrBuffer &DisMc68000::outDecimalString(StrBuffer &out, const DecimalString &v) 
 
 #endif
 
+void DisMc68000::decodeBriefExtension(
+        DisInsn &insn, StrBuffer &out, uint16_t ext, RegName base) const {
+    if (firstGen() && (ext & 0x0700))
+        insn.setErrorIf(out, UNKNOWN_POSTBYTE);
+    const auto disp8 = static_cast<int8_t>(ext & 0xFF);
+    out.letter('(');
+    if (base == REG_PC) {
+        const Config::uintptr_t target =
+                insn.address() + insn.length() - 2 + static_cast<int8_t>(disp8);
+        outRelAddr(out, target, insn.address(), 8);
+    } else {
+        outHex(out, disp8, -8);
+    }
+    outRegName(out.letter(','), base);
+    outRegName(out.letter(','), decodeGeneralReg(ext >> 12));
+    outOprSize(out, (ext & 0x800) ? SZ_LONG : SZ_WORD);
+    const auto indexScale = (ext >> 9) & 3;
+    if (indexScale && !firstGen()) {
+        const auto scale = 1 << indexScale;
+        out.letter('*').int16(scale);
+    }
+}
+
+const char *DisMc68000::outIndexReg(StrBuffer &out, uint16_t ext, const char *delim) const {
+    if (ext & 0x40)
+        return delim;
+    outRegName(out.text(delim), decodeGeneralReg(ext >> 12));
+    outOprSize(out, (ext & 0x800) ? SZ_LONG : SZ_WORD);
+    const auto indexScale = (ext >> 9) & 3;
+    if (indexScale && !firstGen()) {
+        const auto scale = 1 << indexScale;
+        out.letter('*').int16(scale);
+    }
+    return PSTR_COMMA;
+}
+
+const char *DisMc68000::outDisplacement(
+        DisInsn &insn, StrBuffer &out, RegName base, uint_fast8_t bdSize, const char *delim) const {
+    if (base == REG_PC) {
+        uint_fast8_t bits = 8;
+        Config::uintptr_t target = insn.address() + insn.length() - 2;
+        if (bdSize == 2) {
+            target += static_cast<int16_t>(insn.readUint16());
+            bits = 16;
+        } else if (bdSize == 3) {
+            target += static_cast<int32_t>(insn.readUint32());
+            bits = 32;
+        }
+        outRelAddr(out.text(delim), target, insn.address(), bits);
+        delim = PSTR_COMMA;
+    } else {
+        if (bdSize == 2) {
+            outHex(out.text(delim), insn.readUint16(), -16);
+            delim = PSTR_COMMA;
+        } else if (bdSize == 3) {
+            outHex(out.text(delim), insn.readUint32(), -32);
+            delim = PSTR_COMMA;
+        }
+    }
+    return delim;
+}
+
+void DisMc68000::decodeFullExtension(
+        DisInsn &insn, StrBuffer &out, uint16_t ext, RegName base) const {
+    if (ext & 8)
+        insn.setErrorIf(out, UNKNOWN_POSTBYTE);
+    const auto bdSize = (ext >> 4) & 3;
+    if (bdSize == 0)
+        insn.setErrorIf(out, UNKNOWN_POSTBYTE);
+    if ((ext & 7) == 0) {
+        out.letter('(');
+        auto delim = outDisplacement(insn, out, base, bdSize, TEXT_null);
+        if ((ext & 0x80) == 0) {
+            outRegName(out.text(delim), base);
+            delim = PSTR_COMMA;
+        }
+        outIndexReg(out, ext, delim);
+    } else {
+        const auto iis = (ext & 0x47);
+        if (iis == 4 || iis >= 0x44)
+            insn.setErrorIf(out, UNKNOWN_POSTBYTE);
+        out.letter('(').letter('[');
+        auto delim = outDisplacement(insn, out, base, bdSize, TEXT_null);
+        if ((ext & 0x80) == 0) {
+            outRegName(out.text(delim), base);
+            delim = PSTR_COMMA;
+        }
+        if (iis < 4)
+            delim = outIndexReg(out, ext, delim);
+        out.letter(']');
+        if (iis >= 4 && iis < 8)
+            delim = outIndexReg(out, ext, delim);
+        outDisplacement(insn, out, REG_UNDEF, ext & 3, delim);
+    }
+}
+
 void DisMc68000::outEffectiveAddr(
         DisInsn &insn, StrBuffer &out, AddrMode mode, RegName reg, OprSize size) const {
     if (mode == M_DREG || mode == M_AREG) {
@@ -260,23 +356,12 @@ void DisMc68000::outEffectiveAddr(
         outAbsAddr(out.letter('('), target, _gnuAs ? 16 : 0);
     } else if (mode == M_INDX || mode == M_PCIDX) {
         const auto base = (mode == M_INDX) ? reg : REG_PC;
-        BriefExt ext;
-        ext.word = insn.readUint16();
-        if (ext.word & 0x0700)
-            insn.setErrorIf(out, UNKNOWN_POSTBYTE);
-        const auto val8 = ext.disp();
-        out.letter('(');
-        if (mode == M_PCIDX) {
-            const Config::uintptr_t target =
-                    insn.address() + insn.length() - 2 + static_cast<int8_t>(val8);
-            outRelAddr(out, target, insn.address(), 8);
+        const auto ext = insn.readUint16();
+        if (firstGen() || (ext & 0x0100) == 0) {
+            decodeBriefExtension(insn, out, ext, base);
         } else {
-            outHex(out, val8, -8);
+            decodeFullExtension(insn, out, ext, base);
         }
-        out.letter(',');
-        outRegName(out, base).letter(',');
-        outRegName(out, ext.index());
-        outOprSize(out, ext.indexSize());
     }
     out.letter(')');
     if (mode == M_AWORD)
