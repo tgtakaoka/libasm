@@ -262,6 +262,8 @@ void DisMc68000::decodeEffectiveAddr(
         const auto base = (mode == M_INDX) ? reg : REG_PC;
         BriefExt ext;
         ext.word = insn.readUint16();
+        if (ext.word & 0x0700)
+            insn.setErrorIf(out, UNKNOWN_POSTBYTE);
         const auto val8 = ext.disp();
         out.letter('(');
         if (mode == M_PCIDX) {
