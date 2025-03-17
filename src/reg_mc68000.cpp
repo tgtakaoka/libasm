@@ -38,6 +38,8 @@ constexpr NameEntry REG_ENTRIES[] PROGMEM = {
     { TEXT_REG_A5,    REG_A5    },
     { TEXT_REG_A6,    REG_A6    },
     { TEXT_REG_A7,    REG_A7    },
+    { TEXT_REG_CAAR,  REG_CAAR  },
+    { TEXT_REG_CACR,  REG_CACR  },
     { TEXT_REG_CCR,   REG_CCR   },
     { TEXT_REG_D0,    REG_D0    },
     { TEXT_REG_D1,    REG_D1    },
@@ -59,6 +61,8 @@ constexpr NameEntry REG_ENTRIES[] PROGMEM = {
     { TEXT_REG_FPCR,  REG_FPCR  },
     { TEXT_REG_FPIAR, REG_FPIAR },
     { TEXT_REG_FPSR,  REG_FPSR  },
+    { TEXT_REG_ISP,   REG_ISP   },
+    { TEXT_REG_MSP,   REG_MSP   },
     { TEXT_REG_PC,    REG_PC    },
     { TEXT_REG_SFC,   REG_SFC   },
     { TEXT_REG_SR,    REG_SR    },
@@ -116,18 +120,17 @@ Config::opcode_t encodeGeneralRegNo(RegName name) {
 }
 
 Config::opcode_t encodeControlRegNo(RegName name) {
-    switch (name) {
-    case REG_SFC:
-        return 0x000;
-    case REG_DFC:
-        return 0x001;
-    case REG_USP:
-        return 0x800;
-    case REG_VBR:
-        return 0x801;
-    default:
-        return 0;
-    }
+    static constexpr Config::opcode_t CREGNO[] = {
+            0x000,  // REG_SFC = 32 + 0,   // MC68010/MC68020
+            0x001,  // REG_DFC = 32 + 1,   // MC68010/MC68020
+            0x800,  // REG_USP = 32 + 2,   // MC68010/MC68020
+            0x801,  // REG_VBR = 32 + 3,   // MC68010/MC68020
+            0x002,  // REG_CACR = 32 + 4,  // MC68020
+            0x802,  // REG_CAAR = 32 + 5,  // MC68020
+            0x803,  // REG_MSP = 32 + 6,   // MC68020
+            0x804,  // REG_ISP = 32 + 7,   // MC68020
+    };
+    return pgm_read_word(&CREGNO[name - REG_SFC]);
 }
 
 uint_fast8_t encodeGeneralRegPos(RegName name) {
@@ -155,18 +158,26 @@ RegName decodeAddrReg(uint_fast8_t regno) {
 }
 
 RegName decodeControlReg(Config::opcode_t regno) {
-    switch (regno & Entry::Flags::postMask(EX_RC)) {
-    case 0x000:
-        return REG_SFC;
-    case 0x001:
-        return REG_DFC;
-    case 0x800:
-        return REG_USP;
-    case 0x801:
-        return REG_VBR;
-    default:
-        return REG_UNDEF;
+    regno &= 0xFFF;
+    if (regno < 3) {
+        static constexpr RegName CREG_0xx[] PROGMEM = {
+                REG_SFC,   // 0x000
+                REG_DFC,   // 0x001
+                REG_CACR,  // 0x002
+        };
+        return RegName(pgm_read_byte(&CREG_0xx[regno]));
     }
+    if (regno >= 0x800 && regno < 0x805) {
+        static constexpr RegName CREG_8xx[] PROGMEM = {
+                REG_USP,   // 0x800
+                REG_VBR,   // 0x801
+                REG_CAAR,  // 0x802
+                REG_MSP,   // 0x803
+                REG_ISP,   // 0x804
+        };
+        return RegName(pgm_read_byte(&CREG_8xx[regno - 0x800]));
+    }
+    return REG_UNDEF;
 }
 
 InsnSize parseSize(StrScanner &scan) {

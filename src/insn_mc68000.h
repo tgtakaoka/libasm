@@ -36,6 +36,8 @@ struct EntryInsn : EntryInsnPostfix<Config, Entry> {
     OprSize oprSize() const { return flags().oprSize(); }
     bool hasPostVal() const { return flags().hasPostVal(); }
     Config::opcode_t postVal() const { return flags().postVal(); }
+
+    Config::opcode_t post2;  // for CAS2
 };
 
 enum IndexScale : int8_t {
@@ -83,7 +85,10 @@ struct Operand final : ErrorAt {
     Value val;
     RegName reg;
     RegName reg2;
-    Addressing addr;
+    union {
+        Addressing addr;
+        Value val2;
+    };
     StrScanner list;
     Operand() : mode(M_NONE), val(), reg(REG_UNDEF), reg2(REG_UNDEF), addr(), list() {}
 };
