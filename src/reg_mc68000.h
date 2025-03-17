@@ -66,10 +66,14 @@ enum RegName : int8_t {
     REG_FPSR = 5 + 24,
     REG_FPIAR = 6 + 24,
     // Control register
-    REG_SFC = 32 + 0,
-    REG_DFC = 32 + 1,
-    REG_USP = 32 + 2,
-    REG_VBR = 32 + 3,
+    REG_SFC = 32 + 0,   // MC68010/MC68020
+    REG_DFC = 32 + 1,   // MC68010/MC68020
+    REG_USP = 32 + 2,   // MC68010/MC68020
+    REG_VBR = 32 + 3,   // MC68010/MC68020
+    REG_CACR = 32 + 4,  // MC68020
+    REG_CAAR = 32 + 5,  // MC68020
+    REG_MSP = 32 + 6,   // MC68020
+    REG_ISP = 32 + 7,   // MC68020
 };
 
 namespace reg {
