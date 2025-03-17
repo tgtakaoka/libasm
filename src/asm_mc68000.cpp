@@ -107,33 +107,52 @@ Error AsmMc68000::setFpu(StrScanner &scan) {
 namespace {
 
 int8_t modePos(OprPos pos) {
-    // clang-format off
     static constexpr int8_t BITNO[] PROGMEM = {
-        3, 6, -1, -1, -1,
-        -1, -1, -1, -1, -1, -1, -1, -1, -1,
+            3,   // OP_10 = 0: __|___|___|mmm|rrr
+            6,   // OP_23 = 1: __|rrr|mmm|___|___
+            -1,  // OP__0 = 2: __|___|___|___|rrr
+            -1,  // OP__3 = 3: __|rrr|___|___|___
     };
-    // clang-format on
-    return static_cast<int8_t>(pgm_read_byte(&BITNO[pos]));
+    if (pos < OP___)
+        return static_cast<int8_t>(pgm_read_byte(&BITNO[pos]));
+    return -1;
 }
 
 int8_t regPos(OprPos pos) {
-    // clang-format off
     static constexpr int8_t BITNO[] PROGMEM = {
-        0, 9, 0, 9, -1,
-        -1, -1, -1, -1, -1, -1, -1, -1, -1,
+            0,  // OP_10 = 0: __|___|___|mmm|rrr
+            9,  // OP_23 = 1: __|rrr|mmm|___|___
+            0,  // OP__0 = 2: __|___|___|___|rrr
+            9,  // OP__3 = 3: __|rrr|___|___|___
     };
-    // clang-format on
-    return static_cast<int8_t>(pgm_read_byte(&BITNO[pos]));
+    if (pos < OP___)
+        return static_cast<int8_t>(pgm_read_byte(&BITNO[pos]));
+    return -1;
 }
 
 int8_t postPos(OprPos pos) {
-    // clang-format off
     static constexpr int8_t BITNO[] PROGMEM = {
-        -1, -1, -1, -1, -1,
-        10, 7, 7, 0, 4, 0, 4, 12, 0,
+            10,  // EX_RX = 5:   __|xxx|___|_______ : format or source
+            7,   // EX_RY = 6:   __|___|yyy|_______ : destination regi
+            7,   // EX_SC = 7:   __|___|sss|____ccc : FPSINCOS
+            0,   // EX_SL = 8:   __|___|__|ffffffff : static register
+            4,   // EX_DL = 9:   __|___|___|rrr____ : dynamic register
+            0,   // EX_SK = 10:  __|___|___|kkkkkkk : static k-factor
+            4,   // EX_DK = 11:  __|___|___|rrr____ : dynamic k-factor
+            12,  // EX_GR = 12:  a|rrr|____________ : Dn/An
+            0,   // EX_RC = 13:  _____|cccccccccccc : Control register
+            0,   // EX_OW = 14:  _____|dooooodwwwww : Bitfield offset
+            0,   // EX_DC = 15:  _______________ccc : Dc
+            6,   // EX_DU = 16:  _______uuu|___|___ : Du
+            12,  // EX_DR = 17:  _|ddd|____________ : Dn
+            0,   // EX_QR = 18:  _|qqq|________|rrr : Dr:Dq
+            0,   // EX_QQ = 19:  _|qqq|________|qqq : Dq
+            0,   // EX_DCP = 20: ______________|ccc : Dc1:Dc2 for CAS2
+            6,   // EX_DUP = 21: _______uuu|___|___ : Du1:Du2 for CAS2
     };
-    // clang-format on
-    return static_cast<int8_t>(pgm_read_byte(&BITNO[pos]));
+    if (pos < EX_RX)
+        return -1;
+    return static_cast<int8_t>(pgm_read_byte(&BITNO[pos - EX_RX]));
 }
 
 bool checkFloatControlMode(AsmInsn &insn, const Operand &op) {
@@ -148,14 +167,15 @@ bool checkFloatControlMode(AsmInsn &insn, const Operand &op) {
 
 void emitOprSize(AsmInsn &insn, InsnSize isize) {
     const auto osize = insn.oprSize();
-    if (osize == SZ_DATA) {
+    if (osize == SZ_DATA || osize == SZ_DATH) {
+        const auto pos = (osize == SZ_DATA) ? 6 : 9;
         switch (isize) {
         case ISZ_NONE:
         case ISZ_WORD:
-            insn.embed(1 << 6);
+            insn.embed(1 << pos);
             break;
         case ISZ_LONG:
-            insn.embed(2 << 6);
+            insn.embed(2 << pos);
             break;
         default:  // ISZ_BYTE
             break;
@@ -181,6 +201,20 @@ void emitOprSize(AsmInsn &insn, InsnSize isize) {
         // clang-format on
         const auto fsize = pgm_read_byte(&FSIZES[isize]);
         insn.embedPostfix(fsize << 10);
+        return;
+    }
+    if (osize == SZ_CAS1 || osize == SZ_CAS2) {
+        switch (isize) {
+        case ISZ_BYTE:
+            insn.embed(1 << 9);
+            break;
+        default:
+            insn.embed(2 << 9);
+            break;
+        case ISZ_LONG:
+            insn.embed(3 << 9);
+            break;
+        }
         return;
     }
 }
@@ -302,8 +336,13 @@ int_fast8_t AsmMc68000::encodeModeReg(AsmInsn &insn, AddrMode mode, RegName reg,
     }
 
     const auto post_gp = postPos(pos);
-    if (post_gp >= 0)
+    if (post_gp >= 0) {
         insn.embedPostfix(encodeGeneralRegNo(reg) << post_gp);
+        if (pos == EX_GR && isAddrReg(reg))
+            insn.embedPostfix(0x8000);
+        if (pos == EX_QQ)
+            insn.embedPostfix(reg << 12);
+    }
     return post_gp;
 }
 
@@ -475,6 +514,33 @@ void AsmMc68000::encodeAbsoluteMode(
         insn.emitOperand32(addr.disp.value.getUnsigned());
     }
 }
+
+void AsmMc68000::encodeDataRegPair(AsmInsn &insn, const Operand &op, OprPos pos) const {
+    const auto reg1 = encodeGeneralRegNo(op.reg);
+    const auto reg2 = encodeGeneralRegNo(op.reg2);
+    if (pos == EX_QR) {
+        insn.embedPostfix(reg1);
+        insn.embedPostfix(reg2 << 12);
+    } else if (pos == EX_DCP) {
+        insn.embedPostfix(reg1);
+        insn.post2 = reg2;
+    } else if (pos == EX_DUP) {
+        insn.embedPostfix(reg1 << 6);
+        insn.post2 |= reg2 << 6;
+    }
+};
+
+void AsmMc68000::encodePointerPair(AsmInsn &insn, const Operand &op) const {
+    auto reg1 = encodeGeneralRegNo(op.reg);
+    if (isAddrReg(op.reg))
+        reg1 |= 8;
+    auto reg2 = encodeGeneralRegNo(op.reg2);
+    if (isAddrReg(op.reg2))
+        reg2 |= 8;
+    insn.embedPostfix(reg1 << 12);
+    insn.post2 |= reg2 << 12;
+    insn.emitOperand16(insn.post2);
+};
 
 namespace {
 bool inFloatOperand(const AsmInsn &insn, AddrMode mode) {
@@ -680,6 +746,12 @@ Error AsmMc68000::encodeOperand(
         break;
     case M_KDREG:
         insn.embedPostfix(0x1000 | (encodeGeneralRegNo(op.reg) << 4));
+        break;
+    case M_DPAIR:
+        encodeDataRegPair(insn, op, pos);
+        break;
+    case M_PPAIR:
+        encodePointerPair(insn, op);
         break;
     case M_NONE:
         if (mode == M_KFACT && insn.isOK())
@@ -1029,6 +1101,25 @@ Error AsmMc68000::parseAddressing(
     return OK;
 }
 
+Error AsmMc68000::parsePointerPair(StrScanner &scan, Operand &op) const {
+    auto p = scan;
+    op.reg = parseRegName(p.skipSpaces(), parser());
+    if (isGeneralReg(op.reg) && p.skipSpaces().expect(')') && p.skipSpaces().expect(':') &&
+            p.skipSpaces().expect('(')) {
+        auto at = p.skipSpaces();
+        op.reg2 = parseRegName(p, parser());
+        if (isGeneralReg(op.reg2)) {
+            if (!p.skipSpaces().expect(')'))
+                return op.setErrorIf(p, MISSING_CLOSING_PAREN);
+            op.mode = M_PPAIR;
+            scan = p;
+            return OK;
+        }
+        return op.setErrorIf(at, REGISTER_NOT_ALLOWED);
+    }
+    return NOT_AN_EXPECTED;
+}
+
 namespace {
 bool preDecrement(StrScanner &scan) {
     auto p = scan;
@@ -1069,6 +1160,10 @@ Error AsmMc68000::parseOperand(StrScanner &scan, Operand &op) const {
     auto at = p;
     const auto pdec = preDecrement(p);
     if (p.expect('(')) {
+        if (parsePointerPair(p, op) != NOT_AN_EXPECTED) {
+            scan = p;
+            return op.getError();
+        }
         parseAddressing(p, op.addr, op, ')');
         if (op.hasError())
             return op.getError();
@@ -1131,7 +1226,14 @@ Error AsmMc68000::parseOperand(StrScanner &scan, Operand &op) const {
         if (isAddrReg(op.reg)) {
             op.mode = M_AREG;
         } else if (isDataReg(op.reg)) {
-            op.mode = M_DREG;
+            if (a.skipSpaces().expect(':')) {
+                op.reg2 = parseRegName(a, parser());
+                if (!isDataReg(op.reg2))
+                    return op.setErrorIf(p, UNKNOWN_OPERAND);
+                op.mode = M_DPAIR;
+            } else {
+                op.mode = M_DREG;
+            }
         } else if (isFloatReg(op.reg)) {
             if (a.skipSpaces().expect(':')) {
                 op.reg2 = parseRegName(a, parser());

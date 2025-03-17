@@ -36,6 +36,8 @@ struct EntryInsn : EntryInsnPostfix<Config, Entry> {
     OprSize oprSize() const { return flags().oprSize(); }
     bool hasPostVal() const { return flags().hasPostVal(); }
     Config::opcode_t postVal() const { return flags().postVal(); }
+
+    Config::opcode_t post2;  // for CAS2
 };
 
 enum IndexScale : int8_t {

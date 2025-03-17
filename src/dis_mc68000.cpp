@@ -61,6 +61,59 @@ StrBuffer &outOprSize(StrBuffer &out, OprSize size) {
 
 }  // namespace
 
+void DisMc68000::outBitField(DisInsn &insn, StrBuffer &out) const {
+    const auto post = insn.postfix();
+    out.letter('{');
+    if (post & 0x800) {
+        if (post & 0x600)
+            insn.setErrorIf(out, UNKNOWN_POSTBYTE);
+        outRegName(out, decodeDataReg(post >> 6));
+    } else {
+        outDec(out, (post >> 6) & 0x1F, 5);
+    }
+    out.letter(':');
+    if (post & 0x20) {
+        if (post & 0x18)
+            insn.setErrorIf(out, UNKNOWN_POSTBYTE);
+        outRegName(out, decodeDataReg(post));
+    } else {
+        // 0 means 32
+        outDec(out, ((post + 0x1F) & 0x1F) + 1, 6);
+    }
+    out.letter('}');
+}
+
+void DisMc68000::outDataRegPair(DisInsn &insn, StrBuffer &out, OprPos pos) const {
+    auto reg1 = REG_UNDEF;
+    auto reg2 = REG_UNDEF;
+    if (pos == EX_QR) {
+        reg1 = decodeDataReg(insn.postfix());
+        reg2 = decodeDataReg(insn.postfix() >> 12);
+    } else if (pos == EX_DCP) {
+        reg1 = decodeDataReg(insn.postfix());
+        reg2 = decodeDataReg(insn.post2 = insn.readUint16());
+    } else if (pos == EX_DUP) {
+        reg1 = decodeDataReg(insn.postfix() >> 6);
+        reg2 = decodeDataReg(insn.post2 >> 6);
+    }
+    outRegName(outRegName(out, reg1).letter(':'), reg2);
+}
+
+void DisMc68000::outPointerPair(DisInsn &insn, StrBuffer &out) const {
+    const auto reg1 = decodeGeneralReg(insn.postfix() >> 12);
+    const auto reg2 = decodeGeneralReg(insn.post2 >> 12);
+    outRegName(outRegName(out.letter('('), reg1).text_P(PSTR("):(")), reg2).letter(')');
+}
+
+void DisMc68000::outControlReg(DisInsn &insn, StrBuffer &out) const {
+    const auto reg = decodeControlReg(insn.postfix());
+    if (reg == REG_UNDEF)
+        insn.setErrorIf(out, ILLEGAL_REGISTER);
+    if (firstGen() && reg > REG_VBR)
+        insn.setErrorIf(out, UNKNOWN_REGISTER);
+    outRegName(out, reg);
+}
+
 void DisMc68000::outImmediateData(DisInsn &insn, StrBuffer &out, OprSize size) const {
 #if defined(LIBASM_DIS_NOFLOAT) && !defined(LIBASM_MC68000_NOFPU)
     const auto *at = out.mark();
@@ -585,13 +638,20 @@ uint8_t regVal(const DisInsn &insn, OprPos pos) {
         return (post >> 10) & 7;
     case EX_RY:
         return (post >> 7) & 7;
-    case EX_SC:
+    case EX_SC:  // Ds:Dc
         return ((post & 0x380) >> 3) | (post & 7);
     case EX_DL:
     case EX_DK:
         return (post >> 4) & 7;
-    case EX_RR:
+    case EX_GR:
+        return (post >> 12) & 0xF;
+    case EX_DR:
+    case EX_QQ:
         return (post >> 12) & 7;
+    case EX_DC:
+        return post & 7;
+    case EX_DU:
+        return (post >> 6) & 7;
     default:
         return 0;
     }
@@ -643,6 +703,9 @@ void DisMc68000::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode type, Opr
     case M_DISP:
         outEffectiveAddr(insn, out, type, decodeAddrReg(r), size);
         break;
+    case M_GREG:
+        outRegName(out, decodeGeneralReg(r));
+        break;
     case M_RADDR:
     case M_WADDR:
     case M_IADDR:
@@ -654,6 +717,8 @@ void DisMc68000::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode type, Opr
     case M_RMEM:
     case M_WMEM:
     case M_JADDR:
+    case M_BITFR:
+    case M_BITFW:
         outEffectiveAddr(insn, out, mode, decodeRegNo(m, r), size);
         break;
     case M_IM3:
@@ -750,28 +815,37 @@ void DisMc68000::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode type, Opr
         outHex(out.letter('#'), insn.postfix() & 0x7F, 7, false);
         break;
     case M_CREG:
-        if ((reg = decodeControlReg(insn.postfix())) == REG_UNDEF)
-            insn.setErrorIf(out, ILLEGAL_REGISTER);
-        outRegName(out, reg);
+        outControlReg(insn, out);
+        break;
+    case M_BITOW:
+        outBitField(insn, out);
+        break;
+    case M_DPAIR:
+        outDataRegPair(insn, out, pos);
+        break;
+    case M_PPAIR:
+        outPointerPair(insn, out);
+        break;
     default:
         break;
     }
 }
 
 OprSize decodeSize(DisInsn &insn) {
+    static constexpr OprSize INT_SIZES[] PROGMEM = {
+            SZ_BYTE,
+            SZ_WORD,
+            SZ_LONG,
+            SZ_WORD,
+    };
     const auto osize = insn.oprSize();
     const auto opc = insn.opCode();
-    if (osize == SZ_DATA) {
-        static constexpr OprSize SIZES[] PROGMEM = {
-                SZ_BYTE,
-                SZ_WORD,
-                SZ_LONG,
-                SZ_WORD,
-        };
-        return pgm_read_byte(&SIZES[(opc >> 6) & 3]);
-    }
+    if (osize == SZ_DATA)
+        return pgm_read_byte(&INT_SIZES[(opc >> 6) & 3]);
+    if (osize == SZ_DATH)
+        return pgm_read_byte(&INT_SIZES[(opc >> 9) & 3]);
     if (osize == SZ_FDAT) {
-        static constexpr OprSize SIZES[] PROGMEM = {
+        static constexpr OprSize FLT_SIZES[] PROGMEM = {
                 SZ_LONG,
                 SZ_SNGL,
                 SZ_XTND,
@@ -784,16 +858,14 @@ OprSize decodeSize(DisInsn &insn) {
         const auto fmt = (insn.postfix() >> 10) & 7;
         if (fmt == 7)
             insn.setErrorIf(ILLEGAL_SIZE);
-        return pgm_read_byte(&SIZES[fmt]);
+        return pgm_read_byte(&FLT_SIZES[fmt]);
     }
-    static constexpr OprSize SIZES[] PROGMEM = {
-            SZ_WORD,
-            SZ_LONG,
-    };
     if (osize == SZ_ADDR)
-        return pgm_read_byte(&SIZES[(opc >> 6) & 1]);
+        return pgm_read_byte(&INT_SIZES[((opc >> 6) & 1) + 1]);
     if (osize == SZ_ADR8)
-        return pgm_read_byte(&SIZES[(opc >> 8) & 1]);
+        return pgm_read_byte(&INT_SIZES[((opc >> 8) & 1) + 1]);
+    if (osize == SZ_CAS1 || osize == SZ_CAS2)
+        return pgm_read_byte(&INT_SIZES[((opc >> 9) & 3) - 1]);
     return osize;
 }
 
@@ -832,11 +904,13 @@ Error DisMc68000::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) con
 
     decodeOperand(insn, out, insn.src(), insn.srcPos(), osize);
     if (dst != M_NONE && !isFloatOpOnSameFpreg(insn)) {
-        decodeOperand(insn, out.comma(), dst, insn.dstPos(), osize, opr16, opr16Error);
+        if (dst != M_BITOW)
+            out.comma();
+        decodeOperand(insn, out, dst, insn.dstPos(), osize, opr16, opr16Error);
     }
     const auto ext = insn.ext();
     if (ext != M_NONE) {
-        if (ext != M_KDREG && ext != M_KFACT)
+        if (ext != M_KDREG && ext != M_KFACT && ext != M_BITOW)
             out.comma();
         decodeOperand(insn, out, ext, insn.extPos(), osize);
     }
