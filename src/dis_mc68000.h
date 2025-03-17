@@ -36,6 +36,10 @@ private:
 
     bool _gnuAs;
 
+    void outBitField(DisInsn &insn, StrBuffer &out) const;
+    void outDataRegPair(DisInsn &insn, StrBuffer &out, OprPos pos) const;
+    void outPointerPair(DisInsn &insn, StrBuffer &out) const;
+    void outControlReg(DisInsn &insn, StrBuffer &out) const;
     void outImmediateData(DisInsn &insn, StrBuffer &out, OprSize eaSize) const;
     void outEffectiveAddr(
             DisInsn &insn, StrBuffer &out, AddrMode mode, RegName reg, OprSize size) const;

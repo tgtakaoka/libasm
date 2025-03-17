@@ -189,6 +189,49 @@ constexpr char TEXT_REG_DFC[] PROGMEM = "DFC";
 constexpr char TEXT_REG_SFC[] PROGMEM = "SFC";
 constexpr char TEXT_REG_VBR[] PROGMEM = "VBR";
 
+// MC68020
+constexpr char TEXT_BFCHG[]  PROGMEM = "BFCHG";
+constexpr char TEXT_BFCLR[]  PROGMEM = "BFCLR";
+constexpr char TEXT_BFEXTS[] PROGMEM = "BFEXTS";
+constexpr char TEXT_BFEXTU[] PROGMEM = "BFEXTU";
+constexpr char TEXT_BFFFO[]  PROGMEM = "BFFFO";
+constexpr char TEXT_BFINS[]  PROGMEM = "BFINS";
+constexpr char TEXT_BFSET[]  PROGMEM = "BFSET";
+constexpr char TEXT_BFTST[]  PROGMEM = "BFTST";
+constexpr char TEXT_CALLM[]  PROGMEM = "CALLM";
+constexpr char TEXT_CAS2[]   PROGMEM = "CAS2";
+// constexpr char TEXT_CAS[]    PROGMEM = "CAS";
+constexpr char TEXT_CHK2[]   PROGMEM = "CHK2";
+constexpr char TEXT_CMP2[]   PROGMEM = "CMP2";
+constexpr char TEXT_DIVSL[]  PROGMEM = "DIVSL";
+constexpr char TEXT_DIVUL[]  PROGMEM = "DIVUL";
+constexpr char TEXT_PACK[]   PROGMEM = "PACK";
+constexpr char TEXT_RTM[]    PROGMEM = "RTM";
+constexpr char TEXT_TRAPCC[] PROGMEM = "TRAPCC";
+constexpr char TEXT_TRAPCS[] PROGMEM = "TRAPCS";
+constexpr char TEXT_TRAPEQ[] PROGMEM = "TRAPEQ";
+constexpr char TEXT_TRAPF[]  PROGMEM = "TRAPF";
+constexpr char TEXT_TRAPGE[] PROGMEM = "TRAPGE";
+constexpr char TEXT_TRAPGT[] PROGMEM = "TRAPGT";
+constexpr char TEXT_TRAPHI[] PROGMEM = "TRAPHI";
+constexpr char TEXT_TRAPHS[] PROGMEM = "TRAPHS";
+constexpr char TEXT_TRAPLE[] PROGMEM = "TRAPLE";
+constexpr char TEXT_TRAPLO[] PROGMEM = "TRAPLO";
+constexpr char TEXT_TRAPLS[] PROGMEM = "TRAPLS";
+constexpr char TEXT_TRAPLT[] PROGMEM = "TRAPLT";
+constexpr char TEXT_TRAPMI[] PROGMEM = "TRAPMI";
+constexpr char TEXT_TRAPNE[] PROGMEM = "TRAPNE";
+constexpr char TEXT_TRAPPL[] PROGMEM = "TRAPPL";
+constexpr char TEXT_TRAPT[]  PROGMEM = "TRAPT";
+constexpr char TEXT_TRAPVC[] PROGMEM = "TRAPVC";
+constexpr char TEXT_TRAPVS[] PROGMEM = "TRAPVS";
+constexpr char TEXT_UNPK[]   PROGMEM = "UNPK";
+
+constexpr char TEXT_REG_CAAR[] PROGMEM = "CAAR";
+constexpr char TEXT_REG_CACR[] PROGMEM = "CACR";
+constexpr char TEXT_REG_ISP[]  PROGMEM = "ISP";
+constexpr char TEXT_REG_MSP[]  PROGMEM = "MSP";
+
 // MC68881
 // constexpr char TEXT_FABS[]      PROGMEM = "FABS";
 constexpr char TEXT_FACOS[]     PROGMEM = "FACOS";
