@@ -109,6 +109,7 @@ constexpr char TEXT_BZ[]    PROGMEM = "BZ";
 constexpr char TEXT_CALLN[] PROGMEM = "CALLN";
 constexpr char TEXT_CALL[]  PROGMEM = "CALL";
 constexpr char TEXT_CALR[]  PROGMEM = "CALR";
+constexpr char TEXT_CAS[]   PROGMEM = "CAS";
 constexpr char TEXT_CB[]    PROGMEM = "CB";
 constexpr char TEXT_CCF[]   PROGMEM = "CCF";
 constexpr char TEXT_CI[]    PROGMEM = "CI";
