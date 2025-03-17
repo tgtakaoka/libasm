@@ -31,6 +31,10 @@ bool mc68010() {
     return strcmp_P("68010", assembler.config().cpu_P()) == 0;
 }
 
+bool mc68020() {
+    return strcmp_P("68020", assembler.config().cpu_P()) == 0;
+}
+
 bool firstGen() {
     return mc68k00() || mc68010();
 }
@@ -155,6 +159,10 @@ void test_data_move() {
     ERRT("LINK A3,D2",     OPERAND_NOT_ALLOWED, "A3,D2");
     TEST("LINK A3,#$1234", 0047123, 0x1234);
     TEST("LINK A3,#-16",   0047123, 0xFFF0);
+    if (mc68020()) {
+        TEST("LINK.L A3,#$1234", 0044013, 0x0000, 0x1234);
+        TEST("LINK.L A3,#-16",   0044013, 0xFFFF, 0xFFF0);
+    }
 
     // MOVE src,dst: 00|Sz|Rd|Md|Ms|Rs, Sz:B=1/W=3/L=2
     TEST("MOVE.B D2,D7",              0017002);
@@ -2989,6 +2997,19 @@ void test_system() {
     TEST("CHK.W (*+$1234,PC),D7",    0047672, 0x1232);
     TEST("CHK.W (*+$12,PC,D3.W),D7", 0047673, 0x3010);
     TEST("CHK.W #$0034,D7",          0047674, 0x0034);
+    if (mc68020()) {
+        TEST("CHK.L D2,D7",              0047402);
+        ERRT("CHK.L A2,D7",              OPERAND_NOT_ALLOWED, "A2,D7", 0047400);
+        TEST("CHK.L (A2),D7",            0047422);
+        TEST("CHK.L (A2)+,D7",           0047432);
+        TEST("CHK.L -(A2),D7",           0047442);
+        TEST("CHK.L ($1234,A2),D7",      0047452, 0x1234);
+        TEST("CHK.L ($12,A2,D3.L),D7",   0047462, 0x3812);
+        ABSW("CHK.L (@W).W,D7", "FFFE",  0047470, 0xFFFE);
+        TEST("CHK.L ($123456).L,D7",     0047471, 0x0012, 0x3456);
+        TEST("CHK.L (*+$1234,PC),D7",    0047472, 0x1232);
+        TEST("CHK.L (*+$12,PC,D3.W),D7", 0047473, 0x3010);
+    }
 
     // ILLEGAL
     TEST("ILLEGAL", 0045374);

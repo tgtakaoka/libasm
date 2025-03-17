@@ -31,13 +31,16 @@ enum OprSize : uint8_t {
     SZ_WORD = Size::SZ_WORD,  // Word (16 bits/2 bytes)
     SZ_LONG = Size::SZ_QUAD,  // Long (32 bits/4 bytes)
     SZ_DATA = Size::SZ_DATA,  // _ss|___|___ BYTE=0/WORD=1/LONG=2
-    SZ_ADDR = Size::SZ_ADDR,  // __LIBASM_s|___|___ WORD=0/LONG=1
+    SZ_ADDR = Size::SZ_ADDR,  // __s|___|___ WORD=0/LONG=1
     SZ_ADR8 = 7,              // s__|___|___ WORD=0/LONG=1
     SZ_SNGL = 8,              // Single precision real (32 bits/4 bytes)
     SZ_DUBL = 9,              // Double precision real (64 bits/8 bytes)
     SZ_XTND = 10,             // Extended precision real (96 bits/12 bytes)
     SZ_PBCD = 11,             // Packed BCD real (96 bits/12 bytes)
     SZ_FDAT = 12,             // MC68881 float type
+    SZ_DATH = 13,             // _ss|___|___|___ BYTE=0/WORD=1/LONG=2
+    SZ_CAS1 = 14,             // _ss|___|___|___ BYTE=1/WORD=2/LONG=3
+    SZ_CAS2 = 14,             // _ss|___|___|___        WORD=2/LONG=3
 };
 
 enum InsnSize : uint8_t {
@@ -108,6 +111,14 @@ enum AddrMode : uint8_t {
     M_FPIAR = 44,  // FPIAR register
     M_IMROM = 45,  // MC68881 ROM constant
     M_REL32 = 46,  // 32-bit Relative; 1111|ccc|01s|___|___: s=0 16bit, s=1 32bit (FBcc)
+    // MC68020
+    M_BITFW = 47,  // Bitfield write:    Dn/  /(An)/           /(*,An)/(Abs)
+    M_BITFR = 48,  // Bitfield read:     Dn/  /(An)/           /(*,An)/(Abs)/(*,PC)
+    M_BITOW = 49,  // Bitfield offset/width: {Dn/n:Dn/n}
+    M_GREG = 50,   // Data/Address register: Rn
+    M_GPAIR = 50,  // Data/Address register pair: Rn:Rn
+    M_PPAIR = 51,  // Pointer pair: (Rn):(Rn)
+    M_DPAIR = 52,  // Data register pair: Dn:Dn
 };
 
 enum OprPos : uint8_t {
@@ -125,6 +136,11 @@ enum OprPos : uint8_t {
     EX_DK = 11,  // __|___|___|rrr____ : dynamic k-factor
     EX_RR = 12,  // a|rrr|____________ : Dn/An
     EX_RC = 13,  // _____|cccccccccccc : Control register
+    EX_OW = 14,  // _____|dooooodwwwww : Bitfield offset and width
+    EX_DC = 15,  // _______________ccc : Data register
+    EX_DU = 16,  // _______uuu|___|___ : Data register
+    EX_RP = 17,  // _______uuu|___|ccc : Data register pair
+    EX_QR = 18,  // _|qqq|________|rrr : Data register pair
 };
 
 struct Entry final : entry::Base<Config::opcode_t> {
