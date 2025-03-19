@@ -24,15 +24,20 @@ using namespace libasm::text::mc68000;
 namespace libasm {
 namespace mc68000 {
 
+#define E3(_opc, _name, _isize, _src, _dst, _ext, _srcp, _dstp, _extp, _osize) \
+    {_opc, Entry::Flags::create(_src, _dst, _ext, _srcp, _dstp, _extp, _osize, _isize), _name}
 #define E2(_opc, _name, _isize, _src, _dst, _srcp, _dstp, _osize) \
-    {_opc, Entry::Flags::create(_src, _dst, _srcp, _dstp, _osize, _isize), _name}
+    E3(_opc, _name, _isize, _src, _dst, M_NONE, _srcp, _dstp, OP___, _osize)
+#define A2(_opc, _name, _isize, _src, _dst, _srcp, _dstp, _osize) \
+    E2(_opc, _name, _isize, _src, _dst, _srcp, _dstp, _osize)
 #define E1(_opc, _name, _isize, _src, _srcp, _osize) \
     E2(_opc, _name, _isize, _src, M_NONE, _srcp, OP___, _osize)
 #define E0(_opc, _name) E1(_opc, _name, ISZ_NONE, M_NONE, OP___, SZ_NONE)
-#define A2(_opc, _name, _isize, _src, _dst, _srcp, _dstp, _osize) \
-    E2(_opc, _name, _isize, _src, _dst, _srcp, _dstp, _osize)
-#define P2(_opc, _name, _isize, _src, _dst, _srcp, _dstp, _osize, _postVal) \
-    {_opc, Entry::Flags::create(_src, _dst, _srcp, _dstp, _osize, _isize, _postVal), _name}
+#define P3(_opc, _name, _isize, _src, _dst, _ext, _srcp, _dstp, _extp, _osize, _post)          \
+    {_opc, Entry::Flags::create(_src, _dst, _ext, _srcp, _dstp, _extp, _osize, _isize, _post), \
+            _name}
+#define P2(_opc, _name, _isize, _src, _dst, _srcp, _dstp, _osize, _post) \
+    P3(_opc, _name, _isize, _src, _dst, M_NONE, _srcp, _dstp, OP___, _osize, _post)
 #define P1(_opc, _name, _isize, _src, _srcp, _osize, _post) \
     P2(_opc, _name, _isize, _src, M_NONE, _srcp, OP___, _osize, _post)
 #define P0(_opc, _name, _post) P1(_opc, _name, ISZ_NONE, M_NONE, OP___, SZ_NONE, _post)
@@ -527,8 +532,8 @@ constexpr Entry MC68881_ARITH[] PROGMEM = {
     P2(0xF000, TEXT_FSINCOS, ISZ_FDAT, M_RDATA, M_FSICO, OP_10, EX_SC, SZ_FDAT, 0x4030),
     P2(0xF000, TEXT_FCMP,    ISZ_FDAT, M_RDATA, M_FPREG, OP_10, EX_RY, SZ_FDAT, 0x4038),
     P1(0xF000, TEXT_FTST,    ISZ_FDAT, M_RDATA, OP_10, SZ_FDAT, 0x403A),
-    P2(0xF000, TEXT_FMOVE,   ISZ_FIXD, M_FPREG, M_KFACT, EX_RY, EX_SK, SZ_PBCD, 0x6C00),
-    P2(0xF000, TEXT_FMOVE,   ISZ_FIXD, M_FPREG, M_KDREG, EX_RY, EX_DK, SZ_PBCD, 0x7C00),
+    P3(0xF000, TEXT_FMOVE,   ISZ_FIXD, M_FPREG, M_WDATA, M_KFACT, EX_RY, OP_10, EX_SK, SZ_PBCD, 0x6C00),
+    P3(0xF000, TEXT_FMOVE,   ISZ_FIXD, M_FPREG, M_WDATA, M_KDREG, EX_RY, OP_10, EX_DK, SZ_PBCD, 0x7C00),
     P2(0xF000, TEXT_FMOVE,   ISZ_FDAT, M_FPREG, M_WDATA, EX_RY, OP_10, SZ_FDAT, 0x6000),
     P2(0xF000, TEXT_FMOVE,   ISZ_FIXD, M_RADDR, M_FPIAR, OP_10, OP___, SZ_LONG, 0x8400),
     P2(0xF000, TEXT_FMOVE,   ISZ_FIXD, M_RADDR, M_FPSR,  OP_10, OP___, SZ_LONG, 0x8800),
@@ -1177,6 +1182,8 @@ bool genericAddressing(AddrMode mode) {
 }
 
 bool acceptMode(AddrMode opr, AddrMode table, OprSize size) {
+    if (table == M_KFACT && opr == M_NONE)
+        return true;
     if (opr == table)
         return true;
     if (opr == M_DREG)
@@ -1228,7 +1235,8 @@ bool acceptSize(const AsmInsn &insn, const Entry::Flags &flags) {
 bool acceptModes(AsmInsn &insn, const Entry *entry) {
     const auto table = entry->readFlags();
     return acceptMode(insn.srcOp.mode, table.src(), table.oprSize()) &&
-           acceptMode(insn.dstOp.mode, table.dst(), table.oprSize()) && acceptSize(insn, table);
+           acceptMode(insn.dstOp.mode, table.dst(), table.oprSize()) &&
+           acceptMode(insn.extOp.mode, table.ext(), table.oprSize()) && acceptSize(insn, table);
 }
 
 Error searchName(const CpuSpec &cpuSpec, AsmInsn &insn) {
@@ -1245,7 +1253,7 @@ Error searchName(const CpuSpec &cpuSpec, AsmInsn &insn) {
 
 bool invalidModeReg(Config::opcode_t opc, AddrMode addrMode, OprPos pos, OprSize size) {
     uint8_t mode, reg;
-    if (pos == OP_10 || addrMode == M_KFACT || addrMode == M_KDREG) {
+    if (pos == OP_10) {
         mode = (opc >> 3) & 7;
         reg = (opc >> 0) & 7;
     } else if (pos == OP_23) {
@@ -1259,8 +1267,7 @@ bool invalidModeReg(Config::opcode_t opc, AddrMode addrMode, OprPos pos, OprSize
         // |  0 |  1 |   2  |   3   |   4   |    5   |     6     |
         // +----+----+------+-------+-------+--------+-----------+
         // | Dn |  1 | (An) | (An)+ | -(An) | (n,An) | (n,An,Xn) |
-        if (addrMode == M_RDATA || addrMode == M_WDATA || addrMode == M_KFACT ||
-                addrMode == M_KDREG)
+        if (addrMode == M_RDATA || addrMode == M_WDATA)
             return mode == 1;
         // |  0 |  1 | (An) | (An)+ | -(An) | (*,An) | (*,An,Xn) |
         if (addrMode == M_RMEM || addrMode == M_WMEM)
@@ -1295,7 +1302,7 @@ bool invalidModeReg(Config::opcode_t opc, AddrMode addrMode, OprPos pos, OprSize
     if (addrMode == M_RMEM || addrMode == M_JADDR || addrMode == M_IADDR)
         return reg == 4;
     // | (n).W | (n).L |    2   |     3     |  4 |
-    // M_WADDR, M_WDATA, M_WFIAR, M_WMEM, M_DADDR, M_KFACT, M_KDREG
+    // M_WADDR, M_WDATA, M_WFIAR, M_WMEM, M_DADDR
     return reg >= 2;
 }
 

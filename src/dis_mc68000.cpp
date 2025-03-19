@@ -610,7 +610,7 @@ bool inFloatOperand(const DisInsn &insn, AddrMode type) {
         // Dn,FPn || Dn,FPc:FPs || FTST Dn
         return dst == M_FPREG || dst == M_FSICO || dst == M_NONE;
     }
-    if (type == M_WDATA || type == M_KFACT || type == M_KDREG) {
+    if (type == M_WDATA) {
         // FPn,Dn
         return insn.src() == M_FPREG;
     }
@@ -621,8 +621,6 @@ bool inFloatOperand(const DisInsn &insn, AddrMode type) {
 
 void DisMc68000::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode type, OprPos pos,
         OprSize size, uint16_t opr16, Error opr16Error) const {
-    if (type == M_KDREG || type == M_KFACT)
-        pos = OP_10;
     const auto m = modeVal(insn, pos);
     const auto r = regVal(insn, pos);
     const auto mode = decodeAddrMode(m, r);
@@ -634,6 +632,10 @@ void DisMc68000::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode type, Opr
     switch (type) {
     case M_DREG:
         outEffectiveAddr(insn, out, type, decodeDataReg(r), size);
+        break;
+    case M_KDREG:
+        reg = decodeDataReg((insn.postfix() >> 4) & 7);
+        outRegName(out.letter('{'), reg).letter('}');
         break;
     case M_AREG:
     case M_PDEC:
@@ -652,18 +654,7 @@ void DisMc68000::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode type, Opr
     case M_RMEM:
     case M_WMEM:
     case M_JADDR:
-    case M_KDREG:
-    case M_KFACT:
         outEffectiveAddr(insn, out, mode, decodeRegNo(m, r), size);
-        if (insn.getError())
-            break;
-        if (type == M_KDREG) {
-            const auto dreg = decodeDataReg((insn.postfix() >> 4) & 7);
-            outRegName(out.letter('{'), dreg).letter('}');
-        } else if (type == M_KFACT) {
-            const auto kfactor = insn.postfix() & 0x7F;
-            outDec(out.letter('{').letter('#'), kfactor, -7).letter('}');
-        }
         break;
     case M_IM3:
         if (pos == OP__3) {
@@ -748,6 +739,12 @@ void DisMc68000::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode type, Opr
         break;
     case M_FPIAR:
         outRegName(out, REG_FPIAR);
+        break;
+    case M_KFACT:
+        if (insn.isOK()) {
+            const auto kfact = insn.postfix() & 0x7F;
+            outDec(out.letter('{').letter('#'), kfact, -7).letter('}');
+        }
         break;
     case M_IMROM:
         outHex(out.letter('#'), insn.postfix() & 0x7F, 7, false);
@@ -834,8 +831,15 @@ Error DisMc68000::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) con
     const auto opr16Error = insn.getError();
 
     decodeOperand(insn, out, insn.src(), insn.srcPos(), osize);
-    if (dst != M_NONE && !isFloatOpOnSameFpreg(insn))
+    if (dst != M_NONE && !isFloatOpOnSameFpreg(insn)) {
         decodeOperand(insn, out.comma(), dst, insn.dstPos(), osize, opr16, opr16Error);
+    }
+    const auto ext = insn.ext();
+    if (ext != M_NONE) {
+        if (ext != M_KDREG && ext != M_KFACT)
+            out.comma();
+        decodeOperand(insn, out, ext, insn.extPos(), osize);
+    }
     return _insn.setError(insn);
 }
 

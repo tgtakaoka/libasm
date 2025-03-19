@@ -3178,9 +3178,9 @@ void test_float_move() {
     TEST("FMOVE.P FP2, ($56789A).L{D7}",    0xF200|071, 0x7000|(3<<10)|(2<<7)|(7<<4), 0x0056, 0x789A);
     TEST("FMOVE.P FP7, (A6){#-64}",         0xF200|026, 0x6000|(3<<10)|(7<<7)|(-64 & 0x7F));
     TEST("FMOVE.P FP1, (A0)+{#63}",         0xF200|030, 0x6000|(3<<10)|(1<<7)|63);
-    ERRT("FMOVE.P FP3, -(A2){#-65}",        OVERFLOW_RANGE, "{#-65}",
+    ERRT("FMOVE.P FP3, -(A2){#-65}",        OVERFLOW_RANGE, "#-65}",
                                             0xF200|042, 0x6000|(3<<10)|(3<<7)|17);
-    ERRT("FMOVE.P FP5, ($1234,A4){#64}",    OVERFLOW_RANGE, "{#64}",
+    ERRT("FMOVE.P FP5, ($1234,A4){#64}",    OVERFLOW_RANGE, "#64}",
                                             0xF200|054, 0x6000|(3<<10)|(5<<7)|17, 0x1234);
     ERUS("FMOVE.P FP0, ($23,A6,D7.W){#UNDEF}", "UNDEF}",
                                             0xF200|066, 0x6000|(3<<10)|(0<<7)|17, 0x7023);
