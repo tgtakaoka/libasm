@@ -130,6 +130,7 @@ extern const char TEXT_BZ[]    PROGMEM;
 extern const char TEXT_CALLN[] PROGMEM;
 extern const char TEXT_CALL[]  PROGMEM;
 extern const char TEXT_CALR[]  PROGMEM;
+extern const char TEXT_CAS[]   PROGMEM;
 extern const char TEXT_CBA[]   PROGMEM;
 extern const char TEXT_CB[]    PROGMEM;
 extern const char TEXT_CCF[]   PROGMEM;

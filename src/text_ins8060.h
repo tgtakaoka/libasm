@@ -36,7 +36,7 @@ using common::TEXT_ANI;
 extern const char TEXT_CAD[]  PROGMEM;
 extern const char TEXT_CAE[]  PROGMEM;
 extern const char TEXT_CAI[]  PROGMEM;
-extern const char TEXT_CAS[]  PROGMEM;
+using common::TEXT_CAS;
 extern const char TEXT_CCL[]  PROGMEM;
 extern const char TEXT_CSA[]  PROGMEM;
 using common::TEXT_DAD;

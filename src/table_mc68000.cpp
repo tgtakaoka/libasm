@@ -19,20 +19,27 @@
 #include "entry_table.h"
 #include "text_mc68000.h"
 
+#include <stdio.h>
+
 using namespace libasm::text::mc68000;
 
 namespace libasm {
 namespace mc68000 {
 
+#define E3(_opc, _name, _isize, _src, _dst, _ext, _srcp, _dstp, _extp, _osize) \
+    {_opc, Entry::Flags::create(_src, _dst, _ext, _srcp, _dstp, _extp, _osize, _isize), _name}
 #define E2(_opc, _name, _isize, _src, _dst, _srcp, _dstp, _osize) \
-    {_opc, Entry::Flags::create(_src, _dst, _srcp, _dstp, _osize, _isize), _name}
+    E3(_opc, _name, _isize, _src, _dst, M_NONE, _srcp, _dstp, OP___, _osize)
+#define A2(_opc, _name, _isize, _src, _dst, _srcp, _dstp, _osize) \
+    E2(_opc, _name, _isize, _src, _dst, _srcp, _dstp, _osize)
 #define E1(_opc, _name, _isize, _src, _srcp, _osize) \
     E2(_opc, _name, _isize, _src, M_NONE, _srcp, OP___, _osize)
 #define E0(_opc, _name) E1(_opc, _name, ISZ_NONE, M_NONE, OP___, SZ_NONE)
-#define A2(_opc, _name, _isize, _src, _dst, _srcp, _dstp, _osize) \
-    E2(_opc, _name, _isize, _src, _dst, _srcp, _dstp, _osize)
-#define P2(_opc, _name, _isize, _src, _dst, _srcp, _dstp, _osize, _postVal) \
-    {_opc, Entry::Flags::create(_src, _dst, _srcp, _dstp, _osize, _isize, _postVal), _name}
+#define P3(_opc, _name, _isize, _src, _dst, _ext, _srcp, _dstp, _extp, _osize, _post)          \
+    {_opc, Entry::Flags::create(_src, _dst, _ext, _srcp, _dstp, _extp, _osize, _isize, _post), \
+            _name}
+#define P2(_opc, _name, _isize, _src, _dst, _srcp, _dstp, _osize, _post) \
+    P3(_opc, _name, _isize, _src, _dst, M_NONE, _srcp, _dstp, OP___, _osize, _post)
 #define P1(_opc, _name, _isize, _src, _srcp, _osize, _post) \
     P2(_opc, _name, _isize, _src, M_NONE, _srcp, OP___, _osize, _post)
 #define P0(_opc, _name, _post) P1(_opc, _name, ISZ_NONE, M_NONE, OP___, SZ_NONE, _post)
@@ -424,14 +431,10 @@ constexpr Entry MC68010_TABLE[] PROGMEM = {
     E1(0044110, TEXT_BKPT,  ISZ_NONE, M_IM3,   OP__0, SZ_NONE),
     E2(0041300, TEXT_MOVE,  ISZ_FIXD, M_CCR,   M_WDATA, OP___, OP_10, SZ_WORD),
     E1(0047164, TEXT_RTD,   ISZ_NONE, M_IMDAT, OP___, SZ_WORD),
-    P2(0047172, TEXT_MOVEC, ISZ_NONE, M_CREG,  M_DREG,  EX_RC, EX_RR, SZ_LONG, 0x0000),
-    P2(0047172, TEXT_MOVEC, ISZ_NONE, M_CREG,  M_AREG,  EX_RC, EX_RR, SZ_LONG, 0x8000),
-    P2(0047173, TEXT_MOVEC, ISZ_NONE, M_DREG,  M_CREG,  EX_RR, EX_RC, SZ_LONG, 0x0000),
-    P2(0047173, TEXT_MOVEC, ISZ_NONE, M_AREG,  M_CREG,  EX_RR, EX_RC, SZ_LONG, 0x8000),
-    P2(0007000, TEXT_MOVES, ISZ_DATA, M_WMEM,  M_DREG,  OP_10, EX_RR, SZ_DATA, 0x0000),
-    P2(0007000, TEXT_MOVES, ISZ_DATA, M_WMEM,  M_AREG,  OP_10, EX_RR, SZ_DATA, 0x8000),
-    P2(0007000, TEXT_MOVES, ISZ_DATA, M_DREG,  M_WMEM,  EX_RR, OP_10, SZ_DATA, 0x0800),
-    P2(0007000, TEXT_MOVES, ISZ_DATA, M_AREG,  M_WMEM,  EX_RR, OP_10, SZ_DATA, 0x8800),
+    P2(0047172, TEXT_MOVEC, ISZ_NONE, M_CREG,  M_GREG,  EX_RC, EX_GR, SZ_LONG, 0x0000),
+    P2(0047173, TEXT_MOVEC, ISZ_NONE, M_GREG,  M_CREG,  EX_GR, EX_RC, SZ_LONG, 0x0000),
+    P2(0007000, TEXT_MOVES, ISZ_DATA, M_WMEM,  M_GREG,  OP_10, EX_GR, SZ_DATA, 0x0000),
+    P2(0007000, TEXT_MOVES, ISZ_DATA, M_GREG,  M_WMEM,  EX_GR, OP_10, SZ_DATA, 0x0800),
 };
 
 constexpr uint8_t MC68010_INDEX[] PROGMEM = {
@@ -439,13 +442,185 @@ constexpr uint8_t MC68010_INDEX[] PROGMEM = {
       1,  // TEXT_MOVE
       3,  // TEXT_MOVEC
       4,  // TEXT_MOVEC
-      5,  // TEXT_MOVEC
-      6,  // TEXT_MOVEC
-      7,  // TEXT_MOVES
-      8,  // TEXT_MOVES
-      9,  // TEXT_MOVES
-     10,  // TEXT_MOVES
+      5,  // TEXT_MOVES
+      6,  // TEXT_MOVES
       2,  // TEXT_RTD
+};
+
+constexpr Entry MC68020_TABLE[] PROGMEM = {
+    P2(0164300, TEXT_BFTST,  ISZ_NONE, M_BITFR, M_BITOW, OP_10, EX_OW, SZ_NONE, 0x0000),
+    P2(0165300, TEXT_BFCHG,  ISZ_NONE, M_BITFW, M_BITOW, OP_10, EX_OW, SZ_NONE, 0x0000),
+    P2(0166300, TEXT_BFCLR,  ISZ_NONE, M_BITFW, M_BITOW, OP_10, EX_OW, SZ_NONE, 0x0000),
+    P2(0167300, TEXT_BFSET,  ISZ_NONE, M_BITFW, M_BITOW, OP_10, EX_OW, SZ_NONE, 0x0000),
+    P3(0164700, TEXT_BFEXTU, ISZ_NONE, M_BITFR, M_BITOW, M_DREG,  OP_10, EX_OW, EX_DR, SZ_NONE, 0x0000),
+    P3(0165700, TEXT_BFEXTS, ISZ_NONE, M_BITFR, M_BITOW, M_DREG,  OP_10, EX_OW, EX_DR, SZ_NONE, 0x0000),
+    P3(0166700, TEXT_BFFFO,  ISZ_NONE, M_BITFR, M_BITOW, M_DREG,  OP_10, EX_OW, EX_DR, SZ_NONE, 0x0000),
+    P3(0167700, TEXT_BFINS,  ISZ_NONE, M_DREG,  M_BITFW, M_BITOW, EX_DR, OP_10, EX_OW, SZ_NONE, 0x0000),
+    E2(0003300, TEXT_CALLM,  ISZ_NONE, M_IMDAT, M_JADDR, OP___, OP_10, SZ_BYTE),
+    P3(0004300, TEXT_CAS,    ISZ_DATA, M_DREG,  M_DREG,  M_WMEM,  EX_DC, EX_DU, OP_10, SZ_CAS1, 0x0000),
+    P3(0004374, TEXT_CAS2,   ISZ_DATA, M_DPAIR, M_DPAIR, M_PPAIR, EX_DCP, EX_DUP, EX_GR, SZ_CAS2, 0x0000),
+    E2(0040400, TEXT_CHK,    ISZ_LONG, M_RDATA, M_DREG,  OP_10, OP__3, SZ_LONG),
+    P2(0000300, TEXT_CHK2,   ISZ_DATA, M_JADDR, M_GREG,  OP_10, EX_GR, SZ_DATH, 0x0800),
+    P2(0000300, TEXT_CMP2,   ISZ_DATA, M_JADDR, M_GREG,  OP_10, EX_GR, SZ_DATH, 0x0000),
+    P2(0046100, TEXT_DIVS,   ISZ_LONG, M_RDATA, M_DPAIR, OP_10, EX_QR, SZ_LONG, 0x0C00),
+    P2(0046100, TEXT_DIVS,   ISZ_LONG, M_RDATA, M_DREG,  OP_10, EX_QQ, SZ_LONG, 0x0800),
+    P2(0046100, TEXT_DIVSL,  ISZ_LONG, M_RDATA, M_DPAIR, OP_10, EX_QR, SZ_LONG, 0x0800),
+    P2(0046100, TEXT_DIVU,   ISZ_LONG, M_RDATA, M_DPAIR, OP_10, EX_QR, SZ_LONG, 0x0400),
+    P2(0046100, TEXT_DIVU,   ISZ_LONG, M_RDATA, M_DREG,  OP_10, EX_QQ, SZ_LONG, 0x0000),
+    P2(0046100, TEXT_DIVUL,  ISZ_LONG, M_RDATA, M_DPAIR, OP_10, EX_QR, SZ_LONG, 0x0000),
+    E2(0044010, TEXT_LINK,   ISZ_LONG, M_AREG,  M_IMDAT, OP__0, OP___, SZ_LONG),
+    P2(0046000, TEXT_MULS,   ISZ_LONG, M_RDATA, M_DPAIR, OP_10, EX_QR, SZ_LONG, 0x0C00),
+    P2(0046000, TEXT_MULS,   ISZ_LONG, M_RDATA, M_DREG,  OP_10, EX_DR, SZ_LONG, 0x0800),
+    P2(0046000, TEXT_MULU,   ISZ_LONG, M_RDATA, M_DPAIR, OP_10, EX_QR, SZ_LONG, 0x0400),
+    P2(0046000, TEXT_MULU,   ISZ_LONG, M_RDATA, M_DREG,  OP_10, EX_DR, SZ_LONG, 0x0000),
+    E3(0100500, TEXT_PACK,   ISZ_NONE, M_DREG,  M_DREG,  M_IMDAT, OP__0, OP__3, OP___, SZ_WORD),
+    E3(0100510, TEXT_PACK,   ISZ_NONE, M_PDEC,  M_PDEC,  M_IMDAT, OP__0, OP__3, OP___, SZ_WORD),
+    E1(0003310, TEXT_RTM,    ISZ_NONE, M_AREG,  OP__0, SZ_NONE),
+    E1(0003300, TEXT_RTM,    ISZ_NONE, M_DREG,  OP__0, SZ_NONE),
+    E1(0052373, TEXT_TRAPCC, ISZ_LONG, M_IMDAT, OP___, SZ_LONG),
+    E1(0052773, TEXT_TRAPCS, ISZ_LONG, M_IMDAT, OP___, SZ_LONG),
+    E1(0053773, TEXT_TRAPEQ, ISZ_LONG, M_IMDAT, OP___, SZ_LONG),
+    E1(0050773, TEXT_TRAPF,  ISZ_LONG, M_IMDAT, OP___, SZ_LONG),
+    E1(0056373, TEXT_TRAPGE, ISZ_LONG, M_IMDAT, OP___, SZ_LONG),
+    E1(0057373, TEXT_TRAPGT, ISZ_LONG, M_IMDAT, OP___, SZ_LONG),
+    E1(0051373, TEXT_TRAPHI, ISZ_LONG, M_IMDAT, OP___, SZ_LONG),
+    E1(0052373, TEXT_TRAPHS, ISZ_LONG, M_IMDAT, OP___, SZ_LONG),
+    E1(0057773, TEXT_TRAPLE, ISZ_LONG, M_IMDAT, OP___, SZ_LONG),
+    E1(0052773, TEXT_TRAPLO, ISZ_LONG, M_IMDAT, OP___, SZ_LONG),
+    E1(0051773, TEXT_TRAPLS, ISZ_LONG, M_IMDAT, OP___, SZ_LONG),
+    E1(0056773, TEXT_TRAPLT, ISZ_LONG, M_IMDAT, OP___, SZ_LONG),
+    E1(0055773, TEXT_TRAPMI, ISZ_LONG, M_IMDAT, OP___, SZ_LONG),
+    E1(0053373, TEXT_TRAPNE, ISZ_LONG, M_IMDAT, OP___, SZ_LONG),
+    E1(0055373, TEXT_TRAPPL, ISZ_LONG, M_IMDAT, OP___, SZ_LONG),
+    E1(0050373, TEXT_TRAPT,  ISZ_LONG, M_IMDAT, OP___, SZ_LONG),
+    E1(0054373, TEXT_TRAPVC, ISZ_LONG, M_IMDAT, OP___, SZ_LONG),
+    E1(0054773, TEXT_TRAPVS, ISZ_LONG, M_IMDAT, OP___, SZ_LONG),
+    E1(0052372, TEXT_TRAPCC, ISZ_WORD, M_IMDAT, OP___, SZ_WORD),
+    E1(0052772, TEXT_TRAPCS, ISZ_WORD, M_IMDAT, OP___, SZ_WORD),
+    E1(0053772, TEXT_TRAPEQ, ISZ_WORD, M_IMDAT, OP___, SZ_WORD),
+    E1(0050772, TEXT_TRAPF,  ISZ_WORD, M_IMDAT, OP___, SZ_WORD),
+    E1(0056372, TEXT_TRAPGE, ISZ_WORD, M_IMDAT, OP___, SZ_WORD),
+    E1(0057372, TEXT_TRAPGT, ISZ_WORD, M_IMDAT, OP___, SZ_WORD),
+    E1(0051372, TEXT_TRAPHI, ISZ_WORD, M_IMDAT, OP___, SZ_WORD),
+    E1(0052372, TEXT_TRAPHS, ISZ_WORD, M_IMDAT, OP___, SZ_WORD),
+    E1(0057772, TEXT_TRAPLE, ISZ_WORD, M_IMDAT, OP___, SZ_WORD),
+    E1(0052772, TEXT_TRAPLO, ISZ_WORD, M_IMDAT, OP___, SZ_WORD),
+    E1(0051772, TEXT_TRAPLS, ISZ_WORD, M_IMDAT, OP___, SZ_WORD),
+    E1(0056772, TEXT_TRAPLT, ISZ_WORD, M_IMDAT, OP___, SZ_WORD),
+    E1(0055772, TEXT_TRAPMI, ISZ_WORD, M_IMDAT, OP___, SZ_WORD),
+    E1(0053372, TEXT_TRAPNE, ISZ_WORD, M_IMDAT, OP___, SZ_WORD),
+    E1(0055372, TEXT_TRAPPL, ISZ_WORD, M_IMDAT, OP___, SZ_WORD),
+    E1(0050372, TEXT_TRAPT,  ISZ_WORD, M_IMDAT, OP___, SZ_WORD),
+    E1(0054372, TEXT_TRAPVC, ISZ_WORD, M_IMDAT, OP___, SZ_WORD),
+    E1(0054772, TEXT_TRAPVS, ISZ_WORD, M_IMDAT, OP___, SZ_WORD),
+    E0(0052374, TEXT_TRAPCC),
+    E0(0052774, TEXT_TRAPCS),
+    E0(0053774, TEXT_TRAPEQ),
+    E0(0050774, TEXT_TRAPF),
+    E0(0056374, TEXT_TRAPGE),
+    E0(0057374, TEXT_TRAPGT),
+    E0(0051374, TEXT_TRAPHI),
+    E0(0052374, TEXT_TRAPHS),
+    E0(0057774, TEXT_TRAPLE),
+    E0(0052774, TEXT_TRAPLO),
+    E0(0051774, TEXT_TRAPLS),
+    E0(0056774, TEXT_TRAPLT),
+    E0(0055774, TEXT_TRAPMI),
+    E0(0053374, TEXT_TRAPNE),
+    E0(0055374, TEXT_TRAPPL),
+    E0(0050374, TEXT_TRAPT),
+    E0(0054374, TEXT_TRAPVC),
+    E0(0054774, TEXT_TRAPVS),
+    E3(0100600, TEXT_UNPK,   ISZ_NONE, M_DREG,  M_DREG,  M_IMDAT, OP__0, OP__3, OP___, SZ_WORD),
+    E3(0100610, TEXT_UNPK,   ISZ_NONE, M_PDEC,  M_PDEC,  M_IMDAT, OP__0, OP__3, OP___, SZ_WORD),
+};
+
+constexpr uint8_t MC68020_INDEX[] PROGMEM = {
+      1,  // TEXT_BFCHG
+      2,  // TEXT_BFCLR
+      5,  // TEXT_BFEXTS
+      4,  // TEXT_BFEXTU
+      6,  // TEXT_BFFFO
+      7,  // TEXT_BFINS
+      3,  // TEXT_BFSET
+      0,  // TEXT_BFTST
+      8,  // TEXT_CALLM
+      9,  // TEXT_CAS
+     10,  // TEXT_CAS2
+     11,  // TEXT_CHK
+     12,  // TEXT_CHK2
+     13,  // TEXT_CMP2
+     14,  // TEXT_DIVS
+     15,  // TEXT_DIVS
+     16,  // TEXT_DIVSL
+     17,  // TEXT_DIVU
+     18,  // TEXT_DIVU
+     19,  // TEXT_DIVUL
+     20,  // TEXT_LINK
+     21,  // TEXT_MULS
+     22,  // TEXT_MULS
+     23,  // TEXT_MULU
+     24,  // TEXT_MULU
+     25,  // TEXT_PACK
+     26,  // TEXT_PACK
+     27,  // TEXT_RTM
+     28,  // TEXT_RTM
+     29,  // TEXT_TRAPCC
+     47,  // TEXT_TRAPCC
+     65,  // TEXT_TRAPCC
+     30,  // TEXT_TRAPCS
+     48,  // TEXT_TRAPCS
+     66,  // TEXT_TRAPCS
+     31,  // TEXT_TRAPEQ
+     49,  // TEXT_TRAPEQ
+     67,  // TEXT_TRAPEQ
+     32,  // TEXT_TRAPF
+     50,  // TEXT_TRAPF
+     68,  // TEXT_TRAPF
+     33,  // TEXT_TRAPGE
+     51,  // TEXT_TRAPGE
+     69,  // TEXT_TRAPGE
+     34,  // TEXT_TRAPGT
+     52,  // TEXT_TRAPGT
+     70,  // TEXT_TRAPGT
+     35,  // TEXT_TRAPHI
+     53,  // TEXT_TRAPHI
+     71,  // TEXT_TRAPHI
+     36,  // TEXT_TRAPHS
+     54,  // TEXT_TRAPHS
+     72,  // TEXT_TRAPHS
+     37,  // TEXT_TRAPLE
+     55,  // TEXT_TRAPLE
+     73,  // TEXT_TRAPLE
+     38,  // TEXT_TRAPLO
+     56,  // TEXT_TRAPLO
+     74,  // TEXT_TRAPLO
+     39,  // TEXT_TRAPLS
+     57,  // TEXT_TRAPLS
+     75,  // TEXT_TRAPLS
+     40,  // TEXT_TRAPLT
+     58,  // TEXT_TRAPLT
+     76,  // TEXT_TRAPLT
+     41,  // TEXT_TRAPMI
+     59,  // TEXT_TRAPMI
+     77,  // TEXT_TRAPMI
+     42,  // TEXT_TRAPNE
+     60,  // TEXT_TRAPNE
+     78,  // TEXT_TRAPNE
+     43,  // TEXT_TRAPPL
+     61,  // TEXT_TRAPPL
+     79,  // TEXT_TRAPPL
+     44,  // TEXT_TRAPT
+     62,  // TEXT_TRAPT
+     80,  // TEXT_TRAPT
+     45,  // TEXT_TRAPVC
+     63,  // TEXT_TRAPVC
+     81,  // TEXT_TRAPVC
+     46,  // TEXT_TRAPVS
+     64,  // TEXT_TRAPVS
+     82,  // TEXT_TRAPVS
+     83,  // TEXT_UNPK
+     84,  // TEXT_UNPK
 };
 
 #if !defined(LIBASM_MC68000_NOFPU)
@@ -527,8 +702,8 @@ constexpr Entry MC68881_ARITH[] PROGMEM = {
     P2(0xF000, TEXT_FSINCOS, ISZ_FDAT, M_RDATA, M_FSICO, OP_10, EX_SC, SZ_FDAT, 0x4030),
     P2(0xF000, TEXT_FCMP,    ISZ_FDAT, M_RDATA, M_FPREG, OP_10, EX_RY, SZ_FDAT, 0x4038),
     P1(0xF000, TEXT_FTST,    ISZ_FDAT, M_RDATA, OP_10, SZ_FDAT, 0x403A),
-    P2(0xF000, TEXT_FMOVE,   ISZ_FIXD, M_FPREG, M_KFACT, EX_RY, EX_SK, SZ_PBCD, 0x6C00),
-    P2(0xF000, TEXT_FMOVE,   ISZ_FIXD, M_FPREG, M_KDREG, EX_RY, EX_DK, SZ_PBCD, 0x7C00),
+    P3(0xF000, TEXT_FMOVE,   ISZ_FIXD, M_FPREG, M_WDATA, M_KFACT, EX_RY, OP_10, EX_SK, SZ_PBCD, 0x6C00),
+    P3(0xF000, TEXT_FMOVE,   ISZ_FIXD, M_FPREG, M_WDATA, M_KDREG, EX_RY, OP_10, EX_DK, SZ_PBCD, 0x7C00),
     P2(0xF000, TEXT_FMOVE,   ISZ_FDAT, M_FPREG, M_WDATA, EX_RY, OP_10, SZ_FDAT, 0x6000),
     P2(0xF000, TEXT_FMOVE,   ISZ_FIXD, M_RADDR, M_FPIAR, OP_10, OP___, SZ_LONG, 0x8400),
     P2(0xF000, TEXT_FMOVE,   ISZ_FIXD, M_RADDR, M_FPSR,  OP_10, OP___, SZ_LONG, 0x8800),
@@ -1128,6 +1303,12 @@ constexpr EntryPage MC68010_PAGES[] PROGMEM = {
         {ARRAY_RANGE(MC68000_TABLE), ARRAY_RANGE(MC68000_INDEX)},
 };
 
+constexpr EntryPage MC68020_PAGES[] PROGMEM = {
+        {ARRAY_RANGE(MC68020_TABLE), ARRAY_RANGE(MC68020_INDEX)},
+        {ARRAY_RANGE(MC68010_TABLE), ARRAY_RANGE(MC68010_INDEX)},
+        {ARRAY_RANGE(MC68000_TABLE), ARRAY_RANGE(MC68000_INDEX)},
+};
+
 #if !defined(LIBASM_MC68000_NOFPU)
 constexpr EntryPage MC68881_PAGES[] PROGMEM = {
         {ARRAY_RANGE(MC68881_ARITH), ARRAY_RANGE(MC68881_ARITH_INDEX)},
@@ -1141,7 +1322,7 @@ using Cpu = entry::CpuBase<CpuType, EntryPage>;
 constexpr Cpu CPU_TABLE[] PROGMEM = {
         {MC68000, TEXT_CPU_68000, ARRAY_RANGE(MC68000_PAGES)},
         {MC68010, TEXT_CPU_68010, ARRAY_RANGE(MC68010_PAGES)},
-        {MC68020, TEXT_CPU_68020, ARRAY_RANGE(MC68010_PAGES)},
+        {MC68020, TEXT_CPU_68020, ARRAY_RANGE(MC68020_PAGES)},
 };
 
 const Cpu *cpu(CpuType cpuType) {
@@ -1177,12 +1358,14 @@ bool genericAddressing(AddrMode mode) {
 }
 
 bool acceptMode(AddrMode opr, AddrMode table, OprSize size) {
+    if (table == M_KFACT && opr == M_NONE)
+        return true;
     if (opr == table)
         return true;
     if (opr == M_DREG)
-        return genericAddressing(table) || table == M_MULT;
+        return genericAddressing(table) || table == M_MULT || table == M_GREG;
     if (opr == M_AREG)
-        return genericAddressing(table) || table == M_MULT;
+        return genericAddressing(table) || table == M_MULT || table == M_GREG;
     if (opr == M_IMDAT)
         return genericAddressing(table) || table == M_IMBIT || table == M_IM3 || table == M_IM8 ||
                table == M_IMVEC || table == M_IMDSP || table == M_IMROM;
@@ -1211,9 +1394,10 @@ bool acceptSize(const AsmInsn &insn, const Entry::Flags &flags) {
         return insnSize == ISZ_NONE || insnSize == ISZ_BYTE || insnSize == ISZ_SNGL ||
                insnSize == ISZ_WORD || insnSize == ISZ_LONG || insnSize == ISZ_XTND;
     if (insnSize == ISZ_BYTE)
-        return opr == SZ_DATA || opr == SZ_FDAT;
+        return opr == SZ_DATA || opr == SZ_FDAT || opr == SZ_DATH || opr == SZ_CAS1;
     if (insnSize == ISZ_WORD || insnSize == ISZ_LONG)
-        return opr == SZ_DATA || opr == SZ_ADDR || opr == SZ_ADR8 || opr == SZ_FDAT;
+        return opr == SZ_DATA || opr == SZ_ADDR || opr == SZ_ADR8 || opr == SZ_FDAT ||
+               opr == SZ_DATH || opr == SZ_CAS1 || opr == SZ_CAS2;
     if (insnSize == ISZ_SNGL || insnSize == ISZ_DUBL || insnSize == ISZ_XTND ||
             insnSize == ISZ_PBCD)
         return opr == SZ_FDAT;
@@ -1228,7 +1412,8 @@ bool acceptSize(const AsmInsn &insn, const Entry::Flags &flags) {
 bool acceptModes(AsmInsn &insn, const Entry *entry) {
     const auto table = entry->readFlags();
     return acceptMode(insn.srcOp.mode, table.src(), table.oprSize()) &&
-           acceptMode(insn.dstOp.mode, table.dst(), table.oprSize()) && acceptSize(insn, table);
+           acceptMode(insn.dstOp.mode, table.dst(), table.oprSize()) &&
+           acceptMode(insn.extOp.mode, table.ext(), table.oprSize()) && acceptSize(insn, table);
 }
 
 Error searchName(const CpuSpec &cpuSpec, AsmInsn &insn) {
@@ -1245,7 +1430,7 @@ Error searchName(const CpuSpec &cpuSpec, AsmInsn &insn) {
 
 bool invalidModeReg(Config::opcode_t opc, AddrMode addrMode, OprPos pos, OprSize size) {
     uint8_t mode, reg;
-    if (pos == OP_10 || addrMode == M_KFACT || addrMode == M_KDREG) {
+    if (pos == OP_10) {
         mode = (opc >> 3) & 7;
         reg = (opc >> 0) & 7;
     } else if (pos == OP_23) {
@@ -1255,12 +1440,8 @@ bool invalidModeReg(Config::opcode_t opc, AddrMode addrMode, OprPos pos, OprSize
         return false;
     }
     if (mode < 7) {
-        // mode
-        // |  0 |  1 |   2  |   3   |   4   |    5   |     6     |
-        // +----+----+------+-------+-------+--------+-----------+
         // | Dn |  1 | (An) | (An)+ | -(An) | (n,An) | (n,An,Xn) |
-        if (addrMode == M_RDATA || addrMode == M_WDATA || addrMode == M_KFACT ||
-                addrMode == M_KDREG)
+        if (addrMode == M_RDATA || addrMode == M_WDATA)
             return mode == 1;
         // |  0 |  1 | (An) | (An)+ | -(An) | (*,An) | (*,An,Xn) |
         if (addrMode == M_RMEM || addrMode == M_WMEM)
@@ -1271,10 +1452,12 @@ bool invalidModeReg(Config::opcode_t opc, AddrMode addrMode, OprPos pos, OprSize
         // |  0 |  1 | (An) | (An)+ |   4   | (n,An) | (n,An,Xn) |
         if (addrMode == M_IADDR)
             return mode < 2 || mode == 4;
-        //       (An)/     /-(An)/(*,An)/(*,An,Xn)
         // |  0 |  1 | (An) |   3   | -(An) | (n,An) | (n,An,Xn) |
         if (addrMode == M_DADDR)
             return mode < 2 || mode == 3;
+        // | Dn |  1 | (An) |   3   |   4   | (n,An) | (n,An,Xn) |
+        if (addrMode == M_BITFR || addrMode == M_BITFW)
+            return mode == 1 || mode == 3 || mode == 4;
         // | Dn | An*| (An) | (An)+ | -(An) | (n,An) | (n,An,Xn) |
         // M_WADDR, M_RADDR
         if (mode == 1 && size == SZ_DATA) {  // no BYTE size for An
@@ -1286,21 +1469,28 @@ bool invalidModeReg(Config::opcode_t opc, AddrMode addrMode, OprPos pos, OprSize
     // mode == 7
     if (reg >= 5)
         return true;
-    // reg
-    // |   0   |   1   |    2   |     3     |  4 |
     // | (n).W | (n).L | (n,PC) | (n,PC,Xn) | #n |
     if (addrMode == M_RADDR || addrMode == M_RDATA)
         return false;
     // | (n).W | (n).L | (n,PC) | (n,PC,Xn) |  4 |
-    if (addrMode == M_RMEM || addrMode == M_JADDR || addrMode == M_IADDR)
+    if (addrMode == M_RMEM || addrMode == M_JADDR || addrMode == M_IADDR || addrMode == M_BITFR)
         return reg == 4;
     // | (n).W | (n).L |    2   |     3     |  4 |
-    // M_WADDR, M_WDATA, M_WFIAR, M_WMEM, M_DADDR, M_KFACT, M_KDREG
+    // M_WADDR, M_WDATA, M_WFIAR, M_WMEM, M_DADDR, M_BITFW
     return reg >= 2;
 }
 
 bool invalidSize(Config::opcode_t opc, OprSize size) {
-    return size == SZ_DATA && ((opc >> 6) & 3) == 3;
+    if (size == SZ_DATA)
+        return ((opc >> 6) & 3) == 3;
+    const auto sz = (opc >> 9) & 3;
+    if (size == SZ_DATH && sz == 3)
+        return true;
+    if (size == SZ_CAS1 && sz == 0)
+        return true;
+    if (size == SZ_CAS2 && sz < 2)
+        return true;
+    return false;
 }
 
 bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *) {
@@ -1317,6 +1507,8 @@ bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *) {
         return false;
     if (invalidModeReg(opc, flags.dst(), flags.dstPos(), flags.oprSize()))
         return false;
+    if (invalidModeReg(opc, flags.ext(), flags.extPos(), flags.oprSize()))
+        return false;
     if (invalidSize(opc, flags.oprSize()))
         return false;
     if (flags.hasPostVal()) {
@@ -1329,6 +1521,10 @@ bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *) {
             if (oprSize == 7)
                 return false;  // illegal float format
             post &= ~(7 << 10);
+        }
+        if (flags.dstPos() == EX_QQ) {
+            if (((post >> 12) & 7) != (post & 7))
+                return false;  // for DIV[SU].L Dq
         }
         post &= ~flags.postMask();
         return post == flags.postVal();

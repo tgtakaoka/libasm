@@ -31,6 +31,10 @@ bool mc68010() {
     return strcmp_P("68010", assembler.config().cpu_P()) == 0;
 }
 
+bool mc68020() {
+    return strcmp_P("68020", assembler.config().cpu_P()) == 0;
+}
+
 bool firstGen() {
     return mc68k00() || mc68010();
 }
@@ -46,7 +50,11 @@ void subst(char *line, const char *text, const char *mark, const char *word, boo
             text += 2;
             *line = 0;
             // Sign extend short address to full width address.
-            strcat(line, firstGen ? "$FF" : "$FFFF");
+            if (*word >= '8') {
+                strcat(line, firstGen ? "$FF" : "$FFFF");
+            } else {
+                strcat(line, firstGen ? "$00" : "$0000");
+            }
             strcat(line, word);
             line += strlen(line);
         } else {
@@ -155,6 +163,10 @@ void test_data_move() {
     ERRT("LINK A3,D2",     OPERAND_NOT_ALLOWED, "A3,D2");
     TEST("LINK A3,#$1234", 0047123, 0x1234);
     TEST("LINK A3,#-16",   0047123, 0xFFF0);
+    if (!firstGen()) {
+        TEST("LINK.L A3,#$1234", 0044013, 0x0000, 0x1234);
+        TEST("LINK.L A3,#-16",   0044013, 0xFFFF, 0xFFF0);
+    }
 
     // MOVE src,dst: 00|Sz|Rd|Md|Ms|Rs, Sz:B=1/W=3/L=2
     TEST("MOVE.B D2,D7",              0017002);
@@ -210,7 +222,7 @@ void test_data_move() {
     ABSW("MOVE.B (@W).W,D7", "8000",  0017070, 0x8000);
     TEST("MOVE.B ($FF8000).L,D7",     0017071, 0x00FF, 0x8000);
     TEST("MOVE.B ($FF7FFF),D7",       0017071, 0x00FF, 0x7FFF);
-    ERRW("MOVE.B (@W).W,D7", "7FFF",  OVERFLOW_RANGE, "(@W).W,D7", 017070, 0x7FFF);
+    ABSW("MOVE.B (@W).W,D7", "7FFF",  0017070, 0x7FFF);
     TEST("MOVE.B ($FF7FFF).L,D7",     0017071, 0x00FF, 0x7FFF);
     TEST("MOVE.B ($1000000),D7",      0017071, 0x0100, 0x0000);
     ERRT("MOVE.B ($1000000).W,D7",    OVERFLOW_RANGE, "($1000000).W,D7", 017070, 0x0000);
@@ -679,79 +691,73 @@ void test_data_move() {
         ERUI("MOVES.W D3, -(A4)");
         ERUI("MOVES.L D3, -(A4)");
     } else {
-        ERRT("MOVES.B D0, D1", OPERAND_NOT_ALLOWED, "D0, D1", 0x0E00, 0x1000);
-        ERRT("MOVES.B A1, A2", OPERAND_NOT_ALLOWED, "A1, A2", 0x0E00, 0xA000);
-        TEST("MOVES.B (A2), D1",         007022, 0x1000);
-        TEST("MOVES.B (A3)+, A2",        007033, 0xA000);
-        TEST("MOVES.B -(A4), D3",        007044, 0x3000);
-        TEST("MOVES.B ($1234,A5), A4",   007055, 0xC000, 0x1234);
-        TEST("MOVES.B (18,A6,D3.W), D5", 007066, 0x5000, 0x3012);
-        TEST("MOVES.B ($001234).W, A6",  007070, 0xE000, 0x1234);
-        TEST("MOVES.B ($123456).L, D7",  007071, 0x7000, 0x0012, 0x3456);
-        ERRT("MOVES.B ($1234,PC), A0",   OPERAND_NOT_ALLOWED, "($1234,PC), A0",  0x0E00, 0x8000);
-        ERRT("MOVES.B ($12,PC,A2), D1",  OPERAND_NOT_ALLOWED, "($12,PC,A2), D1", 0x0E00, 0x1000);
-        ERRT("MOVES.B #$1234, A2",       OPERAND_NOT_ALLOWED, "#$1234, A2",      0x0E00, 0xA000);
-        ERRT("MOVES.W D0, D1", OPERAND_NOT_ALLOWED, "D0, D1", 0x0E40, 0x1000);
-        ERRT("MOVES.W A1, A2", OPERAND_NOT_ALLOWED, "A1, A2", 0x0E40, 0xA000);
-        TEST("MOVES.W (A2), D1",         007122, 0x1000);
-        TEST("MOVES.W (A3)+, A2",        007133, 0xA000);
-        TEST("MOVES.W -(A4), D3",        007144, 0x3000);
-        TEST("MOVES.W ($1234,A5), A4",   007155, 0xC000, 0x1234);
-        TEST("MOVES.W (18,A6,D3.W), D5", 007166, 0x5000, 0x3012);
-        TEST("MOVES.W ($001234).W, A6",  007170, 0xE000, 0x1234);
-        TEST("MOVES.W ($123456).L, D7",  007171, 0x7000, 0x0012, 0x3456);
-        ERRT("MOVES.W ($1234,PC), A0",  OPERAND_NOT_ALLOWED, "($1234,PC), A0",  0x0E40, 0x8000);
-        ERRT("MOVES.W ($12,PC,A2), D1", OPERAND_NOT_ALLOWED, "($12,PC,A2), D1", 0x0E40, 0x1000);
-        ERRT("MOVES.W #$1234, A2",      OPERAND_NOT_ALLOWED, "#$1234, A2",      0x0E40, 0xA000);
-        ERRT("MOVES.L D0, D1", OPERAND_NOT_ALLOWED, "D0, D1", 0x0E80, 0x1000);
-        ERRT("MOVES.L A1, A2", OPERAND_NOT_ALLOWED, "A1, A2", 0x0E80, 0xA000);
-        TEST("MOVES.L (A2), D1",         007222, 0x1000);
-        TEST("MOVES.L (A3)+, A2",        007233, 0xA000);
-        TEST("MOVES.L -(A4), D3",        007244, 0x3000);
-        TEST("MOVES.L ($1234,A5), A4",   007255, 0xC000, 0x1234);
-        TEST("MOVES.L (18,A6,D3.W), D5", 007266, 0x5000, 0x3012);
-        TEST("MOVES.L ($001234).W, A6",  007270, 0xE000, 0x1234);
-        TEST("MOVES.L ($123456).L, D7",  007271, 0x7000, 0x0012, 0x3456);
-        ERRT("MOVES.L ($1234,PC), A0",  OPERAND_NOT_ALLOWED, "($1234,PC), A0",  0x0E80, 0x8000);
-        ERRT("MOVES.L ($12,PC,A2), D1", OPERAND_NOT_ALLOWED, "($12,PC,A2), D1", 0x0E80, 0x1000);
-        ERRT("MOVES.L #$1234, A2",      OPERAND_NOT_ALLOWED, "#$1234, A2",      0x0E80, 0xA000);
+        ERRT("MOVES.B D0, D1", OPERAND_NOT_ALLOWED, "D0, D1", 0007000, 0010000);
+        ERRT("MOVES.B A1, A2", OPERAND_NOT_ALLOWED, "A1, A2", 0007000, 0120000);
+        TEST("MOVES.B (A2), D1",         0007022, 0010000);
+        TEST("MOVES.B (A3)+, A2",        0007033, 0120000);
+        TEST("MOVES.B -(A4), D3",        0007044, 0030000);
+        TEST("MOVES.B ($1234,A5), A4",   0007055, 0140000, 0x1234);
+        TEST("MOVES.B (18,A6,D3.W), D5", 0007066, 0050000, 0x3012);
+        TEST("MOVES.B ($001234).W, A6",  0007070, 0160000, 0x1234);
+        TEST("MOVES.B ($123456).L, D7",  0007071, 0070000, 0x0012, 0x3456);
+        ERRT("MOVES.B ($1234,PC), A0",   OPERAND_NOT_ALLOWED, "($1234,PC), A0",  0007000, 0100000);
+        ERRT("MOVES.B ($12,PC,A2), D1",  OPERAND_NOT_ALLOWED, "($12,PC,A2), D1", 0007000, 0010000);
+        ERRT("MOVES.B #$1234, A2",       OPERAND_NOT_ALLOWED, "#$1234, A2",      0007000, 0120000);
+        ERRT("MOVES.W D0, D1", OPERAND_NOT_ALLOWED, "D0, D1", 0007100, 0010000);
+        ERRT("MOVES.W A1, A2", OPERAND_NOT_ALLOWED, "A1, A2", 0007100, 0120000);
+        TEST("MOVES.W (A2), D1",         0007122, 0010000);
+        TEST("MOVES.W (A3)+, A2",        0007133, 0120000);
+        TEST("MOVES.W -(A4), D3",        0007144, 0030000);
+        TEST("MOVES.W ($1234,A5), A4",   0007155, 0140000, 0x1234);
+        TEST("MOVES.W (18,A6,D3.W), D5", 0007166, 0050000, 0x3012);
+        TEST("MOVES.W ($001234).W, A6",  0007170, 0160000, 0x1234);
+        TEST("MOVES.W ($123456).L, D7",  0007171, 0070000, 0x0012, 0x3456);
+        ERRT("MOVES.W ($1234,PC), A0",  OPERAND_NOT_ALLOWED, "($1234,PC), A0",  0007100, 0100000);
+        ERRT("MOVES.W ($12,PC,A2), D1", OPERAND_NOT_ALLOWED, "($12,PC,A2), D1", 0007100, 0010000);
+        ERRT("MOVES.W #$1234, A2",      OPERAND_NOT_ALLOWED, "#$1234, A2",      0007100, 0120000);
+        ERRT("MOVES.L D0, D1", OPERAND_NOT_ALLOWED, "D0, D1", 0007200, 0010000);
+        ERRT("MOVES.L A1, A2", OPERAND_NOT_ALLOWED, "A1, A2", 0007200, 0120000);
+        TEST("MOVES.L (A2), D1",         0007222, 0010000);
+        TEST("MOVES.L (A3)+, A2",        0007233, 0120000);
+        TEST("MOVES.L -(A4), D3",        0007244, 0030000);
+        TEST("MOVES.L ($1234,A5), A4",   0007255, 0140000, 0x1234);
+        TEST("MOVES.L (18,A6,D3.W), D5", 0007266, 0050000, 0x3012);
+        TEST("MOVES.L ($001234).W, A6",  0007270, 0160000, 0x1234);
+        TEST("MOVES.L ($123456).L, D7",  0007271, 0070000, 0x0012, 0x3456);
+        ERRT("MOVES.L ($1234,PC), A0",  OPERAND_NOT_ALLOWED, "($1234,PC), A0",  0007200, 0100000);
+        ERRT("MOVES.L ($12,PC,A2), D1", OPERAND_NOT_ALLOWED, "($12,PC,A2), D1", 0007200, 0010000);
+        ERRT("MOVES.L #$1234, A2",      OPERAND_NOT_ALLOWED, "#$1234, A2",      0007200, 0120000);
 
-        ERRT("MOVES.B D1, D0", OPERAND_NOT_ALLOWED, "D1, D0", 0x0E00, 0x0000);
-        ERRT("MOVES.B A2, A1", OPERAND_NOT_ALLOWED, "A2, A1", 0x0E00, 0x9000);
-        TEST("MOVES.B D1, (A2)",         007022, 0x1800);
-        TEST("MOVES.B A2, (A3)+",        007033, 0xA800);
-        TEST("MOVES.B D3, -(A4)",        007044, 0x3800);
-        TEST("MOVES.B A4, ($1234,A5)",   007055, 0xC800, 0x1234);
-        TEST("MOVES.B D5, (18,A6,D3.W)", 007066, 0x5800, 0x3012);
-        TEST("MOVES.B A6, ($001234).W",  007070, 0xE800, 0x1234);
-        TEST("MOVES.B D7, ($123456).L",  007071, 0x7800, 0x0012, 0x3456);
-        ERRT("MOVES.B A0, ($1234,PC)",  OPERAND_NOT_ALLOWED, "($1234,PC)",  0x0E00, 0x8800);
-        ERRT("MOVES.B D1, ($12,PC,A2)", OPERAND_NOT_ALLOWED, "($12,PC,A2)", 0x0E00, 0x1800);
-        ERRT("MOVES.B A2, #$1234",      OPERAND_NOT_ALLOWED, "#$1234",      0x0E00, 0xA800);
-        ERRT("MOVES.W D1, D0", OPERAND_NOT_ALLOWED, "D1, D0", 0x0E40, 0x0000);
-        ERRT("MOVES.W A2, A1", OPERAND_NOT_ALLOWED, "A2, A1", 0x0E40, 0x9000);
-        TEST("MOVES.W D1, (A2)",         007122, 0x1800);
-        TEST("MOVES.W A2, (A3)+",        007133, 0xA800);
-        TEST("MOVES.W D3, -(A4)",        007144, 0x3800);
-        TEST("MOVES.W A4, ($1234,A5)",   007155, 0xC800, 0x1234);
-        TEST("MOVES.W D5, (18,A6,D3.W)", 007166, 0x5800, 0x3012);
-        TEST("MOVES.W A6, ($001234).W",  007170, 0xE800, 0x1234);
-        TEST("MOVES.W D7, ($123456).L",  007171, 0x7800, 0x0012, 0x3456);
-        ERRT("MOVES.W A0, ($1234,PC)",   OPERAND_NOT_ALLOWED, "($1234,PC)",  0x0E40, 0x8800);
-        ERRT("MOVES.W D1, ($12,PC,A2)",  OPERAND_NOT_ALLOWED, "($12,PC,A2)", 0x0E40, 0x1800);
-        ERRT("MOVES.W A2, #$1234",       OPERAND_NOT_ALLOWED, "#$1234",      0x0E40, 0xA800);
-        ERRT("MOVES.L D1, D0", OPERAND_NOT_ALLOWED, "D1, D0", 0x0E80, 0x0000);
-        ERRT("MOVES.L A2, A1", OPERAND_NOT_ALLOWED, "A2, A1", 0x0E80, 0x9000);
-        TEST("MOVES.L D1, (A2)",         007222, 0x1800);
-        TEST("MOVES.L A2, (A3)+",        007233, 0xA800);
-        TEST("MOVES.L D3, -(A4)",        007244, 0x3800);
-        TEST("MOVES.L A4, ($1234,A5)",   007255, 0xC800, 0x1234);
-        TEST("MOVES.L D5, (18,A6,D3.W)", 007266, 0x5800, 0x3012);
-        TEST("MOVES.L A6, ($001234).W",  007270, 0xE800, 0x1234);
-        TEST("MOVES.L D7, ($123456).L",  007271, 0x7800, 0x0012, 0x3456);
-        ERRT("MOVES.L A0, ($1234,PC)",  OPERAND_NOT_ALLOWED, "($1234,PC)",  0x0E80, 0x8800);
-        ERRT("MOVES.L D1, ($12,PC,A2)", OPERAND_NOT_ALLOWED, "($12,PC,A2)", 0x0E80, 0x1800);
-        ERRT("MOVES.L A2, #$1234",      OPERAND_NOT_ALLOWED, "#$1234",      0x0E80, 0xA800);
+        TEST("MOVES.B D1, (A2)",         0007022, 0014000);
+        TEST("MOVES.B A2, (A3)+",        0007033, 0124000);
+        TEST("MOVES.B D3, -(A4)",        0007044, 0034000);
+        TEST("MOVES.B A4, ($1234,A5)",   0007055, 0144000, 0x1234);
+        TEST("MOVES.B D5, (18,A6,D3.W)", 0007066, 0054000, 0x3012);
+        TEST("MOVES.B A6, ($001234).W",  0007070, 0164000, 0x1234);
+        TEST("MOVES.B D7, ($123456).L",  0007071, 0074000, 0x0012, 0x3456);
+        ERRT("MOVES.B A0, ($1234,PC)",  OPERAND_NOT_ALLOWED, "($1234,PC)",  0007000, 0104000);
+        ERRT("MOVES.B D1, ($12,PC,A2)", OPERAND_NOT_ALLOWED, "($12,PC,A2)", 0007000, 0014000);
+        ERRT("MOVES.B A2, #$1234",      OPERAND_NOT_ALLOWED, "#$1234",      0007000, 0124000);
+        TEST("MOVES.W D1, (A2)",         0007122, 0014000);
+        TEST("MOVES.W A2, (A3)+",        0007133, 0124000);
+        TEST("MOVES.W D3, -(A4)",        0007144, 0034000);
+        TEST("MOVES.W A4, ($1234,A5)",   0007155, 0144000, 0x1234);
+        TEST("MOVES.W D5, (18,A6,D3.W)", 0007166, 0054000, 0x3012);
+        TEST("MOVES.W A6, ($001234).W",  0007170, 0164000, 0x1234);
+        TEST("MOVES.W D7, ($123456).L",  0007171, 0074000, 0x0012, 0x3456);
+        ERRT("MOVES.W A0, ($1234,PC)",   OPERAND_NOT_ALLOWED, "($1234,PC)",  0007100, 0104000);
+        ERRT("MOVES.W D1, ($12,PC,A2)",  OPERAND_NOT_ALLOWED, "($12,PC,A2)", 0007100, 0014000);
+        ERRT("MOVES.W A2, #$1234",       OPERAND_NOT_ALLOWED, "#$1234",      0007100, 0124000);
+        TEST("MOVES.L D1, (A2)",         0007222, 0014000);
+        TEST("MOVES.L A2, (A3)+",        0007233, 0124000);
+        TEST("MOVES.L D3, -(A4)",        0007244, 0034000);
+        TEST("MOVES.L A4, ($1234,A5)",   0007255, 0144000, 0x1234);
+        TEST("MOVES.L D5, (18,A6,D3.W)", 0007266, 0054000, 0x3012);
+        TEST("MOVES.L A6, ($001234).W",  0007270, 0164000, 0x1234);
+        TEST("MOVES.L D7, ($123456).L",  0007271, 0074000, 0x0012, 0x3456);
+        ERRT("MOVES.L A0, ($1234,PC)",  OPERAND_NOT_ALLOWED, "($1234,PC)",  0007200, 0104000);
+        ERRT("MOVES.L D1, ($12,PC,A2)", OPERAND_NOT_ALLOWED, "($12,PC,A2)", 0007200, 0014000);
+        ERRT("MOVES.L A2, #$1234",      OPERAND_NOT_ALLOWED, "#$1234",      0007200, 0124000);
     }
 
     // MOVEQ #nn,Dn: 007|Dn|000 + nn
@@ -1155,6 +1161,46 @@ void test_integer() {
     TEST("CMPM.L (A2)+,(A7)+", 0137612);
     ERRT("CMPM.B -(A2),-(A7)", OPERAND_NOT_ALLOWED, "-(A2),-(A7)");
 
+    if (!firstGen()) {
+        // CMP2 src,Rd, 00|Sz|3|M|Rn, Rd|00000, Sz:B=0/W=1/L=2
+        ERRT("CMP2.B D2, D3", OPERAND_NOT_ALLOWED, "D2, D3", 0000300, 0030000);
+        ERRT("CMP2.B A2, D3", OPERAND_NOT_ALLOWED, "A2, D3", 0000300, 0030000);
+        TEST("CMP2.B (A2), D3",           0000322, 0030000);
+        ERRT("CMP2.B (A2)+, D7", OPERAND_NOT_ALLOWED, "(A2)+, D7", 0000300, 0070000);
+        ERRT("CMP2.B -(A2), A7", OPERAND_NOT_ALLOWED, "-(A2), A7", 0000300, 0170000);
+        TEST("CMP2.B ($1234,A2), A6",     0000352, 0160000, 0x1234);
+        TEST("CMP2.B (18,A2,D3.L), D7",   0000362, 0070000, 0x3812);
+        ABSW("CMP2.B (@W).W, A0", "FFFE", 0000370, 0100000, 0xFFFE);
+        TEST("CMP2.B ($123456).L, D0",    0000371, 0000000, 0x0012, 0x3456);
+        TEST("CMP2.B (*+$1234,PC), A1",   0000372, 0110000, 0x1230);
+        TEST("CMP2.B (*+18,PC,D3.W), D2", 0000373, 0020000, 0x300E);
+        ERRT("CMP2.B #$34, D7", OPERAND_NOT_ALLOWED, "#$34, D7", 0000300, 0070000);
+        ERRT("CMP2.W D2, D3", OPERAND_NOT_ALLOWED, "D2, D3", 0001300, 0030000);
+        ERRT("CMP2.W A2, D3", OPERAND_NOT_ALLOWED, "A2, D3", 0001300, 0030000);
+        TEST("CMP2.W (A2), D3",           0001322, 0030000);
+        ERRT("CMP2.W (A2)+, D7", OPERAND_NOT_ALLOWED, "(A2)+, D7", 0001300, 0070000);
+        ERRT("CMP2.W -(A2), A7", OPERAND_NOT_ALLOWED, "-(A2), A7", 0001300, 0170000);
+        TEST("CMP2.W ($1234,A2), A6",     0001352, 0160000, 0x1234);
+        TEST("CMP2.W (18,A2,D3.L), D7",   0001362, 0070000, 0x3812);
+        ABSW("CMP2.W (@W).W, A0", "FFFE", 0001370, 0100000, 0xFFFE);
+        TEST("CMP2.W ($123456).L, D0",    0001371, 0000000, 0x0012, 0x3456);
+        TEST("CMP2.W (*+$1234,PC), A1",   0001372, 0110000, 0x1230);
+        TEST("CMP2.W (*+18,PC,D3.W), D2", 0001373, 0020000, 0x300E);
+        ERRT("CMP2.W #$1234, D7", OPERAND_NOT_ALLOWED, "#$1234, D7", 0001300, 0070000);
+        ERRT("CMP2.L D2, D3", OPERAND_NOT_ALLOWED, "D2, D3", 0002300, 0030000);
+        ERRT("CMP2.L A2, D3", OPERAND_NOT_ALLOWED, "A2, D3", 0002300, 0030000);
+        TEST("CMP2.L (A2), D3",           0002322, 0030000);
+        ERRT("CMP2.L (A2)+, D7", OPERAND_NOT_ALLOWED, "(A2)+, D7", 0002300, 0070000);
+        ERRT("CMP2.L -(A2), A7", OPERAND_NOT_ALLOWED, "-(A2), A7", 0002300, 0170000);
+        TEST("CMP2.L ($1234,A2), A6",     0002352, 0160000, 0x1234);
+        TEST("CMP2.L (18,A2,D3.L), D7",   0002362, 0070000, 0x3812);
+        ABSW("CMP2.L (@W).W, A0", "FFFE", 0002370, 0100000, 0xFFFE);
+        TEST("CMP2.L ($123456).L, D0",    0002371, 0000000, 0x0012, 0x3456);
+        TEST("CMP2.L (*+$1234,PC), A1",   0002372, 0110000, 0x1230);
+        TEST("CMP2.L (*+18,PC,D3.W), D2", 0002373, 0020000, 0x300E);
+        ERRT("CMP2.L #$12345678, D7", OPERAND_NOT_ALLOWED, "#$12345678, D7", 0002300, 0070000);
+    }
+
     // DIVS src,Dn: 010|Dn|7|M|Rn
     TEST("DIVS.W D2,D7",              0107702);
     ERRT("DIVS.W A2,D7",              OPERAND_NOT_ALLOWED, "A2,D7", 0107700);
@@ -1169,6 +1215,48 @@ void test_integer() {
     TEST("DIVS.W (*+$12,PC,D3.W),D7", 0107773, 0x3010);
     TEST("DIVS.W #$5678,D7",          0107774, 0x5678);
 
+    if (!firstGen()) {
+        // DIVS.L src,Dq: 00461|M|Rn, 0|Dq|400|Dq
+        TEST("DIVS.L D2, D7",             0046102, 0074007);
+        ERRT("DIVS.L A2, D7", OPERAND_NOT_ALLOWED, "A2, D7", 0046100, 0074007);
+        TEST("DIVS.L (A2), D7",           0046122, 0074007);
+        TEST("DIVS.L (A2)+, D7",          0046132, 0074007);
+        TEST("DIVS.L -(A2), D7",          0046142, 0074007);
+        TEST("DIVS.L ($1234,A2), D7",     0046152, 0074007, 0x1234);
+        TEST("DIVS.L (18,A2,D3.L), D7",   0046162, 0074007, 0x3812);
+        ABSW("DIVS.L (@W).W, D7", "FFFE", 0046170, 0074007, 0xFFFE);
+        TEST("DIVS.L ($123456).L, D7",    0046171, 0074007, 0x0012, 0x3456);
+        TEST("DIVS.L (*+$1234,PC), D7",   0046172, 0074007, 0x1230);
+        TEST("DIVS.L (*+18,PC,D3.W), D7", 0046173, 0074007, 0x300E);
+        TEST("DIVS.L #$12345678, D7",     0046174, 0074007, 0x1234, 0x5678);
+        // DIVSL.L src,Dr:Dq: 00461|M|Rn, 0|Dq|400|Dr
+        TEST("DIVSL.L D2, D6:D7",             0046102, 0074006);
+        ERRT("DIVSL.L A2, D6:D7", OPERAND_NOT_ALLOWED, "A2, D6:D7", 0046100, 0074006);
+        TEST("DIVSL.L (A2), D6:D7",           0046122, 0074006);
+        TEST("DIVSL.L (A2)+, D6:D7",          0046132, 0074006);
+        TEST("DIVSL.L -(A2), D6:D7",          0046142, 0074006);
+        TEST("DIVSL.L ($1234,A2), D6:D7",     0046152, 0074006, 0x1234);
+        TEST("DIVSL.L (18,A2,D3.L), D6:D7",   0046162, 0074006, 0x3812);
+        ABSW("DIVSL.L (@W).W, D6:D7", "FFFE", 0046170, 0074006, 0xFFFE);
+        TEST("DIVSL.L ($123456).L, D6:D7",    0046171, 0074006, 0x0012, 0x3456);
+        TEST("DIVSL.L (*+$1234,PC), D6:D7",   0046172, 0074006, 0x1230);
+        TEST("DIVSL.L (*+18,PC,D3.W), D6:D7", 0046173, 0074006, 0x300E);
+        TEST("DIVSL.L #$12345678, D6:D7",     0046174, 0074006, 0x1234, 0x5678);
+        // DIVS.L src,Dr:Dq: 00461|M|Rn, 0|Dq|600|Dr
+        TEST("DIVS.L D2, D6:D7",             0046102, 0076006);
+        ERRT("DIVS.L A2, D6:D7", OPERAND_NOT_ALLOWED, "A2, D6:D7", 0046100, 0076006);
+        TEST("DIVS.L (A2), D6:D7",           0046122, 0076006);
+        TEST("DIVS.L (A2)+, D6:D7",          0046132, 0076006);
+        TEST("DIVS.L -(A2), D6:D7",          0046142, 0076006);
+        TEST("DIVS.L ($1234,A2), D6:D7",     0046152, 0076006, 0x1234);
+        TEST("DIVS.L (18,A2,D3.L), D6:D7",   0046162, 0076006, 0x3812);
+        ABSW("DIVS.L (@W).W, D6:D7", "FFFE", 0046170, 0076006, 0xFFFE);
+        TEST("DIVS.L ($123456).L, D6:D7",    0046171, 0076006, 0x0012, 0x3456);
+        TEST("DIVS.L (*+$1234,PC), D6:D7",   0046172, 0076006, 0x1230);
+        TEST("DIVS.L (*+18,PC,D3.W), D6:D7", 0046173, 0076006, 0x300E);
+        TEST("DIVS.L #$12345678, D6:D7",     0046174, 0076006, 0x1234, 0x5678);
+    }
+
     // DIVU src,Dn: 010|Dn|3|M|Rn
     TEST("DIVU.W D2,D7",              0107302);
     ERRT("DIVU.W A2,D7",              OPERAND_NOT_ALLOWED, "A2,D7", 0107300);
@@ -1182,6 +1270,48 @@ void test_integer() {
     TEST("DIVU.W (*+$1234,PC),D7",    0107372, 0x1232);
     TEST("DIVU.W (*+$12,PC,D3.W),D7", 0107373, 0x3010);
     TEST("DIVU.W #$5678,D7",          0107374, 0x5678);
+
+    if (!firstGen()) {
+        // DIVU.L src,Dq: 00461|M|Rn, 0|Dq|000|Dq
+        TEST("DIVU.L D2, D7",             0046102, 0070007);
+        ERRT("DIVU.L A2, D7", OPERAND_NOT_ALLOWED, "A2, D7", 0046100, 0070007);
+        TEST("DIVU.L (A2), D7",           0046122, 0070007);
+        TEST("DIVU.L (A2)+, D7",          0046132, 0070007);
+        TEST("DIVU.L -(A2), D7",          0046142, 0070007);
+        TEST("DIVU.L ($1234,A2), D7",     0046152, 0070007, 0x1234);
+        TEST("DIVU.L (18,A2,D3.L), D7",   0046162, 0070007, 0x3812);
+        ABSW("DIVU.L (@W).W, D7", "FFFE", 0046170, 0070007, 0xFFFE);
+        TEST("DIVU.L ($123456).L, D7",    0046171, 0070007, 0x0012, 0x3456);
+        TEST("DIVU.L (*+$1234,PC), D7",   0046172, 0070007, 0x1230);
+        TEST("DIVU.L (*+18,PC,D3.W), D7", 0046173, 0070007, 0x300E);
+        TEST("DIVU.L #$12345678, D7",     0046174, 0070007, 0x1234, 0x5678);
+        // DIVUL.L src,Dr:Dq: 00461|M|Rn, 0|Dq|000|Dr
+        TEST("DIVUL.L D2, D6:D7",             0046102, 0070006);
+        ERRT("DIVUL.L A2, D6:D7", OPERAND_NOT_ALLOWED, "A2, D6:D7", 0046100, 0070006);
+        TEST("DIVUL.L (A2), D6:D7",           0046122, 0070006);
+        TEST("DIVUL.L (A2)+, D6:D7",          0046132, 0070006);
+        TEST("DIVUL.L -(A2), D6:D7",          0046142, 0070006);
+        TEST("DIVUL.L ($1234,A2), D6:D7",     0046152, 0070006, 0x1234);
+        TEST("DIVUL.L (18,A2,D3.L), D6:D7",   0046162, 0070006, 0x3812);
+        ABSW("DIVUL.L (@W).W, D6:D7", "FFFE", 0046170, 0070006, 0xFFFE);
+        TEST("DIVUL.L ($123456).L, D6:D7",    0046171, 0070006, 0x0012, 0x3456);
+        TEST("DIVUL.L (*+$1234,PC), D6:D7",   0046172, 0070006, 0x1230);
+        TEST("DIVUL.L (*+18,PC,D3.W), D6:D7", 0046173, 0070006, 0x300E);
+        TEST("DIVUL.L #$12345678, D6:D7",     0046174, 0070006, 0x1234, 0x5678);
+        // DIVU.L src,Dr:Dq: 00461|M|Rn, 0|Dq|200|Dr
+        TEST("DIVU.L D2, D6:D7",             0046102, 0072006);
+        ERRT("DIVU.L A2, D6:D7", OPERAND_NOT_ALLOWED, "A2, D6:D7", 0046100, 0072006);
+        TEST("DIVU.L (A2), D6:D7",           0046122, 0072006);
+        TEST("DIVU.L (A2)+, D6:D7",          0046132, 0072006);
+        TEST("DIVU.L -(A2), D6:D7",          0046142, 0072006);
+        TEST("DIVU.L ($1234,A2), D6:D7",     0046152, 0072006, 0x1234);
+        TEST("DIVU.L (18,A2,D3.L), D6:D7",   0046162, 0072006, 0x3812);
+        ABSW("DIVU.L (@W).W, D6:D7", "FFFE", 0046170, 0072006, 0xFFFE);
+        TEST("DIVU.L ($123456).L, D6:D7",    0046171, 0072006, 0x0012, 0x3456);
+        TEST("DIVU.L (*+$1234,PC), D6:D7",   0046172, 0072006, 0x1230);
+        TEST("DIVU.L (*+18,PC,D3.W), D6:D7", 0046173, 0072006, 0x300E);
+        TEST("DIVU.L #$12345678, D6:D7",     0046174, 0072006, 0x1234, 0x5678);
+    }
 
     // EXT Dn: 0044|Sz|0|Dn, Sz:W=2/L=3
     TEST("EXT.W D2", 0044202);
@@ -1202,6 +1332,35 @@ void test_integer() {
     TEST("MULS.W (*+$12,PC,D3.W),D7", 0147773, 0x3010);
     TEST("MULS.W #$5678,D7",          0147774, 0x5678);
 
+    if (!firstGen()) {
+        // MULS.L src,Dl: 00460|M|Rn, 0|Dl|4000
+        TEST("MULS.L D2, D7",               0046002, 074000);
+        ERRT("MULS.L A2, D7", OPERAND_NOT_ALLOWED, "A2, D7", 0046000, 074000);
+        TEST("MULS.L (A2), D6",             0046022, 064000);
+        TEST("MULS.L (A2)+, D5",            0046032, 054000);
+        TEST("MULS.L -(A2), D4",            0046042, 044000);
+        TEST("MULS.L ($1234,A2), D7",       0046052, 074000, 0x1234);
+        TEST("MULS.L (18,A2,D3.L), D7",     0046062, 074000, 0x3812);
+        ABSW("MULS.L (@W).W, D7", "FFFE",   0046070, 074000, 0xFFFE);
+        TEST("MULS.L ($123456).L, D7",      0046071, 074000, 0x0012, 0x3456);
+        TEST("MULS.L (*+$1234,PC), D7",     0046072, 074000, 0x1230);
+        TEST("MULS.L (*+18,PC,D3.W), D7",   0046073, 074000, 0x300E);
+        TEST("MULS.L #$12345678, D7",       0046074, 074000, 0x1234, 0x5678);
+        // MULS.L src,Dh:Dl: 00460|M|Rn, 0|Dl|600Dh
+        TEST("MULS.L D2, D6:D7",               0046002, 076006);
+        ERRT("MULS.L A2, D6:D7", OPERAND_NOT_ALLOWED, "A2, D6:D7", 0046000, 076006);
+        TEST("MULS.L (A2), D6:D7",             0046022, 076006);
+        TEST("MULS.L (A2)+, D6:D7",            0046032, 076006);
+        TEST("MULS.L -(A2), D6:D7",            0046042, 076006);
+        TEST("MULS.L ($1234,A2), D6:D7",       0046052, 076006, 0x1234);
+        TEST("MULS.L (18,A2,D3.L), D6:D7",     0046062, 076006, 0x3812);
+        ABSW("MULS.L (@W).W, D6:D7", "FFFE",   0046070, 076006, 0xFFFE);
+        TEST("MULS.L ($123456).L, D6:D7",      0046071, 076006, 0x0012, 0x3456);
+        TEST("MULS.L (*+$1234,PC), D6:D7",     0046072, 076006, 0x1230);
+        TEST("MULS.L (*+18,PC,D3.W), D6:D7",   0046073, 076006, 0x300E);
+        TEST("MULS.L #$12345678, D6:D7",       0046074, 076006, 0x1234, 0x5678);
+    }
+
     // MULU src,Dn: 014|Dn|3|M|Rn
     TEST("MULU.W D2,D7",              0147302);
     ERRT("MULU.W A2,D7",              OPERAND_NOT_ALLOWED, "A2,D7", 0147300);
@@ -1215,6 +1374,35 @@ void test_integer() {
     TEST("MULU.W (*+$1234,PC),D7",    0147372, 0x1232);
     TEST("MULU.W (*+$12,PC,D3.W),D7", 0147373, 0x3010);
     TEST("MULU.W #$5678,D7",          0147374, 0x5678);
+
+    if (!firstGen()) {
+        // MULU.L src,Dl: 00460|M|Rn, 0|Dl|0000
+        TEST("MULU.L D2, D7",               0046002, 070000);
+        ERRT("MULU.L A2, D7", OPERAND_NOT_ALLOWED, "A2, D7", 0046000, 070000);
+        TEST("MULU.L (A2), D6",             0046022, 060000);
+        TEST("MULU.L (A2)+, D5",            0046032, 050000);
+        TEST("MULU.L -(A2), D4",            0046042, 040000);
+        TEST("MULU.L ($1234,A2), D7",       0046052, 070000, 0x1234);
+        TEST("MULU.L (18,A2,D3.L), D7",     0046062, 070000, 0x3812);
+        ABSW("MULU.L (@W).W, D7", "FFFE",   0046070, 070000, 0xFFFE);
+        TEST("MULU.L ($123456).L, D7",      0046071, 070000, 0x0012, 0x3456);
+        TEST("MULU.L (*+$1234,PC), D7",     0046072, 070000, 0x1230);
+        TEST("MULU.L (*+18,PC,D3.W), D7",   0046073, 070000, 0x300E);
+        TEST("MULU.L #$12345678, D7",       0046074, 070000, 0x1234, 0x5678);
+        // MULU.L src,Dh:Dl: 00460|M|Rn, 0|Dl|200Dh
+        TEST("MULU.L D2, D6:D7",               0046002, 072006);
+        ERRT("MULU.L A2, D6:D7", OPERAND_NOT_ALLOWED, "A2, D6:D7", 0046000, 072006);
+        TEST("MULU.L (A2), D6:D7",             0046022, 072006);
+        TEST("MULU.L (A2)+, D6:D7",            0046032, 072006);
+        TEST("MULU.L -(A2), D6:D7",            0046042, 072006);
+        TEST("MULU.L ($1234,A2), D6:D7",       0046052, 072006, 0x1234);
+        TEST("MULU.L (18,A2,D3.L), D6:D7",     0046062, 072006, 0x3812);
+        ABSW("MULU.L (@W).W, D6:D7", "FFFE",   0046070, 072006, 0xFFFE);
+        TEST("MULU.L ($123456).L, D6:D7",      0046071, 072006, 0x0012, 0x3456);
+        TEST("MULU.L (*+$1234,PC), D6:D7",     0046072, 072006, 0x1230);
+        TEST("MULU.L (*+18,PC,D3.W), D6:D7",   0046073, 072006, 0x300E);
+        TEST("MULU.L #$12345678, D6:D7",       0046074, 072006, 0x1234, 0x5678);
+    }
 
     // NEG dst: 0042|Sz|M|Rn, Sz:B=0/W=1/L=2
     TEST("NEG.B D2",            0042002);
@@ -2469,11 +2657,23 @@ void test_bcd() {
 
     // SBCD -(Ax),-(Ay): 010|Ay|41|Ax
     TEST("SBCD -(A2),-(A7)", 0107412);
+
+
+    if (!firstGen()) {
+        // PACK Dn,Dm, #nn:       010|Dm|50|Dn
+        // PACK -(An),-(Am), #nn: 010|Am|51|An
+        TEST("PACK D2, D7, #$1234",       0107502, 0x1234);
+        TEST("PACK -(A2), -(A7), #$1234", 0107512, 0x1234);
+
+        // UNPK Dn,Dm,#nn;       010|Dm|60|Dn
+        // UNPK -(An),-(Am),#nn: 010|Am|61|An
+        TEST("UNPK D2, D7, #$1234",       0107602, 0x1234);
+        TEST("UNPK -(A2), -(A7), #$1234", 0107612, 0x1234);
+    }
 }
 
 void test_program() {
     // Bcc label: 006|cc|disp
-    TEST("BRA *", 0060000 | 0x000 | 0xFE);
     TEST("BRA *", 0060000 | 0x000 | 0xFE);
     TEST("BSR *", 0060000 | 0x100 | 0xFE);
     TEST("BHI *", 0060000 | 0x200 | 0xFE);
@@ -2489,19 +2689,25 @@ void test_program() {
     TEST("BGE *", 0060000 | 0xC00 | 0xFE);
     TEST("BLT *", 0060000 | 0xD00 | 0xFE);
     TEST("BGT *", 0060000 | 0xE00 | 0xFE);
+    ATEST(0x010000, "BLE *+2",     0060000 | 0xF00, 0x0000);
     ATEST(0x010000, "BLE *-$7E",   0060000 | 0xF00 | 0x80);
     ATEST(0x010000, "BLE *+$80",   0060000 | 0xF00 | 0x7E);
+    ATEST(0x010000, "BLE.W *+2",   0060000 | 0xF00, 0x0000);
     ATEST(0x010000, "BLE.W *-$7E", 0060000 | 0xF00, 0xFF80);
+    ATEST(0x010000, "BLE.L *+2",   0060000 | 0xF00, 0x0000);
     ATEST(0x010000, "BLE.L *+$80", 0060000 | 0xF00, 0x007E);
     ATEST(0x010000, "BLE *-$80",   0060000 | 0xF00, 0xFF7E);
     ATEST(0x010000, "BLE *+$82",   0060000 | 0xF00, 0x0080);
     AERRT(0x010000, "BLE.B *-$80", OPERAND_TOO_FAR, "*-$80", 0060000 | 0xF00 | 0x7E);
     AERRT(0x010000, "BLE.S *+$82", OPERAND_TOO_FAR, "*+$82", 0060000 | 0xF00 | 0x80);
     if (firstGen()) {
+        AERRT(0x010000, "BLE *+1",     OPERAND_NOT_ALIGNED, "*+1", 0060000 | 0xF00 | 0xFF);
         AERRT(0x010000, "BLE.X *+$80", ILLEGAL_SIZE, "BLE.X *+$80", 0060000 | 0xF00 | 0x7E);
         AERRT(0x010000, "BLE *-$8000", OPERAND_TOO_FAR, "*-$8000", 0060000 | 0xF00 | 0xFE);
         AERRT(0x010000, "BLE *+$8002", OPERAND_TOO_FAR, "*+$8002", 0060000 | 0xF00 | 0x00);
     } else {
+        AERRT(0x010000, "BLE *+1",     OPERAND_NOT_ALIGNED, "*+1", 0060000 | 0xF00, 0x0000);
+        ATEST(0x010000, "BLE.X *+2",   0060000 | 0xF00 | 0xFF, 0x0000, 0x0000);
         ATEST(0x010000, "BLE.X *+$80", 0060000 | 0xF00 | 0xFF, 0x0000, 0x007E);
         ATEST(0x010000, "BLE *-$8000", 0060000 | 0xF00 | 0xFF, 0xFFFF, 0x7FFE);
         ATEST(0x010000, "BLE *+$8002", 0060000 | 0xF00 | 0xFF, 0x0000, 0x8000);
@@ -2780,7 +2986,7 @@ void test_program() {
     ATEST(0x010000, "BSR   *",       0060400  | 0xFE);
     ATEST(0x010000, "BSR.W *",       0060400, 0xFFFE);
     ATEST(0x010000, "BSR.W *+2",     0060400, 0x0000);
-    ATEST(0x010000, "BSR   *+2",     0060400  | 0x00);
+    ATEST(0x010000, "BSR   *+2",     0060400  | 0x00, 0x0000);
     ATEST(0x010000, "BSR   *+$80",   0060400  | 0x7E);
     ATEST(0x010000, "BSR.W *+$80"  , 0060400, 0x007E);
     ATEST(0x010000, "BSR   *+$82",   0060400, 0x0080);
@@ -2832,6 +3038,24 @@ void test_program() {
     ERRT("JSR ($003455).W",     OPERAND_NOT_ALIGNED, "($003455).W",  0047270, 0x3455);
     ERRT("JSR ($123455).L",     OPERAND_NOT_ALIGNED, "($123455).L",  0047271, 0x0012, 0x3455);
     ERRT("JSR (*+$1235,PC)",    OPERAND_NOT_ALIGNED, "(*+$1235,PC)", 0047272, 0x1233);
+
+    if (mc68020()) {
+        // RETM Dn:       00033|0|Dn
+        // RETM An:       00033|1|An
+        // CALLM #n8,dst: 00033|M|Rn
+        TEST("RTM D2",           0003302);
+        TEST("RTM A2",           0003312);
+        TEST("CALLM #$FF, (A2)", 0003322, 0x00FF);
+        ERRT("CALLM #-1, (A2)+",  OPERAND_NOT_ALLOWED, "(A2)+", 0003300);
+        ERRT("CALLM #-1, -(A2)",  OPERAND_NOT_ALLOWED, "-(A2)", 0003300);
+        TEST("CALLM #0, ($1234,A2)",     0003352, 0x0000, 0x1234);
+        TEST("CALLM #1, (18,A2,D3.W)",   0003362, 0x0001, 0x3012);
+        ABSW("CALLM #2, (@W).W", "FF00", 0003370, 0x0002, 0xFF00);
+        TEST("CALLM #3, ($123456).L",    0003371, 0x0003, 0x0012, 0x3456);
+        TEST("CALLM #4, (*+$1234,PC)",   0003372, 0x0004, 0x1230);
+        TEST("CALLM #5, (*+18,PC,D3.L)", 0003373, 0x0005, 0x380E);
+        ERRT("CALLM #5, #$1234", OPERAND_NOT_ALLOWED, "#$1234", 0003300);
+    }
 
     // TST dst: 0045|Sz|M|Rn, Sz:B=0/W=1/L=2
     TEST("TST.B D2",             0045002);
@@ -2948,22 +3172,95 @@ void test_system() {
     // TRAPV
     TEST("TRAPV", 047166);
 
+    // TRAPcc
+    if (!firstGen()) {
+        TEST("TRAPT",  0050374 | 0x000);
+        TEST("TRAPF",  0050374 | 0x100);
+        TEST("TRAPHI", 0050374 | 0x200);
+        TEST("TRAPLS", 0050374 | 0x300);
+        TEST("TRAPCC", 0050374 | 0x400);
+        TEST("TRAPCS", 0050374 | 0x500);
+        TEST("TRAPNE", 0050374 | 0x600);
+        TEST("TRAPEQ", 0050374 | 0x700);
+        TEST("TRAPVC", 0050374 | 0x800);
+        TEST("TRAPVS", 0050374 | 0x900);
+        TEST("TRAPPL", 0050374 | 0xA00);
+        TEST("TRAPMI", 0050374 | 0xB00);
+        TEST("TRAPGE", 0050374 | 0xC00);
+        TEST("TRAPLT", 0050374 | 0xD00);
+        TEST("TRAPGT", 0050374 | 0xE00);
+        TEST("TRAPLE", 0050374 | 0xF00);
+
+        TEST("TRAPT.W  #$1234", 0050372 | 0x000, 0x1234);
+        TEST("TRAPF.W  #$1234", 0050372 | 0x100, 0x1234);
+        TEST("TRAPHI.W #$1234", 0050372 | 0x200, 0x1234);
+        TEST("TRAPLS.W #$1234", 0050372 | 0x300, 0x1234);
+        TEST("TRAPCC.W #$1234", 0050372 | 0x400, 0x1234);
+        TEST("TRAPCS.W #$1234", 0050372 | 0x500, 0x1234);
+        TEST("TRAPNE.W #$1234", 0050372 | 0x600, 0x1234);
+        TEST("TRAPEQ.W #$1234", 0050372 | 0x700, 0x1234);
+        TEST("TRAPVC.W #$1234", 0050372 | 0x800, 0x1234);
+        TEST("TRAPVS.W #$1234", 0050372 | 0x900, 0x1234);
+        TEST("TRAPPL.W #$1234", 0050372 | 0xA00, 0x1234);
+        TEST("TRAPMI.W #$1234", 0050372 | 0xB00, 0x1234);
+        TEST("TRAPGE.W #$1234", 0050372 | 0xC00, 0x1234);
+        TEST("TRAPLT.W #$1234", 0050372 | 0xD00, 0x1234);
+        TEST("TRAPGT.W #$1234", 0050372 | 0xE00, 0x1234);
+        TEST("TRAPLE.W #$1234", 0050372 | 0xF00, 0x1234);
+
+        TEST("TRAPT.L  #$12345678", 0050373 | 0x000, 0x1234, 0x5678);
+        TEST("TRAPF.L  #$12345678", 0050373 | 0x100, 0x1234, 0x5678);
+        TEST("TRAPHI.L #$12345678", 0050373 | 0x200, 0x1234, 0x5678);
+        TEST("TRAPLS.L #$12345678", 0050373 | 0x300, 0x1234, 0x5678);
+        TEST("TRAPCC.L #$12345678", 0050373 | 0x400, 0x1234, 0x5678);
+        TEST("TRAPCS.L #$12345678", 0050373 | 0x500, 0x1234, 0x5678);
+        TEST("TRAPNE.L #$12345678", 0050373 | 0x600, 0x1234, 0x5678);
+        TEST("TRAPEQ.L #$12345678", 0050373 | 0x700, 0x1234, 0x5678);
+        TEST("TRAPVC.L #$12345678", 0050373 | 0x800, 0x1234, 0x5678);
+        TEST("TRAPVS.L #$12345678", 0050373 | 0x900, 0x1234, 0x5678);
+        TEST("TRAPPL.L #$12345678", 0050373 | 0xA00, 0x1234, 0x5678);
+        TEST("TRAPMI.L #$12345678", 0050373 | 0xB00, 0x1234, 0x5678);
+        TEST("TRAPGE.L #$12345678", 0050373 | 0xC00, 0x1234, 0x5678);
+        TEST("TRAPLT.L #$12345678", 0050373 | 0xD00, 0x1234, 0x5678);
+        TEST("TRAPGT.L #$12345678", 0050373 | 0xE00, 0x1234, 0x5678);
+        TEST("TRAPLE.L #$12345678", 0050373 | 0xF00, 0x1234, 0x5678);
+    }
+
     // RTR
     TEST("RTR", 047167);
 
     // MOVEC
     if (mc68k00()) {
         ERUI("MOVEC VBR, A4");
-    } else {
-        TEST("MOVEC SFC, D1", 047172, 0x1000);
-        TEST("MOVEC DFC, A2", 047172, 0xA001);
-        TEST("MOVEC USP, D3", 047172, 0x3800);
-        TEST("MOVEC VBR, A4", 047172, 0xC801);
+    } else if (mc68010()) {
+        TEST("MOVEC SFC, D1", 047172, 0010000 | 0x000);
+        TEST("MOVEC DFC, A2", 047172, 0120000 | 0x001);
+        TEST("MOVEC USP, D3", 047172, 0030000 | 0x800);
+        TEST("MOVEC VBR, A4", 047172, 0140000 | 0x801);
         ERRT("MOVEC SR, D5", OPERAND_NOT_ALLOWED, "SR, D5");
-        TEST("MOVEC D5, SFC", 047173, 0x5000);
-        TEST("MOVEC A6, DFC", 047173, 0xE001);
-        TEST("MOVEC D7, USP", 047173, 0x7800);
-        TEST("MOVEC A0, VBR", 047173, 0x8801);
+        TEST("MOVEC D5, SFC", 047173, 0050000 | 0x000);
+        TEST("MOVEC A6, DFC", 047173, 0160000 | 0x001);
+        TEST("MOVEC D7, USP", 047173, 0070000 | 0x800);
+        TEST("MOVEC A0, VBR", 047173, 0100000 | 0x801);
+        ERRT("MOVEC D1, CCR", OPERAND_NOT_ALLOWED, "D1, CCR");
+    } else if (mc68020()) {
+        TEST("MOVEC SFC, D1",  0047172, 0010000 | 0x000);
+        TEST("MOVEC DFC, A2",  0047172, 0120000 | 0x001);
+        TEST("MOVEC CACR, D2", 0047172, 0020000 | 0x002);
+        TEST("MOVEC USP, D3",  0047172, 0030000 | 0x800);
+        TEST("MOVEC VBR, A4",  0047172, 0140000 | 0x801);
+        TEST("MOVEC CAAR, D4", 0047172, 0040000 | 0x802);
+        TEST("MOVEC MSP, A5",  0047172, 0150000 | 0x803);
+        TEST("MOVEC ISP, D5",  0047172, 0050000 | 0x804);
+        ERRT("MOVEC SR, D5", OPERAND_NOT_ALLOWED, "SR, D5");
+        TEST("MOVEC D5, SFC",  0047173, 0050000 | 0x000);
+        TEST("MOVEC A6, DFC",  0047173, 0160000 | 0x001);
+        TEST("MOVEC D7, CACR", 0047173, 0070000 | 0x002);
+        TEST("MOVEC A0, USP",  0047173, 0100000 | 0x800);
+        TEST("MOVEC D1, VBR",  0047173, 0010000 | 0x801);
+        TEST("MOVEC A2, CAAR", 0047173, 0120000 | 0x802);
+        TEST("MOVEC D2, MSP",  0047173, 0020000 | 0x803);
+        TEST("MOVEC A3, ISP",  0047173, 0130000 | 0x804);
         ERRT("MOVEC D1, CCR", OPERAND_NOT_ALLOWED, "D1, CCR");
     }
 
@@ -2989,6 +3286,59 @@ void test_system() {
     TEST("CHK.W (*+$1234,PC),D7",    0047672, 0x1232);
     TEST("CHK.W (*+$12,PC,D3.W),D7", 0047673, 0x3010);
     TEST("CHK.W #$0034,D7",          0047674, 0x0034);
+    if (!firstGen()) {
+        TEST("CHK.L D2,D7",              0047402);
+        ERRT("CHK.L A2,D7",              OPERAND_NOT_ALLOWED, "A2,D7", 0047400);
+        TEST("CHK.L (A2),D7",            0047422);
+        TEST("CHK.L (A2)+,D7",           0047432);
+        TEST("CHK.L -(A2),D7",           0047442);
+        TEST("CHK.L ($1234,A2),D7",      0047452, 0x1234);
+        TEST("CHK.L ($12,A2,D3.L),D7",   0047462, 0x3812);
+        ABSW("CHK.L (@W).W,D7", "FFFE",  0047470, 0xFFFE);
+        TEST("CHK.L ($123456).L,D7",     0047471, 0x0012, 0x3456);
+        TEST("CHK.L (*+$1234,PC),D7",    0047472, 0x1232);
+        TEST("CHK.L (*+$12,PC,D3.W),D7", 0047473, 0x3010);
+    }
+
+    if (!firstGen()) {
+        // CHK2 src,Rd, 00|Sz|3|M|Rn, Rd|40000, Sz:B=0/W=1/L=2
+        ERRT("CHK2.B D2, D7",    OPERAND_NOT_ALLOWED, "D2, D7", 0000300, 0074000);
+        ERRT("CHK2.B A2, A5",    OPERAND_NOT_ALLOWED, "A2, A5", 0000300, 0154000);
+        TEST("CHK2.B (A2), D3",           0000322, 0034000);
+        ERRT("CHK2.B (A2)+, D6", OPERAND_NOT_ALLOWED, "(A2)+, D6", 0000300, 0064000);
+        ERRT("CHK2.B-(A2), A3",  OPERAND_NOT_ALLOWED, "-(A2), A3", 0000300, 0134000);
+        TEST("CHK2.B ($1234,A2), A6",     0000352, 0164000, 0x1234);
+        TEST("CHK2.B (18,A2,D3.L), D7",   0000362, 0074000, 0x3812);
+        ABSW("CHK2.B (@W).W, A0", "FFFE", 0000370, 0104000, 0xFFFE);
+        TEST("CHK2.B ($123456).L, D0",    0000371, 0004000, 0x0012, 0x3456);
+        TEST("CHK2.B (*+$1234,PC), A1",   0000372, 0114000, 0x1230);
+        TEST("CHK2.B (*+18,PC,D3.W), D2", 0000373, 0024000, 0x300E);
+        ERRT("CHK2.B #$34, D3",  OPERAND_NOT_ALLOWED, "#$34, D3", 0000300, 0034000);
+        ERRT("CHK2.W D2, D7",    OPERAND_NOT_ALLOWED, "D2, D7", 0001300, 0074000);
+        ERRT("CHK2.W A2, A5",    OPERAND_NOT_ALLOWED, "A2, A5", 0001300, 0154000);
+        TEST("CHK2.W (A2), D3",           0001322, 0034000);
+        ERRT("CHK2.W (A2)+, D6", OPERAND_NOT_ALLOWED, "(A2)+, D6", 0001300, 0064000);
+        ERRT("CHK2.W-(A2), A3",  OPERAND_NOT_ALLOWED, "-(A2), A3", 0001300, 0134000);
+        TEST("CHK2.W ($1234,A2), A6",     0001352, 0164000, 0x1234);
+        TEST("CHK2.W (18,A2,D3.L), D7",   0001362, 0074000, 0x3812);
+        ABSW("CHK2.W (@W).W, A0", "FFFE", 0001370, 0104000, 0xFFFE);
+        TEST("CHK2.W ($123456).L, D0",    0001371, 0004000, 0x0012, 0x3456);
+        TEST("CHK2.W (*+$1234,PC), A1",   0001372, 0114000, 0x1230);
+        TEST("CHK2.W (*+18,PC,D3.W), D2", 0001373, 0024000, 0x300E);
+        ERRT("CHK2.W #$1234, D3",  OPERAND_NOT_ALLOWED, "#$1234, D3", 0001300, 0034000);
+        ERRT("CHK2.L D2, D7",    OPERAND_NOT_ALLOWED, "D2, D7", 0002300, 0074000);
+        ERRT("CHK2.L A2, A5",    OPERAND_NOT_ALLOWED, "A2, A5", 0002300, 0154000);
+        TEST("CHK2.L (A2), D3",           0002322, 0034000);
+        ERRT("CHK2.L (A2)+, D6", OPERAND_NOT_ALLOWED, "(A2)+, D6", 0002300, 0064000);
+        ERRT("CHK2.L-(A2), A3",  OPERAND_NOT_ALLOWED, "-(A2), A3", 0002300, 0134000);
+        TEST("CHK2.L ($1234,A2), A6",     0002352, 0164000, 0x1234);
+        TEST("CHK2.L (18,A2,D3.L), D7",   0002362, 0074000, 0x3812);
+        ABSW("CHK2.L (@W).W, A0", "FFFE", 0002370, 0104000, 0xFFFE);
+        TEST("CHK2.L ($123456).L, D0",    0002371, 0004000, 0x0012, 0x3456);
+        TEST("CHK2.L (*+$1234,PC), A1",   0002372, 0114000, 0x1230);
+        TEST("CHK2.L (*+18,PC,D3.W), D2", 0002373, 0024000, 0x300E);
+        ERRT("CHK2.L #$123456, D3",  OPERAND_NOT_ALLOWED, "#$123456, D3", 0002300, 0034000);
+    }
 
     // ILLEGAL
     TEST("ILLEGAL", 0045374);
@@ -3071,6 +3421,57 @@ void test_multiproc() {
     ERRT("TAS (*+$1234,PC)",  OPERAND_NOT_ALLOWED, "(*+$1234,PC)",  0045300);
     ERRT("TAS (*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "(*+$12,PC,D3)", 0045300);
     ERRT("TAS #$1234",        OPERAND_NOT_ALLOWED, "#$1234",        0045300);
+
+    if (!firstGen()) {
+        // CAS Dc,Du,dst: 00|Sz|3|M|Rn, 000|Du|0|Dc, Sz:B=5/W=6/L=7
+        ERRT("CAS.B D2, D3, D4", OPERAND_NOT_ALLOWED, "D4", 0005300, 0000302);
+        ERRT("CAS.B D2, D3, A4", OPERAND_NOT_ALLOWED, "A4", 0005300, 0000302);
+        TEST("CAS.B D2, D3, (A4)",           0005324, 0000302);
+        TEST("CAS.B D3, D4, (A2)+",          0005332, 0000403);
+        TEST("CAS.B D4, D5, -(A2)",          0005342, 0000504);
+        TEST("CAS.B D5, D6, ($1234,A2)",     0005352, 0000605, 0x1234);
+        TEST("CAS.B D6, D7, (18,A2,D3.W)",   0005362, 0000706, 0x3012);
+        ABSW("CAS.B D7, D0, (@W).W", "1234", 0005370, 0000007, 0x1234);
+        TEST("CAS.B D0, D1, ($123456).L",    0005371, 0000100, 0x0012, 0x3456);
+        ERRT("CAS.B D2, D3, (*+$1234,PC)",  OPERAND_NOT_ALLOWED, "(*+$1234,PC)",  0005300, 0000302);
+        ERRT("CAS.B D2, D3, (*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "(*+$12,PC,D3)", 0005300, 0000302);
+        ERRT("CAS.B D2, D3, #$34",          OPERAND_NOT_ALLOWED, "#$34",          0005300, 0000302);
+        ERRT("CAS.W D2, D3, D4", OPERAND_NOT_ALLOWED, "D4", 0006300, 0000302);
+        ERRT("CAS.W D2, D3, A4", OPERAND_NOT_ALLOWED, "A4", 0006300, 0000302);
+        TEST("CAS.W D2, D3, (A4)",           0006324, 0000302);
+        TEST("CAS.W D3, D4, (A2)+",          0006332, 0000403);
+        TEST("CAS.W D4, D5, -(A2)",          0006342, 0000504);
+        TEST("CAS.W D5, D6, ($1234,A2)",     0006352, 0000605, 0x1234);
+        TEST("CAS.W D6, D7, (18,A2,D3.W)",   0006362, 0000706, 0x3012);
+        ABSW("CAS.W D7, D0, (@W).W", "FEDC", 0006370, 0000007, 0xFEDC);
+        TEST("CAS.W D0, D1, ($123456).L",    0006371, 0000100, 0x0012, 0x3456);
+        ERRT("CAS.W D2, D3, (*+$1234,PC)",  OPERAND_NOT_ALLOWED, "(*+$1234,PC)",  0006300, 0000302);
+        ERRT("CAS.W D2, D3, (*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "(*+$12,PC,D3)", 0006300, 0000302);
+        ERRT("CAS.W D2, D3, #$1234",        OPERAND_NOT_ALLOWED, "#$1234",        0006300, 0000302);
+        ERRT("CAS.L D2, D3, D4", OPERAND_NOT_ALLOWED, "D4", 0007300, 0000302);
+        ERRT("CAS.L D2, D3, A4", OPERAND_NOT_ALLOWED, "A4", 0007300, 0000302);
+        TEST("CAS.L D2, D3, (A4)",           0007324, 0000302);
+        TEST("CAS.L D3, D4, (A2)+",          0007332, 0000403);
+        TEST("CAS.L D4, D5, -(A2)",          0007342, 0000504);
+        TEST("CAS.L D5, D6, ($1234,A2)",     0007352, 0000605, 0x1234);
+        TEST("CAS.L D6, D7, (18,A2,D3.W)",   0007362, 0000706, 0x3012);
+        ABSW("CAS.L D7, D0, (@W).W", "1234", 0007370, 0000007, 0x1234);
+        TEST("CAS.L D0, D1, ($123454).L",    0007371, 0000100, 0x0012, 0x3454);
+        ERRT("CAS.L D2, D3, (*+$1234,PC)",  OPERAND_NOT_ALLOWED, "(*+$1234,PC)",  0007300, 0000302);
+        ERRT("CAS.L D2, D3, (*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "(*+$12,PC,D3)", 0007300, 0000302);
+        ERRT("CAS.L D2, D3, #$12345678",    OPERAND_NOT_ALLOWED, "#$12345678",    0007300, 0000302);
+
+        // CAS2 Dc1:Dc2, Du1:Du2, (Rn1:Rn2), 00|Sz|3|M|Rn, R1|0|Du1|0|Dc1, R2|0|Du2|0|Dc2
+        // Sz:W=6/L=7
+        TEST("CAS2.W D1:D2, D3:D4, (D5):(D6)", 0006374, 0050301, 0060402);
+        TEST("CAS2.W D1:D2, D3:D4, (A5):(D6)", 0006374, 0150301, 0060402);
+        TEST("CAS2.W D1:D2, D3:D4, (D5):(A6)", 0006374, 0050301, 0160402);
+        TEST("CAS2.W D1:D2, D3:D4, (A5):(A6)", 0006374, 0150301, 0160402);
+        TEST("CAS2.L D1:D2, D3:D4, (D5):(D6)", 0007374, 0050301, 0060402);
+        TEST("CAS2.L D1:D2, D3:D4, (A5):(D6)", 0007374, 0150301, 0060402);
+        TEST("CAS2.L D1:D2, D3:D4, (D5):(A6)", 0007374, 0050301, 0160402);
+        TEST("CAS2.L D1:D2, D3:D4, (A5):(A6)", 0007374, 0150301, 0160402);
+    }
 }
 
 void test_areg_alias() {
@@ -3108,6 +3509,388 @@ void test_areg_alias() {
     TEST("MOVE.L (*+$1234,PC),A6",    0026172, 0x1232);
     TEST("MOVE.L (*+$12,PC,D3.W),A6", 0026173, 0x3010);
     TEST("MOVE.L #$00345678,A6",      0026174, 0x0034, 0x5678);
+}
+
+void test_addressing() {
+
+#define TIDX(opr, mr, ...) TEST("MOVE.L " opr ", D2", 0022000 | mr,  __VA_ARGS__)
+
+    // MOVE.L src, D2: 00220|M|Rn
+    TIDX("D1",             001);
+    TIDX("A2",             012);
+    TIDX("(A3)",           023);
+    TIDX("(A4)+",          034);
+    TIDX("-(A5)",          045);
+    TIDX("($1234,A6)",     056, 0x1234);
+    TIDX("($1234).W",      070, 0x1234);
+    TIDX("($123456).L",    071, 0x0012, 0x3456);
+    TIDX("(*+$1236,PC)",   072, 0x1234);
+    TIDX("#$00123456",     074, 0x0012, 0x3456);
+    // Brief extension: a|Xn|Sz|disp8 a:Dn=0,An=1 Sz:W=0,L=4
+    TIDX("($34,A7,D1.W)",  067, 0010000 | 0x34);
+    TIDX("($34,A7,D1.L)",  067, 0014000 | 0x34);
+    TIDX("($34,A7,A2.W)",  067, 0120000 | 0x34);
+    TIDX("($34,A7,A2.L)",  067, 0124000 | 0x34);
+    TIDX("(*+54,PC,D1.W)", 073, 0010000 | 0x34);
+    TIDX("(*+54,PC,D1.L)", 073, 0014000 | 0x34);
+    TIDX("(*+54,PC,A2.W)", 073, 0120000 | 0x34);
+    TIDX("(*+54,PC,A2.L)", 073, 0124000 | 0x34);
+
+    if (firstGen())
+        return;
+
+    // Brief extension: a|Xn|SzSc|disp8 a:Dn=0,An=1 Sz:W=0,L=4 Sc=*2=1,*4=2,*8=3
+    TIDX("($23,A7,D1.W)",    067, 0010000 | 0x23);
+    TIDX("($23,A7,D1.W*2)",  067, 0011000 | 0x23);
+    TIDX("($23,A7,D1.W*4)",  067, 0012000 | 0x23);
+    TIDX("($23,A7,D1.W*8)",  067, 0013000 | 0x23);
+    TIDX("($23,A7,A1.L)",    067, 0114000 | 0x23);
+    TIDX("($23,A7,A1.L*2)",  067, 0115000 | 0x23);
+    TIDX("($23,A7,A1.L*4)",  067, 0116000 | 0x23);
+    TIDX("($23,A7,A1.L*8)",  067, 0117000 | 0x23);
+    TIDX("(*+54,PC,D1.W)",   073, 0010000 | 0x34);
+    TIDX("(*+54,PC,D1.W*2)", 073, 0011000 | 0x34);
+    TIDX("(*+54,PC,D1.W*4)", 073, 0012000 | 0x34);
+    TIDX("(*+54,PC,D1.W*8)", 073, 0013000 | 0x34);
+    TIDX("(*+54,PC,A1.L)",   073, 0114000 | 0x34);
+    TIDX("(*+54,PC,A1.L*2)", 073, 0115000 | 0x34);
+    TIDX("(*+54,PC,A1.L*4)", 073, 0116000 | 0x34);
+    TIDX("(*+54,PC,A1.L*8)", 073, 0117000 | 0x34);
+
+    TIDX("($1234)",     070, 0x1234);
+    TIDX("($12345678)", 071, 0x1234, 0x5678);
+
+    TIDX("([$1234])",           060, 0000741, 0x1234);
+    TIDX("([$1234],$5678)",     060, 0000742, 0x1234, 0x5678);
+    TIDX("([$1234],$56789ABC)", 060, 0000743, 0x1234, 0x5678, 0x9ABC);
+
+    TIDX("([$12345678])",           060, 0000761, 0x1234, 0x5678);
+    TIDX("([$12345678],$7654)",     060, 0000762, 0x1234, 0x5678, 0x7654);
+    TIDX("([$12345678],$76543210)", 060, 0000763, 0x1234, 0x5678, 0x7654, 0x3210);
+
+    // Full extension: a|Xn|SzSc|Sp|Bd|I
+    // Sp=1|BS|IS, base,index=4 base=5 index=6 no=7
+    // Bd: null=2 W=4 L=6 (base displacement size)
+    // IS,I
+    //  0,0 (bd,An,Xn), (bd,Xn)
+    //  0,1 ([bd,An,Xn])
+    //  0,2 ([bd,An,Xn],od.W)
+    //  0,3 ([bd,An,Xn],od.L)
+    //  0,4 reserved
+    //  0,5 ([bd,An],Xn)
+    //  0,6 ([bd,An],Xn,od.W)
+    //  0,7 ([bd,An],Xn,od.L)
+    //  1,0 (bd,An), (bd)
+    //  1,1 ([bd,An])
+    //  1,2 ([bd,An],od.W)
+    //  1,3 ([bd,An],od.L)
+    //  1,4-1,7 reserved
+
+    TIDX("(A7)",           027);
+    TIDX("($78,A7)",       057, 0x0078);
+    TIDX("($5678,A7)",     057, 0x5678);
+    TIDX("($12345678,A7)", 067, 0000560, 0x1234, 0x5678);
+
+    TIDX("(A7.L)",           027);
+    TIDX("($78,A7.L)",       057, 0x0078);
+    TIDX("($5678,A7.L)",     057, 0x5678);
+    TIDX("($12345678,A7.L)", 067, 0000560, 0x1234, 0x5678);
+
+    TIDX("(A7.W)",           060, 0170620);
+    TIDX("($78,A7.W)",       060, 0170640, 0x0078);
+    TIDX("($5678,A7.W)",     060, 0170640, 0x5678);
+    TIDX("($12345678,A7.W)", 060, 0170660, 0x1234, 0x5678);
+
+    TIDX("(D1)",           060, 0010620);
+    TIDX("($5678,D1)",     060, 0010640, 0x5678);
+    TIDX("($12345678,D1)", 060, 0010660, 0x1234, 0x5678);
+
+    TIDX("(D1.L)",           060, 0014620);
+    TIDX("($5678,D1.L)",     060, 0014640, 0x5678);
+    TIDX("($12345678,D1.L)", 060, 0014660, 0x1234, 0x5678);
+
+    TIDX("(D1.W)",           060, 0010620);
+    TIDX("($5678,D1.W)",     060, 0010640, 0x5678);
+    TIDX("($12345678,D1.W)", 060, 0010660, 0x1234, 0x5678);
+
+    TIDX("([A7])",           067, 0000521);
+    TIDX("([A7],$1234)",     067, 0000522, 0x1234);
+    TIDX("([A7],$12345678)", 067, 0000523, 0x1234, 0x5678);
+
+    TIDX("([A7.W])",           060, 0170621);
+    TIDX("([A7.W],$1234)",     060, 0170622, 0x1234);
+    TIDX("([A7.W],$12345678)", 060, 0170623, 0x1234, 0x5678);
+
+    TIDX("([D1])",           060, 0010621);
+    TIDX("([D1],$1234)",     060, 0010622, 0x1234);
+    TIDX("([D1],$12345678)", 060, 0010623, 0x1234, 0x5678);
+
+    TIDX("([D1.L])",           060, 0014621);
+    TIDX("([D1.L],$1234)",     060, 0014622, 0x1234);
+    TIDX("([D1.L],$12345678)", 060, 0014623, 0x1234, 0x5678);
+
+    TIDX("([$1234,A7])",           067, 0000541, 0x1234);
+    TIDX("([$1234,A7],$5678)",     067, 0000542, 0x1234, 0x5678);
+    TIDX("([$1234,A7],$56789ABC)", 067, 0000543, 0x1234, 0x5678, 0x9ABC);
+
+    TIDX("([$1234,D1.W])",           060, 0010641, 0x1234);
+    TIDX("([$1234,D1.W],$5678)",     060, 0010642, 0x1234, 0x5678);
+    TIDX("([$1234,D1.W],$56789ABC)", 060, 0010643, 0x1234, 0x5678, 0x9ABC);
+
+    TIDX("([$12345678,A7])",           067, 0000561, 0x1234, 0x5678);
+    TIDX("([$12345678,A7],$7654)",     067, 0000562, 0x1234, 0x5678, 0x7654);
+    TIDX("([$12345678,A7],$76543210)", 067, 0000563, 0x1234, 0x5678, 0x7654, 0x3210);
+
+    TIDX("([$12345678,D1.W])",           060, 0010661, 0x1234, 0x5678);
+    TIDX("([$12345678,D1.W],$7654)",     060, 0010662, 0x1234, 0x5678, 0x7654);
+    TIDX("([$12345678,D1.W],$76543210)", 060, 0010663, 0x1234, 0x5678, 0x7654, 0x3210);
+
+    TIDX("([$1234],A7)",           060, 0170645, 0x1234);
+    TIDX("([$1234],A7,$5678)",     060, 0170646, 0x1234, 0x5678);
+    TIDX("([$1234],A7,$56789ABC)", 060, 0170647, 0x1234, 0x5678, 0x9ABC);
+
+    TIDX("([$1234],D1)",           060, 0010645, 0x1234);
+    TIDX("([$1234],D1,$5678)",     060, 0010646, 0x1234, 0x5678);
+    TIDX("([$1234],D1,$56789ABC)", 060, 0010647, 0x1234, 0x5678, 0x9ABC);
+
+    TIDX("([$12345678],A7)",           060, 0170665, 0x1234, 0x5678);
+    TIDX("([$12345678],A7,$7654)",     060, 0170666, 0x1234, 0x5678, 0x7654);
+    TIDX("([$12345678],A7,$76543210)", 060, 0170667, 0x1234, 0x5678, 0x7654, 0x3210);
+
+    TIDX("([$12345678],D1)",           060, 0010665, 0x1234, 0x5678);
+    TIDX("([$12345678],D1,$7654)",     060, 0010666, 0x1234, 0x5678, 0x7654);
+    TIDX("([$12345678],D1,$76543210)", 060, 0010667, 0x1234, 0x5678, 0x7654, 0x3210);
+
+    TIDX("(A7,D1.W)",           067, 0010000);
+    TIDX("($34,A7,D1.W)",       067, 0010000 | 0x34);
+    TIDX("($1234,A7,D1.W)",     067, 0010440, 0x1234);
+    TIDX("($12345678,A7,D1.W)", 067, 0010460, 0x1234, 0x5678);
+
+    TIDX("([A7,D1.W])",           067, 0010421);
+    TIDX("([A7,D1.W],$34)",       067, 0010422, 0x0034);
+    TIDX("([A7,D1.W],$1234)",     067, 0010422, 0x1234);
+    TIDX("([A7,D1.W],$12345678)", 067, 0010423, 0x1234, 0x5678);
+    TIDX("([A7],D1.W)",           067, 0010425);
+    TIDX("([A7],D1.W,$34)",       067, 0010426, 0x0034);
+    TIDX("([A7],D1.W,$1234)",     067, 0010426, 0x1234);
+    TIDX("([A7],D1.W,$12345678)", 067, 0010427, 0x1234, 0x5678);
+
+    TIDX("([$34,A7,D1.W])",           067, 0010441, 0x0034);
+    TIDX("([$34,A7,D1.W],$78)",       067, 0010442, 0x0034, 0x0078);
+    TIDX("([$34,A7,D1.W],$5678)",     067, 0010442, 0x0034, 0x5678);
+    TIDX("([$34,A7,D1.W],$56789ABC)", 067, 0010443, 0x0034, 0x5678, 0x9ABC);
+    TIDX("([$34,A7],D1.W)",           067, 0010445, 0x0034);
+    TIDX("([$34,A7],D1.W,$78)",       067, 0010446, 0x0034, 0x0078);
+    TIDX("([$34,A7],D1.W,$5678)",     067, 0010446, 0x0034, 0x5678);
+    TIDX("([$34,A7],D1.W,$56789ABC)", 067, 0010447, 0x0034, 0x5678, 0x9ABC);
+
+    TIDX("([$1234,A7,D1.W])",           067, 0010441, 0x1234);
+    TIDX("([$1234,A7,D1.W],$78)",       067, 0010442, 0x1234, 0x0078);
+    TIDX("([$1234,A7,D1.W],$5678)",     067, 0010442, 0x1234, 0x5678);
+    TIDX("([$1234,A7,D1.W],$56789ABC)", 067, 0010443, 0x1234, 0x5678, 0x9ABC);
+    TIDX("([$1234,A7],D1.W)",           067, 0010445, 0x1234);
+    TIDX("([$1234,A7],D1.W,$78)",       067, 0010446, 0x1234, 0x0078);
+    TIDX("([$1234,A7],D1.W,$5678)",     067, 0010446, 0x1234, 0x5678);
+    TIDX("([$1234,A7],D1.W,$56789ABC)", 067, 0010447, 0x1234, 0x5678, 0x9ABC);
+
+    TIDX("([$12345678,A7,D1.W])",           067, 0010461, 0x1234, 0x5678);
+    TIDX("([$12345678,A7,D1.W],$54)",       067, 0010462, 0x1234, 0x5678, 0x0054);
+    TIDX("([$12345678,A7,D1.W],$7654)",     067, 0010462, 0x1234, 0x5678, 0x7654);
+    TIDX("([$12345678,A7,D1.W],$76543210)", 067, 0010463, 0x1234, 0x5678, 0x7654, 0x3210);
+    TIDX("([$12345678,A7],D1.W)",           067, 0010465, 0x1234, 0x5678);
+    TIDX("([$12345678,A7],D1.W,$54)",       067, 0010466, 0x1234, 0x5678, 0x0054);
+    TIDX("([$12345678,A7],D1.W,$7654)",     067, 0010466, 0x1234, 0x5678, 0x7654);
+    TIDX("([$12345678,A7],D1.W,$76543210)", 067, 0010467, 0x1234, 0x5678, 0x7654, 0x3210);
+
+    TIDX("(*+2,PC,D1.W)",         073, 0010000);
+    TIDX("(*+$36,PC,D1.W)",       073, 0010000 | 0x34);
+    TIDX("(*+$1236,PC,D1.W)",     073, 0010440, 0x1234);
+    TIDX("(*+$1234567A,PC,D1.W)", 073, 0010460, 0x1234, 0x5678);
+
+    TIDX("([*+2,PC,D1.W])",           073, 0010421);
+    TIDX("([*+2,PC,D1.W],$34)",       073, 0010422, 0x0034);
+    TIDX("([*+2,PC,D1.W],$1234)",     073, 0010422, 0x1234);
+    TIDX("([*+2,PC,D1.W],$12345678)", 073, 0010423, 0x1234, 0x5678);
+    TIDX("([*+2,PC],D1.W)",           073, 0010425);
+    TIDX("([*+2,PC],D1.W,$34)",       073, 0010426, 0x0034);
+    TIDX("([*+2,PC],D1.W,$1234)",     073, 0010426, 0x1234);
+    TIDX("([*+2,PC],D1.W,$12345678)", 073, 0010427, 0x1234, 0x5678);
+
+    TIDX("([*+$36,PC,D1.W])",           073, 0010441, 0x0034);
+    TIDX("([*+$36,PC,D1.W],$78)",       073, 0010442, 0x0034, 0x0078);
+    TIDX("([*+$36,PC,D1.W],$5678)",     073, 0010442, 0x0034, 0x5678);
+    TIDX("([*+$36,PC,D1.W],$56789ABC)", 073, 0010443, 0x0034, 0x5678, 0x9ABC);
+    TIDX("([*+$36,PC],D1.W)",           073, 0010445, 0x0034);
+    TIDX("([*+$36,PC],D1.W,$78)",       073, 0010446, 0x0034, 0x0078);
+    TIDX("([*+$36,PC],D1.W,$5678)",     073, 0010446, 0x0034, 0x5678);
+    TIDX("([*+$36,PC],D1.W,$56789ABC)", 073, 0010447, 0x0034, 0x5678, 0x9ABC);
+
+    TIDX("([*+$1236,PC,D1.W])",           073, 0010441, 0x1234);
+    TIDX("([*+$1236,PC,D1.W],$5678)",     073, 0010442, 0x1234, 0x5678);
+    TIDX("([*+$1236,PC,D1.W],$56789ABC)", 073, 0010443, 0x1234, 0x5678, 0x9ABC);
+    TIDX("([*+$1236,PC],D1.W)",           073, 0010445, 0x1234);
+    TIDX("([*+$1236,PC],D1.W,$5678)",     073, 0010446, 0x1234, 0x5678);
+    TIDX("([*+$1236,PC],D1.W,$56789ABC)", 073, 0010447, 0x1234, 0x5678, 0x9ABC);
+
+    TIDX("([*+$1234567A,PC,D1.W])",           073, 0010461, 0x1234, 0x5678);
+    TIDX("([*+$1234567A,PC,D1.W],$54)",       073, 0010462, 0x1234, 0x5678, 0x0054);
+    TIDX("([*+$1234567A,PC,D1.W],$7654)",     073, 0010462, 0x1234, 0x5678, 0x7654);
+    TIDX("([*+$1234567A,PC,D1.W],$76543210)", 073, 0010463, 0x1234, 0x5678, 0x7654, 0x3210);
+    TIDX("([*+$1234567A,PC],D1.W)",           073, 0010465, 0x1234, 0x5678);
+    TIDX("([*+$1234567A,PC],D1.W,$54)",       073, 0010466, 0x1234, 0x5678, 0x0054);
+    TIDX("([*+$1234567A,PC],D1.W,$7654)",     073, 0010466, 0x1234, 0x5678, 0x7654);
+    TIDX("([*+$1234567A,PC],D1.W,$76543210)", 073, 0010467, 0x1234, 0x5678, 0x7654, 0x3210);
+
+    TIDX("(*+2,PC)",         072, 0x0000);
+    TIDX("(*+$36,PC)",       072, 0x0034);
+    TIDX("(*+$1236,PC)",     072, 0x1234);
+    TIDX("(*+$1234567A,PC)", 073, 0000560, 0x1234, 0x5678);
+
+    TIDX("([*+2,PC])",           073, 0000521);
+    TIDX("([*+2,PC],$34)",       073, 0000522, 0x0034);
+    TIDX("([*+2,PC],$1234)",     073, 0000522, 0x1234);
+    TIDX("([*+2,PC],$12345678)", 073, 0000523, 0x1234, 0x5678);
+
+    TIDX("([*+$36,PC])",           073, 0000541, 0x0034);
+    TIDX("([*+$36,PC],$78)",       073, 0000542, 0x0034, 0x0078);
+    TIDX("([*+$36,PC],$5678)",     073, 0000542, 0x0034, 0x5678);
+    TIDX("([*+$36,PC],$56789ABC)", 073, 0000543, 0x0034, 0x5678, 0x9ABC);
+
+    TIDX("([*+$1236,PC])",           073, 0000541, 0x1234);
+    TIDX("([*+$1236,PC],$78)",       073, 0000542, 0x1234, 0x0078);
+    TIDX("([*+$1236,PC],$5678)",     073, 0000542, 0x1234, 0x5678);
+    TIDX("([*+$1236,PC],$56789ABC)", 073, 0000543, 0x1234, 0x5678, 0x9ABC);
+
+    TIDX("([*+$1234567A,PC])",           073, 0000561, 0x1234, 0x5678);
+    TIDX("([*+$1234567A,PC],$54)",       073, 0000562, 0x1234, 0x5678, 0x0054);
+    TIDX("([*+$1234567A,PC],$7654)",     073, 0000562, 0x1234, 0x5678, 0x7654);
+    TIDX("([*+$1234567A,PC],$76543210)", 073, 0000563, 0x1234, 0x5678, 0x7654, 0x3210);
+}
+
+void test_bitfield(){
+    // BFTST src{o:w}:   01643|M|Rn, |0|oooooo|0|wwwwww|
+    // BFTST src(Do:Dw}: 01643|M|Rn, |1|000ooo|1|000www|
+    TEST("BFTST D1{31:32}",   0164301, 0003700);
+    ERRT("BFTST A2{0:4}", OPERAND_NOT_ALLOWED, "A2{0:4}", 0164300, 0000004);
+    TEST("BFTST (A2){1:2}",   0164322, 0000102);
+    TEST("BFTST (A2){D1:3}",  0164322, 0004103);
+    TEST("BFTST (A2){1:D3}",  0164322, 0000143);
+    ERRT("BFTST (A2)+{D1:D3}", OPERAND_NOT_ALLOWED, "(A2)+{D1:D3}", 0164300, 0004143);
+    ERRT("BFTST -(A2){D1:D3}", OPERAND_NOT_ALLOWED, "-(A2){D1:D3}", 0164300, 0004143);
+    TEST("BFTST ($1234,A2){1:2}",     0164352, 0000102, 0x1234);
+    TEST("BFTST (18,A2,D3.W){1:2}",   0164362, 0000102, 0x3012);
+    ABSW("BFTST (@W).W{1:2}", "1234", 0164370, 0000102, 0x1234);
+    TEST("BFTST ($12346).L{1:2}",     0164371, 0000102, 0x0001, 0x2346);
+    TEST("BFTST (*+$1234,PC){1:2}",   0164372, 0000102, 0x1230);
+    TEST("BFTST (*+35,PC,D3.L){1:2}", 0164373, 0000102, 0x381F);
+    ERRT("BFTST #$1234{1:2}", OPERAND_NOT_ALLOWED, "#$1234{1:2}", 0164300, 0000102);
+
+    // BFEXTU src{o:w},Dn:   01647|M|Rn, 0|Dn|0|oooooo|0|wwwwww|
+    // BFEXTU src(Do:Dw},Dn: 01647|M|Rn, 0|Dn|1|000ooo|1|000www|
+    TEST("BFEXTU D1{1:2}, D4",     0164701, 0040102);
+    ERRT("BFEXTU A2{0:4}, D4", OPERAND_NOT_ALLOWED, "A2{0:4}, D4", 0164700, 0040004);
+    TEST("BFEXTU (A2){D1:3}, D4",  0164722, 0044103);
+    ERRT("BFEXTU (A2)+{D1:D3}, D4", OPERAND_NOT_ALLOWED, "(A2)+{D1:D3}, D4", 0164700, 0044143);
+    ERRT("BFEXTU -(A2){D1:D3}, D4", OPERAND_NOT_ALLOWED, "-(A2){D1:D3}, D4", 0164700, 0044143);
+    TEST("BFEXTU ($1234,A2){1:2}, D4",       0164752, 0040102, 0x1234);
+    TEST("BFEXTU (18,A2,D3.W){1:2}, D4",     0164762, 0040102, 0x3012);
+    ABSW("BFEXTU (@W).W{1:2}, D4", "1234",   0164770, 0040102, 0x1234);
+    TEST("BFEXTU ($12346).L{1:2}, D4",       0164771, 0040102, 0x0001, 0x2346);
+    TEST("BFEXTU (*+$1234,PC){1:2}, D4",     0164772, 0040102, 0x1230);
+    TEST("BFEXTU (*+35,PC,D3.L){1:2}, D4",   0164773, 0040102, 0x381F);
+    ERRT("BFEXTU #$1234{1:2}, D4", OPERAND_NOT_ALLOWED, "#$1234{1:2}, D4", 0164700, 0040102);
+
+    // BFCHG src{o:w}: 01653|M|Rn, |0|oooooo|0|wwwwww|
+    TEST("BFCHG D1{1:2}",     0165301, 00102);
+    ERRT("BFCHG A2{0:4}", OPERAND_NOT_ALLOWED, "A2{0:4}", 0165300, 0000004);
+    TEST("BFCHG (A2){1:D3}",  0165322, 00143);
+    ERRT("BFCHG (A2)+{D1:D3}", OPERAND_NOT_ALLOWED, "(A2)+{D1:D3}", 0165300, 0004143);
+    ERRT("BFCHG -(A2){D1:D3}", OPERAND_NOT_ALLOWED, "-(A2){D1:D3}", 0165300, 0004143);
+    TEST("BFCHG ($1234,A2){1:2}",     0165352, 00102, 0x1234);
+    TEST("BFCHG (18,A2,D3.W){1:2}",   0165362, 00102, 0x3012);
+    ABSW("BFCHG (@W).W{1:2}", "1234", 0165370, 00102, 0x1234);
+    TEST("BFCHG ($12346).L{1:2}",     0165371, 0000102, 0x0001, 0x2346);
+    ERRT("BFCHG (*+$1234,PC){1:2}",
+         OPERAND_NOT_ALLOWED, "(*+$1234,PC){1:2}",   0165300, 0000102);
+    ERRT("BFCHG (*+35,PC,D3.L){1:2}",
+         OPERAND_NOT_ALLOWED, "(*+35,PC,D3.L){1:2}", 0165300, 0000102);
+    ERRT("BFCHG #$1234{1:2}", OPERAND_NOT_ALLOWED, "#$1234{1:2}", 0165300, 0000102);
+
+    // BFEXTS src{o:w},Dn:   01657|M|Rn, 0|Dn|0|oooooo|0|wwwwww|
+    TEST("BFEXTS D1{1:2}, D4",     0165701, 0040102);
+    ERRT("BFEXTS A2{0:4}, D4", OPERAND_NOT_ALLOWED, "A2{0:4}, D4", 0165700, 0040004);
+    TEST("BFEXTS (A2){D1:D3}, D4", 0165722, 0044143);
+    ERRT("BFEXTS (A2)+{D1:D3}, D4", OPERAND_NOT_ALLOWED, "(A2)+{D1:D3}, D4", 0165700, 0044143);
+    ERRT("BFEXTS -(A2){D1:D3}, D4", OPERAND_NOT_ALLOWED, "-(A2){D1:D3}, D4", 0165700, 0044143);
+    TEST("BFEXTS ($1234,A2){1:2}, D4",     0165752, 0040102, 0x1234);
+    TEST("BFEXTS (18,A2,D3.W){1:2}, D4",   0165762, 0040102, 0x3012);
+    ABSW("BFEXTS (@W).W{1:2}, D4", "1234", 0165770, 0040102, 0x1234);
+    TEST("BFEXTS ($12346).L{1:2}, D4",     0165771, 0040102, 0x0001, 0x2346);
+    TEST("BFEXTS (*+$1234,PC){1:2}, D4",   0165772, 0040102, 0x1230);
+    TEST("BFEXTS (*+35,PC,D3.L){1:2}, D4", 0165773, 0040102, 0x381F);
+    ERRT("BFEXTS #$1234{1:2}, D4", OPERAND_NOT_ALLOWED, "#$1234{1:2}, D4", 0165700, 0040102);
+
+    // BFCLR src{o:w}: 01663|M|Rn, |0|oooooo|0|wwwwww|
+    TEST("BFCLR D1{1:2}",     0166301, 00102);
+    ERRT("BFCLR A2{0:4}", OPERAND_NOT_ALLOWED, "A2{0:4}", 0166300, 0000004);
+    TEST("BFCLR (A2){1:2}",   0166322, 00102);
+    ERRT("BFCLR (A2)+{D1:D3}", OPERAND_NOT_ALLOWED, "(A2)+{D1:D3}", 0166300, 0004143);
+    ERRT("BFCLR -(A2){D1:D3}", OPERAND_NOT_ALLOWED, "-(A2){D1:D3}", 0166300, 0004143);
+    TEST("BFCLR ($1234,A2){1:2}",     0166352, 00102, 0x1234);
+    TEST("BFCLR (18,A2,D3.W){1:2}",   0166362, 00102, 0x3012);
+    ABSW("BFCLR (@W).W{1:2}", "1234", 0166370, 00102, 0x1234);
+    TEST("BFCLR ($12346).L{1:2}",     0166371, 0000102, 0x0001, 0x2346);
+    ERRT("BFCLR (*+$1234,PC){1:2}",
+         OPERAND_NOT_ALLOWED, "(*+$1234,PC){1:2}",   0166300, 0000102);
+    ERRT("BFCLR (*+35,PC,D3.L){1:2}",
+         OPERAND_NOT_ALLOWED, "(*+35,PC,D3.L){1:2}", 0166300, 0000102);
+    ERRT("BFCLR #$1234{1:2}", OPERAND_NOT_ALLOWED, "#$1234{1:2}", 0166300, 0000102);
+
+    // BFFFO src{o:w},Dn: 01667|M|Rn, 0|Dn|0|oooooo|0|wwwwww|
+    TEST("BFFFO D1{1:2}, D4",     0166701, 0040102);
+    ERRT("BFFFO A2{0:4}, D4", OPERAND_NOT_ALLOWED, "A2{0:4}, D4", 0166700, 0040004);
+    TEST("BFFFO (A2){D1:D3}, D4", 0166722, 0044143);
+    ERRT("BFFFO (A2)+{D1:D3}, D4", OPERAND_NOT_ALLOWED, "(A2)+{D1:D3}, D4", 0166700, 0044143);
+    ERRT("BFFFO -(A2){D1:D3}, D4", OPERAND_NOT_ALLOWED, "-(A2){D1:D3}, D4", 0166700, 0044143);
+    TEST("BFFFO ($1234,A2){1:2}, D4",     0166752, 0040102, 0x1234);
+    TEST("BFFFO (18,A2,D3.W){1:2}, D4",   0166762, 0040102, 0x3012);
+    ABSW("BFFFO (@W).W{1:2}, D4", "1234", 0166770, 0040102, 0x1234);
+    TEST("BFFFO ($12346).L{1:2}, D4",     0166771, 0040102, 0x0001, 0x2346);
+    TEST("BFFFO (*+$1234,PC){1:2}, D4",   0166772, 0040102, 0x1230);
+    TEST("BFFFO (*+35,PC,D3.L){1:2}, D4", 0166773, 0040102, 0x381F);
+    ERRT("BFFFO #$1234{1:2}, D4", OPERAND_NOT_ALLOWED, "#$1234{1:2}, D4", 0166700, 0040102);
+
+    // BFSET src{o:w}: 01673|M|Rn, |0|oooooo|0|wwwwww|
+    TEST("BFSET D1{0:32}",    0167301, 00000);
+    ERRT("BFSET A2{0:4}", OPERAND_NOT_ALLOWED, "A2{0:4}", 0167300, 0000004);
+    TEST("BFSET (A2){31:31}", 0167322, 03737);
+    ERRT("BFSET (A2)+{D1:D3}", OPERAND_NOT_ALLOWED, "(A2)+{D1:D3}", 0167300, 0004143);
+    ERRT("BFSET -(A2){D1:D3}", OPERAND_NOT_ALLOWED, "-(A2){D1:D3}", 0167300, 0004143);
+    TEST("BFSET ($1234,A2){1:2}",     0167352, 00102, 0x1234);
+    TEST("BFSET (18,A2,D3.W){1:2}",   0167362, 00102, 0x3012);
+    ABSW("BFSET (@W).W{1:2}", "1234", 0167370, 00102, 0x1234);
+    TEST("BFSET ($12346).L{1:2}",     0167371, 0000102, 0x0001, 0x2346);
+    ERRT("BFSET (*+$1234,PC){1:2}",
+         OPERAND_NOT_ALLOWED, "(*+$1234,PC){1:2}",   0167300, 0000102);
+    ERRT("BFSET (*+35,PC,D3.L){1:2}",
+         OPERAND_NOT_ALLOWED, "(*+35,PC,D3.L){1:2}", 0167300, 0000102);
+    ERRT("BFSET #$1234{1:2}", OPERAND_NOT_ALLOWED, "#$1234{1:2}", 0167300, 0000102);
+
+    // BFINS Dn,dst{o:w}: 01677|M|Rn, 0|Dn|0|oooooo|0|wwwwww|
+    TEST("BFINS D4, D1{1:2}",     0167701, 0040102);
+    ERRT("BFINS D4, A2{0:4}", OPERAND_NOT_ALLOWED, "A2{0:4}", 0167700, 0040004);
+    TEST("BFINS D4, (A2){D1:D3}", 0167722, 0044143);
+    ERRT("BFINS D4, (A2)+{D1:D3}", OPERAND_NOT_ALLOWED, "(A2)+{D1:D3}", 0167700, 0044143);
+    ERRT("BFINS D4, -(A2){D1:D3}", OPERAND_NOT_ALLOWED, "-(A2){D1:D3}", 0167700, 0044143);
+    TEST("BFINS D4, ($1234,A2){1:2}",     0167752, 0040102, 0x1234);
+    TEST("BFINS D4, (18,A2,D3.W){1:2}",   0167762, 0040102, 0x3012);
+    ABSW("BFINS D4, (@W).W{1:2}", "1234", 0167770, 0040102, 0x1234);
+    TEST("BFINS D4, ($12346).L{1:2}",     0167771, 0040102, 0x0001, 0x2346);
+    ERRT("BFINS D4, (*+$1234,PC){1:2}",
+         OPERAND_NOT_ALLOWED, "(*+$1234,PC){1:2}",   0167700, 0040102);
+    ERRT("BFINS D4, (*+35,PC,D3.L){1:2}",
+         OPERAND_NOT_ALLOWED, "(*+35,PC,D3.L){1:2}", 0167700, 0040102);
+    ERRT("BFINS D4, #$1234{1:2}", OPERAND_NOT_ALLOWED, "#$1234{1:2}", 0167700, 0040102);
 }
 
 #if !defined(LIBASM_MC68000_NOFPU)
@@ -3178,9 +3961,9 @@ void test_float_move() {
     TEST("FMOVE.P FP2, ($56789A).L{D7}",    0xF200|071, 0x7000|(3<<10)|(2<<7)|(7<<4), 0x0056, 0x789A);
     TEST("FMOVE.P FP7, (A6){#-64}",         0xF200|026, 0x6000|(3<<10)|(7<<7)|(-64 & 0x7F));
     TEST("FMOVE.P FP1, (A0)+{#63}",         0xF200|030, 0x6000|(3<<10)|(1<<7)|63);
-    ERRT("FMOVE.P FP3, -(A2){#-65}",        OVERFLOW_RANGE, "{#-65}",
+    ERRT("FMOVE.P FP3, -(A2){#-65}",        OVERFLOW_RANGE, "#-65}",
                                             0xF200|042, 0x6000|(3<<10)|(3<<7)|17);
-    ERRT("FMOVE.P FP5, ($1234,A4){#64}",    OVERFLOW_RANGE, "{#64}",
+    ERRT("FMOVE.P FP5, ($1234,A4){#64}",    OVERFLOW_RANGE, "#64}",
                                             0xF200|054, 0x6000|(3<<10)|(5<<7)|17, 0x1234);
     ERUS("FMOVE.P FP0, ($23,A6,D7.W){#UNDEF}", "UNDEF}",
                                             0xF200|066, 0x6000|(3<<10)|(0<<7)|17, 0x7023);
@@ -5376,11 +6159,26 @@ void test_undef() {
     ERUS("ADDQ  #1,(UNDEF,A1)",   "UNDEF,A1)",       0051151, 0x0000);
     ERUS("LSR   #UNDEF,D1",       "UNDEF,D1",        0160111);
     ERUS("ROR   (UNDEF,A1)",      "UNDEF,A1)",       0163351, 0x0000);
+    if (!firstGen()) {
+        ERUS("BFSET (4){1:UNDEF}",     "UNDEF}",       0167370, 0000100, 0x0004);
+        ERUS("BFSET (4){UNDEF:2}",     "UNDEF:2}",     0167370, 0000002, 0x0004);
+        ERUS("BFSET (4){UNDEF:UNDEF}", "UNDEF:UNDEF}", 0167370, 0000000, 0x0004);
+        ERUS("BFSET (UNDEF){1:2}",         "UNDEF){1:2}",         0167370, 0000102, 0x0000);
+        ERUS("BFSET (UNDEF){1:UNDEF}",     "UNDEF){1:UNDEF}",     0167370, 0000100, 0x0000);
+        ERUS("BFSET (UNDEF){UNDEF:2}",     "UNDEF){UNDEF:2}",     0167370, 0000002, 0x0000);
+        ERUS("BFSET (UNDEF){UNDEF:UNDEF}", "UNDEF){UNDEF:UNDEF}", 0167370, 0000000, 0x0000);
+    }
 
-    AERUS(0x1000, "BRA UNDEF",                "UNDEF",             0060000);
+    AERUS(0x1000, "BRA UNDEF",                "UNDEF",             0060000, 0x0000);
     AERUS(0x1000, "DBRA  D0,UNDEF",           "UNDEF",             0050710, 0x0000);
     AERUS(0x1000, "MOVEA (UNDEF,PC),A1",      "UNDEF,PC),A1",      0031172, 0x0000);
     AERUS(0x1000, "MOVEA (UNDEF,PC,D1.L),A1", "UNDEF,PC,D1.L),A1", 0031173, 0x1800);
+    if (!firstGen()) {
+        AERUS(0x1000, "MOVE ([UNDEF,PC],D1),D2", "UNDEF,PC],D1),D2", 0032073, 0x1125, 0x0000);
+        AERUS(0x1000, "MOVE ([PC,D1],UNDEF),D2", "UNDEF),D2",        0032073, 0x1112, 0x0000);
+        AERUS(0x1000, "MOVE ([PC],D1,UNDEF),D2", "UNDEF),D2",        0032073, 0x1116, 0x0000);
+        AERUS(0x1000, "MOVE ([UNDEF]),D2", "UNDEF]),D2",             0032060, 0x01E1, 0x0000);
+    }
 }
 
 void test_data_constant() {
@@ -5534,6 +6332,9 @@ void run_tests(const char *cpu) {
     RUN_TEST(test_system);
     RUN_TEST(test_multiproc);
     RUN_TEST(test_areg_alias);
+    RUN_TEST(test_addressing);
+    if (!firstGen())
+        RUN_TEST(test_bitfield);
 #if !defined(LIBASM_MC68000_NOFPU)
     RUN_TEST(test_float_move);
     RUN_TEST(test_float_arithmetic);
@@ -5541,7 +6342,6 @@ void run_tests(const char *cpu) {
     RUN_TEST(test_float_trap);
     RUN_TEST(test_float_system);
 #endif
-    RUN_TEST(test_extension);
     RUN_TEST(test_comment);
     RUN_TEST(test_undef);
     RUN_TEST(test_data_constant);

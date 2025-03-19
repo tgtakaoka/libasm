@@ -89,22 +89,22 @@ void test_dis_mc68000() {
     driver.setUpperHex(false);
 
     DIS16("mc68000", 0x9abcde,
-            R"(      cpu     68000
-      org     $9abcde
-      ori.l   #$bdbebfc0, ($c2c3c4).l
+            R"(      cpu         68000
+      org         $9abcde
+      ori.l       #$bdbebfc0, ($c2c3c4).l
 * test.bin: error: Unknown instruction
 *   9abce8 : 43fc
 * test.bin: error: Operand not aligned: "$9abd6b"
-*   9abcea : 617f                       bsr     $9abd6b
+*   9abcea : 617f                       bsr         $9abd6b
 )",
-            R"(       0 :                            cpu     68000
-  9abcde :                            org     $9abcde
-  9abcde : 00b9 bdbe bfc0             ori.l   #$bdbebfc0, ($c2c3c4).l
+            R"(       0 :                            cpu         68000
+  9abcde :                            org         $9abcde
+  9abcde : 00b9 bdbe bfc0             ori.l       #$bdbebfc0, ($c2c3c4).l
   9abce4 : 00c2 c3c4
 test.bin: error: Unknown instruction
   9abce8 : 43fc
 test.bin: error: Operand not aligned: "$9abd6b"
-  9abcea : 617f                       bsr     $9abd6b
+  9abcea : 617f                       bsr         $9abd6b
 )",
             0x00b9, 0xbdbe, 0xbfc0, 0x00c2, 0xc3c4, 0041774, 0060400 | 0x7F);
 }
