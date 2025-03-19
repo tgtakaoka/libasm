@@ -19,7 +19,7 @@ ASL_FLAGS = +t 0x0e
 P2HEX_FLAGS = -q -k -r \$$-\$$ -l 16
 
 define __asl-opt # target
-$(if $(filter $(1),$(I32_OUTS)),-F Intel32,$(if $(filter $(1),$(S19_OUTS) $(S28_OUTS)),-F Moto +5,-F Intel))
+$(if $(filter $(1),$(I32_OUTS)),-F Intel32,$(if $(filter $(1),$(S19_OUTS) $(S28_OUTS) $(S37_OUTS)),-F Moto +5,-F Intel))
 endef
 define asl-opt # file
 $(call __asl-opt,$(subst gen_,,$(subst test_,,$(1))))

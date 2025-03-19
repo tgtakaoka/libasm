@@ -31,13 +31,16 @@ enum OprSize : uint8_t {
     SZ_WORD = Size::SZ_WORD,  // Word (16 bits/2 bytes)
     SZ_LONG = Size::SZ_QUAD,  // Long (32 bits/4 bytes)
     SZ_DATA = Size::SZ_DATA,  // _ss|___|___ BYTE=0/WORD=1/LONG=2
-    SZ_ADDR = Size::SZ_ADDR,  // __LIBASM_s|___|___ WORD=0/LONG=1
+    SZ_ADDR = Size::SZ_ADDR,  // __s|___|___ WORD=0/LONG=1
     SZ_ADR8 = 7,              // s__|___|___ WORD=0/LONG=1
     SZ_SNGL = 8,              // Single precision real (32 bits/4 bytes)
     SZ_DUBL = 9,              // Double precision real (64 bits/8 bytes)
     SZ_XTND = 10,             // Extended precision real (96 bits/12 bytes)
     SZ_PBCD = 11,             // Packed BCD real (96 bits/12 bytes)
     SZ_FDAT = 12,             // MC68881 float type
+    SZ_DATH = 13,             // _ss|___|___|___ BYTE=0/WORD=1/LONG=2
+    SZ_CAS1 = 14,             // _ss|___|___|___ BYTE=1/WORD=2/LONG=3
+    SZ_CAS2 = 15,             // _ss|___|___|___        WORD=2/LONG=3
 };
 
 enum InsnSize : uint8_t {
@@ -71,101 +74,120 @@ enum AddrMode : uint8_t {
     M_ALONG = 11,  // (xxxx).L: Absolute Long Addressing
     M_PCDSP = 12,  // (d16,PC): Program Counter Indirect with Displacement
     M_PCIDX = 13,  // (d8,PC,Xn.SIZE): Program Counter Indirect with Index
+    M_GREG = 14,   // Data/Address register: Rn
     // for instruction table; M_RADDR-M_DADDR must be contigous.
-    M_RADDR = 14,  // Readable Address:  Dn/An/(An)/(An)+/-(An)/(*,An)/(Abs)/(*,PC)/#xxxx
-    M_RDATA = 15,  // Readable Data:     Dn   /(An)/(An)+/-(An)/(*,An)/(Abs)/(*,PC)/#xxxx
-    M_WADDR = 16,  // Readable Address:  Dn/An/(An)/(An)+/-(An)/(*,An)/(Abs)
-    M_WDATA = 17,  // Writable Data:     Dn   /(An)/(An)+/-(An)/(*.An)/(Abs)
-    M_RMEM = 18,   // Readable Memory:         (An)/(An)+/-(An)/(*,An)/(Abs)/(*,PC)
-    M_WMEM = 19,   // Writable Memory:         (An)/(An)+/-(An)/(*,An)/(Abs)
-    M_JADDR = 20,  // Jumpable Address:        (An)            /(*,An)/(Abs)/(*,PC)
-    M_IADDR = 21,  // Increment Address:       (An)/(An)+      /(*,An)/(Abs)/(*,PC)
-    M_DADDR = 22,  // Decrement Address:       (An)/     /-(An)/(*,An)/(Abs)
+    M_RADDR = 15,  // Readable Address:  Dn/An/(An)/(An)+/-(An)/(*,An)/(Abs)/(*,PC)/#xxxx
+    M_RDATA = 16,  // Readable Data:     Dn/  /(An)/(An)+/-(An)/(*,An)/(Abs)/(*,PC)/#xxxx
+    M_WADDR = 17,  // Readable Address:  Dn/An/(An)/(An)+/-(An)/(*,An)/(Abs)
+    M_WDATA = 18,  // Writable Data:     Dn/  /(An)/(An)+/-(An)/(*.An)/(Abs)
+    M_BITFR = 19,  // Bitfield read:     Dn/  /(An)/           /(*,An)/(Abs)/(*,PC)
+    M_BITFW = 20,  // Bitfield write:    Dn/  /(An)/           /(*,An)/(Abs)
+    M_RMEM = 21,   // Readable Memory:         (An)/(An)+/-(An)/(*,An)/(Abs)/(*,PC)
+    M_WMEM = 22,   // Writable Memory:         (An)/(An)+/-(An)/(*,An)/(Abs)
+    M_JADDR = 23,  // Jumpable Address:        (An)            /(*,An)/(Abs)/(*,PC)
+    M_IADDR = 24,  // Increment Address:       (An)/(An)+      /(*,An)/(Abs)/(*,PC)
+    M_DADDR = 25,  // Decrement Address:       (An)/     /-(An)/(*,An)/(Abs)
     // for instruction table
-    M_REL8 = 23,   // 8/16-bit Relative (Bcc)
-    M_REL16 = 24,  // 16-bit Relative (DBcc/FDBcc)
-    M_IMBIT = 25,  // Bit number: #0~#7/#15/#31
-    M_IM3 = 26,    // 3-bit Immediate: #1~#8
-    M_IM8 = 27,    // 8-bit Immediate
-    M_IMVEC = 28,  // 3-bit Trap Vector
-    M_IMDSP = 29,  // 16-bit Signed Displacement
-    M_LABEL = 30,  // label
-    M_MULT = 31,   // MOVEM register list
-    M_SR = 32,     // SR register
-    M_CCR = 33,    // CCR register
-    M_USP = 34,    // USP register
+    M_REL8 = 26,   // 8/16-bit Relative (Bcc)
+    M_REL16 = 27,  // 16-bit Relative (DBcc/FDBcc)
+    M_IMBIT = 28,  // Bit number: #0~#7/#15/#31
+    M_IM3 = 29,    // 3-bit Immediate: #1~#8
+    M_IM8 = 30,    // 8-bit Immediate
+    M_IMVEC = 31,  // 3-bit Trap Vector
+    M_IMDSP = 32,  // 16-bit Signed Displacement
+    M_LABEL = 33,  // label
+    M_MULT = 34,   // MOVEM register list
+    M_SR = 35,     // SR register
+    M_CCR = 36,    // CCR register
+    M_USP = 37,    // USP register
     // MC68010
-    M_CREG = 35,  // Control register: SFC, DFC, USP, VBR
+    M_CREG = 38,  // Control register: SFC, DFC, USP, VBR, etc.
     // MC68881
-    M_FPREG = 36,  // FPn: Floatng point data register
-    M_FPMLT = 37,  // FMOVEM.X register list; FPn
-    M_FCMLT = 38,  // FMOVEM.L register list; FPCR/FPSR/FPIAR
-    M_FSICO = 39,  // FPSINCOS FPc:FPs
-    M_KDREG = 40,  // <ea>{Dn}
-    M_KFACT = 41,  // <ea>{#k}
-    M_FPCR = 42,   // FPCR register
-    M_FPSR = 43,   // FPSR register
-    M_FPIAR = 44,  // FPIAR register
-    M_IMROM = 45,  // MC68881 ROM constant
-    M_REL32 = 46,  // 32-bit Relative; 1111|ccc|01s|___|___: s=0 16bit, s=1 32bit (FBcc)
+    M_FPREG = 39,  // FPn: Floatng point data register
+    M_FPMLT = 40,  // FMOVEM.X register list; FPn
+    M_FCMLT = 41,  // FMOVEM.L register list; FPCR/FPSR/FPIAR
+    M_FSICO = 42,  // FPSINCOS FPc:FPs
+    M_KDREG = 43,  // <ea>{Dn}
+    M_KFACT = 44,  // <ea>{#k}
+    M_FPCR = 45,   // FPCR register
+    M_FPSR = 46,   // FPSR register
+    M_FPIAR = 47,  // FPIAR register
+    M_IMROM = 48,  // MC68881 ROM constant
+    M_REL32 = 49,  // 32-bit Relative; 1111|ccc|01s|___|___: s=0 16bit, s=1 32bit (FBcc)
+    // MC68020
+    M_BITOW = 50,  // Bitfield offset/width: {Dn/n:Dn/n}
+    M_DPAIR = 51,  // Data register pair: Dn:Dn
+    M_PPAIR = 52,  // Pointer pair: (Rn):(Rn)
 };
 
 enum OprPos : uint8_t {
-    OP_10 = 0,   // __|___|___|mmm|rrr
-    OP_23 = 1,   // __|rrr|mmm|___|___
-    OP__0 = 2,   // __|___|___|___|rrr
-    OP__3 = 3,   // __|rrr|___|___|___
-    OP___ = 4,   // __|___|___|___|___
-    EX_RX = 5,   // __|xxx|___|_______ : format or source register
-    EX_RY = 6,   // __|___|yyy|_______ : destination register
-    EX_SC = 7,   // __|___|sss|____ccc : FPSINCOS
-    EX_SL = 8,   // __|___|__|ffffffff : static register list
-    EX_DL = 9,   // __|___|___|rrr____ : dynamic register list
-    EX_SK = 10,  // __|___|___|kkkkkkk : static k-factor
-    EX_DK = 11,  // __|___|___|rrr____ : dynamic k-factor
-    EX_RR = 12,  // a|rrr|____________ : Dn/An
-    EX_RC = 13,  // _____|cccccccccccc : Control register
+    OP_10 = 0,    // __|___|___|mmm|rrr
+    OP_23 = 1,    // __|rrr|mmm|___|___
+    OP__0 = 2,    // __|___|___|___|rrr
+    OP__3 = 3,    // __|rrr|___|___|___
+    OP___ = 4,    // __|___|___|___|___
+    EX_RX = 5,    // __|xxx|___|_______ : format or source register
+    EX_RY = 6,    // __|___|yyy|_______ : destination register
+    EX_SC = 7,    // __|___|sss|____ccc : FPSINCOS
+    EX_SL = 8,    // __|___|__|ffffffff : static register list
+    EX_DL = 9,    // __|___|___|rrr____ : dynamic register list
+    EX_SK = 10,   // __|___|___|kkkkkkk : static k-factor
+    EX_DK = 11,   // __|___|___|rrr____ : dynamic k-factor
+    EX_GR = 12,   // a|rrr|____________ : Dn/An
+    EX_RC = 13,   // _____|cccccccccccc : Control register
+    EX_OW = 14,   // _____|dooooodwwwww : Bitfield offset and width
+    EX_DC = 15,   // _______________ccc : Dc
+    EX_DU = 16,   // _______uuu|___|___ : Du
+    EX_DR = 17,   // _|ddd|____________ : Dn
+    EX_QR = 18,   // _|qqq|________|rrr : Dr:Dq
+    EX_QQ = 19,   // _|qqq|________|qqq : Dq
+    EX_DCP = 20,  // ______________|ccc : Dc1:Dc2 for CAS2
+    EX_DUP = 21,  // _______uuu|___|___ : Du1:Du2 for CAS2
 };
 
 struct Entry final : entry::Base<Config::opcode_t> {
     struct Flags final {
         uint8_t _src;
         uint8_t _dst;
-        uint8_t _oprPos;
+        uint8_t _ext;
         uint8_t _attr;
+        uint16_t _oprPos;
         Config::opcode_t _postVal;
 
-        static constexpr Flags create(AddrMode src, AddrMode dst, OprPos srcPos, OprPos dstPos,
-                OprSize oSize, InsnSize iSize) {
-            return Flags{static_cast<uint8_t>(src), static_cast<uint8_t>(dst), _pos(srcPos, dstPos),
-                    _size(oSize, iSize), 0};
+        static constexpr Flags create(AddrMode src, AddrMode dst, AddrMode ext, OprPos srcPos,
+                OprPos dstPos, OprPos extPos, OprSize oSize, InsnSize iSize) {
+            return Flags{static_cast<uint8_t>(src), static_cast<uint8_t>(dst),
+                    static_cast<uint8_t>(ext), _size(oSize, iSize), _pos(srcPos, dstPos, extPos),
+                    0};
         }
 
-        static constexpr Flags create(AddrMode src, AddrMode dst, OprPos srcPos, OprPos dstPos,
-                OprSize oSize, InsnSize iSize, Config::opcode_t postVal) {
-            return Flags{static_cast<uint8_t>(src | hasPostVal_bm), static_cast<uint8_t>(dst),
-                    _pos(srcPos, dstPos), _size(oSize, iSize), postVal};
+        static constexpr Flags create(AddrMode src, AddrMode dst, AddrMode ext, OprPos srcPos,
+                OprPos dstPos, OprPos extPos, OprSize oSize, InsnSize iSize,
+                Config::opcode_t postVal) {
+            return Flags{static_cast<uint8_t>(src), static_cast<uint8_t>(dst),
+                    static_cast<uint8_t>(ext), _size(oSize, iSize),
+                    _pos(srcPos, dstPos, extPos, true), postVal};
         }
 
-        AddrMode src() const { return AddrMode(_src & mode_gm); }
+        AddrMode src() const { return AddrMode(_src); }
         AddrMode dst() const { return AddrMode(_dst); }
+        AddrMode ext() const { return AddrMode(_ext); }
         OprPos srcPos() const { return OprPos((_oprPos >> srcPos_gp) & pos_gm); }
         OprPos dstPos() const { return OprPos((_oprPos >> dstPos_gp) & pos_gm); }
+        OprPos extPos() const { return OprPos((_oprPos >> extPos_gp) & pos_gm); }
         OprSize oprSize() const { return OprSize((_attr >> oprSize_gp) & size_gm); }
         InsnSize insnSize() const { return InsnSize((_attr >> insnSize_gp) & size_gm); }
-        bool hasPostVal() const { return (_src & hasPostVal_bm) != 0; }
+        bool hasPostVal() const { return (_oprPos & hasPostVal_bm) != 0; }
         Config::opcode_t postVal() const { return _postVal; }
 
-        void setAddrMode(AddrMode src, AddrMode dst) {
-            _src = static_cast<uint8_t>(src | (_src & hasPostVal_bm));
-            _dst = static_cast<uint8_t>(dst);
-        }
         void setInsnSize(InsnSize size) { _attr = _size(oprSize(), size); }
         Config::opcode_t insnMask() const {
-            return insnMask(dst()) | insnMask(src()) | insnMask(dstPos()) | insnMask(srcPos()) |
-                   insnMask(oprSize());
+            return insnMask(dst()) | insnMask(src()) | insnMask(ext()) | insnMask(dstPos()) |
+                   insnMask(srcPos()) | insnMask(extPos()) | insnMask(oprSize());
         }
-        Config::opcode_t postMask() const { return postMask(dstPos()) | postMask(srcPos()); }
+        Config::opcode_t postMask() const {
+            return postMask(dstPos()) | postMask(srcPos()) | postMask(extPos());
+        }
 
         static Config::opcode_t insnMask(AddrMode mode) {
             if (mode == M_IM8 || mode == M_REL8)
@@ -187,6 +209,10 @@ struct Entry final : entry::Base<Config::opcode_t> {
                 return (1 << 6);
             case SZ_ADR8:
                 return (1 << 8);
+            case SZ_DATH:
+            case SZ_CAS1:
+            case SZ_CAS2:
+                return (3 << 9);
             default:
                 return 0;
             }
@@ -198,44 +224,43 @@ struct Entry final : entry::Base<Config::opcode_t> {
                     07700,  // OP_23 = 1,  // ____|rrr|mmm|___|___
                     00007,  // OP__0 = 2,  // ____|___|___|___|rrr
                     07000,  // OP__3 = 3,  // ____|rrr|___|___|___
-                    00000,  // OP___ = 4,  // ____|___|___|___|___
-                    00000,  // EX_RX = 5,  // ___|xxx|___|_______ : format or source register
-                    00000,  // EX_RY = 6,  // ___|___|yyy|_______ : destination register
-                    00000,  // EX_SC = 7,  // ___|___|sss|____ccc : FPSINCOS
-                    00000,  // EX_SL = 8,  // ___|___|__|ffffffff : static register list
-                    00000,  // EX_DL = 9,  // ___|___|___|rrr____ : dynamic register list/k-factor
-                    00000,  // EX_SK = 10, // ___|___|___|kkkkkkk : static k-factor
-                    00000,  // EX_DK = 11, // ___|___|___|rrr____ : dynamic register list/k-factor
-                    00000,  // EX_RR = 12, // a|rrr|_____________ : Dn/An
-                    00000,  // EX_RC = 13, // _____|ccccccccccccc : Control register
             };
+            if (pos >= OP___)
+                return 0;
             return pgm_read_word(&BITS[pos]);
         }
 
         static Config::opcode_t postMask(OprPos pos) {
             static constexpr Config::opcode_t BITS[] PROGMEM = {
-                    0x0000,  // OP_10 = 0,  // ____|___|___|mmm|rrr
-                    0x0000,  // OP_23 = 1,  // ____|rrr|mmm|___|___
-                    0x0000,  // OP__0 = 2,  // ____|___|___|___|rrr
-                    0x0000,  // OP__3 = 3,  // ____|rrr|___|___|___
-                    0x0000,  // OP___ = 4,  // ____|___|___|___|___
-                    0x1C00,  // EX_RX = 5,  // ___|xxx|___|_______ : format or source register
-                    0x0380,  // EX_RY = 6,  // ___|___|yyy|_______ : destination register
-                    0x0387,  // EX_SC = 7,  // ___|___|sss|____ccc : FPSINCOS
-                    0x00FF,  // EX_SL = 8,  // ___|___|__|ffffffff : static register list
-                    0x0070,  // EX_DL = 9,  // ___|___|___|rrr____ : dynamic register list/k-factor
-                    0x007F,  // EX_SK = 10, // ___|___|___|kkkkkkk : static k-factor
-                    0x0070,  // EX_DK = 11, // ___|___|___|rrr____ : dynamic register list/k-factor
-                    0x7000,  // EX_RR = 12, // a|rrr|_____________ : Dn/An
-                    0x0FFF,  // EX_RC = 13, // _____|ccccccccccccc : Control register
+                    0x1C00,  // EX_RX = 5,   // ___|xxx|___|_______ : format or source register
+                    0x0380,  // EX_RY = 6,   // ___|___|yyy|_______ : destination register
+                    0x0387,  // EX_SC = 7,   // ___|___|sss|____ccc : FPSINCOS
+                    0x00FF,  // EX_SL = 8,   // ___|___|__|ffffffff : static register list
+                    0x0070,  // EX_DL = 9,   // ___|___|___|rrr____ : dynamic register list/k-factor
+                    0x007F,  // EX_SK = 10,  // ___|___|___|kkkkkkk : static k-factor
+                    0x0070,  // EX_DK = 11,  // ___|___|___|rrr____ : dynamic register list/k-factor
+                    0xF000,  // EX_GR = 12,  // a|rrr|_____________ : Dn/An
+                    0x0FFF,  // EX_RC = 13,  // _____|ccccccccccccc : Control register
+                    0x0FFF,  // EX_OW = 14,  // _____|dooooodwwwwww : Bitfield offset and width
+                    0x0007,  // EX_DC = 15,  // ________________ccc : Dc
+                    0x01C0,  // EX_DU = 16,  // _______|uuu|___|___ : Du
+                    0x7000,  // EX_DR = 17,  // _|ddd|_____________ : Dn
+                    0x7007,  // EX_QR = 18,  // _|qqq|_________|rrr : Dr:Dq
+                    0x7007,  // EX_QQ = 19,  // _|qqq|_________|qqq : Dq
+                    0x0007,  // EX_DCP = 20, // _______________|ccc : Dc1:Dc2 for CAS2
+                    0x01C0,  // EX_DUP = 21, // _______|uuu|___|___ : Du1:Du2 for CAS2
             };
-            return pgm_read_word(&BITS[pos]);
+            if (pos < EX_RX)
+                return 0;
+            return pgm_read_word(&BITS[pos - EX_RX]);
         }
 
     private:
-        static constexpr uint8_t _pos(OprPos src, OprPos dst) {
-            return (static_cast<uint8_t>(src) << srcPos_gp) |
-                   (static_cast<uint8_t>(dst) << dstPos_gp);
+        static constexpr uint16_t _pos(
+                OprPos src, OprPos dst, OprPos ext, bool hasPostVal = false) {
+            return (static_cast<uint16_t>(src) << srcPos_gp) |
+                   (static_cast<uint16_t>(dst) << dstPos_gp) |
+                   (static_cast<uint16_t>(ext) << extPos_gp) | (hasPostVal ? hasPostVal_bm : 0);
         }
 
         static constexpr uint8_t _size(OprSize opr, InsnSize insn) {
@@ -243,16 +268,13 @@ struct Entry final : entry::Base<Config::opcode_t> {
                    (static_cast<uint8_t>(insn) << insnSize_gp);
         }
 
-        // |_src|, |_dst|
-        static constexpr int mode_gp = 0;
-        static constexpr uint8_t mode_gm = 0x7F;
-        // |_src|
-        static constexpr int hasPostVal_bp = 7;
-        static constexpr uint8_t hasPostVal_bm = (1 << hasPostVal_bp);
         // |_oprPos|
         static constexpr int srcPos_gp = 0;
-        static constexpr int dstPos_gp = 4;
-        static constexpr uint8_t pos_gm = 0x0F;
+        static constexpr int dstPos_gp = 5;
+        static constexpr int extPos_gp = 10;
+        static constexpr uint16_t pos_gm = 0x1F;
+        static constexpr int hasPostVal_bp = 15;
+        static constexpr uint16_t hasPostVal_bm = UINT16_C(1) << hasPostVal_bp;
         // |_attr|
         static constexpr int oprSize_gp = 0;
         static constexpr int insnSize_gp = 4;
@@ -264,8 +286,8 @@ struct Entry final : entry::Base<Config::opcode_t> {
 
     Flags readFlags() const {
         return Flags{pgm_read_byte(&_flags_P._src), pgm_read_byte(&_flags_P._dst),
-                pgm_read_byte(&_flags_P._oprPos), pgm_read_byte(&_flags_P._attr),
-                pgm_read_word(&_flags_P._postVal)};
+                pgm_read_byte(&_flags_P._ext), pgm_read_byte(&_flags_P._attr),
+                pgm_read_word(&_flags_P._oprPos), pgm_read_word(&_flags_P._postVal)};
     }
 
 private:
