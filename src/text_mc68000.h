@@ -195,6 +195,49 @@ extern const char TEXT_REG_DFC[] PROGMEM;
 extern const char TEXT_REG_SFC[] PROGMEM;
 extern const char TEXT_REG_VBR[] PROGMEM;
 
+// MC68020
+extern const char TEXT_BFCHG[]  PROGMEM;
+extern const char TEXT_BFCLR[]  PROGMEM;
+extern const char TEXT_BFEXTS[] PROGMEM;
+extern const char TEXT_BFEXTU[] PROGMEM;
+extern const char TEXT_BFFFO[]  PROGMEM;
+extern const char TEXT_BFINS[]  PROGMEM;
+extern const char TEXT_BFSET[]  PROGMEM;
+extern const char TEXT_BFTST[]  PROGMEM;
+extern const char TEXT_CALLM[]  PROGMEM;
+extern const char TEXT_CAS2[]   PROGMEM;
+using common::TEXT_CAS;
+extern const char TEXT_CHK2[]   PROGMEM;
+extern const char TEXT_CMP2[]   PROGMEM;
+extern const char TEXT_DIVSL[]  PROGMEM;
+extern const char TEXT_DIVUL[]  PROGMEM;
+extern const char TEXT_PACK[]   PROGMEM;
+extern const char TEXT_RTM[]    PROGMEM;
+extern const char TEXT_TRAPCC[] PROGMEM;
+extern const char TEXT_TRAPCS[] PROGMEM;
+extern const char TEXT_TRAPEQ[] PROGMEM;
+extern const char TEXT_TRAPF[]  PROGMEM;
+extern const char TEXT_TRAPGE[] PROGMEM;
+extern const char TEXT_TRAPGT[] PROGMEM;
+extern const char TEXT_TRAPHI[] PROGMEM;
+extern const char TEXT_TRAPHS[] PROGMEM;
+extern const char TEXT_TRAPLE[] PROGMEM;
+extern const char TEXT_TRAPLO[] PROGMEM;
+extern const char TEXT_TRAPLS[] PROGMEM;
+extern const char TEXT_TRAPLT[] PROGMEM;
+extern const char TEXT_TRAPMI[] PROGMEM;
+extern const char TEXT_TRAPNE[] PROGMEM;
+extern const char TEXT_TRAPPL[] PROGMEM;
+extern const char TEXT_TRAPT[]  PROGMEM;
+extern const char TEXT_TRAPVC[] PROGMEM;
+extern const char TEXT_TRAPVS[] PROGMEM;
+extern const char TEXT_UNPK[]   PROGMEM;
+
+extern const char TEXT_REG_CAAR[] PROGMEM;
+extern const char TEXT_REG_CACR[] PROGMEM;
+extern const char TEXT_REG_ISP[]  PROGMEM;
+extern const char TEXT_REG_MSP[]  PROGMEM;
+
 // MC68881
 using common::TEXT_FABS;
 extern const char TEXT_FACOS[]     PROGMEM;

@@ -157,12 +157,14 @@ CPU_z8       = Z8601
 # targets with Motorola S19 format
 S19_OUTS = $(TGT_mc6809) $(TGT_mc6800) $(TGT_mc6805) mc68hc12 mos6502 g65sc02 r65c02 w65c02s
 # targets with Motorola S28 format
-S28_OUTS = $(TGT_mc68000) mc68hc16 w65c816 w65c816_m0x0 w65c816_m0x1 w65c816_m1x0 w65c816_m1x1
+S28_OUTS = mc68000 mc68010 mc68hc16 w65c816 w65c816_m0x0 w65c816_m0x1 w65c816_m1x0 w65c816_m1x1
+# targets with Motorola S37 format
+S37_OUTS = mc68020
 # targets with Intel32 (32bit address) format
 I32_OUTS = $(TGT_i8086) $(TGT_mn1610) z180 z280 z380 z8001 ns32032 tms320c25 tms320c26
 # other targets use Intel8 format
 define __out-ext # target
-$(if $(filter $(1),$(S19_OUTS)),s19,$(if $(filter $(1),$(S28_OUTS)),s28,hex))
+$(if $(filter $(1),$(S19_OUTS)),s19,$(if $(filter $(1),$(S28_OUTS)),s28,$(if $(filter $(1),$(S37_OUTS)),s37,hex)))
 endef
 define out-ext # file
 $(call __out-ext,$(subst gen_,,$(subst test_,,$(1))))

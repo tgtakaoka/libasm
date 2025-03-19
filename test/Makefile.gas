@@ -93,6 +93,16 @@ gas-%_mc68010.s28: %_mc68010.gas
 	| tr -d '\015' > $(^:.gas=.s28)
 	m68k-elf-objdump -m 68010 -D $(^:.gas=.s28) > $(^:.gas=.dis)
 
+# MC68020 target
+gas-%_mc68020.s37: %_mc68020.gas
+	m68k-elf-as -m68020 -m68881 --warn --register-prefix-optional \
+		--base-size-default-16 -o $(^:.gas=.p) -al=$(^:.gas=.lst) $^
+	m68k-elf-ld --entry=0 -o $(^:.gas=.o) $(^:.gas=.p)
+	m68k-elf-objcopy -I elf32-m68k -O srec --srec-len=16 \
+		--adjust-section-vma .text=0x10000 $(^:.gas=.o) /dev/stdout \
+	| tr -d '\015' > $(^:.gas=.s37)
+	m68k-elf-objdump -m 68020 -D $(^:.gas=.s37) > $(^:.gas=.dis)
+
 # MC68HC11 target
 gas-%_mc68hc11.s19: %_mc68hc11.gas
 	m6811-elf-as -m68hc11 --warn -o $(^:.gas=.p) -al=$(^:.gas=.lst) $^

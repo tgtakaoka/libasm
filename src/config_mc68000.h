@@ -47,7 +47,7 @@ struct CpuSpec final {
 };
 
 struct Config
-    : ConfigImpl<CpuType, ADDRESS_24BIT, ADDRESS_BYTE, OPCODE_16BIT, ENDIAN_BIG, 16, 5 + 2> {
+    : ConfigImpl<CpuType, ADDRESS_24BIT, ADDRESS_BYTE, OPCODE_16BIT, ENDIAN_BIG, 16, 6 + 2> {
     Config(const InsnTable<CpuType> &table)
         : ConfigImpl(table, MC68000), _cpuSpec(MC68000, FPU_NONE, 1) {}
 
@@ -55,6 +55,7 @@ struct Config
         return firstGen() ? ADDRESS_24BIT : ADDRESS_32BIT;
     }
     uint8_t codeMax() const override { return _cpuSpec.fpu == FPU_NONE ? 6 : 16; }
+    uint8_t nameMax() const override { return (_cpuSpec.fpu == FPU_NONE ? 6 : 9) + 2; }
 
     void setCpuType(CpuType cpuType) override {
         _cpuSpec.cpu = cpuType;
