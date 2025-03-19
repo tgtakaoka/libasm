@@ -29,8 +29,10 @@ namespace mc68000 {
 struct EntryInsn : EntryInsnPostfix<Config, Entry> {
     AddrMode src() const { return flags().src(); }
     AddrMode dst() const { return flags().dst(); }
+    AddrMode ext() const { return flags().ext(); }
     OprPos srcPos() const { return flags().srcPos(); }
     OprPos dstPos() const { return flags().dstPos(); }
+    OprPos extPos() const { return flags().extPos(); }
     OprSize oprSize() const { return flags().oprSize(); }
     bool hasPostVal() const { return flags().hasPostVal(); }
     Config::opcode_t postVal() const { return flags().postVal(); }
@@ -51,7 +53,8 @@ struct Indexing {
     StrScanner scaleAt;
     IndexScale scale;
     bool post;
-    explicit Indexing(RegName index = REG_UNDEF) : reg(index), size(ISZ_NONE), scale(SCALE_NONE), post(false) {}
+    explicit Indexing(RegName index = REG_UNDEF)
+        : reg(index), size(ISZ_NONE), scale(SCALE_NONE), post(false) {}
     const char *str() const;
 };
 
@@ -82,19 +85,13 @@ struct Operand final : ErrorAt {
     RegName reg2;
     Addressing addr;
     StrScanner list;
-    AddrMode kMode;
-    union {
-        int8_t kFact;
-        RegName kDreg;
-    };
-    Operand()
-        : mode(M_NONE), val(), reg(REG_UNDEF), reg2(REG_UNDEF), addr(), list(), kMode(M_NONE) {}
+    Operand() : mode(M_NONE), val(), reg(REG_UNDEF), reg2(REG_UNDEF), addr(), list() {}
 };
 
 struct AsmInsn final : AsmInsnImpl<Config>, EntryInsn {
     AsmInsn(Insn &insn) : AsmInsnImpl(insn), _isize(ISZ_NONE) {}
 
-    Operand srcOp, dstOp;
+    Operand srcOp, dstOp, extOp;
 
     InsnSize parseInsnSize();
     InsnSize insnSize() const { return _isize; }
