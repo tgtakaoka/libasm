@@ -313,6 +313,7 @@ constexpr Entry TABLE_IDX[] PROGMEM = {
     E1(0xE9, TEXT_JP,   I_IDX),
     E2(0xF9, TEXT_LD,   R_SP,  R_IDX),
     E2(0xE3, TEXT_EX,   I_SP,  R_IDX),
+    E2(0xE3, TEXT_EX,   R_IDX, I_SP),
     E1(0xE5, TEXT_PUSH, R_IDX),
 };
 
@@ -327,6 +328,7 @@ constexpr uint8_t INDEX_IDX[] PROGMEM = {
       5,  // TEXT_DEC
       7,  // TEXT_DEC
      27,  // TEXT_EX
+     28,  // TEXT_EX
       4,  // TEXT_INC
       6,  // TEXT_INC
      25,  // TEXT_JP
@@ -340,7 +342,7 @@ constexpr uint8_t INDEX_IDX[] PROGMEM = {
      20,  // TEXT_OR
      21,  // TEXT_OR
      24,  // TEXT_POP
-     28,  // TEXT_PUSH
+     29,  // TEXT_PUSH
      15,  // TEXT_SBC
      13,  // TEXT_SUB
      14,  // TEXT_SUB
