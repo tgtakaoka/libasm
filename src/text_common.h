@@ -266,6 +266,7 @@ extern const char TEXT_JR[]    PROGMEM;
 extern const char TEXT_JSR[]   PROGMEM;
 extern const char TEXT_JV[]    PROGMEM;
 extern const char TEXT_JZ[]    PROGMEM;
+extern const char TEXT_LAR[]   PROGMEM;
 extern const char TEXT_LBGE[]  PROGMEM;
 extern const char TEXT_LCALL[] PROGMEM;
 extern const char TEXT_LDA[]   PROGMEM;
