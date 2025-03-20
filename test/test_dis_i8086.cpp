@@ -58,6 +58,12 @@ void test_cpu() {
     EQUALS("cpu i80186", true,   disassembler.setCpu("i80186"));
     EQUALS_P("cpu i80186", "80186", disassembler.config().cpu_P());
 
+    EQUALS("cpu 80286", true,   disassembler.setCpu("80286"));
+    EQUALS_P("cpu 80286", "80286", disassembler.config().cpu_P());
+
+    EQUALS("cpu i80286", true,   disassembler.setCpu("i80286"));
+    EQUALS_P("cpu i80286", "80286", disassembler.config().cpu_P());
+
     EQUALS("cpu V30", true,   disassembler.setCpu("V30"));
     EQUALS_P("cpu V30", "V30", disassembler.config().cpu_P());
 }

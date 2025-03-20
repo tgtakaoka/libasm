@@ -95,18 +95,8 @@ struct AsmInsn final : AsmInsnImpl<Config>, EntryInsn {
             embedModReg(0);
     }
 
-    void emitInsn() {
-        uint8_t pos = 0;
-        if (_fwait)
-            emitByte(_fwait, pos++);
-        if (_segment)
-            emitByte(_segment, pos++);
-        if (hasPrefix())
-            emitByte(prefix(), pos++);
-        emitByte(opCode(), pos++);
-        if (_hasModReg)
-            emitByte(_modReg, pos);
-    }
+    void emitInsn();
+
     Error emitOperand8(uint8_t val8) { return emitByte(val8, operandPos()); }
     Error emitOperand16(uint16_t val16) { return emitUint16(val16, operandPos()); }
 #if !defined(LIBASM_ASM_NOFLOAT)
@@ -120,21 +110,7 @@ private:
     Config::opcode_t _modReg;
     bool _hasModReg;
 
-    uint8_t operandPos() const {
-        uint8_t pos = length();
-        if (pos == 0) {
-            if (_fwait)
-                pos++;
-            if (_segment)
-                pos++;
-            if (hasPrefix())
-                pos++;
-            pos++;
-            if (_hasModReg)
-                pos++;
-        }
-        return pos;
-    }
+    uint_fast8_t operandPos() const;
 };
 
 struct DisInsn final : DisInsnImpl<Config>, EntryInsn {
