@@ -40,11 +40,11 @@
 
 # NS32032 target
 %_ns32032.hex: %_ns32032.gas
-	ns32k-netbsd-as -m32032 --warn -o $(@:.hex=.o) -al=$(@:.hex=.lst) $^
-	ns32k-netbsd-objcopy -I a.out-ns32k-netbsd -O ihex -j .text \
+	ns32k-openbsd-as -m32032 --warn -o $(@:.hex=.o) -al=$(@:.hex=.lst) $^
+	ns32k-openbsd-objcopy -I a.out-ns32k-netbsd -O ihex -j .text \
 		--adjust-section-vma .text=0x10000 $(@:.hex=.o) /dev/stdout \
 	| tr -d '\015' > $@
-	ns32k-netbsd-objdump -m ns32k:32032 -D $@ > $(@:.hex=.dis)
+	ns32k-openbsd-objdump -m ns32k:32032 -D $@ > $(@:.hex=.dis)
 
 # i8086 target
 %_i8086.hex: %_i8086.gas
