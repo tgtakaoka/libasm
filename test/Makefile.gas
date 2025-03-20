@@ -82,6 +82,14 @@
 	| tr -d '\015' > $@
 	z80-elf-objdump -mz80 -D $(@:.hex=.o) > $(@:.hex=.dis)
 
+# Z180 target
+%_z180.hex: %_z180.gas
+	z80-elf-as -march=z180 --warn -o $(@:.hex=.p) -al=$(@:.hex=.lst) $^
+	z80-elf-ld --entry=0 -section-start=.text=0x0100 -o $(@:.hex=.o) $(@:.hex=.p)
+	z80-elf-objcopy -I elf32-z80 -O ihex $(@:.hex=.o) /dev/stdout \
+	| tr -d '\015' > $@
+	z80-elf-objdump -mz180 -D $(@:.hex=.o) > $(@:.hex=.dis)
+
 # Local Variables:
 # mode: makefile-gmake
 # End:
