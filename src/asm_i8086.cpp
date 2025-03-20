@@ -744,6 +744,35 @@ Error AsmI8086::processPseudo(StrScanner &scan, Insn &_insn) {
     return Assembler::processPseudo(scan, _insn);
 }
 
+void AsmInsn::emitInsn() {
+    uint_fast8_t pos = 0;
+    if (_fwait)
+        emitByte(_fwait, pos++);
+    if (_segment)
+        emitByte(_segment, pos++);
+    if (hasPrefix()) {
+        const auto pre = prefix();
+        if (pre >= 0x100)
+            emitByte(pre >> 8, pos++);
+        emitByte(pre, pos++);
+    }
+    emitByte(opCode(), pos++);
+    if (_hasModReg)
+        emitByte(_modReg, pos);
+}
+
+uint_fast8_t AsmInsn::operandPos() const {
+    auto opcLen = hasPrefix() ? (prefix() < 0x100 ? 2 : 3) : 1;
+    if (_fwait)
+        opcLen++;
+    if (_segment)
+        opcLen++;
+    if (_hasModReg)
+        opcLen++;
+    auto pos = length();
+    return pos < opcLen ? opcLen : pos;
+}
+
 Error AsmI8086::encodeImpl(StrScanner &scan, Insn &_insn) const {
     AsmInsn insn(_insn);
     if (parseOperand(scan, insn.dstOp) && insn.dstOp.hasError())
