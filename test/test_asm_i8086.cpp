@@ -58,8 +58,14 @@ void test_cpu() {
     EQUALS("cpu i80186", true,   assembler.setCpu("i80186"));
     EQUALS_P("cpu i80186", "80186", assembler.config().cpu_P());
 
+    EQUALS("cpu 80286", true,   assembler.setCpu("80286"));
+    EQUALS_P("cpu 80286", "80286", assembler.config().cpu_P());
+
+    EQUALS("cpu i80286", true,   assembler.setCpu("i80286"));
+    EQUALS_P("cpu i80286", "80286", assembler.config().cpu_P());
+
     EQUALS("cpu V30", true,   assembler.setCpu("v30"));
-    EQUALS_P("cpu C30", "V30", assembler.config().cpu_P());
+    EQUALS_P("cpu V30", "V30", assembler.config().cpu_P());
 }
 
 void test_data_transfer() {

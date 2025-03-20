@@ -251,6 +251,7 @@ constexpr char TEXT_JP[]    PROGMEM = "JP";
 constexpr char TEXT_JR[]    PROGMEM = "JR";
 constexpr char TEXT_JSR[]   PROGMEM = "JSR";
 constexpr char TEXT_JZ[]    PROGMEM = "JZ";
+constexpr char TEXT_LAR[]   PROGMEM = "LAR";
 constexpr char TEXT_LBGE[]  PROGMEM = "LBGE";
 constexpr char TEXT_LCALL[] PROGMEM = "LCALL";
 constexpr char TEXT_LDA[]   PROGMEM = "LDA";
