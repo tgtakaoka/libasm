@@ -156,17 +156,17 @@ constexpr char TEXT_XLAT[]   PROGMEM = "XLAT";
 // constexpr char TEXT_XOR[]    PROGMEM = "XOR";
 
 // i80186
+constexpr char TEXT_BOUND[]  PROGMEM = "BOUND";
 // constexpr char TEXT_ENTER[]  PROGMEM = "ENTER";
 constexpr char TEXT_LEAVE[]  PROGMEM = "LEAVE";
-constexpr char TEXT_PUSHA[]  PROGMEM = "PUSHA";
-constexpr char TEXT_POPA[]   PROGMEM = "POPA";
-constexpr char TEXT_BOUND[]  PROGMEM = "BOUND";
 // constexpr char TEXT_INS[]    PROGMEM = "INS";
 // constexpr char TEXT_INSB[]   PROGMEM = "INSB";
 // constexpr char TEXT_INSW[]   PROGMEM = "INSW";
 // constexpr char TEXT_OUTS[]   PROGMEM = "OUTS";
 constexpr char TEXT_OUTSB[]  PROGMEM = "OUTSB";
 constexpr char TEXT_OUTSW[]  PROGMEM = "OUTSW";
+constexpr char TEXT_PUSHA[]  PROGMEM = "PUSHA";
+constexpr char TEXT_POPA[]   PROGMEM = "POPA";
 
 // V30
 constexpr char TEXT_ADD4S[]  PROGMEM = "ADD4S";

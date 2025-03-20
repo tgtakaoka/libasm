@@ -161,17 +161,17 @@ extern const char TEXT_XLAT[]   PROGMEM;
 using common::TEXT_XOR;
 
 // i80186
+extern const char TEXT_BOUND[]  PROGMEM;
 using common::TEXT_ENTER;
 extern const char TEXT_LEAVE[]  PROGMEM;
-extern const char TEXT_PUSHA[]  PROGMEM;
-extern const char TEXT_POPA[]   PROGMEM;
-extern const char TEXT_BOUND[]  PROGMEM;
 using common::TEXT_INS;
 using common::TEXT_INSB;
 using common::TEXT_INSW;
 using common::TEXT_OUTS;
 extern const char TEXT_OUTSB[]  PROGMEM;
 extern const char TEXT_OUTSW[]  PROGMEM;
+extern const char TEXT_POPA[]   PROGMEM;
+extern const char TEXT_PUSHA[]  PROGMEM;
 
 // V30
 extern const char TEXT_ADD4S[]  PROGMEM;
