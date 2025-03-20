@@ -34,7 +34,7 @@ extern const TableI8086 TABLE;
 
 Error searchName(const CpuSpec &, AsmInsn &insn);
 Error searchOpCode(const CpuSpec &, DisInsn &insn, StrBuffer &out);
-bool isPrefix(CpuType, Config::opcode_t code);
+bool isPrefix(CpuType, uint16_t code);
 bool isPrefix(FpuType, Config::opcode_t code);
 bool isSegmentPrefix(Config::opcode_t opcode);
 RegName overrideSeg(Config::opcode_t opcode);
