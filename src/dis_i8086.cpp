@@ -424,6 +424,11 @@ Error DisI8086::readCodes(DisInsn &insn) const {
     if (isPrefix(_cpuSpec.cpu, opc) || isPrefix(_cpuSpec.fpu, opc)) {
         insn.setPrefix(opc);
         opc = insn.readByte();
+        auto prefix = (insn.prefix() << 8) | opc;
+        if (isPrefix(_cpuSpec.cpu, prefix)) {
+            insn.setPrefix(prefix);
+            opc = insn.readByte();
+        }
     }
     insn.setOpCode(opc);
     return insn.getError();

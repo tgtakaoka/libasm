@@ -289,6 +289,7 @@ constexpr char TEXT_JR[]    PROGMEM = "JR";
 constexpr char TEXT_JSR[]   PROGMEM = "JSR";
 constexpr char TEXT_JV[]    PROGMEM = "JV";
 constexpr char TEXT_JZ[]    PROGMEM = "JZ";
+constexpr char TEXT_LAR[]   PROGMEM = "LAR";
 constexpr char TEXT_LBCC[]  PROGMEM = "LBCC";
 constexpr char TEXT_LBCS[]  PROGMEM = "LBCS";
 constexpr char TEXT_LBEQ[]  PROGMEM = "LBEQ";
