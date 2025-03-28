@@ -60,7 +60,7 @@ void AsmMc6805::reset() {
 }
 
 AddressWidth AsmMc6805::addressWidth() const {
-    return cpuType() == MC68HC08 ? ADDRESS_16BIT : AddressWidth(_pc_bits == 0 ? 13 : _pc_bits);
+    return is08() ? ADDRESS_16BIT : AddressWidth(_pc_bits == 0 ? 13 : _pc_bits);
 }
 
 Error AsmMc6805::setPcBits(int32_t value) {

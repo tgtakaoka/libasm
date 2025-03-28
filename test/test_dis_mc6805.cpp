@@ -37,6 +37,10 @@ bool m68hc08() {
     return strcmp_P("68HC08", disassembler.config().cpu_P()) == 0;
 }
 
+bool m68hcs08() {
+    return strcmp_P("68HCS08", disassembler.config().cpu_P()) == 0;
+}
+
 void set_up() {
     disassembler.reset();
 }
@@ -54,10 +58,13 @@ void test_cpu() {
     EQUALS_P("cpu 146805", "146805", disassembler.config().cpu_P());
 
     EQUALS("cpu 68HC05", true, disassembler.setCpu("68HC05"));
-    EQUALS_P("cpu 68GC05", "68HC05", disassembler.config().cpu_P());
+    EQUALS_P("cpu 68HC05", "68HC05", disassembler.config().cpu_P());
 
     EQUALS("cpu 68HC08", true, disassembler.setCpu("68HC08"));
-    EQUALS_P("cpu 68GC08", "68HC08", disassembler.config().cpu_P());
+    EQUALS_P("cpu 68HC08", "68HC08", disassembler.config().cpu_P());
+
+    EQUALS("cpu 68HCS08", true, disassembler.setCpu("68HCS08"));
+    EQUALS_P("cpu 68HC08", "68HCS08", disassembler.config().cpu_P());
 
     EQUALS("cpu MC6805", true, disassembler.setCpu("MC6805"));
     EQUALS_P("cpu MC6805", "6805", disassembler.config().cpu_P());
@@ -66,10 +73,13 @@ void test_cpu() {
     EQUALS_P("cpu MC146805", "146805", disassembler.config().cpu_P());
 
     EQUALS("cpu MC68HC05", true, disassembler.setCpu("MC68HC05"));
-    EQUALS_P("cpu MC68GC05", "68HC05", disassembler.config().cpu_P());
+    EQUALS_P("cpu MC68HC05", "68HC05", disassembler.config().cpu_P());
 
     EQUALS("cpu MC68HC08", true, disassembler.setCpu("MC68HC08"));
-    EQUALS_P("cpu MC68GC08", "68HC08", disassembler.config().cpu_P());
+    EQUALS_P("cpu MC68HC08", "68HC08", disassembler.config().cpu_P());
+
+    EQUALS("cpu MC68HCS08", true, disassembler.setCpu("MC68HCS08"));
+    EQUALS_P("cpu MC68HCS08", "68HCS08", disassembler.config().cpu_P());
 }
 
 void test_inherent() {
@@ -85,11 +95,11 @@ void test_inherent() {
 
     TEST("TAX",  "", 0x97);
     TEST("TXA",  "", 0x9F);
-    if (m146805() || m68hc05() || m68hc08())
+    if (m146805() || m68hc05() || m68hc08() || m68hcs08())
         TEST("WAIT", "", 0x8F);
-    if (m68hc05() || m68hc08())
+    if (m68hc05() || m68hc08() || m68hcs08())
         TEST("MUL", "", 0x42);
-    if (m68hc08()) {
+    if (m68hc08() || m68hcs08()) {
         TEST("DIV",  "", 0x52);
         TEST("NSA",  "", 0x62);
         TEST("DAA",  "", 0x72);
@@ -104,6 +114,9 @@ void test_inherent() {
         TEST("CLRH", "", 0x8C);
         TEST("TXS",  "", 0x94);
         TEST("TSX",  "", 0x95);
+    }
+    if (m68hcs08()) {
+        TEST("BGND", "", 0x82);
     }
 
     TEST("NEGA", "", 0x40);
@@ -147,7 +160,7 @@ void test_immediate() {
     TEST("CPX", "#$90", 0xA3, 0x90);
     TEST("LDX", "#$90", 0xAE, 0x90);
 
-    if (m68hc08()) {
+    if (m68hc08() || m68hcs08()) {
         TEST("LDHX", "#$1234", 0x45, 0x12, 0x34);
         TEST("CPHX", "#$1234", 0x65, 0x12, 0x34);
         TEST("AIS", "#2",    0xA7, 0x02);
@@ -198,7 +211,7 @@ void test_direct() {
     TEST("LDX", "$90", 0xBE, 0x90);
     TEST("STX", "$90", 0xBF, 0x90);
 
-    if (m68hc08()) {
+    if (m68hc08() || m68hcs08()) {
         TEST("STHX", "$90", 0x35, 0x90);
         TEST("LDHX", "$90", 0x55, 0x90);
         TEST("CPHX", "$90", 0x75, 0x90);
@@ -235,6 +248,12 @@ void test_extended() {
     TEST("ADD",  "$1ABC",           0xCB, 0x1A, 0xBC);
     NMEM("ADD",  "$1A00",  "$1A00", 0xCB, 0x1A);
     NMEM("ADD", ">$0000", ">$0000", 0xCB);
+
+    if (m68hcs08()) {
+        TEST("LDHX", "$1ABC", 0x32, 0x1A, 0xBC);
+        TEST("CPHX", "$1ABC", 0x3E, 0x1A, 0xBC);
+        TEST("STHX", "$1ABC", 0x96, 0x1A, 0xBC);
+    }
 
     TEST("CPX", "$1ABC", 0xC3, 0x1A, 0xBC);
     TEST("LDX", "$1ABC", 0xCE, 0x1A, 0xBC);
@@ -317,6 +336,10 @@ void test_indexed() {
     TEST("JMP", ",X", 0xFC);
     TEST("JSR", ",X", 0xFD);
 
+    if (m68hcs08()) {
+        TEST("LDHX", ",X", 0x9E, 0xAE);
+    }
+
     TEST("SUB", "<0,X",  0xE0, 0x00);
     TEST("CMP", "<0,X",  0xE1, 0x00);
     TEST("SBC", "1,X",   0xE2, 0x01);
@@ -333,6 +356,10 @@ void test_indexed() {
     TEST("STX", "255,X", 0xEF, 0xFF);
     TEST("JMP", "<0,X",  0xEC, 0x00);
     TEST("JSR", "255,X", 0xED, 0xFF);
+
+    if (m68hcs08()) {
+        TEST("LDHX", "128,X", 0x9E, 0xCE, 0x80);
+    }
 
     TEST("SUB", ">$0000,X", 0xD0, 0x00, 0x00);
     TEST("CMP", ">$00FF,X", 0xD1, 0x00, 0xFF);
@@ -353,7 +380,11 @@ void test_indexed() {
     TEST("JMP", ">$0000,X", 0xDC, 0x00, 0x00);
     TEST("JSR", ">$00FF,X", 0xDD, 0x00, 0xFF);
 
-    if (m68hc08()) {
+    if (m68hcs08()) {
+        TEST("LDHX", "$1234,X", 0x9E, 0xBE, 0x12, 0x34);
+    }
+
+    if (m68hc08() || m68hcs08()) {
         TEST("NEG", "<0,SP",  0x9E, 0x60, 0x00);
         TEST("COM", "<0,SP",  0x9E, 0x63, 0x00);
         TEST("LSR", "1,SP",   0x9E, 0x64, 0x01);
@@ -397,6 +428,12 @@ void test_indexed() {
         TEST("STX", ">$0002,SP", 0x9E, 0xDF, 0x00, 0x02);
     }
 
+    if (m68hcs08()) {
+        TEST("CPHX", "127,SP", 0x9E, 0xF3, 0x7F);
+        TEST("LDHX", "128,SP", 0x9E, 0xFE, 0x80);
+        TEST("STHX", "129,SP", 0x9E, 0xFF, 0x81);
+    }
+
     symtab.intern(0,   "offset0");
     symtab.intern(128, "offset128");
     symtab.intern(255, "offset255");
@@ -437,7 +474,7 @@ void test_relative() {
 
     ATEST(0x1000, "BSR",  "$1042", 0xAD, 0x40);
 
-    if (m68hc08()) {
+    if (m68hc08() || m68hcs08()) {
         ATEST(0x1000, "BGE", "$1081", 0x90, 0x7F);
         ATEST(0x1000, "BLT", "$0F82", 0x91, 0x80);
         ATEST(0x1000, "BGT", "$1081", 0x92, 0x7F);
@@ -501,25 +538,50 @@ void test_bit_ops() {
     ATEST(0x1000, "BRCLR", "bp6, <dir90, sym0F83", 0x0D, 0x90, 0x80);
 }
 
+template<typename V>
+bool contains(const V *begin, const V *end, const V pin) {
+    for (auto p = begin; p < end; p++)
+        if (*p == pin)
+            return true;
+    return false;
+}
+
 void test_illegal() {
-    if (m68hc08()) {
+    static constexpr Config::opcode_t P9E_illegals[] = {
+        0x62, 0x65, 0x6E, 0xDC, 0xDD, 0xEC, 0xED,
+    };
+    if (m68hcs08()) {
+        UNKN(0x8D);
+        UNKN(0xAC);
+        static constexpr Config::opcode_t P9E_legals[] = {
+            0xAE, 0xBE, 0xCE, 0xF3, 0xFE, 0xFF,
+        };
+        for (auto msn = 0x00; msn < 0x100; msn += 0x10) {
+            for (auto lsn = 0; lsn < 0x10; lsn++) {
+                const Config::opcode_t opc = msn | lsn;
+                if (msn == 0x60 || msn == 0xD0 || msn == 0xE0) {
+                    if (!contains(ARRAY_RANGE(P9E_illegals), opc))
+                        continue;
+                } else if (msn == 0xA0 || msn == 0xB0 || msn == 0xC0 || msn == 0xF0) {
+                    if (contains(ARRAY_RANGE(P9E_legals), opc))
+                        continue;
+                }
+                UNKN(0x9E, opc);
+            }
+        }
+    } else if (m68hc08()) {
         static constexpr Config::opcode_t illegals[] = {
             0x32, 0x3E, 0x82, 0x8D, 0x96, 0xAC,
         };
         for (const auto opc : illegals)
             UNKN(opc);
-        UNKN(0x9E, 0x62);
-        UNKN(0x9E, 0x65);
-        UNKN(0x9E, 0x6E);
-        UNKN(0x9E, 0xDC);
-        UNKN(0x9E, 0xDD);
-        UNKN(0x9E, 0xEC);
-        UNKN(0x9E, 0xED);
         for (auto msn = 0x00; msn < 0x100; msn += 0x10) {
-            if (msn == 0x60 || msn == 0xD0 || msn == 0xE0)
-                continue;
             for (auto lsn = 0; lsn < 0x10; lsn++) {
                 const Config::opcode_t opc = msn | lsn;
+                if (msn == 0x60 || msn == 0xD0 || msn == 0xE0) {
+                    if (!contains(ARRAY_RANGE(P9E_illegals), opc))
+                        continue;
+                }
                 UNKN(0x9E, opc);
             }
         }
@@ -547,23 +609,23 @@ void test_illegal() {
         }
     }
 }
-// clang-format on
+    // clang-format on
 
-void run_tests(const char *cpu) {
-    disassembler.setCpu(cpu);
-    RUN_TEST(test_inherent);
-    RUN_TEST(test_immediate);
-    RUN_TEST(test_direct);
-    RUN_TEST(test_extended);
-    RUN_TEST(test_indexed);
-    RUN_TEST(test_relative);
-    RUN_TEST(test_bit_ops);
-    RUN_TEST(test_illegal);
-}
+    void run_tests(const char *cpu) {
+        disassembler.setCpu(cpu);
+        RUN_TEST(test_inherent);
+        RUN_TEST(test_immediate);
+        RUN_TEST(test_direct);
+        RUN_TEST(test_extended);
+        RUN_TEST(test_indexed);
+        RUN_TEST(test_relative);
+        RUN_TEST(test_bit_ops);
+        RUN_TEST(test_illegal);
+    }
 
-// Local Variables:
-// mode: c++
-// c-basic-offset: 4
-// tab-width: 4
-// End:
-// vim: set ft=cpp et ts=4 sw=4:
+    // Local Variables:
+    // mode: c++
+    // c-basic-offset: 4
+    // tab-width: 4
+    // End:
+    // vim: set ft=cpp et ts=4 sw=4:

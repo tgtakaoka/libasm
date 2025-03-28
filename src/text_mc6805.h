@@ -29,6 +29,7 @@ extern const char TEXT_CPU_6805[] PROGMEM;
 extern const char TEXT_CPU_146805[] PROGMEM;
 extern const char TEXT_CPU_68HC05[] PROGMEM;
 extern const char TEXT_CPU_68HC08[] PROGMEM;
+extern const char TEXT_CPU_68HCS08[] PROGMEM;
 
 using common::TEXT_ADC;
 using common::TEXT_ADD;
@@ -151,8 +152,11 @@ using common::TEXT_TAP;
 using common::TEXT_TPA;
 using common::TEXT_TSX;
 using common::TEXT_TXS;
-// clang-format on
 
+// MC68HCS08
+extern const char TEXT_BGND[]  PROGMEM;
+    
+// clang-format on
 }  // namespace mc6805
 }  // namespace text
 }  // namespace libasm
