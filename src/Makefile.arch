@@ -60,7 +60,7 @@ TGT_ins8060  = ins8060
 TGT_ins8070  = ins8070
 TGT_mc68000  = mc68000 mc68010 m68k m68k10
 TGT_mc6800   = mc6800 mb8861 mc6801 mc68hc11 hd6301
-TGT_mc6805   = mc68hc05 mc68hc08
+TGT_mc6805   = mc146805 mc68hc05 mc68hc08 mc68hcs08
 TGT_mc6809   = mc6809 hd6309
 TGT_mn1610   = mn1610 mn1613
 TGT_mos6502  = mos6502 g65sc02 r65c02 w65c02s w65c816
@@ -101,17 +101,19 @@ CPU_im6100   = 6100
 CPU_ins8060  = SC/MP
 CPU_ins8070  = 8070
 CPU_j11      = J11
-CPU_m68k     = 68000
 CPU_m68k10   = 68010
+CPU_m68k     = 68000
 CPU_mb8861   = MB8861
+CPU_mc146805 = 146805
 CPU_mc68000  = 68000
-CPU_mc68010  = 68010
 CPU_mc6800   = 6800
+CPU_mc68010  = 68010
 CPU_mc6801   = 6801
 CPU_mc6809   = 6809
 CPU_mc68hc05 = 68HC05
 CPU_mc68hc08 = 68HC08
 CPU_mc68hc11 = 6811
+CPU_mc68hcs08 = 68HCS08
 CPU_mn1610   = MN1610
 CPU_mn1613   = MN1613
 CPU_mos6502  = 6502
@@ -150,7 +152,7 @@ CPU_z8       = Z8601
 # targets with Motorola S19 format
 S19_OUTS = $(TGT_mc6809) $(TGT_mc6800) $(TGT_mc6805) mos6502 g65sc02 r65c02 w65c02s m6811
 # targets with Motorola S28 format
-S28_OUTS = $(TGT_mc68000) m68k w65c816 w65c816_m0x0 w65c816_m0x1 w65c816_m1x0 w65c816_m1x1
+S28_OUTS = $(TGT_mc68000) w65c816 w65c816_m0x0 w65c816_m0x1 w65c816_m1x0 w65c816_m1x1
 # targets with Intel32 (32bit address) format
 I32_OUTS = z8001 z8k1 ns32032 ns32k mn1613 tms320c25 tms320c26
 # other targets use Intel8 format

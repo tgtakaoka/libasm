@@ -36,6 +36,10 @@ bool m68hc08() {
     return strcmp_P("68HC08", assembler.config().cpu_P()) == 0;
 }
 
+bool m68hcs08() {
+    return strcmp_P("68HCS08", assembler.config().cpu_P()) == 0;
+}
+
 void set_up() {
     assembler.reset();
 }
@@ -58,6 +62,9 @@ void test_cpu() {
     EQUALS("cpu 68HC08", true,   assembler.setCpu("68hc08"));
     EQUALS_P("cpu 68HC08", "68HC08", assembler.config().cpu_P());
 
+    EQUALS("cpu 68HCS08", true,   assembler.setCpu("68hcs08"));
+    EQUALS_P("cpu 68HCS08", "68HCS08", assembler.config().cpu_P());
+
     EQUALS("cpu MC6805", true,   assembler.setCpu("mc6805"));
     EQUALS_P("cpu MC6805", "6805", assembler.config().cpu_P());
 
@@ -69,6 +76,9 @@ void test_cpu() {
 
     EQUALS("cpu MC68HC08", true,   assembler.setCpu("mc68hc08"));
     EQUALS_P("cpu MC68HC08", "68HC08", assembler.config().cpu_P());
+
+    EQUALS("cpu MC68HCS08", true,   assembler.setCpu("mc68hcs08"));
+    EQUALS_P("cpu MC68HCS08", "68HCS08", assembler.config().cpu_P());
 }
 
 void test_inherent() {
@@ -83,7 +93,7 @@ void test_inherent() {
     TEST("SWI", 0x83);
     TEST("TAX",  0x97);
     TEST("TXA",  0x9F);
-    if (m146805() || m68hc05() || m68hc08()) {
+    if (m146805() || m68hc05() || m68hc08() || m68hcs08()) {
         TEST("WAIT", 0x8F);
     } else {
         ERUI("WAIT");
@@ -113,17 +123,17 @@ void test_inherent() {
     TEST("TSTX", 0x5D);
     TEST("CLRX", 0x5F);
 
-    if (m68hc05() || m68hc08()) {
+    if (m68hc05() || m68hc08() || m68hcs08()) {
         TEST("MUL",  0x42);
     } else {
         ERUI("MUL");
     }
-    if (m146805() || m68hc05() || m68hc08()) {
+    if (m146805() || m68hc05() || m68hc08() || m68hcs08()) {
         TEST("STOP", 0x8E);
     } else {
         ERUI("STOP");
     }
-    if (m68hc08()) {
+    if (m68hc08() || m68hcs08()) {
         TEST("DIV",  0x52);
         TEST("NSA",  0x62);
         TEST("DAA",  0x72);
@@ -138,6 +148,26 @@ void test_inherent() {
         TEST("CLRH", 0x8C);
         TEST("TXS",  0x94);
         TEST("TSX",  0x95);
+    } else {
+        ERUI("DIV");
+        ERUI("NSA");
+        ERUI("DAA");
+        ERUI("TAP");
+        ERUI("TPA");
+        ERUI("PULA");
+        ERUI("PSHA");
+        ERUI("PULX");
+        ERUI("PSHX");
+        ERUI("PULH");
+        ERUI("PSHH");
+        ERUI("CLRH");
+        ERUI("TXS");
+        ERUI("TSX");
+    }
+    if (m68hcs08()) {
+        TEST("BGND", 0x82);
+    } else {
+        ERUI("BGND");
     }
 }
 
@@ -164,7 +194,7 @@ void test_relative() {
     ATEST(0x1000, "BSR $1042", 0xAD, 0x40);
     ATEST(0x1000, "BSR *+$42", 0xAD, 0x40);
 
-    if (m68hc08()) {
+    if (m68hc08() || m68hcs08()) {
         ATEST(0x1000, "BGE $1081", 0x90, 0x7F);
         ATEST(0x1000, "BLT $0F82", 0x91, 0x80);
         ATEST(0x1000, "BGT $1081", 0x92, 0x7F);
@@ -211,7 +241,7 @@ void test_immediate() {
     TEST("LDX #$90", 0xAE, 0x90);
     ERRT("STX #$90", OPERAND_NOT_ALLOWED, "#$90");
 
-    if (m68hc08()) {
+    if (m68hc08() || m68hcs08()) {
         TEST("LDHX #$1234", 0x45, 0x12, 0x34);
         TEST("CPHX #$1234", 0x65, 0x12, 0x34);
         TEST("AIS #2",    0xA7, 0x02);
@@ -267,7 +297,7 @@ void test_direct() {
     TEST("LDX $90", 0xBE, 0x90);
     TEST("STX $90", 0xBF, 0x90);
 
-    if (m68hc08()) {
+    if (m68hc08() || m68hcs08()) {
         TEST("STHX $90", 0x35, 0x90);
         TEST("LDHX $90", 0x55, 0x90);
         TEST("CPHX $90", 0x75, 0x90);
@@ -315,12 +345,12 @@ void test_extended() {
     TEST("ADC >$0090", 0xC9, 0x00, 0x90);
     TEST("ORA >$0090", 0xCA, 0x00, 0x90);
     TEST("ADD  $1FFF", 0xCB, 0x1F, 0xFF);
-    if (m68hc08()) {
-        TEST("SUB  $2000", 0xC0, 0x20, 0x00);
-        TEST("ADD  $FFFF", 0xCB, 0xFF, 0xFF);
+    if (m68hc08() || m68hcs08()) {
+        TEST("SUB $2000", 0xC0, 0x20, 0x00);
+        TEST("ADD $FFFF", 0xCB, 0xFF, 0xFF);
     } else {
-        ERRT("SUB  $2000", OVERFLOW_RANGE, "$2000", 0xC0, 0x20, 0x00);
-        ERRT("ADD  $FFFF", OVERFLOW_RANGE, "$FFFF", 0xCB, 0xFF, 0xFF);
+        ERRT("SUB $2000", OVERFLOW_RANGE, "$2000", 0xC0, 0x20, 0x00);
+        ERRT("ADD $FFFF", OVERFLOW_RANGE, "$FFFF", 0xCB, 0xFF, 0xFF);
     }
 
     TEST("CPX $1ABC", 0xC3, 0x1A, 0xBC);
@@ -330,7 +360,7 @@ void test_extended() {
     TEST("JMP >$0034", 0xCC, 0x00, 0x34);
     TEST("JSR  $1234", 0xCD, 0x12, 0x34);
 
-    if (m68hc08()) {
+    if (m68hc08() || m68hcs08()) {
         TEST("CPX $2000", 0xC3, 0x20, 0x00);
         TEST("JMP $4000", 0xCC, 0x40, 0x00);
         TEST("JSR $8000", 0xCD, 0x80, 0x00);
@@ -338,6 +368,19 @@ void test_extended() {
         ERRT("CPX $2000", OVERFLOW_RANGE, "$2000", 0xC3, 0x20, 0x00);
         ERRT("JMP $4000", OVERFLOW_RANGE, "$4000", 0xCC, 0x40, 0x00);
         ERRT("JSR $8000", OVERFLOW_RANGE, "$8000", 0xCD, 0x80, 0x00);
+    }
+    if (m68hcs08()) {
+        TEST("LDHX $1000", 0x32, 0x10, 0x00);
+        TEST("CPHX $2000", 0x3E, 0x20, 0x00);
+        TEST("STHX $8000", 0x96, 0x80, 0x00);
+    } else if (m68hc08()) {
+        ERRT("LDHX $1000", OPERAND_NOT_ALLOWED, "$1000");
+        ERRT("CPHX $2000", OPERAND_NOT_ALLOWED, "$2000");
+        ERRT("STHX $8000", OPERAND_NOT_ALLOWED, "$8000");
+    } else {
+        ERUI("LDHX");
+        ERUI("CPHX");
+        ERUI("STHX");
     }
 
     symtab.intern(0x0090, "ext0090");
@@ -355,7 +398,7 @@ void test_extended() {
     TEST("JSR  ext0090", 0xBD, 0x90);
 
     TEST(R"(option "pc-bits", "11")"); // MC68HC05J for instance
-    if (m68hc08()) {
+    if (m68hc08() || m68hcs08()) {
         TEST(         "LDA $0800", 0xC6, 0x08, 0x00);
         ATEST(0x07F0, "BSR $0800", 0xAD, 0x0E);
     } else {
@@ -366,7 +409,7 @@ void test_extended() {
     }
 
     TEST(R"(option "pc-bits", 0)");  // Most of MC68HC05 has 13bits PC.
-    if (m68hc08()) {
+    if (m68hc08() || m68hcs08()) {
         TEST(         "LDA $2000", 0xC6, 0x20, 0x00);
         ATEST(0x1FF0, "BSR $2000", 0xAD, 0x0E);
     } else {
@@ -377,7 +420,7 @@ void test_extended() {
     }
 
     assembler.setOption("pc-bits", "14"); // MC68HC05X for instance
-    if (m68hc08()) {
+    if (m68hc08() || m68hcs08()) {
         TEST(         "LDA $4000", 0xC6, 0x40, 0x00);
         ATEST(0x3FF0, "BSR $4000", 0xAD, 0x0E);
     } else {
@@ -387,7 +430,7 @@ void test_extended() {
         AERRT(0x3FF0, "BSR $4000", OVERFLOW_RANGE, "$4000", 0xAD, 0x0E);
     }
 
-    if (m68hc08()) {
+    if (m68hc08() || m68hcs08()) {
         TEST(         "LDA $FFFF",                          0xC6, 0xFF, 0xFF);
         AERRT(0xFFF0, "BSR $0000", OVERFLOW_RANGE, "$0000", 0xAD, 0x0E);
     }

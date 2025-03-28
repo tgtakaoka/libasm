@@ -27,12 +27,16 @@ enum CpuType : uint8_t {
     MC146805,
     MC68HC05,
     MC68HC08,
+    MC68HCS08,
 };
 
 struct Config : ConfigImpl<CpuType, ADDRESS_16BIT, ADDRESS_BYTE, OPCODE_8BIT, ENDIAN_BIG, 4, 5> {
     Config(const InsnTable<CpuType> &table) : ConfigImpl(table, MC6805) {}
 
-    uint8_t codeMax() const override { return cpuType() == MC68HC08 ? 4 : 3; }
+    uint8_t codeMax() const override { return is08() ? 4 : 3; }
+
+protected:
+    bool is08() const { return cpuType() >= MC68HC08; }
 };
 
 }  // namespace mc6805

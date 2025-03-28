@@ -414,6 +414,44 @@ constexpr uint8_t MC68HC08_I9E[] PROGMEM = {
      12,  // TEXT_TST
 };
 
+constexpr Entry MC68HCS08_TABLE[] PROGMEM = {
+    E1(0x35, TEXT_STHX, M_DIR),
+    E1(0x55, TEXT_LDHX, M_DIR),
+    E1(0x75, TEXT_CPHX, M_DIR),
+    E1(0x32, TEXT_LDHX, M_EXT),
+    E1(0x3E, TEXT_CPHX, M_EXT),
+    E1(0x96, TEXT_STHX, M_EXT),
+    E0(0x82, TEXT_BGND),
+};
+
+constexpr uint8_t MC68HCS08_INDEX[] PROGMEM = {
+      6,  // TEXT_BGND
+      2,  // TEXT_CPHX
+      4,  // TEXT_CPHX
+      1,  // TEXT_LDHX
+      3,  // TEXT_LDHX
+      0,  // TEXT_STHX
+      5,  // TEXT_STHX
+};
+
+constexpr Entry MC68HCS08_P9E[] PROGMEM = {
+    E1(0xAE, TEXT_LDHX, M_IX0),
+    E1(0xBE, TEXT_LDHX, M_IX2),
+    E1(0xCE, TEXT_LDHX, M_IX1),
+    E1(0xFE, TEXT_LDHX, M_SP1),
+    E1(0xFF, TEXT_STHX, M_SP1),
+    E1(0xF3, TEXT_CPHX, M_SP1),
+};
+
+constexpr uint8_t MC68HCS08_I9E[] PROGMEM = {
+      5,  // TEXT_CPHX
+      0,  // TEXT_LDHX
+      1,  // TEXT_LDHX
+      2,  // TEXT_LDHX
+      3,  // TEXT_LDHX
+      4,  // TEXT_STHX
+};
+
 // clang-format on
 
 using EntryPage = entry::PrefixTableBase<Entry>;
@@ -442,6 +480,17 @@ constexpr EntryPage MC68HC08_PAGES[] PROGMEM = {
         {0x9E, ARRAY_RANGE(MC68HC08_P9E), ARRAY_RANGE(MC68HC08_I9E)},
 };
 
+constexpr EntryPage MC68HCS08_PAGES[] PROGMEM = {
+        {0x00, ARRAY_RANGE(MC68HCS08_TABLE), ARRAY_RANGE(MC68HCS08_INDEX)},
+        {0x00, ARRAY_RANGE(MC68HC08_TABLE), ARRAY_RANGE(MC68HC08_INDEX)},
+        // Above definitions overrides unknown instructions defined below.
+        {0x00, ARRAY_RANGE(MC6805_TABLE), ARRAY_RANGE(MC6805_INDEX)},
+        {0x00, ARRAY_RANGE(MC146805_TABLE), ARRAY_RANGE(MC146805_INDEX)},
+        {0x00, ARRAY_RANGE(MC68HC05_TABLE), ARRAY_RANGE(MC68HC05_INDEX)},
+        {0x9E, ARRAY_RANGE(MC68HCS08_P9E), ARRAY_RANGE(MC68HCS08_I9E)},
+        {0x9E, ARRAY_RANGE(MC68HC08_P9E), ARRAY_RANGE(MC68HC08_I9E)},
+};
+
 using Cpu = entry::CpuBase<CpuType, EntryPage>;
 
 constexpr Cpu CPU_TABLE[] PROGMEM = {
@@ -449,6 +498,7 @@ constexpr Cpu CPU_TABLE[] PROGMEM = {
         {MC146805, TEXT_CPU_146805, ARRAY_RANGE(MC146805_PAGES)},
         {MC68HC05, TEXT_CPU_68HC05, ARRAY_RANGE(MC68HC05_PAGES)},
         {MC68HC08, TEXT_CPU_68HC08, ARRAY_RANGE(MC68HC08_PAGES)},
+        {MC68HCS08, TEXT_CPU_68HCS08, ARRAY_RANGE(MC68HCS08_PAGES)},
 };
 
 const Cpu *cpu(CpuType cpuType) {
@@ -463,19 +513,19 @@ bool hasOperand(CpuType cpuType, AsmInsn &insn) {
 bool acceptMode(AddrMode opr, AddrMode table) {
     if (opr == table)
         return true;
-    if (table == M_GEN)
-        return opr == M_BNO || opr == M_IMM || opr == M_DIR || opr == M_EXT || opr == M_IX1 ||
-               opr == M_IX0 || opr == M_IX2;
-    if (table == M_MEM)
-        return opr == M_BNO || opr == M_DIR || opr == M_IX1 || opr == M_IX0;
     if (opr == M_EXT)
-        return table == M_REL;
+        return table == M_REL || table == M_GEN;
     if (opr == M_DIR)
-        return table == M_REL || table == M_EXT;
+        return table == M_REL || table == M_EXT || table == M_GEN || table == M_MEM;
     if (opr == M_IMM)
-        return table == M_IM16 || table == M_SIM8;
+        return table == M_IM16 || table == M_SIM8 || table == M_GEN;
     if (opr == M_BNO)
-        return table == M_REL || table == M_DIR || table == M_EXT;
+        return table == M_REL || table == M_DIR || table == M_EXT || table == M_GEN ||
+               table == M_MEM;
+    if (opr == M_IX0 || opr == M_IX1)
+        return table == M_GEN || table == M_MEM;
+    if (opr == M_IX2)
+        return table == M_GEN;
     return false;
 }
 

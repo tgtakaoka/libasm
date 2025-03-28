@@ -21,11 +21,12 @@ namespace text {
 namespace mc6805 {
 
 // clang-format off
-constexpr char TEXT_MC6805_LIST[] PROGMEM = "MC6805, MC146805, MC68HC05, MC68HC08";
+constexpr char TEXT_MC6805_LIST[] PROGMEM = "MC6805, MC146805, MC68HC05, MC68HC08, MC68HCS08";
 constexpr char TEXT_CPU_6805[] PROGMEM = "6805";
 constexpr char TEXT_CPU_146805[] PROGMEM = "146805";
 constexpr char TEXT_CPU_68HC05[] PROGMEM = "68HC05";
 constexpr char TEXT_CPU_68HC08[] PROGMEM = "68HC08";
+constexpr char TEXT_CPU_68HCS08[] PROGMEM = "68HCS08";
 
 // constexpr char TEXT_ADC[]  PROGMEM = "ADC";
 // constexpr char TEXT_ADD[]  PROGMEM = "ADD";
@@ -148,8 +149,11 @@ constexpr char TEXT_STHX[]  PROGMEM = "STHX";
 // constexpr char TEXT_TPA[]   PROGMEM = "TPA";
 // constexpr char TEXT_TSX[]   PROGMEM = "TSX";
 // constexpr char TEXT_TXS[]   PROGMEM = "TXS";
-// clang-format on
 
+// MC68HCS08
+constexpr char TEXT_BGND[]  PROGMEM = "BGND";
+
+// clang-format on
 }  // namespace mc6805
 }  // namespace text
 }  // namespace libasm
