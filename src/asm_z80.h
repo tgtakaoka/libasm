@@ -23,13 +23,28 @@
 
 namespace libasm {
 namespace z80 {
+namespace {
+constexpr char OPT_BOOL_LWORDMODE[] PROGMEM = "lwordmode";
+constexpr char OPT_DESC_LWORDMODE[] PROGMEM = "Long word mode";
+}  // namespace
 
 struct AsmZ80 final : Assembler, Config {
     AsmZ80(const ValueParser::Plugins &plugins = defaultPlugins());
 
+    void reset() override;
+
+    Error setExtendedMode(bool enable);
+    Error setLongWordMode(bool enable);
+
 private:
+    const BoolOption<AsmZ80> _opt_extmode;
+    const BoolOption<AsmZ80> _opt_lwordmode;
+
+    bool _lwordmode;
+
     Error parseOperand(StrScanner &scan, Operand &op, const AsmInsn &insn) const;
 
+    int32_t calcDeltaZ380(AsmInsn &insn, const ErrorAt &at, AddrMode &mode, int32_t delta) const;
     void encodeRelative(AsmInsn &insn, const Operand &op, AddrMode mode) const;
     void encodeAbsolute(AsmInsn &insn, const Operand &op) const;
     void encodeMemoryPointer(AsmInsn &insn, const Operand &op) const;
@@ -39,6 +54,7 @@ private:
     void encodeFullIndex(AsmInsn &insn, const Operand &op) const;
     void encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode, const Operand &other) const;
 
+    Error processPseudo(StrScanner &scan, Insn &insn) override;
     Error encodeImpl(StrScanner &scan, Insn &insn) const override;
     const ConfigBase &config() const override { return *this; }
     ConfigSetter &configSetter() override { return *this; }
