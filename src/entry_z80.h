@@ -48,7 +48,7 @@ enum AddrMode : uint8_t {
     M_BIT = 18,    // |..|bbb|...|: bit 0-7
     M_IMMD = 19,   // |...|mm|...|: interrupt mode 0-3
     I_PTR = 21,    // |...|i|....|: (BC)/(DE)
-    I_IDX = 22,    // (IX)/(IY)
+    I_IDX = 22,    // DD:(IX) FD:(IY)
     R_DXY = 23,    // |....|x|...|: 0=IXH/IYH,1=IXL/IYL
     R_SXY = 24,    // |........|x|: 0=IXH/IYH,1=IXL/IYL
     M_FIDX = 25,   // |..|eee|...|: M_BIXH + M_PIXH
@@ -59,14 +59,22 @@ enum AddrMode : uint8_t {
     M_MPTR = 30,   // |...|e|....|: 0=(HL) 1=(a16)
     M_IDX16 = 31,  // |...|e|....|: 0=(IX+d16) 1=(IY+d16)
     M_R16L = 32,   // |.......|pp|: BC/DE/HL/SP
+    M_NOSP = 10,   // |.......|pp|: BC/DE/__/HL
+    M_NOSPH = 10,  // |..|pp|....|: BC/DE/__/HL
     M_IDX = 33,    // Accept M_IDX8 and M_IDX16
-    R_IDX = 34,    // IX/IY
-    M_REL16 = 35,  // 16-bit PC-Relative: nnnn
+    R_IDX = 34,    // DD:IX, FD:IY
+    M_REL16 = 35,  // 16-bit PC-Relative: 00:8-bit, DD:16-bit, FD:24-bit
+    M_REL24 = 35,  // 24-bit PC-Relative: ED:8-bit, DD:16-bit, FD:24-bit
+    M_SR8P = 15,   // |.....|rrr|: alternate B/C/D/E/H/L/___/A
+    R_IDXL = 0,    // |.......|y|: 0-IX 1=IY
+    R_IDXP = 0,    // |.......|y|: alternate IX/IY
+    M_NOSPP = 10,  // |......|pp|: alternate BC/DE/__/HL
     M_PDX = 36,    // Pointer index: (HL+d16)/(IX+d16)/(IY+d16)
     M_SPDX = 37,   // Stack index: (SP+d16)
     M_PCDX = 38,   // Program counter relative: (PC+d16)
     M_BDX = 39,    // Base and index: (HL+IX)/(HL+IY)/(IX+IY)
     M_EPU = 40,    // EPU 4-byte tmeplate
+    M_DD = 0,      // |.......|dd|: Decoder Directive
     I_BASE = 41,
     I_HL = I_BASE + REG_HL,  // (HL)
     I_SP = I_BASE + REG_SP,  // (SP)
@@ -76,6 +84,8 @@ enum AddrMode : uint8_t {
     R_DE = R_BASE + REG_DE,
     R_HL = R_BASE + REG_HL,
     R_SP = R_BASE + REG_SP,
+    R_IX = R_BASE + REG_IX,
+    R_IY = R_BASE + REG_IY,
     R_AF = R_BASE + REG_AF,
     R_AFP = R_BASE + REG_AFP,
     R_USP = R_BASE + REG_USP,

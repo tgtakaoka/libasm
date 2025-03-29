@@ -39,27 +39,47 @@ enum RegName : int8_t {
     REG_IX = 4,
     REG_IY = 5,
     REG_AF = 6,
-    REG_AFP = 7,
-    REG_USP = 8,  // Z280
-    REG_PC = 9,   // Z280
+    REG_USP = 7,  // Z280
+    REG_PC = 8,   // Z280
     // 8-bit registers
     // Data registers
-    REG_B = 10,
-    REG_C = 11,
-    REG_D = 12,
-    REG_E = 13,
-    REG_H = 14,
-    REG_L = 15,
-    REG_A = 17,    // Missing 16 is (HL)
-    REG_IXH = 18,  // Z280
-    REG_IXL = 19,  // Z280
-    REG_IYH = 20,  // Z280
-    REG_IYL = 21,  // Z280
+    REG_B = 9,
+    REG_C = 10,
+    REG_D = 11,
+    REG_E = 12,
+    REG_H = 13,
+    REG_L = 14,
+    REG_A = 16,    // Missing 15 is (HL)
+    REG_IXH = 17,  // Z280
+    REG_IXL = 18,  // Z280
+    REG_IYH = 19,  // Z280
+    REG_IYL = 20,  // Z280
+    REG_IXU = 21,  // Z380
+    REG_IYU = 22,  // Z380
     // 32-bit regitsers
-    REG_DEHL = 22,  // Z280
+    REG_DEHL = 23,  // Z280
+    REG_SR = 24,    // Z380
     // Other registers
-    REG_I = 23,
-    REG_R = 24,
+    REG_I = 25,
+    REG_R = 26,
+    REG_DSR = 27,  // Z380
+    REG_XSR = 28,  // Z380
+    REG_YSR = 29,  // Z380
+    // Alternate register
+    ALT_BASE = 30,
+    REG_BCP = REG_BC + ALT_BASE,  // Z380
+    REG_DEP = REG_DE + ALT_BASE,  // Z380
+    REG_HLP = REG_HL + ALT_BASE,  // Z380
+    REG_AFP = REG_AF + ALT_BASE,  // Z80, Z380
+    REG_IXP = REG_IX + ALT_BASE,  // Z380
+    REG_IYP = REG_IY + ALT_BASE,  // Z380
+    REG_BP = REG_B + ALT_BASE,    // Z380
+    REG_CP = REG_C + ALT_BASE,    // Z380
+    REG_DP = REG_D + ALT_BASE,    // Z380
+    REG_EP = REG_E + ALT_BASE,    // Z380
+    REG_HP = REG_H + ALT_BASE,    // Z380
+    REG_LP = REG_L + ALT_BASE,    // Z380
+    REG_AP = REG_A + ALT_BASE,    // Z380
 };
 
 enum CcName : int8_t {
@@ -79,6 +99,23 @@ enum CcName : int8_t {
     CC_NS = CC_P + CC_alias,
     CC_S = CC_M + CC_alias,
 };
+
+enum DdName : int8_t {
+    DD_UNDEF = -1,
+    DD_W = 0,
+    DD_IB = 1,
+    DD_IW = 2,
+    DD_LW = 4,
+};
+
+enum CtlName : uint8_t {
+    CTL_UNDEF = 0,
+    CTL_LW = 1,
+    CTL_LCK = 2,
+    CTL_XM = 3,
+};
+
+struct DisInsn;
 
 namespace reg {
 
@@ -103,6 +140,15 @@ bool isCc4Name(CcName name);
 bool isCcAlias(CcName name);
 uint8_t encodeCcName(CcName name);
 CcName decodeCcName(uint8_t num);
+
+DdName parseDdName(StrScanner &scan, const ValueParser &parser);
+StrBuffer &outDdName(StrBuffer &out, DdName dd);
+int8_t encodeDdNames(DdName word, DdName imm);
+StrBuffer &outDdNames(StrBuffer &out, const DisInsn &insn);
+
+CtlName parseCtlName(StrScanner &scan, const ValueParser &parser);
+uint8_t encodeCtlName(CtlName name);
+StrBuffer &outCtlName(StrBuffer &out, const DisInsn &insn);
 
 }  // namespace reg
 }  // namespace z80

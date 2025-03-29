@@ -1169,6 +1169,134 @@ constexpr uint8_t INDEX_Z280_IDXBIT[] PROGMEM = {
       0,  // TEXT_TSET
 };
 
+constexpr Entry TABLE_Z380[] PROGMEM = {
+    E1(0x0B, TEXT_DECW, M_R16),
+    E1(0x03, TEXT_INCW, M_R16),
+    E1(0x2F, TEXT_CPL,  R_A),
+};
+    
+// Z380 ED:xx
+constexpr Entry TABLE_Z380_EXT[] PROGMEM = {
+    E2(0x05, TEXT_EX,    R_BC,    R_DE),
+    E2(0x05, TEXT_EX,    R_DE,    R_BC),
+    E2(0x06, TEXT_LDW,   I_PTR,   M_IM16),
+    E2(0x36, TEXT_LDW,   I_HL,    M_IM16),
+    E2(0x0B, TEXT_EX,    R_BC,    R_HL),
+    E2(0x03, TEXT_EX,    M_NOSPH, R_IX),
+    E2(0x0B, TEXT_EX,    M_NOSPH, R_IY),
+    E2(0x03, TEXT_EX,    R_IX,    M_NOSPH),
+    E2(0x0B, TEXT_EX,    R_IY,    M_NOSPH),
+    E2(0x2B, TEXT_EX,    R_IX,    R_IY),
+    E2(0x2B, TEXT_EX,    R_IY,    R_IX),
+    E1(0x65, TEXT_EXTS,  R_A),
+    E1(0x75, TEXT_EXTSW, R_HL),
+    E2(0x84, TEXT_ADDW,  R_HL,    M_NOSP),
+    E2(0x8C, TEXT_ADCW,  R_HL,    M_NOSP),
+    E2(0xA4, TEXT_ANDW,  R_HL,    M_NOSP),
+    E2(0xBC, TEXT_CPW,   R_HL,    M_NOSP),
+    E2(0x86, TEXT_ADDW,  R_HL,    M_IM16),
+    E2(0x8E, TEXT_ADCW,  R_HL,    M_IM16),
+    E2(0xA6, TEXT_ANDW,  R_HL,    M_IM16),
+    E2(0xBE, TEXT_CPW,   R_HL,    M_IM16),
+    E2(0x82, TEXT_ADD,   R_SP,    M_IM16),
+    E2(0xC6, TEXT_ADD,   R_HL,    M_ABS),
+    E2(0xC4, TEXT_CALR,  M_CC8,   M_REL24),
+    E1(0xCD, TEXT_CALR,  M_REL24),
+    E0(0xCF, TEXT_BTEST),
+    E0(0xD9, TEXT_EXALL),
+    E2(0xDB, TEXT_INA,   R_A,     M_ABS),
+    E0(0xE2, TEXT_INIW),
+    E0(0xF2, TEXT_INIRW),
+    E0(0xEA, TEXT_INDW),
+    E0(0xFA, TEXT_INDRW),
+    E0(0x65, TEXT_EXTS), 
+    E0(0x75, TEXT_EXTSW), 
+    E1(0x84, TEXT_ADDW,  M_NOSP),
+    E1(0x8C, TEXT_ADCW,  M_NOSP),
+    E1(0xA4, TEXT_ANDW,  M_NOSP),
+    E1(0xBC, TEXT_CPW,   M_NOSP),
+    E1(0x86, TEXT_ADDW,  M_IM16),
+    E1(0x8E, TEXT_ADCW,  M_IM16),
+    E1(0xA6, TEXT_ANDW,  M_IM16),
+    E1(0xBE, TEXT_CPW,   M_IM16),
+};
+
+// Z380 DD:xx, FD:xx
+constexpr Entry TABLE_Z380_IDX[] PROGMEM = {
+    E1(0x10, TEXT_DJNZ, M_REL16),         // must be before TABLE_Z80
+    E1(0x18, TEXT_JR,   M_REL16),         // must be before TABLE_Z80
+    E2(0x20, TEXT_JR,   M_CC4,  M_REL16), // must be before TABLE_Z80
+    E1(0x23, TEXT_INCW, R_IDX),
+    E1(0x24, TEXT_INC,  R_DXY),
+    E2(0x26, TEXT_LD,   R_DXY,  M_IM8),
+    E2(0x7C, TEXT_LD,   R_A,    R_SXY),
+    E2(0x67, TEXT_LD,   R_DXY,  R_A),
+    E2(0x84, TEXT_ADD,  R_A,    R_SXY),
+    E2(0x8C, TEXT_ADC,  R_A,    R_SXY),
+    E2(0xA4, TEXT_AND,  R_A,    R_SXY),
+    E2(0xBE, TEXT_CP,   R_A,    R_SXY),
+    E1(0x25, TEXT_DEC,  R_SXY),
+    E1(0x2B, TEXT_DEC,  R_IDX),
+    E1(0x2B, TEXT_DECW, R_IDX),
+    E2(0x8F, TEXT_ADCW, R_HL,   R_IDX),
+    E2(0x87, TEXT_ADDW, R_HL,   R_IDX),
+    E2(0xA7, TEXT_ANDW, R_HL,   M_IDX),
+    E2(0xC6, TEXT_ADDW, R_HL,   M_IDX),
+    E2(0xCE, TEXT_ADCW, R_HL,   M_IDX),
+    E2(0xFE, TEXT_CPW,  R_HL,   M_IDX),
+    E1(0xA4, TEXT_AND,  R_SXY),
+    E1(0xBE, TEXT_CP,   R_SXY),
+    E1(0x8F, TEXT_ADCW, R_IDX),
+    E1(0x87, TEXT_ADDW, R_IDX),
+    E1(0xA7, TEXT_ANDW, M_IDX),
+    E1(0xC6, TEXT_ADDW, M_IDX),
+    E1(0xCE, TEXT_ADCW, M_IDX),
+    E1(0xFE, TEXT_CPW,  M_IDX),
+};
+
+// Z380 DD:xx
+constexpr Entry TABLE_Z380_IX[] PROGMEM = {
+    E1(0x2F, TEXT_CPLW, R_HL),
+    E1(0xC0, TEXT_DDIR, M_DD),
+    E1(0xF3, TEXT_DI,   M_IM8),
+    E1(0xFB, TEXT_EI,   M_IM8),
+    E2(0x40, TEXT_INW,  R_BC, I_C),
+    E2(0x50, TEXT_INW,  R_DE, I_C),
+    E2(0x78, TEXT_INW,  R_HL, I_C),
+    E0(0xD9, TEXT_EXXX),
+    E0(0x2F, TEXT_CPLW),
+};
+
+// Z380 FD:xx
+constexpr Entry TABLE_Z380_IY[] PROGMEM = {
+    E1(0xC0, TEXT_DDIR,  M_DD),
+    E0(0xD9, TEXT_EXXY),
+    E2(0xDB, TEXT_INAW,  R_HL,   M_ABS),
+};
+
+// Z380 CB
+constexpr Entry TABLE_Z380_BIT[] PROGMEM = {
+    E2(0x30, TEXT_EX,    M_SR8,  M_SR8P),
+};
+
+// Z380 ED:CB
+constexpr Entry TABLE_Z380_EXTBIT[] PROGMEM = {
+    E2(0x30, TEXT_EX,    M_NOSP, M_NOSPP),
+    E2(0x34, TEXT_EX,    R_IDXL, R_IDXP),
+    E2(0xB8, TEXT_DIVUW, R_HL,   M_NOSP),
+    E2(0xBC, TEXT_DIVUW, R_HL,   R_IDXL),
+    E2(0xBF, TEXT_DIVUW, R_HL,   M_IM16),
+    E1(0xB8, TEXT_DIVUW, M_NOSP),
+    E1(0xBC, TEXT_DIVUW, R_IDXL),
+    E1(0xBF, TEXT_DIVUW, M_IM16),
+};
+
+// Z380 DD:CB, FD:CB
+constexpr Entry TABLE_Z380_IDXBIT[] PROGMEM = {
+    E2(0xBA, TEXT_DIVUW, R_HL, M_IDX),
+    E1(0xBA, TEXT_DIVUW, M_IDX),
+};
+
 // clang-format on
 
 using EntryPage = entry::PrefixTableBase<Entry>;
