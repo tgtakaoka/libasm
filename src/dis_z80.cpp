@@ -22,12 +22,15 @@ namespace libasm {
 namespace z80 {
 
 using namespace reg;
+using namespace text::option;
 
 const ValueFormatter::Plugins &DisZ80::defaultPlugins() {
     return ValueFormatter::Plugins::intel();
 }
 
-DisZ80::DisZ80(const ValueFormatter::Plugins &plugins) : Disassembler(plugins), Config(TABLE) {
+DisZ80::DisZ80(const ValueFormatter::Plugins &plugins)
+    : Disassembler(plugins),
+      Config(TABLE) {
     reset();
 }
 
@@ -39,6 +42,33 @@ StrBuffer &DisZ80::outDataReg(StrBuffer &out, RegName reg) const {
     if (reg == REG_HL)
         return outIndirectReg(out, reg);
     return outRegName(out, reg);
+}
+
+StrBuffer &DisZ80::outAlternateReg(StrBuffer &out, const DisInsn &insn, AddrMode other) const {
+    auto reg = REG_UNDEF;
+    const auto opc = insn.opCode();
+    switch (other) {
+    case R_AF:
+        reg = REG_AF;
+        break;
+    case M_SR8:
+        reg = decodeDataReg(opc);
+        break;
+    case R_PTRL:
+        reg = (opc & 1) ? REG_DE : REG_BC;
+        break;
+    case R_HL:
+        reg = REG_HL;
+        break;
+    case R_IDXL:
+        reg = (opc & 1) ? REG_IY : REG_IX;
+        break;
+    default:
+        break;
+    }
+    if (reg != REG_UNDEF)
+        outRegName(out, reg).letter('\'');
+    return out;
 }
 
 void DisZ80::decodeAbsolute(DisInsn &insn, StrBuffer &out) const {
@@ -54,14 +84,19 @@ void DisZ80::decodeRelative(DisInsn &insn, StrBuffer &out, AddrMode mode) const 
     } else if (mode == M_REL16) {
         bits = 16;
         delta = static_cast<int16_t>(insn.readUint16());
+    } else if (mode == M_REL24) {
+        bits = 24;
+        const uint16_t lsw = insn.readUint16();
+        const int8_t msb = insn.readByte();
+        delta = (static_cast<int32_t>(msb) << 16) | lsw;
     }
     uint32_t base = insn.address() + insn.length();
     if (insn.src() == M_IM8) {
-        base += 1;              // <rel16>, im8
+        base += 1;  // <rel16>, im8
     } else if (insn.src() == M_IM16) {
-        base += 2;              // <rel16>, im16
+        base += 2;  // <rel16>, im16
     } else if (insn.src() == M_EPU) {
-        base += 4;              // <rel16>, EPU template
+        base += 4;  // <rel16>, EPU template
     }
     uint32_t target = base + delta;
     if ((base & ~UINT16_MAX) != (target & ~UINT16_MAX)) {
@@ -162,7 +197,7 @@ void DisZ80::decodeFullIndex(DisInsn &insn, StrBuffer &out) const {
     }
 }
 
-void DisZ80::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) const {
+void DisZ80::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode, AddrMode other) const {
     auto opc = insn.opCode();
     switch (mode) {
     case M_IM8:
@@ -178,12 +213,17 @@ void DisZ80::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) const {
         decodeAbsolute(insn, out);
         break;
     case M_IOA:
-        out.letter('(');
-        outHex(out, insn.readByte(), 8).letter(')');
+        outHex(out.letter('('), insn.readByte(), 8).letter(')');
+        break;
+    case M_IO16:
+        outHex(out.letter('('), insn.readUint16(), 16).letter(')');
         break;
     case M_IDX:
     case M_IDX8:
         decodeShortIndex(insn, out, decodeIndexReg(insn.prefix()));
+        break;
+    case M_SPX:
+        decodeShortIndex(insn, out, REG_SP);
         break;
     case M_IDX16:
         decodeLongIndex(insn, out, (opc & 0x10) == 0 ? REG_IX : REG_IY);
@@ -210,6 +250,7 @@ void DisZ80::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) const {
         break;
     case M_REL8:
     case M_REL16:
+    case M_REL24:
         decodeRelative(insn, out, mode);
         break;
     case M_R16:
@@ -249,29 +290,28 @@ void DisZ80::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) const {
     case R_IDX:
         outRegName(out, decodeIndexReg(insn.prefix()));
         break;
+    case R_IDXL:
+        outRegName(out, (opc & 1) ? REG_IY : REG_IX);
+        break;
     case R_DXY:
     case R_SXY: {
         const auto ix = decodeIndexReg(insn.prefix());
-        const auto hilo = (opc & (mode == R_DXY ? 8 : 1)) ? 'L' : 'H';
+        const auto hi = z380() ? 'U' : 'H';
+        const auto hilo = (opc & (mode == R_DXY ? 8 : 1)) ? 'L' : hi;
         outRegName(out, ix).letter(hilo);
         break;
     }
-    case R_A:
-    case R_H:
-    case R_L:
-    case R_DE:
-    case R_HL:
-    case R_SP:
-    case R_AF:
-    case R_AFP:
-    case R_DEHL:
-    case R_I:
-    case R_R:
-    case R_USP:
-        outRegName(out, RegName(mode - R_BASE));
+    case R_PTRH:
+        outRegName(out, (opc & 0x10) ? REG_DE : REG_BC);
+        break;
+    case R_PTRL:
+        outRegName(out, (opc & 0x01) ? REG_DE : REG_BC);
         break;
     case I_PTR:
-        outIndirectReg(out, decodeIndirectBase(opc >> 4));
+        opc >>= 4;
+        // Fall-through
+    case I_PTRL:
+        outIndirectReg(out, decodeIndirectBase(opc));
         break;
     case I_IDX:
         outIndirectReg(out, decodeIndexReg(insn.prefix()));
@@ -281,7 +321,17 @@ void DisZ80::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) const {
     case I_C:
         outIndirectReg(out, RegName(mode - I_BASE));
         break;
+    case R_ALT:
+        outAlternateReg(out, insn, other);
+        break;
+    case M_LW:
+    case M_LCK:
+    case M_XM:
+        outCtlName(out, insn);
+        break;
     default:
+        if (mode >= R_BASE)
+            outRegName(out, RegName(mode - R_BASE));
         break;
     }
 }
@@ -314,10 +364,11 @@ Error DisZ80::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) const {
     if (searchOpCode(cpuType(), insn, out))
         return _insn.setError(insn);
 
-    decodeOperand(insn, out, insn.dst());
+    const auto dst = insn.dst();
     const auto src = insn.src();
+    decodeOperand(insn, out, dst, src);
     if (src != M_NONE)
-        decodeOperand(insn, out.comma(), src);
+        decodeOperand(insn, out.comma(), src, dst);
     if (insn.getError() == UNKNOWN_INSTRUCTION)
         insn.nameBuffer().reset();
     return _insn.setError(insn);

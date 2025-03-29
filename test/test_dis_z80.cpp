@@ -36,6 +36,40 @@ bool z280() {
     return strcasecmp_P("Z280", disassembler.config().cpu_P()) == 0;
 }
 
+bool z380() {
+    return strcasecmp_P("Z380", disassembler.config().cpu_P()) == 0;
+}
+
+/**
+ * Test helper for Z280/Z38 RX register name
+ * Substitute "I[XY]H" in |text| with "I[XY]U into |line|.
+ */
+void subst(char *line, const char *text) {
+    const auto mlen = strlen("IXH");
+    while (*text) {
+        if (strncasecmp(text, "IXH", mlen) == 0 || strncasecmp(text, "IYH", mlen) == 0) {
+            *line++ = *text++;
+            *line++ = *text++;
+            text++;
+            *line++ = 'U';
+        } else {
+            *line++ = *text++;
+        }
+    }
+    *line = 0;
+}
+
+#define TIDX(name, opr, ...)              \
+    do {                                  \
+        const char *operand = opr;        \
+        if (z380()) {                     \
+            char line[128];               \
+            subst(line, opr);             \
+            operand = line;               \
+        }                                 \
+        TEST(name, operand, __VA_ARGS__); \
+    } while (0)
+
 void set_up() {
     disassembler.reset();
 }
@@ -54,6 +88,9 @@ void test_cpu() {
 
     EQUALS("cpu Z280", true, disassembler.setCpu("z280"));
     EQUALS_P("get cpu", "Z280", disassembler.config().cpu_P());
+
+    EQUALS("cpu Z380", true, disassembler.setCpu("z380"));
+    EQUALS_P("get cpu", "Z380", disassembler.config().cpu_P());
 }
 
 void test_load_registers() {
@@ -113,73 +150,103 @@ void test_load_registers() {
     TEST("LD", "L, H", 0x6C);
     TEST("LD", "L, L", 0x6D);
 
-    if (z280()) {
-        TEST("LD", "A, IXH", 0xDD, 0x7C);
+    if (z280() || z380()) {
+        TIDX("LD", "A, IXH", 0xDD, 0x7C);
         TEST("LD", "A, IXL", 0xDD, 0x7D);
-        TEST("LD", "A, IYH", 0xFD, 0x7C);
+        TIDX("LD", "A, IYH", 0xFD, 0x7C);
         TEST("LD", "A, IYL", 0xFD, 0x7D);
 
-        TEST("LD", "B, IXH", 0xDD, 0x44);
+        TIDX("LD", "B, IXH", 0xDD, 0x44);
         TEST("LD", "B, IXL", 0xDD, 0x45);
-        TEST("LD", "B, IYH", 0xFD, 0x44);
+        TIDX("LD", "B, IYH", 0xFD, 0x44);
         TEST("LD", "B, IYL", 0xFD, 0x45);
 
-        TEST("LD", "C, IXH", 0xDD, 0x4C);
+        TIDX("LD", "C, IXH", 0xDD, 0x4C);
         TEST("LD", "C, IXL", 0xDD, 0x4D);
-        TEST("LD", "C, IYH", 0xFD, 0x4C);
+        TIDX("LD", "C, IYH", 0xFD, 0x4C);
         TEST("LD", "C, IYL", 0xFD, 0x4D);
 
-        TEST("LD", "D, IXH", 0xDD, 0x54);
+        TIDX("LD", "D, IXH", 0xDD, 0x54);
         TEST("LD", "D, IXL", 0xDD, 0x55);
-        TEST("LD", "D, IYH", 0xFD, 0x54);
+        TIDX("LD", "D, IYH", 0xFD, 0x54);
         TEST("LD", "D, IYL", 0xFD, 0x55);
 
-        TEST("LD", "E, IXH", 0xDD, 0x5C);
+
+        TIDX("LD", "E, IXH", 0xDD, 0x5C);
         TEST("LD", "E, IXL", 0xDD, 0x5D);
-        TEST("LD", "E, IYH", 0xFD, 0x5C);
+        TIDX("LD", "E, IYH", 0xFD, 0x5C);
         TEST("LD", "E, IYL", 0xFD, 0x5D);
 
-        TEST("LD", "IXH, A", 0xDD, 0x67);
-        TEST("LD", "IXH, B", 0xDD, 0x60);
-        TEST("LD", "IXH, C", 0xDD, 0x61);
-        TEST("LD", "IXH, D", 0xDD, 0x62);
-        TEST("LD", "IXH, E", 0xDD, 0x63);
-        TEST("LD", "IXH, IXH", 0xDD, 0x64);
-        TEST("LD", "IXH, IXL", 0xDD, 0x65);
+        TIDX("LD", "IXH, A", 0xDD, 0x67);
+        TIDX("LD", "IXH, B", 0xDD, 0x60);
+        TIDX("LD", "IXH, C", 0xDD, 0x61);
+        TIDX("LD", "IXH, D", 0xDD, 0x62);
+        TIDX("LD", "IXH, E", 0xDD, 0x63);
+        TIDX("LD", "IXH, IXH", 0xDD, 0x64);
+        TIDX("LD", "IXH, IXL", 0xDD, 0x65);
 
         TEST("LD", "IXL, A", 0xDD, 0x6F);
         TEST("LD", "IXL, B", 0xDD, 0x68);
         TEST("LD", "IXL, C", 0xDD, 0x69);
         TEST("LD", "IXL, D", 0xDD, 0x6A);
         TEST("LD", "IXL, E", 0xDD, 0x6B);
-        TEST("LD", "IXL, IXH", 0xDD, 0x6C);
+        TIDX("LD", "IXL, IXH", 0xDD, 0x6C);
         TEST("LD", "IXL, IXL", 0xDD, 0x6D);
 
-        TEST("LD", "IYH, A", 0xFD, 0x67);
-        TEST("LD", "IYH, B", 0xFD, 0x60);
-        TEST("LD", "IYH, C", 0xFD, 0x61);
-        TEST("LD", "IYH, D", 0xFD, 0x62);
-        TEST("LD", "IYH, E", 0xFD, 0x63);
-        TEST("LD", "IYH, IYH", 0xFD, 0x64);
-        TEST("LD", "IYH, IYL", 0xFD, 0x65);
+
+        TIDX("LD", "IYH, A", 0xFD, 0x67);
+        TIDX("LD", "IYH, B", 0xFD, 0x60);
+        TIDX("LD", "IYH, C", 0xFD, 0x61);
+        TIDX("LD", "IYH, D", 0xFD, 0x62);
+        TIDX("LD", "IYH, E", 0xFD, 0x63);
+        TIDX("LD", "IYH, IYH", 0xFD, 0x64);
+        TIDX("LD", "IYH, IYL", 0xFD, 0x65);
 
         TEST("LD", "IYL, A", 0xFD, 0x6F);
         TEST("LD", "IYL, B", 0xFD, 0x68);
         TEST("LD", "IYL, C", 0xFD, 0x69);
         TEST("LD", "IYL, D", 0xFD, 0x6A);
         TEST("LD", "IYL, E", 0xFD, 0x6B);
-        TEST("LD", "IYL, IYH", 0xFD, 0x6C);
+        TIDX("LD", "IYL, IYH", 0xFD, 0x6C);
         TEST("LD", "IYL, IYL", 0xFD, 0x6D);
     }
 
-    TEST("LD", "I, A", 0xED, 0x47);
     TEST("LD", "R, A", 0xED, 0x4F);
-    TEST("LD", "A, I", 0xED, 0x57);
     TEST("LD", "A, R", 0xED, 0x5F);
+    TEST("LD", "I, A", 0xED, 0x47);
+    TEST("LD", "A, I", 0xED, 0x57);
+    if (z380()) {
+        TEST("LDW", "I, HL", 0xDD, 0x47);
+        TEST("LDW", "HL, I", 0xDD, 0x57);
+    }
 
     TEST("LD", "SP, HL", 0xF9);
     TEST("LD", "SP, IX", 0xDD, 0xF9);
     TEST("LD", "SP, IY", 0xFD, 0xF9);
+
+    if (z380()) {
+        TEST("LDW", "BC, DE", 0xDD, 0x02);
+        TEST("LDW", "DE, DE", 0xDD, 0x12);
+        TEST("LDW", "HL, DE", 0xDD, 0x32);
+
+        TEST("LDW", "BC, BC", 0xED, 0x02);
+        TEST("LDW", "DE, BC", 0xED, 0x12);
+        TEST("LDW", "HL, BC", 0xED, 0x32);
+
+        TEST("LDW", "BC, HL", 0xFD, 0x02);
+        TEST("LDW", "DE, HL", 0xFD, 0x12);
+        TEST("LDW", "HL, HL", 0xFD, 0x32);
+
+        TEST("LDW", "BC, IX", 0xDD, 0x0B);
+        TEST("LDW", "DE, IX", 0xDD, 0x1B);
+        TEST("LDW", "HL, IX", 0xDD, 0x3B);
+        TEST("LDW", "IY, IX", 0xFD, 0x27);
+
+        TEST("LDW", "BC, IY", 0xFD, 0x0B);
+        TEST("LDW", "DE, IY", 0xFD, 0x1B);
+        TEST("LDW", "HL, IY", 0xFD, 0x3B);
+        TEST("LDW", "IX, IY", 0xDD, 0x27);
+    }
 }
 
 void test_move_immediate() {
@@ -194,10 +261,15 @@ void test_move_immediate() {
     TEST("LD", "H, 0F6H", 0x26, 0xF6);
     TEST("LD", "L, 0F6H", 0x2E, 0xF6);
     if (z280()) {
-        TEST("LD", "IXH, 0F6H", 0xDD, 0x26, 0xF6);
         TEST("LD", "IXL, 9FH",  0xDD, 0x2E, 0x9F);
-        TEST("LD", "IYH, 3AH",  0xFD, 0x26, 0x3A);
         TEST("LD", "IYL, 80H",  0xFD, 0x2E, 0x80);
+    }
+    if (z280()) {
+        TEST("LD", "IXH, 0F6H", 0xDD, 0x26, 0xF6);
+        TEST("LD", "IYH, 3AH",  0xFD, 0x26, 0x3A);
+    } else if (z380()) {
+        TEST("LD", "IXU, 0F6H", 0xDD, 0x26, 0xF6);
+        TEST("LD", "IYU, 3AH",  0xFD, 0x26, 0x3A);
     }
 
     TEST("LD", "(HL), 0F6H",   0x36, 0xF6);
@@ -214,6 +286,10 @@ void test_move_immediate() {
         TEST("LD", "(HL+IY), 0F6H",    0xDD, 0x16, 0xF6);
         TEST("LD", "(IX+IY), 0F6H",    0xDD, 0x1E, 0xF6);
     }
+    if (z380()) {
+        TEST("LD", "(IX-128), 56H", 0xDD, 0x36, 0x80, 0x56);
+        TEST("LD", "(IY+127), 56H", 0xFD, 0x36, 0x7F, 0x56);
+    }
 
     TEST("LD", "BC, 0BEEFH", 0x01, 0xEF, 0xBE);
     TEST("LD", "DE, 1234H",  0x11, 0x34, 0x12);
@@ -227,7 +303,12 @@ void test_move_immediate() {
         TEST("LDW", "(HL), 1234H", 0xDD, 0x01, 0x34, 0x12);
         TEST("LDW", "(1234H), 5678H", 0xDD, 0x11, 0x34, 0x12, 0x78, 0x56);
         TEST("LDW", "<1234H>, 5678H", 0xDD, 0x31, 0x2E, 0x12, 0x78, 0x56);
-
+        TEST("PUSH", "1234H", 0xFD, 0xF5, 0x34, 0x12);
+    }
+    if (z380()) {
+        TEST("LDW", "(BC), 1234H", 0xED, 0x06, 0x34, 0x12);
+        TEST("LDW", "(DE), 1234H", 0xED, 0x16, 0x34, 0x12);
+        TEST("LDW", "(HL), 1234H", 0xED, 0x36, 0x34, 0x12);
         TEST("PUSH", "1234H", 0xFD, 0xF5, 0x34, 0x12);
     }
 }
@@ -334,6 +415,45 @@ void test_load() {
         TEST("LDW", "IY, (HL+IY)",    0xFD, 0xED, 0x14);
         TEST("LDW", "IY, (IX+IY)",    0xFD, 0xED, 0x1C);
     }
+    if (z380()) {
+        TEST("LDW", "BC, (BC)", 0xDD, 0x0C);
+        TEST("LDW", "BC, (DE)", 0xDD, 0x0D);
+        TEST("LDW", "BC, (HL)", 0xDD, 0x0F);
+
+        TEST("LDW", "DE, (BC)", 0xDD, 0x1C);
+        TEST("LDW", "DE, (DE)", 0xDD, 0x1D);
+        TEST("LDW", "DE, (HL)", 0xDD, 0x1F);
+
+        TEST("LDW", "HL, (BC)", 0xDD, 0x3C);
+        TEST("LDW", "HL, (DE)", 0xDD, 0x3D);
+        TEST("LDW", "HL, (HL)", 0xDD, 0x3F);
+
+        TEST("LDW", "IX, (BC)", 0xDD, 0x03);
+        TEST("LDW", "IX, (DE)", 0xDD, 0x13);
+        TEST("LDW", "IX, (HL)", 0xDD, 0x33);
+
+        TEST("LDW", "IY, (BC)", 0xFD, 0x03);
+        TEST("LDW", "IY, (DE)", 0xFD, 0x13);
+        TEST("LDW", "IY, (HL)", 0xFD, 0x33);
+
+        TEST("LDW", "HL, (5678H)", 0xED, 0x6B, 0x78, 0x56);
+
+        TEST("LDW", "BC, (IX+127)", 0xDD, 0xCB, 0x7F, 0x03);
+        TEST("LDW", "DE, (IX+127)", 0xDD, 0xCB, 0x7F, 0x13);
+        TEST("LDW", "IY, (IX+127)", 0xDD, 0xCB, 0x7F, 0x23);
+        TEST("LDW", "HL, (IX+127)", 0xDD, 0xCB, 0x7F, 0x33);
+
+        TEST("LDW", "BC, (IY-128)", 0xFD, 0xCB, 0x80, 0x03);
+        TEST("LDW", "DE, (IY-128)", 0xFD, 0xCB, 0x80, 0x13);
+        TEST("LDW", "IX, (IY-128)", 0xFD, 0xCB, 0x80, 0x23);
+        TEST("LDW", "HL, (IY-128)", 0xFD, 0xCB, 0x80, 0x33);
+
+        TEST("LDW", "BC, (SP+127)", 0xDD, 0xCB, 0x7F, 0x01);
+        TEST("LDW", "DE, (SP+127)", 0xDD, 0xCB, 0x7F, 0x11);
+        TEST("LDW", "HL, (SP-128)", 0xDD, 0xCB, 0x80, 0x31);
+        TEST("LDW", "IX, (SP+127)", 0xDD, 0xCB, 0x7F, 0x21);
+        TEST("LDW", "IY, (SP-128)", 0xFD, 0xCB, 0x80, 0x21);
+    }
 }
 
 void test_store() {
@@ -435,6 +555,43 @@ void test_store() {
         TEST("LDW", "(HL+IY), IY",    0xFD, 0xED, 0x15);
         TEST("LDW", "(IX+IY), IY",    0xFD, 0xED, 0x1D);
     }
+    if (z380()) {
+        TEST("LDW", "(5678H), HL", 0xED, 0x63, 0x78, 0x56);
+
+        TEST("LDW", "(BC), BC", 0xFD, 0x0C);
+        TEST("LDW", "(BC), DE", 0xFD, 0x1C);
+        TEST("LDW", "(BC), HL", 0xFD, 0x3C);
+        TEST("LDW", "(BC), IX", 0xDD, 0x01);
+        TEST("LDW", "(BC), IY", 0xFD, 0x01);
+
+        TEST("LDW", "(DE), BC", 0xFD, 0x0D);
+        TEST("LDW", "(DE), DE", 0xFD, 0x1D);
+        TEST("LDW", "(DE), HL", 0xFD, 0x3D);
+        TEST("LDW", "(DE), IX", 0xDD, 0x11);
+        TEST("LDW", "(DE), IY", 0xFD, 0x11);
+
+        TEST("LDW", "(HL), BC", 0xFD, 0x0F);
+        TEST("LDW", "(HL), DE", 0xFD, 0x1F);
+        TEST("LDW", "(HL), HL", 0xFD, 0x3F);
+        TEST("LDW", "(HL), IX", 0xDD, 0x31);
+        TEST("LDW", "(HL), IY", 0xFD, 0x31);
+
+        TEST("LDW", "(IX-128), BC", 0xDD, 0xCB, 0x80, 0x0B);
+        TEST("LDW", "(IX-128), DE", 0xDD, 0xCB, 0x80, 0x1B);
+        TEST("LDW", "(IX-128), HL", 0xDD, 0xCB, 0x80, 0x3B);
+        TEST("LDW", "(IX-128), IY", 0xDD, 0xCB, 0x80, 0x2B);
+
+        TEST("LDW", "(IY+127), BC", 0xFD, 0xCB, 0x7F, 0x0B);
+        TEST("LDW", "(IY+127), DE", 0xFD, 0xCB, 0x7F, 0x1B);
+        TEST("LDW", "(IY+127), HL", 0xFD, 0xCB, 0x7F, 0x3B);
+        TEST("LDW", "(IY+127), IX", 0xFD, 0xCB, 0x7F, 0x2B);
+
+        TEST("LDW", "(SP+127), BC", 0xDD, 0xCB, 0x7F, 0x09);
+        TEST("LDW", "(SP+127), DE", 0xDD, 0xCB, 0x7F, 0x19);
+        TEST("LDW", "(SP+127), HL", 0xDD, 0xCB, 0x7F, 0x39);
+        TEST("LDW", "(SP+127), IX", 0xDD, 0xCB, 0x7F, 0x29);
+        TEST("LDW", "(SP-128), IY", 0xFD, 0xCB, 0x80, 0x29);
+    }
 }
 
 void test_exchange() {
@@ -451,7 +608,18 @@ void test_exchange() {
         TEST("EX", "A, IXL", 0xDD, 0xED, 0x2F);
         TEST("EX", "A, IYH", 0xFD, 0xED, 0x27);
         TEST("EX", "A, IYL", 0xFD, 0xED, 0x2F);
+    }
+    if (z380()) {
+        TEST("EX", "A, A'", 0xCB, 0x37);
+        TEST("EX", "B, B'", 0xCB, 0x30);
+        TEST("EX", "C, C'", 0xCB, 0x31);
+        TEST("EX", "D, D'", 0xCB, 0x32);
+        TEST("EX", "E, E'", 0xCB, 0x33);
+        TEST("EX", "H, H'", 0xCB, 0x34);
+        TEST("EX", "L, L'", 0xCB, 0x35);
+    }
 
+    if (z280()) {
         TEST("EX", "A, (HL)",       0xED, 0x37);
         TEST("EX", "A, (IX+127)",   0xDD, 0xED, 0x37, 0x7F);
         TEST("EX", "A, (IY-128)",   0xFD, 0xED, 0x37, 0x80);
@@ -471,13 +639,46 @@ void test_exchange() {
         TEST("EX", "IX, HL", 0xDD, 0xEB);
         TEST("EX", "IY, HL", 0xFD, 0xEB);
     }
+    if (z380()) {
+        TEST("EX", "BC, DE", 0xED, 0x05);
+        TEST("EX", "BC, HL", 0xED, 0x0D);
+        TEST("EX", "BC, IX", 0xED, 0x03);
+        TEST("EX", "BC, IY", 0xED, 0x0B);
+
+        TEST("EX", "DE, IX", 0xED, 0x13);
+        TEST("EX", "DE, IY", 0xED, 0x1B);
+
+        TEST("EX", "HL, IX", 0xED, 0x33);
+        TEST("EX", "HL, IY", 0xED, 0x3B);
+
+        TEST("EX", "IX, IY", 0xED, 0x2B);
+    }
+
     TEST("EX", "AF, AF'", 0x08);
+    if (z380()) {
+        TEST("EX", "BC, BC'", 0xED, 0xCB, 0x30);
+        TEST("EX", "DE, DE'", 0xED, 0xCB, 0x31);
+        TEST("EX", "HL, HL'", 0xED, 0xCB, 0x33);
+        TEST("EX", "IX, IX'", 0xED, 0xCB, 0x34);
+        TEST("EX", "IY, IY'", 0xED, 0xCB, 0x35);
+    }
 
     TEST("EX", "(SP), HL", 0xE3);
     TEST("EX", "(SP), IX", 0xDD, 0xE3);
     TEST("EX", "(SP), IY", 0xFD, 0xE3);
 
     TEST("EXX", "",       0xD9);
+    if (z380()) {
+        TEST("EXXX",  "", 0xDD, 0xD9);
+        TEST("EXXY",  "", 0xFD, 0xD9);
+        TEST("EXALL", "", 0xED, 0xD9);
+
+        TEST("SWAP", "BC", 0xED, 0x0E);
+        TEST("SWAP", "DE", 0xED, 0x1E);
+        TEST("SWAP", "HL", 0xED, 0x3E);
+        TEST("SWAP", "IX", 0xDD, 0x3E);
+        TEST("SWAP", "IY", 0xFD, 0x3E);
+    }
 }
 
 void test_stack() {
@@ -487,6 +688,9 @@ void test_stack() {
     TEST("PUSH", "AF", 0xF5);
     TEST("PUSH", "IX", 0xDD, 0xE5);
     TEST("PUSH", "IY", 0xFD, 0xE5);
+    if (z380()) {
+        TEST("PUSH", "SR", 0xED, 0xC5);
+    }
 
     if (z280()) {
         TEST("PUSH", "(HL)",    0xDD, 0xC5);
@@ -500,6 +704,9 @@ void test_stack() {
     TEST("POP", "AF", 0xF1);
     TEST("POP", "IX", 0xDD, 0xE1);
     TEST("POP", "IY", 0xFD, 0xE1);
+    if (z380()) {
+        TEST("POP", "SR", 0xED, 0xC1);
+    }
 
     if (z280()) {
         TEST("POP", "(HL)",    0xDD, 0xC1);
@@ -521,6 +728,9 @@ void test_stack() {
     TEST("RETI", "", 0xED, 0x4D);
     if (z280()) {
         TEST("RETIL", "", 0xED, 0x55);
+    }
+    if (z380()) {
+        TEST("RETB", "",  0xED, 0x55);
     }
 }
 
@@ -594,6 +804,21 @@ void test_jump() {
         AERRT(0x1000, "CALL", "<0FFFFFFH>", OVERFLOW_RANGE, "<0FFFFFFH>", 0xFD, 0xCD, 0xFB, 0xEF);
     }
 
+    if (z380()) {
+        ATEST(0x1000, "CALR", "1082H", 0xED, 0xCD, 0x7F);
+        ATEST(0x1000, "CALR", "2083H", 0xDD, 0xCD, 0x7F, 0x10);
+        ATEST(0x1000, "CALR", "9005H", 0xFD, 0xCD, 0x00, 0x80, 0x00,);
+
+        ATEST(0XF000, "CALR", "NZ, 0EF83H", 0xED, 0xC4, 0x80);
+        ATEST(0XF000, "CALR", "Z, 7004H",   0xDD, 0xCC, 0x00, 0x80);
+        ATEST(0XF000, "CALR", "NC, 6005H",  0xFD, 0xD4, 0x00, 0x70, 0xFF);
+        ATEST(0X1000, "CALR", "C, 1082H",   0xED, 0xDC, 0x7F);
+        ATEST(0X1000, "CALR", "PO, 9003H",  0xDD, 0xE4, 0xFF, 0x7F);
+        ATEST(0X1000, "CALR", "PE, 9005H",  0xFD, 0xEC, 0x00, 0x80, 0x00);
+        ATEST(0X1000, "CALR", "P, 1003H",   0xED, 0xF4, 0x00);
+        ATEST(0X1000, "CALR", "M, 1000H",   0xED, 0xFC, 0xFD);
+    }
+
     ATEST(0x1000, "JR", "1000H",     0x18, 0xFE);
     ATEST(0x1000, "JR", "NZ, 1004H", 0x20, 0x02);
     ATEST(0x1000, "JR", "Z, 1081H",  0x28, 0x7F);
@@ -601,7 +826,19 @@ void test_jump() {
     ATEST(0x1000, "JR", "C, 0F82H",  0x38, 0x80);
     ATEST(0x1000, "JR", "C, 1081H",  0x38, 0x7F);
     ATEST(0x1000, "JR", "C, 0F82H",  0x38, 0x80);
-    if (z280()) {
+    if (z380()) {
+        ATEST(0x1000, "JR", "2083H",     0xDD, 0x18, 0x7F, 0x10);
+        ATEST(0x1000, "JR", "9005H",     0xFD, 0x18, 0x00, 0x80, 0x00);
+
+        ATEST(0x1000, "JR", "NZ, 3004H", 0xDD, 0x20, 0x00, 0x20);
+        ATEST(0x1000, "JR", "Z, 0A005H", 0xFD, 0x28, 0x00, 0x90, 0x00);
+        ATEST(0xF000, "JR", "NC, 7004H", 0xDD, 0x30, 0x00, 0x80);
+        ATEST(0xF000, "JR", "C, 6005H",  0xFD, 0x38, 0x00, 0x70, 0xFF);
+        ATEST(0x1000, "JR", "C, 1004H",  0xDD, 0x38, 0x00, 0x00);
+        ATEST(0x1000, "JR", "C, 1000H",  0xFD, 0x38, 0xFB, 0xFF, 0xFF);
+        AERRT(0xFF80, "JR", "C, 0001H",  OVERFLOW_RANGE,  "0001H", 0x38, 0x7F);
+        AERRT(0x007C, "JR", "C, 0FFFEH", OVERFLOW_RANGE, "0FFFEH", 0x38, 0x80);
+    } else if (z280()) {
         AERRT(0xFF80, "JR", "C, 010001H",  OVERFLOW_RANGE,  "010001H", 0x38, 0x7F);
         AERRT(0x007C, "JR", "C, 0FFFFFEH", OVERFLOW_RANGE, "0FFFFFEH", 0x38, 0x80);
     } else if (z180()) {
@@ -620,7 +857,12 @@ void test_jump() {
     ATEST(0x1000, "DJNZ", "1000H",  0x10, 0xFE);
     ATEST(0x1000, "DJNZ", "1081H",  0x10, 0x7F);
     ATEST(0x1000, "DJNZ", "0F82H",  0x10, 0x80);
-    if (z280()) {
+    if (z380()) {
+        ATEST(0x1000, "DJNZ", "9003H",  0xDD, 0x10, 0xFF, 0x7F);
+        ATEST(0x1000, "DJNZ", "9005H",  0xFD, 0x10, 0x00, 0x80, 0x00);
+        AERRT(0xFF80, "DJNZ", "0001H", OVERFLOW_RANGE,   "0001H",  0x10, 0x7F);
+        AERRT(0x007C, "DJNZ", "0FFFEH", OVERFLOW_RANGE, "0FFFEH", 0x10, 0x80);
+    } else if (z280()) {
         AERRT(0xFF80, "DJNZ", "010001H", OVERFLOW_RANGE,   "010001H",  0x10, 0x7F);
         AERRT(0x007C, "DJNZ", "0FFFFFEH", OVERFLOW_RANGE, "0FFFFFEH", 0x10, 0x80);
     } else if (z180()) {
@@ -640,10 +882,10 @@ void test_incr_decr() {
     TEST("INC", "E", 0x1C);
     TEST("INC", "H", 0x24);
     TEST("INC", "L", 0x2C);
-    if (z280()) {
-        TEST("INC", "IXH", 0xDD, 0x24);
+    if (z280() || z380()) {
+        TIDX("INC", "IXH", 0xDD, 0x24);
         TEST("INC", "IXL", 0xDD, 0x2C);
-        TEST("INC", "IYH", 0xFD, 0x24);
+        TIDX("INC", "IYH", 0xFD, 0x24);
         TEST("INC", "IYL", 0xFD, 0x2C);
     }
 
@@ -668,10 +910,10 @@ void test_incr_decr() {
     TEST("DEC", "E", 0x1D);
     TEST("DEC", "H", 0x25);
     TEST("DEC", "L", 0x2D);
-    if (z280()) {
-        TEST("DEC", "IXH", 0xDD, 0x25);
+    if (z280() || z380()) {
+        TIDX("DEC", "IXH", 0xDD, 0x25);
         TEST("DEC", "IXL", 0xDD, 0x2D);
-        TEST("DEC", "IYH", 0xFD, 0x25);
+        TIDX("DEC", "IYH", 0xFD, 0x25);
         TEST("DEC", "IYL", 0xFD, 0x2D);
     }
 
@@ -821,6 +1063,8 @@ void test_alu_8bit() {
     TEST("NEG", "", 0xED, 0x44);
     if (z280()) {
         TEST("EXTS", "A", 0xED, 0x64);
+    } else if (z380()) {
+        TEST("EXTS", "A", 0xED, 0x65);
     }
 
     TEST("ADD", "A, A", 0x87);
@@ -831,10 +1075,10 @@ void test_alu_8bit() {
     TEST("ADD", "A, H", 0x84);
     TEST("ADD", "A, L", 0x85);
     TEST("ADD", "A, 2", 0xC6, 0x02);
-    if (z280()) {
-        TEST("ADD", "A, IXH", 0xDD, 0x84);
+    if (z280() || z380()) {
+        TIDX("ADD", "A, IXH", 0xDD, 0x84);
         TEST("ADD", "A, IXL", 0xDD, 0x85);
-        TEST("ADD", "A, IYH", 0xFD, 0x84);
+        TIDX("ADD", "A, IYH", 0xFD, 0x84);
         TEST("ADD", "A, IYL", 0xFD, 0x85);
     }
 
@@ -859,10 +1103,10 @@ void test_alu_8bit() {
     TEST("ADC", "A, E", 0x8B);
     TEST("ADC", "A, H", 0x8C);
     TEST("ADC", "A, L", 0x8D);
-    if (z280()) {
-        TEST("ADC", "A, IXH", 0xDD, 0x8C);
+    if (z280() || z380()) {
+        TIDX("ADC", "A, IXH", 0xDD, 0x8C);
         TEST("ADC", "A, IXL", 0xDD, 0x8D);
-        TEST("ADC", "A, IYH", 0xFD, 0x8C);
+        TIDX("ADC", "A, IYH", 0xFD, 0x8C);
         TEST("ADC", "A, IYL", 0xFD, 0x8D);
     }
 
@@ -888,10 +1132,10 @@ void test_alu_8bit() {
     TEST("SUB", "E", 0x93);
     TEST("SUB", "H", 0x94);
     TEST("SUB", "L", 0x95);
-    if (z280()) {
-        TEST("SUB", "A, IXH", 0xDD, 0x94);
+    if (z280() || z380()) {
+        TIDX("SUB", "A, IXH", 0xDD, 0x94);
         TEST("SUB", "A, IXL", 0xDD, 0x95);
-        TEST("SUB", "A, IYH", 0xFD, 0x94);
+        TIDX("SUB", "A, IYH", 0xFD, 0x94);
         TEST("SUB", "A, IYL", 0xFD, 0x95);
     }
 
@@ -917,10 +1161,10 @@ void test_alu_8bit() {
     TEST("SBC", "A, E", 0x9B);
     TEST("SBC", "A, H", 0x9C);
     TEST("SBC", "A, L", 0x9D);
-    if (z280()) {
-        TEST("SBC", "A, IXH", 0xDD, 0x9C);
+    if (z280() || z380()) {
+        TIDX("SBC", "A, IXH", 0xDD, 0x9C);
         TEST("SBC", "A, IXL", 0xDD, 0x9D);
-        TEST("SBC", "A, IYH", 0xFD, 0x9C);
+        TIDX("SBC", "A, IYH", 0xFD, 0x9C);
         TEST("SBC", "A, IYL", 0xFD, 0x9D);
     }
 
@@ -946,10 +1190,10 @@ void test_alu_8bit() {
     TEST("AND", "E", 0xA3);
     TEST("AND", "H", 0xA4);
     TEST("AND", "L", 0xA5);
-    if (z280()) {
-        TEST("AND", "A, IXH", 0xDD, 0xA4);
+    if (z280() || z380()) {
+        TIDX("AND", "A, IXH", 0xDD, 0xA4);
         TEST("AND", "A, IXL", 0xDD, 0xA5);
-        TEST("AND", "A, IYH", 0xFD, 0xA4);
+        TIDX("AND", "A, IYH", 0xFD, 0xA4);
         TEST("AND", "A, IYL", 0xFD, 0xA5);
     }
 
@@ -975,10 +1219,10 @@ void test_alu_8bit() {
     TEST("XOR", "E", 0xAB);
     TEST("XOR", "H", 0xAC);
     TEST("XOR", "L", 0xAD);
-    if (z280()) {
-        TEST("XOR", "A, IXH", 0xDD, 0xAC);
+    if (z280() || z380()) {
+        TIDX("XOR", "A, IXH", 0xDD, 0xAC);
         TEST("XOR", "A, IXL", 0xDD, 0xAD);
-        TEST("XOR", "A, IYH", 0xFD, 0xAC);
+        TIDX("XOR", "A, IYH", 0xFD, 0xAC);
         TEST("XOR", "A, IYL", 0xFD, 0xAD);
     }
 
@@ -1004,10 +1248,10 @@ void test_alu_8bit() {
     TEST("OR", "E", 0xB3);
     TEST("OR", "H", 0xB4);
     TEST("OR", "L", 0xB5);
-    if (z280()) {
-        TEST("OR", "A, IXH", 0xDD, 0xB4);
+    if (z280() || z380()) {
+        TIDX("OR", "A, IXH", 0xDD, 0xB4);
         TEST("OR", "A, IXL", 0xDD, 0xB5);
-        TEST("OR", "A, IYH", 0xFD, 0xB4);
+        TIDX("OR", "A, IYH", 0xFD, 0xB4);
         TEST("OR", "A, IYL", 0xFD, 0xB5);
     }
 
@@ -1033,10 +1277,10 @@ void test_alu_8bit() {
     TEST("CP", "E", 0xBB);
     TEST("CP", "H", 0xBC);
     TEST("CP", "L", 0xBD);
-    if (z280()) {
-        TEST("CP", "A, IXH", 0xDD, 0xBC);
+    if (z280() || z380()) {
+        TIDX("CP", "A, IXH", 0xDD, 0xBC);
         TEST("CP", "A, IXL", 0xDD, 0xBD);
-        TEST("CP", "A, IYH", 0xFD, 0xBC);
+        TIDX("CP", "A, IYH", 0xFD, 0xBC);
         TEST("CP", "A, IYL", 0xFD, 0xBD);
     }
 
@@ -1055,7 +1299,7 @@ void test_alu_8bit() {
         TEST("CP", "A, (IX+IY)",    0xDD, 0xBB);
     }
 
-    if (z180()) {
+    if (z180() || z380()) {
         TEST("TST", "A", 0xED, 0x3C);
         TEST("TST", "B", 0xED, 0x04);
         TEST("TST", "C", 0xED, 0x0C);
@@ -1153,10 +1397,80 @@ void test_alu_16bit() {
     if (z280()) {
         TEST("NEG",  "HL", 0xED, 0x4C);
         TEST("EXTS", "HL", 0xED, 0x6C);
+    } else if (z380()) {
+        TEST("NEGW",  "HL", 0xED, 0x54);
+        TEST("EXTSW", "HL", 0xED, 0x75);
+    }
 
+    if (z280()) {
         TEST("ADD", "HL, A", 0xED, 0x6D);
         TEST("ADD", "IX, A", 0xDD, 0xED, 0x6D);
         TEST("ADD", "IY, A", 0xFD, 0xED, 0x6D);
+    }
+
+    if (z380()) {
+        TEST("RLW", "BC", 0xED, 0xCB, 0x10);
+        TEST("RLW", "DE", 0xED, 0xCB, 0x11);
+        TEST("RLW", "HL", 0xED, 0xCB, 0x13);
+        TEST("RLW", "IX", 0xED, 0xCB, 0x14);
+        TEST("RLW", "IY", 0xED, 0xCB, 0x15);
+        TEST("RLW", "(HL)",     0xED, 0xCB, 0x12);
+        TEST("RLW", "(IX+127)", 0xDD, 0xCB, 0x7F, 0x12);
+        TEST("RLW", "(IY-128)", 0xFD, 0xCB, 0x80, 0x12);
+
+        TEST("RLCW", "BC", 0xED, 0xCB, 0x00);
+        TEST("RLCW", "DE", 0xED, 0xCB, 0x01);
+        TEST("RLCW", "HL", 0xED, 0xCB, 0x03);
+        TEST("RLCW", "IX", 0xED, 0xCB, 0x04);
+        TEST("RLCW", "IY", 0xED, 0xCB, 0x05);
+        TEST("RLCW", "(HL)",     0xED, 0xCB, 0x02);
+        TEST("RLCW", "(IX+127)", 0xDD, 0xCB, 0x7F, 0x02);
+        TEST("RLCW", "(IY-128)", 0xFD, 0xCB, 0x80, 0x02);
+
+        TEST("RRW", "BC", 0xED, 0xCB, 0x18);
+        TEST("RRW", "DE", 0xED, 0xCB, 0x19);
+        TEST("RRW", "HL", 0xED, 0xCB, 0x1B);
+        TEST("RRW", "IX", 0xED, 0xCB, 0x1C);
+        TEST("RRW", "IY", 0xED, 0xCB, 0x1D);
+        TEST("RRW", "(HL)",     0xED, 0xCB, 0x1A);
+        TEST("RRW", "(IX+127)", 0xDD, 0xCB, 0x7F, 0x1A);
+        TEST("RRW", "(IY-128)", 0xFD, 0xCB, 0x80, 0x1A);
+
+        TEST("RRCW", "BC", 0xED, 0xCB, 0x08);
+        TEST("RRCW", "DE", 0xED, 0xCB, 0x09);
+        TEST("RRCW", "HL", 0xED, 0xCB, 0x0B);
+        TEST("RRCW", "IX", 0xED, 0xCB, 0x0C);
+        TEST("RRCW", "IY", 0xED, 0xCB, 0x0D);
+        TEST("RRCW", "(HL)",     0xED, 0xCB, 0x0A);
+        TEST("RRCW", "(IX+127)", 0xDD, 0xCB, 0x7F, 0x0A);
+        TEST("RRCW", "(IY-128)", 0xFD, 0xCB, 0x80, 0x0A);
+
+        TEST("SLAW", "BC", 0xED, 0xCB, 0x20);
+        TEST("SLAW", "DE", 0xED, 0xCB, 0x21);
+        TEST("SLAW", "HL", 0xED, 0xCB, 0x23);
+        TEST("SLAW", "IX", 0xED, 0xCB, 0x24);
+        TEST("SLAW", "IY", 0xED, 0xCB, 0x25);
+        TEST("SLAW", "(HL)",     0xED, 0xCB, 0x22);
+        TEST("SLAW", "(IX+127)", 0xDD, 0xCB, 0x7F, 0x22);
+        TEST("SLAW", "(IY-128)", 0xFD, 0xCB, 0x80, 0x22);
+
+        TEST("SRAW", "BC", 0xED, 0xCB, 0x28);
+        TEST("SRAW", "DE", 0xED, 0xCB, 0x29);
+        TEST("SRAW", "HL", 0xED, 0xCB, 0x2B);
+        TEST("SRAW", "IX", 0xED, 0xCB, 0x2C);
+        TEST("SRAW", "IY", 0xED, 0xCB, 0x2D);
+        TEST("SRAW", "(HL)",     0xED, 0xCB, 0x2A);
+        TEST("SRAW", "(IX+127)", 0xDD, 0xCB, 0x7F, 0x2A);
+        TEST("SRAW", "(IY-128)", 0xFD, 0xCB, 0x80, 0x2A);
+
+        TEST("SRLW", "BC", 0xED, 0xCB, 0x38);
+        TEST("SRLW", "DE", 0xED, 0xCB, 0x39);
+        TEST("SRLW", "HL", 0xED, 0xCB, 0x3B);
+        TEST("SRLW", "IX", 0xED, 0xCB, 0x3C);
+        TEST("SRLW", "IY", 0xED, 0xCB, 0x3D);
+        TEST("SRLW", "(HL)",     0xED, 0xCB, 0x3A);
+        TEST("SRLW", "(IX+127)", 0xDD, 0xCB, 0x7F, 0x3A);
+        TEST("SRLW", "(IY-128)", 0xFD, 0xCB, 0x80, 0x3A);
     }
 
     TEST("ADD", "HL, BC", 0x09);
@@ -1176,6 +1490,18 @@ void test_alu_16bit() {
         TEST("ADDW", "HL, (IX+7FFFH)", 0xFD, 0xED, 0xC6, 0xFF, 0x7F);
         TEST("ADDW", "HL, (IY-8000H)", 0xFD, 0xED, 0xD6, 0x00, 0x80);
         TEST("ADDW", "HL, <1234H>",    0xDD, 0xED, 0xF6, 0x2F, 0x12);
+    } else if (z380()) {
+        TEST("ADD", "HL, (1234H)", 0xED, 0xC6, 0x34, 0x12);
+        TEST("ADD", "SP, 1234H",   0xED, 0x82, 0x34, 0x12);
+
+        TEST("ADDW", "HL, BC", 0xED, 0x84);
+        TEST("ADDW", "HL, DE", 0xED, 0x85);
+        TEST("ADDW", "HL, HL", 0xED, 0x87);
+        TEST("ADDW", "HL, IX", 0xDD, 0x87);
+        TEST("ADDW", "HL, IY", 0xFD, 0x87);
+        TEST("ADDW", "HL, 1234H",    0xED, 0x86, 0x34, 0x12);
+        TEST("ADDW", "HL, (IX-128)", 0xDD, 0xC6, 0x80);
+        TEST("ADDW", "HL, (IY+127)", 0xFD, 0xC6, 0x7F);
     }
 
     TEST("ADD", "IX, BC", 0xDD, 0x09);
@@ -1204,6 +1530,16 @@ void test_alu_16bit() {
         TEST("ADC", "IY, IY", 0xFD, 0xED, 0x6A);
         TEST("ADC", "IY, SP", 0xFD, 0xED, 0x7A);
     }
+    if (z380()) {
+        TEST("ADCW", "HL, BC", 0xED, 0x8C);
+        TEST("ADCW", "HL, DE", 0xED, 0x8D);
+        TEST("ADCW", "HL, HL", 0xED, 0x8F);
+        TEST("ADCW", "HL, IX", 0xDD, 0x8F);
+        TEST("ADCW", "HL, IY", 0xFD, 0x8F);
+        TEST("ADCW", "HL, 1234H",    0xED, 0x8E, 0x34, 0x12);
+        TEST("ADCW", "HL, (IX-128)", 0xDD, 0xCE, 0x80);
+        TEST("ADCW", "HL, (IY+127)", 0xFD, 0xCE, 0x7F);
+    }
 
     if (z280()) {
         TEST("SUBW", "HL, BC", 0xED, 0xCE);
@@ -1218,6 +1554,18 @@ void test_alu_16bit() {
         TEST("SUBW", "HL, (IX+7FFFH)", 0xFD, 0xED, 0xCE, 0xFF, 0x7F);
         TEST("SUBW", "HL, (IY-8000H)", 0xFD, 0xED, 0xDE, 0x00, 0x80);
         TEST("SUBW", "HL, <1234H>",    0xDD, 0xED, 0xFE, 0x2F, 0x12);
+    } else if (z380()) {
+        TEST("SUB", "HL, (1234H)", 0xED, 0xD6, 0x34, 0x12);
+        TEST("SUB", "SP, 1234H",   0xED, 0x92, 0x34, 0x12);
+
+        TEST("SUBW", "HL, BC", 0xED, 0x94);
+        TEST("SUBW", "HL, DE", 0xED, 0x95);
+        TEST("SUBW", "HL, HL", 0xED, 0x97);
+        TEST("SUBW", "HL, IX", 0xDD, 0x97);
+        TEST("SUBW", "HL, IY", 0xFD, 0x97);
+        TEST("SUBW", "HL, 1234H",    0xED, 0x96, 0x34, 0x12);
+        TEST("SUBW", "HL, (IX-128)", 0xDD, 0xD6, 0x80);
+        TEST("SUBW", "HL, (IY+127)", 0xFD, 0xD6, 0x7F);
     }
 
     TEST("SBC", "HL, BC", 0xED, 0x42);
@@ -1236,6 +1584,16 @@ void test_alu_16bit() {
         TEST("SBC", "IY, IY", 0xFD, 0xED, 0x62);
         TEST("SBC", "IY, SP", 0xFD, 0xED, 0x72);
     }
+    if (z380()) {
+        TEST("SBCW", "HL, BC", 0xED, 0x9C);
+        TEST("SBCW", "HL, DE", 0xED, 0x9D);
+        TEST("SBCW", "HL, HL", 0xED, 0x9F);
+        TEST("SBCW", "HL, IX", 0xDD, 0x9F);
+        TEST("SBCW", "HL, IY", 0xFD, 0x9F);
+        TEST("SBCW", "HL, 1234H",    0xED, 0x9E, 0x34, 0x12);
+        TEST("SBCW", "HL, (IX-128)", 0xDD, 0xDE, 0x80);
+        TEST("SBCW", "HL, (IY+127)", 0xFD, 0xDE, 0x7F);
+    }
 
     if (z280()) {
         TEST("CPW", "HL, BC", 0xED, 0xC7);
@@ -1250,6 +1608,45 @@ void test_alu_16bit() {
         TEST("CPW", "HL, (IX+7FFFH)", 0xFD, 0xED, 0xC7, 0xFF, 0x7F);
         TEST("CPW", "HL, (IY-8000H)", 0xFD, 0xED, 0xD7, 0x00, 0x80);
         TEST("CPW", "HL, <1234H>",    0xDD, 0xED, 0xF7, 0x2F, 0x12);
+    }
+    if (z380()) {
+        TEST("CPW", "HL, BC", 0xED, 0xBC);
+        TEST("CPW", "HL, DE", 0xED, 0xBD);
+        TEST("CPW", "HL, HL", 0xED, 0xBF);
+        TEST("CPW", "HL, IX", 0xDD, 0xBF);
+        TEST("CPW", "HL, IY", 0xFD, 0xBF);
+        TEST("CPW", "HL, 1234H",    0xED, 0xBE, 0x34, 0x12);
+        TEST("CPW", "HL, (IX-128)", 0xDD, 0xFE, 0x80);
+        TEST("CPW", "HL, (IY+127)", 0xFD, 0xFE, 0x7F);
+    }
+
+    if (z380()) {
+        TEST("ANDW", "HL, BC", 0xED, 0xA4);
+        TEST("ANDW", "HL, DE", 0xED, 0xA5);
+        TEST("ANDW", "HL, HL", 0xED, 0xA7);
+        TEST("ANDW", "HL, IX", 0xDD, 0xA7);
+        TEST("ANDW", "HL, IY", 0xFD, 0xA7);
+        TEST("ANDW", "HL, 1234H",    0xED, 0xA6, 0x34, 0x12);
+        TEST("ANDW", "HL, (IX-128)", 0xDD, 0xE6, 0x80);
+        TEST("ANDW", "HL, (IY+127)", 0xFD, 0xE6, 0x7F);
+
+        TEST("ORW", "HL, BC", 0xED, 0xB4);
+        TEST("ORW", "HL, DE", 0xED, 0xB5);
+        TEST("ORW", "HL, HL", 0xED, 0xB7);
+        TEST("ORW", "HL, IX", 0xDD, 0xB7);
+        TEST("ORW", "HL, IY", 0xFD, 0xB7);
+        TEST("ORW", "HL, 1234H",    0xED, 0xB6, 0x34, 0x12);
+        TEST("ORW", "HL, (IX-128)", 0xDD, 0xF6, 0x80);
+        TEST("ORW", "HL, (IY+127)", 0xFD, 0xF6, 0x7F);
+
+        TEST("XORW", "HL, BC", 0xED, 0xAC);
+        TEST("XORW", "HL, DE", 0xED, 0xAD);
+        TEST("XORW", "HL, HL", 0xED, 0xAF);
+        TEST("XORW", "HL, IX", 0xDD, 0xAF);
+        TEST("XORW", "HL, IY", 0xFD, 0xAF);
+        TEST("XORW", "HL, 1234H",    0xED, 0xAE, 0x34, 0x12);
+        TEST("XORW", "HL, (IX-128)", 0xDD, 0xEE, 0x80);
+        TEST("XORW", "HL, (IY+127)", 0xFD, 0xEE, 0x7F);
     }
 
     if (z280()) {
@@ -1281,7 +1678,7 @@ void test_alu_16bit() {
         TEST("LDA", "IY, <1234H>",    0xFD, 0xED, 0x22, 0x2F, 0x12);
     }
 
-    if (z180()) {
+    if (z180() || z380()) {
         TEST("MLT", "BC", 0xED, 0x4C);
         TEST("MLT", "DE", 0xED, 0x5C);
         TEST("MLT", "HL", 0xED, 0x6C);
@@ -1301,7 +1698,18 @@ void test_alu_16bit() {
         TEST("MULTW", "HL, (IX+7FFFH)", 0xFD, 0xED, 0xC2, 0xFF, 0x7F);
         TEST("MULTW", "HL, (IY-8000H)", 0xFD, 0xED, 0xD2, 0x00, 0x80);
         TEST("MULTW", "HL, <1234H>",    0xDD, 0xED, 0xF2, 0x2F, 0x12);
+    } else if (z380()) {
+        TEST("MULTW", "HL, BC", 0xED, 0xCB, 0x90);
+        TEST("MULTW", "HL, DE", 0xED, 0xCB, 0x91);
+        TEST("MULTW", "HL, HL", 0xED, 0xCB, 0x93);
+        TEST("MULTW", "HL, IX", 0xED, 0xCB, 0x94);
+        TEST("MULTW", "HL, IY", 0xED, 0xCB, 0x95);
+        TEST("MULTW", "HL, 1234H",    0xED, 0xCB, 0x97, 0x34, 0x12);
+        TEST("MULTW", "HL, (IX-128)", 0xDD, 0xCB, 0x80, 0x92);
+        TEST("MULTW", "HL, (IY+127)", 0xFD, 0xCB, 0x7F, 0x92);
+    }
 
+    if (z280()) {
         TEST("MULTUW", "HL, BC", 0xED, 0xC3);
         TEST("MULTUW", "HL, DE", 0xED, 0xD3);
         TEST("MULTUW", "HL, HL", 0xED, 0xE3);
@@ -1314,7 +1722,18 @@ void test_alu_16bit() {
         TEST("MULTUW", "HL, (IX+7FFFH)", 0xFD, 0xED, 0xC3, 0xFF, 0x7F);
         TEST("MULTUW", "HL, (IY-8000H)", 0xFD, 0xED, 0xD3, 0x00, 0x80);
         TEST("MULTUW", "HL, <1234H>",    0xDD, 0xED, 0xF3, 0x2F, 0x12);
+    } else if (z380()) {
+        TEST("MULTUW", "HL, BC", 0xED, 0xCB, 0x98);
+        TEST("MULTUW", "HL, DE", 0xED, 0xCB, 0x99);
+        TEST("MULTUW", "HL, HL", 0xED, 0xCB, 0x9B);
+        TEST("MULTUW", "HL, IX", 0xED, 0xCB, 0x9C);
+        TEST("MULTUW", "HL, IY", 0xED, 0xCB, 0x9D);
+        TEST("MULTUW", "HL, 1234H",    0xED, 0xCB, 0x9F, 0x34, 0x12);
+        TEST("MULTUW", "HL, (IX-128)", 0xDD, 0xCB, 0x80, 0x9A);
+        TEST("MULTUW", "HL, (IY+127)", 0xFD, 0xCB, 0x7F, 0x9A);
+    }
 
+    if (z280()) {
         TEST("DIVW", "DEHL, BC", 0xED, 0xCA);
         TEST("DIVW", "DEHL, DE", 0xED, 0xDA);
         TEST("DIVW", "DEHL, HL", 0xED, 0xEA);
@@ -1327,7 +1746,9 @@ void test_alu_16bit() {
         TEST("DIVW", "DEHL, (IX+7FFFH)", 0xFD, 0xED, 0xCA, 0xFF, 0x7F);
         TEST("DIVW", "DEHL, (IY-8000H)", 0xFD, 0xED, 0xDA, 0x00, 0x80);
         TEST("DIVW", "DEHL, <1234H>",    0xDD, 0xED, 0xFA, 0x2F, 0x12);
+    }
 
+    if (z280()) {
         TEST("DIVUW", "DEHL, BC", 0xED, 0xCB);
         TEST("DIVUW", "DEHL, DE", 0xED, 0xDB);
         TEST("DIVUW", "DEHL, HL", 0xED, 0xEB);
@@ -1340,12 +1761,25 @@ void test_alu_16bit() {
         TEST("DIVUW", "DEHL, (IX+7FFFH)", 0xFD, 0xED, 0xCB, 0xFF, 0x7F);
         TEST("DIVUW", "DEHL, (IY-8000H)", 0xFD, 0xED, 0xDB, 0x00, 0x80);
         TEST("DIVUW", "DEHL, <1234H>",    0xDD, 0xED, 0xFB, 0x2F, 0x12);
+    } else if (z380()) {
+        TEST("DIVUW", "HL, BC", 0xED, 0xCB, 0xB8);
+        TEST("DIVUW", "HL, DE", 0xED, 0xCB, 0xB9);
+        TEST("DIVUW", "HL, HL", 0xED, 0xCB, 0xBB);
+        TEST("DIVUW", "HL, IX", 0xED, 0xCB, 0xBC);
+        TEST("DIVUW", "HL, IY", 0xED, 0xCB, 0xBD);
+        TEST("DIVUW", "HL, 1234H",    0xED, 0xCB, 0xBF, 0x34, 0x12);
+        TEST("DIVUW", "HL, (IX-128)", 0xDD, 0xCB, 0x80, 0xBA);
+        TEST("DIVUW", "HL, (IY+127)", 0xFD, 0xCB, 0x7F, 0xBA);
     }
 }
 
 void test_io() {
     TEST("IN",  "A, (0F0H)", 0xDB, 0xF0);
-    if (z180()) {
+    if (z380()) {
+        TEST("INA",  "A, (1234H)",  0xED, 0xDB, 0x34, 0x12);
+        TEST("INAW", "HL, (1234H)", 0xFD, 0xDB, 0x34, 0x12);
+    }
+    if (z180() || z380()) {
         TEST("IN0",  "A, (0F0H)", 0xED, 0x38, 0xF0);
         TEST("IN0",  "B, (0F0H)", 0xED, 0x00, 0xF0);
         TEST("IN0",  "C, (0F0H)", 0xED, 0x08, 0xF0);
@@ -1354,9 +1788,16 @@ void test_io() {
         TEST("IN0",  "H, (0F0H)", 0xED, 0x20, 0xF0);
         TEST("IN0",  "L, (0F0H)", 0xED, 0x28, 0xF0);
     }
+    if (z380()) {
+        TEST("IN0",  "(0F0H)", 0xED, 0x30, 0xF0);
+    }
 
     TEST("OUT", "(0F1H), A", 0xD3, 0xF1);
-    if (z180()) {
+    if (z380()) {
+        TEST("OUTA",  "(1234H), A",  0xED, 0xD3, 0x34, 0x12);
+        TEST("OUTAW", "(1234H), HL", 0xFD, 0xD3, 0x34, 0x12);
+    }
+    if (z180() || z380()) {
         TEST("OUT0", "(0F1H), A", 0xED, 0x39, 0xF1);
         TEST("OUT0", "(0F1H), B", 0xED, 0x01, 0xF1);
         TEST("OUT0", "(0F1H), C", 0xED, 0x09, 0xF1);
@@ -1387,8 +1828,14 @@ void test_io() {
         TEST("IN", "(HL+IX), (C)",    0xDD, 0xED, 0x48);
         TEST("IN", "(HL+IY), (C)",    0xDD, 0xED, 0x50);
         TEST("IN", "(IX+IY), (C)",    0xDD, 0xED, 0x58);
+    }
 
+    if (z280()) {
         TEST("INW", "HL, (C)", 0xED, 0xB7);
+    } else if (z380()) {
+        TEST("INW", "BC, (C)", 0xDD, 0x40);
+        TEST("INW", "DE, (C)", 0xDD, 0x50);
+        TEST("INW", "HL, (C)", 0xDD, 0x78);
     }
 
     TEST("OUT", "(C), A", 0xED, 0x79);
@@ -1412,11 +1859,20 @@ void test_io() {
         TEST("OUT", "(C), (HL+IX)",    0xDD, 0xED, 0x49);
         TEST("OUT", "(C), (HL+IY)",    0xDD, 0xED, 0x51);
         TEST("OUT", "(C), (IX+IY)",    0xDD, 0xED, 0x59);
-
-        TEST("OUTW", "(C), HL", 0xED, 0xBF);
+    } else if (z380()) {
+        TEST("OUT", "(C), 56H", 0xED, 0x71, 0x56);
     }
 
-    if (z180()) {
+    if (z280()) {
+        TEST("OUTW", "(C), HL", 0xED, 0xBF);
+    } else if (z380()) {
+        TEST("OUTW", "(C), BC",    0xDD, 0x41);
+        TEST("OUTW", "(C), DE",    0xDD, 0x51);
+        TEST("OUTW", "(C), HL",    0xDD, 0x79);
+        TEST("OUTW", "(C), 1234H", 0xFD, 0x79, 0x34, 0x12);
+    }
+
+    if (z180() || z380()) {
         TEST("TSTIO", "23H", 0xED, 0x74, 0x23);
     }
     if (z280()) {
@@ -1439,6 +1895,22 @@ void test_io() {
         TEST("LDCTL", "USP, HL", 0xED, 0x8F);
         TEST("LDCTL", "USP, IX", 0xDD, 0xED, 0x8F);
         TEST("LDCTL", "USP, IY", 0xFD, 0xED, 0x8F);
+    } else if (z380()) {
+        TEST("LDCTL", "SR, A",  0xDD, 0xC8);
+        TEST("LDCTL", "SR, HL", 0xED, 0xC8);
+        TEST("LDCTL", "SR, 18", 0xDD, 0xCA, 0x12);
+
+        TEST("LDCTL", "DSR, A",  0xED, 0xD8);
+        TEST("LDCTL", "XSR, A",  0xDD, 0xD8);
+        TEST("LDCTL", "YSR, A",  0xFD, 0xD8);
+        TEST("LDCTL", "DSR, 34H", 0xED, 0xDA, 0x34);
+        TEST("LDCTL", "XSR, 56H", 0xDD, 0xDA, 0x56);
+        TEST("LDCTL", "YSR, 78H", 0xFD, 0xDA, 0x78);
+
+        TEST("LDCTL", "HL, SR", 0xED, 0xC0);
+        TEST("LDCTL", "A, DSR", 0xED, 0xD0);
+        TEST("LDCTL", "A, XSR", 0xDD, 0xD0);
+        TEST("LDCTL", "A, YSR", 0xFD, 0xD0);
     }
 }
 
@@ -1451,6 +1923,12 @@ void test_block() {
     TEST("CPD",  "", 0xED, 0xA9);
     TEST("CPIR", "", 0xED, 0xB1);
     TEST("CPDR", "", 0xED, 0xB9);
+    if (z380()) {
+        TEST("LDIW",  "", 0xED, 0xE0);
+        TEST("LDIRW", "", 0xED, 0xF0);
+        TEST("LDDW",  "", 0xED, 0xE8);
+        TEST("LDDRW", "", 0xED, 0xF8);
+    }
 
     TEST("INI",  "", 0xED, 0xA2);
     TEST("IND",  "", 0xED, 0xAA);
@@ -1461,7 +1939,7 @@ void test_block() {
     TEST("OTIR", "", 0xED, 0xB3);
     TEST("OTDR", "", 0xED, 0xBB);
 
-    if (z180()) {
+    if (z180() || z380()) {
         TEST("OTIM",  "", 0xED, 0x83);
         TEST("OTIMR", "", 0xED, 0x93);
         TEST("OTDM",  "", 0xED, 0x8B);
@@ -1477,6 +1955,15 @@ void test_block() {
         TEST("OUTDW", "", 0xED, 0x8B);
         TEST("OTIRW", "", 0xED, 0x93);
         TEST("OTDRW", "", 0xED, 0x9B);
+    } else if (z380()) {
+        TEST("INIW",  "", 0xED, 0xE2);
+        TEST("INDW",  "", 0xED, 0xEA);
+        TEST("INIRW", "", 0xED, 0xF2);
+        TEST("INDRW", "", 0xED, 0xFA);
+        TEST("OUTIW", "", 0xED, 0xE3);
+        TEST("OUTDW", "", 0xED, 0xEB);
+        TEST("OTIRW", "", 0xED, 0xF3);
+        TEST("OTDRW", "", 0xED, 0xFB);
     }
 }
 
@@ -1486,6 +1973,9 @@ void test_inherent() {
     if (z280()) {
         TEST("DI", "34H", 0xED, 0x77, 0x34);
         TEST("EI", "34H", 0xED, 0x7F, 0x34);
+    } else if (z380()) {
+        TEST("DI", "34H", 0xDD, 0xF3, 0x34);
+        TEST("EI", "34H", 0xDD, 0xFB, 0x34);
     }
 
     TEST("SCF", "", 0x37);
@@ -1493,14 +1983,14 @@ void test_inherent() {
 
     TEST("NOP",  "", 0x00);
     TEST("HALT", "", 0x76);
-    if (z180()) {
+    if (z180() || z380()) {
         TEST("SLP", "", 0xED, 0x76);
     }
 
     TEST("IM", "0", 0xED, 0x46);
     TEST("IM", "1", 0xED, 0x56);
     TEST("IM", "2", 0xED, 0x5E);
-    if (z280()) {
+    if (z280() || z380()) {
         TEST("IM", "3", 0xED, 0x4E);
     } else {
         UNKN(           0xED, 0x4E);
@@ -1508,6 +1998,18 @@ void test_inherent() {
 
     if (z280()) {
         TEST("PCACHE", "", 0xED, 0x65);
+    }
+
+    if (z380()) {
+        TEST("BTEST", "", 0xED, 0xCF);
+        TEST("MTEST", "", 0xDD, 0xCF);
+
+        TEST("SETC", "LW",  0xDD, 0xF7);
+        TEST("SETC", "LCK", 0xED, 0xF7);
+        TEST("SETC", "XM",  0xFD, 0xF7);
+
+        TEST("RESC", "LW",  0xDD, 0xFF);
+        TEST("RESC", "LCK", 0xED, 0xFF);
     }
 }
 
@@ -1588,97 +2090,76 @@ void test_epu() {
     TEST("MEPU", "(IX+IY), 12345678H",    0xED, 0x9D, 0x78, 0x56, 0x34, 0x12);
 }
 
+bool contains(const uint8_t *begin, const uint8_t *end, const uint8_t opc) {
+    do {
+        auto p = begin + (end - begin) / 2;
+        if (*p == opc) {
+            return true;
+        } else if (*p < opc) {
+            begin = p + 1;
+        } else {
+            end = p - 1;
+        }
+    } while (begin <= end);
+    return false;
+}
+
 void test_illegal_z80() {
     for (Config::opcode_t opc = 0x30; opc < 0x38; opc++)
         UNKN(0xCB, opc);
-    for (Config::opcode_t opc = 0x00; opc < 0x40; opc++) {
-        if (z180()) {
-            const auto lo = opc & 0xF;
-            if (lo == 0 || lo == 1 || lo == 4 || lo == 8 || lo == 9 || lo == 0xC) {
-                if (opc == 0x30 || opc == 0x31) {
-                    UNKN(0xED, opc); // IN0 (HL),(io)/OUT0 (io),(HL)
-                } else {
-                    continue;        // IN0, OUT0, TST
-                }
-            }
-        }
-        UNKN(0xED, opc);
-    }
-    for (Config::opcode_t opc = z180() ? 0x7d : 0x7C; opc < 0x80; opc++) {
-        UNKN(0xED, opc);
-    }
-    for (Config::opcode_t opc = 0x80; opc < 0xA0; opc++) {
-        if (z180()) {
-            const auto lo = opc & 0xF;
-            if (lo == 3 || lo == 0xB)
-                continue;       // OTxMx
-        }
-        UNKN(0xED, opc);
-    }
-    for (Config::opcode_t opc = 0xBC; opc; opc++)
-        UNKN(0xED, opc);
-    static constexpr Config::opcode_t ed_illegals[] = {
-        0x4C, 0x4E,
-        0x54, 0x55, 0x5C, 0x5D,
-        0x63, 0x64, 0x65, 0x66, 0x6B, 0x6C, 0x6D, 0x6E,
-        0x70, 0x71, 0x74, 0x75, 0x76, 0x77,
-        0xA4, 0xA5, 0xA6, 0xA7, 0xAC, 0xAD, 0xAE, 0xAF,
-        0xB4, 0xB5, 0xB6, 0xB7,
+
+    static constexpr Config::opcode_t legal_ed_z80[] = {
+        0x40, 0x41, 0x42, 0x43, 0x44, 0x45, 0x46, 0x47, 0x48, 0x49, 0x4A, 0x4B, 0x4D, 0x4F,
+        0x50, 0x51, 0x52, 0x53, 0x56, 0x57, 0x58, 0x59, 0x5A, 0x5B, 0x5E, 0x5F,
+        0x60, 0x61, 0x62, 0x67, 0x68, 0x69, 0x6A, 0x6F,
+        0x72, 0x73, 0x78, 0x79, 0x7A, 0x7B,
+        0xA0, 0xA1, 0xA2, 0xA3, 0xA8, 0xA9, 0xAA, 0xAB,
+        0xB0, 0xB1, 0xB2, 0xB3, 0xB8, 0xB9, 0xBA, 0xBB,
     };
-    for (const auto opc : ed_illegals) {
-        if (z180()) {
-            if (opc == 0x4C || opc == 0x5C || opc == 0x6C || opc == 0x7C)
-                continue;       // MLT
-            if (opc == 0x64 || opc == 0x74 || opc == 0x76)
-                continue;       // TST, TSTIO, SLP
+    static constexpr Config::opcode_t legal_ed_z180[] = {
+        0x00, 0x01, 0x04, 0x08, 0x09, 0x0C,
+        0x10, 0x11, 0x14, 0x18, 0x19, 0x1C,
+        0x20, 0x21, 0x24, 0x28, 0x29, 0x2C,
+        0x34, 0x38, 0x39, 0x3C,
+        0x4C, 0x5C, 0x64, 0x6C, 0x74, 0x76, 0x7C,
+        0x83, 0x8B, 0x93, 0x9B,
+    };
+    for (auto i = 0; i < 0x100; i++) {
+        const auto opc = static_cast<Config::opcode_t>(i);
+        if (!contains(ARRAY_RANGE(legal_ed_z80), opc)) {
+            if (isZ80() || !contains(ARRAY_RANGE(legal_ed_z180), opc))
+                UNKN(0xED, opc);
         }
-        UNKN(0xED, opc);
     }
 
-    static constexpr Config::opcode_t ddfd_legals[] = {
-        0x09, 0x19, 0x21, 0x22, 0x23, 0x29, 0x2A, 0x2B, 0x34, 0x35, 0x36, 0x39,
-        0x46, 0x4E, 0x56, 0x5E, 0x66, 0x6E,
-        0x70, 0x71, 0x72, 0x73, 0x74, 0x75, 0x76, 0x77, 0x7E,
+    static constexpr Config::opcode_t legal_ix[] = {
+        0x09, 0x19, 0x21, 0x22, 0x23, 0x29, 0x2A, 0x2B,
+        0x34, 0x35, 0x36, 0x39, 0x46, 0x4E,
+        0x56, 0x5E, 0x66, 0x6E, 0x70, 0x71, 0x72, 0x73, 0x74, 0x75, 0x77, 0x7E,
         0x86, 0x8E, 0x96, 0x9E, 0xA6, 0xAE, 0xB6, 0xBE,
-        0xCB, 0xE1, 0xE3, 0xE5, 0xE9, 0xF9, 0
+        0xCB, 0xE1, 0xE3, 0xE5, 0xE9, 0xF9,
     };
-    Config::opcode_t opc = 0;
-    for (const auto legal : ddfd_legals) {
-        while (opc != legal) {
+    for (auto i = 0; i < 0x100; i++) {
+        const auto opc = static_cast<Config::opcode_t>(i);
+        if (!contains(ARRAY_RANGE(legal_ix), opc)) {
             UNKN(0xDD, opc);
             UNKN(0xFD, opc);
-            opc++;
         }
-        opc++;
     }
 
-    static constexpr Config::opcode_t ddfdcb_legals[] = {
+    static constexpr Config::opcode_t legal_ixbit[] = {
         0x06, 0x0E, 0x16, 0x1E, 0x26, 0x2E, 0x3E,
         0x46, 0x4E, 0x56, 0x5E, 0x66, 0x6E, 0x76, 0x7E,
         0x86, 0x8E, 0x96, 0x9E, 0xA6, 0xAE, 0xB6, 0xBE,
-        0xC6, 0xCE, 0xD6, 0xDE, 0xE6, 0xEE, 0xF6, 0xFE, 0
+        0xC6, 0xCE, 0xD6, 0xDE, 0xE6, 0xEE, 0xF6, 0xFE,
     };
-    opc = 0;
-    for (const auto legal : ddfdcb_legals) {
-        while (opc != legal) {
-            for (Config::opcode_t offset = 0;; offset++) {
-                UNKN(0xDD, 0xCB, offset, opc);
-                UNKN(0xFD, 0xCB, offset, opc);
-                if (offset == 0xFF)
-                    break;
-            }
-            opc++;
+    for (auto i = 0; i < 0x100; i++) {
+        const auto opc = static_cast<Config::opcode_t>(i);
+        if (!contains(ARRAY_RANGE(legal_ixbit), opc)) {
+            UNKN(0xDD, 0xCB, opc, 0);
+            UNKN(0xFD, 0xCB, opc, 0);
         }
-        opc++;
     }
-}
-
-bool contains(const uint8_t *begin, const uint8_t *end, const uint8_t opc) {
-    for (auto p = begin; p < end; p++) {
-        if (*p == opc)
-            return true;
-    }
-    return false;
 }
 
 void test_illegal_z280() {
@@ -1728,14 +2209,12 @@ void test_illegal_z280() {
         0xD2, 0xD4, 0xDA, 0xDC,
     };
     for (Config::opcode_t opc = 0x30; opc < 0x60; opc++) {
-        if (contains(ARRAY_RANGE(fd_legals), opc))
-            continue;
-        UNKN(0xFD, opc);
+        if (!contains(ARRAY_RANGE(fd_legals), opc))
+            UNKN(0xFD, opc);
     }
     for (Config::opcode_t opc = 0xC0; opc < 0xE0; opc++) {
-        if (contains(ARRAY_RANGE(fd_legals), opc))
-            continue;
-        UNKN(0xFD, opc);
+        if (!contains(ARRAY_RANGE(fd_legals), opc))
+            UNKN(0xFD, opc);
     }
 
     static constexpr Config::opcode_t dded_illegals[] = {
@@ -1752,9 +2231,8 @@ void test_illegal_z280() {
         0x72, 0x78, 0x79, 0x7A, 0x86, 0x87, 0x8E, 0x8F, 0x96, 0x9E,
     };
     for (Config::opcode_t opc = 0x40; opc < 0xC0; opc++) {
-        if (contains(ARRAY_RANGE(dded_legals), opc))
-            continue;
-        UNKN(0xDD, 0xED, opc);
+        if (!contains(ARRAY_RANGE(dded_legals), opc))
+            UNKN(0xDD, 0xED, opc);
     }
 
     static constexpr Config::opcode_t fded_illegals[] = {
@@ -1771,9 +2249,108 @@ void test_illegal_z280() {
         0x72, 0x7A, 0x86, 0x87, 0x8E, 0x8F, 0x96, 0x9E,
     };
     for (Config::opcode_t opc = 0x40; opc < 0xC0; opc++) {
-        if (contains(ARRAY_RANGE(fded_legals), opc))
+        if (!contains(ARRAY_RANGE(fded_legals), opc))
+            UNKN(0xFD, 0xED, opc);
+    }
+}
+
+void test_illegal_z380() {
+    static constexpr Config::opcode_t ed_illegals[] = {
+        0x0A, 0x15, 0x1A, 0x1D, 0x22, 0x23, 0x25, 0x26, 0x2A, 0x2D, 0x2E,
+        0x31, 0x35, 0x3A, 0x3D, 0x5D, 0x6D, 0x6E, 0x70, 0x7D, 0x7E, 0x7F,
+        0x80, 0x81, 0x88, 0x89, 0x8A, 0x90, 0x91, 0x98, 0x99, 0x9A,
+        0xC2, 0xC3, 0xC7, 0xC9, 0xCA, 0xCE,
+        0xD1, 0xD2, 0xD5, 0xD7, 0xDD, 0xDE, 0xDF,
+        0xE1, 0xE5, 0xE6, 0xE7, 0xE9, 0xED, 0xEE, 0xEF,
+        0xF1, 0xF5, 0xF6, 0xF9, 0xFD, 0xFE,
+    };
+    for (const auto illegal : ed_illegals) {
+        UNKN(0xED, illegal);
+    }
+
+    static constexpr Config::opcode_t dd_illegals[] = {
+        0x00, 0x04, 0x05, 0x06, 0x08, 0x0A, 0x0E,
+        0x14, 0x15, 0x16, 0x1A, 0x1E, 0x3A,
+        0x42, 0x43, 0x48, 0x49, 0x4A, 0x4B, 0x4F,
+        0x52, 0x53, 0x58, 0x59, 0x5A, 0x5B, 0x5F,
+        0x76, 0x7A, 0x7B, 0x7F, 0xC5, 0xC7, 0xC9,
+        0xD1, 0xD2, 0xD3, 0xD5, 0xD7, 0xDB, 0xDD, 0xDF,
+        0xE0, 0xE2, 0xE7, 0xE8, 0xEA, 0xEB, 0xED, 0xEF,
+        0xF0, 0xF1, 0xF2, 0xF5, 0xF8, 0xFA, 0xFD,
+    };
+    for (const auto illegal : dd_illegals) {
+        UNKN(0xDD, illegal);
+    }
+    for (Config::opcode_t opc = 0x80; opc < 0xC0; opc++) {
+        if ((opc & 7) < 4)
+            UNKN(0xDD, opc);
+    }
+
+    static constexpr Config::opcode_t fd_illegals[] = {
+        0x00, 0x04, 0x05, 0x06, 0x08, 0x0E, 0x14, 0x15, 0x16, 0x1A, 0x1E,
+        0x2F, 0x3A, 0x76, 0x78, 0x7A, 0x7B, 0x7F,
+        0xC5, 0xC7, 0xC8, 0xC9, 0xCA, 0xCF,
+        0xD1, 0xD2, 0xD5, 0xD7, 0xDD, 0xDF,
+        0xE0, 0xE2, 0xE7, 0xE8, 0xEA, 0xEB, 0xED, 0xEF,
+        0xF0, 0xF1, 0xF2, 0xF3, 0xF8, 0xFA, 0xFB, 0xFF,
+    };
+    for (const auto illegal : fd_illegals) {
+        UNKN(0xFD, illegal);
+    }
+    for (Config::opcode_t opc = 0x40; opc < 0x60; opc++) {
+        if ((opc & 7) < 4 || (opc & 7) == 7)
+            UNKN(0xFD, opc);
+    }
+    for (Config::opcode_t opc = 0x80; opc < 0xC0; opc++) {
+        if ((opc & 7) < 4)
+            UNKN(0xFD, opc);
+    }
+
+    static constexpr Config::opcode_t edcb_illegals[] = {
+        0x06, 0x07, 0x0E, 0x0F, 0x16, 0x17, 0x1E, 0x1F,
+        0x26, 0x27, 0x2E, 0x2F, 0x32, 0x36, 0x37, 0x3E, 0x3F,
+        0x92, 0x96, 0x9A, 0x9E,
+        0xB0, 0xB1, 0xB2, 0xB3, 0xB4, 0xB5, 0xB6, 0xB7, 0xBA, 0xBE,
+    };
+    for (const auto illegal : edcb_illegals) {
+        UNKN(0xED, 0xCB, illegal);
+    }
+    for (Config::opcode_t opc = 0x40; opc; opc++) {
+        if ((opc & 0xF0) == 0x90 || (opc & 0xF8) == 0xB8)
             continue;
-        UNKN(0xFD, 0xED, opc);
+        UNKN(0xED, 0xCB, opc);
+    }
+
+    UNKN(0xCB, 0x36);
+
+    static constexpr Config::opcode_t ddcb_legals[] = {
+        0x01, 0x02, 0x03, 0x06, 0x09, 0x0A, 0x0B, 0x0E,
+        0x11, 0x12, 0x13, 0x16, 0x19, 0x1A, 0x1B, 0x1E,
+        0x21, 0x22, 0x23, 0x26, 0x29, 0x2A, 0x2B, 0x2E,
+        0x31, 0x33, 0x39, 0x3A, 0x3B, 0x3E,
+        0x46, 0x4E, 0x56, 0x5E, 0x66, 0x6E, 0x76, 0x7E, 0x80, 0x8E,
+        0x92, 0x96, 0x9A, 0x9E, 0xA6, 0xAE, 0xB6, 0xBA, 0xBE,
+        0xC6, 0xCE, 0xD6, 0xDE, 0xE6, 0xED, 0xF6, 0xFD,
+    };
+    for (auto i = 0; i < 0x100; i++) {
+        const auto opc = static_cast<Config::opcode_t>(i);
+        if (!contains(ARRAY_RANGE(ddcb_legals), opc))
+            UNKN(0xDD, 0xCB, opc, 0);
+    }
+
+    static constexpr Config::opcode_t fdcb_legals[] = {
+        0x02, 0x03, 0x06, 0x0A, 0x0B, 0x0E,
+        0x12, 0x13, 0x16, 0x1A, 0x1B, 0x1E,
+        0x21, 0x22, 0x23, 0x26, 0x29, 0x2A, 0x2B, 0x2E,
+        0x33, 0x3A, 0x3B, 0x3E,
+        0x46, 0x4E, 0x56, 0x5E, 0x66, 0x6E, 0x76, 0x7E, 0x80, 0x8E,
+        0x92, 0x96, 0x9A, 0x9E, 0xA6, 0xAE, 0xB6, 0xBA, 0xBE,
+        0xC6, 0xCE, 0xD6, 0xDE, 0xE6, 0xED, 0xF6, 0xFD,
+    };
+    for (auto i = 0; i < 0x100; i++) {
+        const auto opc = static_cast<Config::opcode_t>(i);
+        if (!contains(ARRAY_RANGE(fdcb_legals), opc))
+            UNKN(0xFD, 0xCB, opc, 0);
     }
 }
 // clang-format on
@@ -1801,6 +2378,8 @@ void run_tests(const char *cpu) {
         RUN_TEST(test_illegal_z80);
     if (z280())
         RUN_TEST(test_illegal_z280);
+    if (z380())
+        RUN_TEST(test_illegal_z380);
 }
 
 // Local Variables:

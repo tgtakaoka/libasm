@@ -30,6 +30,7 @@ struct AsmZ80 final : Assembler, Config {
 private:
     Error parseOperand(StrScanner &scan, Operand &op, const AsmInsn &insn) const;
 
+    int32_t calcDeltaZ380(AsmInsn &insn, const ErrorAt &at, AddrMode &mode, int32_t delta) const;
     void encodeRelative(AsmInsn &insn, const Operand &op, AddrMode mode) const;
     void encodeAbsolute(AsmInsn &insn, const Operand &op) const;
     void encodeMemoryPointer(AsmInsn &insn, const Operand &op) const;

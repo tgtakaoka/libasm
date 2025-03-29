@@ -36,6 +36,18 @@ bool z280() {
     return strcasecmp_P("Z280", assembler.config().cpu_P()) == 0;
 }
 
+bool z380() {
+    return strcasecmp_P("Z380", assembler.config().cpu_P()) == 0;
+}
+
+#define T380(src, ...) \
+    if (z380())        \
+    TEST(src, __VA_ARGS__)
+
+#define E380(src, ...) \
+    if (z380())        \
+    ERRT(src, __VA_ARGS__)
+
 void set_up() {
     assembler.reset();
 }
@@ -54,6 +66,9 @@ void test_cpu() {
 
     EQUALS("cpu z280", true, assembler.setCpu("z280"));
     EQUALS_P("get cpu", "Z280", assembler.config().cpu_P());
+
+    EQUALS("cpu z380", true, assembler.setCpu("z380"));
+    EQUALS_P("get cpu", "Z380", assembler.config().cpu_P());
 }
 
 void test_load_registers() {
@@ -113,41 +128,56 @@ void test_load_registers() {
     TEST("LD L,H", 0x6C);
     TEST("LD L,L", 0x6D);
 
-    if (z280()) {
+
+    if (z280() || z380()) {
         TEST("LD A, IXH", 0xDD, 0x7C);
         TEST("LD A, IXL", 0xDD, 0x7D);
         TEST("LD A, IYH", 0xFD, 0x7C);
         TEST("LD A, IYL", 0xFD, 0x7D);
+        T380("LD A, IXU", 0xDD, 0x7C);
+        T380("LD A, IYU", 0xFD, 0x7C);
 
         TEST("LD B, IXH", 0xDD, 0x44);
         TEST("LD B, IXL", 0xDD, 0x45);
         TEST("LD B, IYH", 0xFD, 0x44);
         TEST("LD B, IYL", 0xFD, 0x45);
+        T380("LD B, IXU", 0xDD, 0x44);
+        T380("LD B, IYU", 0xFD, 0x44);
 
         TEST("LD C, IXH", 0xDD, 0x4C);
         TEST("LD C, IXL", 0xDD, 0x4D);
         TEST("LD C, IYH", 0xFD, 0x4C);
         TEST("LD C, IYL", 0xFD, 0x4D);
+        T380("LD C, IXU", 0xDD, 0x4C);
+        T380("LD C, IYU", 0xFD, 0x4C);
 
         TEST("LD D, IXH", 0xDD, 0x54);
         TEST("LD D, IXL", 0xDD, 0x55);
         TEST("LD D, IYH", 0xFD, 0x54);
         TEST("LD D, IYL", 0xFD, 0x55);
+        T380("LD D, IXU", 0xDD, 0x54);
+        T380("LD D, IYU", 0xFD, 0x54);
 
         TEST("LD E, IXH", 0xDD, 0x5C);
         TEST("LD E, IXL", 0xDD, 0x5D);
         TEST("LD E, IYH", 0xFD, 0x5C);
         TEST("LD E, IYL", 0xFD, 0x5D);
+        T380("LD E, IXU", 0xDD, 0x5C);
+        T380("LD E, IYU", 0xFD, 0x5C);
 
         ERRT("LD H, IXH", REGISTER_NOT_ALLOWED, "H, IXH", 0xDD, 0x64);
         ERRT("LD H, IXL", REGISTER_NOT_ALLOWED, "H, IXL", 0xDD, 0x65);
         ERRT("LD H, IYH", REGISTER_NOT_ALLOWED, "H, IYH", 0xFD, 0x64);
         ERRT("LD H, IYL", REGISTER_NOT_ALLOWED, "H, IYL", 0xFD, 0x65);
+        E380("LD H, IXU", REGISTER_NOT_ALLOWED, "H, IXU", 0xDD, 0x64);
+        E380("LD H, IYU", REGISTER_NOT_ALLOWED, "H, IYU", 0xFD, 0x64);
 
         ERRT("LD L, IXH", REGISTER_NOT_ALLOWED, "L, IXH", 0xDD, 0x6C);
         ERRT("LD L, IXL", REGISTER_NOT_ALLOWED, "L, IXL", 0xDD, 0x6D);
         ERRT("LD L, IYH", REGISTER_NOT_ALLOWED, "L, IYH", 0xFD, 0x6C);
         ERRT("LD L, IYL", REGISTER_NOT_ALLOWED, "L, IYL", 0xFD, 0x6D);
+        E380("LD L, IXU", REGISTER_NOT_ALLOWED, "L, IXU", 0xDD, 0x6C);
+        E380("LD L, IYU", REGISTER_NOT_ALLOWED, "L, IYU", 0xFD, 0x6C);
 
         TEST("LD IXH, A", 0xDD, 0x67);
         TEST("LD IXH, B", 0xDD, 0x60);
@@ -159,6 +189,16 @@ void test_load_registers() {
         TEST("LD IXH, IXH", 0xDD, 0x64);
         TEST("LD IXH, IXL", 0xDD, 0x65);
 
+        T380("LD IXU, A", 0xDD, 0x67);
+        T380("LD IXU, B", 0xDD, 0x60);
+        T380("LD IXU, C", 0xDD, 0x61);
+        T380("LD IXU, D", 0xDD, 0x62);
+        T380("LD IXU, E", 0xDD, 0x63);
+        E380("LD IXU, H", REGISTER_NOT_ALLOWED, "H", 0xDD, 0x64);
+        E380("LD IXU, L", REGISTER_NOT_ALLOWED, "L", 0xDD, 0x65);
+        T380("LD IXU, IXU", 0xDD, 0x64);
+        T380("LD IXU, IXL", 0xDD, 0x65);
+
         TEST("LD IXL, A", 0xDD, 0x6F);
         TEST("LD IXL, B", 0xDD, 0x68);
         TEST("LD IXL, C", 0xDD, 0x69);
@@ -168,6 +208,7 @@ void test_load_registers() {
         ERRT("LD IXL, L", REGISTER_NOT_ALLOWED, "L", 0xDD, 0x6D);
         TEST("LD IXL, IXH", 0xDD, 0x6C);
         TEST("LD IXL, IXL", 0xDD, 0x6D);
+        T380("LD IXL, IXU", 0xDD, 0x6C);
 
         TEST("LD IYH, A", 0xFD, 0x67);
         TEST("LD IYH, B", 0xFD, 0x60);
@@ -179,6 +220,16 @@ void test_load_registers() {
         TEST("LD IYH, IYH", 0xFD, 0x64);
         TEST("LD IYH, IYL", 0xFD, 0x65);
 
+        T380("LD IYU, A", 0xFD, 0x67);
+        T380("LD IYU, B", 0xFD, 0x60);
+        T380("LD IYU, C", 0xFD, 0x61);
+        T380("LD IYU, D", 0xFD, 0x62);
+        T380("LD IYU, E", 0xFD, 0x63);
+        E380("LD IYU, H", REGISTER_NOT_ALLOWED, "H", 0xFD, 0x64);
+        E380("LD IYU, L", REGISTER_NOT_ALLOWED, "L", 0xFD, 0x65);
+        T380("LD IYU, IYU", 0xFD, 0x64);
+        T380("LD IYU, IYL", 0xFD, 0x65);
+
         TEST("LD IYL, A", 0xFD, 0x6F);
         TEST("LD IYL, B", 0xFD, 0x68);
         TEST("LD IYL, C", 0xFD, 0x69);
@@ -188,12 +239,19 @@ void test_load_registers() {
         ERRT("LD IYL, L", REGISTER_NOT_ALLOWED, "L", 0xFD, 0x6D);
         TEST("LD IYL, IYH", 0xFD, 0x6C);
         TEST("LD IYL, IYL", 0xFD, 0x6D);
+        T380("LD IYL, IYU", 0xFD, 0x6C);
     }
 
-    TEST("LD I,A", 0xED, 0x47);
     TEST("LD R,A", 0xED, 0x4F);
-    TEST("LD A,I", 0xED, 0x57);
     TEST("LD A,R", 0xED, 0x5F);
+    TEST("LD I,A", 0xED, 0x47);
+    TEST("LD A,I", 0xED, 0x57);
+    if (z380()) {
+        TEST("LDW I, HL", 0xDD, 0x47);
+        TEST("LD  I, HL", 0xDD, 0x47);
+        TEST("LDW HL, I", 0xDD, 0x57);
+        TEST("LD  HL, I", 0xDD, 0x57);
+    }
 
     TEST("LD SP,HL", 0xF9);
     TEST("LD SP,IX", 0xDD, 0xF9);
@@ -206,6 +264,47 @@ void test_load_registers() {
         TEST("LD  SP, IX", 0xDD, 0xF9);
         TEST("LD  SP, IY", 0xFD, 0xF9);
     }
+
+    if (z380()) {
+        TEST("LDW BC, DE", 0xDD, 0x02);
+        TEST("LDW DE, DE", 0xDD, 0x12);
+        TEST("LDW HL, DE", 0xDD, 0x32);
+        TEST("LD  BC, DE", 0xDD, 0x02);
+        TEST("LD  DE, DE", 0xDD, 0x12);
+        TEST("LD  HL, DE", 0xDD, 0x32);
+
+        TEST("LDW BC, BC", 0xED, 0x02);
+        TEST("LDW DE, BC", 0xED, 0x12);
+        TEST("LDW HL, BC", 0xED, 0x32);
+        TEST("LD  BC, BC", 0xED, 0x02);
+        TEST("LD  DE, BC", 0xED, 0x12);
+        TEST("LD  HL, BC", 0xED, 0x32);
+
+        TEST("LDW BC, HL", 0xFD, 0x02);
+        TEST("LDW DE, HL", 0xFD, 0x12);
+        TEST("LDW HL, HL", 0xFD, 0x32);
+        TEST("LD  BC, HL", 0xFD, 0x02);
+        TEST("LD  DE, HL", 0xFD, 0x12);
+        TEST("LD  HL, HL", 0xFD, 0x32);
+
+        TEST("LDW BC, IX", 0xDD, 0x0B);
+        TEST("LDW DE, IX", 0xDD, 0x1B);
+        TEST("LDW HL, IX", 0xDD, 0x3B);
+        TEST("LDW IY, IX", 0xFD, 0x27);
+        TEST("LD  BC, IX", 0xDD, 0x0B);
+        TEST("LD  DE, IX", 0xDD, 0x1B);
+        TEST("LD  HL, IX", 0xDD, 0x3B);
+        TEST("LD  IY, IX", 0xFD, 0x27);
+
+        TEST("LDW BC, IY", 0xFD, 0x0B);
+        TEST("LDW DE, IY", 0xFD, 0x1B);
+        TEST("LDW HL, IY", 0xFD, 0x3B);
+        TEST("LDW IX, IY", 0xDD, 0x27);
+        TEST("LD  BC, IY", 0xFD, 0x0B);
+        TEST("LD  DE, IY", 0xFD, 0x1B);
+        TEST("LD  HL, IY", 0xFD, 0x3B);
+        TEST("LD  IX, IY", 0xDD, 0x27);
+    }
 }
 
 void test_load_immediate() {
@@ -215,11 +314,13 @@ void test_load_immediate() {
     TEST("LD E,80H",  0x1E, 0x80);
     TEST("LD H,0F6H", 0x26, 0xF6);
     TEST("LD L,0F6H", 0x2E, 0xF6);
-    if (z280()) {
+    if (z280() || z380()) {
         TEST("LD IXH, 0F6H", 0xDD, 0x26, 0xF6);
         TEST("LD IXL, 9FH",  0xDD, 0x2E, 0x9F);
         TEST("LD IYH, 3AH",  0xFD, 0x26, 0x3A);
         TEST("LD IYL, 80H",  0xFD, 0x2E, 0x80);
+        T380("LD IXU, 0F6H", 0xDD, 0x26, 0xF6);
+        T380("LD IYU, 3AH",  0xFD, 0x26, 0x3A);
     }
 
     TEST("LD A,0FEH", 0x3E, 0xFE);
@@ -239,6 +340,10 @@ void test_load_immediate() {
         TEST("LD (HL+IY), 0F6H",    0xDD, 0x16, 0xF6);
         TEST("LD (IX+IY), 0F6H",    0xDD, 0x1E, 0xF6);
     }
+    if (z380()) {
+        TEST("LD (IX-128), 56H", 0xDD, 0x36, 0x80, 0x56);
+        TEST("LD (IY+127), 56H", 0xFD, 0x36, 0x7F, 0x56);
+    }
 
     TEST("LD BC,0BEEFH", 0x01, 0xEF, 0xBE);
     TEST("LD DE,1234H",  0x11, 0x34, 0x12);
@@ -250,7 +355,13 @@ void test_load_immediate() {
         TEST("LDW (HL), 1234H", 0xDD, 0x01, 0x34, 0x12);
         TEST("LDW (1234H), 5678H", 0xDD, 0x11, 0x34, 0x12, 0x78, 0x56);
         TEST("LDW <1234H>, 5678H", 0xDD, 0x31, 0x2E, 0x12, 0x78, 0x56);
-
+    }
+    if (z380()) {
+        TEST("LDW (BC), 1234H", 0xED, 0x06, 0x34, 0x12);
+        TEST("LDW (DE), 1234H", 0xED, 0x16, 0x34, 0x12);
+        TEST("LDW (HL), 1234H", 0xED, 0x36, 0x34, 0x12);
+    }
+    if (z280() || z380()) {
         TEST("PUSH 1234H", 0xFD, 0xF5, 0x34, 0x12);
     }
 
@@ -401,6 +512,58 @@ void test_load() {
         TEST("LD  IY, (HL+IY)",    0xFD, 0xED, 0x14);
         TEST("LD  IY, (IX+IY)",    0xFD, 0xED, 0x1C);
     }
+    if (z380()) {
+        TEST("LDW BC, (BC)", 0xDD, 0x0C);
+        TEST("LDW BC, (DE)", 0xDD, 0x0D);
+        TEST("LDW BC, (HL)", 0xDD, 0x0F);
+
+        TEST("LDW DE, (BC)", 0xDD, 0x1C);
+        TEST("LDW DE, (DE)", 0xDD, 0x1D);
+        TEST("LDW DE, (HL)", 0xDD, 0x1F);
+
+        TEST("LDW HL, (BC)", 0xDD, 0x3C);
+        TEST("LDW HL, (DE)", 0xDD, 0x3D);
+        TEST("LDW HL, (HL)", 0xDD, 0x3F);
+
+        TEST("LDW IX, (BC)", 0xDD, 0x03);
+        TEST("LDW IX, (DE)", 0xDD, 0x13);
+        TEST("LDW IX, (HL)", 0xDD, 0x33);
+
+        TEST("LDW IY, (BC)", 0xFD, 0x03);
+        TEST("LDW IY, (DE)", 0xFD, 0x13);
+        TEST("LDW IY, (HL)", 0xFD, 0x33);
+
+        TEST("LDW HL, (5678H)", 0xED, 0x6B, 0x78, 0x56);
+
+        TEST("LDW BC, (IX+127)", 0xDD, 0xCB, 0x7F, 0x03);
+        TEST("LDW DE, (IX+127)", 0xDD, 0xCB, 0x7F, 0x13);
+        TEST("LDW IY, (IX+127)", 0xDD, 0xCB, 0x7F, 0x23);
+        TEST("LDW HL, (IX+127)", 0xDD, 0xCB, 0x7F, 0x33);
+        TEST("LD  BC, (IX+127)", 0xDD, 0xCB, 0x7F, 0x03);
+        TEST("LD  DE, (IX+127)", 0xDD, 0xCB, 0x7F, 0x13);
+        TEST("LD  IY, (IX+127)", 0xDD, 0xCB, 0x7F, 0x23);
+        TEST("LD  HL, (IX+127)", 0xDD, 0xCB, 0x7F, 0x33);
+
+        TEST("LDW BC, (IY-128)", 0xFD, 0xCB, 0x80, 0x03);
+        TEST("LDW DE, (IY-128)", 0xFD, 0xCB, 0x80, 0x13);
+        TEST("LDW IX, (IY-128)", 0xFD, 0xCB, 0x80, 0x23);
+        TEST("LDW HL, (IY-128)", 0xFD, 0xCB, 0x80, 0x33);
+        TEST("LD  BC, (IY-128)", 0xFD, 0xCB, 0x80, 0x03);
+        TEST("LD  DE, (IY-128)", 0xFD, 0xCB, 0x80, 0x13);
+        TEST("LD  IX, (IY-128)", 0xFD, 0xCB, 0x80, 0x23);
+        TEST("LD  HL, (IY-128)", 0xFD, 0xCB, 0x80, 0x33);
+
+        TEST("LDW BC, (SP+127)", 0xDD, 0xCB, 0x7F, 0x01);
+        TEST("LDW DE, (SP+127)", 0xDD, 0xCB, 0x7F, 0x11);
+        TEST("LDW HL, (SP-128)", 0xDD, 0xCB, 0x80, 0x31);
+        TEST("LDW IX, (SP+127)", 0xDD, 0xCB, 0x7F, 0x21);
+        TEST("LDW IY, (SP-128)", 0xFD, 0xCB, 0x80, 0x21);
+        TEST("LD  BC, (SP+127)", 0xDD, 0xCB, 0x7F, 0x01);
+        TEST("LD  DE, (SP+127)", 0xDD, 0xCB, 0x7F, 0x11);
+        TEST("LD  HL, (SP-128)", 0xDD, 0xCB, 0x80, 0x31);
+        TEST("LD  IX, (SP+127)", 0xDD, 0xCB, 0x7F, 0x21);
+        TEST("LD  IY, (SP-128)", 0xFD, 0xCB, 0x80, 0x21);
+    }
 }
 
 void test_store() {
@@ -549,6 +712,71 @@ void test_store() {
         TEST("LD  (HL+IY), IY",    0xFD, 0xED, 0x15);
         TEST("LD  (IX+IY), IY",    0xFD, 0xED, 0x1D);
     }
+    if (z380()) {
+        TEST("LDW (5678H), HL", 0xED, 0x63, 0x78, 0x56);
+
+        TEST("LDW (BC), BC", 0xFD, 0x0C);
+        TEST("LDW (BC), DE", 0xFD, 0x1C);
+        TEST("LDW (BC), HL", 0xFD, 0x3C);
+        TEST("LDW (BC), IX", 0xDD, 0x01);
+        TEST("LDW (BC), IY", 0xFD, 0x01);
+        TEST("LD  (BC), BC", 0xFD, 0x0C);
+        TEST("LD  (BC), DE", 0xFD, 0x1C);
+        TEST("LD  (BC), HL", 0xFD, 0x3C);
+        TEST("LD  (BC), IX", 0xDD, 0x01);
+        TEST("LD  (BC), IY", 0xFD, 0x01);
+
+        TEST("LDW (DE), BC", 0xFD, 0x0D);
+        TEST("LDW (DE), DE", 0xFD, 0x1D);
+        TEST("LDW (DE), HL", 0xFD, 0x3D);
+        TEST("LDW (DE), IX", 0xDD, 0x11);
+        TEST("LDW (DE), IY", 0xFD, 0x11);
+        TEST("LD  (DE), BC", 0xFD, 0x0D);
+        TEST("LD  (DE), DE", 0xFD, 0x1D);
+        TEST("LD  (DE), HL", 0xFD, 0x3D);
+        TEST("LD  (DE), IX", 0xDD, 0x11);
+        TEST("LD  (DE), IY", 0xFD, 0x11);
+
+        TEST("LDW (HL), BC", 0xFD, 0x0F);
+        TEST("LDW (HL), DE", 0xFD, 0x1F);
+        TEST("LDW (HL), HL", 0xFD, 0x3F);
+        TEST("LDW (HL), IX", 0xDD, 0x31);
+        TEST("LDW (HL), IY", 0xFD, 0x31);
+        TEST("LD  (HL), BC", 0xFD, 0x0F);
+        TEST("LD  (HL), DE", 0xFD, 0x1F);
+        TEST("LD  (HL), HL", 0xFD, 0x3F);
+        TEST("LD  (HL), IX", 0xDD, 0x31);
+        TEST("LD  (HL), IY", 0xFD, 0x31);
+
+        TEST("LDW (IX-128), BC", 0xDD, 0xCB, 0x80, 0x0B);
+        TEST("LDW (IX-128), DE", 0xDD, 0xCB, 0x80, 0x1B);
+        TEST("LDW (IX-128), HL", 0xDD, 0xCB, 0x80, 0x3B);
+        TEST("LDW (IX-128), IY", 0xDD, 0xCB, 0x80, 0x2B);
+        TEST("LD  (IX-128), BC", 0xDD, 0xCB, 0x80, 0x0B);
+        TEST("LD  (IX-128), DE", 0xDD, 0xCB, 0x80, 0x1B);
+        TEST("LD  (IX-128), HL", 0xDD, 0xCB, 0x80, 0x3B);
+        TEST("LD  (IX-128), IY", 0xDD, 0xCB, 0x80, 0x2B);
+
+        TEST("LDW (IY+127), BC", 0xFD, 0xCB, 0x7F, 0x0B);
+        TEST("LDW (IY+127), DE", 0xFD, 0xCB, 0x7F, 0x1B);
+        TEST("LDW (IY+127), HL", 0xFD, 0xCB, 0x7F, 0x3B);
+        TEST("LDW (IY+127), IX", 0xFD, 0xCB, 0x7F, 0x2B);
+        TEST("LD  (IY+127), BC", 0xFD, 0xCB, 0x7F, 0x0B);
+        TEST("LD  (IY+127), DE", 0xFD, 0xCB, 0x7F, 0x1B);
+        TEST("LD  (IY+127), HL", 0xFD, 0xCB, 0x7F, 0x3B);
+        TEST("LD  (IY+127), IX", 0xFD, 0xCB, 0x7F, 0x2B);
+
+        TEST("LDW (SP+127), BC", 0xDD, 0xCB, 0x7F, 0x09);
+        TEST("LDW (SP+127), DE", 0xDD, 0xCB, 0x7F, 0x19);
+        TEST("LDW (SP+127), HL", 0xDD, 0xCB, 0x7F, 0x39);
+        TEST("LDW (SP+127), IX", 0xDD, 0xCB, 0x7F, 0x29);
+        TEST("LDW (SP-128), IY", 0xFD, 0xCB, 0x80, 0x29);
+        TEST("LD  (SP+127), BC", 0xDD, 0xCB, 0x7F, 0x09);
+        TEST("LD  (SP+127), DE", 0xDD, 0xCB, 0x7F, 0x19);
+        TEST("LD  (SP+127), HL", 0xDD, 0xCB, 0x7F, 0x39);
+        TEST("LD  (SP+127), IX", 0xDD, 0xCB, 0x7F, 0x29);
+        TEST("LD  (SP-128), IY", 0xFD, 0xCB, 0x80, 0x29);
+    }
 }
 
 void test_exchange() {
@@ -576,7 +804,18 @@ void test_exchange() {
         TEST("EX IXL, A", 0xDD, 0xED, 0x2F);
         TEST("EX IYH, A", 0xFD, 0xED, 0x27);
         TEST("EX IYL, A", 0xFD, 0xED, 0x2F);
+    }
+    if (z380()) {
+        TEST("EX A, A'", 0xCB, 0x37);
+        TEST("EX B, B'", 0xCB, 0x30);
+        TEST("EX C, C'", 0xCB, 0x31);
+        TEST("EX D, D'", 0xCB, 0x32);
+        TEST("EX E, E'", 0xCB, 0x33);
+        TEST("EX H, H'", 0xCB, 0x34);
+        TEST("EX L, L'", 0xCB, 0x35);
+    }
 
+    if (z280()) {
         TEST("EX A, (HL)",       0xED, 0x37);
         TEST("EX A, (IX+127)",   0xDD, 0xED, 0x37, 0x7F);
         TEST("EX A, (IY-128)",   0xFD, 0xED, 0x37, 0x80);
@@ -599,7 +838,38 @@ void test_exchange() {
         TEST("EX HL, IX", 0xDD, 0xEB);
         TEST("EX HL, IY", 0xFD, 0xEB);
     }
+    if (z380()) {
+        TEST("EX BC, DE", 0xED, 0x05);
+        TEST("EX BC, HL", 0xED, 0x0D);
+        TEST("EX BC, IX", 0xED, 0x03);
+        TEST("EX BC, IY", 0xED, 0x0B);
+        TEST("EX DE, BC", 0xED, 0x05);
+        TEST("EX HL, BC", 0xED, 0x0D);
+        TEST("EX IX, BC", 0xED, 0x03);
+        TEST("EX IY, BC", 0xED, 0x0B);
+
+        TEST("EX DE, IX", 0xED, 0x13);
+        TEST("EX DE, IY", 0xED, 0x1B);
+        TEST("EX IX, DE", 0xED, 0x13);
+        TEST("EX IY, DE", 0xED, 0x1B);
+
+        TEST("EX HL, IX", 0xED, 0x33);
+        TEST("EX HL, IY", 0xED, 0x3B);
+        TEST("EX IX, HL", 0xED, 0x33);
+        TEST("EX IY, HL", 0xED, 0x3B);
+
+        TEST("EX IX, IY", 0xED, 0x2B);
+        TEST("EX IY, IX", 0xED, 0x2B);
+    }
+
     TEST("EX AF,AF'", 0x08);
+    if (z380()) {
+        TEST("EX BC, BC'", 0xED, 0xCB, 0x30);
+        TEST("EX DE, DE'", 0xED, 0xCB, 0x31);
+        TEST("EX HL, HL'", 0xED, 0xCB, 0x33);
+        TEST("EX IX, IX'", 0xED, 0xCB, 0x34);
+        TEST("EX IY, IY'", 0xED, 0xCB, 0x35);
+    }
 
     TEST("EX (SP),HL", 0xE3);
     TEST("EX HL,(SP)", 0xE3);
@@ -609,6 +879,17 @@ void test_exchange() {
     TEST("EX IY,(SP)", 0xFD, 0xE3);
 
     TEST("EXX", 0xD9);
+    if (z380()) {
+        TEST("EXXX",  0xDD, 0xD9);
+        TEST("EXXY",  0xFD, 0xD9);
+        TEST("EXALL", 0xED, 0xD9);
+
+        TEST("SWAP BC", 0xED, 0x0E);
+        TEST("SWAP DE", 0xED, 0x1E);
+        TEST("SWAP HL", 0xED, 0x3E);
+        TEST("SWAP IX", 0xDD, 0x3E);
+        TEST("SWAP IY", 0xFD, 0x3E);
+    }
 }
 
 void test_stack() {
@@ -618,6 +899,9 @@ void test_stack() {
     TEST("PUSH AF", 0xF5);
     TEST("PUSH IX", 0xDD, 0xE5);
     TEST("PUSH IY", 0xFD, 0xE5);
+    if (z380()) {
+        TEST("PUSH SR", 0xED, 0xC5);
+    }
 
     if (z280()) {
         TEST("PUSH (HL)",    0xDD, 0xC5);
@@ -631,6 +915,9 @@ void test_stack() {
     TEST("POP AF", 0xF1);
     TEST("POP IX", 0xDD, 0xE1);
     TEST("POP IY", 0xFD, 0xE1);
+    if (z380()) {
+        TEST("POP SR", 0xED, 0xC1);
+    }
 
     if (z280()) {
         TEST("POP (HL)",    0xDD, 0xC1);
@@ -660,6 +947,11 @@ void test_stack() {
         TEST("RETIL", 0xED, 0x55);
     } else {
         ERUI("RETIL");
+    }
+    if (z380()) {
+        TEST("RETB",  0xED, 0x55);
+    } else {
+        ERUI("RETB");
     }
 }
 
@@ -760,6 +1052,27 @@ void test_jump() {
         AERRT(0x1000, "CALL <0FFFFFFH>", OVERFLOW_RANGE, "<0FFFFFFH>", 0xFD, 0xCD, 0xFB, 0xEF);
     }
 
+    if (z380()) {
+        ATEST(0x1000, "CALR 1082H", 0xED, 0xCD, 0x7F);
+        ATEST(0x1000, "CALR 2083H", 0xDD, 0xCD, 0x7F, 0x10);
+        ATEST(0x1000, "CALR 9005H", 0xFD, 0xCD, 0x00, 0x80, 0x00,);
+
+        ATEST(0XF000, "CALR NZ, 0EF83H", 0xED, 0xC4, 0x80);
+        ATEST(0XF000, "CALR Z, 7004H",   0xDD, 0xCC, 0x00, 0x80);
+        ATEST(0XF000, "CALR NC, 6005H",  0xFD, 0xD4, 0x00, 0x70, 0xFF);
+        ATEST(0X1000, "CALR C, 1082H",   0xED, 0xDC, 0x7F);
+        ATEST(0X1000, "CALR PO, 9003H",  0xDD, 0xE4, 0xFF, 0x7F);
+        ATEST(0X1000, "CALR PE, 9005H",  0xFD, 0xEC, 0x00, 0x80, 0x00);
+        ATEST(0X1000, "CALR P, 1003H",   0xED, 0xF4, 0x00);
+        ATEST(0X1000, "CALR M, 1000H",   0xED, 0xFC, 0xFD);
+        AERRT(0xFFF0, "CALR 10072H",
+              OVERFLOW_RANGE, "10072H", 0xED, 0xCD, 0x7F);
+        AERRT(0xF000, "CALR 11004H",
+              OVERFLOW_RANGE, "11004H", 0xDD, 0xCD, 0x00, 0x20);
+        AERRT(0x1000, "CALR 11005H",
+              OVERFLOW_RANGE, "11005H", 0xFD, 0xCD, 0x00, 0x00, 0x01);
+    }
+
     ATEST(0x1000, "JR    1000H", 0x18, 0xFE);
     ATEST(0x1000, "JR NZ,1004H", 0x20, 0x02);
     ATEST(0x1000, "JR  Z,1081H", 0x28, 0x7F);
@@ -767,9 +1080,31 @@ void test_jump() {
     ATEST(0x1000, "JR  C,0F82H", 0x38, 0x80);
     ATEST(0x1000, "JR  C,1081H", 0x38, 0x7F);
     ATEST(0x1000, "JR  C,0F82H", 0x38, 0x80);
-    AERRT(0x1000, "JR  C,1082H", OPERAND_TOO_FAR, "1082H", 0x38, 0x80);
-    AERRT(0x1000, "JR  C,0F81H", OPERAND_TOO_FAR, "0F81H", 0x38, 0x7F);
     ATEST(0x1000, "JR $+80H",    0x18, 0x7E);
+    if (z380()) {
+        ATEST(0x1000, "JR 2083H",     0xDD, 0x18, 0x7F, 0x10);
+        ATEST(0x1000, "JR 9005H",     0xFD, 0x18, 0x00, 0x80, 0x00);
+
+        ATEST(0x1000, "JR NZ, 3004H", 0xDD, 0x20, 0x00, 0x20);
+        ATEST(0x1000, "JR Z, 0A005H", 0xFD, 0x28, 0x00, 0x90, 0x00);
+        ATEST(0xF000, "JR NC, 7004H", 0xDD, 0x30, 0x00, 0x80);
+        ATEST(0xF000, "JR C, 6005H",  0xFD, 0x38, 0x00, 0x70, 0xFF);
+        ATEST(0x1000, "JR C, 1004H",  0x38, 0x02);
+        ATEST(0x1000, "JR C, 1000H",  0x38, 0xFE);
+        AERRT(0xFFFFFF80, "JR C, 000000001H",
+              OVERFLOW_RANGE, "000000001H", 0x38, 0x7F);
+        AERRT(0x0000007D, "JR C, 0FFFFFFFFH",
+              OVERFLOW_RANGE, "0FFFFFFFFH", 0x38, 0x80);
+        AERRT(0xFFF0, "JR C, 10071H",
+              OVERFLOW_RANGE, "10071H", 0x38, 0x7F);
+        AERRT(0xF000, "JR C, 11004H",
+              OVERFLOW_RANGE, "11004H", 0xDD, 0x38, 0x00, 0x20);
+        AERRT(0x1000, "JR C, 11005H",
+              OVERFLOW_RANGE, "11005H", 0xFD, 0x38, 0x00, 0x00, 0x01);
+    } else {
+        AERRT(0x1000, "JR  C,1082H", OPERAND_TOO_FAR, "1082H", 0x38, 0x80);
+        AERRT(0x1000, "JR  C,0F81H", OPERAND_TOO_FAR, "0F81H", 0x38, 0x7F);
+    }
 
     if (z280()) {
         ATEST(0x1000, "JAR 0F83H", 0xDD, 0x20, 0x80);
@@ -782,8 +1117,15 @@ void test_jump() {
     ATEST(0x1000, "DJNZ 1000H",  0x10, 0xFE);
     ATEST(0x1000, "DJNZ 1081H",  0x10, 0x7F);
     ATEST(0x1000, "DJNZ 0F82H",  0x10, 0x80);
-    AERRT(0x1000, "DJNZ 1082H",  OPERAND_TOO_FAR, "1082H", 0x10, 0x80);
-    AERRT(0x1000, "DJNZ 0F81H",  OPERAND_TOO_FAR, "0F81H", 0x10, 0x7F);
+    if (z380()) {
+        ATEST(0x1000, "DJNZ 9003H",  0xDD, 0x10, 0xFF, 0x7F);
+        ATEST(0x1000, "DJNZ 9005H",  0xFD, 0x10, 0x00, 0x80, 0x00);
+        AERRT(0xFFFFFF80, "DJNZ 000000001H", OVERFLOW_RANGE, "000000001H", 0x10, 0x7F);
+        AERRT(0x0000007D, "DJNZ 0FFFFFFFFH", OVERFLOW_RANGE, "0FFFFFFFFH", 0x10, 0x80);
+    } else {
+        AERRT(0x1000, "DJNZ 1082H",  OPERAND_TOO_FAR, "1082H", 0x10, 0x80);
+        AERRT(0x1000, "DJNZ 0F81H",  OPERAND_TOO_FAR, "0F81H", 0x10, 0x7F);
+    }
 }
 
 void test_incr_decr() {
@@ -794,11 +1136,13 @@ void test_incr_decr() {
     TEST("INC E", 0x1C);
     TEST("INC H", 0x24);
     TEST("INC L", 0x2C);
-    if (z280()) {
+    if (z280() || z380()) {
         TEST("INC IXH", 0xDD, 0x24);
         TEST("INC IXL", 0xDD, 0x2C);
         TEST("INC IYH", 0xFD, 0x24);
         TEST("INC IYL", 0xFD, 0x2C);
+        T380("INC IXU", 0xDD, 0x24);
+        T380("INC IYU", 0xFD, 0x24);
     }
 
     TEST("INC (HL)", 0x34);
@@ -827,11 +1171,13 @@ void test_incr_decr() {
     TEST("DEC E", 0x1D);
     TEST("DEC H", 0x25);
     TEST("DEC L", 0x2D);
-    if (z280()) {
+    if (z280() || z380()) {
         TEST("DEC IXH", 0xDD, 0x25);
         TEST("DEC IXL", 0xDD, 0x2D);
         TEST("DEC IYH", 0xFD, 0x25);
         TEST("DEC IYL", 0xFD, 0x2D);
+        T380("DEC IXU", 0xDD, 0x25);
+        T380("DEC IYU", 0xFD, 0x25);
     }
 
     TEST("DEC (HL)", 0x35);
@@ -859,14 +1205,15 @@ void test_incr_decr() {
     TEST("INC SP", 0x33);
     TEST("INC IX", 0xDD, 0x23);
     TEST("INC IY", 0xFD, 0x23);
-    if (z280()) {
+    if (z280() || z380()) {
         TEST("INCW BC", 0x03);
         TEST("INCW DE", 0x13);
         TEST("INCW HL", 0x23);
         TEST("INCW SP", 0x33);
         TEST("INCW IX", 0xDD, 0x23);
         TEST("INCW IY", 0xFD, 0x23);
-
+    }
+    if (z280()) {
         TEST("INCW (HL)",       0xDD, 0x03);
         TEST("INCW <1234H>",    0xDD, 0x33, 0x30, 0x12);
         TEST("INCW (1234H)",    0xDD, 0x13, 0x34, 0x12);
@@ -880,14 +1227,15 @@ void test_incr_decr() {
     TEST("DEC SP", 0x3B);
     TEST("DEC IX", 0xDD, 0x2B);
     TEST("DEC IY", 0xFD, 0x2B);
-    if (z280()) {
+    if (z280() || z380()) {
         TEST("DECW BC", 0x0B);
         TEST("DECW DE", 0x1B);
         TEST("DECW HL", 0x2B);
         TEST("DECW SP", 0x3B);
         TEST("DECW IX", 0xDD, 0x2B);
         TEST("DECW IY", 0xFD, 0x2B);
-
+    }
+    if (z280()) {
         TEST("DECW (HL)",       0xDD, 0x0B);
         TEST("DECW <1234H>",    0xDD, 0x3B, 0x30, 0x12);
         TEST("DECW (1234H)",    0xDD, 0x1B, 0x34, 0x12);
@@ -1012,14 +1360,20 @@ void test_alu_8bit() {
     TEST("DAA", 0x27);
     TEST("NEG", 0xED, 0x44);
     TEST("CPL", 0x2F);
-    if (z280()) {
+    if (z280() || z380()) {
         TEST("NEG A",  0xED, 0x44);
         TEST("CPL A",  0x2F);
-        TEST("EXTS A", 0xED, 0x64);
-        TEST("EXTS",   0xED, 0x64);
     } else {
         ERRT("NEG A", OPERAND_NOT_ALLOWED, "A");
         ERRT("CPL A", OPERAND_NOT_ALLOWED, "A");
+    }
+    if (z280()) {
+        TEST("EXTS A", 0xED, 0x64);
+        TEST("EXTS",   0xED, 0x64);
+    } else if (z380()) {
+        TEST("EXTS A", 0xED, 0x65);
+        TEST("EXTS",   0xED, 0x65);
+    } else {
         ERUI("EXTS");
     }
 
@@ -1030,11 +1384,13 @@ void test_alu_8bit() {
     TEST("ADD A,E", 0x83);
     TEST("ADD A,H", 0x84);
     TEST("ADD A,L", 0x85);
-    if (z280()) {
+    if (z280() || z380()) {
         TEST("ADD A, IXH", 0xDD, 0x84);
         TEST("ADD A, IXL", 0xDD, 0x85);
         TEST("ADD A, IYH", 0xFD, 0x84);
         TEST("ADD A, IYL", 0xFD, 0x85);
+        T380("ADD A, IXU", 0xDD, 0x84);
+        T380("ADD A, IYU", 0xFD, 0x84);
     }
     TEST("ADD A,10B",  0xC6, 0x02);
     TEST("ADD A,(HL)", 0x86);
@@ -1050,7 +1406,9 @@ void test_alu_8bit() {
         TEST("ADD A, (HL+IX)",    0xDD, 0x81);
         TEST("ADD A, (HL+IY)",    0xDD, 0x82);
         TEST("ADD A, (IX+IY)",    0xDD, 0x83);
+    }
 
+    if (z280() || z380()) {
         TEST("ADD A", 0x87);
         TEST("ADD B", 0x80);
         TEST("ADD C", 0x81);
@@ -1062,10 +1420,15 @@ void test_alu_8bit() {
         TEST("ADD IXL", 0xDD, 0x85);
         TEST("ADD IYH", 0xFD, 0x84);
         TEST("ADD IYL", 0xFD, 0x85);
+        T380("ADD IXU", 0xDD, 0x84);
+        T380("ADD IYU", 0xFD, 0x84);
+
         TEST("ADD 10B", 0xC6, 0x02);
         TEST("ADD (HL)", 0x86);
         TEST("ADD (IX+2)", 0xDD, 0x86, 0x02);
         TEST("ADD (IY-2)", 0xFD, 0x86, 0xFE);
+    }
+    if (z280()) {
         TEST("ADD (IX+7FFFH)", 0xFD, 0x81, 0xFF, 0x7F);
         TEST("ADD (IY-8000H)", 0xFD, 0x82, 0x00, 0x80);
         TEST("ADD (HL+1234H)", 0xFD, 0x83, 0x34, 0x12);
@@ -1083,11 +1446,13 @@ void test_alu_8bit() {
     TEST("ADC A,E", 0x8B);
     TEST("ADC A,H", 0x8C);
     TEST("ADC A,L", 0x8D);
-    if (z280()) {
+    if (z280() || z380()) {
         TEST("ADC A, IXH", 0xDD, 0x8C);
         TEST("ADC A, IXL", 0xDD, 0x8D);
         TEST("ADC A, IYH", 0xFD, 0x8C);
         TEST("ADC A, IYL", 0xFD, 0x8D);
+        T380("ADC A, IXU", 0xDD, 0x8C);
+        T380("ADC A, IYU", 0xFD, 0x8C);
     }
     TEST("ADC A,255",  0xCE, 0xFF);
     TEST("ADC A,(HL)", 0x8E);
@@ -1102,7 +1467,9 @@ void test_alu_8bit() {
         TEST("ADC A, (HL+IX)",    0xDD, 0x89);
         TEST("ADC A, (HL+IY)",    0xDD, 0x8A);
         TEST("ADC A, (IX+IY)",    0xDD, 0x8B);
+    }
 
+    if (z280() || z380()) {
         TEST("ADC A", 0x8F);
         TEST("ADC B", 0x88);
         TEST("ADC C", 0x89);
@@ -1114,10 +1481,15 @@ void test_alu_8bit() {
         TEST("ADC IXL", 0xDD, 0x8D);
         TEST("ADC IYH", 0xFD, 0x8C);
         TEST("ADC IYL", 0xFD, 0x8D);
+        T380("ADC IXU", 0xDD, 0x8C);
+        T380("ADC IYU", 0xFD, 0x8C);
+
         TEST("ADC 255", 0xCE, 0xFF);
         TEST("ADC (HL)", 0x8E);
         TEST("ADC (IX+2)", 0xDD, 0x8E, 0x02);
         TEST("ADC (IY-2)", 0xFD, 0x8E, 0xFE);
+    }
+    if (z280()) {
         TEST("ADC (IX+7FFFH)", 0xFD, 0x89, 0xFF, 0x7F);
         TEST("ADC (IY-8000H)", 0xFD, 0x8A, 0x00, 0x80);
         TEST("ADC (HL+1234H)", 0xFD, 0x8B, 0x34, 0x12);
@@ -1135,11 +1507,13 @@ void test_alu_8bit() {
     TEST("SUB A,E", 0x93);
     TEST("SUB A,H", 0x94);
     TEST("SUB A,L", 0x95);
-    if (z280()) {
+    if (z280() || z380()) {
         TEST("SUB A, IXH", 0xDD, 0x94);
         TEST("SUB A, IXL", 0xDD, 0x95);
         TEST("SUB A, IYH", 0xFD, 0x94);
         TEST("SUB A, IYL", 0xFD, 0x95);
+        T380("SUB A, IXU", 0xDD, 0x94);
+        T380("SUB A, IYU", 0xFD, 0x94);
     }
     TEST("SUB A", 0x97);
     TEST("SUB B", 0x90);
@@ -1148,11 +1522,13 @@ void test_alu_8bit() {
     TEST("SUB E", 0x93);
     TEST("SUB H", 0x94);
     TEST("SUB L", 0x95);
-    if (z280()) {
+    if (z280() || z380()) {
         TEST("SUB IXH", 0xDD, 0x94);
         TEST("SUB IXL", 0xDD, 0x95);
         TEST("SUB IYH", 0xFD, 0x94);
         TEST("SUB IYL", 0xFD, 0x95);
+        T380("SUB IXU", 0xDD, 0x94);
+        T380("SUB IYU", 0xFD, 0x94);
     }
     TEST("SUB A,-2",   0xD6, 0xFE);
     TEST("SUB A,(HL)", 0x96);
@@ -1191,12 +1567,14 @@ void test_alu_8bit() {
     TEST("SBC A,E", 0x9B);
     TEST("SBC A,H", 0x9C);
     TEST("SBC A,L", 0x9D);
-    if (z280()) {
+    if (z280() || z380()) {
         TEST("SBC A, IXH", 0xDD, 0x9C);
         TEST("SBC A, IXL", 0xDD, 0x9D);
         TEST("SBC A, IYH", 0xFD, 0x9C);
         TEST("SBC A, IYL", 0xFD, 0x9D);
-    }
+        T380("SBC A, IXU", 0xDD, 0x9C);
+        T380("SBC A, IYU", 0xFD, 0x9C);
+   }
 
     TEST("SBC A,177O", 0xDE, 0x7F);
     TEST("SBC A,(HL)", 0x9E);
@@ -1212,7 +1590,8 @@ void test_alu_8bit() {
         TEST("SBC A, (HL+IX)",    0xDD, 0x99);
         TEST("SBC A, (HL+IY)",    0xDD, 0x9A);
         TEST("SBC A, (IX+IY)",    0xDD, 0x9B);
-
+    }
+    if (z280() || z380()) {
         TEST("SBC A", 0x9F);
         TEST("SBC B", 0x98);
         TEST("SBC C", 0x99);
@@ -1224,10 +1603,15 @@ void test_alu_8bit() {
         TEST("SBC IXL", 0xDD, 0x9D);
         TEST("SBC IYH", 0xFD, 0x9C);
         TEST("SBC IYL", 0xFD, 0x9D);
+        T380("SBC IXU", 0xDD, 0x9C);
+        T380("SBC IYU", 0xFD, 0x9C);
+
         TEST("SBC 177O", 0xDE, 0x7F);
         TEST("SBC (HL)", 0x9E);
         TEST("SBC (IX+2)", 0xDD, 0x9E, 0x02);
         TEST("SBC (IY-2)", 0xFD, 0x9E, 0xFE);
+    }
+    if (z280()) {
         TEST("SBC (IX+7FFFH)", 0xFD, 0x99, 0xFF, 0x7F);
         TEST("SBC (IY-8000H)", 0xFD, 0x9A, 0x00, 0x80);
         TEST("SBC (HL+1234H)", 0xFD, 0x9B, 0x34, 0x12);
@@ -1245,11 +1629,13 @@ void test_alu_8bit() {
     TEST("AND A,E", 0xA3);
     TEST("AND A,H", 0xA4);
     TEST("AND A,L", 0xA5);
-    if (z280()) {
+    if (z280() || z380()) {
         TEST("AND A, IXH", 0xDD, 0xA4);
         TEST("AND A, IXL", 0xDD, 0xA5);
         TEST("AND A, IYH", 0xFD, 0xA4);
         TEST("AND A, IYL", 0xFD, 0xA5);
+        T380("AND A, IXU", 0xDD, 0xA4);
+        T380("AND A, IYU", 0xFD, 0xA4);
     }
 
     TEST("AND A", 0xA7);
@@ -1259,11 +1645,13 @@ void test_alu_8bit() {
     TEST("AND E", 0xA3);
     TEST("AND H", 0xA4);
     TEST("AND L", 0xA5);
-    if (z280()) {
+    if (z280() || z380()) {
         TEST("AND IXH", 0xDD, 0xA4);
         TEST("AND IXL", 0xDD, 0xA5);
         TEST("AND IYH", 0xFD, 0xA4);
         TEST("AND IYL", 0xFD, 0xA5);
+        T380("AND IXU", 0xDD, 0xA4);
+        T380("AND IYU", 0xFD, 0xA4);
     }
 
     TEST("AND A,~0FH", 0xE6, 0xF0);
@@ -1303,11 +1691,13 @@ void test_alu_8bit() {
     TEST("XOR A,E", 0xAB);
     TEST("XOR A,H", 0xAC);
     TEST("XOR A,L", 0xAD);
-    if (z280()) {
+    if (z280() || z380()) {
         TEST("XOR A, IXH", 0xDD, 0xAC);
         TEST("XOR A, IXL", 0xDD, 0xAD);
         TEST("XOR A, IYH", 0xFD, 0xAC);
         TEST("XOR A, IYL", 0xFD, 0xAD);
+        T380("XOR A, IXU", 0xDD, 0xAC);
+        T380("XOR A, IYU", 0xFD, 0xAC);
     }
 
     TEST("XOR A", 0xAF);
@@ -1317,11 +1707,13 @@ void test_alu_8bit() {
     TEST("XOR E", 0xAB);
     TEST("XOR H", 0xAC);
     TEST("XOR L", 0xAD);
-    if (z280()) {
+    if (z280() || z380()) {
         TEST("XOR IXH", 0xDD, 0xAC);
         TEST("XOR IXL", 0xDD, 0xAD);
         TEST("XOR IYH", 0xFD, 0xAC);
         TEST("XOR IYL", 0xFD, 0xAD);
+        T380("XOR IXU", 0xDD, 0xAC);
+        T380("XOR IYU", 0xFD, 0xAC);
     }
 
     TEST("XOR A,~001B",0xEE, 0xFE);
@@ -1361,11 +1753,13 @@ void test_alu_8bit() {
     TEST("OR A,E", 0xB3);
     TEST("OR A,H", 0xB4);
     TEST("OR A,L", 0xB5);
-    if (z280()) {
+    if (z280() || z380()) {
         TEST("OR A, IXH", 0xDD, 0xB4);
         TEST("OR A, IXL", 0xDD, 0xB5);
         TEST("OR A, IYH", 0xFD, 0xB4);
         TEST("OR A, IYL", 0xFD, 0xB5);
+        T380("OR A, IXU", 0xDD, 0xB4);
+        T380("OR A, IYU", 0xFD, 0xB4);
     }
 
     TEST("OR A", 0xB7);
@@ -1375,11 +1769,13 @@ void test_alu_8bit() {
     TEST("OR E", 0xB3);
     TEST("OR H", 0xB4);
     TEST("OR L", 0xB5);
-    if (z280()) {
+    if (z280() || z380()) {
         TEST("OR IXH", 0xDD, 0xB4);
         TEST("OR IXL", 0xDD, 0xB5);
         TEST("OR IYH", 0xFD, 0xB4);
         TEST("OR IYL", 0xFD, 0xB5);
+        T380("OR IXU", 0xDD, 0xB4);
+        T380("OR IYU", 0xFD, 0xB4);
     }
 
     TEST("OR A,+127", 0xF6, 0x7F);
@@ -1419,11 +1815,13 @@ void test_alu_8bit() {
     TEST("CP A,E", 0xBB);
     TEST("CP A,H", 0xBC);
     TEST("CP A,L", 0xBD);
-    if (z280()) {
+    if (z280() || z380()) {
         TEST("CP A, IXH", 0xDD, 0xBC);
         TEST("CP A, IXL", 0xDD, 0xBD);
         TEST("CP A, IYH", 0xFD, 0xBC);
         TEST("CP A, IYL", 0xFD, 0xBD);
+        T380("CP A, IXU", 0xDD, 0xBC);
+        T380("CP A, IYU", 0xFD, 0xBC);
     }
 
     TEST("CP A", 0xBF);
@@ -1433,11 +1831,13 @@ void test_alu_8bit() {
     TEST("CP E", 0xBB);
     TEST("CP H", 0xBC);
     TEST("CP L", 0xBD);
-    if (z280()) {
+    if (z280() || z380()) {
         TEST("CP IXH", 0xDD, 0xBC);
         TEST("CP IXL", 0xDD, 0xBD);
         TEST("CP IYH", 0xFD, 0xBC);
         TEST("CP IYL", 0xFD, 0xBD);
+        T380("CP IXU", 0xDD, 0xBC);
+        T380("CP IYU", 0xFD, 0xBC);
     }
 
     TEST("CP A,-128", 0xFE, 0x80);
@@ -1470,7 +1870,7 @@ void test_alu_8bit() {
         TEST("CP (IX+IY)",    0xDD, 0xBB);
     }
 
-    if (z180()) {
+    if (z180() || z380()) {
         TEST("TST A", 0xED, 0x3C);
         TEST("TST B", 0xED, 0x04);
         TEST("TST C", 0xED, 0x0C);
@@ -1650,13 +2050,90 @@ void test_alu_16bit() {
     if (z280()) {
         TEST("NEG  HL", 0xED, 0x4C);
         TEST("EXTS HL", 0xED, 0x6C);
+        ERUI("NEGW");
+    } else if (z380()) {
+        TEST("NEGW  HL", 0xED, 0x54);
+        TEST("NEGW",     0xED, 0x54);
+        TEST("EXTSW HL", 0xED, 0x75);
+        TEST("EXTSW",    0xED, 0x75);
+        ERRT("NEG  HL", OPERAND_NOT_ALLOWED, "HL");
+        ERRT("EXTS HL", OPERAND_NOT_ALLOWED, "HL");
+    } else {
+        ERRT("NEG  HL", OPERAND_NOT_ALLOWED, "HL");
+        ERUI("NEGW");
+        ERUI("EXTS");
+    }
 
+    if (z380()) {
+        TEST("RLW BC", 0xED, 0xCB, 0x10);
+        TEST("RLW DE", 0xED, 0xCB, 0x11);
+        TEST("RLW HL", 0xED, 0xCB, 0x13);
+        TEST("RLW IX", 0xED, 0xCB, 0x14);
+        TEST("RLW IY", 0xED, 0xCB, 0x15);
+        TEST("RLW (HL)",     0xED, 0xCB, 0x12);
+        TEST("RLW (IX+127)", 0xDD, 0xCB, 0x7F, 0x12);
+        TEST("RLW (IY-128)", 0xFD, 0xCB, 0x80, 0x12);
+
+        TEST("RLCW BC", 0xED, 0xCB, 0x00);
+        TEST("RLCW DE", 0xED, 0xCB, 0x01);
+        TEST("RLCW HL", 0xED, 0xCB, 0x03);
+        TEST("RLCW IX", 0xED, 0xCB, 0x04);
+        TEST("RLCW IY", 0xED, 0xCB, 0x05);
+        TEST("RLCW (HL)",     0xED, 0xCB, 0x02);
+        TEST("RLCW (IX+127)", 0xDD, 0xCB, 0x7F, 0x02);
+        TEST("RLCW (IY-128)", 0xFD, 0xCB, 0x80, 0x02);
+
+        TEST("RRW BC", 0xED, 0xCB, 0x18);
+        TEST("RRW DE", 0xED, 0xCB, 0x19);
+        TEST("RRW HL", 0xED, 0xCB, 0x1B);
+        TEST("RRW IX", 0xED, 0xCB, 0x1C);
+        TEST("RRW IY", 0xED, 0xCB, 0x1D);
+        TEST("RRW (HL)",     0xED, 0xCB, 0x1A);
+        TEST("RRW (IX+127)", 0xDD, 0xCB, 0x7F, 0x1A);
+        TEST("RRW (IY-128)", 0xFD, 0xCB, 0x80, 0x1A);
+
+        TEST("RRCW BC", 0xED, 0xCB, 0x08);
+        TEST("RRCW DE", 0xED, 0xCB, 0x09);
+        TEST("RRCW HL", 0xED, 0xCB, 0x0B);
+        TEST("RRCW IX", 0xED, 0xCB, 0x0C);
+        TEST("RRCW IY", 0xED, 0xCB, 0x0D);
+        TEST("RRCW (HL)",     0xED, 0xCB, 0x0A);
+        TEST("RRCW (IX+127)", 0xDD, 0xCB, 0x7F, 0x0A);
+        TEST("RRCW (IY-128)", 0xFD, 0xCB, 0x80, 0x0A);
+
+        TEST("SLAW BC", 0xED, 0xCB, 0x20);
+        TEST("SLAW DE", 0xED, 0xCB, 0x21);
+        TEST("SLAW HL", 0xED, 0xCB, 0x23);
+        TEST("SLAW IX", 0xED, 0xCB, 0x24);
+        TEST("SLAW IY", 0xED, 0xCB, 0x25);
+        TEST("SLAW (HL)",     0xED, 0xCB, 0x22);
+        TEST("SLAW (IX+127)", 0xDD, 0xCB, 0x7F, 0x22);
+        TEST("SLAW (IY-128)", 0xFD, 0xCB, 0x80, 0x22);
+
+        TEST("SRAW BC", 0xED, 0xCB, 0x28);
+        TEST("SRAW DE", 0xED, 0xCB, 0x29);
+        TEST("SRAW HL", 0xED, 0xCB, 0x2B);
+        TEST("SRAW IX", 0xED, 0xCB, 0x2C);
+        TEST("SRAW IY", 0xED, 0xCB, 0x2D);
+        TEST("SRAW (HL)",     0xED, 0xCB, 0x2A);
+        TEST("SRAW (IX+127)", 0xDD, 0xCB, 0x7F, 0x2A);
+        TEST("SRAW (IY-128)", 0xFD, 0xCB, 0x80, 0x2A);
+
+        TEST("SRLW BC", 0xED, 0xCB, 0x38);
+        TEST("SRLW DE", 0xED, 0xCB, 0x39);
+        TEST("SRLW HL", 0xED, 0xCB, 0x3B);
+        TEST("SRLW IX", 0xED, 0xCB, 0x3C);
+        TEST("SRLW IY", 0xED, 0xCB, 0x3D);
+        TEST("SRLW (HL)",     0xED, 0xCB, 0x3A);
+        TEST("SRLW (IX+127)", 0xDD, 0xCB, 0x7F, 0x3A);
+        TEST("SRLW (IY-128)", 0xFD, 0xCB, 0x80, 0x3A);
+    }
+
+    if (z280()) {
         TEST("ADD HL, A", 0xED, 0x6D);
         TEST("ADD IX, A", 0xDD, 0xED, 0x6D);
         TEST("ADD IY, A", 0xFD, 0xED, 0x6D);
     } else {
-        ERRT("NEG  HL", OPERAND_NOT_ALLOWED, "HL");
-        ERUI("EXTS");
         ERRT("ADD HL, A", OPERAND_NOT_ALLOWED, "HL, A");
         ERRT("ADD IX, A", OPERAND_NOT_ALLOWED, "IX, A");
         ERRT("ADD IY, A", OPERAND_NOT_ALLOWED, "IY, A");
@@ -1692,6 +2169,27 @@ void test_alu_16bit() {
         TEST("ADDW (IX+7FFFH)", 0xFD, 0xED, 0xC6, 0xFF, 0x7F);
         TEST("ADDW (IY-8000H)", 0xFD, 0xED, 0xD6, 0x00, 0x80);
         TEST("ADDW <1234H>",    0xDD, 0xED, 0xF6, 0x2F, 0x12);
+    } else if (z380()) {
+        TEST("ADD HL, (1234H)", 0xED, 0xC6, 0x34, 0x12);
+        TEST("ADD SP, 1234H",   0xED, 0x82, 0x34, 0x12);
+
+        TEST("ADDW HL, BC", 0xED, 0x84);
+        TEST("ADDW HL, DE", 0xED, 0x85);
+        TEST("ADDW HL, HL", 0xED, 0x87);
+        TEST("ADDW HL, IX", 0xDD, 0x87);
+        TEST("ADDW HL, IY", 0xFD, 0x87);
+        TEST("ADDW HL, 1234H",    0xED, 0x86, 0x34, 0x12);
+        TEST("ADDW HL, (IX-128)", 0xDD, 0xC6, 0x80);
+        TEST("ADDW HL, (IY+127)", 0xFD, 0xC6, 0x7F);
+
+        TEST("ADDW BC", 0xED, 0x84);
+        TEST("ADDW DE", 0xED, 0x85);
+        TEST("ADDW HL", 0xED, 0x87);
+        TEST("ADDW IX", 0xDD, 0x87);
+        TEST("ADDW IY", 0xFD, 0x87);
+        TEST("ADDW 1234H",    0xED, 0x86, 0x34, 0x12);
+        TEST("ADDW (IX-128)", 0xDD, 0xC6, 0x80);
+        TEST("ADDW (IY+127)", 0xFD, 0xC6, 0x7F);
     }
 
     TEST("ADD IX,BC", 0xDD, 0x09);
@@ -1724,6 +2222,25 @@ void test_alu_16bit() {
         TEST("ADC IY, SP", 0xFD, 0xED, 0x7A);
         TEST("ADC IY, IY", 0xFD, 0xED, 0x6A);
     }
+    if (z380()) {
+        TEST("ADCW HL, BC", 0xED, 0x8C);
+        TEST("ADCW HL, DE", 0xED, 0x8D);
+        TEST("ADCW HL, HL", 0xED, 0x8F);
+        TEST("ADCW HL, IX", 0xDD, 0x8F);
+        TEST("ADCW HL, IY", 0xFD, 0x8F);
+        TEST("ADCW HL, 1234H",    0xED, 0x8E, 0x34, 0x12);
+        TEST("ADCW HL, (IX-128)", 0xDD, 0xCE, 0x80);
+        TEST("ADCW HL, (IY+127)", 0xFD, 0xCE, 0x7F);
+
+        TEST("ADCW BC", 0xED, 0x8C);
+        TEST("ADCW DE", 0xED, 0x8D);
+        TEST("ADCW HL", 0xED, 0x8F);
+        TEST("ADCW IX", 0xDD, 0x8F);
+        TEST("ADCW IY", 0xFD, 0x8F);
+        TEST("ADCW 1234H",    0xED, 0x8E, 0x34, 0x12);
+        TEST("ADCW (IX-128)", 0xDD, 0xCE, 0x80);
+        TEST("ADCW (IY+127)", 0xFD, 0xCE, 0x7F);
+    }
 
     if (z280()) {
         TEST("SUBW HL, BC",         0xED, 0xCE);
@@ -1751,6 +2268,27 @@ void test_alu_16bit() {
         TEST("SUBW (IX+7FFFH)", 0xFD, 0xED, 0xCE, 0xFF, 0x7F);
         TEST("SUBW (IY-8000H)", 0xFD, 0xED, 0xDE, 0x00, 0x80);
         TEST("SUBW <1234H>",    0xDD, 0xED, 0xFE, 0x2F, 0x12);
+    } else if (z380()) {
+        TEST("SUB HL, (1234H)", 0xED, 0xD6, 0x34, 0x12);
+        TEST("SUB SP, 1234H",   0xED, 0x92, 0x34, 0x12);
+
+        TEST("SUBW HL, BC", 0xED, 0x94);
+        TEST("SUBW HL, DE", 0xED, 0x95);
+        TEST("SUBW HL, HL", 0xED, 0x97);
+        TEST("SUBW HL, IX", 0xDD, 0x97);
+        TEST("SUBW HL, IY", 0xFD, 0x97);
+        TEST("SUBW HL, 1234H",    0xED, 0x96, 0x34, 0x12);
+        TEST("SUBW HL, (IX-128)", 0xDD, 0xD6, 0x80);
+        TEST("SUBW HL, (IY+127)", 0xFD, 0xD6, 0x7F);
+
+        TEST("SUBW BC", 0xED, 0x94);
+        TEST("SUBW DE", 0xED, 0x95);
+        TEST("SUBW HL", 0xED, 0x97);
+        TEST("SUBW IX", 0xDD, 0x97);
+        TEST("SUBW IY", 0xFD, 0x97);
+        TEST("SUBW 1234H",    0xED, 0x96, 0x34, 0x12);
+        TEST("SUBW (IX-128)", 0xDD, 0xD6, 0x80);
+        TEST("SUBW (IY+127)", 0xFD, 0xD6, 0x7F);
     }
 
     TEST("SBC HL,BC", 0xED, 0x42);
@@ -1770,6 +2308,25 @@ void test_alu_16bit() {
         ERRT("SBC IY, HL", REGISTER_NOT_ALLOWED, "HL", 0xFD, 0xED, 0x62);
         TEST("SBC IY, SP", 0xFD, 0xED, 0x72);
         TEST("SBC IY, IY", 0xFD, 0xED, 0x62);
+    }
+    if (z380()) {
+        TEST("SBCW HL, BC", 0xED, 0x9C);
+        TEST("SBCW HL, DE", 0xED, 0x9D);
+        TEST("SBCW HL, HL", 0xED, 0x9F);
+        TEST("SBCW HL, IX", 0xDD, 0x9F);
+        TEST("SBCW HL, IY", 0xFD, 0x9F);
+        TEST("SBCW HL, 1234H",    0xED, 0x9E, 0x34, 0x12);
+        TEST("SBCW HL, (IX-128)", 0xDD, 0xDE, 0x80);
+        TEST("SBCW HL, (IY+127)", 0xFD, 0xDE, 0x7F);
+
+        TEST("SBCW BC", 0xED, 0x9C);
+        TEST("SBCW DE", 0xED, 0x9D);
+        TEST("SBCW HL", 0xED, 0x9F);
+        TEST("SBCW IX", 0xDD, 0x9F);
+        TEST("SBCW IY", 0xFD, 0x9F);
+        TEST("SBCW 1234H",    0xED, 0x9E, 0x34, 0x12);
+        TEST("SBCW (IX-128)", 0xDD, 0xDE, 0x80);
+        TEST("SBCW (IY+127)", 0xFD, 0xDE, 0x7F);
     }
 
     if (z280()) {
@@ -1798,6 +2355,81 @@ void test_alu_16bit() {
         TEST("CPW (IX+7FFFH)", 0xFD, 0xED, 0xC7, 0xFF, 0x7F);
         TEST("CPW (IY-8000H)", 0xFD, 0xED, 0xD7, 0x00, 0x80);
         TEST("CPW <1234H>",    0xDD, 0xED, 0xF7, 0x2F, 0x12);
+    }
+    if (z380()) {
+        TEST("CPW HL, BC", 0xED, 0xBC);
+        TEST("CPW HL, DE", 0xED, 0xBD);
+        TEST("CPW HL, HL", 0xED, 0xBF);
+        TEST("CPW HL, IX", 0xDD, 0xBF);
+        TEST("CPW HL, IY", 0xFD, 0xBF);
+        TEST("CPW HL, 1234H",    0xED, 0xBE, 0x34, 0x12);
+        TEST("CPW HL, (IX-128)", 0xDD, 0xFE, 0x80);
+        TEST("CPW HL, (IY+127)", 0xFD, 0xFE, 0x7F);
+
+        TEST("CPW BC", 0xED, 0xBC);
+        TEST("CPW DE", 0xED, 0xBD);
+        TEST("CPW HL", 0xED, 0xBF);
+        TEST("CPW IX", 0xDD, 0xBF);
+        TEST("CPW IY", 0xFD, 0xBF);
+        TEST("CPW 1234H",    0xED, 0xBE, 0x34, 0x12);
+        TEST("CPW (IX-128)", 0xDD, 0xFE, 0x80);
+        TEST("CPW (IY+127)", 0xFD, 0xFE, 0x7F);
+    }
+
+    if (z380()) {
+        TEST("ANDW HL, BC", 0xED, 0xA4);
+        TEST("ANDW HL, DE", 0xED, 0xA5);
+        TEST("ANDW HL, HL", 0xED, 0xA7);
+        TEST("ANDW HL, IX", 0xDD, 0xA7);
+        TEST("ANDW HL, IY", 0xFD, 0xA7);
+        TEST("ANDW HL, 1234H",    0xED, 0xA6, 0x34, 0x12);
+        TEST("ANDW HL, (IX-128)", 0xDD, 0xE6, 0x80);
+        TEST("ANDW HL, (IY+127)", 0xFD, 0xE6, 0x7F);
+
+        TEST("ANDW BC", 0xED, 0xA4);
+        TEST("ANDW DE", 0xED, 0xA5);
+        TEST("ANDW HL", 0xED, 0xA7);
+        TEST("ANDW IX", 0xDD, 0xA7);
+        TEST("ANDW IY", 0xFD, 0xA7);
+        TEST("ANDW 1234H",    0xED, 0xA6, 0x34, 0x12);
+        TEST("ANDW (IX-128)", 0xDD, 0xE6, 0x80);
+        TEST("ANDW (IY+127)", 0xFD, 0xE6, 0x7F);
+
+        TEST("ORW HL, BC", 0xED, 0xB4);
+        TEST("ORW HL, DE", 0xED, 0xB5);
+        TEST("ORW HL, HL", 0xED, 0xB7);
+        TEST("ORW HL, IX", 0xDD, 0xB7);
+        TEST("ORW HL, IY", 0xFD, 0xB7);
+        TEST("ORW HL, 1234H",    0xED, 0xB6, 0x34, 0x12);
+        TEST("ORW HL, (IX-128)", 0xDD, 0xF6, 0x80);
+        TEST("ORW HL, (IY+127)", 0xFD, 0xF6, 0x7F);
+
+        TEST("ORW BC", 0xED, 0xB4);
+        TEST("ORW DE", 0xED, 0xB5);
+        TEST("ORW HL", 0xED, 0xB7);
+        TEST("ORW IX", 0xDD, 0xB7);
+        TEST("ORW IY", 0xFD, 0xB7);
+        TEST("ORW 1234H",    0xED, 0xB6, 0x34, 0x12);
+        TEST("ORW (IX-128)", 0xDD, 0xF6, 0x80);
+        TEST("ORW (IY+127)", 0xFD, 0xF6, 0x7F);
+
+        TEST("XORW HL, BC", 0xED, 0xAC);
+        TEST("XORW HL, DE", 0xED, 0xAD);
+        TEST("XORW HL, HL", 0xED, 0xAF);
+        TEST("XORW HL, IX", 0xDD, 0xAF);
+        TEST("XORW HL, IY", 0xFD, 0xAF);
+        TEST("XORW HL, 1234H",    0xED, 0xAE, 0x34, 0x12);
+        TEST("XORW HL, (IX-128)", 0xDD, 0xEE, 0x80);
+        TEST("XORW HL, (IY+127)", 0xFD, 0xEE, 0x7F);
+
+        TEST("XORW BC", 0xED, 0xAC);
+        TEST("XORW DE", 0xED, 0xAD);
+        TEST("XORW HL", 0xED, 0xAF);
+        TEST("XORW IX", 0xDD, 0xAF);
+        TEST("XORW IY", 0xFD, 0xAF);
+        TEST("XORW 1234H",    0xED, 0xAE, 0x34, 0x12);
+        TEST("XORW (IX-128)", 0xDD, 0xEE, 0x80);
+        TEST("XORW (IY+127)", 0xFD, 0xEE, 0x7F);
     }
 
     if (z280()) {
@@ -1829,7 +2461,7 @@ void test_alu_16bit() {
         TEST("LDA IY, <1234H>",    0xFD, 0xED, 0x22, 0x2F, 0x12);
     }
 
-    if (z180()) {
+    if (z180() || z380()) {
         TEST("MLT BC", 0xED, 0x4C);
         TEST("MLT DE", 0xED, 0x5C);
         TEST("MLT HL", 0xED, 0x6C);
@@ -1864,7 +2496,27 @@ void test_alu_16bit() {
         TEST("MULTW (IX+7FFFH)", 0xFD, 0xED, 0xC2, 0xFF, 0x7F);
         TEST("MULTW (IY-8000H)", 0xFD, 0xED, 0xD2, 0x00, 0x80);
         TEST("MULTW <1234H>",    0xDD, 0xED, 0xF2, 0x2F, 0x12);
+    } else if (z380()) {
+        TEST("MULTW HL, BC", 0xED, 0xCB, 0x90);
+        TEST("MULTW HL, DE", 0xED, 0xCB, 0x91);
+        TEST("MULTW HL, HL", 0xED, 0xCB, 0x93);
+        TEST("MULTW HL, IX", 0xED, 0xCB, 0x94);
+        TEST("MULTW HL, IY", 0xED, 0xCB, 0x95);
+        TEST("MULTW HL, 1234H",    0xED, 0xCB, 0x97, 0x34, 0x12);
+        TEST("MULTW HL, (IX-128)", 0xDD, 0xCB, 0x80, 0x92);
+        TEST("MULTW HL, (IY+127)", 0xFD, 0xCB, 0x7F, 0x92);
 
+        TEST("MULTW BC", 0xED, 0xCB, 0x90);
+        TEST("MULTW DE", 0xED, 0xCB, 0x91);
+        TEST("MULTW HL", 0xED, 0xCB, 0x93);
+        TEST("MULTW IX", 0xED, 0xCB, 0x94);
+        TEST("MULTW IY", 0xED, 0xCB, 0x95);
+        TEST("MULTW 1234H",    0xED, 0xCB, 0x97, 0x34, 0x12);
+        TEST("MULTW (IX-128)", 0xDD, 0xCB, 0x80, 0x92);
+        TEST("MULTW (IY+127)", 0xFD, 0xCB, 0x7F, 0x92);
+    }
+
+    if (z280()) {
         TEST("MULTUW HL, BC", 0xED, 0xC3);
         TEST("MULTUW HL, DE", 0xED, 0xD3);
         TEST("MULTUW HL, HL", 0xED, 0xE3);
@@ -1877,7 +2529,27 @@ void test_alu_16bit() {
         TEST("MULTUW HL, (IX+7FFFH)", 0xFD, 0xED, 0xC3, 0xFF, 0x7F);
         TEST("MULTUW HL, (IY-8000H)", 0xFD, 0xED, 0xD3, 0x00, 0x80);
         TEST("MULTUW HL, <1234H>",    0xDD, 0xED, 0xF3, 0x2F, 0x12);
+    } else if (z380()) {
+        TEST("MULTUW HL, BC", 0xED, 0xCB, 0x98);
+        TEST("MULTUW HL, DE", 0xED, 0xCB, 0x99);
+        TEST("MULTUW HL, HL", 0xED, 0xCB, 0x9B);
+        TEST("MULTUW HL, IX", 0xED, 0xCB, 0x9C);
+        TEST("MULTUW HL, IY", 0xED, 0xCB, 0x9D);
+        TEST("MULTUW HL, 1234H",    0xED, 0xCB, 0x9F, 0x34, 0x12);
+        TEST("MULTUW HL, (IX-128)", 0xDD, 0xCB, 0x80, 0x9A);
+        TEST("MULTUW HL, (IY+127)", 0xFD, 0xCB, 0x7F, 0x9A);
 
+        TEST("MULTUW BC", 0xED, 0xCB, 0x98);
+        TEST("MULTUW DE", 0xED, 0xCB, 0x99);
+        TEST("MULTUW HL", 0xED, 0xCB, 0x9B);
+        TEST("MULTUW IX", 0xED, 0xCB, 0x9C);
+        TEST("MULTUW IY", 0xED, 0xCB, 0x9D);
+        TEST("MULTUW 1234H",    0xED, 0xCB, 0x9F, 0x34, 0x12);
+        TEST("MULTUW (IX-128)", 0xDD, 0xCB, 0x80, 0x9A);
+        TEST("MULTUW (IY+127)", 0xFD, 0xCB, 0x7F, 0x9A);
+    }
+
+    if (z280()) {
         TEST("MULTUW BC", 0xED, 0xC3);
         TEST("MULTUW DE", 0xED, 0xD3);
         TEST("MULTUW HL", 0xED, 0xE3);
@@ -1916,7 +2588,9 @@ void test_alu_16bit() {
         TEST("DIVW (IX+7FFFH)", 0xFD, 0xED, 0xCA, 0xFF, 0x7F);
         TEST("DIVW (IY-8000H)", 0xFD, 0xED, 0xDA, 0x00, 0x80);
         TEST("DIVW <1234H>",    0xDD, 0xED, 0xFA, 0x2F, 0x12);
+    }
 
+    if (z280()) {
         TEST("DIVUW DEHL, BC", 0xED, 0xCB);
         TEST("DIVUW DEHL, DE", 0xED, 0xDB);
         TEST("DIVUW DEHL, HL", 0xED, 0xEB);
@@ -1942,6 +2616,24 @@ void test_alu_16bit() {
         TEST("DIVUW (IX+7FFFH)", 0xFD, 0xED, 0xCB, 0xFF, 0x7F);
         TEST("DIVUW (IY-8000H)", 0xFD, 0xED, 0xDB, 0x00, 0x80);
         TEST("DIVUW <1234H>",    0xDD, 0xED, 0xFB, 0x2F, 0x12);
+    } else if (z380()) {
+        TEST("DIVUW HL, BC", 0xED, 0xCB, 0xB8);
+        TEST("DIVUW HL, DE", 0xED, 0xCB, 0xB9);
+        TEST("DIVUW HL, HL", 0xED, 0xCB, 0xBB);
+        TEST("DIVUW HL, IX", 0xED, 0xCB, 0xBC);
+        TEST("DIVUW HL, IY", 0xED, 0xCB, 0xBD);
+        TEST("DIVUW HL, 1234H",    0xED, 0xCB, 0xBF, 0x34, 0x12);
+        TEST("DIVUW HL, (IX-128)", 0xDD, 0xCB, 0x80, 0xBA);
+        TEST("DIVUW HL, (IY+127)", 0xFD, 0xCB, 0x7F, 0xBA);
+
+        TEST("DIVUW BC", 0xED, 0xCB, 0xB8);
+        TEST("DIVUW DE", 0xED, 0xCB, 0xB9);
+        TEST("DIVUW HL", 0xED, 0xCB, 0xBB);
+        TEST("DIVUW IX", 0xED, 0xCB, 0xBC);
+        TEST("DIVUW IY", 0xED, 0xCB, 0xBD);
+        TEST("DIVUW 1234H",    0xED, 0xCB, 0xBF, 0x34, 0x12);
+        TEST("DIVUW (IX-128)", 0xDD, 0xCB, 0x80, 0xBA);
+        TEST("DIVUW HL, (IY+127)", 0xFD, 0xCB, 0x7F, 0xBA);
     }
 }
 
@@ -1949,7 +2641,14 @@ void test_io() {
     TEST("IN A,(0F0H)", 0xDB, 0xF0);
     ERRT("IN A,(-1)",   OVERFLOW_RANGE, "(-1)",  0xDB, 0xFF);
     ERRT("IN A,(256)",  OVERFLOW_RANGE, "(256)", 0xDB, 0x00);
-    if (z180()) {
+    if (z380()) {
+        TEST("INA   A, (1234H)",  0xED, 0xDB, 0x34, 0x12);
+        TEST("INAW  HL, (1234H)", 0xFD, 0xDB, 0x34, 0x12);
+    } else {
+        ERUI("INA");
+        ERUI("INAW");
+    }
+    if (z180() || z380()) {
         TEST("IN0 A, (0F0H)", 0xED, 0x38, 0xF0);
         TEST("IN0 B, (0F0H)", 0xED, 0x00, 0xF0);
         TEST("IN0 C, (0F0H)", 0xED, 0x08, 0xF0);
@@ -1960,11 +2659,21 @@ void test_io() {
     } else {
         ERUI("IN0  B, (0F0H)");
     }
+    if (z380()) {
+        TEST("IN0 (0F0H)", 0xED, 0x30, 0xF0);
+    }
 
     TEST("OUT (0F1H),A", 0xD3, 0xF1);
     ERRT("OUT (-1),A",   OVERFLOW_RANGE, "(-1),A",  0xD3, 0xFF);
     ERRT("OUT (256),A",  OVERFLOW_RANGE, "(256),A", 0xD3, 0x00);
-    if (z180()) {
+    if (z380()) {
+        TEST("OUTA  (1234H), A",  0xED, 0xD3, 0x34, 0x12);
+        TEST("OUTAW (1234H), HL", 0xFD, 0xD3, 0x34, 0x12);
+    } else {
+        ERUI("OUTA");
+        ERUI("OUTAW");
+    }
+    if (z180() || z380()) {
         TEST("OUT0 (0F1H), A", 0xED, 0x39, 0xF1);
         TEST("OUT0 (0F1H), B", 0xED, 0x01, 0xF1);
         TEST("OUT0 (0F1H), C", 0xED, 0x09, 0xF1);
@@ -1998,9 +2707,15 @@ void test_io() {
         TEST("IN (HL+IX), (C)",    0xDD, 0xED, 0x48);
         TEST("IN (HL+IY), (C)",    0xDD, 0xED, 0x50);
         TEST("IN (IX+IY), (C)",    0xDD, 0xED, 0x58);
+    }
 
+    if (z280()) {
         TEST("INW HL, (C)", 0xED, 0xB7);
         TEST("IN  HL, (C)", 0xED, 0xB7);
+   } else if (z380()) {
+        TEST("INW BC, (C)", 0xDD, 0x40);
+        TEST("INW DE, (C)", 0xDD, 0x50);
+        TEST("INW HL, (C)", 0xDD, 0x78);
     }
 
     TEST("OUT (C),A", 0xED, 0x79);
@@ -2025,12 +2740,21 @@ void test_io() {
         TEST("OUT (C), (HL+IX)",    0xDD, 0xED, 0x49);
         TEST("OUT (C), (HL+IY)",    0xDD, 0xED, 0x51);
         TEST("OUT (C), (IX+IY)",    0xDD, 0xED, 0x59);
-
-        TEST("OUTW (C), HL", 0xED, 0xBF);
-        TEST("OUT  (C), HL", 0xED, 0xBF);
+    } else if (z380()) {
+        TEST("OUT (C), 56H", 0xED, 0x71, 0x56);
     }
 
-    if (z180()) {
+    if (z280()) {
+        TEST("OUTW (C), HL", 0xED, 0xBF);
+        TEST("OUT  (C), HL", 0xED, 0xBF);
+    } else if (z380()) {
+        TEST("OUTW (C), BC",    0xDD, 0x41);
+        TEST("OUTW (C), DE",    0xDD, 0x51);
+        TEST("OUTW (C), HL",    0xDD, 0x79);
+        TEST("OUTW (C), 1234H", 0xFD, 0x79, 0x34, 0x12);
+    }
+
+    if (z180() || z380()) {
         TEST("TSTIO 23H", 0xED, 0x74, 0x23);
     } else {
         ERUI("TSTIO");
@@ -2058,6 +2782,22 @@ void test_io() {
         TEST("LDCTL USP, HL", 0xED, 0x8F);
         TEST("LDCTL USP, IX", 0xDD, 0xED, 0x8F);
         TEST("LDCTL USP, IY", 0xFD, 0xED, 0x8F);
+    } else if (z380()) {
+        TEST("LDCTL SR, A",  0xDD, 0xC8);
+        TEST("LDCTL SR, HL", 0xED, 0xC8);
+        TEST("LDCTL SR, 18", 0xDD, 0xCA, 0x12);
+
+        TEST("LDCTL DSR, A",  0xED, 0xD8);
+        TEST("LDCTL XSR, A",  0xDD, 0xD8);
+        TEST("LDCTL YSR, A",  0xFD, 0xD8);
+        TEST("LDCTL DSR, 34H", 0xED, 0xDA, 0x34);
+        TEST("LDCTL XSR, 56H", 0xDD, 0xDA, 0x56);
+        TEST("LDCTL YSR, 78H", 0xFD, 0xDA, 0x78);
+
+        TEST("LDCTL HL, SR", 0xED, 0xC0);
+        TEST("LDCTL A, DSR", 0xED, 0xD0);
+        TEST("LDCTL A, XSR", 0xDD, 0xD0);
+        TEST("LDCTL A, YSR", 0xFD, 0xD0);
     } else {
         ERUI("LDCTL");
     }
@@ -2072,6 +2812,17 @@ void test_block() {
     TEST("CPD",  0xED, 0xA9);
     TEST("CPIR", 0xED, 0xB1);
     TEST("CPDR", 0xED, 0xB9);
+    if (z380()) {
+        TEST("LDIW",  0xED, 0xE0);
+        TEST("LDIRW", 0xED, 0xF0);
+        TEST("LDDW",  0xED, 0xE8);
+        TEST("LDDRW", 0xED, 0xF8);
+    } else {
+        ERUI("LDIW");
+        ERUI("LDIRW");
+        ERUI("LDDW");
+        ERUI("LDDRW");
+    }
 
     TEST("INI",  0xED, 0xA2);
     TEST("IND",  0xED, 0xAA);
@@ -2082,7 +2833,7 @@ void test_block() {
     TEST("OTIR", 0xED, 0xB3);
     TEST("OTDR", 0xED, 0xBB);
 
-    if (z180()) {
+    if (z180() || z380()) {
         TEST("OTIM",  0xED, 0x83);
         TEST("OTIMR", 0xED, 0x93);
         TEST("OTDM",  0xED, 0x8B);
@@ -2103,6 +2854,15 @@ void test_block() {
         TEST("OUTDW", 0xED, 0x8B);
         TEST("OTIRW", 0xED, 0x93);
         TEST("OTDRW", 0xED, 0x9B);
+    } else if (z380()) {
+        TEST("INIW",  0xED, 0xE2);
+        TEST("INDW",  0xED, 0xEA);
+        TEST("INIRW", 0xED, 0xF2);
+        TEST("INDRW", 0xED, 0xFA);
+        TEST("OUTIW", 0xED, 0xE3);
+        TEST("OUTDW", 0xED, 0xEB);
+        TEST("OTIRW", 0xED, 0xF3);
+        TEST("OTDRW", 0xED, 0xFB);
     } else {
         ERUI("INIW");
         ERUI("INDW");
@@ -2121,6 +2881,9 @@ void test_inherent() {
     if (z280()) {
         TEST("DI    23H", 0xED, 0x77, 0x23);
         TEST("EI    45H", 0xED, 0x7F, 0x45);
+    } else if (z380()) {
+        TEST("DI 34H", 0xDD, 0xF3, 0x34);
+        TEST("EI 34H", 0xDD, 0xFB, 0x34);
     } else {
         ERRT("DI 23H", OPERAND_NOT_ALLOWED, "23H");
         ERRT("EI 45H", OPERAND_NOT_ALLOWED, "45H");
@@ -2131,7 +2894,7 @@ void test_inherent() {
 
     TEST("NOP",  0x00);
     TEST("HALT", 0x76);
-    if (z180()) {
+    if (z180() || z380()) {
         TEST("SLP", 0xED, 0x76);
     } else {
         ERUI("SLP");
@@ -2140,7 +2903,7 @@ void test_inherent() {
     TEST("IM 0", 0xED, 0x46);
     TEST("IM 1", 0xED, 0x56);
     TEST("IM 2", 0xED, 0x5E);
-    if (z280()) {
+    if (z280() || z380()) {
         TEST("IM 3", 0xED, 0x4E);
     } else {
         ERRT("IM 3",  ILLEGAL_OPERAND, "3",  0xED, 0x46);
@@ -2151,6 +2914,19 @@ void test_inherent() {
         TEST("PCACHE", 0xED, 0x65);
     } else {
         ERUI("PCACHE");
+    }
+
+    if (z380()) {
+        TEST("BTEST", 0xED, 0xCF);
+        TEST("MTEST", 0xDD, 0xCF);
+
+        TEST("SETC LW",  0xDD, 0xF7);
+        TEST("SETC LCK", 0xED, 0xF7);
+        TEST("SETC XM",  0xFD, 0xF7);
+
+        TEST("RESC LW",  0xDD, 0xFF);
+        TEST("RESC LCK", 0xED, 0xFF);
+        ERRT("RESC XM", OPERAND_NOT_ALLOWED, "XM");
     }
 }
 
