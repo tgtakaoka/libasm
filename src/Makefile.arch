@@ -79,7 +79,7 @@ TGT_tms370   = tms370
 TGT_tms7000  = tms7000
 TGT_tms9900  = tms9900 tms9980 tms9995 tms99105 tms99110
 TGT_z8000    = z8001 z8002
-TGT_z80      = z80 z180 z280
+TGT_z80      = z80 z180 z280 z380
 TGT_z8       = z8 z86c z88
 
 # CPU for each target
@@ -145,6 +145,7 @@ CPU_w65c02s  = W65C02S
 CPU_w65c816  = 65816
 CPU_z180     = Z180
 CPU_z280     = Z280
+CPU_z380     = Z380
 CPU_z8001    = Z8001
 CPU_z8002    = Z8002
 CPU_z80      = Z80
@@ -157,7 +158,7 @@ S19_OUTS = $(TGT_mc6809) $(TGT_mc6800) $(TGT_mc6805) mc68hc12 mos6502 g65sc02 r6
 # targets with Motorola S28 format
 S28_OUTS = $(TGT_mc68000) mc68hc16 w65c816 w65c816_m0x0 w65c816_m0x1 w65c816_m1x0 w65c816_m1x1
 # targets with Intel32 (32bit address) format
-I32_OUTS = $(TGT_i8086) z180 z280 z8001 z8k1 ns32032 ns32k mn1613 tms320c25 tms320c26
+I32_OUTS = $(TGT_i8086) $(TGT_mn1610) z180 z280 z380 z8001 ns32032 tms320c25 tms320c26
 # other targets use Intel8 format
 define __out-ext # target
 $(if $(filter $(1),$(S19_OUTS)),s19,$(if $(filter $(1),$(S28_OUTS)),s28,hex))

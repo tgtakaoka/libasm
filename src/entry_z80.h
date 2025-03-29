@@ -47,75 +47,86 @@ enum AddrMode : uint8_t {
     M_VEC = 17,    // |..|vvv|...|: vector 0~7
     M_BIT = 18,    // |..|bbb|...|: bit 0-7
     M_IMMD = 19,   // |...|mm|...|: interrupt mode 0-3
-    I_PTR = 21,    // |...|i|....|: (BC)/(DE)
-    I_IDX = 22,    // (IX)/(IY)
-    R_DXY = 23,    // |....|x|...|: 0=IXH/IYH,1=IXL/IYL
-    R_SXY = 24,    // |........|x|: 0=IXH/IYH,1=IXL/IYL
-    M_FIDX = 25,   // |..|eee|...|: M_BIXH + M_PIXH
-    M_BIXH = 26,   // |...|ee|...|: 0=(SP+d16) 1=(HL+IX) 2=(HL+IY) 3=(IX+IY)
-    M_PIXH = 27,   // |...|ee|...|: 0=<r16> 1=(IX+d16) 2=(IY+d16) 3=(HL+d16)
-    M_BIXL = 28,   // |.......|ee|: 0=(SP+d16) 1=(HL+IX) 2=(HL+IY) 3=(IX+IY)
-    M_PIXL = 29,   // |.......|ee|: 0=<r16> 1=(IX+d16) 2=(IY+d16) 3=(HL+d16)
-    M_MPTR = 30,   // |...|e|....|: 0=(HL) 1=(a16)
-    M_IDX16 = 31,  // |...|e|....|: 0=(IX+d16) 1=(IY+d16)
-    M_R16L = 32,   // |.......|pp|: BC/DE/HL/SP
-    M_SR8X = 33,   // |......|rrr|: B/C/D/E/_/_/_/A
-    M_DR8X = 34,   // |..|rrr|...|: B/C/D/E/_/_/_/A
-    M_IDX = 35,    // Accept M_IDX8 and M_IDX16
-    R_IDX = 36,    // DD:IX, FD:IY
-    M_REL16 = 37,  // 16-bit PC-Relative: <r16>
-    M_PDX = 38,    // Pointer index: (HL+d16)/(IX+d16)/(IY+d16)
-    M_SPDX = 39,   // Stack index: (SP+d16)
-    M_PCDX = 40,   // Program counter relative: (PC+d16)
-    M_BDX = 41,    // Base and index: (HL+IX)/(HL+IY)/(IX+IY)
-    M_EPU = 42,    // EPU 4-byte tmeplate
-    I_BASE = 43,
+    I_PTR = 20,    // |...|i|....|: (BC)/(DE)
+    I_IDX = 21,    // DD:(IX) FD:(IY)
+    R_DXY = 22,    // |....|x|...|: 0=IXH/IYH/IXU/IYU 1=IXL/IYL
+    R_SXY = 23,    // |........|x|: 0=IXH/IYH/IXU/IYU 1=IXL/IYL
+    M_FIDX = 24,   // |..|eee|...|: M_BIXH + M_PIXH
+    M_BIXH = 25,   // |...|ee|...|: 0=(SP+d16) 1=(HL+IX) 2=(HL+IY) 3=(IX+IY)
+    M_PIXH = 26,   // |...|ee|...|: 0=<r16> 1=(IX+d16) 2=(IY+d16) 3=(HL+d16)
+    M_BIXL = 27,   // |.......|ee|: 0=(SP+d16) 1=(HL+IX) 2=(HL+IY) 3=(IX+IY)
+    M_PIXL = 28,   // |.......|ee|: 0=<r16> 1=(IX+d16) 2=(IY+d16) 3=(HL+d16)
+    M_MPTR = 29,   // |...|e|....|: 0=(HL) 1=(a16)
+    M_IDX16 = 30,  // |...|e|....|: 0=(IX+d16) 1=(IY+d16)
+    M_SR8X = 31,   // |......|rrr|: B/C/D/E/_/_/_/A
+    M_DR8X = 32,   // |..|rrr|...|: B/C/D/E/_/_/_/A
+    M_IDX = 33,    // Accept M_IDX8 and M_IDX16
+    R_IDX = 34,    // DD:IX, FD:IY
+    M_SPX = 35,    // Stack pointer relative: (SP+d8)
+    M_REL16 = 36,  // 16-bit PC-Relative: <r16>, 00:8-bit DD:16-bit FD:24-bit
+    M_PDX = 37,    // Pointer index: (HL+d16)/(IX+d16)/(IY+d16)
+    M_SPDX = 38,   // Stack index: (SP+d16)
+    M_PCDX = 39,   // Program counter relative: (PC+d16)
+    M_BDX = 40,    // Base and index: (HL+IX)/(HL+IY)/(IX+IY)
+    M_EPU = 41,    // EPU 4-byte tmeplate
+    I_PTRL = 42,   // |........|p|: 0=(BC) 1=(DE)
+    R_PTRL = 43,   // |........|p|: 0=BC 1=DE
+    R_PTRH = 44,   // |...|p|....|: 0=BC 1=DE
+    M_REL24 = 45,  // 24-bit PC-Relative: ED:8-bit DD:16-bit FD:24-bit
+    R_IDXL = 46,   // |........|y|: 0=IX 1=IY
+    M_DD = 47,     // |.......|dd|: Decoder Directive
+    M_IO16 = 48,   // 16-bit I/O address: (nnnn)
+    M_LW = 49,     // Control bit LW
+    M_LCK = 50,    // Control bit LCK
+    M_XM = 51,     // Control bit XM
+    R_ALT = 52,    // Alternate register
+    I_BASE = 53,
     I_HL = I_BASE + REG_HL,  // (HL)
     I_SP = I_BASE + REG_SP,  // (SP)
     I_C = I_BASE + REG_C,    // (C)
-    R_BASE = I_C + 1,
+    R_BASE = 65,
     R_BC = R_BASE + REG_BC,
     R_DE = R_BASE + REG_DE,
     R_HL = R_BASE + REG_HL,
-    R_SP = R_BASE + REG_SP,
+    R_IX = R_BASE + REG_IX,
+    R_IY = R_BASE + REG_IY,
     R_AF = R_BASE + REG_AF,
-    R_AFP = R_BASE + REG_AFP,
-    R_USP = R_BASE + REG_USP,
     R_C = R_BASE + REG_C,  // or CC_C
     R_A = R_BASE + REG_A,
     R_H = R_BASE + REG_H,
     R_L = R_BASE + REG_L,
-    R_DEHL = R_BASE + REG_DEHL,
+    R_SP = R_BASE + REG_SP,
     R_I = R_BASE + REG_I,
     R_R = R_BASE + REG_R,
+    R_DEHL = R_BASE + REG_DEHL,
+    R_USP = R_BASE + REG_USP,
+    R_SR = R_BASE + REG_SR,
+    R_DSR = R_BASE + REG_DSR,
+    R_XSR = R_BASE + REG_XSR,
+    R_YSR = R_BASE + REG_YSR,
 };
 
 struct Entry final : entry::Base<Config::opcode_t> {
     struct Flags final {
         uint8_t _dst;
         uint8_t _src;
+        uint8_t _mask;
 
-        static constexpr Flags create(AddrMode dst, AddrMode src) {
-            return Flags{dst_attr(dst), src_attr(src)};
+        static constexpr Flags create(uint8_t mask, AddrMode dst, AddrMode src) {
+            return Flags{dst, src, mask};
         }
 
         AddrMode dst() const { return AddrMode(_dst); }
         AddrMode src() const { return AddrMode(_src); }
-
-    private:
-        static constexpr uint8_t dst_attr(AddrMode mode) {
-            return static_cast<uint8_t>(static_cast<uint8_t>(mode));
-        }
-        static constexpr uint8_t src_attr(AddrMode mode) {
-            return static_cast<uint8_t>(static_cast<uint8_t>(mode));
-        }
+        uint8_t mask() const { return _mask; }
     };
 
-    constexpr Entry(Config::opcode_t opCode, Flags flags, const /* PROGMEM */ char *name_P)
-        : Base(name_P, opCode), _flags_P(flags) {}
+    constexpr Entry(Config::opcode_t opc, Flags flags, const /* PROGMEM */ char *name_P)
+        : Base(name_P, opc), _flags_P(flags) {}
 
     Flags readFlags() const {
-        return Flags{pgm_read_byte(&_flags_P._dst), pgm_read_byte(&_flags_P._src)};
+        return Flags{pgm_read_byte(&_flags_P._dst), pgm_read_byte(&_flags_P._src),
+                pgm_read_byte(&_flags_P._mask)};
     }
 
 private:

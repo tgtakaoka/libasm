@@ -28,6 +28,7 @@ extern const char TEXT_CPU_LIST[] PROGMEM;
 extern const char TEXT_CPU_Z80[]  PROGMEM;
 extern const char TEXT_CPU_Z180[] PROGMEM;
 extern const char TEXT_CPU_Z280[] PROGMEM;
+extern const char TEXT_CPU_Z380[] PROGMEM;
 
 using common::TEXT_ADC;
 using common::TEXT_ADD;
@@ -49,7 +50,6 @@ using common::TEXT_EI;
 using common::TEXT_EX;
 using common::TEXT_EXX;
 using common::TEXT_HALT;
-using common::TEXT_HLT;
 extern const char TEXT_IM[]   PROGMEM;
 using common::TEXT_IN;
 using common::TEXT_INC;
@@ -153,6 +153,43 @@ using common::TEXT_SUBW;
 using common::TEXT_TSET;
 extern const char TEXT_TSTI[]   PROGMEM;
 
+// Z380
+extern const char TEXT_ADCW[]  PROGMEM;
+using common::TEXT_ANDW;
+extern const char TEXT_BTEST[] PROGMEM;
+using common::TEXT_CALR;
+extern const char TEXT_CPLW[]  PROGMEM;
+extern const char TEXT_DDIR[]  PROGMEM;
+extern const char TEXT_EXALL[] PROGMEM;
+using common::TEXT_EXTSW;
+extern const char TEXT_EXXX[]  PROGMEM;
+extern const char TEXT_EXXY[]  PROGMEM;
+extern const char TEXT_INA[]   PROGMEM;
+extern const char TEXT_INAW[]  PROGMEM;
+extern const char TEXT_LDDW[]  PROGMEM;
+extern const char TEXT_LDIRW[] PROGMEM;
+extern const char TEXT_LDIW[]  PROGMEM;
+extern const char TEXT_LDDRW[] PROGMEM;
+extern const char TEXT_MTEST[] PROGMEM;
+using common::TEXT_NEGW;
+using common::TEXT_ORW;
+extern const char TEXT_OUTA[]  PROGMEM;
+extern const char TEXT_OUTAW[] PROGMEM;
+extern const char TEXT_RESC[]  PROGMEM;
+extern const char TEXT_RETB[]  PROGMEM;
+extern const char TEXT_RLCW[]  PROGMEM;
+extern const char TEXT_RLW[]   PROGMEM;
+extern const char TEXT_RRCW[]  PROGMEM;
+extern const char TEXT_RRW[]   PROGMEM;
+extern const char TEXT_SBCW[]  PROGMEM;
+using common::TEXT_SETC;
+extern const char TEXT_SLAW[]  PROGMEM;
+extern const char TEXT_SRAW[]  PROGMEM;
+extern const char TEXT_SRLW[]  PROGMEM;
+using common::TEXT_SWAP;
+using common::TEXT_XORW;
+
+// Z80, Z180
 using common::TEXT_REG_BC;
 using common::TEXT_REG_DE;
 using common::TEXT_REG_HL;
@@ -178,6 +215,15 @@ extern const char TEXT_REG_IYH[]  PROGMEM;
 extern const char TEXT_REG_IYL[]  PROGMEM;
 using common::TEXT_REG_USP;
 
+// Z380
+extern const char TEXT_REG_DSR[] PROGMEM;
+extern const char TEXT_REG_IXU[] PROGMEM;
+extern const char TEXT_REG_IYU[] PROGMEM;
+using common::TEXT_REG_SR;
+extern const char TEXT_REG_XSR[] PROGMEM;
+extern const char TEXT_REG_YSR[] PROGMEM;
+
+// Z80, Z180
 using common::TEXT_CC_NZ;
 using common::TEXT_CC_Z;
 using common::TEXT_CC_NC;
@@ -192,6 +238,14 @@ extern const char TEXT_CC_NS[] PROGMEM;
 extern const char TEXT_CC_NV[] PROGMEM;
 extern const char TEXT_CC_S[]  PROGMEM;
 extern const char TEXT_CC_V[]  PROGMEM;
+
+// Z380
+extern const char PSTR_IB[]  PROGMEM;
+extern const char PSTR_IW[]  PROGMEM;
+extern const char PSTR_LCK[] PROGMEM;
+extern const char PSTR_LW[]  PROGMEM;
+extern const char PSTR_W[]   PROGMEM;
+extern const char PSTR_XM[]  PROGMEM;
 
 // clang-format on
 
