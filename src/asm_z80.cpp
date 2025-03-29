@@ -24,6 +24,7 @@ namespace z80 {
 using namespace pseudo;
 using namespace reg;
 using namespace text::common;
+using namespace text::option;
 
 namespace {
 
@@ -57,6 +58,29 @@ AsmZ80::AsmZ80(const ValueParser::Plugins &plugins)
     reset();
 }
 
+int32_t AsmZ80::calcDeltaZ380(
+        AsmInsn &insn, const ErrorAt &at, AddrMode &mode, int32_t delta) const {
+    if (!overflowDelta(delta, 8))
+        return delta;
+    auto diff = delta;
+    diff--;
+    if (insn.prefix() == 0)
+        diff--;
+    if (!overflowDelta(diff, 16)) {
+        mode = M_REL16;
+        insn.setPrefix(0xDD);
+        return diff;
+    }
+    diff--;
+    if (!overflowDelta(diff, 24)) {
+        mode = M_REL24;
+        insn.setPrefix(0xFD);
+        return diff;
+    }
+    insn.setErrorIf(at, OPERAND_TOO_FAR);
+    return delta;
+}
+
 void AsmZ80::encodeRelative(AsmInsn &insn, const Operand &op, AddrMode mode) const {
     const auto deltaLen = (mode == M_REL8) ? 1 : 2;
     uint32_t base = insn.address() + insn.operandPos() + deltaLen;
@@ -77,8 +101,10 @@ void AsmZ80::encodeRelative(AsmInsn &insn, const Operand &op, AddrMode mode) con
         target = op.getError() ? base : op.val.getUnsigned();
         delta = branchDelta(base, target, insn, op);
     }
+    if (z380())
+        delta = calcDeltaZ380(insn, op, mode, delta);
     if ((base & ~UINT16_MAX) != (target & ~UINT16_MAX))
-        insn.setErrorIf(op, OVERFLOW_RANGE);
+            insn.setErrorIf(op, OVERFLOW_RANGE);
     if (mode == M_REL8) {
         if (overflowDelta(delta, 8))
             insn.setErrorIf(op, OPERAND_TOO_FAR);
@@ -87,6 +113,9 @@ void AsmZ80::encodeRelative(AsmInsn &insn, const Operand &op, AddrMode mode) con
         if (overflowDelta(delta, 16))
             insn.setErrorIf(op, OPERAND_TOO_FAR);
         insn.emitOperand16(delta);
+    } else if (mode == M_REL24) {
+        insn.emitOperand16(delta);
+        insn.emitOperand8(delta >> 16);
     }
 }
 
@@ -168,6 +197,11 @@ void AsmZ80::encodeFullIndex(AsmInsn &insn, const Operand &op) const {
 void AsmZ80::encodeOperand(
         AsmInsn &insn, const Operand &op, AddrMode mode, const Operand &other) const {
     insn.setErrorIf(op);
+    if (mode >= R_BASE && other.mode == R_ALT) {
+        const auto base = RegName(mode - R_BASE);
+        if (base != alt2BaseReg(other.reg))
+            insn.setErrorIf(other, REGISTER_NOT_ALLOWED);
+    }
     auto val16 = op.val.getUnsigned();
     switch (mode) {
     case M_IM8:
@@ -177,6 +211,16 @@ void AsmZ80::encodeOperand(
         break;
     case M_IOA:
         if (op.val.overflow(UINT8_MAX))
+            insn.setErrorIf(op, OVERFLOW_RANGE);
+        insn.emitOperand8(val16);
+        break;
+    case M_IO16:
+        if (op.val.overflow(UINT16_MAX))
+            insn.setErrorIf(op, OVERFLOW_RANGE);
+        insn.emitOperand16(val16);
+        break;
+    case M_SPX:
+        if (op.val.overflowInt8())
             insn.setErrorIf(op, OVERFLOW_RANGE);
         insn.emitOperand8(val16);
         break;
@@ -190,17 +234,28 @@ void AsmZ80::encodeOperand(
     case I_IDX:
         encodeIndexReg(insn, op.reg);
         break;
+    case R_IDXL:
+        insn.embed(op.reg == REG_IX ? 0 : 1);
+        break;
     case R_DXY:
     case R_SXY:
         if (op.reg == REG_IXL || op.reg == REG_IYL)
             insn.embed(mode == R_DXY ? 8 : 1);
-        encodeIndexReg(insn, (op.reg == REG_IXH || op.reg == REG_IXL) ? REG_IX : REG_IY);
+        encodeIndexReg(insn,
+                (op.reg == REG_IXH || op.reg == REG_IXL || op.reg == REG_IXU) ? REG_IX : REG_IY);
         break;
     case M_IDX16:
         encodeLongIndex(insn, op);
         break;
     case M_MPTR:
         encodeMemoryPointer(insn, op);
+        break;
+    case R_PTRL:
+    case I_PTRL:
+        insn.embed(op.reg == REG_BC ? 0 : 1);
+        break;
+    case R_PTRH:
+        insn.embed(op.reg == REG_BC ? 0x00 : 0x10);
         break;
     case M_BIXH:
     case M_BIXL:
@@ -281,7 +336,7 @@ void AsmZ80::encodeOperand(
             insn.embed(3 << 3);
             break;
         case 3:
-            if (z280()) {
+            if (z280() || z380()) {
                 insn.embed(1 << 3);
                 break;
             }
@@ -293,6 +348,11 @@ void AsmZ80::encodeOperand(
         break;
     case M_EPU:
         insn.emitOperand32(op.val.getUnsigned());
+        break;
+    case M_LW:
+    case M_LCK:
+    case M_XM:
+        insn.setPrefix(encodeCtlName(CtlName(op.mode - M_LW + CTL_LW)));
         break;
     default:
         break;
@@ -307,11 +367,14 @@ Error AsmZ80::parseOperand(StrScanner &scan, Operand &op, const AsmInsn &insn) c
 
     // 'C' is either C-reg or C-condition
     auto a = p;
-    const auto reg = parseRegName(a, parser());
-    if (reg == REG_C) {
+    op.reg = parseRegName(a, parser());
+    if (op.reg == REG_C) {
         op.mode = R_C;
-        op.reg = REG_C;
         op.val.setUnsigned(encodeCcName(CC_C));
+        scan = a;
+        return OK;
+    } else if (op.reg == REG_CP) {
+        op.mode = R_ALT;
         scan = a;
         return OK;
     }
@@ -324,13 +387,18 @@ Error AsmZ80::parseOperand(StrScanner &scan, Operand &op, const AsmInsn &insn) c
         return OK;
     }
 
+    const auto ctl = parseCtlName(p, parser());
+    if (ctl != CTL_UNDEF) {
+        op.mode = AddrMode((ctl - CTL_LW) + M_LW);
+        scan = p;
+        return OK;
+    }
+
     op.reg = parseRegName(p, parser());
     if (op.reg != REG_UNDEF) {
         switch (op.reg) {
-        case REG_IX:
-        case REG_IY:
-            op.mode = R_IDX;
-            break;
+        case REG_IXU:
+        case REG_IYU:
         case REG_IXH:
         case REG_IXL:
         case REG_IYH:
@@ -349,7 +417,11 @@ Error AsmZ80::parseOperand(StrScanner &scan, Operand &op, const AsmInsn &insn) c
             op.mode = M_SR8;
             break;
         default:
-            op.mode = AddrMode(op.reg + R_BASE);
+            if (isAlternateReg(op.reg)) {
+                op.mode = R_ALT;
+            } else {
+                op.mode = AddrMode(op.reg + R_BASE);
+            }
             break;
         }
         scan = p;

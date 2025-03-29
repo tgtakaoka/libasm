@@ -178,9 +178,9 @@ extern const char TEXT_REG_A4[] PROGMEM;
 extern const char TEXT_REG_A5[] PROGMEM;
 extern const char TEXT_REG_A6[] PROGMEM;
 extern const char TEXT_REG_A7[] PROGMEM;
-using common::TEXT_REG_PC;
-extern const char TEXT_REG_SR[] PROGMEM;
 using common::TEXT_REG_CCR;
+using common::TEXT_REG_PC;
+using common::TEXT_REG_SR;
 using common::TEXT_REG_USP;
 
 // MC68010
