@@ -47,20 +47,39 @@ enum RegName : int8_t {
     REG_E = 10,
     REG_H = 11,
     REG_L = 12,
-    REG_A = 14,    // Missing 13 is (HL)
+    // REG_M = 13, // (HL)
+    REG_A = 14,
     REG_IXH = 15,  // Z280
-    REG_IXL = 16,  // Z280
+    REG_IXL = 16,  // Z280/Z380
     REG_IYH = 17,  // Z280
-    REG_IYL = 18,  // Z280
+    REG_IYL = 18,  // Z280/Z380
+    REG_IXU = 19,  // Z380
+    REG_IYU = 20,  // Z380
     // Other registers
-    REG_I = 19,
-    REG_R = 20,
-    REG_DEHL = 21,  // Z280
-    REG_USP = 22,   // Z280
-    REG_PC = 23,    // Z280
+    REG_I = 21,
+    REG_R = 22,
+    REG_DEHL = 23,  // Z280
+    REG_USP = 24,   // Z280
+    REG_SR = 25,    // Z380
+    REG_DSR = 26,   // Z380
+    REG_XSR = 27,   // Z380
+    REG_YSR = 28,   // Z380
+    REG_PC = 29,    // Z280
     // Alternate register
-    ALT_BASE = 24,
-    REG_AFP = REG_AF + ALT_BASE,
+    ALT_BASE = 30,
+    REG_BCP = REG_BC + ALT_BASE,  // Z380
+    REG_DEP = REG_DE + ALT_BASE,  // Z380
+    REG_HLP = REG_HL + ALT_BASE,  // Z380
+    REG_IXP = REG_IX + ALT_BASE,  // Z380
+    REG_IYP = REG_IX + ALT_BASE,  // Z380
+    REG_AFP = REG_AF + ALT_BASE,  // Z80
+    REG_BP = REG_B + ALT_BASE,    // Z380
+    REG_CP = REG_C + ALT_BASE,    // Z380
+    REG_DP = REG_D + ALT_BASE,    // Z380
+    REG_EP = REG_E + ALT_BASE,    // Z380
+    REG_HP = REG_H + ALT_BASE,    // Z380
+    REG_LP = REG_L + ALT_BASE,    // Z380
+    REG_AP = REG_A + ALT_BASE,    // Z380
 };
 
 enum CcName : int8_t {
@@ -81,6 +100,23 @@ enum CcName : int8_t {
     CC_S = CC_M + CC_alias,
 };
 
+enum DdName : int8_t {
+    DD_UNDEF = -1,
+    DD_W = 0,
+    DD_IB = 1,
+    DD_IW = 2,
+    DD_LW = 4,
+};
+
+enum CtlName : uint8_t {
+    CTL_UNDEF = 0,
+    CTL_LW = 1,
+    CTL_LCK = 2,
+    CTL_XM = 3,
+};
+
+struct DisInsn;
+
 namespace reg {
 
 RegName parseRegName(StrScanner &scan, const ValueParser &parser);
@@ -94,6 +130,8 @@ RegName decodeStackReg(uint8_t num);
 uint8_t encodeIndirectBase(RegName name);
 RegName decodeIndirectBase(uint8_t num);
 bool isIndexReg(RegName name);
+bool isAlternateReg(RegName name);
+RegName alt2BaseReg(RegName alt);
 
 CcName parseCcName(StrScanner &scan, const ValueParser &parser);
 StrBuffer &outCcName(StrBuffer &out, CcName cc);
@@ -101,6 +139,15 @@ bool isCc4Name(CcName name);
 bool isCcAlias(CcName name);
 uint8_t encodeCcName(CcName name);
 CcName decodeCcName(uint8_t num);
+
+DdName parseDdName(StrScanner &scan, const ValueParser &parser);
+StrBuffer &outDdName(StrBuffer &out, DdName dd);
+int8_t encodeDdNames(DdName word, DdName imm);
+StrBuffer &outDdNames(StrBuffer &out, const DisInsn &insn);
+
+CtlName parseCtlName(StrScanner &scan, const ValueParser &parser);
+uint8_t encodeCtlName(CtlName name);
+StrBuffer &outCtlName(StrBuffer &out, const DisInsn &insn);
 
 }  // namespace reg
 }  // namespace z80

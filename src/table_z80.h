@@ -32,6 +32,7 @@ struct TableZ80 final : InsnTable<CpuType> {
     static constexpr uint16_t IX = 0xDD;
     static constexpr uint16_t IY = 0xFD;
     static constexpr uint16_t BIT = 0xCB;
+    static constexpr uint16_t EXTBIT = 0xEDCB;
     static constexpr uint16_t IXEXT = 0xDDED;
     static constexpr uint16_t IYEXT = 0xFDED;
     static constexpr uint16_t IXBIT = 0xDDCB;
