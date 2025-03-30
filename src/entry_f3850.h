@@ -54,26 +54,43 @@ enum AddrMode : uint8_t {
     M_IOA = 24,     // 8-bit I/O address (4~255)
 };
 
+enum CodeFormat : uint8_t {
+    CF_00 = 0,  // 0x00
+    CF_07 = 1,  // 0x07
+    CF_0F = 2,  // 0x0F
+};
+
 struct Entry final : entry::Base<Config::opcode_t> {
     struct Flags final {
         uint16_t _attr;
 
-        static constexpr Flags create(AddrMode opr1, AddrMode opr2) {
-            return Flags{static_cast<uint16_t>((static_cast<uint8_t>(opr1) << opr1_gp) |
-                                               (static_cast<uint8_t>(opr2) << opr2_gp))};
+        static constexpr Flags create(CodeFormat cf, AddrMode opr1, AddrMode opr2) {
+            return Flags{static_cast<uint16_t>((static_cast<uint16_t>(opr1) << opr1_gp) |
+                                               (static_cast<uint16_t>(opr2) << opr2_gp) |
+                                               (static_cast<uint16_t>(cf) << cf_gp))};
         }
 
         AddrMode mode1() const { return AddrMode((_attr >> opr1_gp) & mode_gm); }
         AddrMode mode2() const { return AddrMode((_attr >> opr2_gp) & mode_gm); }
+        uint8_t mask() const {
+            static constexpr uint8_t MASK[] PROGMEM = {
+                    0x00,  // CF_00
+                    0x07,  // CF_07
+                    0x0F,  // CF_0F
+            };
+            return pgm_read_byte(&MASK[(_attr >> cf_gp) & cf_gm]);
+        }
 
     private:
         static constexpr int opr1_gp = 0;
-        static constexpr int opr2_gp = 8;
-        static constexpr uint8_t mode_gm = 0xFF;
+        static constexpr int opr2_gp = 6;
+        static constexpr int cf_gp = 12;
+        static constexpr uint8_t mode_gm = 0x3F;
+        static constexpr uint8_t cf_gm = 0x03;
     };
 
-    constexpr Entry(Config::opcode_t opCode, Flags flags, const /* PROGMEM */ char *name_P)
-        : Base(name_P, opCode), _flags_P(flags) {}
+    constexpr Entry(Config::opcode_t opc, Flags flags, const /* PROGMEM */ char *name_P)
+        : Base(name_P, opc), _flags_P(flags) {}
 
     Flags readFlags() const { return Flags{pgm_read_word(&_flags_P._attr)}; }
 
