@@ -60,8 +60,11 @@ RegName parseRegName(StrScanner &scan, const ValueParser &parser) {
     auto p = scan;
     const auto *entry = TABLE.searchText(parser.readRegName(p));
     if (entry) {
+        auto name = RegName(entry->name());
+        if (name == REG_H && p.expect('\''))
+            return REG_UNDEF;  // H'xx'
         scan = p;
-        return RegName(entry->name());
+        return name;
     }
     return REG_UNDEF;
 }

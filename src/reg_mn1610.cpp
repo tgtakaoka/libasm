@@ -204,8 +204,11 @@ CcName parseCcName(StrScanner &scan, const ValueParser &parser) {
     auto p = scan;
     const auto *entry = CC_TABLE.searchText(parser.readRegName(p));
     if (entry) {
+        auto name = CcName(entry->name());
+        if (name == CC_C && p.expect('\''))
+            return CC_UNDEF;  // C'x'
         scan = p;
-        return CcName(entry->name());
+        return name;
     }
     return CC_UNDEF;
 }

@@ -103,7 +103,6 @@ constexpr char TEXT_SRLA[] PROGMEM = "SRLA";
 // constexpr char TEXT_REG_IX[]  PROGMEM = "IX";
 // constexpr char TEXT_REG_IY[]  PROGMEM = "IY";
 // constexpr char TEXT_REG_SP[]  PROGMEM = "SP";
-// constexpr char TEXT_REG_AFP[] PROGMEM = "AF'";
 // constexpr char TEXT_REG_AF[]  PROGMEM = "AF";
 // constexpr char TEXT_REG_A[]   PROGMEM = "A";
 // constexpr char TEXT_REG_B[]   PROGMEM = "B";

@@ -39,7 +39,6 @@ enum RegName : int8_t {
     REG_SP = 4 + 2,
     // 16-bit registers for stack: M_STACK
     REG_AF = 8 + 6,
-    REG_AFP = 8 + 7,
     // 8-bit registers: M_REG8
     REG_B = 16 + 0,
     REG_C = 16 + 1,
@@ -48,6 +47,9 @@ enum RegName : int8_t {
     REG_H = 16 + 4,
     REG_L = 16 + 5,
     REG_A = 16 + 6,
+    // Alternate register
+    ALT_BASE = 24,
+    REG_AFP = REG_AF + ALT_BASE,
 };
 
 enum CcName : int8_t {

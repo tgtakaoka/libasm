@@ -106,7 +106,7 @@ struct ValueParser {
      * Parse |scan| and read a |symbol|, then return OK. Otherwise return NOT_AN_EXPECTED.
      */
     Error readSymbol(StrScanner &scan, StrScanner &symbol) const;
-    StrScanner readRegName(StrScanner &scan, bool period = false) const;
+    StrScanner readRegName(StrScanner &scan, bool excludePeriod = false) const;
     Error readLabel(StrScanner &scan, StrScanner &label) const;
     Error readInstruction(StrScanner &scan, StrScanner &inst) const;
     bool commentLine(StrScanner &scan) const { return _comment.commentLine(scan); }

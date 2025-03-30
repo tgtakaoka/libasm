@@ -457,7 +457,6 @@ extern const char TEXT_CPU_8080[]   PROGMEM;
 extern const char TEXT_CPU_8085[]   PROGMEM;
 extern const char TEXT_CPU_V30EMU[] PROGMEM;
 
-extern const char TEXT_REG_AFP[] PROGMEM;
 extern const char TEXT_REG_AF[]  PROGMEM;
 extern const char TEXT_REG_A[]   PROGMEM;
 extern const char TEXT_REG_BC[]  PROGMEM;

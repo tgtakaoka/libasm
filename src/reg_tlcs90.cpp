@@ -32,7 +32,6 @@ namespace {
 constexpr NameEntry REG_ENTRIES[] PROGMEM = {
     { TEXT_REG_A,   REG_A   },
     { TEXT_REG_AF,  REG_AF  },
-    { TEXT_REG_AFP, REG_AFP },
     { TEXT_REG_B,   REG_B   },
     { TEXT_REG_BC,  REG_BC  },
     { TEXT_REG_C,   REG_C   },
@@ -83,13 +82,18 @@ RegName parseRegName(StrScanner &scan, const ValueParser &parser) {
     auto p = scan;
     const auto *entry = REG_TABLE.searchText(parser.readRegName(p));
     if (entry) {
+        auto name = RegName(entry->name());
+        if (name == REG_AF && p.expect('\''))
+            name = REG_AFP;
         scan = p;
-        return RegName(entry->name());
+        return name;
     }
     return REG_UNDEF;
 }
 
 StrBuffer &outRegName(StrBuffer &out, RegName name) {
+    if (name >= ALT_BASE)
+        return outRegName(out, RegName(name - ALT_BASE)).letter('\'');
     const auto *entry = REG_TABLE.searchName(name);
     return entry ? entry->outText(out) : out;
 }

@@ -116,7 +116,6 @@ using common::TEXT_REG_HL;
 using common::TEXT_REG_IX;
 using common::TEXT_REG_IY;
 using common::TEXT_REG_SP;
-using common::TEXT_REG_AFP;
 using common::TEXT_REG_AF;
 using common::TEXT_REG_A;
 using common::TEXT_REG_B;

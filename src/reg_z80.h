@@ -39,7 +39,6 @@ enum RegName : int8_t {
     REG_IX = 4 + 0,
     REG_IY = 5 + 0,
     REG_AF = 6 + 0,
-    REG_AFP = 7 + 0,
     // 8-bit registers
     // Data registers
     REG_B = 0 + 8,
@@ -52,6 +51,9 @@ enum RegName : int8_t {
     // Other registers
     REG_I = 0 + 16,
     REG_R = 1 + 16,
+    // Alternate register
+    ALT_BASE = 24,
+    REG_AFP = REG_AF + ALT_BASE,
 };
 
 enum CcName : int8_t {

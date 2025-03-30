@@ -564,6 +564,10 @@ void test_16bit_transfer() {
 }
 
 void test_exchange() {
+    TEST("EX DE, HL",  0x08);
+    TEST("EX AF, AF'", 0x09);
+    TEST("EXX",        0x0A);
+
     TEST("EX (BC),BC",     0xE0, 0x50);
     TEST("EX (DE),BC",     0xE1, 0x50);
     TEST("EX (HL),BC",     0xE2, 0x50);
