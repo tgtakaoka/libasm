@@ -24,140 +24,143 @@ using namespace libasm::text::mc6800;
 namespace libasm {
 namespace mc6800 {
 
-#define E3(_opc, _name, _opr1, _opr2, _opr3) \
-    {_opc, Entry::Flags::create(_opr1, _opr2, _opr3), _name}
-#define E2(_opc, _name, _opr1, _opr2) E3(_opc, _name, _opr1, _opr2, M_NONE)
-#define E1(_opc, _name, _opr1) E2(_opc, _name, _opr1, M_NONE)
-#define E0(_opc, _name) E1(_opc, _name, M_NONE)
-#define U1(_opc, _name, _opr1) {_opc, Entry::Flags::undef(_opr1), _name}
+#define E3(_opc, _cf, _name, _opr1, _opr2, _opr3) \
+    {_opc, Entry::Flags::create(_cf, _opr1, _opr2, _opr3), _name}
+#define E2(_opc, _cf, _name, _opr1, _opr2) E3(_opc, _cf, _name, _opr1, _opr2, M_NONE)
+#define E1(_opc, _cf, _name, _opr1) E2(_opc, _cf, _name, _opr1, M_NONE)
+#define E0(_opc, _cf, _name) E1(_opc, _cf, _name, M_NONE)
 
 // clang-format off
 constexpr Entry MC6800_TABLE[] PROGMEM = {
-    E0(0x01, TEXT_NOP),
-    E0(0x06, TEXT_TAP),
-    E0(0x07, TEXT_TPA),
-    E0(0x08, TEXT_INX),
-    E0(0x09, TEXT_DEX),
-    E0(0x0A, TEXT_CLV),
-    E0(0x0B, TEXT_SEV),
-    E0(0x0C, TEXT_CLC),
-    E0(0x0D, TEXT_SEC),
-    E0(0x0E, TEXT_CLI),
-    E0(0x0F, TEXT_SEI),
-    E0(0x10, TEXT_SBA),
-    E0(0x11, TEXT_CBA),
-    E0(0x16, TEXT_TAB),
-    E0(0x17, TEXT_TBA),
-    E0(0x19, TEXT_DAA),
-    E0(0x1B, TEXT_ABA),
-    E1(0x20, TEXT_BRA,  M_REL),
-    E1(0x22, TEXT_BHI,  M_REL),
-    E1(0x23, TEXT_BLS,  M_REL),
-    E1(0x24, TEXT_BHS,  M_REL),
-    E1(0x24, TEXT_BCC,  M_REL),
-    E1(0x25, TEXT_BLO,  M_REL),
-    E1(0x25, TEXT_BCS,  M_REL),
-    E1(0x26, TEXT_BNE,  M_REL),
-    E1(0x27, TEXT_BEQ,  M_REL),
-    E1(0x28, TEXT_BVC,  M_REL),
-    E1(0x29, TEXT_BVS,  M_REL),
-    E1(0x2A, TEXT_BPL,  M_REL),
-    E1(0x2B, TEXT_BMI,  M_REL),
-    E1(0x2C, TEXT_BGE,  M_REL),
-    E1(0x2D, TEXT_BLT,  M_REL),
-    E1(0x2E, TEXT_BGT,  M_REL),
-    E1(0x2F, TEXT_BLE,  M_REL),
-    E0(0x30, TEXT_TSX),
-    E0(0x31, TEXT_INS),
-    E0(0x32, TEXT_PULA),
-    E0(0x33, TEXT_PULB),
-    E0(0x34, TEXT_DES),
-    E0(0x35, TEXT_TXS),
-    E0(0x36, TEXT_PSHA),
-    E0(0x37, TEXT_PSHB),
-    E0(0x39, TEXT_RTS),
-    E0(0x3B, TEXT_RTI),
-    E0(0x3E, TEXT_WAI),
-    E0(0x3F, TEXT_SWI),
-    E0(0x40, TEXT_NEGA),
-    E0(0x50, TEXT_NEGB),
-    E0(0x43, TEXT_COMA),
-    E0(0x53, TEXT_COMB),
-    E0(0x44, TEXT_LSRA),
-    E0(0x54, TEXT_LSRB),
-    E0(0x46, TEXT_RORA),
-    E0(0x56, TEXT_RORB),
-    E0(0x47, TEXT_ASRA),
-    E0(0x57, TEXT_ASRB),
-    E0(0x48, TEXT_ASLA),
-    E0(0x58, TEXT_ASLB),
-    E0(0x48, TEXT_LSLA),
-    E0(0x58, TEXT_LSLB),
-    E0(0x49, TEXT_ROLA),
-    E0(0x59, TEXT_ROLB),
-    E0(0x4A, TEXT_DECA),
-    E0(0x5A, TEXT_DECB),
-    E0(0x4C, TEXT_INCA),
-    E0(0x5C, TEXT_INCB),
-    E0(0x4D, TEXT_TSTA),
-    E0(0x5D, TEXT_TSTB),
-    E0(0x4F, TEXT_CLRA),
-    E0(0x5F, TEXT_CLRB),
-    E1(0x60, TEXT_NEG,  M_GMEM),
-    E1(0x63, TEXT_COM,  M_GMEM),
-    E1(0x64, TEXT_LSR,  M_GMEM),
-    E1(0x66, TEXT_ROR,  M_GMEM),
-    E1(0x67, TEXT_ASR,  M_GMEM),
-    E1(0x68, TEXT_ASL,  M_GMEM),
-    E1(0x68, TEXT_LSL,  M_GMEM),
-    E1(0x69, TEXT_ROL,  M_GMEM),
-    E1(0x6A, TEXT_DEC,  M_GMEM),
-    E1(0x6C, TEXT_INC,  M_GMEM),
-    E1(0x6D, TEXT_TST,  M_GMEM),
-    E1(0x6E, TEXT_JMP,  M_GMEM),
-    E1(0x6F, TEXT_CLR,  M_GMEM),
-    E1(0x80, TEXT_SUBA, M_GN8),
-    E1(0xC0, TEXT_SUBB, M_GN8),
-    E1(0x81, TEXT_CMPA, M_GN8),
-    E1(0xC1, TEXT_CMPB, M_GN8),
-    E1(0x82, TEXT_SBCA, M_GN8),
-    E1(0xC2, TEXT_SBCB, M_GN8),
-    E1(0x84, TEXT_ANDA, M_GN8),
-    E1(0xC4, TEXT_ANDB, M_GN8),
-    E1(0x85, TEXT_BITA, M_GN8),
-    E1(0xC5, TEXT_BITB, M_GN8),
-    E1(0x86, TEXT_LDAA, M_GN8),
-    E1(0xC6, TEXT_LDAB, M_GN8),
-    U1(0x87, TEXT_STAA, M_IM8), // undefined STAA #
-    U1(0xC7, TEXT_STAB, M_IM8), // undefined STAB #
-    E1(0x87, TEXT_STAA, M_GN8),
-    E1(0xC7, TEXT_STAB, M_GN8),
-    E1(0x88, TEXT_EORA, M_GN8),
-    E1(0xC8, TEXT_EORB, M_GN8),
-    E1(0x89, TEXT_ADCA, M_GN8),
-    E1(0xC9, TEXT_ADCB, M_GN8),
-    E1(0x8A, TEXT_ORAA, M_GN8),
-    E1(0xCA, TEXT_ORAB, M_GN8),
-    E1(0x8B, TEXT_ADDA, M_GN8),
-    E1(0xCB, TEXT_ADDB, M_GN8),
-    E1(0x8C, TEXT_CPX,  M_GN16),
-    E1(0x8D, TEXT_BSR,  M_REL),
-    E1(0x8E, TEXT_LDS,  M_GN16),
-    U1(0x8F, TEXT_STS,  M_IM16), // undefined STS #
-    E1(0x8F, TEXT_STS,  M_GN16),
-    E1(0xAD, TEXT_JSR,  M_IDX),
-    E1(0xBD, TEXT_JSR,  M_EXT),
-    E1(0xCE, TEXT_LDX,  M_GN16),
-    U1(0xCF, TEXT_STX,  M_IM16), // undefined STX #
-    E1(0xCF, TEXT_STX,  M_GN16),
+    E0(0x01, CF_00, TEXT_NOP),
+    E0(0x06, CF_00, TEXT_TAP),
+    E0(0x07, CF_00, TEXT_TPA),
+    E0(0x08, CF_00, TEXT_INX),
+    E0(0x09, CF_00, TEXT_DEX),
+    E0(0x0A, CF_00, TEXT_CLV),
+    E0(0x0B, CF_00, TEXT_SEV),
+    E0(0x0C, CF_00, TEXT_CLC),
+    E0(0x0D, CF_00, TEXT_SEC),
+    E0(0x0E, CF_00, TEXT_CLI),
+    E0(0x0F, CF_00, TEXT_SEI),
+    E0(0x10, CF_00, TEXT_SBA),
+    E0(0x11, CF_00, TEXT_CBA),
+    E0(0x16, CF_00, TEXT_TAB),
+    E0(0x17, CF_00, TEXT_TBA),
+    E0(0x19, CF_00, TEXT_DAA),
+    E0(0x1B, CF_00, TEXT_ABA),
+    E1(0x20, CF_00, TEXT_BRA,  M_REL),
+    E1(0x22, CF_00, TEXT_BHI,  M_REL),
+    E1(0x23, CF_00, TEXT_BLS,  M_REL),
+    E1(0x24, CF_00, TEXT_BHS,  M_REL),
+    E1(0x24, CF_00, TEXT_BCC,  M_REL),
+    E1(0x25, CF_00, TEXT_BLO,  M_REL),
+    E1(0x25, CF_00, TEXT_BCS,  M_REL),
+    E1(0x26, CF_00, TEXT_BNE,  M_REL),
+    E1(0x27, CF_00, TEXT_BEQ,  M_REL),
+    E1(0x28, CF_00, TEXT_BVC,  M_REL),
+    E1(0x29, CF_00, TEXT_BVS,  M_REL),
+    E1(0x2A, CF_00, TEXT_BPL,  M_REL),
+    E1(0x2B, CF_00, TEXT_BMI,  M_REL),
+    E1(0x2C, CF_00, TEXT_BGE,  M_REL),
+    E1(0x2D, CF_00, TEXT_BLT,  M_REL),
+    E1(0x2E, CF_00, TEXT_BGT,  M_REL),
+    E1(0x2F, CF_00, TEXT_BLE,  M_REL),
+    E0(0x30, CF_00, TEXT_TSX),
+    E0(0x31, CF_00, TEXT_INS),
+    E0(0x32, CF_00, TEXT_PULA),
+    E0(0x33, CF_00, TEXT_PULB),
+    E0(0x34, CF_00, TEXT_DES),
+    E0(0x35, CF_00, TEXT_TXS),
+    E0(0x36, CF_00, TEXT_PSHA),
+    E0(0x37, CF_00, TEXT_PSHB),
+    E0(0x39, CF_00, TEXT_RTS),
+    E0(0x3B, CF_00, TEXT_RTI),
+    E0(0x3E, CF_00, TEXT_WAI),
+    E0(0x3F, CF_00, TEXT_SWI),
+    E0(0x40, CF_00, TEXT_NEGA),
+    E0(0x50, CF_00, TEXT_NEGB),
+    E0(0x43, CF_00, TEXT_COMA),
+    E0(0x53, CF_00, TEXT_COMB),
+    E0(0x44, CF_00, TEXT_LSRA),
+    E0(0x54, CF_00, TEXT_LSRB),
+    E0(0x46, CF_00, TEXT_RORA),
+    E0(0x56, CF_00, TEXT_RORB),
+    E0(0x47, CF_00, TEXT_ASRA),
+    E0(0x57, CF_00, TEXT_ASRB),
+    E0(0x48, CF_00, TEXT_ASLA),
+    E0(0x58, CF_00, TEXT_ASLB),
+    E0(0x48, CF_00, TEXT_LSLA),
+    E0(0x58, CF_00, TEXT_LSLB),
+    E0(0x49, CF_00, TEXT_ROLA),
+    E0(0x59, CF_00, TEXT_ROLB),
+    E0(0x4A, CF_00, TEXT_DECA),
+    E0(0x5A, CF_00, TEXT_DECB),
+    E0(0x4C, CF_00, TEXT_INCA),
+    E0(0x5C, CF_00, TEXT_INCB),
+    E0(0x4D, CF_00, TEXT_TSTA),
+    E0(0x5D, CF_00, TEXT_TSTB),
+    E0(0x4F, CF_00, TEXT_CLRA),
+    E0(0x5F, CF_00, TEXT_CLRB),
+    E1(0x60, CF_10, TEXT_NEG,  M_GMEM),
+    E1(0x63, CF_10, TEXT_COM,  M_GMEM),
+    E1(0x64, CF_10, TEXT_LSR,  M_GMEM),
+    E1(0x66, CF_10, TEXT_ROR,  M_GMEM),
+    E1(0x67, CF_10, TEXT_ASR,  M_GMEM),
+    E1(0x68, CF_10, TEXT_ASL,  M_GMEM),
+    E1(0x68, CF_10, TEXT_LSL,  M_GMEM),
+    E1(0x69, CF_10, TEXT_ROL,  M_GMEM),
+    E1(0x6A, CF_10, TEXT_DEC,  M_GMEM),
+    E1(0x6C, CF_10, TEXT_INC,  M_GMEM),
+    E1(0x6D, CF_10, TEXT_TST,  M_GMEM),
+    E1(0x6E, CF_10, TEXT_JMP,  M_GMEM),
+    E1(0x6F, CF_10, TEXT_CLR,  M_GMEM),
+    E1(0x80, CF_30, TEXT_SUBA, M_GN8),
+    E1(0xC0, CF_30, TEXT_SUBB, M_GN8),
+    E1(0x81, CF_30, TEXT_CMPA, M_GN8),
+    E1(0xC1, CF_30, TEXT_CMPB, M_GN8),
+    E1(0x82, CF_30, TEXT_SBCA, M_GN8),
+    E1(0xC2, CF_30, TEXT_SBCB, M_GN8),
+    E1(0x84, CF_30, TEXT_ANDA, M_GN8),
+    E1(0xC4, CF_30, TEXT_ANDB, M_GN8),
+    E1(0x85, CF_30, TEXT_BITA, M_GN8),
+    E1(0xC5, CF_30, TEXT_BITB, M_GN8),
+    E1(0x86, CF_30, TEXT_LDAA, M_GN8),
+    E1(0xC6, CF_30, TEXT_LDAB, M_GN8),
+    E1(0x97, CF_00, TEXT_STAA, M_DIR),
+    E1(0xA7, CF_00, TEXT_STAA, M_IDX),
+    E1(0xB7, CF_00, TEXT_STAA, M_EXT),
+    E1(0xD7, CF_00, TEXT_STAB, M_DIR),
+    E1(0xE7, CF_00, TEXT_STAB, M_IDX),
+    E1(0xF7, CF_00, TEXT_STAB, M_EXT),
+    E1(0x88, CF_30, TEXT_EORA, M_GN8),
+    E1(0xC8, CF_30, TEXT_EORB, M_GN8),
+    E1(0x89, CF_30, TEXT_ADCA, M_GN8),
+    E1(0xC9, CF_30, TEXT_ADCB, M_GN8),
+    E1(0x8A, CF_30, TEXT_ORAA, M_GN8),
+    E1(0xCA, CF_30, TEXT_ORAB, M_GN8),
+    E1(0x8B, CF_30, TEXT_ADDA, M_GN8),
+    E1(0xCB, CF_30, TEXT_ADDB, M_GN8),
+    E1(0x8C, CF_30, TEXT_CPX,  M_GN16),
+    E1(0x8D, CF_00, TEXT_BSR,  M_REL),
+    E1(0x8E, CF_30, TEXT_LDS,  M_GN16),
+    E1(0x9F, CF_00, TEXT_STS,  M_DIR),
+    E1(0xAF, CF_00, TEXT_STS,  M_IDX),
+    E1(0xBF, CF_00, TEXT_STS,  M_EXT),
+    E1(0xAD, CF_00, TEXT_JSR,  M_IDX),
+    E1(0xBD, CF_00, TEXT_JSR,  M_EXT),
+    E1(0xCE, CF_30, TEXT_LDX,  M_GN16),
+    E1(0xDF, CF_00, TEXT_STX,  M_DIR),
+    E1(0xEF, CF_00, TEXT_STX,  M_IDX),
+    E1(0xFF, CF_00, TEXT_STX,  M_EXT),
 };
 
 constexpr uint8_t MC6800_INDEX[] PROGMEM = {
      16,  // TEXT_ABA
-    101,  // TEXT_ADCA
-    102,  // TEXT_ADCB
-    105,  // TEXT_ADDA
-    106,  // TEXT_ADDB
+    103,  // TEXT_ADCA
+    104,  // TEXT_ADCB
+    107,  // TEXT_ADDA
+    108,  // TEXT_ADDB
      89,  // TEXT_ANDA
      90,  // TEXT_ANDB
      75,  // TEXT_ASL
@@ -183,7 +186,7 @@ constexpr uint8_t MC6800_INDEX[] PROGMEM = {
      24,  // TEXT_BNE
      28,  // TEXT_BPL
      17,  // TEXT_BRA
-    108,  // TEXT_BSR
+    110,  // TEXT_BSR
      26,  // TEXT_BVC
      27,  // TEXT_BVS
      12,  // TEXT_CBA
@@ -198,27 +201,27 @@ constexpr uint8_t MC6800_INDEX[] PROGMEM = {
      71,  // TEXT_COM
      48,  // TEXT_COMA
      49,  // TEXT_COMB
-    107,  // TEXT_CPX
+    109,  // TEXT_CPX
      15,  // TEXT_DAA
      78,  // TEXT_DEC
      62,  // TEXT_DECA
      63,  // TEXT_DECB
      38,  // TEXT_DES
       4,  // TEXT_DEX
-     99,  // TEXT_EORA
-    100,  // TEXT_EORB
+    101,  // TEXT_EORA
+    102,  // TEXT_EORB
      79,  // TEXT_INC
      64,  // TEXT_INCA
      65,  // TEXT_INCB
      35,  // TEXT_INS
       3,  // TEXT_INX
      81,  // TEXT_JMP
-    112,  // TEXT_JSR
-    113,  // TEXT_JSR
+    115,  // TEXT_JSR
+    116,  // TEXT_JSR
      93,  // TEXT_LDAA
      94,  // TEXT_LDAB
-    109,  // TEXT_LDS
-    114,  // TEXT_LDX
+    111,  // TEXT_LDS
+    117,  // TEXT_LDX
      76,  // TEXT_LSL
      58,  // TEXT_LSLA
      59,  // TEXT_LSLB
@@ -229,8 +232,8 @@ constexpr uint8_t MC6800_INDEX[] PROGMEM = {
      46,  // TEXT_NEGA
      47,  // TEXT_NEGB
       0,  // TEXT_NOP
-    103,  // TEXT_ORAA
-    104,  // TEXT_ORAB
+    105,  // TEXT_ORAA
+    106,  // TEXT_ORAB
      40,  // TEXT_PSHA
      41,  // TEXT_PSHB
      36,  // TEXT_PULA
@@ -250,13 +253,17 @@ constexpr uint8_t MC6800_INDEX[] PROGMEM = {
      10,  // TEXT_SEI
       6,  // TEXT_SEV
      95,  // TEXT_STAA
+     96,  // TEXT_STAA
      97,  // TEXT_STAA
-     96,  // TEXT_STAB
      98,  // TEXT_STAB
-    110,  // TEXT_STS
-    111,  // TEXT_STS
-    115,  // TEXT_STX
-    116,  // TEXT_STX
+     99,  // TEXT_STAB
+    100,  // TEXT_STAB
+    112,  // TEXT_STS
+    113,  // TEXT_STS
+    114,  // TEXT_STS
+    118,  // TEXT_STX
+    119,  // TEXT_STX
+    120,  // TEXT_STX
      83,  // TEXT_SUBA
      84,  // TEXT_SUBB
      45,  // TEXT_SWI
@@ -273,12 +280,12 @@ constexpr uint8_t MC6800_INDEX[] PROGMEM = {
 };
 
 constexpr Entry MB8861_TABLE[] PROGMEM = {
-    E2(0x71, TEXT_NIM, M_IM8, M_IDX),
-    E2(0x72, TEXT_OIM, M_IM8, M_IDX),
-    E2(0x75, TEXT_XIM, M_IM8, M_IDX),
-    E2(0x7B, TEXT_TMM, M_IM8, M_IDX),
-    E1(0xEC, TEXT_ADX, M_IM8),
-    E1(0xFC, TEXT_ADX, M_EXT),
+    E2(0x71, CF_00, TEXT_NIM, M_IM8, M_IDX),
+    E2(0x72, CF_00, TEXT_OIM, M_IM8, M_IDX),
+    E2(0x75, CF_00, TEXT_XIM, M_IM8, M_IDX),
+    E2(0x7B, CF_00, TEXT_TMM, M_IM8, M_IDX),
+    E1(0xEC, CF_00, TEXT_ADX, M_IM8),
+    E1(0xFC, CF_00, TEXT_ADX, M_EXT),
 };
 
 constexpr uint8_t MB8861_INDEX[] PROGMEM = {
@@ -291,20 +298,21 @@ constexpr uint8_t MB8861_INDEX[] PROGMEM = {
 };
 
 constexpr Entry MC6801_TABLE[] PROGMEM = {
-    E0(0x04, TEXT_LSRD),
-    E0(0x05, TEXT_ASLD),
-    E0(0x05, TEXT_LSLD),
-    E1(0x21, TEXT_BRN,  M_REL),
-    E0(0x38, TEXT_PULX),
-    E0(0x3A, TEXT_ABX),
-    E0(0x3C, TEXT_PSHX),
-    E0(0x3D, TEXT_MUL),
-    E1(0x83, TEXT_SUBD, M_GN16),
-    E1(0x9D, TEXT_JSR,  M_DIR),
-    E1(0xC3, TEXT_ADDD, M_GN16),
-    E1(0xCC, TEXT_LDD,  M_GN16),
-    U1(0xCD, TEXT_STD,  M_IM16), // undefined STD #
-    E1(0xCD, TEXT_STD,  M_GN16),
+    E0(0x04, CF_00, TEXT_LSRD),
+    E0(0x05, CF_00, TEXT_ASLD),
+    E0(0x05, CF_00, TEXT_LSLD),
+    E1(0x21, CF_00, TEXT_BRN,  M_REL),
+    E0(0x38, CF_00, TEXT_PULX),
+    E0(0x3A, CF_00, TEXT_ABX),
+    E0(0x3C, CF_00, TEXT_PSHX),
+    E0(0x3D, CF_00, TEXT_MUL),
+    E1(0x83, CF_30, TEXT_SUBD, M_GN16),
+    E1(0x9D, CF_00, TEXT_JSR,  M_DIR),
+    E1(0xC3, CF_30, TEXT_ADDD, M_GN16),
+    E1(0xCC, CF_30, TEXT_LDD,  M_GN16),
+    E1(0xDD, CF_00, TEXT_STD,  M_DIR),
+    E1(0xED, CF_00, TEXT_STD,  M_IDX),
+    E1(0xFD, CF_00, TEXT_STD,  M_EXT),
 };
 
 constexpr uint8_t MC6801_INDEX[] PROGMEM = {
@@ -321,28 +329,29 @@ constexpr uint8_t MC6801_INDEX[] PROGMEM = {
       4,  // TEXT_PULX
      12,  // TEXT_STD
      13,  // TEXT_STD
+     14,  // TEXT_STD
       8,  // TEXT_SUBD
 };
 
 constexpr Entry HD6301_TABLE[] PROGMEM = {
-    E0(0x18, TEXT_XGDX),
-    E0(0x1A, TEXT_SLP),
-    E2(0x61, TEXT_AIM,  M_BMM, M_IDX),
-    E2(0x61, TEXT_BCLR, M_BIT, M_IDX),
-    E2(0x62, TEXT_OIM,  M_BMM, M_IDX),
-    E2(0x62, TEXT_BSET, M_BIT, M_IDX),
-    E2(0x65, TEXT_EIM,  M_BMM, M_IDX),
-    E2(0x65, TEXT_BTGL, M_BIT, M_IDX),
-    E2(0x6B, TEXT_TIM,  M_BMM, M_IDX),
-    E2(0x6B, TEXT_BTST, M_BIT, M_IDX),
-    E2(0x71, TEXT_AIM,  M_BMM, M_DIR),
-    E2(0x71, TEXT_BCLR, M_BIT, M_DIR),
-    E2(0x72, TEXT_OIM,  M_BMM, M_DIR),
-    E2(0x72, TEXT_BSET, M_BIT, M_DIR),
-    E2(0x75, TEXT_EIM,  M_BMM, M_DIR),
-    E2(0x75, TEXT_BTGL, M_BIT, M_DIR),
-    E2(0x7B, TEXT_TIM,  M_BMM, M_DIR),
-    E2(0x7B, TEXT_BTST, M_BIT, M_DIR),
+    E0(0x18, CF_00, TEXT_XGDX),
+    E0(0x1A, CF_00, TEXT_SLP),
+    E2(0x61, CF_00, TEXT_AIM,  M_BMM, M_IDX),
+    E2(0x61, CF_00, TEXT_BCLR, M_BIT, M_IDX),
+    E2(0x62, CF_00, TEXT_OIM,  M_BMM, M_IDX),
+    E2(0x62, CF_00, TEXT_BSET, M_BIT, M_IDX),
+    E2(0x65, CF_00, TEXT_EIM,  M_BMM, M_IDX),
+    E2(0x65, CF_00, TEXT_BTGL, M_BIT, M_IDX),
+    E2(0x6B, CF_00, TEXT_TIM,  M_BMM, M_IDX),
+    E2(0x6B, CF_00, TEXT_BTST, M_BIT, M_IDX),
+    E2(0x71, CF_00, TEXT_AIM,  M_BMM, M_DIR),
+    E2(0x71, CF_00, TEXT_BCLR, M_BIT, M_DIR),
+    E2(0x72, CF_00, TEXT_OIM,  M_BMM, M_DIR),
+    E2(0x72, CF_00, TEXT_BSET, M_BIT, M_DIR),
+    E2(0x75, CF_00, TEXT_EIM,  M_BMM, M_DIR),
+    E2(0x75, CF_00, TEXT_BTGL, M_BIT, M_DIR),
+    E2(0x7B, CF_00, TEXT_TIM,  M_BMM, M_DIR),
+    E2(0x7B, CF_00, TEXT_BTST, M_BIT, M_DIR),
 };
 
 constexpr uint8_t HD6301_INDEX[] PROGMEM = {
@@ -367,18 +376,18 @@ constexpr uint8_t HD6301_INDEX[] PROGMEM = {
 };
 
 constexpr Entry MC68HC11_P00[] PROGMEM = {
-    E0(0x02, TEXT_IDIV),
-    E0(0x03, TEXT_FDIV),
-    E3(0x12, TEXT_BRSET, M_DIR, M_IM8, M_REL),
-    E3(0x13, TEXT_BRCLR, M_DIR, M_IM8, M_REL),
-    E2(0x14, TEXT_BSET,  M_DIR, M_IM8),
-    E2(0x15, TEXT_BCLR,  M_DIR, M_IM8),
-    E2(0x1C, TEXT_BSET,  M_IDX, M_IM8),
-    E2(0x1D, TEXT_BCLR,  M_IDX, M_IM8),
-    E3(0x1E, TEXT_BRSET, M_IDX, M_IM8, M_REL),
-    E3(0x1F, TEXT_BRCLR, M_IDX, M_IM8, M_REL),
-    E0(0x8F, TEXT_XGDX),
-    E0(0xCF, TEXT_STOP),
+    E0(0x02, CF_00, TEXT_IDIV),
+    E0(0x03, CF_00, TEXT_FDIV),
+    E3(0x12, CF_00, TEXT_BRSET, M_DIR, M_IM8, M_REL),
+    E3(0x13, CF_00, TEXT_BRCLR, M_DIR, M_IM8, M_REL),
+    E2(0x14, CF_00, TEXT_BSET,  M_DIR, M_IM8),
+    E2(0x15, CF_00, TEXT_BCLR,  M_DIR, M_IM8),
+    E2(0x1C, CF_00, TEXT_BSET,  M_IDX, M_IM8),
+    E2(0x1D, CF_00, TEXT_BCLR,  M_IDX, M_IM8),
+    E3(0x1E, CF_00, TEXT_BRSET, M_IDX, M_IM8, M_REL),
+    E3(0x1F, CF_00, TEXT_BRCLR, M_IDX, M_IM8, M_REL),
+    E0(0x8F, CF_00, TEXT_XGDX),
+    E0(0xCF, CF_00, TEXT_STOP),
 };
 
 constexpr uint8_t MC68HC11_I00[] PROGMEM = {
@@ -397,71 +406,71 @@ constexpr uint8_t MC68HC11_I00[] PROGMEM = {
 };
 
 constexpr Entry MC68HC11_P18[] PROGMEM = {
-    E0(0x08, TEXT_INY),
-    E0(0x09, TEXT_DEY),
-    E2(0x1C, TEXT_BSET,  M_IDY, M_IM8),
-    E2(0x1D, TEXT_BCLR,  M_IDY, M_IM8),
-    E3(0x1E, TEXT_BRSET, M_IDY, M_IM8, M_REL),
-    E3(0x1F, TEXT_BRCLR, M_IDY, M_IM8, M_REL),
-    E0(0x30, TEXT_TSY),
-    E0(0x35, TEXT_TYS),
-    E0(0x38, TEXT_PULY),
-    E0(0x3A, TEXT_ABY),
-    E0(0x3C, TEXT_PSHY),
-    E1(0x60, TEXT_NEG,   M_IDY),
-    E1(0x63, TEXT_COM,   M_IDY),
-    E1(0x64, TEXT_LSR,   M_IDY),
-    E1(0x66, TEXT_ROR,   M_IDY),
-    E1(0x67, TEXT_ASR,   M_IDY),
-    E1(0x68, TEXT_ASL,   M_IDY),
-    E1(0x68, TEXT_LSL,   M_IDY),
-    E1(0x69, TEXT_ROL,   M_IDY),
-    E1(0x6A, TEXT_DEC,   M_IDY),
-    E1(0x6C, TEXT_INC,   M_IDY),
-    E1(0x6D, TEXT_TST,   M_IDY),
-    E1(0x6E, TEXT_JMP,   M_IDY),
-    E1(0x6F, TEXT_CLR,   M_IDY),
-    E1(0x8C, TEXT_CPY,   M_IM16),
-    E0(0x8F, TEXT_XGDY),
-    E1(0x9C, TEXT_CPY,   M_DIR),
-    E1(0xA0, TEXT_SUBA,  M_IDY),
-    E1(0xE0, TEXT_SUBB,  M_IDY),
-    E1(0xA1, TEXT_CMPA,  M_IDY),
-    E1(0xE1, TEXT_CMPB,  M_IDY),
-    E1(0xA2, TEXT_SBCA,  M_IDY),
-    E1(0xE2, TEXT_SBCB,  M_IDY),
-    E1(0xA3, TEXT_SUBD,  M_IDY),
-    E1(0xE3, TEXT_ADDD,  M_IDY),
-    E1(0xA4, TEXT_ANDA,  M_IDY),
-    E1(0xE4, TEXT_ANDB,  M_IDY),
-    E1(0xA5, TEXT_BITA,  M_IDY),
-    E1(0xE5, TEXT_BITB,  M_IDY),
-    E1(0xA6, TEXT_LDAA,  M_IDY),
-    E1(0xE6, TEXT_LDAB,  M_IDY),
-    E1(0xA7, TEXT_STAA,  M_IDY),
-    E1(0xE7, TEXT_STAB,  M_IDY),
-    E1(0xA8, TEXT_EORA,  M_IDY),
-    E1(0xE8, TEXT_EORB,  M_IDY),
-    E1(0xA9, TEXT_ADCA,  M_IDY),
-    E1(0xE9, TEXT_ADCB,  M_IDY),
-    E1(0xAA, TEXT_ORAA,  M_IDY),
-    E1(0xEA, TEXT_ORAB,  M_IDY),
-    E1(0xAB, TEXT_ADDA,  M_IDY),
-    E1(0xEB, TEXT_ADDB,  M_IDY),
-    E1(0xAC, TEXT_CPY,   M_IDY),
-    E1(0xAD, TEXT_JSR,   M_IDY),
-    E1(0xAE, TEXT_LDS,   M_IDY),
-    E1(0xAF, TEXT_STS,   M_IDY),
-    E1(0xBC, TEXT_CPY,   M_EXT),
-    E1(0xCE, TEXT_LDY,   M_IM16),
-    E1(0xDE, TEXT_LDY,   M_DIR),
-    E1(0xDF, TEXT_STY,   M_DIR),
-    E1(0xEC, TEXT_LDD,   M_IDY),
-    E1(0xED, TEXT_STD,   M_IDY),
-    E1(0xEE, TEXT_LDY,   M_IDY),
-    E1(0xEF, TEXT_STY,   M_IDY),
-    E1(0xFE, TEXT_LDY,   M_EXT),
-    E1(0xFF, TEXT_STY,   M_EXT),
+    E0(0x08, CF_00, TEXT_INY),
+    E0(0x09, CF_00, TEXT_DEY),
+    E2(0x1C, CF_00, TEXT_BSET,  M_IDY, M_IM8),
+    E2(0x1D, CF_00, TEXT_BCLR,  M_IDY, M_IM8),
+    E3(0x1E, CF_00, TEXT_BRSET, M_IDY, M_IM8, M_REL),
+    E3(0x1F, CF_00, TEXT_BRCLR, M_IDY, M_IM8, M_REL),
+    E0(0x30, CF_00, TEXT_TSY),
+    E0(0x35, CF_00, TEXT_TYS),
+    E0(0x38, CF_00, TEXT_PULY),
+    E0(0x3A, CF_00, TEXT_ABY),
+    E0(0x3C, CF_00, TEXT_PSHY),
+    E1(0x60, CF_00, TEXT_NEG,   M_IDY),
+    E1(0x63, CF_00, TEXT_COM,   M_IDY),
+    E1(0x64, CF_00, TEXT_LSR,   M_IDY),
+    E1(0x66, CF_00, TEXT_ROR,   M_IDY),
+    E1(0x67, CF_00, TEXT_ASR,   M_IDY),
+    E1(0x68, CF_00, TEXT_ASL,   M_IDY),
+    E1(0x68, CF_00, TEXT_LSL,   M_IDY),
+    E1(0x69, CF_00, TEXT_ROL,   M_IDY),
+    E1(0x6A, CF_00, TEXT_DEC,   M_IDY),
+    E1(0x6C, CF_00, TEXT_INC,   M_IDY),
+    E1(0x6D, CF_00, TEXT_TST,   M_IDY),
+    E1(0x6E, CF_00, TEXT_JMP,   M_IDY),
+    E1(0x6F, CF_00, TEXT_CLR,   M_IDY),
+    E1(0x8C, CF_00, TEXT_CPY,   M_IM16),
+    E0(0x8F, CF_00, TEXT_XGDY),
+    E1(0x9C, CF_00, TEXT_CPY,   M_DIR),
+    E1(0xA0, CF_00, TEXT_SUBA,  M_IDY),
+    E1(0xE0, CF_00, TEXT_SUBB,  M_IDY),
+    E1(0xA1, CF_00, TEXT_CMPA,  M_IDY),
+    E1(0xE1, CF_00, TEXT_CMPB,  M_IDY),
+    E1(0xA2, CF_00, TEXT_SBCA,  M_IDY),
+    E1(0xE2, CF_00, TEXT_SBCB,  M_IDY),
+    E1(0xA3, CF_00, TEXT_SUBD,  M_IDY),
+    E1(0xE3, CF_00, TEXT_ADDD,  M_IDY),
+    E1(0xA4, CF_00, TEXT_ANDA,  M_IDY),
+    E1(0xE4, CF_00, TEXT_ANDB,  M_IDY),
+    E1(0xA5, CF_00, TEXT_BITA,  M_IDY),
+    E1(0xE5, CF_00, TEXT_BITB,  M_IDY),
+    E1(0xA6, CF_00, TEXT_LDAA,  M_IDY),
+    E1(0xE6, CF_00, TEXT_LDAB,  M_IDY),
+    E1(0xA7, CF_00, TEXT_STAA,  M_IDY),
+    E1(0xE7, CF_00, TEXT_STAB,  M_IDY),
+    E1(0xA8, CF_00, TEXT_EORA,  M_IDY),
+    E1(0xE8, CF_00, TEXT_EORB,  M_IDY),
+    E1(0xA9, CF_00, TEXT_ADCA,  M_IDY),
+    E1(0xE9, CF_00, TEXT_ADCB,  M_IDY),
+    E1(0xAA, CF_00, TEXT_ORAA,  M_IDY),
+    E1(0xEA, CF_00, TEXT_ORAB,  M_IDY),
+    E1(0xAB, CF_00, TEXT_ADDA,  M_IDY),
+    E1(0xEB, CF_00, TEXT_ADDB,  M_IDY),
+    E1(0xAC, CF_00, TEXT_CPY,   M_IDY),
+    E1(0xAD, CF_00, TEXT_JSR,   M_IDY),
+    E1(0xAE, CF_00, TEXT_LDS,   M_IDY),
+    E1(0xAF, CF_00, TEXT_STS,   M_IDY),
+    E1(0xBC, CF_00, TEXT_CPY,   M_EXT),
+    E1(0xCE, CF_00, TEXT_LDY,   M_IM16),
+    E1(0xDE, CF_00, TEXT_LDY,   M_DIR),
+    E1(0xDF, CF_00, TEXT_STY,   M_DIR),
+    E1(0xEC, CF_00, TEXT_LDD,   M_IDY),
+    E1(0xED, CF_00, TEXT_STD,   M_IDY),
+    E1(0xEE, CF_00, TEXT_LDY,   M_IDY),
+    E1(0xEF, CF_00, TEXT_STY,   M_IDY),
+    E1(0xFE, CF_00, TEXT_LDY,   M_EXT),
+    E1(0xFF, CF_00, TEXT_STY,   M_EXT),
 };
 
 constexpr uint8_t MC68HC11_I18[] PROGMEM = {
@@ -533,10 +542,10 @@ constexpr uint8_t MC68HC11_I18[] PROGMEM = {
 };
 
 constexpr Entry MC68HC11_P1A[] PROGMEM = {
-    E1(0x83, TEXT_CPD,   M_GN16),
-    E1(0xAC, TEXT_CPY,   M_IDX),
-    E1(0xEE, TEXT_LDY,   M_IDX),
-    E1(0xEF, TEXT_STY,   M_IDX),
+    E1(0x83, CF_30, TEXT_CPD,   M_GN16),
+    E1(0xAC, CF_00, TEXT_CPY,   M_IDX),
+    E1(0xEE, CF_00, TEXT_LDY,   M_IDX),
+    E1(0xEF, CF_00, TEXT_STY,   M_IDX),
 };
 
 constexpr uint8_t MC68HC11_I1A[] PROGMEM = {
@@ -547,10 +556,10 @@ constexpr uint8_t MC68HC11_I1A[] PROGMEM = {
 };
 
 constexpr Entry MC68HC11_PCD[] PROGMEM = {
-    E1(0xA3, TEXT_CPD,   M_IDY),
-    E1(0xAC, TEXT_CPX,   M_IDY),
-    E1(0xEE, TEXT_LDX,   M_IDY),
-    E1(0xEF, TEXT_STX,   M_IDY),
+    E1(0xA3, CF_00, TEXT_CPD,   M_IDY),
+    E1(0xAC, CF_00, TEXT_CPX,   M_IDY),
+    E1(0xEE, CF_00, TEXT_LDX,   M_IDY),
+    E1(0xEF, CF_00, TEXT_STX,   M_IDY),
 };
 
 constexpr uint8_t MC68HC11_ICD[] PROGMEM = {
@@ -599,7 +608,9 @@ constexpr Cpu CPU_TABLE[] PROGMEM = {
         {MB8861, TEXT_CPU_MB8861, ARRAY_RANGE(MB8861_PAGES)},
         {MC6801, TEXT_CPU_6801, ARRAY_RANGE(MC6801_PAGES)},
         {HD6301, TEXT_CPU_6301, ARRAY_RANGE(HD6301_PAGES)},
+        {HD6301, TEXT_CPU_HD6301, ARRAY_RANGE(HD6301_PAGES)},
         {MC68HC11, TEXT_CPU_6811, ARRAY_RANGE(MC68HC11_PAGES)},
+        {MC68HC11, TEXT_CPU_68HC11, ARRAY_RANGE(MC68HC11_PAGES)},
 };
 
 const Cpu *cpu(CpuType cpuType) {
@@ -631,13 +642,8 @@ bool acceptMode(AddrMode opr, AddrMode table) {
 
 bool acceptModes(AsmInsn &insn, const Entry *entry) {
     const auto table = entry->readFlags();
-    if (acceptMode(insn.op1.mode, table.mode1()) && acceptMode(insn.op2.mode, table.mode2()) &&
-            acceptMode(insn.op3.mode, table.mode3())) {
-        if (table.undefined())
-            insn.setErrorIf(OPERAND_NOT_ALLOWED);
-        return true;
-    }
-    return false;
+    return acceptMode(insn.op1.mode, table.mode1()) && acceptMode(insn.op2.mode, table.mode2()) &&
+           acceptMode(insn.op3.mode, table.mode3());
 }
 
 Error searchName(CpuType cpuType, AsmInsn &insn) {
@@ -646,27 +652,13 @@ Error searchName(CpuType cpuType, AsmInsn &insn) {
 }
 
 bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *) {
-    auto opCode = insn.opCode();
-    const auto flags = entry->readFlags();
-    const auto mode1 = flags.mode1();
-    if (mode1 == M_GMEM || flags.mode2() == M_GMEM) {
-        const auto opc = opCode & 0xF0;
-        if (opc == 0x60 || opc == 0x70)
-            opCode &= ~0x10;
-    } else if (mode1 == M_GN8 || mode1 == M_GN16) {
-        opCode &= ~0x30;
-    }
-    return opCode == entry->readOpCode();
+    auto opc = insn.opCode();
+    opc &= ~entry->readFlags().mask();
+    return opc == entry->readOpCode();
 }
 
 const Entry *searchOpCodeImpl(const Cpu *cpu, DisInsn &insn, StrBuffer &out) {
-    auto entry = cpu->searchOpCode(insn, out, matchOpCode);
-    if (entry && entry->readFlags().undefined()) {
-        insn.nameBuffer().reset();
-        insn.setErrorIf(UNKNOWN_INSTRUCTION);
-        entry = nullptr;
-    }
-    return entry;
+    return cpu->searchOpCode(insn, out, matchOpCode);
 }
 
 Error searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) {
@@ -699,8 +691,9 @@ const /*PROGMEM*/ char *TableMc6800::cpuName_P(CpuType cpuType) const {
 
 Error TableMc6800::searchCpuName(StrScanner &name, CpuType &cpuType) const {
     auto p = name;
-    p.iexpectText_P(TEXT_MC6800_LIST, 2);
     auto t = Cpu::search(p, ARRAY_RANGE(CPU_TABLE));
+    if (t == nullptr && p.iexpectText_P(TEXT_MC6800_LIST, 2))
+        t = Cpu::search(p, ARRAY_RANGE(CPU_TABLE));
     if (t) {
         cpuType = t->readCpuType();
     } else if (p.iequals_P(TEXT_CPU_68HC11)) {
