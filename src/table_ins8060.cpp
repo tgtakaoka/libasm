@@ -24,58 +24,58 @@ using namespace libasm::text::ins8060;
 namespace libasm {
 namespace ins8060 {
 
-#define E1(_opc, _name, _mode) {_opc, Entry::Flags::create(_mode), _name}
-#define E0(_opc, _name) E1(_opc, _name, M_NONE)
+#define E1(_opc, _cf, _name, _mode) {_opc, Entry::Flags::create(_cf, _mode), _name}
+#define E0(_opc, _cf, _name) E1(_opc, _cf, _name, M_NONE)
 
 // clang-format off
 constexpr Entry TABLE_INS8060[] PROGMEM = {
-    E0(0x00, TEXT_HALT),
-    E0(0x01, TEXT_XAE),
-    E0(0x02, TEXT_CCL),
-    E0(0x03, TEXT_SCL),
-    E0(0x04, TEXT_DINT),
-    E0(0x05, TEXT_IEN),
-    E0(0x06, TEXT_CSA),
-    E0(0x07, TEXT_CAS),
-    E0(0x08, TEXT_NOP),
-    E0(0x19, TEXT_SIO),
-    E0(0x1C, TEXT_SR),
-    E0(0x1D, TEXT_SRL),
-    E0(0x1E, TEXT_RR),
-    E0(0x1F, TEXT_RRL),
-    E1(0x30, TEXT_XPAL, M_PNTR),
-    E1(0x34, TEXT_XPAH, M_PNTR),
-    E1(0x3C, TEXT_XPPC, M_PNTR),
-    E0(0x40, TEXT_LDE),
-    E0(0x50, TEXT_ANE),
-    E0(0x58, TEXT_ORE),
-    E0(0x60, TEXT_XRE),
-    E0(0x68, TEXT_DAE),
-    E0(0x70, TEXT_ADE),
-    E0(0x78, TEXT_CAE),
-    E1(0x8F, TEXT_DLY,  M_IMM8),
-    E1(0x90, TEXT_JMP,  M_REL8),
-    E1(0x94, TEXT_JP,   M_REL8),
-    E1(0x98, TEXT_JZ,   M_REL8),
-    E1(0x9C, TEXT_JNZ,  M_REL8),
-    E1(0xA8, TEXT_ILD,  M_DISP),
-    E1(0xB8, TEXT_DLD,  M_DISP),
-    E1(0xC4, TEXT_LDI,  M_IMM8),
-    E1(0xC0, TEXT_LD,   M_INDX),
-    E1(0xCC, TEXT_ST,   M_UNDEF),  // undefined ST immediate instruction
-    E1(0xC8, TEXT_ST,   M_INDX),
-    E1(0xD4, TEXT_ANI,  M_IMM8),
-    E1(0xD0, TEXT_AND,  M_INDX),
-    E1(0xDC, TEXT_ORI,  M_IMM8),
-    E1(0xD8, TEXT_OR,   M_INDX),
-    E1(0xE4, TEXT_XRI,  M_IMM8),
-    E1(0xE0, TEXT_XOR,  M_INDX),
-    E1(0xEC, TEXT_DAI,  M_IMM8),
-    E1(0xE8, TEXT_DAD,  M_INDX),
-    E1(0xF4, TEXT_ADI,  M_IMM8),
-    E1(0xF0, TEXT_ADD,  M_INDX),
-    E1(0xFC, TEXT_CAI,  M_IMM8),
-    E1(0xF8, TEXT_CAD,  M_INDX),
+    E0(0x00, CF_00, TEXT_HALT),
+    E0(0x01, CF_00, TEXT_XAE),
+    E0(0x02, CF_00, TEXT_CCL),
+    E0(0x03, CF_00, TEXT_SCL),
+    E0(0x04, CF_00, TEXT_DINT),
+    E0(0x05, CF_00, TEXT_IEN),
+    E0(0x06, CF_00, TEXT_CSA),
+    E0(0x07, CF_00, TEXT_CAS),
+    E0(0x08, CF_00, TEXT_NOP),
+    E0(0x19, CF_00, TEXT_SIO),
+    E0(0x1C, CF_00, TEXT_SR),
+    E0(0x1D, CF_00, TEXT_SRL),
+    E0(0x1E, CF_00, TEXT_RR),
+    E0(0x1F, CF_00, TEXT_RRL),
+    E1(0x30, CF_03, TEXT_XPAL, M_PNTR),
+    E1(0x34, CF_03, TEXT_XPAH, M_PNTR),
+    E1(0x3C, CF_03, TEXT_XPPC, M_PNTR),
+    E0(0x40, CF_00, TEXT_LDE),
+    E0(0x50, CF_00, TEXT_ANE),
+    E0(0x58, CF_00, TEXT_ORE),
+    E0(0x60, CF_00, TEXT_XRE),
+    E0(0x68, CF_00, TEXT_DAE),
+    E0(0x70, CF_00, TEXT_ADE),
+    E0(0x78, CF_00, TEXT_CAE),
+    E1(0x8F, CF_00, TEXT_DLY,  M_IMM8),
+    E1(0x90, CF_03, TEXT_JMP,  M_REL8),
+    E1(0x94, CF_03, TEXT_JP,   M_REL8),
+    E1(0x98, CF_03, TEXT_JZ,   M_REL8),
+    E1(0x9C, CF_03, TEXT_JNZ,  M_REL8),
+    E1(0xA8, CF_03, TEXT_ILD,  M_DISP),
+    E1(0xB8, CF_03, TEXT_DLD,  M_DISP),
+    E1(0xC4, CF_00, TEXT_LDI,  M_IMM8),
+    E1(0xC0, CF_07, TEXT_LD,   M_INDX),
+    E1(0xCC, CF_00, TEXT_ST,   M_UNDEF),  // undefined ST immediate instruction
+    E1(0xC8, CF_07, TEXT_ST,   M_INDX),
+    E1(0xD4, CF_00, TEXT_ANI,  M_IMM8),
+    E1(0xD0, CF_07, TEXT_AND,  M_INDX),
+    E1(0xDC, CF_00, TEXT_ORI,  M_IMM8),
+    E1(0xD8, CF_07, TEXT_OR,   M_INDX),
+    E1(0xE4, CF_00, TEXT_XRI,  M_IMM8),
+    E1(0xE0, CF_07, TEXT_XOR,  M_INDX),
+    E1(0xEC, CF_00, TEXT_DAI,  M_IMM8),
+    E1(0xE8, CF_07, TEXT_DAD,  M_INDX),
+    E1(0xF4, CF_00, TEXT_ADI,  M_IMM8),
+    E1(0xF0, CF_07, TEXT_ADD,  M_INDX),
+    E1(0xFC, CF_00, TEXT_CAI,  M_IMM8),
+    E1(0xF8, CF_07, TEXT_CAD,  M_INDX),
 };
 
 constexpr uint8_t INDEX_INS8060[] PROGMEM = {
@@ -164,12 +164,7 @@ Error searchName(CpuType cpuType, AsmInsn &insn) {
 
 bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *) {
     auto opc = insn.opCode();
-    const auto mode = entry->readFlags().mode();
-    if (mode == M_INDX) {
-        opc &= ~0x07;
-    } else if (mode == M_PNTR || mode == M_REL8 || mode == M_DISP) {
-        opc &= ~0x03;
-    }
+    opc &= ~entry->readFlags().mask();
     return opc == entry->readOpCode();
 }
 
