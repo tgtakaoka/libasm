@@ -94,6 +94,12 @@ enum OprPos : uint8_t {
     P_MREG = 7,  // In mod-reg-r/m: mo|reg|reg
 };
 
+enum CodeFormat : uint8_t {
+    CF_00 = 0,  // 0000
+    CF_07 = 1,  // 0007
+    CF_30 = 2,  // 0030
+};
+
 struct Entry final : entry::Base<Config::opcode_t> {
     struct Flags final {
         uint8_t _dst;
@@ -101,21 +107,21 @@ struct Entry final : entry::Base<Config::opcode_t> {
         uint8_t _ext;
         uint8_t _attr;
 
-        static constexpr Flags create(AddrMode dst, AddrMode src, AddrMode ext, OprPos dstPos,
-                OprPos srcPos, OprPos extPos, OprSize size) {
+        static constexpr Flags create(CodeFormat cf, AddrMode dst, AddrMode src, AddrMode ext,
+                OprPos dstPos, OprPos srcPos, OprPos extPos, OprSize size) {
             return Flags{_opr(dst, dstPos), _opr(src, srcPos), _opr(ext, extPos),
-                    _size(size, false, false)};
+                    _size(size, cf, false, false)};
         }
 
-        static constexpr Flags fpuInst(
-                AddrMode dst, AddrMode src, OprPos dstPos, OprPos srcPos, OprSize size) {
+        static constexpr Flags fpuInst(CodeFormat cf, AddrMode dst, AddrMode src, OprPos dstPos,
+                OprPos srcPos, OprSize size) {
             return Flags{_opr(dst, dstPos), _opr(src, srcPos), _opr(M_NONE, P_NONE),
-                    _size(size, false, true)};
+                    _size(size, cf, false, true)};
         }
 
-        static constexpr Flags strInst(AddrMode dst, AddrMode src, OprSize size) {
+        static constexpr Flags strInst(CodeFormat cf, AddrMode dst, AddrMode src, OprSize size) {
             return Flags{_opr(dst, P_NONE), _opr(src, P_NONE), _opr(M_NONE, P_NONE),
-                    _size(size, true, false)};
+                    _size(size, cf, true, false)};
         }
 
         AddrMode dst() const { return AddrMode((_dst >> mode_gp) & mode_gm); }
@@ -127,32 +133,42 @@ struct Entry final : entry::Base<Config::opcode_t> {
         OprSize size() const { return OprSize((_attr >> size_gp) & size_gm); }
         bool stringInst() const { return _attr & strInst_bm; }
         bool fpuInst() const { return _attr & fpuInst_bm; }
+        uint8_t mask() const {
+            static constexpr uint8_t MASK[] PROGMEM = {
+                    0000,  // CF_00 = 0
+                    0007,  // CF_07 = 1
+                    0030,  // CF_30 = 2
+            };
+            return pgm_read_byte(&MASK[(_attr >> cf_gp) & cf_gm]);
+        }
 
     private:
         static constexpr uint8_t _opr(AddrMode mode, OprPos pos) {
             return (static_cast<uint8_t>(mode) << mode_gp) | (static_cast<uint8_t>(pos) << pos_gp);
         }
-        static constexpr uint8_t _size(OprSize size, bool strInst, bool fpuInst) {
-            return (static_cast<uint8_t>(size) << size_gp) | (strInst ? strInst_bm : 0) |
-                   (fpuInst ? fpuInst_bm : 0);
+        static constexpr uint8_t _size(OprSize size, CodeFormat cf, bool strInst, bool fpuInst) {
+            return (static_cast<uint8_t>(size) << size_gp) | (static_cast<uint8_t>(cf) << cf_gp) |
+                   (strInst ? strInst_bm : 0) | (fpuInst ? fpuInst_bm : 0);
         }
 
         // |_dst|, |_src|, |_ext|
         static constexpr int mode_gp = 0;
         static constexpr int pos_gp = 5;
-        static constexpr uint8_t mode_gm = 0x1F;
-        static constexpr uint8_t pos_gm = 0x07;
-        // |_size|
+        static constexpr uint_fast8_t mode_gm = 0x1F;
+        static constexpr uint_fast8_t pos_gm = 0x07;
+        // |_attr|
         static constexpr int size_gp = 0;
-        static constexpr int strInst_bp = 3;
-        static constexpr int fpuInst_bp = 4;
-        static constexpr uint8_t size_gm = 0x07;
-        static constexpr uint8_t strInst_bm = (1 << strInst_bp);
-        static constexpr uint8_t fpuInst_bm = (1 << fpuInst_bp);
+        static constexpr int cf_gp = 3;
+        static constexpr int strInst_bp = 5;
+        static constexpr int fpuInst_bp = 6;
+        static constexpr uint_fast8_t size_gm = 0x07;
+        static constexpr uint_fast8_t cf_gm = 0x03;
+        static constexpr uint_fast8_t strInst_bm = (1 << strInst_bp);
+        static constexpr uint_fast8_t fpuInst_bm = (1 << fpuInst_bp);
     };
 
-    constexpr Entry(Config::opcode_t opCode, Flags flags, const /* PROGMEM */ char *name_P)
-        : Base(name_P, opCode), _flags_P(flags) {}
+    constexpr Entry(Config::opcode_t opc, Flags flags, const /* PROGMEM */ char *name_P)
+        : Base(name_P, opc), _flags_P(flags) {}
 
     Flags readFlags() const {
         return Flags{pgm_read_byte(&_flags_P._dst), pgm_read_byte(&_flags_P._src),
