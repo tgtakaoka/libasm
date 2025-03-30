@@ -57,26 +57,51 @@ enum AddrMode : uint8_t {
     M_P2 = 27,   // P2
 };
 
+enum CodeFormat : uint8_t {
+    CF_00 = 0,  // 0x00
+    CF_01 = 1,  // 0x01
+    CF_03 = 2,  // 0x03
+    CF_07 = 3,  // 0x07
+    CF_10 = 4,  // 0x10
+    CF_20 = 5,  // 0x20
+    CF_E0 = 6,  // 0xE0
+};
+
 struct Entry final : entry::Base<Config::opcode_t> {
     struct Flags final {
         uint16_t _attr;
 
-        static constexpr Flags create(AddrMode dst, AddrMode src) {
+        static constexpr Flags create(CodeFormat cf, AddrMode dst, AddrMode src) {
             return Flags{static_cast<uint16_t>((static_cast<uint16_t>(dst) << dst_gp) |
-                                               (static_cast<uint16_t>(src) << src_gp))};
+                                               (static_cast<uint16_t>(src) << src_gp) |
+                                               (static_cast<uint16_t>(cf) << cf_gp))};
         }
 
         AddrMode dst() const { return AddrMode((_attr >> dst_gp) & mode_gm); }
         AddrMode src() const { return AddrMode((_attr >> src_gp) & mode_gm); }
+        uint8_t mask() const {
+            static constexpr uint8_t MASK[] PROGMEM = {
+                0x00, // CF_00 = 0
+                0x01, // CF_01 = 1
+                0x03, // CF_03 = 2
+                0x07, // CF_07 = 3
+                0x10, // CF_10 = 4
+                0x20, // CF_20 = 5
+                0xE0, // CF_E0 = 6
+            };
+            return pgm_read_byte(&MASK[(_attr >> cf_gp) & cf_gm]);
+        }
 
     private:
-        static constexpr uint8_t dst_gp = 0;
-        static constexpr uint8_t src_gp = 5;
-        static constexpr uint8_t mode_gm = 0x1f;
+        static constexpr int dst_gp = 0;
+        static constexpr int src_gp = 5;
+        static constexpr int cf_gp = 10;
+        static constexpr uint_fast8_t mode_gm = 0x1F;
+        static constexpr uint_fast8_t cf_gm = 0x7;
     };
 
-    constexpr Entry(Config::opcode_t opCode, Flags flags, const /* PROGMEM */ char *name_P)
-        : Base(name_P, opCode), _flags_P(flags) {}
+    constexpr Entry(Config::opcode_t opc, Flags flags, const /* PROGMEM */ char *name_P)
+        : Base(name_P, opc), _flags_P(flags) {}
 
     Flags readFlags() const { return Flags{pgm_read_word(&_flags_P._attr)}; }
 
