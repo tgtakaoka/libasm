@@ -35,23 +35,40 @@ enum AddrMode : uint8_t {
     M_UNDEF = 6,
 };
 
+enum CodeFormat : uint8_t {
+    CF_00 = 0,  // 0x00
+    CF_03 = 1,  // 0x03
+    CF_07 = 2,  // 0x07
+};
+
 struct Entry final : entry::Base<Config::opcode_t> {
     struct Flags final {
         uint8_t _attr;
 
-        static constexpr Flags create(AddrMode mode) {
-            return Flags{static_cast<uint8_t>(static_cast<uint8_t>(mode) << mode_gp)};
+        static constexpr Flags create(CodeFormat cf, AddrMode mode) {
+            return Flags{static_cast<uint8_t>((static_cast<uint_fast8_t>(mode) << mode_gp) |
+                                              (static_cast<uint_fast8_t>(cf) << cf_gp))};
         }
 
-        AddrMode mode() const { return AddrMode(_attr); }
+        AddrMode mode() const { return AddrMode((_attr >> mode_gp) & mode_gm); }
+        uint8_t mask() const {
+            static constexpr uint8_t MASK[] PROGMEM = {
+                    0x00,  // CF_00 = 0
+                    0x03,  // CF_03 = 1
+                    0x07,  // CF_07 = 2
+            };
+            return pgm_read_byte(&MASK[(_attr >> cf_gp) & cf_gm]);
+        }
 
     private:
         static constexpr int mode_gp = 0;
-        static constexpr uint8_t mode_gm = 0x07;
+        static constexpr int cf_gp = 4;
+        static constexpr uint_fast8_t mode_gm = 0x07;
+        static constexpr uint_fast8_t cf_gm = 0x03;
     };
 
-    constexpr Entry(Config::opcode_t opCode, Flags flags, const /* PROGMEM */ char *name_P)
-        : Base(name_P, opCode), _flags_P(flags) {}
+    constexpr Entry(Config::opcode_t opc, Flags flags, const /* PROGMEM */ char *name_P)
+        : Base(name_P, opc), _flags_P(flags) {}
 
     Flags readFlags() const { return Flags{pgm_read_byte(&_flags_P._attr)}; }
 
