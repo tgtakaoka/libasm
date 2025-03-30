@@ -45,47 +45,63 @@ enum AddrMode : uint8_t {
     M_BITNO = 9,   // bit number (0~7)
     M_COUNT = 10,  // #n (0~15) or M_BREG
     M_INDIR = 11,  // indirect (M_BAOP:2, M_WAOP:2)
-    // not in TableI8096
     M_IMM8 = 12,   // 8-bit immediate (M_BAOP:1)
     M_IMM16 = 13,  // 16-bit immediate (M_WAOP:1)
+    // not in TableI8096
     M_IDX8 = 14,   // 8-bit indexed (M_BAOP:3, M_WAOP:3)
     M_IDX16 = 15,  // 16-bit indexed (M_BAOP:3, M_WAOP:3)
     M_ADDR = 16,   // 16-bit address or register number
+};
+
+enum CodeFormat : uint8_t {
+    CF_00 = 0,  // 0x00
+    CF_03 = 1,  // 0x03
+    CF_07 = 2,  // 0x07
 };
 
 struct Entry final : entry::Base<Config::opcode_t> {
     struct Flags final {
         uint16_t _attr;
 
-        static constexpr Flags create(AddrMode dst, AddrMode src1, AddrMode src2) {
+        static constexpr Flags create(CodeFormat cf, AddrMode dst, AddrMode src1, AddrMode src2) {
             return Flags{static_cast<uint16_t>((static_cast<uint16_t>(dst) << dst_gp) |
                                                (static_cast<uint16_t>(src1) << src1_gp) |
-                                               (static_cast<uint16_t>(src2) << src2_gp))};
+                                               (static_cast<uint16_t>(src2) << src2_gp) |
+                                               (static_cast<uint16_t>(cf) << cf_gp))};
         }
 
-        static constexpr Flags undef(AddrMode dst, AddrMode src1) {
-            return Flags{
-                    static_cast<uint16_t>((static_cast<uint16_t>(dst) << dst_gp) |
-                                          (static_cast<uint16_t>(src1) << src1_gp) |
-                                          (static_cast<uint16_t>(M_NONE) << src2_gp) | undef_bm)};
+        static constexpr Flags undef(CodeFormat cf, AddrMode dst, AddrMode src1) {
+            return Flags{static_cast<uint16_t>((static_cast<uint16_t>(dst) << dst_gp) |
+                                               (static_cast<uint16_t>(src1) << src1_gp) |
+                                               (static_cast<uint16_t>(cf) << cf_gp) | undef_bm)};
         }
 
         AddrMode dst() const { return AddrMode((_attr >> dst_gp) & mode_gm); }
         AddrMode src1() const { return AddrMode((_attr >> src1_gp) & mode_gm); }
         AddrMode src2() const { return AddrMode((_attr >> src2_gp) & mode_gm); }
         bool undefined() const { return _attr & undef_bm; }
+        uint8_t mask() const {
+            static constexpr uint8_t MASK[] PROGMEM = {
+                    0x00,  // CF_00 = 0
+                    0x03,  // CF_03 = 1
+                    0x07,  // CF_07 = 2
+            };
+            return pgm_read_byte(&MASK[(_attr >> cf_gp) & cf_gm]);
+        }
 
     private:
         static constexpr int dst_gp = 0;
-        static constexpr int src1_gp = 5;
-        static constexpr int src2_gp = 10;
+        static constexpr int src1_gp = 4;
+        static constexpr int src2_gp = 8;
+        static constexpr int cf_gp = 12;
         static constexpr int undef_bp = 15;
-        static constexpr uint8_t mode_gm = 0x1f;
+        static constexpr uint_fast8_t mode_gm = 0xF;
+        static constexpr uint_fast8_t cf_gm = 0x3;
         static constexpr uint16_t undef_bm = (1 << undef_bp);
     };
 
-    constexpr Entry(Config::opcode_t opCode, Flags flags, const /* PROGMEM */ char *name_P)
-        : Base(name_P, opCode), _flags_P(flags) {}
+    constexpr Entry(Config::opcode_t opc, Flags flags, const /* PROGMEM */ char *name_P)
+        : Base(name_P, opc), _flags_P(flags) {}
 
     Flags readFlags() const { return Flags{pgm_read_word(&_flags_P._attr)}; }
 
