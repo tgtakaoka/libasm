@@ -49,28 +49,34 @@ enum AddrMode : uint8_t {
     M_GEN = 14,  // nnnn/nnnn,PC/nn,SP/nn,Pn/@nn,Pn/nn,@Pn/0xFFnn
 };
 
+enum CodeFormat : uint8_t {
+    CF_00 = 0,  // 0x00
+    CF_01 = 1,  // 0x01
+    CF_03 = 2,  // 0x03
+    CF_07 = 3,  // 0x07
+    CF_0F = 4,  // 0x0F
+};
+
 struct Entry final : entry::Base<Config::opcode_t> {
     struct Flags final {
         uint16_t _attr;
 
-        static constexpr Flags create(AddrMode dst, AddrMode src, OprSize size) {
+        static constexpr Flags create(CodeFormat cf, AddrMode dst, AddrMode src, OprSize size) {
             return Flags{static_cast<uint16_t>((static_cast<uint16_t>(dst) << dst_gp) |
                                                (static_cast<uint16_t>(src) << src_gp) |
-                                               (static_cast<uint16_t>(size) << size_gp))};
+                                               (static_cast<uint16_t>(size) << size_gp) |
+                                               (static_cast<uint16_t>(cf) << cf_gp))};
         }
 
-        static constexpr Flags exec(AddrMode dst) {
-            return Flags{
-                    static_cast<uint16_t>((static_cast<uint16_t>(dst) << dst_gp) |
-                                          (static_cast<uint16_t>(M_NONE) << src_gp) |
-                                          (static_cast<uint16_t>(SZ_NONE) << size_gp) | exec_bm)};
+        static constexpr Flags exec(CodeFormat cf, AddrMode dst) {
+            return Flags{static_cast<uint16_t>((static_cast<uint16_t>(dst) << dst_gp) |
+                                               (static_cast<uint16_t>(cf) << cf_gp) | exec_bm)};
         }
 
-        static constexpr Flags undef(AddrMode dst, AddrMode src) {
-            return Flags{
-                    static_cast<uint16_t>((static_cast<uint16_t>(dst) << dst_gp) |
-                                          (static_cast<uint16_t>(src) << src_gp) |
-                                          (static_cast<uint16_t>(SZ_NONE) << size_gp) | undef_bm)};
+        static constexpr Flags undef(CodeFormat cf, AddrMode dst, AddrMode src) {
+            return Flags{static_cast<uint16_t>((static_cast<uint16_t>(dst) << dst_gp) |
+                                               (static_cast<uint16_t>(src) << src_gp) |
+                                               (static_cast<uint16_t>(cf) << cf_gp) | undef_bm)};
         }
 
         AddrMode dst() const { return AddrMode((_attr >> dst_gp) & mode_gm); }
@@ -78,21 +84,33 @@ struct Entry final : entry::Base<Config::opcode_t> {
         OprSize size() const { return OprSize((_attr >> size_gp) & size_gm); }
         bool execute() const { return _attr & exec_bm; }
         bool undefined() const { return _attr & undef_bm; }
+        uint8_t mask() const {
+            static constexpr uint8_t MASK[] PROGMEM = {
+                    0x00,  // CF_00 = 0
+                    0x01,  // CF_01 = 1
+                    0x03,  // CF_03 = 2
+                    0x07,  // CF_07 = 3
+                    0x0F,  // CF_0F = 4
+            };
+            return pgm_read_byte(&MASK[(_attr >> cf_gp) & cf_gm]);
+        }
 
     private:
         static constexpr int dst_gp = 0;
         static constexpr int src_gp = 4;
         static constexpr int size_gp = 8;
+        static constexpr int cf_gp = 10;
         static constexpr int exec_bp = 14;
         static constexpr int undef_bp = 15;
-        static constexpr uint8_t mode_gm = 0x0F;
-        static constexpr uint8_t size_gm = 0x03;
+        static constexpr uint_fast8_t mode_gm = 0x0F;
+        static constexpr uint_fast8_t size_gm = 0x03;
+        static constexpr uint_fast8_t cf_gm = 0x07;
         static constexpr uint16_t exec_bm = (1 << exec_bp);
         static constexpr uint16_t undef_bm = (1 << undef_bp);
     };
 
-    constexpr Entry(Config::opcode_t opCode, Flags flags, const /* PROGMEM */ char *name_P)
-        : Base(name_P, opCode), _flags_P(flags) {}
+    constexpr Entry(Config::opcode_t opc, Flags flags, const /* PROGMEM */ char *name_P)
+        : Base(name_P, opc), _flags_P(flags) {}
 
     Flags readFlags() const { return Flags{pgm_read_word(&_flags_P._attr)}; }
 

@@ -31,9 +31,6 @@ struct EntryInsn : EntryInsnBase<Config, Entry> {
     AddrMode src() const { return flags().src(); }
     OprSize oprSize() const { return flags().size(); }
     bool execute() const { return flags().execute(); }
-    void setAddrMode(AddrMode dst, AddrMode src) {
-        setFlags(Entry::Flags::create(dst, src, SZ_NONE));
-    }
 };
 
 struct Operand final : ErrorAt {
