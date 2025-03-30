@@ -24,88 +24,89 @@ using namespace libasm::text::f3850;
 namespace libasm {
 namespace f3850 {
 
-#define E2(_opc, _name, _mode1, _mode2) {_opc, Entry::Flags::create(_mode1, _mode2), _name}
-#define E1(_opc, _name, _mode1) E2(_opc, _name, _mode1, M_NONE)
-#define E0(_opc, _name) E1(_opc, _name, M_NONE)
+#define E2(_opc, _cf, _name, _mode1, _mode2) \
+    {_opc, Entry::Flags::create(_cf, _mode1, _mode2), _name}
+#define E1(_opc, _cf, _name, _mode1) E2(_opc, _cf, _name, _mode1, M_NONE)
+#define E0(_opc, _cf, _name) E1(_opc, _cf, _name, M_NONE)
 
 // clang-format off
 constexpr Entry TABLE_3850[] PROGMEM = {
-    E2(0x00, TEXT_LR,  M_A,    M_KU),
-    E2(0x01, TEXT_LR,  M_A,    M_KL),
-    E2(0x02, TEXT_LR,  M_A,    M_QU),
-    E2(0x03, TEXT_LR,  M_A,    M_QL),
-    E2(0x04, TEXT_LR,  M_KU,   M_A),
-    E2(0x05, TEXT_LR,  M_KL,   M_A),
-    E2(0x06, TEXT_LR,  M_QU,   M_A),
-    E2(0x07, TEXT_LR,  M_QL,   M_A),
-    E2(0x08, TEXT_LR,  M_K,    M_P),
-    E2(0x09, TEXT_LR,  M_P,    M_K),
-    E2(0x0A, TEXT_LR,  M_A,    M_IS),
-    E2(0x0B, TEXT_LR,  M_IS,   M_A),
-    E0(0x0C, TEXT_PK),
-    E2(0x0D, TEXT_LR,  M_P0,   M_Q),
-    E2(0x0E, TEXT_LR,  M_Q,    M_DC),
-    E2(0x0F, TEXT_LR,  M_DC,   M_Q),
-    E2(0x10, TEXT_LR,  M_DC,   M_H),
-    E2(0x11, TEXT_LR,  M_H,    M_DC),
-    E1(0x12, TEXT_SR,  M_C1),
-    E1(0x13, TEXT_SL,  M_C1),
-    E1(0x14, TEXT_SR,  M_C4),
-    E1(0x15, TEXT_SL,  M_C4),
-    E0(0x16, TEXT_LM),
-    E0(0x17, TEXT_ST),
-    E0(0x18, TEXT_COM),
-    E0(0x19, TEXT_LNK),
-    E0(0x1A, TEXT_DI),
-    E0(0x1B, TEXT_EI),
-    E0(0x1C, TEXT_POP),
-    E2(0x1D, TEXT_LR,  M_W,   M_J),
-    E2(0x1E, TEXT_LR,  M_J,   M_W),
-    E0(0x1F, TEXT_INC),
-    E1(0x20, TEXT_LI,  M_IM8),
-    E1(0x21, TEXT_NI,  M_IM8),
-    E1(0x22, TEXT_OI,  M_IM8),
-    E1(0x23, TEXT_XI,  M_IM8),
-    E1(0x24, TEXT_AI,  M_IM8),
-    E1(0x25, TEXT_CI,  M_IM8),
-    E1(0x26, TEXT_IN,  M_IOA),
-    E1(0x27, TEXT_OUT, M_IOA),
-    E1(0x28, TEXT_PI,  M_ADDR),
-    E1(0x29, TEXT_JMP, M_ADDR),
-    E1(0x2A, TEXT_DCI, M_ADDR),
-    E0(0x2B, TEXT_NOP),
-    E0(0x2C, TEXT_XDC),
-    E1(0x30, TEXT_DS,   M_REG),
-    E2(0x40, TEXT_LR,   M_A,   M_REG),
-    E2(0x50, TEXT_LR,   M_REG, M_A),
-    E1(0x60, TEXT_LISU, M_IM3),
-    E1(0x68, TEXT_LISL, M_IM3),
-    E0(0x70, TEXT_CLR),
-    E1(0x70, TEXT_LIS,  M_IM4),
-    E1(0x81, TEXT_BP,   M_REL),
-    E1(0x82, TEXT_BC,   M_REL),
-    E1(0x84, TEXT_BZ,   M_REL),
-    E0(0x88, TEXT_AM),
-    E0(0x89, TEXT_AMD),
-    E0(0x8A, TEXT_NM),
-    E0(0x8B, TEXT_OM),
-    E0(0x8C, TEXT_XM),
-    E0(0x8D, TEXT_CM),
-    E0(0x8E, TEXT_ADC),
-    E1(0x8F, TEXT_BR7,  M_REL),
-    E2(0x80, TEXT_BT,   M_IM3,  M_REL),
-    E1(0x90, TEXT_BR,   M_REL),
-    E1(0x91, TEXT_BM,   M_REL),
-    E1(0x92, TEXT_BNC,  M_REL),
-    E1(0x94, TEXT_BNZ,  M_REL),
-    E1(0x98, TEXT_BNO,  M_REL),
-    E2(0x90, TEXT_BF,   M_IM4,  M_REL),
-    E1(0xA0, TEXT_INS,  M_IOS),
-    E1(0xB0, TEXT_OUTS, M_IOS),
-    E1(0xC0, TEXT_AS,   M_REG),
-    E1(0xD0, TEXT_ASD,  M_REG),
-    E1(0xE0, TEXT_XS,   M_REG),
-    E1(0xF0, TEXT_NS,   M_REG),
+    E2(0x00, CF_00, TEXT_LR,  M_A,    M_KU),
+    E2(0x01, CF_00, TEXT_LR,  M_A,    M_KL),
+    E2(0x02, CF_00, TEXT_LR,  M_A,    M_QU),
+    E2(0x03, CF_00, TEXT_LR,  M_A,    M_QL),
+    E2(0x04, CF_00, TEXT_LR,  M_KU,   M_A),
+    E2(0x05, CF_00, TEXT_LR,  M_KL,   M_A),
+    E2(0x06, CF_00, TEXT_LR,  M_QU,   M_A),
+    E2(0x07, CF_00, TEXT_LR,  M_QL,   M_A),
+    E2(0x08, CF_00, TEXT_LR,  M_K,    M_P),
+    E2(0x09, CF_00, TEXT_LR,  M_P,    M_K),
+    E2(0x0A, CF_00, TEXT_LR,  M_A,    M_IS),
+    E2(0x0B, CF_00, TEXT_LR,  M_IS,   M_A),
+    E0(0x0C, CF_00, TEXT_PK),
+    E2(0x0D, CF_00, TEXT_LR,  M_P0,   M_Q),
+    E2(0x0E, CF_00, TEXT_LR,  M_Q,    M_DC),
+    E2(0x0F, CF_00, TEXT_LR,  M_DC,   M_Q),
+    E2(0x10, CF_00, TEXT_LR,  M_DC,   M_H),
+    E2(0x11, CF_00, TEXT_LR,  M_H,    M_DC),
+    E1(0x12, CF_00, TEXT_SR,  M_C1),
+    E1(0x13, CF_00, TEXT_SL,  M_C1),
+    E1(0x14, CF_00, TEXT_SR,  M_C4),
+    E1(0x15, CF_00, TEXT_SL,  M_C4),
+    E0(0x16, CF_00, TEXT_LM),
+    E0(0x17, CF_00, TEXT_ST),
+    E0(0x18, CF_00, TEXT_COM),
+    E0(0x19, CF_00, TEXT_LNK),
+    E0(0x1A, CF_00, TEXT_DI),
+    E0(0x1B, CF_00, TEXT_EI),
+    E0(0x1C, CF_00, TEXT_POP),
+    E2(0x1D, CF_00, TEXT_LR,  M_W,   M_J),
+    E2(0x1E, CF_00, TEXT_LR,  M_J,   M_W),
+    E0(0x1F, CF_00, TEXT_INC),
+    E1(0x20, CF_00, TEXT_LI,  M_IM8),
+    E1(0x21, CF_00, TEXT_NI,  M_IM8),
+    E1(0x22, CF_00, TEXT_OI,  M_IM8),
+    E1(0x23, CF_00, TEXT_XI,  M_IM8),
+    E1(0x24, CF_00, TEXT_AI,  M_IM8),
+    E1(0x25, CF_00, TEXT_CI,  M_IM8),
+    E1(0x26, CF_00, TEXT_IN,  M_IOA),
+    E1(0x27, CF_00, TEXT_OUT, M_IOA),
+    E1(0x28, CF_00, TEXT_PI,  M_ADDR),
+    E1(0x29, CF_00, TEXT_JMP, M_ADDR),
+    E1(0x2A, CF_00, TEXT_DCI, M_ADDR),
+    E0(0x2B, CF_00, TEXT_NOP),
+    E0(0x2C, CF_00, TEXT_XDC),
+    E1(0x30, CF_0F, TEXT_DS,   M_REG),
+    E2(0x40, CF_0F, TEXT_LR,   M_A,   M_REG),
+    E2(0x50, CF_0F, TEXT_LR,   M_REG, M_A),
+    E1(0x60, CF_07, TEXT_LISU, M_IM3),
+    E1(0x68, CF_07, TEXT_LISL, M_IM3),
+    E0(0x70, CF_00, TEXT_CLR),
+    E1(0x70, CF_0F, TEXT_LIS,  M_IM4),
+    E1(0x81, CF_00, TEXT_BP,   M_REL),
+    E1(0x82, CF_00, TEXT_BC,   M_REL),
+    E1(0x84, CF_00, TEXT_BZ,   M_REL),
+    E0(0x88, CF_00, TEXT_AM),
+    E0(0x89, CF_00, TEXT_AMD),
+    E0(0x8A, CF_00, TEXT_NM),
+    E0(0x8B, CF_00, TEXT_OM),
+    E0(0x8C, CF_00, TEXT_XM),
+    E0(0x8D, CF_00, TEXT_CM),
+    E0(0x8E, CF_00, TEXT_ADC),
+    E1(0x8F, CF_00, TEXT_BR7,  M_REL),
+    E2(0x80, CF_07, TEXT_BT,   M_IM3,  M_REL),
+    E1(0x90, CF_00, TEXT_BR,   M_REL),
+    E1(0x91, CF_00, TEXT_BM,   M_REL),
+    E1(0x92, CF_00, TEXT_BNC,  M_REL),
+    E1(0x94, CF_00, TEXT_BNZ,  M_REL),
+    E1(0x98, CF_00, TEXT_BNO,  M_REL),
+    E2(0x90, CF_0F, TEXT_BF,   M_IM4,  M_REL),
+    E1(0xA0, CF_0F, TEXT_INS,  M_IOS),
+    E1(0xB0, CF_0F, TEXT_OUTS, M_IOS),
+    E1(0xC0, CF_0F, TEXT_AS,   M_REG),
+    E1(0xD0, CF_0F, TEXT_ASD,  M_REG),
+    E1(0xE0, CF_0F, TEXT_XS,   M_REG),
+    E1(0xF0, CF_0F, TEXT_NS,   M_REG),
 };
 
 constexpr uint8_t INDEX_3850[] PROGMEM = {
@@ -233,16 +234,9 @@ Error searchName(CpuType cpuType, AsmInsn &insn) {
 }
 
 bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *) {
-    auto opCode = insn.opCode();
-    const auto flags = entry->readFlags();
-    const auto mode1 = flags.mode1();
-    const auto mode2 = flags.mode2();
-    if (mode1 == M_REG || mode2 == M_REG || mode1 == M_IM4 || mode1 == M_IOS) {
-        opCode &= ~0x0F;
-    } else if (mode1 == M_IM3) {
-        opCode &= ~0x07;
-    }
-    return opCode == entry->readOpCode();
+    auto opc = insn.opCode();
+    opc &= ~entry->readFlags().mask();
+    return opc == entry->readOpCode();
 }
 
 Error searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) {
