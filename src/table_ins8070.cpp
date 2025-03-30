@@ -24,85 +24,86 @@ using namespace libasm::text::ins8070;
 namespace libasm {
 namespace ins8070 {
 
-#define E2(_opc, _name, _dst, _src, _size) {_opc, Entry::Flags::create(_dst, _src, _size), _name}
-#define E1(_opc, _name, _dst, _size) E2(_opc, _name, _dst, M_NONE, _size)
-#define E0(_opc, _name) E1(_opc, _name, M_NONE, SZ_NONE)
-#define X1(_opc, _name, _dst) {_opc, Entry::Flags::exec(_dst), _name}
-#define U2(_opc, _name, _dst, _src) {_opc, Entry::Flags::undef(_dst, _src), _name}
-#define U1(_opc, _name, _dst) U2(_opc, _name, _dst, M_NONE)
+#define E2(_opc, _cf, _name, _dst, _src, _size) \
+    {_opc, Entry::Flags::create(_cf, _dst, _src, _size), _name}
+#define E1(_opc, _cf, _name, _dst, _size) E2(_opc, _cf, _name, _dst, M_NONE, _size)
+#define E0(_opc, _cf, _name) E1(_opc, _cf, _name, M_NONE, SZ_NONE)
+#define X1(_opc, _cf, _name, _dst) {_opc, Entry::Flags::exec(_cf, _dst), _name}
+#define U2(_opc, _cf, _name, _dst, _src) {_opc, Entry::Flags::undef(_cf, _dst, _src), _name}
+#define U1(_opc, _cf, _name, _dst) U2(_opc, _cf, _name, _dst, M_NONE)
 
 // clang-format off
 constexpr Entry TABLE_INS8070[] PROGMEM = {
-    E0(0x00, TEXT_NOP),
-    E2(0x01, TEXT_XCH,  M_AR,   M_ER,   SZ_BYTE),
-    E2(0x01, TEXT_XCH,  M_ER,   M_AR,   SZ_BYTE),
-    E2(0x06, TEXT_LD,   M_AR,   M_SR,   SZ_BYTE),
-    E2(0x07, TEXT_LD,   M_SR,   M_AR,   SZ_BYTE),
-    E1(0x08, TEXT_PUSH, M_EA,           SZ_WORD),
-    E2(0x09, TEXT_LD,   M_TR,   M_EA,   SZ_WORD),
-    E1(0x0A, TEXT_PUSH, M_AR,           SZ_BYTE),
-    E2(0x0B, TEXT_LD,   M_EA,   M_TR,   SZ_WORD),
-    E1(0x0C, TEXT_SR,   M_EA,           SZ_WORD),
-    E2(0x0D, TEXT_DIV,  M_EA,   M_TR,   SZ_WORD),
-    E1(0x0E, TEXT_SL,   M_AR,           SZ_BYTE),
-    E1(0x0F, TEXT_SL,   M_EA,           SZ_WORD),
-    E1(0x10, TEXT_CALL, M_VEC,          SZ_NONE),
-    X1(0x20, TEXT_JSR,  M_ADR),
-    E2(0x22, TEXT_PLI,  M_P23,  M_IMM,  SZ_WORD),
-    X1(0x24, TEXT_JMP,  M_ADR),
-    E2(0x24, TEXT_LD,   M_PTR,  M_IMM,  SZ_WORD),
-    E2(0x2C, TEXT_MPY,  M_EA,   M_TR,   SZ_WORD),
-    X1(0x2D, TEXT_BND,  M_PCR),
-    E1(0x2E, TEXT_SSM,  M_P23,          SZ_BYTE),
-    E2(0x30, TEXT_LD,   M_EA,   M_PTR,  SZ_WORD),
-    E1(0x38, TEXT_POP,  M_AR,           SZ_BYTE),
-    E2(0x39, TEXT_AND,  M_SR,   M_IMM,  SZ_BYTE),
-    E1(0x3A, TEXT_POP,  M_EA,           SZ_WORD),
-    E2(0x3B, TEXT_OR,   M_SR,   M_IMM,  SZ_BYTE),
-    E1(0x3C, TEXT_SR,   M_AR,           SZ_BYTE),
-    E1(0x3D, TEXT_SRL,  M_AR,           SZ_BYTE),
-    E1(0x3E, TEXT_RR,   M_AR,           SZ_BYTE),
-    E1(0x3F, TEXT_RRL,  M_AR,           SZ_BYTE),
-    E2(0x40, TEXT_LD,   M_AR,   M_ER,   SZ_BYTE),
-    E2(0x44, TEXT_LD,   M_PTR,  M_EA,   SZ_WORD),
-    E2(0x48, TEXT_LD,   M_ER,   M_AR,   SZ_BYTE),
-    E2(0x4C, TEXT_XCH,  M_EA,   M_PTR,  SZ_WORD),
-    E2(0x4C, TEXT_XCH,  M_PTR,  M_EA,   SZ_WORD),
-    E2(0x50, TEXT_AND,  M_AR,   M_ER,   SZ_BYTE),
-    U1(0x55, TEXT_PUSH, M_SP), // undefined PUSH SP
-    E1(0x54, TEXT_PUSH, M_PTR,          SZ_WORD),
-    E2(0x58, TEXT_OR,   M_AR,   M_ER,   SZ_BYTE),
-    E0(0x5C, TEXT_RET),
-    E1(0x5E, TEXT_POP,  M_P23,          SZ_WORD),
-    E2(0x60, TEXT_XOR,  M_AR,   M_ER,   SZ_BYTE),
-    X1(0x64, TEXT_BP,   M_PCR),
-    X1(0x66, TEXT_BP,   M_IDX),
-    X1(0x6C, TEXT_BZ,   M_PCR),
-    X1(0x6E, TEXT_BZ,   M_IDX),
-    E2(0x70, TEXT_ADD,  M_AR,   M_ER,   SZ_BYTE),
-    X1(0x74, TEXT_BRA,  M_PCR),
-    X1(0x76, TEXT_BRA,  M_IDX),
-    E2(0x78, TEXT_SUB,  M_AR,   M_ER,   SZ_BYTE),
-    X1(0x7C, TEXT_BNZ,  M_PCR),
-    X1(0x7E, TEXT_BNZ,  M_IDX),
-    E2(0x80, TEXT_LD,   M_EA,   M_GEN,  SZ_WORD),
-    U2(0x8C, TEXT_ST,   M_EA,   M_IMM), // undefined ST EA immediate
-    E2(0x88, TEXT_ST,   M_EA,   M_GEN,  SZ_WORD),
-    U2(0x94, TEXT_ILD,  M_AR,   M_IMM), // undefined ILD immediate
-    E2(0x90, TEXT_ILD,  M_AR,   M_GEN,  SZ_BYTE),
-    U2(0x9C, TEXT_DLD,  M_AR,   M_IMM), // undefined DLD immediate
-    E2(0x98, TEXT_DLD,  M_AR,   M_GEN,  SZ_BYTE),
-    E2(0xA0, TEXT_LD,   M_TR,   M_GEN,  SZ_WORD),
-    E2(0xB0, TEXT_ADD,  M_EA,   M_GEN,  SZ_WORD),
-    E2(0xB8, TEXT_SUB,  M_EA,   M_GEN,  SZ_WORD),
-    E2(0xC0, TEXT_LD,   M_AR,   M_GEN,  SZ_BYTE),
-    U2(0xCC, TEXT_ST,   M_AR,   M_IMM), // undefined ST A immediate
-    E2(0xC8, TEXT_ST,   M_AR,   M_GEN,  SZ_BYTE),
-    E2(0xD0, TEXT_AND,  M_AR,   M_GEN,  SZ_BYTE),
-    E2(0xD8, TEXT_OR,   M_AR,   M_GEN,  SZ_BYTE),
-    E2(0xE0, TEXT_XOR,  M_AR,   M_GEN,  SZ_BYTE),
-    E2(0xF0, TEXT_ADD,  M_AR,   M_GEN,  SZ_BYTE),
-    E2(0xF8, TEXT_SUB,  M_AR,   M_GEN,  SZ_BYTE),
+    E0(0x00, CF_00, TEXT_NOP),
+    E2(0x01, CF_00, TEXT_XCH,  M_AR,   M_ER,   SZ_BYTE),
+    E2(0x01, CF_00, TEXT_XCH,  M_ER,   M_AR,   SZ_BYTE),
+    E2(0x06, CF_00, TEXT_LD,   M_AR,   M_SR,   SZ_BYTE),
+    E2(0x07, CF_00, TEXT_LD,   M_SR,   M_AR,   SZ_BYTE),
+    E1(0x08, CF_00, TEXT_PUSH, M_EA,           SZ_WORD),
+    E2(0x09, CF_00, TEXT_LD,   M_TR,   M_EA,   SZ_WORD),
+    E1(0x0A, CF_00, TEXT_PUSH, M_AR,           SZ_BYTE),
+    E2(0x0B, CF_00, TEXT_LD,   M_EA,   M_TR,   SZ_WORD),
+    E1(0x0C, CF_00, TEXT_SR,   M_EA,           SZ_WORD),
+    E2(0x0D, CF_00, TEXT_DIV,  M_EA,   M_TR,   SZ_WORD),
+    E1(0x0E, CF_00, TEXT_SL,   M_AR,           SZ_BYTE),
+    E1(0x0F, CF_00, TEXT_SL,   M_EA,           SZ_WORD),
+    E1(0x10, CF_0F, TEXT_CALL, M_VEC,          SZ_NONE),
+    X1(0x20, CF_00, TEXT_JSR,  M_ADR),
+    E2(0x22, CF_01, TEXT_PLI,  M_P23,  M_IMM,  SZ_WORD),
+    X1(0x24, CF_00, TEXT_JMP,  M_ADR),
+    E2(0x24, CF_03, TEXT_LD,   M_PTR,  M_IMM,  SZ_WORD),
+    E2(0x2C, CF_00, TEXT_MPY,  M_EA,   M_TR,   SZ_WORD),
+    X1(0x2D, CF_00, TEXT_BND,  M_PCR),
+    E1(0x2E, CF_01, TEXT_SSM,  M_P23,          SZ_BYTE),
+    E2(0x30, CF_03, TEXT_LD,   M_EA,   M_PTR,  SZ_WORD),
+    E1(0x38, CF_00, TEXT_POP,  M_AR,           SZ_BYTE),
+    E2(0x39, CF_00, TEXT_AND,  M_SR,   M_IMM,  SZ_BYTE),
+    E1(0x3A, CF_00, TEXT_POP,  M_EA,           SZ_WORD),
+    E2(0x3B, CF_00, TEXT_OR,   M_SR,   M_IMM,  SZ_BYTE),
+    E1(0x3C, CF_00, TEXT_SR,   M_AR,           SZ_BYTE),
+    E1(0x3D, CF_00, TEXT_SRL,  M_AR,           SZ_BYTE),
+    E1(0x3E, CF_00, TEXT_RR,   M_AR,           SZ_BYTE),
+    E1(0x3F, CF_00, TEXT_RRL,  M_AR,           SZ_BYTE),
+    E2(0x40, CF_00, TEXT_LD,   M_AR,   M_ER,   SZ_BYTE),
+    E2(0x44, CF_03, TEXT_LD,   M_PTR,  M_EA,   SZ_WORD),
+    E2(0x48, CF_00, TEXT_LD,   M_ER,   M_AR,   SZ_BYTE),
+    E2(0x4C, CF_03, TEXT_XCH,  M_EA,   M_PTR,  SZ_WORD),
+    E2(0x4C, CF_03, TEXT_XCH,  M_PTR,  M_EA,   SZ_WORD),
+    E2(0x50, CF_00, TEXT_AND,  M_AR,   M_ER,   SZ_BYTE),
+    U1(0x55, CF_00, TEXT_PUSH, M_SP), // undefined PUSH SP
+    E1(0x54, CF_03, TEXT_PUSH, M_PTR,          SZ_WORD),
+    E2(0x58, CF_00, TEXT_OR,   M_AR,   M_ER,   SZ_BYTE),
+    E0(0x5C, CF_00, TEXT_RET),
+    E1(0x5E, CF_01, TEXT_POP,  M_P23,          SZ_WORD),
+    E2(0x60, CF_00, TEXT_XOR,  M_AR,   M_ER,   SZ_BYTE),
+    X1(0x64, CF_00, TEXT_BP,   M_PCR),
+    X1(0x66, CF_01, TEXT_BP,   M_IDX),
+    X1(0x6C, CF_00, TEXT_BZ,   M_PCR),
+    X1(0x6E, CF_01, TEXT_BZ,   M_IDX),
+    E2(0x70, CF_00, TEXT_ADD,  M_AR,   M_ER,   SZ_BYTE),
+    X1(0x74, CF_00, TEXT_BRA,  M_PCR),
+    X1(0x76, CF_01, TEXT_BRA,  M_IDX),
+    E2(0x78, CF_00, TEXT_SUB,  M_AR,   M_ER,   SZ_BYTE),
+    X1(0x7C, CF_00, TEXT_BNZ,  M_PCR),
+    X1(0x7E, CF_01, TEXT_BNZ,  M_IDX),
+    E2(0x80, CF_07, TEXT_LD,   M_EA,   M_GEN,  SZ_WORD),
+    U2(0x8C, CF_00, TEXT_ST,   M_EA,   M_IMM), // undefined ST EA immediate
+    E2(0x88, CF_07, TEXT_ST,   M_EA,   M_GEN,  SZ_WORD),
+    U2(0x94, CF_00, TEXT_ILD,  M_AR,   M_IMM), // undefined ILD immediate
+    E2(0x90, CF_07, TEXT_ILD,  M_AR,   M_GEN,  SZ_BYTE),
+    U2(0x9C, CF_00, TEXT_DLD,  M_AR,   M_IMM), // undefined DLD immediate
+    E2(0x98, CF_07, TEXT_DLD,  M_AR,   M_GEN,  SZ_BYTE),
+    E2(0xA0, CF_07, TEXT_LD,   M_TR,   M_GEN,  SZ_WORD),
+    E2(0xB0, CF_07, TEXT_ADD,  M_EA,   M_GEN,  SZ_WORD),
+    E2(0xB8, CF_07, TEXT_SUB,  M_EA,   M_GEN,  SZ_WORD),
+    E2(0xC0, CF_07, TEXT_LD,   M_AR,   M_GEN,  SZ_BYTE),
+    U2(0xCC, CF_00, TEXT_ST,   M_AR,   M_IMM), // undefined ST A immediate
+    E2(0xC8, CF_07, TEXT_ST,   M_AR,   M_GEN,  SZ_BYTE),
+    E2(0xD0, CF_07, TEXT_AND,  M_AR,   M_GEN,  SZ_BYTE),
+    E2(0xD8, CF_07, TEXT_OR,   M_AR,   M_GEN,  SZ_BYTE),
+    E2(0xE0, CF_07, TEXT_XOR,  M_AR,   M_GEN,  SZ_BYTE),
+    E2(0xF0, CF_07, TEXT_ADD,  M_AR,   M_GEN,  SZ_BYTE),
+    E2(0xF8, CF_07, TEXT_SUB,  M_AR,   M_GEN,  SZ_BYTE),
 };
 
 constexpr uint8_t INDEX_INS8070[] PROGMEM = {
@@ -228,28 +229,10 @@ Error searchName(CpuType cpuType, AsmInsn &insn) {
     return insn.getError();
 }
 
-Config::opcode_t maskCode(AddrMode mode) {
-    switch (mode) {
-    case M_VEC:
-        return ~0x0F;
-    case M_IDX:
-    case M_P23:
-        return ~0x01;
-    case M_PTR:
-        return ~0x03;
-    case M_GEN:
-        return ~0x07;
-    default:
-        return ~0;
-    }
-}
-
 bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *) {
-    auto opCode = insn.opCode();
-    const auto flags = entry->readFlags();
-    opCode &= maskCode(flags.dst());
-    opCode &= maskCode(flags.src());
-    return opCode == entry->readOpCode();
+    auto opc = insn.opCode();
+    opc &= ~entry->readFlags().mask();
+    return opc == entry->readOpCode();
 }
 
 Error searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) {
