@@ -128,6 +128,8 @@ void DisI8051::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) const
         outRegName(out.letter('@'), REG_A).letter('+');
         outRegName(out, REG_PC);
         break;
+    default:
+        break;
     }
 }
 
