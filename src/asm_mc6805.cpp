@@ -176,42 +176,29 @@ void AsmMc6805::emitBitNumber(AsmInsn &insn, const Operand &op) const {
 void AsmMc6805::emitOperand(AsmInsn &insn, AddrMode mode, const Operand &op) const {
     insn.setErrorIf(op);
     switch (mode) {
-    case M_GEN:
-        insn.setOpCode(insn.opCode() & 0x0F);
-        switch (op.mode) {
-        case M_IMM:
-            insn.embed(0xA0);
-            goto imm;
-        case M_DIR:
-        case M_BNO:
-            insn.embed(0xB0);
-            goto dir;
-        case M_EXT:
-            insn.embed(0xC0);
-            goto ext;
-        case M_IX2:
-            insn.embed(0xD0);
-            goto ix2;
-        case M_IX1:
-            insn.embed(0xE0);
-            goto idx;
-        default:  // M_IX0
-            insn.embed(0xF0);
+    case M_IX10:
+        if (op.mode == M_IX0) {
+            insn.embed(0x10);
             break;
         }
-        break;
-    case M_MEM:
-        insn.setOpCode(insn.opCode() & 0x0F);
+        goto idx;
+    case M_GEN1:
+        if (op.mode == M_IMM)
+            goto imm;
+        insn.embed(0x10);
+        goto dir;
+    case M_GEN2:
         switch (op.mode) {
-        case M_DIR:
-        case M_BNO:
-            insn.embed(0x30);
-            goto dir;
+        case M_EXT:
+            goto ext;
+        case M_IX2:
+            insn.embed(0x10);
+            goto ix2;
         case M_IX1:
-            insn.embed(0x60);
+            insn.embed(0x20);
             goto idx;
         default:  // M_IX0
-            insn.embed(0x70);
+            insn.embed(0x30);
             break;
         }
         break;
