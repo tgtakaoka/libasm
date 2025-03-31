@@ -35,13 +35,13 @@ enum AddrMode : uint8_t {
     M_IM8 = 6,     // Immediate 8-bit
     M_IM32 = 7,    // Immediate 32-bit
     M_PAIR = 8,    // Register pair
-    M_LIST = 9,    // Register list; means Undefined when in mode2
+    M_LIST = 9,    // Register list
     M_RBIT = 10,   // Register bit
     M_DBIT = 11,   // Direct Page bit
     M_RTFM = 12,   // Transfer Memory Register
     M_GEN8 = 13,   // Generic: M_IM8/M_DIR/M_IDX/M_EXT
     M_GEN16 = 14,  // Generic: M_IM16/M_DIR/M_IDX/M_EXT
-    M_GMEM = 15,   // Generic memory: M_DIR/M_IDX/M_EXT
+    M_GMEM = 15,   // Generic memory: M_IDX/M_EXT
 };
 
 enum OprSize : uint8_t {
@@ -59,14 +59,8 @@ struct Entry final : entry::Base<Config::opcode_t> {
                                               (static_cast<uint8_t>(opr2) << opr2_gp))};
         }
 
-        static constexpr Flags undef(AddrMode opr1) {
-            return Flags{static_cast<uint8_t>((static_cast<uint8_t>(opr1) << opr1_gp) |
-                                              (static_cast<uint8_t>(M_LIST) << opr2_gp))};
-        }
-
         AddrMode mode1() const { return AddrMode((_attr >> opr1_gp) & mode_gm); }
         AddrMode mode2() const { return AddrMode((_attr >> opr2_gp) & mode_gm); }
-        bool undefined() const { return mode2() == M_LIST; }
 
     private:
         static constexpr int opr1_gp = 0;
