@@ -110,13 +110,12 @@ void DisMc6805::decodeRelative(DisInsn &insn, StrBuffer &out) const {
 }
 
 void DisMc6805::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) const {
-    if (mode == M_GEN || mode == M_MEM) {
+    if (mode == M_GEN1 || mode == M_GEN2 || mode == M_IX10) {
         switch (insn.opCode() & 0xF0) {
         case 0xA0:
             out.letter('#');
             outHex(out, insn.readByte(), 8);
             break;
-        case 0x30:
         case 0xB0:
             decodeDirectPage(insn, out);
             break;
@@ -130,7 +129,8 @@ void DisMc6805::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) cons
         case 0xE0:
             decodeIndexed(insn, out, M_IX1);
             break;
-        default:
+        case 0x70:
+        case 0xF0:
             decodeIndexed(insn, out, M_IX0);
             break;
         }
