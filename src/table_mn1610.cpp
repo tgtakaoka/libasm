@@ -24,20 +24,20 @@ using namespace libasm::text::mn1610;
 namespace libasm {
 namespace mn1610 {
 
-#define E4(_opc, _name, _opr1, _opr2, _opr3, _opr4) \
-    {_opc, Entry::Flags::create(_opr1, _opr2, _opr3, _opr4), _name}
-#define E3(_opc, _name, _opr1, _opr2, _opr3) E4(_opc, _name, _opr1, _opr2, _opr3, M_NONE)
-#define E2(_opc, _name, _opr1, _opr2) E3(_opc, _name, _opr1, _opr2, M_NONE)
-#define E1(_opc, _name, _opr1) E2(_opc, _name, _opr1, M_NONE)
-#define E0(_opc, _name) E1(_opc, _name, M_NONE)
+#define E4(_opc, _cf, _name, _opr1, _opr2, _opr3, _opr4) \
+    {_opc, Entry::Flags::create(_cf, _opr1, _opr2, _opr3, _opr4), _name}
+#define E3(_opc, _cf, _name, _opr1, _opr2, _opr3) E4(_opc, _cf, _name, _opr1, _opr2, _opr3, M_NONE)
+#define E2(_opc, _cf, _name, _opr1, _opr2) E3(_opc, _cf, _name, _opr1, _opr2, M_NONE)
+#define E1(_opc, _cf, _name, _opr1) E2(_opc, _cf, _name, _opr1, M_NONE)
+#define E0(_opc, _cf, _name) E1(_opc, _cf, _name, M_NONE)
 
 // clang-format off
 constexpr Entry TABLE_COMMON[] PROGMEM = {
-        E0(0x2000, TEXT_H),
-        E0(0x2003, TEXT_RET),
-        E1(0x2001, TEXT_PUSH, M_RD),
-        E1(0x2002, TEXT_POP,  M_RD),
-        E1(0x2004, TEXT_LPSW, M_ILVL),
+        E0(0x2000, CF_0000, TEXT_H),
+        E0(0x2003, CF_0000, TEXT_RET),
+        E1(0x2001, CF_0700, TEXT_PUSH, M_RD),
+        E1(0x2002, CF_0700, TEXT_POP,  M_RD),
+        E1(0x2004, CF_0003, TEXT_LPSW, M_ILVL),
 };
 
 constexpr uint8_t INDEX_COMMON[] PROGMEM = {
@@ -49,38 +49,38 @@ constexpr uint8_t INDEX_COMMON[] PROGMEM = {
 };
 
 constexpr Entry TABLE_MN1610[] PROGMEM = {
-        E2(0x0800, TEXT_MVI,  M_RD,   M_IM8),
-        E2(0x1000, TEXT_WT,   M_RD,   M_IOA),
-        E2(0x1800, TEXT_RD,   M_RD,   M_IOA),
-        E3(0x2008, TEXT_SR,   M_RD,   M_EOP, M_SKIP),
-        E2(0x2008, TEXT_SR,   M_RD,   M_SKIP),
-        E3(0x200C, TEXT_SL,   M_RD,   M_EOP, M_SKIP),
-        E2(0x200C, TEXT_SL,   M_RD,   M_SKIP),
-        E3(0x2800, TEXT_TBIT, M_RD,   M_BIT, M_SKIP),
-        E3(0x3000, TEXT_RBIT, M_RD,   M_BIT, M_SKIP),
-        E3(0x3800, TEXT_SBIT, M_RD,   M_BIT, M_SKIP),
-        E3(0x4000, TEXT_SI,   M_RD,   M_IM4, M_SKIP),
-        E3(0x4800, TEXT_AI,   M_RD,   M_IM4, M_SKIP),
-        E3(0x5000, TEXT_CB,   M_RD,   M_RS,  M_SKIP),
-        E3(0x5008, TEXT_C,    M_RD,   M_RS,  M_SKIP),
-        E3(0x5800, TEXT_S,    M_RD,   M_RS,  M_SKIP),
-        E3(0x5808, TEXT_A,    M_RD,   M_RS,  M_SKIP),
-        E3(0x6000, TEXT_EOR,  M_RD,   M_RS,  M_SKIP),
-        E3(0x6008, TEXT_OR,   M_RD,   M_RS,  M_SKIP),
-        E3(0x6800, TEXT_LAD,  M_RD,   M_RS,  M_SKIP),
-        E3(0x6808, TEXT_AND,  M_RD,   M_RS,  M_SKIP),
-        E3(0x7000, TEXT_DSWP, M_RD,   M_RS,  M_SKIP),
-        E3(0x7008, TEXT_BSWP, M_RD,   M_RS,  M_SKIP),
-        E3(0x7800, TEXT_MVB,  M_RD,   M_RS,  M_SKIP),
-        E3(0x7808, TEXT_MV,   M_RD,   M_RS,  M_SKIP),
-        E1(0x8600, TEXT_DMS,  M_GEN),
-        E1(0x8700, TEXT_BAL,  M_GEN),
-        E2(0x8000, TEXT_ST,   M_RDG,  M_GEN),
-        E1(0xC600, TEXT_IMS,  M_GEN),
-        E1(0xC700, TEXT_B,    M_GEN),
-        E2(0xC000, TEXT_L,    M_RDG,  M_GEN),
-        E2(0x6000, TEXT_CLR,  M_RDS,  M_SKIP),
-        E2(0x6008, TEXT_TST,  M_RDS,  M_SKIP),
+        E2(0x0800, CF_07FF, TEXT_MVI,  M_RD,   M_IM8),
+        E2(0x1000, CF_07FF, TEXT_WT,   M_RD,   M_IOA),
+        E2(0x1800, CF_07FF, TEXT_RD,   M_RD,   M_IOA),
+        E3(0x2008, CF_07F3, TEXT_SR,   M_RD,   M_EOP, M_SKIP),
+        E2(0x2008, CF_07F0, TEXT_SR,   M_RD,   M_SKIP),
+        E3(0x200C, CF_07F3, TEXT_SL,   M_RD,   M_EOP, M_SKIP),
+        E2(0x200C, CF_07F0, TEXT_SL,   M_RD,   M_SKIP),
+        E3(0x2800, CF_07FF, TEXT_TBIT, M_RD,   M_BIT, M_SKIP),
+        E3(0x3000, CF_07FF, TEXT_RBIT, M_RD,   M_BIT, M_SKIP),
+        E3(0x3800, CF_07FF, TEXT_SBIT, M_RD,   M_BIT, M_SKIP),
+        E3(0x4000, CF_07FF, TEXT_SI,   M_RD,   M_IM4, M_SKIP),
+        E3(0x4800, CF_07FF, TEXT_AI,   M_RD,   M_IM4, M_SKIP),
+        E3(0x5000, CF_07F7, TEXT_CB,   M_RD,   M_RS,  M_SKIP),
+        E3(0x5008, CF_07F7, TEXT_C,    M_RD,   M_RS,  M_SKIP),
+        E3(0x5800, CF_07F7, TEXT_S,    M_RD,   M_RS,  M_SKIP),
+        E3(0x5808, CF_07F7, TEXT_A,    M_RD,   M_RS,  M_SKIP),
+        E3(0x6000, CF_07F7, TEXT_EOR,  M_RD,   M_RS,  M_SKIP),
+        E3(0x6008, CF_07F7, TEXT_OR,   M_RD,   M_RS,  M_SKIP),
+        E3(0x6800, CF_07F7, TEXT_LAD,  M_RD,   M_RS,  M_SKIP),
+        E3(0x6808, CF_07F7, TEXT_AND,  M_RD,   M_RS,  M_SKIP),
+        E3(0x7000, CF_07F7, TEXT_DSWP, M_RD,   M_RS,  M_SKIP),
+        E3(0x7008, CF_07F7, TEXT_BSWP, M_RD,   M_RS,  M_SKIP),
+        E3(0x7800, CF_07F7, TEXT_MVB,  M_RD,   M_RS,  M_SKIP),
+        E3(0x7808, CF_07F7, TEXT_MV,   M_RD,   M_RS,  M_SKIP),
+        E1(0x8600, CF_38FF, TEXT_DMS,  M_GEN),
+        E1(0x8700, CF_38FF, TEXT_BAL,  M_GEN),
+        E2(0x8000, CF_3FFF, TEXT_ST,   M_RDG,  M_GEN),
+        E1(0xC600, CF_38FF, TEXT_IMS,  M_GEN),
+        E1(0xC700, CF_38FF, TEXT_B,    M_GEN),
+        E2(0xC000, CF_3FFF, TEXT_L,    M_RDG,  M_GEN),
+        E2(0x6000, CF_07F0, TEXT_CLR,  M_RDS,  M_SKIP),
+        E2(0x6008, CF_07F0, TEXT_TST,  M_RDS,  M_SKIP),
 };
 
 constexpr uint8_t INDEX_MN1610[] PROGMEM = {
@@ -119,79 +119,79 @@ constexpr uint8_t INDEX_MN1610[] PROGMEM = {
 };
 
 constexpr Entry TABLE_MN1613[] PROGMEM = {
-        E2(0x0F07, TEXT_LB,   M_RBW,  M_ABS),
-        E2(0x0F00, TEXT_SETB, M_RS,   M_RBW),
-        E2(0x0F0F, TEXT_LS,   M_RP,   M_ABS),
-        E2(0x0F08, TEXT_SETS, M_RS,   M_RP),
-        E2(0x0F87, TEXT_STB,  M_RB,   M_ABS),
-        E2(0x0F80, TEXT_CPYB, M_RS,   M_RB),
-        E2(0x0F8F, TEXT_STS,  M_RP,   M_ABS),
-        E2(0x0F88, TEXT_CPYS, M_RS,   M_RP),
-        E0(0x1707, TEXT_POPM),
-        E3(0x1700, TEXT_TRST, M_RS,   M_ABS,  M_SKIP),
-        E0(0x170F, TEXT_PSHM),
-        E3(0x1708, TEXT_TSET, M_RS,   M_ABS,  M_SKIP),
-        E3(0x1F07, TEXT_FLT,  M_DR0,  M_R0,   M_SKIP),
-        E3(0x1F0F, TEXT_FIX,  M_R0,   M_DR0,  M_SKIP),
-        E3(0x1F00, TEXT_NEG,  M_RS,   M_COP,  M_SKIP),
-        E2(0x1F00, TEXT_NEG,  M_RS,   M_SKIP),
-        E1(0x2607, TEXT_BD,   M_ABS),
-        E1(0x2617, TEXT_BALD, M_ABS),
-        E1(0x270F, TEXT_BL,   M_IABS),
-        E1(0x2704, TEXT_BR,   M_RI),
-        E1(0x271F, TEXT_BALL, M_IABS),
-        E1(0x2714, TEXT_BALR, M_RI),
-        E3(0x2708, TEXT_LD,   M_RSG,  M_SB,   M_ABS),
-        E2(0x2708, TEXT_LD,   M_RSG,  M_ABS),
-        E3(0x2748, TEXT_STD,  M_RSG,  M_SB,   M_ABS),
-        E2(0x2748, TEXT_STD,  M_RSG,  M_ABS),
-        E2(0x2010, TEXT_WTR,  M_RDG,  M_RI),
-        E2(0x2014, TEXT_RDR,  M_RDG,  M_RI),
-        E3(0x2000, TEXT_LR,   M_RDG,  M_SB,   M_RIAU),
-        E2(0x2000, TEXT_LR,   M_RDG,  M_RIAU),
-        E3(0x2004, TEXT_STR,  M_RDG,  M_SB,   M_RIAU),
-        E2(0x2004, TEXT_STR,  M_RDG,  M_RIAU),
-        E0(0x3F07, TEXT_RETL),
-        E3(0x3F17, TEXT_BLK,  M_RI2,  M_RI1,  M_R0),
-        E2(0x3F70, TEXT_SRBT, M_R0,   M_RS),
-        E2(0x3F00, TEXT_SETH, M_RS,   M_RHW),
-        E2(0x3FF0, TEXT_DEBP, M_RS,   M_R0),
-        E2(0x3F80, TEXT_CPYH, M_RS,   M_RHR),
-        E4(0x4704, TEXT_SD,   M_DR0,  M_RI,   M_COP,  M_SKIP),
-        E3(0x4704, TEXT_SD,   M_DR0,  M_RI,   M_SKIP),
-        E4(0x4F04, TEXT_AD,   M_DR0,  M_RI,   M_COP,  M_SKIP),
-        E3(0x4F04, TEXT_AD,   M_DR0,  M_RI,   M_SKIP),
-        E4(0x5704, TEXT_DAS,  M_R0,   M_RI,   M_COP,  M_SKIP),
-        E3(0x5704, TEXT_DAS,  M_R0,   M_RI,   M_SKIP),
-        E3(0x5700, TEXT_CBR,  M_R0,   M_RI,   M_SKIP),
-        E3(0x5708, TEXT_CWR,  M_R0,   M_RI,   M_SKIP),
-        E3(0x5007, TEXT_CBI,  M_RD,   M_IM8W, M_SKIP),
-        E3(0x500F, TEXT_CWI,  M_RD,   M_IM16, M_SKIP),
-        E4(0x5F04, TEXT_DAA,  M_R0,   M_RI,   M_COP,  M_SKIP),
-        E3(0x5F04, TEXT_DAA,  M_R0,   M_RI,   M_SKIP),
-        E3(0x5F00, TEXT_SWR,  M_R0,   M_RI,   M_SKIP),
-        E3(0x5F08, TEXT_AWR,  M_R0,   M_RI,   M_SKIP),
-        E3(0x5807, TEXT_SWI,  M_RD,   M_IM16, M_SKIP),
-        E3(0x580F, TEXT_AWI,  M_RD,   M_IM16, M_SKIP),
-        E3(0x6704, TEXT_FD,   M_DR0,  M_RI,   M_SKIP),
-        E3(0x670C, TEXT_FM,   M_DR0,  M_RI,   M_SKIP),
-        E3(0x6700, TEXT_EORR, M_R0,   M_RI,   M_SKIP),
-        E3(0x6708, TEXT_ORR,  M_R0,   M_RI,   M_SKIP),
-        E3(0x6007, TEXT_EORI, M_RD,   M_IM16, M_SKIP),
-        E3(0x600F, TEXT_ORI,  M_RD,   M_IM16, M_SKIP),
-        E3(0x6F08, TEXT_ANDR, M_R0,   M_RI,   M_SKIP),
-        E3(0x6F00, TEXT_LADR, M_R0,   M_RI,   M_SKIP),
-        E3(0x6F04, TEXT_FS,   M_DR0,  M_RI,   M_SKIP),
-        E3(0x6F0C, TEXT_FA,   M_DR0,  M_RI,   M_SKIP),
-        E3(0x6807, TEXT_LADI, M_RD,   M_IM16, M_SKIP),
-        E3(0x680F, TEXT_ANDI, M_RD,   M_IM16, M_SKIP),
-        E3(0x7700, TEXT_DSWR, M_R0,   M_RI,   M_SKIP),
-        E3(0x7708, TEXT_BSWR, M_R0,   M_RI,   M_SKIP),
-        E3(0x770C, TEXT_D,    M_DR0,  M_RI,   M_SKIP),
-        E3(0x7F00, TEXT_MVBR, M_R0,   M_RI,   M_SKIP),
-        E3(0x7F08, TEXT_MVWR, M_R0,   M_RI,   M_SKIP),
-        E3(0x7F0C, TEXT_M,    M_DR0,  M_RI,   M_SKIP),
-        E3(0x780F, TEXT_MVWI, M_RD,   M_IM16, M_SKIP),
+        E2(0x0F07, CF_0070, TEXT_LB,   M_RBW,  M_ABS),
+        E2(0x0F00, CF_0077, TEXT_SETB, M_RS,   M_RBW),
+        E2(0x0F0F, CF_0070, TEXT_LS,   M_RP,   M_ABS),
+        E2(0x0F08, CF_0077, TEXT_SETS, M_RS,   M_RP),
+        E2(0x0F87, CF_0070, TEXT_STB,  M_RB,   M_ABS),
+        E2(0x0F80, CF_0077, TEXT_CPYB, M_RS,   M_RB),
+        E2(0x0F8F, CF_0070, TEXT_STS,  M_RP,   M_ABS),
+        E2(0x0F88, CF_0077, TEXT_CPYS, M_RS,   M_RP),
+        E0(0x1707, CF_0000, TEXT_POPM),
+        E3(0x1700, CF_00F7, TEXT_TRST, M_RS,   M_ABS,  M_SKIP),
+        E0(0x170F, CF_0000, TEXT_PSHM),
+        E3(0x1708, CF_00F7, TEXT_TSET, M_RS,   M_ABS,  M_SKIP),
+        E3(0x1F07, CF_00F0, TEXT_FLT,  M_DR0,  M_R0,   M_SKIP),
+        E3(0x1F0F, CF_00F0, TEXT_FIX,  M_R0,   M_DR0,  M_SKIP),
+        E3(0x1F00, CF_00FF, TEXT_NEG,  M_RS,   M_COP,  M_SKIP),
+        E2(0x1F00, CF_00F7, TEXT_NEG,  M_RS,   M_SKIP),
+        E1(0x2607, CF_0000, TEXT_BD,   M_ABS),
+        E1(0x2617, CF_0000, TEXT_BALD, M_ABS),
+        E1(0x270F, CF_0000, TEXT_BL,   M_IABS),
+        E1(0x2704, CF_0003, TEXT_BR,   M_RI),
+        E1(0x271F, CF_0000, TEXT_BALL, M_IABS),
+        E1(0x2714, CF_0003, TEXT_BALR, M_RI),
+        E3(0x2708, CF_0037, TEXT_LD,   M_RSG,  M_SB,   M_ABS),
+        E2(0x2708, CF_0007, TEXT_LD,   M_RSG,  M_ABS),
+        E3(0x2748, CF_0037, TEXT_STD,  M_RSG,  M_SB,   M_ABS),
+        E2(0x2748, CF_0007, TEXT_STD,  M_RSG,  M_ABS),
+        E2(0x2010, CF_0703, TEXT_WTR,  M_RDG,  M_RI),
+        E2(0x2014, CF_0703, TEXT_RDR,  M_RDG,  M_RI),
+        E3(0x2000, CF_07F3, TEXT_LR,   M_RDG,  M_SB,   M_RIAU),
+        E2(0x2000, CF_07C3, TEXT_LR,   M_RDG,  M_RIAU),
+        E3(0x2004, CF_07F3, TEXT_STR,  M_RDG,  M_SB,   M_RIAU),
+        E2(0x2004, CF_07C3, TEXT_STR,  M_RDG,  M_RIAU),
+        E0(0x3F07, CF_0000, TEXT_RETL),
+        E3(0x3F17, CF_0000, TEXT_BLK,  M_RI2,  M_RI1,  M_R0),
+        E2(0x3F70, CF_0007, TEXT_SRBT, M_R0,   M_RS),
+        E2(0x3F00, CF_0077, TEXT_SETH, M_RS,   M_RHW),
+        E2(0x3FF0, CF_0007, TEXT_DEBP, M_RS,   M_R0),
+        E2(0x3F80, CF_0077, TEXT_CPYH, M_RS,   M_RHR),
+        E4(0x4704, CF_00FB, TEXT_SD,   M_DR0,  M_RI,   M_COP,  M_SKIP),
+        E3(0x4704, CF_00F3, TEXT_SD,   M_DR0,  M_RI,   M_SKIP),
+        E4(0x4F04, CF_00FB, TEXT_AD,   M_DR0,  M_RI,   M_COP,  M_SKIP),
+        E3(0x4F04, CF_00F3, TEXT_AD,   M_DR0,  M_RI,   M_SKIP),
+        E4(0x5704, CF_00FB, TEXT_DAS,  M_R0,   M_RI,   M_COP,  M_SKIP),
+        E3(0x5704, CF_00F3, TEXT_DAS,  M_R0,   M_RI,   M_SKIP),
+        E3(0x5700, CF_00F3, TEXT_CBR,  M_R0,   M_RI,   M_SKIP),
+        E3(0x5708, CF_00F3, TEXT_CWR,  M_R0,   M_RI,   M_SKIP),
+        E3(0x5007, CF_07F0, TEXT_CBI,  M_RD,   M_IM8W, M_SKIP),
+        E3(0x500F, CF_07F0, TEXT_CWI,  M_RD,   M_IM16, M_SKIP),
+        E4(0x5F04, CF_00FB, TEXT_DAA,  M_R0,   M_RI,   M_COP,  M_SKIP),
+        E3(0x5F04, CF_00F3, TEXT_DAA,  M_R0,   M_RI,   M_SKIP),
+        E3(0x5F00, CF_00F3, TEXT_SWR,  M_R0,   M_RI,   M_SKIP),
+        E3(0x5F08, CF_00F3, TEXT_AWR,  M_R0,   M_RI,   M_SKIP),
+        E3(0x5807, CF_07F0, TEXT_SWI,  M_RD,   M_IM16, M_SKIP),
+        E3(0x580F, CF_07F0, TEXT_AWI,  M_RD,   M_IM16, M_SKIP),
+        E3(0x6704, CF_00F3, TEXT_FD,   M_DR0,  M_RI,   M_SKIP),
+        E3(0x670C, CF_00F3, TEXT_FM,   M_DR0,  M_RI,   M_SKIP),
+        E3(0x6700, CF_00F3, TEXT_EORR, M_R0,   M_RI,   M_SKIP),
+        E3(0x6708, CF_00F3, TEXT_ORR,  M_R0,   M_RI,   M_SKIP),
+        E3(0x6007, CF_07F0, TEXT_EORI, M_RD,   M_IM16, M_SKIP),
+        E3(0x600F, CF_07F0, TEXT_ORI,  M_RD,   M_IM16, M_SKIP),
+        E3(0x6F08, CF_00F3, TEXT_ANDR, M_R0,   M_RI,   M_SKIP),
+        E3(0x6F00, CF_00F3, TEXT_LADR, M_R0,   M_RI,   M_SKIP),
+        E3(0x6F04, CF_00F3, TEXT_FS,   M_DR0,  M_RI,   M_SKIP),
+        E3(0x6F0C, CF_00F3, TEXT_FA,   M_DR0,  M_RI,   M_SKIP),
+        E3(0x6807, CF_07F0, TEXT_LADI, M_RD,   M_IM16, M_SKIP),
+        E3(0x680F, CF_07F0, TEXT_ANDI, M_RD,   M_IM16, M_SKIP),
+        E3(0x7700, CF_00F3, TEXT_DSWR, M_R0,   M_RI,   M_SKIP),
+        E3(0x7708, CF_00F3, TEXT_BSWR, M_R0,   M_RI,   M_SKIP),
+        E3(0x770C, CF_00F3, TEXT_D,    M_DR0,  M_RI,   M_SKIP),
+        E3(0x7F00, CF_00F3, TEXT_MVBR, M_R0,   M_RI,   M_SKIP),
+        E3(0x7F08, CF_00F3, TEXT_MVWR, M_R0,   M_RI,   M_SKIP),
+        E3(0x7F0C, CF_00F3, TEXT_M,    M_DR0,  M_RI,   M_SKIP),
+        E3(0x780F, CF_07F0, TEXT_MVWI, M_RD,   M_IM16, M_SKIP),
 };
 
 constexpr uint8_t INDEX_MN1613[] PROGMEM = {
@@ -361,71 +361,27 @@ bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *) {
     const auto mode1 = flags.mode1();
     const auto mode2 = flags.mode2();
     const auto mode3 = flags.mode3();
-    const auto mode4 = flags.mode4();
-    if (mode1 == M_GEN || mode2 == M_GEN)
-        opc &= ~((7 << 11) | 0xFF);
-    const auto dstReg = (opc >> 8) & 7;
-    if (mode1 == M_RD || mode1 == M_RDS) {
-        if (dstReg == 7)
-            return false;
-        opc &= ~(7 << 8);
-    }
-    if (mode1 == M_RDG) {
-        if (dstReg >= 6)
-            return false;
-        opc &= ~(7 << 8);
-    }
-    const auto srcReg = opc & 7;
-    if (mode1 == M_RS || mode2 == M_RS || mode1 == M_RDS) {
-        if (srcReg == 7)
-            return false;
-        opc &= ~7;
-    }
-    if (mode1 == M_RSG) {
-        if (srcReg >= 6)
-            return false;  // no STR
-        opc &= ~7;
-    }
-    if (mode1 == M_RI || mode2 == M_RI)
-        opc &= ~3;
-    if (mode3 == M_RIAU) {
-        const auto idirMode = (opc >> 6) & 3;
-        if (idirMode == 0)
-            return false;
-        opc &= ~((3 << 6) | 3);
-    }
-    if (mode2 == M_SB)
-        opc &= ~(3 << 4);
-    if (mode1 == M_RBW || mode2 == M_RBW) {
-        const auto segBase = (opc >> 4) & 7;
-        if (segBase == 0)
-            return false;  // no CSBR
-        opc &= ~(7 << 4);
-    }
-    if (mode1 == M_RB || mode2 == M_RB)
-        opc &= ~(7 << 4);
-    if (mode1 == M_RP || mode2 == M_RP) {
-        const auto cntlReg = (opc >> 4) & 7;
-        if (cntlReg >= 3)
-            return false;
-        opc &= ~(7 << 4);
-    }
-    if (mode2 == M_RHR || mode2 == M_RHW) {
-        const auto hardReg = (opc >> 4) & 7;
-        if (hardReg == 7)
-            return false;
-        opc &= ~(7 << 4);
-    }
-    if (mode2 == M_SKIP || mode3 == M_SKIP || mode4 == M_SKIP)
-        opc &= ~(0xF << 4);
-    if (mode2 == M_IM8 || mode2 == M_IOA)
-        opc &= ~0xFF;
-    if (mode2 == M_IM4 || mode2 == M_BIT)
-        opc &= ~0xF;
-    if (mode1 == M_ILVL || mode2 == M_EOP)
-        opc &= ~3;
-    if (mode2 == M_COP || mode3 == M_COP)
-        opc &= ~(1 << 3);
+    auto reg = (opc >> 8) & 7;
+    if ((mode1 == M_RD || mode1 == M_RDS) && reg == 7)
+        return false;
+    if (mode1 == M_RDG && reg >= 6)
+        return false;
+    reg = opc & 7;
+    if ((mode1 == M_RS || mode2 == M_RS) && reg == 7)
+        return false;
+    if (mode1 == M_RSG && reg >= 6)
+        return false;
+    reg = (opc >> 6) & 3;
+    if ((mode2 == M_RIAU || mode3 == M_RIAU) && reg == 0)
+        return false;
+    reg = (opc >> 4) & 7;
+    if ((mode1 == M_RBW || mode2 == M_RBW) && reg == 0)
+        return false;
+    if ((mode1 == M_RP || mode2 == M_RP) && reg >= 3)
+        return false;
+    if ((mode2 == M_RHR || mode2 == M_RHW) && reg == 7)
+        return false;
+    opc &= ~flags.mask();
     return opc == entry->readOpCode();
 }
 

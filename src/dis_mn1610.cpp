@@ -102,13 +102,15 @@ void DisMn1610::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) cons
     case M_SKIP:
         outConditionCode(out, decodeSkip(opc >> 4));
         break;
-    case M_RD:
     case M_RDG:
+    case M_RD:
     case M_RDS:
         outRegister(out, decodeRegNum(opc >> 8), mode);
         break;
-    case M_RS:
     case M_RSG:
+    case M_RS:
+        if ((opc & 7) == 7)
+            insn.setErrorIf(UNKNOWN_INSTRUCTION);
         outRegister(out, decodeRegNum(opc), mode);
         break;
     case M_GEN:
@@ -153,6 +155,8 @@ void DisMn1610::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) cons
         outRegister(out.letter('('), decodeIndirect(opc), mode).letter(')');
         break;
     case M_RIAU:
+        if ((opc & 0xC0) == 0)
+            insn.setErrorIf(UNKNOWN_INSTRUCTION);
         outIndirect(out, opc);
         break;
     case M_SB:
