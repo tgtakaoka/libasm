@@ -159,6 +159,28 @@ void AsmTlcs90::encodeOperand(
     }
 }
 
+AddrMode reg2mode(RegName reg) {
+    static constexpr AddrMode MODE[] PROGMEM = {
+            R_BC,     // REG_BC=0
+            R_DE,     // REG_DE=1
+            R_HL,     // REG_HL=2
+            M_NONE,   // 3
+            M_REGIX,  // REG_IX=4
+            M_REGIX,  // REG_IY=5
+            R_SP,     // REG_SP=6
+            R_AF,     // REG_AF=7
+            M_REG8,   // REG_B=8
+            R_C,      // REG_C=9
+            M_REG8,   // REG_D=10
+            M_REG8,   // REG_E=11
+            M_REG8,   // REG_H=12
+            M_REG8,   // REG_L=13
+            R_A,      // REG_A=14
+            R_AFP,    // REG_AFP=15
+    };
+    return AddrMode(pgm_read_byte(&MODE[reg]));
+}
+
 Error AsmTlcs90::parseOperand(StrScanner &scan, Operand &op) const {
     auto p = scan.skipSpaces();
     op.setAt(p);
@@ -234,22 +256,7 @@ Error AsmTlcs90::parseOperand(StrScanner &scan, Operand &op) const {
         }
         return op.setError(regAt, REGISTER_NOT_ALLOWED);
     }
-    switch (reg) {
-    case REG_IX:
-    case REG_IY:
-        op.mode = M_REGIX;
-        break;
-    case REG_B:
-    case REG_D:
-    case REG_E:
-    case REG_H:
-    case REG_L:
-        op.mode = M_REG8;
-        break;
-    default:
-        op.mode = AddrMode(int8_t(reg) + R_BASE);
-        break;
-    }
+    op.mode = reg2mode(reg);
     scan = p;
     return OK;
 }

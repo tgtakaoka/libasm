@@ -92,29 +92,29 @@ RegName parseRegName(StrScanner &scan, const ValueParser &parser) {
 }
 
 StrBuffer &outRegName(StrBuffer &out, RegName name) {
-    if (name >= ALT_BASE)
-        return outRegName(out, RegName(name - ALT_BASE)).letter('\'');
+    if (name == REG_AFP)
+        return outRegName(out, REG_AF).letter('\'');
     const auto *entry = REG_TABLE.searchName(name);
     return entry ? entry->outText(out) : out;
 }
 
 bool isReg16(RegName name) {
-    return uint8_t(name) <= uint8_t(REG_SP);
+    return uint8_t(name) <= REG_SP;
 }
 
 bool isRegIndex(RegName name) {
-    return isReg16(name) && uint8_t(name) >= uint8_t(REG_IX);
+    return isReg16(name) && name >= REG_IX;
 }
 
 uint8_t encodeReg8(RegName name) {
-    return int8_t(name) - 16;
+    return int8_t(name) - REG_B;
 }
 
 RegName decodeReg8(uint8_t num) {
     num &= 7;
     if (num == 7)
         return REG_UNDEF;
-    return RegName(num + 16);
+    return RegName(num + REG_B);
 }
 
 uint8_t encodeReg16(RegName name) {
@@ -144,14 +144,14 @@ RegName decodeStackReg(uint8_t num) {
 }
 
 uint8_t encodeIndexReg(RegName name) {
-    return int8_t(name) - 4;
+    return int8_t(name) - REG_IX;
 }
 
 RegName decodeIndexReg(uint8_t num) {
     num &= 3;
     if (num == 3)
         return REG_UNDEF;
-    return RegName(num + 4);
+    return RegName(num + REG_IX);
 }
 
 CcName parseCcName(StrScanner &scan, const ValueParser &parser) {
@@ -171,7 +171,7 @@ StrBuffer &outCcName(StrBuffer &out, const CcName name) {
 
 uint8_t encodeCcName(const CcName name) {
     const auto cc = uint8_t(name);
-    return cc >= 16 ? cc - 16 : cc;
+    return cc >= ALIAS_BASE ? cc - ALIAS_BASE : cc;
 }
 
 CcName decodeCcName(uint8_t num) {

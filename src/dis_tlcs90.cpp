@@ -87,6 +87,20 @@ void DisTlcs90::decodeRelative(
     outRelAddr(out, target, insn.address(), mode == M_REL8 ? 8 : 16);
 }
 
+RegName mode2reg(AddrMode mode) {
+    static constexpr RegName REG[] PROGMEM = {
+            REG_A,    // R_A=22
+            REG_C,    // R_C=23
+            REG_AFP,  // R_AFP=24
+            REG_BC,   // R_BC=25
+            REG_DE,   // R_DE=26
+            REG_HL,   // R_HL=27
+            REG_SP,   // R_SP=28
+            REG_AF,   // R_AF=29
+    };
+    return RegName(pgm_read_byte(&REG[mode - R_A]));
+}
+
 void DisTlcs90::decodeOperand(
         DisInsn &insn, StrBuffer &out, AddrMode mode, const Operand &op) const {
     auto val16 = op.val.getUnsigned();
@@ -141,16 +155,9 @@ void DisTlcs90::decodeOperand(
     case M_REGIX:
         outRegName(out, op.reg);
         break;
-    case R_BC:
-    case R_DE:
-    case R_HL:
-    case R_SP:
-    case R_AF:
-    case R_AFP:
-    case R_A:
-        outRegName(out, RegName(uint8_t(mode) - R_BASE));
-        break;
     default:
+        if (mode >= R_A)
+            outRegName(out, mode2reg(mode));
         break;
     }
 }

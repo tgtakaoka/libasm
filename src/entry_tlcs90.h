@@ -45,40 +45,61 @@ enum AddrMode : uint8_t {
     M_REGIX = 15,  // Register index: IX/IY/SP
     M_HLPA = 16,   // HL+A
     M_IXPD = 17,   // ix+disp
-    R_BASE = 18,
-    R_BC = R_BASE + REG_BC,
-    R_DE = R_BASE + REG_DE,
-    R_HL = R_BASE + REG_HL,
-    R_SP = R_BASE + REG_SP,
-    R_AF = R_BASE + REG_AF,
-    R_AFP = R_BASE + REG_AFP,
-    R_C = R_BASE + REG_C,  // or CC_C
-    R_A = R_BASE + REG_A,
-    M_SYM = 59,    // Undefined symbol: M_EXT/M_DIR
-    M_SRC16 = 60,  // M_REG16
-    M_SRC = 61,
-    M_DST = 62,
+    M_SRC16 = 18,  // M_REG16
+    M_SRC = 19,
+    M_DST = 20,
+    M_SYM = 21,  // Undefined symbol: M_EXT/M_DIR
+    R_A = 22,    // Check |mode2reg| in dis_tlcs90.cpp
+    R_C = 23,    // Check |reg2mode| in asm_tlcs90.cpp
+    R_AFP = 24,
+    R_BC = 25,
+    R_DE = 26,
+    R_HL = 27,
+    R_SP = 28,
+    R_AF = 29,
+};
+
+enum CodeFormat : uint8_t {
+    CF_00 = 0,  // 0x00
+    CF_03 = 1,  // 0x03
+    CF_07 = 2,  // 0x07
+    CF_0F = 3,  // 0x0F
 };
 
 struct Entry final : entry::Base<Config::opcode_t> {
     struct Flags final {
-        uint8_t _dst;
-        uint8_t _src;
+        uint16_t _attr;
 
-        static constexpr Flags create(AddrMode dst, AddrMode src) {
-            return Flags{static_cast<uint8_t>(dst), static_cast<uint8_t>(src)};
+        static constexpr Flags create(CodeFormat cf, AddrMode dst, AddrMode src) {
+            return Flags{static_cast<uint16_t>((dst << dst_gp) | (src << src_gp) | (cf << cf_gp))};
         }
 
-        AddrMode dst() const { return AddrMode(_dst); }
-        AddrMode src() const { return AddrMode(_src); }
+        AddrMode dst() const { return AddrMode((_attr >> dst_gp) & dst_gm); }
+        AddrMode src() const { return AddrMode((_attr >> src_gp) & src_gm); }
+        CodeFormat format() const { return CodeFormat((_attr >> cf_gp) & cf_gm); }
+        uint8_t mask() const {
+            static constexpr uint8_t MASK[] PROGMEM = {
+                    0x00,  // CF_00 = 0
+                    0x03,  // CF_03 = 1
+                    0x07,  // CF_07 = 2
+                    0x0F,  // CF_0F = 3
+            };
+            return pgm_read_byte(&MASK[format()]);
+        }
+
+    private:
+        static constexpr int dst_gp = 0;
+        static constexpr int src_gp = 5;
+        static constexpr int cf_gp = 10;
+        static constexpr uint_fast8_t dst_gm = 0x1F;
+        static constexpr uint_fast8_t src_gm = 0x1F;
+        static constexpr uint_fast8_t cf_gm = 0x3;
     };
 
-    constexpr Entry(Config::opcode_t opCode, Flags flags, const /* PROGMEM */ char *name_P)
-        : Base(name_P, opCode), _flags_P(flags) {}
+    constexpr Entry(Config::opcode_t opc, Flags flags, const /* PROGMEM */ char *name_P)
+        : Base(name_P, opc), _flags_P(flags) {}
 
-    Flags readFlags() const {
-        return Flags{pgm_read_byte(&_flags_P._dst), pgm_read_byte(&_flags_P._src)};
-    }
+    Flags readFlags() const { return Flags{pgm_read_word(&_flags_P._attr)}; }
 
 private:
     const Flags _flags_P;
