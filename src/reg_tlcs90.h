@@ -30,26 +30,25 @@ namespace tlcs90 {
 enum RegName : int8_t {
     REG_UNDEF = -1,
     // 16-bit registers: M_REG16
-    REG_BC = 0 + 0,
-    REG_DE = 0 + 1,
-    REG_HL = 0 + 2,
+    REG_BC = 0,
+    REG_DE = 1,
+    REG_HL = 2,
     // Index registers: M_REGIX
-    REG_IX = 4 + 0,
-    REG_IY = 4 + 1,
-    REG_SP = 4 + 2,
+    REG_IX = 4,
+    REG_IY = 5,
+    REG_SP = 6,
     // 16-bit registers for stack: M_STACK
-    REG_AF = 8 + 6,
+    REG_AF = 7,
     // 8-bit registers: M_REG8
-    REG_B = 16 + 0,
-    REG_C = 16 + 1,
-    REG_D = 16 + 2,
-    REG_E = 16 + 3,
-    REG_H = 16 + 4,
-    REG_L = 16 + 5,
-    REG_A = 16 + 6,
+    REG_B = 0 + 8,
+    REG_C = 1 + 8,
+    REG_D = 2 + 8,
+    REG_E = 3 + 8,
+    REG_H = 4 + 8,
+    REG_L = 5 + 8,
+    REG_A = 6 + 8,
     // Alternate register
-    ALT_BASE = 24,
-    REG_AFP = REG_AF + ALT_BASE,
+    REG_AFP = 15,
 };
 
 enum CcName : int8_t {
@@ -71,14 +70,15 @@ enum CcName : int8_t {
     CC_NZ = 14,
     CC_NC = 15,
     // Aliases
-    CC_PE = 16 + 4,    // == OV(4)
-    CC_M = 16 + 5,     // == MI(5)
-    CC_EQ = 16 + 6,    // == Z(6)
-    CC_ULT = 16 + 7,   // == C(7)
-    CC_PO = 16 + 12,   // == NOV(12)
-    CC_P = 16 + 13,    // == PL(13)
-    CC_NE = 16 + 14,   // == NZ(14)
-    CC_UGE = 16 + 15,  // == NC(15)
+    ALIAS_BASE = 16,
+    CC_PE = CC_OV + ALIAS_BASE,   // == OV(4)
+    CC_M = CC_MI + ALIAS_BASE,    // == MI(5)
+    CC_EQ = CC_Z + ALIAS_BASE,    // == Z(6)
+    CC_ULT = CC_C + ALIAS_BASE,   // == C(7)
+    CC_PO = CC_NOV + ALIAS_BASE,  // == NOV(12)
+    CC_P = CC_PL + ALIAS_BASE,    // == PL(13)
+    CC_NE = CC_NZ + ALIAS_BASE,   // == NZ(14)
+    CC_UGE = CC_NC + ALIAS_BASE,  // == NC(15)
 };
 
 namespace reg {

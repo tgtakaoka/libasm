@@ -29,7 +29,9 @@ namespace tlcs90 {
 struct EntryInsn : EntryInsnPrefix<Config, Entry> {
     AddrMode dst() const { return flags().dst(); }
     AddrMode src() const { return flags().src(); }
-    void setAddrMode(AddrMode dst, AddrMode src) { setFlags(Entry::Flags::create(dst, src)); }
+    void setAddrMode(AddrMode dst, AddrMode src) {
+        setFlags(Entry::Flags::create(flags().format(), dst, src));
+    }
     AddrMode pre() const { return _prefixMode; }
     void setPrefixMode(AddrMode mode) { _prefixMode = mode; }
 
