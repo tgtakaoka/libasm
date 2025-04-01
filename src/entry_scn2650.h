@@ -26,38 +26,55 @@ namespace libasm {
 namespace scn2650 {
 
 enum AddrMode : uint8_t {
+    // mode2
     M_NONE = 0,
-    M_REGN = 1,   // r0~r3; means Undefined when in mode2
-    M_REG0 = 2,   // r0
-    M_R123 = 3,   // r1~R3
-    M_IMM8 = 4,   // v: Immediate, 8 bit
-    M_CCVN = 5,   // eq/gt/lt/un: Condition code
-    M_C012 = 6,   // eq/gt/lt: Condition code
-    M_REL7 = 7,   // (*)a: Relative, 7 bit, optionally indirect
-    M_ABS7 = 8,   // (*)a: First page relative. 7 bit. optionally indirect.
-    M_AB13 = 9,   // (*)a: Absolute, 13 bit, optionally indirect
-    M_IX13 = 10,  // (*)a,rx(,[+-]): Indexed, 13bit (indirect and auto increment/decrement)
-    M_IX15 = 11,  // (*)a,r3: Indexed with r3, 15bit, optionally indirect
-    M_AB15 = 12,  // (*)a: Absolute jump, 15 bit, optionally indirect
+    M_IMM8 = 1,  // v: Immediate, 8 bit
+    M_REL7 = 2,  // (*)a: Relative, 7 bit, optionally indirect
+    M_AB13 = 3,  // (*)a: Absolute, 13 bit, optionally indirect
+    M_AB15 = 4,  // (*)a: Absolute jump, 15 bit, optionally indirect
+    M_IX13 = 5,  // (*)a,rx(,[+-]): Indexed, 13bit (indirect and auto increment/decrement)
+    // mode1, mode2
+    M_REGN = 6,   // r0~r3
+    M_REG0 = 7,   // r0
+    M_R123 = 8,   // r1~R3
+    M_CCVN = 9,   // eq/gt/lt/un: Condition code
+    M_C012 = 10,  // eq/gt/lt: Condition code
+    M_ABS7 = 11,  // (*)a: First page relative. 7 bit. optionally indirect.
+    M_IX15 = 12,  // (*)a,r3: Indexed with r3, 15bit, optionally indirect
+};
+
+enum CodeFormat : uint8_t {
+    CF_00 = 0,  // 0x00
+    CF_03 = 1,  // 0x03
 };
 
 struct Entry final : entry::Base<Config::opcode_t> {
     struct Flags final {
         uint8_t _attr;
 
-        static constexpr Flags create(AddrMode opr1, AddrMode opr2) {
-            return Flags{static_cast<uint8_t>((static_cast<uint8_t>(opr1) << opr1_gp) |
-                                              (static_cast<uint8_t>(opr2) << opr2_gp))};
+        static constexpr Flags create(CodeFormat cf, AddrMode opr1, AddrMode opr2) {
+            return Flags{static_cast<uint8_t>((static_cast<uint8_t>(opr1) << mode1_gp) |
+                                              (static_cast<uint8_t>(opr2) << mode2_gp) |
+                                              (static_cast<uint8_t>(cf) << cf_gp))};
         }
 
-        AddrMode mode1() const { return AddrMode((_attr >> opr1_gp) & mode_gm); }
-        AddrMode mode2() const { return AddrMode((_attr >> opr2_gp) & mode_gm); }
-        bool undefined() const { return mode2() == M_REGN; }
+        AddrMode mode1() const { return AddrMode((_attr >> mode1_gp) & mode1_gm); }
+        AddrMode mode2() const { return AddrMode((_attr >> mode2_gp) & mode2_gm); }
+        uint8_t mask() const {
+            static constexpr uint8_t MASK[] PROGMEM = {
+                    0x00,  // CF_00 = 0
+                    0x03,  // CF_03 = 1
+            };
+            return pgm_read_byte(&MASK[(_attr >> cf_gp) & cf_gm]);
+        }
 
     private:
-        static constexpr int opr1_gp = 0;
-        static constexpr int opr2_gp = 4;
-        static constexpr uint8_t mode_gm = 0x0F;
+        static constexpr int mode1_gp = 0;
+        static constexpr int mode2_gp = 4;
+        static constexpr int cf_gp = 7;
+        static constexpr uint8_t mode1_gm = 0xF;
+        static constexpr uint8_t mode2_gm = 0x7;
+        static constexpr uint8_t cf_gm = 0x1;
     };
 
     constexpr Entry(Config::opcode_t opCode, Flags flags, const /* PROGMEM */ char *name_P)

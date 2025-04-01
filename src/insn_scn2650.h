@@ -29,9 +29,6 @@ namespace scn2650 {
 struct EntryInsn : EntryInsnBase<Config, Entry> {
     AddrMode mode1() const { return flags().mode1(); }
     AddrMode mode2() const { return flags().mode2(); }
-    void setAddrMode(AddrMode mode1, AddrMode mode2) {
-        setFlags(Entry::Flags::create(mode1, mode2));
-    }
 };
 
 struct Operand final : ErrorAt {
