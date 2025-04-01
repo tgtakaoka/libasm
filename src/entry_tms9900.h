@@ -50,36 +50,56 @@ enum AddrMode : uint8_t {
     M_INDX = 20,  // Indexed Addressing: @TABLE(Rn)
 };
 
+enum CodeFormat : uint8_t {
+    CF_0000 = 0,  // 0x0000
+    CF_000F = 1,  // 0x000F
+    CF_0030 = 2,  // 0x0030
+    CF_003F = 3,  // 0x003F
+    CF_00FF = 4,  // 0x00FF
+    CF_03FF = 5,  // 0x03FF
+    CF_0FFF = 6,  // 0x0FFF
+};
+
 struct Entry final : entry::Base<Config::opcode_t> {
     struct Flags final {
-        uint8_t _src;
-        uint8_t _attr;
+        uint16_t _attr;
 
-        static constexpr Flags create(AddrMode src, AddrMode dst, bool byteOp = false) {
-            return Flags{static_cast<uint8_t>(src), attr(dst, byteOp)};
+        static constexpr Flags create(
+                CodeFormat cf, AddrMode src, AddrMode dst, bool byteOp = false) {
+            return Flags{static_cast<uint16_t>(
+                    (src << src_gp) | (dst << dst_gp) | (byteOp << byteOp_bp) | (cf << cf_gp))};
         }
 
-        AddrMode src() const { return AddrMode(_src); }
+        AddrMode src() const { return AddrMode((_attr >> src_gp) & src_gm); }
         AddrMode dst() const { return AddrMode((_attr >> dst_gp) & dst_gm); }
         bool byteOp() const { return (_attr & (1 << byteOp_bp)) != 0; }
+        uint16_t mask() const {
+            static constexpr uint16_t MASK[] PROGMEM = {
+                    0x0000,  // CF_0000 = 0
+                    0x000F,  // CF_000F = 1
+                    0x0030,  // CF_0030 = 2
+                    0x003F,  // CF_003F = 3
+                    0x00FF,  // CF_00FF = 4
+                    0x03FF,  // CF_03FF = 5
+                    0x0FFF,  // CF_0FFF = 6
+            };
+            return pgm_read_word(&MASK[(_attr >> cf_gp) & cf_gm]);
+        }
 
     private:
-        // |_attr|
-        static constexpr int dst_gp = 0;
-        static constexpr uint8_t dst_gm = 0x1F;
-        static constexpr int byteOp_bp = 7;
-        static constexpr uint8_t attr(AddrMode dst, bool byteOp) {
-            return ((static_cast<uint8_t>(dst) & dst_gm) << dst_gp) |
-                   (byteOp ? (1 << byteOp_bp) : 0);
-        }
+        static constexpr int src_gp = 0;
+        static constexpr int dst_gp = 6;
+        static constexpr int cf_gp = 11;
+        static constexpr int byteOp_bp = 14;
+        static constexpr uint_fast8_t src_gm = 0x1F;
+        static constexpr uint_fast8_t dst_gm = 0x1F;
+        static constexpr uint_fast8_t cf_gm = 0x07;
     };
 
     constexpr Entry(Config::opcode_t opCode, Flags flags, const /* PROGMEM */ char *name_P)
         : Base(name_P, opCode), _flags_P(flags) {}
 
-    Flags readFlags() const {
-        return Flags{pgm_read_byte(&_flags_P._src), pgm_read_byte(&_flags_P._attr)};
-    }
+    Flags readFlags() const { return Flags{pgm_read_word(&_flags_P._attr)}; }
 
 private:
     const Flags _flags_P;
