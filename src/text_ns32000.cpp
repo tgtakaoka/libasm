@@ -26,8 +26,6 @@ constexpr char TEXT_FPU_NS32081[]  PROGMEM = "NS32081";
 constexpr char TEXT_PMMU_NS32082[] PROGMEM = "NS32082";
 constexpr char TEXT_CPU_32032[]    PROGMEM = "32032";
 
-constexpr char TEXT_PMMU[] PROGMEM = "PMMU";
-
 // Standard instructions
 constexpr char TEXT_ABSB[]    PROGMEM = "ABSB";
 // constexpr char TEXT_ABSD[]    PROGMEM = "ABSD";
@@ -363,7 +361,7 @@ constexpr char TEXT_REG_F7[] PROGMEM = "F7";
 
 constexpr char TEXT_REG_UPSR[]    PROGMEM = "UPSR";
 constexpr char TEXT_REG_US[]      PROGMEM = "US";
-constexpr char TEXT_REG_PSR[]     PROGMEM = "PSR";
+// constexpr char TEXT_REG_PSR[]     PROGMEM = "PSR";
 constexpr char TEXT_REG_INTBASE[] PROGMEM = "INTBASE";
 constexpr char TEXT_REG_MOD[]     PROGMEM = "MOD";
 

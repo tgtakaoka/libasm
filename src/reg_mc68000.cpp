@@ -16,6 +16,8 @@
 
 #include "reg_mc68000.h"
 #include "reg_base.h"
+#include "str_buffer.h"
+#include "str_scanner.h"
 #include "text_mc68000.h"
 #include "value_parser.h"
 
@@ -71,6 +73,23 @@ constexpr NameEntry REG_ENTRIES[] PROGMEM = {
 };
 
 PROGMEM constexpr NameTable TABLE{ARRAY_RANGE(REG_ENTRIES)};
+
+#if !defined(LIBASM_MC68000_NOPMMU)
+constexpr NameEntry PREG_ENTRIES[] PROGMEM = {
+    { TEXT_REG_AC,   PREG_AC   },
+    { TEXT_REG_CAL,  PREG_CAL  },
+    { TEXT_REG_CRP,  PREG_CRP  },
+    { TEXT_REG_DRP,  PREG_DRP  },
+    { TEXT_REG_PCSR, PREG_PCSR },
+    { TEXT_REG_PSR,  PREG_PSR  },
+    { TEXT_REG_SCC,  PREG_SCC  },
+    { TEXT_REG_SRP,  PREG_SRP  },
+    { TEXT_REG_TC,   PREG_TC   },
+    { TEXT_REG_VAL,  PREG_VAL  },
+};
+
+PROGMEM constexpr NameTable PREG_TABLE{ARRAY_RANGE(PREG_ENTRIES)};
+#endif
 
 // clang-format on
 }  // namespace
@@ -180,6 +199,69 @@ RegName decodeControlReg(Config::opcode_t regno) {
     return REG_UNDEF;
 }
 
+#if !defined(LIBASM_MC68000_NOPMMU)
+PmmuReg parsePmmuReg(StrScanner &scan, const ValueParser &parser) {
+    auto p = scan;
+    auto name = parser.readRegName(p);
+    const auto *entry = PREG_TABLE.searchText(name);
+    if (entry) {
+        scan = p;
+        return PmmuReg(entry->name());
+    }
+    auto reg = PREG_UNDEF;
+    if (name.iexpectText_P(TEXT_REG_BAD, 3)) {
+        reg = PREG_BAD0;
+    } else if (name.iexpectText_P(TEXT_REG_BAC, 3)) {
+        reg = PREG_BAC0;
+    }
+    if (reg != PREG_UNDEF && *name >= '0' && *name < '8' && name[1] == 0) {
+        scan = p;
+        return PmmuReg(reg + (*name - '0'));
+    }
+    return PREG_UNDEF;
+}
+
+StrBuffer &outPmmuReg(StrBuffer &out, PmmuReg name) {
+    const auto *entry = PREG_TABLE.searchName(name);
+    if (entry)
+        return entry->outText(out);
+    if (name >= PREG_BAC0)
+        return out.text_P(TEXT_REG_BAC).letter(name - PREG_BAC0 + '0');
+    if (name >= PREG_BAD0)
+        return out.text_P(TEXT_REG_BAD).letter(name - PREG_BAD0 + '0');
+    return out;
+}
+
+Config::opcode_t encodePmmuReg(PmmuReg name) {
+    if (name >= PREG_BAC0)
+        return (13 << 10) | ((name - PREG_BAC0) << 2);
+    if (name >= PREG_BAD0)
+        return (12 << 10) | ((name - PREG_BAD0) << 2);
+    return name << 10;
+}
+
+PmmuReg decodePmmuReg(Config::opcode_t post) {
+    const auto regno = (post >> 10) & 0xF;
+    if (regno < 10)
+        return PmmuReg(regno);
+    if (regno == 12)
+        return PmmuReg(PREG_BAD0 + ((post >> 2) & 7));
+    if (regno == 13)
+        return PmmuReg(PREG_BAC0 + ((post >> 2) & 7));
+    return PREG_UNDEF;
+}
+
+OprSize pmmuRegSize(PmmuReg name) {
+    if (name == PREG_UNDEF)
+        return SZ_NONE;
+    if (name >= PREG_AC)
+        return SZ_WORD;
+    if (name >= PREG_CAL)
+        return SZ_BYTE;
+    return name == PREG_TC ? SZ_LONG : SZ_QUAD;
+}
+#endif
+
 InsnSize parseSize(StrScanner &scan) {
     auto p = scan;
     if (p.expect('.')) {
@@ -198,6 +280,10 @@ InsnSize parseSize(StrScanner &scan) {
             size = ISZ_XTND;
         } else if (p.iexpect('P')) {
             size = ISZ_PBCD;
+#if !defined(LIBASM_MC68000_NOPMMU)
+        } else if (p.iexpect('Q')) {
+            size = ISZ_QUAD;
+#endif
         }
         if (size == ISZ_ERROR || isIdLetter(*p))
             return ISZ_ERROR;
@@ -229,12 +315,16 @@ char sizeSuffix(OprSize size) {
         return 'W';
     case SZ_LONG:
         return 'L';
+#if !defined(LIBASM_MC68000_NOPMMU)
+    case SZ_QUAD:
+        return 'Q';
+#endif
     case SZ_SNGL:
         return 'S';
-    case SZ_DUBL:
-        return 'D';
     case SZ_XTND:
         return 'X';
+    case SZ_DUBL:
+        return 'D';
     case SZ_PBCD:
         return 'P';
     default:

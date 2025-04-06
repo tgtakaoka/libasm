@@ -31,7 +31,7 @@ extern const char TEXT_CPU_32032[]    PROGMEM;
 using common::TEXT_none;
 
 using common::TEXT_FPU;
-extern const char TEXT_PMMU[] PROGMEM;
+using common::TEXT_PMMU;
 
 // Standard instructions
 extern const char TEXT_ABSB[]    PROGMEM;
@@ -368,7 +368,7 @@ extern const char TEXT_REG_F7[] PROGMEM;
 
 extern const char TEXT_REG_UPSR[]    PROGMEM;
 extern const char TEXT_REG_US[]      PROGMEM;
-extern const char TEXT_REG_PSR[]     PROGMEM;
+using common::TEXT_REG_PSR;
 extern const char TEXT_REG_INTBASE[] PROGMEM;
 extern const char TEXT_REG_MOD[]     PROGMEM;
 

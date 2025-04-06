@@ -31,6 +31,7 @@ struct DisMc68000 final : Disassembler, Config {
 
 private:
     const TextOption<Config> _opt_fpu;
+    const TextOption<Config> _opt_pmmu;
 
     void outBitField(DisInsn &insn, StrBuffer &out) const;
     void outDataRegPair(DisInsn &insn, StrBuffer &out, OprPos pos) const;

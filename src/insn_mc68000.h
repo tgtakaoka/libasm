@@ -29,10 +29,12 @@ namespace mc68000 {
 struct EntryInsn : EntryInsnPostfix<Config, Entry> {
     AddrMode src() const { return flags().src(); }
     AddrMode dst() const { return flags().dst(); }
-    AddrMode ext() const { return flags().ext(); }
+    AddrMode ex1() const { return flags().ex1(); }
+    AddrMode ex2() const { return flags().ex2(); }
     OprPos srcPos() const { return flags().srcPos(); }
     OprPos dstPos() const { return flags().dstPos(); }
-    OprPos extPos() const { return flags().extPos(); }
+    OprPos ex1Pos() const { return flags().ex1Pos(); }
+    OprPos ex2Pos() const { return flags().ex2Pos(); }
     OprSize oprSize() const { return flags().oprSize(); }
     bool hasPostVal() const { return flags().hasPostVal(); }
     Config::opcode_t postVal() const { return flags().postVal(); }
@@ -85,6 +87,9 @@ struct Operand final : ErrorAt {
     Value val;
     RegName reg;
     RegName reg2;
+#if !defined(LIBASM_MC68000_NOPMMU)
+    PmmuReg preg;
+#endif
     union {
         Addressing addr;
         Value val2;
@@ -96,7 +101,10 @@ struct Operand final : ErrorAt {
 struct AsmInsn final : AsmInsnImpl<Config>, EntryInsn {
     AsmInsn(Insn &insn) : AsmInsnImpl(insn), _isize(ISZ_NONE) {}
 
-    Operand srcOp, dstOp, extOp;
+    Operand srcOp, dstOp, ex1Op;
+#if !defined(LIBASM_MC68000_NOPMMU)
+    Operand ex2Op;
+#endif
 
     InsnSize parseInsnSize();
     InsnSize insnSize() const { return _isize; }

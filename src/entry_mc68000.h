@@ -41,35 +41,44 @@ enum OprSize : uint8_t {
     SZ_DATH = 13,             // _ss|___|___|___ BYTE=0/WORD=1/LONG=2
     SZ_CAS1 = 14,             // _ss|___|___|___ BYTE=1/WORD=2/LONG=3
     SZ_CAS2 = 15,             // _ss|___|___|___        WORD=2/LONG=3
+#if !defined(LIBASM_MC68000_NOPMMU)
+    SZ_QUAD = 16,             // MC68851 root pointer
+    SZ_PMMU = 17,             // depending on PMMU register
+#endif
 };
 
-enum InsnSize : uint8_t {
+enum InsnSize : int8_t {
     ISZ_NONE = Size::SZ_NONE,
     ISZ_BYTE = Size::SZ_BYTE,  // .B
     ISZ_WORD = Size::SZ_WORD,  // .W
     ISZ_LONG = Size::SZ_QUAD,  // .L
     ISZ_FIXD = Size::SZ_OCTA,  // Fixed size
     ISZ_DATA = Size::SZ_DATA,
-    ISZ_ERROR = 7,
     ISZ_SNGL = SZ_SNGL,  // .S
     ISZ_DUBL = SZ_DUBL,  // .D
     ISZ_XTND = SZ_XTND,  // .X
     ISZ_PBCD = SZ_PBCD,  // .P
-    ISZ_FDAT = SZ_FDAT,  // .f : ___|fff|___|_______ : MC68881 size
+    ISZ_FDAT = SZ_FDAT,  // .f: ___|fff|___|_______ : MC68881 size
+#if !defined(LIBASM_MC68000_NOPMMU)
+    ISZ_QUAD = SZ_QUAD,  // .Q: MC68851 root pointer
+#endif
+    ISZ_ERROR = -1,
 };
 
 enum AddrMode : uint8_t {
     M_NONE = 0,
     // for assembler operand parsing; M_DREG-M_INDX must be contiguous and in this order.
-    M_DREG = 1,    // Dn: Data Register Direct
-    M_AREG = 2,    // An: Address Register Direct
-    M_AIND = 3,    // (An): Address Register Indirect
-    M_PINC = 4,    // (An)+: Address Register Indirect with Postincrement
-    M_PDEC = 5,    // -(An): Address Register Indirect with Predecrement
-    M_DISP = 6,    // (d16,An): Address Register Indirect with Displacement
-    M_INDX = 7,    // (d8,An,Xn.SIZE): Address Register Indirect with Index
-    M_IMDAT = 8,   // #imm: Immediate Data
-    M_IMFLT = 9,   // #imm: Floating point immediate
+    M_DREG = 1,   // Dn: Data Register Direct
+    M_AREG = 2,   // An: Address Register Direct
+    M_AIND = 3,   // (An): Address Register Indirect
+    M_PINC = 4,   // (An)+: Address Register Indirect with Postincrement
+    M_PDEC = 5,   // -(An): Address Register Indirect with Predecrement
+    M_DISP = 6,   // (d16,An): Address Register Indirect with Displacement
+    M_INDX = 7,   // (d8,An,Xn.SIZE): Address Register Indirect with Index
+    M_IMDAT = 8,  // #imm: Immediate Data
+#if !defined(LIBASM_MC68000_NOFPU)
+    M_IMFLT = 9,  // #imm: Floating point immediate
+#endif
     M_AWORD = 10,  // (xxxx).W: Absolute Short Addressing
     M_ALONG = 11,  // (xxxx).L: Absolute Long Addressing
     M_PCDSP = 12,  // (d16,PC): Program Counter Indirect with Displacement
@@ -85,39 +94,52 @@ enum AddrMode : uint8_t {
     M_RMEM = 21,   // Readable Memory:         (An)/(An)+/-(An)/(*,An)/(Abs)/(*,PC)
     M_WMEM = 22,   // Writable Memory:         (An)/(An)+/-(An)/(*,An)/(Abs)
     M_JADDR = 23,  // Jumpable Address:        (An)            /(*,An)/(Abs)/(*,PC)
-    M_IADDR = 24,  // Increment Address:       (An)/(An)+      /(*,An)/(Abs)/(*,PC)
-    M_DADDR = 25,  // Decrement Address:       (An)/     /-(An)/(*,An)/(Abs)
+    M_PADDR = 24,  // Control alterable:       (An)/           /(*,An)/(Abs)
+    M_MROOT = 25,  // PMMU root:               (An)/           /(*,An)/(Abs)/(*,PC)/#xxxx
+    M_IADDR = 26,  // Increment Address:       (An)/(An)+      /(*,An)/(Abs)/(*,PC)
+    M_DADDR = 27,  // Decrement Address:       (An)/     /-(An)/(*,An)/(Abs)
     // for instruction table
-    M_REL8 = 26,   // 8/16-bit Relative (Bcc)
-    M_REL16 = 27,  // 16-bit Relative (DBcc/FDBcc)
-    M_IMBIT = 28,  // Bit number: #0~#7/#15/#31
-    M_IM3 = 29,    // 3-bit Immediate: #1~#8
-    M_IM8 = 30,    // 8-bit Immediate
-    M_IMVEC = 31,  // 3-bit Trap Vector
-    M_IMDSP = 32,  // 16-bit Signed Displacement
-    M_LABEL = 33,  // label
-    M_MULT = 34,   // MOVEM register list
-    M_SR = 35,     // SR register
-    M_CCR = 36,    // CCR register
-    M_USP = 37,    // USP register
+    M_REL8 = 28,   // 8/16-bit Relative (Bcc)
+    M_REL16 = 29,  // 16-bit Relative (DBcc/FDBcc)
+    M_IMBIT = 30,  // Bit number: #0~#7/#15/#31
+    M_IM3 = 31,    // 3-bit Immediate: #1~#8
+    M_IM8 = 32,    // 8-bit Immediate
+    M_IMVEC = 33,  // 3-bit Trap Vector
+    M_IMDSP = 34,  // 16-bit Signed Displacement
+    M_LABEL = 35,  // label
+    M_MULT = 36,   // MOVEM register list
+    M_SR = 37,     // SR register
+    M_CCR = 38,    // CCR register
+    M_USP = 39,    // USP register
     // MC68010
-    M_CREG = 38,  // Control register: SFC, DFC, USP, VBR, etc.
+    M_CREG = 40,  // Control register: SFC, DFC, USP, VBR, etc.
+#if !defined(LIBASM_MC68000_NOFPU)
     // MC68881
-    M_FPREG = 39,  // FPn: Floatng point data register
-    M_FPMLT = 40,  // FMOVEM.X register list; FPn
-    M_FCMLT = 41,  // FMOVEM.L register list; FPCR/FPSR/FPIAR
-    M_FSICO = 42,  // FPSINCOS FPc:FPs
-    M_KDREG = 43,  // <ea>{Dn}
-    M_KFACT = 44,  // <ea>{#k}
-    M_FPCR = 45,   // FPCR register
-    M_FPSR = 46,   // FPSR register
-    M_FPIAR = 47,  // FPIAR register
-    M_IMROM = 48,  // MC68881 ROM constant
-    M_REL32 = 49,  // 32-bit Relative; 1111|ccc|01s|___|___: s=0 16bit, s=1 32bit (FBcc)
+    M_FPREG = 41,  // FPn: Floatng point data register
+    M_FPMLT = 42,  // FMOVEM.X register list; FPn
+    M_FCMLT = 43,  // FMOVEM.L register list; FPCR/FPSR/FPIAR
+    M_FSICO = 44,  // FPSINCOS FPc:FPs
+    M_KDREG = 45,  // <ea>{Dn}
+    M_KFACT = 46,  // <ea>{#k}
+    M_FPCR = 47,   // FPCR register
+    M_FPSR = 48,   // FPSR register
+    M_FPIAR = 49,  // FPIAR register
+    M_IMROM = 50,  // MC68881 ROM constant
+#endif
+    M_REL32 = 51,  // 32-bit Relative; 1111|ccc|01s|___|___: s=0 16bit, s=1 32bit (FBcc)
     // MC68020
-    M_BITOW = 50,  // Bitfield offset/width: {Dn/n:Dn/n}
-    M_DPAIR = 51,  // Data register pair: Dn:Dn
-    M_PPAIR = 52,  // Pointer pair: (Rn):(Rn)
+    M_BITOW = 52,  // Bitfield offset/width: {Dn/n:Dn/n}
+    M_DPAIR = 53,  // Data register pair: Dn:Dn
+    M_PPAIR = 54,  // Pointer pair: (Rn):(Rn)
+#if !defined(LIBASM_MC68000_NOPMMU)
+    // MC68851
+    M_IMFC = 55,  // 4-bit function code: #0~#15
+    M_IMFM = 56,  // 4-bit function code mask: #0~#15
+    M_IMLV = 57,  // 3-bit level
+    M_PFC = 58,   // SFC/DFC
+    M_PREG = 59,  // PMMU register
+    M_PVAL = 60,  // PMMU VAL register
+#endif
 };
 
 enum OprPos : uint8_t {
@@ -143,6 +165,10 @@ enum OprPos : uint8_t {
     EX_QQ = 19,   // _|qqq|________|qqq : Dq
     EX_DCP = 20,  // ______________|ccc : Dc1:Dc2 for CAS2
     EX_DUP = 21,  // _______uuu|___|___ : Du1:Du2 for CAS2
+    EX_PFC = 22,  // _____________|nnnn : PMMU function code
+    EX_PFM = 23,  // _______|mmmm|_____ : PMMU function code mask
+    EX_PR = 24,   // __|rrrr|___|nnn|__ : PMMU register
+    EX_PAR = 25,  // ________|aaa|_____ : PTEST An
 };
 
 enum CodeFormat : uint8_t {
@@ -184,6 +210,16 @@ enum PostFormat : uint8_t {
     PF_F000 = 14,  // 0xF000
     PF_F1C7 = 15,  // 0xF1C7
     PF_FFFF = 16,  // 0xFFFF
+    PF_01EF = 17,  // 0x01EF
+    PF_01E7 = 18,  // 0x01E7
+    PF_001F = 19,  // 0x001F
+    PF_3C1C = 20,  // 0x3C1C
+    PF_1C0F = 21,  // 0x1C0F
+    PF_1C07 = 22,  // 0x1C07
+    PF_1CEF = 23,  // 0x1CEF
+    PF_1CE7 = 24,  // 0x1CE7
+    PF_000F = 25,  // 0x000F
+    PF_0007 = 26,  // 0x0007
 };
 
 struct Entry final : entry::Base<Config::opcode_t> {
@@ -194,25 +230,27 @@ struct Entry final : entry::Base<Config::opcode_t> {
         uint16_t _attr;
         Config::opcode_t _post;
 
-        static constexpr Flags create(AddrMode src, AddrMode dst, AddrMode ext, OprPos spos,
-                OprPos dpos, OprPos epos, OprSize osize, InsnSize isize, CodeFormat cf) {
-            return Flags{mode(src, spos, cf), mode(dst, dpos, PF_0000), mode(ext, epos),
+        static constexpr Flags create(AddrMode src, AddrMode dst, AddrMode ex1, OprPos spos,
+                OprPos dpos, OprPos e1pos, OprSize osize, InsnSize isize, CodeFormat cf) {
+            return Flags{mode(src, spos, cf), mode(dst, dpos, PF_0000), mode(ex1, e1pos, M_NONE),
                     attr(osize, isize), 0x0000};
         }
 
-        static constexpr Flags create(AddrMode src, AddrMode dst, AddrMode ext, OprPos spos,
-                OprPos dpos, OprPos epos, OprSize osize, InsnSize isize, CodeFormat cf,
-                Config::opcode_t post, PostFormat pf) {
-            return Flags{mode(src, spos, cf), mode(dst, dpos, pf), mode(ext, epos),
+        static constexpr Flags create(AddrMode src, AddrMode dst, AddrMode ex1, AddrMode ex2,
+                OprPos spos, OprPos dpos, OprPos e1pos, OprSize osize, InsnSize isize,
+                CodeFormat cf, Config::opcode_t post, PostFormat pf) {
+            return Flags{mode(src, spos, cf), mode(dst, dpos, pf), mode(ex1, e1pos, ex2),
                     attr(osize, isize, true), post};
         }
 
         AddrMode src() const { return AddrMode((_src >> src_gp) & src_gm); }
         AddrMode dst() const { return AddrMode((_dst >> dst_gp) & dst_gm); }
-        AddrMode ext() const { return AddrMode((_ext >> ext_gp) & ext_gm); }
+        AddrMode ex1() const { return AddrMode((_ext >> ex1_gp) & ex1_gm); }
+        AddrMode ex2() const { return AddrMode((_ext >> ex2_gp) & ex2_gm); }
         OprPos srcPos() const { return OprPos((_src >> spos_gp) & spos_gm); }
         OprPos dstPos() const { return OprPos((_dst >> dpos_gp) & dpos_gm); }
-        OprPos extPos() const { return OprPos((_ext >> epos_gp) & epos_gm); }
+        OprPos ex1Pos() const { return OprPos((_ext >> e1pos_gp) & e1pos_gm); }
+        OprPos ex2Pos() const { return ex2() == M_NONE ? OP___ : EX_PAR; }
         OprSize oprSize() const { return OprSize((_attr >> osize_gp) & osize_gm); }
         InsnSize insnSize() const { return InsnSize((_attr >> isize_gp) & isize_gm); }
         bool hasPostVal() const { return (_attr & pval_bm) != 0; }
@@ -263,6 +301,16 @@ struct Entry final : entry::Base<Config::opcode_t> {
                     0xF000,  // PF_F000 = 14
                     0xF1C7,  // PF_F1C7 = 15
                     0xFFFF,  // PF_FFFF = 16
+                    0x01EF,  // PF_01EF = 17
+                    0x01E7,  // PF_01E7 = 18
+                    0x001F,  // PF_001F = 19
+                    0x3C1C,  // PF_3C1C = 20,
+                    0x1C0F,  // PF_1C0F = 21,
+                    0x1C07,  // PF_1C07 = 22,
+                    0x1CEF,  // PF_1C0F = 23,
+                    0x1CE7,  // PF_1C07 = 24,
+                    0x000F,  // PF_000F = 25,
+                    0x0007,  // PF_0007 = 26,
             };
             return pgm_read_word(PMASK + postFormat());
         }
@@ -289,22 +337,24 @@ struct Entry final : entry::Base<Config::opcode_t> {
         static constexpr auto dpos_gm = UINT16_C(0x1F);
         static constexpr auto pf_gm = UINT16_C(0x1F);
         static constexpr uint16_t mode(AddrMode dst, OprPos dpos, PostFormat pf) {
-            return (dst << dst_gp) | (dpos << spos_gp) | (pf << pf_gp);
+            return (dst << dst_gp) | (dpos << dpos_gp) | (pf << pf_gp);
         }
         // |_ext|
-        static constexpr int ext_gp = 0;
-        static constexpr int epos_gp = 6;
-        static constexpr auto ext_gm = UINT16_C(0x3F);
-        static constexpr auto epos_gm = UINT16_C(0x1F);
-        static constexpr uint16_t mode(AddrMode ext, OprPos epos) {
-            return (ext << ext_gp) | (epos << epos_gp);
+        static constexpr int ex1_gp = 0;
+        static constexpr int e1pos_gp = 6;
+        static constexpr int ex2_gp = 11;
+        static constexpr auto ex1_gm = UINT16_C(0x3F);
+        static constexpr auto ex2_gm = UINT16_C(0x03);  // M_AREG/M_NONE
+        static constexpr auto e1pos_gm = UINT16_C(0x1F);
+        static constexpr uint16_t mode(AddrMode ex1, OprPos e1pos, AddrMode ex2) {
+            return (ex1 << ex1_gp) | (e1pos << e1pos_gp) | (ex2 << ex2_gp);
         }
         // |_attr|
         static constexpr int osize_gp = 0;
-        static constexpr int isize_gp = 4;
-        static constexpr int pval_bp = 8;
-        static constexpr auto osize_gm = UINT16_C(0x0F);
-        static constexpr auto isize_gm = UINT16_C(0x0F);
+        static constexpr int isize_gp = 5;
+        static constexpr int pval_bp = 10;
+        static constexpr auto osize_gm = UINT16_C(0x1F);
+        static constexpr auto isize_gm = UINT16_C(0x1F);
         static constexpr auto pval_bm = UINT16_C(1) << pval_bp;
         static constexpr uint16_t attr(OprSize osize, InsnSize isize, bool pval = false) {
             return (osize << osize_gp) | (isize << isize_gp) | (pval ? pval_bm : 0);

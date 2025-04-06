@@ -29,6 +29,7 @@ constexpr char TEXT_none[] PROGMEM = "none";
 constexpr char TEXT_NAN[]  PROGMEM = "nan";
 constexpr char TEXT_INF[]  PROGMEM = "inf";
 constexpr char TEXT_INFINITY[] PROGMEM = "infinity";
+constexpr char TEXT_PMMU[] PROGMEM = "PMMU";
 
 constexpr char TEXT_ABA[]   PROGMEM = "ABA";
 constexpr char TEXT_ABSD[]  PROGMEM = "ABSD";
@@ -617,6 +618,7 @@ constexpr char TEXT_REG_P2[]  PROGMEM = "P2";
 constexpr char TEXT_REG_P3[]  PROGMEM = "P3";
 constexpr char TEXT_REG_PC[]  PROGMEM = "PC";
 constexpr char TEXT_REG_P[]   PROGMEM = "P";
+constexpr char TEXT_REG_PSR[] PROGMEM = "PSR";
 constexpr char TEXT_REG_PSW[] PROGMEM = "PSW";
 constexpr char TEXT_REG_R0[]  PROGMEM = "R0";
 constexpr char TEXT_REG_R1[]  PROGMEM = "R1";

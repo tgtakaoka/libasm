@@ -21,6 +21,8 @@
 
 /** Disable MC68881 FPU instructions */
 // #define LIBASM_MC68000_NOFPU
+/** Disable MC68851 PMMU instructions */
+// #define LIBASM_MC68000_NOPMMU
 
 namespace libasm {
 namespace mc68000 {
@@ -39,9 +41,19 @@ enum FpuType : uint8_t {
 #endif
 };
 
+enum PmmuType : uint8_t {
+    PMMU_NONE,
+#if !defined(LIBASM_MC68000_NOPMMU)
+    PMMU_ON,
+    PMMU_MC68851,
+#endif
+};
+
 struct CpuSpec final {
-    CpuSpec(CpuType cpu_, FpuType fpu_, uint8_t fpuCid_) : cpu(cpu_), fpu(fpu_), fpuCid(fpuCid_) {}
+    CpuSpec(CpuType cpu_, PmmuType pmmu_, FpuType fpu_, uint8_t fpuCid_)
+        : cpu(cpu_), pmmu(pmmu_), fpu(fpu_), fpuCid(fpuCid_) {}
     CpuType cpu;
+    PmmuType pmmu;
     FpuType fpu;
     uint8_t fpuCid;  // FPU co-processor ID
 };
@@ -49,7 +61,7 @@ struct CpuSpec final {
 struct Config
     : ConfigImpl<CpuType, ADDRESS_24BIT, ADDRESS_BYTE, OPCODE_16BIT, ENDIAN_BIG, 16, 6 + 2> {
     Config(const InsnTable<CpuType> &table)
-        : ConfigImpl(table, MC68000), _cpuSpec(MC68000, FPU_NONE, DEFAULT_FPU_CID) {}
+        : ConfigImpl(table, MC68000), _cpuSpec(MC68000, PMMU_NONE, FPU_NONE, DEFAULT_FPU_CID) {}
 
     AddressWidth addressWidth() const override {
         return firstGen() ? ADDRESS_24BIT : ADDRESS_32BIT;
@@ -57,16 +69,19 @@ struct Config
     uint8_t codeMax() const override { return _cpuSpec.fpu == FPU_NONE ? 6 : 16; }
     uint8_t nameMax() const override { return (_cpuSpec.fpu == FPU_NONE ? 6 : 9) + 2; }
 
-    void setCpuType(CpuType cpuType) override {
-        _cpuSpec.cpu = cpuType;
-        ConfigImpl::setCpuType(cpuType);
-    }
+    void setCpuType(CpuType cpuType) override;
+
     const char *fpu_P() const;
     FpuType fpuType() const { return _cpuSpec.fpu; }
     Error setFpuType(FpuType fpuType);
     Error setFpuName(StrScanner &scan) override;
     // TODO: Add option
     void setFpuCid(uint_fast8_t id) { _cpuSpec.fpuCid = (id > 0 && id < 8) ? id : DEFAULT_FPU_CID; }
+
+    const char *pmmu_P() const;
+    PmmuType pmmuType() const { return _cpuSpec.pmmu; }
+    Error setPmmuType(PmmuType pmmuType);
+    Error setPmmuName(StrScanner &scan);
 
     static constexpr auto DEFAULT_FPU_CID = 1;
 

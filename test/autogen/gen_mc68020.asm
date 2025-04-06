@@ -14,6 +14,7 @@
 
         cpu     68020
         fpu     on
+        pmmu    on
         org     10000h
         include "gen_mc68020.inc"
         end

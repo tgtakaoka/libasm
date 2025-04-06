@@ -24,8 +24,8 @@ using namespace libasm::text::mc68000;
 namespace libasm {
 namespace mc68000 {
 
-#define E3(_opc, _name, _isz, _src, _dst, _ext, _srcp, _dstp, _extp, _osz, _mask) \
-    {_opc, Entry::Flags::create(_src, _dst, _ext, _srcp, _dstp, _extp, _osz, _isz, _mask), _name}
+#define E3(_opc, _name, _isz, _src, _dst, _ex1, _srcp, _dstp, _ex1p, _osz, _mask) \
+    {_opc, Entry::Flags::create(_src, _dst, _ex1, _srcp, _dstp, _ex1p, _osz, _isz, _mask), _name}
 #define E2(_opc, _name, _isz, _src, _dst, _srcp, _dstp, _osz, _mask) \
     E3(_opc, _name, _isz, _src, _dst, M_NONE, _srcp, _dstp, OP___, _osz, _mask)
 #define A2(_opc, _name, _isz, _src, _dst, _srcp, _dstp, _osz, _mask) \
@@ -33,17 +33,24 @@ namespace mc68000 {
 #define E1(_opc, _name, _isz, _src, _srcp, _osz, _mask) \
     E2(_opc, _name, _isz, _src, M_NONE, _srcp, OP___, _osz, _mask)
 #define E0(_opc, _name) E1(_opc, _name, ISZ_NONE, M_NONE, OP___, SZ_NONE, CF_0000)
-#define X3(_opc, _name, _isz, _src, _dst, _ext, _srcp, _dstp, _extp, _osz, _mask, _pval, _pmask) \
+#define X4(_opc, _name, _isz, _src, _dst, _ex1, _ex2, _srcp, _dstp, _ex1p, _osz, _mask, _pval,   \
+        _pmask)                                                                                  \
     {_opc,                                                                                       \
-            Entry::Flags::create(                                                                \
-                    _src, _dst, _ext, _srcp, _dstp, _extp, _osz, _isz, _mask, _pval, _pmask),    \
+            Entry::Flags::create(_src, _dst, _ex1, _ex2, _srcp, _dstp, _ex1p, _osz, _isz, _mask, \
+                    _pval, _pmask),                                                              \
             _name}
+#define X3(_opc, _name, _isz, _src, _dst, _ex1, _srcp, _dstp, _ex1p, _osz, _mask, _pval, _pmask) \
+    X4(_opc, _name, _isz, _src, _dst, _ex1, M_NONE, _srcp, _dstp, _ex1p, _osz, _mask, _pval, _pmask)
 #define X2(_opc, _name, _isz, _src, _dst, _srcp, _dstp, _osz, _mask, _pval, _pmask) \
     X3(_opc, _name, _isz, _src, _dst, M_NONE, _srcp, _dstp, OP___, _osz, _mask, _pval, _pmask)
 #define X1(_opc, _name, _isz, _src, _srcp, _osz, _mask, _pval, _pmask) \
     X2(_opc, _name, _isz, _src, M_NONE, _srcp, OP___, _osz, _mask, _pval, _pmask)
+#define X0(_opc, _name, _mask, _pval, _pmask) \
+    X1(_opc, _name, ISZ_NONE, M_NONE, OP___, SZ_NONE, _mask, _pval, _pmask)
+#define P3(_opc, _name, _isz, _src, _dst, _ex1, _srcp, _dstp, _ex1p, _osz, _mask, _pval) \
+    X3(_opc, _name, _isz, _src, _dst, _ex1, _srcp, _dstp, _ex1p, _osz, _mask, _pval, PF_0000)
 #define P2(_opc, _name, _isz, _src, _dst, _srcp, _dstp, _osz, _mask, _pval) \
-    X2(_opc, _name, _isz, _src, _dst, _srcp, _dstp, _osz, _mask, _pval, PF_0000)
+    P3(_opc, _name, _isz, _src, _dst, M_NONE, _srcp, _dstp, OP___, _osz, _mask, _pval)
 #define P1(_opc, _name, _isz, _src, _srcp, _osz, _mask, _pval) \
     P2(_opc, _name, _isz, _src, M_NONE, _srcp, OP___, _osz, _mask, _pval)
 #define P0(_opc, _name, _pval) P1(_opc, _name, ISZ_NONE, M_NONE, OP___, SZ_NONE, CF_0000, _pval)
@@ -1294,6 +1301,295 @@ constexpr uint8_t MC68881_TRAP_INDEX[] PROGMEM = {
 };
 
 #endif
+
+#if !defined(LIBASM_MC68000_NOPMMU)
+
+constexpr Entry MC68851_TABLE[] PROGMEM = {
+    X0(0xF000, TEXT_PFLUSHA,  CF_0077, 0x2400, PF_0000),
+    X2(0xF000, TEXT_PFLUSH,   ISZ_NONE, M_IMFC,  M_IMFM, EX_PFC,  EX_PFM, SZ_NONE, CF_0077, 0x3010, PF_01EF),
+    X2(0xF000, TEXT_PFLUSH,   ISZ_NONE, M_DREG,  M_IMFM, EX_DC,   EX_PFM, SZ_NONE, CF_0077, 0x3008, PF_01E7),
+    X2(0xF000, TEXT_PFLUSH,   ISZ_NONE, M_PFC,   M_IMFM, EX_PFC,  EX_PFM, SZ_NONE, CF_0077, 0x3000, PF_01E7),
+    X2(0xF000, TEXT_PFLUSHS,  ISZ_NONE, M_IMFC,  M_IMFM, EX_PFC,  EX_PFM, SZ_NONE, CF_0077, 0x3410, PF_01EF),
+    X2(0xF000, TEXT_PFLUSHS,  ISZ_NONE, M_DREG,  M_IMFM, EX_DC,   EX_PFM, SZ_NONE, CF_0077, 0x3408, PF_01E7),
+    X2(0xF000, TEXT_PFLUSHS,  ISZ_NONE, M_PFC,   M_IMFM, EX_PFC,  EX_PFM, SZ_NONE, CF_0077, 0x3400, PF_01E7),
+    X3(0xF000, TEXT_PFLUSH,   ISZ_NONE, M_IMFC,  M_IMFM, M_PADDR, EX_PFC, EX_PFM, OP_10, SZ_NONE, CF_0077, 0x3810, PF_01EF),
+    X3(0xF000, TEXT_PFLUSH,   ISZ_NONE, M_DREG,  M_IMFM, M_PADDR, EX_DC,  EX_PFM, OP_10, SZ_NONE, CF_0077, 0x3808, PF_01E7),
+    X3(0xF000, TEXT_PFLUSH,   ISZ_NONE, M_PFC,   M_IMFM, M_PADDR, EX_PFC, EX_PFM, OP_10, SZ_NONE, CF_0077, 0x3800, PF_01E7),
+    X3(0xF000, TEXT_PFLUSHS,  ISZ_NONE, M_IMFC,  M_IMFM, M_PADDR, EX_PFC, EX_PFM, OP_10, SZ_NONE, CF_0077, 0x3C10, PF_01EF),
+    X3(0xF000, TEXT_PFLUSHS,  ISZ_NONE, M_DREG,  M_IMFM, M_PADDR, EX_DC,  EX_PFM, OP_10, SZ_NONE, CF_0077, 0x3C08, PF_01E7),
+    X3(0xF000, TEXT_PFLUSHS,  ISZ_NONE, M_PFC,   M_IMFM, M_PADDR, EX_PFC, EX_PFM, OP_10, SZ_NONE, CF_0077, 0x3C00, PF_01E7),
+    P1(0xF000, TEXT_PFLUSHR,  ISZ_NONE, M_MROOT, OP_10,  SZ_QUAD, CF_0077, 0xA000),
+    X2(0xF000, TEXT_PLOADR,   ISZ_NONE, M_IMFC,  M_PADDR, EX_PFC, OP_10, SZ_NONE, CF_0077, 0x2210, PF_000F),
+    X2(0xF000, TEXT_PLOADR,   ISZ_NONE, M_DREG,  M_PADDR, EX_DC,  OP_10, SZ_NONE, CF_0077, 0x2208, PF_0007),
+    X2(0xF000, TEXT_PLOADR,   ISZ_NONE, M_PFC,   M_PADDR, EX_PFC, OP_10, SZ_NONE, CF_0077, 0x2200, PF_0007),
+    X2(0xF000, TEXT_PLOADW,   ISZ_NONE, M_IMFC,  M_PADDR, EX_PFC, OP_10, SZ_NONE, CF_0077, 0x2010, PF_000F),
+    X2(0xF000, TEXT_PLOADW,   ISZ_NONE, M_DREG,  M_PADDR, EX_DC,  OP_10, SZ_NONE, CF_0077, 0x2008, PF_0007),
+    X2(0xF000, TEXT_PLOADW,   ISZ_NONE, M_PFC,   M_PADDR, EX_PFC, OP_10, SZ_NONE, CF_0077, 0x2000, PF_0007),
+    X2(0xF000, TEXT_PMOVE,    ISZ_FIXD, M_PREG,  M_WADDR, EX_PR,  OP_10, SZ_PMMU, CF_0077, 0x4200, PF_3C1C),
+    X2(0xF000, TEXT_PMOVE,    ISZ_FIXD, M_RADDR, M_PREG,  OP_10,  EX_PR, SZ_PMMU, CF_0077, 0x4000, PF_3C1C),
+    X3(0xF000, TEXT_PTESTR,   ISZ_NONE, M_IMFC,  M_PADDR, M_IMLV, EX_PFC, OP_10,  EX_RX, SZ_NONE, CF_0077, 0x8210, PF_1C0F),
+    X3(0xF000, TEXT_PTESTR,   ISZ_NONE, M_DREG,  M_PADDR, M_IMLV, EX_DC,  OP_10,  EX_RX, SZ_NONE, CF_0077, 0x8208, PF_1C07),
+    X3(0xF000, TEXT_PTESTR,   ISZ_NONE, M_PFC,   M_PADDR, M_IMLV, EX_PFC, OP_10,  EX_RX, SZ_NONE, CF_0077, 0x8200, PF_1C07),
+    X3(0xF000, TEXT_PTESTW,   ISZ_NONE, M_IMFC,  M_PADDR, M_IMLV, EX_PFC, OP_10,  EX_RX, SZ_NONE, CF_0077, 0x8010, PF_1C0F),
+    X3(0xF000, TEXT_PTESTW,   ISZ_NONE, M_DREG,  M_PADDR, M_IMLV, EX_DC,  OP_10,  EX_RX, SZ_NONE, CF_0077, 0x8008, PF_1C07),
+    X3(0xF000, TEXT_PTESTW,   ISZ_NONE, M_PFC,   M_PADDR, M_IMLV, EX_PFC, OP_10,  EX_RX, SZ_NONE, CF_0077, 0x8000, PF_1C07),
+    X4(0xF000, TEXT_PTESTR,   ISZ_NONE, M_IMFC,  M_PADDR, M_IMLV, M_AREG, EX_PFC, OP_10, EX_RX, SZ_NONE, CF_0077, 0x8310, PF_1CEF),
+    X4(0xF000, TEXT_PTESTR,   ISZ_NONE, M_DREG,  M_PADDR, M_IMLV, M_AREG, EX_DC,  OP_10, EX_RX, SZ_NONE, CF_0077, 0x8308, PF_1CE7),
+    X4(0xF000, TEXT_PTESTR,   ISZ_NONE, M_PFC,   M_PADDR, M_IMLV, M_AREG, EX_PFC, OP_10, EX_RX, SZ_NONE, CF_0077, 0x8300, PF_1CE7),
+    X4(0xF000, TEXT_PTESTW,   ISZ_NONE, M_IMFC,  M_PADDR, M_IMLV, M_AREG, EX_PFC, OP_10, EX_RX, SZ_NONE, CF_0077, 0x8110, PF_1CEF),
+    X4(0xF000, TEXT_PTESTW,   ISZ_NONE, M_DREG,  M_PADDR, M_IMLV, M_AREG, EX_DC,  OP_10, EX_RX, SZ_NONE, CF_0077, 0x8108, PF_1CE7),
+    X4(0xF000, TEXT_PTESTW,   ISZ_NONE, M_PFC,   M_PADDR, M_IMLV, M_AREG, EX_PFC, OP_10, EX_RX, SZ_NONE, CF_0077, 0x8100, PF_1CE7),
+    P2(0xF000, TEXT_PVALID,   ISZ_NONE, M_PVAL,  M_PADDR, OP___,  OP_10, SZ_LONG, CF_0077, 0x2800),
+    X2(0xF000, TEXT_PVALID,   ISZ_NONE, M_AREG,  M_PADDR, EX_DC,  OP_10, SZ_LONG, CF_0077, 0x2C00, PF_0007),
+    E1(0xF140, TEXT_PRESTORE, ISZ_NONE, M_IADDR, OP_10,  SZ_NONE, CF_0077),
+    E1(0xF100, TEXT_PSAVE,    ISZ_NONE, M_DADDR, OP_10,  SZ_NONE, CF_0077),
+};
+
+constexpr uint8_t MC68851_INDEX[] PROGMEM = {
+      1,  // TEXT_PFLUSH
+      2,  // TEXT_PFLUSH
+      3,  // TEXT_PFLUSH
+      7,  // TEXT_PFLUSH
+      8,  // TEXT_PFLUSH
+      9,  // TEXT_PFLUSH
+      0,  // TEXT_PFLUSHA
+     13,  // TEXT_PFLUSHR
+      4,  // TEXT_PFLUSHS
+      5,  // TEXT_PFLUSHS
+      6,  // TEXT_PFLUSHS
+     10,  // TEXT_PFLUSHS
+     11,  // TEXT_PFLUSHS
+     12,  // TEXT_PFLUSHS
+     14,  // TEXT_PLOADR
+     15,  // TEXT_PLOADR
+     16,  // TEXT_PLOADR
+     17,  // TEXT_PLOADW
+     18,  // TEXT_PLOADW
+     19,  // TEXT_PLOADW
+     20,  // TEXT_PMOVE
+     21,  // TEXT_PMOVE
+     36,  // TEXT_PRESTORE
+     37,  // TEXT_PSAVE
+     22,  // TEXT_PTESTR
+     23,  // TEXT_PTESTR
+     24,  // TEXT_PTESTR
+     28,  // TEXT_PTESTR
+     29,  // TEXT_PTESTR
+     30,  // TEXT_PTESTR
+     25,  // TEXT_PTESTW
+     26,  // TEXT_PTESTW
+     27,  // TEXT_PTESTW
+     31,  // TEXT_PTESTW
+     32,  // TEXT_PTESTW
+     33,  // TEXT_PTESTW
+     34,  // TEXT_PVALID
+     35,  // TEXT_PVALID
+};
+
+constexpr Entry MC68851_BRANCH[] PROGMEM = {
+    E1(0xF080, TEXT_PBBS,  ISZ_NONE, M_REL32, OP___ ,SZ_LONG, CF_0100),
+    E1(0xF081, TEXT_PBBC,  ISZ_NONE, M_REL32, OP___ ,SZ_LONG, CF_0100),
+    E1(0xF082, TEXT_PBLS,  ISZ_NONE, M_REL32, OP___ ,SZ_LONG, CF_0100),
+    E1(0xF083, TEXT_PBLC,  ISZ_NONE, M_REL32, OP___ ,SZ_LONG, CF_0100),
+    E1(0xF084, TEXT_PBSS,  ISZ_NONE, M_REL32, OP___ ,SZ_LONG, CF_0100),
+    E1(0xF085, TEXT_PBSC,  ISZ_NONE, M_REL32, OP___ ,SZ_LONG, CF_0100),
+    E1(0xF086, TEXT_PBAS,  ISZ_NONE, M_REL32, OP___ ,SZ_LONG, CF_0100),
+    E1(0xF087, TEXT_PBAC,  ISZ_NONE, M_REL32, OP___ ,SZ_LONG, CF_0100),
+    E1(0xF088, TEXT_PBWS,  ISZ_NONE, M_REL32, OP___ ,SZ_LONG, CF_0100),
+    E1(0xF089, TEXT_PBWC,  ISZ_NONE, M_REL32, OP___ ,SZ_LONG, CF_0100),
+    E1(0xF08A, TEXT_PBIS,  ISZ_NONE, M_REL32, OP___ ,SZ_LONG, CF_0100),
+    E1(0xF08B, TEXT_PBIC,  ISZ_NONE, M_REL32, OP___ ,SZ_LONG, CF_0100),
+    E1(0xF08C, TEXT_PBGS,  ISZ_NONE, M_REL32, OP___ ,SZ_LONG, CF_0100),
+    E1(0xF08D, TEXT_PBGC,  ISZ_NONE, M_REL32, OP___ ,SZ_LONG, CF_0100),
+    E1(0xF08E, TEXT_PBCS,  ISZ_NONE, M_REL32, OP___ ,SZ_LONG, CF_0100),
+    E1(0xF08F, TEXT_PBCC,  ISZ_NONE, M_REL32, OP___ ,SZ_LONG, CF_0100),
+    P2(0xF048, TEXT_PDBBS, ISZ_NONE, M_DREG, M_REL16, OP__0, OP___, SZ_WORD, CF_0007, 0x0000),
+    P2(0xF048, TEXT_PDBBC, ISZ_NONE, M_DREG, M_REL16, OP__0, OP___, SZ_WORD, CF_0007, 0x0001),
+    P2(0xF048, TEXT_PDBLS, ISZ_NONE, M_DREG, M_REL16, OP__0, OP___, SZ_WORD, CF_0007, 0x0002),
+    P2(0xF048, TEXT_PDBLC, ISZ_NONE, M_DREG, M_REL16, OP__0, OP___, SZ_WORD, CF_0007, 0x0003),
+    P2(0xF048, TEXT_PDBSS, ISZ_NONE, M_DREG, M_REL16, OP__0, OP___, SZ_WORD, CF_0007, 0x0004),
+    P2(0xF048, TEXT_PDBSC, ISZ_NONE, M_DREG, M_REL16, OP__0, OP___, SZ_WORD, CF_0007, 0x0005),
+    P2(0xF048, TEXT_PDBAS, ISZ_NONE, M_DREG, M_REL16, OP__0, OP___, SZ_WORD, CF_0007, 0x0006),
+    P2(0xF048, TEXT_PDBAC, ISZ_NONE, M_DREG, M_REL16, OP__0, OP___, SZ_WORD, CF_0007, 0x0007),
+    P2(0xF048, TEXT_PDBWS, ISZ_NONE, M_DREG, M_REL16, OP__0, OP___, SZ_WORD, CF_0007, 0x0008),
+    P2(0xF048, TEXT_PDBWC, ISZ_NONE, M_DREG, M_REL16, OP__0, OP___, SZ_WORD, CF_0007, 0x0009),
+    P2(0xF048, TEXT_PDBIS, ISZ_NONE, M_DREG, M_REL16, OP__0, OP___, SZ_WORD, CF_0007, 0x000A),
+    P2(0xF048, TEXT_PDBIC, ISZ_NONE, M_DREG, M_REL16, OP__0, OP___, SZ_WORD, CF_0007, 0x000B),
+    P2(0xF048, TEXT_PDBGS, ISZ_NONE, M_DREG, M_REL16, OP__0, OP___, SZ_WORD, CF_0007, 0x000C),
+    P2(0xF048, TEXT_PDBGC, ISZ_NONE, M_DREG, M_REL16, OP__0, OP___, SZ_WORD, CF_0007, 0x000D),
+    P2(0xF048, TEXT_PDBCS, ISZ_NONE, M_DREG, M_REL16, OP__0, OP___, SZ_WORD, CF_0007, 0x000E),
+    P2(0xF048, TEXT_PDBCC, ISZ_NONE, M_DREG, M_REL16, OP__0, OP___, SZ_WORD, CF_0007, 0x000F),
+};
+
+constexpr uint8_t MC68851_BRANCH_INDEX[] PROGMEM = {
+      7,  // TEXT_PBAC
+      6,  // TEXT_PBAS
+      1,  // TEXT_PBBC
+      0,  // TEXT_PBBS
+     15,  // TEXT_PBCC
+     14,  // TEXT_PBCS
+     13,  // TEXT_PBGC
+     12,  // TEXT_PBGS
+     11,  // TEXT_PBIC
+     10,  // TEXT_PBIS
+      3,  // TEXT_PBLC
+      2,  // TEXT_PBLS
+      5,  // TEXT_PBSC
+      4,  // TEXT_PBSS
+      9,  // TEXT_PBWC
+      8,  // TEXT_PBWS
+     23,  // TEXT_PDBAC
+     22,  // TEXT_PDBAS
+     17,  // TEXT_PDBBC
+     16,  // TEXT_PDBBS
+     31,  // TEXT_PDBCC
+     30,  // TEXT_PDBCS
+     29,  // TEXT_PDBGC
+     28,  // TEXT_PDBGS
+     27,  // TEXT_PDBIC
+     26,  // TEXT_PDBIS
+     19,  // TEXT_PDBLC
+     18,  // TEXT_PDBLS
+     21,  // TEXT_PDBSC
+     20,  // TEXT_PDBSS
+     25,  // TEXT_PDBWC
+     24,  // TEXT_PDBWS
+};
+
+constexpr Entry MC68851_TRAP[] PROGMEM = {
+    P1(0xF040, TEXT_PSBS, ISZ_NONE, M_WDATA, OP_10, SZ_BYTE, CF_0077, 0x0000),
+    P1(0xF040, TEXT_PSBC, ISZ_NONE, M_WDATA, OP_10, SZ_BYTE, CF_0077, 0x0001),
+    P1(0xF040, TEXT_PSLS, ISZ_NONE, M_WDATA, OP_10, SZ_BYTE, CF_0077, 0x0002),
+    P1(0xF040, TEXT_PSLC, ISZ_NONE, M_WDATA, OP_10, SZ_BYTE, CF_0077, 0x0003),
+    P1(0xF040, TEXT_PSSS, ISZ_NONE, M_WDATA, OP_10, SZ_BYTE, CF_0077, 0x0004),
+    P1(0xF040, TEXT_PSSC, ISZ_NONE, M_WDATA, OP_10, SZ_BYTE, CF_0077, 0x0005),
+    P1(0xF040, TEXT_PSAS, ISZ_NONE, M_WDATA, OP_10, SZ_BYTE, CF_0077, 0x0006),
+    P1(0xF040, TEXT_PSAC, ISZ_NONE, M_WDATA, OP_10, SZ_BYTE, CF_0077, 0x0007),
+    P1(0xF040, TEXT_PSWS, ISZ_NONE, M_WDATA, OP_10, SZ_BYTE, CF_0077, 0x0008),
+    P1(0xF040, TEXT_PSWC, ISZ_NONE, M_WDATA, OP_10, SZ_BYTE, CF_0077, 0x0009),
+    P1(0xF040, TEXT_PSIS, ISZ_NONE, M_WDATA, OP_10, SZ_BYTE, CF_0077, 0x000A),
+    P1(0xF040, TEXT_PSIC, ISZ_NONE, M_WDATA, OP_10, SZ_BYTE, CF_0077, 0x000B),
+    P1(0xF040, TEXT_PSGS, ISZ_NONE, M_WDATA, OP_10, SZ_BYTE, CF_0077, 0x000C),
+    P1(0xF040, TEXT_PSGC, ISZ_NONE, M_WDATA, OP_10, SZ_BYTE, CF_0077, 0x000D),
+    P1(0xF040, TEXT_PSCS, ISZ_NONE, M_WDATA, OP_10, SZ_BYTE, CF_0077, 0x000E),
+    P1(0xF040, TEXT_PSCC, ISZ_NONE, M_WDATA, OP_10, SZ_BYTE, CF_0077, 0x000F),
+    P1(0xF07A, TEXT_PTRAPBS, ISZ_FIXD, M_IMDAT, OP___, SZ_WORD, CF_0000, 0x0000),
+    P1(0xF07A, TEXT_PTRAPBC, ISZ_FIXD, M_IMDAT, OP___, SZ_WORD, CF_0000, 0x0001),
+    P1(0xF07A, TEXT_PTRAPLS, ISZ_FIXD, M_IMDAT, OP___, SZ_WORD, CF_0000, 0x0002),
+    P1(0xF07A, TEXT_PTRAPLC, ISZ_FIXD, M_IMDAT, OP___, SZ_WORD, CF_0000, 0x0003),
+    P1(0xF07A, TEXT_PTRAPSS, ISZ_FIXD, M_IMDAT, OP___, SZ_WORD, CF_0000, 0x0004),
+    P1(0xF07A, TEXT_PTRAPSC, ISZ_FIXD, M_IMDAT, OP___, SZ_WORD, CF_0000, 0x0005),
+    P1(0xF07A, TEXT_PTRAPAS, ISZ_FIXD, M_IMDAT, OP___, SZ_WORD, CF_0000, 0x0006),
+    P1(0xF07A, TEXT_PTRAPAC, ISZ_FIXD, M_IMDAT, OP___, SZ_WORD, CF_0000, 0x0007),
+    P1(0xF07A, TEXT_PTRAPWS, ISZ_FIXD, M_IMDAT, OP___, SZ_WORD, CF_0000, 0x0008),
+    P1(0xF07A, TEXT_PTRAPWC, ISZ_FIXD, M_IMDAT, OP___, SZ_WORD, CF_0000, 0x0009),
+    P1(0xF07A, TEXT_PTRAPIS, ISZ_FIXD, M_IMDAT, OP___, SZ_WORD, CF_0000, 0x000A),
+    P1(0xF07A, TEXT_PTRAPIC, ISZ_FIXD, M_IMDAT, OP___, SZ_WORD, CF_0000, 0x000B),
+    P1(0xF07A, TEXT_PTRAPGS, ISZ_FIXD, M_IMDAT, OP___, SZ_WORD, CF_0000, 0x000C),
+    P1(0xF07A, TEXT_PTRAPGC, ISZ_FIXD, M_IMDAT, OP___, SZ_WORD, CF_0000, 0x000D),
+    P1(0xF07A, TEXT_PTRAPCS, ISZ_FIXD, M_IMDAT, OP___, SZ_WORD, CF_0000, 0x000E),
+    P1(0xF07A, TEXT_PTRAPCC, ISZ_FIXD, M_IMDAT, OP___, SZ_WORD, CF_0000, 0x000F),
+    P1(0xF07B, TEXT_PTRAPBS, ISZ_FIXD, M_IMDAT, OP___, SZ_LONG, CF_0000, 0x0000),
+    P1(0xF07B, TEXT_PTRAPBC, ISZ_FIXD, M_IMDAT, OP___, SZ_LONG, CF_0000, 0x0001),
+    P1(0xF07B, TEXT_PTRAPLS, ISZ_FIXD, M_IMDAT, OP___, SZ_LONG, CF_0000, 0x0002),
+    P1(0xF07B, TEXT_PTRAPLC, ISZ_FIXD, M_IMDAT, OP___, SZ_LONG, CF_0000, 0x0003),
+    P1(0xF07B, TEXT_PTRAPSS, ISZ_FIXD, M_IMDAT, OP___, SZ_LONG, CF_0000, 0x0004),
+    P1(0xF07B, TEXT_PTRAPSC, ISZ_FIXD, M_IMDAT, OP___, SZ_LONG, CF_0000, 0x0005),
+    P1(0xF07B, TEXT_PTRAPAS, ISZ_FIXD, M_IMDAT, OP___, SZ_LONG, CF_0000, 0x0006),
+    P1(0xF07B, TEXT_PTRAPAC, ISZ_FIXD, M_IMDAT, OP___, SZ_LONG, CF_0000, 0x0007),
+    P1(0xF07B, TEXT_PTRAPWS, ISZ_FIXD, M_IMDAT, OP___, SZ_LONG, CF_0000, 0x0008),
+    P1(0xF07B, TEXT_PTRAPWC, ISZ_FIXD, M_IMDAT, OP___, SZ_LONG, CF_0000, 0x0009),
+    P1(0xF07B, TEXT_PTRAPIS, ISZ_FIXD, M_IMDAT, OP___, SZ_LONG, CF_0000, 0x000A),
+    P1(0xF07B, TEXT_PTRAPIC, ISZ_FIXD, M_IMDAT, OP___, SZ_LONG, CF_0000, 0x000B),
+    P1(0xF07B, TEXT_PTRAPGS, ISZ_FIXD, M_IMDAT, OP___, SZ_LONG, CF_0000, 0x000C),
+    P1(0xF07B, TEXT_PTRAPGC, ISZ_FIXD, M_IMDAT, OP___, SZ_LONG, CF_0000, 0x000D),
+    P1(0xF07B, TEXT_PTRAPCS, ISZ_FIXD, M_IMDAT, OP___, SZ_LONG, CF_0000, 0x000E),
+    P1(0xF07B, TEXT_PTRAPCC, ISZ_FIXD, M_IMDAT, OP___, SZ_LONG, CF_0000, 0x000F),
+    P0(0xF07C, TEXT_PTRAPBS, 0x0000),
+    P0(0xF07C, TEXT_PTRAPBC, 0x0001),
+    P0(0xF07C, TEXT_PTRAPLS, 0x0002),
+    P0(0xF07C, TEXT_PTRAPLC, 0x0003),
+    P0(0xF07C, TEXT_PTRAPSS, 0x0004),
+    P0(0xF07C, TEXT_PTRAPSC, 0x0005),
+    P0(0xF07C, TEXT_PTRAPAS, 0x0006),
+    P0(0xF07C, TEXT_PTRAPAC, 0x0007),
+    P0(0xF07C, TEXT_PTRAPWS, 0x0008),
+    P0(0xF07C, TEXT_PTRAPWC, 0x0009),
+    P0(0xF07C, TEXT_PTRAPIS, 0x000A),
+    P0(0xF07C, TEXT_PTRAPIC, 0x000B),
+    P0(0xF07C, TEXT_PTRAPGS, 0x000C),
+    P0(0xF07C, TEXT_PTRAPGC, 0x000D),
+    P0(0xF07C, TEXT_PTRAPCS, 0x000E),
+    P0(0xF07C, TEXT_PTRAPCC, 0x000F),
+};
+
+constexpr uint8_t MC68851_TRAP_INDEX[] PROGMEM = {
+      7,  // TEXT_PSAC
+      6,  // TEXT_PSAS
+      1,  // TEXT_PSBC
+      0,  // TEXT_PSBS
+     15,  // TEXT_PSCC
+     14,  // TEXT_PSCS
+     13,  // TEXT_PSGC
+     12,  // TEXT_PSGS
+     11,  // TEXT_PSIC
+     10,  // TEXT_PSIS
+      3,  // TEXT_PSLC
+      2,  // TEXT_PSLS
+      5,  // TEXT_PSSC
+      4,  // TEXT_PSSS
+      9,  // TEXT_PSWC
+      8,  // TEXT_PSWS
+     23,  // TEXT_PTRAPAC
+     39,  // TEXT_PTRAPAC
+     55,  // TEXT_PTRAPAC
+     22,  // TEXT_PTRAPAS
+     38,  // TEXT_PTRAPAS
+     54,  // TEXT_PTRAPAS
+     17,  // TEXT_PTRAPBC
+     33,  // TEXT_PTRAPBC
+     49,  // TEXT_PTRAPBC
+     16,  // TEXT_PTRAPBS
+     32,  // TEXT_PTRAPBS
+     48,  // TEXT_PTRAPBS
+     31,  // TEXT_PTRAPCC
+     47,  // TEXT_PTRAPCC
+     63,  // TEXT_PTRAPCC
+     30,  // TEXT_PTRAPCS
+     46,  // TEXT_PTRAPCS
+     62,  // TEXT_PTRAPCS
+     29,  // TEXT_PTRAPGC
+     45,  // TEXT_PTRAPGC
+     61,  // TEXT_PTRAPGC
+     28,  // TEXT_PTRAPGS
+     44,  // TEXT_PTRAPGS
+     60,  // TEXT_PTRAPGS
+     27,  // TEXT_PTRAPIC
+     43,  // TEXT_PTRAPIC
+     59,  // TEXT_PTRAPIC
+     26,  // TEXT_PTRAPIS
+     42,  // TEXT_PTRAPIS
+     58,  // TEXT_PTRAPIS
+     19,  // TEXT_PTRAPLC
+     35,  // TEXT_PTRAPLC
+     51,  // TEXT_PTRAPLC
+     18,  // TEXT_PTRAPLS
+     34,  // TEXT_PTRAPLS
+     50,  // TEXT_PTRAPLS
+     21,  // TEXT_PTRAPSC
+     37,  // TEXT_PTRAPSC
+     53,  // TEXT_PTRAPSC
+     20,  // TEXT_PTRAPSS
+     36,  // TEXT_PTRAPSS
+     52,  // TEXT_PTRAPSS
+     25,  // TEXT_PTRAPWC
+     41,  // TEXT_PTRAPWC
+     57,  // TEXT_PTRAPWC
+     24,  // TEXT_PTRAPWS
+     40,  // TEXT_PTRAPWS
+     56,  // TEXT_PTRAPWS
+};
+#endif
 // clang-format on
 
 using EntryPage = entry::TableBase<Entry>;
@@ -1318,6 +1614,14 @@ constexpr EntryPage MC68881_PAGES[] PROGMEM = {
         {ARRAY_RANGE(MC68881_ARITH), ARRAY_RANGE(MC68881_ARITH_INDEX)},
         {ARRAY_RANGE(MC68881_BRANCH), ARRAY_RANGE(MC68881_BRANCH_INDEX)},
         {ARRAY_RANGE(MC68881_TRAP), ARRAY_RANGE(MC68881_TRAP_INDEX)},
+};
+#endif
+
+#if !defined(LIBASM_MC68000_NOPMMU)
+constexpr EntryPage MC68851_PAGES[] PROGMEM = {
+        {ARRAY_RANGE(MC68851_TABLE), ARRAY_RANGE(MC68851_INDEX)},
+        {ARRAY_RANGE(MC68851_BRANCH), ARRAY_RANGE(MC68851_BRANCH_INDEX)},
+        {ARRAY_RANGE(MC68851_TRAP), ARRAY_RANGE(MC68851_TRAP_INDEX)},
 };
 #endif
 
@@ -1348,11 +1652,28 @@ const Fpu *fpu(FpuType fpuType) {
 }
 #endif
 
+#if !defined(LIBASM_MC68000_NOPMMU)
+using Pmmu = entry::CpuBase<PmmuType, EntryPage>;
+
+constexpr Pmmu PMMU_TABLE[] PROGMEM = {
+        {PMMU_MC68851, TEXT_PMMU_68851, ARRAY_RANGE(MC68851_PAGES)},
+        {PMMU_NONE, TEXT_none, EMPTY_RANGE(MC68851_PAGES)},
+};
+
+const Pmmu *pmmu(PmmuType pmmuType) {
+    return Pmmu::search(pmmuType, ARRAY_RANGE(PMMU_TABLE));
+}
+#endif
+
 bool hasOperand(const CpuSpec &cpuSpec, AsmInsn &insn) {
     cpu(cpuSpec.cpu)->searchName(insn, Cpu::acceptAll<AsmInsn, Entry>);
 #if !defined(LIBASM_MC68000_NOFPU)
     if (!insn.isOK())
         fpu(cpuSpec.fpu)->searchName(insn, Cpu::acceptAll<AsmInsn, Entry>);
+#endif
+#if !defined(LIBASM_MC68000_NOPMMU)
+    if (!insn.isOK())
+        pmmu(cpuSpec.pmmu)->searchName(insn, Cpu::acceptAll<AsmInsn, Entry>);
 #endif
     return insn.isOK() && insn.src() != M_NONE;
 }
@@ -1361,9 +1682,25 @@ bool genericAddressing(AddrMode mode) {
     return mode >= M_RADDR && mode <= M_DADDR;
 }
 
-bool acceptMode(AddrMode opr, AddrMode table, OprSize size) {
-    if (table == M_KFACT && opr == M_NONE)
+bool miscImmediate(AddrMode mode) {
+    if (mode == M_IMBIT || mode == M_IM3 || mode == M_IM8 || mode == M_IMVEC || mode == M_IMDSP)
         return true;
+#if !defined(LIBASM_MC68000_NOFPU)
+    if (mode == M_IMROM)
+        return true;
+#endif
+#if !defined(LIBASM_MC68000_NOPMMU)
+    if (mode == M_IMFC || mode == M_IMFM || mode == M_IMLV)
+        return true;
+#endif
+    return false;
+}
+
+bool acceptMode(AddrMode opr, AddrMode table, OprSize size) {
+#if !defined(LIBASM_MC68000)
+    if (opr == M_NONE && table == M_KFACT)
+        return true;
+#endif
     if (opr == table)
         return true;
     if (opr == M_DREG)
@@ -1371,20 +1708,29 @@ bool acceptMode(AddrMode opr, AddrMode table, OprSize size) {
     if (opr == M_AREG)
         return genericAddressing(table) || table == M_MULT || table == M_GREG;
     if (opr == M_IMDAT)
-        return genericAddressing(table) || table == M_IMBIT || table == M_IM3 || table == M_IM8 ||
-               table == M_IMVEC || table == M_IMDSP || table == M_IMROM;
-    if (opr == M_IMFLT)
-        return genericAddressing(table) && size == SZ_FDAT;
+        return genericAddressing(table) || miscImmediate(table);
     if (opr >= M_AIND && opr <= M_PCIDX)
         return genericAddressing(table);
     if (opr == M_LABEL)
         return table == M_REL8 || table == M_REL16 || table == M_REL32;
+    if (opr == M_USP)
+        return table == M_CREG;
+#if !defined(LIBASM_MC68000_NOFPU)
+    if (opr == M_IMFLT)
+        return genericAddressing(table) && size == SZ_FDAT;
     if (opr == M_FPREG)
         return table == M_FPMLT;
     if (opr == M_FPCR || opr == M_FPSR || opr == M_FPIAR)
         return table == M_FCMLT;
-    if (opr == M_USP)
-        return table == M_CREG;
+#endif
+#if !defined(LIBASM_MC68000_NOPMMU)
+    if (opr == M_PADDR || opr == M_MROOT)
+        return genericAddressing(table);
+    if (opr == M_PREG)
+        return table == M_PVAL;
+    if (opr == M_CREG)
+        return table == M_PFC;
+#endif
     return false;
 }
 
@@ -1398,13 +1744,34 @@ bool acceptSize(const AsmInsn &insn, const Entry::Flags &flags) {
         return insnSize == ISZ_NONE || insnSize == ISZ_BYTE || insnSize == ISZ_SNGL ||
                insnSize == ISZ_WORD || insnSize == ISZ_LONG || insnSize == ISZ_XTND;
     if (insnSize == ISZ_BYTE)
-        return opr == SZ_DATA || opr == SZ_FDAT || opr == SZ_DATH || opr == SZ_CAS1;
+        return opr == SZ_DATA
+#if !defined(LIBASM_MC68000_NOFPU)
+               || opr == SZ_FDAT
+#endif
+               || opr == SZ_DATH || opr == SZ_CAS1
+#if !defined(LIBASM_MC68000_NOPMMU)
+               || opr == SZ_PMMU
+#endif
+                ;
     if (insnSize == ISZ_WORD || insnSize == ISZ_LONG)
-        return opr == SZ_DATA || opr == SZ_ADDR || opr == SZ_ADR8 || opr == SZ_FDAT ||
-               opr == SZ_DATH || opr == SZ_CAS1 || opr == SZ_CAS2;
+        return opr == SZ_DATA || opr == SZ_ADDR || opr == SZ_ADR8
+#if !defined(LIBASM_MC68000_NOFPU)
+               || opr == SZ_FDAT
+#endif
+               || opr == SZ_DATH || opr == SZ_CAS1 || opr == SZ_CAS2
+#if !defined(LIBASM_MC68000_NOPMMU)
+               || opr == SZ_PMMU
+#endif
+                ;
+#if !defined(LIBASM_MC68000_NOPMMU)
+    if (insnSize == ISZ_QUAD)
+        return opr == SZ_PMMU;
+#endif
+#if !defined(LIBASM_MC68000_NOFPU)
     if (insnSize == ISZ_SNGL || insnSize == ISZ_DUBL || insnSize == ISZ_XTND ||
             insnSize == ISZ_PBCD)
         return opr == SZ_FDAT;
+#endif
     if (insnSize == ISZ_NONE) {
         const auto table = flags.insnSize();
         return opr == SZ_DATA || opr == SZ_ADDR || opr == SZ_ADR8 || opr == SZ_WORD ||
@@ -1417,7 +1784,11 @@ bool acceptModes(AsmInsn &insn, const Entry *entry) {
     const auto table = entry->readFlags();
     return acceptMode(insn.srcOp.mode, table.src(), table.oprSize()) &&
            acceptMode(insn.dstOp.mode, table.dst(), table.oprSize()) &&
-           acceptMode(insn.extOp.mode, table.ext(), table.oprSize()) && acceptSize(insn, table);
+           acceptMode(insn.ex1Op.mode, table.ex1(), table.oprSize()) &&
+#if !defined(LIBASM_MC68000_NOPMMU)
+           acceptMode(insn.ex2Op.mode, table.ex2(), table.oprSize()) &&
+#endif
+           acceptSize(insn, table);
 }
 
 Error searchName(const CpuSpec &cpuSpec, AsmInsn &insn) {
@@ -1429,6 +1800,11 @@ Error searchName(const CpuSpec &cpuSpec, AsmInsn &insn) {
             const auto opc = (insn.opCode() & ~07000) | (cpuSpec.fpuCid << 9);
             insn.setOpCode(opc);
         }
+    }
+#endif
+#if !defined(LIBASM_MC68000_NOPMMU)
+    if (insn.getError() == UNKNOWN_INSTRUCTION) {
+        pmmu(cpuSpec.pmmu)->searchName(insn, acceptModes);
     }
 #endif
     return insn.getError();
@@ -1450,10 +1826,10 @@ bool invalidModeReg(Config::opcode_t opc, AddrMode addrMode, OprPos pos, OprSize
         if (addrMode == M_RDATA || addrMode == M_WDATA)
             return mode == 1;
         // |  0 |  1 | (An) | (An)+ | -(An) | (*,An) | (*,An,Xn) |
-        if (addrMode == M_RMEM || addrMode == M_WMEM)
+        if (addrMode == M_RMEM || addrMode == M_WMEM || addrMode == M_MROOT)
             return mode < 2;
         // |  0 |  1 | (An) |   3   |   4   | (n,An) | (n,An,Xn) |
-        if (addrMode == M_JADDR)
+        if (addrMode == M_JADDR || addrMode == M_PADDR)
             return mode < 2 || mode == 3 || mode == 4;
         // |  0 |  1 | (An) | (An)+ |   4   | (n,An) | (n,An,Xn) |
         if (addrMode == M_IADDR)
@@ -1476,13 +1852,13 @@ bool invalidModeReg(Config::opcode_t opc, AddrMode addrMode, OprPos pos, OprSize
     if (reg >= 5)
         return true;
     // | (n).W | (n).L | (n,PC) | (n,PC,Xn) | #n |
-    if (addrMode == M_RADDR || addrMode == M_RDATA)
+    if (addrMode == M_RADDR || addrMode == M_RDATA || addrMode == M_MROOT)
         return false;
     // | (n).W | (n).L | (n,PC) | (n,PC,Xn) |  4 |
     if (addrMode == M_RMEM || addrMode == M_JADDR || addrMode == M_IADDR || addrMode == M_BITFR)
         return reg == 4;
     // | (n).W | (n).L |    2   |     3     |  4 |
-    // M_WADDR, M_WDATA, M_WFIAR, M_WMEM, M_DADDR, M_BITFW
+    // M_WADDR, M_WDATA, M_WFIAR, M_WMEM, M_DADDR, M_BITFW, M_PADDR
     return reg >= 2;
 }
 
@@ -1509,29 +1885,28 @@ bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *) {
         return false;
     if (invalidModeReg(opc, flags.dst(), flags.dstPos(), flags.oprSize()))
         return false;
-    if (invalidModeReg(opc, flags.ext(), flags.extPos(), flags.oprSize()))
+    if (invalidModeReg(opc, flags.ex1(), flags.ex1Pos(), flags.oprSize()))
         return false;
     if (invalidSize(opc, flags.oprSize()))
         return false;
-    if (flags.hasPostVal()) {
-        insn.readPostfix();
-        if (insn.length() < sizeof(Config::opcode_t) * 2)
-            insn.setPostfix(insn.readUint16());
-        auto post = insn.postfix();
-        if (flags.oprSize() == SZ_FDAT) {
-            const auto oprSize = (post >> 10) & 7;
-            if (oprSize == 7)
-                return false;  // illegal float format
-            post &= ~(7 << 10);
-        }
-        if (flags.dstPos() == EX_QQ) {
-            if (((post >> 12) & 7) != (post & 7))
-                return false;  // for DIV[SU].L Dq
-        }
-        post &= ~flags.postMask();
-        return post == flags.postVal();
+    if (!flags.hasPostVal())
+        return true;
+    insn.readPostfix();
+    auto post = insn.postfix();
+#if !defined(LIBASM_MC68000_NOFPU)
+    if (flags.oprSize() == SZ_FDAT) {
+        const auto oprSize = (post >> 10) & 7;
+        if (oprSize == 7)
+            return false;  // illegal float format
+        post &= ~(7 << 10);
     }
-    return true;
+#endif
+    if (flags.dstPos() == EX_QQ) {
+        if (((post >> 12) & 7) != (post & 7))
+            return false;  // for DIV[SU].L Dq
+    }
+    post &= ~flags.postMask();
+    return post == flags.postVal();
 }
 
 Error searchOpCode(const CpuSpec &cpuSpec, DisInsn &insn, StrBuffer &out) {
@@ -1545,6 +1920,12 @@ Error searchOpCode(const CpuSpec &cpuSpec, DisInsn &insn, StrBuffer &out) {
             fpu(cpuSpec.fpu)->searchOpCode(insn, out, matchOpCode);
             insn.setOpCode(opc);
         }
+    }
+#endif
+#if !defined(LIBASM_MC68000_NOPMMU)
+    if (insn.getError() == UNKNOWN_INSTRUCTION) {
+        const auto pmmuType = cpuSpec.cpu == MC68020 ? PMMU_MC68851 : PMMU_NONE;
+        pmmu(pmmuType)->searchOpCode(insn, out, matchOpCode);
     }
 #endif
     if (insn.getError() == UNKNOWN_INSTRUCTION)
@@ -1570,6 +1951,13 @@ Error TableMc68000::searchCpuName(StrScanner &name, CpuType &cpuType) const {
     return UNSUPPORTED_CPU;
 }
 
+void Config::setCpuType(CpuType cpuType) {
+    _cpuSpec.cpu = cpuType;
+    ConfigImpl::setCpuType(cpuType);
+    setFpuType(_cpuSpec.fpu == FPU_NONE ? FPU_NONE : FPU_ON);
+    setPmmuType(_cpuSpec.pmmu == PMMU_NONE ? PMMU_NONE : PMMU_ON);
+}
+
 const /*PROGMEM*/ char *Config::fpu_P() const {
     return fpu(_cpuSpec.fpu)->name_P();
 }
@@ -1584,6 +1972,7 @@ Error Config::setFpuType(FpuType fpuType) {
         _cpuSpec.fpu = FPU_MC68881;
         return OK;
     }
+    _cpuSpec.fpu = FPU_NONE;
 #endif
     return UNKNOWN_OPERAND;
 }
@@ -1596,6 +1985,39 @@ Error Config::setFpuName(StrScanner &scan) {
         return setFpuType(FPU_ON);
     if (scan.iequals_P(TEXT_FPU_68881) || scan.iequals_P(TEXT_FPU_MC68881))
         return setFpuType(FPU_MC68881);
+#endif
+    return UNKNOWN_OPERAND;
+}
+
+const /*PROGMEM*/ char *Config::pmmu_P() const {
+    return pmmu(_cpuSpec.pmmu)->name_P();
+}
+
+Error Config::setPmmuType(PmmuType pmmuType) {
+    if (pmmuType == PMMU_NONE) {
+        _cpuSpec.pmmu = PMMU_NONE;
+        return OK;
+    }
+#if !defined(LIBASM_MC68000_NOPMMU)
+    if (pmmuType == PMMU_ON || pmmuType == PMMU_MC68851) {
+        if (_cpuSpec.cpu == MC68020) {
+            _cpuSpec.pmmu = PMMU_MC68851;
+            return OK;
+        }
+    }
+#endif
+    _cpuSpec.pmmu = PMMU_NONE;
+    return UNKNOWN_OPERAND;
+}
+
+Error Config::setPmmuName(StrScanner &scan) {
+    if (scan.expectFalse())
+        return setPmmuType(PMMU_NONE);
+#if !defined(LIBASM_MC68000_NOPMMU)
+    if (scan.expectTrue())
+        return setPmmuType(PMMU_ON);
+    if (scan.iequals_P(TEXT_PMMU_MC68851))
+        return setPmmuType(PMMU_MC68851);
 #endif
     return UNKNOWN_OPERAND;
 }
