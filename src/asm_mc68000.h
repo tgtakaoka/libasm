@@ -30,9 +30,11 @@ struct AsmMc68000 final : Assembler, Config {
     void reset() override;
 
     Error setFpu(StrScanner &scan) override;
+    Error setPmmu(StrScanner &scan);
 
 private:
     const TextOption<Assembler> _opt_fpu;
+    const TextOption<AsmMc68000> _opt_pmmu;
 
     Error parseDisplacement(StrScanner &scan, Displacement &disp, ErrorAt &error, char delim) const;
     Error parseIndexScale(StrScanner &scan, Indexing &index, ErrorAt &error, char delim) const;

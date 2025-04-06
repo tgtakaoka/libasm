@@ -21,6 +21,8 @@
 
 /** Disable MC68881 FPU instructions */
 // #define LIBASM_MC68000_NOFPU
+/** Disable MC68851 PMMU instructions */
+// #define LIBASM_MC68000_NOMMU
 
 namespace libasm {
 namespace mc68000 {
@@ -38,10 +40,19 @@ enum FpuType : uint8_t {
 #endif
 };
 
+enum MmuType : uint8_t {
+    MMU_NONE,
+#if !defined(LIBASM_MC68000_NOMMU)
+    MMU_MC68851,
+#endif
+};
+
 struct CpuSpec final {
-    CpuSpec(CpuType cpu_, FpuType fpu_, uint8_t fpuCid_) : cpu(cpu_), fpu(fpu_), fpuCid(fpuCid_) {}
+    CpuSpec(CpuType cpu_, FpuType fpu_, MmuType mmu_, uint8_t fpuCid_ = 1)
+        : cpu(cpu_), fpu(fpu_), mmu(mmu_), fpuCid(fpuCid_) {}
     CpuType cpu;
     FpuType fpu;
+    MmuType mmu;
     uint8_t fpuCid;  // FPU co-processor ID
 };
 
@@ -54,6 +65,11 @@ struct Config
                   FPU_NONE,
 #else
                   FPU_MC68881,
+#endif
+#if defined(LIBASM_MC68000_NOMMU)
+                  MMU_NONE,
+#else
+                  MMU_MC68851,
 #endif
                   1) {
     }
@@ -71,6 +87,7 @@ struct Config
     void setFpuType(FpuType fpuType) { _cpuSpec.fpu = fpuType; }
     // TODO: Add option
     void setFpuId(uint8_t id) { _cpuSpec.fpuCid = id; }
+    void setMmuType(MmuType mmuType) { _cpuSpec.mmu = mmuType; }
 
 protected:
     CpuSpec _cpuSpec;

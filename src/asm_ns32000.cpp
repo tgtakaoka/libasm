@@ -29,14 +29,10 @@ using namespace text::option;
 
 using text::ns32000::TEXT_FPU_NS32081;
 using text::ns32000::TEXT_MMU_NS32082;
-using text::ns32000::TEXT_PMMU;
 
 namespace {
 
 // clang-format off
-constexpr char OPT_TEXT_PMMU[] PROGMEM = "pmmu";
-constexpr char OPT_DESC_PMMU[] PROGMEM = "memory management unit";
-
 constexpr char TEXT_dBLKD[]   PROGMEM = ".blkd";
 constexpr char TEXT_dDOUBLE[] PROGMEM = ".double";
 constexpr char TEXT_dFLOAT[]  PROGMEM = ".float";

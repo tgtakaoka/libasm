@@ -27,9 +27,10 @@ using namespace reg;
 using namespace text::common;
 using namespace text::option;
 
-using text::mc68000::TEXT_FMOVE;
 using text::mc68000::TEXT_FPU_68881;
 using text::mc68000::TEXT_FPU_MC68881;
+using text::mc68000::TEXT_MMU_68851;
+using text::mc68000::TEXT_MMU_MC68851;
 
 namespace {
 
@@ -81,7 +82,8 @@ const ValueParser::Plugins &AsmMc68000::defaultPlugins() {
 AsmMc68000::AsmMc68000(const ValueParser::Plugins &plugins)
     : Assembler(plugins, PSEUDO_TABLE, &_opt_fpu),
       Config(TABLE),
-      _opt_fpu(this, &Assembler::setFpu, OPT_TEXT_FPU, OPT_DESC_FPU) {
+      _opt_fpu(this, &Assembler::setFpu, OPT_TEXT_FPU, OPT_DESC_FPU, &_opt_pmmu),
+      _opt_pmmu(this, &AsmMc68000::setPmmu, OPT_TEXT_PMMU, OPT_DESC_PMMU) {
     reset();
 }
 
@@ -102,6 +104,22 @@ Error AsmMc68000::setFpu(StrScanner &scan) {
         return UNKNOWN_OPERAND;
     }
     return OK;
+}
+
+Error AsmMc68000::setPmmu(StrScanner &scan) {
+    if (scan.iequals_P(TEXT_none)) {
+        setMmuType(MMU_NONE);
+        return OK;
+    }
+#if !defined(LIBASM_MC68000_NOMMU)
+    if (scan.iequals_P(TEXT_MMU_68851) || scan.iequals_P(TEXT_MMU_MC68851)) {
+        if (cpuType() == MC68020) {
+            setMmuType(MMU_MC68851);
+            return OK;
+        }
+    }
+#endif
+    return UNKNOWN_OPERAND;
 }
 
 namespace {
@@ -1443,6 +1461,10 @@ Error AsmMc68000::processPseudo(StrScanner &scan, Insn &_insn) {
     const auto at = scan;
     if (strcasecmp_P(insn.name(), TEXT_FPU) == 0) {
         const auto error = _opt_fpu.set(scan);
+        return error ? insn.setErrorIf(at, error) : OK;
+    }
+    if (strcasecmp_P(insn.name(), TEXT_PMMU) == 0) {
+        const auto error = _opt_pmmu.set(scan);
         return error ? insn.setErrorIf(at, error) : OK;
     }
 #if !defined(LIBASM_MC68000_NOFPU)

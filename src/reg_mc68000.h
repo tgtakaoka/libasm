@@ -76,6 +76,23 @@ enum RegName : int8_t {
     REG_ISP = 32 + 7,   // MC68020
 };
 
+// MC68851
+enum PmmuReg : int8_t {
+    PREG_UNDEF = -1,
+    PREG_TC = 0,
+    PREG_DRP = 1,
+    PREG_SRP = 2,
+    PREG_CRP = 3,
+    PREG_CAL = 4,
+    PREG_VAL = 5,
+    PREG_SCC = 6,
+    PREG_AC = 7,
+    PREG_PSR = 8,
+    PREG_PCSR = 9,
+    PREG_BAD = 12,  // BAD0~BAD7
+    PREG_BAC = 13,  // BAC0~BAC7
+};
+
 namespace reg {
 
 RegName parseRegName(StrScanner &scan, const ValueParser &parser);
@@ -95,6 +112,11 @@ RegName decodeGeneralReg(uint_fast8_t regno);
 RegName decodeDataReg(uint_fast8_t regno);
 RegName decodeAddrReg(uint_fast8_t regno);
 RegName decodeControlReg(Config::opcode_t regno);
+
+PmmuReg parsePmmuReg(StrScanner &scan, const ValueParser &parser);
+StrBuffer &outPmmuReg(StrBuffer &out, PmmuReg name);
+uint8_t encodePmmuReg(PmmuReg name);
+PmmuReg decodePmmuReg(uint_fast8_t regno);
 
 uint_fast8_t encodeAddrMode(AddrMode mode);
 uint_fast8_t encodeRegNo(AddrMode mode, RegName reg);

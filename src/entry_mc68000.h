@@ -118,6 +118,10 @@ enum AddrMode : uint8_t {
     M_BITOW = 50,  // Bitfield offset/width: {Dn/n:Dn/n}
     M_DPAIR = 51,  // Data register pair: Dn:Dn
     M_PPAIR = 52,  // Pointer pair: (Rn):(Rn)
+    // MC68851
+    M_SFC = 53,  // REG_SFC
+    M_DFC = 54,  // REG_DFC
+    M_PMMU = 55, // PMMU register
 };
 
 enum OprPos : uint8_t {
@@ -143,6 +147,9 @@ enum OprPos : uint8_t {
     EX_QQ = 19,   // _|qqq|________|qqq : Dq
     EX_DCP = 20,  // ______________|ccc : Dc1:Dc2 for CAS2
     EX_DUP = 21,  // _______uuu|___|___ : Du1:Du2 for CAS2
+    EX_FC = 22,   // ____________1|nnnn : function code
+    EX_FCM = 23,  // _______|mmmm|_____ : function code mask
+    EX_PMMU = 24, // __|rrrr|__________ : PMMU register
 };
 
 struct Entry final : entry::Base<Config::opcode_t> {

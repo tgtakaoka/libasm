@@ -70,7 +70,19 @@ constexpr NameEntry REG_ENTRIES[] PROGMEM = {
     { TEXT_REG_VBR,   REG_VBR   },
 };
 
+constexpr NameEntry PREG_ENTRIES[] PROGMEM = {
+    { TEXT_REG_AC,  PREG_AC  },
+    { TEXT_REG_CAL, PREG_CAL },
+    { TEXT_REG_CRP, PREG_CRP },
+    { TEXT_REG_DRP, PREG_DRP },
+    { TEXT_REG_SCC, PREG_SCC },
+    { TEXT_REG_SRP, PREG_SRP },
+    { TEXT_REG_TC,  PREG_TC  },
+    { TEXT_REG_VAL, PREG_VAL },
+};
+
 PROGMEM constexpr NameTable TABLE{ARRAY_RANGE(REG_ENTRIES)};
+PROGMEM constexpr NameTable PREG_TABLE{ARRAY_RANGE(PREG_ENTRIES)};
 
 // clang-format on
 }  // namespace
@@ -178,6 +190,29 @@ RegName decodeControlReg(Config::opcode_t regno) {
         return RegName(pgm_read_byte(&CREG_8xx[regno - 0x800]));
     }
     return REG_UNDEF;
+}
+
+PmmuReg parsePmmuReg(StrScanner &scan, const ValueParser &parser) {
+    auto p = scan;
+    const auto *entry = PREG_TABLE.searchText(parser.readRegName(p));
+    if (entry) {
+        scan = p;
+        return PmmuReg(entry->name());
+    }
+    return PREG_UNDEF;
+}
+
+StrBuffer &outPmmuReg(StrBuffer &out, PmmuReg name) {
+    const auto *entry = PREG_TABLE.searchName(name);
+    return entry ? entry->outText(out) : out;
+}
+
+uint8_t encodePmmuReg(PmmuReg name) {
+    return uint8_t(name);
+}
+
+PmmuReg decodePmmuReg(uint_fast8_t regno) {
+    return PmmuReg(regno & 7);
 }
 
 InsnSize parseSize(StrScanner &scan) {

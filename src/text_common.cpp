@@ -26,6 +26,7 @@ constexpr char TEXT_none[] PROGMEM = "none";
 constexpr char TEXT_NAN[]  PROGMEM = "nan";
 constexpr char TEXT_INF[]  PROGMEM = "inf";
 constexpr char TEXT_INFINITY[] PROGMEM = "infinity";
+constexpr char TEXT_PMMU[] PROGMEM = "PMMU";
 
 constexpr char TEXT_ABSD[]  PROGMEM = "ABSD";
 constexpr char TEXT_ABSF[]  PROGMEM = "ABSF";
