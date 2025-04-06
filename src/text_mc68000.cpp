@@ -22,14 +22,16 @@ namespace mc68000 {
 
 // clang-format off
 constexpr char TEXT_MC68000_LIST[] PROGMEM = "MC68000, MC68010, MC68020";
-constexpr char TEXT_CPU_MC68000[] PROGMEM = "MC68000";
-constexpr char TEXT_CPU_MC68010[] PROGMEM = "MC68010";
-constexpr char TEXT_CPU_MC68020[] PROGMEM = "MC68020";
-constexpr char TEXT_FPU_MC68881[] PROGMEM = "MC68881";
-constexpr char TEXT_CPU_68000[]   PROGMEM = "68000";
-constexpr char TEXT_CPU_68010[]   PROGMEM = "68010";
-constexpr char TEXT_CPU_68020[]   PROGMEM = "68020";
-constexpr char TEXT_FPU_68881[]   PROGMEM = "68881";
+constexpr char TEXT_CPU_MC68000[]  PROGMEM = "MC68000";
+constexpr char TEXT_CPU_MC68010[]  PROGMEM = "MC68010";
+constexpr char TEXT_CPU_MC68020[]  PROGMEM = "MC68020";
+constexpr char TEXT_FPU_MC68881[]  PROGMEM = "MC68881";
+constexpr char TEXT_PMMU_MC68851[] PROGMEM = "MC68851";
+constexpr char TEXT_CPU_68000[]    PROGMEM = "68000";
+constexpr char TEXT_CPU_68010[]    PROGMEM = "68010";
+constexpr char TEXT_CPU_68020[]    PROGMEM = "68020";
+constexpr char TEXT_FPU_68881[]    PROGMEM = "68881";
+constexpr char TEXT_PMMU_68851[]   PROGMEM = "68851";
 
 // MC68000 instructions
 constexpr char TEXT_ABCD[]  PROGMEM = "ABCD";
@@ -416,6 +418,98 @@ constexpr char TEXT_REG_FP7[]   PROGMEM = "FP7";
 constexpr char TEXT_REG_FPCR[]  PROGMEM = "FPCR";
 constexpr char TEXT_REG_FPIAR[] PROGMEM = "FPIAR";
 constexpr char TEXT_REG_FPSR[]  PROGMEM = "FPSR";
+
+// MC68851
+constexpr char TEXT_PBAC[] PROGMEM = "PBAC";
+constexpr char TEXT_PBAS[] PROGMEM = "PBAS";
+constexpr char TEXT_PBBC[] PROGMEM = "PBBC";
+constexpr char TEXT_PBBS[] PROGMEM = "PBBS";
+constexpr char TEXT_PBCC[] PROGMEM = "PBCC";
+constexpr char TEXT_PBCS[] PROGMEM = "PBCS";
+constexpr char TEXT_PBGC[] PROGMEM = "PBGC";
+constexpr char TEXT_PBGS[] PROGMEM = "PBGS";
+constexpr char TEXT_PBIC[] PROGMEM = "PBIC";
+constexpr char TEXT_PBIS[] PROGMEM = "PBIS";
+constexpr char TEXT_PBLC[] PROGMEM = "PBLC";
+constexpr char TEXT_PBLS[] PROGMEM = "PBLS";
+constexpr char TEXT_PBSC[] PROGMEM = "PBSC";
+constexpr char TEXT_PBSS[] PROGMEM = "PBSS";
+constexpr char TEXT_PBWC[] PROGMEM = "PBWC";
+constexpr char TEXT_PBWS[] PROGMEM = "PBWS";
+constexpr char TEXT_PDBAC[] PROGMEM = "PDBAC";
+constexpr char TEXT_PDBAS[] PROGMEM = "PDBAS";
+constexpr char TEXT_PDBBC[] PROGMEM = "PDBBC";
+constexpr char TEXT_PDBBS[] PROGMEM = "PDBBS";
+constexpr char TEXT_PDBCC[] PROGMEM = "PDBCC";
+constexpr char TEXT_PDBCS[] PROGMEM = "PDBCS";
+constexpr char TEXT_PDBGC[] PROGMEM = "PDBGC";
+constexpr char TEXT_PDBGS[] PROGMEM = "PDBGS";
+constexpr char TEXT_PDBIC[] PROGMEM = "PDBIC";
+constexpr char TEXT_PDBIS[] PROGMEM = "PDBIS";
+constexpr char TEXT_PDBLC[] PROGMEM = "PDBLC";
+constexpr char TEXT_PDBLS[] PROGMEM = "PDBLS";
+constexpr char TEXT_PDBSC[] PROGMEM = "PDBSC";
+constexpr char TEXT_PDBSS[] PROGMEM = "PDBSS";
+constexpr char TEXT_PDBWC[] PROGMEM = "PDBWC";
+constexpr char TEXT_PDBWS[] PROGMEM = "PDBWS";
+constexpr char TEXT_PFLUSHA[] PROGMEM = "PFLUSHA";
+constexpr char TEXT_PFLUSH[]  PROGMEM = "PFLUSH";
+constexpr char TEXT_PFLUSHR[] PROGMEM = "PFLUSHR";
+constexpr char TEXT_PFLUSHS[] PROGMEM = "PFLUSHS";
+constexpr char TEXT_PLOADR[] PROGMEM = "PLOADR";
+constexpr char TEXT_PLOADW[] PROGMEM = "PLOADW";
+constexpr char TEXT_PMOVE[]  PROGMEM = "PMOVE";
+constexpr char TEXT_PRESTORE[] PROGMEM = "PRESTORE";
+constexpr char TEXT_PSAC[]  PROGMEM = "PSAC";
+constexpr char TEXT_PSAS[]  PROGMEM = "PSAS";
+constexpr char TEXT_PSAVE[] PROGMEM = "PSAVE";
+constexpr char TEXT_PSBC[]  PROGMEM = "PSBC";
+constexpr char TEXT_PSBS[]  PROGMEM = "PSBS";
+constexpr char TEXT_PSCC[]  PROGMEM = "PSCC";
+constexpr char TEXT_PSCS[]  PROGMEM = "PSCS";
+constexpr char TEXT_PSGC[]  PROGMEM = "PSGC";
+constexpr char TEXT_PSGS[]  PROGMEM = "PSGS";
+constexpr char TEXT_PSIC[]  PROGMEM = "PSIC";
+constexpr char TEXT_PSIS[]  PROGMEM = "PSIS";
+constexpr char TEXT_PSLC[]  PROGMEM = "PSLC";
+constexpr char TEXT_PSLS[]  PROGMEM = "PSLS";
+constexpr char TEXT_PSSC[]  PROGMEM = "PSSC";
+constexpr char TEXT_PSSS[]  PROGMEM = "PSSS";
+constexpr char TEXT_PSWC[]  PROGMEM = "PSWC";
+constexpr char TEXT_PSWS[]  PROGMEM = "PSWS";
+constexpr char TEXT_PTESTR[] PROGMEM = "PTESTR";
+constexpr char TEXT_PTESTW[] PROGMEM = "PTESTW";
+constexpr char TEXT_PTRAPAC[] PROGMEM = "PTRAPAC";
+constexpr char TEXT_PTRAPAS[] PROGMEM = "PTRAPAS";
+constexpr char TEXT_PTRAPBC[] PROGMEM = "PTRAPBC";
+constexpr char TEXT_PTRAPBS[] PROGMEM = "PTRAPBS";
+constexpr char TEXT_PTRAPCC[] PROGMEM = "PTRAPCC";
+constexpr char TEXT_PTRAPCS[] PROGMEM = "PTRAPCS";
+constexpr char TEXT_PTRAPGC[] PROGMEM = "PTRAPGC";
+constexpr char TEXT_PTRAPGS[] PROGMEM = "PTRAPGS";
+constexpr char TEXT_PTRAPIC[] PROGMEM = "PTRAPIC";
+constexpr char TEXT_PTRAPIS[] PROGMEM = "PTRAPIS";
+constexpr char TEXT_PTRAPLC[] PROGMEM = "PTRAPLC";
+constexpr char TEXT_PTRAPLS[] PROGMEM = "PTRAPLS";
+constexpr char TEXT_PTRAPSC[] PROGMEM = "PTRAPSC";
+constexpr char TEXT_PTRAPSS[] PROGMEM = "PTRAPSS";
+constexpr char TEXT_PTRAPWC[] PROGMEM = "PTRAPWC";
+constexpr char TEXT_PTRAPWS[] PROGMEM = "PTRAPWS";
+constexpr char TEXT_PVALID[]  PROGMEM = "PVALID";
+
+constexpr char TEXT_REG_AC[]   PROGMEM = "AC";
+constexpr char TEXT_REG_BAC[]  PROGMEM = "BAC";
+constexpr char TEXT_REG_BAD[]  PROGMEM = "BAD";
+constexpr char TEXT_REG_CAL[]  PROGMEM = "CAL";
+constexpr char TEXT_REG_CRP[]  PROGMEM = "CRP";
+constexpr char TEXT_REG_DRP[]  PROGMEM = "DRP";
+constexpr char TEXT_REG_PCSR[] PROGMEM = "PCSR";
+// constexpr char TEXT_REG_PSR[]  PROGMEM = "PSR";
+constexpr char TEXT_REG_SCC[]  PROGMEM = "SCC";
+constexpr char TEXT_REG_SRP[]  PROGMEM = "SRP";
+constexpr char TEXT_REG_TC[]   PROGMEM = "TC";
+constexpr char TEXT_REG_VAL[]  PROGMEM = "VAL";
+
 // clang-format on
 
 }  // namespace mc68000

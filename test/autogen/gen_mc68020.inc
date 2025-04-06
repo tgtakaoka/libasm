@@ -31071,6 +31071,4983 @@
       BFINS       D0, ($01210222).L{0:D0}
       BFINS       D0, ($090E0A10).L{D0:13}
       BFINS       D0, ($09210A22).L{D0:D0}
+      PFLUSHA
+      PFLUSH      SFC, #0
+      PFLUSH      DFC, #0
+      PFLUSH      D0, #0
+      PFLUSH      #0, #0
+      PFLUSHS     SFC, #0
+      PFLUSHS     DFC, #0
+      PFLUSHS     D0, #0
+      PFLUSHS     #0, #0
+      PMOVE.L     D0, TC
+      PMOVE.L     TC, D0
+      PMOVE.B     D0, CAL
+      PMOVE.B     CAL, D0
+      PMOVE.B     D0, VAL
+      PMOVE.B     VAL, D0
+      PMOVE.B     D0, SCC
+      PMOVE.B     SCC, D0
+      PMOVE.W     D0, AC
+      PMOVE.W     AC, D0
+      PMOVE.W     D0, PSR
+      PMOVE.W     PSR, D0
+      PMOVE.W     D0, PCSR
+      PMOVE.W     PCSR, D0
+      PMOVE.W     D0, BAD0
+      PMOVE.W     BAD0, D0
+      PMOVE.W     D0, BAC0
+      PMOVE.W     BAC0, D0
+      PMOVE.L     A0, TC
+      PMOVE.L     TC, A0
+      PMOVE.B     A0, CAL
+      PMOVE.B     CAL, A0
+      PMOVE.B     A0, VAL
+      PMOVE.B     VAL, A0
+      PMOVE.B     A0, SCC
+      PMOVE.B     SCC, A0
+      PMOVE.W     A0, AC
+      PMOVE.W     AC, A0
+      PMOVE.W     A0, PSR
+      PMOVE.W     PSR, A0
+      PMOVE.W     A0, PCSR
+      PMOVE.W     PCSR, A0
+      PMOVE.W     A0, BAD0
+      PMOVE.W     BAD0, A0
+      PMOVE.W     A0, BAC0
+      PMOVE.W     BAC0, A0
+      PLOADW      SFC, (A0)
+      PLOADW      DFC, (A0)
+      PLOADW      D0, (A0)
+      PLOADW      #0, (A0)
+      PLOADR      SFC, (A0)
+      PLOADR      DFC, (A0)
+      PLOADR      D0, (A0)
+      PLOADR      #0, (A0)
+      PVALID      VAL, (A0)
+      PVALID      A0, (A0)
+      PFLUSH      SFC, #0, (A0)
+      PFLUSH      DFC, #0, (A0)
+      PFLUSH      D0, #0, (A0)
+      PFLUSH      #0, #0, (A0)
+      PFLUSHS     SFC, #0, (A0)
+      PFLUSHS     DFC, #0, (A0)
+      PFLUSHS     D0, #0, (A0)
+      PFLUSHS     #0, #0, (A0)
+      PMOVE.L     (A0), TC
+      PMOVE.L     TC, (A0)
+      PMOVE.Q     (A0), DRP
+      PMOVE.Q     DRP, (A0)
+      PMOVE.Q     (A0), SRP
+      PMOVE.Q     SRP, (A0)
+      PMOVE.Q     (A0), CRP
+      PMOVE.Q     CRP, (A0)
+      PMOVE.B     (A0), CAL
+      PMOVE.B     CAL, (A0)
+      PMOVE.B     (A0), VAL
+      PMOVE.B     VAL, (A0)
+      PMOVE.B     (A0), SCC
+      PMOVE.B     SCC, (A0)
+      PMOVE.W     (A0), AC
+      PMOVE.W     AC, (A0)
+      PMOVE.W     (A0), PSR
+      PMOVE.W     PSR, (A0)
+      PMOVE.W     (A0), PCSR
+      PMOVE.W     PCSR, (A0)
+      PMOVE.W     (A0), BAD0
+      PMOVE.W     BAD0, (A0)
+      PMOVE.W     (A0), BAC0
+      PMOVE.W     BAC0, (A0)
+      PTESTW      SFC, (A0), #0
+      PTESTW      DFC, (A0), #0
+      PTESTW      D0, (A0), #0
+      PTESTW      #0, (A0), #0
+      PTESTW      SFC, (A0), #0, A0
+      PTESTW      DFC, (A0), #0, A0
+      PTESTW      D0, (A0), #0, A0
+      PTESTW      #0, (A0), #0, A0
+      PTESTR      SFC, (A0), #0
+      PTESTR      DFC, (A0), #0
+      PTESTR      D0, (A0), #0
+      PTESTR      #0, (A0), #0
+      PTESTR      SFC, (A0), #0, A0
+      PTESTR      DFC, (A0), #0, A0
+      PTESTR      D0, (A0), #0, A0
+      PTESTR      #0, (A0), #0, A0
+      PFLUSHR     (A0)
+      PMOVE.L     (A0)+, TC
+      PMOVE.L     TC, (A0)+
+      PMOVE.Q     (A0)+, DRP
+      PMOVE.Q     DRP, (A0)+
+      PMOVE.Q     (A0)+, SRP
+      PMOVE.Q     SRP, (A0)+
+      PMOVE.Q     (A0)+, CRP
+      PMOVE.Q     CRP, (A0)+
+      PMOVE.B     (A0)+, CAL
+      PMOVE.B     CAL, (A0)+
+      PMOVE.B     (A0)+, VAL
+      PMOVE.B     VAL, (A0)+
+      PMOVE.B     (A0)+, SCC
+      PMOVE.B     SCC, (A0)+
+      PMOVE.W     (A0)+, AC
+      PMOVE.W     AC, (A0)+
+      PMOVE.W     (A0)+, PSR
+      PMOVE.W     PSR, (A0)+
+      PMOVE.W     (A0)+, PCSR
+      PMOVE.W     PCSR, (A0)+
+      PMOVE.W     (A0)+, BAD0
+      PMOVE.W     BAD0, (A0)+
+      PMOVE.W     (A0)+, BAC0
+      PMOVE.W     BAC0, (A0)+
+      PFLUSHR     (A0)+
+      PMOVE.L     -(A0), TC
+      PMOVE.L     TC, -(A0)
+      PMOVE.Q     -(A0), DRP
+      PMOVE.Q     DRP, -(A0)
+      PMOVE.Q     -(A0), SRP
+      PMOVE.Q     SRP, -(A0)
+      PMOVE.Q     -(A0), CRP
+      PMOVE.Q     CRP, -(A0)
+      PMOVE.B     -(A0), CAL
+      PMOVE.B     CAL, -(A0)
+      PMOVE.B     -(A0), VAL
+      PMOVE.B     VAL, -(A0)
+      PMOVE.B     -(A0), SCC
+      PMOVE.B     SCC, -(A0)
+      PMOVE.W     -(A0), AC
+      PMOVE.W     AC, -(A0)
+      PMOVE.W     -(A0), PSR
+      PMOVE.W     PSR, -(A0)
+      PMOVE.W     -(A0), PCSR
+      PMOVE.W     PCSR, -(A0)
+      PMOVE.W     -(A0), BAD0
+      PMOVE.W     BAD0, -(A0)
+      PMOVE.W     -(A0), BAC0
+      PMOVE.W     BAC0, -(A0)
+      PFLUSHR     -(A0)
+      PLOADW      SFC, ($2101,A0)
+      PLOADW      DFC, ($2102,A0)
+      PLOADW      D0, ($2109,A0)
+      PLOADW      #0, ($2111,A0)
+      PLOADR      SFC, ($2301,A0)
+      PLOADR      DFC, ($2302,A0)
+      PLOADR      D0, ($2309,A0)
+      PLOADR      #0, ($2311,A0)
+      PVALID      VAL, ($2901,A0)
+      PVALID      A0, ($2D01,A0)
+      PFLUSH      SFC, #0, ($3901,A0)
+      PFLUSH      DFC, #0, ($3902,A0)
+      PFLUSH      D0, #0, ($3909,A0)
+      PFLUSH      #0, #0, ($3911,A0)
+      PFLUSHS     SFC, #0, ($3D01,A0)
+      PFLUSHS     DFC, #0, ($3D02,A0)
+      PFLUSHS     D0, #0, ($3D09,A0)
+      PFLUSHS     #0, #0, ($3D11,A0)
+      PMOVE.L     ($4101,A0), TC
+      PMOVE.L     TC, ($4301,A0)
+      PMOVE.Q     ($4501,A0), DRP
+      PMOVE.Q     DRP, ($4701,A0)
+      PMOVE.Q     ($4901,A0), SRP
+      PMOVE.Q     SRP, ($4B01,A0)
+      PMOVE.Q     ($4D01,A0), CRP
+      PMOVE.Q     CRP, ($4F01,A0)
+      PMOVE.B     ($5101,A0), CAL
+      PMOVE.B     CAL, ($5301,A0)
+      PMOVE.B     ($5501,A0), VAL
+      PMOVE.B     VAL, ($5701,A0)
+      PMOVE.B     ($5901,A0), SCC
+      PMOVE.B     SCC, ($5B01,A0)
+      PMOVE.W     ($5D01,A0), AC
+      PMOVE.W     AC, ($5F01,A0)
+      PMOVE.W     ($6101,A0), PSR
+      PMOVE.W     PSR, ($6301,A0)
+      PMOVE.W     ($6501,A0), PCSR
+      PMOVE.W     PCSR, ($6701,A0)
+      PMOVE.W     ($7101,A0), BAD0
+      PMOVE.W     BAD0, ($7301,A0)
+      PMOVE.W     ($7501,A0), BAC0
+      PMOVE.W     BAC0, ($7701,A0)
+      PTESTW      SFC, (-$7EFF,A0), #0
+      PTESTW      DFC, (-$7EFE,A0), #0
+      PTESTW      D0, (-$7EF7,A0), #0
+      PTESTW      #0, (-$7EEF,A0), #0
+      PTESTW      SFC, (-$7DFF,A0), #0, A0
+      PTESTW      DFC, (-$7DFE,A0), #0, A0
+      PTESTW      D0, (-$7DF7,A0), #0, A0
+      PTESTW      #0, (-$7DEF,A0), #0, A0
+      PTESTR      SFC, (-$7CFF,A0), #0
+      PTESTR      DFC, (-$7CFE,A0), #0
+      PTESTR      D0, (-$7CF7,A0), #0
+      PTESTR      #0, (-$7CEF,A0), #0
+      PTESTR      SFC, (-$7BFF,A0), #0, A0
+      PTESTR      DFC, (-$7BFE,A0), #0, A0
+      PTESTR      D0, (-$7BF7,A0), #0, A0
+      PTESTR      #0, (-$7BEF,A0), #0, A0
+      PLOADW      SFC, (A0,D2.W)
+      PLOADW      SFC, ([A0,D2.W])
+      PLOADW      SFC, ([A0,D2.W],$2213)
+      PLOADW      SFC, ([A0,D2.W],$22142315)
+      PLOADW      SFC, ([A0],D2.W)
+      PLOADW      SFC, ([A0],D2.W,$2217)
+      PLOADW      SFC, ([A0],D2.W,$22182319)
+      PLOADW      SFC, ($2221,A0,D2.W)
+      PLOADW      SFC, ([$2222,A0,D2.W])
+      PLOADW      SFC, ([$2223,A0,D2.W],$2324)
+      PLOADW      SFC, ([$2224,A0,D2.W],$23252426)
+      PLOADW      SFC, ([$2226,A0],D2.W)
+      PLOADW      SFC, ([$2227,A0],D2.W,$2328)
+      PLOADW      SFC, ([$2228,A0],D2.W,$2329242A)
+      PLOADW      SFC, ($22312332,A0,D2.W)
+      PLOADW      SFC, ([$22322333,A0,D2.W])
+      PLOADW      SFC, ([$22342335,A0,D2.W],$24362537)
+      PLOADW      SFC, ([$22362337,A0],D2.W)
+      PLOADW      SFC, ([$22382339,A0],D2.W,$243A253B)
+      PLOADW      SFC, (A0)
+      PLOADW      SFC, ([A0])
+      PLOADW      SFC, ([A0],$2253)
+      PLOADW      SFC, ([A0],$22542355)
+      PLOADW      SFC, ($2261,A0)
+      PLOADW      SFC, ([$2262,A0])
+      PLOADW      SFC, ([$2263,A0],$2364)
+      PLOADW      SFC, ([$2264,A0],$23652466)
+      PLOADW      SFC, ($22712372,A0)
+      PLOADW      SFC, ([$22722373,A0])
+      PLOADW      SFC, ([$22742375,A0],$24762577)
+      PLOADW      SFC, (D2.W)
+      PLOADW      SFC, ([D2.W])
+      PLOADW      SFC, ([D2.W],$2293)
+      PLOADW      SFC, ([D2.W],$22942395)
+      PLOADW      SFC, ($22A1,D2.W)
+      PLOADW      SFC, ([$22A2,D2.W])
+      PLOADW      SFC, ([$22A3,D2.W],$23A4)
+      PLOADW      SFC, ([$22A4,D2.W],$23A524A6)
+      PLOADW      SFC, ([$22A6],D2.W)
+      PLOADW      SFC, ([$22A7],D2.W,$23A8)
+      PLOADW      SFC, ([$22A8],D2.W,$23A924AA)
+      PLOADW      SFC, ($22B123B2,D2.W)
+      PLOADW      SFC, ([$22B223B3,D2.W])
+      PLOADW      SFC, ([$22B423B5,D2.W],$24B625B7)
+      PLOADW      SFC, ([$22B623B7],D2.W)
+      PLOADW      SFC, ([$22B823B9],D2.W,$24BA25BB)
+      PLOADW      SFC, ($22E2)
+      PLOADW      SFC, ([$22E2])
+      PLOADW      SFC, ([$22E4],$23E5)
+      PLOADW      SFC, ([$22E4],$23E524E6)
+      PLOADW      SFC, ($22F123F2)
+      PLOADW      SFC, ([$22F223F4])
+      PLOADW      SFC, ([$22F423F6],$24F725F8)
+      PLOADW      SFC, (0,A0,D2.W*2)
+      PLOADW      DFC, (A0,D2.W)
+      PLOADW      DFC, ([A0,D2.W])
+      PLOADW      DFC, ([A0,D2.W],$2213)
+      PLOADW      DFC, ([A0,D2.W],$22142315)
+      PLOADW      DFC, ([A0],D2.W)
+      PLOADW      DFC, ([A0],D2.W,$2217)
+      PLOADW      DFC, ([A0],D2.W,$22182319)
+      PLOADW      DFC, ($2221,A0,D2.W)
+      PLOADW      DFC, ([$2222,A0,D2.W])
+      PLOADW      DFC, ([$2223,A0,D2.W],$2324)
+      PLOADW      DFC, ([$2224,A0,D2.W],$23252426)
+      PLOADW      DFC, ([$2226,A0],D2.W)
+      PLOADW      DFC, ([$2227,A0],D2.W,$2328)
+      PLOADW      DFC, ([$2228,A0],D2.W,$2329242A)
+      PLOADW      DFC, ($22312332,A0,D2.W)
+      PLOADW      DFC, ([$22322333,A0,D2.W])
+      PLOADW      DFC, ([$22342335,A0,D2.W],$24362537)
+      PLOADW      DFC, ([$22362337,A0],D2.W)
+      PLOADW      DFC, ([$22382339,A0],D2.W,$243A253B)
+      PLOADW      DFC, (A0)
+      PLOADW      DFC, ([A0])
+      PLOADW      DFC, ([A0],$2253)
+      PLOADW      DFC, ([A0],$22542355)
+      PLOADW      DFC, ($2261,A0)
+      PLOADW      DFC, ([$2262,A0])
+      PLOADW      DFC, ([$2263,A0],$2364)
+      PLOADW      DFC, ([$2264,A0],$23652466)
+      PLOADW      DFC, ($22712372,A0)
+      PLOADW      DFC, ([$22722373,A0])
+      PLOADW      DFC, ([$22742375,A0],$24762577)
+      PLOADW      DFC, (D2.W)
+      PLOADW      DFC, ([D2.W])
+      PLOADW      DFC, ([D2.W],$2293)
+      PLOADW      DFC, ([D2.W],$22942395)
+      PLOADW      DFC, ($22A1,D2.W)
+      PLOADW      DFC, ([$22A2,D2.W])
+      PLOADW      DFC, ([$22A3,D2.W],$23A4)
+      PLOADW      DFC, ([$22A4,D2.W],$23A524A6)
+      PLOADW      DFC, ([$22A6],D2.W)
+      PLOADW      DFC, ([$22A7],D2.W,$23A8)
+      PLOADW      DFC, ([$22A8],D2.W,$23A924AA)
+      PLOADW      DFC, ($22B123B2,D2.W)
+      PLOADW      DFC, ([$22B223B3,D2.W])
+      PLOADW      DFC, ([$22B423B5,D2.W],$24B625B7)
+      PLOADW      DFC, ([$22B623B7],D2.W)
+      PLOADW      DFC, ([$22B823B9],D2.W,$24BA25BB)
+      PLOADW      DFC, ($22E2)
+      PLOADW      DFC, ([$22E2])
+      PLOADW      DFC, ([$22E4],$23E5)
+      PLOADW      DFC, ([$22E4],$23E524E6)
+      PLOADW      DFC, ($22F123F2)
+      PLOADW      DFC, ([$22F223F4])
+      PLOADW      DFC, ([$22F423F6],$24F725F8)
+      PLOADW      DFC, (0,A0,D2.W*2)
+      PLOADW      D0, (A0,D2.W)
+      PLOADW      D0, ([A0,D2.W])
+      PLOADW      D0, ([A0,D2.W],$2213)
+      PLOADW      D0, ([A0,D2.W],$22142315)
+      PLOADW      D0, ([A0],D2.W)
+      PLOADW      D0, ([A0],D2.W,$2217)
+      PLOADW      D0, ([A0],D2.W,$22182319)
+      PLOADW      D0, ($2221,A0,D2.W)
+      PLOADW      D0, ([$2222,A0,D2.W])
+      PLOADW      D0, ([$2223,A0,D2.W],$2324)
+      PLOADW      D0, ([$2224,A0,D2.W],$23252426)
+      PLOADW      D0, ([$2226,A0],D2.W)
+      PLOADW      D0, ([$2227,A0],D2.W,$2328)
+      PLOADW      D0, ([$2228,A0],D2.W,$2329242A)
+      PLOADW      D0, ($22312332,A0,D2.W)
+      PLOADW      D0, ([$22322333,A0,D2.W])
+      PLOADW      D0, ([$22342335,A0,D2.W],$24362537)
+      PLOADW      D0, ([$22362337,A0],D2.W)
+      PLOADW      D0, ([$22382339,A0],D2.W,$243A253B)
+      PLOADW      D0, (A0)
+      PLOADW      D0, ([A0])
+      PLOADW      D0, ([A0],$2253)
+      PLOADW      D0, ([A0],$22542355)
+      PLOADW      D0, ($2261,A0)
+      PLOADW      D0, ([$2262,A0])
+      PLOADW      D0, ([$2263,A0],$2364)
+      PLOADW      D0, ([$2264,A0],$23652466)
+      PLOADW      D0, ($22712372,A0)
+      PLOADW      D0, ([$22722373,A0])
+      PLOADW      D0, ([$22742375,A0],$24762577)
+      PLOADW      D0, (D2.W)
+      PLOADW      D0, ([D2.W])
+      PLOADW      D0, ([D2.W],$2293)
+      PLOADW      D0, ([D2.W],$22942395)
+      PLOADW      D0, ($22A1,D2.W)
+      PLOADW      D0, ([$22A2,D2.W])
+      PLOADW      D0, ([$22A3,D2.W],$23A4)
+      PLOADW      D0, ([$22A4,D2.W],$23A524A6)
+      PLOADW      D0, ([$22A6],D2.W)
+      PLOADW      D0, ([$22A7],D2.W,$23A8)
+      PLOADW      D0, ([$22A8],D2.W,$23A924AA)
+      PLOADW      D0, ($22B123B2,D2.W)
+      PLOADW      D0, ([$22B223B3,D2.W])
+      PLOADW      D0, ([$22B423B5,D2.W],$24B625B7)
+      PLOADW      D0, ([$22B623B7],D2.W)
+      PLOADW      D0, ([$22B823B9],D2.W,$24BA25BB)
+      PLOADW      D0, ($22E2)
+      PLOADW      D0, ([$22E2])
+      PLOADW      D0, ([$22E4],$23E5)
+      PLOADW      D0, ([$22E4],$23E524E6)
+      PLOADW      D0, ($22F123F2)
+      PLOADW      D0, ([$22F223F4])
+      PLOADW      D0, ([$22F423F6],$24F725F8)
+      PLOADW      D0, (0,A0,D2.W*2)
+      PLOADW      #0, ([A0,D2.W])
+      PLOADW      #0, ([A0,D2.W],$2213)
+      PLOADW      #0, ([A0,D2.W],$22142315)
+      PLOADW      #0, ([A0],D2.W)
+      PLOADW      #0, ([A0],D2.W,$2217)
+      PLOADW      #0, ([A0],D2.W,$22182319)
+      PLOADW      #0, ($2221,A0,D2.W)
+      PLOADW      #0, ([$2222,A0,D2.W])
+      PLOADW      #0, ([$2223,A0,D2.W],$2324)
+      PLOADW      #0, ([$2224,A0,D2.W],$23252426)
+      PLOADW      #0, ([$2226,A0],D2.W)
+      PLOADW      #0, ([$2227,A0],D2.W,$2328)
+      PLOADW      #0, ([$2228,A0],D2.W,$2329242A)
+      PLOADW      #0, ($22312332,A0,D2.W)
+      PLOADW      #0, ([$22322333,A0,D2.W])
+      PLOADW      #0, ([$22342335,A0,D2.W],$24362537)
+      PLOADW      #0, ([$22362337,A0],D2.W)
+      PLOADW      #0, ([$22382339,A0],D2.W,$243A253B)
+      PLOADW      #0, (A0)
+      PLOADW      #0, ([A0])
+      PLOADW      #0, ([A0],$2253)
+      PLOADW      #0, ([A0],$22542355)
+      PLOADW      #0, ($2261,A0)
+      PLOADW      #0, ([$2262,A0])
+      PLOADW      #0, ([$2263,A0],$2364)
+      PLOADW      #0, ([$2264,A0],$23652466)
+      PLOADW      #0, ($22712372,A0)
+      PLOADW      #0, ([$22722373,A0])
+      PLOADW      #0, ([$22742375,A0],$24762577)
+      PLOADW      #0, (D2.W)
+      PLOADW      #0, ([D2.W])
+      PLOADW      #0, ([D2.W],$2293)
+      PLOADW      #0, ([D2.W],$22942395)
+      PLOADW      #0, ($22A1,D2.W)
+      PLOADW      #0, ([$22A2,D2.W])
+      PLOADW      #0, ([$22A3,D2.W],$23A4)
+      PLOADW      #0, ([$22A4,D2.W],$23A524A6)
+      PLOADW      #0, ([$22A6],D2.W)
+      PLOADW      #0, ([$22A7],D2.W,$23A8)
+      PLOADW      #0, ([$22A8],D2.W,$23A924AA)
+      PLOADW      #0, ($22B123B2,D2.W)
+      PLOADW      #0, ([$22B223B3,D2.W])
+      PLOADW      #0, ([$22B423B5,D2.W],$24B625B7)
+      PLOADW      #0, ([$22B623B7],D2.W)
+      PLOADW      #0, ([$22B823B9],D2.W,$24BA25BB)
+      PLOADW      #0, ($22E2)
+      PLOADW      #0, ([$22E2])
+      PLOADW      #0, ([$22E4],$23E5)
+      PLOADW      #0, ([$22E4],$23E524E6)
+      PLOADW      #0, ($22F123F2)
+      PLOADW      #0, ([$22F223F4])
+      PLOADW      #0, ([$22F423F6],$24F725F8)
+      PLOADW      #0, (0,A0,D2.W*2)
+      PLOADW      #0, (A0,D2.W*2)
+      PLOADR      SFC, (A0,D2.W*2)
+      PLOADR      SFC, ([A0,D2.W*2])
+      PLOADR      SFC, ([A0,D2.W*2],$2413)
+      PLOADR      SFC, ([A0,D2.W*2],$24142515)
+      PLOADR      SFC, ([A0],D2.W*2)
+      PLOADR      SFC, ([A0],D2.W*2,$2417)
+      PLOADR      SFC, ([A0],D2.W*2,$24182519)
+      PLOADR      SFC, ($2421,A0,D2.W*2)
+      PLOADR      SFC, ([$2422,A0,D2.W*2])
+      PLOADR      SFC, ([$2423,A0,D2.W*2],$2524)
+      PLOADR      SFC, ([$2424,A0,D2.W*2],$25252626)
+      PLOADR      SFC, ([$2426,A0],D2.W*2)
+      PLOADR      SFC, ([$2427,A0],D2.W*2,$2528)
+      PLOADR      SFC, ([$2428,A0],D2.W*2,$2529262A)
+      PLOADR      SFC, ($24312532,A0,D2.W*2)
+      PLOADR      SFC, ([$24322533,A0,D2.W*2])
+      PLOADR      SFC, ([$24342535,A0,D2.W*2],$26362737)
+      PLOADR      SFC, ([$24362537,A0],D2.W*2)
+      PLOADR      SFC, ([$24382539,A0],D2.W*2,$263A273B)
+      PLOADR      SFC, (A0)
+      PLOADR      SFC, ([A0])
+      PLOADR      SFC, ([A0],$2453)
+      PLOADR      SFC, ([A0],$24542555)
+      PLOADR      SFC, ($2461,A0)
+      PLOADR      SFC, ([$2462,A0])
+      PLOADR      SFC, ([$2463,A0],$2564)
+      PLOADR      SFC, ([$2464,A0],$25652666)
+      PLOADR      SFC, ($24712572,A0)
+      PLOADR      SFC, ([$24722573,A0])
+      PLOADR      SFC, ([$24742575,A0],$26762777)
+      PLOADR      SFC, (D2.W*2)
+      PLOADR      SFC, ([D2.W*2])
+      PLOADR      SFC, ([D2.W*2],$2493)
+      PLOADR      SFC, ([D2.W*2],$24942595)
+      PLOADR      SFC, ($24A1,D2.W*2)
+      PLOADR      SFC, ([$24A2,D2.W*2])
+      PLOADR      SFC, ([$24A3,D2.W*2],$25A4)
+      PLOADR      SFC, ([$24A4,D2.W*2],$25A526A6)
+      PLOADR      SFC, ([$24A6],D2.W*2)
+      PLOADR      SFC, ([$24A7],D2.W*2,$25A8)
+      PLOADR      SFC, ([$24A8],D2.W*2,$25A926AA)
+      PLOADR      SFC, ($24B125B2,D2.W*2)
+      PLOADR      SFC, ([$24B225B3,D2.W*2])
+      PLOADR      SFC, ([$24B425B5,D2.W*2],$26B627B7)
+      PLOADR      SFC, ([$24B625B7],D2.W*2)
+      PLOADR      SFC, ([$24B825B9],D2.W*2,$26BA27BB)
+      PLOADR      SFC, ($24E2)
+      PLOADR      SFC, ([$24E2])
+      PLOADR      SFC, ([$24E4],$25E5)
+      PLOADR      SFC, ([$24E4],$25E526E6)
+      PLOADR      SFC, ($24F125F2)
+      PLOADR      SFC, ([$24F225F4])
+      PLOADR      SFC, ([$24F425F6],$26F727F8)
+      PLOADR      SFC, (0,A0,D2.W*4)
+      PLOADR      DFC, (A0,D2.W*2)
+      PLOADR      DFC, ([A0,D2.W*2])
+      PLOADR      DFC, ([A0,D2.W*2],$2413)
+      PLOADR      DFC, ([A0,D2.W*2],$24142515)
+      PLOADR      DFC, ([A0],D2.W*2)
+      PLOADR      DFC, ([A0],D2.W*2,$2417)
+      PLOADR      DFC, ([A0],D2.W*2,$24182519)
+      PLOADR      DFC, ($2421,A0,D2.W*2)
+      PLOADR      DFC, ([$2422,A0,D2.W*2])
+      PLOADR      DFC, ([$2423,A0,D2.W*2],$2524)
+      PLOADR      DFC, ([$2424,A0,D2.W*2],$25252626)
+      PLOADR      DFC, ([$2426,A0],D2.W*2)
+      PLOADR      DFC, ([$2427,A0],D2.W*2,$2528)
+      PLOADR      DFC, ([$2428,A0],D2.W*2,$2529262A)
+      PLOADR      DFC, ($24312532,A0,D2.W*2)
+      PLOADR      DFC, ([$24322533,A0,D2.W*2])
+      PLOADR      DFC, ([$24342535,A0,D2.W*2],$26362737)
+      PLOADR      DFC, ([$24362537,A0],D2.W*2)
+      PLOADR      DFC, ([$24382539,A0],D2.W*2,$263A273B)
+      PLOADR      DFC, (A0)
+      PLOADR      DFC, ([A0])
+      PLOADR      DFC, ([A0],$2453)
+      PLOADR      DFC, ([A0],$24542555)
+      PLOADR      DFC, ($2461,A0)
+      PLOADR      DFC, ([$2462,A0])
+      PLOADR      DFC, ([$2463,A0],$2564)
+      PLOADR      DFC, ([$2464,A0],$25652666)
+      PLOADR      DFC, ($24712572,A0)
+      PLOADR      DFC, ([$24722573,A0])
+      PLOADR      DFC, ([$24742575,A0],$26762777)
+      PLOADR      DFC, (D2.W*2)
+      PLOADR      DFC, ([D2.W*2])
+      PLOADR      DFC, ([D2.W*2],$2493)
+      PLOADR      DFC, ([D2.W*2],$24942595)
+      PLOADR      DFC, ($24A1,D2.W*2)
+      PLOADR      DFC, ([$24A2,D2.W*2])
+      PLOADR      DFC, ([$24A3,D2.W*2],$25A4)
+      PLOADR      DFC, ([$24A4,D2.W*2],$25A526A6)
+      PLOADR      DFC, ([$24A6],D2.W*2)
+      PLOADR      DFC, ([$24A7],D2.W*2,$25A8)
+      PLOADR      DFC, ([$24A8],D2.W*2,$25A926AA)
+      PLOADR      DFC, ($24B125B2,D2.W*2)
+      PLOADR      DFC, ([$24B225B3,D2.W*2])
+      PLOADR      DFC, ([$24B425B5,D2.W*2],$26B627B7)
+      PLOADR      DFC, ([$24B625B7],D2.W*2)
+      PLOADR      DFC, ([$24B825B9],D2.W*2,$26BA27BB)
+      PLOADR      DFC, ($24E2)
+      PLOADR      DFC, ([$24E2])
+      PLOADR      DFC, ([$24E4],$25E5)
+      PLOADR      DFC, ([$24E4],$25E526E6)
+      PLOADR      DFC, ($24F125F2)
+      PLOADR      DFC, ([$24F225F4])
+      PLOADR      DFC, ([$24F425F6],$26F727F8)
+      PLOADR      DFC, (0,A0,D2.W*4)
+      PLOADR      D0, (A0,D2.W*2)
+      PLOADR      D0, ([A0,D2.W*2])
+      PLOADR      D0, ([A0,D2.W*2],$2413)
+      PLOADR      D0, ([A0,D2.W*2],$24142515)
+      PLOADR      D0, ([A0],D2.W*2)
+      PLOADR      D0, ([A0],D2.W*2,$2417)
+      PLOADR      D0, ([A0],D2.W*2,$24182519)
+      PLOADR      D0, ($2421,A0,D2.W*2)
+      PLOADR      D0, ([$2422,A0,D2.W*2])
+      PLOADR      D0, ([$2423,A0,D2.W*2],$2524)
+      PLOADR      D0, ([$2424,A0,D2.W*2],$25252626)
+      PLOADR      D0, ([$2426,A0],D2.W*2)
+      PLOADR      D0, ([$2427,A0],D2.W*2,$2528)
+      PLOADR      D0, ([$2428,A0],D2.W*2,$2529262A)
+      PLOADR      D0, ($24312532,A0,D2.W*2)
+      PLOADR      D0, ([$24322533,A0,D2.W*2])
+      PLOADR      D0, ([$24342535,A0,D2.W*2],$26362737)
+      PLOADR      D0, ([$24362537,A0],D2.W*2)
+      PLOADR      D0, ([$24382539,A0],D2.W*2,$263A273B)
+      PLOADR      D0, (A0)
+      PLOADR      D0, ([A0])
+      PLOADR      D0, ([A0],$2453)
+      PLOADR      D0, ([A0],$24542555)
+      PLOADR      D0, ($2461,A0)
+      PLOADR      D0, ([$2462,A0])
+      PLOADR      D0, ([$2463,A0],$2564)
+      PLOADR      D0, ([$2464,A0],$25652666)
+      PLOADR      D0, ($24712572,A0)
+      PLOADR      D0, ([$24722573,A0])
+      PLOADR      D0, ([$24742575,A0],$26762777)
+      PLOADR      D0, (D2.W*2)
+      PLOADR      D0, ([D2.W*2])
+      PLOADR      D0, ([D2.W*2],$2493)
+      PLOADR      D0, ([D2.W*2],$24942595)
+      PLOADR      D0, ($24A1,D2.W*2)
+      PLOADR      D0, ([$24A2,D2.W*2])
+      PLOADR      D0, ([$24A3,D2.W*2],$25A4)
+      PLOADR      D0, ([$24A4,D2.W*2],$25A526A6)
+      PLOADR      D0, ([$24A6],D2.W*2)
+      PLOADR      D0, ([$24A7],D2.W*2,$25A8)
+      PLOADR      D0, ([$24A8],D2.W*2,$25A926AA)
+      PLOADR      D0, ($24B125B2,D2.W*2)
+      PLOADR      D0, ([$24B225B3,D2.W*2])
+      PLOADR      D0, ([$24B425B5,D2.W*2],$26B627B7)
+      PLOADR      D0, ([$24B625B7],D2.W*2)
+      PLOADR      D0, ([$24B825B9],D2.W*2,$26BA27BB)
+      PLOADR      D0, ($24E2)
+      PLOADR      D0, ([$24E2])
+      PLOADR      D0, ([$24E4],$25E5)
+      PLOADR      D0, ([$24E4],$25E526E6)
+      PLOADR      D0, ($24F125F2)
+      PLOADR      D0, ([$24F225F4])
+      PLOADR      D0, ([$24F425F6],$26F727F8)
+      PLOADR      D0, (0,A0,D2.W*4)
+      PLOADR      #0, ([A0,D2.W*2])
+      PLOADR      #0, ([A0,D2.W*2],$2413)
+      PLOADR      #0, ([A0,D2.W*2],$24142515)
+      PLOADR      #0, ([A0],D2.W*2)
+      PLOADR      #0, ([A0],D2.W*2,$2417)
+      PLOADR      #0, ([A0],D2.W*2,$24182519)
+      PLOADR      #0, ($2421,A0,D2.W*2)
+      PLOADR      #0, ([$2422,A0,D2.W*2])
+      PLOADR      #0, ([$2423,A0,D2.W*2],$2524)
+      PLOADR      #0, ([$2424,A0,D2.W*2],$25252626)
+      PLOADR      #0, ([$2426,A0],D2.W*2)
+      PLOADR      #0, ([$2427,A0],D2.W*2,$2528)
+      PLOADR      #0, ([$2428,A0],D2.W*2,$2529262A)
+      PLOADR      #0, ($24312532,A0,D2.W*2)
+      PLOADR      #0, ([$24322533,A0,D2.W*2])
+      PLOADR      #0, ([$24342535,A0,D2.W*2],$26362737)
+      PLOADR      #0, ([$24362537,A0],D2.W*2)
+      PLOADR      #0, ([$24382539,A0],D2.W*2,$263A273B)
+      PLOADR      #0, (A0)
+      PLOADR      #0, ([A0])
+      PLOADR      #0, ([A0],$2453)
+      PLOADR      #0, ([A0],$24542555)
+      PLOADR      #0, ($2461,A0)
+      PLOADR      #0, ([$2462,A0])
+      PLOADR      #0, ([$2463,A0],$2564)
+      PLOADR      #0, ([$2464,A0],$25652666)
+      PLOADR      #0, ($24712572,A0)
+      PLOADR      #0, ([$24722573,A0])
+      PLOADR      #0, ([$24742575,A0],$26762777)
+      PLOADR      #0, (D2.W*2)
+      PLOADR      #0, ([D2.W*2])
+      PLOADR      #0, ([D2.W*2],$2493)
+      PLOADR      #0, ([D2.W*2],$24942595)
+      PLOADR      #0, ($24A1,D2.W*2)
+      PLOADR      #0, ([$24A2,D2.W*2])
+      PLOADR      #0, ([$24A3,D2.W*2],$25A4)
+      PLOADR      #0, ([$24A4,D2.W*2],$25A526A6)
+      PLOADR      #0, ([$24A6],D2.W*2)
+      PLOADR      #0, ([$24A7],D2.W*2,$25A8)
+      PLOADR      #0, ([$24A8],D2.W*2,$25A926AA)
+      PLOADR      #0, ($24B125B2,D2.W*2)
+      PLOADR      #0, ([$24B225B3,D2.W*2])
+      PLOADR      #0, ([$24B425B5,D2.W*2],$26B627B7)
+      PLOADR      #0, ([$24B625B7],D2.W*2)
+      PLOADR      #0, ([$24B825B9],D2.W*2,$26BA27BB)
+      PLOADR      #0, ($24E2)
+      PLOADR      #0, ([$24E2])
+      PLOADR      #0, ([$24E4],$25E5)
+      PLOADR      #0, ([$24E4],$25E526E6)
+      PLOADR      #0, ($24F125F2)
+      PLOADR      #0, ([$24F225F4])
+      PLOADR      #0, ([$24F425F6],$26F727F8)
+      PLOADR      #0, (0,A0,D2.W*4)
+      PLOADR      #0, (A0,D2.W*4)
+      PVALID      VAL, (A0,D2.L)
+      PVALID      VAL, ([A0,D2.L])
+      PVALID      VAL, ([A0,D2.L],$2A13)
+      PVALID      VAL, ([A0,D2.L],$2A142B15)
+      PVALID      VAL, ([A0],D2.L)
+      PVALID      VAL, ([A0],D2.L,$2A17)
+      PVALID      VAL, ([A0],D2.L,$2A182B19)
+      PVALID      VAL, ($2A21,A0,D2.L)
+      PVALID      VAL, ([$2A22,A0,D2.L])
+      PVALID      VAL, ([$2A23,A0,D2.L],$2B24)
+      PVALID      VAL, ([$2A24,A0,D2.L],$2B252C26)
+      PVALID      VAL, ([$2A26,A0],D2.L)
+      PVALID      VAL, ([$2A27,A0],D2.L,$2B28)
+      PVALID      VAL, ([$2A28,A0],D2.L,$2B292C2A)
+      PVALID      VAL, ($2A312B32,A0,D2.L)
+      PVALID      VAL, ([$2A322B33,A0,D2.L])
+      PVALID      VAL, ([$2A342B35,A0,D2.L],$2C362D37)
+      PVALID      VAL, ([$2A362B37,A0],D2.L)
+      PVALID      VAL, ([$2A382B39,A0],D2.L,$2C3A2D3B)
+      PVALID      VAL, (A0)
+      PVALID      VAL, ([A0])
+      PVALID      VAL, ([A0],$2A53)
+      PVALID      VAL, ([A0],$2A542B55)
+      PVALID      VAL, ($2A61,A0)
+      PVALID      VAL, ([$2A62,A0])
+      PVALID      VAL, ([$2A63,A0],$2B64)
+      PVALID      VAL, ([$2A64,A0],$2B652C66)
+      PVALID      VAL, ($2A712B72,A0)
+      PVALID      VAL, ([$2A722B73,A0])
+      PVALID      VAL, ([$2A742B75,A0],$2C762D77)
+      PVALID      VAL, (D2.L)
+      PVALID      VAL, ([D2.L])
+      PVALID      VAL, ([D2.L],$2A93)
+      PVALID      VAL, ([D2.L],$2A942B95)
+      PVALID      VAL, ($2AA1,D2.L)
+      PVALID      VAL, ([$2AA2,D2.L])
+      PVALID      VAL, ([$2AA3,D2.L],$2BA4)
+      PVALID      VAL, ([$2AA4,D2.L],$2BA52CA6)
+      PVALID      VAL, ([$2AA6],D2.L)
+      PVALID      VAL, ([$2AA7],D2.L,$2BA8)
+      PVALID      VAL, ([$2AA8],D2.L,$2BA92CAA)
+      PVALID      VAL, ($2AB12BB2,D2.L)
+      PVALID      VAL, ([$2AB22BB3,D2.L])
+      PVALID      VAL, ([$2AB42BB5,D2.L],$2CB62DB7)
+      PVALID      VAL, ([$2AB62BB7],D2.L)
+      PVALID      VAL, ([$2AB82BB9],D2.L,$2CBA2DBB)
+      PVALID      VAL, ($2AE2)
+      PVALID      VAL, ([$2AE2])
+      PVALID      VAL, ([$2AE4],$2BE5)
+      PVALID      VAL, ([$2AE4],$2BE52CE6)
+      PVALID      VAL, ($2AF12BF2)
+      PVALID      VAL, ([$2AF22BF4])
+      PVALID      VAL, ([$2AF42BF6],$2CF72DF8)
+      PVALID      VAL, (0,A0,D2.L*2)
+      PVALID      A0, (A0,D2.L*4)
+      PVALID      A0, ([A0,D2.L*4])
+      PVALID      A0, ([A0,D2.L*4],$2E13)
+      PVALID      A0, ([A0,D2.L*4],$2E142F15)
+      PVALID      A0, ([A0],D2.L*4)
+      PVALID      A0, ([A0],D2.L*4,$2E17)
+      PVALID      A0, ([A0],D2.L*4,$2E182F19)
+      PVALID      A0, ($2E21,A0,D2.L*4)
+      PVALID      A0, ([$2E22,A0,D2.L*4])
+      PVALID      A0, ([$2E23,A0,D2.L*4],$2F24)
+      PVALID      A0, ([$2E24,A0,D2.L*4],$2F253026)
+      PVALID      A0, ([$2E26,A0],D2.L*4)
+      PVALID      A0, ([$2E27,A0],D2.L*4,$2F28)
+      PVALID      A0, ([$2E28,A0],D2.L*4,$2F29302A)
+      PVALID      A0, ($2E312F32,A0,D2.L*4)
+      PVALID      A0, ([$2E322F33,A0,D2.L*4])
+      PVALID      A0, ([$2E342F35,A0,D2.L*4],$30363137)
+      PVALID      A0, ([$2E362F37,A0],D2.L*4)
+      PVALID      A0, ([$2E382F39,A0],D2.L*4,$303A313B)
+      PVALID      A0, (A0)
+      PVALID      A0, ([A0])
+      PVALID      A0, ([A0],$2E53)
+      PVALID      A0, ([A0],$2E542F55)
+      PVALID      A0, ($2E61,A0)
+      PVALID      A0, ([$2E62,A0])
+      PVALID      A0, ([$2E63,A0],$2F64)
+      PVALID      A0, ([$2E64,A0],$2F653066)
+      PVALID      A0, ($2E712F72,A0)
+      PVALID      A0, ([$2E722F73,A0])
+      PVALID      A0, ([$2E742F75,A0],$30763177)
+      PVALID      A0, (D2.L*4)
+      PVALID      A0, ([D2.L*4])
+      PVALID      A0, ([D2.L*4],$2E93)
+      PVALID      A0, ([D2.L*4],$2E942F95)
+      PVALID      A0, ($2EA1,D2.L*4)
+      PVALID      A0, ([$2EA2,D2.L*4])
+      PVALID      A0, ([$2EA3,D2.L*4],$2FA4)
+      PVALID      A0, ([$2EA4,D2.L*4],$2FA530A6)
+      PVALID      A0, ([$2EA6],D2.L*4)
+      PVALID      A0, ([$2EA7],D2.L*4,$2FA8)
+      PVALID      A0, ([$2EA8],D2.L*4,$2FA930AA)
+      PVALID      A0, ($2EB12FB2,D2.L*4)
+      PVALID      A0, ([$2EB22FB3,D2.L*4])
+      PVALID      A0, ([$2EB42FB5,D2.L*4],$30B631B7)
+      PVALID      A0, ([$2EB62FB7],D2.L*4)
+      PVALID      A0, ([$2EB82FB9],D2.L*4,$30BA31BB)
+      PVALID      A0, ($2EE2)
+      PVALID      A0, ([$2EE2])
+      PVALID      A0, ([$2EE4],$2FE5)
+      PVALID      A0, ([$2EE4],$2FE530E6)
+      PVALID      A0, ($2EF12FF2)
+      PVALID      A0, ([$2EF22FF4])
+      PVALID      A0, ([$2EF42FF6],$30F731F8)
+      PVALID      A0, (0,A0,D2.L*8)
+      PFLUSH      SFC, #0, (A0,D3.L)
+      PFLUSH      SFC, #0, ([A0,D3.L])
+      PFLUSH      SFC, #0, ([A0,D3.L],$3A13)
+      PFLUSH      SFC, #0, ([A0,D3.L],$3A143B15)
+      PFLUSH      SFC, #0, ([A0],D3.L)
+      PFLUSH      SFC, #0, ([A0],D3.L,$3A17)
+      PFLUSH      SFC, #0, ([A0],D3.L,$3A183B19)
+      PFLUSH      SFC, #0, ($3A21,A0,D3.L)
+      PFLUSH      SFC, #0, ([$3A22,A0,D3.L])
+      PFLUSH      SFC, #0, ([$3A23,A0,D3.L],$3B24)
+      PFLUSH      SFC, #0, ([$3A24,A0,D3.L],$3B253C26)
+      PFLUSH      SFC, #0, ([$3A26,A0],D3.L)
+      PFLUSH      SFC, #0, ([$3A27,A0],D3.L,$3B28)
+      PFLUSH      SFC, #0, ([$3A28,A0],D3.L,$3B293C2A)
+      PFLUSH      SFC, #0, ($3A313B32,A0,D3.L)
+      PFLUSH      SFC, #0, ([$3A323B33,A0,D3.L])
+      PFLUSH      SFC, #0, ([$3A343B35,A0,D3.L],$3C363D37)
+      PFLUSH      SFC, #0, ([$3A363B37,A0],D3.L)
+      PFLUSH      SFC, #0, ([$3A383B39,A0],D3.L,$3C3A3D3B)
+      PFLUSH      SFC, #0, (A0)
+      PFLUSH      SFC, #0, ([A0])
+      PFLUSH      SFC, #0, ([A0],$3A53)
+      PFLUSH      SFC, #0, ([A0],$3A543B55)
+      PFLUSH      SFC, #0, ($3A61,A0)
+      PFLUSH      SFC, #0, ([$3A62,A0])
+      PFLUSH      SFC, #0, ([$3A63,A0],$3B64)
+      PFLUSH      SFC, #0, ([$3A64,A0],$3B653C66)
+      PFLUSH      SFC, #0, ($3A713B72,A0)
+      PFLUSH      SFC, #0, ([$3A723B73,A0])
+      PFLUSH      SFC, #0, ([$3A743B75,A0],$3C763D77)
+      PFLUSH      SFC, #0, (D3.L)
+      PFLUSH      SFC, #0, ([D3.L])
+      PFLUSH      SFC, #0, ([D3.L],$3A93)
+      PFLUSH      SFC, #0, ([D3.L],$3A943B95)
+      PFLUSH      SFC, #0, ($3AA1,D3.L)
+      PFLUSH      SFC, #0, ([$3AA2,D3.L])
+      PFLUSH      SFC, #0, ([$3AA3,D3.L],$3BA4)
+      PFLUSH      SFC, #0, ([$3AA4,D3.L],$3BA53CA6)
+      PFLUSH      SFC, #0, ([$3AA6],D3.L)
+      PFLUSH      SFC, #0, ([$3AA7],D3.L,$3BA8)
+      PFLUSH      SFC, #0, ([$3AA8],D3.L,$3BA93CAA)
+      PFLUSH      SFC, #0, ($3AB13BB2,D3.L)
+      PFLUSH      SFC, #0, ([$3AB23BB3,D3.L])
+      PFLUSH      SFC, #0, ([$3AB43BB5,D3.L],$3CB63DB7)
+      PFLUSH      SFC, #0, ([$3AB63BB7],D3.L)
+      PFLUSH      SFC, #0, ([$3AB83BB9],D3.L,$3CBA3DBB)
+      PFLUSH      SFC, #0, ($3AE2)
+      PFLUSH      SFC, #0, ([$3AE2])
+      PFLUSH      SFC, #0, ([$3AE4],$3BE5)
+      PFLUSH      SFC, #0, ([$3AE4],$3BE53CE6)
+      PFLUSH      SFC, #0, ($3AF13BF2)
+      PFLUSH      SFC, #0, ([$3AF23BF4])
+      PFLUSH      SFC, #0, ([$3AF43BF6],$3CF73DF8)
+      PFLUSH      SFC, #0, (0,A0,D3.L*2)
+      PFLUSH      DFC, #0, (A0,D3.L)
+      PFLUSH      DFC, #0, ([A0,D3.L])
+      PFLUSH      DFC, #0, ([A0,D3.L],$3A13)
+      PFLUSH      DFC, #0, ([A0,D3.L],$3A143B15)
+      PFLUSH      DFC, #0, ([A0],D3.L)
+      PFLUSH      DFC, #0, ([A0],D3.L,$3A17)
+      PFLUSH      DFC, #0, ([A0],D3.L,$3A183B19)
+      PFLUSH      DFC, #0, ($3A21,A0,D3.L)
+      PFLUSH      DFC, #0, ([$3A22,A0,D3.L])
+      PFLUSH      DFC, #0, ([$3A23,A0,D3.L],$3B24)
+      PFLUSH      DFC, #0, ([$3A24,A0,D3.L],$3B253C26)
+      PFLUSH      DFC, #0, ([$3A26,A0],D3.L)
+      PFLUSH      DFC, #0, ([$3A27,A0],D3.L,$3B28)
+      PFLUSH      DFC, #0, ([$3A28,A0],D3.L,$3B293C2A)
+      PFLUSH      DFC, #0, ($3A313B32,A0,D3.L)
+      PFLUSH      DFC, #0, ([$3A323B33,A0,D3.L])
+      PFLUSH      DFC, #0, ([$3A343B35,A0,D3.L],$3C363D37)
+      PFLUSH      DFC, #0, ([$3A363B37,A0],D3.L)
+      PFLUSH      DFC, #0, ([$3A383B39,A0],D3.L,$3C3A3D3B)
+      PFLUSH      DFC, #0, (A0)
+      PFLUSH      DFC, #0, ([A0])
+      PFLUSH      DFC, #0, ([A0],$3A53)
+      PFLUSH      DFC, #0, ([A0],$3A543B55)
+      PFLUSH      DFC, #0, ($3A61,A0)
+      PFLUSH      DFC, #0, ([$3A62,A0])
+      PFLUSH      DFC, #0, ([$3A63,A0],$3B64)
+      PFLUSH      DFC, #0, ([$3A64,A0],$3B653C66)
+      PFLUSH      DFC, #0, ($3A713B72,A0)
+      PFLUSH      DFC, #0, ([$3A723B73,A0])
+      PFLUSH      DFC, #0, ([$3A743B75,A0],$3C763D77)
+      PFLUSH      DFC, #0, (D3.L)
+      PFLUSH      DFC, #0, ([D3.L])
+      PFLUSH      DFC, #0, ([D3.L],$3A93)
+      PFLUSH      DFC, #0, ([D3.L],$3A943B95)
+      PFLUSH      DFC, #0, ($3AA1,D3.L)
+      PFLUSH      DFC, #0, ([$3AA2,D3.L])
+      PFLUSH      DFC, #0, ([$3AA3,D3.L],$3BA4)
+      PFLUSH      DFC, #0, ([$3AA4,D3.L],$3BA53CA6)
+      PFLUSH      DFC, #0, ([$3AA6],D3.L)
+      PFLUSH      DFC, #0, ([$3AA7],D3.L,$3BA8)
+      PFLUSH      DFC, #0, ([$3AA8],D3.L,$3BA93CAA)
+      PFLUSH      DFC, #0, ($3AB13BB2,D3.L)
+      PFLUSH      DFC, #0, ([$3AB23BB3,D3.L])
+      PFLUSH      DFC, #0, ([$3AB43BB5,D3.L],$3CB63DB7)
+      PFLUSH      DFC, #0, ([$3AB63BB7],D3.L)
+      PFLUSH      DFC, #0, ([$3AB83BB9],D3.L,$3CBA3DBB)
+      PFLUSH      DFC, #0, ($3AE2)
+      PFLUSH      DFC, #0, ([$3AE2])
+      PFLUSH      DFC, #0, ([$3AE4],$3BE5)
+      PFLUSH      DFC, #0, ([$3AE4],$3BE53CE6)
+      PFLUSH      DFC, #0, ($3AF13BF2)
+      PFLUSH      DFC, #0, ([$3AF23BF4])
+      PFLUSH      DFC, #0, ([$3AF43BF6],$3CF73DF8)
+      PFLUSH      DFC, #0, (0,A0,D3.L*2)
+      PFLUSH      D0, #0, (A0,D3.L)
+      PFLUSH      D0, #0, ([A0,D3.L])
+      PFLUSH      D0, #0, ([A0,D3.L],$3A13)
+      PFLUSH      D0, #0, ([A0,D3.L],$3A143B15)
+      PFLUSH      D0, #0, ([A0],D3.L)
+      PFLUSH      D0, #0, ([A0],D3.L,$3A17)
+      PFLUSH      D0, #0, ([A0],D3.L,$3A183B19)
+      PFLUSH      D0, #0, ($3A21,A0,D3.L)
+      PFLUSH      D0, #0, ([$3A22,A0,D3.L])
+      PFLUSH      D0, #0, ([$3A23,A0,D3.L],$3B24)
+      PFLUSH      D0, #0, ([$3A24,A0,D3.L],$3B253C26)
+      PFLUSH      D0, #0, ([$3A26,A0],D3.L)
+      PFLUSH      D0, #0, ([$3A27,A0],D3.L,$3B28)
+      PFLUSH      D0, #0, ([$3A28,A0],D3.L,$3B293C2A)
+      PFLUSH      D0, #0, ($3A313B32,A0,D3.L)
+      PFLUSH      D0, #0, ([$3A323B33,A0,D3.L])
+      PFLUSH      D0, #0, ([$3A343B35,A0,D3.L],$3C363D37)
+      PFLUSH      D0, #0, ([$3A363B37,A0],D3.L)
+      PFLUSH      D0, #0, ([$3A383B39,A0],D3.L,$3C3A3D3B)
+      PFLUSH      D0, #0, (A0)
+      PFLUSH      D0, #0, ([A0])
+      PFLUSH      D0, #0, ([A0],$3A53)
+      PFLUSH      D0, #0, ([A0],$3A543B55)
+      PFLUSH      D0, #0, ($3A61,A0)
+      PFLUSH      D0, #0, ([$3A62,A0])
+      PFLUSH      D0, #0, ([$3A63,A0],$3B64)
+      PFLUSH      D0, #0, ([$3A64,A0],$3B653C66)
+      PFLUSH      D0, #0, ($3A713B72,A0)
+      PFLUSH      D0, #0, ([$3A723B73,A0])
+      PFLUSH      D0, #0, ([$3A743B75,A0],$3C763D77)
+      PFLUSH      D0, #0, (D3.L)
+      PFLUSH      D0, #0, ([D3.L])
+      PFLUSH      D0, #0, ([D3.L],$3A93)
+      PFLUSH      D0, #0, ([D3.L],$3A943B95)
+      PFLUSH      D0, #0, ($3AA1,D3.L)
+      PFLUSH      D0, #0, ([$3AA2,D3.L])
+      PFLUSH      D0, #0, ([$3AA3,D3.L],$3BA4)
+      PFLUSH      D0, #0, ([$3AA4,D3.L],$3BA53CA6)
+      PFLUSH      D0, #0, ([$3AA6],D3.L)
+      PFLUSH      D0, #0, ([$3AA7],D3.L,$3BA8)
+      PFLUSH      D0, #0, ([$3AA8],D3.L,$3BA93CAA)
+      PFLUSH      D0, #0, ($3AB13BB2,D3.L)
+      PFLUSH      D0, #0, ([$3AB23BB3,D3.L])
+      PFLUSH      D0, #0, ([$3AB43BB5,D3.L],$3CB63DB7)
+      PFLUSH      D0, #0, ([$3AB63BB7],D3.L)
+      PFLUSH      D0, #0, ([$3AB83BB9],D3.L,$3CBA3DBB)
+      PFLUSH      D0, #0, ($3AE2)
+      PFLUSH      D0, #0, ([$3AE2])
+      PFLUSH      D0, #0, ([$3AE4],$3BE5)
+      PFLUSH      D0, #0, ([$3AE4],$3BE53CE6)
+      PFLUSH      D0, #0, ($3AF13BF2)
+      PFLUSH      D0, #0, ([$3AF23BF4])
+      PFLUSH      D0, #0, ([$3AF43BF6],$3CF73DF8)
+      PFLUSH      D0, #0, (0,A0,D3.L*2)
+      PFLUSH      #0, #0, ([A0,D3.L])
+      PFLUSH      #0, #0, ([A0,D3.L],$3A13)
+      PFLUSH      #0, #0, ([A0,D3.L],$3A143B15)
+      PFLUSH      #0, #0, ([A0],D3.L)
+      PFLUSH      #0, #0, ([A0],D3.L,$3A17)
+      PFLUSH      #0, #0, ([A0],D3.L,$3A183B19)
+      PFLUSH      #0, #0, ($3A21,A0,D3.L)
+      PFLUSH      #0, #0, ([$3A22,A0,D3.L])
+      PFLUSH      #0, #0, ([$3A23,A0,D3.L],$3B24)
+      PFLUSH      #0, #0, ([$3A24,A0,D3.L],$3B253C26)
+      PFLUSH      #0, #0, ([$3A26,A0],D3.L)
+      PFLUSH      #0, #0, ([$3A27,A0],D3.L,$3B28)
+      PFLUSH      #0, #0, ([$3A28,A0],D3.L,$3B293C2A)
+      PFLUSH      #0, #0, ($3A313B32,A0,D3.L)
+      PFLUSH      #0, #0, ([$3A323B33,A0,D3.L])
+      PFLUSH      #0, #0, ([$3A343B35,A0,D3.L],$3C363D37)
+      PFLUSH      #0, #0, ([$3A363B37,A0],D3.L)
+      PFLUSH      #0, #0, ([$3A383B39,A0],D3.L,$3C3A3D3B)
+      PFLUSH      #0, #0, (A0)
+      PFLUSH      #0, #0, ([A0])
+      PFLUSH      #0, #0, ([A0],$3A53)
+      PFLUSH      #0, #0, ([A0],$3A543B55)
+      PFLUSH      #0, #0, ($3A61,A0)
+      PFLUSH      #0, #0, ([$3A62,A0])
+      PFLUSH      #0, #0, ([$3A63,A0],$3B64)
+      PFLUSH      #0, #0, ([$3A64,A0],$3B653C66)
+      PFLUSH      #0, #0, ($3A713B72,A0)
+      PFLUSH      #0, #0, ([$3A723B73,A0])
+      PFLUSH      #0, #0, ([$3A743B75,A0],$3C763D77)
+      PFLUSH      #0, #0, (D3.L)
+      PFLUSH      #0, #0, ([D3.L])
+      PFLUSH      #0, #0, ([D3.L],$3A93)
+      PFLUSH      #0, #0, ([D3.L],$3A943B95)
+      PFLUSH      #0, #0, ($3AA1,D3.L)
+      PFLUSH      #0, #0, ([$3AA2,D3.L])
+      PFLUSH      #0, #0, ([$3AA3,D3.L],$3BA4)
+      PFLUSH      #0, #0, ([$3AA4,D3.L],$3BA53CA6)
+      PFLUSH      #0, #0, ([$3AA6],D3.L)
+      PFLUSH      #0, #0, ([$3AA7],D3.L,$3BA8)
+      PFLUSH      #0, #0, ([$3AA8],D3.L,$3BA93CAA)
+      PFLUSH      #0, #0, ($3AB13BB2,D3.L)
+      PFLUSH      #0, #0, ([$3AB23BB3,D3.L])
+      PFLUSH      #0, #0, ([$3AB43BB5,D3.L],$3CB63DB7)
+      PFLUSH      #0, #0, ([$3AB63BB7],D3.L)
+      PFLUSH      #0, #0, ([$3AB83BB9],D3.L,$3CBA3DBB)
+      PFLUSH      #0, #0, ($3AE2)
+      PFLUSH      #0, #0, ([$3AE2])
+      PFLUSH      #0, #0, ([$3AE4],$3BE5)
+      PFLUSH      #0, #0, ([$3AE4],$3BE53CE6)
+      PFLUSH      #0, #0, ($3AF13BF2)
+      PFLUSH      #0, #0, ([$3AF23BF4])
+      PFLUSH      #0, #0, ([$3AF43BF6],$3CF73DF8)
+      PFLUSH      #0, #0, (0,A0,D3.L*2)
+      PFLUSH      #0, #0, (A0,D3.L*2)
+      PFLUSHS     SFC, #0, (A0,D3.L*4)
+      PFLUSHS     SFC, #0, ([A0,D3.L*4])
+      PFLUSHS     SFC, #0, ([A0,D3.L*4],$3E13)
+      PFLUSHS     SFC, #0, ([A0,D3.L*4],$3E143F15)
+      PFLUSHS     SFC, #0, ([A0],D3.L*4)
+      PFLUSHS     SFC, #0, ([A0],D3.L*4,$3E17)
+      PFLUSHS     SFC, #0, ([A0],D3.L*4,$3E183F19)
+      PFLUSHS     SFC, #0, ($3E21,A0,D3.L*4)
+      PFLUSHS     SFC, #0, ([$3E22,A0,D3.L*4])
+      PFLUSHS     SFC, #0, ([$3E23,A0,D3.L*4],$3F24)
+      PFLUSHS     SFC, #0, ([$3E24,A0,D3.L*4],$3F254026)
+      PFLUSHS     SFC, #0, ([$3E26,A0],D3.L*4)
+      PFLUSHS     SFC, #0, ([$3E27,A0],D3.L*4,$3F28)
+      PFLUSHS     SFC, #0, ([$3E28,A0],D3.L*4,$3F29402A)
+      PFLUSHS     SFC, #0, ($3E313F32,A0,D3.L*4)
+      PFLUSHS     SFC, #0, ([$3E323F33,A0,D3.L*4])
+      PFLUSHS     SFC, #0, ([$3E343F35,A0,D3.L*4],$40364137)
+      PFLUSHS     SFC, #0, ([$3E363F37,A0],D3.L*4)
+      PFLUSHS     SFC, #0, ([$3E383F39,A0],D3.L*4,$403A413B)
+      PFLUSHS     SFC, #0, (A0)
+      PFLUSHS     SFC, #0, ([A0])
+      PFLUSHS     SFC, #0, ([A0],$3E53)
+      PFLUSHS     SFC, #0, ([A0],$3E543F55)
+      PFLUSHS     SFC, #0, ($3E61,A0)
+      PFLUSHS     SFC, #0, ([$3E62,A0])
+      PFLUSHS     SFC, #0, ([$3E63,A0],$3F64)
+      PFLUSHS     SFC, #0, ([$3E64,A0],$3F654066)
+      PFLUSHS     SFC, #0, ($3E713F72,A0)
+      PFLUSHS     SFC, #0, ([$3E723F73,A0])
+      PFLUSHS     SFC, #0, ([$3E743F75,A0],$40764177)
+      PFLUSHS     SFC, #0, (D3.L*4)
+      PFLUSHS     SFC, #0, ([D3.L*4])
+      PFLUSHS     SFC, #0, ([D3.L*4],$3E93)
+      PFLUSHS     SFC, #0, ([D3.L*4],$3E943F95)
+      PFLUSHS     SFC, #0, ($3EA1,D3.L*4)
+      PFLUSHS     SFC, #0, ([$3EA2,D3.L*4])
+      PFLUSHS     SFC, #0, ([$3EA3,D3.L*4],$3FA4)
+      PFLUSHS     SFC, #0, ([$3EA4,D3.L*4],$3FA540A6)
+      PFLUSHS     SFC, #0, ([$3EA6],D3.L*4)
+      PFLUSHS     SFC, #0, ([$3EA7],D3.L*4,$3FA8)
+      PFLUSHS     SFC, #0, ([$3EA8],D3.L*4,$3FA940AA)
+      PFLUSHS     SFC, #0, ($3EB13FB2,D3.L*4)
+      PFLUSHS     SFC, #0, ([$3EB23FB3,D3.L*4])
+      PFLUSHS     SFC, #0, ([$3EB43FB5,D3.L*4],$40B641B7)
+      PFLUSHS     SFC, #0, ([$3EB63FB7],D3.L*4)
+      PFLUSHS     SFC, #0, ([$3EB83FB9],D3.L*4,$40BA41BB)
+      PFLUSHS     SFC, #0, ($3EE2)
+      PFLUSHS     SFC, #0, ([$3EE2])
+      PFLUSHS     SFC, #0, ([$3EE4],$3FE5)
+      PFLUSHS     SFC, #0, ([$3EE4],$3FE540E6)
+      PFLUSHS     SFC, #0, ($3EF13FF2)
+      PFLUSHS     SFC, #0, ([$3EF23FF4])
+      PFLUSHS     SFC, #0, ([$3EF43FF6],$40F741F8)
+      PFLUSHS     SFC, #0, (0,A0,D3.L*8)
+      PFLUSHS     DFC, #0, (A0,D3.L*4)
+      PFLUSHS     DFC, #0, ([A0,D3.L*4])
+      PFLUSHS     DFC, #0, ([A0,D3.L*4],$3E13)
+      PFLUSHS     DFC, #0, ([A0,D3.L*4],$3E143F15)
+      PFLUSHS     DFC, #0, ([A0],D3.L*4)
+      PFLUSHS     DFC, #0, ([A0],D3.L*4,$3E17)
+      PFLUSHS     DFC, #0, ([A0],D3.L*4,$3E183F19)
+      PFLUSHS     DFC, #0, ($3E21,A0,D3.L*4)
+      PFLUSHS     DFC, #0, ([$3E22,A0,D3.L*4])
+      PFLUSHS     DFC, #0, ([$3E23,A0,D3.L*4],$3F24)
+      PFLUSHS     DFC, #0, ([$3E24,A0,D3.L*4],$3F254026)
+      PFLUSHS     DFC, #0, ([$3E26,A0],D3.L*4)
+      PFLUSHS     DFC, #0, ([$3E27,A0],D3.L*4,$3F28)
+      PFLUSHS     DFC, #0, ([$3E28,A0],D3.L*4,$3F29402A)
+      PFLUSHS     DFC, #0, ($3E313F32,A0,D3.L*4)
+      PFLUSHS     DFC, #0, ([$3E323F33,A0,D3.L*4])
+      PFLUSHS     DFC, #0, ([$3E343F35,A0,D3.L*4],$40364137)
+      PFLUSHS     DFC, #0, ([$3E363F37,A0],D3.L*4)
+      PFLUSHS     DFC, #0, ([$3E383F39,A0],D3.L*4,$403A413B)
+      PFLUSHS     DFC, #0, (A0)
+      PFLUSHS     DFC, #0, ([A0])
+      PFLUSHS     DFC, #0, ([A0],$3E53)
+      PFLUSHS     DFC, #0, ([A0],$3E543F55)
+      PFLUSHS     DFC, #0, ($3E61,A0)
+      PFLUSHS     DFC, #0, ([$3E62,A0])
+      PFLUSHS     DFC, #0, ([$3E63,A0],$3F64)
+      PFLUSHS     DFC, #0, ([$3E64,A0],$3F654066)
+      PFLUSHS     DFC, #0, ($3E713F72,A0)
+      PFLUSHS     DFC, #0, ([$3E723F73,A0])
+      PFLUSHS     DFC, #0, ([$3E743F75,A0],$40764177)
+      PFLUSHS     DFC, #0, (D3.L*4)
+      PFLUSHS     DFC, #0, ([D3.L*4])
+      PFLUSHS     DFC, #0, ([D3.L*4],$3E93)
+      PFLUSHS     DFC, #0, ([D3.L*4],$3E943F95)
+      PFLUSHS     DFC, #0, ($3EA1,D3.L*4)
+      PFLUSHS     DFC, #0, ([$3EA2,D3.L*4])
+      PFLUSHS     DFC, #0, ([$3EA3,D3.L*4],$3FA4)
+      PFLUSHS     DFC, #0, ([$3EA4,D3.L*4],$3FA540A6)
+      PFLUSHS     DFC, #0, ([$3EA6],D3.L*4)
+      PFLUSHS     DFC, #0, ([$3EA7],D3.L*4,$3FA8)
+      PFLUSHS     DFC, #0, ([$3EA8],D3.L*4,$3FA940AA)
+      PFLUSHS     DFC, #0, ($3EB13FB2,D3.L*4)
+      PFLUSHS     DFC, #0, ([$3EB23FB3,D3.L*4])
+      PFLUSHS     DFC, #0, ([$3EB43FB5,D3.L*4],$40B641B7)
+      PFLUSHS     DFC, #0, ([$3EB63FB7],D3.L*4)
+      PFLUSHS     DFC, #0, ([$3EB83FB9],D3.L*4,$40BA41BB)
+      PFLUSHS     DFC, #0, ($3EE2)
+      PFLUSHS     DFC, #0, ([$3EE2])
+      PFLUSHS     DFC, #0, ([$3EE4],$3FE5)
+      PFLUSHS     DFC, #0, ([$3EE4],$3FE540E6)
+      PFLUSHS     DFC, #0, ($3EF13FF2)
+      PFLUSHS     DFC, #0, ([$3EF23FF4])
+      PFLUSHS     DFC, #0, ([$3EF43FF6],$40F741F8)
+      PFLUSHS     DFC, #0, (0,A0,D3.L*8)
+      PFLUSHS     D0, #0, (A0,D3.L*4)
+      PFLUSHS     D0, #0, ([A0,D3.L*4])
+      PFLUSHS     D0, #0, ([A0,D3.L*4],$3E13)
+      PFLUSHS     D0, #0, ([A0,D3.L*4],$3E143F15)
+      PFLUSHS     D0, #0, ([A0],D3.L*4)
+      PFLUSHS     D0, #0, ([A0],D3.L*4,$3E17)
+      PFLUSHS     D0, #0, ([A0],D3.L*4,$3E183F19)
+      PFLUSHS     D0, #0, ($3E21,A0,D3.L*4)
+      PFLUSHS     D0, #0, ([$3E22,A0,D3.L*4])
+      PFLUSHS     D0, #0, ([$3E23,A0,D3.L*4],$3F24)
+      PFLUSHS     D0, #0, ([$3E24,A0,D3.L*4],$3F254026)
+      PFLUSHS     D0, #0, ([$3E26,A0],D3.L*4)
+      PFLUSHS     D0, #0, ([$3E27,A0],D3.L*4,$3F28)
+      PFLUSHS     D0, #0, ([$3E28,A0],D3.L*4,$3F29402A)
+      PFLUSHS     D0, #0, ($3E313F32,A0,D3.L*4)
+      PFLUSHS     D0, #0, ([$3E323F33,A0,D3.L*4])
+      PFLUSHS     D0, #0, ([$3E343F35,A0,D3.L*4],$40364137)
+      PFLUSHS     D0, #0, ([$3E363F37,A0],D3.L*4)
+      PFLUSHS     D0, #0, ([$3E383F39,A0],D3.L*4,$403A413B)
+      PFLUSHS     D0, #0, (A0)
+      PFLUSHS     D0, #0, ([A0])
+      PFLUSHS     D0, #0, ([A0],$3E53)
+      PFLUSHS     D0, #0, ([A0],$3E543F55)
+      PFLUSHS     D0, #0, ($3E61,A0)
+      PFLUSHS     D0, #0, ([$3E62,A0])
+      PFLUSHS     D0, #0, ([$3E63,A0],$3F64)
+      PFLUSHS     D0, #0, ([$3E64,A0],$3F654066)
+      PFLUSHS     D0, #0, ($3E713F72,A0)
+      PFLUSHS     D0, #0, ([$3E723F73,A0])
+      PFLUSHS     D0, #0, ([$3E743F75,A0],$40764177)
+      PFLUSHS     D0, #0, (D3.L*4)
+      PFLUSHS     D0, #0, ([D3.L*4])
+      PFLUSHS     D0, #0, ([D3.L*4],$3E93)
+      PFLUSHS     D0, #0, ([D3.L*4],$3E943F95)
+      PFLUSHS     D0, #0, ($3EA1,D3.L*4)
+      PFLUSHS     D0, #0, ([$3EA2,D3.L*4])
+      PFLUSHS     D0, #0, ([$3EA3,D3.L*4],$3FA4)
+      PFLUSHS     D0, #0, ([$3EA4,D3.L*4],$3FA540A6)
+      PFLUSHS     D0, #0, ([$3EA6],D3.L*4)
+      PFLUSHS     D0, #0, ([$3EA7],D3.L*4,$3FA8)
+      PFLUSHS     D0, #0, ([$3EA8],D3.L*4,$3FA940AA)
+      PFLUSHS     D0, #0, ($3EB13FB2,D3.L*4)
+      PFLUSHS     D0, #0, ([$3EB23FB3,D3.L*4])
+      PFLUSHS     D0, #0, ([$3EB43FB5,D3.L*4],$40B641B7)
+      PFLUSHS     D0, #0, ([$3EB63FB7],D3.L*4)
+      PFLUSHS     D0, #0, ([$3EB83FB9],D3.L*4,$40BA41BB)
+      PFLUSHS     D0, #0, ($3EE2)
+      PFLUSHS     D0, #0, ([$3EE2])
+      PFLUSHS     D0, #0, ([$3EE4],$3FE5)
+      PFLUSHS     D0, #0, ([$3EE4],$3FE540E6)
+      PFLUSHS     D0, #0, ($3EF13FF2)
+      PFLUSHS     D0, #0, ([$3EF23FF4])
+      PFLUSHS     D0, #0, ([$3EF43FF6],$40F741F8)
+      PFLUSHS     D0, #0, (0,A0,D3.L*8)
+      PFLUSHS     #0, #0, ([A0,D3.L*4])
+      PFLUSHS     #0, #0, ([A0,D3.L*4],$3E13)
+      PFLUSHS     #0, #0, ([A0,D3.L*4],$3E143F15)
+      PFLUSHS     #0, #0, ([A0],D3.L*4)
+      PFLUSHS     #0, #0, ([A0],D3.L*4,$3E17)
+      PFLUSHS     #0, #0, ([A0],D3.L*4,$3E183F19)
+      PFLUSHS     #0, #0, ($3E21,A0,D3.L*4)
+      PFLUSHS     #0, #0, ([$3E22,A0,D3.L*4])
+      PFLUSHS     #0, #0, ([$3E23,A0,D3.L*4],$3F24)
+      PFLUSHS     #0, #0, ([$3E24,A0,D3.L*4],$3F254026)
+      PFLUSHS     #0, #0, ([$3E26,A0],D3.L*4)
+      PFLUSHS     #0, #0, ([$3E27,A0],D3.L*4,$3F28)
+      PFLUSHS     #0, #0, ([$3E28,A0],D3.L*4,$3F29402A)
+      PFLUSHS     #0, #0, ($3E313F32,A0,D3.L*4)
+      PFLUSHS     #0, #0, ([$3E323F33,A0,D3.L*4])
+      PFLUSHS     #0, #0, ([$3E343F35,A0,D3.L*4],$40364137)
+      PFLUSHS     #0, #0, ([$3E363F37,A0],D3.L*4)
+      PFLUSHS     #0, #0, ([$3E383F39,A0],D3.L*4,$403A413B)
+      PFLUSHS     #0, #0, (A0)
+      PFLUSHS     #0, #0, ([A0])
+      PFLUSHS     #0, #0, ([A0],$3E53)
+      PFLUSHS     #0, #0, ([A0],$3E543F55)
+      PFLUSHS     #0, #0, ($3E61,A0)
+      PFLUSHS     #0, #0, ([$3E62,A0])
+      PFLUSHS     #0, #0, ([$3E63,A0],$3F64)
+      PFLUSHS     #0, #0, ([$3E64,A0],$3F654066)
+      PFLUSHS     #0, #0, ($3E713F72,A0)
+      PFLUSHS     #0, #0, ([$3E723F73,A0])
+      PFLUSHS     #0, #0, ([$3E743F75,A0],$40764177)
+      PFLUSHS     #0, #0, (D3.L*4)
+      PFLUSHS     #0, #0, ([D3.L*4])
+      PFLUSHS     #0, #0, ([D3.L*4],$3E93)
+      PFLUSHS     #0, #0, ([D3.L*4],$3E943F95)
+      PFLUSHS     #0, #0, ($3EA1,D3.L*4)
+      PFLUSHS     #0, #0, ([$3EA2,D3.L*4])
+      PFLUSHS     #0, #0, ([$3EA3,D3.L*4],$3FA4)
+      PFLUSHS     #0, #0, ([$3EA4,D3.L*4],$3FA540A6)
+      PFLUSHS     #0, #0, ([$3EA6],D3.L*4)
+      PFLUSHS     #0, #0, ([$3EA7],D3.L*4,$3FA8)
+      PFLUSHS     #0, #0, ([$3EA8],D3.L*4,$3FA940AA)
+      PFLUSHS     #0, #0, ($3EB13FB2,D3.L*4)
+      PFLUSHS     #0, #0, ([$3EB23FB3,D3.L*4])
+      PFLUSHS     #0, #0, ([$3EB43FB5,D3.L*4],$40B641B7)
+      PFLUSHS     #0, #0, ([$3EB63FB7],D3.L*4)
+      PFLUSHS     #0, #0, ([$3EB83FB9],D3.L*4,$40BA41BB)
+      PFLUSHS     #0, #0, ($3EE2)
+      PFLUSHS     #0, #0, ([$3EE2])
+      PFLUSHS     #0, #0, ([$3EE4],$3FE5)
+      PFLUSHS     #0, #0, ([$3EE4],$3FE540E6)
+      PFLUSHS     #0, #0, ($3EF13FF2)
+      PFLUSHS     #0, #0, ([$3EF23FF4])
+      PFLUSHS     #0, #0, ([$3EF43FF6],$40F741F8)
+      PFLUSHS     #0, #0, (0,A0,D3.L*8)
+      PFLUSHS     #0, #0, (A0,D3.L*8)
+      PMOVE.L     (A0,D4.W), TC
+      PMOVE.L     ([A0,D4.W]), TC
+      PMOVE.L     ([A0,D4.W],$4213), TC
+      PMOVE.L     ([A0,D4.W],$42144315), TC
+      PMOVE.L     ([A0],D4.W), TC
+      PMOVE.L     ([A0],D4.W,$4217), TC
+      PMOVE.L     ([A0],D4.W,$42184319), TC
+      PMOVE.L     ($4221,A0,D4.W), TC
+      PMOVE.L     ([$4222,A0,D4.W]), TC
+      PMOVE.L     ([$4223,A0,D4.W],$4324), TC
+      PMOVE.L     ([$4224,A0,D4.W],$43254426), TC
+      PMOVE.L     ([$4226,A0],D4.W), TC
+      PMOVE.L     ([$4227,A0],D4.W,$4328), TC
+      PMOVE.L     ([$4228,A0],D4.W,$4329442A), TC
+      PMOVE.L     ($42314332,A0,D4.W), TC
+      PMOVE.L     ([$42324333,A0,D4.W]), TC
+      PMOVE.L     ([$42344335,A0,D4.W],$44364537), TC
+      PMOVE.L     ([$42364337,A0],D4.W), TC
+      PMOVE.L     ([$42384339,A0],D4.W,$443A453B), TC
+      PMOVE.L     (A0), TC
+      PMOVE.L     ([A0]), TC
+      PMOVE.L     ([A0],$4253), TC
+      PMOVE.L     ([A0],$42544355), TC
+      PMOVE.L     ($4261,A0), TC
+      PMOVE.L     ([$4262,A0]), TC
+      PMOVE.L     ([$4263,A0],$4364), TC
+      PMOVE.L     ([$4264,A0],$43654466), TC
+      PMOVE.L     ($42714372,A0), TC
+      PMOVE.L     ([$42724373,A0]), TC
+      PMOVE.L     ([$42744375,A0],$44764577), TC
+      PMOVE.L     (D4.W), TC
+      PMOVE.L     ([D4.W]), TC
+      PMOVE.L     ([D4.W],$4293), TC
+      PMOVE.L     ([D4.W],$42944395), TC
+      PMOVE.L     ($42A1,D4.W), TC
+      PMOVE.L     ([$42A2,D4.W]), TC
+      PMOVE.L     ([$42A3,D4.W],$43A4), TC
+      PMOVE.L     ([$42A4,D4.W],$43A544A6), TC
+      PMOVE.L     ([$42A6],D4.W), TC
+      PMOVE.L     ([$42A7],D4.W,$43A8), TC
+      PMOVE.L     ([$42A8],D4.W,$43A944AA), TC
+      PMOVE.L     ($42B143B2,D4.W), TC
+      PMOVE.L     ([$42B243B3,D4.W]), TC
+      PMOVE.L     ([$42B443B5,D4.W],$44B645B7), TC
+      PMOVE.L     ([$42B643B7],D4.W), TC
+      PMOVE.L     ([$42B843B9],D4.W,$44BA45BB), TC
+      PMOVE.L     ($42E2), TC
+      PMOVE.L     ([$42E2]), TC
+      PMOVE.L     ([$42E4],$43E5), TC
+      PMOVE.L     ([$42E4],$43E544E6), TC
+      PMOVE.L     ($42F143F2), TC
+      PMOVE.L     ([$42F243F4]), TC
+      PMOVE.L     ([$42F443F6],$44F745F8), TC
+      PMOVE.L     (0,A0,D4.W*2), TC
+      PMOVE.L     TC, (A0,D4.W*2)
+      PMOVE.L     TC, ([A0,D4.W*2])
+      PMOVE.L     TC, ([A0,D4.W*2],$4413)
+      PMOVE.L     TC, ([A0,D4.W*2],$44144515)
+      PMOVE.L     TC, ([A0],D4.W*2)
+      PMOVE.L     TC, ([A0],D4.W*2,$4417)
+      PMOVE.L     TC, ([A0],D4.W*2,$44184519)
+      PMOVE.L     TC, ($4421,A0,D4.W*2)
+      PMOVE.L     TC, ([$4422,A0,D4.W*2])
+      PMOVE.L     TC, ([$4423,A0,D4.W*2],$4524)
+      PMOVE.L     TC, ([$4424,A0,D4.W*2],$45254626)
+      PMOVE.L     TC, ([$4426,A0],D4.W*2)
+      PMOVE.L     TC, ([$4427,A0],D4.W*2,$4528)
+      PMOVE.L     TC, ([$4428,A0],D4.W*2,$4529462A)
+      PMOVE.L     TC, ($44314532,A0,D4.W*2)
+      PMOVE.L     TC, ([$44324533,A0,D4.W*2])
+      PMOVE.L     TC, ([$44344535,A0,D4.W*2],$46364737)
+      PMOVE.L     TC, ([$44364537,A0],D4.W*2)
+      PMOVE.L     TC, ([$44384539,A0],D4.W*2,$463A473B)
+      PMOVE.L     TC, (A0)
+      PMOVE.L     TC, ([A0])
+      PMOVE.L     TC, ([A0],$4453)
+      PMOVE.L     TC, ([A0],$44544555)
+      PMOVE.L     TC, ($4461,A0)
+      PMOVE.L     TC, ([$4462,A0])
+      PMOVE.L     TC, ([$4463,A0],$4564)
+      PMOVE.L     TC, ([$4464,A0],$45654666)
+      PMOVE.L     TC, ($44714572,A0)
+      PMOVE.L     TC, ([$44724573,A0])
+      PMOVE.L     TC, ([$44744575,A0],$46764777)
+      PMOVE.L     TC, (D4.W*2)
+      PMOVE.L     TC, ([D4.W*2])
+      PMOVE.L     TC, ([D4.W*2],$4493)
+      PMOVE.L     TC, ([D4.W*2],$44944595)
+      PMOVE.L     TC, ($44A1,D4.W*2)
+      PMOVE.L     TC, ([$44A2,D4.W*2])
+      PMOVE.L     TC, ([$44A3,D4.W*2],$45A4)
+      PMOVE.L     TC, ([$44A4,D4.W*2],$45A546A6)
+      PMOVE.L     TC, ([$44A6],D4.W*2)
+      PMOVE.L     TC, ([$44A7],D4.W*2,$45A8)
+      PMOVE.L     TC, ([$44A8],D4.W*2,$45A946AA)
+      PMOVE.L     TC, ($44B145B2,D4.W*2)
+      PMOVE.L     TC, ([$44B245B3,D4.W*2])
+      PMOVE.L     TC, ([$44B445B5,D4.W*2],$46B647B7)
+      PMOVE.L     TC, ([$44B645B7],D4.W*2)
+      PMOVE.L     TC, ([$44B845B9],D4.W*2,$46BA47BB)
+      PMOVE.L     TC, ($44E2)
+      PMOVE.L     TC, ([$44E2])
+      PMOVE.L     TC, ([$44E4],$45E5)
+      PMOVE.L     TC, ([$44E4],$45E546E6)
+      PMOVE.L     TC, ($44F145F2)
+      PMOVE.L     TC, ([$44F245F4])
+      PMOVE.L     TC, ([$44F445F6],$46F747F8)
+      PMOVE.L     TC, (0,A0,D4.W*4)
+      PMOVE.Q     (A0,D4.W*4), DRP
+      PMOVE.Q     ([A0,D4.W*4]), DRP
+      PMOVE.Q     ([A0,D4.W*4],$4613), DRP
+      PMOVE.Q     ([A0,D4.W*4],$46144715), DRP
+      PMOVE.Q     ([A0],D4.W*4), DRP
+      PMOVE.Q     ([A0],D4.W*4,$4617), DRP
+      PMOVE.Q     ([A0],D4.W*4,$46184719), DRP
+      PMOVE.Q     ($4621,A0,D4.W*4), DRP
+      PMOVE.Q     ([$4622,A0,D4.W*4]), DRP
+      PMOVE.Q     ([$4623,A0,D4.W*4],$4724), DRP
+      PMOVE.Q     ([$4624,A0,D4.W*4],$47254826), DRP
+      PMOVE.Q     ([$4626,A0],D4.W*4), DRP
+      PMOVE.Q     ([$4627,A0],D4.W*4,$4728), DRP
+      PMOVE.Q     ([$4628,A0],D4.W*4,$4729482A), DRP
+      PMOVE.Q     ($46314732,A0,D4.W*4), DRP
+      PMOVE.Q     ([$46324733,A0,D4.W*4]), DRP
+      PMOVE.Q     ([$46344735,A0,D4.W*4],$48364937), DRP
+      PMOVE.Q     ([$46364737,A0],D4.W*4), DRP
+      PMOVE.Q     ([$46384739,A0],D4.W*4,$483A493B), DRP
+      PMOVE.Q     (A0), DRP
+      PMOVE.Q     ([A0]), DRP
+      PMOVE.Q     ([A0],$4653), DRP
+      PMOVE.Q     ([A0],$46544755), DRP
+      PMOVE.Q     ($4661,A0), DRP
+      PMOVE.Q     ([$4662,A0]), DRP
+      PMOVE.Q     ([$4663,A0],$4764), DRP
+      PMOVE.Q     ([$4664,A0],$47654866), DRP
+      PMOVE.Q     ($46714772,A0), DRP
+      PMOVE.Q     ([$46724773,A0]), DRP
+      PMOVE.Q     ([$46744775,A0],$48764977), DRP
+      PMOVE.Q     (D4.W*4), DRP
+      PMOVE.Q     ([D4.W*4]), DRP
+      PMOVE.Q     ([D4.W*4],$4693), DRP
+      PMOVE.Q     ([D4.W*4],$46944795), DRP
+      PMOVE.Q     ($46A1,D4.W*4), DRP
+      PMOVE.Q     ([$46A2,D4.W*4]), DRP
+      PMOVE.Q     ([$46A3,D4.W*4],$47A4), DRP
+      PMOVE.Q     ([$46A4,D4.W*4],$47A548A6), DRP
+      PMOVE.Q     ([$46A6],D4.W*4), DRP
+      PMOVE.Q     ([$46A7],D4.W*4,$47A8), DRP
+      PMOVE.Q     ([$46A8],D4.W*4,$47A948AA), DRP
+      PMOVE.Q     ($46B147B2,D4.W*4), DRP
+      PMOVE.Q     ([$46B247B3,D4.W*4]), DRP
+      PMOVE.Q     ([$46B447B5,D4.W*4],$48B649B7), DRP
+      PMOVE.Q     ([$46B647B7],D4.W*4), DRP
+      PMOVE.Q     ([$46B847B9],D4.W*4,$48BA49BB), DRP
+      PMOVE.Q     ($46E2), DRP
+      PMOVE.Q     ([$46E2]), DRP
+      PMOVE.Q     ([$46E4],$47E5), DRP
+      PMOVE.Q     ([$46E4],$47E548E6), DRP
+      PMOVE.Q     ($46F147F2), DRP
+      PMOVE.Q     ([$46F247F4]), DRP
+      PMOVE.Q     ([$46F447F6],$48F749F8), DRP
+      PMOVE.Q     (0,A0,D4.W*8), DRP
+      PMOVE.Q     DRP, (A0,D4.W*8)
+      PMOVE.Q     DRP, ([A0,D4.W*8])
+      PMOVE.Q     DRP, ([A0,D4.W*8],$4813)
+      PMOVE.Q     DRP, ([A0,D4.W*8],$48144915)
+      PMOVE.Q     DRP, ([A0],D4.W*8)
+      PMOVE.Q     DRP, ([A0],D4.W*8,$4817)
+      PMOVE.Q     DRP, ([A0],D4.W*8,$48184919)
+      PMOVE.Q     DRP, ($4821,A0,D4.W*8)
+      PMOVE.Q     DRP, ([$4822,A0,D4.W*8])
+      PMOVE.Q     DRP, ([$4823,A0,D4.W*8],$4924)
+      PMOVE.Q     DRP, ([$4824,A0,D4.W*8],$49254A26)
+      PMOVE.Q     DRP, ([$4826,A0],D4.W*8)
+      PMOVE.Q     DRP, ([$4827,A0],D4.W*8,$4928)
+      PMOVE.Q     DRP, ([$4828,A0],D4.W*8,$49294A2A)
+      PMOVE.Q     DRP, ($48314932,A0,D4.W*8)
+      PMOVE.Q     DRP, ([$48324933,A0,D4.W*8])
+      PMOVE.Q     DRP, ([$48344935,A0,D4.W*8],$4A364B37)
+      PMOVE.Q     DRP, ([$48364937,A0],D4.W*8)
+      PMOVE.Q     DRP, ([$48384939,A0],D4.W*8,$4A3A4B3B)
+      PMOVE.Q     DRP, (A0)
+      PMOVE.Q     DRP, ([A0])
+      PMOVE.Q     DRP, ([A0],$4853)
+      PMOVE.Q     DRP, ([A0],$48544955)
+      PMOVE.Q     DRP, ($4861,A0)
+      PMOVE.Q     DRP, ([$4862,A0])
+      PMOVE.Q     DRP, ([$4863,A0],$4964)
+      PMOVE.Q     DRP, ([$4864,A0],$49654A66)
+      PMOVE.Q     DRP, ($48714972,A0)
+      PMOVE.Q     DRP, ([$48724973,A0])
+      PMOVE.Q     DRP, ([$48744975,A0],$4A764B77)
+      PMOVE.Q     DRP, (D4.W*8)
+      PMOVE.Q     DRP, ([D4.W*8])
+      PMOVE.Q     DRP, ([D4.W*8],$4893)
+      PMOVE.Q     DRP, ([D4.W*8],$48944995)
+      PMOVE.Q     DRP, ($48A1,D4.W*8)
+      PMOVE.Q     DRP, ([$48A2,D4.W*8])
+      PMOVE.Q     DRP, ([$48A3,D4.W*8],$49A4)
+      PMOVE.Q     DRP, ([$48A4,D4.W*8],$49A54AA6)
+      PMOVE.Q     DRP, ([$48A6],D4.W*8)
+      PMOVE.Q     DRP, ([$48A7],D4.W*8,$49A8)
+      PMOVE.Q     DRP, ([$48A8],D4.W*8,$49A94AAA)
+      PMOVE.Q     DRP, ($48B149B2,D4.W*8)
+      PMOVE.Q     DRP, ([$48B249B3,D4.W*8])
+      PMOVE.Q     DRP, ([$48B449B5,D4.W*8],$4AB64BB7)
+      PMOVE.Q     DRP, ([$48B649B7],D4.W*8)
+      PMOVE.Q     DRP, ([$48B849B9],D4.W*8,$4ABA4BBB)
+      PMOVE.Q     DRP, ($48E2)
+      PMOVE.Q     DRP, ([$48E2])
+      PMOVE.Q     DRP, ([$48E4],$49E5)
+      PMOVE.Q     DRP, ([$48E4],$49E54AE6)
+      PMOVE.Q     DRP, ($48F149F2)
+      PMOVE.Q     DRP, ([$48F249F4])
+      PMOVE.Q     DRP, ([$48F449F6],$4AF74BF8)
+      PMOVE.Q     DRP, (0,A0,D4.L)
+      PMOVE.Q     (A0,D4.L), SRP
+      PMOVE.Q     ([A0,D4.L]), SRP
+      PMOVE.Q     ([A0,D4.L],$4A13), SRP
+      PMOVE.Q     ([A0,D4.L],$4A144B15), SRP
+      PMOVE.Q     ([A0],D4.L), SRP
+      PMOVE.Q     ([A0],D4.L,$4A17), SRP
+      PMOVE.Q     ([A0],D4.L,$4A184B19), SRP
+      PMOVE.Q     ($4A21,A0,D4.L), SRP
+      PMOVE.Q     ([$4A22,A0,D4.L]), SRP
+      PMOVE.Q     ([$4A23,A0,D4.L],$4B24), SRP
+      PMOVE.Q     ([$4A24,A0,D4.L],$4B254C26), SRP
+      PMOVE.Q     ([$4A26,A0],D4.L), SRP
+      PMOVE.Q     ([$4A27,A0],D4.L,$4B28), SRP
+      PMOVE.Q     ([$4A28,A0],D4.L,$4B294C2A), SRP
+      PMOVE.Q     ($4A314B32,A0,D4.L), SRP
+      PMOVE.Q     ([$4A324B33,A0,D4.L]), SRP
+      PMOVE.Q     ([$4A344B35,A0,D4.L],$4C364D37), SRP
+      PMOVE.Q     ([$4A364B37,A0],D4.L), SRP
+      PMOVE.Q     ([$4A384B39,A0],D4.L,$4C3A4D3B), SRP
+      PMOVE.Q     (A0), SRP
+      PMOVE.Q     ([A0]), SRP
+      PMOVE.Q     ([A0],$4A53), SRP
+      PMOVE.Q     ([A0],$4A544B55), SRP
+      PMOVE.Q     ($4A61,A0), SRP
+      PMOVE.Q     ([$4A62,A0]), SRP
+      PMOVE.Q     ([$4A63,A0],$4B64), SRP
+      PMOVE.Q     ([$4A64,A0],$4B654C66), SRP
+      PMOVE.Q     ($4A714B72,A0), SRP
+      PMOVE.Q     ([$4A724B73,A0]), SRP
+      PMOVE.Q     ([$4A744B75,A0],$4C764D77), SRP
+      PMOVE.Q     (D4.L), SRP
+      PMOVE.Q     ([D4.L]), SRP
+      PMOVE.Q     ([D4.L],$4A93), SRP
+      PMOVE.Q     ([D4.L],$4A944B95), SRP
+      PMOVE.Q     ($4AA1,D4.L), SRP
+      PMOVE.Q     ([$4AA2,D4.L]), SRP
+      PMOVE.Q     ([$4AA3,D4.L],$4BA4), SRP
+      PMOVE.Q     ([$4AA4,D4.L],$4BA54CA6), SRP
+      PMOVE.Q     ([$4AA6],D4.L), SRP
+      PMOVE.Q     ([$4AA7],D4.L,$4BA8), SRP
+      PMOVE.Q     ([$4AA8],D4.L,$4BA94CAA), SRP
+      PMOVE.Q     ($4AB14BB2,D4.L), SRP
+      PMOVE.Q     ([$4AB24BB3,D4.L]), SRP
+      PMOVE.Q     ([$4AB44BB5,D4.L],$4CB64DB7), SRP
+      PMOVE.Q     ([$4AB64BB7],D4.L), SRP
+      PMOVE.Q     ([$4AB84BB9],D4.L,$4CBA4DBB), SRP
+      PMOVE.Q     ($4AE2), SRP
+      PMOVE.Q     ([$4AE2]), SRP
+      PMOVE.Q     ([$4AE4],$4BE5), SRP
+      PMOVE.Q     ([$4AE4],$4BE54CE6), SRP
+      PMOVE.Q     ($4AF14BF2), SRP
+      PMOVE.Q     ([$4AF24BF4]), SRP
+      PMOVE.Q     ([$4AF44BF6],$4CF74DF8), SRP
+      PMOVE.Q     (0,A0,D4.L*2), SRP
+      PMOVE.Q     SRP, (A0,D4.L*2)
+      PMOVE.Q     SRP, ([A0,D4.L*2])
+      PMOVE.Q     SRP, ([A0,D4.L*2],$4C13)
+      PMOVE.Q     SRP, ([A0,D4.L*2],$4C144D15)
+      PMOVE.Q     SRP, ([A0],D4.L*2)
+      PMOVE.Q     SRP, ([A0],D4.L*2,$4C17)
+      PMOVE.Q     SRP, ([A0],D4.L*2,$4C184D19)
+      PMOVE.Q     SRP, ($4C21,A0,D4.L*2)
+      PMOVE.Q     SRP, ([$4C22,A0,D4.L*2])
+      PMOVE.Q     SRP, ([$4C23,A0,D4.L*2],$4D24)
+      PMOVE.Q     SRP, ([$4C24,A0,D4.L*2],$4D254E26)
+      PMOVE.Q     SRP, ([$4C26,A0],D4.L*2)
+      PMOVE.Q     SRP, ([$4C27,A0],D4.L*2,$4D28)
+      PMOVE.Q     SRP, ([$4C28,A0],D4.L*2,$4D294E2A)
+      PMOVE.Q     SRP, ($4C314D32,A0,D4.L*2)
+      PMOVE.Q     SRP, ([$4C324D33,A0,D4.L*2])
+      PMOVE.Q     SRP, ([$4C344D35,A0,D4.L*2],$4E364F37)
+      PMOVE.Q     SRP, ([$4C364D37,A0],D4.L*2)
+      PMOVE.Q     SRP, ([$4C384D39,A0],D4.L*2,$4E3A4F3B)
+      PMOVE.Q     SRP, (A0)
+      PMOVE.Q     SRP, ([A0])
+      PMOVE.Q     SRP, ([A0],$4C53)
+      PMOVE.Q     SRP, ([A0],$4C544D55)
+      PMOVE.Q     SRP, ($4C61,A0)
+      PMOVE.Q     SRP, ([$4C62,A0])
+      PMOVE.Q     SRP, ([$4C63,A0],$4D64)
+      PMOVE.Q     SRP, ([$4C64,A0],$4D654E66)
+      PMOVE.Q     SRP, ($4C714D72,A0)
+      PMOVE.Q     SRP, ([$4C724D73,A0])
+      PMOVE.Q     SRP, ([$4C744D75,A0],$4E764F77)
+      PMOVE.Q     SRP, (D4.L*2)
+      PMOVE.Q     SRP, ([D4.L*2])
+      PMOVE.Q     SRP, ([D4.L*2],$4C93)
+      PMOVE.Q     SRP, ([D4.L*2],$4C944D95)
+      PMOVE.Q     SRP, ($4CA1,D4.L*2)
+      PMOVE.Q     SRP, ([$4CA2,D4.L*2])
+      PMOVE.Q     SRP, ([$4CA3,D4.L*2],$4DA4)
+      PMOVE.Q     SRP, ([$4CA4,D4.L*2],$4DA54EA6)
+      PMOVE.Q     SRP, ([$4CA6],D4.L*2)
+      PMOVE.Q     SRP, ([$4CA7],D4.L*2,$4DA8)
+      PMOVE.Q     SRP, ([$4CA8],D4.L*2,$4DA94EAA)
+      PMOVE.Q     SRP, ($4CB14DB2,D4.L*2)
+      PMOVE.Q     SRP, ([$4CB24DB3,D4.L*2])
+      PMOVE.Q     SRP, ([$4CB44DB5,D4.L*2],$4EB64FB7)
+      PMOVE.Q     SRP, ([$4CB64DB7],D4.L*2)
+      PMOVE.Q     SRP, ([$4CB84DB9],D4.L*2,$4EBA4FBB)
+      PMOVE.Q     SRP, ($4CE2)
+      PMOVE.Q     SRP, ([$4CE2])
+      PMOVE.Q     SRP, ([$4CE4],$4DE5)
+      PMOVE.Q     SRP, ([$4CE4],$4DE54EE6)
+      PMOVE.Q     SRP, ($4CF14DF2)
+      PMOVE.Q     SRP, ([$4CF24DF4])
+      PMOVE.Q     SRP, ([$4CF44DF6],$4EF74FF8)
+      PMOVE.Q     SRP, (0,A0,D4.L*4)
+      PMOVE.Q     (A0,D4.L*4), CRP
+      PMOVE.Q     ([A0,D4.L*4]), CRP
+      PMOVE.Q     ([A0,D4.L*4],$4E13), CRP
+      PMOVE.Q     ([A0,D4.L*4],$4E144F15), CRP
+      PMOVE.Q     ([A0],D4.L*4), CRP
+      PMOVE.Q     ([A0],D4.L*4,$4E17), CRP
+      PMOVE.Q     ([A0],D4.L*4,$4E184F19), CRP
+      PMOVE.Q     ($4E21,A0,D4.L*4), CRP
+      PMOVE.Q     ([$4E22,A0,D4.L*4]), CRP
+      PMOVE.Q     ([$4E23,A0,D4.L*4],$4F24), CRP
+      PMOVE.Q     ([$4E24,A0,D4.L*4],$4F255026), CRP
+      PMOVE.Q     ([$4E26,A0],D4.L*4), CRP
+      PMOVE.Q     ([$4E27,A0],D4.L*4,$4F28), CRP
+      PMOVE.Q     ([$4E28,A0],D4.L*4,$4F29502A), CRP
+      PMOVE.Q     ($4E314F32,A0,D4.L*4), CRP
+      PMOVE.Q     ([$4E324F33,A0,D4.L*4]), CRP
+      PMOVE.Q     ([$4E344F35,A0,D4.L*4],$50365137), CRP
+      PMOVE.Q     ([$4E364F37,A0],D4.L*4), CRP
+      PMOVE.Q     ([$4E384F39,A0],D4.L*4,$503A513B), CRP
+      PMOVE.Q     (A0), CRP
+      PMOVE.Q     ([A0]), CRP
+      PMOVE.Q     ([A0],$4E53), CRP
+      PMOVE.Q     ([A0],$4E544F55), CRP
+      PMOVE.Q     ($4E61,A0), CRP
+      PMOVE.Q     ([$4E62,A0]), CRP
+      PMOVE.Q     ([$4E63,A0],$4F64), CRP
+      PMOVE.Q     ([$4E64,A0],$4F655066), CRP
+      PMOVE.Q     ($4E714F72,A0), CRP
+      PMOVE.Q     ([$4E724F73,A0]), CRP
+      PMOVE.Q     ([$4E744F75,A0],$50765177), CRP
+      PMOVE.Q     (D4.L*4), CRP
+      PMOVE.Q     ([D4.L*4]), CRP
+      PMOVE.Q     ([D4.L*4],$4E93), CRP
+      PMOVE.Q     ([D4.L*4],$4E944F95), CRP
+      PMOVE.Q     ($4EA1,D4.L*4), CRP
+      PMOVE.Q     ([$4EA2,D4.L*4]), CRP
+      PMOVE.Q     ([$4EA3,D4.L*4],$4FA4), CRP
+      PMOVE.Q     ([$4EA4,D4.L*4],$4FA550A6), CRP
+      PMOVE.Q     ([$4EA6],D4.L*4), CRP
+      PMOVE.Q     ([$4EA7],D4.L*4,$4FA8), CRP
+      PMOVE.Q     ([$4EA8],D4.L*4,$4FA950AA), CRP
+      PMOVE.Q     ($4EB14FB2,D4.L*4), CRP
+      PMOVE.Q     ([$4EB24FB3,D4.L*4]), CRP
+      PMOVE.Q     ([$4EB44FB5,D4.L*4],$50B651B7), CRP
+      PMOVE.Q     ([$4EB64FB7],D4.L*4), CRP
+      PMOVE.Q     ([$4EB84FB9],D4.L*4,$50BA51BB), CRP
+      PMOVE.Q     ($4EE2), CRP
+      PMOVE.Q     ([$4EE2]), CRP
+      PMOVE.Q     ([$4EE4],$4FE5), CRP
+      PMOVE.Q     ([$4EE4],$4FE550E6), CRP
+      PMOVE.Q     ($4EF14FF2), CRP
+      PMOVE.Q     ([$4EF24FF4]), CRP
+      PMOVE.Q     ([$4EF44FF6],$50F751F8), CRP
+      PMOVE.Q     (0,A0,D4.L*8), CRP
+      PMOVE.Q     CRP, (A0,D4.L*8)
+      PMOVE.Q     CRP, ([A0,D4.L*8])
+      PMOVE.Q     CRP, ([A0,D4.L*8],$5013)
+      PMOVE.Q     CRP, ([A0,D4.L*8],$50145115)
+      PMOVE.Q     CRP, ([A0],D4.L*8)
+      PMOVE.Q     CRP, ([A0],D4.L*8,$5017)
+      PMOVE.Q     CRP, ([A0],D4.L*8,$50185119)
+      PMOVE.Q     CRP, ($5021,A0,D4.L*8)
+      PMOVE.Q     CRP, ([$5022,A0,D4.L*8])
+      PMOVE.Q     CRP, ([$5023,A0,D4.L*8],$5124)
+      PMOVE.Q     CRP, ([$5024,A0,D4.L*8],$51255226)
+      PMOVE.Q     CRP, ([$5026,A0],D4.L*8)
+      PMOVE.Q     CRP, ([$5027,A0],D4.L*8,$5128)
+      PMOVE.Q     CRP, ([$5028,A0],D4.L*8,$5129522A)
+      PMOVE.Q     CRP, ($50315132,A0,D4.L*8)
+      PMOVE.Q     CRP, ([$50325133,A0,D4.L*8])
+      PMOVE.Q     CRP, ([$50345135,A0,D4.L*8],$52365337)
+      PMOVE.Q     CRP, ([$50365137,A0],D4.L*8)
+      PMOVE.Q     CRP, ([$50385139,A0],D4.L*8,$523A533B)
+      PMOVE.Q     CRP, (A0)
+      PMOVE.Q     CRP, ([A0])
+      PMOVE.Q     CRP, ([A0],$5053)
+      PMOVE.Q     CRP, ([A0],$50545155)
+      PMOVE.Q     CRP, ($5061,A0)
+      PMOVE.Q     CRP, ([$5062,A0])
+      PMOVE.Q     CRP, ([$5063,A0],$5164)
+      PMOVE.Q     CRP, ([$5064,A0],$51655266)
+      PMOVE.Q     CRP, ($50715172,A0)
+      PMOVE.Q     CRP, ([$50725173,A0])
+      PMOVE.Q     CRP, ([$50745175,A0],$52765377)
+      PMOVE.Q     CRP, (D4.L*8)
+      PMOVE.Q     CRP, ([D4.L*8])
+      PMOVE.Q     CRP, ([D4.L*8],$5093)
+      PMOVE.Q     CRP, ([D4.L*8],$50945195)
+      PMOVE.Q     CRP, ($50A1,D4.L*8)
+      PMOVE.Q     CRP, ([$50A2,D4.L*8])
+      PMOVE.Q     CRP, ([$50A3,D4.L*8],$51A4)
+      PMOVE.Q     CRP, ([$50A4,D4.L*8],$51A552A6)
+      PMOVE.Q     CRP, ([$50A6],D4.L*8)
+      PMOVE.Q     CRP, ([$50A7],D4.L*8,$51A8)
+      PMOVE.Q     CRP, ([$50A8],D4.L*8,$51A952AA)
+      PMOVE.Q     CRP, ($50B151B2,D4.L*8)
+      PMOVE.Q     CRP, ([$50B251B3,D4.L*8])
+      PMOVE.Q     CRP, ([$50B451B5,D4.L*8],$52B653B7)
+      PMOVE.Q     CRP, ([$50B651B7],D4.L*8)
+      PMOVE.Q     CRP, ([$50B851B9],D4.L*8,$52BA53BB)
+      PMOVE.Q     CRP, ($50E2)
+      PMOVE.Q     CRP, ([$50E2])
+      PMOVE.Q     CRP, ([$50E4],$51E5)
+      PMOVE.Q     CRP, ([$50E4],$51E552E6)
+      PMOVE.Q     CRP, ($50F151F2)
+      PMOVE.Q     CRP, ([$50F251F4])
+      PMOVE.Q     CRP, ([$50F451F6],$52F753F8)
+      PMOVE.Q     CRP, (0,A0,D5.W)
+      PMOVE.B     (A0,D5.W), CAL
+      PMOVE.B     ([A0,D5.W]), CAL
+      PMOVE.B     ([A0,D5.W],$5213), CAL
+      PMOVE.B     ([A0,D5.W],$52145315), CAL
+      PMOVE.B     ([A0],D5.W), CAL
+      PMOVE.B     ([A0],D5.W,$5217), CAL
+      PMOVE.B     ([A0],D5.W,$52185319), CAL
+      PMOVE.B     ($5221,A0,D5.W), CAL
+      PMOVE.B     ([$5222,A0,D5.W]), CAL
+      PMOVE.B     ([$5223,A0,D5.W],$5324), CAL
+      PMOVE.B     ([$5224,A0,D5.W],$53255426), CAL
+      PMOVE.B     ([$5226,A0],D5.W), CAL
+      PMOVE.B     ([$5227,A0],D5.W,$5328), CAL
+      PMOVE.B     ([$5228,A0],D5.W,$5329542A), CAL
+      PMOVE.B     ($52315332,A0,D5.W), CAL
+      PMOVE.B     ([$52325333,A0,D5.W]), CAL
+      PMOVE.B     ([$52345335,A0,D5.W],$54365537), CAL
+      PMOVE.B     ([$52365337,A0],D5.W), CAL
+      PMOVE.B     ([$52385339,A0],D5.W,$543A553B), CAL
+      PMOVE.B     (A0), CAL
+      PMOVE.B     ([A0]), CAL
+      PMOVE.B     ([A0],$5253), CAL
+      PMOVE.B     ([A0],$52545355), CAL
+      PMOVE.B     ($5261,A0), CAL
+      PMOVE.B     ([$5262,A0]), CAL
+      PMOVE.B     ([$5263,A0],$5364), CAL
+      PMOVE.B     ([$5264,A0],$53655466), CAL
+      PMOVE.B     ($52715372,A0), CAL
+      PMOVE.B     ([$52725373,A0]), CAL
+      PMOVE.B     ([$52745375,A0],$54765577), CAL
+      PMOVE.B     (D5.W), CAL
+      PMOVE.B     ([D5.W]), CAL
+      PMOVE.B     ([D5.W],$5293), CAL
+      PMOVE.B     ([D5.W],$52945395), CAL
+      PMOVE.B     ($52A1,D5.W), CAL
+      PMOVE.B     ([$52A2,D5.W]), CAL
+      PMOVE.B     ([$52A3,D5.W],$53A4), CAL
+      PMOVE.B     ([$52A4,D5.W],$53A554A6), CAL
+      PMOVE.B     ([$52A6],D5.W), CAL
+      PMOVE.B     ([$52A7],D5.W,$53A8), CAL
+      PMOVE.B     ([$52A8],D5.W,$53A954AA), CAL
+      PMOVE.B     ($52B153B2,D5.W), CAL
+      PMOVE.B     ([$52B253B3,D5.W]), CAL
+      PMOVE.B     ([$52B453B5,D5.W],$54B655B7), CAL
+      PMOVE.B     ([$52B653B7],D5.W), CAL
+      PMOVE.B     ([$52B853B9],D5.W,$54BA55BB), CAL
+      PMOVE.B     ($52E2), CAL
+      PMOVE.B     ([$52E2]), CAL
+      PMOVE.B     ([$52E4],$53E5), CAL
+      PMOVE.B     ([$52E4],$53E554E6), CAL
+      PMOVE.B     ($52F153F2), CAL
+      PMOVE.B     ([$52F253F4]), CAL
+      PMOVE.B     ([$52F453F6],$54F755F8), CAL
+      PMOVE.B     (0,A0,D5.W*2), CAL
+      PMOVE.B     CAL, (A0,D5.W*2)
+      PMOVE.B     CAL, ([A0,D5.W*2])
+      PMOVE.B     CAL, ([A0,D5.W*2],$5413)
+      PMOVE.B     CAL, ([A0,D5.W*2],$54145515)
+      PMOVE.B     CAL, ([A0],D5.W*2)
+      PMOVE.B     CAL, ([A0],D5.W*2,$5417)
+      PMOVE.B     CAL, ([A0],D5.W*2,$54185519)
+      PMOVE.B     CAL, ($5421,A0,D5.W*2)
+      PMOVE.B     CAL, ([$5422,A0,D5.W*2])
+      PMOVE.B     CAL, ([$5423,A0,D5.W*2],$5524)
+      PMOVE.B     CAL, ([$5424,A0,D5.W*2],$55255626)
+      PMOVE.B     CAL, ([$5426,A0],D5.W*2)
+      PMOVE.B     CAL, ([$5427,A0],D5.W*2,$5528)
+      PMOVE.B     CAL, ([$5428,A0],D5.W*2,$5529562A)
+      PMOVE.B     CAL, ($54315532,A0,D5.W*2)
+      PMOVE.B     CAL, ([$54325533,A0,D5.W*2])
+      PMOVE.B     CAL, ([$54345535,A0,D5.W*2],$56365737)
+      PMOVE.B     CAL, ([$54365537,A0],D5.W*2)
+      PMOVE.B     CAL, ([$54385539,A0],D5.W*2,$563A573B)
+      PMOVE.B     CAL, (A0)
+      PMOVE.B     CAL, ([A0])
+      PMOVE.B     CAL, ([A0],$5453)
+      PMOVE.B     CAL, ([A0],$54545555)
+      PMOVE.B     CAL, ($5461,A0)
+      PMOVE.B     CAL, ([$5462,A0])
+      PMOVE.B     CAL, ([$5463,A0],$5564)
+      PMOVE.B     CAL, ([$5464,A0],$55655666)
+      PMOVE.B     CAL, ($54715572,A0)
+      PMOVE.B     CAL, ([$54725573,A0])
+      PMOVE.B     CAL, ([$54745575,A0],$56765777)
+      PMOVE.B     CAL, (D5.W*2)
+      PMOVE.B     CAL, ([D5.W*2])
+      PMOVE.B     CAL, ([D5.W*2],$5493)
+      PMOVE.B     CAL, ([D5.W*2],$54945595)
+      PMOVE.B     CAL, ($54A1,D5.W*2)
+      PMOVE.B     CAL, ([$54A2,D5.W*2])
+      PMOVE.B     CAL, ([$54A3,D5.W*2],$55A4)
+      PMOVE.B     CAL, ([$54A4,D5.W*2],$55A556A6)
+      PMOVE.B     CAL, ([$54A6],D5.W*2)
+      PMOVE.B     CAL, ([$54A7],D5.W*2,$55A8)
+      PMOVE.B     CAL, ([$54A8],D5.W*2,$55A956AA)
+      PMOVE.B     CAL, ($54B155B2,D5.W*2)
+      PMOVE.B     CAL, ([$54B255B3,D5.W*2])
+      PMOVE.B     CAL, ([$54B455B5,D5.W*2],$56B657B7)
+      PMOVE.B     CAL, ([$54B655B7],D5.W*2)
+      PMOVE.B     CAL, ([$54B855B9],D5.W*2,$56BA57BB)
+      PMOVE.B     CAL, ($54E2)
+      PMOVE.B     CAL, ([$54E2])
+      PMOVE.B     CAL, ([$54E4],$55E5)
+      PMOVE.B     CAL, ([$54E4],$55E556E6)
+      PMOVE.B     CAL, ($54F155F2)
+      PMOVE.B     CAL, ([$54F255F4])
+      PMOVE.B     CAL, ([$54F455F6],$56F757F8)
+      PMOVE.B     CAL, (0,A0,D5.W*4)
+      PMOVE.B     (A0,D5.W*4), VAL
+      PMOVE.B     ([A0,D5.W*4]), VAL
+      PMOVE.B     ([A0,D5.W*4],$5613), VAL
+      PMOVE.B     ([A0,D5.W*4],$56145715), VAL
+      PMOVE.B     ([A0],D5.W*4), VAL
+      PMOVE.B     ([A0],D5.W*4,$5617), VAL
+      PMOVE.B     ([A0],D5.W*4,$56185719), VAL
+      PMOVE.B     ($5621,A0,D5.W*4), VAL
+      PMOVE.B     ([$5622,A0,D5.W*4]), VAL
+      PMOVE.B     ([$5623,A0,D5.W*4],$5724), VAL
+      PMOVE.B     ([$5624,A0,D5.W*4],$57255826), VAL
+      PMOVE.B     ([$5626,A0],D5.W*4), VAL
+      PMOVE.B     ([$5627,A0],D5.W*4,$5728), VAL
+      PMOVE.B     ([$5628,A0],D5.W*4,$5729582A), VAL
+      PMOVE.B     ($56315732,A0,D5.W*4), VAL
+      PMOVE.B     ([$56325733,A0,D5.W*4]), VAL
+      PMOVE.B     ([$56345735,A0,D5.W*4],$58365937), VAL
+      PMOVE.B     ([$56365737,A0],D5.W*4), VAL
+      PMOVE.B     ([$56385739,A0],D5.W*4,$583A593B), VAL
+      PMOVE.B     (A0), VAL
+      PMOVE.B     ([A0]), VAL
+      PMOVE.B     ([A0],$5653), VAL
+      PMOVE.B     ([A0],$56545755), VAL
+      PMOVE.B     ($5661,A0), VAL
+      PMOVE.B     ([$5662,A0]), VAL
+      PMOVE.B     ([$5663,A0],$5764), VAL
+      PMOVE.B     ([$5664,A0],$57655866), VAL
+      PMOVE.B     ($56715772,A0), VAL
+      PMOVE.B     ([$56725773,A0]), VAL
+      PMOVE.B     ([$56745775,A0],$58765977), VAL
+      PMOVE.B     (D5.W*4), VAL
+      PMOVE.B     ([D5.W*4]), VAL
+      PMOVE.B     ([D5.W*4],$5693), VAL
+      PMOVE.B     ([D5.W*4],$56945795), VAL
+      PMOVE.B     ($56A1,D5.W*4), VAL
+      PMOVE.B     ([$56A2,D5.W*4]), VAL
+      PMOVE.B     ([$56A3,D5.W*4],$57A4), VAL
+      PMOVE.B     ([$56A4,D5.W*4],$57A558A6), VAL
+      PMOVE.B     ([$56A6],D5.W*4), VAL
+      PMOVE.B     ([$56A7],D5.W*4,$57A8), VAL
+      PMOVE.B     ([$56A8],D5.W*4,$57A958AA), VAL
+      PMOVE.B     ($56B157B2,D5.W*4), VAL
+      PMOVE.B     ([$56B257B3,D5.W*4]), VAL
+      PMOVE.B     ([$56B457B5,D5.W*4],$58B659B7), VAL
+      PMOVE.B     ([$56B657B7],D5.W*4), VAL
+      PMOVE.B     ([$56B857B9],D5.W*4,$58BA59BB), VAL
+      PMOVE.B     ($56E2), VAL
+      PMOVE.B     ([$56E2]), VAL
+      PMOVE.B     ([$56E4],$57E5), VAL
+      PMOVE.B     ([$56E4],$57E558E6), VAL
+      PMOVE.B     ($56F157F2), VAL
+      PMOVE.B     ([$56F257F4]), VAL
+      PMOVE.B     ([$56F457F6],$58F759F8), VAL
+      PMOVE.B     (0,A0,D5.W*8), VAL
+      PMOVE.B     VAL, (A0,D5.W*8)
+      PMOVE.B     VAL, ([A0,D5.W*8])
+      PMOVE.B     VAL, ([A0,D5.W*8],$5813)
+      PMOVE.B     VAL, ([A0,D5.W*8],$58145915)
+      PMOVE.B     VAL, ([A0],D5.W*8)
+      PMOVE.B     VAL, ([A0],D5.W*8,$5817)
+      PMOVE.B     VAL, ([A0],D5.W*8,$58185919)
+      PMOVE.B     VAL, ($5821,A0,D5.W*8)
+      PMOVE.B     VAL, ([$5822,A0,D5.W*8])
+      PMOVE.B     VAL, ([$5823,A0,D5.W*8],$5924)
+      PMOVE.B     VAL, ([$5824,A0,D5.W*8],$59255A26)
+      PMOVE.B     VAL, ([$5826,A0],D5.W*8)
+      PMOVE.B     VAL, ([$5827,A0],D5.W*8,$5928)
+      PMOVE.B     VAL, ([$5828,A0],D5.W*8,$59295A2A)
+      PMOVE.B     VAL, ($58315932,A0,D5.W*8)
+      PMOVE.B     VAL, ([$58325933,A0,D5.W*8])
+      PMOVE.B     VAL, ([$58345935,A0,D5.W*8],$5A365B37)
+      PMOVE.B     VAL, ([$58365937,A0],D5.W*8)
+      PMOVE.B     VAL, ([$58385939,A0],D5.W*8,$5A3A5B3B)
+      PMOVE.B     VAL, (A0)
+      PMOVE.B     VAL, ([A0])
+      PMOVE.B     VAL, ([A0],$5853)
+      PMOVE.B     VAL, ([A0],$58545955)
+      PMOVE.B     VAL, ($5861,A0)
+      PMOVE.B     VAL, ([$5862,A0])
+      PMOVE.B     VAL, ([$5863,A0],$5964)
+      PMOVE.B     VAL, ([$5864,A0],$59655A66)
+      PMOVE.B     VAL, ($58715972,A0)
+      PMOVE.B     VAL, ([$58725973,A0])
+      PMOVE.B     VAL, ([$58745975,A0],$5A765B77)
+      PMOVE.B     VAL, (D5.W*8)
+      PMOVE.B     VAL, ([D5.W*8])
+      PMOVE.B     VAL, ([D5.W*8],$5893)
+      PMOVE.B     VAL, ([D5.W*8],$58945995)
+      PMOVE.B     VAL, ($58A1,D5.W*8)
+      PMOVE.B     VAL, ([$58A2,D5.W*8])
+      PMOVE.B     VAL, ([$58A3,D5.W*8],$59A4)
+      PMOVE.B     VAL, ([$58A4,D5.W*8],$59A55AA6)
+      PMOVE.B     VAL, ([$58A6],D5.W*8)
+      PMOVE.B     VAL, ([$58A7],D5.W*8,$59A8)
+      PMOVE.B     VAL, ([$58A8],D5.W*8,$59A95AAA)
+      PMOVE.B     VAL, ($58B159B2,D5.W*8)
+      PMOVE.B     VAL, ([$58B259B3,D5.W*8])
+      PMOVE.B     VAL, ([$58B459B5,D5.W*8],$5AB65BB7)
+      PMOVE.B     VAL, ([$58B659B7],D5.W*8)
+      PMOVE.B     VAL, ([$58B859B9],D5.W*8,$5ABA5BBB)
+      PMOVE.B     VAL, ($58E2)
+      PMOVE.B     VAL, ([$58E2])
+      PMOVE.B     VAL, ([$58E4],$59E5)
+      PMOVE.B     VAL, ([$58E4],$59E55AE6)
+      PMOVE.B     VAL, ($58F159F2)
+      PMOVE.B     VAL, ([$58F259F4])
+      PMOVE.B     VAL, ([$58F459F6],$5AF75BF8)
+      PMOVE.B     VAL, (0,A0,D5.L)
+      PMOVE.B     (A0,D5.L), SCC
+      PMOVE.B     ([A0,D5.L]), SCC
+      PMOVE.B     ([A0,D5.L],$5A13), SCC
+      PMOVE.B     ([A0,D5.L],$5A145B15), SCC
+      PMOVE.B     ([A0],D5.L), SCC
+      PMOVE.B     ([A0],D5.L,$5A17), SCC
+      PMOVE.B     ([A0],D5.L,$5A185B19), SCC
+      PMOVE.B     ($5A21,A0,D5.L), SCC
+      PMOVE.B     ([$5A22,A0,D5.L]), SCC
+      PMOVE.B     ([$5A23,A0,D5.L],$5B24), SCC
+      PMOVE.B     ([$5A24,A0,D5.L],$5B255C26), SCC
+      PMOVE.B     ([$5A26,A0],D5.L), SCC
+      PMOVE.B     ([$5A27,A0],D5.L,$5B28), SCC
+      PMOVE.B     ([$5A28,A0],D5.L,$5B295C2A), SCC
+      PMOVE.B     ($5A315B32,A0,D5.L), SCC
+      PMOVE.B     ([$5A325B33,A0,D5.L]), SCC
+      PMOVE.B     ([$5A345B35,A0,D5.L],$5C365D37), SCC
+      PMOVE.B     ([$5A365B37,A0],D5.L), SCC
+      PMOVE.B     ([$5A385B39,A0],D5.L,$5C3A5D3B), SCC
+      PMOVE.B     (A0), SCC
+      PMOVE.B     ([A0]), SCC
+      PMOVE.B     ([A0],$5A53), SCC
+      PMOVE.B     ([A0],$5A545B55), SCC
+      PMOVE.B     ($5A61,A0), SCC
+      PMOVE.B     ([$5A62,A0]), SCC
+      PMOVE.B     ([$5A63,A0],$5B64), SCC
+      PMOVE.B     ([$5A64,A0],$5B655C66), SCC
+      PMOVE.B     ($5A715B72,A0), SCC
+      PMOVE.B     ([$5A725B73,A0]), SCC
+      PMOVE.B     ([$5A745B75,A0],$5C765D77), SCC
+      PMOVE.B     (D5.L), SCC
+      PMOVE.B     ([D5.L]), SCC
+      PMOVE.B     ([D5.L],$5A93), SCC
+      PMOVE.B     ([D5.L],$5A945B95), SCC
+      PMOVE.B     ($5AA1,D5.L), SCC
+      PMOVE.B     ([$5AA2,D5.L]), SCC
+      PMOVE.B     ([$5AA3,D5.L],$5BA4), SCC
+      PMOVE.B     ([$5AA4,D5.L],$5BA55CA6), SCC
+      PMOVE.B     ([$5AA6],D5.L), SCC
+      PMOVE.B     ([$5AA7],D5.L,$5BA8), SCC
+      PMOVE.B     ([$5AA8],D5.L,$5BA95CAA), SCC
+      PMOVE.B     ($5AB15BB2,D5.L), SCC
+      PMOVE.B     ([$5AB25BB3,D5.L]), SCC
+      PMOVE.B     ([$5AB45BB5,D5.L],$5CB65DB7), SCC
+      PMOVE.B     ([$5AB65BB7],D5.L), SCC
+      PMOVE.B     ([$5AB85BB9],D5.L,$5CBA5DBB), SCC
+      PMOVE.B     ($5AE2), SCC
+      PMOVE.B     ([$5AE2]), SCC
+      PMOVE.B     ([$5AE4],$5BE5), SCC
+      PMOVE.B     ([$5AE4],$5BE55CE6), SCC
+      PMOVE.B     ($5AF15BF2), SCC
+      PMOVE.B     ([$5AF25BF4]), SCC
+      PMOVE.B     ([$5AF45BF6],$5CF75DF8), SCC
+      PMOVE.B     (0,A0,D5.L*2), SCC
+      PMOVE.B     SCC, (A0,D5.L*2)
+      PMOVE.B     SCC, ([A0,D5.L*2])
+      PMOVE.B     SCC, ([A0,D5.L*2],$5C13)
+      PMOVE.B     SCC, ([A0,D5.L*2],$5C145D15)
+      PMOVE.B     SCC, ([A0],D5.L*2)
+      PMOVE.B     SCC, ([A0],D5.L*2,$5C17)
+      PMOVE.B     SCC, ([A0],D5.L*2,$5C185D19)
+      PMOVE.B     SCC, ($5C21,A0,D5.L*2)
+      PMOVE.B     SCC, ([$5C22,A0,D5.L*2])
+      PMOVE.B     SCC, ([$5C23,A0,D5.L*2],$5D24)
+      PMOVE.B     SCC, ([$5C24,A0,D5.L*2],$5D255E26)
+      PMOVE.B     SCC, ([$5C26,A0],D5.L*2)
+      PMOVE.B     SCC, ([$5C27,A0],D5.L*2,$5D28)
+      PMOVE.B     SCC, ([$5C28,A0],D5.L*2,$5D295E2A)
+      PMOVE.B     SCC, ($5C315D32,A0,D5.L*2)
+      PMOVE.B     SCC, ([$5C325D33,A0,D5.L*2])
+      PMOVE.B     SCC, ([$5C345D35,A0,D5.L*2],$5E365F37)
+      PMOVE.B     SCC, ([$5C365D37,A0],D5.L*2)
+      PMOVE.B     SCC, ([$5C385D39,A0],D5.L*2,$5E3A5F3B)
+      PMOVE.B     SCC, (A0)
+      PMOVE.B     SCC, ([A0])
+      PMOVE.B     SCC, ([A0],$5C53)
+      PMOVE.B     SCC, ([A0],$5C545D55)
+      PMOVE.B     SCC, ($5C61,A0)
+      PMOVE.B     SCC, ([$5C62,A0])
+      PMOVE.B     SCC, ([$5C63,A0],$5D64)
+      PMOVE.B     SCC, ([$5C64,A0],$5D655E66)
+      PMOVE.B     SCC, ($5C715D72,A0)
+      PMOVE.B     SCC, ([$5C725D73,A0])
+      PMOVE.B     SCC, ([$5C745D75,A0],$5E765F77)
+      PMOVE.B     SCC, (D5.L*2)
+      PMOVE.B     SCC, ([D5.L*2])
+      PMOVE.B     SCC, ([D5.L*2],$5C93)
+      PMOVE.B     SCC, ([D5.L*2],$5C945D95)
+      PMOVE.B     SCC, ($5CA1,D5.L*2)
+      PMOVE.B     SCC, ([$5CA2,D5.L*2])
+      PMOVE.B     SCC, ([$5CA3,D5.L*2],$5DA4)
+      PMOVE.B     SCC, ([$5CA4,D5.L*2],$5DA55EA6)
+      PMOVE.B     SCC, ([$5CA6],D5.L*2)
+      PMOVE.B     SCC, ([$5CA7],D5.L*2,$5DA8)
+      PMOVE.B     SCC, ([$5CA8],D5.L*2,$5DA95EAA)
+      PMOVE.B     SCC, ($5CB15DB2,D5.L*2)
+      PMOVE.B     SCC, ([$5CB25DB3,D5.L*2])
+      PMOVE.B     SCC, ([$5CB45DB5,D5.L*2],$5EB65FB7)
+      PMOVE.B     SCC, ([$5CB65DB7],D5.L*2)
+      PMOVE.B     SCC, ([$5CB85DB9],D5.L*2,$5EBA5FBB)
+      PMOVE.B     SCC, ($5CE2)
+      PMOVE.B     SCC, ([$5CE2])
+      PMOVE.B     SCC, ([$5CE4],$5DE5)
+      PMOVE.B     SCC, ([$5CE4],$5DE55EE6)
+      PMOVE.B     SCC, ($5CF15DF2)
+      PMOVE.B     SCC, ([$5CF25DF4])
+      PMOVE.B     SCC, ([$5CF45DF6],$5EF75FF8)
+      PMOVE.B     SCC, (0,A0,D5.L*4)
+      PMOVE.W     (A0,D5.L*4), AC
+      PMOVE.W     ([A0,D5.L*4]), AC
+      PMOVE.W     ([A0,D5.L*4],$5E13), AC
+      PMOVE.W     ([A0,D5.L*4],$5E145F15), AC
+      PMOVE.W     ([A0],D5.L*4), AC
+      PMOVE.W     ([A0],D5.L*4,$5E17), AC
+      PMOVE.W     ([A0],D5.L*4,$5E185F19), AC
+      PMOVE.W     ($5E21,A0,D5.L*4), AC
+      PMOVE.W     ([$5E22,A0,D5.L*4]), AC
+      PMOVE.W     ([$5E23,A0,D5.L*4],$5F24), AC
+      PMOVE.W     ([$5E24,A0,D5.L*4],$5F256026), AC
+      PMOVE.W     ([$5E26,A0],D5.L*4), AC
+      PMOVE.W     ([$5E27,A0],D5.L*4,$5F28), AC
+      PMOVE.W     ([$5E28,A0],D5.L*4,$5F29602A), AC
+      PMOVE.W     ($5E315F32,A0,D5.L*4), AC
+      PMOVE.W     ([$5E325F33,A0,D5.L*4]), AC
+      PMOVE.W     ([$5E345F35,A0,D5.L*4],$60366137), AC
+      PMOVE.W     ([$5E365F37,A0],D5.L*4), AC
+      PMOVE.W     ([$5E385F39,A0],D5.L*4,$603A613B), AC
+      PMOVE.W     (A0), AC
+      PMOVE.W     ([A0]), AC
+      PMOVE.W     ([A0],$5E53), AC
+      PMOVE.W     ([A0],$5E545F55), AC
+      PMOVE.W     ($5E61,A0), AC
+      PMOVE.W     ([$5E62,A0]), AC
+      PMOVE.W     ([$5E63,A0],$5F64), AC
+      PMOVE.W     ([$5E64,A0],$5F656066), AC
+      PMOVE.W     ($5E715F72,A0), AC
+      PMOVE.W     ([$5E725F73,A0]), AC
+      PMOVE.W     ([$5E745F75,A0],$60766177), AC
+      PMOVE.W     (D5.L*4), AC
+      PMOVE.W     ([D5.L*4]), AC
+      PMOVE.W     ([D5.L*4],$5E93), AC
+      PMOVE.W     ([D5.L*4],$5E945F95), AC
+      PMOVE.W     ($5EA1,D5.L*4), AC
+      PMOVE.W     ([$5EA2,D5.L*4]), AC
+      PMOVE.W     ([$5EA3,D5.L*4],$5FA4), AC
+      PMOVE.W     ([$5EA4,D5.L*4],$5FA560A6), AC
+      PMOVE.W     ([$5EA6],D5.L*4), AC
+      PMOVE.W     ([$5EA7],D5.L*4,$5FA8), AC
+      PMOVE.W     ([$5EA8],D5.L*4,$5FA960AA), AC
+      PMOVE.W     ($5EB15FB2,D5.L*4), AC
+      PMOVE.W     ([$5EB25FB3,D5.L*4]), AC
+      PMOVE.W     ([$5EB45FB5,D5.L*4],$60B661B7), AC
+      PMOVE.W     ([$5EB65FB7],D5.L*4), AC
+      PMOVE.W     ([$5EB85FB9],D5.L*4,$60BA61BB), AC
+      PMOVE.W     ($5EE2), AC
+      PMOVE.W     ([$5EE2]), AC
+      PMOVE.W     ([$5EE4],$5FE5), AC
+      PMOVE.W     ([$5EE4],$5FE560E6), AC
+      PMOVE.W     ($5EF15FF2), AC
+      PMOVE.W     ([$5EF25FF4]), AC
+      PMOVE.W     ([$5EF45FF6],$60F761F8), AC
+      PMOVE.W     (0,A0,D5.L*8), AC
+      PMOVE.W     AC, (A0,D5.L*8)
+      PMOVE.W     AC, ([A0,D5.L*8])
+      PMOVE.W     AC, ([A0,D5.L*8],$6013)
+      PMOVE.W     AC, ([A0,D5.L*8],$60146115)
+      PMOVE.W     AC, ([A0],D5.L*8)
+      PMOVE.W     AC, ([A0],D5.L*8,$6017)
+      PMOVE.W     AC, ([A0],D5.L*8,$60186119)
+      PMOVE.W     AC, ($6021,A0,D5.L*8)
+      PMOVE.W     AC, ([$6022,A0,D5.L*8])
+      PMOVE.W     AC, ([$6023,A0,D5.L*8],$6124)
+      PMOVE.W     AC, ([$6024,A0,D5.L*8],$61256226)
+      PMOVE.W     AC, ([$6026,A0],D5.L*8)
+      PMOVE.W     AC, ([$6027,A0],D5.L*8,$6128)
+      PMOVE.W     AC, ([$6028,A0],D5.L*8,$6129622A)
+      PMOVE.W     AC, ($60316132,A0,D5.L*8)
+      PMOVE.W     AC, ([$60326133,A0,D5.L*8])
+      PMOVE.W     AC, ([$60346135,A0,D5.L*8],$62366337)
+      PMOVE.W     AC, ([$60366137,A0],D5.L*8)
+      PMOVE.W     AC, ([$60386139,A0],D5.L*8,$623A633B)
+      PMOVE.W     AC, (A0)
+      PMOVE.W     AC, ([A0])
+      PMOVE.W     AC, ([A0],$6053)
+      PMOVE.W     AC, ([A0],$60546155)
+      PMOVE.W     AC, ($6061,A0)
+      PMOVE.W     AC, ([$6062,A0])
+      PMOVE.W     AC, ([$6063,A0],$6164)
+      PMOVE.W     AC, ([$6064,A0],$61656266)
+      PMOVE.W     AC, ($60716172,A0)
+      PMOVE.W     AC, ([$60726173,A0])
+      PMOVE.W     AC, ([$60746175,A0],$62766377)
+      PMOVE.W     AC, (D5.L*8)
+      PMOVE.W     AC, ([D5.L*8])
+      PMOVE.W     AC, ([D5.L*8],$6093)
+      PMOVE.W     AC, ([D5.L*8],$60946195)
+      PMOVE.W     AC, ($60A1,D5.L*8)
+      PMOVE.W     AC, ([$60A2,D5.L*8])
+      PMOVE.W     AC, ([$60A3,D5.L*8],$61A4)
+      PMOVE.W     AC, ([$60A4,D5.L*8],$61A562A6)
+      PMOVE.W     AC, ([$60A6],D5.L*8)
+      PMOVE.W     AC, ([$60A7],D5.L*8,$61A8)
+      PMOVE.W     AC, ([$60A8],D5.L*8,$61A962AA)
+      PMOVE.W     AC, ($60B161B2,D5.L*8)
+      PMOVE.W     AC, ([$60B261B3,D5.L*8])
+      PMOVE.W     AC, ([$60B461B5,D5.L*8],$62B663B7)
+      PMOVE.W     AC, ([$60B661B7],D5.L*8)
+      PMOVE.W     AC, ([$60B861B9],D5.L*8,$62BA63BB)
+      PMOVE.W     AC, ($60E2)
+      PMOVE.W     AC, ([$60E2])
+      PMOVE.W     AC, ([$60E4],$61E5)
+      PMOVE.W     AC, ([$60E4],$61E562E6)
+      PMOVE.W     AC, ($60F161F2)
+      PMOVE.W     AC, ([$60F261F4])
+      PMOVE.W     AC, ([$60F461F6],$62F763F8)
+      PMOVE.W     AC, (0,A0,D6.W)
+      PMOVE.W     (A0,D6.W), PSR
+      PMOVE.W     ([A0,D6.W]), PSR
+      PMOVE.W     ([A0,D6.W],$6213), PSR
+      PMOVE.W     ([A0,D6.W],$62146315), PSR
+      PMOVE.W     ([A0],D6.W), PSR
+      PMOVE.W     ([A0],D6.W,$6217), PSR
+      PMOVE.W     ([A0],D6.W,$62186319), PSR
+      PMOVE.W     ($6221,A0,D6.W), PSR
+      PMOVE.W     ([$6222,A0,D6.W]), PSR
+      PMOVE.W     ([$6223,A0,D6.W],$6324), PSR
+      PMOVE.W     ([$6224,A0,D6.W],$63256426), PSR
+      PMOVE.W     ([$6226,A0],D6.W), PSR
+      PMOVE.W     ([$6227,A0],D6.W,$6328), PSR
+      PMOVE.W     ([$6228,A0],D6.W,$6329642A), PSR
+      PMOVE.W     ($62316332,A0,D6.W), PSR
+      PMOVE.W     ([$62326333,A0,D6.W]), PSR
+      PMOVE.W     ([$62346335,A0,D6.W],$64366537), PSR
+      PMOVE.W     ([$62366337,A0],D6.W), PSR
+      PMOVE.W     ([$62386339,A0],D6.W,$643A653B), PSR
+      PMOVE.W     (A0), PSR
+      PMOVE.W     ([A0]), PSR
+      PMOVE.W     ([A0],$6253), PSR
+      PMOVE.W     ([A0],$62546355), PSR
+      PMOVE.W     ($6261,A0), PSR
+      PMOVE.W     ([$6262,A0]), PSR
+      PMOVE.W     ([$6263,A0],$6364), PSR
+      PMOVE.W     ([$6264,A0],$63656466), PSR
+      PMOVE.W     ($62716372,A0), PSR
+      PMOVE.W     ([$62726373,A0]), PSR
+      PMOVE.W     ([$62746375,A0],$64766577), PSR
+      PMOVE.W     (D6.W), PSR
+      PMOVE.W     ([D6.W]), PSR
+      PMOVE.W     ([D6.W],$6293), PSR
+      PMOVE.W     ([D6.W],$62946395), PSR
+      PMOVE.W     ($62A1,D6.W), PSR
+      PMOVE.W     ([$62A2,D6.W]), PSR
+      PMOVE.W     ([$62A3,D6.W],$63A4), PSR
+      PMOVE.W     ([$62A4,D6.W],$63A564A6), PSR
+      PMOVE.W     ([$62A6],D6.W), PSR
+      PMOVE.W     ([$62A7],D6.W,$63A8), PSR
+      PMOVE.W     ([$62A8],D6.W,$63A964AA), PSR
+      PMOVE.W     ($62B163B2,D6.W), PSR
+      PMOVE.W     ([$62B263B3,D6.W]), PSR
+      PMOVE.W     ([$62B463B5,D6.W],$64B665B7), PSR
+      PMOVE.W     ([$62B663B7],D6.W), PSR
+      PMOVE.W     ([$62B863B9],D6.W,$64BA65BB), PSR
+      PMOVE.W     ($62E2), PSR
+      PMOVE.W     ([$62E2]), PSR
+      PMOVE.W     ([$62E4],$63E5), PSR
+      PMOVE.W     ([$62E4],$63E564E6), PSR
+      PMOVE.W     ($62F163F2), PSR
+      PMOVE.W     ([$62F263F4]), PSR
+      PMOVE.W     ([$62F463F6],$64F765F8), PSR
+      PMOVE.W     (0,A0,D6.W*2), PSR
+      PMOVE.W     PSR, (A0,D6.W*2)
+      PMOVE.W     PSR, ([A0,D6.W*2])
+      PMOVE.W     PSR, ([A0,D6.W*2],$6413)
+      PMOVE.W     PSR, ([A0,D6.W*2],$64146515)
+      PMOVE.W     PSR, ([A0],D6.W*2)
+      PMOVE.W     PSR, ([A0],D6.W*2,$6417)
+      PMOVE.W     PSR, ([A0],D6.W*2,$64186519)
+      PMOVE.W     PSR, ($6421,A0,D6.W*2)
+      PMOVE.W     PSR, ([$6422,A0,D6.W*2])
+      PMOVE.W     PSR, ([$6423,A0,D6.W*2],$6524)
+      PMOVE.W     PSR, ([$6424,A0,D6.W*2],$65256626)
+      PMOVE.W     PSR, ([$6426,A0],D6.W*2)
+      PMOVE.W     PSR, ([$6427,A0],D6.W*2,$6528)
+      PMOVE.W     PSR, ([$6428,A0],D6.W*2,$6529662A)
+      PMOVE.W     PSR, ($64316532,A0,D6.W*2)
+      PMOVE.W     PSR, ([$64326533,A0,D6.W*2])
+      PMOVE.W     PSR, ([$64346535,A0,D6.W*2],$66366737)
+      PMOVE.W     PSR, ([$64366537,A0],D6.W*2)
+      PMOVE.W     PSR, ([$64386539,A0],D6.W*2,$663A673B)
+      PMOVE.W     PSR, (A0)
+      PMOVE.W     PSR, ([A0])
+      PMOVE.W     PSR, ([A0],$6453)
+      PMOVE.W     PSR, ([A0],$64546555)
+      PMOVE.W     PSR, ($6461,A0)
+      PMOVE.W     PSR, ([$6462,A0])
+      PMOVE.W     PSR, ([$6463,A0],$6564)
+      PMOVE.W     PSR, ([$6464,A0],$65656666)
+      PMOVE.W     PSR, ($64716572,A0)
+      PMOVE.W     PSR, ([$64726573,A0])
+      PMOVE.W     PSR, ([$64746575,A0],$66766777)
+      PMOVE.W     PSR, (D6.W*2)
+      PMOVE.W     PSR, ([D6.W*2])
+      PMOVE.W     PSR, ([D6.W*2],$6493)
+      PMOVE.W     PSR, ([D6.W*2],$64946595)
+      PMOVE.W     PSR, ($64A1,D6.W*2)
+      PMOVE.W     PSR, ([$64A2,D6.W*2])
+      PMOVE.W     PSR, ([$64A3,D6.W*2],$65A4)
+      PMOVE.W     PSR, ([$64A4,D6.W*2],$65A566A6)
+      PMOVE.W     PSR, ([$64A6],D6.W*2)
+      PMOVE.W     PSR, ([$64A7],D6.W*2,$65A8)
+      PMOVE.W     PSR, ([$64A8],D6.W*2,$65A966AA)
+      PMOVE.W     PSR, ($64B165B2,D6.W*2)
+      PMOVE.W     PSR, ([$64B265B3,D6.W*2])
+      PMOVE.W     PSR, ([$64B465B5,D6.W*2],$66B667B7)
+      PMOVE.W     PSR, ([$64B665B7],D6.W*2)
+      PMOVE.W     PSR, ([$64B865B9],D6.W*2,$66BA67BB)
+      PMOVE.W     PSR, ($64E2)
+      PMOVE.W     PSR, ([$64E2])
+      PMOVE.W     PSR, ([$64E4],$65E5)
+      PMOVE.W     PSR, ([$64E4],$65E566E6)
+      PMOVE.W     PSR, ($64F165F2)
+      PMOVE.W     PSR, ([$64F265F4])
+      PMOVE.W     PSR, ([$64F465F6],$66F767F8)
+      PMOVE.W     PSR, (0,A0,D6.W*4)
+      PMOVE.W     (A0,D6.W*4), PCSR
+      PMOVE.W     ([A0,D6.W*4]), PCSR
+      PMOVE.W     ([A0,D6.W*4],$6613), PCSR
+      PMOVE.W     ([A0,D6.W*4],$66146715), PCSR
+      PMOVE.W     ([A0],D6.W*4), PCSR
+      PMOVE.W     ([A0],D6.W*4,$6617), PCSR
+      PMOVE.W     ([A0],D6.W*4,$66186719), PCSR
+      PMOVE.W     ($6621,A0,D6.W*4), PCSR
+      PMOVE.W     ([$6622,A0,D6.W*4]), PCSR
+      PMOVE.W     ([$6623,A0,D6.W*4],$6724), PCSR
+      PMOVE.W     ([$6624,A0,D6.W*4],$67256826), PCSR
+      PMOVE.W     ([$6626,A0],D6.W*4), PCSR
+      PMOVE.W     ([$6627,A0],D6.W*4,$6728), PCSR
+      PMOVE.W     ([$6628,A0],D6.W*4,$6729682A), PCSR
+      PMOVE.W     ($66316732,A0,D6.W*4), PCSR
+      PMOVE.W     ([$66326733,A0,D6.W*4]), PCSR
+      PMOVE.W     ([$66346735,A0,D6.W*4],$68366937), PCSR
+      PMOVE.W     ([$66366737,A0],D6.W*4), PCSR
+      PMOVE.W     ([$66386739,A0],D6.W*4,$683A693B), PCSR
+      PMOVE.W     (A0), PCSR
+      PMOVE.W     ([A0]), PCSR
+      PMOVE.W     ([A0],$6653), PCSR
+      PMOVE.W     ([A0],$66546755), PCSR
+      PMOVE.W     ($6661,A0), PCSR
+      PMOVE.W     ([$6662,A0]), PCSR
+      PMOVE.W     ([$6663,A0],$6764), PCSR
+      PMOVE.W     ([$6664,A0],$67656866), PCSR
+      PMOVE.W     ($66716772,A0), PCSR
+      PMOVE.W     ([$66726773,A0]), PCSR
+      PMOVE.W     ([$66746775,A0],$68766977), PCSR
+      PMOVE.W     (D6.W*4), PCSR
+      PMOVE.W     ([D6.W*4]), PCSR
+      PMOVE.W     ([D6.W*4],$6693), PCSR
+      PMOVE.W     ([D6.W*4],$66946795), PCSR
+      PMOVE.W     ($66A1,D6.W*4), PCSR
+      PMOVE.W     ([$66A2,D6.W*4]), PCSR
+      PMOVE.W     ([$66A3,D6.W*4],$67A4), PCSR
+      PMOVE.W     ([$66A4,D6.W*4],$67A568A6), PCSR
+      PMOVE.W     ([$66A6],D6.W*4), PCSR
+      PMOVE.W     ([$66A7],D6.W*4,$67A8), PCSR
+      PMOVE.W     ([$66A8],D6.W*4,$67A968AA), PCSR
+      PMOVE.W     ($66B167B2,D6.W*4), PCSR
+      PMOVE.W     ([$66B267B3,D6.W*4]), PCSR
+      PMOVE.W     ([$66B467B5,D6.W*4],$68B669B7), PCSR
+      PMOVE.W     ([$66B667B7],D6.W*4), PCSR
+      PMOVE.W     ([$66B867B9],D6.W*4,$68BA69BB), PCSR
+      PMOVE.W     ($66E2), PCSR
+      PMOVE.W     ([$66E2]), PCSR
+      PMOVE.W     ([$66E4],$67E5), PCSR
+      PMOVE.W     ([$66E4],$67E568E6), PCSR
+      PMOVE.W     ($66F167F2), PCSR
+      PMOVE.W     ([$66F267F4]), PCSR
+      PMOVE.W     ([$66F467F6],$68F769F8), PCSR
+      PMOVE.W     (0,A0,D6.W*8), PCSR
+      PMOVE.W     PCSR, (A0,D6.W*8)
+      PMOVE.W     PCSR, ([A0,D6.W*8])
+      PMOVE.W     PCSR, ([A0,D6.W*8],$6813)
+      PMOVE.W     PCSR, ([A0,D6.W*8],$68146915)
+      PMOVE.W     PCSR, ([A0],D6.W*8)
+      PMOVE.W     PCSR, ([A0],D6.W*8,$6817)
+      PMOVE.W     PCSR, ([A0],D6.W*8,$68186919)
+      PMOVE.W     PCSR, ($6821,A0,D6.W*8)
+      PMOVE.W     PCSR, ([$6822,A0,D6.W*8])
+      PMOVE.W     PCSR, ([$6823,A0,D6.W*8],$6924)
+      PMOVE.W     PCSR, ([$6824,A0,D6.W*8],$69256A26)
+      PMOVE.W     PCSR, ([$6826,A0],D6.W*8)
+      PMOVE.W     PCSR, ([$6827,A0],D6.W*8,$6928)
+      PMOVE.W     PCSR, ([$6828,A0],D6.W*8,$69296A2A)
+      PMOVE.W     PCSR, ($68316932,A0,D6.W*8)
+      PMOVE.W     PCSR, ([$68326933,A0,D6.W*8])
+      PMOVE.W     PCSR, ([$68346935,A0,D6.W*8],$6A366B37)
+      PMOVE.W     PCSR, ([$68366937,A0],D6.W*8)
+      PMOVE.W     PCSR, ([$68386939,A0],D6.W*8,$6A3A6B3B)
+      PMOVE.W     PCSR, (A0)
+      PMOVE.W     PCSR, ([A0])
+      PMOVE.W     PCSR, ([A0],$6853)
+      PMOVE.W     PCSR, ([A0],$68546955)
+      PMOVE.W     PCSR, ($6861,A0)
+      PMOVE.W     PCSR, ([$6862,A0])
+      PMOVE.W     PCSR, ([$6863,A0],$6964)
+      PMOVE.W     PCSR, ([$6864,A0],$69656A66)
+      PMOVE.W     PCSR, ($68716972,A0)
+      PMOVE.W     PCSR, ([$68726973,A0])
+      PMOVE.W     PCSR, ([$68746975,A0],$6A766B77)
+      PMOVE.W     PCSR, (D6.W*8)
+      PMOVE.W     PCSR, ([D6.W*8])
+      PMOVE.W     PCSR, ([D6.W*8],$6893)
+      PMOVE.W     PCSR, ([D6.W*8],$68946995)
+      PMOVE.W     PCSR, ($68A1,D6.W*8)
+      PMOVE.W     PCSR, ([$68A2,D6.W*8])
+      PMOVE.W     PCSR, ([$68A3,D6.W*8],$69A4)
+      PMOVE.W     PCSR, ([$68A4,D6.W*8],$69A56AA6)
+      PMOVE.W     PCSR, ([$68A6],D6.W*8)
+      PMOVE.W     PCSR, ([$68A7],D6.W*8,$69A8)
+      PMOVE.W     PCSR, ([$68A8],D6.W*8,$69A96AAA)
+      PMOVE.W     PCSR, ($68B169B2,D6.W*8)
+      PMOVE.W     PCSR, ([$68B269B3,D6.W*8])
+      PMOVE.W     PCSR, ([$68B469B5,D6.W*8],$6AB66BB7)
+      PMOVE.W     PCSR, ([$68B669B7],D6.W*8)
+      PMOVE.W     PCSR, ([$68B869B9],D6.W*8,$6ABA6BBB)
+      PMOVE.W     PCSR, ($68E2)
+      PMOVE.W     PCSR, ([$68E2])
+      PMOVE.W     PCSR, ([$68E4],$69E5)
+      PMOVE.W     PCSR, ([$68E4],$69E56AE6)
+      PMOVE.W     PCSR, ($68F169F2)
+      PMOVE.W     PCSR, ([$68F269F4])
+      PMOVE.W     PCSR, ([$68F469F6],$6AF76BF8)
+      PMOVE.W     PCSR, (0,A0,D6.L)
+      PMOVE.W     (A0,D7.W), BAD0
+      PMOVE.W     ([A0,D7.W]), BAD0
+      PMOVE.W     ([A0,D7.W],$7213), BAD0
+      PMOVE.W     ([A0,D7.W],$72147315), BAD0
+      PMOVE.W     ([A0],D7.W), BAD0
+      PMOVE.W     ([A0],D7.W,$7217), BAD0
+      PMOVE.W     ([A0],D7.W,$72187319), BAD0
+      PMOVE.W     ($7221,A0,D7.W), BAD0
+      PMOVE.W     ([$7222,A0,D7.W]), BAD0
+      PMOVE.W     ([$7223,A0,D7.W],$7324), BAD0
+      PMOVE.W     ([$7224,A0,D7.W],$73257426), BAD0
+      PMOVE.W     ([$7226,A0],D7.W), BAD0
+      PMOVE.W     ([$7227,A0],D7.W,$7328), BAD0
+      PMOVE.W     ([$7228,A0],D7.W,$7329742A), BAD0
+      PMOVE.W     ($72317332,A0,D7.W), BAD0
+      PMOVE.W     ([$72327333,A0,D7.W]), BAD0
+      PMOVE.W     ([$72347335,A0,D7.W],$74367537), BAD0
+      PMOVE.W     ([$72367337,A0],D7.W), BAD0
+      PMOVE.W     ([$72387339,A0],D7.W,$743A753B), BAD0
+      PMOVE.W     (A0), BAD0
+      PMOVE.W     ([A0]), BAD0
+      PMOVE.W     ([A0],$7253), BAD0
+      PMOVE.W     ([A0],$72547355), BAD0
+      PMOVE.W     ($7261,A0), BAD0
+      PMOVE.W     ([$7262,A0]), BAD0
+      PMOVE.W     ([$7263,A0],$7364), BAD0
+      PMOVE.W     ([$7264,A0],$73657466), BAD0
+      PMOVE.W     ($72717372,A0), BAD0
+      PMOVE.W     ([$72727373,A0]), BAD0
+      PMOVE.W     ([$72747375,A0],$74767577), BAD0
+      PMOVE.W     (D7.W), BAD0
+      PMOVE.W     ([D7.W]), BAD0
+      PMOVE.W     ([D7.W],$7293), BAD0
+      PMOVE.W     ([D7.W],$72947395), BAD0
+      PMOVE.W     ($72A1,D7.W), BAD0
+      PMOVE.W     ([$72A2,D7.W]), BAD0
+      PMOVE.W     ([$72A3,D7.W],$73A4), BAD0
+      PMOVE.W     ([$72A4,D7.W],$73A574A6), BAD0
+      PMOVE.W     ([$72A6],D7.W), BAD0
+      PMOVE.W     ([$72A7],D7.W,$73A8), BAD0
+      PMOVE.W     ([$72A8],D7.W,$73A974AA), BAD0
+      PMOVE.W     ($72B173B2,D7.W), BAD0
+      PMOVE.W     ([$72B273B3,D7.W]), BAD0
+      PMOVE.W     ([$72B473B5,D7.W],$74B675B7), BAD0
+      PMOVE.W     ([$72B673B7],D7.W), BAD0
+      PMOVE.W     ([$72B873B9],D7.W,$74BA75BB), BAD0
+      PMOVE.W     ($72E2), BAD0
+      PMOVE.W     ([$72E2]), BAD0
+      PMOVE.W     ([$72E4],$73E5), BAD0
+      PMOVE.W     ([$72E4],$73E574E6), BAD0
+      PMOVE.W     ($72F173F2), BAD0
+      PMOVE.W     ([$72F273F4]), BAD0
+      PMOVE.W     ([$72F473F6],$74F775F8), BAD0
+      PMOVE.W     (0,A0,D7.W*2), BAD0
+      PMOVE.W     BAD0, (A0,D7.W*2)
+      PMOVE.W     BAD0, ([A0,D7.W*2])
+      PMOVE.W     BAD0, ([A0,D7.W*2],$7413)
+      PMOVE.W     BAD0, ([A0,D7.W*2],$74147515)
+      PMOVE.W     BAD0, ([A0],D7.W*2)
+      PMOVE.W     BAD0, ([A0],D7.W*2,$7417)
+      PMOVE.W     BAD0, ([A0],D7.W*2,$74187519)
+      PMOVE.W     BAD0, ($7421,A0,D7.W*2)
+      PMOVE.W     BAD0, ([$7422,A0,D7.W*2])
+      PMOVE.W     BAD0, ([$7423,A0,D7.W*2],$7524)
+      PMOVE.W     BAD0, ([$7424,A0,D7.W*2],$75257626)
+      PMOVE.W     BAD0, ([$7426,A0],D7.W*2)
+      PMOVE.W     BAD0, ([$7427,A0],D7.W*2,$7528)
+      PMOVE.W     BAD0, ([$7428,A0],D7.W*2,$7529762A)
+      PMOVE.W     BAD0, ($74317532,A0,D7.W*2)
+      PMOVE.W     BAD0, ([$74327533,A0,D7.W*2])
+      PMOVE.W     BAD0, ([$74347535,A0,D7.W*2],$76367737)
+      PMOVE.W     BAD0, ([$74367537,A0],D7.W*2)
+      PMOVE.W     BAD0, ([$74387539,A0],D7.W*2,$763A773B)
+      PMOVE.W     BAD0, (A0)
+      PMOVE.W     BAD0, ([A0])
+      PMOVE.W     BAD0, ([A0],$7453)
+      PMOVE.W     BAD0, ([A0],$74547555)
+      PMOVE.W     BAD0, ($7461,A0)
+      PMOVE.W     BAD0, ([$7462,A0])
+      PMOVE.W     BAD0, ([$7463,A0],$7564)
+      PMOVE.W     BAD0, ([$7464,A0],$75657666)
+      PMOVE.W     BAD0, ($74717572,A0)
+      PMOVE.W     BAD0, ([$74727573,A0])
+      PMOVE.W     BAD0, ([$74747575,A0],$76767777)
+      PMOVE.W     BAD0, (D7.W*2)
+      PMOVE.W     BAD0, ([D7.W*2])
+      PMOVE.W     BAD0, ([D7.W*2],$7493)
+      PMOVE.W     BAD0, ([D7.W*2],$74947595)
+      PMOVE.W     BAD0, ($74A1,D7.W*2)
+      PMOVE.W     BAD0, ([$74A2,D7.W*2])
+      PMOVE.W     BAD0, ([$74A3,D7.W*2],$75A4)
+      PMOVE.W     BAD0, ([$74A4,D7.W*2],$75A576A6)
+      PMOVE.W     BAD0, ([$74A6],D7.W*2)
+      PMOVE.W     BAD0, ([$74A7],D7.W*2,$75A8)
+      PMOVE.W     BAD0, ([$74A8],D7.W*2,$75A976AA)
+      PMOVE.W     BAD0, ($74B175B2,D7.W*2)
+      PMOVE.W     BAD0, ([$74B275B3,D7.W*2])
+      PMOVE.W     BAD0, ([$74B475B5,D7.W*2],$76B677B7)
+      PMOVE.W     BAD0, ([$74B675B7],D7.W*2)
+      PMOVE.W     BAD0, ([$74B875B9],D7.W*2,$76BA77BB)
+      PMOVE.W     BAD0, ($74E2)
+      PMOVE.W     BAD0, ([$74E2])
+      PMOVE.W     BAD0, ([$74E4],$75E5)
+      PMOVE.W     BAD0, ([$74E4],$75E576E6)
+      PMOVE.W     BAD0, ($74F175F2)
+      PMOVE.W     BAD0, ([$74F275F4])
+      PMOVE.W     BAD0, ([$74F475F6],$76F777F8)
+      PMOVE.W     BAD0, (0,A0,D7.W*4)
+      PMOVE.W     (A0,D7.W*4), BAC0
+      PMOVE.W     ([A0,D7.W*4]), BAC0
+      PMOVE.W     ([A0,D7.W*4],$7613), BAC0
+      PMOVE.W     ([A0,D7.W*4],$76147715), BAC0
+      PMOVE.W     ([A0],D7.W*4), BAC0
+      PMOVE.W     ([A0],D7.W*4,$7617), BAC0
+      PMOVE.W     ([A0],D7.W*4,$76187719), BAC0
+      PMOVE.W     ($7621,A0,D7.W*4), BAC0
+      PMOVE.W     ([$7622,A0,D7.W*4]), BAC0
+      PMOVE.W     ([$7623,A0,D7.W*4],$7724), BAC0
+      PMOVE.W     ([$7624,A0,D7.W*4],$77257826), BAC0
+      PMOVE.W     ([$7626,A0],D7.W*4), BAC0
+      PMOVE.W     ([$7627,A0],D7.W*4,$7728), BAC0
+      PMOVE.W     ([$7628,A0],D7.W*4,$7729782A), BAC0
+      PMOVE.W     ($76317732,A0,D7.W*4), BAC0
+      PMOVE.W     ([$76327733,A0,D7.W*4]), BAC0
+      PMOVE.W     ([$76347735,A0,D7.W*4],$78367937), BAC0
+      PMOVE.W     ([$76367737,A0],D7.W*4), BAC0
+      PMOVE.W     ([$76387739,A0],D7.W*4,$783A793B), BAC0
+      PMOVE.W     (A0), BAC0
+      PMOVE.W     ([A0]), BAC0
+      PMOVE.W     ([A0],$7653), BAC0
+      PMOVE.W     ([A0],$76547755), BAC0
+      PMOVE.W     ($7661,A0), BAC0
+      PMOVE.W     ([$7662,A0]), BAC0
+      PMOVE.W     ([$7663,A0],$7764), BAC0
+      PMOVE.W     ([$7664,A0],$77657866), BAC0
+      PMOVE.W     ($76717772,A0), BAC0
+      PMOVE.W     ([$76727773,A0]), BAC0
+      PMOVE.W     ([$76747775,A0],$78767977), BAC0
+      PMOVE.W     (D7.W*4), BAC0
+      PMOVE.W     ([D7.W*4]), BAC0
+      PMOVE.W     ([D7.W*4],$7693), BAC0
+      PMOVE.W     ([D7.W*4],$76947795), BAC0
+      PMOVE.W     ($76A1,D7.W*4), BAC0
+      PMOVE.W     ([$76A2,D7.W*4]), BAC0
+      PMOVE.W     ([$76A3,D7.W*4],$77A4), BAC0
+      PMOVE.W     ([$76A4,D7.W*4],$77A578A6), BAC0
+      PMOVE.W     ([$76A6],D7.W*4), BAC0
+      PMOVE.W     ([$76A7],D7.W*4,$77A8), BAC0
+      PMOVE.W     ([$76A8],D7.W*4,$77A978AA), BAC0
+      PMOVE.W     ($76B177B2,D7.W*4), BAC0
+      PMOVE.W     ([$76B277B3,D7.W*4]), BAC0
+      PMOVE.W     ([$76B477B5,D7.W*4],$78B679B7), BAC0
+      PMOVE.W     ([$76B677B7],D7.W*4), BAC0
+      PMOVE.W     ([$76B877B9],D7.W*4,$78BA79BB), BAC0
+      PMOVE.W     ($76E2), BAC0
+      PMOVE.W     ([$76E2]), BAC0
+      PMOVE.W     ([$76E4],$77E5), BAC0
+      PMOVE.W     ([$76E4],$77E578E6), BAC0
+      PMOVE.W     ($76F177F2), BAC0
+      PMOVE.W     ([$76F277F4]), BAC0
+      PMOVE.W     ([$76F477F6],$78F779F8), BAC0
+      PMOVE.W     (0,A0,D7.W*8), BAC0
+      PMOVE.W     BAC0, (A0,D7.W*8)
+      PMOVE.W     BAC0, ([A0,D7.W*8])
+      PMOVE.W     BAC0, ([A0,D7.W*8],$7813)
+      PMOVE.W     BAC0, ([A0,D7.W*8],$78147915)
+      PMOVE.W     BAC0, ([A0],D7.W*8)
+      PMOVE.W     BAC0, ([A0],D7.W*8,$7817)
+      PMOVE.W     BAC0, ([A0],D7.W*8,$78187919)
+      PMOVE.W     BAC0, ($7821,A0,D7.W*8)
+      PMOVE.W     BAC0, ([$7822,A0,D7.W*8])
+      PMOVE.W     BAC0, ([$7823,A0,D7.W*8],$7924)
+      PMOVE.W     BAC0, ([$7824,A0,D7.W*8],$79257A26)
+      PMOVE.W     BAC0, ([$7826,A0],D7.W*8)
+      PMOVE.W     BAC0, ([$7827,A0],D7.W*8,$7928)
+      PMOVE.W     BAC0, ([$7828,A0],D7.W*8,$79297A2A)
+      PMOVE.W     BAC0, ($78317932,A0,D7.W*8)
+      PMOVE.W     BAC0, ([$78327933,A0,D7.W*8])
+      PMOVE.W     BAC0, ([$78347935,A0,D7.W*8],$7A367B37)
+      PMOVE.W     BAC0, ([$78367937,A0],D7.W*8)
+      PMOVE.W     BAC0, ([$78387939,A0],D7.W*8,$7A3A7B3B)
+      PMOVE.W     BAC0, (A0)
+      PMOVE.W     BAC0, ([A0])
+      PMOVE.W     BAC0, ([A0],$7853)
+      PMOVE.W     BAC0, ([A0],$78547955)
+      PMOVE.W     BAC0, ($7861,A0)
+      PMOVE.W     BAC0, ([$7862,A0])
+      PMOVE.W     BAC0, ([$7863,A0],$7964)
+      PMOVE.W     BAC0, ([$7864,A0],$79657A66)
+      PMOVE.W     BAC0, ($78717972,A0)
+      PMOVE.W     BAC0, ([$78727973,A0])
+      PMOVE.W     BAC0, ([$78747975,A0],$7A767B77)
+      PMOVE.W     BAC0, (D7.W*8)
+      PMOVE.W     BAC0, ([D7.W*8])
+      PMOVE.W     BAC0, ([D7.W*8],$7893)
+      PMOVE.W     BAC0, ([D7.W*8],$78947995)
+      PMOVE.W     BAC0, ($78A1,D7.W*8)
+      PMOVE.W     BAC0, ([$78A2,D7.W*8])
+      PMOVE.W     BAC0, ([$78A3,D7.W*8],$79A4)
+      PMOVE.W     BAC0, ([$78A4,D7.W*8],$79A57AA6)
+      PMOVE.W     BAC0, ([$78A6],D7.W*8)
+      PMOVE.W     BAC0, ([$78A7],D7.W*8,$79A8)
+      PMOVE.W     BAC0, ([$78A8],D7.W*8,$79A97AAA)
+      PMOVE.W     BAC0, ($78B179B2,D7.W*8)
+      PMOVE.W     BAC0, ([$78B279B3,D7.W*8])
+      PMOVE.W     BAC0, ([$78B479B5,D7.W*8],$7AB67BB7)
+      PMOVE.W     BAC0, ([$78B679B7],D7.W*8)
+      PMOVE.W     BAC0, ([$78B879B9],D7.W*8,$7ABA7BBB)
+      PMOVE.W     BAC0, ($78E2)
+      PMOVE.W     BAC0, ([$78E2])
+      PMOVE.W     BAC0, ([$78E4],$79E5)
+      PMOVE.W     BAC0, ([$78E4],$79E57AE6)
+      PMOVE.W     BAC0, ($78F179F2)
+      PMOVE.W     BAC0, ([$78F279F4])
+      PMOVE.W     BAC0, ([$78F479F6],$7AF77BF8)
+      PMOVE.W     BAC0, (0,A0,D7.L)
+      PTESTW      SFC, (A0,A0.W), #0
+      PTESTW      SFC, ([A0,A0.W]), #0
+      PTESTW      SFC, ([A0,A0.W],-$7DED), #0
+      PTESTW      SFC, ([A0,A0.W],-$7DEB7CEB), #0
+      PTESTW      SFC, ([A0],A0.W), #0
+      PTESTW      SFC, ([A0],A0.W,-$7DE9), #0
+      PTESTW      SFC, ([A0],A0.W,-$7DE77CE7), #0
+      PTESTW      SFC, (-$7DDF,A0,A0.W), #0
+      PTESTW      SFC, ([-$7DDE,A0,A0.W]), #0
+      PTESTW      SFC, ([-$7DDD,A0,A0.W],-$7CDC), #0
+      PTESTW      SFC, ([-$7DDC,A0,A0.W],-$7CDA7BDA), #0
+      PTESTW      SFC, ([-$7DDA,A0],A0.W), #0
+      PTESTW      SFC, ([-$7DD9,A0],A0.W,-$7CD8), #0
+      PTESTW      SFC, ([-$7DD8,A0],A0.W,-$7CD67BD6), #0
+      PTESTW      SFC, (-$7DCE7CCE,A0,A0.W), #0
+      PTESTW      SFC, ([-$7DCD7CCD,A0,A0.W]), #0
+      PTESTW      SFC, ([-$7DCB7CCB,A0,A0.W],-$7BC97AC9), #0
+      PTESTW      SFC, ([-$7DC97CC9,A0],A0.W), #0
+      PTESTW      SFC, ([-$7DC77CC7,A0],A0.W,-$7BC57AC5), #0
+      PTESTW      SFC, (A0), #0
+      PTESTW      SFC, ([A0]), #0
+      PTESTW      SFC, ([A0],-$7DAD), #0
+      PTESTW      SFC, ([A0],-$7DAB7CAB), #0
+      PTESTW      SFC, (-$7D9F,A0), #0
+      PTESTW      SFC, ([-$7D9E,A0]), #0
+      PTESTW      SFC, ([-$7D9D,A0],-$7C9C), #0
+      PTESTW      SFC, ([-$7D9C,A0],-$7C9A7B9A), #0
+      PTESTW      SFC, (-$7D8E7C8E,A0), #0
+      PTESTW      SFC, ([-$7D8D7C8D,A0]), #0
+      PTESTW      SFC, ([-$7D8B7C8B,A0],-$7B897A89), #0
+      PTESTW      SFC, (A0.W), #0
+      PTESTW      SFC, ([A0.W]), #0
+      PTESTW      SFC, ([A0.W],-$7D6D), #0
+      PTESTW      SFC, ([A0.W],-$7D6B7C6B), #0
+      PTESTW      SFC, (-$7D5F,A0.W), #0
+      PTESTW      SFC, ([-$7D5E,A0.W]), #0
+      PTESTW      SFC, ([-$7D5D,A0.W],-$7C5C), #0
+      PTESTW      SFC, ([-$7D5C,A0.W],-$7C5A7B5A), #0
+      PTESTW      SFC, ([-$7D5A],A0.W), #0
+      PTESTW      SFC, ([-$7D59],A0.W,-$7C58), #0
+      PTESTW      SFC, ([-$7D58],A0.W,-$7C567B56), #0
+      PTESTW      SFC, (-$7D4E7C4E,A0.W), #0
+      PTESTW      SFC, ([-$7D4D7C4D,A0.W]), #0
+      PTESTW      SFC, ([-$7D4B7C4B,A0.W],-$7B497A49), #0
+      PTESTW      SFC, ([-$7D497C49],A0.W), #0
+      PTESTW      SFC, ([-$7D477C47],A0.W,-$7B457A45), #0
+      PTESTW      SFC, (-$7D1E), #0
+      PTESTW      SFC, ([-$7D1E]), #0
+      PTESTW      SFC, ([-$7D1C],-$7C1B), #0
+      PTESTW      SFC, ([-$7D1C],-$7C1A7B1A), #0
+      PTESTW      SFC, (-$7D0E7C0E), #0
+      PTESTW      SFC, ([-$7D0D7C0C]), #0
+      PTESTW      SFC, ([-$7D0B7C0A],-$7B087A08), #0
+      PTESTW      SFC, (0,A0,A0.W*2), #0
+      PTESTW      DFC, (A0,A0.W), #0
+      PTESTW      DFC, ([A0,A0.W]), #0
+      PTESTW      DFC, ([A0,A0.W],-$7DED), #0
+      PTESTW      DFC, ([A0,A0.W],-$7DEB7CEB), #0
+      PTESTW      DFC, ([A0],A0.W), #0
+      PTESTW      DFC, ([A0],A0.W,-$7DE9), #0
+      PTESTW      DFC, ([A0],A0.W,-$7DE77CE7), #0
+      PTESTW      DFC, (-$7DDF,A0,A0.W), #0
+      PTESTW      DFC, ([-$7DDE,A0,A0.W]), #0
+      PTESTW      DFC, ([-$7DDD,A0,A0.W],-$7CDC), #0
+      PTESTW      DFC, ([-$7DDC,A0,A0.W],-$7CDA7BDA), #0
+      PTESTW      DFC, ([-$7DDA,A0],A0.W), #0
+      PTESTW      DFC, ([-$7DD9,A0],A0.W,-$7CD8), #0
+      PTESTW      DFC, ([-$7DD8,A0],A0.W,-$7CD67BD6), #0
+      PTESTW      DFC, (-$7DCE7CCE,A0,A0.W), #0
+      PTESTW      DFC, ([-$7DCD7CCD,A0,A0.W]), #0
+      PTESTW      DFC, ([-$7DCB7CCB,A0,A0.W],-$7BC97AC9), #0
+      PTESTW      DFC, ([-$7DC97CC9,A0],A0.W), #0
+      PTESTW      DFC, ([-$7DC77CC7,A0],A0.W,-$7BC57AC5), #0
+      PTESTW      DFC, (A0), #0
+      PTESTW      DFC, ([A0]), #0
+      PTESTW      DFC, ([A0],-$7DAD), #0
+      PTESTW      DFC, ([A0],-$7DAB7CAB), #0
+      PTESTW      DFC, (-$7D9F,A0), #0
+      PTESTW      DFC, ([-$7D9E,A0]), #0
+      PTESTW      DFC, ([-$7D9D,A0],-$7C9C), #0
+      PTESTW      DFC, ([-$7D9C,A0],-$7C9A7B9A), #0
+      PTESTW      DFC, (-$7D8E7C8E,A0), #0
+      PTESTW      DFC, ([-$7D8D7C8D,A0]), #0
+      PTESTW      DFC, ([-$7D8B7C8B,A0],-$7B897A89), #0
+      PTESTW      DFC, (A0.W), #0
+      PTESTW      DFC, ([A0.W]), #0
+      PTESTW      DFC, ([A0.W],-$7D6D), #0
+      PTESTW      DFC, ([A0.W],-$7D6B7C6B), #0
+      PTESTW      DFC, (-$7D5F,A0.W), #0
+      PTESTW      DFC, ([-$7D5E,A0.W]), #0
+      PTESTW      DFC, ([-$7D5D,A0.W],-$7C5C), #0
+      PTESTW      DFC, ([-$7D5C,A0.W],-$7C5A7B5A), #0
+      PTESTW      DFC, ([-$7D5A],A0.W), #0
+      PTESTW      DFC, ([-$7D59],A0.W,-$7C58), #0
+      PTESTW      DFC, ([-$7D58],A0.W,-$7C567B56), #0
+      PTESTW      DFC, (-$7D4E7C4E,A0.W), #0
+      PTESTW      DFC, ([-$7D4D7C4D,A0.W]), #0
+      PTESTW      DFC, ([-$7D4B7C4B,A0.W],-$7B497A49), #0
+      PTESTW      DFC, ([-$7D497C49],A0.W), #0
+      PTESTW      DFC, ([-$7D477C47],A0.W,-$7B457A45), #0
+      PTESTW      DFC, (-$7D1E), #0
+      PTESTW      DFC, ([-$7D1E]), #0
+      PTESTW      DFC, ([-$7D1C],-$7C1B), #0
+      PTESTW      DFC, ([-$7D1C],-$7C1A7B1A), #0
+      PTESTW      DFC, (-$7D0E7C0E), #0
+      PTESTW      DFC, ([-$7D0D7C0C]), #0
+      PTESTW      DFC, ([-$7D0B7C0A],-$7B087A08), #0
+      PTESTW      DFC, (0,A0,A0.W*2), #0
+      PTESTW      D0, (A0,A0.W), #0
+      PTESTW      D0, ([A0,A0.W]), #0
+      PTESTW      D0, ([A0,A0.W],-$7DED), #0
+      PTESTW      D0, ([A0,A0.W],-$7DEB7CEB), #0
+      PTESTW      D0, ([A0],A0.W), #0
+      PTESTW      D0, ([A0],A0.W,-$7DE9), #0
+      PTESTW      D0, ([A0],A0.W,-$7DE77CE7), #0
+      PTESTW      D0, (-$7DDF,A0,A0.W), #0
+      PTESTW      D0, ([-$7DDE,A0,A0.W]), #0
+      PTESTW      D0, ([-$7DDD,A0,A0.W],-$7CDC), #0
+      PTESTW      D0, ([-$7DDC,A0,A0.W],-$7CDA7BDA), #0
+      PTESTW      D0, ([-$7DDA,A0],A0.W), #0
+      PTESTW      D0, ([-$7DD9,A0],A0.W,-$7CD8), #0
+      PTESTW      D0, ([-$7DD8,A0],A0.W,-$7CD67BD6), #0
+      PTESTW      D0, (-$7DCE7CCE,A0,A0.W), #0
+      PTESTW      D0, ([-$7DCD7CCD,A0,A0.W]), #0
+      PTESTW      D0, ([-$7DCB7CCB,A0,A0.W],-$7BC97AC9), #0
+      PTESTW      D0, ([-$7DC97CC9,A0],A0.W), #0
+      PTESTW      D0, ([-$7DC77CC7,A0],A0.W,-$7BC57AC5), #0
+      PTESTW      D0, (A0), #0
+      PTESTW      D0, ([A0]), #0
+      PTESTW      D0, ([A0],-$7DAD), #0
+      PTESTW      D0, ([A0],-$7DAB7CAB), #0
+      PTESTW      D0, (-$7D9F,A0), #0
+      PTESTW      D0, ([-$7D9E,A0]), #0
+      PTESTW      D0, ([-$7D9D,A0],-$7C9C), #0
+      PTESTW      D0, ([-$7D9C,A0],-$7C9A7B9A), #0
+      PTESTW      D0, (-$7D8E7C8E,A0), #0
+      PTESTW      D0, ([-$7D8D7C8D,A0]), #0
+      PTESTW      D0, ([-$7D8B7C8B,A0],-$7B897A89), #0
+      PTESTW      D0, (A0.W), #0
+      PTESTW      D0, ([A0.W]), #0
+      PTESTW      D0, ([A0.W],-$7D6D), #0
+      PTESTW      D0, ([A0.W],-$7D6B7C6B), #0
+      PTESTW      D0, (-$7D5F,A0.W), #0
+      PTESTW      D0, ([-$7D5E,A0.W]), #0
+      PTESTW      D0, ([-$7D5D,A0.W],-$7C5C), #0
+      PTESTW      D0, ([-$7D5C,A0.W],-$7C5A7B5A), #0
+      PTESTW      D0, ([-$7D5A],A0.W), #0
+      PTESTW      D0, ([-$7D59],A0.W,-$7C58), #0
+      PTESTW      D0, ([-$7D58],A0.W,-$7C567B56), #0
+      PTESTW      D0, (-$7D4E7C4E,A0.W), #0
+      PTESTW      D0, ([-$7D4D7C4D,A0.W]), #0
+      PTESTW      D0, ([-$7D4B7C4B,A0.W],-$7B497A49), #0
+      PTESTW      D0, ([-$7D497C49],A0.W), #0
+      PTESTW      D0, ([-$7D477C47],A0.W,-$7B457A45), #0
+      PTESTW      D0, (-$7D1E), #0
+      PTESTW      D0, ([-$7D1E]), #0
+      PTESTW      D0, ([-$7D1C],-$7C1B), #0
+      PTESTW      D0, ([-$7D1C],-$7C1A7B1A), #0
+      PTESTW      D0, (-$7D0E7C0E), #0
+      PTESTW      D0, ([-$7D0D7C0C]), #0
+      PTESTW      D0, ([-$7D0B7C0A],-$7B087A08), #0
+      PTESTW      D0, (0,A0,A0.W*2), #0
+      PTESTW      #0, ([A0,A0.W]), #0
+      PTESTW      #0, ([A0,A0.W],-$7DED), #0
+      PTESTW      #0, ([A0,A0.W],-$7DEB7CEB), #0
+      PTESTW      #0, ([A0],A0.W), #0
+      PTESTW      #0, ([A0],A0.W,-$7DE9), #0
+      PTESTW      #0, ([A0],A0.W,-$7DE77CE7), #0
+      PTESTW      #0, (-$7DDF,A0,A0.W), #0
+      PTESTW      #0, ([-$7DDE,A0,A0.W]), #0
+      PTESTW      #0, ([-$7DDD,A0,A0.W],-$7CDC), #0
+      PTESTW      #0, ([-$7DDC,A0,A0.W],-$7CDA7BDA), #0
+      PTESTW      #0, ([-$7DDA,A0],A0.W), #0
+      PTESTW      #0, ([-$7DD9,A0],A0.W,-$7CD8), #0
+      PTESTW      #0, ([-$7DD8,A0],A0.W,-$7CD67BD6), #0
+      PTESTW      #0, (-$7DCE7CCE,A0,A0.W), #0
+      PTESTW      #0, ([-$7DCD7CCD,A0,A0.W]), #0
+      PTESTW      #0, ([-$7DCB7CCB,A0,A0.W],-$7BC97AC9), #0
+      PTESTW      #0, ([-$7DC97CC9,A0],A0.W), #0
+      PTESTW      #0, ([-$7DC77CC7,A0],A0.W,-$7BC57AC5), #0
+      PTESTW      #0, (A0), #0
+      PTESTW      #0, ([A0]), #0
+      PTESTW      #0, ([A0],-$7DAD), #0
+      PTESTW      #0, ([A0],-$7DAB7CAB), #0
+      PTESTW      #0, (-$7D9F,A0), #0
+      PTESTW      #0, ([-$7D9E,A0]), #0
+      PTESTW      #0, ([-$7D9D,A0],-$7C9C), #0
+      PTESTW      #0, ([-$7D9C,A0],-$7C9A7B9A), #0
+      PTESTW      #0, (-$7D8E7C8E,A0), #0
+      PTESTW      #0, ([-$7D8D7C8D,A0]), #0
+      PTESTW      #0, ([-$7D8B7C8B,A0],-$7B897A89), #0
+      PTESTW      #0, (A0.W), #0
+      PTESTW      #0, ([A0.W]), #0
+      PTESTW      #0, ([A0.W],-$7D6D), #0
+      PTESTW      #0, ([A0.W],-$7D6B7C6B), #0
+      PTESTW      #0, (-$7D5F,A0.W), #0
+      PTESTW      #0, ([-$7D5E,A0.W]), #0
+      PTESTW      #0, ([-$7D5D,A0.W],-$7C5C), #0
+      PTESTW      #0, ([-$7D5C,A0.W],-$7C5A7B5A), #0
+      PTESTW      #0, ([-$7D5A],A0.W), #0
+      PTESTW      #0, ([-$7D59],A0.W,-$7C58), #0
+      PTESTW      #0, ([-$7D58],A0.W,-$7C567B56), #0
+      PTESTW      #0, (-$7D4E7C4E,A0.W), #0
+      PTESTW      #0, ([-$7D4D7C4D,A0.W]), #0
+      PTESTW      #0, ([-$7D4B7C4B,A0.W],-$7B497A49), #0
+      PTESTW      #0, ([-$7D497C49],A0.W), #0
+      PTESTW      #0, ([-$7D477C47],A0.W,-$7B457A45), #0
+      PTESTW      #0, (-$7D1E), #0
+      PTESTW      #0, ([-$7D1E]), #0
+      PTESTW      #0, ([-$7D1C],-$7C1B), #0
+      PTESTW      #0, ([-$7D1C],-$7C1A7B1A), #0
+      PTESTW      #0, (-$7D0E7C0E), #0
+      PTESTW      #0, ([-$7D0D7C0C]), #0
+      PTESTW      #0, ([-$7D0B7C0A],-$7B087A08), #0
+      PTESTW      #0, (0,A0,A0.W*2), #0
+      PTESTW      #0, (A0,A0.W*2), #0
+      PTESTW      SFC, (1,A0,A0.W*2), #0, A0
+      PTESTW      SFC, (A0,A0.W*2), #0, A0
+      PTESTW      SFC, ([A0,A0.W*2]), #0, A0
+      PTESTW      SFC, ([A0,A0.W*2],-$7BED), #0, A0
+      PTESTW      SFC, ([A0,A0.W*2],-$7BEB7AEB), #0, A0
+      PTESTW      SFC, ([A0],A0.W*2), #0, A0
+      PTESTW      SFC, ([A0],A0.W*2,-$7BE9), #0, A0
+      PTESTW      SFC, ([A0],A0.W*2,-$7BE77AE7), #0, A0
+      PTESTW      SFC, (-$7BDF,A0,A0.W*2), #0, A0
+      PTESTW      SFC, ([-$7BDE,A0,A0.W*2]), #0, A0
+      PTESTW      SFC, ([-$7BDD,A0,A0.W*2],-$7ADC), #0, A0
+      PTESTW      SFC, ([-$7BDC,A0,A0.W*2],-$7ADA79DA), #0, A0
+      PTESTW      SFC, ([-$7BDA,A0],A0.W*2), #0, A0
+      PTESTW      SFC, ([-$7BD9,A0],A0.W*2,-$7AD8), #0, A0
+      PTESTW      SFC, ([-$7BD8,A0],A0.W*2,-$7AD679D6), #0, A0
+      PTESTW      SFC, (-$7BCE7ACE,A0,A0.W*2), #0, A0
+      PTESTW      SFC, ([-$7BCD7ACD,A0,A0.W*2]), #0, A0
+      PTESTW      SFC, ([-$7BCB7ACB,A0,A0.W*2],-$79C978C9), #0, A0
+      PTESTW      SFC, ([-$7BC97AC9,A0],A0.W*2), #0, A0
+      PTESTW      SFC, ([-$7BC77AC7,A0],A0.W*2,-$79C578C5), #0, A0
+      PTESTW      SFC, (A0), #0, A0
+      PTESTW      SFC, ([A0]), #0, A0
+      PTESTW      SFC, ([A0],-$7BAD), #0, A0
+      PTESTW      SFC, ([A0],-$7BAB7AAB), #0, A0
+      PTESTW      SFC, (-$7B9F,A0), #0, A0
+      PTESTW      SFC, ([-$7B9E,A0]), #0, A0
+      PTESTW      SFC, ([-$7B9D,A0],-$7A9C), #0, A0
+      PTESTW      SFC, ([-$7B9C,A0],-$7A9A799A), #0, A0
+      PTESTW      SFC, (-$7B8E7A8E,A0), #0, A0
+      PTESTW      SFC, ([-$7B8D7A8D,A0]), #0, A0
+      PTESTW      SFC, ([-$7B8B7A8B,A0],-$79897889), #0, A0
+      PTESTW      SFC, (A0.W*2), #0, A0
+      PTESTW      SFC, ([A0.W*2]), #0, A0
+      PTESTW      SFC, ([A0.W*2],-$7B6D), #0, A0
+      PTESTW      SFC, ([A0.W*2],-$7B6B7A6B), #0, A0
+      PTESTW      SFC, (-$7B5F,A0.W*2), #0, A0
+      PTESTW      SFC, ([-$7B5E,A0.W*2]), #0, A0
+      PTESTW      SFC, ([-$7B5D,A0.W*2],-$7A5C), #0, A0
+      PTESTW      SFC, ([-$7B5C,A0.W*2],-$7A5A795A), #0, A0
+      PTESTW      SFC, ([-$7B5A],A0.W*2), #0, A0
+      PTESTW      SFC, ([-$7B59],A0.W*2,-$7A58), #0, A0
+      PTESTW      SFC, ([-$7B58],A0.W*2,-$7A567956), #0, A0
+      PTESTW      SFC, (-$7B4E7A4E,A0.W*2), #0, A0
+      PTESTW      SFC, ([-$7B4D7A4D,A0.W*2]), #0, A0
+      PTESTW      SFC, ([-$7B4B7A4B,A0.W*2],-$79497849), #0, A0
+      PTESTW      SFC, ([-$7B497A49],A0.W*2), #0, A0
+      PTESTW      SFC, ([-$7B477A47],A0.W*2,-$79457845), #0, A0
+      PTESTW      SFC, (-$7B1E), #0, A0
+      PTESTW      SFC, ([-$7B1E]), #0, A0
+      PTESTW      SFC, ([-$7B1C],-$7A1B), #0, A0
+      PTESTW      SFC, ([-$7B1C],-$7A1A791A), #0, A0
+      PTESTW      SFC, (-$7B0E7A0E), #0, A0
+      PTESTW      SFC, ([-$7B0D7A0C]), #0, A0
+      PTESTW      SFC, ([-$7B0B7A0A],-$79087808), #0, A0
+      PTESTW      DFC, (2,A0,A0.W*2), #0, A0
+      PTESTW      DFC, (A0,A0.W*2), #0, A0
+      PTESTW      DFC, ([A0,A0.W*2]), #0, A0
+      PTESTW      DFC, ([A0,A0.W*2],-$7BED), #0, A0
+      PTESTW      DFC, ([A0,A0.W*2],-$7BEB7AEB), #0, A0
+      PTESTW      DFC, ([A0],A0.W*2), #0, A0
+      PTESTW      DFC, ([A0],A0.W*2,-$7BE9), #0, A0
+      PTESTW      DFC, ([A0],A0.W*2,-$7BE77AE7), #0, A0
+      PTESTW      DFC, (-$7BDF,A0,A0.W*2), #0, A0
+      PTESTW      DFC, ([-$7BDE,A0,A0.W*2]), #0, A0
+      PTESTW      DFC, ([-$7BDD,A0,A0.W*2],-$7ADC), #0, A0
+      PTESTW      DFC, ([-$7BDC,A0,A0.W*2],-$7ADA79DA), #0, A0
+      PTESTW      DFC, ([-$7BDA,A0],A0.W*2), #0, A0
+      PTESTW      DFC, ([-$7BD9,A0],A0.W*2,-$7AD8), #0, A0
+      PTESTW      DFC, ([-$7BD8,A0],A0.W*2,-$7AD679D6), #0, A0
+      PTESTW      DFC, (-$7BCE7ACE,A0,A0.W*2), #0, A0
+      PTESTW      DFC, ([-$7BCD7ACD,A0,A0.W*2]), #0, A0
+      PTESTW      DFC, ([-$7BCB7ACB,A0,A0.W*2],-$79C978C9), #0, A0
+      PTESTW      DFC, ([-$7BC97AC9,A0],A0.W*2), #0, A0
+      PTESTW      DFC, ([-$7BC77AC7,A0],A0.W*2,-$79C578C5), #0, A0
+      PTESTW      DFC, (A0), #0, A0
+      PTESTW      DFC, ([A0]), #0, A0
+      PTESTW      DFC, ([A0],-$7BAD), #0, A0
+      PTESTW      DFC, ([A0],-$7BAB7AAB), #0, A0
+      PTESTW      DFC, (-$7B9F,A0), #0, A0
+      PTESTW      DFC, ([-$7B9E,A0]), #0, A0
+      PTESTW      DFC, ([-$7B9D,A0],-$7A9C), #0, A0
+      PTESTW      DFC, ([-$7B9C,A0],-$7A9A799A), #0, A0
+      PTESTW      DFC, (-$7B8E7A8E,A0), #0, A0
+      PTESTW      DFC, ([-$7B8D7A8D,A0]), #0, A0
+      PTESTW      DFC, ([-$7B8B7A8B,A0],-$79897889), #0, A0
+      PTESTW      DFC, (A0.W*2), #0, A0
+      PTESTW      DFC, ([A0.W*2]), #0, A0
+      PTESTW      DFC, ([A0.W*2],-$7B6D), #0, A0
+      PTESTW      DFC, ([A0.W*2],-$7B6B7A6B), #0, A0
+      PTESTW      DFC, (-$7B5F,A0.W*2), #0, A0
+      PTESTW      DFC, ([-$7B5E,A0.W*2]), #0, A0
+      PTESTW      DFC, ([-$7B5D,A0.W*2],-$7A5C), #0, A0
+      PTESTW      DFC, ([-$7B5C,A0.W*2],-$7A5A795A), #0, A0
+      PTESTW      DFC, ([-$7B5A],A0.W*2), #0, A0
+      PTESTW      DFC, ([-$7B59],A0.W*2,-$7A58), #0, A0
+      PTESTW      DFC, ([-$7B58],A0.W*2,-$7A567956), #0, A0
+      PTESTW      DFC, (-$7B4E7A4E,A0.W*2), #0, A0
+      PTESTW      DFC, ([-$7B4D7A4D,A0.W*2]), #0, A0
+      PTESTW      DFC, ([-$7B4B7A4B,A0.W*2],-$79497849), #0, A0
+      PTESTW      DFC, ([-$7B497A49],A0.W*2), #0, A0
+      PTESTW      DFC, ([-$7B477A47],A0.W*2,-$79457845), #0, A0
+      PTESTW      DFC, (-$7B1E), #0, A0
+      PTESTW      DFC, ([-$7B1E]), #0, A0
+      PTESTW      DFC, ([-$7B1C],-$7A1B), #0, A0
+      PTESTW      DFC, ([-$7B1C],-$7A1A791A), #0, A0
+      PTESTW      DFC, (-$7B0E7A0E), #0, A0
+      PTESTW      DFC, ([-$7B0D7A0C]), #0, A0
+      PTESTW      DFC, ([-$7B0B7A0A],-$79087808), #0, A0
+      PTESTW      D0, (9,A0,A0.W*2), #0, A0
+      PTESTW      D0, (A0,A0.W*2), #0, A0
+      PTESTW      D0, ([A0,A0.W*2]), #0, A0
+      PTESTW      D0, ([A0,A0.W*2],-$7BED), #0, A0
+      PTESTW      D0, ([A0,A0.W*2],-$7BEB7AEB), #0, A0
+      PTESTW      D0, ([A0],A0.W*2), #0, A0
+      PTESTW      D0, ([A0],A0.W*2,-$7BE9), #0, A0
+      PTESTW      D0, ([A0],A0.W*2,-$7BE77AE7), #0, A0
+      PTESTW      D0, (-$7BDF,A0,A0.W*2), #0, A0
+      PTESTW      D0, ([-$7BDE,A0,A0.W*2]), #0, A0
+      PTESTW      D0, ([-$7BDD,A0,A0.W*2],-$7ADC), #0, A0
+      PTESTW      D0, ([-$7BDC,A0,A0.W*2],-$7ADA79DA), #0, A0
+      PTESTW      D0, ([-$7BDA,A0],A0.W*2), #0, A0
+      PTESTW      D0, ([-$7BD9,A0],A0.W*2,-$7AD8), #0, A0
+      PTESTW      D0, ([-$7BD8,A0],A0.W*2,-$7AD679D6), #0, A0
+      PTESTW      D0, (-$7BCE7ACE,A0,A0.W*2), #0, A0
+      PTESTW      D0, ([-$7BCD7ACD,A0,A0.W*2]), #0, A0
+      PTESTW      D0, ([-$7BCB7ACB,A0,A0.W*2],-$79C978C9), #0, A0
+      PTESTW      D0, ([-$7BC97AC9,A0],A0.W*2), #0, A0
+      PTESTW      D0, ([-$7BC77AC7,A0],A0.W*2,-$79C578C5), #0, A0
+      PTESTW      D0, (A0), #0, A0
+      PTESTW      D0, ([A0]), #0, A0
+      PTESTW      D0, ([A0],-$7BAD), #0, A0
+      PTESTW      D0, ([A0],-$7BAB7AAB), #0, A0
+      PTESTW      D0, (-$7B9F,A0), #0, A0
+      PTESTW      D0, ([-$7B9E,A0]), #0, A0
+      PTESTW      D0, ([-$7B9D,A0],-$7A9C), #0, A0
+      PTESTW      D0, ([-$7B9C,A0],-$7A9A799A), #0, A0
+      PTESTW      D0, (-$7B8E7A8E,A0), #0, A0
+      PTESTW      D0, ([-$7B8D7A8D,A0]), #0, A0
+      PTESTW      D0, ([-$7B8B7A8B,A0],-$79897889), #0, A0
+      PTESTW      D0, (A0.W*2), #0, A0
+      PTESTW      D0, ([A0.W*2]), #0, A0
+      PTESTW      D0, ([A0.W*2],-$7B6D), #0, A0
+      PTESTW      D0, ([A0.W*2],-$7B6B7A6B), #0, A0
+      PTESTW      D0, (-$7B5F,A0.W*2), #0, A0
+      PTESTW      D0, ([-$7B5E,A0.W*2]), #0, A0
+      PTESTW      D0, ([-$7B5D,A0.W*2],-$7A5C), #0, A0
+      PTESTW      D0, ([-$7B5C,A0.W*2],-$7A5A795A), #0, A0
+      PTESTW      D0, ([-$7B5A],A0.W*2), #0, A0
+      PTESTW      D0, ([-$7B59],A0.W*2,-$7A58), #0, A0
+      PTESTW      D0, ([-$7B58],A0.W*2,-$7A567956), #0, A0
+      PTESTW      D0, (-$7B4E7A4E,A0.W*2), #0, A0
+      PTESTW      D0, ([-$7B4D7A4D,A0.W*2]), #0, A0
+      PTESTW      D0, ([-$7B4B7A4B,A0.W*2],-$79497849), #0, A0
+      PTESTW      D0, ([-$7B497A49],A0.W*2), #0, A0
+      PTESTW      D0, ([-$7B477A47],A0.W*2,-$79457845), #0, A0
+      PTESTW      D0, (-$7B1E), #0, A0
+      PTESTW      D0, ([-$7B1E]), #0, A0
+      PTESTW      D0, ([-$7B1C],-$7A1B), #0, A0
+      PTESTW      D0, ([-$7B1C],-$7A1A791A), #0, A0
+      PTESTW      D0, (-$7B0E7A0E), #0, A0
+      PTESTW      D0, ([-$7B0D7A0C]), #0, A0
+      PTESTW      D0, ([-$7B0B7A0A],-$79087808), #0, A0
+      PTESTW      #0, (17,A0,A0.W*2), #0, A0
+      PTESTW      #0, (A0,A0.W*2), #0, A0
+      PTESTW      #0, ([A0,A0.W*2]), #0, A0
+      PTESTW      #0, ([A0,A0.W*2],-$7BED), #0, A0
+      PTESTW      #0, ([A0,A0.W*2],-$7BEB7AEB), #0, A0
+      PTESTW      #0, ([A0],A0.W*2), #0, A0
+      PTESTW      #0, ([A0],A0.W*2,-$7BE9), #0, A0
+      PTESTW      #0, ([A0],A0.W*2,-$7BE77AE7), #0, A0
+      PTESTW      #0, (-$7BDF,A0,A0.W*2), #0, A0
+      PTESTW      #0, ([-$7BDE,A0,A0.W*2]), #0, A0
+      PTESTW      #0, ([-$7BDD,A0,A0.W*2],-$7ADC), #0, A0
+      PTESTW      #0, ([-$7BDC,A0,A0.W*2],-$7ADA79DA), #0, A0
+      PTESTW      #0, ([-$7BDA,A0],A0.W*2), #0, A0
+      PTESTW      #0, ([-$7BD9,A0],A0.W*2,-$7AD8), #0, A0
+      PTESTW      #0, ([-$7BD8,A0],A0.W*2,-$7AD679D6), #0, A0
+      PTESTW      #0, (-$7BCE7ACE,A0,A0.W*2), #0, A0
+      PTESTW      #0, ([-$7BCD7ACD,A0,A0.W*2]), #0, A0
+      PTESTW      #0, ([-$7BCB7ACB,A0,A0.W*2],-$79C978C9), #0, A0
+      PTESTW      #0, ([-$7BC97AC9,A0],A0.W*2), #0, A0
+      PTESTW      #0, ([-$7BC77AC7,A0],A0.W*2,-$79C578C5), #0, A0
+      PTESTW      #0, (A0), #0, A0
+      PTESTW      #0, ([A0]), #0, A0
+      PTESTW      #0, ([A0],-$7BAD), #0, A0
+      PTESTW      #0, ([A0],-$7BAB7AAB), #0, A0
+      PTESTW      #0, (-$7B9F,A0), #0, A0
+      PTESTW      #0, ([-$7B9E,A0]), #0, A0
+      PTESTW      #0, ([-$7B9D,A0],-$7A9C), #0, A0
+      PTESTW      #0, ([-$7B9C,A0],-$7A9A799A), #0, A0
+      PTESTW      #0, (-$7B8E7A8E,A0), #0, A0
+      PTESTW      #0, ([-$7B8D7A8D,A0]), #0, A0
+      PTESTW      #0, ([-$7B8B7A8B,A0],-$79897889), #0, A0
+      PTESTW      #0, (A0.W*2), #0, A0
+      PTESTW      #0, ([A0.W*2]), #0, A0
+      PTESTW      #0, ([A0.W*2],-$7B6D), #0, A0
+      PTESTW      #0, ([A0.W*2],-$7B6B7A6B), #0, A0
+      PTESTW      #0, (-$7B5F,A0.W*2), #0, A0
+      PTESTW      #0, ([-$7B5E,A0.W*2]), #0, A0
+      PTESTW      #0, ([-$7B5D,A0.W*2],-$7A5C), #0, A0
+      PTESTW      #0, ([-$7B5C,A0.W*2],-$7A5A795A), #0, A0
+      PTESTW      #0, ([-$7B5A],A0.W*2), #0, A0
+      PTESTW      #0, ([-$7B59],A0.W*2,-$7A58), #0, A0
+      PTESTW      #0, ([-$7B58],A0.W*2,-$7A567956), #0, A0
+      PTESTW      #0, (-$7B4E7A4E,A0.W*2), #0, A0
+      PTESTW      #0, ([-$7B4D7A4D,A0.W*2]), #0, A0
+      PTESTW      #0, ([-$7B4B7A4B,A0.W*2],-$79497849), #0, A0
+      PTESTW      #0, ([-$7B497A49],A0.W*2), #0, A0
+      PTESTW      #0, ([-$7B477A47],A0.W*2,-$79457845), #0, A0
+      PTESTW      #0, (-$7B1E), #0, A0
+      PTESTW      #0, ([-$7B1E]), #0, A0
+      PTESTW      #0, ([-$7B1C],-$7A1B), #0, A0
+      PTESTW      #0, ([-$7B1C],-$7A1A791A), #0, A0
+      PTESTW      #0, (-$7B0E7A0E), #0, A0
+      PTESTW      #0, ([-$7B0D7A0C]), #0, A0
+      PTESTW      #0, ([-$7B0B7A0A],-$79087808), #0, A0
+      PTESTR      SFC, (A0,A0.W*2), #0
+      PTESTR      SFC, ([A0,A0.W*2]), #0
+      PTESTR      SFC, ([A0,A0.W*2],-$7BED), #0
+      PTESTR      SFC, ([A0,A0.W*2],-$7BEB7AEB), #0
+      PTESTR      SFC, ([A0],A0.W*2), #0
+      PTESTR      SFC, ([A0],A0.W*2,-$7BE9), #0
+      PTESTR      SFC, ([A0],A0.W*2,-$7BE77AE7), #0
+      PTESTR      SFC, (-$7BDF,A0,A0.W*2), #0
+      PTESTR      SFC, ([-$7BDE,A0,A0.W*2]), #0
+      PTESTR      SFC, ([-$7BDD,A0,A0.W*2],-$7ADC), #0
+      PTESTR      SFC, ([-$7BDC,A0,A0.W*2],-$7ADA79DA), #0
+      PTESTR      SFC, ([-$7BDA,A0],A0.W*2), #0
+      PTESTR      SFC, ([-$7BD9,A0],A0.W*2,-$7AD8), #0
+      PTESTR      SFC, ([-$7BD8,A0],A0.W*2,-$7AD679D6), #0
+      PTESTR      SFC, (-$7BCE7ACE,A0,A0.W*2), #0
+      PTESTR      SFC, ([-$7BCD7ACD,A0,A0.W*2]), #0
+      PTESTR      SFC, ([-$7BCB7ACB,A0,A0.W*2],-$79C978C9), #0
+      PTESTR      SFC, ([-$7BC97AC9,A0],A0.W*2), #0
+      PTESTR      SFC, ([-$7BC77AC7,A0],A0.W*2,-$79C578C5), #0
+      PTESTR      SFC, (A0), #0
+      PTESTR      SFC, ([A0]), #0
+      PTESTR      SFC, ([A0],-$7BAD), #0
+      PTESTR      SFC, ([A0],-$7BAB7AAB), #0
+      PTESTR      SFC, (-$7B9F,A0), #0
+      PTESTR      SFC, ([-$7B9E,A0]), #0
+      PTESTR      SFC, ([-$7B9D,A0],-$7A9C), #0
+      PTESTR      SFC, ([-$7B9C,A0],-$7A9A799A), #0
+      PTESTR      SFC, (-$7B8E7A8E,A0), #0
+      PTESTR      SFC, ([-$7B8D7A8D,A0]), #0
+      PTESTR      SFC, ([-$7B8B7A8B,A0],-$79897889), #0
+      PTESTR      SFC, (A0.W*2), #0
+      PTESTR      SFC, ([A0.W*2]), #0
+      PTESTR      SFC, ([A0.W*2],-$7B6D), #0
+      PTESTR      SFC, ([A0.W*2],-$7B6B7A6B), #0
+      PTESTR      SFC, (-$7B5F,A0.W*2), #0
+      PTESTR      SFC, ([-$7B5E,A0.W*2]), #0
+      PTESTR      SFC, ([-$7B5D,A0.W*2],-$7A5C), #0
+      PTESTR      SFC, ([-$7B5C,A0.W*2],-$7A5A795A), #0
+      PTESTR      SFC, ([-$7B5A],A0.W*2), #0
+      PTESTR      SFC, ([-$7B59],A0.W*2,-$7A58), #0
+      PTESTR      SFC, ([-$7B58],A0.W*2,-$7A567956), #0
+      PTESTR      SFC, (-$7B4E7A4E,A0.W*2), #0
+      PTESTR      SFC, ([-$7B4D7A4D,A0.W*2]), #0
+      PTESTR      SFC, ([-$7B4B7A4B,A0.W*2],-$79497849), #0
+      PTESTR      SFC, ([-$7B497A49],A0.W*2), #0
+      PTESTR      SFC, ([-$7B477A47],A0.W*2,-$79457845), #0
+      PTESTR      SFC, (-$7B1E), #0
+      PTESTR      SFC, ([-$7B1E]), #0
+      PTESTR      SFC, ([-$7B1C],-$7A1B), #0
+      PTESTR      SFC, ([-$7B1C],-$7A1A791A), #0
+      PTESTR      SFC, (-$7B0E7A0E), #0
+      PTESTR      SFC, ([-$7B0D7A0C]), #0
+      PTESTR      SFC, ([-$7B0B7A0A],-$79087808), #0
+      PTESTR      SFC, (0,A0,A0.W*4), #0
+      PTESTR      DFC, (A0,A0.W*2), #0
+      PTESTR      DFC, ([A0,A0.W*2]), #0
+      PTESTR      DFC, ([A0,A0.W*2],-$7BED), #0
+      PTESTR      DFC, ([A0,A0.W*2],-$7BEB7AEB), #0
+      PTESTR      DFC, ([A0],A0.W*2), #0
+      PTESTR      DFC, ([A0],A0.W*2,-$7BE9), #0
+      PTESTR      DFC, ([A0],A0.W*2,-$7BE77AE7), #0
+      PTESTR      DFC, (-$7BDF,A0,A0.W*2), #0
+      PTESTR      DFC, ([-$7BDE,A0,A0.W*2]), #0
+      PTESTR      DFC, ([-$7BDD,A0,A0.W*2],-$7ADC), #0
+      PTESTR      DFC, ([-$7BDC,A0,A0.W*2],-$7ADA79DA), #0
+      PTESTR      DFC, ([-$7BDA,A0],A0.W*2), #0
+      PTESTR      DFC, ([-$7BD9,A0],A0.W*2,-$7AD8), #0
+      PTESTR      DFC, ([-$7BD8,A0],A0.W*2,-$7AD679D6), #0
+      PTESTR      DFC, (-$7BCE7ACE,A0,A0.W*2), #0
+      PTESTR      DFC, ([-$7BCD7ACD,A0,A0.W*2]), #0
+      PTESTR      DFC, ([-$7BCB7ACB,A0,A0.W*2],-$79C978C9), #0
+      PTESTR      DFC, ([-$7BC97AC9,A0],A0.W*2), #0
+      PTESTR      DFC, ([-$7BC77AC7,A0],A0.W*2,-$79C578C5), #0
+      PTESTR      DFC, (A0), #0
+      PTESTR      DFC, ([A0]), #0
+      PTESTR      DFC, ([A0],-$7BAD), #0
+      PTESTR      DFC, ([A0],-$7BAB7AAB), #0
+      PTESTR      DFC, (-$7B9F,A0), #0
+      PTESTR      DFC, ([-$7B9E,A0]), #0
+      PTESTR      DFC, ([-$7B9D,A0],-$7A9C), #0
+      PTESTR      DFC, ([-$7B9C,A0],-$7A9A799A), #0
+      PTESTR      DFC, (-$7B8E7A8E,A0), #0
+      PTESTR      DFC, ([-$7B8D7A8D,A0]), #0
+      PTESTR      DFC, ([-$7B8B7A8B,A0],-$79897889), #0
+      PTESTR      DFC, (A0.W*2), #0
+      PTESTR      DFC, ([A0.W*2]), #0
+      PTESTR      DFC, ([A0.W*2],-$7B6D), #0
+      PTESTR      DFC, ([A0.W*2],-$7B6B7A6B), #0
+      PTESTR      DFC, (-$7B5F,A0.W*2), #0
+      PTESTR      DFC, ([-$7B5E,A0.W*2]), #0
+      PTESTR      DFC, ([-$7B5D,A0.W*2],-$7A5C), #0
+      PTESTR      DFC, ([-$7B5C,A0.W*2],-$7A5A795A), #0
+      PTESTR      DFC, ([-$7B5A],A0.W*2), #0
+      PTESTR      DFC, ([-$7B59],A0.W*2,-$7A58), #0
+      PTESTR      DFC, ([-$7B58],A0.W*2,-$7A567956), #0
+      PTESTR      DFC, (-$7B4E7A4E,A0.W*2), #0
+      PTESTR      DFC, ([-$7B4D7A4D,A0.W*2]), #0
+      PTESTR      DFC, ([-$7B4B7A4B,A0.W*2],-$79497849), #0
+      PTESTR      DFC, ([-$7B497A49],A0.W*2), #0
+      PTESTR      DFC, ([-$7B477A47],A0.W*2,-$79457845), #0
+      PTESTR      DFC, (-$7B1E), #0
+      PTESTR      DFC, ([-$7B1E]), #0
+      PTESTR      DFC, ([-$7B1C],-$7A1B), #0
+      PTESTR      DFC, ([-$7B1C],-$7A1A791A), #0
+      PTESTR      DFC, (-$7B0E7A0E), #0
+      PTESTR      DFC, ([-$7B0D7A0C]), #0
+      PTESTR      DFC, ([-$7B0B7A0A],-$79087808), #0
+      PTESTR      DFC, (0,A0,A0.W*4), #0
+      PTESTR      D0, (A0,A0.W*2), #0
+      PTESTR      D0, ([A0,A0.W*2]), #0
+      PTESTR      D0, ([A0,A0.W*2],-$7BED), #0
+      PTESTR      D0, ([A0,A0.W*2],-$7BEB7AEB), #0
+      PTESTR      D0, ([A0],A0.W*2), #0
+      PTESTR      D0, ([A0],A0.W*2,-$7BE9), #0
+      PTESTR      D0, ([A0],A0.W*2,-$7BE77AE7), #0
+      PTESTR      D0, (-$7BDF,A0,A0.W*2), #0
+      PTESTR      D0, ([-$7BDE,A0,A0.W*2]), #0
+      PTESTR      D0, ([-$7BDD,A0,A0.W*2],-$7ADC), #0
+      PTESTR      D0, ([-$7BDC,A0,A0.W*2],-$7ADA79DA), #0
+      PTESTR      D0, ([-$7BDA,A0],A0.W*2), #0
+      PTESTR      D0, ([-$7BD9,A0],A0.W*2,-$7AD8), #0
+      PTESTR      D0, ([-$7BD8,A0],A0.W*2,-$7AD679D6), #0
+      PTESTR      D0, (-$7BCE7ACE,A0,A0.W*2), #0
+      PTESTR      D0, ([-$7BCD7ACD,A0,A0.W*2]), #0
+      PTESTR      D0, ([-$7BCB7ACB,A0,A0.W*2],-$79C978C9), #0
+      PTESTR      D0, ([-$7BC97AC9,A0],A0.W*2), #0
+      PTESTR      D0, ([-$7BC77AC7,A0],A0.W*2,-$79C578C5), #0
+      PTESTR      D0, (A0), #0
+      PTESTR      D0, ([A0]), #0
+      PTESTR      D0, ([A0],-$7BAD), #0
+      PTESTR      D0, ([A0],-$7BAB7AAB), #0
+      PTESTR      D0, (-$7B9F,A0), #0
+      PTESTR      D0, ([-$7B9E,A0]), #0
+      PTESTR      D0, ([-$7B9D,A0],-$7A9C), #0
+      PTESTR      D0, ([-$7B9C,A0],-$7A9A799A), #0
+      PTESTR      D0, (-$7B8E7A8E,A0), #0
+      PTESTR      D0, ([-$7B8D7A8D,A0]), #0
+      PTESTR      D0, ([-$7B8B7A8B,A0],-$79897889), #0
+      PTESTR      D0, (A0.W*2), #0
+      PTESTR      D0, ([A0.W*2]), #0
+      PTESTR      D0, ([A0.W*2],-$7B6D), #0
+      PTESTR      D0, ([A0.W*2],-$7B6B7A6B), #0
+      PTESTR      D0, (-$7B5F,A0.W*2), #0
+      PTESTR      D0, ([-$7B5E,A0.W*2]), #0
+      PTESTR      D0, ([-$7B5D,A0.W*2],-$7A5C), #0
+      PTESTR      D0, ([-$7B5C,A0.W*2],-$7A5A795A), #0
+      PTESTR      D0, ([-$7B5A],A0.W*2), #0
+      PTESTR      D0, ([-$7B59],A0.W*2,-$7A58), #0
+      PTESTR      D0, ([-$7B58],A0.W*2,-$7A567956), #0
+      PTESTR      D0, (-$7B4E7A4E,A0.W*2), #0
+      PTESTR      D0, ([-$7B4D7A4D,A0.W*2]), #0
+      PTESTR      D0, ([-$7B4B7A4B,A0.W*2],-$79497849), #0
+      PTESTR      D0, ([-$7B497A49],A0.W*2), #0
+      PTESTR      D0, ([-$7B477A47],A0.W*2,-$79457845), #0
+      PTESTR      D0, (-$7B1E), #0
+      PTESTR      D0, ([-$7B1E]), #0
+      PTESTR      D0, ([-$7B1C],-$7A1B), #0
+      PTESTR      D0, ([-$7B1C],-$7A1A791A), #0
+      PTESTR      D0, (-$7B0E7A0E), #0
+      PTESTR      D0, ([-$7B0D7A0C]), #0
+      PTESTR      D0, ([-$7B0B7A0A],-$79087808), #0
+      PTESTR      D0, (0,A0,A0.W*4), #0
+      PTESTR      #0, ([A0,A0.W*2]), #0
+      PTESTR      #0, ([A0,A0.W*2],-$7BED), #0
+      PTESTR      #0, ([A0,A0.W*2],-$7BEB7AEB), #0
+      PTESTR      #0, ([A0],A0.W*2), #0
+      PTESTR      #0, ([A0],A0.W*2,-$7BE9), #0
+      PTESTR      #0, ([A0],A0.W*2,-$7BE77AE7), #0
+      PTESTR      #0, (-$7BDF,A0,A0.W*2), #0
+      PTESTR      #0, ([-$7BDE,A0,A0.W*2]), #0
+      PTESTR      #0, ([-$7BDD,A0,A0.W*2],-$7ADC), #0
+      PTESTR      #0, ([-$7BDC,A0,A0.W*2],-$7ADA79DA), #0
+      PTESTR      #0, ([-$7BDA,A0],A0.W*2), #0
+      PTESTR      #0, ([-$7BD9,A0],A0.W*2,-$7AD8), #0
+      PTESTR      #0, ([-$7BD8,A0],A0.W*2,-$7AD679D6), #0
+      PTESTR      #0, (-$7BCE7ACE,A0,A0.W*2), #0
+      PTESTR      #0, ([-$7BCD7ACD,A0,A0.W*2]), #0
+      PTESTR      #0, ([-$7BCB7ACB,A0,A0.W*2],-$79C978C9), #0
+      PTESTR      #0, ([-$7BC97AC9,A0],A0.W*2), #0
+      PTESTR      #0, ([-$7BC77AC7,A0],A0.W*2,-$79C578C5), #0
+      PTESTR      #0, (A0), #0
+      PTESTR      #0, ([A0]), #0
+      PTESTR      #0, ([A0],-$7BAD), #0
+      PTESTR      #0, ([A0],-$7BAB7AAB), #0
+      PTESTR      #0, (-$7B9F,A0), #0
+      PTESTR      #0, ([-$7B9E,A0]), #0
+      PTESTR      #0, ([-$7B9D,A0],-$7A9C), #0
+      PTESTR      #0, ([-$7B9C,A0],-$7A9A799A), #0
+      PTESTR      #0, (-$7B8E7A8E,A0), #0
+      PTESTR      #0, ([-$7B8D7A8D,A0]), #0
+      PTESTR      #0, ([-$7B8B7A8B,A0],-$79897889), #0
+      PTESTR      #0, (A0.W*2), #0
+      PTESTR      #0, ([A0.W*2]), #0
+      PTESTR      #0, ([A0.W*2],-$7B6D), #0
+      PTESTR      #0, ([A0.W*2],-$7B6B7A6B), #0
+      PTESTR      #0, (-$7B5F,A0.W*2), #0
+      PTESTR      #0, ([-$7B5E,A0.W*2]), #0
+      PTESTR      #0, ([-$7B5D,A0.W*2],-$7A5C), #0
+      PTESTR      #0, ([-$7B5C,A0.W*2],-$7A5A795A), #0
+      PTESTR      #0, ([-$7B5A],A0.W*2), #0
+      PTESTR      #0, ([-$7B59],A0.W*2,-$7A58), #0
+      PTESTR      #0, ([-$7B58],A0.W*2,-$7A567956), #0
+      PTESTR      #0, (-$7B4E7A4E,A0.W*2), #0
+      PTESTR      #0, ([-$7B4D7A4D,A0.W*2]), #0
+      PTESTR      #0, ([-$7B4B7A4B,A0.W*2],-$79497849), #0
+      PTESTR      #0, ([-$7B497A49],A0.W*2), #0
+      PTESTR      #0, ([-$7B477A47],A0.W*2,-$79457845), #0
+      PTESTR      #0, (-$7B1E), #0
+      PTESTR      #0, ([-$7B1E]), #0
+      PTESTR      #0, ([-$7B1C],-$7A1B), #0
+      PTESTR      #0, ([-$7B1C],-$7A1A791A), #0
+      PTESTR      #0, (-$7B0E7A0E), #0
+      PTESTR      #0, ([-$7B0D7A0C]), #0
+      PTESTR      #0, ([-$7B0B7A0A],-$79087808), #0
+      PTESTR      #0, (0,A0,A0.W*4), #0
+      PTESTR      #0, (A0,A0.W*4), #0
+      PTESTR      SFC, (1,A0,A0.W*4), #0, A0
+      PTESTR      SFC, (A0,A0.W*4), #0, A0
+      PTESTR      SFC, ([A0,A0.W*4]), #0, A0
+      PTESTR      SFC, ([A0,A0.W*4],-$79ED), #0, A0
+      PTESTR      SFC, ([A0,A0.W*4],-$79EB78EB), #0, A0
+      PTESTR      SFC, ([A0],A0.W*4), #0, A0
+      PTESTR      SFC, ([A0],A0.W*4,-$79E9), #0, A0
+      PTESTR      SFC, ([A0],A0.W*4,-$79E778E7), #0, A0
+      PTESTR      SFC, (-$79DF,A0,A0.W*4), #0, A0
+      PTESTR      SFC, ([-$79DE,A0,A0.W*4]), #0, A0
+      PTESTR      SFC, ([-$79DD,A0,A0.W*4],-$78DC), #0, A0
+      PTESTR      SFC, ([-$79DC,A0,A0.W*4],-$78DA77DA), #0, A0
+      PTESTR      SFC, ([-$79DA,A0],A0.W*4), #0, A0
+      PTESTR      SFC, ([-$79D9,A0],A0.W*4,-$78D8), #0, A0
+      PTESTR      SFC, ([-$79D8,A0],A0.W*4,-$78D677D6), #0, A0
+      PTESTR      SFC, (-$79CE78CE,A0,A0.W*4), #0, A0
+      PTESTR      SFC, ([-$79CD78CD,A0,A0.W*4]), #0, A0
+      PTESTR      SFC, ([-$79CB78CB,A0,A0.W*4],-$77C976C9), #0, A0
+      PTESTR      SFC, ([-$79C978C9,A0],A0.W*4), #0, A0
+      PTESTR      SFC, ([-$79C778C7,A0],A0.W*4,-$77C576C5), #0, A0
+      PTESTR      SFC, (A0), #0, A0
+      PTESTR      SFC, ([A0]), #0, A0
+      PTESTR      SFC, ([A0],-$79AD), #0, A0
+      PTESTR      SFC, ([A0],-$79AB78AB), #0, A0
+      PTESTR      SFC, (-$799F,A0), #0, A0
+      PTESTR      SFC, ([-$799E,A0]), #0, A0
+      PTESTR      SFC, ([-$799D,A0],-$789C), #0, A0
+      PTESTR      SFC, ([-$799C,A0],-$789A779A), #0, A0
+      PTESTR      SFC, (-$798E788E,A0), #0, A0
+      PTESTR      SFC, ([-$798D788D,A0]), #0, A0
+      PTESTR      SFC, ([-$798B788B,A0],-$77897689), #0, A0
+      PTESTR      SFC, (A0.W*4), #0, A0
+      PTESTR      SFC, ([A0.W*4]), #0, A0
+      PTESTR      SFC, ([A0.W*4],-$796D), #0, A0
+      PTESTR      SFC, ([A0.W*4],-$796B786B), #0, A0
+      PTESTR      SFC, (-$795F,A0.W*4), #0, A0
+      PTESTR      SFC, ([-$795E,A0.W*4]), #0, A0
+      PTESTR      SFC, ([-$795D,A0.W*4],-$785C), #0, A0
+      PTESTR      SFC, ([-$795C,A0.W*4],-$785A775A), #0, A0
+      PTESTR      SFC, ([-$795A],A0.W*4), #0, A0
+      PTESTR      SFC, ([-$7959],A0.W*4,-$7858), #0, A0
+      PTESTR      SFC, ([-$7958],A0.W*4,-$78567756), #0, A0
+      PTESTR      SFC, (-$794E784E,A0.W*4), #0, A0
+      PTESTR      SFC, ([-$794D784D,A0.W*4]), #0, A0
+      PTESTR      SFC, ([-$794B784B,A0.W*4],-$77497649), #0, A0
+      PTESTR      SFC, ([-$79497849],A0.W*4), #0, A0
+      PTESTR      SFC, ([-$79477847],A0.W*4,-$77457645), #0, A0
+      PTESTR      SFC, (-$791E), #0, A0
+      PTESTR      SFC, ([-$791E]), #0, A0
+      PTESTR      SFC, ([-$791C],-$781B), #0, A0
+      PTESTR      SFC, ([-$791C],-$781A771A), #0, A0
+      PTESTR      SFC, (-$790E780E), #0, A0
+      PTESTR      SFC, ([-$790D780C]), #0, A0
+      PTESTR      SFC, ([-$790B780A],-$77087608), #0, A0
+      PTESTR      DFC, (2,A0,A0.W*4), #0, A0
+      PTESTR      DFC, (A0,A0.W*4), #0, A0
+      PTESTR      DFC, ([A0,A0.W*4]), #0, A0
+      PTESTR      DFC, ([A0,A0.W*4],-$79ED), #0, A0
+      PTESTR      DFC, ([A0,A0.W*4],-$79EB78EB), #0, A0
+      PTESTR      DFC, ([A0],A0.W*4), #0, A0
+      PTESTR      DFC, ([A0],A0.W*4,-$79E9), #0, A0
+      PTESTR      DFC, ([A0],A0.W*4,-$79E778E7), #0, A0
+      PTESTR      DFC, (-$79DF,A0,A0.W*4), #0, A0
+      PTESTR      DFC, ([-$79DE,A0,A0.W*4]), #0, A0
+      PTESTR      DFC, ([-$79DD,A0,A0.W*4],-$78DC), #0, A0
+      PTESTR      DFC, ([-$79DC,A0,A0.W*4],-$78DA77DA), #0, A0
+      PTESTR      DFC, ([-$79DA,A0],A0.W*4), #0, A0
+      PTESTR      DFC, ([-$79D9,A0],A0.W*4,-$78D8), #0, A0
+      PTESTR      DFC, ([-$79D8,A0],A0.W*4,-$78D677D6), #0, A0
+      PTESTR      DFC, (-$79CE78CE,A0,A0.W*4), #0, A0
+      PTESTR      DFC, ([-$79CD78CD,A0,A0.W*4]), #0, A0
+      PTESTR      DFC, ([-$79CB78CB,A0,A0.W*4],-$77C976C9), #0, A0
+      PTESTR      DFC, ([-$79C978C9,A0],A0.W*4), #0, A0
+      PTESTR      DFC, ([-$79C778C7,A0],A0.W*4,-$77C576C5), #0, A0
+      PTESTR      DFC, (A0), #0, A0
+      PTESTR      DFC, ([A0]), #0, A0
+      PTESTR      DFC, ([A0],-$79AD), #0, A0
+      PTESTR      DFC, ([A0],-$79AB78AB), #0, A0
+      PTESTR      DFC, (-$799F,A0), #0, A0
+      PTESTR      DFC, ([-$799E,A0]), #0, A0
+      PTESTR      DFC, ([-$799D,A0],-$789C), #0, A0
+      PTESTR      DFC, ([-$799C,A0],-$789A779A), #0, A0
+      PTESTR      DFC, (-$798E788E,A0), #0, A0
+      PTESTR      DFC, ([-$798D788D,A0]), #0, A0
+      PTESTR      DFC, ([-$798B788B,A0],-$77897689), #0, A0
+      PTESTR      DFC, (A0.W*4), #0, A0
+      PTESTR      DFC, ([A0.W*4]), #0, A0
+      PTESTR      DFC, ([A0.W*4],-$796D), #0, A0
+      PTESTR      DFC, ([A0.W*4],-$796B786B), #0, A0
+      PTESTR      DFC, (-$795F,A0.W*4), #0, A0
+      PTESTR      DFC, ([-$795E,A0.W*4]), #0, A0
+      PTESTR      DFC, ([-$795D,A0.W*4],-$785C), #0, A0
+      PTESTR      DFC, ([-$795C,A0.W*4],-$785A775A), #0, A0
+      PTESTR      DFC, ([-$795A],A0.W*4), #0, A0
+      PTESTR      DFC, ([-$7959],A0.W*4,-$7858), #0, A0
+      PTESTR      DFC, ([-$7958],A0.W*4,-$78567756), #0, A0
+      PTESTR      DFC, (-$794E784E,A0.W*4), #0, A0
+      PTESTR      DFC, ([-$794D784D,A0.W*4]), #0, A0
+      PTESTR      DFC, ([-$794B784B,A0.W*4],-$77497649), #0, A0
+      PTESTR      DFC, ([-$79497849],A0.W*4), #0, A0
+      PTESTR      DFC, ([-$79477847],A0.W*4,-$77457645), #0, A0
+      PTESTR      DFC, (-$791E), #0, A0
+      PTESTR      DFC, ([-$791E]), #0, A0
+      PTESTR      DFC, ([-$791C],-$781B), #0, A0
+      PTESTR      DFC, ([-$791C],-$781A771A), #0, A0
+      PTESTR      DFC, (-$790E780E), #0, A0
+      PTESTR      DFC, ([-$790D780C]), #0, A0
+      PTESTR      DFC, ([-$790B780A],-$77087608), #0, A0
+      PTESTR      D0, (9,A0,A0.W*4), #0, A0
+      PTESTR      D0, (A0,A0.W*4), #0, A0
+      PTESTR      D0, ([A0,A0.W*4]), #0, A0
+      PTESTR      D0, ([A0,A0.W*4],-$79ED), #0, A0
+      PTESTR      D0, ([A0,A0.W*4],-$79EB78EB), #0, A0
+      PTESTR      D0, ([A0],A0.W*4), #0, A0
+      PTESTR      D0, ([A0],A0.W*4,-$79E9), #0, A0
+      PTESTR      D0, ([A0],A0.W*4,-$79E778E7), #0, A0
+      PTESTR      D0, (-$79DF,A0,A0.W*4), #0, A0
+      PTESTR      D0, ([-$79DE,A0,A0.W*4]), #0, A0
+      PTESTR      D0, ([-$79DD,A0,A0.W*4],-$78DC), #0, A0
+      PTESTR      D0, ([-$79DC,A0,A0.W*4],-$78DA77DA), #0, A0
+      PTESTR      D0, ([-$79DA,A0],A0.W*4), #0, A0
+      PTESTR      D0, ([-$79D9,A0],A0.W*4,-$78D8), #0, A0
+      PTESTR      D0, ([-$79D8,A0],A0.W*4,-$78D677D6), #0, A0
+      PTESTR      D0, (-$79CE78CE,A0,A0.W*4), #0, A0
+      PTESTR      D0, ([-$79CD78CD,A0,A0.W*4]), #0, A0
+      PTESTR      D0, ([-$79CB78CB,A0,A0.W*4],-$77C976C9), #0, A0
+      PTESTR      D0, ([-$79C978C9,A0],A0.W*4), #0, A0
+      PTESTR      D0, ([-$79C778C7,A0],A0.W*4,-$77C576C5), #0, A0
+      PTESTR      D0, (A0), #0, A0
+      PTESTR      D0, ([A0]), #0, A0
+      PTESTR      D0, ([A0],-$79AD), #0, A0
+      PTESTR      D0, ([A0],-$79AB78AB), #0, A0
+      PTESTR      D0, (-$799F,A0), #0, A0
+      PTESTR      D0, ([-$799E,A0]), #0, A0
+      PTESTR      D0, ([-$799D,A0],-$789C), #0, A0
+      PTESTR      D0, ([-$799C,A0],-$789A779A), #0, A0
+      PTESTR      D0, (-$798E788E,A0), #0, A0
+      PTESTR      D0, ([-$798D788D,A0]), #0, A0
+      PTESTR      D0, ([-$798B788B,A0],-$77897689), #0, A0
+      PTESTR      D0, (A0.W*4), #0, A0
+      PTESTR      D0, ([A0.W*4]), #0, A0
+      PTESTR      D0, ([A0.W*4],-$796D), #0, A0
+      PTESTR      D0, ([A0.W*4],-$796B786B), #0, A0
+      PTESTR      D0, (-$795F,A0.W*4), #0, A0
+      PTESTR      D0, ([-$795E,A0.W*4]), #0, A0
+      PTESTR      D0, ([-$795D,A0.W*4],-$785C), #0, A0
+      PTESTR      D0, ([-$795C,A0.W*4],-$785A775A), #0, A0
+      PTESTR      D0, ([-$795A],A0.W*4), #0, A0
+      PTESTR      D0, ([-$7959],A0.W*4,-$7858), #0, A0
+      PTESTR      D0, ([-$7958],A0.W*4,-$78567756), #0, A0
+      PTESTR      D0, (-$794E784E,A0.W*4), #0, A0
+      PTESTR      D0, ([-$794D784D,A0.W*4]), #0, A0
+      PTESTR      D0, ([-$794B784B,A0.W*4],-$77497649), #0, A0
+      PTESTR      D0, ([-$79497849],A0.W*4), #0, A0
+      PTESTR      D0, ([-$79477847],A0.W*4,-$77457645), #0, A0
+      PTESTR      D0, (-$791E), #0, A0
+      PTESTR      D0, ([-$791E]), #0, A0
+      PTESTR      D0, ([-$791C],-$781B), #0, A0
+      PTESTR      D0, ([-$791C],-$781A771A), #0, A0
+      PTESTR      D0, (-$790E780E), #0, A0
+      PTESTR      D0, ([-$790D780C]), #0, A0
+      PTESTR      D0, ([-$790B780A],-$77087608), #0, A0
+      PTESTR      #0, (17,A0,A0.W*4), #0, A0
+      PTESTR      #0, (A0,A0.W*4), #0, A0
+      PTESTR      #0, ([A0,A0.W*4]), #0, A0
+      PTESTR      #0, ([A0,A0.W*4],-$79ED), #0, A0
+      PTESTR      #0, ([A0,A0.W*4],-$79EB78EB), #0, A0
+      PTESTR      #0, ([A0],A0.W*4), #0, A0
+      PTESTR      #0, ([A0],A0.W*4,-$79E9), #0, A0
+      PTESTR      #0, ([A0],A0.W*4,-$79E778E7), #0, A0
+      PTESTR      #0, (-$79DF,A0,A0.W*4), #0, A0
+      PTESTR      #0, ([-$79DE,A0,A0.W*4]), #0, A0
+      PTESTR      #0, ([-$79DD,A0,A0.W*4],-$78DC), #0, A0
+      PTESTR      #0, ([-$79DC,A0,A0.W*4],-$78DA77DA), #0, A0
+      PTESTR      #0, ([-$79DA,A0],A0.W*4), #0, A0
+      PTESTR      #0, ([-$79D9,A0],A0.W*4,-$78D8), #0, A0
+      PTESTR      #0, ([-$79D8,A0],A0.W*4,-$78D677D6), #0, A0
+      PTESTR      #0, (-$79CE78CE,A0,A0.W*4), #0, A0
+      PTESTR      #0, ([-$79CD78CD,A0,A0.W*4]), #0, A0
+      PTESTR      #0, ([-$79CB78CB,A0,A0.W*4],-$77C976C9), #0, A0
+      PTESTR      #0, ([-$79C978C9,A0],A0.W*4), #0, A0
+      PTESTR      #0, ([-$79C778C7,A0],A0.W*4,-$77C576C5), #0, A0
+      PTESTR      #0, (A0), #0, A0
+      PTESTR      #0, ([A0]), #0, A0
+      PTESTR      #0, ([A0],-$79AD), #0, A0
+      PTESTR      #0, ([A0],-$79AB78AB), #0, A0
+      PTESTR      #0, (-$799F,A0), #0, A0
+      PTESTR      #0, ([-$799E,A0]), #0, A0
+      PTESTR      #0, ([-$799D,A0],-$789C), #0, A0
+      PTESTR      #0, ([-$799C,A0],-$789A779A), #0, A0
+      PTESTR      #0, (-$798E788E,A0), #0, A0
+      PTESTR      #0, ([-$798D788D,A0]), #0, A0
+      PTESTR      #0, ([-$798B788B,A0],-$77897689), #0, A0
+      PTESTR      #0, (A0.W*4), #0, A0
+      PTESTR      #0, ([A0.W*4]), #0, A0
+      PTESTR      #0, ([A0.W*4],-$796D), #0, A0
+      PTESTR      #0, ([A0.W*4],-$796B786B), #0, A0
+      PTESTR      #0, (-$795F,A0.W*4), #0, A0
+      PTESTR      #0, ([-$795E,A0.W*4]), #0, A0
+      PTESTR      #0, ([-$795D,A0.W*4],-$785C), #0, A0
+      PTESTR      #0, ([-$795C,A0.W*4],-$785A775A), #0, A0
+      PTESTR      #0, ([-$795A],A0.W*4), #0, A0
+      PTESTR      #0, ([-$7959],A0.W*4,-$7858), #0, A0
+      PTESTR      #0, ([-$7958],A0.W*4,-$78567756), #0, A0
+      PTESTR      #0, (-$794E784E,A0.W*4), #0, A0
+      PTESTR      #0, ([-$794D784D,A0.W*4]), #0, A0
+      PTESTR      #0, ([-$794B784B,A0.W*4],-$77497649), #0, A0
+      PTESTR      #0, ([-$79497849],A0.W*4), #0, A0
+      PTESTR      #0, ([-$79477847],A0.W*4,-$77457645), #0, A0
+      PTESTR      #0, (-$791E), #0, A0
+      PTESTR      #0, ([-$791E]), #0, A0
+      PTESTR      #0, ([-$791C],-$781B), #0, A0
+      PTESTR      #0, ([-$791C],-$781A771A), #0, A0
+      PTESTR      #0, (-$790E780E), #0, A0
+      PTESTR      #0, ([-$790D780C]), #0, A0
+      PTESTR      #0, ([-$790B780A],-$77087608), #0, A0
+      PLOADW      SFC, ($00002102).W
+      PLOADW      DFC, ($00002102).W
+      PLOADW      D0, ($0000210A).W
+      PLOADW      #0, ($00002112).W
+      PLOADR      SFC, ($00002302).W
+      PLOADR      DFC, ($00002302).W
+      PLOADR      D0, ($0000230A).W
+      PLOADR      #0, ($00002312).W
+      PVALID      VAL, ($00002902).W
+      PVALID      A0, ($00002D02).W
+      PFLUSH      SFC, #0, ($00003902).W
+      PFLUSH      DFC, #0, ($00003902).W
+      PFLUSH      D0, #0, ($0000390A).W
+      PFLUSH      #0, #0, ($00003912).W
+      PFLUSHS     SFC, #0, ($00003D02).W
+      PFLUSHS     DFC, #0, ($00003D02).W
+      PFLUSHS     D0, #0, ($00003D0A).W
+      PFLUSHS     #0, #0, ($00003D12).W
+      PMOVE.L     ($00004102).W, TC
+      PMOVE.L     TC, ($00004302).W
+      PMOVE.Q     ($00004502).W, DRP
+      PMOVE.Q     DRP, ($00004702).W
+      PMOVE.Q     ($00004902).W, SRP
+      PMOVE.Q     SRP, ($00004B02).W
+      PMOVE.Q     ($00004D02).W, CRP
+      PMOVE.Q     CRP, ($00004F02).W
+      PMOVE.B     ($00005102).W, CAL
+      PMOVE.B     CAL, ($00005302).W
+      PMOVE.B     ($00005502).W, VAL
+      PMOVE.B     VAL, ($00005702).W
+      PMOVE.B     ($00005902).W, SCC
+      PMOVE.B     SCC, ($00005B02).W
+      PMOVE.W     ($00005D02).W, AC
+      PMOVE.W     AC, ($00005F02).W
+      PMOVE.W     ($00006102).W, PSR
+      PMOVE.W     PSR, ($00006302).W
+      PMOVE.W     ($00006502).W, PCSR
+      PMOVE.W     PCSR, ($00006702).W
+      PMOVE.W     ($00007102).W, BAD0
+      PMOVE.W     BAD0, ($00007302).W
+      PMOVE.W     ($00007502).W, BAC0
+      PMOVE.W     BAC0, ($00007702).W
+      PTESTW      SFC, ($FFFF8102).W, #0
+      PTESTW      DFC, ($FFFF8102).W, #0
+      PTESTW      D0, ($FFFF810A).W, #0
+      PTESTW      #0, ($FFFF8112).W, #0
+      PTESTW      SFC, ($FFFF8202).W, #0, A0
+      PTESTW      DFC, ($FFFF8202).W, #0, A0
+      PTESTW      D0, ($FFFF820A).W, #0, A0
+      PTESTW      #0, ($FFFF8212).W, #0, A0
+      PTESTR      SFC, ($FFFF8302).W, #0
+      PTESTR      DFC, ($FFFF8302).W, #0
+      PTESTR      D0, ($FFFF830A).W, #0
+      PTESTR      #0, ($FFFF8312).W, #0
+      PTESTR      SFC, ($FFFF8402).W, #0, A0
+      PTESTR      DFC, ($FFFF8402).W, #0, A0
+      PTESTR      D0, ($FFFF840A).W, #0, A0
+      PTESTR      #0, ($FFFF8412).W, #0, A0
+      PLOADW      SFC, ($21012202).L
+      PLOADW      DFC, ($21022204).L
+      PLOADW      D0, ($2109220A).L
+      PLOADW      #0, ($21112212).L
+      PLOADR      SFC, ($23012402).L
+      PLOADR      DFC, ($23022404).L
+      PLOADR      D0, ($2309240A).L
+      PLOADR      #0, ($23112412).L
+      PVALID      VAL, ($29012A02).L
+      PVALID      A0, ($2D012E02).L
+      PFLUSH      SFC, #0, ($39013A02).L
+      PFLUSH      DFC, #0, ($39023A04).L
+      PFLUSH      D0, #0, ($39093A0A).L
+      PFLUSH      #0, #0, ($39113A12).L
+      PFLUSHS     SFC, #0, ($3D013E02).L
+      PFLUSHS     DFC, #0, ($3D023E04).L
+      PFLUSHS     D0, #0, ($3D093E0A).L
+      PFLUSHS     #0, #0, ($3D113E12).L
+      PMOVE.L     ($41014202).L, TC
+      PMOVE.L     TC, ($43014402).L
+      PMOVE.Q     ($45014602).L, DRP
+      PMOVE.Q     DRP, ($47014802).L
+      PMOVE.Q     ($49014A02).L, SRP
+      PMOVE.Q     SRP, ($4B014C02).L
+      PMOVE.Q     ($4D014E02).L, CRP
+      PMOVE.Q     CRP, ($4F015002).L
+      PMOVE.B     ($51015202).L, CAL
+      PMOVE.B     CAL, ($53015402).L
+      PMOVE.B     ($55015602).L, VAL
+      PMOVE.B     VAL, ($57015802).L
+      PMOVE.B     ($59015A02).L, SCC
+      PMOVE.B     SCC, ($5B015C02).L
+      PMOVE.W     ($5D015E02).L, AC
+      PMOVE.W     AC, ($5F016002).L
+      PMOVE.W     ($61016202).L, PSR
+      PMOVE.W     PSR, ($63016402).L
+      PMOVE.W     ($65016602).L, PCSR
+      PMOVE.W     PCSR, ($67016802).L
+      PMOVE.W     ($71017202).L, BAD0
+      PMOVE.W     BAD0, ($73017402).L
+      PMOVE.W     ($75017602).L, BAC0
+      PMOVE.W     BAC0, ($77017802).L
+      PTESTW      SFC, ($81018202).L, #0
+      PTESTW      DFC, ($81028204).L, #0
+      PTESTW      D0, ($8109820A).L, #0
+      PTESTW      #0, ($81118212).L, #0
+      PTESTW      SFC, ($82018302).L, #0, A0
+      PTESTW      DFC, ($82028304).L, #0, A0
+      PTESTW      D0, ($8209830A).L, #0, A0
+      PTESTW      #0, ($82118312).L, #0, A0
+      PTESTR      SFC, ($83018402).L, #0
+      PTESTR      DFC, ($83028404).L, #0
+      PTESTR      D0, ($8309840A).L, #0
+      PTESTR      #0, ($83118412).L, #0
+      PTESTR      SFC, ($84018502).L, #0, A0
+      PTESTR      DFC, ($84028504).L, #0, A0
+      PTESTR      D0, ($8409850A).L, #0, A0
+      PTESTR      #0, ($84118512).L, #0, A0
+      PMOVE.L     (*+$4106,PC), TC
+      PMOVE.Q     (*+$4506,PC), DRP
+      PMOVE.Q     (*+$4906,PC), SRP
+      PMOVE.Q     (*+$4D06,PC), CRP
+      PMOVE.B     (*+$5106,PC), CAL
+      PMOVE.B     (*+$5506,PC), VAL
+      PMOVE.B     (*+$5906,PC), SCC
+      PMOVE.W     (*+$5D06,PC), AC
+      PMOVE.W     (*+$6106,PC), PSR
+      PMOVE.W     (*+$6506,PC), PCSR
+      PMOVE.W     (*+$7106,PC), BAD0
+      PMOVE.W     (*+$7506,PC), BAC0
+      PFLUSHR     (*-$5EFA,PC)
+      PMOVE.L     (*+4,PC,D4.W), TC
+      PMOVE.L     ([*+4,PC,D4.W]), TC
+      PMOVE.L     ([*+4,PC,D4.W],$4213), TC
+      PMOVE.L     ([*+4,PC,D4.W],$42144315), TC
+      PMOVE.L     ([*+4,PC],D4.W), TC
+      PMOVE.L     ([*+4,PC],D4.W,$4217), TC
+      PMOVE.L     ([*+4,PC],D4.W,$42184319), TC
+      PMOVE.L     (*+$4225,PC,D4.W), TC
+      PMOVE.L     ([*+$4226,PC,D4.W]), TC
+      PMOVE.L     ([*+$4228,PC,D4.W],$43254426), TC
+      PMOVE.L     ([*+$422A,PC],D4.W), TC
+      PMOVE.L     ([*+$422C,PC],D4.W,$4329442A), TC
+      PMOVE.L     (*+$42314336,PC,D4.W), TC
+      PMOVE.L     ([*+$42324337,PC,D4.W]), TC
+      PMOVE.L     ([*+$42344339,PC,D4.W],$44364537), TC
+      PMOVE.L     ([*+$4236433B,PC],D4.W), TC
+      PMOVE.L     ([*+$4238433D,PC],D4.W,$443A453B), TC
+      PMOVE.Q     (*+4,PC,D4.W*4), DRP
+      PMOVE.Q     ([*+4,PC,D4.W*4]), DRP
+      PMOVE.Q     ([*+4,PC,D4.W*4],$4613), DRP
+      PMOVE.Q     ([*+4,PC,D4.W*4],$46144715), DRP
+      PMOVE.Q     ([*+4,PC],D4.W*4), DRP
+      PMOVE.Q     ([*+4,PC],D4.W*4,$4617), DRP
+      PMOVE.Q     ([*+4,PC],D4.W*4,$46184719), DRP
+      PMOVE.Q     (*+$4625,PC,D4.W*4), DRP
+      PMOVE.Q     ([*+$4626,PC,D4.W*4]), DRP
+      PMOVE.Q     ([*+$4628,PC,D4.W*4],$47254826), DRP
+      PMOVE.Q     ([*+$462A,PC],D4.W*4), DRP
+      PMOVE.Q     ([*+$462C,PC],D4.W*4,$4729482A), DRP
+      PMOVE.Q     (*+$46314736,PC,D4.W*4), DRP
+      PMOVE.Q     ([*+$46324737,PC,D4.W*4]), DRP
+      PMOVE.Q     ([*+$46344739,PC,D4.W*4],$48364937), DRP
+      PMOVE.Q     ([*+$4636473B,PC],D4.W*4), DRP
+      PMOVE.Q     ([*+$4638473D,PC],D4.W*4,$483A493B), DRP
+      PMOVE.Q     (*+4,PC,D4.L), SRP
+      PMOVE.Q     ([*+4,PC,D4.L]), SRP
+      PMOVE.Q     ([*+4,PC,D4.L],$4A13), SRP
+      PMOVE.Q     ([*+4,PC,D4.L],$4A144B15), SRP
+      PMOVE.Q     ([*+4,PC],D4.L), SRP
+      PMOVE.Q     ([*+4,PC],D4.L,$4A17), SRP
+      PMOVE.Q     ([*+4,PC],D4.L,$4A184B19), SRP
+      PMOVE.Q     (*+$4A25,PC,D4.L), SRP
+      PMOVE.Q     ([*+$4A26,PC,D4.L]), SRP
+      PMOVE.Q     ([*+$4A28,PC,D4.L],$4B254C26), SRP
+      PMOVE.Q     ([*+$4A2A,PC],D4.L), SRP
+      PMOVE.Q     ([*+$4A2C,PC],D4.L,$4B294C2A), SRP
+      PMOVE.Q     (*+$4A314B36,PC,D4.L), SRP
+      PMOVE.Q     ([*+$4A324B37,PC,D4.L]), SRP
+      PMOVE.Q     ([*+$4A344B39,PC,D4.L],$4C364D37), SRP
+      PMOVE.Q     ([*+$4A364B3B,PC],D4.L), SRP
+      PMOVE.Q     ([*+$4A384B3D,PC],D4.L,$4C3A4D3B), SRP
+      PMOVE.Q     (*+4,PC,D4.L*4), CRP
+      PMOVE.Q     ([*+4,PC,D4.L*4]), CRP
+      PMOVE.Q     ([*+4,PC,D4.L*4],$4E13), CRP
+      PMOVE.Q     ([*+4,PC,D4.L*4],$4E144F15), CRP
+      PMOVE.Q     ([*+4,PC],D4.L*4), CRP
+      PMOVE.Q     ([*+4,PC],D4.L*4,$4E17), CRP
+      PMOVE.Q     ([*+4,PC],D4.L*4,$4E184F19), CRP
+      PMOVE.Q     (*+$4E25,PC,D4.L*4), CRP
+      PMOVE.Q     ([*+$4E26,PC,D4.L*4]), CRP
+      PMOVE.Q     ([*+$4E28,PC,D4.L*4],$4F255026), CRP
+      PMOVE.Q     ([*+$4E2A,PC],D4.L*4), CRP
+      PMOVE.Q     ([*+$4E2C,PC],D4.L*4,$4F29502A), CRP
+      PMOVE.Q     (*+$4E314F36,PC,D4.L*4), CRP
+      PMOVE.Q     ([*+$4E324F37,PC,D4.L*4]), CRP
+      PMOVE.Q     ([*+$4E344F39,PC,D4.L*4],$50365137), CRP
+      PMOVE.Q     ([*+$4E364F3B,PC],D4.L*4), CRP
+      PMOVE.Q     ([*+$4E384F3D,PC],D4.L*4,$503A513B), CRP
+      PMOVE.B     (*+4,PC,D5.W), CAL
+      PMOVE.B     ([*+4,PC,D5.W]), CAL
+      PMOVE.B     ([*+4,PC,D5.W],$5213), CAL
+      PMOVE.B     ([*+4,PC,D5.W],$52145315), CAL
+      PMOVE.B     ([*+4,PC],D5.W), CAL
+      PMOVE.B     ([*+4,PC],D5.W,$5217), CAL
+      PMOVE.B     ([*+4,PC],D5.W,$52185319), CAL
+      PMOVE.B     (*+$5225,PC,D5.W), CAL
+      PMOVE.B     ([*+$5226,PC,D5.W]), CAL
+      PMOVE.B     ([*+$5228,PC,D5.W],$53255426), CAL
+      PMOVE.B     ([*+$522A,PC],D5.W), CAL
+      PMOVE.B     ([*+$522C,PC],D5.W,$5329542A), CAL
+      PMOVE.B     (*+$52315336,PC,D5.W), CAL
+      PMOVE.B     ([*+$52325337,PC,D5.W]), CAL
+      PMOVE.B     ([*+$52345339,PC,D5.W],$54365537), CAL
+      PMOVE.B     ([*+$5236533B,PC],D5.W), CAL
+      PMOVE.B     ([*+$5238533D,PC],D5.W,$543A553B), CAL
+      PMOVE.B     (*+4,PC,D5.W*4), VAL
+      PMOVE.B     ([*+4,PC,D5.W*4]), VAL
+      PMOVE.B     ([*+4,PC,D5.W*4],$5613), VAL
+      PMOVE.B     ([*+4,PC,D5.W*4],$56145715), VAL
+      PMOVE.B     ([*+4,PC],D5.W*4), VAL
+      PMOVE.B     ([*+4,PC],D5.W*4,$5617), VAL
+      PMOVE.B     ([*+4,PC],D5.W*4,$56185719), VAL
+      PMOVE.B     (*+$5625,PC,D5.W*4), VAL
+      PMOVE.B     ([*+$5626,PC,D5.W*4]), VAL
+      PMOVE.B     ([*+$5628,PC,D5.W*4],$57255826), VAL
+      PMOVE.B     ([*+$562A,PC],D5.W*4), VAL
+      PMOVE.B     ([*+$562C,PC],D5.W*4,$5729582A), VAL
+      PMOVE.B     (*+$56315736,PC,D5.W*4), VAL
+      PMOVE.B     ([*+$56325737,PC,D5.W*4]), VAL
+      PMOVE.B     ([*+$56345739,PC,D5.W*4],$58365937), VAL
+      PMOVE.B     ([*+$5636573B,PC],D5.W*4), VAL
+      PMOVE.B     ([*+$5638573D,PC],D5.W*4,$583A593B), VAL
+      PMOVE.B     (*+4,PC,D5.L), SCC
+      PMOVE.B     ([*+4,PC,D5.L]), SCC
+      PMOVE.B     ([*+4,PC,D5.L],$5A13), SCC
+      PMOVE.B     ([*+4,PC,D5.L],$5A145B15), SCC
+      PMOVE.B     ([*+4,PC],D5.L), SCC
+      PMOVE.B     ([*+4,PC],D5.L,$5A17), SCC
+      PMOVE.B     ([*+4,PC],D5.L,$5A185B19), SCC
+      PMOVE.B     (*+$5A25,PC,D5.L), SCC
+      PMOVE.B     ([*+$5A26,PC,D5.L]), SCC
+      PMOVE.B     ([*+$5A28,PC,D5.L],$5B255C26), SCC
+      PMOVE.B     ([*+$5A2A,PC],D5.L), SCC
+      PMOVE.B     ([*+$5A2C,PC],D5.L,$5B295C2A), SCC
+      PMOVE.B     (*+$5A315B36,PC,D5.L), SCC
+      PMOVE.B     ([*+$5A325B37,PC,D5.L]), SCC
+      PMOVE.B     ([*+$5A345B39,PC,D5.L],$5C365D37), SCC
+      PMOVE.B     ([*+$5A365B3B,PC],D5.L), SCC
+      PMOVE.B     ([*+$5A385B3D,PC],D5.L,$5C3A5D3B), SCC
+      PMOVE.W     (*+4,PC,D5.L*4), AC
+      PMOVE.W     ([*+4,PC,D5.L*4]), AC
+      PMOVE.W     ([*+4,PC,D5.L*4],$5E13), AC
+      PMOVE.W     ([*+4,PC,D5.L*4],$5E145F15), AC
+      PMOVE.W     ([*+4,PC],D5.L*4), AC
+      PMOVE.W     ([*+4,PC],D5.L*4,$5E17), AC
+      PMOVE.W     ([*+4,PC],D5.L*4,$5E185F19), AC
+      PMOVE.W     (*+$5E25,PC,D5.L*4), AC
+      PMOVE.W     ([*+$5E26,PC,D5.L*4]), AC
+      PMOVE.W     ([*+$5E28,PC,D5.L*4],$5F256026), AC
+      PMOVE.W     ([*+$5E2A,PC],D5.L*4), AC
+      PMOVE.W     ([*+$5E2C,PC],D5.L*4,$5F29602A), AC
+      PMOVE.W     (*+$5E315F36,PC,D5.L*4), AC
+      PMOVE.W     ([*+$5E325F37,PC,D5.L*4]), AC
+      PMOVE.W     ([*+$5E345F39,PC,D5.L*4],$60366137), AC
+      PMOVE.W     ([*+$5E365F3B,PC],D5.L*4), AC
+      PMOVE.W     ([*+$5E385F3D,PC],D5.L*4,$603A613B), AC
+      PMOVE.W     (*+4,PC,D6.W), PSR
+      PMOVE.W     ([*+4,PC,D6.W]), PSR
+      PMOVE.W     ([*+4,PC,D6.W],$6213), PSR
+      PMOVE.W     ([*+4,PC,D6.W],$62146315), PSR
+      PMOVE.W     ([*+4,PC],D6.W), PSR
+      PMOVE.W     ([*+4,PC],D6.W,$6217), PSR
+      PMOVE.W     ([*+4,PC],D6.W,$62186319), PSR
+      PMOVE.W     (*+$6225,PC,D6.W), PSR
+      PMOVE.W     ([*+$6226,PC,D6.W]), PSR
+      PMOVE.W     ([*+$6228,PC,D6.W],$63256426), PSR
+      PMOVE.W     ([*+$622A,PC],D6.W), PSR
+      PMOVE.W     ([*+$622C,PC],D6.W,$6329642A), PSR
+      PMOVE.W     (*+$62316336,PC,D6.W), PSR
+      PMOVE.W     ([*+$62326337,PC,D6.W]), PSR
+      PMOVE.W     ([*+$62346339,PC,D6.W],$64366537), PSR
+      PMOVE.W     ([*+$6236633B,PC],D6.W), PSR
+      PMOVE.W     ([*+$6238633D,PC],D6.W,$643A653B), PSR
+      PMOVE.W     (*+4,PC,D6.W*4), PCSR
+      PMOVE.W     ([*+4,PC,D6.W*4]), PCSR
+      PMOVE.W     ([*+4,PC,D6.W*4],$6613), PCSR
+      PMOVE.W     ([*+4,PC,D6.W*4],$66146715), PCSR
+      PMOVE.W     ([*+4,PC],D6.W*4), PCSR
+      PMOVE.W     ([*+4,PC],D6.W*4,$6617), PCSR
+      PMOVE.W     ([*+4,PC],D6.W*4,$66186719), PCSR
+      PMOVE.W     (*+$6625,PC,D6.W*4), PCSR
+      PMOVE.W     ([*+$6626,PC,D6.W*4]), PCSR
+      PMOVE.W     ([*+$6628,PC,D6.W*4],$67256826), PCSR
+      PMOVE.W     ([*+$662A,PC],D6.W*4), PCSR
+      PMOVE.W     ([*+$662C,PC],D6.W*4,$6729682A), PCSR
+      PMOVE.W     (*+$66316736,PC,D6.W*4), PCSR
+      PMOVE.W     ([*+$66326737,PC,D6.W*4]), PCSR
+      PMOVE.W     ([*+$66346739,PC,D6.W*4],$68366937), PCSR
+      PMOVE.W     ([*+$6636673B,PC],D6.W*4), PCSR
+      PMOVE.W     ([*+$6638673D,PC],D6.W*4,$683A693B), PCSR
+      PMOVE.W     (*+4,PC,D7.W), BAD0
+      PMOVE.W     ([*+4,PC,D7.W]), BAD0
+      PMOVE.W     ([*+4,PC,D7.W],$7213), BAD0
+      PMOVE.W     ([*+4,PC,D7.W],$72147315), BAD0
+      PMOVE.W     ([*+4,PC],D7.W), BAD0
+      PMOVE.W     ([*+4,PC],D7.W,$7217), BAD0
+      PMOVE.W     ([*+4,PC],D7.W,$72187319), BAD0
+      PMOVE.W     (*+$7225,PC,D7.W), BAD0
+      PMOVE.W     ([*+$7226,PC,D7.W]), BAD0
+      PMOVE.W     ([*+$7228,PC,D7.W],$73257426), BAD0
+      PMOVE.W     ([*+$722A,PC],D7.W), BAD0
+      PMOVE.W     ([*+$722C,PC],D7.W,$7329742A), BAD0
+      PMOVE.W     (*+$72317336,PC,D7.W), BAD0
+      PMOVE.W     ([*+$72327337,PC,D7.W]), BAD0
+      PMOVE.W     ([*+$72347339,PC,D7.W],$74367537), BAD0
+      PMOVE.W     ([*+$7236733B,PC],D7.W), BAD0
+      PMOVE.W     ([*+$7238733D,PC],D7.W,$743A753B), BAD0
+      PMOVE.W     (*+4,PC,D7.W*4), BAC0
+      PMOVE.W     ([*+4,PC,D7.W*4]), BAC0
+      PMOVE.W     ([*+4,PC,D7.W*4],$7613), BAC0
+      PMOVE.W     ([*+4,PC,D7.W*4],$76147715), BAC0
+      PMOVE.W     ([*+4,PC],D7.W*4), BAC0
+      PMOVE.W     ([*+4,PC],D7.W*4,$7617), BAC0
+      PMOVE.W     ([*+4,PC],D7.W*4,$76187719), BAC0
+      PMOVE.W     (*+$7625,PC,D7.W*4), BAC0
+      PMOVE.W     ([*+$7626,PC,D7.W*4]), BAC0
+      PMOVE.W     ([*+$7628,PC,D7.W*4],$77257826), BAC0
+      PMOVE.W     ([*+$762A,PC],D7.W*4), BAC0
+      PMOVE.W     ([*+$762C,PC],D7.W*4,$7729782A), BAC0
+      PMOVE.W     (*+$76317736,PC,D7.W*4), BAC0
+      PMOVE.W     ([*+$76327737,PC,D7.W*4]), BAC0
+      PMOVE.W     ([*+$76347739,PC,D7.W*4],$78367937), BAC0
+      PMOVE.W     ([*+$7636773B,PC],D7.W*4), BAC0
+      PMOVE.W     ([*+$7638773D,PC],D7.W*4,$783A793B), BAC0
+      PFLUSHR     (*+4,PC,A2.W)
+      PFLUSHR     ([*+4,PC,A2.W])
+      PFLUSHR     ([*+4,PC,A2.W],-$5DED)
+      PFLUSHR     ([*+4,PC,A2.W],-$5DEB5CEB)
+      PFLUSHR     ([*+4,PC],A2.W)
+      PFLUSHR     ([*+4,PC],A2.W,-$5DE9)
+      PFLUSHR     ([*+4,PC],A2.W,-$5DE75CE7)
+      PFLUSHR     (*-$5DDB,PC,A2.W)
+      PFLUSHR     ([*-$5DDA,PC,A2.W])
+      PFLUSHR     ([*-$5DD8,PC,A2.W],-$5CDA5BDA)
+      PFLUSHR     ([*-$5DD6,PC],A2.W)
+      PFLUSHR     ([*-$5DD4,PC],A2.W,-$5CD65BD6)
+      PFLUSHR     (*-$5DCE5CCA,PC,A2.W)
+      PFLUSHR     ([*-$5DCD5CC9,PC,A2.W])
+      PFLUSHR     ([*-$5DCB5CC7,PC,A2.W],-$5BC95AC9)
+      PFLUSHR     ([*-$5DC95CC5,PC],A2.W)
+      PFLUSHR     ([*-$5DC75CC3,PC],A2.W,-$5BC55AC5)
+      PFLUSHR     ([*+4,PC])
+      PFLUSHR     ([*+4,PC],-$5DAD)
+      PFLUSHR     ([*+4,PC],-$5DAB5CAB)
+      PFLUSHR     (*-$5D9A,PC)
+      PFLUSHR     ([*-$5D9A,PC])
+      PFLUSHR     ([*-$5D98,PC],-$5C9A5B9A)
+      PFLUSHR     (*-$5D8E5C8A,PC)
+      PFLUSHR     ([*-$5D8D5C88,PC])
+      PFLUSHR     ([*-$5D8B5C86,PC],-$5B885A88)
+      PFLUSHR     (*+4,A2.W)
+      PFLUSHR     ([*+4,A2.W])
+      PFLUSHR     ([*+4,A2.W],-$5D6D)
+      PFLUSHR     ([*+4,A2.W],-$5D6B5C6B)
+      PFLUSHR     (*-$5D5B,A2.W)
+      PFLUSHR     ([*-$5D5A,A2.W])
+      PFLUSHR     ([*-$5D58,A2.W],-$5C5A5B5A)
+      PFLUSHR     ([*-$5D56],A2.W)
+      PFLUSHR     ([*-$5D55],A2.W,-$5C58)
+      PFLUSHR     ([*-$5D54],A2.W,-$5C565B56)
+      PFLUSHR     (*-$5D4E5C4A,A2.W)
+      PFLUSHR     ([*-$5D4D5C49,A2.W])
+      PFLUSHR     ([*-$5D4B5C47,A2.W],-$5B495A49)
+      PFLUSHR     ([*-$5D495C45],A2.W)
+      PFLUSHR     ([*-$5D475C43],A2.W,-$5B455A45)
+      PFLUSHR     (*-$5D1A)
+      PFLUSHR     ([*-$5D1A])
+      PFLUSHR     ([*-$5D18],-$5C1B)
+      PFLUSHR     ([*-$5D18],-$5C1A5B1A)
+      PFLUSHR     (*-$5D0E5C0A)
+      PFLUSHR     ([*-$5D0D5C08])
+      PFLUSHR     ([*-$5D0B5C06],-$5B085A08)
+      PMOVE.L     #$41014202, TC
+      PMOVE.Q     #$4501460247034804, DRP
+      PMOVE.Q     #$49014A024B034C04, SRP
+      PMOVE.Q     #$4D014E024F035004, CRP
+      PMOVE.B     #1, CAL
+      PMOVE.B     #1, VAL
+      PMOVE.B     #1, SCC
+      PMOVE.W     #$5D01, AC
+      PMOVE.W     #$6101, PSR
+      PMOVE.W     #$6501, PCSR
+      PMOVE.W     #$7101, BAD0
+      PMOVE.W     #$7501, BAC0
+      PFLUSHR     #$A101A202A303A404
+      PSBS        D0
+      PSBC        D0
+      PSLS        D0
+      PSLC        D0
+      PSSS        D0
+      PSSC        D0
+      PSAS        D0
+      PSAC        D0
+      PSWS        D0
+      PSWC        D0
+      PSIS        D0
+      PSIC        D0
+      PSGS        D0
+      PSGC        D0
+      PSCS        D0
+      PSCC        D0
+      PDBBS       D0, *+$0106
+      PDBBC       D0, *+$0106
+      PDBLS       D0, *+$0108
+      PDBLC       D0, *+$0108
+      PDBSS       D0, *+$010A
+      PDBSC       D0, *+$010A
+      PDBAS       D0, *+$010C
+      PDBAC       D0, *+$010C
+      PDBWS       D0, *+$010E
+      PDBWC       D0, *+$010E
+      PDBIS       D0, *+$0110
+      PDBIC       D0, *+$0110
+      PDBGS       D0, *+$0112
+      PDBGC       D0, *+$0112
+      PDBCS       D0, *+$0114
+      PDBCC       D0, *+$0114
+      PSBS        (A0)
+      PSBC        (A0)
+      PSLS        (A0)
+      PSLC        (A0)
+      PSSS        (A0)
+      PSSC        (A0)
+      PSAS        (A0)
+      PSAC        (A0)
+      PSWS        (A0)
+      PSWC        (A0)
+      PSIS        (A0)
+      PSIC        (A0)
+      PSGS        (A0)
+      PSGC        (A0)
+      PSCS        (A0)
+      PSCC        (A0)
+      PSBS        (A0)+
+      PSBC        (A0)+
+      PSLS        (A0)+
+      PSLC        (A0)+
+      PSSS        (A0)+
+      PSSC        (A0)+
+      PSAS        (A0)+
+      PSAC        (A0)+
+      PSWS        (A0)+
+      PSWC        (A0)+
+      PSIS        (A0)+
+      PSIC        (A0)+
+      PSGS        (A0)+
+      PSGC        (A0)+
+      PSCS        (A0)+
+      PSCC        (A0)+
+      PSBS        -(A0)
+      PSBC        -(A0)
+      PSLS        -(A0)
+      PSLC        -(A0)
+      PSSS        -(A0)
+      PSSC        -(A0)
+      PSAS        -(A0)
+      PSAC        -(A0)
+      PSWS        -(A0)
+      PSWC        -(A0)
+      PSIS        -(A0)
+      PSIC        -(A0)
+      PSGS        -(A0)
+      PSGC        -(A0)
+      PSCS        -(A0)
+      PSCC        -(A0)
+      PSBS        ($0101,A0)
+      PSBC        ($0102,A0)
+      PSLS        ($0103,A0)
+      PSLC        ($0104,A0)
+      PSSS        ($0105,A0)
+      PSSC        ($0106,A0)
+      PSAS        ($0107,A0)
+      PSAC        ($0108,A0)
+      PSWS        ($0109,A0)
+      PSWC        ($010A,A0)
+      PSIS        ($010B,A0)
+      PSIC        ($010C,A0)
+      PSGS        ($010D,A0)
+      PSGC        ($010E,A0)
+      PSCS        ($010F,A0)
+      PSCC        ($0110,A0)
+      PSBS        (A0,D0.W)
+      PSBS        ([A0,D0.W])
+      PSBS        ([A0,D0.W],$0213)
+      PSBS        ([A0,D0.W],$02140315)
+      PSBS        ([A0],D0.W)
+      PSBS        ([A0],D0.W,$0217)
+      PSBS        ([A0],D0.W,$02180319)
+      PSBS        ($0221,A0,D0.W)
+      PSBS        ([$0222,A0,D0.W])
+      PSBS        ([$0223,A0,D0.W],$0324)
+      PSBS        ([$0224,A0,D0.W],$03250426)
+      PSBS        ([$0226,A0],D0.W)
+      PSBS        ([$0227,A0],D0.W,$0328)
+      PSBS        ([$0228,A0],D0.W,$0329042A)
+      PSBS        ($02310332,A0,D0.W)
+      PSBS        ([$02320333,A0,D0.W])
+      PSBS        ([$02340335,A0,D0.W],$04360537)
+      PSBS        ([$02360337,A0],D0.W)
+      PSBS        ([$02380339,A0],D0.W,$043A053B)
+      PSBS        (A0)
+      PSBS        ([A0])
+      PSBS        ([A0],$0253)
+      PSBS        ([A0],$02540355)
+      PSBS        ($0261,A0)
+      PSBS        ([$0262,A0])
+      PSBS        ([$0263,A0],$0364)
+      PSBS        ([$0264,A0],$03650466)
+      PSBS        ($02710372,A0)
+      PSBS        ([$02720373,A0])
+      PSBS        ([$02740375,A0],$04760577)
+      PSBS        (D0.W)
+      PSBS        ([D0.W])
+      PSBS        ([D0.W],$0293)
+      PSBS        ([D0.W],$02940395)
+      PSBS        ($02A1,D0.W)
+      PSBS        ([$02A2,D0.W])
+      PSBS        ([$02A3,D0.W],$03A4)
+      PSBS        ([$02A4,D0.W],$03A504A6)
+      PSBS        ([$02A6],D0.W)
+      PSBS        ([$02A7],D0.W,$03A8)
+      PSBS        ([$02A8],D0.W,$03A904AA)
+      PSBS        ($02B103B2,D0.W)
+      PSBS        ([$02B203B3,D0.W])
+      PSBS        ([$02B403B5,D0.W],$04B605B7)
+      PSBS        ([$02B603B7],D0.W)
+      PSBS        ([$02B803B9],D0.W,$04BA05BB)
+      PSBS        ($02E1)
+      PSBS        ([$02E2])
+      PSBS        ([$02E4],$03E5)
+      PSBS        ([$02E4],$03E504E6)
+      PSBS        ($02F103F2)
+      PSBS        ([$02F203F4])
+      PSBS        ([$02F403F6],$04F705F8)
+      PSBS        (0,A0,D0.W*2)
+      PSBC        (A0,D0.W)
+      PSBC        ([A0,D0.W])
+      PSBC        ([A0,D0.W],$0213)
+      PSBC        ([A0,D0.W],$02140315)
+      PSBC        ([A0],D0.W)
+      PSBC        ([A0],D0.W,$0217)
+      PSBC        ([A0],D0.W,$02180319)
+      PSBC        ($0221,A0,D0.W)
+      PSBC        ([$0222,A0,D0.W])
+      PSBC        ([$0223,A0,D0.W],$0324)
+      PSBC        ([$0224,A0,D0.W],$03250426)
+      PSBC        ([$0226,A0],D0.W)
+      PSBC        ([$0227,A0],D0.W,$0328)
+      PSBC        ([$0228,A0],D0.W,$0329042A)
+      PSBC        ($02310332,A0,D0.W)
+      PSBC        ([$02320333,A0,D0.W])
+      PSBC        ([$02340335,A0,D0.W],$04360537)
+      PSBC        ([$02360337,A0],D0.W)
+      PSBC        ([$02380339,A0],D0.W,$043A053B)
+      PSBC        (A0)
+      PSBC        ([A0])
+      PSBC        ([A0],$0253)
+      PSBC        ([A0],$02540355)
+      PSBC        ($0261,A0)
+      PSBC        ([$0262,A0])
+      PSBC        ([$0263,A0],$0364)
+      PSBC        ([$0264,A0],$03650466)
+      PSBC        ($02710372,A0)
+      PSBC        ([$02720373,A0])
+      PSBC        ([$02740375,A0],$04760577)
+      PSBC        (D0.W)
+      PSBC        ([D0.W])
+      PSBC        ([D0.W],$0293)
+      PSBC        ([D0.W],$02940395)
+      PSBC        ($02A1,D0.W)
+      PSBC        ([$02A2,D0.W])
+      PSBC        ([$02A3,D0.W],$03A4)
+      PSBC        ([$02A4,D0.W],$03A504A6)
+      PSBC        ([$02A6],D0.W)
+      PSBC        ([$02A7],D0.W,$03A8)
+      PSBC        ([$02A8],D0.W,$03A904AA)
+      PSBC        ($02B103B2,D0.W)
+      PSBC        ([$02B203B3,D0.W])
+      PSBC        ([$02B403B5,D0.W],$04B605B7)
+      PSBC        ([$02B603B7],D0.W)
+      PSBC        ([$02B803B9],D0.W,$04BA05BB)
+      PSBC        ($02E1)
+      PSBC        ([$02E2])
+      PSBC        ([$02E4],$03E5)
+      PSBC        ([$02E4],$03E504E6)
+      PSBC        ($02F103F2)
+      PSBC        ([$02F203F4])
+      PSBC        ([$02F403F6],$04F705F8)
+      PSBC        (0,A0,D0.W*2)
+      PSLS        (A0,D0.W)
+      PSLS        ([A0,D0.W])
+      PSLS        ([A0,D0.W],$0213)
+      PSLS        ([A0,D0.W],$02140315)
+      PSLS        ([A0],D0.W)
+      PSLS        ([A0],D0.W,$0217)
+      PSLS        ([A0],D0.W,$02180319)
+      PSLS        ($0221,A0,D0.W)
+      PSLS        ([$0222,A0,D0.W])
+      PSLS        ([$0223,A0,D0.W],$0324)
+      PSLS        ([$0224,A0,D0.W],$03250426)
+      PSLS        ([$0226,A0],D0.W)
+      PSLS        ([$0227,A0],D0.W,$0328)
+      PSLS        ([$0228,A0],D0.W,$0329042A)
+      PSLS        ($02310332,A0,D0.W)
+      PSLS        ([$02320333,A0,D0.W])
+      PSLS        ([$02340335,A0,D0.W],$04360537)
+      PSLS        ([$02360337,A0],D0.W)
+      PSLS        ([$02380339,A0],D0.W,$043A053B)
+      PSLS        (A0)
+      PSLS        ([A0])
+      PSLS        ([A0],$0253)
+      PSLS        ([A0],$02540355)
+      PSLS        ($0261,A0)
+      PSLS        ([$0262,A0])
+      PSLS        ([$0263,A0],$0364)
+      PSLS        ([$0264,A0],$03650466)
+      PSLS        ($02710372,A0)
+      PSLS        ([$02720373,A0])
+      PSLS        ([$02740375,A0],$04760577)
+      PSLS        (D0.W)
+      PSLS        ([D0.W])
+      PSLS        ([D0.W],$0293)
+      PSLS        ([D0.W],$02940395)
+      PSLS        ($02A1,D0.W)
+      PSLS        ([$02A2,D0.W])
+      PSLS        ([$02A3,D0.W],$03A4)
+      PSLS        ([$02A4,D0.W],$03A504A6)
+      PSLS        ([$02A6],D0.W)
+      PSLS        ([$02A7],D0.W,$03A8)
+      PSLS        ([$02A8],D0.W,$03A904AA)
+      PSLS        ($02B103B2,D0.W)
+      PSLS        ([$02B203B3,D0.W])
+      PSLS        ([$02B403B5,D0.W],$04B605B7)
+      PSLS        ([$02B603B7],D0.W)
+      PSLS        ([$02B803B9],D0.W,$04BA05BB)
+      PSLS        ($02E1)
+      PSLS        ([$02E2])
+      PSLS        ([$02E4],$03E5)
+      PSLS        ([$02E4],$03E504E6)
+      PSLS        ($02F103F2)
+      PSLS        ([$02F203F4])
+      PSLS        ([$02F403F6],$04F705F8)
+      PSLS        (0,A0,D0.W*2)
+      PSLC        (A0,D0.W)
+      PSLC        ([A0,D0.W])
+      PSLC        ([A0,D0.W],$0213)
+      PSLC        ([A0,D0.W],$02140315)
+      PSLC        ([A0],D0.W)
+      PSLC        ([A0],D0.W,$0217)
+      PSLC        ([A0],D0.W,$02180319)
+      PSLC        ($0221,A0,D0.W)
+      PSLC        ([$0222,A0,D0.W])
+      PSLC        ([$0223,A0,D0.W],$0324)
+      PSLC        ([$0224,A0,D0.W],$03250426)
+      PSLC        ([$0226,A0],D0.W)
+      PSLC        ([$0227,A0],D0.W,$0328)
+      PSLC        ([$0228,A0],D0.W,$0329042A)
+      PSLC        ($02310332,A0,D0.W)
+      PSLC        ([$02320333,A0,D0.W])
+      PSLC        ([$02340335,A0,D0.W],$04360537)
+      PSLC        ([$02360337,A0],D0.W)
+      PSLC        ([$02380339,A0],D0.W,$043A053B)
+      PSLC        (A0)
+      PSLC        ([A0])
+      PSLC        ([A0],$0253)
+      PSLC        ([A0],$02540355)
+      PSLC        ($0261,A0)
+      PSLC        ([$0262,A0])
+      PSLC        ([$0263,A0],$0364)
+      PSLC        ([$0264,A0],$03650466)
+      PSLC        ($02710372,A0)
+      PSLC        ([$02720373,A0])
+      PSLC        ([$02740375,A0],$04760577)
+      PSLC        (D0.W)
+      PSLC        ([D0.W])
+      PSLC        ([D0.W],$0293)
+      PSLC        ([D0.W],$02940395)
+      PSLC        ($02A1,D0.W)
+      PSLC        ([$02A2,D0.W])
+      PSLC        ([$02A3,D0.W],$03A4)
+      PSLC        ([$02A4,D0.W],$03A504A6)
+      PSLC        ([$02A6],D0.W)
+      PSLC        ([$02A7],D0.W,$03A8)
+      PSLC        ([$02A8],D0.W,$03A904AA)
+      PSLC        ($02B103B2,D0.W)
+      PSLC        ([$02B203B3,D0.W])
+      PSLC        ([$02B403B5,D0.W],$04B605B7)
+      PSLC        ([$02B603B7],D0.W)
+      PSLC        ([$02B803B9],D0.W,$04BA05BB)
+      PSLC        ($02E1)
+      PSLC        ([$02E2])
+      PSLC        ([$02E4],$03E5)
+      PSLC        ([$02E4],$03E504E6)
+      PSLC        ($02F103F2)
+      PSLC        ([$02F203F4])
+      PSLC        ([$02F403F6],$04F705F8)
+      PSLC        (0,A0,D0.W*2)
+      PSSS        (A0,D0.W)
+      PSSS        ([A0,D0.W])
+      PSSS        ([A0,D0.W],$0213)
+      PSSS        ([A0,D0.W],$02140315)
+      PSSS        ([A0],D0.W)
+      PSSS        ([A0],D0.W,$0217)
+      PSSS        ([A0],D0.W,$02180319)
+      PSSS        ($0221,A0,D0.W)
+      PSSS        ([$0222,A0,D0.W])
+      PSSS        ([$0223,A0,D0.W],$0324)
+      PSSS        ([$0224,A0,D0.W],$03250426)
+      PSSS        ([$0226,A0],D0.W)
+      PSSS        ([$0227,A0],D0.W,$0328)
+      PSSS        ([$0228,A0],D0.W,$0329042A)
+      PSSS        ($02310332,A0,D0.W)
+      PSSS        ([$02320333,A0,D0.W])
+      PSSS        ([$02340335,A0,D0.W],$04360537)
+      PSSS        ([$02360337,A0],D0.W)
+      PSSS        ([$02380339,A0],D0.W,$043A053B)
+      PSSS        (A0)
+      PSSS        ([A0])
+      PSSS        ([A0],$0253)
+      PSSS        ([A0],$02540355)
+      PSSS        ($0261,A0)
+      PSSS        ([$0262,A0])
+      PSSS        ([$0263,A0],$0364)
+      PSSS        ([$0264,A0],$03650466)
+      PSSS        ($02710372,A0)
+      PSSS        ([$02720373,A0])
+      PSSS        ([$02740375,A0],$04760577)
+      PSSS        (D0.W)
+      PSSS        ([D0.W])
+      PSSS        ([D0.W],$0293)
+      PSSS        ([D0.W],$02940395)
+      PSSS        ($02A1,D0.W)
+      PSSS        ([$02A2,D0.W])
+      PSSS        ([$02A3,D0.W],$03A4)
+      PSSS        ([$02A4,D0.W],$03A504A6)
+      PSSS        ([$02A6],D0.W)
+      PSSS        ([$02A7],D0.W,$03A8)
+      PSSS        ([$02A8],D0.W,$03A904AA)
+      PSSS        ($02B103B2,D0.W)
+      PSSS        ([$02B203B3,D0.W])
+      PSSS        ([$02B403B5,D0.W],$04B605B7)
+      PSSS        ([$02B603B7],D0.W)
+      PSSS        ([$02B803B9],D0.W,$04BA05BB)
+      PSSS        ($02E1)
+      PSSS        ([$02E2])
+      PSSS        ([$02E4],$03E5)
+      PSSS        ([$02E4],$03E504E6)
+      PSSS        ($02F103F2)
+      PSSS        ([$02F203F4])
+      PSSS        ([$02F403F6],$04F705F8)
+      PSSS        (0,A0,D0.W*2)
+      PSSC        (A0,D0.W)
+      PSSC        ([A0,D0.W])
+      PSSC        ([A0,D0.W],$0213)
+      PSSC        ([A0,D0.W],$02140315)
+      PSSC        ([A0],D0.W)
+      PSSC        ([A0],D0.W,$0217)
+      PSSC        ([A0],D0.W,$02180319)
+      PSSC        ($0221,A0,D0.W)
+      PSSC        ([$0222,A0,D0.W])
+      PSSC        ([$0223,A0,D0.W],$0324)
+      PSSC        ([$0224,A0,D0.W],$03250426)
+      PSSC        ([$0226,A0],D0.W)
+      PSSC        ([$0227,A0],D0.W,$0328)
+      PSSC        ([$0228,A0],D0.W,$0329042A)
+      PSSC        ($02310332,A0,D0.W)
+      PSSC        ([$02320333,A0,D0.W])
+      PSSC        ([$02340335,A0,D0.W],$04360537)
+      PSSC        ([$02360337,A0],D0.W)
+      PSSC        ([$02380339,A0],D0.W,$043A053B)
+      PSSC        (A0)
+      PSSC        ([A0])
+      PSSC        ([A0],$0253)
+      PSSC        ([A0],$02540355)
+      PSSC        ($0261,A0)
+      PSSC        ([$0262,A0])
+      PSSC        ([$0263,A0],$0364)
+      PSSC        ([$0264,A0],$03650466)
+      PSSC        ($02710372,A0)
+      PSSC        ([$02720373,A0])
+      PSSC        ([$02740375,A0],$04760577)
+      PSSC        (D0.W)
+      PSSC        ([D0.W])
+      PSSC        ([D0.W],$0293)
+      PSSC        ([D0.W],$02940395)
+      PSSC        ($02A1,D0.W)
+      PSSC        ([$02A2,D0.W])
+      PSSC        ([$02A3,D0.W],$03A4)
+      PSSC        ([$02A4,D0.W],$03A504A6)
+      PSSC        ([$02A6],D0.W)
+      PSSC        ([$02A7],D0.W,$03A8)
+      PSSC        ([$02A8],D0.W,$03A904AA)
+      PSSC        ($02B103B2,D0.W)
+      PSSC        ([$02B203B3,D0.W])
+      PSSC        ([$02B403B5,D0.W],$04B605B7)
+      PSSC        ([$02B603B7],D0.W)
+      PSSC        ([$02B803B9],D0.W,$04BA05BB)
+      PSSC        ($02E1)
+      PSSC        ([$02E2])
+      PSSC        ([$02E4],$03E5)
+      PSSC        ([$02E4],$03E504E6)
+      PSSC        ($02F103F2)
+      PSSC        ([$02F203F4])
+      PSSC        ([$02F403F6],$04F705F8)
+      PSSC        (0,A0,D0.W*2)
+      PSAS        (A0,D0.W)
+      PSAS        ([A0,D0.W])
+      PSAS        ([A0,D0.W],$0213)
+      PSAS        ([A0,D0.W],$02140315)
+      PSAS        ([A0],D0.W)
+      PSAS        ([A0],D0.W,$0217)
+      PSAS        ([A0],D0.W,$02180319)
+      PSAS        ($0221,A0,D0.W)
+      PSAS        ([$0222,A0,D0.W])
+      PSAS        ([$0223,A0,D0.W],$0324)
+      PSAS        ([$0224,A0,D0.W],$03250426)
+      PSAS        ([$0226,A0],D0.W)
+      PSAS        ([$0227,A0],D0.W,$0328)
+      PSAS        ([$0228,A0],D0.W,$0329042A)
+      PSAS        ($02310332,A0,D0.W)
+      PSAS        ([$02320333,A0,D0.W])
+      PSAS        ([$02340335,A0,D0.W],$04360537)
+      PSAS        ([$02360337,A0],D0.W)
+      PSAS        ([$02380339,A0],D0.W,$043A053B)
+      PSAS        (A0)
+      PSAS        ([A0])
+      PSAS        ([A0],$0253)
+      PSAS        ([A0],$02540355)
+      PSAS        ($0261,A0)
+      PSAS        ([$0262,A0])
+      PSAS        ([$0263,A0],$0364)
+      PSAS        ([$0264,A0],$03650466)
+      PSAS        ($02710372,A0)
+      PSAS        ([$02720373,A0])
+      PSAS        ([$02740375,A0],$04760577)
+      PSAS        (D0.W)
+      PSAS        ([D0.W])
+      PSAS        ([D0.W],$0293)
+      PSAS        ([D0.W],$02940395)
+      PSAS        ($02A1,D0.W)
+      PSAS        ([$02A2,D0.W])
+      PSAS        ([$02A3,D0.W],$03A4)
+      PSAS        ([$02A4,D0.W],$03A504A6)
+      PSAS        ([$02A6],D0.W)
+      PSAS        ([$02A7],D0.W,$03A8)
+      PSAS        ([$02A8],D0.W,$03A904AA)
+      PSAS        ($02B103B2,D0.W)
+      PSAS        ([$02B203B3,D0.W])
+      PSAS        ([$02B403B5,D0.W],$04B605B7)
+      PSAS        ([$02B603B7],D0.W)
+      PSAS        ([$02B803B9],D0.W,$04BA05BB)
+      PSAS        ($02E1)
+      PSAS        ([$02E2])
+      PSAS        ([$02E4],$03E5)
+      PSAS        ([$02E4],$03E504E6)
+      PSAS        ($02F103F2)
+      PSAS        ([$02F203F4])
+      PSAS        ([$02F403F6],$04F705F8)
+      PSAS        (0,A0,D0.W*2)
+      PSAC        (A0,D0.W)
+      PSAC        ([A0,D0.W])
+      PSAC        ([A0,D0.W],$0213)
+      PSAC        ([A0,D0.W],$02140315)
+      PSAC        ([A0],D0.W)
+      PSAC        ([A0],D0.W,$0217)
+      PSAC        ([A0],D0.W,$02180319)
+      PSAC        ($0221,A0,D0.W)
+      PSAC        ([$0222,A0,D0.W])
+      PSAC        ([$0223,A0,D0.W],$0324)
+      PSAC        ([$0224,A0,D0.W],$03250426)
+      PSAC        ([$0226,A0],D0.W)
+      PSAC        ([$0227,A0],D0.W,$0328)
+      PSAC        ([$0228,A0],D0.W,$0329042A)
+      PSAC        ($02310332,A0,D0.W)
+      PSAC        ([$02320333,A0,D0.W])
+      PSAC        ([$02340335,A0,D0.W],$04360537)
+      PSAC        ([$02360337,A0],D0.W)
+      PSAC        ([$02380339,A0],D0.W,$043A053B)
+      PSAC        (A0)
+      PSAC        ([A0])
+      PSAC        ([A0],$0253)
+      PSAC        ([A0],$02540355)
+      PSAC        ($0261,A0)
+      PSAC        ([$0262,A0])
+      PSAC        ([$0263,A0],$0364)
+      PSAC        ([$0264,A0],$03650466)
+      PSAC        ($02710372,A0)
+      PSAC        ([$02720373,A0])
+      PSAC        ([$02740375,A0],$04760577)
+      PSAC        (D0.W)
+      PSAC        ([D0.W])
+      PSAC        ([D0.W],$0293)
+      PSAC        ([D0.W],$02940395)
+      PSAC        ($02A1,D0.W)
+      PSAC        ([$02A2,D0.W])
+      PSAC        ([$02A3,D0.W],$03A4)
+      PSAC        ([$02A4,D0.W],$03A504A6)
+      PSAC        ([$02A6],D0.W)
+      PSAC        ([$02A7],D0.W,$03A8)
+      PSAC        ([$02A8],D0.W,$03A904AA)
+      PSAC        ($02B103B2,D0.W)
+      PSAC        ([$02B203B3,D0.W])
+      PSAC        ([$02B403B5,D0.W],$04B605B7)
+      PSAC        ([$02B603B7],D0.W)
+      PSAC        ([$02B803B9],D0.W,$04BA05BB)
+      PSAC        ($02E1)
+      PSAC        ([$02E2])
+      PSAC        ([$02E4],$03E5)
+      PSAC        ([$02E4],$03E504E6)
+      PSAC        ($02F103F2)
+      PSAC        ([$02F203F4])
+      PSAC        ([$02F403F6],$04F705F8)
+      PSAC        (0,A0,D0.W*2)
+      PSWS        (A0,D0.W)
+      PSWS        ([A0,D0.W])
+      PSWS        ([A0,D0.W],$0213)
+      PSWS        ([A0,D0.W],$02140315)
+      PSWS        ([A0],D0.W)
+      PSWS        ([A0],D0.W,$0217)
+      PSWS        ([A0],D0.W,$02180319)
+      PSWS        ($0221,A0,D0.W)
+      PSWS        ([$0222,A0,D0.W])
+      PSWS        ([$0223,A0,D0.W],$0324)
+      PSWS        ([$0224,A0,D0.W],$03250426)
+      PSWS        ([$0226,A0],D0.W)
+      PSWS        ([$0227,A0],D0.W,$0328)
+      PSWS        ([$0228,A0],D0.W,$0329042A)
+      PSWS        ($02310332,A0,D0.W)
+      PSWS        ([$02320333,A0,D0.W])
+      PSWS        ([$02340335,A0,D0.W],$04360537)
+      PSWS        ([$02360337,A0],D0.W)
+      PSWS        ([$02380339,A0],D0.W,$043A053B)
+      PSWS        (A0)
+      PSWS        ([A0])
+      PSWS        ([A0],$0253)
+      PSWS        ([A0],$02540355)
+      PSWS        ($0261,A0)
+      PSWS        ([$0262,A0])
+      PSWS        ([$0263,A0],$0364)
+      PSWS        ([$0264,A0],$03650466)
+      PSWS        ($02710372,A0)
+      PSWS        ([$02720373,A0])
+      PSWS        ([$02740375,A0],$04760577)
+      PSWS        (D0.W)
+      PSWS        ([D0.W])
+      PSWS        ([D0.W],$0293)
+      PSWS        ([D0.W],$02940395)
+      PSWS        ($02A1,D0.W)
+      PSWS        ([$02A2,D0.W])
+      PSWS        ([$02A3,D0.W],$03A4)
+      PSWS        ([$02A4,D0.W],$03A504A6)
+      PSWS        ([$02A6],D0.W)
+      PSWS        ([$02A7],D0.W,$03A8)
+      PSWS        ([$02A8],D0.W,$03A904AA)
+      PSWS        ($02B103B2,D0.W)
+      PSWS        ([$02B203B3,D0.W])
+      PSWS        ([$02B403B5,D0.W],$04B605B7)
+      PSWS        ([$02B603B7],D0.W)
+      PSWS        ([$02B803B9],D0.W,$04BA05BB)
+      PSWS        ($02E1)
+      PSWS        ([$02E2])
+      PSWS        ([$02E4],$03E5)
+      PSWS        ([$02E4],$03E504E6)
+      PSWS        ($02F103F2)
+      PSWS        ([$02F203F4])
+      PSWS        ([$02F403F6],$04F705F8)
+      PSWS        (0,A0,D0.W*2)
+      PSWC        (A0,D0.W)
+      PSWC        ([A0,D0.W])
+      PSWC        ([A0,D0.W],$0213)
+      PSWC        ([A0,D0.W],$02140315)
+      PSWC        ([A0],D0.W)
+      PSWC        ([A0],D0.W,$0217)
+      PSWC        ([A0],D0.W,$02180319)
+      PSWC        ($0221,A0,D0.W)
+      PSWC        ([$0222,A0,D0.W])
+      PSWC        ([$0223,A0,D0.W],$0324)
+      PSWC        ([$0224,A0,D0.W],$03250426)
+      PSWC        ([$0226,A0],D0.W)
+      PSWC        ([$0227,A0],D0.W,$0328)
+      PSWC        ([$0228,A0],D0.W,$0329042A)
+      PSWC        ($02310332,A0,D0.W)
+      PSWC        ([$02320333,A0,D0.W])
+      PSWC        ([$02340335,A0,D0.W],$04360537)
+      PSWC        ([$02360337,A0],D0.W)
+      PSWC        ([$02380339,A0],D0.W,$043A053B)
+      PSWC        (A0)
+      PSWC        ([A0])
+      PSWC        ([A0],$0253)
+      PSWC        ([A0],$02540355)
+      PSWC        ($0261,A0)
+      PSWC        ([$0262,A0])
+      PSWC        ([$0263,A0],$0364)
+      PSWC        ([$0264,A0],$03650466)
+      PSWC        ($02710372,A0)
+      PSWC        ([$02720373,A0])
+      PSWC        ([$02740375,A0],$04760577)
+      PSWC        (D0.W)
+      PSWC        ([D0.W])
+      PSWC        ([D0.W],$0293)
+      PSWC        ([D0.W],$02940395)
+      PSWC        ($02A1,D0.W)
+      PSWC        ([$02A2,D0.W])
+      PSWC        ([$02A3,D0.W],$03A4)
+      PSWC        ([$02A4,D0.W],$03A504A6)
+      PSWC        ([$02A6],D0.W)
+      PSWC        ([$02A7],D0.W,$03A8)
+      PSWC        ([$02A8],D0.W,$03A904AA)
+      PSWC        ($02B103B2,D0.W)
+      PSWC        ([$02B203B3,D0.W])
+      PSWC        ([$02B403B5,D0.W],$04B605B7)
+      PSWC        ([$02B603B7],D0.W)
+      PSWC        ([$02B803B9],D0.W,$04BA05BB)
+      PSWC        ($02E1)
+      PSWC        ([$02E2])
+      PSWC        ([$02E4],$03E5)
+      PSWC        ([$02E4],$03E504E6)
+      PSWC        ($02F103F2)
+      PSWC        ([$02F203F4])
+      PSWC        ([$02F403F6],$04F705F8)
+      PSWC        (0,A0,D0.W*2)
+      PSIS        (A0,D0.W)
+      PSIS        ([A0,D0.W])
+      PSIS        ([A0,D0.W],$0213)
+      PSIS        ([A0,D0.W],$02140315)
+      PSIS        ([A0],D0.W)
+      PSIS        ([A0],D0.W,$0217)
+      PSIS        ([A0],D0.W,$02180319)
+      PSIS        ($0221,A0,D0.W)
+      PSIS        ([$0222,A0,D0.W])
+      PSIS        ([$0223,A0,D0.W],$0324)
+      PSIS        ([$0224,A0,D0.W],$03250426)
+      PSIS        ([$0226,A0],D0.W)
+      PSIS        ([$0227,A0],D0.W,$0328)
+      PSIS        ([$0228,A0],D0.W,$0329042A)
+      PSIS        ($02310332,A0,D0.W)
+      PSIS        ([$02320333,A0,D0.W])
+      PSIS        ([$02340335,A0,D0.W],$04360537)
+      PSIS        ([$02360337,A0],D0.W)
+      PSIS        ([$02380339,A0],D0.W,$043A053B)
+      PSIS        (A0)
+      PSIS        ([A0])
+      PSIS        ([A0],$0253)
+      PSIS        ([A0],$02540355)
+      PSIS        ($0261,A0)
+      PSIS        ([$0262,A0])
+      PSIS        ([$0263,A0],$0364)
+      PSIS        ([$0264,A0],$03650466)
+      PSIS        ($02710372,A0)
+      PSIS        ([$02720373,A0])
+      PSIS        ([$02740375,A0],$04760577)
+      PSIS        (D0.W)
+      PSIS        ([D0.W])
+      PSIS        ([D0.W],$0293)
+      PSIS        ([D0.W],$02940395)
+      PSIS        ($02A1,D0.W)
+      PSIS        ([$02A2,D0.W])
+      PSIS        ([$02A3,D0.W],$03A4)
+      PSIS        ([$02A4,D0.W],$03A504A6)
+      PSIS        ([$02A6],D0.W)
+      PSIS        ([$02A7],D0.W,$03A8)
+      PSIS        ([$02A8],D0.W,$03A904AA)
+      PSIS        ($02B103B2,D0.W)
+      PSIS        ([$02B203B3,D0.W])
+      PSIS        ([$02B403B5,D0.W],$04B605B7)
+      PSIS        ([$02B603B7],D0.W)
+      PSIS        ([$02B803B9],D0.W,$04BA05BB)
+      PSIS        ($02E1)
+      PSIS        ([$02E2])
+      PSIS        ([$02E4],$03E5)
+      PSIS        ([$02E4],$03E504E6)
+      PSIS        ($02F103F2)
+      PSIS        ([$02F203F4])
+      PSIS        ([$02F403F6],$04F705F8)
+      PSIS        (0,A0,D0.W*2)
+      PSIC        (A0,D0.W)
+      PSIC        ([A0,D0.W])
+      PSIC        ([A0,D0.W],$0213)
+      PSIC        ([A0,D0.W],$02140315)
+      PSIC        ([A0],D0.W)
+      PSIC        ([A0],D0.W,$0217)
+      PSIC        ([A0],D0.W,$02180319)
+      PSIC        ($0221,A0,D0.W)
+      PSIC        ([$0222,A0,D0.W])
+      PSIC        ([$0223,A0,D0.W],$0324)
+      PSIC        ([$0224,A0,D0.W],$03250426)
+      PSIC        ([$0226,A0],D0.W)
+      PSIC        ([$0227,A0],D0.W,$0328)
+      PSIC        ([$0228,A0],D0.W,$0329042A)
+      PSIC        ($02310332,A0,D0.W)
+      PSIC        ([$02320333,A0,D0.W])
+      PSIC        ([$02340335,A0,D0.W],$04360537)
+      PSIC        ([$02360337,A0],D0.W)
+      PSIC        ([$02380339,A0],D0.W,$043A053B)
+      PSIC        (A0)
+      PSIC        ([A0])
+      PSIC        ([A0],$0253)
+      PSIC        ([A0],$02540355)
+      PSIC        ($0261,A0)
+      PSIC        ([$0262,A0])
+      PSIC        ([$0263,A0],$0364)
+      PSIC        ([$0264,A0],$03650466)
+      PSIC        ($02710372,A0)
+      PSIC        ([$02720373,A0])
+      PSIC        ([$02740375,A0],$04760577)
+      PSIC        (D0.W)
+      PSIC        ([D0.W])
+      PSIC        ([D0.W],$0293)
+      PSIC        ([D0.W],$02940395)
+      PSIC        ($02A1,D0.W)
+      PSIC        ([$02A2,D0.W])
+      PSIC        ([$02A3,D0.W],$03A4)
+      PSIC        ([$02A4,D0.W],$03A504A6)
+      PSIC        ([$02A6],D0.W)
+      PSIC        ([$02A7],D0.W,$03A8)
+      PSIC        ([$02A8],D0.W,$03A904AA)
+      PSIC        ($02B103B2,D0.W)
+      PSIC        ([$02B203B3,D0.W])
+      PSIC        ([$02B403B5,D0.W],$04B605B7)
+      PSIC        ([$02B603B7],D0.W)
+      PSIC        ([$02B803B9],D0.W,$04BA05BB)
+      PSIC        ($02E1)
+      PSIC        ([$02E2])
+      PSIC        ([$02E4],$03E5)
+      PSIC        ([$02E4],$03E504E6)
+      PSIC        ($02F103F2)
+      PSIC        ([$02F203F4])
+      PSIC        ([$02F403F6],$04F705F8)
+      PSIC        (0,A0,D0.W*2)
+      PSGS        (A0,D0.W)
+      PSGS        ([A0,D0.W])
+      PSGS        ([A0,D0.W],$0213)
+      PSGS        ([A0,D0.W],$02140315)
+      PSGS        ([A0],D0.W)
+      PSGS        ([A0],D0.W,$0217)
+      PSGS        ([A0],D0.W,$02180319)
+      PSGS        ($0221,A0,D0.W)
+      PSGS        ([$0222,A0,D0.W])
+      PSGS        ([$0223,A0,D0.W],$0324)
+      PSGS        ([$0224,A0,D0.W],$03250426)
+      PSGS        ([$0226,A0],D0.W)
+      PSGS        ([$0227,A0],D0.W,$0328)
+      PSGS        ([$0228,A0],D0.W,$0329042A)
+      PSGS        ($02310332,A0,D0.W)
+      PSGS        ([$02320333,A0,D0.W])
+      PSGS        ([$02340335,A0,D0.W],$04360537)
+      PSGS        ([$02360337,A0],D0.W)
+      PSGS        ([$02380339,A0],D0.W,$043A053B)
+      PSGS        (A0)
+      PSGS        ([A0])
+      PSGS        ([A0],$0253)
+      PSGS        ([A0],$02540355)
+      PSGS        ($0261,A0)
+      PSGS        ([$0262,A0])
+      PSGS        ([$0263,A0],$0364)
+      PSGS        ([$0264,A0],$03650466)
+      PSGS        ($02710372,A0)
+      PSGS        ([$02720373,A0])
+      PSGS        ([$02740375,A0],$04760577)
+      PSGS        (D0.W)
+      PSGS        ([D0.W])
+      PSGS        ([D0.W],$0293)
+      PSGS        ([D0.W],$02940395)
+      PSGS        ($02A1,D0.W)
+      PSGS        ([$02A2,D0.W])
+      PSGS        ([$02A3,D0.W],$03A4)
+      PSGS        ([$02A4,D0.W],$03A504A6)
+      PSGS        ([$02A6],D0.W)
+      PSGS        ([$02A7],D0.W,$03A8)
+      PSGS        ([$02A8],D0.W,$03A904AA)
+      PSGS        ($02B103B2,D0.W)
+      PSGS        ([$02B203B3,D0.W])
+      PSGS        ([$02B403B5,D0.W],$04B605B7)
+      PSGS        ([$02B603B7],D0.W)
+      PSGS        ([$02B803B9],D0.W,$04BA05BB)
+      PSGS        ($02E1)
+      PSGS        ([$02E2])
+      PSGS        ([$02E4],$03E5)
+      PSGS        ([$02E4],$03E504E6)
+      PSGS        ($02F103F2)
+      PSGS        ([$02F203F4])
+      PSGS        ([$02F403F6],$04F705F8)
+      PSGS        (0,A0,D0.W*2)
+      PSGC        (A0,D0.W)
+      PSGC        ([A0,D0.W])
+      PSGC        ([A0,D0.W],$0213)
+      PSGC        ([A0,D0.W],$02140315)
+      PSGC        ([A0],D0.W)
+      PSGC        ([A0],D0.W,$0217)
+      PSGC        ([A0],D0.W,$02180319)
+      PSGC        ($0221,A0,D0.W)
+      PSGC        ([$0222,A0,D0.W])
+      PSGC        ([$0223,A0,D0.W],$0324)
+      PSGC        ([$0224,A0,D0.W],$03250426)
+      PSGC        ([$0226,A0],D0.W)
+      PSGC        ([$0227,A0],D0.W,$0328)
+      PSGC        ([$0228,A0],D0.W,$0329042A)
+      PSGC        ($02310332,A0,D0.W)
+      PSGC        ([$02320333,A0,D0.W])
+      PSGC        ([$02340335,A0,D0.W],$04360537)
+      PSGC        ([$02360337,A0],D0.W)
+      PSGC        ([$02380339,A0],D0.W,$043A053B)
+      PSGC        (A0)
+      PSGC        ([A0])
+      PSGC        ([A0],$0253)
+      PSGC        ([A0],$02540355)
+      PSGC        ($0261,A0)
+      PSGC        ([$0262,A0])
+      PSGC        ([$0263,A0],$0364)
+      PSGC        ([$0264,A0],$03650466)
+      PSGC        ($02710372,A0)
+      PSGC        ([$02720373,A0])
+      PSGC        ([$02740375,A0],$04760577)
+      PSGC        (D0.W)
+      PSGC        ([D0.W])
+      PSGC        ([D0.W],$0293)
+      PSGC        ([D0.W],$02940395)
+      PSGC        ($02A1,D0.W)
+      PSGC        ([$02A2,D0.W])
+      PSGC        ([$02A3,D0.W],$03A4)
+      PSGC        ([$02A4,D0.W],$03A504A6)
+      PSGC        ([$02A6],D0.W)
+      PSGC        ([$02A7],D0.W,$03A8)
+      PSGC        ([$02A8],D0.W,$03A904AA)
+      PSGC        ($02B103B2,D0.W)
+      PSGC        ([$02B203B3,D0.W])
+      PSGC        ([$02B403B5,D0.W],$04B605B7)
+      PSGC        ([$02B603B7],D0.W)
+      PSGC        ([$02B803B9],D0.W,$04BA05BB)
+      PSGC        ($02E1)
+      PSGC        ([$02E2])
+      PSGC        ([$02E4],$03E5)
+      PSGC        ([$02E4],$03E504E6)
+      PSGC        ($02F103F2)
+      PSGC        ([$02F203F4])
+      PSGC        ([$02F403F6],$04F705F8)
+      PSGC        (0,A0,D0.W*2)
+      PSCS        (A0,D0.W)
+      PSCS        ([A0,D0.W])
+      PSCS        ([A0,D0.W],$0213)
+      PSCS        ([A0,D0.W],$02140315)
+      PSCS        ([A0],D0.W)
+      PSCS        ([A0],D0.W,$0217)
+      PSCS        ([A0],D0.W,$02180319)
+      PSCS        ($0221,A0,D0.W)
+      PSCS        ([$0222,A0,D0.W])
+      PSCS        ([$0223,A0,D0.W],$0324)
+      PSCS        ([$0224,A0,D0.W],$03250426)
+      PSCS        ([$0226,A0],D0.W)
+      PSCS        ([$0227,A0],D0.W,$0328)
+      PSCS        ([$0228,A0],D0.W,$0329042A)
+      PSCS        ($02310332,A0,D0.W)
+      PSCS        ([$02320333,A0,D0.W])
+      PSCS        ([$02340335,A0,D0.W],$04360537)
+      PSCS        ([$02360337,A0],D0.W)
+      PSCS        ([$02380339,A0],D0.W,$043A053B)
+      PSCS        (A0)
+      PSCS        ([A0])
+      PSCS        ([A0],$0253)
+      PSCS        ([A0],$02540355)
+      PSCS        ($0261,A0)
+      PSCS        ([$0262,A0])
+      PSCS        ([$0263,A0],$0364)
+      PSCS        ([$0264,A0],$03650466)
+      PSCS        ($02710372,A0)
+      PSCS        ([$02720373,A0])
+      PSCS        ([$02740375,A0],$04760577)
+      PSCS        (D0.W)
+      PSCS        ([D0.W])
+      PSCS        ([D0.W],$0293)
+      PSCS        ([D0.W],$02940395)
+      PSCS        ($02A1,D0.W)
+      PSCS        ([$02A2,D0.W])
+      PSCS        ([$02A3,D0.W],$03A4)
+      PSCS        ([$02A4,D0.W],$03A504A6)
+      PSCS        ([$02A6],D0.W)
+      PSCS        ([$02A7],D0.W,$03A8)
+      PSCS        ([$02A8],D0.W,$03A904AA)
+      PSCS        ($02B103B2,D0.W)
+      PSCS        ([$02B203B3,D0.W])
+      PSCS        ([$02B403B5,D0.W],$04B605B7)
+      PSCS        ([$02B603B7],D0.W)
+      PSCS        ([$02B803B9],D0.W,$04BA05BB)
+      PSCS        ($02E1)
+      PSCS        ([$02E2])
+      PSCS        ([$02E4],$03E5)
+      PSCS        ([$02E4],$03E504E6)
+      PSCS        ($02F103F2)
+      PSCS        ([$02F203F4])
+      PSCS        ([$02F403F6],$04F705F8)
+      PSCS        (0,A0,D0.W*2)
+      PSCC        (A0,D0.W)
+      PSCC        ([A0,D0.W])
+      PSCC        ([A0,D0.W],$0213)
+      PSCC        ([A0,D0.W],$02140315)
+      PSCC        ([A0],D0.W)
+      PSCC        ([A0],D0.W,$0217)
+      PSCC        ([A0],D0.W,$02180319)
+      PSCC        ($0221,A0,D0.W)
+      PSCC        ([$0222,A0,D0.W])
+      PSCC        ([$0223,A0,D0.W],$0324)
+      PSCC        ([$0224,A0,D0.W],$03250426)
+      PSCC        ([$0226,A0],D0.W)
+      PSCC        ([$0227,A0],D0.W,$0328)
+      PSCC        ([$0228,A0],D0.W,$0329042A)
+      PSCC        ($02310332,A0,D0.W)
+      PSCC        ([$02320333,A0,D0.W])
+      PSCC        ([$02340335,A0,D0.W],$04360537)
+      PSCC        ([$02360337,A0],D0.W)
+      PSCC        ([$02380339,A0],D0.W,$043A053B)
+      PSCC        (A0)
+      PSCC        ([A0])
+      PSCC        ([A0],$0253)
+      PSCC        ([A0],$02540355)
+      PSCC        ($0261,A0)
+      PSCC        ([$0262,A0])
+      PSCC        ([$0263,A0],$0364)
+      PSCC        ([$0264,A0],$03650466)
+      PSCC        ($02710372,A0)
+      PSCC        ([$02720373,A0])
+      PSCC        ([$02740375,A0],$04760577)
+      PSCC        (D0.W)
+      PSCC        ([D0.W])
+      PSCC        ([D0.W],$0293)
+      PSCC        ([D0.W],$02940395)
+      PSCC        ($02A1,D0.W)
+      PSCC        ([$02A2,D0.W])
+      PSCC        ([$02A3,D0.W],$03A4)
+      PSCC        ([$02A4,D0.W],$03A504A6)
+      PSCC        ([$02A6],D0.W)
+      PSCC        ([$02A7],D0.W,$03A8)
+      PSCC        ([$02A8],D0.W,$03A904AA)
+      PSCC        ($02B103B2,D0.W)
+      PSCC        ([$02B203B3,D0.W])
+      PSCC        ([$02B403B5,D0.W],$04B605B7)
+      PSCC        ([$02B603B7],D0.W)
+      PSCC        ([$02B803B9],D0.W,$04BA05BB)
+      PSCC        ($02E1)
+      PSCC        ([$02E2])
+      PSCC        ([$02E4],$03E5)
+      PSCC        ([$02E4],$03E504E6)
+      PSCC        ($02F103F2)
+      PSCC        ([$02F203F4])
+      PSCC        ([$02F403F6],$04F705F8)
+      PSCC        (0,A0,D0.W*2)
+      PSBS        ($00000101).W
+      PSBC        ($00000102).W
+      PSLS        ($00000103).W
+      PSLC        ($00000104).W
+      PSSS        ($00000105).W
+      PSSC        ($00000106).W
+      PSAS        ($00000107).W
+      PSAC        ($00000108).W
+      PSWS        ($00000109).W
+      PSWC        ($0000010A).W
+      PSIS        ($0000010B).W
+      PSIC        ($0000010C).W
+      PSGS        ($0000010D).W
+      PSGC        ($0000010E).W
+      PSCS        ($0000010F).W
+      PSCC        ($00000110).W
+      PSBS        ($01010202).L
+      PSBC        ($01020203).L
+      PSLS        ($01030204).L
+      PSLC        ($01040205).L
+      PSSS        ($01050206).L
+      PSSC        ($01060207).L
+      PSAS        ($01070208).L
+      PSAC        ($01080209).L
+      PSWS        ($0109020A).L
+      PSWC        ($010A020B).L
+      PSIS        ($010B020C).L
+      PSIC        ($010C020D).L
+      PSGS        ($010D020E).L
+      PSGC        ($010E020F).L
+      PSCS        ($010F0210).L
+      PSCC        ($01100211).L
+      PTRAPBS.W   #$0101
+      PTRAPBC.W   #$0102
+      PTRAPLS.W   #$0103
+      PTRAPLC.W   #$0104
+      PTRAPSS.W   #$0105
+      PTRAPSC.W   #$0106
+      PTRAPAS.W   #$0107
+      PTRAPAC.W   #$0108
+      PTRAPWS.W   #$0109
+      PTRAPWC.W   #$010A
+      PTRAPIS.W   #$010B
+      PTRAPIC.W   #$010C
+      PTRAPGS.W   #$010D
+      PTRAPGC.W   #$010E
+      PTRAPCS.W   #$010F
+      PTRAPCC.W   #$0110
+      PTRAPBS.L   #$01010202
+      PTRAPBC.L   #$01020203
+      PTRAPLS.L   #$01030204
+      PTRAPLC.L   #$01040205
+      PTRAPSS.L   #$01050206
+      PTRAPSC.L   #$01060207
+      PTRAPAS.L   #$01070208
+      PTRAPAC.L   #$01080209
+      PTRAPWS.L   #$0109020A
+      PTRAPWC.L   #$010A020B
+      PTRAPIS.L   #$010B020C
+      PTRAPIC.L   #$010C020D
+      PTRAPGS.L   #$010D020E
+      PTRAPGC.L   #$010E020F
+      PTRAPCS.L   #$010F0210
+      PTRAPCC.L   #$01100211
+      PTRAPBS
+      PTRAPBC
+      PTRAPLS
+      PTRAPLC
+      PTRAPSS
+      PTRAPSC
+      PTRAPAS
+      PTRAPAC
+      PTRAPWS
+      PTRAPWC
+      PTRAPIS
+      PTRAPIC
+      PTRAPGS
+      PTRAPGC
+      PTRAPCS
+      PTRAPCC
+      PBBS        *-$0E7C
+      PBBC        *-$0E7C
+      PBLS        *-$0E7A
+      PBLC        *-$0E7A
+      PBSS        *-$0E78
+      PBSC        *-$0E78
+      PBAS        *-$0E76
+      PBAC        *-$0E76
+      PBWS        *-$0E74
+      PBWC        *-$0E74
+      PBIS        *-$0E72
+      PBIC        *-$0E72
+      PBGS        *-$0E70
+      PBGC        *-$0E70
+      PBCS        *-$0E6E
+      PBCC        *-$0E6E
+      PBBS        *+$00DE01E2
+      PBBC        *+$00DF01E2
+      PBLS        *+$00E001E4
+      PBLC        *+$00E101E4
+      PBSS        *+$00E201E6
+      PBSC        *+$00E301E6
+      PBAS        *+$00E401E8
+      PBAC        *+$00E501E8
+      PBWS        *+$00E601EA
+      PBWC        *+$00E701EA
+      PBIS        *+$00E801EC
+      PBIC        *+$00E901EC
+      PBGS        *+$00EA01EE
+      PBGC        *+$00EB01EE
+      PBCS        *+$00EC01F0
+      PBCC        *+$00ED01F0
+      PSAVE       (A0)
+      PSAVE       -(A0)
+      PSAVE       (-$0DD7,A0)
+      PSAVE       ($31,A0,A7.W*2)
+      PSAVE       (A0,A7.W*2)
+      PSAVE       ([A0,A7.W*2])
+      PSAVE       ([A0,A7.W*2],-$0BED)
+      PSAVE       ([A0,A7.W*2],-$0BEB0AEB)
+      PSAVE       ([A0],A7.W*2)
+      PSAVE       ([A0],A7.W*2,-$0BE9)
+      PSAVE       ([A0],A7.W*2,-$0BE70AE7)
+      PSAVE       (-$0BDF,A0,A7.W*2)
+      PSAVE       ([-$0BDE,A0,A7.W*2])
+      PSAVE       ([-$0BDD,A0,A7.W*2],-$0ADC)
+      PSAVE       ([-$0BDC,A0,A7.W*2],-$0ADA09DA)
+      PSAVE       ([-$0BDA,A0],A7.W*2)
+      PSAVE       ([-$0BD9,A0],A7.W*2,-$0AD8)
+      PSAVE       ([-$0BD8,A0],A7.W*2,-$0AD609D6)
+      PSAVE       (-$0BCE0ACE,A0,A7.W*2)
+      PSAVE       ([-$0BCD0ACD,A0,A7.W*2])
+      PSAVE       ([-$0BCB0ACB,A0,A7.W*2],-$09C908C9)
+      PSAVE       ([-$0BC90AC9,A0],A7.W*2)
+      PSAVE       ([-$0BC70AC7,A0],A7.W*2,-$09C508C5)
+      PSAVE       (A0)
+      PSAVE       ([A0])
+      PSAVE       ([A0],-$0BAD)
+      PSAVE       ([A0],-$0BAB0AAB)
+      PSAVE       (-$0B9F,A0)
+      PSAVE       ([-$0B9E,A0])
+      PSAVE       ([-$0B9D,A0],-$0A9C)
+      PSAVE       ([-$0B9C,A0],-$0A9A099A)
+      PSAVE       (-$0B8E0A8E,A0)
+      PSAVE       ([-$0B8D0A8D,A0])
+      PSAVE       ([-$0B8B0A8B,A0],-$09890889)
+      PSAVE       (A7.W*2)
+      PSAVE       ([A7.W*2])
+      PSAVE       ([A7.W*2],-$0B6D)
+      PSAVE       ([A7.W*2],-$0B6B0A6B)
+      PSAVE       (-$0B5F,A7.W*2)
+      PSAVE       ([-$0B5E,A7.W*2])
+      PSAVE       ([-$0B5D,A7.W*2],-$0A5C)
+      PSAVE       ([-$0B5C,A7.W*2],-$0A5A095A)
+      PSAVE       ([-$0B5A],A7.W*2)
+      PSAVE       ([-$0B59],A7.W*2,-$0A58)
+      PSAVE       ([-$0B58],A7.W*2,-$0A560956)
+      PSAVE       (-$0B4E0A4E,A7.W*2)
+      PSAVE       ([-$0B4D0A4D,A7.W*2])
+      PSAVE       ([-$0B4B0A4B,A7.W*2],-$09490849)
+      PSAVE       ([-$0B490A49],A7.W*2)
+      PSAVE       ([-$0B470A47],A7.W*2,-$09450845)
+      PSAVE       (-$0B1E)
+      PSAVE       ([-$0B1E])
+      PSAVE       ([-$0B1C],-$0A1B)
+      PSAVE       ([-$0B1C],-$0A1A091A)
+      PSAVE       (-$0B0E0A0E)
+      PSAVE       ([-$0B0D0A0C])
+      PSAVE       ([-$0B0B0A0A],-$09080808)
+      PSAVE       ($FFFFF23A).W
+      PSAVE       ($F23AF33C).L
+      PRESTORE    (A0)
+      PRESTORE    (A0)+
+      PRESTORE    (-$0D97,A0)
+      PRESTORE    ($71,A0,A7.W*2)
+      PRESTORE    (A0,A7.W*2)
+      PRESTORE    ([A0,A7.W*2])
+      PRESTORE    ([A0,A7.W*2],-$0BED)
+      PRESTORE    ([A0,A7.W*2],-$0BEB0AEB)
+      PRESTORE    ([A0],A7.W*2)
+      PRESTORE    ([A0],A7.W*2,-$0BE9)
+      PRESTORE    ([A0],A7.W*2,-$0BE70AE7)
+      PRESTORE    (-$0BDF,A0,A7.W*2)
+      PRESTORE    ([-$0BDE,A0,A7.W*2])
+      PRESTORE    ([-$0BDD,A0,A7.W*2],-$0ADC)
+      PRESTORE    ([-$0BDC,A0,A7.W*2],-$0ADA09DA)
+      PRESTORE    ([-$0BDA,A0],A7.W*2)
+      PRESTORE    ([-$0BD9,A0],A7.W*2,-$0AD8)
+      PRESTORE    ([-$0BD8,A0],A7.W*2,-$0AD609D6)
+      PRESTORE    (-$0BCE0ACE,A0,A7.W*2)
+      PRESTORE    ([-$0BCD0ACD,A0,A7.W*2])
+      PRESTORE    ([-$0BCB0ACB,A0,A7.W*2],-$09C908C9)
+      PRESTORE    ([-$0BC90AC9,A0],A7.W*2)
+      PRESTORE    ([-$0BC70AC7,A0],A7.W*2,-$09C508C5)
+      PRESTORE    (A0)
+      PRESTORE    ([A0])
+      PRESTORE    ([A0],-$0BAD)
+      PRESTORE    ([A0],-$0BAB0AAB)
+      PRESTORE    (-$0B9F,A0)
+      PRESTORE    ([-$0B9E,A0])
+      PRESTORE    ([-$0B9D,A0],-$0A9C)
+      PRESTORE    ([-$0B9C,A0],-$0A9A099A)
+      PRESTORE    (-$0B8E0A8E,A0)
+      PRESTORE    ([-$0B8D0A8D,A0])
+      PRESTORE    ([-$0B8B0A8B,A0],-$09890889)
+      PRESTORE    (A7.W*2)
+      PRESTORE    ([A7.W*2])
+      PRESTORE    ([A7.W*2],-$0B6D)
+      PRESTORE    ([A7.W*2],-$0B6B0A6B)
+      PRESTORE    (-$0B5F,A7.W*2)
+      PRESTORE    ([-$0B5E,A7.W*2])
+      PRESTORE    ([-$0B5D,A7.W*2],-$0A5C)
+      PRESTORE    ([-$0B5C,A7.W*2],-$0A5A095A)
+      PRESTORE    ([-$0B5A],A7.W*2)
+      PRESTORE    ([-$0B59],A7.W*2,-$0A58)
+      PRESTORE    ([-$0B58],A7.W*2,-$0A560956)
+      PRESTORE    (-$0B4E0A4E,A7.W*2)
+      PRESTORE    ([-$0B4D0A4D,A7.W*2])
+      PRESTORE    ([-$0B4B0A4B,A7.W*2],-$09490849)
+      PRESTORE    ([-$0B490A49],A7.W*2)
+      PRESTORE    ([-$0B470A47],A7.W*2,-$09450845)
+      PRESTORE    (-$0B1E)
+      PRESTORE    ([-$0B1E])
+      PRESTORE    ([-$0B1C],-$0A1B)
+      PRESTORE    ([-$0B1C],-$0A1A091A)
+      PRESTORE    (-$0B0E0A0E)
+      PRESTORE    ([-$0B0D0A0C])
+      PRESTORE    ([-$0B0B0A0A],-$09080808)
+      PRESTORE    ($FFFFF27A).W
+      PRESTORE    ($F27AF37C).L
+      PRESTORE    (*-$0D82,PC)
+      PRESTORE    (*+126,PC,A7.W*2)
+      PRESTORE    ([*+2,PC,A7.W*2])
+      PRESTORE    ([*+2,PC,A7.W*2],-$0BED)
+      PRESTORE    ([*+2,PC,A7.W*2],-$0BEB0AEB)
+      PRESTORE    ([*+2,PC],A7.W*2)
+      PRESTORE    ([*+2,PC],A7.W*2,-$0BE9)
+      PRESTORE    ([*+2,PC],A7.W*2,-$0BE70AE7)
+      PRESTORE    (*-$0BDD,PC,A7.W*2)
+      PRESTORE    ([*-$0BDC,PC,A7.W*2])
+      PRESTORE    ([*-$0BDA,PC,A7.W*2],-$0ADA09DA)
+      PRESTORE    ([*-$0BD8,PC],A7.W*2)
+      PRESTORE    ([*-$0BD6,PC],A7.W*2,-$0AD609D6)
+      PRESTORE    (*-$0BCE0ACC,PC,A7.W*2)
+      PRESTORE    ([*-$0BCD0ACB,PC,A7.W*2])
+      PRESTORE    ([*-$0BCB0AC9,PC,A7.W*2],-$09C908C9)
+      PRESTORE    ([*-$0BC90AC7,PC],A7.W*2)
+      PRESTORE    ([*-$0BC70AC5,PC],A7.W*2,-$09C508C5)
+      PRESTORE    ([*+2,PC])
+      PRESTORE    ([*+2,PC],-$0BAD)
+      PRESTORE    ([*+2,PC],-$0BAB0AAB)
+      PRESTORE    (*-$0B9C,PC)
+      PRESTORE    ([*-$0B9C,PC])
+      PRESTORE    ([*-$0B9A,PC],-$0A9A099A)
+      PRESTORE    (*-$0B8E0A8C,PC)
+      PRESTORE    ([*-$0B8D0A8A,PC])
+      PRESTORE    ([*-$0B8B0A88,PC],-$09880888)
+      PRESTORE    (*+2,A7.W*2)
+      PRESTORE    ([*+2,A7.W*2])
+      PRESTORE    ([*+2,A7.W*2],-$0B6D)
+      PRESTORE    ([*+2,A7.W*2],-$0B6B0A6B)
+      PRESTORE    (*-$0B5D,A7.W*2)
+      PRESTORE    ([*-$0B5C,A7.W*2])
+      PRESTORE    ([*-$0B5A,A7.W*2],-$0A5A095A)
+      PRESTORE    ([*-$0B58],A7.W*2)
+      PRESTORE    ([*-$0B57],A7.W*2,-$0A58)
+      PRESTORE    ([*-$0B56],A7.W*2,-$0A560956)
+      PRESTORE    (*-$0B4E0A4C,A7.W*2)
+      PRESTORE    ([*-$0B4D0A4B,A7.W*2])
+      PRESTORE    ([*-$0B4B0A49,A7.W*2],-$09490849)
+      PRESTORE    ([*-$0B490A47],A7.W*2)
+      PRESTORE    ([*-$0B470A45],A7.W*2,-$09450845)
+      PRESTORE    (*-$0B1C)
+      PRESTORE    ([*-$0B1C])
+      PRESTORE    ([*-$0B1A],-$0A1B)
+      PRESTORE    ([*-$0B1A],-$0A1A091A)
+      PRESTORE    (*-$0B0E0A0C)
+      PRESTORE    ([*-$0B0D0A0A])
+      PRESTORE    ([*-$0B0B0A08],-$09080808)
       FMOVE.X     FP0, FP0
       FINT.X      FP0
       FSINH.X     FP0

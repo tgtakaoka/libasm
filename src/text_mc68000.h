@@ -25,17 +25,20 @@ namespace mc68000 {
 
 // clang-format off
 extern const char TEXT_MC68000_LIST[] PROGMEM;
-extern const char TEXT_CPU_MC68000[] PROGMEM;
-extern const char TEXT_CPU_MC68010[] PROGMEM;
-extern const char TEXT_CPU_MC68020[] PROGMEM;
-extern const char TEXT_FPU_MC68881[] PROGMEM;
-extern const char TEXT_CPU_68000[]   PROGMEM;
-extern const char TEXT_CPU_68010[]   PROGMEM;
-extern const char TEXT_CPU_68020[]   PROGMEM;
-extern const char TEXT_FPU_68881[]   PROGMEM;
+extern const char TEXT_CPU_MC68000[]  PROGMEM;
+extern const char TEXT_CPU_MC68010[]  PROGMEM;
+extern const char TEXT_CPU_MC68020[]  PROGMEM;
+extern const char TEXT_FPU_MC68881[]  PROGMEM;
+extern const char TEXT_PMMU_MC68851[] PROGMEM;
+extern const char TEXT_CPU_68000[]    PROGMEM;
+extern const char TEXT_CPU_68010[]    PROGMEM;
+extern const char TEXT_CPU_68020[]    PROGMEM;
+extern const char TEXT_FPU_68881[]    PROGMEM;
+extern const char TEXT_PMMU_68851[]   PROGMEM;
 using common::TEXT_none;
 
 using common::TEXT_FPU;
+using common::TEXT_PMMU;
 
 // MC68000 instructions
 extern const char TEXT_ABCD[]  PROGMEM;
@@ -422,6 +425,98 @@ extern const char TEXT_REG_FP7[]   PROGMEM;
 extern const char TEXT_REG_FPCR[]  PROGMEM;
 extern const char TEXT_REG_FPIAR[] PROGMEM;
 extern const char TEXT_REG_FPSR[]  PROGMEM;
+
+// MC68851    
+extern const char TEXT_PBAC[] PROGMEM;
+extern const char TEXT_PBAS[] PROGMEM;
+extern const char TEXT_PBBC[] PROGMEM;
+extern const char TEXT_PBBS[] PROGMEM;
+extern const char TEXT_PBCC[] PROGMEM;
+extern const char TEXT_PBCS[] PROGMEM;
+extern const char TEXT_PBGC[] PROGMEM;
+extern const char TEXT_PBGS[] PROGMEM;
+extern const char TEXT_PBIC[] PROGMEM;
+extern const char TEXT_PBIS[] PROGMEM;
+extern const char TEXT_PBLC[] PROGMEM;
+extern const char TEXT_PBLS[] PROGMEM;
+extern const char TEXT_PBSC[] PROGMEM;
+extern const char TEXT_PBSS[] PROGMEM;
+extern const char TEXT_PBWC[] PROGMEM;
+extern const char TEXT_PBWS[] PROGMEM;
+extern const char TEXT_PDBAC[] PROGMEM;
+extern const char TEXT_PDBAS[] PROGMEM;
+extern const char TEXT_PDBBC[] PROGMEM;
+extern const char TEXT_PDBBS[] PROGMEM;
+extern const char TEXT_PDBCC[] PROGMEM;
+extern const char TEXT_PDBCS[] PROGMEM;
+extern const char TEXT_PDBGC[] PROGMEM;
+extern const char TEXT_PDBGS[] PROGMEM;
+extern const char TEXT_PDBIC[] PROGMEM;
+extern const char TEXT_PDBIS[] PROGMEM;
+extern const char TEXT_PDBLC[] PROGMEM;
+extern const char TEXT_PDBLS[] PROGMEM;
+extern const char TEXT_PDBSC[] PROGMEM;
+extern const char TEXT_PDBSS[] PROGMEM;
+extern const char TEXT_PDBWC[] PROGMEM;
+extern const char TEXT_PDBWS[] PROGMEM;
+extern const char TEXT_PFLUSHA[] PROGMEM;
+extern const char TEXT_PFLUSH[]  PROGMEM;
+extern const char TEXT_PFLUSHR[] PROGMEM;
+extern const char TEXT_PFLUSHS[] PROGMEM;
+extern const char TEXT_PLOADR[] PROGMEM;
+extern const char TEXT_PLOADW[] PROGMEM;
+extern const char TEXT_PMOVE[]  PROGMEM;
+extern const char TEXT_PRESTORE[] PROGMEM;
+extern const char TEXT_PSAC[]  PROGMEM;
+extern const char TEXT_PSAS[]  PROGMEM;
+extern const char TEXT_PSAVE[] PROGMEM;
+extern const char TEXT_PSBC[]  PROGMEM;
+extern const char TEXT_PSBS[]  PROGMEM;
+extern const char TEXT_PSCC[]  PROGMEM;
+extern const char TEXT_PSCS[]  PROGMEM;
+extern const char TEXT_PSGC[]  PROGMEM;
+extern const char TEXT_PSGS[]  PROGMEM;
+extern const char TEXT_PSIC[]  PROGMEM;
+extern const char TEXT_PSIS[]  PROGMEM;
+extern const char TEXT_PSLC[]  PROGMEM;
+extern const char TEXT_PSLS[]  PROGMEM;
+extern const char TEXT_PSSC[]  PROGMEM;
+extern const char TEXT_PSSS[]  PROGMEM;
+extern const char TEXT_PSWC[]  PROGMEM;
+extern const char TEXT_PSWS[]  PROGMEM;
+extern const char TEXT_PTESTR[] PROGMEM;
+extern const char TEXT_PTESTW[] PROGMEM;
+extern const char TEXT_PTRAPAC[] PROGMEM;
+extern const char TEXT_PTRAPAS[] PROGMEM;
+extern const char TEXT_PTRAPBC[] PROGMEM;
+extern const char TEXT_PTRAPBS[] PROGMEM;
+extern const char TEXT_PTRAPCC[] PROGMEM;
+extern const char TEXT_PTRAPCS[] PROGMEM;
+extern const char TEXT_PTRAPGC[] PROGMEM;
+extern const char TEXT_PTRAPGS[] PROGMEM;
+extern const char TEXT_PTRAPIC[] PROGMEM;
+extern const char TEXT_PTRAPIS[] PROGMEM;
+extern const char TEXT_PTRAPLC[] PROGMEM;
+extern const char TEXT_PTRAPLS[] PROGMEM;
+extern const char TEXT_PTRAPSC[] PROGMEM;
+extern const char TEXT_PTRAPSS[] PROGMEM;
+extern const char TEXT_PTRAPWC[] PROGMEM;
+extern const char TEXT_PTRAPWS[] PROGMEM;
+extern const char TEXT_PVALID[]  PROGMEM;
+
+extern const char TEXT_REG_AC[]   PROGMEM;
+extern const char TEXT_REG_BAC[]  PROGMEM;
+extern const char TEXT_REG_BAD[]  PROGMEM;
+extern const char TEXT_REG_CAL[]  PROGMEM;
+extern const char TEXT_REG_CRP[]  PROGMEM;
+extern const char TEXT_REG_DRP[]  PROGMEM;
+extern const char TEXT_REG_PCSR[] PROGMEM;
+using common::TEXT_REG_PSR;
+extern const char TEXT_REG_SCC[]  PROGMEM;
+extern const char TEXT_REG_SRP[]  PROGMEM;
+extern const char TEXT_REG_TC[]   PROGMEM;
+extern const char TEXT_REG_VAL[]  PROGMEM;
+
 // clang-format on
 
 }  // namespace mc68000

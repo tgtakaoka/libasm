@@ -31,6 +31,7 @@ struct AsmMc68000 final : Assembler, Config {
 
 private:
     const TextOption<Config> _opt_fpu;
+    const TextOption<Config> _opt_pmmu;
 
     Error parseDisplacement(StrScanner &scan, Displacement &disp, ErrorAt &error, char delim) const;
     Error parseIndexScale(StrScanner &scan, Indexing &index, ErrorAt &error, char delim) const;
@@ -46,11 +47,14 @@ private:
     void encodeEffectiveAddress(AsmInsn &insn, const Operand &op, OprPos pos) const;
     AddrMode branchType(AddrMode mode, InsnSize size, Config::ptrdiff_t delta) const;
     void encodeRelativeAddr(AsmInsn &insn, AddrMode mode, const Operand &op) const;
+    bool encodeMiscImmediate(
+            AsmInsn &insn, const Operand &op, AddrMode mode, OprPos pos, OprSize size) const;
     void encodeImmediate(AsmInsn &insn, const Operand &op, OprSize size) const;
     void encodeAbsoluteMode(AsmInsn &insn, OprSize size, OprPos pos, const Addressing &addr,
             const ErrorAt &at) const;
     void encodeFloatControlList(AsmInsn &insn, const Operand &o) const;
     void encodeFloatRegisterList(AsmInsn &insn, const Operand &o) const;
+    void encodePmove(AsmInsn &insn, const Operand &op, AddrMode mode) const;
     void encodeRegisterList(AsmInsn &insn, const Operand &op, bool reverse = false) const;
     void encodeBitField(AsmInsn &insn, const Operand &op) const;
     void encodeDataRegPair(AsmInsn &insn, const Operand &op, OprPos pos) const;
