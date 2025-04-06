@@ -77,7 +77,7 @@ gas-%_mc68010.s28: %_mc68010.gas
 
 # MC68020 target
 gas-%_mc68020.s28: %_mc68020.gas
-	m68k-elf-as -m68020 -m68881 --warn --register-prefix-optional \
+	m68k-elf-as -m68020 -m68881 -m68851 --warn --register-prefix-optional \
 		--base-size-default-16 -o $(@:.s28=.p) -al=$(@:.s28=.lst) $^
 	m68k-elf-ld --entry=0 -o $(@:.s28=.o) $(@:.s28=.p)
 	m68k-elf-objcopy -I elf32-m68k -O srec --srec-len=16 \
