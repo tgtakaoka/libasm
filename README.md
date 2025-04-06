@@ -99,7 +99,7 @@ It can generate Intel HEX or Motorola S-Record output.
       --optimize-index  : optimize zero index (bool: Z8)
       --optimize-segment: optimize segment override (bool: 8086)
       --pc-bits         : program counter width in bit, default 13 (int: 6805)
-      --pmmu            : memory management unit (text: 32032)
+      --pmmu            : memory management unit (text: 68000, 32032)
       --reg-alias       : emit register alias regarding setrp value (bool: Z8)
       --short-direct    : optimize direct addressing (bool: Z8001)
       --use-register    : enable register name Rn (bool: 1802)

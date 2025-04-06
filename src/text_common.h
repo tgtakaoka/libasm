@@ -29,6 +29,7 @@ extern const char TEXT_none[]  PROGMEM;
 extern const char TEXT_NAN[]   PROGMEM;
 extern const char TEXT_INF[]   PROGMEM;
 extern const char TEXT_INFINITY[] PROGMEM;
+extern const char TEXT_PMMU[]  PROGMEM;
 
 extern const char TEXT_ABSD[]  PROGMEM;
 extern const char TEXT_ABSF[]  PROGMEM;
