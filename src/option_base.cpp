@@ -135,6 +135,8 @@ namespace option {
 
 constexpr char OPT_TEXT_FPU[] PROGMEM = "fpu";
 constexpr char OPT_DESC_FPU[] PROGMEM = "floating point co-processor";
+constexpr char OPT_TEXT_PMMU[] PROGMEM = "pmmu";
+constexpr char OPT_DESC_PMMU[] PROGMEM = "memory management unit";
 constexpr char OPT_BOOL_LONGA[] PROGMEM = "longa";
 constexpr char OPT_DESC_LONGA[] PROGMEM = "enable 16-bit accumulator";
 constexpr char OPT_BOOL_LONGI[] PROGMEM = "longi";
