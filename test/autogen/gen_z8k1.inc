@@ -122,40 +122,22 @@
       ldb    @rr2, rl0
       ld     @rr2, r0
       ldrb   rh0, .+0x3105
-      ldrb   rh0, .-0x0158
-      ldrb   rh0, .
       ldrb   rl0, .+0x310d
-      ldrb   rl0, .-0x0164
-      ldrb   rl0, .
       ldb    rh0, rr2(#0x3121)
       ldb    rl0, rr2(#0x3129)
       ldr    r0, .+0x3206
-      ldr    r0, .-0x0178
-      ldr    r0, .
       ld     r0, rr2(#0x3221)
       ldrb   .+0x3305, rh0
-      ldrb   .-0x0188, rh0
-      ldrb   ., rh0
       ldrb   .+0x330d, rl0
-      ldrb   .-0x0194, rl0
-      ldrb   ., rl0
       ldb    rr2(#0x3321), rh0
       ldb    rr2(#0x3329), rl0
       ldr    .+0x3406, r0
-      ldr    .-0x01a8, r0
-      ldr    ., r0
       ld     rr2(#0x3421), r0
       ldar   rr0, .+0x3505
-      ldar   rr0, .-0x01b8
-      ldar   rr0, .
       lda    rr0, rr2(#0x3521)
       ldrl   rr0, .+0x3606
-      ldrl   rr0, .-0x01c8
-      ldrl   rr0, .
       ldl    rr0, rr2(#0x3621)
       ldrl   .+0x3806, rr0
-      ldrl   .-0x01d8, rr0
-      ldrl   ., rr0
       ldl    rr2(#0x3821), rr0
       ldps   @rr2
       inb    rh0, #0x3b05
@@ -1182,62 +1164,22 @@
       ldb    rh0, #0
       ldb    rl0, #0
       calr   .+2
-      calr   .
-      calr   .-2
       jr     f, .+2
-      jr     f, .-254
-      jr     f, .
       jr     lt, .+2
-      jr     lt, .-254
-      jr     lt, .
       jr     le, .+2
-      jr     le, .-254
-      jr     le, .
       jr     ule, .+2
-      jr     ule, .-254
-      jr     ule, .
       jr     ov, .+2
-      jr     ov, .-254
-      jr     ov, .
       jr     mi, .+2
-      jr     mi, .-254
-      jr     mi, .
       jr     z, .+2
-      jr     z, .-254
-      jr     z, .
       jr     c, .+2
-      jr     c, .-254
-      jr     c, .
       jr     .+2
-      jr     .-254
-      jr     .
       jr     ge, .+2
-      jr     ge, .-254
-      jr     ge, .
       jr     gt, .+2
-      jr     gt, .-254
-      jr     gt, .
       jr     ugt, .+2
-      jr     ugt, .-254
-      jr     ugt, .
       jr     nov, .+2
-      jr     nov, .-254
-      jr     nov, .
       jr     pl, .+2
-      jr     pl, .-254
-      jr     pl, .
       jr     nz, .+2
-      jr     nz, .-254
-      jr     nz, .
       jr     nc, .+2
-      jr     nc, .-254
-      jr     nc, .
       dbjnz  rh0, .+2
-      dbjnz  rh0, .
-      dbjnz  rh0, .-2
       djnz   r0, .+2
-      djnz   r0, .
-      djnz   r0, .-2
       dbjnz  rl0, .+2
-      dbjnz  rl0, .
-      dbjnz  rl0, .-2

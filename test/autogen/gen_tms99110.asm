@@ -168,6 +168,7 @@
       BLWP  *R0+
       B     R0
       B     *R0
+      RT
       B     @0562H
       B     @0562H(R1)
       B     *R0+
@@ -292,45 +293,20 @@
       STR   @0EE2H
       STR   @0EE2H(R1)
       STR   *R0+
-      JMP   $+2
-      JMP   $-254
-      JMP   $
+      NOP
+      JMP   $+4
       JLT   $+2
-      JLT   $-254
-      JLT   $
       JLE   $+2
-      JLE   $-254
-      JLE   $
       JEQ   $+2
-      JEQ   $-254
-      JEQ   $
       JHE   $+2
-      JHE   $-254
-      JHE   $
       JGT   $+2
-      JGT   $-254
-      JGT   $
       JNE   $+2
-      JNE   $-254
-      JNE   $
       JNC   $+2
-      JNC   $-254
-      JNC   $
       JOC   $+2
-      JOC   $-254
-      JOC   $
       JNO   $+2
-      JNO   $-254
-      JNO   $
       JL    $+2
-      JL    $-254
-      JL    $
       JH    $+2
-      JH    $-254
-      JH    $
       JOP   $+2
-      JOP   $-254
-      JOP   $
       SBO   0
       SBO   -128
       SBZ   0

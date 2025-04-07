@@ -24,23 +24,11 @@
       XOR   A, A
       XOR   B, A
       BTJO  R23, A, $+27
-      BTJO  R23, A, $-125
-      BTJO  R23, A, $
       BTJO  A, A, $+4
-      BTJO  A, A, $-125
-      BTJO  A, A, $
       BTJO  B, A, $+5
-      BTJO  B, A, $-125
-      BTJO  B, A, $
       BTJZ  R24, A, $+28
-      BTJZ  R24, A, $-125
-      BTJZ  R24, A, $
       BTJZ  A, A, $+4
-      BTJZ  A, A, $-125
-      BTJZ  A, A, $
       BTJZ  B, A, $+5
-      BTJZ  B, A, $-125
-      BTJZ  B, A, $
       ADD   R25, A
       ADD   A, A
       ADD   B, A
@@ -70,11 +58,7 @@
       OR    %25H, A
       XOR   %26H, A
       BTJO  %27H, A, $+43
-      BTJO  %27H, A, $-125
-      BTJO  %27H, A, $
       BTJZ  %28H, A, $+44
-      BTJZ  %28H, A, $-125
-      BTJZ  %28H, A, $
       ADD   %29H, A
       ADC   %2AH, A
       SUB   %2BH, A
@@ -96,23 +80,11 @@
       XOR   A, B
       XOR   B, B
       BTJO  R55, B, $+59
-      BTJO  R55, B, $-125
-      BTJO  R55, B, $
       BTJO  A, B, $+4
-      BTJO  A, B, $-125
-      BTJO  A, B, $
       BTJO  B, B, $+5
-      BTJO  B, B, $-125
-      BTJO  B, B, $
       BTJZ  R56, B, $+60
-      BTJZ  R56, B, $-125
-      BTJZ  R56, B, $
       BTJZ  A, B, $+4
-      BTJZ  A, B, $-125
-      BTJZ  A, B, $
       BTJZ  B, B, $+5
-      BTJZ  B, B, $-125
-      BTJZ  B, B, $
       ADD   R57, B
       ADD   A, B
       ADD   B, B
@@ -174,59 +146,23 @@
       XOR   B, A
       XOR   B, B
       BTJO  R71, R72, $+77
-      BTJO  R71, R72, $-124
-      BTJO  R71, R72, $
       BTJO  R71, A, $+5
-      BTJO  R71, A, $-124
-      BTJO  R71, A, $
       BTJO  R71, B, $+6
-      BTJO  R71, B, $-124
-      BTJO  R71, B, $
       BTJO  A, B, $+6
-      BTJO  A, B, $-124
-      BTJO  A, B, $
       BTJO  A, R2, $+7
-      BTJO  A, R2, $-124
-      BTJO  A, R2, $
       BTJO  A, A, $+5
-      BTJO  A, A, $-124
-      BTJO  A, A, $
       BTJO  B, R2, $+7
-      BTJO  B, R2, $-124
-      BTJO  B, R2, $
       BTJO  B, A, $+5
-      BTJO  B, A, $-124
-      BTJO  B, A, $
       BTJO  B, B, $+6
-      BTJO  B, B, $-124
-      BTJO  B, B, $
       BTJZ  R72, R73, $+78
-      BTJZ  R72, R73, $-124
-      BTJZ  R72, R73, $
       BTJZ  R72, A, $+5
-      BTJZ  R72, A, $-124
-      BTJZ  R72, A, $
       BTJZ  R72, B, $+6
-      BTJZ  R72, B, $-124
-      BTJZ  R72, B, $
       BTJZ  A, B, $+6
-      BTJZ  A, B, $-124
-      BTJZ  A, B, $
       BTJZ  A, R2, $+7
-      BTJZ  A, R2, $-124
-      BTJZ  A, R2, $
       BTJZ  A, A, $+5
-      BTJZ  A, A, $-124
-      BTJZ  A, A, $
       BTJZ  B, R2, $+7
-      BTJZ  B, R2, $-124
-      BTJZ  B, R2, $
       BTJZ  B, A, $+5
-      BTJZ  B, A, $-124
-      BTJZ  B, A, $
       BTJZ  B, B, $+6
-      BTJZ  B, B, $-124
-      BTJZ  B, B, $
       ADD   R73, R74
       ADD   R73, A
       ADD   R73, B
@@ -304,11 +240,7 @@
       OR    %55H, B
       XOR   %56H, B
       BTJO  %57H, B, $+91
-      BTJO  %57H, B, $-125
-      BTJO  %57H, B, $
       BTJZ  %58H, B, $+92
-      BTJZ  %58H, B, $-125
-      BTJZ  %58H, B, $
       ADD   %59H, B
       ADC   %5AH, B
       SUB   %5BH, B
@@ -322,11 +254,7 @@
       OR    B, A
       XOR   B, A
       BTJO  B, A, $+105
-      BTJO  B, A, $-126
-      BTJO  B, A, $
       BTJZ  B, A, $+106
-      BTJZ  B, A, $-126
-      BTJZ  B, A, $
       ADD   B, A
       ADC   B, A
       SUB   B, A
@@ -348,23 +276,11 @@
       XOR   %76H, A
       XOR   %76H, B
       BTJO  %77H, R120, $+125
-      BTJO  %77H, R120, $-124
-      BTJO  %77H, R120, $
       BTJO  %77H, A, $+5
-      BTJO  %77H, A, $-124
-      BTJO  %77H, A, $
       BTJO  %77H, B, $+6
-      BTJO  %77H, B, $-124
-      BTJO  %77H, B, $
       BTJZ  %78H, R121, $+126
-      BTJZ  %78H, R121, $-124
-      BTJZ  %78H, R121, $
       BTJZ  %78H, A, $+5
-      BTJZ  %78H, A, $-124
-      BTJZ  %78H, A, $
       BTJZ  %78H, B, $+6
-      BTJZ  %78H, B, $-124
-      BTJZ  %78H, B, $
       ADD   %79H, R122
       ADD   %79H, A
       ADD   %79H, B
@@ -395,11 +311,7 @@
       ORP   A, P133
       XORP  A, P134
       BTJOP A, P135, $-117
-      BTJOP A, P135, $
-      BTJOP A, P135, $+1
       BTJZP A, P136, $-116
-      BTJZP A, P136, $
-      BTJZP A, P136, $+1
       MOVD  %898AH, R139
       MOVD  %898AH, A
       MOVD  %898AH, B
@@ -414,11 +326,7 @@
       ORP   B, P149
       XORP  B, P150
       BTJOP B, P151, $-101
-      BTJOP B, P151, $
-      BTJOP B, P151, $+1
       BTJZP B, P152, $-100
-      BTJZP B, P152, $
-      BTJZP B, P152, $+1
       MOVD  R153, R154
       MOVD  R153, A
       MOVD  R153, B
@@ -438,11 +346,7 @@
       ORP   %0A5H, P166
       XORP  %0A6H, P167
       BTJOP %0A7H, P168, $-83
-      BTJOP %0A7H, P168, $
-      BTJOP %0A7H, P168, $+1
       BTJZP %0A8H, P169, $-82
-      BTJZP %0A8H, P169, $
-      BTJZP %0A8H, P169, $+1
       MOVD  %0A9AAH(B), R171
       MOVD  %0A9AAH(B), A
       MOVD  %0A9AAH(B), B
@@ -461,8 +365,6 @@
       PUSH  A
       POP   A
       DJNZ  A, $-67
-      DJNZ  A, $
-      DJNZ  A, $+1
       DECD  A
       RR    A
       RRC   A
@@ -479,8 +381,6 @@
       PUSH  B
       POP   B
       DJNZ  B, $-51
-      DJNZ  B, $
-      DJNZ  B, $+1
       DECD  B
       RR    B
       RRC   B
@@ -513,14 +413,8 @@
       POP   A
       POP   B
       DJNZ  R219, $-33
-      DJNZ  R219, $
-      DJNZ  R219, $+1
       DJNZ  A, $+4
-      DJNZ  A, $-125
-      DJNZ  A, $
       DJNZ  B, $+5
-      DJNZ  B, $-125
-      DJNZ  B, $
       DECD  R220
       DECD  A
       DECD  B
@@ -537,27 +431,11 @@
       RLC   A
       RLC   B
       JMP   $-29
-      JMP   $
-      JMP   $+1
       JN    $-28
-      JN    $
-      JN    $+1
       JZ    $-27
-      JZ    $
-      JZ    $+1
       JC    $-26
-      JC    $
-      JC    $+1
       JP    $-25
-      JP    $
-      JP    $+1
       JPZ   $-24
-      JPZ   $
-      JPZ   $+1
       JNZ   $-23
-      JNZ   $
-      JNZ   $+1
       JNC   $-22
-      JNC   $
-      JNC   $+1
       TRAP  23

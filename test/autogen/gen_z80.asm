@@ -19,8 +19,6 @@
       LD    C, 15
       RRCA
       DJNZ  $+19
-      DJNZ  $-126
-      DJNZ  $
       LD    DE, 1312H
       LD    (DE), A
       INC   DE
@@ -29,8 +27,6 @@
       LD    D, 23
       RLA
       JR    $+27
-      JR    $-126
-      JR    $
       ADD   HL, DE
       LD    A, (DE)
       DEC   DE
@@ -39,8 +35,6 @@
       LD    E, 31
       RRA
       JR    NZ, $+35
-      JR    NZ, $-126
-      JR    NZ, $
       LD    HL, 2322H
       LD    (2423H), HL
       INC   HL
@@ -49,8 +43,6 @@
       LD    H, 27H
       DAA
       JR    Z, $+43
-      JR    Z, $-126
-      JR    Z, $
       ADD   HL, HL
       LD    HL, (2C2BH)
       DEC   HL
@@ -59,8 +51,6 @@
       LD    L, 2FH
       CPL
       JR    NC, $+51
-      JR    NC, $-126
-      JR    NC, $
       LD    SP, 3332H
       LD    (3433H), A
       INC   SP
@@ -69,8 +59,6 @@
       LD    (HL), 37H
       SCF
       JR    C, $+59
-      JR    C, $-126
-      JR    C, $
       ADD   HL, SP
       LD    A, (3C3BH)
       DEC   SP

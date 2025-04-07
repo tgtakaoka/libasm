@@ -3,61 +3,25 @@
       CPU   146805
       ORG   $0100
       BRSET 0, $01, *+5
-      BRSET 0, $01, *-125
-      BRSET 0, $01, *
       BRCLR 0, $02, *+6
-      BRCLR 0, $02, *-125
-      BRCLR 0, $02, *
       BSET  0, $11
       BCLR  0, $12
       BRA   *+35
-      BRA   *-126
-      BRA   *
       BRN   *+36
-      BRN   *-126
-      BRN   *
       BHI   *+37
-      BHI   *-126
-      BHI   *
       BLS   *+38
-      BLS   *-126
-      BLS   *
       BHS   *+39
-      BHS   *-126
-      BHS   *
       BLO   *+40
-      BLO   *-126
-      BLO   *
       BNE   *+41
-      BNE   *-126
-      BNE   *
       BEQ   *+42
-      BEQ   *-126
-      BEQ   *
       BHCC  *+43
-      BHCC  *-126
-      BHCC  *
       BHCS  *+44
-      BHCS  *-126
-      BHCS  *
       BPL   *+45
-      BPL   *-126
-      BPL   *
       BMI   *+46
-      BMI   *-126
-      BMI   *
       BMC   *+47
-      BMC   *-126
-      BMC   *
       BMS   *+48
-      BMS   *-126
-      BMS   *
       BIL   *+49
-      BIL   *-126
-      BIL   *
       BIH   *+50
-      BIH   *-126
-      BIH   *
       NEG   $31
       COM   $34
       LSR   $35
@@ -149,8 +113,6 @@
       ORA   #$AB
       ADD   #$AC
       BSR   *-80
-      BSR   *
-      BSR   *+1
       LDX   #$AF
       SUB   $B1
       CMP   $B2

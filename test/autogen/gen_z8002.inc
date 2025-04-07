@@ -122,40 +122,22 @@
       LDB    @R1, RL0
       LD     @R1, R0
       LDRB   RH0, $+3105H
-      LDRB   RH0, $-1158H
-      LDRB   RH0, $
       LDRB   RL0, $+310DH
-      LDRB   RL0, $-1164H
-      LDRB   RL0, $
       LDB    RH0, R1(#3111H)
       LDB    RL0, R1(#3119H)
       LDR    R0, $+3206H
-      LDR    R0, $-1178H
-      LDR    R0, $
       LD     R0, R1(#3211H)
       LDRB   $+3305H, RH0
-      LDRB   $-1188H, RH0
-      LDRB   $, RH0
       LDRB   $+330DH, RL0
-      LDRB   $-1194H, RL0
-      LDRB   $, RL0
       LDB    R1(#3311H), RH0
       LDB    R1(#3319H), RL0
       LDR    $+3406H, R0
-      LDR    $-11A8H, R0
-      LDR    $, R0
       LD     R1(#3411H), R0
       LDAR   R0, $+3505H
-      LDAR   R0, $-11B8H
-      LDAR   R0, $
       LDA    R0, R1(#3511H)
       LDRL   RR0, $+3606H
-      LDRL   RR0, $-11C8H
-      LDRL   RR0, $
       LDL    RR0, R1(#3611H)
       LDRL   $+3806H, RR0
-      LDRL   $-11D8H, RR0
-      LDRL   $, RR0
       LDL    R1(#3811H), RR0
       LDPS   @R1
       INB    RH0, 3B05H
@@ -1006,62 +988,22 @@
       LDB    RH0, #0
       LDB    RL0, #0
       CALR   $+2
-      CALR   $
-      CALR   $-2
       JR     F, $+2
-      JR     F, $-254
-      JR     F, $
       JR     LT, $+2
-      JR     LT, $-254
-      JR     LT, $
       JR     LE, $+2
-      JR     LE, $-254
-      JR     LE, $
       JR     ULE, $+2
-      JR     ULE, $-254
-      JR     ULE, $
       JR     OV, $+2
-      JR     OV, $-254
-      JR     OV, $
       JR     MI, $+2
-      JR     MI, $-254
-      JR     MI, $
       JR     Z, $+2
-      JR     Z, $-254
-      JR     Z, $
       JR     C, $+2
-      JR     C, $-254
-      JR     C, $
       JR     $+2
-      JR     $-254
-      JR     $
       JR     GE, $+2
-      JR     GE, $-254
-      JR     GE, $
       JR     GT, $+2
-      JR     GT, $-254
-      JR     GT, $
       JR     UGT, $+2
-      JR     UGT, $-254
-      JR     UGT, $
       JR     NOV, $+2
-      JR     NOV, $-254
-      JR     NOV, $
       JR     PL, $+2
-      JR     PL, $-254
-      JR     PL, $
       JR     NZ, $+2
-      JR     NZ, $-254
-      JR     NZ, $
       JR     NC, $+2
-      JR     NC, $-254
-      JR     NC, $
       DBJNZ  RH0, $+2
-      DBJNZ  RH0, $
-      DBJNZ  RH0, $-2
       DJNZ   R0, $+2
-      DJNZ   R0, $
-      DJNZ   R0, $-2
       DBJNZ  RL0, $+2
-      DBJNZ  RL0, $
-      DBJNZ  RL0, $-2

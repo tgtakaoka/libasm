@@ -11,8 +11,6 @@
       INC   @R0
       INC   R0
       JBC   22H.1, $+21
-      JBC   22H.1, $-125
-      JBC   22H.1, $
       ACALL 0012H
       LCALL 1314H
       RRC   A
@@ -21,8 +19,6 @@
       DEC   @R0
       DEC   R0
       JB    24H.1, $+37
-      JB    24H.1, $-125
-      JB    24H.1, $
       RET
       RL    A
       ADD   A, #25H
@@ -30,8 +26,6 @@
       ADD   A, @R0
       ADD   A, R0
       JNB   26H.1, $+53
-      JNB   26H.1, $-125
-      JNB   26H.1, $
       RETI
       RLC   A
       ADDC  A, #35H
@@ -39,8 +33,6 @@
       ADDC  A, @R0
       ADDC  A, R0
       JC    $+67
-      JC    $-126
-      JC    $
       ORL   43H, A
       ORL   44H, #45H
       ORL   A, #45H
@@ -48,8 +40,6 @@
       ORL   A, @R0
       ORL   A, R0
       JNC   $+83
-      JNC   $-126
-      JNC   $
       ANL   53H, A
       ANL   54H, #55H
       ANL   A, #55H
@@ -57,8 +47,6 @@
       ANL   A, @R0
       ANL   A, R0
       JZ    $+99
-      JZ    $-126
-      JZ    $
       XRL   63H, A
       XRL   64H, #65H
       XRL   A, #65H
@@ -66,8 +54,6 @@
       XRL   A, @R0
       XRL   A, R0
       JNZ   $+115
-      JNZ   $-126
-      JNZ   $
       ORL   C, 2EH.3
       JMP   @A+DPTR
       MOV   A, #75H
@@ -75,8 +61,6 @@
       MOV   @R0, #77H
       MOV   R0, #79H
       SJMP  $-125
-      SJMP  $
-      SJMP  $+1
       ANL   C, 80H.3
       MOVC  A, @A+PC
       DIV   AB
@@ -100,17 +84,9 @@
       CPL   0B0H.3
       CPL   C
       CJNE  A, #0B5H, $-71
-      CJNE  A, #0B5H, $
-      CJNE  A, #0B5H, $+1
       CJNE  A, 0B6H, $-70
-      CJNE  A, 0B6H, $
-      CJNE  A, 0B6H, $+1
       CJNE  @R0, #0B7H, $-69
-      CJNE  @R0, #0B7H, $
-      CJNE  @R0, #0B7H, $+1
       CJNE  R0, #0B9H, $-67
-      CJNE  R0, #0B9H, $
-      CJNE  R0, #0B9H, $+1
       PUSH  0C1H
       CLR   0C0H.3
       CLR   C
@@ -123,12 +99,8 @@
       SETB  C
       DA    A
       DJNZ  0D6H, $-38
-      DJNZ  0D6H, $
-      DJNZ  0D6H, $+1
       XCHD  A, @R0
       DJNZ  R0, $-37
-      DJNZ  R0, $
-      DJNZ  R0, $+1
       MOVX  A, @DPTR
       MOVX  A, @R0
       CLR   A

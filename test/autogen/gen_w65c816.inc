@@ -21,8 +21,6 @@
       ORA   $121110
       ORA   >>$001110
       BPL   *+19
-      BPL   *-126
-      BPL   *
       ORA   ($12),Y
       ORA   ($13)
       ORA   ($14,S),Y
@@ -65,8 +63,6 @@
       AND   $323130
       AND   >>$003130
       BMI   *+51
-      BMI   *-126
-      BMI   *
       AND   ($32),Y
       AND   ($33)
       AND   ($34,S),Y
@@ -107,8 +103,6 @@
       EOR   $525150
       EOR   >>$005150
       BVC   *+83
-      BVC   *-126
-      BVC   *
       EOR   ($52),Y
       EOR   ($53)
       EOR   ($54,S),Y
@@ -132,8 +126,6 @@
       RTS
       ADC   ($62,X)
       PER   *+$6466
-      PER   *-$029A
-      PER   *
       ADC   $64,S
       STZ   $65
       ADC   $66
@@ -152,8 +144,6 @@
       ADC   $727170
       ADC   >>$007170
       BVS   *+115
-      BVS   *-126
-      BVS   *
       ADC   ($72),Y
       ADC   ($73)
       ADC   ($74,S),Y
@@ -175,12 +165,8 @@
       ADC   $828180,X
       ADC   >>$008180,X
       BRA   *-125
-      BRA   *
-      BRA   *+1
       STA   ($82,X)
       BRL   *-$037A
-      BRL   *+$0086
-      BRL   *
       STA   $84,S
       STY   $85
       STA   $86
@@ -199,8 +185,6 @@
       STA   $929190
       STA   >>$009190
       BCC   *-109
-      BCC   *
-      BCC   *+1
       STA   ($92),Y
       STA   ($93)
       STA   ($94,S),Y
@@ -242,8 +226,6 @@
       LDA   $B2B1B0
       LDA   >>$00B1B0
       BCS   *-77
-      BCS   *
-      BCS   *+1
       LDA   ($B2),Y
       LDA   ($B3)
       LDA   ($B4,S),Y
@@ -285,8 +267,6 @@
       CMP   $D2D1D0
       CMP   >>$00D1D0
       BNE   *-45
-      BNE   *
-      BNE   *+1
       CMP   ($D2),Y
       CMP   ($D3)
       CMP   ($D4,S),Y
@@ -328,8 +308,6 @@
       SBC   $F2F1F0
       SBC   >>$00F1F0
       BEQ   *-13
-      BEQ   *
-      BEQ   *+1
       SBC   ($F2),Y
       SBC   ($F3)
       SBC   ($F4,S),Y

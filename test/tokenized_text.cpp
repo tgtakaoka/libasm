@@ -67,7 +67,7 @@ bool isNumber(const char *p, const char *&r) {
         r = s;
         return true;
     }
-    if (isXdigits(s, p) && toupper(*s) == 'H') {
+    if (isXdigits(s, p) && (toupper(*s) == 'H' || toupper(*s) == 'Q')) {
         r = s + 1;
         return true;
     }
@@ -83,9 +83,67 @@ bool isNumber(const char *p, const char *&r) {
     return false;
 }
 
-bool isNs32kSize(char c) {
-    c = toupper(c);
-    return c == 'B' || c == 'W' || c == 'D' || c == 'Q';
+bool isRelative(const char *p, const char *&r) {
+    const auto o = *p;
+    if (o == '$' || o == '*' || o == '.') {
+        const auto n = *++p;
+        const char *tmp;
+        if ((n == '+' || n == '-') && isNumber(p + 1, tmp)) {
+            r = tmp;
+            return true;
+        }
+        if (n == 0 || n == ',' || n == ')' || n == ']' || n == '[') {
+            r = p;
+            return true;
+        }
+    }
+    return false;
+}
+
+bool isM68kIndex(const char *p, const char *&r) {
+    const auto x = toupper(*p);
+    const auto n = *++p;
+    if ((x == 'A' || x == 'D') && (n >= '0' && n < '8') && *++p == '.') {
+        // "[AD][0-7]."
+        const auto sz = toupper(*++p);
+        if (sz == 'W' || sz == 'L') {
+            if (*++p != '*') {
+                r = p;
+                return true;
+            }
+            const auto sc = p[1];
+            if (sc == '2' || sc == '4' || sc == '8') {
+                r = p + 2;
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+bool isM68kList(const char *p, const char *&r) {
+    const auto x = toupper(*p++);
+    const auto rn = *p++;
+    if ((x == 'A' || x == 'D') && (rn >= '0' && rn < '8') && (*p == '/' || *p == '-')) {
+        // "[AD][0-7][-/]"
+        r = p + 1;
+        return true;
+    }
+    const auto fpn = *p++;
+    if (x == 'F' && toupper(rn) == 'P' && (fpn >= '0' && fpn < '8') && (*p == '/' || *p == '-')) {
+        // "FP[0-7][-/]"
+        r = p + 1;
+        return true;
+    }
+    return false;
+}
+
+bool isNs32kScale(const char *p) {
+    if (p[1] == ']') {
+        const auto c = toupper(*p);
+        return c == 'B' || c == 'W' || c == 'D' || c == 'Q';
+    }
+    return false;
 }
 
 TokenizedText::TokenizedText(const char *text) : _tokens(tokenize(text)), _count(0) {}
@@ -99,17 +157,39 @@ std::string TokenizedText::tokenize(const char *text) {
             // reduce float constant variants; n.nE-e, n.nE+e
             t.push_back('n');
             t.push_back('.');
-            t.push_back('n');
+            t.push_back('f');
             t.push_back('E');
             t.push_back('+');
             t.push_back('e');
             b = tmp;
+        } else if (isNumber(b, tmp)) {
+            t.push_back('n');
+            b = tmp;
+        } else if (isRelative(b, tmp)) {
+            // reduce relative variant
+            t.push_back(b[0]);
+            t.push_back('+');
+            t.push_back('r');
+            b = tmp;
+        } else if (isM68kIndex(b, tmp)) {
+            // reduce index variants of MC680xx; [AD][0-7].[WL](*[248])?
+            t.push_back('X');
+            t.push_back('n');
+            b = tmp;
+        } else if (isM68kList(b, tmp)) {
+            // reduce MOVEM variants of MC68000; Rn/Rn and Rn-Rn
+            t.push_back('R');
+            t.push_back('n');
+            t.push_back('/');
+            b = tmp;
+        } else if ((b[0] == '(' || b[0] == '[') && b[1] == '-' && isNumber(b + 2, tmp)) {
+            // reduce displacement variants of MC68000; (-n...) and (n...), [-n...] and [n...]
+            t.push_back(b[0]);
+            t.push_back('n');
+            b = tmp;
         } else if (((b[0] == '-' && isNumber(b + 1, tmp)) || isNumber(b, tmp)) &&
                    (*tmp == '(' || *tmp == ')')) {
             // reduce displacement variants of NS32000; -n(...) and n(...), (-n) and (n)
-            t.push_back('n');
-            b = tmp;
-        } else if (isNumber(b, tmp)) {
             t.push_back('n');
             b = tmp;
         } else if (b[0] == '+' && b[1] == '(' && b[2] == '-' && isNumber(b + 3, tmp) &&
@@ -118,16 +198,12 @@ std::string TokenizedText::tokenize(const char *text) {
             t.push_back('+');
             t.push_back('n');
             b = tmp + 1;
-        } else if (b[0] == ':' && isNs32kSize(b[1]) && b[2] == ']') {
+        } else if (b[0] == ':' && isNs32kScale(b + 1)) {
             // reduce index size variants of NS32000; [Rn:B], [Rn:W], [Rn:D] and [Rn:Q]
             t.push_back(':');
             t.push_back('s');
             t.push_back(']');
             b += 3;
-        } else if (*b == '/') {
-            // reduce MOVEM variants of MC68000; Rn/Rn and Rn-Rn
-            ++b;
-            t.push_back('-');
         } else {
             t.push_back(*b++);
         }

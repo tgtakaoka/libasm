@@ -21,22 +21,12 @@
       ADD   IY, 1716H
       ADD   SP, 1817H
       LDAR  HL, $+191AH
-      LDAR  HL, $-00E6H
-      LDAR  HL, $
       DJNZ  $+27
-      DJNZ  $-126
-      DJNZ  $
       DJNZ  BC, $+28
-      DJNZ  BC, $-126
-      DJNZ  BC, $
       JP    1C1BH
       JRL   $+1D1EH
-      JRL   $-00E2H
-      JRL   $
       CALL  1E1DH
       CALR  $+1F20H
-      CALR  $-00E0H
-      CALR  $
       RET
       RETI
       LD    A, B
@@ -168,53 +158,21 @@
       RES   0, (0FFB1H)
       SET   0, (0FFB9H)
       JR    F, $-61
-      JR    F, $
-      JR    F, $+1
       JR    LT, $-60
-      JR    LT, $
-      JR    LT, $+1
       JR    LE, $-59
-      JR    LE, $
-      JR    LE, $+1
       JR    ULE, $-58
-      JR    ULE, $
-      JR    ULE, $+1
       JR    OV, $-57
-      JR    OV, $
-      JR    OV, $+1
       JR    MI, $-56
-      JR    MI, $
-      JR    MI, $+1
       JR    Z, $-55
-      JR    Z, $
-      JR    Z, $+1
       JR    C, $-54
-      JR    C, $
-      JR    C, $+1
       JR    $-53
-      JR    $
-      JR    $+1
       JR    GE, $-52
-      JR    GE, $
-      JR    GE, $+1
       JR    GT, $-51
-      JR    GT, $
-      JR    GT, $+1
       JR    UGT, $-50
-      JR    UGT, $
-      JR    UGT, $+1
       JR    NOV, $-49
-      JR    NOV, $
-      JR    NOV, $+1
       JR    PL, $-48
-      JR    PL, $
-      JR    PL, $+1
       JR    NZ, $-47
-      JR    NZ, $
-      JR    NZ, $+1
       JR    NC, $-46
-      JR    NC, $
-      JR    NC, $+1
       RLD   (BC)
       RRD   (BC)
       MUL   HL, (BC)

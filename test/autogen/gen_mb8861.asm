@@ -20,50 +20,20 @@
       DAA
       ABA
       BRA   *+35
-      BRA   *-126
-      BRA   *
       BHI   *+37
-      BHI   *-126
-      BHI   *
       BLS   *+38
-      BLS   *-126
-      BLS   *
       BHS   *+39
-      BHS   *-126
-      BHS   *
       BLO   *+40
-      BLO   *-126
-      BLO   *
       BNE   *+41
-      BNE   *-126
-      BNE   *
       BEQ   *+42
-      BEQ   *-126
-      BEQ   *
       BVC   *+43
-      BVC   *-126
-      BVC   *
       BVS   *+44
-      BVS   *-126
-      BVS   *
       BPL   *+45
-      BPL   *-126
-      BPL   *
       BMI   *+46
-      BMI   *-126
-      BMI   *
       BGE   *+47
-      BGE   *-126
-      BGE   *
       BLT   *+48
-      BLT   *-126
-      BLT   *
       BGT   *+49
-      BGT   *-126
-      BGT   *
       BLE   *+50
-      BLE   *-126
-      BLE   *
       TSX
       INS
       PULA
@@ -150,8 +120,6 @@
       ADDA  #$8C
       CPX   #$8D8E
       BSR   *-112
-      BSR   *
-      BSR   *+1
       LDS   #$8F90
       SUBA  $91
       CMPA  $92

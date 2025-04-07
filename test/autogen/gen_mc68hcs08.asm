@@ -3,65 +3,27 @@
       CPU   68HCS08
       ORG   $0100
       BRSET 0, $01, *+5
-      BRSET 0, $01, *-125
-      BRSET 0, $01, *
       BRCLR 0, $02, *+6
-      BRCLR 0, $02, *-125
-      BRCLR 0, $02, *
       BSET  0, $11
       BCLR  0, $12
       BRA   *+35
-      BRA   *-126
-      BRA   *
       BRN   *+36
-      BRN   *-126
-      BRN   *
       BHI   *+37
-      BHI   *-126
-      BHI   *
       BLS   *+38
-      BLS   *-126
-      BLS   *
       BHS   *+39
-      BHS   *-126
-      BHS   *
       BLO   *+40
-      BLO   *-126
-      BLO   *
       BNE   *+41
-      BNE   *-126
-      BNE   *
       BEQ   *+42
-      BEQ   *-126
-      BEQ   *
       BHCC  *+43
-      BHCC  *-126
-      BHCC  *
       BHCS  *+44
-      BHCS  *-126
-      BHCS  *
       BPL   *+45
-      BPL   *-126
-      BPL   *
       BMI   *+46
-      BMI   *-126
-      BMI   *
       BMC   *+47
-      BMC   *-126
-      BMC   *
       BMS   *+48
-      BMS   *-126
-      BMS   *
       BIL   *+49
-      BIL   *-126
-      BIL   *
       BIH   *+50
-      BIH   *-126
-      BIH   *
       NEG   $31
       CBEQ  $32, *+54
-      CBEQ  $32, *-125
-      CBEQ  $32, *
       LDHX  >$0001
       LDHX  $0102
       COM   $34
@@ -73,8 +35,6 @@
       ROL   $3A
       DEC   $3B
       DBNZ  $3C, *+64
-      DBNZ  $3C, *-125
-      DBNZ  $3C, *
       INC   $3D
       TST   $3E
       CPHX  >$0001
@@ -82,8 +42,6 @@
       CLR   $40
       NEGA
       CBEQA #$42, *+70
-      CBEQA #$42, *-125
-      CBEQA #$42, *
       MUL
       COMA
       LSRA
@@ -94,16 +52,12 @@
       ROLA
       DECA
       DBNZA *+78
-      DBNZA *-126
-      DBNZA *
       INCA
       TSTA
       MOV   $4F, $50
       CLRA
       NEGX
       CBEQX #$52, *+86
-      CBEQX #$52, *-125
-      CBEQX #$52, *
       DIV
       COMX
       LSRX
@@ -114,8 +68,6 @@
       ROLX
       DECX
       DBNZX *+94
-      DBNZX *-126
-      DBNZX *
       INCX
       TSTX
       MOV   $5F, X+
@@ -123,11 +75,7 @@
       NEG   97,X
       NEG   <0,X
       CBEQ  98,X+, *+102
-      CBEQ  98,X+, *-125
-      CBEQ  98,X+, *
       CBEQ  <0,X+, *+4
-      CBEQ  <0,X+, *-125
-      CBEQ  <0,X+, *
       NSA
       COM   100,X
       COM   <0,X
@@ -145,11 +93,7 @@
       DEC   107,X
       DEC   <0,X
       DBNZ  108,X, *+112
-      DBNZ  108,X, *-125
-      DBNZ  108,X, *
       DBNZ  <0,X, *+4
-      DBNZ  <0,X, *-125
-      DBNZ  <0,X, *
       INC   109,X
       INC   <0,X
       TST   110,X
@@ -159,8 +103,6 @@
       CLR   <0,X
       NEG   ,X
       CBEQ  X+, *+116
-      CBEQ  X+, *-126
-      CBEQ  X+, *
       DAA
       COM   ,X
       LSR   ,X
@@ -171,8 +113,6 @@
       ROL   ,X
       DEC   ,X
       DBNZ  ,X, *+126
-      DBNZ  ,X, *-126
-      DBNZ  ,X, *
       INC   ,X
       TST   ,X
       MOV   X+, $7F
@@ -193,17 +133,9 @@
       STOP
       WAIT
       BGE   *-109
-      BGE   *
-      BGE   *+1
       BLT   *-108
-      BLT   *
-      BLT   *+1
       BGT   *-107
-      BGT   *
-      BGT   *+1
       BLE   *-106
-      BLE   *
-      BLE   *+1
       TXS
       TSX
       STHX  >$0001
@@ -285,11 +217,7 @@
       NEG   97,SP
       NEG   <0,SP
       CBEQ  98,SP, *+103
-      CBEQ  98,SP, *-124
-      CBEQ  98,SP, *
       CBEQ  <0,SP, *+5
-      CBEQ  <0,SP, *-124
-      CBEQ  <0,SP, *
       COM   100,SP
       COM   <0,SP
       LSR   101,SP
@@ -305,11 +233,7 @@
       DEC   107,SP
       DEC   <0,SP
       DBNZ  108,SP, *+113
-      DBNZ  108,SP, *-124
-      DBNZ  108,SP, *
       DBNZ  <0,SP, *+5
-      DBNZ  <0,SP, *-124
-      DBNZ  <0,SP, *
       INC   109,SP
       INC   <0,SP
       TST   110,SP
@@ -331,8 +255,6 @@
       ORA   #$AB
       ADD   #$AC
       BSR   *-80
-      BSR   *
-      BSR   *+1
       LDX   #$AF
       AIX   #-$50
       AIX   #0

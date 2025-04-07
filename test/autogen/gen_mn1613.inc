@@ -3609,33 +3609,17 @@
       DMS   00H
       BAL   00H
       ST    R0, *
-      ST    R0, *+1
-      ST    R0, *-128
       ST    SP, *
-      ST    SP, *+1
-      ST    SP, *-128
       DMS   *
-      DMS   *+1
-      DMS   *-128
       BAL   *
-      BAL   *+1
-      BAL   *-128
       ST    R0, (00H)
       ST    SP, (00H)
       DMS   (00H)
       BAL   (00H)
       ST    R0, (*)
-      ST    R0, (*+1)
-      ST    R0, (*-128)
       ST    SP, (*)
-      ST    SP, (*+1)
-      ST    SP, (*-128)
       DMS   (*)
-      DMS   (*+1)
-      DMS   (*-128)
       BAL   (*)
-      BAL   (*+1)
-      BAL   (*-128)
       ST    R0, 0(X0)
       ST    SP, 0(X0)
       DMS   0(X0)
@@ -3649,33 +3633,17 @@
       IMS   00H
       B     00H
       L     R0, *
-      L     R0, *+1
-      L     R0, *-128
       L     SP, *
-      L     SP, *+1
-      L     SP, *-128
       IMS   *
-      IMS   *+1
-      IMS   *-128
       B     *
-      B     *+1
-      B     *-128
       L     R0, (00H)
       L     SP, (00H)
       IMS   (00H)
       B     (00H)
       L     R0, (*)
-      L     R0, (*+1)
-      L     R0, (*-128)
       L     SP, (*)
-      L     SP, (*+1)
-      L     SP, (*-128)
       IMS   (*)
-      IMS   (*+1)
-      IMS   (*-128)
       B     (*)
-      B     (*+1)
-      B     (*-128)
       L     R0, 0(X0)
       L     SP, 0(X0)
       IMS   0(X0)

@@ -35,17 +35,9 @@
       SHRAB 28, 27
       SHRAB 1, #0
       SJMP  $+35
-      SJMP  $-985
-      SJMP  $
       SCALL $+43
-      SCALL $-977
-      SCALL $
       JBC   49, 0, $+53
-      JBC   49, 0, $-125
-      JBC   49, 0, $
       JBS   57, 0, $+61
-      JBS   57, 0, $-125
-      JBS   57, 0, $
       AND   70, 68, 66
       AND   70, 68, #4342H
       AND   72, 70, [68]
@@ -260,63 +252,25 @@
       POP   0[208]
       POP   0D3D2H[208]
       JNST  $-45
-      JNST  $
-      JNST  $+1
       JNH   $-44
-      JNH   $
-      JNH   $+1
       JGT   $-43
-      JGT   $
-      JGT   $+1
       JNC   $-42
-      JNC   $
-      JNC   $+1
       JNVT  $-41
-      JNVT  $
-      JNVT  $+1
       JNV   $-40
-      JNV   $
-      JNV   $+1
       JGE   $-39
-      JGE   $
-      JGE   $+1
       JNE   $-38
-      JNE   $
-      JNE   $+1
       JST   $-37
-      JST   $
-      JST   $+1
       JH    $-36
-      JH    $
-      JH    $+1
       JLE   $-35
-      JLE   $
-      JLE   $+1
       JC    $-34
-      JC    $
-      JC    $+1
       JVT   $-33
-      JVT   $
-      JVT   $+1
       JV    $-32
-      JV    $
-      JV    $+1
       JLT   $-31
-      JLT   $
-      JLT   $+1
       JE    $-30
-      JE    $
-      JE    $+1
       DJNZ  225, $-27
-      DJNZ  225, $
-      DJNZ  225, $+1
       BR    [228]
       LJMP  $-1615H
-      LJMP  $+00EBH
-      LJMP  $
       LCALL $-0E0DH
-      LCALL $+00F3H
-      LCALL $
       RET
       PUSHF
       POPF

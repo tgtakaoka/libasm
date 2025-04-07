@@ -20,11 +20,7 @@
       SBA
       CBA
       BRSET $13, #20, *+25
-      BRSET $13, #20, *-124
-      BRSET $13, #20, *
       BRCLR $14, #21, *+26
-      BRCLR $14, #21, *-124
-      BRCLR $14, #21, *
       BSET  $15, #22
       BCLR  $16, #23
       TAB
@@ -32,11 +28,7 @@
       BSET  29,Y, #30
       BCLR  30,Y, #31
       BRSET 31,Y, #32, *+38
-      BRSET 31,Y, #32, *-123
-      BRSET 31,Y, #32, *
       BRCLR 32,Y, #$21, *+39
-      BRCLR 32,Y, #$21, *-123
-      BRCLR 32,Y, #$21, *
       TSY
       TYS
       PULY
@@ -113,59 +105,23 @@
       BSET  29,X, #30
       BCLR  30,X, #31
       BRSET 31,X, #32, *+37
-      BRSET 31,X, #32, *-124
-      BRSET 31,X, #32, *
       BRCLR 32,X, #$21, *+38
-      BRCLR 32,X, #$21, *-124
-      BRCLR 32,X, #$21, *
       BRA   *+35
-      BRA   *-126
-      BRA   *
       BRN   *+36
-      BRN   *-126
-      BRN   *
       BHI   *+37
-      BHI   *-126
-      BHI   *
       BLS   *+38
-      BLS   *-126
-      BLS   *
       BHS   *+39
-      BHS   *-126
-      BHS   *
       BLO   *+40
-      BLO   *-126
-      BLO   *
       BNE   *+41
-      BNE   *-126
-      BNE   *
       BEQ   *+42
-      BEQ   *-126
-      BEQ   *
       BVC   *+43
-      BVC   *-126
-      BVC   *
       BVS   *+44
-      BVS   *-126
-      BVS   *
       BPL   *+45
-      BPL   *-126
-      BPL   *
       BMI   *+46
-      BMI   *-126
-      BMI   *
       BGE   *+47
-      BGE   *-126
-      BGE   *
       BLT   *+48
-      BLT   *-126
-      BLT   *
       BGT   *+49
-      BGT   *-126
-      BGT   *
       BLE   *+50
-      BLE   *-126
-      BLE   *
       TSX
       INS
       PULA
@@ -253,8 +209,6 @@
       ADDA  #$8C
       CPX   #$8D8E
       BSR   *-112
-      BSR   *
-      BSR   *+1
       LDS   #$8F90
       XGDX
       SUBA  $91

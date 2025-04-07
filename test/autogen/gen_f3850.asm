@@ -71,17 +71,9 @@
       CLR
       LIS   1
       BT    0, $-126
-      BT    0, $
-      BT    0, $+1
       BP    $-125
-      BP    $
-      BP    $+1
       BC    $-124
-      BC    $
-      BC    $+1
       BZ    $-122
-      BZ    $
-      BZ    $+1
       AM
       AMD
       NM
@@ -90,26 +82,12 @@
       CM
       ADC
       BR7   $-111
-      BR7   $
-      BR7   $+1
       BR    $-110
-      BR    $
-      BR    $+1
       BM    $-109
-      BM    $
-      BM    $+1
       BNC   $-108
-      BNC   $
-      BNC   $+1
       BF    3, $-107
-      BF    3, $
-      BF    3, $+1
       BNZ   $-106
-      BNZ   $
-      BNZ   $+1
       BNO   $-102
-      BNO   $
-      BNO   $+1
       INS   0
       OUTS  0
       AS    0
