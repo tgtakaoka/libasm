@@ -32,9 +32,9 @@ void ListFormatter::setListRadix(Radix radix) {
     _listRadix = radix;
 }
 
-static uint8_t calcDigits(uint32_t val, Radix radix) {
-    const uint8_t base = uint8_t(radix);
-    int8_t n = 0;
+static uint_fast8_t calcDigits(uint32_t val, Radix radix) {
+    const uint_fast8_t base = uint8_t(radix);
+    auto n = 0;
     do {
         n++;
         val /= base;
@@ -55,9 +55,9 @@ void ListFormatter::formatDec(StrBuffer &out, uint32_t val, int8_t width) {
     }
 }
 
-static uint8_t calcBits(const uint32_t val) {
-    uint32_t mask = 0x80000000;
-    uint8_t bits = 32;
+static uint_fast8_t calcBits(const uint32_t val) {
+    auto mask = UINT32_C(0x80000000);
+    auto bits = 32;
     while (mask >= 2 && (val & mask) == 0) {
         mask >>= 1;
         bits--;
@@ -65,11 +65,12 @@ static uint8_t calcBits(const uint32_t val) {
     return bits;
 }
 
-static uint8_t calcRadixBits(Radix radix) {
+static uint_fast8_t calcRadixBits(Radix radix) {
     return calcBits(uint8_t(radix) - 1);
 }
 
-void ListFormatter::formatValue(StrBuffer &out, uint32_t val, uint8_t bits, int8_t width, bool zeroSuppress) {
+void ListFormatter::formatValue(
+        StrBuffer &out, uint32_t val, uint8_t bits, int8_t width, bool zeroSuppress) {
     if (bits == 0)
         bits = calcBits(val);
     if (width > 0) {
@@ -104,14 +105,18 @@ void ListFormatter::formatAddress(StrBuffer &out, uint32_t addr) {
     out.letter(' ').letter(':');
 }
 
-uint8_t ListFormatter::formatBytes(StrBuffer &out, uint8_t offset) {
+int ListFormatter::bytesInLine() const {
+    return _listRadix == RADIX_8 ? 4 : 6;
+}
+
+uint_fast8_t ListFormatter::formatBytes(StrBuffer &out, uint_fast8_t offset) {
     const auto &config = _provider.config();
     const auto unit = config.addressUnit();
     const auto width = config.opCodeWidth();
     const auto endian = config.endian();
     const auto addr = offset + _provider.startAddress();
     const auto size = _provider.bytesSize();
-    uint8_t len = 0;
+    auto len = 0;
     for (auto pos = 0; offset + len < size && pos < bytesInLine(); pos++) {
         out.letter(' ');
         uint16_t val = _provider.getByte(offset + len++);

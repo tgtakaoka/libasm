@@ -76,8 +76,8 @@ StrBuffer &AsmFormatter::getLine(StrBuffer &out) {
             _formatter.formatDec(out, column);
         }
         out.rtext_P(PSTR(": error: ")).rtext_P(_error.errorText_P());
-        if (_error.errorAt() && *_error.errorAt())
-            out.rtext_P(PSTR(R"(: ")")).rtext(_error.errorAt()).rletter('"');
+        if (_error.errorAt() && *_error.errorAt()) 
+           out.rtext_P(PSTR(R"(: ")")).rtext(_error.errorAt()).rletter('"');
         _nextLine = -1;
     } else {
         if (_nextLine < 0)
