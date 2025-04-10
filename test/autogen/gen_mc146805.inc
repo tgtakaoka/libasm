@@ -54,27 +54,16 @@
       TSTX
       CLRX
       NEG   97,X
-      NEG   <0,X
       COM   100,X
-      COM   <0,X
       LSR   101,X
-      LSR   <0,X
       ROR   103,X
-      ROR   <0,X
       ASR   104,X
-      ASR   <0,X
       ASL   105,X
-      ASL   <0,X
       ROL   106,X
-      ROL   <0,X
       DEC   107,X
-      DEC   <0,X
       INC   109,X
-      INC   <0,X
       TST   110,X
-      TST   <0,X
       CLR   112,X
-      CLR   <0,X
       NEG   ,X
       COM   ,X
       LSR   ,X
@@ -193,37 +182,21 @@
       STX   $E0E1,X
       STX   >$0001,X
       SUB   225,X
-      SUB   <0,X
       CMP   226,X
-      CMP   <0,X
       SBC   227,X
-      SBC   <0,X
       CPX   228,X
-      CPX   <0,X
       AND   229,X
-      AND   <0,X
       BIT   230,X
-      BIT   <0,X
       LDA   231,X
-      LDA   <0,X
       STA   232,X
-      STA   <0,X
       EOR   233,X
-      EOR   <0,X
       ADC   234,X
-      ADC   <0,X
       ORA   235,X
-      ORA   <0,X
       ADD   236,X
-      ADD   <0,X
       JMP   237,X
-      JMP   <0,X
       JSR   238,X
-      JSR   <0,X
       LDX   239,X
-      LDX   <0,X
       STX   240,X
-      STX   <0,X
       SUB   ,X
       CMP   ,X
       SBC   ,X

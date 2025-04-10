@@ -294,8 +294,8 @@ void test_extended() {
 }
 
 void test_indexed() {
-    TEST("NEG", "<0,X",  0x60, 0x00);
-    TEST("COM", "<0,X",  0x63, 0x00);
+    TEST("NEG", "0,X",   0x60, 0x00);
+    TEST("COM", "0,X",   0x63, 0x00);
     TEST("LSR", "1,X",   0x64, 0x01);
     TEST("ROR", "2,X",   0x66, 0x02);
     TEST("ASR", "3,X",   0x67, 0x03);
@@ -304,8 +304,8 @@ void test_indexed() {
     TEST("DEC", "6,X",   0x6A, 0x06);
     TEST("INC", "127,X", 0x6C, 0x7F);
     TEST("TST", "128,X", 0x6D, 0x80);
-    TEST("CLR", "255,X",        0x6F, 0xFF);
-    NMEM("CLR", "<0,X", "<0,X", 0x6F);
+    TEST("CLR", "255,X",      0x6F, 0xFF);
+    NMEM("CLR", "0,X", "0,X", 0x6F);
 
     TEST("NEG", ",X", 0x70);
     TEST("COM", ",X", 0x73);
@@ -340,8 +340,8 @@ void test_indexed() {
         TEST("LDHX", ",X", 0x9E, 0xAE);
     }
 
-    TEST("SUB", "<0,X",  0xE0, 0x00);
-    TEST("CMP", "<0,X",  0xE1, 0x00);
+    TEST("SUB", "0,X",   0xE0, 0x00);
+    TEST("CMP", "0,X",   0xE1, 0x00);
     TEST("SBC", "1,X",   0xE2, 0x01);
     TEST("AND", "2,X",   0xE4, 0x02);
     TEST("BIT", "3,X",   0xE5, 0x03);
@@ -354,7 +354,7 @@ void test_indexed() {
     TEST("CPX", "127,X", 0xE3, 0x7F);
     TEST("LDX", "128,X", 0xEE, 0x80);
     TEST("STX", "255,X", 0xEF, 0xFF);
-    TEST("JMP", "<0,X",  0xEC, 0x00);
+    TEST("JMP", "0,X",   0xEC, 0x00);
     TEST("JSR", "255,X", 0xED, 0xFF);
 
     if (m68hcs08()) {
@@ -385,8 +385,8 @@ void test_indexed() {
     }
 
     if (m68hc08() || m68hcs08()) {
-        TEST("NEG", "<0,SP",  0x9E, 0x60, 0x00);
-        TEST("COM", "<0,SP",  0x9E, 0x63, 0x00);
+        TEST("NEG", "0,SP",   0x9E, 0x60, 0x00);
+        TEST("COM", "0,SP",   0x9E, 0x63, 0x00);
         TEST("LSR", "1,SP",   0x9E, 0x64, 0x01);
         TEST("ROR", "2,SP",   0x9E, 0x66, 0x02);
         TEST("ASR", "3,SP",   0x9E, 0x67, 0x03);
@@ -397,8 +397,8 @@ void test_indexed() {
         TEST("TST", "128,SP", 0x9E, 0x6D, 0x80);
         TEST("CLR", "255,SP", 0x9E, 0x6F, 0xFF);
 
-        TEST("SUB", "<0,SP",  0x9E, 0xE0, 0x00);
-        TEST("CMP", "<0,SP",  0x9E, 0xE1, 0x00);
+        TEST("SUB", "0,SP",   0x9E, 0xE0, 0x00);
+        TEST("CMP", "0,SP",   0x9E, 0xE1, 0x00);
         TEST("SBC", "1,SP",   0x9E, 0xE2, 0x01);
         TEST("AND", "2,SP",   0x9E, 0xE4, 0x02);
         TEST("BIT", "3,SP",   0x9E, 0xE5, 0x03);
@@ -439,12 +439,12 @@ void test_indexed() {
     symtab.intern(255, "offset255");
     symtab.intern(256, "offset256");
 
-    TEST("NEG", "<offset0,X",  0x60, 0x00);
+    TEST("NEG", "offset0,X",   0x60, 0x00);
     TEST("COM", "offset255,X", 0x63, 0xFF);
 
-    TEST("CMP", "<offset0,X",  0xE1, 0x00);
+    TEST("CMP", "offset0,X",   0xE1, 0x00);
     TEST("ADD", "offset255,X", 0xEB, 0xFF);
-    TEST("JMP", "<offset0,X",  0xEC, 0x00);
+    TEST("JMP", "offset0,X",   0xEC, 0x00);
     TEST("JSR", "offset255,X", 0xED, 0xFF);
 
     TEST("CMP", "offset256,X", 0xD1, 0x01, 0x00);

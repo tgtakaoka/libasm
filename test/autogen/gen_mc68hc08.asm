@@ -69,34 +69,21 @@
       MOV   $5F, X+
       CLRX
       NEG   97,X
-      NEG   <0,X
       CBEQ  98,X+, *+102
-      CBEQ  <0,X+, *+4
       NSA
       COM   100,X
-      COM   <0,X
       LSR   101,X
-      LSR   <0,X
       CPHX  #$6667
       ROR   103,X
-      ROR   <0,X
       ASR   104,X
-      ASR   <0,X
       ASL   105,X
-      ASL   <0,X
       ROL   106,X
-      ROL   <0,X
       DEC   107,X
-      DEC   <0,X
       DBNZ  108,X, *+112
-      DBNZ  <0,X, *+4
       INC   109,X
-      INC   <0,X
       TST   110,X
-      TST   <0,X
       MOV   #$6F, $70
       CLR   112,X
-      CLR   <0,X
       NEG   ,X
       CBEQ  X+, *+116
       DAA
@@ -169,59 +156,32 @@
       STX   $E0E1,SP
       STX   >$0001,SP
       SUB   225,SP
-      SUB   <0,SP
       CMP   226,SP
-      CMP   <0,SP
       SBC   227,SP
-      SBC   <0,SP
       CPX   228,SP
-      CPX   <0,SP
       AND   229,SP
-      AND   <0,SP
       BIT   230,SP
-      BIT   <0,SP
       LDA   231,SP
-      LDA   <0,SP
       STA   232,SP
-      STA   <0,SP
       EOR   233,SP
-      EOR   <0,SP
       ADC   234,SP
-      ADC   <0,SP
       ORA   235,SP
-      ORA   <0,SP
       ADD   236,SP
-      ADD   <0,SP
       LDX   239,SP
-      LDX   <0,SP
       STX   240,SP
-      STX   <0,SP
       NEG   97,SP
-      NEG   <0,SP
       CBEQ  98,SP, *+103
-      CBEQ  <0,SP, *+5
       COM   100,SP
-      COM   <0,SP
       LSR   101,SP
-      LSR   <0,SP
       ROR   103,SP
-      ROR   <0,SP
       ASR   104,SP
-      ASR   <0,SP
       ASL   105,SP
-      ASL   <0,SP
       ROL   106,SP
-      ROL   <0,SP
       DEC   107,SP
-      DEC   <0,SP
       DBNZ  108,SP, *+113
-      DBNZ  <0,SP, *+5
       INC   109,SP
-      INC   <0,SP
       TST   110,SP
-      TST   <0,SP
       CLR   112,SP
-      CLR   <0,SP
       TXA
       SUB   #$A1
       CMP   #$A2
@@ -321,37 +281,21 @@
       STX   $E0E1,X
       STX   >$0001,X
       SUB   225,X
-      SUB   <0,X
       CMP   226,X
-      CMP   <0,X
       SBC   227,X
-      SBC   <0,X
       CPX   228,X
-      CPX   <0,X
       AND   229,X
-      AND   <0,X
       BIT   230,X
-      BIT   <0,X
       LDA   231,X
-      LDA   <0,X
       STA   232,X
-      STA   <0,X
       EOR   233,X
-      EOR   <0,X
       ADC   234,X
-      ADC   <0,X
       ORA   235,X
-      ORA   <0,X
       ADD   236,X
-      ADD   <0,X
       JMP   237,X
-      JMP   <0,X
       JSR   238,X
-      JSR   <0,X
       LDX   239,X
-      LDX   <0,X
       STX   240,X
-      STX   <0,X
       SUB   ,X
       CMP   ,X
       SBC   ,X

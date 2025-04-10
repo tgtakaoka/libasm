@@ -88,8 +88,6 @@ void DisMc6805::decodeIndexed(DisInsn &insn, StrBuffer &out, AddrMode mode) cons
         outRegName(out, REG_X).letter('+');
     } else if (mode == M_IX1 || mode == M_IX1P || mode == M_SP1) {
         const uint8_t disp8 = insn.readByte();
-        if (disp8 == 0)
-            out.letter('<');
         outDec(out, disp8, 8).letter(',');
         outRegName(out, mode == M_SP1 ? REG_SP : REG_X);
         if (mode == M_IX1P)
