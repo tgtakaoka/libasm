@@ -170,7 +170,7 @@ void test_cnt_reg() {
 void test_src() {
     TEST("BLWP", "@>3876",  0x0420, 0x3876);
     NMEM("BLWP", "@0", "0", 0x0420);
-    TEST("RT",   "",        0x045B);
+    TEST("B",    "*R11",    0x045B); // RT
     TEST("B",    "*R12",    0x045C);
     TEST("B",    "R13",     0x044D);
     TEST("X",    "*R10",    0x049A);
@@ -412,7 +412,7 @@ void test_rel() {
     ATEST(0x1000, "JMP", "$-254", 0x1080);
     ATEST(0x1000, "JMP", "$",     0x10FF);
     ATEST(0x1000, "JMP", "$+256", 0x107F);
-    ATEST(0x1000, "NOP", "",      0x1000);
+    ATEST(0x1000, "JMP", "$+2",   0x1000); // NOP
 
     symtab.intern(0x0F02, "sym0F02");
     symtab.intern(0x1000, "sym1000");

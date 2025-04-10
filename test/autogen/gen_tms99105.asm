@@ -118,7 +118,6 @@
       BLWP  *R0+
       B     R0
       B     *R0
-      RT
       B     @0562H
       B     @0562H(R1)
       B     *R0+
@@ -202,8 +201,7 @@
       TSMB  *R0, 0
       TSMB  @0122H, 0
       TSMB  @0122H(R1), 0
-      NOP
-      JMP   $+4
+      JMP   $+2
       JLT   $+2
       JLE   $+2
       JEQ   $+2

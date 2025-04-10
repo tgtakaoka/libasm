@@ -46,8 +46,6 @@ constexpr Entry TABLE_TMS9900[] PROGMEM = {
     E0(0x03A0, TEXT_CKON),
     E0(0x03C0, TEXT_CKOF),
     E0(0x03E0, TEXT_LREX),
-    E0(0x045B, TEXT_RT),
-    E0(0x1000, TEXT_NOP),
     E1(0x0400, TEXT_BLWP, M_SRC),
     E1(0x0440, TEXT_B,    M_SRC),
     E1(0x0480, TEXT_X,    M_SRC),
@@ -102,80 +100,82 @@ constexpr Entry TABLE_TMS9900[] PROGMEM = {
     B2(0xD000, TEXT_MOVB, M_SRC,  M_DST),
     E2(0xE000, TEXT_SOC,  M_SRC,  M_DST),
     B2(0xF000, TEXT_SOCB, M_SRC,  M_DST),
+    E0(0x045B, TEXT_RT),
+    E0(0x1000, TEXT_NOP),
 };
 
 constexpr uint8_t INDEX_TMS9900[] PROGMEM = {
-     65,  // TEXT_A
-     66,  // TEXT_AB
-     30,  // TEXT_ABS
+     63,  // TEXT_A
+     64,  // TEXT_AB
+     28,  // TEXT_ABS
       1,  // TEXT_AI
       2,  // TEXT_ANDI
-     18,  // TEXT_B
-     27,  // TEXT_BL
-     17,  // TEXT_BLWP
-     63,  // TEXT_C
-     64,  // TEXT_CB
+     16,  // TEXT_B
+     25,  // TEXT_BL
+     15,  // TEXT_BLWP
+     61,  // TEXT_C
+     62,  // TEXT_CB
       4,  // TEXT_CI
      13,  // TEXT_CKOF
      12,  // TEXT_CKON
-     20,  // TEXT_CLR
-     51,  // TEXT_COC
-     52,  // TEXT_CZC
-     25,  // TEXT_DEC
-     26,  // TEXT_DECT
-     58,  // TEXT_DIV
+     18,  // TEXT_CLR
+     49,  // TEXT_COC
+     50,  // TEXT_CZC
+     23,  // TEXT_DEC
+     24,  // TEXT_DECT
+     56,  // TEXT_DIV
       9,  // TEXT_IDLE
-     23,  // TEXT_INC
-     24,  // TEXT_INCT
-     22,  // TEXT_INV
-     38,  // TEXT_JEQ
-     40,  // TEXT_JGT
-     46,  // TEXT_JH
-     39,  // TEXT_JHE
-     45,  // TEXT_JL
-     37,  // TEXT_JLE
-     36,  // TEXT_JLT
-     35,  // TEXT_JMP
-     42,  // TEXT_JNC
-     41,  // TEXT_JNE
-     44,  // TEXT_JNO
-     43,  // TEXT_JOC
-     47,  // TEXT_JOP
-     55,  // TEXT_LDCR
+     21,  // TEXT_INC
+     22,  // TEXT_INCT
+     20,  // TEXT_INV
+     36,  // TEXT_JEQ
+     38,  // TEXT_JGT
+     44,  // TEXT_JH
+     37,  // TEXT_JHE
+     43,  // TEXT_JL
+     35,  // TEXT_JLE
+     34,  // TEXT_JLT
+     33,  // TEXT_JMP
+     40,  // TEXT_JNC
+     39,  // TEXT_JNE
+     42,  // TEXT_JNO
+     41,  // TEXT_JOC
+     45,  // TEXT_JOP
+     53,  // TEXT_LDCR
       0,  // TEXT_LI
       8,  // TEXT_LIMI
      14,  // TEXT_LREX
       7,  // TEXT_LWPI
-     67,  // TEXT_MOV
-     68,  // TEXT_MOVB
-     57,  // TEXT_MPY
-     21,  // TEXT_NEG
-     16,  // TEXT_NOP
+     65,  // TEXT_MOV
+     66,  // TEXT_MOVB
+     55,  // TEXT_MPY
+     19,  // TEXT_NEG
+     70,  // TEXT_NOP
       3,  // TEXT_ORI
      10,  // TEXT_RSET
-     15,  // TEXT_RT
+     69,  // TEXT_RT
      11,  // TEXT_RTWP
-     61,  // TEXT_S
-     62,  // TEXT_SB
-     48,  // TEXT_SBO
-     49,  // TEXT_SBZ
-     29,  // TEXT_SETO
-     33,  // TEXT_SLA
-     69,  // TEXT_SOC
-     70,  // TEXT_SOCB
-     31,  // TEXT_SRA
-     34,  // TEXT_SRC
-     32,  // TEXT_SRL
-     56,  // TEXT_STCR
+     59,  // TEXT_S
+     60,  // TEXT_SB
+     46,  // TEXT_SBO
+     47,  // TEXT_SBZ
+     27,  // TEXT_SETO
+     31,  // TEXT_SLA
+     67,  // TEXT_SOC
+     68,  // TEXT_SOCB
+     29,  // TEXT_SRA
+     32,  // TEXT_SRC
+     30,  // TEXT_SRL
+     54,  // TEXT_STCR
       6,  // TEXT_STST
       5,  // TEXT_STWP
-     28,  // TEXT_SWPB
-     59,  // TEXT_SZC
-     60,  // TEXT_SZCB
-     50,  // TEXT_TB
-     19,  // TEXT_X
-     54,  // TEXT_XOP
-     53,  // TEXT_XOR
+     26,  // TEXT_SWPB
+     57,  // TEXT_SZC
+     58,  // TEXT_SZCB
+     48,  // TEXT_TB
+     17,  // TEXT_X
+     52,  // TEXT_XOP
+     51,  // TEXT_XOR
 };
 
 constexpr Entry TABLE_TMS9995[] PROGMEM = {

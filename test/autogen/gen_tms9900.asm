@@ -24,7 +24,6 @@
       BLWP  *R0+
       B     R0
       B     *R0
-      RT
       B     @0562H
       B     @0562H(R1)
       B     *R0+
@@ -96,8 +95,7 @@
       SLA   R0, 1
       SRC   R0, R0
       SRC   R0, 1
-      NOP
-      JMP   $+4
+      JMP   $+2
       JLT   $+2
       JLE   $+2
       JEQ   $+2

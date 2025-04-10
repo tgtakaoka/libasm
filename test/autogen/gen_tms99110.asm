@@ -168,7 +168,6 @@
       BLWP  *R0+
       B     R0
       B     *R0
-      RT
       B     @0562H
       B     @0562H(R1)
       B     *R0+
@@ -293,8 +292,7 @@
       STR   @0EE2H
       STR   @0EE2H(R1)
       STR   *R0+
-      NOP
-      JMP   $+4
+      JMP   $+2
       JLT   $+2
       JLE   $+2
       JEQ   $+2
