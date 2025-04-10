@@ -12,7 +12,7 @@
 ; See the License for the specific language governing permissions and
 ; limitations under the License.
 
-        cpu     146805
+        cpu     68HC05
         org     0100H
         include "gen_mc146805.inc"
         end
