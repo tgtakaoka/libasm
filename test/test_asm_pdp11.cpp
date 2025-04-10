@@ -484,7 +484,8 @@ void test_single_operand() {
          "(PC)+",            005027, 000000);
     ERRT("CLR  #012345",     OPERAND_NOT_ALLOWED,
          "#012345",          005027, 012345);
-    TEST("TST  #012345",     005727, 012345);
+    ERRT("TST  #012345",     OPERAND_NOT_ALLOWED,
+         "#012345",          005727, 012345);
     TEST("COM  @(R2)+",      005132);
     ERRT("COM  @(PC)+",      NOT_AN_EXPECTED,
          "@(PC)+",           005137, 000000);
@@ -532,7 +533,8 @@ void test_single_operand() {
          "(PC)+",            0105027, 000000);
     ERRT("CLRB #0345",       OPERAND_NOT_ALLOWED,
          "#0345",            0105027, 000345);
-    TEST("TSTB #0345",       0105727, 000345);
+    ERRT("TSTB #0345",       OPERAND_NOT_ALLOWED,
+         "#0345",            0105727, 000345);
     TEST("COMB @(R2)+",      0105132);
     ERRT("COMB @(PC)+",      NOT_AN_EXPECTED,
          "@(PC)+",           0105137, 000000);

@@ -39,9 +39,9 @@ enum OprSize : uint8_t {
 enum AddrMode : uint8_t {
     M_NONE = 0,
     M_GENR = 1,   // Register: R0~R7/SP/PC
-    M_GENS = 2,   // General source: #nnn/Rn/(Rn)/(Rn)+/-(Rn)/@(Rn)+/@-R(Rn)/X(Rn)/@X(Rn)
-    M_GEND = 3,   // General destination: Rn/(Rn)/(Rn)+/-(Rn)/@(Rn)+/@-R(Rn)/X(Rn)/@X(Rn)
-    M_GENA = 4,   // General address: (Rn)/(Rn)+/-(Rn)/@(Rn)+/@-R(Rn)/X(Rn)/@X(Rn)
+    M_GENS = 2,   // General source:       #nnn/Rn/(Rn)/(Rn)+/-(Rn)/@(Rn)+/@-R(Rn)/X(Rn)/@X(Rn)
+    M_GEND = 3,   // General destination:       Rn/(Rn)/(Rn)+/-(Rn)/@(Rn)+/@-R(Rn)/X(Rn)/@X(Rn)
+    M_GENA = 4,   // General address:              (Rn)/(Rn)+/-(Rn)/@(Rn)+/@-R(Rn)/X(Rn)/@X(Rn)
     M_GENF = 5,   // General float source: #nnn/ACn/(Rn)/(Rn)+/-(Rn)/@(Rn)+/@-R(Rn)/X(Rn)/@X(Rn)
     M_GENG = 6,   // General float destination: ACn/(Rn)/(Rn)+/-(Rn)/@(Rn)+/@-R(Rn)/X(Rn)/@X(Rn)
     M_AC03 = 7,   // Restricted float register: AC0~AC3
