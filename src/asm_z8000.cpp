@@ -416,7 +416,7 @@ void AsmZ8000::checkRegisterOverlap(
         insn.setErrorIf(srcOp, REGISTER_NOT_ALLOWED);
     if (insn.isTranslateInsn()) {
         // Original content of RH1 are lost, so that R1 must not be used as dst/src.
-        if (!cpuType() == Z8001) {
+        if (cpuType() == Z8002) {
             if (dstOp.reg == REG_R1)
                 insn.setErrorIf(dstOp, REGISTER_NOT_ALLOWED);
             if (srcOp.reg == REG_R1)
