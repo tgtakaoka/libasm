@@ -145,149 +145,179 @@ enum OprPos : uint8_t {
     EX_DUP = 21,  // _______uuu|___|___ : Du1:Du2 for CAS2
 };
 
+enum CodeFormat : uint8_t {
+    CF_0000 = 0,   // 0000000
+    CF_0007 = 1,   // 0000007
+    CF_0017 = 2,   // 0000017
+    CF_0077 = 3,   // 0000077
+    CF_0100 = 4,   // 0000100
+    CF_0107 = 5,   // 0000107
+    CF_0177 = 6,   // 0000177
+    CF_0377 = 7,   // 0000377
+    CF_3000 = 8,   // 0003000
+    CF_3077 = 9,   // 0003077
+    CF_7007 = 10,  // 0007007
+    CF_7077 = 11,  // 0007077
+    CF_7107 = 12,  // 0007107
+    CF_7307 = 13,  // 0007307
+    CF_7377 = 14,  // 0007377
+    CF_7400 = 15,  // 0007400
+    CF_7477 = 16,  // 0007477
+    CF_7777 = 17,  // 0007777
+};
+
+enum PostFormat : uint8_t {
+    PF_0000 = 0,   // 0x0000
+    PF_0070 = 1,   // 0x0070
+    PF_00FF = 2,   // 0x00FF
+    PF_01C7 = 3,   // 0x01C7
+    PF_0380 = 4,   // 0x0380
+    PF_0387 = 5,   // 0x0387
+    PF_03F0 = 6,   // 0x03F0
+    PF_03FF = 7,   // 0x03FF
+    PF_0FFF = 8,   // 0x0FFF
+    PF_1C00 = 9,   // 0x1C00
+    PF_1F80 = 10,  // 0x1F80
+    PF_1F87 = 11,  // 0x1F87
+    PF_7007 = 12,  // 0x7007
+    PF_7FFF = 13,  // 0x7FFF
+    PF_F000 = 14,  // 0xF000
+    PF_F1C7 = 15,  // 0xF1C7
+    PF_FFFF = 16,  // 0xFFFF
+};
+
 struct Entry final : entry::Base<Config::opcode_t> {
     struct Flags final {
-        uint8_t _src;
-        uint8_t _dst;
-        uint8_t _ext;
-        uint8_t _attr;
-        uint16_t _oprPos;
-        Config::opcode_t _postVal;
+        uint16_t _src;
+        uint16_t _dst;
+        uint16_t _ext;
+        uint16_t _attr;
+        Config::opcode_t _post;
 
-        static constexpr Flags create(AddrMode src, AddrMode dst, AddrMode ext, OprPos srcPos,
-                OprPos dstPos, OprPos extPos, OprSize oSize, InsnSize iSize) {
-            return Flags{static_cast<uint8_t>(src), static_cast<uint8_t>(dst),
-                    static_cast<uint8_t>(ext), _size(oSize, iSize), _pos(srcPos, dstPos, extPos),
-                    0};
+        static constexpr Flags create(AddrMode src, AddrMode dst, AddrMode ext, OprPos spos,
+                OprPos dpos, OprPos epos, OprSize osize, InsnSize isize, CodeFormat cf) {
+            return Flags{mode(src, spos, cf), mode(dst, dpos, PF_0000), mode(ext, epos),
+                    attr(osize, isize), 0x0000};
         }
 
-        static constexpr Flags create(AddrMode src, AddrMode dst, AddrMode ext, OprPos srcPos,
-                OprPos dstPos, OprPos extPos, OprSize oSize, InsnSize iSize,
-                Config::opcode_t postVal) {
-            return Flags{static_cast<uint8_t>(src), static_cast<uint8_t>(dst),
-                    static_cast<uint8_t>(ext), _size(oSize, iSize),
-                    _pos(srcPos, dstPos, extPos, true), postVal};
+        static constexpr Flags create(AddrMode src, AddrMode dst, AddrMode ext, OprPos spos,
+                OprPos dpos, OprPos epos, OprSize osize, InsnSize isize, CodeFormat cf,
+                Config::opcode_t post, PostFormat pf) {
+            return Flags{mode(src, spos, cf), mode(dst, dpos, pf), mode(ext, epos),
+                    attr(osize, isize, true), post};
         }
 
-        AddrMode src() const { return AddrMode(_src); }
-        AddrMode dst() const { return AddrMode(_dst); }
-        AddrMode ext() const { return AddrMode(_ext); }
-        OprPos srcPos() const { return OprPos((_oprPos >> srcPos_gp) & pos_gm); }
-        OprPos dstPos() const { return OprPos((_oprPos >> dstPos_gp) & pos_gm); }
-        OprPos extPos() const { return OprPos((_oprPos >> extPos_gp) & pos_gm); }
-        OprSize oprSize() const { return OprSize((_attr >> oprSize_gp) & size_gm); }
-        InsnSize insnSize() const { return InsnSize((_attr >> insnSize_gp) & size_gm); }
-        bool hasPostVal() const { return (_oprPos & hasPostVal_bm) != 0; }
-        Config::opcode_t postVal() const { return _postVal; }
+        AddrMode src() const { return AddrMode((_src >> src_gp) & src_gm); }
+        AddrMode dst() const { return AddrMode((_dst >> dst_gp) & dst_gm); }
+        AddrMode ext() const { return AddrMode((_ext >> ext_gp) & ext_gm); }
+        OprPos srcPos() const { return OprPos((_src >> spos_gp) & spos_gm); }
+        OprPos dstPos() const { return OprPos((_dst >> dpos_gp) & dpos_gm); }
+        OprPos extPos() const { return OprPos((_ext >> epos_gp) & epos_gm); }
+        OprSize oprSize() const { return OprSize((_attr >> osize_gp) & osize_gm); }
+        InsnSize insnSize() const { return InsnSize((_attr >> isize_gp) & isize_gm); }
+        bool hasPostVal() const { return (_attr & pval_bm) != 0; }
+        Config::opcode_t postVal() const { return _post; }
 
-        void setInsnSize(InsnSize size) { _attr = _size(oprSize(), size); }
+        void setInsnSize(InsnSize size) { _attr = attr(oprSize(), size, hasPostVal()); }
+
         Config::opcode_t insnMask() const {
-            return insnMask(dst()) | insnMask(src()) | insnMask(ext()) | insnMask(dstPos()) |
-                   insnMask(srcPos()) | insnMask(extPos()) | insnMask(oprSize());
+            static constexpr Config::opcode_t CMASK[] PROGMEM = {
+                    00000,  // CF_0000 = 0
+                    00007,  // CF_0007 = 1
+                    00017,  // CF_0017 = 2
+                    00077,  // CF_0077 = 3
+                    00100,  // CF_0100 = 4
+                    00107,  // CF_0107 = 5
+                    00177,  // CF_0177 = 6
+                    00377,  // CF_0377 = 7
+                    03000,  // CF_3000 = 8
+                    03077,  // CF_3077 = 9
+                    07007,  // CF_7007 = 10
+                    07077,  // CF_7077 = 11
+                    07107,  // CF_7107 = 12
+                    07307,  // CF_7307 = 13
+                    07377,  // CF_7377 = 14
+                    07400,  // CF_7400 = 15
+                    07477,  // CF_7477 = 16
+                    07777,  // CF_7777 = 17
+            };
+            return pgm_read_word(CMASK + codeFormat());
         }
+
         Config::opcode_t postMask() const {
-            return postMask(dstPos()) | postMask(srcPos()) | postMask(extPos());
-        }
-
-        static Config::opcode_t insnMask(AddrMode mode) {
-            if (mode == M_IM8 || mode == M_REL8)
-                return 0xFF;
-            if (mode == M_REL32)
-                return 0x40;
-            if (mode == M_IMVEC)
-                return 0xF;
-            if (mode == M_KFACT || mode == M_KDREG)
-                return 00077;  // OP_10
-            return 0;
-        }
-
-        static Config::opcode_t insnMask(OprSize size) {
-            switch (size) {
-            case SZ_DATA:
-                return (3 << 6);
-            case SZ_ADDR:
-                return (1 << 6);
-            case SZ_ADR8:
-                return (1 << 8);
-            case SZ_DATH:
-            case SZ_CAS1:
-            case SZ_CAS2:
-                return (3 << 9);
-            default:
-                return 0;
-            }
-        }
-
-        static Config::opcode_t insnMask(OprPos pos) {
-            static constexpr Config::opcode_t BITS[] PROGMEM = {
-                    00077,  // OP_10 = 0,  // ____|___|___|mmm|rrr
-                    07700,  // OP_23 = 1,  // ____|rrr|mmm|___|___
-                    00007,  // OP__0 = 2,  // ____|___|___|___|rrr
-                    07000,  // OP__3 = 3,  // ____|rrr|___|___|___
+            static constexpr Config::opcode_t PMASK[] PROGMEM = {
+                    0x0000,  // PF_0000 = 0
+                    0x0070,  // PF_0070 = 1
+                    0x00FF,  // PF_00FF = 2
+                    0x01C7,  // PF_01C7 = 3
+                    0x0380,  // PF_0380 = 4
+                    0x0387,  // PF_0387 = 5
+                    0x03F0,  // PF_03F0 = 6
+                    0x03FF,  // PF_03FF = 7
+                    0x0FFF,  // PF_0FFF = 8
+                    0x1C00,  // PF_1C00 = 9
+                    0x1F80,  // PF_1F80 = 10
+                    0x1F87,  // PF_1F87 = 11
+                    0x7007,  // PF_7007 = 12
+                    0x7FFF,  // PF_7FFF = 13
+                    0xF000,  // PF_F000 = 14
+                    0xF1C7,  // PF_F1C7 = 15
+                    0xFFFF,  // PF_FFFF = 16
             };
-            if (pos >= OP___)
-                return 0;
-            return pgm_read_word(&BITS[pos]);
-        }
-
-        static Config::opcode_t postMask(OprPos pos) {
-            static constexpr Config::opcode_t BITS[] PROGMEM = {
-                    0x1C00,  // EX_RX = 5,   // ___|xxx|___|_______ : format or source register
-                    0x0380,  // EX_RY = 6,   // ___|___|yyy|_______ : destination register
-                    0x0387,  // EX_SC = 7,   // ___|___|sss|____ccc : FPSINCOS
-                    0x00FF,  // EX_SL = 8,   // ___|___|__|ffffffff : static register list
-                    0x0070,  // EX_DL = 9,   // ___|___|___|rrr____ : dynamic register list/k-factor
-                    0x007F,  // EX_SK = 10,  // ___|___|___|kkkkkkk : static k-factor
-                    0x0070,  // EX_DK = 11,  // ___|___|___|rrr____ : dynamic register list/k-factor
-                    0xF000,  // EX_GR = 12,  // a|rrr|_____________ : Dn/An
-                    0x0FFF,  // EX_RC = 13,  // _____|ccccccccccccc : Control register
-                    0x0FFF,  // EX_OW = 14,  // _____|dooooodwwwwww : Bitfield offset and width
-                    0x0007,  // EX_DC = 15,  // ________________ccc : Dc
-                    0x01C0,  // EX_DU = 16,  // _______|uuu|___|___ : Du
-                    0x7000,  // EX_DR = 17,  // _|ddd|_____________ : Dn
-                    0x7007,  // EX_QR = 18,  // _|qqq|_________|rrr : Dr:Dq
-                    0x7007,  // EX_QQ = 19,  // _|qqq|_________|qqq : Dq
-                    0x0007,  // EX_DCP = 20, // _______________|ccc : Dc1:Dc2 for CAS2
-                    0x01C0,  // EX_DUP = 21, // _______|uuu|___|___ : Du1:Du2 for CAS2
-            };
-            if (pos < EX_RX)
-                return 0;
-            return pgm_read_word(&BITS[pos - EX_RX]);
+            return pgm_read_word(PMASK + postFormat());
         }
 
     private:
-        static constexpr uint16_t _pos(
-                OprPos src, OprPos dst, OprPos ext, bool hasPostVal = false) {
-            return (static_cast<uint16_t>(src) << srcPos_gp) |
-                   (static_cast<uint16_t>(dst) << dstPos_gp) |
-                   (static_cast<uint16_t>(ext) << extPos_gp) | (hasPostVal ? hasPostVal_bm : 0);
-        }
+        CodeFormat codeFormat() const { return CodeFormat((_src >> cf_gp) & cf_gm); }
+        PostFormat postFormat() const { return PostFormat((_dst >> pf_gp) & pf_gm); }
 
-        static constexpr uint8_t _size(OprSize opr, InsnSize insn) {
-            return (static_cast<uint8_t>(opr) << oprSize_gp) |
-                   (static_cast<uint8_t>(insn) << insnSize_gp);
+        // |_src|
+        static constexpr int src_gp = 0;
+        static constexpr int spos_gp = 6;
+        static constexpr int cf_gp = 11;
+        static constexpr auto src_gm = UINT16_C(0x3F);
+        static constexpr auto spos_gm = UINT16_C(0x1F);
+        static constexpr auto cf_gm = UINT16_C(0x1F);
+        static constexpr uint16_t mode(AddrMode src, OprPos spos, CodeFormat cf) {
+            return (src << src_gp) | (spos << spos_gp) | (cf << cf_gp);
         }
-
-        // |_oprPos|
-        static constexpr int srcPos_gp = 0;
-        static constexpr int dstPos_gp = 5;
-        static constexpr int extPos_gp = 10;
-        static constexpr uint16_t pos_gm = 0x1F;
-        static constexpr int hasPostVal_bp = 15;
-        static constexpr uint16_t hasPostVal_bm = UINT16_C(1) << hasPostVal_bp;
+        // |_dst|
+        static constexpr int dst_gp = 0;
+        static constexpr int dpos_gp = 6;
+        static constexpr int pf_gp = 11;
+        static constexpr auto dst_gm = UINT16_C(0x3F);
+        static constexpr auto dpos_gm = UINT16_C(0x1F);
+        static constexpr auto pf_gm = UINT16_C(0x1F);
+        static constexpr uint16_t mode(AddrMode dst, OprPos dpos, PostFormat pf) {
+            return (dst << dst_gp) | (dpos << spos_gp) | (pf << pf_gp);
+        }
+        // |_ext|
+        static constexpr int ext_gp = 0;
+        static constexpr int epos_gp = 6;
+        static constexpr auto ext_gm = UINT16_C(0x3F);
+        static constexpr auto epos_gm = UINT16_C(0x1F);
+        static constexpr uint16_t mode(AddrMode ext, OprPos epos) {
+            return (ext << ext_gp) | (epos << epos_gp);
+        }
         // |_attr|
-        static constexpr int oprSize_gp = 0;
-        static constexpr int insnSize_gp = 4;
-        static constexpr uint8_t size_gm = 0x0F;
+        static constexpr int osize_gp = 0;
+        static constexpr int isize_gp = 4;
+        static constexpr int pval_bp = 8;
+        static constexpr auto osize_gm = UINT16_C(0x0F);
+        static constexpr auto isize_gm = UINT16_C(0x0F);
+        static constexpr auto pval_bm = UINT16_C(1) << pval_bp;
+        static constexpr uint16_t attr(OprSize osize, InsnSize isize, bool pval = false) {
+            return (osize << osize_gp) | (isize << isize_gp) | (pval ? pval_bm : 0);
+        }
     };
 
-    constexpr Entry(Config::opcode_t opCode, Flags flags, const /* PROGMEM */ char *name_P)
-        : Base(name_P, opCode), _flags_P(flags) {}
+    constexpr Entry(Config::opcode_t opc, Flags flags, const /* PROGMEM */ char *name_P)
+        : Base(name_P, opc), _flags_P(flags) {}
 
     Flags readFlags() const {
-        return Flags{pgm_read_byte(&_flags_P._src), pgm_read_byte(&_flags_P._dst),
-                pgm_read_byte(&_flags_P._ext), pgm_read_byte(&_flags_P._attr),
-                pgm_read_word(&_flags_P._oprPos), pgm_read_word(&_flags_P._postVal)};
+        return Flags{pgm_read_word(&_flags_P._src), pgm_read_word(&_flags_P._dst),
+                pgm_read_word(&_flags_P._ext), pgm_read_word(&_flags_P._attr),
+                pgm_read_word(&_flags_P._post)};
     }
 
 private:
