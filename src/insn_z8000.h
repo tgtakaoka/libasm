@@ -72,7 +72,7 @@ struct AsmInsn final : AsmInsnImpl<Config>, EntryInsn {
 
     void emitInsn() {
         emitUint16(opCode(), 0);
-        const PostFormat format = postFormat();
+        const auto format = postFormat();
         if (format == PF_0XX8)
             embedPostfix(0x8);
         if (format == PF_0XXE)
@@ -84,8 +84,8 @@ struct AsmInsn final : AsmInsnImpl<Config>, EntryInsn {
     void emitOperand32(uint32_t val32) { emitUint32(val32, operandPos()); }
 
 private:
-    uint8_t operandPos() {
-        uint8_t pos = length();
+    uint_fast8_t operandPos() {
+        auto pos = length();
         if (pos == 0)
             pos = postFormat() != PF_NONE ? 4 : 2;
         return pos;

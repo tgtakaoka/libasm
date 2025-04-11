@@ -201,10 +201,11 @@ void AsmZ8000::emitDirectAddress(AsmInsn &insn, AddrMode mode, const Operand &op
 void AsmZ8000::emitRelative(AsmInsn &insn, AddrMode mode, const Operand &op) const {
     const auto base = insn.address() + (mode == M_RA ? 4 : 2);
     const auto target = op.getError() ? base : op.val.getUnsigned();
+    const auto align = insn.size() == SZ_WORD || insn.size() == SZ_QUAD;
     if (cpuType() == Z8001)
-        insn.setErrorIf(op, checkAddr(target, insn.address(), 16));
+        insn.setErrorIf(op, checkAddr(target, insn.address(), 16, align));
     if (mode == M_RA) {
-        insn.setErrorIf(op, checkAddr(target, insn.size() == SZ_WORD || insn.size() == SZ_QUAD));
+        insn.setErrorIf(op, checkAddr(target, align));
         const auto delta = target - base;
         if (overflowDelta(delta, 16))
             insn.setErrorIf(op, OPERAND_TOO_FAR);

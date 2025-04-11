@@ -36,51 +36,40 @@ enum OprSize : uint8_t {
 
 enum AddrMode : uint8_t {
     M_NONE = 0,
-    M_R = 1,      // Register: Rn/RHn/RLn/RRn/RQn
-    M_IM = 2,     // Immediate: #nn
-    M_IR = 3,     // Indirect Register: @Rn/@RRn
-    M_DA = 4,     // Direct Address: nnnn
-    M_X = 5,      // Index: nnnn(Rn)
-    M_RA = 6,     // 16-bit Relative: nnnn -32768~+32767
-    M_BA = 7,     // Base Address: Rn(#nnnn)/RRn(#nnnn)
-    M_BX = 8,     // Base Index: Rn(Rn)/RRn(Rn)
-    M_GENI = 9,   // Generic and Immediate: IM/IR/DA/X/R
-    M_GEND = 10,  // Generic Data: IR/DA/X/R
-    M_GENA = 11,  // Generic Address: IR/DA/X
-    M_IO = 12,    // IO Address: nnnn/#nnnn
-    M_IM8 = 13,   // System call: #nn
-    M_BIT = 14,   // Bit number: #0~15
-    M_CNT = 15,   // Count: #1~16
-    M_QCNT = 16,  // Quick Count: #1/2
-    M_SCNT = 17,  // Signed Count: #-32~32
-    M_NCNT = 18,  // Signed Negative Count: #-32~32
-    M_CC = 19,    // Condition Code:
-                  // F/Z/NZ/C/NC/PL/MI/NE/EQ/OV/NOV/PE/PO/GE/LT/GT/LE/UGE/ULT/UGT/ULE
-    M_INTR = 20,  // Interrupt type: VI/NVI
-    M_CTL = 21,   // Control Register:
+    // dst/src/ex2
+    M_CC = 1,  // Condition Code:
+               // F/Z/NZ/C/NC/PL/MI/NE/EQ/OV/NOV/PE/PO/GE/LT/GT/LE/UGE/ULT/UGT/ULE
+    // src/ex1
+    M_CNT = 2,  // Count: #1~16
+    M_WR = 3,   // R0-R15
+    // dst/src
+    M_R = 4,      // Register: Rn/RHn/RLn/RRn/RQn
+    M_IM = 5,     // Immediate: #nn
+    M_IR = 6,     // Indirect Register: @Rn/@RRn
+    M_DA = 7,     // Direct Address: nnnn
+    M_X = 8,      // Index: nnnn(Rn)
+    M_RA = 9,     // 16-bit Relative: nnnn -32768~+32767
+    M_BA = 10,    // Base Address: Rn(#nnnn)/RRn(#nnnn)
+    M_BX = 11,    // Base Index: Rn(Rn)/RRn(Rn)
+    M_GENI = 12,  // Generic and Immediate: IM/IR/DA/X/R
+    M_GEND = 13,  // Generic Data: IR/DA/X/R
+    M_GENA = 14,  // Generic Address: IR/DA/X
+    M_IO = 15,    // IO Address: nnnn/#nnnn
+    M_IM8 = 16,   // System call: #nn
+    M_BIT = 17,   // Bit number: #0~15
+    M_QCNT = 18,  // Quick Count: #1/2
+    M_SCNT = 19,  // Signed Count: #-32~32
+    M_NCNT = 20,  // Signed Negative Count: #-32~32
+    M_INTR = 21,  // Interrupt type: VI/NVI
+    M_CTL = 22,   // Control Register:
                   // FCW/REFRESH/NSPSRG/NSPOFF/PSAPSEG/PSAPOFF/FLAGS
-    M_FLAG = 22,  // Flags: C/Z/S/P/V
-    M_RA12 = 23,  // 12-bit Relative: (-2048~+2047)*22
-    M_RA8 = 24,   // 8-bit Relative: (-128~+127)*2
-    M_RA7 = 25,   // 7-bit Positive Relative: -(0~127)*2
-    M_DBLR = 26,  // Double-Sized Register: WORD:RRn LONG:RQn
-    M_WR07 = 27,  // R0~R7
-    M_WR = 28,    // R0-R15
+    M_FLAG = 23,  // Flags: C/Z/S/P/V
+    M_RA12 = 24,  // 12-bit Relative: (-2048~+2047)*22
+    M_RA8 = 25,   // 8-bit Relative: (-128~+127)*2
+    M_RA7 = 26,   // 7-bit Positive Relative: -(0~127)*2
+    M_DBLR = 27,  // Double-Sized Register: WORD:RRn LONG:RQn
+    M_WR07 = 28,  // R0~R7
     M_IRIO = 29,  // Indirect Register IO Address: @R1~R15
-    M_ERROR = 255,
-};
-
-enum Ex1Mode : uint8_t {
-    E1_NONE = 0,
-    E1_CNT = 1,
-    E1_WR = 2,
-    E1_ERROR = 3,
-};
-
-enum Ex2Mode : uint8_t {
-    E2_NONE = 0,
-    E2_CC = 1,
-    E2_ERROR = 2,
 };
 
 enum PostFormat : uint8_t {
@@ -120,36 +109,27 @@ enum OprPos : uint8_t {
 
 struct Entry final : entry::Base<Config::opcode_t> {
     struct Flags final {
-        uint8_t _dst;
-        uint8_t _src;
-        uint8_t _ext;
-        uint8_t _attr;
+        uint16_t _mode;
+        uint16_t _attr;
 
-        static constexpr Flags create(AddrMode dst, OprPos dstPos, AddrMode src, OprPos srcPos,
-                Ex1Mode ex1, Ex2Mode ex2, PostFormat postFormat, CodeFormat codeFormat,
-                OprSize size) {
-            return Flags{opr(dst, dstPos), opr(src, srcPos), ext(ex1, ex2, postFormat),
-                    attr(codeFormat, size)};
+        static constexpr Flags create(AddrMode dst, AddrMode src, AddrMode ex1, AddrMode ex2,
+                OprSize size, OprPos dstPos, OprPos srcPos, CodeFormat cf, PostFormat pf) {
+            return Flags{mode(dst, src, ex1, ex2, size), attr(dstPos, srcPos, cf, pf)};
         }
 
         static const Flags create(AddrMode dst, AddrMode src, AddrMode ex1, AddrMode ex2) {
-            return Flags{opr(dst, OP_NO), opr(src, OP_NO),
-                    ext(toEx1Mode(ex1), toEx2Mode(ex2), PF_NONE), attr(CF_0000, SZ_NONE)};
+            return Flags{mode(dst, src, ex1, ex2, SZ_NONE), attr(OP_NO, OP_NO, CF_0000, PF_NONE)};
         }
 
-        AddrMode dst() const { return mode(_dst); }
-        AddrMode src() const { return mode(_src); }
-        AddrMode ex1() const { return toAddrMode(Ex1Mode((_ext >> ex1Mode_gp) & ex1Mode_gm)); }
-        AddrMode ex2() const { return toAddrMode(Ex2Mode((_ext >> ex2Mode_gp) & ex2Mode_gm)); }
-        OprPos dstPos() const { return pos(_dst); }
-        OprPos srcPos() const { return pos(_src); }
-        PostFormat postFormat() const {
-            return PostFormat((_ext >> postFormat_gp) & postFormat_gm);
-        }
-        CodeFormat codeFormat() const {
-            return CodeFormat((_attr >> codeFormat_gp) & codeFormat_gm);
-        }
-        OprSize size() const { return OprSize((_attr >> size_gp) & size_gm); }
+        AddrMode dst() const { return AddrMode((_mode >> dst_gp) & dst_gm); }
+        AddrMode src() const { return AddrMode((_mode >> src_gp) & src_gm); }
+        AddrMode ex1() const { return AddrMode((_mode >> ex1_gp) & ex1_gm); }
+        AddrMode ex2() const { return AddrMode((_mode >> ex2_gp) & ex2_gm); }
+        OprSize size() const { return OprSize((_mode >> size_gp) & size_gm); }
+        OprPos dstPos() const { return OprPos((_attr >> dstPos_gp) & dstPos_gm); }
+        OprPos srcPos() const { return OprPos((_attr >> srcPos_gp) & srcPos_gm); }
+        PostFormat postFormat() const { return PostFormat((_attr >> pf_gp) & pf_gm); }
+        CodeFormat codeFormat() const { return CodeFormat((_attr >> cf_gp) & cf_gm); }
 
         Config::opcode_t postVal() const {
             static constexpr Config::opcode_t POSTFIXES[] PROGMEM = {
@@ -196,95 +176,43 @@ struct Entry final : entry::Base<Config::opcode_t> {
         }
 
     private:
-        static constexpr uint8_t opr(AddrMode mode, OprPos pos) {
-            return (static_cast<uint8_t>(mode) << mode_gp) |
-                   (static_cast<uint8_t>(pos) << modePos_gp);
+        static constexpr uint16_t mode(
+                AddrMode dst, AddrMode src, AddrMode ex1, AddrMode ex2, OprSize size) {
+            return (dst << dst_gp) | (src << src_gp) | (ex1 << ex1_gp) | (ex2 << ex2_gp) |
+                   (size << size_gp);
         }
 
-        static constexpr uint8_t ext(Ex1Mode ex1, Ex2Mode ex2, PostFormat postFormat) {
-            return (static_cast<uint8_t>(ex1) << ex1Mode_gp) |
-                   (static_cast<uint8_t>(ex2) << ex2Mode_gp) |
-                   (static_cast<uint8_t>(postFormat) << postFormat_gp);
+        static constexpr uint16_t attr(OprPos dstPos, OprPos srcPos, CodeFormat cf, PostFormat pf) {
+            return (dstPos << dstPos_gp) | (srcPos << srcPos_gp) | (cf << cf_gp) | (pf << pf_gp);
         }
 
-        static constexpr uint8_t attr(CodeFormat codeFormat, OprSize size) {
-            return (static_cast<uint8_t>(codeFormat) << codeFormat_gp) |
-                   (static_cast<uint8_t>(size) << size_gp);
-        }
-
-        static inline AddrMode mode(uint8_t opr) { return AddrMode((opr >> mode_gp) & mode_gm); }
-        static inline OprPos pos(uint8_t opr) { return OprPos((opr >> modePos_gp) & modePos_gm); }
-
-        static AddrMode toAddrMode(Ex1Mode mode) {
-            static constexpr AddrMode EX1MODES[] PROGMEM = {
-                    M_NONE,   // E1_NONE
-                    M_CNT,    // E1_CNT
-                    M_WR,     // E1_WR
-                    M_ERROR,  // E1_ERROR
-            };
-            return AddrMode(pgm_read_byte(EX1MODES + mode));
-        }
-
-        static inline Ex1Mode toEx1Mode(AddrMode mode) {
-            switch (mode) {
-            case M_NONE:
-                return E1_NONE;
-            case M_CNT:
-            case M_IM:
-                return E1_CNT;
-            case M_WR:
-            case M_R:
-                return E1_WR;
-            default:
-                return E1_ERROR;
-            }
-        }
-
-        static inline Ex2Mode toEx2Mode(AddrMode mode) {
-            switch (mode) {
-            case M_NONE:
-                return E2_NONE;
-            case M_CC:
-                return E2_CC;
-            default:
-                return E2_ERROR;
-            }
-        }
-
-        static AddrMode toAddrMode(Ex2Mode mode) {
-            static constexpr AddrMode EX2MODES[] PROGMEM = {
-                    M_NONE,   // E2_NONE
-                    M_CC,     // E2_CC
-                    M_ERROR,  // E2_ERROR
-            };
-            return AddrMode(pgm_read_byte(EX2MODES + mode));
-        }
-
-        // |_dst|, |_src|
-        static constexpr int mode_gp = 0;
-        static constexpr int modePos_gp = 5;
-        static constexpr uint8_t mode_gm = 0x1f;
-        static constexpr uint8_t modePos_gm = 0x7;
-        // |_ext|
-        static constexpr int ex1Mode_gp = 0;
-        static constexpr int ex2Mode_gp = 2;
-        static constexpr int postFormat_gp = 4;
-        static constexpr uint8_t ex1Mode_gm = 0x3;
-        static constexpr uint8_t ex2Mode_gm = 0x3;
-        static constexpr uint8_t postFormat_gm = 0x7;
+        // |_mode|
+        static constexpr int dst_gp = 0;
+        static constexpr int src_gp = 5;
+        static constexpr int ex1_gp = 10;
+        static constexpr int ex2_gp = 12;
+        static constexpr int size_gp = 13;
+        static constexpr auto dst_gm = UINT16_C(0x1F);
+        static constexpr auto src_gm = UINT16_C(0x1F);
+        static constexpr auto ex1_gm = UINT16_C(0x3);
+        static constexpr auto ex2_gm = UINT16_C(0x1);
+        static constexpr auto size_gm = UINT16_C(0x7);
         // |_attr|
-        static constexpr int codeFormat_gp = 0;
-        static constexpr int size_gp = 4;
-        static constexpr uint8_t codeFormat_gm = 0xf;
-        static constexpr uint8_t size_gm = 0x7;
+        static constexpr int dstPos_gp = 0;
+        static constexpr int srcPos_gp = 3;
+        static constexpr int cf_gp = 6;
+        static constexpr int pf_gp = 10;
+        static constexpr auto dstPos_gm = UINT16_C(0x7);
+        static constexpr auto srcPos_gm = UINT16_C(0x7);
+        static constexpr auto cf_gm = UINT16_C(0xF);
+        static constexpr auto pf_gm = UINT16_C(0x7);
     };
 
     constexpr Entry(Config::opcode_t opCode, Flags flags, const /* PROGMEM */ char *name_P)
         : Base(name_P, opCode), _flags_P(flags) {}
 
     Flags readFlags() const {
-        return Flags{pgm_read_byte(&_flags_P._dst), pgm_read_byte(&_flags_P._src),
-                pgm_read_byte(&_flags_P._ext), pgm_read_byte(&_flags_P._attr)};
+        return Flags{pgm_read_word(&_flags_P._mode), pgm_read_word(&_flags_P._attr)};
     }
 
 private:

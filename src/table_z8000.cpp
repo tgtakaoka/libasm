@@ -24,15 +24,15 @@ using namespace libasm::text::z8000;
 namespace libasm {
 namespace z8000 {
 
-#define X4(_opc, _name, _cf, _sz, _dst, _src, _dstf, _srcf, _ex1, _ex2, _postFormat) \
-    {_opc, Entry::Flags::create(_dst, _dstf, _src, _srcf, _ex1, _ex2, _postFormat, _cf, _sz), _name}
-#define X3(_opc, _name, _cf, _sz, _dst, _src, _dstf, _srcf, _ex1, _postFormat) \
-    X4(_opc, _name, _cf, _sz, _dst, _src, _dstf, _srcf, _ex1, E2_NONE, _postFormat)
-#define X2(_opc, _name, _cf, _sz, _dst, _src, _dstf, _srcf, _postFormat) \
-    X3(_opc, _name, _cf, _sz, _dst, _src, _dstf, _srcf, E1_NONE, _postFormat)
-#define E2(_opc, _name, _cf, _sz, _dst, _src, _dstf, _srcf) \
-    X2(_opc, _name, _cf, _sz, _dst, _src, _dstf, _srcf, PF_NONE)
-#define E1(_opc, _name, _cf, _sz, _dst, _dstf) E2(_opc, _name, _cf, _sz, _dst, M_NONE, _dstf, OP_NO)
+#define X4(_opc, _name, _cf, _sz, _dst, _src, _dpos, _spos, _ex1, _ex2, _pf) \
+    {_opc, Entry::Flags::create(_dst, _src, _ex1, _ex2, _sz, _dpos, _spos, _cf, _pf), _name}
+#define X3(_opc, _name, _cf, _sz, _dst, _src, _dpos, _spos, _ex1, _pf) \
+    X4(_opc, _name, _cf, _sz, _dst, _src, _dpos, _spos, _ex1, M_NONE, _pf)
+#define X2(_opc, _name, _cf, _sz, _dst, _src, _dpos, _spos, _pf) \
+    X3(_opc, _name, _cf, _sz, _dst, _src, _dpos, _spos, M_NONE, _pf)
+#define E2(_opc, _name, _cf, _sz, _dst, _src, _dpos, _spos) \
+    X2(_opc, _name, _cf, _sz, _dst, _src, _dpos, _spos, PF_NONE)
+#define E1(_opc, _name, _cf, _sz, _dst, _dpos) E2(_opc, _name, _cf, _sz, _dst, M_NONE, _dpos, OP_NO)
 #define E0(_opc, _name, _cf) E1(_opc, _name, _cf, SZ_NONE, M_NONE, OP_NO)
 
 // clang-format off
@@ -163,9 +163,9 @@ constexpr Entry TABLE_Z8000[] PROGMEM = {
     E2(0x1900, TEXT_MULT,   CF_C0FF, SZ_WORD, M_DBLR, M_GENI, OP_C0, OP_C4),
     E2(0x1A00, TEXT_DIVL,   CF_C0FF, SZ_QUAD, M_DBLR, M_GENI, OP_C0, OP_C4),
     E2(0x1B00, TEXT_DIV,    CF_C0FF, SZ_WORD, M_DBLR, M_GENI, OP_C0, OP_C4),
-    X3(0x1C01, TEXT_LDM,    CF_C0F0, SZ_WORD, M_R,    M_GENA, OP_P8, OP_C4, E1_CNT, PF_0X0X),
+    X3(0x1C01, TEXT_LDM,    CF_C0F0, SZ_WORD, M_R,    M_GENA, OP_P8, OP_C4, M_CNT, PF_0X0X),
     E1(0x1C08, TEXT_TESTL,  CF_C0F0, SZ_QUAD, M_GEND,         OP_C4),
-    X3(0x1C09, TEXT_LDM,    CF_C0F0, SZ_WORD, M_GENA, M_R,    OP_C4, OP_P8, E1_CNT, PF_0X0X),
+    X3(0x1C09, TEXT_LDM,    CF_C0F0, SZ_WORD, M_GENA, M_R,    OP_C4, OP_P8, M_CNT, PF_0X0X),
     E2(0x1D00, TEXT_LDL,    CF_C0FF, SZ_QUAD, M_GENA, M_R,    OP_C4, OP_C0),
     E2(0x1E00, TEXT_JP,     CF_C0FF, SZ_WORD, M_CC,   M_GENA, OP_C0, OP_C4),
     E1(0x1E08, TEXT_JP,     CF_C0F0, SZ_WORD, M_GENA,         OP_C4),
@@ -205,70 +205,70 @@ constexpr Entry TABLE_Z8000[] PROGMEM = {
     E2(0x3D00, TEXT_IN,     CF_00FF, SZ_WORD, M_R,    M_IRIO, OP_C0, OP_C4),
     E2(0x3E00, TEXT_OUTB,   CF_00FF, SZ_BYTE, M_IRIO, M_R,    OP_C4, OP_C0),
     E2(0x3F00, TEXT_OUT,    CF_00FF, SZ_WORD, M_IRIO, M_R,    OP_C4, OP_C0),
-    X3(0x3A00, TEXT_INIRB,  CF_00F0, SZ_BYTE, M_IR,   M_IRIO, OP_P4, OP_C4, E1_WR, PF_0XX0),
-    X3(0x3A00, TEXT_INIB,   CF_00F0, SZ_BYTE, M_IR,   M_IRIO, OP_P4, OP_C4, E1_WR, PF_0XX8),
-    X3(0x3A01, TEXT_SINIRB, CF_00F0, SZ_BYTE, M_IR,   M_IRIO, OP_P4, OP_C4, E1_WR, PF_0XX0),
-    X3(0x3A01, TEXT_SINIB,  CF_00F0, SZ_BYTE, M_IR,   M_IRIO, OP_P4, OP_C4, E1_WR, PF_0XX8),
-    X3(0x3A02, TEXT_OTIRB,  CF_00F0, SZ_BYTE, M_IRIO, M_IR,   OP_P4, OP_C4, E1_WR, PF_0XX0),
-    X3(0x3A02, TEXT_OUTIB,  CF_00F0, SZ_BYTE, M_IRIO, M_IR,   OP_P4, OP_C4, E1_WR, PF_0XX8),
-    X3(0x3A03, TEXT_SOTIRB, CF_00F0, SZ_BYTE, M_IRIO, M_IR,   OP_P4, OP_C4, E1_WR, PF_0XX0),
-    X3(0x3A03, TEXT_SOUTIB, CF_00F0, SZ_BYTE, M_IRIO, M_IR,   OP_P4, OP_C4, E1_WR, PF_0XX8),
-    X3(0x3A08, TEXT_INDRB,  CF_00F0, SZ_BYTE, M_IR,   M_IRIO, OP_P4, OP_C4, E1_WR, PF_0XX0),
-    X3(0x3A08, TEXT_INDB,   CF_00F0, SZ_BYTE, M_IR,   M_IRIO, OP_P4, OP_C4, E1_WR, PF_0XX8),
-    X3(0x3A09, TEXT_SINDRB, CF_00F0, SZ_BYTE, M_IR,   M_IRIO, OP_P4, OP_C4, E1_WR, PF_0XX0),
-    X3(0x3A09, TEXT_SINDB,  CF_00F0, SZ_BYTE, M_IR,   M_IRIO, OP_P4, OP_C4, E1_WR, PF_0XX8),
-    X3(0x3A0A, TEXT_OTDRB,  CF_00F0, SZ_BYTE, M_IRIO, M_IR,   OP_P4, OP_C4, E1_WR, PF_0XX0),
-    X3(0x3A0A, TEXT_OUTDB,  CF_00F0, SZ_BYTE, M_IRIO, M_IR,   OP_P4, OP_C4, E1_WR, PF_0XX8),
-    X3(0x3A0B, TEXT_SOTDRB, CF_00F0, SZ_BYTE, M_IRIO, M_IR,   OP_P4, OP_C4, E1_WR, PF_0XX0),
-    X3(0x3A0B, TEXT_SOUTDB, CF_00F0, SZ_BYTE, M_IRIO, M_IR,   OP_P4, OP_C4, E1_WR, PF_0XX8),
-    X3(0x3B00, TEXT_INIR,   CF_00F0, SZ_WORD, M_IR,   M_IRIO, OP_P4, OP_C4, E1_WR, PF_0XX0),
-    X3(0x3B00, TEXT_INI,    CF_00F0, SZ_WORD, M_IR,   M_IRIO, OP_P4, OP_C4, E1_WR, PF_0XX8),
-    X3(0x3B01, TEXT_SINIR,  CF_00F0, SZ_WORD, M_IR,   M_IRIO, OP_P4, OP_C4, E1_WR, PF_0XX0),
-    X3(0x3B01, TEXT_SINI,   CF_00F0, SZ_WORD, M_IR,   M_IRIO, OP_P4, OP_C4, E1_WR, PF_0XX8),
-    X3(0x3B02, TEXT_OTIR,   CF_00F0, SZ_WORD, M_IRIO, M_IR,   OP_P4, OP_C4, E1_WR, PF_0XX0),
-    X3(0x3B02, TEXT_OUTI,   CF_00F0, SZ_WORD, M_IRIO, M_IR,   OP_P4, OP_C4, E1_WR, PF_0XX8),
-    X3(0x3B03, TEXT_SOTIR,  CF_00F0, SZ_WORD, M_IRIO, M_IR,   OP_P4, OP_C4, E1_WR, PF_0XX0),
-    X3(0x3B03, TEXT_SOUTI,  CF_00F0, SZ_WORD, M_IRIO, M_IR,   OP_P4, OP_C4, E1_WR, PF_0XX8),
-    X3(0x3B08, TEXT_INDR,   CF_00F0, SZ_WORD, M_IR,   M_IRIO, OP_P4, OP_C4, E1_WR, PF_0XX0),
-    X3(0x3B08, TEXT_IND,    CF_00F0, SZ_WORD, M_IR,   M_IRIO, OP_P4, OP_C4, E1_WR, PF_0XX8),
-    X3(0x3B09, TEXT_SINDR,  CF_00F0, SZ_WORD, M_IR,   M_IRIO, OP_P4, OP_C4, E1_WR, PF_0XX0),
-    X3(0x3B09, TEXT_SIND,   CF_00F0, SZ_WORD, M_IR,   M_IRIO, OP_P4, OP_C4, E1_WR, PF_0XX8),
-    X3(0x3B0A, TEXT_OTDR,   CF_00F0, SZ_WORD, M_IRIO, M_IR,   OP_P4, OP_C4, E1_WR, PF_0XX0),
-    X3(0x3B0A, TEXT_OUTD,   CF_00F0, SZ_WORD, M_IRIO, M_IR,   OP_P4, OP_C4, E1_WR, PF_0XX8),
-    X3(0x3B0B, TEXT_SOTDR,  CF_00F0, SZ_WORD, M_IRIO, M_IR,   OP_P4, OP_C4, E1_WR, PF_0XX0),
-    X3(0x3B0B, TEXT_SOUTD,  CF_00F0, SZ_WORD, M_IRIO, M_IR,   OP_P4, OP_C4, E1_WR, PF_0XX8),
-    X3(0xB800, TEXT_TRIB,   CF_00F0, SZ_BYTE, M_IR,   M_IR,   OP_C4, OP_P4, E1_WR, PF_0XX0),
-    X3(0xB802, TEXT_TRTIB,  CF_00F0, SZ_BYTE, M_IR,   M_IR,   OP_C4, OP_P4, E1_WR, PF_0XX0),
-    X3(0xB804, TEXT_TRIRB,  CF_00F0, SZ_BYTE, M_IR,   M_IR,   OP_C4, OP_P4, E1_WR, PF_0XX0),
-    X3(0xB806, TEXT_TRTIRB, CF_00F0, SZ_BYTE, M_IR,   M_IR,   OP_C4, OP_P4, E1_WR, PF_0XXE),
-    X3(0xB808, TEXT_TRDB,   CF_00F0, SZ_BYTE, M_IR,   M_IR,   OP_C4, OP_P4, E1_WR, PF_0XX0),
-    X3(0xB80A, TEXT_TRTDB,  CF_00F0, SZ_BYTE, M_IR,   M_IR,   OP_C4, OP_P4, E1_WR, PF_0XX0),
-    X3(0xB80C, TEXT_TRDRB,  CF_00F0, SZ_BYTE, M_IR,   M_IR,   OP_C4, OP_P4, E1_WR, PF_0XX0),
-    X3(0xB80E, TEXT_TRTDRB, CF_00F0, SZ_BYTE, M_IR,   M_IR,   OP_C4, OP_P4, E1_WR, PF_0XXE),
-    X4(0xBA00, TEXT_CPIB,   CF_00F0, SZ_BYTE, M_R,    M_IR,   OP_P4, OP_C4, E1_WR, E2_CC, PF_0XXX),
-    X3(0xBA01, TEXT_LDIRB,  CF_00F0, SZ_BYTE, M_IR,   M_IR,   OP_P4, OP_C4, E1_WR,        PF_0XX0),
-    X3(0xBA01, TEXT_LDIB,   CF_00F0, SZ_BYTE, M_IR,   M_IR,   OP_P4, OP_C4, E1_WR,        PF_0XX8),
-    X4(0xBA02, TEXT_CPSIB,  CF_00F0, SZ_BYTE, M_IR,   M_IR,   OP_P4, OP_C4, E1_WR, E2_CC, PF_0XXX),
-    X4(0xBA04, TEXT_CPIRB,  CF_00F0, SZ_BYTE, M_R,    M_IR,   OP_P4, OP_C4, E1_WR, E2_CC, PF_0XXX),
-    X4(0xBA06, TEXT_CPSIRB, CF_00F0, SZ_BYTE, M_IR,   M_IR,   OP_P4, OP_C4, E1_WR, E2_CC, PF_0XXX),
-    X4(0xBA08, TEXT_CPDB,   CF_00F0, SZ_BYTE, M_R,    M_IR,   OP_P4, OP_C4, E1_WR, E2_CC, PF_0XXX),
-    X3(0xBA09, TEXT_LDDRB,  CF_00F0, SZ_BYTE, M_IR,   M_IR,   OP_P4, OP_C4, E1_WR,        PF_0XX0),
-    X3(0xBA09, TEXT_LDDB,   CF_00F0, SZ_BYTE, M_IR,   M_IR,   OP_P4, OP_C4, E1_WR,        PF_0XX8),
-    X4(0xBA0A, TEXT_CPSDB,  CF_00F0, SZ_BYTE, M_IR,   M_IR,   OP_P4, OP_C4, E1_WR, E2_CC, PF_0XXX),
-    X4(0xBA0C, TEXT_CPDRB,  CF_00F0, SZ_BYTE, M_R,    M_IR,   OP_P4, OP_C4, E1_WR, E2_CC, PF_0XXX),
-    X4(0xBA0E, TEXT_CPSDRB, CF_00F0, SZ_BYTE, M_IR,   M_IR,   OP_P4, OP_C4, E1_WR, E2_CC, PF_0XXX),
-    X4(0xBB00, TEXT_CPI,    CF_00F0, SZ_WORD, M_R,    M_IR,   OP_P4, OP_C4, E1_WR, E2_CC, PF_0XXX),
-    X3(0xBB01, TEXT_LDIR,   CF_00F0, SZ_WORD, M_IR,   M_IR,   OP_P4, OP_C4, E1_WR,        PF_0XX0),
-    X3(0xBB01, TEXT_LDI,    CF_00F0, SZ_WORD, M_IR,   M_IR,   OP_P4, OP_C4, E1_WR,        PF_0XX8),
-    X4(0xBB02, TEXT_CPSI,   CF_00F0, SZ_WORD, M_IR,   M_IR,   OP_P4, OP_C4, E1_WR, E2_CC, PF_0XXX),
-    X4(0xBB04, TEXT_CPIR,   CF_00F0, SZ_WORD, M_R,    M_IR,   OP_P4, OP_C4, E1_WR, E2_CC, PF_0XXX),
-    X4(0xBB06, TEXT_CPSIR,  CF_00F0, SZ_WORD, M_IR,   M_IR,   OP_P4, OP_C4, E1_WR, E2_CC, PF_0XXX),
-    X4(0xBB08, TEXT_CPD,    CF_00F0, SZ_WORD, M_R,    M_IR,   OP_P4, OP_C4, E1_WR, E2_CC, PF_0XXX),
-    X3(0xBB09, TEXT_LDDR,   CF_00F0, SZ_WORD, M_IR,   M_IR,   OP_P4, OP_C4, E1_WR,        PF_0XX0),
-    X3(0xBB09, TEXT_LDD,    CF_00F0, SZ_WORD, M_IR,   M_IR,   OP_P4, OP_C4, E1_WR,        PF_0XX8),
-    X4(0xBB0A, TEXT_CPSD,   CF_00F0, SZ_WORD, M_IR,   M_IR,   OP_P4, OP_C4, E1_WR, E2_CC, PF_0XXX),
-    X4(0xBB0C, TEXT_CPDR,   CF_00F0, SZ_WORD, M_R,    M_IR,   OP_P4, OP_C4, E1_WR, E2_CC, PF_0XXX),
-    X4(0xBB0E, TEXT_CPSDR,  CF_00F0, SZ_WORD, M_IR,   M_IR,   OP_P4, OP_C4, E1_WR, E2_CC, PF_0XXX),
+    X3(0x3A00, TEXT_INIRB,  CF_00F0, SZ_BYTE, M_IR,   M_IRIO, OP_P4, OP_C4, M_WR, PF_0XX0),
+    X3(0x3A00, TEXT_INIB,   CF_00F0, SZ_BYTE, M_IR,   M_IRIO, OP_P4, OP_C4, M_WR, PF_0XX8),
+    X3(0x3A01, TEXT_SINIRB, CF_00F0, SZ_BYTE, M_IR,   M_IRIO, OP_P4, OP_C4, M_WR, PF_0XX0),
+    X3(0x3A01, TEXT_SINIB,  CF_00F0, SZ_BYTE, M_IR,   M_IRIO, OP_P4, OP_C4, M_WR, PF_0XX8),
+    X3(0x3A02, TEXT_OTIRB,  CF_00F0, SZ_BYTE, M_IRIO, M_IR,   OP_P4, OP_C4, M_WR, PF_0XX0),
+    X3(0x3A02, TEXT_OUTIB,  CF_00F0, SZ_BYTE, M_IRIO, M_IR,   OP_P4, OP_C4, M_WR, PF_0XX8),
+    X3(0x3A03, TEXT_SOTIRB, CF_00F0, SZ_BYTE, M_IRIO, M_IR,   OP_P4, OP_C4, M_WR, PF_0XX0),
+    X3(0x3A03, TEXT_SOUTIB, CF_00F0, SZ_BYTE, M_IRIO, M_IR,   OP_P4, OP_C4, M_WR, PF_0XX8),
+    X3(0x3A08, TEXT_INDRB,  CF_00F0, SZ_BYTE, M_IR,   M_IRIO, OP_P4, OP_C4, M_WR, PF_0XX0),
+    X3(0x3A08, TEXT_INDB,   CF_00F0, SZ_BYTE, M_IR,   M_IRIO, OP_P4, OP_C4, M_WR, PF_0XX8),
+    X3(0x3A09, TEXT_SINDRB, CF_00F0, SZ_BYTE, M_IR,   M_IRIO, OP_P4, OP_C4, M_WR, PF_0XX0),
+    X3(0x3A09, TEXT_SINDB,  CF_00F0, SZ_BYTE, M_IR,   M_IRIO, OP_P4, OP_C4, M_WR, PF_0XX8),
+    X3(0x3A0A, TEXT_OTDRB,  CF_00F0, SZ_BYTE, M_IRIO, M_IR,   OP_P4, OP_C4, M_WR, PF_0XX0),
+    X3(0x3A0A, TEXT_OUTDB,  CF_00F0, SZ_BYTE, M_IRIO, M_IR,   OP_P4, OP_C4, M_WR, PF_0XX8),
+    X3(0x3A0B, TEXT_SOTDRB, CF_00F0, SZ_BYTE, M_IRIO, M_IR,   OP_P4, OP_C4, M_WR, PF_0XX0),
+    X3(0x3A0B, TEXT_SOUTDB, CF_00F0, SZ_BYTE, M_IRIO, M_IR,   OP_P4, OP_C4, M_WR, PF_0XX8),
+    X3(0x3B00, TEXT_INIR,   CF_00F0, SZ_WORD, M_IR,   M_IRIO, OP_P4, OP_C4, M_WR, PF_0XX0),
+    X3(0x3B00, TEXT_INI,    CF_00F0, SZ_WORD, M_IR,   M_IRIO, OP_P4, OP_C4, M_WR, PF_0XX8),
+    X3(0x3B01, TEXT_SINIR,  CF_00F0, SZ_WORD, M_IR,   M_IRIO, OP_P4, OP_C4, M_WR, PF_0XX0),
+    X3(0x3B01, TEXT_SINI,   CF_00F0, SZ_WORD, M_IR,   M_IRIO, OP_P4, OP_C4, M_WR, PF_0XX8),
+    X3(0x3B02, TEXT_OTIR,   CF_00F0, SZ_WORD, M_IRIO, M_IR,   OP_P4, OP_C4, M_WR, PF_0XX0),
+    X3(0x3B02, TEXT_OUTI,   CF_00F0, SZ_WORD, M_IRIO, M_IR,   OP_P4, OP_C4, M_WR, PF_0XX8),
+    X3(0x3B03, TEXT_SOTIR,  CF_00F0, SZ_WORD, M_IRIO, M_IR,   OP_P4, OP_C4, M_WR, PF_0XX0),
+    X3(0x3B03, TEXT_SOUTI,  CF_00F0, SZ_WORD, M_IRIO, M_IR,   OP_P4, OP_C4, M_WR, PF_0XX8),
+    X3(0x3B08, TEXT_INDR,   CF_00F0, SZ_WORD, M_IR,   M_IRIO, OP_P4, OP_C4, M_WR, PF_0XX0),
+    X3(0x3B08, TEXT_IND,    CF_00F0, SZ_WORD, M_IR,   M_IRIO, OP_P4, OP_C4, M_WR, PF_0XX8),
+    X3(0x3B09, TEXT_SINDR,  CF_00F0, SZ_WORD, M_IR,   M_IRIO, OP_P4, OP_C4, M_WR, PF_0XX0),
+    X3(0x3B09, TEXT_SIND,   CF_00F0, SZ_WORD, M_IR,   M_IRIO, OP_P4, OP_C4, M_WR, PF_0XX8),
+    X3(0x3B0A, TEXT_OTDR,   CF_00F0, SZ_WORD, M_IRIO, M_IR,   OP_P4, OP_C4, M_WR, PF_0XX0),
+    X3(0x3B0A, TEXT_OUTD,   CF_00F0, SZ_WORD, M_IRIO, M_IR,   OP_P4, OP_C4, M_WR, PF_0XX8),
+    X3(0x3B0B, TEXT_SOTDR,  CF_00F0, SZ_WORD, M_IRIO, M_IR,   OP_P4, OP_C4, M_WR, PF_0XX0),
+    X3(0x3B0B, TEXT_SOUTD,  CF_00F0, SZ_WORD, M_IRIO, M_IR,   OP_P4, OP_C4, M_WR, PF_0XX8),
+    X3(0xB800, TEXT_TRIB,   CF_00F0, SZ_BYTE, M_IR,   M_IR,   OP_C4, OP_P4, M_WR, PF_0XX0),
+    X3(0xB802, TEXT_TRTIB,  CF_00F0, SZ_BYTE, M_IR,   M_IR,   OP_C4, OP_P4, M_WR, PF_0XX0),
+    X3(0xB804, TEXT_TRIRB,  CF_00F0, SZ_BYTE, M_IR,   M_IR,   OP_C4, OP_P4, M_WR, PF_0XX0),
+    X3(0xB806, TEXT_TRTIRB, CF_00F0, SZ_BYTE, M_IR,   M_IR,   OP_C4, OP_P4, M_WR, PF_0XXE),
+    X3(0xB808, TEXT_TRDB,   CF_00F0, SZ_BYTE, M_IR,   M_IR,   OP_C4, OP_P4, M_WR, PF_0XX0),
+    X3(0xB80A, TEXT_TRTDB,  CF_00F0, SZ_BYTE, M_IR,   M_IR,   OP_C4, OP_P4, M_WR, PF_0XX0),
+    X3(0xB80C, TEXT_TRDRB,  CF_00F0, SZ_BYTE, M_IR,   M_IR,   OP_C4, OP_P4, M_WR, PF_0XX0),
+    X3(0xB80E, TEXT_TRTDRB, CF_00F0, SZ_BYTE, M_IR,   M_IR,   OP_C4, OP_P4, M_WR, PF_0XXE),
+    X4(0xBA00, TEXT_CPIB,   CF_00F0, SZ_BYTE, M_R,    M_IR,   OP_P4, OP_C4, M_WR, M_CC, PF_0XXX),
+    X3(0xBA01, TEXT_LDIRB,  CF_00F0, SZ_BYTE, M_IR,   M_IR,   OP_P4, OP_C4, M_WR,       PF_0XX0),
+    X3(0xBA01, TEXT_LDIB,   CF_00F0, SZ_BYTE, M_IR,   M_IR,   OP_P4, OP_C4, M_WR,       PF_0XX8),
+    X4(0xBA02, TEXT_CPSIB,  CF_00F0, SZ_BYTE, M_IR,   M_IR,   OP_P4, OP_C4, M_WR, M_CC, PF_0XXX),
+    X4(0xBA04, TEXT_CPIRB,  CF_00F0, SZ_BYTE, M_R,    M_IR,   OP_P4, OP_C4, M_WR, M_CC, PF_0XXX),
+    X4(0xBA06, TEXT_CPSIRB, CF_00F0, SZ_BYTE, M_IR,   M_IR,   OP_P4, OP_C4, M_WR, M_CC, PF_0XXX),
+    X4(0xBA08, TEXT_CPDB,   CF_00F0, SZ_BYTE, M_R,    M_IR,   OP_P4, OP_C4, M_WR, M_CC, PF_0XXX),
+    X3(0xBA09, TEXT_LDDRB,  CF_00F0, SZ_BYTE, M_IR,   M_IR,   OP_P4, OP_C4, M_WR,       PF_0XX0),
+    X3(0xBA09, TEXT_LDDB,   CF_00F0, SZ_BYTE, M_IR,   M_IR,   OP_P4, OP_C4, M_WR,       PF_0XX8),
+    X4(0xBA0A, TEXT_CPSDB,  CF_00F0, SZ_BYTE, M_IR,   M_IR,   OP_P4, OP_C4, M_WR, M_CC, PF_0XXX),
+    X4(0xBA0C, TEXT_CPDRB,  CF_00F0, SZ_BYTE, M_R,    M_IR,   OP_P4, OP_C4, M_WR, M_CC, PF_0XXX),
+    X4(0xBA0E, TEXT_CPSDRB, CF_00F0, SZ_BYTE, M_IR,   M_IR,   OP_P4, OP_C4, M_WR, M_CC, PF_0XXX),
+    X4(0xBB00, TEXT_CPI,    CF_00F0, SZ_WORD, M_R,    M_IR,   OP_P4, OP_C4, M_WR, M_CC, PF_0XXX),
+    X3(0xBB01, TEXT_LDIR,   CF_00F0, SZ_WORD, M_IR,   M_IR,   OP_P4, OP_C4, M_WR,       PF_0XX0),
+    X3(0xBB01, TEXT_LDI,    CF_00F0, SZ_WORD, M_IR,   M_IR,   OP_P4, OP_C4, M_WR,       PF_0XX8),
+    X4(0xBB02, TEXT_CPSI,   CF_00F0, SZ_WORD, M_IR,   M_IR,   OP_P4, OP_C4, M_WR, M_CC, PF_0XXX),
+    X4(0xBB04, TEXT_CPIR,   CF_00F0, SZ_WORD, M_R,    M_IR,   OP_P4, OP_C4, M_WR, M_CC, PF_0XXX),
+    X4(0xBB06, TEXT_CPSIR,  CF_00F0, SZ_WORD, M_IR,   M_IR,   OP_P4, OP_C4, M_WR, M_CC, PF_0XXX),
+    X4(0xBB08, TEXT_CPD,    CF_00F0, SZ_WORD, M_R,    M_IR,   OP_P4, OP_C4, M_WR, M_CC, PF_0XXX),
+    X3(0xBB09, TEXT_LDDR,   CF_00F0, SZ_WORD, M_IR,   M_IR,   OP_P4, OP_C4, M_WR,       PF_0XX0),
+    X3(0xBB09, TEXT_LDD,    CF_00F0, SZ_WORD, M_IR,   M_IR,   OP_P4, OP_C4, M_WR,       PF_0XX8),
+    X4(0xBB0A, TEXT_CPSD,   CF_00F0, SZ_WORD, M_IR,   M_IR,   OP_P4, OP_C4, M_WR, M_CC, PF_0XXX),
+    X4(0xBB0C, TEXT_CPDR,   CF_00F0, SZ_WORD, M_R,    M_IR,   OP_P4, OP_C4, M_WR, M_CC, PF_0XXX),
+    X4(0xBB0E, TEXT_CPSDR,  CF_00F0, SZ_WORD, M_IR,   M_IR,   OP_P4, OP_C4, M_WR, M_CC, PF_0XXX),
 };
 
 constexpr uint8_t INDEX_Z8000[] PROGMEM = {
@@ -561,18 +561,20 @@ Error searchName(CpuType cpuType, AsmInsn &insn) {
 bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *) {
     const auto flags = entry->readFlags();
     const auto cf = flags.codeFormat();
-    const auto opc = insn.opCode();
+    auto opc = insn.opCode();
     if ((cf == CF_C0F0 || cf == CF_C0FF) && (opc & 0xC000) == 0xC000)
         return false;
     if (cf == CF_X0FF && (opc & 0xC000) == 0 && (opc & 0x00F0) == 0)
         return false;
-    if ((opc & ~flags.codeMask()) != entry->readOpCode())
-        return false;
-    if (flags.postFormat() != PF_NONE) {
-        insn.readPostfix();
-        return (insn.postfix() & flags.postMask()) == flags.postVal();
+    opc &= ~flags.codeMask();
+    if (opc == entry->readOpCode()) {
+        if (flags.postFormat() != PF_NONE) {
+            insn.readPostfix();
+            return (insn.postfix() & flags.postMask()) == flags.postVal();
+        }
+        return true;
     }
-    return true;
+    return false;
 }
 
 Error searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) {
