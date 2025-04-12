@@ -27,6 +27,8 @@ namespace mc68000 {
 struct DisMc68000 final : Disassembler, Config {
     DisMc68000(const ValueFormatter::Plugins &plugins = defaultPlugins());
 
+    void reset() override;
+
 private:
     void outBitField(DisInsn &insn, StrBuffer &out) const;
     void outDataRegPair(DisInsn &insn, StrBuffer &out, OprPos pos) const;
