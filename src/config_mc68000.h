@@ -49,7 +49,7 @@ struct CpuSpec final {
 struct Config
     : ConfigImpl<CpuType, ADDRESS_24BIT, ADDRESS_BYTE, OPCODE_16BIT, ENDIAN_BIG, 16, 6 + 2> {
     Config(const InsnTable<CpuType> &table)
-        : ConfigImpl(table, MC68000), _cpuSpec(MC68000, FPU_NONE, 1) {}
+        : ConfigImpl(table, MC68000), _cpuSpec(MC68000, FPU_NONE, DEFAULT_FPU_CID) {}
 
     AddressWidth addressWidth() const override {
         return firstGen() ? ADDRESS_24BIT : ADDRESS_32BIT;
@@ -66,7 +66,9 @@ struct Config
     Error setFpuType(FpuType fpuType);
     Error setFpuName(StrScanner &scan) override;
     // TODO: Add option
-    void setFpuId(uint8_t id) { _cpuSpec.fpuCid = id; }
+    void setFpuCid(uint_fast8_t id) { _cpuSpec.fpuCid = (id > 0 && id < 8) ? id : DEFAULT_FPU_CID; }
+
+    static constexpr auto DEFAULT_FPU_CID = 1;
 
 protected:
     CpuSpec _cpuSpec;

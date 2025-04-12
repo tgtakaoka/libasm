@@ -46,6 +46,8 @@ void DisMc68000::reset() {
 #else
     setFpuType(FPU_ON);
 #endif
+    setFpuCid(DEFAULT_FPU_CID);
+    setGnuAs(false);
 }
 
 namespace {

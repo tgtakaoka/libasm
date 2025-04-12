@@ -87,6 +87,7 @@ AsmMc68000::AsmMc68000(const ValueParser::Plugins &plugins)
 
 void AsmMc68000::reset() {
     Assembler::reset();
+    setFpuCid(DEFAULT_FPU_CID);
     setFpuType(FPU_NONE);
 }
 
