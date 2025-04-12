@@ -5630,6 +5630,16 @@ void test_float_system() {
     UNKN(0xF300|072);
     UNKN(0xF300|073);
     UNKN(0xF300|074);
+
+    TEST("FADD.X", "FP0, FP1", 0171000, 0x0022|(0<<10)|(1<<7));
+    dis68000.setFpuCid(0);
+    TEST("FADD.X", "FP0, FP1", 0171000, 0x0022|(0<<10)|(1<<7));
+    dis68000.setFpuCid(8);
+    TEST("FADD.X", "FP0, FP1", 0171000, 0x0022|(0<<10)|(1<<7));
+    dis68000.setFpuCid(2);
+    TEST("FADD.X", "FP0, FP1", 0172000, 0x0022|(0<<10)|(1<<7));
+    dis68000.setFpuCid(7);
+    TEST("FADD.X", "FP0, FP1", 0177000, 0x0022|(0<<10)|(1<<7));
 }
 
 #endif

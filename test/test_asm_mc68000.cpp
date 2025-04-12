@@ -5928,6 +5928,16 @@ void test_float_system() {
     ERRT("FSAVE (*+$1234,PC)",   OPERAND_NOT_ALLOWED, "(*+$1234,PC)",   0xF300);
     ERRT("FSAVE (*+90,PC,A4.L)", OPERAND_NOT_ALLOWED, "(*+90,PC,A4.L)", 0xF300);
     ERRT("FSAVE #$6789ABCD",     OPERAND_NOT_ALLOWED, "#$6789ABCD",     0xF300);
+
+    TEST("FADD.X FP0, FP1", 0171000, 0x0022|(0<<10)|(1<<7));
+    as68000.setFpuCid(0);
+    TEST("FADD.X FP0, FP1", 0171000, 0x0022|(0<<10)|(1<<7));
+    as68000.setFpuCid(8);
+    TEST("FADD.X FP0, FP1", 0171000, 0x0022|(0<<10)|(1<<7));
+    as68000.setFpuCid(2);
+    TEST("FADD.X FP0, FP1", 0172000, 0x0022|(0<<10)|(1<<7));
+    as68000.setFpuCid(7);
+    TEST("FADD.X FP0, FP1", 0177000, 0x0022|(0<<10)|(1<<7));
 }
 
 #endif
