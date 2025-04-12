@@ -55,7 +55,7 @@ struct Config
 #else
                   FPU_MC68881,
 #endif
-                  1) {
+                  DEFAULT_FPU_CID) {
     }
 
     AddressWidth addressWidth() const override {
@@ -70,7 +70,9 @@ struct Config
     }
     void setFpuType(FpuType fpuType) { _cpuSpec.fpu = fpuType; }
     // TODO: Add option
-    void setFpuId(uint8_t id) { _cpuSpec.fpuCid = id; }
+    void setFpuCid(uint_fast8_t id) { _cpuSpec.fpuCid = (id > 0 && id < 8) ? id : DEFAULT_FPU_CID; }
+
+    static constexpr auto DEFAULT_FPU_CID = 1;
 
 protected:
     CpuSpec _cpuSpec;

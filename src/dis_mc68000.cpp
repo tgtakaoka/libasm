@@ -35,6 +35,12 @@ DisMc68000::DisMc68000(const ValueFormatter::Plugins &plugins)
     reset();
 }
 
+void DisMc68000::reset() {
+    Disassembler::reset();
+    setFpuCid(DEFAULT_FPU_CID);
+    setGnuAs(false);
+}
+
 namespace {
 
 StrBuffer &outOprSize(StrBuffer &out, OprSize size) {
