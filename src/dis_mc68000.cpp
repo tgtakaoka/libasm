@@ -40,6 +40,7 @@ DisMc68000::DisMc68000(const ValueFormatter::Plugins &plugins)
 
 void DisMc68000::reset() {
     Disassembler::reset();
+    setFpuCid(DEFAULT_FPU_CID);
     setGnuAs(false);
 }
 
