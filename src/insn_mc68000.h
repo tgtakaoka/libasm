@@ -87,9 +87,7 @@ struct Operand final : ErrorAt {
     Value val;
     RegName reg;
     RegName reg2;
-#if !defined(LIBASM_MC68000_NOMMU)
     PmmuReg preg;
-#endif
     union {
         Addressing addr;
         Value val2;
@@ -101,17 +99,14 @@ struct Operand final : ErrorAt {
 struct AsmInsn final : AsmInsnImpl<Config>, EntryInsn {
     AsmInsn(Insn &insn) : AsmInsnImpl(insn), _isize(ISZ_NONE) {}
 
-    Operand srcOp, dstOp, ex1Op;
-#if !defined(LIBASM_MC68000_NOMMU)
-    Operand ex2Op;
-#endif
+    Operand srcOp, dstOp, ex1Op, ex2Op;
 
     InsnSize parseInsnSize();
     InsnSize insnSize() const { return _isize; }
     void emitInsn() {
         emitUint16(opCode(), 0);
         if (hasPostVal())
-            emitUint16(postfix() | postVal(), 2);
+            emitUint16(postfix(), 2);
     }
     Error emitOperand16(uint16_t val16) { return emitUint16(val16, operandPos()); }
     Error emitOperand32(uint32_t val32) { return emitUint32(val32, operandPos()); }

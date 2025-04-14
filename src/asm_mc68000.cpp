@@ -538,15 +538,14 @@ bool AsmMc68000::encodeMiscImmediate(
         return true;
     }
 #endif
-#if !defined(LIBASM_MC68000_NOMMU)
     if (mode == M_IMFC) {
-        if (op.val.overflow(15))
+        if (op.val.overflow(mc68030() ? 7 : 15))
             insn.setErrorIf(op, OVERFLOW_RANGE);
         insn.embedPostfix(op.val.getUnsigned() & 0xF);
         return true;
     }
     if (mode == M_IMFM) {
-        if (op.val.overflow(15))
+        if (op.val.overflow(mc68030() ? 7 : 15))
             insn.setErrorIf(op, OVERFLOW_RANGE);
         insn.embedPostfix((op.val.getUnsigned() & 0xF) << 5);
         return true;
@@ -557,7 +556,6 @@ bool AsmMc68000::encodeMiscImmediate(
         insn.embedPostfix((op.val.getUnsigned() & 7) << 10);
         return true;
     }
-#endif
     return false;
 }
 
@@ -677,11 +675,10 @@ void AsmMc68000::encodePointerPair(AsmInsn &insn, const Operand &op) const {
     insn.emitOperand16(insn.post2);
 };
 
-#if !defined(LIBASM_MC68000_NOMMU)
 void AsmMc68000::encodePmove(AsmInsn &insn, const Operand &op, AddrMode mode) const {
     if (mode == M_PVAL)
         return;
-    const auto regSize = pmmuRegSize(op.preg);
+    const auto regSize = pmmuRegSize(op.preg, _cpuSpec);
     if (insn.insnSize() != ISZ_NONE && insn.insnSize() != InsnSize(regSize))
         insn.setErrorIf(ILLEGAL_SIZE);
     if (regSize == SZ_QUAD) {
@@ -689,9 +686,16 @@ void AsmMc68000::encodePmove(AsmInsn &insn, const Operand &op, AddrMode mode) co
         if (other.mode == M_DREG || other.mode == M_AREG)
             insn.setErrorIf(other, REGISTER_NOT_ALLOWED);
     }
-    insn.embedPostfix(encodePmmuReg(op.preg));
+    const auto preg = encodePmmuReg(op.preg, _cpuSpec);
+    auto pval = insn.postfix();
+    if (mc68030()) {
+        // Check for PMOVEFD to PSR
+        if ((pval & 0x100) && op.preg == PREG_PSR)
+            insn.setErrorIf(op, REGISTER_NOT_ALLOWED);
+        pval &= 0x3FFF;
+    }
+    insn.setPostfix(pval | preg);
 }
-#endif
 
 namespace {
 
@@ -714,11 +718,8 @@ bool validAddrReg(AsmInsn &insn, AddrMode mode, const ErrorAt &at) {
 }
 
 bool validPostInc(AsmInsn &insn, AddrMode mode, const ErrorAt &at) {
-    if (mode == M_JADDR || mode == M_DADDR || mode == M_BITFR || mode == M_BITFW
-#if !defined(LIBASM_MC68000_NOMMU)
-            || mode == M_PADDR
-#endif
-    ) {
+    if (mode == M_JADDR || mode == M_DADDR || mode == M_BITFR || mode == M_BITFW ||
+            mode == M_PADDR) {
         insn.reset();
         insn.setErrorIf(at, OPERAND_NOT_ALLOWED);
         return false;
@@ -727,11 +728,8 @@ bool validPostInc(AsmInsn &insn, AddrMode mode, const ErrorAt &at) {
 }
 
 bool validPreDec(AsmInsn &insn, AddrMode mode, const ErrorAt &at) {
-    if (mode == M_JADDR || mode == M_IADDR || mode == M_BITFR || mode == M_BITFW
-#if !defined(LIBASM_MC68000_NOMMU)
-            || mode == M_PADDR
-#endif
-    ) {
+    if (mode == M_JADDR || mode == M_IADDR || mode == M_BITFR || mode == M_BITFW ||
+            mode == M_PADDR) {
         insn.reset();
         insn.setErrorIf(at, OPERAND_NOT_ALLOWED);
         return false;
@@ -740,11 +738,8 @@ bool validPreDec(AsmInsn &insn, AddrMode mode, const ErrorAt &at) {
 }
 
 bool invalidPcBase(AsmInsn &insn, AddrMode mode, const ErrorAt &at) {
-    if (mode == M_WADDR || mode == M_WDATA || mode == M_BITFW || mode == M_WMEM || mode == M_DADDR
-#if !defined(LIBASM_MC68000_NOMMU)
-            || mode == M_PADDR
-#endif
-    ) {
+    if (mode == M_WADDR || mode == M_WDATA || mode == M_BITFW || mode == M_WMEM ||
+            mode == M_DADDR || mode == M_PADDR) {
         insn.reset();
         insn.setErrorIf(at, OPERAND_NOT_ALLOWED);
         return true;
@@ -896,14 +891,12 @@ Error AsmMc68000::encodeOperand(
     case M_USP:
     case M_CREG: {
         auto creg = encodeControlRegNo(op.reg);
-#if !defined(LIBASM_MC68000_NOMMU)
         if (mode == M_PFC) {
             if (op.reg != REG_SFC && op.reg != REG_DFC) {
                 insn.setErrorIf(op, REGISTER_NOT_ALLOWED);
                 creg = 0;
             }
         }
-#endif
         if (postPos(pos) == 0)
             insn.embedPostfix(creg);
         break;
@@ -923,11 +916,9 @@ Error AsmMc68000::encodeOperand(
             insn.embedPostfix(17);
 #endif
         break;
-#if !defined(LIBASM_MC68000_NOMMU)
     case M_PREG:
         encodePmove(insn, op, mode);
         break;
-#endif
     default:
         break;
     }
@@ -1484,14 +1475,12 @@ Error AsmMc68000::parseOperand(StrScanner &scan, Operand &op) const {
         return OK;
     }
 
-#if !defined(LIBASM_MC68000_NOMMU)
     op.preg = parsePmmuReg(p, parser());
     if (op.preg != PREG_UNDEF) {
         op.mode = M_PREG;
         scan = p;
         return OK;
     }
-#endif
 
     op.val = parseInteger(p, op);
     if (op.hasError())
@@ -1658,12 +1647,10 @@ Error AsmMc68000::encodeImpl(StrScanner &scan, Insn &_insn) const {
             if (parseOperand(scan, insn.ex1Op) && insn.ex1Op.hasError())
                 return _insn.setError(insn.ex1Op);
         }
-#if !defined(LIBASM_MC68000_NOMMU)
         if (scan.skipSpaces().expect(',')) {
             if (parseOperand(scan, insn.ex2Op) && insn.ex2Op.hasError())
                 return _insn.setError(insn.ex2Op);
         }
-#endif
     }
     scan.skipSpaces();
 
@@ -1673,9 +1660,7 @@ Error AsmMc68000::encodeImpl(StrScanner &scan, Insn &_insn) const {
     insn.setErrorIf(insn.srcOp);
     insn.setErrorIf(insn.dstOp);
     insn.setErrorIf(insn.ex1Op);
-#if !defined(LIBASM_MC68000_NOMMU)
     insn.setErrorIf(insn.ex2Op);
-#endif
     const auto src = insn.src();
     const auto dst = insn.dst();
     // Register list must be just after instruction code
@@ -1688,9 +1673,7 @@ Error AsmMc68000::encodeImpl(StrScanner &scan, Insn &_insn) const {
     encodeOperand(insn, osize, insn.srcOp, src, insn.srcPos());
     encodeOperand(insn, osize, insn.dstOp, dst, insn.dstPos());
     encodeOperand(insn, osize, insn.ex1Op, insn.ex1(), insn.ex1Pos());
-#if !defined(LIBASM_MC68000_NOMMU)
     encodeOperand(insn, osize, insn.ex2Op, insn.ex2(), insn.ex2Pos());
-#endif
     insn.emitInsn();
     if (insn.getError() == ILLEGAL_SIZE)
         insn.setAt(_insn.errorAt());

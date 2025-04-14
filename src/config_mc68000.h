@@ -22,7 +22,7 @@
 /** Disable MC68881 FPU instructions */
 // #define LIBASM_MC68000_NOFPU
 /** Disable MC68851 PMMU instructions */
-// #define LIBASM_MC68000_NOMMU
+#define LIBASM_MC68000_NOMMU
 
 namespace libasm {
 namespace mc68000 {
@@ -31,6 +31,7 @@ enum CpuType : uint8_t {
     MC68000,
     MC68010,
     MC68020,
+    MC68030,
 };
 
 enum FpuType : uint8_t {
@@ -96,6 +97,7 @@ protected:
 
     bool firstGen() const { return _cpuSpec.cpu == MC68000 || _cpuSpec.cpu == MC68010; }
     bool hasLongBranch() const { return !firstGen(); }
+    bool mc68030() const { return _cpuSpec.cpu == MC68030; }
 };
 
 }  // namespace mc68000

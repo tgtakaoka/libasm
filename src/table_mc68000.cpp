@@ -467,7 +467,6 @@ constexpr Entry MC68020_TABLE[] PROGMEM = {
     X3(0165700, TEXT_BFEXTS, ISZ_NONE, M_BITFR, M_BITOW, M_DREG,  OP_10, EX_OW, EX_DR, SZ_NONE, CF_0077, 0x0000, PF_7FFF),
     X3(0166700, TEXT_BFFFO,  ISZ_NONE, M_BITFR, M_BITOW, M_DREG,  OP_10, EX_OW, EX_DR, SZ_NONE, CF_0077, 0x0000, PF_7FFF),
     X3(0167700, TEXT_BFINS,  ISZ_NONE, M_DREG,  M_BITFW, M_BITOW, EX_DR, OP_10, EX_OW, SZ_NONE, CF_0077, 0x0000, PF_7FFF),
-    E2(0003300, TEXT_CALLM,  ISZ_NONE, M_IMDAT, M_JADDR, OP___, OP_10, SZ_BYTE, CF_0077),
     X3(0004300, TEXT_CAS,    ISZ_DATA, M_DREG,  M_DREG,  M_WMEM,  EX_DC,  EX_DU,  OP_10, SZ_CAS1, CF_3077, 0x0000, PF_01C7),
     X3(0004374, TEXT_CAS2,   ISZ_DATA, M_DPAIR, M_DPAIR, M_PPAIR, EX_DCP, EX_DUP, EX_GR, SZ_CAS2, CF_3000, 0x0000, PF_F1C7),
     E2(0040400, TEXT_CHK,    ISZ_LONG, M_RDATA, M_DREG,  OP_10, OP__3, SZ_LONG, CF_7077),
@@ -486,8 +485,6 @@ constexpr Entry MC68020_TABLE[] PROGMEM = {
     X2(0046000, TEXT_MULU,   ISZ_LONG, M_RDATA, M_DREG,  OP_10, EX_DR, SZ_LONG, CF_0077, 0x0000, PF_7007),
     E3(0100500, TEXT_PACK,   ISZ_NONE, M_DREG,  M_DREG,  M_IMDAT, OP__0, OP__3, OP___, SZ_WORD, CF_7007),
     E3(0100510, TEXT_PACK,   ISZ_NONE, M_PDEC,  M_PDEC,  M_IMDAT, OP__0, OP__3, OP___, SZ_WORD, CF_7007),
-    E1(0003310, TEXT_RTM,    ISZ_NONE, M_AREG,  OP__0, SZ_NONE, CF_0007),
-    E1(0003300, TEXT_RTM,    ISZ_NONE, M_DREG,  OP__0, SZ_NONE, CF_0007),
     E1(0052373, TEXT_TRAPCC, ISZ_LONG, M_IMDAT, OP___, SZ_LONG, CF_0000),
     E1(0052773, TEXT_TRAPCS, ISZ_LONG, M_IMDAT, OP___, SZ_LONG, CF_0000),
     E1(0053773, TEXT_TRAPEQ, ISZ_LONG, M_IMDAT, OP___, SZ_LONG, CF_0000),
@@ -555,83 +552,164 @@ constexpr uint8_t MC68020_INDEX[] PROGMEM = {
       7,  // TEXT_BFINS
       3,  // TEXT_BFSET
       0,  // TEXT_BFTST
-      8,  // TEXT_CALLM
-      9,  // TEXT_CAS
-     10,  // TEXT_CAS2
-     11,  // TEXT_CHK
-     12,  // TEXT_CHK2
-     13,  // TEXT_CMP2
+      8,  // TEXT_CAS
+      9,  // TEXT_CAS2
+     10,  // TEXT_CHK
+     11,  // TEXT_CHK2
+     12,  // TEXT_CMP2
+     13,  // TEXT_DIVS
      14,  // TEXT_DIVS
-     15,  // TEXT_DIVS
-     16,  // TEXT_DIVSL
+     15,  // TEXT_DIVSL
+     16,  // TEXT_DIVU
      17,  // TEXT_DIVU
-     18,  // TEXT_DIVU
-     19,  // TEXT_DIVUL
-     20,  // TEXT_LINK
+     18,  // TEXT_DIVUL
+     19,  // TEXT_LINK
+     20,  // TEXT_MULS
      21,  // TEXT_MULS
-     22,  // TEXT_MULS
+     22,  // TEXT_MULU
      23,  // TEXT_MULU
-     24,  // TEXT_MULU
+     24,  // TEXT_PACK
      25,  // TEXT_PACK
-     26,  // TEXT_PACK
-     27,  // TEXT_RTM
-     28,  // TEXT_RTM
-     29,  // TEXT_TRAPCC
-     47,  // TEXT_TRAPCC
-     65,  // TEXT_TRAPCC
-     30,  // TEXT_TRAPCS
-     48,  // TEXT_TRAPCS
-     66,  // TEXT_TRAPCS
-     31,  // TEXT_TRAPEQ
-     49,  // TEXT_TRAPEQ
-     67,  // TEXT_TRAPEQ
-     32,  // TEXT_TRAPF
-     50,  // TEXT_TRAPF
-     68,  // TEXT_TRAPF
-     33,  // TEXT_TRAPGE
-     51,  // TEXT_TRAPGE
-     69,  // TEXT_TRAPGE
-     34,  // TEXT_TRAPGT
-     52,  // TEXT_TRAPGT
-     70,  // TEXT_TRAPGT
-     35,  // TEXT_TRAPHI
-     53,  // TEXT_TRAPHI
-     71,  // TEXT_TRAPHI
-     36,  // TEXT_TRAPHS
-     54,  // TEXT_TRAPHS
-     72,  // TEXT_TRAPHS
-     37,  // TEXT_TRAPLE
-     55,  // TEXT_TRAPLE
-     73,  // TEXT_TRAPLE
-     38,  // TEXT_TRAPLO
-     56,  // TEXT_TRAPLO
-     74,  // TEXT_TRAPLO
-     39,  // TEXT_TRAPLS
-     57,  // TEXT_TRAPLS
-     75,  // TEXT_TRAPLS
-     40,  // TEXT_TRAPLT
-     58,  // TEXT_TRAPLT
-     76,  // TEXT_TRAPLT
-     41,  // TEXT_TRAPMI
-     59,  // TEXT_TRAPMI
-     77,  // TEXT_TRAPMI
-     42,  // TEXT_TRAPNE
-     60,  // TEXT_TRAPNE
-     78,  // TEXT_TRAPNE
-     43,  // TEXT_TRAPPL
-     61,  // TEXT_TRAPPL
-     79,  // TEXT_TRAPPL
-     44,  // TEXT_TRAPT
-     62,  // TEXT_TRAPT
-     80,  // TEXT_TRAPT
-     45,  // TEXT_TRAPVC
-     63,  // TEXT_TRAPVC
-     81,  // TEXT_TRAPVC
-     46,  // TEXT_TRAPVS
-     64,  // TEXT_TRAPVS
-     82,  // TEXT_TRAPVS
-     83,  // TEXT_UNPK
-     84,  // TEXT_UNPK
+     26,  // TEXT_TRAPCC
+     44,  // TEXT_TRAPCC
+     62,  // TEXT_TRAPCC
+     27,  // TEXT_TRAPCS
+     45,  // TEXT_TRAPCS
+     63,  // TEXT_TRAPCS
+     28,  // TEXT_TRAPEQ
+     46,  // TEXT_TRAPEQ
+     64,  // TEXT_TRAPEQ
+     29,  // TEXT_TRAPF
+     47,  // TEXT_TRAPF
+     65,  // TEXT_TRAPF
+     30,  // TEXT_TRAPGE
+     48,  // TEXT_TRAPGE
+     66,  // TEXT_TRAPGE
+     31,  // TEXT_TRAPGT
+     49,  // TEXT_TRAPGT
+     67,  // TEXT_TRAPGT
+     32,  // TEXT_TRAPHI
+     50,  // TEXT_TRAPHI
+     68,  // TEXT_TRAPHI
+     33,  // TEXT_TRAPHS
+     51,  // TEXT_TRAPHS
+     69,  // TEXT_TRAPHS
+     34,  // TEXT_TRAPLE
+     52,  // TEXT_TRAPLE
+     70,  // TEXT_TRAPLE
+     35,  // TEXT_TRAPLO
+     53,  // TEXT_TRAPLO
+     71,  // TEXT_TRAPLO
+     36,  // TEXT_TRAPLS
+     54,  // TEXT_TRAPLS
+     72,  // TEXT_TRAPLS
+     37,  // TEXT_TRAPLT
+     55,  // TEXT_TRAPLT
+     73,  // TEXT_TRAPLT
+     38,  // TEXT_TRAPMI
+     56,  // TEXT_TRAPMI
+     74,  // TEXT_TRAPMI
+     39,  // TEXT_TRAPNE
+     57,  // TEXT_TRAPNE
+     75,  // TEXT_TRAPNE
+     40,  // TEXT_TRAPPL
+     58,  // TEXT_TRAPPL
+     76,  // TEXT_TRAPPL
+     41,  // TEXT_TRAPT
+     59,  // TEXT_TRAPT
+     77,  // TEXT_TRAPT
+     42,  // TEXT_TRAPVC
+     60,  // TEXT_TRAPVC
+     78,  // TEXT_TRAPVC
+     43,  // TEXT_TRAPVS
+     61,  // TEXT_TRAPVS
+     79,  // TEXT_TRAPVS
+     80,  // TEXT_UNPK
+     81,  // TEXT_UNPK
+};
+
+constexpr Entry MC68020_MODULE[] PROGMEM = {
+    E2(0003300, TEXT_CALLM,  ISZ_NONE, M_IMDAT, M_JADDR, OP___, OP_10, SZ_BYTE, CF_0077),
+    E1(0003310, TEXT_RTM,    ISZ_NONE, M_AREG,  OP__0, SZ_NONE, CF_0007),
+    E1(0003300, TEXT_RTM,    ISZ_NONE, M_DREG,  OP__0, SZ_NONE, CF_0007),
+};
+
+constexpr uint8_t MC68020_MODULE_INDEX[] PROGMEM = {
+      0,  // TEXT_CALLM
+      1,  // TEXT_RTM
+      2,  // TEXT_RTM
+};
+
+constexpr Entry MC68030_TABLE[] PROGMEM = {
+    X0(0xF000, TEXT_PFLUSHA,  CF_0077,  0x2400,  PF_0000),
+    X2(0xF000, TEXT_PFLUSH,   ISZ_NONE, M_IMFC,  M_IMFM, EX_PFC,  EX_PFM, SZ_NONE, CF_0077, 0x3010, PF_01EF),
+    X2(0xF000, TEXT_PFLUSH,   ISZ_NONE, M_DREG,  M_IMFM, EX_DC,   EX_PFM, SZ_NONE, CF_0077, 0x3008, PF_01E7),
+    X2(0xF000, TEXT_PFLUSH,   ISZ_NONE, M_PFC,   M_IMFM, EX_PFC,  EX_PFM, SZ_NONE, CF_0077, 0x3000, PF_01E7),
+    X3(0xF000, TEXT_PFLUSH,   ISZ_NONE, M_IMFC,  M_IMFM, M_PADDR, EX_PFC, EX_PFM, OP_10, SZ_NONE, CF_0077, 0x3810, PF_01EF),
+    X3(0xF000, TEXT_PFLUSH,   ISZ_NONE, M_DREG,  M_IMFM, M_PADDR, EX_DC,  EX_PFM, OP_10, SZ_NONE, CF_0077, 0x3808, PF_01E7),
+    X3(0xF000, TEXT_PFLUSH,   ISZ_NONE, M_PFC,   M_IMFM, M_PADDR, EX_PFC, EX_PFM, OP_10, SZ_NONE, CF_0077, 0x3800, PF_01E7),
+    X2(0xF000, TEXT_PLOADR,   ISZ_NONE, M_IMFC,  M_PADDR, EX_PFC, OP_10, SZ_NONE, CF_0077, 0x2210, PF_000F),
+    X2(0xF000, TEXT_PLOADR,   ISZ_NONE, M_DREG,  M_PADDR, EX_DC,  OP_10, SZ_NONE, CF_0077, 0x2208, PF_0007),
+    X2(0xF000, TEXT_PLOADR,   ISZ_NONE, M_PFC,   M_PADDR, EX_PFC, OP_10, SZ_NONE, CF_0077, 0x2200, PF_0007),
+    X2(0xF000, TEXT_PLOADW,   ISZ_NONE, M_IMFC,  M_PADDR, EX_PFC, OP_10, SZ_NONE, CF_0077, 0x2010, PF_000F),
+    X2(0xF000, TEXT_PLOADW,   ISZ_NONE, M_DREG,  M_PADDR, EX_DC,  OP_10, SZ_NONE, CF_0077, 0x2008, PF_0007),
+    X2(0xF000, TEXT_PLOADW,   ISZ_NONE, M_PFC,   M_PADDR, EX_PFC, OP_10, SZ_NONE, CF_0077, 0x2000, PF_0007),
+    X2(0xF000, TEXT_PMOVE,    ISZ_FIXD, M_RADDR, M_PREG,  OP_10,  EX_PR, SZ_PMMU, CF_0077, 0x4000, PF_1C00),
+    X2(0xF000, TEXT_PMOVE,    ISZ_FIXD, M_RADDR, M_PREG,  OP_10,  EX_PR, SZ_PMMU, CF_0077, 0x6000, PF_1C00),
+    X2(0xF000, TEXT_PMOVE,    ISZ_FIXD, M_RADDR, M_PREG,  OP_10,  EX_PR, SZ_PMMU, CF_0077, 0x0000, PF_1C00),
+    X2(0xF000, TEXT_PMOVE,    ISZ_FIXD, M_PREG,  M_WADDR, EX_PR,  OP_10, SZ_PMMU, CF_0077, 0x4200, PF_1C00),
+    X2(0xF000, TEXT_PMOVE,    ISZ_FIXD, M_PREG,  M_WADDR, EX_PR,  OP_10, SZ_PMMU, CF_0077, 0x6200, PF_1C00),
+    X2(0xF000, TEXT_PMOVE,    ISZ_FIXD, M_PREG,  M_WADDR, EX_PR,  OP_10, SZ_PMMU, CF_0077, 0x0200, PF_1C00),
+    X2(0xF000, TEXT_PMOVEFD,  ISZ_FIXD, M_RADDR, M_PREG,  OP_10,  EX_PR, SZ_PMMU, CF_0077, 0x4100, PF_1C00),
+    X2(0xF000, TEXT_PMOVEFD,  ISZ_FIXD, M_RADDR, M_PREG,  OP_10,  EX_PR, SZ_PMMU, CF_0077, 0x0100, PF_1C00),
+    X3(0xF000, TEXT_PTESTR,   ISZ_NONE, M_IMFC,  M_PADDR, M_IMLV, EX_PFC, OP_10,  EX_RX, SZ_NONE, CF_0077, 0x8210, PF_1C0F),
+    X3(0xF000, TEXT_PTESTR,   ISZ_NONE, M_DREG,  M_PADDR, M_IMLV, EX_DC,  OP_10,  EX_RX, SZ_NONE, CF_0077, 0x8208, PF_1C07),
+    X3(0xF000, TEXT_PTESTR,   ISZ_NONE, M_PFC,   M_PADDR, M_IMLV, EX_PFC, OP_10,  EX_RX, SZ_NONE, CF_0077, 0x8200, PF_1C07),
+    X3(0xF000, TEXT_PTESTW,   ISZ_NONE, M_IMFC,  M_PADDR, M_IMLV, EX_PFC, OP_10,  EX_RX, SZ_NONE, CF_0077, 0x8010, PF_1C0F),
+    X3(0xF000, TEXT_PTESTW,   ISZ_NONE, M_DREG,  M_PADDR, M_IMLV, EX_DC,  OP_10,  EX_RX, SZ_NONE, CF_0077, 0x8008, PF_1C07),
+    X3(0xF000, TEXT_PTESTW,   ISZ_NONE, M_PFC,   M_PADDR, M_IMLV, EX_PFC, OP_10,  EX_RX, SZ_NONE, CF_0077, 0x8000, PF_1C07),
+    X4(0xF000, TEXT_PTESTR,   ISZ_NONE, M_IMFC,  M_PADDR, M_IMLV, M_AREG, EX_PFC, OP_10, EX_RX, SZ_NONE, CF_0077, 0x8310, PF_1CEF),
+    X4(0xF000, TEXT_PTESTR,   ISZ_NONE, M_DREG,  M_PADDR, M_IMLV, M_AREG, EX_DC,  OP_10, EX_RX, SZ_NONE, CF_0077, 0x8308, PF_1CE7),
+    X4(0xF000, TEXT_PTESTR,   ISZ_NONE, M_PFC,   M_PADDR, M_IMLV, M_AREG, EX_PFC, OP_10, EX_RX, SZ_NONE, CF_0077, 0x8300, PF_1CE7),
+    X4(0xF000, TEXT_PTESTW,   ISZ_NONE, M_IMFC,  M_PADDR, M_IMLV, M_AREG, EX_PFC, OP_10, EX_RX, SZ_NONE, CF_0077, 0x8110, PF_1CEF),
+    X4(0xF000, TEXT_PTESTW,   ISZ_NONE, M_DREG,  M_PADDR, M_IMLV, M_AREG, EX_DC,  OP_10, EX_RX, SZ_NONE, CF_0077, 0x8108, PF_1CE7),
+    X4(0xF000, TEXT_PTESTW,   ISZ_NONE, M_PFC,   M_PADDR, M_IMLV, M_AREG, EX_PFC, OP_10, EX_RX, SZ_NONE, CF_0077, 0x8100, PF_1CE7),
+};
+
+constexpr uint8_t MC68030_INDEX[] PROGMEM = {
+      1,  // TEXT_PFLUSH
+      2,  // TEXT_PFLUSH
+      3,  // TEXT_PFLUSH
+      4,  // TEXT_PFLUSH
+      5,  // TEXT_PFLUSH
+      6,  // TEXT_PFLUSH
+      0,  // TEXT_PFLUSHA
+      7,  // TEXT_PLOADR
+      8,  // TEXT_PLOADR
+      9,  // TEXT_PLOADR
+     10,  // TEXT_PLOADW
+     11,  // TEXT_PLOADW
+     12,  // TEXT_PLOADW
+     13,  // TEXT_PMOVE
+     14,  // TEXT_PMOVE
+     15,  // TEXT_PMOVE
+     16,  // TEXT_PMOVE
+     17,  // TEXT_PMOVE
+     18,  // TEXT_PMOVE
+     19,  // TEXT_PMOVEFD
+     20,  // TEXT_PMOVEFD
+     21,  // TEXT_PTESTR
+     22,  // TEXT_PTESTR
+     23,  // TEXT_PTESTR
+     27,  // TEXT_PTESTR
+     28,  // TEXT_PTESTR
+     29,  // TEXT_PTESTR
+     24,  // TEXT_PTESTW
+     25,  // TEXT_PTESTW
+     26,  // TEXT_PTESTW
+     30,  // TEXT_PTESTW
+     31,  // TEXT_PTESTW
+     32,  // TEXT_PTESTW
 };
 
 #if !defined(LIBASM_MC68000_NOFPU)
@@ -1607,6 +1685,14 @@ constexpr EntryPage MC68020_PAGES[] PROGMEM = {
         {ARRAY_RANGE(MC68020_TABLE), ARRAY_RANGE(MC68020_INDEX)},
         {ARRAY_RANGE(MC68010_TABLE), ARRAY_RANGE(MC68010_INDEX)},
         {ARRAY_RANGE(MC68000_TABLE), ARRAY_RANGE(MC68000_INDEX)},
+        {ARRAY_RANGE(MC68020_MODULE), ARRAY_RANGE(MC68020_MODULE_INDEX)},
+};
+
+constexpr EntryPage MC68030_PAGES[] PROGMEM = {
+        {ARRAY_RANGE(MC68020_TABLE), ARRAY_RANGE(MC68020_INDEX)},
+        {ARRAY_RANGE(MC68010_TABLE), ARRAY_RANGE(MC68010_INDEX)},
+        {ARRAY_RANGE(MC68000_TABLE), ARRAY_RANGE(MC68000_INDEX)},
+        {ARRAY_RANGE(MC68030_TABLE), ARRAY_RANGE(MC68030_INDEX)},
 };
 
 #if !defined(LIBASM_MC68000_NOFPU)
@@ -1631,6 +1717,7 @@ constexpr Cpu CPU_TABLE[] PROGMEM = {
         {MC68000, TEXT_CPU_68000, ARRAY_RANGE(MC68000_PAGES)},
         {MC68010, TEXT_CPU_68010, ARRAY_RANGE(MC68010_PAGES)},
         {MC68020, TEXT_CPU_68020, ARRAY_RANGE(MC68020_PAGES)},
+        {MC68030, TEXT_CPU_68030, ARRAY_RANGE(MC68030_PAGES)},
 };
 
 const Cpu *cpu(CpuType cpuType) {
@@ -1690,10 +1777,8 @@ bool miscImmediate(AddrMode mode) {
     if (mode == M_IMROM)
         return true;
 #endif
-#if !defined(LIBASM_MC68000_NOMMU)
     if (mode == M_IMFC || mode == M_IMFM || mode == M_IMLV)
         return true;
-#endif
     return false;
 }
 
@@ -1724,14 +1809,12 @@ bool acceptMode(AddrMode opr, AddrMode table, OprSize size) {
     if (opr == M_FPCR || opr == M_FPSR || opr == M_FPIAR)
         return table == M_FCMLT;
 #endif
-#if !defined(LIBASM_MC68000_NOMMU)
     if (opr == M_PADDR || opr == M_MROOT)
         return genericAddressing(table);
     if (opr == M_PREG)
         return table == M_PVAL;
     if (opr == M_CREG)
         return table == M_PFC;
-#endif
     return false;
 }
 
@@ -1776,17 +1859,24 @@ bool acceptModes(AsmInsn &insn, const Entry *entry) {
     return acceptMode(insn.srcOp.mode, table.src(), table.oprSize()) &&
            acceptMode(insn.dstOp.mode, table.dst(), table.oprSize()) &&
            acceptMode(insn.ex1Op.mode, table.ex1(), table.oprSize()) &&
-#if !defined(LIBASM_MC68000_NOMMU)
            acceptMode(insn.ex2Op.mode, table.ex2(), table.oprSize()) &&
-#endif
            acceptSize(insn, table);
 }
 
+void pageSetup(AsmInsn &, const EntryPage *) {}
+
+void readCode(AsmInsn &insn, const Entry *entry_P, const EntryPage *) {
+    insn.setOpCode(entry_P->readOpCode());
+    insn.setFlags(entry_P->readFlags());
+    if (insn.hasPostVal())
+        insn.setPostfix(insn.postVal());
+}
+
 Error searchName(const CpuSpec &cpuSpec, AsmInsn &insn) {
-    cpu(cpuSpec.cpu)->searchName(insn, acceptModes);
+    cpu(cpuSpec.cpu)->searchName(insn, acceptModes, pageSetup, readCode);
 #if !defined(LIBASM_MC68000_NOFPU)
     if (insn.getError() == UNKNOWN_INSTRUCTION) {
-        fpu(cpuSpec.fpu)->searchName(insn, acceptModes);
+        fpu(cpuSpec.fpu)->searchName(insn, acceptModes, pageSetup, readCode);
         if (insn.getError() != UNKNOWN_INSTRUCTION) {
             const auto opc = (insn.opCode() & ~07000) | (cpuSpec.fpuCid << 9);
             insn.setOpCode(opc);
