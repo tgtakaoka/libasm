@@ -28,13 +28,16 @@ extern const char TEXT_MC68000_LIST[] PROGMEM;
 extern const char TEXT_CPU_MC68000[]  PROGMEM;
 extern const char TEXT_CPU_MC68010[]  PROGMEM;
 extern const char TEXT_CPU_MC68020[]  PROGMEM;
+extern const char TEXT_CPU_MC68030[]  PROGMEM;
 extern const char TEXT_FPU_MC68881[]  PROGMEM;
 extern const char TEXT_PMMU_MC68851[] PROGMEM;
 extern const char TEXT_CPU_68000[]    PROGMEM;
 extern const char TEXT_CPU_68010[]    PROGMEM;
 extern const char TEXT_CPU_68020[]    PROGMEM;
+extern const char TEXT_CPU_68030[]    PROGMEM;
 extern const char TEXT_FPU_68881[]    PROGMEM;
 extern const char TEXT_PMMU_68851[]   PROGMEM;
+
 using common::TEXT_none;
 
 using common::TEXT_FPU;
@@ -240,6 +243,12 @@ extern const char TEXT_REG_CAAR[] PROGMEM;
 extern const char TEXT_REG_CACR[] PROGMEM;
 extern const char TEXT_REG_ISP[]  PROGMEM;
 extern const char TEXT_REG_MSP[]  PROGMEM;
+
+// MC68030
+extern const char TEXT_PMOVEFD[] PROGMEM;
+
+extern const char TEXT_REG_TT0[] PROGMEM;
+extern const char TEXT_REG_TT1[] PROGMEM;
 
 // MC68881
 using common::TEXT_FABS;

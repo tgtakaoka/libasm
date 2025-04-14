@@ -85,6 +85,8 @@ constexpr NameEntry PREG_ENTRIES[] PROGMEM = {
     { TEXT_REG_SCC,  PREG_SCC  },
     { TEXT_REG_SRP,  PREG_SRP  },
     { TEXT_REG_TC,   PREG_TC   },
+    { TEXT_REG_TT0,  PREG_TT0  },
+    { TEXT_REG_TT1,  PREG_TT1  },
     { TEXT_REG_VAL,  PREG_VAL  },
 };
 
@@ -232,33 +234,86 @@ StrBuffer &outPmmuReg(StrBuffer &out, PmmuReg name) {
     return out;
 }
 
-Config::opcode_t encodePmmuReg(PmmuReg name) {
-    if (name >= PREG_BAC0)
-        return (13 << 10) | ((name - PREG_BAC0) << 2);
-    if (name >= PREG_BAD0)
-        return (12 << 10) | ((name - PREG_BAD0) << 2);
-    return name << 10;
+Config::opcode_t encodePmmuReg(PmmuReg name, const CpuSpec &cpuSpec) {
+    if (cpuSpec.cpu == MC68020) {
+        if (name >= PREG_BAC0)
+            return (13 << 10) | ((name - PREG_BAC0) << 2);
+        if (name >= PREG_BAD0)
+            return (12 << 10) | ((name - PREG_BAD0) << 2);
+        return name << 10;
+    }
+    if (cpuSpec.cpu == MC68030) {
+        if (name == PREG_TT0 || name == PREG_TT1)
+            return (name - PREG_TT0 + 2) << 10;
+        return (name + 0x10) << 10;
+    }
+    return 0;
 }
 
-PmmuReg decodePmmuReg(Config::opcode_t post) {
-    const auto regno = (post >> 10) & 0xF;
-    if (regno < 10)
-        return PmmuReg(regno);
-    if (regno == 12)
-        return PmmuReg(PREG_BAD0 + ((post >> 2) & 7));
-    if (regno == 13)
-        return PmmuReg(PREG_BAC0 + ((post >> 2) & 7));
+PmmuReg decodePmmuReg(Config::opcode_t post, const CpuSpec &cpuSpec) {
+    if (cpuSpec.cpu == MC68020) {
+        const auto regno = (post >> 10) & 0xF;
+        if (regno < 10)
+            return PmmuReg(regno);
+        if (regno == 12)
+            return PmmuReg(PREG_BAD0 + ((post >> 2) & 7));
+        if (regno == 13)
+            return PmmuReg(PREG_BAC0 + ((post >> 2) & 7));
+    }
+    if (cpuSpec.cpu == MC68030) {
+        const auto regno = (post >> 10) & 0x1F;
+        if (regno == 2 || regno == 3)
+            return PmmuReg(PREG_TT0 + regno - 2);
+        if (regno >= 0x10 && regno < 0x14 && regno != 0x11)
+            return PmmuReg(PREG_TC + regno - 0x10);
+        if (regno == 0x18)
+            return PREG_PSR;
+    }
     return PREG_UNDEF;
 }
 
-OprSize pmmuRegSize(PmmuReg name) {
+OprSize pmmuRegSize(PmmuReg name, const CpuSpec &cpuSpec) {
     if (name == PREG_UNDEF)
         return SZ_NONE;
-    if (name >= PREG_AC)
-        return SZ_WORD;
-    if (name >= PREG_CAL)
-        return SZ_BYTE;
-    return name == PREG_TC ? SZ_LONG : SZ_QUAD;
+    if (cpuSpec.cpu == MC68020) {
+        if (name >= PREG_BAD0)
+            return SZ_WORD;
+        static constexpr OprSize SIZE[] PROGMEM = {
+                SZ_LONG,  // PREG_TC = 0
+                SZ_QUAD,  // PREG_DRP = 1
+                SZ_QUAD,  // PREG_SRP = 2
+                SZ_QUAD,  // PREG_CRP = 3
+                SZ_BYTE,  // PREG_CAL = 4
+                SZ_BYTE,  // PREG_VAL = 5
+                SZ_BYTE,  // PREG_SCC = 6
+                SZ_WORD,  // PREG_AC = 7
+                SZ_WORD,  // PREG_PSR = 8
+                SZ_WORD,  // PREG_PCSR = 9
+                SZ_NONE,  // PREG_TT0 = 10
+                SZ_NONE,  // PREG_TT1 = 11
+        };
+        return OprSize(pgm_read_byte(SIZE + name));
+    }
+    if (cpuSpec.cpu == MC68030) {
+        if (name >= PREG_BAD0)
+            return SZ_NONE;
+        static constexpr OprSize SIZE[] PROGMEM = {
+                SZ_LONG,  // PREG_TC = 0
+                SZ_NONE,  // PREG_DRP = 1
+                SZ_QUAD,  // PREG_SRP = 2
+                SZ_QUAD,  // PREG_CRP = 3
+                SZ_NONE,  // PREG_CAL = 4
+                SZ_NONE,  // PREG_VAL = 5
+                SZ_NONE,  // PREG_SCC = 6
+                SZ_NONE,  // PREG_AC = 7
+                SZ_WORD,  // PREG_PSR = 8
+                SZ_NONE,  // PREG_PCSR = 9
+                SZ_LONG,  // PREG_TT0 = 10
+                SZ_LONG,  // PREG_TT1 = 11
+        };
+        return OprSize(pgm_read_byte(SIZE + name));
+    }
+    return SZ_NONE;
 }
 #endif
 

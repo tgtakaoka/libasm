@@ -111,7 +111,7 @@ struct AsmInsn final : AsmInsnImpl<Config>, EntryInsn {
     void emitInsn() {
         emitUint16(opCode(), 0);
         if (hasPostVal())
-            emitUint16(postfix() | postVal(), 2);
+            emitUint16(postfix(), 2);
     }
     Error emitOperand16(uint16_t val16) { return emitUint16(val16, operandPos()); }
     Error emitOperand32(uint32_t val32) { return emitUint32(val32, operandPos()); }
