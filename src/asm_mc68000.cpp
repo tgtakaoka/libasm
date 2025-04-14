@@ -114,14 +114,20 @@ Error AsmMc68000::setPmmu(StrScanner &scan) {
         return OK;
     }
 #if !defined(LIBASM_MC68000_NOMMU)
+    bool pmmu;
+    if (OptionBase::parseBoolOption(scan, pmmu) == OK) {
+        if (_cpuSpec.cpu == MC68020) {
+            setMmuType(pmmu ? MMU_MC68851 : MMU_NONE);
+            return OK;
+        }
+        if (_cpuSpec.cpu == MC68030) {
+            setMmuType(pmmu ? MMU_MC68030 : MMU_NONE);
+            return OK;
+        }
+    }
     if (_cpuSpec.cpu == MC68020) {
         if (scan.iequals_P(TEXT_MMU_68851) || scan.iequals_P(TEXT_MMU_MC68851)) {
             setMmuType(MMU_MC68851);
-            return OK;
-        }
-        bool pmmu;
-        if (OptionBase::parseBoolOption(scan, pmmu) == OK) {
-            setMmuType(pmmu ? MMU_MC68851 : MMU_NONE);
             return OK;
         }
     }
@@ -546,13 +552,13 @@ bool AsmMc68000::encodeMiscImmediate(
 #endif
 #if !defined(LIBASM_MC68000_NOMMU)
     if (mode == M_IMFC) {
-        if (op.val.overflow(15))
+        if (op.val.overflow(mc68030() ? 7 : 15))
             insn.setErrorIf(op, OVERFLOW_RANGE);
         insn.embedPostfix(op.val.getUnsigned() & 0xF);
         return true;
     }
     if (mode == M_IMFM) {
-        if (op.val.overflow(15))
+        if (op.val.overflow(mc68030() ? 7 : 15))
             insn.setErrorIf(op, OVERFLOW_RANGE);
         insn.embedPostfix((op.val.getUnsigned() & 0xF) << 5);
         return true;
@@ -689,7 +695,7 @@ void AsmMc68000::encodePointerPair(AsmInsn &insn, const Operand &op) const {
 void AsmMc68000::encodePmove(AsmInsn &insn, const Operand &op, AddrMode mode) const {
     if (mode == M_PVAL)
         return;
-    const auto regSize = pmmuRegSize(op.preg);
+    const auto regSize = pmmuRegSize(op.preg, _cpuSpec);
     if (insn.insnSize() != ISZ_NONE && insn.insnSize() != InsnSize(regSize))
         insn.setErrorIf(ILLEGAL_SIZE);
     if (regSize == SZ_QUAD) {
@@ -697,7 +703,15 @@ void AsmMc68000::encodePmove(AsmInsn &insn, const Operand &op, AddrMode mode) co
         if (other.mode == M_DREG || other.mode == M_AREG)
             insn.setErrorIf(other, REGISTER_NOT_ALLOWED);
     }
-    insn.embedPostfix(encodePmmuReg(op.preg));
+    const auto preg = encodePmmuReg(op.preg, _cpuSpec);
+    auto pval = insn.postfix();
+    if (mc68030()) {
+        // Check for PMOVEFD to PSR
+        if ((pval & 0x100) && op.preg == PREG_PSR)
+            insn.setErrorIf(op, REGISTER_NOT_ALLOWED);
+        pval &= 0x3FFF;
+    }
+    insn.setPostfix(pval | preg);
 }
 #endif
 

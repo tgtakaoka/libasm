@@ -111,7 +111,7 @@ void DisMc68000::outImmediateData(DisInsn &insn, StrBuffer &out, OprSize size) c
 #endif
 #if !defined(LIBASM_MC68000_NOMMU)
     if (size == SZ_PMMU)
-        size = pmmuRegSize(decodePmmuReg(insn.postfix()));
+        size = pmmuRegSize(decodePmmuReg(insn.postfix(), _cpuSpec), _cpuSpec);
 #endif
     out.letter('#');
     if (size == SZ_BYTE || insn.src() == M_CCR || insn.dst() == M_CCR) {
@@ -413,7 +413,7 @@ void DisMc68000::outEffectiveAddr(
     if (mode == M_DREG || mode == M_AREG) {
 #if !defined(LIBASM_MC68000_NOMMU)
         if (insn.src() == M_PREG || insn.dst() == M_PREG) {
-            if (pmmuRegSize(decodePmmuReg(insn.postfix())) == SZ_QUAD)
+            if (pmmuRegSize(decodePmmuReg(insn.postfix(), _cpuSpec), _cpuSpec) == SZ_QUAD)
                 insn.setErrorIf(out, ILLEGAL_SIZE);
         }
 #endif
@@ -734,7 +734,6 @@ void DisMc68000::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode type, Opr
         if (size == SZ_DUBL || size == SZ_XTND || size == SZ_PBCD)
             insn.setErrorIf(out, ILLEGAL_SIZE);
     }
-    RegName reg;
 #endif
     switch (type) {
     case M_DREG:
@@ -833,8 +832,7 @@ void DisMc68000::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode type, Opr
         break;
 #if !defined(LIBASM_MC68000_NOFPU)
     case M_KDREG:
-        reg = decodeDataReg((insn.postfix() >> 4) & 7);
-        outRegName(out.letter('{'), reg).letter('}');
+        outRegName(out.letter('{'), decodeDataReg((insn.postfix() >> 4) & 7)).letter('}');
         break;
     case M_FPMLT:
         outFmoveMltRegList(out, insn);
@@ -881,12 +879,20 @@ void DisMc68000::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode type, Opr
         outPointerPair(insn, out);
         break;
 #if !defined(LIBASM_MC68000_NOMMU)
-    case M_IMFC:
-        outDec(out.letter('#'), insn.postfix() & 0xF, 4);
+    case M_IMFC: {
+        const auto fc = insn.postfix() & 0xF;
+        if (mc68030() && fc >= 8)
+            insn.setErrorIf(out, OVERFLOW_RANGE);
+        outDec(out.letter('#'), fc, 4);
         break;
-    case M_IMFM:
-        outDec(out.letter('#'), (insn.postfix() >> 5) & 0xF, 4);
+    }
+    case M_IMFM: {
+        const auto fm = (insn.postfix() >> 5) & 0xF;
+        if (mc68030() && fm >= 8)
+            insn.setErrorIf(out, OVERFLOW_RANGE);
+        outDec(out.letter('#'), fm & 0xF, 4);
         break;
+    }
     case M_IMLV:
         outDec(out.letter('#'), (insn.postfix() >> 10) & 7, 3);
         break;
@@ -896,8 +902,10 @@ void DisMc68000::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode type, Opr
         outRegName(out, (insn.postfix() & 1) == 0 ? REG_SFC : REG_DFC);
         break;
     case M_PREG: {
-        const auto reg = decodePmmuReg(insn.postfix());
+        const auto reg = decodePmmuReg(insn.postfix(), _cpuSpec);
         if (reg == PREG_UNDEF)
+            insn.setErrorIf(out, ILLEGAL_REGISTER);
+        if (reg == PREG_PSR && (insn.postfix() & 0x0100) && mc68030())
             insn.setErrorIf(out, ILLEGAL_REGISTER);
         outPmmuReg(out, reg);
         break;
@@ -951,11 +959,11 @@ OprSize decodeSize(DisInsn &insn) {
     return osize;
 }
 
-char decodeInsnSize(const DisInsn &insn, OprSize osize) {
+char DisMc68000::decodeInsnSize(const DisInsn &insn, OprSize osize) const {
     const auto isize = insn.insnSize();
 #if !defined(LIBASM_MC68000_NOMMU)
     if (osize == SZ_PMMU)
-        osize = pmmuRegSize(decodePmmuReg(insn.postfix()));
+        osize = pmmuRegSize(decodePmmuReg(insn.postfix(), _cpuSpec), _cpuSpec);
 #endif
     const auto size = (isize == ISZ_DATA || isize == ISZ_FIXD
 #if !defined(LIBASM_MC68000_NOFPU)
