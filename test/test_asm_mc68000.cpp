@@ -35,6 +35,10 @@ bool mc68020() {
     return strcmp_P("68020", assembler.config().cpu_P()) == 0;
 }
 
+bool mc68030() {
+    return strcmp_P("68030", assembler.config().cpu_P()) == 0;
+}
+
 bool firstGen() {
     return mc68k00() || mc68010();
 }
@@ -123,6 +127,12 @@ void test_cpu() {
 
     EQUALS("cpu mc68020", true,    assembler.setCpu("mc68020"));
     EQUALS_P("cpu mc68020", "68020", assembler.config().cpu_P());
+
+    EQUALS("cpu 68030", true,    assembler.setCpu("68030"));
+    EQUALS_P("cpu 68030", "68030", assembler.config().cpu_P());
+
+    EQUALS("cpu mc68030", true,    assembler.setCpu("mc68030"));
+    EQUALS_P("cpu mc68030", "68030", assembler.config().cpu_P());
 }
 
 void test_data_move() {
@@ -3243,7 +3253,7 @@ void test_system() {
         TEST("MOVEC D7, USP", 047173, 0070000 | 0x800);
         TEST("MOVEC A0, VBR", 047173, 0100000 | 0x801);
         ERRT("MOVEC D1, CCR", OPERAND_NOT_ALLOWED, "D1, CCR");
-    } else if (mc68020()) {
+    } else {
         TEST("MOVEC SFC, D1",  0047172, 0010000 | 0x000);
         TEST("MOVEC DFC, A2",  0047172, 0120000 | 0x001);
         TEST("MOVEC CACR, D2", 0047172, 0020000 | 0x002);
@@ -6109,9 +6119,268 @@ void test_extension() {
 }
 
 #if !defined(LIBASM_MC68000_NOPMMU)
+void test_mmu_move() {
+    TEST("PMMU ON");
+
+    ERRT("PMOVE.L D2, TC",
+         OPERAND_NOT_ALLOWED, "D2, TC",               0xF000, 0x4000|(0<<10));
+    ERRT("PMOVE.Q A2, SRP",
+         OPERAND_NOT_ALLOWED, "A2, SRP",              0xF000, 0x4000|(2<<10));
+    ERRT("PMOVE.Q (A2)+, CRP",
+         OPERAND_NOT_ALLOWED, "(A2)+, CRP",           0xF000, 0x4000|(3<<10));
+    ERRT("PMOVE.W -(A2), PSR",
+         OPERAND_NOT_ALLOWED, "-(A2), PSR",           0xF000, 0x6000|(8<<10));
+    ERRT("PMOVE.L (*+$1234,PC), TT0",
+         OPERAND_NOT_ALLOWED, "(*+$1234,PC), TT0",    0xF000, 0x0000|(2<<10));
+    ERRT("PMOVE.L (*+52,PC,D3.W), TT1",
+         OPERAND_NOT_ALLOWED, "(*+52,PC,D3.W), TT1",  0xF000, 0x0000|(3<<10));
+    ERRT("PMOVE.L #$12345678, TC",
+         OPERAND_NOT_ALLOWED, "#$12345678, TC",       0xF000, 0x4000|(0<<10));
+
+    TEST("PMOVE.L (A2), TC",   0xF000|022, 0x4000|(0<<10));
+    TEST("PMOVE.Q (A2), SRP",  0xF000|022, 0x4000|(2<<10));
+    TEST("PMOVE.Q (A2), CRP",  0xF000|022, 0x4000|(3<<10));
+    TEST("PMOVE.W (A2), PSR",  0xF000|022, 0x6000|(8<<10));
+    TEST("PMOVE.L (A2), TT0",  0xF000|022, 0x0000|(2<<10));
+    TEST("PMOVE.L (A2), TT1",  0xF000|022, 0x0000|(3<<10));
+
+    TEST("PMOVE.L ($1234,A2), TC",  0xF000|052, 0x4000|(0<<10), 0x1234);
+    TEST("PMOVE.Q ($1234,A2), SRP", 0xF000|052, 0x4000|(2<<10), 0x1234);
+    TEST("PMOVE.Q ($1234,A2), CRP", 0xF000|052, 0x4000|(3<<10), 0x1234);
+    TEST("PMOVE.W ($1234,A2), PSR", 0xF000|052, 0x6000|(8<<10), 0x1234);
+    TEST("PMOVE.L ($1234,A2), TT0", 0xF000|052, 0x0000|(2<<10), 0x1234);
+    TEST("PMOVE.L ($1234,A2), TT1", 0xF000|052, 0x0000|(3<<10), 0x1234);
+
+    TEST("PMOVE.L ($34,A2,D3.W), TC",  0xF000|062, 0x4000|(0<<10), 0x3034);
+    TEST("PMOVE.Q ($34,A2,D3.W), SRP", 0xF000|062, 0x4000|(2<<10), 0x3034);
+    TEST("PMOVE.Q ($34,A2,D3.W), CRP", 0xF000|062, 0x4000|(3<<10), 0x3034);
+    TEST("PMOVE.W ($34,A2,D3.W), PSR", 0xF000|062, 0x6000|(8<<10), 0x3034);
+    TEST("PMOVE.L ($34,A2,D3.W), TT0", 0xF000|062, 0x0000|(2<<10), 0x3034);
+    TEST("PMOVE.L ($34,A2,D3.W), TT1", 0xF000|062, 0x0000|(3<<10), 0x3034);
+
+    TEST("PMOVE.L ($00001234).W, TC",  0xF000|070, 0x4000|(0<<10), 0x1234);
+    TEST("PMOVE.Q ($00001234).W, SRP", 0xF000|070, 0x4000|(2<<10), 0x1234);
+    TEST("PMOVE.Q ($00001234).W, CRP", 0xF000|070, 0x4000|(3<<10), 0x1234);
+    TEST("PMOVE.W ($00001234).W, PSR", 0xF000|070, 0x6000|(8<<10), 0x1234);
+    TEST("PMOVE.L ($00001234).W, TT0", 0xF000|070, 0x0000|(2<<10), 0x1234);
+    TEST("PMOVE.L ($00001234).W, TT1", 0xF000|070, 0x0000|(3<<10), 0x1234);
+
+    TEST("PMOVE.L ($12345678).L, TC",  0xF000|071, 0x4000|(0<<10), 0x1234, 0x5678);
+    TEST("PMOVE.Q ($12345678).L, SRP", 0xF000|071, 0x4000|(2<<10), 0x1234, 0x5678);
+    TEST("PMOVE.Q ($12345678).L, CRP", 0xF000|071, 0x4000|(3<<10), 0x1234, 0x5678);
+    TEST("PMOVE.W ($12345678).L, PSR", 0xF000|071, 0x6000|(8<<10), 0x1234, 0x5678);
+    TEST("PMOVE.L ($12345678).L, TT0", 0xF000|071, 0x0000|(2<<10), 0x1234, 0x5678);
+    TEST("PMOVE.L ($12345678).L, TT1", 0xF000|071, 0x0000|(3<<10), 0x1234, 0x5678);
+
+    ERRT("PMOVEFD.L D2, TC",
+         OPERAND_NOT_ALLOWED, "D2, TC",              0xF000, 0x4100|(0<<10));
+    ERRT("PMOVEFD.Q A2, SRP",
+         OPERAND_NOT_ALLOWED, "A2, SRP",             0xF000, 0x4100|(2<<10));
+    ERRT("PMOVEFD.Q (A2)+, CRP",
+         OPERAND_NOT_ALLOWED, "(A2)+, CRP",          0xF000, 0x4100|(3<<10));
+    ERRT("PMOVEFD.W -(A2), PSR",
+         OPERAND_NOT_ALLOWED, "-(A2), PSR",          0xF000, 0x6100|(8<<10));
+    ERRT("PMOVEFD.L (*+$1234,PC), TT0",
+         OPERAND_NOT_ALLOWED, "(*+$1234,PC), TT0",   0xF000, 0x0100|(2<<10));
+    ERRT("PMOVEFD.L (*+52,PC,D3.W), TT1",
+         OPERAND_NOT_ALLOWED, "(*+52,PC,D3.W), TT1", 0xF000, 0x0100|(3<<10));
+    ERRT("PMOVEFD.L #$12345678, TC",
+         OPERAND_NOT_ALLOWED, "#$12345678, TC",      0xF000, 0x4100|(0<<10));
+
+    TEST("PMOVEFD.L (A2), TC",  0xF000|022, 0x4100|(0<<10));
+    TEST("PMOVEFD.Q (A2), SRP", 0xF000|022, 0x4100|(2<<10));
+    TEST("PMOVEFD.Q (A2), CRP", 0xF000|022, 0x4100|(3<<10));
+    ERRT("PMOVEFD.W (A2), PSR", REGISTER_NOT_ALLOWED, "PSR", 0xF000|022, 0x6100|(8<<10));
+    TEST("PMOVEFD.L (A2), TT0", 0xF000|022, 0x0100|(2<<10));
+    TEST("PMOVEFD.L (A2), TT1", 0xF000|022, 0x0100|(3<<10));
+
+    TEST("PMOVEFD.L ($1234,A2), TC",  0xF000|052, 0x4100|(0<<10), 0x1234);
+    TEST("PMOVEFD.Q ($1234,A2), SRP", 0xF000|052, 0x4100|(2<<10), 0x1234);
+    TEST("PMOVEFD.Q ($1234,A2), CRP", 0xF000|052, 0x4100|(3<<10), 0x1234);
+    ERRT("PMOVEFD.W ($1234,A2), PSR",
+         REGISTER_NOT_ALLOWED, "PSR", 0xF000|052, 0x6100|(8<<10), 0x1234);
+    TEST("PMOVEFD.L ($1234,A2), TT0", 0xF000|052, 0x0100|(2<<10), 0x1234);
+    TEST("PMOVEFD.L ($1234,A2), TT1", 0xF000|052, 0x0100|(3<<10), 0x1234);
+
+    TEST("PMOVEFD.L ($34,A2,D3.W), TC",  0xF000|062, 0x4100|(0<<10), 0x3034);
+    TEST("PMOVEFD.Q ($34,A2,D3.W), SRP", 0xF000|062, 0x4100|(2<<10), 0x3034);
+    TEST("PMOVEFD.Q ($34,A2,D3.W), CRP", 0xF000|062, 0x4100|(3<<10), 0x3034);
+    ERRT("PMOVEFD.W ($34,A2,D3.W), PSR",
+         REGISTER_NOT_ALLOWED, "PSR",    0xF000|062, 0x6100|(8<<10), 0x3034);
+    TEST("PMOVEFD.L ($34,A2,D3.W), TT0", 0xF000|062, 0x0100|(2<<10), 0x3034);
+    TEST("PMOVEFD.L ($34,A2,D3.W), TT1", 0xF000|062, 0x0100|(3<<10), 0x3034);
+
+    TEST("PMOVEFD.L ($00001234).W, TC",  0xF000|070, 0x4100|(0<<10), 0x1234);
+    TEST("PMOVEFD.Q ($00001234).W, SRP", 0xF000|070, 0x4100|(2<<10), 0x1234);
+    TEST("PMOVEFD.Q ($00001234).W, CRP", 0xF000|070, 0x4100|(3<<10), 0x1234);
+    ERRT("PMOVEFD.W ($00001234).W, PSR",
+         REGISTER_NOT_ALLOWED, "PSR",    0xF000|070, 0x6100|(8<<10), 0x1234);
+    TEST("PMOVEFD.L ($00001234).W, TT0", 0xF000|070, 0x0100|(2<<10), 0x1234);
+    TEST("PMOVEFD.L ($00001234).W, TT1", 0xF000|070, 0x0100|(3<<10), 0x1234);
+
+    TEST("PMOVEFD.L ($12345678).L, TC",  0xF000|071, 0x4100|(0<<10), 0x1234, 0x5678);
+    TEST("PMOVEFD.Q ($12345678).L, SRP", 0xF000|071, 0x4100|(2<<10), 0x1234, 0x5678);
+    TEST("PMOVEFD.Q ($12345678).L, CRP", 0xF000|071, 0x4100|(3<<10), 0x1234, 0x5678);
+    ERRT("PMOVEFD.W ($12345678).L, PSR",
+         REGISTER_NOT_ALLOWED, "PSR",    0xF000|071, 0x6100|(8<<10), 0x1234, 0x5678);
+    TEST("PMOVEFD.L ($12345678).L, TT0", 0xF000|071, 0x0100|(2<<10), 0x1234, 0x5678);
+    TEST("PMOVEFD.L ($12345678).L, TT1", 0xF000|071, 0x0100|(3<<10), 0x1234, 0x5678);
+
+    ERRT("PMOVE.L TC, D2",     OPERAND_NOT_ALLOWED, "D2", 0xF000, 0x4200|(0<<10));
+    ERRT("PMOVE.Q SRP, A2",    OPERAND_NOT_ALLOWED, "A2", 0xF000, 0x4200|(2<<10));
+    ERRT("PMOVE.Q CRP, (A2)+", OPERAND_NOT_ALLOWED, "(A2)+", 0xF000, 0x4200|(3<<10));
+    ERRT("PMOVE.W PSR, -(A2)", OPERAND_NOT_ALLOWED, "-(A2)", 0xF000, 0x6200|(8<<10));
+    ERRT("PMOVE.L TT0, (*+$1234,PC)",
+         OPERAND_NOT_ALLOWED, "(*+$1234,PC)",   0xF000, 0x0200|(2<<10));
+    ERRT("PMOVE.L TT1, (*+52,PC,D3.W)",
+         OPERAND_NOT_ALLOWED, "(*+52,PC,D3.W)", 0xF000, 0x0200|(3<<10));
+
+    TEST("PMOVE.L TC, (A2)",  0xF000|022, 0x4200|(0<<10));
+    TEST("PMOVE.Q SRP, (A2)", 0xF000|022, 0x4200|(2<<10));
+    TEST("PMOVE.Q CRP, (A2)", 0xF000|022, 0x4200|(3<<10));
+    TEST("PMOVE.W PSR, (A2)", 0xF000|022, 0x6200|(8<<10));
+    TEST("PMOVE.L TT0, (A2)", 0xF000|022, 0x0200|(2<<10));
+    TEST("PMOVE.L TT1, (A2)", 0xF000|022, 0x0200|(3<<10));
+
+    TEST("PMOVE.L TC, ($1234,A2)",  0xF000|052, 0x4200|(0<<10), 0x1234);
+    TEST("PMOVE.Q SRP, ($1234,A2)", 0xF000|052, 0x4200|(2<<10), 0x1234);
+    TEST("PMOVE.Q CRP, ($1234,A2)", 0xF000|052, 0x4200|(3<<10), 0x1234);
+    TEST("PMOVE.W PSR, ($1234,A2)", 0xF000|052, 0x6200|(8<<10), 0x1234);
+    TEST("PMOVE.L TT0, ($1234,A2)", 0xF000|052, 0x0200|(2<<10), 0x1234);
+    TEST("PMOVE.L TT1, ($1234,A2)", 0xF000|052, 0x0200|(3<<10), 0x1234);
+
+    TEST("PMOVE.L TC, ($34,A2,D3.W)",  0xF000|062, 0x4200|(0<<10), 0x3034);
+    TEST("PMOVE.Q SRP, ($34,A2,D3.W)", 0xF000|062, 0x4200|(2<<10), 0x3034);
+    TEST("PMOVE.Q CRP, ($34,A2,D3.W)", 0xF000|062, 0x4200|(3<<10), 0x3034);
+    TEST("PMOVE.W PSR, ($34,A2,D3.W)", 0xF000|062, 0x6200|(8<<10), 0x3034);
+    TEST("PMOVE.L TT0, ($34,A2,D3.W)", 0xF000|062, 0x0200|(2<<10), 0x3034);
+    TEST("PMOVE.L TT1, ($34,A2,D3.W)", 0xF000|062, 0x0200|(3<<10), 0x3034);
+
+    TEST("PMOVE.L TC, ($00001234).W",  0xF000|070, 0x4200|(0<<10), 0x1234);
+    TEST("PMOVE.Q SRP, ($00001234).W", 0xF000|070, 0x4200|(2<<10), 0x1234);
+    TEST("PMOVE.Q CRP, ($00001234).W", 0xF000|070, 0x4200|(3<<10), 0x1234);
+    TEST("PMOVE.W PSR, ($00001234).W", 0xF000|070, 0x6200|(8<<10), 0x1234);
+    TEST("PMOVE.L TT0, ($00001234).W", 0xF000|070, 0x0200|(2<<10), 0x1234);
+    TEST("PMOVE.L TT1, ($00001234).W", 0xF000|070, 0x0200|(3<<10), 0x1234);
+
+    TEST("PMOVE.L TC, ($12345678).L",  0xF000|071, 0x4200|(0<<10), 0x1234, 0x5678);
+    TEST("PMOVE.Q SRP, ($12345678).L", 0xF000|071, 0x4200|(2<<10), 0x1234, 0x5678);
+    TEST("PMOVE.Q CRP, ($12345678).L", 0xF000|071, 0x4200|(3<<10), 0x1234, 0x5678);
+    TEST("PMOVE.W PSR, ($12345678).L", 0xF000|071, 0x6200|(8<<10), 0x1234, 0x5678);
+    TEST("PMOVE.L TT0, ($12345678).L", 0xF000|071, 0x0200|(2<<10), 0x1234, 0x5678);
+    TEST("PMOVE.L TT1, ($12345678).L", 0xF000|071, 0x0200|(3<<10), 0x1234, 0x5678);
+}
+
+void test_mmu_system() {
+    TEST("PMMU ON");
+
+    TEST("PFLUSHA ",        0xF000, 0x2400);
+
+    TEST("PFLUSH #7, #4",  0xF000, 0x3010|(4<<5)|7);
+    ERRT("PFLUSH #8, #4",  OVERFLOW_RANGE, "#8, #4", 0xF000, 0x3010|(4<<5)|8);
+    TEST("PFLUSH D4, #7",  0xF000, 0x3008|(7<<5)|4);
+    ERRT("PFLUSH D4, #8",  OVERFLOW_RANGE, "#8",     0xF000, 0x3008|(8<<5)|4);
+    TEST("PFLUSH SFC, #1", 0xF000, 0x3000|(1<<5)|0);
+    TEST("PFLUSH DFC, #7", 0xF000, 0x3000|(7<<5)|1);
+
+    ERRT("PFLUSH #3, #4, D2", OPERAND_NOT_ALLOWED, "D2", 0xF000, 0x3810|(4<<5)|3);
+    ERRT("PFLUSH #3, #4, A2", OPERAND_NOT_ALLOWED, "A2", 0xF000, 0x3810|(4<<5)|3);
+    TEST("PFLUSH #7, #4, (A2)",       0xF000|022, 0x3810|(4<<5)|7);
+    ERRT("PFLUSH #15, #4, (A2)",
+         OVERFLOW_RANGE, "#15, #4, (A2)", 0xF000|022, 0x3810|(4<<5)|15);
+    TEST("PFLUSH D4, #7, ($1234,A2)",     0xF000|052, 0x3808|(7<<5)|4, 0x1234);
+    TEST("PFLUSH SFC, #1, ($34,A2,D3.W)", 0xF000|062, 0x3800|(1<<5)|0, 0x3034);
+    TEST("PFLUSH DFC, #1, ($00001234).W", 0xF000|070, 0x3800|(1<<5)|1, 0x1234);
+    TEST("PFLUSH #7, #4, ($12345678).L",  0xF000|071, 0x3810|(4<<5)|7, 0x1234, 0x5678);
+    ERRT("PFLUSH D4, #15, (*+$1234,PC)",
+         OPERAND_NOT_ALLOWED, "(*+$1234,PC)",  0xF000, 0x3808|(15<<5)|4);
+    ERRT("PFLUSH SFC, #1, (*+$34,PC,D3)",
+         OPERAND_NOT_ALLOWED, "(*+$34,PC,D3)", 0xF000, 0x3800|(1<<5)|0);
+    ERRT("PFLUSH #15, #4, #$12345678",
+         OPERAND_NOT_ALLOWED, "#$12345678",   0xF000, 0x3810|(4<<5)|15);
+
+    ERRT("PLOADR #7, D2", OPERAND_NOT_ALLOWED, "D2", 0xF000, 0x2210|7);
+    ERRT("PLOADR #6, A2", OPERAND_NOT_ALLOWED, "A2", 0xF000, 0x2210|6);
+    TEST("PLOADR #4, (A2)",           0xF000|022, 0x2210|4);
+    ERRT("PLOADR #5, (A2)+", OPERAND_NOT_ALLOWED, "(A2)+", 0xF000, 0x2210|5);
+    ERRT("PLOADR #4, -(A2)", OPERAND_NOT_ALLOWED, "-(A2)", 0xF000, 0x2210|4);
+    TEST("PLOADR D3, ($1234,A2)",     0xF000|052, 0x2208|3, 0x1234);
+    TEST("PLOADR SFC, ($34,A2,D3.W)", 0xF000|062, 0x2200|0, 0x3034);
+    TEST("PLOADR DFC, ($00001234).W", 0xF000|070, 0x2200|1, 0x1234);
+    TEST("PLOADR #4, ($12345678).L",  0xF000|071, 0x2210|4, 0x1234, 0x5678);
+    ERRT("PLOADR D3, (*+$1234,PC)",   OPERAND_NOT_ALLOWED, "(*+$1234,PC)",  0xF000, 0x2208|3);
+    ERRT("PLOADR SFC, (*+$34,PC,D3)", OPERAND_NOT_ALLOWED, "(*+$34,PC,D3)", 0xF000, 0x2200|0);
+    ERRT("PLOADR DFC, #$1234",        OPERAND_NOT_ALLOWED, "#$1234",        0xF000, 0x2200|1);
+
+    ERRT("PLOADW #3, D2", OPERAND_NOT_ALLOWED, "D2", 0xF000, 0x2010|3);
+    ERRT("PLOADW #2, A2", OPERAND_NOT_ALLOWED, "A2", 0xF000, 0x2010|2);
+    TEST("PLOADW #7, (A2)",           0xF000|022, 0x2010|7);
+    ERRT("PLOADW #1, (A2)+", OPERAND_NOT_ALLOWED, "(A2)+", 0xF000, 0x2010|1);
+    ERRT("PLOADW #0, -(A2)", OPERAND_NOT_ALLOWED, "-(A2)", 0xF000, 0x2010|0);
+    TEST("PLOADW D3, ($1234,A2)",     0xF000|052, 0x2008|3, 0x1234);
+    TEST("PLOADW SFC, ($34,A2,D3.W)", 0xF000|062, 0x2000|0, 0x3034);
+    TEST("PLOADW DFC, ($00001234).W", 0xF000|070, 0x2000|1, 0x1234);
+    TEST("PLOADW #4, ($12345678).L",  0xF000|071, 0x2010|4, 0x1234, 0x5678);
+    ERRT("PLOADW D3, (*+$1234,PC)",   OPERAND_NOT_ALLOWED, "(*+$1234,PC)",  0xF000, 0x2008|3);
+    ERRT("PLOADW SFC, (*+$34,PC,D3)", OPERAND_NOT_ALLOWED, "(*+$34,PC,D3)", 0xF000, 0x2000|0);
+    ERRT("PLOADW DFC, #$1234",        OPERAND_NOT_ALLOWED, "#$1234",        0xF000, 0x2000|1);
+
+    ERRT("PTESTR #7, D2, #4", OPERAND_NOT_ALLOWED, "D2, #4", 0xF000, 0x8210|(4<<10)|7);
+    ERRT("PTESTR #7, A2, #4", OPERAND_NOT_ALLOWED, "A2, #4", 0xF000, 0x8210|(4<<10)|7);
+    TEST("PTESTR #7, (A2), #4",           0xF000|022, 0x8210|(4<<10)|7);
+    ERRT("PTESTR #7, (A2)+, #4", OPERAND_NOT_ALLOWED, "(A2)+, #4", 0xF000, 0x8210|(4<<10)|7);
+    ERRT("PTESTR #7, -(A2), #4", OPERAND_NOT_ALLOWED, "-(A2), #4", 0xF000, 0x8210|(4<<10)|7);
+    TEST("PTESTR D3, ($1234,A2), #7",     0xF000|052, 0x8208|(7<<10)|3, 0x1234);
+    TEST("PTESTR SFC, ($34,A2,D3.W), #1", 0xF000|062, 0x8200|(1<<10)|0, 0x3034);
+    TEST("PTESTR DFC, ($00001234).W, #5", 0xF000|070, 0x8200|(5<<10)|1, 0x1234);
+    TEST("PTESTR #7, ($12345678).L, #2",  0xF000|071, 0x8210|(2<<10)|7, 0x1234, 0x5678);
+    ERRT("PTESTR D3,  ($1234,PC), #7",
+         OPERAND_NOT_ALLOWED, "($1234,PC), #7",  0xF000, 0x8208|(7<<10)|3);
+    ERRT("PTESTR SFC, ($34,PC,D3), #1",
+         OPERAND_NOT_ALLOWED, "($34,PC,D3), #1", 0xF000, 0x8200|(1<<10)|0);
+    ERRT("PTESTR DFC, #$1234, #5",
+         OPERAND_NOT_ALLOWED, "#$1234, #5",      0xF000, 0x8200|(5<<10)|1);
+
+    TEST("PTESTR #7, (A2), #4, A3",           0xF000|022, 0x8310|(4<<10)|7|(3<<5));
+    ERRT("PTESTR #7, (A2), #4, D3", OPERAND_NOT_ALLOWED, "#7, (A2), #4, D3");
+    TEST("PTESTR D3, ($1234,A2), #7, A4",     0xF000|052, 0x8308|(7<<10)|3|(4<<5), 0x1234);
+    TEST("PTESTR SFC, ($34,A2,D3.W), #1, A3", 0xF000|062, 0x8300|(1<<10)|0|(3<<5), 0x3034);
+    TEST("PTESTR DFC, ($00001234).W, #5, A3", 0xF000|070, 0x8300|(5<<10)|1|(3<<5), 0x1234);
+    TEST("PTESTR #6, ($12345678).L, #2, A3",  0xF000|071, 0x8310|(2<<10)|6|(3<<5),
+         0x1234, 0x5678);
+
+    TEST("PTESTW #7, (A2), #4",           0xF000|022, 0x8010|(4<<10)|7);
+    TEST("PTESTW D3, ($1234,A2), #7",     0xF000|052, 0x8008|(7<<10)|3, 0x1234);
+    TEST("PTESTW SFC, ($34,A2,D3.W), #1", 0xF000|062, 0x8000|(1<<10)|0, 0x3034);
+    TEST("PTESTW DFC, ($00001234).W, #5", 0xF000|070, 0x8000|(5<<10)|1, 0x1234);
+    TEST("PTESTW #1, ($12345678).L, #2",  0xF000|071, 0x8010|(2<<10)|1,
+         0x1234, 0x5678);
+
+    ERRT("PTESTW #7, D2, #4, A3",
+         OPERAND_NOT_ALLOWED, "D2, #4, A3", 0xF000, 0x8110|(4<<10)|7|(3<<5));
+    ERRT("PTESTW #7, A2, #4, A3",
+         OPERAND_NOT_ALLOWED, "A2, #4, A3", 0xF000, 0x8110|(4<<10)|7|(3<<5));
+    TEST("PTESTW #7, (A2), #4",           0xF000|022, 0x8010|(4<<10)|7);
+    ERRT("PTESTW #7, D2, #4, A3",
+         OPERAND_NOT_ALLOWED, "D2, #4, A3", 0xF000, 0x8110|(4<<10)|7|(3<<5));
+    ERRT("PTESTW #7, D2, #4, A3",
+         OPERAND_NOT_ALLOWED, "D2, #4, A3", 0xF000, 0x8110|(4<<10)|7|(3<<5));
+    TEST("PTESTW D3, ($1234,A2), #7",     0xF000|052, 0x8008|(7<<10)|3, 0x1234);
+    TEST("PTESTW SFC, ($34,A2,D3.W), #1", 0xF000|062, 0x8000|(1<<10)|0, 0x3034);
+    TEST("PTESTW DFC, ($00001234).W, #5", 0xF000|070, 0x8000|(5<<10)|1, 0x1234);
+    TEST("PTESTW #3, ($12345678).L, #2",  0xF000|071, 0x8010|(2<<10)|3, 0x1234, 0x5678);
+    ERRT("PTESTW D3,  (*+$1234,PC), #7, A4",
+         OPERAND_NOT_ALLOWED, "(*+$1234,PC), #7, A4",  0xF000, 0x8108|(7<<10)|3|(4<<5));
+    ERRT("PTESTW SFC, (*+$34,PC,D3), #1, A3",
+         OPERAND_NOT_ALLOWED, "(*+$34,PC,D3), #1, A3", 0xF000, 0x8100|(1<<10)|0|(3<<5));
+    ERRT("PTESTW DFC, #$1234, #5, A3",
+         OPERAND_NOT_ALLOWED, "#$1234, #5, A3",        0xF000, 0x8100|(5<<10)|1|(3<<5));
+}
+
 void test_pmmu_move() {
     if (mc68020()) {
         TEST("PMMU MC68851");
+        TEST("PMMU ON");
     } else {
         ERRT("PMMU MC68851", UNKNOWN_OPERAND, "MC68851");
         return;
@@ -7096,6 +7365,10 @@ void run_tests(const char *cpu) {
     RUN_TEST(test_float_system);
 #endif
 #if !defined(LIBASM_MC68000_NOPMMU)
+    if (mc68030()) {
+        RUN_TEST(test_mmu_move);
+        RUN_TEST(test_mmu_system);
+    }
     RUN_TEST(test_pmmu_move);
     RUN_TEST(test_pmmu_branch);
     RUN_TEST(test_pmmu_trap);

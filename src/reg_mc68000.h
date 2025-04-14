@@ -66,46 +66,48 @@ enum RegName : int8_t {
     REG_FPSR = 5 + 24,
     REG_FPIAR = 6 + 24,
     // Control register
-    REG_SFC = 32 + 0,   // MC68010/MC68020/MC68851
-    REG_DFC = 32 + 1,   // MC68010/MC68020/MC68851
-    REG_USP = 32 + 2,   // MC68010/MC68020
-    REG_VBR = 32 + 3,   // MC68010/MC68020
-    REG_CACR = 32 + 4,  // MC68020
-    REG_CAAR = 32 + 5,  // MC68020
-    REG_MSP = 32 + 6,   // MC68020
-    REG_ISP = 32 + 7,   // MC68020
+    REG_SFC = 32 + 0,   // MC68010/MC68020/MC68030/MC68851
+    REG_DFC = 32 + 1,   // MC68010/MC68020/MC68030/MC68851
+    REG_USP = 32 + 2,   // MC68010/MC68020/MC68030
+    REG_VBR = 32 + 3,   // MC68010/MC68020/MC68030
+    REG_CACR = 32 + 4,  // MC68020/MC68030
+    REG_CAAR = 32 + 5,  // MC68020/MC68030
+    REG_MSP = 32 + 6,   // MC68020/MC68030
+    REG_ISP = 32 + 7,   // MC68020/MC68030
 };
 
 #if !defined(LIBASM_MC68000_NOPMMU)
 // MC68851
 enum PmmuReg : int8_t {
     PREG_UNDEF = -1,
-    PREG_TC = 0,     // L
-    PREG_DRP = 1,    // Q
-    PREG_SRP = 2,    // Q
-    PREG_CRP = 3,    // Q
-    PREG_CAL = 4,    // B
-    PREG_VAL = 5,    // B
-    PREG_SCC = 6,    // B
-    PREG_AC = 7,     // W
-    PREG_PSR = 8,    // W
-    PREG_PCSR = 9,   // W
-    PREG_BAD0 = 12,  // W
-    PREG_BAD1 = 13,  // W
-    PREG_BAD2 = 14,  // W
-    PREG_BAD3 = 15,  // W
-    PREG_BAD4 = 16,  // W
-    PREG_BAD5 = 17,  // W
-    PREG_BAD6 = 18,  // W
-    PREG_BAD7 = 19,  // W
-    PREG_BAC0 = 20,  // W
-    PREG_BAC1 = 21,  // W
-    PREG_BAC2 = 22,  // W
-    PREG_BAC3 = 23,  // W
-    PREG_BAC4 = 24,  // W
-    PREG_BAC5 = 25,  // W
-    PREG_BAC6 = 26,  // W
-    PREG_BAC7 = 27,  // W
+    PREG_TC = 0,     // L: MC68851/MC68030
+    PREG_DRP = 1,    // Q: MC68851
+    PREG_SRP = 2,    // Q: MC68851/MC68030
+    PREG_CRP = 3,    // Q: MC68851/MC68030
+    PREG_CAL = 4,    // B: MC68851
+    PREG_VAL = 5,    // B: MC68851
+    PREG_SCC = 6,    // B: MC68851
+    PREG_AC = 7,     // W: MC68851
+    PREG_PSR = 8,    // W: MC68851/MC68030
+    PREG_PCSR = 9,   // W: MC68851
+    PREG_TT0 = 10,   // L: MC68030
+    PREG_TT1 = 11,   // L: MC68030
+    PREG_BAD0 = 12,  // W: MC68851
+    PREG_BAD1 = 13,  // W: MC68851
+    PREG_BAD2 = 14,  // W: MC68851
+    PREG_BAD3 = 15,  // W: MC68851
+    PREG_BAD4 = 16,  // W: MC68851
+    PREG_BAD5 = 17,  // W: MC68851
+    PREG_BAD6 = 18,  // W: MC68851
+    PREG_BAD7 = 19,  // W: MC68851
+    PREG_BAC0 = 20,  // W: MC68851
+    PREG_BAC1 = 21,  // W: MC68851
+    PREG_BAC2 = 22,  // W: MC68851
+    PREG_BAC3 = 23,  // W: MC68851
+    PREG_BAC4 = 24,  // W: MC68851
+    PREG_BAC5 = 25,  // W: MC68851
+    PREG_BAC6 = 26,  // W: MC68851
+    PREG_BAC7 = 27,  // W: MC68851
 };
 #endif
 
@@ -132,9 +134,9 @@ RegName decodeControlReg(Config::opcode_t regno);
 #if !defined(LIBASM_MC68000_NOPMMU)
 PmmuReg parsePmmuReg(StrScanner &scan, const ValueParser &parser);
 StrBuffer &outPmmuReg(StrBuffer &out, PmmuReg name);
-Config::opcode_t encodePmmuReg(PmmuReg name);
-PmmuReg decodePmmuReg(Config::opcode_t post);
-OprSize pmmuRegSize(PmmuReg name);
+Config::opcode_t encodePmmuReg(PmmuReg name, const CpuSpec &cpuSpec);
+PmmuReg decodePmmuReg(Config::opcode_t post, const CpuSpec &cpuSpec);
+OprSize pmmuRegSize(PmmuReg name, const CpuSpec &cpuSpec);
 #endif
 
 uint_fast8_t encodeAddrMode(AddrMode mode);

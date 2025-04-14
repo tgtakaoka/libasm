@@ -25,11 +25,13 @@ constexpr char TEXT_MC68000_LIST[] PROGMEM = "MC68000, MC68010, MC68020";
 constexpr char TEXT_CPU_MC68000[]  PROGMEM = "MC68000";
 constexpr char TEXT_CPU_MC68010[]  PROGMEM = "MC68010";
 constexpr char TEXT_CPU_MC68020[]  PROGMEM = "MC68020";
+constexpr char TEXT_CPU_MC68030[]  PROGMEM = "MC68030";
 constexpr char TEXT_FPU_MC68881[]  PROGMEM = "MC68881";
 constexpr char TEXT_PMMU_MC68851[] PROGMEM = "MC68851";
 constexpr char TEXT_CPU_68000[]    PROGMEM = "68000";
 constexpr char TEXT_CPU_68010[]    PROGMEM = "68010";
 constexpr char TEXT_CPU_68020[]    PROGMEM = "68020";
+constexpr char TEXT_CPU_68030[]    PROGMEM = "68030";
 constexpr char TEXT_FPU_68881[]    PROGMEM = "68881";
 constexpr char TEXT_PMMU_68851[]   PROGMEM = "68851";
 
@@ -233,6 +235,12 @@ constexpr char TEXT_REG_CAAR[] PROGMEM = "CAAR";
 constexpr char TEXT_REG_CACR[] PROGMEM = "CACR";
 constexpr char TEXT_REG_ISP[]  PROGMEM = "ISP";
 constexpr char TEXT_REG_MSP[]  PROGMEM = "MSP";
+
+// MC68030
+constexpr char TEXT_PMOVEFD[] PROGMEM = "PMOVEFD";
+
+constexpr char TEXT_REG_TT0[] PROGMEM = "TT0";
+constexpr char TEXT_REG_TT1[] PROGMEM = "TT1";
 
 // MC68881
 // constexpr char TEXT_FABS[]      PROGMEM = "FABS";

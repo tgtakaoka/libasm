@@ -132,12 +132,13 @@ enum AddrMode : uint8_t {
     M_DPAIR = 53,  // Data register pair: Dn:Dn
     M_PPAIR = 54,  // Pointer pair: (Rn):(Rn)
 #if !defined(LIBASM_MC68000_NOPMMU)
-    // MC68851
+    // MC68030/MC68851
     M_IMFC = 55,  // 4-bit function code: #0~#15
     M_IMFM = 56,  // 4-bit function code mask: #0~#15
     M_IMLV = 57,  // 3-bit level
     M_PFC = 58,   // SFC/DFC
-    M_PREG = 59,  // PMMU register
+    M_PREG = 59,  // MMU/PMMU register
+    // MC68851
     M_PVAL = 60,  // PMMU VAL register
 #endif
 };
