@@ -18,11 +18,11 @@
 
         fpu     ns32081
         align   32
-        include "test_ns32000_fpu.inc"
+        include "test_ns32081.inc"
 
         pmmu    ns32082
         align   32
-        include "test_ns32000_mmu.inc"
+        include "test_ns32082.inc"
 
         end
 

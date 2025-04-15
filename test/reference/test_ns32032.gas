@@ -14,9 +14,9 @@
 
         .include "test_ns32000.inc"
         .align   5
-        .include "test_ns32k_float.inc"
+        .include "test_ns32081.ginc"
         .align   5
-        .include "test_ns32000_mmu.inc"
+        .include "test_ns32082.inc"
         .end
 
 # Local Variables:

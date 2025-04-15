@@ -2061,7 +2061,7 @@
 ;#       rolw    (.,pc)
 ;#       rolw    (.,pc,d3)
 
-        .include "test_mc68000_fpu.ginc"
+        .include "test_mc68881.ginc"
 
 ;# Local Variables:
 ;# mode: asm

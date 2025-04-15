@@ -16,7 +16,7 @@
         fpu     on
         org     $10000
         include "test_mc68000.inc"
-        include "test_mc68000_fpu.inc"
+        include "test_mc68881.inc"
         end
 
 ;;; Local Variables:
