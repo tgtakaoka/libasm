@@ -19,8 +19,8 @@
 namespace libasm {
 namespace driver {
 
-uint8_t BinEncoder::addressSize(AddressWidth addrWidth) {
-    const uint8_t bits = uint8_t(addrWidth);
+uint_fast8_t BinEncoder::addressSize(AddressWidth width, AddressUnit unit) {
+    const auto bits = uint8_t(width) * uint8_t(unit);
     if (bits <= 16)
         return 2;
     if (bits <= 24)
@@ -28,8 +28,9 @@ uint8_t BinEncoder::addressSize(AddressWidth addrWidth) {
     return 4;
 }
 
-void BinEncoder::reset(AddressWidth addrWidth, uint8_t recordSize) {
-    _addr_width = addrWidth;
+void BinEncoder::reset(AddressWidth width, AddressUnit unit, uint8_t recordSize) {
+    _addr_width = width;
+    _addr_unit = unit;
     _record_size = recordSize;
 }
 

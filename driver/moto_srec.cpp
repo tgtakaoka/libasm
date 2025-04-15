@@ -37,10 +37,10 @@ void MotoSrec::begin(TextPrinter &out) {
     out.println("S0030000FC");
 }
 
-void MotoSrec::encode(TextPrinter &out, uint32_t addr, const uint8_t *data, uint8_t size) {
+void MotoSrec::encode(TextPrinter &out, uint32_t addr, const uint8_t *data, uint_fast8_t size) {
     resetSum();
-    const auto addr_size = addressSize(_addr_width);
-    const uint8_t len = addr_size + size + 1;
+    const auto addr_size = addressSize(_addr_width, _addr_unit);
+    const auto len = addr_size + size + 1;
     addSum8(len);
     switch (addr_size) {
     case 2:
@@ -57,7 +57,7 @@ void MotoSrec::encode(TextPrinter &out, uint32_t addr, const uint8_t *data, uint
         addSum32(addr);
         break;
     }
-    for (uint8_t i = 0; i < size; i++) {
+    for (uint_fast8_t i = 0; i < size; i++) {
         out.format("%02X", data[i]);
         addSum8(data[i]);
     }
@@ -65,7 +65,7 @@ void MotoSrec::encode(TextPrinter &out, uint32_t addr, const uint8_t *data, uint
 }
 
 void MotoSrec::end(TextPrinter &out) {
-    switch (addressSize(_addr_width)) {
+    switch (addressSize(_addr_width, _addr_unit)) {
     case 2:
         out.println("S9030000FC");
         break;
@@ -80,7 +80,7 @@ void MotoSrec::end(TextPrinter &out) {
 int MotoSrec::decode(StrScanner &line, BinMemory &memory) {
     if (!line.expect('S'))
         return -1;
-    const char type = *line++;
+    const auto type = *line++;
     if (type == '0')
         return 0;  // start record
     if (type == '9' || type == '8' || type == '7')
@@ -118,14 +118,14 @@ int MotoSrec::decode(StrScanner &line, BinMemory &memory) {
     if (len < 1)
         return -2;
     const auto size = len - 1;
-    for (uint8_t i = 0; i < size; i++) {
+    for (uint_fast8_t i = 0; i < size; i++) {
         uint8_t data = 0;
         if (!parseByte(line, data))
             return -1;
         addSum8(data);
         memory.writeByte(addr + i, data);
     }
-    const uint8_t sum = getSum();
+    const auto sum = getSum();
     uint8_t val8 = 0;
     if (!parseByte(line, val8))
         return -1;

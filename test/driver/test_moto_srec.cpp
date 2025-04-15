@@ -56,7 +56,7 @@ void test_encoder() {
     WRITE_BLOCK(memory, 0x123400, block1);
 
     StoredPrinter out;
-    encoder.reset(ADDRESS_16BIT, 32);
+    encoder.reset(ADDRESS_16BIT, ADDRESS_BYTE, 32);
     encoder.encode(memory, out);
     EQ("lines", 3, out.size());
     EQ("start", "S0030000FC", out.line(1));
@@ -64,7 +64,7 @@ void test_encoder() {
     EQ("end", "S9030000FC", out.line(3));
 
     out.clear();
-    encoder.reset(ADDRESS_16BIT, 16);
+    encoder.reset(ADDRESS_16BIT, ADDRESS_BYTE, 16);
     encoder.encode(memory, out);
     EQ("lines", 4, out.size());
     EQ("start", "S0030000FC", out.line(1));
@@ -73,7 +73,7 @@ void test_encoder() {
     EQ("end", "S9030000FC", out.line(4));
 
     out.clear();
-    encoder.reset(ADDRESS_24BIT, 8);
+    encoder.reset(ADDRESS_24BIT, ADDRESS_BYTE, 8);
     encoder.encode(memory, out);
     EQ("lines", 5, out.size());
     EQ("start", "S0030000FC", out.line(1));
@@ -85,7 +85,7 @@ void test_encoder() {
     BinMemory interseg;
     WRITE_BLOCK(interseg, 0x1234FFF0, block1);
     out.clear();
-    encoder.reset(ADDRESS_32BIT, 16);
+    encoder.reset(ADDRESS_32BIT, ADDRESS_BYTE, 16);
     encoder.encode(interseg, out);
     EQ("lines", 4, out.size());
     EQ("start", "S0030000FC", out.line(1));
@@ -103,7 +103,7 @@ void test_encoder_blocks() {
     WRITE_BLOCK(memory, 0xFF00, block2);
 
     StoredPrinter out;
-    encoder.reset(ADDRESS_16BIT, 16);
+    encoder.reset(ADDRESS_16BIT, ADDRESS_BYTE, 16);
     encoder.encode(memory, out);
     EQ("lines", 6, out.size());
     EQ("start", "S0030000FC", out.line(1));

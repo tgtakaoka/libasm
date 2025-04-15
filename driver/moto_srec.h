@@ -32,7 +32,7 @@ private:
 
     // BinEncoder
     void begin(TextPrinter &out) override;
-    void encode(TextPrinter &out, uint32_t addr, const uint8_t *data, uint8_t size) override;
+    void encode(TextPrinter &out, uint32_t addr, const uint8_t *data, uint_fast8_t size) override;
     void end(TextPrinter &out) override;
     // BinDecoder
     int decode(StrScanner &line, BinMemory &memory) override;

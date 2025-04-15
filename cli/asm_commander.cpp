@@ -104,8 +104,9 @@ int AsmCommander::assemble() {
                 encoder = MotoSrec::encoder();
             else if (_encoder == 'H')
                 encoder = IntelHex::encoder();
-            const auto addrWidth = _driver.current()->config().addressWidth();
-            encoder.reset(addrWidth, _record_bytes);
+            const auto width = _driver.current()->config().addressWidth();
+            const auto unit= _driver.current()->config().addressUnit();
+            encoder.reset(width, unit, _record_bytes);
             encoder.encode(memory, output);
             if (_verbose) {
                 const auto unit = _driver.current()->config().addressUnit();
