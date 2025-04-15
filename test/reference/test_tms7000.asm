@@ -13,7 +13,7 @@
 ;;; limitations under the License.
 
         CPU     TMS70C00
-        ORG     0100h
+        ORG     0200h
 
 ;;; 0x
 	NOP
