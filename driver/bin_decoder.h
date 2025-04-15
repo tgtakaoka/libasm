@@ -34,7 +34,7 @@ struct BinDecoder {
     static int decode(TextReader &in, BinMemory &memory);
 
 protected:
-    virtual void reset() {}
+    virtual void reset() = 0;
     virtual int decode(StrScanner &line, BinMemory &memory) = 0;
 
     static bool parseByte(StrScanner &line, uint8_t &val);

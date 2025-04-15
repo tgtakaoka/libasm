@@ -56,34 +56,36 @@ void test_encoder() {
     WRITE_BLOCK(memory, 0x123400, block1);
 
     StoredPrinter out;
-    encoder.reset(ADDRESS_16BIT, 32);
-    encoder.encode(memory, out);
-    EQ("lines", 2, out.size());
-    EQ("line 1", ":12340000112233445566778899AABBCCDDEEFF0012347C", out.line(1));
-    EQ("end", ":00000001FF", out.line(2));
-
-    out.clear();
-    encoder.reset(ADDRESS_16BIT, 16);
+    encoder.reset(32);
     encoder.encode(memory, out);
     EQ("lines", 3, out.size());
-    EQ("line 1", ":10340000112233445566778899AABBCCDDEEFF00C4", out.line(1));
-    EQ("line 2", ":02341000123474", out.line(2));
+    EQ("line 1", ":020000040012E8", out.line(1));
+    EQ("line 2", ":12340000112233445566778899AABBCCDDEEFF0012347C", out.line(2));
     EQ("end", ":00000001FF", out.line(3));
 
     out.clear();
-    encoder.reset(ADDRESS_24BIT, 8);
+    encoder.reset(16);
+    encoder.encode(memory, out);
+    EQ("lines", 4, out.size());
+    EQ("line 1", ":020000040012E8", out.line(1));
+    EQ("line 2", ":10340000112233445566778899AABBCCDDEEFF00C4", out.line(2));
+    EQ("line 3", ":02341000123474", out.line(3));
+    EQ("end", ":00000001FF", out.line(4));
+
+    out.clear();
+    encoder.reset(8);
     encoder.encode(memory, out);
     EQ("lines", 5, out.size());
-    EQ("extended", ":020000040012E8", out.line(1));
-    EQ("line 1", ":08340000112233445566778860", out.line(2));
-    EQ("line 2", ":0834080099AABBCCDDEEFF0028", out.line(3));
-    EQ("line 3", ":02341000123474", out.line(4));
+    EQ("line 1", ":020000040012E8", out.line(1));
+    EQ("line 2", ":08340000112233445566778860", out.line(2));
+    EQ("line 3", ":0834080099AABBCCDDEEFF0028", out.line(3));
+    EQ("line 4", ":02341000123474", out.line(4));
     EQ("end", ":00000001FF", out.line(5));
 
     BinMemory interseg;
     WRITE_BLOCK(interseg, 0x1234FFF0, block1);
     out.clear();
-    encoder.reset(ADDRESS_32BIT, 16);
+    encoder.reset(16);
     encoder.encode(interseg, out);
     EQ("lines", 5, out.size());
     EQ("extended", ":020000041234B4", out.line(1));
@@ -99,17 +101,18 @@ void test_encoder_blocks() {
 
     BinMemory memory;
     WRITE_BLOCK(memory, 0x1234, block1);
-    WRITE_BLOCK(memory, 0xFF00, block2);
+    WRITE_BLOCK(memory, 0xFFF0, block2);
 
     StoredPrinter out;
-    encoder.reset(ADDRESS_16BIT, 16);
+    encoder.reset(16);
     encoder.encode(memory, out);
-    EQ("lines", 5, out.size());
+    EQ("lines", 6, out.size());
     EQ("line 1", ":10123400112233445566778899AABBCCDDEEFF00B2", out.line(1));
     EQ("line 2", ":02124400123462", out.line(2));
-    EQ("line 3", ":10FF0000123456789ABCDEF0FEDCBA987654321081", out.line(3));
-    EQ("line 4", ":03FF1000456789B9", out.line(4));
-    EQ("end", ":00000001FF", out.line(5));
+    EQ("line 3", ":10FFF000123456789ABCDEF0FEDCBA987654321091", out.line(3));
+    EQ("line 4", ":020000040001F9", out.line(4));
+    EQ("line 5", ":03000000456789C8", out.line(5));
+    EQ("end", ":00000001FF", out.line(6));
 }
 
 #define BLOCK_EQ(_msg, _expected, _actual, _base)                                     \
@@ -130,7 +133,7 @@ void test_decoder() {
     TestReader hex("test");
     hex.clear("16bit-32block1")
             .add(":12340000112233445566778899AABBCCDDEEFF0012347C")
-            .add(":00000001FF");
+        .add(":00000001FF");
     BinMemory mem16_32;
     EQ("16bit-32block1", 18, BinDecoder::decode(hex, mem16_32));
     EQ("16bit-32block1", start_expected16, mem16_32.startAddress());

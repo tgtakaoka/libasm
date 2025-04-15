@@ -30,12 +30,11 @@ struct IntelHex : BinDecoder, BinEncoder {
 private:
     uint32_t _last_addr;  // start address of the last block
     uint32_t _next_addr;  // expected address of the next block
-    uint8_t _check_sum;
+    uint_fast8_t _check_sum;
 
     // BinEncoder
-    void reset(AddressWidth addrWidth, uint8_t recordSize) override;
-    void begin(TextPrinter &out) override {}
-    void encode(TextPrinter &out, uint32_t addr, const uint8_t *data, uint8_t size) override;
+    void begin(TextPrinter &out) override;
+    void encode(TextPrinter &out, uint32_t addr, const uint8_t *data, uint_fast8_t size) override;
     void end(TextPrinter &out) override;
     // BinDecoder
     void reset() override;

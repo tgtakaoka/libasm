@@ -56,24 +56,24 @@ void test_encoder() {
     WRITE_BLOCK(memory, 0x123400, block1);
 
     StoredPrinter out;
-    encoder.reset(ADDRESS_16BIT, 32);
+    encoder.reset(32);
     encoder.encode(memory, out);
     EQ("lines", 3, out.size());
     EQ("start", "S0030000FC", out.line(1));
-    EQ("line 1", "S1153400112233445566778899AABBCCDDEEFF00123478", out.line(2));
-    EQ("end", "S9030000FC", out.line(3));
+    EQ("line 1", "S216123400112233445566778899AABBCCDDEEFF00123465", out.line(2));
+    EQ("end", "S804000000FB", out.line(3));
 
     out.clear();
-    encoder.reset(ADDRESS_16BIT, 16);
+    encoder.reset(16);
     encoder.encode(memory, out);
     EQ("lines", 4, out.size());
     EQ("start", "S0030000FC", out.line(1));
-    EQ("line 1", "S1133400112233445566778899AABBCCDDEEFF00C0", out.line(2));
-    EQ("line 2", "S1053410123470", out.line(3));
-    EQ("end", "S9030000FC", out.line(4));
+    EQ("line 1", "S214123400112233445566778899AABBCCDDEEFF00AD", out.line(2));
+    EQ("line 2", "S20612341012345D", out.line(3));
+    EQ("end", "S804000000FB", out.line(4));
 
     out.clear();
-    encoder.reset(ADDRESS_24BIT, 8);
+    encoder.reset(8);
     encoder.encode(memory, out);
     EQ("lines", 5, out.size());
     EQ("start", "S0030000FC", out.line(1));
@@ -85,7 +85,7 @@ void test_encoder() {
     BinMemory interseg;
     WRITE_BLOCK(interseg, 0x1234FFF0, block1);
     out.clear();
-    encoder.reset(ADDRESS_32BIT, 16);
+    encoder.reset(16);
     encoder.encode(interseg, out);
     EQ("lines", 4, out.size());
     EQ("start", "S0030000FC", out.line(1));
@@ -100,18 +100,18 @@ void test_encoder_blocks() {
 
     BinMemory memory;
     WRITE_BLOCK(memory, 0x1234, block1);
-    WRITE_BLOCK(memory, 0xFF00, block2);
+    WRITE_BLOCK(memory, 0xFFF0, block2);
 
     StoredPrinter out;
-    encoder.reset(ADDRESS_16BIT, 16);
+    encoder.reset(16);
     encoder.encode(memory, out);
     EQ("lines", 6, out.size());
     EQ("start", "S0030000FC", out.line(1));
-    EQ("line 1", "S1131234112233445566778899AABBCCDDEEFF00AE", out.line(2));
-    EQ("line 2", "S105124412345E", out.line(3));
-    EQ("line 3", "S113FF00123456789ABCDEF0FEDCBA98765432107D", out.line(4));
-    EQ("line 4", "S106FF10456789B5", out.line(5));
-    EQ("end", "S9030000FC", out.line(6));
+    EQ("line 1", "S214001234112233445566778899AABBCCDDEEFF00AD", out.line(2));
+    EQ("line 2", "S20600124412345D", out.line(3));
+    EQ("line 3", "S21400FFF0123456789ABCDEF0FEDCBA98765432108C", out.line(4));
+    EQ("line 4", "S207010000456789C2", out.line(5));
+    EQ("end", "S804000000FB", out.line(6));
 }
 
 #define BLOCK_EQ(_msg, _expected, _actual, _base)                                     \

@@ -33,19 +33,19 @@ uint8_t IntelHex::getSum() const {
     return static_cast<uint8_t>(-_check_sum);
 }
 
-void IntelHex::reset(AddressWidth addrWidth, uint8_t recordSize) {
-    BinEncoder::reset(addrWidth, recordSize);
+void IntelHex::begin(TextPrinter &out) {
     reset();
 }
 
-void IntelHex::encode(TextPrinter &out, uint32_t addr, const uint8_t *data, uint8_t size) {
-    // If |addr| is discontinued or |addr| has different ELA than last
-    if (addr != _next_addr || ((addr ^ _last_addr) >> 16) != 0)
+void IntelHex::encode(TextPrinter &out, uint32_t addr, const uint8_t *data, uint_fast8_t size) {
+    // If |addr| has different ELA than last
+    if ((addr & ~UINT16_MAX) != 0 && ((addr ^ _last_addr) & ~UINT16_MAX) != 0) {
         formatEla(out, addr);
+    }
     const auto end = addr + size;
     // If this block overwarp ELA boundary.
-    if ((addr ^ end) & ~0xFFFF) {
-        const uint8_t chunk = (end & ~0xFFFF) - addr;
+    if ((addr ^ end) & ~UINT16_MAX) {
+        const auto chunk = (addr & ~UINT16_MAX) + UINT32_C(0x10000) - addr;
         encodeLine(out, addr, data, chunk);
         _last_addr = addr;
         addr += chunk;
@@ -62,12 +62,12 @@ void IntelHex::encode(TextPrinter &out, uint32_t addr, const uint8_t *data, uint
 
 // Output Type "04" Extended Linear Address.
 void IntelHex::formatEla(TextPrinter &out, uint32_t addr) {
-    if (addressSize(_addr_width) <= 2)
+    if (addressSize(addr) <= 2)
         return;
-    const uint16_t ela = static_cast<uint16_t>(addr >> 16);
-    const uint8_t len = sizeof(ela);
-    const uint16_t dummy = 0;
-    const uint8_t type = 4;
+    const auto ela = static_cast<uint16_t>(addr >> 16);
+    const auto len = sizeof(ela);
+    const auto dummy = 0;
+    const auto type = 4;
     // :LLdddd04EEEESS
     resetSum();
     addSum8(len);
@@ -77,15 +77,15 @@ void IntelHex::formatEla(TextPrinter &out, uint32_t addr) {
     out.format(":%02X%04X%02X%04X%2X\n", len, dummy, type, ela, getSum());
 }
 
-void IntelHex::encodeLine(TextPrinter &out, uint16_t addr, const uint8_t *data, uint8_t size) {
-    const uint8_t type = 0;
+void IntelHex::encodeLine(TextPrinter &out, uint16_t addr, const uint8_t *data, uint_fast8_t size) {
+    const auto type = 0;
     resetSum();
     addSum8(size);
     addSum16(addr);
     addSum8(type);
     // :LLaaaa00dd....ddSS
     out.format(":%02X%04X%02X", size, addr, type);
-    for (uint8_t i = 0; i < size; i++) {
+    for (uint_fast8_t i = 0; i < size; i++) {
         addSum8(data[i]);
         out.format("%02X", data[i]);
     }
@@ -97,7 +97,7 @@ void IntelHex::end(TextPrinter &out) {
 }
 
 void IntelHex::reset() {
-    _last_addr = -1;
+    _last_addr = 0;
     _next_addr = 0;
 }
 

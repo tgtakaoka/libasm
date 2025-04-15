@@ -27,18 +27,20 @@ namespace libasm {
 namespace driver {
 
 struct BinEncoder {
-    virtual void reset(AddressWidth addrWidth, uint8_t recordSize);
+    void reset(uint_fast8_t recordSize) { _record_size = recordSize; }
     int encode(const BinMemory &memory, TextPrinter &out);
 
 protected:
-    AddressWidth _addr_width;
-    uint8_t _record_size;
+    uint_fast8_t _record_size;
+    uint_fast8_t _address_size;
 
     virtual void begin(TextPrinter &out) = 0;
-    virtual void encode(TextPrinter &out, uint32_t addr, const uint8_t *data, uint8_t size) = 0;
+    virtual void encode(
+            TextPrinter &out, uint32_t addr, const uint8_t *data, uint_fast8_t size) = 0;
     virtual void end(TextPrinter &out) = 0;
 
-    static uint8_t addressSize(AddressWidth addrWidth);
+    static uint_fast8_t addressSize(uint32_t addr);
+    static uint_fast8_t maxAddressSize(const BinMemory &memory);
 };
 
 }  // namespace driver

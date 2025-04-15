@@ -12,8 +12,8 @@
 ;;; See the License for the specific language governing permissions and
 ;;; limitations under the License.
 
-	cpu     32010
-        org     0100H
+        cpu     32010
+        org     0800H
 ;;; 0x0
         add     23H, 1
         add     *, 1
@@ -118,7 +118,7 @@
         bioz    678H
         call    89AH
         b       9ABH
-	blz     0ABCH
+        blz     0ABCH
         blez    0BCDH
         bgz     0CDEH
         bgez    0DEFH

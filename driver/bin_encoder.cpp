@@ -19,21 +19,26 @@
 namespace libasm {
 namespace driver {
 
-uint8_t BinEncoder::addressSize(AddressWidth addrWidth) {
-    const uint8_t bits = uint8_t(addrWidth);
-    if (bits <= 16)
+uint_fast8_t BinEncoder::addressSize(uint32_t addr) {
+    if ((addr & UINT32_C(0xFFFF0000)) == 0)
         return 2;
-    if (bits <= 24)
+    if ((addr & UINT32_C(0xFF000000)) == 0)
         return 3;
     return 4;
 }
 
-void BinEncoder::reset(AddressWidth addrWidth, uint8_t recordSize) {
-    _addr_width = addrWidth;
-    _record_size = recordSize;
+uint_fast8_t BinEncoder::maxAddressSize(const BinMemory &memory) {
+    uint_fast8_t max_size = 0;
+    for (auto *block = memory.begin(); block != nullptr; block = block->next()) {
+        const auto last_size = addressSize(block->base() + block->size() - 1);
+        if (last_size > max_size)
+            max_size = last_size;
+    };
+    return max_size;
 }
 
 int BinEncoder::encode(const BinMemory &memory, TextPrinter &out) {
+    _address_size = maxAddressSize(memory);
     this->begin(out);
     for (auto *block = memory.begin(); block != nullptr; block = block->next()) {
         for (size_t i = 0; i < block->size(); i += _record_size) {

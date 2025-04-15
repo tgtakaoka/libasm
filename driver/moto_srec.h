@@ -28,13 +28,15 @@ struct MotoSrec : BinDecoder, BinEncoder {
     static BinEncoder &encoder();
 
 private:
-    uint8_t _check_sum;
+    uint32_t _last_addr;
+    uint_fast8_t _check_sum;
 
     // BinEncoder
     void begin(TextPrinter &out) override;
-    void encode(TextPrinter &out, uint32_t addr, const uint8_t *data, uint8_t size) override;
+    void encode(TextPrinter &out, uint32_t addr, const uint8_t *data, uint_fast8_t size) override;
     void end(TextPrinter &out) override;
     // BinDecoder
+    void reset() override;
     int decode(StrScanner &line, BinMemory &memory) override;
 
     void resetSum() { _check_sum = 0; }
