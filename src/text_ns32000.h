@@ -176,7 +176,7 @@ using common::TEXT_MOVSB;
 extern const char TEXT_MOVSD[]   PROGMEM;
 extern const char TEXT_MOVST[]   PROGMEM;
 using common::TEXT_MOVSW;
-extern const char TEXT_MOVW[]    PROGMEM;
+using common::TEXT_MOVW;
 extern const char TEXT_MOVXBD[]  PROGMEM;
 extern const char TEXT_MOVXBW[]  PROGMEM;
 extern const char TEXT_MOVXWD[]  PROGMEM;

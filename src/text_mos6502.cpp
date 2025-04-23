@@ -172,7 +172,7 @@ constexpr char TEXT_WDM[] PROGMEM  = "WDM";
 constexpr char TEXT_XBA[] PROGMEM  = "XBA";
 constexpr char TEXT_XCE[] PROGMEM  = "XCE";
 
-constexpr char TEXT_JMPL[] PROGMEM = "JMPL";
+// constexpr char TEXT_JMPL[] PROGMEM = "JMPL";
 constexpr char TEXT_ADCL[] PROGMEM = "ADCL";
 constexpr char TEXT_ANDL[] PROGMEM = "ANDL";
 // constexpr char TEXT_CMPL[] PROGMEM = "CMPL";

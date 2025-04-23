@@ -92,7 +92,7 @@ bool isRelative(const char *p, const char *&r) {
             r = tmp;
             return true;
         }
-        if (n == 0 || n == ',' || n == ')' || n == ']' || n == '[') {
+        if (n == 0 || n == ',' || n == ')' || n == ']' || n == '[' || n == '(') {
             r = p;
             return true;
         }

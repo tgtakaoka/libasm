@@ -43,6 +43,7 @@ EXS = \
 	scn2650  \
 	tlcs90   \
 	tms32010 \
+	tms370   \
 	tms7000  \
 	tms9900  \
 	z8       \

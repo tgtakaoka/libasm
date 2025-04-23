@@ -30,6 +30,7 @@ build test_formatter_pdp8.o:     cxx test_formatter_pdp8.cpp
 build test_formatter_scn2650.o:  cxx test_formatter_scn2650.cpp
 build test_formatter_tlcs90.o:   cxx test_formatter_tlcs90.cpp
 build test_formatter_tms32010.o: cxx test_formatter_tms32010.cpp
+build test_formatter_tms370.o:   cxx test_formatter_tms370.cpp
 build test_formatter_tms7000.o:  cxx test_formatter_tms7000.cpp
 build test_formatter_tms9900.o:  cxx test_formatter_tms9900.cpp
 build test_formatter_z8000.o:    cxx test_formatter_z8000.cpp

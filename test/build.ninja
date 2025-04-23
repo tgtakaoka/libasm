@@ -524,6 +524,30 @@ build gen_tms32010: link gen_tms32010.o $
   dec_float.o value_parser.o parsers.o operators.o $
   gen_driver.o tokenized_text.o
 
+# tms370
+build test_asm_tms370: run test_asm_tms370.o $
+  asm_tms370.o reg_tms370.o table_tms370.o text_tms370.o $
+  asm_base.o config_base.o error_reporter.o insn_base.o operators.o $
+  option_base.o parsers.o reg_base.o str_buffer.o str_scanner.o $
+  text_common.o value.o value_parser.o $
+  fixed64.o ieee_float.o float80_base.o float80_hard.o float80_soft.o $
+  dec_float.o ibm_float.o test_asm_helper.o test_asserter.o
+build test_dis_tms370: run test_dis_tms370.o $
+  dis_tms370.o reg_tms370.o table_tms370.o text_tms370.o $
+  dis_base.o config_base.o error_reporter.o formatters.o insn_base.o $
+  option_base.o reg_base.o str_buffer.o str_scanner.o text_common.o value.o $
+  value_formatter.o value_parser.o parsers.o operators.o dec_float.o $
+  fixed64.o ieee_float.o float80_base.o float80_hard.o float80_soft.o $
+  test_dis_helper.o test_asserter.o
+build gen_tms370: link gen_tms370.o $
+  dis_tms370.o reg_tms370.o table_tms370.o text_tms370.o $
+  config_base.o dis_base.o dis_formatter.o error_reporter.o formatters.o $
+  insn_base.o list_formatter.o option_base.o reg_base.o str_buffer.o $
+  str_scanner.o test_generator.o text_common.o value.o value_formatter.o $
+  fixed64.o ieee_float.o float80_base.o float80_hard.o float80_soft.o $
+  dec_float.o value_parser.o parsers.o operators.o $
+  gen_driver.o tokenized_text.o
+
 # tms7000
 build test_asm_tms7000: run test_asm_tms7000.o $
   asm_tms7000.o reg_tms7000.o table_tms7000.o text_tms7000.o $
@@ -703,6 +727,7 @@ build test_pdp8:     phony test_asm_pdp8     test_dis_pdp8
 build test_scn2650:  phony test_asm_scn2650  test_dis_scn2650
 build test_tlcs90:   phony test_asm_tlcs90   test_dis_tlcs90
 build test_tms32010: phony test_asm_tms32010 test_dis_tms32010
+build test_tms370:   phony test_asm_tms370   test_dis_tms370
 build test_tms7000:  phony test_asm_tms7000  test_dis_tms7000
 build test_tms9900:  phony test_asm_tms9900  test_dis_tms9900
 build test_z8000:    phony test_asm_z8000    test_dis_z8000
@@ -739,6 +764,7 @@ build test: phony $
   test_scn2650  $
   test_tlcs90   $
   test_tms32010 $
+  test_tms370   $
   test_tms7000  $
   test_tms9900  $
   test_z8       $
@@ -768,6 +794,7 @@ build gen: phony $
   gen_scn2650  $
   gen_tlcs90   $
   gen_tms32010 $
+  gen_tms370   $
   gen_tms7000  $
   gen_tms9900  $
   gen_z8       $

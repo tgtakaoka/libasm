@@ -70,7 +70,7 @@ extern const char TEXT_JBE[]    PROGMEM;
 using common::TEXT_JC;
 extern const char TEXT_JCXZ[]   PROGMEM;
 using common::TEXT_JE;
-extern const char TEXT_JG[]     PROGMEM;
+using common::TEXT_JG;
 using common::TEXT_JGE;
 using common::TEXT_JL;
 using common::TEXT_JLE;

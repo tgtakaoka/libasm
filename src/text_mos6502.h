@@ -175,7 +175,7 @@ extern const char TEXT_WDM[] PROGMEM;
 extern const char TEXT_XBA[] PROGMEM;
 extern const char TEXT_XCE[] PROGMEM;
 
-extern const char TEXT_JMPL[] PROGMEM;
+using common::TEXT_JMPL;
 extern const char TEXT_ADCL[] PROGMEM;
 extern const char TEXT_ANDL[] PROGMEM;
 using common::TEXT_CMPL;
