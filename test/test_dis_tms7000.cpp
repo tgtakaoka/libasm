@@ -53,6 +53,8 @@ void test_implied() {
     TEST("STSP", "", 0x09);
     TEST("RETI", "", 0x0B);
     TEST("RETS", "", 0x0A);
+    TEST("TSTA", "", 0xB0);
+    TEST("TSTB", "", 0xC1);
 
     TEST("TRAP", "23", 0xE8);
     TEST("TRAP", "22", 0xE9);

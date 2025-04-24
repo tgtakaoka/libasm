@@ -140,7 +140,7 @@ Error AsmTms7000::parseOperand(StrScanner &scan, Operand &op) const {
         indir = p.skipSpaces().expect('*');
     if (abs && indir)
         return op.setError(UNKNOWN_OPERAND);
-    op.val = parseExpr(p.skipSpaces(), op);
+    op.val = parseInteger(p.skipSpaces(), op);
     if (op.hasError())
         return op.getError();
     if (hasIndexB(p, op)) {
