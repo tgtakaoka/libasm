@@ -21,8 +21,8 @@ namespace text {
 namespace tms7000 {
 
 // clang-format off
-constexpr char TEXT_CPU_TMS7000[]  PROGMEM = "TMS7000";
-constexpr char TEXT_CPU_TMS70C00[] PROGMEM = "TMS70C00";
+constexpr char TEXT_CPU_TMS7000[] PROGMEM = "TMS7000";
+constexpr char TEXT_CPU_TMS70C[]  PROGMEM = "TMS70C";
 
 // TMS7000
 // constexpr char TEXT_ADC[]  PROGMEM = "ADC";

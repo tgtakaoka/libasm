@@ -24,8 +24,8 @@ namespace text {
 namespace tms7000 {
 
 // clang-format off
-extern const char TEXT_CPU_TMS7000[]  PROGMEM;
-extern const char TEXT_CPU_TMS70C00[] PROGMEM;
+extern const char TEXT_CPU_TMS7000[] PROGMEM;
+extern const char TEXT_CPU_TMS70C[]  PROGMEM;
 
 // TMS7000
 using common::TEXT_ADC;

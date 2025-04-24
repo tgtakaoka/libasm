@@ -530,7 +530,7 @@ const /*PROGMEM*/ char *TableTms7000::cpuName_P(CpuType cpuType) const {
 }
 
 Error TableTms7000::searchCpuName(StrScanner &name, CpuType &cpuType) const {
-    if (name.iequals(TEXT_CPU_TMS7000) || name.iequals(TEXT_CPU_TMS70C00)) {
+    if (name.iequals(TEXT_CPU_TMS7000) || strncasecmp_P(TEXT_CPU_TMS70C, name.str(), 6) == 0) {
         cpuType = TMS7000;
         return OK;
     }
