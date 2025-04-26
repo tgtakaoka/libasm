@@ -52,6 +52,9 @@ endef
 define zinc-out
 $(filter $(1),$(ZINC_targets:%=%_zinc))
 endef
+define zinc-out
+$(filter $(1),$(ZINC_targets:%=%_zinc))
+endef
 define gen-opt
 $(if $(call ginc-out,$(1)),-g -i,$(if $(call out-inc,$(1)),-i -u,-u)) \
 $(if $(call zinc-out,$(1)),-z)
