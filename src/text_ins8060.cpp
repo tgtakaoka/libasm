@@ -27,7 +27,7 @@ constexpr char TEXT_CPU_INS8060[] PROGMEM = "INS8060";
 // constexpr char TEXT_null[] PROGMEM = "";
 
 // constexpr char TEXT_ADD[]  PROGMEM = "ADD";
-constexpr char TEXT_ADE[]  PROGMEM = "ADE";
+// constexpr char TEXT_ADE[]  PROGMEM = "ADE";
 // constexpr char TEXT_ADI[]  PROGMEM = "ADI";
 // constexpr char TEXT_AND[]  PROGMEM = "AND";
 constexpr char TEXT_ANE[]  PROGMEM = "ANE";
@@ -57,7 +57,7 @@ constexpr char TEXT_IEN[]  PROGMEM = "IEN";
 // constexpr char TEXT_LDI[]  PROGMEM = "LDI";
 // constexpr char TEXT_NOP[]  PROGMEM = "NOP";
 // constexpr char TEXT_OR[]   PROGMEM = "OR";
-constexpr char TEXT_ORE[]  PROGMEM = "ORE";
+// constexpr char TEXT_ORE[]  PROGMEM = "ORE";
 // constexpr char TEXT_ORI[]  PROGMEM = "ORI";
 // constexpr char TEXT_RR[]   PROGMEM = "RR";
 // constexpr char TEXT_RRL[]  PROGMEM = "RRL";

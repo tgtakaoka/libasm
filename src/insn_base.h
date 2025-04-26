@@ -147,6 +147,7 @@ struct AsmInsnBase : ErrorAt {
         resetError();
         _insn.reset(addr);
     }
+    void resetBytes() { _insn.reset(address(), 0); }
 
     /** Generate 8 bit |data| (Assembler). */
     Error emitByte(uint8_t data) { return _insn.emitByte(data); }

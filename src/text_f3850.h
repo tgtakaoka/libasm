@@ -95,7 +95,7 @@ using common::TEXT_REG_I;
 extern const char TEXT_REG_IS[] PROGMEM;
 extern const char TEXT_REG_J[]  PROGMEM;
 extern const char TEXT_REG_KL[] PROGMEM;
-extern const char TEXT_REG_K[]  PROGMEM;
+using common::TEXT_REG_K;
 extern const char TEXT_REG_KU[] PROGMEM;
 using common::TEXT_REG_P;
 using common::TEXT_REG_P0;

@@ -99,7 +99,7 @@ using common::TEXT_LDB;
 extern const char TEXT_LDCD[]   PROGMEM;
 extern const char TEXT_LDCPD[]  PROGMEM;
 extern const char TEXT_LDCPI[]  PROGMEM;
-extern const char TEXT_LDED[]   PROGMEM;
+using common::TEXT_LDED;
 extern const char TEXT_LDEPD[]  PROGMEM;
 extern const char TEXT_LDEPI[]  PROGMEM;
 using common::TEXT_LDW;

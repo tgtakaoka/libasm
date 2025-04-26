@@ -161,7 +161,7 @@ using common::TEXT_TXS;
 using common::TEXT_WAI;
 
 // MB8861
-extern const char TEXT_ADX[] PROGMEM;
+using common::TEXT_ADX;
 extern const char TEXT_NIM[] PROGMEM;
 extern const char TEXT_TMM[] PROGMEM;
 extern const char TEXT_XIM[] PROGMEM;

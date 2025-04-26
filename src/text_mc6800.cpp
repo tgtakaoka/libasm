@@ -158,7 +158,7 @@ constexpr char TEXT_PUL[]  PROGMEM = "PUL";
 // constexpr char TEXT_WAI[]  PROGMEM = "WAI";
 
 // MB8861
-constexpr char TEXT_ADX[] PROGMEM = "ADX";
+// constexpr char TEXT_ADX[] PROGMEM = "ADX";
 constexpr char TEXT_NIM[] PROGMEM = "NIM";
 constexpr char TEXT_TMM[] PROGMEM = "TMM";
 constexpr char TEXT_XIM[] PROGMEM = "XIM";

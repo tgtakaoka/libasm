@@ -123,6 +123,13 @@ build reg_mc68hc12.o:   cxx ${root}/src/reg_mc68hc12.cpp
 build table_mc68hc12.o: cxx ${root}/src/table_mc68hc12.cpp
 build text_mc68hc12.o:  cxx ${root}/src/text_mc68hc12.cpp
 
+# mc68hc16
+build asm_mc68hc16.o:   cxx ${root}/src/asm_mc68hc16.cpp
+build dis_mc68hc16.o:   cxx ${root}/src/dis_mc68hc16.cpp
+build reg_mc68hc16.o:   cxx ${root}/src/reg_mc68hc16.cpp
+build table_mc68hc16.o: cxx ${root}/src/table_mc68hc16.cpp
+build text_mc68hc16.o:  cxx ${root}/src/text_mc68hc16.cpp
+
 # mn1610
 build asm_mn1610.o:   cxx ${root}/src/asm_mn1610.cpp
 build dis_mn1610.o:   cxx ${root}/src/dis_mn1610.cpp

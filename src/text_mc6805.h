@@ -122,8 +122,8 @@ using common::TEXT_TXA;
 using common::TEXT_WAIT;
 
 // MC68HC08
-extern const char TEXT_AIS[]   PROGMEM;
-extern const char TEXT_AIX[]   PROGMEM;
+using common::TEXT_AIS;
+using common::TEXT_AIX;
 using common::TEXT_BGE;
 using common::TEXT_BGT;
 using common::TEXT_BLE;
