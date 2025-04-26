@@ -84,6 +84,15 @@ gas-%_mc68hc11.s19: %_mc68hc11.gas
 	| tr -d '\015' > $(^:.gas=.s19)
 	m6811-elf-objdump -m m68hc11 -D $(^:.gas=.s19) > $(^:.gas=.dis)
 
+# MC68HC12 target
+gas-%_mc68hc12.s19: %_mc68hc12.gas
+	m6811-elf-as -m68hc12 --warn -o $(^:.gas=.p) -al=$(^:.gas=.lst) $^
+	m6811-elf-ld -m m68hc12elf --entry=0 -o $(^:.gas=.o) $(^:.gas=.p)
+	m6811-elf-objcopy -I elf32-m68hc12 -O srec --srec-len=16 \
+	        --change-section-lma .text=0x0100 $(^:.gas=.o) /dev/stdout \
+	| tr -d '\015' > $(^:.gas=.s19)
+	m6811-elf-objdump -m m68hc12 -D $(^:.gas=.s19) > $(^:.gas=.dis)
+
 # Z80 target
 gas-%_z80.hex: %_z80.gas
 	z80-elf-as -march=z80 --warn -o $(^:.gas=.p) -al=$(^:.gas=.lst) $^

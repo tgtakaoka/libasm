@@ -1,0 +1,593 @@
+;;; Copyright 2025 Tadashi G. Takaoka
+;;;
+;;; Licensed under the Apache License, Version 2.0 (the "License");
+;;; you may not use this file except in compliance with the License.
+;;; You may obtain a copy of the License at
+;;;
+;;;     http://www.apache.org/licenses/LICENSE-2.0
+;;;
+;;; Unless required by applicable law or agreed to in writing, software
+;;; distributed under the License is distributed on an "AS IS" BASIS,
+;;; WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+;;; See the License for the specific language governing permissions and
+;;; limitations under the License.
+        .text
+;;; 0x
+        bgnd
+        mem
+        iny
+        dey
+        dbeq    x,(.+0x09)
+        jmp     5,x
+        bsr     (.+0x0A)
+        inx
+        dex
+        rtc
+        rti
+        bset    *0x0D,x,#0x0E
+        bclr    *0x0E,x,#0x0F
+        brset   *0x0F,x,#0x10,(.+0x15)
+        brclr   -16,x,#0x11,(.+0x16)
+;;; 1x
+        andcc   #0x11
+        clc
+        cli
+        clv
+        ediv
+        mul
+        emul
+        orcc    #0x15
+        sec
+        sei
+        sev
+        jsr     -10,x
+        mina    -6,x
+        leay    -6,x
+        aby
+        leax    -5,x
+        abx
+        leas    -4,x
+        des
+        ins
+        bset    0x1D1E,#0x1F
+        bclr    0x1E1F,#0x20
+        brset   0x1F20,#0x21,(.+0x27)
+        brclr   0x2021,#0x22,(.+0x28)
+;;; 2X
+        bra     (.+0x23)
+        bhi     (.+0x25)
+        bls     (.+0x26)
+        bcc     (.+0x27)
+        bcs     (.+0x28)
+        bhs     (.+0x27)
+        blo     (.+0x28)
+        bne     (.+0x29)
+        beq     (.+0x2A)
+        bvc     (.+0x2B)
+        bvs     (.+0x2C)
+        bpl     (.+0x2D)
+        bmi     (.+0x2E)
+        bge     (.+0x2F)
+        blt     (.+0x30)
+        bgt     (.+0x31)
+        ble     (.+0x32)
+;;; 3x
+        pulx
+        puly
+        pula
+        pulb
+        pshx
+        pshy
+        psha
+        pshb
+        pulc
+        pshc
+        puld
+        pshd
+        rts
+        wai
+        swi
+;;; 4x
+        nega
+        coma
+        inca
+        deca
+        lsra
+        rola
+        rora
+        asra
+        asla
+        lsla
+        lsrd
+        call    0x4B4C,0x4D
+        call    12,y,0x4D
+        bset    *0x4D,#0x4E
+        bclr    *0x4E,#0x4F
+        brset   *0x4F,#0x50,(.+0x55)
+        brclr   *0x50,#0x51,(.+0x56)
+;;; 5x
+        negb
+        comb
+        incb
+        decb
+        lsrb
+        rolb
+        rorb
+        asrb
+        aslb
+        lslb
+        asld
+        lsld
+        staa    *0x5B
+        stab    *0x5C
+        std     *0x5D
+        sty     *0x5E
+        stx     *0x5F
+        sts     *0x60
+;;; 6x
+        neg     2,+y
+        com     3,+y
+        inc     4,+y
+        dec     5,+y
+        lsr     6,+y
+        rol     7,+y
+        ror     8,+y
+        asr     8,-y
+        asl     7,-y
+        lsl     7,-y
+        clr     6,-y
+        staa    5,-y
+        stab    4,-y
+        std     3,-y
+        sty     2,-y
+        stx     1,-y
+        sts     1,y+
+;;; 7x
+        neg     0x7172
+        com     0x7273
+        inc     0x7374
+        dec     0x7475
+        lsr     0x7576
+        rol     0x7677
+        ror     0x7778
+        asr     0x7879
+        asl     0x797A
+        lsl     0x797A
+        clr     0x7A7B
+        staa    0x7B7C
+        stab    0x7C7D
+        std     0x7D7E
+        sty     0x7E7F
+        stx     0x7F80
+        sts     0x8081
+;;; 8x
+        suba    #0x81
+        cmpa    #0x82
+        sbca    #0x83
+        subd    #0x8485
+        anda    #0x85
+        bita    #0x86
+        ldaa    #0x87
+        clra
+        eora    #0x89
+        adca    #0x8A
+        oraa    #0x8B
+        adda    #0x8C
+        cpd     #0x8D8E
+        cpy     #0x8E8F
+        cpx     #0x9F90
+        cps     #0x9091
+;;; 9x
+        suba    *0x91
+        cmpa    *0x92
+        sbca    *0x93
+        subd    *0x94
+        anda    *0x95
+        bita    *0x96
+        ldaa    *0x97
+        tsta
+        eora    *0x99
+        adca    *0x9A
+        oraa    *0x9B
+        adda    *0x9C
+        cpd     *0x9D
+        cpy     *0x9E
+        cpx     *0x9F
+        cps     *0xA0
+;;; Ax
+        suba    2,+sp
+        cmpa    3,+sp
+        sbca    4,+sp
+        subd    5,+sp
+        anda    6,+sp
+        bita    7,+sp
+        ldaa    8,+sp
+        nop
+        eora    7,-sp
+        adca    6,-sp
+        oraa    5,-sp
+        adda    4,-sp
+        cpd     3,-sp
+        cpy     2,-sp
+        cpx     1,-sp
+        cps     1,sp+
+;;; Bx
+        suba    0xB1B2
+        cmpa    0xB2B3
+        sbca    0xB3B4
+        subd    0xB485
+        anda    0xB5B6
+        bita    0xB6B7
+        ldaa    0xB7B8
+        exg     d,sp
+        eora    0xB9BA
+        adca    0xBABB
+        oraa    0xBBBC
+        adda    0xBCBD
+        cpd     0xBD8E
+        cpy     0xBE8F
+        cpx     0xBFC0
+        cps     0xC0C1
+;;; Cx
+        subb    #0xC1
+        cmpb    #0xC2
+        sbcb    #0xC3
+        addd    #0xC4C5
+        andb    #0xC5
+        bitb    #0xC6
+        ldab    #0xC7
+        clrb
+        eorb    #0xC9
+        adcb    #0xCA
+        orab    #0xCB
+        addb    #0xCC
+        ldd     #0xCDCE
+        ldy     #0xCECF
+        ldx     #0xCFD0
+        lds     #0xD0D1
+;;; Dx
+        subb    *0xD1
+        cmpb    *0xD2
+        sbcb    *0xD3
+        addd    *0xD4
+        andb    *0xD5
+        bitb    *0xD6
+        ldab    *0xD7
+        tstb
+        eorb    *0xD9
+        adcb    *0xDA
+        orab    *0xDB
+        addb    *0xDC
+        ldd     *0xDD
+        ldy     *0xDE
+        ldx     *0xDF
+        lds     *0xE0
+;;; Ex
+        subb    -0x1E,x
+        cmpb    0xE3E4,x
+        sbcb    [0xE4E5,x]
+        addd    a,x
+        andb    b,x
+        bitb    d,x
+        ldab    [d,x]
+        tst     0xE9,y
+        eorb    -0x16,y
+        adcb    0xEBEC,y
+        orab    [0xECED,y]
+        addb    a,y
+        ldd     b,y
+        ldy     d,y
+        ldx     [d,y]
+        lds     0xF1,sp
+;;; Fx
+        subb    0xF1F2
+        cmpb    0xF2F3
+        sbcb    0xF3F4
+        addd    0xF4F5
+        andb    0xF5F6
+        bitb    0xF6F7
+        ldab    0xF7F8
+        tst     0xF8F9
+        eorb    0xF9FA
+        adcb    0xFAFB
+        orab    0xFBFC
+        addb    0xFCFD
+        ldd     0xFDFE
+        ldy     0xFEFF
+        ldx     0xFF00
+        lds     0x1001
+;;; 04 xx
+        dbeq    a,(.+0x04)
+        dbeq    b,(.+0x05)
+        dbeq    d,(.+0x08)
+        dbeq    x,(.+0x09)
+        dbeq    y,(.+0x0A)
+        dbeq    sp,(.+0x0B)
+        dbeq    a,(.-0xEC)
+        dbeq    b,(.-0xEB)
+        dbeq    d,(.-0xE8)
+        dbeq    x,(.-0xE7)
+        dbeq    y,(.-0xE6)
+        dbeq    sp,(.-0xE5)
+        dbne    a,(.+0x24)
+        dbne    b,(.+0x25)
+        dbne    d,(.+0x28)
+        dbne    x,(.+0x29)
+        dbne    y,(.+0x2A)
+        dbne    sp,(.+0x2B)
+        dbne    a,(.-0xCC)
+        dbne    b,(.-0xCB)
+        dbne    d,(.-0xC8)
+        dbne    x,(.-0xC7)
+        dbne    y,(.-0xC6)
+        dbne    sp,(.-0xC5)
+        tbeq    a,(.+0x44)
+        tbeq    b,(.+0x45)
+        tbeq    d,(.+0x48)
+        tbeq    x,(.+0x49)
+        tbeq    y,(.+0x4A)
+        tbeq    sp,(.+0x4B)
+        tbeq    a,(.-0xAC)
+        tbeq    b,(.-0xAB)
+        tbeq    d,(.-0xA8)
+        tbeq    x,(.-0xA7)
+        tbeq    y,(.-0xA6)
+        tbeq    sp,(.-0xA5)
+        tbne    a,(.+0x64)
+        tbne    b,(.+0x65)
+        tbne    d,(.+0x68)
+        tbne    x,(.+0x69)
+        tbne    y,(.+0x6A)
+        tbne    sp,(.+0x6B)
+        tbne    a,(.-0x8C)
+        tbne    b,(.-0x8B)
+        tbne    d,(.-0x88)
+        tbne    x,(.-0x87)
+        tbne    y,(.-0x86)
+        tbne    sp,(.-0x85)
+        ibeq    a,(.+0x84)
+        ibeq    b,(.+0x85)
+        ibeq    d,(.+0x88)
+        ibeq    x,(.+0x89)
+        ibeq    y,(.+0x8A)
+        ibeq    sp,(.+0x8B)
+        ibeq    a,(.-0x6C)
+        ibeq    b,(.-0x6B)
+        ibeq    d,(.-0x68)
+        ibeq    x,(.-0x67)
+        ibeq    y,(.-0x66)
+        ibeq    sp,(.-0x65)
+        ibne    a,(.+0xA4)
+        ibne    b,(.+0xA5)
+        ibne    d,(.+0xA8)
+        ibne    x,(.+0xA9)
+        ibne    y,(.+0xAA)
+        ibne    sp,(.+0xAB)
+        ibne    a,(.-0x4C)
+        ibne    b,(.-0x4B)
+        ibne    d,(.-0x48)
+        ibne    x,(.-0x47)
+        ibne    y,(.-0x46)
+        ibne    sp,(.-0x45)
+;;; B7 xx
+        tfr     a,a
+        tfr     a,b
+        tfr     a,ccr
+        tap
+        sex     a,d
+        sex     a,x
+        sex     a,y
+        sex     a,sp
+        tfr     b,a
+        tfr     b,b
+        tfr     b,ccr
+        sex     b,d
+        sex     b,x
+        sex     b,y
+        sex     b,sp
+        tfr     ccr,a
+        tpa
+        tfr     ccr,b
+        tfr     ccr,ccr
+        sex     ccr,d
+        sex     ccr,x
+        sex     ccr,y
+        sex     ccr,sp
+        tfr     d,d
+        tfr     d,x
+        tfr     d,y
+        tfr     d,sp
+        tfr     x,d
+        tfr     x,x
+        tfr     x,y
+        tfr     x,sp
+        txs
+        tfr     y,d
+        tfr     y,x
+        tfr     y,y
+        tfr     y,sp
+        tys
+        tfr     sp,d
+        tfr     sp,x
+        tsx
+        tfr     sp,y
+        tsy
+        tfr     sp,sp
+        exg     a,a
+        exg     a,b
+        exg     a,ccr
+        exg     b,a
+        exg     b,b
+        exg     b,ccr
+        exg     ccr,a
+        exg     ccr,b
+        exg     ccr,ccr
+        exg     d,d
+        exg     d,x
+        xgdx
+        exg     d,y
+        xgdy
+        exg     d,sp
+        exg     x,d
+        exg     x,x
+        exg     x,y
+        exg     x,y
+        exg     y,d
+        exg     y,x
+        exg     y,y
+        exg     y,sp
+        exg     sp,d
+        exg     sp,x
+        exg     sp,y
+        exg     sp,sp
+;;; 18 0x
+        movw    #0x0203,1,x
+        movw    0x0304,2,x
+        movw    3,x,4,x
+        movw    #0x0405,0x0607
+        movw    0x0506,0x0708
+        movw    6,x,0x0708
+        aba
+        daa
+        movb    #0x0A,9,x
+        movb    0x0B0C,10,x
+        movb    11,x,12,x
+        movb    #0x0C,0x0D0E
+        movb    0x0D0E,0x0F10
+        movb    14,x,0x0F10
+        tab
+        tba
+;;; 18 1x
+        idiv
+        fdiv
+        emacs   0x1314
+        emuls
+        edivs
+        idivs
+        sba
+        cba
+        maxa    -7,x
+        mina    -6,x
+        emaxd   -5,x
+        emind   -4,x
+        maxm    -3,x
+        minm    -2,x
+        emaxm   -1,x
+        eminm   1,+x
+;;; 18 2x
+        lbra    (.+0x2126)
+        lbrn    (.+0x2227)
+        lbhi    (.+0x2328)
+        lbls    (.+0x2429)
+        lbcc    (.+0x252A)
+        lbcs    (.+0x262B)
+        lbhs    (.+0x252A)
+        lblo    (.+0x262B)
+        lbne    (.+0x272C)
+        lbeq    (.+0x282D)
+        lbvc    (.+0x292E)
+        lbvs    (.+0x2A2F)
+        lbpl    (.+0x2B30)
+        lbmi    (.+0x2C31)
+        lbge    (.+0x2D32)
+        lblt    (.+0x2E33)
+        lbgt    (.+0x2F34)
+        lble    (.+0x3035)
+;;; 18 3x
+        trap    #0x30
+        trap    #0x31
+        trap    #0x32
+        trap    #0x33
+        trap    #0x34
+        trap    #0x35
+        trap    #0x36
+        trap    #0x37
+        trap    #0x38
+        trap    #0x39
+        rev
+        revw
+        wav
+        tbl     2,x-
+        stop
+        etbl    0,y
+;;; 18 xx
+        trap    #0x40
+        trap    #0xFF
+;;; indexing
+        ldaa    0,x
+        ldaa    15,x
+        ldaa    -16,x
+        ldaa    -1,x
+        ldaa    1,+x
+        ldaa    8,+x
+        ldaa    8,-x
+        ldaa    1,-x
+        ldaa    1,x+
+        ldaa    8,x+
+        ldaa    8,x-
+        ldaa    1,x-
+        ldaa    0,y
+        ldaa    15,y
+        ldaa    -16,y
+        ldaa    -1,y
+        ldaa    1,+y
+        ldaa    8,+y
+        ldaa    8,-y
+        ldaa    1,-y
+        ldaa    1,y+
+        ldaa    8,y+
+        ldaa    8,y-
+        ldaa    1,y-
+        ldaa    0,sp
+        ldaa    15,sp
+        ldaa    -16,sp
+        ldaa    -1,sp
+        ldaa    1,+sp
+        ldaa    8,+sp
+        ldaa    8,-sp
+        ldaa    1,-sp
+        ldaa    1,sp+
+        ldaa    8,sp+
+        ldaa    8,sp-
+        ldaa    1,sp-
+        ldaa    (.+2),pc
+        ldaa    (.+17),pc
+        ldaa    (.-14),pc
+        ldaa    (.+1),pc
+        ldaa    0xFF,x
+        ldaa    -0x100,x
+        ldaa    0xE3E4,x
+        ldaa    [0xE4E5,x]
+        ldaa    a,x
+        ldaa    b,x
+        ldaa    d,x
+        ldaa    [d,x]
+        ldaa    0xFF,y
+        ldaa    -0x100,y
+        ldaa    0xEBEC,y
+        ldaa    [0xECED,y]
+        ldaa    a,y
+        ldaa    b,y
+        ldaa    d,y
+        ldaa    [d,y]
+        ldaa    0xFF,sp
+        ldaa    -0x100,sp
+        ldaa    0xF3F4,sp
+        ldaa    [0xF4F5,sp]
+        ldaa    a,sp
+        ldaa    b,sp
+        ldaa    d,sp
+        ldaa    [d,sp]
+        ldaa    +0xFF,pc
+        ldaa    -0x100,pc
+        ldaa    -0x404,pc
+        ldaa    [-0x303,pc]
+        ldaa    a,pc
+        ldaa    b,pc
+        ldaa    d,pc
+        ldaa    [d,pc]
+        .end
+;;; Local Variables:
+;;; mode: asm
+;;; End:
+;;; vim: set ft=asm:
