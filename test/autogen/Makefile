@@ -29,7 +29,7 @@ help:
 # target which has ".inc" suffix for output.
 INC_targets = w65c816 tlcs90 i8086 i80186 v30 \
     mc68000 mc68010 z8001 z8002 ns32000 mn1610 mn1613 \
-    tms7000 tms9980 j11 t11 mc146805
+    tms7000 tms9980 j11 t11 mc146805 z80 z180
 # target which for GNU assembler (also ".ginc" targets)
 GINC_targets  = mc68000 mc68010 z8001 z8002 ns32000
 # target which also has Zilog syntax (also ".zinc" targets)
