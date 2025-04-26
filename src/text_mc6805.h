@@ -154,7 +154,7 @@ using common::TEXT_TSX;
 using common::TEXT_TXS;
 
 // MC68HCS08
-extern const char TEXT_BGND[]  PROGMEM;
+using common::TEXT_BGND;
     
 // clang-format on
 }  // namespace mc6805

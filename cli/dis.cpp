@@ -28,6 +28,7 @@
 #include "dis_mc6800.h"
 #include "dis_mc6805.h"
 #include "dis_mc6809.h"
+#include "dis_mc68hc12.h"
 #include "dis_mn1610.h"
 #include "dis_mos6502.h"
 #include "dis_ns32000.h"
@@ -60,6 +61,7 @@ mc68000::DisMc68000 dis68000;
 mc6800::DisMc6800 dis6800;
 mc6805::DisMc6805 dis6805;
 mc6809::DisMc6809 dis6809;
+mc68hc12::DisMc68HC12 dis6812;
 mn1610::DisMn1610 dis1610;
 mos6502::DisMos6502 dis6502;
 ns32000::DisNs32000 dis32000;
@@ -79,6 +81,7 @@ DisCommander commander{
         &dis6800,
         &dis6805,
         &dis6809,
+        &dis6812,
         &dis6502,
         &dis8048,
         &dis8051,

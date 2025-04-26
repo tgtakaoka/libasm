@@ -77,7 +77,7 @@ extern const char TEXT_CMPI[]  PROGMEM;
 extern const char TEXT_CMPM[]  PROGMEM;
 extern const char TEXT_DBCC[]  PROGMEM;
 extern const char TEXT_DBCS[]  PROGMEM;
-extern const char TEXT_DBEQ[]  PROGMEM;
+using common::TEXT_DBEQ;
 extern const char TEXT_DBF[]   PROGMEM;
 extern const char TEXT_DBGE[]  PROGMEM;
 extern const char TEXT_DBGT[]  PROGMEM;
@@ -88,7 +88,7 @@ extern const char TEXT_DBLE[]  PROGMEM;
 extern const char TEXT_DBLO[]  PROGMEM;
 extern const char TEXT_DBLT[]  PROGMEM;
 extern const char TEXT_DBMI[]  PROGMEM;
-extern const char TEXT_DBNE[]  PROGMEM;
+using common::TEXT_DBNE;
 extern const char TEXT_DBPL[]  PROGMEM;
 extern const char TEXT_DBRA[]  PROGMEM;
 extern const char TEXT_DBT[]   PROGMEM;
@@ -180,7 +180,7 @@ extern const char TEXT_REG_A6[] PROGMEM;
 extern const char TEXT_REG_A7[] PROGMEM;
 using common::TEXT_REG_PC;
 extern const char TEXT_REG_SR[] PROGMEM;
-extern const char TEXT_REG_CCR[] PROGMEM;
+using common::TEXT_REG_CCR;
 using common::TEXT_REG_USP;
 
 // MC68010

@@ -332,6 +332,30 @@ build gen_mc6809: link gen_mc6809.o $
   dec_float.o value_parser.o parsers.o operators.o $
   gen_driver.o tokenized_text.o
 
+# mc68hc12
+build test_asm_mc68hc12: run test_asm_mc68hc12.o $
+  asm_mc68hc12.o reg_mc68hc12.o table_mc68hc12.o text_mc68hc12.o $
+  asm_base.o config_base.o error_reporter.o insn_base.o operators.o $
+  option_base.o parsers.o reg_base.o str_buffer.o str_scanner.o $
+  text_common.o value.o value_parser.o $
+  fixed64.o ieee_float.o float80_base.o float80_hard.o float80_soft.o $
+  dec_float.o ibm_float.o test_asm_helper.o test_asserter.o
+build test_dis_mc68hc12: run test_dis_mc68hc12.o $
+  dis_mc68hc12.o reg_mc68hc12.o table_mc68hc12.o text_mc68hc12.o $
+  dis_base.o config_base.o error_reporter.o formatters.o insn_base.o $
+  option_base.o reg_base.o str_buffer.o str_scanner.o text_common.o value.o $
+  value_formatter.o value_parser.o parsers.o operators.o dec_float.o $
+  fixed64.o ieee_float.o float80_base.o float80_hard.o float80_soft.o $
+  test_dis_helper.o test_asserter.o
+build gen_mc68hc12: link gen_mc68hc12.o $
+  dis_mc68hc12.o reg_mc68hc12.o table_mc68hc12.o text_mc68hc12.o $
+  config_base.o dis_base.o dis_formatter.o error_reporter.o formatters.o $
+  insn_base.o list_formatter.o option_base.o reg_base.o str_buffer.o $
+  str_scanner.o test_generator.o text_common.o value.o value_formatter.o $
+  fixed64.o ieee_float.o float80_base.o float80_hard.o float80_soft.o $
+  dec_float.o value_parser.o parsers.o operators.o $
+  gen_driver.o tokenized_text.o
+
 # mn1610
 build test_asm_mn1610: run test_asm_mn1610.o $
   asm_mn1610.o reg_mn1610.o table_mn1610.o text_mn1610.o $
@@ -719,6 +743,7 @@ build test_mc68000:  phony test_asm_mc68000  test_dis_mc68000
 build test_mc6800:   phony test_asm_mc6800   test_dis_mc6800
 build test_mc6805:   phony test_asm_mc6805   test_dis_mc6805
 build test_mc6809:   phony test_asm_mc6809   test_dis_mc6809
+build test_mc68hc12: phony test_asm_mc68hc12 test_dis_mc68hc12
 build test_mn1610:   phony test_asm_mn1610   test_dis_mn1610
 build test_mos6502:  phony test_asm_mos6502  test_dis_mos6502
 build test_ns32000:  phony test_asm_ns32000  test_dis_ns32000
@@ -756,6 +781,7 @@ build test: phony $
   test_mc68000  $
   test_mc6805   $
   test_mc6809   $
+  test_mc68hc12 $
   test_mn1610   $
   test_mos6502  $
   test_ns32000  $
@@ -786,6 +812,7 @@ build gen: phony $
   gen_mc68000  $
   gen_mc6805   $
   gen_mc6809   $
+  gen_mc68hc12 $
   gen_mn1610   $
   gen_mos6502  $
   gen_ns32000  $

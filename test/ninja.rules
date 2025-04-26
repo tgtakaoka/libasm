@@ -67,15 +67,20 @@ build test_asm_mc68000.o: cxx ${root}/test/test_asm_mc68000.cpp
 build test_dis_mc68000.o: cxx ${root}/test/test_dis_mc68000.cpp
 build gen_mc68000.o:      cxx ${root}/test/gen_mc68000.cpp
 
+# mc6805
+build test_asm_mc6805.o: cxx ${root}/test/test_asm_mc6805.cpp
+build test_dis_mc6805.o: cxx ${root}/test/test_dis_mc6805.cpp
+build gen_mc6805.o:      cxx ${root}/test/gen_mc6805.cpp
+
 # mc6809
 build test_asm_mc6809.o: cxx ${root}/test/test_asm_mc6809.cpp
 build test_dis_mc6809.o: cxx ${root}/test/test_dis_mc6809.cpp
 build gen_mc6809.o:      cxx ${root}/test/gen_mc6809.cpp
 
-# mc6805
-build test_asm_mc6805.o: cxx ${root}/test/test_asm_mc6805.cpp
-build test_dis_mc6805.o: cxx ${root}/test/test_dis_mc6805.cpp
-build gen_mc6805.o:      cxx ${root}/test/gen_mc6805.cpp
+# mc68hc12
+build test_asm_mc68hc12.o: cxx ${root}/test/test_asm_mc68hc12.cpp
+build test_dis_mc68hc12.o: cxx ${root}/test/test_dis_mc68hc12.cpp
+build gen_mc68hc12.o:      cxx ${root}/test/gen_mc68hc12.cpp
 
 # mn1610
 build test_asm_mn1610.o: cxx ${root}/test/test_asm_mn1610.cpp

@@ -190,6 +190,17 @@ build test_formatter_mc6809: test test_formatter_mc6809.o $
   fixed64.o ieee_float.o float80_base.o float80_hard.o float80_soft.o $
   dec_float.o ibm_float.o test_driver_helper.o test_asserter.o
 
+build test_formatter_mc68hc12: test test_formatter_mc68hc12.o $
+  asm_mc68hc12.o dis_mc68hc12.o reg_mc68hc12.o table_mc68hc12.o text_mc68hc12.o $
+  asm_base.o asm_directive.o asm_driver.o asm_formatter.o bin_decoder.o $
+  bin_encoder.o bin_memory.o config_base.o dis_base.o dis_driver.o $
+  dis_formatter.o error_reporter.o formatters.o function_store.o insn_base.o $
+  intel_hex.o list_formatter.o moto_srec.o operators.o option_base.o $
+  parsers.o reg_base.o str_buffer.o str_scanner.o symbol_store.o $
+  text_common.o value.o value_formatter.o value_parser.o $
+  fixed64.o ieee_float.o float80_base.o float80_hard.o float80_soft.o $
+  dec_float.o ibm_float.o test_driver_helper.o test_asserter.o
+
 build test_formatter_mn1610: test test_formatter_mn1610.o $
   asm_mn1610.o dis_mn1610.o reg_mn1610.o table_mn1610.o text_mn1610.o $
   asm_base.o asm_directive.o asm_driver.o asm_formatter.o bin_decoder.o $
@@ -359,6 +370,7 @@ build test: phony test_helpers test_bin_memory test_intel_hex test_moto_srec $
   test_formatter_mc68000  $
   test_formatter_mc6805   $
   test_formatter_mc6809   $
+  test_formatter_mc68hc12 $
   test_formatter_mn1610   $
   test_formatter_mos6502  $
   test_formatter_ns32000  $

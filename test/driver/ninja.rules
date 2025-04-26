@@ -22,6 +22,7 @@ build test_formatter_mc68000.o:  cxx test_formatter_mc68000.cpp
 build test_formatter_mc6800.o:   cxx test_formatter_mc6800.cpp
 build test_formatter_mc6805.o:   cxx test_formatter_mc6805.cpp
 build test_formatter_mc6809.o:   cxx test_formatter_mc6809.cpp
+build test_formatter_mc68hc12.o: cxx test_formatter_mc68hc12.cpp
 build test_formatter_mn1610.o:   cxx test_formatter_mn1610.cpp
 build test_formatter_mos6502.o:  cxx test_formatter_mos6502.cpp
 build test_formatter_ns32000.o:  cxx test_formatter_ns32000.cpp

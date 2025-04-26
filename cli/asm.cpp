@@ -29,6 +29,7 @@
 #include "asm_mc68000.h"
 #include "asm_mc6805.h"
 #include "asm_mc6809.h"
+#include "asm_mc68hc12.h"
 #include "asm_mn1610.h"
 #include "asm_mos6502.h"
 #include "asm_ns32000.h"
@@ -61,6 +62,7 @@ mc68000::AsmMc68000 asm68000;
 mc6800::AsmMc6800 asm6800;
 mc6805::AsmMc6805 asm6805;
 mc6809::AsmMc6809 asm6809;
+mc68hc12::AsmMc68HC12 asm6812;
 mn1610::AsmMn1610 asm1610;
 mos6502::AsmMos6502 asm6502;
 ns32000::AsmNs32000 asm32000;
@@ -95,6 +97,7 @@ MotorolaDirective dir68000(asm68000);
 MotorolaDirective dir6800(asm6800);
 MotorolaDirective dir6805(asm6805);
 MotorolaDirective dir6809(asm6809);
+MotorolaDirective dir6812(asm6812);
 NationalDirective dir32000(asm32000);
 NationalDirective dir8060(asm8060);
 NationalDirective dir8070(asm8070);
@@ -108,6 +111,7 @@ AsmCommander commander{
         &dir6800,
         &dir6805,
         &dir6809,
+        &dir6812,
         &dir6502,
         &dir8048,
         &dir8051,

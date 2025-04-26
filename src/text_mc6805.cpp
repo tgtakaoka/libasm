@@ -151,7 +151,7 @@ constexpr char TEXT_STHX[]  PROGMEM = "STHX";
 // constexpr char TEXT_TXS[]   PROGMEM = "TXS";
 
 // MC68HCS08
-constexpr char TEXT_BGND[]  PROGMEM = "BGND";
+// constexpr char TEXT_BGND[]  PROGMEM = "BGND";
 
 // clang-format on
 }  // namespace mc6805

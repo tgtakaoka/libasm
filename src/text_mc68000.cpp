@@ -71,7 +71,7 @@ constexpr char TEXT_CMPI[]  PROGMEM = "CMPI";
 constexpr char TEXT_CMPM[]  PROGMEM = "CMPM";
 constexpr char TEXT_DBCC[]  PROGMEM = "DBCC";
 constexpr char TEXT_DBCS[]  PROGMEM = "DBCS";
-constexpr char TEXT_DBEQ[]  PROGMEM = "DBEQ";
+// constexpr char TEXT_DBEQ[]  PROGMEM = "DBEQ";
 constexpr char TEXT_DBF[]   PROGMEM = "DBF";
 constexpr char TEXT_DBGE[]  PROGMEM = "DBGE";
 constexpr char TEXT_DBGT[]  PROGMEM = "DBGT";
@@ -82,7 +82,7 @@ constexpr char TEXT_DBLE[]  PROGMEM = "DBLE";
 constexpr char TEXT_DBLO[]  PROGMEM = "DBLO";
 constexpr char TEXT_DBLT[]  PROGMEM = "DBLT";
 constexpr char TEXT_DBMI[]  PROGMEM = "DBMI";
-constexpr char TEXT_DBNE[]  PROGMEM = "DBNE";
+// constexpr char TEXT_DBNE[]  PROGMEM = "DBNE";
 constexpr char TEXT_DBPL[]  PROGMEM = "DBPL";
 constexpr char TEXT_DBRA[]  PROGMEM = "DBRA";
 constexpr char TEXT_DBT[]   PROGMEM = "DBT";
@@ -174,7 +174,7 @@ constexpr char TEXT_REG_A6[] PROGMEM = "A6";
 constexpr char TEXT_REG_A7[] PROGMEM = "A7";
 // constexpr char TEXT_REG_PC[] PROGMEM = "PC";
 constexpr char TEXT_REG_SR[] PROGMEM = "SR";
-constexpr char TEXT_REG_CCR[] PROGMEM = "CCR";
+// constexpr char TEXT_REG_CCR[] PROGMEM = "CCR";
 // constexpr char TEXT_REG_USP[] PROGMEM = "USP";
 
 // MC68010
