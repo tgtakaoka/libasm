@@ -151,7 +151,7 @@ CPU_z8       = Z8601
 # targets with Motorola S19 format
 S19_OUTS = $(TGT_mc6809) $(TGT_mc6800) $(TGT_mc6805) mc68hc12 mos6502 g65sc02 r65c02 w65c02s
 # targets with Motorola S28 format
-S28_OUTS = $(TGT_mc68000) w65c816 w65c816_m0x0 w65c816_m0x1 w65c816_m1x0 w65c816_m1x1
+S28_OUTS = $(TGT_mc68000) mc68hc16 w65c816 w65c816_m0x0 w65c816_m0x1 w65c816_m1x0 w65c816_m1x1
 # targets with Intel32 (32bit address) format
 I32_OUTS = z180 z280 z8001 z8k1 ns32032 ns32k mn1613 tms320c25 tms320c26
 # other targets use Intel8 format
