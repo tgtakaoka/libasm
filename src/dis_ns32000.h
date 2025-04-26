@@ -29,17 +29,14 @@ struct DisNs32000 final : Disassembler, Config {
 
     void reset() override;
 
-    Error setGnuAs(bool enable);
     Error setPcRelativeParen(bool enable);
     Error setExternalParen(bool enable);
     Error setStringOptionBracket(bool enable);
     Error setFloatPrefix(bool enable);
 
 private:
-    const BoolOption<DisNs32000> _opt_gnuAs;
     const BoolOption<DisNs32000> _opt_externalParen;
 
-    bool _gnuAs;
     bool _externalParen;
 
     struct Displacement : ErrorReporter {

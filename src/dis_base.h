@@ -60,6 +60,7 @@ struct Disassembler {
     Error setCStyle(bool enable);
     Error setIntelHex(bool enable);
     Error setCurSym(char curSym);
+    Error setGnuAs(bool enable);
 
     Radix listRadix() const { return _listRadix; }
 
@@ -82,6 +83,7 @@ protected:
     const BoolOption<Disassembler> _opt_cstyle;
     const BoolOption<Disassembler> _opt_intelhex;
     const CharOption<Disassembler> _opt_curSym;
+    const BoolOption<Disassembler> _opt_gnuAs;
 
     bool _upperHex;
     bool _uppercase;
@@ -90,6 +92,7 @@ protected:
     bool _cstyle;
     bool _intelHex;
     char _curSym;
+    bool _gnuAs;
     SymbolTable *_symtab = nullptr;
 
     Disassembler(const ValueFormatter::Plugins &plugins, const OptionBase *option = nullptr);

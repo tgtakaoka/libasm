@@ -169,8 +169,6 @@ private:
 namespace text {
 namespace option {
 
-extern const char OPT_BOOL_GNU_AS[] PROGMEM;
-extern const char OPT_DESC_GNU_AS[] PROGMEM;
 extern const char OPT_TEXT_FPU[] PROGMEM;
 extern const char OPT_DESC_FPU[] PROGMEM;
 extern const char OPT_BOOL_LONGA[] PROGMEM;

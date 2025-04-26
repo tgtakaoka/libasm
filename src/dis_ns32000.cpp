@@ -24,7 +24,6 @@ namespace ns32000 {
 
 using namespace reg;
 using namespace text::common;
-using namespace text::option;
 
 namespace {
 
@@ -43,10 +42,8 @@ const ValueFormatter::Plugins &DisNs32000::defaultPlugins() {
 }
 
 DisNs32000::DisNs32000(const ValueFormatter::Plugins &plugins)
-    : Disassembler(plugins, &_opt_gnuAs),
+    : Disassembler(plugins, &_opt_externalParen),
       Config(TABLE),
-      _opt_gnuAs(
-              this, &DisNs32000::setGnuAs, OPT_BOOL_GNU_AS, OPT_DESC_GNU_AS, &_opt_externalParen),
       _opt_externalParen(this, &DisNs32000::setExternalParen, OPT_BOOL_EXTERNAL_PAREN,
               OPT_DESC_EXTERNAL_PAREN) {
     reset();
@@ -54,15 +51,7 @@ DisNs32000::DisNs32000(const ValueFormatter::Plugins &plugins)
 
 void DisNs32000::reset() {
     Disassembler::reset();
-    setGnuAs(false);
     setExternalParen(false);
-}
-
-Error DisNs32000::setGnuAs(bool enable) {
-    _gnuAs = enable;
-    setCStyle(enable);
-    setCurSym(enable ? '.' : 0);
-    return OK;
 }
 
 Error DisNs32000::setExternalParen(bool enable) {

@@ -29,16 +29,13 @@ struct DisZ8000 final : Disassembler, Config {
 
     void reset() override;
 
-    Error setGnuAs(bool enable);
     Error setShortDirect(bool enable);
     Error setSegmentedAddr(bool enable);
 
 private:
-    const BoolOption<DisZ8000> _opt_gnuAs;
     const BoolOption<DisZ8000> _opt_shortDirect;
     const BoolOption<DisZ8000> _opt_segmentedAddr;
 
-    bool _gnuAs;
     bool _shortDirect;
     bool _segmentedAddr;
 

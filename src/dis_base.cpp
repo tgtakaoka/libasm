@@ -34,6 +34,8 @@ constexpr char OPT_BOOL_INTELHEX[] PROGMEM = "intel-hex";
 constexpr char OPT_DESC_INTELHEX[] PROGMEM = "Intel style hexadecimal";
 constexpr char OPT_CHAR_ORIGIN[] PROGMEM = "origin-char";
 constexpr char OPT_DESC_ORIGIN[] PROGMEM = "letter for origin symbol";
+constexpr char OPT_BOOL_GNU_AS[] PROGMEM = "gnu-as";
+constexpr char OPT_DESC_GNU_AS[] PROGMEM = "GNU assembler compatible";
 
 }  // namespace
 
@@ -52,7 +54,10 @@ Disassembler::Disassembler(const ValueFormatter::Plugins &plugins, const OptionB
       _opt_cstyle(this, &Disassembler::setCStyle, OPT_BOOL_CSTYLE, OPT_DESC_CSTYLE, &_opt_intelhex),
       _opt_intelhex(
               this, &Disassembler::setIntelHex, OPT_BOOL_INTELHEX, OPT_DESC_INTELHEX, &_opt_curSym),
-      _opt_curSym(this, &Disassembler::setCurSym, OPT_CHAR_ORIGIN, OPT_DESC_ORIGIN) {}
+      _opt_curSym(this, &Disassembler::setCurSym, OPT_CHAR_ORIGIN, OPT_DESC_ORIGIN, &_opt_gnuAs),
+      _opt_gnuAs(this, &Disassembler::setGnuAs, OPT_BOOL_GNU_AS, OPT_DESC_GNU_AS) {
+    reset();
+}
 
 void Disassembler::reset() {
     setUpperHex(true);
@@ -62,6 +67,7 @@ void Disassembler::reset() {
     setCStyle(false);
     setIntelHex(false);
     setCurSym(0);
+    setGnuAs(false);
 }
 
 const ValueFormatter &Disassembler::formatter() const {
@@ -112,6 +118,13 @@ Error Disassembler::setIntelHex(bool enable) {
 
 Error Disassembler::setCurSym(char curSym) {
     _curSym = curSym ? curSym : _formatter.locationSymbol();
+    return OK;
+}
+
+Error Disassembler::setGnuAs(bool enable) {
+    _gnuAs = enable;
+    setCStyle(enable);
+    setCurSym(enable ? '.' : 0);
     return OK;
 }
 

@@ -27,15 +27,7 @@ namespace mc68000 {
 struct DisMc68000 final : Disassembler, Config {
     DisMc68000(const ValueFormatter::Plugins &plugins = defaultPlugins());
 
-    void reset() override;
-
-    Error setGnuAs(bool enable);
-
 private:
-    const BoolOption<DisMc68000> _opt_gnuAs;
-
-    bool _gnuAs;
-
     void decodeImmediateData(DisInsn &insn, StrBuffer &out, OprSize eaSize) const;
     void decodeEffectiveAddr(
             DisInsn &insn, StrBuffer &out, uint8_t mode, RegName reg, OprSize size) const;

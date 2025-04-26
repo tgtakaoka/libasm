@@ -22,7 +22,6 @@ namespace libasm {
 namespace z8000 {
 
 using namespace reg;
-using namespace text::option;
 
 namespace {
 
@@ -38,9 +37,8 @@ const ValueFormatter::Plugins &DisZ8000::defaultPlugins() {
 }
 
 DisZ8000::DisZ8000(const ValueFormatter::Plugins &plugins)
-    : Disassembler(plugins, &_opt_gnuAs),
+    : Disassembler(plugins, &_opt_shortDirect),
       Config(TABLE),
-      _opt_gnuAs(this, &DisZ8000::setGnuAs, OPT_BOOL_GNU_AS, OPT_DESC_GNU_AS, &_opt_shortDirect),
       _opt_shortDirect(this, &DisZ8000::setShortDirect, OPT_BOOL_SHORT_DIRECT,
               OPT_DESC_SHORT_DIRECT, &_opt_segmentedAddr),
       _opt_segmentedAddr(
@@ -50,16 +48,8 @@ DisZ8000::DisZ8000(const ValueFormatter::Plugins &plugins)
 
 void DisZ8000::reset() {
     Disassembler::reset();
-    setGnuAs(false);
     setShortDirect(true);
     setSegmentedAddr(true);
-}
-
-Error DisZ8000::setGnuAs(bool enable) {
-    _gnuAs = enable;
-    setCStyle(enable);
-    setCurSym(enable ? '.' : 0);
-    return OK;
 }
 
 Error DisZ8000::setShortDirect(bool enable) {

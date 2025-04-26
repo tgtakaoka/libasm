@@ -25,29 +25,14 @@ namespace mc68000 {
 
 using namespace reg;
 using namespace text::common;
-using namespace text::option;
 
 const ValueFormatter::Plugins &DisMc68000::defaultPlugins() {
     return ValueFormatter::Plugins::motorola();
 }
 
 DisMc68000::DisMc68000(const ValueFormatter::Plugins &plugins)
-    : Disassembler(plugins, &_opt_gnuAs),
-      Config(TABLE),
-      _opt_gnuAs(this, &DisMc68000::setGnuAs, OPT_BOOL_GNU_AS, OPT_DESC_GNU_AS) {
+    : Disassembler(plugins), Config(TABLE) {
     reset();
-}
-
-void DisMc68000::reset() {
-    Disassembler::reset();
-    setGnuAs(false);
-}
-
-Error DisMc68000::setGnuAs(bool enable) {
-    _gnuAs = enable;
-    setCStyle(enable);
-    setCurSym(enable ? '.' : 0);
-    return OK;
 }
 
 namespace {
