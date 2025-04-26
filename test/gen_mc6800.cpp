@@ -27,6 +27,8 @@ int main(int argc, const char **argv) {
         return 1;
 
     dis6800.setOption("relative", "enable");
+    if (driver.generateGas())
+        dis6800.setOption("gnu-as", "enable");
 
     TestGenerator generator(driver, dis6800, 0x0100);
     generator.generate();

@@ -35,8 +35,12 @@ DisMc6800::DisMc6800(const ValueFormatter::Plugins &plugins)
 void DisMc6800::decodeDirectPage(DisInsn &insn, StrBuffer &out) const {
     const uint8_t dir = insn.readByte();
     const auto label = lookup(dir);
+    if (_gnuAs)
+        out.letter('*');
     if (label) {
-        out.letter('<').rtext(label);
+        if (!_gnuAs)
+            out.letter('<');
+        out.rtext(label);
     } else {
         outAbsAddr(out, dir, 8);
     }
@@ -46,9 +50,11 @@ void DisMc6800::decodeExtended(DisInsn &insn, StrBuffer &out) const {
     const Config::uintptr_t addr = insn.readUint16();
     const auto label = lookup(addr);
     if (label) {
-        out.letter('>').rtext(label);
+        if (!_gnuAs)
+            out.letter('>');
+        out.rtext(label);
     } else {
-        if (addr < 0x100)
+        if (addr < 0x100 && !_gnuAs)
             out.letter('>');
         outAbsAddr(out, addr);
     }
@@ -59,7 +65,11 @@ void DisMc6800::decodeRelative(DisInsn &insn, StrBuffer &out) const {
     const auto base = insn.address() + insn.length();
     const auto target = base + delta;
     insn.setErrorIf(out, checkAddr(target));
+    if (_gnuAs)
+        out.letter('(');
     outRelAddr(out, target, insn.address(), 8);
+    if (_gnuAs)
+        out.letter(')');
 }
 
 namespace {
@@ -156,10 +166,21 @@ Error DisMc6800::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) cons
     decodeOperand(insn, out, insn.mode1());
     const auto mode2 = insn.mode2();
     if (mode2 != M_NONE) {
-        decodeOperand(insn, out.comma(), mode2);
+        if (_gnuAs) {
+            out.letter(' ');
+        } else {
+            out.comma();
+        }
+        decodeOperand(insn, out, mode2);
         const auto mode3 = insn.mode3();
-        if (mode3 != M_NONE)
-            decodeOperand(insn, out.comma(), mode3);
+        if (mode3 != M_NONE) {
+            if (_gnuAs) {
+                out.letter(' ');
+            } else {
+                out.comma();
+            }
+            decodeOperand(insn, out, mode3);
+        }
     }
     return _insn.setError(insn);
 }
