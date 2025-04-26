@@ -27,7 +27,7 @@ help:
 
 ASM=../../cli/asm
 $(ASM)-refresh:
-	+$(MAKE) -C ../../cli cli
+	+$(MAKE) -C ../../cli asm
 
 ASM_TESTS = $(patsubst %.asm,%,$(wildcard test_*.asm))
 ASM_OUTS  = $(foreach t,$(ASM_TESTS),$(t).$(call out-ext,$(t)))
@@ -40,7 +40,7 @@ asm-$(1).$(2):: $(1).asm
 endef
 $(eval $(foreach t,$(ASM_TESTS),$(call asm-rule,$(t),$(call out-ext,$(t)),$(call asm-opt,$(t)))))
 
-asm-test: clean-asm $(ASM_OUTS:%=asm-%)
+asm-test: $(ASM)-refresh clean-asm $(ASM_OUTS:%=asm-%)
 clean-asm:
 	-rm -f $(ASM_OUTS)
 
@@ -65,7 +65,7 @@ clean-asl:
 
 GAS_TESTS = $(patsubst %.gas,%,$(wildcard test_*.gas))
 GAS_OUTS  = $(foreach t,$(GAS_TESTS),$(t).$(call out-ext,$(t)))
-gas-test: clean-gas $(GAS_OUTS)
+gas-test: clean-gas $(GAS_OUTS:%=gas-%)
 clean-gas:
 	-rm -f $(GAS_OUTS)
 

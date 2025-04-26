@@ -14,7 +14,7 @@
 
         .z8001
         .text
-        .include "gen_z8k1.inc"
+        .include "gen_z8001.ginc"
         .end
 
 # Local Variables:

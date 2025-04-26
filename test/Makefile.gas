@@ -15,80 +15,90 @@
 # GNU assembler rules
 
 # Z8001 target
-%_z8001.hex: %_z8001.gas
-	z8k-coff-as --warn -o $(@:.hex=.p) -al=$(@:.hex=.lst) $^
-	z8k-coff-ld -m z8001 --entry=0 -o $(@:.hex=.o) $(@:.hex=.p) \
+gas-%_z8001.hex: %_z8001.gas
+	z8k-coff-as --warn -o $(^:.gas=.p) -al=$(^:.gas=.lst) $^
+	z8k-coff-ld -m z8001 --entry=0 -o $(^:.gas=.o) $(^:.gas=.p) \
 		--section-start=text=0x010000 \
 		--section-start=bss1=0x0A1234 \
 		--section-start=bss2=0x0B5678
-	z8k-coff-objcopy -I coff-z8k -O ihex $(@:.hex=.o) /dev/stdout \
+	z8k-coff-objcopy -I coff-z8k -O ihex $(^:.gas=.o) /dev/stdout \
 		--adjust-section-vma .text=0x010000 \
-	| tr -d '\015' > $@
-	z8k-coff-objdump -m z8001 -D $@ > $(@:.hex=.dis)
+	| tr -d '\015' > $(^:.gas=.hex)
+	z8k-coff-objdump -m z8001 -D $(^:.gas=.hex) > $(^:.gas=.dis)
 
 # Z8002 target
-%_z8002.hex: %_z8002.gas
-	z8k-coff-as --warn -o $(@:.hex=.p) -al=$(@:.hex=.lst) $^
-	z8k-coff-ld -m z8002 --entry=0 -o $(@:.hex=.o) $(@:.hex=.p) \
+gas-%_z8002.hex: %_z8002.gas
+	z8k-coff-as --warn -o $(^:.gas=.p) -al=$(^:.gas=.lst) $^
+	z8k-coff-ld -m z8002 --entry=0 -o $(^:.gas=.o) $(^:.gas=.p) \
 		--section-start=text=0x1000 \
 		--section-start=bss1=0x1234 \
 		--section-start=bss2=0x5678
-	z8k-coff-objcopy -I coff-z8k -O ihex $(@:.hex=.o) /dev/stdout \
+	z8k-coff-objcopy -I coff-z8k -O ihex $(^:.gas=.o) /dev/stdout \
 		--adjust-section-vma .text=0x1000 \
-	| tr -d '\015' > $@
-	z8k-coff-objdump -m z8002 -D $@ > $(@:.hex=.dis)
+	| tr -d '\015' > $(^:.gas=.hex)
+	z8k-coff-objdump -m z8002 -D $(^:.gas=.hex) > $(^:.gas=.dis)
 
 # NS32032 target
-%_ns32032.hex: %_ns32032.gas
-	ns32k-openbsd-as -m32032 --warn -o $(@:.hex=.o) -al=$(@:.hex=.lst) $^
+gas-%_ns32032.hex: %_ns32032.gas
+	ns32k-openbsd-as -m32032 --warn -o $(^:.gas=.o) -al=$(^:.gas=.lst) $^
 	ns32k-openbsd-objcopy -I a.out-ns32k-netbsd -O ihex -j .text \
-		--adjust-section-vma .text=0x10000 $(@:.hex=.o) /dev/stdout \
-	| tr -d '\015' > $@
-	ns32k-openbsd-objdump -m ns32k:32032 -D $@ > $(@:.hex=.dis)
+		--adjust-section-vma .text=0x10000 $(^:.gas=.o) /dev/stdout \
+	| tr -d '\015' > $(^:.gas=.hex)
+	ns32k-openbsd-objdump -m ns32k:32032 -D $(^:.gas=.hex) > $(^:.gas=.dis)
 
 # i8086 target
-%_i8086.hex: %_i8086.gas
+gas-%_i8086.hex: %_i8086.gas
 	i386-elf-as -mtune=i8086 --warn -mnaked-reg -msyntax=intel \
-		-mmnemonic=intel -o $(@:.hex=.p) -al=$(@:.hex=.lst) $^
-	i386-elf-ld --entry=0 -section-start=.text=0x1000 -o $(@:.hex=.o) $(@:.hex=.p)
-	i386-elf-objcopy -I elf32-i386 -O ihex $(@:.hex=.o) /dev/stdout \
-	| tr -d '\015' > $@
-	i386-elf-objdump -m i8086 -M intel -D $@ > $(@:.hex=.dis)
+		-mmnemonic=intel -o $(^:.gas=.p) -al=$(^:.gas=.lst) $^
+	i386-elf-ld --entry=0 -section-start=.text=0x1000 -o $(^:.gas=.o) $(^:.gas=.p)
+	i386-elf-objcopy -I elf32-i386 -O ihex $(^:.gas=.o) /dev/stdout \
+	| tr -d '\015' > $(^:.gas=.hex)
+	i386-elf-objdump -m i8086 -M intel -D $(^:.gas=.hex) > $(^:.gas=.dis)
 
 # MC68000 target
-%_mc68000.s28: %_mc68000.gas
+gas-%_mc68000.s28: %_mc68000.gas
 	m68k-elf-as -m68000 -m68881 --warn --register-prefix-optional \
-		--base-size-default-16 -o $(@:.s28=.p) -al=$(@:.s28=.lst) $^
-	m68k-elf-ld --entry=0 -o $(@:.s28=.o) $(@:.s28=.p)
+		--base-size-default-16 -o $(^:.gas=.p) -al=$(^:.gas=.lst) $^
+	m68k-elf-ld --entry=0 -o $(^:.gas=.o) $(^:.gas=.p)
 	m68k-elf-objcopy -I elf32-m68k -O srec --srec-len=16 \
-		--adjust-section-vma .text=0x10000 $(@:.s28=.o) /dev/stdout \
-	| tr -d '\015' > $@
-	m68k-elf-objdump -m 68000 -D $@ > $(@:.s28=.dis)
+		--adjust-section-vma .text=0x10000 $(^:.gas=.o) /dev/stdout \
+	| tr -d '\015' > $(^:.gas=.s28)
+	m68k-elf-objdump -m 68000 -D $(^:.gas=.s28) > $(^:.gas=.dis)
+
+# MC68010 target
+gas-%_mc68010.s28: %_mc68010.gas
+	m68k-elf-as -m68010 -m68881 --warn --register-prefix-optional \
+		--base-size-default-16 -o $(^:.gas=.p) -al=$(^:.gas=.lst) $^
+	m68k-elf-ld --entry=0 -o $(^:.gas=.o) $(^:.gas=.p)
+	m68k-elf-objcopy -I elf32-m68k -O srec --srec-len=16 \
+		--adjust-section-vma .text=0x10000 $(^:.gas=.o) /dev/stdout \
+	| tr -d '\015' > $(^:.gas=.s28)
+	m68k-elf-objdump -m 68010 -D $(^:.gas=.s28) > $(^:.gas=.dis)
 
 # MC68HC11 target
-%_mc68hc11.s19: %_mc68hc11.gas
-	m6811-elf-as -m68hc11 --warn -o $(@:.s19=.p) -al=$(@:.s19=.lst) $^
-	m6811-elf-ld -m m68hc11elf --entry=0 -o $(@:.s19=.o) $(@:.s19=.p)
+gas-%_mc68hc11.s19: %_mc68hc11.gas
+	m6811-elf-as -m68hc11 --warn -o $(^:.gas=.p) -al=$(^:.gas=.lst) $^
+	m6811-elf-ld -m m68hc11elf --entry=0 -o $(^:.gas=.o) $(^:.gas=.p)
 	m6811-elf-objcopy -I elf32-m68hc11 -O srec --srec-len=16 \
-	        --change-section-lma .text=0x0100 $(@:.s19=.o) /dev/stdout \
-	| tr -d '\015' > $@
-	m6811-elf-objdump -m m68hc11 -D $@ > $(@:.s19=.dis)
+	        --change-section-lma .text=0x0100 $(^:.gas=.o) /dev/stdout \
+	| tr -d '\015' > $(^:.gas=.s19)
+	m6811-elf-objdump -m m68hc11 -D $(^:.gas=.s19) > $(^:.gas=.dis)
 
 # Z80 target
-%_z80.hex: %_z80.gas
-	z80-elf-as -march=z80 --warn -o $(@:.hex=.p) -al=$(@:.hex=.lst) $^
-	z80-elf-ld --entry=0 -section-start=.text=0x0100 -o $(@:.hex=.o) $(@:.hex=.p)
-	z80-elf-objcopy -I elf32-z80 -O ihex $(@:.hex=.o) /dev/stdout \
-	| tr -d '\015' > $@
-	z80-elf-objdump -mz80 -D $(@:.hex=.o) > $(@:.hex=.dis)
+gas-%_z80.hex: %_z80.gas
+	z80-elf-as -march=z80 --warn -o $(^:.gas=.p) -al=$(^:.gas=.lst) $^
+	z80-elf-ld --entry=0 -section-start=.text=0x0100 -o $(^:.gas=.o) $(^:.gas=.p)
+	z80-elf-objcopy -I elf32-z80 -O ihex $(^:.gas=.o) /dev/stdout \
+	| tr -d '\015' > $(^:.gas=.hex)
+	z80-elf-objdump -mz80 -D $(^:.gas=.o) > $(^:.gas=.dis)
 
 # Z180 target
-%_z180.hex: %_z180.gas
-	z80-elf-as -march=z180 --warn -o $(@:.hex=.p) -al=$(@:.hex=.lst) $^
-	z80-elf-ld --entry=0 -section-start=.text=0x0100 -o $(@:.hex=.o) $(@:.hex=.p)
-	z80-elf-objcopy -I elf32-z80 -O ihex $(@:.hex=.o) /dev/stdout \
-	| tr -d '\015' > $@
-	z80-elf-objdump -mz180 -D $(@:.hex=.o) > $(@:.hex=.dis)
+gas-%_z180.hex: %_z180.gas
+	z80-elf-as -march=z180 --warn -o $(^:.gas=.p) -al=$(^:.gas=.lst) $^
+	z80-elf-ld --entry=0 -section-start=.text=0x0100 -o $(^:.gas=.o) $(^:.gas=.p)
+	z80-elf-objcopy -I elf32-z80 -O ihex $(^:.gas=.o) /dev/stdout \
+	| tr -d '\015' > $(^:.gas=.hex)
+	z80-elf-objdump -mz180 -D $(^:.gas=.o) > $(^:.gas=.dis)
 
 # Local Variables:
 # mode: makefile-gmake

@@ -20,7 +20,7 @@ data1234:
 data5678:
 
         .text
-        .include        "test_z8k2.inc"
+        .include        "test_z8002.ginc"
 
         .end
 
