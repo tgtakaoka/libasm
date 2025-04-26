@@ -70,7 +70,7 @@
 	m6811-elf-as -m68hc11 --warn -o $(@:.s19=.p) -al=$(@:.s19=.lst) $^
 	m6811-elf-ld -m m68hc11elf --entry=0 -o $(@:.s19=.o) $(@:.s19=.p)
 	m6811-elf-objcopy -I elf32-m68hc11 -O srec --srec-len=16 \
-		--adjust-section-vma .text=0x0100 $(@:.s19=.o) /dev/stdout \
+	        --change-section-lma .text=0x0100 $(@:.s19=.o) /dev/stdout \
 	| tr -d '\015' > $@
 	m6811-elf-objdump -m m68hc11 -D $@ > $(@:.s19=.dis)
 

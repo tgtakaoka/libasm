@@ -16,14 +16,14 @@
         idiv
         fdiv
 ;;; 1X
-        brset   $13,#$14,*+$19
-        brclr   $14,#$15,*+$1A
-        bset    $15,#$16
-        bclr    $16,#$17
-        bset    $1D,x,#$1E
-        bclr    $1E,x,#$1F
-        brset   $1F,x,#$20,*+$25
-        brclr   $20,x,#$21,*+$26
+        brset   *0x13 #0x14 .+0x15
+        brclr   *0x14 #0x15 .+0x16
+        bset    *0x15 #0x16
+        bclr    *0x16 #0x17
+        bset    0x1D,x #0x1E
+        bclr    0x1E,x #0x1F
+        brset   0x1F,x #0x20 .+0x21
+        brclr   0x20,x #0x21 .+0x22
 ;;; 8X
         xgdx
 ;;; CX
@@ -32,10 +32,10 @@
         iny
         dey
 ;;; 181X
-        bset    $1D,y,#$1E
-        bclr    $1E,y,#$1F
-        brset   $1F,y,#$20,*+$26
-        brclr   $20,y,#$21,*+$27
+        bset    *0x1D,y #0x1E
+        bclr    *0x1E,y #0x1F
+        brset   0x1F,y #0x20 .+0x21
+        brclr   0x20,y #0x21 .+0x22
 ;;; 183X
         tsy
         tys
@@ -57,10 +57,10 @@
         jmp     15,y
         clr     255,y
 ;;; 188X
-        cpy     #$8d8e
+        cpy     #0x8d8e
         xgdy
 ;;; 189X
-        cpy     $9d
+        cpy     *0x9d
 ;;; 18AX
         suba    0,y
         cmpa    0,y
@@ -79,33 +79,33 @@
         lds     4,y
         sts     6,y
 ;;; 18BX
-        cpy     $bdbe
+        cpy     0xbdbe
 ;;; 18CX
-        ldy     #$cfd0
+        ldy     #0xcfd0
 ;;; 18DX
-        ldy     $df
-        sty     $e0
+        ldy     *0xdf
+        sty     *0xe0
 ;;; 18EX
-        addd    $e4,y
-        ldd     $ed,y
-        ldy     $ef,y
-        sty     $f0,y
+        addd    0xe4,y
+        ldd     0xed,y
+        ldy     0xef,y
+        sty     0xf0,y
 ;;; 10FX
-        ldy     $ff00
-        sty     $1234
+        ldy     0xff00
+        sty     0x1234
 ;;; 1AXX
-        cpd     #$8485
-        cpd     $94
-        cpd     $a4,x
-        cpy     $ad,x
-        cpd     $b4b5
-        ldy     $ef,x
-        sty     $f0,x
+        cpd     #0x8485
+        cpd     *0x94
+        cpd     0xa4,x
+        cpy     0xad,x
+        cpd     0xb4b5
+        ldy     0xef,x
+        sty     0xf0,x
 ;;; CDXX
-        cpd     $a4,y
-        cpx     $ad,y
-        ldx     $ef,y
-        stx     $f0,y
+        cpd     0xa4,y
+        cpx     0xad,y
+        ldx     0xef,y
+        stx     0xf0,y
 
 ;;; Local Variables:
 ;;; mode: asm

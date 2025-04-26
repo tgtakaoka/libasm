@@ -12,13 +12,41 @@
 ;;; See the License for the specific language governing permissions and
 ;;; limitations under the License.
 
-        .text
-        include "test_mc6800.ginc"
-        .align  5
-        include "test_mc6801.ginc"
-        .align  5
-        include "test_mc68hc11.ginc"
-        end
+;;; 0X
+        lsrd
+        asld
+        lsld
+;;; 2X
+        brn     .+0x22
+;;; 3X
+        pulx
+        abx
+        pshx
+        mul
+;;; 8X
+        subd    #0x8485
+;;; 9X
+        subd    *0x94
+        jsr     *0x9e
+;;; AX
+        subd    164,x
+;;; BX
+        subd    0xb4b5
+;;; CX
+        addd    #0xc4c5
+        ldd     #0xcdce
+;;; DX
+        addd    *0xd4
+        ldd     *0xdd
+        std     *0xde
+;;; EX
+        addd    228,x
+        ldd     237,x
+        std     238,x
+;;; FX
+        addd    0xf4f5
+        ldd     0xfdfe
+        std     0xfeff
 
 ;;; Local Variables:
 ;;; mode: asm

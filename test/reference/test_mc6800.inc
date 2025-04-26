@@ -47,7 +47,7 @@
         bmi     *+$2e
         bge     *+$2f
         blt     *+$30
-        bge     *+$31
+        bgt     *+$31
         ble     *+$32
 ;;; 3X
         tsx
