@@ -1,4 +1,4 @@
-; Copyright 2022 Tadashi G. Takaoka
+; Copyright 2021 Tadashi G. Takaoka
 ;
 ; Licensed under the Apache License, Version 2.0 (the "License");
 ; you may not use this file except in compliance with the License.
@@ -13,9 +13,9 @@
 ; limitations under the License.
 
         cpu     v30emu
-        z80syntax    on
+        z80syntax    exclusive
         org     0100h
-        include "gen_v30emu_z80syn.inc"
+        include "gen_v30emu.zinc"
         end
 
 ; Local Variables:

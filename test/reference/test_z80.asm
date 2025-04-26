@@ -14,7 +14,7 @@
 
         cpu     z80
         org     0100h
-        include "test_i8080_z80syn.inc"
+        include "test_i8080.zinc"
         align   32
         include "test_z80.inc"
         end

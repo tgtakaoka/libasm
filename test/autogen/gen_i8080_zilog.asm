@@ -13,9 +13,9 @@
 ; limitations under the License.
 
         cpu     8080
-        z80syntax    exclusive
+        z80syntax    on
         org     0100h
-        include "gen_i8080_z80syn.inc"
+        include "gen_i8080.zinc"
         end
 
 ; Local Variables:

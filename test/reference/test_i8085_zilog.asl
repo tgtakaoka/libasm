@@ -15,9 +15,9 @@
         cpu     8085
         org     0100h
         z80syntax exclusive
-        include "test_i8080_z80syn.inc"
+        include "test_i8080.zinc"
         align   32
-        include "test_i8085_z80syn.inc"
+        include "test_i8085.zinc"
         end
 
 ;;; Local Variables:

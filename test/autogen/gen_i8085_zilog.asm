@@ -12,10 +12,10 @@
 ; See the License for the specific language governing permissions and
 ; limitations under the License.
 
-        cpu     v30emu
-        z80syntax    exclusive
+        cpu     8085
+        z80syntax    on
         org     0100h
-        include "gen_v30emu_z80syn.inc"
+        include "gen_i8085.zinc"
         end
 
 ; Local Variables:

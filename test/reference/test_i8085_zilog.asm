@@ -12,10 +12,12 @@
 ;;; See the License for the specific language governing permissions and
 ;;; limitations under the License.
 
-        cpu     8080
+        cpu     8085
         org     0100h
-        z80syntax exclusive
-        include "test_i8080_z80syn.inc"
+        z80syntax on
+        include "test_i8080.zinc"
+        align   32
+        include "test_i8085.zinc"
         end
 
 ;;; Local Variables:

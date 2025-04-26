@@ -28,34 +28,44 @@ help:
 
 # target which has ".inc" suffix for output.
 INC_targets  = \
-    w65c816 tlcs90 i8080_z80syn i8085_z80syn v30emu_z80syn i8086 i80186 v30 \
+    w65c816 tlcs90 i8086 i80186 v30 \
     mc68000 mc68010 m68k m68k10 z8001 z8002 z8k1 z8k2 ns32000 ns32k \
     mn1610 mn1613 tms7000 tms9980 j11 t11 mc146805
 # target which for GNU assembler
 GAS_targets  = m68k m68k10 z8k1 z8k2 ns32k
-# target which is Zilog syntax
-Z80SYN_targets = i8080_z80syn i8085_z80syn v30emu_z80syn
+# target which also has Zilog syntax (also ".zinc" targets)
+ZINC_targets = i8080 i8085 v30emu
 
-# suffix of generating file
+# file name of generating file
 define out-inc # target
-$(filter $(1),$(INC_targets))
+$(filter $(1),$(INC_targets) $(ZINC_targets:%=%_zinc))
 endef
 define gen-out # target
-$(if $(call out-inc,$(1)),gen_$(1).inc,gen_$(1).asm)
+$(if $(filter $(1),$(ZINC_targets:%=%_zinc)),gen_$(1:%_zinc=%).zinc,\
+$(if $(call out-inc,$(1)),gen_$(1).inc,gen_$(1).asm))
 endef
 
 # generator options
 define gas-out
 $(filter $(1),$(GAS_targets))
 endef
+define zinc-out
+$(filter $(1),$(ZINC_targets:%=%_zinc))
+endef
 define gen-opt
 $(if $(call gas-out,$(1)),-g,$(if $(call out-inc,$(1)),-i -u,-u)) \
-$(if $(filter $(1),$(Z80SYN_targets)),-z)
+$(if $(call zinc-out,$(1)),-z)
+endef
+define arch-target # arch
+$(foreach t,$(TGT_$(1)),$(t) $(if $(filter $(t),$(ZINC_targets)),$(t)_zinc))
+endef
+define cpu-opt # out
+$(if $(call zinc-out,$(1)),-C $(CPU_$(1:%_zinc=%)),-C $(CPU_$(1)))
 endef
 
 # make rule for auto generation file
 define gen-target # arch target out opt
-	../gen_$(1) $(4) -C $(CPU_$(2)) -o $(3) -l gen_$(2).lst
+	../gen_$(1) $(4) $(call cpu-opt,$(2)) -o $(3) -l gen_$(2).lst
 endef
 define gen-target-rule # arch target out opt
 $(3): #../gen_$(1)
@@ -64,16 +74,16 @@ $(3): #../gen_$(1)
 endef
 define gen-arch-rule # arch
 clean_$(1):
-	rm -f $(foreach t,$(TGT_$(1)),$(call gen-out,$(t)))
-gen_$(1): clean_$(1) $(foreach t,$(TGT_$(1)),$(call gen-out,$(t)))
+	rm -f $(foreach t,$(call arch-target,$(1)),$(call gen-out,$(t)))
+gen_$(1): clean_$(1) $(foreach t,$(call arch-target,$(1)),$(call gen-out,$(t)))
 
 endef
 
-GEN_OUTS = $(foreach a,$(ARCHS),$(foreach t,$(TGT_$(a)),$(call gen-out,$(t))))
+GEN_OUTS = $(foreach a,$(ARCHS),$(foreach t,$(call arch-target,$(a)),$(call gen-out,$(t))))
 
 # rules for auto generations
 $(eval $(foreach a,$(ARCHS),$(call gen-arch-rule,$(a))))
-$(eval $(foreach a,$(ARCHS),$(foreach t,$(TGT_$(a)),\
+$(eval $(foreach a,$(ARCHS),$(foreach t,$(call arch-target,$(a)),\
 	$(call gen-target-rule,$(a),$(t),$(call gen-out,$(t)),$(call gen-opt,$(t))))))
 
 generate: $(foreach a,$(ARCHS),gen_$(a))

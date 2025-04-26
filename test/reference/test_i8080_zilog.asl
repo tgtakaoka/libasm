@@ -14,8 +14,8 @@
 
         cpu     8080
         org     0100h
-        z80syntax on
-        include "test_i8080_z80syn.inc"
+        z80syntax exclusive
+        include "test_i8080.zinc"
         end
 
 ;;; Local Variables:
