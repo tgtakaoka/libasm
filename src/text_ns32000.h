@@ -188,7 +188,7 @@ using common::TEXT_MULD;
 extern const char TEXT_MULW[]    PROGMEM;
 using common::TEXT_NEGB;
 using common::TEXT_NEGD;
-extern const char TEXT_NEGW[]    PROGMEM;
+using common::TEXT_NEGW;
 using common::TEXT_NOP;
 using common::TEXT_NOTB;
 extern const char TEXT_NOTD[]    PROGMEM;

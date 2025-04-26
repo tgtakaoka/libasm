@@ -108,7 +108,7 @@ extern const char TEXT_SEZ[]   PROGMEM;
 extern const char TEXT_SOB[]   PROGMEM;
 using common::TEXT_SUB;
 extern const char TEXT_SWAB[]  PROGMEM;
-extern const char TEXT_SXT[]   PROGMEM;
+using common::TEXT_SXT;
 using common::TEXT_TRAP;
 using common::TEXT_TST;
 using common::TEXT_TSTB;

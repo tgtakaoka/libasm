@@ -82,6 +82,11 @@ build test_asm_mc68hc12.o: cxx ${root}/test/test_asm_mc68hc12.cpp
 build test_dis_mc68hc12.o: cxx ${root}/test/test_dis_mc68hc12.cpp
 build gen_mc68hc12.o:      cxx ${root}/test/gen_mc68hc12.cpp
 
+# mc68hc16
+build test_asm_mc68hc16.o: cxx ${root}/test/test_asm_mc68hc16.cpp
+build test_dis_mc68hc16.o: cxx ${root}/test/test_dis_mc68hc16.cpp
+build gen_mc68hc16.o:      cxx ${root}/test/gen_mc68hc16.cpp
+
 # mn1610
 build test_asm_mn1610.o: cxx ${root}/test/test_asm_mn1610.cpp
 build test_dis_mn1610.o: cxx ${root}/test/test_dis_mn1610.cpp

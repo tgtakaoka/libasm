@@ -119,8 +119,8 @@ constexpr char TEXT_TSTX[] PROGMEM = "TSTX";
 // constexpr char TEXT_WAIT[] PROGMEM = "WAIT";
 
 // MC68HC08
-constexpr char TEXT_AIS[]   PROGMEM = "AIS";
-constexpr char TEXT_AIX[]   PROGMEM = "AIX";
+// constexpr char TEXT_AIS[]   PROGMEM = "AIS";
+// constexpr char TEXT_AIX[]   PROGMEM = "AIX";
 // constexpr char TEXT_BGE[]   PROGMEM = "BGE";
 // constexpr char TEXT_BGT[]   PROGMEM = "BGT";
 // constexpr char TEXT_BLE[]   PROGMEM = "BLE";

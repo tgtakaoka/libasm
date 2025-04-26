@@ -28,7 +28,7 @@ extern const char TEXT_CPU_SCMP[]    PROGMEM;
 extern const char TEXT_CPU_INS8060[] PROGMEM;
 
 using common::TEXT_ADD;
-extern const char TEXT_ADE[]  PROGMEM;
+using common::TEXT_ADE;
 using common::TEXT_ADI;
 using common::TEXT_AND;
 extern const char TEXT_ANE[]  PROGMEM;
@@ -58,7 +58,7 @@ using common::TEXT_LDE;
 using common::TEXT_LDI;
 using common::TEXT_NOP;
 using common::TEXT_OR;
-extern const char TEXT_ORE[]  PROGMEM;
+using common::TEXT_ORE;
 using common::TEXT_ORI;
 using common::TEXT_RR;
 using common::TEXT_RRL;

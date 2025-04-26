@@ -44,7 +44,7 @@ using common::TEXT_CMP;
 extern const char TEXT_CNC[]  PROGMEM;
 extern const char TEXT_CNZ[]  PROGMEM;
 using common::TEXT_CP;
-extern const char TEXT_CPE[]  PROGMEM;
+using common::TEXT_CPE;
 using common::TEXT_CPI;
 extern const char TEXT_CPO[]  PROGMEM;
 extern const char TEXT_CZ[]   PROGMEM;

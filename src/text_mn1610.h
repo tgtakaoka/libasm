@@ -76,7 +76,7 @@ extern const char TEXT_CPYB[] PROGMEM;
 using common::TEXT_STS;
 extern const char TEXT_CPYS[] PROGMEM;
 extern const char TEXT_POPM[] PROGMEM;
-extern const char TEXT_PSHM[] PROGMEM;
+using common::TEXT_PSHM;
 extern const char TEXT_TRST[] PROGMEM;
 using common::TEXT_TSET;
 using common::TEXT_FLT;
