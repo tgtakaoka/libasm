@@ -15,13 +15,13 @@
  */
 
 #include <arduino_example.h>
-#include <asm_mc6800.h>
-#include <dis_mc6800.h>
+#include <asm_mc6805.h>
+#include <dis_mc6805.h>
 
-libasm::mc6800::AsmMc6800 asm6800;
-libasm::mc6800::DisMc6800 dis6800;
+libasm::mc6805::AsmMc6805 asm6805;
+libasm::mc6805::DisMc6805 dis6805;
 
-libasm::arduino::Example example(asm6800, dis6800);
+libasm::arduino::Example example(asm6805, dis6805);
 
 void setup() {
     Serial.begin(9600);
