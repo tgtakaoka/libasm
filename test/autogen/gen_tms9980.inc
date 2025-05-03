@@ -107,11 +107,8 @@
       JH    $+2
       JOP   $+2
       SBO   0
-      SBO   -128
       SBZ   0
-      SBZ   -128
       TB    0
-      TB    -128
       COC   R0, R0
       COC   *R0, R0
       COC   @2122H, R0

@@ -162,7 +162,7 @@ std::string TokenizedText::tokenize(const char *text) {
             t.push_back('+');
             t.push_back('e');
             b = tmp;
-        } else if (isNumber(b, tmp)) {
+        } else if (isNumber(b, tmp) || (*b == '-' && isNumber(b + 1, tmp))) {
             t.push_back('n');
             b = tmp;
         } else if (isRelative(b, tmp)) {
@@ -185,11 +185,6 @@ std::string TokenizedText::tokenize(const char *text) {
         } else if ((b[0] == '(' || b[0] == '[') && b[1] == '-' && isNumber(b + 2, tmp)) {
             // reduce displacement variants of MC68000; (-n...) and (n...), [-n...] and [n...]
             t.push_back(b[0]);
-            t.push_back('n');
-            b = tmp;
-        } else if (((b[0] == '-' && isNumber(b + 1, tmp)) || isNumber(b, tmp)) &&
-                   (*tmp == '(' || *tmp == ')')) {
-            // reduce displacement variants of NS32000; -n(...) and n(...), (-n) and (n)
             t.push_back('n');
             b = tmp;
         } else if (b[0] == '+' && b[1] == '(' && b[2] == '-' && isNumber(b + 3, tmp) &&

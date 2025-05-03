@@ -8003,583 +8003,262 @@
       IMUL    BP, [BX+DI+106], 6C6BH
       IMUL    BP, [BX+DI-128], 8281H
       PUSH    6BH
-      PUSH    -80H
       IMUL    BP, [SI+109], 6EH
-      IMUL    BP, [SI+109], -80H
       IMUL    BP, [SI-128], -7FH
-      IMUL    BP, [SI-128], 0
       IMUL    BP, [DI+110], 6FH
-      IMUL    BP, [DI+110], -80H
       IMUL    BP, [DI-128], -7FH
-      IMUL    BP, [DI-128], 0
       IMUL    BP, [BP+111], 70H
-      IMUL    BP, [BP+111], -80H
       IMUL    BP, [BP-128], -7FH
-      IMUL    BP, [BP-128], 0
       IMUL    BP, [BX+112], 71H
-      IMUL    BP, [BX+112], -80H
       IMUL    BP, [BX-128], -7FH
-      IMUL    BP, [BX-128], 0
       IMUL    SI, [BX+SI+113], 72H
-      IMUL    SI, [BX+SI+113], -80H
       IMUL    SI, [BX+SI-128], -7FH
-      IMUL    SI, [BX+SI-128], 0
       IMUL    SI, [BX+DI+114], 73H
-      IMUL    SI, [BX+DI+114], -80H
       IMUL    SI, [BX+DI-128], -7FH
-      IMUL    SI, [BX+DI-128], 0
       IMUL    SI, [BP+SI+115], 74H
-      IMUL    SI, [BP+SI+115], -80H
       IMUL    SI, [BP+SI-128], -7FH
-      IMUL    SI, [BP+SI-128], 0
       IMUL    SI, [BP+DI+116], 75H
-      IMUL    SI, [BP+DI+116], -80H
       IMUL    SI, [BP+DI-128], -7FH
-      IMUL    SI, [BP+DI-128], 0
       IMUL    SI, [SI+117], 76H
-      IMUL    SI, [SI+117], -80H
       IMUL    SI, [SI-128], -7FH
-      IMUL    SI, [SI-128], 0
       IMUL    SI, [DI+118], 77H
-      IMUL    SI, [DI+118], -80H
       IMUL    SI, [DI-128], -7FH
-      IMUL    SI, [DI-128], 0
       IMUL    SI, [BP+119], 78H
-      IMUL    SI, [BP+119], -80H
       IMUL    SI, [BP-128], -7FH
-      IMUL    SI, [BP-128], 0
       IMUL    SI, [BX+120], 79H
-      IMUL    SI, [BX+120], -80H
       IMUL    SI, [BX-128], -7FH
-      IMUL    SI, [BX-128], 0
       IMUL    DI, [BX+SI+121], 7AH
-      IMUL    DI, [BX+SI+121], -80H
       IMUL    DI, [BX+SI-128], -7FH
-      IMUL    DI, [BX+SI-128], 0
       IMUL    DI, [BX+DI+122], 7BH
-      IMUL    DI, [BX+DI+122], -80H
       IMUL    DI, [BX+DI-128], -7FH
-      IMUL    DI, [BX+DI-128], 0
       IMUL    DI, [BP+SI+123], 7CH
-      IMUL    DI, [BP+SI+123], -80H
       IMUL    DI, [BP+SI-128], -7FH
-      IMUL    DI, [BP+SI-128], 0
       IMUL    DI, [BP+DI+124], 7DH
-      IMUL    DI, [BP+DI+124], -80H
       IMUL    DI, [BP+DI-128], -7FH
-      IMUL    DI, [BP+DI-128], 0
       IMUL    DI, [SI+125], 7EH
-      IMUL    DI, [SI+125], -80H
       IMUL    DI, [SI-128], -7FH
-      IMUL    DI, [SI-128], 0
       IMUL    DI, [DI+126], 7FH
-      IMUL    DI, [DI+126], -80H
       IMUL    DI, [DI-128], -7FH
-      IMUL    DI, [DI-128], 0
       IMUL    DI, [BP+127], -80H
-      IMUL    DI, [BP+127], 0
       IMUL    DI, [BP-128], -7FH
-      IMUL    DI, [BP-128], 0
       IMUL    DI, [BX-128], -7FH
-      IMUL    DI, [BX-128], 0
       IMUL    DI, [BX+0], 1
-      IMUL    DI, [BX+0], -80H
-      IMUL    AX, [BX+SI+8281H], -7DH
-      IMUL    AX, [BX+DI+8382H], -7CH
-      IMUL    AX, [BP+SI+8483H], -7BH
-      IMUL    AX, [BP+DI+8584H], -7AH
-      IMUL    AX, [SI+8685H], -79H
-      IMUL    AX, [DI+8786H], -78H
-      IMUL    AX, [BP+8887H], -77H
-      IMUL    AX, [BX+8988H], -76H
-      IMUL    CX, [BX+SI+8A89H], -75H
-      IMUL    CX, [BX+DI+8B8AH], -74H
-      IMUL    CX, [BP+SI+8C8BH], -73H
-      IMUL    CX, [BP+DI+8D8CH], -72H
-      IMUL    CX, [SI+8E8DH], -71H
-      IMUL    CX, [DI+8F8EH], -70H
-      IMUL    CX, [BP+908FH], -6FH
-      IMUL    CX, [BX+9190H], -6EH
-      IMUL    DX, [BX+SI+9291H], -6DH
-      IMUL    DX, [BX+DI+9392H], -6CH
-      IMUL    DX, [BP+SI+9493H], -6BH
-      IMUL    DX, [BP+DI+9594H], -6AH
-      IMUL    DX, [SI+9695H], -69H
-      IMUL    DX, [DI+9796H], -68H
-      IMUL    DX, [BP+9897H], -67H
-      IMUL    DX, [BX+9998H], -66H
-      IMUL    BX, [BX+SI+9A99H], -65H
-      IMUL    BX, [BX+DI+9B9AH], -64H
-      IMUL    BX, [BP+SI+9C9BH], -63H
-      IMUL    BX, [BP+DI+9D9CH], -62H
-      IMUL    BX, [SI+9E9DH], -61H
-      IMUL    BX, [DI+9F9EH], -60H
-      IMUL    BX, [BP+0A09FH], -5FH
-      IMUL    BX, [BX+0A1A0H], -5EH
-      IMUL    SP, [BX+SI+0A2A1H], -5DH
-      IMUL    SP, [BX+DI+0A3A2H], -5CH
-      IMUL    SP, [BP+SI+0A4A3H], -5BH
-      IMUL    SP, [BP+DI+0A5A4H], -5AH
-      IMUL    SP, [SI+0A6A5H], -59H
-      IMUL    SP, [DI+0A7A6H], -58H
-      IMUL    SP, [BP+0A8A7H], -57H
-      IMUL    SP, [BX+0A9A8H], -56H
-      IMUL    BP, [BX+SI+0AAA9H], -55H
-      IMUL    BP, [BX+DI+0ABAAH], -54H
-      IMUL    BP, [BP+SI+0ACABH], -53H
-      IMUL    BP, [BP+DI+0ADACH], -52H
-      IMUL    BP, [SI+0AEADH], -51H
-      IMUL    BP, [DI+0AFAEH], -50H
-      IMUL    BP, [BP+0B0AFH], -4FH
-      IMUL    BP, [BX+0B1B0H], -4EH
-      IMUL    SI, [BX+SI+0B2B1H], -4DH
-      IMUL    SI, [BX+DI+0B3B2H], -4CH
-      IMUL    SI, [BP+SI+0B4B3H], -4BH
-      IMUL    SI, [BP+DI+0B5B4H], -4AH
-      IMUL    SI, [SI+0B6B5H], -49H
-      IMUL    SI, [DI+0B7B6H], -48H
-      IMUL    SI, [BP+0B8B7H], -47H
-      IMUL    SI, [BX+0B9B8H], -46H
-      IMUL    DI, [BX+SI+0BAB9H], -45H
-      IMUL    DI, [BX+DI+0BBBAH], -44H
-      IMUL    DI, [BP+SI+0BCBBH], -43H
-      IMUL    DI, [BP+DI+0BDBCH], -42H
-      IMUL    DI, [SI+0BEBDH], -41H
-      IMUL    DI, [DI+0BFBEH], -40H
-      IMUL    DI, [BP+0C0BFH], -3FH
-      IMUL    DI, [BX+0C1C0H], -3EH
       IMUL    AX, -3FH
-      IMUL    AX, 0
       IMUL    AX, CX, -3EH
-      IMUL    AX, CX, 0
       IMUL    AX, DX, -3DH
-      IMUL    AX, DX, 0
       IMUL    AX, BX, -3CH
-      IMUL    AX, BX, 0
       IMUL    AX, SP, -3BH
-      IMUL    AX, SP, 0
       IMUL    AX, BP, -3AH
-      IMUL    AX, BP, 0
       IMUL    AX, SI, -39H
-      IMUL    AX, SI, 0
       IMUL    AX, DI, -38H
-      IMUL    AX, DI, 0
       IMUL    CX, AX, -37H
-      IMUL    CX, AX, 0
       IMUL    CX, -36H
-      IMUL    CX, 0
       IMUL    CX, DX, -35H
-      IMUL    CX, DX, 0
       IMUL    CX, BX, -34H
-      IMUL    CX, BX, 0
       IMUL    CX, SP, -33H
-      IMUL    CX, SP, 0
       IMUL    CX, BP, -32H
-      IMUL    CX, BP, 0
       IMUL    CX, SI, -31H
-      IMUL    CX, SI, 0
       IMUL    CX, DI, -30H
-      IMUL    CX, DI, 0
       IMUL    DX, AX, -2FH
-      IMUL    DX, AX, 0
       IMUL    DX, CX, -2EH
-      IMUL    DX, CX, 0
       IMUL    DX, -2DH
-      IMUL    DX, 0
       IMUL    DX, BX, -2CH
-      IMUL    DX, BX, 0
       IMUL    DX, SP, -2BH
-      IMUL    DX, SP, 0
       IMUL    DX, BP, -2AH
-      IMUL    DX, BP, 0
       IMUL    DX, SI, -29H
-      IMUL    DX, SI, 0
       IMUL    DX, DI, -28H
-      IMUL    DX, DI, 0
       IMUL    BX, AX, -27H
-      IMUL    BX, AX, 0
       IMUL    BX, CX, -26H
-      IMUL    BX, CX, 0
       IMUL    BX, DX, -25H
-      IMUL    BX, DX, 0
       IMUL    BX, -24H
-      IMUL    BX, 0
       IMUL    BX, SP, -23H
-      IMUL    BX, SP, 0
       IMUL    BX, BP, -22H
-      IMUL    BX, BP, 0
       IMUL    BX, SI, -21H
-      IMUL    BX, SI, 0
       IMUL    BX, DI, -32
-      IMUL    BX, DI, 0
       IMUL    SP, AX, -31
-      IMUL    SP, AX, 0
       IMUL    SP, CX, -30
-      IMUL    SP, CX, 0
       IMUL    SP, DX, -29
-      IMUL    SP, DX, 0
       IMUL    SP, BX, -28
-      IMUL    SP, BX, 0
       IMUL    SP, -27
-      IMUL    SP, 0
       IMUL    SP, BP, -26
-      IMUL    SP, BP, 0
       IMUL    SP, SI, -25
-      IMUL    SP, SI, 0
       IMUL    SP, DI, -24
-      IMUL    SP, DI, 0
       IMUL    BP, AX, -23
-      IMUL    BP, AX, 0
       IMUL    BP, CX, -22
-      IMUL    BP, CX, 0
       IMUL    BP, DX, -21
-      IMUL    BP, DX, 0
       IMUL    BP, BX, -20
-      IMUL    BP, BX, 0
       IMUL    BP, SP, -19
-      IMUL    BP, SP, 0
       IMUL    BP, -18
-      IMUL    BP, 0
       IMUL    BP, SI, -17
-      IMUL    BP, SI, 0
       IMUL    BP, DI, -16
-      IMUL    BP, DI, 0
       IMUL    SI, AX, -15
-      IMUL    SI, AX, 0
       IMUL    SI, CX, -14
-      IMUL    SI, CX, 0
       IMUL    SI, DX, -13
-      IMUL    SI, DX, 0
       IMUL    SI, BX, -12
-      IMUL    SI, BX, 0
       IMUL    SI, SP, -11
-      IMUL    SI, SP, 0
       IMUL    SI, BP, -10
-      IMUL    SI, BP, 0
       IMUL    SI, -9
-      IMUL    SI, 0
       IMUL    SI, DI, -8
-      IMUL    SI, DI, 0
       IMUL    DI, AX, -7
-      IMUL    DI, AX, 0
       IMUL    DI, CX, -6
-      IMUL    DI, CX, 0
       IMUL    DI, DX, -5
-      IMUL    DI, DX, 0
       IMUL    DI, BX, -4
-      IMUL    DI, BX, 0
       IMUL    DI, SP, -3
-      IMUL    DI, SP, 0
       IMUL    DI, BP, -2
-      IMUL    DI, BP, 0
       IMUL    DI, SI, -1
-      IMUL    DI, SI, 0
       IMUL    DI, 0
-      IMUL    DI, -80H
       IMUL    AX, [BX+SI], 1
-      IMUL    AX, [BX+SI], -80H
       IMUL    AX, [BX+DI], 2
-      IMUL    AX, [BX+DI], -80H
       IMUL    AX, [BP+SI], 3
-      IMUL    AX, [BP+SI], -80H
       IMUL    AX, [BP+DI], 4
-      IMUL    AX, [BP+DI], -80H
       IMUL    AX, [SI], 5
-      IMUL    AX, [SI], -80H
       IMUL    AX, [DI], 6
-      IMUL    AX, [DI], -80H
       IMUL    AX, [0807H], 9
-      IMUL    AX, [0807H], -80H
       IMUL    AX, [BX], 8
-      IMUL    AX, [BX], -80H
       IMUL    CX, [BX+SI], 9
-      IMUL    CX, [BX+SI], -80H
       IMUL    CX, [BX+DI], 10
-      IMUL    CX, [BX+DI], -80H
       IMUL    CX, [BP+SI], 11
-      IMUL    CX, [BP+SI], -80H
       IMUL    CX, [BP+DI], 12
-      IMUL    CX, [BP+DI], -80H
       IMUL    CX, [SI], 13
-      IMUL    CX, [SI], -80H
       IMUL    CX, [DI], 14
-      IMUL    CX, [DI], -80H
       IMUL    CX, [100FH], 17
-      IMUL    CX, [100FH], -80H
       IMUL    CX, [BX], 16
-      IMUL    CX, [BX], -80H
       IMUL    DX, [BX+SI], 17
-      IMUL    DX, [BX+SI], -80H
       IMUL    DX, [BX+DI], 18
-      IMUL    DX, [BX+DI], -80H
       IMUL    DX, [BP+SI], 19
-      IMUL    DX, [BP+SI], -80H
       IMUL    DX, [BP+DI], 20
-      IMUL    DX, [BP+DI], -80H
       IMUL    DX, [SI], 21
-      IMUL    DX, [SI], -80H
       IMUL    DX, [DI], 22
-      IMUL    DX, [DI], -80H
       IMUL    DX, [1817H], 25
-      IMUL    DX, [1817H], -80H
       IMUL    DX, [BX], 24
-      IMUL    DX, [BX], -80H
       IMUL    BX, [BX+SI], 25
-      IMUL    BX, [BX+SI], -80H
       IMUL    BX, [BX+DI], 26
-      IMUL    BX, [BX+DI], -80H
       IMUL    BX, [BP+SI], 27
-      IMUL    BX, [BP+SI], -80H
       IMUL    BX, [BP+DI], 28
-      IMUL    BX, [BP+DI], -80H
       IMUL    BX, [SI], 29
-      IMUL    BX, [SI], -80H
       IMUL    BX, [DI], 30
-      IMUL    BX, [DI], -80H
       IMUL    BX, [201FH], 21H
-      IMUL    BX, [201FH], -80H
       IMUL    BX, [BX], 32
-      IMUL    BX, [BX], -80H
       IMUL    SP, [BX+SI], 21H
-      IMUL    SP, [BX+SI], -80H
       IMUL    SP, [BX+DI], 22H
-      IMUL    SP, [BX+DI], -80H
       IMUL    SP, [BP+SI], 23H
-      IMUL    SP, [BP+SI], -80H
       IMUL    SP, [BP+DI], 24H
-      IMUL    SP, [BP+DI], -80H
       IMUL    SP, [SI], 25H
-      IMUL    SP, [SI], -80H
       IMUL    SP, [DI], 26H
-      IMUL    SP, [DI], -80H
       IMUL    SP, [2827H], 29H
-      IMUL    SP, [2827H], -80H
       IMUL    SP, [BX], 28H
-      IMUL    SP, [BX], -80H
       IMUL    BP, [BX+SI], 29H
-      IMUL    BP, [BX+SI], -80H
       IMUL    BP, [BX+DI], 2AH
-      IMUL    BP, [BX+DI], -80H
       IMUL    BP, [BP+SI], 2BH
-      IMUL    BP, [BP+SI], -80H
       IMUL    BP, [BP+DI], 2CH
-      IMUL    BP, [BP+DI], -80H
       IMUL    BP, [SI], 2DH
-      IMUL    BP, [SI], -80H
       IMUL    BP, [DI], 2EH
-      IMUL    BP, [DI], -80H
       IMUL    BP, [302FH], 31H
-      IMUL    BP, [302FH], -80H
       IMUL    BP, [BX], 30H
-      IMUL    BP, [BX], -80H
       IMUL    SI, [BX+SI], 31H
-      IMUL    SI, [BX+SI], -80H
       IMUL    SI, [BX+DI], 32H
-      IMUL    SI, [BX+DI], -80H
       IMUL    SI, [BP+SI], 33H
-      IMUL    SI, [BP+SI], -80H
       IMUL    SI, [BP+DI], 34H
-      IMUL    SI, [BP+DI], -80H
       IMUL    SI, [SI], 35H
-      IMUL    SI, [SI], -80H
       IMUL    SI, [DI], 36H
-      IMUL    SI, [DI], -80H
       IMUL    SI, [3837H], 39H
-      IMUL    SI, [3837H], -80H
       IMUL    SI, [BX], 38H
-      IMUL    SI, [BX], -80H
       IMUL    DI, [BX+SI], 39H
-      IMUL    DI, [BX+SI], -80H
       IMUL    DI, [BX+DI], 3AH
-      IMUL    DI, [BX+DI], -80H
       IMUL    DI, [BP+SI], 3BH
-      IMUL    DI, [BP+SI], -80H
       IMUL    DI, [BP+DI], 3CH
-      IMUL    DI, [BP+DI], -80H
       IMUL    DI, [SI], 3DH
-      IMUL    DI, [SI], -80H
       IMUL    DI, [DI], 3EH
-      IMUL    DI, [DI], -80H
       IMUL    DI, [403FH], 41H
-      IMUL    DI, [403FH], -80H
       IMUL    DI, [BX], 40H
-      IMUL    DI, [BX], -80H
       IMUL    AX, [BX+SI+65], 42H
-      IMUL    AX, [BX+SI+65], -80H
       IMUL    AX, [BX+SI-128], -7FH
-      IMUL    AX, [BX+SI-128], 0
       IMUL    AX, [BX+DI+66], 43H
-      IMUL    AX, [BX+DI+66], -80H
       IMUL    AX, [BX+DI-128], -7FH
-      IMUL    AX, [BX+DI-128], 0
       IMUL    AX, [BP+SI+67], 44H
-      IMUL    AX, [BP+SI+67], -80H
       IMUL    AX, [BP+SI-128], -7FH
-      IMUL    AX, [BP+SI-128], 0
       IMUL    AX, [BP+DI+68], 45H
-      IMUL    AX, [BP+DI+68], -80H
       IMUL    AX, [BP+DI-128], -7FH
-      IMUL    AX, [BP+DI-128], 0
       IMUL    AX, [SI+69], 46H
-      IMUL    AX, [SI+69], -80H
       IMUL    AX, [SI-128], -7FH
-      IMUL    AX, [SI-128], 0
       IMUL    AX, [DI+70], 47H
-      IMUL    AX, [DI+70], -80H
       IMUL    AX, [DI-128], -7FH
-      IMUL    AX, [DI-128], 0
       IMUL    AX, [BP+71], 48H
-      IMUL    AX, [BP+71], -80H
       IMUL    AX, [BP-128], -7FH
-      IMUL    AX, [BP-128], 0
       IMUL    AX, [BX+72], 49H
-      IMUL    AX, [BX+72], -80H
       IMUL    AX, [BX-128], -7FH
-      IMUL    AX, [BX-128], 0
       IMUL    CX, [BX+SI+73], 4AH
-      IMUL    CX, [BX+SI+73], -80H
       IMUL    CX, [BX+SI-128], -7FH
-      IMUL    CX, [BX+SI-128], 0
       IMUL    CX, [BX+DI+74], 4BH
-      IMUL    CX, [BX+DI+74], -80H
       IMUL    CX, [BX+DI-128], -7FH
-      IMUL    CX, [BX+DI-128], 0
       IMUL    CX, [BP+SI+75], 4CH
-      IMUL    CX, [BP+SI+75], -80H
       IMUL    CX, [BP+SI-128], -7FH
-      IMUL    CX, [BP+SI-128], 0
       IMUL    CX, [BP+DI+76], 4DH
-      IMUL    CX, [BP+DI+76], -80H
       IMUL    CX, [BP+DI-128], -7FH
-      IMUL    CX, [BP+DI-128], 0
       IMUL    CX, [SI+77], 4EH
-      IMUL    CX, [SI+77], -80H
       IMUL    CX, [SI-128], -7FH
-      IMUL    CX, [SI-128], 0
       IMUL    CX, [DI+78], 4FH
-      IMUL    CX, [DI+78], -80H
       IMUL    CX, [DI-128], -7FH
-      IMUL    CX, [DI-128], 0
       IMUL    CX, [BP+79], 50H
-      IMUL    CX, [BP+79], -80H
       IMUL    CX, [BP-128], -7FH
-      IMUL    CX, [BP-128], 0
       IMUL    CX, [BX+80], 51H
-      IMUL    CX, [BX+80], -80H
       IMUL    CX, [BX-128], -7FH
-      IMUL    CX, [BX-128], 0
       IMUL    DX, [BX+SI+81], 52H
-      IMUL    DX, [BX+SI+81], -80H
       IMUL    DX, [BX+SI-128], -7FH
-      IMUL    DX, [BX+SI-128], 0
       IMUL    DX, [BX+DI+82], 53H
-      IMUL    DX, [BX+DI+82], -80H
       IMUL    DX, [BX+DI-128], -7FH
-      IMUL    DX, [BX+DI-128], 0
       IMUL    DX, [BP+SI+83], 54H
-      IMUL    DX, [BP+SI+83], -80H
       IMUL    DX, [BP+SI-128], -7FH
-      IMUL    DX, [BP+SI-128], 0
       IMUL    DX, [BP+DI+84], 55H
-      IMUL    DX, [BP+DI+84], -80H
       IMUL    DX, [BP+DI-128], -7FH
-      IMUL    DX, [BP+DI-128], 0
       IMUL    DX, [SI+85], 56H
-      IMUL    DX, [SI+85], -80H
       IMUL    DX, [SI-128], -7FH
-      IMUL    DX, [SI-128], 0
       IMUL    DX, [DI+86], 57H
-      IMUL    DX, [DI+86], -80H
       IMUL    DX, [DI-128], -7FH
-      IMUL    DX, [DI-128], 0
       IMUL    DX, [BP+87], 58H
-      IMUL    DX, [BP+87], -80H
       IMUL    DX, [BP-128], -7FH
-      IMUL    DX, [BP-128], 0
       IMUL    DX, [BX+88], 59H
-      IMUL    DX, [BX+88], -80H
       IMUL    DX, [BX-128], -7FH
-      IMUL    DX, [BX-128], 0
       IMUL    BX, [BX+SI+89], 5AH
-      IMUL    BX, [BX+SI+89], -80H
       IMUL    BX, [BX+SI-128], -7FH
-      IMUL    BX, [BX+SI-128], 0
       IMUL    BX, [BX+DI+90], 5BH
-      IMUL    BX, [BX+DI+90], -80H
       IMUL    BX, [BX+DI-128], -7FH
-      IMUL    BX, [BX+DI-128], 0
       IMUL    BX, [BP+SI+91], 5CH
-      IMUL    BX, [BP+SI+91], -80H
       IMUL    BX, [BP+SI-128], -7FH
-      IMUL    BX, [BP+SI-128], 0
       IMUL    BX, [BP+DI+92], 5DH
-      IMUL    BX, [BP+DI+92], -80H
       IMUL    BX, [BP+DI-128], -7FH
-      IMUL    BX, [BP+DI-128], 0
       IMUL    BX, [SI+93], 5EH
-      IMUL    BX, [SI+93], -80H
       IMUL    BX, [SI-128], -7FH
-      IMUL    BX, [SI-128], 0
       IMUL    BX, [DI+94], 5FH
-      IMUL    BX, [DI+94], -80H
       IMUL    BX, [DI-128], -7FH
-      IMUL    BX, [DI-128], 0
       IMUL    BX, [BP+95], 60H
-      IMUL    BX, [BP+95], -80H
       IMUL    BX, [BP-128], -7FH
-      IMUL    BX, [BP-128], 0
       IMUL    BX, [BX+96], 61H
-      IMUL    BX, [BX+96], -80H
       IMUL    BX, [BX-128], -7FH
-      IMUL    BX, [BX-128], 0
       IMUL    SP, [BX+SI+97], 62H
-      IMUL    SP, [BX+SI+97], -80H
       IMUL    SP, [BX+SI-128], -7FH
-      IMUL    SP, [BX+SI-128], 0
       IMUL    SP, [BX+DI+98], 63H
-      IMUL    SP, [BX+DI+98], -80H
       IMUL    SP, [BX+DI-128], -7FH
-      IMUL    SP, [BX+DI-128], 0
       IMUL    SP, [BP+SI+99], 64H
-      IMUL    SP, [BP+SI+99], -80H
       IMUL    SP, [BP+SI-128], -7FH
-      IMUL    SP, [BP+SI-128], 0
       IMUL    SP, [BP+DI+100], 65H
-      IMUL    SP, [BP+DI+100], -80H
       IMUL    SP, [BP+DI-128], -7FH
-      IMUL    SP, [BP+DI-128], 0
       IMUL    SP, [SI+101], 66H
-      IMUL    SP, [SI+101], -80H
       IMUL    SP, [SI-128], -7FH
-      IMUL    SP, [SI-128], 0
       IMUL    SP, [DI+102], 67H
-      IMUL    SP, [DI+102], -80H
       IMUL    SP, [DI-128], -7FH
-      IMUL    SP, [DI-128], 0
       IMUL    SP, [BP+103], 68H
-      IMUL    SP, [BP+103], -80H
       IMUL    SP, [BP-128], -7FH
-      IMUL    SP, [BP-128], 0
       IMUL    SP, [BX+104], 69H
-      IMUL    SP, [BX+104], -80H
       IMUL    SP, [BX-128], -7FH
-      IMUL    SP, [BX-128], 0
       IMUL    BP, [BX+SI+105], 6AH
-      IMUL    BP, [BX+SI+105], -80H
       IMUL    BP, [BX+SI-128], -7FH
-      IMUL    BP, [BX+SI-128], 0
       IMUL    BP, [BX+DI+106], 6BH
-      IMUL    BP, [BX+DI+106], -80H
       IMUL    BP, [BX+DI-128], -7FH
-      IMUL    BP, [BX+DI-128], 0
       IMUL    BP, [BP+SI+107], 6CH
-      IMUL    BP, [BP+SI+107], -80H
       IMUL    BP, [BP+SI-128], -7FH
-      IMUL    BP, [BP+SI-128], 0
       IMUL    BP, [BP+DI+108], 6DH
-      IMUL    BP, [BP+DI+108], -80H
       IMUL    BP, [BP+DI-128], -7FH
-      IMUL    BP, [BP+DI-128], 0
       INSB
       INSW
       OUTSB
@@ -9216,67 +8895,6 @@
       CMP     WORD PTR [BX+0], 0201H
       ADD     WORD PTR [BX+SI+8281H], 8483H
       ADD     WORD PTR [BX+DI+8382H], 8584H
-      ADD     WORD PTR [SI+8685H], -79H
-      ADD     WORD PTR [DI+8786H], -78H
-      ADD     WORD PTR [BP+8887H], -77H
-      ADD     WORD PTR [BX+8988H], -76H
-      OR      WORD PTR [BX+SI+8A89H], -75H
-      OR      WORD PTR [BX+DI+8B8AH], -74H
-      OR      WORD PTR [BP+SI+8C8BH], -73H
-      OR      WORD PTR [BP+DI+8D8CH], -72H
-      OR      WORD PTR [SI+8E8DH], -71H
-      OR      WORD PTR [DI+8F8EH], -70H
-      OR      WORD PTR [BP+908FH], -6FH
-      OR      WORD PTR [BX+9190H], -6EH
-      ADC     WORD PTR [BX+SI+9291H], -6DH
-      ADC     WORD PTR [BX+DI+9392H], -6CH
-      ADC     WORD PTR [BP+SI+9493H], -6BH
-      ADC     WORD PTR [BP+DI+9594H], -6AH
-      ADC     WORD PTR [SI+9695H], -69H
-      ADC     WORD PTR [DI+9796H], -68H
-      ADC     WORD PTR [BP+9897H], -67H
-      ADC     WORD PTR [BX+9998H], -66H
-      SBB     WORD PTR [BX+SI+9A99H], -65H
-      SBB     WORD PTR [BX+DI+9B9AH], -64H
-      SBB     WORD PTR [BP+SI+9C9BH], -63H
-      SBB     WORD PTR [BP+DI+9D9CH], -62H
-      SBB     WORD PTR [SI+9E9DH], -61H
-      SBB     WORD PTR [DI+9F9EH], -60H
-      SBB     WORD PTR [BP+0A09FH], -5FH
-      SBB     WORD PTR [BX+0A1A0H], -5EH
-      AND     WORD PTR [BX+SI+0A2A1H], -5DH
-      AND     WORD PTR [BX+DI+0A3A2H], -5CH
-      AND     WORD PTR [BP+SI+0A4A3H], -5BH
-      AND     WORD PTR [BP+DI+0A5A4H], -5AH
-      AND     WORD PTR [SI+0A6A5H], -59H
-      AND     WORD PTR [DI+0A7A6H], -58H
-      AND     WORD PTR [BP+0A8A7H], -57H
-      AND     WORD PTR [BX+0A9A8H], -56H
-      SUB     WORD PTR [BX+SI+0AAA9H], -55H
-      SUB     WORD PTR [BX+DI+0ABAAH], -54H
-      SUB     WORD PTR [BP+SI+0ACABH], -53H
-      SUB     WORD PTR [BP+DI+0ADACH], -52H
-      SUB     WORD PTR [SI+0AEADH], -51H
-      SUB     WORD PTR [DI+0AFAEH], -50H
-      SUB     WORD PTR [BP+0B0AFH], -4FH
-      SUB     WORD PTR [BX+0B1B0H], -4EH
-      XOR     WORD PTR [BX+SI+0B2B1H], -4DH
-      XOR     WORD PTR [BX+DI+0B3B2H], -4CH
-      XOR     WORD PTR [BP+SI+0B4B3H], -4BH
-      XOR     WORD PTR [BP+DI+0B5B4H], -4AH
-      XOR     WORD PTR [SI+0B6B5H], -49H
-      XOR     WORD PTR [DI+0B7B6H], -48H
-      XOR     WORD PTR [BP+0B8B7H], -47H
-      XOR     WORD PTR [BX+0B9B8H], -46H
-      CMP     WORD PTR [BX+SI+0BAB9H], -45H
-      CMP     WORD PTR [BX+DI+0BBBAH], -44H
-      CMP     WORD PTR [BP+SI+0BCBBH], -43H
-      CMP     WORD PTR [BP+DI+0BDBCH], -42H
-      CMP     WORD PTR [SI+0BEBDH], -41H
-      CMP     WORD PTR [DI+0BFBEH], -40H
-      CMP     WORD PTR [BP+0C0BFH], -3FH
-      CMP     WORD PTR [BX+0C1C0H], -3EH
-      ADD     AX, -3FH
       TEST    AL, [DI+8786H]
       TEST    AL, [BP+8887H]
       TEST    AL, [BX+8988H]

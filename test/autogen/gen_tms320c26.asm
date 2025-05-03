@@ -869,7 +869,6 @@
       BIT   *BR0+, 0
       BIT   *BR0+, 0, AR0
       MPYK  0
-      MPYK  -4096
       LARK  AR0, 0
       LDPK  000H
       ZAC

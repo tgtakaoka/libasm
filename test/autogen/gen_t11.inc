@@ -2896,47 +2896,26 @@
       ADD   (SP)+, @063277Q(SP)
       ADD   (SP)+, @*+063304Q
       ADD   #063301Q, R0
-      ADD   #-100000Q, R0
       ADD   #063307Q, SP
-      ADD   #-100000Q, SP
       ADD   #063310Q, PC
-      ADD   #-100000Q, PC
       ADD   #063311Q, (R0)
-      ADD   #-100000Q, (R0)
       ADD   #063317Q, (SP)
-      ADD   #-100000Q, (SP)
       ADD   #063320Q, (PC)
-      ADD   #-100000Q, (PC)
       ADD   #063321Q, (R0)+
-      ADD   #-100000Q, (R0)+
       ADD   #063327Q, (SP)+
-      ADD   #-100000Q, (SP)+
       ADD   #063331Q, @(R0)+
-      ADD   #-100000Q, @(R0)+
       ADD   #063337Q, @(SP)+
-      ADD   #-100000Q, @(SP)+
       ADD   #063340Q, @#063742Q
-      ADD   #-077757Q, @#100422Q
       ADD   #063341Q, -(R0)
-      ADD   #-100000Q, -(R0)
       ADD   #063347Q, -(SP)
-      ADD   #-100000Q, -(SP)
       ADD   #063351Q, @-(R0)
-      ADD   #-100000Q, @-(R0)
       ADD   #063357Q, @-(SP)
-      ADD   #-100000Q, @-(SP)
       ADD   #063361Q, 063762Q(R0)
-      ADD   #-077737Q, 100442Q(R0)
       ADD   #063367Q, 063770Q(SP)
-      ADD   #-077731Q, 100450Q(SP)
       ADD   #063370Q, *+064000Q
-      ADD   #-100000Q, *-022764Q
       ADD   #063371Q, @063772Q(R0)
-      ADD   #-077727Q, @100452Q(R0)
       ADD   #063377Q, @064000Q(SP)
-      ADD   #-077721Q, @100460Q(SP)
       ADD   #063400Q, @*+064010Q
-      ADD   #-100000Q, @*-023030Q
       ADD   @(R0)+, R0
       ADD   @(R0)+, SP
       ADD   @(R0)+, PC
@@ -3303,10 +3282,10 @@
       CLRB  @-(SP)
       CLRB  105461Q(R0)
       CLRB  105467Q(SP)
-      CLRB  *-025406Q
+      CLRB  *-025244Q
       CLRB  @105471Q(R0)
       CLRB  @105477Q(SP)
-      CLRB  @*-025422Q
+      CLRB  @*-025260Q
       COMB  R0
       COMB  SP
       COMB  PC
@@ -3324,10 +3303,10 @@
       COMB  @-(SP)
       COMB  105561Q(R0)
       COMB  105567Q(SP)
-      COMB  *-025476Q
+      COMB  *-025334Q
       COMB  @105571Q(R0)
       COMB  @105577Q(SP)
-      COMB  @*-025512Q
+      COMB  @*-025350Q
       INCB  R0
       INCB  SP
       INCB  PC
@@ -3345,10 +3324,10 @@
       INCB  @-(SP)
       INCB  105661Q(R0)
       INCB  105667Q(SP)
-      INCB  *-025566Q
+      INCB  *-025424Q
       INCB  @105671Q(R0)
       INCB  @105677Q(SP)
-      INCB  @*-025602Q
+      INCB  @*-025440Q
       DECB  R0
       DECB  SP
       DECB  PC
@@ -3366,10 +3345,10 @@
       DECB  @-(SP)
       DECB  105761Q(R0)
       DECB  105767Q(SP)
-      DECB  *-025656Q
+      DECB  *-025514Q
       DECB  @105771Q(R0)
       DECB  @105777Q(SP)
-      DECB  @*-025672Q
+      DECB  @*-025530Q
       NEGB  R0
       NEGB  SP
       NEGB  PC
@@ -3387,10 +3366,10 @@
       NEGB  @-(SP)
       NEGB  106061Q(R0)
       NEGB  106067Q(SP)
-      NEGB  *-025746Q
+      NEGB  *-025604Q
       NEGB  @106071Q(R0)
       NEGB  @106077Q(SP)
-      NEGB  @*-025762Q
+      NEGB  @*-025620Q
       ADCB  R0
       ADCB  SP
       ADCB  PC
@@ -3408,10 +3387,10 @@
       ADCB  @-(SP)
       ADCB  106161Q(R0)
       ADCB  106167Q(SP)
-      ADCB  *-026036Q
+      ADCB  *-025674Q
       ADCB  @106171Q(R0)
       ADCB  @106177Q(SP)
-      ADCB  @*-026052Q
+      ADCB  @*-025710Q
       SBCB  R0
       SBCB  SP
       SBCB  PC
@@ -3429,10 +3408,10 @@
       SBCB  @-(SP)
       SBCB  106261Q(R0)
       SBCB  106267Q(SP)
-      SBCB  *-026126Q
+      SBCB  *-025764Q
       SBCB  @106271Q(R0)
       SBCB  @106277Q(SP)
-      SBCB  @*-026142Q
+      SBCB  @*-026000Q
       TSTB  R0
       TSTB  SP
       TSTB  PC
@@ -3450,10 +3429,10 @@
       TSTB  @-(SP)
       TSTB  106361Q(R0)
       TSTB  106367Q(SP)
-      TSTB  *-026216Q
+      TSTB  *-026054Q
       TSTB  @106371Q(R0)
       TSTB  @106377Q(SP)
-      TSTB  @*-026232Q
+      TSTB  @*-026070Q
       RORB  R0
       RORB  SP
       RORB  PC
@@ -3471,10 +3450,10 @@
       RORB  @-(SP)
       RORB  106461Q(R0)
       RORB  106467Q(SP)
-      RORB  *-026306Q
+      RORB  *-026144Q
       RORB  @106471Q(R0)
       RORB  @106477Q(SP)
-      RORB  @*-026322Q
+      RORB  @*-026160Q
       ROLB  R0
       ROLB  SP
       ROLB  PC
@@ -3492,10 +3471,10 @@
       ROLB  @-(SP)
       ROLB  106561Q(R0)
       ROLB  106567Q(SP)
-      ROLB  *-026376Q
+      ROLB  *-026234Q
       ROLB  @106571Q(R0)
       ROLB  @106577Q(SP)
-      ROLB  @*-026412Q
+      ROLB  @*-026250Q
       ASRB  R0
       ASRB  SP
       ASRB  PC
@@ -3513,10 +3492,10 @@
       ASRB  @-(SP)
       ASRB  106661Q(R0)
       ASRB  106667Q(SP)
-      ASRB  *-026466Q
+      ASRB  *-026324Q
       ASRB  @106671Q(R0)
       ASRB  @106677Q(SP)
-      ASRB  @*-026502Q
+      ASRB  @*-026340Q
       ASLB  R0
       ASLB  SP
       ASLB  PC
@@ -3534,10 +3513,10 @@
       ASLB  @-(SP)
       ASLB  106761Q(R0)
       ASLB  106767Q(SP)
-      ASLB  *-026556Q
+      ASLB  *-026414Q
       ASLB  @106771Q(R0)
       ASLB  @106777Q(SP)
-      ASLB  @*-026572Q
+      ASLB  @*-026430Q
       MTPS  R0
       MTPS  SP
       MTPS  PC
@@ -3556,10 +3535,10 @@
       MTPS  @-(SP)
       MTPS  107061Q(R0)
       MTPS  107067Q(SP)
-      MTPS  *-026652Q
+      MTPS  *-026510Q
       MTPS  @107071Q(R0)
       MTPS  @107077Q(SP)
-      MTPS  @*-026666Q
+      MTPS  @*-026524Q
       MFPS  R0
       MFPS  SP
       MFPS  PC
@@ -3577,10 +3556,10 @@
       MFPS  @-(SP)
       MFPS  107361Q(R0)
       MFPS  107367Q(SP)
-      MFPS  *-026742Q
+      MFPS  *-026600Q
       MFPS  @107371Q(R0)
       MFPS  @107377Q(SP)
-      MFPS  @*-026756Q
+      MFPS  @*-026614Q
       MOVB  R0, R0
       MOVB  R0, SP
       MOVB  R0, PC
@@ -3598,10 +3577,10 @@
       MOVB  R0, @-(SP)
       MOVB  R0, 110461Q(R0)
       MOVB  R0, 110467Q(SP)
-      MOVB  R0, *-027032Q
+      MOVB  R0, *-026670Q
       MOVB  R0, @110471Q(R0)
       MOVB  R0, @110477Q(SP)
-      MOVB  R0, @*-027046Q
+      MOVB  R0, @*-026704Q
       MOVB  SP, R0
       MOVB  SP, SP
       MOVB  SP, PC
@@ -3619,10 +3598,10 @@
       MOVB  SP, @-(SP)
       MOVB  SP, 111261Q(R0)
       MOVB  SP, 111267Q(SP)
-      MOVB  SP, *-027122Q
+      MOVB  SP, *-026760Q
       MOVB  SP, @111271Q(R0)
       MOVB  SP, @111277Q(SP)
-      MOVB  SP, @*-027136Q
+      MOVB  SP, @*-026774Q
       MOVB  PC, R0
       MOVB  PC, SP
       MOVB  PC, PC
@@ -3640,10 +3619,10 @@
       MOVB  PC, @-(SP)
       MOVB  PC, 111361Q(R0)
       MOVB  PC, 111367Q(SP)
-      MOVB  PC, *-027212Q
+      MOVB  PC, *-027050Q
       MOVB  PC, @111371Q(R0)
       MOVB  PC, @111377Q(SP)
-      MOVB  PC, @*-027226Q
+      MOVB  PC, @*-027064Q
       MOVB  (R0), R0
       MOVB  (R0), SP
       MOVB  (R0), PC
@@ -3661,10 +3640,10 @@
       MOVB  (R0), @-(SP)
       MOVB  (R0), 111461Q(R0)
       MOVB  (R0), 111467Q(SP)
-      MOVB  (R0), *-027302Q
+      MOVB  (R0), *-027140Q
       MOVB  (R0), @111471Q(R0)
       MOVB  (R0), @111477Q(SP)
-      MOVB  (R0), @*-027316Q
+      MOVB  (R0), @*-027154Q
       MOVB  (SP), R0
       MOVB  (SP), SP
       MOVB  (SP), PC
@@ -3682,10 +3661,10 @@
       MOVB  (SP), @-(SP)
       MOVB  (SP), 112261Q(R0)
       MOVB  (SP), 112267Q(SP)
-      MOVB  (SP), *-027372Q
+      MOVB  (SP), *-027230Q
       MOVB  (SP), @112271Q(R0)
       MOVB  (SP), @112277Q(SP)
-      MOVB  (SP), @*-027406Q
+      MOVB  (SP), @*-027244Q
       MOVB  (PC), R0
       MOVB  (PC), SP
       MOVB  (PC), PC
@@ -3703,10 +3682,10 @@
       MOVB  (PC), @-(SP)
       MOVB  (PC), 112361Q(R0)
       MOVB  (PC), 112367Q(SP)
-      MOVB  (PC), *-027462Q
+      MOVB  (PC), *-027320Q
       MOVB  (PC), @112371Q(R0)
       MOVB  (PC), @112377Q(SP)
-      MOVB  (PC), @*-027476Q
+      MOVB  (PC), @*-027334Q
       MOVB  (R0)+, R0
       MOVB  (R0)+, SP
       MOVB  (R0)+, PC
@@ -3724,10 +3703,10 @@
       MOVB  (R0)+, @-(SP)
       MOVB  (R0)+, 112461Q(R0)
       MOVB  (R0)+, 112467Q(SP)
-      MOVB  (R0)+, *-027552Q
+      MOVB  (R0)+, *-027410Q
       MOVB  (R0)+, @112471Q(R0)
       MOVB  (R0)+, @112477Q(SP)
-      MOVB  (R0)+, @*-027566Q
+      MOVB  (R0)+, @*-027424Q
       MOVB  (SP)+, R0
       MOVB  (SP)+, SP
       MOVB  (SP)+, PC
@@ -3745,10 +3724,10 @@
       MOVB  (SP)+, @-(SP)
       MOVB  (SP)+, 113261Q(R0)
       MOVB  (SP)+, 113267Q(SP)
-      MOVB  (SP)+, *-027642Q
+      MOVB  (SP)+, *-027500Q
       MOVB  (SP)+, @113271Q(R0)
       MOVB  (SP)+, @113277Q(SP)
-      MOVB  (SP)+, @*-027656Q
+      MOVB  (SP)+, @*-027514Q
       MOVB  #000Q, R0
       MOVB  #000Q, SP
       MOVB  #000Q, PC
@@ -3787,10 +3766,10 @@
       MOVB  @(R0)+, @-(SP)
       MOVB  @(R0)+, 113461Q(R0)
       MOVB  @(R0)+, 113467Q(SP)
-      MOVB  @(R0)+, *-030074Q
+      MOVB  @(R0)+, *-027732Q
       MOVB  @(R0)+, @113471Q(R0)
       MOVB  @(R0)+, @113477Q(SP)
-      MOVB  @(R0)+, @*-030110Q
+      MOVB  @(R0)+, @*-027746Q
       MOVB  @(SP)+, R0
       MOVB  @(SP)+, SP
       MOVB  @(SP)+, PC
@@ -3808,10 +3787,10 @@
       MOVB  @(SP)+, @-(SP)
       MOVB  @(SP)+, 114261Q(R0)
       MOVB  @(SP)+, 114267Q(SP)
-      MOVB  @(SP)+, *-030164Q
+      MOVB  @(SP)+, *-030022Q
       MOVB  @(SP)+, @114271Q(R0)
       MOVB  @(SP)+, @114277Q(SP)
-      MOVB  @(SP)+, @*-030200Q
+      MOVB  @(SP)+, @*-030036Q
       MOVB  @#114301Q, R0
       MOVB  @#114307Q, SP
       MOVB  @#114310Q, PC
@@ -3829,10 +3808,10 @@
       MOVB  @#114357Q, @-(SP)
       MOVB  @#114361Q, 114762Q(R0)
       MOVB  @#114367Q, 114770Q(SP)
-      MOVB  @#114370Q, *-030316Q
+      MOVB  @#114370Q, *-030154Q
       MOVB  @#114371Q, @114772Q(R0)
       MOVB  @#114377Q, @115000Q(SP)
-      MOVB  @#114400Q, @*-030340Q
+      MOVB  @#114400Q, @*-030176Q
       MOVB  -(R0), R0
       MOVB  -(R0), SP
       MOVB  -(R0), PC
@@ -3850,10 +3829,10 @@
       MOVB  -(R0), @-(SP)
       MOVB  -(R0), 114461Q(R0)
       MOVB  -(R0), 114467Q(SP)
-      MOVB  -(R0), *-030416Q
+      MOVB  -(R0), *-030254Q
       MOVB  -(R0), @114471Q(R0)
       MOVB  -(R0), @114477Q(SP)
-      MOVB  -(R0), @*-030432Q
+      MOVB  -(R0), @*-030270Q
       MOVB  -(SP), R0
       MOVB  -(SP), SP
       MOVB  -(SP), PC
@@ -3871,10 +3850,10 @@
       MOVB  -(SP), @-(SP)
       MOVB  -(SP), 115261Q(R0)
       MOVB  -(SP), 115267Q(SP)
-      MOVB  -(SP), *-030506Q
+      MOVB  -(SP), *-030344Q
       MOVB  -(SP), @115271Q(R0)
       MOVB  -(SP), @115277Q(SP)
-      MOVB  -(SP), @*-030522Q
+      MOVB  -(SP), @*-030360Q
       MOVB  @-(R0), R0
       MOVB  @-(R0), SP
       MOVB  @-(R0), PC
@@ -3892,10 +3871,10 @@
       MOVB  @-(R0), @-(SP)
       MOVB  @-(R0), 115461Q(R0)
       MOVB  @-(R0), 115467Q(SP)
-      MOVB  @-(R0), *-030576Q
+      MOVB  @-(R0), *-030434Q
       MOVB  @-(R0), @115471Q(R0)
       MOVB  @-(R0), @115477Q(SP)
-      MOVB  @-(R0), @*-030612Q
+      MOVB  @-(R0), @*-030450Q
       MOVB  @-(SP), R0
       MOVB  @-(SP), SP
       MOVB  @-(SP), PC
@@ -3913,10 +3892,10 @@
       MOVB  @-(SP), @-(SP)
       MOVB  @-(SP), 116261Q(R0)
       MOVB  @-(SP), 116267Q(SP)
-      MOVB  @-(SP), *-030666Q
+      MOVB  @-(SP), *-030524Q
       MOVB  @-(SP), @116271Q(R0)
       MOVB  @-(SP), @116277Q(SP)
-      MOVB  @-(SP), @*-030702Q
+      MOVB  @-(SP), @*-030540Q
       MOVB  116401Q(R0), R0
       MOVB  116407Q(R0), SP
       MOVB  116410Q(R0), PC
@@ -3934,10 +3913,10 @@
       MOVB  116457Q(R0), @-(SP)
       MOVB  116461Q(R0), 117062Q(R0)
       MOVB  116467Q(R0), 117070Q(SP)
-      MOVB  116470Q(R0), *-031020Q
+      MOVB  116470Q(R0), *-030656Q
       MOVB  116471Q(R0), @117072Q(R0)
       MOVB  116477Q(R0), @117100Q(SP)
-      MOVB  116500Q(R0), @*-031042Q
+      MOVB  116500Q(R0), @*-030700Q
       MOVB  117201Q(SP), R0
       MOVB  117207Q(SP), SP
       MOVB  117210Q(SP), PC
@@ -3955,31 +3934,31 @@
       MOVB  117257Q(SP), @-(SP)
       MOVB  117261Q(SP), 117662Q(R0)
       MOVB  117267Q(SP), 117670Q(SP)
-      MOVB  117270Q(SP), *-031162Q
+      MOVB  117270Q(SP), *-031020Q
       MOVB  117271Q(SP), @117672Q(R0)
       MOVB  117277Q(SP), @117700Q(SP)
-      MOVB  117300Q(SP), @*-031204Q
-      MOVB  *-031212Q, R0
-      MOVB  *-031216Q, SP
-      MOVB  *-031222Q, PC
-      MOVB  *-031226Q, (R0)
-      MOVB  *-031232Q, (SP)
-      MOVB  *-031236Q, (PC)
-      MOVB  *-031242Q, (R0)+
-      MOVB  *-031246Q, (SP)+
-      MOVB  *-031252Q, @(R0)+
-      MOVB  *-031256Q, @(SP)+
-      MOVB  *-031262Q, @#147113Q
-      MOVB  *-031270Q, -(R0)
-      MOVB  *-031274Q, -(SP)
-      MOVB  *-031300Q, @-(R0)
-      MOVB  *-031304Q, @-(SP)
-      MOVB  *-031310Q, 147065Q(R0)
-      MOVB  *-031316Q, 147057Q(SP)
-      MOVB  *-031324Q, *-030721Q
-      MOVB  *-031332Q, @147043Q(R0)
-      MOVB  *-031340Q, @147035Q(SP)
-      MOVB  *-031346Q, @*-030742Q
+      MOVB  117300Q(SP), @*-031042Q
+      MOVB  *-031050Q, R0
+      MOVB  *-031054Q, SP
+      MOVB  *-031060Q, PC
+      MOVB  *-031064Q, (R0)
+      MOVB  *-031070Q, (SP)
+      MOVB  *-031074Q, (PC)
+      MOVB  *-031100Q, (R0)+
+      MOVB  *-031104Q, (SP)+
+      MOVB  *-031110Q, @(R0)+
+      MOVB  *-031114Q, @(SP)+
+      MOVB  *-031120Q, @#147255Q
+      MOVB  *-031126Q, -(R0)
+      MOVB  *-031132Q, -(SP)
+      MOVB  *-031136Q, @-(R0)
+      MOVB  *-031142Q, @-(SP)
+      MOVB  *-031146Q, 147227Q(R0)
+      MOVB  *-031154Q, 147221Q(SP)
+      MOVB  *-031162Q, *-030557Q
+      MOVB  *-031170Q, @147205Q(R0)
+      MOVB  *-031176Q, @147177Q(SP)
+      MOVB  *-031204Q, @*-030600Q
       MOVB  @117401Q(R0), R0
       MOVB  @117407Q(R0), SP
       MOVB  @117410Q(R0), PC
@@ -3997,10 +3976,10 @@
       MOVB  @117457Q(R0), @-(SP)
       MOVB  @117461Q(R0), 120062Q(R0)
       MOVB  @117467Q(R0), 120070Q(SP)
-      MOVB  @117470Q(R0), *-031466Q
+      MOVB  @117470Q(R0), *-031324Q
       MOVB  @117471Q(R0), @120072Q(R0)
       MOVB  @117477Q(R0), @120100Q(SP)
-      MOVB  @117500Q(R0), @*-031510Q
+      MOVB  @117500Q(R0), @*-031346Q
       MOVB  @120201Q(SP), R0
       MOVB  @120207Q(SP), SP
       MOVB  @120210Q(SP), PC
@@ -4018,31 +3997,31 @@
       MOVB  @120257Q(SP), @-(SP)
       MOVB  @120261Q(SP), 120662Q(R0)
       MOVB  @120267Q(SP), 120670Q(SP)
-      MOVB  @120270Q(SP), *-031630Q
+      MOVB  @120270Q(SP), *-031466Q
       MOVB  @120271Q(SP), @120672Q(R0)
       MOVB  @120277Q(SP), @120700Q(SP)
-      MOVB  @120300Q(SP), @*-031652Q
-      MOVB  @*-031660Q, R0
-      MOVB  @*-031664Q, SP
-      MOVB  @*-031670Q, PC
-      MOVB  @*-031674Q, (R0)
-      MOVB  @*-031700Q, (SP)
-      MOVB  @*-031704Q, (PC)
-      MOVB  @*-031710Q, (R0)+
-      MOVB  @*-031714Q, (SP)+
-      MOVB  @*-031720Q, @(R0)+
-      MOVB  @*-031724Q, @(SP)+
-      MOVB  @*-031730Q, @#146445Q
-      MOVB  @*-031736Q, -(R0)
-      MOVB  @*-031742Q, -(SP)
-      MOVB  @*-031746Q, @-(R0)
-      MOVB  @*-031752Q, @-(SP)
-      MOVB  @*-031756Q, 146417Q(R0)
-      MOVB  @*-031764Q, 146411Q(SP)
-      MOVB  @*-031772Q, *-031367Q
-      MOVB  @*-032000Q, @146375Q(R0)
-      MOVB  @*-032006Q, @146367Q(SP)
-      MOVB  @*-032014Q, @*-031410Q
+      MOVB  @120300Q(SP), @*-031510Q
+      MOVB  @*-031516Q, R0
+      MOVB  @*-031522Q, SP
+      MOVB  @*-031526Q, PC
+      MOVB  @*-031532Q, (R0)
+      MOVB  @*-031536Q, (SP)
+      MOVB  @*-031542Q, (PC)
+      MOVB  @*-031546Q, (R0)+
+      MOVB  @*-031552Q, (SP)+
+      MOVB  @*-031556Q, @(R0)+
+      MOVB  @*-031562Q, @(SP)+
+      MOVB  @*-031566Q, @#146607Q
+      MOVB  @*-031574Q, -(R0)
+      MOVB  @*-031600Q, -(SP)
+      MOVB  @*-031604Q, @-(R0)
+      MOVB  @*-031610Q, @-(SP)
+      MOVB  @*-031614Q, 146561Q(R0)
+      MOVB  @*-031622Q, 146553Q(SP)
+      MOVB  @*-031630Q, *-031225Q
+      MOVB  @*-031636Q, @146537Q(R0)
+      MOVB  @*-031644Q, @146531Q(SP)
+      MOVB  @*-031652Q, @*-031246Q
       CMPB  R0, R0
       CMPB  R0, SP
       CMPB  R0, PC
@@ -4061,10 +4040,10 @@
       CMPB  R0, @-(SP)
       CMPB  R0, 120461Q(R0)
       CMPB  R0, 120467Q(SP)
-      CMPB  R0, *-032076Q
+      CMPB  R0, *-031734Q
       CMPB  R0, @120471Q(R0)
       CMPB  R0, @120477Q(SP)
-      CMPB  R0, @*-032112Q
+      CMPB  R0, @*-031750Q
       CMPB  SP, R0
       CMPB  SP, SP
       CMPB  SP, PC
@@ -4083,10 +4062,10 @@
       CMPB  SP, @-(SP)
       CMPB  SP, 121261Q(R0)
       CMPB  SP, 121267Q(SP)
-      CMPB  SP, *-032172Q
+      CMPB  SP, *-032030Q
       CMPB  SP, @121271Q(R0)
       CMPB  SP, @121277Q(SP)
-      CMPB  SP, @*-032206Q
+      CMPB  SP, @*-032044Q
       CMPB  PC, R0
       CMPB  PC, SP
       CMPB  PC, PC
@@ -4105,10 +4084,10 @@
       CMPB  PC, @-(SP)
       CMPB  PC, 121361Q(R0)
       CMPB  PC, 121367Q(SP)
-      CMPB  PC, *-032266Q
+      CMPB  PC, *-032124Q
       CMPB  PC, @121371Q(R0)
       CMPB  PC, @121377Q(SP)
-      CMPB  PC, @*-032302Q
+      CMPB  PC, @*-032140Q
       CMPB  (R0), R0
       CMPB  (R0), SP
       CMPB  (R0), PC
@@ -4127,10 +4106,10 @@
       CMPB  (R0), @-(SP)
       CMPB  (R0), 121461Q(R0)
       CMPB  (R0), 121467Q(SP)
-      CMPB  (R0), *-032362Q
+      CMPB  (R0), *-032220Q
       CMPB  (R0), @121471Q(R0)
       CMPB  (R0), @121477Q(SP)
-      CMPB  (R0), @*-032376Q
+      CMPB  (R0), @*-032234Q
       CMPB  (SP), R0
       CMPB  (SP), SP
       CMPB  (SP), PC
@@ -4149,10 +4128,10 @@
       CMPB  (SP), @-(SP)
       CMPB  (SP), 122261Q(R0)
       CMPB  (SP), 122267Q(SP)
-      CMPB  (SP), *-032456Q
+      CMPB  (SP), *-032314Q
       CMPB  (SP), @122271Q(R0)
       CMPB  (SP), @122277Q(SP)
-      CMPB  (SP), @*-032472Q
+      CMPB  (SP), @*-032330Q
       CMPB  (PC), R0
       CMPB  (PC), SP
       CMPB  (PC), PC
@@ -4171,10 +4150,10 @@
       CMPB  (PC), @-(SP)
       CMPB  (PC), 122361Q(R0)
       CMPB  (PC), 122367Q(SP)
-      CMPB  (PC), *-032552Q
+      CMPB  (PC), *-032410Q
       CMPB  (PC), @122371Q(R0)
       CMPB  (PC), @122377Q(SP)
-      CMPB  (PC), @*-032566Q
+      CMPB  (PC), @*-032424Q
       CMPB  (R0)+, R0
       CMPB  (R0)+, SP
       CMPB  (R0)+, PC
@@ -4193,10 +4172,10 @@
       CMPB  (R0)+, @-(SP)
       CMPB  (R0)+, 122461Q(R0)
       CMPB  (R0)+, 122467Q(SP)
-      CMPB  (R0)+, *-032646Q
+      CMPB  (R0)+, *-032504Q
       CMPB  (R0)+, @122471Q(R0)
       CMPB  (R0)+, @122477Q(SP)
-      CMPB  (R0)+, @*-032662Q
+      CMPB  (R0)+, @*-032520Q
       CMPB  (SP)+, R0
       CMPB  (SP)+, SP
       CMPB  (SP)+, PC
@@ -4215,10 +4194,10 @@
       CMPB  (SP)+, @-(SP)
       CMPB  (SP)+, 123261Q(R0)
       CMPB  (SP)+, 123267Q(SP)
-      CMPB  (SP)+, *-032742Q
+      CMPB  (SP)+, *-032600Q
       CMPB  (SP)+, @123271Q(R0)
       CMPB  (SP)+, @123277Q(SP)
-      CMPB  (SP)+, @*-032756Q
+      CMPB  (SP)+, @*-032614Q
       CMPB  #000Q, R0
       CMPB  #000Q, SP
       CMPB  #000Q, PC
@@ -4259,10 +4238,10 @@
       CMPB  @(R0)+, @-(SP)
       CMPB  @(R0)+, 123461Q(R0)
       CMPB  @(R0)+, 123467Q(SP)
-      CMPB  @(R0)+, *-033206Q
+      CMPB  @(R0)+, *-033044Q
       CMPB  @(R0)+, @123471Q(R0)
       CMPB  @(R0)+, @123477Q(SP)
-      CMPB  @(R0)+, @*-033222Q
+      CMPB  @(R0)+, @*-033060Q
       CMPB  @(SP)+, R0
       CMPB  @(SP)+, SP
       CMPB  @(SP)+, PC
@@ -4281,10 +4260,10 @@
       CMPB  @(SP)+, @-(SP)
       CMPB  @(SP)+, 124261Q(R0)
       CMPB  @(SP)+, 124267Q(SP)
-      CMPB  @(SP)+, *-033302Q
+      CMPB  @(SP)+, *-033140Q
       CMPB  @(SP)+, @124271Q(R0)
       CMPB  @(SP)+, @124277Q(SP)
-      CMPB  @(SP)+, @*-033316Q
+      CMPB  @(SP)+, @*-033154Q
       CMPB  @#124301Q, R0
       CMPB  @#124307Q, SP
       CMPB  @#124310Q, PC
@@ -4303,10 +4282,10 @@
       CMPB  @#124357Q, @-(SP)
       CMPB  @#124361Q, 124762Q(R0)
       CMPB  @#124367Q, 124770Q(SP)
-      CMPB  @#124370Q, *-033442Q
+      CMPB  @#124370Q, *-033300Q
       CMPB  @#124371Q, @124772Q(R0)
       CMPB  @#124377Q, @125000Q(SP)
-      CMPB  @#124400Q, @*-033464Q
+      CMPB  @#124400Q, @*-033322Q
       CMPB  -(R0), R0
       CMPB  -(R0), SP
       CMPB  -(R0), PC
@@ -4325,10 +4304,10 @@
       CMPB  -(R0), @-(SP)
       CMPB  -(R0), 124461Q(R0)
       CMPB  -(R0), 124467Q(SP)
-      CMPB  -(R0), *-033546Q
+      CMPB  -(R0), *-033404Q
       CMPB  -(R0), @124471Q(R0)
       CMPB  -(R0), @124477Q(SP)
-      CMPB  -(R0), @*-033562Q
+      CMPB  -(R0), @*-033420Q
       CMPB  -(SP), R0
       CMPB  -(SP), SP
       CMPB  -(SP), PC
@@ -4347,10 +4326,10 @@
       CMPB  -(SP), @-(SP)
       CMPB  -(SP), 125261Q(R0)
       CMPB  -(SP), 125267Q(SP)
-      CMPB  -(SP), *-033642Q
+      CMPB  -(SP), *-033500Q
       CMPB  -(SP), @125271Q(R0)
       CMPB  -(SP), @125277Q(SP)
-      CMPB  -(SP), @*-033656Q
+      CMPB  -(SP), @*-033514Q
       CMPB  @-(R0), R0
       CMPB  @-(R0), SP
       CMPB  @-(R0), PC
@@ -4369,10 +4348,10 @@
       CMPB  @-(R0), @-(SP)
       CMPB  @-(R0), 125461Q(R0)
       CMPB  @-(R0), 125467Q(SP)
-      CMPB  @-(R0), *-033736Q
+      CMPB  @-(R0), *-033574Q
       CMPB  @-(R0), @125471Q(R0)
       CMPB  @-(R0), @125477Q(SP)
-      CMPB  @-(R0), @*-033752Q
+      CMPB  @-(R0), @*-033610Q
       CMPB  @-(SP), R0
       CMPB  @-(SP), SP
       CMPB  @-(SP), PC
@@ -4391,10 +4370,10 @@
       CMPB  @-(SP), @-(SP)
       CMPB  @-(SP), 126261Q(R0)
       CMPB  @-(SP), 126267Q(SP)
-      CMPB  @-(SP), *-034032Q
+      CMPB  @-(SP), *-033670Q
       CMPB  @-(SP), @126271Q(R0)
       CMPB  @-(SP), @126277Q(SP)
-      CMPB  @-(SP), @*-034046Q
+      CMPB  @-(SP), @*-033704Q
       CMPB  126401Q(R0), R0
       CMPB  126407Q(R0), SP
       CMPB  126410Q(R0), PC
@@ -4413,10 +4392,10 @@
       CMPB  126457Q(R0), @-(SP)
       CMPB  126461Q(R0), 127062Q(R0)
       CMPB  126467Q(R0), 127070Q(SP)
-      CMPB  126470Q(R0), *-034172Q
+      CMPB  126470Q(R0), *-034030Q
       CMPB  126471Q(R0), @127072Q(R0)
       CMPB  126477Q(R0), @127100Q(SP)
-      CMPB  126500Q(R0), @*-034214Q
+      CMPB  126500Q(R0), @*-034052Q
       CMPB  127201Q(SP), R0
       CMPB  127207Q(SP), SP
       CMPB  127210Q(SP), PC
@@ -4435,32 +4414,32 @@
       CMPB  127257Q(SP), @-(SP)
       CMPB  127261Q(SP), 127662Q(R0)
       CMPB  127267Q(SP), 127670Q(SP)
-      CMPB  127270Q(SP), *-034342Q
+      CMPB  127270Q(SP), *-034200Q
       CMPB  127271Q(SP), @127672Q(R0)
       CMPB  127277Q(SP), @127700Q(SP)
-      CMPB  127300Q(SP), @*-034364Q
-      CMPB  *-034372Q, R0
-      CMPB  *-034376Q, SP
-      CMPB  *-034402Q, PC
-      CMPB  *-034406Q, (R0)
-      CMPB  *-034412Q, (SP)
-      CMPB  *-034416Q, (PC)
-      CMPB  *-034422Q, (R0)+
-      CMPB  *-034426Q, (SP)+
-      CMPB  *-034432Q, #000Q
-      CMPB  *-034440Q, @(R0)+
-      CMPB  *-034444Q, @(SP)+
-      CMPB  *-034450Q, @#143725Q
-      CMPB  *-034456Q, -(R0)
-      CMPB  *-034462Q, -(SP)
-      CMPB  *-034466Q, @-(R0)
-      CMPB  *-034472Q, @-(SP)
-      CMPB  *-034476Q, 143677Q(R0)
-      CMPB  *-034504Q, 143671Q(SP)
-      CMPB  *-034512Q, *-034107Q
-      CMPB  *-034520Q, @143655Q(R0)
-      CMPB  *-034526Q, @143647Q(SP)
-      CMPB  *-034534Q, @*-034130Q
+      CMPB  127300Q(SP), @*-034222Q
+      CMPB  *-034230Q, R0
+      CMPB  *-034234Q, SP
+      CMPB  *-034240Q, PC
+      CMPB  *-034244Q, (R0)
+      CMPB  *-034250Q, (SP)
+      CMPB  *-034254Q, (PC)
+      CMPB  *-034260Q, (R0)+
+      CMPB  *-034264Q, (SP)+
+      CMPB  *-034270Q, #000Q
+      CMPB  *-034276Q, @(R0)+
+      CMPB  *-034302Q, @(SP)+
+      CMPB  *-034306Q, @#144067Q
+      CMPB  *-034314Q, -(R0)
+      CMPB  *-034320Q, -(SP)
+      CMPB  *-034324Q, @-(R0)
+      CMPB  *-034330Q, @-(SP)
+      CMPB  *-034334Q, 144041Q(R0)
+      CMPB  *-034342Q, 144033Q(SP)
+      CMPB  *-034350Q, *-033745Q
+      CMPB  *-034356Q, @144017Q(R0)
+      CMPB  *-034364Q, @144011Q(SP)
+      CMPB  *-034372Q, @*-033766Q
       CMPB  @127401Q(R0), R0
       CMPB  @127407Q(R0), SP
       CMPB  @127410Q(R0), PC
@@ -4479,10 +4458,10 @@
       CMPB  @127457Q(R0), @-(SP)
       CMPB  @127461Q(R0), 130062Q(R0)
       CMPB  @127467Q(R0), 130070Q(SP)
-      CMPB  @127470Q(R0), *-034662Q
+      CMPB  @127470Q(R0), *-034520Q
       CMPB  @127471Q(R0), @130072Q(R0)
       CMPB  @127477Q(R0), @130100Q(SP)
-      CMPB  @127500Q(R0), @*-034704Q
+      CMPB  @127500Q(R0), @*-034542Q
       CMPB  @130201Q(SP), R0
       CMPB  @130207Q(SP), SP
       CMPB  @130210Q(SP), PC
@@ -4501,32 +4480,32 @@
       CMPB  @130257Q(SP), @-(SP)
       CMPB  @130261Q(SP), 130662Q(R0)
       CMPB  @130267Q(SP), 130670Q(SP)
-      CMPB  @130270Q(SP), *-035032Q
+      CMPB  @130270Q(SP), *-034670Q
       CMPB  @130271Q(SP), @130672Q(R0)
       CMPB  @130277Q(SP), @130700Q(SP)
-      CMPB  @130300Q(SP), @*-035054Q
-      CMPB  @*-035062Q, R0
-      CMPB  @*-035066Q, SP
-      CMPB  @*-035072Q, PC
-      CMPB  @*-035076Q, (R0)
-      CMPB  @*-035102Q, (SP)
-      CMPB  @*-035106Q, (PC)
-      CMPB  @*-035112Q, (R0)+
-      CMPB  @*-035116Q, (SP)+
-      CMPB  @*-035122Q, #000Q
-      CMPB  @*-035130Q, @(R0)+
-      CMPB  @*-035134Q, @(SP)+
-      CMPB  @*-035140Q, @#143235Q
-      CMPB  @*-035146Q, -(R0)
-      CMPB  @*-035152Q, -(SP)
-      CMPB  @*-035156Q, @-(R0)
-      CMPB  @*-035162Q, @-(SP)
-      CMPB  @*-035166Q, 143207Q(R0)
-      CMPB  @*-035174Q, 143201Q(SP)
-      CMPB  @*-035202Q, *-034577Q
-      CMPB  @*-035210Q, @143165Q(R0)
-      CMPB  @*-035216Q, @143157Q(SP)
-      CMPB  @*-035224Q, @*-034620Q
+      CMPB  @130300Q(SP), @*-034712Q
+      CMPB  @*-034720Q, R0
+      CMPB  @*-034724Q, SP
+      CMPB  @*-034730Q, PC
+      CMPB  @*-034734Q, (R0)
+      CMPB  @*-034740Q, (SP)
+      CMPB  @*-034744Q, (PC)
+      CMPB  @*-034750Q, (R0)+
+      CMPB  @*-034754Q, (SP)+
+      CMPB  @*-034760Q, #000Q
+      CMPB  @*-034766Q, @(R0)+
+      CMPB  @*-034772Q, @(SP)+
+      CMPB  @*-034776Q, @#143377Q
+      CMPB  @*-035004Q, -(R0)
+      CMPB  @*-035010Q, -(SP)
+      CMPB  @*-035014Q, @-(R0)
+      CMPB  @*-035020Q, @-(SP)
+      CMPB  @*-035024Q, 143351Q(R0)
+      CMPB  @*-035032Q, 143343Q(SP)
+      CMPB  @*-035040Q, *-034435Q
+      CMPB  @*-035046Q, @143327Q(R0)
+      CMPB  @*-035054Q, @143321Q(SP)
+      CMPB  @*-035062Q, @*-034456Q
       BITB  R0, R0
       BITB  R0, SP
       BITB  R0, PC
@@ -4544,10 +4523,10 @@
       BITB  R0, @-(SP)
       BITB  R0, 130461Q(R0)
       BITB  R0, 130467Q(SP)
-      BITB  R0, *-035302Q
+      BITB  R0, *-035140Q
       BITB  R0, @130471Q(R0)
       BITB  R0, @130477Q(SP)
-      BITB  R0, @*-035316Q
+      BITB  R0, @*-035154Q
       BITB  SP, R0
       BITB  SP, SP
       BITB  SP, PC
@@ -4565,10 +4544,10 @@
       BITB  SP, @-(SP)
       BITB  SP, 131261Q(R0)
       BITB  SP, 131267Q(SP)
-      BITB  SP, *-035372Q
+      BITB  SP, *-035230Q
       BITB  SP, @131271Q(R0)
       BITB  SP, @131277Q(SP)
-      BITB  SP, @*-035406Q
+      BITB  SP, @*-035244Q
       BITB  PC, R0
       BITB  PC, SP
       BITB  PC, PC
@@ -4586,10 +4565,10 @@
       BITB  PC, @-(SP)
       BITB  PC, 131361Q(R0)
       BITB  PC, 131367Q(SP)
-      BITB  PC, *-035462Q
+      BITB  PC, *-035320Q
       BITB  PC, @131371Q(R0)
       BITB  PC, @131377Q(SP)
-      BITB  PC, @*-035476Q
+      BITB  PC, @*-035334Q
       BITB  (R0), R0
       BITB  (R0), SP
       BITB  (R0), PC
@@ -4607,10 +4586,10 @@
       BITB  (R0), @-(SP)
       BITB  (R0), 131461Q(R0)
       BITB  (R0), 131467Q(SP)
-      BITB  (R0), *-035552Q
+      BITB  (R0), *-035410Q
       BITB  (R0), @131471Q(R0)
       BITB  (R0), @131477Q(SP)
-      BITB  (R0), @*-035566Q
+      BITB  (R0), @*-035424Q
       BITB  (SP), R0
       BITB  (SP), SP
       BITB  (SP), PC
@@ -4628,10 +4607,10 @@
       BITB  (SP), @-(SP)
       BITB  (SP), 132261Q(R0)
       BITB  (SP), 132267Q(SP)
-      BITB  (SP), *-035642Q
+      BITB  (SP), *-035500Q
       BITB  (SP), @132271Q(R0)
       BITB  (SP), @132277Q(SP)
-      BITB  (SP), @*-035656Q
+      BITB  (SP), @*-035514Q
       BITB  (PC), R0
       BITB  (PC), SP
       BITB  (PC), PC
@@ -4649,10 +4628,10 @@
       BITB  (PC), @-(SP)
       BITB  (PC), 132361Q(R0)
       BITB  (PC), 132367Q(SP)
-      BITB  (PC), *-035732Q
+      BITB  (PC), *-035570Q
       BITB  (PC), @132371Q(R0)
       BITB  (PC), @132377Q(SP)
-      BITB  (PC), @*-035746Q
+      BITB  (PC), @*-035604Q
       BITB  (R0)+, R0
       BITB  (R0)+, SP
       BITB  (R0)+, PC
@@ -4670,10 +4649,10 @@
       BITB  (R0)+, @-(SP)
       BITB  (R0)+, 132461Q(R0)
       BITB  (R0)+, 132467Q(SP)
-      BITB  (R0)+, *-036022Q
+      BITB  (R0)+, *-035660Q
       BITB  (R0)+, @132471Q(R0)
       BITB  (R0)+, @132477Q(SP)
-      BITB  (R0)+, @*-036036Q
+      BITB  (R0)+, @*-035674Q
       BITB  (SP)+, R0
       BITB  (SP)+, SP
       BITB  (SP)+, PC
@@ -4691,10 +4670,10 @@
       BITB  (SP)+, @-(SP)
       BITB  (SP)+, 133261Q(R0)
       BITB  (SP)+, 133267Q(SP)
-      BITB  (SP)+, *-036112Q
+      BITB  (SP)+, *-035750Q
       BITB  (SP)+, @133271Q(R0)
       BITB  (SP)+, @133277Q(SP)
-      BITB  (SP)+, @*-036126Q
+      BITB  (SP)+, @*-035764Q
       BITB  #000Q, R0
       BITB  #000Q, SP
       BITB  #000Q, PC
@@ -4733,10 +4712,10 @@
       BITB  @(R0)+, @-(SP)
       BITB  @(R0)+, 133461Q(R0)
       BITB  @(R0)+, 133467Q(SP)
-      BITB  @(R0)+, *-036344Q
+      BITB  @(R0)+, *-036202Q
       BITB  @(R0)+, @133471Q(R0)
       BITB  @(R0)+, @133477Q(SP)
-      BITB  @(R0)+, @*-036360Q
+      BITB  @(R0)+, @*-036216Q
       BITB  @(SP)+, R0
       BITB  @(SP)+, SP
       BITB  @(SP)+, PC
@@ -4754,10 +4733,10 @@
       BITB  @(SP)+, @-(SP)
       BITB  @(SP)+, 134261Q(R0)
       BITB  @(SP)+, 134267Q(SP)
-      BITB  @(SP)+, *-036434Q
+      BITB  @(SP)+, *-036272Q
       BITB  @(SP)+, @134271Q(R0)
       BITB  @(SP)+, @134277Q(SP)
-      BITB  @(SP)+, @*-036450Q
+      BITB  @(SP)+, @*-036306Q
       BITB  @#134301Q, R0
       BITB  @#134307Q, SP
       BITB  @#134310Q, PC
@@ -4775,10 +4754,10 @@
       BITB  @#134357Q, @-(SP)
       BITB  @#134361Q, 134762Q(R0)
       BITB  @#134367Q, 134770Q(SP)
-      BITB  @#134370Q, *-036566Q
+      BITB  @#134370Q, *-036424Q
       BITB  @#134371Q, @134772Q(R0)
       BITB  @#134377Q, @135000Q(SP)
-      BITB  @#134400Q, @*-036610Q
+      BITB  @#134400Q, @*-036446Q
       BITB  -(R0), R0
       BITB  -(R0), SP
       BITB  -(R0), PC
@@ -4796,10 +4775,10 @@
       BITB  -(R0), @-(SP)
       BITB  -(R0), 134461Q(R0)
       BITB  -(R0), 134467Q(SP)
-      BITB  -(R0), *-036666Q
+      BITB  -(R0), *-036524Q
       BITB  -(R0), @134471Q(R0)
       BITB  -(R0), @134477Q(SP)
-      BITB  -(R0), @*-036702Q
+      BITB  -(R0), @*-036540Q
       BITB  -(SP), R0
       BITB  -(SP), SP
       BITB  -(SP), PC
@@ -4817,10 +4796,10 @@
       BITB  -(SP), @-(SP)
       BITB  -(SP), 135261Q(R0)
       BITB  -(SP), 135267Q(SP)
-      BITB  -(SP), *-036756Q
+      BITB  -(SP), *-036614Q
       BITB  -(SP), @135271Q(R0)
       BITB  -(SP), @135277Q(SP)
-      BITB  -(SP), @*-036772Q
+      BITB  -(SP), @*-036630Q
       BITB  @-(R0), R0
       BITB  @-(R0), SP
       BITB  @-(R0), PC
@@ -4838,10 +4817,10 @@
       BITB  @-(R0), @-(SP)
       BITB  @-(R0), 135461Q(R0)
       BITB  @-(R0), 135467Q(SP)
-      BITB  @-(R0), *-037046Q
+      BITB  @-(R0), *-036704Q
       BITB  @-(R0), @135471Q(R0)
       BITB  @-(R0), @135477Q(SP)
-      BITB  @-(R0), @*-037062Q
+      BITB  @-(R0), @*-036720Q
       BITB  @-(SP), R0
       BITB  @-(SP), SP
       BITB  @-(SP), PC
@@ -4859,10 +4838,10 @@
       BITB  @-(SP), @-(SP)
       BITB  @-(SP), 136261Q(R0)
       BITB  @-(SP), 136267Q(SP)
-      BITB  @-(SP), *-037136Q
+      BITB  @-(SP), *-036774Q
       BITB  @-(SP), @136271Q(R0)
       BITB  @-(SP), @136277Q(SP)
-      BITB  @-(SP), @*-037152Q
+      BITB  @-(SP), @*-037010Q
       BITB  136401Q(R0), R0
       BITB  136407Q(R0), SP
       BITB  136410Q(R0), PC
@@ -4880,10 +4859,10 @@
       BITB  136457Q(R0), @-(SP)
       BITB  136461Q(R0), 137062Q(R0)
       BITB  136467Q(R0), 137070Q(SP)
-      BITB  136470Q(R0), *-037270Q
+      BITB  136470Q(R0), *-037126Q
       BITB  136471Q(R0), @137072Q(R0)
       BITB  136477Q(R0), @137100Q(SP)
-      BITB  136500Q(R0), @*-037312Q
+      BITB  136500Q(R0), @*-037150Q
       BITB  137201Q(SP), R0
       BITB  137207Q(SP), SP
       BITB  137210Q(SP), PC
@@ -4901,31 +4880,31 @@
       BITB  137257Q(SP), @-(SP)
       BITB  137261Q(SP), 137662Q(R0)
       BITB  137267Q(SP), 137670Q(SP)
-      BITB  137270Q(SP), *-037432Q
+      BITB  137270Q(SP), *-037270Q
       BITB  137271Q(SP), @137672Q(R0)
       BITB  137277Q(SP), @137700Q(SP)
-      BITB  137300Q(SP), @*-037454Q
-      BITB  *-037462Q, R0
-      BITB  *-037466Q, SP
-      BITB  *-037472Q, PC
-      BITB  *-037476Q, (R0)
-      BITB  *-037502Q, (SP)
-      BITB  *-037506Q, (PC)
-      BITB  *-037512Q, (R0)+
-      BITB  *-037516Q, (SP)+
-      BITB  *-037522Q, @(R0)+
-      BITB  *-037526Q, @(SP)+
-      BITB  *-037532Q, @#140643Q
-      BITB  *-037540Q, -(R0)
-      BITB  *-037544Q, -(SP)
-      BITB  *-037550Q, @-(R0)
-      BITB  *-037554Q, @-(SP)
-      BITB  *-037560Q, 140615Q(R0)
-      BITB  *-037566Q, 140607Q(SP)
-      BITB  *-037574Q, *-037171Q
-      BITB  *-037602Q, @140573Q(R0)
-      BITB  *-037610Q, @140565Q(SP)
-      BITB  *-037616Q, @*-037212Q
+      BITB  137300Q(SP), @*-037312Q
+      BITB  *-037320Q, R0
+      BITB  *-037324Q, SP
+      BITB  *-037330Q, PC
+      BITB  *-037334Q, (R0)
+      BITB  *-037340Q, (SP)
+      BITB  *-037344Q, (PC)
+      BITB  *-037350Q, (R0)+
+      BITB  *-037354Q, (SP)+
+      BITB  *-037360Q, @(R0)+
+      BITB  *-037364Q, @(SP)+
+      BITB  *-037370Q, @#141005Q
+      BITB  *-037376Q, -(R0)
+      BITB  *-037402Q, -(SP)
+      BITB  *-037406Q, @-(R0)
+      BITB  *-037412Q, @-(SP)
+      BITB  *-037416Q, 140757Q(R0)
+      BITB  *-037424Q, 140751Q(SP)
+      BITB  *-037432Q, *-037027Q
+      BITB  *-037440Q, @140735Q(R0)
+      BITB  *-037446Q, @140727Q(SP)
+      BITB  *-037454Q, @*-037050Q
       BITB  @137401Q(R0), R0
       BITB  @137407Q(R0), SP
       BITB  @137410Q(R0), PC
@@ -4943,10 +4922,10 @@
       BITB  @137457Q(R0), @-(SP)
       BITB  @137461Q(R0), 140062Q(R0)
       BITB  @137467Q(R0), 140070Q(SP)
-      BITB  @137470Q(R0), *-037701Q
+      BITB  @137470Q(R0), *-037574Q
       BITB  @137471Q(R0), @140072Q(R0)
       BITB  @137477Q(R0), @140100Q(SP)
-      BITB  @137500Q(R0), @*-037670Q
+      BITB  @137500Q(R0), @*-037616Q
       BITB  @140201Q(SP), R0
       BITB  @140207Q(SP), SP
       BITB  @140210Q(SP), PC
@@ -6082,47 +6061,26 @@
       SUB   (SP)+, @163277Q(SP)
       SUB   (SP)+, @*-014474Q
       SUB   #-014477Q, R0
-      SUB   #000000Q, R0
       SUB   #-014471Q, SP
-      SUB   #000000Q, SP
       SUB   #-014470Q, PC
-      SUB   #000000Q, PC
       SUB   #-014467Q, (R0)
-      SUB   #000000Q, (R0)
       SUB   #-014461Q, (SP)
-      SUB   #000000Q, (SP)
       SUB   #-014460Q, (PC)
-      SUB   #000000Q, (PC)
       SUB   #-014457Q, (R0)+
-      SUB   #000000Q, (R0)+
       SUB   #-014451Q, (SP)+
-      SUB   #000000Q, (SP)+
       SUB   #-014447Q, @(R0)+
-      SUB   #000000Q, @(R0)+
       SUB   #-014441Q, @(SP)+
-      SUB   #000000Q, @(SP)+
       SUB   #-014440Q, @#163742Q
-      SUB   #000021Q, @#000422Q
       SUB   #-014437Q, -(R0)
-      SUB   #000000Q, -(R0)
       SUB   #-014431Q, -(SP)
-      SUB   #000000Q, -(SP)
       SUB   #-014427Q, @-(R0)
-      SUB   #000000Q, @-(R0)
       SUB   #-014421Q, @-(SP)
-      SUB   #000000Q, @-(SP)
       SUB   #-014417Q, 163762Q(R0)
-      SUB   #000041Q, 000442Q(R0)
       SUB   #-014411Q, 163770Q(SP)
-      SUB   #000047Q, 000450Q(SP)
       SUB   #-014410Q, *-014000Q
-      SUB   #000052Q, *+000462Q
       SUB   #-014407Q, @163772Q(R0)
-      SUB   #000051Q, @000452Q(R0)
       SUB   #-014401Q, @164000Q(SP)
-      SUB   #000057Q, @000460Q(SP)
       SUB   #-014400Q, @*-013770Q
-      SUB   #000062Q, @*+000472Q
       SUB   @(R0)+, R0
       SUB   @(R0)+, SP
       SUB   @(R0)+, PC

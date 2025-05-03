@@ -205,7 +205,6 @@
       BIT   #$A6
       LDA   #$A7
       AIS   #-$58
-      AIS   #0
       EOR   #$A9
       ADC   #$AA
       ORA   #$AB
@@ -213,7 +212,6 @@
       BSR   *-80
       LDX   #$AF
       AIX   #-$50
-      AIX   #0
       SUB   $B1
       CMP   $B2
       SBC   $B3

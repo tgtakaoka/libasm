@@ -440,10 +440,8 @@
       SL    R0, RE, LM
       SL    R0, SE, LM
       SL    R0, CE, LM
-      LR    SP, (R1)
       PUSH  SP
       POP   SP
-      STR   SP, (R1)
       SR    SP
       SR    SP, RE
       SR    SP, SE
@@ -478,6 +476,8 @@
       SL    SP, RE, PZ
       SL    SP, SE, PZ
       SL    SP, CE, PZ
+      LR    SP, (R1)
+      STR   SP, (R1)
       SR    SP, Z
       SR    SP, RE, Z
       SR    SP, SE, Z

@@ -8055,67 +8055,6 @@
       CMP     WORD PTR [BX+0], 0201H
       ADD     WORD PTR [BX+SI+8281H], 8483H
       ADD     WORD PTR [BX+DI+8382H], 8584H
-      ADD     WORD PTR [SI+8685H], -79H
-      ADD     WORD PTR [DI+8786H], -78H
-      ADD     WORD PTR [BP+8887H], -77H
-      ADD     WORD PTR [BX+8988H], -76H
-      OR      WORD PTR [BX+SI+8A89H], -75H
-      OR      WORD PTR [BX+DI+8B8AH], -74H
-      OR      WORD PTR [BP+SI+8C8BH], -73H
-      OR      WORD PTR [BP+DI+8D8CH], -72H
-      OR      WORD PTR [SI+8E8DH], -71H
-      OR      WORD PTR [DI+8F8EH], -70H
-      OR      WORD PTR [BP+908FH], -6FH
-      OR      WORD PTR [BX+9190H], -6EH
-      ADC     WORD PTR [BX+SI+9291H], -6DH
-      ADC     WORD PTR [BX+DI+9392H], -6CH
-      ADC     WORD PTR [BP+SI+9493H], -6BH
-      ADC     WORD PTR [BP+DI+9594H], -6AH
-      ADC     WORD PTR [SI+9695H], -69H
-      ADC     WORD PTR [DI+9796H], -68H
-      ADC     WORD PTR [BP+9897H], -67H
-      ADC     WORD PTR [BX+9998H], -66H
-      SBB     WORD PTR [BX+SI+9A99H], -65H
-      SBB     WORD PTR [BX+DI+9B9AH], -64H
-      SBB     WORD PTR [BP+SI+9C9BH], -63H
-      SBB     WORD PTR [BP+DI+9D9CH], -62H
-      SBB     WORD PTR [SI+9E9DH], -61H
-      SBB     WORD PTR [DI+9F9EH], -60H
-      SBB     WORD PTR [BP+0A09FH], -5FH
-      SBB     WORD PTR [BX+0A1A0H], -5EH
-      AND     WORD PTR [BX+SI+0A2A1H], -5DH
-      AND     WORD PTR [BX+DI+0A3A2H], -5CH
-      AND     WORD PTR [BP+SI+0A4A3H], -5BH
-      AND     WORD PTR [BP+DI+0A5A4H], -5AH
-      AND     WORD PTR [SI+0A6A5H], -59H
-      AND     WORD PTR [DI+0A7A6H], -58H
-      AND     WORD PTR [BP+0A8A7H], -57H
-      AND     WORD PTR [BX+0A9A8H], -56H
-      SUB     WORD PTR [BX+SI+0AAA9H], -55H
-      SUB     WORD PTR [BX+DI+0ABAAH], -54H
-      SUB     WORD PTR [BP+SI+0ACABH], -53H
-      SUB     WORD PTR [BP+DI+0ADACH], -52H
-      SUB     WORD PTR [SI+0AEADH], -51H
-      SUB     WORD PTR [DI+0AFAEH], -50H
-      SUB     WORD PTR [BP+0B0AFH], -4FH
-      SUB     WORD PTR [BX+0B1B0H], -4EH
-      XOR     WORD PTR [BX+SI+0B2B1H], -4DH
-      XOR     WORD PTR [BX+DI+0B3B2H], -4CH
-      XOR     WORD PTR [BP+SI+0B4B3H], -4BH
-      XOR     WORD PTR [BP+DI+0B5B4H], -4AH
-      XOR     WORD PTR [SI+0B6B5H], -49H
-      XOR     WORD PTR [DI+0B7B6H], -48H
-      XOR     WORD PTR [BP+0B8B7H], -47H
-      XOR     WORD PTR [BX+0B9B8H], -46H
-      CMP     WORD PTR [BX+SI+0BAB9H], -45H
-      CMP     WORD PTR [BX+DI+0BBBAH], -44H
-      CMP     WORD PTR [BP+SI+0BCBBH], -43H
-      CMP     WORD PTR [BP+DI+0BDBCH], -42H
-      CMP     WORD PTR [SI+0BEBDH], -41H
-      CMP     WORD PTR [DI+0BFBEH], -40H
-      CMP     WORD PTR [BP+0C0BFH], -3FH
-      CMP     WORD PTR [BX+0C1C0H], -3EH
-      ADD     AX, -3FH
       TEST    AL, [DI+8786H]
       TEST    AL, [BP+8887H]
       TEST    AL, [BX+8988H]

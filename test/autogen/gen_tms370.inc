@@ -273,9 +273,6 @@
       INCW  #113, R114
       INCW  #113, A
       INCW  #113, B
-      INCW  #-128, R129
-      INCW  #-128, A
-      INCW  #-128, B
       MOV   R114, P115
       MOV   A, P1
       MOV   B, P2

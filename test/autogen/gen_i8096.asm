@@ -42,214 +42,178 @@
       AND   70, 68, #4342H
       AND   72, 70, [68]
       AND   72, 70, 69[68]
-      AND   132, 130, -128[68]
       AND   74, 72, 4746H[68]
       ADD   74, 72, 70
       ADD   74, 72, #4746H
       ADD   76, 74, [72]
       ADD   76, 74, 73[72]
-      ADD   132, 130, -128[72]
       ADD   78, 76, 4B4AH[72]
       SUB   78, 76, 74
       SUB   78, 76, #4B4AH
       SUB   80, 78, [76]
       SUB   80, 78, 77[76]
-      SUB   132, 130, -128[76]
       SUB   82, 80, 4F4EH[76]
       MULU  84, 80, 78
       MULU  84, 80, #4F4EH
       MULU  84, 82, [80]
       MULU  84, 82, 81[80]
-      MULU  132, 130, -128[80]
       MULU  88, 84, 5352H[80]
       ANDB  83, 82, 81
       ANDB  84, 83, #52H
       ANDB  86, 85, [84]
       ANDB  87, 86, 85[84]
-      ANDB  130, 129, -128[84]
       ANDB  89, 88, 5756H[84]
       ADDB  87, 86, 85
       ADDB  88, 87, #56H
       ADDB  90, 89, [88]
       ADDB  91, 90, 89[88]
-      ADDB  130, 129, -128[88]
       ADDB  93, 92, 5B5AH[88]
       SUBB  91, 90, 89
       SUBB  92, 91, #5AH
       SUBB  94, 93, [92]
       SUBB  95, 94, 93[92]
-      SUBB  130, 129, -128[92]
       SUBB  97, 96, 5F5EH[92]
       MULUB 96, 94, 93
       MULUB 96, 95, #5EH
       MULUB 98, 97, [96]
       MULUB 100, 98, 97[96]
-      MULUB 130, 129, -128[96]
       MULUB 102, 100, 6362H[96]
       AND   100, 98
       AND   100, #6362H
       AND   102, [100]
       AND   102, 101[100]
-      AND   130, -128[100]
       AND   104, 6766H[100]
       ADD   104, 102
       ADD   104, #6766H
       ADD   106, [104]
       ADD   106, 105[104]
-      ADD   130, -128[104]
       ADD   108, 6B6AH[104]
       SUB   108, 106
       SUB   108, #6B6AH
       SUB   110, [108]
       SUB   110, 109[108]
-      SUB   130, -128[108]
       SUB   112, 6F6EH[108]
       MULU  112, 110
       MULU  112, #6F6EH
       MULU  116, [112]
       MULU  116, 113[112]
-      MULU  132, -128[112]
       MULU  116, 7372H[112]
       ANDB  114, 113
       ANDB  115, #72H
       ANDB  117, [116]
       ANDB  118, 117[116]
-      ANDB  129, -128[116]
       ANDB  120, 7776H[116]
       ADDB  118, 117
       ADDB  119, #76H
       ADDB  121, [120]
       ADDB  122, 121[120]
-      ADDB  129, -128[120]
       ADDB  124, 7B7AH[120]
       SUBB  122, 121
       SUBB  123, #7AH
       SUBB  125, [124]
       SUBB  126, 125[124]
-      SUBB  129, -128[124]
       SUBB  128, 7F7EH[124]
       MULUB 126, 125
       MULUB 128, #7EH
       MULUB 130, [128]
       MULUB 130, -127[128]
-      MULUB 2, 0[128]
       MULUB 132, 8382H[128]
       OR    132, 130
       OR    132, #8382H
       OR    134, [132]
       OR    134, -123[132]
-      OR    2, 0[132]
       OR    136, 8786H[132]
       XOR   136, 134
       XOR   136, #8786H
       XOR   138, [136]
       XOR   138, -119[136]
-      XOR   2, 0[136]
       XOR   140, 8B8AH[136]
       CMP   140, 138
       CMP   140, #8B8AH
       CMP   142, [140]
       CMP   142, -115[140]
-      CMP   2, 0[140]
       CMP   144, 8F8EH[140]
       DIVU  144, 142
       DIVU  144, #8F8EH
       DIVU  148, [144]
       DIVU  148, -111[144]
-      DIVU  4, 0[144]
       DIVU  148, 9392H[144]
       ORB   146, 145
       ORB   147, #92H
       ORB   149, [148]
       ORB   150, -107[148]
-      ORB   1, 0[148]
       ORB   152, 9796H[148]
       XORB  150, 149
       XORB  151, #96H
       XORB  153, [152]
       XORB  154, -103[152]
-      XORB  1, 0[152]
       XORB  156, 9B9AH[152]
       CMPB  154, 153
       CMPB  155, #9AH
       CMPB  157, [156]
       CMPB  158, -99[156]
-      CMPB  1, 0[156]
       CMPB  160, 9F9EH[156]
       DIVUB 158, 157
       DIVUB 160, #9EH
       DIVUB 162, [160]
       DIVUB 162, -95[160]
-      DIVUB 2, 0[160]
       DIVUB 164, 0A3A2H[160]
       LD    164, 162
       LD    164, #0A3A2H
       LD    166, [164]
       LD    166, -91[164]
-      LD    2, 0[164]
       LD    168, 0A7A6H[164]
       ADDC  168, 166
       ADDC  168, #0A7A6H
       ADDC  170, [168]
       ADDC  170, -87[168]
-      ADDC  2, 0[168]
       ADDC  172, 0ABAAH[168]
       SUBC  172, 170
       SUBC  172, #0ABAAH
       SUBC  174, [172]
       SUBC  174, -83[172]
-      SUBC  2, 0[172]
       SUBC  176, 0AFAEH[172]
       LDBZE 174, 173
       LDBZE 176, #0AEH
       LDBZE 178, [176]
       LDBZE 178, -79[176]
-      LDBZE 2, 0[176]
       LDBZE 180, 0B3B2H[176]
       LDB   178, 177
       LDB   179, #0B2H
       LDB   181, [180]
       LDB   182, -75[180]
-      LDB   1, 0[180]
       LDB   184, 0B7B6H[180]
       ADDCB 182, 181
       ADDCB 183, #0B6H
       ADDCB 185, [184]
       ADDCB 186, -71[184]
-      ADDCB 1, 0[184]
       ADDCB 188, 0BBBAH[184]
       SUBCB 186, 185
       SUBCB 187, #0BAH
       SUBCB 189, [188]
       SUBCB 190, -67[188]
-      SUBCB 1, 0[188]
       SUBCB 192, 0BFBEH[188]
       LDBSE 190, 189
       LDBSE 192, #0BEH
       LDBSE 194, [192]
       LDBSE 194, -63[192]
-      LDBSE 2, 0[192]
       LDBSE 196, 0C3C2H[192]
       ST    196, 194
       ST    198, [196]
       ST    198, -59[196]
-      ST    2, 0[196]
       ST    200, 0C7C6H[196]
       STB   198, 197
       STB   201, [200]
       STB   202, -55[200]
-      STB   1, 0[200]
       STB   204, 0CBCAH[200]
       PUSH  202
       PUSH  #0CBCAH
       PUSH  [204]
       PUSH  -51[204]
-      PUSH  0[204]
       PUSH  0CFCEH[204]
       POP   206
       POP   [208]
       POP   -47[208]
-      POP   0[208]
       POP   0D3D2H[208]
       JNST  $-45
       JNH   $-44
@@ -285,36 +249,30 @@
       MUL   84, 80, #4F4EH
       MUL   84, 82, [80]
       MUL   84, 82, 81[80]
-      MUL   132, 130, -128[80]
       MUL   88, 84, 5352H[80]
       MULB  96, 94, 93
       MULB  96, 95, #5EH
       MULB  98, 97, [96]
       MULB  100, 98, 97[96]
-      MULB  130, 129, -128[96]
       MULB  102, 100, 6362H[96]
       MUL   112, 110
       MUL   112, #6F6EH
       MUL   116, [112]
       MUL   116, 113[112]
-      MUL   132, -128[112]
       MUL   116, 7372H[112]
       MULB  126, 125
       MULB  128, #7EH
       MULB  130, [128]
       MULB  130, -127[128]
-      MULB  2, 0[128]
       MULB  132, 8382H[128]
       DIV   144, 142
       DIV   144, #8F8EH
       DIV   148, [144]
       DIV   148, -111[144]
-      DIV   4, 0[144]
       DIV   148, 9392H[144]
       DIVB  158, 157
       DIVB  160, #9EH
       DIVB  162, [160]
       DIVB  162, -95[160]
-      DIVB  2, 0[160]
       DIVB  164, 0A3A2H[160]
       RST

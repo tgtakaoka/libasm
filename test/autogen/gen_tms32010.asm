@@ -246,7 +246,6 @@
       PUSH
       POP
       MPYK  0
-      MPYK  -4096
       BANZ  000H
       BV    000H
       BIOZ  000H
