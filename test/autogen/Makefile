@@ -13,7 +13,7 @@
 # limitations under the License.
 
 help:
-	@echo '"make generate" auto generate test sources'
+	@echo '"make gen" auto generate test sources'
 	@echo '"make asm-test" assemble with "asm" command'
 	@echo '"make asl-test" assemble with "asl" command'
 	@echo '"make gas-test" assemble with "gas" command'
@@ -23,7 +23,7 @@ help:
 -include ../Makefile.asl
 -include ../Makefile.gas
 
-.PHONY:: gen generate asm-test asl-test gas-test
+.PHONY:: gen asm-test asl-test gas-test
 .PHONY:: clean clean-gen clean-asm clean-asl clean-gas
 
 # target which has ".inc" suffix for output.
@@ -89,7 +89,7 @@ $(eval $(foreach a,$(ARCHS),$(call gen-arch-rule,$(a))))
 $(eval $(foreach a,$(ARCHS),$(foreach t,$(call arch-target,$(a)),\
 	$(call gen-target-rule,$(a),$(t),$(call gen-out,$(t)),$(call gen-opt,$(t))))))
 
-generate: $(foreach a,$(ARCHS),gen_$(a))
+gen: $(foreach a,$(ARCHS),gen_$(a))
 
 ASM=../../cli/asm
 $(ASM)-refresh:

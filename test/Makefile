@@ -23,7 +23,7 @@ help:
 
 generate: gen
 	$(MAKE) -C autogen clean-gen
-	$(MAKE) -C autogen generate
+	$(MAKE) -C autogen gen
 
 clean: clean-test
 	$(MAKE) -C driver clean
