@@ -27,7 +27,7 @@ Insn::Insn(uint32_t addr) : ErrorAt(), _address(addr), _length(0) {
 void Insn::reset(uint32_t addr, uint8_t length) {
     resetError();
     resetAt();
-    _address = addr;
+    setAddress(addr);
     if (length >= sizeof(_bytes))
         length = sizeof(_bytes);
     _length = length;
