@@ -39,6 +39,16 @@ void asm_assert(const char *file, int line, const ErrorAt &error, const char *sr
     asserter.equals(file, line, src, expected, insn.bytes(), insn.length(), assembler.listRadix());
 }
 
+void cont_assert(const char *file, int line, const ErrorAt &error, const char *src,
+        uint32_t expected_addr, const ArrayMemory &expected) {
+    Insn insn(expected.origin());
+    assembler.encode(src, insn, &symtab);
+    asserter.equals(file, line, src, error.errorText_P(), insn.errorText_P());
+    asserter.equals(file, line, "error at", error.errorAt(), insn.errorAt());
+    asserter.equals(file, line, src, expected_addr, insn.address(), assembler.listRadix());
+    asserter.equals(file, line, src, expected, insn.bytes(), insn.length(), assembler.listRadix());
+}
+
 bool test_failed;
 
 void run_test(void (*test)(), const char *name, void (*set_up)(), void (*tear_down)()) {

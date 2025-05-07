@@ -92,6 +92,8 @@ const /*PROGMEM*/ char *ErrorReporter::errorText_P(Error error) {
         return PSTR("Registers overlapped");
     case MISSING_CLOSING_BRACKET:
         return PSTR("Missing closing bracket");
+    case ILLEGAL_COMBINATION:
+        return PSTR("Illegal combination");
 
     // ValueParser
     case ILLEGAL_CONSTANT:

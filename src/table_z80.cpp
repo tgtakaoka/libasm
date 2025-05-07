@@ -1186,6 +1186,8 @@ constexpr Entry TABLE_Z380[] PROGMEM = {
     E1(0x10, 0000, TEXT_DJNZ, M_REL16),
     E1(0x18, 0000, TEXT_JR,   M_REL16),
     E2(0x20, 0030, TEXT_JR,   M_CC4,  M_REL16),
+    D2(0x22, 0000, TEXT_LDW,  M_DABS, R_HL),
+    D2(0x2A, 0000, TEXT_LDW,  R_HL,   M_DABS),
     E1(0x80, 0007, TEXT_ADD,  M_SRC),
     E1(0x88, 0007, TEXT_ADC,  M_SRC),
     E1(0x98, 0007, TEXT_SBC,  M_SRC),
@@ -1197,20 +1199,22 @@ constexpr Entry TABLE_Z380[] PROGMEM = {
 };
 
 constexpr uint8_t INDEX_Z380[] PROGMEM = {
-      7,  // TEXT_ADC
-     10,  // TEXT_ADC
-      6,  // TEXT_ADD
-      9,  // TEXT_ADD
+      9,  // TEXT_ADC
+     12,  // TEXT_ADC
+      8,  // TEXT_ADD
+     11,  // TEXT_ADD
       2,  // TEXT_CPL
-     13,  // TEXT_CPL
-     12,  // TEXT_DAA
+     15,  // TEXT_CPL
+     14,  // TEXT_DAA
       0,  // TEXT_DECW
       3,  // TEXT_DJNZ
       1,  // TEXT_INCW
       4,  // TEXT_JR
       5,  // TEXT_JR
-      8,  // TEXT_SBC
-     11,  // TEXT_SBC
+      6,  // TEXT_LDW
+      7,  // TEXT_LDW
+     10,  // TEXT_SBC
+     13,  // TEXT_SBC
 };
 
 // Z380 ED:xx
@@ -1688,6 +1692,7 @@ constexpr Entry TABLE_Z380_IX[] PROGMEM = {
     L2(0x3F, 0000, TEXT_LD,    R_HL,   I_HL),
     E1(0x2F, 0000, TEXT_CPLW,  R_HL),
     E1(0xC0, 0003, TEXT_DDIR,  M_DD),
+    E2(0xC0, 0003, TEXT_DDIR,  M_DD,   M_DD),
     E1(0xF3, 0000, TEXT_DI,    M_IM8),
     E1(0xFB, 0000, TEXT_EI,    M_IM8),
     E1(0xF7, 0000, TEXT_SETC,  M_LCK),
@@ -1715,14 +1720,15 @@ constexpr uint8_t INDEX_Z380_IX[] PROGMEM = {
       2,  // TEXT_CALR
       3,  // TEXT_CALR
      19,  // TEXT_CPLW
-     39,  // TEXT_CPLW
+     40,  // TEXT_CPLW
      20,  // TEXT_DDIR
-     21,  // TEXT_DI
+     21,  // TEXT_DDIR
+     22,  // TEXT_DI
       4,  // TEXT_DJNZ
-     22,  // TEXT_EI
-     41,  // TEXT_EXXX
-     29,  // TEXT_INW
-     31,  // TEXT_INW
+     23,  // TEXT_EI
+     42,  // TEXT_EXXX
+     30,  // TEXT_INW
+     32,  // TEXT_INW
       0,  // TEXT_JR
       1,  // TEXT_JR
      12,  // TEXT_LD
@@ -1732,13 +1738,13 @@ constexpr uint8_t INDEX_Z380_IX[] PROGMEM = {
      16,  // TEXT_LD
      17,  // TEXT_LD
      18,  // TEXT_LD
-     27,  // TEXT_LD
      28,  // TEXT_LD
-     33,  // TEXT_LDCTL
+     29,  // TEXT_LD
      34,  // TEXT_LDCTL
      35,  // TEXT_LDCTL
      36,  // TEXT_LDCTL
      37,  // TEXT_LDCTL
+     38,  // TEXT_LDCTL
       5,  // TEXT_LDW
       6,  // TEXT_LDW
       7,  // TEXT_LDW
@@ -1746,14 +1752,14 @@ constexpr uint8_t INDEX_Z380_IX[] PROGMEM = {
       9,  // TEXT_LDW
      10,  // TEXT_LDW
      11,  // TEXT_LDW
-     25,  // TEXT_LDW
      26,  // TEXT_LDW
-     38,  // TEXT_MTEST
-     40,  // TEXT_MTEST
-     30,  // TEXT_OUTW
-     32,  // TEXT_OUTW
-     24,  // TEXT_RESC
-     23,  // TEXT_SETC
+     27,  // TEXT_LDW
+     39,  // TEXT_MTEST
+     41,  // TEXT_MTEST
+     31,  // TEXT_OUTW
+     33,  // TEXT_OUTW
+     25,  // TEXT_RESC
+     24,  // TEXT_SETC
 };
 
 // Z380 FD:xx
@@ -2190,6 +2196,8 @@ bool acceptMode(AddrMode opr, AddrMode table) {
                table == M_XABS;
     if (opr == M_CC4)
         return table == M_CC8;
+    if (opr == M_LW)
+        return table == M_DD;
     return false;
 }
 

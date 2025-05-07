@@ -34,14 +34,18 @@ struct EntryInsn : EntryInsnPrefix<Config, Entry> {
     bool lmCapable() const { return flags().lmCapable(); }
 };
 
+struct AsmInsn;
 struct DisInsn;
 
 /** Z380 Decoder Directive */
 struct Ddir final {
-    Ddir() : _prefix(0), _opc(0) {}
+    Ddir() : _prefix(0), _opc(0), _addr(0) {}
+    void operator=(const AsmInsn &insn);
     void operator=(const DisInsn &insn);
     explicit operator bool() const { return _prefix != 0; }
     void clear() { _prefix = 0; }
+    void setImmediate(DdName dd);
+    bool setMode(DdName dd);
 
     bool noImmediate() const { return *this && (_opc & 3) == 0; }
     bool byteImmediate() const { return *this && ((wim() & 3) == 1 || wim() == 0x03); }
@@ -50,9 +54,14 @@ struct Ddir final {
     bool wordMode() const { return _prefix == 0xDD && (_opc & 3) < 3; }
     bool lwordMode() const { return _prefix == 0xFD && (_opc & 3) < 3; }
 
+    Config::opcode_t prefix() const { return _prefix; }
+    Config::opcode_t opc() const { return _opc; }
+    Config::uintptr_t addr() const { return _addr; }
+
 private:
     Config::opcode_t _prefix;
     Config::opcode_t _opc;
+    Config::uintptr_t _addr;
 
     Config::opcode_t wim() const { return (_prefix & 0x20) | (_opc & 3); }
 };
@@ -66,15 +75,26 @@ struct Operand final : ErrorAt {
 };
 
 struct AsmInsn final : AsmInsnImpl<Config>, EntryInsn {
-    AsmInsn(Insn &insn) : AsmInsnImpl(insn) {}
+    AsmInsn(Insn &insn) : AsmInsnImpl(insn), _dd(0) {}
 
     Operand dstOp, srcOp;
+    Ddir ddir;
 
+    Error fixup(const Ddir &ddir);
+    Error embedDd(DdName dd);
     void emitInsn();
     void emitOperand8(uint8_t val8) { emitByte(val8, operandPos()); }
     void emitOperand16(uint16_t val16) { emitUint16(val16, operandPos()); }
+    void emitOperand24(uint32_t val24) {
+        emitOperand16(val24);
+        emitByte((val24 >> 16) & UINT8_MAX);
+    }
     void emitOperand32(uint32_t val32) { emitUint32(val32, operandPos()); }
     uint_fast8_t operandPos() const;
+
+private:
+    Config::opcode_t _dd;
+    void fixupDd();
 };
 
 struct DisInsn final : DisInsnImpl<Config>, EntryInsn {

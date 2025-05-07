@@ -40,6 +40,7 @@ struct Insn final : ErrorAt {
     uint8_t length() const { return _length; }
     const char *name() const { return _name; }
     StrBuffer &nameBuffer() { return _buffer; }
+    void setAddress(uint32_t addr) { _address = addr; }
     void reset(uint32_t addr, uint8_t length = 0);
     uint32_t align(uint8_t step);
 
@@ -148,6 +149,7 @@ struct AsmInsnBase : ErrorAt {
         _insn.reset(addr);
     }
     void resetBytes() { _insn.reset(address(), 0); }
+    void resetAddress(uint32_t addr) { _insn.setAddress(addr); }
 
     /** Generate 8 bit |data| (Assembler). */
     Error emitByte(uint8_t data) { return _insn.emitByte(data); }

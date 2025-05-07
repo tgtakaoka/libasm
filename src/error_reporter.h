@@ -60,6 +60,7 @@ enum Error : uint8_t {
     OPCODE_HAS_NO_EFFECT = 34,
     REGISTERS_OVERLAPPED = 35,
     MISSING_CLOSING_BRACKET = 36,
+    ILLEGAL_COMBINATION = 37,
 
     // ValueParser
     ILLEGAL_CONSTANT = 100,

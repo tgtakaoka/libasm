@@ -70,14 +70,18 @@ void TestAsserter::isNotNull(
     printf("%s:%d: %s: expected not 'nullptr': actual 'nullptr'\n", file, line, message);
 }
 
-void TestAsserter::equals(
-        const char *file, const int line, const char *message, uint64_t expected, uint64_t actual) {
+void TestAsserter::equals(const char *file, const int line, const char *message, uint64_t expected,
+        uint64_t actual, Radix radix) {
     if (expected == actual) {
         _pass_count++;
         return;
     }
     _fail_count++;
-    printf("%s:%d: %s: expected '%lu': actual '%lu'\n", file, line, message, expected, actual);
+    if (radix == RADIX_10) {
+        printf("%s:%d: %s: expected '%lu': actual '%lu'\n", file, line, message, expected, actual);
+    } else if (radix == RADIX_16) {
+        printf("%s:%d: %s: expected '%lx': actual '%lx'\n", file, line, message, expected, actual);
+    }
 }
 
 void TestAsserter::equals(const char *file, const int line, const char *message,
