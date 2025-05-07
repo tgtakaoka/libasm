@@ -28,12 +28,20 @@ namespace z80 {
 struct DisZ80 final : Disassembler, Config {
     DisZ80(const ValueFormatter::Plugins &plugins = defaultPlugins());
 
+    void reset() override;
+
 private:
+    const BoolOption<DisZ80> _opt_extmode;
+    const BoolOption<DisZ80> _opt_lwordmode;
+
     StrBuffer &outIndirectReg(StrBuffer &out, RegName reg) const;
     StrBuffer &outDataReg(StrBuffer &out, RegName reg) const;
     StrBuffer &outAlternateReg(StrBuffer &out, const DisInsn &insn, AddrMode other) const;
 
-    void decodeAbsolute(DisInsn &insn, StrBuffer &out) const;
+    bool wordMode(const Ddir &ddir) const;
+    bool lwordMode(const Ddir &ddir) const;
+    void decodeImmediate16(DisInsn &insn, StrBuffer &out, AddrMode mode) const;
+    void decodeAbsolute(DisInsn &insn, StrBuffer &out, AddrMode mode) const;
     void decodeRelative(DisInsn &insn, StrBuffer &out, AddrMode mode) const;
     void decodeShortIndex(DisInsn &insn, StrBuffer &out, RegName base) const;
     void decodeLongIndex(DisInsn &insn, StrBuffer &out, RegName base) const;

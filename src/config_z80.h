@@ -30,7 +30,8 @@ enum CpuType : uint8_t {
 };
 
 struct Config : ConfigImpl<CpuType, ADDRESS_32BIT, ADDRESS_BYTE, OPCODE_8BIT, ENDIAN_LITTLE, 4, 5> {
-    Config(const InsnTable<CpuType> &table) : ConfigImpl(table, Z80) {}
+    Config(const InsnTable<CpuType> &table)
+        : ConfigImpl(table, Z80), _extmode(false), _lwordmode(false) {}
 
     AddressWidth addressWidth() const override {
         if (cpuType() == Z80)
@@ -44,7 +45,21 @@ struct Config : ConfigImpl<CpuType, ADDRESS_32BIT, ADDRESS_BYTE, OPCODE_8BIT, EN
     uint8_t codeMax() const override { return cpuType() >= Z280 ? 8 : 4; }
     uint8_t nameMax() const override { return cpuType() >= Z280 ? 6 : 5; }
 
+    Error setExtendedMode(bool enable) {
+        if (z380())
+            _extmode = enable;
+        return OK;
+    }
+    Error setLongWordMode(bool enable) {
+        if (z380())
+            _lwordmode = enable;
+        return OK;
+    }
+
 protected:
+    bool _extmode;
+    bool _lwordmode;
+
     bool z80() const { return cpuType() == Z80 || cpuType() == Z180; }
     bool z180() const { return cpuType() == Z180; }
     bool z280() const { return cpuType() == Z280; }

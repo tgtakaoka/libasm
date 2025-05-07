@@ -33,7 +33,7 @@ enum AddrMode : uint8_t {
     M_ABS = 3,     // Direct address 16-bit: (nnnn)
     M_IOA = 4,     // I/O address 8-bit: (nn)
     M_REL8 = 5,    // 8-bit PC-Relative: nnnn
-    M_IDX8 = 6,    // Indexed: DD:(IX+d8) ED:(IY+d8)
+    M_IDX8 = 6,    // Indexed: DD:(IX+d8) ED:(IY+d8) (DDIR extendable)
     M_CC4 = 7,     // |...|cc|...|: NZ/Z/NC/C
     M_CC8 = 8,     // |..|ccc|...|: NZ/Z/NC/C/PO/PE/P/M
     M_R16 = 9,     // |..|pp|....|: BC/DE/HL/SP
@@ -75,16 +75,22 @@ enum AddrMode : uint8_t {
     M_REL24 = 45,  // 24-bit PC-Relative: ED:8-bit DD:16-bit FD:24-bit
     R_IDXL = 46,   // |........|y|: 0=IX 1=IY
     M_DD = 47,     // |.......|dd|: Decoder Directive
-    M_IO16 = 48,   // 16-bit I/O address: (nnnn)
+    M_IO16 = 48,   // 16-bit I/O address: (nnnn) (DDIR extendable)
     M_LW = 49,     // Control bit LW
     M_LCK = 50,    // Control bit LCK
     M_XM = 51,     // Control bit XM
     R_ALT = 52,    // Alternate register
-    I_BASE = 53,
+    M_DM16 = 53,   // Immediate 16-bit: nnnn (DDIR extendable)
+    M_XM16 = 54,   // Immediate 16-bit: nnnn (DDIR extendable only in Extended mode)
+    M_LM16 = 55,   // Immediate 16-bit: nnnn (DDIR extendable only in LW mode)
+    M_JABS = 56,   // Direct address 16-bit:  nnnn  (DDIR extendable only in Extended mode)
+    M_DABS = 57,   // Direct address 16-bit: (nnnn) (DDIR extendable)
+    M_XABS = 58,   // Direct address 16-bit: (nnnn) (DDIR extendable only in Extended mode)
+    I_BASE = 59,
     I_HL = I_BASE + REG_HL,  // (HL)
     I_SP = I_BASE + REG_SP,  // (SP)
     I_C = I_BASE + REG_C,    // (C)
-    R_BASE = 65,
+    R_BASE = 71,
     R_BC = R_BASE + REG_BC,
     R_DE = R_BASE + REG_DE,
     R_HL = R_BASE + REG_HL,
@@ -115,10 +121,28 @@ struct Entry final : entry::Base<Config::opcode_t> {
         static constexpr Flags create(uint8_t mask, AddrMode dst, AddrMode src) {
             return Flags{dst, src, mask};
         }
+        static constexpr Flags imcapable(uint8_t mask, AddrMode dst, AddrMode src) {
+            return Flags{static_cast<uint8_t>(dst | im_bm), src, mask};
+        }
+        static constexpr Flags lmcapable(uint8_t mask, AddrMode dst, AddrMode src) {
+            return Flags{dst, static_cast<uint8_t>(src | lm_bm), mask};
+        }
+        static constexpr Flags ilmcapable(uint8_t mask, AddrMode dst, AddrMode src) {
+            return Flags{
+                    static_cast<uint8_t>(dst | im_bm), static_cast<uint8_t>(src | lm_bm), mask};
+        }
 
-        AddrMode dst() const { return AddrMode(_dst); }
-        AddrMode src() const { return AddrMode(_src); }
+        AddrMode dst() const { return AddrMode(_dst & dst_gm); }
+        AddrMode src() const { return AddrMode(_src & src_gm); }
+        bool imCapable() const { return _dst & im_bm; }
+        bool lmCapable() const { return _src & lm_bm; }
         uint8_t mask() const { return _mask; }
+
+    private:
+        static constexpr uint8_t dst_gm = 0x7F;
+        static constexpr uint8_t src_gm = 0x7F;
+        static constexpr uint8_t im_bm = 0x80;
+        static constexpr uint8_t lm_bm = 0x80;
     };
 
     constexpr Entry(Config::opcode_t opc, Flags flags, const /* PROGMEM */ char *name_P)

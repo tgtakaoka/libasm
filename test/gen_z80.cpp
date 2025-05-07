@@ -27,8 +27,11 @@ int main(int argc, const char **argv) {
         return 1;
 
     disz80.setOption("relative", "enable");
+    disz80.setOption("extmode", "on");
+    disz80.setOption("lwordmode", "on");
+    const auto org = strcasecmp(driver.cpu(), "Z380") == 0 ? 0x10000 : 0x0100;
 
-    TestGenerator generator(driver, disz80, 0x0100);
+    TestGenerator generator(driver, disz80, org);
     generator.generate();
 
     return driver.close();

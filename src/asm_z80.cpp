@@ -103,8 +103,13 @@ void AsmZ80::encodeRelative(AsmInsn &insn, const Operand &op, AddrMode mode) con
     }
     if (z380())
         delta = calcDeltaZ380(insn, op, mode, delta);
-    if ((base & ~UINT16_MAX) != (target & ~UINT16_MAX))
+    if (z380() && _extmode) {
+        if ((delta >= 0 && target < base) || (delta < 0 && target >= base))
             insn.setErrorIf(op, OVERFLOW_RANGE);
+    } else {
+        if ((base & ~UINT16_MAX) != (target & ~UINT16_MAX))
+            insn.setErrorIf(op, OVERFLOW_RANGE);
+    }
     if (mode == M_REL8) {
         if (overflowDelta(delta, 8))
             insn.setErrorIf(op, OPERAND_TOO_FAR);
@@ -269,7 +274,13 @@ void AsmZ80::encodeOperand(
         encodeFullIndex(insn, op);
         break;
     case M_IM16:
+    case M_DM16:
+    case M_XM16:
+    case M_LM16:
     case M_ABS:
+    case M_JABS:
+    case M_DABS:
+    case M_XABS:
         insn.emitOperand16(val16);
         break;
     case M_REL8:

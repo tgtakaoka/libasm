@@ -143,6 +143,10 @@ constexpr char OPT_BOOL_IMPLICIT_WORD[] PROGMEM = "implicit-word";
 constexpr char OPT_DESC_IMPLICIT_WORD[] PROGMEM = "unknown instruction defines word";
 constexpr char OPT_BOOL_ZILOG_SYNTAX[] PROGMEM = "zilog-syntax";
 constexpr char OPT_DESC_ZILOG_SYNTAX[] PROGMEM = "Use Zilog syntax";
+constexpr char OPT_BOOL_EXTMODE[] PROGMEM = "extmode";
+constexpr char OPT_DESC_EXTMODE[] PROGMEM = "Extended mode";
+constexpr char OPT_BOOL_LWORDMODE[] PROGMEM = "lwordmode";
+constexpr char OPT_DESC_LWORDMODE[] PROGMEM = "Long word mode";
 
 }  // namespace option
 }  // namespace text
