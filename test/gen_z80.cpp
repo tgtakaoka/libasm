@@ -27,6 +27,8 @@ int main(int argc, const char **argv) {
         return 1;
 
     disz80.setOption("relative", "enable");
+    disz80.setOption("extmode", "on");
+    disz80.setOption("lwordmode", "on");
 
     TestGenerator generator(driver, disz80, 0x0100);
     generator.generate();
