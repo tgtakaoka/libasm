@@ -34,11 +34,13 @@ struct EntryInsn : EntryInsnPrefix<Config, Entry> {
     bool lmCapable() const { return flags().lmCapable(); }
 };
 
+struct AsmInsn;
 struct DisInsn;
 
 /** Z380 Decoder Directive */
 struct Ddir final {
-    Ddir() : _prefix(0), _opc(0) {}
+    Ddir() :  _prefix(0), _opc(0) {}
+    void operator=(const AsmInsn &insn);
     void operator=(const DisInsn &insn);
     explicit operator bool() const { return _prefix != 0; }
     void clear() { _prefix = 0; }

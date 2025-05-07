@@ -54,8 +54,26 @@ const ValueParser::Plugins &AsmZ80::defaultPlugins() {
 }
 
 AsmZ80::AsmZ80(const ValueParser::Plugins &plugins)
-    : Assembler(plugins, PSEUDO_TABLE), Config(TABLE) {
+    : Assembler(plugins, PSEUDO_TABLE, &_opt_extmode),
+      Config(TABLE),
+      _opt_extmode(
+              this, &AsmZ80::setExtendedMode, OPT_BOOL_EXTMODE, OPT_DESC_EXTMODE, &_opt_lwordmode),
+      _opt_lwordmode(this, &AsmZ80::setLongWordMode, OPT_BOOL_LWORDMODE, OPT_DESC_LWORDMODE) {
     reset();
+}
+
+void AsmZ80::reset() {
+    Assembler::reset();
+    setExtendedMode(false);
+    setLongWordMode(false);
+}
+
+bool AsmZ80::wordMode() const {
+    return (!_lwordmode && !_ddir.lwordMode()) || (_lwordmode && _ddir.wordMode());
+}
+
+bool AsmZ80::lwordMode() const {
+    return (_lwordmode && !_ddir.wordMode()) || (!_lwordmode && _ddir.lwordMode());
 }
 
 int32_t AsmZ80::calcDeltaZ380(
@@ -550,6 +568,26 @@ uint_fast8_t AsmInsn::operandPos() const {
     return pos < opcodeLen ? opcodeLen : pos;
 }
 
+Error AsmZ80::processPseudo(StrScanner &scan, Insn &insn) {
+    const auto at = scan;
+    if (z380()) {
+        if (strcasecmp_P(insn.name(), OPT_BOOL_EXTMODE) == 0) {
+            const auto error = _opt_extmode.set(scan);
+            return error ? insn.setErrorIf(at, error) : OK;
+        }
+        if (strcasecmp_P(insn.name(), OPT_BOOL_LWORDMODE) == 0) {
+            const auto error = _opt_lwordmode.set(scan);
+            return error ? insn.setErrorIf(at, error) : OK;
+        }
+    }
+    return Assembler::processPseudo(scan, insn);
+}
+
+void Ddir::operator=(const AsmInsn &insn) {
+    _prefix = insn.prefix();
+    _opc = insn.opCode();
+}
+
 Error AsmZ80::encodeImpl(StrScanner &scan, Insn &_insn) const {
     AsmInsn insn(_insn);
     if (parseOperand(scan, insn.dstOp, insn) && insn.dstOp.hasError())
@@ -566,6 +604,11 @@ Error AsmZ80::encodeImpl(StrScanner &scan, Insn &_insn) const {
     encodeOperand(insn, insn.dstOp, insn.dst(), insn.srcOp);
     encodeOperand(insn, insn.srcOp, insn.src(), insn.dstOp);
     insn.emitInsn();
+    if (insn.dst() == M_DD) {
+        _ddir = insn;
+    } else {
+        _ddir.clear();
+    }
     return _insn.setError(insn);
 }
 
