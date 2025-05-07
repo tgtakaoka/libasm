@@ -56,6 +56,8 @@ const /*PROGMEM*/ char *ErrorReporter::errorText_P(Error error) {
         return PSTR("Suboptimal instruction");
     case FLOAT_NOT_SUPPORTED:
         return PSTR("Float literal not supported");
+    case PREFIX_HAS_NO_EFFECT:
+        return PSTR("Prefix has no effect");
 
     // Assembler
     case UNKNOWN_INSTRUCTION:

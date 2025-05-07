@@ -30,6 +30,31 @@ struct EntryInsn : EntryInsnPrefix<Config, Entry> {
     AddrMode dst() const { return flags().dst(); }
     AddrMode src() const { return flags().src(); }
     bool ixBit() const;
+    bool imCapable() const { return flags().imCapable(); }
+    bool lmCapable() const { return flags().lmCapable(); }
+};
+
+struct DisInsn;
+
+/** Z380 Decoder Directive */
+struct Ddir final {
+    Ddir() : _prefix(0), _opc(0) {}
+    void operator=(const DisInsn &insn);
+    explicit operator bool() const { return _prefix != 0; }
+    void clear() { _prefix = 0; }
+
+    bool noImmediate() const { return *this && (_opc & 3) == 0; }
+    bool byteImmediate() const { return *this && ((wim() & 3) == 1 || wim() == 0x03); }
+    bool wordImmediate() const { return *this && ((wim() & 3) == 2 || wim() == 0x23); }
+    bool noMode() const { return *this && (_opc & 3) == 3; }
+    bool wordMode() const { return _prefix == 0xDD && (_opc & 3) < 3; }
+    bool lwordMode() const { return _prefix == 0xFD && (_opc & 3) < 3; }
+
+private:
+    Config::opcode_t _prefix;
+    Config::opcode_t _opc;
+
+    Config::opcode_t wim() const { return (_prefix & 0x20) | (_opc & 3); }
 };
 
 struct Operand final : ErrorAt {
@@ -56,7 +81,21 @@ struct DisInsn final : DisInsnImpl<Config>, EntryInsn {
     DisInsn(Insn &insn, DisMemory &memory, const StrBuffer &out) : DisInsnImpl(insn, memory, out) {}
     DisInsn(DisInsn &o) : DisInsnImpl(o) {}
 
-    int8_t ixoff;  // index offset for ixBit() instruction
+    uint32_t readUint24() {
+        const auto val16 = readUint16();
+        return (static_cast<uint32_t>(readByte()) << 16) | val16;
+    }
+
+    int32_t readDisp8() {
+        if (ddir.byteImmediate())
+            return static_cast<int16_t>(readUint16());
+        if (ddir.wordImmediate())
+            return Config::signExtend(readUint24(), 24);
+        return static_cast<int8_t>(readByte());
+    }
+
+    int32_t ixoff;  // index offset for ixBit() instruction
+    Ddir ddir;      // Z380 Decoder Directive
 };
 
 }  // namespace z80

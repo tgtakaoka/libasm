@@ -41,6 +41,7 @@ enum Error : uint8_t {
     INVALID_INSTRUCTION = 12,
     SUBOPTIMAL_INSTRUCTION = 13,
     FLOAT_NOT_SUPPORTED = 14,
+    PREFIX_HAS_NO_EFFECT = 15,
 
     // Assembler
     UNKNOWN_INSTRUCTION = 21,

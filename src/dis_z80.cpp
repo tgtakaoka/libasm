@@ -17,11 +17,13 @@
 #include "dis_z80.h"
 #include "reg_z80.h"
 #include "table_z80.h"
+#include "text_common.h"
 
 namespace libasm {
 namespace z80 {
 
 using namespace reg;
+using namespace text::common;
 using namespace text::option;
 
 const ValueFormatter::Plugins &DisZ80::defaultPlugins() {
@@ -29,9 +31,17 @@ const ValueFormatter::Plugins &DisZ80::defaultPlugins() {
 }
 
 DisZ80::DisZ80(const ValueFormatter::Plugins &plugins)
-    : Disassembler(plugins),
-      Config(TABLE) {
+    : Disassembler(plugins, &_opt_extmode),
+      Config(TABLE),
+      _opt_extmode(
+              this, &DisZ80::setExtendedMode, OPT_BOOL_EXTMODE, OPT_DESC_EXTMODE, &_opt_lwordmode),
+      _opt_lwordmode(this, &DisZ80::setLongWordMode, OPT_BOOL_LWORDMODE, OPT_DESC_LWORDMODE) {
     reset();
+}
+
+void DisZ80::reset() {
+    Disassembler::reset();
+    setExtendedMode(false);
 }
 
 StrBuffer &DisZ80::outIndirectReg(StrBuffer &out, RegName reg) const {
@@ -71,8 +81,55 @@ StrBuffer &DisZ80::outAlternateReg(StrBuffer &out, const DisInsn &insn, AddrMode
     return out;
 }
 
-void DisZ80::decodeAbsolute(DisInsn &insn, StrBuffer &out) const {
-    outAbsAddr(out.letter('('), insn.readUint16()).letter(')');
+bool DisZ80::wordMode(const Ddir &ddir) const {
+    return (!_lwordmode && !ddir.lwordMode()) || (_lwordmode && ddir.wordMode());
+}
+
+bool DisZ80::lwordMode(const Ddir &ddir) const {
+    return (_lwordmode && !ddir.wordMode()) || (!_lwordmode && ddir.lwordMode());
+}
+
+void DisZ80::decodeImmediate16(DisInsn &insn, StrBuffer &out, AddrMode mode) const {
+    if (insn.ddir) {
+        if ((mode == M_XM16 && !_extmode) || (mode == M_LM16 && !lwordMode(insn.ddir))) {
+            insn.setErrorIf(out, PREFIX_HAS_NO_EFFECT);
+            mode = M_IM16;
+        }
+        if (!insn.lmCapable() && insn.ddir.noImmediate())
+            insn.setErrorIf(out, PREFIX_HAS_NO_EFFECT);
+        if (!insn.lmCapable() && !insn.ddir.noMode())
+            insn.setErrorIf(out, SUBOPTIMAL_INSTRUCTION);
+    }
+    if (mode == M_IM16 || !insn.ddir || insn.ddir.noImmediate()) {
+        outAbsAddr(out, insn.readUint16(), 16);
+    } else if (insn.ddir.byteImmediate()) {
+        outAbsAddr(out, insn.readUint24(), 24);
+    } else if (insn.ddir.wordImmediate()) {
+        outAbsAddr(out, insn.readUint32(), 32);
+    }
+}
+
+void DisZ80::decodeAbsolute(DisInsn &insn, StrBuffer &out, AddrMode mode) const {
+    const auto *prefix = (mode == M_JABS) ? "" : "(";
+    if (insn.ddir) {
+        if ((mode == M_XABS || mode == M_JABS) && !_extmode) {
+            insn.setErrorIf(out, PREFIX_HAS_NO_EFFECT);
+            mode = M_ABS;
+        }
+        if (!insn.lmCapable() && insn.ddir.noImmediate())
+            insn.setErrorIf(out, PREFIX_HAS_NO_EFFECT);
+        if (!insn.lmCapable() && !insn.ddir.noMode())
+            insn.setErrorIf(out, SUBOPTIMAL_INSTRUCTION);
+    }
+    if (mode == M_ABS || !insn.ddir || insn.ddir.noImmediate()) {
+        outAbsAddr(out.text(prefix), insn.readUint16(), 16);
+    } else if (insn.ddir.byteImmediate()) {
+        outAbsAddr(out.text(prefix), insn.readUint24(), 24);
+    } else if (insn.ddir.wordImmediate()) {
+        outAbsAddr(out.text(prefix), insn.readUint32(), 32);
+    }
+    if (*prefix)
+        out.letter(')');
 }
 
 void DisZ80::decodeRelative(DisInsn &insn, StrBuffer &out, AddrMode mode) const {
@@ -90,7 +147,7 @@ void DisZ80::decodeRelative(DisInsn &insn, StrBuffer &out, AddrMode mode) const 
         const int8_t msb = insn.readByte();
         delta = (static_cast<int32_t>(msb) << 16) | lsw;
     }
-    uint32_t base = insn.address() + insn.length();
+    auto base = insn.address() + insn.length();
     if (insn.src() == M_IM8) {
         base += 1;  // <rel16>, im8
     } else if (insn.src() == M_IM16) {
@@ -98,14 +155,17 @@ void DisZ80::decodeRelative(DisInsn &insn, StrBuffer &out, AddrMode mode) const 
     } else if (insn.src() == M_EPU) {
         base += 4;  // <rel16>, EPU template
     }
-    uint32_t target = base + delta;
-    if ((base & ~UINT16_MAX) != (target & ~UINT16_MAX)) {
+    auto target = base + delta;
+    if (z380() && _extmode) {
+        ;
+    } else if ((base & ~UINT16_MAX) != (target & ~UINT16_MAX)) {
         insn.setErrorIf(out, OVERFLOW_RANGE);
-        if (z280()) {
+        const auto width = addressWidth();
+        if (width == ADDRESS_24BIT) {
             target &= UINT32_C(0xFFFFFF);
-        } else if (z180()) {
+        } else if (width == ADDRESS_20BIT) {
             target &= UINT32_C(0xFFFFF);
-        } else {
+        } else {  // ADDRESS_32BIT, ADDRESS_16BIT
             target &= UINT16_MAX;
         }
     }
@@ -139,14 +199,28 @@ uint_fast8_t decodeInterruptMode(uint_fast8_t opc) {
     static const uint8_t MODE[] = {0, 3, 1, 2};
     return MODE[(opc >> 3) & 3];
 }
+
 }  // namespace
 
 void DisZ80::decodeShortIndex(DisInsn &insn, StrBuffer &out, RegName base) const {
-    const auto disp = insn.ixBit() ? insn.ixoff : static_cast<int8_t>(insn.readByte());
+    if (insn.ddir && !insn.lmCapable()) {
+        if (insn.ddir.noImmediate())
+            insn.setErrorIf(out, PREFIX_HAS_NO_EFFECT);
+        if (!insn.ddir.noMode())
+            insn.setErrorIf(out, SUBOPTIMAL_INSTRUCTION);
+    }
+    const auto disp = insn.ixBit() ? insn.ixoff : insn.readDisp8();
     outRegName(out.letter('('), base);
     if (disp >= 0)
         out.letter('+');
-    outDec(out, disp, -8).letter(')');
+    if (insn.ddir.byteImmediate()) {
+        outHex(out, disp, -16);
+    } else if (insn.ddir.wordImmediate()) {
+        outHex(out, disp, -24);
+    } else {
+        outDec(out, disp, -8);
+    }
+    out.letter(')');
 }
 
 void DisZ80::decodeLongIndex(DisInsn &insn, StrBuffer &out, RegName base) const {
@@ -159,7 +233,7 @@ void DisZ80::decodeLongIndex(DisInsn &insn, StrBuffer &out, RegName base) const 
 
 void DisZ80::decodeMemoryPointer(DisInsn &insn, StrBuffer &out) const {
     if (insn.opCode() & 0x10) {
-        decodeAbsolute(insn, out);
+        decodeAbsolute(insn, out, M_ABS);
     } else {
         outIndirectReg(out, REG_HL);
     }
@@ -204,19 +278,24 @@ void DisZ80::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode, AddrMod
         outHex(out, insn.readByte(), 8);
         break;
     case M_IM16:
-        outHex(out, insn.readUint16(), 16);
+    case M_DM16:
+    case M_XM16:
+    case M_LM16:
+        decodeImmediate16(insn, out, mode);
         break;
     case M_EPU:
         outHex(out, insn.readUint32(), 32);
         break;
     case M_ABS:
-        decodeAbsolute(insn, out);
+    case M_JABS:
+    case M_DABS:
+    case M_XABS:
+    case M_IO16:
+        decodeAbsolute(insn, out, mode);
         break;
     case M_IOA:
         outHex(out.letter('('), insn.readByte(), 8).letter(')');
         break;
-    case M_IO16:
-        outHex(out.letter('('), insn.readUint16(), 16).letter(')');
         break;
     case M_IDX:
     case M_IDX8:
@@ -337,13 +416,19 @@ void DisZ80::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode, AddrMod
 }
 
 StrBuffer &DisZ80::outAbsAddr(StrBuffer &out, uint32_t val, uint8_t addrWidth) const {
-    if (val <= UINT16_MAX)
+    if (val <= UINT16_MAX && (!z380() || !_extmode))
         addrWidth = ADDRESS_16BIT;
     return Disassembler::outAbsAddr(out, val, addrWidth);
 }
 
+void Ddir::operator=(const DisInsn &insn) {
+    _prefix = insn.prefix();
+    _opc = insn.opCode();
+}
+
 Error DisZ80::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) const {
     DisInsn insn(_insn, memory, out);
+retry:
     auto opc = insn.readByte();
     if (isPrefix(cpuType(), opc)) {
         insn.setPrefix(opc);
@@ -351,26 +436,37 @@ Error DisZ80::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) const {
         auto prefix = (insn.prefix() << 8) | opc;
         if (isPrefix(cpuType(), prefix)) {
             insn.setPrefix(prefix);
+            if (insn.ixBit())
+                insn.ixoff = insn.readDisp8();
             opc = insn.readByte();
-            if (insn.ixBit()) {
-                insn.ixoff = opc;
-                opc = insn.readByte();
-            }
         }
     }
     insn.setOpCode(opc);
     if (insn.getError())
         return _insn.setError(insn);
+
     if (searchOpCode(cpuType(), insn, out))
         return _insn.setError(insn);
 
     const auto dst = insn.dst();
     const auto src = insn.src();
+    if (dst == M_DD) {
+        if (insn.ddir)
+            return _insn.setError(INVALID_INSTRUCTION);
+        insn.ddir = insn;
+        insn.setPrefix(0);
+        goto retry;
+    }
+    if (insn.ddir && !insn.imCapable()) {
+        if (!insn.lmCapable() || !insn.ddir.noImmediate() || insn.ddir.noMode())
+            insn.setErrorIf(out, PREFIX_HAS_NO_EFFECT);
+    }
     decodeOperand(insn, out, dst, src);
     if (src != M_NONE)
         decodeOperand(insn, out.comma(), src, dst);
     if (insn.getError() == UNKNOWN_INSTRUCTION)
         insn.nameBuffer().reset();
+    insn.ddir.clear();
     return _insn.setError(insn);
 }
 

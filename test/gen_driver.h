@@ -34,6 +34,7 @@ struct GenDriver : TestGenerator::Formatter {
     int close();
     bool generateGas() const { return _generateGas; }
     bool generateZilog() const { return _generateZilog; }
+    const char *cpu() const { return _cpu.c_str(); }
 
 private:
     Disassembler &_disassembler;
