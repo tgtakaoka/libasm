@@ -1,4 +1,4 @@
-;# Copyright 2020 Tadashi G. Takaoka
+;# Copyright 2025 Tadashi G. Takaoka
 ;#
 ;# Licensed under the Apache License, Version 2.0 (the "License");
 ;# you may not use this file except in compliance with the License.
@@ -14,6 +14,7 @@
 
         .include "test_mc68000.ginc"
         .include "test_mc68881.ginc"
+        .include "test_mc68010.ginc"
 
 ;# Local Variables:
 ;# mode: asm
