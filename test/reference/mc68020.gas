@@ -1,0 +1,8 @@
+# mc68020
+        # Wrong opcode
+        bfchg   d1{31:32}
+        bfclr   d1{31:32}
+        bfset   d1{31:32}
+        # Garbage in unused field
+        muls.l  d2,d7
+        mulu.l  d2,d3

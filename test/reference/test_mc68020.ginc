@@ -1,0 +1,650 @@
+;# Copyright 2025 Tadashi G. Takaoka
+;#
+;# Licensed under the Apache License, Version 2.0 (the "License");
+;# you may not use this file except in compliance with the License.
+;# You may obtain a copy of the License at
+;#
+;#     http://www.apache.org/licenses/LICENSE-2.0
+;#
+;# Unless required by applicable law or agreed to in writing, software
+;# distributed under the License is distributed on an "AS IS" BASIS,
+;# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+;# See the License for the specific language governing permissions and
+;# limitations under the License.
+
+        link.l  a3,#0x1234
+        link.l  a3,#-16
+        move.b  (-0x8001,a2),d7
+        move.b  (0x8000,a2),d7
+        move.b  (-0x81,a2,d3.l),d7
+        move.b  (0x80,a2,d3.l),d7
+        move.b  (.-0x7fff,pc),d7
+        move.b  (.+0x8002,pc),d7
+        move.b  (.-0x7f,pc,d3),d7
+        move.b  (.+0x82,pc,d3),d7
+        bftst   d1{31:32}
+        bftst   (a2){0:4}
+        bftst   (a2){d1:3}
+        bftst   (a2){1:d3}
+        bftst   (a2){d2:d3}
+        bftst   (0x1234,a2){0:4}
+        bftst   (18,a2,d3.w){0:4}
+        bftst   (0x1234).w{1:2}
+        bftst   (0x12345678).l{0:16}
+        bftst   (.+0x1234,pc){0:4}
+        bftst   (.+35,pc,d3.l){0:4}
+        bfextu  d1{31:32},d4
+        bfextu  (a2){0:4},d4
+        bfextu  (a2){d1:3},d4
+        bfextu  (a2){1:d3},d4
+        bfextu  (a2){d2:d3},d4
+        bfextu  (0x1234,a2){0:4},d4
+        bfextu  (18,a2,d3.w){0:4},d4
+        bfextu  (0x1234).w{1:2},d4
+        bfextu  (0x12345678).l{0:16},d4
+        bfextu  (.+0x1234,pc){0:4},d4
+        bfextu  (.+35,pc,d3.l){0:4},d4
+        bfchg   d1{31:32}
+        bfchg   (a2){0:4}
+        bfchg   (a2){d1:3}
+        bfchg   (a2){1:d3}
+        bfchg   (a2){d2:d3}
+        bfchg   (0x1234,a2){0:4}
+        bfchg   (18,a2,d3.w){0:4}
+        bfchg   (0x1234).w{1:2}
+        bfchg   (0x12345678).l{0:16}
+        bfexts  d1{31:32},d4
+        bfexts  (a2){0:4},d4
+        bfexts  (a2){d1:3},d4
+        bfexts  (a2){1:d3},d4
+        bfexts  (a2){d2:d3},d4
+        bfexts  (0x1234,a2){0:4},d4
+        bfexts  (18,a2,d3.w){0:4},d4
+        bfexts  (0x1234).w{1:2},d4
+        bfexts  (0x12345678).l{0:16},d4
+        bfexts  (.+0x1234,pc){0:4},d4
+        bfexts  (.+35,pc,d3.l){0:4},d4
+        bfclr   d1{31:32}
+        bfclr   (a2){0:4}
+        bfclr   (a2){d1:3}
+        bfclr   (a2){1:d3}
+        bfclr   (a2){d2:d3}
+        bfclr   (0x1234,a2){0:4}
+        bfclr   (18,a2,d3.w){0:4}
+        bfclr   (0x1234).w{1:2}
+        bfclr   (0x12345678).l{0:16}
+        bfffo   d1{31:32},d4
+        bfffo   (a2){0:4},d4
+        bfffo   (a2){d1:3},d4
+        bfffo   (a2){1:d3},d4
+        bfffo   (a2){d2:d3},d4
+        bfffo   (0x1234,a2){0:4},d4
+        bfffo   (18,a2,d3.w){0:4},d4
+        bfffo   (0x1234).w{1:2},d4
+        bfffo   (0x12345678).l{0:16},d4
+        bfffo   (.+0x1234,pc){0:4},d4
+        bfffo   (.+35,pc,d3.l){0:4},d4
+        bfset   d1{31:32}
+        bfset   (a2){0:4}
+        bfset   (a2){d1:3}
+        bfset   (a2){1:d3}
+        bfset   (a2){d2:d3}
+        bfset   (0x1234,a2){0:4}
+        bfset   (18,a2,d3.w){0:4}
+        bfset   (0x1234).w{1:2}
+        bfset   (0x12345678).l{0:16}
+        bfins   d4,d1{31:32}
+        bfins   d4,(a2){0:4}
+        bfins   d4,(a2){d1:3}
+        bfins   d4,(a2){1:d3}
+        bfins   d4,(a2){d2:d3}
+        bfins   d4,(0x1234,a2){0:4}
+        bfins   d4,(18,a2,d3.w){0:4}
+        bfins   d4,(0x1234).w{1:2}
+        bfins   d4,(0x12345678).l{0:16}
+        cmp2.b  (a2),d7
+        cmp2.b  (0x1234,a2),a6
+        cmp2.b  (18,a2,d3.l),d7
+        cmp2.b  (0xfffffffe).w,a0
+        cmp2.b  (0x12345678).l,d0
+        cmp2.b  (.+0x1234,pc),a1
+        cmp2.b  (.+18,pc,d3.w),d2
+        cmp2.w  (a2),d3
+        cmp2.w  (0x1234,a2),a6
+        cmp2.w  (18,a2,d3.l),d7
+        cmp2.w  (0xfffffffe).w,a0
+        cmp2.w  (0x12345678).l,d0
+        cmp2.w  (.+0x1234,pc),a1
+        cmp2.w  (.+18,pc,d3.w),d2
+        cmp2.l  (a2),d3
+        cmp2.l  (0x1234,a2),a6
+        cmp2.l  (18,a2,d3.l),d7
+        cmp2.l  (0xfffffffe).w,a0
+        cmp2.l  (0x12345678).l,d0
+        cmp2.l  (.+0x1234,pc),a1
+        cmp2.l  (.+18,pc,d3.w),d2
+        divs.l  d2,d7
+        divs.l  (a2),d7
+        divs.l  (a2)+,d7
+        divs.l  -(a2),d7
+        divs.l  (0x1234,a2),d7
+        divs.l  (18,a2,d3.l),d7
+        divs.l  (0xfffffffe).w,d7
+        divs.l  (0x12345678).l,d7
+        divs.l  (.+0x1234,pc),d7
+        divs.l  (.+18,pc,d3.w),d7
+        divsl.l d2,d6:d7
+        divsl.l (a2),d6:d7
+        divsl.l (a2)+,d6:d7
+        divsl.l -(a2),d6:d7
+        divsl.l (0x1234,a2),d6:d7
+        divsl.l (18,a2,d3.l),d6:d7
+        divsl.l (0xfffffffe).w,d6:d7
+        divsl.l (0x12345678).l,d6:d7
+        divsl.l (.+0x1234,pc),d6:d7
+        divsl.l (.+18,pc,d3.w),d6:d7
+        divs.l  d2,d6:d7
+        divs.l  (a2),d6:d7
+        divs.l  (a2)+,d6:d7
+        divs.l  -(a2),d6:d7
+        divs.l  (0x1234,a2),d6:d7
+        divs.l  (18,a2,d3.l),d6:d7
+        divs.l  (0xfffffffe).w,d6:d7
+        divs.l  (0x12345678).l,d6:d7
+        divs.l  (.+0x1234,pc),d6:d7
+        divs.l  (.+18,pc,d3.w),d6:d7
+        divu.l  d2,d7
+        divu.l  (a2),d7
+        divu.l  (a2)+,d7
+        divu.l  -(a2),d7
+        divu.l  (0x1234,a2),d7
+        divu.l  (18,a2,d3.l),d7
+        divu.l  (0xfffffffe).w,d7
+        divu.l  (0x12345678).l,d7
+        divu.l  (.+0x1234,pc),d7
+        divu.l  (.+18,pc,d3.w),d7
+        divul.l d2,d6:d7
+        divul.l (a2),d6:d7
+        divul.l (a2)+,d6:d7
+        divul.l -(a2),d6:d7
+        divul.l (0x1234,a2),d6:d7
+        divul.l (18,a2,d3.l),d6:d7
+        divul.l (0xfffffffe).w,d6:d7
+        divul.l (0x12345678).l,d6:d7
+        divul.l (.+0x1234,pc),d6:d7
+        divul.l (.+18,pc,d3.w),d6:d7
+        divu.l  d2,d6:d7
+        divu.l  (a2),d6:d7
+        divu.l  (a2)+,d6:d7
+        divu.l  -(a2),d6:d7
+        divu.l  (0x1234,a2),d6:d7
+        divu.l  (18,a2,d3.l),d6:d7
+        divu.l  (0xfffffffe).w,d6:d7
+        divu.l  (0x12345678).l,d6:d7
+        divu.l  (.+0x1234,pc),d6:d7
+        divu.l  (.+18,pc,d3.w),d6:d7
+        muls.l  d2,d7
+        muls.l  (a2),d7
+        muls.l  (a2)+,d7
+        muls.l  -(a2),d7
+        muls.l  (0x1234,a2),d7
+        muls.l  (18,a2,d3.l),d7
+        muls.l  (0xfffffffe).w,d7
+        muls.l  (0x12345678).l,d7
+        muls.l  (.+0x1234,pc),d7
+        muls.l  (.+18,pc,d3.w),d7
+        muls.l  d2,d6:d7
+        muls.l  (a2),d6:d7
+        muls.l  (a2)+,d6:d7
+        muls.l  -(a2),d6:d7
+        muls.l  (0x1234,a2),d6:d7
+        muls.l  (18,a2,d3.l),d6:d7
+        muls.l  (0xfffffffe).w,d6:d7
+        muls.l  (0x12345678).l,d6:d7
+        muls.l  (.+0x1234,pc),d6:d7
+        muls.l  (.+18,pc,d3.w),d6:d7
+        mulu.l  d2,d7
+        mulu.l  (a2),d7
+        mulu.l  (a2)+,d7
+        mulu.l  -(a2),d7
+        mulu.l  (0x1234,a2),d7
+        mulu.l  (18,a2,d3.l),d7
+        mulu.l  (0xfffffffe).w,d7
+        mulu.l  (0x12345678).l,d7
+        mulu.l  (.+0x1234,pc),d7
+        mulu.l  (.+18,pc,d3.w),d7
+        mulu.l  d2,d6:d7
+        mulu.l  (a2),d6:d7
+        mulu.l  (a2)+,d6:d7
+        mulu.l  -(a2),d6:d7
+        mulu.l  (0x1234,a2),d6:d7
+        mulu.l  (18,a2,d3.l),d6:d7
+        mulu.l  (0xfffffffe).w,d6:d7
+        mulu.l  (0x12345678).l,d6:d7
+        mulu.l  (.+0x1234,pc),d6:d7
+        mulu.l  (.+18,pc,d3.w),d6:d7
+        pack    d2,d7,#0x234
+        pack    -(a2),-(a7),#0x1234
+        unpk    d2,d7,#0x1234
+        unpk    -(a2),-(a7),#0x1234
+        bral    .+2
+        bral    .+0x80
+        bral    .-0x8000
+        bral    .+0x8002
+        bsrl    .+2
+        bsrl    .+0x80
+        bsrl    .-0x8000
+        bsrl    .+0x8002
+        chk.l   d2,d7
+        chk.l   (a2),d7
+        chk.l   (a2)+,d7
+        chk.l   -(a2),d7
+        chk.l   (0x1234,a2),d7
+        chk.l   (18,a2,d3.l),d7
+        chk.l   (0xfffffffe).w,d7
+        chk.l   (0x12345678).l,d7
+        chk.l   (.+0x1234,pc),d7
+        chk.l   (.+18,pc,d3.w),d7
+        chk2.b  (a2),d7
+        chk2.b  (0x1234,a2),d7
+        chk2.b  (18,a2,d3.l),d7
+        chk2.b  (0xfffffffe).w,d7
+        chk2.b  (0x12345678).l,d7
+        chk2.b  (.+0x1234,pc),d7
+        chk2.b  (.+18,pc,d3.w),d7
+        chk2.w  (a2),d7
+        chk2.w  (0x1234,a2),d7
+        chk2.w  (18,a2,d3.l),d7
+        chk2.w  (0xfffffffe).w,d7
+        chk2.w  (0x12345678).l,d7
+        chk2.w  (.+0x1234,pc),d7
+        chk2.w  (.+18,pc,d3.w),d7
+        chk2.l  (a2),d7
+        chk2.l  (0x1234,a2),d7
+        chk2.l  (18,a2,d3.l),d7
+        chk2.l  (0xfffffffe).w,d7
+        chk2.l  (0x12345678).l,d7
+        chk2.l  (.+0x1234,pc),d7
+        chk2.l  (.+18,pc,d3.w),d7
+        cas.b   d2,d3,(a4)
+        cas.b   d2,d3,(a4)+
+        cas.b   d2,d3,-(a4)
+        cas.b   d2,d3,(0x1234,a4)
+        cas.b   d2,d3,(18,a4,d5.w)
+        cas.b   d2,d3,(0x1234).w
+        cas.b   d2,d3,(0x12345678).l
+        cas.w   d2,d3,(a4)
+        cas.w   d2,d3,(a4)+
+        cas.w   d2,d3,-(a4)
+        cas.w   d2,d3,(0x1234,a4)
+        cas.w   d2,d3,(18,a4,d5.w)
+        cas.w   d2,d3,(0x1234).w
+        cas.w   d2,d3,(0x12345678).l
+        cas.l   d2,d3,(a4)
+        cas.l   d2,d3,(a4)+
+        cas.l   d2,d3,-(a4)
+        cas.l   d2,d3,(0x1234,a4)
+        cas.l   d2,d3,(18,a4,d5.w)
+        cas.l   d2,d3,(0x1234).w
+        cas.l   d2,d3,(0x12345678).l
+        cas2.w  d1:d2,d3:d4,(d5):(d6)
+        cas2.w  d1:d2,d3:d4,(a5):(d6)
+        cas2.w  d1:d2,d3:d4,(d5):(a6)
+        cas2.w  d1:d2,d3:d4,(a5):(a6)
+        cas2.l  d1:d2,d3:d4,(d5):(d6)
+        cas2.l  d1:d2,d3:d4,(a5):(d6)
+        cas2.l  d1:d2,d3:d4,(d5):(a6)
+        cas2.l  d1:d2,d3:d4,(a5):(a6)
+        trapt
+        trapf
+        traphi
+        trapls
+        trapcc
+        trapcs
+        trapne
+        trapeq
+        trapvc
+        trapvs
+        trappl
+        trapmi
+        trapge
+        traplt
+        trapgt
+        traple
+        trapt.w         #0x1234
+        trapf.w         #0x1234
+        traphi.w        #0x1234
+        trapls.w        #0x1234
+        trapcc.w        #0x1234
+        trapcs.w        #0x1234
+        trapne.w        #0x1234
+        trapeq.w        #0x1234
+        trapvc.w        #0x1234
+        trapvs.w        #0x1234
+        trappl.w        #0x1234
+        trapmi.w        #0x1234
+        trapge.w        #0x1234
+        traplt.w        #0x1234
+        trapgt.w        #0x1234
+        traple.w        #0x1234
+        trapt.l         #0x12345678
+        trapf.l         #0x12345678
+        traphi.l        #0x12345678
+        trapls.l        #0x12345678
+        trapcc.l        #0x12345678
+        trapcs.l        #0x12345678
+        trapne.l        #0x12345678
+        trapeq.l        #0x12345678
+        trapvc.l        #0x12345678
+        trapvs.l        #0x12345678
+        trappl.l        #0x12345678
+        trapmi.l        #0x12345678
+        trapge.l        #0x12345678
+        traplt.l        #0x12345678
+        trapgt.l        #0x12345678
+        traple.l        #0x12345678
+;# Brief extention
+        ;# scaled index
+        move.l  (0x23,a7,d1.w*1),d2
+        move.l  (0x23,a7,a1.w*2),d2
+        move.l  (0x23,a7,d1.w*4),d2
+        move.l  (0x23,a7,a1.w*8),d2
+        move.l  (0x23,a7,a1.l*1),d2
+        move.l  (0x23,a7,d1.l*2),d2
+        move.l  (0x23,a7,a1.l*4),d2
+        move.l  (0x23,a7,d1.l*8),d2
+        move.l  (.+54,pc,a1.w*1),d2
+        move.l  (.+54,pc,d1.w*2),d2
+        move.l  (.+54,pc,a1.w*4),d2
+        move.l  (.+54,pc,d1.w*8),d2
+        move.l  (.+54,pc,d1.l*1),d2
+        move.l  (.+54,pc,a1.l*2),d2
+        move.l  (.+54,pc,d1.l*4),d2
+        move.l  (.+54,pc,a1.l*8),d2
+        ;# no displacement
+        move.l  (a7,d1.w),d2
+        move.l  (a7,d1.l),d2
+        move.l  (a7,a1.w),d2
+        move.l  (a7,a1.l),d2
+;# Full extension
+        ;# large displacement
+        move.l  (0x12345678,a7),d2
+        move.l  (0x12345678,a7,d1.w),d2
+        move.l  (0x12345678,a7,d1.l),d2
+        move.l  (0x12345678,a7,a1.w),d2
+        move.l  (0x12345678,a7,a1.l),d2
+        ;# extended base without indirect
+        move.l  (a7.w),d2
+        move.l  (d1.w),d2
+        move.l  (d1.l),d2
+        move.l  (0x1234,a7.w),d2
+        move.l  (0x1234,d1.w),d2
+        move.l  (0x1234,d1.l),d2
+        move.l  (0x12345678,a7.w),d2
+        move.l  (0x12345678,d1.w),d2
+        move.l  (0x12345678,d1.l),d2
+        ;# indirect without base and index
+        move.l  ([0x1234]),d2
+        move.l  ([0x1234],0x5678),d2
+        move.l  ([0x1234],0x56789ABC),d2
+        move.l  ([0x12345678]),d2
+        move.l  ([0x12345678],0x7654),d2
+        move.l  ([0x12345678],0x76543210),d2
+        ;# indirect without base
+        move.l  ([0x1234],a7.w),d2
+        move.l  ([0x1234],a7.w,0x5678),d2
+        move.l  ([0x1234],a7.w,0x56789ABC),d2
+        move.l  ([0x1234],d1.w),d2
+        move.l  ([0x1234],d1.w,0x5678),d2
+        move.l  ([0x1234],d1.w,0x56789ABC),d2
+        move.l  ([0x1234],d1.l),d2
+        move.l  ([0x1234],d1.l,0x5678),d2
+        move.l  ([0x1234],d1.l,0x56789ABC),d2
+        move.l  ([0x12345678],a7.l),d2
+        move.l  ([0x12345678],a7.l,0x5678),d2
+        move.l  ([0x12345678],a7.l,0x56789ABC),d2
+        move.l  ([0x12345678],a7.w),d2
+        move.l  ([0x12345678],a7.w,0x5678),d2
+        move.l  ([0x12345678],a7.w,0x56789ABC),d2
+        move.l  ([0x12345678],d1.w),d2
+        move.l  ([0x12345678],d1.w,0x5678),d2
+        move.l  ([0x12345678],d1.w,0x56789ABC),d2
+        move.l  ([0x12345678],d1.l),d2
+        move.l  ([0x12345678],d1.l,0x5678),d2
+        move.l  ([0x12345678],d1.l,0x56789ABC),d2
+        ;# indirect with base and no index
+        move.l  ([a7]),d2
+        move.l  ([a7],0x1234),d2
+        move.l  ([a7],0x12345678),d2
+        move.l  ([a7.w]),d2
+        move.l  ([a7.w],0x1234),d2
+        move.l  ([a7.w],0x12345678),d2
+        move.l  ([d1.w]),d2
+        move.l  ([d1.w],0x1234),d2
+        move.l  ([d1.w],0x12345678),d2
+        move.l  ([d1.l]),d2
+        move.l  ([d1.l],0x1234),d2
+        move.l  ([d1.l],0x12345678),d2
+        move.l  ([0x1234,a7]),d2
+        move.l  ([0x1234,a7],0x5678),d2
+        move.l  ([0x1234,a7],0x56789ABC),d2
+        move.l  ([0x1234,a7.w]),d2
+        move.l  ([0x1234,a7.w],0x5678),d2
+        move.l  ([0x1234,a7.w],0x56789ABC),d2
+        move.l  ([0x1234,d1.w]),d2
+        move.l  ([0x1234,d1.w],0x5678),d2
+        move.l  ([0x1234,d1.w],0x56789ABC),d2
+        move.l  ([0x1234,d1.l]),d2
+        move.l  ([0x1234,d1.l],0x5678),d2
+        move.l  ([0x1234,d1.l],0x56789ABC),d2
+        move.l  ([0x12345678,a7]),d2
+        move.l  ([0x12345678,a7],0x7654),d2
+        move.l  ([0x12345678,a7],0x76543210),d2
+        move.l  ([0x12345678,a7.w]),d2
+        move.l  ([0x12345678,a7.w],0x7654),d2
+        move.l  ([0x12345678,a7.w],0x76543210),d2
+        move.l  ([0x12345678,d1.w]),d2
+        move.l  ([0x12345678,d1.w],0x7654),d2
+        move.l  ([0x12345678,d1.w],0x76543210),d2
+        move.l  ([0x12345678,d1.l]),d2
+        move.l  ([0x12345678,d1.l],0x7654),d2
+        move.l  ([0x12345678,d1.l],0x76543210),d2
+        ;# indirect with base and inner index
+        move.l  ([a7,d1.w]),d2
+        move.l  ([a7,d1.w],0x1234),d2
+        move.l  ([a7,d1.w],0x12345678),d2
+        move.l  ([a7,d1.l]),d2
+        move.l  ([a7,d1.l],0x1234),d2
+        move.l  ([a7,d1.l],0x12345678),d2
+        move.l  ([a7,a1.w]),d2
+        move.l  ([a7,a1.w],0x1234),d2
+        move.l  ([a7,a1.w],0x12345678),d2
+        move.l  ([a7,a1.l]),d2
+        move.l  ([a7,a1.l],0x1234),d2
+        move.l  ([a7,a1.l],0x12345678),d2
+        move.l  ([0x1234,a7,d1.w]),d2
+        move.l  ([0x1234,a7,d1.w],0x7654),d2
+        move.l  ([0x1234,a7,d1.w],0x76543210),d2
+        move.l  ([0x1234,a7,d1.l]),d2
+        move.l  ([0x1234,a7,d1.l],0x7654),d2
+        move.l  ([0x1234,a7,d1.l],0x76543210),d2
+        move.l  ([0x1234,a7,a1.w]),d2
+        move.l  ([0x1234,a7,a1.w],0x7654),d2
+        move.l  ([0x1234,a7,a1.w],0x76543210),d2
+        move.l  ([0x1234,a7,a1.l]),d2
+        move.l  ([0x1234,a7,a1.l],0x7654),d2
+        move.l  ([0x1234,a7,a1.l],0x76543210),d2
+        move.l  ([0x12345678,a7,d1.w]),d2
+        move.l  ([0x12345678,a7,d1.w],0x7654),d2
+        move.l  ([0x12345678,a7,d1.w],0x76543210),d2
+        move.l  ([0x12345678,a7,d1.l]),d2
+        move.l  ([0x12345678,a7,d1.l],0x7654),d2
+        move.l  ([0x12345678,a7,d1.l],0x76543210),d2
+        move.l  ([0x12345678,a7,a1.w]),d2
+        move.l  ([0x12345678,a7,a1.w],0x7654),d2
+        move.l  ([0x12345678,a7,a1.w],0x76543210),d2
+        move.l  ([0x12345678,a7,a1.l]),d2
+        move.l  ([0x12345678,a7,a1.l],0x7654),d2
+        move.l  ([0x12345678,a7,a1.l],0x76543210),d2
+        ;# indirect with base and outer index
+        move.l  ([a7],d1.w),d2
+        move.l  ([a7],d1.w,0x1234),d2
+        move.l  ([a7],d1.w,0x12345678),d2
+        move.l  ([a7],d1.l),d2
+        move.l  ([a7],d1.l,0x1234),d2
+        move.l  ([a7],d1.l,0x12345678),d2
+        move.l  ([a7],a1.w),d2
+        move.l  ([a7],a1.w,0x1234),d2
+        move.l  ([a7],a1.w,0x12345678),d2
+        move.l  ([a7],a1.l),d2
+        move.l  ([a7],a1.l,0x1234),d2
+        move.l  ([a7],a1.l,0x12345678),d2
+        move.l  ([0x1234,a7],d1.w),d2
+        move.l  ([0x1234,a7],d1.w,0x7654),d2
+        move.l  ([0x1234,a7],d1.w,0x76543210),d2
+        move.l  ([0x1234,a7],d1.l),d2
+        move.l  ([0x1234,a7],d1.l,0x7654),d2
+        move.l  ([0x1234,a7],d1.l,0x76543210),d2
+        move.l  ([0x1234,a7],a1.w),d2
+        move.l  ([0x1234,a7],a1.w,0x7654),d2
+        move.l  ([0x1234,a7],a1.w,0x76543210),d2
+        move.l  ([0x1234,a7],a1.l),d2
+        move.l  ([0x1234,a7],a1.l,0x7654),d2
+        move.l  ([0x1234,a7],a1.l,0x76543210),d2
+        move.l  ([0x12345678,a7],d1.w),d2
+        move.l  ([0x12345678,a7],d1.w,0x7654),d2
+        move.l  ([0x12345678,a7],d1.w,0x76543210),d2
+        move.l  ([0x12345678,a7],d1.l),d2
+        move.l  ([0x12345678,a7],d1.l,0x7654),d2
+        move.l  ([0x12345678,a7],d1.l,0x76543210),d2
+        move.l  ([0x12345678,a7],a1.w),d2
+        move.l  ([0x12345678,a7],a1.w,0x7654),d2
+        move.l  ([0x12345678,a7],a1.w,0x76543210),d2
+        move.l  ([0x12345678,a7],a1.l),d2
+        move.l  ([0x12345678,a7],a1.l,0x7654),d2
+        move.l  ([0x12345678,a7],a1.l,0x76543210),d2
+        ;# pc-relative large displacement
+        move.l  (.+0x12345678,pc),d2
+        move.l  (.+0x12345678,pc,d1.w),d2
+        move.l  (.+0x12345678,pc,d1.l),d2
+        move.l  (.+0x12345678,pc,a1.w),d2
+        move.l  (.+0x12345678,pc,a1.l),d2
+        ;# pc-relative indirect without index
+        .word 0x243B, 0x0151         ;# move.l  ([.+2,pc]),d2
+        .word 0x243B, 0x0152, 0x1234 ;# move.l  ([.+2,pc],0x1234),d2
+        .word 0x243B, 0x0153, 0x1234 ;# move.l  ([.+2,pc],0x12345678),d2
+        .word 0x5678
+        .word 0x243B, 0x0161, 0x1232 ;# move.l  ([.+0x1234,pc]),d2
+        .word 0x243B, 0x0162, 0x1232 ;# move.l  ([.+0x1234,pc],0x7654),d2
+        .word 0x7654
+        .word 0x243B, 0x0163, 0x1232 ;# move.l  ([.+0x1234,pc],0x76543210),d2
+        .word 0x7654, 0x3210
+        .word 0x243B, 0x0171, 0x1234 ;# move.l  ([.+0x12345678,pc]),d2
+        .word 0x5676
+        .word 0x243B, 0x0172, 0x1234 ;# move.l  ([.+0x12345678,pc],0x7654),d2
+        .word 0x5676, 0x7654
+        .word 0x243B, 0x0173, 0x1234 ;# move.l  ([.+0x12345678,pc],0x76543210),d2
+        .word 0x5676, 0x7654, 0x3210
+        ;# pc-relative indirect with inner index
+        .word 0x243B, 0x1111         ;# move.l  ([.+2,pc,d1.w]),d2
+        .word 0x243B, 0x1112, 0x1234 ;# move.l  ([.+2,pc,d1.w],0x1234),d2
+        .word 0x243B, 0x1113, 0x1234 ;# move.l  ([.+2,pc,d1.w],0x12345678),d2
+        .word 0x5678
+        .word 0x243B, 0x1911         ;# move.l  ([.+2,pc,d1.l]),d2
+        .word 0x243B, 0x1912, 0x1234 ;# move.l  ([.+2,pc,d1.l],0x1234),d2
+        .word 0x243B, 0x1913, 0x1234 ;# move.l  ([.+2,pc,d1.l],0x12345678),d2
+        .word 0x5678
+        .word 0x243B, 0x9111         ;# move.l  ([.+2,pc,a1.w]),d2
+        .word 0x243B, 0x9112, 0x1234 ;# move.l  ([.+2,pc,a1.w],0x1234),d2
+        .word 0x243B, 0x9113, 0x1234 ;# move.l  ([.+2,pc,a1.w],0x12345678),d2
+        .word 0x5678
+        .word 0x243B, 0x9911         ;# move.l  ([.+2,pc,a1.l]),d2
+        .word 0x243B, 0x9912, 0x1234 ;# move.l  ([.+2,pc,a1.l],0x1234),d2
+        .word 0x243B, 0x9913, 0x1234 ;# move.l  ([.+2,pc,a1.l],0x12345678),d2
+        .word 0x5678
+        .word 0x243B, 0x1121, 0x1232 ;# move.l  ([.+0x1234,pc,d1.w]),d2
+        .word 0x243B, 0x1122, 0x1232 ;# move.l  ([.+0x1234,pc,d1.w],0x7654),d2
+        .word 0x7654
+        .word 0x243B, 0x1123, 0x1232 ;# move.l  ([.+0x1234,pc,d1.w],0x76543210),d2
+        .word 0x7654, 0x3210
+        .word 0x243B, 0x1921, 0x1232 ;# move.l  ([.+0x1234,pc,d1.l]),d2
+        .word 0x243B, 0x1922, 0x1232 ;# move.l  ([.+0x1234,pc,d1.l],0x7654),d2
+        .word 0x7654
+        .word 0x243B, 0x1923, 0x1232 ;#; move.l  ([.+0x1234,pc,d1.l],0x76543210),d2
+        .word 0x7654, 0x3210
+        .word 0x243B, 0x9121, 0x1232 ;# move.l  ([.+0x1234,pc,a1.w]),d2
+        .word 0x243B, 0x9122, 0x1232 ;# move.l  ([.+0x1234,pc,a1.w],0x7654),d2
+        .word 0x7654
+        .word 0x243B, 0x9123, 0x1232 ;# move.l  ([.+0x1234,pc,a1.w],0x76543210),d2
+        .word 0x7654, 0x3210
+        .word 0x243B, 0x9921, 0x1232 ;# move.l  ([.+0x1234,pc,a1.l]),d2
+        .word 0x243B, 0x9922, 0x1232 ;# move.l  ([.+0x1234,pc,a1.l],0x7654),d2
+        .word 0x7654
+        .word 0x243B, 0x9923, 0x1232 ;# move.l  ([.+0x1234,pc,a1.l],0x76543210),d2
+        .word 0x7654, 0x3210
+        move.l  ([.+0x12345678,pc,d1.w]),d2
+        move.l  ([.+0x12345678,pc,d1.w],0x7654),d2
+        move.l  ([.+0x12345678,pc,d1.w],0x76543210),d2
+        move.l  ([.+0x12345678,pc,d1.l]),d2
+        move.l  ([.+0x12345678,pc,d1.l],0x7654),d2
+        move.l  ([.+0x12345678,pc,d1.l],0x76543210),d2
+        move.l  ([.+0x12345678,pc,a1.w]),d2
+        move.l  ([.+0x12345678,pc,a1.w],0x7654),d2
+        move.l  ([.+0x12345678,pc,a1.w],0x76543210),d2
+        move.l  ([.+0x12345678,pc,a1.l]),d2
+        move.l  ([.+0x12345678,pc,a1.l],0x7654),d2
+        move.l  ([.+0x12345678,pc,a1.l],0x76543210),d2
+        ;# pc-relative indirect with outer index
+        .word 0x243B, 0x1115         ;# move.l  ([.+2,pc],d1.w),d2
+        .word 0x243B, 0x1116, 0x1234 ;# move.l  ([.+2,pc],d1.w,0x1234),d2
+        .word 0x243B, 0x1117, 0x1234 ;# move.l  ([.+2,pc],d1.w,0x12345678),d2
+        .word 0x5678
+        .word 0x243B, 0x1915         ;# move.l  ([.+2,pc],d1.l),d2
+        .word 0x243B, 0x1916, 0x1234 ;# move.l  ([.+2,pc],d1.l,0x1234),d2
+        .word 0x243B, 0x1917, 0x1234 ;# move.l  ([.+2,pc],d1.l,0x12345678),d2
+        .word 0x5678
+        .word 0x243B, 0x9115         ;# move.l  ([.+2,pc],a1.w),d2
+        .word 0x243B, 0x9116, 0x1234 ;# move.l  ([.+2,pc],a1.w,0x1234),d2
+        .word 0x243B, 0x9117, 0x1234 ;# move.l  ([.+2,pc],a1.w,0x12345678),d2
+        .word 0x5678
+        .word 0x243B, 0x9915         ;# move.l  ([.+2,pc],a1.l),d2
+        .word 0x243B, 0x9916, 0x1234 ;# move.l  ([.+2,pc],a1.l,0x1234),d2
+        .word 0x243B, 0x9917, 0x1234 ;# move.l  ([.+2,pc],a1.l,0x12345678),d2
+        .word 0x5678
+        .word 0x243B, 0x1125, 0x1232 ;# move.l  ([.+0x1234,pc],d1.w),d2
+        .word 0x243B, 0x1126, 0x1232 ;# move.l  ([.+0x1234,pc],d1.w,0x7654),d2
+        .word 0x7654
+        .word 0x243B, 0x1127, 0x1232 ;# move.l  ([.+0x1234,pc],d1.w,0x76543210),d2
+        .word 0x7654, 0x3210
+        .word 0x243B, 0x1925, 0x1232 ;# move.l  ([.+0x1234,pc],d1.l),d2
+        .word 0x243B, 0x1926, 0x1232 ;# move.l  ([.+0x1234,pc],d1.l,0x7654),d2
+        .word 0x7654
+        .word 0x243B, 0x1927, 0x1232 ;# move.l  ([.+0x1234,pc],d1.l,0x76543210),d2
+        .word 0x7654, 0x3210
+        .word 0x243B, 0x9125, 0x1232 ;# move.l  ([.+0x1234,pc],a1.w),d2
+        .word 0x243B, 0x9126, 0x1232 ;# move.l  ([.+0x1234,pc],a1.w,0x7654),d2
+        .word 0x7654
+        .word 0x243B, 0x9127, 0x1232 ;# move.l  ([.+0x1234,pc],a1.w,0x76543210),d2
+        .word 0x7654, 0x3210
+        .word 0x243B, 0x9925, 0x1232 ;# move.l  ([.+0x1234,pc],a1.l),d2
+        .word 0x243B, 0x9926, 0x1232 ;# move.l  ([.+0x1234,pc],a1.l,0x7654),d2
+        .word 0x7654
+        .word 0x243B, 0x9927, 0x1232 ;# move.l  ([.+0x1234,pc],a1.l,0x76543210),d2
+        .word 0x7654, 0x3210
+        move.l  ([.+0x12345678,pc],d1.w),d2
+        move.l  ([.+0x12345678,pc],d1.w,0x7654),d2
+        move.l  ([.+0x12345678,pc],d1.w,0x76543210),d2
+        move.l  ([.+0x12345678,pc],d1.l),d2
+        move.l  ([.+0x12345678,pc],d1.l,0x7654),d2
+        move.l  ([.+0x12345678,pc],d1.l,0x76543210),d2
+        move.l  ([.+0x12345678,pc],a1.w),d2
+        move.l  ([.+0x12345678,pc],a1.w,0x7654),d2
+        move.l  ([.+0x12345678,pc],a1.w,0x76543210),d2
+        move.l  ([.+0x12345678,pc],a1.l),d2
+        move.l  ([.+0x12345678,pc],a1.l,0x7654),d2
+        move.l  ([.+0x12345678,pc],a1.l,0x76543210),d2
+
+;# Local Variables:
+;# mode: asm
+;# End:
+;# vim: set ft=asm:
