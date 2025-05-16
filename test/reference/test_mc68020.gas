@@ -16,6 +16,7 @@
         .include "test_mc68882.ginc"
         .include "test_mc68010.ginc"
         .include "test_mc68020.ginc"
+        .include "test_mc68851.ginc"
 ;# Module
         rtm     d2
         rtm     a2

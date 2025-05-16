@@ -19,6 +19,8 @@
         include "test_mc68882.inc"
         include "test_mc68010.inc"
         include "test_mc68020.inc"
+        pmmu    on
+        include "test_mc68851.inc"
 ;;; Module
         rtm     d2
         rtm     a2
