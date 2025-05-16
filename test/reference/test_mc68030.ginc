@@ -1,0 +1,139 @@
+;### Copyright 2025 Tadashi G. Takaoka
+;###
+;### Licensed under the Apache License, Version 2.0 (the "License");
+;### you may not use this file except in compliance with the License.
+;### You may obtain a copy of the License at
+;###
+;###     http://www.apache.org/licenses/LICENSE-2.0
+;###
+;### Unless required by applicable law or agreed to in writing, software
+;### distributed under the License is distributed on an "AS IS" BASIS,
+;### WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+;### See the License for the specific language governing permissions and
+;### limitations under the License.
+
+        pmove   (a2),tc
+        pmove   (a2),srp
+        pmove   (a2),crp
+        pmove   (a2),psr
+        pmove   (a2),tt0
+        pmove   (a2),tt1
+        pmove   (0x1234,a2),tc
+        pmove   (0x1234,a2),srp
+        pmove   (0x1234,a2),crp
+        pmove   (0x1234,a2),psr
+        pmove   (0x1234,a2),tt0
+        pmove   (0x1234,a2),tt1
+        pmove   (0x34,a2,d3.w),tc
+        pmove   (0x34,a2,d3.w),srp
+        pmove   (0x34,a2,d3.w),crp
+        pmove   (0x34,a2,d3.w),psr
+        pmove   (0x34,a2,d3.w),tt0
+        pmove   (0x34,a2,d3.w),tt1
+        pmove   (0x1234).w,tc
+        pmove   (0x1234).w,srp
+        pmove   (0x1234).w,crp
+        pmove   (0x1234).w,psr
+        pmove   (0x1234).w,tt0
+        pmove   (0x1234).w,tt1
+        pmove   (0x12345678).l,tc
+        pmove   (0x12345678).l,srp
+        pmove   (0x12345678).l,crp
+        pmove   (0x12345678).l,psr
+        pmove   (0x12345678).l,tt0
+        pmove   (0x12345678).l,tt1
+        pmovefd (a2),tc
+        pmovefd (a2),srp
+        pmovefd (a2),crp
+        pmovefd (a2),tt0
+        pmovefd (a2),tt1
+        pmovefd (0x1234,a2),tc
+        pmovefd (0x1234,a2),srp
+        pmovefd (0x1234,a2),crp
+        pmovefd (0x1234,a2),tt0
+        pmovefd (0x1234,a2),tt1
+        pmovefd (0x34,a2,d3.w),tc
+        pmovefd (0x34,a2,d3.w),srp
+        pmovefd (0x34,a2,d3.w),crp
+        pmovefd (0x34,a2,d3.w),tt0
+        pmovefd (0x34,a2,d3.w),tt1
+        pmovefd (0x1234).w,tc
+        pmovefd (0x1234).w,srp
+        pmovefd (0x1234).w,crp
+        pmovefd (0x1234).w,tt0
+        pmovefd (0x1234).w,tt1
+        pmovefd (0x12345678).l,tc
+        pmovefd (0x12345678).l,srp
+        pmovefd (0x12345678).l,crp
+        pmovefd (0x12345678).l,tt0
+        pmovefd (0x12345678).l,tt1
+        pmove   tc,(a2)
+        pmove   srp,(a2)
+        pmove   crp,(a2)
+        pmove   psr,(a2)
+        pmove   tt0,(a2)
+        pmove   tt1,(a2)
+        pmove   tc,(0x1234,a2)
+        pmove   srp,(0x1234,a2)
+        pmove   crp,(0x1234,a2)
+        pmove   psr,(0x1234,a2)
+        pmove   tt0,(0x1234,a2)
+        pmove   tt1,(0x1234,a2)
+        pmove   tc,(0x34,a2,d3.w)
+        pmove   srp,(0x34,a2,d3.w)
+        pmove   crp,(0x34,a2,d3.w)
+        pmove   psr,(0x34,a2,d3.w)
+        pmove   tt0,(0x34,a2,d3.w)
+        pmove   tt1,(0x34,a2,d3.w)
+        pmove   tc,(0x1234).w
+        pmove   srp,(0x1234).w
+        pmove   crp,(0x1234).w
+        pmove   psr,(0x1234).w
+        pmove   tt0,(0x1234).w
+        pmove   tt1,(0x1234).w
+        pmove   tc,(0x12345678).l
+        pmove   srp,(0x12345678).l
+        pmove   crp,(0x12345678).l
+        pmove   psr,(0x12345678).l
+        pmove   tt0,(0x12345678).l
+        pmove   tt1,(0x12345678).l
+        pflusha
+        pflush  #7,#4
+        pflush  d4,#7
+        pflush  sfc,#1
+        pflush  dfc,#7
+        pflush  #7,#4,(a2)
+        pflush  d4,#7,(0x1234,a2)
+        pflush  sfc,#1,(0x34,a2,d3.w)
+        pflush  dfc,#7,(0x1234).w
+        pflush  #7,#4,(0x12345678).l
+        ploadr  #7,(a2)
+        ploadr  d3,(0x1234,a2)
+        ploadr  sfc,(0x34,a2,d3.w)
+        ploadr  dfc,(0x1234).w
+        ploadr  #4,(0x12345678).l
+        ploadw  #7,(a2)
+        ploadw  d3,(0x1234,a2)
+        ploadw  sfc,(0x34,a2,d3.w)
+        ploadw  dfc,(0x1234).w
+        ploadw  #4,(0x12345678).l
+        ptestr  #7,(a2),#4
+        ptestr  d3,(0x1234,a2),#7
+        ptestr  sfc,(0x34,a2,d3.w),#1
+        ptestr  dfc,(0x1234).w,#5
+        ptestr  #4,(0x12345678).l,#2
+        ptestw  #7,(a2),#4
+        ptestw  d3,(0x1234,a2),#7
+        ptestw  sfc,(0x34,a2,d3.w),#1
+        ptestw  dfc,(0x1234).w,#5
+        ptestw  #4,(0x12345678).l,#2
+        ptestw  #7,(a2),#4,a3
+        ptestw  d3,(0x1234,a2),#7,a3
+        ptestw  sfc,(0x34,a2,d3.w),#1,a3
+        ptestw  dfc,(0x1234).w,#5,a3
+        ptestw  #4,(0x12345678).l,#2,a3
+
+;### Local Variables:
+;### mode: asm
+;### End:
+;### vim: set ft=asm:
