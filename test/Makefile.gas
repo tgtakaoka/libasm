@@ -64,6 +64,15 @@ gas-%_i80186.hex: %_i80186.gas
 	| tr -d '\015' > $(^:.gas=.hex)
 	i386-elf-objdump -m i8086 -M intel -D $(^:.gas=.hex) > $(^:.gas=.dis)
 
+# i80286 target
+gas-%_i80286.hex: %_i80286.gas
+	i386-elf-as -mtune=i286 --warn -mnaked-reg -msyntax=intel \
+		-mmnemonic=intel -o $(^:.gas=.p) -al=$(^:.gas=.lst) $^
+	i386-elf-ld --entry=0 -section-start=.text=0x1000 -o $(^:.gas=.o) $(^:.gas=.p)
+	i386-elf-objcopy -I elf32-i386 -O ihex $(^:.gas=.o) /dev/stdout \
+	| tr -d '\015' > $(^:.gas=.hex)
+	i386-elf-objdump -m i8086 -M intel -D $(^:.gas=.hex) > $(^:.gas=.dis)
+
 # MC68000 target
 gas-%_mc68000.s28: %_mc68000.gas
 	m68k-elf-as -m68000 -m68881 --warn --register-prefix-optional \
