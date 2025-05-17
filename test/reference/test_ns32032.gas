@@ -12,10 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-        .include "test_ns32000.inc"
-        .align   5
+        .include "test_ns32000.ginc"
         .include "test_ns32081.ginc"
-        .align   5
         .include "test_ns32082.inc"
         .end
 
