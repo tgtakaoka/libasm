@@ -14,7 +14,7 @@
 
         .code16
         .include "test_i8086.ginc"
-        .include "test_i8087.ginc"
+        .include "test_i80186.ginc"
 
 ;### Local Variables:
 ;### mode: asm
