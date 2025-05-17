@@ -15,8 +15,6 @@
         cpu     80186
         org     1000H
         include "test_i8086.inc"
-
-        org     2000H
         include "test_i80186.inc"
         end
 

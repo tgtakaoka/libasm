@@ -1,0 +1,253 @@
+;### Copyright 2023 Tadashi G. Takaoka
+;###
+;### Licensed under the Apache License, Version 2.0 (the "License");
+;### you may not use this file except in compliance with the License.
+;### You may obtain a copy of the License at
+;###
+;###     http://www.apache.org/licenses/LICENSE-2.0
+;###
+;### Unless required by applicable law or agreed to in writing, software
+;### distributed under the License is distributed on an "AS IS" BASIS,
+;### WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+;### See the License for the specific language governing permissions and
+;### limitations under the License.
+
+;## Data Transfer
+        wait
+        fld     dword ptr [si]
+        wait
+        fld     qword ptr [0x1234]
+        wait
+        fld     tbyte ptr [di+52]
+        wait
+        fld     st(0)
+        wait
+        fild    word ptr [bp+0x1234]
+        wait
+        fild    dword ptr [bx+si]
+        wait
+        fild    qword ptr [bx+di-52]
+        wait
+        fbld    tbyte ptr [bp+si+0x89AB]
+        wait
+        fst     dword ptr [bp+0x1234]
+        wait
+        fst     qword ptr [bx+si]
+        wait
+        fst     st(1)
+        wait
+        fist    word ptr [bx+di-52]
+        wait
+        fist    dword ptr [bp+si+0x89AB]
+        wait
+        fstp    dword ptr [bp+si+0x89AB]
+        wait
+        fstp    qword ptr [si]
+        wait
+        fstp    tbyte ptr [0x1234]
+        wait
+        fstp    st(2)
+        wait
+        fistp   word ptr [di+52]
+        wait
+        fistp   dword ptr [bp+0x1234]
+        wait
+        fistp   qword ptr [bx+si]
+        wait
+        fbstp   tbyte ptr [bx+di-52]
+        wait
+        fxch    st(3)
+
+;## Comparison
+        wait
+        ficom   word ptr [si]
+        wait
+        ficom   dword ptr [0x1234]
+        wait
+        fcom    dword ptr [si]
+        wait
+        fcom    qword ptr [0x1234]
+        wait
+        fcom    st(1)
+        wait
+        ficomp  word ptr [di+52]
+        wait
+        ficomp  dword ptr [bp+0x1234]
+        wait
+        fcomp   dword ptr [di+52]
+        wait
+        fcomp   qword ptr [bp+0x1234]
+        wait
+        fcomp   st(3)
+        wait
+        fcompp
+        wait
+        ftst
+        wait
+        fxam
+
+;## Constants
+        wait
+        fldz
+        wait
+        fld1
+        wait
+        fldpi
+        wait
+        fldl2t
+        wait
+        fldl2e
+        wait
+        fldlg2
+        wait
+        fldln2
+
+;## Arithmetic
+        wait
+        fiadd   word ptr [si]
+        wait
+        fiadd   dword ptr [0x1234]
+        wait
+        fadd    dword ptr [si]
+        wait
+        fadd    qword ptr [0x1234]
+        wait
+        fadd    st, st(1)
+        wait
+        fadd    st(2), st
+        wait
+        faddp   st(3), st
+        wait
+        fisub   word ptr [bx+si]
+        wait
+        fisub   dword ptr [bx+di-52]
+        wait
+        fsub    dword ptr [bx+si]
+        wait
+        fsub    qword ptr [bx+di-52]
+        wait
+        fsub    st, st(5)
+        wait
+        fsub    st(6), st
+        wait
+        fsubp   st(7), st
+        wait
+        fisubr  word ptr [bp+si+0x89AB]
+        wait
+        fisubr  dword ptr [si]
+        wait
+        fsubr   dword ptr [bp+si+0x89AB]
+        wait
+        fsubr   qword ptr [si]
+        wait
+        fsubr   st, st(7)
+        wait
+        fsubr   st(1), st
+        wait
+        fsubrp  st(2), st
+        wait
+        fimul   word ptr [di+52]
+        wait
+        fimul   dword ptr [bp+0x1234]
+        wait
+        fmul    dword ptr [di+52]
+        wait
+        fmul    qword ptr [bp+0x1234]
+        wait
+        fmul    st, st(3)
+        wait
+        fmul    st(4), st
+        wait
+        fmulp   st(5), st
+        wait
+        fidiv   word ptr [0x1234]
+        wait
+        fidiv   dword ptr [di+52]
+        wait
+        fdiv    dword ptr [0x1234]
+        wait
+        fdiv    dword ptr [di+52]
+        wait
+        fdiv    st, st(2)
+        wait
+        fdiv    st(3), st
+        wait
+        fdivp   st(4), st
+        wait
+        fidivr  word ptr [bp+0x1234]
+        wait
+        fidivr  dword ptr [bx+si]
+        wait
+        fdivr   dword ptr [bp+0x1234]
+        wait
+        fdivr   qword ptr [bx+si]
+        wait
+        fdivr   st, st(4)
+        wait
+        fdivr   st(5), st
+        wait
+        fdivrp  st(6), st
+        wait
+        fsqrt
+        wait
+        fscale
+        wait
+        fprem
+        wait
+        frndint
+        wait
+        fxtract
+        wait
+        fabs
+        wait
+        fchs
+
+;## Transcendental
+        wait
+        fptan
+        wait
+        fpatan
+        wait
+        f2xm1
+        wait
+        fyl2x
+        wait
+        fyl2xp1
+
+;## Co-processor control
+        finit
+        fninit
+        feni
+        fneni
+        fdisi
+        fndisi
+        wait
+        fldcw   [si]
+        fstcw   [0x1234]
+        fnstcw  [di+52]
+        fstsw   [bp+0x1234]
+        fnstsw  [bx+si]
+        fclex
+        fnclex
+        fstenv  [bx+di-52]
+        fnstenv [bp+si+0x89AB]
+        wait
+        fldenv  [di]
+        fsave   [0x5678]
+        fnsave  [si+52]
+        wait
+        frstor  [bx+0x1234]
+        wait
+        fincstp
+        wait
+        fdecstp
+        wait
+        ffree   st(2)
+        wait
+        fnop
+        fwait
+
+;### Local Variables:
+;### mode: asm
+;### End:
+;### vim: set ft=asm:
