@@ -16,10 +16,10 @@
         MTPI    (R1)
         MFPD    (R2)
         MTPD    (R3)
-;        MFPI    R0              ; should be warning
-;        MTPI    R1              ; should be warning
-;        MFPD    R2              ; should be warning
-;        MTPD    R3              ; should be warning
+;#       MFPI    R0              ; should be warning
+;#       MTPI    R1              ; should be warning
+;#       MFPD    R2              ; should be warning
+;#       MTPD    R3              ; should be warning
         MUL     @SP, R1
         DIV     (R2), R3
         ASH     (R0)+, R4
@@ -28,8 +28,8 @@
         CSM     (R0)
         TSTSET  (R1)
         WRTLCK  (R2)
-;        TSTSET  R1              ; must be error (trap 10)
-;        WRTLCK  R2              ; error (trap 10)
+;#       TSTSET  R1              ; must be error (trap 10)
+;#       WRTLCK  R2              ; error (trap 10)
 
         ABSD    AC0
         ABSF    AC1
