@@ -1,4 +1,4 @@
-;;; Copyright 2025 Tadashi G. Takaoka
+;;; Copyright 2022 Tadashi G. Takaoka
 ;;;
 ;;; Licensed under the Apache License, Version 2.0 (the "License");
 ;;; you may not use this file except in compliance with the License.
@@ -12,13 +12,14 @@
 ;;; See the License for the specific language governing permissions and
 ;;; limitations under the License.
 
-        cpu     80186
-        org     1000H
-        include "test_i8086.inc"
-        include "test_i8086_far.inc"
-        include "test_i80186.inc"
+        cpu     80286
+        org     0x1000
+        include "test_i8086.ginc"
+        include "test_i80186.ginc"
+        include "test_i80286.ginc"
         fpu     on
-        include "test_i8087.inc"
+        include "test_i8087.ginc"
+        include "test_i80287.ginc"
         end
 
 ;;; Local Variables:

@@ -1,0 +1,141 @@
+;### Copyright 2025 Tadashi G. Takaoka
+;###
+;### Licensed under the Apache License, Version 2.0 (the "License");
+;### you may not use this file except in compliance with the License.
+;### You may obtain a copy of the License at
+;###
+;###     http://www.apache.org/licenses/LICENSE-2.0
+;###
+;### Unless required by applicable law or agreed to in writing, software
+;### distributed under the License is distributed on an "AS IS" BASIS,
+;### WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+;### See the License for the specific language governing permissions and
+;### limitations under the License.
+
+;### System Management
+        arpl    [bx+si], si
+        arpl    [bx+di+0x34], di
+        arpl    [bp+si+0x1234], ax
+        arpl    bx, cx
+        arpl    [si], dx
+        arpl    [di+0x34], bx
+        arpl    [bp+0x1234], sp
+        arpl    di, bp
+        lar     si, [bx+si+0x34]
+        lar     di, [bx+di+0x1234]
+        lar     ax, dx
+        lar     cx, [bp+di]
+        lar     dx, [si+0x34]
+        lar     bx, [di+0x1234]
+        lar     sp, si
+        lar     bp, [bx]
+        lsl     si, [bx+si+0x1234]
+        lsl     di, cx
+        lsl     ax, [bp+si]
+        lsl     cx, [bp+di+0x34]
+        lsl     dx, [si+0x1234]
+        lsl     bx, bp
+        lsl     sp, [0x1234]
+        lsl     bp, [bx+0x34]
+        lgdt    [bx+si]
+        lgdt    [bx+di+0x34]
+        lgdt    [bp+si+0x1234]
+        lgdt    [bp+di]
+        lgdt    [si+0x34]
+        lgdt    [di+0x1234]
+        lgdt    [0x1234]
+        lgdt    [bx+0x34]
+        sgdt    [bx+si+0x1234]
+        sgdt    [bx+di]
+        sgdt    [bp+si+0x34]
+        sgdt    [bp+di+0x1234]
+        sgdt    [si]
+        sgdt    [di+0x34]
+        sgdt    [bp+0x1234]
+        sgdt    [bx]
+        lldt    [bx+si+0x34]
+        lldt    [bx+di+0x1234]
+        lldt    dx
+        lldt    [bp+di]
+        lldt    [si+0x34]
+        lldt    [di+0x1234]
+        lldt    si
+        lldt    [bx]
+        sldt    [bx+si+0x1234]
+        sldt    cx
+        sldt    [bp+si]
+        sldt    [bp+di+0x34]
+        sldt    [si+0x1234]
+        sldt    bp
+        sldt    [0x1234]
+        sldt    [bx+0x34]
+        lidt    [bx+si+0x34]
+        lidt    [bx+di+0x1234]
+        lidt    [bp+si]
+        lidt    [bp+di+0x34]
+        lidt    [si+0x1234]
+        lidt    [di]
+        lidt    [bp+0x34]
+        lidt    [bx+0x1234]
+        sidt    [bx+si]
+        sidt    [bx+di+0x34]
+        sidt    [bp+si+0x1234]
+        sidt    [bp+di]
+        sidt    [si+0x34]
+        sidt    [di+0x1234]
+        sidt    [0x1234]
+        sidt    [bx+0x34]
+        ltr    [bx+si+0x34]
+        ltr    [bx+di+0x1234]
+        ltr    dx
+        ltr    [bp+di]
+        ltr    [si+0x34]
+        ltr    [di+0x1234]
+        ltr    si
+        ltr    [bx]
+        str    [bx+si+0x1234]
+        str    cx
+        str    [bp+si]
+        str    [bp+di+0x34]
+        str    [si+0x1234]
+        str    bp
+        str    [0x1234]
+        str    [bx+0x34]
+        verr    ax
+        verr    [bx+di]
+        verr    [bp+si+0x34]
+        verr    [bp+di+0x1234]
+        verr    sp
+        verr    [di]
+        verr    [bp+0x34]
+        verr    [bx+0x1234]
+        verw    [bx+si]
+        verw    [bx+di+0x34]
+        verw    [bp+si+0x1234]
+        verw    bx
+        verw    [si]
+        verw    [di+0x34]
+        verw    [bp+0x1234]
+        verw    di
+        clts
+        lmsw    [bx+si+0x34]
+        lmsw    [bx+di+0x1234]
+        lmsw    dx
+        lmsw    [bp+di]
+        lmsw    [si+0x34]
+        lmsw    [di+0x1234]
+        lmsw    si
+        lmsw    [bx]
+        smsw    [bx+si+0x1234]
+        smsw    cx
+        smsw    [bp+si]
+        smsw    [bp+di+0x34]
+        smsw    [si+0x1234]
+        smsw    bp
+        smsw    [0x1234]
+        smsw    [bx+0x34]
+
+;### local Variables:
+;### mode: asm
+;### End:
+;### vim: set ft=asm:
