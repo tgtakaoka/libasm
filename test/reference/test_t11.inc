@@ -19,7 +19,7 @@
         IOT
         RESET
         RTT
-;        MFPT
+        MFPT
         RTS     R0
         RTS     PC
         CLC
@@ -47,7 +47,7 @@
         BISB    033(SP), R3
         ADD     @077(SP), R4
         SUB     056(PC), R5
-;        XOR     R0, -2(SP)
+        XOR     R0, -2(SP)
         JMP     @#01234
         SWAB    R0
         CLR     (R1)
