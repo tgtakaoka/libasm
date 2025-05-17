@@ -33,17 +33,20 @@
 ;# Compare Floating: CMPf src1/gen, src2/gen
         cmpf    f5, f7
         cmpl    f6, f0
-        cmpf    1.25, 3.75
-        cmpl    1.25, 3.75
+        cmpf    0f1.25, 0f3.75
+        cmpl    0f1.25, 0f3.75
 ;# Move Floating: MOVf src/gen, dest/gen
         movf    f0, 8(sb)
         movl    f2, f4
-        movf    0fnan, f0
+        .byte   0xBE, 0x05, 0xA0, 0x7F ;# movf    0fnan, f0
+        .byte   0xC0, 0x00, 0x00
         movf    0f+inf, f1
         movf    0f-inf, f1
         movf    0f+0.0, f2
         movf    0f-0.0, f2
-        movl    0fnan, f0
+        .byte   0xBE, 0x04, 0xA0, 0x7F ;# movl    0fnan, f0
+        .byte   0xF8, 0x00, 0x00, 0x00
+        .byte   0x00, 0x00, 0x00
         movl    0f+inf, f2
         movl    0f-inf, f2
         movl    0f+0.0, f4
