@@ -21,10 +21,10 @@ namespace text {
 namespace ns32000 {
 
 // clang-format off
-constexpr char TEXT_CPU_NS32032[] PROGMEM = "NS32032";
-constexpr char TEXT_FPU_NS32081[] PROGMEM = "NS32081";
-constexpr char TEXT_MMU_NS32082[] PROGMEM = "NS32082";
-constexpr char TEXT_CPU_32032[]   PROGMEM = "32032";
+constexpr char TEXT_CPU_NS32032[]  PROGMEM = "NS32032";
+constexpr char TEXT_FPU_NS32081[]  PROGMEM = "NS32081";
+constexpr char TEXT_PMMU_NS32082[] PROGMEM = "NS32082";
+constexpr char TEXT_CPU_32032[]    PROGMEM = "32032";
 
 constexpr char TEXT_PMMU[] PROGMEM = "PMMU";
 
@@ -367,7 +367,7 @@ constexpr char TEXT_REG_PSR[]     PROGMEM = "PSR";
 constexpr char TEXT_REG_INTBASE[] PROGMEM = "INTBASE";
 constexpr char TEXT_REG_MOD[]     PROGMEM = "MOD";
 
-// NS32082/MMU registers.
+// NS32082/PMMU registers.
 constexpr char TEXT_REG_BPR0[] PROGMEM = "BPR0";
 constexpr char TEXT_REG_BPR1[] PROGMEM = "BPR1";
 constexpr char TEXT_REG_MSR[]  PROGMEM = "MSR";

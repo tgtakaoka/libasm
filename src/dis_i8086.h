@@ -34,6 +34,7 @@ struct DisI8086 final : Disassembler, Config {
     Error setSegmentInsn(bool enable);
 
 private:
+    const TextOption<Config> _opt_fpu;
     const BoolOption<DisI8086> _opt_segmentInsn;
     const BoolOption<DisI8086> _opt_stringInsn;
 

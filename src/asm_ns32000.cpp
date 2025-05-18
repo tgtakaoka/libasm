@@ -26,17 +26,11 @@ using namespace pseudo;
 using namespace reg;
 using namespace text::common;
 using namespace text::option;
-
-using text::ns32000::TEXT_FPU_NS32081;
-using text::ns32000::TEXT_MMU_NS32082;
-using text::ns32000::TEXT_PMMU;
+using namespace text::ns32000;
 
 namespace {
 
 // clang-format off
-constexpr char OPT_TEXT_PMMU[] PROGMEM = "pmmu";
-constexpr char OPT_DESC_PMMU[] PROGMEM = "memory management unit";
-
 constexpr char TEXT_dBLKD[]   PROGMEM = ".blkd";
 constexpr char TEXT_dDOUBLE[] PROGMEM = ".double";
 constexpr char TEXT_dFLOAT[]  PROGMEM = ".float";
@@ -77,41 +71,15 @@ const ValueParser::Plugins &AsmNs32000::defaultPlugins() {
 AsmNs32000::AsmNs32000(const ValueParser::Plugins &plugins)
     : Assembler(plugins, PSEUDO_TABLE, &_opt_fpu),
       Config(TABLE),
-      _opt_fpu(this, &Assembler::setFpu, OPT_TEXT_FPU, OPT_DESC_FPU, &_opt_pmmu),
-      _opt_pmmu(this, &AsmNs32000::setPmmu, OPT_TEXT_PMMU, OPT_DESC_PMMU) {
+      _opt_fpu(this, &Config::setFpuName, OPT_TEXT_FPU, OPT_DESC_FPU, &_opt_pmmu),
+      _opt_pmmu(this, &Config::setPmmuName, OPT_TEXT_PMMU, OPT_DESC_PMMU) {
     reset();
 }
 
 void AsmNs32000::reset() {
     Assembler::reset();
     setFpuType(FPU_NONE);
-    setMmuType(MMU_NONE);
-}
-
-Error AsmNs32000::setFpu(StrScanner &scan) {
-    if (scan.iequals_P(TEXT_none)) {
-        setFpuType(FPU_NONE);
-#if !defined(LIBASM_NS32000_NOFPU)
-    } else if (scan.iequals_P(TEXT_FPU_NS32081)) {
-        setFpuType(FPU_NS32081);
-#endif
-    } else {
-        return UNKNOWN_OPERAND;
-    }
-    return OK;
-}
-
-Error AsmNs32000::setPmmu(StrScanner &scan) {
-    if (scan.iequals_P(TEXT_none)) {
-        setMmuType(MMU_NONE);
-#if !defined(LIBASM_NS32000_NOMMU)
-    } else if (scan.iequals_P(TEXT_MMU_NS32082)) {
-        setMmuType(MMU_NS32082);
-#endif
-    } else {
-        return UNKNOWN_OPERAND;
-    }
-    return OK;
+    setPmmuType(PMMU_NONE);
 }
 
 Error AsmNs32000::parseStrOptNames(StrScanner &scan, Operand &op, bool braket) const {

@@ -81,27 +81,13 @@ const ValueParser::Plugins &AsmMc68000::defaultPlugins() {
 AsmMc68000::AsmMc68000(const ValueParser::Plugins &plugins)
     : Assembler(plugins, PSEUDO_TABLE, &_opt_fpu),
       Config(TABLE),
-      _opt_fpu(this, &Assembler::setFpu, OPT_TEXT_FPU, OPT_DESC_FPU) {
+      _opt_fpu(this, &Config::setFpuName, OPT_TEXT_FPU, OPT_DESC_FPU) {
     reset();
 }
 
 void AsmMc68000::reset() {
     Assembler::reset();
     setFpuType(FPU_NONE);
-}
-
-Error AsmMc68000::setFpu(StrScanner &scan) {
-    if (scan.expectFalse() || scan.iequals_P(TEXT_none)) {
-        setFpuType(FPU_NONE);
-#if !defined(LIBASM_MC68000_NOFPU)
-    } else if (scan.expectTrue() || scan.iequals_P(TEXT_FPU_68881) ||
-               scan.iequals_P(TEXT_FPU_MC68881)) {
-        setFpuType(FPU_MC68881);
-#endif
-    } else {
-        return UNKNOWN_OPERAND;
-    }
-    return OK;
 }
 
 namespace {
@@ -943,7 +929,7 @@ Error AsmMc68000::processPseudo(StrScanner &scan, Insn &_insn) {
     const auto at = scan;
     if (strcasecmp_P(insn.name(), TEXT_FPU) == 0) {
         const auto error = _opt_fpu.set(scan);
-        return error ? insn.setErrorIf(at, error) : OK;
+        return error ? _insn.setErrorIf(at, error) : OK;
     }
 #if !defined(LIBASM_MC68000_NOFPU)
     if (strcasecmp_P(insn.name(), TEXT_DC_X) == 0)

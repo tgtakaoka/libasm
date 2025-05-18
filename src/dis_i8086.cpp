@@ -17,11 +17,15 @@
 #include "dis_i8086.h"
 #include "reg_i8086.h"
 #include "table_i8086.h"
+#include "text_i8086.h"
 
 namespace libasm {
 namespace i8086 {
 
 using namespace reg;
+using namespace text::common;
+using namespace text::option;
+using namespace text::i8086;
 
 namespace {
 
@@ -37,8 +41,9 @@ const ValueFormatter::Plugins &DisI8086::defaultPlugins() {
 }
 
 DisI8086::DisI8086(const ValueFormatter::Plugins &plugins)
-    : Disassembler(plugins, &_opt_segmentInsn),
+    : Disassembler(plugins, &_opt_fpu),
       Config(TABLE),
+      _opt_fpu(this, &Config::setFpuName, OPT_TEXT_FPU, OPT_DESC_FPU, &_opt_segmentInsn),
       _opt_segmentInsn(this, &DisI8086::setSegmentInsn, OPT_BOOL_SEGMENT_INSN,
               OPT_DESC_SEGMENT_INSN, &_opt_stringInsn),
       _opt_stringInsn(this, &DisI8086::setStringInsn, OPT_BOOL_STRING_INSN, OPT_DESC_STRING_INSN) {
@@ -47,6 +52,11 @@ DisI8086::DisI8086(const ValueFormatter::Plugins &plugins)
 
 void DisI8086::reset() {
     Disassembler::reset();
+#if defined(LIBASM_I8086_NOFPU)
+    setFpuType(FPU_NONE);
+#else
+    setFpuType(FPU_ON);
+#endif
     setSegmentInsn(true);
     setStringInsn(false);
 }

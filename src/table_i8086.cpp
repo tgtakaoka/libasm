@@ -1419,6 +1419,48 @@ Error TableI8086::searchCpuName(StrScanner &name, CpuType &cpuType) const {
     return OK;
 }
 
+void Config::setCpuType(CpuType cpuType) {
+    _cpuSpec.cpu = cpuType;
+    ConfigImpl::setCpuType(cpuType);
+    if (cpuType == V30)
+        setFpuType(FPU_NONE);
+}
+
+const /*PROGMEM*/ char *Config::fpu_P() const {
+    return fpu(_cpuSpec.fpu)->name_P();
+}
+
+Error Config::setFpuType(FpuType fpuType) {
+    if (fpuType == FPU_NONE) {
+        _cpuSpec.fpu = FPU_NONE;
+        return OK;
+    }
+#if !defined(LIBASM_I8086_NOFPU)
+    const auto cpuType = _cpuSpec.cpu;
+    if (fpuType == FPU_ON || fpuType == FPU_I8087) {
+        if (cpuType == I8086 || cpuType == I80186) {
+            _cpuSpec.fpu = FPU_I8087;
+            return OK;
+        }
+    }
+#endif
+    return FLOAT_NOT_SUPPORTED;
+}
+
+Error Config::setFpuName(StrScanner &scan) {
+    if (scan.expectFalse())
+        return setFpuType(FPU_NONE);
+#if !defined(LIBASM_I8086_NOFPU)
+    if (scan.expectTrue())
+        return setFpuType(FPU_ON);
+    auto p = scan;
+    p.iexpect('i');
+    if (p.iequals_P(TEXT_FPU_8087))
+        return setFpuType(FPU_I8087);
+#endif
+    return UNKNOWN_OPERAND;
+}
+
 const TableI8086 TABLE;
 
 }  // namespace i8086

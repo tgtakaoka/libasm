@@ -136,19 +136,6 @@ int32_t Assembler::branchDelta(
     return delta;
 }
 
-bool Assembler::setCpu(const char *name) {
-    StrScanner scan{name};
-    return setCpu(scan) == OK;
-}
-
-Error Assembler::setCpu(StrScanner &scan) {
-    return configSetter().setCpuName(scan);
-}
-
-Error Assembler::setFpu(StrScanner &) {
-    return UNSUPPORTED_CPU;
-}
-
 Error Assembler::setOption(const char *name, const char *text) {
     StrScanner scan{text};
     return setOption(name, scan);

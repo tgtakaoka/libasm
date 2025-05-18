@@ -67,7 +67,7 @@ const ValueParser::Plugins &AsmI8086::defaultPlugins() {
 AsmI8086::AsmI8086(const ValueParser::Plugins &plugins)
     : Assembler(plugins, PSEUDO_TABLE, &_opt_fpu),
       Config(TABLE),
-      _opt_fpu(this, &Assembler::setFpu, OPT_TEXT_FPU, OPT_DESC_FPU, &_opt_optimizeSegment),
+      _opt_fpu(this, &Config::setFpuName, OPT_TEXT_FPU, OPT_DESC_FPU, &_opt_optimizeSegment),
       _opt_optimizeSegment(this, &AsmI8086::setOptimizeSegment, OPT_BOOL_OPTIMIZE_SEGMENT,
               OPT_DESC_OPTIMIZE_SEGMENT) {
     reset();
@@ -77,21 +77,6 @@ void AsmI8086::reset() {
     Assembler::reset();
     setFpuType(FPU_NONE);
     setOptimizeSegment(false);
-}
-
-Error AsmI8086::setFpu(StrScanner &scan) {
-    auto p = scan;
-    p.iexpect('i');
-    if (scan.expectFalse() || scan.iequals_P(TEXT_none)) {
-        setFpuType(FPU_NONE);
-#if !defined(LIBASM_I8086_NOFPU)
-    } else if (scan.expectTrue() || p.iequals_P(TEXT_FPU_8087)) {
-        setFpuType(FPU_I8087);
-#endif
-    } else {
-        return UNKNOWN_OPERAND;
-    }
-    return OK;
 }
 
 Error AsmI8086::setOptimizeSegment(bool enable) {
@@ -733,7 +718,7 @@ Error AsmI8086::processPseudo(StrScanner &scan, Insn &_insn) {
     const auto at = scan;
     if (strcasecmp_P(insn.name(), TEXT_FPU) == 0) {
         const auto error = _opt_fpu.set(scan);
-        return error ? insn.setErrorIf(at, error) : OK;
+        return error ? _insn.setErrorIf(at, error) : OK;
     }
     if (strcasecmp_P(insn.name(), TEXT_DD) == 0)
         return defineDataConstant(insn, scan, DATA_DD, _insn);

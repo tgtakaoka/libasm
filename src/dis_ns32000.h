@@ -35,6 +35,8 @@ struct DisNs32000 final : Disassembler, Config {
     Error setFloatPrefix(bool enable);
 
 private:
+    const TextOption<Config> _opt_fpu;
+    const TextOption<Config> _opt_pmmu;
     const BoolOption<DisNs32000> _opt_externalParen;
 
     bool _externalParen;

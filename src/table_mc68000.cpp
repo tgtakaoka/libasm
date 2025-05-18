@@ -1471,6 +1471,36 @@ Error TableMc68000::searchCpuName(StrScanner &name, CpuType &cpuType) const {
     return UNSUPPORTED_CPU;
 }
 
+const /*PROGMEM*/ char *Config::fpu_P() const {
+    return fpu(_cpuSpec.fpu)->name_P();
+}
+
+Error Config::setFpuType(FpuType fpuType) {
+    if (fpuType == FPU_NONE) {
+        _cpuSpec.fpu = FPU_NONE;
+        return OK;
+    }
+#if !defined(LIBASM_MC68000_NOFPU)
+    if (fpuType == FPU_ON || fpuType == FPU_MC68881) {
+        _cpuSpec.fpu = FPU_MC68881;
+        return OK;
+    }
+#endif
+    return UNKNOWN_OPERAND;
+}
+
+Error Config::setFpuName(StrScanner &scan) {
+    if (scan.expectFalse())
+        return setFpuType(FPU_NONE);
+#if !defined(LIBASM_MC68000_NOFPU)
+    if (scan.expectTrue())
+        return setFpuType(FPU_ON);
+    if (scan.iequals_P(TEXT_FPU_68881) || scan.iequals_P(TEXT_FPU_MC68881))
+        return setFpuType(FPU_MC68881);
+#endif
+    return UNKNOWN_OPERAND;
+}
+
 const TableMc68000 TABLE;
 
 }  // namespace mc68000

@@ -612,7 +612,7 @@ void test_format_11_fpu() {
 
 #endif
 
-#if !defined(LIBASM_NS32000_NOMMU)
+#if !defined(LIBASM_NS32000_NOPMMU)
 
 void test_format_8_mmu() {
     TEST("MOVSUB", "5(SP), 9(SB)",        0xAE, 0x8C, 0xCE, 0x05, 0x09);
@@ -853,10 +853,10 @@ const CpuSpec SPEC{NS32032,
 #else
         FPU_NS32081,
 #endif
-#if defined(LIBASM_NS32000_NOMMU)
-        MMU_NONE
+#if defined(LIBASM_NS32000_NOPMMU)
+        PMMU_NONE
 #else
-        MMU_NS32082
+        PMMU_NS32082
 #endif
 };
 
@@ -1044,7 +1044,7 @@ void run_tests(const char *cpu) {
     RUN_TEST(test_format_9_fpu);
     RUN_TEST(test_format_11_fpu);
 #endif
-#if !defined(LIBASM_NS32000_NOMMU)
+#if !defined(LIBASM_NS32000_NOPMMU)
     RUN_TEST(test_format_8_mmu);
     RUN_TEST(test_format_14_mmu);
 #endif

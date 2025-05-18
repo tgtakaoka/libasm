@@ -36,6 +36,24 @@ bool is80186() {
     return strcmp_P("80186", disassembler.config().cpu_P()) == 0 || v30();
 }
 
+bool fpu_on() {
+    if (is8086()) {
+        EQUALS("8086", OK, dis8086.setFpuType(FPU_ON));
+        EQUALS_P("8086", "8087", dis8086.fpu_P());
+    } else if (v30()) {
+        EQUALS("v30", FLOAT_NOT_SUPPORTED, dis8086.setFpuType(FPU_ON));
+        EQUALS_P("v30", "none", dis8086.fpu_P());
+        return false;
+    } else if (is80186()) {
+        EQUALS("80186", OK, dis8086.setFpuType(FPU_ON));
+        EQUALS_P("80186", "8087", dis8086.fpu_P());
+    } else {
+        EQUALS("unknown CPU", "", dis8086.cpu_P());
+        return false;
+    }
+    return true;
+}
+
 void set_up() {
     disassembler.reset();
 }
@@ -1786,6 +1804,9 @@ void test_segment_override() {
 #if !defined(LIBASM_I8086_NOFPU)
 
 void test_float() {
+    if (!fpu_on())
+        return;
+
     TEST("FINIT", "", 0x9B, 0xDB, 0xE3);
 
     TEST("FLDCW", "[SI]",          0x9B, 0xD9, 0054);
@@ -2328,6 +2349,9 @@ void test_float() {
 }
 
 void test_float_nowait() {
+    if (!fpu_on())
+        return;
+
     TEST("FNINIT", "",      0xDB, 0xE3);
     TEST("FNLDCW", "[SI]",  0xD9, 0054);
     TEST("FNSTCW", "[SI]",  0xD9, 0074);
@@ -2555,6 +2579,9 @@ void test_illegal_80186() {
 // clang-format on
 
 void test_illegal_8087() {
+    if (!fpu_on())
+        return;
+
     static constexpr Config::opcode_t ILLEGALS_D9[] = {
         0xD1, 0xD2, 0xD3, 0xD4, 0xD5, 0xD6, 0xD7,
         0xD8, 0xD9, 0xDA, 0xDB, 0xDC, 0xDD, 0xDE, 0xDF,

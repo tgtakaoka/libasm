@@ -156,6 +156,15 @@ struct __opcode_type<OPCODE_16BIT> : public __opcode_helper<uint16_t> {};
 /** Interface for setting CPU */
 struct ConfigSetter {
     virtual Error setCpuName(StrScanner &scan) = 0;
+    virtual Error setFpuName(StrScanner &scan) = 0;
+    bool setCpu(const char *name) {
+        StrScanner scan{name};
+        return setCpuName(scan) == OK;
+    }
+    bool setFpu(const char *name) {
+        StrScanner scan{name};
+        return setFpuName(scan) == OK;
+    }
 };
 
 /** Base for instruction table fo |CPUTYPE|. */
@@ -196,6 +205,8 @@ struct ConfigImpl : ConfigBase, ConfigSetter {
             setCpuType(cpuType);
         return error;
     }
+
+    Error setFpuName(StrScanner &scan) override { return FLOAT_NOT_SUPPORTED; }
 
 private:
     const InsnTable<CPUTYPE> &_table;

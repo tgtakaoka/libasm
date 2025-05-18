@@ -33,6 +33,7 @@ enum CpuType : uint8_t {
 enum FpuType : uint8_t {
     FPU_NONE,
 #if !defined(LIBASM_MC68000_NOFPU)
+    FPU_ON,
     FPU_MC68881,
 #endif
 };
@@ -47,15 +48,7 @@ struct CpuSpec final {
 struct Config
     : ConfigImpl<CpuType, ADDRESS_24BIT, ADDRESS_BYTE, OPCODE_16BIT, ENDIAN_BIG, 16, 5 + 2> {
     Config(const InsnTable<CpuType> &table)
-        : ConfigImpl(table, MC68000),
-          _cpuSpec(MC68000,
-#if defined(LIBASM_MC68000_NOFPU)
-                  FPU_NONE,
-#else
-                  FPU_MC68881,
-#endif
-                  1) {
-    }
+        : ConfigImpl(table, MC68000), _cpuSpec(MC68000, FPU_NONE, 1) {}
 
     uint8_t codeMax() const override { return _cpuSpec.fpu == FPU_NONE ? 6 : 16; }
 
@@ -63,7 +56,10 @@ struct Config
         _cpuSpec.cpu = cpuType;
         ConfigImpl::setCpuType(cpuType);
     }
-    void setFpuType(FpuType fpuType) { _cpuSpec.fpu = fpuType; }
+    const char *fpu_P() const;
+    FpuType fpuType() const { return _cpuSpec.fpu; }
+    Error setFpuType(FpuType fpuType);
+    Error setFpuName(StrScanner &scan) override;
     // TODO: Add option
     void setFpuId(uint8_t id) { _cpuSpec.fpuCid = id; }
 

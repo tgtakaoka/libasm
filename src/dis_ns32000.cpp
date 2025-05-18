@@ -17,13 +17,15 @@
 #include "dis_ns32000.h"
 #include "reg_ns32000.h"
 #include "table_ns32000.h"
-#include "text_common.h"
+#include "text_ns32000.h"
 
 namespace libasm {
 namespace ns32000 {
 
 using namespace reg;
 using namespace text::common;
+using namespace text::option;
+using namespace text::ns32000;
 
 namespace {
 
@@ -42,8 +44,10 @@ const ValueFormatter::Plugins &DisNs32000::defaultPlugins() {
 }
 
 DisNs32000::DisNs32000(const ValueFormatter::Plugins &plugins)
-    : Disassembler(plugins, &_opt_externalParen),
+    : Disassembler(plugins, &_opt_fpu),
       Config(TABLE),
+      _opt_fpu(this, &Config::setFpuName, OPT_TEXT_FPU, OPT_DESC_FPU, &_opt_pmmu),
+      _opt_pmmu(this, &Config::setPmmuName, OPT_TEXT_PMMU, OPT_DESC_PMMU, &_opt_externalParen),
       _opt_externalParen(this, &DisNs32000::setExternalParen, OPT_BOOL_EXTERNAL_PAREN,
               OPT_DESC_EXTERNAL_PAREN) {
     reset();
@@ -51,6 +55,16 @@ DisNs32000::DisNs32000(const ValueFormatter::Plugins &plugins)
 
 void DisNs32000::reset() {
     Disassembler::reset();
+#if defined(LIBASM_NS32000_NOFPU)
+    setFpuType(FPU_NONE);
+#else
+    setFpuType(FPU_ON);
+#endif
+#if defined(LIBASM_NS32000_NOPMMU)
+    setMmuType(PMMU_NONE);
+#else
+    setPmmuType(PMMU_ON);
+#endif
     setExternalParen(false);
 }
 

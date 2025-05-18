@@ -22,7 +22,7 @@
 /** Disable NS32081 FPU instructions */
 // #define LIBASM_NS32000_NOFPU
 /** Disable NS32082 PMMU instructions */
-// #define LIBASM_NS32000_NOMMU
+// #define LIBASM_NS32000_NOPMMU
 
 namespace libasm {
 namespace ns32000 {
@@ -34,49 +34,43 @@ enum CpuType : uint8_t {
 enum FpuType : uint8_t {
     FPU_NONE,
 #if !defined(LIBASM_NS32000_NOFPU)
+    FPU_ON,
     FPU_NS32081,
 #endif
 };
-enum MmuType : uint8_t {
-    MMU_NONE,
-#if !defined(LIBASM_NS32000_NOMMU)
-    MMU_NS32082,
+enum PmmuType : uint8_t {
+    PMMU_NONE,
+#if !defined(LIBASM_NS32000_NOPMMU)
+    PMMU_ON,
+    PMMU_NS32082,
 #endif
 };
 
 struct CpuSpec final {
-    CpuSpec(CpuType cpu_, FpuType fpu_, MmuType mmu_) : cpu(cpu_), fpu(fpu_), mmu(mmu_) {}
+    CpuSpec(CpuType cpu_, FpuType fpu_, PmmuType pmmu_) : cpu(cpu_), fpu(fpu_), pmmu(pmmu_) {}
     CpuType cpu;
     FpuType fpu;
-    MmuType mmu;
+    PmmuType pmmu;
 };
 
 struct Config
     : ConfigImpl<CpuType, ADDRESS_24BIT, ADDRESS_BYTE, OPCODE_8BIT, ENDIAN_LITTLE, 25, 7> {
     Config(const InsnTable<CpuType> &table)
-        : ConfigImpl(table, NS32032),
-          _cpuSpec(NS32032,
-#if defined(LIBASM_NS32000_NOFPU)
-                   FPU_NONE,
-#else
-                   FPU_NS32081,
-#endif
-#if defined(LIBASM_NS32000_NOMMU)
-                   MMU_NONE
-#else
-                   MMU_NS32082
-#endif
-          ) {
-    }
+        : ConfigImpl(table, NS32032), _cpuSpec(NS32032, FPU_NONE, PMMU_NONE) {}
 
     void setCpuType(CpuType cpuType) override {
         _cpuSpec.cpu = cpuType;
         ConfigImpl::setCpuType(cpuType);
     }
-    void setFpuType(FpuType fpuType) { _cpuSpec.fpu = fpuType; }
-    void setMmuType(MmuType mmuType) { _cpuSpec.mmu = mmuType; }
+    const char *fpu_P() const;
     FpuType fpuType() const { return _cpuSpec.fpu; }
-    MmuType mmuType() const { return _cpuSpec.mmu; }
+    Error setFpuType(FpuType fpuType);
+    Error setFpuName(StrScanner &scan) override;
+
+    const char *pmmu_P() const;
+    PmmuType pmmuType() const { return _cpuSpec.pmmu; }
+    Error setPmmuType(PmmuType pmmuType);
+    Error setPmmuName(StrScanner &scan);
 
 protected:
     CpuSpec _cpuSpec;

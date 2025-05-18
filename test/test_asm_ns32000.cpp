@@ -64,7 +64,7 @@ void tear_down() {
     TEST("fpu none");
     ERRT("fpu ns32082", UNKNOWN_OPERAND, "ns32082");
 
-#if defined(LIBASM_NS32000_NOMMU)
+#if defined(LIBASM_NS32000_NOPMMU)
     ERRT("pmmu ns32082", UNKNOWN_OPERAND, "ns32082");
 #else
     TEST("pmmu ns32082");
@@ -527,7 +527,7 @@ void test_format_11_fpu() {
 
 #endif
 
-#if !defined(LIBASM_NS32000_NOMMU)
+#if !defined(LIBASM_NS32000_NOPMMU)
 
 void test_format_8_mmu() {
     TEST("PMMU NS32082");
@@ -700,7 +700,7 @@ void test_comment() {
 #if !defined(LIBASM_NS32000_NOFPU)
     TEST("FPU NS32081");
 #endif
-#if !defined(LIBASM_NS32000_NOMMU)
+#if !defined(LIBASM_NS32000_NOPMMU)
     TEST("PMMU NS32082");
 #endif
 
@@ -731,7 +731,7 @@ void test_comment() {
 #endif
 
     COMM("LPRB UPSR , R0 ; comment", "; comment", 0x6C, 0x00);
-#if !defined(LIBASM_NS32000_NOMMU)
+#if !defined(LIBASM_NS32000_NOPMMU)
     COMM("LMR  PTB0 , R0 ; comment", "; comment", 0x1E, 0x0B, 0x06);
 #endif
 
@@ -936,7 +936,7 @@ void run_tests(const char *cpu) {
     RUN_TEST(test_format_9_fpu);
     RUN_TEST(test_format_11_fpu);
 #endif
-#if !defined(LIBASM_NS32000_NOMMU)
+#if !defined(LIBASM_NS32000_NOPMMU)
     RUN_TEST(test_format_8_mmu);
     RUN_TEST(test_format_14_mmu);
 #endif

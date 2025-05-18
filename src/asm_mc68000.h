@@ -29,10 +29,8 @@ struct AsmMc68000 final : Assembler, Config {
 
     void reset() override;
 
-    Error setFpu(StrScanner &scan) override;
-
 private:
-    const TextOption<Assembler> _opt_fpu;
+    const TextOption<Config> _opt_fpu;
 
     Error parseOperand(StrScanner &scan, Operand &op) const;
     Error parseKFactor(StrScanner &scan, Operand &op) const;

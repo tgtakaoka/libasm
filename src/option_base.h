@@ -171,6 +171,8 @@ namespace option {
 
 extern const char OPT_TEXT_FPU[] PROGMEM;
 extern const char OPT_DESC_FPU[] PROGMEM;
+extern const char OPT_TEXT_PMMU[] PROGMEM;
+extern const char OPT_DESC_PMMU[] PROGMEM;
 extern const char OPT_BOOL_LONGA[] PROGMEM;
 extern const char OPT_DESC_LONGA[] PROGMEM;
 extern const char OPT_BOOL_LONGI[] PROGMEM;

@@ -18,21 +18,34 @@
 #include <math.h>
 #include "reg_mc68000.h"
 #include "table_mc68000.h"
-#include "text_common.h"
+#include "text_mc68000.h"
 
 namespace libasm {
 namespace mc68000 {
 
 using namespace reg;
 using namespace text::common;
+using namespace text::option;
+using namespace text::mc68000;
 
 const ValueFormatter::Plugins &DisMc68000::defaultPlugins() {
     return ValueFormatter::Plugins::motorola();
 }
 
 DisMc68000::DisMc68000(const ValueFormatter::Plugins &plugins)
-    : Disassembler(plugins), Config(TABLE) {
+    : Disassembler(plugins, &_opt_fpu),
+      Config(TABLE),
+      _opt_fpu(this, &Config::setFpuName, OPT_TEXT_FPU, OPT_DESC_FPU) {
     reset();
+}
+
+void DisMc68000::reset() {
+    Disassembler::reset();
+#if defined(LIBASM_MC68000_NOFPU)
+    setFpuType(FPU_NONE);
+#else
+    setFpuType(FPU_ON);
+#endif
 }
 
 namespace {

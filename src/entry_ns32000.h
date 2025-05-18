@@ -37,7 +37,7 @@ enum AddrMode : uint8_t {
     M_TOS = 8,     // Top of Stack: TOS
     M_MEM = 9,     // Memory Space: disp(FP/SP/SB/PC)
     M_PREG = 10,   // Dedicated Register
-    M_MREG = 11,   // MMU Register
+    M_MREG = 11,   // PMMU Register
     M_CONF = 12,   // Configuration
     M_SOPT = 13,   // String instruction option
     M_RLST = 14,   // Register list

@@ -57,7 +57,7 @@ bool StrScanner::expectTrue() {
 
 bool StrScanner::expectFalse() {
     return iexpectWord_P(PSTR("disable")) || iexpectWord_P(PSTR("false")) ||
-           iexpectWord_P(PSTR("no")) || iexpectWord_P(PSTR("off"));
+           iexpectWord_P(PSTR("no")) || iexpectWord_P(PSTR("off")) || iexpectWord_P(PSTR("none"));
 }
 
 }  // namespace libasm

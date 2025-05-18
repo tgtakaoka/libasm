@@ -24,6 +24,10 @@ using namespace libasm::test;
 AsmI8086 asm8086;
 Assembler &assembler(asm8086);
 
+bool is8086() {
+    return strcmp_P("8086", assembler.config().cpu_P()) == 0;
+}
+
 bool v30() {
     return strcmp_P("V30", assembler.config().cpu_P()) == 0;
 }
@@ -32,8 +36,22 @@ bool is80186() {
     return strcmp_P("80186", assembler.config().cpu_P()) == 0 || v30();
 }
 
-bool is8086() {
-    return strcmp_P("8086", assembler.config().cpu_P()) == 0;
+bool fpu_on() {
+    if (is8086()) {
+        TEST("FPU ON");
+        EQUALS_P("8086", "8087", asm8086.fpu_P());
+    } else if (v30()) {
+        ERRT("FPU ON", FLOAT_NOT_SUPPORTED, "ON");
+        EQUALS_P("v30", "none", asm8086.fpu_P());
+        return false;
+    } else if (is80186()) {
+        TEST("FPU ON");
+        EQUALS_P("80186", "8087", asm8086.fpu_P());
+    } else {
+        EQUALS("unknown CPU", "", asm8086.cpu_P());
+        return false;
+    }
+    return true;
 }
 
 void set_up() {
@@ -1983,7 +2001,8 @@ void test_segment_override() {
 #if !defined(LIBASM_I8086_NOFPU)
 
 void test_float() {
-    TEST("FPU 8087");
+    if (!fpu_on())
+        return;
 
     TEST("FINIT", 0x9B, 0xDB, 0xE3);
 
@@ -2533,7 +2552,8 @@ void test_float() {
 }
 
 void test_float_nowait() {
-    TEST("FPU 8087");
+    if (!fpu_on())
+        return;
 
     TEST("FNINIT",       0xDB, 0xE3);
     TEST("FNLDCW [SI]",  0xD9, 0054);

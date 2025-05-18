@@ -642,8 +642,8 @@ constexpr uint8_t INDEX_8_4[] PROGMEM = {
       1,  // TEXT_CHECKW
 };
 
-#if !defined(LIBASM_NS32000_NOMMU)
-constexpr Entry FORMAT_8_3_1_MMU[] PROGMEM = {
+#if !defined(LIBASM_NS32000_NOPMMU)
+constexpr Entry FORMAT_8_3_1_PMMU[] PROGMEM = {
     E2(0x0C, TEXT_MOVSUB, SZ_BYTE, M_GENA, M_GENA, P_GEN1, P_GEN2),
     E2(0x0D, TEXT_MOVSUW, SZ_WORD, M_GENA, M_GENA, P_GEN1, P_GEN2),
     E2(0x0F, TEXT_MOVSUD, SZ_QUAD, M_GENA, M_GENA, P_GEN1, P_GEN2),
@@ -651,7 +651,7 @@ constexpr Entry FORMAT_8_3_1_MMU[] PROGMEM = {
     E2(0x1D, TEXT_MOVUSW, SZ_WORD, M_GENA, M_GENA, P_GEN1, P_GEN2),
     E2(0x1F, TEXT_MOVUSD, SZ_QUAD, M_GENA, M_GENA, P_GEN1, P_GEN2),
 };
-constexpr uint8_t INDEX_8_3_1_MMU[] PROGMEM = {
+constexpr uint8_t INDEX_8_3_1_PMMU[] PROGMEM = {
       0,  // TEXT_MOVSUB
       2,  // TEXT_MOVSUD
       1,  // TEXT_MOVSUW
@@ -768,21 +768,21 @@ constexpr uint8_t INDEX_11_FPU[] PROGMEM = {
 
 #endif
 
-#if !defined(LIBASM_NS32000_NOMMU)
+#if !defined(LIBASM_NS32000_NOPMMU)
 // Format 14: |gen1_|sho| |t|0|_op_|ii| |0001|1110|
-constexpr Entry FORMAT_14_1_MMU[] PROGMEM = {
+constexpr Entry FORMAT_14_1_PMMU[] PROGMEM = {
     E2(0x03, TEXT_RDVAL, SZ_QUAD, M_GENA, M_ZERO, P_GEN1, P_GEN2),
     E2(0x07, TEXT_WRVAL, SZ_QUAD, M_GENA, M_ZERO, P_GEN1, P_GEN2),
 };
-constexpr Entry FORMAT_14_2_MMU[] PROGMEM = {
+constexpr Entry FORMAT_14_2_PMMU[] PROGMEM = {
     E2(0x0B, TEXT_LMR, SZ_QUAD, M_MREG, M_GENR, P_SHORT, P_GEN1),
     E2(0x0F, TEXT_SMR, SZ_QUAD, M_MREG, M_GENW, P_SHORT, P_GEN1),
 };
-constexpr uint8_t INDEX_14_1_MMU[] PROGMEM = {
+constexpr uint8_t INDEX_14_1_PMMU[] PROGMEM = {
       0,  // TEXT_RDVAL
       1,  // TEXT_WRVAL
 };
-constexpr uint8_t INDEX_14_2_MMU[] PROGMEM = {
+constexpr uint8_t INDEX_14_2_PMMU[] PROGMEM = {
       0,  // TEXT_LMR
       1,  // TEXT_SMR
 };
@@ -837,12 +837,12 @@ constexpr EntryPage NS32081_PAGES[] PROGMEM = {
 };
 #endif
 
-#if !defined(LIBASM_NS32000_NOMMU)
+#if !defined(LIBASM_NS32000_NOPMMU)
 // Memory management instructions
 constexpr EntryPage NS32082_PAGES[] PROGMEM = {
-        {0xAE, 0xC0, 1, ARRAY_RANGE(FORMAT_8_3_1_MMU), ARRAY_RANGE(INDEX_8_3_1_MMU)},
-        {0x1E, 0x00, 1, ARRAY_RANGE(FORMAT_14_1_MMU), ARRAY_RANGE(INDEX_14_1_MMU)},
-        {0x1E, 0x80, 1, ARRAY_RANGE(FORMAT_14_2_MMU), ARRAY_RANGE(INDEX_14_2_MMU)},
+        {0xAE, 0xC0, 1, ARRAY_RANGE(FORMAT_8_3_1_PMMU), ARRAY_RANGE(INDEX_8_3_1_PMMU)},
+        {0x1E, 0x00, 1, ARRAY_RANGE(FORMAT_14_1_PMMU), ARRAY_RANGE(INDEX_14_1_PMMU)},
+        {0x1E, 0x80, 1, ARRAY_RANGE(FORMAT_14_2_PMMU), ARRAY_RANGE(INDEX_14_2_PMMU)},
 };
 #endif
 
@@ -871,16 +871,16 @@ const Fpu *fpu(FpuType fpuType) {
 }
 #endif
 
-#if !defined(LIBASM_NS32000_NOMMU)
-using Mmu = entry::CpuBase<MmuType, EntryPage>;
+#if !defined(LIBASM_NS32000_NOPMMU)
+using Pmmu = entry::CpuBase<PmmuType, EntryPage>;
 
-constexpr Mmu MMU_TABLE[] PROGMEM = {
-        {MMU_NS32082, TEXT_MMU_NS32082, ARRAY_RANGE(NS32082_PAGES)},
-        {MMU_NONE, TEXT_none, EMPTY_RANGE(NS32082_PAGES)},
+constexpr Pmmu PMMU_TABLE[] PROGMEM = {
+        {PMMU_NS32082, TEXT_PMMU_NS32082, ARRAY_RANGE(NS32082_PAGES)},
+        {PMMU_NONE, TEXT_none, EMPTY_RANGE(NS32082_PAGES)},
 };
 
-const Mmu *mmu(MmuType mmuType) {
-    return Mmu::search(mmuType, ARRAY_RANGE(MMU_TABLE));
+const Pmmu *pmmu(PmmuType pmmuType) {
+    return Pmmu::search(pmmuType, ARRAY_RANGE(PMMU_TABLE));
 }
 #endif
 
@@ -920,9 +920,9 @@ Error searchName(const CpuSpec &cpuSpec, AsmInsn &insn) {
     if (insn.getError() == UNKNOWN_INSTRUCTION)
         fpu(cpuSpec.fpu)->searchName(insn, acceptModes, pageSetup);
 #endif
-#if !defined(LIBASM_NS32000_NOMMU)
+#if !defined(LIBASM_NS32000_NOPMMU)
     if (insn.getError() == UNKNOWN_INSTRUCTION)
-        mmu(cpuSpec.mmu)->searchName(insn, acceptModes, pageSetup);
+        pmmu(cpuSpec.pmmu)->searchName(insn, acceptModes, pageSetup);
 #endif
     return insn.getError();
 }
@@ -951,9 +951,9 @@ Error searchOpCode(const CpuSpec &cpuSpec, DisInsn &insn, StrBuffer &out) {
     if (insn.getError() == UNKNOWN_INSTRUCTION)
         searchCode(fpu(cpuSpec.fpu), insn, out);
 #endif
-#if !defined(LIBASM_NS32000_NOMMU)
+#if !defined(LIBASM_NS32000_NOPMMU)
     if (insn.getError() == UNKNOWN_INSTRUCTION)
-        searchCode(mmu(cpuSpec.mmu), insn, out);
+        searchCode(pmmu(cpuSpec.pmmu), insn, out);
 #endif
     return insn.getError();
 }
@@ -963,8 +963,8 @@ bool isPrefixCode(const CpuSpec &cpuSpec, uint8_t code) {
 #if !defined(LIBASM_NS32000_NOFPU)
             fpu(cpuSpec.fpu)->isPrefix(code) ||
 #endif
-#if !defined(LIBASM_NS32000_NOMMU)
-            mmu(cpuSpec.mmu)->isPrefix(code) ||
+#if !defined(LIBASM_NS32000_NOPMMU)
+            pmmu(cpuSpec.pmmu)->isPrefix(code) ||
 #endif
             cpu(cpuSpec.cpu)->isPrefix(code);
 }
@@ -983,6 +983,66 @@ Error TableNs32000::searchCpuName(StrScanner &name, CpuType &cpuType) const {
         return OK;
     }
     return UNSUPPORTED_CPU;
+}
+
+const /*PROGMEM*/ char *Config::fpu_P() const {
+    return fpu(_cpuSpec.fpu)->name_P();
+}
+
+Error Config::setFpuType(FpuType fpuType) {
+    if (fpuType == FPU_NONE) {
+        _cpuSpec.fpu = FPU_NONE;
+        return OK;
+    }
+#if !defined(LIBASM_NS32000_NOFPU)
+    if (fpuType == FPU_ON || fpuType == FPU_NS32081) {
+        _cpuSpec.fpu = FPU_NS32081;
+        return OK;
+    }
+#endif
+    return UNKNOWN_OPERAND;
+}
+
+Error Config::setFpuName(StrScanner &scan) {
+    if (scan.expectFalse())
+        return setFpuType(FPU_NONE);
+#if !defined(LIBASM_NS32000_NOFPU)
+    if (scan.expectTrue())
+        return setFpuType(FPU_ON);
+    if (scan.iequals_P(TEXT_FPU_NS32081))
+        return setFpuType(FPU_NS32081);
+#endif
+    return UNKNOWN_OPERAND;
+}
+
+const /*PROGMEM*/ char *Config::pmmu_P() const {
+    return pmmu(_cpuSpec.pmmu)->name_P();
+}
+
+Error Config::setPmmuType(PmmuType pmmuType) {
+    if (pmmuType == PMMU_NONE) {
+        _cpuSpec.pmmu = PMMU_NONE;
+        return OK;
+    }
+#if !defined(LIBASM_NS32000_NOPMMU)
+    if (pmmuType == PMMU_ON || pmmuType == PMMU_NS32082) {
+        _cpuSpec.pmmu = PMMU_NS32082;
+        return OK;
+    }
+#endif
+    return UNKNOWN_OPERAND;
+}
+
+Error Config::setPmmuName(StrScanner &scan) {
+    if (scan.expectFalse())
+        return setPmmuType(PMMU_NONE);
+#if !defined(LIBASM_NS32000_NOPMMU)
+    if (scan.expectTrue())
+        return setPmmuType(PMMU_ON);
+    if (scan.iequals_P(TEXT_PMMU_NS32082))
+        return setPmmuType(PMMU_NS32082);
+#endif
+    return UNKNOWN_OPERAND;
 }
 
 const TableNs32000 TABLE;

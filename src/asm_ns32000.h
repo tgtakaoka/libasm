@@ -30,12 +30,9 @@ struct AsmNs32000 final : Assembler, Config {
 
     void reset() override;
 
-    Error setFpu(StrScanner &scan) override;
-    Error setPmmu(StrScanner &scan);
-
 private:
-    const TextOption<Assembler> _opt_fpu;
-    const TextOption<AsmNs32000> _opt_pmmu;
+    const TextOption<Config> _opt_fpu;
+    const TextOption<Config> _opt_pmmu;
 
     Error parseStrOptNames(StrScanner &scan, Operand &op, bool braket = false) const;
     Error parseConfigNames(StrScanner &scan, Operand &op) const;

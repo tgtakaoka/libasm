@@ -128,15 +128,6 @@ Error Disassembler::setGnuAs(bool enable) {
     return OK;
 }
 
-bool Disassembler::setCpu(const char *name) {
-    StrScanner scan{name};
-    return setCpu(scan) == OK;
-}
-
-Error Disassembler::setCpu(StrScanner &scan) {
-    return configSetter().setCpuName(scan);
-}
-
 Error Disassembler::setOption(const char *name, const char *text) {
     StrScanner scan{text};
     if (_commonOptions.setOption(name, scan) == OK)

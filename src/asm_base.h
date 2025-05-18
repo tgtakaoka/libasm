@@ -45,9 +45,7 @@ struct Assembler {
     /** Parse |expr| text as an expression and get value. */
     Value parseExpr(StrScanner &expr, ErrorAt &error, char delim = 0) const;
 
-    bool setCpu(const char *name);
-    Error setCpu(StrScanner &scan);
-    virtual Error setFpu(StrScanner &scan);
+    bool setCpu(const char *name) { return configSetter().setCpu(name); }
 
     Error setOption(const char *name, const char *text);
     Error setOption(const StrScanner &name, StrScanner &text);

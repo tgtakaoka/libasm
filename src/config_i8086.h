@@ -34,6 +34,7 @@ enum CpuType : uint8_t {
 enum FpuType : uint8_t {
     FPU_NONE,
 #if !defined(LIBASM_I8086_NOFPU)
+    FPU_ON,
     FPU_I8087,
 #endif
 };
@@ -45,28 +46,20 @@ struct CpuSpec final {
 };
 
 struct Config : ConfigImpl<CpuType, ADDRESS_20BIT, ADDRESS_BYTE, OPCODE_8BIT, ENDIAN_LITTLE, 6, 7> {
-    Config(const InsnTable<CpuType> &table)
-        : ConfigImpl(table, I8086),
-          _cpuSpec(I8086,
-#if defined(LIBASM_I8086_NOFPU)
-                  FPU_NONE
-#else
-                  FPU_I8087
-#endif
-          ) {
-    }
+    Config(const InsnTable<CpuType> &table) : ConfigImpl(table, I8086), _cpuSpec(I8086, FPU_NONE) {}
 
     uint8_t nameMax() const override { return fpuType() == FPU_NONE ? 6 : 7; }
 
-    void setCpuType(CpuType cpuType) override {
-        _cpuSpec.cpu = cpuType;
-        ConfigImpl::setCpuType(cpuType);
-    }
-    void setFpuType(FpuType fpuType) { _cpuSpec.fpu = fpuType; }
+    void setCpuType(CpuType cpuType) override;
+
+    const char *fpu_P() const;
     FpuType fpuType() const { return _cpuSpec.fpu; }
+    Error setFpuType(FpuType fpuType);
+    Error setFpuName(StrScanner &scan) override;
 
 protected:
     CpuSpec _cpuSpec;
+
 };
 
 }  // namespace i8086
