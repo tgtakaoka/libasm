@@ -16,6 +16,8 @@
         org     1000H
         include "test_i8086.inc"
         include "test_i80186.inc"
+        fpu     on
+        include "test_i8087.inc"
         end
 
 ;;; Local Variables:

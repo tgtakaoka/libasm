@@ -28,12 +28,12 @@ bool v30() {
     return strcmp_P("V30", disassembler.config().cpu_P()) == 0;
 }
 
-bool is80186() {
-    return strcmp_P("80186", disassembler.config().cpu_P()) == 0 || v30();
-}
-
 bool is8086() {
     return strcmp_P("8086", disassembler.config().cpu_P()) == 0;
+}
+
+bool is80186() {
+    return strcmp_P("80186", disassembler.config().cpu_P()) == 0 || v30();
 }
 
 void set_up() {
@@ -168,7 +168,7 @@ void test_data_transfer() {
     TEST("POP", "[BP+SI+1234H]", 0x8F, 0202, 0x34, 0x12);
     TEST("POP", "BP",            0135);
     TEST("POP", "ES",            0007);
-    if (!v30()) {
+    if (is8086() || (is80186() && !v30())) {
         ERRT("POP", "CS", REGISTER_NOT_ALLOWED, "CS", 0017);
     }
     TEST("POP", "SS",            0027);
@@ -2444,110 +2444,172 @@ void test_float_nowait() {
 
 #endif
 
-// clang-format on
-
-void test_illegal() {
-    if (v30()) {
-        for (Config::opcode_t opc = 0; opc < 0xFF; opc++) {
-            if (opc >= 0x12 && opc < 0x18)
-                continue;
-            if (opc >= 0x1A && opc < 0x20)
-                continue;
-            if (opc == 0x20 || opc == 0x22 || opc == 0x26 || opc == 0x28 || opc == 0x2A)
-                continue;
-            if (opc == 0x31 || opc == 0x33 || opc == 0x39 || opc == 0x3B)
-                continue;
-            UNKN(0x0F, opc);
-        }
-    } else {
-        ERRT("POP", "CS", REGISTER_NOT_ALLOWED, "CS", 0x0F);
+bool contains(const uint8_t *begin, const uint8_t *end, const uint8_t opc) {
+    for (auto p = begin; p < end; p++) {
+        if (*p == opc)
+            return true;
     }
+    return false;
+}
 
-    for (Config::opcode_t opc = 0x60; opc < 0x70; opc++) {
-        if (is80186() && (opc <= 0x62 || opc >= 0x68))
-            continue;
-        if (v30() && (opc == 0x64 || opc == 0x65))
-            continue;
-        UNKN(opc);
-    }
-
-    UNKN(0x82);
-
-    if (is8086()) {
-        UNKN(0xC0);
-        UNKN(0xC1);
-        UNKN(0xC8);
-        UNKN(0xC9);
-    }
-
-#if defined(LIBASM_I8086_NOFPU)
-#define UNKN_FPU(opc, modReg) UNKN(opc);
-#else
-#define UNKN_FPU(opc, modReg) UNKN(opc, modReg);
-#endif
-    
-    for (auto mod = 0; mod < 4; mod++) {
-        for (auto reg = 0; reg < 8; reg++) {
-            for (auto r_m = 0; r_m < 8; r_m++) {
-                const Config::opcode_t modReg = (mod << 6) | (reg << 3) | r_m;
-                if (mod == 3) {
-                    if ((modReg >= 0xD1 && modReg < 0xE0) || modReg == 0xE2 || modReg == 0xE3 ||
-                            modReg == 0xE6 || modReg == 0xE7 || modReg == 0xEF || modReg == 0xF5 ||
-                            modReg == 0xFB || modReg >= 0xFE) {
-                        UNKN_FPU(0xD9, modReg);
-                    }
-                    UNKN_FPU(0xDA, modReg);
-                    if (modReg < 0xE0 || modReg >= 0xE4)
-                        UNKN_FPU(0xDB, modReg);
-                    if (modReg >= 0xD0 && modReg < 0xE0)
-                        UNKN_FPU(0xDC, modReg);
-                    if ((modReg >= 0xC8 && modReg < 0xD0) || modReg >= 0xE0)
-                        UNKN_FPU(0xDD, modReg);
-                    if ((modReg >= 0xD0 && modReg < 0xD9) || (modReg >= 0xDA && modReg < 0xE0))
-                        UNKN_FPU(0xDE, modReg);
-                    UNKN_FPU(0xDF, modReg);
-                }
-                if (reg == 1) {
-                    UNKN(0xF6, modReg);
-                    UNKN(0xF7, modReg);
-                    UNKN_FPU(0xDF, modReg);
-                }
-                if (reg == 6) {
-                    UNKN(0xD0, modReg);
-                    UNKN(0xD1, modReg);
-                    UNKN(0xD2, modReg);
-                    UNKN(0xD3, modReg);
-                    if (is80186()) {
-                        UNKN(0xC0, modReg);
-                        UNKN(0xC1, modReg);
-                    }
-                }
-                if (reg == 7)
-                    UNKN(0xFF, modReg);
-                if (reg == 1 || reg == 6)
-                    UNKN_FPU(0xDB, modReg);
-                if (reg != 0 && reg != 1)
-                    UNKN(0xFE, modReg);
-                if (reg != 0) {
-                    UNKN(0x8F, modReg);
-                    UNKN(0xC6, modReg);
-                    UNKN(0xC7, modReg);
-                }
-            }
-        }
-    }
-
-    for (Config::opcode_t opc = 0;; opc++) {
+void test_illegal_aax() {
+    for (auto i = 0; i < 0x100; i++) {
+        const Config::opcode_t opc = i;
         if (opc == 0x0A)
             continue;  // AAM, AAD
         UNKN(0xD4, opc);
         UNKN(0xD5, opc);
-        if (opc == 0xFF)
-            break;
+    }
+}
+
+void test_illegal_modreg() {
+    for (auto mod = 0; mod < 4; mod++) {
+        for (auto reg = 0; reg < 8; reg++) {
+            for (auto r_m = 0; r_m < 8; r_m++) {
+                const Config::opcode_t opc = (mod << 6) | (reg << 3) | r_m;
+                if (reg == 1) {
+                    UNKN(0xF6, opc);
+                    UNKN(0xF7, opc);
+                }
+                if (reg == 6) {
+                    UNKN(0xD0, opc);
+                    UNKN(0xD1, opc);
+                    UNKN(0xD2, opc);
+                    UNKN(0xD3, opc);
+                    if (is80186()) {
+                        UNKN(0xC0, opc);
+                        UNKN(0xC1, opc);
+                    }
+                }
+                if (reg == 7)
+                    UNKN(0xFF, opc);
+                if (reg != 0 && reg != 1)
+                    UNKN(0xFE, opc);
+                if (reg != 0) {
+                    UNKN(0x8F, opc);
+                    UNKN(0xC6, opc);
+                    UNKN(0xC7, opc);
+                }
+            }
+        }
+    }
+}
+
+void test_illegal_8086() {
+    ERRT("POP", "CS", REGISTER_NOT_ALLOWED, "CS", 0x0F);
+
+    static constexpr Config::opcode_t ILLEGALS[] = {
+        0x60, 0x61, 0x62, 0x63, 0x64, 0x65, 0x66, 0x67,
+        0x68, 0x69, 0x6B, 0x6C, 0x6D, 0x6E, 0x6F,
+        0x82, 0xC0, 0xC1, 0xC8, 0xC9, 0xD6, 0xF1,
+    };
+    for (const auto opc : ILLEGALS)
+        UNKN(opc);
+
+    test_illegal_aax();
+    test_illegal_modreg();
+}
+
+void test_illegal_v30() {
+    static constexpr Config::opcode_t ILLEGALS[] = {
+        0x63, 0x66, 0x67, 0x82, 0xD6, 0xF1,
+    };
+    for (const auto opc : ILLEGALS)
+        UNKN(opc);
+
+    test_illegal_aax();
+    test_illegal_modreg();
+
+    static constexpr Config::opcode_t LEGALS[] = {
+        0x12, 0x13, 0x14, 0x15, 0x16, 0x17,
+        0x1A, 0x1B, 0x1C, 0x1D, 0x1E, 0x1F,
+        0x20, 0x22, 0x26, 0x28, 0x2A,
+        0x31, 0x33, 0x39, 0x3B, 0xFF,
+    };
+    for (auto i = 0; i < 0x100; i++) {
+        const Config::opcode_t opc = i;
+        if (contains(ARRAY_RANGE(LEGALS), opc))
+            continue;
+        UNKN(0x0F, opc);
+    }
+}
+
+void test_illegal_80186() {
+    if (v30()) {
+        test_illegal_v30();
+        return;
     }
 
-    UNKN(0xD6);
-    UNKN(0xF1);
+    ERRT("POP", "CS", REGISTER_NOT_ALLOWED, "CS", 0x0F);
+
+    static constexpr Config::opcode_t ILLEGALS[] = {
+        0x63, 0x64, 0x65, 0x66, 0x67, 0x82, 0xD6, 0xF1,
+    };
+    for (const auto opc : ILLEGALS)
+        UNKN(opc);
+
+    test_illegal_aax();
+    test_illegal_modreg();
+}
+
+// clang-format on
+
+void test_illegal_8087() {
+    static constexpr Config::opcode_t ILLEGALS_D9[] = {
+        0xD1, 0xD2, 0xD3, 0xD4, 0xD5, 0xD6, 0xD7,
+        0xD8, 0xD9, 0xDA, 0xDB, 0xDC, 0xDD, 0xDE, 0xDF,
+        0xE2, 0xE3, 0xE6, 0xE7, 0xEF, 0xF5, 0xFB, 0xFE, 0xFF,
+    };
+    static constexpr Config::opcode_t LEGALS_DB[] = {
+        0xE0, 0xE1, 0xE2, 0xE3,
+    };
+    static constexpr Config::opcode_t ILLEGALS_DC[] = {
+        0xD0, 0xD1, 0xD2, 0xD3, 0xD4, 0xD5, 0xD6, 0xD7,
+        0xD8, 0xD9, 0xDA, 0xDB, 0xDC, 0xDD, 0xDE, 0xDF,
+    };
+    static constexpr Config::opcode_t LEGALS_DD[] = {
+        0xC0, 0xC1, 0xC2, 0xC3, 0xC4, 0xC5, 0xC6, 0xC7,
+        0xD0, 0xD1, 0xD2, 0xD3, 0xD4, 0xD5, 0xD6, 0xD7,
+        0xD8, 0xD9, 0xDA, 0xDB, 0xDC, 0xDD, 0xDE, 0xDF,
+    };
+    static constexpr Config::opcode_t ILLEGALS_DE[] = {
+        0xD0, 0xD1, 0xD2, 0xD3, 0xD4, 0xD5, 0xD6, 0xD7,
+    };
+
+    for (auto mod = 0; mod < 4; mod++) {
+        for (auto reg = 0; reg < 8; reg++) {
+            for (auto r_m = 0; r_m < 8; r_m++) {
+                const Config::opcode_t opc = (mod << 6) | (reg << 3) | r_m;
+                if (mod == 3) {
+                    if (contains(ARRAY_RANGE(ILLEGALS_D9), opc))
+                        UNKN(0xD9, opc);
+                    UNKN(0xDA, opc);
+                    UNKN(0xDF, opc);
+                    if (!contains(ARRAY_RANGE(LEGALS_DB), opc))
+                        UNKN(0xDB, opc);
+                    if (contains(ARRAY_RANGE(ILLEGALS_DC), opc))
+                        UNKN(0xDC, opc);
+                    if (!contains(ARRAY_RANGE(LEGALS_DD), opc))
+                        UNKN(0xDD, opc);
+                    if (contains(ARRAY_RANGE(ILLEGALS_DE), opc))
+                        UNKN(0xDE, opc);
+                } else {
+                    if (reg == 1) {
+                        UNKN(0xD9, opc);
+                        UNKN(0xDB, opc);
+                        UNKN(0xDD, opc);
+                        UNKN(0xDF, opc);
+                    }
+                    if (reg == 4)
+                        UNKN(0xDB, opc);
+                    if (reg == 5)
+                        UNKN(0xDD, opc);
+                    if (reg == 6)
+                        UNKN(0xDB, opc);
+                }
+            }
+        }
+    }
 }
 
 void run_tests(const char *cpu) {
@@ -2562,8 +2624,12 @@ void run_tests(const char *cpu) {
 #if !defined(LIBASM_I8086_NOFPU)
     RUN_TEST(test_float);
     RUN_TEST(test_float_nowait);
+    RUN_TEST(test_illegal_8087);
 #endif
-    RUN_TEST(test_illegal);
+    if (is8086())
+        RUN_TEST(test_illegal_8086);
+    if (is80186())
+        RUN_TEST(test_illegal_80186);
 }
 
 // Local Variables:
