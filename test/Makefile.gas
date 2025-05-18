@@ -157,6 +157,22 @@ gas-%_z180.hex: %_z180.gas
 	| tr -d '\015' > $(^:.gas=.hex)
 	z80-elf-objdump -mz180 -D $(^:.gas=.o) > $(^:.gas=.dis)
 
+# T11 target
+gas-%_t11.hex: %_t11.gas
+	pdp11-aout-as --warn -o $(^:.gas=.p) -al=$(^:.gas=.lst) $^
+	pdp11-aout-ld --entry=0 -section-start=.text=0x0000 -o $(^:.gas=.o) $(^:.gas=.p)
+	pdp11-aout-objcopy -I a.out-pdp11 -O ihex $(^:.gas=.o) /dev/stdout \
+	| tr -d '\015' > $(^:.gas=.hex)
+	pdp11-aout-objdump -D $(^:.gas=.o) > $(^:.gas=.dis)
+
+# J11 target
+gas-%_j11.hex: %_j11.gas
+	pdp11-aout-as --warn -o $(^:.gas=.p) -al=$(^:.gas=.lst) $^
+	pdp11-aout-ld --entry=0 -section-start=.text=0x0000 -o $(^:.gas=.o) $(^:.gas=.p)
+	pdp11-aout-objcopy -I a.out-pdp11 -O ihex $(^:.gas=.o) /dev/stdout \
+	| tr -d '\015' > $(^:.gas=.hex)
+	pdp11-aout-objdump -D $(^:.gas=.o) > $(^:.gas=.dis)
+
 # Local Variables:
 # mode: makefile-gmake
 # End:
