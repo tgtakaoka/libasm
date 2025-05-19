@@ -859,6 +859,8 @@ void test_logic() {
         TEST("SAL WORD PTR [BX+SI],1",        0xD1, 0040);
         TEST("SAL WORD PTR [BX+DI+52],1",     0xD1, 0141, 0x34);
         TEST("SAL WORD PTR [BP+SI+1234H],1",  0xD1, 0242, 0x34, 0x12);
+        ERRT("SAL CH,2", OPERAND_NOT_ALLOWED, "CH,2");
+        ERRT("SAL BP,3", OPERAND_NOT_ALLOWED, "BP,3");
     } else {
         TEST("SAL CH,0",                      0xC0, 0345, 0);
         TEST("SAL BYTE PTR [SI],1",           0xD0, 0044);
@@ -876,6 +878,8 @@ void test_logic() {
         TEST("SAL WORD PTR [BX+SI],13",       0xC1, 0040, 13);
         TEST("SAL WORD PTR [BX+DI+52],14",    0xC1, 0141, 0x34, 14);
         TEST("SAL WORD PTR [BP+SI+1234H],1",  0xD1, 0242, 0x34, 0x12);
+        ERRT("SAL CH,8",  OVERFLOW_RANGE,  "8", 0xC0, 0345, 8);
+        ERRT("SAL BP,16", OVERFLOW_RANGE, "16", 0xC1, 0345, 16);
     }
     TEST("SAL CH,CL",                     0xD2, 0345);
     TEST("SAL BYTE PTR [SI],CL",          0xD2, 0044);
@@ -2794,10 +2798,10 @@ void test_error() {
     } else {
         TEST("ROR AL,2",  0xC0, 0310, 2);
         TEST("ROR AL,7",  0xC0, 0310, 7);
-        ERRT("ROR AL,10", OVERFLOW_RANGE, "10", 0xC0, 0310, 2);
+        ERRT("ROR AL,10", OVERFLOW_RANGE, "10", 0xC0, 0310, 10);
         TEST("ROR AX,8",  0xC1, 0310, 8);
         TEST("ROR AX,15", 0xC1, 0310, 15);
-        ERRT("ROR AX,16", OVERFLOW_RANGE, "16", 0xC1, 0310, 0);
+        ERRT("ROR AX,16", OVERFLOW_RANGE, "16", 0xC1, 0310, 16);
     }
     ERRT("ROR AL,CH", OPERAND_NOT_ALLOWED, "AL,CH");
 

@@ -113,7 +113,7 @@ struct Entry final : entry::Base<Config::opcode_t> {
                     _size(size, cf, false, false)};
         }
 
-        static constexpr Flags fpuInst(CodeFormat cf, AddrMode dst, AddrMode src, OprPos dstPos,
+        static constexpr Flags needsFwait(CodeFormat cf, AddrMode dst, AddrMode src, OprPos dstPos,
                 OprPos srcPos, OprSize size) {
             return Flags{_opr(dst, dstPos), _opr(src, srcPos), _opr(M_NONE, P_NONE),
                     _size(size, cf, false, true)};
@@ -132,7 +132,7 @@ struct Entry final : entry::Base<Config::opcode_t> {
         OprPos extPos() const { return OprPos((_ext >> pos_gp) & pos_gm); }
         OprSize size() const { return OprSize((_attr >> size_gp) & size_gm); }
         bool stringInst() const { return _attr & strInst_bm; }
-        bool fpuInst() const { return _attr & fpuInst_bm; }
+        bool needsFwait() const { return _attr & needsFwait_bm; }
         uint8_t mask() const {
             static constexpr uint8_t MASK[] PROGMEM = {
                     0000,  // CF_00 = 0
@@ -146,9 +146,9 @@ struct Entry final : entry::Base<Config::opcode_t> {
         static constexpr uint8_t _opr(AddrMode mode, OprPos pos) {
             return (static_cast<uint8_t>(mode) << mode_gp) | (static_cast<uint8_t>(pos) << pos_gp);
         }
-        static constexpr uint8_t _size(OprSize size, CodeFormat cf, bool strInst, bool fpuInst) {
+        static constexpr uint8_t _size(OprSize size, CodeFormat cf, bool strInst, bool needsFwait) {
             return (static_cast<uint8_t>(size) << size_gp) | (static_cast<uint8_t>(cf) << cf_gp) |
-                   (strInst ? strInst_bm : 0) | (fpuInst ? fpuInst_bm : 0);
+                   (strInst ? strInst_bm : 0) | (needsFwait ? needsFwait_bm : 0);
         }
 
         // |_dst|, |_src|, |_ext|
@@ -160,11 +160,11 @@ struct Entry final : entry::Base<Config::opcode_t> {
         static constexpr int size_gp = 0;
         static constexpr int cf_gp = 3;
         static constexpr int strInst_bp = 5;
-        static constexpr int fpuInst_bp = 6;
+        static constexpr int needsFwait_bp = 6;
         static constexpr uint_fast8_t size_gm = 0x07;
         static constexpr uint_fast8_t cf_gm = 0x03;
         static constexpr uint_fast8_t strInst_bm = (1 << strInst_bp);
-        static constexpr uint_fast8_t fpuInst_bm = (1 << fpuInst_bp);
+        static constexpr uint_fast8_t needsFwait_bm = (1 << needsFwait_bp);
     };
 
     constexpr Entry(Config::opcode_t opc, Flags flags, const /* PROGMEM */ char *name_P)

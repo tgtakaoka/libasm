@@ -37,7 +37,7 @@ struct EntryInsn : EntryInsnPrefix<Config, Entry> {
     OprPos extPos() const { return flags().extPos(); }
     OprSize size() const { return flags().size(); }
     bool stringInst() const { return flags().stringInst(); }
-    bool fpuInst() const { return flags().fpuInst(); }
+    bool needsFwait() const { return flags().needsFwait(); }
 
     void setSegment(Config::opcode_t segment) { _segment = segment; }
     Config::opcode_t segment() const { return _segment; }

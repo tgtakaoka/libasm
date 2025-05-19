@@ -522,15 +522,11 @@ void AsmI8086::emitOperand(AsmInsn &insn, AddrMode mode, const Operand &op, OprP
         insn.emitOperand8(op.val.getUnsigned());
         break;
     case M_BIT:
-        if (insn.size() == SZ_BYTE) {
-            if (op.val.overflow(7))
-                insn.setErrorIf(op, OVERFLOW_RANGE);
-            insn.emitOperand8(op.val.getUnsigned() & 7);
-        } else {
-            if (op.val.overflow(15))
-                insn.setErrorIf(op, OVERFLOW_RANGE);
-            insn.emitOperand8(op.val.getUnsigned() & 0xF);
-        }
+        if (insn.size() == SZ_BYTE && op.val.overflow(7))
+            insn.setErrorIf(op, OVERFLOW_RANGE);
+        if (insn.size() == SZ_WORD && op.val.overflow(15))
+            insn.setErrorIf(op, OVERFLOW_RANGE);
+        insn.emitOperand8(op.val.getUnsigned());
         break;
     case M_IMM:
         emitImmediate(insn, op, insn.size(), op.val);

@@ -134,8 +134,8 @@ void DisI8086::decodeImmediate(DisInsn &insn, StrBuffer &out, AddrMode mode) con
     } else if (mode == M_BIT) {
         const auto bit = insn.readByte();
         if (bit >= 16 || (insn.size() == SZ_BYTE && bit >= 8))
-            insn.setErrorIf(OVERFLOW_RANGE);
-        outDec(out, bit, 4);
+            insn.setErrorIf(out, OVERFLOW_RANGE);
+        outDec(out, bit, 8);
     } else {
         // M_FAR
         const auto offset = insn.readUint16();
@@ -258,7 +258,7 @@ void DisI8086::decodeMemReg(DisInsn &insn, StrBuffer &out, AddrMode mode, OprPos
     const auto mod = insn.modReg() >> 6;
     if (mod == 3) {
         if (mode == M_BMEM || mode == M_WMEM)
-            insn.setErrorIf(ILLEGAL_OPERAND);
+            insn.setErrorIf(out, ILLEGAL_OPERAND);
         const auto regMode = (mode == M_BMOD ? M_BREG : M_WREG);
         outRegister(out, decodeRegister(insn, regMode, pos));
     } else {
@@ -276,11 +276,9 @@ void DisI8086::decodeRepeatStr(DisInsn &insn, StrBuffer &out) const {
             return;
         istr.setOpCode(opc);
         if (searchOpCode(_cpuSpec, istr, out))
-            insn.setErrorIf(istr);
-        if (!istr.stringInst()) {
-            istr.nameBuffer().reset();
-            insn.setErrorIf(out, UNKNOWN_INSTRUCTION);
-        }
+            insn.setErrorIf(out, istr);
+        if (!istr.stringInst())
+            insn.setErrorIf(out, INVALID_INSTRUCTION);
         out.text(istr.name());
     }
 }

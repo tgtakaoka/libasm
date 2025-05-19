@@ -34,7 +34,7 @@ using namespace reg;
     E2(_opc, _cf, _name, _sz, _dst, M_NONE, _dpos, P_NONE)
 #define E0(_opc, _cf, _name, _sz) E1(_opc, _cf, _name, _sz, M_NONE, P_NONE)
 #define F2(_opc, _cf, _name, _sz, _dst, _src, _dpos, _spos) \
-    {_opc, Entry::Flags::fpuInst(_cf, _dst, _src, _dpos, _spos, _sz), _name}
+    {_opc, Entry::Flags::needsFwait(_cf, _dst, _src, _dpos, _spos, _sz), _name}
 #define F1(_opc, _cf, _name, _sz, _dst, _dpos) \
     F2(_opc, _cf, _name, _sz, _dst, M_NONE, _dpos, P_NONE)
 #define F0(_opc, _cf, _name, _sz) F1(_opc, _cf, _name, _sz, M_NONE, P_NONE)
@@ -1297,14 +1297,14 @@ Error searchName(const CpuSpec &cpuSpec, AsmInsn &insn) {
             strcpy(name, insn.name());
             insn.nameBuffer().reset().letter('F').text(name + 2);
             fpu(cpuSpec.fpu)->searchName(insn, acceptModes);
-            if (insn.isOK() && insn.fpuInst()) {
+            if (insn.isOK() && insn.needsFwait()) {
                 ;  // found non-wait float instruction
             } else {
                 insn.setError(UNKNOWN_INSTRUCTION);
             }
             insn.nameBuffer().reset().text(name);
         }
-    } else if (insn.fpuInst()) {
+    } else if (insn.needsFwait()) {
         insn.setFwait();
     }
     if (insn.getError() == UNKNOWN_INSTRUCTION)
@@ -1366,7 +1366,7 @@ Error searchOpCode(const CpuSpec &cpuSpec, DisInsn &insn, StrBuffer &out) {
     if (insn.isOK()) {
         if (insn.opCode() == DisInsn::FWAIT)
             insn.setError(UNKNOWN_INSTRUCTION);  // prefer WAIT than FWAIT
-        if (insn.fpuInst() && insn.fwait() == 0) {
+        if (insn.needsFwait() && insn.fwait() == 0) {
             // no-wait instruction
             char name[insn.nameBuffer().len() + 2];
             strcpy(name, insn.name());
