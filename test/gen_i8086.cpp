@@ -28,7 +28,12 @@ int main(int argc, const char **argv) {
 
     dis8086.setOption("relative", "enable");
     dis8086.setOption("string-insn", "enable");
-
+    dis8086.setOption("segment-insn", "enable");
+    if (driver.generateGas()) {
+        dis8086.setOption("gnu-as", "on");
+        dis8086.setOption("origin-char", "$");
+    }
+    
     TestGenerator generator(driver, dis8086, 0x0000);
     generator.generate().generate(0x9B);
 

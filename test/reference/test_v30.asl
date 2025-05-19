@@ -13,10 +13,10 @@
 ;;; limitations under the License.
 
         cpu     V30
-        org     0x1000
-        include "test_i8086.ginc"
-        include "test_i80186.ginc"
-        include "test_v30.ginc"
+        org     1000H
+        include "test_i8086.inc"
+        include "test_i80186.inc"
+        include "test_v30.inc"
         end
 
 ;;; Local Variables:

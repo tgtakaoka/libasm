@@ -12,13 +12,11 @@
 ;### See the License for the specific language governing permissions and
 ;### limitations under the License.
 
-        .code16
-
 ;### Data Transfer
 ;### Move
-        .byte   0x8A, 0xC1      ;# mov     al,cl
-        .byte   0x8A, 0xD3	;# mov     dl,bl
-        .byte   0x8A, 0xE5	;# mov     ah,ch
+        mov     al,cl
+        mov     dl,bl
+        mov     ah,ch
         mov     [si],dh
         mov     [0x1234],bh
         mov     [di-0x34],al
@@ -33,9 +31,9 @@
         mov     dl,[bx+si]
         mov     bl,[bx+di+0x34]
         mov     ah,[bp+si+0x1234]
-        .byte   0x8B, 0xC1      ;# mov     ax,cx
-        .byte   0x8B, 0xD3      ;# mov     dx,bx
-        .byte   0x8B, 0xE5      ;# mov     sp,bp
+        mov     ax,cx
+        mov     dx,bx
+        mov     sp,bp
         mov     [si],si
         mov     [0x1234],di
         mov     [di-0x34],ax
@@ -113,7 +111,7 @@
         pop     ss
         pop     ds
 ;### Exchange data
-        .byte   0x86, 0xC5	;# xchg    al,ch
+        xchg    al,ch
         xchg    [si],cl
         xchg    [0x1234],dl
         xchg    [di-0x34],bl
@@ -173,12 +171,11 @@
         pushf
 ;### Pop FLAGS register from stack
         popf
-
 ;### Arithmetic
 ;### Add
-        .byte   0x02, 0xC1      ;# add     al,cl
-        .byte   0x02, 0xD3      ;# add     dl,bl
-        .byte   0x02, 0xE5      ;# add     ah,ch
+        add     al,cl
+        add     dl,bl
+        add     ah,ch
         add     [si],dh
         add     [0x1234],bh
         add     [di-0x34],al
@@ -193,9 +190,9 @@
         add     dl,[bx+si]
         add     bl,[bx+di+0x34]
         add     ah,[bp+si+0x1234]
-        .byte   0x03, 0xC1      ;# add     ax,cx
-        .byte   0x03, 0xD3      ;# add     dx,bx
-        .byte   0x03, 0xE5      ;# add     sp,bp
+        add     ax,cx
+        add     dx,bx
+        add     sp,bp
         add     [si],si
         add     [0x1234],di
         add     [di-0x34],ax
@@ -228,8 +225,8 @@
         add     word ptr [bx+si],0x5678
         add     word ptr [bx+di+0x34],0x5678
         add     word ptr [bp+si+0x1234],0x5678
-        .byte   0x05, 0x56, 0x00        ;# add     ax,0x56
-        .byte   0x05, 0xF0, 0xFF        ;# add     ax,-16
+        add     ax,0x56
+        add     ax,-16
         add     cx,0x56
         add     cx,-16
         add     word ptr [si],0x56
@@ -240,9 +237,9 @@
         add     word ptr [bx+di+0x34],0x56
         add     word ptr [bp+si+0x1234],0x56
 ;### Add with carry
-        .byte   0x12, 0xC1      ;# adc     al,cl
-        .byte   0x12, 0xD3      ;# adc     dl,bl
-        .byte   0x12, 0xE5      ;# adc     ah,ch
+        adc     al,cl
+        adc     dl,bl
+        adc     ah,ch
         adc     [si],dh
         adc     [0x1234],bh
         adc     [di-0x34],al
@@ -257,9 +254,9 @@
         adc     dl,[bx+si]
         adc     bl,[bx+di+0x34]
         adc     ah,[bp+si+0x1234]
-        .byte   0x13, 0xC1      ;# adc     ax,cx
-        .byte   0x13, 0xD3      ;# adc     dx,bx
-        .byte   0x13, 0xE5      ;# adc     sp,bp
+        adc     ax,cx
+        adc     dx,bx
+        adc     sp,bp
         adc     [si],si
         adc     [0x1234],di
         adc     [di-0x34],ax
@@ -292,8 +289,8 @@
         adc     word ptr [bx+si],0x5678
         adc     word ptr [bx+di+0x34],0x5678
         adc     word ptr [bp+si+0x1234],0x5678
-        .byte   0x15, 0x56, 0x00        ;# adc     ax,0x56
-        .byte   0x15, 0xF0, 0xFF        ;# adc     ax,-16
+        adc     ax,0x56
+        adc     ax,-16
         adc     cx,0x56
         adc     cx,-16
         adc     word ptr [si],0x56
@@ -325,9 +322,9 @@
 ;### Decimal adjust AL after addition
         daa
 ;### Subtraction
-        .byte   0x2A, 0xC1      ;# sub     al,cl
-        .byte   0x2A, 0xD3      ;# sub     dl,bl
-        .byte   0x2A, 0xE5      ;# sub     ah,ch
+        sub     al,cl
+        sub     dl,bl
+        sub     ah,ch
         sub     [si],dh
         sub     [0x1234],bh
         sub     [di-0x34],al
@@ -342,9 +339,9 @@
         sub     dl,[bx+si]
         sub     bl,[bx+di+0x34]
         sub     ah,[bp+si+0x1234]
-        .byte   0x2B, 0xC1      ;# sub     ax,cx
-        .byte   0x2B, 0xD3      ;# sub     dx,bx
-        .byte   0x2B, 0xE5      ;# sub     sp,bp
+        sub     ax,cx
+        sub     dx,bx
+        sub     sp,bp
         sub     [si],si
         sub     [0x1234],di
         sub     [di-0x34],ax
@@ -377,8 +374,8 @@
         sub     word ptr [bx+si],0x5678
         sub     word ptr [bx+di+0x34],0x5678
         sub     word ptr [bp+si+0x1234],0x5678
-        .byte   0x2D, 0x56, 0x00        ;# sub     ax,0x56
-        .byte   0x2D, 0xF0, 0xFF        ;# sub     ax,-16
+        sub     ax,0x56
+        sub     ax,-16
         sub     cx,0x56
         sub     cx,-16
         sub     word ptr [si],0x56
@@ -389,9 +386,9 @@
         sub     word ptr [bx+di+0x34],0x56
         sub     word ptr [bp+si+0x1234],0x56
 ;### Subtract with borrow
-        .byte   0x1A, 0xC1      ;# sbb     al,cl
-        .byte   0x1A, 0xD3      ;# sbb     dl,bl
-        .byte   0x1A, 0xE5      ;# sbb     ah,ch
+        sbb     al,cl
+        sbb     dl,bl
+        sbb     ah,ch
         sbb     [si],dh
         sbb     [0x1234],bh
         sbb     [di-0x34],al
@@ -406,9 +403,9 @@
         sbb     dl,[bx+si]
         sbb     bl,[bx+di+0x34]
         sbb     ah,[bp+si+0x1234]
-        .byte   0x1B, 0xC1      ;# sbb     ax,cx
-        .byte   0x1B, 0xD3      ;# sbb     dx,bx
-        .byte   0x1B, 0xE5      ;# sbb     sp,bp
+        sbb     ax,cx
+        sbb     dx,bx
+        sbb     sp,bp
         sbb     [si],si
         sbb     [0x1234],di
         sbb     [di-0x34],ax
@@ -441,8 +438,8 @@
         sbb     word ptr [bx+si],0x5678
         sbb     word ptr [bx+di+0x34],0x5678
         sbb     word ptr [bp+si+0x1234],0x5678
-        .byte   0x1D, 0x56, 0x00        ;# sbb     ax,0x56
-        .byte   0x1D, 0xF0, 0xFF        ;# sbb     ax,-16
+        sbb     ax,0x56
+        sbb     ax,-16
         sbb     cx,0x56
         sbb     cx,-16
         sbb     word ptr [si],0x56
@@ -487,9 +484,9 @@
         neg     word ptr [bx+di+0x34]
         neg     word ptr [bp+si+0x1234]
 ;### Compare operands
-        .byte   0x3A, 0xC1      ;# cmp     al,cl
-        .byte   0x3A, 0xD3      ;# cmp     dl,bl
-        .byte   0x3A, 0xE5      ;# cmp     ah,ch
+        cmp     al,cl
+        cmp     dl,bl
+        cmp     ah,ch
         cmp     [si],dh
         cmp     [0x1234],bh
         cmp     [di-0x34],al
@@ -504,9 +501,9 @@
         cmp     dl,[bx+si]
         cmp     bl,[bx+di+0x34]
         cmp     ah,[bp+si+0x1234]
-        .byte   0x3B, 0xC1      ;# cmp     ax,cx
-        .byte   0x3B, 0xD3      ;# cmp     dx,bx
-        .byte   0x3B, 0xE5      ;# cmp     sp,bp
+        cmp     ax,cx
+        cmp     dx,bx
+        cmp     sp,bp
         cmp     [si],si
         cmp     [0x1234],di
         cmp     [di-0x34],ax
@@ -539,8 +536,8 @@
         cmp     word ptr [bx+si],0x5678
         cmp     word ptr [bx+di+0x34],0x5678
         cmp     word ptr [bp+si+0x1234],0x5678
-        .byte   0x3D, 0x56, 0x00        ;# cmp     ax,0x56
-        .byte   0x3D, 0xF0, 0xFF        ;# cmp     ax,-16
+        cmp     ax,0x56
+        cmp     ax,-16
         cmp     cx,0x56
         cmp     cx,-16
         cmp     word ptr [si],0x56
@@ -630,7 +627,6 @@
         cbw
 ;### Convert word to double word
         cwd
-
 ;### Logic
 ;### Negate the operand, logical NOT
         not     ch
@@ -914,9 +910,9 @@
         rcr     word ptr [bx+di+0x34],cl
         rcr     word ptr [bp+si+0x1234],cl
 ;### Logical AND
-        .byte   0x22, 0xC1      ;# and     al,cl
-        .byte   0x22, 0xD3      ;# and     dl,bl
-        .byte   0x22, 0xE5      ;# and     ah,ch
+        and     al,cl
+        and     dl,bl
+        and     ah,ch
         and     [si],dh
         and     [0x1234],bh
         and     [di-0x34],al
@@ -931,9 +927,9 @@
         and     dl,[bx+si]
         and     bl,[bx+di+0x34]
         and     ah,[bp+si+0x1234]
-        .byte   0x23, 0xC1      ;# and     ax,cx
-        .byte   0x23, 0xD3      ;# and     dx,bx
-        .byte   0x23, 0xE5      ;# and     sp,bp
+        and     ax,cx
+        and     dx,bx
+        and     sp,bp
         and     [si],si
         and     [0x1234],di
         and     [di-0x34],ax
@@ -958,9 +954,7 @@
         and     byte ptr [bx+di+0x34],0x56
         and     byte ptr [bp+si+0x1234],0x56
         and     ax,0x5678
-        .byte   0x25, 0xF0, 0xFF        ;# and     ax,-16
         and     cx,0x5678
-        and     cx,-16
         and     word ptr [si],0x5678
         and     word ptr [0x1234],0x5678
         and     word ptr [di-0x34],0x5678
@@ -968,10 +962,21 @@
         and     word ptr [bx+si],0x5678
         and     word ptr [bx+di+0x34],0x5678
         and     word ptr [bp+si+0x1234],0x5678
+        and     ax,0x56
+        and     ax,-16
+        and     cx,0x56
+        and     cx,-16
+        and     word ptr [si],0x56
+        and     word ptr [0x1234],0x56
+        and     word ptr [di-0x34],0x56
+        and     word ptr [bp+0x1234],0x56
+        and     word ptr [bx+si],0x56
+        and     word ptr [bx+di+0x34],0x56
+        and     word ptr [bp+si+0x1234],0x56
 ;### Logical compare
-        .byte   0x84, 0xC1      ;# test    al,cl
-        .byte   0x84, 0xD3      ;# test    dl,bl
-        .byte   0x84, 0xE5      ;# test    ah,ch
+        test    al,cl
+        test    dl,bl
+        test    ah,ch
         test    dh,[si]
         test    bh,[0x1234]
         test    al,[di-0x34]
@@ -986,9 +991,9 @@
         test    [bx+si],dl
         test    [bx+di+0x34],bl
         test    [bp+si+0x1234],ah
-        .byte   0x85, 0xC1      ;# test    ax,cx
-        .byte   0x85, 0xD3      ;# test    dx,bx
-        .byte   0x85, 0xE5      ;# test    sp,bp
+        test    ax,cx
+        test    dx,bx
+        test    sp,bp
         test    si,[si]
         test    di,[0x1234]
         test    ax,[di-0x34]
@@ -1013,9 +1018,7 @@
         test    byte ptr [bx+di+0x34],0x56
         test    byte ptr [bp+si+0x1234],0x56
         test    ax,0x5678
-        test    ax,-16
         test    cx,0x5678
-        test    cx,-16
         test    word ptr [si],0x5678
         test    word ptr [0x1234],0x5678
         test    word ptr [di-0x34],0x5678
@@ -1023,10 +1026,21 @@
         test    word ptr [bx+si],0x5678
         test    word ptr [bx+di+0x34],0x5678
         test    word ptr [bp+si+0x1234],0x5678
+        test    ax,0x56
+        test    ax,-16
+        test    cx,0x56
+        test    cx,-16
+        test    word ptr [si],0x56
+        test    word ptr [0x1234],0x56
+        test    word ptr [di-0x34],0x56
+        test    word ptr [bp+0x1234],0x56
+        test    word ptr [bx+si],0x56
+        test    word ptr [bx+di+0x34],0x56
+        test    word ptr [bp+si+0x1234],0x56
 ;### Logical OR
-        .byte   0x0A, 0xC1      ;# or      al,cl
-        .byte   0x0A, 0xD3      ;# or      dl,bl
-        .byte   0x0A, 0xE5      ;# or      ah,ch
+        or      al,cl
+        or      dl,bl
+        or      ah,ch
         or      [si],dh
         or      [0x1234],bh
         or      [di-0x34],al
@@ -1041,9 +1055,9 @@
         or      dl,[bx+si]
         or      bl,[bx+di+0x34]
         or      ah,[bp+si+0x1234]
-        .byte   0x0B, 0xC1      ;# or      ax,cx
-        .byte   0x0B, 0xD3      ;# or      dx,bx
-        .byte   0x0B, 0xE5      ;# or      sp,bp
+        or      ax,cx
+        or      dx,bx
+        or      sp,bp
         or      [si],si
         or      [0x1234],di
         or      [di-0x34],ax
@@ -1068,9 +1082,7 @@
         or      byte ptr [bx+di+0x34],0x56
         or      byte ptr [bp+si+0x1234],0x56
         or      ax,0x5678
-        .byte   0x0D, 0xF0, 0xFF        ;# or      ax,-16
         or      cx,0x5678
-        or      cx,-16
         or      word ptr [si],0x5678
         or      word ptr [0x1234],0x5678
         or      word ptr [di-0x34],0x5678
@@ -1078,10 +1090,21 @@
         or      word ptr [bx+si],0x5678
         or      word ptr [bx+di+0x34],0x5678
         or      word ptr [bp+si+0x1234],0x5678
+        or      ax,0x56
+        or      ax,-16
+        or      cx,0x56
+        or      cx,-16
+        or      word ptr [si],0x56
+        or      word ptr [0x1234],0x56
+        or      word ptr [di-0x34],0x56
+        or      word ptr [bp+0x1234],0x56
+        or      word ptr [bx+si],0x56
+        or      word ptr [bx+di+0x34],0x56
+        or      word ptr [bp+si+0x1234],0x56
 ;### Exclusive OR
-        .byte   0x32, 0xC1      ;# xor     al,cl
-        .byte   0x32, 0xD3      ;# xor     dl,bl
-        .byte   0x32, 0xE5      ;# xor     ah,ch
+        xor     al,cl
+        xor     dl,bl
+        xor     ah,ch
         xor     [si],dh
         xor     [0x1234],bh
         xor     [di-0x34],al
@@ -1096,9 +1119,9 @@
         xor     dl,[bx+si]
         xor     bl,[bx+di+0x34]
         xor     ah,[bp+si+0x1234]
-        .byte   0x33, 0xC1      ;# xor     ax,cx
-        .byte   0x33, 0xD3      ;# xor     dx,bx
-        .byte   0x33, 0xE5      ;# xor     sp,bp
+        xor     ax,cx
+        xor     dx,bx
+        xor     sp,bp
         xor     [si],si
         xor     [0x1234],di
         xor     [di-0x34],ax
@@ -1123,9 +1146,7 @@
         xor     byte ptr [bx+di+0x34],0x56
         xor     byte ptr [bp+si+0x1234],0x56
         xor     ax,0x5678
-        .byte   0x35, 0xF0, 0xFF        ;# xor     ax,-16
         xor     cx,0x5678
-        xor     cx,-16
         xor     word ptr [si],0x5678
         xor     word ptr [0x1234],0x5678
         xor     word ptr [di-0x34],0x5678
@@ -1133,7 +1154,17 @@
         xor     word ptr [bx+si],0x5678
         xor     word ptr [bx+di+0x34],0x5678
         xor     word ptr [bp+si+0x1234],0x5678
-
+        xor     ax,0x56
+        xor     ax,-16
+        xor     cx,0x56
+        xor     cx,-16
+        xor     word ptr [si],0x56
+        xor     word ptr [0x1234],0x56
+        xor     word ptr [di-0x34],0x56
+        xor     word ptr [bp+0x1234],0x56
+        xor     word ptr [bx+si],0x56
+        xor     word ptr [bx+di+0x34],0x56
+        xor     word ptr [bp+si+0x1234],0x56
 ;### String manipulation
 ;### Repeat
         rep     movsb
@@ -1189,26 +1220,25 @@
         repnz   scasb
         repnz   scasw
 ;### Move byte from string to string
-        movsb
+        movsb   es:[di], ds:[si]
 ;### Move word from string to string
-        movsw
+        movsw   es:[di], ds:[si]
 ;### Compare bytes in memory
-        cmpsb
+        cmpsb   ds:[si], es:[di]
 ;### Compare words in memory
-        cmpsw
+        cmpsw   ds:[si], es:[di]
 ;### Compare byte string
-        scasb
+        scasb   es:[di]
 ;### Compare word string
-        scasw
+        scasw   es:[di]
 ;### Load string byte
-        lodsb
+        lodsb   ds:[si]
 ;### Load string word
-        lodsw
+        lodsw   ds:[si]
 ;### Store byte string
-        stosb
+        stosb   es:[di]
 ;### Store word string
-        stosw
-
+        stosw   es:[di]
 ;### Control transfer
 ;### Call procedure
         call    $
@@ -1221,14 +1251,6 @@
         call    [bx+si]
         call    [bx+di+0x34]
         call    [bp+si+0x1234]
-        lcall   0x1234,0x5678
-        lcall   [si]
-        lcall   [0x1234]
-        lcall   [di-0x34]
-        lcall   [bp+0x1234]
-        lcall   [bx+si]
-        lcall   [bx+di+0x34]
-        lcall   [bp+si+0x1234]
 ;### Jump
         jmp     $+0x1234
         jmp     $
@@ -1241,19 +1263,9 @@
         jmp     [bx+si]
         jmp     [bx+di+0x34]
         jmp     [bp+si+0x1234]
-        ljmp    0x1234,0x5678
-        ljmp    [si]
-        ljmp    [0x1234]
-        ljmp    [di-0x34]
-        ljmp    [bp+0x1234]
-        ljmp    [bx+si]
-        ljmp    [bx+di+0x34]
-        ljmp    [bp+si+0x1234]
 ;### Return from procedure
         ret
         ret     16
-        lret
-        lret    16
 ;### Jump on Equal/Zero
         je      $
         jz      $
@@ -1317,7 +1329,6 @@
         into
 ;### Return from interrupt
         iret
-
 ;### Processor control
 ;### Clear carry flag
         clc
@@ -1341,7 +1352,6 @@
         lock
 ;### No operation
         nop
-
 ;### Segment override
         mov     es:[bx],ah
         mov     es:[bp],ah
@@ -1354,22 +1364,19 @@
         mov     cs:[di],ah
         mov     cs:[0x1234],ah
         mov     ss:[bx],ah
-        .byte   0x36, 0x88, 0x66 ;# mov     ss:[bp],ah
-        .byte   0x00
+        mov     ss:[bp],ah
         mov     ss:[si],ah
         mov     ss:[di],ah
         mov     ss:[0x1234],ah
-        .byte   0x3E, 0x88, 0x27 ;# mov     ds:[bx],ah
+        mov     ds:[bx],ah
         mov     ds:[bp],ah
-        .byte   0x3E, 0x88, 0x24 ;# mov     ds:[si],ah
-        .byte   0x3E, 0x88, 0x25 ;# mov     ds:[di],ah
-        .byte   0x3E, 0x88, 0x26 ;# mov     ds:[0x1234],ah
-        .byte   0x34, 0x12
-
+        mov     ds:[si],ah
+        mov     ds:[di],ah
+        mov     ds:[0x1234],ah
         jmp     es:[si]
         jmp     cs:[si]
         jmp     ss:[si]
-        .byte   0x3E, 0xFF, 0x24 ;# jmp     ds:[si]
+        jmp     ds:[si]
 
 ;### Local Variables:
 ;### mode: asm

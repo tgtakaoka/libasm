@@ -121,7 +121,7 @@ Error Insn::emitFloat64Le(const float80_t &data, uint8_t pos) {
 
 #endif
 
-void DisInsnBase::reset(uint8_t length) {
+void DisInsnBase::resetLength(uint8_t length) {
     resetError();
     _insn.reset(_insn.address(), length);
 }

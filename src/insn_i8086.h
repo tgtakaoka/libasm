@@ -27,7 +27,7 @@ namespace libasm {
 namespace i8086 {
 
 struct EntryInsn : EntryInsnPrefix<Config, Entry> {
-    EntryInsn() : _fwait(0), _segment(0) {}
+    EntryInsn() : _segment(0) {}
 
     AddrMode dst() const { return flags().dst(); }
     AddrMode src() const { return flags().src(); }
@@ -37,17 +37,15 @@ struct EntryInsn : EntryInsnPrefix<Config, Entry> {
     OprPos extPos() const { return flags().extPos(); }
     OprSize size() const { return flags().size(); }
     bool stringInst() const { return flags().stringInst(); }
-    bool needsFwait() const { return flags().needsFwait(); }
+    bool leaInsn() const { return prefix() == 0 && opCode() == 0x8D; }
 
     void setSegment(Config::opcode_t segment) { _segment = segment; }
     Config::opcode_t segment() const { return _segment; }
-    void setFwait(bool enable = true) { _fwait = enable ? FWAIT : 0; }
-    Config::opcode_t fwait() const { return _fwait; }
 
     static constexpr Config::opcode_t FWAIT = 0x9B;
+    static bool escapeInsn(Config::opcode_t opc) { return opc >= 0xD8 && opc < 0xE0; }
 
 protected:
-    Config::opcode_t _fwait;
     Config::opcode_t _segment;
 };
 
@@ -80,33 +78,13 @@ struct AsmInsn final : AsmInsnImpl<Config>, EntryInsn {
 
     Operand dstOp, srcOp, extOp;
 
-    void embedModReg(Config::opcode_t data) {
-        _modReg |= data;
-        _hasModReg = true;
-    }
+    bool farOperand() const { return flags().dst() == M_SEG && flags().src() == M_OFF; }
+
+    void prepairModReg();
+    void embedModReg(Config::opcode_t data);
     Config::opcode_t modReg() const { return _modReg; }
 
-    void prepairModReg() {
-        if (hasPrefix())
-            return;
-        const OprPos dst = dstPos();
-        const OprPos src = srcPos();
-        if (dst == P_MOD || dst == P_REG || dst == P_MREG || src == P_MOD || src == P_REG)
-            embedModReg(0);
-    }
-
-    void emitInsn() {
-        uint8_t pos = 0;
-        if (_fwait)
-            emitByte(_fwait, pos++);
-        if (_segment)
-            emitByte(_segment, pos++);
-        if (hasPrefix())
-            emitByte(prefix(), pos++);
-        emitByte(opCode(), pos++);
-        if (_hasModReg)
-            emitByte(_modReg, pos);
-    }
+    void emitInsn();
     Error emitOperand8(uint8_t val8) { return emitByte(val8, operandPos()); }
     Error emitOperand16(uint16_t val16) { return emitUint16(val16, operandPos()); }
 #if !defined(LIBASM_ASM_NOFLOAT)
@@ -120,56 +98,22 @@ private:
     Config::opcode_t _modReg;
     bool _hasModReg;
 
-    uint8_t operandPos() const {
-        uint8_t pos = length();
-        if (pos == 0) {
-            if (_fwait)
-                pos++;
-            if (_segment)
-                pos++;
-            if (hasPrefix())
-                pos++;
-            pos++;
-            if (_hasModReg)
-                pos++;
-        }
-        return pos;
-    }
+    uint_fast8_t operandPos() const;
 };
 
 struct DisInsn final : DisInsnImpl<Config>, EntryInsn {
     DisInsn(Insn &insn, DisMemory &memory, const StrBuffer &out)
-        : DisInsnImpl(insn, memory, out), _modReg(0), _hasPushBack(false), _pushBack(0) {}
-    DisInsn(Insn &insn, DisInsn &o, const StrBuffer &out)
-        : DisInsnImpl(insn, o, out), _modReg(0), _hasPushBack(false), _pushBack(0) {}
+        : DisInsnImpl(insn, memory, out), _modReg(0) {}
+    DisInsn(Insn &insn, DisInsn &o, const StrBuffer &out) : DisInsnImpl(insn, o, out), _modReg(0) {}
 
-    uint8_t readByte() override {
-        if (_hasPushBack) {
-            _hasPushBack = false;
-            return _pushBack;
-        }
-        return DisInsnBase::readByte();
-    }
+    uint16_t farseg;
+    bool farInsn() const;
 
-    void pushBack(uint8_t code) {
-        _pushBack = code;
-        _hasPushBack = true;
-    }
-
-    void readModReg() {
-        const OprPos dst = dstPos();
-        const OprPos src = srcPos();
-        if (dst == P_MOD || dst == P_REG || src == P_MOD || src == P_REG)
-            _modReg = readByte();
-        else if (dst == P_OMOD || src == P_OMOD)
-            _modReg = opCode();
-    }
+    void readModReg();
     Config::opcode_t modReg() const { return _modReg; }
 
 private:
     Config::opcode_t _modReg;
-    bool _hasPushBack;
-    Config::opcode_t _pushBack;
 };
 
 }  // namespace i8086

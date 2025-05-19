@@ -12,137 +12,135 @@
 ;### See the License for the specific language governing permissions and
 ;### limitations under the License.
 
-;;; Data Transfer
-        fld     dword ptr [si]
-        fld     qword ptr [1234H]
-        fld     tbyte ptr [di+52]
-        fld     st(0)
-        fild    word ptr [bp+1234H]
-        fild    dword ptr [bx+si]
-        fild    qword ptr [bx+di-52]
-        fbld    tbyte ptr [bp+si+89ABH]
-        fst     dword ptr [bp+1234H]
-        fst     qword ptr [bx+si]
-        fst     st(1)
-        fist    word ptr [bx+di-52]
-        fist    dword ptr [bp+si+89ABH]
-        fstp    dword ptr [bp+si+89ABH]
-        fstp    qword ptr [si]
-        fstp    tbyte ptr [1234H]
-        fstp    st(2)
-        fistp   word ptr [di+52]
-        fistp   dword ptr [bp+1234H]
-        fistp   qword ptr [bx+si]
-        fbstp   tbyte ptr [bx+di-52]
-        fxch    st(3)
-
-;;; Comparison
-        ficom   word ptr [si]
-        ficom   dword ptr [1234H]
-        fcom    dword ptr [si]
-        fcom    qword ptr [1234H]
-        fcom    st(1)
-        ficomp  word ptr [di+52]
-        ficomp  dword ptr [bp+1234H]
-        fcomp   dword ptr [di+52]
-        fcomp   qword ptr [bp+1234H]
-        fcomp   st(3)
-        fcompp
-        ftst
-        fxam
-
-;;; Constants
-        fldz
-        fld1
-        fldpi
-        fldl2t
-        fldl2e
-        fldlg2
-        fldln2
-
-;;; Arithmetic
-        fiadd   word ptr [si]
-        fiadd   dword ptr [1234H]
-        fadd    dword ptr [si]
-        fadd    qword ptr [1234H]
-        fadd    st, st(1)
-        fadd    st(2), st
-        faddp   st(3), st
-        fisub   word ptr [bx+si]
-        fisub   dword ptr [bx+di-52]
-        fsub    dword ptr [bx+si]
-        fsub    qword ptr [bx+di-52]
-        fsub    st, st(5)
-        fsub    st(6), st
-        fsubp   st(7), st
-        fisubr  word ptr [bp+si+89ABH]
-        fisubr  dword ptr [si]
-        fsubr   dword ptr [bp+si+89ABH]
-        fsubr   qword ptr [si]
-        fsubr   st, st(7)
-        fsubr   st(1), st
-        fsubrp  st(2), st
-        fimul   word ptr [di+52]
-        fimul   dword ptr [bp+1234H]
-        fmul    dword ptr [di+52]
-        fmul    qword ptr [bp+1234H]
-        fmul    st, st(3)
-        fmul    st(4), st
-        fmulp   st(5), st
-        fidiv   word ptr [1234H]
-        fidiv   dword ptr [di+52]
-        fdiv    dword ptr [1234H]
-        fdiv    dword ptr [di+52]
-        fdiv    st, st(2)
-        fdiv    st(3), st
-        fdivp   st(4), st
-        fidivr  word ptr [bp+1234H]
-        fidivr  dword ptr [bx+si]
-        fdivr   dword ptr [bp+1234H]
-        fdivr   qword ptr [bx+si]
-        fdivr   st, st(4)
-        fdivr   st(5), st
-        fdivrp  st(6), st
-        fsqrt
-        fscale
-        fprem
-        frndint
-        fxtract
-        fabs
-        fchs
-
-;;; Transcendental
-        fptan
-        fpatan
-        f2xm1
-        fyl2x
-        fyl2xp1
-
-;;; Co-processor control
+;## Data Transfer
+        fnld    dword ptr [si]
+        fnld    qword ptr [0x1234]
+        fnld    tbyte ptr [di+52]
+        fnld    st(0)
+        fnild   word ptr [bp+0x1234]
+        fnild   dword ptr [bx+si]
+        fnild   qword ptr [bx+di-52]
+        fnbld   tbyte ptr [bp+si+0x89AB]
+        fnst    dword ptr [bp+0x1234]
+        fnst    qword ptr [bx+si]
+        fnst    st(1)
+        fnist   word ptr [bx+di-52]
+        fnist   dword ptr [bp+si+0x89AB]
+        fnstp   dword ptr [bp+si+0x89AB]
+        fnstp   qword ptr [si]
+        fnstp   tbyte ptr [0x1234]
+        fnstp   st(2)
+        fnistp  word ptr [di+52]
+        fnistp  dword ptr [bp+0x1234]
+        fnistp  qword ptr [bx+si]
+        fnbstp  tbyte ptr [bx+di-52]
+        fnxch   st(3)
+;## Comparison
+        fnicom  word ptr [si]
+        fnicom  dword ptr [0x1234]
+        fncom   dword ptr [si]
+        fncom   qword ptr [0x1234]
+        fncom   st(1)
+        fnicomp word ptr [di+52]
+        fnicomp dword ptr [bp+0x1234]
+        fncomp  dword ptr [di+52]
+        fncomp  qword ptr [bp+0x1234]
+        fncomp  st(3)
+        fncompp
+        fntst
+        fnxam
+;## Constants
+        fnldz
+        fnld1
+        fnldpi
+        fnldl2t
+        fnldl2e
+        fnldlg2
+        fnldln2
+;## Arithmetic
+        fniadd  word ptr [si]
+        fniadd  dword ptr [0x1234]
+        fnadd   dword ptr [si]
+        fnadd   qword ptr [0x1234]
+        fnadd   st, st(1)
+        fnadd   st(2), st
+        fnaddp  st(3), st
+        fnisub  word ptr [bx+si]
+        fnisub  dword ptr [bx+di-52]
+        fnsub   dword ptr [bx+si]
+        fnsub   qword ptr [bx+di-52]
+        fnsub   st, st(5)
+        fnsub   st(6), st
+        fnsubp  st(7), st
+        fnisubr word ptr [bp+si+0x89AB]
+        fnisubr dword ptr [si]
+        fnsubr  dword ptr [bp+si+0x89AB]
+        fnsubr  qword ptr [si]
+        fnsubr  st, st(7)
+        fnsubr  st(1), st
+        fnsubrp st(2), st
+        fnimul  word ptr [di+52]
+        fnimul  dword ptr [bp+0x1234]
+        fnmul   dword ptr [di+52]
+        fnmul   qword ptr [bp+0x1234]
+        fnmul   st, st(3)
+        fnmul   st(4), st
+        fnmulp  st(5), st
+        fnidiv  word ptr [0x1234]
+        fnidiv  dword ptr [di+52]
+        fndiv   dword ptr [0x1234]
+        fndiv   dword ptr [di+52]
+        fndiv   st, st(2)
+        fndiv   st(3), st
+        fndivp  st(4), st
+        fnidivr word ptr [bp+0x1234]
+        fnidivr dword ptr [bx+si]
+        fndivr  dword ptr [bp+0x1234]
+        fndivr  qword ptr [bx+si]
+        fndivr  st, st(4)
+        fndivr  st(5), st
+        fndivrp st(6), st
+        fnsqrt
+        fnscale
+        fnprem
+        fnrndint
+        fnxtract
+        fnabs
+        fnchs
+;## Transcendental
+        fnptan
+        fnpatan
+        fn2xm1
+        fnyl2x
+        fnyl2xp1
+;## Co-processor control
         finit
         fninit
         feni
         fneni
         fdisi
         fndisi
-        fldcw   [si]
-        fstcw   [1234H]
+        fnldcw  [si]
+        fstcw   [0x1234]
         fnstcw  [di+52]
-        fstsw   [bp+1234H]
+        fstsw   [bp+0x1234]
         fnstsw  [bx+si]
         fclex
         fnclex
         fstenv  [bx+di-52]
-        fnstenv [bp+si+89ABH]
-        fldenv  [di]
-        fsave   [5678H]
+        fnstenv [bp+si+0x89AB]
+        fnldenv [di]
+        fsave   [0x5678]
         fnsave  [si+52]
-        frstor  [bx+1234H]
-        fincstp
-        fdecstp
-        ffree   st(2)
-        fnop
+        fnrstor [bx+0x1234]
+        fnincstp
+        fndecstp
+        fnfree  st(2)
+        fnnop
         fwait
+;## Segment override
+        fnldcw  es:[si]
+        fstcw   es:[si]
 
 ;### Local Variables:
 ;### mode: asm

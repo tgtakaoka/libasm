@@ -76,7 +76,7 @@ AsmI8086::AsmI8086(const ValueParser::Plugins &plugins)
 void AsmI8086::reset() {
     Assembler::reset();
     setFpuType(FPU_NONE);
-    setOptimizeSegment(false);
+    setOptimizeSegment(true);
 }
 
 Error AsmI8086::setOptimizeSegment(bool enable) {
@@ -176,7 +176,9 @@ AddrMode pointerMode(RegName ptr, AddrMode undef, AddrMode byte, AddrMode word) 
         return byte;
     if (ptr == REG_WORD)
         return word;
-    return M_FMOD;
+    if (ptr == REG_DWORD)
+        return M_DMEM;
+    return M_FMEM;
 }
 }  // namespace
 
@@ -290,24 +292,29 @@ Error AsmI8086::parseOperand(StrScanner &scan, Operand &op) const {
 
 AddrMode Operand::immediateMode() const {
     if (getError())
-        return M_IMM;
+        return M_WIMM;
     const auto v = val.getUnsigned();
     if (v == 1)
         return M_VAL1;
     if (v == 3)
         return M_VAL3;
-    return val.overflowInt8() ? M_IMM : M_IMM8;
+    return val.overflowInt8() ? M_WIMM : M_BIMM;
 }
 
 void AsmI8086::emitImmediate(
-        AsmInsn &insn, const Operand &op, OprSize size, const Value &val) const {
+        AsmInsn &insn, AddrMode mode, OprSize size, const Value &val, const ErrorAt &at) const {
+    const auto imm = (mode == M_BIMM || mode == M_WIMM);
     if (size == SZ_BYTE) {
-        if (val.overflowUint8())
-            insn.setErrorIf(op, OVERFLOW_RANGE);
+        if (imm && val.overflowUint8())
+            insn.setErrorIf(at, OVERFLOW_RANGE);
+        if (!imm && val.overflow(UINT8_MAX))
+            insn.setErrorIf(at, OVERFLOW_RANGE);
         insn.emitOperand8(val.getUnsigned());
     } else if (size == SZ_WORD) {
-        if (val.overflowUint16())
-            insn.setErrorIf(op, OVERFLOW_RANGE);
+        if (imm && val.overflowUint16())
+            insn.setErrorIf(at, OVERFLOW_RANGE);
+        if (!imm && val.overflow(UINT16_MAX))
+            insn.setErrorIf(at, OVERFLOW_RANGE);
         insn.emitOperand16(val.getUnsigned());
     }
 }
@@ -444,12 +451,22 @@ void AsmI8086::emitModReg(AsmInsn &insn, const Operand &op, OprPos pos) const {
     case M_BDIR:
     case M_WDIR:
     case M_DIR:
+        if (insn.leaInsn() && op.seg != REG_UNDEF)
+            insn.setErrorIf(op, OPCODE_HAS_NO_EFFECT);
         emitDirect(insn, op, pos);
         break;
-    case M_FMOD:
+    case M_DMEM:
+    case M_FMEM:
+    case M_MEM:
+        if (op.reg == REG_UNDEF && op.index == REG_UNDEF) {
+            emitDirect(insn, op, pos);
+            break;
+        }
+        // Fall-trhough
     case M_BMEM:
     case M_WMEM:
-    case M_MEM:
+        if (insn.leaInsn() && op.seg != REG_UNDEF)
+            insn.setErrorIf(op, OPCODE_HAS_NO_EFFECT);
         insn.setSegment(encodeSegmentOverride(op.seg, op.reg));
         mod = op.encodeMod();
         modReg = mod << 6;
@@ -480,7 +497,7 @@ void AsmI8086::emitDirect(AsmInsn &insn, const Operand &op, OprPos pos) const {
         insn.embedModReg(0006);
     if (pos == P_OMOD)
         insn.embed(0006);
-    emitImmediate(insn, op, SZ_WORD, op.val);
+    emitImmediate(insn, M_DIR, SZ_WORD, op.val, op);
 }
 
 void AsmI8086::emitOperand(AsmInsn &insn, AddrMode mode, const Operand &op, OprPos pos) const {
@@ -495,16 +512,13 @@ void AsmI8086::emitOperand(AsmInsn &insn, AddrMode mode, const Operand &op, OprP
     case M_SREG:
         emitRegister(insn, op, pos);
         break;
-    case M_FMOD:
-        if (op.reg == REG_UNDEF && op.index == REG_UNDEF) {
-            emitDirect(insn, op, pos);
-            break;
-        }
-        /* Fall-through */
     case M_BMOD:
     case M_WMOD:
     case M_BMEM:
     case M_WMEM:
+    case M_DMEM:
+    case M_FMEM:
+    case M_MEM:
         emitModReg(insn, op, pos);
         break;
     case M_BDIR:
@@ -528,25 +542,26 @@ void AsmI8086::emitOperand(AsmInsn &insn, AddrMode mode, const Operand &op, OprP
             insn.setErrorIf(op, OVERFLOW_RANGE);
         insn.emitOperand8(op.val.getUnsigned());
         break;
-    case M_IMM:
-        emitImmediate(insn, op, insn.size(), op.val);
+    case M_WIMM:
+        emitImmediate(insn, mode, insn.size(), op.val, op);
         break;
     case M_IOA:
-        if (op.val.overflow(UINT8_MAX))
-            insn.setErrorIf(op, OVERFLOW_RANGE);
-        /* Fall-through */
-    case M_IMM8:
-        emitImmediate(insn, op, SZ_BYTE, op.val);
+    case M_BIMM:
+        emitImmediate(insn, mode, SZ_BYTE, op.val, op);
         break;
     case M_REL:
     case M_REL8:
         emitRelative(insn, op, mode);
         break;
     case M_FAR:
-        if (op.val.overflow(UINT16_MAX))
-            insn.setErrorIf(op, OVERFLOW_RANGE);
-        emitImmediate(insn, op, SZ_WORD, op.val);
-        emitImmediate(insn, op, SZ_WORD, op.segval);
+        emitImmediate(insn, M_OFF, SZ_WORD, op.val, op);
+        emitImmediate(insn, M_SEG, SZ_WORD, op.segval, op);
+        break;
+    case M_SEG:
+        break;  // emit with M_OFF
+    case M_OFF:
+        emitImmediate(insn, mode, SZ_WORD, op.val, op);
+        emitImmediate(insn, M_SEG, SZ_WORD, insn.dstOp.val, op);
         break;
     case M_ISTR:
         insn.emitOperand8(op.val.getUnsigned());
@@ -723,6 +738,56 @@ Error AsmI8086::processPseudo(StrScanner &scan, Insn &_insn) {
     if (strcasecmp_P(insn.name(), TEXT_DT) == 0)
         return defineDataConstant(insn, scan, DATA_DT, _insn);
     return Assembler::processPseudo(scan, _insn);
+}
+
+void AsmInsn::prepairModReg() {
+    if (hasPrefix())
+        return;
+    const auto dst = dstPos();
+    const auto src = srcPos();
+    if (dst == P_MOD || dst == P_REG || dst == P_MREG || src == P_MOD || src == P_REG)
+        embedModReg(0);
+}
+
+void AsmInsn::embedModReg(Config::opcode_t data) {
+    _modReg |= data;
+    _hasModReg = true;
+}
+
+void AsmInsn::emitInsn() {
+    uint_fast8_t pos = 0;
+    auto pre = prefix();
+    if ((pre >> 8) == FWAIT) {
+        pre &= UINT8_MAX;
+        emitByte(FWAIT, pos++);
+    }
+    if (_segment)
+        emitByte(_segment, pos++);
+    if (pre) {
+        if (pre >= 0x100)
+            emitByte(pre >> 8, pos++);
+        emitByte(pre, pos++);
+    }
+    emitByte(opCode(), pos++);
+    if (_hasModReg)
+        emitByte(_modReg, pos);
+}
+
+uint_fast8_t AsmInsn::operandPos() const {
+    uint_fast8_t pos = length();
+    if (pos == 0) {
+        if (_segment)
+            pos++;
+        if (hasPrefix()) {
+            if (prefix() >= 0x100)
+                pos++;
+            pos++;
+        }
+        pos++;
+        if (_hasModReg)
+            pos++;
+    }
+    return pos;
 }
 
 Error AsmI8086::encodeImpl(StrScanner &scan, Insn &_insn) const {

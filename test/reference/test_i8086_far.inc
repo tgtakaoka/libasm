@@ -1,4 +1,4 @@
-;### Copyright 2020 Tadashi G. Takaoka
+;### Copyright 2025 Tadashi G. Takaoka
 ;###
 ;### Licensed under the Apache License, Version 2.0 (the "License");
 ;### you may not use this file except in compliance with the License.
@@ -12,10 +12,28 @@
 ;### See the License for the specific language governing permissions and
 ;### limitations under the License.
 
-        .code16
-        .include "test_i8086.ginc"
-        .include "test_i8086_far.ginc"
-        .include "test_i8087.ginc"
+;### Control transfer
+;### Call procedure
+        callf   0x1234:0x5678
+        callf   [si]
+        callf   [0x1234]
+        callf   [di-0x34]
+        callf   [bp+0x1234]
+        callf   [bx+si]
+        callf   [bx+di+0x34]
+        callf   [bp+si+0x1234]
+;### Jump
+        jmpf    0x1234:0x5678
+        jmpf    [si]
+        jmpf    [0x1234]
+        jmpf    [di-0x34]
+        jmpf    [bp+0x1234]
+        jmpf    [bx+si]
+        jmpf    [bx+di+0x34]
+        jmpf    [bp+si+0x1234]
+;### Return from procedure
+        retf
+        retf    16
 
 ;### Local Variables:
 ;### mode: asm

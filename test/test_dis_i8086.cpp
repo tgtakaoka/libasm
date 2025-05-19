@@ -199,22 +199,22 @@ void test_data_transfer() {
         TEST("POPA",  "", 0x61);
     }
 
-    TEST("XCHG", "AL, CH",            0x86, 0305);
-    TEST("XCHG", "CL, [SI]",          0x86, 0014);
-    TEST("XCHG", "DL, [1234H]",       0x86, 0026, 0x34, 0x12);
-    TEST("XCHG", "BL, [DI-52]",       0x86, 0135, 0xCC);
-    TEST("XCHG", "AH, [BP+1234H]",    0x86, 0246, 0x34, 0x12);
-    TEST("XCHG", "CH, [BX+SI]",       0x86, 0050);
-    TEST("XCHG", "DH, [BX+DI+52]",    0x86, 0161, 0x34);
-    TEST("XCHG", "BH, [BP+SI+1234H]", 0x86, 0272, 0x34, 0x12);
-    TEST("XCHG", "BP, AX",            0x87, 0350);
-    TEST("XCHG", "CX, [SI]",          0x87, 0014);
-    TEST("XCHG", "DX, [1234H]",       0x87, 0026, 0x34, 0x12);
-    TEST("XCHG", "BX, [DI-52]",       0x87, 0135, 0xCC);
-    TEST("XCHG", "SP, [BP+1234H]",    0x87, 0246, 0x34, 0x12);
-    TEST("XCHG", "BP, [BX+SI]",       0x87, 0050);
-    TEST("XCHG", "SI, [BX+DI+52]",    0x87, 0161, 0x34);
-    TEST("XCHG", "DI, [BP+SI+1234H]", 0x87, 0272, 0x34, 0x12);
+    TEST("XCHG", "CH, AL",            0x86, 0305);
+    TEST("XCHG", "[SI], CL",          0x86, 0014);
+    TEST("XCHG", "[1234H], DL",       0x86, 0026, 0x34, 0x12);
+    TEST("XCHG", "[DI-52], BL",       0x86, 0135, 0xCC);
+    TEST("XCHG", "[BP+1234H], AH",    0x86, 0246, 0x34, 0x12);
+    TEST("XCHG", "[BX+SI], CH",       0x86, 0050);
+    TEST("XCHG", "[BX+DI+52], DH",    0x86, 0161, 0x34);
+    TEST("XCHG", "[BP+SI+1234H], BH", 0x86, 0272, 0x34, 0x12);
+    TEST("XCHG", "AX, BP",            0x87, 0350);
+    TEST("XCHG", "[SI], CX",          0x87, 0014);
+    TEST("XCHG", "[1234H], DX",       0x87, 0026, 0x34, 0x12);
+    TEST("XCHG", "[DI-52], BX",       0x87, 0135, 0xCC);
+    TEST("XCHG", "[BP+1234H], SP",    0x87, 0246, 0x34, 0x12);
+    TEST("XCHG", "[BX+SI], BP",       0x87, 0050);
+    TEST("XCHG", "[BX+DI+52], SI",    0x87, 0161, 0x34);
+    TEST("XCHG", "[BP+SI+1234H], DI", 0x87, 0272, 0x34, 0x12);
     TEST("XCHG", "AX, BP",            0225);
 
     TEST("IN",   "AL, 34H", 0xE4, 0x34);
@@ -1238,26 +1238,26 @@ void test_logic() {
     TEST("AND", "AL, 56H",   0x24, 0x56);
     TEST("AND", "AX, 5678H", 0x25, 0x78, 0x56);
 
-    TEST("TEST", "AL, CL",            0x84, 0301);
-    TEST("TEST", "DL, BL",            0x84, 0323);
-    TEST("TEST", "AH, CH",            0x84, 0345);
-    TEST("TEST", "DH, [SI]",          0x84, 0064);
-    TEST("TEST", "BH, [1234H]",       0x84, 0076, 0x34, 0x12);
-    TEST("TEST", "AL, [DI-52]",       0x84, 0105, 0xCC);
-    TEST("TEST", "CL, [BP+1234H]",    0x84, 0216, 0x34, 0x12);
-    TEST("TEST", "DL, [BX+SI]",       0x84, 0020);
-    TEST("TEST", "BL, [BX+DI-52]",    0x84, 0131, 0xCC);
-    TEST("TEST", "AH, [BP+SI+1234H]", 0x84, 0242, 0x34, 0x12);
-    TEST("TEST", "AX, CX",            0x85, 0301);
-    TEST("TEST", "DX, BX",            0x85, 0323);
-    TEST("TEST", "SP, BP",            0x85, 0345);
-    TEST("TEST", "SI, [SI]",          0x85, 0064);
-    TEST("TEST", "DI, [1234H]",       0x85, 0076, 0x34, 0x12);
-    TEST("TEST", "AX, [DI+52]",       0x85, 0105, 0x34);
-    TEST("TEST", "CX, [BP+1234H]",    0x85, 0216, 0x34, 0x12);
-    TEST("TEST", "DX, [BX+SI]",       0x85, 0020);
-    TEST("TEST", "BX, [BX+DI+52]",    0x85, 0131, 0x34);
-    TEST("TEST", "SP, [BP+SI+1234H]", 0x85, 0242, 0x34, 0x12);
+    TEST("TEST", "CL, AL",            0x84, 0301);
+    TEST("TEST", "BL, DL",            0x84, 0323);
+    TEST("TEST", "CH, AH",            0x84, 0345);
+    TEST("TEST", "[SI], DH",          0x84, 0064);
+    TEST("TEST", "[1234H], BH",       0x84, 0076, 0x34, 0x12);
+    TEST("TEST", "[DI-52], AL",       0x84, 0105, 0xCC);
+    TEST("TEST", "[BP+1234H], CL",    0x84, 0216, 0x34, 0x12);
+    TEST("TEST", "[BX+SI], DL",       0x84, 0020);
+    TEST("TEST", "[BX+DI-52], BL",    0x84, 0131, 0xCC);
+    TEST("TEST", "[BP+SI+1234H], AH", 0x84, 0242, 0x34, 0x12);
+    TEST("TEST", "CX, AX",            0x85, 0301);
+    TEST("TEST", "BX, DX",            0x85, 0323);
+    TEST("TEST", "BP, SP",            0x85, 0345);
+    TEST("TEST", "[SI], SI",          0x85, 0064);
+    TEST("TEST", "[1234H], DI",       0x85, 0076, 0x34, 0x12);
+    TEST("TEST", "[DI+52], AX",       0x85, 0105, 0x34);
+    TEST("TEST", "[BP+1234H], CX",    0x85, 0216, 0x34, 0x12);
+    TEST("TEST", "[BX+SI], DX",       0x85, 0020);
+    TEST("TEST", "[BX+DI+52], BX",    0x85, 0131, 0x34);
+    TEST("TEST", "[BP+SI+1234H], SP", 0x85, 0242, 0x34, 0x12);
 
     TEST("TEST", "AL, 56H",                       0xF6, 0300, 0x56);
     TEST("TEST", "CL, 56H",                       0xF6, 0301, 0x56);
@@ -1600,6 +1600,32 @@ void test_string_manipulation() {
         TEST("CMP4S", "", 0x0F, 0x26);
         TEST("SUB4S", "", 0x0F, 0x22);
     }
+
+    disassembler.setOption("gnu-as", "on");
+
+    TEST("MOVSB", "ES:[DI], DS:[SI]", 0xA4);
+    TEST("MOVSW", "ES:[DI], DS:[SI]", 0xA5);
+    TEST("CMPSB", "DS:[SI], ES:[DI]", 0xA6);
+    TEST("CMPSW", "DS:[SI], ES:[DI]", 0xA7);
+    TEST("STOSB", "ES:[DI]", 0xAA);
+    TEST("STOSW", "ES:[DI]", 0xAB);
+    TEST("LODSB", "DS:[SI]", 0xAC);
+    TEST("LODSW", "DS:[SI]", 0xAD);
+    TEST("SCASB", "ES:[DI]", 0xAE);
+    TEST("SCASW", "ES:[DI]", 0xAF);
+
+    if (is80186()) {
+        TEST("INSB",  "ES:[DI], DX", 0x6C);
+        TEST("INSW",  "ES:[DI], DX", 0x6D);
+        TEST("OUTSB", "DX, DS:[SI]", 0x6E);
+        TEST("OUTSW", "DX, DS:[SI]", 0x6F);
+    }
+
+    if (v30()) {
+        TEST("ADD4S", "ES:[DI], DS:[SI]", 0x0F, 0x20);
+        TEST("CMP4S", "ES:[DI], DS:[SI]", 0x0F, 0x26);
+        TEST("SUB4S", "ES:[DI], DS:[SI]", 0x0F, 0x22);
+    }
 }
 
 void test_control_transfer() {
@@ -1723,6 +1749,28 @@ void test_control_transfer() {
     if (v30()) {
         TEST("BRKEM", "40H", 0x0F, 0xFF, 0x40);
     }
+
+    disassembler.setOption("gnu-as", "on");
+    TEST("LCALL", "0x1234, 0x5678", 0x9A, 0x78, 0x56, 0x34, 0x12);
+    TEST("LCALL", "[SI]",           0xFF, 0034);
+    TEST("LCALL", "[0x1234]",       0xFF, 0036, 0x34, 0x12);
+    TEST("LCALL", "[DI-52]",        0xFF, 0135, 0xCC);
+    TEST("LCALL", "[BP+0x1234]",    0xFF, 0236, 0x34, 0x12);
+    TEST("LCALL", "[BX+SI]",        0xFF, 0030);
+    TEST("LCALL", "[BX+DI+52]",     0xFF, 0131, 0x34);
+    TEST("LCALL", "[BP+SI+0x1234]", 0xFF, 0232, 0x34, 0x12);
+
+    TEST("LJMP", "0x1234, 0x5678", 0xEA, 0x78, 0x56, 0x34, 0x12);
+    TEST("LJMP", "[SI]",           0xFF, 0054);
+    TEST("LJMP", "[0x1234]",       0xFF, 0056, 0x34, 0x12);
+    TEST("LJMP", "[DI-52]",        0xFF, 0155, 0xCC);
+    TEST("LJMP", "[BP+0x1234]",    0xFF, 0256, 0x34, 0x12);
+    TEST("LJMP", "[BX+SI]",        0xFF, 0050);
+    TEST("LJMP", "[BX+DI+52]",     0xFF, 0151, 0x34);
+    TEST("LJMP", "[BP+SI+0x1234]", 0xFF, 0252, 0x34, 0x12);
+
+    TEST("LRET", "",   0xCB);
+    TEST("LRET", "16", 0xCA, 0x10, 0x00);
 }
 
 void test_processor_control() {
@@ -1740,83 +1788,180 @@ void test_processor_control() {
 }
 
 void test_segment_override() {
-    TEST("SEGES", "", 0x26);
-    TEST("SEGCS", "", 0x2E);
-    TEST("SEGSS", "", 0x36);
-    TEST("SEGDS", "", 0x3E);
+    constexpr auto SEGES = 0x26;
+    constexpr auto SEGCS = 0x2E;
+    constexpr auto SEGSS = 0x36;
+    constexpr auto SEGDS = 0x3E;
+    constexpr auto FWAIT = 0x9B;
+
+    disassembler.setOption("segment-insn", "enable");
+
+    TEST("SEGES", "", SEGES);
+    TEST("SEGCS", "", SEGCS);
+    TEST("SEGSS", "", SEGSS);
+    TEST("SEGDS", "", SEGDS);
 
     disassembler.setOption("segment-insn", "disable");
 
-    TEST("MOV", "ES:[BX], AH",    0x26, 0x88, 0047);
-    TEST("MOV", "ES:[BP+0], AH",  0x26, 0x88, 0146, 0x00);
-    TEST("MOV", "ES:[SI], AH",    0x26, 0x88, 0044);
-    TEST("MOV", "ES:[DI], AH",    0x26, 0x88, 0045);
-    TEST("MOV", "ES:[1234H], AH", 0x26, 0x88, 0046, 0x34, 0x12);
-    TEST("MOV", "CS:[BX], AH",    0x2E, 0x88, 0047);
-    TEST("MOV", "CS:[BP+0], AH",  0x2E, 0x88, 0146, 0x00);
-    TEST("MOV", "CS:[SI], AH",    0x2E, 0x88, 0044);
-    TEST("MOV", "CS:[DI], AH",    0x2E, 0x88, 0045);
-    TEST("MOV", "CS:[1234H], AH", 0x2E, 0x88, 0046, 0x34, 0x12);
-    TEST("MOV", "SS:[BX], AH",    0x36, 0x88, 0047);
-    TEST("MOV", "SS:[BP+0], AH",  0x36, 0x88, 0146, 0x00);
-    TEST("MOV", "SS:[SI], AH",    0x36, 0x88, 0044);
-    TEST("MOV", "SS:[DI], AH",    0x36, 0x88, 0045);
-    TEST("MOV", "SS:[1234H], AH", 0x36, 0x88, 0046, 0x34, 0x12);
-    TEST("MOV", "DS:[BX], AH",    0x3E, 0x88, 0047);
-    TEST("MOV", "DS:[BP+0], AH",  0x3E, 0x88, 0146, 0x00);
-    TEST("MOV", "DS:[SI], AH",    0x3E, 0x88, 0044);
-    TEST("MOV", "DS:[DI], AH",    0x3E, 0x88, 0045);
-    TEST("MOV", "DS:[1234H], AH", 0x3E, 0x88, 0046, 0x34, 0x12);
+    NMEM("", "", "", SEGES);
+    NMEM("", "", "", SEGCS);
+    NMEM("", "", "", SEGSS);
+    NMEM("", "", "", SEGDS);
+
+    TEST("MOV", "ES:[BX], AH",    SEGES, 0x88, 0047);
+    TEST("MOV", "ES:[BP+0], AH",  SEGES, 0x88, 0146, 0x00);
+    TEST("MOV", "ES:[SI], AH",    SEGES, 0x88, 0044);
+    TEST("MOV", "ES:[DI], AH",    SEGES, 0x88, 0045);
+    TEST("MOV", "ES:[1234H], AH", SEGES, 0x88, 0046, 0x34, 0x12);
+    TEST("MOV", "CS:[BX], AH",    SEGCS, 0x88, 0047);
+    TEST("MOV", "CS:[BP+0], AH",  SEGCS, 0x88, 0146, 0x00);
+    TEST("MOV", "CS:[SI], AH",    SEGCS, 0x88, 0044);
+    TEST("MOV", "CS:[DI], AH",    SEGCS, 0x88, 0045);
+    TEST("MOV", "CS:[1234H], AH", SEGCS, 0x88, 0046, 0x34, 0x12);
+    TEST("MOV", "SS:[BX], AH",    SEGSS, 0x88, 0047);
+    TEST("MOV", "SS:[BP+0], AH",  SEGSS, 0x88, 0146, 0x00);
+    TEST("MOV", "SS:[SI], AH",    SEGSS, 0x88, 0044);
+    TEST("MOV", "SS:[DI], AH",    SEGSS, 0x88, 0045);
+    TEST("MOV", "SS:[1234H], AH", SEGSS, 0x88, 0046, 0x34, 0x12);
+    TEST("MOV", "DS:[BX], AH",    SEGDS, 0x88, 0047);
+    TEST("MOV", "DS:[BP+0], AH",  SEGDS, 0x88, 0146, 0x00);
+    TEST("MOV", "DS:[SI], AH",    SEGDS, 0x88, 0044);
+    TEST("MOV", "DS:[DI], AH",    SEGDS, 0x88, 0045);
+    TEST("MOV", "DS:[1234H], AH", SEGDS, 0x88, 0046, 0x34, 0x12);
 
     if (is80186()) {
-        TEST("BOUND", "SI, ES:[SI]",       0x26, 0x62, 0064);
-        TEST("BOUND", "DI, CS:[1234H]",    0x2E, 0x62, 0076, 0x34, 0x12);
-        TEST("BOUND", "AX, SS:[DI+52]",    0x36, 0x62, 0105, 0x34);
-        TEST("BOUND", "CX, DS:[BP+1234H]", 0x3E, 0x62, 0216, 0x34, 0x12);
+        TEST("BOUND", "SI, ES:[SI]",       SEGES, 0x62, 0064);
+        TEST("BOUND", "CX, CS:[1234H]",    SEGCS, 0x62, 0016, 0x34, 0x12);
+        TEST("BOUND", "DI, CS:[1234H]",    SEGCS, 0x62, 0076, 0x34, 0x12);
+        TEST("BOUND", "AX, SS:[DI+52]",    SEGSS, 0x62, 0105, 0x34);
+        TEST("BOUND", "CX, DS:[BP+1234H]", SEGDS, 0x62, 0216, 0x34, 0x12);
     }
 
-    TEST("JMP", "ES:[SI]", 0x26, 0xFF, 0044);
-    TEST("JMP", "CS:[SI]", 0x2E, 0xFF, 0044);
-    TEST("JMP", "SS:[SI]", 0x36, 0xFF, 0044);
-    TEST("JMP", "DS:[SI]", 0x3E, 0xFF, 0044);
+    TEST("JMP", "ES:[SI]", SEGES, 0xFF, 0044);
+    TEST("JMP", "CS:[SI]", SEGCS, 0xFF, 0044);
+    TEST("JMP", "SS:[SI]", SEGSS, 0xFF, 0044);
+    TEST("JMP", "DS:[SI]", SEGDS, 0xFF, 0044);
 
-    TEST("MOVSB", "ES:[DI], ES:[SI]", 0x26, 0xA4);
-    TEST("MOVSB", "ES:[DI], CS:[SI]", 0x2E, 0xA4);
-    TEST("MOVSW", "ES:[DI], SS:[SI]", 0x36, 0xA5);
-    TEST("MOVSW", "ES:[DI], DS:[SI]", 0x3E, 0xA5);
-    TEST("CMPSB", "ES:[SI], ES:[DI]", 0x26, 0xA6);
-    TEST("CMPSB", "CS:[SI], ES:[DI]", 0x2E, 0xA6);
-    TEST("CMPSW", "SS:[SI], ES:[DI]", 0x36, 0xA7);
-    TEST("CMPSW", "DS:[SI], ES:[DI]", 0x3E, 0xA7);
-    TEST("LODSB", "ES:[SI]", 0x26, 0xAC);
-    TEST("LODSB", "CS:[SI]", 0x2E, 0xAC);
-    TEST("LODSW", "SS:[SI]", 0x36, 0xAD);
-    TEST("LODSW", "DS:[SI]", 0x3E, 0xAD);
+    ERRT("LEA", "CX, CS:[SI]",
+         OPCODE_HAS_NO_EFFECT, "CS:[SI]",          SEGCS, 0x8D, 0014);
+    ERRT("LEA", "DX, ES:[1235H]",
+         OPCODE_HAS_NO_EFFECT, "ES:[1235H]",       SEGES, 0x8D, 0026, 0x35, 0x12);
+    ERRT("LEA", "BX, ES:[DI-52]",
+         OPCODE_HAS_NO_EFFECT, "ES:[DI-52]",       SEGES, 0x8D, 0135, 0xCC);
+    ERRT("LEA", "SP, DS:[BP+1234H]",
+         OPCODE_HAS_NO_EFFECT, "DS:[BP+1234H]",    SEGDS, 0x8D, 0246, 0x34, 0x12);
+    ERRT("LEA", "BP, SS:[BX+SI]",
+         OPCODE_HAS_NO_EFFECT, "SS:[BX+SI]",       SEGSS, 0x8D, 0050);
+    ERRT("LEA", "SI, DS:[BX+DI+52]",
+         OPCODE_HAS_NO_EFFECT, "DS:[BX+DI+52]",    SEGDS, 0x8D, 0161, 0x34);
+    ERRT("LEA", "DI, CS:[BP+SI+1234H]",
+         OPCODE_HAS_NO_EFFECT, "CS:[BP+SI+1234H]", SEGCS, 0x8D, 0272, 0x34, 0x12);
 
-    ERRT("STOSB", "CS:[DI]", ILLEGAL_SEGMENT, "CS:[DI]", 0x2E, 0xAA);
-    ERRT("STOSW", "SS:[DI]", ILLEGAL_SEGMENT, "SS:[DI]", 0x36, 0xAB);
-    ERRT("STOSW", "DS:[DI]", ILLEGAL_SEGMENT, "DS:[DI]", 0x3E, 0xAB);
-    ERRT("SCASB", "ES:[DI]", ILLEGAL_SEGMENT, "ES:[DI]", 0x26, 0xAE);
-    ERRT("SCASB", "CS:[DI]", ILLEGAL_SEGMENT, "CS:[DI]", 0x2E, 0xAE);
-    ERRT("SCASW", "SS:[DI]", ILLEGAL_SEGMENT, "SS:[DI]", 0x36, 0xAF);
-    ERRT("SCASW", "DS:[DI]", ILLEGAL_SEGMENT, "DS:[DI]", 0x3E, 0xAF);
+    disassembler.setOption("gnu-as", "on");
+
+    TEST("MOVSB", "ES:[DI], ES:[SI]", SEGES, 0xA4);
+    TEST("MOVSB", "ES:[DI], CS:[SI]", SEGCS, 0xA4);
+    TEST("MOVSW", "ES:[DI], SS:[SI]", SEGSS, 0xA5);
+    TEST("MOVSW", "ES:[DI], DS:[SI]", SEGDS, 0xA5);
+    TEST("CMPSB", "ES:[SI], ES:[DI]", SEGES, 0xA6);
+    TEST("CMPSB", "CS:[SI], ES:[DI]", SEGCS, 0xA6);
+    TEST("CMPSW", "SS:[SI], ES:[DI]", SEGSS, 0xA7);
+    TEST("CMPSW", "DS:[SI], ES:[DI]", SEGDS, 0xA7);
+    TEST("LODSB", "ES:[SI]", SEGES, 0xAC);
+    TEST("LODSB", "CS:[SI]", SEGCS, 0xAC);
+    TEST("LODSW", "SS:[SI]", SEGSS, 0xAD);
+    TEST("LODSW", "DS:[SI]", SEGDS, 0xAD);
+
+    ERRT("STOSB", "CS:[DI]", ILLEGAL_SEGMENT, "CS:[DI]", SEGCS, 0xAA);
+    ERRT("STOSW", "SS:[DI]", ILLEGAL_SEGMENT, "SS:[DI]", SEGSS, 0xAB);
+    ERRT("STOSW", "DS:[DI]", ILLEGAL_SEGMENT, "DS:[DI]", SEGDS, 0xAB);
+    ERRT("SCASB", "ES:[DI]", ILLEGAL_SEGMENT, "ES:[DI]", SEGES, 0xAE);
+    ERRT("SCASB", "CS:[DI]", ILLEGAL_SEGMENT, "CS:[DI]", SEGCS, 0xAE);
+    ERRT("SCASW", "SS:[DI]", ILLEGAL_SEGMENT, "SS:[DI]", SEGSS, 0xAF);
+    ERRT("SCASW", "DS:[DI]", ILLEGAL_SEGMENT, "DS:[DI]", SEGDS, 0xAF);
 
     if (is80186()) {
-        TEST("OUTSB", "ES:[SI]", 0x26, 0x6E);
-        TEST("OUTSB", "CS:[SI]", 0x2E, 0x6E);
-        TEST("OUTSW", "SS:[SI]", 0x36, 0x6F);
-        TEST("OUTSW", "DS:[SI]", 0x3E, 0x6F);
-        ERRT("INSB",  "ES:[DI]", ILLEGAL_SEGMENT, "ES:[DI]", 0x26, 0x6C);
-        ERRT("INSB",  "CS:[DI]", ILLEGAL_SEGMENT, "CS:[DI]", 0x2E, 0x6C);
-        ERRT("INSW",  "SS:[DI]", ILLEGAL_SEGMENT, "SS:[DI]", 0x36, 0x6D);
-        ERRT("INSW",  "DS:[DI]", ILLEGAL_SEGMENT, "DS:[DI]", 0x3E, 0x6D);
+        TEST("OUTSB", "DX, ES:[SI]", SEGES, 0x6E);
+        TEST("OUTSB", "DX, CS:[SI]", SEGCS, 0x6E);
+        TEST("OUTSW", "DX, SS:[SI]", SEGSS, 0x6F);
+        TEST("OUTSW", "DX, DS:[SI]", SEGDS, 0x6F);
+        ERRT("INSB",  "ES:[DI], DX", ILLEGAL_SEGMENT, "ES:[DI], DX", SEGES, 0x6C);
+        ERRT("INSB",  "CS:[DI], DX", ILLEGAL_SEGMENT, "CS:[DI], DX", SEGCS, 0x6C);
+        ERRT("INSW",  "SS:[DI], DX", ILLEGAL_SEGMENT, "SS:[DI], DX", SEGSS, 0x6D);
+        ERRT("INSW",  "DS:[DI], DX", ILLEGAL_SEGMENT, "DS:[DI], DX", SEGDS, 0x6D);
     }
 
     if (v30()) {
-        TEST("ADD4S", "ES:[DI], ES:[SI]", 0x26, 0x0F, 0x20);
-        TEST("CMP4S", "ES:[DI], CS:[SI]", 0x2E, 0x0F, 0x26);
-        TEST("SUB4S", "ES:[DI], SS:[SI]", 0x36, 0x0F, 0x22);
+        TEST("ADD4S", "ES:[DI], ES:[SI]", SEGES, 0x0F, 0x20);
+        TEST("CMP4S", "ES:[DI], CS:[SI]", SEGCS, 0x0F, 0x26);
+        TEST("SUB4S", "ES:[DI], SS:[SI]", SEGSS, 0x0F, 0x22);
     }
+
+    disassembler.setOption("gnu-as", "off");
+
+    ERRT("MOVSB", "ES:[DI], ES:[SI]", ILLEGAL_SEGMENT, "ES:[DI], ES:[SI]", SEGES, 0xA4);
+    ERRT("MOVSB", "ES:[DI], CS:[SI]", ILLEGAL_SEGMENT, "ES:[DI], CS:[SI]", SEGCS, 0xA4);
+    ERRT("MOVSW", "ES:[DI], SS:[SI]", ILLEGAL_SEGMENT, "ES:[DI], SS:[SI]", SEGSS, 0xA5);
+    ERRT("MOVSW", "ES:[DI], DS:[SI]", ILLEGAL_SEGMENT, "ES:[DI], DS:[SI]", SEGDS, 0xA5);
+    ERRT("CMPSB", "ES:[SI], ES:[DI]", ILLEGAL_SEGMENT, "ES:[SI], ES:[DI]", SEGES, 0xA6);
+    ERRT("CMPSB", "CS:[SI], ES:[DI]", ILLEGAL_SEGMENT, "CS:[SI], ES:[DI]", SEGCS, 0xA6);
+    ERRT("CMPSW", "SS:[SI], ES:[DI]", ILLEGAL_SEGMENT, "SS:[SI], ES:[DI]", SEGSS, 0xA7);
+    ERRT("CMPSW", "DS:[SI], ES:[DI]", ILLEGAL_SEGMENT, "DS:[SI], ES:[DI]", SEGDS, 0xA7);
+    ERRT("LODSB", "ES:[SI]", ILLEGAL_SEGMENT, "ES:[SI]", SEGES, 0xAC);
+    ERRT("LODSB", "CS:[SI]", ILLEGAL_SEGMENT, "CS:[SI]", SEGCS, 0xAC);
+    ERRT("LODSW", "SS:[SI]", ILLEGAL_SEGMENT, "SS:[SI]", SEGSS, 0xAD);
+    ERRT("LODSW", "DS:[SI]", ILLEGAL_SEGMENT, "DS:[SI]", SEGDS, 0xAD);
+
+    ERRT("STOSB", "CS:[DI]", ILLEGAL_SEGMENT, "CS:[DI]", SEGCS, 0xAA);
+    ERRT("STOSW", "SS:[DI]", ILLEGAL_SEGMENT, "SS:[DI]", SEGSS, 0xAB);
+    ERRT("STOSW", "DS:[DI]", ILLEGAL_SEGMENT, "DS:[DI]", SEGDS, 0xAB);
+    ERRT("SCASB", "ES:[DI]", ILLEGAL_SEGMENT, "ES:[DI]", SEGES, 0xAE);
+    ERRT("SCASB", "CS:[DI]", ILLEGAL_SEGMENT, "CS:[DI]", SEGCS, 0xAE);
+    ERRT("SCASW", "SS:[DI]", ILLEGAL_SEGMENT, "SS:[DI]", SEGSS, 0xAF);
+    ERRT("SCASW", "DS:[DI]", ILLEGAL_SEGMENT, "DS:[DI]", SEGDS, 0xAF);
+
+    if (is80186()) {
+        ERRT("OUTSB", "DX, ES:[SI]", ILLEGAL_SEGMENT, "DX, ES:[SI]", SEGES, 0x6E);
+        ERRT("OUTSB", "DX, CS:[SI]", ILLEGAL_SEGMENT, "DX, CS:[SI]", SEGCS, 0x6E);
+        ERRT("OUTSW", "DX, SS:[SI]", ILLEGAL_SEGMENT, "DX, SS:[SI]", SEGSS, 0x6F);
+        ERRT("OUTSW", "DX, DS:[SI]", ILLEGAL_SEGMENT, "DX, DS:[SI]", SEGDS, 0x6F);
+        ERRT("INSB",  "ES:[DI], DX", ILLEGAL_SEGMENT, "ES:[DI], DX", SEGES, 0x6C);
+        ERRT("INSB",  "CS:[DI], DX", ILLEGAL_SEGMENT, "CS:[DI], DX", SEGCS, 0x6C);
+        ERRT("INSW",  "SS:[DI], DX", ILLEGAL_SEGMENT, "SS:[DI], DX", SEGSS, 0x6D);
+        ERRT("INSW",  "DS:[DI], DX", ILLEGAL_SEGMENT, "DS:[DI], DX", SEGDS, 0x6D);
+    }
+
+    if (v30()) {
+        ERRT("ADD4S", "ES:[DI], ES:[SI]", ILLEGAL_SEGMENT, "ES:[DI], ES:[SI]", SEGES, 0x0F, 0x20);
+        ERRT("CMP4S", "ES:[DI], CS:[SI]", ILLEGAL_SEGMENT, "ES:[DI], CS:[SI]", SEGCS, 0x0F, 0x26);
+        ERRT("SUB4S", "ES:[DI], SS:[SI]", ILLEGAL_SEGMENT, "ES:[DI], SS:[SI]", SEGSS, 0x0F, 0x22);
+    }
+
+#if !defined(LIBASM_I8086_NOFPU)
+    if (!fpu_on())
+        return;
+
+    NMEM("", "", "", FWAIT, SEGES);
+    NMEM("", "", "", FWAIT, SEGCS);
+    NMEM("", "", "", FWAIT, SEGSS);
+    NMEM("", "", "", FWAIT, SEGDS);
+
+    TEST("FLDCW", "SS:[SI]",          SEGSS, 0xD9, 0054);
+    TEST("FLDCW", "CS:[1234H]",       SEGCS, 0xD9, 0056, 0x34, 0x12);
+    TEST("FLDCW", "ES:[DI+52]",       SEGES, 0xD9, 0155, 0x34);
+    TEST("FLDCW", "ES:[BP+1234H]",    SEGES, 0xD9, 0256, 0x34, 0x12);
+    TEST("FLDCW", "ES:[BX+SI]",       SEGES, 0xD9, 0050);
+    TEST("FLDCW", "CS:[BX+DI-52]",    SEGCS, 0xD9, 0151, 0xCC);
+    TEST("FLDCW", "ES:[BP+SI+89ABH]", SEGES, 0xD9, 0252, 0xAB, 0x89);
+
+    TEST("FSTCW", "ES:[SI]",          FWAIT, SEGES, 0xD9, 0074);
+    TEST("FSTCW", "ES:[1234H]",       FWAIT, SEGES, 0xD9, 0076, 0x34, 0x12);
+    TEST("FSTCW", "SS:[DI+52]",       FWAIT, SEGSS, 0xD9, 0175, 0x34);
+    TEST("FSTCW", "DS:[BP+1234H]",    FWAIT, SEGDS, 0xD9, 0276, 0x34, 0x12);
+    TEST("FSTCW", "SS:[BX+SI]",       FWAIT, SEGSS, 0xD9, 0070);
+    TEST("FSTCW", "ES:[BX+DI-52]",    FWAIT, SEGES, 0xD9, 0171, 0xCC);
+    TEST("FSTCW", "DS:[BP+SI+89ABH]", FWAIT, SEGDS, 0xD9, 0272, 0xAB, 0x89);
+#endif
 }
 
 #if !defined(LIBASM_I8086_NOFPU)
@@ -1825,545 +1970,560 @@ void test_float() {
     if (!fpu_on())
         return;
 
-    TEST("FINIT", "", 0x9B, 0xDB, 0xE3);
-
-    TEST("FLDCW", "[SI]",          0x9B, 0xD9, 0054);
-    TEST("FLDCW", "[1234H]",       0x9B, 0xD9, 0056, 0x34, 0x12);
-    TEST("FLDCW", "[DI+52]",       0x9B, 0xD9, 0155, 0x34);
-    TEST("FLDCW", "[BP+1234H]",    0x9B, 0xD9, 0256, 0x34, 0x12);
-    TEST("FLDCW", "[BX+SI]",       0x9B, 0xD9, 0050);
-    TEST("FLDCW", "[BX+DI-52]",    0x9B, 0xD9, 0151, 0xCC);
-    TEST("FLDCW", "[BP+SI+89ABH]", 0x9B, 0xD9, 0252, 0xAB, 0x89);
-
-    TEST("FSTCW", "[SI]",          0x9B, 0xD9, 0074);
-    TEST("FSTCW", "[1234H]",       0x9B, 0xD9, 0076, 0x34, 0x12);
-    TEST("FSTCW", "[DI+52]",       0x9B, 0xD9, 0175, 0x34);
-    TEST("FSTCW", "[BP+1234H]",    0x9B, 0xD9, 0276, 0x34, 0x12);
-    TEST("FSTCW", "[BX+SI]",       0x9B, 0xD9, 0070);
-    TEST("FSTCW", "[BX+DI-52]",    0x9B, 0xD9, 0171, 0xCC);
-    TEST("FSTCW", "[BP+SI+89ABH]", 0x9B, 0xD9, 0272, 0xAB, 0x89);
-
-    TEST("FLDENV", "[SI]",          0x9B, 0xD9, 0044);
-    TEST("FLDENV", "[1234H]",       0x9B, 0xD9, 0046, 0x34, 0x12);
-    TEST("FLDENV", "[DI+52]",       0x9B, 0xD9, 0145, 0x34);
-    TEST("FLDENV", "[BP+1234H]",    0x9B, 0xD9, 0246, 0x34, 0x12);
-    TEST("FLDENV", "[BX+SI]",       0x9B, 0xD9, 0040);
-    TEST("FLDENV", "[BX+DI-52]",    0x9B, 0xD9, 0141, 0xCC);
-    TEST("FLDENV", "[BP+SI+89ABH]", 0x9B, 0xD9, 0242, 0xAB, 0x89);
-
-    TEST("FSTSW", "[SI]",          0x9B, 0xDD, 0074);
-    TEST("FSTSW", "[1234H]",       0x9B, 0xDD, 0076, 0x34, 0x12);
-    TEST("FSTSW", "[DI+52]",       0x9B, 0xDD, 0175, 0x34);
-    TEST("FSTSW", "[BP+1234H]",    0x9B, 0xDD, 0276, 0x34, 0x12);
-    TEST("FSTSW", "[BX+SI]",       0x9B, 0xDD, 0070);
-    TEST("FSTSW", "[BX+DI-52]",    0x9B, 0xDD, 0171, 0xCC);
-    TEST("FSTSW", "[BP+SI+89ABH]", 0x9B, 0xDD, 0272, 0xAB, 0x89);
-
-    TEST("FCLEX", "", 0x9B, 0xDB, 0xE2);
-
-    TEST("FSTENV", "[SI]",          0x9B, 0xD9, 0064);
-    TEST("FSTENV", "[1234H]",       0x9B, 0xD9, 0066, 0x34, 0x12);
-    TEST("FSTENV", "[DI+52]",       0x9B, 0xD9, 0165, 0x34);
-    TEST("FSTENV", "[BP+1234H]",    0x9B, 0xD9, 0266, 0x34, 0x12);
-    TEST("FSTENV", "[BX+SI]",       0x9B, 0xD9, 0060);
-    TEST("FSTENV", "[BX+DI-52]",    0x9B, 0xD9, 0161, 0xCC);
-    TEST("FSTENV", "[BP+SI+89ABH]", 0x9B, 0xD9, 0262, 0xAB, 0x89);
-
-    TEST("FSAVE", "[SI]",          0x9B, 0xDD, 0064);
-    TEST("FSAVE", "[1234H]",       0x9B, 0xDD, 0066, 0x34, 0x12);
-    TEST("FSAVE", "[DI+52]",       0x9B, 0xDD, 0165, 0x34);
-    TEST("FSAVE", "[BP+1234H]",    0x9B, 0xDD, 0266, 0x34, 0x12);
-    TEST("FSAVE", "[BX+SI]",       0x9B, 0xDD, 0060);
-    TEST("FSAVE", "[BX+DI-52]",    0x9B, 0xDD, 0161, 0xCC);
-    TEST("FSAVE", "[BP+SI+89ABH]", 0x9B, 0xDD, 0262, 0xAB, 0x89);
-
-    TEST("FRSTOR", "[SI]",          0x9B, 0xDD, 0044);
-    TEST("FRSTOR", "[1234H]",       0x9B, 0xDD, 0046, 0x34, 0x12);
-    TEST("FRSTOR", "[DI+52]",       0x9B, 0xDD, 0145, 0x34);
-    TEST("FRSTOR", "[BP+1234H]",    0x9B, 0xDD, 0246, 0x34, 0x12);
-    TEST("FRSTOR", "[BX+SI]",       0x9B, 0xDD, 0040);
-    TEST("FRSTOR", "[BX+DI-52]",    0x9B, 0xDD, 0141, 0xCC);
-    TEST("FRSTOR", "[BP+SI+89ABH]", 0x9B, 0xDD, 0242, 0xAB, 0x89);
-
-    TEST("FENI", "", 0x9B, 0xDB, 0xE0);
-    TEST("FDISI", "", 0x9B, 0xDB, 0xE1);
-
-    TEST("FLD", "DWORD PTR [SI]",          0x9B, 0xD9, 0004);
-    TEST("FLD", "DWORD PTR [1234H]",       0x9B, 0xD9, 0006, 0x34, 0x12);
-    TEST("FLD", "DWORD PTR [DI+52]",       0x9B, 0xD9, 0105, 0x34);
-    TEST("FLD", "DWORD PTR [BP+1234H]",    0x9B, 0xD9, 0206, 0x34, 0x12);
-    TEST("FLD", "DWORD PTR [BX+SI]",       0x9B, 0xD9, 0000);
-    TEST("FLD", "DWORD PTR [BX+DI-52]",    0x9B, 0xD9, 0101, 0xCC);
-    TEST("FLD", "DWORD PTR [BP+SI+89ABH]", 0x9B, 0xD9, 0202, 0xAB, 0x89);
-
-    TEST("FLD", "QWORD PTR [SI]",          0x9B, 0xDD, 0004);
-    TEST("FLD", "QWORD PTR [1234H]",       0x9B, 0xDD, 0006, 0x34, 0x12);
-    TEST("FLD", "QWORD PTR [DI+52]",       0x9B, 0xDD, 0105, 0x34);
-    TEST("FLD", "QWORD PTR [BP+1234H]",    0x9B, 0xDD, 0206, 0x34, 0x12);
-    TEST("FLD", "QWORD PTR [BX+SI]",       0x9B, 0xDD, 0000);
-    TEST("FLD", "QWORD PTR [BX+DI-52]",    0x9B, 0xDD, 0101, 0xCC);
-    TEST("FLD", "QWORD PTR [BP+SI+89ABH]", 0x9B, 0xDD, 0202, 0xAB, 0x89);
-
-    TEST("FLD", "TBYTE PTR [SI]",          0x9B, 0xDB, 0054);
-    TEST("FLD", "TBYTE PTR [1234H]",       0x9B, 0xDB, 0056, 0x34, 0x12);
-    TEST("FLD", "TBYTE PTR [DI+52]",       0x9B, 0xDB, 0155, 0x34);
-    TEST("FLD", "TBYTE PTR [BP+1234H]",    0x9B, 0xDB, 0256, 0x34, 0x12);
-    TEST("FLD", "TBYTE PTR [BX+SI]",       0x9B, 0xDB, 0050);
-    TEST("FLD", "TBYTE PTR [BX+DI-52]",    0x9B, 0xDB, 0151, 0xCC);
-    TEST("FLD", "TBYTE PTR [BP+SI+89ABH]", 0x9B, 0xDB, 0252, 0xAB, 0x89);
-
-    TEST("FLD", "ST(0)", 0x9B, 0xD9, 0xC0);
-    TEST("FLD", "ST(7)", 0x9B, 0xD9, 0xC7);
-
-    TEST("FST", "DWORD PTR [SI]",          0x9B, 0xD9, 0024);
-    TEST("FST", "DWORD PTR [1234H]",       0x9B, 0xD9, 0026, 0x34, 0x12);
-    TEST("FST", "DWORD PTR [DI+52]",       0x9B, 0xD9, 0125, 0x34);
-    TEST("FST", "DWORD PTR [BP+1234H]",    0x9B, 0xD9, 0226, 0x34, 0x12);
-    TEST("FST", "DWORD PTR [BX+SI]",       0x9B, 0xD9, 0020);
-    TEST("FST", "DWORD PTR [BX+DI-52]",    0x9B, 0xD9, 0121, 0xCC);
-    TEST("FST", "DWORD PTR [BP+SI+89ABH]", 0x9B, 0xD9, 0222, 0xAB, 0x89);
-
-    TEST("FST", "QWORD PTR [SI]",          0x9B, 0xDD, 0024);
-    TEST("FST", "QWORD PTR [1234H]",       0x9B, 0xDD, 0026, 0x34, 0x12);
-    TEST("FST", "QWORD PTR [DI+52]",       0x9B, 0xDD, 0125, 0x34);
-    TEST("FST", "QWORD PTR [BP+1234H]",    0x9B, 0xDD, 0226, 0x34, 0x12);
-    TEST("FST", "QWORD PTR [BX+SI]",       0x9B, 0xDD, 0020);
-    TEST("FST", "QWORD PTR [BX+DI-52]",    0x9B, 0xDD, 0121, 0xCC);
-    TEST("FST", "QWORD PTR [BP+SI+89ABH]", 0x9B, 0xDD, 0222, 0xAB, 0x89);
-
-    TEST("FST", "ST(0)", 0x9B, 0xDD, 0xD0);
-    TEST("FST", "ST(7)", 0x9B, 0xDD, 0xD7);
-
-    TEST("FSTP", "DWORD PTR [SI]",          0x9B, 0xD9, 0034);
-    TEST("FSTP", "DWORD PTR [1234H]",       0x9B, 0xD9, 0036, 0x34, 0x12);
-    TEST("FSTP", "DWORD PTR [DI+52]",       0x9B, 0xD9, 0135, 0x34);
-    TEST("FSTP", "DWORD PTR [BP+1234H]",    0x9B, 0xD9, 0236, 0x34, 0x12);
-    TEST("FSTP", "DWORD PTR [BX+SI]",       0x9B, 0xD9, 0030);
-    TEST("FSTP", "DWORD PTR [BX+DI-52]",    0x9B, 0xD9, 0131, 0xCC);
-    TEST("FSTP", "DWORD PTR [BP+SI+89ABH]", 0x9B, 0xD9, 0232, 0xAB, 0x89);
-
-    TEST("FSTP", "QWORD PTR [SI]",          0x9B, 0xDD, 0034);
-    TEST("FSTP", "QWORD PTR [1234H]",       0x9B, 0xDD, 0036, 0x34, 0x12);
-    TEST("FSTP", "QWORD PTR [DI+52]",       0x9B, 0xDD, 0135, 0x34);
-    TEST("FSTP", "QWORD PTR [BP+1234H]",    0x9B, 0xDD, 0236, 0x34, 0x12);
-    TEST("FSTP", "QWORD PTR [BX+SI]",       0x9B, 0xDD, 0030);
-    TEST("FSTP", "QWORD PTR [BX+DI-52]",    0x9B, 0xDD, 0131, 0xCC);
-    TEST("FSTP", "QWORD PTR [BP+SI+89ABH]", 0x9B, 0xDD, 0232, 0xAB, 0x89);
-
-    TEST("FSTP", "TBYTE PTR [SI]",          0x9B, 0xDB, 0074);
-    TEST("FSTP", "TBYTE PTR [1234H]",       0x9B, 0xDB, 0076, 0x34, 0x12);
-    TEST("FSTP", "TBYTE PTR [DI+52]",       0x9B, 0xDB, 0175, 0x34);
-    TEST("FSTP", "TBYTE PTR [BP+1234H]",    0x9B, 0xDB, 0276, 0x34, 0x12);
-    TEST("FSTP", "TBYTE PTR [BX+SI]",       0x9B, 0xDB, 0070);
-    TEST("FSTP", "TBYTE PTR [BX+DI-52]",    0x9B, 0xDB, 0171, 0xCC);
-    TEST("FSTP", "TBYTE PTR [BP+SI+89ABH]", 0x9B, 0xDB, 0272, 0xAB, 0x89);
-
-    TEST("FSTP", "ST(0)", 0x9B, 0xDD, 0xD8);
-    TEST("FSTP", "ST(7)", 0x9B, 0xDD, 0xDF);
-
-    TEST("FLDZ", "", 0x9B, 0xD9, 0xEE);
-    TEST("FLD1", "", 0x9B, 0xD9, 0xE8);
-    TEST("FLDPI", "", 0x9B, 0xD9, 0xEB);
-    TEST("FLDL2T", "", 0x9B, 0xD9, 0xE9);
-    TEST("FLDL2E", "", 0x9B, 0xD9, 0xEA);
-    TEST("FLDLG2", "", 0x9B, 0xD9, 0xEC);
-    TEST("FLDLN2", "", 0x9B, 0xD9, 0xED);
-
-    TEST("FXCH", "ST(0)", 0x9B, 0xD9, 0xC8);
-    TEST("FXCH", "ST(7)", 0x9B, 0xD9, 0xCF);
-
-    TEST("FILD", "WORD PTR [SI]",          0x9B, 0xDF, 0004);
-    TEST("FILD", "WORD PTR [1234H]",       0x9B, 0xDF, 0006, 0x34, 0x12);
-    TEST("FILD", "WORD PTR [DI+52]",       0x9B, 0xDF, 0105, 0x34);
-    TEST("FILD", "WORD PTR [BP+1234H]",    0x9B, 0xDF, 0206, 0x34, 0x12);
-    TEST("FILD", "WORD PTR [BX+SI]",       0x9B, 0xDF, 0000);
-    TEST("FILD", "WORD PTR [BX+DI-52]",    0x9B, 0xDF, 0101, 0xCC);
-    TEST("FILD", "WORD PTR [BP+SI+89ABH]", 0x9B, 0xDF, 0202, 0xAB, 0x89);
-
-    TEST("FILD", "DWORD PTR [SI]",          0x9B, 0xDB, 0004);
-    TEST("FILD", "DWORD PTR [1234H]",       0x9B, 0xDB, 0006, 0x34, 0x12);
-    TEST("FILD", "DWORD PTR [DI+52]",       0x9B, 0xDB, 0105, 0x34);
-    TEST("FILD", "DWORD PTR [BP+1234H]",    0x9B, 0xDB, 0206, 0x34, 0x12);
-    TEST("FILD", "DWORD PTR [BX+SI]",       0x9B, 0xDB, 0000);
-    TEST("FILD", "DWORD PTR [BX+DI-52]",    0x9B, 0xDB, 0101, 0xCC);
-    TEST("FILD", "DWORD PTR [BP+SI+89ABH]", 0x9B, 0xDB, 0202, 0xAB, 0x89);
-
-    TEST("FILD", "QWORD PTR [SI]",          0x9B, 0xDF, 0054);
-    TEST("FILD", "QWORD PTR [1234H]",       0x9B, 0xDF, 0056, 0x34, 0x12);
-    TEST("FILD", "QWORD PTR [DI+52]",       0x9B, 0xDF, 0155, 0x34);
-    TEST("FILD", "QWORD PTR [BP+1234H]",    0x9B, 0xDF, 0256, 0x34, 0x12);
-    TEST("FILD", "QWORD PTR [BX+SI]",       0x9B, 0xDF, 0050);
-    TEST("FILD", "QWORD PTR [BX+DI-52]",    0x9B, 0xDF, 0151, 0xCC);
-    TEST("FILD", "QWORD PTR [BP+SI+89ABH]", 0x9B, 0xDF, 0252, 0xAB, 0x89);
-
-    TEST("FIST", "WORD PTR [SI]",          0x9B, 0xDF, 0024);
-    TEST("FIST", "WORD PTR [1234H]",       0x9B, 0xDF, 0026, 0x34, 0x12);
-    TEST("FIST", "WORD PTR [DI+52]",       0x9B, 0xDF, 0125, 0x34);
-    TEST("FIST", "WORD PTR [BP+1234H]",    0x9B, 0xDF, 0226, 0x34, 0x12);
-    TEST("FIST", "WORD PTR [BX+SI]",       0x9B, 0xDF, 0020);
-    TEST("FIST", "WORD PTR [BX+DI-52]",    0x9B, 0xDF, 0121, 0xCC);
-    TEST("FIST", "WORD PTR [BP+SI+89ABH]", 0x9B, 0xDF, 0222, 0xAB, 0x89);
-
-    TEST("FIST", "DWORD PTR [SI]",          0x9B, 0xDB, 0024);
-    TEST("FIST", "DWORD PTR [1234H]",       0x9B, 0xDB, 0026, 0x34, 0x12);
-    TEST("FIST", "DWORD PTR [DI+52]",       0x9B, 0xDB, 0125, 0x34);
-    TEST("FIST", "DWORD PTR [BP+1234H]",    0x9B, 0xDB, 0226, 0x34, 0x12);
-    TEST("FIST", "DWORD PTR [BX+SI]",       0x9B, 0xDB, 0020);
-    TEST("FIST", "DWORD PTR [BX+DI-52]",    0x9B, 0xDB, 0121, 0xCC);
-    TEST("FIST", "DWORD PTR [BP+SI+89ABH]", 0x9B, 0xDB, 0222, 0xAB, 0x89);
-
-    TEST("FISTP", "WORD PTR [SI]",          0x9B, 0xDF, 0034);
-    TEST("FISTP", "WORD PTR [1234H]",       0x9B, 0xDF, 0036, 0x34, 0x12);
-    TEST("FISTP", "WORD PTR [DI+52]",       0x9B, 0xDF, 0135, 0x34);
-    TEST("FISTP", "WORD PTR [BP+1234H]",    0x9B, 0xDF, 0236, 0x34, 0x12);
-    TEST("FISTP", "WORD PTR [BX+SI]",       0x9B, 0xDF, 0030);
-    TEST("FISTP", "WORD PTR [BX+DI-52]",    0x9B, 0xDF, 0131, 0xCC);
-    TEST("FISTP", "WORD PTR [BP+SI+89ABH]", 0x9B, 0xDF, 0232, 0xAB, 0x89);
-
-    TEST("FISTP", "DWORD PTR [SI]",          0x9B, 0xDB, 0034);
-    TEST("FISTP", "DWORD PTR [1234H]",       0x9B, 0xDB, 0036, 0x34, 0x12);
-    TEST("FISTP", "DWORD PTR [DI+52]",       0x9B, 0xDB, 0135, 0x34);
-    TEST("FISTP", "DWORD PTR [BP+1234H]",    0x9B, 0xDB, 0236, 0x34, 0x12);
-    TEST("FISTP", "DWORD PTR [BX+SI]",       0x9B, 0xDB, 0030);
-    TEST("FISTP", "DWORD PTR [BX+DI-52]",    0x9B, 0xDB, 0131, 0xCC);
-    TEST("FISTP", "DWORD PTR [BP+SI+89ABH]", 0x9B, 0xDB, 0232, 0xAB, 0x89);
-
-    TEST("FISTP", "QWORD PTR [SI]",          0x9B, 0xDF, 0074);
-    TEST("FISTP", "QWORD PTR [1234H]",       0x9B, 0xDF, 0076, 0x34, 0x12);
-    TEST("FISTP", "QWORD PTR [DI+52]",       0x9B, 0xDF, 0175, 0x34);
-    TEST("FISTP", "QWORD PTR [BP+1234H]",    0x9B, 0xDF, 0276, 0x34, 0x12);
-    TEST("FISTP", "QWORD PTR [BX+SI]",       0x9B, 0xDF, 0070);
-    TEST("FISTP", "QWORD PTR [BX+DI-52]",    0x9B, 0xDF, 0171, 0xCC);
-    TEST("FISTP", "QWORD PTR [BP+SI+89ABH]", 0x9B, 0xDF, 0272, 0xAB, 0x89);
-
-    TEST("FBLD", "TBYTE PTR [SI]",          0x9B, 0xDF, 0044);
-    TEST("FBLD", "TBYTE PTR [1234H]",       0x9B, 0xDF, 0046, 0x34, 0x12);
-    TEST("FBLD", "TBYTE PTR [DI+52]",       0x9B, 0xDF, 0145, 0x34);
-    TEST("FBLD", "TBYTE PTR [BP+1234H]",    0x9B, 0xDF, 0246, 0x34, 0x12);
-    TEST("FBLD", "TBYTE PTR [BX+SI]",       0x9B, 0xDF, 0040);
-    TEST("FBLD", "TBYTE PTR [BX+DI-52]",    0x9B, 0xDF, 0141, 0xCC);
-    TEST("FBLD", "TBYTE PTR [BP+SI+89ABH]", 0x9B, 0xDF, 0242, 0xAB, 0x89);
-
-    TEST("FBSTP", "TBYTE PTR [SI]",          0x9B, 0xDF, 0064);
-    TEST("FBSTP", "TBYTE PTR [1234H]",       0x9B, 0xDF, 0066, 0x34, 0x12);
-    TEST("FBSTP", "TBYTE PTR [DI+52]",       0x9B, 0xDF, 0165, 0x34);
-    TEST("FBSTP", "TBYTE PTR [BP+1234H]",    0x9B, 0xDF, 0266, 0x34, 0x12);
-    TEST("FBSTP", "TBYTE PTR [BX+SI]",       0x9B, 0xDF, 0060);
-    TEST("FBSTP", "TBYTE PTR [BX+DI-52]",    0x9B, 0xDF, 0161, 0xCC);
-    TEST("FBSTP", "TBYTE PTR [BP+SI+89ABH]", 0x9B, 0xDF, 0262, 0xAB, 0x89);
-
-    TEST("FADD", "DWORD PTR [SI]",          0x9B, 0xD8, 0004);
-    TEST("FADD", "DWORD PTR [1234H]",       0x9B, 0xD8, 0006, 0x34, 0x12);
-    TEST("FADD", "DWORD PTR [DI+52]",       0x9B, 0xD8, 0105, 0x34);
-    TEST("FADD", "DWORD PTR [BP+1234H]",    0x9B, 0xD8, 0206, 0x34, 0x12);
-    TEST("FADD", "DWORD PTR [BX+SI]",       0x9B, 0xD8, 0000);
-    TEST("FADD", "DWORD PTR [BX+DI-52]",    0x9B, 0xD8, 0101, 0xCC);
-    TEST("FADD", "DWORD PTR [BP+SI+89ABH]", 0x9B, 0xD8, 0202, 0xAB, 0x89);
-
-    TEST("FADD", "QWORD PTR [SI]",          0x9B, 0xDC, 0004);
-    TEST("FADD", "QWORD PTR [1234H]",       0x9B, 0xDC, 0006, 0x34, 0x12);
-    TEST("FADD", "QWORD PTR [DI+52]",       0x9B, 0xDC, 0105, 0x34);
-    TEST("FADD", "QWORD PTR [BP+1234H]",    0x9B, 0xDC, 0206, 0x34, 0x12);
-    TEST("FADD", "QWORD PTR [BX+SI]",       0x9B, 0xDC, 0000);
-    TEST("FADD", "QWORD PTR [BX+DI-52]",    0x9B, 0xDC, 0101, 0xCC);
-    TEST("FADD", "QWORD PTR [BP+SI+89ABH]", 0x9B, 0xDC, 0202, 0xAB, 0x89);
-
-    TEST("FADD", "ST, ST(1)",  0x9B, 0xD8, 0xC1);
-    TEST("FADD", "ST(2), ST",  0x9B, 0xDC, 0xC2);
-    TEST("FADDP", "ST(3), ST", 0x9B, 0xDE, 0xC3);
-
-    TEST("FMUL", "DWORD PTR [SI]",          0x9B, 0xD8, 0014);
-    TEST("FMUL", "DWORD PTR [1234H]",       0x9B, 0xD8, 0016, 0x34, 0x12);
-    TEST("FMUL", "DWORD PTR [DI+52]",       0x9B, 0xD8, 0115, 0x34);
-    TEST("FMUL", "DWORD PTR [BP+1234H]",    0x9B, 0xD8, 0216, 0x34, 0x12);
-    TEST("FMUL", "DWORD PTR [BX+SI]",       0x9B, 0xD8, 0010);
-    TEST("FMUL", "DWORD PTR [BX+DI-52]",    0x9B, 0xD8, 0111, 0xCC);
-    TEST("FMUL", "DWORD PTR [BP+SI+89ABH]", 0x9B, 0xD8, 0212, 0xAB, 0x89);
-
-    TEST("FMUL", "QWORD PTR [SI]",          0x9B, 0xDC, 0014);
-    TEST("FMUL", "QWORD PTR [1234H]",       0x9B, 0xDC, 0016, 0x34, 0x12);
-    TEST("FMUL", "QWORD PTR [DI+52]",       0x9B, 0xDC, 0115, 0x34);
-    TEST("FMUL", "QWORD PTR [BP+1234H]",    0x9B, 0xDC, 0216, 0x34, 0x12);
-    TEST("FMUL", "QWORD PTR [BX+SI]",       0x9B, 0xDC, 0010);
-    TEST("FMUL", "QWORD PTR [BX+DI-52]",    0x9B, 0xDC, 0111, 0xCC);
-    TEST("FMUL", "QWORD PTR [BP+SI+89ABH]", 0x9B, 0xDC, 0212, 0xAB, 0x89);
-
-    TEST("FMUL", "ST, ST(4)",  0x9B, 0xD8, 0xCC);
-    TEST("FMUL", "ST(5), ST",  0x9B, 0xDC, 0xCD);
-    TEST("FMULP", "ST(6), ST", 0x9B, 0xDE, 0xCE);
-
-    TEST("FSUB", "DWORD PTR [SI]",          0x9B, 0xD8, 0044);
-    TEST("FSUB", "DWORD PTR [1234H]",       0x9B, 0xD8, 0046, 0x34, 0x12);
-    TEST("FSUB", "DWORD PTR [DI+52]",       0x9B, 0xD8, 0145, 0x34);
-    TEST("FSUB", "DWORD PTR [BP+1234H]",    0x9B, 0xD8, 0246, 0x34, 0x12);
-    TEST("FSUB", "DWORD PTR [BX+SI]",       0x9B, 0xD8, 0040);
-    TEST("FSUB", "DWORD PTR [BX+DI-52]",    0x9B, 0xD8, 0141, 0xCC);
-    TEST("FSUB", "DWORD PTR [BP+SI+89ABH]", 0x9B, 0xD8, 0242, 0xAB, 0x89);
-
-    TEST("FSUB", "QWORD PTR [SI]",          0x9B, 0xDC, 0044);
-    TEST("FSUB", "QWORD PTR [1234H]",       0x9B, 0xDC, 0046, 0x34, 0x12);
-    TEST("FSUB", "QWORD PTR [DI+52]",       0x9B, 0xDC, 0145, 0x34);
-    TEST("FSUB", "QWORD PTR [BP+1234H]",    0x9B, 0xDC, 0246, 0x34, 0x12);
-    TEST("FSUB", "QWORD PTR [BX+SI]",       0x9B, 0xDC, 0040);
-    TEST("FSUB", "QWORD PTR [BX+DI-52]",    0x9B, 0xDC, 0141, 0xCC);
-    TEST("FSUB", "QWORD PTR [BP+SI+89ABH]", 0x9B, 0xDC, 0242, 0xAB, 0x89);
-
-    TEST("FSUB", "ST, ST(7)",  0x9B, 0xD8, 0xE7);
-    TEST("FSUB", "ST(1), ST",  0x9B, 0xDC, 0xE9);
-    TEST("FSUBP", "ST(1), ST", 0x9B, 0xDE, 0xE9);
-
-    TEST("FSUBR", "DWORD PTR [SI]",          0x9B, 0xD8, 0054);
-    TEST("FSUBR", "DWORD PTR [1234H]",       0x9B, 0xD8, 0056, 0x34, 0x12);
-    TEST("FSUBR", "DWORD PTR [DI+52]",       0x9B, 0xD8, 0155, 0x34);
-    TEST("FSUBR", "DWORD PTR [BP+1234H]",    0x9B, 0xD8, 0256, 0x34, 0x12);
-    TEST("FSUBR", "DWORD PTR [BX+SI]",       0x9B, 0xD8, 0050);
-    TEST("FSUBR", "DWORD PTR [BX+DI-52]",    0x9B, 0xD8, 0151, 0xCC);
-    TEST("FSUBR", "DWORD PTR [BP+SI+89ABH]", 0x9B, 0xD8, 0252, 0xAB, 0x89);
-
-    TEST("FSUBR", "QWORD PTR [SI]",          0x9B, 0xDC, 0054);
-    TEST("FSUBR", "QWORD PTR [1234H]",       0x9B, 0xDC, 0056, 0x34, 0x12);
-    TEST("FSUBR", "QWORD PTR [DI+52]",       0x9B, 0xDC, 0155, 0x34);
-    TEST("FSUBR", "QWORD PTR [BP+1234H]",    0x9B, 0xDC, 0256, 0x34, 0x12);
-    TEST("FSUBR", "QWORD PTR [BX+SI]",       0x9B, 0xDC, 0050);
-    TEST("FSUBR", "QWORD PTR [BX+DI-52]",    0x9B, 0xDC, 0151, 0xCC);
-    TEST("FSUBR", "QWORD PTR [BP+SI+89ABH]", 0x9B, 0xDC, 0252, 0xAB, 0x89);
-
-    TEST("FSUBR", "ST, ST(2)",  0x9B, 0xD8, 0xEA);
-    TEST("FSUBR", "ST(3), ST",  0x9B, 0xDC, 0xE3);
-    TEST("FSUBRP", "ST(4), ST", 0x9B, 0xDE, 0xE4);
-
-    TEST("FDIV", "DWORD PTR [SI]",          0x9B, 0xD8, 0064);
-    TEST("FDIV", "DWORD PTR [1234H]",       0x9B, 0xD8, 0066, 0x34, 0x12);
-    TEST("FDIV", "DWORD PTR [DI+52]",       0x9B, 0xD8, 0165, 0x34);
-    TEST("FDIV", "DWORD PTR [BP+1234H]",    0x9B, 0xD8, 0266, 0x34, 0x12);
-    TEST("FDIV", "DWORD PTR [BX+SI]",       0x9B, 0xD8, 0060);
-    TEST("FDIV", "DWORD PTR [BX+DI-52]",    0x9B, 0xD8, 0161, 0xCC);
-    TEST("FDIV", "DWORD PTR [BP+SI+89ABH]", 0x9B, 0xD8, 0262, 0xAB, 0x89);
-
-    TEST("FDIV", "QWORD PTR [SI]",          0x9B, 0xDC, 0064);
-    TEST("FDIV", "QWORD PTR [1234H]",       0x9B, 0xDC, 0066, 0x34, 0x12);
-    TEST("FDIV", "QWORD PTR [DI+52]",       0x9B, 0xDC, 0165, 0x34);
-    TEST("FDIV", "QWORD PTR [BP+1234H]",    0x9B, 0xDC, 0266, 0x34, 0x12);
-    TEST("FDIV", "QWORD PTR [BX+SI]",       0x9B, 0xDC, 0060);
-    TEST("FDIV", "QWORD PTR [BX+DI-52]",    0x9B, 0xDC, 0161, 0xCC);
-    TEST("FDIV", "QWORD PTR [BP+SI+89ABH]", 0x9B, 0xDC, 0262, 0xAB, 0x89);
-
-    TEST("FDIV", "ST, ST(7)",  0x9B, 0xD8, 0xF7);
-    TEST("FDIV", "ST(1), ST",  0x9B, 0xDC, 0xF9);
-    TEST("FDIVP", "ST(1), ST", 0x9B, 0xDE, 0xF9);
-
-    TEST("FDIVR", "DWORD PTR [SI]",          0x9B, 0xD8, 0074);
-    TEST("FDIVR", "DWORD PTR [1234H]",       0x9B, 0xD8, 0076, 0x34, 0x12);
-    TEST("FDIVR", "DWORD PTR [DI+52]",       0x9B, 0xD8, 0175, 0x34);
-    TEST("FDIVR", "DWORD PTR [BP+1234H]",    0x9B, 0xD8, 0276, 0x34, 0x12);
-    TEST("FDIVR", "DWORD PTR [BX+SI]",       0x9B, 0xD8, 0070);
-    TEST("FDIVR", "DWORD PTR [BX+DI-52]",    0x9B, 0xD8, 0171, 0xCC);
-    TEST("FDIVR", "DWORD PTR [BP+SI+89ABH]", 0x9B, 0xD8, 0272, 0xAB, 0x89);
-
-    TEST("FDIVR", "QWORD PTR [SI]",          0x9B, 0xDC, 0074);
-    TEST("FDIVR", "QWORD PTR [1234H]",       0x9B, 0xDC, 0076, 0x34, 0x12);
-    TEST("FDIVR", "QWORD PTR [DI+52]",       0x9B, 0xDC, 0175, 0x34);
-    TEST("FDIVR", "QWORD PTR [BP+1234H]",    0x9B, 0xDC, 0276, 0x34, 0x12);
-    TEST("FDIVR", "QWORD PTR [BX+SI]",       0x9B, 0xDC, 0070);
-    TEST("FDIVR", "QWORD PTR [BX+DI-52]",    0x9B, 0xDC, 0171, 0xCC);
-    TEST("FDIVR", "QWORD PTR [BP+SI+89ABH]", 0x9B, 0xDC, 0272, 0xAB, 0x89);
-
-    TEST("FDIVR", "ST, ST(2)",  0x9B, 0xD8, 0xFA);
-    TEST("FDIVR", "ST(3), ST",  0x9B, 0xDC, 0xF3);
-    TEST("FDIVRP", "ST(4), ST", 0x9B, 0xDE, 0xF4);
-
-    TEST("FCOM", "DWORD PTR [SI]",          0x9B, 0xD8, 0024);
-    TEST("FCOM", "DWORD PTR [1234H]",       0x9B, 0xD8, 0026, 0x34, 0x12);
-    TEST("FCOM", "DWORD PTR [DI+52]",       0x9B, 0xD8, 0125, 0x34);
-    TEST("FCOM", "DWORD PTR [BP+1234H]",    0x9B, 0xD8, 0226, 0x34, 0x12);
-    TEST("FCOM", "DWORD PTR [BX+SI]",       0x9B, 0xD8, 0020);
-    TEST("FCOM", "DWORD PTR [BX+DI-52]",    0x9B, 0xD8, 0121, 0xCC);
-    TEST("FCOM", "DWORD PTR [BP+SI+89ABH]", 0x9B, 0xD8, 0222, 0xAB, 0x89);
-
-    TEST("FCOM", "QWORD PTR [SI]",          0x9B, 0xDC, 0024);
-    TEST("FCOM", "QWORD PTR [1234H]",       0x9B, 0xDC, 0026, 0x34, 0x12);
-    TEST("FCOM", "QWORD PTR [DI+52]",       0x9B, 0xDC, 0125, 0x34);
-    TEST("FCOM", "QWORD PTR [BP+1234H]",    0x9B, 0xDC, 0226, 0x34, 0x12);
-    TEST("FCOM", "QWORD PTR [BX+SI]",       0x9B, 0xDC, 0020);
-    TEST("FCOM", "QWORD PTR [BX+DI-52]",    0x9B, 0xDC, 0121, 0xCC);
-    TEST("FCOM", "QWORD PTR [BP+SI+89ABH]", 0x9B, 0xDC, 0222, 0xAB, 0x89);
-
-    TEST("FCOM", "ST(2)", 0x9B, 0xD8, 0xD2);
-
-    TEST("FCOMP", "DWORD PTR [SI]",          0x9B, 0xD8, 0034);
-    TEST("FCOMP", "DWORD PTR [1234H]",       0x9B, 0xD8, 0036, 0x34, 0x12);
-    TEST("FCOMP", "DWORD PTR [DI+52]",       0x9B, 0xD8, 0135, 0x34);
-    TEST("FCOMP", "DWORD PTR [BP+1234H]",    0x9B, 0xD8, 0236, 0x34, 0x12);
-    TEST("FCOMP", "DWORD PTR [BX+SI]",       0x9B, 0xD8, 0030);
-    TEST("FCOMP", "DWORD PTR [BX+DI-52]",    0x9B, 0xD8, 0131, 0xCC);
-    TEST("FCOMP", "DWORD PTR [BP+SI+89ABH]", 0x9B, 0xD8, 0232, 0xAB, 0x89);
-
-    TEST("FCOMP", "QWORD PTR [SI]",          0x9B, 0xDC, 0034);
-    TEST("FCOMP", "QWORD PTR [1234H]",       0x9B, 0xDC, 0036, 0x34, 0x12);
-    TEST("FCOMP", "QWORD PTR [DI+52]",       0x9B, 0xDC, 0135, 0x34);
-    TEST("FCOMP", "QWORD PTR [BP+1234H]",    0x9B, 0xDC, 0236, 0x34, 0x12);
-    TEST("FCOMP", "QWORD PTR [BX+SI]",       0x9B, 0xDC, 0030);
-    TEST("FCOMP", "QWORD PTR [BX+DI-52]",    0x9B, 0xDC, 0131, 0xCC);
-    TEST("FCOMP", "QWORD PTR [BP+SI+89ABH]", 0x9B, 0xDC, 0232, 0xAB, 0x89);
-
-    TEST("FCOMP", "ST(2)", 0x9B, 0xD8, 0xDA);
-    TEST("FCOMPP", "",     0x9B, 0xDE, 0xD9);
-
-    TEST("FIADD", "WORD PTR [SI]",          0x9B, 0xDE, 0004);
-    TEST("FIADD", "WORD PTR [1234H]",       0x9B, 0xDE, 0006, 0x34, 0x12);
-    TEST("FIADD", "WORD PTR [DI+52]",       0x9B, 0xDE, 0105, 0x34);
-    TEST("FIADD", "WORD PTR [BP+1234H]",    0x9B, 0xDE, 0206, 0x34, 0x12);
-    TEST("FIADD", "WORD PTR [BX+SI]",       0x9B, 0xDE, 0000);
-    TEST("FIADD", "WORD PTR [BX+DI-52]",    0x9B, 0xDE, 0101, 0xCC);
-    TEST("FIADD", "WORD PTR [BP+SI+89ABH]", 0x9B, 0xDE, 0202, 0xAB, 0x89);
-
-    TEST("FIADD", "DWORD PTR [SI]",          0x9B, 0xDA, 0004);
-    TEST("FIADD", "DWORD PTR [1234H]",       0x9B, 0xDA, 0006, 0x34, 0x12);
-    TEST("FIADD", "DWORD PTR [DI+52]",       0x9B, 0xDA, 0105, 0x34);
-    TEST("FIADD", "DWORD PTR [BP+1234H]",    0x9B, 0xDA, 0206, 0x34, 0x12);
-    TEST("FIADD", "DWORD PTR [BX+SI]",       0x9B, 0xDA, 0000);
-    TEST("FIADD", "DWORD PTR [BX+DI-52]",    0x9B, 0xDA, 0101, 0xCC);
-    TEST("FIADD", "DWORD PTR [BP+SI+89ABH]", 0x9B, 0xDA, 0202, 0xAB, 0x89);
-
-    TEST("FIMUL", "WORD PTR [SI]",          0x9B, 0xDE, 0014);
-    TEST("FIMUL", "WORD PTR [1234H]",       0x9B, 0xDE, 0016, 0x34, 0x12);
-    TEST("FIMUL", "WORD PTR [DI+52]",       0x9B, 0xDE, 0115, 0x34);
-    TEST("FIMUL", "WORD PTR [BP+1234H]",    0x9B, 0xDE, 0216, 0x34, 0x12);
-    TEST("FIMUL", "WORD PTR [BX+SI]",       0x9B, 0xDE, 0010);
-    TEST("FIMUL", "WORD PTR [BX+DI-52]",    0x9B, 0xDE, 0111, 0xCC);
-    TEST("FIMUL", "WORD PTR [BP+SI+89ABH]", 0x9B, 0xDE, 0212, 0xAB, 0x89);
-
-    TEST("FIMUL", "DWORD PTR [SI]",          0x9B, 0xDA, 0014);
-    TEST("FIMUL", "DWORD PTR [1234H]",       0x9B, 0xDA, 0016, 0x34, 0x12);
-    TEST("FIMUL", "DWORD PTR [DI+52]",       0x9B, 0xDA, 0115, 0x34);
-    TEST("FIMUL", "DWORD PTR [BP+1234H]",    0x9B, 0xDA, 0216, 0x34, 0x12);
-    TEST("FIMUL", "DWORD PTR [BX+SI]",       0x9B, 0xDA, 0010);
-    TEST("FIMUL", "DWORD PTR [BX+DI-52]",    0x9B, 0xDA, 0111, 0xCC);
-    TEST("FIMUL", "DWORD PTR [BP+SI+89ABH]", 0x9B, 0xDA, 0212, 0xAB, 0x89);
-
-    TEST("FISUB", "WORD PTR [SI]",          0x9B, 0xDE, 0044);
-    TEST("FISUB", "WORD PTR [1234H]",       0x9B, 0xDE, 0046, 0x34, 0x12);
-    TEST("FISUB", "WORD PTR [DI+52]",       0x9B, 0xDE, 0145, 0x34);
-    TEST("FISUB", "WORD PTR [BP+1234H]",    0x9B, 0xDE, 0246, 0x34, 0x12);
-    TEST("FISUB", "WORD PTR [BX+SI]",       0x9B, 0xDE, 0040);
-    TEST("FISUB", "WORD PTR [BX+DI-52]",    0x9B, 0xDE, 0141, 0xCC);
-    TEST("FISUB", "WORD PTR [BP+SI+89ABH]", 0x9B, 0xDE, 0242, 0xAB, 0x89);
-
-    TEST("FISUB", "DWORD PTR [SI]",          0x9B, 0xDA, 0044);
-    TEST("FISUB", "DWORD PTR [1234H]",       0x9B, 0xDA, 0046, 0x34, 0x12);
-    TEST("FISUB", "DWORD PTR [DI+52]",       0x9B, 0xDA, 0145, 0x34);
-    TEST("FISUB", "DWORD PTR [BP+1234H]",    0x9B, 0xDA, 0246, 0x34, 0x12);
-    TEST("FISUB", "DWORD PTR [BX+SI]",       0x9B, 0xDA, 0040);
-    TEST("FISUB", "DWORD PTR [BX+DI-52]",    0x9B, 0xDA, 0141, 0xCC);
-    TEST("FISUB", "DWORD PTR [BP+SI+89ABH]", 0x9B, 0xDA, 0242, 0xAB, 0x89);
-
-    TEST("FISUBR", "WORD PTR [SI]",          0x9B, 0xDE, 0054);
-    TEST("FISUBR", "WORD PTR [1234H]",       0x9B, 0xDE, 0056, 0x34, 0x12);
-    TEST("FISUBR", "WORD PTR [DI+52]",       0x9B, 0xDE, 0155, 0x34);
-    TEST("FISUBR", "WORD PTR [BP+1234H]",    0x9B, 0xDE, 0256, 0x34, 0x12);
-    TEST("FISUBR", "WORD PTR [BX+SI]",       0x9B, 0xDE, 0050);
-    TEST("FISUBR", "WORD PTR [BX+DI-52]",    0x9B, 0xDE, 0151, 0xCC);
-    TEST("FISUBR", "WORD PTR [BP+SI+89ABH]", 0x9B, 0xDE, 0252, 0xAB, 0x89);
-
-    TEST("FISUBR", "DWORD PTR [SI]",          0x9B, 0xDA, 0054);
-    TEST("FISUBR", "DWORD PTR [1234H]",       0x9B, 0xDA, 0056, 0x34, 0x12);
-    TEST("FISUBR", "DWORD PTR [DI+52]",       0x9B, 0xDA, 0155, 0x34);
-    TEST("FISUBR", "DWORD PTR [BP+1234H]",    0x9B, 0xDA, 0256, 0x34, 0x12);
-    TEST("FISUBR", "DWORD PTR [BX+SI]",       0x9B, 0xDA, 0050);
-    TEST("FISUBR", "DWORD PTR [BX+DI-52]",    0x9B, 0xDA, 0151, 0xCC);
-    TEST("FISUBR", "DWORD PTR [BP+SI+89ABH]", 0x9B, 0xDA, 0252, 0xAB, 0x89);
-
-    TEST("FIDIV", "WORD PTR [SI]",          0x9B, 0xDE, 0064);
-    TEST("FIDIV", "WORD PTR [1234H]",       0x9B, 0xDE, 0066, 0x34, 0x12);
-    TEST("FIDIV", "WORD PTR [DI+52]",       0x9B, 0xDE, 0165, 0x34);
-    TEST("FIDIV", "WORD PTR [BP+1234H]",    0x9B, 0xDE, 0266, 0x34, 0x12);
-    TEST("FIDIV", "WORD PTR [BX+SI]",       0x9B, 0xDE, 0060);
-    TEST("FIDIV", "WORD PTR [BX+DI-52]",    0x9B, 0xDE, 0161, 0xCC);
-    TEST("FIDIV", "WORD PTR [BP+SI+89ABH]", 0x9B, 0xDE, 0262, 0xAB, 0x89);
-
-    TEST("FIDIV", "DWORD PTR [SI]",          0x9B, 0xDA, 0064);
-    TEST("FIDIV", "DWORD PTR [1234H]",       0x9B, 0xDA, 0066, 0x34, 0x12);
-    TEST("FIDIV", "DWORD PTR [DI+52]",       0x9B, 0xDA, 0165, 0x34);
-    TEST("FIDIV", "DWORD PTR [BP+1234H]",    0x9B, 0xDA, 0266, 0x34, 0x12);
-    TEST("FIDIV", "DWORD PTR [BX+SI]",       0x9B, 0xDA, 0060);
-    TEST("FIDIV", "DWORD PTR [BX+DI-52]",    0x9B, 0xDA, 0161, 0xCC);
-    TEST("FIDIV", "DWORD PTR [BP+SI+89ABH]", 0x9B, 0xDA, 0262, 0xAB, 0x89);
-
-    TEST("FIDIVR", "WORD PTR [SI]",          0x9B, 0xDE, 0074);
-    TEST("FIDIVR", "WORD PTR [1234H]",       0x9B, 0xDE, 0076, 0x34, 0x12);
-    TEST("FIDIVR", "WORD PTR [DI+52]",       0x9B, 0xDE, 0175, 0x34);
-    TEST("FIDIVR", "WORD PTR [BP+1234H]",    0x9B, 0xDE, 0276, 0x34, 0x12);
-    TEST("FIDIVR", "WORD PTR [BX+SI]",       0x9B, 0xDE, 0070);
-    TEST("FIDIVR", "WORD PTR [BX+DI-52]",    0x9B, 0xDE, 0171, 0xCC);
-    TEST("FIDIVR", "WORD PTR [BP+SI+89ABH]", 0x9B, 0xDE, 0272, 0xAB, 0x89);
-
-    TEST("FIDIVR", "DWORD PTR [SI]",          0x9B, 0xDA, 0074);
-    TEST("FIDIVR", "DWORD PTR [1234H]",       0x9B, 0xDA, 0076, 0x34, 0x12);
-    TEST("FIDIVR", "DWORD PTR [DI+52]",       0x9B, 0xDA, 0175, 0x34);
-    TEST("FIDIVR", "DWORD PTR [BP+1234H]",    0x9B, 0xDA, 0276, 0x34, 0x12);
-    TEST("FIDIVR", "DWORD PTR [BX+SI]",       0x9B, 0xDA, 0070);
-    TEST("FIDIVR", "DWORD PTR [BX+DI-52]",    0x9B, 0xDA, 0171, 0xCC);
-    TEST("FIDIVR", "DWORD PTR [BP+SI+89ABH]", 0x9B, 0xDA, 0272, 0xAB, 0x89);
-
-    TEST("FICOM", "WORD PTR [SI]",          0x9B, 0xDE, 0024);
-    TEST("FICOM", "WORD PTR [1234H]",       0x9B, 0xDE, 0026, 0x34, 0x12);
-    TEST("FICOM", "WORD PTR [DI+52]",       0x9B, 0xDE, 0125, 0x34);
-    TEST("FICOM", "WORD PTR [BP+1234H]",    0x9B, 0xDE, 0226, 0x34, 0x12);
-    TEST("FICOM", "WORD PTR [BX+SI]",       0x9B, 0xDE, 0020);
-    TEST("FICOM", "WORD PTR [BX+DI-52]",    0x9B, 0xDE, 0121, 0xCC);
-    TEST("FICOM", "WORD PTR [BP+SI+89ABH]", 0x9B, 0xDE, 0222, 0xAB, 0x89);
-
-    TEST("FICOM", "DWORD PTR [SI]",          0x9B, 0xDA, 0024);
-    TEST("FICOM", "DWORD PTR [1234H]",       0x9B, 0xDA, 0026, 0x34, 0x12);
-    TEST("FICOM", "DWORD PTR [DI+52]",       0x9B, 0xDA, 0125, 0x34);
-    TEST("FICOM", "DWORD PTR [BP+1234H]",    0x9B, 0xDA, 0226, 0x34, 0x12);
-    TEST("FICOM", "DWORD PTR [BX+SI]",       0x9B, 0xDA, 0020);
-    TEST("FICOM", "DWORD PTR [BX+DI-52]",    0x9B, 0xDA, 0121, 0xCC);
-    TEST("FICOM", "DWORD PTR [BP+SI+89ABH]", 0x9B, 0xDA, 0222, 0xAB, 0x89);
-
-    TEST("FICOMP", "WORD PTR [SI]",          0x9B, 0xDE, 0034);
-    TEST("FICOMP", "WORD PTR [1234H]",       0x9B, 0xDE, 0036, 0x34, 0x12);
-    TEST("FICOMP", "WORD PTR [DI+52]",       0x9B, 0xDE, 0135, 0x34);
-    TEST("FICOMP", "WORD PTR [BP+1234H]",    0x9B, 0xDE, 0236, 0x34, 0x12);
-    TEST("FICOMP", "WORD PTR [BX+SI]",       0x9B, 0xDE, 0030);
-    TEST("FICOMP", "WORD PTR [BX+DI-52]",    0x9B, 0xDE, 0131, 0xCC);
-    TEST("FICOMP", "WORD PTR [BP+SI+89ABH]", 0x9B, 0xDE, 0232, 0xAB, 0x89);
-
-    TEST("FICOMP", "DWORD PTR [SI]",          0x9B, 0xDA, 0034);
-    TEST("FICOMP", "DWORD PTR [1234H]",       0x9B, 0xDA, 0036, 0x34, 0x12);
-    TEST("FICOMP", "DWORD PTR [DI+52]",       0x9B, 0xDA, 0135, 0x34);
-    TEST("FICOMP", "DWORD PTR [BP+1234H]",    0x9B, 0xDA, 0236, 0x34, 0x12);
-    TEST("FICOMP", "DWORD PTR [BX+SI]",       0x9B, 0xDA, 0030);
-    TEST("FICOMP", "DWORD PTR [BX+DI-52]",    0x9B, 0xDA, 0131, 0xCC);
-    TEST("FICOMP", "DWORD PTR [BP+SI+89ABH]", 0x9B, 0xDA, 0232, 0xAB, 0x89);
-
-    TEST("FCHS",    "", 0x9B, 0xD9, 0xE0);
-    TEST("FABS",    "", 0x9B, 0xD9, 0xE1);
-    TEST("FTST",    "", 0x9B, 0xD9, 0xE4);
-    TEST("FXAM",    "", 0x9B, 0xD9, 0xE5);
-    TEST("FXTRACT", "", 0x9B, 0xD9, 0xF4);
-    TEST("FPREM",   "", 0x9B, 0xD9, 0xF8);
-    TEST("FSQRT",   "", 0x9B, 0xD9, 0xFA);
-    TEST("FRNDINT", "", 0x9B, 0xD9, 0xFC);
-    TEST("FSCALE",  "", 0x9B, 0xD9, 0xFD);
-
-    TEST("F2XM1",   "", 0x9B, 0xD9, 0xF0);
-    TEST("FYL2X",   "", 0x9B, 0xD9, 0xF1);
-    TEST("FPTAN",   "", 0x9B, 0xD9, 0xF2);
-    TEST("FPATAN",  "", 0x9B, 0xD9, 0xF3);
-    TEST("FYL2XP1", "", 0x9B, 0xD9, 0xF9);
-
-    TEST("FNOP",    "", 0x9B, 0xD9, 0xD0);
-    TEST("FDECSTP", "", 0x9B, 0xD9, 0xF6);
-    TEST("FINCSTP", "", 0x9B, 0xD9, 0xF7);
-    TEST("FFREE", "ST(0)", 0x9B, 0xDD, 0xC0);
-    TEST("FFREE", "ST(1)", 0x9B, 0xDD, 0xC1);
-    TEST("FFREE", "ST(2)", 0x9B, 0xDD, 0xC2);
-    TEST("FFREE", "ST(3)", 0x9B, 0xDD, 0xC3);
-    TEST("FFREE", "ST(4)", 0x9B, 0xDD, 0xC4);
-    TEST("FFREE", "ST(5)", 0x9B, 0xDD, 0xC5);
-    TEST("FFREE", "ST(6)", 0x9B, 0xDD, 0xC6);
-    TEST("FFREE", "ST(7)", 0x9B, 0xDD, 0xC7);
+    constexpr auto FWAIT = 0x9B;
+
+    UNKN(            FWAIT, 0x00);
+    UNKN(            FWAIT, 0xD7);
+    UNKN(            FWAIT, 0xD8);
+    NMEM("", "", "", FWAIT, 0xD9);
+    UNKN(            FWAIT, 0xDA);
+    NMEM("", "", "", FWAIT, 0xDB);
+    UNKN(            FWAIT, 0xDC);
+    NMEM("", "", "", FWAIT, 0xDD);
+    UNKN(            FWAIT, 0xDE);
+    UNKN(            FWAIT, 0xDF);
+    UNKN(            FWAIT, 0xE0);
+
+    TEST("FINIT", "", FWAIT, 0xDB, 0xE3);
+
+    TEST("FLDCW", "[SI]",          0xD9, 0054);
+    TEST("FLDCW", "[1234H]",       0xD9, 0056, 0x34, 0x12);
+    TEST("FLDCW", "[DI+52]",       0xD9, 0155, 0x34);
+    TEST("FLDCW", "[BP+1234H]",    0xD9, 0256, 0x34, 0x12);
+    TEST("FLDCW", "[BX+SI]",       0xD9, 0050);
+    TEST("FLDCW", "[BX+DI-52]",    0xD9, 0151, 0xCC);
+    TEST("FLDCW", "[BP+SI+89ABH]", 0xD9, 0252, 0xAB, 0x89);
+
+    TEST("FSTCW", "[SI]",          FWAIT, 0xD9, 0074);
+    TEST("FSTCW", "[1234H]",       FWAIT, 0xD9, 0076, 0x34, 0x12);
+    TEST("FSTCW", "[DI+52]",       FWAIT, 0xD9, 0175, 0x34);
+    TEST("FSTCW", "[BP+1234H]",    FWAIT, 0xD9, 0276, 0x34, 0x12);
+    TEST("FSTCW", "[BX+SI]",       FWAIT, 0xD9, 0070);
+    TEST("FSTCW", "[BX+DI-52]",    FWAIT, 0xD9, 0171, 0xCC);
+    TEST("FSTCW", "[BP+SI+89ABH]", FWAIT, 0xD9, 0272, 0xAB, 0x89);
+
+    TEST("FLDENV", "[SI]",          0xD9, 0044);
+    TEST("FLDENV", "[1234H]",       0xD9, 0046, 0x34, 0x12);
+    TEST("FLDENV", "[DI+52]",       0xD9, 0145, 0x34);
+    TEST("FLDENV", "[BP+1234H]",    0xD9, 0246, 0x34, 0x12);
+    TEST("FLDENV", "[BX+SI]",       0xD9, 0040);
+    TEST("FLDENV", "[BX+DI-52]",    0xD9, 0141, 0xCC);
+    TEST("FLDENV", "[BP+SI+89ABH]", 0xD9, 0242, 0xAB, 0x89);
+
+    TEST("FSTSW", "[SI]",          FWAIT, 0xDD, 0074);
+    TEST("FSTSW", "[1234H]",       FWAIT, 0xDD, 0076, 0x34, 0x12);
+    TEST("FSTSW", "[DI+52]",       FWAIT, 0xDD, 0175, 0x34);
+    TEST("FSTSW", "[BP+1234H]",    FWAIT, 0xDD, 0276, 0x34, 0x12);
+    TEST("FSTSW", "[BX+SI]",       FWAIT, 0xDD, 0070);
+    TEST("FSTSW", "[BX+DI-52]",    FWAIT, 0xDD, 0171, 0xCC);
+    TEST("FSTSW", "[BP+SI+89ABH]", FWAIT, 0xDD, 0272, 0xAB, 0x89);
+    UNKN(FWAIT, 0xDD, 0370);    // FSTSW AX
+
+    TEST("FCLEX", "", FWAIT, 0xDB, 0xE2);
+
+    TEST("FSTENV", "[SI]",          FWAIT, 0xD9, 0064);
+    TEST("FSTENV", "[1234H]",       FWAIT, 0xD9, 0066, 0x34, 0x12);
+    TEST("FSTENV", "[DI+52]",       FWAIT, 0xD9, 0165, 0x34);
+    TEST("FSTENV", "[BP+1234H]",    FWAIT, 0xD9, 0266, 0x34, 0x12);
+    TEST("FSTENV", "[BX+SI]",       FWAIT, 0xD9, 0060);
+    TEST("FSTENV", "[BX+DI-52]",    FWAIT, 0xD9, 0161, 0xCC);
+    TEST("FSTENV", "[BP+SI+89ABH]", FWAIT, 0xD9, 0262, 0xAB, 0x89);
+
+    TEST("FSAVE", "[SI]",          FWAIT, 0xDD, 0064);
+    TEST("FSAVE", "[1234H]",       FWAIT, 0xDD, 0066, 0x34, 0x12);
+    TEST("FSAVE", "[DI+52]",       FWAIT, 0xDD, 0165, 0x34);
+    TEST("FSAVE", "[BP+1234H]",    FWAIT, 0xDD, 0266, 0x34, 0x12);
+    TEST("FSAVE", "[BX+SI]",       FWAIT, 0xDD, 0060);
+    TEST("FSAVE", "[BX+DI-52]",    FWAIT, 0xDD, 0161, 0xCC);
+    TEST("FSAVE", "[BP+SI+89ABH]", FWAIT, 0xDD, 0262, 0xAB, 0x89);
+
+    TEST("FRSTOR", "[SI]",          0xDD, 0044);
+    TEST("FRSTOR", "[1234H]",       0xDD, 0046, 0x34, 0x12);
+    TEST("FRSTOR", "[DI+52]",       0xDD, 0145, 0x34);
+    TEST("FRSTOR", "[BP+1234H]",    0xDD, 0246, 0x34, 0x12);
+    TEST("FRSTOR", "[BX+SI]",       0xDD, 0040);
+    TEST("FRSTOR", "[BX+DI-52]",    0xDD, 0141, 0xCC);
+    TEST("FRSTOR", "[BP+SI+89ABH]", 0xDD, 0242, 0xAB, 0x89);
+
+    TEST("FENI",  "", FWAIT, 0xDB, 0xE0);
+    TEST("FDISI", "", FWAIT, 0xDB, 0xE1);
+
+    TEST("FLD", "DWORD PTR [SI]",          0xD9, 0004);
+    TEST("FLD", "DWORD PTR [1234H]",       0xD9, 0006, 0x34, 0x12);
+    TEST("FLD", "DWORD PTR [DI+52]",       0xD9, 0105, 0x34);
+    TEST("FLD", "DWORD PTR [BP+1234H]",    0xD9, 0206, 0x34, 0x12);
+    TEST("FLD", "DWORD PTR [BX+SI]",       0xD9, 0000);
+    TEST("FLD", "DWORD PTR [BX+DI-52]",    0xD9, 0101, 0xCC);
+    TEST("FLD", "DWORD PTR [BP+SI+89ABH]", 0xD9, 0202, 0xAB, 0x89);
+
+    TEST("FLD", "QWORD PTR [SI]",          0xDD, 0004);
+    TEST("FLD", "QWORD PTR [1234H]",       0xDD, 0006, 0x34, 0x12);
+    TEST("FLD", "QWORD PTR [DI+52]",       0xDD, 0105, 0x34);
+    TEST("FLD", "QWORD PTR [BP+1234H]",    0xDD, 0206, 0x34, 0x12);
+    TEST("FLD", "QWORD PTR [BX+SI]",       0xDD, 0000);
+    TEST("FLD", "QWORD PTR [BX+DI-52]",    0xDD, 0101, 0xCC);
+    TEST("FLD", "QWORD PTR [BP+SI+89ABH]", 0xDD, 0202, 0xAB, 0x89);
+
+    TEST("FLD", "TBYTE PTR [SI]",          0xDB, 0054);
+    TEST("FLD", "TBYTE PTR [1234H]",       0xDB, 0056, 0x34, 0x12);
+    TEST("FLD", "TBYTE PTR [DI+52]",       0xDB, 0155, 0x34);
+    TEST("FLD", "TBYTE PTR [BP+1234H]",    0xDB, 0256, 0x34, 0x12);
+    TEST("FLD", "TBYTE PTR [BX+SI]",       0xDB, 0050);
+    TEST("FLD", "TBYTE PTR [BX+DI-52]",    0xDB, 0151, 0xCC);
+    TEST("FLD", "TBYTE PTR [BP+SI+89ABH]", 0xDB, 0252, 0xAB, 0x89);
+
+    TEST("FLD", "ST(0)", 0xD9, 0xC0);
+    TEST("FLD", "ST(7)", 0xD9, 0xC7);
+
+    TEST("FST", "DWORD PTR [SI]",          0xD9, 0024);
+    TEST("FST", "DWORD PTR [1234H]",       0xD9, 0026, 0x34, 0x12);
+    TEST("FST", "DWORD PTR [DI+52]",       0xD9, 0125, 0x34);
+    TEST("FST", "DWORD PTR [BP+1234H]",    0xD9, 0226, 0x34, 0x12);
+    TEST("FST", "DWORD PTR [BX+SI]",       0xD9, 0020);
+    TEST("FST", "DWORD PTR [BX+DI-52]",    0xD9, 0121, 0xCC);
+    TEST("FST", "DWORD PTR [BP+SI+89ABH]", 0xD9, 0222, 0xAB, 0x89);
+
+    TEST("FST", "QWORD PTR [SI]",          0xDD, 0024);
+    TEST("FST", "QWORD PTR [1234H]",       0xDD, 0026, 0x34, 0x12);
+    TEST("FST", "QWORD PTR [DI+52]",       0xDD, 0125, 0x34);
+    TEST("FST", "QWORD PTR [BP+1234H]",    0xDD, 0226, 0x34, 0x12);
+    TEST("FST", "QWORD PTR [BX+SI]",       0xDD, 0020);
+    TEST("FST", "QWORD PTR [BX+DI-52]",    0xDD, 0121, 0xCC);
+    TEST("FST", "QWORD PTR [BP+SI+89ABH]", 0xDD, 0222, 0xAB, 0x89);
+
+    TEST("FST", "ST(0)", 0xDD, 0xD0);
+    TEST("FST", "ST(7)", 0xDD, 0xD7);
+
+    TEST("FSTP", "DWORD PTR [SI]",          0xD9, 0034);
+    TEST("FSTP", "DWORD PTR [1234H]",       0xD9, 0036, 0x34, 0x12);
+    TEST("FSTP", "DWORD PTR [DI+52]",       0xD9, 0135, 0x34);
+    TEST("FSTP", "DWORD PTR [BP+1234H]",    0xD9, 0236, 0x34, 0x12);
+    TEST("FSTP", "DWORD PTR [BX+SI]",       0xD9, 0030);
+    TEST("FSTP", "DWORD PTR [BX+DI-52]",    0xD9, 0131, 0xCC);
+    TEST("FSTP", "DWORD PTR [BP+SI+89ABH]", 0xD9, 0232, 0xAB, 0x89);
+
+    TEST("FSTP", "QWORD PTR [SI]",          0xDD, 0034);
+    TEST("FSTP", "QWORD PTR [1234H]",       0xDD, 0036, 0x34, 0x12);
+    TEST("FSTP", "QWORD PTR [DI+52]",       0xDD, 0135, 0x34);
+    TEST("FSTP", "QWORD PTR [BP+1234H]",    0xDD, 0236, 0x34, 0x12);
+    TEST("FSTP", "QWORD PTR [BX+SI]",       0xDD, 0030);
+    TEST("FSTP", "QWORD PTR [BX+DI-52]",    0xDD, 0131, 0xCC);
+    TEST("FSTP", "QWORD PTR [BP+SI+89ABH]", 0xDD, 0232, 0xAB, 0x89);
+
+    TEST("FSTP", "TBYTE PTR [SI]",          0xDB, 0074);
+    TEST("FSTP", "TBYTE PTR [1234H]",       0xDB, 0076, 0x34, 0x12);
+    TEST("FSTP", "TBYTE PTR [DI+52]",       0xDB, 0175, 0x34);
+    TEST("FSTP", "TBYTE PTR [BP+1234H]",    0xDB, 0276, 0x34, 0x12);
+    TEST("FSTP", "TBYTE PTR [BX+SI]",       0xDB, 0070);
+    TEST("FSTP", "TBYTE PTR [BX+DI-52]",    0xDB, 0171, 0xCC);
+    TEST("FSTP", "TBYTE PTR [BP+SI+89ABH]", 0xDB, 0272, 0xAB, 0x89);
+
+    TEST("FSTP", "ST(0)", 0xDD, 0xD8);
+    TEST("FSTP", "ST(7)", 0xDD, 0xDF);
+
+    TEST("FLDZ", "", 0xD9, 0xEE);
+    TEST("FLD1", "", 0xD9, 0xE8);
+    TEST("FLDPI", "", 0xD9, 0xEB);
+    TEST("FLDL2T", "", 0xD9, 0xE9);
+    TEST("FLDL2E", "", 0xD9, 0xEA);
+    TEST("FLDLG2", "", 0xD9, 0xEC);
+    TEST("FLDLN2", "", 0xD9, 0xED);
+
+    TEST("FXCH", "ST(0)", 0xD9, 0xC8);
+    TEST("FXCH", "ST(7)", 0xD9, 0xCF);
+
+    TEST("FILD", "WORD PTR [SI]",          0xDF, 0004);
+    TEST("FILD", "WORD PTR [1234H]",       0xDF, 0006, 0x34, 0x12);
+    TEST("FILD", "WORD PTR [DI+52]",       0xDF, 0105, 0x34);
+    TEST("FILD", "WORD PTR [BP+1234H]",    0xDF, 0206, 0x34, 0x12);
+    TEST("FILD", "WORD PTR [BX+SI]",       0xDF, 0000);
+    TEST("FILD", "WORD PTR [BX+DI-52]",    0xDF, 0101, 0xCC);
+    TEST("FILD", "WORD PTR [BP+SI+89ABH]", 0xDF, 0202, 0xAB, 0x89);
+
+    TEST("FILD", "DWORD PTR [SI]",          0xDB, 0004);
+    TEST("FILD", "DWORD PTR [1234H]",       0xDB, 0006, 0x34, 0x12);
+    TEST("FILD", "DWORD PTR [DI+52]",       0xDB, 0105, 0x34);
+    TEST("FILD", "DWORD PTR [BP+1234H]",    0xDB, 0206, 0x34, 0x12);
+    TEST("FILD", "DWORD PTR [BX+SI]",       0xDB, 0000);
+    TEST("FILD", "DWORD PTR [BX+DI-52]",    0xDB, 0101, 0xCC);
+    TEST("FILD", "DWORD PTR [BP+SI+89ABH]", 0xDB, 0202, 0xAB, 0x89);
+
+    TEST("FILD", "QWORD PTR [SI]",          0xDF, 0054);
+    TEST("FILD", "QWORD PTR [1234H]",       0xDF, 0056, 0x34, 0x12);
+    TEST("FILD", "QWORD PTR [DI+52]",       0xDF, 0155, 0x34);
+    TEST("FILD", "QWORD PTR [BP+1234H]",    0xDF, 0256, 0x34, 0x12);
+    TEST("FILD", "QWORD PTR [BX+SI]",       0xDF, 0050);
+    TEST("FILD", "QWORD PTR [BX+DI-52]",    0xDF, 0151, 0xCC);
+    TEST("FILD", "QWORD PTR [BP+SI+89ABH]", 0xDF, 0252, 0xAB, 0x89);
+
+    TEST("FIST", "WORD PTR [SI]",          0xDF, 0024);
+    TEST("FIST", "WORD PTR [1234H]",       0xDF, 0026, 0x34, 0x12);
+    TEST("FIST", "WORD PTR [DI+52]",       0xDF, 0125, 0x34);
+    TEST("FIST", "WORD PTR [BP+1234H]",    0xDF, 0226, 0x34, 0x12);
+    TEST("FIST", "WORD PTR [BX+SI]",       0xDF, 0020);
+    TEST("FIST", "WORD PTR [BX+DI-52]",    0xDF, 0121, 0xCC);
+    TEST("FIST", "WORD PTR [BP+SI+89ABH]", 0xDF, 0222, 0xAB, 0x89);
+
+    TEST("FIST", "DWORD PTR [SI]",          0xDB, 0024);
+    TEST("FIST", "DWORD PTR [1234H]",       0xDB, 0026, 0x34, 0x12);
+    TEST("FIST", "DWORD PTR [DI+52]",       0xDB, 0125, 0x34);
+    TEST("FIST", "DWORD PTR [BP+1234H]",    0xDB, 0226, 0x34, 0x12);
+    TEST("FIST", "DWORD PTR [BX+SI]",       0xDB, 0020);
+    TEST("FIST", "DWORD PTR [BX+DI-52]",    0xDB, 0121, 0xCC);
+    TEST("FIST", "DWORD PTR [BP+SI+89ABH]", 0xDB, 0222, 0xAB, 0x89);
+
+    TEST("FISTP", "WORD PTR [SI]",          0xDF, 0034);
+    TEST("FISTP", "WORD PTR [1234H]",       0xDF, 0036, 0x34, 0x12);
+    TEST("FISTP", "WORD PTR [DI+52]",       0xDF, 0135, 0x34);
+    TEST("FISTP", "WORD PTR [BP+1234H]",    0xDF, 0236, 0x34, 0x12);
+    TEST("FISTP", "WORD PTR [BX+SI]",       0xDF, 0030);
+    TEST("FISTP", "WORD PTR [BX+DI-52]",    0xDF, 0131, 0xCC);
+    TEST("FISTP", "WORD PTR [BP+SI+89ABH]", 0xDF, 0232, 0xAB, 0x89);
+
+    TEST("FISTP", "DWORD PTR [SI]",          0xDB, 0034);
+    TEST("FISTP", "DWORD PTR [1234H]",       0xDB, 0036, 0x34, 0x12);
+    TEST("FISTP", "DWORD PTR [DI+52]",       0xDB, 0135, 0x34);
+    TEST("FISTP", "DWORD PTR [BP+1234H]",    0xDB, 0236, 0x34, 0x12);
+    TEST("FISTP", "DWORD PTR [BX+SI]",       0xDB, 0030);
+    TEST("FISTP", "DWORD PTR [BX+DI-52]",    0xDB, 0131, 0xCC);
+    TEST("FISTP", "DWORD PTR [BP+SI+89ABH]", 0xDB, 0232, 0xAB, 0x89);
+
+    TEST("FISTP", "QWORD PTR [SI]",          0xDF, 0074);
+    TEST("FISTP", "QWORD PTR [1234H]",       0xDF, 0076, 0x34, 0x12);
+    TEST("FISTP", "QWORD PTR [DI+52]",       0xDF, 0175, 0x34);
+    TEST("FISTP", "QWORD PTR [BP+1234H]",    0xDF, 0276, 0x34, 0x12);
+    TEST("FISTP", "QWORD PTR [BX+SI]",       0xDF, 0070);
+    TEST("FISTP", "QWORD PTR [BX+DI-52]",    0xDF, 0171, 0xCC);
+    TEST("FISTP", "QWORD PTR [BP+SI+89ABH]", 0xDF, 0272, 0xAB, 0x89);
+
+    TEST("FBLD", "TBYTE PTR [SI]",          0xDF, 0044);
+    TEST("FBLD", "TBYTE PTR [1234H]",       0xDF, 0046, 0x34, 0x12);
+    TEST("FBLD", "TBYTE PTR [DI+52]",       0xDF, 0145, 0x34);
+    TEST("FBLD", "TBYTE PTR [BP+1234H]",    0xDF, 0246, 0x34, 0x12);
+    TEST("FBLD", "TBYTE PTR [BX+SI]",       0xDF, 0040);
+    TEST("FBLD", "TBYTE PTR [BX+DI-52]",    0xDF, 0141, 0xCC);
+    TEST("FBLD", "TBYTE PTR [BP+SI+89ABH]", 0xDF, 0242, 0xAB, 0x89);
+
+    TEST("FBSTP", "TBYTE PTR [SI]",          0xDF, 0064);
+    TEST("FBSTP", "TBYTE PTR [1234H]",       0xDF, 0066, 0x34, 0x12);
+    TEST("FBSTP", "TBYTE PTR [DI+52]",       0xDF, 0165, 0x34);
+    TEST("FBSTP", "TBYTE PTR [BP+1234H]",    0xDF, 0266, 0x34, 0x12);
+    TEST("FBSTP", "TBYTE PTR [BX+SI]",       0xDF, 0060);
+    TEST("FBSTP", "TBYTE PTR [BX+DI-52]",    0xDF, 0161, 0xCC);
+    TEST("FBSTP", "TBYTE PTR [BP+SI+89ABH]", 0xDF, 0262, 0xAB, 0x89);
+
+    TEST("FADD", "DWORD PTR [SI]",          0xD8, 0004);
+    TEST("FADD", "DWORD PTR [1234H]",       0xD8, 0006, 0x34, 0x12);
+    TEST("FADD", "DWORD PTR [DI+52]",       0xD8, 0105, 0x34);
+    TEST("FADD", "DWORD PTR [BP+1234H]",    0xD8, 0206, 0x34, 0x12);
+    TEST("FADD", "DWORD PTR [BX+SI]",       0xD8, 0000);
+    TEST("FADD", "DWORD PTR [BX+DI-52]",    0xD8, 0101, 0xCC);
+    TEST("FADD", "DWORD PTR [BP+SI+89ABH]", 0xD8, 0202, 0xAB, 0x89);
+
+    TEST("FADD", "QWORD PTR [SI]",          0xDC, 0004);
+    TEST("FADD", "QWORD PTR [1234H]",       0xDC, 0006, 0x34, 0x12);
+    TEST("FADD", "QWORD PTR [DI+52]",       0xDC, 0105, 0x34);
+    TEST("FADD", "QWORD PTR [BP+1234H]",    0xDC, 0206, 0x34, 0x12);
+    TEST("FADD", "QWORD PTR [BX+SI]",       0xDC, 0000);
+    TEST("FADD", "QWORD PTR [BX+DI-52]",    0xDC, 0101, 0xCC);
+    TEST("FADD", "QWORD PTR [BP+SI+89ABH]", 0xDC, 0202, 0xAB, 0x89);
+
+    TEST("FADD", "ST, ST(1)",  0xD8, 0xC1);
+    TEST("FADD", "ST(2), ST",  0xDC, 0xC2);
+    TEST("FADDP", "ST(3), ST", 0xDE, 0xC3);
+
+    TEST("FMUL", "DWORD PTR [SI]",          0xD8, 0014);
+    TEST("FMUL", "DWORD PTR [1234H]",       0xD8, 0016, 0x34, 0x12);
+    TEST("FMUL", "DWORD PTR [DI+52]",       0xD8, 0115, 0x34);
+    TEST("FMUL", "DWORD PTR [BP+1234H]",    0xD8, 0216, 0x34, 0x12);
+    TEST("FMUL", "DWORD PTR [BX+SI]",       0xD8, 0010);
+    TEST("FMUL", "DWORD PTR [BX+DI-52]",    0xD8, 0111, 0xCC);
+    TEST("FMUL", "DWORD PTR [BP+SI+89ABH]", 0xD8, 0212, 0xAB, 0x89);
+
+    TEST("FMUL", "QWORD PTR [SI]",          0xDC, 0014);
+    TEST("FMUL", "QWORD PTR [1234H]",       0xDC, 0016, 0x34, 0x12);
+    TEST("FMUL", "QWORD PTR [DI+52]",       0xDC, 0115, 0x34);
+    TEST("FMUL", "QWORD PTR [BP+1234H]",    0xDC, 0216, 0x34, 0x12);
+    TEST("FMUL", "QWORD PTR [BX+SI]",       0xDC, 0010);
+    TEST("FMUL", "QWORD PTR [BX+DI-52]",    0xDC, 0111, 0xCC);
+    TEST("FMUL", "QWORD PTR [BP+SI+89ABH]", 0xDC, 0212, 0xAB, 0x89);
+
+    TEST("FMUL", "ST, ST(4)",  0xD8, 0xCC);
+    TEST("FMUL", "ST(5), ST",  0xDC, 0xCD);
+    TEST("FMULP", "ST(6), ST", 0xDE, 0xCE);
+
+    TEST("FSUB", "DWORD PTR [SI]",          0xD8, 0044);
+    TEST("FSUB", "DWORD PTR [1234H]",       0xD8, 0046, 0x34, 0x12);
+    TEST("FSUB", "DWORD PTR [DI+52]",       0xD8, 0145, 0x34);
+    TEST("FSUB", "DWORD PTR [BP+1234H]",    0xD8, 0246, 0x34, 0x12);
+    TEST("FSUB", "DWORD PTR [BX+SI]",       0xD8, 0040);
+    TEST("FSUB", "DWORD PTR [BX+DI-52]",    0xD8, 0141, 0xCC);
+    TEST("FSUB", "DWORD PTR [BP+SI+89ABH]", 0xD8, 0242, 0xAB, 0x89);
+
+    TEST("FSUB", "QWORD PTR [SI]",          0xDC, 0044);
+    TEST("FSUB", "QWORD PTR [1234H]",       0xDC, 0046, 0x34, 0x12);
+    TEST("FSUB", "QWORD PTR [DI+52]",       0xDC, 0145, 0x34);
+    TEST("FSUB", "QWORD PTR [BP+1234H]",    0xDC, 0246, 0x34, 0x12);
+    TEST("FSUB", "QWORD PTR [BX+SI]",       0xDC, 0040);
+    TEST("FSUB", "QWORD PTR [BX+DI-52]",    0xDC, 0141, 0xCC);
+    TEST("FSUB", "QWORD PTR [BP+SI+89ABH]", 0xDC, 0242, 0xAB, 0x89);
+
+    TEST("FSUB", "ST, ST(7)",  0xD8, 0xE7);
+    TEST("FSUB", "ST(1), ST",  0xDC, 0xE9);
+    TEST("FSUBP", "ST(1), ST", 0xDE, 0xE9);
+
+    TEST("FSUBR", "DWORD PTR [SI]",          0xD8, 0054);
+    TEST("FSUBR", "DWORD PTR [1234H]",       0xD8, 0056, 0x34, 0x12);
+    TEST("FSUBR", "DWORD PTR [DI+52]",       0xD8, 0155, 0x34);
+    TEST("FSUBR", "DWORD PTR [BP+1234H]",    0xD8, 0256, 0x34, 0x12);
+    TEST("FSUBR", "DWORD PTR [BX+SI]",       0xD8, 0050);
+    TEST("FSUBR", "DWORD PTR [BX+DI-52]",    0xD8, 0151, 0xCC);
+    TEST("FSUBR", "DWORD PTR [BP+SI+89ABH]", 0xD8, 0252, 0xAB, 0x89);
+
+    TEST("FSUBR", "QWORD PTR [SI]",          0xDC, 0054);
+    TEST("FSUBR", "QWORD PTR [1234H]",       0xDC, 0056, 0x34, 0x12);
+    TEST("FSUBR", "QWORD PTR [DI+52]",       0xDC, 0155, 0x34);
+    TEST("FSUBR", "QWORD PTR [BP+1234H]",    0xDC, 0256, 0x34, 0x12);
+    TEST("FSUBR", "QWORD PTR [BX+SI]",       0xDC, 0050);
+    TEST("FSUBR", "QWORD PTR [BX+DI-52]",    0xDC, 0151, 0xCC);
+    TEST("FSUBR", "QWORD PTR [BP+SI+89ABH]", 0xDC, 0252, 0xAB, 0x89);
+
+    TEST("FSUBR", "ST, ST(2)",  0xD8, 0xEA);
+    TEST("FSUBR", "ST(3), ST",  0xDC, 0xE3);
+    TEST("FSUBRP", "ST(4), ST", 0xDE, 0xE4);
+
+    TEST("FDIV", "DWORD PTR [SI]",          0xD8, 0064);
+    TEST("FDIV", "DWORD PTR [1234H]",       0xD8, 0066, 0x34, 0x12);
+    TEST("FDIV", "DWORD PTR [DI+52]",       0xD8, 0165, 0x34);
+    TEST("FDIV", "DWORD PTR [BP+1234H]",    0xD8, 0266, 0x34, 0x12);
+    TEST("FDIV", "DWORD PTR [BX+SI]",       0xD8, 0060);
+    TEST("FDIV", "DWORD PTR [BX+DI-52]",    0xD8, 0161, 0xCC);
+    TEST("FDIV", "DWORD PTR [BP+SI+89ABH]", 0xD8, 0262, 0xAB, 0x89);
+
+    TEST("FDIV", "QWORD PTR [SI]",          0xDC, 0064);
+    TEST("FDIV", "QWORD PTR [1234H]",       0xDC, 0066, 0x34, 0x12);
+    TEST("FDIV", "QWORD PTR [DI+52]",       0xDC, 0165, 0x34);
+    TEST("FDIV", "QWORD PTR [BP+1234H]",    0xDC, 0266, 0x34, 0x12);
+    TEST("FDIV", "QWORD PTR [BX+SI]",       0xDC, 0060);
+    TEST("FDIV", "QWORD PTR [BX+DI-52]",    0xDC, 0161, 0xCC);
+    TEST("FDIV", "QWORD PTR [BP+SI+89ABH]", 0xDC, 0262, 0xAB, 0x89);
+
+    TEST("FDIV", "ST, ST(7)",  0xD8, 0xF7);
+    TEST("FDIV", "ST(1), ST",  0xDC, 0xF9);
+    TEST("FDIVP", "ST(1), ST", 0xDE, 0xF9);
+
+    TEST("FDIVR", "DWORD PTR [SI]",          0xD8, 0074);
+    TEST("FDIVR", "DWORD PTR [1234H]",       0xD8, 0076, 0x34, 0x12);
+    TEST("FDIVR", "DWORD PTR [DI+52]",       0xD8, 0175, 0x34);
+    TEST("FDIVR", "DWORD PTR [BP+1234H]",    0xD8, 0276, 0x34, 0x12);
+    TEST("FDIVR", "DWORD PTR [BX+SI]",       0xD8, 0070);
+    TEST("FDIVR", "DWORD PTR [BX+DI-52]",    0xD8, 0171, 0xCC);
+    TEST("FDIVR", "DWORD PTR [BP+SI+89ABH]", 0xD8, 0272, 0xAB, 0x89);
+
+    TEST("FDIVR", "QWORD PTR [SI]",          0xDC, 0074);
+    TEST("FDIVR", "QWORD PTR [1234H]",       0xDC, 0076, 0x34, 0x12);
+    TEST("FDIVR", "QWORD PTR [DI+52]",       0xDC, 0175, 0x34);
+    TEST("FDIVR", "QWORD PTR [BP+1234H]",    0xDC, 0276, 0x34, 0x12);
+    TEST("FDIVR", "QWORD PTR [BX+SI]",       0xDC, 0070);
+    TEST("FDIVR", "QWORD PTR [BX+DI-52]",    0xDC, 0171, 0xCC);
+    TEST("FDIVR", "QWORD PTR [BP+SI+89ABH]", 0xDC, 0272, 0xAB, 0x89);
+
+    TEST("FDIVR", "ST, ST(2)",  0xD8, 0xFA);
+    TEST("FDIVR", "ST(3), ST",  0xDC, 0xF3);
+    TEST("FDIVRP", "ST(4), ST", 0xDE, 0xF4);
+
+    TEST("FCOM", "DWORD PTR [SI]",          0xD8, 0024);
+    TEST("FCOM", "DWORD PTR [1234H]",       0xD8, 0026, 0x34, 0x12);
+    TEST("FCOM", "DWORD PTR [DI+52]",       0xD8, 0125, 0x34);
+    TEST("FCOM", "DWORD PTR [BP+1234H]",    0xD8, 0226, 0x34, 0x12);
+    TEST("FCOM", "DWORD PTR [BX+SI]",       0xD8, 0020);
+    TEST("FCOM", "DWORD PTR [BX+DI-52]",    0xD8, 0121, 0xCC);
+    TEST("FCOM", "DWORD PTR [BP+SI+89ABH]", 0xD8, 0222, 0xAB, 0x89);
+
+    TEST("FCOM", "QWORD PTR [SI]",          0xDC, 0024);
+    TEST("FCOM", "QWORD PTR [1234H]",       0xDC, 0026, 0x34, 0x12);
+    TEST("FCOM", "QWORD PTR [DI+52]",       0xDC, 0125, 0x34);
+    TEST("FCOM", "QWORD PTR [BP+1234H]",    0xDC, 0226, 0x34, 0x12);
+    TEST("FCOM", "QWORD PTR [BX+SI]",       0xDC, 0020);
+    TEST("FCOM", "QWORD PTR [BX+DI-52]",    0xDC, 0121, 0xCC);
+    TEST("FCOM", "QWORD PTR [BP+SI+89ABH]", 0xDC, 0222, 0xAB, 0x89);
+
+    TEST("FCOM", "ST(2)", 0xD8, 0xD2);
+
+    TEST("FCOMP", "DWORD PTR [SI]",          0xD8, 0034);
+    TEST("FCOMP", "DWORD PTR [1234H]",       0xD8, 0036, 0x34, 0x12);
+    TEST("FCOMP", "DWORD PTR [DI+52]",       0xD8, 0135, 0x34);
+    TEST("FCOMP", "DWORD PTR [BP+1234H]",    0xD8, 0236, 0x34, 0x12);
+    TEST("FCOMP", "DWORD PTR [BX+SI]",       0xD8, 0030);
+    TEST("FCOMP", "DWORD PTR [BX+DI-52]",    0xD8, 0131, 0xCC);
+    TEST("FCOMP", "DWORD PTR [BP+SI+89ABH]", 0xD8, 0232, 0xAB, 0x89);
+
+    TEST("FCOMP", "QWORD PTR [SI]",          0xDC, 0034);
+    TEST("FCOMP", "QWORD PTR [1234H]",       0xDC, 0036, 0x34, 0x12);
+    TEST("FCOMP", "QWORD PTR [DI+52]",       0xDC, 0135, 0x34);
+    TEST("FCOMP", "QWORD PTR [BP+1234H]",    0xDC, 0236, 0x34, 0x12);
+    TEST("FCOMP", "QWORD PTR [BX+SI]",       0xDC, 0030);
+    TEST("FCOMP", "QWORD PTR [BX+DI-52]",    0xDC, 0131, 0xCC);
+    TEST("FCOMP", "QWORD PTR [BP+SI+89ABH]", 0xDC, 0232, 0xAB, 0x89);
+
+    TEST("FCOMP", "ST(2)", 0xD8, 0xDA);
+    TEST("FCOMPP", "",     0xDE, 0xD9);
+
+    TEST("FIADD", "WORD PTR [SI]",          0xDE, 0004);
+    TEST("FIADD", "WORD PTR [1234H]",       0xDE, 0006, 0x34, 0x12);
+    TEST("FIADD", "WORD PTR [DI+52]",       0xDE, 0105, 0x34);
+    TEST("FIADD", "WORD PTR [BP+1234H]",    0xDE, 0206, 0x34, 0x12);
+    TEST("FIADD", "WORD PTR [BX+SI]",       0xDE, 0000);
+    TEST("FIADD", "WORD PTR [BX+DI-52]",    0xDE, 0101, 0xCC);
+    TEST("FIADD", "WORD PTR [BP+SI+89ABH]", 0xDE, 0202, 0xAB, 0x89);
+
+    TEST("FIADD", "DWORD PTR [SI]",          0xDA, 0004);
+    TEST("FIADD", "DWORD PTR [1234H]",       0xDA, 0006, 0x34, 0x12);
+    TEST("FIADD", "DWORD PTR [DI+52]",       0xDA, 0105, 0x34);
+    TEST("FIADD", "DWORD PTR [BP+1234H]",    0xDA, 0206, 0x34, 0x12);
+    TEST("FIADD", "DWORD PTR [BX+SI]",       0xDA, 0000);
+    TEST("FIADD", "DWORD PTR [BX+DI-52]",    0xDA, 0101, 0xCC);
+    TEST("FIADD", "DWORD PTR [BP+SI+89ABH]", 0xDA, 0202, 0xAB, 0x89);
+
+    TEST("FIMUL", "WORD PTR [SI]",          0xDE, 0014);
+    TEST("FIMUL", "WORD PTR [1234H]",       0xDE, 0016, 0x34, 0x12);
+    TEST("FIMUL", "WORD PTR [DI+52]",       0xDE, 0115, 0x34);
+    TEST("FIMUL", "WORD PTR [BP+1234H]",    0xDE, 0216, 0x34, 0x12);
+    TEST("FIMUL", "WORD PTR [BX+SI]",       0xDE, 0010);
+    TEST("FIMUL", "WORD PTR [BX+DI-52]",    0xDE, 0111, 0xCC);
+    TEST("FIMUL", "WORD PTR [BP+SI+89ABH]", 0xDE, 0212, 0xAB, 0x89);
+
+    TEST("FIMUL", "DWORD PTR [SI]",          0xDA, 0014);
+    TEST("FIMUL", "DWORD PTR [1234H]",       0xDA, 0016, 0x34, 0x12);
+    TEST("FIMUL", "DWORD PTR [DI+52]",       0xDA, 0115, 0x34);
+    TEST("FIMUL", "DWORD PTR [BP+1234H]",    0xDA, 0216, 0x34, 0x12);
+    TEST("FIMUL", "DWORD PTR [BX+SI]",       0xDA, 0010);
+    TEST("FIMUL", "DWORD PTR [BX+DI-52]",    0xDA, 0111, 0xCC);
+    TEST("FIMUL", "DWORD PTR [BP+SI+89ABH]", 0xDA, 0212, 0xAB, 0x89);
+
+    TEST("FISUB", "WORD PTR [SI]",          0xDE, 0044);
+    TEST("FISUB", "WORD PTR [1234H]",       0xDE, 0046, 0x34, 0x12);
+    TEST("FISUB", "WORD PTR [DI+52]",       0xDE, 0145, 0x34);
+    TEST("FISUB", "WORD PTR [BP+1234H]",    0xDE, 0246, 0x34, 0x12);
+    TEST("FISUB", "WORD PTR [BX+SI]",       0xDE, 0040);
+    TEST("FISUB", "WORD PTR [BX+DI-52]",    0xDE, 0141, 0xCC);
+    TEST("FISUB", "WORD PTR [BP+SI+89ABH]", 0xDE, 0242, 0xAB, 0x89);
+
+    TEST("FISUB", "DWORD PTR [SI]",          0xDA, 0044);
+    TEST("FISUB", "DWORD PTR [1234H]",       0xDA, 0046, 0x34, 0x12);
+    TEST("FISUB", "DWORD PTR [DI+52]",       0xDA, 0145, 0x34);
+    TEST("FISUB", "DWORD PTR [BP+1234H]",    0xDA, 0246, 0x34, 0x12);
+    TEST("FISUB", "DWORD PTR [BX+SI]",       0xDA, 0040);
+    TEST("FISUB", "DWORD PTR [BX+DI-52]",    0xDA, 0141, 0xCC);
+    TEST("FISUB", "DWORD PTR [BP+SI+89ABH]", 0xDA, 0242, 0xAB, 0x89);
+
+    TEST("FISUBR", "WORD PTR [SI]",          0xDE, 0054);
+    TEST("FISUBR", "WORD PTR [1234H]",       0xDE, 0056, 0x34, 0x12);
+    TEST("FISUBR", "WORD PTR [DI+52]",       0xDE, 0155, 0x34);
+    TEST("FISUBR", "WORD PTR [BP+1234H]",    0xDE, 0256, 0x34, 0x12);
+    TEST("FISUBR", "WORD PTR [BX+SI]",       0xDE, 0050);
+    TEST("FISUBR", "WORD PTR [BX+DI-52]",    0xDE, 0151, 0xCC);
+    TEST("FISUBR", "WORD PTR [BP+SI+89ABH]", 0xDE, 0252, 0xAB, 0x89);
+
+    TEST("FISUBR", "DWORD PTR [SI]",          0xDA, 0054);
+    TEST("FISUBR", "DWORD PTR [1234H]",       0xDA, 0056, 0x34, 0x12);
+    TEST("FISUBR", "DWORD PTR [DI+52]",       0xDA, 0155, 0x34);
+    TEST("FISUBR", "DWORD PTR [BP+1234H]",    0xDA, 0256, 0x34, 0x12);
+    TEST("FISUBR", "DWORD PTR [BX+SI]",       0xDA, 0050);
+    TEST("FISUBR", "DWORD PTR [BX+DI-52]",    0xDA, 0151, 0xCC);
+    TEST("FISUBR", "DWORD PTR [BP+SI+89ABH]", 0xDA, 0252, 0xAB, 0x89);
+
+    TEST("FIDIV", "WORD PTR [SI]",          0xDE, 0064);
+    TEST("FIDIV", "WORD PTR [1234H]",       0xDE, 0066, 0x34, 0x12);
+    TEST("FIDIV", "WORD PTR [DI+52]",       0xDE, 0165, 0x34);
+    TEST("FIDIV", "WORD PTR [BP+1234H]",    0xDE, 0266, 0x34, 0x12);
+    TEST("FIDIV", "WORD PTR [BX+SI]",       0xDE, 0060);
+    TEST("FIDIV", "WORD PTR [BX+DI-52]",    0xDE, 0161, 0xCC);
+    TEST("FIDIV", "WORD PTR [BP+SI+89ABH]", 0xDE, 0262, 0xAB, 0x89);
+
+    TEST("FIDIV", "DWORD PTR [SI]",          0xDA, 0064);
+    TEST("FIDIV", "DWORD PTR [1234H]",       0xDA, 0066, 0x34, 0x12);
+    TEST("FIDIV", "DWORD PTR [DI+52]",       0xDA, 0165, 0x34);
+    TEST("FIDIV", "DWORD PTR [BP+1234H]",    0xDA, 0266, 0x34, 0x12);
+    TEST("FIDIV", "DWORD PTR [BX+SI]",       0xDA, 0060);
+    TEST("FIDIV", "DWORD PTR [BX+DI-52]",    0xDA, 0161, 0xCC);
+    TEST("FIDIV", "DWORD PTR [BP+SI+89ABH]", 0xDA, 0262, 0xAB, 0x89);
+
+    TEST("FIDIVR", "WORD PTR [SI]",          0xDE, 0074);
+    TEST("FIDIVR", "WORD PTR [1234H]",       0xDE, 0076, 0x34, 0x12);
+    TEST("FIDIVR", "WORD PTR [DI+52]",       0xDE, 0175, 0x34);
+    TEST("FIDIVR", "WORD PTR [BP+1234H]",    0xDE, 0276, 0x34, 0x12);
+    TEST("FIDIVR", "WORD PTR [BX+SI]",       0xDE, 0070);
+    TEST("FIDIVR", "WORD PTR [BX+DI-52]",    0xDE, 0171, 0xCC);
+    TEST("FIDIVR", "WORD PTR [BP+SI+89ABH]", 0xDE, 0272, 0xAB, 0x89);
+
+    TEST("FIDIVR", "DWORD PTR [SI]",          0xDA, 0074);
+    TEST("FIDIVR", "DWORD PTR [1234H]",       0xDA, 0076, 0x34, 0x12);
+    TEST("FIDIVR", "DWORD PTR [DI+52]",       0xDA, 0175, 0x34);
+    TEST("FIDIVR", "DWORD PTR [BP+1234H]",    0xDA, 0276, 0x34, 0x12);
+    TEST("FIDIVR", "DWORD PTR [BX+SI]",       0xDA, 0070);
+    TEST("FIDIVR", "DWORD PTR [BX+DI-52]",    0xDA, 0171, 0xCC);
+    TEST("FIDIVR", "DWORD PTR [BP+SI+89ABH]", 0xDA, 0272, 0xAB, 0x89);
+
+    TEST("FICOM", "WORD PTR [SI]",          0xDE, 0024);
+    TEST("FICOM", "WORD PTR [1234H]",       0xDE, 0026, 0x34, 0x12);
+    TEST("FICOM", "WORD PTR [DI+52]",       0xDE, 0125, 0x34);
+    TEST("FICOM", "WORD PTR [BP+1234H]",    0xDE, 0226, 0x34, 0x12);
+    TEST("FICOM", "WORD PTR [BX+SI]",       0xDE, 0020);
+    TEST("FICOM", "WORD PTR [BX+DI-52]",    0xDE, 0121, 0xCC);
+    TEST("FICOM", "WORD PTR [BP+SI+89ABH]", 0xDE, 0222, 0xAB, 0x89);
+
+    TEST("FICOM", "DWORD PTR [SI]",          0xDA, 0024);
+    TEST("FICOM", "DWORD PTR [1234H]",       0xDA, 0026, 0x34, 0x12);
+    TEST("FICOM", "DWORD PTR [DI+52]",       0xDA, 0125, 0x34);
+    TEST("FICOM", "DWORD PTR [BP+1234H]",    0xDA, 0226, 0x34, 0x12);
+    TEST("FICOM", "DWORD PTR [BX+SI]",       0xDA, 0020);
+    TEST("FICOM", "DWORD PTR [BX+DI-52]",    0xDA, 0121, 0xCC);
+    TEST("FICOM", "DWORD PTR [BP+SI+89ABH]", 0xDA, 0222, 0xAB, 0x89);
+
+    TEST("FICOMP", "WORD PTR [SI]",          0xDE, 0034);
+    TEST("FICOMP", "WORD PTR [1234H]",       0xDE, 0036, 0x34, 0x12);
+    TEST("FICOMP", "WORD PTR [DI+52]",       0xDE, 0135, 0x34);
+    TEST("FICOMP", "WORD PTR [BP+1234H]",    0xDE, 0236, 0x34, 0x12);
+    TEST("FICOMP", "WORD PTR [BX+SI]",       0xDE, 0030);
+    TEST("FICOMP", "WORD PTR [BX+DI-52]",    0xDE, 0131, 0xCC);
+    TEST("FICOMP", "WORD PTR [BP+SI+89ABH]", 0xDE, 0232, 0xAB, 0x89);
+
+    TEST("FICOMP", "DWORD PTR [SI]",          0xDA, 0034);
+    TEST("FICOMP", "DWORD PTR [1234H]",       0xDA, 0036, 0x34, 0x12);
+    TEST("FICOMP", "DWORD PTR [DI+52]",       0xDA, 0135, 0x34);
+    TEST("FICOMP", "DWORD PTR [BP+1234H]",    0xDA, 0236, 0x34, 0x12);
+    TEST("FICOMP", "DWORD PTR [BX+SI]",       0xDA, 0030);
+    TEST("FICOMP", "DWORD PTR [BX+DI-52]",    0xDA, 0131, 0xCC);
+    TEST("FICOMP", "DWORD PTR [BP+SI+89ABH]", 0xDA, 0232, 0xAB, 0x89);
+
+    TEST("FCHS",    "", 0xD9, 0xE0);
+    TEST("FABS",    "", 0xD9, 0xE1);
+    TEST("FTST",    "", 0xD9, 0xE4);
+    TEST("FXAM",    "", 0xD9, 0xE5);
+    TEST("FXTRACT", "", 0xD9, 0xF4);
+    TEST("FPREM",   "", 0xD9, 0xF8);
+    TEST("FSQRT",   "", 0xD9, 0xFA);
+    TEST("FRNDINT", "", 0xD9, 0xFC);
+    TEST("FSCALE",  "", 0xD9, 0xFD);
+
+    TEST("F2XM1",   "", 0xD9, 0xF0);
+    TEST("FYL2X",   "", 0xD9, 0xF1);
+    TEST("FPTAN",   "", 0xD9, 0xF2);
+    TEST("FPATAN",  "", 0xD9, 0xF3);
+    TEST("FYL2XP1", "", 0xD9, 0xF9);
+
+    TEST("FNOP",    "", 0xD9, 0xD0);
+    TEST("FDECSTP", "", 0xD9, 0xF6);
+    TEST("FINCSTP", "", 0xD9, 0xF7);
+    TEST("FFREE", "ST(0)", 0xDD, 0xC0);
+    TEST("FFREE", "ST(1)", 0xDD, 0xC1);
+    TEST("FFREE", "ST(2)", 0xDD, 0xC2);
+    TEST("FFREE", "ST(3)", 0xDD, 0xC3);
+    TEST("FFREE", "ST(4)", 0xDD, 0xC4);
+    TEST("FFREE", "ST(5)", 0xDD, 0xC5);
+    TEST("FFREE", "ST(6)", 0xDD, 0xC6);
+    TEST("FFREE", "ST(7)", 0xDD, 0xC7);
 }
 
 void test_float_nowait() {
@@ -2371,117 +2531,13 @@ void test_float_nowait() {
         return;
 
     TEST("FNINIT", "",      0xDB, 0xE3);
-    TEST("FNLDCW", "[SI]",  0xD9, 0054);
     TEST("FNSTCW", "[SI]",  0xD9, 0074);
     TEST("FNSTSW", "[SI]",  0xDD, 0074);
     TEST("FNCLEX", "",      0xDB, 0xE2);
-    TEST("FNLDENV", "[SI]", 0xD9, 0044);
     TEST("FNSTENV", "[SI]", 0xD9, 0064);
     TEST("FNSAVE",  "[SI]", 0xDD, 0064);
-    TEST("FNRSTOR", "[SI]", 0xDD, 0044);
     TEST("FNENI", "",       0xDB, 0xE0);
     TEST("FNDISI", "",      0xDB, 0xE1);
-
-    TEST("FNLD", "DWORD PTR [SI]", 0xD9, 0004);
-    TEST("FNLD", "QWORD PTR [SI]", 0xDD, 0004);
-    TEST("FNLD", "TBYTE PTR [SI]", 0xDB, 0054);
-    TEST("FNLD", "ST(0)",          0xD9, 0xC0);
-    TEST("FNST", "DWORD PTR [SI]", 0xD9, 0024);
-    TEST("FNST", "QWORD PTR [SI]", 0xDD, 0024);
-    TEST("FNST", "ST(0)",          0xDD, 0xD0);
-    TEST("FNSTP", "DWORD PTR [SI]", 0xD9, 0034);
-    TEST("FNSTP", "QWORD PTR [SI]", 0xDD, 0034);
-    TEST("FNSTP", "TBYTE PTR [SI]", 0xDB, 0074);
-    TEST("FNSTP", "ST(0)",          0xDD, 0xD8);
-    TEST("FNLDZ",   "", 0xD9, 0xEE);
-    TEST("FNLD1",   "", 0xD9, 0xE8);
-    TEST("FNLDPI",  "", 0xD9, 0xEB);
-    TEST("FNLDL2T", "", 0xD9, 0xE9);
-    TEST("FNLDL2E", "", 0xD9, 0xEA);
-    TEST("FNLDLG2", "", 0xD9, 0xEC);
-    TEST("FNLDLN2", "", 0xD9, 0xED);
-    TEST("FNXCH", "ST(0)", 0xD9, 0xC8);
-    TEST("FNILD",   "WORD PTR [SI]", 0xDF, 0004);
-    TEST("FNILD",  "DWORD PTR [SI]", 0xDB, 0004);
-    TEST("FNILD",  "QWORD PTR [SI]", 0xDF, 0054);
-    TEST("FNIST",   "WORD PTR [SI]", 0xDF, 0024);
-    TEST("FNIST",  "DWORD PTR [SI]", 0xDB, 0024);
-    TEST("FNISTP",  "WORD PTR [SI]", 0xDF, 0034);
-    TEST("FNISTP", "DWORD PTR [SI]", 0xDB, 0034);
-    TEST("FNISTP", "QWORD PTR [SI]", 0xDF, 0074);
-    TEST("FNBLD",  "TBYTE PTR [SI]", 0xDF, 0044);
-    TEST("FNBSTP", "TBYTE PTR [SI]", 0xDF, 0064);
-    TEST("FNADD",  "DWORD PTR [SI]", 0xD8, 0004);
-    TEST("FNADD",  "QWORD PTR [SI]", 0xDC, 0004);
-    TEST("FNADD", "ST, ST(1)",  0xD8, 0xC1);
-    TEST("FNADD", "ST(2), ST",  0xDC, 0xC2);
-    TEST("FNADDP", "ST(3), ST", 0xDE, 0xC3);
-    TEST("FNMUL", "DWORD PTR [SI]", 0xD8, 0014);
-    TEST("FNMUL", "QWORD PTR [SI]", 0xDC, 0014);
-    TEST("FNMUL", "ST, ST(4)",  0xD8, 0xCC);
-    TEST("FNMUL", "ST(5), ST",  0xDC, 0xCD);
-    TEST("FNMULP", "ST(6), ST", 0xDE, 0xCE);
-    TEST("FNSUB", "DWORD PTR [SI]", 0xD8, 0044);
-    TEST("FNSUB", "QWORD PTR [SI]", 0xDC, 0044);
-    TEST("FNSUB", "ST, ST(7)",  0xD8, 0xE7);
-    TEST("FNSUB", "ST(1), ST",  0xDC, 0xE9);
-    TEST("FNSUBP", "ST(1), ST", 0xDE, 0xE9);
-    TEST("FNSUBR", "DWORD PTR [SI]", 0xD8, 0054);
-    TEST("FNSUBR", "QWORD PTR [SI]", 0xDC, 0054);
-    TEST("FNSUBR", "ST, ST(2)",  0xD8, 0xEA);
-    TEST("FNSUBR", "ST(3), ST",  0xDC, 0xE3);
-    TEST("FNSUBRP", "ST(4), ST", 0xDE, 0xE4);
-    TEST("FNDIV", "DWORD PTR [SI]", 0xD8, 0064);
-    TEST("FNDIV", "QWORD PTR [SI]", 0xDC, 0064);
-    TEST("FNDIV", "ST, ST(7)",  0xD8, 0xF7);
-    TEST("FNDIV", "ST(1), ST",  0xDC, 0xF9);
-    TEST("FNDIVP", "ST(1), ST", 0xDE, 0xF9);
-    TEST("FNDIVR", "DWORD PTR [SI]", 0xD8, 0074);
-    TEST("FNDIVR", "QWORD PTR [SI]", 0xDC, 0074);
-    TEST("FNDIVR", "ST, ST(2)",  0xD8, 0xFA);
-    TEST("FNDIVR", "ST(3), ST",  0xDC, 0xF3);
-    TEST("FNDIVRP", "ST(4), ST", 0xDE, 0xF4);
-    TEST("FNCOM", "DWORD PTR [SI]", 0xD8, 0024);
-    TEST("FNCOM", "QWORD PTR [SI]", 0xDC, 0024);
-    TEST("FNCOM", "ST(2)", 0xD8, 0xD2);
-    TEST("FNCOMP", "DWORD PTR [SI]", 0xD8, 0034);
-    TEST("FNCOMP", "QWORD PTR [SI]", 0xDC, 0034);
-    TEST("FNCOMP", "ST(2)", 0xD8, 0xDA);
-    TEST("FNCOMPP", "",     0xDE, 0xD9);
-    TEST("FNIADD",   "WORD PTR [SI]", 0xDE, 0004);
-    TEST("FNIADD",  "DWORD PTR [SI]", 0xDA, 0004);
-    TEST("FNIMUL",   "WORD PTR [SI]", 0xDE, 0014);
-    TEST("FNIMUL",  "DWORD PTR [SI]", 0xDA, 0014);
-    TEST("FNISUB",   "WORD PTR [SI]", 0xDE, 0044);
-    TEST("FNISUB",  "DWORD PTR [SI]", 0xDA, 0044);
-    TEST("FNISUBR",  "WORD PTR [SI]", 0xDE, 0054);
-    TEST("FNISUBR", "DWORD PTR [SI]", 0xDA, 0054);
-    TEST("FNIDIV",   "WORD PTR [SI]", 0xDE, 0064);
-    TEST("FNIDIV",  "DWORD PTR [SI]", 0xDA, 0064);
-    TEST("FNIDIVR",  "WORD PTR [SI]", 0xDE, 0074);
-    TEST("FNIDIVR", "DWORD PTR [SI]", 0xDA, 0074);
-    TEST("FNICOM",   "WORD PTR [SI]", 0xDE, 0024);
-    TEST("FNICOM",  "DWORD PTR [SI]", 0xDA, 0024);
-    TEST("FNICOMP",  "WORD PTR [SI]", 0xDE, 0034);
-    TEST("FNICOMP", "DWORD PTR [SI]", 0xDA, 0034);
-    TEST("FNCHS",    "", 0xD9, 0xE0);
-    TEST("FNABS",    "", 0xD9, 0xE1);
-    TEST("FNTST",    "", 0xD9, 0xE4);
-    TEST("FNXAM",    "", 0xD9, 0xE5);
-    TEST("FNXTRACT", "", 0xD9, 0xF4);
-    TEST("FNPREM",   "", 0xD9, 0xF8);
-    TEST("FNSQRT",   "", 0xD9, 0xFA);
-    TEST("FNRNDINT", "", 0xD9, 0xFC);
-    TEST("FNSCALE",  "", 0xD9, 0xFD);
-    TEST("FN2XM1",   "", 0xD9, 0xF0);
-    TEST("FNYL2X",   "", 0xD9, 0xF1);
-    TEST("FNPTAN",   "", 0xD9, 0xF2);
-    TEST("FNPATAN",  "", 0xD9, 0xF3);
-    TEST("FNYL2XP1", "", 0xD9, 0xF9);
-    TEST("FNNOP",    "", 0xD9, 0xD0);
-    TEST("FNDECSTP", "", 0xD9, 0xF6);
-    TEST("FNINCSTP", "", 0xD9, 0xF7);
-    TEST("FNFREE", "ST(0)", 0xDD, 0xC0);
 }
 
 #endif

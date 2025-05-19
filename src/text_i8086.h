@@ -160,6 +160,11 @@ using common::TEXT_XCHG;
 extern const char TEXT_XLAT[]   PROGMEM;
 using common::TEXT_XOR;
 
+// GNU assembler compatibility
+extern const char TEXT_LCALL[] PROGMEM;
+extern const char TEXT_LJMP[]  PROGMEM;
+extern const char TEXT_LRET[]  PROGMEM;
+
 // i80186
 using common::TEXT_ENTER;
 extern const char TEXT_LEAVE[]  PROGMEM;
@@ -258,6 +263,15 @@ extern const char TEXT_FXCH[]    PROGMEM;
 extern const char TEXT_FXTRACT[] PROGMEM;
 extern const char TEXT_FYL2XP1[] PROGMEM;
 extern const char TEXT_FYL2X[]   PROGMEM;
+// no wait
+extern const char TEXT_FNINIT[]  PROGMEM;
+extern const char TEXT_FNENI[]   PROGMEM;
+extern const char TEXT_FNDISI[]  PROGMEM;
+extern const char TEXT_FNSTCW[]  PROGMEM;
+extern const char TEXT_FNSTSW[]  PROGMEM;
+extern const char TEXT_FNCLEX[]  PROGMEM;
+extern const char TEXT_FNSTENV[] PROGMEM;
+extern const char TEXT_FNSAVE[]  PROGMEM;
 
 extern const char TEXT_REG_AL[]   PROGMEM;
 extern const char TEXT_REG_BL[]   PROGMEM;

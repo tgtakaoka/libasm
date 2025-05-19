@@ -14,9 +14,9 @@
 
 ;### Data Transfer
 ;### Move
-        mov     al,cl
-        mov     dl,bl
-        mov     ah,ch
+        db 88H, 0C8H            ; mov     al,cl
+        db 88H, 0DAH            ; mov     dl,bl
+        db 88H, 0ECH            ; mov     ah,ch
         mov     [si],dh
         mov     [1234H],bh
         mov     [di-34H],al
@@ -31,9 +31,9 @@
         mov     dl,[bx+si]
         mov     bl,[bx+di+34H]
         mov     ah,[bp+si+1234H]
-        mov     ax,cx
-        mov     dx,bx
-        mov     sp,bp
+        db 89H, 0C8H            ; mov     ax,cx
+        db 89H, 0DAH            ; mov     dx,bx
+        db 89H, 0ECH            ; mov     sp,bp
         mov     [si],si
         mov     [1234H],di
         mov     [di-34H],ax
@@ -111,7 +111,7 @@
         pop     ss
         pop     ds
 ;### Exchange data
-        xchg    al,ch
+        db 86H, 0E8H            ; xchg    al,ch
         xchg    [si],cl
         xchg    [1234H],dl
         xchg    [di-34H],bl
@@ -171,12 +171,11 @@
         pushf
 ;### Pop FLAGS register from stack
         popf
-
 ;### Arithmetic
 ;### Add
-        add     al,cl
-        add     dl,bl
-        add     ah,ch
+        db 00H,0C8H             ; add     al,cl
+        db 00H,0DAH             ; add     dl,bl
+        db 00H,0ECH             ; add     ah,ch
         add     [si],dh
         add     [1234H],bh
         add     [di-34H],al
@@ -191,9 +190,9 @@
         add     dl,[bx+si]
         add     bl,[bx+di+34H]
         add     ah,[bp+si+1234H]
-        add     ax,cx
-        add     dx,bx
-        add     sp,bp
+        db 01H,0C8H             ; add     ax,cx
+        db 01H,0DAH             ; add     dx,bx
+        db 01H,0ECH             ; add     sp,bp
         add     [si],si
         add     [1234H],di
         add     [di-34H],ax
@@ -226,8 +225,8 @@
         add     word ptr [bx+si],5678H
         add     word ptr [bx+di+34H],5678H
         add     word ptr [bp+si+1234H],5678H
-        add     ax,56H
-        add     ax,-16
+        db 83H,0C0H,56H         ; add     ax,56H
+        db 83H,0C0H,0F0H        ; add     ax,-16
         add     cx,56H
         add     cx,-16
         add     word ptr [si],56H
@@ -238,9 +237,9 @@
         add     word ptr [bx+di+34H],56H
         add     word ptr [bp+si+1234H],56H
 ;### Add with carry
-        adc     al,cl
-        adc     dl,bl
-        adc     ah,ch
+        db 10H,0C8H             ; adc     al,cl
+        db 10H,0DAH             ; adc     dl,bl
+        db 10H,0ECH             ; adc     ah,ch
         adc     [si],dh
         adc     [1234H],bh
         adc     [di-34H],al
@@ -255,9 +254,9 @@
         adc     dl,[bx+si]
         adc     bl,[bx+di+34H]
         adc     ah,[bp+si+1234H]
-        adc     ax,cx
-        adc     dx,bx
-        adc     sp,bp
+        db 11H,0C8H             ; adc     ax,cx
+        db 11H,0DAH             ; adc     dx,bx
+        db 11H,0ECH             ; adc     sp,bp
         adc     [si],si
         adc     [1234H],di
         adc     [di-34H],ax
@@ -290,8 +289,8 @@
         adc     word ptr [bx+si],5678H
         adc     word ptr [bx+di+34H],5678H
         adc     word ptr [bp+si+1234H],5678H
-        adc     ax,56H
-        adc     ax,-16
+        db 83H,0D0H,56H         ;adc     ax,56H
+        db 83H,0D0H,0F0H        ;adc     ax,-16
         adc     cx,56H
         adc     cx,-16
         adc     word ptr [si],56H
@@ -323,9 +322,9 @@
 ;### Decimal adjust AL after addition
         daa
 ;### Subtraction
-        sub     al,cl
-        sub     dl,bl
-        sub     ah,ch
+        db 28H,0C8H             ; sub     al,cl
+        db 28H,0DAH             ; sub     dl,bl
+        db 28H,0ECH             ; sub     ah,ch
         sub     [si],dh
         sub     [1234H],bh
         sub     [di-34H],al
@@ -340,9 +339,9 @@
         sub     dl,[bx+si]
         sub     bl,[bx+di+34H]
         sub     ah,[bp+si+1234H]
-        sub     ax,cx
-        sub     dx,bx
-        sub     sp,bp
+        db 29H,0C8H             ; sub     ax,cx
+        db 29H,0DAH             ; sub     dx,bx
+        db 29H,0ECH             ; sub     sp,bp
         sub     [si],si
         sub     [1234H],di
         sub     [di-34H],ax
@@ -375,8 +374,8 @@
         sub     word ptr [bx+si],5678H
         sub     word ptr [bx+di+34H],5678H
         sub     word ptr [bp+si+1234H],5678H
-        sub     ax,56H
-        sub     ax,-16
+        db 83H,0E8H,56H         ; sub     ax,56H
+        db 83H,0E8H,0F0H        ; sub     ax,-16
         sub     cx,56H
         sub     cx,-16
         sub     word ptr [si],56H
@@ -387,9 +386,9 @@
         sub     word ptr [bx+di+34H],56H
         sub     word ptr [bp+si+1234H],56H
 ;### Subtract with borrow
-        sbb     al,cl
-        sbb     dl,bl
-        sbb     ah,ch
+        db 18H,0C8H             ; sbb     al,cl
+        db 18H,0DAH             ; sbb     dl,bl
+        db 18H,0ECH             ; sbb     ah,ch
         sbb     [si],dh
         sbb     [1234H],bh
         sbb     [di-34H],al
@@ -404,9 +403,9 @@
         sbb     dl,[bx+si]
         sbb     bl,[bx+di+34H]
         sbb     ah,[bp+si+1234H]
-        sbb     ax,cx
-        sbb     dx,bx
-        sbb     sp,bp
+        db 19H,0C8H             ; sbb     ax,cx
+        db 19H,0DAH             ; sbb     dx,bx
+        db 19H,0ECH             ; sbb     sp,bp
         sbb     [si],si
         sbb     [1234H],di
         sbb     [di-34H],ax
@@ -439,8 +438,8 @@
         sbb     word ptr [bx+si],5678H
         sbb     word ptr [bx+di+34H],5678H
         sbb     word ptr [bp+si+1234H],5678H
-        sbb     ax,56H
-        sbb     ax,-16
+        db 83H,0D8H,56H         ; sbb     ax,56H
+        db 83H,0D8H,0F0H        ; sbb     ax,-16
         sbb     cx,56H
         sbb     cx,-16
         sbb     word ptr [si],56H
@@ -485,9 +484,9 @@
         neg     word ptr [bx+di+34H]
         neg     word ptr [bp+si+1234H]
 ;### Compare operands
-        cmp     al,cl
-        cmp     dl,bl
-        cmp     ah,ch
+        db 38H,0C8H             ; cmp     al,cl
+        db 38H,0DAH             ; cmp     dl,bl
+        db 38H,0ECH             ; cmp     ah,ch
         cmp     [si],dh
         cmp     [1234H],bh
         cmp     [di-34H],al
@@ -502,9 +501,9 @@
         cmp     dl,[bx+si]
         cmp     bl,[bx+di+34H]
         cmp     ah,[bp+si+1234H]
-        cmp     ax,cx
-        cmp     dx,bx
-        cmp     sp,bp
+        db 39H,0C8H             ; cmp     ax,cx
+        db 39H,0DAH             ; cmp     dx,bx
+        db 39H,0ECH             ; cmp     sp,bp
         cmp     [si],si
         cmp     [1234H],di
         cmp     [di-34H],ax
@@ -537,8 +536,8 @@
         cmp     word ptr [bx+si],5678H
         cmp     word ptr [bx+di+34H],5678H
         cmp     word ptr [bp+si+1234H],5678H
-        cmp     ax,56H
-        cmp     ax,-16
+        db 83H,0F8H,56H         ; cmp     ax,56H
+        db 83H,0F8H,0F0H        ; cmp     ax,-16
         cmp     cx,56H
         cmp     cx,-16
         cmp     word ptr [si],56H
@@ -628,7 +627,6 @@
         cbw
 ;### Convert word to double word
         cwd
-
 ;### Logic
 ;### Negate the operand, logical NOT
         not     ch
@@ -912,9 +910,9 @@
         rcr     word ptr [bx+di+34H],cl
         rcr     word ptr [bp+si+1234H],cl
 ;### Logical AND
-        and     al,cl
-        and     dl,bl
-        and     ah,ch
+        db 20H,0C8H             ;and     al,cl
+        db 20H,0DAH             ;and     dl,bl
+        db 20H,0ECH             ;and     ah,ch
         and     [si],dh
         and     [1234H],bh
         and     [di-34H],al
@@ -929,9 +927,9 @@
         and     dl,[bx+si]
         and     bl,[bx+di+34H]
         and     ah,[bp+si+1234H]
-        and     ax,cx
-        and     dx,bx
-        and     sp,bp
+        db 21H,0C8H             ;and     ax,cx
+        db 21H,0DAH             ;and     dx,bx
+        db 21H,0ECH             ;and     sp,bp
         and     [si],si
         and     [1234H],di
         and     [di-34H],ax
@@ -956,9 +954,7 @@
         and     byte ptr [bx+di+34H],56H
         and     byte ptr [bp+si+1234H],56H
         and     ax,5678H
-        and     ax,-16
         and     cx,5678H
-        and     cx,-16
         and     word ptr [si],5678H
         and     word ptr [1234H],5678H
         and     word ptr [di-34H],5678H
@@ -966,10 +962,21 @@
         and     word ptr [bx+si],5678H
         and     word ptr [bx+di+34H],5678H
         and     word ptr [bp+si+1234H],5678H
+        db 83H,0E0H,56H         ;and     ax,56H
+        db 83H,0E0H,0F0H        ;and     ax,-16
+        and     cx,56H
+        and     cx,-16
+        and     word ptr [si],56H
+        and     word ptr [1234H],56H
+        and     word ptr [di-34H],56H
+        and     word ptr [bp+1234H],56H
+        and     word ptr [bx+si],56H
+        and     word ptr [bx+di+34H],56H
+        and     word ptr [bp+si+1234H],56H
 ;### Logical compare
-        test    al,cl
-        test    dl,bl
-        test    ah,ch
+        db 84H,0C8H             ;test    al,cl
+        db 84H,0DAH             ;test    dl,bl
+        db 84H,0ECH             ;test    ah,ch
         test    dh,[si]
         test    bh,[1234H]
         test    al,[di-34H]
@@ -984,9 +991,9 @@
         test    [bx+si],dl
         test    [bx+di+34H],bl
         test    [bp+si+1234H],ah
-        test    ax,cx
-        test    dx,bx
-        test    sp,bp
+        db 85H,0C8H             ;test    ax,cx
+        db 85H,0DAH             ;test    dx,bx
+        db 85H,0ECH             ;test    sp,bp
         test    si,[si]
         test    di,[1234H]
         test    ax,[di-34H]
@@ -1011,9 +1018,7 @@
         test    byte ptr [bx+di+34H],56H
         test    byte ptr [bp+si+1234H],56H
         test    ax,5678H
-        test    ax,-16
         test    cx,5678H
-        test    cx,-16
         test    word ptr [si],5678H
         test    word ptr [1234H],5678H
         test    word ptr [di-34H],5678H
@@ -1021,10 +1026,21 @@
         test    word ptr [bx+si],5678H
         test    word ptr [bx+di+34H],5678H
         test    word ptr [bp+si+1234H],5678H
+        test    ax,56H
+        test    ax,-16
+        test    cx,56H
+        test    cx,-16
+        test    word ptr [si],56H
+        test    word ptr [1234H],56H
+        test    word ptr [di-34H],56H
+        test    word ptr [bp+1234H],56H
+        test    word ptr [bx+si],56H
+        test    word ptr [bx+di+34H],56H
+        test    word ptr [bp+si+1234H],56H
 ;### Logical OR
-        or      al,cl
-        or      dl,bl
-        or      ah,ch
+        db 08H,0C8H             ;or      al,cl
+        db 08H,0DAH             ;or      dl,bl
+        db 08H,0ECH             ;or      ah,ch
         or      [si],dh
         or      [1234H],bh
         or      [di-34H],al
@@ -1039,9 +1055,9 @@
         or      dl,[bx+si]
         or      bl,[bx+di+34H]
         or      ah,[bp+si+1234H]
-        or      ax,cx
-        or      dx,bx
-        or      sp,bp
+        db 09H,0C8H             ;or      ax,cx
+        db 09H,0DAH             ;or      dx,bx
+        db 09H,0ECH             ;or      sp,bp
         or      [si],si
         or      [1234H],di
         or      [di-34H],ax
@@ -1066,9 +1082,7 @@
         or      byte ptr [bx+di+34H],56H
         or      byte ptr [bp+si+1234H],56H
         or      ax,5678H
-        or      ax,-16
         or      cx,5678H
-        or      cx,-16
         or      word ptr [si],5678H
         or      word ptr [1234H],5678H
         or      word ptr [di-34H],5678H
@@ -1076,10 +1090,21 @@
         or      word ptr [bx+si],5678H
         or      word ptr [bx+di+34H],5678H
         or      word ptr [bp+si+1234H],5678H
+        db 83H,0C8H,56H         ;or      ax,56H
+        db 83H,0C8H,0F0H        ;or      ax,-16
+        or      cx,56H
+        or      cx,-16
+        or      word ptr [si],0x56
+        or      word ptr [0x1234],0x56
+        or      word ptr [di-0x34],0x56
+        or      word ptr [bp+0x1234],0x56
+        or      word ptr [bx+si],0x56
+        or      word ptr [bx+di+0x34],0x56
+        or      word ptr [bp+si+0x1234],0x56
 ;### Exclusive OR
-        xor     al,cl
-        xor     dl,bl
-        xor     ah,ch
+        db 30H,0C8H             ;xor     al,cl
+        db 30H,0DAH             ;xor     dl,bl
+        db 30H,0ECH             ;xor     ah,ch
         xor     [si],dh
         xor     [1234H],bh
         xor     [di-34H],al
@@ -1094,9 +1119,9 @@
         xor     dl,[bx+si]
         xor     bl,[bx+di+34H]
         xor     ah,[bp+si+1234H]
-        xor     ax,cx
-        xor     dx,bx
-        xor     sp,bp
+        db 31H,0C8H             ;xor     ax,cx
+        db 31H,0DAH             ;xor     dx,bx
+        db 31H,0ECH             ;xor     sp,bp
         xor     [si],si
         xor     [1234H],di
         xor     [di-34H],ax
@@ -1121,9 +1146,7 @@
         xor     byte ptr [bx+di+34H],56H
         xor     byte ptr [bp+si+1234H],56H
         xor     ax,5678H
-        xor     ax,-16
         xor     cx,5678H
-        xor     cx,-16
         xor     word ptr [si],5678H
         xor     word ptr [1234H],5678H
         xor     word ptr [di-34H],5678H
@@ -1131,7 +1154,17 @@
         xor     word ptr [bx+si],5678H
         xor     word ptr [bx+di+34H],5678H
         xor     word ptr [bp+si+1234H],5678H
-
+        db 83H,0F0H,56H         ;xor     ax,56H
+        db 83H,0F0H,0F0H        ;xor     ax,-16
+        xor     cx,56H
+        xor     cx,-16
+        xor     word ptr [si],56H
+        xor     word ptr [1234H],56H
+        xor     word ptr [di-34H],56H
+        xor     word ptr [bp+1234H],56H
+        xor     word ptr [bx+si],56H
+        xor     word ptr [bx+di+34H],56H
+        xor     word ptr [bp+si+1234H],56H
 ;### String manipulation
 ;### Repeat
         rep     movsb
@@ -1206,7 +1239,6 @@
         stosb
 ;### Store word string
         stosw
-
 ;### Control transfer
 ;### Call procedure
         call    $
@@ -1219,14 +1251,6 @@
         call    [bx+si]
         call    [bx+di+34H]
         call    [bp+si+1234H]
-        callf   1234H:0X5678
-        callf   [si]
-        callf   [1234H]
-        callf   [di-34H]
-        callf   [bp+1234H]
-        callf   [bx+si]
-        callf   [bx+di+34H]
-        callf   [bp+si+1234H]
 ;### Jump
         jmp     $+1234H
         jmp     $
@@ -1239,19 +1263,9 @@
         jmp     [bx+si]
         jmp     [bx+di+34H]
         jmp     [bp+si+1234H]
-        jmpf    1234H:0X5678
-        jmpf    [si]
-        jmpf    [1234H]
-        jmpf    [di-34H]
-        jmpf    [bp+1234H]
-        jmpf    [bx+si]
-        jmpf    [bx+di+34H]
-        jmpf    [bp+si+1234H]
 ;### Return from procedure
         ret
         ret     16
-        retf
-        retf    16
 ;### Jump on Equal/Zero
         je      $
         jz      $
@@ -1315,7 +1329,6 @@
         into
 ;### Return from interrupt
         iret
-
 ;### Processor control
 ;### Clear carry flag
         clc
@@ -1339,7 +1352,6 @@
         lock
 ;### No operation
         nop
-
 ;### Segment override
         mov     es:[bx],ah
         mov     es:[bp],ah
@@ -1352,20 +1364,19 @@
         mov     cs:[di],ah
         mov     cs:[1234H],ah
         mov     ss:[bx],ah
-        mov     ss:[bp],ah
+        mov     [bp],ah
         mov     ss:[si],ah
         mov     ss:[di],ah
         mov     ss:[1234H],ah
-        mov     ds:[bx],ah
+        mov     [bx],ah
         mov     ds:[bp],ah
-        mov     ds:[si],ah
-        mov     ds:[di],ah
-        mov     ds:[1234H],ah
-
+        mov     [si],ah
+        mov     [di],ah
+        mov     [1234H],ah
         jmp     es:[si]
         jmp     cs:[si]
         jmp     ss:[si]
-        jmp     ds:[si]
+        jmp     [si]
 
 ;### Local Variables:
 ;### mode: asm

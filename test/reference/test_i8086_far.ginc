@@ -1,4 +1,4 @@
-;### Copyright 2020 Tadashi G. Takaoka
+;### Copyright 2025 Tadashi G. Takaoka
 ;###
 ;### Licensed under the Apache License, Version 2.0 (the "License");
 ;### you may not use this file except in compliance with the License.
@@ -12,10 +12,28 @@
 ;### See the License for the specific language governing permissions and
 ;### limitations under the License.
 
-        .code16
-        .include "test_i8086.ginc"
-        .include "test_i8086_far.ginc"
-        .include "test_i8087.ginc"
+;### Control transfer
+;### Call procedure
+        lcall   0x1234,0x5678
+        lcall   [si]
+        lcall   [0x1234]
+        lcall   [di-0x34]
+        lcall   [bp+0x1234]
+        lcall   [bx+si]
+        lcall   [bx+di+0x34]
+        lcall   [bp+si+0x1234]
+;### Jump
+        ljmp    0x1234,0x5678
+        ljmp    [si]
+        ljmp    [0x1234]
+        ljmp    [di-0x34]
+        ljmp    [bp+0x1234]
+        ljmp    [bx+si]
+        ljmp    [bx+di+0x34]
+        ljmp    [bp+si+0x1234]
+;### Return from procedure
+        lret
+        lret    16
 
 ;### Local Variables:
 ;### mode: asm

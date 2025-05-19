@@ -34,10 +34,9 @@ extern const TableI8086 TABLE;
 
 Error searchName(const CpuSpec &, AsmInsn &insn);
 Error searchOpCode(const CpuSpec &, DisInsn &insn, StrBuffer &out);
-bool isPrefix(CpuType, Config::opcode_t code);
-bool isPrefix(FpuType, Config::opcode_t code);
+bool isPrefix(const CpuSpec &, uint16_t code);
 bool isSegmentPrefix(Config::opcode_t opcode);
-RegName overrideSeg(Config::opcode_t opcode);
+RegName overrideSeg(Config::opcode_t opcode, RegName defSeg = REG_UNDEF);
 Config::opcode_t segOverridePrefix(RegName name);
 
 }  // namespace i8086

@@ -12,10 +12,10 @@
 ; See the License for the specific language governing permissions and
 ; limitations under the License.
 
-        cpu     8086
+        cpu     80186
         fpu     on
-        org     0x0000
-        include "gen_i8086.ginc"
+        org     0000h
+        include "gen_i80186.inc"
         end
 
 ; Local Variables:

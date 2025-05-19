@@ -146,6 +146,15 @@ bool isNs32kScale(const char *p) {
     return false;
 }
 
+bool isX86Seg(const char *p) {
+    const auto s = toupper(p[1]);
+    if (s == 'S' && p[2] == ':') {
+        const auto c = toupper(*p);
+        return c == 'E' || c == 'C' || c == 'S' || c == 'D'; // ES:/CS:/SS:/DS:
+    }
+    return false;
+}
+
 TokenizedText::TokenizedText(const char *text) : _tokens(tokenize(text)), _count(0) {}
 
 std::string TokenizedText::tokenize(const char *text) {
@@ -198,6 +207,12 @@ std::string TokenizedText::tokenize(const char *text) {
             t.push_back(':');
             t.push_back('s');
             t.push_back(']');
+            b += 3;
+        } else if (isX86Seg(b)) {
+            // reduce segment override of 80x86; ES:, CS:, SS:, DS:
+            t.push_back('s');
+            t.push_back('o');
+            t.push_back(':');
             b += 3;
         } else {
             t.push_back(*b++);

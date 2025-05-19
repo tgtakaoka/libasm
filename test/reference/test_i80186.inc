@@ -25,7 +25,6 @@
         pusha
 ;### PopAll
         popa
-
 ;### Arithmetic
 ;### Integer Immediate multiply
         imul    ax, -1
@@ -60,7 +59,6 @@
         imul    bp, [bx+si], 600H
         imul    si, [bx+di+52], 700H
         imul    di, [bp+si+1234H], 800H
-
 ;### Logic
 ;### Shift left, unsigned shift left
         shl     ch,2
@@ -198,7 +196,6 @@
         rcr     word ptr [bx+si],13
         rcr     word ptr [bx+di+34H],14
         rcr     word ptr [bp+si+1234H],15
-
 ;### String manipulation
 ;### Repeat
         rep     insb
@@ -231,7 +228,6 @@
         outsb
 ;### Output string word
         outsw
-
 ;### Control Transfer
 ;### Enter Procedure
         enter   30, 1

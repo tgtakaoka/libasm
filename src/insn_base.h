@@ -239,10 +239,10 @@ struct DisInsnBase : ErrorAt {
     const char *name() const { return _insn.name(); }
     StrBuffer &nameBuffer() { return _insn.nameBuffer(); }
 
-    void reset(uint8_t length = 0);
+    void resetLength(uint8_t length = 0);
 
     /** Read 8 bit data. */
-    virtual uint8_t readByte();
+    uint8_t readByte();
 
     /** Read 16 bit big endian data */
     uint16_t readUint16Be();

@@ -13,10 +13,11 @@
 ;;; limitations under the License.
 
         cpu     8086
-        org     1000H
-        include "test_i8086.inc"
+        org     0x1000
+        include "test_i8086.ginc"
+        include "test_i8086_far.ginc"
         fpu     on
-        include "test_i8087.inc"
+        include "test_i8087.ginc"
         end
 
 ;;; Local Variables:

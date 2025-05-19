@@ -155,6 +155,11 @@ constexpr char TEXT_STOSW[]  PROGMEM = "STOSW";
 constexpr char TEXT_XLAT[]   PROGMEM = "XLAT";
 // constexpr char TEXT_XOR[]    PROGMEM = "XOR";
 
+// GNU assembler compatibility
+constexpr char TEXT_LCALL[] PROGMEM = "LCALL";
+constexpr char TEXT_LJMP[]  PROGMEM = "LJMP";
+constexpr char TEXT_LRET[]  PROGMEM = "LRET";
+
 // i80186
 // constexpr char TEXT_ENTER[]  PROGMEM = "ENTER";
 constexpr char TEXT_LEAVE[]  PROGMEM = "LEAVE";
@@ -253,6 +258,15 @@ constexpr char TEXT_FXCH[]    PROGMEM = "FXCH";
 constexpr char TEXT_FXTRACT[] PROGMEM = "FXTRACT";
 constexpr char TEXT_FYL2XP1[] PROGMEM = "FYL2XP1";
 constexpr char TEXT_FYL2X[]   PROGMEM = "FYL2X";
+// no wait
+constexpr char TEXT_FNINIT[]  PROGMEM = "FNINIT";
+constexpr char TEXT_FNENI[]   PROGMEM = "FNENI";
+constexpr char TEXT_FNDISI[]  PROGMEM = "FNDISI";
+constexpr char TEXT_FNSTCW[]  PROGMEM = "FNSTCW";
+constexpr char TEXT_FNSTSW[]  PROGMEM = "FNSTSW";
+constexpr char TEXT_FNCLEX[]  PROGMEM = "FNCLEX";
+constexpr char TEXT_FNSTENV[] PROGMEM = "FNSTENV";
+constexpr char TEXT_FNSAVE[]  PROGMEM = "FNSAVE";
 
 constexpr char TEXT_REG_AL[]   PROGMEM = "AL";
 constexpr char TEXT_REG_BL[]   PROGMEM = "BL";

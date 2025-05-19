@@ -41,37 +41,44 @@ namespace i8086 {
 
 enum AddrMode : uint8_t {
     M_NONE = 0,
-    M_AL = 1,     // Byte Accumulator: AL
-    M_CL = 2,     // Bit Counter: CL
-    M_BREG = 3,   // Byte Register: AL, AH, BL, BH, CL, CH, DL, DH
-    M_AX = 4,     // Word Accumulator: AX
-    M_DX = 5,     // Dynamic I/O Address: DX
-    M_WREG = 6,   // Word Register: AX, BX, CX, DX, SP, BP, SI, DI
-    M_SREG = 7,   // Segment Register: ES, CS, SS, DS
-    M_BMOD = 8,   // Byte memory/register mode
-    M_WMOD = 9,   // Word memory/register mode
-    M_BMEM = 10,  // Byte memory: BYTE PTR [addr]
-    M_WMEM = 11,  // Word memory: WORD PTR [addr]
-    M_BDIR = 12,  // Byte Direct mode: BYTE PTR [nnnn]
-    M_WDIR = 13,  // Word Direct mode: WORD PTR [nnnn]
-    M_IMM = 14,   // 16-bit Immediate Constant
-    M_IMM8 = 15,  // Sign-extended 8-bit Immediate
-    M_VAL1 = 16,  // Constant 1: for bit counter
-    M_VAL3 = 17,  // Constant 3: for INT type
-    M_REL = 18,   // Relative: 16-bit displacement
-    M_REL8 = 19,  // Relative: 8-bit displacement
-    M_IOA = 20,   // I/O Address
-    M_FAR = 21,   // Far address: seg:off
-    M_ISTR = 22,  // String instruction: MOVSi/CMPSi/STOSi/LODSi/SCASi
-    M_MEM = 23,   // Memory address: [addr]
-    M_DIR = 24,   // Direct mode: [nnnn]
-    M_CS = 25,    // Code Segment Register: CS
-    M_UI16 = 26,  // 16-bit unsigned immediate
-    M_UI8 = 27,   // 8-bit unsigned immediate
-    M_BIT = 28,   // 3/4-bit shift count/bit number constant
-    M_FMOD = 29,  // i8087 float word, DWORD/QWORD/TBYTE PTR
-    M_ST0 = 30,   // i8087 stack top ST(0)
-    M_STI = 31,   // i8087 stack ST(i)
+    // dst/src/ext
+    M_WIMM = 1,  // 16-bit Immediate Constant
+    M_BIMM = 2,  // Sign-extended 8-bit Immediate
+    // dst/src
+    M_AL = 3,     // Byte Accumulator: AL
+    M_CL = 4,     // Bit Counter: CL
+    M_BREG = 5,   // Byte Register: AL, AH, BL, BH, CL, CH, DL, DH
+    M_AX = 6,     // Word Accumulator: AX
+    M_DX = 7,     // Dynamic I/O Address: DX
+    M_WREG = 8,   // Word Register: AX, BX, CX, DX, SP, BP, SI, DI
+    M_SREG = 9,   // Segment Register: ES, CS, SS, DS
+    M_BMOD = 10,  // Byte memory/register mode
+    M_WMOD = 11,  // Word memory/register mode
+    // M_BMEM to M_WDIR must be contiguous
+    M_BMEM = 12,  // Byte memory: BYTE PTR [addr]
+    M_WMEM = 13,  // Word memory: WORD PTR [addr]
+    M_DMEM = 14,  // Word memory: WORD PTR [addr]
+    M_FMEM = 15,  // i8087 float word, DWORD/QWORD/TBYTE PTR
+    M_MEM = 16,   // Memory address: no sized M_BMEM/M_WMEM
+    M_BDIR = 17,  // Byte Direct mode: BYTE PTR [nnnn]
+    M_WDIR = 18,  // Word Direct mode: WORD PTR [nnnn]
+    M_VAL1 = 19,  // Constant 1: for bit counter
+    M_VAL3 = 20,  // Constant 3: for INT type
+    M_REL = 21,   // Relative: 16-bit displacement
+    M_REL8 = 22,  // Relative: 8-bit displacement
+    M_IOA = 23,   // I/O Address
+    M_SEG = 24,   // Segment: nnnn
+    M_OFF = 25,   // Offset: nnnn
+    M_FAR = 26,   // Far address: M_SEG:M_OFF
+    M_ISTR = 27,  // String instruction: MOVSi/CMPSi/STOSi/LODSi/SCASi
+    M_CS = 28,    // Code Segment Register: CS
+    M_UI16 = 29,  // 16-bit unsigned immediate
+    M_UI8 = 30,   // 8-bit unsigned immediate
+    M_BIT = 31,   // 3/4-bit shift count/bit number constant
+    M_ST0 = 32,   // i8087 stack top ST(0)
+    M_STI = 33,   // i8087 stack ST(i)
+    // Assembler
+    M_DIR = 34,   // Direct mode: [nnnn]
 };
 
 enum OprSize : uint8_t {
@@ -85,7 +92,9 @@ enum OprSize : uint8_t {
 
 enum OprPos : uint8_t {
     P_NONE = 0,
-    P_OPR = 1,   // In operand
+    // dst/src/ext
+    P_OPR = 1,  // In operand
+    // dst/src
     P_OREG = 2,  // In opcode:      __|___|reg
     P_OSEG = 3,  // In opcode:      ___|ss|___
     P_OMOD = 4,  // In opcode:      mo|___|r/m
@@ -102,37 +111,26 @@ enum CodeFormat : uint8_t {
 
 struct Entry final : entry::Base<Config::opcode_t> {
     struct Flags final {
-        uint8_t _dst;
-        uint8_t _src;
-        uint8_t _ext;
-        uint8_t _attr;
+        uint16_t _mode;
+        uint16_t _attr;
 
         static constexpr Flags create(CodeFormat cf, AddrMode dst, AddrMode src, AddrMode ext,
-                OprPos dstPos, OprPos srcPos, OprPos extPos, OprSize size) {
-            return Flags{_opr(dst, dstPos), _opr(src, srcPos), _opr(ext, extPos),
-                    _size(size, cf, false, false)};
-        }
-
-        static constexpr Flags needsFwait(CodeFormat cf, AddrMode dst, AddrMode src, OprPos dstPos,
-                OprPos srcPos, OprSize size) {
-            return Flags{_opr(dst, dstPos), _opr(src, srcPos), _opr(M_NONE, P_NONE),
-                    _size(size, cf, false, true)};
+                OprPos dpos, OprPos spos, OprPos epos, OprSize size) {
+            return Flags{mode(dst, src, ext), attr(dpos, spos, epos, size, cf)};
         }
 
         static constexpr Flags strInst(CodeFormat cf, AddrMode dst, AddrMode src, OprSize size) {
-            return Flags{_opr(dst, P_NONE), _opr(src, P_NONE), _opr(M_NONE, P_NONE),
-                    _size(size, cf, true, false)};
+            return Flags{mode(dst, src, M_NONE), attr(P_NONE, P_NONE, P_NONE, size, cf, true)};
         }
 
-        AddrMode dst() const { return AddrMode((_dst >> mode_gp) & mode_gm); }
-        AddrMode src() const { return AddrMode((_src >> mode_gp) & mode_gm); }
-        AddrMode ext() const { return AddrMode((_ext >> mode_gp) & mode_gm); }
-        OprPos dstPos() const { return OprPos((_dst >> pos_gp) & pos_gm); }
-        OprPos srcPos() const { return OprPos((_src >> pos_gp) & pos_gm); }
-        OprPos extPos() const { return OprPos((_ext >> pos_gp) & pos_gm); }
+        AddrMode dst() const { return AddrMode((_mode >> dst_gp) & dst_gm); }
+        AddrMode src() const { return AddrMode((_mode >> src_gp) & src_gm); }
+        AddrMode ext() const { return AddrMode((_mode >> ext_gp) & ext_gm); }
+        OprPos dstPos() const { return OprPos((_attr >> dpos_gp) & dpos_gm); }
+        OprPos srcPos() const { return OprPos((_attr >> spos_gp) & spos_gm); }
+        OprPos extPos() const { return OprPos((_attr >> epos_gp) & epos_gm); }
         OprSize size() const { return OprSize((_attr >> size_gp) & size_gm); }
         bool stringInst() const { return _attr & strInst_bm; }
-        bool needsFwait() const { return _attr & needsFwait_bm; }
         uint8_t mask() const {
             static constexpr uint8_t MASK[] PROGMEM = {
                     0000,  // CF_00 = 0
@@ -143,36 +141,43 @@ struct Entry final : entry::Base<Config::opcode_t> {
         }
 
     private:
-        static constexpr uint8_t _opr(AddrMode mode, OprPos pos) {
-            return (static_cast<uint8_t>(mode) << mode_gp) | (static_cast<uint8_t>(pos) << pos_gp);
+        static constexpr uint16_t mode(AddrMode dst, AddrMode src, AddrMode ext) {
+            return static_cast<uint16_t>((dst << dst_gp) | (src << src_gp) | (ext << ext_gp));
         }
-        static constexpr uint8_t _size(OprSize size, CodeFormat cf, bool strInst, bool needsFwait) {
-            return (static_cast<uint8_t>(size) << size_gp) | (static_cast<uint8_t>(cf) << cf_gp) |
-                   (strInst ? strInst_bm : 0) | (needsFwait ? needsFwait_bm : 0);
+        static constexpr uint16_t attr(OprPos dpos, OprPos spos, OprPos epos, OprSize size,
+                CodeFormat cf, bool strInst = false) {
+            return static_cast<uint16_t>((dpos << dpos_gp) | (spos << spos_gp) | (epos << epos_gp) |
+                                         (size << size_gp) | (cf << cf_gp) |
+                                         (strInst ? strInst_bm : 0));
         }
 
-        // |_dst|, |_src|, |_ext|
-        static constexpr int mode_gp = 0;
-        static constexpr int pos_gp = 5;
-        static constexpr uint_fast8_t mode_gm = 0x1F;
-        static constexpr uint_fast8_t pos_gm = 0x07;
+        // |_mode|
+        static constexpr auto dst_gp = 0;
+        static constexpr auto src_gp = 6;
+        static constexpr auto ext_gp = 12;
+        static constexpr uint_fast8_t dst_gm = 0x3F;
+        static constexpr uint_fast8_t src_gm = 0x3F;
+        static constexpr uint_fast8_t ext_gm = 0x03;
         // |_attr|
-        static constexpr int size_gp = 0;
-        static constexpr int cf_gp = 3;
-        static constexpr int strInst_bp = 5;
-        static constexpr int needsFwait_bp = 6;
-        static constexpr uint_fast8_t size_gm = 0x07;
-        static constexpr uint_fast8_t cf_gm = 0x03;
-        static constexpr uint_fast8_t strInst_bm = (1 << strInst_bp);
-        static constexpr uint_fast8_t needsFwait_bm = (1 << needsFwait_bp);
+        static constexpr auto dpos_gp = 0;
+        static constexpr auto spos_gp = 3;
+        static constexpr auto epos_gp = 6;
+        static constexpr auto size_gp = 7;
+        static constexpr auto cf_gp = 10;
+        static constexpr auto strInst_bp = 12;
+        static constexpr uint_fast8_t dpos_gm = 0x7;
+        static constexpr uint_fast8_t spos_gm = 0x7;
+        static constexpr uint_fast8_t epos_gm = 0x1;
+        static constexpr uint_fast8_t size_gm = 0x7;
+        static constexpr uint_fast8_t cf_gm = 0x3;
+        static constexpr uint_fast16_t strInst_bm = (1 << strInst_bp);
     };
 
     constexpr Entry(Config::opcode_t opc, Flags flags, const /* PROGMEM */ char *name_P)
         : Base(name_P, opc), _flags_P(flags) {}
 
     Flags readFlags() const {
-        return Flags{pgm_read_byte(&_flags_P._dst), pgm_read_byte(&_flags_P._src),
-                pgm_read_byte(&_flags_P._ext), pgm_read_byte(&_flags_P._attr)};
+        return Flags{pgm_read_word(&_flags_P._mode), pgm_read_word(&_flags_P._attr)};
     }
 
 private:

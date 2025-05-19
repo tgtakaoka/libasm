@@ -14,8 +14,8 @@
 
         cpu     8086
         fpu     on
-        org     0x0000
-        include "gen_i8086.ginc"
+        org     0000h
+        include "gen_i8086.inc"
         end
 
 ; Local Variables:
