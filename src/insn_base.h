@@ -122,12 +122,13 @@ struct Insn final : ErrorAt {
     Error emitFloat64Le(const float80_t &data, uint8_t pos);
 #endif
 
+static constexpr size_t MAX_NAME = 15;
+
 private:
     uint32_t _address;
     uint8_t _length;
     const /*PROGMEM*/ char *_continueMark_P;
 
-    static constexpr size_t MAX_NAME = 11;
     char _name[MAX_NAME + 1];
     StrBuffer _buffer{_name, sizeof(_name)};
 

@@ -42,43 +42,50 @@ namespace i8086 {
 enum AddrMode : uint8_t {
     M_NONE = 0,
     // dst/src/ext
-    M_WIMM = 1,  // 16-bit Immediate Constant
+    M_WIMM = 1,  // 16/32-bit Immediate Constant
     M_BIMM = 2,  // Sign-extended 8-bit Immediate
+    M_BIT = 3,   // 3/4-bit shift count/bit number constant
+    M_CL = 4,    // Bit Counter: CL
     // dst/src
-    M_AL = 3,     // Byte Accumulator: AL
-    M_CL = 4,     // Bit Counter: CL
-    M_BREG = 5,   // Byte Register: AL, AH, BL, BH, CL, CH, DL, DH
-    M_AX = 6,     // Word Accumulator: AX
-    M_DX = 7,     // Dynamic I/O Address: DX
-    M_WREG = 8,   // Word Register: AX, BX, CX, DX, SP, BP, SI, DI
-    M_SREG = 9,   // Segment Register: ES, CS, SS, DS
-    M_BMOD = 10,  // Byte memory/register mode
-    M_WMOD = 11,  // Word memory/register mode
-    // M_BMEM to M_WDIR must be contiguous
-    M_BMEM = 12,  // Byte memory: BYTE PTR [addr]
-    M_WMEM = 13,  // Word memory: WORD PTR [addr]
-    M_DMEM = 14,  // Word memory: WORD PTR [addr]
-    M_FMEM = 15,  // i8087 float word, DWORD/QWORD/TBYTE PTR
-    M_MEM = 16,   // Memory address: no sized M_BMEM/M_WMEM
-    M_BDIR = 17,  // Byte Direct mode: BYTE PTR [nnnn]
-    M_WDIR = 18,  // Word Direct mode: WORD PTR [nnnn]
-    M_VAL1 = 19,  // Constant 1: for bit counter
-    M_VAL3 = 20,  // Constant 3: for INT type
-    M_REL = 21,   // Relative: 16-bit displacement
-    M_REL8 = 22,  // Relative: 8-bit displacement
-    M_IOA = 23,   // I/O Address
-    M_SEG = 24,   // Segment: nnnn
-    M_OFF = 25,   // Offset: nnnn
-    M_FAR = 26,   // Far address: M_SEG:M_OFF
-    M_ISTR = 27,  // String instruction: MOVSi/CMPSi/STOSi/LODSi/SCASi
-    M_CS = 28,    // Code Segment Register: CS
-    M_UI16 = 29,  // 16-bit unsigned immediate
-    M_UI8 = 30,   // 8-bit unsigned immediate
-    M_BIT = 31,   // 3/4-bit shift count/bit number constant
-    M_ST0 = 32,   // i8087 stack top ST(0)
-    M_STI = 33,   // i8087 stack ST(i)
+    M_AL = 5,    // Byte Accumulator: AL
+    M_BREG = 6,  // Byte Register: AL, AH, BL, BH, CL, CH, DL, DH
+    M_AX = 7,    // Word/Dword Accumulator: AX/EAX
+    M_DX = 8,    // Dynamic I/O Address: DX
+    M_WREG = 9,  // Word/Dword Register: AX/EAX, BX/EBX, CX/ECX, DX/EDX, SP/ESP, BP/EBP, SI/ESI, DI/EDI
+    M_DREG = 10,  // Dword Register: EAX, EBX, ECX, EDX, ESP, EBP, ESI, EDI
+    M_SREG = 11,  // Segment Register: ES, CS, SS, DS, FS, GS
+    M_BMOD = 12,  // Byte memory/register mode
+    M_WMOD = 13,  // Word/Dword memory/register mode
+    // M_BMEM to M_DDIR must be contiguous
+    M_BMEM = 14,  // Byte memory: BYTE PTR [addr]
+    M_WMEM = 15,  // Word memory: WORD PTR [addr]
+    M_DMEM = 16,  // Double Word memory: DWORD PTR [addr]
+    M_FMEM = 17,  // i8087 float word, DWORD/QWORD/TBYTE PTR
+    M_MEM = 18,   // Memory address: no sized M_BMEM/M_WMEM
+    M_BDIR = 19,  // Byte Direct mode: BYTE PTR [nnnn]
+    M_WDIR = 20,  // Word Direct mode: WORD PTR [nnnn]
+    M_DDIR = 21,  // Double Word Direct mode: DWORD PTR [nnnn]
+    M_VAL1 = 22,  // Constant 1: for bit counter
+    M_VAL3 = 23,  // Constant 3: for INT type
+    M_REL = 24,   // Relative: 16-bit displacement
+    M_REL8 = 25,  // Relative: 8-bit displacement
+    M_IOA = 26,   // I/O Address
+    M_SEG = 27,   // Segment: nnnn
+    M_OFF = 28,   // Offset: nnnn
+    M_FAR = 29,   // Far address: M_SEG:M_OFF
+    M_ISTR = 30,  // String instruction: MOVSi/CMPSi/STOSi/LODSi/SCASi
+    M_CS = 31,    // Code Segment Register: CS
+    M_FS = 32,    // Extra Segment Register: FS
+    M_GS = 33,    // Extra Segment Register: GS
+    M_UI16 = 34,  // 16-bit unsigned immediate
+    M_UI8 = 35,   // 8-bit unsigned immediate
+    M_ST0 = 36,   // i8087 stack top ST(0)
+    M_STI = 37,   // i8087 stack ST(i)
+    M_CTLR = 38,  // Control register
+    M_DBGR = 39,  // Debug regoster
+    M_TSTR = 40,  // Test reguster
     // Assembler
-    M_DIR = 34,   // Direct mode: [nnnn]
+    M_DIR = 41,  // Direct mode: [nnnn]
 };
 
 enum OprSize : uint8_t {
@@ -88,6 +95,7 @@ enum OprSize : uint8_t {
     SZ_DWORD = Size::SZ_QUAD,
     SZ_QWORD = Size::SZ_OCTA,
     SZ_TBYTE = Size::SZ_DATA,  // 10 byte
+    SZ_FWORD = Size::SZ_ADDR,  // 4+2 byte
 };
 
 enum OprPos : uint8_t {
@@ -157,7 +165,7 @@ struct Entry final : entry::Base<Config::opcode_t> {
         static constexpr auto ext_gp = 12;
         static constexpr uint_fast8_t dst_gm = 0x3F;
         static constexpr uint_fast8_t src_gm = 0x3F;
-        static constexpr uint_fast8_t ext_gm = 0x03;
+        static constexpr uint_fast8_t ext_gm = 0x07;
         // |_attr|
         static constexpr auto dpos_gp = 0;
         static constexpr auto spos_gp = 3;

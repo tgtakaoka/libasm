@@ -185,6 +185,10 @@ extern const char OPT_BOOL_EXTMODE[] PROGMEM;
 extern const char OPT_DESC_EXTMODE[] PROGMEM;
 extern const char OPT_BOOL_LWORDMODE[] PROGMEM;
 extern const char OPT_DESC_LWORDMODE[] PROGMEM;
+extern const char OPT_BOOL_USE16[] PROGMEM;
+extern const char OPT_DESC_USE16[] PROGMEM;
+extern const char OPT_BOOL_USE32[] PROGMEM;
+extern const char OPT_DESC_USE32[] PROGMEM;
 
 }  // namespace option
 }  // namespace text

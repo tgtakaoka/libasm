@@ -16,7 +16,6 @@
 
 #include "asm_i8086.h"
 #include "table_i8086.h"
-#include "text_i8086.h"
 
 namespace libasm {
 namespace i8086 {
@@ -25,7 +24,6 @@ using namespace pseudo;
 using namespace reg;
 using namespace text::common;
 using namespace text::option;
-using namespace text::i8086;
 
 namespace {
 
@@ -38,6 +36,8 @@ constexpr char TEXT_DT[] PROGMEM = "dt";
 constexpr char TEXT_RESB[] PROGMEM = "resb";
 constexpr char TEXT_RESD[] PROGMEM = "resd";
 constexpr char TEXT_RESW[] PROGMEM = "resw";
+constexpr char TEXT_dCODE16[] PROGMEM = ".code16";
+constexpr char TEXT_dCODE32[] PROGMEM = ".code32";
 
 constexpr Pseudo PSEUDOS[] PROGMEM = {
     {TEXT_DB,   &Assembler::defineDataConstant, Assembler::DATA_BYTE},
@@ -118,8 +118,8 @@ Error AsmI8086::parsePointerSize(StrScanner &scan, Operand &op) const {
 
 void AsmI8086::parseSegmentOverride(StrScanner &scan, Operand &op) const {
     auto p = scan;
-    const auto reg = parseRegName(p, parser());
-    if (isSegmentReg(reg)) {
+    const auto reg = parseRegName(p, _cpuSpec, parser());
+    if (isSegmentReg(reg, _cpuSpec)) {
         // Segment Override
         if (p.skipSpaces().expect(':')) {
             op.seg = reg;
@@ -130,7 +130,7 @@ void AsmI8086::parseSegmentOverride(StrScanner &scan, Operand &op) const {
 
 void AsmI8086::parseBaseRegister(StrScanner &scan, Operand &op) const {
     auto p = scan;
-    const auto reg = parseRegName(p, parser());
+    const auto reg = parseRegName(p, _cpuSpec, parser());
     if (reg == REG_BX || reg == REG_BP) {
         op.reg = reg;
         scan = p.skipSpaces();
@@ -144,7 +144,7 @@ void AsmI8086::parseIndexRegister(StrScanner &scan, Operand &op) const {
             return;
         p.skipSpaces();
     }
-    const auto reg = parseRegName(p, parser());
+    const auto reg = parseRegName(p, _cpuSpec, parser());
     if (reg == REG_SI || reg == REG_DI) {
         op.index = reg;
         scan = p.skipSpaces();
@@ -216,8 +216,8 @@ Error AsmI8086::parseOperand(StrScanner &scan, Operand &op) const {
         return op.setError(UNKNOWN_OPERAND);
 
     auto a = p;
-    const auto reg = parseRegName(a, parser());
-    if (isGeneralReg(reg)) {
+    const auto reg = parseRegName(a, _cpuSpec, parser());
+    if (isGeneralReg(reg, _cpuSpec)) {
         op.reg = reg;
         switch (reg) {
         case REG_AL:
@@ -239,7 +239,7 @@ Error AsmI8086::parseOperand(StrScanner &scan, Operand &op) const {
         scan = a;
         return OK;
     }
-    if (isSegmentReg(reg)) {
+    if (isSegmentReg(reg, _cpuSpec)) {
         op.reg = reg;
         op.mode = (reg == REG_CS) ? M_CS : M_SREG;
         scan = a;
@@ -427,7 +427,7 @@ uint8_t Operand::encodeR_m() const {
 Config::opcode_t AsmI8086::encodeSegmentOverride(RegName seg, RegName base) const {
     if (seg == REG_UNDEF)
         return 0;
-    const Config::opcode_t segPrefix = segOverridePrefix(seg);
+    const Config::opcode_t segPrefix = segOverridePrefix(_cpuSpec, seg);
     if (_optimizeSegment) {
         if (base == REG_BP || base == REG_SP)
             return seg == REG_SS ? 0 : segPrefix;
@@ -587,7 +587,7 @@ void AsmI8086::emitStringOperand(
     if (seg == REG_ES && op.seg != REG_ES)
         insn.setErrorIf(op, ILLEGAL_SEGMENT);
     if (seg == REG_DS && op.seg != REG_UNDEF && op.seg != REG_DS)
-        insn.setSegment(segOverridePrefix(op.seg));
+        insn.setSegment(segOverridePrefix(_cpuSpec, op.seg));
 }
 
 void AsmI8086::emitStringInst(AsmInsn &insn, const Operand &dst, const Operand &src) const {

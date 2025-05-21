@@ -15,14 +15,18 @@
  */
 
 #include "dis_i8086.h"
+#include <ctype.h>
 #include "reg_i8086.h"
 #include "table_i8086.h"
+#include "text_i8086.h"
+
+#include <stdio.h>
 
 namespace libasm {
 namespace i8086 {
 
 using namespace reg;
-using namespace text::common;
+using namespace text::i8086;
 using namespace text::option;
 
 namespace {
@@ -31,6 +35,8 @@ const char OPT_BOOL_SEGMENT_INSN[] PROGMEM = "segment-insn";
 const char OPT_DESC_SEGMENT_INSN[] PROGMEM = "segment override as instruction";
 const char OPT_BOOL_STRING_INSN[] PROGMEM = "string-insn";
 const char OPT_DESC_STRING_INSN[] PROGMEM = "string instruction as repeat operand";
+const char OPT_BOOL_FAR_SUFFIX[] PROGMEM = "far-suffix";
+const char OPT_DESC_FAR_SUFFIX[] PROGMEM = "use callf/jmpf for far call/jump";
 
 }  // namespace
 
@@ -44,7 +50,11 @@ DisI8086::DisI8086(const ValueFormatter::Plugins &plugins)
       _opt_fpu(this, &Config::setFpuName, OPT_TEXT_FPU, OPT_DESC_FPU, &_opt_segmentInsn),
       _opt_segmentInsn(this, &DisI8086::setSegmentInsn, OPT_BOOL_SEGMENT_INSN,
               OPT_DESC_SEGMENT_INSN, &_opt_stringInsn),
-      _opt_stringInsn(this, &DisI8086::setStringInsn, OPT_BOOL_STRING_INSN, OPT_DESC_STRING_INSN) {
+      _opt_stringInsn(this, &DisI8086::setStringInsn, OPT_BOOL_STRING_INSN, OPT_DESC_STRING_INSN,
+              &_opt_use16),
+      _opt_use16(this, &Config::setUse16, OPT_BOOL_USE16, OPT_DESC_USE16, &_opt_use32),
+      _opt_use32(this, &Config::setUse32, OPT_BOOL_USE32, OPT_DESC_USE32, &_opt_farSuffix),
+      _opt_farSuffix(this, &DisI8086::setFarSuffix, OPT_BOOL_FAR_SUFFIX, OPT_DESC_FAR_SUFFIX) {
     reset();
 }
 
@@ -56,6 +66,8 @@ void DisI8086::reset() {
 #endif
     setSegmentInsn(false);
     setStringInsn(false);
+    setFarSuffix(false);
+    setModel(_cpuSpec.has32bit());
 }
 
 Error DisI8086::setSegmentInsn(bool enable) {
@@ -68,6 +80,11 @@ Error DisI8086::setStringInsn(bool enable) {
     return OK;
 }
 
+Error DisI8086::setFarSuffix(bool enable) {
+    _farSuffix = enable;
+    return OK;
+}
+
 StrBuffer &DisI8086::outRegister(StrBuffer &out, RegName name, const char prefix) const {
     if (name != REG_UNDEF) {
         if (prefix)
@@ -77,7 +94,7 @@ StrBuffer &DisI8086::outRegister(StrBuffer &out, RegName name, const char prefix
     return out;
 }
 
-RegName DisI8086::decodeRegister(const DisInsn &insn, AddrMode mode, OprPos pos) const {
+RegName DisI8086::decodeRegister(DisInsn &insn, AddrMode mode, OprPos pos) const {
     uint8_t num = 0;
     switch (pos) {
     case P_OREG:
@@ -100,42 +117,75 @@ RegName DisI8086::decodeRegister(const DisInsn &insn, AddrMode mode, OprPos pos)
     case M_BREG:
         return decodeByteReg(num);
     case M_WREG:
-        return decodeWordReg(num);
+        return insn.useData32() ? decodeDwordReg(num) : decodeWordReg(num);
+    case M_DREG:
+        return decodeDwordReg(num);
     case M_SREG:
-        return decodeSegReg(num);
+        return decodeSegReg(num, _cpuSpec);
+    case M_CTLR:
+        return decodeCtlReg(num, _cpuSpec);
+    case M_DBGR:
+        return decodeDbgReg(num, _cpuSpec);
+    case M_TSTR:
+        return decodeTstReg(num, _cpuSpec);
     default:
         return REG_UNDEF;
     }
 }
 
+int32_t readDelta(DisInsn &insn, AddrMode mode) {
+    if (mode == M_REL8)
+        return static_cast<int8_t>(insn.readByte());
+    if (insn.useData32())
+        return static_cast<int32_t>(insn.readUint32());
+    return static_cast<int16_t>(insn.readUint16());
+}
+
 void DisI8086::decodeRelative(DisInsn &insn, StrBuffer &out, AddrMode mode) const {
-    const auto delta = (mode == M_REL8) ? static_cast<int8_t>(insn.readByte())
-                                        : static_cast<int16_t>(insn.readUint16());
+    const auto delta = readDelta(insn, mode);
     const auto base = insn.address() + insn.length();
     const auto target = base + delta;
-    insn.setErrorIf(out, checkAddr(target, insn.address(), 16));
-    outRelAddr(out, target, insn.address(), mode == M_REL8 ? 8 : 16);
+    if (addressWidth() == ADDRESS_32BIT) {
+        if ((delta >= 0 && target < base) || (delta < 0 && target >= base))
+            insn.setErrorIf(out, OVERFLOW_RANGE);
+        const auto bits = (mode == M_REL8) ? 8 : (insn.data32() ? 32 : 16);
+        outRelAddr(out, target, insn.address(), bits);
+    } else {
+        insn.setErrorIf(out, checkAddr(target, insn.address(), 16));
+        outRelAddr(out, target, insn.address(), mode == M_REL8 ? 8 : 16);
+    }
 }
 
 void DisI8086::decodeImmediate(DisInsn &insn, StrBuffer &out, AddrMode mode) const {
     if (mode == M_WIMM && insn.size() == SZ_WORD) {
-        outHex(out, insn.readUint16(), 16);
+        if (insn.useData32()) {
+            outHex(out, insn.readUint32(), 32);
+        } else {
+            outHex(out, insn.readUint16(), 16);
+        }
     } else if ((mode == M_WIMM && insn.size() == SZ_BYTE) || mode == M_IOA) {
-        outHex(out, insn.readByte(), 8);
+        outDec(out, insn.readByte(), 8);
     } else if (mode == M_BIMM) {
-        outHex(out, insn.readByte(), -8);
+        outDec(out, insn.readByte(), -8);
     } else if (mode == M_UI16) {
-        outDec(out, insn.readUint16(), 16);
+        outHex(out, insn.readUint16(), 16);
     } else if (mode == M_UI8) {
         outDec(out, insn.readByte(), 8);
     } else if (mode == M_BIT) {
         const auto bit = insn.readByte();
-        if (bit >= 16 || (insn.size() == SZ_BYTE && bit >= 8))
+        if (insn.size() == SZ_BYTE) {
+            if (bit >= 8)
+                insn.setErrorIf(out, OVERFLOW_RANGE);
+        } else if (insn.data32()) {
+            if (bit >= 32)
+                insn.setErrorIf(out, OVERFLOW_RANGE);
+        } else if (bit >= 16) {
             insn.setErrorIf(out, OVERFLOW_RANGE);
+        }
         outDec(out, bit, 8);
     } else {
         // M_FAR
-        const auto offset = insn.readUint16();
+        const uint32_t offset = insn.useData32() ? insn.readUint32() : insn.readUint16();
         const auto offsetError = insn.getError();
         const auto segment = insn.readUint16();
         outHex(out, segment, 16);
@@ -146,7 +196,7 @@ void DisI8086::decodeImmediate(DisInsn &insn, StrBuffer &out, AddrMode mode) con
         }
         if (offsetError)
             insn.setErrorIf(out, offsetError);
-        outAbsAddr(out, offset, 16);
+        outAbsAddr(out, offset, insn.data32() ? 32 : 16);
     }
 }
 
@@ -175,11 +225,13 @@ OprSize operandSize(const DisInsn &insn, AddrMode mode) {
         return SZ_BYTE;
     case M_AX:
     case M_WREG:
+        return insn.data32() ? SZ_DWORD : SZ_WORD;
     case M_SREG:
         return SZ_WORD;
     case M_BMOD:
-    case M_WMOD:
         return (insn.modReg() >> 6) == 3 ? insn.size() : SZ_NONE;
+    case M_WMOD:
+        return (insn.modReg() >> 6) == 3 ? (insn.data32() ? SZ_DWORD : insn.size()) : SZ_NONE;
     default:
         return SZ_NONE;
     }
@@ -196,23 +248,33 @@ OprSize operandSize(const DisInsn &insn) {
     return SZ_NONE;
 }
 
-OprSize pointerSize(const DisInsn &insn, AddrMode mode) {
+OprSize pointerSize(DisInsn &insn, AddrMode mode) {
     const auto size = insn.size();
-    if (size == SZ_NONE)
-        return size;
     switch (mode) {
     case M_BMOD:
     case M_BMEM:
-        return SZ_BYTE;
+        return size;
     case M_WMOD:
     case M_WMEM:
-        return SZ_WORD;
+        if (size == SZ_NONE) {
+            if (insn.fpuInsn())
+                return SZ_NONE;
+            if (insn.farInsn()) {
+                if (insn.gnuAs()) {
+                    //                    printf("@@ farInsn & GNU\n");
+                    return SZ_NONE;
+                }
+                return insn.useData32() ? SZ_FWORD : SZ_NONE;
+            }
+            return insn.useData32() ? SZ_DWORD : SZ_NONE;
+        }
+        return insn.useData32() ? SZ_DWORD : SZ_WORD;
     default:
         return size;
     }
 }
 
-PrefixName pointerReg(const DisInsn &insn) {
+PrefixName pointerReg(DisInsn &insn) {
     OprSize size;
     if ((size = pointerSize(insn, insn.dst())) == SZ_NONE &&
             (size = pointerSize(insn, insn.src())) == SZ_NONE)
@@ -222,9 +284,13 @@ PrefixName pointerReg(const DisInsn &insn) {
 
 }  // namespace
 
-StrBuffer &DisI8086::outMemReg(
-        DisInsn &insn, StrBuffer &out, RegName seg, uint8_t mod, uint8_t r_m) const {
-    if (operandSize(insn) == SZ_NONE) {
+StrBuffer &DisI8086::outMemPrefix(DisInsn &insn, StrBuffer &out, RegName seg) const {
+    auto opr = operandSize(insn);
+    if ((opr == SZ_DWORD || opr == SZ_WORD) && insn.src() == M_BMOD) {
+        insn.useData32();
+        opr = SZ_NONE;  // MOVSX/MOVSZ r32,r/m8
+    }
+    if (opr == SZ_NONE) {
         const auto ptr = pointerReg(insn);
         if (ptr != PRE_UNDEF) {
             outPrefixName(out, ptr).letter(' ');
@@ -233,11 +299,17 @@ StrBuffer &DisI8086::outMemReg(
     }
     if (seg != REG_UNDEF)
         outRegister(out, seg).letter(':');
+    return out;
+}
+
+StrBuffer &DisI8086::outMemReg(
+        DisInsn &insn, StrBuffer &out, RegName seg, uint_fast8_t mod, uint_fast8_t r_m) const {
+    outMemPrefix(insn, out, seg);
     const auto base = getBaseReg(mod, r_m);
     const auto index = getIndexReg(r_m);
     out.letter('[');
     char sep = 0;
-    outRegister(out, base, sep);
+    outRegister(out, base);
     if (base != REG_UNDEF)
         sep = '+';
     outRegister(out, index, sep);
@@ -256,6 +328,69 @@ StrBuffer &DisI8086::outMemReg(
     return out.letter(']');
 }
 
+StrBuffer &DisI8086::outDisplacement(DisInsn &insn, StrBuffer &out, uint_fast8_t mod) const {
+    if (mod == 1) {
+        const auto disp8 = static_cast<int8_t>(insn.readByte());
+        if (disp8 >= 0)
+            out.letter('+');
+        outDec(out, disp8, -8);
+    } else if (mod == 2) {
+        if (_gnuAs && !model32())
+            insn.addPrefix(TEXT_PRE_ADDR32, out);
+        outAbsAddr(out.letter('+'), insn.readUint32(), 32);
+    }
+    return out;
+}
+
+StrBuffer &DisI8086::outScaledIndex(DisInsn &insn, StrBuffer &out, uint_fast8_t mod) const {
+    const auto sib = insn.readByte();
+    const auto ss = (sib >> 6);
+    const auto idx = (sib >> 3) & 7;
+    const auto index = (idx == 4) ? REG_UNDEF : RegName(REG_EAX + idx);
+    const auto bas = (sib & 7);
+    auto base = RegName(REG_EAX + bas);
+    if (mod == 0 && bas == 5)
+        base = REG_UNDEF;
+    out.letter('[');
+    outRegister(out, base);
+    auto sep = (base == REG_UNDEF) ? 0 : '+';
+    if (index != REG_UNDEF) {
+        outRegister(out, index, sep);
+        if (ss)
+            out.letter('*').letter('0' + (1 << ss));
+        sep = '+';
+    }
+    if (base == REG_UNDEF) {
+        if (sep)
+            out.letter(sep);
+        if (_gnuAs && !model32())
+            insn.addPrefix(TEXT_PRE_ADDR32, out);
+        outAbsAddr(out, insn.readUint32(), 32);
+    } else {
+        outDisplacement(insn, out, mod);
+    }
+    return out.letter(']');
+}
+
+StrBuffer &DisI8086::out32bitAddr(DisInsn &insn, StrBuffer &out, uint_fast8_t mod) const {
+    outMemPrefix(insn, out, overrideSeg(_cpuSpec, insn.segment()));
+
+    const auto r_m = insn.modReg() & 07;
+    if (r_m == 4)
+        return outScaledIndex(insn, out, mod);
+
+    const auto base = RegName(REG_EAX + r_m);
+    out.letter('[');
+    if (mod == 0 && r_m == 5) {
+        if (_gnuAs && !model32())
+            insn.addPrefix(TEXT_PRE_ADDR32, out);
+        outAbsAddr(out, insn.readUint32(), 32);
+    } else {
+        outRegister(out, base);
+    }
+    return outDisplacement(insn, out, mod).letter(']');
+}
+
 void DisI8086::decodeMemReg(DisInsn &insn, StrBuffer &out, AddrMode mode, OprPos pos) const {
     if (pos == P_NONE) {  // XLAT [BX]
         outRegName(out.letter('['), REG_BX).letter(']');
@@ -265,12 +400,18 @@ void DisI8086::decodeMemReg(DisInsn &insn, StrBuffer &out, AddrMode mode, OprPos
     if (mod == 3) {
         if (mode >= M_BMEM && mode <= M_MEM)
             insn.setErrorIf(out, ILLEGAL_OPERAND);
-        const auto regMode = (mode == M_BMOD ? M_BREG : M_WREG);
+        auto regMode = (mode == M_BMOD ? M_BREG : M_WREG);
+        if (mode == M_DREG)
+            regMode = mode;
         outRegister(out, decodeRegister(insn, regMode, pos));
-    } else {
-        const auto r_m = insn.modReg() & 07;
-        outMemReg(insn, out, overrideSeg(insn.segment()), mod, r_m);
+        return;
     }
+    if (insn.useAddr32()) {
+        out32bitAddr(insn, out, mod);
+        return;
+    }
+    const auto r_m = insn.modReg() & 07;
+    outMemReg(insn, out, overrideSeg(_cpuSpec, insn.segment()), mod, r_m);
 }
 
 void DisI8086::decodeRepeatStr(DisInsn &insn, StrBuffer &out) const {
@@ -280,12 +421,14 @@ void DisI8086::decodeRepeatStr(DisInsn &insn, StrBuffer &out) const {
         const auto opc = insn.readByte();
         if (insn.getError())
             return;
+        istr.setModel(model32());
         istr.setOpCode(opc);
         if (searchOpCode(_cpuSpec, istr, out))
             insn.setErrorIf(out, istr);
         if (!istr.stringInst())
             insn.setErrorIf(out, INVALID_INSTRUCTION);
         out.text(istr.name());
+        insn.setUsage(istr);
     }
 }
 
@@ -299,7 +442,7 @@ void DisI8086::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode, OprPo
         outRegister(out, REG_CL);
         break;
     case M_AX:
-        outRegister(out, REG_AX);
+        outRegister(out, insn.useData32() ? REG_EAX : REG_AX);
         break;
     case M_DX:
         outRegister(out, REG_DX);
@@ -307,13 +450,28 @@ void DisI8086::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode, OprPo
     case M_CS:
     case M_BREG:
     case M_WREG:
+    case M_DREG:
     case M_SREG:
+    case M_CTLR:
+    case M_DBGR:
+    case M_TSTR:
         name = decodeRegister(insn, mode, pos);
         if (mode == M_CS && pos == P_NONE) {  // POP CS
             name = REG_CS;
             insn.setErrorIf(out, REGISTER_NOT_ALLOWED);
+        } else if (mode == M_DREG && pos == P_MOD) {
+            if ((insn.modReg() >> 6) != 3)
+                insn.setErrorIf(out, ILLEGAL_OPERAND_MODE);
+        } else if (name == REG_UNDEF) {
+            insn.setErrorIf(out, ILLEGAL_REGISTER);
         }
         outRegister(out, name);
+        break;
+    case M_FS:
+        outRegister(out, REG_FS);
+        break;
+    case M_GS:
+        outRegister(out, REG_GS);
         break;
     case M_BMEM:
     case M_WMEM:
@@ -347,11 +505,11 @@ void DisI8086::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode, OprPo
         break;
     case M_OFF:
         outHex(out, insn.farseg, 16).comma();
-        outAbsAddr(out, insn.readUint16());
+        outAbsAddr(out, insn.useData32() ? insn.readUint32() : insn.readUint16());
         break;
     case M_BDIR:
     case M_WDIR:
-        outMemReg(insn, out, overrideSeg(insn.segment()), 0, 6);
+        outMemReg(insn, out, overrideSeg(_cpuSpec, insn.segment()), 0, 6);
         break;
     case M_REL:
     case M_REL8:
@@ -410,33 +568,33 @@ void DisI8086::decodeStringInst(DisInsn &insn, StrBuffer &out) const {
         insn.setErrorIf(out, ILLEGAL_SEGMENT);
     }
 
-    switch (insn.opCode() & ~1) {
+    switch (opc) {
     case MOVS:
     case ADD4S:
     case SUB4S:
     case CMP4S:
         // ES:[DI], xS:[SI]
         outMemReg(insn, out, REG_ES, 0, 5).comma();
-        outMemReg(insn, out, overrideSeg(seg, REG_DS), 0, 4);
+        outMemReg(insn, out, overrideSeg(_cpuSpec, seg, REG_DS), 0, 4);
         break;
     case OUTS:
         outRegName(out, REG_DX).comma();
         // Fall-through
     case LODS:
-        outMemReg(insn, out, overrideSeg(seg, REG_DS), 0, 4);
+        outMemReg(insn, out, overrideSeg(_cpuSpec, seg, REG_DS), 0, 4);
         break;
     case CMPS:
         // xS:[SI], ES:[DI]
-        outMemReg(insn, out, overrideSeg(seg, REG_DS), 0, 4).comma();
+        outMemReg(insn, out, overrideSeg(_cpuSpec, seg, REG_DS), 0, 4).comma();
         outMemReg(insn, out, REG_ES, 0, 5);
         break;
     case STOS:
     case SCAS:
     case INS:
         // ES:[DI]
-        if (overrideSeg(seg) != REG_UNDEF)
+        if (overrideSeg(_cpuSpec, seg) != REG_UNDEF)
             insn.setErrorIf(out, ILLEGAL_SEGMENT);
-        outMemReg(insn, out, overrideSeg(seg, REG_ES), 0, 5);
+        outMemReg(insn, out, overrideSeg(_cpuSpec, seg, REG_ES), 0, 5);
         break;
     }
     if (opc == INS)
@@ -444,6 +602,7 @@ void DisI8086::decodeStringInst(DisInsn &insn, StrBuffer &out) const {
 }
 
 Error DisI8086::searchCodes(DisInsn &insn, StrBuffer &out) const {
+    insn.setModel(model32());
     uint16_t opc = insn.readByte();
     const auto fwait = (_cpuSpec.fpu != FPU_NONE && opc == DisInsn::FWAIT);
     if (fwait)
@@ -459,7 +618,12 @@ Error DisI8086::searchCodes(DisInsn &insn, StrBuffer &out) const {
         return insn.getError();
     }
 
-    if ((!_segOverrideInsn || _gnuAs) && isSegmentPrefix(opc)) {
+    if (_cpuSpec.has32bit()) {
+        opc = insn.readSizePrefix(opc);
+        if (insn.getError())
+            return insn.getError();
+    }
+    if ((!_segOverrideInsn || _gnuAs) && isSegmentPrefix(_cpuSpec, opc)) {
         insn.setSegment(opc);
         opc = insn.readByte();
         if (insn.getError())
@@ -488,7 +652,18 @@ Error DisI8086::searchCodes(DisInsn &insn, StrBuffer &out) const {
     }
 
     insn.setOpCode(opc);
+    // printf("@@ search:");
+    // if (prefix >= 100) {
+    //     printf(" %02X %02X", prefix >> 8, prefix & 0xFF);
+    // } else if (prefix) {
+    //     printf(" %02X", prefix);
+    // }
+    // printf(" %02x\n", opc);
     searchOpCode(_cpuSpec, insn, out);
+    // if (insn.isOK()) {
+    //     printf("@@  found: %s dst=%d/%d src=%d/%d ext=%d/%d", insn.name(), insn.dst(),
+    //             insn.dstPos(), insn.src(), insn.srcPos(), insn.ext(), insn.extPos());
+    // }
     return insn.getError();
 }
 
@@ -504,16 +679,18 @@ bool imulHasSameDstSrc(const DisInsn &insn) {
 
 }  // namespace
 
-bool DisInsn::farInsn() const {
-    const auto pre = prefix();
-    const auto opc = opCode();
-    if (pre == 0)
-        return opc == 0x9A || opc == 0xEA || opc == 0xCA || opc == 0xCB;  // CALLF/JMPF/RETF
-    if (pre == 0xFF) {
-        const auto reg = (opc >> 3) & 7;
-        return reg == 3 || reg == 5;  // CALLF/JMPF
+Config::opcode_t DisInsn::readSizePrefix(Config::opcode_t opc) {
+    while (true) {
+        if (opc == DATA32 && !_hasData32) {
+            _hasData32 = _hasUnusedData32 = true;
+        } else if (opc == ADDR32 && !_hasAddr32) {
+            _hasAddr32 = _hasUnusedAddr32 = true;
+        } else {
+            break;
+        }
+        opc = readByte();
     }
-    return false;
+    return opc;
 }
 
 void DisInsn::readModReg() {
@@ -525,10 +702,78 @@ void DisInsn::readModReg() {
         _modReg = opCode();
 }
 
+static constexpr auto CALLF = 0x9A;    // CALLF far
+static constexpr auto JMPF = 0xEA;     // JMPF far
+static constexpr auto RETFu16 = 0xCA;  // RETF u16
+static constexpr auto RETF = 0xCB;     // RETF
+static constexpr auto PUSHiw = 0x68;   // PUSH iw
+
+bool DisInsn::farInsn() const {
+    const auto pre = prefix();
+    const auto opc = opCode();
+    if (pre == 0)
+        return opc == CALLF || opc == JMPF || opc == RETFu16 || opc == RETF;
+    if (pre == 0xFF) {
+        const auto reg = (opc >> 3) & 7;
+        return reg == 3 || reg == 5;  // CALLF/JMPF
+    }
+    return false;
+}
+
+bool DisInsn::needData32() const {
+    const auto opc = opCode();
+    return data32() && prefix() == 0 && (opc == CALLF || opc == JMPF || opc == PUSHiw);
+}
+
+void DisInsn::addSuffix(char suffix, StrBuffer &out) {
+    auto save{out};
+    nameBuffer().over(out).letter(suffix).over(nameBuffer());
+    save.over(out);
+}
+
+void DisInsn::addGnuPrefix(char prefix, StrBuffer &out) {
+    char buffer[Insn::MAX_NAME + 1];
+    strcpy(buffer, name());
+    const auto pos = strlen(buffer) - 1;
+    if (toupper(buffer[pos]) == 'F')
+        buffer[pos] = 0;
+    auto save{out};
+    nameBuffer().reset().over(out).letter(prefix).text(buffer).over(nameBuffer());
+    save.over(out);
+}
+
+void DisInsn::addPrefix(const /*PROGMEM*/ char *prefix_P, StrBuffer &out) {
+    char buffer[Insn::MAX_NAME + 1];
+    strcpy(buffer, name());
+    auto save{out};
+    nameBuffer().reset().over(out).text_P(prefix_P).letter(' ').text(buffer).over(nameBuffer());
+    save.over(out);
+}
+
 Error DisI8086::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) const {
     DisInsn insn(_insn, memory, out);
+    insn.setGnuAs(_gnuAs);
     if (searchCodes(insn, out))
         return _insn.setError(insn);
+#if 0
+    if (_cpuSpec.cpu == I80386) {
+        printf("@@ found: %s dst=%d src=%d ext=%d:", insn.name(), insn.dst(), insn.src(),
+                insn.ext());
+        if (insn.hasUnusedData32())
+            printf(" DATA32");
+        if (insn.hasUnusedAddr32())
+            printf(" ADDR32");
+        if (insn.data32())
+            printf(" data32");
+        if (insn.addr32())
+            printf(" addr32");
+        if (insn.farInsn())
+            printf(" farInsn");
+        for (auto i = 0; i < insn.length(); i++)
+            printf(" %02X", insn.bytes()[i]);
+        printf("\n");
+    }
+#endif
 
     insn.readModReg();
     if (_insn.setErrorIf(insn))
@@ -536,21 +781,26 @@ Error DisI8086::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) const
     if (!validSegOverride(insn))
         return _insn.setErrorIf(insn, ILLEGAL_SEGMENT);
 
-    if (_gnuAs && insn.farInsn()) {
-        char name[insn.nameBuffer().len() + 1];
-        strcpy(name, insn.name());
-        name[insn.nameBuffer().len() - 1] = 0;             // omit 'F' suffix
-        insn.nameBuffer().reset().letter('L').text(name);  // add 'L' prefix
+    if (insn.farInsn()) {
+        if (_gnuAs) {
+            insn.addGnuPrefix('L', out);  // LCALL/LJMP
+        } else if (_farSuffix) {
+            insn.addSuffix('F', out);  // CALLF/JMPF
+        }
     }
     if (insn.stringInst()) {
         decodeStringInst(insn, out);
     } else {
         decodeOperand(insn, out, insn.dst(), insn.dstPos());
+        if (_gnuAs && insn.needData32() && !model32())
+            insn.addPrefix(TEXT_PRE_DATA32, out);
         if (insn.src() != M_NONE && !imulHasSameDstSrc(insn))
             decodeOperand(insn, out.comma(), insn.src(), insn.srcPos());
         if (insn.ext() != M_NONE)
             decodeOperand(insn, out.comma(), insn.ext(), insn.extPos());
     }
+    if (insn.hasUnusedData32() || insn.hasUnusedAddr32())
+        insn.setErrorIf(out.str(), PREFIX_HAS_NO_EFFECT);
     return _insn.setError(insn);
 }
 

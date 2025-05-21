@@ -12,6 +12,24 @@
 ;### See the License for the specific language governing permissions and
 ;### limitations under the License.
 
+        .code16
+        lcall   0x1234,0x5678
+        lcall   [bx]
+        lcall   [bx+0x34]
+        lcall   [bx+0x1234]
+        lcall   [ebx]
+        lcall   [ebx+0x34]
+        lcall   [ebx+0x12345678]
+        .code32
+        lcall   0x1234,0x56789abc
+        lcall   [bx]
+        lcall   [bx+0x34]
+        lcall   [bx+0x1234]
+        lcall   [ebx]
+        lcall   [ebx+0x34]
+        lcall   [ebx+0x12345678]
+
+        .code16
 ;### Data Transfer
 ;### Stack
         push    fs

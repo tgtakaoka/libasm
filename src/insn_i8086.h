@@ -42,6 +42,8 @@ struct EntryInsn : EntryInsnPrefix<Config, Entry> {
     void setSegment(Config::opcode_t segment) { _segment = segment; }
     Config::opcode_t segment() const { return _segment; }
 
+    static constexpr Config::opcode_t DATA32 = 0x66;
+    static constexpr Config::opcode_t ADDR32 = 0x67;
     static constexpr Config::opcode_t FWAIT = 0x9B;
     static bool escapeInsn(Config::opcode_t opc) { return opc >= 0xD8 && opc < 0xE0; }
 
@@ -103,17 +105,63 @@ private:
 
 struct DisInsn final : DisInsnImpl<Config>, EntryInsn {
     DisInsn(Insn &insn, DisMemory &memory, const StrBuffer &out)
-        : DisInsnImpl(insn, memory, out), _modReg(0) {}
-    DisInsn(Insn &insn, DisInsn &o, const StrBuffer &out) : DisInsnImpl(insn, o, out), _modReg(0) {}
+        : DisInsnImpl(insn, memory, out),
+          _modReg(0),
+          _hasData32(false),
+          _hasAddr32(false),
+          _hasUnusedData32(false),
+          _hasUnusedAddr32(false) {}
+    DisInsn(Insn &insn, DisInsn &o, const StrBuffer &out)
+        : DisInsnImpl(insn, o, out),
+          _modReg(0),
+          _hasData32(o._hasData32),
+          _hasAddr32(o._hasAddr32),
+          _hasUnusedData32(o._hasUnusedData32),
+          _hasUnusedAddr32(o._hasUnusedAddr32) {}
+
+    void addSuffix(char suffix, StrBuffer &out);
+    void addGnuPrefix(char prefix, StrBuffer &out);
+    void addPrefix(const /*PROGMEM*/ char *prefix_P, StrBuffer &out);
+
+    Config::opcode_t readSizePrefix(Config::opcode_t opc);
+    void setModel(bool model32) { _model32 = model32; }
+    bool data32() const { return _model32 ^ _hasData32; };
+    bool addr32() const { return _model32 ^ _hasAddr32; }
+    bool useData32() {
+        _hasUnusedData32 = false;
+        return data32();
+    }
+
+    bool useAddr32() {
+        _hasUnusedAddr32 = false;
+        return addr32();
+    }
+    bool hasUnusedData32() const { return _hasUnusedData32; }
+    bool hasUnusedAddr32() const { return _hasUnusedAddr32; }
+    void setUsage(const DisInsn &o) {
+        _hasUnusedData32 = o._hasUnusedData32;
+        _hasUnusedAddr32 = o._hasUnusedAddr32;
+    }
 
     uint16_t farseg;
     bool farInsn() const;
+    bool needData32() const;
+    bool fpuInsn() const { return escapeInsn(prefix() & UINT8_MAX); }
+
+    void setGnuAs(bool enable) { _gnuAs = enable; }
+    bool gnuAs() const { return _gnuAs; }
 
     void readModReg();
     Config::opcode_t modReg() const { return _modReg; }
 
 private:
     Config::opcode_t _modReg;
+    bool _hasData32;
+    bool _hasAddr32;
+    mutable bool _hasUnusedData32;
+    mutable bool _hasUnusedAddr32;
+    bool _model32;
+    bool _gnuAs;
 };
 
 }  // namespace i8086
