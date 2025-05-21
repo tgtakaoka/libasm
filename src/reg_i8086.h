@@ -48,18 +48,31 @@ enum RegName : int8_t {
     REG_CH = 5 + 8,
     REG_DH = 6 + 8,
     REG_BH = 7 + 8,
+    // General dword registers.
+    REG_EAX = 0 + 16,
+    REG_ECX = 1 + 16,
+    REG_EDX = 2 + 16,
+    REG_EBX = 3 + 16,
+    REG_ESP = 4 + 16,
+    REG_EBP = 5 + 16,
+    REG_ESI = 6 + 16,
+    REG_EDI = 7 + 16,
     // Segment registers.
-    REG_ES = 0 + 16,
-    REG_CS = 1 + 16,
-    REG_SS = 2 + 16,
-    REG_DS = 3 + 16,
+    REG_ES = 0 + 24,
+    REG_CS = 1 + 24,
+    REG_SS = 2 + 24,
+    REG_DS = 3 + 24,
+    REG_FS = 4 + 24,
+    REG_GS = 5 + 24,
     // Other registers.
-    REG_ST = 20,  // ST
+    REG_ST = 30,  // ST
 };
 
 enum PrefixName : uint8_t {
     PRE_UNDEF = 0,
-    PRE_PTR = 1,
+    PRE_ADDR16 = 1,
+    PRE_ADDR32 = 2,
+    PRE_PTR = 3,
     PRE_BYTE = Size::SZ_BYTE + PRE_PTR,
     PRE_WORD = Size::SZ_WORD + PRE_PTR,
     PRE_DWORD = Size::SZ_QUAD + PRE_PTR,
@@ -69,15 +82,15 @@ enum PrefixName : uint8_t {
 
 namespace reg {
 
-RegName parseRegName(StrScanner &scan, const ValueParser &parser);
+RegName parseRegName(StrScanner &scan, const CpuSpec &cpuSpec, const ValueParser &parser);
 StrBuffer &outRegName(StrBuffer &out, RegName name);
 
 RegName decodeByteReg(uint8_t num);
 RegName decodeWordReg(uint8_t num);
 RegName decodeSegReg(uint8_t num);
-uint8_t encodeRegNum(RegName name);
-bool isGeneralReg(RegName name);
-bool isSegmentReg(RegName name);
+uint_fast8_t encodeRegNum(RegName name);
+bool isGeneralReg(RegName name, const CpuSpec &cpuSpec);
+bool isSegmentReg(RegName name, const CpuSpec &cpuSpec);
 OprSize generalRegSize(RegName name);
 
 PrefixName parsePrefixName(StrScanner &scan, const ValueParser &parser);

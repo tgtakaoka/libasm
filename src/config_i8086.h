@@ -28,8 +28,9 @@ namespace i8086 {
 enum CpuType : uint8_t {
     I8086,
     I80186,
-    I80286,
     V30,
+    I80286,
+    I80386,
 };
 
 enum FpuType : uint8_t {
@@ -38,6 +39,7 @@ enum FpuType : uint8_t {
     FPU_ON,
     FPU_I8087,
     FPU_I80287,
+    FPU_I80387,
     FPU_I80C187,
 #endif
 };
