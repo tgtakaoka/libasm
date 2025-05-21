@@ -16,7 +16,6 @@
 
 #include "asm_i8086.h"
 #include "table_i8086.h"
-#include "text_i8086.h"
 
 namespace libasm {
 namespace i8086 {
@@ -25,7 +24,6 @@ using namespace pseudo;
 using namespace reg;
 using namespace text::common;
 using namespace text::option;
-using namespace text::i8086;
 
 namespace {
 
@@ -118,8 +116,8 @@ Error AsmI8086::parsePointerSize(StrScanner &scan, Operand &op) const {
 
 void AsmI8086::parseSegmentOverride(StrScanner &scan, Operand &op) const {
     auto p = scan;
-    const auto reg = parseRegName(p, parser());
-    if (isSegmentReg(reg)) {
+    const auto reg = parseRegName(p, _cpuSpec, parser());
+    if (isSegmentReg(reg, _cpuSpec)) {
         // Segment Override
         if (p.skipSpaces().expect(':')) {
             op.seg = reg;
@@ -130,7 +128,7 @@ void AsmI8086::parseSegmentOverride(StrScanner &scan, Operand &op) const {
 
 void AsmI8086::parseBaseRegister(StrScanner &scan, Operand &op) const {
     auto p = scan;
-    const auto reg = parseRegName(p, parser());
+    const auto reg = parseRegName(p, _cpuSpec, parser());
     if (reg == REG_BX || reg == REG_BP) {
         op.reg = reg;
         scan = p.skipSpaces();
@@ -144,7 +142,7 @@ void AsmI8086::parseIndexRegister(StrScanner &scan, Operand &op) const {
             return;
         p.skipSpaces();
     }
-    const auto reg = parseRegName(p, parser());
+    const auto reg = parseRegName(p, _cpuSpec, parser());
     if (reg == REG_SI || reg == REG_DI) {
         op.index = reg;
         scan = p.skipSpaces();
@@ -216,8 +214,8 @@ Error AsmI8086::parseOperand(StrScanner &scan, Operand &op) const {
         return op.setError(UNKNOWN_OPERAND);
 
     auto a = p;
-    const auto reg = parseRegName(a, parser());
-    if (isGeneralReg(reg)) {
+    const auto reg = parseRegName(a, _cpuSpec, parser());
+    if (isGeneralReg(reg, _cpuSpec)) {
         op.reg = reg;
         switch (reg) {
         case REG_AL:
@@ -239,7 +237,7 @@ Error AsmI8086::parseOperand(StrScanner &scan, Operand &op) const {
         scan = a;
         return OK;
     }
-    if (isSegmentReg(reg)) {
+    if (isSegmentReg(reg, _cpuSpec)) {
         op.reg = reg;
         op.mode = (reg == REG_CS) ? M_CS : M_SREG;
         scan = a;
