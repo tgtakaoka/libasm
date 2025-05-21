@@ -70,7 +70,7 @@ extern const char TEXT_WT[]   PROGMEM;
 extern const char TEXT_LB[]   PROGMEM;
 using common::TEXT_SETB;
 extern const char TEXT_LS[]   PROGMEM;
-extern const char TEXT_SETS[] PROGMEM;
+using common::TEXT_SETS;
 using common::TEXT_STB;
 extern const char TEXT_CPYB[] PROGMEM;
 using common::TEXT_STS;
