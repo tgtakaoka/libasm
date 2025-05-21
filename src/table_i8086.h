@@ -36,9 +36,9 @@ Error searchName(const CpuSpec &, AsmInsn &insn);
 Error searchOpCode(const CpuSpec &, DisInsn &insn, StrBuffer &out);
 bool isPrefix(const CpuSpec &, uint16_t code);
 bool isRepeatPrefix(const CpuSpec &, Config::opcode_t opcode);
-bool isSegmentPrefix(Config::opcode_t opcode);
-RegName overrideSeg(Config::opcode_t opcode, RegName defSeg = REG_UNDEF);
-Config::opcode_t segOverridePrefix(RegName name);
+bool isSegmentPrefix(const CpuSpec &, Config::opcode_t opcode);
+RegName overrideSeg(const CpuSpec &, Config::opcode_t opcode, RegName defSeg = REG_UNDEF);
+Config::opcode_t segOverridePrefix(const CpuSpec &, RegName name);
 
 }  // namespace i8086
 }  // namespace libasm

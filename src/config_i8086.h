@@ -30,6 +30,7 @@ enum CpuType : uint8_t {
     I80186,
     V30,
     I80286,
+    I80386,
 };
 
 enum FpuType : uint8_t {
@@ -38,6 +39,7 @@ enum FpuType : uint8_t {
     FPU_ON,
     FPU_I8087,
     FPU_I80287,
+    FPU_I80387,
     FPU_I80C187,
 #endif
 };
@@ -46,14 +48,18 @@ struct CpuSpec final {
     CpuSpec(CpuType cpu_, FpuType fpu_) : cpu(cpu_), fpu(fpu_) {}
     CpuType cpu;
     FpuType fpu;
+    bool hasExtraSeg() const { return cpu == I80386; }
+    bool has32bit() const { return cpu == I80386; }
 };
 
-struct Config : ConfigImpl<CpuType, ADDRESS_24BIT, ADDRESS_BYTE, OPCODE_8BIT, ENDIAN_LITTLE, 6, 7> {
-    Config(const InsnTable<CpuType> &table) : ConfigImpl(table, I8086), _cpuSpec(I8086, FPU_NONE) {}
+struct Config : ConfigImpl<CpuType, ADDRESS_32BIT, ADDRESS_BYTE, OPCODE_8BIT, ENDIAN_LITTLE, 6, 7> {
+    Config(const InsnTable<CpuType> &table)
+        : ConfigImpl(table, I8086), _cpuSpec(I8086, FPU_NONE), _model32(false) {}
 
     AddressWidth addressWidth() const override {
-        return _cpuSpec.cpu < I80286 ? ADDRESS_20BIT : ADDRESS_24BIT;
-    }        
+        return _cpuSpec.has32bit() ? ADDRESS_32BIT
+                                   : (_cpuSpec.cpu < I80286 ? ADDRESS_20BIT : ADDRESS_24BIT);
+    }
     uint8_t nameMax() const override { return fpuType() == FPU_NONE ? 6 : 7; }
 
     void setCpuType(CpuType cpuType) override;
@@ -63,8 +69,21 @@ struct Config : ConfigImpl<CpuType, ADDRESS_24BIT, ADDRESS_BYTE, OPCODE_8BIT, EN
     Error setFpuType(FpuType fpuType);
     Error setFpuName(StrScanner &scan) override;
 
+    Error setUse16(bool use) { return setModel(false); }
+    Error setUse32(bool use) { return setModel(true); }
+    bool model32() const { return _model32; }
+
 protected:
     CpuSpec _cpuSpec;
+    bool _model32;
+
+    Error setModel(bool model32) {
+        if (_cpuSpec.has32bit()) {
+            _model32 = model32;
+            return OK;
+        }
+        return OPTION_NOT_SUPPORTED;
+    }
 };
 
 }  // namespace i8086

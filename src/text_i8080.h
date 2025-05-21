@@ -96,7 +96,7 @@ using common::TEXT_RST;
 extern const char TEXT_RZ[]   PROGMEM;
 using common::TEXT_SBB;
 extern const char TEXT_SBI[]  PROGMEM;
-extern const char TEXT_SHLD[] PROGMEM;
+using common::TEXT_SHLD;
 extern const char TEXT_SPHL[] PROGMEM;
 using common::TEXT_STA;
 extern const char TEXT_STAX[] PROGMEM;

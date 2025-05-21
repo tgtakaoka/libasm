@@ -2097,14 +2097,14 @@
       imul    cx, es:[bp+79], 0x5150
       imul    cx, es:[bx+80], 0x5251
       imul    sp, es:[bx+si+97], 0x6362
-      imul    bp, es:[si+109], 0x6e
-      imul    bp, es:[bp+111], 0x70
-      imul    bp, es:[bx+112], 0x71
-      imul    si, es:[bx+si+113], 0x72
-      imul    si, es:[bp+si+115], 0x74
-      imul    si, es:[si+117], 0x76
-      imul    si, es:[bp+119], 0x78
-      imul    si, es:[bx+120], 0x79
+      imul    bp, es:[si+109], 110
+      imul    bp, es:[bp+111], 112
+      imul    bp, es:[bx+112], 113
+      imul    si, es:[bx+si+113], 114
+      imul    si, es:[bp+si+115], 116
+      imul    si, es:[si+117], 118
+      imul    si, es:[bp+119], 120
+      imul    si, es:[bx+120], 121
       imul    ax, es:[bx+si], 1
       imul    ax, es:[bp+si], 3
       imul    ax, es:[si], 5
@@ -2115,70 +2115,70 @@
       imul    cx, es:[si], 13
       imul    cx, es:[0x100f], 17
       imul    cx, es:[bx], 16
-      imul    sp, es:[bx+si], 0x21
-      imul    sp, es:[bp+si], 0x23
-      imul    sp, es:[si], 0x25
-      imul    sp, es:[0x2827], 0x29
-      imul    sp, es:[bx], 0x28
-      imul    si, es:[bx+si], 0x31
-      imul    si, es:[bp+si], 0x33
-      imul    si, es:[si], 0x35
-      imul    si, es:[0x3837], 0x39
-      imul    si, es:[bx], 0x38
-      imul    ax, es:[bx+si+65], 0x42
-      imul    ax, es:[bp+si+67], 0x44
-      imul    ax, es:[si+69], 0x46
-      imul    ax, es:[bp+71], 0x48
-      imul    ax, es:[bx+72], 0x49
-      imul    cx, es:[bx+si+73], 0x4a
-      imul    cx, es:[bp+si+75], 0x4c
-      imul    cx, es:[si+77], 0x4e
-      imul    cx, es:[bp+79], 0x50
-      imul    cx, es:[bx+80], 0x51
-      imul    sp, es:[bx+si+97], 0x62
-      imul    sp, es:[bp+si+99], 0x64
+      imul    sp, es:[bx+si], 33
+      imul    sp, es:[bp+si], 35
+      imul    sp, es:[si], 37
+      imul    sp, es:[0x2827], 41
+      imul    sp, es:[bx], 40
+      imul    si, es:[bx+si], 49
+      imul    si, es:[bp+si], 51
+      imul    si, es:[si], 53
+      imul    si, es:[0x3837], 57
+      imul    si, es:[bx], 56
+      imul    ax, es:[bx+si+65], 66
+      imul    ax, es:[bp+si+67], 68
+      imul    ax, es:[si+69], 70
+      imul    ax, es:[bp+71], 72
+      imul    ax, es:[bx+72], 73
+      imul    cx, es:[bx+si+73], 74
+      imul    cx, es:[bp+si+75], 76
+      imul    cx, es:[si+77], 78
+      imul    cx, es:[bp+79], 80
+      imul    cx, es:[bx+80], 81
+      imul    sp, es:[bx+si+97], 98
+      imul    sp, es:[bp+si+99], 100
       outsb   dx, es:[si]
       outsw   dx, es:[si]
-      add     byte ptr es:[bx+di+0x8382], 0x84
-      add     byte ptr es:[bp+si+0x8483], 0x85
-      add     byte ptr es:[si+0x8685], 0x87
-      add     byte ptr es:[bp+0x8887], 0x89
-      add     byte ptr es:[bx+0x8988], 0x8a
-      or      byte ptr es:[bx+si+0x8a89], 0x8b
-      or      byte ptr es:[bp+si+0x8c8b], 0x8d
-      or      byte ptr es:[si+0x8e8d], 0x8f
-      or      byte ptr es:[bp+0x908f], 0x91
-      or      byte ptr es:[bx+0x9190], 0x92
-      adc     byte ptr es:[bx+si+0x9291], 0x93
-      adc     byte ptr es:[bp+si+0x9493], 0x95
-      adc     byte ptr es:[si+0x9695], 0x97
-      adc     byte ptr es:[bp+0x9897], 0x99
-      adc     byte ptr es:[bx+0x9998], 0x9a
-      sbb     byte ptr es:[bx+si+0x9a99], 0x9b
-      sbb     byte ptr es:[bp+si+0x9c9b], 0x9d
-      sbb     byte ptr es:[si+0x9e9d], 0x9f
-      sbb     byte ptr es:[bp+0xa09f], 0xa1
-      sbb     byte ptr es:[bx+0xa1a0], 0xa2
-      and     byte ptr es:[bx+si+0xa2a1], 0xa3
-      and     byte ptr es:[bp+si+0xa4a3], 0xa5
-      and     byte ptr es:[si+0xa6a5], 0xa7
-      and     byte ptr es:[bp+0xa8a7], 0xa9
-      and     byte ptr es:[bx+0xa9a8], 0xaa
-      sub     byte ptr es:[bx+si+0xaaa9], 0xab
-      sub     byte ptr es:[bp+si+0xacab], 0xad
-      sub     byte ptr es:[si+0xaead], 0xaf
-      sub     byte ptr es:[bp+0xb0af], 0xb1
-      sub     byte ptr es:[bx+0xb1b0], 0xb2
-      xor     byte ptr es:[bx+si+0xb2b1], 0xb3
-      xor     byte ptr es:[bp+si+0xb4b3], 0xb5
-      xor     byte ptr es:[si+0xb6b5], 0xb7
-      xor     byte ptr es:[bp+0xb8b7], 0xb9
-      xor     byte ptr es:[bx+0xb9b8], 0xba
-      cmp     byte ptr es:[bx+si+0xbab9], 0xbb
-      cmp     byte ptr es:[bp+si+0xbcbb], 0xbd
-      cmp     byte ptr es:[si+0xbebd], 0xbf
-      cmp     byte ptr es:[bp+0xc0bf], 0xc1
-      cmp     byte ptr es:[bx+0xc1c0], 0xc2
+      add     byte ptr es:[bx+di+0x8382], 132
+      add     byte ptr es:[bp+si+0x8483], 133
+      add     byte ptr es:[si+0x8685], 135
+      add     byte ptr es:[bp+0x8887], 137
+      add     byte ptr es:[bx+0x8988], 138
+      or      byte ptr es:[bx+si+0x8a89], 139
+      or      byte ptr es:[bp+si+0x8c8b], 141
+      or      byte ptr es:[si+0x8e8d], 143
+      or      byte ptr es:[bp+0x908f], 145
+      or      byte ptr es:[bx+0x9190], 146
+      adc     byte ptr es:[bx+si+0x9291], 147
+      adc     byte ptr es:[bp+si+0x9493], 149
+      adc     byte ptr es:[si+0x9695], 151
+      adc     byte ptr es:[bp+0x9897], 153
+      adc     byte ptr es:[bx+0x9998], 154
+      sbb     byte ptr es:[bx+si+0x9a99], 155
+      sbb     byte ptr es:[bp+si+0x9c9b], 157
+      sbb     byte ptr es:[si+0x9e9d], 159
+      sbb     byte ptr es:[bp+0xa09f], 161
+      sbb     byte ptr es:[bx+0xa1a0], 162
+      and     byte ptr es:[bx+si+0xa2a1], 163
+      and     byte ptr es:[bp+si+0xa4a3], 165
+      and     byte ptr es:[si+0xa6a5], 167
+      and     byte ptr es:[bp+0xa8a7], 169
+      and     byte ptr es:[bx+0xa9a8], 170
+      sub     byte ptr es:[bx+si+0xaaa9], 171
+      sub     byte ptr es:[bp+si+0xacab], 173
+      sub     byte ptr es:[si+0xaead], 175
+      sub     byte ptr es:[bp+0xb0af], 177
+      sub     byte ptr es:[bx+0xb1b0], 178
+      xor     byte ptr es:[bx+si+0xb2b1], 179
+      xor     byte ptr es:[bp+si+0xb4b3], 181
+      xor     byte ptr es:[si+0xb6b5], 183
+      xor     byte ptr es:[bp+0xb8b7], 185
+      xor     byte ptr es:[bx+0xb9b8], 186
+      cmp     byte ptr es:[bx+si+0xbab9], 187
+      cmp     byte ptr es:[bp+si+0xbcbb], 189
+      cmp     byte ptr es:[si+0xbebd], 191
+      cmp     byte ptr es:[bp+0xc0bf], 193
+      cmp     byte ptr es:[bx+0xc1c0], 194
       add     byte ptr es:[bx+si], 1
       add     byte ptr es:[bp+si], 3
       add     byte ptr es:[si], 5
@@ -2197,68 +2197,68 @@
       sbb     byte ptr es:[bx+si], 25
       sbb     byte ptr es:[bp+si], 27
       sbb     byte ptr es:[si], 29
-      sbb     byte ptr es:[0x201f], 0x21
+      sbb     byte ptr es:[0x201f], 33
       sbb     byte ptr es:[bx], 32
-      and     byte ptr es:[bx+si], 0x21
-      and     byte ptr es:[bp+si], 0x23
-      and     byte ptr es:[si], 0x25
-      and     byte ptr es:[0x2827], 0x29
-      and     byte ptr es:[bx], 0x28
-      sub     byte ptr es:[bx+si], 0x29
-      sub     byte ptr es:[bp+si], 0x2b
-      sub     byte ptr es:[si], 0x2d
-      sub     byte ptr es:[0x302f], 0x31
-      sub     byte ptr es:[bx], 0x30
-      xor     byte ptr es:[bx+si], 0x31
-      xor     byte ptr es:[bp+si], 0x33
-      xor     byte ptr es:[si], 0x35
-      xor     byte ptr es:[0x3837], 0x39
-      xor     byte ptr es:[bx], 0x38
-      cmp     byte ptr es:[bx+si], 0x39
-      cmp     byte ptr es:[bp+si], 0x3b
-      cmp     byte ptr es:[si], 0x3d
-      cmp     byte ptr es:[0x403f], 0x41
-      cmp     byte ptr es:[bx], 0x40
-      add     byte ptr es:[bx+si+65], 0x42
-      add     byte ptr es:[bp+si+67], 0x44
-      add     byte ptr es:[si+69], 0x46
-      add     byte ptr es:[bp+71], 0x48
-      add     byte ptr es:[bx+72], 0x49
-      or      byte ptr es:[bx+si+73], 0x4a
-      or      byte ptr es:[bp+si+75], 0x4c
-      or      byte ptr es:[si+77], 0x4e
-      or      byte ptr es:[bp+79], 0x50
-      or      byte ptr es:[bx+80], 0x51
-      adc     byte ptr es:[bx+si+81], 0x52
-      adc     byte ptr es:[bp+si+83], 0x54
-      adc     byte ptr es:[si+85], 0x56
-      adc     byte ptr es:[bp+87], 0x58
-      adc     byte ptr es:[bx+88], 0x59
-      sbb     byte ptr es:[bx+si+89], 0x5a
-      sbb     byte ptr es:[bp+si+91], 0x5c
-      sbb     byte ptr es:[si+93], 0x5e
-      sbb     byte ptr es:[bp+95], 0x60
-      sbb     byte ptr es:[bx+96], 0x61
-      and     byte ptr es:[bx+si+97], 0x62
-      and     byte ptr es:[bp+si+99], 0x64
-      and     byte ptr es:[si+101], 0x66
-      and     byte ptr es:[bp+103], 0x68
-      and     byte ptr es:[bx+104], 0x69
-      sub     byte ptr es:[bx+si+105], 0x6a
-      sub     byte ptr es:[bp+si+107], 0x6c
-      sub     byte ptr es:[si+109], 0x6e
-      sub     byte ptr es:[bp+111], 0x70
-      sub     byte ptr es:[bx+112], 0x71
-      xor     byte ptr es:[bx+si+113], 0x72
-      xor     byte ptr es:[bp+si+115], 0x74
-      xor     byte ptr es:[si+117], 0x76
-      xor     byte ptr es:[bp+119], 0x78
-      xor     byte ptr es:[bx+120], 0x79
-      cmp     byte ptr es:[bx+si+121], 0x7a
-      cmp     byte ptr es:[bp+si+123], 0x7c
-      cmp     byte ptr es:[si+125], 0x7e
-      cmp     byte ptr es:[bp+127], 0x80
-      cmp     byte ptr es:[bx-128], 0x81
+      and     byte ptr es:[bx+si], 33
+      and     byte ptr es:[bp+si], 35
+      and     byte ptr es:[si], 37
+      and     byte ptr es:[0x2827], 41
+      and     byte ptr es:[bx], 40
+      sub     byte ptr es:[bx+si], 41
+      sub     byte ptr es:[bp+si], 43
+      sub     byte ptr es:[si], 45
+      sub     byte ptr es:[0x302f], 49
+      sub     byte ptr es:[bx], 48
+      xor     byte ptr es:[bx+si], 49
+      xor     byte ptr es:[bp+si], 51
+      xor     byte ptr es:[si], 53
+      xor     byte ptr es:[0x3837], 57
+      xor     byte ptr es:[bx], 56
+      cmp     byte ptr es:[bx+si], 57
+      cmp     byte ptr es:[bp+si], 59
+      cmp     byte ptr es:[si], 61
+      cmp     byte ptr es:[0x403f], 65
+      cmp     byte ptr es:[bx], 64
+      add     byte ptr es:[bx+si+65], 66
+      add     byte ptr es:[bp+si+67], 68
+      add     byte ptr es:[si+69], 70
+      add     byte ptr es:[bp+71], 72
+      add     byte ptr es:[bx+72], 73
+      or      byte ptr es:[bx+si+73], 74
+      or      byte ptr es:[bp+si+75], 76
+      or      byte ptr es:[si+77], 78
+      or      byte ptr es:[bp+79], 80
+      or      byte ptr es:[bx+80], 81
+      adc     byte ptr es:[bx+si+81], 82
+      adc     byte ptr es:[bp+si+83], 84
+      adc     byte ptr es:[si+85], 86
+      adc     byte ptr es:[bp+87], 88
+      adc     byte ptr es:[bx+88], 89
+      sbb     byte ptr es:[bx+si+89], 90
+      sbb     byte ptr es:[bp+si+91], 92
+      sbb     byte ptr es:[si+93], 94
+      sbb     byte ptr es:[bp+95], 96
+      sbb     byte ptr es:[bx+96], 97
+      and     byte ptr es:[bx+si+97], 98
+      and     byte ptr es:[bp+si+99], 100
+      and     byte ptr es:[si+101], 102
+      and     byte ptr es:[bp+103], 104
+      and     byte ptr es:[bx+104], 105
+      sub     byte ptr es:[bx+si+105], 106
+      sub     byte ptr es:[bp+si+107], 108
+      sub     byte ptr es:[si+109], 110
+      sub     byte ptr es:[bp+111], 112
+      sub     byte ptr es:[bx+112], 113
+      xor     byte ptr es:[bx+si+113], 114
+      xor     byte ptr es:[bp+si+115], 116
+      xor     byte ptr es:[si+117], 118
+      xor     byte ptr es:[bp+119], 120
+      xor     byte ptr es:[bx+120], 121
+      cmp     byte ptr es:[bx+si+121], 122
+      cmp     byte ptr es:[bp+si+123], 124
+      cmp     byte ptr es:[si+125], 126
+      cmp     byte ptr es:[bp+127], 128
+      cmp     byte ptr es:[bx-128], 129
       add     word ptr es:[bp+si+0x8483], 0x8685
       add     word ptr es:[si+0x8685], 0x8887
       add     word ptr es:[bp+0x8887], 0x8a89
@@ -2397,68 +2397,68 @@
       sbb     word ptr es:[bx+si], 25
       sbb     word ptr es:[bp+si], 27
       sbb     word ptr es:[si], 29
-      sbb     word ptr es:[0x201f], 0x21
+      sbb     word ptr es:[0x201f], 33
       sbb     word ptr es:[bx], 32
-      and     word ptr es:[bx+si], 0x21
-      and     word ptr es:[bp+si], 0x23
-      and     word ptr es:[si], 0x25
-      and     word ptr es:[0x2827], 0x29
-      and     word ptr es:[bx], 0x28
-      sub     word ptr es:[bx+si], 0x29
-      sub     word ptr es:[bp+si], 0x2b
-      sub     word ptr es:[si], 0x2d
-      sub     word ptr es:[0x302f], 0x31
-      sub     word ptr es:[bx], 0x30
-      xor     word ptr es:[bx+si], 0x31
-      xor     word ptr es:[bp+si], 0x33
-      xor     word ptr es:[si], 0x35
-      xor     word ptr es:[0x3837], 0x39
-      xor     word ptr es:[bx], 0x38
-      cmp     word ptr es:[bx+si], 0x39
-      cmp     word ptr es:[bp+si], 0x3b
-      cmp     word ptr es:[si], 0x3d
-      cmp     word ptr es:[0x403f], 0x41
-      cmp     word ptr es:[bx], 0x40
-      add     word ptr es:[bx+si+65], 0x42
-      add     word ptr es:[bp+si+67], 0x44
-      add     word ptr es:[si+69], 0x46
-      add     word ptr es:[bp+71], 0x48
-      add     word ptr es:[bx+72], 0x49
-      or      word ptr es:[bx+si+73], 0x4a
-      or      word ptr es:[bp+si+75], 0x4c
-      or      word ptr es:[si+77], 0x4e
-      or      word ptr es:[bp+79], 0x50
-      or      word ptr es:[bx+80], 0x51
-      adc     word ptr es:[bx+si+81], 0x52
-      adc     word ptr es:[bp+si+83], 0x54
-      adc     word ptr es:[si+85], 0x56
-      adc     word ptr es:[bp+87], 0x58
-      adc     word ptr es:[bx+88], 0x59
-      sbb     word ptr es:[bx+si+89], 0x5a
-      sbb     word ptr es:[bp+si+91], 0x5c
-      sbb     word ptr es:[si+93], 0x5e
-      sbb     word ptr es:[bp+95], 0x60
-      sbb     word ptr es:[bx+96], 0x61
-      and     word ptr es:[bx+si+97], 0x62
-      and     word ptr es:[bp+si+99], 0x64
-      and     word ptr es:[si+101], 0x66
-      and     word ptr es:[bp+103], 0x68
-      and     word ptr es:[bx+104], 0x69
-      sub     word ptr es:[bx+si+105], 0x6a
-      sub     word ptr es:[bp+si+107], 0x6c
-      sub     word ptr es:[si+109], 0x6e
-      sub     word ptr es:[bp+111], 0x70
-      sub     word ptr es:[bx+112], 0x71
-      xor     word ptr es:[bx+si+113], 0x72
-      xor     word ptr es:[bp+si+115], 0x74
-      xor     word ptr es:[si+117], 0x76
-      xor     word ptr es:[bp+119], 0x78
-      xor     word ptr es:[bx+120], 0x79
-      cmp     word ptr es:[bx+si+121], 0x7a
-      cmp     word ptr es:[bp+si+123], 0x7c
-      cmp     word ptr es:[si+125], 0x7e
-      cmp     word ptr es:[bp+127], -0x80
-      cmp     word ptr es:[bx-128], -0x7f
+      and     word ptr es:[bx+si], 33
+      and     word ptr es:[bp+si], 35
+      and     word ptr es:[si], 37
+      and     word ptr es:[0x2827], 41
+      and     word ptr es:[bx], 40
+      sub     word ptr es:[bx+si], 41
+      sub     word ptr es:[bp+si], 43
+      sub     word ptr es:[si], 45
+      sub     word ptr es:[0x302f], 49
+      sub     word ptr es:[bx], 48
+      xor     word ptr es:[bx+si], 49
+      xor     word ptr es:[bp+si], 51
+      xor     word ptr es:[si], 53
+      xor     word ptr es:[0x3837], 57
+      xor     word ptr es:[bx], 56
+      cmp     word ptr es:[bx+si], 57
+      cmp     word ptr es:[bp+si], 59
+      cmp     word ptr es:[si], 61
+      cmp     word ptr es:[0x403f], 65
+      cmp     word ptr es:[bx], 64
+      add     word ptr es:[bx+si+65], 66
+      add     word ptr es:[bp+si+67], 68
+      add     word ptr es:[si+69], 70
+      add     word ptr es:[bp+71], 72
+      add     word ptr es:[bx+72], 73
+      or      word ptr es:[bx+si+73], 74
+      or      word ptr es:[bp+si+75], 76
+      or      word ptr es:[si+77], 78
+      or      word ptr es:[bp+79], 80
+      or      word ptr es:[bx+80], 81
+      adc     word ptr es:[bx+si+81], 82
+      adc     word ptr es:[bp+si+83], 84
+      adc     word ptr es:[si+85], 86
+      adc     word ptr es:[bp+87], 88
+      adc     word ptr es:[bx+88], 89
+      sbb     word ptr es:[bx+si+89], 90
+      sbb     word ptr es:[bp+si+91], 92
+      sbb     word ptr es:[si+93], 94
+      sbb     word ptr es:[bp+95], 96
+      sbb     word ptr es:[bx+96], 97
+      and     word ptr es:[bx+si+97], 98
+      and     word ptr es:[bp+si+99], 100
+      and     word ptr es:[si+101], 102
+      and     word ptr es:[bp+103], 104
+      and     word ptr es:[bx+104], 105
+      sub     word ptr es:[bx+si+105], 106
+      sub     word ptr es:[bp+si+107], 108
+      sub     word ptr es:[si+109], 110
+      sub     word ptr es:[bp+111], 112
+      sub     word ptr es:[bx+112], 113
+      xor     word ptr es:[bx+si+113], 114
+      xor     word ptr es:[bp+si+115], 116
+      xor     word ptr es:[si+117], 118
+      xor     word ptr es:[bp+119], 120
+      xor     word ptr es:[bx+120], 121
+      cmp     word ptr es:[bx+si+121], 122
+      cmp     word ptr es:[bp+si+123], 124
+      cmp     word ptr es:[si+125], 126
+      cmp     word ptr es:[bp+127], -128
+      cmp     word ptr es:[bx-128], -127
       test    es:[di+0x8786], al
       test    es:[bp+0x8887], al
       test    es:[bx+0x8988], al
@@ -2832,13 +2832,6 @@
       mov     es:[si+0x9e9d], ds
       mov     es:[bp+0xa09f], ds
       mov     es:[bx+0xa1a0], ds
-      mov     es:[bx+si+0xa2a1], es
-      mov     es:[bp+si+0xa4a3], es
-      mov     es:[si+0xa6a5], es
-      mov     es:[bp+0xa8a7], es
-      mov     es:[bx+0xa9a8], es
-      mov     es:[bx+si+0xaaa9], cs
-      mov     es:[bp+si+0xacab], cs
       mov     es:[bx+si], es
       mov     es:[bp+si], es
       mov     es:[si], es
@@ -2879,6 +2872,13 @@
       mov     es:[si+93], ds
       mov     es:[bp+95], ds
       mov     es:[bx+96], ds
+      mov     es:[bx+si+0x8281], es
+      mov     es:[bp+si+0x8483], es
+      mov     es:[si+0x8685], es
+      mov     es:[bp+0x8887], es
+      mov     es:[bx+0x8988], es
+      mov     es:[bx+si+0x8a89], cs
+      mov     es:[bp+si+0x8c8b], cs
       mov     cs, es:[bx+0x9190]
       mov     ss, es:[bx+si+0x9291]
       mov     ss, es:[bp+si+0x9493]
@@ -2890,15 +2890,6 @@
       mov     ds, es:[si+0x9e9d]
       mov     ds, es:[bp+0xa09f]
       mov     ds, es:[bx+0xa1a0]
-      mov     es, es:[bx+si+0xa2a1]
-      mov     es, es:[bp+si+0xa4a3]
-      mov     es, es:[si+0xa6a5]
-      mov     es, es:[bp+0xa8a7]
-      mov     es, es:[bx+0xa9a8]
-      mov     cs, es:[bx+si+0xaaa9]
-      mov     cs, es:[bp+si+0xacab]
-      mov     cs, es:[si+0xaead]
-      mov     cs, es:[bp+0xb0af]
       mov     es, es:[bx+si]
       mov     es, es:[bp+si]
       mov     es, es:[si]
@@ -2939,6 +2930,15 @@
       mov     ds, es:[si+93]
       mov     ds, es:[bp+95]
       mov     ds, es:[bx+96]
+      mov     es, es:[bx+si+0x8281]
+      mov     es, es:[bp+si+0x8483]
+      mov     es, es:[si+0x8685]
+      mov     es, es:[bp+0x8887]
+      mov     es, es:[bx+0x8988]
+      mov     cs, es:[bx+si+0x8a89]
+      mov     cs, es:[bp+si+0x8c8b]
+      mov     cs, es:[si+0x8e8d]
+      mov     cs, es:[bp+0x908f]
       pop     es:[bx+si]
       pop     es:[bp+si]
       pop     es:[si]
@@ -3299,16 +3299,16 @@
       mov     byte ptr es:[si], 5
       mov     byte ptr es:[0x0807], 9
       mov     byte ptr es:[bx], 8
-      mov     byte ptr es:[bx+si+65], 0x42
-      mov     byte ptr es:[bp+si+67], 0x44
-      mov     byte ptr es:[si+69], 0x46
-      mov     byte ptr es:[bp+71], 0x48
-      mov     byte ptr es:[bx+72], 0x49
-      mov     byte ptr es:[bx+si+0x8281], 0x83
-      mov     byte ptr es:[bp+si+0x8483], 0x85
-      mov     byte ptr es:[si+0x8685], 0x87
-      mov     byte ptr es:[bp+0x8887], 0x89
-      mov     byte ptr es:[bx+0x8988], 0x8a
+      mov     byte ptr es:[bx+si+65], 66
+      mov     byte ptr es:[bp+si+67], 68
+      mov     byte ptr es:[si+69], 70
+      mov     byte ptr es:[bp+71], 72
+      mov     byte ptr es:[bx+72], 73
+      mov     byte ptr es:[bx+si+0x8281], 131
+      mov     byte ptr es:[bp+si+0x8483], 133
+      mov     byte ptr es:[si+0x8685], 135
+      mov     byte ptr es:[bp+0x8887], 137
+      mov     byte ptr es:[bx+0x8988], 138
       mov     word ptr es:[bx+si], 0x0201
       mov     word ptr es:[bp+si], 0x0403
       mov     word ptr es:[si], 0x0605
@@ -5701,11 +5701,11 @@
       idiv    byte ptr es:[si]
       idiv    byte ptr es:[0x403f]
       idiv    byte ptr es:[bx]
-      test    byte ptr es:[bx+si+65], 0x42
-      test    byte ptr es:[bp+si+67], 0x44
-      test    byte ptr es:[si+69], 0x46
-      test    byte ptr es:[bp+71], 0x48
-      test    byte ptr es:[bx+72], 0x49
+      test    byte ptr es:[bx+si+65], 66
+      test    byte ptr es:[bp+si+67], 68
+      test    byte ptr es:[si+69], 70
+      test    byte ptr es:[bp+71], 72
+      test    byte ptr es:[bx+72], 73
       not     byte ptr es:[bx+si+81]
       not     byte ptr es:[bp+si+83]
       not     byte ptr es:[si+85]
@@ -5736,11 +5736,11 @@
       idiv    byte ptr es:[si+125]
       idiv    byte ptr es:[bp+127]
       idiv    byte ptr es:[bx-128]
-      test    byte ptr es:[bx+si+0x8281], 0x83
-      test    byte ptr es:[bp+si+0x8483], 0x85
-      test    byte ptr es:[si+0x8685], 0x87
-      test    byte ptr es:[bp+0x8887], 0x89
-      test    byte ptr es:[bx+0x8988], 0x8a
+      test    byte ptr es:[bx+si+0x8281], 131
+      test    byte ptr es:[bp+si+0x8483], 133
+      test    byte ptr es:[si+0x8685], 135
+      test    byte ptr es:[bp+0x8887], 137
+      test    byte ptr es:[bx+0x8988], 138
       not     byte ptr es:[bx+si+0x9291]
       not     byte ptr es:[bp+si+0x9493]
       not     byte ptr es:[si+0x9695]
@@ -5921,21 +5921,21 @@
       call    es:[si]
       call    es:[0x1817]
       call    es:[bx]
-      Lcall   es:[bx+si]
-      Lcall   es:[bp+si]
-      Lcall   es:[si]
-      Lcall   es:[0x201f]
-      Lcall   es:[bx]
+      lcall   es:[bx+si]
+      lcall   es:[bp+si]
+      lcall   es:[si]
+      lcall   es:[0x201f]
+      lcall   es:[bx]
       jmp     es:[bx+si]
       jmp     es:[bp+si]
       jmp     es:[si]
       jmp     es:[0x2827]
       jmp     es:[bx]
-      Ljmp    es:[bx+si]
-      Ljmp    es:[bp+si]
-      Ljmp    es:[si]
-      Ljmp    es:[0x302f]
-      Ljmp    es:[bx]
+      ljmp    es:[bx+si]
+      ljmp    es:[bp+si]
+      ljmp    es:[si]
+      ljmp    es:[0x302f]
+      ljmp    es:[bx]
       push    es:[bx+si]
       push    es:[bp+si]
       push    es:[si]
@@ -5956,21 +5956,21 @@
       call    es:[si+85]
       call    es:[bp+87]
       call    es:[bx+88]
-      Lcall   es:[bx+si+89]
-      Lcall   es:[bp+si+91]
-      Lcall   es:[si+93]
-      Lcall   es:[bp+95]
-      Lcall   es:[bx+96]
+      lcall   es:[bx+si+89]
+      lcall   es:[bp+si+91]
+      lcall   es:[si+93]
+      lcall   es:[bp+95]
+      lcall   es:[bx+96]
       jmp     es:[bx+si+97]
       jmp     es:[bp+si+99]
       jmp     es:[si+101]
       jmp     es:[bp+103]
       jmp     es:[bx+104]
-      Ljmp    es:[bx+si+105]
-      Ljmp    es:[bp+si+107]
-      Ljmp    es:[si+109]
-      Ljmp    es:[bp+111]
-      Ljmp    es:[bx+112]
+      ljmp    es:[bx+si+105]
+      ljmp    es:[bp+si+107]
+      ljmp    es:[si+109]
+      ljmp    es:[bp+111]
+      ljmp    es:[bx+112]
       push    es:[bx+si+113]
       push    es:[bp+si+115]
       push    es:[si+117]
@@ -5991,21 +5991,21 @@
       call    es:[si+0x9695]
       call    es:[bp+0x9897]
       call    es:[bx+0x9998]
-      Lcall   es:[bx+si+0x9a99]
-      Lcall   es:[bp+si+0x9c9b]
-      Lcall   es:[si+0x9e9d]
-      Lcall   es:[bp+0xa09f]
-      Lcall   es:[bx+0xa1a0]
+      lcall   es:[bx+si+0x9a99]
+      lcall   es:[bp+si+0x9c9b]
+      lcall   es:[si+0x9e9d]
+      lcall   es:[bp+0xa09f]
+      lcall   es:[bx+0xa1a0]
       jmp     es:[bx+si+0xa2a1]
       jmp     es:[bp+si+0xa4a3]
       jmp     es:[si+0xa6a5]
       jmp     es:[bp+0xa8a7]
       jmp     es:[bx+0xa9a8]
-      Ljmp    es:[bx+si+0xaaa9]
-      Ljmp    es:[bp+si+0xacab]
-      Ljmp    es:[si+0xaead]
-      Ljmp    es:[bp+0xb0af]
-      Ljmp    es:[bx+0xb1b0]
+      ljmp    es:[bx+si+0xaaa9]
+      ljmp    es:[bp+si+0xacab]
+      ljmp    es:[si+0xaead]
+      ljmp    es:[bp+0xb0af]
+      ljmp    es:[bx+0xb1b0]
       push    es:[bx+si+0xb2b1]
       push    es:[bp+si+0xb4b3]
       push    es:[si+0xb6b5]
@@ -8052,24 +8052,24 @@
       imul    cx, [bp+79], 0x5150
       imul    cx, [bx+80], 0x5251
       imul    sp, [bx+si+97], 0x6362
-      push    0x6b
-      imul    bp, [si+109], 0x6e
-      imul    bp, [bp+111], 0x70
-      imul    bp, [bx+112], 0x71
-      imul    si, [bx+si+113], 0x72
-      imul    si, [bp+si+115], 0x74
-      imul    si, [si+117], 0x76
-      imul    si, [bp+119], 0x78
-      imul    si, [bx+120], 0x79
-      imul    ax, -0x3f
-      imul    ax, cx, -0x3e
-      imul    ax, sp, -0x3b
-      imul    ax, si, -0x39
-      imul    cx, ax, -0x37
-      imul    cx, -0x36
-      imul    cx, dx, -0x35
-      imul    cx, sp, -0x33
-      imul    cx, si, -0x31
+      push    107
+      imul    bp, [si+109], 110
+      imul    bp, [bp+111], 112
+      imul    bp, [bx+112], 113
+      imul    si, [bx+si+113], 114
+      imul    si, [bp+si+115], 116
+      imul    si, [si+117], 118
+      imul    si, [bp+119], 120
+      imul    si, [bx+120], 121
+      imul    ax, -63
+      imul    ax, cx, -62
+      imul    ax, sp, -59
+      imul    ax, si, -57
+      imul    cx, ax, -55
+      imul    cx, -54
+      imul    cx, dx, -53
+      imul    cx, sp, -51
+      imul    cx, si, -49
       imul    sp, ax, -31
       imul    sp, cx, -30
       imul    sp, -27
@@ -8090,28 +8090,28 @@
       imul    cx, [si], 13
       imul    cx, [0x100f], 17
       imul    cx, [bx], 16
-      imul    sp, [bx+si], 0x21
-      imul    sp, [bp+si], 0x23
-      imul    sp, [si], 0x25
-      imul    sp, [0x2827], 0x29
-      imul    sp, [bx], 0x28
-      imul    si, [bx+si], 0x31
-      imul    si, [bp+si], 0x33
-      imul    si, [si], 0x35
-      imul    si, [0x3837], 0x39
-      imul    si, [bx], 0x38
-      imul    ax, [bx+si+65], 0x42
-      imul    ax, [bp+si+67], 0x44
-      imul    ax, [si+69], 0x46
-      imul    ax, [bp+71], 0x48
-      imul    ax, [bx+72], 0x49
-      imul    cx, [bx+si+73], 0x4a
-      imul    cx, [bp+si+75], 0x4c
-      imul    cx, [si+77], 0x4e
-      imul    cx, [bp+79], 0x50
-      imul    cx, [bx+80], 0x51
-      imul    sp, [bx+si+97], 0x62
-      imul    sp, [bp+si+99], 0x64
+      imul    sp, [bx+si], 33
+      imul    sp, [bp+si], 35
+      imul    sp, [si], 37
+      imul    sp, [0x2827], 41
+      imul    sp, [bx], 40
+      imul    si, [bx+si], 49
+      imul    si, [bp+si], 51
+      imul    si, [si], 53
+      imul    si, [0x3837], 57
+      imul    si, [bx], 56
+      imul    ax, [bx+si+65], 66
+      imul    ax, [bp+si+67], 68
+      imul    ax, [si+69], 70
+      imul    ax, [bp+71], 72
+      imul    ax, [bx+72], 73
+      imul    cx, [bx+si+73], 74
+      imul    cx, [bp+si+75], 76
+      imul    cx, [si+77], 78
+      imul    cx, [bp+79], 80
+      imul    cx, [bx+80], 81
+      imul    sp, [bx+si+97], 98
+      imul    sp, [bp+si+99], 100
       insb    es:[di], dx
       insw    es:[di], dx
       outsb   dx, ds:[si]
@@ -8132,62 +8132,62 @@
       jge     $+128
       jle     $+129
       jg      $-126
-      add     byte ptr [bx+di+0x8382], 0x84
-      add     byte ptr [bp+si+0x8483], 0x85
-      add     byte ptr [si+0x8685], 0x87
-      add     byte ptr [bp+0x8887], 0x89
-      add     byte ptr [bx+0x8988], 0x8a
-      or      byte ptr [bx+si+0x8a89], 0x8b
-      or      byte ptr [bp+si+0x8c8b], 0x8d
-      or      byte ptr [si+0x8e8d], 0x8f
-      or      byte ptr [bp+0x908f], 0x91
-      or      byte ptr [bx+0x9190], 0x92
-      adc     byte ptr [bx+si+0x9291], 0x93
-      adc     byte ptr [bp+si+0x9493], 0x95
-      adc     byte ptr [si+0x9695], 0x97
-      adc     byte ptr [bp+0x9897], 0x99
-      adc     byte ptr [bx+0x9998], 0x9a
-      sbb     byte ptr [bx+si+0x9a99], 0x9b
-      sbb     byte ptr [bp+si+0x9c9b], 0x9d
-      sbb     byte ptr [si+0x9e9d], 0x9f
-      sbb     byte ptr [bp+0xa09f], 0xa1
-      sbb     byte ptr [bx+0xa1a0], 0xa2
-      and     byte ptr [bx+si+0xa2a1], 0xa3
-      and     byte ptr [bp+si+0xa4a3], 0xa5
-      and     byte ptr [si+0xa6a5], 0xa7
-      and     byte ptr [bp+0xa8a7], 0xa9
-      and     byte ptr [bx+0xa9a8], 0xaa
-      sub     byte ptr [bx+si+0xaaa9], 0xab
-      sub     byte ptr [bp+si+0xacab], 0xad
-      sub     byte ptr [si+0xaead], 0xaf
-      sub     byte ptr [bp+0xb0af], 0xb1
-      sub     byte ptr [bx+0xb1b0], 0xb2
-      xor     byte ptr [bx+si+0xb2b1], 0xb3
-      xor     byte ptr [bp+si+0xb4b3], 0xb5
-      xor     byte ptr [si+0xb6b5], 0xb7
-      xor     byte ptr [bp+0xb8b7], 0xb9
-      xor     byte ptr [bx+0xb9b8], 0xba
-      cmp     byte ptr [bx+si+0xbab9], 0xbb
-      cmp     byte ptr [bp+si+0xbcbb], 0xbd
-      cmp     byte ptr [si+0xbebd], 0xbf
-      cmp     byte ptr [bp+0xc0bf], 0xc1
-      cmp     byte ptr [bx+0xc1c0], 0xc2
-      add     al, 0xc1
-      add     ah, 0xc5
-      or      al, 0xc9
-      or      ah, 0xcd
-      adc     al, 0xd1
-      adc     ah, 0xd5
-      sbb     al, 0xd9
-      sbb     ah, 0xdd
-      and     al, 0xe1
-      and     ah, 0xe5
-      sub     al, 0xe9
-      sub     ah, 0xed
-      xor     al, 0xf1
-      xor     ah, 0xf5
-      cmp     al, 0xf9
-      cmp     ah, 0xfd
+      add     byte ptr [bx+di+0x8382], 132
+      add     byte ptr [bp+si+0x8483], 133
+      add     byte ptr [si+0x8685], 135
+      add     byte ptr [bp+0x8887], 137
+      add     byte ptr [bx+0x8988], 138
+      or      byte ptr [bx+si+0x8a89], 139
+      or      byte ptr [bp+si+0x8c8b], 141
+      or      byte ptr [si+0x8e8d], 143
+      or      byte ptr [bp+0x908f], 145
+      or      byte ptr [bx+0x9190], 146
+      adc     byte ptr [bx+si+0x9291], 147
+      adc     byte ptr [bp+si+0x9493], 149
+      adc     byte ptr [si+0x9695], 151
+      adc     byte ptr [bp+0x9897], 153
+      adc     byte ptr [bx+0x9998], 154
+      sbb     byte ptr [bx+si+0x9a99], 155
+      sbb     byte ptr [bp+si+0x9c9b], 157
+      sbb     byte ptr [si+0x9e9d], 159
+      sbb     byte ptr [bp+0xa09f], 161
+      sbb     byte ptr [bx+0xa1a0], 162
+      and     byte ptr [bx+si+0xa2a1], 163
+      and     byte ptr [bp+si+0xa4a3], 165
+      and     byte ptr [si+0xa6a5], 167
+      and     byte ptr [bp+0xa8a7], 169
+      and     byte ptr [bx+0xa9a8], 170
+      sub     byte ptr [bx+si+0xaaa9], 171
+      sub     byte ptr [bp+si+0xacab], 173
+      sub     byte ptr [si+0xaead], 175
+      sub     byte ptr [bp+0xb0af], 177
+      sub     byte ptr [bx+0xb1b0], 178
+      xor     byte ptr [bx+si+0xb2b1], 179
+      xor     byte ptr [bp+si+0xb4b3], 181
+      xor     byte ptr [si+0xb6b5], 183
+      xor     byte ptr [bp+0xb8b7], 185
+      xor     byte ptr [bx+0xb9b8], 186
+      cmp     byte ptr [bx+si+0xbab9], 187
+      cmp     byte ptr [bp+si+0xbcbb], 189
+      cmp     byte ptr [si+0xbebd], 191
+      cmp     byte ptr [bp+0xc0bf], 193
+      cmp     byte ptr [bx+0xc1c0], 194
+      add     al, 193
+      add     ah, 197
+      or      al, 201
+      or      ah, 205
+      adc     al, 209
+      adc     ah, 213
+      sbb     al, 217
+      sbb     ah, 221
+      and     al, 225
+      and     ah, 229
+      sub     al, 233
+      sub     ah, 237
+      xor     al, 241
+      xor     ah, 245
+      cmp     al, 249
+      cmp     ah, 253
       add     byte ptr [bx+si], 1
       add     byte ptr [bp+si], 3
       add     byte ptr [si], 5
@@ -8206,68 +8206,68 @@
       sbb     byte ptr [bx+si], 25
       sbb     byte ptr [bp+si], 27
       sbb     byte ptr [si], 29
-      sbb     byte ptr [0x201f], 0x21
+      sbb     byte ptr [0x201f], 33
       sbb     byte ptr [bx], 32
-      and     byte ptr [bx+si], 0x21
-      and     byte ptr [bp+si], 0x23
-      and     byte ptr [si], 0x25
-      and     byte ptr [0x2827], 0x29
-      and     byte ptr [bx], 0x28
-      sub     byte ptr [bx+si], 0x29
-      sub     byte ptr [bp+si], 0x2b
-      sub     byte ptr [si], 0x2d
-      sub     byte ptr [0x302f], 0x31
-      sub     byte ptr [bx], 0x30
-      xor     byte ptr [bx+si], 0x31
-      xor     byte ptr [bp+si], 0x33
-      xor     byte ptr [si], 0x35
-      xor     byte ptr [0x3837], 0x39
-      xor     byte ptr [bx], 0x38
-      cmp     byte ptr [bx+si], 0x39
-      cmp     byte ptr [bp+si], 0x3b
-      cmp     byte ptr [si], 0x3d
-      cmp     byte ptr [0x403f], 0x41
-      cmp     byte ptr [bx], 0x40
-      add     byte ptr [bx+si+65], 0x42
-      add     byte ptr [bp+si+67], 0x44
-      add     byte ptr [si+69], 0x46
-      add     byte ptr [bp+71], 0x48
-      add     byte ptr [bx+72], 0x49
-      or      byte ptr [bx+si+73], 0x4a
-      or      byte ptr [bp+si+75], 0x4c
-      or      byte ptr [si+77], 0x4e
-      or      byte ptr [bp+79], 0x50
-      or      byte ptr [bx+80], 0x51
-      adc     byte ptr [bx+si+81], 0x52
-      adc     byte ptr [bp+si+83], 0x54
-      adc     byte ptr [si+85], 0x56
-      adc     byte ptr [bp+87], 0x58
-      adc     byte ptr [bx+88], 0x59
-      sbb     byte ptr [bx+si+89], 0x5a
-      sbb     byte ptr [bp+si+91], 0x5c
-      sbb     byte ptr [si+93], 0x5e
-      sbb     byte ptr [bp+95], 0x60
-      sbb     byte ptr [bx+96], 0x61
-      and     byte ptr [bx+si+97], 0x62
-      and     byte ptr [bp+si+99], 0x64
-      and     byte ptr [si+101], 0x66
-      and     byte ptr [bp+103], 0x68
-      and     byte ptr [bx+104], 0x69
-      sub     byte ptr [bx+si+105], 0x6a
-      sub     byte ptr [bp+si+107], 0x6c
-      sub     byte ptr [si+109], 0x6e
-      sub     byte ptr [bp+111], 0x70
-      sub     byte ptr [bx+112], 0x71
-      xor     byte ptr [bx+si+113], 0x72
-      xor     byte ptr [bp+si+115], 0x74
-      xor     byte ptr [si+117], 0x76
-      xor     byte ptr [bp+119], 0x78
-      xor     byte ptr [bx+120], 0x79
-      cmp     byte ptr [bx+si+121], 0x7a
-      cmp     byte ptr [bp+si+123], 0x7c
-      cmp     byte ptr [si+125], 0x7e
-      cmp     byte ptr [bp+127], 0x80
-      cmp     byte ptr [bx-128], 0x81
+      and     byte ptr [bx+si], 33
+      and     byte ptr [bp+si], 35
+      and     byte ptr [si], 37
+      and     byte ptr [0x2827], 41
+      and     byte ptr [bx], 40
+      sub     byte ptr [bx+si], 41
+      sub     byte ptr [bp+si], 43
+      sub     byte ptr [si], 45
+      sub     byte ptr [0x302f], 49
+      sub     byte ptr [bx], 48
+      xor     byte ptr [bx+si], 49
+      xor     byte ptr [bp+si], 51
+      xor     byte ptr [si], 53
+      xor     byte ptr [0x3837], 57
+      xor     byte ptr [bx], 56
+      cmp     byte ptr [bx+si], 57
+      cmp     byte ptr [bp+si], 59
+      cmp     byte ptr [si], 61
+      cmp     byte ptr [0x403f], 65
+      cmp     byte ptr [bx], 64
+      add     byte ptr [bx+si+65], 66
+      add     byte ptr [bp+si+67], 68
+      add     byte ptr [si+69], 70
+      add     byte ptr [bp+71], 72
+      add     byte ptr [bx+72], 73
+      or      byte ptr [bx+si+73], 74
+      or      byte ptr [bp+si+75], 76
+      or      byte ptr [si+77], 78
+      or      byte ptr [bp+79], 80
+      or      byte ptr [bx+80], 81
+      adc     byte ptr [bx+si+81], 82
+      adc     byte ptr [bp+si+83], 84
+      adc     byte ptr [si+85], 86
+      adc     byte ptr [bp+87], 88
+      adc     byte ptr [bx+88], 89
+      sbb     byte ptr [bx+si+89], 90
+      sbb     byte ptr [bp+si+91], 92
+      sbb     byte ptr [si+93], 94
+      sbb     byte ptr [bp+95], 96
+      sbb     byte ptr [bx+96], 97
+      and     byte ptr [bx+si+97], 98
+      and     byte ptr [bp+si+99], 100
+      and     byte ptr [si+101], 102
+      and     byte ptr [bp+103], 104
+      and     byte ptr [bx+104], 105
+      sub     byte ptr [bx+si+105], 106
+      sub     byte ptr [bp+si+107], 108
+      sub     byte ptr [si+109], 110
+      sub     byte ptr [bp+111], 112
+      sub     byte ptr [bx+112], 113
+      xor     byte ptr [bx+si+113], 114
+      xor     byte ptr [bp+si+115], 116
+      xor     byte ptr [si+117], 118
+      xor     byte ptr [bp+119], 120
+      xor     byte ptr [bx+120], 121
+      cmp     byte ptr [bx+si+121], 122
+      cmp     byte ptr [bp+si+123], 124
+      cmp     byte ptr [si+125], 126
+      cmp     byte ptr [bp+127], 128
+      cmp     byte ptr [bx-128], 129
       add     word ptr [bp+si+0x8483], 0x8685
       add     word ptr [si+0x8685], 0x8887
       add     word ptr [bp+0x8887], 0x8a89
@@ -8853,13 +8853,6 @@
       mov     [si+0x9e9d], ds
       mov     [bp+0xa09f], ds
       mov     [bx+0xa1a0], ds
-      mov     [bx+si+0xa2a1], es
-      mov     [bp+si+0xa4a3], es
-      mov     [si+0xa6a5], es
-      mov     [bp+0xa8a7], es
-      mov     [bx+0xa9a8], es
-      mov     [bx+si+0xaaa9], cs
-      mov     [bp+si+0xacab], cs
       mov     ax, es
       mov     cx, es
       mov     sp, es
@@ -8916,6 +8909,13 @@
       mov     [si+93], ds
       mov     [bp+95], ds
       mov     [bx+96], ds
+      mov     [bx+si+0x8281], es
+      mov     [bp+si+0x8483], es
+      mov     [si+0x8685], es
+      mov     [bp+0x8887], es
+      mov     [bx+0x8988], es
+      mov     [bx+si+0x8a89], cs
+      mov     [bp+si+0x8c8b], cs
       lea     cx, [bp+0x908f]
       lea     cx, [bx+0x9190]
       lea     dx, [bx+si+0x9291]
@@ -8987,15 +8987,6 @@
       mov     ds, [si+0x9e9d]
       mov     ds, [bp+0xa09f]
       mov     ds, [bx+0xa1a0]
-      mov     es, [bx+si+0xa2a1]
-      mov     es, [bp+si+0xa4a3]
-      mov     es, [si+0xa6a5]
-      mov     es, [bp+0xa8a7]
-      mov     es, [bx+0xa9a8]
-      mov     cs, [bx+si+0xaaa9]
-      mov     cs, [bp+si+0xacab]
-      mov     cs, [si+0xaead]
-      mov     cs, [bp+0xb0af]
       mov     es, ax
       mov     es, cx
       mov     es, sp
@@ -9052,6 +9043,15 @@
       mov     ds, [si+93]
       mov     ds, [bp+95]
       mov     ds, [bx+96]
+      mov     es, [bx+si+0x8281]
+      mov     es, [bp+si+0x8483]
+      mov     es, [si+0x8685]
+      mov     es, [bp+0x8887]
+      mov     es, [bx+0x8988]
+      mov     cs, [bx+si+0x8a89]
+      mov     cs, [bp+si+0x8c8b]
+      mov     cs, [si+0x8e8d]
+      mov     cs, [bp+0x908f]
       pop     ax
       pop     cx
       pop     sp
@@ -9077,7 +9077,7 @@
       xchg    ax, si
       cbw
       cwd
-      Lcall   0x9e9d, 0x9c9b
+      lcall   0x9e9d, 0x9c9b
       wait
       pushf
       popf
@@ -9354,7 +9354,7 @@
       sar     word ptr [bp+0xc0bf], 0
       sar     word ptr [bx+0xc1c0], 0
       rol     ax, 0
-      ret     50371
+      ret     0xc4c3
       ret
       les     ax, [bx+si]
       les     ax, [bp+si]
@@ -9476,23 +9476,23 @@
       lds     si, [si+0xb6b5]
       lds     si, [bp+0xb8b7]
       lds     si, [bx+0xb9b8]
-      mov     bh, 0xc8
+      mov     bh, 200
       mov     byte ptr [bx+si], 1
       mov     byte ptr [bp+si], 3
       mov     byte ptr [si], 5
       mov     byte ptr [0x0807], 9
       mov     byte ptr [bx], 8
-      mov     byte ptr [bx+si+65], 0x42
-      mov     byte ptr [bp+si+67], 0x44
-      mov     byte ptr [si+69], 0x46
-      mov     byte ptr [bp+71], 0x48
-      mov     byte ptr [bx+72], 0x49
-      mov     byte ptr [bx+si+0x8281], 0x83
-      mov     byte ptr [bp+si+0x8483], 0x85
-      mov     byte ptr [si+0x8685], 0x87
-      mov     byte ptr [bp+0x8887], 0x89
-      mov     byte ptr [bx+0x8988], 0x8a
-      mov     al, 0xc1
+      mov     byte ptr [bx+si+65], 66
+      mov     byte ptr [bp+si+67], 68
+      mov     byte ptr [si+69], 70
+      mov     byte ptr [bp+71], 72
+      mov     byte ptr [bx+72], 73
+      mov     byte ptr [bx+si+0x8281], 131
+      mov     byte ptr [bp+si+0x8483], 133
+      mov     byte ptr [si+0x8685], 135
+      mov     byte ptr [bp+0x8887], 137
+      mov     byte ptr [bx+0x8988], 138
+      mov     al, 193
       mov     word ptr [bx+si], 0x0201
       mov     word ptr [bp+si], 0x0403
       mov     word ptr [si], 0x0605
@@ -9512,12 +9512,12 @@
       mov     cx, 0xc3c2
       mov     sp, 0xc6c5
       mov     si, 0xc8c7
-      enter   51913, 203
+      enter   0xcac9, 203
       leave
-      Lret    52427
-      Lret
+      lret    0xcccb
+      lret
       int     3
-      int     0xce
+      int     206
       into
       iret
       rcl     cl, 1
@@ -10872,13 +10872,13 @@
       loope   $-28
       loop    $-27
       jcxz    $-26
-      in      al, 0xe5
-      in      ax, 0xe6
-      out     0xe7, al
-      out     0xe8, ax
-      call    $-0x1514
-      jmp     $-0x1413
-      Ljmp    0xeeed, 0xeceb
+      in      al, 229
+      in      ax, 230
+      out     231, al
+      out     232, ax
+      call    $-5396
+      jmp     $-5139
+      ljmp    0xeeed, 0xeceb
       jmp     $-18
       in      al, dx
       in      ax, dx
@@ -12072,11 +12072,11 @@
       idiv    byte ptr [si]
       idiv    byte ptr [0x403f]
       idiv    byte ptr [bx]
-      test    byte ptr [bx+si+65], 0x42
-      test    byte ptr [bp+si+67], 0x44
-      test    byte ptr [si+69], 0x46
-      test    byte ptr [bp+71], 0x48
-      test    byte ptr [bx+72], 0x49
+      test    byte ptr [bx+si+65], 66
+      test    byte ptr [bp+si+67], 68
+      test    byte ptr [si+69], 70
+      test    byte ptr [bp+71], 72
+      test    byte ptr [bx+72], 73
       not     byte ptr [bx+si+81]
       not     byte ptr [bp+si+83]
       not     byte ptr [si+85]
@@ -12107,11 +12107,11 @@
       idiv    byte ptr [si+125]
       idiv    byte ptr [bp+127]
       idiv    byte ptr [bx-128]
-      test    byte ptr [bx+si+0x8281], 0x83
-      test    byte ptr [bp+si+0x8483], 0x85
-      test    byte ptr [si+0x8685], 0x87
-      test    byte ptr [bp+0x8887], 0x89
-      test    byte ptr [bx+0x8988], 0x8a
+      test    byte ptr [bx+si+0x8281], 131
+      test    byte ptr [bp+si+0x8483], 133
+      test    byte ptr [si+0x8685], 135
+      test    byte ptr [bp+0x8887], 137
+      test    byte ptr [bx+0x8988], 138
       not     byte ptr [bx+si+0x9291]
       not     byte ptr [bp+si+0x9493]
       not     byte ptr [si+0x9695]
@@ -12142,8 +12142,8 @@
       idiv    byte ptr [si+0xbebd]
       idiv    byte ptr [bp+0xc0bf]
       idiv    byte ptr [bx+0xc1c0]
-      test    al, 0xc1
-      test    ah, 0xc5
+      test    al, 193
+      test    ah, 197
       not     al
       not     ah
       neg     al
@@ -12341,21 +12341,21 @@
       call    [si]
       call    [0x1817]
       call    [bx]
-      Lcall   [bx+si]
-      Lcall   [bp+si]
-      Lcall   [si]
-      Lcall   [0x201f]
-      Lcall   [bx]
+      lcall   [bx+si]
+      lcall   [bp+si]
+      lcall   [si]
+      lcall   [0x201f]
+      lcall   [bx]
       jmp     [bx+si]
       jmp     [bp+si]
       jmp     [si]
       jmp     [0x2827]
       jmp     [bx]
-      Ljmp    [bx+si]
-      Ljmp    [bp+si]
-      Ljmp    [si]
-      Ljmp    [0x302f]
-      Ljmp    [bx]
+      ljmp    [bx+si]
+      ljmp    [bp+si]
+      ljmp    [si]
+      ljmp    [0x302f]
+      ljmp    [bx]
       push    [bx+si]
       push    [bp+si]
       push    [si]
@@ -12376,21 +12376,21 @@
       call    [si+85]
       call    [bp+87]
       call    [bx+88]
-      Lcall   [bx+si+89]
-      Lcall   [bp+si+91]
-      Lcall   [si+93]
-      Lcall   [bp+95]
-      Lcall   [bx+96]
+      lcall   [bx+si+89]
+      lcall   [bp+si+91]
+      lcall   [si+93]
+      lcall   [bp+95]
+      lcall   [bx+96]
       jmp     [bx+si+97]
       jmp     [bp+si+99]
       jmp     [si+101]
       jmp     [bp+103]
       jmp     [bx+104]
-      Ljmp    [bx+si+105]
-      Ljmp    [bp+si+107]
-      Ljmp    [si+109]
-      Ljmp    [bp+111]
-      Ljmp    [bx+112]
+      ljmp    [bx+si+105]
+      ljmp    [bp+si+107]
+      ljmp    [si+109]
+      ljmp    [bp+111]
+      ljmp    [bx+112]
       push    [bx+si+113]
       push    [bp+si+115]
       push    [si+117]
@@ -12411,21 +12411,21 @@
       call    [si+0x9695]
       call    [bp+0x9897]
       call    [bx+0x9998]
-      Lcall   [bx+si+0x9a99]
-      Lcall   [bp+si+0x9c9b]
-      Lcall   [si+0x9e9d]
-      Lcall   [bp+0xa09f]
-      Lcall   [bx+0xa1a0]
+      lcall   [bx+si+0x9a99]
+      lcall   [bp+si+0x9c9b]
+      lcall   [si+0x9e9d]
+      lcall   [bp+0xa09f]
+      lcall   [bx+0xa1a0]
       jmp     [bx+si+0xa2a1]
       jmp     [bp+si+0xa4a3]
       jmp     [si+0xa6a5]
       jmp     [bp+0xa8a7]
       jmp     [bx+0xa9a8]
-      Ljmp    [bx+si+0xaaa9]
-      Ljmp    [bp+si+0xacab]
-      Ljmp    [si+0xaead]
-      Ljmp    [bp+0xb0af]
-      Ljmp    [bx+0xb1b0]
+      ljmp    [bx+si+0xaaa9]
+      ljmp    [bp+si+0xacab]
+      ljmp    [si+0xaead]
+      ljmp    [bp+0xb0af]
+      ljmp    [bx+0xb1b0]
       push    [bx+si+0xb2b1]
       push    [bp+si+0xb4b3]
       push    [si+0xb6b5]

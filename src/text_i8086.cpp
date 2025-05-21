@@ -21,13 +21,15 @@ namespace text {
 namespace i8086 {
 // clang-format off
 
-constexpr char TEXT_I8086_LIST[] PROGMEM = "i8086, i80186, i80286, V30";
+constexpr char TEXT_I8086_LIST[] PROGMEM = "i8086, i80186, i80286, i80386, V30";
 constexpr char TEXT_CPU_8086[]   PROGMEM = "8086";
 constexpr char TEXT_CPU_80186[]  PROGMEM = "80186";
 constexpr char TEXT_CPU_80286[]  PROGMEM = "80286";
+constexpr char TEXT_CPU_80386[]  PROGMEM = "80386";
 constexpr char TEXT_CPU_V30[]    PROGMEM = "V30";
 constexpr char TEXT_FPU_8087[]   PROGMEM = "8087";
 constexpr char TEXT_FPU_80287[]  PROGMEM = "80287";
+constexpr char TEXT_FPU_80387[]  PROGMEM = "80387";
 constexpr char TEXT_FPU_80C187[] PROGMEM = "80C187";
 
 constexpr char TEXT_AAA[]    PROGMEM = "AAA";
@@ -195,6 +197,69 @@ constexpr char TEXT_SMSW[] PROGMEM = "SMSW";
 constexpr char TEXT_VERR[] PROGMEM = "VERR";
 constexpr char TEXT_VERW[] PROGMEM = "VERW";
 
+// i80386
+constexpr char TEXT_BSF[]    PROGMEM = "BSF";
+// constexpr char TEXT_BSR[]   PROGMEM = "BSR";
+// constexpr char TEXT_BT[]    PROGMEM = "BT";
+constexpr char TEXT_BTC[]    PROGMEM = "BTC";
+constexpr char TEXT_BTR[]    PROGMEM = "BTR";
+constexpr char TEXT_BTS[]    PROGMEM = "BTS";
+constexpr char TEXT_CDQ[]    PROGMEM = "CDQ";
+// constexpr char TEXT_CMPSD[] PROGMEM = "CMPSD";
+constexpr char TEXT_CWDE[]   PROGMEM = "CWDE";
+// constexpr char TEXT_INSD[]  PROGMEM = "INSD";
+constexpr char TEXT_IRETD[]  PROGMEM = "IRETD";
+constexpr char TEXT_JECXZ[]  PROGMEM = "JECXZ";
+constexpr char TEXT_LFS[]    PROGMEM = "LFS";
+constexpr char TEXT_LGS[]    PROGMEM = "LGS";
+constexpr char TEXT_LODSD[]  PROGMEM = "LODSD";
+constexpr char TEXT_LSS[]    PROGMEM = "LSS";
+// constexpr char TEXT_MOVSD[] PROGMEM = "MOVSD";
+constexpr char TEXT_MOVSX[]  PROGMEM = "MOVSX";
+constexpr char TEXT_MOVZX[]  PROGMEM = "MOVZX";
+constexpr char TEXT_OUTSD[]  PROGMEM = "OUTSD";
+constexpr char TEXT_POPAD[]  PROGMEM = "POPAD";
+constexpr char TEXT_POPFD[]  PROGMEM = "POPFD";
+constexpr char TEXT_PUSHAD[] PROGMEM = "PUSHAD";
+constexpr char TEXT_PUSHFD[] PROGMEM = "PUSHFD";
+constexpr char TEXT_SCASD[]  PROGMEM = "SCASD";
+constexpr char TEXT_SEGFS[]  PROGMEM = "SEGFS";
+constexpr char TEXT_SEGGS[]  PROGMEM = "SEGGS";
+constexpr char TEXT_SENAE[]  PROGMEM = "SETNAE";
+constexpr char TEXT_SETA[]   PROGMEM = "SETA";
+constexpr char TEXT_SETAE[]  PROGMEM = "SETAE";
+// constexpr char TEXT_SETB[]  PROGMEM = "SETB";
+constexpr char TEXT_SETBE[]  PROGMEM = "SETBE";
+// constexpr char TEXT_SETC[]   PROGMEM = "SETC";
+constexpr char TEXT_SETE[]   PROGMEM = "SETE";
+constexpr char TEXT_SETG[]   PROGMEM = "SETG";
+constexpr char TEXT_SETGE[]  PROGMEM = "SETGE";
+// constexpr char TEXT_SETL[]  PROGMEM = "SETL";
+constexpr char TEXT_SETLE[]  PROGMEM = "SETLE";
+constexpr char TEXT_SETNA[]  PROGMEM = "SETNA";
+constexpr char TEXT_SETNAE[] PROGMEM = "SETNAE";
+constexpr char TEXT_SETNB[]  PROGMEM = "SETNB";
+constexpr char TEXT_SETNBE[] PROGMEM = "SETNBE";
+constexpr char TEXT_SETNC[]  PROGMEM = "SETNC";
+constexpr char TEXT_SETNE[]  PROGMEM = "SETNE";
+constexpr char TEXT_SETNG[]  PROGMEM = "SETNG";
+constexpr char TEXT_SETNGE[] PROGMEM = "SETNGE";
+constexpr char TEXT_SETNL[]  PROGMEM = "SETNL";
+constexpr char TEXT_SETNLE[] PROGMEM = "SETNLE";
+constexpr char TEXT_SETNO[]  PROGMEM = "SETNO";
+constexpr char TEXT_SETNP[]  PROGMEM = "SETNP";
+constexpr char TEXT_SETNS[]  PROGMEM = "SETNS";
+constexpr char TEXT_SETNZ[]  PROGMEM = "SETNZ";
+// constexpr char TEXT_SETO[]  PROGMEM = "SETO";
+constexpr char TEXT_SETP[]   PROGMEM = "SETP";
+constexpr char TEXT_SETPE[]  PROGMEM = "SETPE";
+constexpr char TEXT_SETPO[]  PROGMEM = "SETPO";
+// constexpr char TEXT_SETS[]  PROGMEM = "SETS";
+constexpr char TEXT_SETZ[]   PROGMEM = "SETZ";
+// constexpr char TEXT_SHLD[]  PROGMEM = "SHLD";
+constexpr char TEXT_SHRD[]   PROGMEM = "SHRD";
+constexpr char TEXT_STOSD[]  PROGMEM = "STOSD";
+
 // V30
 constexpr char TEXT_ADD4S[] PROGMEM = "ADD4S";
 constexpr char TEXT_BRKEM[] PROGMEM = "BRKEM";
@@ -292,21 +357,17 @@ constexpr char TEXT_FYL2XP1[] PROGMEM = "FYL2XP1";
 // i80287
 constexpr char TEXT_FNSETPM[] PROGMEM = "FNSETPM";
 
-// i80C187
+// i80387/i80C187
 // constexpr char TEXT_FCOS[]    PROGMEM = "FCOS";
-constexpr char TEXT_FPREM1[]  PROGMEM = "FPREM1";
+constexpr char TEXT_FPREM1[]    PROGMEM = "FPREM1";
 // constexpr char TEXT_FSIN[]    PROGMEM = "FSIN";
 // constexpr char TEXT_FSINCOS[] PROGMEM = "FSINCOS";
-constexpr char TEXT_FUCOM[]   PROGMEM = "FUCOM";
-constexpr char TEXT_FUCOMP[]  PROGMEM = "FUCOMP";
-constexpr char TEXT_FUCOMPP[] PROGMEM = "FUCOMPP";
+constexpr char TEXT_FUCOM[]     PROGMEM = "FUCOM";
+constexpr char TEXT_FUCOMP[]    PROGMEM = "FUCOMP";
+constexpr char TEXT_FUCOMPP[]   PROGMEM = "FUCOMPP";
 
-constexpr char TEXT_PRE_BYTE[]  PROGMEM = "BYTE";
-constexpr char TEXT_PRE_DWORD[] PROGMEM = "DWORD";
-constexpr char TEXT_PRE_PTR[]   PROGMEM = "PTR";
-constexpr char TEXT_PRE_QWORD[] PROGMEM = "QWORD";
-constexpr char TEXT_PRE_TBYTE[] PROGMEM = "TBYTE";
-constexpr char TEXT_PRE_WORD[]  PROGMEM = "WORD";
+
+// i8086
 constexpr char TEXT_REG_AH[]    PROGMEM = "AH";
 constexpr char TEXT_REG_AL[]    PROGMEM = "AL";
 constexpr char TEXT_REG_AX[]    PROGMEM = "AX";
@@ -325,8 +386,41 @@ constexpr char TEXT_REG_DS[]    PROGMEM = "DS";
 constexpr char TEXT_REG_DX[]    PROGMEM = "DX";
 constexpr char TEXT_REG_ES[]    PROGMEM = "ES";
 constexpr char TEXT_REG_SI[]    PROGMEM = "SI";
-// constexpr char TEXT_REG_SP[] PROGMEM = "SP";
+// constexpr char TEXT_REG_SP[]  PROGMEM = "SP";
 constexpr char TEXT_REG_SS[]    PROGMEM = "SS";
+
+constexpr char TEXT_PRE_BYTE[]  PROGMEM = "BYTE";
+constexpr char TEXT_PRE_DWORD[] PROGMEM = "DWORD";
+constexpr char TEXT_PRE_PTR[]   PROGMEM = "PTR";
+constexpr char TEXT_PRE_QWORD[] PROGMEM = "QWORD";
+constexpr char TEXT_PRE_TBYTE[] PROGMEM = "TBYTE";
+constexpr char TEXT_PRE_WORD[]  PROGMEM = "WORD";
+
+// i80386
+constexpr char TEXT_REG_CR[]  PROGMEM = "CR";
+constexpr char TEXT_REG_DR[]  PROGMEM = "DR";
+constexpr char TEXT_REG_EAX[] PROGMEM = "EAX";
+constexpr char TEXT_REG_EBP[] PROGMEM = "EBP";
+constexpr char TEXT_REG_EBX[] PROGMEM = "EBX";
+constexpr char TEXT_REG_ECX[] PROGMEM = "ECX";
+constexpr char TEXT_REG_EDI[] PROGMEM = "EDI";
+constexpr char TEXT_REG_EDX[] PROGMEM = "EDX";
+constexpr char TEXT_REG_ESI[] PROGMEM = "ESI";
+constexpr char TEXT_REG_ESP[] PROGMEM = "ESP";
+constexpr char TEXT_REG_FS[]  PROGMEM = "FS";
+constexpr char TEXT_REG_GS[]  PROGMEM = "GS";
+constexpr char TEXT_REG_TR[]  PROGMEM = "TR";
+
+// 80386 prefix
+constexpr char TEXT_PRE_ADDR16[] PROGMEM = "ADDR16";
+constexpr char TEXT_PRE_ADDR32[] PROGMEM = "ADDR32";
+constexpr char TEXT_PRE_DATA16[] PROGMEM = "DATA16";
+constexpr char TEXT_PRE_DATA32[] PROGMEM = "DATA32";
+constexpr char TEXT_PRE_FAR[]    PROGMEM = "FAR";
+
+// 80386 directive
+constexpr char TEXT_USE16[] PROGMEM = "USE16";
+constexpr char TEXT_USE32[] PROGMEM = "USE32";
 
 // clang-format on
 }  // namespace i8086

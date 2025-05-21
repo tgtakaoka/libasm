@@ -1655,62 +1655,62 @@
       JGE     $+128
       JLE     $+129
       JG      $-126
-      ADD     BYTE PTR [BX+DI+8382H], 84H
-      ADD     BYTE PTR [BP+SI+8483H], 85H
-      ADD     BYTE PTR [SI+8685H], 87H
-      ADD     BYTE PTR [BP+8887H], 89H
-      ADD     BYTE PTR [BX+8988H], 8AH
-      OR      BYTE PTR [BX+SI+8A89H], 8BH
-      OR      BYTE PTR [BP+SI+8C8BH], 8DH
-      OR      BYTE PTR [SI+8E8DH], 8FH
-      OR      BYTE PTR [BP+908FH], 91H
-      OR      BYTE PTR [BX+9190H], 92H
-      ADC     BYTE PTR [BX+SI+9291H], 93H
-      ADC     BYTE PTR [BP+SI+9493H], 95H
-      ADC     BYTE PTR [SI+9695H], 97H
-      ADC     BYTE PTR [BP+9897H], 99H
-      ADC     BYTE PTR [BX+9998H], 9AH
-      SBB     BYTE PTR [BX+SI+9A99H], 9BH
-      SBB     BYTE PTR [BP+SI+9C9BH], 9DH
-      SBB     BYTE PTR [SI+9E9DH], 9FH
-      SBB     BYTE PTR [BP+0A09FH], 0A1H
-      SBB     BYTE PTR [BX+0A1A0H], 0A2H
-      AND     BYTE PTR [BX+SI+0A2A1H], 0A3H
-      AND     BYTE PTR [BP+SI+0A4A3H], 0A5H
-      AND     BYTE PTR [SI+0A6A5H], 0A7H
-      AND     BYTE PTR [BP+0A8A7H], 0A9H
-      AND     BYTE PTR [BX+0A9A8H], 0AAH
-      SUB     BYTE PTR [BX+SI+0AAA9H], 0ABH
-      SUB     BYTE PTR [BP+SI+0ACABH], 0ADH
-      SUB     BYTE PTR [SI+0AEADH], 0AFH
-      SUB     BYTE PTR [BP+0B0AFH], 0B1H
-      SUB     BYTE PTR [BX+0B1B0H], 0B2H
-      XOR     BYTE PTR [BX+SI+0B2B1H], 0B3H
-      XOR     BYTE PTR [BP+SI+0B4B3H], 0B5H
-      XOR     BYTE PTR [SI+0B6B5H], 0B7H
-      XOR     BYTE PTR [BP+0B8B7H], 0B9H
-      XOR     BYTE PTR [BX+0B9B8H], 0BAH
-      CMP     BYTE PTR [BX+SI+0BAB9H], 0BBH
-      CMP     BYTE PTR [BP+SI+0BCBBH], 0BDH
-      CMP     BYTE PTR [SI+0BEBDH], 0BFH
-      CMP     BYTE PTR [BP+0C0BFH], 0C1H
-      CMP     BYTE PTR [BX+0C1C0H], 0C2H
-      ADD     AL, 0C1H
-      ADD     AH, 0C5H
-      OR      AL, 0C9H
-      OR      AH, 0CDH
-      ADC     AL, 0D1H
-      ADC     AH, 0D5H
-      SBB     AL, 0D9H
-      SBB     AH, 0DDH
-      AND     AL, 0E1H
-      AND     AH, 0E5H
-      SUB     AL, 0E9H
-      SUB     AH, 0EDH
-      XOR     AL, 0F1H
-      XOR     AH, 0F5H
-      CMP     AL, 0F9H
-      CMP     AH, 0FDH
+      ADD     BYTE PTR [BX+DI+8382H], 132
+      ADD     BYTE PTR [BP+SI+8483H], 133
+      ADD     BYTE PTR [SI+8685H], 135
+      ADD     BYTE PTR [BP+8887H], 137
+      ADD     BYTE PTR [BX+8988H], 138
+      OR      BYTE PTR [BX+SI+8A89H], 139
+      OR      BYTE PTR [BP+SI+8C8BH], 141
+      OR      BYTE PTR [SI+8E8DH], 143
+      OR      BYTE PTR [BP+908FH], 145
+      OR      BYTE PTR [BX+9190H], 146
+      ADC     BYTE PTR [BX+SI+9291H], 147
+      ADC     BYTE PTR [BP+SI+9493H], 149
+      ADC     BYTE PTR [SI+9695H], 151
+      ADC     BYTE PTR [BP+9897H], 153
+      ADC     BYTE PTR [BX+9998H], 154
+      SBB     BYTE PTR [BX+SI+9A99H], 155
+      SBB     BYTE PTR [BP+SI+9C9BH], 157
+      SBB     BYTE PTR [SI+9E9DH], 159
+      SBB     BYTE PTR [BP+0A09FH], 161
+      SBB     BYTE PTR [BX+0A1A0H], 162
+      AND     BYTE PTR [BX+SI+0A2A1H], 163
+      AND     BYTE PTR [BP+SI+0A4A3H], 165
+      AND     BYTE PTR [SI+0A6A5H], 167
+      AND     BYTE PTR [BP+0A8A7H], 169
+      AND     BYTE PTR [BX+0A9A8H], 170
+      SUB     BYTE PTR [BX+SI+0AAA9H], 171
+      SUB     BYTE PTR [BP+SI+0ACABH], 173
+      SUB     BYTE PTR [SI+0AEADH], 175
+      SUB     BYTE PTR [BP+0B0AFH], 177
+      SUB     BYTE PTR [BX+0B1B0H], 178
+      XOR     BYTE PTR [BX+SI+0B2B1H], 179
+      XOR     BYTE PTR [BP+SI+0B4B3H], 181
+      XOR     BYTE PTR [SI+0B6B5H], 183
+      XOR     BYTE PTR [BP+0B8B7H], 185
+      XOR     BYTE PTR [BX+0B9B8H], 186
+      CMP     BYTE PTR [BX+SI+0BAB9H], 187
+      CMP     BYTE PTR [BP+SI+0BCBBH], 189
+      CMP     BYTE PTR [SI+0BEBDH], 191
+      CMP     BYTE PTR [BP+0C0BFH], 193
+      CMP     BYTE PTR [BX+0C1C0H], 194
+      ADD     AL, 193
+      ADD     AH, 197
+      OR      AL, 201
+      OR      AH, 205
+      ADC     AL, 209
+      ADC     AH, 213
+      SBB     AL, 217
+      SBB     AH, 221
+      AND     AL, 225
+      AND     AH, 229
+      SUB     AL, 233
+      SUB     AH, 237
+      XOR     AL, 241
+      XOR     AH, 245
+      CMP     AL, 249
+      CMP     AH, 253
       ADD     BYTE PTR [BX+SI], 1
       ADD     BYTE PTR [BP+SI], 3
       ADD     BYTE PTR [SI], 5
@@ -1729,68 +1729,68 @@
       SBB     BYTE PTR [BX+SI], 25
       SBB     BYTE PTR [BP+SI], 27
       SBB     BYTE PTR [SI], 29
-      SBB     BYTE PTR [201FH], 21H
+      SBB     BYTE PTR [201FH], 33
       SBB     BYTE PTR [BX], 32
-      AND     BYTE PTR [BX+SI], 21H
-      AND     BYTE PTR [BP+SI], 23H
-      AND     BYTE PTR [SI], 25H
-      AND     BYTE PTR [2827H], 29H
-      AND     BYTE PTR [BX], 28H
-      SUB     BYTE PTR [BX+SI], 29H
-      SUB     BYTE PTR [BP+SI], 2BH
-      SUB     BYTE PTR [SI], 2DH
-      SUB     BYTE PTR [302FH], 31H
-      SUB     BYTE PTR [BX], 30H
-      XOR     BYTE PTR [BX+SI], 31H
-      XOR     BYTE PTR [BP+SI], 33H
-      XOR     BYTE PTR [SI], 35H
-      XOR     BYTE PTR [3837H], 39H
-      XOR     BYTE PTR [BX], 38H
-      CMP     BYTE PTR [BX+SI], 39H
-      CMP     BYTE PTR [BP+SI], 3BH
-      CMP     BYTE PTR [SI], 3DH
-      CMP     BYTE PTR [403FH], 41H
-      CMP     BYTE PTR [BX], 40H
-      ADD     BYTE PTR [BX+SI+65], 42H
-      ADD     BYTE PTR [BP+SI+67], 44H
-      ADD     BYTE PTR [SI+69], 46H
-      ADD     BYTE PTR [BP+71], 48H
-      ADD     BYTE PTR [BX+72], 49H
-      OR      BYTE PTR [BX+SI+73], 4AH
-      OR      BYTE PTR [BP+SI+75], 4CH
-      OR      BYTE PTR [SI+77], 4EH
-      OR      BYTE PTR [BP+79], 50H
-      OR      BYTE PTR [BX+80], 51H
-      ADC     BYTE PTR [BX+SI+81], 52H
-      ADC     BYTE PTR [BP+SI+83], 54H
-      ADC     BYTE PTR [SI+85], 56H
-      ADC     BYTE PTR [BP+87], 58H
-      ADC     BYTE PTR [BX+88], 59H
-      SBB     BYTE PTR [BX+SI+89], 5AH
-      SBB     BYTE PTR [BP+SI+91], 5CH
-      SBB     BYTE PTR [SI+93], 5EH
-      SBB     BYTE PTR [BP+95], 60H
-      SBB     BYTE PTR [BX+96], 61H
-      AND     BYTE PTR [BX+SI+97], 62H
-      AND     BYTE PTR [BP+SI+99], 64H
-      AND     BYTE PTR [SI+101], 66H
-      AND     BYTE PTR [BP+103], 68H
-      AND     BYTE PTR [BX+104], 69H
-      SUB     BYTE PTR [BX+SI+105], 6AH
-      SUB     BYTE PTR [BP+SI+107], 6CH
-      SUB     BYTE PTR [SI+109], 6EH
-      SUB     BYTE PTR [BP+111], 70H
-      SUB     BYTE PTR [BX+112], 71H
-      XOR     BYTE PTR [BX+SI+113], 72H
-      XOR     BYTE PTR [BP+SI+115], 74H
-      XOR     BYTE PTR [SI+117], 76H
-      XOR     BYTE PTR [BP+119], 78H
-      XOR     BYTE PTR [BX+120], 79H
-      CMP     BYTE PTR [BX+SI+121], 7AH
-      CMP     BYTE PTR [BP+SI+123], 7CH
-      CMP     BYTE PTR [SI+125], 7EH
-      CMP     BYTE PTR [BP+127], 80H
-      CMP     BYTE PTR [BX-128], 81H
+      AND     BYTE PTR [BX+SI], 33
+      AND     BYTE PTR [BP+SI], 35
+      AND     BYTE PTR [SI], 37
+      AND     BYTE PTR [2827H], 41
+      AND     BYTE PTR [BX], 40
+      SUB     BYTE PTR [BX+SI], 41
+      SUB     BYTE PTR [BP+SI], 43
+      SUB     BYTE PTR [SI], 45
+      SUB     BYTE PTR [302FH], 49
+      SUB     BYTE PTR [BX], 48
+      XOR     BYTE PTR [BX+SI], 49
+      XOR     BYTE PTR [BP+SI], 51
+      XOR     BYTE PTR [SI], 53
+      XOR     BYTE PTR [3837H], 57
+      XOR     BYTE PTR [BX], 56
+      CMP     BYTE PTR [BX+SI], 57
+      CMP     BYTE PTR [BP+SI], 59
+      CMP     BYTE PTR [SI], 61
+      CMP     BYTE PTR [403FH], 65
+      CMP     BYTE PTR [BX], 64
+      ADD     BYTE PTR [BX+SI+65], 66
+      ADD     BYTE PTR [BP+SI+67], 68
+      ADD     BYTE PTR [SI+69], 70
+      ADD     BYTE PTR [BP+71], 72
+      ADD     BYTE PTR [BX+72], 73
+      OR      BYTE PTR [BX+SI+73], 74
+      OR      BYTE PTR [BP+SI+75], 76
+      OR      BYTE PTR [SI+77], 78
+      OR      BYTE PTR [BP+79], 80
+      OR      BYTE PTR [BX+80], 81
+      ADC     BYTE PTR [BX+SI+81], 82
+      ADC     BYTE PTR [BP+SI+83], 84
+      ADC     BYTE PTR [SI+85], 86
+      ADC     BYTE PTR [BP+87], 88
+      ADC     BYTE PTR [BX+88], 89
+      SBB     BYTE PTR [BX+SI+89], 90
+      SBB     BYTE PTR [BP+SI+91], 92
+      SBB     BYTE PTR [SI+93], 94
+      SBB     BYTE PTR [BP+95], 96
+      SBB     BYTE PTR [BX+96], 97
+      AND     BYTE PTR [BX+SI+97], 98
+      AND     BYTE PTR [BP+SI+99], 100
+      AND     BYTE PTR [SI+101], 102
+      AND     BYTE PTR [BP+103], 104
+      AND     BYTE PTR [BX+104], 105
+      SUB     BYTE PTR [BX+SI+105], 106
+      SUB     BYTE PTR [BP+SI+107], 108
+      SUB     BYTE PTR [SI+109], 110
+      SUB     BYTE PTR [BP+111], 112
+      SUB     BYTE PTR [BX+112], 113
+      XOR     BYTE PTR [BX+SI+113], 114
+      XOR     BYTE PTR [BP+SI+115], 116
+      XOR     BYTE PTR [SI+117], 118
+      XOR     BYTE PTR [BP+119], 120
+      XOR     BYTE PTR [BX+120], 121
+      CMP     BYTE PTR [BX+SI+121], 122
+      CMP     BYTE PTR [BP+SI+123], 124
+      CMP     BYTE PTR [SI+125], 126
+      CMP     BYTE PTR [BP+127], 128
+      CMP     BYTE PTR [BX-128], 129
       ADD     WORD PTR [BP+SI+8483H], 8685H
       ADD     WORD PTR [SI+8685H], 8887H
       ADD     WORD PTR [BP+8887H], 8A89H
@@ -2376,13 +2376,6 @@
       MOV     [SI+9E9DH], DS
       MOV     [BP+0A09FH], DS
       MOV     [BX+0A1A0H], DS
-      MOV     [BX+SI+0A2A1H], ES
-      MOV     [BP+SI+0A4A3H], ES
-      MOV     [SI+0A6A5H], ES
-      MOV     [BP+0A8A7H], ES
-      MOV     [BX+0A9A8H], ES
-      MOV     [BX+SI+0AAA9H], CS
-      MOV     [BP+SI+0ACABH], CS
       MOV     AX, ES
       MOV     CX, ES
       MOV     SP, ES
@@ -2439,6 +2432,13 @@
       MOV     [SI+93], DS
       MOV     [BP+95], DS
       MOV     [BX+96], DS
+      MOV     [BX+SI+8281H], ES
+      MOV     [BP+SI+8483H], ES
+      MOV     [SI+8685H], ES
+      MOV     [BP+8887H], ES
+      MOV     [BX+8988H], ES
+      MOV     [BX+SI+8A89H], CS
+      MOV     [BP+SI+8C8BH], CS
       LEA     CX, [BP+908FH]
       LEA     CX, [BX+9190H]
       LEA     DX, [BX+SI+9291H]
@@ -2510,15 +2510,6 @@
       MOV     DS, [SI+9E9DH]
       MOV     DS, [BP+0A09FH]
       MOV     DS, [BX+0A1A0H]
-      MOV     ES, [BX+SI+0A2A1H]
-      MOV     ES, [BP+SI+0A4A3H]
-      MOV     ES, [SI+0A6A5H]
-      MOV     ES, [BP+0A8A7H]
-      MOV     ES, [BX+0A9A8H]
-      MOV     CS, [BX+SI+0AAA9H]
-      MOV     CS, [BP+SI+0ACABH]
-      MOV     CS, [SI+0AEADH]
-      MOV     CS, [BP+0B0AFH]
       MOV     ES, AX
       MOV     ES, CX
       MOV     ES, SP
@@ -2575,6 +2566,15 @@
       MOV     DS, [SI+93]
       MOV     DS, [BP+95]
       MOV     DS, [BX+96]
+      MOV     ES, [BX+SI+8281H]
+      MOV     ES, [BP+SI+8483H]
+      MOV     ES, [SI+8685H]
+      MOV     ES, [BP+8887H]
+      MOV     ES, [BX+8988H]
+      MOV     CS, [BX+SI+8A89H]
+      MOV     CS, [BP+SI+8C8BH]
+      MOV     CS, [SI+8E8DH]
+      MOV     CS, [BP+908FH]
       POP     AX
       POP     CX
       POP     SP
@@ -2625,7 +2625,7 @@
       MOV     CX, 0BBBAH
       MOV     SP, 0BEBDH
       MOV     SI, 0C0BFH
-      RET     50371
+      RET     0C4C3H
       RET
       LES     AX, [BX+SI]
       LES     AX, [BP+SI]
@@ -2747,23 +2747,23 @@
       LDS     SI, [SI+0B6B5H]
       LDS     SI, [BP+0B8B7H]
       LDS     SI, [BX+0B9B8H]
-      MOV     BH, 0C8H
+      MOV     BH, 200
       MOV     BYTE PTR [BX+SI], 1
       MOV     BYTE PTR [BP+SI], 3
       MOV     BYTE PTR [SI], 5
       MOV     BYTE PTR [0807H], 9
       MOV     BYTE PTR [BX], 8
-      MOV     BYTE PTR [BX+SI+65], 42H
-      MOV     BYTE PTR [BP+SI+67], 44H
-      MOV     BYTE PTR [SI+69], 46H
-      MOV     BYTE PTR [BP+71], 48H
-      MOV     BYTE PTR [BX+72], 49H
-      MOV     BYTE PTR [BX+SI+8281H], 83H
-      MOV     BYTE PTR [BP+SI+8483H], 85H
-      MOV     BYTE PTR [SI+8685H], 87H
-      MOV     BYTE PTR [BP+8887H], 89H
-      MOV     BYTE PTR [BX+8988H], 8AH
-      MOV     AL, 0C1H
+      MOV     BYTE PTR [BX+SI+65], 66
+      MOV     BYTE PTR [BP+SI+67], 68
+      MOV     BYTE PTR [SI+69], 70
+      MOV     BYTE PTR [BP+71], 72
+      MOV     BYTE PTR [BX+72], 73
+      MOV     BYTE PTR [BX+SI+8281H], 131
+      MOV     BYTE PTR [BP+SI+8483H], 133
+      MOV     BYTE PTR [SI+8685H], 135
+      MOV     BYTE PTR [BP+8887H], 137
+      MOV     BYTE PTR [BX+8988H], 138
+      MOV     AL, 193
       MOV     WORD PTR [BX+SI], 0201H
       MOV     WORD PTR [BP+SI], 0403H
       MOV     WORD PTR [SI], 0605H
@@ -2783,10 +2783,10 @@
       MOV     CX, 0C3C2H
       MOV     SP, 0C6C5H
       MOV     SI, 0C8C7H
-      RETF    52427
+      RETF    0CCCBH
       RETF
       INT     3
-      INT     0CEH
+      INT     206
       INTO
       IRET
       RCL     CL, 1
@@ -4209,12 +4209,12 @@
       LOOPE   $-28
       LOOP    $-27
       JCXZ    $-26
-      IN      AL, 0E5H
-      IN      AX, 0E6H
-      OUT     0E7H, AL
-      OUT     0E8H, AX
-      CALL    $-1514H
-      JMP     $-1413H
+      IN      AL, 229
+      IN      AX, 230
+      OUT     231, AL
+      OUT     232, AX
+      CALL    $-5396
+      JMP     $-5139
       JMPF    0EEEDH:0ECEBH
       JMP     $-18
       IN      AL, DX
@@ -5401,11 +5401,11 @@
       IDIV    BYTE PTR [SI]
       IDIV    BYTE PTR [403FH]
       IDIV    BYTE PTR [BX]
-      TEST    BYTE PTR [BX+SI+65], 42H
-      TEST    BYTE PTR [BP+SI+67], 44H
-      TEST    BYTE PTR [SI+69], 46H
-      TEST    BYTE PTR [BP+71], 48H
-      TEST    BYTE PTR [BX+72], 49H
+      TEST    BYTE PTR [BX+SI+65], 66
+      TEST    BYTE PTR [BP+SI+67], 68
+      TEST    BYTE PTR [SI+69], 70
+      TEST    BYTE PTR [BP+71], 72
+      TEST    BYTE PTR [BX+72], 73
       NOT     BYTE PTR [BX+SI+81]
       NOT     BYTE PTR [BP+SI+83]
       NOT     BYTE PTR [SI+85]
@@ -5436,11 +5436,11 @@
       IDIV    BYTE PTR [SI+125]
       IDIV    BYTE PTR [BP+127]
       IDIV    BYTE PTR [BX-128]
-      TEST    BYTE PTR [BX+SI+8281H], 83H
-      TEST    BYTE PTR [BP+SI+8483H], 85H
-      TEST    BYTE PTR [SI+8685H], 87H
-      TEST    BYTE PTR [BP+8887H], 89H
-      TEST    BYTE PTR [BX+8988H], 8AH
+      TEST    BYTE PTR [BX+SI+8281H], 131
+      TEST    BYTE PTR [BP+SI+8483H], 133
+      TEST    BYTE PTR [SI+8685H], 135
+      TEST    BYTE PTR [BP+8887H], 137
+      TEST    BYTE PTR [BX+8988H], 138
       NOT     BYTE PTR [BX+SI+9291H]
       NOT     BYTE PTR [BP+SI+9493H]
       NOT     BYTE PTR [SI+9695H]
@@ -5471,8 +5471,8 @@
       IDIV    BYTE PTR [SI+0BEBDH]
       IDIV    BYTE PTR [BP+0C0BFH]
       IDIV    BYTE PTR [BX+0C1C0H]
-      TEST    AL, 0C1H
-      TEST    AH, 0C5H
+      TEST    AL, 193
+      TEST    AH, 197
       NOT     AL
       NOT     AH
       NEG     AL

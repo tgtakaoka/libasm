@@ -126,9 +126,9 @@ It can read Intel HEX or Motorola S-Record input.
          INS8060 INS8070 CDP1802 CDP1804 CDP1804A SCN2650 F3850 IM6100 HD6120
          TMS7000 TMS370 TMS32010 TMS32015 TMS32020 TMS320C25 TMS320C26
          TMS320C20X TMS320C5X TMS320C30 TMS320C31 TMS320C32 i8086 i80186
-         i80286 V30 i8096 i80196 MC68000 MC68010 MC68020 MC68030 MC68040
-         TMS9900 TMS9980 TMS9995 TMS99105 TMS99110 Z8001 Z8002 NS32032 MN1610
-         MN1613 MN1613A J11 T11
+         i80286 i80386 V30 i8096 i80196 MC68000 MC68010 MC68020 MC68030
+         MC68040 TMS9900 TMS9980 TMS9995 TMS99105 TMS99110 Z8001 Z8002 NS32032
+         MN1610 MN1613 MN1613A J11 T11
       -o <output>      : output file
       -l <list>        : list file
       <input>          : file can be Motorola S-Record or Intel HEX format
@@ -148,6 +148,7 @@ It can read Intel HEX or Motorola S-Record input.
       --gnu-as         : GNU assembler compatible (bool)
       --external-paren : disp2(disp(ext)) as external addressing (bool: 32032)
       --extmode        : Extended mode (bool: Z380)
+      --far-insn       : use callf/jmpf for far call/jump (bool: 8086)
       --fpu            : floating point co-processor (text: 8086, 68000, 32032)
       --indirect-long  : [] for indirect long operand (bool: 6502)
       --lock-insn      : lock prefix as instruction (bool: 8086)
@@ -156,6 +157,7 @@ It can read Intel HEX or Motorola S-Record input.
       --lwordmode      : Long word mode (bool: Z380)
       --pc-bits        : program counter width in bit (default 13) (int: 6805)
       --pmmu           : memory management unit (text: 68000, 32032)
+      --ptr-suffix     : add ptr suffix for memory reference (bool: 8086)
       --repeat-insn    : repeat prefix as instruction (bool: 8086)
       --segment-insn   : segment override as instruction (bool: 8086)
       --segmented-addr : use <<segment>> notation (bool: Z8001)
@@ -165,6 +167,8 @@ It can read Intel HEX or Motorola S-Record input.
       --use-port-name  : use port name PAn (bool: 32010)
       --use-register   : use register name Rn (bool: 1802)
       --use-sharp      : use # (default =) for immediate (bool: 8070)
+      --use16          : 16-bit program model (bool: 8086)
+      --use32          : 32-bit program model (bool: 8086)
       --work-register  : prefer work register name than alias address (bool: Z8)
       --zilog-syntax   : Use Zilog syntax (bool: 8080)
 
