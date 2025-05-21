@@ -40,16 +40,20 @@ bool is80286() {
     return strcmp_P("80286", disassembler.config().cpu_P()) == 0;
 }
 
+bool is80386() {
+    return strcmp_P("80386", disassembler.config().cpu_P()) == 0;
+}
+
 bool is8087() {
     return strcmp_P("8087", dis8086.fpu_P()) == 0;
 }
 
-bool is80C187() {
-    return strcasecmp_P("80C187", dis8086.fpu_P()) == 0;
+bool is80287() {
+    return strcmp_P("80287", dis8086.fpu_P()) == 0;
 }
 
-bool is80287() {
-    return strcmp_P("80287", dis8086.fpu_P()) == 0 || is80C187();
+bool is80387() {
+    return strcmp_P("80387", dis8086.fpu_P()) == 0 || strcmp_P("80C187", dis8086.fpu_P()) == 0;
 }
 
 bool fpu_on() {
@@ -66,8 +70,11 @@ bool fpu_on() {
         EQUALS("80C187", OK, dis8086.setFpuType(FPU_I80C187));
         EQUALS_P("80186/80C187", "80C187", dis8086.fpu_P());
     } else if (is80286()) {
-        EQUALS("8086", OK, dis8086.setFpuType(FPU_ON));
-        EQUALS_P("80286", "80287", dis8086.fpu_P());
+        EQUALS("80286", OK, dis8086.setFpuType(FPU_ON));
+        EQUALS_P("80287", "80287", dis8086.fpu_P());
+    } else if (is80386()) {
+        EQUALS("80386", OK, dis8086.setFpuType(FPU_ON));
+        EQUALS_P("80387", "80387", dis8086.fpu_P());
     } else {
         EQUALS("unknown CPU", "", dis8086.cpu_P());
         return false;
@@ -2549,7 +2556,7 @@ void test_float() {
     TEST("FCOMP", "ST(2)", 0xD8, 0xDA);
     TEST("FCOMPP", "",     0xDE, 0xD9);
 
-    if (is80C187()) {
+    if (is80387()) {
         TEST("FUCOM", "ST(0)", 0xDD, 0xE0);
         TEST("FUCOM", "ST(1)", 0xDD, 0xE1);
         TEST("FUCOM", "ST(2)", 0xDD, 0xE2);
@@ -2968,19 +2975,19 @@ void test_illegal_8087() {
                         UNKN(0xDB, opc);
                 } else {
                     if (contains(ARRAY_RANGE(ILLEGALS_D9), opc)) {
-                        if (is80C187() && opc >= 0xF0) {
+                        if (is80387() && opc >= 0xF0) {
                             ;   // FPREM1/FSINCOS/FSIN/FCOS
                         } else {
                             UNKN(0xD9, opc);
                         }
                     }
-                    if (is80C187() && opc == 0xE9) {
+                    if (is80387() && opc == 0xE9) {
                         ;       // FUCOMPP
                     } else {
                         UNKN(0xDA, opc);
                     }
                     if (!contains(ARRAY_RANGE(LEGALS_DB), opc)) {
-                        if (is80287() && opc == 0xE4) {
+                        if ((is80287() || is80387()) && opc == 0xE4) {
                             ;   // FNSETPM
                         } else {
                             UNKN(0xDB, opc);
@@ -2989,7 +2996,7 @@ void test_illegal_8087() {
                     if (contains(ARRAY_RANGE(ILLEGALS_DC), opc))
                         UNKN(0xDC, opc);
                     if (!contains(ARRAY_RANGE(LEGALS_DD), opc)) {
-                        if (is80C187() && opc >= 0xE0 && opc < 0xF0) {
+                        if (is80387() && opc >= 0xE0 && opc < 0xF0) {
                             ;   // FUCOM/FUCOMP
                         } else {
                             UNKN(0xDD, opc);
@@ -2997,7 +3004,7 @@ void test_illegal_8087() {
                     }
                     if (contains(ARRAY_RANGE(ILLEGALS_DE), opc))
                         UNKN(0xDE, opc);
-                    if (is80287() && opc == 0xE0) {
+                    if ((is80287() || is80387()) && opc == 0xE0) {
                         ;       // FNSTSW AX
                     } else {
                         UNKN(0xDF, opc);
