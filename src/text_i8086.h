@@ -27,8 +27,10 @@ namespace i8086 {
 extern const char TEXT_I8086_LIST[] PROGMEM;
 extern const char TEXT_CPU_8086[]  PROGMEM;
 extern const char TEXT_CPU_80186[] PROGMEM;
+extern const char TEXT_CPU_80286[] PROGMEM;
 extern const char TEXT_CPU_V30[]   PROGMEM;
 extern const char TEXT_FPU_8087[]  PROGMEM;
+extern const char TEXT_FPU_80287[] PROGMEM;
 using common::TEXT_none;
 using common::TEXT_FPU;
 
@@ -161,22 +163,40 @@ extern const char TEXT_XLAT[]   PROGMEM;
 using common::TEXT_XOR;
 
 // GNU assembler compatibility
-extern const char TEXT_LCALL[] PROGMEM;
-extern const char TEXT_LJMP[]  PROGMEM;
+using common::TEXT_LCALL;
+using common::TEXT_LJMP;
 extern const char TEXT_LRET[]  PROGMEM;
 
 // i80186
+extern const char TEXT_BOUND[]  PROGMEM;
 using common::TEXT_ENTER;
 extern const char TEXT_LEAVE[]  PROGMEM;
-extern const char TEXT_PUSHA[]  PROGMEM;
-extern const char TEXT_POPA[]   PROGMEM;
-extern const char TEXT_BOUND[]  PROGMEM;
 using common::TEXT_INS;
 using common::TEXT_INSB;
 using common::TEXT_INSW;
 using common::TEXT_OUTS;
 extern const char TEXT_OUTSB[]  PROGMEM;
 extern const char TEXT_OUTSW[]  PROGMEM;
+extern const char TEXT_POPA[]   PROGMEM;
+extern const char TEXT_PUSHA[]  PROGMEM;
+
+// i80286
+extern const char TEXT_ARPL[] PROGMEM;
+extern const char TEXT_CLTS[] PROGMEM;
+using common::TEXT_LAR;
+extern const char TEXT_LGDT[] PROGMEM;
+extern const char TEXT_LIDT[] PROGMEM;
+extern const char TEXT_LLDT[] PROGMEM;
+extern const char TEXT_LMSW[] PROGMEM;
+using common::TEXT_LSL;
+extern const char TEXT_LTR[]  PROGMEM;
+extern const char TEXT_SGDT[] PROGMEM;
+extern const char TEXT_SIDT[] PROGMEM;
+extern const char TEXT_SLDT[] PROGMEM;
+extern const char TEXT_SMSW[] PROGMEM;
+using common::TEXT_STR;
+extern const char TEXT_VERR[] PROGMEM;
+extern const char TEXT_VERW[] PROGMEM;
 
 // V30
 extern const char TEXT_ADD4S[]  PROGMEM;
@@ -272,6 +292,9 @@ extern const char TEXT_FNSTSW[]  PROGMEM;
 extern const char TEXT_FNCLEX[]  PROGMEM;
 extern const char TEXT_FNSTENV[] PROGMEM;
 extern const char TEXT_FNSAVE[]  PROGMEM;
+
+// i80287
+extern const char TEXT_FNSETPM[] PROGMEM;
 
 extern const char TEXT_REG_AL[]   PROGMEM;
 extern const char TEXT_REG_BL[]   PROGMEM;

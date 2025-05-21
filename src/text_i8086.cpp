@@ -21,11 +21,13 @@ namespace text {
 namespace i8086 {
 
 // clang-format off
-constexpr char TEXT_I8086_LIST[] PROGMEM = "i8086, i80186, V30";
+constexpr char TEXT_I8086_LIST[] PROGMEM = "i8086, i80186, i80286, V30";
 constexpr char TEXT_CPU_8086[]  PROGMEM = "8086";
 constexpr char TEXT_CPU_80186[] PROGMEM = "80186";
+constexpr char TEXT_CPU_80286[] PROGMEM = "80286";
 constexpr char TEXT_CPU_V30[]   PROGMEM = "V30";
 constexpr char TEXT_FPU_8087[]  PROGMEM = "8087";
+constexpr char TEXT_FPU_80287[] PROGMEM = "80287";
 
 constexpr char TEXT_AAA[]    PROGMEM = "AAA";
 constexpr char TEXT_AAD[]    PROGMEM = "AAD";
@@ -156,22 +158,40 @@ constexpr char TEXT_XLAT[]   PROGMEM = "XLAT";
 // constexpr char TEXT_XOR[]    PROGMEM = "XOR";
 
 // GNU assembler compatibility
-constexpr char TEXT_LCALL[] PROGMEM = "LCALL";
-constexpr char TEXT_LJMP[]  PROGMEM = "LJMP";
+// constexpr char TEXT_LCALL[] PROGMEM = "LCALL";
+// constexpr char TEXT_LJMP[]  PROGMEM = "LJMP";
 constexpr char TEXT_LRET[]  PROGMEM = "LRET";
 
 // i80186
+constexpr char TEXT_BOUND[]  PROGMEM = "BOUND";
 // constexpr char TEXT_ENTER[]  PROGMEM = "ENTER";
 constexpr char TEXT_LEAVE[]  PROGMEM = "LEAVE";
-constexpr char TEXT_PUSHA[]  PROGMEM = "PUSHA";
-constexpr char TEXT_POPA[]   PROGMEM = "POPA";
-constexpr char TEXT_BOUND[]  PROGMEM = "BOUND";
 // constexpr char TEXT_INS[]    PROGMEM = "INS";
 // constexpr char TEXT_INSB[]   PROGMEM = "INSB";
 // constexpr char TEXT_INSW[]   PROGMEM = "INSW";
 // constexpr char TEXT_OUTS[]   PROGMEM = "OUTS";
 constexpr char TEXT_OUTSB[]  PROGMEM = "OUTSB";
 constexpr char TEXT_OUTSW[]  PROGMEM = "OUTSW";
+constexpr char TEXT_PUSHA[]  PROGMEM = "PUSHA";
+constexpr char TEXT_POPA[]   PROGMEM = "POPA";
+
+// i80286
+constexpr char TEXT_ARPL[] PROGMEM = "ARPL";
+constexpr char TEXT_CLTS[] PROGMEM = "CLTS";
+// constexpr char TEXT_LAR[]  PROGMEM = "LAR";
+constexpr char TEXT_LGDT[] PROGMEM = "LGDT";
+constexpr char TEXT_LIDT[] PROGMEM = "LIDT";
+constexpr char TEXT_LLDT[] PROGMEM = "LLDT";
+constexpr char TEXT_LMSW[] PROGMEM = "LMSW";
+// constexpr char TEXT_LSL[]  PROGMEM = "LSL";
+constexpr char TEXT_LTR[]  PROGMEM = "LTR";
+constexpr char TEXT_SGDT[] PROGMEM = "SGDT";
+constexpr char TEXT_SIDT[] PROGMEM = "SIDT";
+constexpr char TEXT_SLDT[] PROGMEM = "SLDT";
+constexpr char TEXT_SMSW[] PROGMEM = "SMSW";
+// constexpr char TEXT_STR[]  PROGMEM = "STR";
+constexpr char TEXT_VERR[] PROGMEM = "VERR";
+constexpr char TEXT_VERW[] PROGMEM = "VERW";
 
 // V30
 constexpr char TEXT_ADD4S[]  PROGMEM = "ADD4S";
@@ -267,6 +287,9 @@ constexpr char TEXT_FNSTSW[]  PROGMEM = "FNSTSW";
 constexpr char TEXT_FNCLEX[]  PROGMEM = "FNCLEX";
 constexpr char TEXT_FNSTENV[] PROGMEM = "FNSTENV";
 constexpr char TEXT_FNSAVE[]  PROGMEM = "FNSAVE";
+
+// i80287
+constexpr char TEXT_FNSETPM[] PROGMEM = "FNSETPM";
 
 constexpr char TEXT_REG_AL[]   PROGMEM = "AL";
 constexpr char TEXT_REG_BL[]   PROGMEM = "BL";

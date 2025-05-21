@@ -32,6 +32,8 @@ int main(int argc, const char **argv) {
     if (driver.generateGas()) {
         dis8086.setOption("gnu-as", "on");
         dis8086.setOption("origin-char", "$");
+        // i80186 may be used with i80C187
+        dis8086.setOption("fpu", "on");
     }
     
     TestGenerator generator(driver, dis8086, 0x0000);

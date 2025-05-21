@@ -31,10 +31,14 @@ INC_targets = w65c816 tlcs90 i8086 i80186 \
     mc68000 mc68010 z8001 z8002 ns32000 mn1610 mn1613 \
     tms370 tms7000 tms9980 j11 t11 mc146805 z80 z180
 # target which for GNU assembler (also ".ginc" targets)
-GINC_targets  = mc68000 mc68010 z8001 z8002 ns32000 mc68hc11 mc68hc12 \
-    i8086 i80186
+GINC_targets = mc68000 mc68010 z8001 z8002 ns32000 mc68hc11 mc68hc12 \
+    i8086 i80186 i80286
 # target which also has Zilog syntax (also ".zinc" targets)
 ZINC_targets = i8080 i8085 v30emu
+# target which doesn't need ".asm"
+NOASM_targets = i80286
+# target which ASL could not assemble
+ASL_exclude = gen_mb8861 gen_i80286 gen_z280
 
 # file name of generating file
 define out-inc # target
@@ -43,7 +47,8 @@ endef
 define gen-out # target
 $(if $(filter $(1),$(GINC_targets:%=%_ginc)),gen_$(1:%_ginc=%).ginc,\
 $(if $(filter $(1),$(ZINC_targets:%=%_zinc)),gen_$(1:%_zinc=%).zinc,\
-$(if $(call out-inc,$(1)),gen_$(1).inc,gen_$(1).asm)))
+$(if $(filter $(1),$(NOASM_targets)),,\
+$(if $(call out-inc,$(1)),gen_$(1).inc,gen_$(1).asm))))
 endef
 
 # generator options
@@ -114,7 +119,6 @@ asm-test: $(ASM)-refresh clean-asm $(ASM_OUTS:%=asm-%)
 clean-asm:
 	-rm -f $(ASM_OUTS)
 
-ASL_exclude = gen_mb8861
 ASL_SRCS = $(foreach t,$(ASM_TESTS),$(if $(filter $(t),$(ASL_exclude)),,$(t)))
 ASL_TESTS = $(ASL_SRCS) \
 	$(foreach t,$(patsubst %.asl,%,$(wildcard gen_*.asl)),$(if $(filter $(t),$(ASL_SRCS)),,$(t)))

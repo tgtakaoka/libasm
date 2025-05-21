@@ -36,6 +36,14 @@ bool is80186() {
     return strcmp_P("80186", disassembler.config().cpu_P()) == 0 || v30();
 }
 
+bool is80286() {
+    return strcmp_P("80286", disassembler.config().cpu_P()) == 0;
+}
+
+bool is80287() {
+    return strcmp_P("80287", dis8086.fpu_P()) == 0;
+}
+
 bool fpu_on() {
     if (is8086()) {
         EQUALS("8086", OK, dis8086.setFpuType(FPU_ON));
@@ -47,6 +55,9 @@ bool fpu_on() {
     } else if (is80186()) {
         EQUALS("80186", OK, dis8086.setFpuType(FPU_ON));
         EQUALS_P("80186", "8087", dis8086.fpu_P());
+    } else if (is80286()) {
+        EQUALS("8086", OK, dis8086.setFpuType(FPU_ON));
+        EQUALS_P("80286", "80287", dis8086.fpu_P());
     } else {
         EQUALS("unknown CPU", "", dis8086.cpu_P());
         return false;
@@ -75,6 +86,12 @@ void test_cpu() {
 
     EQUALS("cpu i80186", true,   disassembler.setCpu("i80186"));
     EQUALS_P("cpu i80186", "80186", disassembler.config().cpu_P());
+
+    EQUALS("cpu 80286", true,   disassembler.setCpu("80286"));
+    EQUALS_P("cpu 80286", "80286", disassembler.config().cpu_P());
+
+    EQUALS("cpu i80286", true,   disassembler.setCpu("i80286"));
+    EQUALS_P("cpu i80286", "80286", disassembler.config().cpu_P());
 
     EQUALS("cpu V30", true,   disassembler.setCpu("V30"));
     EQUALS_P("cpu V30", "V30", disassembler.config().cpu_P());
@@ -1785,6 +1802,156 @@ void test_processor_control() {
     TEST("WAIT", "", 0x9B);
     TEST("LOCK", "", 0xF0);
     TEST("NOP",  "", 0x90);
+
+    if (is80286()) {
+        TEST("ARPL", "[BX+SI], SI",       0x63, 0060);
+        TEST("ARPL", "[BX+DI+52], DI",    0x63, 0171, 0x34);
+        TEST("ARPL", "[BP+SI+1234H], AX", 0x63, 0202, 0x34, 0x12);
+        TEST("ARPL", "BX, CX",            0x63, 0313);
+        TEST("ARPL", "[SI], DX",          0x63, 0024);
+        TEST("ARPL", "[DI+52], BX",       0x63, 0135, 0x34);
+        TEST("ARPL", "[BP+1234H], SP",    0x63, 0246, 0x34, 0x12);
+        TEST("ARPL", "DI, BP",            0x63, 0357);
+
+        NMEM("", "", "", 0x0F);
+        TEST("LAR", "SI, [BX+SI+52]",    0x0F, 0x02, 0160, 0x34);
+        TEST("LAR", "DI, [BX+DI+1234H]", 0x0F, 0x02, 0271, 0x34, 0x12);
+        TEST("LAR", "AX, DX",            0x0F, 0x02, 0302);
+        TEST("LAR", "CX, [BP+DI]",       0x0F, 0x02, 0013);
+        TEST("LAR", "DX, [SI+52]",       0x0F, 0x02, 0124, 0x34);
+        TEST("LAR", "BX, [DI+1234H]",    0x0F, 0x02, 0235, 0x34, 0x12);
+        TEST("LAR", "SP, SI",            0x0F, 0x02, 0346);
+        TEST("LAR", "BP, [BX]",          0x0F, 0x02, 0057);
+
+        TEST("LSL", "SI, [BX+SI+1234H]", 0x0F, 0x03, 0260, 0x34, 0x12);
+        TEST("LSL", "DI, CX",            0x0F, 0x03, 0371);
+        TEST("LSL", "AX, [BP+SI]",       0x0F, 0x03, 0002);
+        TEST("LSL", "CX, [BP+DI+52]",    0x0F, 0x03, 0113, 0x34);
+        TEST("LSL", "DX, [SI+1234H]",    0x0F, 0x03, 0224, 0x34, 0x12);
+        TEST("LSL", "BX, BP",            0x0F, 0x03, 0335);
+        TEST("LSL", "SP, [1234H]",       0x0F, 0x03, 0046, 0x34, 0x12);
+        TEST("LSL", "BP, [BX+52]",       0x0F, 0x03, 0157, 0x34);
+
+        NMEM("", "", "", 0x0F, 0x01);
+        TEST("LGDT", "[BX+SI]",       0x0F, 0x01, 0020);
+        TEST("LGDT", "[BX+DI+52]",    0x0F, 0x01, 0121, 0x34);
+        TEST("LGDT", "[BP+SI+1234H]", 0x0F, 0x01, 0222, 0x34, 0x12);
+        TEST("LGDT", "[BP+DI]",       0x0F, 0x01, 0023);
+        TEST("LGDT", "[SI+52]",       0x0F, 0x01, 0124, 0x34);
+        TEST("LGDT", "[DI+1234H]",    0x0F, 0x01, 0225, 0x34, 0x12);
+        TEST("LGDT", "[1234H]",       0x0F, 0x01, 0026, 0x34, 0x12);
+        TEST("LGDT", "[BX+52]",       0x0F, 0x01, 0127, 0x34);
+        ERRT("LGDT", "AX", ILLEGAL_OPERAND, "AX", 0x0F, 0x01, 0320);
+        ERRT("LGDT", "DI", ILLEGAL_OPERAND, "DI", 0x0F, 0x01, 0327);
+
+        TEST("SGDT", "[BX+SI+1234H]", 0x0F, 0x01, 0200, 0x34, 0x12);
+        TEST("SGDT", "[BX+DI]",       0x0F, 0x01, 0001);
+        TEST("SGDT", "[BP+SI+52]",    0x0F, 0x01, 0102, 0x34);
+        TEST("SGDT", "[BP+DI+1234H]", 0x0F, 0x01, 0203, 0x34, 0x12);
+        TEST("SGDT", "[SI]",          0x0F, 0x01, 0004);
+        TEST("SGDT", "[DI+52]",       0x0F, 0x01, 0105, 0x34);
+        TEST("SGDT", "[BP+1234H]",    0x0F, 0x01, 0206, 0x34, 0x12);
+        TEST("SGDT", "[BX]",          0x0F, 0x01, 0007);
+        ERRT("SGDT", "CX", ILLEGAL_OPERAND, "CX", 0x0F, 0x01, 0301);
+        ERRT("SGDT", "SI", ILLEGAL_OPERAND, "SI", 0x0F, 0x01, 0306);
+
+        NMEM("", "", "", 0x0F, 0x00);
+        TEST("LLDT", "[BX+SI+52]",    0x0F, 0x00, 0120, 0x34);
+        TEST("LLDT", "[BX+DI+1234H]", 0x0F, 0x00, 0221, 0x34, 0x12);
+        TEST("LLDT", "DX",            0x0F, 0x00, 0322);
+        TEST("LLDT", "[BP+DI]",       0x0F, 0x00, 0023);
+        TEST("LLDT", "[SI+52]",       0x0F, 0x00, 0124, 0x34);
+        TEST("LLDT", "[DI+1234H]",    0x0F, 0x00, 0225, 0x34, 0x12);
+        TEST("LLDT", "SI",            0x0F, 0x00, 0326);
+        TEST("LLDT", "[BX]",          0x0F, 0x00, 0027);
+
+        TEST("SLDT", "[BX+SI+1234H]", 0x0F, 0x00, 0200, 0x34, 0x12);
+        TEST("SLDT", "CX",            0x0F, 0x00, 0301);
+        TEST("SLDT", "[BP+SI]",       0x0F, 0x00, 0002);
+        TEST("SLDT", "[BP+DI+52]",    0x0F, 0x00, 0103, 0x34);
+        TEST("SLDT", "[SI+1234H]",    0x0F, 0x00, 0204, 0x34, 0x12);
+        TEST("SLDT", "BP",            0x0F, 0x00, 0305);
+        TEST("SLDT", "[1234H]",       0x0F, 0x00, 0006, 0x34, 0x12);
+        TEST("SLDT", "[BX+52]",       0x0F, 0x00, 0107, 0x34);
+
+        TEST("LIDT", "[BX+SI+52]",    0x0F, 0x01, 0130, 0x34);
+        TEST("LIDT", "[BX+DI+1234H]", 0x0F, 0x01, 0231, 0x34, 0x12);
+        TEST("LIDT", "[BP+SI]",       0x0F, 0x01, 0032);
+        TEST("LIDT", "[BP+DI+52]",    0x0F, 0x01, 0133, 0x34);
+        TEST("LIDT", "[SI+1234H]",    0x0F, 0x01, 0234, 0x34, 0x12);
+        TEST("LIDT", "[DI]",          0x0F, 0x01, 0035);
+        TEST("LIDT", "[BP+52]",       0x0F, 0x01, 0136, 0x34);
+        TEST("LIDT", "[BX+1234H]",    0x0F, 0x01, 0237, 0x34, 0x12);
+        ERRT("LIDT", "DX", ILLEGAL_OPERAND, "DX", 0x0F, 0x01, 0332);
+        ERRT("LIDT", "BP", ILLEGAL_OPERAND, "BP", 0x0F, 0x01, 0335);
+
+        TEST("SIDT", "[BX+SI]",       0x0F, 0x01, 0010);
+        TEST("SIDT", "[BX+DI+52]",    0x0F, 0x01, 0111, 0x34);
+        TEST("SIDT", "[BP+SI+1234H]", 0x0F, 0x01, 0212, 0x34, 0x12);
+        TEST("SIDT", "[BP+DI]",       0x0F, 0x01, 0013);
+        TEST("SIDT", "[SI+52]",       0x0F, 0x01, 0114, 0x34);
+        TEST("SIDT", "[DI+1234H]",    0x0F, 0x01, 0215, 0x34, 0x12);
+        TEST("SIDT", "[1234H]",       0x0F, 0x01, 0016, 0x34, 0x12);
+        TEST("SIDT", "[BX+52]",       0x0F, 0x01, 0117, 0x34);
+        ERRT("SIDT", "BX", ILLEGAL_OPERAND, "BX", 0x0F, 0x01, 0313);
+        ERRT("SIDT", "SP", ILLEGAL_OPERAND, "SP", 0x0F, 0x01, 0314);
+
+        TEST("LTR", "[BX+SI+52]",    0x0F, 0x00, 0130, 0x34);
+        TEST("LTR", "[BX+DI+1234H]", 0x0F, 0x00, 0231, 0x34, 0x12);
+        TEST("LTR", "DX",            0x0F, 0x00, 0332);
+        TEST("LTR", "[BP+DI]",       0x0F, 0x00, 0033);
+        TEST("LTR", "[SI+52]",       0x0F, 0x00, 0134, 0x34);
+        TEST("LTR", "[DI+1234H]",    0x0F, 0x00, 0235, 0x34, 0x12);
+        TEST("LTR", "SI",            0x0F, 0x00, 0336);
+        TEST("LTR", "[BX]",          0x0F, 0x00, 0037);
+
+        TEST("STR", "[BX+SI+1234H]", 0x0F, 0x00, 0210, 0x34, 0x12);
+        TEST("STR", "CX",            0x0F, 0x00, 0311);
+        TEST("STR", "[BP+SI]",       0x0F, 0x00, 0012);
+        TEST("STR", "[BP+DI+52]",    0x0F, 0x00, 0113, 0x34);
+        TEST("STR", "[SI+1234H]",    0x0F, 0x00, 0214, 0x34, 0x12);
+        TEST("STR", "BP",            0x0F, 0x00, 0315);
+        TEST("STR", "[1234H]",       0x0F, 0x00, 0016, 0x34, 0x12);
+        TEST("STR", "[BX+52]",       0x0F, 0x00, 0117, 0x34);
+
+        TEST("VERR", "AX",            0x0F, 0x00, 0340);
+        TEST("VERR", "[BX+DI]",       0x0F, 0x00, 0041);
+        TEST("VERR", "[BP+SI+52]",    0x0F, 0x00, 0142, 0x34);
+        TEST("VERR", "[BP+DI+1234H]", 0x0F, 0x00, 0243, 0x34, 0x12);
+        TEST("VERR", "SP",            0x0F, 0x00, 0344);
+        TEST("VERR", "[DI]",          0x0F, 0x00, 0045);
+        TEST("VERR", "[BP+52]",       0x0F, 0x00, 0146, 0x34);
+        TEST("VERR", "[BX+1234H]",    0x0F, 0x00, 0247, 0x34, 0x12);
+
+        TEST("VERW", "[BX+SI]",       0x0F, 0x00, 0050);
+        TEST("VERW", "[BX+DI+52]",    0x0F, 0x00, 0151, 0x34);
+        TEST("VERW", "[BP+SI+1234H]", 0x0F, 0x00, 0252, 0x34, 0x12);
+        TEST("VERW", "BX",            0x0F, 0x00, 0353);
+        TEST("VERW", "[SI]",          0x0F, 0x00, 0054);
+        TEST("VERW", "[DI+52]",       0x0F, 0x00, 0155, 0x34);
+        TEST("VERW", "[BP+1234H]",    0x0F, 0x00, 0256, 0x34, 0x12);
+        TEST("VERW", "DI",            0x0F, 0x00, 0357);
+
+        TEST("CLTS", "", 0x0F, 0x06);
+
+        TEST("LMSW", "[BX+SI+52]",    0x0F, 0x01, 0160, 0x34);
+        TEST("LMSW", "[BX+DI+1234H]", 0x0F, 0x01, 0261, 0x34, 0x12);
+        TEST("LMSW", "DX",            0x0F, 0x01, 0362);
+        TEST("LMSW", "[BP+DI]",       0x0F, 0x01, 0063);
+        TEST("LMSW", "[SI+52]",       0x0F, 0x01, 0164, 0x34);
+        TEST("LMSW", "[DI+1234H]",    0x0F, 0x01, 0265, 0x34, 0x12);
+        TEST("LMSW", "SI",            0x0F, 0x01, 0366);
+        TEST("LMSW", "[BX]",          0x0F, 0x01, 0067);
+
+        TEST("SMSW", "[BX+SI+1234H]", 0x0F, 0x01, 0240, 0x34, 0x12);
+        TEST("SMSW", "CX",            0x0F, 0x01, 0341);
+        TEST("SMSW", "[BP+SI]",       0x0F, 0x01, 0042);
+        TEST("SMSW", "[BP+DI+52]",    0x0F, 0x01, 0143, 0x34);
+        TEST("SMSW", "[SI+1234H]",    0x0F, 0x01, 0244, 0x34, 0x12);
+        TEST("SMSW", "BP",            0x0F, 0x01, 0345);
+        TEST("SMSW", "[1234H]",       0x0F, 0x01, 0046, 0x34, 0x12);
+        TEST("SMSW", "[BX+52]",       0x0F, 0x01, 0147, 0x34);
+    }
 }
 
 void test_segment_override() {
@@ -2538,6 +2705,11 @@ void test_float_nowait() {
     TEST("FNSAVE",  "[SI]", 0xDD, 0064);
     TEST("FNENI", "",       0xDB, 0xE0);
     TEST("FNDISI", "",      0xDB, 0xE1);
+
+    if (is80287()) {
+        TEST("FNSETPM", "",  0xDB, 0xE4);
+        TEST("FNSTSW", "AX", 0xDF, 0xE0);
+    }
 }
 
 #endif
@@ -2671,9 +2843,55 @@ void test_illegal_80186() {
     test_illegal_modreg();
 }
 
+void test_illegal_80286() {
+    static constexpr Config::opcode_t ILLEGALS[] = {
+        0x82, 0xD6, 0xF1,
+    };
+    for (const auto opc : ILLEGALS)
+        UNKN(opc);
+
+    test_illegal_aax();
+    test_illegal_modreg();
+
+    static constexpr Config::opcode_t LEGALS_0F[] = {
+        0x00, 0x01, 0x02, 0x03, 0x06,
+    };
+    for (auto i = 0; i < 0x100; i++) {
+        const Config::opcode_t opc = i;
+        if (contains(ARRAY_RANGE(LEGALS_0F), opc))
+            continue;
+        UNKN(0x0F, opc);
+    }
+    for (auto mod = 0; mod < 4; mod++) {
+        for (auto reg = 0; reg < 8; reg++) {
+            for (auto r_m = 0; r_m < 8; r_m++) {
+                const Config::opcode_t opc = (mod << 6) | (reg << 3) | r_m;
+                if (mod == 3) {
+                    if (reg == 0) ILOP("SGDT", 0x0F, 0x01, opc);
+                    if (reg == 1) ILOP("SIDT", 0x0F, 0x01, opc);
+                    if (reg == 2) ILOP("LGDT", 0x0F, 0x01, opc);
+                    if (reg == 3) ILOP("LIDT", 0x0F, 0x01, opc);
+                }
+                if (reg == 6 || reg == 7)
+                    UNKN(0x0F, 0x00, opc);
+                if (reg == 5 || reg == 7)
+                    UNKN(0x0F, 0x01, opc);
+            }
+        }
+    }
+}
+
 void test_illegal_8087() {
-    if (!fpu_on())
+    if (!fpu_on()) {
+        UNKN(0xD8);
+        UNKN(0xD9);
+        UNKN(0xDA);
+        UNKN(0xDB);
+        UNKN(0xDC);
+        UNKN(0xDD);
+        UNKN(0xDF);
         return;
+    }
 
     static constexpr Config::opcode_t ILLEGALS_D9[] = {
         0xD1, 0xD2, 0xD3, 0xD4, 0xD5, 0xD6, 0xD7,
@@ -2714,18 +2932,29 @@ void test_illegal_8087() {
                     if (reg == 6)
                         UNKN(0xDB, opc);
                 } else {
-                    if (contains(ARRAY_RANGE(ILLEGALS_D9), opc))
+                    if (contains(ARRAY_RANGE(ILLEGALS_D9), opc)) {
                         UNKN(0xD9, opc);
+                    }
                     UNKN(0xDA, opc);
-                    if (!contains(ARRAY_RANGE(LEGALS_DB), opc))
-                        UNKN(0xDB, opc);
+                    if (!contains(ARRAY_RANGE(LEGALS_DB), opc)) {
+                        if (is80287() && opc == 0xE4) {
+                            ;   // FNSETPM
+                        } else {
+                            UNKN(0xDB, opc);
+                        }
+                    }
                     if (contains(ARRAY_RANGE(ILLEGALS_DC), opc))
                         UNKN(0xDC, opc);
-                    if (!contains(ARRAY_RANGE(LEGALS_DD), opc))
+                    if (!contains(ARRAY_RANGE(LEGALS_DD), opc)) {
                         UNKN(0xDD, opc);
+                    }
                     if (contains(ARRAY_RANGE(ILLEGALS_DE), opc))
                         UNKN(0xDE, opc);
-                    UNKN(0xDF, opc);
+                    if (is80287() && opc == 0xE0) {
+                        ;       // FNSTSW AX
+                    } else {
+                        UNKN(0xDF, opc);
+                    }
                 }
             }
         }
@@ -2751,6 +2980,8 @@ void run_tests(const char *cpu) {
         RUN_TEST(test_illegal_8086);
     if (is80186())
         RUN_TEST(test_illegal_80186);
+    if (is80286())
+        RUN_TEST(test_illegal_80286);
 }
 
 // Local Variables:

@@ -50,9 +50,8 @@ DisI8086::DisI8086(const ValueFormatter::Plugins &plugins)
 
 void DisI8086::reset() {
     Disassembler::reset();
-#if defined(LIBASM_I8086_NOFPU)
     setFpuType(FPU_NONE);
-#else
+#if !defined(LIBASM_I8086_NOFPU)
     setFpuType(FPU_ON);
 #endif
     setSegmentInsn(false);
@@ -472,6 +471,15 @@ Error DisI8086::searchCodes(DisInsn &insn, StrBuffer &out) const {
         opc = insn.readByte();
         if (insn.getError())
             return insn.getError();
+        if (prefix < 0x100) {
+            prefix = (prefix << 8) | opc;
+            if (isPrefix(_cpuSpec, prefix)) {
+                insn.setPrefix(prefix);
+                opc = insn.readByte();
+                if (insn.getError())
+                    return insn.getError();
+            }
+        }
     }
 
     insn.setOpCode(opc);

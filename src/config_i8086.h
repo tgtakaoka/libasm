@@ -28,6 +28,7 @@ namespace i8086 {
 enum CpuType : uint8_t {
     I8086,
     I80186,
+    I80286,
     V30,
 };
 
@@ -36,6 +37,7 @@ enum FpuType : uint8_t {
 #if !defined(LIBASM_I8086_NOFPU)
     FPU_ON,
     FPU_I8087,
+    FPU_I80287,
 #endif
 };
 

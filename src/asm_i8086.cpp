@@ -25,8 +25,7 @@ using namespace pseudo;
 using namespace reg;
 using namespace text::common;
 using namespace text::option;
-
-using text::i8086::TEXT_FPU_8087;
+using namespace text::i8086;
 
 namespace {
 

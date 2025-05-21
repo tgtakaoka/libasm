@@ -56,7 +56,7 @@ using common::TEXT_EINT;
 using common::TEXT_IN;
 extern const char TEXT_LAC[]  PROGMEM;
 extern const char TEXT_LACK[] PROGMEM;
-extern const char TEXT_LAR[]  PROGMEM;
+using common::TEXT_LAR;
 extern const char TEXT_LARK[] PROGMEM;
 extern const char TEXT_LARP[] PROGMEM;
 extern const char TEXT_LDP[]  PROGMEM;
