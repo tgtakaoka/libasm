@@ -27,7 +27,7 @@ namespace libasm {
 namespace i8086 {
 
 struct EntryInsn : EntryInsnPrefix<Config, Entry> {
-    EntryInsn() : _repeat(0), _segment(0) {}
+    EntryInsn() : _repeat(0), _segment(0), _model32(false) {}
 
     AddrMode dst() const { return flags().dst(); }
     AddrMode src() const { return flags().src(); }
@@ -37,19 +37,26 @@ struct EntryInsn : EntryInsnPrefix<Config, Entry> {
     OprPos extPos() const { return flags().extPos(); }
     OprSize size() const { return flags().size(); }
     bool stringInsn() const { return flags().stringInsn(); }
-    bool leaInsn() const { return prefix() == 0 && opCode() == 0x8D; }
+    bool needSize() const { return flags().needSize(); }
+    bool farInsn() const;
+    bool leaInsn() const;
 
     void setRepeat(Config::opcode_t repeat) { _repeat = repeat; }
     Config::opcode_t repeat() const { return _repeat; }
     void setSegment(Config::opcode_t segment) { _segment = segment; }
     Config::opcode_t segment() const { return _segment; }
 
+    void setModel(bool model32) { _model32 = model32; }
+
+    static constexpr Config::opcode_t DATA32 = 0x66;
+    static constexpr Config::opcode_t ADDR32 = 0x67;
     static constexpr Config::opcode_t FWAIT = 0x9B;
     static bool escapeInsn(Config::opcode_t opc) { return opc >= 0xD8 && opc < 0xE0; }
 
 protected:
     Config::opcode_t _repeat;
     Config::opcode_t _segment;
+    bool _model32;
 };
 
 struct Operand final : ErrorAt {
@@ -104,19 +111,70 @@ private:
     uint_fast8_t operandPos() const;
 };
 
+enum FarMode : uint8_t {
+    FMODE_FAR = 0,  // add FAR prefix to operand; call far [si]
+    FMODE_F = 1,    // add F suffix to mnemonic;  callf [si]
+    FMODE_L = 2,    // add L prefix to mnemonic;  lcall [si]
+};
+
 struct DisInsn final : DisInsnImpl<Config>, EntryInsn {
     DisInsn(Insn &insn, DisMemory &memory, const StrBuffer &out)
-        : DisInsnImpl(insn, memory, out), _modReg(0) {}
-    DisInsn(Insn &insn, DisInsn &o, const StrBuffer &out) : DisInsnImpl(insn, o, out), _modReg(0) {}
+        : DisInsnImpl(insn, memory, out),
+          _modReg(0),
+          _hasData32(false),
+          _hasAddr32(false),
+          _hasUnusedData32(false),
+          _hasUnusedAddr32(false) {}
+    DisInsn(Insn &insn, DisInsn &o, const StrBuffer &out)
+        : DisInsnImpl(insn, o, out),
+          _modReg(0),
+          _hasData32(o._hasData32),
+          _hasAddr32(o._hasAddr32),
+          _hasUnusedData32(o._hasUnusedData32),
+          _hasUnusedAddr32(o._hasUnusedAddr32) {}
 
-    uint16_t farseg;
-    bool farInsn() const;
+    void addPrefix(const /*PROGMEM*/ char *prefix_P, StrBuffer &out);
+
+    Config::opcode_t readPrefixCodes(
+            Config::opcode_t opc, const CpuSpec &cpuSpec, bool segInsn, bool repInsn);
+    bool data32() const { return _model32 ^ _hasData32; };
+    bool addr32() const { return _model32 ^ _hasAddr32; }
+    bool hasData32() const { return _hasData32; };
+    bool hasAddr32() const { return _hasAddr32; }
+    bool useData32() {
+        if (_hasData32)
+            _hasUnusedData32 = false;
+        return data32();
+    }
+    bool useAddr32() {
+        if (_hasAddr32)
+            _hasUnusedAddr32 = false;
+        return addr32();
+    }
+    bool hasUnusedData32() const { return _hasUnusedData32; }
+    bool hasUnusedAddr32() const { return _hasUnusedAddr32; }
+    void setUsage(const DisInsn &o) {
+        _hasUnusedData32 = o._hasUnusedData32;
+        _hasUnusedAddr32 = o._hasUnusedAddr32;
+    }
+
+    bool needData32() const;
+    bool fpuInsn() const { return escapeInsn(prefix() & UINT8_MAX); }
+
+    uint32_t farOffset;
+    void setFarMode(FarMode mode) { _farMode = mode; }
+    FarMode farMode() const { return _farMode; }
 
     void readModReg();
     Config::opcode_t modReg() const { return _modReg; }
 
 private:
     Config::opcode_t _modReg;
+    bool _hasData32;
+    bool _hasAddr32;
+    mutable bool _hasUnusedData32;
+    mutable bool _hasUnusedAddr32;
+    FarMode _farMode;
 };
 
 }  // namespace i8086

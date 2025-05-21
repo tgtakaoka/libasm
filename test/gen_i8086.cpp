@@ -34,8 +34,11 @@ int main(int argc, const char **argv) {
         dis8086.setOption("origin-char", "$");
         // i80186 may be used with i80C187
         dis8086.setOption("fpu", "on");
+    } else {
+        dis8086.setOption("far-insn", "on");
+        dis8086.setOption("ptr-suffix", "on");
     }
-    
+
     TestGenerator generator(driver, dis8086, 0x0000);
     generator.generate().generate(0x9B);
 

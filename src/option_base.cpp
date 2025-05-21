@@ -57,6 +57,12 @@ Error parseInt(StrScanner &scan, int32_t &value) {
 Error OptionBase::parseBoolOption(StrScanner &scan, bool &value) {
     if (parseBool(scan, value) == OK)
         return OK;
+    auto p = scan;
+    if (*p.skipSpaces() == 0) {
+        scan = p;
+        value = true;
+        return OK;
+    }
     int32_t val;
     const auto error = parseIntOption(scan, val);
     if (error == OK)
@@ -147,6 +153,10 @@ constexpr char OPT_BOOL_EXTMODE[] PROGMEM = "extmode";
 constexpr char OPT_DESC_EXTMODE[] PROGMEM = "Extended mode";
 constexpr char OPT_BOOL_LWORDMODE[] PROGMEM = "lwordmode";
 constexpr char OPT_DESC_LWORDMODE[] PROGMEM = "Long word mode";
+constexpr char OPT_BOOL_USE16[] PROGMEM = "use16";
+constexpr char OPT_DESC_USE16[] PROGMEM = "16-bit program model";
+constexpr char OPT_BOOL_USE32[] PROGMEM = "use32";
+constexpr char OPT_DESC_USE32[] PROGMEM = "32-bit program model";
 
 }  // namespace option
 }  // namespace text
