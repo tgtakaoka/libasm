@@ -28260,13 +28260,17 @@
       fptan
       fpatan
       fxtract
+      fprem1
       fdecstp
       fincstp
       fprem
       fyl2xp1
       fsqrt
+      fsincos
       frndint
       fscale
+      fsin
+      fcos
       fld     dword ptr [bx+si]
       fld     dword ptr [bx+di]
       fld     dword ptr [bp+si]
@@ -28494,6 +28498,7 @@
       fld     st(0)
       fxch    st(0)
       fnop
+      fucompp
       fiadd   dword ptr [bx+si]
       fiadd   dword ptr [bx+di]
       fiadd   dword ptr [bp+si]
@@ -28754,6 +28759,7 @@
       fndisi
       fnclex
       fninit
+      fnsetpm
       fild    dword ptr [bx+si]
       fild    dword ptr [bx+di]
       fild    dword ptr [bp+si]
@@ -29177,6 +29183,8 @@
       fadd    st(0), st
       fmul    st(0), st
       fstp    st(6)
+      fucom   st(0)
+      fucomp  st(0)
       fld     qword ptr [bx+si]
       fld     qword ptr [bx+di]
       fld     qword ptr [bp+si]
@@ -29634,6 +29642,7 @@
       faddp   st(0), st
       fmulp   st(0), st
       fcompp
+      fnstsw  ax
       fild    word ptr [bx+si]
       fild    word ptr [bx+di]
       fild    word ptr [bp+si]

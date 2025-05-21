@@ -1,4 +1,4 @@
-; Copyright 2023 Tadashi G. Takaoka
+; Copyright 2025 Tadashi G. Takaoka
 ;
 ; Licensed under the Apache License, Version 2.0 (the "License");
 ; you may not use this file except in compliance with the License.
@@ -13,8 +13,7 @@
 ; limitations under the License.
 
         cpu     80186
-        fpu     on
-        org     0000h
+        org     0000H
         include "gen_i80186.inc"
         end
 

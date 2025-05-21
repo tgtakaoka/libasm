@@ -44,6 +44,10 @@ bool is80287() {
     return strcmp_P("80287", asm8086.fpu_P()) == 0;
 }
 
+bool is80C187() {
+    return strcasecmp_P("801C87", asm8086.fpu_P()) == 0;
+}
+
 bool fpu_on() {
     if (is8086()) {
         TEST("FPU ON");
@@ -54,7 +58,9 @@ bool fpu_on() {
         return false;
     } else if (is80186()) {
         TEST("FPU ON");
-        EQUALS_P("80186", "8087", asm8086.fpu_P());
+        EQUALS_P("80186/8087", "8087", asm8086.fpu_P());
+        TEST("FPU 80C187");
+        EQUALS_P("80186/80C187", "80C187", asm8086.fpu_P());
     } else if (is80286()) {
         TEST("FPU ON");
         EQUALS_P("80286", "80287", asm8086.fpu_P());
@@ -2733,6 +2739,12 @@ void test_float() {
     TEST("FCOMP ST(2)", 0xD8, 0xDA);
     TEST("FCOMPP",      0xDE, 0xD9);
 
+    if (is80C187()) {
+        TEST("FUCOM  ST(1)", 0xDD, 0xE1);
+        TEST("FUCOMP ST(7)", 0xDD, 0xEF);
+        TEST("FUCOMPP",      0xDA, 0xE9);
+    }
+
     ERRT("FIADD AX", OPERAND_NOT_ALLOWED, "AX");
     TEST("FIADD WORD PTR [SI]",          0xDE, 0004);
     TEST("FIADD WORD PTR [1234H]",       0xDE, 0006, 0x34, 0x12);
@@ -2875,6 +2887,9 @@ void test_float() {
     TEST("FXAM",    0xD9, 0xE5);
     TEST("FXTRACT", 0xD9, 0xF4);
     TEST("FPREM",   0xD9, 0xF8);
+    if (is80C187()) {
+        TEST("FPREM1", 0xD9, 0xF5);
+    }
     TEST("FSQRT",   0xD9, 0xFA);
     TEST("FRNDINT", 0xD9, 0xFC);
     TEST("FSCALE",  0xD9, 0xFD);
@@ -2884,6 +2899,11 @@ void test_float() {
     TEST("FPTAN",   0xD9, 0xF2);
     TEST("FPATAN",  0xD9, 0xF3);
     TEST("FYL2XP1", 0xD9, 0xF9);
+    if (is80C187()) {
+        TEST("FSINCOS", 0xD9, 0xFB);
+        TEST("FSIN",    0xD9, 0xFE);
+        TEST("FCOS",    0xD9, 0xFF);
+    }
 
     TEST("FNOP",        0xD9, 0xD0);
     TEST("FDECSTP",     0xD9, 0xF6);
@@ -2912,7 +2932,7 @@ void test_float_nowait() {
     TEST("FNSAVE [SI]",  0xDD, 0064);
     TEST("FNENI",        0xDB, 0xE0);
     TEST("FNDISI",       0xDB, 0xE1);
-    if (is80286()) {
+    if (is80286() || is80C187()) {
         TEST("FNSETPM",   0xDB, 0xE4);
         TEST("FNSTSW AX", 0xDF, 0xE0);
     }

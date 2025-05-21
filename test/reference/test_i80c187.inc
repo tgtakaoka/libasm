@@ -1,4 +1,4 @@
-;### Copyright 2020 Tadashi G. Takaoka
+;### Copyright 2025 Tadashi G. Takaoka
 ;###
 ;### Licensed under the Apache License, Version 2.0 (the "License");
 ;### you may not use this file except in compliance with the License.
@@ -12,12 +12,13 @@
 ;### See the License for the specific language governing permissions and
 ;### limitations under the License.
 
-        .code16
-        .include "test_i8086.ginc"
-        .include "test_i8086_far.ginc"
-        .include "test_i80186.ginc"
-        .include "test_i8087.ginc"
-        .include "test_i80c187.ginc"
+        db 0DDH,0E2H            ; fucom   st(2)
+        db 0DDH,0EAH            ; fucomp  st(2)
+        db 0DAH,0E9H            ; fucompp
+        db 0D9H,0F5H            ; fprem1
+        db 0D9H,0FBH            ; fsincos
+        db 0D9H,0FEH            ; fsin
+        db 0D9H,0FFH            ; fcos
 
 ;### Local Variables:
 ;### mode: asm

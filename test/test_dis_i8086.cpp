@@ -40,8 +40,16 @@ bool is80286() {
     return strcmp_P("80286", disassembler.config().cpu_P()) == 0;
 }
 
+bool is8087() {
+    return strcmp_P("8087", dis8086.fpu_P()) == 0;
+}
+
+bool is80C187() {
+    return strcasecmp_P("80C187", dis8086.fpu_P()) == 0;
+}
+
 bool is80287() {
-    return strcmp_P("80287", dis8086.fpu_P()) == 0;
+    return strcmp_P("80287", dis8086.fpu_P()) == 0 || is80C187();
 }
 
 bool fpu_on() {
@@ -54,7 +62,9 @@ bool fpu_on() {
         return false;
     } else if (is80186()) {
         EQUALS("80186", OK, dis8086.setFpuType(FPU_ON));
-        EQUALS_P("80186", "8087", dis8086.fpu_P());
+        EQUALS_P("80186/8087", "8087", dis8086.fpu_P());
+        EQUALS("80C187", OK, dis8086.setFpuType(FPU_I80C187));
+        EQUALS_P("80186/80C187", "80C187", dis8086.fpu_P());
     } else if (is80286()) {
         EQUALS("8086", OK, dis8086.setFpuType(FPU_ON));
         EQUALS_P("80286", "80287", dis8086.fpu_P());
@@ -67,6 +77,10 @@ bool fpu_on() {
 
 void set_up() {
     disassembler.reset();
+    if (is80186() && !v30()) {
+        // Use i80186 with i80C187
+        disassembler.setOption("fpu", "on");
+    }
 }
 
 void tear_down() {
@@ -2138,7 +2152,6 @@ void test_float() {
         return;
 
     constexpr auto FWAIT = 0x9B;
-
     UNKN(            FWAIT, 0x00);
     UNKN(            FWAIT, 0xD7);
     UNKN(            FWAIT, 0xD8);
@@ -2535,6 +2548,28 @@ void test_float() {
 
     TEST("FCOMP", "ST(2)", 0xD8, 0xDA);
     TEST("FCOMPP", "",     0xDE, 0xD9);
+
+    if (is80C187()) {
+        TEST("FUCOM", "ST(0)", 0xDD, 0xE0);
+        TEST("FUCOM", "ST(1)", 0xDD, 0xE1);
+        TEST("FUCOM", "ST(2)", 0xDD, 0xE2);
+        TEST("FUCOM", "ST(3)", 0xDD, 0xE3);
+        TEST("FUCOM", "ST(4)", 0xDD, 0xE4);
+        TEST("FUCOM", "ST(5)", 0xDD, 0xE5);
+        TEST("FUCOM", "ST(6)", 0xDD, 0xE6);
+        TEST("FUCOM", "ST(7)", 0xDD, 0xE7);
+
+        TEST("FUCOMP", "ST(0)", 0xDD, 0xE8);
+        TEST("FUCOMP", "ST(1)", 0xDD, 0xE9);
+        TEST("FUCOMP", "ST(2)", 0xDD, 0xEA);
+        TEST("FUCOMP", "ST(3)", 0xDD, 0xEB);
+        TEST("FUCOMP", "ST(4)", 0xDD, 0xEC);
+        TEST("FUCOMP", "ST(5)", 0xDD, 0xED);
+        TEST("FUCOMP", "ST(6)", 0xDD, 0xEE);
+        TEST("FUCOMP", "ST(7)", 0xDD, 0xEF);
+
+        TEST("FUCOMPP", "", 0xDA, 0xE9);
+    }
 
     TEST("FIADD", "WORD PTR [SI]",          0xDE, 0004);
     TEST("FIADD", "WORD PTR [1234H]",       0xDE, 0006, 0x34, 0x12);
@@ -2933,9 +2968,17 @@ void test_illegal_8087() {
                         UNKN(0xDB, opc);
                 } else {
                     if (contains(ARRAY_RANGE(ILLEGALS_D9), opc)) {
-                        UNKN(0xD9, opc);
+                        if (is80C187() && opc >= 0xF0) {
+                            ;   // FPREM1/FSINCOS/FSIN/FCOS
+                        } else {
+                            UNKN(0xD9, opc);
+                        }
                     }
-                    UNKN(0xDA, opc);
+                    if (is80C187() && opc == 0xE9) {
+                        ;       // FUCOMPP
+                    } else {
+                        UNKN(0xDA, opc);
+                    }
                     if (!contains(ARRAY_RANGE(LEGALS_DB), opc)) {
                         if (is80287() && opc == 0xE4) {
                             ;   // FNSETPM
@@ -2946,7 +2989,11 @@ void test_illegal_8087() {
                     if (contains(ARRAY_RANGE(ILLEGALS_DC), opc))
                         UNKN(0xDC, opc);
                     if (!contains(ARRAY_RANGE(LEGALS_DD), opc)) {
-                        UNKN(0xDD, opc);
+                        if (is80C187() && opc >= 0xE0 && opc < 0xF0) {
+                            ;   // FUCOM/FUCOMP
+                        } else {
+                            UNKN(0xDD, opc);
+                        }
                     }
                     if (contains(ARRAY_RANGE(ILLEGALS_DE), opc))
                         UNKN(0xDE, opc);

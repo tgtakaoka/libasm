@@ -1212,6 +1212,38 @@ constexpr Entry T80287_DF[] PROGMEM = {
 constexpr uint8_t I80287_DF[] PROGMEM = {
       0,  // TEXT_FNSTSW
 };
+
+constexpr Entry T80C187_D9[] PROGMEM = {
+    E0(0xF5, CF_00, TEXT_FPREM1,  SZ_NONE),
+    E0(0xFB, CF_00, TEXT_FSINCOS, SZ_NONE),
+    E0(0xFE, CF_00, TEXT_FSIN,    SZ_NONE),
+    E0(0xFF, CF_00, TEXT_FCOS,    SZ_NONE),
+};
+
+constexpr uint8_t I80C187_D9[] PROGMEM = {
+      3,  // TEXT_FCOS
+      0,  // TEXT_FPREM1
+      2,  // TEXT_FSIN
+      1,  // TEXT_FSINCOS
+};
+
+constexpr Entry T80C187_DA[] PROGMEM = {
+    E0(0xE9, CF_00, TEXT_FUCOMPP, SZ_NONE),
+};
+
+constexpr uint8_t I80C187_DA[] PROGMEM = {
+      0,  // TEXT_FUCOMPP
+};
+
+constexpr Entry T80C187_DD[] PROGMEM = {
+    E1(0xE0, CF_07, TEXT_FUCOM,  SZ_NONE, M_STI, P_OREG),
+    E1(0xE8, CF_07, TEXT_FUCOMP, SZ_NONE, M_STI, P_OREG),
+};
+
+constexpr uint8_t I80C187_DD[] PROGMEM = {
+      0,  // TEXT_FUCOM
+      1,  // TEXT_FUCOMP
+};
 #endif
 
 // clang-format on
@@ -1372,11 +1404,35 @@ constexpr EntryPage I80287_PAGES[] PROGMEM = {
         {0xDF, ARRAY_RANGE(T80287_DF), ARRAY_RANGE(I80287_DF)},
 };
 
+constexpr EntryPage I80C187_PAGES[] PROGMEM = {
+        // i8087
+        {0xD8, ARRAY_RANGE(T8087_D8), ARRAY_RANGE(I8087_D8)},
+        {0xD9, ARRAY_RANGE(T8087_D9), ARRAY_RANGE(I8087_D9)},
+        {0xDA, ARRAY_RANGE(T8087_DA), ARRAY_RANGE(I8087_DA)},
+        {0xDB, ARRAY_RANGE(T8087_DB), ARRAY_RANGE(I8087_DB)},
+        {0xDC, ARRAY_RANGE(T8087_DC), ARRAY_RANGE(I8087_DC)},
+        {0xDD, ARRAY_RANGE(T8087_DD), ARRAY_RANGE(I8087_DD)},
+        {0xDE, ARRAY_RANGE(T8087_DE), ARRAY_RANGE(I8087_DE)},
+        {0xDF, ARRAY_RANGE(T8087_DF), ARRAY_RANGE(I8087_DF)},
+        {0x00, ARRAY_RANGE(T8087_00), ARRAY_RANGE(I8087_00)},
+        {0x9BD9, ARRAY_RANGE(T8087_9BD9), ARRAY_RANGE(I8087_9BD9)},
+        {0x9BDB, ARRAY_RANGE(T8087_9BDB), ARRAY_RANGE(I8087_9BDB)},
+        {0x9BDD, ARRAY_RANGE(T8087_9BDD), ARRAY_RANGE(I8087_9BDD)},
+        // i80287
+        {0xDB, ARRAY_RANGE(T80287_DB), ARRAY_RANGE(I80287_DB)},
+        {0xDF, ARRAY_RANGE(T80287_DF), ARRAY_RANGE(I80287_DF)},
+        // i80C187
+        {0xD9, ARRAY_RANGE(T80C187_D9), ARRAY_RANGE(I80C187_D9)},
+        {0xDA, ARRAY_RANGE(T80C187_DA), ARRAY_RANGE(I80C187_DA)},
+        {0xDD, ARRAY_RANGE(T80C187_DD), ARRAY_RANGE(I80C187_DD)},
+};
+
 using Fpu = entry::CpuBase<FpuType, EntryPage>;
 
 constexpr Fpu FPU_TABLE[] PROGMEM = {
         {FPU_I8087, TEXT_FPU_8087, ARRAY_RANGE(I8087_PAGES)},
         {FPU_I80287, TEXT_FPU_80287, ARRAY_RANGE(I80287_PAGES)},
+        {FPU_I80C187, TEXT_FPU_80C187, ARRAY_RANGE(I80C187_PAGES)},
         {FPU_NONE, TEXT_none, EMPTY_RANGE(I8087_PAGES)},
 };
 
@@ -1553,7 +1609,7 @@ void Config::setCpuType(CpuType cpuType) {
     setFpuType(_cpuSpec.fpu == FPU_NONE ? FPU_NONE : FPU_ON);
 }
 
-const /*PROGMEM*/ char *Config::fpu_P() const {
+const char *Config::fpu_P() const {
     return fpu(_cpuSpec.fpu)->name_P();
 }
 
@@ -1584,6 +1640,11 @@ Error Config::setFpuType(FpuType fpuType) {
             _cpuSpec.fpu = FPU_I80287;
             return OK;
         }
+    } else if (fpuType == FPU_I80C187) {
+        if (cpuType == I80186) {
+            _cpuSpec.fpu = FPU_I80C187;
+            return OK;
+        }
     }
     _cpuSpec.fpu = FPU_NONE;
     return FLOAT_NOT_SUPPORTED;
@@ -1602,6 +1663,8 @@ Error Config::setFpuName(StrScanner &scan) {
         return setFpuType(FPU_I8087);
     if (p.iequals_P(TEXT_FPU_80287))
         return setFpuType(FPU_I80287);
+    if (p.iequals_P(TEXT_FPU_80C187))
+        return setFpuType(FPU_I80C187);
 #endif
     return UNKNOWN_OPERAND;
 }

@@ -38,6 +38,7 @@ enum FpuType : uint8_t {
     FPU_ON,
     FPU_I8087,
     FPU_I80287,
+    FPU_I80C187,
 #endif
 };
 
@@ -61,7 +62,6 @@ struct Config : ConfigImpl<CpuType, ADDRESS_20BIT, ADDRESS_BYTE, OPCODE_8BIT, EN
 
 protected:
     CpuSpec _cpuSpec;
-
 };
 
 }  // namespace i8086

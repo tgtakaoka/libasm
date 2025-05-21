@@ -31,6 +31,7 @@ extern const char TEXT_CPU_80286[] PROGMEM;
 extern const char TEXT_CPU_V30[]   PROGMEM;
 extern const char TEXT_FPU_8087[]  PROGMEM;
 extern const char TEXT_FPU_80287[] PROGMEM;
+extern const char TEXT_FPU_80C187[] PROGMEM;
 using common::TEXT_none;
 using common::TEXT_FPU;
 
@@ -295,6 +296,15 @@ extern const char TEXT_FNSAVE[]  PROGMEM;
 
 // i80287
 extern const char TEXT_FNSETPM[] PROGMEM;
+
+// i80C187
+using common::TEXT_FCOS;
+extern const char TEXT_FPREM1[]  PROGMEM;
+using common::TEXT_FSIN;
+using common::TEXT_FSINCOS;
+extern const char TEXT_FUCOM[]   PROGMEM;
+extern const char TEXT_FUCOMP[]  PROGMEM;
+extern const char TEXT_FUCOMPP[] PROGMEM;
 
 extern const char TEXT_REG_AL[]   PROGMEM;
 extern const char TEXT_REG_BL[]   PROGMEM;

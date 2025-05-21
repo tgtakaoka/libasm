@@ -28,6 +28,7 @@ constexpr char TEXT_CPU_80286[] PROGMEM = "80286";
 constexpr char TEXT_CPU_V30[]   PROGMEM = "V30";
 constexpr char TEXT_FPU_8087[]  PROGMEM = "8087";
 constexpr char TEXT_FPU_80287[] PROGMEM = "80287";
+constexpr char TEXT_FPU_80C187[] PROGMEM = "80C187";
 
 constexpr char TEXT_AAA[]    PROGMEM = "AAA";
 constexpr char TEXT_AAD[]    PROGMEM = "AAD";
@@ -290,6 +291,15 @@ constexpr char TEXT_FNSAVE[]  PROGMEM = "FNSAVE";
 
 // i80287
 constexpr char TEXT_FNSETPM[] PROGMEM = "FNSETPM";
+
+// i80C187
+// constexpr char TEXT_FCOS[]    PROGMEM = "FCOS";
+constexpr char TEXT_FPREM1[]  PROGMEM = "FPREM1";
+// constexpr char TEXT_FSIN[]    PROGMEM = "FSIN";
+// constexpr char TEXT_FSINCOS[] PROGMEM = "FSINCOS";
+constexpr char TEXT_FUCOM[]   PROGMEM = "FUCOM";
+constexpr char TEXT_FUCOMP[]  PROGMEM = "FUCOMP";
+constexpr char TEXT_FUCOMPP[] PROGMEM = "FUCOMPP";
 
 constexpr char TEXT_REG_AL[]   PROGMEM = "AL";
 constexpr char TEXT_REG_BL[]   PROGMEM = "BL";
