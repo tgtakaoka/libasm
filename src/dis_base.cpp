@@ -238,9 +238,9 @@ StrBuffer &Disassembler::outRelAddr(
     StrCaseBuffer caseOut(out, _upperHex);
     if (_listRadix == RADIX_8)
         return formatter().formatOct(caseOut, val, deltaBits).over(out);
-    if (deltaBits <= 14)
+    if (delta >= -0x4000 && delta < 0x4000)
         return formatter().formatDec(caseOut, val, deltaBits).over(out);
-    return outHex(caseOut, val, deltaBits, true).over(out);
+    return outHex(caseOut, val, deltaBits).over(out);
 }
 
 }  // namespace libasm

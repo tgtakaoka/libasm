@@ -28,9 +28,11 @@ extern const char TEXT_I8086_LIST[] PROGMEM;
 extern const char TEXT_CPU_8086[]  PROGMEM;
 extern const char TEXT_CPU_80186[] PROGMEM;
 extern const char TEXT_CPU_80286[] PROGMEM;
+extern const char TEXT_CPU_80386[] PROGMEM;
 extern const char TEXT_CPU_V30[]   PROGMEM;
 extern const char TEXT_FPU_8087[]  PROGMEM;
 extern const char TEXT_FPU_80287[] PROGMEM;
+extern const char TEXT_FPU_80387[] PROGMEM;
 extern const char TEXT_FPU_80C187[] PROGMEM;
 using common::TEXT_none;
 using common::TEXT_FPU;
@@ -201,6 +203,68 @@ using common::TEXT_STR;
 extern const char TEXT_VERR[] PROGMEM;
 extern const char TEXT_VERW[] PROGMEM;
 
+// i80386
+extern const char TEXT_BSF[]    PROGMEM;
+using common::TEXT_BSR;
+using common::TEXT_BT;
+extern const char TEXT_BTC[]    PROGMEM;
+extern const char TEXT_BTR[]    PROGMEM;
+extern const char TEXT_BTS[]    PROGMEM;
+extern const char TEXT_CDQ[]    PROGMEM;
+using common::TEXT_CMPSD;
+extern const char TEXT_CWDE[]   PROGMEM;
+using common::TEXT_INSD;
+extern const char TEXT_IRETD[]  PROGMEM;
+extern const char TEXT_JECXZ[]  PROGMEM;
+extern const char TEXT_LFS[]    PROGMEM;
+extern const char TEXT_LGS[]    PROGMEM;
+extern const char TEXT_LODSD[]  PROGMEM;
+extern const char TEXT_LSS[]    PROGMEM;
+using common::TEXT_MOVSD;
+extern const char TEXT_MOVSX[]  PROGMEM;
+extern const char TEXT_MOVZX[]  PROGMEM;
+extern const char TEXT_OUTSD[]  PROGMEM;
+extern const char TEXT_POPAD[]  PROGMEM;
+extern const char TEXT_POPFD[]  PROGMEM;
+extern const char TEXT_PUSHAD[] PROGMEM;
+extern const char TEXT_PUSHFD[] PROGMEM;
+extern const char TEXT_SCASD[]  PROGMEM;
+extern const char TEXT_SEGFS[]  PROGMEM;
+extern const char TEXT_SEGGS[]  PROGMEM;
+extern const char TEXT_SETA[]   PROGMEM;
+extern const char TEXT_SETAE[]  PROGMEM;
+using common::TEXT_SETB;
+extern const char TEXT_SETBE[]  PROGMEM;
+using common::TEXT_SETC;
+extern const char TEXT_SETE[]   PROGMEM;
+extern const char TEXT_SETG[]   PROGMEM;
+extern const char TEXT_SETGE[]  PROGMEM;
+using common::TEXT_SETL;
+extern const char TEXT_SETLE[]  PROGMEM;
+extern const char TEXT_SETNA[]  PROGMEM;
+extern const char TEXT_SETNAE[] PROGMEM;
+extern const char TEXT_SETNB[]  PROGMEM;
+extern const char TEXT_SETNBE[] PROGMEM;
+extern const char TEXT_SETNC[]  PROGMEM;
+extern const char TEXT_SETNE[]  PROGMEM;
+extern const char TEXT_SETNG[]  PROGMEM;
+extern const char TEXT_SETNGE[] PROGMEM;
+extern const char TEXT_SETNL[]  PROGMEM;
+extern const char TEXT_SETNLE[] PROGMEM;
+extern const char TEXT_SETNO[]  PROGMEM;
+extern const char TEXT_SETNP[]  PROGMEM;
+extern const char TEXT_SETNS[]  PROGMEM;
+extern const char TEXT_SETNZ[]  PROGMEM;
+using common::TEXT_SETO;
+extern const char TEXT_SETP[]   PROGMEM;
+extern const char TEXT_SETPE[]  PROGMEM;
+extern const char TEXT_SETPO[]  PROGMEM;
+using common::TEXT_SETS;
+extern const char TEXT_SETZ[]   PROGMEM;
+using common::TEXT_SHLD;
+extern const char TEXT_SHRD[]   PROGMEM;
+extern const char TEXT_STOSD[]  PROGMEM;
+
 // V30
 extern const char TEXT_ADD4S[] PROGMEM;
 extern const char TEXT_BRKEM[] PROGMEM;
@@ -298,7 +362,7 @@ extern const char TEXT_FYL2XP1[] PROGMEM;
 // i80287
 extern const char TEXT_FNSETPM[] PROGMEM;
 
-// i80C187
+// i80387/i80C187
 using common::TEXT_FCOS;
 extern const char TEXT_FPREM1[]  PROGMEM;
 using common::TEXT_FSIN;
@@ -307,6 +371,7 @@ extern const char TEXT_FUCOM[]   PROGMEM;
 extern const char TEXT_FUCOMP[]  PROGMEM;
 extern const char TEXT_FUCOMPP[] PROGMEM;
 
+// i8086
 extern const char TEXT_REG_AH[] PROGMEM;
 extern const char TEXT_REG_AL[] PROGMEM;
 extern const char TEXT_REG_AX[] PROGMEM;
@@ -336,8 +401,35 @@ extern const char TEXT_PRE_QWORD[] PROGMEM;
 extern const char TEXT_PRE_TBYTE[] PROGMEM;
 extern const char TEXT_PRE_WORD[]  PROGMEM;
 
+// i80386
+extern const char TEXT_REG_CR[]  PROGMEM;
+extern const char TEXT_REG_DR[]  PROGMEM;
+extern const char TEXT_REG_EAX[] PROGMEM;
+extern const char TEXT_REG_EBP[] PROGMEM;
+extern const char TEXT_REG_EBX[] PROGMEM;
+extern const char TEXT_REG_ECX[] PROGMEM;
+extern const char TEXT_REG_EDI[] PROGMEM;
+extern const char TEXT_REG_EDX[] PROGMEM;
+extern const char TEXT_REG_ESI[] PROGMEM;
+extern const char TEXT_REG_ESP[] PROGMEM;
+extern const char TEXT_REG_FS[]  PROGMEM;
+extern const char TEXT_REG_GS[]  PROGMEM;
+extern const char TEXT_REG_TR[]  PROGMEM;
+
+// 80386 prefix
+extern const char TEXT_PRE_ADDR16[] PROGMEM;
+extern const char TEXT_PRE_ADDR32[] PROGMEM;
+extern const char TEXT_PRE_DATA16[] PROGMEM;
+extern const char TEXT_PRE_DATA32[] PROGMEM;
+extern const char TEXT_PRE_FAR[]    PROGMEM;
+
+// 80386 directive
+extern const char TEXT_USE16[] PROGMEM;
+extern const char TEXT_USE32[] PROGMEM;
+
 // clang-format on
 }  // namespace i8086
+
 }  // namespace text
 }  // namespace libasm
 

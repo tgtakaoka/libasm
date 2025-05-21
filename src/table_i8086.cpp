@@ -17,7 +17,10 @@
 #include "table_i8086.h"
 #include "entry_i8086.h"
 #include "entry_table.h"
+#include "reg_i8086.h"
 #include "text_i8086.h"
+
+#include <stdio.h>
 
 namespace libasm {
 namespace i8086 {
@@ -25,35 +28,53 @@ namespace i8086 {
 using namespace reg;
 using namespace libasm::text::i8086;
 
-#define X3(_opc, _cf, _name, _sz, _dst, _src, _ext, _dpos, _spos, _epos, _lock) \
-    {_opc, Entry::Flags::create(_cf, _dst, _src, _ext, _dpos, _spos, _epos, _sz, _lock), _name}
+#define X3(_opc, _cf, _name, _sz, _dst, _src, _ext, _dpos, _spos, _epos, _str, _lock, _nsz) \
+    {_opc,                                                                                  \
+            Entry::Flags::create(                                                           \
+                    _cf, _dst, _src, _ext, _dpos, _spos, _epos, _sz, _str, _lock, _nsz),    \
+            _name}
+#define X2(_opc, _cf, _name, _sz, _dst, _src, _dpos, _spos, _str, _lock, _nsz) \
+    X3(_opc, _cf, _name, _sz, _dst, _src, M_NONE, _dpos, _spos, P_NONE, _str, _lock, _nsz)
+#define X1(_opc, _cf, _name, _sz, _dst, _dpos, _str, _lock, _nsz) \
+    X2(_opc, _cf, _name, _sz, _dst, M_NONE, _dpos, P_NONE, _str, _lock, _nsz)
 #define E3(_opc, _cf, _name, _sz, _dst, _src, _ext, _dpos, _spos, _epos) \
-    X3(_opc, _cf, _name, _sz, _dst, _src, _ext, _dpos, _spos, _epos, false)
+    X3(_opc, _cf, _name, _sz, _dst, _src, _ext, _dpos, _spos, _epos, false, false, false)
 #define E2(_opc, _cf, _name, _sz, _dst, _src, _dpos, _spos) \
     E3(_opc, _cf, _name, _sz, _dst, _src, M_NONE, _dpos, _spos, P_NONE)
 #define E1(_opc, _cf, _name, _sz, _dst, _dpos) \
     E2(_opc, _cf, _name, _sz, _dst, M_NONE, _dpos, P_NONE)
 #define E0(_opc, _cf, _name, _sz) E1(_opc, _cf, _name, _sz, M_NONE, P_NONE)
 #define L2(_opc, _cf, _name, _sz, _dst, _src, _dpos, _spos) \
-    X3(_opc, _cf, _name, _sz, _dst, _src, M_NONE, _dpos, _spos, P_NONE, true)
+    X2(_opc, _cf, _name, _sz, _dst, _src, _dpos, _spos, false, true, false)
 #define L1(_opc, _cf, _name, _sz, _dst, _dpos) \
     L2(_opc, _cf, _name, _sz, _dst, M_NONE, _dpos, P_NONE)
+#define N2(_opc, _cf, _name, _sz, _dst, _src, _dpos, _spos) \
+    X2(_opc, _cf, _name, _sz, _dst, _src, _dpos, _spos, false, false, true)
+#define N1(_opc, _cf, _name, _sz, _dst, _dpos) \
+    N2(_opc, _cf, _name, _sz, _dst, M_NONE, _dpos, P_NONE)
+#define M2(_opc, _cf, _name, _sz, _dst, _src, _dpos, _spos) \
+    X2(_opc, _cf, _name, _sz, _dst, _src, _dpos, _spos, false, true, true)
+#define M1(_opc, _cf, _name, _sz, _dst, _dpos) \
+    L2(_opc, _cf, _name, _sz, _dst, M_NONE, _dpos, P_NONE)
 #define S2(_opc, _cf, _name, _sz, _dst, _src) \
-    {_opc, Entry::Flags::strInst(_cf, _dst, _src, _sz), _name}
+    X2(_opc, _cf, _name, _sz, _dst, _src, P_NONE, P_NONE, true, false, false)
 #define S1(_opc, _cf, _name, _sz, _dst) S2(_opc, _cf, _name, _sz, _dst, M_NONE)
 #define S0(_opc, _cf, _name, _sz) S1(_opc, _cf, _name, _sz, M_NONE)
+#define T2(_opc, _cf, _name, _sz, _dst, _src) \
+    X2(_opc, _cf, _name, _sz, _dst, _src, P_NONE, P_NONE, true, false, true)
+#define T1(_opc, _cf, _name, _sz, _dst) T2(_opc, _cf, _name, _sz, _dst, M_NONE)
 
 // clang-format off
 constexpr Entry T8086_00[] PROGMEM = {
     E2(0xA0, CF_00, TEXT_MOV,    SZ_BYTE, M_AL,   M_BDIR, P_NONE, P_OPR),
-    E2(0xA1, CF_00, TEXT_MOV,    SZ_WORD, M_AX,   M_WDIR, P_NONE, P_OPR),
+    E2(0xA1, CF_00, TEXT_MOV,    SZ_DATA, M_AX,   M_WDIR, P_NONE, P_OPR),
     E2(0xA2, CF_00, TEXT_MOV,    SZ_BYTE, M_BDIR, M_AL,   P_OPR,  P_NONE),
-    E2(0xA3, CF_00, TEXT_MOV,    SZ_WORD, M_WDIR, M_AX,   P_OPR,  P_NONE),
+    E2(0xA3, CF_00, TEXT_MOV,    SZ_DATA, M_WDIR, M_AX,   P_OPR,  P_NONE),
     E0(0x90, CF_00, TEXT_NOP,    SZ_NONE),
-    E2(0x90, CF_07, TEXT_XCHG,   SZ_WORD, M_AX,   M_WREG, P_NONE, P_OREG),
-    E2(0x90, CF_07, TEXT_XCHG,   SZ_WORD, M_WREG, M_AX,   P_OREG, P_NONE),
+    E2(0x90, CF_07, TEXT_XCHG,   SZ_DATA, M_AX,   M_WREG, P_NONE, P_OREG),
+    E2(0x90, CF_07, TEXT_XCHG,   SZ_DATA, M_WREG, M_AX,   P_OREG, P_NONE),
     E2(0x04, CF_00, TEXT_ADD,    SZ_BYTE, M_AL,   M_WIMM, P_NONE, P_OPR),
-    E2(0x05, CF_00, TEXT_ADD,    SZ_WORD, M_AX,   M_WIMM, P_NONE, P_OPR),
+    E2(0x05, CF_00, TEXT_ADD,    SZ_DATA, M_AX,   M_WIMM, P_NONE, P_OPR),
     E2(0x0C, CF_00, TEXT_OR,     SZ_BYTE, M_AL,   M_WIMM, P_NONE, P_OPR),
     E2(0x0D, CF_00, TEXT_OR,     SZ_WORD, M_AX,   M_WIMM, P_NONE, P_OPR),
     L2(0x00, CF_00, TEXT_ADD,    SZ_BYTE, M_BMOD, M_BREG, P_MOD,  P_REG),
@@ -100,21 +121,21 @@ constexpr Entry T8086_00[] PROGMEM = {
     L2(0x31, CF_00, TEXT_XOR,    SZ_WORD, M_WMOD, M_WREG, P_MOD,  P_REG),
     E2(0x33, CF_00, TEXT_XOR,    SZ_WORD, M_WREG, M_WMOD, P_REG,  P_MOD),
     E2(0x34, CF_00, TEXT_XOR,    SZ_BYTE, M_AL,   M_WIMM, P_NONE, P_OPR),
-    E2(0x35, CF_00, TEXT_XOR,    SZ_WORD, M_AX,   M_WIMM, P_NONE, P_OPR),
-    E0(0x36, CF_00, TEXT_SEGSS,  SZ_BYTE),
-    E0(0x37, CF_00, TEXT_AAA,    SZ_BYTE),
+    E2(0x35, CF_00, TEXT_XOR,    SZ_DATA, M_AX,   M_WIMM, P_NONE, P_OPR),
+    E0(0x36, CF_00, TEXT_SEGSS,  SZ_NONE),
+    E0(0x37, CF_00, TEXT_AAA,    SZ_NONE),
     E2(0x38, CF_00, TEXT_CMP,    SZ_BYTE, M_BMOD, M_BREG, P_MOD,  P_REG),
     E2(0x3A, CF_00, TEXT_CMP,    SZ_BYTE, M_BREG, M_BMOD, P_REG,  P_MOD),
-    E2(0x39, CF_00, TEXT_CMP,    SZ_WORD, M_WMOD, M_WREG, P_MOD,  P_REG),
-    E2(0x3B, CF_00, TEXT_CMP,    SZ_WORD, M_WREG, M_WMOD, P_REG,  P_MOD),
+    E2(0x39, CF_00, TEXT_CMP,    SZ_DATA, M_WMOD, M_WREG, P_MOD,  P_REG),
+    E2(0x3B, CF_00, TEXT_CMP,    SZ_DATA, M_WREG, M_WMOD, P_REG,  P_MOD),
     E2(0x3C, CF_00, TEXT_CMP,    SZ_BYTE, M_AL,   M_WIMM, P_NONE, P_OPR),
-    E2(0x3D, CF_00, TEXT_CMP,    SZ_WORD, M_AX,   M_WIMM, P_NONE, P_OPR),
-    E0(0x3E, CF_00, TEXT_SEGDS,  SZ_BYTE),
-    E0(0x3F, CF_00, TEXT_AAS,    SZ_BYTE),
-    E1(0x40, CF_07, TEXT_INC,    SZ_WORD, M_WREG, P_OREG),
-    E1(0x48, CF_07, TEXT_DEC,    SZ_WORD, M_WREG, P_OREG),
-    E1(0x50, CF_07, TEXT_PUSH,   SZ_WORD, M_WREG, P_OREG),
-    E1(0x58, CF_07, TEXT_POP,    SZ_WORD, M_WREG, P_OREG),
+    E2(0x3D, CF_00, TEXT_CMP,    SZ_DATA, M_AX,   M_WIMM, P_NONE, P_OPR),
+    E0(0x3E, CF_00, TEXT_SEGDS,  SZ_NONE),
+    E0(0x3F, CF_00, TEXT_AAS,    SZ_NONE),
+    E1(0x40, CF_07, TEXT_INC,    SZ_DATA, M_WREG, P_OREG),
+    E1(0x48, CF_07, TEXT_DEC,    SZ_DATA, M_WREG, P_OREG),
+    E1(0x50, CF_07, TEXT_PUSH,   SZ_DATA, M_WREG, P_OREG),
+    E1(0x58, CF_07, TEXT_POP,    SZ_DATA, M_WREG, P_OREG),
     E1(0x70, CF_00, TEXT_JO,     SZ_NONE, M_REL8, P_OPR),
     E1(0x71, CF_00, TEXT_JNO,    SZ_NONE, M_REL8, P_OPR),
     E1(0x72, CF_00, TEXT_JB,     SZ_NONE, M_REL8, P_OPR),
@@ -155,63 +176,65 @@ constexpr Entry T8086_00[] PROGMEM = {
     L2(0x87, CF_00, TEXT_XCHG,   SZ_WORD, M_WREG, M_WMOD, P_REG,  P_MOD),
     E2(0x88, CF_00, TEXT_MOV,    SZ_BYTE, M_BMOD, M_BREG, P_MOD,  P_REG),
     E2(0x8A, CF_00, TEXT_MOV,    SZ_BYTE, M_BREG, M_BMOD, P_REG,  P_MOD),
-    E2(0x89, CF_00, TEXT_MOV,    SZ_WORD, M_WMOD, M_WREG, P_MOD,  P_REG),
-    E2(0x8B, CF_00, TEXT_MOV,    SZ_WORD, M_WREG, M_WMOD, P_REG,  P_MOD),
+    E2(0x89, CF_00, TEXT_MOV,    SZ_DATA, M_WMOD, M_WREG, P_MOD,  P_REG),
+    E2(0x8B, CF_00, TEXT_MOV,    SZ_DATA, M_WREG, M_WMOD, P_REG,  P_MOD),
     E2(0x8C, CF_00, TEXT_MOV,    SZ_WORD, M_WMOD, M_SREG, P_MOD,  P_REG),
-    E2(0x8D, CF_00, TEXT_LEA,    SZ_WORD, M_WREG, M_BMEM, P_REG,  P_MOD),
-    E2(0x8D, CF_00, TEXT_LEA,    SZ_WORD, M_WREG, M_WMEM, P_REG,  P_MOD),
+    E2(0x8D, CF_00, TEXT_LEA,    SZ_DATA, M_WREG, M_MEM,  P_REG,  P_MOD),
     E2(0x8E, CF_00, TEXT_MOV,    SZ_WORD, M_SREG, M_WMOD, P_REG,  P_MOD),
-    E0(0x98, CF_00, TEXT_CBW,    SZ_BYTE),
-    E0(0x99, CF_00, TEXT_CWD,    SZ_WORD),
-    E1(0x9A, CF_00, TEXT_CALLF,  SZ_NONE, M_FAR,  P_OPR),
-    E2(0x9A, CF_00, TEXT_LCALL,  SZ_NONE, M_SEG,  M_OFF, P_OPR,  P_OPR),
+    E0(0x98, CF_00, TEXT_CBW,    SZ_NONE),
+    E0(0x99, CF_00, TEXT_CWD,    SZ_NONE),
+    E1(0x9A, CF_00, TEXT_CALL,   SZ_NONE, M_FAR,  P_OPR), // FMODE_FAR
+    E1(0x9A, CF_00, TEXT_CALLF,  SZ_NONE, M_FAR,  P_OPR), // FMODE_F
+    E2(0x9A, CF_00, TEXT_LCALL,  SZ_NONE, M_SEG,  M_OFF, P_OPR,  P_OPR), // FMODE_L
     E0(0x9B, CF_00, TEXT_WAIT,   SZ_NONE),
     E0(0x9C, CF_00, TEXT_PUSHF,  SZ_WORD),
     E0(0x9D, CF_00, TEXT_POPF,   SZ_WORD),
-    E0(0x9E, CF_00, TEXT_SAHF,   SZ_BYTE),
-    E0(0x9F, CF_00, TEXT_LAHF,   SZ_BYTE),
+    E0(0x9E, CF_00, TEXT_SAHF,   SZ_NONE),
+    E0(0x9F, CF_00, TEXT_LAHF,   SZ_NONE),
     S2(0xA4, CF_00, TEXT_MOVSB,  SZ_BYTE, M_BMEM, M_BMEM),
     S2(0xA5, CF_00, TEXT_MOVSW,  SZ_WORD, M_WMEM, M_WMEM),
-    S2(0xA4, CF_00, TEXT_MOVS,   SZ_BYTE, M_BMEM, M_BMEM),
-    S2(0xA5, CF_00, TEXT_MOVS,   SZ_WORD, M_WMEM, M_WMEM),
-    S0(0xA4, CF_00, TEXT_MOVSB,  SZ_BYTE),
-    S0(0xA5, CF_00, TEXT_MOVSW,  SZ_WORD),
+    T2(0xA4, CF_00, TEXT_MOVS,   SZ_BYTE, M_BMEM, M_BMEM),
+    T2(0xA5, CF_00, TEXT_MOVS,   SZ_DATA, M_WMEM, M_WMEM),
+    S0(0xA4, CF_00, TEXT_MOVSB,  SZ_NONE),
+    S0(0xA5, CF_00, TEXT_MOVSW,  SZ_NONE),
     S2(0xA6, CF_00, TEXT_CMPSB,  SZ_BYTE, M_BMEM, M_BMEM),
     S2(0xA7, CF_00, TEXT_CMPSW,  SZ_WORD, M_WMEM, M_WMEM),
-    S2(0xA6, CF_00, TEXT_CMPS,   SZ_BYTE, M_BMEM, M_BMEM),
-    S2(0xA7, CF_00, TEXT_CMPS,   SZ_WORD, M_WMEM, M_WMEM),
-    S0(0xA6, CF_00, TEXT_CMPSB,  SZ_BYTE),
-    S0(0xA7, CF_00, TEXT_CMPSW,  SZ_WORD),
+    T2(0xA6, CF_00, TEXT_CMPS,   SZ_BYTE, M_BMEM, M_BMEM),
+    T2(0xA7, CF_00, TEXT_CMPS,   SZ_DATA, M_WMEM, M_WMEM),
+    S0(0xA6, CF_00, TEXT_CMPSB,  SZ_NONE),
+    S0(0xA7, CF_00, TEXT_CMPSW,  SZ_NONE),
     E2(0xA8, CF_00, TEXT_TEST,   SZ_BYTE, M_AL,   M_WIMM,  P_NONE, P_OPR),
-    E2(0xA9, CF_00, TEXT_TEST,   SZ_WORD, M_AX,   M_WIMM,  P_NONE, P_OPR),
-    S1(0xAA, CF_00, TEXT_STOSB,  SZ_NONE, M_BMEM),
-    S1(0xAB, CF_00, TEXT_STOSW,  SZ_NONE, M_WMEM),
-    S1(0xAA, CF_00, TEXT_STOS,   SZ_BYTE, M_BMEM),
-    S1(0xAB, CF_00, TEXT_STOS,   SZ_WORD, M_WMEM),
-    S0(0xAA, CF_00, TEXT_STOSB,  SZ_BYTE),
-    S0(0xAB, CF_00, TEXT_STOSW,  SZ_WORD),
-    S1(0xAC, CF_00, TEXT_LODSB,  SZ_NONE, M_BMEM),
-    S1(0xAD, CF_00, TEXT_LODSW,  SZ_NONE, M_WMEM),
-    S1(0xAC, CF_00, TEXT_LODS,   SZ_BYTE, M_BMEM),
-    S1(0xAD, CF_00, TEXT_LODS,   SZ_WORD, M_WMEM),
-    S0(0xAC, CF_00, TEXT_LODSB,  SZ_BYTE),
-    S0(0xAD, CF_00, TEXT_LODSW,  SZ_WORD),
-    S1(0xAE, CF_00, TEXT_SCASB,  SZ_NONE, M_BMEM),
-    S1(0xAF, CF_00, TEXT_SCASW,  SZ_NONE, M_WMEM),
-    S1(0xAE, CF_00, TEXT_SCAS,   SZ_BYTE, M_BMEM),
-    S1(0xAF, CF_00, TEXT_SCAS,   SZ_WORD, M_WMEM),
-    S0(0xAE, CF_00, TEXT_SCASB,  SZ_BYTE),
-    S0(0xAF, CF_00, TEXT_SCASW,  SZ_WORD),
+    E2(0xA9, CF_00, TEXT_TEST,   SZ_DATA, M_AX,   M_WIMM,  P_NONE, P_OPR),
+    S1(0xAA, CF_00, TEXT_STOSB,  SZ_BYTE, M_BMEM),
+    S1(0xAB, CF_00, TEXT_STOSW,  SZ_WORD, M_WMEM),
+    T1(0xAA, CF_00, TEXT_STOS,   SZ_BYTE, M_BMEM),
+    T1(0xAB, CF_00, TEXT_STOS,   SZ_DATA, M_WMEM),
+    S0(0xAA, CF_00, TEXT_STOSB,  SZ_NONE),
+    S0(0xAB, CF_00, TEXT_STOSW,  SZ_NONE),
+    S1(0xAC, CF_00, TEXT_LODSB,  SZ_BYTE, M_BMEM),
+    S1(0xAD, CF_00, TEXT_LODSW,  SZ_WORD, M_WMEM),
+    T1(0xAC, CF_00, TEXT_LODS,   SZ_BYTE, M_BMEM),
+    T1(0xAD, CF_00, TEXT_LODS,   SZ_DATA, M_WMEM),
+    S0(0xAC, CF_00, TEXT_LODSB,  SZ_NONE),
+    S0(0xAD, CF_00, TEXT_LODSW,  SZ_NONE),
+    S1(0xAE, CF_00, TEXT_SCASB,  SZ_BYTE, M_BMEM),
+    S1(0xAF, CF_00, TEXT_SCASW,  SZ_WORD, M_WMEM),
+    T1(0xAE, CF_00, TEXT_SCAS,   SZ_BYTE, M_BMEM),
+    T1(0xAF, CF_00, TEXT_SCAS,   SZ_DATA, M_WMEM),
+    S0(0xAE, CF_00, TEXT_SCASB,  SZ_NONE),
+    S0(0xAF, CF_00, TEXT_SCASW,  SZ_NONE),
     E2(0xB0, CF_07, TEXT_MOV,    SZ_BYTE, M_BREG, M_WIMM, P_OREG, P_OPR),
-    E2(0xB8, CF_07, TEXT_MOV,    SZ_WORD, M_WREG, M_WIMM, P_OREG, P_OPR),
-    E1(0xC2, CF_00, TEXT_RET,    SZ_WORD, M_UI16, P_OPR),
+    E2(0xB8, CF_07, TEXT_MOV,    SZ_DATA, M_WREG, M_WIMM, P_OREG, P_OPR),
+    E1(0xC2, CF_00, TEXT_RET,    SZ_NONE, M_UI16, P_OPR),
     E0(0xC3, CF_00, TEXT_RET,    SZ_NONE),
-    E2(0xC4, CF_00, TEXT_LES,    SZ_WORD, M_WREG, M_WMEM, P_REG,  P_MOD),
-    E2(0xC5, CF_00, TEXT_LDS,    SZ_WORD, M_WREG, M_WMEM, P_REG,  P_MOD),
-    E1(0xCA, CF_00, TEXT_RETF,   SZ_WORD, M_UI16, P_OPR),
-    E0(0xCB, CF_00, TEXT_RETF,   SZ_NONE),
-    E1(0xCA, CF_00, TEXT_LRET,   SZ_WORD, M_UI16, P_OPR),
-    E0(0xCB, CF_00, TEXT_LRET,   SZ_NONE),
+    E2(0xC4, CF_00, TEXT_LES,    SZ_DATA, M_WREG, M_MEM, P_REG,  P_MOD),
+    E2(0xC5, CF_00, TEXT_LDS,    SZ_DATA, M_WREG, M_MEM, P_REG,  P_MOD),
+    E1(0xCA, CF_00, TEXT_RETF,   SZ_WORD, M_UI16, P_OPR), // FMODE_FAR
+    E1(0xCA, CF_00, TEXT_RETF,   SZ_WORD, M_UI16, P_OPR), // FMODE_F
+    E1(0xCA, CF_00, TEXT_LRET,   SZ_WORD, M_UI16, P_OPR), // FMODE_L
+    E0(0xCB, CF_00, TEXT_RETF,   SZ_NONE),                // FMODE_FAR
+    E0(0xCB, CF_00, TEXT_RETF,   SZ_NONE),                // FMODE_F
+    E0(0xCB, CF_00, TEXT_LRET,   SZ_NONE),                // FMODE_L
     E1(0xCC, CF_00, TEXT_INT,    SZ_NONE, M_VAL3, P_NONE),
     E1(0xCD, CF_00, TEXT_INT,    SZ_BYTE, M_WIMM, P_OPR),
     E0(0xCE, CF_00, TEXT_INTO,   SZ_NONE),
@@ -224,18 +247,19 @@ constexpr Entry T8086_00[] PROGMEM = {
     E1(0xE2, CF_00, TEXT_LOOP,   SZ_NONE, M_REL8, P_OPR),
     E1(0xE3, CF_00, TEXT_JCXZ,   SZ_NONE, M_REL8, P_OPR),
     E2(0xE4, CF_00, TEXT_IN,     SZ_BYTE, M_AL,   M_IOA,  P_NONE, P_OPR),
-    E2(0xE5, CF_00, TEXT_IN,     SZ_WORD, M_AX,   M_IOA,  P_NONE, P_OPR),
+    E2(0xE5, CF_00, TEXT_IN,     SZ_DATA, M_AX,   M_IOA,  P_NONE, P_OPR),
     E2(0xE6, CF_00, TEXT_OUT,    SZ_BYTE, M_IOA,  M_AL,   P_OPR,  P_NONE),
-    E2(0xE7, CF_00, TEXT_OUT,    SZ_WORD, M_IOA,  M_AX,   P_OPR,  P_NONE),
+    E2(0xE7, CF_00, TEXT_OUT,    SZ_DATA, M_IOA,  M_AX,   P_OPR,  P_NONE),
     E1(0xE8, CF_00, TEXT_CALL,   SZ_NONE, M_REL,  P_OPR),
     E1(0xEB, CF_00, TEXT_JMP,    SZ_NONE, M_REL8, P_OPR),
     E1(0xE9, CF_00, TEXT_JMP,    SZ_NONE, M_REL,  P_OPR),
+    E1(0xEA, CF_00, TEXT_JMP,    SZ_NONE, M_FAR,  P_OPR),
     E1(0xEA, CF_00, TEXT_JMPF,   SZ_NONE, M_FAR,  P_OPR),
     E2(0xEA, CF_00, TEXT_LJMP,   SZ_NONE, M_SEG,  M_OFF,  P_OPR,  P_OPR),
     E2(0xEC, CF_00, TEXT_IN,     SZ_BYTE, M_AL,   M_DX,   P_NONE, P_NONE),
-    E2(0xED, CF_00, TEXT_IN,     SZ_WORD, M_AX,   M_DX,   P_NONE, P_NONE),
+    E2(0xED, CF_00, TEXT_IN,     SZ_DATA, M_AX,   M_DX,   P_NONE, P_NONE),
     E2(0xEE, CF_00, TEXT_OUT,    SZ_BYTE, M_DX,   M_AL,   P_NONE, P_NONE),
-    E2(0xEF, CF_00, TEXT_OUT,    SZ_WORD, M_DX,   M_AX,   P_NONE, P_NONE),
+    E2(0xEF, CF_00, TEXT_OUT,    SZ_DATA, M_DX,   M_AX,   P_NONE, P_NONE),
     E0(0xF0, CF_00, TEXT_LOCK,   SZ_NONE),
     E0(0xF2, CF_00, TEXT_REPNE,  SZ_NONE),
     E0(0xF2, CF_00, TEXT_REPNZ,  SZ_NONE),
@@ -273,13 +297,14 @@ constexpr uint8_t I8086_00[] PROGMEM = {
      37,  // TEXT_AND
      38,  // TEXT_AND
      39,  // TEXT_AND
-    182,  // TEXT_CALL
+    117,  // TEXT_CALL
+    184,  // TEXT_CALL
     118,  // TEXT_CALLF
-    116,  // TEXT_CBW
-    199,  // TEXT_CLC
-    203,  // TEXT_CLD
-    201,  // TEXT_CLI
-    198,  // TEXT_CMC
+    115,  // TEXT_CBW
+    202,  // TEXT_CLC
+    206,  // TEXT_CLD
+    204,  // TEXT_CLI
+    201,  // TEXT_CMC
      58,  // TEXT_CMP
      59,  // TEXT_CMP
      60,  // TEXT_CMP
@@ -292,34 +317,35 @@ constexpr uint8_t I8086_00[] PROGMEM = {
     135,  // TEXT_CMPSB
     132,  // TEXT_CMPSW
     136,  // TEXT_CMPSW
-    117,  // TEXT_CWD
+    116,  // TEXT_CWD
      41,  // TEXT_DAA
      49,  // TEXT_DAS
      67,  // TEXT_DEC
-    197,  // TEXT_HLT
-    178,  // TEXT_IN
-    179,  // TEXT_IN
-    187,  // TEXT_IN
-    188,  // TEXT_IN
+    200,  // TEXT_HLT
+    180,  // TEXT_IN
+    181,  // TEXT_IN
+    190,  // TEXT_IN
+    191,  // TEXT_IN
      66,  // TEXT_INC
-    167,  // TEXT_INT
-    168,  // TEXT_INT
-    169,  // TEXT_INTO
-    170,  // TEXT_IRET
+    169,  // TEXT_INT
+    170,  // TEXT_INT
+    171,  // TEXT_INTO
+    172,  // TEXT_IRET
      84,  // TEXT_JA
      75,  // TEXT_JAE
      72,  // TEXT_JB
      82,  // TEXT_JBE
      73,  // TEXT_JC
-    177,  // TEXT_JCXZ
+    179,  // TEXT_JCXZ
      78,  // TEXT_JE
      98,  // TEXT_JG
      94,  // TEXT_JGE
      92,  // TEXT_JL
      96,  // TEXT_JLE
-    183,  // TEXT_JMP
-    184,  // TEXT_JMP
-    185,  // TEXT_JMPF
+    185,  // TEXT_JMP
+    186,  // TEXT_JMP
+    187,  // TEXT_JMP
+    188,  // TEXT_JMPF
      83,  // TEXT_JNA
      74,  // TEXT_JNAE
      76,  // TEXT_JNB
@@ -344,23 +370,22 @@ constexpr uint8_t I8086_00[] PROGMEM = {
     119,  // TEXT_LCALL
     162,  // TEXT_LDS
     113,  // TEXT_LEA
-    114,  // TEXT_LEA
     161,  // TEXT_LES
-    186,  // TEXT_LJMP
-    191,  // TEXT_LOCK
+    189,  // TEXT_LJMP
+    194,  // TEXT_LOCK
     147,  // TEXT_LODS
     148,  // TEXT_LODS
     145,  // TEXT_LODSB
     149,  // TEXT_LODSB
     146,  // TEXT_LODSW
     150,  // TEXT_LODSW
-    176,  // TEXT_LOOP
-    174,  // TEXT_LOOPE
-    172,  // TEXT_LOOPNE
-    173,  // TEXT_LOOPNZ
-    175,  // TEXT_LOOPZ
+    178,  // TEXT_LOOP
+    176,  // TEXT_LOOPE
+    174,  // TEXT_LOOPNE
+    175,  // TEXT_LOOPNZ
+    177,  // TEXT_LOOPZ
     165,  // TEXT_LRET
-    166,  // TEXT_LRET
+    168,  // TEXT_LRET
       0,  // TEXT_MOV
       1,  // TEXT_MOV
       2,  // TEXT_MOV
@@ -370,7 +395,7 @@ constexpr uint8_t I8086_00[] PROGMEM = {
     110,  // TEXT_MOV
     111,  // TEXT_MOV
     112,  // TEXT_MOV
-    115,  // TEXT_MOV
+    114,  // TEXT_MOV
     157,  // TEXT_MOV
     158,  // TEXT_MOV
     127,  // TEXT_MOVS
@@ -386,10 +411,10 @@ constexpr uint8_t I8086_00[] PROGMEM = {
      19,  // TEXT_OR
      20,  // TEXT_OR
      21,  // TEXT_OR
-    180,  // TEXT_OUT
-    181,  // TEXT_OUT
-    189,  // TEXT_OUT
-    190,  // TEXT_OUT
+    182,  // TEXT_OUT
+    183,  // TEXT_OUT
+    192,  // TEXT_OUT
+    193,  // TEXT_OUT
      16,  // TEXT_POP
      17,  // TEXT_POP
      69,  // TEXT_POP
@@ -397,15 +422,17 @@ constexpr uint8_t I8086_00[] PROGMEM = {
      15,  // TEXT_PUSH
      68,  // TEXT_PUSH
     121,  // TEXT_PUSHF
-    194,  // TEXT_REP
-    195,  // TEXT_REPE
-    192,  // TEXT_REPNE
-    193,  // TEXT_REPNZ
-    196,  // TEXT_REPZ
+    197,  // TEXT_REP
+    198,  // TEXT_REPE
+    195,  // TEXT_REPNE
+    196,  // TEXT_REPNZ
+    199,  // TEXT_REPZ
     159,  // TEXT_RET
     160,  // TEXT_RET
     163,  // TEXT_RETF
     164,  // TEXT_RETF
+    166,  // TEXT_RETF
+    167,  // TEXT_RETF
     123,  // TEXT_SAHF
      28,  // TEXT_SBB
      29,  // TEXT_SBB
@@ -423,9 +450,9 @@ constexpr uint8_t I8086_00[] PROGMEM = {
      64,  // TEXT_SEGDS
      40,  // TEXT_SEGES
      56,  // TEXT_SEGSS
-    200,  // TEXT_STC
-    204,  // TEXT_STD
-    202,  // TEXT_STI
+    203,  // TEXT_STC
+    207,  // TEXT_STD
+    205,  // TEXT_STI
     141,  // TEXT_STOS
     142,  // TEXT_STOS
     139,  // TEXT_STOSB
@@ -451,7 +478,7 @@ constexpr uint8_t I8086_00[] PROGMEM = {
     105,  // TEXT_XCHG
     106,  // TEXT_XCHG
     107,  // TEXT_XCHG
-    171,  // TEXT_XLAT
+    173,  // TEXT_XLAT
      50,  // TEXT_XOR
      51,  // TEXT_XOR
      52,  // TEXT_XOR
@@ -461,14 +488,14 @@ constexpr uint8_t I8086_00[] PROGMEM = {
 };
 
 constexpr Entry T8086_80[] PROGMEM = {
-    L2(000, CF_00, TEXT_ADD, SZ_BYTE, M_BMOD, M_WIMM, P_OMOD, P_OPR),
-    L2(010, CF_00, TEXT_OR,  SZ_BYTE, M_BMOD, M_WIMM, P_OMOD, P_OPR),
-    L2(020, CF_00, TEXT_ADC, SZ_BYTE, M_BMOD, M_WIMM, P_OMOD, P_OPR),
-    L2(030, CF_00, TEXT_SBB, SZ_BYTE, M_BMOD, M_WIMM, P_OMOD, P_OPR),
-    L2(040, CF_00, TEXT_AND, SZ_BYTE, M_BMOD, M_WIMM, P_OMOD, P_OPR),
-    L2(050, CF_00, TEXT_SUB, SZ_BYTE, M_BMOD, M_WIMM, P_OMOD, P_OPR),
-    L2(060, CF_00, TEXT_XOR, SZ_BYTE, M_BMOD, M_WIMM, P_OMOD, P_OPR),
-    E2(070, CF_00, TEXT_CMP, SZ_BYTE, M_BMOD, M_WIMM, P_OMOD, P_OPR),
+    M2(000, CF_00, TEXT_ADD, SZ_BYTE, M_BMOD, M_WIMM, P_OMOD, P_OPR),
+    M2(010, CF_00, TEXT_OR,  SZ_BYTE, M_BMOD, M_WIMM, P_OMOD, P_OPR),
+    M2(020, CF_00, TEXT_ADC, SZ_BYTE, M_BMOD, M_WIMM, P_OMOD, P_OPR),
+    M2(030, CF_00, TEXT_SBB, SZ_BYTE, M_BMOD, M_WIMM, P_OMOD, P_OPR),
+    M2(040, CF_00, TEXT_AND, SZ_BYTE, M_BMOD, M_WIMM, P_OMOD, P_OPR),
+    M2(050, CF_00, TEXT_SUB, SZ_BYTE, M_BMOD, M_WIMM, P_OMOD, P_OPR),
+    M2(060, CF_00, TEXT_XOR, SZ_BYTE, M_BMOD, M_WIMM, P_OMOD, P_OPR),
+    N2(070, CF_00, TEXT_CMP, SZ_BYTE, M_BMOD, M_WIMM, P_OMOD, P_OPR),
 };
 
 constexpr uint8_t I8086_8X[] PROGMEM = {
@@ -483,29 +510,29 @@ constexpr uint8_t I8086_8X[] PROGMEM = {
 };
 
 constexpr Entry T8086_81[] PROGMEM = {
-    L2(000, CF_00, TEXT_ADD, SZ_WORD, M_WMOD, M_WIMM, P_OMOD, P_OPR),
-    L2(010, CF_00, TEXT_OR,  SZ_WORD, M_WMOD, M_WIMM, P_OMOD, P_OPR),
-    L2(020, CF_00, TEXT_ADC, SZ_WORD, M_WMOD, M_WIMM, P_OMOD, P_OPR),
-    L2(030, CF_00, TEXT_SBB, SZ_WORD, M_WMOD, M_WIMM, P_OMOD, P_OPR),
-    L2(040, CF_00, TEXT_AND, SZ_WORD, M_WMOD, M_WIMM, P_OMOD, P_OPR),
-    L2(050, CF_00, TEXT_SUB, SZ_WORD, M_WMOD, M_WIMM, P_OMOD, P_OPR),
-    L2(060, CF_00, TEXT_XOR, SZ_WORD, M_WMOD, M_WIMM, P_OMOD, P_OPR),
-    E2(070, CF_00, TEXT_CMP, SZ_WORD, M_WMOD, M_WIMM, P_OMOD, P_OPR),
+    M2(000, CF_00, TEXT_ADD, SZ_WORD, M_WMOD, M_WIMM, P_OMOD, P_OPR),
+    M2(010, CF_00, TEXT_OR,  SZ_WORD, M_WMOD, M_WIMM, P_OMOD, P_OPR),
+    M2(020, CF_00, TEXT_ADC, SZ_WORD, M_WMOD, M_WIMM, P_OMOD, P_OPR),
+    M2(030, CF_00, TEXT_SBB, SZ_WORD, M_WMOD, M_WIMM, P_OMOD, P_OPR),
+    M2(040, CF_00, TEXT_AND, SZ_WORD, M_WMOD, M_WIMM, P_OMOD, P_OPR),
+    M2(050, CF_00, TEXT_SUB, SZ_WORD, M_WMOD, M_WIMM, P_OMOD, P_OPR),
+    M2(060, CF_00, TEXT_XOR, SZ_WORD, M_WMOD, M_WIMM, P_OMOD, P_OPR),
+    N2(070, CF_00, TEXT_CMP, SZ_WORD, M_WMOD, M_WIMM, P_OMOD, P_OPR),
 };
 
 constexpr Entry T8086_83[] PROGMEM = {
-    L2(000, CF_00, TEXT_ADD, SZ_WORD, M_WMOD, M_BIMM, P_OMOD, P_OPR),
-    L2(010, CF_00, TEXT_OR,  SZ_WORD, M_WMOD, M_BIMM, P_OMOD, P_OPR),
-    L2(020, CF_00, TEXT_ADC, SZ_WORD, M_WMOD, M_BIMM, P_OMOD, P_OPR),
-    L2(030, CF_00, TEXT_SBB, SZ_WORD, M_WMOD, M_BIMM, P_OMOD, P_OPR),
-    L2(040, CF_00, TEXT_AND, SZ_WORD, M_WMOD, M_BIMM, P_OMOD, P_OPR),
-    L2(050, CF_00, TEXT_SUB, SZ_WORD, M_WMOD, M_BIMM, P_OMOD, P_OPR),
-    L2(060, CF_00, TEXT_XOR, SZ_WORD, M_WMOD, M_BIMM, P_OMOD, P_OPR),
-    E2(070, CF_00, TEXT_CMP, SZ_WORD, M_WMOD, M_BIMM, P_OMOD, P_OPR),
+    M2(000, CF_00, TEXT_ADD, SZ_WORD, M_WMOD, M_BIMM, P_OMOD, P_OPR),
+    M2(010, CF_00, TEXT_OR,  SZ_WORD, M_WMOD, M_BIMM, P_OMOD, P_OPR),
+    M2(020, CF_00, TEXT_ADC, SZ_WORD, M_WMOD, M_BIMM, P_OMOD, P_OPR),
+    M2(030, CF_00, TEXT_SBB, SZ_WORD, M_WMOD, M_BIMM, P_OMOD, P_OPR),
+    M2(040, CF_00, TEXT_AND, SZ_WORD, M_WMOD, M_BIMM, P_OMOD, P_OPR),
+    M2(050, CF_00, TEXT_SUB, SZ_WORD, M_WMOD, M_BIMM, P_OMOD, P_OPR),
+    M2(060, CF_00, TEXT_XOR, SZ_WORD, M_WMOD, M_BIMM, P_OMOD, P_OPR),
+    N2(070, CF_00, TEXT_CMP, SZ_WORD, M_WMOD, M_BIMM, P_OMOD, P_OPR),
 };
 
 constexpr Entry T8086_8F[] PROGMEM = {
-    E1(000, CF_00, TEXT_POP, SZ_NONE, M_WMOD, P_OMOD),
+    E1(000, CF_00, TEXT_POP, SZ_WORD, M_WMOD, P_OMOD),
 };
 
 constexpr uint8_t I8086_8F[] PROGMEM = {
@@ -513,7 +540,7 @@ constexpr uint8_t I8086_8F[] PROGMEM = {
 };
 
 constexpr Entry T8086_C6[] PROGMEM = {
-    E2(000, CF_00, TEXT_MOV, SZ_BYTE, M_BMOD, M_WIMM, P_OMOD, P_OPR),
+    N2(000, CF_00, TEXT_MOV, SZ_BYTE, M_BMOD, M_WIMM, P_OMOD, P_OPR),
 };
 
 constexpr uint8_t I8086_C6[] PROGMEM = {
@@ -521,7 +548,7 @@ constexpr uint8_t I8086_C6[] PROGMEM = {
 };
 
 constexpr Entry T8086_C7[] PROGMEM = {
-    E2(000, CF_00, TEXT_MOV, SZ_WORD, M_WMOD, M_WIMM, P_OMOD, P_OPR),
+    N2(000, CF_00, TEXT_MOV, SZ_DATA, M_WMOD, M_WIMM, P_OMOD, P_OPR),
 };
 
 constexpr uint8_t I8086_C7[] PROGMEM = {
@@ -529,14 +556,14 @@ constexpr uint8_t I8086_C7[] PROGMEM = {
 };
 
 constexpr Entry T8086_D0[] PROGMEM = {
-    E2(000, CF_00, TEXT_ROL, SZ_BYTE, M_BMOD, M_VAL1, P_OMOD, P_NONE),
-    E2(010, CF_00, TEXT_ROR, SZ_BYTE, M_BMOD, M_VAL1, P_OMOD, P_NONE),
-    E2(020, CF_00, TEXT_RCL, SZ_BYTE, M_BMOD, M_VAL1, P_OMOD, P_NONE),
-    E2(030, CF_00, TEXT_RCR, SZ_BYTE, M_BMOD, M_VAL1, P_OMOD, P_NONE),
-    E2(040, CF_00, TEXT_SHL, SZ_BYTE, M_BMOD, M_VAL1, P_OMOD, P_NONE),
-    E2(040, CF_00, TEXT_SAL, SZ_BYTE, M_BMOD, M_VAL1, P_OMOD, P_NONE),
-    E2(050, CF_00, TEXT_SHR, SZ_BYTE, M_BMOD, M_VAL1, P_OMOD, P_NONE),
-    E2(070, CF_00, TEXT_SAR, SZ_BYTE, M_BMOD, M_VAL1, P_OMOD, P_NONE),
+    N2(000, CF_00, TEXT_ROL, SZ_BYTE, M_BMOD, M_VAL1, P_OMOD, P_NONE),
+    N2(010, CF_00, TEXT_ROR, SZ_BYTE, M_BMOD, M_VAL1, P_OMOD, P_NONE),
+    N2(020, CF_00, TEXT_RCL, SZ_BYTE, M_BMOD, M_VAL1, P_OMOD, P_NONE),
+    N2(030, CF_00, TEXT_RCR, SZ_BYTE, M_BMOD, M_VAL1, P_OMOD, P_NONE),
+    N2(040, CF_00, TEXT_SHL, SZ_BYTE, M_BMOD, M_VAL1, P_OMOD, P_NONE),
+    N2(040, CF_00, TEXT_SAL, SZ_BYTE, M_BMOD, M_VAL1, P_OMOD, P_NONE),
+    N2(050, CF_00, TEXT_SHR, SZ_BYTE, M_BMOD, M_VAL1, P_OMOD, P_NONE),
+    N2(070, CF_00, TEXT_SAR, SZ_BYTE, M_BMOD, M_VAL1, P_OMOD, P_NONE),
 };
 
 constexpr uint8_t I8086_DX[] PROGMEM = {
@@ -551,40 +578,40 @@ constexpr uint8_t I8086_DX[] PROGMEM = {
 };
 
 constexpr Entry T8086_D1[] PROGMEM = {
-    E2(000, CF_00, TEXT_ROL, SZ_WORD, M_WMOD, M_VAL1, P_OMOD, P_NONE),
-    E2(010, CF_00, TEXT_ROR, SZ_WORD, M_WMOD, M_VAL1, P_OMOD, P_NONE),
-    E2(020, CF_00, TEXT_RCL, SZ_WORD, M_WMOD, M_VAL1, P_OMOD, P_NONE),
-    E2(030, CF_00, TEXT_RCR, SZ_WORD, M_WMOD, M_VAL1, P_OMOD, P_NONE),
-    E2(040, CF_00, TEXT_SHL, SZ_WORD, M_WMOD, M_VAL1, P_OMOD, P_NONE),
-    E2(040, CF_00, TEXT_SAL, SZ_WORD, M_WMOD, M_VAL1, P_OMOD, P_NONE),
-    E2(050, CF_00, TEXT_SHR, SZ_WORD, M_WMOD, M_VAL1, P_OMOD, P_NONE),
-    E2(070, CF_00, TEXT_SAR, SZ_WORD, M_WMOD, M_VAL1, P_OMOD, P_NONE),
+    N2(000, CF_00, TEXT_ROL, SZ_DATA, M_WMOD, M_VAL1, P_OMOD, P_NONE),
+    N2(010, CF_00, TEXT_ROR, SZ_DATA, M_WMOD, M_VAL1, P_OMOD, P_NONE),
+    N2(020, CF_00, TEXT_RCL, SZ_DATA, M_WMOD, M_VAL1, P_OMOD, P_NONE),
+    N2(030, CF_00, TEXT_RCR, SZ_DATA, M_WMOD, M_VAL1, P_OMOD, P_NONE),
+    N2(040, CF_00, TEXT_SHL, SZ_DATA, M_WMOD, M_VAL1, P_OMOD, P_NONE),
+    N2(040, CF_00, TEXT_SAL, SZ_DATA, M_WMOD, M_VAL1, P_OMOD, P_NONE),
+    N2(050, CF_00, TEXT_SHR, SZ_DATA, M_WMOD, M_VAL1, P_OMOD, P_NONE),
+    N2(070, CF_00, TEXT_SAR, SZ_DATA, M_WMOD, M_VAL1, P_OMOD, P_NONE),
 };
 
 constexpr Entry T8086_D2[] PROGMEM = {
-    E2(000, CF_00, TEXT_ROL, SZ_BYTE, M_BMOD, M_CL, P_OMOD, P_NONE),
-    E2(010, CF_00, TEXT_ROR, SZ_BYTE, M_BMOD, M_CL, P_OMOD, P_NONE),
-    E2(020, CF_00, TEXT_RCL, SZ_BYTE, M_BMOD, M_CL, P_OMOD, P_NONE),
-    E2(030, CF_00, TEXT_RCR, SZ_BYTE, M_BMOD, M_CL, P_OMOD, P_NONE),
-    E2(040, CF_00, TEXT_SHL, SZ_BYTE, M_BMOD, M_CL, P_OMOD, P_NONE),
-    E2(040, CF_00, TEXT_SAL, SZ_BYTE, M_BMOD, M_CL, P_OMOD, P_NONE),
-    E2(050, CF_00, TEXT_SHR, SZ_BYTE, M_BMOD, M_CL, P_OMOD, P_NONE),
-    E2(070, CF_00, TEXT_SAR, SZ_BYTE, M_BMOD, M_CL, P_OMOD, P_NONE),
+    N2(000, CF_00, TEXT_ROL, SZ_BYTE, M_BMOD, M_CL, P_OMOD, P_NONE),
+    N2(010, CF_00, TEXT_ROR, SZ_BYTE, M_BMOD, M_CL, P_OMOD, P_NONE),
+    N2(020, CF_00, TEXT_RCL, SZ_BYTE, M_BMOD, M_CL, P_OMOD, P_NONE),
+    N2(030, CF_00, TEXT_RCR, SZ_BYTE, M_BMOD, M_CL, P_OMOD, P_NONE),
+    N2(040, CF_00, TEXT_SHL, SZ_BYTE, M_BMOD, M_CL, P_OMOD, P_NONE),
+    N2(040, CF_00, TEXT_SAL, SZ_BYTE, M_BMOD, M_CL, P_OMOD, P_NONE),
+    N2(050, CF_00, TEXT_SHR, SZ_BYTE, M_BMOD, M_CL, P_OMOD, P_NONE),
+    N2(070, CF_00, TEXT_SAR, SZ_BYTE, M_BMOD, M_CL, P_OMOD, P_NONE),
 };
 
 constexpr Entry T8086_D3[] PROGMEM = {
-    E2(000, CF_00, TEXT_ROL, SZ_WORD, M_WMOD, M_CL, P_OMOD, P_NONE),
-    E2(010, CF_00, TEXT_ROR, SZ_WORD, M_WMOD, M_CL, P_OMOD, P_NONE),
-    E2(020, CF_00, TEXT_RCL, SZ_WORD, M_WMOD, M_CL, P_OMOD, P_NONE),
-    E2(030, CF_00, TEXT_RCR, SZ_WORD, M_WMOD, M_CL, P_OMOD, P_NONE),
-    E2(040, CF_00, TEXT_SHL, SZ_WORD, M_WMOD, M_CL, P_OMOD, P_NONE),
-    E2(040, CF_00, TEXT_SAL, SZ_WORD, M_WMOD, M_CL, P_OMOD, P_NONE),
-    E2(050, CF_00, TEXT_SHR, SZ_WORD, M_WMOD, M_CL, P_OMOD, P_NONE),
-    E2(070, CF_00, TEXT_SAR, SZ_WORD, M_WMOD, M_CL, P_OMOD, P_NONE),
+    N2(000, CF_00, TEXT_ROL, SZ_DATA, M_WMOD, M_CL, P_OMOD, P_NONE),
+    N2(010, CF_00, TEXT_ROR, SZ_DATA, M_WMOD, M_CL, P_OMOD, P_NONE),
+    N2(020, CF_00, TEXT_RCL, SZ_DATA, M_WMOD, M_CL, P_OMOD, P_NONE),
+    N2(030, CF_00, TEXT_RCR, SZ_DATA, M_WMOD, M_CL, P_OMOD, P_NONE),
+    N2(040, CF_00, TEXT_SHL, SZ_DATA, M_WMOD, M_CL, P_OMOD, P_NONE),
+    N2(040, CF_00, TEXT_SAL, SZ_DATA, M_WMOD, M_CL, P_OMOD, P_NONE),
+    N2(050, CF_00, TEXT_SHR, SZ_DATA, M_WMOD, M_CL, P_OMOD, P_NONE),
+    N2(070, CF_00, TEXT_SAR, SZ_DATA, M_WMOD, M_CL, P_OMOD, P_NONE),
 };
 
 constexpr Entry T8086_D4[] PROGMEM = {
-    E0(0x0A, CF_00, TEXT_AAM, SZ_BYTE),
+    E0(0x0A, CF_00, TEXT_AAM, SZ_NONE),
 };
 
 constexpr uint8_t I8086_D4[] PROGMEM = {
@@ -592,7 +619,7 @@ constexpr uint8_t I8086_D4[] PROGMEM = {
 };
 
 constexpr Entry T8086_D5[] PROGMEM = {
-    E0(0x0A, CF_00, TEXT_AAD, SZ_BYTE),
+    E0(0x0A, CF_00, TEXT_AAD, SZ_NONE),
 };
 
 constexpr uint8_t I8086_D5[] PROGMEM = {
@@ -600,13 +627,13 @@ constexpr uint8_t I8086_D5[] PROGMEM = {
 };
 
 constexpr Entry T8086_F6[] PROGMEM = {
-    E2(000, CF_00, TEXT_TEST, SZ_BYTE, M_BMOD, M_WIMM, P_OMOD, P_OPR),
-    L1(020, CF_00, TEXT_NOT,  SZ_BYTE, M_BMOD, P_OMOD),
-    L1(030, CF_00, TEXT_NEG,  SZ_BYTE, M_BMOD, P_OMOD),
-    E1(040, CF_00, TEXT_MUL,  SZ_BYTE, M_BMOD, P_OMOD),
-    E1(050, CF_00, TEXT_IMUL, SZ_BYTE, M_BMOD, P_OMOD),
-    E1(060, CF_00, TEXT_DIV,  SZ_BYTE, M_BMOD, P_OMOD),
-    E1(070, CF_00, TEXT_IDIV, SZ_BYTE, M_BMOD, P_OMOD),
+    N2(000, CF_00, TEXT_TEST, SZ_BYTE, M_BMOD, M_WIMM, P_OMOD, P_OPR),
+    M1(020, CF_00, TEXT_NOT,  SZ_BYTE, M_BMOD, P_OMOD),
+    M1(030, CF_00, TEXT_NEG,  SZ_BYTE, M_BMOD, P_OMOD),
+    N1(040, CF_00, TEXT_MUL,  SZ_BYTE, M_BMOD, P_OMOD),
+    N1(050, CF_00, TEXT_IMUL, SZ_BYTE, M_BMOD, P_OMOD),
+    N1(060, CF_00, TEXT_DIV,  SZ_BYTE, M_BMOD, P_OMOD),
+    N1(070, CF_00, TEXT_IDIV, SZ_BYTE, M_BMOD, P_OMOD),
 };
 
 constexpr uint8_t I8086_FX[] PROGMEM = {
@@ -620,18 +647,18 @@ constexpr uint8_t I8086_FX[] PROGMEM = {
 };
 
 constexpr Entry T8086_F7[] PROGMEM = {
-    E2(000, CF_00, TEXT_TEST, SZ_WORD, M_WMOD, M_WIMM, P_OMOD, P_OPR),
-    L1(020, CF_00, TEXT_NOT,  SZ_WORD, M_WMOD, P_OMOD),
-    L1(030, CF_00, TEXT_NEG,  SZ_WORD, M_WMOD, P_OMOD),
-    E1(040, CF_00, TEXT_MUL,  SZ_WORD, M_WMOD, P_OMOD),
-    E1(050, CF_00, TEXT_IMUL, SZ_WORD, M_WMOD, P_OMOD),
-    E1(060, CF_00, TEXT_DIV,  SZ_WORD, M_WMOD, P_OMOD),
-    E1(070, CF_00, TEXT_IDIV, SZ_WORD, M_WMOD, P_OMOD),
+    N2(000, CF_00, TEXT_TEST, SZ_DATA, M_WMOD, M_WIMM, P_OMOD, P_OPR),
+    M1(020, CF_00, TEXT_NOT,  SZ_DATA, M_WMOD, P_OMOD),
+    M1(030, CF_00, TEXT_NEG,  SZ_DATA, M_WMOD, P_OMOD),
+    N1(040, CF_00, TEXT_MUL,  SZ_DATA, M_WMOD, P_OMOD),
+    N1(050, CF_00, TEXT_IMUL, SZ_DATA, M_WMOD, P_OMOD),
+    N1(060, CF_00, TEXT_DIV,  SZ_DATA, M_WMOD, P_OMOD),
+    N1(070, CF_00, TEXT_IDIV, SZ_DATA, M_WMOD, P_OMOD),
 };
 
 constexpr Entry T8086_FE[] PROGMEM = {
-    L1(000, CF_00, TEXT_INC, SZ_BYTE, M_BMOD, P_OMOD),
-    L1(010, CF_00, TEXT_DEC, SZ_BYTE, M_BMOD, P_OMOD),
+    M1(000, CF_00, TEXT_INC, SZ_BYTE, M_BMOD, P_OMOD),
+    M1(010, CF_00, TEXT_DEC, SZ_BYTE, M_BMOD, P_OMOD),
 };
 
 constexpr uint8_t I8086_FE[] PROGMEM = {
@@ -640,27 +667,31 @@ constexpr uint8_t I8086_FE[] PROGMEM = {
 };
 
 constexpr Entry T8086_FF[] PROGMEM = {
-    L1(000, CF_00, TEXT_INC,   SZ_WORD, M_WMOD, P_OMOD),
-    L1(010, CF_00, TEXT_DEC,   SZ_WORD, M_WMOD, P_OMOD),
+    M1(000, CF_00, TEXT_INC,   SZ_WORD, M_WMOD, P_OMOD),
+    M1(010, CF_00, TEXT_DEC,   SZ_WORD, M_WMOD, P_OMOD),
     E1(020, CF_00, TEXT_CALL,  SZ_NONE, M_WMOD, P_OMOD),
-    E1(030, CF_00, TEXT_CALLF, SZ_NONE, M_WMEM, P_OMOD),
-    E1(030, CF_00, TEXT_LCALL, SZ_NONE, M_WMEM, P_OMOD),
+    E1(030, CF_00, TEXT_CALL,  SZ_NONE, M_FARM, P_OMOD), // FMODE_FAR
+    E1(030, CF_00, TEXT_CALLF, SZ_NONE, M_WMEM, P_OMOD), // FMODE_F
+    E1(030, CF_00, TEXT_LCALL, SZ_NONE, M_WMEM, P_OMOD), // FMODE_L
     E1(040, CF_00, TEXT_JMP,   SZ_NONE, M_WMOD, P_OMOD),
-    E1(050, CF_00, TEXT_JMPF,  SZ_NONE, M_WMEM, P_OMOD),
-    E1(050, CF_00, TEXT_LJMP,  SZ_NONE, M_WMEM, P_OMOD),
-    E1(060, CF_00, TEXT_PUSH,  SZ_NONE, M_WMOD, P_OMOD),
+    E1(050, CF_00, TEXT_JMP,   SZ_NONE, M_FARM, P_OMOD), // FMODE_FAR
+    E1(050, CF_00, TEXT_JMPF,  SZ_NONE, M_WMEM, P_OMOD), // FMODE_F
+    E1(050, CF_00, TEXT_LJMP,  SZ_NONE, M_WMEM, P_OMOD), // FMODE_L
+    E1(060, CF_00, TEXT_PUSH,  SZ_WORD, M_WMOD, P_OMOD),
 };
 
 constexpr uint8_t I8086_FF[] PROGMEM = {
       2,  // TEXT_CALL
-      3,  // TEXT_CALLF
+      3,  // TEXT_CALL
+      4,  // TEXT_CALLF
       1,  // TEXT_DEC
       0,  // TEXT_INC
-      5,  // TEXT_JMP
-      6,  // TEXT_JMPF
-      4,  // TEXT_LCALL
-      7,  // TEXT_LJMP
-      8,  // TEXT_PUSH
+      6,  // TEXT_JMP
+      7,  // TEXT_JMP
+      8,  // TEXT_JMPF
+      5,  // TEXT_LCALL
+      9,  // TEXT_LJMP
+     10,  // TEXT_PUSH
 };
 
 // i80186
@@ -668,23 +699,23 @@ constexpr uint8_t I8086_FF[] PROGMEM = {
 constexpr Entry T80186_00[] PROGMEM = {
     E0(0x60, CF_00, TEXT_PUSHA, SZ_NONE),
     E0(0x61, CF_00, TEXT_POPA,  SZ_NONE),
-    E2(0x62, CF_00, TEXT_BOUND, SZ_WORD, M_WREG, M_WMEM, P_REG,  P_MOD),
+    E2(0x62, CF_00, TEXT_BOUND, SZ_DATA, M_WREG, M_WMEM, P_REG,  P_MOD),
     E1(0x6A, CF_00, TEXT_PUSH,  SZ_BYTE, M_BIMM, P_OPR),
-    E3(0x6B, CF_00, TEXT_IMUL,  SZ_WORD, M_WREG, M_WMOD, M_BIMM, P_REG, P_MOD, P_OPR),
-    E2(0x6B, CF_00, TEXT_IMUL,  SZ_WORD, M_WREG, M_BIMM, P_MREG, P_OPR),
-    E1(0x68, CF_00, TEXT_PUSH,  SZ_WORD, M_WIMM, P_OPR),
-    E3(0x69, CF_00, TEXT_IMUL,  SZ_WORD, M_WREG, M_WMOD, M_WIMM, P_REG, P_MOD, P_OPR),
-    E2(0x69, CF_00, TEXT_IMUL,  SZ_WORD, M_WREG, M_WIMM, P_MREG, P_OPR),
-    S2(0x6C, CF_00, TEXT_INSB,  SZ_BYTE, M_MEM,  M_DX),
-    S2(0x6D, CF_00, TEXT_INSW,  SZ_WORD, M_MEM,  M_DX),
-    S2(0x6C, CF_00, TEXT_INS,   SZ_BYTE, M_BMEM, M_DX),
-    S2(0x6D, CF_00, TEXT_INS,   SZ_WORD, M_WMEM, M_DX),
+    E3(0x6B, CF_00, TEXT_IMUL,  SZ_DATA, M_WREG, M_WMOD, M_BIMM, P_REG, P_MOD, P_OPR),
+    E2(0x6B, CF_00, TEXT_IMUL,  SZ_DATA, M_WREG, M_BIMM, P_MREG, P_OPR),
+    E1(0x68, CF_00, TEXT_PUSH,  SZ_DATA, M_WIMM, P_OPR),
+    E3(0x69, CF_00, TEXT_IMUL,  SZ_DATA, M_WREG, M_WMOD, M_WIMM, P_REG, P_MOD, P_OPR),
+    E2(0x69, CF_00, TEXT_IMUL,  SZ_DATA, M_WREG, M_WIMM, P_MREG, P_OPR),
+    S2(0x6C, CF_00, TEXT_INSB,  SZ_BYTE, M_BMEM, M_DX),
+    S2(0x6D, CF_00, TEXT_INSW,  SZ_WORD, M_WMEM, M_DX),
+    T2(0x6C, CF_00, TEXT_INS,   SZ_BYTE, M_BMEM, M_DX),
+    T2(0x6D, CF_00, TEXT_INS,   SZ_DATA, M_WMEM, M_DX),
     S0(0x6C, CF_00, TEXT_INSB,  SZ_BYTE),
     S0(0x6D, CF_00, TEXT_INSW,  SZ_WORD),
     S2(0x6E, CF_00, TEXT_OUTSB, SZ_BYTE, M_DX,   M_BMEM),
     S2(0x6F, CF_00, TEXT_OUTSW, SZ_WORD, M_DX,   M_WMEM),
-    S2(0x6E, CF_00, TEXT_OUTS,  SZ_BYTE, M_DX,   M_BMEM),
-    S2(0x6F, CF_00, TEXT_OUTS,  SZ_WORD, M_DX,   M_WMEM),
+    T2(0x6E, CF_00, TEXT_OUTS,  SZ_BYTE, M_DX,   M_BMEM),
+    T2(0x6F, CF_00, TEXT_OUTS,  SZ_DATA, M_DX,   M_WMEM),
     S0(0x6E, CF_00, TEXT_OUTSB, SZ_BYTE),
     S0(0x6F, CF_00, TEXT_OUTSW, SZ_WORD),
     E2(0xC8, CF_00, TEXT_ENTER, SZ_NONE, M_UI16, M_UI8,  P_OPR,  P_OPR),
@@ -718,14 +749,14 @@ constexpr uint8_t I80186_00[] PROGMEM = {
 };
 
 constexpr Entry T80186_C0[] PROGMEM = {
-    E2(000, CF_00, TEXT_ROL, SZ_BYTE, M_BMOD, M_BIT, P_OMOD, P_OPR),
-    E2(010, CF_00, TEXT_ROR, SZ_BYTE, M_BMOD, M_BIT, P_OMOD, P_OPR),
-    E2(020, CF_00, TEXT_RCL, SZ_BYTE, M_BMOD, M_BIT, P_OMOD, P_OPR),
-    E2(030, CF_00, TEXT_RCR, SZ_BYTE, M_BMOD, M_BIT, P_OMOD, P_OPR),
-    E2(040, CF_00, TEXT_SHL, SZ_BYTE, M_BMOD, M_BIT, P_OMOD, P_OPR),
-    E2(040, CF_00, TEXT_SAL, SZ_BYTE, M_BMOD, M_BIT, P_OMOD, P_OPR),
-    E2(050, CF_00, TEXT_SHR, SZ_BYTE, M_BMOD, M_BIT, P_OMOD, P_OPR),
-    E2(070, CF_00, TEXT_SAR, SZ_BYTE, M_BMOD, M_BIT, P_OMOD, P_OPR),
+    N2(000, CF_00, TEXT_ROL, SZ_BYTE, M_BMOD, M_BIT, P_OMOD, P_OPR),
+    N2(010, CF_00, TEXT_ROR, SZ_BYTE, M_BMOD, M_BIT, P_OMOD, P_OPR),
+    N2(020, CF_00, TEXT_RCL, SZ_BYTE, M_BMOD, M_BIT, P_OMOD, P_OPR),
+    N2(030, CF_00, TEXT_RCR, SZ_BYTE, M_BMOD, M_BIT, P_OMOD, P_OPR),
+    N2(040, CF_00, TEXT_SHL, SZ_BYTE, M_BMOD, M_BIT, P_OMOD, P_OPR),
+    N2(040, CF_00, TEXT_SAL, SZ_BYTE, M_BMOD, M_BIT, P_OMOD, P_OPR),
+    N2(050, CF_00, TEXT_SHR, SZ_BYTE, M_BMOD, M_BIT, P_OMOD, P_OPR),
+    N2(070, CF_00, TEXT_SAR, SZ_BYTE, M_BMOD, M_BIT, P_OMOD, P_OPR),
 };
 
 constexpr uint8_t I80186_CX[] PROGMEM = {
@@ -740,21 +771,21 @@ constexpr uint8_t I80186_CX[] PROGMEM = {
 };
 
 constexpr Entry T80186_C1[] PROGMEM = {
-    E2(000, CF_00, TEXT_ROL, SZ_WORD, M_WMOD, M_BIT, P_OMOD, P_OPR),
-    E2(010, CF_00, TEXT_ROR, SZ_WORD, M_WMOD, M_BIT, P_OMOD, P_OPR),
-    E2(020, CF_00, TEXT_RCL, SZ_WORD, M_WMOD, M_BIT, P_OMOD, P_OPR),
-    E2(030, CF_00, TEXT_RCR, SZ_WORD, M_WMOD, M_BIT, P_OMOD, P_OPR),
-    E2(040, CF_00, TEXT_SHL, SZ_WORD, M_WMOD, M_BIT, P_OMOD, P_OPR),
-    E2(040, CF_00, TEXT_SAL, SZ_WORD, M_WMOD, M_BIT, P_OMOD, P_OPR),
-    E2(050, CF_00, TEXT_SHR, SZ_WORD, M_WMOD, M_BIT, P_OMOD, P_OPR),
-    E2(070, CF_00, TEXT_SAR, SZ_WORD, M_WMOD, M_BIT, P_OMOD, P_OPR),
+    N2(000, CF_00, TEXT_ROL, SZ_DATA, M_WMOD, M_BIT, P_OMOD, P_OPR),
+    N2(010, CF_00, TEXT_ROR, SZ_DATA, M_WMOD, M_BIT, P_OMOD, P_OPR),
+    N2(020, CF_00, TEXT_RCL, SZ_DATA, M_WMOD, M_BIT, P_OMOD, P_OPR),
+    N2(030, CF_00, TEXT_RCR, SZ_DATA, M_WMOD, M_BIT, P_OMOD, P_OPR),
+    N2(040, CF_00, TEXT_SHL, SZ_DATA, M_WMOD, M_BIT, P_OMOD, P_OPR),
+    N2(040, CF_00, TEXT_SAL, SZ_DATA, M_WMOD, M_BIT, P_OMOD, P_OPR),
+    N2(050, CF_00, TEXT_SHR, SZ_DATA, M_WMOD, M_BIT, P_OMOD, P_OPR),
+    N2(070, CF_00, TEXT_SAR, SZ_DATA, M_WMOD, M_BIT, P_OMOD, P_OPR),
 };
 
 // i80286
 
 constexpr Entry T80286_00[] PROGMEM = {
     E2(0x63, CF_00, TEXT_ARPL,  SZ_WORD, M_WMOD, M_WREG, P_MOD, P_REG),
-    E1(0xD7, CF_00, TEXT_XLAT,  SZ_NONE, M_BMEM, P_NONE),
+    E1(0xD7, CF_00, TEXT_XLAT,  SZ_BYTE, M_BMEM, P_NONE),
     E0(0xD7, CF_00, TEXT_XLATB, SZ_NONE),
 };
 
@@ -766,8 +797,8 @@ constexpr uint8_t I80286_00[] PROGMEM = {
 
 constexpr Entry T80286_0F[] PROGMEM = {
     E0(0x06, CF_00, TEXT_CLTS, SZ_NONE),
-    E2(0x02, CF_00, TEXT_LAR,  SZ_WORD, M_WREG, M_WMOD, P_REG, P_MOD),
-    E2(0x03, CF_00, TEXT_LSL,  SZ_WORD, M_WREG, M_WMOD, P_REG, P_MOD),
+    E2(0x02, CF_00, TEXT_LAR,  SZ_DATA, M_WREG, M_WMOD, P_REG, P_MOD),
+    E2(0x03, CF_00, TEXT_LSL,  SZ_DATA, M_WREG, M_WMOD, P_REG, P_MOD),
 };
 
 constexpr uint8_t I80286_0F[] PROGMEM = {
@@ -777,12 +808,12 @@ constexpr uint8_t I80286_0F[] PROGMEM = {
 };
 
 constexpr Entry T80286_0F00[] PROGMEM = {
-    E1(000, CF_00, TEXT_SLDT, SZ_NONE, M_WMOD, P_OMOD),
-    E1(010, CF_00, TEXT_STR,  SZ_NONE, M_WMOD, P_OMOD),
-    E1(020, CF_00, TEXT_LLDT, SZ_NONE, M_WMOD, P_OMOD),
-    E1(030, CF_00, TEXT_LTR,  SZ_NONE, M_WMOD, P_OMOD),
-    E1(040, CF_00, TEXT_VERR, SZ_NONE, M_WMOD, P_OMOD),
-    E1(050, CF_00, TEXT_VERW, SZ_NONE, M_WMOD, P_OMOD),
+    E1(000, CF_00, TEXT_SLDT, SZ_WORD, M_WMOD, P_OMOD),
+    E1(010, CF_00, TEXT_STR,  SZ_WORD, M_WMOD, P_OMOD),
+    E1(020, CF_00, TEXT_LLDT, SZ_WORD, M_WMOD, P_OMOD),
+    E1(030, CF_00, TEXT_LTR,  SZ_WORD, M_WMOD, P_OMOD),
+    E1(040, CF_00, TEXT_VERR, SZ_WORD, M_WMOD, P_OMOD),
+    E1(050, CF_00, TEXT_VERW, SZ_WORD, M_WMOD, P_OMOD),
 };
 
 constexpr uint8_t I80286_0F00[] PROGMEM = {
@@ -795,12 +826,12 @@ constexpr uint8_t I80286_0F00[] PROGMEM = {
 };
 
 constexpr Entry T80286_0F01[] PROGMEM = {
-    E1(000, CF_00, TEXT_SGDT, SZ_NONE, M_WMEM, P_OMOD),
-    E1(010, CF_00, TEXT_SIDT, SZ_NONE, M_WMEM, P_OMOD),
-    E1(020, CF_00, TEXT_LGDT, SZ_NONE, M_WMEM, P_OMOD),
-    E1(030, CF_00, TEXT_LIDT, SZ_NONE, M_WMEM, P_OMOD),
-    E1(040, CF_00, TEXT_SMSW, SZ_NONE, M_WMOD, P_OMOD),
-    E1(060, CF_00, TEXT_LMSW, SZ_NONE, M_WMOD, P_OMOD),
+    E1(000, CF_00, TEXT_SGDT, SZ_NONE, M_MEM,  P_OMOD),
+    E1(010, CF_00, TEXT_SIDT, SZ_NONE, M_MEM,  P_OMOD),
+    E1(020, CF_00, TEXT_LGDT, SZ_NONE, M_MEM,  P_OMOD),
+    E1(030, CF_00, TEXT_LIDT, SZ_NONE, M_MEM,  P_OMOD),
+    E1(040, CF_00, TEXT_SMSW, SZ_WORD, M_WMOD, P_OMOD),
+    E1(060, CF_00, TEXT_LMSW, SZ_WORD, M_WMOD, P_OMOD),
 };
 
 constexpr uint8_t I80286_0F01[] PROGMEM = {
@@ -810,6 +841,191 @@ constexpr uint8_t I80286_0F01[] PROGMEM = {
       0,  // TEXT_SGDT
       1,  // TEXT_SIDT
       4,  // TEXT_SMSW
+};
+
+// i80386
+
+constexpr Entry T80386_00[] PROGMEM = {
+    E0(0x64, CF_00, TEXT_SEGFS, SZ_NONE),
+    E0(0x65, CF_00, TEXT_SEGGS, SZ_NONE),
+};
+
+constexpr uint8_t I80386_00[] PROGMEM = {
+    /* empty */
+};
+
+constexpr Entry T80386_8F[] PROGMEM = {
+    N1(000, CF_00, TEXT_POP, SZ_DATA, M_WMOD, P_OMOD),
+};
+
+constexpr Entry T80386_FF[] PROGMEM = {
+    M1(000, CF_00, TEXT_INC,   SZ_DATA, M_WMOD, P_OMOD),
+    M1(010, CF_00, TEXT_DEC,   SZ_DATA, M_WMOD, P_OMOD),
+    N1(020, CF_00, TEXT_CALL,  SZ_DATA, M_WMOD, P_OMOD),
+    N1(030, CF_00, TEXT_CALL,  SZ_DATA, M_FARM, P_OMOD),
+    E1(030, CF_00, TEXT_CALLF, SZ_DATA, M_WMEM, P_OMOD),
+    E1(030, CF_00, TEXT_LCALL, SZ_DATA, M_WMEM, P_OMOD),
+    N1(040, CF_00, TEXT_JMP,   SZ_DATA, M_WMOD, P_OMOD),
+    N1(050, CF_00, TEXT_JMP,   SZ_DATA, M_FARM, P_OMOD),
+    E1(050, CF_00, TEXT_JMPF,  SZ_DATA, M_WMEM, P_OMOD),
+    E1(050, CF_00, TEXT_LJMP,  SZ_DATA, M_WMEM, P_OMOD),
+    N1(060, CF_00, TEXT_PUSH,  SZ_DATA, M_WMOD, P_OMOD),
+};
+
+constexpr Entry TCODE16_00[] PROGMEM = {
+    E0(0x60, CF_00, TEXT_PUSHA, SZ_NONE),
+    E0(0x61, CF_00, TEXT_POPA,  SZ_NONE),
+    S2(0x6D, CF_00, TEXT_INSW,  SZ_WORD, M_WMEM, M_DX),
+    S2(0x6F, CF_00, TEXT_OUTSW, SZ_WORD, M_DX,   M_WMEM),
+    E0(0x98, CF_00, TEXT_CBW,   SZ_NONE),
+    E0(0x99, CF_00, TEXT_CWD,   SZ_NONE),
+    E0(0x9C, CF_00, TEXT_PUSHF, SZ_NONE),
+    E0(0x9D, CF_00, TEXT_POPF,  SZ_NONE),
+    S2(0xA5, CF_00, TEXT_MOVSW, SZ_WORD, M_DMEM, M_DMEM),
+    S0(0xA5, CF_00, TEXT_MOVSW, SZ_NONE),
+    S2(0xA7, CF_00, TEXT_CMPSW, SZ_WORD, M_DMEM, M_DMEM),
+    S0(0xA7, CF_00, TEXT_CMPSW, SZ_NONE),
+    S1(0xAB, CF_00, TEXT_STOSW, SZ_WORD, M_DMEM),
+    S0(0xAB, CF_00, TEXT_STOSW, SZ_NONE),
+    S1(0xAD, CF_00, TEXT_LODSW, SZ_WORD, M_DMEM),
+    S0(0xAD, CF_00, TEXT_LODSW, SZ_NONE),
+    S1(0xAF, CF_00, TEXT_SCASW, SZ_WORD, M_DMEM),
+    S0(0xAF, CF_00, TEXT_SCASW, SZ_NONE),
+    E0(0xCF, CF_00, TEXT_IRET,  SZ_WORD),
+    E1(0xE3, CF_00, TEXT_JCXZ,  SZ_NONE,  M_REL8, P_OPR),
+};
+
+constexpr Entry TCODE32_00[] PROGMEM = {
+    E0(0x60, CF_00, TEXT_PUSHAD, SZ_NONE),
+    E0(0x61, CF_00, TEXT_POPAD,  SZ_NONE),
+    S2(0x6D, CF_00, TEXT_INSD,   SZ_DWORD, M_DMEM, M_DX),
+    S2(0x6F, CF_00, TEXT_OUTSD,  SZ_DWORD, M_DX,   M_DMEM),
+    E0(0x98, CF_00, TEXT_CWDE,   SZ_NONE),
+    E0(0x99, CF_00, TEXT_CDQ,    SZ_NONE),
+    E0(0x9C, CF_00, TEXT_PUSHFD, SZ_NONE),
+    E0(0x9D, CF_00, TEXT_POPFD,  SZ_NONE),
+    S2(0xA5, CF_00, TEXT_MOVSD,  SZ_DWORD, M_DMEM, M_DMEM),
+    S0(0xA5, CF_00, TEXT_MOVSD,  SZ_NONE),
+    S2(0xA7, CF_00, TEXT_CMPSD,  SZ_DWORD, M_DMEM, M_DMEM),
+    S0(0xA7, CF_00, TEXT_CMPSD,  SZ_NONE),
+    S1(0xAB, CF_00, TEXT_STOSD,  SZ_DWORD, M_DMEM),
+    S0(0xAB, CF_00, TEXT_STOSD,  SZ_NONE),
+    S1(0xAD, CF_00, TEXT_LODSD,  SZ_DWORD, M_DMEM),
+    S0(0xAD, CF_00, TEXT_LODSD,  SZ_NONE),
+    S1(0xAF, CF_00, TEXT_SCASD,  SZ_DWORD, M_DMEM),
+    S0(0xAF, CF_00, TEXT_SCASD,  SZ_NONE),
+    E0(0xCF, CF_00, TEXT_IRETD,  SZ_NONE),
+    E1(0xE3, CF_00, TEXT_JECXZ,  SZ_NONE,  M_REL8, P_OPR),
+};
+
+constexpr uint8_t ICODE16_00[] PROGMEM = {
+    /* empty */
+};
+
+constexpr Entry T80386_0F[] PROGMEM = {
+    E2(0x20, CF_00, TEXT_MOV,  SZ_DWORD, M_DREG, M_CTLR, P_MOD, P_REG),
+    E2(0x21, CF_00, TEXT_MOV,  SZ_DWORD, M_DREG, M_DBGR, P_MOD, P_REG),
+    E2(0x22, CF_00, TEXT_MOV,  SZ_DWORD, M_CTLR, M_DREG, P_REG, P_MOD),
+    E2(0x23, CF_00, TEXT_MOV,  SZ_DWORD, M_DBGR, M_DREG, P_REG, P_MOD),
+    E2(0x24, CF_00, TEXT_MOV,  SZ_DWORD, M_DREG, M_TSTR, P_MOD, P_REG),
+    E2(0x26, CF_00, TEXT_MOV,  SZ_DWORD, M_TSTR, M_DREG, P_REG, P_MOD),
+    E1(0x80, CF_00, TEXT_JO,   SZ_NONE, M_REL, P_OPR),
+    E1(0x81, CF_00, TEXT_JNO,  SZ_NONE, M_REL, P_OPR),
+    E1(0x82, CF_00, TEXT_JB,   SZ_NONE, M_REL, P_OPR),
+    E1(0x82, CF_00, TEXT_JC,   SZ_NONE, M_REL, P_OPR),
+    E1(0x82, CF_00, TEXT_JNAE, SZ_NONE, M_REL, P_OPR),
+    E1(0x83, CF_00, TEXT_JAE,  SZ_NONE, M_REL, P_OPR),
+    E1(0x83, CF_00, TEXT_JNB,  SZ_NONE, M_REL, P_OPR),
+    E1(0x83, CF_00, TEXT_JNC,  SZ_NONE, M_REL, P_OPR),
+    E1(0x84, CF_00, TEXT_JE,   SZ_NONE, M_REL, P_OPR),
+    E1(0x84, CF_00, TEXT_JZ,   SZ_NONE, M_REL, P_OPR),
+    E1(0x85, CF_00, TEXT_JNE,  SZ_NONE, M_REL, P_OPR),
+    E1(0x85, CF_00, TEXT_JNZ,  SZ_NONE, M_REL, P_OPR),
+    E1(0x86, CF_00, TEXT_JBE,  SZ_NONE, M_REL, P_OPR),
+    E1(0x86, CF_00, TEXT_JNA,  SZ_NONE, M_REL, P_OPR),
+    E1(0x87, CF_00, TEXT_JA,   SZ_NONE, M_REL, P_OPR),
+    E1(0x87, CF_00, TEXT_JNBE, SZ_NONE, M_REL, P_OPR),
+    E1(0x88, CF_00, TEXT_JS,   SZ_NONE, M_REL, P_OPR),
+    E1(0x89, CF_00, TEXT_JNS,  SZ_NONE, M_REL, P_OPR),
+    E1(0x8A, CF_00, TEXT_JPE,  SZ_NONE, M_REL, P_OPR),
+    E1(0x8A, CF_00, TEXT_JP,   SZ_NONE, M_REL, P_OPR),
+    E1(0x8B, CF_00, TEXT_JPO,  SZ_NONE, M_REL, P_OPR),
+    E1(0x8B, CF_00, TEXT_JNP,  SZ_NONE, M_REL, P_OPR),
+    E1(0x8C, CF_00, TEXT_JL,   SZ_NONE, M_REL, P_OPR),
+    E1(0x8C, CF_00, TEXT_JNGE, SZ_NONE, M_REL, P_OPR),
+    E1(0x8D, CF_00, TEXT_JGE,  SZ_NONE, M_REL, P_OPR),
+    E1(0x8D, CF_00, TEXT_JNL,  SZ_NONE, M_REL, P_OPR),
+    E1(0x8E, CF_00, TEXT_JLE,  SZ_NONE, M_REL, P_OPR),
+    E1(0x8E, CF_00, TEXT_JNG,  SZ_NONE, M_REL, P_OPR),
+    E1(0x8F, CF_00, TEXT_JG,   SZ_NONE, M_REL, P_OPR),
+    E1(0x8F, CF_00, TEXT_JNLE, SZ_NONE, M_REL, P_OPR),
+    E1(0x90, CF_00, TEXT_SETO,   SZ_BYTE, M_BMOD, P_MOD),
+    E1(0x91, CF_00, TEXT_SETNO,  SZ_BYTE, M_BMOD, P_MOD),
+    E1(0x92, CF_00, TEXT_SETB,   SZ_BYTE, M_BMOD, P_MOD),
+    E1(0x92, CF_00, TEXT_SETC,   SZ_BYTE, M_BMOD, P_MOD),
+    E1(0x92, CF_00, TEXT_SETNAE, SZ_BYTE, M_BMOD, P_MOD),
+    E1(0x93, CF_00, TEXT_SETAE,  SZ_BYTE, M_BMOD, P_MOD),
+    E1(0x93, CF_00, TEXT_SETNB,  SZ_BYTE, M_BMOD, P_MOD),
+    E1(0x93, CF_00, TEXT_SETNC,  SZ_BYTE, M_BMOD, P_MOD),
+    E1(0x94, CF_00, TEXT_SETE,   SZ_BYTE, M_BMOD, P_MOD),
+    E1(0x94, CF_00, TEXT_SETZ,   SZ_BYTE, M_BMOD, P_MOD),
+    E1(0x95, CF_00, TEXT_SETNE,  SZ_BYTE, M_BMOD, P_MOD),
+    E1(0x95, CF_00, TEXT_SETNZ,  SZ_BYTE, M_BMOD, P_MOD),
+    E1(0x96, CF_00, TEXT_SETBE,  SZ_BYTE, M_BMOD, P_MOD),
+    E1(0x96, CF_00, TEXT_SETNA,  SZ_BYTE, M_BMOD, P_MOD),
+    E1(0x97, CF_00, TEXT_SETA,   SZ_BYTE, M_BMOD, P_MOD),
+    E1(0x97, CF_00, TEXT_SETNBE, SZ_BYTE, M_BMOD, P_MOD),
+    E1(0x98, CF_00, TEXT_SETS,   SZ_BYTE, M_BMOD, P_MOD),
+    E1(0x99, CF_00, TEXT_SETNS,  SZ_BYTE, M_BMOD, P_MOD),
+    E1(0x9A, CF_00, TEXT_SETPE,  SZ_BYTE, M_BMOD, P_MOD),
+    E1(0x9A, CF_00, TEXT_SETP,   SZ_BYTE, M_BMOD, P_MOD),
+    E1(0x9B, CF_00, TEXT_SETPO,  SZ_BYTE, M_BMOD, P_MOD),
+    E1(0x9B, CF_00, TEXT_SETNP,  SZ_BYTE, M_BMOD, P_MOD),
+    E1(0x9C, CF_00, TEXT_SETL,   SZ_BYTE, M_BMOD, P_MOD),
+    E1(0x9C, CF_00, TEXT_SETNGE, SZ_BYTE, M_BMOD, P_MOD),
+    E1(0x9D, CF_00, TEXT_SETGE,  SZ_BYTE, M_BMOD, P_MOD),
+    E1(0x9D, CF_00, TEXT_SETNL,  SZ_BYTE, M_BMOD, P_MOD),
+    E1(0x9E, CF_00, TEXT_SETLE,  SZ_BYTE, M_BMOD, P_MOD),
+    E1(0x9E, CF_00, TEXT_SETNG,  SZ_BYTE, M_BMOD, P_MOD),
+    E1(0x9F, CF_00, TEXT_SETG,   SZ_BYTE, M_BMOD, P_MOD),
+    E1(0x9F, CF_00, TEXT_SETNLE, SZ_BYTE, M_BMOD, P_MOD),
+    E1(0xA0, CF_00, TEXT_PUSH,   SZ_WORD, M_FS,   P_NONE),
+    E1(0xA1, CF_00, TEXT_POP,    SZ_WORD, M_FS,   P_NONE),
+    E2(0xA3, CF_00, TEXT_BT,     SZ_DATA, M_WMOD, M_WREG, P_MOD,  P_REG),
+    E3(0xA4, CF_00, TEXT_SHLD,   SZ_DATA, M_WMOD, M_WREG, M_BIT,  P_MOD, P_REG, P_OPR),
+    E3(0xA5, CF_00, TEXT_SHLD,   SZ_DATA, M_WMOD, M_WREG, M_CL,   P_MOD, P_REG, P_NONE),
+    E1(0xA8, CF_00, TEXT_PUSH,   SZ_WORD, M_GS,   P_NONE),
+    E1(0xA9, CF_00, TEXT_POP,    SZ_WORD, M_GS,   P_NONE),
+    E2(0xAB, CF_00, TEXT_BTS,    SZ_DATA, M_WMOD, M_WREG, P_MOD,  P_REG),
+    E3(0xAC, CF_00, TEXT_SHRD,   SZ_DATA, M_WMOD, M_WREG, M_BIT,  P_MOD, P_REG, P_OPR),
+    E3(0xAD, CF_00, TEXT_SHRD,   SZ_DATA, M_WMOD, M_WREG, M_CL,   P_MOD, P_REG, P_NONE),
+    E2(0xAF, CF_00, TEXT_IMUL,   SZ_DATA, M_WREG, M_WMOD, P_REG,  P_MOD),
+    E2(0xB2, CF_00, TEXT_LSS,    SZ_DATA, M_WREG, M_MEM, P_REG,  P_MOD),
+    E2(0xB3, CF_00, TEXT_BTR,    SZ_DATA, M_WMOD, M_WREG, P_MOD,  P_REG),
+    E2(0xB4, CF_00, TEXT_LFS,    SZ_DATA, M_WREG, M_MEM, P_REG,  P_MOD),
+    E2(0xB5, CF_00, TEXT_LGS,    SZ_DATA, M_WREG, M_MEM, P_REG,  P_MOD),
+    E2(0xBB, CF_00, TEXT_BTC,    SZ_DATA, M_WMOD, M_WREG, P_REG,  P_MOD),
+    E2(0xBC, CF_00, TEXT_BSF,    SZ_DATA, M_WREG, M_WMOD, P_REG,  P_MOD),
+    E2(0xBD, CF_00, TEXT_BSR,    SZ_DATA, M_WREG, M_WMOD, P_REG,  P_MOD),
+    N2(0xB6, CF_00, TEXT_MOVZX,  SZ_DATA, M_WREG, M_BMOD, P_REG,  P_MOD),
+    N2(0xB7, CF_00, TEXT_MOVZX,  SZ_WORD, M_DREG, M_WMOD, P_REG,  P_MOD),
+    N2(0xBE, CF_00, TEXT_MOVSX,  SZ_DATA, M_WREG, M_BMOD, P_REG,  P_MOD),
+    N2(0xBF, CF_00, TEXT_MOVSX,  SZ_WORD, M_DREG, M_WMOD, P_REG,  P_MOD),
+};
+
+constexpr uint8_t I80386_0F[] PROGMEM = {
+    /* empty */
+};
+
+constexpr Entry T80386_0FBA[] PROGMEM = {
+    N2(040, CF_00, TEXT_BT,  SZ_DATA, M_WMOD, M_UI8, P_OMOD, P_OPR),
+    N2(050, CF_00, TEXT_BTS, SZ_DATA, M_WMOD, M_UI8, P_OMOD, P_OPR),
+    N2(060, CF_00, TEXT_BTR, SZ_DATA, M_WMOD, M_UI8, P_OMOD, P_OPR),
+    N2(070, CF_00, TEXT_BTC, SZ_DATA, M_WMOD, M_UI8, P_OMOD, P_OPR),
+};
+
+constexpr uint8_t I80386_0FBA[] PROGMEM = {
+    /* empty */
 };
 
 // V30
@@ -825,31 +1041,31 @@ constexpr uint8_t IV30_00[] PROGMEM = {
 };
 
 constexpr Entry TV30_0F[] PROGMEM = {
-    E1(0xFF, CF_00, TEXT_BRKEM,  SZ_BYTE, M_WIMM,  P_OPR),
+    E1(0xFF, CF_00, TEXT_BRKEM,  SZ_BYTE, M_UI8,  P_OPR),
     S2(0x20, CF_00, TEXT_ADD4S,  SZ_BYTE, M_BMEM, M_BMEM),
-    S0(0x20, CF_00, TEXT_ADD4S,  SZ_BYTE),
+    S0(0x20, CF_00, TEXT_ADD4S,  SZ_NONE),
     S2(0x26, CF_00, TEXT_CMP4S,  SZ_BYTE, M_BMEM, M_BMEM),
-    S0(0x26, CF_00, TEXT_CMP4S,  SZ_BYTE),
+    S0(0x26, CF_00, TEXT_CMP4S,  SZ_NONE),
     S2(0x22, CF_00, TEXT_SUB4S,  SZ_BYTE, M_BMEM, M_BMEM),
-    S0(0x22, CF_00, TEXT_SUB4S,  SZ_BYTE),
+    S0(0x22, CF_00, TEXT_SUB4S,  SZ_NONE),
     E1(0x28, CF_00, TEXT_ROL4,   SZ_BYTE, M_BMOD, P_MOD),
     E1(0x2A, CF_00, TEXT_ROR4,   SZ_BYTE, M_BMOD, P_MOD),
     E2(0x31, CF_00, TEXT_INS,    SZ_WORD, M_BREG, M_BREG, P_MOD,  P_REG),
     E2(0x39, CF_00, TEXT_INS,    SZ_WORD, M_BREG, M_BIT,  P_MOD,  P_OPR),
     E2(0x33, CF_00, TEXT_EXT,    SZ_WORD, M_BREG, M_BREG, P_MOD,  P_REG),
     E2(0x3B, CF_00, TEXT_EXT,    SZ_WORD, M_BREG, M_BIT,  P_MOD,  P_OPR),
-    E2(0x12, CF_00, TEXT_CLR1,   SZ_BYTE, M_BMOD, M_CL,   P_MOD,  P_NONE),
-    E2(0x13, CF_00, TEXT_CLR1,   SZ_WORD, M_WMOD, M_CL,   P_MOD,  P_NONE),
-    E2(0x1A, CF_00, TEXT_CLR1,   SZ_BYTE, M_BMOD, M_BIT,  P_MOD,  P_OPR),
-    E2(0x1B, CF_00, TEXT_CLR1,   SZ_WORD, M_WMOD, M_BIT,  P_MOD,  P_OPR),
-    E2(0x14, CF_00, TEXT_SET1,   SZ_BYTE, M_BMOD, M_CL,   P_MOD,  P_NONE),
-    E2(0x15, CF_00, TEXT_SET1,   SZ_WORD, M_WMOD, M_CL,   P_MOD,  P_NONE),
-    E2(0x1C, CF_00, TEXT_SET1,   SZ_BYTE, M_BMOD, M_BIT,  P_MOD,  P_OPR),
-    E2(0x1D, CF_00, TEXT_SET1,   SZ_WORD, M_WMOD, M_BIT,  P_MOD,  P_OPR),
-    E2(0x16, CF_00, TEXT_NOT1,   SZ_BYTE, M_BMOD, M_CL,   P_MOD,  P_NONE),
-    E2(0x17, CF_00, TEXT_NOT1,   SZ_WORD, M_WMOD, M_CL,   P_MOD,  P_NONE),
-    E2(0x1E, CF_00, TEXT_NOT1,   SZ_BYTE, M_BMOD, M_BIT,  P_MOD,  P_OPR),
-    E2(0x1F, CF_00, TEXT_NOT1,   SZ_WORD, M_WMOD, M_BIT,  P_MOD,  P_OPR),
+    N2(0x12, CF_00, TEXT_CLR1,   SZ_BYTE, M_BMOD, M_CL,   P_MOD,  P_NONE),
+    N2(0x13, CF_00, TEXT_CLR1,   SZ_WORD, M_WMOD, M_CL,   P_MOD,  P_NONE),
+    N2(0x1A, CF_00, TEXT_CLR1,   SZ_BYTE, M_BMOD, M_BIT,  P_MOD,  P_OPR), 
+    N2(0x1B, CF_00, TEXT_CLR1,   SZ_WORD, M_WMOD, M_BIT,  P_MOD,  P_OPR), 
+    N2(0x14, CF_00, TEXT_SET1,   SZ_BYTE, M_BMOD, M_CL,   P_MOD,  P_NONE),
+    N2(0x15, CF_00, TEXT_SET1,   SZ_WORD, M_WMOD, M_CL,   P_MOD,  P_NONE),
+    N2(0x1C, CF_00, TEXT_SET1,   SZ_BYTE, M_BMOD, M_BIT,  P_MOD,  P_OPR), 
+    N2(0x1D, CF_00, TEXT_SET1,   SZ_WORD, M_WMOD, M_BIT,  P_MOD,  P_OPR), 
+    N2(0x16, CF_00, TEXT_NOT1,   SZ_BYTE, M_BMOD, M_CL,   P_MOD,  P_NONE),
+    N2(0x17, CF_00, TEXT_NOT1,   SZ_WORD, M_WMOD, M_CL,   P_MOD,  P_NONE),
+    N2(0x1E, CF_00, TEXT_NOT1,   SZ_BYTE, M_BMOD, M_BIT,  P_MOD,  P_OPR), 
+    N2(0x1F, CF_00, TEXT_NOT1,   SZ_WORD, M_WMOD, M_BIT,  P_MOD,  P_OPR), 
 };
 
 constexpr uint8_t IV30_0F[] PROGMEM = {
@@ -898,14 +1114,14 @@ constexpr Entry T8087_D8[] PROGMEM = {
     E2(0xE8, CF_07, TEXT_FSUBR,  SZ_NONE,  M_ST0,  M_STI,  P_NONE, P_OREG),
     E2(0xF0, CF_07, TEXT_FDIV,   SZ_NONE,  M_ST0,  M_STI,  P_NONE, P_OREG),
     E2(0xF8, CF_07, TEXT_FDIVR,  SZ_NONE,  M_ST0,  M_STI,  P_NONE, P_OREG),
-    E1(000,  CF_00, TEXT_FADD,   SZ_DWORD, M_DMEM, P_OMOD),
-    E1(010,  CF_00, TEXT_FMUL,   SZ_DWORD, M_DMEM, P_OMOD),
-    E1(020,  CF_00, TEXT_FCOM,   SZ_DWORD, M_DMEM, P_OMOD),
-    E1(030,  CF_00, TEXT_FCOMP,  SZ_DWORD, M_DMEM, P_OMOD),
-    E1(040,  CF_00, TEXT_FSUB,   SZ_DWORD, M_DMEM, P_OMOD),
-    E1(050,  CF_00, TEXT_FSUBR,  SZ_DWORD, M_DMEM, P_OMOD),
-    E1(060,  CF_00, TEXT_FDIV,   SZ_DWORD, M_DMEM, P_OMOD),
-    E1(070,  CF_00, TEXT_FDIVR,  SZ_DWORD, M_DMEM, P_OMOD),
+    N1(000,  CF_00, TEXT_FADD,   SZ_DWORD, M_DMEM, P_OMOD),
+    N1(010,  CF_00, TEXT_FMUL,   SZ_DWORD, M_DMEM, P_OMOD),
+    N1(020,  CF_00, TEXT_FCOM,   SZ_DWORD, M_DMEM, P_OMOD),
+    N1(030,  CF_00, TEXT_FCOMP,  SZ_DWORD, M_DMEM, P_OMOD),
+    N1(040,  CF_00, TEXT_FSUB,   SZ_DWORD, M_DMEM, P_OMOD),
+    N1(050,  CF_00, TEXT_FSUBR,  SZ_DWORD, M_DMEM, P_OMOD),
+    N1(060,  CF_00, TEXT_FDIV,   SZ_DWORD, M_DMEM, P_OMOD),
+    N1(070,  CF_00, TEXT_FDIVR,  SZ_DWORD, M_DMEM, P_OMOD),
 };
 
 constexpr uint8_t I8087_D8[] PROGMEM = {
@@ -954,13 +1170,13 @@ constexpr Entry T8087_D9[] PROGMEM = {
     E0(0xFA, CF_00, TEXT_FSQRT,   SZ_NONE),
     E0(0xFC, CF_00, TEXT_FRNDINT, SZ_NONE),
     E0(0xFD, CF_00, TEXT_FSCALE,  SZ_NONE),
-    E1(000,  CF_00, TEXT_FLD,     SZ_DWORD, M_DMEM, P_OMOD),
-    E1(020,  CF_00, TEXT_FST,     SZ_DWORD, M_DMEM, P_OMOD),
-    E1(030,  CF_00, TEXT_FSTP,    SZ_DWORD, M_DMEM, P_OMOD),
+    N1(000,  CF_00, TEXT_FLD,     SZ_DWORD, M_DMEM, P_OMOD),
+    N1(020,  CF_00, TEXT_FST,     SZ_DWORD, M_DMEM, P_OMOD),
+    N1(030,  CF_00, TEXT_FSTP,    SZ_DWORD, M_DMEM, P_OMOD),
     E1(040,  CF_00, TEXT_FLDENV,  SZ_NONE,  M_MEM,  P_OMOD),
-    E1(050,  CF_00, TEXT_FLDCW,   SZ_NONE,  M_WMEM, P_OMOD),
+    E1(050,  CF_00, TEXT_FLDCW,   SZ_WORD,  M_WMEM, P_OMOD),
     E1(060,  CF_00, TEXT_FNSTENV, SZ_NONE,  M_MEM,  P_OMOD),
-    E1(070,  CF_00, TEXT_FNSTCW,  SZ_NONE,  M_WMEM, P_OMOD),
+    E1(070,  CF_00, TEXT_FNSTCW,  SZ_WORD,  M_WMEM, P_OMOD),
 };
 
 constexpr uint8_t I8087_D9[] PROGMEM = {
@@ -1000,14 +1216,14 @@ constexpr uint8_t I8087_D9[] PROGMEM = {
 };
 
 constexpr Entry T8087_DA[] PROGMEM = {
-    E1(000,  CF_00, TEXT_FIADD,  SZ_DWORD, M_DMEM, P_OMOD),
-    E1(010,  CF_00, TEXT_FIMUL,  SZ_DWORD, M_DMEM, P_OMOD),
-    E1(020,  CF_00, TEXT_FICOM,  SZ_DWORD, M_DMEM, P_OMOD),
-    E1(030,  CF_00, TEXT_FICOMP, SZ_DWORD, M_DMEM, P_OMOD),
-    E1(040,  CF_00, TEXT_FISUB,  SZ_DWORD, M_DMEM, P_OMOD),
-    E1(050,  CF_00, TEXT_FISUBR, SZ_DWORD, M_DMEM, P_OMOD),
-    E1(060,  CF_00, TEXT_FIDIV,  SZ_DWORD, M_DMEM, P_OMOD),
-    E1(070,  CF_00, TEXT_FIDIVR, SZ_DWORD, M_DMEM, P_OMOD),
+    N1(000,  CF_00, TEXT_FIADD,  SZ_DWORD, M_DMEM, P_OMOD),
+    N1(010,  CF_00, TEXT_FIMUL,  SZ_DWORD, M_DMEM, P_OMOD),
+    N1(020,  CF_00, TEXT_FICOM,  SZ_DWORD, M_DMEM, P_OMOD),
+    N1(030,  CF_00, TEXT_FICOMP, SZ_DWORD, M_DMEM, P_OMOD),
+    N1(040,  CF_00, TEXT_FISUB,  SZ_DWORD, M_DMEM, P_OMOD),
+    N1(050,  CF_00, TEXT_FISUBR, SZ_DWORD, M_DMEM, P_OMOD),
+    N1(060,  CF_00, TEXT_FIDIV,  SZ_DWORD, M_DMEM, P_OMOD),
+    N1(070,  CF_00, TEXT_FIDIVR, SZ_DWORD, M_DMEM, P_OMOD),
 };
 
 constexpr uint8_t I8087_DA[] PROGMEM = {
@@ -1026,11 +1242,11 @@ constexpr Entry T8087_DB[] PROGMEM = {
     E0(0xE1, CF_00, TEXT_FNDISI, SZ_NONE),
     E0(0xE2, CF_00, TEXT_FNCLEX, SZ_NONE),
     E0(0xE3, CF_00, TEXT_FNINIT, SZ_NONE),
-    E1(000,  CF_00, TEXT_FILD,   SZ_DWORD, M_DMEM, P_OMOD),
-    E1(020,  CF_00, TEXT_FIST,   SZ_DWORD, M_DMEM, P_OMOD),
-    E1(030,  CF_00, TEXT_FISTP,  SZ_DWORD, M_DMEM, P_OMOD),
-    E1(050,  CF_00, TEXT_FLD,    SZ_TBYTE, M_FMEM, P_OMOD),
-    E1(070,  CF_00, TEXT_FSTP,   SZ_TBYTE, M_FMEM, P_OMOD),
+    N1(000,  CF_00, TEXT_FILD,   SZ_DWORD, M_DMEM, P_OMOD),
+    N1(020,  CF_00, TEXT_FIST,   SZ_DWORD, M_DMEM, P_OMOD),
+    N1(030,  CF_00, TEXT_FISTP,  SZ_DWORD, M_DMEM, P_OMOD),
+    N1(050,  CF_00, TEXT_FLD,    SZ_TBYTE, M_FMEM, P_OMOD),
+    N1(070,  CF_00, TEXT_FSTP,   SZ_TBYTE, M_FMEM, P_OMOD),
 };
 
 constexpr uint8_t I8087_DB[] PROGMEM = {
@@ -1052,14 +1268,14 @@ constexpr Entry T8087_DC[] PROGMEM = {
     E2(0xE0, CF_07, TEXT_FSUBR, SZ_NONE,  M_STI,  M_ST0,  P_OREG, P_NONE),
     E2(0xF8, CF_07, TEXT_FDIV,  SZ_NONE,  M_STI,  M_ST0,  P_OREG, P_NONE),
     E2(0xF0, CF_07, TEXT_FDIVR, SZ_NONE,  M_STI,  M_ST0,  P_OREG, P_NONE),
-    E1(000,  CF_00, TEXT_FADD,  SZ_QWORD, M_FMEM, P_OMOD),
-    E1(010,  CF_00, TEXT_FMUL,  SZ_QWORD, M_FMEM, P_OMOD),
-    E1(020,  CF_00, TEXT_FCOM,  SZ_QWORD, M_FMEM, P_OMOD),
-    E1(030,  CF_00, TEXT_FCOMP, SZ_QWORD, M_FMEM, P_OMOD),
-    E1(040,  CF_00, TEXT_FSUB,  SZ_QWORD, M_FMEM, P_OMOD),
-    E1(050,  CF_00, TEXT_FSUBR, SZ_QWORD, M_FMEM, P_OMOD),
-    E1(060,  CF_00, TEXT_FDIV,  SZ_QWORD, M_FMEM, P_OMOD),
-    E1(070,  CF_00, TEXT_FDIVR, SZ_QWORD, M_FMEM, P_OMOD),
+    N1(000,  CF_00, TEXT_FADD,  SZ_QWORD, M_FMEM, P_OMOD),
+    N1(010,  CF_00, TEXT_FMUL,  SZ_QWORD, M_FMEM, P_OMOD),
+    N1(020,  CF_00, TEXT_FCOM,  SZ_QWORD, M_FMEM, P_OMOD),
+    N1(030,  CF_00, TEXT_FCOMP, SZ_QWORD, M_FMEM, P_OMOD),
+    N1(040,  CF_00, TEXT_FSUB,  SZ_QWORD, M_FMEM, P_OMOD),
+    N1(050,  CF_00, TEXT_FSUBR, SZ_QWORD, M_FMEM, P_OMOD),
+    N1(060,  CF_00, TEXT_FDIV,  SZ_QWORD, M_FMEM, P_OMOD),
+    N1(070,  CF_00, TEXT_FDIVR, SZ_QWORD, M_FMEM, P_OMOD),
 };
 
 constexpr uint8_t I8087_DC[] PROGMEM = {
@@ -1083,12 +1299,12 @@ constexpr Entry T8087_DD[] PROGMEM = {
     E1(0xC0, CF_07, TEXT_FFREE,  SZ_NONE,  M_STI,  P_OREG),
     E1(0xD0, CF_07, TEXT_FST,    SZ_NONE,  M_STI,  P_OREG),
     E1(0xD8, CF_07, TEXT_FSTP,   SZ_NONE,  M_STI,  P_OREG),
-    E1(000,  CF_00, TEXT_FLD,    SZ_QWORD, M_FMEM, P_OMOD),
-    E1(020,  CF_00, TEXT_FST,    SZ_QWORD, M_FMEM, P_OMOD),
-    E1(030,  CF_00, TEXT_FSTP,   SZ_QWORD, M_FMEM, P_OMOD),
+    N1(000,  CF_00, TEXT_FLD,    SZ_QWORD, M_FMEM, P_OMOD),
+    N1(020,  CF_00, TEXT_FST,    SZ_QWORD, M_FMEM, P_OMOD),
+    N1(030,  CF_00, TEXT_FSTP,   SZ_QWORD, M_FMEM, P_OMOD),
     E1(040,  CF_00, TEXT_FRSTOR, SZ_NONE,  M_MEM,  P_OMOD),
     E1(060,  CF_00, TEXT_FNSAVE, SZ_NONE,  M_MEM,  P_OMOD),
-    E1(070,  CF_00, TEXT_FNSTSW, SZ_NONE,  M_WMEM, P_OMOD),
+    E1(070,  CF_00, TEXT_FNSTSW, SZ_WORD,  M_WMEM, P_OMOD),
 };
 
 constexpr uint8_t I8087_DD[] PROGMEM = {
@@ -1111,14 +1327,14 @@ constexpr Entry T8087_DE[] PROGMEM = {
     E2(0xE8, CF_07, TEXT_FSUBP,  SZ_NONE, M_STI,  M_ST0, P_OREG, P_NONE),
     E2(0xF0, CF_07, TEXT_FDIVRP, SZ_NONE, M_STI,  M_ST0, P_OREG, P_NONE),
     E2(0xF8, CF_07, TEXT_FDIVP,  SZ_NONE, M_STI,  M_ST0, P_OREG, P_NONE),
-    E1(000,  CF_00, TEXT_FIADD,  SZ_WORD, M_WMEM, P_OMOD),
-    E1(010,  CF_00, TEXT_FIMUL,  SZ_WORD, M_WMEM, P_OMOD),
-    E1(020,  CF_00, TEXT_FICOM,  SZ_WORD, M_WMEM, P_OMOD),
-    E1(030,  CF_00, TEXT_FICOMP, SZ_WORD, M_WMEM, P_OMOD),
-    E1(040,  CF_00, TEXT_FISUB,  SZ_WORD, M_WMEM, P_OMOD),
-    E1(050,  CF_00, TEXT_FISUBR, SZ_WORD, M_WMEM, P_OMOD),
-    E1(060,  CF_00, TEXT_FIDIV,  SZ_WORD, M_WMEM, P_OMOD),
-    E1(070,  CF_00, TEXT_FIDIVR, SZ_WORD, M_WMEM, P_OMOD),
+    N1(000,  CF_00, TEXT_FIADD,  SZ_WORD, M_WMEM, P_OMOD),
+    N1(010,  CF_00, TEXT_FIMUL,  SZ_WORD, M_WMEM, P_OMOD),
+    N1(020,  CF_00, TEXT_FICOM,  SZ_WORD, M_WMEM, P_OMOD),
+    N1(030,  CF_00, TEXT_FICOMP, SZ_WORD, M_WMEM, P_OMOD),
+    N1(040,  CF_00, TEXT_FISUB,  SZ_WORD, M_WMEM, P_OMOD),
+    N1(050,  CF_00, TEXT_FISUBR, SZ_WORD, M_WMEM, P_OMOD),
+    N1(060,  CF_00, TEXT_FIDIV,  SZ_WORD, M_WMEM, P_OMOD),
+    N1(070,  CF_00, TEXT_FIDIVR, SZ_WORD, M_WMEM, P_OMOD),
 };
 
 constexpr uint8_t I8087_DE[] PROGMEM = {
@@ -1140,13 +1356,13 @@ constexpr uint8_t I8087_DE[] PROGMEM = {
 };
 
 constexpr Entry T8087_DF[] PROGMEM = {
-    E1(000,  CF_00, TEXT_FILD,  SZ_WORD,  M_WMEM, P_OMOD),
-    E1(020,  CF_00, TEXT_FIST,  SZ_WORD,  M_WMEM, P_OMOD),
-    E1(030,  CF_00, TEXT_FISTP, SZ_WORD,  M_WMEM, P_OMOD),
-    E1(040,  CF_00, TEXT_FBLD,  SZ_TBYTE, M_FMEM, P_OMOD),
-    E1(050,  CF_00, TEXT_FILD,  SZ_QWORD, M_FMEM, P_OMOD),
-    E1(060,  CF_00, TEXT_FBSTP, SZ_TBYTE, M_FMEM, P_OMOD),
-    E1(070,  CF_00, TEXT_FISTP, SZ_QWORD, M_FMEM, P_OMOD),
+    N1(000,  CF_00, TEXT_FILD,  SZ_WORD,  M_WMEM, P_OMOD),
+    N1(020,  CF_00, TEXT_FIST,  SZ_WORD,  M_WMEM, P_OMOD),
+    N1(030,  CF_00, TEXT_FISTP, SZ_WORD,  M_WMEM, P_OMOD),
+    N1(040,  CF_00, TEXT_FBLD,  SZ_TBYTE, M_FMEM, P_OMOD),
+    N1(050,  CF_00, TEXT_FILD,  SZ_QWORD, M_FMEM, P_OMOD),
+    N1(060,  CF_00, TEXT_FBSTP, SZ_TBYTE, M_FMEM, P_OMOD),
+    N1(070,  CF_00, TEXT_FISTP, SZ_QWORD, M_FMEM, P_OMOD),
 };
 
 constexpr uint8_t I8087_DF[] PROGMEM = {
@@ -1161,7 +1377,7 @@ constexpr uint8_t I8087_DF[] PROGMEM = {
 
 constexpr Entry T8087_9BD9[] PROGMEM = {
     E1(060,  CF_00, TEXT_FSTENV, SZ_NONE, M_MEM,  P_OMOD),
-    E1(070,  CF_00, TEXT_FSTCW,  SZ_NONE, M_WMEM, P_OMOD),
+    E1(070,  CF_00, TEXT_FSTCW,  SZ_WORD, M_WMEM, P_OMOD),
 };
 
 constexpr uint8_t I8087_9BD9[] PROGMEM = {
@@ -1184,8 +1400,8 @@ constexpr uint8_t I8087_9BDB[] PROGMEM = {
 };
 
 constexpr Entry T8087_9BDD[] PROGMEM = {
-    E1(060,  CF_00, TEXT_FSAVE, SZ_NONE, M_MEM, P_OMOD),
-    E1(070,  CF_00, TEXT_FSTSW, SZ_NONE, M_MEM, P_OMOD),
+    E1(060,  CF_00, TEXT_FSAVE, SZ_NONE, M_MEM,  P_OMOD),
+    E1(070,  CF_00, TEXT_FSTSW, SZ_WORD, M_WMEM, P_OMOD),
 };
 
 constexpr uint8_t I8087_9BDD[] PROGMEM = {
@@ -1209,34 +1425,34 @@ constexpr uint8_t I80287_DF[] PROGMEM = {
       0,  // TEXT_FNSTSW
 };
 
-constexpr Entry T80C187_D9[] PROGMEM = {
+constexpr Entry T80387_D9[] PROGMEM = {
     E0(0xF5, CF_00, TEXT_FPREM1,  SZ_NONE),
     E0(0xFB, CF_00, TEXT_FSINCOS, SZ_NONE),
     E0(0xFE, CF_00, TEXT_FSIN,    SZ_NONE),
     E0(0xFF, CF_00, TEXT_FCOS,    SZ_NONE),
 };
 
-constexpr uint8_t I80C187_D9[] PROGMEM = {
+constexpr uint8_t I80387_D9[] PROGMEM = {
       3,  // TEXT_FCOS
       0,  // TEXT_FPREM1
       2,  // TEXT_FSIN
       1,  // TEXT_FSINCOS
 };
 
-constexpr Entry T80C187_DA[] PROGMEM = {
+constexpr Entry T80387_DA[] PROGMEM = {
     E0(0xE9, CF_00, TEXT_FUCOMPP, SZ_NONE),
 };
 
-constexpr uint8_t I80C187_DA[] PROGMEM = {
+constexpr uint8_t I80387_DA[] PROGMEM = {
       0,  // TEXT_FUCOMPP
 };
 
-constexpr Entry T80C187_DD[] PROGMEM = {
+constexpr Entry T80387_DD[] PROGMEM = {
     E1(0xE0, CF_07, TEXT_FUCOM,  SZ_NONE, M_STI, P_OREG),
     E1(0xE8, CF_07, TEXT_FUCOMP, SZ_NONE, M_STI, P_OREG),
 };
 
-constexpr uint8_t I80C187_DD[] PROGMEM = {
+constexpr uint8_t I80387_DD[] PROGMEM = {
       0,  // TEXT_FUCOM
       1,  // TEXT_FUCOMP
 };
@@ -1267,7 +1483,7 @@ constexpr EntryPage I8086_PAGES[] PROGMEM = {
 };
 
 constexpr EntryPage I80186_PAGES[] PROGMEM = {
-        // I80186
+        // i80186
         {0x00, ARRAY_RANGE(T80186_00), ARRAY_RANGE(I80186_00)},
         {0xD0, ARRAY_RANGE(T8086_D0), ARRAY_RANGE(I8086_DX)},    // M_VAL1
         {0xD1, ARRAY_RANGE(T8086_D1), ARRAY_RANGE(I8086_DX)},    // M_VAL1
@@ -1292,7 +1508,7 @@ constexpr EntryPage I80186_PAGES[] PROGMEM = {
 };
 
 constexpr EntryPage I80286_PAGES[] PROGMEM = {
-        // I80186
+        // i80186
         {0x00, ARRAY_RANGE(T80186_00), ARRAY_RANGE(I80186_00)},
         {0xD0, ARRAY_RANGE(T8086_D0), ARRAY_RANGE(I8086_DX)},    // M_VAL1
         {0xD1, ARRAY_RANGE(T8086_D1), ARRAY_RANGE(I8086_DX)},    // M_VAL1
@@ -1319,6 +1535,42 @@ constexpr EntryPage I80286_PAGES[] PROGMEM = {
         {0xF7, ARRAY_RANGE(T8086_F7), ARRAY_RANGE(I8086_FX)},
         {0xFE, ARRAY_RANGE(T8086_FE), ARRAY_RANGE(I8086_FE)},
         {0xFF, ARRAY_RANGE(T8086_FF), ARRAY_RANGE(I8086_FF)},
+};
+
+constexpr EntryPage I80386_PAGES[] PROGMEM = {
+        // i80386
+        {0x00, ARRAY_RANGE(TCODE16_00), ARRAY_RANGE(ICODE16_00)},
+        // i80186
+        {0x00, ARRAY_RANGE(T80186_00), ARRAY_RANGE(I80186_00)},
+        {0xD0, ARRAY_RANGE(T8086_D0), ARRAY_RANGE(I8086_DX)},    // M_VAL1
+        {0xD1, ARRAY_RANGE(T8086_D1), ARRAY_RANGE(I8086_DX)},    // M_VAL1
+        {0xC0, ARRAY_RANGE(T80186_C0), ARRAY_RANGE(I80186_CX)},  // M_BIT
+        {0xC1, ARRAY_RANGE(T80186_C1), ARRAY_RANGE(I80186_CX)},  // M_BIT
+        // i80286
+        {0x00, ARRAY_RANGE(T80286_00), ARRAY_RANGE(I80286_00)},
+        {0x0F, ARRAY_RANGE(T80286_0F), ARRAY_RANGE(I80286_0F)},
+        {0x0F00, ARRAY_RANGE(T80286_0F00), ARRAY_RANGE(I80286_0F00)},
+        {0x0F01, ARRAY_RANGE(T80286_0F01), ARRAY_RANGE(I80286_0F01)},
+        // i8086
+        {0x83, ARRAY_RANGE(T8086_83), ARRAY_RANGE(I8086_8X)},  // M_BIMM
+        {0x00, ARRAY_RANGE(T8086_00), ARRAY_RANGE(I8086_00)},
+        {0x80, ARRAY_RANGE(T8086_80), ARRAY_RANGE(I8086_8X)},
+        {0x81, ARRAY_RANGE(T8086_81), ARRAY_RANGE(I8086_8X)},   // M_WIMM
+        {0x8F, ARRAY_RANGE(T80386_8F), ARRAY_RANGE(I8086_8F)},  // i80386
+        {0xC6, ARRAY_RANGE(T8086_C6), ARRAY_RANGE(I8086_C6)},
+        {0xC7, ARRAY_RANGE(T8086_C7), ARRAY_RANGE(I8086_C7)},
+        {0xD2, ARRAY_RANGE(T8086_D2), ARRAY_RANGE(I8086_DX)},
+        {0xD3, ARRAY_RANGE(T8086_D3), ARRAY_RANGE(I8086_DX)},
+        {0xD4, ARRAY_RANGE(T8086_D4), ARRAY_RANGE(I8086_D4)},
+        {0xD5, ARRAY_RANGE(T8086_D5), ARRAY_RANGE(I8086_D5)},
+        {0xF6, ARRAY_RANGE(T8086_F6), ARRAY_RANGE(I8086_FX)},
+        {0xF7, ARRAY_RANGE(T8086_F7), ARRAY_RANGE(I8086_FX)},
+        {0xFE, ARRAY_RANGE(T8086_FE), ARRAY_RANGE(I8086_FE)},
+        {0xFF, ARRAY_RANGE(T80386_FF), ARRAY_RANGE(I8086_FF)},  // i80386
+        // i80386
+        {0x00, ARRAY_RANGE(T80386_00), ARRAY_RANGE(I80386_00)},
+        {0x0F, ARRAY_RANGE(T80386_0F), ARRAY_RANGE(I80386_0F)},
+        {0x0FBA, ARRAY_RANGE(T80386_0FBA), ARRAY_RANGE(I80386_0FBA)},
 };
 
 constexpr EntryPage V30_PAGES[] PROGMEM = {
@@ -1355,6 +1607,7 @@ constexpr Cpu CPU_TABLE[] PROGMEM = {
         {I8086, TEXT_CPU_8086, ARRAY_RANGE(I8086_PAGES)},
         {I80186, TEXT_CPU_80186, ARRAY_RANGE(I80186_PAGES)},
         {I80286, TEXT_CPU_80286, ARRAY_RANGE(I80286_PAGES)},
+        {I80386, TEXT_CPU_80386, ARRAY_RANGE(I80386_PAGES)},
         {V30, TEXT_CPU_V30, ARRAY_RANGE(V30_PAGES)},
 };
 
@@ -1400,7 +1653,7 @@ constexpr EntryPage I80287_PAGES[] PROGMEM = {
         {0xDF, ARRAY_RANGE(T80287_DF), ARRAY_RANGE(I80287_DF)},
 };
 
-constexpr EntryPage I80C187_PAGES[] PROGMEM = {
+constexpr EntryPage I80387_PAGES[] PROGMEM = {
         // i8087
         {0xD8, ARRAY_RANGE(T8087_D8), ARRAY_RANGE(I8087_D8)},
         {0xD9, ARRAY_RANGE(T8087_D9), ARRAY_RANGE(I8087_D9)},
@@ -1417,10 +1670,10 @@ constexpr EntryPage I80C187_PAGES[] PROGMEM = {
         // i80287
         {0xDB, ARRAY_RANGE(T80287_DB), ARRAY_RANGE(I80287_DB)},
         {0xDF, ARRAY_RANGE(T80287_DF), ARRAY_RANGE(I80287_DF)},
-        // i80C187
-        {0xD9, ARRAY_RANGE(T80C187_D9), ARRAY_RANGE(I80C187_D9)},
-        {0xDA, ARRAY_RANGE(T80C187_DA), ARRAY_RANGE(I80C187_DA)},
-        {0xDD, ARRAY_RANGE(T80C187_DD), ARRAY_RANGE(I80C187_DD)},
+        // i80387
+        {0xD9, ARRAY_RANGE(T80387_D9), ARRAY_RANGE(I80387_D9)},
+        {0xDA, ARRAY_RANGE(T80387_DA), ARRAY_RANGE(I80387_DA)},
+        {0xDD, ARRAY_RANGE(T80387_DD), ARRAY_RANGE(I80387_DD)},
 };
 
 using Fpu = entry::CpuBase<FpuType, EntryPage>;
@@ -1428,7 +1681,8 @@ using Fpu = entry::CpuBase<FpuType, EntryPage>;
 constexpr Fpu FPU_TABLE[] PROGMEM = {
         {FPU_I8087, TEXT_FPU_8087, ARRAY_RANGE(I8087_PAGES)},
         {FPU_I80287, TEXT_FPU_80287, ARRAY_RANGE(I80287_PAGES)},
-        {FPU_I80C187, TEXT_FPU_80C187, ARRAY_RANGE(I80C187_PAGES)},
+        {FPU_I80387, TEXT_FPU_80387, ARRAY_RANGE(I80387_PAGES)},
+        {FPU_I80C187, TEXT_FPU_80C187, ARRAY_RANGE(I80387_PAGES)},
         {FPU_NONE, TEXT_none, EMPTY_RANGE(I8087_PAGES)},
 };
 
@@ -1487,13 +1741,13 @@ bool acceptSize(const AsmInsn &insn, const Entry *entry) {
     const auto flags = entry->readFlags();
     if (dst == M_MEM || dst == M_DIR) {
         if (src == M_NONE)
-            return flags.size() == SZ_NONE;
+            return !flags.needSize();
         return hasSize(src) || flags.stringInsn();
     }
     if (src == M_MEM || src == M_DIR)
         return hasSize(dst) || flags.stringInsn();
     if (dst == M_FMEM) {
-        const auto ptrSize = OprSize(insn.dstOp.ptr - PRE_PTR);
+        const auto ptrSize = pointerSize(insn.dstOp.ptr);
         return ptrSize == flags.size();
     }
     return true;
@@ -1501,6 +1755,18 @@ bool acceptSize(const AsmInsn &insn, const Entry *entry) {
 
 bool acceptModes(AsmInsn &insn, const Entry *entry) {
     const auto table = entry->readFlags();
+    // if (strcasecmp(insn.name(), "CALL") == 0 && strcasecmp_P(entry->name_P(), "CALL") == 0) {
+    //     const auto dst = acceptMode(insn.dstOp.mode, table.dst());
+    //     const auto src = acceptMode(insn.srcOp.mode, table.src());
+    //     const auto ext = acceptMode(insn.extOp.mode, table.ext());
+    //     const auto size = acceptSize(insn, entry);
+    //     printf("@@ insn: dst=%d src=%d  table: opc=%02X(%04o) dst=%d src=%d size=%d  accept: "
+    //            "dst=%d "
+    //            "src=%d size=%d\n",
+    //             insn.dstOp.mode, insn.srcOp.mode, entry->readOpCode(), entry->readOpCode(),
+    //             table.dst(), table.src(), table.size(), dst, src, size);
+    //     return dst && src && ext && size;
+    // }
     return acceptMode(insn.dstOp.mode, table.dst()) && acceptMode(insn.srcOp.mode, table.src()) &&
            acceptMode(insn.extOp.mode, table.ext()) && acceptSize(insn, entry);
 }
@@ -1516,8 +1782,8 @@ Error searchName(const CpuSpec &cpuSpec, AsmInsn &insn) {
     return insn.getError();
 }
 
-bool isSegmentPrefix(Config::opcode_t opCode) {
-    return overrideSeg(opCode) != REG_UNDEF;
+bool isSegmentPrefix(const CpuSpec &cpuSpec, Config::opcode_t opCode) {
+    return overrideSeg(cpuSpec, opCode) != REG_UNDEF;
 }
 
 bool isRepeatPrefix(const CpuSpec &cpuSpec, Config::opcode_t opCode) {
@@ -1526,7 +1792,7 @@ bool isRepeatPrefix(const CpuSpec &cpuSpec, Config::opcode_t opCode) {
     return cpuSpec.cpu == V30 && (opCode == 0x64 || opCode == 0x65);
 }
 
-RegName overrideSeg(Config::opcode_t opCode, RegName defSeg) {
+RegName overrideSeg(const CpuSpec &cpuSpec, Config::opcode_t opCode, RegName defSeg) {
     switch (opCode) {
     case 0x26:
         return REG_ES;
@@ -1536,12 +1802,16 @@ RegName overrideSeg(Config::opcode_t opCode, RegName defSeg) {
         return REG_SS;
     case 0x3E:
         return REG_DS;
+    case 0x64:
+        return cpuSpec.hasExtraSeg() ? REG_FS : defSeg;
+    case 0x65:
+        return cpuSpec.hasExtraSeg() ? REG_GS : defSeg;
     default:
         return defSeg;
     }
 }
 
-Config::opcode_t segOverridePrefix(RegName name) {
+Config::opcode_t segOverridePrefix(const CpuSpec &cpuSpec, RegName name) {
     switch (name) {
     case REG_ES:
         return 0x26;
@@ -1551,6 +1821,10 @@ Config::opcode_t segOverridePrefix(RegName name) {
         return 0x36;
     case REG_DS:
         return 0x3E;
+    case REG_FS:
+        return cpuSpec.hasExtraSeg() ? 0x64 : 0;
+    case REG_GS:
+        return cpuSpec.hasExtraSeg() ? 0x65 : 0;
     default:
         return 0;
     }
@@ -1585,8 +1859,24 @@ bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page) {
     return opc == entry->readOpCode();
 }
 
+bool isData16(const Entry *entry) {
+    return entry >= TCODE16_00 && entry < ARRAY_END(TCODE16_00);
+}
+
+const Entry *toData32(const Entry *entry) {
+    return (entry - TCODE16_00) + TCODE32_00;
+}
+
 Error searchOpCode(const CpuSpec &cpuSpec, DisInsn &insn, StrBuffer &out) {
-    cpu(cpuSpec.cpu)->searchOpCode(insn, out, matchOpCode);
+    auto entry = cpu(cpuSpec.cpu)->searchOpCode(insn, out, matchOpCode);
+    if (isData16(entry) && insn.useData32()) {
+        entry = toData32(entry);
+        Cpu::defaultReadName(insn, entry, out);
+    }
+    if (insn.farInsn() && insn.farMode() != FMODE_FAR) {
+        entry += (insn.farMode() == FMODE_F ? 1 : 2);
+        Cpu::defaultReadName(insn, entry, out);
+    }
 #if !defined(LIBASM_I8086_NOFPU)
     if (insn.getError() == UNKNOWN_INSTRUCTION)
         fpu(cpuSpec.fpu)->searchOpCode(insn, out, matchOpCode);
@@ -1646,6 +1936,9 @@ Error Config::setFpuType(FpuType fpuType) {
         } else if (cpuType == I80286) {
             _cpuSpec.fpu = FPU_I80287;
             return OK;
+        } else if (cpuType == I80386) {
+            _cpuSpec.fpu = FPU_I80387;
+            return OK;
         }
     } else if (fpuType == FPU_I8087) {
         if (cpuType == I8086 || cpuType == I80186) {
@@ -1655,6 +1948,11 @@ Error Config::setFpuType(FpuType fpuType) {
     } else if (fpuType == FPU_I80287) {
         if (cpuType == I80286) {
             _cpuSpec.fpu = FPU_I80287;
+            return OK;
+        }
+    } else if (fpuType == FPU_I80387) {
+        if (cpuType == I80386) {
+            _cpuSpec.fpu = FPU_I80387;
             return OK;
         }
     } else if (fpuType == FPU_I80C187) {
@@ -1680,10 +1978,35 @@ Error Config::setFpuName(StrScanner &scan) {
         return setFpuType(FPU_I8087);
     if (p.iequals_P(TEXT_FPU_80287))
         return setFpuType(FPU_I80287);
+    if (p.iequals_P(TEXT_FPU_80387))
+        return setFpuType(FPU_I80387);
     if (p.iequals_P(TEXT_FPU_80C187))
         return setFpuType(FPU_I80C187);
 #endif
     return UNKNOWN_OPERAND;
+}
+
+static constexpr auto LEA = 0x8D;      // LEA
+static constexpr auto CALLF = 0x9A;    // CALL far
+static constexpr auto JMPF = 0xEA;     // JMPF far
+static constexpr auto RETFu16 = 0xCA;  // RETF u16
+static constexpr auto RETF = 0xCB;     // RETF
+static constexpr auto PUSHiw = 0x68;   // PUSH iw
+
+bool EntryInsn::leaInsn() const {
+    return prefix() == 0 && opCode() == LEA;
+}
+
+bool EntryInsn::farInsn() const {
+    const auto pre = prefix();
+    const auto opc = opCode();
+    if (pre == 0)
+        return opc == CALLF || opc == JMPF || opc == RETFu16 || opc == RETF;
+    if (pre == 0xFF) {
+        const auto reg = (opc >> 3) & 7;
+        return reg == 3 || reg == 5;  // CALLF/JMPF
+    }
+    return false;
 }
 
 const TableI8086 TABLE;
