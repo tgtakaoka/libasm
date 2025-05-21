@@ -44,8 +44,12 @@ bool is80287() {
     return strcmp_P("80287", asm8086.fpu_P()) == 0;
 }
 
-bool is80C187() {
-    return strcasecmp_P("801C87", asm8086.fpu_P()) == 0;
+bool is80386() {
+    return strcmp_P("80386", assembler.config().cpu_P()) == 0;
+}
+
+bool is80387() {
+    return strcmp_P("80387", asm8086.fpu_P()) == 0 || strcasecmp_P("801C87", asm8086.fpu_P()) == 0;
 }
 
 bool fpu_on() {
@@ -64,6 +68,9 @@ bool fpu_on() {
     } else if (is80286()) {
         TEST("FPU ON");
         EQUALS_P("80286", "80287", asm8086.fpu_P());
+    } else if (is80386()) {
+        TEST("FPU ON");
+        EQUALS_P("80386", "80387", asm8086.fpu_P());
     } else {
         EQUALS("unknown CPU", "", asm8086.cpu_P());
         return false;
@@ -98,6 +105,12 @@ void test_cpu() {
 
     EQUALS("cpu i80286", true,   assembler.setCpu("i80286"));
     EQUALS_P("cpu i80286", "80286", assembler.config().cpu_P());
+
+    EQUALS("cpu 80386", true,   assembler.setCpu("80386"));
+    EQUALS_P("cpu 80386", "80386", assembler.config().cpu_P());
+
+    EQUALS("cpu i80386", true,   assembler.setCpu("i80386"));
+    EQUALS_P("cpu i80386", "80386", assembler.config().cpu_P());
 
     EQUALS("cpu V30", true,   assembler.setCpu("v30"));
     EQUALS_P("cpu V30", "V30", assembler.config().cpu_P());
@@ -2739,7 +2752,7 @@ void test_float() {
     TEST("FCOMP ST(2)", 0xD8, 0xDA);
     TEST("FCOMPP",      0xDE, 0xD9);
 
-    if (is80C187()) {
+    if (is80387()) {
         TEST("FUCOM  ST(1)", 0xDD, 0xE1);
         TEST("FUCOMP ST(7)", 0xDD, 0xEF);
         TEST("FUCOMPP",      0xDA, 0xE9);
@@ -2887,7 +2900,7 @@ void test_float() {
     TEST("FXAM",    0xD9, 0xE5);
     TEST("FXTRACT", 0xD9, 0xF4);
     TEST("FPREM",   0xD9, 0xF8);
-    if (is80C187()) {
+    if (is80387()) {
         TEST("FPREM1", 0xD9, 0xF5);
     }
     TEST("FSQRT",   0xD9, 0xFA);
@@ -2899,7 +2912,7 @@ void test_float() {
     TEST("FPTAN",   0xD9, 0xF2);
     TEST("FPATAN",  0xD9, 0xF3);
     TEST("FYL2XP1", 0xD9, 0xF9);
-    if (is80C187()) {
+    if (is80387()) {
         TEST("FSINCOS", 0xD9, 0xFB);
         TEST("FSIN",    0xD9, 0xFE);
         TEST("FCOS",    0xD9, 0xFF);
@@ -2932,7 +2945,7 @@ void test_float_nowait() {
     TEST("FNSAVE [SI]",  0xDD, 0064);
     TEST("FNENI",        0xDB, 0xE0);
     TEST("FNDISI",       0xDB, 0xE1);
-    if (is80286() || is80C187()) {
+    if (is80286() || is80387()) {
         TEST("FNSETPM",   0xDB, 0xE4);
         TEST("FNSTSW AX", 0xDF, 0xE0);
     }
