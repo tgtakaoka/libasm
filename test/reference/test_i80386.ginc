@@ -1,0 +1,258 @@
+;### Copyright 2025 Tadashi G. Takaoka
+;###
+;### Licensed under the Apache License, Version 2.0 (the "License");
+;### you may not use this file except in compliance with the License.
+;### You may obtain a copy of the License at
+;###
+;###     http://www.apache.org/licenses/LICENSE-2.0
+;###
+;### Unless required by applicable law or agreed to in writing, software
+;### distributed under the License is distributed on an "AS IS" BASIS,
+;### WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+;### See the License for the specific language governing permissions and
+;### limitations under the License.
+
+;### Data Transfer
+;### Stack
+        push    fs
+        pop     fs
+        push    gs
+        pop     gs
+        pushd   0x12345678
+        pushad
+        popad
+        pushfd
+        popfd
+;### Type conversion
+        cwde
+        cdq
+        movsx   ax, al
+        movsx   cx, ah
+        movsx   dx, byte ptr [bx+si]
+        movsx   bx, byte ptr [bx+di]
+        movsx   sp, byte ptr [bp+si]
+        movsx   bp, byte ptr [bp+di]
+        movsx   si, byte ptr [si]
+        movsx   di, byte ptr [di]
+        movsx   ax, byte ptr [0x1234]
+        movsx   cx, byte ptr [bx]
+        movsx   dx, byte ptr [bx+si+0x34]
+        movsx   bx, byte ptr [bx+di+0x34]
+        movsx   sp, byte ptr [bp+si+0x34]
+        movsx   bp, byte ptr [bp+di+0x34]
+        movsx   si, byte ptr [si+0x34]
+        movsx   di, byte ptr [di+0x34]
+        movsx   ax, byte ptr [bp+0x34]
+        movsx   cx, byte ptr [bx+0x34]
+        movsx   dx, byte ptr [bx+si+0x1234]
+        movsx   bx, byte ptr [bx+di+0x1234]
+        movsx   sp, byte ptr [bp+si+0x1234]
+        movsx   bp, byte ptr [bp+di+0x1234]
+        movsx   si, byte ptr [si+0x1234]
+        movsx   di, byte ptr [di+0x1234]
+        movsx   ax, byte ptr [bp+0x1234]
+        movsx   cx, byte ptr [bx+0x1234]
+        movsx   eax, al
+        movsx   ecx, ah
+        movsx   edx, byte ptr [bx+si]
+        movsx   ebx, byte ptr [bx+di]
+        movsx   esp, byte ptr [bp+si]
+        movsx   ebp, byte ptr [bp+di]
+        movsx   esi, byte ptr [si]
+        movsx   edi, byte ptr [di]
+        movsx   eax, byte ptr [0x1234]
+        movsx   ecx, byte ptr [bx]
+        movsx   edx, byte ptr [bx+si+0x34]
+        movsx   ebx, byte ptr [bx+di+0x34]
+        movsx   esp, byte ptr [bp+si+0x34]
+        movsx   ebp, byte ptr [bp+di+0x34]
+        movsx   esi, byte ptr [si+0x34]
+        movsx   edi, byte ptr [di+0x34]
+        movsx   eax, byte ptr [bp+0x34]
+        movsx   ecx, byte ptr [bx+0x34]
+        movsx   edx, byte ptr [bx+si+0x1234]
+        movsx   ebx, byte ptr [bx+di+0x1234]
+        movsx   esp, byte ptr [bp+si+0x1234]
+        movsx   ebp, byte ptr [bp+di+0x1234]
+        movsx   esi, byte ptr [si+0x1234]
+        movsx   edi, byte ptr [di+0x1234]
+        movsx   eax, byte ptr [bp+0x1234]
+        movsx   ecx, byte ptr [bx+0x1234]
+        movsx   eax, cx
+        movsx   ecx, dx
+        movsx   edx, word ptr [bx+si]
+        movsx   ebx, word ptr [bx+di]
+        movsx   esp, word ptr [bp+si]
+        movsx   ebp, word ptr [bp+di]
+        movsx   esi, word ptr [si]
+        movsx   edi, word ptr [di]
+        movsx   eax, word ptr [0x1234]
+        movsx   ecx, word ptr [bx]
+        movsx   edx, word ptr [bx+si+0x34]
+        movsx   ebx, word ptr [bx+di+0x34]
+        movsx   esp, word ptr [bp+si+0x34]
+        movsx   ebp, word ptr [bp+di+0x34]
+        movsx   esi, word ptr [si+0x34]
+        movsx   edi, word ptr [di+0x34]
+        movsx   eax, word ptr [bp+0x34]
+        movsx   ecx, word ptr [bx+0x34]
+        movsx   edx, word ptr [bx+si+0x1234]
+        movsx   ebx, word ptr [bx+di+0x1234]
+        movsx   esp, word ptr [bp+si+0x1234]
+        movsx   ebp, word ptr [bp+di+0x1234]
+        movsx   esi, word ptr [si+0x1234]
+        movsx   edi, word ptr [di+0x1234]
+        movsx   eax, word ptr [bp+0x1234]
+        movsx   ecx, word ptr [bx+0x1234]
+
+;### 32-bit Addressing
+### mod=0
+        xor     ax, [bx+si]
+        xor     ax, [bx+di]
+        xor     ax, [bp+si]
+        xor     ax, [bp+di]
+        xor     ax, [si]
+        xor     ax, [di]
+        xor     ax, [0x0100]
+        xor     ax, [bx]
+### mod=1
+        xor     ax, [bx+si+1]
+        xor     ax, [bx+di+1]
+        xor     ax, [bp+si+1]
+        xor     ax, [bp+di+1]
+        xor     ax, [si+1]
+        xor     ax, [di+1]
+        xor     ax, [bp+1]
+        xor     ax, [bx+1]
+### mod=2
+        xor     ax, [bx+si+0x0100]
+        xor     ax, [bx+di+0x0100]
+        xor     ax, [bp+si+0x0100]
+        xor     ax, [bp+di+0x0100]
+        xor     ax, [si+0x0100]
+        xor     ax, [di+0x0100]
+        xor     ax, [bp+0x0100]
+        xor     ax, [bx+0x0100]
+### mod=3
+        xor     ax, ax
+        xor     cx, ax
+        xor     dx, ax
+        xor     bx, ax
+        xor     sp, ax
+        xor     bp, ax
+        xor     si, ax
+        xor     di, ax
+### mod=0
+        xor     eax, [bx+si]
+        xor     eax, [bx+di]
+        xor     eax, [bp+si]
+        xor     eax, [bp+di]
+        xor     eax, [si]
+        xor     eax, [di]
+        xor     eax, [0x0100]
+        xor     eax, [bx]
+### mod=1
+        xor     eax, [bx+si+1]
+        xor     eax, [bx+di+1]
+        xor     eax, [bp+si+1]
+        xor     eax, [bp+di+1]
+        xor     eax, [si+1]
+        xor     eax, [di+1]
+        xor     eax, [bp+1]
+        xor     eax, [bx+1]
+### mod=2
+        xor     eax, [bx+si+0x0100]
+        xor     eax, [bx+di+0x0100]
+        xor     eax, [bp+si+0x0100]
+        xor     eax, [bp+di+0x0100]
+        xor     eax, [si+0x0100]
+        xor     eax, [di+0x0100]
+        xor     eax, [bp+0x0100]
+        xor     eax, [bx+0x0100]
+### mod=3
+        xor     eax, eax
+        xor     ecx, eax
+        xor     edx, eax
+        xor     ebx, eax
+        xor     esp, eax
+        xor     ebp, eax
+        xor     esi, eax
+        xor     edi, eax
+### mod=0
+        xor     ax, [eax]
+        xor     ax, [ecx]
+        xor     ax, [edx]
+        xor     ax, [ebx]
+        xor     ax, [0x12345678]
+        xor     ax, [esi]
+        xor     ax, [edi]
+### mod=1
+        xor     ax, [eax+1]
+        xor     ax, [ecx+1]
+        xor     ax, [edx+1]
+        xor     ax, [ebx+1]
+        xor     ax, [ebp+1]
+        xor     ax, [esi+1]
+        xor     ax, [edi+1]
+### mod=2
+        xor     ax, [eax+0x12345678]
+        xor     ax, [ecx+0x12345678]
+        xor     ax, [edx+0x12345678]
+        xor     ax, [ebx+0x12345678]
+        xor     ax, [ebp+0x12345678]
+        xor     ax, [esi+0x12345678]
+        xor     ax, [edi+0x12345678]
+### mod=3
+        xor     eax, eax
+        xor     ecx, eax
+        xor     edx, eax
+        xor     ebx, eax
+        xor     esp, eax
+        xor     ebp, eax
+        xor     esi, eax
+        xor     edi, eax
+### mod=0
+        xor     ax, [eax+eax]
+        xor     ax, [ecx+ecx]
+        xor     ax, [edx+edx]
+        xor     ax, [ebx+ebx]
+        xor     ax, [esp+ebx]
+        xor     ax, [eax+ebp]
+        xor     ax, [esi+esi]
+        xor     ax, [edi+edi]
+### mod=1
+        xor     ax, [eax+eax*2]
+        xor     ax, [ecx+ecx*2]
+        xor     ax, [edx+edx*2]
+        xor     ax, [ebx+ebx*2]
+        xor     ax, [esp+ebx*2]
+        xor     ax, [eax+ebp*2]
+        xor     ax, [eax+esi*2]
+        xor     ax, [eax+edi*2]
+### mod=2
+        xor     ax, [eax+eax*4]
+        xor     ax, [ecx+ecx*4]
+        xor     ax, [edx+edx*4]
+        xor     ax, [ebx+ebx*4]
+        xor     ax, [esp+ebx*4]
+        xor     ax, [eax+ebp*4]
+        xor     ax, [esi+esi*4]
+        xor     ax, [edi+edi*4]
+### mod=3
+        xor     ax, [eax+eax*8]
+        xor     ax, [ecx+ecx*8]
+        xor     ax, [edx+edx*8]
+        xor     ax, [ebx+ebx*8]
+        xor     ax, [esp+ebx*8]
+        xor     ax, [eax+ebp*8]
+        xor     ax, [esi+esi*8]
+        xor     ax, [edi+edi*8]
+### r=5
+        xor     ax, [0x12345678]
+        xor     ax, [ebp+eax+1]
+        xor     ax, [ebp+eax+0x12345678]
+
+;### Local Variables:
+;### mode: asm
+;### End:
+;### vim: set ft=asm:
