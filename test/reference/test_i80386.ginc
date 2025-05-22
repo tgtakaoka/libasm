@@ -1,0 +1,1472 @@
+;### Copyright 2025 Tadashi G. Takaoka
+;###
+;### Licensed under the Apache License, Version 2.0 (the "License");
+;### you may not use this file except in compliance with the License.
+;### You may obtain a copy of the License at
+;###
+;###     http://www.apache.org/licenses/LICENSE-2.0
+;###
+;### Unless required by applicable law or agreed to in writing, software
+;### distributed under the License is distributed on an "AS IS" BASIS,
+;### WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+;### See the License for the specific language governing permissions and
+;### limitations under the License.
+
+;### Data Transfer
+;### Move
+        mov     eax,ecx
+        mov     edx,ebx
+        mov     esp,ebp
+        mov     [esi],esi
+        mov     [0x1234],edi
+        mov     [edi-0x34],eax
+        mov     [ebp+0x1234],ecx
+        mov     [ebx+esi],edx
+        mov     [ebx+edi+0x34],ebx
+        mov     [ebp+esi+0x1234],esp
+        mov     esi,[esi]
+        mov     edi,[0x1234]
+        mov     eax,[edi-0x34]
+        mov     ecx,[ebp+0x1234]
+        mov     edx,[ebx+esi]
+        mov     ebx,[ebx+edi+0x34]
+        mov     esp,[ebp+esi+0x1234]
+        mov     eax,0x12345678
+        mov     ecx,0x12345678
+        mov     dword ptr [esi],0x12345678
+        mov     dword ptr [0x1234],0x12345678
+        mov     dword ptr [edi+0x34],0x12345678
+        mov     dword ptr [ebp+0x1234],0x12345678
+        mov     dword ptr [ebx+esi],0x12345678
+        mov     dword ptr [ebx+edi-0x34],0x12345678
+        mov     dword ptr [ebp+esi+0x89AB],0x12345678
+        mov     eax,[0x1234]
+        mov     [0x1234],eax
+        mov     eax,es
+        mov     [esi],cs
+        mov     [0x89AB],ss
+        mov     [edi-0x34],ds
+        mov     [ebp+0x1234],es
+        mov     [ebx+esi],cs
+        mov     [ebx+edi+0x34],ss
+        mov     [ebp+esi+0x1234],ds
+        mov     es,eax
+        mov     cs,[esi]
+        mov     ss,[0x1234]
+        mov     ds,[edi-0x34]
+        mov     es,[ebp+0x1234]
+        mov     cs,[ebx+esi]
+        mov     ss,[ebx+edi+0x34]
+        mov     ds,[ebp+esi+0x1234]
+        mov     fs,ax
+        mov     gs,[si]
+        mov     fs,[0x1234]
+        mov     gs,[di-0x34]
+        mov     fs,[bp+0x1234]
+        mov     gs,[bx+si]
+        mov     fs,[bx+di+0x34]
+        mov     gs,[bp+si+0x1234]
+        mov     gs,[esi]
+        mov     fs,[0x1234]
+        mov     gs,[edi-0x34]
+        mov     fs,[ebp+0x1234]
+        mov     gs,[ebx+esi]
+        mov     fs,[ebx+edi+0x34]
+        mov     gs,[ebp+esi+0x1234]
+;### Move to/from special registers
+        mov     eax,cr0
+        mov     ecx,cr2
+        mov     edx,cr3
+        mov     ebx,dr0
+        mov     esi,tr6
+        mov     edi,tr7
+        mov     cr0,esp
+        mov     cr2,ebp
+        mov     cr3,eax
+        mov     dr0,eax
+        mov     dr1,ecx
+        mov     tr6,edx
+        mov     tr7,ebx
+;### Push data onto stack
+        pushd   0x12345678
+        push    ebp
+        push    [esi]
+        push    [0x1234]
+        push    [edi-0x34]
+        push    [ebp+0x1234]
+        push    [ebx+esi]
+        push    [ebx+edi+0x34]
+        push    [ebp+esi+0x1234]
+        push    es
+        push    cs
+        push    ss
+        push    ds
+        push    fs
+        push    gs
+;### Pop data from stack
+        pop     ebp
+        pop     [esi]
+        pop     [0x1234]
+        pop     [edi-0x34]
+        pop     [ebp+0x1234]
+        pop     [ebx+esi]
+        pop     [ebx+edi+0x34]
+        pop     [ebp+esi+0x1234]
+        pop     es
+;###    pop     cs
+        pop     ss
+        pop     ds
+        pop     fs
+        pop     gs
+;### Exchange data
+        xchg    eax,ebp
+        xchg    [esi],ecx
+        xchg    [0x1234],edx
+        xchg    [edi-0x34],ebx
+        xchg    [ebp+0x1234],esp
+        xchg    [ebx+esi],ebp
+        xchg    [ebx+edi+0x34],esi
+        xchg    [ebp+esi+0x1234],edi
+;### Input from port
+        in      eax,0x34
+        in      eax,dx
+;### Output to port
+        out     0x34,eax
+        out     dx,eax
+;### Load effective address
+        lea     ecx,[esi]
+        lea     edx,[0x1234]
+        lea     ebx,[edi-0x34]
+        lea     esp,[ebp+0x1234]
+        lea     ebp,[ebx+esi]
+        lea     esi,[ebx+edi+0x34]
+        lea     edi,[ebp+esi+0x1234]
+;### Load pointer uesing DS
+        lds     ecx,[esi]
+        lds     edx,[0x1234]
+        lds     ebx,[edi-0x34]
+        lds     esp,[ebp+0x1234]
+        lds     ebp,[ebx+esi]
+        lds     esi,[ebx+edi+0x34]
+        lds     edi,[ebp+esi+0x1234]
+;### Load ES with pointer
+        les     ecx,[esi]
+        les     edx,[0x1234]
+        les     ebx,[edi-0x34]
+        les     esp,[ebp+0x1234]
+        les     ebp,[ebx+esi]
+        les     esi,[ebx+edi+0x34]
+        les     edi,[ebp+esi+0x1234]
+;### Load FS with pointer
+        lfs     cx,[si]
+        lfs     dx,[0x1234]
+        lfs     bx,[di-0x34]
+        lfs     sp,[bp+0x1234]
+        lfs     bp,[bx+si]
+        lfs     si,[bx+di+0x34]
+        lfs     di,[bp+si+0x1234]
+        lfs     ecx,[esi]
+        lfs     edx,[0x1234]
+        lfs     ebx,[edi-0x34]
+        lfs     esp,[ebp+0x1234]
+        lfs     ebp,[ebx+esi]
+        lfs     esi,[ebx+edi+0x34]
+        lfs     edi,[ebp+esi+0x1234]
+;### Load GS with pointer
+        lgs     cx,[si]
+        lgs     dx,[0x1234]
+        lgs     bx,[di-0x34]
+        lgs     sp,[bp+0x1234]
+        lgs     bp,[bx+si]
+        lgs     si,[bx+di+0x34]
+        lgs     di,[bp+si+0x1234]
+        lgs     ecx,[esi]
+        lgs     edx,[0x1234]
+        lgs     ebx,[edi-0x34]
+        lgs     esp,[ebp+0x1234]
+        lgs     ebp,[ebx+esi]
+        lgs     esi,[ebx+edi+0x34]
+        lgs     edi,[ebp+esi+0x1234]
+;### Push register onto stack
+        pushfd
+        pushad
+;### Pop register from stack
+        popfd
+        popad
+;### Arithmetic
+;### Add
+        add     [esi],dh
+        add     [0x1234],bh
+        add     [edi-0x34],al
+        add     [ebp+0x1234],cl
+        add     [ebx+esi],dl
+        add     [ebx+edi+0x34],bl
+        add     [ebp+esi+0x1234],ah
+        add     dh,[esi]
+        add     bh,[0x1234]
+        add     al,[edi-0x34]
+        add     cl,[ebp+0x1234]
+        add     dl,[ebx+esi]
+        add     bl,[ebx+edi+0x34]
+        add     ah,[ebp+esi+0x1234]
+        add     eax,ecx
+        add     edx,ebx
+        add     esp,ebp
+        add     [esi],esi
+        add     [0x1234],edi
+        add     [edi-0x34],eax
+        add     [ebp+0x1234],ecx
+        add     [ebx+esi],edx
+        add     [ebx+edi+0x34],ebx
+        add     [ebp+esi+0x1234],esp
+        add     esi,[esi]
+        add     edi,[0x1234]
+        add     eax,[edi-0x34]
+        add     ecx,[ebp+0x1234]
+        add     edx,[ebx+esi]
+        add     ebx,[ebx+edi+0x34]
+        add     esp,[ebp+esi+0x1234]
+        add     eax,0x12345678
+        add     ecx,0x12345678
+        add     byte ptr [esi],0x56
+        add     byte ptr [0x1234],0x56
+        add     byte ptr [edi-0x34],0x56
+        add     byte ptr [ebp+0x1234],0x56
+        add     byte ptr [ebx+esi],0x56
+        add     byte ptr [ebx+edi+0x34],0x56
+        add     byte ptr [ebp+esi+0x1234],0x56
+        add     word ptr [esi],0x1234
+        add     word ptr [0x1234],0x1234
+        add     word ptr [edi-0x34],0x1234
+        add     word ptr [ebp+0x1234],0x1234
+        add     word ptr [ebx+esi],0x1234
+        add     word ptr [ebx+edi+0x34],0x1234
+        add     word ptr [ebp+esi+0x1234],0x1234
+        add     dword ptr [esi],0x12345678
+        add     dword ptr [0x1234],0x12345678
+        add     dword ptr [edi-0x34],0x12345678
+        add     dword ptr [ebp+0x1234],0x12345678
+        add     dword ptr [ebx+esi],0x12345678
+        add     dword ptr [ebx+edi+0x34],0x12345678
+        add     dword ptr [ebp+esi+0x1234],0x12345678
+        add     eax,0x56
+        add     eax,-16
+        add     ecx,0x56
+        add     ecx,-16
+        add     dword ptr [esi],0x56
+        add     dword ptr [0x1234],0x56
+        add     dword ptr [edi-0x34],0x56
+        add     dword ptr [ebp+0x1234],0x56
+        add     dword ptr [ebx+esi],0x56
+        add     dword ptr [ebx+edi+0x34],0x56
+        add     dword ptr [ebp+esi+0x1234],0x56
+;### Add with carry
+        adc     [esi],dh
+        adc     [0x1234],bh
+        adc     [edi-0x34],al
+        adc     [ebp+0x1234],cl
+        adc     [ebx+esi],dl
+        adc     [ebx+edi+0x34],bl
+        adc     [ebp+esi+0x1234],ah
+        adc     dh,[esi]
+        adc     bh,[0x1234]
+        adc     al,[edi-0x34]
+        adc     cl,[ebp+0x1234]
+        adc     dl,[ebx+esi]
+        adc     bl,[ebx+edi+0x34]
+        adc     ah,[ebp+esi+0x1234]
+        adc     eax,ecx
+        adc     edx,ebx
+        adc     esp,ebp
+        adc     [esi],esi
+        adc     [0x1234],edi
+        adc     [edi-0x34],eax
+        adc     [ebp+0x1234],ecx
+        adc     [ebx+esi],edx
+        adc     [ebx+edi+0x34],ebx
+        adc     [ebp+esi+0x1234],esp
+        adc     esi,[esi]
+        adc     edi,[0x1234]
+        adc     eax,[edi-0x34]
+        adc     ecx,[ebp+0x1234]
+        adc     edx,[ebx+esi]
+        adc     ebx,[ebx+edi+0x34]
+        adc     esp,[ebp+esi+0x1234]
+        adc     eax,0x12345678
+        adc     ecx,0x12345678
+        adc     byte ptr [esi],0x56
+        adc     byte ptr [0x1234],0x56
+        adc     byte ptr [edi-0x34],0x56
+        adc     byte ptr [ebp+0x1234],0x56
+        adc     byte ptr [ebx+esi],0x56
+        adc     byte ptr [ebx+edi+0x34],0x56
+        adc     byte ptr [ebp+esi+0x1234],0x56
+        adc     word ptr [esi],0x1234
+        adc     word ptr [0x1234],0x1234
+        adc     word ptr [edi-0x34],0x1234
+        adc     word ptr [ebp+0x1234],0x1234
+        adc     word ptr [ebx+esi],0x1234
+        adc     word ptr [ebx+edi+0x34],0x1234
+        adc     word ptr [ebp+esi+0x1234],0x1234
+        adc     dword ptr [esi],0x12345678
+        adc     dword ptr [0x1234],0x12345678
+        adc     dword ptr [edi-0x34],0x12345678
+        adc     dword ptr [ebp+0x1234],0x12345678
+        adc     dword ptr [ebx+esi],0x12345678
+        adc     dword ptr [ebx+edi+0x34],0x12345678
+        adc     dword ptr [ebp+esi+0x1234],0x12345678
+        adc     eax,0x56
+        adc     eax,-16
+        adc     ecx,0x56
+        adc     ecx,-16
+        adc     dword ptr [esi],0x56
+        adc     dword ptr [0x1234],0x56
+        adc     dword ptr [edi-0x34],0x56
+        adc     dword ptr [ebp+0x1234],0x56
+        adc     dword ptr [ebx+esi],0x56
+        adc     dword ptr [ebx+edi+0x34],0x56
+        adc     dword ptr [ebp+esi+0x1234],0x56
+;### Increment by 1
+        inc     ebp
+        inc     dword ptr [esi]
+        inc     dword ptr [0x1234]
+        inc     dword ptr [edi-0x34]
+        inc     dword ptr [ebp+0x1234]
+        inc     dword ptr [ebx+esi]
+        inc     dword ptr [ebx+edi+0x34]
+        inc     dword ptr [ebp+esi+0x1234]
+;### Subtraction
+        sub     al,cl
+        sub     dl,bl
+        sub     ah,ch
+        sub     [esi],dh
+        sub     [0x1234],bh
+        sub     [edi-0x34],al
+        sub     [ebp+0x1234],cl
+        sub     [ebx+esi],dl
+        sub     [ebx+edi+0x34],bl
+        sub     [ebp+esi+0x1234],ah
+        sub     dh,[esi]
+        sub     bh,[0x1234]
+        sub     al,[edi-0x34]
+        sub     cl,[ebp+0x1234]
+        sub     dl,[ebx+esi]
+        sub     bl,[ebx+edi+0x34]
+        sub     ah,[ebp+esi+0x1234]
+        sub     eax,ecx
+        sub     edx,ebx
+        sub     esp,ebp
+        sub     [esi],esi
+        sub     [0x1234],edi
+        sub     [edi-0x34],eax
+        sub     [ebp+0x1234],ecx
+        sub     [ebx+esi],edx
+        sub     [ebx+edi+0x34],ebx
+        sub     [ebp+esi+0x1234],esp
+        sub     esi,[esi]
+        sub     edi,[0x1234]
+        sub     eax,[edi-0x34]
+        sub     ecx,[ebp+0x1234]
+        sub     edx,[ebx+esi]
+        sub     ebx,[ebx+edi+0x34]
+        sub     esp,[ebp+esi+0x1234]
+        sub     al,0x56
+        sub     cl,0x56
+        sub     byte ptr [esi],0x56
+        sub     byte ptr [0x1234],0x56
+        sub     byte ptr [edi-0x34],0x56
+        sub     byte ptr [ebp+0x1234],0x56
+        sub     byte ptr [ebx+esi],0x56
+        sub     byte ptr [ebx+edi+0x34],0x56
+        sub     byte ptr [ebp+esi+0x1234],0x56
+        sub     eax,0x12345678
+        sub     ecx,0x12345678
+        sub     dword ptr [esi],0x12345678
+        sub     dword ptr [0x1234],0x12345678
+        sub     dword ptr [edi-0x34],0x12345678
+        sub     dword ptr [ebp+0x1234],0x12345678
+        sub     dword ptr [ebx+esi],0x12345678
+        sub     dword ptr [ebx+edi+0x34],0x12345678
+        sub     dword ptr [ebp+esi+0x1234],0x12345678
+        sub     eax,0x56
+        sub     eax,-16
+        sub     ecx,0x56
+        sub     ecx,-16
+        sub     dword ptr [esi],0x56
+        sub     dword ptr [0x1234],0x56
+        sub     dword ptr [edi-0x34],0x56
+        sub     dword ptr [ebp+0x1234],0x56
+        sub     dword ptr [ebx+esi],0x56
+        sub     dword ptr [ebx+edi+0x34],0x56
+        sub     dword ptr [ebp+esi+0x1234],0x56
+;### Subtract with borrow
+        sbb     al,cl
+        sbb     dl,bl
+        sbb     ah,ch
+        sbb     [esi],dh
+        sbb     [0x1234],bh
+        sbb     [edi-0x34],al
+        sbb     [ebp+0x1234],cl
+        sbb     [ebx+esi],dl
+        sbb     [ebx+edi+0x34],bl
+        sbb     [ebp+esi+0x1234],ah
+        sbb     dh,[esi]
+        sbb     bh,[0x1234]
+        sbb     al,[edi-0x34]
+        sbb     cl,[ebp+0x1234]
+        sbb     dl,[ebx+esi]
+        sbb     bl,[ebx+edi+0x34]
+        sbb     ah,[ebp+esi+0x1234]
+        sbb     eax,ecx
+        sbb     edx,ebx
+        sbb     esp,ebp
+        sbb     [esi],esi
+        sbb     [0x1234],edi
+        sbb     [edi-0x34],eax
+        sbb     [ebp+0x1234],ecx
+        sbb     [ebx+esi],edx
+        sbb     [ebx+edi+0x34],ebx
+        sbb     [ebp+esi+0x1234],esp
+        sbb     esi,[esi]
+        sbb     edi,[0x1234]
+        sbb     eax,[edi-0x34]
+        sbb     ecx,[ebp+0x1234]
+        sbb     edx,[ebx+esi]
+        sbb     ebx,[ebx+edi+0x34]
+        sbb     esp,[ebp+esi+0x1234]
+        sbb     al,0x56
+        sbb     cl,0x56
+        sbb     byte ptr [esi],0x56
+        sbb     byte ptr [0x1234],0x56
+        sbb     byte ptr [edi-0x34],0x56
+        sbb     byte ptr [ebp+0x1234],0x56
+        sbb     byte ptr [ebx+esi],0x56
+        sbb     byte ptr [ebx+edi+0x34],0x56
+        sbb     byte ptr [ebp+esi+0x1234],0x56
+        sbb     eax,0x12345678
+        sbb     ecx,0x12345678
+        sbb     dword ptr [esi],0x12345678
+        sbb     dword ptr [0x1234],0x12345678
+        sbb     dword ptr [edi-0x34],0x12345678
+        sbb     dword ptr [ebp+0x1234],0x12345678
+        sbb     dword ptr [ebx+esi],0x12345678
+        sbb     dword ptr [ebx+edi+0x34],0x12345678
+        sbb     dword ptr [ebp+esi+0x1234],0x12345678
+        sbb     eax,0x56
+        sbb     eax,-16
+        sbb     ecx,0x56
+        sbb     ecx,-16
+        sbb     dword ptr [esi],0x56
+        sbb     dword ptr [0x1234],0x56
+        sbb     dword ptr [edi-0x34],0x56
+        sbb     dword ptr [ebp+0x1234],0x56
+        sbb     dword ptr [ebx+esi],0x56
+        sbb     dword ptr [ebx+edi+0x34],0x56
+        sbb     dword ptr [ebp+esi+0x1234],0x56
+;### Decrement by 1
+        dec     ebp
+        dec     dword ptr [esi]
+        dec     dword ptr [0x1234]
+        dec     dword ptr [edi-0x34]
+        dec     dword ptr [ebp+0x1234]
+        dec     dword ptr [ebx+esi]
+        dec     dword ptr [ebx+edi+0x34]
+        dec     dword ptr [ebp+esi+0x1234]
+;### Negation
+        neg     ch
+        neg     byte ptr [esi]
+        neg     byte ptr [0x1234]
+        neg     byte ptr [edi-0x34]
+        neg     byte ptr [ebp+0x1234]
+        neg     byte ptr [ebx+esi]
+        neg     byte ptr [ebx+edi+0x34]
+        neg     byte ptr [ebp+esi+0x1234]
+        neg     ebp
+        neg     dword ptr [esi]
+        neg     dword ptr [0x1234]
+        neg     dword ptr [edi-0x34]
+        neg     dword ptr [ebp+0x1234]
+        neg     dword ptr [ebx+esi]
+        neg     dword ptr [ebx+edi+0x34]
+        neg     dword ptr [ebp+esi+0x1234]
+;### Compare operands
+        cmp     [esi],dh
+        cmp     [0x1234],bh
+        cmp     [edi-0x34],al
+        cmp     [ebp+0x1234],cl
+        cmp     [ebx+esi],dl
+        cmp     [ebx+edi+0x34],bl
+        cmp     [ebp+esi+0x1234],ah
+        cmp     dh,[esi]
+        cmp     bh,[0x1234]
+        cmp     al,[edi-0x34]
+        cmp     cl,[ebp+0x1234]
+        cmp     dl,[ebx+esi]
+        cmp     bl,[ebx+edi+0x34]
+        cmp     ah,[ebp+esi+0x1234]
+        cmp     eax,ecx
+        cmp     edx,ebx
+        cmp     esp,ebp
+        cmp     [esi],esi
+        cmp     [0x1234],edi
+        cmp     [edi-0x34],eax
+        cmp     [ebp+0x1234],ecx
+        cmp     [ebx+esi],edx
+        cmp     [ebx+edi+0x34],ebx
+        cmp     [ebp+esi+0x1234],esp
+        cmp     esi,[esi]
+        cmp     edi,[0x1234]
+        cmp     eax,[edi-0x34]
+        cmp     ecx,[ebp+0x1234]
+        cmp     edx,[ebx+esi]
+        cmp     ebx,[ebx+edi+0x34]
+        cmp     esp,[ebp+esi+0x1234]
+        cmp     eax,0x12345678
+        cmp     ecx,0x12345678
+        cmp     byte ptr [esi],0x56
+        cmp     byte ptr [0x1234],0x56
+        cmp     byte ptr [edi-0x34],0x56
+        cmp     byte ptr [ebp+0x1234],0x56
+        cmp     byte ptr [ebx+esi],0x56
+        cmp     byte ptr [ebx+edi+0x34],0x56
+        cmp     byte ptr [ebp+esi+0x1234],0x56
+        cmp     word ptr [esi],0x1234
+        cmp     word ptr [0x1234],0x1234
+        cmp     word ptr [edi-0x34],0x1234
+        cmp     word ptr [ebp+0x1234],0x1234
+        cmp     word ptr [ebx+esi],0x1234
+        cmp     word ptr [ebx+edi+0x34],0x1234
+        cmp     word ptr [ebp+esi+0x1234],0x1234
+        cmp     dword ptr [esi],0x12345678
+        cmp     dword ptr [0x1234],0x12345678
+        cmp     dword ptr [edi-0x34],0x12345678
+        cmp     dword ptr [ebp+0x1234],0x12345678
+        cmp     dword ptr [ebx+esi],0x12345678
+        cmp     dword ptr [ebx+edi+0x34],0x12345678
+        cmp     dword ptr [ebp+esi+0x1234],0x12345678
+        cmp     eax,0x56
+        cmp     eax,-16
+        cmp     ecx,0x56
+        cmp     ecx,-16
+        cmp     dword ptr [esi],0x56
+        cmp     dword ptr [0x1234],0x56
+        cmp     dword ptr [edi-0x34],0x56
+        cmp     dword ptr [ebp+0x1234],0x56
+        cmp     dword ptr [ebx+esi],0x56
+        cmp     dword ptr [ebx+edi+0x34],0x56
+        cmp     dword ptr [ebp+esi+0x1234],0x56
+;### Unesigned multiply
+        mul     ch
+        mul     byte ptr [esi]
+        mul     byte ptr [0x1234]
+        mul     byte ptr [edi-0x34]
+        mul     byte ptr [ebp+0x1234]
+        mul     byte ptr [ebx+esi]
+        mul     byte ptr [ebx+edi+0x34]
+        mul     byte ptr [ebp+esi+0x1234]
+        mul     ebp
+        mul     dword ptr [esi]
+        mul     dword ptr [0x1234]
+        mul     dword ptr [edi-0x34]
+        mul     dword ptr [ebp+0x1234]
+        mul     dword ptr [ebx+esi]
+        mul     dword ptr [ebx+edi+0x34]
+        mul     dword ptr [ebp+esi+0x1234]
+;### Esigned multiply
+        imul    ch
+        imul    byte ptr [esi]
+        imul    byte ptr [0x1234]
+        imul    byte ptr [edi-0x34]
+        imul    byte ptr [ebp+0x1234]
+        imul    byte ptr [ebx+esi]
+        imul    byte ptr [ebx+edi+0x34]
+        imul    byte ptr [ebp+esi+0x1234]
+        imul    ebp
+        imul    dword ptr [esi]
+        imul    dword ptr [0x1234]
+        imul    dword ptr [edi-0x34]
+        imul    dword ptr [ebp+0x1234]
+        imul    dword ptr [ebx+esi]
+        imul    dword ptr [ebx+edi+0x34]
+        imul    dword ptr [ebp+esi+0x1234]
+;### Unesigned edivide
+        div     eax,ebp
+        div     eax,dword ptr [esi]
+        div     eax,dword ptr [0x1234]
+        div     eax,dword ptr [edi-0x34]
+        div     eax,dword ptr [ebp+0x1234]
+        div     eax,dword ptr [ebx+esi]
+        div     eax,dword ptr [ebx+edi+0x34]
+        div     eax,dword ptr [ebp+esi+0x1234]
+;### Esigned divide
+        idiv    eax,ebp
+        idiv    eax,dword ptr [esi]
+        idiv    eax,dword ptr [0x1234]
+        idiv    eax,dword ptr [edi-0x34]
+        idiv    eax,dword ptr [ebp+0x1234]
+        idiv    eax,dword ptr [ebx+esi]
+        idiv    eax,dword ptr [ebx+edi+0x34]
+        idiv    eax,dword ptr [ebp+esi+0x1234]
+;### Convert word to dword
+        cwde
+;### Convert dword to double qword
+        cdq
+;### Logic
+;### Negate the operand, logical NOT
+        not     ch
+        not     byte ptr [esi]
+        not     byte ptr [0x1234]
+        not     byte ptr [edi-0x34]
+        not     byte ptr [ebp+0x1234]
+        not     byte ptr [ebx+esi]
+        not     byte ptr [ebx+edi+0x34]
+        not     byte ptr [ebp+esi+0x1234]
+        not     ebp
+        not     dword ptr [esi]
+        not     dword ptr [0x1234]
+        not     dword ptr [edi-0x34]
+        not     dword ptr [ebp+0x1234]
+        not     dword ptr [ebx+esi]
+        not     dword ptr [ebx+edi+0x34]
+        not     dword ptr [ebp+esi+0x1234]
+;### Shift left, unesigned shift left
+        shl     ch,1
+        shl     byte ptr [esi],1
+        shl     byte ptr [0x1234],1
+        shl     byte ptr [edi-0x34],1
+        shl     byte ptr [ebp+0x1234],1
+        shl     byte ptr [ebx+esi],1
+        shl     byte ptr [ebx+edi+0x34],1
+        shl     byte ptr [ebp+esi+0x1234],1
+        shl     ebp,1
+        shl     dword ptr [esi],1
+        shl     dword ptr [0x1234],1
+        shl     dword ptr [edi-0x34],1
+        shl     dword ptr [ebp+0x1234],1
+        shl     dword ptr [ebx+esi],1
+        shl     dword ptr [ebx+edi+0x34],1
+        shl     dword ptr [ebp+esi+0x1234],1
+        shl     ch,cl
+        shl     byte ptr [esi],cl
+        shl     byte ptr [0x1234],cl
+        shl     byte ptr [edi-0x34],cl
+        shl     byte ptr [ebp+0x1234],cl
+        shl     byte ptr [ebx+esi],cl
+        shl     byte ptr [ebx+edi+0x34],cl
+        shl     byte ptr [ebp+esi+0x1234],cl
+        shl     ebp,cl
+        shl     dword ptr [esi],cl
+        shl     dword ptr [0x1234],cl
+        shl     dword ptr [edi-0x34],cl
+        shl     dword ptr [ebp+0x1234],cl
+        shl     dword ptr [ebx+esi],cl
+        shl     dword ptr [ebx+edi+0x34],cl
+        shl     dword ptr [ebp+esi+0x1234],cl
+;### Shift arithmetically left, esigned shift left
+        sal     ch,1
+        sal     byte ptr [esi],1
+        sal     byte ptr [0x1234],1
+        sal     byte ptr [edi-0x34],1
+        sal     byte ptr [ebp+0x1234],1
+        sal     byte ptr [ebx+esi],1
+        sal     byte ptr [ebx+edi+0x34],1
+        sal     byte ptr [ebp+esi+0x1234],1
+        sal     ebp,1
+        sal     dword ptr [esi],1
+        sal     dword ptr [0x1234],1
+        sal     dword ptr [edi-0x34],1
+        sal     dword ptr [ebp+0x1234],1
+        sal     dword ptr [ebx+esi],1
+        sal     dword ptr [ebx+edi+0x34],1
+        sal     dword ptr [ebp+esi+0x1234],1
+        sal     ch,cl
+        sal     byte ptr [esi],cl
+        sal     byte ptr [0x1234],cl
+        sal     byte ptr [edi-0x34],cl
+        sal     byte ptr [ebp+0x1234],cl
+        sal     byte ptr [ebx+esi],cl
+        sal     byte ptr [ebx+edi+0x34],cl
+        sal     byte ptr [ebp+esi+0x1234],cl
+        sal     ebp,cl
+        sal     dword ptr [esi],cl
+        sal     dword ptr [0x1234],cl
+        sal     dword ptr [edi-0x34],cl
+        sal     dword ptr [ebp+0x1234],cl
+        sal     dword ptr [ebx+esi],cl
+        sal     dword ptr [ebx+edi+0x34],cl
+        sal     dword ptr [ebp+esi+0x1234],cl
+;### Shift right, unesigned shift right
+        shr     ch,1
+        shr     byte ptr [esi],1
+        shr     byte ptr [0x1234],1
+        shr     byte ptr [edi-0x34],1
+        shr     byte ptr [ebp+0x1234],1
+        shr     byte ptr [ebx+esi],1
+        shr     byte ptr [ebx+edi+0x34],1
+        shr     byte ptr [ebp+esi+0x1234],1
+        shr     ebp,1
+        shr     dword ptr [esi],1
+        shr     dword ptr [0x1234],1
+        shr     dword ptr [edi-0x34],1
+        shr     dword ptr [ebp+0x1234],1
+        shr     dword ptr [ebx+esi],1
+        shr     dword ptr [ebx+edi+0x34],1
+        shr     dword ptr [ebp+esi+0x1234],1
+        shr     ch,cl
+        shr     byte ptr [esi],cl
+        shr     byte ptr [0x1234],cl
+        shr     byte ptr [edi-0x34],cl
+        shr     byte ptr [ebp+0x1234],cl
+        shr     byte ptr [ebx+esi],cl
+        shr     byte ptr [ebx+edi+0x34],cl
+        shr     byte ptr [ebp+esi+0x1234],cl
+        shr     ebp,cl
+        shr     dword ptr [esi],cl
+        shr     dword ptr [0x1234],cl
+        shr     dword ptr [edi-0x34],cl
+        shr     dword ptr [ebp+0x1234],cl
+        shr     dword ptr [ebx+esi],cl
+        shr     dword ptr [ebx+edi+0x34],cl
+        shr     dword ptr [ebp+esi+0x1234],cl
+;### Shift arithmetically right, esigned shift right
+        sar     ch,1
+        sar     byte ptr [esi],1
+        sar     byte ptr [0x1234],1
+        sar     byte ptr [edi-0x34],1
+        sar     byte ptr [ebp+0x1234],1
+        sar     byte ptr [ebx+esi],1
+        sar     byte ptr [ebx+edi+0x34],1
+        sar     byte ptr [ebp+esi+0x1234],1
+        sar     ebp,1
+        sar     dword ptr [esi],1
+        sar     dword ptr [0x1234],1
+        sar     dword ptr [edi-0x34],1
+        sar     dword ptr [ebp+0x1234],1
+        sar     dword ptr [ebx+esi],1
+        sar     dword ptr [ebx+edi+0x34],1
+        sar     dword ptr [ebp+esi+0x1234],1
+        sar     ch,cl
+        sar     byte ptr [esi],cl
+        sar     byte ptr [0x1234],cl
+        sar     byte ptr [edi-0x34],cl
+        sar     byte ptr [ebp+0x1234],cl
+        sar     byte ptr [ebx+esi],cl
+        sar     byte ptr [ebx+edi+0x34],cl
+        sar     byte ptr [ebp+esi+0x1234],cl
+        sar     ebp,cl
+        sar     dword ptr [esi],cl
+        sar     dword ptr [0x1234],cl
+        sar     dword ptr [edi-0x34],cl
+        sar     dword ptr [ebp+0x1234],cl
+        sar     dword ptr [ebx+esi],cl
+        sar     dword ptr [ebx+edi+0x34],cl
+        sar     dword ptr [ebp+esi+0x1234],cl
+;### Rotate left
+        rol     ch,1
+        rol     byte ptr [esi],1
+        rol     byte ptr [0x1234],1
+        rol     byte ptr [edi-0x34],1
+        rol     byte ptr [ebp+0x1234],1
+        rol     byte ptr [ebx+esi],1
+        rol     byte ptr [ebx+edi+0x34],1
+        rol     byte ptr [ebp+esi+0x1234],1
+        rol     ebp,1
+        rol     dword ptr [esi],1
+        rol     dword ptr [0x1234],1
+        rol     dword ptr [edi-0x34],1
+        rol     dword ptr [ebp+0x1234],1
+        rol     dword ptr [ebx+esi],1
+        rol     dword ptr [ebx+edi+0x34],1
+        rol     dword ptr [ebp+esi+0x1234],1
+        rol     ch,cl
+        rol     byte ptr [esi],cl
+        rol     byte ptr [0x1234],cl
+        rol     byte ptr [edi-0x34],cl
+        rol     byte ptr [ebp+0x1234],cl
+        rol     byte ptr [ebx+esi],cl
+        rol     byte ptr [ebx+edi+0x34],cl
+        rol     byte ptr [ebp+esi+0x1234],cl
+        rol     ebp,cl
+        rol     dword ptr [esi],cl
+        rol     dword ptr [0x1234],cl
+        rol     dword ptr [edi-0x34],cl
+        rol     dword ptr [ebp+0x1234],cl
+        rol     dword ptr [ebx+esi],cl
+        rol     dword ptr [ebx+edi+0x34],cl
+        rol     dword ptr [ebp+esi+0x1234],cl
+;### Rotate right
+        ror     ch,1
+        ror     byte ptr [esi],1
+        ror     byte ptr [0x1234],1
+        ror     byte ptr [edi-0x34],1
+        ror     byte ptr [ebp+0x1234],1
+        ror     byte ptr [ebx+esi],1
+        ror     byte ptr [ebx+edi+0x34],1
+        ror     byte ptr [ebp+esi+0x1234],1
+        ror     ebp,1
+        ror     dword ptr [esi],1
+        ror     dword ptr [0x1234],1
+        ror     dword ptr [edi-0x34],1
+        ror     dword ptr [ebp+0x1234],1
+        ror     dword ptr [ebx+esi],1
+        ror     dword ptr [ebx+edi+0x34],1
+        ror     dword ptr [ebp+esi+0x1234],1
+        ror     ch,cl
+        ror     byte ptr [esi],cl
+        ror     byte ptr [0x1234],cl
+        ror     byte ptr [edi-0x34],cl
+        ror     byte ptr [ebp+0x1234],cl
+        ror     byte ptr [ebx+esi],cl
+        ror     byte ptr [ebx+edi+0x34],cl
+        ror     byte ptr [ebp+esi+0x1234],cl
+        ror     ebp,cl
+        ror     dword ptr [esi],cl
+        ror     dword ptr [0x1234],cl
+        ror     dword ptr [edi-0x34],cl
+        ror     dword ptr [ebp+0x1234],cl
+        ror     dword ptr [ebx+esi],cl
+        ror     dword ptr [ebx+edi+0x34],cl
+        ror     dword ptr [ebp+esi+0x1234],cl
+;### Rotate left with carry
+        rcl     ch,1
+        rcl     byte ptr [esi],1
+        rcl     byte ptr [0x1234],1
+        rcl     byte ptr [edi-0x34],1
+        rcl     byte ptr [ebp+0x1234],1
+        rcl     byte ptr [ebx+esi],1
+        rcl     byte ptr [ebx+edi+0x34],1
+        rcl     byte ptr [ebp+esi+0x1234],1
+        rcl     ebp,1
+        rcl     dword ptr [esi],1
+        rcl     dword ptr [0x1234],1
+        rcl     dword ptr [edi-0x34],1
+        rcl     dword ptr [ebp+0x1234],1
+        rcl     dword ptr [ebx+esi],1
+        rcl     dword ptr [ebx+edi+0x34],1
+        rcl     dword ptr [ebp+esi+0x1234],1
+        rcl     ch,cl
+        rcl     byte ptr [esi],cl
+        rcl     byte ptr [0x1234],cl
+        rcl     byte ptr [edi-0x34],cl
+        rcl     byte ptr [ebp+0x1234],cl
+        rcl     byte ptr [ebx+esi],cl
+        rcl     byte ptr [ebx+edi+0x34],cl
+        rcl     byte ptr [ebp+esi+0x1234],cl
+        rcl     ebp,cl
+        rcl     dword ptr [esi],cl
+        rcl     dword ptr [0x1234],cl
+        rcl     dword ptr [edi-0x34],cl
+        rcl     dword ptr [ebp+0x1234],cl
+        rcl     dword ptr [ebx+esi],cl
+        rcl     dword ptr [ebx+edi+0x34],cl
+        rcl     dword ptr [ebp+esi+0x1234],cl
+;### Rotate right with carry
+        rcr     ch,1
+        rcr     byte ptr [esi],1
+        rcr     byte ptr [0x1234],1
+        rcr     byte ptr [edi-0x34],1
+        rcr     byte ptr [ebp+0x1234],1
+        rcr     byte ptr [ebx+esi],1
+        rcr     byte ptr [ebx+edi+0x34],1
+        rcr     byte ptr [ebp+esi+0x1234],1
+        rcr     ebp,1
+        rcr     dword ptr [esi],1
+        rcr     dword ptr [0x1234],1
+        rcr     dword ptr [edi-0x34],1
+        rcr     dword ptr [ebp+0x1234],1
+        rcr     dword ptr [ebx+esi],1
+        rcr     dword ptr [ebx+edi+0x34],1
+        rcr     dword ptr [ebp+esi+0x1234],1
+        rcr     ch,cl
+        rcr     byte ptr [esi],cl
+        rcr     byte ptr [0x1234],cl
+        rcr     byte ptr [edi-0x34],cl
+        rcr     byte ptr [ebp+0x1234],cl
+        rcr     byte ptr [ebx+esi],cl
+        rcr     byte ptr [ebx+edi+0x34],cl
+        rcr     byte ptr [ebp+esi+0x1234],cl
+        rcr     ebp,cl
+        rcr     dword ptr [esi],cl
+        rcr     dword ptr [0x1234],cl
+        rcr     dword ptr [edi-0x34],cl
+        rcr     dword ptr [ebp+0x1234],cl
+        rcr     dword ptr [ebx+esi],cl
+        rcr     dword ptr [ebx+edi+0x34],cl
+        rcr     dword ptr [ebp+esi+0x1234],cl
+;### Logical AND
+        and     [esi],dh
+        and     [0x1234],bh
+        and     [edi-0x34],al
+        and     [ebp+0x1234],cl
+        and     [ebx+esi],dl
+        and     [ebx+edi+0x34],bl
+        and     [ebp+esi+0x1234],ah
+        and     dh,[esi]
+        and     bh,[0x1234]
+        and     al,[edi-0x34]
+        and     cl,[ebp+0x1234]
+        and     dl,[ebx+esi]
+        and     bl,[ebx+edi+0x34]
+        and     ah,[ebp+esi+0x1234]
+        and     eax,ecx
+        and     edx,ebx
+        and     esp,ebp
+        and     [esi],esi
+        and     [0x1234],edi
+        and     [edi-0x34],eax
+        and     [ebp+0x1234],ecx
+        and     [ebx+esi],edx
+        and     [ebx+edi+0x34],ebx
+        and     [ebp+esi+0x1234],esp
+        and     esi,[esi]
+        and     edi,[0x1234]
+        and     eax,[edi-0x34]
+        and     ecx,[ebp+0x1234]
+        and     edx,[ebx+esi]
+        and     ebx,[ebx+edi+0x34]
+        and     esp,[ebp+esi+0x1234]
+        and     eax,0x12345678
+        and     ecx,0x12345678
+        and     byte ptr [esi],0x56
+        and     byte ptr [0x1234],0x56
+        and     byte ptr [edi-0x34],0x56
+        and     byte ptr [ebp+0x1234],0x56
+        and     byte ptr [ebx+esi],0x56
+        and     byte ptr [ebx+edi+0x34],0x56
+        and     byte ptr [ebp+esi+0x1234],0x56
+        and     word ptr [esi],0x1234
+        and     word ptr [0x1234],0x1234
+        and     word ptr [edi-0x34],0x1234
+        and     word ptr [ebp+0x1234],0x1234
+        and     word ptr [ebx+esi],0x1234
+        and     word ptr [ebx+edi+0x34],0x1234
+        and     word ptr [ebp+esi+0x1234],0x1234
+        and     dword ptr [esi],0x12345678
+        and     dword ptr [0x1234],0x12345678
+        and     dword ptr [edi-0x34],0x12345678
+        and     dword ptr [ebp+0x1234],0x12345678
+        and     dword ptr [ebx+esi],0x12345678
+        and     dword ptr [ebx+edi+0x34],0x12345678
+        and     dword ptr [ebp+esi+0x1234],0x12345678
+        and     eax,0x56
+        and     eax,-16
+        and     ecx,0x56
+        and     ecx,-16
+        and     dword ptr [esi],0x56
+        and     dword ptr [0x1234],0x56
+        and     dword ptr [edi-0x34],0x56
+        and     dword ptr [ebp+0x1234],0x56
+        and     dword ptr [ebx+esi],0x56
+        and     dword ptr [ebx+edi+0x34],0x56
+        and     dword ptr [ebp+esi+0x1234],0x56
+;### Logical compare
+        test    al,cl
+        test    dl,bl
+        test    ah,ch
+        test    dh,[esi]
+        test    bh,[0x1234]
+        test    al,[edi-0x34]
+        test    cl,[ebp+0x1234]
+        test    dl,[ebx+esi]
+        test    bl,[ebx+edi+0x34]
+        test    ah,[ebp+esi+0x1234]
+        test    [esi],dh
+        test    [0x1234],bh
+        test    [edi-0x34],al
+        test    [ebp+0x1234],cl
+        test    [ebx+esi],dl
+        test    [ebx+edi+0x34],bl
+        test    [ebp+esi+0x1234],ah
+        test    eax,ecx
+        test    edx,ebx
+        test    esp,ebp
+        test    esi,[esi]
+        test    edi,[0x1234]
+        test    eax,[edi-0x34]
+        test    ecx,[ebp+0x1234]
+        test    edx,[ebx+esi]
+        test    ebx,[ebx+edi+0x34]
+        test    esp,[ebp+esi+0x1234]
+        test    [esi],esi
+        test    [0x1234],edi
+        test    [edi-0x34],eax
+        test    [ebp+0x1234],ecx
+        test    [ebx+esi],edx
+        test    [ebx+edi+0x34],ebx
+        test    [ebp+esi+0x1234],esp
+        test    al,0x56
+        test    cl,0x56
+        test    byte ptr [esi],0x56
+        test    byte ptr [0x1234],0x56
+        test    byte ptr [edi-0x34],0x56
+        test    byte ptr [ebp+0x1234],0x56
+        test    byte ptr [ebx+esi],0x56
+        test    byte ptr [ebx+edi+0x34],0x56
+        test    byte ptr [ebp+esi+0x1234],0x56
+        test    eax,0x12345678
+        test    ecx,0x12345678
+        test    dword ptr [esi],0x12345678
+        test    dword ptr [0x1234],0x12345678
+        test    dword ptr [edi-0x34],0x12345678
+        test    dword ptr [ebp+0x1234],0x12345678
+        test    dword ptr [ebx+esi],0x12345678
+        test    dword ptr [ebx+edi+0x34],0x12345678
+        test    dword ptr [ebp+esi+0x1234],0x12345678
+        test    eax,0x56
+        test    eax,-16
+        test    ecx,0x56
+        test    ecx,-16
+        test    dword ptr [esi],0x56
+        test    dword ptr [0x1234],0x56
+        test    dword ptr [edi-0x34],0x56
+        test    dword ptr [ebp+0x1234],0x56
+        test    dword ptr [ebx+esi],0x56
+        test    dword ptr [ebx+edi+0x34],0x56
+        test    dword ptr [ebp+esi+0x1234],0x56
+;### Logical OR
+        or      al,cl
+        or      dl,bl
+        or      ah,ch
+        or      [esi],dh
+        or      [0x1234],bh
+        or      [edi-0x34],al
+        or      [ebp+0x1234],cl
+        or      [ebx+esi],dl
+        or      [ebx+edi+0x34],bl
+        or      [ebp+esi+0x1234],ah
+        or      dh,[esi]
+        or      bh,[0x1234]
+        or      al,[edi-0x34]
+        or      cl,[ebp+0x1234]
+        or      dl,[ebx+esi]
+        or      bl,[ebx+edi+0x34]
+        or      ah,[ebp+esi+0x1234]
+        or      eax,ecx
+        or      edx,ebx
+        or      esp,ebp
+        or      [esi],esi
+        or      [0x1234],edi
+        or      [edi-0x34],eax
+        or      [ebp+0x1234],ecx
+        or      [ebx+esi],edx
+        or      [ebx+edi+0x34],ebx
+        or      [ebp+esi+0x1234],esp
+        or      esi,[esi]
+        or      edi,[0x1234]
+        or      eax,[edi-0x34]
+        or      ecx,[ebp+0x1234]
+        or      edx,[ebx+esi]
+        or      ebx,[ebx+edi+0x34]
+        or      esp,[ebp+esi+0x1234]
+        or      al,0x56
+        or      cl,0x56
+        or      byte ptr [esi],0x56
+        or      byte ptr [0x1234],0x56
+        or      byte ptr [edi-0x34],0x56
+        or      byte ptr [ebp+0x1234],0x56
+        or      byte ptr [ebx+esi],0x56
+        or      byte ptr [ebx+edi+0x34],0x56
+        or      byte ptr [ebp+esi+0x1234],0x56
+        or      eax,0x12345678
+        or      ecx,0x12345678
+        or      dword ptr [esi],0x12345678
+        or      dword ptr [0x1234],0x12345678
+        or      dword ptr [edi-0x34],0x12345678
+        or      dword ptr [ebp+0x1234],0x12345678
+        or      dword ptr [ebx+esi],0x12345678
+        or      dword ptr [ebx+edi+0x34],0x12345678
+        or      dword ptr [ebp+esi+0x1234],0x12345678
+        or      eax,0x56
+        or      eax,-16
+        or      ecx,0x56
+        or      ecx,-16
+        or      dword ptr [esi],0x56
+        or      dword ptr [0x1234],0x56
+        or      dword ptr [edi-0x34],0x56
+        or      dword ptr [ebp+0x1234],0x56
+        or      dword ptr [ebx+esi],0x56
+        or      dword ptr [ebx+edi+0x34],0x56
+        or      dword ptr [ebp+esi+0x1234],0x56
+;### Excluesive OR
+        xor     al,cl
+        xor     dl,bl
+        xor     ah,ch
+        xor     [esi],dh
+        xor     [0x1234],bh
+        xor     [edi-0x34],al
+        xor     [ebp+0x1234],cl
+        xor     [ebx+esi],dl
+        xor     [ebx+edi+0x34],bl
+        xor     [ebp+esi+0x1234],ah
+        xor     dh,[esi]
+        xor     bh,[0x1234]
+        xor     al,[edi-0x34]
+        xor     cl,[ebp+0x1234]
+        xor     dl,[ebx+esi]
+        xor     bl,[ebx+edi+0x34]
+        xor     ah,[ebp+esi+0x1234]
+        xor     eax,ecx
+        xor     edx,ebx
+        xor     esp,ebp
+        xor     [esi],esi
+        xor     [0x1234],edi
+        xor     [edi-0x34],eax
+        xor     [ebp+0x1234],ecx
+        xor     [ebx+esi],edx
+        xor     [ebx+edi+0x34],ebx
+        xor     [ebp+esi+0x1234],esp
+        xor     esi,[esi]
+        xor     edi,[0x1234]
+        xor     eax,[edi-0x34]
+        xor     ecx,[ebp+0x1234]
+        xor     edx,[ebx+esi]
+        xor     ebx,[ebx+edi+0x34]
+        xor     esp,[ebp+esi+0x1234]
+        xor     al,0x56
+        xor     cl,0x56
+        xor     byte ptr [esi],0x56
+        xor     byte ptr [0x1234],0x56
+        xor     byte ptr [edi-0x34],0x56
+        xor     byte ptr [ebp+0x1234],0x56
+        xor     byte ptr [ebx+esi],0x56
+        xor     byte ptr [ebx+edi+0x34],0x56
+        xor     byte ptr [ebp+esi+0x1234],0x56
+        xor     eax,0x12345678
+        xor     ecx,0x12345678
+        xor     dword ptr [esi],0x12345678
+        xor     dword ptr [0x1234],0x12345678
+        xor     dword ptr [edi-0x34],0x12345678
+        xor     dword ptr [ebp+0x1234],0x12345678
+        xor     dword ptr [ebx+esi],0x12345678
+        xor     dword ptr [ebx+edi+0x34],0x12345678
+        xor     dword ptr [ebp+esi+0x1234],0x12345678
+        xor     eax,0x56
+        xor     eax,-16
+        xor     ecx,0x56
+        xor     ecx,-16
+        xor     dword ptr [esi],0x56
+        xor     dword ptr [0x1234],0x56
+        xor     dword ptr [edi-0x34],0x56
+        xor     dword ptr [ebp+0x1234],0x56
+        xor     dword ptr [ebx+esi],0x56
+        xor     dword ptr [ebx+edi+0x34],0x56
+        xor     dword ptr [ebp+esi+0x1234],0x56
+;### String manipulation
+;### Repeat
+        rep     movsd
+        rep     cmpsd
+        rep     stosd
+        rep     lodsd
+        rep     scasd
+;### Repeat While Equal/Zero
+        repe    movsd
+        repe    cmpsd
+        repe    stosd
+        repe    lodsd
+        repe    scasd
+        repz    movsd
+        repz    cmpsd
+        repz    stosd
+        repz    lodsd
+        repz    scasd
+;### Repeat While Not Equal/Not Zero
+        repne   movsd
+        repne   cmpsd
+        repne   stosd
+        repne   lodsd
+        repne   scasd
+        repnz   movsd
+        repnz   cmpsd
+        repnz   stosd
+        repnz   lodsd
+        repnz   scasd
+;### Move dword from string to string
+        movsd   es:[edi], ds:[esi]
+;### Compare dwords in memory
+        cmpsd   ds:[esi], es:[edi]
+;### Compare dword string
+        scasd   es:[edi]
+;### Load string dword
+        lodsd   ds:[esi]
+;### Store dword string
+        stosd   es:[edi]
+;### Control transfer
+;### Call procedure
+        call    eax
+        call    esi
+;#        call    $+0x12345678     rel32?
+        call    [esi]
+        call    [0x1234]
+        call    [edi-0x34]
+        call    [ebp+0x1234]
+        call    [ebx+esi]
+        call    [ebx+edi+0x34]
+        call    [ebp+esi+0x1234]
+        lcall   0x5678, 0x1234
+        lcall   [esi]
+        lcall   [0x1234]
+        lcall   [edi-0x34]
+        lcall   [ebp+0x1234]
+        lcall   [ebx+esi]
+        lcall   [ebx+edi+0x34]
+        lcall   [ebp+esi+0x1234]
+;### Jump
+        jmp     $+0x12345678
+        jmp     eax
+        jmp     esi
+        jmp     [esi]
+        jmp     [0x1234]
+        jmp     [edi-0x34]
+        jmp     [ebp+0x1234]
+        jmp     [ebx+esi]
+        jmp     [ebx+edi+0x34]
+        jmp     [ebp+esi+0x1234]
+        ljmp    0x5678, 0x1234
+        ljmp    [esi]
+        ljmp    [0x1234]
+        ljmp    [edi-0x34]
+        ljmp    [ebp+0x1234]
+        ljmp    [ebx+esi]
+        ljmp    [ebx+edi+0x34]
+        ljmp    [ebp+esi+0x1234]
+;### Return from procedure
+        retd
+        retd    16
+;### Jump on Equal/Zero
+        je      $
+        jz      $
+;### Jump on Less/Not Greater or Equal
+        jl      $
+        jnge    $
+;### Jump on Less or Equal/Not Greater
+        jle     $
+        jng     $
+;### Jump on Below/Not Above or Equal/Carry
+        jb      $
+        jnae    $
+        jc      $
+;### Jump on Below or Equal/Not Above
+        jbe     $
+        jna     $
+;### Jump on Parity/Parity Even
+        jpe     $
+        jp      $
+;### Jump on Overflow
+        jo      $
+;### Jump on Esign
+        js      $
+;### Jump on Not Equal/Not Zero
+        jne     $
+        jnz     $
+;### Jump on Not Less/Greater or Equal
+        jge     $
+        jnl     $
+;### Jump on Not Less or Equal/Greater
+        jg      $
+        jnle    $
+;### Jump on Not Below/Above or Equal/Not Carry
+        jae     $
+        jnb     $
+        jnc     $
+;### Jump on Not Below or Equal/Above
+        ja      $
+        jnbe    $
+;### Jump on Not Parity/Parity Odd
+        jpo     $
+        jnp     $
+;### Jump on Not Overflow
+        jno     $
+;### Jump on Not Esign
+        jns     $
+;### Loop ECX Times
+        loop    $
+;### Loop While Zero/Equal
+        loope   $
+        loopz   $
+;### Loop While Not Zero/Equal
+        loopne  $
+        loopnz  $
+;### Jump if ECX is zero
+        jecxz    $
+;### Return from interrupt
+        iretd
+;### Check array index
+        bound   esi, [esi]
+        bound   edi, [0x1234]
+        bound   eax, [edi+52]
+        bound   ecx, [ebp+0x1234]
+        bound   edx, [ebx+esi]
+        bound   ebx, [ebx+edi+52]
+        bound   esp, [ebp+esi+0x1234]
+;### Bit scan forward
+        bsf     si, [si]
+        bsf     di, [0x1234]
+        bsf     ax, [di+52]
+        bsf     cx, [bp+0x1234]
+        bsf     dx, [bx+si]
+        bsf     bx, [bx+di+52]
+        bsf     sp, [bp+si+0x1234]
+        bsf     esi, [esi]
+        bsf     edi, [0x1234]
+        bsf     eax, [edi+52]
+        bsf     ecx, [ebp+0x1234]
+        bsf     edx, [ebx+esi]
+        bsf     ebx, [ebx+edi+52]
+        bsf     esp, [ebp+esi+0x1234]
+;### Bit scan reverse
+        bsr     si, [si]
+        bsr     di, [0x1234]
+        bsr     ax, [di+52]
+        bsr     cx, [bp+0x1234]
+        bsr     dx, [bx+si]
+        bsr     bx, [bx+di+52]
+        bsr     sp, [bp+si+0x1234]
+        bsr     esi, [esi]
+        bsr     edi, [0x1234]
+        bsr     eax, [edi+52]
+        bsr     ecx, [ebp+0x1234]
+        bsr     edx, [ebx+esi]
+        bsr     ebx, [ebx+edi+52]
+        bsr     esp, [ebp+esi+0x1234]
+;### Bit test
+        bt      [si], si
+        bt      [0x1234], di
+        bt      [di+52], ax
+        bt      [bp+0x1234], cx
+        bt      [bx+si], dx
+        bt      [bx+di+52], bx
+        bt      [bp+si+0x1234], sp
+        bt      [esi], esi
+        bt      [0x1234], edi
+        bt      [edi+52], eax
+        bt      [ebp+0x1234], ecx
+        bt      [ebx+esi], edx
+        bt      [ebx+edi+52], ebx
+        bt      [ebp+esi+0x1234], esp
+;### Bit test and complement
+        btc     [si], si
+        btc     [0x1234], di
+        btc     [di+52], ax
+        btc     [bp+0x1234], cx
+        btc     [bx+si], dx
+        btc     [bx+di+52], bx
+        btc     [bp+si+0x1234], sp
+        btc     [esi], esi
+        btc     [0x1234], edi
+        btc     [edi+52], eax
+        btc     [ebp+0x1234], ecx
+        btc     [ebx+esi], edx
+        btc     [ebx+edi+52], ebx
+        btc     [ebp+esi+0x1234], esp
+;### Bit test and reset
+        btr     [si], si
+        btr     [0x1234], di
+        btr     [di+52], ax
+        btr     [bp+0x1234], cx
+        btr     [bx+si], dx
+        btr     [bx+di+52], bx
+        btr     [bp+si+0x1234], sp
+        btr     [esi], esi
+        btr     [0x1234], edi
+        btr     [edi+52], eax
+        btr     [ebp+0x1234], ecx
+        btr     [ebx+esi], edx
+        btr     [ebx+edi+52], ebx
+        btr     [ebp+esi+0x1234], esp
+        btr     word ptr [si], 0x56
+        btr     word ptr [0x1234], 0x56
+        btr     word ptr [di+52], 0x56
+        btr     word ptr [bp+0x1234], 0x56
+        btr     word ptr [bx+si], 0x56
+        btr     word ptr [bx+di+52], 0x56
+        btr     word ptr [bp+si+0x1234], 0x56
+        btr     dword ptr [esi], 0x56
+        btr     dword ptr [0x1234], 0x56
+        btr     dword ptr [edi+52], 0x56
+        btr     dword ptr [ebp+0x1234], 0x56
+        btr     dword ptr [ebx+esi], 0x56
+        btr     dword ptr [ebx+edi+52], 0x56
+        btr     dword ptr [ebp+esi+0x1234], 0x56
+;### Bit test and set
+        btr     [si], si
+        btr     [0x1234], di
+        btr     [di+52], ax
+        btr     [bp+0x1234], cx
+        btr     [bx+si], dx
+        btr     [bx+di+52], bx
+        btr     [bp+si+0x1234], sp
+        btr     [esi], esi
+        btr     [0x1234], edi
+        btr     [edi+52], eax
+        btr     [ebp+0x1234], ecx
+        btr     [ebx+esi], edx
+        btr     [ebx+edi+52], ebx
+        btr     [ebp+esi+0x1234], esp
+        btr     word ptr [si], 0x56
+        btr     word ptr [0x1234], 0x56
+        btr     word ptr [di+52], 0x56
+        btr     word ptr [bp+0x1234], 0x56
+        btr     word ptr [bx+si], 0x56
+        btr     word ptr [bx+di+52], 0x56
+        btr     word ptr [bp+si+0x1234], 0x56
+        btr     dword ptr [esi], 0x56
+        btr     dword ptr [0x1234], 0x56
+        btr     dword ptr [edi+52], 0x56
+        btr     dword ptr [ebp+0x1234], 0x56
+        btr     dword ptr [ebx+esi], 0x56
+        btr     dword ptr [ebx+edi+52], 0x56
+        btr     dword ptr [ebp+esi+0x1234], 0x56
+;### Segment override
+        mov     fs:[bx],eax
+        mov     fs:[bp],eax
+        mov     fs:[si],eax
+        mov     fs:[di],eax
+        mov     fs:[0x1234],eax
+        mov     gs:[bx],eax
+        mov     gs:[bp],eax
+        mov     gs:[si],eax
+        mov     gs:[di],eax
+        mov     gs:[0x1234],eax
+        jmp     fs:[si]
+        jmp     gs:[si]
+        mov     es:[ebx],eax
+        mov     es:[ebp],eax
+        mov     es:[esi],eax
+        mov     es:[edi],eax
+        mov     es:[0x1234],eax
+        mov     cs:[ebx],eax
+        mov     cs:[ebp],eax
+        mov     cs:[esi],eax
+        mov     cs:[edi],eax
+        mov     cs:[0x1234],eax
+        mov     ss:[ebx],eax
+        mov     ss:[ebp],eax
+        mov     ss:[esi],eax
+        mov     ss:[edi],eax
+        mov     ss:[0x1234],eax
+        mov     ds:[ebx],eax
+        mov     ds:[ebp],eax
+        mov     ds:[esi],eax
+        mov     ds:[edi],eax
+        mov     ds:[0x1234],eax
+        mov     fs:[ebx],eax
+        mov     fs:[ebp],eax
+        mov     fs:[esi],eax
+        mov     fs:[edi],eax
+        mov     fs:[0x1234],eax
+        mov     gs:[ebx],eax
+        mov     gs:[ebp],eax
+        mov     gs:[esi],eax
+        mov     gs:[edi],eax
+        mov     gs:[0x1234],eax
+        jmp     es:[esi]
+        jmp     cs:[esi]
+        jmp     ss:[esi]
+        jmp     ds:[esi]
+        jmp     fs:[esi]
+        jmp     gs:[esi]
+
+;### Local Variables:
+;### mode: asm
+;### End:
+;### vim: set ft=asm:
