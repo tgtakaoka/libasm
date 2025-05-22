@@ -212,12 +212,12 @@ OprSize pointerSize(const DisInsn &insn, AddrMode mode) {
     }
 }
 
-RegName pointerReg(const DisInsn &insn) {
+PrefixName pointerReg(const DisInsn &insn) {
     OprSize size;
     if ((size = pointerSize(insn, insn.dst())) == SZ_NONE &&
             (size = pointerSize(insn, insn.src())) == SZ_NONE)
-        return REG_UNDEF;
-    return RegName(size + REG_PTR);
+        return PRE_UNDEF;
+    return PrefixName(size + PRE_PTR);
 }
 
 }  // namespace
@@ -226,9 +226,9 @@ StrBuffer &DisI8086::outMemReg(
         DisInsn &insn, StrBuffer &out, RegName seg, uint8_t mod, uint8_t r_m) const {
     if (operandSize(insn) == SZ_NONE) {
         const auto ptr = pointerReg(insn);
-        if (ptr != REG_UNDEF) {
-            outRegister(out, ptr);
-            outRegister(out, REG_PTR, ' ').letter(' ');
+        if (ptr != PRE_UNDEF) {
+            outPrefixName(out, ptr).letter(' ');
+            outPrefixName(out, PRE_PTR).letter(' ');
         }
     }
     if (seg != REG_UNDEF)

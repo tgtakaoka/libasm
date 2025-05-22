@@ -103,11 +103,11 @@ Error AsmI8086::parseStringInst(StrScanner &scan, Operand &op) const {
 
 Error AsmI8086::parsePointerSize(StrScanner &scan, Operand &op) const {
     auto p = scan;
-    const auto reg = parseRegName(p, parser());
-    if (reg > REG_PTR) {
+    const auto prefix = parsePrefixName(p, parser());
+    if (prefix != PRE_UNDEF) {
         // Pointer size override
-        if (parseRegName(p.skipSpaces(), parser()) == REG_PTR) {
-            op.ptr = reg;
+        if (parsePrefixName(p.skipSpaces(), parser()) == PRE_PTR) {
+            op.ptr = prefix;
             scan = p.skipSpaces();
             return OK;
         }
@@ -168,15 +168,16 @@ Error AsmI8086::parseDisplacement(StrScanner &scan, Operand &op) const {
 }
 
 namespace {
-AddrMode pointerMode(RegName ptr, AddrMode undef, AddrMode byte, AddrMode word) {
-    if (ptr == REG_UNDEF)
+AddrMode pointerMode(PrefixName ptr, AddrMode undef, AddrMode byte, AddrMode word) {
+    if (ptr == PRE_UNDEF)
         return undef;
-    if (ptr == REG_BYTE)
+    if (ptr == PRE_BYTE)
         return byte;
-    if (ptr == REG_WORD)
+    if (ptr == PRE_WORD)
         return word;
-    if (ptr == REG_DWORD)
+    if (ptr == PRE_DWORD)
         return M_DMEM;
+    // QWORD, TBYTE
     return M_FMEM;
 }
 }  // namespace
@@ -211,7 +212,7 @@ Error AsmI8086::parseOperand(StrScanner &scan, Operand &op) const {
         op.mode = pointerMode(op.ptr, M_MEM, M_BMEM, M_WMEM);
         return OK;
     }
-    if (op.ptr != REG_UNDEF || op.seg != REG_UNDEF)
+    if (op.ptr != PRE_UNDEF || op.seg != REG_UNDEF)
         return op.setError(UNKNOWN_OPERAND);
 
     auto a = p;

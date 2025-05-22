@@ -30,43 +30,48 @@ namespace {
 // clang-format off
 
 constexpr NameEntry REG_ENTRIES[] PROGMEM = {
-    { TEXT_REG_AH,    REG_AH    },
-    { TEXT_REG_AL,    REG_AL    },
-    { TEXT_REG_AX,    REG_AX    },
-    { TEXT_REG_BH,    REG_BH    },
-    { TEXT_REG_BL,    REG_BL    },
-    { TEXT_REG_BP,    REG_BP    },
-    { TEXT_REG_BX,    REG_BX    },
-    { TEXT_REG_BYTE,  REG_BYTE  },
-    { TEXT_REG_CH,    REG_CH    },
-    { TEXT_REG_CL,    REG_CL    },
-    { TEXT_REG_CS,    REG_CS    },
-    { TEXT_REG_CX,    REG_CX    },
-    { TEXT_REG_DH,    REG_DH    },
-    { TEXT_REG_DI,    REG_DI    },
-    { TEXT_REG_DL,    REG_DL    },
-    { TEXT_REG_DS,    REG_DS    },
-    { TEXT_REG_DWORD, REG_DWORD },
-    { TEXT_REG_DX,    REG_DX    },
-    { TEXT_REG_ES,    REG_ES    },
-    { TEXT_REG_PTR,   REG_PTR   },
-    { TEXT_REG_QWORD, REG_QWORD },
-    { TEXT_REG_SI,    REG_SI    },
-    { TEXT_REG_SP,    REG_SP    },
-    { TEXT_REG_SS,    REG_SS    },
-    { TEXT_REG_ST,    REG_ST    },
-    { TEXT_REG_TBYTE, REG_TBYTE },
-    { TEXT_REG_WORD,  REG_WORD  },
+    { TEXT_REG_AH, REG_AH },
+    { TEXT_REG_AL, REG_AL },
+    { TEXT_REG_AX, REG_AX },
+    { TEXT_REG_BH, REG_BH },
+    { TEXT_REG_BL, REG_BL },
+    { TEXT_REG_BP, REG_BP },
+    { TEXT_REG_BX, REG_BX },
+    { TEXT_REG_CH, REG_CH },
+    { TEXT_REG_CL, REG_CL },
+    { TEXT_REG_CS, REG_CS },
+    { TEXT_REG_CX, REG_CX },
+    { TEXT_REG_DH, REG_DH },
+    { TEXT_REG_DI, REG_DI },
+    { TEXT_REG_DL, REG_DL },
+    { TEXT_REG_DS, REG_DS },
+    { TEXT_REG_DX, REG_DX },
+    { TEXT_REG_ES, REG_ES },
+    { TEXT_REG_SI, REG_SI },
+    { TEXT_REG_SP, REG_SP },
+    { TEXT_REG_SS, REG_SS },
+    { TEXT_REG_ST, REG_ST },
 };
 
-PROGMEM constexpr NameTable TABLE{ARRAY_RANGE(REG_ENTRIES)};
+PROGMEM constexpr NameTable REG_TABLE{ARRAY_RANGE(REG_ENTRIES)};
+
+constexpr NameEntry PRE_ENTRIES[] PROGMEM = {
+    { TEXT_PRE_BYTE,  PRE_BYTE  },
+    { TEXT_PRE_DWORD, PRE_DWORD },
+    { TEXT_PRE_PTR,   PRE_PTR   },
+    { TEXT_PRE_QWORD, PRE_QWORD },
+    { TEXT_PRE_TBYTE, PRE_TBYTE },
+    { TEXT_PRE_WORD,  PRE_WORD  },
+};
+
+PROGMEM constexpr NameTable PREFIX_TABLE{ARRAY_RANGE(PRE_ENTRIES)};
 
 // clang-format on
 }  // namespace
 
 RegName parseRegName(StrScanner &scan, const ValueParser &parser) {
     auto p = scan;
-    const auto *entry = TABLE.searchText(parser.readRegName(p));
+    const auto *entry = REG_TABLE.searchText(parser.readRegName(p));
     if (entry) {
         scan = p;
         return RegName(entry->name());
@@ -75,7 +80,7 @@ RegName parseRegName(StrScanner &scan, const ValueParser &parser) {
 }
 
 StrBuffer &outRegName(StrBuffer &out, RegName name) {
-    const auto *entry = TABLE.searchName(name);
+    const auto *entry = REG_TABLE.searchName(name);
     return entry ? entry->outText(out) : out;
 }
 
@@ -113,6 +118,21 @@ uint8_t encodeRegNum(RegName name) {
     if (num < 16)
         return num - 8;
     return num - 16;
+}
+
+PrefixName parsePrefixName(StrScanner &scan, const ValueParser &parser) {
+    auto p = scan;
+    const auto *entry = PREFIX_TABLE.searchText(parser.readRegName(p));
+    if (entry) {
+        scan = p;
+        return PrefixName(entry->name());
+    }
+    return PRE_UNDEF;
+}
+
+StrBuffer &outPrefixName(StrBuffer &out, PrefixName name) {
+    const auto *entry = PREFIX_TABLE.searchName(name);
+    return entry ? entry->outText(out) : out;
 }
 
 }  // namespace reg

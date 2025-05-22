@@ -51,7 +51,7 @@ protected:
 
 struct Operand final : ErrorAt {
     AddrMode mode;
-    RegName ptr;
+    PrefixName ptr;
     RegName seg;
     RegName reg;
     RegName index;
@@ -60,7 +60,7 @@ struct Operand final : ErrorAt {
     Value segval;
     Operand()
         : mode(M_NONE),
-          ptr(REG_UNDEF),
+          ptr(PRE_UNDEF),
           seg(REG_UNDEF),
           reg(REG_UNDEF),
           index(REG_UNDEF),

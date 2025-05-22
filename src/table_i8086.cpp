@@ -1497,7 +1497,7 @@ bool acceptSize(const AsmInsn &insn, const Entry *entry) {
     if (src == M_MEM || src == M_DIR)
         return hasSize(dst) || flags.stringInst();
     if (dst == M_FMEM) {
-        const auto ptrSize = OprSize(insn.dstOp.ptr - REG_PTR);
+        const auto ptrSize = OprSize(insn.dstOp.ptr - PRE_PTR);
         return ptrSize == flags.size();
     }
     return true;

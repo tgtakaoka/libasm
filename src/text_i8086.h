@@ -327,12 +327,12 @@ extern const char TEXT_REG_CS[]   PROGMEM;
 extern const char TEXT_REG_DS[]   PROGMEM;
 extern const char TEXT_REG_ES[]   PROGMEM;
 extern const char TEXT_REG_SS[]   PROGMEM;
-extern const char TEXT_REG_PTR[]  PROGMEM;
-extern const char TEXT_REG_BYTE[] PROGMEM;
-extern const char TEXT_REG_WORD[] PROGMEM;
-extern const char TEXT_REG_DWORD[] PROGMEM;
-extern const char TEXT_REG_QWORD[] PROGMEM;
-extern const char TEXT_REG_TBYTE[] PROGMEM;
+extern const char TEXT_PRE_PTR[]  PROGMEM;
+extern const char TEXT_PRE_BYTE[] PROGMEM;
+extern const char TEXT_PRE_WORD[] PROGMEM;
+extern const char TEXT_PRE_DWORD[] PROGMEM;
+extern const char TEXT_PRE_QWORD[] PROGMEM;
+extern const char TEXT_PRE_TBYTE[] PROGMEM;
 // clang-format on
 
 }  // namespace i8086

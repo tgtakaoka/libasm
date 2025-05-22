@@ -54,21 +54,17 @@ enum RegName : int8_t {
     REG_SS = 2 + 16,
     REG_DS = 3 + 16,
     // Other registers.
-    REG_ST = 20,           // ST
-    REG_ST0 = 0 + REG_ST,  // ST(0)
-    REG_ST1 = 1 + REG_ST,  // ST(1)
-    REG_ST2 = 2 + REG_ST,  // ST(2)
-    REG_ST3 = 3 + REG_ST,  // ST(3)
-    REG_ST4 = 4 + REG_ST,  // ST(4)
-    REG_ST5 = 5 + REG_ST,  // ST(5)
-    REG_ST6 = 6 + REG_ST,  // ST(6)
-    REG_PT7 = 7 + REG_ST,  // ST(7)
-    REG_PTR = 28,
-    REG_BYTE = Size::SZ_BYTE + REG_PTR,
-    REG_WORD = Size::SZ_WORD + REG_PTR,
-    REG_DWORD = Size::SZ_QUAD + REG_PTR,
-    REG_QWORD = Size::SZ_OCTA + REG_PTR,
-    REG_TBYTE = Size::SZ_DATA + REG_PTR,
+    REG_ST = 20,  // ST
+};
+
+enum PrefixName : uint8_t {
+    PRE_UNDEF = 0,
+    PRE_PTR = 1,
+    PRE_BYTE = Size::SZ_BYTE + PRE_PTR,
+    PRE_WORD = Size::SZ_WORD + PRE_PTR,
+    PRE_DWORD = Size::SZ_QUAD + PRE_PTR,
+    PRE_QWORD = Size::SZ_OCTA + PRE_PTR,
+    PRE_TBYTE = Size::SZ_DATA + PRE_PTR,
 };
 
 namespace reg {
@@ -83,6 +79,9 @@ uint8_t encodeRegNum(RegName name);
 bool isGeneralReg(RegName name);
 bool isSegmentReg(RegName name);
 OprSize generalRegSize(RegName name);
+
+PrefixName parsePrefixName(StrScanner &scan, const ValueParser &parser);
+StrBuffer &outPrefixName(StrBuffer &out, PrefixName name);
 
 }  // namespace reg
 }  // namespace i8086

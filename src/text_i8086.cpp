@@ -321,12 +321,12 @@ constexpr char TEXT_REG_CS[]   PROGMEM = "CS";
 constexpr char TEXT_REG_DS[]   PROGMEM = "DS";
 constexpr char TEXT_REG_ES[]   PROGMEM = "ES";
 constexpr char TEXT_REG_SS[]   PROGMEM = "SS";
-constexpr char TEXT_REG_PTR[]  PROGMEM = "PTR";
-constexpr char TEXT_REG_BYTE[] PROGMEM = "BYTE";
-constexpr char TEXT_REG_WORD[] PROGMEM = "WORD";
-constexpr char TEXT_REG_DWORD[] PROGMEM = "DWORD";
-constexpr char TEXT_REG_QWORD[] PROGMEM = "QWORD";
-constexpr char TEXT_REG_TBYTE[] PROGMEM = "TBYTE";
+constexpr char TEXT_PRE_PTR[]  PROGMEM = "PTR";
+constexpr char TEXT_PRE_BYTE[] PROGMEM = "BYTE";
+constexpr char TEXT_PRE_WORD[] PROGMEM = "WORD";
+constexpr char TEXT_PRE_DWORD[] PROGMEM = "DWORD";
+constexpr char TEXT_PRE_QWORD[] PROGMEM = "QWORD";
+constexpr char TEXT_PRE_TBYTE[] PROGMEM = "TBYTE";
 // clang-format on
 
 }  // namespace i8086
