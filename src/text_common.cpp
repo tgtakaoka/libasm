@@ -559,10 +559,6 @@ constexpr char TEXT_XOR[]   PROGMEM = "XOR";
 constexpr char TEXT_XRI[]   PROGMEM = "XRI";
 constexpr char TEXT_XRL[]   PROGMEM = "XRL";
 
-constexpr char TEXT_CPU_8080[]   PROGMEM = "8080";
-constexpr char TEXT_CPU_8085[]   PROGMEM = "8085";
-constexpr char TEXT_CPU_V30EMU[] PROGMEM = "V30EMU";
-
 constexpr char TEXT_REG_AF[]  PROGMEM = "AF";
 constexpr char TEXT_REG_A[]   PROGMEM = "A";
 constexpr char TEXT_REG_BC[]  PROGMEM = "BC";

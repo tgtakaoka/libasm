@@ -562,10 +562,6 @@ extern const char TEXT_XOR[]   PROGMEM;
 extern const char TEXT_XRI[]   PROGMEM;
 extern const char TEXT_XRL[]   PROGMEM;
 
-extern const char TEXT_CPU_8080[]   PROGMEM;
-extern const char TEXT_CPU_8085[]   PROGMEM;
-extern const char TEXT_CPU_V30EMU[] PROGMEM;
-
 extern const char TEXT_REG_AF[]  PROGMEM;
 extern const char TEXT_REG_A[]   PROGMEM;
 extern const char TEXT_REG_BC[]  PROGMEM;

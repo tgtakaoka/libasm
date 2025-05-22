@@ -22,9 +22,9 @@ namespace i8080 {
 
 // clang-format off
 constexpr char TEXT_I8080_LIST[] PROGMEM = "i8080, i8085, V30EMU";
-// constexpr char TEXT_CPU_8080[]   PROGMEM = "8080";
-// constexpr char TEXT_CPU_8085[]   PROGMEM = "8085";
-// constexpr char TEXT_CPU_V30EMU[] PROGMEM = "V30EMU";
+constexpr char TEXT_CPU_8080[]   PROGMEM = "8080";
+constexpr char TEXT_CPU_8085[]   PROGMEM = "8085";
+constexpr char TEXT_CPU_V30EMU[] PROGMEM = "V30EMU";
 
 constexpr char TEXT_ACI[]  PROGMEM = "ACI";
 // constexpr char TEXT_ADC[]  PROGMEM = "ADC";

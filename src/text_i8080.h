@@ -25,9 +25,9 @@ namespace i8080 {
 
 // clang-format off
 extern const char TEXT_I8080_LIST[] PROGMEM;
-using common::TEXT_CPU_8080;
-using common::TEXT_CPU_8085;
-using common::TEXT_CPU_V30EMU;
+extern const char TEXT_CPU_8080[]   PROGMEM;
+extern const char TEXT_CPU_8085[]   PROGMEM;
+extern const char TEXT_CPU_V30EMU[] PROGMEM;
 
 extern const char TEXT_ACI[]  PROGMEM;
 using common::TEXT_ADC;
