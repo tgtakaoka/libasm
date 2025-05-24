@@ -152,6 +152,11 @@ build test_asm_z80.o: cxx ${root}/test/test_asm_z80.cpp
 build test_dis_z80.o: cxx ${root}/test/test_dis_z80.cpp
 build gen_z80.o:      cxx ${root}/test/gen_z80.cpp
 
+# z380
+build test_asm_z380.o: cxx ${root}/test/test_asm_z380.cpp
+build test_dis_z380.o: cxx ${root}/test/test_dis_z380.cpp
+build gen_z380.o:      cxx ${root}/test/gen_z380.cpp
+
 # z8000
 build test_asm_z8000.o: cxx ${root}/test/test_asm_z8000.cpp
 build test_dis_z8000.o: cxx ${root}/test/test_dis_z8000.cpp

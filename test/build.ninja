@@ -692,6 +692,30 @@ build gen_z80: link gen_z80.o $
   dec_float.o value_parser.o parsers.o operators.o $
   gen_driver.o tokenized_text.o
 
+# z380
+build test_asm_z380: run test_asm_z380.o $
+  asm_z380.o reg_z380.o table_z380.o text_z380.o $
+  asm_base.o config_base.o error_reporter.o insn_base.o operators.o $
+  option_base.o parsers.o reg_base.o str_buffer.o str_scanner.o $
+  text_common.o value.o value_parser.o $
+  fixed64.o ieee_float.o float80_base.o float80_hard.o float80_soft.o $
+  dec_float.o ibm_float.o test_asm_helper.o test_asserter.o
+build test_dis_z380: run test_dis_z380.o $
+  dis_z380.o reg_z380.o table_z380.o text_z380.o $
+  dis_base.o config_base.o error_reporter.o formatters.o insn_base.o $
+  option_base.o reg_base.o str_buffer.o str_scanner.o text_common.o value.o $
+  value_formatter.o value_parser.o parsers.o operators.o dec_float.o $
+  fixed64.o ieee_float.o float80_base.o float80_hard.o float80_soft.o $
+  test_dis_helper.o test_asserter.o
+build gen_z380: link gen_z380.o $
+  dis_z380.o reg_z380.o table_z380.o text_z380.o $
+  config_base.o dis_base.o dis_formatter.o error_reporter.o formatters.o $
+  insn_base.o list_formatter.o option_base.o reg_base.o str_buffer.o $
+  str_scanner.o test_generator.o text_common.o value.o value_formatter.o $
+  fixed64.o ieee_float.o float80_base.o float80_hard.o float80_soft.o $
+  dec_float.o value_parser.o parsers.o operators.o $
+  gen_driver.o tokenized_text.o
+
 # z8000
 build test_asm_z8000: run test_asm_z8000.o $
   asm_z8000.o reg_z8000.o table_z8000.o text_z8000.o $
@@ -780,6 +804,7 @@ build test_tms320:   phony test_asm_tms320   test_dis_tms320
 build test_tms370:   phony test_asm_tms370   test_dis_tms370
 build test_tms7000:  phony test_asm_tms7000  test_dis_tms7000
 build test_tms9900:  phony test_asm_tms9900  test_dis_tms9900
+build test_z380:     phony test_asm_z380     test_dis_z380
 build test_z8000:    phony test_asm_z8000    test_dis_z8000
 build test_z80:      phony test_asm_z80      test_dis_z80
 build test_z8:       phony test_asm_z8       test_dis_z8
@@ -819,6 +844,7 @@ build test: phony $
   test_tms370   $
   test_tms7000  $
   test_tms9900  $
+  test_z380     $
   test_z8       $
   test_z80      $
   test_z8000    $
@@ -850,6 +876,7 @@ build gen: phony $
   gen_tms370   $
   gen_tms7000  $
   gen_tms9900  $
+  gen_z380     $
   gen_z8       $
   gen_z80      $
   gen_z8000

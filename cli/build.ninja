@@ -52,6 +52,7 @@ build asm: link asm.o $
   asm_tms370.o   reg_tms370.o   table_tms370.o   text_tms370.o   $
   asm_tms7000.o  reg_tms7000.o  table_tms7000.o  text_tms7000.o  $
   asm_tms9900.o  reg_tms9900.o  table_tms9900.o  text_tms9900.o  $
+  asm_z380.o     reg_z380.o     table_z380.o     text_z380.o     $
   asm_z8000.o    reg_z8000.o    table_z8000.o    text_z8000.o    $
   asm_z80.o      reg_z80.o      table_z80.o      text_z80.o      $
   asm_z8.o       reg_z8.o       table_z8.o       text_z8.o
@@ -91,6 +92,7 @@ build dis: link dis.o $
   dis_tms370.o   reg_tms370.o   table_tms370.o   text_tms370.o   $
   dis_tms7000.o  reg_tms7000.o  table_tms7000.o  text_tms7000.o  $
   dis_tms9900.o  reg_tms9900.o  table_tms9900.o  text_tms9900.o  $
+  dis_z380.o     reg_z380.o     table_z380.o     text_z380.o     $
   dis_z8000.o    reg_z8000.o    table_z8000.o    text_z8000.o    $
   dis_z80.o      reg_z80.o      table_z80.o      text_z80.o      $
   dis_z8.o       reg_z8.o       table_z8.o       text_z8.o

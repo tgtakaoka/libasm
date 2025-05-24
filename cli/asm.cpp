@@ -25,8 +25,8 @@
 #include "asm_i8096.h"
 #include "asm_ins8060.h"
 #include "asm_ins8070.h"
-#include "asm_mc6800.h"
 #include "asm_mc68000.h"
+#include "asm_mc6800.h"
 #include "asm_mc6805.h"
 #include "asm_mc6809.h"
 #include "asm_mc68hc12.h"
@@ -42,9 +42,10 @@
 #include "asm_tms370.h"
 #include "asm_tms7000.h"
 #include "asm_tms9900.h"
-#include "asm_z8.h"
-#include "asm_z80.h"
+#include "asm_z380.h"
 #include "asm_z8000.h"
+#include "asm_z80.h"
+#include "asm_z8.h"
 
 using namespace libasm;
 using namespace libasm::cli;
@@ -76,6 +77,7 @@ tms320::AsmTms320 asm320;
 tms370::AsmTms370 asm370;
 tms7000::AsmTms7000 asm7000;
 tms9900::AsmTms9900 asm9900;
+z380::AsmZ380 asmz380;
 z8000::AsmZ8000 asmz8000;
 z80::AsmZ80 asmz80;
 z8::AsmZ8 asmz8;
@@ -107,6 +109,7 @@ NationalDirective dir8070(asm8070);
 RcaDirective dir1802(asm1802);
 Z8Directive dirz8(asmz8);
 ZilogDirective dir90(asm90);
+ZilogDirective dirz380(asmz380);
 ZilogDirective dirz8000(asmz8000);
 ZilogDirective dirz80(asmz80);
 
@@ -121,6 +124,7 @@ AsmCommander commander{
         &dir8051,
         &dir8080,
         &dirz80,
+        &dirz380,
         &dirz8,
         &dir90,
         &dir8060,
