@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Tadashi G. Takaoka
+ * Copyright 2025 Tadashi G. Takaoka
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,16 +14,16 @@
  * limitations under the License.
  */
 
-#include "text_z80.h"
+#include "text_z280.h"
 
 namespace libasm {
 namespace text {
-namespace z80 {
+namespace z280 {
 
 // clang-format off
-constexpr char TEXT_Z80_LIST[] PROGMEM = "Z80, Z180";
+constexpr char TEXT_Z280_LIST[] PROGMEM = "Z280, Z80";
 // constexpr char TEXT_CPU_Z80[]  PROGMEM = "Z80";
-// constexpr char TEXT_CPU_Z180[] PROGMEM = "Z180";
+constexpr char TEXT_CPU_Z280[] PROGMEM = "Z280";
 
 // constexpr char TEXT_ADC[]  PROGMEM = "ADC";
 // constexpr char TEXT_ADD[]  PROGMEM = "ADD";
@@ -94,16 +94,58 @@ constexpr char TEXT_Z80_LIST[] PROGMEM = "Z80, Z180";
 // constexpr char TEXT_XOR[]  PROGMEM = "XOR";
 
 // Z180
-// constexpr char TEXT_MLT[]   PROGMEM = "MLT";
+constexpr char TEXT_MLT[]   PROGMEM = "MLT";
 // constexpr char TEXT_TST[]   PROGMEM = "TST";
-// constexpr char TEXT_TSTIO[] PROGMEM = "TSTIO";
-// constexpr char TEXT_IN0[]   PROGMEM = "IN0";
-// constexpr char TEXT_OTDM[]  PROGMEM = "OTDM";
-// constexpr char TEXT_OTDMR[] PROGMEM = "OTDMR";
-// constexpr char TEXT_OTIM[]  PROGMEM = "OTIM";
-// constexpr char TEXT_OTIMR[] PROGMEM = "OTIMR";
-// constexpr char TEXT_OUT0[]  PROGMEM = "OUT0";
+constexpr char TEXT_TSTIO[] PROGMEM = "TSTIO";
+constexpr char TEXT_IN0[]   PROGMEM = "IN0";
+constexpr char TEXT_OTDM[]  PROGMEM = "OTDM";
+constexpr char TEXT_OTDMR[] PROGMEM = "OTDMR";
+constexpr char TEXT_OTIM[]  PROGMEM = "OTIM";
+constexpr char TEXT_OTIMR[] PROGMEM = "OTIMR";
+constexpr char TEXT_OUT0[]  PROGMEM = "OUT0";
 // constexpr char TEXT_SLP[]   PROGMEM = "SLP";
+
+// Z280
+// constexpr char TEXT_ADDW[]   PROGMEM = "ADDW";
+// constexpr char TEXT_CPW[]    PROGMEM = "CPW";
+// constexpr char TEXT_DECW[]   PROGMEM = "DECW";
+// constexpr char TEXT_DIV[]    PROGMEM = "DIV";
+// constexpr char TEXT_DIVU[]   PROGMEM = "DIVU";
+// constexpr char TEXT_DIVUW[]  PROGMEM = "DIVUW";
+// constexpr char TEXT_DIVW[]   PROGMEM = "DIVW";
+constexpr char TEXT_EPUF[]   PROGMEM = "EPUF";
+constexpr char TEXT_EPUI[]   PROGMEM = "EPUI";
+constexpr char TEXT_EPUM[]   PROGMEM = "EPUM";
+// constexpr char TEXT_EXTS[]   PROGMEM = "EXTS";
+// constexpr char TEXT_INCW[]   PROGMEM = "INCW";
+// constexpr char TEXT_INDRW[]  PROGMEM = "INDRW";
+// constexpr char TEXT_INDW[]   PROGMEM = "INDW";
+// constexpr char TEXT_INIRW[]  PROGMEM = "INIRW";
+// constexpr char TEXT_INIW[]   PROGMEM = "INIW";
+// constexpr char TEXT_INW[]    PROGMEM = "INW";
+constexpr char TEXT_JAF[]    PROGMEM = "JAF";
+constexpr char TEXT_JAR[]    PROGMEM = "JAR";
+// constexpr char TEXT_LDA[]    PROGMEM = "LDA";
+// constexpr char TEXT_LDCTL[]  PROGMEM = "LDCTL";
+constexpr char TEXT_LDUD[]   PROGMEM = "LDUD";
+constexpr char TEXT_LDUP[]   PROGMEM = "LDUP";
+// constexpr char TEXT_LDW[]    PROGMEM = "LDW";
+constexpr char TEXT_MEPU[]   PROGMEM = "MEPU";
+// constexpr char TEXT_MULT[]   PROGMEM = "MULT";
+constexpr char TEXT_MULTU[]  PROGMEM = "MULTU";
+// constexpr char TEXT_MULTUW[] PROGMEM = "MULTUW";
+// constexpr char TEXT_MULTW[]  PROGMEM = "MULTW";
+// constexpr char TEXT_OTDRW[]  PROGMEM = "OTDRW";
+// constexpr char TEXT_OTIRW[]  PROGMEM = "OTIRW";
+// constexpr char TEXT_OUTDW[]  PROGMEM = "OUTDW";
+// constexpr char TEXT_OUTIW[]  PROGMEM = "OUTIW";
+// constexpr char TEXT_OUTW[]   PROGMEM = "OUTW";
+constexpr char TEXT_PCACHE[] PROGMEM = "PCACHE";
+constexpr char TEXT_RETIL[]  PROGMEM = "RETIL";
+// constexpr char TEXT_SC[]     PROGMEM = "SC";
+// constexpr char TEXT_SUBW[]   PROGMEM = "SUBW";
+// constexpr char TEXT_TSET[]   PROGMEM = "TSET";
+constexpr char TEXT_TSTI[]   PROGMEM = "TSTI";
 
 // Z80, Z180
 // constexpr char TEXT_REG_BC[]  PROGMEM = "BC";
@@ -123,6 +165,14 @@ constexpr char TEXT_Z80_LIST[] PROGMEM = "Z80, Z180";
 // constexpr char TEXT_REG_R[]   PROGMEM = "R";
 // constexpr char TEXT_REG_I[]   PROGMEM = "I";
 
+// Z280
+constexpr char TEXT_REG_DEHL[] PROGMEM = "DEHL";
+constexpr char TEXT_REG_IXH[]  PROGMEM = "IXH";
+// constexpr char TEXT_REG_IXL[]  PROGMEM = "IXL";
+constexpr char TEXT_REG_IYH[]  PROGMEM = "IYH";
+// constexpr char TEXT_REG_IYL[]  PROGMEM = "IYL";
+// constexpr char TEXT_REG_USP[]  PROGMEM = "USP";
+
 // Z80, Z180
 // constexpr char TEXT_CC_NZ[] PROGMEM = "NZ";
 // constexpr char TEXT_CC_Z[]  PROGMEM = "Z";
@@ -132,9 +182,16 @@ constexpr char TEXT_Z80_LIST[] PROGMEM = "Z80, Z180";
 // constexpr char TEXT_CC_PE[] PROGMEM = "PE";
 // constexpr char TEXT_CC_P[]  PROGMEM = "P";
 // constexpr char TEXT_CC_M[]  PROGMEM = "M";
+
+// Z280
+// constexpr char TEXT_CC_NS[] PROGMEM = "NS";
+// constexpr char TEXT_CC_NV[] PROGMEM = "NV";
+// constexpr char TEXT_CC_S[]  PROGMEM = "S";
+// constexpr char TEXT_CC_V[]  PROGMEM = "V";
+
 // clang-format on
 
-}  // namespace z80
+}  // namespace z280
 }  // namespace text
 }  // namespace libasm
 

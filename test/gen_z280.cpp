@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Tadashi G. Takaoka
+ * Copyright 2025 Tadashi G. Takaoka
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,34 +14,25 @@
  * limitations under the License.
  */
 
-#ifndef __LIBASM_CONFIG_Z80_H__
-#define __LIBASM_CONFIG_Z80_H__
+#include "dis_z280.h"
+#include "gen_driver.h"
 
-#include "config_base.h"
+using namespace libasm::z280;
+using namespace libasm::gen;
 
-namespace libasm {
-namespace z80 {
+int main(int argc, const char **argv) {
+    DisZ280 disz280;
+    GenDriver driver(disz280);
+    if (driver.main(argc, argv))
+        return 1;
 
-enum CpuType : uint8_t {
-    Z80,
-    Z180,
-};
+    disz280.setOption("relative", "enable");
 
-struct Config : ConfigImpl<CpuType, ADDRESS_16BIT, ADDRESS_BYTE, OPCODE_8BIT, ENDIAN_LITTLE, 4, 5> {
-    Config(const InsnTable<CpuType> &table) : ConfigImpl(table, Z80) {}
+    TestGenerator generator(driver, disz280, 0x0100);
+    generator.generate();
 
-    AddressWidth addressWidth() const override {
-        return (cpuType() == Z80) ? ADDRESS_16BIT : ADDRESS_20BIT;
-    }
-
-protected:
-    bool z180() const { return cpuType() == Z180; }
-};
-
-}  // namespace z80
-}  // namespace libasm
-
-#endif  // __LIBASM_CONFIG_Z80_H__
+    return driver.close();
+}
 
 // Local Variables:
 // mode: c++

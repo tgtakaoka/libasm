@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Tadashi G. Takaoka
+ * Copyright 2025 Tadashi G. Takaoka
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,34 +14,36 @@
  * limitations under the License.
  */
 
-#ifndef __LIBASM_CONFIG_Z80_H__
-#define __LIBASM_CONFIG_Z80_H__
+#ifndef __LIBASM_CONFIG_Z280_H__
+#define __LIBASM_CONFIG_Z280_H__
 
 #include "config_base.h"
 
 namespace libasm {
-namespace z80 {
+namespace z280 {
 
 enum CpuType : uint8_t {
     Z80,
-    Z180,
+    Z280,
 };
 
-struct Config : ConfigImpl<CpuType, ADDRESS_16BIT, ADDRESS_BYTE, OPCODE_8BIT, ENDIAN_LITTLE, 4, 5> {
-    Config(const InsnTable<CpuType> &table) : ConfigImpl(table, Z80) {}
+struct Config : ConfigImpl<CpuType, ADDRESS_24BIT, ADDRESS_BYTE, OPCODE_8BIT, ENDIAN_LITTLE, 8, 6> {
+    Config(const InsnTable<CpuType> &table) : ConfigImpl(table, Z280) {}
 
     AddressWidth addressWidth() const override {
-        return (cpuType() == Z80) ? ADDRESS_16BIT : ADDRESS_20BIT;
+        return (cpuType() == Z80) ? ADDRESS_16BIT : ADDRESS_24BIT;
     }
+    uint8_t codeMax() const override { return cpuType() == Z80 ? 4 : 8; }
+    uint8_t nameMax() const override { return cpuType() == Z80 ? 5 : 6; }
 
 protected:
-    bool z180() const { return cpuType() == Z180; }
+    bool z80() const { return cpuType() == Z80; }
 };
 
-}  // namespace z80
+}  // namespace z280
 }  // namespace libasm
 
-#endif  // __LIBASM_CONFIG_Z80_H__
+#endif  // __LIBASM_CONFIG_Z280_H__
 
 // Local Variables:
 // mode: c++

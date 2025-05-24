@@ -35,6 +35,7 @@ build test_formatter_tms320.o:   cxx test_formatter_tms320.cpp
 build test_formatter_tms370.o:   cxx test_formatter_tms370.cpp
 build test_formatter_tms7000.o:  cxx test_formatter_tms7000.cpp
 build test_formatter_tms9900.o:  cxx test_formatter_tms9900.cpp
+build test_formatter_z280.o:     cxx test_formatter_z280.cpp
 build test_formatter_z380.o:     cxx test_formatter_z380.cpp
 build test_formatter_z8000.o:    cxx test_formatter_z8000.cpp
 build test_formatter_z80.o:      cxx test_formatter_z80.cpp

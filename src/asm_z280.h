@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Tadashi G. Takaoka
+ * Copyright 2025 Tadashi G. Takaoka
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,25 +14,30 @@
  * limitations under the License.
  */
 
-#ifndef __LIBASM_ASM_Z80_H__
-#define __LIBASM_ASM_Z80_H__
+#ifndef __LIBASM_ASM_Z280_H__
+#define __LIBASM_ASM_Z280_H__
 
 #include "asm_base.h"
-#include "config_z80.h"
-#include "insn_z80.h"
+#include "config_z280.h"
+#include "insn_z280.h"
 
 namespace libasm {
-namespace z80 {
+namespace z280 {
 
-struct AsmZ80 final : Assembler, Config {
-    AsmZ80(const ValueParser::Plugins &plugins = defaultPlugins());
+struct AsmZ280 final : Assembler, Config {
+    AsmZ280(const ValueParser::Plugins &plugins = defaultPlugins());
 
 private:
     Error parseOperand(StrScanner &scan, Operand &op) const;
 
-    void encodeRelative(AsmInsn &insn, const Operand &op) const;
+    void encodeRelative(AsmInsn &insn, const Operand &op, AddrMode mode) const;
     void encodeAbsolute(AsmInsn &insn, const Operand &op) const;
+    void encodeMemoryPointer(AsmInsn &insn, const Operand &op) const;
     void encodeShortIndex(AsmInsn &insn, const Operand &op) const;
+    void encodeLongIndex(AsmInsn &insn, const Operand &op) const;
+    void encodeBaseIndex(AsmInsn &insn, const Operand &op, AddrMode mode) const;
+    void encodePointerIndex(AsmInsn &insn, const Operand &op, AddrMode mode) const;
+    void encodeFullIndex(AsmInsn &insn, const Operand &op) const;
     void encodeImmediate16(AsmInsn &insn, const Operand &op) const;
     void encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode, const Operand &other) const;
 
@@ -42,10 +47,10 @@ private:
     static const ValueParser::Plugins &defaultPlugins();
 };
 
-}  // namespace z80
+}  // namespace z280
 }  // namespace libasm
 
-#endif  // __LIBASM_ASM_Z80_H__
+#endif  // __LIBASM_ASM_Z280_H__
 
 // Local Variables:
 // mode: c++

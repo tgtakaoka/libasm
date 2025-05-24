@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Tadashi G. Takaoka
+ * Copyright 2025 Tadashi G. Takaoka
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,19 +14,19 @@
  * limitations under the License.
  */
 
-#ifndef __LIBASM_DIS_Z80_H__
-#define __LIBASM_DIS_Z80_H__
+#ifndef __LIBASM_DIS_Z280_H__
+#define __LIBASM_DIS_Z280_H__
 
-#include "config_z80.h"
+#include "config_z280.h"
 #include "dis_base.h"
-#include "insn_z80.h"
-#include "reg_z80.h"
+#include "insn_z280.h"
+#include "reg_z280.h"
 
 namespace libasm {
-namespace z80 {
+namespace z280 {
 
-struct DisZ80 final : Disassembler, Config {
-    DisZ80(const ValueFormatter::Plugins &plugins = defaultPlugins());
+struct DisZ280 final : Disassembler, Config {
+    DisZ280(const ValueFormatter::Plugins &plugins = defaultPlugins());
 
 private:
     StrBuffer &outIndirectReg(StrBuffer &out, RegName reg) const;
@@ -35,8 +35,13 @@ private:
 
     void decodeImmediate16(DisInsn &insn, StrBuffer &out) const;
     void decodeAbsolute(DisInsn &insn, StrBuffer &out) const;
-    void decodeRelative(DisInsn &insn, StrBuffer &out) const;
+    void decodeRelative(DisInsn &insn, StrBuffer &out, AddrMode mode) const;
     void decodeShortIndex(DisInsn &insn, StrBuffer &out, RegName base) const;
+    void decodeLongIndex(DisInsn &insn, StrBuffer &out, RegName base) const;
+    void decodeMemoryPointer(DisInsn &insn, StrBuffer &out) const;
+    void decodeBaseIndex(DisInsn &insn, StrBuffer &out, AddrMode mode) const;
+    void decodePointerIndex(DisInsn &insn, StrBuffer &out, AddrMode mode) const;
+    void decodeFullIndex(DisInsn &insn, StrBuffer &out) const;
     void decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode, AddrMode other) const;
 
     StrBuffer &outAbsAddr(StrBuffer &out, uint32_t val, uint8_t addrWidth = 0) const override;
@@ -46,10 +51,10 @@ private:
     static const ValueFormatter::Plugins &defaultPlugins();
 };
 
-}  // namespace z80
+}  // namespace z280
 }  // namespace libasm
 
-#endif  // __LIBASM_DIS_Z80_H__
+#endif  // __LIBASM_DIS_Z280_H__
 
 // Local Variables:
 // mode: c++
