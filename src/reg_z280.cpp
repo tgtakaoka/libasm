@@ -19,13 +19,13 @@
 #include "text_z280.h"
 #include "value_parser.h"
 
-using namespace libasm::text::z280;
-using namespace libasm::text::common;
-using namespace libasm::reg;
-
 namespace libasm {
 namespace z280 {
 namespace reg {
+
+using namespace libasm::text::z280;
+using namespace libasm::text::common;
+using namespace libasm::reg;
 
 namespace {
 // clang-format off

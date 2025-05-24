@@ -28,6 +28,8 @@ enum CpuType : uint8_t {
 };
 
 struct Config : ConfigImpl<CpuType, ADDRESS_16BIT, ADDRESS_BYTE, OPCODE_8BIT, ENDIAN_LITTLE, 4, 5> {
+    typedef uint16_t prefix_t;
+
     Config(const InsnTable<CpuType> &table) : ConfigImpl(table, Z80) {}
 
     AddressWidth addressWidth() const override {

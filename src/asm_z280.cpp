@@ -109,7 +109,7 @@ void AsmZ280::encodeMemoryPointer(AsmInsn &insn, const Operand &op) const {
 
 namespace {
 void encodeIndexReg(AsmInsn &insn, RegName ixReg) {
-    const auto ix = (ixReg == REG_IX) ? TableZ280::IX : TableZ280::IY;
+    const auto ix = Entry::encodeIndex(ixReg);
     auto prefix = insn.prefix();
     if (prefix < 0x100) {
         prefix = ix;

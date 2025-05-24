@@ -27,23 +27,13 @@ struct TableZ80 final : InsnTable<CpuType> {
     const /*PROGMEM*/ char *listCpu_P() const override;
     const /*PROGMEM*/ char *cpuName_P(CpuType cpuType) const override;
     Error searchCpuName(StrScanner &name, CpuType &cpuType) const override;
-
-    static constexpr uint16_t EXT = 0xED;
-    static constexpr uint16_t IX = 0xDD;
-    static constexpr uint16_t IY = 0xFD;
-    static constexpr uint16_t BIT = 0xCB;
-    static constexpr uint16_t EXTBIT = 0xEDCB;
-    static constexpr uint16_t IXEXT = 0xDDED;
-    static constexpr uint16_t IYEXT = 0xFDED;
-    static constexpr uint16_t IXBIT = 0xDDCB;
-    static constexpr uint16_t IYBIT = 0xFDCB;
 };
 
 extern const TableZ80 TABLE;
 
 Error searchName(CpuType, AsmInsn &insn);
 Error searchOpCode(CpuType, DisInsn &insn, StrBuffer &out);
-bool isPrefix(CpuType, uint16_t code);
+bool isPrefix(CpuType, Config::prefix_t code);
 
 }  // namespace z80
 }  // namespace libasm

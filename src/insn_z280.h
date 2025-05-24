@@ -18,13 +18,15 @@
 #define __LIBASM_INSN_Z280_H__
 
 #include "config_z280.h"
-#include "entry_z280.h"
+#include "entry_z80.h"
 #include "insn_base.h"
 #include "reg_z280.h"
 #include "value.h"
 
 namespace libasm {
 namespace z280 {
+
+using namespace libasm::z80::common;
 
 struct EntryInsn : EntryInsnPrefix<Config, Entry> {
     AddrMode dst() const { return flags().dst(); }

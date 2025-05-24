@@ -17,10 +17,8 @@
 #ifndef __LIBASM_REG_Z280_H__
 #define __LIBASM_REG_Z280_H__
 
-#include <stdint.h>
 #include "config_z280.h"
-#include "str_buffer.h"
-#include "str_scanner.h"
+#include "reg_z80.h"
 
 namespace libasm {
 
@@ -28,81 +26,11 @@ struct ValueParser;
 
 namespace z280 {
 
-enum RegName : int8_t {
-    REG_UNDEF = -1,
-    // 16-bit registers
-    // Pointer registers
-    REG_BC = 0,
-    REG_DE = 1,
-    REG_HL = 2,
-    REG_SP = 3,
-    REG_IX = 4,
-    REG_IY = 5,
-    REG_AF = 6,
-    // 8-bit registers
-    // Data registers
-    REG_B = 7,
-    REG_C = 8,
-    REG_D = 9,
-    REG_E = 10,
-    REG_H = 11,
-    REG_L = 12,
-    // REG_M = 13, // (HL)
-    REG_A = 14,
-    REG_IXH = 15,  // Z280
-    REG_IXL = 16,  // Z280/Z380
-    REG_IYH = 17,  // Z280
-    REG_IYL = 18,  // Z280/Z380
-    //REG_IXU = 19,  // Z380
-    //REG_IYU = 20,  // Z380
-    // Other registers
-    REG_I = 21,
-    REG_R = 22,
-    REG_DEHL = 23,  // Z280
-    REG_USP = 24,   // Z280
-    //REG_SR = 25,    // Z380
-    //REG_DSR = 26,   // Z380
-    //REG_XSR = 27,   // Z380
-    //REG_YSR = 28,   // Z380
-    REG_PC = 29,    // Z280
-    // Alternate register
-    ALT_BASE = 30,
-    //REG_BCP = REG_BC + ALT_BASE,  // Z380
-    //REG_DEP = REG_DE + ALT_BASE,  // Z380
-    //REG_HLP = REG_HL + ALT_BASE,  // Z380
-    //REG_IXP = REG_IX + ALT_BASE,  // Z380
-    //REG_IYP = REG_IX + ALT_BASE,  // Z380
-    REG_AFP = REG_AF + ALT_BASE,  // Z80
-    //REG_BP = REG_B + ALT_BASE,    // Z380
-    //REG_CP = REG_C + ALT_BASE,    // Z380
-    //REG_DP = REG_D + ALT_BASE,    // Z380
-    //REG_EP = REG_E + ALT_BASE,    // Z380
-    //REG_HP = REG_H + ALT_BASE,    // Z380
-    //REG_LP = REG_L + ALT_BASE,    // Z380
-    //REG_AP = REG_A + ALT_BASE,    // Z380
-};
-
-enum CcName : int8_t {
-    CC_UNDEF = -1,
-    CC_NZ = 0,
-    CC_Z = 1,
-    CC_NC = 2,
-    CC_C = 3,
-    CC_PO = 4,
-    CC_PE = 5,
-    CC_P = 6,
-    CC_M = 7,
-    // alias (Z280)
-    CC_alias = 8,
-    CC_NV = CC_PO + CC_alias,
-    CC_V = CC_PE + CC_alias,
-    CC_NS = CC_P + CC_alias,
-    CC_S = CC_M + CC_alias,
-};
-
 struct DisInsn;
 
 namespace reg {
+
+using namespace libasm::z80::common;
 
 RegName parseRegName(StrScanner &scan, const ValueParser &parser);
 StrBuffer &outRegName(StrBuffer &out, RegName name);

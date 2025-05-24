@@ -85,7 +85,7 @@ void AsmZ80::encodeAbsolute(AsmInsn &insn, const Operand &op) const {
 
 namespace {
 void encodeIndexReg(AsmInsn &insn, RegName ixReg) {
-    const auto ix = (ixReg == REG_IX) ? TableZ80::IX : TableZ80::IY;
+    const auto ix = (ixReg == REG_IX) ? Entry::IX : Entry::IY;
     auto prefix = insn.prefix();
     if (prefix < 0x100) {
         prefix = ix;

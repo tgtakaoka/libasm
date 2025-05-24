@@ -122,18 +122,11 @@ void DisZ280::decodeRelative(DisInsn &insn, StrBuffer &out, AddrMode mode) const
 }
 
 namespace {
-RegName decodeIndexReg(uint16_t prefix) {
-    if (prefix == TableZ280::IX || prefix == TableZ280::IXEXT || prefix == TableZ280::IXBIT)
-        return REG_IX;
-    if (prefix == TableZ280::IY || prefix == TableZ280::IYEXT || prefix == TableZ280::IYBIT)
-        return REG_IY;
-    return REG_UNDEF;
-}
 
-RegName decodePointerReg(uint_fast8_t num, uint16_t prefix) {
+RegName decodePointerReg(uint_fast8_t num, Config::prefix_t prefix) {
     const auto name = RegName(num & 3);
     if (name == REG_HL) {
-        const auto ix = decodeIndexReg(prefix);
+        const auto ix = Entry::decodeIndex(prefix);
         return ix == REG_UNDEF ? name : ix;
     }
     return name;
@@ -227,7 +220,7 @@ void DisZ280::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode, AddrMo
         break;
     case M_IDX:
     case M_IDX8:
-        decodeShortIndex(insn, out, decodeIndexReg(insn.prefix()));
+        decodeShortIndex(insn, out, Entry::decodeIndex(insn.prefix()));
         break;
     case M_IDX16:
         decodeLongIndex(insn, out, (opc & 0x10) == 0 ? REG_IX : REG_IY);
@@ -288,14 +281,14 @@ void DisZ280::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode, AddrMo
         }
         break;
     case R_IDX:
-        outRegName(out, decodeIndexReg(insn.prefix()));
+        outRegName(out, Entry::decodeIndex(insn.prefix()));
         break;
     case R_IDXL:
         outRegName(out, (opc & 1) ? REG_IY : REG_IX);
         break;
     case R_DXY:
     case R_SXY: {
-        const auto ix = decodeIndexReg(insn.prefix());
+        const auto ix = Entry::decodeIndex(insn.prefix());
         const auto hilo = (opc & (mode == R_DXY ? 8 : 1)) ? 'L' : 'H';
         outRegName(out, ix).letter(hilo);
         break;
@@ -313,7 +306,7 @@ void DisZ280::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode, AddrMo
         outIndirectReg(out, decodeIndirectBase(opc));
         break;
     case I_IDX:
-        outIndirectReg(out, decodeIndexReg(insn.prefix()));
+        outIndirectReg(out, Entry::decodeIndex(insn.prefix()));
         break;
     case I_HL:
     case I_SP:
