@@ -36,6 +36,7 @@ AsmTms320       KEYWORD1        libasm
 AsmTms370       KEYWORD1        libasm
 AsmTms7000      KEYWORD1        libasm
 AsmTms9900      KEYWORD1        libasm
+AsmZ280         KEYWORD1        libasm
 AsmZ380         KEYWORD1        libasm
 AsmZ8000        KEYWORD1        libasm
 AsmZ80          KEYWORD1        libasm
@@ -66,6 +67,7 @@ DisTms320       KEYWORD1        libasm
 DisTms370       KEYWORD1        libasm
 DisTms7000      KEYWORD1        libasm
 DisTms9900      KEYWORD1        libasm
+DisZ280         KEYWORD1        libasm
 DisZ380         KEYWORD1        libasm
 DisZ8000        KEYWORD1        libasm
 DisZ80          KEYWORD1        libasm

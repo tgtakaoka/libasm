@@ -41,6 +41,7 @@
 #include "dis_tms370.h"
 #include "dis_tms7000.h"
 #include "dis_tms9900.h"
+#include "dis_z280.h"
 #include "dis_z380.h"
 #include "dis_z8000.h"
 #include "dis_z80.h"
@@ -76,6 +77,7 @@ tms320::DisTms320 dis320;
 tms370::DisTms370 dis370;
 tms7000::DisTms7000 dis7000;
 tms9900::DisTms9900 dis9900;
+z280::DisZ280 disz280;
 z380::DisZ380 disz380;
 z8000::DisZ8000 disz8000;
 z80::DisZ80 disz80;
@@ -92,6 +94,7 @@ DisCommander commander{
         &dis8051,
         &dis8080,
         &disz80,
+        &disz280,
         &disz380,
         &disz8,
         &dis90,

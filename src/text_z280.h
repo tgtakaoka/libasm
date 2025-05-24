@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Tadashi G. Takaoka
+ * Copyright 2025 Tadashi G. Takaoka
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,19 +14,19 @@
  * limitations under the License.
  */
 
-#ifndef __LIBASM_TEXT_Z80__
-#define __LIBASM_TEXT_Z80__
+#ifndef __LIBASM_TEXT_Z280__
+#define __LIBASM_TEXT_Z280__
 
 #include "text_common.h"
 
 namespace libasm {
 namespace text {
-namespace z80 {
+namespace z280 {
 
 // clang-format off
-extern const char TEXT_Z80_LIST[] PROGMEM;
+extern const char TEXT_Z280_LIST[] PROGMEM;
 using common::TEXT_CPU_Z80;
-using common::TEXT_CPU_Z180;
+extern const char TEXT_CPU_Z280[] PROGMEM;
 
 using common::TEXT_ADC;
 using common::TEXT_ADD;
@@ -97,19 +97,49 @@ using common::TEXT_SRL;
 using common::TEXT_SUB;
 using common::TEXT_XOR;
 
-// Z180
-using common::TEXT_MLT;
-using common::TEXT_TST;
-using common::TEXT_TSTIO;
-using common::TEXT_IN0;
-using common::TEXT_OTDM;
-using common::TEXT_OTDMR;
-using common::TEXT_OTIM;
-using common::TEXT_OTIMR;
-using common::TEXT_OUT0;
-using common::TEXT_SLP;
+// Z280
+using common::TEXT_ADDW;
+using common::TEXT_CPW;
+using common::TEXT_DECW;
+using common::TEXT_DIV;
+using common::TEXT_DIVU;
+using common::TEXT_DIVUW;
+using common::TEXT_DIVW;
+extern const char TEXT_EPUF[]   PROGMEM;
+extern const char TEXT_EPUI[]   PROGMEM;
+extern const char TEXT_EPUM[]   PROGMEM;
+using common::TEXT_EXTS;
+using common::TEXT_INCW;
+using common::TEXT_INDRW;
+using common::TEXT_INDW;
+using common::TEXT_INIRW;
+using common::TEXT_INIW;
+using common::TEXT_INW;
+extern const char TEXT_JAF[]    PROGMEM;
+extern const char TEXT_JAR[]    PROGMEM;
+using common::TEXT_LDA;
+using common::TEXT_LDCTL;
+extern const char TEXT_LDUD[]   PROGMEM;
+extern const char TEXT_LDUP[]   PROGMEM;
+using common::TEXT_LDW;
+extern const char TEXT_MEPU[]   PROGMEM;
+using common::TEXT_MULT;
+extern const char TEXT_MULTU[]  PROGMEM;
+using common::TEXT_MULTUW;
+using common::TEXT_MULTW;
+using common::TEXT_OTDRW;
+using common::TEXT_OTIRW;
+using common::TEXT_OUTDW;
+using common::TEXT_OUTIW;
+using common::TEXT_OUTW;
+extern const char TEXT_PCACHE[] PROGMEM;
+extern const char TEXT_RETIL[]  PROGMEM;
+using common::TEXT_SC;
+using common::TEXT_SUBW;
+using common::TEXT_TSET;
+extern const char TEXT_TSTI[]   PROGMEM;
 
-// Z80, Z180
+// Z80
 using common::TEXT_REG_BC;
 using common::TEXT_REG_DE;
 using common::TEXT_REG_HL;
@@ -127,7 +157,15 @@ using common::TEXT_REG_L;
 using common::TEXT_REG_R;
 using common::TEXT_REG_I;
 
-// Z80, Z180
+// Z280
+extern const char TEXT_REG_DEHL[] PROGMEM;
+extern const char TEXT_REG_IXH[]  PROGMEM;
+using common::TEXT_REG_IXL;
+extern const char TEXT_REG_IYH[]  PROGMEM;
+using common::TEXT_REG_IYL;
+using common::TEXT_REG_USP;
+
+// Z80
 using common::TEXT_CC_NZ;
 using common::TEXT_CC_Z;
 using common::TEXT_CC_NC;
@@ -136,13 +174,20 @@ using common::TEXT_CC_PO;
 using common::TEXT_CC_PE;
 using common::TEXT_CC_P;
 using common::TEXT_CC_M;
+
+// Z280
+using common::TEXT_CC_NS;
+using common::TEXT_CC_NV;
+using common::TEXT_CC_S;
+using common::TEXT_CC_V;
+
 // clang-format on
 
-}  // namespace z80
+}  // namespace z280
 }  // namespace text
 }  // namespace libasm
 
-#endif  // __LIBASM_TEXT_Z80__
+#endif  // __LIBASM_TEXT_Z280__
 
 // Local Variables:
 // mode: c++

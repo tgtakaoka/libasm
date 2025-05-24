@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Tadashi G. Takaoka
+ * Copyright 2025 Tadashi G. Takaoka
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,17 +14,17 @@
  * limitations under the License.
  */
 
-#include "reg_z80.h"
+#include "reg_z280.h"
 #include "reg_base.h"
-#include "text_z80.h"
+#include "text_z280.h"
 #include "value_parser.h"
 
-using namespace libasm::text::z80;
+using namespace libasm::text::z280;
 using namespace libasm::text::common;
 using namespace libasm::reg;
 
 namespace libasm {
-namespace z80 {
+namespace z280 {
 namespace reg {
 
 namespace {
@@ -38,24 +38,35 @@ constexpr NameEntry REG_ENTRIES[] PROGMEM = {
     { TEXT_REG_C,    REG_C    },
     { TEXT_REG_D,    REG_D    },
     { TEXT_REG_DE,   REG_DE   },
+    { TEXT_REG_DEHL, REG_DEHL },
     { TEXT_REG_E,    REG_E    },
     { TEXT_REG_H,    REG_H    },
     { TEXT_REG_HL,   REG_HL   },
     { TEXT_REG_I,    REG_I    },
     { TEXT_REG_IX,   REG_IX   },
+    { TEXT_REG_IXH,  REG_IXH  },
+    { TEXT_REG_IXL,  REG_IXL  },
     { TEXT_REG_IY,   REG_IY   },
+    { TEXT_REG_IYH,  REG_IYH  },
+    { TEXT_REG_IYL,  REG_IYL  },
     { TEXT_REG_L,    REG_L    },
+    { TEXT_REG_PC,   REG_PC   },
     { TEXT_REG_R,    REG_R    },
     { TEXT_REG_SP,   REG_SP   },
+    { TEXT_REG_USP,  REG_USP  },
 };
 constexpr NameEntry CC_ENTRIES[] PROGMEM = {
     { TEXT_CC_C,  CC_C  },
     { TEXT_CC_M,  CC_M  },
     { TEXT_CC_NC, CC_NC },
+    { TEXT_CC_NS, CC_NS },
+    { TEXT_CC_NV, CC_NV },
     { TEXT_CC_NZ, CC_NZ },
     { TEXT_CC_P,  CC_P  },
     { TEXT_CC_PE, CC_PE },
     { TEXT_CC_PO, CC_PO },
+    { TEXT_CC_S,  CC_S  },
+    { TEXT_CC_V,  CC_V  },
     { TEXT_CC_Z,  CC_Z  },
 };
 
@@ -148,7 +159,13 @@ bool isCc4Name(CcName name) {
     return num >= 0 && num < 4;
 }
 
+bool isCcAlias(CcName name) {
+    return name >= CC_alias;
+}
+
 uint8_t encodeCcName(CcName name) {
+    if (isCcAlias(name))
+        return encodeCcName(CcName(name - CC_alias));
     return uint8_t(name);
 }
 
@@ -157,7 +174,7 @@ CcName decodeCcName(uint8_t num) {
 }
 
 }  // namespace reg
-}  // namespace z80
+}  // namespace z280
 }  // namespace libasm
 
 // Local Variables:
