@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Tadashi G. Takaoka
+ * Copyright 2025 Tadashi G. Takaoka
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#include "asm_z80.h"
-#include "dis_z80.h"
+#include "asm_z280.h"
+#include "dis_z280.h"
 #include "test_formatter_helper.h"
 
 namespace libasm {
@@ -27,7 +27,7 @@ void set_up() {}
 void tear_down() {}
 
 void test_asm_z80() {
-    PREP_ASM(z80::AsmZ80, ZilogDirective);
+    PREP_ASM(z280::AsmZ280, ZilogDirective);
 
     TestReader inc("data/db.inc");
     sources.add(inc);
@@ -66,7 +66,7 @@ data2:  defm  'A', '''', 'C'+80H, 'a''c'
 }
 
 void test_dis_z80() {
-    PREP_DIS(z80::DisZ80);
+    PREP_DIS(z280::DisZ280);
 
     DIS8("z80", 0xabcd,
             R"(      cpu   z80
@@ -84,8 +84,8 @@ test.bin: error: Unknown instruction
             0xfd, 0xcb, 0x80, 0x86, 0xdd, 0xcb, 0x00, 0xef);
 }
 
-void test_asm_z180() {
-    PREP_ASM(z80::AsmZ80, ZilogDirective);
+void test_asm_z280() {
+    PREP_ASM(z280::AsmZ280, ZilogDirective);
 
     TestReader inc("data/db.inc");
     sources.add(inc);
@@ -98,8 +98,8 @@ data2:  defm  'A', '''', 'C'+80H, 'a''c'
 
     driver.setUpperHex(false);
 
-    ASM("z180",
-            R"(        cpu   z180
+    ASM("z280",
+            R"(        cpu   z280
 ; comment line
         org   0abcdeh
         include "data/db.inc"
@@ -110,7 +110,7 @@ data2:  defm  'A', '''', 'C'+80H, 'a''c'
         pop   (HL)
         inc   (IX+IY)
 )",
-            R"(          0 :                            cpu   z180
+            R"(          0 :                            cpu   z280
           0 :                    ; comment line
       abcde :                            org   0abcdeh
       abcde :                            include "data/db.inc"
@@ -129,21 +129,21 @@ data2:  defm  'A', '''', 'C'+80H, 'a''c'
 )");
 }
 
-void test_dis_z180() {
-    PREP_DIS(z80::DisZ80);
+void test_dis_z280() {
+    PREP_DIS(z280::DisZ280);
 
-    DIS8("z180", 0xabcde,
-            R"(      cpu   z180
-      org   0ABCDEH
-      res   0, (iy-128)
+    DIS8("z280", 0xabcde,
+            R"(      cpu    z280
+      org    0ABCDEH
+      res    0, (iy-128)
 ; test.bin: error: Unknown instruction
 ;    ABCE2 : DD CB 00 EF
       ld     a, (iy-8000H)
       div    hl, <0ACCEFH>
 )",
-            R"(       0 :                            cpu   z180
-   ABCDE :                            org   0ABCDEH
-   ABCDE : FD CB 80 86                res   0, (iy-128)
+            R"(       0 :                            cpu    z280
+   ABCDE :                            org    0ABCDEH
+   ABCDE : FD CB 80 86                res    0, (iy-128)
 test.bin: error: Unknown instruction
    ABCE2 : DD CB 00 EF
    ABCE6 : FD 7A 00 80                ld     a, (iy-8000H)
@@ -156,8 +156,8 @@ test.bin: error: Unknown instruction
 void run_tests() {
     RUN_TEST(test_asm_z80);
     RUN_TEST(test_dis_z80);
-    RUN_TEST(test_asm_z180);
-    RUN_TEST(test_dis_z180);
+    RUN_TEST(test_asm_z280);
+    RUN_TEST(test_dis_z280);
 }
 
 }  // namespace test

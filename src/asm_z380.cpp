@@ -199,7 +199,7 @@ void AsmZ380::encodeAbsolute(AsmInsn &insn, const Operand &op, AddrMode mode) co
 
 namespace {
 void encodeIndexReg(AsmInsn &insn, RegName ixReg) {
-    const auto ix = (ixReg == REG_IX) ? TableZ380::IX : TableZ380::IY;
+    const auto ix = Entry::encodeIndex(ixReg);
     auto prefix = insn.prefix();
     if (prefix < 0x100) {
         prefix = ix;

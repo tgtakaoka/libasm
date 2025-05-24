@@ -26,10 +26,12 @@
 namespace libasm {
 namespace z80 {
 
+using namespace libasm::z80::common;
+
 struct EntryInsn : EntryInsnPrefix<Config, Entry> {
     AddrMode dst() const { return flags().dst(); }
     AddrMode src() const { return flags().src(); }
-    bool ixBit() const;
+    bool ixBit() const { return Entry::ixBit(prefix()); }
     bool imCapable() const { return flags().imCapable(); }
     bool lmCapable() const { return flags().lmCapable(); }
 };
