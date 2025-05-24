@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Tadashi G. Takaoka
+ * Copyright 2025 Tadashi G. Takaoka
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,34 +14,36 @@
  * limitations under the License.
  */
 
-#ifndef __LIBASM_DIS_Z80_H__
-#define __LIBASM_DIS_Z80_H__
+#ifndef __LIBASM_DIS_Z380_H__
+#define __LIBASM_DIS_Z380_H__
 
-#include "config_z80.h"
+#include "config_z380.h"
 #include "dis_base.h"
-#include "insn_z80.h"
-#include "reg_z80.h"
+#include "insn_z380.h"
+#include "reg_z380.h"
 
 namespace libasm {
-namespace z80 {
+namespace z380 {
 
-struct DisZ80 final : Disassembler, Config {
-    DisZ80(const ValueFormatter::Plugins &plugins = defaultPlugins());
+struct DisZ380 final : Disassembler, Config {
+    DisZ380(const ValueFormatter::Plugins &plugins = defaultPlugins());
+
+    void reset() override;
 
 private:
+    const BoolOption<DisZ380> _opt_extmode;
+    const BoolOption<DisZ380> _opt_lwordmode;
+
     StrBuffer &outIndirectReg(StrBuffer &out, RegName reg) const;
     StrBuffer &outDataReg(StrBuffer &out, RegName reg) const;
     StrBuffer &outAlternateReg(StrBuffer &out, const DisInsn &insn, AddrMode other) const;
 
-    void decodeImmediate16(DisInsn &insn, StrBuffer &out) const;
-    void decodeAbsolute(DisInsn &insn, StrBuffer &out) const;
+    bool wordMode(const Ddir &ddir) const;
+    bool lwordMode(const Ddir &ddir) const;
+    void decodeImmediate16(DisInsn &insn, StrBuffer &out, AddrMode mode) const;
+    void decodeAbsolute(DisInsn &insn, StrBuffer &out, AddrMode mode) const;
     void decodeRelative(DisInsn &insn, StrBuffer &out, AddrMode mode) const;
     void decodeShortIndex(DisInsn &insn, StrBuffer &out, RegName base) const;
-    void decodeLongIndex(DisInsn &insn, StrBuffer &out, RegName base) const;
-    void decodeMemoryPointer(DisInsn &insn, StrBuffer &out) const;
-    void decodeBaseIndex(DisInsn &insn, StrBuffer &out, AddrMode mode) const;
-    void decodePointerIndex(DisInsn &insn, StrBuffer &out, AddrMode mode) const;
-    void decodeFullIndex(DisInsn &insn, StrBuffer &out) const;
     void decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode, AddrMode other) const;
 
     StrBuffer &outAbsAddr(StrBuffer &out, uint32_t val, uint8_t addrWidth = 0) const override;
@@ -51,10 +53,10 @@ private:
     static const ValueFormatter::Plugins &defaultPlugins();
 };
 
-}  // namespace z80
+}  // namespace z380
 }  // namespace libasm
 
-#endif  // __LIBASM_DIS_Z80_H__
+#endif  // __LIBASM_DIS_Z380_H__
 
 // Local Variables:
 // mode: c++

@@ -221,6 +221,13 @@ build reg_z80.o:   cxx ${root}/src/reg_z80.cpp
 build table_z80.o: cxx ${root}/src/table_z80.cpp
 build text_z80.o:  cxx ${root}/src/text_z80.cpp
 
+# z380
+build asm_z380.o:   cxx ${root}/src/asm_z380.cpp
+build dis_z380.o:   cxx ${root}/src/dis_z380.cpp
+build reg_z380.o:   cxx ${root}/src/reg_z380.cpp
+build table_z380.o: cxx ${root}/src/table_z380.cpp
+build text_z380.o:  cxx ${root}/src/text_z380.cpp
+
 # z8000
 build asm_z8000.o:   cxx ${root}/src/asm_z8000.cpp
 build dis_z8000.o:   cxx ${root}/src/dis_z8000.cpp

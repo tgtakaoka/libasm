@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Tadashi G. Takaoka
+ * Copyright 2025 Tadashi G. Takaoka
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,21 +14,23 @@
  * limitations under the License.
  */
 
-#include "dis_z80.h"
+#include "dis_z380.h"
 #include "gen_driver.h"
 
-using namespace libasm::z80;
+using namespace libasm::z380;
 using namespace libasm::gen;
 
 int main(int argc, const char **argv) {
-    DisZ80 disz80;
-    GenDriver driver(disz80);
+    DisZ380 disz380;
+    GenDriver driver(disz380);
     if (driver.main(argc, argv))
         return 1;
 
-    disz80.setOption("relative", "enable");
+    disz380.setOption("relative", "enable");
+    disz380.setOption("extmode", "on");
+    disz380.setOption("lwordmode", "on");
 
-    TestGenerator generator(driver, disz80, 0x0100);
+    TestGenerator generator(driver, disz380, 0x10000);
     generator.generate();
 
     return driver.close();

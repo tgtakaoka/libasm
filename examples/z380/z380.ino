@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Tadashi G. Takaoka
+ * Copyright 2025 Tadashi G. Takaoka
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,29 +14,27 @@
  * limitations under the License.
  */
 
-#include "dis_z80.h"
-#include "gen_driver.h"
+#include <arduino_example.h>
+#include <asm_z380.h>
+#include <dis_z380.h>
 
-using namespace libasm::z80;
-using namespace libasm::gen;
+libasm::z380::AsmZ380 asmz380;
+libasm::z380::DisZ380 disz380;
 
-int main(int argc, const char **argv) {
-    DisZ80 disz80;
-    GenDriver driver(disz80);
-    if (driver.main(argc, argv))
-        return 1;
+libasm::arduino::Example example(asmz380, disz380);
 
-    disz80.setOption("relative", "enable");
+void setup() {
+    Serial.begin(9600);
+    example.begin(Serial);
+}
 
-    TestGenerator generator(driver, disz80, 0x0100);
-    generator.generate();
-
-    return driver.close();
+void loop() {
+    example.loop();
 }
 
 // Local Variables:
 // mode: c++
-// c-basic-offset: 4
-// tab-width: 4
+// c-basic-offset: 2
+// tab-width: 2
 // End:
-// vim: set ft=cpp et ts=4 sw=4:
+// vim: set ft=cpp et ts=2 sw=2:

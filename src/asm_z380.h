@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Tadashi G. Takaoka
+ * Copyright 2025 Tadashi G. Takaoka
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,43 +14,48 @@
  * limitations under the License.
  */
 
-#ifndef __LIBASM_ASM_Z80_H__
-#define __LIBASM_ASM_Z80_H__
+#ifndef __LIBASM_ASM_Z380_H__
+#define __LIBASM_ASM_Z380_H__
 
 #include "asm_base.h"
-#include "config_z80.h"
-#include "insn_z80.h"
+#include "config_z380.h"
+#include "insn_z380.h"
 
 namespace libasm {
-namespace z80 {
+namespace z380 {
 
-struct AsmZ80 final : Assembler, Config {
-    AsmZ80(const ValueParser::Plugins &plugins = defaultPlugins());
+struct AsmZ380 final : Assembler, Config {
+    AsmZ380(const ValueParser::Plugins &plugins = defaultPlugins());
+
+    void reset() override;
 
 private:
+    const BoolOption<AsmZ380> _opt_extmode;
+    const BoolOption<AsmZ380> _opt_lwordmode;
+    mutable Ddir _ddir;
+
     Error parseOperand(StrScanner &scan, Operand &op) const;
 
+    bool wordMode() const;
+    bool lwordMode() const;
+    int32_t calcDeltaZ380(AsmInsn &insn, const ErrorAt &at, AddrMode &mode, int32_t delta) const;
     void encodeRelative(AsmInsn &insn, const Operand &op, AddrMode mode) const;
-    void encodeAbsolute(AsmInsn &insn, const Operand &op) const;
-    void encodeMemoryPointer(AsmInsn &insn, const Operand &op) const;
+    void encodeAbsolute(AsmInsn &insn, const Operand &op, AddrMode mode) const;
     void encodeShortIndex(AsmInsn &insn, const Operand &op) const;
-    void encodeLongIndex(AsmInsn &insn, const Operand &op) const;
-    void encodeBaseIndex(AsmInsn &insn, const Operand &op, AddrMode mode) const;
-    void encodePointerIndex(AsmInsn &insn, const Operand &op, AddrMode mode) const;
-    void encodeFullIndex(AsmInsn &insn, const Operand &op) const;
-    void encodeImmediate16(AsmInsn &insn, const Operand &op) const;
+    void encodeImmediate16(AsmInsn &insn, const Operand &op, AddrMode mode) const;
     void encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode, const Operand &other) const;
 
+    Error processPseudo(StrScanner &scan, Insn &insn) override;
     Error encodeImpl(StrScanner &scan, Insn &insn) const override;
     const ConfigBase &config() const override { return *this; }
     ConfigSetter &configSetter() override { return *this; }
     static const ValueParser::Plugins &defaultPlugins();
 };
 
-}  // namespace z80
+}  // namespace z380
 }  // namespace libasm
 
-#endif  // __LIBASM_ASM_Z80_H__
+#endif  // __LIBASM_ASM_Z380_H__
 
 // Local Variables:
 // mode: c++

@@ -355,6 +355,17 @@ build test_formatter_z80: test test_formatter_z80.o $
   fixed64.o ieee_float.o float80_base.o float80_hard.o float80_soft.o $
   dec_float.o ibm_float.o test_driver_helper.o test_asserter.o
 
+build test_formatter_z380: test test_formatter_z380.o $
+  asm_z380.o dis_z380.o reg_z380.o table_z380.o text_z380.o $
+  asm_base.o asm_directive.o asm_driver.o asm_formatter.o bin_decoder.o $
+  bin_encoder.o bin_memory.o config_base.o dis_base.o dis_driver.o $
+  dis_formatter.o error_reporter.o formatters.o function_store.o insn_base.o $
+  intel_hex.o list_formatter.o moto_srec.o operators.o option_base.o $
+  parsers.o reg_base.o str_buffer.o str_scanner.o symbol_store.o $
+  text_common.o value.o value_formatter.o value_parser.o $
+  fixed64.o ieee_float.o float80_base.o float80_hard.o float80_soft.o $
+  dec_float.o ibm_float.o test_driver_helper.o test_asserter.o
+
 build test_formatter_z8000: test test_formatter_z8000.o $
   asm_z8000.o dis_z8000.o reg_z8000.o table_z8000.o text_z8000.o $
   asm_base.o asm_directive.o asm_driver.o asm_formatter.o bin_decoder.o $
@@ -394,6 +405,7 @@ build test: phony test_helpers test_bin_memory test_intel_hex test_moto_srec $
   test_formatter_tms370   $
   test_formatter_tms7000  $
   test_formatter_tms9900  $
+  test_formatter_z380     $
   test_formatter_z8       $
   test_formatter_z80      $
   test_formatter_z8000

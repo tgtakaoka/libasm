@@ -54,49 +54,8 @@ const ValueParser::Plugins &AsmZ80::defaultPlugins() {
 }
 
 AsmZ80::AsmZ80(const ValueParser::Plugins &plugins)
-    : Assembler(plugins, PSEUDO_TABLE, &_opt_extmode),
-      Config(TABLE),
-      _opt_extmode(
-              this, &AsmZ80::setExtendedMode, OPT_BOOL_EXTMODE, OPT_DESC_EXTMODE, &_opt_lwordmode),
-      _opt_lwordmode(this, &AsmZ80::setLongWordMode, OPT_BOOL_LWORDMODE, OPT_DESC_LWORDMODE) {
+    : Assembler(plugins, PSEUDO_TABLE), Config(TABLE) {
     reset();
-}
-
-void AsmZ80::reset() {
-    Assembler::reset();
-    setExtendedMode(false);
-    setLongWordMode(false);
-}
-
-bool AsmZ80::wordMode() const {
-    return (!_lwordmode && !_ddir.lwordMode()) || (_lwordmode && _ddir.wordMode());
-}
-
-bool AsmZ80::lwordMode() const {
-    return (_lwordmode && !_ddir.wordMode()) || (!_lwordmode && _ddir.lwordMode());
-}
-
-int32_t AsmZ80::calcDeltaZ380(
-        AsmInsn &insn, const ErrorAt &at, AddrMode &mode, int32_t delta) const {
-    if (!overflowDelta(delta, 8))
-        return delta;
-    auto diff = delta;
-    diff--;
-    if (insn.prefix() == 0)
-        diff--;
-    if (!overflowDelta(diff, 16)) {
-        mode = M_REL16;
-        insn.setPrefix(0xDD);
-        return diff;
-    }
-    diff--;
-    if (!overflowDelta(diff, 24)) {
-        mode = M_REL24;
-        insn.setPrefix(0xFD);
-        return diff;
-    }
-    insn.setErrorIf(at, OPERAND_TOO_FAR);
-    return delta;
 }
 
 void AsmZ80::encodeRelative(AsmInsn &insn, const Operand &op, AddrMode mode) const {
@@ -119,15 +78,8 @@ void AsmZ80::encodeRelative(AsmInsn &insn, const Operand &op, AddrMode mode) con
         target = op.getError() ? base : op.val.getUnsigned();
         delta = branchDelta(base, target, insn, op);
     }
-    if (z380())
-        delta = calcDeltaZ380(insn, op, mode, delta);
-    if (z380() && _extmode) {
-        if ((delta >= 0 && target < base) || (delta < 0 && target >= base))
-            insn.setErrorIf(op, OVERFLOW_RANGE);
-    } else {
-        if ((base & ~UINT16_MAX) != (target & ~UINT16_MAX))
-            insn.setErrorIf(op, OVERFLOW_RANGE);
-    }
+    if ((base & ~UINT16_MAX) != (target & ~UINT16_MAX))
+        insn.setErrorIf(op, OVERFLOW_RANGE);
     if (mode == M_REL8) {
         if (overflowDelta(delta, 8))
             insn.setErrorIf(op, OPERAND_TOO_FAR);
@@ -142,64 +94,7 @@ void AsmZ80::encodeRelative(AsmInsn &insn, const Operand &op, AddrMode mode) con
     }
 }
 
-void AsmZ80::encodeAbsolute(AsmInsn &insn, const Operand &op, AddrMode mode) const {
-    if (mode == M_XABS || mode == M_JABS) {
-        if (_extmode) {
-            if (_ddir) {
-                if (_ddir.noImmediate()) {
-                    insn.setError(op, PREFIX_HAS_NO_EFFECT);
-                } else if (!_ddir.noMode()) {
-                    insn.setError(op, SUBOPTIMAL_INSTRUCTION);
-                }
-            }
-        } else {
-            if (_ddir)
-                insn.setErrorIf(op, PREFIX_HAS_NO_EFFECT);
-            mode = M_ABS;
-        }
-    }
-    if (mode != M_ABS || mode == M_IO16) {
-        auto fixup = DD_UNDEF;
-        if (!_ddir) {
-        do_fixup:
-            if (op.val.overflow(UINT32_C(0xFFFFFF))) {
-                if (insn.ddir.setMode(fixup)) {
-                    insn.resetAddress(_ddir.addr());
-                    _ddir.clear();
-                }
-                insn.ddir.setImmediate(DD_IW);
-            emit32:
-                insn.emitOperand32(op.val.getUnsigned());
-                return;
-            }
-            if (op.val.overflow(UINT16_MAX)) {
-                if (insn.ddir.setMode(fixup)) {
-                    insn.resetAddress(_ddir.addr());
-                    _ddir.clear();
-                }
-                insn.ddir.setImmediate(DD_IB);
-            emit24:
-                insn.emitOperand24(op.val.getUnsigned());
-                return;
-            }
-        } else {
-            if (_ddir.byteImmediate()) {
-                if (op.val.overflow(UINT32_C(0xFFFFFF)))
-                    insn.setErrorIf(op, OVERFLOW_RANGE);
-                goto emit24;
-            } else if (_ddir.wordImmediate()) {
-                if (op.val.overflowUint32())
-                    insn.setErrorIf(op, OVERFLOW_RANGE);
-                goto emit32;
-            } else if (insn.lmCapable()) {
-                fixup = _ddir.lwordMode() ? DD_LW : DD_W;
-                goto do_fixup;
-            } else if (_ddir.noImmediate()) {
-                if (insn.imCapable())
-                    insn.setErrorIf(op, PREFIX_HAS_NO_EFFECT);
-            }
-        }
-    }
+void AsmZ80::encodeAbsolute(AsmInsn &insn, const Operand &op) const {
     if (op.val.overflow(UINT16_MAX))
         insn.setErrorIf(op, OVERFLOW_RANGE);
     insn.emitOperand16(op.val.getUnsigned());
@@ -208,7 +103,7 @@ void AsmZ80::encodeAbsolute(AsmInsn &insn, const Operand &op, AddrMode mode) con
 void AsmZ80::encodeMemoryPointer(AsmInsn &insn, const Operand &op) const {
     if (op.mode == M_ABS) {
         insn.embed(0x10);
-        encodeAbsolute(insn, op, M_ABS);
+        encodeAbsolute(insn, op);
     }
 }
 
@@ -275,112 +170,12 @@ void AsmZ80::encodeFullIndex(AsmInsn &insn, const Operand &op) const {
 }
 
 void AsmZ80::encodeShortIndex(AsmInsn &insn, const Operand &op) const {
-    if (z380()) {
-        auto fixup = DD_UNDEF;
-        if (!_ddir) {
-        do_fixup:
-            if (op.val.overflow(UINT32_C(0x7FFFFF), INT32_C(-0x800000))) {
-                insn.setErrorIf(op, OVERFLOW_RANGE);
-                insn.emitOperand8(op.val.getUnsigned());
-                return;
-            }
-            if (op.val.overflowInt16()) {
-                if (insn.ddir.setMode(fixup)) {
-                    insn.resetAddress(_ddir.addr());
-                    _ddir.clear();
-                }
-                insn.ddir.setImmediate(DD_IW);
-            disp24:
-                insn.emitOperand24(op.val.getSigned());
-                return;
-            }
-            if (op.val.overflowInt8()) {
-                if (insn.ddir.setMode(fixup)) {
-                    insn.resetAddress(_ddir.addr());
-                    _ddir.clear();
-                }
-                insn.ddir.setImmediate(DD_IB);
-            disp16:
-                insn.emitOperand16(op.val.getSigned());
-                return;
-            }
-        } else {
-            if (_ddir.byteImmediate()) {
-                if (op.val.overflowInt16())
-                    insn.setErrorIf(op, OVERFLOW_RANGE);
-                goto disp16;
-            } else if (_ddir.wordImmediate()) {
-                if (op.val.overflow(UINT32_C(0x7FFFFF), INT32_C(-0x800000)))
-                    insn.setErrorIf(op, OVERFLOW_RANGE);
-                goto disp24;
-            } else if (insn.lmCapable()) {
-                fixup = _ddir.lwordMode() ? DD_LW : DD_W;
-                goto do_fixup;
-            }
-        }
-    }
     if (op.val.overflowInt8())
         insn.setErrorIf(op, OVERFLOW_RANGE);
     insn.emitOperand8(op.val.getUnsigned());
 }
 
-void AsmZ80::encodeImmediate16(AsmInsn &insn, const Operand &op, AddrMode mode) const {
-    if (mode == M_XM16) {
-        encodeAbsolute(insn, op, M_XABS);
-        return;
-    }
-    if (mode == M_LM16) {
-        if (!z380()) {
-            mode = M_IM16;
-        } else if (!lwordMode()) {
-            if (_ddir)
-                insn.setErrorIf(op, PREFIX_HAS_NO_EFFECT);
-            mode = M_IM16;
-        }
-    }
-    if (mode != M_IM16) {
-        auto fixup = DD_UNDEF;
-        if (!_ddir) {
-        do_fixup:
-            if (op.val.overflow(UINT32_C(0xFFFFFF), INT32_C(-0x800000))) {
-                if (mode == M_LM16 && !lwordMode())
-                    insn.ddir.setMode(DD_LW);
-                if (insn.ddir.setMode(fixup)) {
-                    insn.resetAddress(_ddir.addr());
-                    _ddir.clear();
-                }
-                insn.ddir.setImmediate(DD_IW);
-            emit32:
-                insn.emitOperand32(op.val.getUnsigned());
-                return;
-            }
-            if (op.val.overflow(UINT16_MAX, INT16_MIN)) {
-                if (mode == M_LM16 && !lwordMode())
-                    insn.ddir.setMode(DD_LW);
-                if (insn.ddir.setMode(fixup)) {
-                    insn.resetAddress(_ddir.addr());
-                    _ddir.clear();
-                }
-                insn.ddir.setImmediate(DD_IB);
-            emit24:
-                insn.emitOperand24(op.val.getUnsigned());
-                return;
-            }
-        } else {
-            if (_ddir.byteImmediate()) {
-                if (op.val.overflow(UINT32_C(0xFFFFFF), INT32_C(-0x800000)))
-                    insn.setErrorIf(op, OVERFLOW_RANGE);
-                goto emit24;
-            } else if (_ddir.wordImmediate()) {
-                if (op.val.overflowUint32())
-                    insn.setErrorIf(op, OVERFLOW_RANGE);
-                goto emit32;
-            } else if (insn.lmCapable()) {
-                fixup = _ddir.lwordMode() ? DD_LW : DD_W;
-                goto do_fixup;
-            }
-        }
-    }
+void AsmZ80::encodeImmediate16(AsmInsn &insn, const Operand &op) const {
     if (op.val.overflowUint16())
         insn.setErrorIf(op, OVERFLOW_RANGE);
     insn.emitOperand16(op.val.getUnsigned());
@@ -406,18 +201,13 @@ void AsmZ80::encodeOperand(
             insn.setErrorIf(op, OVERFLOW_RANGE);
         insn.emitOperand8(val16);
         break;
-    case M_IO16:
-        encodeAbsolute(insn, op, mode);
-        break;
-    case M_SPX:
     case M_IDX:
     case M_IDX8:
         encodeShortIndex(insn, op);
         /* Fall-through */
     case R_IDX:
     case I_IDX:
-        if (mode != M_SPX)
-            encodeIndexReg(insn, op.reg);
+        encodeIndexReg(insn, op.reg);
         break;
     case R_IDXL:
         insn.embed(op.reg == REG_IX ? 0 : 1);
@@ -426,8 +216,7 @@ void AsmZ80::encodeOperand(
     case R_SXY:
         if (op.reg == REG_IXL || op.reg == REG_IYL)
             insn.embed(mode == R_DXY ? 8 : 1);
-        encodeIndexReg(insn,
-                (op.reg == REG_IXH || op.reg == REG_IXL || op.reg == REG_IXU) ? REG_IX : REG_IY);
+        encodeIndexReg(insn, (op.reg == REG_IXH || op.reg == REG_IXL) ? REG_IX : REG_IY);
         break;
     case M_IDX16:
         encodeLongIndex(insn, op);
@@ -454,16 +243,13 @@ void AsmZ80::encodeOperand(
         encodeFullIndex(insn, op);
         break;
     case M_IM16:
-    case M_DM16:
-    case M_XM16:
     case M_LM16:
-        encodeImmediate16(insn, op, mode);
+        encodeImmediate16(insn, op);
         break;
     case M_ABS:
     case M_JABS:
     case M_DABS:
-    case M_XABS:
-        encodeAbsolute(insn, op, mode);
+        encodeAbsolute(insn, op);
         break;
     case M_REL8:
     case M_REL16:
@@ -481,9 +267,6 @@ void AsmZ80::encodeOperand(
         if (op.reg == REG_HL)
             insn.setErrorIf(op, REGISTER_NOT_ALLOWED);
         insn.embed(encodePointerRegIx(op.reg, other.reg) << 4);
-        break;
-    case M_STK:
-        insn.embed(encodeStackReg(op.reg) << 4);
         break;
     case I_PTR:
         insn.embed(encodeIndirectBase(op.reg) << 4);
@@ -530,7 +313,7 @@ void AsmZ80::encodeOperand(
             insn.embed(3 << 3);
             break;
         case 3:
-            if (z280() || z380()) {
+            if (z280()) {
                 insn.embed(1 << 3);
                 break;
             }
@@ -542,14 +325,6 @@ void AsmZ80::encodeOperand(
         break;
     case M_EPU:
         insn.emitOperand32(op.val.getUnsigned());
-        break;
-    case M_LW:
-    case M_LCK:
-    case M_XM:
-        insn.setPrefix(encodeCtlName(CtlName(op.mode - M_LW + CTL_LW)));
-        break;
-    case M_DD:
-        insn.setErrorIf(op, insn.embedDd(DdName(op.val.getUnsigned())));
         break;
     default:
         break;
@@ -570,10 +345,6 @@ Error AsmZ80::parseOperand(StrScanner &scan, Operand &op) const {
         op.val.setUnsigned(encodeCcName(CC_C));
         scan = a;
         return OK;
-    } else if (op.reg == REG_CP) {
-        op.mode = R_ALT;
-        scan = a;
-        return OK;
     }
 
     const auto cc = parseCcName(p, parser());
@@ -584,28 +355,9 @@ Error AsmZ80::parseOperand(StrScanner &scan, Operand &op) const {
         return OK;
     }
 
-    const auto ctl = parseCtlName(p, parser());
-    if (ctl != CTL_UNDEF) {
-        op.mode = AddrMode((ctl - CTL_LW) + M_LW);
-        if (op.mode == M_LW)
-            op.val.setUnsigned(DD_LW);
-        scan = p;
-        return OK;
-    }
-
-    const auto ddir = parseDdName(p, parser());
-    if (ddir != DD_UNDEF) {
-        op.mode = M_DD;
-        op.val.setUnsigned(ddir);
-        scan = p;
-        return OK;
-    }
-
     op.reg = parseRegName(p, parser());
     if (op.reg != REG_UNDEF) {
         switch (op.reg) {
-        case REG_IXU:
-        case REG_IYU:
         case REG_IXH:
         case REG_IXL:
         case REG_IYH:
@@ -724,48 +476,8 @@ Error AsmZ80::parseOperand(StrScanner &scan, Operand &op) const {
     return OK;
 }
 
-Error AsmInsn::fixup(const Ddir &ddir) {
-    if (!lmCapable() && !imCapable())
-        return PREFIX_HAS_NO_EFFECT;
-    if (lmCapable() && !imCapable() && ddir.noMode())
-        return PREFIX_HAS_NO_EFFECT;
-    return OK;
-}
-
-Error AsmInsn::embedDd(DdName dd) {
-    if (dd == DD_IB || dd == DD_IW) {
-        if (_dd & 0x03)
-            return ILLEGAL_COMBINATION;
-        _dd |= dd;
-    } else if (_dd & 0xC0) {
-        return ILLEGAL_COMBINATION;
-    } else if (dd == DD_LW) {
-        setPrefix(0xFD);
-        _dd |= 0xC0;
-    } else if (dd == DD_W) {
-        setPrefix(0xDD);
-        _dd |= 0xC0;
-    }
-    return OK;
-}
-
-void AsmInsn::fixupDd() {
-    if (_dd) {
-        if ((_dd & 0xC0) == 0) {
-            setPrefix((_dd == DD_IB) ? 0xDD : 0xFD);
-            _dd = 0xC3;  // DDIR IB/DDIR IW
-        }
-        setOpCode(_dd);
-    }
-}
-
 void AsmInsn::emitInsn() {
-    fixupDd();  // encoding DDIR operands
     uint_fast8_t pos = 0;
-    if (ddir) {
-        emitByte(ddir.prefix(), pos++);
-        emitByte(ddir.opc(), pos++);
-    }
     if (hasPrefix()) {
         const auto pre = prefix();
         if (pre >= 0x100)
@@ -780,50 +492,12 @@ void AsmInsn::emitInsn() {
 }
 
 uint_fast8_t AsmInsn::operandPos() const {
-    uint_fast8_t len = ddir ? 2 : 0;
+    uint_fast8_t len = 0;
     if (ixBit())
         return len + 2;
     len += !hasPrefix() ? 1 : (prefix() < 0x100 ? 2 : 3);
     const auto pos = length();
     return pos < len ? len : pos;
-}
-
-Error AsmZ80::processPseudo(StrScanner &scan, Insn &insn) {
-    const auto at = scan;
-    if (z380()) {
-        if (strcasecmp_P(insn.name(), OPT_BOOL_EXTMODE) == 0) {
-            const auto error = _opt_extmode.set(scan);
-            return error ? insn.setErrorIf(at, error) : OK;
-        }
-        if (strcasecmp_P(insn.name(), OPT_BOOL_LWORDMODE) == 0) {
-            const auto error = _opt_lwordmode.set(scan);
-            return error ? insn.setErrorIf(at, error) : OK;
-        }
-    }
-    return Assembler::processPseudo(scan, insn);
-}
-
-void Ddir::operator=(const AsmInsn &insn) {
-    _prefix = insn.prefix();
-    _opc = insn.opCode();
-    _addr = insn.address();
-}
-
-void Ddir::setImmediate(DdName dd) {
-    if (_prefix == 0) {
-        _prefix = (dd == DD_IB) ? 0xDD : 0xFD;
-        _opc = 0xC3;
-    } else {
-        _opc |= dd;
-    }
-}
-
-bool Ddir::setMode(DdName dd) {
-    if (dd != DD_UNDEF && _prefix == 0) {
-        _prefix = (dd == DD_W) ? 0xDD : 0xFD;
-        _opc = 0xC0;
-    }
-    return dd != DD_UNDEF;
 }
 
 Error AsmZ80::encodeImpl(StrScanner &scan, Insn &_insn) const {
@@ -839,23 +513,9 @@ Error AsmZ80::encodeImpl(StrScanner &scan, Insn &_insn) const {
     if (searchName(cpuType(), insn))
         return _insn.setError(insn.dstOp, insn);
 
-    if (_ddir) {
-        insn.setErrorIf(_insn.errorAt(), insn.fixup(_ddir));
-        if (insn.lmCapable() && !_ddir.noMode() && !_ddir.noImmediate() && !insn.imCapable()) {
-            insn.setErrorIf(_insn.errorAt(), SUBOPTIMAL_INSTRUCTION);
-            insn.resetAddress(_ddir.addr());
-            insn.ddir.setMode(_ddir.lwordMode() ? DD_LW : DD_W);
-            _ddir.clear();
-        }
-    }
     encodeOperand(insn, insn.dstOp, insn.dst(), insn.srcOp);
     encodeOperand(insn, insn.srcOp, insn.src(), insn.dstOp);
     insn.emitInsn();
-    if (insn.dst() == M_DD && insn.isOK()) {
-        _ddir = insn;
-    } else {
-        _ddir.clear();
-    }
     return _insn.setError(insn);
 }
 
