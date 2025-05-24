@@ -14,21 +14,21 @@
  * limitations under the License.
  */
 
-#include "text_tms32010.h"
+#include "text_tms320.h"
 
 namespace libasm {
 namespace text {
-namespace tms32010 {
+namespace tms320 {
 
 // clang-format off
-constexpr char TEXT_TMS32010_LIST[] PROGMEM = "TMS32010, TMS32015, TMS32020, TMS320C25, TMS320C26";
+constexpr char TEXT_TMS320_LIST[] PROGMEM = "TMS32010, TMS32015, TMS32020, TMS320C25, TMS320C26";
 constexpr char TEXT_CPU_32010[] PROGMEM = "32010";
 constexpr char TEXT_CPU_32015[] PROGMEM = "32015";
 constexpr char TEXT_CPU_32020[] PROGMEM = "32020";
 constexpr char TEXT_CPU_320C25[] PROGMEM = "320C25";
 constexpr char TEXT_CPU_320C26[] PROGMEM = "320C26";
 
-// TMS32010
+// TMS320
 // constexpr char TEXT_ABS[]  PROGMEM = "ABS";
 // constexpr char TEXT_ADD[]  PROGMEM = "ADD";
 constexpr char TEXT_ADDH[] PROGMEM = "ADDH";
@@ -175,7 +175,7 @@ constexpr char TEXT_REG_PA[] PROGMEM = "PA";
 
 // clang-format on
 
-}  // namespace tms32010
+}  // namespace tms320
 }  // namespace text
 }  // namespace libasm
 

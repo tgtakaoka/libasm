@@ -15,13 +15,13 @@
  */
 
 #include <arduino_example.h>
-#include <asm_tms32010.h>
-#include <dis_tms32010.h>
+#include <asm_tms320.h>
+#include <dis_tms320.h>
 
-libasm::tms32010::AsmTms32010 asm32010;
-libasm::tms32010::DisTms32010 dis32010;
+libasm::tms320::AsmTms320 asm320;
+libasm::tms320::DisTms320 dis320;
 
-libasm::arduino::Example example(asm32010, dis32010);
+libasm::arduino::Example example(asm320, dis320);
 
 void setup() {
     Serial.begin(9600);

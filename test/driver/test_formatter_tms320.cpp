@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#include "asm_tms32010.h"
-#include "dis_tms32010.h"
+#include "asm_tms320.h"
+#include "dis_tms320.h"
 #include "test_formatter_helper.h"
 
 namespace libasm {
@@ -26,8 +26,8 @@ void set_up() {}
 
 void tear_down() {}
 
-void test_asm_tms32010() {
-    PREP_ASM(tms32010::AsmTms32010, IntelDirective);
+void test_asm_tms320() {
+    PREP_ASM(tms320::AsmTms320, IntelDirective);
 
     driver.setUpperHex(false);
 
@@ -53,8 +53,8 @@ label:  .word label
 )");
 }
 
-void test_dis_tms32010() {
-    PREP_DIS(tms32010::DisTms32010);
+void test_dis_tms320() {
+    PREP_DIS(tms320::DisTms320);
 
     driver.setUpperHex(false);
 
@@ -77,8 +77,8 @@ test.bin: error: Unknown instruction
 }
 
 void run_tests() {
-    RUN_TEST(test_asm_tms32010);
-    RUN_TEST(test_dis_tms32010);
+    RUN_TEST(test_asm_tms320);
+    RUN_TEST(test_dis_tms320);
 }
 
 }  // namespace test

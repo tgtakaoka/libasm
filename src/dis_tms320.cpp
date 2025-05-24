@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-#include "dis_tms32010.h"
-#include "reg_tms32010.h"
-#include "table_tms32010.h"
+#include "dis_tms320.h"
+#include "reg_tms320.h"
+#include "table_tms320.h"
 #include "text_common.h"
 
 namespace libasm {
-namespace tms32010 {
+namespace tms320 {
 
 using namespace reg;
 using namespace text::common;
@@ -34,7 +34,7 @@ const char OPT_DESC_USE_PORT_NAME[] PROGMEM = "use port name PAn";
 
 }  // namespace
 
-const ValueFormatter::Plugins &DisTms32010::defaultPlugins() {
+const ValueFormatter::Plugins &DisTms320::defaultPlugins() {
     static const struct final : ValueFormatter::Plugins {
         const HexFormatter &hex() const override { return _hex; }
         char locationSymbol() const override { return '$'; }
@@ -44,33 +44,33 @@ const ValueFormatter::Plugins &DisTms32010::defaultPlugins() {
     return PLUGINS;
 }
 
-DisTms32010::DisTms32010(const ValueFormatter::Plugins &plugins)
+DisTms320::DisTms320(const ValueFormatter::Plugins &plugins)
     : Disassembler(plugins, &_opt_useAuxName),
       Config(TABLE),
-      _opt_useAuxName(this, &DisTms32010::setUseAuxName, OPT_BOOL_USE_REG_NAME,
+      _opt_useAuxName(this, &DisTms320::setUseAuxName, OPT_BOOL_USE_REG_NAME,
               OPT_DESC_USE_REG_NAME, &_opt_usePortName),
       _opt_usePortName(
-              this, &DisTms32010::setUsePortName, OPT_BOOL_USE_PORT_NAME, OPT_DESC_USE_PORT_NAME) {
+              this, &DisTms320::setUsePortName, OPT_BOOL_USE_PORT_NAME, OPT_DESC_USE_PORT_NAME) {
     reset();
 }
 
-void DisTms32010::reset() {
+void DisTms320::reset() {
     Disassembler::reset();
     setUseAuxName(true);
     setUsePortName(true);
 }
 
-Error DisTms32010::setUseAuxName(bool enable) {
+Error DisTms320::setUseAuxName(bool enable) {
     _useAuxName = enable;
     return OK;
 }
 
-Error DisTms32010::setUsePortName(bool enable) {
+Error DisTms320::setUsePortName(bool enable) {
     _usePortName = enable;
     return OK;
 }
 
-StrBuffer &DisTms32010::outDirect(StrBuffer &out, DisInsn &insn) const {
+StrBuffer &DisTms320::outDirect(StrBuffer &out, DisInsn &insn) const {
     const auto dma = toDmAddr(insn.opCode());
     if (!validDmAddr(insn.opCode(), dma))
         insn.setErrorIf(out, OVERFLOW_RANGE);
@@ -78,7 +78,7 @@ StrBuffer &DisTms32010::outDirect(StrBuffer &out, DisInsn &insn) const {
     return out;
 }
 
-StrBuffer &DisTms32010::outIndirect(StrBuffer &out, uint8_t mam) const {
+StrBuffer &DisTms320::outIndirect(StrBuffer &out, uint8_t mam) const {
     const auto modify = (mam >> 4) & 7;
     out.letter('*');
     if (modify == 4 || modify == 7)
@@ -92,28 +92,28 @@ StrBuffer &DisTms32010::outIndirect(StrBuffer &out, uint8_t mam) const {
     return out;
 }
 
-StrBuffer &DisTms32010::outAuxiliary(StrBuffer &out, uint_fast8_t no) const {
+StrBuffer &DisTms320::outAuxiliary(StrBuffer &out, uint_fast8_t no) const {
     no &= maxAR();
     if (_useAuxName)
         return outRegName(out, decodeAR(no));
     return outDec(out, no, 3);
 }
 
-StrBuffer &DisTms32010::outPort(StrBuffer &out, uint_fast8_t no) const {
+StrBuffer &DisTms320::outPort(StrBuffer &out, uint_fast8_t no) const {
     no &= maxPA();
     if (_usePortName)
         return outRegName(out, decodePA(no));
     return outDec(out, no, 4);
 };
 
-StrBuffer &DisTms32010::outProgramAddress(StrBuffer &out, DisInsn &insn) const {
+StrBuffer &DisTms320::outProgramAddress(StrBuffer &out, DisInsn &insn) const {
     const auto pma = insn.readUint16();
     const auto error = insn.setErrorIf(out, checkAddr(pma));
     outAbsAddr(out, pma, error ? ADDRESS_16BIT : 0);
     return out;
 }
 
-bool DisTms32010::hasValue(DisInsn &insn, AddrMode mode) const {
+bool DisTms320::hasValue(DisInsn &insn, AddrMode mode) const {
     const auto opc = insn.opCode();
     if (mode == M_NARP) {
         return is3201x() ? (opc & 0x88) == 0x80 : (opc & 0x88) == 0x88;
@@ -129,7 +129,7 @@ bool DisTms32010::hasValue(DisInsn &insn, AddrMode mode) const {
     return mode != M_NONE;
 }
 
-void DisTms32010::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) const {
+void DisTms320::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) const {
     const auto opc = insn.opCode();
     switch (mode) {
     case M_MAM:
@@ -191,7 +191,7 @@ void DisTms32010::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) co
     }
 }
 
-Error DisTms32010::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) const {
+Error DisTms320::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) const {
     DisInsn insn(_insn, memory, out);
     insn.setOpCode(insn.readUint16());
     if (searchOpCode(cpuType(), insn, out))
@@ -210,7 +210,7 @@ Error DisTms32010::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) co
     return _insn.setError(insn);
 }
 
-}  // namespace tms32010
+}  // namespace tms320
 }  // namespace libasm
 
 // Local Variables:

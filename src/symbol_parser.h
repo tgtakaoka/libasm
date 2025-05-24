@@ -154,8 +154,8 @@ struct Pdp8SymbolParser final : SymbolParser, Singleton<Pdp8SymbolParser> {
     bool instructionTerminator(char c) const override;
 };
 
-struct Tms32010SymbolParser final : SimpleSymbolParser, Singleton<Tms32010SymbolParser> {
-    Tms32010SymbolParser() : SimpleSymbolParser(text::common::PSTR_UNDER_DOLLAR) {}
+struct Tms320SymbolParser final : SimpleSymbolParser, Singleton<Tms320SymbolParser> {
+    Tms320SymbolParser() : SimpleSymbolParser(text::common::PSTR_UNDER_DOLLAR) {}
     bool instructionLetter(char c) const override;
 };
 

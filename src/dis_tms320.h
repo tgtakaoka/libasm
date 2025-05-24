@@ -14,18 +14,18 @@
  * limitations under the License.
  */
 
-#ifndef __LIBASM_DIS_TMS32010_H__
-#define __LIBASM_DIS_TMS32010_H__
+#ifndef __LIBASM_DIS_TMS320_H__
+#define __LIBASM_DIS_TMS320_H__
 
-#include "config_tms32010.h"
+#include "config_tms320.h"
 #include "dis_base.h"
-#include "insn_tms32010.h"
+#include "insn_tms320.h"
 
 namespace libasm {
-namespace tms32010 {
+namespace tms320 {
 
-struct DisTms32010 final : Disassembler, Config {
-    DisTms32010(const ValueFormatter::Plugins &plugins = defaultPlugins());
+struct DisTms320 final : Disassembler, Config {
+    DisTms320(const ValueFormatter::Plugins &plugins = defaultPlugins());
 
     void reset() override;
 
@@ -33,8 +33,8 @@ struct DisTms32010 final : Disassembler, Config {
     Error setUsePortName(bool enable);
 
 private:
-    const BoolOption<DisTms32010> _opt_useAuxName;
-    const BoolOption<DisTms32010> _opt_usePortName;
+    const BoolOption<DisTms320> _opt_useAuxName;
+    const BoolOption<DisTms320> _opt_usePortName;
 
     bool _useAuxName;
     bool _usePortName;
@@ -56,10 +56,10 @@ private:
     static const ValueFormatter::Plugins &defaultPlugins();
 };
 
-}  // namespace tms32010
+}  // namespace tms320
 }  // namespace libasm
 
-#endif  // __LIBASM_DIS_TMS32010_H__
+#endif  // __LIBASM_DIS_TMS320_H__
 
 // Local Variables:
 // mode: c++

@@ -14,24 +14,24 @@
  * limitations under the License.
  */
 
-#ifndef __LIBASM_TEXT_TMS32010__
-#define __LIBASM_TEXT_TMS32010__
+#ifndef __LIBASM_TEXT_TMS320__
+#define __LIBASM_TEXT_TMS320__
 
 #include "text_common.h"
 
 namespace libasm {
 namespace text {
-namespace tms32010 {
+namespace tms320 {
 
 // clang-format off
-extern const char TEXT_TMS32010_LIST[]  PROGMEM;
+extern const char TEXT_TMS320_LIST[]  PROGMEM;
 extern const char TEXT_CPU_32010[] PROGMEM;
 extern const char TEXT_CPU_32015[] PROGMEM;
 extern const char TEXT_CPU_32020[]  PROGMEM;
 extern const char TEXT_CPU_320C25[] PROGMEM;
 extern const char TEXT_CPU_320C26[] PROGMEM;
 
-// TMS32010
+// TMS320
 using common::TEXT_ABS;
 using common::TEXT_ADD;
 extern const char TEXT_ADDH[] PROGMEM;
@@ -178,11 +178,11 @@ extern const char TEXT_REG_PA[] PROGMEM;
 
 // clang-format on
 
-}  // namespace tms32010
+}  // namespace tms320
 }  // namespace text
 }  // namespace libasm
 
-#endif  // __LIBASM_TEXT_TMS32010__
+#endif  // __LIBASM_TEXT_TMS320__
 // Local Variables:
 // mode: c++
 // c-basic-offset: 4

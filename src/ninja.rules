@@ -179,12 +179,12 @@ build reg_tlcs90.o:   cxx ${root}/src/reg_tlcs90.cpp
 build table_tlcs90.o: cxx ${root}/src/table_tlcs90.cpp
 build text_tlcs90.o:  cxx ${root}/src/text_tlcs90.cpp
 
-# tms32010
-build asm_tms32010.o:   cxx ${root}/src/asm_tms32010.cpp
-build dis_tms32010.o:   cxx ${root}/src/dis_tms32010.cpp
-build reg_tms32010.o:   cxx ${root}/src/reg_tms32010.cpp
-build table_tms32010.o: cxx ${root}/src/table_tms32010.cpp
-build text_tms32010.o:  cxx ${root}/src/text_tms32010.cpp
+# tms320
+build asm_tms320.o:   cxx ${root}/src/asm_tms320.cpp
+build dis_tms320.o:   cxx ${root}/src/dis_tms320.cpp
+build reg_tms320.o:   cxx ${root}/src/reg_tms320.cpp
+build table_tms320.o: cxx ${root}/src/table_tms320.cpp
+build text_tms320.o:  cxx ${root}/src/text_tms320.cpp
 
 # tms370
 build asm_tms370.o:   cxx ${root}/src/asm_tms370.cpp

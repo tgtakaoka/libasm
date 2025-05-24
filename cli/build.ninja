@@ -48,7 +48,7 @@ build asm: link asm.o $
   asm_ns32000.o  reg_ns32000.o  table_ns32000.o  text_ns32000.o  $
   asm_scn2650.o  reg_scn2650.o  table_scn2650.o  text_scn2650.o  $
   asm_tlcs90.o   reg_tlcs90.o   table_tlcs90.o   text_tlcs90.o   $
-  asm_tms32010.o reg_tms32010.o table_tms32010.o text_tms32010.o $
+  asm_tms320.o   reg_tms320.o   table_tms320.o   text_tms320.o   $
   asm_tms370.o   reg_tms370.o   table_tms370.o   text_tms370.o   $
   asm_tms7000.o  reg_tms7000.o  table_tms7000.o  text_tms7000.o  $
   asm_tms9900.o  reg_tms9900.o  table_tms9900.o  text_tms9900.o  $
@@ -87,7 +87,7 @@ build dis: link dis.o $
   dis_ns32000.o  reg_ns32000.o  table_ns32000.o  text_ns32000.o  $
   dis_scn2650.o  reg_scn2650.o  table_scn2650.o  text_scn2650.o  $
   dis_tlcs90.o   reg_tlcs90.o   table_tlcs90.o   text_tlcs90.o   $
-  dis_tms32010.o reg_tms32010.o table_tms32010.o text_tms32010.o $
+  dis_tms320.o   reg_tms320.o   table_tms320.o   text_tms320.o   $
   dis_tms370.o   reg_tms370.o   table_tms370.o   text_tms370.o   $
   dis_tms7000.o  reg_tms7000.o  table_tms7000.o  text_tms7000.o  $
   dis_tms9900.o  reg_tms9900.o  table_tms9900.o  text_tms9900.o  $

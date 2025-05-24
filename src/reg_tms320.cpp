@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-#include "reg_tms32010.h"
+#include "reg_tms320.h"
 #include "reg_base.h"
-#include "text_tms32010.h"
+#include "text_tms320.h"
 
 using namespace libasm::reg;
-using namespace libasm::text::tms32010;
+using namespace libasm::text::tms320;
 
 namespace libasm {
-namespace tms32010 {
+namespace tms320 {
 namespace reg {
 
 RegName parseRegName(StrScanner &scan) {
@@ -57,7 +57,7 @@ uint_fast8_t encodeRegName(RegName name) {
 }
 
 }  // namespace reg
-}  // namespace tms32010
+}  // namespace tms320
 }  // namespace libasm
 
 // Local Variables:

@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-#include "dis_tms32010.h"
+#include "dis_tms320.h"
 #include "gen_driver.h"
 
-using namespace libasm::tms32010;
+using namespace libasm::tms320;
 using namespace libasm::gen;
 
 int main(int argc, const char **argv) {
-    DisTms32010 dis32010;
+    DisTms320 dis32010;
     GenDriver driver(dis32010);
     if (driver.main(argc, argv))
         return 1;

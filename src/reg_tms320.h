@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __LIBASM_REG_TMS32010_H__
-#define __LIBASM_REG_TMS32010_H__
+#ifndef __LIBASM_REG_TMS320_H__
+#define __LIBASM_REG_TMS320_H__
 
 #include <stdint.h>
 
@@ -23,7 +23,7 @@
 #include "str_scanner.h"
 
 namespace libasm {
-namespace tms32010 {
+namespace tms320 {
 
 enum RegName : int8_t {
     REG_UNDEF = -1,
@@ -60,10 +60,10 @@ StrBuffer &outRegName(StrBuffer &out, RegName name);
 uint_fast8_t encodeRegName(RegName name);
 
 }  // namespace reg
-}  // namespace tms32010
+}  // namespace tms320
 }  // namespace libasm
 
-#endif  // __LIBASM_REG_TMS32010_H__
+#endif  // __LIBASM_REG_TMS320_H__
 
 // Local Variables:
 // mode: c++

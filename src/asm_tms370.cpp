@@ -46,8 +46,8 @@ PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
 const ValueParser::Plugins &AsmTms370::defaultPlugins() {
     static const struct final : ValueParser::Plugins {
         const NumberParser &number() const override { return IntelNumberParser::singleton(); }
-        const SymbolParser &symbol() const override { return Tms32010SymbolParser::singleton(); }
-        const LetterParser &letter() const override { return Tms32010LetterParser::singleton(); }
+        const SymbolParser &symbol() const override { return Tms320SymbolParser::singleton(); }
+        const LetterParser &letter() const override { return Tms320LetterParser::singleton(); }
     } PLUGINS{};
     return PLUGINS;
 }

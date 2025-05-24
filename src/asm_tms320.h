@@ -14,18 +14,18 @@
  * limitations under the License.
  */
 
-#ifndef __LIBASM_ASM_TMS32010_H__
-#define __LIBASM_ASM_TMS32010_H__
+#ifndef __LIBASM_ASM_TMS320_H__
+#define __LIBASM_ASM_TMS320_H__
 
 #include "asm_base.h"
-#include "config_tms32010.h"
-#include "insn_tms32010.h"
+#include "config_tms320.h"
+#include "insn_tms320.h"
 
 namespace libasm {
-namespace tms32010 {
+namespace tms320 {
 
-struct AsmTms32010 final : Assembler, Config {
-    AsmTms32010(const ValueParser::Plugins &plugins = defaultPlugins());
+struct AsmTms320 final : Assembler, Config {
+    AsmTms320(const ValueParser::Plugins &plugins = defaultPlugins());
 
 private:
     Error parseOperand(StrScanner &scan, Operand &op) const;
@@ -41,10 +41,10 @@ private:
     static const ValueParser::Plugins &defaultPlugins();
 };
 
-}  // namespace tms32010
+}  // namespace tms320
 }  // namespace libasm
 
-#endif  // __LIBASM_ASM_TMS32010_H__
+#endif  // __LIBASM_ASM_TMS320_H__
 
 // Local Variables:
 // mode: c++

@@ -36,7 +36,7 @@ ARCHS = \
 	pdp8     \
 	scn2650  \
 	tlcs90   \
-	tms32010 \
+	tms320   \
 	tms370   \
 	tms7000  \
 	tms9900  \
@@ -74,7 +74,7 @@ TGT_pdp11    = j11 t11
 TGT_pdp8     = im6100 hd6120
 TGT_scn2650  = scn2650
 TGT_tlcs90   = tlcs90
-TGT_tms32010 = tms32010 tms320c25 tms320c26
+TGT_tms320   = tms32010 tms320c25 tms320c26
 TGT_tms370   = tms370
 TGT_tms7000  = tms7000
 TGT_tms9900  = tms9900 tms9980 tms9995 tms99105 tms99110

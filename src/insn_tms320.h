@@ -14,17 +14,17 @@
  * limitations under the License.
  */
 
-#ifndef __LIBASM_INSN_TMS32010_H__
-#define __LIBASM_INSN_TMS32010_H__
+#ifndef __LIBASM_INSN_TMS320_H__
+#define __LIBASM_INSN_TMS320_H__
 
-#include "config_tms32010.h"
-#include "entry_tms32010.h"
+#include "config_tms320.h"
+#include "entry_tms320.h"
 #include "insn_base.h"
-#include "reg_tms32010.h"
+#include "reg_tms320.h"
 #include "value.h"
 
 namespace libasm {
-namespace tms32010 {
+namespace tms320 {
 
 struct EntryInsn : EntryInsnBase<Config, Entry> {
     AddrMode mode1() const { return flags().mode1(); }
@@ -53,10 +53,10 @@ struct DisInsn final : DisInsnImpl<Config>, EntryInsn {
     DisInsn(Insn &insn, DisMemory &memory, const StrBuffer &out) : DisInsnImpl(insn, memory, out) {}
 };
 
-}  // namespace tms32010
+}  // namespace tms320
 }  // namespace libasm
 
-#endif  // __LIBASM_INSN_TMS32010_H__
+#endif  // __LIBASM_INSN_TMS320_H__
 
 // Local Variables:
 // mode: c++

@@ -24,6 +24,7 @@ AsmMc6800       KEYWORD1        libasm
 AsmMc6805       KEYWORD1        libasm
 AsmMc6809       KEYWORD1        libasm
 AsmMc68HC12     KEYWORD1        libasm
+AsmMc68HC16     KEYWORD1        libasm
 AsmMn1610       KEYWORD1        libasm
 AsmMos6502      KEYWORD1        libasm
 AsmNs32000      KEYWORD1        libasm
@@ -31,7 +32,7 @@ AsmPdp11        KEYWORD1        libasm
 AsmPdp8         KEYWORD1        libasm
 AsmScn2650      KEYWORD1        libasm
 AsmTlcs90       KEYWORD1        libasm
-AsmTms32010     KEYWORD1        libasm
+AsmTms320       KEYWORD1        libasm
 AsmTms370       KEYWORD1        libasm
 AsmTms7000      KEYWORD1        libasm
 AsmTms9900      KEYWORD1        libasm
@@ -52,6 +53,7 @@ DisMc6800       KEYWORD1        libasm
 DisMc6805       KEYWORD1        libasm
 DisMc6809       KEYWORD1        libasm
 DisMc68HC12     KEYWORD1        libasm
+DisMc68HC16     KEYWORD1        libasm
 DisMn1610       KEYWORD1        libasm
 DisMos6502      KEYWORD1        libasm
 DisNs32000      KEYWORD1        libasm
@@ -59,7 +61,7 @@ DisPdp11        KEYWORD1        libasm
 DisPdp8         KEYWORD1        libasm
 DisScn2650      KEYWORD1        libasm
 DisTlcs90       KEYWORD1        libasm
-DisTms32010     KEYWORD1        libasm
+DisTms320       KEYWORD1        libasm
 DisTms370       KEYWORD1        libasm
 DisTms7000      KEYWORD1        libasm
 DisTms9900      KEYWORD1        libasm

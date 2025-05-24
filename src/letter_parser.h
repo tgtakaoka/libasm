@@ -148,7 +148,7 @@ struct Pdp8LetterParser final : LetterParser, Singleton<Pdp8LetterParser> {
     char readLetter(StrScanner &scan, ErrorAt &error, char delim) const override;
 };
 
-struct Tms32010LetterParser final : LetterParser, Singleton<Tms32010LetterParser> {
+struct Tms320LetterParser final : LetterParser, Singleton<Tms320LetterParser> {
     char stringDelimiter(StrScanner &scan) const override { return scan.expect('"'); }
 };
 

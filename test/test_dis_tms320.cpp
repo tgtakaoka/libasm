@@ -15,15 +15,15 @@
  */
 
 #include "array_memory.h"
-#include "dis_tms32010.h"
+#include "dis_tms320.h"
 #include "test_dis_helper.h"
 
 using namespace libasm;
-using namespace libasm::tms32010;
+using namespace libasm::tms320;
 using namespace libasm::test;
 
-DisTms32010 dis32010;
-Disassembler &disassembler(dis32010);
+DisTms320 dis320;
+Disassembler &disassembler(dis320);
 
 bool is32010() {
     return strcmp_P("32010", disassembler.config().cpu_P()) == 0;

@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-#ifndef __LIBASM_CONFIG_TMS32010_H__
-#define __LIBASM_CONFIG_TMS32010_H__
+#ifndef __LIBASM_CONFIG_TMS320_H__
+#define __LIBASM_CONFIG_TMS320_H__
 
 #include "config_base.h"
-#include "reg_tms32010.h"
+#include "reg_tms320.h"
 
 namespace libasm {
-namespace tms32010 {
+namespace tms320 {
 
 enum CpuType : uint8_t {
     TMS32010,
@@ -95,10 +95,10 @@ protected:
     static constexpr auto PAGE1_MAX = UINT16_C(0x00FF);
 };
 
-}  // namespace tms32010
+}  // namespace tms320
 }  // namespace libasm
 
-#endif  // __LIBASM_CONFIG_TMS32010_H__
+#endif  // __LIBASM_CONFIG_TMS320_H__
 
 // Local Variables:
 // mode: c++

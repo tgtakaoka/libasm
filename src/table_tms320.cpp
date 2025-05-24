@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-#include "table_tms32010.h"
+#include "table_tms320.h"
 #include "entry_table.h"
-#include "entry_tms32010.h"
-#include "text_tms32010.h"
+#include "entry_tms320.h"
+#include "text_tms320.h"
 
-using namespace libasm::text::tms32010;
+using namespace libasm::text::tms320;
 
 namespace libasm {
-namespace tms32010 {
+namespace tms320 {
 
 #define E3(_opc, _cf, _name, _opr1, _opr2, _opr3) \
     {_opc, Entry::Flags::create(_cf, _opr1, _opr2, _opr3), _name}
@@ -589,16 +589,16 @@ Error searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) {
     return insn.getError();
 }
 
-const /*PROGMEM*/ char *TableTms32010::listCpu_P() const {
-    return TEXT_TMS32010_LIST;
+const /*PROGMEM*/ char *TableTms320::listCpu_P() const {
+    return TEXT_TMS320_LIST;
 }
 
-const /*PROGMEM*/ char *TableTms32010::cpuName_P(CpuType cpuType) const {
+const /*PROGMEM*/ char *TableTms320::cpuName_P(CpuType cpuType) const {
     return cpu(cpuType)->name_P();
 }
 
-Error TableTms32010::searchCpuName(StrScanner &name, CpuType &cpuType) const {
-    name.iexpectText_P(TEXT_TMS32010_LIST, 3);  // Ignore "TMS" if exist
+Error TableTms320::searchCpuName(StrScanner &name, CpuType &cpuType) const {
+    name.iexpectText_P(TEXT_TMS320_LIST, 3);  // Ignore "TMS" if exist
     const auto t = Cpu::search(name, ARRAY_RANGE(CPU_TABLE));
     if (t) {
         cpuType = t->readCpuType();
@@ -608,9 +608,9 @@ Error TableTms32010::searchCpuName(StrScanner &name, CpuType &cpuType) const {
     return OK;
 }
 
-const TableTms32010 TABLE;
+const TableTms320 TABLE;
 
-}  // namespace tms32010
+}  // namespace tms320
 }  // namespace libasm
 
 // Local Variables:

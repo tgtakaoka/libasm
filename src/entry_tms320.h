@@ -14,16 +14,16 @@
  * limitations under the License.
  */
 
-#ifndef __LIBASM_ENTRY_TMS32010_H__
-#define __LIBASM_ENTRY_TMS32010_H__
+#ifndef __LIBASM_ENTRY_TMS320_H__
+#define __LIBASM_ENTRY_TMS320_H__
 
 #include <stdint.h>
 
-#include "config_tms32010.h"
+#include "config_tms320.h"
 #include "entry_base.h"
 
 namespace libasm {
-namespace tms32010 {
+namespace tms320 {
 
 enum AddrMode : uint8_t {
     // T=table, P=parser. M_IM1~M_CNST must be a constant.
@@ -52,7 +52,7 @@ enum AddrMode : uint8_t {
     M_MAR = 19,   // T_: Modify AR                   ---- ---- 1vpm ----
     M_CNST = 20,  // _P: constant
     // M_ARP..M_DBR0 must be contiguous in this order.
-    // See AsmTms32010::encodeIndirect
+    // See AsmTms320::encodeIndirect
     M_ARP = 21,   // _P: "*"   Indirect addressing
     M_INC = 22,   // _P: "*+"  Indirect then auto increment addressing
     M_DEC = 23,   // _P: "*-"  Indirect then auto decrement addressing
@@ -125,10 +125,10 @@ private:
     const Flags _flags_P;
 };
 
-}  // namespace tms32010
+}  // namespace tms320
 }  // namespace libasm
 
-#endif  // __LIBASM_ENTRY_TMS32010_H__
+#endif  // __LIBASM_ENTRY_TMS320_H__
 
 // Local Variables:
 // mode: c++

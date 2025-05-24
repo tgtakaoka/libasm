@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-#include "asm_tms32010.h"
+#include "asm_tms320.h"
 #include "test_asm_helper.h"
 
 using namespace libasm;
-using namespace libasm::tms32010;
+using namespace libasm::tms320;
 using namespace libasm::test;
 
-AsmTms32010 asm32010;
-Assembler &assembler(asm32010);
+AsmTms320 asm320;
+Assembler &assembler(asm320);
 
 bool is32010() {
     return strcmp_P("32010", assembler.config().cpu_P()) == 0;

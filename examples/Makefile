@@ -45,7 +45,7 @@ EXS = \
 	pdp8     \
 	scn2650  \
 	tlcs90   \
-	tms32010 \
+	tms320   \
 	tms370   \
 	tms7000  \
 	tms9900  \

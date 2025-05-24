@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-#include "asm_tms32010.h"
-#include "table_tms32010.h"
+#include "asm_tms320.h"
+#include "table_tms320.h"
 #include "text_common.h"
 
 namespace libasm {
-namespace tms32010 {
+namespace tms320 {
 
 using namespace pseudo;
 using namespace reg;
@@ -42,22 +42,22 @@ PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
 
 }  // namespace
 
-const ValueParser::Plugins &AsmTms32010::defaultPlugins() {
+const ValueParser::Plugins &AsmTms320::defaultPlugins() {
     static const struct final : ValueParser::Plugins {
         const NumberParser &number() const override { return IntelNumberParser::singleton(); }
-        const CommentParser &comment() const override { return Tms32010CommentParser::singleton(); }
-        const SymbolParser &symbol() const override { return Tms32010SymbolParser::singleton(); }
-        const LetterParser &letter() const override { return Tms32010LetterParser::singleton(); }
+        const CommentParser &comment() const override { return Tms320CommentParser::singleton(); }
+        const SymbolParser &symbol() const override { return Tms320SymbolParser::singleton(); }
+        const LetterParser &letter() const override { return Tms320LetterParser::singleton(); }
     } PLUGINS{};
     return PLUGINS;
 }
 
-AsmTms32010::AsmTms32010(const ValueParser::Plugins &plugins)
+AsmTms320::AsmTms320(const ValueParser::Plugins &plugins)
     : Assembler(plugins, PSEUDO_TABLE), Config(TABLE) {
     reset();
 }
 
-void AsmTms32010::encodeIndirect(AsmInsn &insn, const Operand &op) const {
+void AsmTms320::encodeIndirect(AsmInsn &insn, const Operand &op) const {
     static constexpr uint8_t MAR[] PROGMEM = {
             0x80,  // M_ARP: *
             0xA0,  // M_INC: *+
@@ -71,14 +71,14 @@ void AsmTms32010::encodeIndirect(AsmInsn &insn, const Operand &op) const {
         insn.embed(pgm_read_byte(&MAR[op.mode - M_ARP]));
 }
 
-void AsmTms32010::encodeDirect(AsmInsn &insn, const Operand &op) const {
+void AsmTms320::encodeDirect(AsmInsn &insn, const Operand &op) const {
     const auto dma = op.val.getUnsigned();
     if (op.val.isNegative() || !validDmAddr(insn.opCode(), dma))
         insn.setErrorIf(op, OVERFLOW_RANGE);
     insn.embed(dma & 0x7F);
 }
 
-void AsmTms32010::encodeNextAR(AsmInsn &insn, const Operand &op) const {
+void AsmTms320::encodeNextAR(AsmInsn &insn, const Operand &op) const {
     if ((insn.opCode() & 0x80) == 0)
         return;
     if (op.mode == M_NONE) {
@@ -96,7 +96,7 @@ void AsmTms32010::encodeNextAR(AsmInsn &insn, const Operand &op) const {
     insn.embed(val);
 }
 
-void AsmTms32010::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode) const {
+void AsmTms320::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode) const {
     insn.setErrorIf(op);
     auto val = op.val.getUnsigned();
     auto max = UINT16_MAX;
@@ -193,7 +193,7 @@ void AsmTms32010::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode)
     }
 }
 
-Error AsmTms32010::parseOperand(StrScanner &scan, Operand &op) const {
+Error AsmTms320::parseOperand(StrScanner &scan, Operand &op) const {
     auto p = scan.skipSpaces();
     op.setAt(p);
     if (endOfLine(p))
@@ -235,7 +235,7 @@ Error AsmTms32010::parseOperand(StrScanner &scan, Operand &op) const {
     return OK;
 }
 
-Error AsmTms32010::encodeImpl(StrScanner &scan, Insn &_insn) const {
+Error AsmTms320::encodeImpl(StrScanner &scan, Insn &_insn) const {
     AsmInsn insn(_insn);
     if (parseOperand(scan, insn.op1) && insn.op1.hasError())
         return _insn.setError(insn.op1);
@@ -260,7 +260,7 @@ Error AsmTms32010::encodeImpl(StrScanner &scan, Insn &_insn) const {
     return _insn.setErrorIf(insn);
 }
 
-}  // namespace tms32010
+}  // namespace tms320
 }  // namespace libasm
 
 // Local Variables:

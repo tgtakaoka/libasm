@@ -14,30 +14,30 @@
  * limitations under the License.
  */
 
-#ifndef __LIBASM_TABLE_TMS32010_H__
-#define __LIBASM_TABLE_TMS32010_H__
+#ifndef __LIBASM_TABLE_TMS320_H__
+#define __LIBASM_TABLE_TMS320_H__
 
-#include "config_tms32010.h"
-#include "insn_tms32010.h"
+#include "config_tms320.h"
+#include "insn_tms320.h"
 
 namespace libasm {
-namespace tms32010 {
+namespace tms320 {
 
-struct TableTms32010 final : InsnTable<CpuType> {
+struct TableTms320 final : InsnTable<CpuType> {
     const /*PROGMEM*/ char *listCpu_P() const override;
     const /*PROGMEM*/ char *cpuName_P(CpuType cpuType) const override;
     Error searchCpuName(StrScanner &name, CpuType &cpuType) const override;
 };
 
-extern const TableTms32010 TABLE;
+extern const TableTms320 TABLE;
 
 Error searchName(CpuType, AsmInsn &insn);
 Error searchOpCode(CpuType, DisInsn &insn, StrBuffer &out);
 
-}  // namespace tms32010
+}  // namespace tms320
 }  // namespace libasm
 
-#endif  // __LIBASM_TABLE_TMS32010_H__
+#endif  // __LIBASM_TABLE_TMS320_H__
 
 // Local Variables:
 // mode: c++

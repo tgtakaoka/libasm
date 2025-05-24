@@ -74,7 +74,7 @@ struct Pdp8CommentParser final : CommentParser, Singleton<Pdp8CommentParser> {
     bool endOfLine(StrScanner &scan) const override;
 };
 
-struct Tms32010CommentParser final : CommentParser, Singleton<Tms32010CommentParser> {
+struct Tms320CommentParser final : CommentParser, Singleton<Tms320CommentParser> {
     bool commentLine(StrScanner &scan) const override { return *scan == '*'; }
     bool endOfLine(StrScanner &scan) const override {
         return SemicolonCommentParser::singleton().endOfLine(scan);

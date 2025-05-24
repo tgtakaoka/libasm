@@ -122,10 +122,10 @@ build test_asm_tlcs90.o: cxx ${root}/test/test_asm_tlcs90.cpp
 build test_dis_tlcs90.o: cxx ${root}/test/test_dis_tlcs90.cpp
 build gen_tlcs90.o:      cxx ${root}/test/gen_tlcs90.cpp
 
-# tms32010
-build test_asm_tms32010.o: cxx ${root}/test/test_asm_tms32010.cpp
-build test_dis_tms32010.o: cxx ${root}/test/test_dis_tms32010.cpp
-build gen_tms32010.o:      cxx ${root}/test/gen_tms32010.cpp
+# tms320
+build test_asm_tms320.o: cxx ${root}/test/test_asm_tms320.cpp
+build test_dis_tms320.o: cxx ${root}/test/test_dis_tms320.cpp
+build gen_tms320.o:      cxx ${root}/test/gen_tms320.cpp
 
 # tms370
 build test_asm_tms370.o: cxx ${root}/test/test_asm_tms370.cpp

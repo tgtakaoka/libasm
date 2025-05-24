@@ -289,8 +289,8 @@ build test_formatter_tlcs90: test test_formatter_tlcs90.o $
   fixed64.o ieee_float.o float80_base.o float80_hard.o float80_soft.o $
   dec_float.o ibm_float.o test_driver_helper.o test_asserter.o
 
-build test_formatter_tms32010: test test_formatter_tms32010.o $
-  asm_tms32010.o dis_tms32010.o reg_tms32010.o table_tms32010.o text_tms32010.o $
+build test_formatter_tms320: test test_formatter_tms320.o $
+  asm_tms320.o dis_tms320.o reg_tms320.o table_tms320.o text_tms320.o $
   asm_base.o asm_directive.o asm_driver.o asm_formatter.o bin_decoder.o $
   bin_encoder.o bin_memory.o config_base.o dis_base.o dis_driver.o $
   dis_formatter.o error_reporter.o formatters.o function_store.o insn_base.o $
@@ -390,7 +390,7 @@ build test: phony test_helpers test_bin_memory test_intel_hex test_moto_srec $
   test_formatter_pdp8     $
   test_formatter_scn2650  $
   test_formatter_tlcs90   $
-  test_formatter_tms32010 $
+  test_formatter_tms320   $
   test_formatter_tms370   $
   test_formatter_tms7000  $
   test_formatter_tms9900  $

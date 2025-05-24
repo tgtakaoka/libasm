@@ -332,7 +332,7 @@ bool Pdp8SymbolParser::instructionTerminator(char c) const {
     return c == '*' || c == '=';
 }
 
-bool Tms32010SymbolParser::instructionLetter(char c) const {
+bool Tms320SymbolParser::instructionLetter(char c) const {
     return SimpleSymbolParser::instructionLetter(c) || c == '.';
 }
 
