@@ -34,7 +34,7 @@ private:
     const BoolOption<AsmZ80> _opt_lwordmode;
     mutable Ddir _ddir;
 
-    Error parseOperand(StrScanner &scan, Operand &op, const AsmInsn &insn) const;
+    Error parseOperand(StrScanner &scan, Operand &op) const;
 
     bool wordMode() const;
     bool lwordMode() const;
@@ -42,7 +42,7 @@ private:
     void encodeRelative(AsmInsn &insn, const Operand &op, AddrMode mode) const;
     void encodeAbsolute(AsmInsn &insn, const Operand &op, AddrMode mode) const;
     void encodeMemoryPointer(AsmInsn &insn, const Operand &op) const;
-    void encodeShortIndex(AsmInsn &insn, const Operand &op, AddrMode mode) const;
+    void encodeShortIndex(AsmInsn &insn, const Operand &op) const;
     void encodeLongIndex(AsmInsn &insn, const Operand &op) const;
     void encodeBaseIndex(AsmInsn &insn, const Operand &op, AddrMode mode) const;
     void encodePointerIndex(AsmInsn &insn, const Operand &op, AddrMode mode) const;

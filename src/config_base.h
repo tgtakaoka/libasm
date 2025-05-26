@@ -206,7 +206,7 @@ struct ConfigImpl : ConfigBase, ConfigSetter {
         return error;
     }
 
-    Error setFpuName(StrScanner &scan) override { return FLOAT_NOT_SUPPORTED; }
+    Error setFpuName(StrScanner &) override { return FLOAT_NOT_SUPPORTED; }
 
 private:
     const InsnTable<CPUTYPE> &_table;

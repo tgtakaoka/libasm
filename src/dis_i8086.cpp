@@ -417,6 +417,7 @@ void DisI8086::decodeStringInst(DisInsn &insn, StrBuffer &out) const {
         break;
     case OUTS:
         outRegName(out, REG_DX).comma();
+        // Fall-through
     case LODS:
         outMemReg(insn, out, overrideSeg(seg, REG_DS), 0, 4);
         break;

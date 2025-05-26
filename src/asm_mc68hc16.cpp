@@ -50,8 +50,7 @@ AsmMc68HC16::AsmMc68HC16(const ValueParser::Plugins &plugins)
     reset();
 }
 
-Config::ptrdiff_t AsmMc68HC16::calculateDisplacement(
-        AsmInsn &insn, const Operand &op, AddrMode mode) const {
+Config::ptrdiff_t AsmMc68HC16::calculateDisplacement(AsmInsn &insn, const Operand &op) const {
     const auto base = insn.address() + PC_OFFSET;
     const auto target = op.getError() ? base : op.val.getUnsigned();
     return branchDelta(base, target, insn, op);
@@ -131,7 +130,7 @@ void AsmMc68HC16::encodeRelative(AsmInsn &insn, const Operand &op, AddrMode mode
     const auto smartBranch = _smartBranch && (isBcc(insn) || isBsr(insn) || isBrxxx(insn));
     if (mode == M_RL8 && !smartBranch) {
     short_branch:
-        const auto delta = calculateDisplacement(insn, op, M_RL8);
+        const auto delta = calculateDisplacement(insn, op);
         const auto target = insn.address() + PC_OFFSET + delta;
         insn.setErrorIf(op, checkAddr(target, true));
         if (overflowDelta(delta, 8))
@@ -141,7 +140,7 @@ void AsmMc68HC16::encodeRelative(AsmInsn &insn, const Operand &op, AddrMode mode
     }
     if (mode == M_RL16 && !smartBranch) {
     long_branch:
-        const auto delta = calculateDisplacement(insn, op, M_RL16);
+        const auto delta = calculateDisplacement(insn, op);
         const auto target = insn.address() + PC_OFFSET + delta;
         insn.setErrorIf(op, checkAddr(target, true));
         if (overflowDelta(delta, 16))
@@ -149,7 +148,7 @@ void AsmMc68HC16::encodeRelative(AsmInsn &insn, const Operand &op, AddrMode mode
         insn.emitOperand16(delta);
         return;
     }
-    const auto delta = calculateDisplacement(insn, op, M_RL8);
+    const auto delta = calculateDisplacement(insn, op);
     if (op.getError() || overflowDelta(delta, 8)) {
         longBranch(insn);
         goto long_branch;

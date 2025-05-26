@@ -1183,7 +1183,7 @@ constexpr Cpu CPU_TABLE[] PROGMEM = {
         {MC68HC16, TEXT_CPU_68HC16, ARRAY_RANGE(MC68HC16_PAGES)},
 };
 
-const Cpu *cpu(CpuType cpuType) {
+const Cpu *cpu(CpuType) {
     return &CPU_TABLE[0];
 }
 
@@ -1236,7 +1236,7 @@ Error searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) {
     return insn.getError();
 }
 
-bool isPrefix(CpuType cpuType, Config::opcode_t code) {
+bool isPrefix(CpuType, Config::opcode_t code) {
     return code == 0x17 || code == 0x27 || code == 0x37;
 }
 
@@ -1250,8 +1250,7 @@ const /*PROGMEM*/ char *TableMc68HC16::cpuName_P(CpuType cpuType) const {
 
 Error TableMc68HC16::searchCpuName(StrScanner &name, CpuType &cpuType) const {
     auto p = name;
-    if (p.iexpectText_P(TEXT_CPU_MC68HC16, 2))
-        ;  // ignore prefix MC
+    p.iexpectText_P(TEXT_CPU_MC68HC16, 2);  // ignore prefix MC
     auto t = Cpu::search(p, ARRAY_RANGE(CPU_TABLE));
     if (t) {
         cpuType = t->readCpuType();

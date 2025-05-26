@@ -541,7 +541,7 @@ constexpr Cpu CPU_TABLE[] PROGMEM = {
         {TMS370, TEXT_CPU_TMS370, ARRAY_RANGE(TMS370_PAGES)},
 };
 
-const Cpu *cpu(CpuType cpuType) {
+const Cpu *cpu(CpuType) {
     return &CPU_TABLE[0];
 }
 

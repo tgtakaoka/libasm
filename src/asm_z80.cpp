@@ -274,7 +274,7 @@ void AsmZ80::encodeFullIndex(AsmInsn &insn, const Operand &op) const {
     }
 }
 
-void AsmZ80::encodeShortIndex(AsmInsn &insn, const Operand &op, AddrMode mode) const {
+void AsmZ80::encodeShortIndex(AsmInsn &insn, const Operand &op) const {
     if (z380()) {
         auto fixup = DD_UNDEF;
         if (!_ddir) {
@@ -412,7 +412,7 @@ void AsmZ80::encodeOperand(
     case M_SPX:
     case M_IDX:
     case M_IDX8:
-        encodeShortIndex(insn, op, mode);
+        encodeShortIndex(insn, op);
         /* Fall-through */
     case R_IDX:
     case I_IDX:
@@ -491,7 +491,7 @@ void AsmZ80::encodeOperand(
     case M_SR8X:
         if (op.reg == REG_H || op.reg == REG_L)
             insn.setErrorIf(op, REGISTER_NOT_ALLOWED);
-        // Fall-though
+        // Fall-through
     case M_SR8:
     case M_SRC:
         insn.embed(encodeDataReg(op.reg));
@@ -499,7 +499,7 @@ void AsmZ80::encodeOperand(
     case M_DR8X:
         if (op.reg == REG_H || op.reg == REG_L)
             insn.setErrorIf(op, REGISTER_NOT_ALLOWED);
-        // Fall-though
+        // Fall-through
     case M_DR8:
     case M_DST:
         insn.embed(encodeDataReg(op.reg) << 3);
@@ -556,7 +556,7 @@ void AsmZ80::encodeOperand(
     }
 }
 
-Error AsmZ80::parseOperand(StrScanner &scan, Operand &op, const AsmInsn &insn) const {
+Error AsmZ80::parseOperand(StrScanner &scan, Operand &op) const {
     auto p = scan.skipSpaces();
     op.setAt(p);
     if (endOfLine(p))
@@ -828,10 +828,10 @@ bool Ddir::setMode(DdName dd) {
 
 Error AsmZ80::encodeImpl(StrScanner &scan, Insn &_insn) const {
     AsmInsn insn(_insn);
-    if (parseOperand(scan, insn.dstOp, insn) && insn.dstOp.hasError())
+    if (parseOperand(scan, insn.dstOp) && insn.dstOp.hasError())
         return _insn.setError(insn.dstOp);
     if (scan.skipSpaces().expect(',')) {
-        if (parseOperand(scan, insn.srcOp, insn) && insn.srcOp.hasError())
+        if (parseOperand(scan, insn.srcOp) && insn.srcOp.hasError())
             return _insn.setError(insn.srcOp);
         scan.skipSpaces();
     }

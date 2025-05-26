@@ -30,7 +30,7 @@ struct AsmMc68HC16 final : Assembler, Config {
 private:
     Error parseOperand(StrScanner &scan, Operand &op) const;
 
-    Config::ptrdiff_t calculateDisplacement(AsmInsn &insn, const Operand &op, AddrMode mode) const;
+    Config::ptrdiff_t calculateDisplacement(AsmInsn &insn, const Operand &op) const;
     void encodeRelative(AsmInsn &insn, const Operand &op, AddrMode mode) const;
     void encodeRegisterList(AsmInsn &insn, const Operand &op) const;
     void encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode) const;

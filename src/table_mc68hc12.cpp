@@ -621,7 +621,7 @@ constexpr Cpu CPU_TABLE[] PROGMEM = {
         {MC68HC12, TEXT_CPU_68HC12, ARRAY_RANGE(MC68HC12_PAGES)},
 };
 
-const Cpu *cpu(CpuType cpuType) {
+const Cpu *cpu(CpuType) {
     return &CPU_TABLE[0];
 }
 
@@ -688,8 +688,7 @@ const /*PROGMEM*/ char *TableMc68HC12::cpuName_P(CpuType cpuType) const {
 
 Error TableMc68HC12::searchCpuName(StrScanner &name, CpuType &cpuType) const {
     auto p = name;
-    if (p.iexpectText_P(TEXT_CPU_MC68HC12, 2))
-        ;  // ignore prefix MC
+    p.iexpectText_P(TEXT_CPU_MC68HC12, 2);  // ignore prefix MC
     auto t = Cpu::search(p, ARRAY_RANGE(CPU_TABLE));
     if (t) {
         cpuType = t->readCpuType();

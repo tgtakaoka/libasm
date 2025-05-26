@@ -462,7 +462,7 @@ void AsmI8086::emitModReg(AsmInsn &insn, const Operand &op, OprPos pos) const {
             emitDirect(insn, op, pos);
             break;
         }
-        // Fall-trhough
+        // Fall-through
     case M_BMEM:
     case M_WMEM:
         if (insn.leaInsn() && op.seg != REG_UNDEF)
