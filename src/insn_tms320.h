@@ -35,8 +35,9 @@ struct EntryInsn : EntryInsnBase<Config, Entry> {
 struct Operand final : ErrorAt {
     AddrMode mode;
     RegName reg;
+    CcName cc;
     Value val;
-    Operand() : mode(M_NONE), reg(REG_UNDEF), val() {}
+    Operand() : mode(M_NONE), reg(REG_UNDEF), cc(CC_UNDEF), val() {}
 };
 
 struct AsmInsn final : AsmInsnImpl<Config>, EntryInsn {

@@ -161,26 +161,27 @@ void DisTms320::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) cons
     case M_PA:
         outPort(out, opc >> 8);
         break;
-    case M_IM1:
+    case M_UI1:
         out.letter((opc & 1) == 0 ? '0' : '1');
         break;
-    case M_IM2:
+    case M_UI2:
         outHex(out, opc & 3, 2);
         break;
-    case M_IM8:
+    case M_UI8:
         outDec(out, static_cast<uint8_t>(opc), 8);
         break;
-    case M_IM9:
+    case M_UI9:
         outHex(out, opc & 0x1FF, 9, false);
         break;
-    case M_IM13:
+    case M_SI13:
         // Sign extends 13-bit number as 0x1000 is a sign bit.
         outDec(out, signExtend(opc, 13), -13);
         break;
     case M_PM12:
         outProgramAddress(out, insn);
         break;
-    case M_IM16:
+    case M_SI16:
+    case M_UI16:
         outHex(out, insn.readUint16(), 16);
         break;
     case M_PM16:

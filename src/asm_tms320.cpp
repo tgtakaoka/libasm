@@ -102,7 +102,7 @@ void AsmTms320::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode) c
     auto max = UINT16_MAX;
     switch (mode) {
     case M_MAM:
-        if (op.mode == M_CNST) {
+        if (op.mode == M_UI16 || op.mode == M_LS16) {
             encodeDirect(insn, op);
         } else {
             encodeIndirect(insn, op);
@@ -146,28 +146,34 @@ void AsmTms320::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode) c
         if (mode == M_AR)
             goto embed_hi8;
         goto embed_const;
-    case M_IM1:
+    case M_STN:
+    case M_UI1:
         max = 1;
     check_const:
         if (op.val.overflow(max)) {
             val &= max;
             insn.setErrorIf(op, OVERFLOW_RANGE);
         }
+        if (mode == M_STN)
+            val <<= 8;
     embed_const:
         insn.embed(val);
         break;
-    case M_IM2:
+    case M_UI2:
         max = 3;
         goto check_const;
     case M_BIT:
         max = 15;
         goto embed_hi8;
-    case M_IM8:
+    case M_UI8:
+    case M_IMU8:
         max = UINT8_MAX;
         goto check_const;
-    case M_IM9:
+    case M_UI9:
+    case M_IMU9:
         max = 0x1FF;
         goto check_const;
+    case M_SI13:
     case M_IM13:
         if (op.val.overflow(0x0FFF, -0x1000))
             insn.setErrorIf(op, OVERFLOW_RANGE);
@@ -183,10 +189,23 @@ void AsmTms320::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode) c
         if (op.val.overflow(UINT16_MAX))
             insn.setErrorIf(op, OVERFLOW_RANGE);
         // Fall-through
+    case M_UI16:
+    case M_IMU16:
+        if (op.val.overflow(UINT16_MAX))
+            insn.setErrorIf(op, OVERFLOW_RANGE);
+        insn.emitOperand16(val);
+        break;
+    case M_SI16:
     case M_IM16:
         if (op.val.overflowUint16())
             insn.setErrorIf(op, OVERFLOW_RANGE);
         insn.emitOperand16(val);
+        break;
+    case M_CTL:
+        insn.embed(encodeControlName(op.reg));
+        break;
+    case M_CC:
+        insn.embed(encodeCcName(op.cc));
         break;
     default:
         break;
@@ -198,6 +217,19 @@ Error AsmTms320::parseOperand(StrScanner &scan, Operand &op) const {
     op.setAt(p);
     if (endOfLine(p))
         return OK;
+
+    if (p.expect('#')) {
+        op.val = parseInteger(p, op);
+        if (op.hasError())
+            return op.getError();
+        if (op.val.isNegative()) {
+            op.mode = M_IM16;
+        } else {
+            op.mode = op.val.overflow(UINT8_MAX) ? M_IMU16 : M_IMU8;
+        }
+        scan = p;
+        return OK;
+    }
 
     if (p.expect('*')) {
         auto s = p;
@@ -219,10 +251,27 @@ Error AsmTms320::parseOperand(StrScanner &scan, Operand &op) const {
         scan = p;
         return OK;
     }
-    op.reg = parseRegName(p);
+
+    op.cc = parseCcName(p, parser());
+    if (op.cc != CC_UNDEF) {
+        if (op.cc == CC_C || op.cc == CC_TC) {
+            op.mode = M_CCCTL;
+            op.reg = (op.cc == CC_C) ? REG_C : REG_TC;
+        } else {
+            op.mode = M_CC;
+        }
+        scan = p;
+        return OK;
+    }
+
+    op.reg = parseRegName(p, parser());
     if (op.reg != REG_UNDEF) {
-        op.mode = isAR(op.reg) ? M_AR : M_PA;
-        op.val.setUnsigned(encodeRegName(op.reg));
+        if (isControlName(op.reg)) {
+            op.mode = M_CTL;
+        } else {
+            op.mode = isAR(op.reg) ? M_AR : M_PA;
+            op.val.setUnsigned(encodeRegName(op.reg));
+        }
         scan = p;
         return OK;
     }
@@ -230,7 +279,11 @@ Error AsmTms320::parseOperand(StrScanner &scan, Operand &op) const {
     op.val = parseInteger(p, op);
     if (op.hasError())
         return op.getError();
-    op.mode = M_CNST;
+    if (op.val.isNegative()) {
+        op.mode = M_SI16;
+    } else {
+        op.mode = (op.val.getUnsigned() == 16) ? M_LS16 : M_UI16;
+    }
     scan = p;
     return OK;
 }

@@ -168,10 +168,44 @@ constexpr char TEXT_SUBK[] PROGMEM = "SUBK";
 constexpr char TEXT_ZALR[] PROGMEM = "ZALR";
 
 // TMS320C26
-constexpr char TEXT_CONF[]  = "CONF";
+constexpr char TEXT_CONF[] PROGMEM = "CONF";
+
+// TMS320C2X Enhanced instruction
+constexpr char TEXT_BCND[] PROGMEM = "BCND";
+constexpr char TEXT_BLDD[] PROGMEM = "BLDD";
+constexpr char TEXT_BLPD[] PROGMEM = "BLPD";
+// constexpr char TEXT_CLRC[] PROGMEM = "CLRC";
+constexpr char TEXT_LACC[] PROGMEM = "LACC";
+constexpr char TEXT_LACL[] PROGMEM = "LACL";
+// constexpr char TEXT_SETC[] PROGMEM = "SETC";
 
 constexpr char TEXT_REG_AR[] PROGMEM = "AR";
 constexpr char TEXT_REG_PA[] PROGMEM = "PA";
+
+// TMS320C2X Enhanced instruction
+constexpr char TEXT_REG_CNF[]  PROGMEM = "CNF";
+// constexpr char TEXT_REG_C[]    PROGMEM = "C";
+constexpr char TEXT_REG_HM[]   PROGMEM = "HM";
+constexpr char TEXT_REG_INTM[] PROGMEM = "INTM";
+constexpr char TEXT_REG_OVM[]  PROGMEM = "OVM";
+constexpr char TEXT_REG_SXM[]  PROGMEM = "SXM";
+// constexpr char TEXT_REG_TC[]   PROGMEM = "TC";
+constexpr char TEXT_REG_XF[]   PROGMEM = "XF";
+
+constexpr char TEXT_CC_BIO[] PROGMEM = "BIO";
+// constexpr char TEXT_CC_C[]   PROGMEM = "C";
+// constexpr char TEXT_CC_EQ[]  PROGMEM = "EQ";
+constexpr char TEXT_CC_GEQ[] PROGMEM = "GEQ";
+// constexpr char TEXT_CC_GT[]  PROGMEM = "GT";
+constexpr char TEXT_CC_LEQ[] PROGMEM = "LEQ";
+// constexpr char TEXT_CC_LT[]  PROGMEM = "LT";
+// constexpr char TEXT_CC_NC[]  PROGMEM = "NC";
+constexpr char TEXT_CC_NEQ[] PROGMEM = "NEQ";
+// constexpr char TEXT_CC_NOV[] PROGMEM = "NOV";
+constexpr char TEXT_CC_NTC[] PROGMEM = "NTC";
+// constexpr char TEXT_CC_OV[]  PROGMEM = "OV";
+constexpr char TEXT_CC_TC[]  PROGMEM = "TC";
+constexpr char TEXT_CC_UNC[] PROGMEM = "UNC";
 
 // clang-format on
 

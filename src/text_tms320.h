@@ -173,8 +173,42 @@ extern const char TEXT_ZALR[] PROGMEM;
 // TMS320C26
 extern const char TEXT_CONF[] PROGMEM;
 
+// TMS320C2X Enhanced instruction
+extern const char TEXT_BCND[] PROGMEM;
+extern const char TEXT_BLDD[] PROGMEM;
+extern const char TEXT_BLPD[] PROGMEM;
+using common::TEXT_CLRC;
+extern const char TEXT_LACC[] PROGMEM;
+extern const char TEXT_LACL[] PROGMEM;
+using common::TEXT_SETC;
+
 extern const char TEXT_REG_AR[] PROGMEM;
 extern const char TEXT_REG_PA[] PROGMEM;
+
+// TMS320C2X Enhanced instruction
+extern const char TEXT_REG_CNF[]  PROGMEM;
+using common::TEXT_REG_C;
+extern const char TEXT_REG_HM[]   PROGMEM;
+extern const char TEXT_REG_INTM[] PROGMEM;
+extern const char TEXT_REG_OVM[]  PROGMEM;
+extern const char TEXT_REG_SXM[]  PROGMEM;
+using common::TEXT_REG_TC;
+extern const char TEXT_REG_XF[]   PROGMEM;
+
+extern const char TEXT_CC_BIO[] PROGMEM;
+using common::TEXT_CC_C;
+using common::TEXT_CC_EQ;
+extern const char TEXT_CC_GEQ[] PROGMEM;
+using common::TEXT_CC_GT;
+extern const char TEXT_CC_LEQ[] PROGMEM;
+using common::TEXT_CC_LT;
+using common::TEXT_CC_NC;
+extern const char TEXT_CC_NEQ[] PROGMEM;
+using common::TEXT_CC_NOV;
+extern const char TEXT_CC_NTC[] PROGMEM;
+using common::TEXT_CC_OV;
+extern const char TEXT_CC_TC[]  PROGMEM;
+extern const char TEXT_CC_UNC[] PROGMEM;
 
 // clang-format on
 
