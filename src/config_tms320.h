@@ -42,12 +42,10 @@ protected:
     bool is3202x() const { return !is3201x(); }
     bool is320C2x() const { return cpuType() == TMS320C25 || cpuType() == TMS320C26; }
 
-            uint16_t dataMemoryMax() const {
-        if (is3201x()) {
+    uint16_t dataMemoryMax() const {
+        if (is3201x())
             return cpuType() == TMS32010 ? UINT16_C(0x8F) : PAGE1_MAX;
-        } else {
-            return cpuType() == TMS320C26 ? 0x7FF : 0x3FF;
-        }
+        return UINT16_MAX;
     }
 
     uint_fast8_t maxAR() const { return is3201x() ? 1 : 7; }
@@ -57,42 +55,48 @@ protected:
     RegName decodeAR(uint32_t r) const { return r <= maxAR() ? RegName(r + REG_AR0) : REG_UNDEF; }
     RegName decodePA(uint32_t r) const { return r <= maxPA() ? RegName(r + REG_PA0) : REG_UNDEF; }
 
-    bool isSST(opcode_t opc) const {
-        opc >>= 8;
-        return is3201x() ? opc == 0x7C            // SST
-                         : (opc & 0xFE) == 0x78;  // SST and SST1
+    bool isSST1x(opcode_t opc) const {
+        const uint8_t insn = opc >> 8;
+        return is3201x() && insn == 0x7C;  // SST
+    }
+
+    bool isSST2x(opcode_t opc) const {
+        const uint8_t insn = (opc >> 8) & 0xFE;
+        return is3202x() && insn == 0x78;  // SST and SST1;
     }
 
     bool validDmAddr(opcode_t opc, uint32_t dma) const {
-        uint16_t min = UINT16_C(0);
-        uint16_t max = dataMemoryMax();
-        if (isSST(opc)) {
-            if (is3201x()) {
-                // TMS3201x: SST destination must be in page 1.
-                min = PAGE1_MIN;
-            } else {
-                // TMS3202x: SST/SST1 destination must be in page 0.
-                min = PAGE0_MIN;
-                max = PAGE0_MAX;
-            }
+        auto min = PAGE0_MIN;
+        auto max = dataMemoryMax();
+        if (isSST1x(opc)) {
+            // TMS3201x: SST destination must be in page 1.
+            min = PAGE1_MIN;
+        }
+        if (isSST2x(opc)) {
+            // TMS3202x: SST/SST1 destination must be in page 0.
+            min = PAGE0_MIN;
+            max = PAGE0_MAX;
         }
         return dma >= min && dma <= max;
     }
 
     uint16_t toDmAddr(opcode_t opc) const {
-        auto dma = opc & 0x7F;
-        if (isSST(opc)) {
+        const uint8_t dma = opc & 0x7F;
+        if (isSST1x(opc)) {
             // TMS3201x: SST destination must be in page 1.
+            return PAGE1_MIN + dma;
+        }
+        if (isSST2x(opc)) {
             // TMS3202x: SST/SST1 destination must be in page 0.
-            return (is3201x() ? PAGE1_MIN : PAGE0_MIN) + dma;
+            return PAGE0_MIN + dma;
         }
         return dma;
     }
 
-    static constexpr auto PAGE0_MIN = UINT16_C(0x0000);
-    static constexpr auto PAGE0_MAX = UINT16_C(0x007F);
-    static constexpr auto PAGE1_MIN = UINT16_C(0x0080);
-    static constexpr auto PAGE1_MAX = UINT16_C(0x00FF);
+    static constexpr uint16_t PAGE0_MIN = 0x0000;
+    static constexpr uint16_t PAGE0_MAX = 0x007F;
+    static constexpr uint16_t PAGE1_MIN = 0x0080;
+    static constexpr uint16_t PAGE1_MAX = 0x00FF;
 };
 
 }  // namespace tms320
