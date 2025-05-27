@@ -569,7 +569,7 @@ constexpr char TEXT_REG_PCSR[] PROGMEM = "PCSR";
 // constexpr char TEXT_REG_PSR[]  PROGMEM = "PSR";
 constexpr char TEXT_REG_SCC[]  PROGMEM = "SCC";
 constexpr char TEXT_REG_SRP[]  PROGMEM = "SRP";
-constexpr char TEXT_REG_TC[]   PROGMEM = "TC";
+// constexpr char TEXT_REG_TC[]   PROGMEM = "TC";
 constexpr char TEXT_REG_VAL[]  PROGMEM = "VAL";
 
 // clang-format on

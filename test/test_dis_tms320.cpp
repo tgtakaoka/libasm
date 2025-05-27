@@ -1186,6 +1186,8 @@ void test_control_2x() {
         TEST("STC",  "", 0xCE33);
     }
 
+    TEST("TRAP", "", 0xCE1E);
+
     TEST("RPT", "00H",     0x4B00);
     TEST("RPT", "70H",     0x4B70);
     TEST("RPT", "*",       0x4B80);

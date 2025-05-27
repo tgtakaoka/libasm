@@ -636,6 +636,7 @@ constexpr char TEXT_REG_SP[]  PROGMEM = "SP";
 constexpr char TEXT_REG_S[]   PROGMEM = "S";
 constexpr char TEXT_REG_SR[]  PROGMEM = "SR";
 constexpr char TEXT_REG_ST[]  PROGMEM = "ST";
+constexpr char TEXT_REG_TC[]  PROGMEM = "TC";
 constexpr char TEXT_REG_T[]   PROGMEM = "T";
 constexpr char TEXT_REG_USP[] PROGMEM = "USP";
 constexpr char TEXT_REG_W[]   PROGMEM = "W";

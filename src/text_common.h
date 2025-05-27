@@ -640,6 +640,7 @@ extern const char TEXT_REG_SP[]  PROGMEM;
 extern const char TEXT_REG_S[]   PROGMEM;
 extern const char TEXT_REG_SR[]  PROGMEM;
 extern const char TEXT_REG_ST[]  PROGMEM;
+extern const char TEXT_REG_TC[]   PROGMEM;
 extern const char TEXT_REG_T[]   PROGMEM;
 extern const char TEXT_REG_USP[] PROGMEM;
 extern const char TEXT_REG_W[]   PROGMEM;

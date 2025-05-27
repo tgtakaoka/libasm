@@ -56,16 +56,16 @@ constexpr Entry TABLE_TMS32010[] PROGMEM = {
     E2(0x6B00, CF_00FF, TEXT_LTD,  M_MAM,  M_NARP),
     E2(0x6C00, CF_00FF, TEXT_LTA,  M_MAM,  M_NARP),
     E2(0x6D00, CF_00FF, TEXT_MPY,  M_MAM,  M_NARP),
-    E1(0x6E00, CF_0001, TEXT_LDPK, M_IM1),
+    E1(0x6E00, CF_0001, TEXT_LDPK, M_UI1),
     E2(0x6F00, CF_00FF, TEXT_LDP,  M_MAM,  M_NARP),
-    E2(0x7000, CF_01FF, TEXT_LARK, M_AR,   M_IM8),
+    E2(0x7000, CF_01FF, TEXT_LARK, M_AR,   M_UI8),
     E2(0x7800, CF_00FF, TEXT_XOR,  M_MAM,  M_NARP),
     E2(0x7900, CF_00FF, TEXT_AND,  M_MAM,  M_NARP),
     E2(0x7A00, CF_00FF, TEXT_OR,   M_MAM,  M_NARP),
     E2(0x7B00, CF_00FF, TEXT_LST,  M_MAM,  M_NARP),
     E2(0x7C00, CF_00FF, TEXT_SST,  M_MAM,  M_NARP),
     E2(0x7D00, CF_00FF, TEXT_TBLW, M_MAM,  M_NARP),
-    E1(0x7E00, CF_00FF, TEXT_LACK, M_IM8),
+    E1(0x7E00, CF_00FF, TEXT_LACK, M_UI8),
     E0(0x7F80, CF_0000, TEXT_NOP),
     E0(0x7F81, CF_0000, TEXT_DINT),
     E0(0x7F82, CF_0000, TEXT_EINT),
@@ -80,7 +80,7 @@ constexpr Entry TABLE_TMS32010[] PROGMEM = {
     E0(0x7F90, CF_0000, TEXT_SPAC),
     E0(0x7F9C, CF_0000, TEXT_PUSH),
     E0(0x7F9D, CF_0000, TEXT_POP),
-    E1(0x8000, CF_1FFF, TEXT_MPYK, M_IM13),
+    E1(0x8000, CF_1FFF, TEXT_MPYK, M_SI13),
     E1(0xF400, CF_0000, TEXT_BANZ, M_PM12),
     E1(0xF500, CF_0000, TEXT_BV,   M_PM12),
     E1(0xF600, CF_0000, TEXT_BIOZ, M_PM12),
@@ -157,7 +157,7 @@ constexpr uint8_t INDEX_TMS32010[] PROGMEM = {
      15,  // TEXT_ZALS
 };
 
-const Entry TABLE_TMS3202X[] PROGMEM = {
+constexpr Entry TABLE_TMS3202X[] PROGMEM = {
     E3(0x0000, CF_0FFF, TEXT_ADD,  M_MAM,  M_LS4,  M_NARP),
     E3(0x1000, CF_0FFF, TEXT_SUB,  M_MAM,  M_LS4,  M_NARP),
     E3(0x2000, CF_0FFF, TEXT_LAC,  M_MAM,  M_LS4,  M_NARP),
@@ -206,22 +206,22 @@ const Entry TABLE_TMS3202X[] PROGMEM = {
     E2(0x7A00, CF_00FF, TEXT_POPD, M_MAM,  M_NARP),
     E3(0x8000, CF_0FFF, TEXT_IN,   M_MAM,  M_PA,   M_NARP),
     E3(0x9000, CF_0FFF, TEXT_BIT,  M_MAM,  M_BIT,  M_NARP),
-    E1(0xA000, CF_1FFF, TEXT_MPYK, M_IM13),
-    E2(0xC000, CF_07FF, TEXT_LARK, M_AR,   M_IM8),
-    E1(0xC800, CF_01FF, TEXT_LDPK, M_IM9),
+    E1(0xA000, CF_1FFF, TEXT_MPYK, M_SI13),
+    E2(0xC000, CF_07FF, TEXT_LARK, M_AR,   M_UI8),
+    E1(0xC800, CF_01FF, TEXT_LDPK, M_UI9),
     E0(0xCA00, CF_0000, TEXT_ZAC),
-    E1(0xCA00, CF_00FF, TEXT_LACK, M_IM8),
-    E1(0xCB00, CF_00FF, TEXT_RPTK, M_IM8),
+    E1(0xCA00, CF_00FF, TEXT_LACK, M_UI8),
+    E1(0xCB00, CF_00FF, TEXT_RPTK, M_UI8),
     E0(0xCE00, CF_0000, TEXT_EINT),
     E0(0xCE01, CF_0000, TEXT_DINT),
     E0(0xCE02, CF_0000, TEXT_ROVM),
     E0(0xCE03, CF_0000, TEXT_SOVM),
     E0(0xCE06, CF_0000, TEXT_RSXM),
     E0(0xCE07, CF_0000, TEXT_SSXM),
-    E1(0xCE08, CF_0003, TEXT_SPM,  M_IM2),
+    E1(0xCE08, CF_0003, TEXT_SPM,  M_UI2),
     E0(0xCE0C, CF_0000, TEXT_RXF),
     E0(0xCE0D, CF_0000, TEXT_SXF),
-    E1(0xCE0E, CF_0001, TEXT_FORT, M_IM1),
+    E1(0xCE0E, CF_0001, TEXT_FORT, M_UI1),
     E0(0xCE14, CF_0000, TEXT_PAC),
     E0(0xCE15, CF_0000, TEXT_APAC),
     E0(0xCE16, CF_0000, TEXT_SPAC),
@@ -239,31 +239,31 @@ const Entry TABLE_TMS3202X[] PROGMEM = {
     E0(0xCE25, CF_0000, TEXT_BACC),
     E0(0xCE26, CF_0000, TEXT_RET),
     E0(0xCE27, CF_0000, TEXT_CMPL),
-    E1(0xCE50, CF_0003, TEXT_CMPR, M_IM2),
+    E1(0xCE50, CF_0003, TEXT_CMPR, M_UI2),
     E2(0xD000, CF_0700, TEXT_LRLK, M_AR,   M_PM16),
-    E2(0xD001, CF_0F00, TEXT_LALK, M_IM16, M_LS4),
-    E2(0xD002, CF_0F00, TEXT_ADLK, M_IM16, M_LS4),
-    E2(0xD003, CF_0F00, TEXT_SBLK, M_IM16, M_LS4),
-    E2(0xD004, CF_0F00, TEXT_ANDK, M_IM16, M_LS4),
-    E2(0xD005, CF_0F00, TEXT_ORK,  M_IM16, M_LS4),
-    E2(0xD006, CF_0F00, TEXT_XORK, M_IM16, M_LS4),
+    E2(0xD001, CF_0F00, TEXT_LALK, M_SI16, M_LS4),
+    E2(0xD002, CF_0F00, TEXT_ADLK, M_SI16, M_LS4),
+    E2(0xD003, CF_0F00, TEXT_SBLK, M_SI16, M_LS4),
+    E2(0xD004, CF_0F00, TEXT_ANDK, M_UI16, M_LS4),
+    E2(0xD005, CF_0F00, TEXT_ORK,  M_UI16, M_LS4),
+    E2(0xD006, CF_0F00, TEXT_XORK, M_UI16, M_LS4),
     E3(0xE000, CF_0FFF, TEXT_OUT,  M_MAM,  M_PA,   M_NARP),
-    E3(0xF080, CF_0000, TEXT_BV,   M_PM16, M_MAR,  M_NARP),
-    E3(0xF180, CF_0000, TEXT_BGZ,  M_PM16, M_MAR,  M_NARP),
-    E3(0xF280, CF_0000, TEXT_BLEZ, M_PM16, M_MAR,  M_NARP),
-    E3(0xF380, CF_0000, TEXT_BLZ,  M_PM16, M_MAR,  M_NARP),
-    E3(0xF480, CF_0000, TEXT_BGEZ, M_PM16, M_MAR,  M_NARP),
-    E3(0xF580, CF_0000, TEXT_BNZ,  M_PM16, M_MAR,  M_NARP),
-    E3(0xF680, CF_0000, TEXT_BZ,   M_PM16, M_MAR,  M_NARP),
-    E3(0xF780, CF_0000, TEXT_BNV,  M_PM16, M_MAR,  M_NARP),
-    E3(0xF880, CF_0000, TEXT_BBZ,  M_PM16, M_MAR,  M_NARP),
-    E3(0xF980, CF_0000, TEXT_BBNZ, M_PM16, M_MAR,  M_NARP),
-    E3(0xFA80, CF_0000, TEXT_BIOZ, M_PM16, M_MAR,  M_NARP),
-    E3(0xFB80, CF_0000, TEXT_BANZ, M_PM16, M_MAR,  M_NARP),
+    E3(0xF080, CF_007F, TEXT_BV,   M_PM16, M_MAR,  M_NARP),
+    E3(0xF180, CF_007F, TEXT_BGZ,  M_PM16, M_MAR,  M_NARP),
+    E3(0xF280, CF_007F, TEXT_BLEZ, M_PM16, M_MAR,  M_NARP),
+    E3(0xF380, CF_007F, TEXT_BLZ,  M_PM16, M_MAR,  M_NARP),
+    E3(0xF480, CF_007F, TEXT_BGEZ, M_PM16, M_MAR,  M_NARP),
+    E3(0xF580, CF_007F, TEXT_BNZ,  M_PM16, M_MAR,  M_NARP),
+    E3(0xF680, CF_007F, TEXT_BZ,   M_PM16, M_MAR,  M_NARP),
+    E3(0xF780, CF_007F, TEXT_BNV,  M_PM16, M_MAR,  M_NARP),
+    E3(0xF880, CF_007F, TEXT_BBZ,  M_PM16, M_MAR,  M_NARP),
+    E3(0xF980, CF_007F, TEXT_BBNZ, M_PM16, M_MAR,  M_NARP),
+    E3(0xFA80, CF_007F, TEXT_BIOZ, M_PM16, M_MAR,  M_NARP),
+    E3(0xFB80, CF_007F, TEXT_BANZ, M_PM16, M_MAR,  M_NARP),
     E3(0xFC00, CF_00FF, TEXT_BLKP, M_PM16, M_MAM,  M_NARP),
     E3(0xFD00, CF_00FF, TEXT_BLKD, M_PM16, M_MAM,  M_NARP),
-    E3(0xFE80, CF_0000, TEXT_CALL, M_PM16, M_MAR,  M_NARP),
-    E3(0xFF80, CF_0000, TEXT_B,    M_PM16, M_MAR,  M_NARP),
+    E3(0xFE80, CF_007F, TEXT_CALL, M_PM16, M_MAR,  M_NARP),
+    E3(0xFF80, CF_007F, TEXT_B,    M_PM16, M_MAR,  M_NARP),
 };
 
 constexpr uint8_t INDEX_TMS3202X[] PROGMEM = {
@@ -375,6 +375,14 @@ constexpr uint8_t INDEX_TMS3202X[] PROGMEM = {
      11,  // TEXT_ZALS
 };
 
+constexpr Entry TABLE_TMS32020[] PROGMEM = {
+    E0(0xCE82, CF_0000, TEXT_NORM),
+};
+
+constexpr uint8_t INDEX_TMS32020[] PROGMEM = {
+      0,  // TEXT_NORM
+};
+
 constexpr Entry TABLE_TMS320C2X[] PROGMEM = {
     E2(0x3A00, CF_00FF, TEXT_MPYA, M_MAM,  M_NARP),
     E2(0x3B00, CF_00FF, TEXT_MPYS, M_MAM,  M_NARP),
@@ -385,10 +393,10 @@ constexpr Entry TABLE_TMS320C2X[] PROGMEM = {
     E2(0x7B00, CF_00FF, TEXT_ZALR, M_MAM,  M_NARP),
     E2(0x7C00, CF_00FF, TEXT_SPL,  M_MAM,  M_NARP),
     E2(0x7D00, CF_00FF, TEXT_SPH,  M_MAM,  M_NARP),
-    E1(0x7E00, CF_00FF, TEXT_ADRK, M_IM8),
-    E1(0x7F00, CF_00FF, TEXT_SBRK, M_IM8),
-    E1(0xCC00, CF_00FF, TEXT_ADDK, M_IM8),
-    E1(0xCD00, CF_00FF, TEXT_SUBK, M_IM8),
+    E1(0x7E00, CF_00FF, TEXT_ADRK, M_UI8),
+    E1(0x7F00, CF_00FF, TEXT_SBRK, M_UI8),
+    E1(0xCC00, CF_00FF, TEXT_ADDK, M_UI8),
+    E1(0xCD00, CF_00FF, TEXT_SUBK, M_UI8),
     E0(0xCE30, CF_0000, TEXT_RC),
     E0(0xCE31, CF_0000, TEXT_SC),
     E0(0xCE32, CF_0000, TEXT_RTC),
@@ -431,12 +439,66 @@ constexpr uint8_t INDEX_TMS320C2X[] = {
       6,  // TEXT_ZALR
 };
 
-constexpr Entry TABLE_TMS32020[] = {
-    E0(0xCE82, CF_0000, TEXT_NORM),
+// Assembler only
+constexpr Entry TABLE_TMS320C2X_E[] PROGMEM = {
+    E3(0x4800, CF_00FF, TEXT_ADD,  M_MAM,  M_LS16, M_NARP), // ADDH
+    E3(0x4400, CF_00FF, TEXT_SUB,  M_MAM,  M_LS16, M_NARP), // SUBH
+    E3(0x2000, CF_0FFF, TEXT_LACC, M_MAM,  M_LS4,  M_NARP), // LAC
+    E2(0xD001, CF_0F00, TEXT_LACC, M_IM16, M_LS4),          // LALK
+    E3(0x4000, CF_00FF, TEXT_LACC, M_MAM,  M_LS16, M_NARP), // ZALH
+    E1(0xCA00, CF_00FF, TEXT_LACL, M_IMU8),                 // LACK/ZAC
+    E2(0x4100, CF_00FF, TEXT_LACL, M_MAM,  M_NARP),         // ZALS
+    E1(0xC800, CF_01FF, TEXT_LDP,  M_IMU9),                 // LDPK
+    E2(0xC000, CF_07FF, TEXT_LAR,  M_AR,   M_IMU8),         // LARK
+    E2(0xD000, CF_0700, TEXT_LAR,  M_AR,   M_IMU16),        // LRLK
+    E1(0xCC00, CF_00FF, TEXT_ADD,  M_IMU8),                 // ADDK
+    E1(0xCD00, CF_00FF, TEXT_SUB,  M_IMU8),                 // SUBK
+    E2(0xD002, CF_0F00, TEXT_ADD,  M_IM16, M_LS4),          // ADLK
+    E2(0xD003, CF_0F00, TEXT_SUB,  M_IM16, M_LS4),          // SBLK
+    E1(0xA000, CF_1FFF, TEXT_MPY,  M_IM13),                 // MPYK
+    E2(0xD004, CF_0F00, TEXT_AND,  M_IMU16, M_LS4),         // ANDK
+    E2(0xD005, CF_0F00, TEXT_OR,   M_IMU16, M_LS4),         // ORK
+    E2(0xD006, CF_0F00, TEXT_XOR,  M_IMU16, M_LS4),         // XORK
+    E2(0x0080, CF_0000, TEXT_BCND, M_PM16,  M_CC),          // B/BZ/BNZ/BLZ/BLEZ/BGZ/BGEZ/BNV/BV
+                                                            // BNC/BC/BIOZ/BBZ/BBNZ
+    E1(0xCB00, CF_00FF, TEXT_RPT,  M_IMU8),                 // RPTK
+    E1(0x5588, CF_0007, TEXT_MAR,  M_ARK),                  // LARP
+    E1(0xCE00, CF_0000, TEXT_CLRC, M_CTL),                  // RC/CNFD/EINT/ROVM/RSXM/RTC/RXF
+    E1(0xCE01, CF_0000, TEXT_SETC, M_CTL),                  // SC/CNFP/DINT/SOVM/SSXM/STC/SXF
+    E3(0x5000, CF_01FF, TEXT_LST,  M_STN,  M_MAM,  M_NARP), // LST/LST1
+    E3(0x7800, CF_01FF, TEXT_SST,  M_STN,  M_MAM,  M_NARP), // SST/SST1
+    E3(0xFC00, CF_00FF, TEXT_BLPD, M_PM16, M_MAM,  M_NARP), // BLKP
+    E3(0xFD00, CF_00FF, TEXT_BLDD, M_PM16, M_MAM,  M_NARP), // BLDP
 };
 
-constexpr uint8_t INDEX_TMS32020[] = {
-      0,  // TEXT_NORM
+constexpr uint8_t INDEX_TMS320C2X_E[] PROGMEM = {
+      0,  // TEXT_ADD
+     10,  // TEXT_ADD
+     12,  // TEXT_ADD
+     15,  // TEXT_AND
+     18,  // TEXT_BCND
+     26,  // TEXT_BLDD
+     25,  // TEXT_BLPD
+     21,  // TEXT_CLRC
+      2,  // TEXT_LACC
+      3,  // TEXT_LACC
+      4,  // TEXT_LACC
+      5,  // TEXT_LACL
+      6,  // TEXT_LACL
+      8,  // TEXT_LAR
+      9,  // TEXT_LAR
+      7,  // TEXT_LDP
+     23,  // TEXT_LST
+     20,  // TEXT_MAR
+     14,  // TEXT_MPY
+     16,  // TEXT_OR
+     19,  // TEXT_RPT
+     22,  // TEXT_SETC
+     24,  // TEXT_SST
+      1,  // TEXT_SUB
+     11,  // TEXT_SUB
+     13,  // TEXT_SUB
+     17,  // TEXT_XOR
 };
 
 constexpr Entry TABLE_TMS320CNFx[] PROGMEM = {
@@ -450,7 +512,7 @@ constexpr uint8_t INDEX_TMS320CNFx[] = {
 };
 
 constexpr Entry TABLE_TMS320CONF[] PROGMEM = {
-    E1(0xCE3C, CF_0003, TEXT_CONF, M_IM2),
+    E1(0xCE3C, CF_0003, TEXT_CONF, M_UI2),
 };
 
 constexpr uint8_t INDEX_TMS320CONF[] = {
@@ -475,12 +537,14 @@ constexpr EntryPage TMS32020_PAGES[] PROGMEM = {
 constexpr EntryPage TMS320C25_PAGES[] PROGMEM = {
         {ARRAY_RANGE(TABLE_TMS320C2X), ARRAY_RANGE(INDEX_TMS320C2X)},
         {ARRAY_RANGE(TABLE_TMS3202X), ARRAY_RANGE(INDEX_TMS3202X)},
+        {ARRAY_RANGE(TABLE_TMS320C2X_E), ARRAY_RANGE(INDEX_TMS320C2X_E)},
         {ARRAY_RANGE(TABLE_TMS320CNFx), ARRAY_RANGE(INDEX_TMS320CNFx)},
 };
 
 constexpr EntryPage TMS320C26_PAGES[] PROGMEM = {
         {ARRAY_RANGE(TABLE_TMS320C2X), ARRAY_RANGE(INDEX_TMS320C2X)},
         {ARRAY_RANGE(TABLE_TMS3202X), ARRAY_RANGE(INDEX_TMS3202X)},
+        {ARRAY_RANGE(TABLE_TMS320C2X_E), ARRAY_RANGE(INDEX_TMS320C2X_E)},
         {ARRAY_RANGE(TABLE_TMS320CONF), ARRAY_RANGE(INDEX_TMS320CONF)},
 };
 
@@ -496,7 +560,7 @@ const Cpu *cpu(CpuType cpuType) {
     return Cpu::search(cpuType, ARRAY_RANGE(CPU_TABLE));
 }
 
-bool acceptMode(AddrMode opr, AddrMode table) {
+bool acceptMode(AddrMode opr, AddrMode table, bool is320C2x) {
     if (opr == table)
         return true;
     if (opr == M_NONE)  // These can be ommitted.
@@ -507,9 +571,32 @@ bool acceptMode(AddrMode opr, AddrMode table) {
     if (opr == M_ARP || opr == M_INC || opr == M_DEC || opr == M_INC0 || opr == M_DEC0 ||
             opr == M_IBR0 || opr == M_DBR0)
         return table == M_MAM || table == M_IND || table == M_MAR;
-    if (opr == M_CNST)
-        return table == M_MAM || table == M_NARP || (table >= M_IM1 && table <= M_PM16);
+    if (opr == M_UI16)
+        return table == M_MAM || table == M_NARP || (table >= M_UI1 && table <= M_PM16);
+    if (opr == M_LS16) {
+        if (is320C2x) {
+            if (table == M_LS4)
+                return false;
+            return table == M_MAM || table == M_NARP || (table >= M_UI1 && table <= M_PM16);
+        } else {
+            return table == M_MAM || table == M_NARP || (table >= M_UI1 && table <= M_PM16);
+        }
+    }
+    if (opr == M_SI16)
+        return table >= M_UI1 && table <= M_BIT;
+    if (opr == M_IMU8)
+        return table >= M_STN && table <= M_IMU16;
+    if (opr == M_IMU16)
+        return table >= M_IMU9 && table <= M_IMU16;
+    if (opr == M_IM16)
+        return table == M_IM13;
+    if (opr == M_CCCTL)
+        return table == M_CC || table == M_CTL;
     return false;
+}
+
+bool acceptMode(AddrMode opr, AddrMode table) {
+    return acceptMode(opr, table, false);
 }
 
 bool acceptModes(AsmInsn &insn, const Entry *entry) {
@@ -518,8 +605,24 @@ bool acceptModes(AsmInsn &insn, const Entry *entry) {
            acceptMode(insn.op3.mode, table.mode3());
 }
 
+bool acceptModec2x(AddrMode opr, AddrMode table) {
+    return acceptMode(opr, table, true);
+}
+
+bool acceptModesc2x(AsmInsn &insn, const Entry *entry) {
+    const auto table = entry->readFlags();
+    return acceptModec2x(insn.op1.mode, table.mode1()) &&
+           acceptModec2x(insn.op2.mode, table.mode2()) &&
+           acceptModec2x(insn.op3.mode, table.mode3());
+}
+
 Error searchName(CpuType cpuType, AsmInsn &insn) {
-    cpu(cpuType)->searchName(insn, acceptModes);
+    const auto c = cpu(cpuType);
+    if (cpuType == TMS320C25 || cpuType == TMS320C26) {
+        c->searchName(insn, acceptModesc2x);
+    } else {
+        c->searchName(insn, acceptModes);
+    }
     return insn.getError();
 }
 

@@ -577,7 +577,7 @@ extern const char TEXT_REG_PCSR[] PROGMEM;
 using common::TEXT_REG_PSR;
 extern const char TEXT_REG_SCC[]  PROGMEM;
 extern const char TEXT_REG_SRP[]  PROGMEM;
-extern const char TEXT_REG_TC[]   PROGMEM;
+using common::TEXT_REG_TC;
 extern const char TEXT_REG_VAL[]  PROGMEM;
 
 // clang-format on

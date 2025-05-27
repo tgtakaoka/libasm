@@ -26,40 +26,51 @@ namespace libasm {
 namespace tms320 {
 
 enum AddrMode : uint8_t {
-    // T=table, P=parser. M_IM1~M_CNST must be a constant.
+    // T=table, P=parser. M_UI1~M_CNST must be a constant.
     M_NONE = 0,  // TP: No operand
     // mode3, mode2
     M_NARP = 1,  // T_: Next ARP                    ---- ---- ---- xyyy
     // mode1, mode2
-    // M_IM1..M_PM16 must be contiguous
-    M_IM1 = 2,    // T_: 1-bit unsigned immediate    ---- ---- ---- ---k
-    M_IM2 = 3,    // T_: 2-bit unsigned immediate    ---- ---- ---- --kk
-    M_IM8 = 4,    // T_: 8-bit unsigned immediate    ---- ---- kkkk kkkk
-    M_IM9 = 5,    // T_: 9-bit unsigned immediate    ---- ---k kkkk kkkk
-    M_IM13 = 6,   // T_: 13-bit signed immediate     ---k kkkk kkkk kkkk
-    M_IM16 = 7,   // T_: 16-bit unsigned immediate
-    M_ARK = 8,    // T_: 3-bit AR register           ---- ---- ---- -rrr
-    M_AR = 9,     // TP: AR[0-7] Auxiliary register  ---- -rrr ---- ----
-    M_PA = 10,    // TP: PA[0-15] Port address       ---- pppp ---- ----
-    M_LS0 = 11,   // T_: 0 constant for SACL         ---- -000 ---- ----
-    M_LS3 = 12,   // T_: 3-bit left shift            ---- -xxx ---- ----
-    M_LS4 = 13,   // T_: 4-bit left shift            ---- ssss ---- ----
-    M_BIT = 14,   // T_: 4-bit bit position          ---- bbbb ---- ----
-    M_PM12 = 15,  // T_: 12-bit program address      ---- pppp pppp pppp
-    M_PM16 = 16,  // T_: 16-bit program address
-    M_MAM = 17,   // T_: Direct address or M_IND     ---- ---- ixxx xxxx
-    M_IND = 18,   // T_: Indirect addressing         ---- ---- 1vpm ----
-    M_MAR = 19,   // T_: Modify AR                   ---- ---- 1vpm ----
-    M_CNST = 20,  // _P: constant
+    // M_UI1..M_PM16 must be contiguous
+    M_UI1 = 2,    // T_: 1-bit unsigned constant    ---- ---- ---- ---k
+    M_UI2 = 3,    // T_: 2-bit unsigned constant    ---- ---- ---- --kk
+    M_UI8 = 4,    // T_: 8-bit unsigned constant    ---- ---- kkkk kkkk
+    M_UI9 = 5,    // T_: 9-bit unsigned constant    ---- ---k kkkk kkkk
+    M_SI13 = 6,   // T_: 13-bit signed constant     ---k kkkk kkkk kkkk
+    M_SI16 = 7,   // TP: 16-bit signed constant
+    M_UI16 = 8,   // TP: 16-bit unsigned constant
+    M_ARK = 9,    // T_: 3-bit AR register          ---- ---- ---- -rrr
+    M_AR = 10,    // TP: AR[0-7] Auxiliary register ---- -rrr ---- ----
+    M_PA = 11,    // TP: PA[0-15] Port address      ---- pppp ---- ----
+    M_LS0 = 12,   // T_: 0 constant for SACL        ---- -000 ---- ----
+    M_LS3 = 13,   // T_: 3-bit left shift           ---- -xxx ---- ----
+    M_LS4 = 14,   // T_: 4-bit left shift           ---- ssss ---- ----
+    M_LS16 = 15,  // TP: 16 left shift for ADDH/SUBH/ZALH
+    M_BIT = 16,   // T_: 4-bit bit position         ---- bbbb ---- ----
+    M_PM12 = 17,  // T_: 12-bit program address     ---- pppp pppp pppp
+    M_PM16 = 18,  // T_: 16-bit program address
+    M_MAM = 19,   // T_: Direct address or M_IND    ---- ---- ixxx xxxx
+    M_IND = 20,   // T_: Indirect addressing        ---- ---- 1vpm ----
+    M_MAR = 21,   // T_: Modify AR                  ---- ---- 1vpm ----
+    // M_STN..M_UIM16 must be ocontiguous
+    M_STN = 22,    // T_: Status register number     ---- ---k ---- ----
+    M_IMU8 = 23,   // TP: 8-bit unsigned immediate   ---- ---- kkkk kkkk
+    M_IMU9 = 24,   // T_: 9-bit unsigned immediate   ---- ---k kkkk kkkk
+    M_IM13 = 25,   // T_: 13-bit signed immediate    ---k kkkk kkkk kkkk
+    M_IM16 = 26,   // TP: 16-bit signed immediate
+    M_IMU16 = 27,  // TP: 16-bit unsigned immediate
+    M_CC = 28,     // TP: Condition code name
+    M_CTL = 29,    // TP: Control bit name
+    M_CCCTL = 30,  // TP: CC_C/CC_TC or REG_C/REG_TC
     // M_ARP..M_DBR0 must be contiguous in this order.
     // See AsmTms320::encodeIndirect
-    M_ARP = 21,   // _P: "*"   Indirect addressing
-    M_INC = 22,   // _P: "*+"  Indirect then auto increment addressing
-    M_DEC = 23,   // _P: "*-"  Indirect then auto decrement addressing
-    M_INC0 = 24,  // _P: "*0+"  Indirect then auto increment by AR0 addressing
-    M_DEC0 = 25,  // _P: "*0-"  Indirect then auto decrement by AR0 addressing
-    M_IBR0 = 26,  // _P: "*BR+"  Indirect then auto increment by bit-reverse AR0 addressing
-    M_DBR0 = 27,  // _P: "*BR-"  Indirect then auto decrement by bit-reverse AR0 addressing
+    M_ARP = 31,   // _P: "*"   Indirect addressing
+    M_INC = 32,   // _P: "*+"  Indirect then auto increment addressing
+    M_DEC = 33,   // _P: "*-"  Indirect then auto decrement addressing
+    M_INC0 = 34,  // _P: "*0+"  Indirect then auto increment by AR0 addressing
+    M_DEC0 = 35,  // _P: "*0-"  Indirect then auto decrement by AR0 addressing
+    M_IBR0 = 36,  // _P: "*BR+"  Indirect then auto increment by bit-reverse AR0 addressing
+    M_DBR0 = 37,  // _P: "*BR-"  Indirect then auto decrement by bit-reverse AR0 addressing
 };
 
 enum CodeFormat : uint8_t {
@@ -67,13 +78,14 @@ enum CodeFormat : uint8_t {
     CF_0001 = 1,   // 0x0001
     CF_0003 = 2,   // 0x0003
     CF_0007 = 3,   // 0x0007
-    CF_00FF = 4,   // 0x00FF
-    CF_01FF = 5,   // 0x01FF
-    CF_0700 = 6,   // 0x0700
-    CF_07FF = 7,   // 0x07FF
-    CF_0F00 = 8,   // 0x0F00
-    CF_0FFF = 9,   // 0x0FFF
-    CF_1FFF = 10,  // 0x1FFF
+    CF_007F = 4,   // 0x007F
+    CF_00FF = 5,   // 0x00FF
+    CF_01FF = 6,   // 0x01FF
+    CF_0700 = 7,   // 0x0700
+    CF_07FF = 8,   // 0x07FF
+    CF_0F00 = 9,   // 0x0F00
+    CF_0FFF = 10,  // 0x0FFF
+    CF_1FFF = 11,  // 0x1FFF
 };
 
 struct Entry final : entry::Base<Config::opcode_t> {
@@ -94,13 +106,14 @@ struct Entry final : entry::Base<Config::opcode_t> {
                     0x0001,  // CF_0001 = 1
                     0x0003,  // CF_0003 = 2
                     0x0007,  // CF_0007 = 3
-                    0x00FF,  // CF_00FF = 4
-                    0x01FF,  // CF_01FF = 5
-                    0x0700,  // CF_0700 = 6
-                    0x07FF,  // CF_07FF = 7
-                    0x0F00,  // CF_0F00 = 8
-                    0x0FFF,  // CF_0FFF = 9
-                    0x1FFF,  // CF_1FFF = 10
+                    0x007F,  // CF_007F = 4
+                    0x00FF,  // CF_00FF = 5
+                    0x01FF,  // CF_01FF = 6
+                    0x0700,  // CF_0700 = 7
+                    0x07FF,  // CF_07FF = 8
+                    0x0F00,  // CF_0F00 = 9
+                    0x0FFF,  // CF_0FFF = 11
+                    0x1FFF,  // CF_1FFF = 12
             };
             return pgm_read_word(&MASK[(_attr >> cf_gp) & cf_gm]);
         }
