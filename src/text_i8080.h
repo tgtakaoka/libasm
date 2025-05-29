@@ -36,7 +36,7 @@ using common::TEXT_ADI;
 extern const char TEXT_ANA[]  PROGMEM;
 using common::TEXT_ANI;
 using common::TEXT_CALL;
-extern const char TEXT_CC[]   PROGMEM;
+using common::TEXT_CC;
 using common::TEXT_CM;
 using common::TEXT_CMA;
 using common::TEXT_CMC;

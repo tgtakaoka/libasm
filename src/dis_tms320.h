@@ -47,6 +47,7 @@ private:
     StrBuffer &outNextArp(StrBuffer &out, uint8_t mam) const;
     StrBuffer &outShiftCount(StrBuffer &out, uint8_t count, uint8_t mam) const;
     StrBuffer &outProgramAddress(StrBuffer &out, DisInsn &insn) const;
+    void decodeConditionCode(DisInsn &insn, StrBuffer &out) const;
     void decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) const;
     bool hasValue(DisInsn &insn, AddrMode mode) const;
 

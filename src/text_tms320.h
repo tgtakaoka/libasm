@@ -30,6 +30,7 @@ extern const char TEXT_CPU_32015[] PROGMEM;
 extern const char TEXT_CPU_32020[]  PROGMEM;
 extern const char TEXT_CPU_320C25[] PROGMEM;
 extern const char TEXT_CPU_320C26[] PROGMEM;
+extern const char TEXT_CPU_320C20X[] PROGMEM;
 
 // TMS320
 using common::TEXT_ABS;
@@ -181,6 +182,13 @@ using common::TEXT_CLRC;
 extern const char TEXT_LACC[] PROGMEM;
 extern const char TEXT_LACL[] PROGMEM;
 using common::TEXT_SETC;
+
+// TMS320C20X
+using common::TEXT_CC;
+extern const char TEXT_NMI[]  PROGMEM;
+extern const char TEXT_INTR[] PROGMEM;
+using common::TEXT_RETC;
+extern const char TEXT_SPLK[] PROGMEM;
 
 extern const char TEXT_REG_AR[] PROGMEM;
 extern const char TEXT_REG_PA[] PROGMEM;

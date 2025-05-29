@@ -36,6 +36,7 @@ struct Operand final : ErrorAt {
     AddrMode mode;
     RegName reg;
     CcName cc;
+    StrScanner ccAt;
     Value val;
     Operand() : mode(M_NONE), reg(REG_UNDEF), cc(CC_UNDEF), val() {}
 };

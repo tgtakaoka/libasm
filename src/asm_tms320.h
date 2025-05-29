@@ -28,8 +28,10 @@ struct AsmTms320 final : Assembler, Config {
     AsmTms320(const ValueParser::Plugins &plugins = defaultPlugins());
 
 private:
+    Error parseConditionCode(StrScanner &scan, Operand &op) const;
     Error parseOperand(StrScanner &scan, Operand &op) const;
 
+    void encodeConditionCode(AsmInsn &insn, const Operand &op) const;
     void encodeIndirect(AsmInsn &insn, const Operand &op) const;
     void encodeDirect(AsmInsn &insn, const Operand &op) const;
     void encodeNextAR(AsmInsn &insn, const Operand &op) const;
