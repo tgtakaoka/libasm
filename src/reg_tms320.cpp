@@ -92,6 +92,10 @@ RegName parseRegName(StrScanner &scan, const ValueParser &parser) {
 }
 
 StrBuffer &outRegName(StrBuffer &out, RegName name) {
+    if (name >= CTL_BASE) {
+        const auto *entry = REG_TABLE.searchName(name);
+        return entry ? entry->outText(out) : out;
+    }
     if (name >= REG_PA0)
         return out.text_P(TEXT_REG_PA).int16(name - REG_PA0);
     return out.text_P(TEXT_REG_AR).int16(name - REG_AR0);
@@ -105,8 +109,24 @@ bool isControlName(RegName name) {
     return name >= CTL_BASE;
 }
 
-uint_fast8_t encodeControlName(RegName name) {
-    return name - CTL_BASE;
+uint_fast8_t encodeControlName(RegName name, bool is320C2x) {
+    if (is320C2x || name < REG_C)
+        return name - CTL_BASE;
+    return name == REG_C ? 0xE : /*TC*/ 0xA;
+}
+
+RegName decodeControlNum(uint_fast8_t num) {
+    static constexpr RegName CTL_C20X[] PROGMEM = {
+            REG_INTM,  // 0
+            REG_OVM,   // 1
+            REG_CNF,   // 2
+            REG_SXM,   // 3
+            REG_HM,    // 4
+            REG_TC,    // 5
+            REG_XF,    // 6
+            REG_C,     // 7
+    };
+    return RegName(pgm_read_byte(CTL_C20X + (num & 7)));
 }
 
 CcName parseCcName(StrScanner &scan, const ValueParser &parser) {

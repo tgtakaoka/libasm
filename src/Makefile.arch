@@ -76,7 +76,7 @@ TGT_pdp11    = j11 t11
 TGT_pdp8     = im6100 hd6120
 TGT_scn2650  = scn2650
 TGT_tlcs90   = tlcs90
-TGT_tms320   = tms32010 tms320c25 tms320c26
+TGT_tms320   = tms32010 tms320c25 tms320c26 tms320c20x
 TGT_tms370   = tms370
 TGT_tms7000  = tms7000
 TGT_tms9900  = tms9900 tms9980 tms9995 tms99105 tms99110
@@ -137,6 +137,7 @@ CPU_scn2650  = 2650
 CPU_t11      = T11
 CPU_tlcs90   = TLCS90
 CPU_tms32010 = 32010
+CPU_tms320c20x = 320C20X
 CPU_tms320c25 = 320C25
 CPU_tms320c26 = 320C26
 CPU_tms370   = TMS370
@@ -167,7 +168,7 @@ S28_OUTS = mc68000 mc68010 mc68hc16 w65c816 w65c816_m0x0 w65c816_m0x1 w65c816_m1
 # targets with Motorola S37 format
 S37_OUTS = mc68020 mc68030 mc68040
 # targets with Intel32 (32bit address) format
-I32_OUTS = $(TGT_i8086) $(TGT_mn1610) z180 z280 z380 z8001 ns32032 tms320c25 tms320c26
+I32_OUTS = $(TGT_i8086) $(TGT_mn1610) z180 z280 z380 z8001 ns32032 tms320c25 tms320c26 tms320c20x
 # other targets use Intel8 format
 define __out-ext # target
 $(if $(filter $(1),$(S19_OUTS)),s19,$(if $(filter $(1),$(S28_OUTS)),s28,$(if $(filter $(1),$(S37_OUTS)),s37,hex)))

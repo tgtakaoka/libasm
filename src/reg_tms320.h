@@ -66,20 +66,20 @@ enum RegName : int8_t {
 
 enum CcName : int16_t {
     CC_UNDEF = -1,
-    CC_UNC = 0,   // UNCOND: B
-    CC_EQ = 1,    // Z=1:    BZ
-    CC_NEQ = 2,   // Z=0:    BNZ
-    CC_LT = 3,    // ACC<0:  BLZ
-    CC_LEQ = 4,   // ACC<=0: BLEZ
-    CC_GT = 5,    // ACC>0:  BGZ
-    CC_GEQ = 6,   // ACC>=0: BGEZ
-    CC_NOV = 7,   // V=0:    BNV
-    CC_OV = 8,    // V=1:    BV
-    CC_NC = 9,    // C=0:    BNC
-    CC_C = 10,    // C=1:    BC
-    CC_BIO = 11,  // BIO=0:  BIOZ
-    CC_NTC = 12,  // TC=0:   BBZ
-    CC_TC = 13,   // TC=1:   BBNZ
+    CC_UNC = 0,   // uncondition
+    CC_TC = 1,    // TC=1:  BBNZ
+    CC_NTC = 2,   // TC=0:  BBZ
+    CC_BIO = 3,   // BIO=0: BIOZ
+    CC_EQ = 4,    // Z=1:   BZ
+    CC_NEQ = 5,   // Z=0:   BNZ
+    CC_LT = 6,    // L=1:   BLZ
+    CC_GEQ = 7,   // L=0:   BGEZ
+    CC_OV = 8,    // V=1:   BV
+    CC_NOV = 9,   // V=0:   BNV
+    CC_C = 10,    // C=1:   BC
+    CC_NC = 11,   // C=0:   BNC
+    CC_LEQ = 12,  // Z=L=1: BLEZ
+    CC_GT = 13,   // Z=L=0: BGZ
 };
 
 namespace reg {
@@ -88,10 +88,10 @@ RegName parseRegName(StrScanner &scan, const ValueParser &parser);
 StrBuffer &outRegName(StrBuffer &out, RegName name);
 uint_fast8_t encodeRegName(RegName name);
 bool isControlName(RegName name);
-uint_fast8_t encodeControlName(RegName name);
+uint_fast8_t encodeControlName(RegName name, bool is320C2x);
+RegName decodeControlNum(uint_fast8_t num);
 
 CcName parseCcName(StrScanner &scan, const ValueParser &parser);
-uint16_t encodeCcName(CcName name);
 
 }  // namespace reg
 }  // namespace tms320

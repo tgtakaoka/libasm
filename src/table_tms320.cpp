@@ -518,6 +518,226 @@ constexpr Entry TABLE_TMS320CONF[] PROGMEM = {
 constexpr uint8_t INDEX_TMS320CONF[] = {
       0,  // TEXT_CONF
 };
+
+constexpr Entry TABLE_TMS320C20X[] PROGMEM = {
+    E3(0x0000, CF_07FF, TEXT_LAR,  M_AR,   M_MAM,  M_NARP),
+    E2(0x0A00, CF_00FF, TEXT_SUBC, M_MAM,  M_NARP),
+    E2(0x0B00, CF_00FF, TEXT_RPT,  M_MAM,  M_NARP),
+    E3(0x0C00, CF_00FF, TEXT_OUT,  M_MAM,  M_PA16, M_NARP),
+    E2(0x0D00, CF_00FF, TEXT_LDP,  M_MAM,  M_NARP),
+    E3(0x0E00, CF_01FF, TEXT_LST,  M_STN,  M_MAM,  M_NARP),
+    E3(0x6A00, CF_00FF, TEXT_LACC, M_MAM,  M_LS16, M_NARP),
+    E3(0x6100, CF_00FF, TEXT_ADD,  M_MAM,  M_LS16, M_NARP),
+    E3(0x6500, CF_00FF, TEXT_SUB,  M_MAM,  M_LS16, M_NARP),
+    E3(0x1000, CF_0FFF, TEXT_LACC, M_MAM,  M_LS4,  M_NARP),
+    E3(0x2000, CF_0FFF, TEXT_ADD,  M_MAM,  M_LS4,  M_NARP),
+    E3(0x3000, CF_0FFF, TEXT_SUB,  M_MAM,  M_LS4,  M_NARP),
+    E3(0x4000, CF_0FFF, TEXT_BIT,  M_MAM,  M_BIT,  M_NARP),
+    E2(0x5000, CF_00FF, TEXT_MPYA, M_MAM,  M_NARP),
+    E2(0x5100, CF_00FF, TEXT_MPYS, M_MAM,  M_NARP),
+    E2(0x5200, CF_00FF, TEXT_SQRA, M_MAM,  M_NARP),
+    E2(0x5300, CF_00FF, TEXT_SQRS, M_MAM,  M_NARP),
+    E2(0x5400, CF_00FF, TEXT_MPY,  M_MAM,  M_NARP),
+    E2(0x5500, CF_00FF, TEXT_MPYU, M_MAM,  M_NARP),
+    E2(0x6000, CF_00FF, TEXT_ADDC, M_MAM,  M_NARP),
+    E2(0x6200, CF_00FF, TEXT_ADDS, M_MAM,  M_NARP),
+    E2(0x6300, CF_00FF, TEXT_ADDT, M_MAM,  M_NARP),
+    E2(0x6400, CF_00FF, TEXT_SUBB, M_MAM,  M_NARP),
+    E2(0x6600, CF_00FF, TEXT_SUBS, M_MAM,  M_NARP),
+    E2(0x6700, CF_00FF, TEXT_SUBT, M_MAM,  M_NARP),
+    E2(0x6800, CF_00FF, TEXT_ZALR, M_MAM,  M_NARP),
+    E2(0x6900, CF_00FF, TEXT_LACL, M_MAM,  M_NARP),
+    E2(0x6B00, CF_00FF, TEXT_LACT, M_MAM,  M_NARP),
+    E2(0xBE81, CF_0000, TEXT_AND,  M_IMU16, M_LS16),
+    E2(0xBE82, CF_0000, TEXT_OR,   M_IMU16, M_LS16),
+    E2(0xBE83, CF_0000, TEXT_XOR,  M_IMU16, M_LS16),
+    E2(0x6C00, CF_00FF, TEXT_XOR,  M_MAM,  M_NARP),
+    E2(0x6D00, CF_00FF, TEXT_OR,   M_MAM,  M_NARP),
+    E2(0x6E00, CF_00FF, TEXT_AND,  M_MAM,  M_NARP),
+    E2(0x6F00, CF_00FF, TEXT_BITT, M_MAM,  M_NARP),
+    E2(0x7000, CF_00FF, TEXT_LTA,  M_MAM,  M_NARP),
+    E2(0x7100, CF_00FF, TEXT_LTP,  M_MAM,  M_NARP),
+    E2(0x7200, CF_00FF, TEXT_LTD,  M_MAM,  M_NARP),
+    E2(0x7300, CF_00FF, TEXT_LT,   M_MAM,  M_NARP),
+    E2(0x7400, CF_00FF, TEXT_LTS,  M_MAM,  M_NARP),
+    E2(0x7500, CF_00FF, TEXT_LPH,  M_MAM,  M_NARP),
+    E2(0x7600, CF_00FF, TEXT_PSHD, M_MAM,  M_NARP),
+    E2(0x7700, CF_00FF, TEXT_DMOV, M_MAM,  M_NARP),
+    E1(0x7800, CF_00FF, TEXT_ADRK, M_IMU8),
+    E3(0x7980, CF_007F, TEXT_B,    M_PM16, M_MAR,  M_NARP),
+    E3(0x7A80, CF_007F, TEXT_CALL, M_PM16, M_MAR,  M_NARP),
+    E3(0x7B80, CF_007F, TEXT_BANZ, M_PM16, M_MAR,  M_NARP),
+    E1(0x7C00, CF_00FF, TEXT_SBRK, M_IMU8),
+    E3(0x8000, CF_07FF, TEXT_SAR,  M_AR,   M_MAM,  M_NARP),
+    E2(0x8A00, CF_00FF, TEXT_POPD, M_MAM,  M_NARP),
+    E0(0x8B00, CF_0000, TEXT_NOP),
+    E2(0x8B00, CF_00FF, TEXT_MAR,  M_MAM,  M_NARP),
+    E2(0x8C00, CF_00FF, TEXT_SPL,  M_MAM,  M_NARP),
+    E2(0x8D00, CF_00FF, TEXT_SPH,  M_MAM,  M_NARP),
+    E3(0x8E00, CF_01FF, TEXT_SST,  M_STN,  M_MAM,  M_NARP),
+    E3(0x9000, CF_07FF, TEXT_SACL, M_MAM,  M_LS3,  M_NARP),
+    E3(0x9800, CF_07FF, TEXT_SACH, M_MAM,  M_LS3,  M_NARP),
+    E1(0xA080, CF_0000, TEXT_NORM, M_IND),
+    E3(0xA200, CF_00FF, TEXT_MAC,  M_PM16, M_MAM,  M_NARP),
+    E3(0xA300, CF_00FF, TEXT_MACD, M_PM16, M_MAM,  M_NARP),
+    E3(0xA500, CF_00FF, TEXT_BLPD, M_IMU16, M_MAM, M_NARP),
+    E2(0xA600, CF_00FF, TEXT_TBLR, M_MAM,  M_NARP),
+    E2(0xA700, CF_00FF, TEXT_TBLW, M_MAM,  M_NARP),
+    E3(0xA800, CF_00FF, TEXT_BLDD, M_IMU16, M_MAM, M_NARP),
+    E3(0xA900, CF_00FF, TEXT_BLDD, M_MAM, M_IMU16, M_NARP),
+    E3(0xAE00, CF_00FF, TEXT_SPLK, M_IMU16, M_MAM, M_NARP),
+    E3(0xAF00, CF_00FF, TEXT_IN,   M_MAM,  M_PA16, M_NARP),
+    E2(0xB000, CF_07FF, TEXT_LAR,  M_AR,   M_IMU8),
+    E1(0xB800, CF_00FF, TEXT_ADD,  M_IMU8),
+    E1(0xB900, CF_00FF, TEXT_LACL, M_IMU8),
+    E1(0xBA00, CF_00FF, TEXT_SUB,  M_IMU8),
+    E1(0xBB00, CF_00FF, TEXT_RPT,  M_IMU8),
+    E1(0xBC00, CF_01FF, TEXT_LDP,  M_IMU9),
+    E0(0xBE00, CF_0000, TEXT_ABS),
+    E0(0xBE01, CF_0000, TEXT_CMPL),
+    E0(0xBE02, CF_0000, TEXT_NEG),
+    E0(0xBE03, CF_0000, TEXT_PAC),
+    E0(0xBE04, CF_0000, TEXT_APAC),
+    E0(0xBE05, CF_0000, TEXT_SPAC),
+    E0(0xBE09, CF_0000, TEXT_SFL),
+    E0(0xBE0A, CF_0000, TEXT_SFR),
+    E0(0xBE0C, CF_0000, TEXT_ROL),
+    E0(0xBE0D, CF_0000, TEXT_ROR),
+    E0(0xBE20, CF_0000, TEXT_BACC),
+    E0(0xBE22, CF_0000, TEXT_IDLE),
+    E0(0xBE30, CF_0000, TEXT_CALA),
+    E0(0xBE32, CF_0000, TEXT_POP),
+    E0(0xBE3C, CF_0000, TEXT_PUSH),
+    E1(0xBE40, CF_000E, TEXT_CLRC, M_CTL),
+    E1(0xBE41, CF_000E, TEXT_SETC, M_CTL),
+    E0(0xBE51, CF_0000, TEXT_TRAP),
+    E0(0xBE52, CF_0000, TEXT_NMI),
+    E1(0xBE60, CF_001F, TEXT_INTR, M_UI5),
+    E1(0xBF00, CF_0003, TEXT_SPM,  M_UI2),
+    E2(0xBF08, CF_0007, TEXT_LAR,  M_ARK,  M_IMU16),
+    E1(0xBF44, CF_0003, TEXT_CMPR, M_UI2),
+    E2(0xBF80, CF_000F, TEXT_LACC, M_IM16, M_LS4L),
+    E2(0xBF90, CF_000F, TEXT_ADD,  M_IM16, M_LS4L),
+    E2(0xBFA0, CF_000F, TEXT_SUB,  M_IM16, M_LS4L),
+    E2(0xBFB0, CF_000F, TEXT_AND,  M_IMU16, M_LS4L),
+    E2(0xBFC0, CF_000F, TEXT_OR,   M_IMU16, M_LS4L),
+    E2(0xBFD0, CF_000F, TEXT_XOR,  M_IMU16, M_LS4L),
+    E1(0xC000, CF_1FFF, TEXT_MPY,  M_IM13),
+    E0(0xEF00, CF_0000, TEXT_RET),
+    E2(0xE000, CF_03FF, TEXT_BCND, M_PM16, M_CC),
+    E2(0xE800, CF_03FF, TEXT_CC,   M_PM16, M_CC),
+    E1(0xEC00, CF_03FF, TEXT_RETC, M_CC),
+};
+
+constexpr uint8_t INDEX_TMS320C20X[] PROGMEM = {
+     73,  // TEXT_ABS
+      7,  // TEXT_ADD
+     10,  // TEXT_ADD
+     68,  // TEXT_ADD
+     97,  // TEXT_ADD
+     19,  // TEXT_ADDC
+     20,  // TEXT_ADDS
+     21,  // TEXT_ADDT
+     43,  // TEXT_ADRK
+     28,  // TEXT_AND
+     33,  // TEXT_AND
+     99,  // TEXT_AND
+     77,  // TEXT_APAC
+     44,  // TEXT_B
+     83,  // TEXT_BACC
+     46,  // TEXT_BANZ
+    104,  // TEXT_BCND
+     12,  // TEXT_BIT
+     34,  // TEXT_BITT
+     63,  // TEXT_BLDD
+     64,  // TEXT_BLDD
+     60,  // TEXT_BLPD
+     85,  // TEXT_CALA
+     45,  // TEXT_CALL
+    105,  // TEXT_CC
+     88,  // TEXT_CLRC
+     74,  // TEXT_CMPL
+     95,  // TEXT_CMPR
+     42,  // TEXT_DMOV
+     84,  // TEXT_IDLE
+     66,  // TEXT_IN
+     92,  // TEXT_INTR
+      6,  // TEXT_LACC
+      9,  // TEXT_LACC
+     96,  // TEXT_LACC
+     26,  // TEXT_LACL
+     69,  // TEXT_LACL
+     27,  // TEXT_LACT
+      0,  // TEXT_LAR
+     67,  // TEXT_LAR
+     94,  // TEXT_LAR
+      4,  // TEXT_LDP
+     72,  // TEXT_LDP
+     40,  // TEXT_LPH
+      5,  // TEXT_LST
+     38,  // TEXT_LT
+     35,  // TEXT_LTA
+     37,  // TEXT_LTD
+     36,  // TEXT_LTP
+     39,  // TEXT_LTS
+     58,  // TEXT_MAC
+     59,  // TEXT_MACD
+     51,  // TEXT_MAR
+     17,  // TEXT_MPY
+    102,  // TEXT_MPY
+     13,  // TEXT_MPYA
+     14,  // TEXT_MPYS
+     18,  // TEXT_MPYU
+     75,  // TEXT_NEG
+     91,  // TEXT_NMI
+     50,  // TEXT_NOP
+     57,  // TEXT_NORM
+     29,  // TEXT_OR
+     32,  // TEXT_OR
+    100,  // TEXT_OR
+      3,  // TEXT_OUT
+     76,  // TEXT_PAC
+     86,  // TEXT_POP
+     49,  // TEXT_POPD
+     41,  // TEXT_PSHD
+     87,  // TEXT_PUSH
+    103,  // TEXT_RET
+    106,  // TEXT_RETC
+     81,  // TEXT_ROL
+     82,  // TEXT_ROR
+      2,  // TEXT_RPT
+     71,  // TEXT_RPT
+     56,  // TEXT_SACH
+     55,  // TEXT_SACL
+     48,  // TEXT_SAR
+     47,  // TEXT_SBRK
+     89,  // TEXT_SETC
+     79,  // TEXT_SFL
+     80,  // TEXT_SFR
+     78,  // TEXT_SPAC
+     53,  // TEXT_SPH
+     52,  // TEXT_SPL
+     65,  // TEXT_SPLK
+     93,  // TEXT_SPM
+     15,  // TEXT_SQRA
+     16,  // TEXT_SQRS
+     54,  // TEXT_SST
+      8,  // TEXT_SUB
+     11,  // TEXT_SUB
+     70,  // TEXT_SUB
+     98,  // TEXT_SUB
+     22,  // TEXT_SUBB
+      1,  // TEXT_SUBC
+     23,  // TEXT_SUBS
+     24,  // TEXT_SUBT
+     61,  // TEXT_TBLR
+     62,  // TEXT_TBLW
+     90,  // TEXT_TRAP
+     30,  // TEXT_XOR
+     31,  // TEXT_XOR
+    101,  // TEXT_XOR
+     25,  // TEXT_ZALR
+};
 // clang-format on
 
 using EntryPage = entry::TableBase<Entry>;
@@ -548,33 +768,41 @@ constexpr EntryPage TMS320C26_PAGES[] PROGMEM = {
         {ARRAY_RANGE(TABLE_TMS320CONF), ARRAY_RANGE(INDEX_TMS320CONF)},
 };
 
+constexpr EntryPage TMS320C20X_PAGES[] PROGMEM = {
+        {ARRAY_RANGE(TABLE_TMS320C20X), ARRAY_RANGE(INDEX_TMS320C20X)},
+};
+
 constexpr Cpu CPU_TABLE[] PROGMEM = {
         {TMS32010, TEXT_CPU_32010, ARRAY_RANGE(TMS32010_PAGES)},
         {TMS32015, TEXT_CPU_32015, ARRAY_RANGE(TMS32010_PAGES)},
         {TMS32020, TEXT_CPU_32020, ARRAY_RANGE(TMS32020_PAGES)},
         {TMS320C25, TEXT_CPU_320C25, ARRAY_RANGE(TMS320C25_PAGES)},
         {TMS320C26, TEXT_CPU_320C26, ARRAY_RANGE(TMS320C26_PAGES)},
+        {TMS320C20X, TEXT_CPU_320C20X, ARRAY_RANGE(TMS320C20X_PAGES)},
 };
 
 const Cpu *cpu(CpuType cpuType) {
     return Cpu::search(cpuType, ARRAY_RANGE(CPU_TABLE));
 }
 
-bool acceptMode(AddrMode opr, AddrMode table, bool is320C2x) {
+bool acceptMode(AddrMode opr, AddrMode table, bool is320C2xx) {
     if (opr == table)
         return true;
     if (opr == M_NONE)  // These can be ommitted.
-        return table == M_LS0 || table == M_LS3 || table == M_LS4 || table == M_MAR ||
-               table == M_NARP;
+        return table == M_LS0 || table == M_LS3 || table == M_LS4 || table == M_LS4L ||
+               table == M_MAR || table == M_NARP;
     if (opr == M_AR)
         return table == M_ARK || table == M_NARP;
     if (opr == M_ARP || opr == M_INC || opr == M_DEC || opr == M_INC0 || opr == M_DEC0 ||
             opr == M_IBR0 || opr == M_DBR0)
         return table == M_MAM || table == M_IND || table == M_MAR;
-    if (opr == M_UI16)
+    if (opr == M_UI16) {
+        if (is320C2xx && table == M_LS16)
+            return false;
         return table == M_MAM || table == M_NARP || (table >= M_UI1 && table <= M_PM16);
+    }
     if (opr == M_LS16) {
-        if (is320C2x) {
+        if (is320C2xx) {
             if (table == M_LS4)
                 return false;
             return table == M_MAM || table == M_NARP || (table >= M_UI1 && table <= M_PM16);
@@ -605,21 +833,21 @@ bool acceptModes(AsmInsn &insn, const Entry *entry) {
            acceptMode(insn.op3.mode, table.mode3());
 }
 
-bool acceptModec2x(AddrMode opr, AddrMode table) {
+bool acceptModec2xx(AddrMode opr, AddrMode table) {
     return acceptMode(opr, table, true);
 }
 
-bool acceptModesc2x(AsmInsn &insn, const Entry *entry) {
+bool acceptModesc2xx(AsmInsn &insn, const Entry *entry) {
     const auto table = entry->readFlags();
-    return acceptModec2x(insn.op1.mode, table.mode1()) &&
-           acceptModec2x(insn.op2.mode, table.mode2()) &&
-           acceptModec2x(insn.op3.mode, table.mode3());
+    return acceptModec2xx(insn.op1.mode, table.mode1()) &&
+           acceptModec2xx(insn.op2.mode, table.mode2()) &&
+           acceptModec2xx(insn.op3.mode, table.mode3());
 }
 
 Error searchName(CpuType cpuType, AsmInsn &insn) {
     const auto c = cpu(cpuType);
-    if (cpuType == TMS320C25 || cpuType == TMS320C26) {
-        c->searchName(insn, acceptModesc2x);
+    if (cpuType == TMS320C25 || cpuType == TMS320C26 || cpuType == TMS320C20X) {
+        c->searchName(insn, acceptModesc2xx);
     } else {
         c->searchName(insn, acceptModes);
     }

@@ -100,6 +100,7 @@ void AsmTms320::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode) c
     insn.setErrorIf(op);
     auto val = op.val.getUnsigned();
     auto max = UINT16_MAX;
+    auto error = OVERFLOW_RANGE;
     switch (mode) {
     case M_MAM:
         if (op.mode == M_UI16 || op.mode == M_LS16) {
@@ -112,67 +113,68 @@ void AsmTms320::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode) c
     case M_MAR:
         encodeIndirect(insn, op);
         break;
+    case M_NARP:
+        encodeNextAR(insn, op);
+        break;
     case M_LS0:
         if (val)
             insn.setErrorIf(op, ILLEGAL_CONSTANT);
         break;
     case M_LS3:
-        if (!is320C2x() && !(val == 0 || val == 1 || val == 4))
+        max = 7;
+        if (!is320C2xx() && !(val == 0 || val == 1 || val == 4))
             insn.setErrorIf(op, ILLEGAL_CONSTANT);
-        // Fall-through
-    case M_PA:
-        if (!isPA(decodePA(val))) {
-            val &= maxPA();
-            insn.setErrorIf(op, OVERFLOW_RANGE);
-        }
-        // Fall-through
+        goto check_hi8;
+    case M_BIT:
     case M_LS4:
-        if (op.val.overflow(15)) {
-            val &= 15;
-            insn.setErrorIf(op, OVERFLOW_RANGE);
+        max = 15;
+    check_hi8:
+        if (op.val.overflow(max)) {
+            val &= max;
+            insn.setErrorIf(op, error);
         }
-    embed_hi8:
         insn.embed(val << 8);
         break;
-    case M_NARP:
-        encodeNextAR(insn, op);
-        break;
+    case M_PA:
+        max = maxPA();
+        goto check_hi8;
     case M_AR:
+        max = maxAR();
+        error = UNKNOWN_REGISTER;
+        goto check_hi8;
     case M_ARK:
-        if (!isAR(decodeAR(val))) {
-            val &= maxAR();
-            insn.setErrorIf(op, UNKNOWN_REGISTER);
-        }
-        if (mode == M_AR)
-            goto embed_hi8;
-        goto embed_const;
+        max = maxAR();
+        error = UNKNOWN_REGISTER;
+        goto check_lo8;
     case M_STN:
     case M_UI1:
         max = 1;
-    check_const:
+    check_lo8:
         if (op.val.overflow(max)) {
             val &= max;
-            insn.setErrorIf(op, OVERFLOW_RANGE);
+            insn.setErrorIf(op, error);
         }
         if (mode == M_STN)
             val <<= 8;
-    embed_const:
         insn.embed(val);
         break;
     case M_UI2:
         max = 3;
-        goto check_const;
-    case M_BIT:
+        goto check_lo8;
+    case M_LS4L:
         max = 15;
-        goto embed_hi8;
+        goto check_lo8;
+    case M_UI5:
+        max = 31;
+        goto check_lo8;
     case M_UI8:
     case M_IMU8:
         max = UINT8_MAX;
-        goto check_const;
+        goto check_lo8;
     case M_UI9:
     case M_IMU9:
         max = 0x1FF;
-        goto check_const;
+        goto check_lo8;
     case M_SI13:
     case M_IM13:
         if (op.val.overflow(0x0FFF, -0x1000))
@@ -186,6 +188,7 @@ void AsmTms320::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode) c
         }
         // Fall-through
     case M_PM16:
+    case M_PA16:
         if (op.val.overflow(UINT16_MAX))
             insn.setErrorIf(op, OVERFLOW_RANGE);
         // Fall-through
@@ -202,14 +205,111 @@ void AsmTms320::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode) c
         insn.emitOperand16(val);
         break;
     case M_CTL:
-        insn.embed(encodeControlName(op.reg));
+        insn.embed(encodeControlName(op.reg, is320C2x()));
         break;
     case M_CC:
-        insn.embed(encodeCcName(op.cc));
+        encodeConditionCode(insn, op);
         break;
     default:
         break;
     }
+}
+
+void AsmTms320::encodeConditionCode(AsmInsn &insn, const Operand &op) const {
+    if (is320C2x()) {
+        static constexpr uint8_t CC[] PROGMEM = {
+                0xFF,  // CC_UNC = 0,   Unconditional
+                0xF9,  // CC_TC = 13,   TC=1:   BBNZ
+                0xF8,  // CC_NTC = 12,  TC=0:   BBZ
+                0xFA,  // CC_BIO = 11,  BIO=0:  BIOZ
+                0xF6,  // CC_EQ = 1,    Z=1:    BZ
+                0xF5,  // CC_NEQ = 2,   Z=0:    BNZ
+                0xF3,  // CC_LT = 3,    ACC<0:  BLZ
+                0xF4,  // CC_GEQ = 6,   ACC>=0: BGEZ
+                0xF0,  // CC_OV = 8,    V=1:    BV
+                0xF7,  // CC_NOV = 7,   V=0:    BNV
+                0x5E,  // CC_C = 10,    C=1:    BC
+                0x5F,  // CC_NC = 9,    C=0:    BNC
+                0xF2,  // CC_LEQ = 4,   ACC<=0: BLEZ
+                0xF1,  // CC_GT = 5,    ACC>0:  BGZ
+        };
+        insn.embed(pgm_read_byte(CC + op.cc) << 8);
+        return;
+    }
+    constexpr auto TP = 0x300;
+    constexpr auto MASK = 0x00F;
+    static constexpr Config::opcode_t TABLE[] PROGMEM = {
+            0x000,  // CC_UNC = 0   uncondition
+            0x100,  // CC_TC = 1    TC=1
+            0x200,  // CC_NTC = 2   TC=0
+            0x300,  // CC_BIO = 3   BIO=0
+            0x088,  // CC_EQ = 4    Z=1
+            0x008,  // CC_NEQ = 5   Z=0
+            0x044,  // CC_LT = 6    L=1
+            0x08C,  // CC_GEQ = 7   Z=1, L=0
+            0x022,  // CC_OV = 8    V=1
+            0x002,  // CC_NOV = 9   V=0
+            0x011,  // CC_C = 10    C=1
+            0x001,  // CC_NC = 11   C=0
+            0x0CC,  // CC_LEQ = 12  Z=1, L=1
+            0x004,  // CC_GT = 13   L=0
+    };
+    auto uncondition = false;
+    Config::opcode_t code = 0;
+    auto p = op.ccAt;
+    do {
+        const auto at = p.skipSpaces();
+        const auto cc = parseCcName(p, parser());
+        const auto item = pgm_read_word(TABLE + cc);
+        if (cc == CC_UNC)
+            uncondition = true;
+        if (uncondition && item)
+            insn.setErrorIf(at, ILLEGAL_COMBINATION);
+        if (item & TP) {
+            if ((code & TP) == 0) {
+                code |= item;
+            } else {
+                insn.setErrorIf(at, ILLEGAL_COMBINATION);
+            }
+        }
+        if (item & MASK) {
+            const auto both = (code & item & MASK) << 4;
+            if (both == 0) {
+                code |= item;
+            } else if ((code & both) != (item & both)) {
+                insn.setErrorIf(at, ILLEGAL_COMBINATION);
+            }
+        }
+    } while (p.skipSpaces().expect(','));
+    if ((code & TP) == 0 || (code & TP) == TP)
+        code ^= TP;  // flip BIO and UNC
+    insn.embed(code);
+}
+
+Error AsmTms320::parseConditionCode(StrScanner &scan, Operand &op) const {
+    auto p = scan;
+    op.cc = parseCcName(p, parser());
+    if (op.cc == CC_UNDEF)
+        return NOT_AN_EXPECTED;
+    op.ccAt = scan;
+    // C and TC may bre condition code or control bit
+    if (op.cc == CC_C || op.cc == CC_TC) {
+        op.mode = M_CCCTL;
+        op.reg = (op.cc == CC_C) ? REG_C : REG_TC;
+    } else {
+        op.mode = M_CC;
+    }
+    if (is320C20x()) {
+        while (p.skipSpaces().expect(',')) {
+            if (parseCcName(p.skipSpaces(), parser()) == CC_UNDEF) {
+                op.setErrorIf(p, UNKNOWN_OPERAND);
+                return OK;
+            }
+            op.mode = M_CC;
+        }
+    }
+    scan = p;
+    return OK;
 }
 
 Error AsmTms320::parseOperand(StrScanner &scan, Operand &op) const {
@@ -252,14 +352,9 @@ Error AsmTms320::parseOperand(StrScanner &scan, Operand &op) const {
         return OK;
     }
 
-    op.cc = parseCcName(p, parser());
-    if (op.cc != CC_UNDEF) {
-        if (op.cc == CC_C || op.cc == CC_TC) {
-            op.mode = M_CCCTL;
-            op.reg = (op.cc == CC_C) ? REG_C : REG_TC;
-        } else {
-            op.mode = M_CC;
-        }
+    if (parseConditionCode(p, op) == OK) {
+        if (op.hasError())
+            return op.getError();
         scan = p;
         return OK;
     }

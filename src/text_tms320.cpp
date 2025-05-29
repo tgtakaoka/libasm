@@ -21,12 +21,13 @@ namespace text {
 namespace tms320 {
 
 // clang-format off
-constexpr char TEXT_TMS320_LIST[] PROGMEM = "TMS32010, TMS32015, TMS32020, TMS320C25, TMS320C26";
+constexpr char TEXT_TMS320_LIST[] PROGMEM = "TMS32010, TMS32015, TMS32020, TMS320C25, TMS320C26, TMS320C20X";
 constexpr char TEXT_CPU_32010[] PROGMEM = "32010";
 constexpr char TEXT_CPU_32015[] PROGMEM = "32015";
 constexpr char TEXT_CPU_32020[] PROGMEM = "32020";
 constexpr char TEXT_CPU_320C25[] PROGMEM = "320C25";
 constexpr char TEXT_CPU_320C26[] PROGMEM = "320C26";
+constexpr char TEXT_CPU_320C20X[] PROGMEM = "320C20X";
 
 // TMS320
 // constexpr char TEXT_ABS[]  PROGMEM = "ABS";
@@ -178,6 +179,13 @@ constexpr char TEXT_BLPD[] PROGMEM = "BLPD";
 constexpr char TEXT_LACC[] PROGMEM = "LACC";
 constexpr char TEXT_LACL[] PROGMEM = "LACL";
 // constexpr char TEXT_SETC[] PROGMEM = "SETC";
+
+// TMS320C20X
+// constexpr char TEXT_CC[]   PROGMEM = "CC";
+constexpr char TEXT_NMI[]  PROGMEM = "NMI";
+constexpr char TEXT_INTR[] PROGMEM = "INTR";
+constexpr char TEXT_SPLK[] PROGMEM = "SPLK";
+// constexpr char TEXT_RETC[] PROGMEM = "RETC";
 
 constexpr char TEXT_REG_AR[] PROGMEM = "AR";
 constexpr char TEXT_REG_PA[] PROGMEM = "PA";
