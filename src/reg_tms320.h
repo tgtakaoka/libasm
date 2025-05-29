@@ -88,6 +88,7 @@ StrBuffer &outRegName(StrBuffer &out, RegName name);
 uint_fast8_t encodeRegName(RegName name);
 bool isControlName(RegName name);
 uint_fast8_t encodeControlName(RegName name);
+RegName decodeControlNum(uint_fast8_t num);
 
 CcName parseCcName(StrScanner &scan, const ValueParser &parser);
 uint16_t encodeCcName(CcName name);

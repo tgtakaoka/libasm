@@ -518,6 +518,333 @@ constexpr Entry TABLE_TMS320CONF[] PROGMEM = {
 constexpr uint8_t INDEX_TMS320CONF[] = {
       0,  // TEXT_CONF
 };
+
+constexpr Entry TABLE_TMS320C20X[] PROGMEM = {
+    E3(0x0000, CF_07FF, TEXT_LAR,  M_AR,   M_MAM,  M_NARP),
+    E2(0x0A00, CF_00FF, TEXT_SUBC, M_MAM,  M_NARP),
+    E2(0x0B00, CF_00FF, TEXT_RPT,  M_MAM,  M_NARP),
+    E3(0x0C00, CF_00FF, TEXT_OUT,  M_MAM,  M_PA16, M_NARP),
+    E2(0x0D00, CF_00FF, TEXT_LDP,  M_MAM,  M_NARP),
+    E3(0x0E00, CF_01FF, TEXT_LST,  M_STN,  M_MAM,  M_NARP),
+    E3(0x6A00, CF_00FF, TEXT_LACC, M_MAM,  M_LS16, M_NARP),
+    E3(0x6100, CF_00FF, TEXT_ADD,  M_MAM,  M_LS16, M_NARP),
+    E3(0x6500, CF_00FF, TEXT_SUB,  M_MAM,  M_LS16, M_NARP),
+    E3(0x1000, CF_0FFF, TEXT_LACC, M_MAM,  M_LS4,  M_NARP),
+    E3(0x2000, CF_0FFF, TEXT_ADD,  M_MAM,  M_LS4,  M_NARP),
+    E3(0x3000, CF_0FFF, TEXT_SUB,  M_MAM,  M_LS4,  M_NARP),
+    E3(0x4000, CF_0FFF, TEXT_BIT,  M_MAM,  M_BIT,  M_NARP),
+    E2(0x5000, CF_00FF, TEXT_MPYA, M_MAM,  M_NARP),
+    E2(0x5100, CF_00FF, TEXT_MPYS, M_MAM,  M_NARP),
+    E2(0x5200, CF_00FF, TEXT_SQRA, M_MAM,  M_NARP),
+    E2(0x5300, CF_00FF, TEXT_SQRS, M_MAM,  M_NARP),
+    E2(0x5400, CF_00FF, TEXT_MPY,  M_MAM,  M_NARP),
+    E2(0x5500, CF_00FF, TEXT_MPYU, M_MAM,  M_NARP),
+    E2(0x6000, CF_00FF, TEXT_ADDC, M_MAM,  M_NARP),
+    E2(0x6200, CF_00FF, TEXT_ADDS, M_MAM,  M_NARP),
+    E2(0x6300, CF_00FF, TEXT_ADDT, M_MAM,  M_NARP),
+    E2(0x6400, CF_00FF, TEXT_SUBB, M_MAM,  M_NARP),
+    E2(0x6600, CF_00FF, TEXT_SUBS, M_MAM,  M_NARP),
+    E2(0x6700, CF_00FF, TEXT_SUBT, M_MAM,  M_NARP),
+    E2(0x6800, CF_00FF, TEXT_ZALR, M_MAM,  M_NARP),
+    E2(0x6900, CF_00FF, TEXT_LACL, M_MAM,  M_NARP),
+    E2(0x6B00, CF_00FF, TEXT_LACT, M_MAM,  M_NARP),
+    E2(0xBE81, CF_0000, TEXT_AND,  M_IMU16, M_LS16),
+    E2(0xBE82, CF_0000, TEXT_OR,   M_IMU16, M_LS16),
+    E2(0xBE83, CF_0000, TEXT_XOR,  M_IMU16, M_LS16),
+    E2(0x6C00, CF_00FF, TEXT_XOR,  M_MAM,  M_NARP),
+    E2(0x6D00, CF_00FF, TEXT_OR,   M_MAM,  M_NARP),
+    E2(0x6E00, CF_00FF, TEXT_AND,  M_MAM,  M_NARP),
+    E2(0x6F00, CF_00FF, TEXT_BITT, M_MAM,  M_NARP),
+    E2(0x7000, CF_00FF, TEXT_LTA,  M_MAM,  M_NARP),
+    E2(0x7100, CF_00FF, TEXT_LTP,  M_MAM,  M_NARP),
+    E2(0x7200, CF_00FF, TEXT_LTD,  M_MAM,  M_NARP),
+    E2(0x7300, CF_00FF, TEXT_LT,   M_MAM,  M_NARP),
+    E2(0x7400, CF_00FF, TEXT_LTS,  M_MAM,  M_NARP),
+    E2(0x7500, CF_00FF, TEXT_LPH,  M_MAM,  M_NARP),
+    E2(0x7600, CF_00FF, TEXT_PSHD, M_MAM,  M_NARP),
+    E2(0x7700, CF_00FF, TEXT_DMOV, M_MAM,  M_NARP),
+    E1(0x7800, CF_00FF, TEXT_ADRK, M_IMU8),
+    E3(0x7980, CF_007F, TEXT_B,    M_PM16, M_MAR,  M_NARP),
+    E3(0x7A80, CF_007F, TEXT_CALL, M_PM16, M_MAR,  M_NARP),
+    E3(0x7B80, CF_007F, TEXT_BANZ, M_PM16, M_MAR,  M_NARP),
+    E1(0x7C00, CF_00FF, TEXT_SBRK, M_IMU8),
+    E3(0x8000, CF_07FF, TEXT_SAR,  M_AR,   M_MAM,  M_NARP),
+    E2(0x8A00, CF_00FF, TEXT_POPD, M_MAM,  M_NARP),
+    E0(0x8B00, CF_0000, TEXT_NOP),
+    E2(0x8B00, CF_00FF, TEXT_MAR,  M_MAM,  M_NARP),
+    E2(0x8C00, CF_00FF, TEXT_SPL,  M_MAM,  M_NARP),
+    E2(0x8D00, CF_00FF, TEXT_SPH,  M_MAM,  M_NARP),
+    E3(0x8E00, CF_01FF, TEXT_SST,  M_STN,  M_MAM,  M_NARP),
+    E3(0x9000, CF_07FF, TEXT_SACL, M_MAM,  M_LS3,  M_NARP),
+    E3(0x9800, CF_07FF, TEXT_SACH, M_MAM,  M_LS3,  M_NARP),
+    E1(0xA080, CF_0000, TEXT_NORM, M_IND),
+    E3(0xA200, CF_00FF, TEXT_MAC,  M_PM16, M_MAM,  M_NARP),
+    E3(0xA300, CF_00FF, TEXT_MACD, M_PM16, M_MAM,  M_NARP),
+    E3(0xA500, CF_00FF, TEXT_BLPD, M_IMU16, M_MAM, M_NARP),
+    E2(0xA600, CF_00FF, TEXT_TBLR, M_MAM,  M_NARP),
+    E2(0xA700, CF_00FF, TEXT_TBLW, M_MAM,  M_NARP),
+    E3(0xA800, CF_00FF, TEXT_BLDD, M_IMU16, M_MAM, M_NARP),
+    E3(0xA900, CF_00FF, TEXT_BLDD, M_MAM, M_IMU16, M_NARP),
+    E3(0xAE00, CF_00FF, TEXT_SPLK, M_IMU16, M_MAM, M_NARP),
+    E3(0xAF00, CF_00FF, TEXT_IN,   M_MAM,  M_PA16, M_NARP),
+    E2(0xB000, CF_07FF, TEXT_LAR,  M_AR,   M_IMU8),
+    E1(0xB800, CF_00FF, TEXT_ADD,  M_IMU8),
+    E1(0xB900, CF_00FF, TEXT_LACL, M_IMU8),
+    E1(0xBA00, CF_00FF, TEXT_SUB,  M_IMU8),
+    E1(0xBB00, CF_00FF, TEXT_RPT,  M_IMU8),
+    E1(0xBC00, CF_01FF, TEXT_LDP,  M_IMU9),
+    E0(0xBE00, CF_0000, TEXT_ABS),
+    E0(0xBE01, CF_0000, TEXT_CMPL),
+    E0(0xBE02, CF_0000, TEXT_NEG),
+    E0(0xBE03, CF_0000, TEXT_PAC),
+    E0(0xBE04, CF_0000, TEXT_APAC),
+    E0(0xBE05, CF_0000, TEXT_SPAC),
+    E0(0xBE09, CF_0000, TEXT_SFL),
+    E0(0xBE0A, CF_0000, TEXT_SFR),
+    E0(0xBE0C, CF_0000, TEXT_ROL),
+    E0(0xBE0D, CF_0000, TEXT_ROR),
+    E0(0xBE20, CF_0000, TEXT_BACC),
+    E0(0xBE22, CF_0000, TEXT_IDLE),
+    E0(0xBE30, CF_0000, TEXT_CALA),
+    E0(0xBE32, CF_0000, TEXT_POP),
+    E0(0xBE3C, CF_0000, TEXT_PUSH),
+    E1(0xBE40, CF_000E, TEXT_CLRC, M_CTL),
+    E1(0xBE41, CF_000E, TEXT_SETC, M_CTL),
+    E0(0xBE51, CF_0000, TEXT_TRAP),
+    E0(0xBE52, CF_0000, TEXT_NMI),
+    E1(0xBE60, CF_001F, TEXT_INTR, M_UI5),
+    E1(0xBF00, CF_0003, TEXT_SPM,  M_UI2),
+    E2(0xBF08, CF_0007, TEXT_LAR,  M_ARK,  M_IMU16),
+    E1(0xBF44, CF_0003, TEXT_CMPR, M_UI2),
+    E2(0xBF80, CF_000F, TEXT_LACC, M_IM16, M_LS4L),
+    E2(0xBF90, CF_000F, TEXT_ADD,  M_IM16, M_LS4L),
+    E2(0xBFA0, CF_000F, TEXT_SUB,  M_IM16, M_LS4L),
+    E2(0xBFB0, CF_000F, TEXT_AND,  M_IMU16, M_LS4L),
+    E2(0xBFC0, CF_000F, TEXT_OR,   M_IMU16, M_LS4L),
+    E2(0xBFD0, CF_000F, TEXT_XOR,  M_IMU16, M_LS4L),
+    E1(0xC000, CF_1FFF, TEXT_MPY,  M_IM13),
+    E2(0xE000, CF_03FF, TEXT_BCND, M_PM16,  M_CC),
+    E2(0xE800, CF_03FF, TEXT_CC,   M_PM16,  M_CC),
+    E0(0xEF00, CF_0000, TEXT_RET),
+    E1(0xEC00, CF_03FF, TEXT_RETC, M_CC),
+};
+
+constexpr uint8_t INDEX_TMS320C20X[] PROGMEM = {
+     73,  // TEXT_ABS
+    107,  // TEXT_ABS
+      7,  // TEXT_ADD
+     10,  // TEXT_ADD
+     68,  // TEXT_ADD
+     97,  // TEXT_ADD
+    108,  // TEXT_ADD
+    109,  // TEXT_ADD
+    110,  // TEXT_ADD
+    111,  // TEXT_ADD
+     19,  // TEXT_ADDC
+    112,  // TEXT_ADDC
+     20,  // TEXT_ADDS
+    113,  // TEXT_ADDS
+     21,  // TEXT_ADDT
+    114,  // TEXT_ADDT
+     43,  // TEXT_ADRK
+    115,  // TEXT_ADRK
+     28,  // TEXT_AND
+     33,  // TEXT_AND
+     99,  // TEXT_AND
+    116,  // TEXT_AND
+    117,  // TEXT_AND
+    118,  // TEXT_AND
+     77,  // TEXT_APAC
+    119,  // TEXT_APAC
+     44,  // TEXT_B
+    120,  // TEXT_B
+     83,  // TEXT_BACC
+    121,  // TEXT_BACC
+     46,  // TEXT_BANZ
+    122,  // TEXT_BANZ
+    103,  // TEXT_BCND
+    123,  // TEXT_BCND
+     12,  // TEXT_BIT
+    124,  // TEXT_BIT
+     34,  // TEXT_BITT
+    125,  // TEXT_BITT
+     63,  // TEXT_BLDD
+     64,  // TEXT_BLDD
+    126,  // TEXT_BLDD
+    127,  // TEXT_BLDD
+     60,  // TEXT_BLPD
+    128,  // TEXT_BLPD
+     85,  // TEXT_CALA
+    129,  // TEXT_CALA
+     45,  // TEXT_CALL
+    130,  // TEXT_CALL
+    104,  // TEXT_CC
+    131,  // TEXT_CC
+     88,  // TEXT_CLRC
+    132,  // TEXT_CLRC
+     74,  // TEXT_CMPL
+    133,  // TEXT_CMPL
+     95,  // TEXT_CMPR
+    134,  // TEXT_CMPR
+     42,  // TEXT_DMOV
+    135,  // TEXT_DMOV
+     84,  // TEXT_IDLE
+    136,  // TEXT_IDLE
+     66,  // TEXT_IN
+    137,  // TEXT_IN
+     92,  // TEXT_INTR
+    138,  // TEXT_INTR
+      6,  // TEXT_LACC
+      9,  // TEXT_LACC
+     96,  // TEXT_LACC
+    139,  // TEXT_LACC
+    140,  // TEXT_LACC
+    141,  // TEXT_LACC
+     26,  // TEXT_LACL
+     69,  // TEXT_LACL
+    142,  // TEXT_LACL
+    143,  // TEXT_LACL
+     27,  // TEXT_LACT
+    144,  // TEXT_LACT
+      0,  // TEXT_LAR
+     67,  // TEXT_LAR
+     94,  // TEXT_LAR
+    145,  // TEXT_LAR
+    146,  // TEXT_LAR
+    147,  // TEXT_LAR
+      4,  // TEXT_LDP
+     72,  // TEXT_LDP
+    148,  // TEXT_LDP
+    149,  // TEXT_LDP
+     40,  // TEXT_LPH
+    150,  // TEXT_LPH
+      5,  // TEXT_LST
+    151,  // TEXT_LST
+     38,  // TEXT_LT
+    152,  // TEXT_LT
+     35,  // TEXT_LTA
+    153,  // TEXT_LTA
+     37,  // TEXT_LTD
+    154,  // TEXT_LTD
+     36,  // TEXT_LTP
+    155,  // TEXT_LTP
+     39,  // TEXT_LTS
+    156,  // TEXT_LTS
+     58,  // TEXT_MAC
+    157,  // TEXT_MAC
+     59,  // TEXT_MACD
+    158,  // TEXT_MACD
+     51,  // TEXT_MAR
+    159,  // TEXT_MAR
+     17,  // TEXT_MPY
+    102,  // TEXT_MPY
+    160,  // TEXT_MPY
+    161,  // TEXT_MPY
+     13,  // TEXT_MPYA
+    162,  // TEXT_MPYA
+     14,  // TEXT_MPYS
+    163,  // TEXT_MPYS
+     18,  // TEXT_MPYU
+    164,  // TEXT_MPYU
+     75,  // TEXT_NEG
+    165,  // TEXT_NEG
+     91,  // TEXT_NMI
+    166,  // TEXT_NMI
+     50,  // TEXT_NOP
+    167,  // TEXT_NOP
+     57,  // TEXT_NORM
+    168,  // TEXT_NORM
+     29,  // TEXT_OR
+     32,  // TEXT_OR
+    100,  // TEXT_OR
+    169,  // TEXT_OR
+    170,  // TEXT_OR
+    171,  // TEXT_OR
+      3,  // TEXT_OUT
+    172,  // TEXT_OUT
+     76,  // TEXT_PAC
+    173,  // TEXT_PAC
+     86,  // TEXT_POP
+    174,  // TEXT_POP
+     49,  // TEXT_POPD
+    175,  // TEXT_POPD
+     41,  // TEXT_PSHD
+    176,  // TEXT_PSHD
+     87,  // TEXT_PUSH
+    177,  // TEXT_PUSH
+    105,  // TEXT_RET
+    178,  // TEXT_RET
+    106,  // TEXT_RETC
+    179,  // TEXT_RETC
+     81,  // TEXT_ROL
+    180,  // TEXT_ROL
+     82,  // TEXT_ROR
+    181,  // TEXT_ROR
+      2,  // TEXT_RPT
+     71,  // TEXT_RPT
+    182,  // TEXT_RPT
+    183,  // TEXT_RPT
+     56,  // TEXT_SACH
+    184,  // TEXT_SACH
+     55,  // TEXT_SACL
+    185,  // TEXT_SACL
+     48,  // TEXT_SAR
+    186,  // TEXT_SAR
+     47,  // TEXT_SBRK
+    187,  // TEXT_SBRK
+     89,  // TEXT_SETC
+    188,  // TEXT_SETC
+     79,  // TEXT_SFL
+    189,  // TEXT_SFL
+     80,  // TEXT_SFR
+    190,  // TEXT_SFR
+     78,  // TEXT_SPAC
+    191,  // TEXT_SPAC
+     53,  // TEXT_SPH
+    192,  // TEXT_SPH
+     52,  // TEXT_SPL
+    193,  // TEXT_SPL
+     65,  // TEXT_SPLK
+    194,  // TEXT_SPLK
+     93,  // TEXT_SPM
+    195,  // TEXT_SPM
+     15,  // TEXT_SQRA
+    196,  // TEXT_SQRA
+     16,  // TEXT_SQRS
+    197,  // TEXT_SQRS
+     54,  // TEXT_SST
+    198,  // TEXT_SST
+      8,  // TEXT_SUB
+     11,  // TEXT_SUB
+     70,  // TEXT_SUB
+     98,  // TEXT_SUB
+    199,  // TEXT_SUB
+    200,  // TEXT_SUB
+    201,  // TEXT_SUB
+    202,  // TEXT_SUB
+     22,  // TEXT_SUBB
+    203,  // TEXT_SUBB
+      1,  // TEXT_SUBC
+    204,  // TEXT_SUBC
+     23,  // TEXT_SUBS
+    205,  // TEXT_SUBS
+     24,  // TEXT_SUBT
+    206,  // TEXT_SUBT
+     61,  // TEXT_TBLR
+    207,  // TEXT_TBLR
+     62,  // TEXT_TBLW
+    208,  // TEXT_TBLW
+     90,  // TEXT_TRAP
+    209,  // TEXT_TRAP
+     30,  // TEXT_XOR
+     31,  // TEXT_XOR
+    101,  // TEXT_XOR
+    210,  // TEXT_XOR
+    211,  // TEXT_XOR
+    212,  // TEXT_XOR
+     25,  // TEXT_ZALR
+    213,  // TEXT_ZALR
+};
 // clang-format on
 
 using EntryPage = entry::TableBase<Entry>;
@@ -548,12 +875,17 @@ constexpr EntryPage TMS320C26_PAGES[] PROGMEM = {
         {ARRAY_RANGE(TABLE_TMS320CONF), ARRAY_RANGE(INDEX_TMS320CONF)},
 };
 
+constexpr EntryPage TMS320C20X_PAGES[] PROGMEM = {
+        {ARRAY_RANGE(TABLE_TMS320C20X), ARRAY_RANGE(INDEX_TMS320C20X)},
+};
+
 constexpr Cpu CPU_TABLE[] PROGMEM = {
         {TMS32010, TEXT_CPU_32010, ARRAY_RANGE(TMS32010_PAGES)},
         {TMS32015, TEXT_CPU_32015, ARRAY_RANGE(TMS32010_PAGES)},
         {TMS32020, TEXT_CPU_32020, ARRAY_RANGE(TMS32020_PAGES)},
         {TMS320C25, TEXT_CPU_320C25, ARRAY_RANGE(TMS320C25_PAGES)},
         {TMS320C26, TEXT_CPU_320C26, ARRAY_RANGE(TMS320C26_PAGES)},
+        {TMS320C20X, TEXT_CPU_320C20X, ARRAY_RANGE(TMS320C20X_PAGES)},
 };
 
 const Cpu *cpu(CpuType cpuType) {

@@ -29,6 +29,7 @@ enum CpuType : uint8_t {
     TMS32020,
     TMS320C25,
     TMS320C26,
+    TMS320C20X,
 };
 
 struct Config
