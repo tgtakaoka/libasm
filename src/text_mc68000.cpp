@@ -21,7 +21,7 @@ namespace text {
 namespace mc68000 {
 
 // clang-format off
-constexpr char TEXT_MC68000_LIST[] PROGMEM = "MC68000, MC68010, MC68020";
+constexpr char TEXT_MC68000_LIST[] PROGMEM = "MC68000, MC68010, MC68020, MC68030";
 constexpr char TEXT_CPU_MC68000[]  PROGMEM = "MC68000";
 constexpr char TEXT_CPU_MC68010[]  PROGMEM = "MC68010";
 constexpr char TEXT_CPU_MC68020[]  PROGMEM = "MC68020";
