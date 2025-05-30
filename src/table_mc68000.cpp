@@ -2025,8 +2025,7 @@ Error searchOpCode(const CpuSpec &cpuSpec, DisInsn &insn, StrBuffer &out) {
 #endif
 #if !defined(LIBASM_MC68000_NOPMMU)
     if (insn.getError() == UNKNOWN_INSTRUCTION) {
-        const auto pmmuType = cpuSpec.cpu == MC68020 ? PMMU_MC68851 : PMMU_NONE;
-        pmmu(pmmuType)->searchOpCode(insn, out, matchOpCode);
+        pmmu(cpuSpec.pmmu)->searchOpCode(insn, out, matchOpCode);
     }
 #endif
     if (insn.getError() == UNKNOWN_INSTRUCTION)
