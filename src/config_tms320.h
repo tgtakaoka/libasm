@@ -42,6 +42,8 @@ protected:
     bool is3201x() const { return cpuType() == TMS32010 || cpuType() == TMS32015; }
     bool is3202x() const { return !is3201x(); }
     bool is320C2x() const { return cpuType() == TMS320C25 || cpuType() == TMS320C26; }
+    bool is320C20x() const { return cpuType() == TMS320C20X; }
+    bool is320C2xx() const { return is320C2x() || is320C20x(); }
 
     uint16_t dataMemoryMax() const {
         if (is3201x())

@@ -108,8 +108,10 @@ bool isControlName(RegName name) {
     return name >= CTL_BASE;
 }
 
-uint_fast8_t encodeControlName(RegName name) {
-    return name - CTL_BASE;
+uint_fast8_t encodeControlName(RegName name, bool is320C2x) {
+    if (is320C2x || name < REG_C)
+        return name - CTL_BASE;
+    return name == REG_C ? 0xE : /*TC*/ 0xA;
 }
 
 RegName decodeControlNum(uint_fast8_t num) {

@@ -1230,13 +1230,11 @@ void test_auxiliary_c20x() {
     TEST("LAR", "AR0, #0",      0xBF08, 0x0000);
     TEST("LAR", "AR7, #0FFFFH", 0xBF0F, 0xFFFF);
 
-    if (is320C2x()) {
-        TEST("ADRK", "0",   0x7E00);
-        TEST("ADRK", "255", 0x7EFF);
+    TEST("ADRK", "#0",   0x7800);
+    TEST("ADRK", "#255", 0x78FF);
 
-        TEST("SBRK", "0",   0x7F00);
-        TEST("SBRK", "255", 0x7FFF);
-    }
+    TEST("SBRK", "#0",   0x7C00);
+    TEST("SBRK", "#255", 0x7CFF);
 
     TEST("MAR", "70H",     0x8B70);
     TEST("MAR", "*",       0x8B80);

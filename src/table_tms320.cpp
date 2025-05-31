@@ -623,227 +623,120 @@ constexpr Entry TABLE_TMS320C20X[] PROGMEM = {
     E2(0xBFC0, CF_000F, TEXT_OR,   M_IMU16, M_LS4L),
     E2(0xBFD0, CF_000F, TEXT_XOR,  M_IMU16, M_LS4L),
     E1(0xC000, CF_1FFF, TEXT_MPY,  M_IM13),
-    E2(0xE000, CF_03FF, TEXT_BCND, M_PM16,  M_CC),
-    E2(0xE800, CF_03FF, TEXT_CC,   M_PM16,  M_CC),
     E0(0xEF00, CF_0000, TEXT_RET),
+    E2(0xE000, CF_03FF, TEXT_BCND, M_PM16, M_CC),
+    E2(0xE800, CF_03FF, TEXT_CC,   M_PM16, M_CC),
     E1(0xEC00, CF_03FF, TEXT_RETC, M_CC),
 };
 
 constexpr uint8_t INDEX_TMS320C20X[] PROGMEM = {
      73,  // TEXT_ABS
-    107,  // TEXT_ABS
       7,  // TEXT_ADD
      10,  // TEXT_ADD
      68,  // TEXT_ADD
      97,  // TEXT_ADD
-    108,  // TEXT_ADD
-    109,  // TEXT_ADD
-    110,  // TEXT_ADD
-    111,  // TEXT_ADD
      19,  // TEXT_ADDC
-    112,  // TEXT_ADDC
      20,  // TEXT_ADDS
-    113,  // TEXT_ADDS
      21,  // TEXT_ADDT
-    114,  // TEXT_ADDT
      43,  // TEXT_ADRK
-    115,  // TEXT_ADRK
      28,  // TEXT_AND
      33,  // TEXT_AND
      99,  // TEXT_AND
-    116,  // TEXT_AND
-    117,  // TEXT_AND
-    118,  // TEXT_AND
      77,  // TEXT_APAC
-    119,  // TEXT_APAC
      44,  // TEXT_B
-    120,  // TEXT_B
      83,  // TEXT_BACC
-    121,  // TEXT_BACC
      46,  // TEXT_BANZ
-    122,  // TEXT_BANZ
-    103,  // TEXT_BCND
-    123,  // TEXT_BCND
+    104,  // TEXT_BCND
      12,  // TEXT_BIT
-    124,  // TEXT_BIT
      34,  // TEXT_BITT
-    125,  // TEXT_BITT
      63,  // TEXT_BLDD
      64,  // TEXT_BLDD
-    126,  // TEXT_BLDD
-    127,  // TEXT_BLDD
      60,  // TEXT_BLPD
-    128,  // TEXT_BLPD
      85,  // TEXT_CALA
-    129,  // TEXT_CALA
      45,  // TEXT_CALL
-    130,  // TEXT_CALL
-    104,  // TEXT_CC
-    131,  // TEXT_CC
+    105,  // TEXT_CC
      88,  // TEXT_CLRC
-    132,  // TEXT_CLRC
      74,  // TEXT_CMPL
-    133,  // TEXT_CMPL
      95,  // TEXT_CMPR
-    134,  // TEXT_CMPR
      42,  // TEXT_DMOV
-    135,  // TEXT_DMOV
      84,  // TEXT_IDLE
-    136,  // TEXT_IDLE
      66,  // TEXT_IN
-    137,  // TEXT_IN
      92,  // TEXT_INTR
-    138,  // TEXT_INTR
       6,  // TEXT_LACC
       9,  // TEXT_LACC
      96,  // TEXT_LACC
-    139,  // TEXT_LACC
-    140,  // TEXT_LACC
-    141,  // TEXT_LACC
      26,  // TEXT_LACL
      69,  // TEXT_LACL
-    142,  // TEXT_LACL
-    143,  // TEXT_LACL
      27,  // TEXT_LACT
-    144,  // TEXT_LACT
       0,  // TEXT_LAR
      67,  // TEXT_LAR
      94,  // TEXT_LAR
-    145,  // TEXT_LAR
-    146,  // TEXT_LAR
-    147,  // TEXT_LAR
       4,  // TEXT_LDP
      72,  // TEXT_LDP
-    148,  // TEXT_LDP
-    149,  // TEXT_LDP
      40,  // TEXT_LPH
-    150,  // TEXT_LPH
       5,  // TEXT_LST
-    151,  // TEXT_LST
      38,  // TEXT_LT
-    152,  // TEXT_LT
      35,  // TEXT_LTA
-    153,  // TEXT_LTA
      37,  // TEXT_LTD
-    154,  // TEXT_LTD
      36,  // TEXT_LTP
-    155,  // TEXT_LTP
      39,  // TEXT_LTS
-    156,  // TEXT_LTS
      58,  // TEXT_MAC
-    157,  // TEXT_MAC
      59,  // TEXT_MACD
-    158,  // TEXT_MACD
      51,  // TEXT_MAR
-    159,  // TEXT_MAR
      17,  // TEXT_MPY
     102,  // TEXT_MPY
-    160,  // TEXT_MPY
-    161,  // TEXT_MPY
      13,  // TEXT_MPYA
-    162,  // TEXT_MPYA
      14,  // TEXT_MPYS
-    163,  // TEXT_MPYS
      18,  // TEXT_MPYU
-    164,  // TEXT_MPYU
      75,  // TEXT_NEG
-    165,  // TEXT_NEG
      91,  // TEXT_NMI
-    166,  // TEXT_NMI
      50,  // TEXT_NOP
-    167,  // TEXT_NOP
      57,  // TEXT_NORM
-    168,  // TEXT_NORM
      29,  // TEXT_OR
      32,  // TEXT_OR
     100,  // TEXT_OR
-    169,  // TEXT_OR
-    170,  // TEXT_OR
-    171,  // TEXT_OR
       3,  // TEXT_OUT
-    172,  // TEXT_OUT
      76,  // TEXT_PAC
-    173,  // TEXT_PAC
      86,  // TEXT_POP
-    174,  // TEXT_POP
      49,  // TEXT_POPD
-    175,  // TEXT_POPD
      41,  // TEXT_PSHD
-    176,  // TEXT_PSHD
      87,  // TEXT_PUSH
-    177,  // TEXT_PUSH
-    105,  // TEXT_RET
-    178,  // TEXT_RET
+    103,  // TEXT_RET
     106,  // TEXT_RETC
-    179,  // TEXT_RETC
      81,  // TEXT_ROL
-    180,  // TEXT_ROL
      82,  // TEXT_ROR
-    181,  // TEXT_ROR
       2,  // TEXT_RPT
      71,  // TEXT_RPT
-    182,  // TEXT_RPT
-    183,  // TEXT_RPT
      56,  // TEXT_SACH
-    184,  // TEXT_SACH
      55,  // TEXT_SACL
-    185,  // TEXT_SACL
      48,  // TEXT_SAR
-    186,  // TEXT_SAR
      47,  // TEXT_SBRK
-    187,  // TEXT_SBRK
      89,  // TEXT_SETC
-    188,  // TEXT_SETC
      79,  // TEXT_SFL
-    189,  // TEXT_SFL
      80,  // TEXT_SFR
-    190,  // TEXT_SFR
      78,  // TEXT_SPAC
-    191,  // TEXT_SPAC
      53,  // TEXT_SPH
-    192,  // TEXT_SPH
      52,  // TEXT_SPL
-    193,  // TEXT_SPL
      65,  // TEXT_SPLK
-    194,  // TEXT_SPLK
      93,  // TEXT_SPM
-    195,  // TEXT_SPM
      15,  // TEXT_SQRA
-    196,  // TEXT_SQRA
      16,  // TEXT_SQRS
-    197,  // TEXT_SQRS
      54,  // TEXT_SST
-    198,  // TEXT_SST
       8,  // TEXT_SUB
      11,  // TEXT_SUB
      70,  // TEXT_SUB
      98,  // TEXT_SUB
-    199,  // TEXT_SUB
-    200,  // TEXT_SUB
-    201,  // TEXT_SUB
-    202,  // TEXT_SUB
      22,  // TEXT_SUBB
-    203,  // TEXT_SUBB
       1,  // TEXT_SUBC
-    204,  // TEXT_SUBC
      23,  // TEXT_SUBS
-    205,  // TEXT_SUBS
      24,  // TEXT_SUBT
-    206,  // TEXT_SUBT
      61,  // TEXT_TBLR
-    207,  // TEXT_TBLR
      62,  // TEXT_TBLW
-    208,  // TEXT_TBLW
      90,  // TEXT_TRAP
-    209,  // TEXT_TRAP
      30,  // TEXT_XOR
      31,  // TEXT_XOR
     101,  // TEXT_XOR
-    210,  // TEXT_XOR
-    211,  // TEXT_XOR
-    212,  // TEXT_XOR
      25,  // TEXT_ZALR
-    213,  // TEXT_ZALR
 };
 // clang-format on
 
@@ -892,21 +785,24 @@ const Cpu *cpu(CpuType cpuType) {
     return Cpu::search(cpuType, ARRAY_RANGE(CPU_TABLE));
 }
 
-bool acceptMode(AddrMode opr, AddrMode table, bool is320C2x) {
+bool acceptMode(AddrMode opr, AddrMode table, bool is320C2xx) {
     if (opr == table)
         return true;
     if (opr == M_NONE)  // These can be ommitted.
-        return table == M_LS0 || table == M_LS3 || table == M_LS4 || table == M_MAR ||
-               table == M_NARP;
+        return table == M_LS0 || table == M_LS3 || table == M_LS4 || table == M_LS4L ||
+               table == M_MAR || table == M_NARP;
     if (opr == M_AR)
         return table == M_ARK || table == M_NARP;
     if (opr == M_ARP || opr == M_INC || opr == M_DEC || opr == M_INC0 || opr == M_DEC0 ||
             opr == M_IBR0 || opr == M_DBR0)
         return table == M_MAM || table == M_IND || table == M_MAR;
-    if (opr == M_UI16)
+    if (opr == M_UI16) {
+        if (is320C2xx && table == M_LS16)
+            return false;
         return table == M_MAM || table == M_NARP || (table >= M_UI1 && table <= M_PM16);
+    }
     if (opr == M_LS16) {
-        if (is320C2x) {
+        if (is320C2xx) {
             if (table == M_LS4)
                 return false;
             return table == M_MAM || table == M_NARP || (table >= M_UI1 && table <= M_PM16);
@@ -937,21 +833,21 @@ bool acceptModes(AsmInsn &insn, const Entry *entry) {
            acceptMode(insn.op3.mode, table.mode3());
 }
 
-bool acceptModec2x(AddrMode opr, AddrMode table) {
+bool acceptModec2xx(AddrMode opr, AddrMode table) {
     return acceptMode(opr, table, true);
 }
 
-bool acceptModesc2x(AsmInsn &insn, const Entry *entry) {
+bool acceptModesc2xx(AsmInsn &insn, const Entry *entry) {
     const auto table = entry->readFlags();
-    return acceptModec2x(insn.op1.mode, table.mode1()) &&
-           acceptModec2x(insn.op2.mode, table.mode2()) &&
-           acceptModec2x(insn.op3.mode, table.mode3());
+    return acceptModec2xx(insn.op1.mode, table.mode1()) &&
+           acceptModec2xx(insn.op2.mode, table.mode2()) &&
+           acceptModec2xx(insn.op3.mode, table.mode3());
 }
 
 Error searchName(CpuType cpuType, AsmInsn &insn) {
     const auto c = cpu(cpuType);
-    if (cpuType == TMS320C25 || cpuType == TMS320C26) {
-        c->searchName(insn, acceptModesc2x);
+    if (cpuType == TMS320C25 || cpuType == TMS320C26 || cpuType == TMS320C20X) {
+        c->searchName(insn, acceptModesc2xx);
     } else {
         c->searchName(insn, acceptModes);
     }
