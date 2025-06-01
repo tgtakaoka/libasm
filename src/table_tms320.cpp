@@ -1,3 +1,4 @@
+
 /*
  * Copyright 2021 Tadashi G. Takaoka
  *
@@ -738,6 +739,121 @@ constexpr uint8_t INDEX_TMS320C20X[] PROGMEM = {
     101,  // TEXT_XOR
      25,  // TEXT_ZALR
 };
+
+constexpr Entry TABLE_TMS320C5X[] PROGMEM = {
+    E2(0x0800, CF_00FF, TEXT_LAMM,  M_MAM,  M_NARP),
+    E3(0x0900, CF_00FF, TEXT_SMMR,  M_MAM,  M_IMU16, M_NARP),
+    E2(0x5700, CF_00FF, TEXT_BLDP,  M_MAM,  M_NARP),
+    E2(0x5800, CF_00FF, TEXT_XPL,   M_MAM,  M_NARP),
+    E2(0x5900, CF_00FF, TEXT_OPL,   M_MAM,  M_NARP),
+    E2(0x5A00, CF_00FF, TEXT_APL,   M_MAM,  M_NARP),
+    E2(0x5B00, CF_00FF, TEXT_CPL,   M_MAM,  M_NARP),
+    E3(0x5C00, CF_00FF, TEXT_XPL,   M_IMU16, M_MAM,  M_NARP),
+    E3(0x5D00, CF_00FF, TEXT_OPL,   M_IMU16, M_MAM,  M_NARP),
+    E3(0x5E00, CF_00FF, TEXT_APL,   M_IMU16, M_MAM,  M_NARP),
+    E3(0x5F00, CF_00FF, TEXT_CPL,   M_IMU16, M_MAM,  M_NARP),
+    E3(0x7D80, CF_007F, TEXT_BD,    M_PM16, M_MAR,   M_NARP),
+    E3(0x7E80, CF_007F, TEXT_CALLD, M_PM16, M_MAR,   M_NARP),
+    E3(0x7F80, CF_007F, TEXT_BANZD, M_PM16, M_MAR,   M_NARP),
+    E2(0x8800, CF_00FF, TEXT_SAMM,  M_MAM,  M_NARP),
+    E3(0x8900, CF_00FF, TEXT_LMMR,  M_MAM,  M_IMU16, M_NARP),
+    E3(0xA400, CF_00FF, TEXT_BLPD,  M_BMAR, M_MAM,  M_NARP),
+    E2(0xAA00, CF_00FF, TEXT_MADS,  M_MAM,  M_NARP),
+    E2(0xAB00, CF_00FF, TEXT_MADD,  M_MAM,  M_NARP),
+    E3(0xAC00, CF_00FF, TEXT_BLDD,  M_BMAR, M_MAM,  M_NARP),
+    E3(0xAD00, CF_00FF, TEXT_BLDD,  M_MAM,  M_BMAR, M_NARP),
+    E0(0xBE10, CF_0000, TEXT_ADDB),
+    E0(0xBE11, CF_0000, TEXT_ADCB),
+    E0(0xBE12, CF_0000, TEXT_ANDB),
+    E0(0xBE13, CF_0000, TEXT_ORB),
+    E0(0xBE14, CF_0000, TEXT_ROLB),
+    E0(0xBE15, CF_0000, TEXT_RORB),
+    E0(0xBE16, CF_0000, TEXT_SFLB),
+    E0(0xBE17, CF_0000, TEXT_SFRB),
+    E0(0xBE18, CF_0000, TEXT_SBB),
+    E0(0xBE19, CF_0000, TEXT_SBBB),
+    E0(0xBE1A, CF_0000, TEXT_XORB),
+    E0(0xBE1B, CF_0000, TEXT_CRGT),
+    E0(0xBE1C, CF_0000, TEXT_CRLT),
+    E0(0xBE1D, CF_0000, TEXT_EXAR),
+    E0(0xBE1E, CF_0000, TEXT_SACB),
+    E0(0xBE1F, CF_0000, TEXT_LACB),
+    E0(0xBE21, CF_0000, TEXT_BACCD),
+    E0(0xBE23, CF_0000, TEXT_IDLE2),
+    E0(0xBE38, CF_0000, TEXT_RETI),
+    E0(0xBE3A, CF_0000, TEXT_RETE),
+    E0(0xBE3D, CF_0000, TEXT_CALAD),
+    E0(0xBE58, CF_0000, TEXT_ZPR),
+    E0(0xBE59, CF_0000, TEXT_ZAP),
+    E0(0xBE5A, CF_0000, TEXT_SATH),
+    E0(0xBE5B, CF_0000, TEXT_SATL),
+    E1(0xBEC5, CF_0000, TEXT_RPTZ,  M_IMU16),
+    E1(0xBEC6, CF_0000, TEXT_RPTB,  M_PM16),
+    E1(0xBFE0, CF_000F, TEXT_BSAR,  M_LS4Z),
+    E2(0xE400, CF_13FF, TEXT_XC,    M_XCN,   M_CC),
+    E2(0xF000, CF_03FF, TEXT_BCNDD, M_PM16,  M_CC),
+    E2(0xF800, CF_03FF, TEXT_CCD,   M_PM16,  M_CC),
+    E0(0xFF00, CF_0000, TEXT_RETD),
+    E1(0xFC00, CF_03FF, TEXT_RETCD, M_CC),
+};
+
+constexpr uint8_t INDEX_TMS320C5X[] PROGMEM = {
+     22,  // TEXT_ADCB
+     21,  // TEXT_ADDB
+     23,  // TEXT_ANDB
+      5,  // TEXT_APL
+      9,  // TEXT_APL
+     37,  // TEXT_BACCD
+     13,  // TEXT_BANZD
+     50,  // TEXT_BCNDD
+     11,  // TEXT_BD
+     19,  // TEXT_BLDD
+     20,  // TEXT_BLDD
+      2,  // TEXT_BLDP
+     16,  // TEXT_BLPD
+     48,  // TEXT_BSAR
+     41,  // TEXT_CALAD
+     12,  // TEXT_CALLD
+     51,  // TEXT_CCD
+      6,  // TEXT_CPL
+     10,  // TEXT_CPL
+     32,  // TEXT_CRGT
+     33,  // TEXT_CRLT
+     34,  // TEXT_EXAR
+     38,  // TEXT_IDLE2
+     36,  // TEXT_LACB
+      0,  // TEXT_LAMM
+     15,  // TEXT_LMMR
+     18,  // TEXT_MADD
+     17,  // TEXT_MADS
+      4,  // TEXT_OPL
+      8,  // TEXT_OPL
+     24,  // TEXT_ORB
+     53,  // TEXT_RETCD
+     52,  // TEXT_RETD
+     40,  // TEXT_RETE
+     39,  // TEXT_RETI
+     25,  // TEXT_ROLB
+     26,  // TEXT_RORB
+     47,  // TEXT_RPTB
+     46,  // TEXT_RPTZ
+     35,  // TEXT_SACB
+     14,  // TEXT_SAMM
+     44,  // TEXT_SATH
+     45,  // TEXT_SATL
+     29,  // TEXT_SBB
+     30,  // TEXT_SBBB
+     27,  // TEXT_SFLB
+     28,  // TEXT_SFRB
+      1,  // TEXT_SMMR
+     49,  // TEXT_XC
+     31,  // TEXT_XORB
+      3,  // TEXT_XPL
+      7,  // TEXT_XPL
+     43,  // TEXT_ZAP
+     42,  // TEXT_ZPR
+};
+
 // clang-format on
 
 using EntryPage = entry::TableBase<Entry>;
@@ -772,6 +888,11 @@ constexpr EntryPage TMS320C20X_PAGES[] PROGMEM = {
         {ARRAY_RANGE(TABLE_TMS320C20X), ARRAY_RANGE(INDEX_TMS320C20X)},
 };
 
+constexpr EntryPage TMS320C5X_PAGES[] PROGMEM = {
+        {ARRAY_RANGE(TABLE_TMS320C20X), ARRAY_RANGE(INDEX_TMS320C20X)},
+        {ARRAY_RANGE(TABLE_TMS320C5X), ARRAY_RANGE(INDEX_TMS320C5X)},
+};
+
 constexpr Cpu CPU_TABLE[] PROGMEM = {
         {TMS32010, TEXT_CPU_32010, ARRAY_RANGE(TMS32010_PAGES)},
         {TMS32015, TEXT_CPU_32015, ARRAY_RANGE(TMS32010_PAGES)},
@@ -779,13 +900,14 @@ constexpr Cpu CPU_TABLE[] PROGMEM = {
         {TMS320C25, TEXT_CPU_320C25, ARRAY_RANGE(TMS320C25_PAGES)},
         {TMS320C26, TEXT_CPU_320C26, ARRAY_RANGE(TMS320C26_PAGES)},
         {TMS320C20X, TEXT_CPU_320C20X, ARRAY_RANGE(TMS320C20X_PAGES)},
+        {TMS320C5X, TEXT_CPU_320C5X, ARRAY_RANGE(TMS320C5X_PAGES)},
 };
 
 const Cpu *cpu(CpuType cpuType) {
     return Cpu::search(cpuType, ARRAY_RANGE(CPU_TABLE));
 }
 
-bool acceptMode(AddrMode opr, AddrMode table, bool is320C2xx) {
+bool acceptMode(AddrMode opr, AddrMode table, bool is320c) {
     if (opr == table)
         return true;
     if (opr == M_NONE)  // These can be ommitted.
@@ -797,12 +919,12 @@ bool acceptMode(AddrMode opr, AddrMode table, bool is320C2xx) {
             opr == M_IBR0 || opr == M_DBR0)
         return table == M_MAM || table == M_IND || table == M_MAR;
     if (opr == M_UI16) {
-        if (is320C2xx && table == M_LS16)
+        if (is320c && table == M_LS16)
             return false;
         return table == M_MAM || table == M_NARP || (table >= M_UI1 && table <= M_PM16);
     }
     if (opr == M_LS16) {
-        if (is320C2xx) {
+        if (is320c) {
             if (table == M_LS4)
                 return false;
             return table == M_MAM || table == M_NARP || (table >= M_UI1 && table <= M_PM16);
@@ -833,21 +955,21 @@ bool acceptModes(AsmInsn &insn, const Entry *entry) {
            acceptMode(insn.op3.mode, table.mode3());
 }
 
-bool acceptModec2xx(AddrMode opr, AddrMode table) {
+bool acceptMode320c(AddrMode opr, AddrMode table) {
     return acceptMode(opr, table, true);
 }
 
-bool acceptModesc2xx(AsmInsn &insn, const Entry *entry) {
+bool acceptModes320c(AsmInsn &insn, const Entry *entry) {
     const auto table = entry->readFlags();
-    return acceptModec2xx(insn.op1.mode, table.mode1()) &&
-           acceptModec2xx(insn.op2.mode, table.mode2()) &&
-           acceptModec2xx(insn.op3.mode, table.mode3());
+    return acceptMode320c(insn.op1.mode, table.mode1()) &&
+           acceptMode320c(insn.op2.mode, table.mode2()) &&
+           acceptMode320c(insn.op3.mode, table.mode3());
 }
 
 Error searchName(CpuType cpuType, AsmInsn &insn) {
     const auto c = cpu(cpuType);
-    if (cpuType == TMS320C25 || cpuType == TMS320C26 || cpuType == TMS320C20X) {
-        c->searchName(insn, acceptModesc2xx);
+    if (cpuType >= TMS320C25) {
+        c->searchName(insn, acceptModes320c);
     } else {
         c->searchName(insn, acceptModes);
     }
@@ -883,7 +1005,7 @@ bool matchOpCode(DisInsn &insn, const Entry *entry, CpuType cpuType) {
             mask |= 0x70;
         }
     }
-    if (mode2 == M_LS3 && cpuType != TMS320C25) {
+    if (mode2 == M_LS3 && cpuType < TMS320C25) {
         const auto shift = (opc >> 8) & 7;
         if (shift == 0 || shift == 1 || shift == 4) {
             ;  // OK

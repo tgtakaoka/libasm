@@ -53,7 +53,8 @@ enum RegName : int8_t {
     REG_PA13 = 21,  // Port address 13
     REG_PA14 = 22,  // Port address 14
     REG_PA15 = 23,  // Port address 15
-    CTL_BASE = 0x40,
+    REG_BMAR = 24,  // TMS320C5X
+    CTL_BASE = 0x20,
     REG_INTM = CTL_BASE + 0x00,  // ST0: interrupt mode
     REG_OVM = CTL_BASE + 0x02,   // ST0: overflow mode
     REG_CNF = CTL_BASE + 0x04,   // ST1: RAM configuration

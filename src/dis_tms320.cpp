@@ -207,6 +207,9 @@ void DisTms320::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) cons
     case M_ARK:
         outAuxiliary(out, opc);
         break;
+    case M_LS4Z:
+        outDec(out, (opc & 0xF) + 1, 5);
+        break;
     case M_LS4:
     case M_BIT:
         outDec(out, opc >> 8, 4);
@@ -229,6 +232,9 @@ void DisTms320::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) cons
         break;
     case M_STN:
         out.letter('#').letter((opc & 0x100) ? '1' : '0');
+        break;
+    case M_XCN:
+        out.letter((opc & 0x1000) == 0 ? '1' : '2');
         break;
     case M_UI1:
         out.letter((opc & 1) == 0 ? '0' : '1');
@@ -283,6 +289,9 @@ void DisTms320::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) cons
         outRegName(out, reg);
         break;
     }
+    case M_BMAR:
+        outRegName(out, REG_BMAR);
+        break;
     default:
         break;
     }

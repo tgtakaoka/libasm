@@ -30,6 +30,7 @@ enum CpuType : uint8_t {
     TMS320C25,
     TMS320C26,
     TMS320C20X,
+    TMS320C5X,
 };
 
 struct Config
@@ -43,7 +44,10 @@ protected:
     bool is3202x() const { return !is3201x(); }
     bool is320C2x() const { return cpuType() == TMS320C25 || cpuType() == TMS320C26; }
     bool is320C20x() const { return cpuType() == TMS320C20X; }
-    bool is320C2xx() const { return is320C2x() || is320C20x(); }
+    bool is320C5x() const { return cpuType() == TMS320C5X; }
+    bool is320Cx() const { return cpuType() >= TMS320C25; }
+
+    uint8_t nameMax() const override { return is320C5x() ? 5 : 4; }
 
     uint16_t dataMemoryMax() const {
         if (is3201x())

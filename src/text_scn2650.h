@@ -83,7 +83,7 @@ extern const char TEXT_REDC[] PROGMEM;
 extern const char TEXT_REDD[] PROGMEM;
 extern const char TEXT_REDE[] PROGMEM;
 using common::TEXT_RETC;
-extern const char TEXT_RETE[] PROGMEM;
+using common::TEXT_RETE;
 using common::TEXT_RRL;
 extern const char TEXT_RRR[]  PROGMEM;
 extern const char TEXT_SPSL[] PROGMEM;
