@@ -631,6 +631,14 @@ void test_accumrator_2x() {
         TEST("ZALR *-, AR1", 0x7B99);
         TEST("ZALR *+, AR0", 0x7BA8);
     }
+
+    TEST("SFL", 0xCE18);
+    TEST("SFR", 0xCE19);
+
+    if (is320C2x()) {
+        TEST("ROL", 0xCE34);
+        TEST("ROR", 0xCE35);
+    }
 }
 
 void test_auxiliary_1x() {
