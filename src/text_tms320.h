@@ -31,6 +31,7 @@ extern const char TEXT_CPU_32020[]  PROGMEM;
 extern const char TEXT_CPU_320C25[] PROGMEM;
 extern const char TEXT_CPU_320C26[] PROGMEM;
 extern const char TEXT_CPU_320C20X[] PROGMEM;
+extern const char TEXT_CPU_320C5X[] PROGMEM;
 
 // TMS320
 using common::TEXT_ABS;
@@ -193,6 +194,55 @@ extern const char TEXT_SPLK[] PROGMEM;
 extern const char TEXT_REG_AR[] PROGMEM;
 extern const char TEXT_REG_PA[] PROGMEM;
 
+// TMS320C5X
+using common::TEXT_ADCB;
+using common::TEXT_ADDB;
+using common::TEXT_ANDB;
+extern const char TEXT_APL[]   PROGMEM;
+extern const char TEXT_BACCD[] PROGMEM;
+extern const char TEXT_BANZD[] PROGMEM;
+extern const char TEXT_BCNDD[] PROGMEM;
+using common::TEXT_BD;
+extern const char TEXT_BLDP[]  PROGMEM;
+extern const char TEXT_BSAR[]  PROGMEM;
+extern const char TEXT_CALAD[] PROGMEM;
+extern const char TEXT_CALLD[] PROGMEM;
+extern const char TEXT_CCD[]   PROGMEM;
+using common::TEXT_CPL;
+extern const char TEXT_CRGT[]  PROGMEM;
+extern const char TEXT_CRLT[]  PROGMEM;
+extern const char TEXT_EXAR[]  PROGMEM;
+extern const char TEXT_IDLE2[] PROGMEM;
+extern const char TEXT_LACB[]  PROGMEM;
+extern const char TEXT_LAMM[]  PROGMEM;
+extern const char TEXT_LMMR[]  PROGMEM;
+extern const char TEXT_MADD[]  PROGMEM;
+extern const char TEXT_MADS[]  PROGMEM;
+extern const char TEXT_OPL[]   PROGMEM;
+using common::TEXT_ORB;
+extern const char TEXT_RETCD[] PROGMEM;
+extern const char TEXT_RETD[]  PROGMEM;
+using common::TEXT_RETE;
+using common::TEXT_RETI;
+using common::TEXT_ROLB;
+using common::TEXT_RORB;
+extern const char TEXT_RPTB[]  PROGMEM;
+extern const char TEXT_RPTZ[]  PROGMEM;
+extern const char TEXT_SACB[]  PROGMEM;
+extern const char TEXT_SAMM[]  PROGMEM;
+extern const char TEXT_SATH[]  PROGMEM;
+extern const char TEXT_SATL[]  PROGMEM;
+using common::TEXT_SBB;
+extern const char TEXT_SBBB[]  PROGMEM;
+extern const char TEXT_SFLB[]  PROGMEM;
+extern const char TEXT_SFRB[]  PROGMEM;
+extern const char TEXT_SMMR[]  PROGMEM;
+extern const char TEXT_XC[]    PROGMEM;
+using common::TEXT_XORB;
+extern const char TEXT_XPL[]   PROGMEM;
+extern const char TEXT_ZAP[]   PROGMEM;
+extern const char TEXT_ZPR[]   PROGMEM;
+
 // TMS320C2X Enhanced instruction
 extern const char TEXT_REG_CNF[]  PROGMEM;
 using common::TEXT_REG_C;
@@ -202,6 +252,9 @@ extern const char TEXT_REG_OVM[]  PROGMEM;
 extern const char TEXT_REG_SXM[]  PROGMEM;
 using common::TEXT_REG_TC;
 extern const char TEXT_REG_XF[]   PROGMEM;
+
+// TMS320C5X
+extern const char TEXT_REG_BMAR[] PROGMEM;
 
 extern const char TEXT_CC_BIO[] PROGMEM;
 using common::TEXT_CC_C;

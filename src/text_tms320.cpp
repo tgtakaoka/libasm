@@ -21,13 +21,15 @@ namespace text {
 namespace tms320 {
 
 // clang-format off
-constexpr char TEXT_TMS320_LIST[] PROGMEM = "TMS32010, TMS32015, TMS32020, TMS320C25, TMS320C26, TMS320C20X";
+constexpr char TEXT_TMS320_LIST[] PROGMEM =
+    "TMS32010, TMS32015, TMS32020, TMS320C25, TMS320C26, TMS320C20X, TMS320C5X";
 constexpr char TEXT_CPU_32010[] PROGMEM = "32010";
 constexpr char TEXT_CPU_32015[] PROGMEM = "32015";
 constexpr char TEXT_CPU_32020[] PROGMEM = "32020";
 constexpr char TEXT_CPU_320C25[] PROGMEM = "320C25";
 constexpr char TEXT_CPU_320C26[] PROGMEM = "320C26";
 constexpr char TEXT_CPU_320C20X[] PROGMEM = "320C20X";
+constexpr char TEXT_CPU_320C5X[] PROGMEM = "320C5X";
 
 // TMS320
 // constexpr char TEXT_ABS[]  PROGMEM = "ABS";
@@ -187,6 +189,55 @@ constexpr char TEXT_INTR[] PROGMEM = "INTR";
 constexpr char TEXT_SPLK[] PROGMEM = "SPLK";
 // constexpr char TEXT_RETC[] PROGMEM = "RETC";
 
+// TMS320C5X
+// constexpr char TEXT_ADCB[]  PROGMEM = "ADCB";
+// constexpr char TEXT_ADDB[]  PROGMEM = "ADDB";
+// constexpr char TEXT_ANDB[]  PROGMEM = "ANDB";
+constexpr char TEXT_APL[]   PROGMEM = "APL";
+constexpr char TEXT_BACCD[] PROGMEM = "BACCD";
+constexpr char TEXT_BANZD[] PROGMEM = "BANZD";
+constexpr char TEXT_BCNDD[] PROGMEM = "BCNDD";
+// constexpr char TEXT_BD[]    PROGMEM = "BD";
+constexpr char TEXT_BLDP[]  PROGMEM = "BLDP";
+constexpr char TEXT_BSAR[]  PROGMEM = "BSAR";
+constexpr char TEXT_CALAD[] PROGMEM = "CALAD";
+constexpr char TEXT_CALLD[] PROGMEM = "CALLD";
+constexpr char TEXT_CCD[]   PROGMEM = "CCD";
+// constexpr char TEXT_CPL[]   PROGMEM = "CPL";
+constexpr char TEXT_CRGT[]  PROGMEM = "CRGT";
+constexpr char TEXT_CRLT[]  PROGMEM = "CRLT";
+constexpr char TEXT_EXAR[]  PROGMEM = "EXAR";
+constexpr char TEXT_IDLE2[] PROGMEM = "IDLE2";
+constexpr char TEXT_LACB[]  PROGMEM = "LACB";
+constexpr char TEXT_LAMM[]  PROGMEM = "LAMM";
+constexpr char TEXT_LMMR[]  PROGMEM = "LMMR";
+constexpr char TEXT_MADD[]  PROGMEM = "MADD";
+constexpr char TEXT_MADS[]  PROGMEM = "MADS";
+constexpr char TEXT_OPL[]   PROGMEM = "OPL";
+// constexpr char TEXT_ORB[]   PROGMEM = "ORB";
+constexpr char TEXT_RETCD[] PROGMEM = "RETCD";
+constexpr char TEXT_RETD[]  PROGMEM = "RETD";
+// constexpr char TEXT_RETE[]  PROGMEM = "RETE";
+// constexpr char TEXT_RETI[]  PROGMEM = "RETI";
+// constexpr char TEXT_ROLB[]  PROGMEM = "ROLB";
+// constexpr char TEXT_RORB[]  PROGMEM = "RORB";
+constexpr char TEXT_RPTB[]  PROGMEM = "RPTB";
+constexpr char TEXT_RPTZ[]  PROGMEM = "RPTZ";
+constexpr char TEXT_SACB[]  PROGMEM = "SACB";
+constexpr char TEXT_SAMM[]  PROGMEM = "SAMM";
+constexpr char TEXT_SATH[]  PROGMEM = "SATH";
+constexpr char TEXT_SATL[]  PROGMEM = "SATL";
+// constexpr char TEXT_SBB[]   PROGMEM = "SBB";
+constexpr char TEXT_SBBB[]  PROGMEM = "SBBB";
+constexpr char TEXT_SFLB[]  PROGMEM = "SFLB";
+constexpr char TEXT_SFRB[]  PROGMEM = "SFRB";
+constexpr char TEXT_SMMR[]  PROGMEM = "SMMR";
+constexpr char TEXT_XC[]    PROGMEM = "XC";
+// constexpr char TEXT_XORB[]  PROGMEM = "XORB";
+constexpr char TEXT_XPL[]   PROGMEM = "XPL";
+constexpr char TEXT_ZAP[]   PROGMEM = "ZAP";
+constexpr char TEXT_ZPR[]   PROGMEM = "ZPR";
+
 constexpr char TEXT_REG_AR[] PROGMEM = "AR";
 constexpr char TEXT_REG_PA[] PROGMEM = "PA";
 
@@ -199,6 +250,9 @@ constexpr char TEXT_REG_OVM[]  PROGMEM = "OVM";
 constexpr char TEXT_REG_SXM[]  PROGMEM = "SXM";
 // constexpr char TEXT_REG_TC[]   PROGMEM = "TC";
 constexpr char TEXT_REG_XF[]   PROGMEM = "XF";
+
+// TMS320C5X
+constexpr char TEXT_REG_BMAR[] PROGMEM = "BMAR";
 
 constexpr char TEXT_CC_BIO[] PROGMEM = "BIO";
 // constexpr char TEXT_CC_C[]   PROGMEM = "C";

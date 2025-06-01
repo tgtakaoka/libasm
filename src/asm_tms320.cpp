@@ -122,9 +122,24 @@ void AsmTms320::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode) c
         break;
     case M_LS3:
         max = 7;
-        if (!is320C2xx() && !(val == 0 || val == 1 || val == 4))
+        if (!is320Cx() && !(val == 0 || val == 1 || val == 4))
             insn.setErrorIf(op, ILLEGAL_CONSTANT);
         goto check_hi8;
+    case M_XCN:
+        max = 2;
+        goto check_int;
+    case M_LS4Z:
+        max = 16;
+    check_int:
+        if (op.val.overflow(max, 1)) {
+            val &= (max - 1);
+            insn.setErrorIf(op, OVERFLOW_RANGE);
+        }
+        val -= 1;
+        if (mode == M_XCN)
+            val <<= 12;
+        insn.embed(val);
+        break;
     case M_BIT:
     case M_LS4:
         max = 15;
@@ -205,6 +220,8 @@ void AsmTms320::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode) c
         insn.emitOperand16(val);
         break;
     case M_CTL:
+        if (op.reg == REG_HM && is320C20x())
+            insn.setErrorIf(op, ILLEGAL_REGISTER);
         insn.embed(encodeControlName(op.reg, is320C2x()));
         break;
     case M_CC:
@@ -299,7 +316,7 @@ Error AsmTms320::parseConditionCode(StrScanner &scan, Operand &op) const {
     } else {
         op.mode = M_CC;
     }
-    if (is320C20x()) {
+    if (is320C20x() || is320C5x()) {
         while (p.skipSpaces().expect(',')) {
             if (parseCcName(p.skipSpaces(), parser()) == CC_UNDEF) {
                 op.setErrorIf(p, UNKNOWN_OPERAND);
@@ -363,6 +380,8 @@ Error AsmTms320::parseOperand(StrScanner &scan, Operand &op) const {
     if (op.reg != REG_UNDEF) {
         if (isControlName(op.reg)) {
             op.mode = M_CTL;
+        } else if (op.reg == REG_BMAR) {
+            op.mode = M_BMAR;
         } else {
             op.mode = isAR(op.reg) ? M_AR : M_PA;
             op.val.setUnsigned(encodeRegName(op.reg));

@@ -29,7 +29,7 @@ help:
 # target which has ".inc" suffix for output.
 INC_targets = w65c816 tlcs90 i8086 i80186 \
     mc68000 mc68010 mc68020 mc68030 z8001 z8002 ns32000 mn1610 mn1613 \
-    tms320c20x tms370 tms7000 tms9980 j11 t11 mc146805 z80 z180 z380
+    tms320c20x tms320c5x tms370 tms7000 tms9980 j11 t11 mc146805 z80 z180 z380
 # target which for GNU assembler (also ".ginc" targets)
 GINC_targets = mc68000 mc68010 mc68020 mc68030 z8001 z8002 ns32000 \
     mc68hc11 mc68hc12 i8086 i80186 i80286

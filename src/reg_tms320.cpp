@@ -31,6 +31,7 @@ namespace reg {
 namespace {
 // clang-format off
 constexpr NameEntry REG_ENTRIES[] PROGMEM = {
+    { TEXT_REG_BMAR, REG_BMAR },
     { TEXT_REG_C,    REG_C    },
     { TEXT_REG_CNF,  REG_CNF  },
     { TEXT_REG_HM,   REG_HM   },
@@ -92,7 +93,7 @@ RegName parseRegName(StrScanner &scan, const ValueParser &parser) {
 }
 
 StrBuffer &outRegName(StrBuffer &out, RegName name) {
-    if (name >= CTL_BASE) {
+    if (name >= REG_BMAR) {
         const auto *entry = REG_TABLE.searchName(name);
         return entry ? entry->outText(out) : out;
     }
@@ -110,8 +111,12 @@ bool isControlName(RegName name) {
 }
 
 uint_fast8_t encodeControlName(RegName name, bool is320C2x) {
-    if (is320C2x || name < REG_C)
+    if (is320C2x)
         return name - CTL_BASE;
+    if (name < REG_C)
+        return (name - CTL_BASE) & 0xF;
+    if (name == REG_HM)
+        return 0x8;
     return name == REG_C ? 0xE : /*TC*/ 0xA;
 }
 
