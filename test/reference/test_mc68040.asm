@@ -14,6 +14,7 @@
 
         cpu     68040
         fpu     on
+        pmmu    on
         org     $10000
         include "test_mc68000.inc"
         include "test_mc68010.inc"

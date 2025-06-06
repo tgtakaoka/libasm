@@ -875,20 +875,24 @@ Error AsmMc68000::encodeOperand(
         break;
 #endif
     case M_USP:
-    case M_CREG: {
-        auto creg = encodeCntlRegNo(op.creg);
+    case M_CREG:
+        if (validCntlReg(op.creg, _cpuSpec)) {
+            auto creg = encodeCntlRegNo(op.creg);
 #if !defined(LIBASM_MC68000_NOPMMU)
-        if (mode == M_PFC) {
-            if (op.creg != CREG_SFC && op.creg != CREG_DFC) {
-                insn.setErrorIf(op, REGISTER_NOT_ALLOWED);
-                creg = 0;
+            if (mode == M_PFC) {
+                if (op.creg != CREG_SFC && op.creg != CREG_DFC) {
+                    insn.setErrorIf(op, REGISTER_NOT_ALLOWED);
+                    creg = 0;
+                }
             }
-        }
 #endif
-        if (postPos(pos) == 0)
-            insn.embedPostfix(creg);
+            if (postPos(pos) == 0)
+                insn.embedPostfix(creg);
+        } else {
+            insn.setErrorIf(op, UNKNOWN_REGISTER);
+            insn.embedPostfix(encodeCntlRegNo(op.creg));
+        }
         break;
-    }
     case M_BITOW:
         encodeBitField(insn, op);
         break;
@@ -1495,7 +1499,7 @@ Error AsmMc68000::parseOperand(StrScanner &scan, Operand &op) const {
         return OK;
     }
 
-    op.creg = parseCntlReg(a, parser(), _cpuSpec.cpu);
+    op.creg = parseCntlReg(a, parser(), _cpuSpec.pmmu);
     if (op.creg != CREG_UNDEF) {
         if (op.creg == CREG_USP) {
             op.mode = M_USP;
@@ -1697,15 +1701,18 @@ Error AsmMc68000::encodeImpl(StrScanner &scan, Insn &_insn) const {
     scan.skipSpaces();
 
     if (false && mc68040())
-    printf("@@ search: %s src=%d dst=%d ex1=%d ex2=%d\n", insn.name(), insn.srcOp.mode, insn.dstOp.mode, insn.ex1Op.mode, insn.ex2Op.mode);
+        printf("@@ search: %s src=%d dst=%d ex1=%d ex2=%d\n", insn.name(), insn.srcOp.mode,
+                insn.dstOp.mode, insn.ex1Op.mode, insn.ex2Op.mode);
     if (searchName(_cpuSpec, insn))
         return _insn.setError(insn.srcOp, insn);
     if (false && mc68040()) {
-    if (insn.hasPostVal()) {
-        printf("@@  found: %06o %06o src=%d dst=%d ex1=%d ex2=%d\n", insn.opCode(), insn.postVal(), insn.src(), insn.dst(), insn.ex1(), insn.ex2());
-    } else {
-        printf("@@  found: %06o src=%d dst=%d ex1=%d ex2=%d\n", insn.opCode(), insn.src(), insn.dst(), insn.ex1(), insn.ex2());
-    }
+        if (insn.hasPostVal()) {
+            printf("@@  found: %06o %06o src=%d dst=%d ex1=%d ex2=%d\n", insn.opCode(),
+                    insn.postVal(), insn.src(), insn.dst(), insn.ex1(), insn.ex2());
+        } else {
+            printf("@@  found: %06o src=%d dst=%d ex1=%d ex2=%d\n", insn.opCode(), insn.src(),
+                    insn.dst(), insn.ex1(), insn.ex2());
+        }
     }
 
     insn.setErrorIf(insn.srcOp);

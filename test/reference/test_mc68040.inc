@@ -42,6 +42,22 @@
         cpusha  ic
         cpusha  dc/ic
         cpusha  nc
+        movec   d1, tc
+        movec   a2, itt0
+        movec   d3, itt1
+        movec   a4, dtt0
+        movec   d5, dtt1
+        movec   a6, mmusr
+        movec   d7, urp
+        movec   a0, srp
+        movec   tc, d0
+        movec   itt0, a1
+        movec   itt1, d2
+        movec   dtt0, a3
+        movec   dtt1, d4
+        movec   mmusr, a5
+        movec   urp, d6
+        movec   srp, a7
 
 ;;; FPU common
         fmove.x fp0, fp1
@@ -1163,6 +1179,8 @@
         fdneg.w #$1234, fp2
         fdneg.d #-8.25, fp3
         fdneg.b #$23, fp4
+
+;# MC68040 PMMU
 
 ;### Local Variables:
 ;### mode: asm

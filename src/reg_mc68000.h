@@ -69,14 +69,26 @@ enum RegName : int8_t {
 
 enum CntlReg : int8_t {
     CREG_UNDEF = -1,
-    CREG_SFC = 0,   // MC68010/MC68020/MC68030/MC68851
-    CREG_DFC = 1,   // MC68010/MC68020/MC68030/MC68851
-    CREG_USP = 2,   // MC68010/MC68020/MC68030
-    CREG_VBR = 3,   // MC68010/MC68020/MC68030
-    CREG_CACR = 4,  // MC68020/MC68030
-    CREG_CAAR = 5,  // MC68020/MC68030
-    CREG_MSP = 6,   // MC68020/MC68030
-    CREG_ISP = 7,   // MC68020/MC68030
+    CREG_SFC = 0,     // MC68010/MC68020/MC68030/MC68040/MC68851
+    CREG_DFC = 1,     // MC68010/MC68020/MC68030/MC68040/MC68851
+    CREG_USP = 2,     // MC68010/MC68020/MC68030/MC68040
+    CREG_VBR = 3,     // MC68010/MC68020/MC68030/MC68040
+    CREG_CACR = 4,    // MC68020/MC68030/MC68040
+    CREG_CAAR = 5,    // MC68020/MC68030/MC68040
+    CREG_MSP = 6,     // MC68020/MC68030/MC68040
+    CREG_ISP = 7,     // MC68020/MC68030/MC68040
+    CREG_TC = 8,      // MC68040
+    CREG_ITT0 = 9,    // MC68040
+    CREG_ITT1 = 10,   // MC68040
+    CREG_DTT0 = 11,   // MC68040
+    CREG_DTT1 = 12,   // MC68040
+    CREG_MMUSR = 13,  // MC68040
+    CREG_URP = 14,    // MC68040
+    CREG_SRP = 15,    // MC68040
+    CREG_IACR0 = 16,  // MC68EC040
+    CREG_IACR1 = 17,  // MC68EC040
+    CREG_DACR0 = 18,  // MC68EC040
+    CREG_DACR1 = 19,  // MC68EC040
 };
 
 #if !defined(LIBASM_MC68000_NOPMMU)
@@ -142,10 +154,11 @@ RegName decodeGeneralReg(uint_fast8_t regno);
 RegName decodeDataReg(uint_fast8_t regno);
 RegName decodeAddrReg(uint_fast8_t regno);
 
-CntlReg parseCntlReg(StrScanner &scan, const ValueParser &parser, CpuType cpuType);
+CntlReg parseCntlReg(StrScanner &scan, const ValueParser &parser, PmmuType pmmuType);
 StrBuffer &outCntlReg(StrBuffer &out, CntlReg name);
+bool validCntlReg(CntlReg name, const CpuSpec &cpuSpec);
 Config::opcode_t encodeCntlRegNo(CntlReg name);
-CntlReg decodeCntlRegNo(Config::opcode_t regno, CpuType cpuType);
+CntlReg decodeCntlRegNo(Config::opcode_t regno, const CpuSpec &cpuSpec);
 
 #if !defined(LIBASM_MC68000_NOPMMU)
 PmmuReg parsePmmuReg(StrScanner &scan, const ValueParser &parser);

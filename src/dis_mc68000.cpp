@@ -120,7 +120,7 @@ void DisMc68000::outPointerPair(DisInsn &insn, StrBuffer &out) const {
 }
 
 void DisMc68000::outControlReg(DisInsn &insn, StrBuffer &out) const {
-    const auto creg = decodeCntlRegNo(insn.postfix(), _cpuSpec.cpu);
+    const auto creg = decodeCntlRegNo(insn.postfix(), _cpuSpec);
     if (creg == CREG_UNDEF)
         insn.setErrorIf(out, ILLEGAL_REGISTER);
     outCntlReg(out, creg);
