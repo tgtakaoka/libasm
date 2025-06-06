@@ -858,6 +858,7 @@
         fgetman.b #$23, fp4
 
 ;;; program control operations
+        fnop
         fbf    *+$1234
         fbeq.w *+$1234
         fbeq.l *+$1234

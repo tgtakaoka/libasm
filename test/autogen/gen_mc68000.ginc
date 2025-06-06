@@ -5506,6 +5506,7 @@
       ftrapsne
       ftrapst
       fbf         .-0x0c7c
+      fnop
       fbeq        .-0x0c7c
       fbogt       .-0x0c7a
       fboge       .-0x0c7a

@@ -512,6 +512,13 @@ void DisMc68000::decodeRelative(DisInsn &insn, StrBuffer &out, AddrMode mode) co
     } else if (type == M_REL16) {
         bits = 16;
         delta = static_cast<int16_t>(insn.readUint16());
+        if (delta == 0 && insn.opCode() == 0xF280) {
+            auto save{out};
+            insn.nameBuffer().reset().over(out);
+            out.text_P(TEXT_FNOP).over(insn.nameBuffer());
+            save.over(out);
+            return;
+        }
         if (!_gnuAs && mode == M_REL8 && !overflowDelta(delta, 8)) {
             insn.appendName(out, '.');
             insn.appendName(out, 'W');
