@@ -728,13 +728,6 @@ uint8_t regVal(const DisInsn &insn, OprPos pos) {
 }
 
 #if !defined(LIBASM_MC68000_NOFPU)
-bool isFloatOpOnSameFpreg(const DisInsn &insn) {
-    const auto postVal = insn.postVal();
-    const auto may1opr = insn.hasPostVal() && postVal >= 0x0001 && postVal < 0x0020;
-    return may1opr && insn.src() == M_FPREG && insn.dst() == M_FPREG &&
-           regVal(insn, insn.srcPos()) == regVal(insn, insn.dstPos());
-}
-
 bool inFloatOperand(const DisInsn &insn, AddrMode type) {
     if (type == M_RDATA) {
         const auto dst = insn.dst();
@@ -749,6 +742,21 @@ bool inFloatOperand(const DisInsn &insn, AddrMode type) {
 }
 #endif
 }  // namespace
+
+bool DisMc68000::isFloatOpOnSameFpreg(const DisInsn &insn) const {
+#if !defined(LIBASM_MC68000_NOFPU)
+    if (insn.src() == M_FPREG && insn.dst() == M_FPREG && insn.hasPostVal()) {
+        if (regVal(insn, insn.srcPos()) == regVal(insn, insn.dstPos())) {
+            const auto pval = insn.postVal();
+            if (pval >= 0x01 && pval < 0x20)
+                return true;
+            if (mc68040())
+                return pval == 0x41 || (pval >= 0x45 && pval < 0x60);
+        }
+    }
+#endif
+    return false;
+}
 
 void DisMc68000::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode type, OprPos pos,
         OprSize size, uint16_t opr16, Error opr16Error) const {

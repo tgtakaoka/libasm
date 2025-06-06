@@ -40,6 +40,7 @@ enum FpuType : uint8_t {
 #if !defined(LIBASM_MC68000_NOFPU)
     FPU_ON,
     FPU_MC68881,
+    FPU_MC68040,
 #endif
 };
 
@@ -95,6 +96,7 @@ protected:
     bool firstGen() const { return _cpuSpec.cpu == MC68000 || _cpuSpec.cpu == MC68010; }
     bool hasLongBranch() const { return !firstGen(); }
     bool mc68030() const { return _cpuSpec.cpu == MC68030; }
+    bool mc68040() const { return _cpuSpec.cpu == MC68040; }
 };
 
 }  // namespace mc68000
