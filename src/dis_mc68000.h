@@ -33,6 +33,7 @@ private:
     const TextOption<Config> _opt_fpu;
     const TextOption<Config> _opt_pmmu;
 
+    void outCacheList(StrBuffer &out, CacheName cache) const;
     void outBitField(DisInsn &insn, StrBuffer &out) const;
     void outDataRegPair(DisInsn &insn, StrBuffer &out, OprPos pos) const;
     void outPointerPair(DisInsn &insn, StrBuffer &out) const;

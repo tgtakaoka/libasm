@@ -117,6 +117,14 @@ enum PmmuReg : int8_t {
 };
 #endif
 
+enum CacheName : int8_t {
+    CACHE_UNDEF = -1,
+    CACHE_NONE = 0,  // NC
+    CACHE_DATA = 1,  // DC
+    CACHE_INST = 2,  // IC
+    CACHE_BOTH = 3,  // BC, IC/DC
+};
+
 namespace reg {
 
 RegName parseRegName(StrScanner &scan, const ValueParser &parser);
@@ -156,6 +164,11 @@ InsnSize parseSize(StrScanner &scan);
 InsnSize parseIndexSize(StrScanner &scan);
 uint_fast8_t sizeNameLen(OprSize size);
 char sizeSuffix(OprSize size);
+
+CacheName parseCacheName(StrScanner &scan, const ValueParser &parser);
+StrBuffer &outCacheName(StrBuffer &out, CacheName name);
+Config::opcode_t encodeCacheNum(CacheName name);
+CacheName decodeCacheName(Config::opcode_t opc);
 
 }  // namespace reg
 }  // namespace mc68000

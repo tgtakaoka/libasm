@@ -32,6 +32,7 @@ enum CpuType : uint8_t {
     MC68010,
     MC68020,
     MC68030,
+    MC68040,
 };
 
 enum FpuType : uint8_t {

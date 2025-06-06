@@ -1,0 +1,48 @@
+;### Copyright 2025 Tadashi G. Takaoka
+;###
+;### Licensed under the Apache License, Version 2.0 (the "License");
+;### you may not use this file except in compliance with the License.
+;### You may obtain a copy of the License at
+;###
+;###     http://www.apache.org/licenses/LICENSE-2.0
+;###
+;### Unless required by applicable law or agreed to in writing, software
+;### distributed under the License is distributed on an "AS IS" BASIS,
+;### WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+;### See the License for the specific language governing permissions and
+;### limitations under the License.
+
+        move16  (a1)+, (a2)+
+        move16  (a1)+, ($12345678)
+        move16  ($12345678), (a1)+
+        move16  (a1), ($12345678)
+        move16  ($12345678), (a1)
+        cinvl   dc, (a2)
+        cinvl   ic, (a2)
+        cinvl   dc/ic, (a2)
+        cinvl   nc, (a2)
+        cinvp   dc, (a2)
+        cinvp   ic, (a2)
+        cinvp   dc/ic, (a2)
+        cinvp   nc, (a2)
+        cinva   dc
+        cinva   ic
+        cinva   dc/ic
+        cinva   nc
+        cpushl  dc, (a2)
+        cpushl  ic, (a2)
+        cpushl  dc/ic, (a2)
+        cpushl  nc, (a2)
+        cpushp  dc, (a2)
+        cpushp  ic, (a2)
+        cpushp  dc/ic, (a2)
+        cpushp  nc, (a2)
+        cpusha  dc
+        cpusha  ic
+        cpusha  dc/ic
+        cpusha  nc
+
+;### Local Variables:
+;### mode: asm
+;### End:
+;### vim: set ft=asm:

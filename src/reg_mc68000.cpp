@@ -101,6 +101,15 @@ constexpr NameEntry PREG_ENTRIES[] PROGMEM = {
 PROGMEM constexpr NameTable PREG_TABLE{ARRAY_RANGE(PREG_ENTRIES)};
 #endif
 
+constexpr NameEntry CACHE_ENTRIES[] PROGMEM = {
+    { TEXT_BC, CACHE_BOTH },
+    { TEXT_DC, CACHE_DATA },
+    { TEXT_IC, CACHE_INST },
+    { TEXT_NC, CACHE_NONE },
+};
+
+PROGMEM constexpr NameTable CACHE_TABLE{ARRAY_RANGE(CACHE_ENTRIES)};
+
 // clang-format on
 }  // namespace
 
@@ -479,6 +488,29 @@ RegName decodeRegNo(uint_fast8_t mode, uint_fast8_t regno) {
     if (mode >= 1 && mode < 7)
         return decodeAddrReg(regno);
     return REG_UNDEF;
+}
+
+CacheName parseCacheName(StrScanner &scan, const ValueParser &parser) {
+    auto p = scan;
+    const auto *entry = CACHE_TABLE.searchText(parser.readRegName(p));
+    if (entry) {
+        scan = p;
+        return CacheName(entry->name());
+    }
+    return CACHE_UNDEF;
+}
+
+StrBuffer &outCacheName(StrBuffer &out, CacheName name) {
+    const auto *entry = CACHE_TABLE.searchName(name);
+    return entry ? entry->outText(out) : out;
+}
+
+Config::opcode_t encodeCacheNum(CacheName name) {
+    return (static_cast<Config::opcode_t>(name) & 3) << 6;
+}
+
+CacheName decodeCacheName(Config::opcode_t opc) {
+    return CacheName((opc >> 6) & 3);
 }
 
 }  // namespace reg

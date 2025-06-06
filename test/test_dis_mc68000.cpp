@@ -40,6 +40,10 @@ bool mc68030() {
     return strcmp_P("68030", disassembler.config().cpu_P()) == 0;
 }
 
+bool mc68040() {
+    return strcmp_P("68040", disassembler.config().cpu_P()) == 0;
+}
+
 bool firstGen() {
     return mc68k00() || mc68010();
 }
@@ -161,6 +165,12 @@ void test_cpu() {
 
     EQUALS("cpu MC68030", true,    disassembler.setCpu("MC68030"));
     EQUALS_P("cpu MC68030", "68030", disassembler.config().cpu_P());
+
+    EQUALS("cpu 68040", true,    disassembler.setCpu("68040"));
+    EQUALS_P("cpu 68040", "68040", disassembler.config().cpu_P());
+
+    EQUALS("cpu MC68040", true,    disassembler.setCpu("MC68040"));
+    EQUALS_P("cpu MC68040", "68040", disassembler.config().cpu_P());
 }
 
 void test_data_move() {
@@ -680,6 +690,19 @@ void test_data_move() {
     TEST("MOVEQ", "#$7F, D0",  0070000 | 0x7F);
     TEST("MOVEQ", "#-$80, D0", 0070000 | 0x80);
     TEST("MOVEQ", "#-1, D7",   0077000 | 0xFF);
+
+    if (mc68040()) {
+        // MOVE16 (Ax)+, (Ay)+: 0173040|Ax + 1|Ay|00000
+        TEST("MOVE16", "(A1)+, (A2)+",         0173040 | 1, 0100000 | (2 << 12));
+        // MOVE16 (Ax)+, (n).L: 0173000|Ax
+        TEST("MOVE16", "(A1)+, ($12345678).L", 0173000 | 1, 0x1234, 0x5678);
+        // MOVE16 (n).L, (Ax)+: 0173010|Ax
+        TEST("MOVE16", "($12345678).L, (A1)+", 0173010 | 1, 0x1234, 0x5678);
+        // MOVE16 (Ax)+, (n).L: 0173020|Ax
+        TEST("MOVE16", "(A1), ($12345678).L",  0173020 | 1, 0x1234, 0x5678);
+        // MOVE16 (Ax)+, (n).L: 0173030|Ax
+        TEST("MOVE16", "($12345678).L, (A1)",  0173030 | 1, 0x1234, 0x5678);
+    }
 
     // PEA src: 00441|M|Rn
     TEST("SWAP", "D2",            0044102); // SWAP
@@ -3030,6 +3053,50 @@ void test_system() {
 
     // ORI #nn,CCR
     TEST("ORI", "#$34, CCR", 0000074, 0x0034);
+
+    if (mc68040()) {
+        UNKN(                        0172000);
+        TEST("CINVL", "NC, (A2)",    0172012);
+        TEST("CINVL", "DC, (A2)",    0172112);
+        TEST("CINVL", "IC, (A2)",    0172212);
+        TEST("CINVL", "DC/IC, (A2)", 0172312);
+        TEST("CINVP", "NC, (A2)",    0172022);
+        TEST("CINVP", "DC, (A2)",    0172122);
+        TEST("CINVP", "IC, (A2)",    0172222);
+        TEST("CINVP", "DC/IC, (A2)", 0172322);
+        UNKN(                        0172032);
+        TEST("CINVA", "NC",          0172030);
+        TEST("CINVA", "DC",          0172130);
+        TEST("CINVA", "IC",          0172230);
+        TEST("CINVA", "DC/IC",       0172330);
+
+        UNKN(                         0172040);
+        TEST("CPUSHL", "NC, (A2)",    0172052);
+        TEST("CPUSHL", "DC, (A2)",    0172152);
+        TEST("CPUSHL", "IC, (A2)",    0172252);
+        TEST("CPUSHL", "DC/IC, (A2)", 0172352);
+        TEST("CPUSHP", "NC, (A2)",    0172062);
+        TEST("CPUSHP", "DC, (A2)",    0172162);
+        TEST("CPUSHP", "IC, (A2)",    0172262);
+        TEST("CPUSHP", "DC/IC, (A2)", 0172362);
+        UNKN(                         0172071);
+        UNKN(                         0172072);
+        UNKN(                         0172074);
+        TEST("CPUSHA", "NC",          0172070);
+        TEST("CPUSHA", "DC",          0172170);
+        TEST("CPUSHA", "IC",          0172270);
+        TEST("CPUSHA", "DC/IC",       0172370);
+
+        disassembler.setOption("gnu-as", "on");
+        TEST("CINVL", "BC, (A2)", 0172312);
+        TEST("CINVP", "BC, (A2)", 0172322);
+        TEST("CINVA", "BC",       0172330);
+
+        TEST("CPUSHL", "BC, (A2)", 0172352);
+        TEST("CPUSHP", "BC, (A2)", 0172362);
+        TEST("CPUSHA", "BC",       0172370);
+        disassembler.setOption("gnu-as", "off");
+    }
 }
 
 void test_multiproc() {

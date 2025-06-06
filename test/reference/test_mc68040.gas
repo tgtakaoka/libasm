@@ -13,22 +13,9 @@
 ;# limitations under the License.
 
         .include "test_mc68000.ginc"
-        .include "test_mc68882.ginc"
         .include "test_mc68010.ginc"
         .include "test_mc68020.ginc"
-        movec   caar, d2
-        movec   a6, caar
-        .include "test_mc68851.ginc"
-;# Module
-        rtm     d2
-        rtm     a2
-        callm   #0xFF, (a2)
-        callm   #0, (0x1234, a2)
-        callm   #1, (18,a2,d3.w)
-        callm   #2, (0xffffff00).w
-        callm   #3, (0x12345678).l
-        callm   #4, (.+0x1234,pc)
-        callm   #5, (.+18,pc,d3.l)
+        .include "test_mc68040.ginc"
 
 ;# Local Variables:
 ;# mode: asm
