@@ -56,6 +56,7 @@ private:
     void decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode, OprPos pos, OprSize size,
             uint16_t opr16 = 0, Error opr16Error = OK) const;
     char decodeInsnSize(const DisInsn &insn, OprSize size) const;
+    bool isFloatOpOnSameFpreg(const DisInsn &insn) const;
 
     Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) const override;
     const ConfigBase &config() const override { return *this; }

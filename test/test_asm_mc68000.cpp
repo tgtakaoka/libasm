@@ -47,6 +47,10 @@ bool firstGen() {
     return mc68k00() || mc68010();
 }
 
+bool mc68881() {
+    return strcmp_P("68881", as68000.fpu_P()) == 0;
+}
+
 /**
  * Test helper for Absolute Short addressing mode.
  * Substitute |mark| in |text| with |word| into |line|.
@@ -4222,114 +4226,19 @@ void test_float_move() {
     ERRT("FMOVEM.L #$12345678, FPCR/FPSR/FPIAR",  ILLEGAL_OPERAND_MODE,
          "#$12345678, FPCR/FPSR/FPIAR", 0xF200|074, 0x9C00, 0x1234, 0x5678);
 
-    TEST("FMOVECR.X #$00, FP0", 0xF200, 0x5C00|(0<<7)|0x00);
-    TEST("FMOVECR.X #$10, FP2", 0xF200, 0x5C00|(2<<7)|0x10);
-    TEST("FMOVECR.X #$20, FP4", 0xF200, 0x5C00|(4<<7)|0x20);
-    TEST("FMOVECR.X #$7F, FP7", 0xF200, 0x5C00|(7<<7)|0x7F);
-    ERRT("FMOVECR.X #$81, FP7", OVERFLOW_RANGE, "#$81, FP7", 0xF200, 0x5C00|(7<<7)|0x01);
+    if (mc68881()) {
+        TEST("FMOVECR.X #$00, FP0", 0xF200, 0x5C00|(0<<7)|0x00);
+        TEST("FMOVECR.X #$10, FP2", 0xF200, 0x5C00|(2<<7)|0x10);
+        TEST("FMOVECR.X #$20, FP4", 0xF200, 0x5C00|(4<<7)|0x20);
+        TEST("FMOVECR.X #$7F, FP7", 0xF200, 0x5C00|(7<<7)|0x7F);
+        ERRT("FMOVECR.X #$81, FP7", OVERFLOW_RANGE, "#$81, FP7", 0xF200, 0x5C00|(7<<7)|0x01);
+    } else if (mc68040()) {
+        ERUI("FMOVECR.X #$00, FP0");
+    }
 }
 
-void test_float_arithmetic() {
+void test_float_common() {
     TEST("FPU ON");
-
-    TEST("FINT.X FP0, FP1",            0xF200,     0x0001|(0<<10)|(1<<7));
-    TEST("FINT.X FP2",                 0xF200,     0x0001|(2<<10)|(2<<7));
-    TEST("FINT.L D2, FP3",             0xF200|002, 0x4001|(0<<10)|(3<<7));
-    TEST("FINT.S D2, FP3",             0xF200|002, 0x4001|(1<<10)|(3<<7));
-    ERRT("FINT.X D2, FP3", ILLEGAL_SIZE, "FINT.X D2, FP3",
-                                       0xF200|002, 0x4001|(2<<10)|(3<<7));
-    ERRT("FINT.P D2, FP3", ILLEGAL_SIZE, "FINT.P D2, FP3",
-                                       0xF200|002, 0x4001|(3<<10)|(3<<7));
-    TEST("FINT.W D2, FP3",             0xF200|002, 0x4001|(4<<10)|(3<<7));
-    ERRT("FINT.D D2, FP3", ILLEGAL_SIZE, "FINT.D D2, FP3",
-                                       0xF200|002, 0x4001|(5<<10)|(3<<7));
-    TEST("FINT.B D2, FP3",             0xF200|002, 0x4001|(6<<10)|(3<<7));
-    ERRT("FINT.S A4, FP5",             OPERAND_NOT_ALLOWED, "A4, FP5", 0xF200, 0x4681);
-    TEST("FINT.X (A6), FP7",           0xF200|026, 0x4001|(2<<10)|(7<<7));
-    TEST("FINT.P (A0)+, FP1",          0xF200|030, 0x4001|(3<<10)|(1<<7));
-    TEST("FINT.W -(A2), FP3",          0xF200|042, 0x4001|(4<<10)|(3<<7));
-    TEST("FINT.D ($1234,A4), FP5",     0xF200|054, 0x4001|(5<<10)|(5<<7), 0x1234);
-    TEST("FINT.B ($23,A6,D7.W), FP0",  0xF200|066, 0x4001|(6<<10)|(0<<7), 0x7023);
-    TEST("FINT.L ($004566).W, FP1",    0xF200|070, 0x4001|(0<<10)|(1<<7), 0x4566);
-    TEST("FINT.S ($56789A).L, FP2",    0xF200|071, 0x4001|(1<<10)|(2<<7), 0x0056, 0x789A);
-    TEST("FINT.X (*+$1234,PC), FP3",   0xF200|072, 0x4001|(2<<10)|(3<<7), 0x1230);
-    TEST("FINT.P (*+90,PC,A4.L), FP5", 0xF200|073, 0x4001|(3<<10)|(5<<7), 0xC856);
-    TEST("FINT.L #$6789ABCD, FP6",     0xF200|074, 0x4001|(0<<10)|(6<<7), 0x6789, 0xABCD);
-    TEST("FINT.W #$1234, FP2",         0xF200|074, 0x4001|(4<<10)|(2<<7), 0x1234);
-    TEST("FINT.B #$23, FP4",           0xF200|074, 0x4001|(6<<10)|(4<<7), 0x0023);
-    FLTS("FINT.S", "#7.88999976E-10, FP7", 0xF200|074, 0x4001|(1<<10)|(7<<7), 0x3058, 0xE0F0);
-    FLTX("FINT.X", "#-89000000032, FP0",   0xF200|074, 0x4001|(2<<10)|(0<<7),
-         0xC023, 0x0000, 0xA5C6, 0x81D1, 0x0000, 0x0000);
-    FLTP("FINT.P", "#9.12E20, FP1",        0xF200|074, 0x4001|(3<<10)|(1<<7),
-         0x0020, 0x0009, 0x1200, 0x0000, 0x0000, 0x0000);
-    FLTD("FINT.D", "#-8.25, FP3",          0xF200|074, 0x4001|(5<<10)|(3<<7),
-         0xC020, 0x8000, 0x0000, 0x0000);
-
-    TEST("FSINH.X FP0, FP1",            0xF200,     0x0002|(0<<10)|(1<<7));
-    TEST("FSINH.X FP2",                 0xF200,     0x0002|(2<<10)|(2<<7));
-    TEST("FSINH.L D2, FP3",             0xF200|002, 0x4002|(0<<10)|(3<<7));
-    TEST("FSINH.S D2, FP3",             0xF200|002, 0x4002|(1<<10)|(3<<7));
-    ERRT("FSINH.X D2, FP3", ILLEGAL_SIZE, "FSINH.X D2, FP3",
-                                        0xF200|002, 0x4002|(2<<10)|(3<<7));
-    ERRT("FSINH.P D2, FP3", ILLEGAL_SIZE, "FSINH.P D2, FP3",
-                                        0xF200|002, 0x4002|(3<<10)|(3<<7));
-    TEST("FSINH.W D2, FP3",             0xF200|002, 0x4002|(4<<10)|(3<<7));
-    ERRT("FSINH.D D2, FP3", ILLEGAL_SIZE, "FSINH.D D2, FP3",
-                                        0xF200|002, 0x4002|(5<<10)|(3<<7));
-    TEST("FSINH.B D2, FP3",             0xF200|002, 0x4002|(6<<10)|(3<<7));
-    ERRT("FSINH.S A4, FP5",             OPERAND_NOT_ALLOWED, "A4, FP5", 0xF200, 0x4682);
-    TEST("FSINH.X (A6), FP7",           0xF200|026, 0x4002|(2<<10)|(7<<7));
-    TEST("FSINH.P (A0)+, FP1",          0xF200|030, 0x4002|(3<<10)|(1<<7));
-    TEST("FSINH.W -(A2), FP3",          0xF200|042, 0x4002|(4<<10)|(3<<7));
-    TEST("FSINH.D ($1234,A4), FP5",     0xF200|054, 0x4002|(5<<10)|(5<<7), 0x1234);
-    TEST("FSINH.B ($23,A6,D7.W), FP0",  0xF200|066, 0x4002|(6<<10)|(0<<7), 0x7023);
-    TEST("FSINH.L ($004566).W, FP1",    0xF200|070, 0x4002|(0<<10)|(1<<7), 0x4566);
-    TEST("FSINH.S ($56789A).L, FP2",    0xF200|071, 0x4002|(1<<10)|(2<<7), 0x0056, 0x789A);
-    TEST("FSINH.X (*+$1234,PC), FP3",   0xF200|072, 0x4002|(2<<10)|(3<<7), 0x1230);
-    TEST("FSINH.P (*+90,PC,A4.L), FP5", 0xF200|073, 0x4002|(3<<10)|(5<<7), 0xC856);
-    TEST("FSINH.L #$6789ABCD, FP6",     0xF200|074, 0x4002|(0<<10)|(6<<7), 0x6789, 0xABCD);
-    TEST("FSINH.W #$1234, FP2",         0xF200|074, 0x4002|(4<<10)|(2<<7), 0x1234);
-    TEST("FSINH.B #$23, FP4",           0xF200|074, 0x4002|(6<<10)|(4<<7), 0x0023);
-    FLTS("FSINH.S", "#7.88999976E-10, FP7", 0xF200|074, 0x4002|(1<<10)|(7<<7), 0x3058, 0xE0F0);
-    FLTX("FSINH.X", "#-8, FP0",             0xF200|074, 0x4002|(2<<10)|(0<<7),
-         0xC002, 0x0000, 0x8000, 0x0000, 0x0000, 0x0000);
-    FLTP("FSINH.P", "#9.12E20, FP1",        0xF200|074, 0x4002|(3<<10)|(1<<7),
-         0x0020, 0x0009, 0x1200, 0x0000, 0x0000, 0x0000);
-    FLTD("FSINH.D", "#-8.25, FP3",          0xF200|074, 0x4002|(5<<10)|(3<<7),
-         0xC020, 0x8000, 0x0000, 0x0000);
-
-    TEST("FINTRZ.X FP0, FP1",            0xF200,     0x0003|(0<<10)|(1<<7));
-    TEST("FINTRZ.X FP2",                 0xF200,     0x0003|(2<<10)|(2<<7));
-    TEST("FINTRZ.L D2, FP3",             0xF200|002, 0x4003|(0<<10)|(3<<7));
-    TEST("FINTRZ.S D2, FP3",             0xF200|002, 0x4003|(1<<10)|(3<<7));
-    ERRT("FINTRZ.X D2, FP3", ILLEGAL_SIZE, "FINTRZ.X D2, FP3",
-                                         0xF200|002, 0x4003|(2<<10)|(3<<7));
-    ERRT("FINTRZ.P D2, FP3", ILLEGAL_SIZE, "FINTRZ.P D2, FP3",
-                                         0xF200|002, 0x4003|(3<<10)|(3<<7));
-    TEST("FINTRZ.W D2, FP3",             0xF200|002, 0x4003|(4<<10)|(3<<7));
-    ERRT("FINTRZ.D D2, FP3", ILLEGAL_SIZE, "FINTRZ.D D2, FP3",
-                                         0xF200|002, 0x4003|(5<<10)|(3<<7));
-    TEST("FINTRZ.B D2, FP3",             0xF200|002, 0x4003|(6<<10)|(3<<7));
-    ERRT("FINTRZ.S A4, FP5",             OPERAND_NOT_ALLOWED, "A4, FP5", 0xF200, 0x4683);
-    TEST("FINTRZ.X (A6), FP7",           0xF200|026, 0x4003|(2<<10)|(7<<7));
-    TEST("FINTRZ.P (A0)+, FP1",          0xF200|030, 0x4003|(3<<10)|(1<<7));
-    TEST("FINTRZ.W -(A2), FP3",          0xF200|042, 0x4003|(4<<10)|(3<<7));
-    TEST("FINTRZ.D ($1234,A4), FP5",     0xF200|054, 0x4003|(5<<10)|(5<<7), 0x1234);
-    TEST("FINTRZ.B ($23,A6,D7.W), FP0",  0xF200|066, 0x4003|(6<<10)|(0<<7), 0x7023);
-    TEST("FINTRZ.L ($004566).W, FP1",    0xF200|070, 0x4003|(0<<10)|(1<<7), 0x4566);
-    TEST("FINTRZ.S ($56789A).L, FP2",    0xF200|071, 0x4003|(1<<10)|(2<<7), 0x0056, 0x789A);
-    TEST("FINTRZ.X (*+$1234,PC), FP3",   0xF200|072, 0x4003|(2<<10)|(3<<7), 0x1230);
-    TEST("FINTRZ.P (*+90,PC,A4.L), FP5", 0xF200|073, 0x4003|(3<<10)|(5<<7), 0xC856);
-    TEST("FINTRZ.L #$6789ABCD, FP6",     0xF200|074, 0x4003|(0<<10)|(6<<7), 0x6789, 0xABCD);
-    TEST("FINTRZ.W #$1234, FP2",         0xF200|074, 0x4003|(4<<10)|(2<<7), 0x1234);
-    TEST("FINTRZ.B #$23, FP4",           0xF200|074, 0x4003|(6<<10)|(4<<7), 0x0023);
-    FLTS("FINTRZ.S", "#7.88999976E-10, FP7", 0xF200|074, 0x4003|(1<<10)|(7<<7), 0x3058, 0xE0F0);
-    FLTX("FINTRZ.X", "#-89000000032, FP0",   0xF200|074, 0x4003|(2<<10)|(0<<7),
-         0xC023, 0x0000, 0xA5C6, 0x81D1, 0x0000, 0x0000);
-    FLTP("FINTRZ.P", "#9.12E20, FP1",        0xF200|074, 0x4003|(3<<10)|(1<<7),
-         0x0020, 0x0009, 0x1200, 0x0000, 0x0000, 0x0000);
-    FLTD("FINTRZ.D", "#-8.25, FP3",          0xF200|074, 0x4003|(5<<10)|(3<<7),
-         0xC020, 0x8000, 0x0000, 0x0000);
 
     TEST("FSQRT.X FP0, FP1",            0xF200,     0x0004|(0<<10)|(1<<7));
     TEST("FSQRT.X FP2",                 0xF200,     0x0004|(2<<10)|(2<<7));
@@ -4362,468 +4271,6 @@ void test_float_arithmetic() {
     FLTP("FSQRT.P", "#9.12E20, FP1",        0xF200|074, 0x4004|(3<<10)|(1<<7),
          0x0020, 0x0009, 0x1200, 0x0000, 0x0000, 0x0000);
     FLTD("FSQRT.D", "#-8.25, FP3",          0xF200|074, 0x4004|(5<<10)|(3<<7),
-         0xC020, 0x8000, 0x0000, 0x0000);
-
-    TEST("FLOGNP1.X FP0, FP1",            0xF200,     0x0006|(0<<10)|(1<<7));
-    TEST("FLOGNP1.X FP2",                 0xF200,     0x0006|(2<<10)|(2<<7));
-    TEST("FLOGNP1.L D2, FP3",             0xF200|002, 0x4006|(0<<10)|(3<<7));
-    TEST("FLOGNP1.S D2, FP3",             0xF200|002, 0x4006|(1<<10)|(3<<7));
-    ERRT("FLOGNP1.X D2, FP3", ILLEGAL_SIZE, "FLOGNP1.X D2, FP3",
-                                          0xF200|002, 0x4006|(2<<10)|(3<<7));
-    ERRT("FLOGNP1.P D2, FP3", ILLEGAL_SIZE, "FLOGNP1.P D2, FP3",
-                                          0xF200|002, 0x4006|(3<<10)|(3<<7));
-    TEST("FLOGNP1.W D2, FP3",             0xF200|002, 0x4006|(4<<10)|(3<<7));
-    ERRT("FLOGNP1.D D2, FP3", ILLEGAL_SIZE, "FLOGNP1.D D2, FP3",
-                                          0xF200|002, 0x4006|(5<<10)|(3<<7));
-    TEST("FLOGNP1.B D2, FP3",             0xF200|002, 0x4006|(6<<10)|(3<<7));
-    ERRT("FLOGNP1.S A4, FP5",             OPERAND_NOT_ALLOWED, "A4, FP5", 0xF200, 0x4686);
-    TEST("FLOGNP1.X (A6), FP7",           0xF200|026, 0x4006|(2<<10)|(7<<7));
-    TEST("FLOGNP1.P (A0)+, FP1",          0xF200|030, 0x4006|(3<<10)|(1<<7));
-    TEST("FLOGNP1.W -(A2), FP3",          0xF200|042, 0x4006|(4<<10)|(3<<7));
-    TEST("FLOGNP1.D ($1234,A4), FP5",     0xF200|054, 0x4006|(5<<10)|(5<<7), 0x1234);
-    TEST("FLOGNP1.B ($23,A6,D7.W), FP0",  0xF200|066, 0x4006|(6<<10)|(0<<7), 0x7023);
-    TEST("FLOGNP1.L ($004566).W, FP1",    0xF200|070, 0x4006|(0<<10)|(1<<7), 0x4566);
-    TEST("FLOGNP1.S ($56789A).L, FP2",    0xF200|071, 0x4006|(1<<10)|(2<<7), 0x0056, 0x789A);
-    TEST("FLOGNP1.X (*+$1234,PC), FP3",   0xF200|072, 0x4006|(2<<10)|(3<<7), 0x1230);
-    TEST("FLOGNP1.P (*+90,PC,A4.L), FP5", 0xF200|073, 0x4006|(3<<10)|(5<<7), 0xC856);
-    TEST("FLOGNP1.L #$6789ABCD, FP6",     0xF200|074, 0x4006|(0<<10)|(6<<7), 0x6789, 0xABCD);
-    TEST("FLOGNP1.W #$1234, FP2",         0xF200|074, 0x4006|(4<<10)|(2<<7), 0x1234);
-    TEST("FLOGNP1.B #$23, FP4",           0xF200|074, 0x4006|(6<<10)|(4<<7), 0x0023);
-    FLTS("FLOGNP1.S", "#7.88999976E-10, FP7", 0xF200|074, 0x4006|(1<<10)|(7<<7), 0x3058, 0xE0F0);
-    FLTX("FLOGNP1.X", "#-89000000032, FP0",   0xF200|074, 0x4006|(2<<10)|(0<<7),
-         0xC023, 0x0000, 0xA5C6, 0x81D1, 0x0000, 0x0000);
-    FLTP("FLOGNP1.P", "#9.12E20, FP1",        0xF200|074, 0x4006|(3<<10)|(1<<7),
-         0x0020, 0x0009, 0x1200, 0x0000, 0x0000, 0x0000);
-    FLTD("FLOGNP1.D", "#-8.25, FP3",          0xF200|074, 0x4006|(5<<10)|(3<<7),
-         0xC020, 0x8000, 0x0000, 0x0000);
-
-    TEST("FETOXM1.X FP0, FP1",            0xF200,     0x0008|(0<<10)|(1<<7));
-    TEST("FETOXM1.X FP2",                 0xF200,     0x0008|(2<<10)|(2<<7));
-    TEST("FETOXM1.L D2, FP3",             0xF200|002, 0x4008|(0<<10)|(3<<7));
-    TEST("FETOXM1.S D2, FP3",             0xF200|002, 0x4008|(1<<10)|(3<<7));
-    ERRT("FETOXM1.X D2, FP3", ILLEGAL_SIZE, "FETOXM1.X D2, FP3",
-                                          0xF200|002, 0x4008|(2<<10)|(3<<7));
-    ERRT("FETOXM1.P D2, FP3", ILLEGAL_SIZE, "FETOXM1.P D2, FP3",
-                                          0xF200|002, 0x4008|(3<<10)|(3<<7));
-    TEST("FETOXM1.W D2, FP3",             0xF200|002, 0x4008|(4<<10)|(3<<7));
-    ERRT("FETOXM1.D D2, FP3", ILLEGAL_SIZE, "FETOXM1.D D2, FP3",
-                                          0xF200|002, 0x4008|(5<<10)|(3<<7));
-    TEST("FETOXM1.B D2, FP3",             0xF200|002, 0x4008|(6<<10)|(3<<7));
-    ERRT("FETOXM1.S A4, FP5",             OPERAND_NOT_ALLOWED, "A4, FP5", 0xF200, 0x4688);
-    TEST("FETOXM1.X (A6), FP7",           0xF200|026, 0x4008|(2<<10)|(7<<7));
-    TEST("FETOXM1.P (A0)+, FP1",          0xF200|030, 0x4008|(3<<10)|(1<<7));
-    TEST("FETOXM1.W -(A2), FP3",          0xF200|042, 0x4008|(4<<10)|(3<<7));
-    TEST("FETOXM1.D ($1234,A4), FP5",     0xF200|054, 0x4008|(5<<10)|(5<<7), 0x1234);
-    TEST("FETOXM1.B ($23,A6,D7.W), FP0",  0xF200|066, 0x4008|(6<<10)|(0<<7), 0x7023);
-    TEST("FETOXM1.L ($004566).W, FP1",    0xF200|070, 0x4008|(0<<10)|(1<<7), 0x4566);
-    TEST("FETOXM1.S ($56789A).L, FP2",    0xF200|071, 0x4008|(1<<10)|(2<<7), 0x0056, 0x789A);
-    TEST("FETOXM1.X (*+$1234,PC), FP3",   0xF200|072, 0x4008|(2<<10)|(3<<7), 0x1230);
-    TEST("FETOXM1.P (*+90,PC,A4.L), FP5", 0xF200|073, 0x4008|(3<<10)|(5<<7), 0xC856);
-    TEST("FETOXM1.L #$6789ABCD, FP6",     0xF200|074, 0x4008|(0<<10)|(6<<7), 0x6789, 0xABCD);
-    TEST("FETOXM1.W #$1234, FP2",         0xF200|074, 0x4008|(4<<10)|(2<<7), 0x1234);
-    TEST("FETOXM1.B #$23, FP4",           0xF200|074, 0x4008|(6<<10)|(4<<7), 0x0023);
-    FLTS("FETOXM1.S", "#7.88999976E-10, FP7", 0xF200|074, 0x4008|(1<<10)|(7<<7), 0x3058, 0xE0F0);
-    FLTX("FETOXM1.X", "#-89000000032, FP0",   0xF200|074, 0x4008|(2<<10)|(0<<7),
-         0xC023, 0x0000, 0xA5C6, 0x81D1, 0x0000, 0x0000);
-    FLTP("FETOXM1.P", "#9.12E20, FP1",        0xF200|074, 0x4008|(3<<10)|(1<<7),
-         0x0020, 0x0009, 0x1200, 0x0000, 0x0000, 0x0000);
-    FLTD("FETOXM1.D", "#-8.25, FP3",          0xF200|074, 0x4008|(5<<10)|(3<<7),
-         0xC020, 0x8000, 0x0000, 0x0000);
-
-    TEST("FTANH.X FP0, FP1",            0xF200,     0x0009|(0<<10)|(1<<7));
-    TEST("FTANH.X FP2",                 0xF200,     0x0009|(2<<10)|(2<<7));
-    TEST("FTANH.L D2, FP3",             0xF200|002, 0x4009|(0<<10)|(3<<7));
-    TEST("FTANH.S D2, FP3",             0xF200|002, 0x4009|(1<<10)|(3<<7));
-    ERRT("FTANH.X D2, FP3", ILLEGAL_SIZE, "FTANH.X D2, FP3",
-                                        0xF200|002, 0x4009|(2<<10)|(3<<7));
-    ERRT("FTANH.P D2, FP3", ILLEGAL_SIZE, "FTANH.P D2, FP3",
-                                        0xF200|002, 0x4009|(3<<10)|(3<<7));
-    TEST("FTANH.W D2, FP3",             0xF200|002, 0x4009|(4<<10)|(3<<7));
-    ERRT("FTANH.D D2, FP3", ILLEGAL_SIZE, "FTANH.D D2, FP3",
-                                        0xF200|002, 0x4009|(5<<10)|(3<<7));
-    TEST("FTANH.B D2, FP3",             0xF200|002, 0x4009|(6<<10)|(3<<7));
-    ERRT("FTANH.S A4, FP5",             OPERAND_NOT_ALLOWED, "A4, FP5", 0xF200, 0x4689);
-    TEST("FTANH.X (A6), FP7",           0xF200|026, 0x4009|(2<<10)|(7<<7));
-    TEST("FTANH.P (A0)+, FP1",          0xF200|030, 0x4009|(3<<10)|(1<<7));
-    TEST("FTANH.W -(A2), FP3",          0xF200|042, 0x4009|(4<<10)|(3<<7));
-    TEST("FTANH.D ($1234,A4), FP5",     0xF200|054, 0x4009|(5<<10)|(5<<7), 0x1234);
-    TEST("FTANH.B ($23,A6,D7.W), FP0",  0xF200|066, 0x4009|(6<<10)|(0<<7), 0x7023);
-    TEST("FTANH.L ($004566).W, FP1",    0xF200|070, 0x4009|(0<<10)|(1<<7), 0x4566);
-    TEST("FTANH.S ($56789A).L, FP2",    0xF200|071, 0x4009|(1<<10)|(2<<7), 0x0056, 0x789A);
-    TEST("FTANH.X (*+$1234,PC), FP3",   0xF200|072, 0x4009|(2<<10)|(3<<7), 0x1230);
-    TEST("FTANH.P (*+90,PC,A4.L), FP5", 0xF200|073, 0x4009|(3<<10)|(5<<7), 0xC856);
-    TEST("FTANH.L #$6789ABCD, FP6",     0xF200|074, 0x4009|(0<<10)|(6<<7), 0x6789, 0xABCD);
-    TEST("FTANH.W #$1234, FP2",         0xF200|074, 0x4009|(4<<10)|(2<<7), 0x1234);
-    TEST("FTANH.B #$23, FP4",           0xF200|074, 0x4009|(6<<10)|(4<<7), 0x0023);
-    FLTS("FTANH.S", "#7.88999976E-10, FP7", 0xF200|074, 0x4009|(1<<10)|(7<<7), 0x3058, 0xE0F0);
-    FLTX("FTANH.X", "#-89000000032, FP0",   0xF200|074, 0x4009|(2<<10)|(0<<7),
-         0xC023, 0x0000, 0xA5C6, 0x81D1, 0x0000, 0x0000);
-    FLTP("FTANH.P", "#9.12E20, FP1",        0xF200|074, 0x4009|(3<<10)|(1<<7),
-         0x0020, 0x0009, 0x1200, 0x0000, 0x0000, 0x0000);
-    FLTD("FTANH.D", "#-8.25, FP3",          0xF200|074, 0x4009|(5<<10)|(3<<7),
-         0xC020, 0x8000, 0x0000, 0x0000);
-
-    TEST("FATAN.X FP0, FP1",            0xF200,     0x000A|(0<<10)|(1<<7));
-    TEST("FATAN.X FP2",                 0xF200,     0x000A|(2<<10)|(2<<7));
-    TEST("FATAN.L D2, FP3",             0xF200|002, 0x400A|(0<<10)|(3<<7));
-    TEST("FATAN.S D2, FP3",             0xF200|002, 0x400A|(1<<10)|(3<<7));
-    ERRT("FATAN.X D2, FP3", ILLEGAL_SIZE, "FATAN.X D2, FP3",
-                                        0xF200|002, 0x400A|(2<<10)|(3<<7));
-    ERRT("FATAN.P D2, FP3", ILLEGAL_SIZE, "FATAN.P D2, FP3",
-                                        0xF200|002, 0x400A|(3<<10)|(3<<7));
-    TEST("FATAN.W D2, FP3",             0xF200|002, 0x400A|(4<<10)|(3<<7));
-    ERRT("FATAN.D D2, FP3", ILLEGAL_SIZE, "FATAN.D D2, FP3",
-                                        0xF200|002, 0x400A|(5<<10)|(3<<7));
-    TEST("FATAN.B D2, FP3",             0xF200|002, 0x400A|(6<<10)|(3<<7));
-    ERRT("FATAN.S A4, FP5",             OPERAND_NOT_ALLOWED, "A4, FP5", 0xF200, 0x468A);
-    TEST("FATAN.X (A6), FP7",           0xF200|026, 0x400A|(2<<10)|(7<<7));
-    TEST("FATAN.P (A0)+, FP1",          0xF200|030, 0x400A|(3<<10)|(1<<7));
-    TEST("FATAN.W -(A2), FP3",          0xF200|042, 0x400A|(4<<10)|(3<<7));
-    TEST("FATAN.D ($1234,A4), FP5",     0xF200|054, 0x400A|(5<<10)|(5<<7), 0x1234);
-    TEST("FATAN.B ($23,A6,D7.W), FP0",  0xF200|066, 0x400A|(6<<10)|(0<<7), 0x7023);
-    TEST("FATAN.L ($004566).W, FP1",    0xF200|070, 0x400A|(0<<10)|(1<<7), 0x4566);
-    TEST("FATAN.S ($56789A).L, FP2",    0xF200|071, 0x400A|(1<<10)|(2<<7), 0x0056, 0x789A);
-    TEST("FATAN.X (*+$1234,PC), FP3",   0xF200|072, 0x400A|(2<<10)|(3<<7), 0x1230);
-    TEST("FATAN.P (*+90,PC,A4.L), FP5", 0xF200|073, 0x400A|(3<<10)|(5<<7), 0xC856);
-    TEST("FATAN.L #$6789ABCD, FP6",     0xF200|074, 0x400A|(0<<10)|(6<<7), 0x6789, 0xABCD);
-    TEST("FATAN.W #$1234, FP2",         0xF200|074, 0x400A|(4<<10)|(2<<7), 0x1234);
-    TEST("FATAN.B #$23, FP4",           0xF200|074, 0x400A|(6<<10)|(4<<7), 0x0023);
-    FLTS("FATAN.S", "#7.88999976E-10, FP7", 0xF200|074, 0x400A|(1<<10)|(7<<7), 0x3058, 0xE0F0);
-    FLTX("FATAN.X", "#-89000000032, FP0",   0xF200|074, 0x400A|(2<<10)|(0<<7),
-         0xC023, 0x0000, 0xA5C6, 0x81D1, 0x0000, 0x0000);
-    FLTP("FATAN.P", "#9.12E20, FP1",        0xF200|074, 0x400A|(3<<10)|(1<<7),
-         0x0020, 0x0009, 0x1200, 0x0000, 0x0000, 0x0000);
-    FLTD("FATAN.D", "#-8.25, FP3",          0xF200|074, 0x400A|(5<<10)|(3<<7),
-         0xC020, 0x8000, 0x0000, 0x0000);
-
-    TEST("FASIN.X FP0, FP1",            0xF200,     0x000C|(0<<10)|(1<<7));
-    TEST("FASIN.X FP2",                 0xF200,     0x000C|(2<<10)|(2<<7));
-    TEST("FASIN.L D2, FP3",             0xF200|002, 0x400C|(0<<10)|(3<<7));
-    TEST("FASIN.S D2, FP3",             0xF200|002, 0x400C|(1<<10)|(3<<7));
-    ERRT("FASIN.X D2, FP3", ILLEGAL_SIZE, "FASIN.X D2, FP3",
-                                        0xF200|002, 0x400C|(2<<10)|(3<<7));
-    ERRT("FASIN.P D2, FP3", ILLEGAL_SIZE, "FASIN.P D2, FP3",
-                                        0xF200|002, 0x400C|(3<<10)|(3<<7));
-    TEST("FASIN.W D2, FP3",             0xF200|002, 0x400C|(4<<10)|(3<<7));
-    ERRT("FASIN.D D2, FP3", ILLEGAL_SIZE, "FASIN.D D2, FP3",
-                                        0xF200|002, 0x400C|(5<<10)|(3<<7));
-    TEST("FASIN.B D2, FP3",             0xF200|002, 0x400C|(6<<10)|(3<<7));
-    ERRT("FASIN.S A4, FP5",             OPERAND_NOT_ALLOWED, "A4, FP5", 0xF200, 0x468C);
-    TEST("FASIN.X (A6), FP7",           0xF200|026, 0x400C|(2<<10)|(7<<7));
-    TEST("FASIN.P (A0)+, FP1",          0xF200|030, 0x400C|(3<<10)|(1<<7));
-    TEST("FASIN.W -(A2), FP3",          0xF200|042, 0x400C|(4<<10)|(3<<7));
-    TEST("FASIN.D ($1234,A4), FP5",     0xF200|054, 0x400C|(5<<10)|(5<<7), 0x1234);
-    TEST("FASIN.B ($23,A6,D7.W), FP0",  0xF200|066, 0x400C|(6<<10)|(0<<7), 0x7023);
-    TEST("FASIN.L ($004566).W, FP1",    0xF200|070, 0x400C|(0<<10)|(1<<7), 0x4566);
-    TEST("FASIN.S ($56789A).L, FP2",    0xF200|071, 0x400C|(1<<10)|(2<<7), 0x0056, 0x789A);
-    TEST("FASIN.X (*+$1234,PC), FP3",   0xF200|072, 0x400C|(2<<10)|(3<<7), 0x1230);
-    TEST("FASIN.P (*+90,PC,A4.L), FP5", 0xF200|073, 0x400C|(3<<10)|(5<<7), 0xC856);
-    TEST("FASIN.L #$6789ABCD, FP6",     0xF200|074, 0x400C|(0<<10)|(6<<7), 0x6789, 0xABCD);
-    TEST("FASIN.W #$1234, FP2",         0xF200|074, 0x400C|(4<<10)|(2<<7), 0x1234);
-    TEST("FASIN.B #$23, FP4",           0xF200|074, 0x400C|(6<<10)|(4<<7), 0x0023);
-    FLTS("FASIN.S", "#7.88999976E-10, FP7", 0xF200|074, 0x400C|(1<<10)|(7<<7), 0x3058, 0xE0F0);
-    FLTX("FASIN.X", "#-89000000032, FP0",   0xF200|074, 0x400C|(2<<10)|(0<<7),
-         0xC023, 0x0000, 0xA5C6, 0x81D1, 0x0000, 0x0000);
-    FLTP("FASIN.P", "#9.12E20, FP1",        0xF200|074, 0x400C|(3<<10)|(1<<7),
-         0x0020, 0x0009, 0x1200, 0x0000, 0x0000, 0x0000);
-    FLTD("FASIN.D", "#-8.25, FP3",          0xF200|074, 0x400C|(5<<10)|(3<<7),
-         0xC020, 0x8000, 0x0000, 0x0000);
-
-    TEST("FATANH.X FP0, FP1",            0xF200,     0x000D|(0<<10)|(1<<7));
-    TEST("FATANH.X FP2",                 0xF200,     0x000D|(2<<10)|(2<<7));
-    TEST("FATANH.L D2, FP3",             0xF200|002, 0x400D|(0<<10)|(3<<7));
-    TEST("FATANH.S D2, FP3",             0xF200|002, 0x400D|(1<<10)|(3<<7));
-    ERRT("FATANH.X D2, FP3", ILLEGAL_SIZE, "FATANH.X D2, FP3",
-                                         0xF200|002, 0x400D|(2<<10)|(3<<7));
-    ERRT("FATANH.P D2, FP3", ILLEGAL_SIZE, "FATANH.P D2, FP3",
-                                         0xF200|002, 0x400D|(3<<10)|(3<<7));
-    TEST("FATANH.W D2, FP3",             0xF200|002, 0x400D|(4<<10)|(3<<7));
-    ERRT("FATANH.D D2, FP3", ILLEGAL_SIZE, "FATANH.D D2, FP3",
-                                         0xF200|002, 0x400D|(5<<10)|(3<<7));
-    TEST("FATANH.B D2, FP3",             0xF200|002, 0x400D|(6<<10)|(3<<7));
-    ERRT("FATANH.S A4, FP5",             OPERAND_NOT_ALLOWED, "A4, FP5", 0xF200, 0x468D);
-    TEST("FATANH.X (A6), FP7",           0xF200|026, 0x400D|(2<<10)|(7<<7));
-    TEST("FATANH.P (A0)+, FP1",          0xF200|030, 0x400D|(3<<10)|(1<<7));
-    TEST("FATANH.W -(A2), FP3",          0xF200|042, 0x400D|(4<<10)|(3<<7));
-    TEST("FATANH.D ($1234,A4), FP5",     0xF200|054, 0x400D|(5<<10)|(5<<7), 0x1234);
-    TEST("FATANH.B ($23,A6,D7.W), FP0",  0xF200|066, 0x400D|(6<<10)|(0<<7), 0x7023);
-    TEST("FATANH.L ($004566).W, FP1",    0xF200|070, 0x400D|(0<<10)|(1<<7), 0x4566);
-    TEST("FATANH.S ($56789A).L, FP2",    0xF200|071, 0x400D|(1<<10)|(2<<7), 0x0056, 0x789A);
-    TEST("FATANH.X (*+$1234,PC), FP3",   0xF200|072, 0x400D|(2<<10)|(3<<7), 0x1230);
-    TEST("FATANH.P (*+90,PC,A4.L), FP5", 0xF200|073, 0x400D|(3<<10)|(5<<7), 0xC856);
-    TEST("FATANH.L #$6789ABCD, FP6",     0xF200|074, 0x400D|(0<<10)|(6<<7), 0x6789, 0xABCD);
-    TEST("FATANH.W #$1234, FP2",         0xF200|074, 0x400D|(4<<10)|(2<<7), 0x1234);
-    TEST("FATANH.B #$23, FP4",           0xF200|074, 0x400D|(6<<10)|(4<<7), 0x0023);
-    FLTS("FATANH.S", "#7.88999976E-10, FP7", 0xF200|074, 0x400D|(1<<10)|(7<<7), 0x3058, 0xE0F0);
-    FLTX("FATANH.X", "#-89000000032, FP0",   0xF200|074, 0x400D|(2<<10)|(0<<7),
-         0xC023, 0x0000, 0xA5C6, 0x81D1, 0x0000, 0x0000);
-    FLTP("FATANH.P", "#9.12E20, FP1",        0xF200|074, 0x400D|(3<<10)|(1<<7),
-         0x0020, 0x0009, 0x1200, 0x0000, 0x0000, 0x0000);
-    FLTD("FATANH.D", "#-8.25, FP3",          0xF200|074, 0x400D|(5<<10)|(3<<7),
-         0xC020, 0x8000, 0x0000, 0x0000);
-
-    TEST("FSIN.X FP0, FP1",            0xF200,     0x000E|(0<<10)|(1<<7));
-    TEST("FSIN.X FP2",                 0xF200,     0x000E|(2<<10)|(2<<7));
-    TEST("FSIN.L D2, FP3",             0xF200|002, 0x400E|(0<<10)|(3<<7));
-    TEST("FSIN.S D2, FP3",             0xF200|002, 0x400E|(1<<10)|(3<<7));
-    ERRT("FSIN.X D2, FP3", ILLEGAL_SIZE, "FSIN.X D2, FP3",
-                                       0xF200|002, 0x400E|(2<<10)|(3<<7));
-    ERRT("FSIN.P D2, FP3", ILLEGAL_SIZE, "FSIN.P D2, FP3",
-                                       0xF200|002, 0x400E|(3<<10)|(3<<7));
-    TEST("FSIN.W D2, FP3",             0xF200|002, 0x400E|(4<<10)|(3<<7));
-    ERRT("FSIN.D D2, FP3", ILLEGAL_SIZE, "FSIN.D D2, FP3",
-                                       0xF200|002, 0x400E|(5<<10)|(3<<7));
-    TEST("FSIN.B D2, FP3",             0xF200|002, 0x400E|(6<<10)|(3<<7));
-    ERRT("FSIN.S A4, FP5",             OPERAND_NOT_ALLOWED, "A4, FP5", 0xF200, 0x468E);
-    TEST("FSIN.X (A6), FP7",           0xF200|026, 0x400E|(2<<10)|(7<<7));
-    TEST("FSIN.P (A0)+, FP1",          0xF200|030, 0x400E|(3<<10)|(1<<7));
-    TEST("FSIN.W -(A2), FP3",          0xF200|042, 0x400E|(4<<10)|(3<<7));
-    TEST("FSIN.D ($1234,A4), FP5",     0xF200|054, 0x400E|(5<<10)|(5<<7), 0x1234);
-    TEST("FSIN.B ($23,A6,D7.W), FP0",  0xF200|066, 0x400E|(6<<10)|(0<<7), 0x7023);
-    TEST("FSIN.L ($004566).W, FP1",    0xF200|070, 0x400E|(0<<10)|(1<<7), 0x4566);
-    TEST("FSIN.S ($56789A).L, FP2",    0xF200|071, 0x400E|(1<<10)|(2<<7), 0x0056, 0x789A);
-    TEST("FSIN.X (*+$1234,PC), FP3",   0xF200|072, 0x400E|(2<<10)|(3<<7), 0x1230);
-    TEST("FSIN.P (*+90,PC,A4.L), FP5", 0xF200|073, 0x400E|(3<<10)|(5<<7), 0xC856);
-    TEST("FSIN.L #$6789ABCD, FP6",     0xF200|074, 0x400E|(0<<10)|(6<<7), 0x6789, 0xABCD);
-    TEST("FSIN.W #$1234, FP2",         0xF200|074, 0x400E|(4<<10)|(2<<7), 0x1234);
-    TEST("FSIN.B #$23, FP4",           0xF200|074, 0x400E|(6<<10)|(4<<7), 0x0023);
-    FLTS("FSIN.S", "#7.88999976E-10, FP7", 0xF200|074, 0x400E|(1<<10)|(7<<7), 0x3058, 0xE0F0);
-    FLTX("FSIN.X", "#-89000000032, FP0",   0xF200|074, 0x400E|(2<<10)|(0<<7),
-         0xC023, 0x0000, 0xA5C6, 0x81D1, 0x0000, 0x0000);
-    FLTP("FSIN.P", "#9.12E20, FP1",        0xF200|074, 0x400E|(3<<10)|(1<<7),
-         0x0020, 0x0009, 0x1200, 0x0000, 0x0000, 0x0000);
-    FLTD("FSIN.D", "#-8.25, FP3",          0xF200|074, 0x400E|(5<<10)|(3<<7),
-         0xC020, 0x8000, 0x0000, 0x0000);
-
-    TEST("FTAN.X FP0, FP1",            0xF200,     0x000F|(0<<10)|(1<<7));
-    TEST("FTAN.X FP2",                 0xF200,     0x000F|(2<<10)|(2<<7));
-    TEST("FTAN.L D2, FP3",             0xF200|002, 0x400F|(0<<10)|(3<<7));
-    TEST("FTAN.S D2, FP3",             0xF200|002, 0x400F|(1<<10)|(3<<7));
-    ERRT("FTAN.X D2, FP3", ILLEGAL_SIZE, "FTAN.X D2, FP3",
-                                       0xF200|002, 0x400F|(2<<10)|(3<<7));
-    ERRT("FTAN.P D2, FP3", ILLEGAL_SIZE, "FTAN.P D2, FP3",
-                                       0xF200|002, 0x400F|(3<<10)|(3<<7));
-    TEST("FTAN.W D2, FP3",             0xF200|002, 0x400F|(4<<10)|(3<<7));
-    ERRT("FTAN.D D2, FP3", ILLEGAL_SIZE, "FTAN.D D2, FP3",
-                                       0xF200|002, 0x400F|(5<<10)|(3<<7));
-    TEST("FTAN.B D2, FP3",             0xF200|002, 0x400F|(6<<10)|(3<<7));
-    ERRT("FTAN.S A4, FP5",             OPERAND_NOT_ALLOWED, "A4, FP5", 0xF200, 0x468F);
-    TEST("FTAN.X (A6), FP7",           0xF200|026, 0x400F|(2<<10)|(7<<7));
-    TEST("FTAN.P (A0)+, FP1",          0xF200|030, 0x400F|(3<<10)|(1<<7));
-    TEST("FTAN.W -(A2), FP3",          0xF200|042, 0x400F|(4<<10)|(3<<7));
-    TEST("FTAN.D ($1234,A4), FP5",     0xF200|054, 0x400F|(5<<10)|(5<<7), 0x1234);
-    TEST("FTAN.B ($23,A6,D7.W), FP0",  0xF200|066, 0x400F|(6<<10)|(0<<7), 0x7023);
-    TEST("FTAN.L ($004566).W, FP1",    0xF200|070, 0x400F|(0<<10)|(1<<7), 0x4566);
-    TEST("FTAN.S ($56789A).L, FP2",    0xF200|071, 0x400F|(1<<10)|(2<<7), 0x0056, 0x789A);
-    TEST("FTAN.X (*+$1234,PC), FP3",   0xF200|072, 0x400F|(2<<10)|(3<<7), 0x1230);
-    TEST("FTAN.P (*+90,PC,A4.L), FP5", 0xF200|073, 0x400F|(3<<10)|(5<<7), 0xC856);
-    TEST("FTAN.L #$6789ABCD, FP6",     0xF200|074, 0x400F|(0<<10)|(6<<7), 0x6789, 0xABCD);
-    TEST("FTAN.W #$1234, FP2",         0xF200|074, 0x400F|(4<<10)|(2<<7), 0x1234);
-    TEST("FTAN.B #$23, FP4",           0xF200|074, 0x400F|(6<<10)|(4<<7), 0x0023);
-    FLTS("FTAN.S", "#7.88999976E-10, FP7", 0xF200|074, 0x400F|(1<<10)|(7<<7), 0x3058, 0xE0F0);
-    FLTX("FTAN.X", "#-89000000032, FP0",   0xF200|074, 0x400F|(2<<10)|(0<<7),
-         0xC023, 0x0000, 0xA5C6, 0x81D1, 0x0000, 0x0000);
-    FLTP("FTAN.P", "#9.12E20, FP1",        0xF200|074, 0x400F|(3<<10)|(1<<7),
-         0x0020, 0x0009, 0x1200, 0x0000, 0x0000, 0x0000);
-    FLTD("FTAN.D", "#-8.25, FP3",          0xF200|074, 0x400F|(5<<10)|(3<<7),
-         0xC020, 0x8000, 0x0000, 0x0000);
-
-    TEST("FETOX.X FP0, FP1",            0xF200,     0x0010|(0<<10)|(1<<7));
-    TEST("FETOX.X FP2",                 0xF200,     0x0010|(2<<10)|(2<<7));
-    TEST("FETOX.L D2, FP3",             0xF200|002, 0x4010|(0<<10)|(3<<7));
-    TEST("FETOX.S D2, FP3",             0xF200|002, 0x4010|(1<<10)|(3<<7));
-    ERRT("FETOX.X D2, FP3", ILLEGAL_SIZE, "FETOX.X D2, FP3",
-                                        0xF200|002, 0x4010|(2<<10)|(3<<7));
-    ERRT("FETOX.P D2, FP3", ILLEGAL_SIZE, "FETOX.P D2, FP3",
-                                        0xF200|002, 0x4010|(3<<10)|(3<<7));
-    TEST("FETOX.W D2, FP3",             0xF200|002, 0x4010|(4<<10)|(3<<7));
-    ERRT("FETOX.D D2, FP3", ILLEGAL_SIZE, "FETOX.D D2, FP3",
-                                        0xF200|002, 0x4010|(5<<10)|(3<<7));
-    TEST("FETOX.B D2, FP3",             0xF200|002, 0x4010|(6<<10)|(3<<7));
-    ERRT("FETOX.S A4, FP5",             OPERAND_NOT_ALLOWED, "A4, FP5", 0xF200, 0x4690);
-    TEST("FETOX.X (A6), FP7",           0xF200|026, 0x4010|(2<<10)|(7<<7));
-    TEST("FETOX.P (A0)+, FP1",          0xF200|030, 0x4010|(3<<10)|(1<<7));
-    TEST("FETOX.W -(A2), FP3",          0xF200|042, 0x4010|(4<<10)|(3<<7));
-    TEST("FETOX.D ($1234,A4), FP5",     0xF200|054, 0x4010|(5<<10)|(5<<7), 0x1234);
-    TEST("FETOX.B ($23,A6,D7.W), FP0",  0xF200|066, 0x4010|(6<<10)|(0<<7), 0x7023);
-    TEST("FETOX.L ($004566).W, FP1",    0xF200|070, 0x4010|(0<<10)|(1<<7), 0x4566);
-    TEST("FETOX.S ($56789A).L, FP2",    0xF200|071, 0x4010|(1<<10)|(2<<7), 0x0056, 0x789A);
-    TEST("FETOX.X (*+$1234,PC), FP3",   0xF200|072, 0x4010|(2<<10)|(3<<7), 0x1230);
-    TEST("FETOX.P (*+90,PC,A4.L), FP5", 0xF200|073, 0x4010|(3<<10)|(5<<7), 0xC856);
-    TEST("FETOX.L #$6789ABCD, FP6",     0xF200|074, 0x4010|(0<<10)|(6<<7), 0x6789, 0xABCD);
-    TEST("FETOX.W #$1234, FP2",         0xF200|074, 0x4010|(4<<10)|(2<<7), 0x1234);
-    TEST("FETOX.B #$23, FP4",           0xF200|074, 0x4010|(6<<10)|(4<<7), 0x0023);
-    FLTS("FETOX.S", "#7.88999976E-10, FP7", 0xF200|074, 0x4010|(1<<10)|(7<<7), 0x3058, 0xE0F0);
-    FLTX("FETOX.X", "#-89000000032, FP0",   0xF200|074, 0x4010|(2<<10)|(0<<7),
-         0xC023, 0x0000, 0xA5C6, 0x81D1, 0x0000, 0x0000);
-    FLTP("FETOX.P", "#9.12E20, FP1",        0xF200|074, 0x4010|(3<<10)|(1<<7),
-         0x0020, 0x0009, 0x1200, 0x0000, 0x0000, 0x0000);
-    FLTD("FETOX.D", "#-8.25, FP3",          0xF200|074, 0x4010|(5<<10)|(3<<7),
-         0xC020, 0x8000, 0x0000, 0x0000);
-
-    TEST("FTWOTOX.X FP0, FP1",            0xF200,     0x0011|(0<<10)|(1<<7));
-    TEST("FTWOTOX.X FP2",                 0xF200,     0x0011|(2<<10)|(2<<7));
-    TEST("FTWOTOX.L D2, FP3",             0xF200|002, 0x4011|(0<<10)|(3<<7));
-    TEST("FTWOTOX.S D2, FP3",             0xF200|002, 0x4011|(1<<10)|(3<<7));
-    ERRT("FTWOTOX.X D2, FP3", ILLEGAL_SIZE, "FTWOTOX.X D2, FP3",
-                                          0xF200|002, 0x4011|(2<<10)|(3<<7));
-    ERRT("FTWOTOX.P D2, FP3", ILLEGAL_SIZE, "FTWOTOX.P D2, FP3",
-                                          0xF200|002, 0x4011|(3<<10)|(3<<7));
-    TEST("FTWOTOX.W D2, FP3",             0xF200|002, 0x4011|(4<<10)|(3<<7));
-    ERRT("FTWOTOX.D D2, FP3", ILLEGAL_SIZE, "FTWOTOX.D D2, FP3",
-                                          0xF200|002, 0x4011|(5<<10)|(3<<7));
-    TEST("FTWOTOX.B D2, FP3",             0xF200|002, 0x4011|(6<<10)|(3<<7));
-    ERRT("FTWOTOX.S A4, FP5",             OPERAND_NOT_ALLOWED, "A4, FP5", 0xF200, 0x4691);
-    TEST("FTWOTOX.X (A6), FP7",           0xF200|026, 0x4011|(2<<10)|(7<<7));
-    TEST("FTWOTOX.P (A0)+, FP1",          0xF200|030, 0x4011|(3<<10)|(1<<7));
-    TEST("FTWOTOX.W -(A2), FP3",          0xF200|042, 0x4011|(4<<10)|(3<<7));
-    TEST("FTWOTOX.D ($1234,A4), FP5",     0xF200|054, 0x4011|(5<<10)|(5<<7), 0x1234);
-    TEST("FTWOTOX.B ($23,A6,D7.W), FP0",  0xF200|066, 0x4011|(6<<10)|(0<<7), 0x7023);
-    TEST("FTWOTOX.L ($004566).W, FP1",    0xF200|070, 0x4011|(0<<10)|(1<<7), 0x4566);
-    TEST("FTWOTOX.S ($56789A).L, FP2",    0xF200|071, 0x4011|(1<<10)|(2<<7), 0x0056, 0x789A);
-    TEST("FTWOTOX.X (*+$1234,PC), FP3",   0xF200|072, 0x4011|(2<<10)|(3<<7), 0x1230);
-    TEST("FTWOTOX.P (*+90,PC,A4.L), FP5", 0xF200|073, 0x4011|(3<<10)|(5<<7), 0xC856);
-    TEST("FTWOTOX.L #$6789ABCD, FP6",     0xF200|074, 0x4011|(0<<10)|(6<<7), 0x6789, 0xABCD);
-    TEST("FTWOTOX.W #$1234, FP2",         0xF200|074, 0x4011|(4<<10)|(2<<7), 0x1234);
-    TEST("FTWOTOX.B #$23, FP4",           0xF200|074, 0x4011|(6<<10)|(4<<7), 0x0023);
-    FLTS("FTWOTOX.S", "#7.88999976E-10, FP7", 0xF200|074, 0x4011|(1<<10)|(7<<7), 0x3058, 0xE0F0);
-    FLTX("FTWOTOX.X", "#-89000000032, FP0",   0xF200|074, 0x4011|(2<<10)|(0<<7),
-         0xC023, 0x0000, 0xA5C6, 0x81D1, 0x0000, 0x0000);
-    FLTP("FTWOTOX.P", "#9.12E20, FP1",        0xF200|074, 0x4011|(3<<10)|(1<<7),
-         0x0020, 0x0009, 0x1200, 0x0000, 0x0000, 0x0000);
-    FLTD("FTWOTOX.D", "#-8.25, FP3",          0xF200|074, 0x4011|(5<<10)|(3<<7),
-         0xC020, 0x8000, 0x0000, 0x0000);
-
-    TEST("FTENTOX.X FP0, FP1",            0xF200,     0x0012|(0<<10)|(1<<7));
-    TEST("FTENTOX.X FP2",                 0xF200,     0x0012|(2<<10)|(2<<7));
-    TEST("FTENTOX.L D2, FP3",             0xF200|002, 0x4012|(0<<10)|(3<<7));
-    TEST("FTENTOX.S D2, FP3",             0xF200|002, 0x4012|(1<<10)|(3<<7));
-    ERRT("FTENTOX.X D2, FP3", ILLEGAL_SIZE, "FTENTOX.X D2, FP3",
-                                          0xF200|002, 0x4012|(2<<10)|(3<<7));
-    ERRT("FTENTOX.P D2, FP3", ILLEGAL_SIZE, "FTENTOX.P D2, FP3",
-                                          0xF200|002, 0x4012|(3<<10)|(3<<7));
-    TEST("FTENTOX.W D2, FP3",             0xF200|002, 0x4012|(4<<10)|(3<<7));
-    ERRT("FTENTOX.D D2, FP3", ILLEGAL_SIZE, "FTENTOX.D D2, FP3",
-                                          0xF200|002, 0x4012|(5<<10)|(3<<7));
-    TEST("FTENTOX.B D2, FP3",             0xF200|002, 0x4012|(6<<10)|(3<<7));
-    ERRT("FTENTOX.S A4, FP5",             OPERAND_NOT_ALLOWED, "A4, FP5", 0xF200, 0x4692);
-    TEST("FTENTOX.X (A6), FP7",           0xF200|026, 0x4012|(2<<10)|(7<<7));
-    TEST("FTENTOX.P (A0)+, FP1",          0xF200|030, 0x4012|(3<<10)|(1<<7));
-    TEST("FTENTOX.W -(A2), FP3",          0xF200|042, 0x4012|(4<<10)|(3<<7));
-    TEST("FTENTOX.D ($1234,A4), FP5",     0xF200|054, 0x4012|(5<<10)|(5<<7), 0x1234);
-    TEST("FTENTOX.B ($23,A6,D7.W), FP0",  0xF200|066, 0x4012|(6<<10)|(0<<7), 0x7023);
-    TEST("FTENTOX.L ($004566).W, FP1",    0xF200|070, 0x4012|(0<<10)|(1<<7), 0x4566);
-    TEST("FTENTOX.S ($56789A).L, FP2",    0xF200|071, 0x4012|(1<<10)|(2<<7), 0x0056, 0x789A);
-    TEST("FTENTOX.X (*+$1234,PC), FP3",   0xF200|072, 0x4012|(2<<10)|(3<<7), 0x1230);
-    TEST("FTENTOX.P (*+90,PC,A4.L), FP5", 0xF200|073, 0x4012|(3<<10)|(5<<7), 0xC856);
-    TEST("FTENTOX.L #$6789ABCD, FP6",     0xF200|074, 0x4012|(0<<10)|(6<<7), 0x6789, 0xABCD);
-    TEST("FTENTOX.W #$1234, FP2",         0xF200|074, 0x4012|(4<<10)|(2<<7), 0x1234);
-    TEST("FTENTOX.B #$23, FP4",           0xF200|074, 0x4012|(6<<10)|(4<<7), 0x0023);
-    FLTS("FTENTOX.S", "#7.88999976E-10, FP7", 0xF200|074, 0x4012|(1<<10)|(7<<7), 0x3058, 0xE0F0);
-    FLTX("FTENTOX.X", "#-89000000032, FP0",   0xF200|074, 0x4012|(2<<10)|(0<<7),
-         0xC023, 0x0000, 0xA5C6, 0x81D1, 0x0000, 0x0000);
-    FLTP("FTENTOX.P", "#9.12E20, FP1",        0xF200|074, 0x4012|(3<<10)|(1<<7),
-         0x0020, 0x0009, 0x1200, 0x0000, 0x0000, 0x0000);
-    FLTD("FTENTOX.D", "#-8.25, FP3",          0xF200|074, 0x4012|(5<<10)|(3<<7),
-         0xC020, 0x8000, 0x0000, 0x0000);
-
-    TEST("FLOGN.X FP0, FP1",            0xF200,     0x0014|(0<<10)|(1<<7));
-    TEST("FLOGN.X FP2",                 0xF200,     0x0014|(2<<10)|(2<<7));
-    TEST("FLOGN.L D2, FP3",             0xF200|002, 0x4014|(0<<10)|(3<<7));
-    TEST("FLOGN.S D2, FP3",             0xF200|002, 0x4014|(1<<10)|(3<<7));
-    ERRT("FLOGN.X D2, FP3", ILLEGAL_SIZE, "FLOGN.X D2, FP3",
-                                        0xF200|002, 0x4014|(2<<10)|(3<<7));
-    ERRT("FLOGN.P D2, FP3", ILLEGAL_SIZE, "FLOGN.P D2, FP3",
-                                        0xF200|002, 0x4014|(3<<10)|(3<<7));
-    TEST("FLOGN.W D2, FP3",             0xF200|002, 0x4014|(4<<10)|(3<<7));
-    ERRT("FLOGN.D D2, FP3", ILLEGAL_SIZE, "FLOGN.D D2, FP3",
-                                        0xF200|002, 0x4014|(5<<10)|(3<<7));
-    TEST("FLOGN.B D2, FP3",             0xF200|002, 0x4014|(6<<10)|(3<<7));
-    ERRT("FLOGN.S A4, FP5",             OPERAND_NOT_ALLOWED, "A4, FP5", 0xF200, 0x4694);
-    TEST("FLOGN.X (A6), FP7",           0xF200|026, 0x4014|(2<<10)|(7<<7));
-    TEST("FLOGN.P (A0)+, FP1",          0xF200|030, 0x4014|(3<<10)|(1<<7));
-    TEST("FLOGN.W -(A2), FP3",          0xF200|042, 0x4014|(4<<10)|(3<<7));
-    TEST("FLOGN.D ($1234,A4), FP5",     0xF200|054, 0x4014|(5<<10)|(5<<7), 0x1234);
-    TEST("FLOGN.B ($23,A6,D7.W), FP0",  0xF200|066, 0x4014|(6<<10)|(0<<7), 0x7023);
-    TEST("FLOGN.L ($004566).W, FP1",    0xF200|070, 0x4014|(0<<10)|(1<<7), 0x4566);
-    TEST("FLOGN.S ($56789A).L, FP2",    0xF200|071, 0x4014|(1<<10)|(2<<7), 0x0056, 0x789A);
-    TEST("FLOGN.X (*+$1234,PC), FP3",   0xF200|072, 0x4014|(2<<10)|(3<<7), 0x1230);
-    TEST("FLOGN.P (*+90,PC,A4.L), FP5", 0xF200|073, 0x4014|(3<<10)|(5<<7), 0xC856);
-    TEST("FLOGN.L #$6789ABCD, FP6",     0xF200|074, 0x4014|(0<<10)|(6<<7), 0x6789, 0xABCD);
-    TEST("FLOGN.W #$1234, FP2",         0xF200|074, 0x4014|(4<<10)|(2<<7), 0x1234);
-    TEST("FLOGN.B #$23, FP4",           0xF200|074, 0x4014|(6<<10)|(4<<7), 0x0023);
-    FLTS("FLOGN.S", "#7.88999976E-10, FP7", 0xF200|074, 0x4014|(1<<10)|(7<<7), 0x3058, 0xE0F0);
-    FLTX("FLOGN.X", "#-89000000032, FP0",   0xF200|074, 0x4014|(2<<10)|(0<<7),
-         0xC023, 0x0000, 0xA5C6, 0x81D1, 0x0000, 0x0000);
-    FLTP("FLOGN.P", "#9.12E20, FP1",        0xF200|074, 0x4014|(3<<10)|(1<<7),
-         0x0020, 0x0009, 0x1200, 0x0000, 0x0000, 0x0000);
-    FLTD("FLOGN.D", "#-8.25, FP3",          0xF200|074, 0x4014|(5<<10)|(3<<7),
-         0xC020, 0x8000, 0x0000, 0x0000);
-
-    TEST("FLOG10.X FP0, FP1",            0xF200,     0x0015|(0<<10)|(1<<7));
-    TEST("FLOG10.X FP2",                 0xF200,     0x0015|(2<<10)|(2<<7));
-    TEST("FLOG10.L D2, FP3",             0xF200|002, 0x4015|(0<<10)|(3<<7));
-    TEST("FLOG10.S D2, FP3",             0xF200|002, 0x4015|(1<<10)|(3<<7));
-    ERRT("FLOG10.X D2, FP3", ILLEGAL_SIZE, "FLOG10.X D2, FP3",
-                                         0xF200|002, 0x4015|(2<<10)|(3<<7));
-    ERRT("FLOG10.P D2, FP3", ILLEGAL_SIZE, "FLOG10.P D2, FP3",
-                                         0xF200|002, 0x4015|(3<<10)|(3<<7));
-    TEST("FLOG10.W D2, FP3",             0xF200|002, 0x4015|(4<<10)|(3<<7));
-    ERRT("FLOG10.D D2, FP3", ILLEGAL_SIZE, "FLOG10.D D2, FP3",
-                                         0xF200|002, 0x4015|(5<<10)|(3<<7));
-    TEST("FLOG10.B D2, FP3",             0xF200|002, 0x4015|(6<<10)|(3<<7));
-    ERRT("FLOG10.S A4, FP5",             OPERAND_NOT_ALLOWED, "A4, FP5", 0xF200, 0x4695);
-    TEST("FLOG10.X (A6), FP7",           0xF200|026, 0x4015|(2<<10)|(7<<7));
-    TEST("FLOG10.P (A0)+, FP1",          0xF200|030, 0x4015|(3<<10)|(1<<7));
-    TEST("FLOG10.W -(A2), FP3",          0xF200|042, 0x4015|(4<<10)|(3<<7));
-    TEST("FLOG10.D ($1234,A4), FP5",     0xF200|054, 0x4015|(5<<10)|(5<<7), 0x1234);
-    TEST("FLOG10.B ($23,A6,D7.W), FP0",  0xF200|066, 0x4015|(6<<10)|(0<<7), 0x7023);
-    TEST("FLOG10.L ($004566).W, FP1",    0xF200|070, 0x4015|(0<<10)|(1<<7), 0x4566);
-    TEST("FLOG10.S ($56789A).L, FP2",    0xF200|071, 0x4015|(1<<10)|(2<<7), 0x0056, 0x789A);
-    TEST("FLOG10.X (*+$1234,PC), FP3",   0xF200|072, 0x4015|(2<<10)|(3<<7), 0x1230);
-    TEST("FLOG10.P (*+90,PC,A4.L), FP5", 0xF200|073, 0x4015|(3<<10)|(5<<7), 0xC856);
-    TEST("FLOG10.L #$6789ABCD, FP6",     0xF200|074, 0x4015|(0<<10)|(6<<7), 0x6789, 0xABCD);
-    TEST("FLOG10.W #$1234, FP2",         0xF200|074, 0x4015|(4<<10)|(2<<7), 0x1234);
-    TEST("FLOG10.B #$23, FP4",           0xF200|074, 0x4015|(6<<10)|(4<<7), 0x0023);
-    FLTS("FLOG10.S", "#7.88999976E-10, FP7", 0xF200|074, 0x4015|(1<<10)|(7<<7), 0x3058, 0xE0F0);
-    FLTX("FLOG10.X", "#-89000000032, FP0",   0xF200|074, 0x4015|(2<<10)|(0<<7),
-         0xC023, 0x0000, 0xA5C6, 0x81D1, 0x0000, 0x0000);
-    FLTP("FLOG10.P", "#9.12E20, FP1",        0xF200|074, 0x4015|(3<<10)|(1<<7),
-         0x0020, 0x0009, 0x1200, 0x0000, 0x0000, 0x0000);
-    FLTD("FLOG10.D", "#-8.25, FP3",          0xF200|074, 0x4015|(5<<10)|(3<<7),
-         0xC020, 0x8000, 0x0000, 0x0000);
-
-    TEST("FLOG2.X FP0, FP1",            0xF200,     0x0016|(0<<10)|(1<<7));
-    TEST("FLOG2.X FP2",                 0xF200,     0x0016|(2<<10)|(2<<7));
-    TEST("FLOG2.L D2, FP3",             0xF200|002, 0x4016|(0<<10)|(3<<7));
-    TEST("FLOG2.S D2, FP3",             0xF200|002, 0x4016|(1<<10)|(3<<7));
-    ERRT("FLOG2.X D2, FP3", ILLEGAL_SIZE, "FLOG2.X D2, FP3",
-                                        0xF200|002, 0x4016|(2<<10)|(3<<7));
-    ERRT("FLOG2.P D2, FP3", ILLEGAL_SIZE, "FLOG2.P D2, FP3",
-                                        0xF200|002, 0x4016|(3<<10)|(3<<7));
-    TEST("FLOG2.W D2, FP3",             0xF200|002, 0x4016|(4<<10)|(3<<7));
-    ERRT("FLOG2.D D2, FP3", ILLEGAL_SIZE, "FLOG2.D D2, FP3",
-                                        0xF200|002, 0x4016|(5<<10)|(3<<7));
-    TEST("FLOG2.B D2, FP3",             0xF200|002, 0x4016|(6<<10)|(3<<7));
-    ERRT("FLOG2.S A4, FP5",             OPERAND_NOT_ALLOWED, "A4, FP5", 0xF200, 0x4696);
-    TEST("FLOG2.X (A6), FP7",           0xF200|026, 0x4016|(2<<10)|(7<<7));
-    TEST("FLOG2.P (A0)+, FP1",          0xF200|030, 0x4016|(3<<10)|(1<<7));
-    TEST("FLOG2.W -(A2), FP3",          0xF200|042, 0x4016|(4<<10)|(3<<7));
-    TEST("FLOG2.D ($1234,A4), FP5",     0xF200|054, 0x4016|(5<<10)|(5<<7), 0x1234);
-    TEST("FLOG2.B ($23,A6,D7.W), FP0",  0xF200|066, 0x4016|(6<<10)|(0<<7), 0x7023);
-    TEST("FLOG2.L ($004566).W, FP1",    0xF200|070, 0x4016|(0<<10)|(1<<7), 0x4566);
-    TEST("FLOG2.S ($56789A).L, FP2",    0xF200|071, 0x4016|(1<<10)|(2<<7), 0x0056, 0x789A);
-    TEST("FLOG2.X (*+$1234,PC), FP3",   0xF200|072, 0x4016|(2<<10)|(3<<7), 0x1230);
-    TEST("FLOG2.P (*+90,PC,A4.L), FP5", 0xF200|073, 0x4016|(3<<10)|(5<<7), 0xC856);
-    TEST("FLOG2.L #$6789ABCD, FP6",     0xF200|074, 0x4016|(0<<10)|(6<<7), 0x6789, 0xABCD);
-    TEST("FLOG2.W #$1234, FP2",         0xF200|074, 0x4016|(4<<10)|(2<<7), 0x1234);
-    TEST("FLOG2.B #$23, FP4",           0xF200|074, 0x4016|(6<<10)|(4<<7), 0x0023);
-    FLTS("FLOG2.S", "#7.88999976E-10, FP7", 0xF200|074, 0x4016|(1<<10)|(7<<7), 0x3058, 0xE0F0);
-    FLTX("FLOG2.X", "#-89000000032, FP0",   0xF200|074, 0x4016|(2<<10)|(0<<7),
-         0xC023, 0x0000, 0xA5C6, 0x81D1, 0x0000, 0x0000);
-    FLTP("FLOG2.P", "#9.12E20, FP1",        0xF200|074, 0x4016|(3<<10)|(1<<7),
-         0x0020, 0x0009, 0x1200, 0x0000, 0x0000, 0x0000);
-    FLTD("FLOG2.D", "#-8.25, FP3",          0xF200|074, 0x4016|(5<<10)|(3<<7),
          0xC020, 0x8000, 0x0000, 0x0000);
 
     TEST("FABS.X FP0, FP1",            0xF200,     0x0018|(0<<10)|(1<<7));
@@ -4859,39 +4306,6 @@ void test_float_arithmetic() {
     FLTD("FABS.D", "#-8.25, FP3",          0xF200|074, 0x4018|(5<<10)|(3<<7),
          0xC020, 0x8000, 0x0000, 0x0000);
 
-    TEST("FCOSH.X FP0, FP1",            0xF200,     0x0019|(0<<10)|(1<<7));
-    TEST("FCOSH.X FP2",                 0xF200,     0x0019|(2<<10)|(2<<7));
-    TEST("FCOSH.L D2, FP3",             0xF200|002, 0x4019|(0<<10)|(3<<7));
-    TEST("FCOSH.S D2, FP3",             0xF200|002, 0x4019|(1<<10)|(3<<7));
-    ERRT("FCOSH.X D2, FP3", ILLEGAL_SIZE, "FCOSH.X D2, FP3",
-                                        0xF200|002, 0x4019|(2<<10)|(3<<7));
-    ERRT("FCOSH.P D2, FP3", ILLEGAL_SIZE, "FCOSH.P D2, FP3",
-                                        0xF200|002, 0x4019|(3<<10)|(3<<7));
-    TEST("FCOSH.W D2, FP3",             0xF200|002, 0x4019|(4<<10)|(3<<7));
-    ERRT("FCOSH.D D2, FP3", ILLEGAL_SIZE, "FCOSH.D D2, FP3",
-                                        0xF200|002, 0x4019|(5<<10)|(3<<7));
-    TEST("FCOSH.B D2, FP3",             0xF200|002, 0x4019|(6<<10)|(3<<7));
-    ERRT("FCOSH.S A4, FP5",             OPERAND_NOT_ALLOWED, "A4, FP5", 0xF200, 0x4699);
-    TEST("FCOSH.X (A6), FP7",           0xF200|026, 0x4019|(2<<10)|(7<<7));
-    TEST("FCOSH.P (A0)+, FP1",          0xF200|030, 0x4019|(3<<10)|(1<<7));
-    TEST("FCOSH.W -(A2), FP3",          0xF200|042, 0x4019|(4<<10)|(3<<7));
-    TEST("FCOSH.D ($1234,A4), FP5",     0xF200|054, 0x4019|(5<<10)|(5<<7), 0x1234);
-    TEST("FCOSH.B ($23,A6,D7.W), FP0",  0xF200|066, 0x4019|(6<<10)|(0<<7), 0x7023);
-    TEST("FCOSH.L ($004566).W, FP1",    0xF200|070, 0x4019|(0<<10)|(1<<7), 0x4566);
-    TEST("FCOSH.S ($56789A).L, FP2",    0xF200|071, 0x4019|(1<<10)|(2<<7), 0x0056, 0x789A);
-    TEST("FCOSH.X (*+$1234,PC), FP3",   0xF200|072, 0x4019|(2<<10)|(3<<7), 0x1230);
-    TEST("FCOSH.P (*+90,PC,A4.L), FP5", 0xF200|073, 0x4019|(3<<10)|(5<<7), 0xC856);
-    TEST("FCOSH.L #$6789ABCD, FP6",     0xF200|074, 0x4019|(0<<10)|(6<<7), 0x6789, 0xABCD);
-    TEST("FCOSH.W #$1234, FP2",         0xF200|074, 0x4019|(4<<10)|(2<<7), 0x1234);
-    TEST("FCOSH.B #$23, FP4",           0xF200|074, 0x4019|(6<<10)|(4<<7), 0x0023);
-    FLTS("FCOSH.S", "#7.88999976E-10, FP7", 0xF200|074, 0x4019|(1<<10)|(7<<7), 0x3058, 0xE0F0);
-    FLTX("FCOSH.X", "#-89000000032, FP0",   0xF200|074, 0x4019|(2<<10)|(0<<7),
-         0xC023, 0x0000, 0xA5C6, 0x81D1, 0x0000, 0x0000);
-    FLTP("FCOSH.P", "#9.12E20, FP1",        0xF200|074, 0x4019|(3<<10)|(1<<7),
-         0x0020, 0x0009, 0x1200, 0x0000, 0x0000, 0x0000);
-    FLTD("FCOSH.D", "#-8.25, FP3",          0xF200|074, 0x4019|(5<<10)|(3<<7),
-         0xC020, 0x8000, 0x0000, 0x0000);
-
     TEST("FNEG.X FP0, FP1",            0xF200,     0x001A|(0<<10)|(1<<7));
     TEST("FNEG.X FP2",                 0xF200,     0x001A|(2<<10)|(2<<7));
     TEST("FNEG.L D2, FP3",             0xF200|002, 0x401A|(0<<10)|(3<<7));
@@ -4925,138 +4339,6 @@ void test_float_arithmetic() {
     FLTD("FNEG.D", "#-8.25, FP3",          0xF200|074, 0x401A|(5<<10)|(3<<7),
          0xC020, 0x8000, 0x0000, 0x0000);
 
-    TEST("FACOS.X FP0, FP1",            0xF200,     0x001C|(0<<10)|(1<<7));
-    TEST("FACOS.X FP2",                 0xF200,     0x001C|(2<<10)|(2<<7));
-    TEST("FACOS.L D2, FP3",             0xF200|002, 0x401C|(0<<10)|(3<<7));
-    TEST("FACOS.S D2, FP3",             0xF200|002, 0x401C|(1<<10)|(3<<7));
-    ERRT("FACOS.X D2, FP3", ILLEGAL_SIZE, "FACOS.X D2, FP3",
-                                        0xF200|002, 0x401C|(2<<10)|(3<<7));
-    ERRT("FACOS.P D2, FP3", ILLEGAL_SIZE, "FACOS.P D2, FP3",
-                                        0xF200|002, 0x401C|(3<<10)|(3<<7));
-    TEST("FACOS.W D2, FP3",             0xF200|002, 0x401C|(4<<10)|(3<<7));
-    ERRT("FACOS.D D2, FP3", ILLEGAL_SIZE, "FACOS.D D2, FP3",
-                                        0xF200|002, 0x401C|(5<<10)|(3<<7));
-    TEST("FACOS.B D2, FP3",             0xF200|002, 0x401C|(6<<10)|(3<<7));
-    ERRT("FACOS.S A4, FP5",             OPERAND_NOT_ALLOWED, "A4, FP5", 0xF200, 0x469C);
-    TEST("FACOS.X (A6), FP7",           0xF200|026, 0x401C|(2<<10)|(7<<7));
-    TEST("FACOS.P (A0)+, FP1",          0xF200|030, 0x401C|(3<<10)|(1<<7));
-    TEST("FACOS.W -(A2), FP3",          0xF200|042, 0x401C|(4<<10)|(3<<7));
-    TEST("FACOS.D ($1234,A4), FP5",     0xF200|054, 0x401C|(5<<10)|(5<<7), 0x1234);
-    TEST("FACOS.B ($23,A6,D7.W), FP0",  0xF200|066, 0x401C|(6<<10)|(0<<7), 0x7023);
-    TEST("FACOS.L ($004566).W, FP1",    0xF200|070, 0x401C|(0<<10)|(1<<7), 0x4566);
-    TEST("FACOS.S ($56789A).L, FP2",    0xF200|071, 0x401C|(1<<10)|(2<<7), 0x0056, 0x789A);
-    TEST("FACOS.X (*+$1234,PC), FP3",   0xF200|072, 0x401C|(2<<10)|(3<<7), 0x1230);
-    TEST("FACOS.P (*+90,PC,A4.L), FP5", 0xF200|073, 0x401C|(3<<10)|(5<<7), 0xC856);
-    TEST("FACOS.L #$6789ABCD, FP6",     0xF200|074, 0x401C|(0<<10)|(6<<7), 0x6789, 0xABCD);
-    TEST("FACOS.W #$1234, FP2",         0xF200|074, 0x401C|(4<<10)|(2<<7), 0x1234);
-    TEST("FACOS.B #$23, FP4",           0xF200|074, 0x401C|(6<<10)|(4<<7), 0x0023);
-    FLTS("FACOS.S", "#7.88999976E-10, FP7", 0xF200|074, 0x401C|(1<<10)|(7<<7), 0x3058, 0xE0F0);
-    FLTX("FACOS.X", "#-89000000032, FP0",   0xF200|074, 0x401C|(2<<10)|(0<<7),
-         0xC023, 0x0000, 0xA5C6, 0x81D1, 0x0000, 0x0000);
-    FLTP("FACOS.P", "#9.12E20, FP1",        0xF200|074, 0x401C|(3<<10)|(1<<7),
-         0x0020, 0x0009, 0x1200, 0x0000, 0x0000, 0x0000);
-    FLTD("FACOS.D", "#-8.25, FP3",          0xF200|074, 0x401C|(5<<10)|(3<<7),
-         0xC020, 0x8000, 0x0000, 0x0000);
-
-    TEST("FCOS.X FP0, FP1",            0xF200,     0x001D|(0<<10)|(1<<7));
-    TEST("FCOS.X FP2",                 0xF200,     0x001D|(2<<10)|(2<<7));
-    TEST("FCOS.L D2, FP3",             0xF200|002, 0x401D|(0<<10)|(3<<7));
-    TEST("FCOS.S D2, FP3",             0xF200|002, 0x401D|(1<<10)|(3<<7));
-    ERRT("FCOS.X D2, FP3", ILLEGAL_SIZE, "FCOS.X D2, FP3",
-                                       0xF200|002, 0x401D|(2<<10)|(3<<7));
-    ERRT("FCOS.P D2, FP3", ILLEGAL_SIZE, "FCOS.P D2, FP3",
-                                       0xF200|002, 0x401D|(3<<10)|(3<<7));
-    TEST("FCOS.W D2, FP3",             0xF200|002, 0x401D|(4<<10)|(3<<7));
-    ERRT("FCOS.D D2, FP3", ILLEGAL_SIZE, "FCOS.D D2, FP3",
-                                       0xF200|002, 0x401D|(5<<10)|(3<<7));
-    TEST("FCOS.B D2, FP3",             0xF200|002, 0x401D|(6<<10)|(3<<7));
-    ERRT("FCOS.S A4, FP5",             OPERAND_NOT_ALLOWED, "A4, FP5", 0xF200, 0x469D);
-    TEST("FCOS.X (A6), FP7",           0xF200|026, 0x401D|(2<<10)|(7<<7));
-    TEST("FCOS.P (A0)+, FP1",          0xF200|030, 0x401D|(3<<10)|(1<<7));
-    TEST("FCOS.W -(A2), FP3",          0xF200|042, 0x401D|(4<<10)|(3<<7));
-    TEST("FCOS.D ($1234,A4), FP5",     0xF200|054, 0x401D|(5<<10)|(5<<7), 0x1234);
-    TEST("FCOS.B ($23,A6,D7.W), FP0",  0xF200|066, 0x401D|(6<<10)|(0<<7), 0x7023);
-    TEST("FCOS.L ($004566).W, FP1",    0xF200|070, 0x401D|(0<<10)|(1<<7), 0x4566);
-    TEST("FCOS.S ($56789A).L, FP2",    0xF200|071, 0x401D|(1<<10)|(2<<7), 0x0056, 0x789A);
-    TEST("FCOS.X (*+$1234,PC), FP3",   0xF200|072, 0x401D|(2<<10)|(3<<7), 0x1230);
-    TEST("FCOS.P (*+90,PC,A4.L), FP5", 0xF200|073, 0x401D|(3<<10)|(5<<7), 0xC856);
-    TEST("FCOS.L #$6789ABCD, FP6",     0xF200|074, 0x401D|(0<<10)|(6<<7), 0x6789, 0xABCD);
-    TEST("FCOS.W #$1234, FP2",         0xF200|074, 0x401D|(4<<10)|(2<<7), 0x1234);
-    TEST("FCOS.B #$23, FP4",           0xF200|074, 0x401D|(6<<10)|(4<<7), 0x0023);
-    FLTS("FCOS.S", "#7.88999976E-10, FP7", 0xF200|074, 0x401D|(1<<10)|(7<<7), 0x3058, 0xE0F0);
-    FLTX("FCOS.X", "#-89000000032, FP0",   0xF200|074, 0x401D|(2<<10)|(0<<7),
-         0xC023, 0x0000, 0xA5C6, 0x81D1, 0x0000, 0x0000);
-    FLTP("FCOS.P", "#9.12E20, FP1",        0xF200|074, 0x401D|(3<<10)|(1<<7),
-         0x0020, 0x0009, 0x1200, 0x0000, 0x0000, 0x0000);
-    FLTD("FCOS.D", "#-8.25, FP3",          0xF200|074, 0x401D|(5<<10)|(3<<7),
-         0xC020, 0x8000, 0x0000, 0x0000);
-
-    TEST("FGETEXP.X FP0, FP1",            0xF200,     0x001E|(0<<10)|(1<<7));
-    TEST("FGETEXP.X FP2",                 0xF200,     0x001E|(2<<10)|(2<<7));
-    TEST("FGETEXP.L D2, FP3",             0xF200|002, 0x401E|(0<<10)|(3<<7));
-    TEST("FGETEXP.S D2, FP3",             0xF200|002, 0x401E|(1<<10)|(3<<7));
-    ERRT("FGETEXP.X D2, FP3", ILLEGAL_SIZE, "FGETEXP.X D2, FP3",
-                                         0xF200|002, 0x401E|(2<<10)|(3<<7));
-    ERRT("FGETEXP.P D2, FP3", ILLEGAL_SIZE, "FGETEXP.P D2, FP3",
-                                          0xF200|002, 0x401E|(3<<10)|(3<<7));
-    TEST("FGETEXP.W D2, FP3",             0xF200|002, 0x401E|(4<<10)|(3<<7));
-    ERRT("FGETEXP.D D2, FP3", ILLEGAL_SIZE, "FGETEXP.D D2, FP3",
-                                          0xF200|002, 0x401E|(5<<10)|(3<<7));
-    TEST("FGETEXP.B D2, FP3",             0xF200|002, 0x401E|(6<<10)|(3<<7));
-    ERRT("FGETEXP.S A4, FP5",             OPERAND_NOT_ALLOWED, "A4, FP5", 0xF200, 0x469E);
-    TEST("FGETEXP.X (A6), FP7",           0xF200|026, 0x401E|(2<<10)|(7<<7));
-    TEST("FGETEXP.P (A0)+, FP1",          0xF200|030, 0x401E|(3<<10)|(1<<7));
-    TEST("FGETEXP.W -(A2), FP3",          0xF200|042, 0x401E|(4<<10)|(3<<7));
-    TEST("FGETEXP.D ($1234,A4), FP5",     0xF200|054, 0x401E|(5<<10)|(5<<7), 0x1234);
-    TEST("FGETEXP.B ($23,A6,D7.W), FP0",  0xF200|066, 0x401E|(6<<10)|(0<<7), 0x7023);
-    TEST("FGETEXP.L ($004566).W, FP1",    0xF200|070, 0x401E|(0<<10)|(1<<7), 0x4566);
-    TEST("FGETEXP.S ($56789A).L, FP2",    0xF200|071, 0x401E|(1<<10)|(2<<7), 0x0056, 0x789A);
-    TEST("FGETEXP.X (*+$1234,PC), FP3",   0xF200|072, 0x401E|(2<<10)|(3<<7), 0x1230);
-    TEST("FGETEXP.P (*+90,PC,A4.L), FP5", 0xF200|073, 0x401E|(3<<10)|(5<<7), 0xC856);
-    TEST("FGETEXP.L #$6789ABCD, FP6",     0xF200|074, 0x401E|(0<<10)|(6<<7), 0x6789, 0xABCD);
-    TEST("FGETEXP.W #$1234, FP2",         0xF200|074, 0x401E|(4<<10)|(2<<7), 0x1234);
-    TEST("FGETEXP.B #$23, FP4",           0xF200|074, 0x401E|(6<<10)|(4<<7), 0x0023);
-    FLTS("FGETEXP.S", "#7.88999976E-10, FP7", 0xF200|074, 0x401E|(1<<10)|(7<<7), 0x3058, 0xE0F0);
-    FLTX("FGETEXP.X", "#-89000000032, FP0",   0xF200|074, 0x401E|(2<<10)|(0<<7),
-         0xC023, 0x0000, 0xA5C6, 0x81D1, 0x0000, 0x0000);
-    FLTP("FGETEXP.P", "#9.12E20, FP1",        0xF200|074, 0x401E|(3<<10)|(1<<7),
-         0x0020, 0x0009, 0x1200, 0x0000, 0x0000, 0x0000);
-    FLTD("FGETEXP.D", "#-8.25, FP3",          0xF200|074, 0x401E|(5<<10)|(3<<7),
-         0xC020, 0x8000, 0x0000, 0x0000);
-
-    TEST("FGETMAN.X FP0, FP1",            0xF200,     0x001F|(0<<10)|(1<<7));
-    TEST("FGETMAN.X FP2",                 0xF200,     0x001F|(2<<10)|(2<<7));
-    TEST("FGETMAN.L D2, FP3",             0xF200|002, 0x401F|(0<<10)|(3<<7));
-    TEST("FGETMAN.S D2, FP3",             0xF200|002, 0x401F|(1<<10)|(3<<7));
-    ERRT("FGETMAN.X D2, FP3", ILLEGAL_SIZE, "FGETMAN.X D2, FP3",
-                                          0xF200|002, 0x401F|(2<<10)|(3<<7));
-    ERRT("FGETMAN.P D2, FP3", ILLEGAL_SIZE, "FGETMAN.P D2, FP3",
-                                          0xF200|002, 0x401F|(3<<10)|(3<<7));
-    TEST("FGETMAN.W D2, FP3",             0xF200|002, 0x401F|(4<<10)|(3<<7));
-    ERRT("FGETMAN.D D2, FP3", ILLEGAL_SIZE, "FGETMAN.D D2, FP3",
-                                          0xF200|002, 0x401F|(5<<10)|(3<<7));
-    TEST("FGETMAN.B D2, FP3",             0xF200|002, 0x401F|(6<<10)|(3<<7));
-    ERRT("FGETMAN.S A4, FP5",             OPERAND_NOT_ALLOWED, "A4, FP5", 0xF200, 0x469F);
-    TEST("FGETMAN.X (A6), FP7",           0xF200|026, 0x401F|(2<<10)|(7<<7));
-    TEST("FGETMAN.P (A0)+, FP1",          0xF200|030, 0x401F|(3<<10)|(1<<7));
-    TEST("FGETMAN.W -(A2), FP3",          0xF200|042, 0x401F|(4<<10)|(3<<7));
-    TEST("FGETMAN.D ($1234,A4), FP5",     0xF200|054, 0x401F|(5<<10)|(5<<7), 0x1234);
-    TEST("FGETMAN.B ($23,A6,D7.W), FP0",  0xF200|066, 0x401F|(6<<10)|(0<<7), 0x7023);
-    TEST("FGETMAN.L ($004566).W, FP1",    0xF200|070, 0x401F|(0<<10)|(1<<7), 0x4566);
-    TEST("FGETMAN.S ($56789A).L, FP2",    0xF200|071, 0x401F|(1<<10)|(2<<7), 0x0056, 0x789A);
-    TEST("FGETMAN.X (*+$1234,PC), FP3",   0xF200|072, 0x401F|(2<<10)|(3<<7), 0x1230);
-    TEST("FGETMAN.P (*+90,PC,A4.L), FP5", 0xF200|073, 0x401F|(3<<10)|(5<<7), 0xC856);
-    TEST("FGETMAN.L #$6789ABCD, FP6",     0xF200|074, 0x401F|(0<<10)|(6<<7), 0x6789, 0xABCD);
-    TEST("FGETMAN.W #$1234, FP2",         0xF200|074, 0x401F|(4<<10)|(2<<7), 0x1234);
-    TEST("FGETMAN.B #$23, FP4",           0xF200|074, 0x401F|(6<<10)|(4<<7), 0x0023);
-    FLTS("FGETMAN.S", "#7.88999976E-10, FP7", 0xF200|074, 0x401F|(1<<10)|(7<<7), 0x3058, 0xE0F0);
-    FLTX("FGETMAN.X", "#-89000000032, FP0",   0xF200|074, 0x401F|(2<<10)|(0<<7),
-         0xC023, 0x0000, 0xA5C6, 0x81D1, 0x0000, 0x0000);
-    FLTP("FGETMAN.P", "#9.12E20, FP1",        0xF200|074, 0x401F|(3<<10)|(1<<7),
-         0x0020, 0x0009, 0x1200, 0x0000, 0x0000, 0x0000);
-    FLTD("FGETMAN.D", "#-8.25, FP3",          0xF200|074, 0x401F|(5<<10)|(3<<7),
-         0xC020, 0x8000, 0x0000, 0x0000);
-
     TEST("FDIV.X FP0, FP1",            0xF200,     0x0020|(0<<10)|(1<<7));
     ERRT("FDIV.X FP0",                 OPERAND_NOT_ALLOWED, "FP0");
     TEST("FDIV.L D2, FP3",             0xF200|002, 0x4020|(0<<10)|(3<<7));
@@ -5088,39 +4370,6 @@ void test_float_arithmetic() {
     FLTP("FDIV.P", "#9.12E20, FP1",        0xF200|074, 0x4020|(3<<10)|(1<<7),
          0x0020, 0x0009, 0x1200, 0x0000, 0x0000, 0x0000);
     FLTD("FDIV.D", "#-8.25, FP3",          0xF200|074, 0x4020|(5<<10)|(3<<7),
-         0xC020, 0x8000, 0x0000, 0x0000);
-
-    TEST("FMOD.X FP0, FP1",            0xF200,     0x0021|(0<<10)|(1<<7));
-    ERRT("FMOD.X FP0",                 OPERAND_NOT_ALLOWED, "FP0");
-    TEST("FMOD.L D2, FP3",             0xF200|002, 0x4021|(0<<10)|(3<<7));
-    TEST("FMOD.S D2, FP3",             0xF200|002, 0x4021|(1<<10)|(3<<7));
-    ERRT("FMOD.X D2, FP3", ILLEGAL_SIZE, "FMOD.X D2, FP3",
-                                       0xF200|002, 0x4021|(2<<10)|(3<<7));
-    ERRT("FMOD.P D2, FP3", ILLEGAL_SIZE, "FMOD.P D2, FP3",
-                                       0xF200|002, 0x4021|(3<<10)|(3<<7));
-    TEST("FMOD.W D2, FP3",             0xF200|002, 0x4021|(4<<10)|(3<<7));
-    ERRT("FMOD.D D2, FP3", ILLEGAL_SIZE, "FMOD.D D2, FP3",
-                                       0xF200|002, 0x4021|(5<<10)|(3<<7));
-    TEST("FMOD.B D2, FP3",             0xF200|002, 0x4021|(6<<10)|(3<<7));
-    ERRT("FMOD.S A4, FP5",             OPERAND_NOT_ALLOWED, "A4, FP5", 0xF200, 0x46A1);
-    TEST("FMOD.X (A6), FP7",           0xF200|026, 0x4021|(2<<10)|(7<<7));
-    TEST("FMOD.P (A0)+, FP1",          0xF200|030, 0x4021|(3<<10)|(1<<7));
-    TEST("FMOD.W -(A2), FP3",          0xF200|042, 0x4021|(4<<10)|(3<<7));
-    TEST("FMOD.D ($1234,A4), FP5",     0xF200|054, 0x4021|(5<<10)|(5<<7), 0x1234);
-    TEST("FMOD.B ($23,A6,D7.W), FP0",  0xF200|066, 0x4021|(6<<10)|(0<<7), 0x7023);
-    TEST("FMOD.L ($004566).W, FP1",    0xF200|070, 0x4021|(0<<10)|(1<<7), 0x4566);
-    TEST("FMOD.S ($56789A).L, FP2",    0xF200|071, 0x4021|(1<<10)|(2<<7), 0x0056, 0x789A);
-    TEST("FMOD.X (*+$1234,PC), FP3",   0xF200|072, 0x4021|(2<<10)|(3<<7), 0x1230);
-    TEST("FMOD.P (*+90,PC,A4.L), FP5", 0xF200|073, 0x4021|(3<<10)|(5<<7), 0xC856);
-    TEST("FMOD.L #$6789ABCD, FP6",     0xF200|074, 0x4021|(0<<10)|(6<<7), 0x6789, 0xABCD);
-    TEST("FMOD.W #$1234, FP2",         0xF200|074, 0x4021|(4<<10)|(2<<7), 0x1234);
-    TEST("FMOD.B #$23, FP4",           0xF200|074, 0x4021|(6<<10)|(4<<7), 0x0023);
-    FLTS("FMOD.S", "#7.88999976E-10, FP7", 0xF200|074, 0x4021|(1<<10)|(7<<7), 0x3058, 0xE0F0);
-    FLTX("FMOD.X", "#-89000000032, FP0",   0xF200|074, 0x4021|(2<<10)|(0<<7),
-         0xC023, 0x0000, 0xA5C6, 0x81D1, 0x0000, 0x0000);
-    FLTP("FMOD.P", "#9.12E20, FP1",        0xF200|074, 0x4021|(3<<10)|(1<<7),
-         0x0020, 0x0009, 0x1200, 0x0000, 0x0000, 0x0000);
-    FLTD("FMOD.D", "#-8.25, FP3",          0xF200|074, 0x4021|(5<<10)|(3<<7),
          0xC020, 0x8000, 0x0000, 0x0000);
 
     TEST("FADD.X FP0, FP1",            0xF200,     0x0022|(0<<10)|(1<<7));
@@ -5222,72 +4471,6 @@ void test_float_arithmetic() {
     FLTD("FSGLDIV.D", "#-8.25, FP3",          0xF200|074, 0x4024|(5<<10)|(3<<7),
          0xC020, 0x8000, 0x0000, 0x0000);
 
-    TEST("FREM.X FP0, FP1",            0xF200,     0x0025|(0<<10)|(1<<7));
-    ERRT("FREM.X FP0",                 OPERAND_NOT_ALLOWED, "FP0");
-    TEST("FREM.L D2, FP3",             0xF200|002, 0x4025|(0<<10)|(3<<7));
-    TEST("FREM.S D2, FP3",             0xF200|002, 0x4025|(1<<10)|(3<<7));
-    ERRT("FREM.X D2, FP3", ILLEGAL_SIZE, "FREM.X D2, FP3",
-                                       0xF200|002, 0x4025|(2<<10)|(3<<7));
-    ERRT("FREM.P D2, FP3", ILLEGAL_SIZE, "FREM.P D2, FP3",
-                                       0xF200|002, 0x4025|(3<<10)|(3<<7));
-    TEST("FREM.W D2, FP3",             0xF200|002, 0x4025|(4<<10)|(3<<7));
-    ERRT("FREM.D D2, FP3", ILLEGAL_SIZE, "FREM.D D2, FP3",
-                                       0xF200|002, 0x4025|(5<<10)|(3<<7));
-    TEST("FREM.B D2, FP3",             0xF200|002, 0x4025|(6<<10)|(3<<7));
-    ERRT("FREM.S A4, FP5",             OPERAND_NOT_ALLOWED, "A4, FP5", 0xF200, 0x46A5);
-    TEST("FREM.X (A6), FP7",           0xF200|026, 0x4025|(2<<10)|(7<<7));
-    TEST("FREM.P (A0)+, FP1",          0xF200|030, 0x4025|(3<<10)|(1<<7));
-    TEST("FREM.W -(A2), FP3",          0xF200|042, 0x4025|(4<<10)|(3<<7));
-    TEST("FREM.D ($1234,A4), FP5",     0xF200|054, 0x4025|(5<<10)|(5<<7), 0x1234);
-    TEST("FREM.B ($23,A6,D7.W), FP0",  0xF200|066, 0x4025|(6<<10)|(0<<7), 0x7023);
-    TEST("FREM.L ($004566).W, FP1",    0xF200|070, 0x4025|(0<<10)|(1<<7), 0x4566);
-    TEST("FREM.S ($56789A).L, FP2",    0xF200|071, 0x4025|(1<<10)|(2<<7), 0x0056, 0x789A);
-    TEST("FREM.X (*+$1234,PC), FP3",   0xF200|072, 0x4025|(2<<10)|(3<<7), 0x1230);
-    TEST("FREM.P (*+90,PC,A4.L), FP5", 0xF200|073, 0x4025|(3<<10)|(5<<7), 0xC856);
-    TEST("FREM.L #$6789ABCD, FP6",     0xF200|074, 0x4025|(0<<10)|(6<<7), 0x6789, 0xABCD);
-    TEST("FREM.W #$1234, FP2",         0xF200|074, 0x4025|(4<<10)|(2<<7), 0x1234);
-    TEST("FREM.B #$23, FP4",           0xF200|074, 0x4025|(6<<10)|(4<<7), 0x0023);
-    FLTS("FREM.S", "#7.88999976E-10, FP7", 0xF200|074, 0x4025|(1<<10)|(7<<7), 0x3058, 0xE0F0);
-    FLTX("FREM.X", "#-89000000032, FP0",   0xF200|074, 0x4025|(2<<10)|(0<<7),
-         0xC023, 0x0000, 0xA5C6, 0x81D1, 0x0000, 0x0000);
-    FLTP("FREM.P", "#9.12E20, FP1",        0xF200|074, 0x4025|(3<<10)|(1<<7),
-         0x0020, 0x0009, 0x1200, 0x0000, 0x0000, 0x0000);
-    FLTD("FREM.D", "#-8.25, FP3",          0xF200|074, 0x4025|(5<<10)|(3<<7),
-         0xC020, 0x8000, 0x0000, 0x0000);
-
-    TEST("FSCALE.X FP0, FP1",            0xF200,     0x0026|(0<<10)|(1<<7));
-    ERRT("FSCALE.X FP0",                 OPERAND_NOT_ALLOWED, "FP0");
-    TEST("FSCALE.L D2, FP3",             0xF200|002, 0x4026|(0<<10)|(3<<7));
-    TEST("FSCALE.S D2, FP3",             0xF200|002, 0x4026|(1<<10)|(3<<7));
-    ERRT("FSCALE.X D2, FP3", ILLEGAL_SIZE, "FSCALE.X D2, FP3",
-                                         0xF200|002, 0x4026|(2<<10)|(3<<7));
-    ERRT("FSCALE.P D2, FP3", ILLEGAL_SIZE, "FSCALE.P D2, FP3",
-                                         0xF200|002, 0x4026|(3<<10)|(3<<7));
-    TEST("FSCALE.W D2, FP3",             0xF200|002, 0x4026|(4<<10)|(3<<7));
-    ERRT("FSCALE.D D2, FP3", ILLEGAL_SIZE, "FSCALE.D D2, FP3",
-                                         0xF200|002, 0x4026|(5<<10)|(3<<7));
-    TEST("FSCALE.B D2, FP3",             0xF200|002, 0x4026|(6<<10)|(3<<7));
-    ERRT("FSCALE.S A4, FP5",             OPERAND_NOT_ALLOWED, "A4, FP5", 0xF200, 0x46A6);
-    TEST("FSCALE.X (A6), FP7",           0xF200|026, 0x4026|(2<<10)|(7<<7));
-    TEST("FSCALE.P (A0)+, FP1",          0xF200|030, 0x4026|(3<<10)|(1<<7));
-    TEST("FSCALE.W -(A2), FP3",          0xF200|042, 0x4026|(4<<10)|(3<<7));
-    TEST("FSCALE.D ($1234,A4), FP5",     0xF200|054, 0x4026|(5<<10)|(5<<7), 0x1234);
-    TEST("FSCALE.B ($23,A6,D7.W), FP0",  0xF200|066, 0x4026|(6<<10)|(0<<7), 0x7023);
-    TEST("FSCALE.L ($004566).W, FP1",    0xF200|070, 0x4026|(0<<10)|(1<<7), 0x4566);
-    TEST("FSCALE.S ($56789A).L, FP2",    0xF200|071, 0x4026|(1<<10)|(2<<7), 0x0056, 0x789A);
-    TEST("FSCALE.X (*+$1234,PC), FP3",   0xF200|072, 0x4026|(2<<10)|(3<<7), 0x1230);
-    TEST("FSCALE.P (*+90,PC,A4.L), FP5", 0xF200|073, 0x4026|(3<<10)|(5<<7), 0xC856);
-    TEST("FSCALE.L #$6789ABCD, FP6",     0xF200|074, 0x4026|(0<<10)|(6<<7), 0x6789, 0xABCD);
-    TEST("FSCALE.W #$1234, FP2",         0xF200|074, 0x4026|(4<<10)|(2<<7), 0x1234);
-    TEST("FSCALE.B #$23, FP4",           0xF200|074, 0x4026|(6<<10)|(4<<7), 0x0023);
-    FLTS("FSCALE.S", "#7.88999976E-10, FP7", 0xF200|074, 0x4026|(1<<10)|(7<<7), 0x3058, 0xE0F0);
-    FLTX("FSCALE.X", "#-89000000032, FP0",   0xF200|074, 0x4026|(2<<10)|(0<<7),
-         0xC023, 0x0000, 0xA5C6, 0x81D1, 0x0000, 0x0000);
-    FLTP("FSCALE.P", "#9.12E20, FP1",        0xF200|074, 0x4026|(3<<10)|(1<<7),
-         0x0020, 0x0009, 0x1200, 0x0000, 0x0000, 0x0000);
-    FLTD("FSCALE.D", "#-8.25, FP3",          0xF200|074, 0x4026|(5<<10)|(3<<7),
-         0xC020, 0x8000, 0x0000, 0x0000);
-
     TEST("FSGLMUL.X FP0, FP1",            0xF200,     0x0027|(0<<10)|(1<<7));
     ERRT("FSGLMUL.X FP0",                 OPERAND_NOT_ALLOWED, "FP0");
     TEST("FSGLMUL.L D2, FP3",             0xF200|002, 0x4027|(0<<10)|(3<<7));
@@ -5352,40 +4535,6 @@ void test_float_arithmetic() {
     FLTP("FSUB.P", "#9.12E20, FP1",        0xF200|074, 0x4028|(3<<10)|(1<<7),
          0x0020, 0x0009, 0x1200, 0x0000, 0x0000, 0x0000);
     FLTD("FSUB.D", "#-8.25, FP3",          0xF200|074, 0x4028|(5<<10)|(3<<7),
-         0xC020, 0x8000, 0x0000, 0x0000);
-
-    TEST("FSINCOS.X FP0, FP2:FP1",            0xF200,     0x0032|(0<<10)|(1<<7));
-    TEST("FSINCOS.X FP0, FP0:FP0",            0xF200,     0x0030|(0<<10)|(0<<7));
-    TEST("FSINCOS.L D2, FP1:FP3",             0xF200|002, 0x4031|(0<<10)|(3<<7));
-    TEST("FSINCOS.S D2, FP4:FP3",             0xF200|002, 0x4034|(1<<10)|(3<<7));
-    ERRT("FSINCOS.X D2, FP4:FP3", ILLEGAL_SIZE, "FSINCOS.X D2, FP4:FP3",
-                                              0xF200|002, 0x4034|(2<<10)|(3<<7));
-    ERRT("FSINCOS.P D2, FP4:FP3", ILLEGAL_SIZE, "FSINCOS.P D2, FP4:FP3",
-                                              0xF200|002, 0x4034|(3<<10)|(3<<7));
-    TEST("FSINCOS.W D2, FP4:FP3",             0xF200|002, 0x4034|(4<<10)|(3<<7));
-    ERRT("FSINCOS.D D2, FP4:FP3", ILLEGAL_SIZE, "FSINCOS.D D2, FP4:FP3",
-                                              0xF200|002, 0x4034|(5<<10)|(3<<7));
-    TEST("FSINCOS.B D2, FP4:FP3",             0xF200|002, 0x4034|(6<<10)|(3<<7));
-    ERRT("FSINCOS.S A4, FP2:FP5",             OPERAND_NOT_ALLOWED, "A4, FP2:FP5", 0xF200, 0x46B2);
-    TEST("FSINCOS.X (A6), FP0:FP7",           0xF200|026, 0x4030|(2<<10)|(7<<7));
-    TEST("FSINCOS.P (A0)+, FP7:FP1",          0xF200|030, 0x4037|(3<<10)|(1<<7));
-    TEST("FSINCOS.W -(A2), FP6:FP3",          0xF200|042, 0x4036|(4<<10)|(3<<7));
-    TEST("FSINCOS.D ($1234,A4), FP5:FP5",     0xF200|054, 0x4035|(5<<10)|(5<<7), 0x1234);
-    TEST("FSINCOS.B ($23,A6,D7.W), FP4:FP0",  0xF200|066, 0x4034|(6<<10)|(0<<7), 0x7023);
-    TEST("FSINCOS.L ($004566).W, FP3:FP1",    0xF200|070, 0x4033|(0<<10)|(1<<7), 0x4566);
-    TEST("FSINCOS.S ($56789A).L, FP1:FP2",    0xF200|071, 0x4031|(1<<10)|(2<<7), 0x0056, 0x789A);
-    TEST("FSINCOS.X (*+$1234,PC), FP0:FP3",   0xF200|072, 0x4030|(2<<10)|(3<<7), 0x1230);
-    TEST("FSINCOS.P (*+90,PC,A4.L), FP7:FP5", 0xF200|073, 0x4037|(3<<10)|(5<<7), 0xC856);
-    TEST("FSINCOS.L #$6789ABCD, FP5:FP6",     0xF200|074, 0x4035|(0<<10)|(6<<7), 0x6789, 0xABCD);
-    TEST("FSINCOS.W #$1234, FP1:FP2",         0xF200|074, 0x4031|(4<<10)|(2<<7), 0x1234);
-    TEST("FSINCOS.B #$23, FP7:FP4",           0xF200|074, 0x4037|(6<<10)|(4<<7), 0x0023);
-    FLTS("FSINCOS.S", "#7.88999976E-10, FP6:FP7", 0xF200|074, 0x4036|(1<<10)|(7<<7),
-         0x3058, 0xE0F0);
-    FLTX("FSINCOS.X", "#-89000000032, FP4:FP0",   0xF200|074, 0x4034|(2<<10)|(0<<7),
-         0xC023, 0x0000, 0xA5C6, 0x81D1, 0x0000, 0x0000);
-    FLTP("FSINCOS.P", "#9.12E20, FP3:FP1",        0xF200|074, 0x4033|(3<<10)|(1<<7),
-         0x0020, 0x0009, 0x1200, 0x0000, 0x0000, 0x0000);
-    FLTD("FSINCOS.D", "#-8.25, FP0:FP3",          0xF200|074, 0x4030|(5<<10)|(3<<7),
          0xC020, 0x8000, 0x0000, 0x0000);
 
     TEST("FCMP.X FP0, FP1",            0xF200,     0x0038|(0<<10)|(1<<7));
@@ -5455,9 +4604,1472 @@ void test_float_arithmetic() {
          0xC020, 0x8000, 0x0000, 0x0000);
 }
 
-void test_float_branch() {
+void test_float_mc68040() {
     TEST("FPU ON");
 
+    TEST("FSMOVE.X FP0, FP1",            0xF200,     0x0040|(0<<10)|(1<<7));
+    TEST("FSMOVE.X FP2, FP2",            0xF200,     0x0040|(2<<10)|(2<<7));
+
+    TEST("FSMOVE.L D2, FP3",             0xF200|002, 0x4040|(0<<10)|(3<<7));
+    TEST("FSMOVE.S D2, FP3",             0xF200|002, 0x4040|(1<<10)|(3<<7));
+    ERRT("FSMOVE.X D2, FP3", ILLEGAL_SIZE,
+         "FSMOVE.X D2, FP3",             0xF200|002, 0x4040|(2<<10)|(3<<7));
+    ERRT("FSMOVE.P D2, FP3", ILLEGAL_SIZE,
+         "FSMOVE.P D2, FP3",             0xF200|002, 0x4040|(3<<10)|(3<<7));
+    TEST("FSMOVE.W D2, FP3",             0xF200|002, 0x4040|(4<<10)|(3<<7));
+    ERRT("FSMOVE.D D2, FP3", ILLEGAL_SIZE,
+         "FSMOVE.D D2, FP3",             0xF200|002, 0x4040|(5<<10)|(3<<7));
+    TEST("FSMOVE.B D2, FP3",             0xF200|002, 0x4040|(6<<10)|(3<<7));
+    ERRT("FSMOVE.P A4{D3}, FP5", OPERAND_NOT_ALLOWED, "A4{D3}, FP5");
+    ERRT("FSMOVE.L A4, FP5",     OPERAND_NOT_ALLOWED,
+         "A4, FP5",                      0xF200,     0x4040|(0<<10)|(5<<7));
+    ERRT("FSMOVE.S A4, FP5",     OPERAND_NOT_ALLOWED,
+         "A4, FP5",                      0xF200,     0x4040|(1<<10)|(5<<7));
+    TEST("FSMOVE.X (A6), FP7",           0xF200|026, 0x4040|(2<<10)|(7<<7));
+    TEST("FSMOVE.P (A0)+, FP1",          0xF200|030, 0x4040|(3<<10)|(1<<7));
+    TEST("FSMOVE.W -(A2), FP3",          0xF200|042, 0x4040|(4<<10)|(3<<7));
+    TEST("FSMOVE.D ($1234,A4), FP5",     0xF200|054, 0x4040|(5<<10)|(5<<7), 0x1234);
+    TEST("FSMOVE.B ($23,A6,D7.W), FP0",  0xF200|066, 0x4040|(6<<10)|(0<<7), 0x7023);
+    TEST("FSMOVE.L ($4566).W, FP1",      0xF200|070, 0x4040|(0<<10)|(1<<7), 0x4566);
+    TEST("FSMOVE.S ($56789A).L, FP2",    0xF200|071, 0x4040|(1<<10)|(2<<7), 0x0056, 0x789A);
+    TEST("FSMOVE.X (*+$1234,PC), FP3",   0xF200|072, 0x4040|(2<<10)|(3<<7), 0x1230);
+    TEST("FSMOVE.P (*+90,PC,A4.L), FP5", 0xF200|073, 0x4040|(3<<10)|(5<<7), 0xC856);
+    TEST("FSMOVE.L #$6789ABCD, FP6",     0xF200|074, 0x4040|(0<<10)|(6<<7), 0x6789, 0xABCD);
+    TEST("FSMOVE.W #$1234, FP2",         0xF200|074, 0x4040|(4<<10)|(2<<7), 0x1234);
+    TEST("FSMOVE.B #$23, FP4",           0xF200|074, 0x4040|(6<<10)|(4<<7), 0x0023);
+    FLTS("FSMOVE.S", "#7.88999976E-10, FP7",
+         0xF200|074, 0x4040|(1<<10)|(7<<7), 0x3058, 0xE0F0);
+    FLTX("FSMOVE.X", "#-89000000032, FP0",
+         0xF200|074, 0x4040|(2<<10)|(0<<7), 0xC023, 0x0000, 0xA5C6, 0x81D1, 0x0000, 0x0000);
+    FLTP("FSMOVE.P", "#0.0912, FP1",
+         0xF200|074, 0x4040|(3<<10)|(1<<7), 0x4002, 0x0009, 0x1200, 0x0000, 0x0000, 0x0000);
+    FLTD("FSMOVE.D", "#-8.25, FP3",
+         0xF200|074, 0x4040|(5<<10)|(3<<7), 0xC020, 0x8000, 0x0000, 0x0000);
+
+    TEST("FDMOVE.X FP0, FP1",            0xF200,     0x0044|(0<<10)|(1<<7));
+    TEST("FDMOVE.X FP2, FP2",            0xF200,     0x0044|(2<<10)|(2<<7));
+
+    TEST("FDMOVE.L D2, FP3",             0xF200|002, 0x4044|(0<<10)|(3<<7));
+    TEST("FDMOVE.S D2, FP3",             0xF200|002, 0x4044|(1<<10)|(3<<7));
+    ERRT("FDMOVE.X D2, FP3", ILLEGAL_SIZE,
+         "FDMOVE.X D2, FP3",             0xF200|002, 0x4044|(2<<10)|(3<<7));
+    ERRT("FDMOVE.P D2, FP3", ILLEGAL_SIZE,
+         "FDMOVE.P D2, FP3",             0xF200|002, 0x4044|(3<<10)|(3<<7));
+    TEST("FDMOVE.W D2, FP3",             0xF200|002, 0x4044|(4<<10)|(3<<7));
+    ERRT("FDMOVE.D D2, FP3", ILLEGAL_SIZE,
+         "FDMOVE.D D2, FP3",             0xF200|002, 0x4044|(5<<10)|(3<<7));
+    TEST("FDMOVE.B D2, FP3",             0xF200|002, 0x4044|(6<<10)|(3<<7));
+    ERRT("FDMOVE.P A4{D3}, FP5", OPERAND_NOT_ALLOWED, "A4{D3}, FP5");
+    ERRT("FDMOVE.L A4, FP5", OPERAND_NOT_ALLOWED,
+         "A4, FP5",                      0xF200,     0x4044|(0<<10)|(5<<7));
+    ERRT("FDMOVE.S A4, FP5", OPERAND_NOT_ALLOWED,
+         "A4, FP5",                      0xF200,      0x4044|(1<<10)|(5<<7));
+    TEST("FDMOVE.X (A6), FP7",           0xF200|026, 0x4044|(2<<10)|(7<<7));
+    TEST("FDMOVE.P (A0)+, FP1",          0xF200|030, 0x4044|(3<<10)|(1<<7));
+    TEST("FDMOVE.W -(A2), FP3",          0xF200|042, 0x4044|(4<<10)|(3<<7));
+    TEST("FDMOVE.D ($1234,A4), FP5",     0xF200|054, 0x4044|(5<<10)|(5<<7), 0x1234);
+    TEST("FDMOVE.B ($23,A6,D7.W), FP0",  0xF200|066, 0x4044|(6<<10)|(0<<7), 0x7023);
+    TEST("FDMOVE.L ($4566).W, FP1",      0xF200|070, 0x4044|(0<<10)|(1<<7), 0x4566);
+    TEST("FDMOVE.S ($56789A).L, FP2",    0xF200|071, 0x4044|(1<<10)|(2<<7), 0x0056, 0x789A);
+    TEST("FDMOVE.X (*+$1234,PC), FP3",   0xF200|072, 0x4044|(2<<10)|(3<<7), 0x1230);
+    TEST("FDMOVE.P (*+90,PC,A4.L), FP5", 0xF200|073, 0x4044|(3<<10)|(5<<7), 0xC856);
+    TEST("FDMOVE.L #$6789ABCD, FP6",     0xF200|074, 0x4044|(0<<10)|(6<<7), 0x6789, 0xABCD);
+    TEST("FDMOVE.W #$1234, FP2",         0xF200|074, 0x4044|(4<<10)|(2<<7), 0x1234);
+    TEST("FDMOVE.B #$23, FP4",           0xF200|074, 0x4044|(6<<10)|(4<<7), 0x0023);
+    FLTS("FDMOVE.S", "#7.88999976E-10, FP7",
+         0xF200|074, 0x4044|(1<<10)|(7<<7), 0x3058, 0xE0F0);
+    FLTX("FDMOVE.X", "#-89000000032, FP0",
+         0xF200|074, 0x4044|(2<<10)|(0<<7), 0xC023, 0x0000, 0xA5C6, 0x81D1, 0x0000, 0x0000);
+    FLTP("FDMOVE.P", "#0.0912, FP1",
+         0xF200|074, 0x4044|(3<<10)|(1<<7), 0x4002, 0x0009, 0x1200, 0x0000, 0x0000, 0x0000);
+    FLTD("FDMOVE.D", "#-8.25, FP3",
+         0xF200|074, 0x4044|(5<<10)|(3<<7), 0xC020, 0x8000, 0x0000, 0x0000);
+
+    TEST("FSSQRT.X FP0, FP1",            0xF200,     0x0041|(0<<10)|(1<<7));
+    TEST("FSSQRT.X FP2",                 0xF200,     0x0041|(2<<10)|(2<<7));
+    TEST("FSSQRT.L D2, FP3",             0xF200|002, 0x4041|(0<<10)|(3<<7));
+    TEST("FSSQRT.S D2, FP3",             0xF200|002, 0x4041|(1<<10)|(3<<7));
+    ERRT("FSSQRT.X D2, FP3", ILLEGAL_SIZE,
+         "FSSQRT.X D2, FP3",             0xF200|002, 0x4041|(2<<10)|(3<<7));
+    ERRT("FSSQRT.P D2, FP3", ILLEGAL_SIZE,
+         "FSSQRT.P D2, FP3",             0xF200|002, 0x4041|(3<<10)|(3<<7));
+    TEST("FSSQRT.W D2, FP3",             0xF200|002, 0x4041|(4<<10)|(3<<7));
+    ERRT("FSSQRT.D D2, FP3", ILLEGAL_SIZE,
+         "FSSQRT.D D2, FP3",             0xF200|002, 0x4041|(5<<10)|(3<<7));
+    TEST("FSSQRT.B D2, FP3",             0xF200|002, 0x4041|(6<<10)|(3<<7));
+    ERRT("FSSQRT.P D2, FP3", ILLEGAL_SIZE,
+         "FSSQRT.P D2, FP3",             0xF200|002, 0x4041|(3<<10)|(3<<7));
+    ERRT("FSSQRT.S A4, FP5", OPERAND_NOT_ALLOWED,
+         "A4, FP5",                      0xF200,     0x4041|(1<<10)|(5<<7));
+    TEST("FSSQRT.X (A6), FP7",           0xF200|026, 0x4041|(2<<10)|(7<<7));
+    TEST("FSSQRT.P (A0)+, FP1",          0xF200|030, 0x4041|(3<<10)|(1<<7));
+    TEST("FSSQRT.W -(A2), FP3",          0xF200|042, 0x4041|(4<<10)|(3<<7));
+    TEST("FSSQRT.D ($1234,A4), FP5",     0xF200|054, 0x4041|(5<<10)|(5<<7), 0x1234);
+    TEST("FSSQRT.B ($23,A6,D7.W), FP0",  0xF200|066, 0x4041|(6<<10)|(0<<7), 0x7023);
+    TEST("FSSQRT.L ($4566).W, FP1",      0xF200|070, 0x4041|(0<<10)|(1<<7), 0x4566);
+    TEST("FSSQRT.S ($56789A).L, FP2",    0xF200|071, 0x4041|(1<<10)|(2<<7), 0x0056, 0x789A);
+    TEST("FSSQRT.X (*+$1234,PC), FP3",   0xF200|072, 0x4041|(2<<10)|(3<<7), 0x1230);
+    TEST("FSSQRT.P (*+90,PC,A4.L), FP5", 0xF200|073, 0x4041|(3<<10)|(5<<7), 0xC856);
+    TEST("FSSQRT.L #$6789ABCD, FP6",     0xF200|074, 0x4041|(0<<10)|(6<<7), 0x6789, 0xABCD);
+    TEST("FSSQRT.W #$1234, FP2",         0xF200|074, 0x4041|(4<<10)|(2<<7), 0x1234);
+    TEST("FSSQRT.B #$23, FP4",           0xF200|074, 0x4041|(6<<10)|(4<<7), 0x0023);
+    FLTS("FSSQRT.S", "#7.88999976E-10, FP7",
+         0xF200|074, 0x4041|(1<<10)|(7<<7), 0x3058, 0xE0F0);
+    FLTX("FSSQRT.X", "#-89000000032, FP0",
+         0xF200|074, 0x4041|(2<<10)|(0<<7), 0xC023, 0x0000, 0xA5C6, 0x81D1, 0x0000, 0x0000);
+    FLTP("FSSQRT.P", "#9.1234567891234567, FP1",
+         0xF200|074, 0x4041|(3<<10)|(1<<7), 0x0000, 0x0009, 0x1234, 0x5678, 0x9123, 0x4567);
+    FLTD("FSSQRT.D", "#-8.25, FP3",
+         0xF200|074, 0x4041|(5<<10)|(3<<7), 0xC020, 0x8000, 0x0000, 0x0000);
+
+    TEST("FDSQRT.X FP0, FP1",            0xF200,     0x0045|(0<<10)|(1<<7));
+    TEST("FDSQRT.X FP2",                 0xF200,     0x0045|(2<<10)|(2<<7));
+    TEST("FDSQRT.L D2, FP3",             0xF200|002, 0x4045|(0<<10)|(3<<7));
+    TEST("FDSQRT.S D2, FP3",             0xF200|002, 0x4045|(1<<10)|(3<<7));
+    ERRT("FDSQRT.X D2, FP3", ILLEGAL_SIZE,
+         "FDSQRT.X D2, FP3",             0xF200|002, 0x4045|(2<<10)|(3<<7));
+    ERRT("FDSQRT.P D2, FP3", ILLEGAL_SIZE,
+         "FDSQRT.P D2, FP3",             0xF200|002, 0x4045|(3<<10)|(3<<7));
+    TEST("FDSQRT.W D2, FP3",             0xF200|002, 0x4045|(4<<10)|(3<<7));
+    ERRT("FDSQRT.D D2, FP3", ILLEGAL_SIZE,
+         "FDSQRT.D D2, FP3",             0xF200|002, 0x4045|(5<<10)|(3<<7));
+    TEST("FDSQRT.B D2, FP3",             0xF200|002, 0x4045|(6<<10)|(3<<7));
+    ERRT("FDSQRT.P D2, FP3", ILLEGAL_SIZE,
+         "FDSQRT.P D2, FP3",             0xF200|002, 0x4045|(3<<10)|(3<<7));
+    ERRT("FDSQRT.S A4, FP5", OPERAND_NOT_ALLOWED,
+         "A4, FP5",                      0xF200,     0x4045|(1<<10)|(5<<7));
+    TEST("FDSQRT.X (A6), FP7",           0xF200|026, 0x4045|(2<<10)|(7<<7));
+    TEST("FDSQRT.P (A0)+, FP1",          0xF200|030, 0x4045|(3<<10)|(1<<7));
+    TEST("FDSQRT.W -(A2), FP3",          0xF200|042, 0x4045|(4<<10)|(3<<7));
+    TEST("FDSQRT.D ($1234,A4), FP5",     0xF200|054, 0x4045|(5<<10)|(5<<7), 0x1234);
+    TEST("FDSQRT.B ($23,A6,D7.W), FP0",  0xF200|066, 0x4045|(6<<10)|(0<<7), 0x7023);
+    TEST("FDSQRT.L ($4566).W, FP1",      0xF200|070, 0x4045|(0<<10)|(1<<7), 0x4566);
+    TEST("FDSQRT.S ($56789A).L, FP2",    0xF200|071, 0x4045|(1<<10)|(2<<7), 0x0056, 0x789A);
+    TEST("FDSQRT.X (*+$1234,PC), FP3",   0xF200|072, 0x4045|(2<<10)|(3<<7), 0x1230);
+    TEST("FDSQRT.P (*+90,PC,A4.L), FP5", 0xF200|073, 0x4045|(3<<10)|(5<<7), 0xC856);
+    TEST("FDSQRT.L #$6789ABCD, FP6",     0xF200|074, 0x4045|(0<<10)|(6<<7), 0x6789, 0xABCD);
+    TEST("FDSQRT.W #$1234, FP2",         0xF200|074, 0x4045|(4<<10)|(2<<7), 0x1234);
+    TEST("FDSQRT.B #$23, FP4",           0xF200|074, 0x4045|(6<<10)|(4<<7), 0x0023);
+    FLTS("FDSQRT.S", "#7.88999976E-10, FP7",
+         0xF200|074, 0x4045|(1<<10)|(7<<7), 0x3058, 0xE0F0);
+    FLTX("FDSQRT.X", "#-89000000032, FP0",
+         0xF200|074, 0x4045|(2<<10)|(0<<7), 0xC023, 0x0000, 0xA5C6, 0x81D1, 0x0000, 0x0000);
+    FLTP("FDSQRT.P", "#9.1234567891234567, FP1",
+         0xF200|074, 0x4045|(3<<10)|(1<<7), 0x0000, 0x0009, 0x1234, 0x5678, 0x9123, 0x4567);
+    FLTD("FDSQRT.D", "#-8.25, FP3",
+         0xF200|074, 0x4045|(5<<10)|(3<<7), 0xC020, 0x8000, 0x0000, 0x0000);
+
+    TEST("FSABS.X FP0, FP1",            0xF200,     0x0058|(0<<10)|(1<<7));
+    TEST("FSABS.X FP2",                 0xF200,     0x0058|(2<<10)|(2<<7));
+    TEST("FSABS.L D2, FP3",             0xF200|002, 0x4058|(0<<10)|(3<<7));
+    TEST("FSABS.S D2, FP3",             0xF200|002, 0x4058|(1<<10)|(3<<7));
+    ERRT("FSABS.X D2, FP3", ILLEGAL_SIZE,
+         "FSABS.X D2, FP3",             0xF200|002, 0x4058|(2<<10)|(3<<7));
+    ERRT("FSABS.P D2, FP3", ILLEGAL_SIZE,
+         "FSABS.P D2, FP3",             0xF200|002, 0x4058|(3<<10)|(3<<7));
+    TEST("FSABS.W D2, FP3",             0xF200|002, 0x4058|(4<<10)|(3<<7));
+    ERRT("FSABS.D D2, FP3", ILLEGAL_SIZE,
+         "FSABS.D D2, FP3",             0xF200|002, 0x4058|(5<<10)|(3<<7));
+    TEST("FSABS.B D2, FP3",             0xF200|002, 0x4058|(6<<10)|(3<<7));
+    ERRT("FSABS.P D2, FP3", ILLEGAL_SIZE,
+         "FSABS.P D2, FP3",             0xF200|002, 0x4058|(3<<10)|(3<<7));
+    ERRT("FSABS.S A4, FP5", OPERAND_NOT_ALLOWED,
+         "A4, FP5",                     0xF200,     0x4058|(1<<10)|(5<<7));
+    TEST("FSABS.X (A6), FP7",           0xF200|026, 0x4058|(2<<10)|(7<<7));
+    TEST("FSABS.P (A0)+, FP1",          0xF200|030, 0x4058|(3<<10)|(1<<7));
+    TEST("FSABS.W -(A2), FP3",          0xF200|042, 0x4058|(4<<10)|(3<<7));
+    TEST("FSABS.D ($1234,A4), FP5",     0xF200|054, 0x4058|(5<<10)|(5<<7), 0x1234);
+    TEST("FSABS.B ($23,A6,D7.W), FP0",  0xF200|066, 0x4058|(6<<10)|(0<<7), 0x7023);
+    TEST("FSABS.L ($4566).W, FP1",      0xF200|070, 0x4058|(0<<10)|(1<<7), 0x4566);
+    TEST("FSABS.S ($56789A).L, FP2",    0xF200|071, 0x4058|(1<<10)|(2<<7), 0x0056, 0x789A);
+    TEST("FSABS.X (*+$1234,PC), FP3",   0xF200|072, 0x4058|(2<<10)|(3<<7), 0x1230);
+    TEST("FSABS.P (*+90,PC,A4.L), FP5", 0xF200|073, 0x4058|(3<<10)|(5<<7), 0xC856);
+    TEST("FSABS.L #$6789ABCD, FP6",     0xF200|074, 0x4058|(0<<10)|(6<<7), 0x6789, 0xABCD);
+    TEST("FSABS.W #$1234, FP2",         0xF200|074, 0x4058|(4<<10)|(2<<7), 0x1234);
+    TEST("FSABS.B #$23, FP4",           0xF200|074, 0x4058|(6<<10)|(4<<7), 0x0023);
+    FLTS("FSABS.S", "#7.88999976E-10, FP7",
+         0xF200|074, 0x4058|(1<<10)|(7<<7), 0x3058, 0xE0F0);
+    FLTX("FSABS.X", "#-89000000032, FP0",
+         0xF200|074, 0x4058|(2<<10)|(0<<7), 0xC023, 0x0000, 0xA5C6, 0x81D1, 0x0000, 0x0000);
+    FLTP("FSABS.P", "#9.12E+20, FP1",
+         0xF200|074, 0x4058|(3<<10)|(1<<7), 0x0020, 0x0009, 0x1200, 0x0000, 0x0000, 0x0000);
+    FLTD("FSABS.D", "#-8.25, FP3",
+         0xF200|074, 0x4058|(5<<10)|(3<<7), 0xC020, 0x8000, 0x0000, 0x0000);
+
+    TEST("FDABS.X FP0, FP1",            0xF200,     0x005C|(0<<10)|(1<<7));
+    TEST("FDABS.X FP2",                 0xF200,     0x005C|(2<<10)|(2<<7));
+    TEST("FDABS.L D2, FP3",             0xF200|002, 0x405C|(0<<10)|(3<<7));
+    TEST("FDABS.S D2, FP3",             0xF200|002, 0x405C|(1<<10)|(3<<7));
+    ERRT("FDABS.X D2, FP3", ILLEGAL_SIZE,
+         "FDABS.X D2, FP3",             0xF200|002, 0x405C|(2<<10)|(3<<7));
+    ERRT("FDABS.P D2, FP3", ILLEGAL_SIZE,
+         "FDABS.P D2, FP3",             0xF200|002, 0x405C|(3<<10)|(3<<7));
+    TEST("FDABS.W D2, FP3",             0xF200|002, 0x405C|(4<<10)|(3<<7));
+    ERRT("FDABS.D D2, FP3", ILLEGAL_SIZE,
+         "FDABS.D D2, FP3",             0xF200|002, 0x405C|(5<<10)|(3<<7));
+    TEST("FDABS.B D2, FP3",             0xF200|002, 0x405C|(6<<10)|(3<<7));
+    ERRT("FDABS.P D2, FP3", ILLEGAL_SIZE,
+         "FDABS.P D2, FP3",             0xF200|002, 0x405C|(3<<10)|(3<<7));
+    ERRT("FDABS.S A4, FP5", OPERAND_NOT_ALLOWED,
+         "A4, FP5",                     0xF200,      0x405C|(1<<10)|(5<<7));
+    TEST("FDABS.X (A6), FP7",           0xF200|026, 0x405C|(2<<10)|(7<<7));
+    TEST("FDABS.P (A0)+, FP1",          0xF200|030, 0x405C|(3<<10)|(1<<7));
+    TEST("FDABS.W -(A2), FP3",          0xF200|042, 0x405C|(4<<10)|(3<<7));
+    TEST("FDABS.D ($1234,A4), FP5",     0xF200|054, 0x405C|(5<<10)|(5<<7), 0x1234);
+    TEST("FDABS.B ($23,A6,D7.W), FP0",  0xF200|066, 0x405C|(6<<10)|(0<<7), 0x7023);
+    TEST("FDABS.L ($4566).W, FP1",      0xF200|070, 0x405C|(0<<10)|(1<<7), 0x4566);
+    TEST("FDABS.S ($56789A).L, FP2",    0xF200|071, 0x405C|(1<<10)|(2<<7), 0x0056, 0x789A);
+    TEST("FDABS.X (*+$1234,PC), FP3",   0xF200|072, 0x405C|(2<<10)|(3<<7), 0x1230);
+    TEST("FDABS.P (*+90,PC,A4.L), FP5", 0xF200|073, 0x405C|(3<<10)|(5<<7), 0xC856);
+    TEST("FDABS.L #$6789ABCD, FP6",     0xF200|074, 0x405C|(0<<10)|(6<<7), 0x6789, 0xABCD);
+    TEST("FDABS.W #$1234, FP2",         0xF200|074, 0x405C|(4<<10)|(2<<7), 0x1234);
+    TEST("FDABS.B #$23, FP4",           0xF200|074, 0x405C|(6<<10)|(4<<7), 0x0023);
+    FLTS("FDABS.S", "#7.88999976E-10, FP7",
+         0xF200|074, 0x405C|(1<<10)|(7<<7), 0x3058, 0xE0F0);
+    FLTX("FDABS.X", "#-89000000032, FP0",
+         0xF200|074, 0x405C|(2<<10)|(0<<7), 0xC023, 0x0000, 0xA5C6, 0x81D1, 0x0000, 0x0000);
+    FLTP("FDABS.P", "#9.12E+20, FP1",
+         0xF200|074, 0x405C|(3<<10)|(1<<7), 0x0020, 0x0009, 0x1200, 0x0000, 0x0000, 0x0000);
+    FLTD("FDABS.D", "#-8.25, FP3",
+         0xF200|074, 0x405C|(5<<10)|(3<<7), 0xC020, 0x8000, 0x0000, 0x0000);
+
+    TEST("FSNEG.X FP0, FP1",            0xF200,     0x005A|(0<<10)|(1<<7));
+    TEST("FSNEG.X FP2",                 0xF200,     0x005A|(2<<10)|(2<<7));
+    TEST("FSNEG.L D2, FP3",             0xF200|002, 0x405A|(0<<10)|(3<<7));
+    TEST("FSNEG.S D2, FP3",             0xF200|002, 0x405A|(1<<10)|(3<<7));
+    ERRT("FSNEG.X D2, FP3", ILLEGAL_SIZE,
+         "FSNEG.X D2, FP3",             0xF200|002, 0x405A|(2<<10)|(3<<7));
+    ERRT("FSNEG.P D2, FP3", ILLEGAL_SIZE,
+         "FSNEG.P D2, FP3",             0xF200|002, 0x405A|(3<<10)|(3<<7));
+    TEST("FSNEG.W D2, FP3",             0xF200|002, 0x405A|(4<<10)|(3<<7));
+    ERRT("FSNEG.D D2, FP3", ILLEGAL_SIZE,
+         "FSNEG.D D2, FP3",             0xF200|002, 0x405A|(5<<10)|(3<<7));
+    TEST("FSNEG.B D2, FP3",             0xF200|002, 0x405A|(6<<10)|(3<<7));
+    ERRT("FSNEG.P D2, FP3", ILLEGAL_SIZE,
+         "FSNEG.P D2, FP3",             0xF200|002, 0x405A|(3<<10)|(3<<7));
+    ERRT("FSNEG.S A4, FP5", OPERAND_NOT_ALLOWED,
+         "A4, FP5",                     0xF200,     0x405A|(1<<10)|(5<<7));
+    TEST("FSNEG.X (A6), FP7",           0xF200|026, 0x405A|(2<<10)|(7<<7));
+    TEST("FSNEG.P (A0)+, FP1",          0xF200|030, 0x405A|(3<<10)|(1<<7));
+    TEST("FSNEG.W -(A2), FP3",          0xF200|042, 0x405A|(4<<10)|(3<<7));
+    TEST("FSNEG.D ($1234,A4), FP5",     0xF200|054, 0x405A|(5<<10)|(5<<7), 0x1234);
+    TEST("FSNEG.B ($23,A6,D7.W), FP0",  0xF200|066, 0x405A|(6<<10)|(0<<7), 0x7023);
+    TEST("FSNEG.L ($4566).W, FP1",      0xF200|070, 0x405A|(0<<10)|(1<<7), 0x4566);
+    TEST("FSNEG.S ($56789A).L, FP2",    0xF200|071, 0x405A|(1<<10)|(2<<7), 0x0056, 0x789A);
+    TEST("FSNEG.X (*+$1234,PC), FP3",   0xF200|072, 0x405A|(2<<10)|(3<<7), 0x1230);
+    TEST("FSNEG.P (*+90,PC,A4.L), FP5", 0xF200|073, 0x405A|(3<<10)|(5<<7), 0xC856);
+    TEST("FSNEG.L #$6789ABCD, FP6",     0xF200|074, 0x405A|(0<<10)|(6<<7), 0x6789, 0xABCD);
+    TEST("FSNEG.W #$1234, FP2",         0xF200|074, 0x405A|(4<<10)|(2<<7), 0x1234);
+    TEST("FSNEG.B #$23, FP4",           0xF200|074, 0x405A|(6<<10)|(4<<7), 0x0023);
+    FLTS("FSNEG.S", "#7.88999976E-10, FP7",
+         0xF200|074, 0x405A|(1<<10)|(7<<7), 0x3058, 0xE0F0);
+    FLTX("FSNEG.X", "#-89000000032, FP0",
+         0xF200|074, 0x405A|(2<<10)|(0<<7), 0xC023, 0x0000, 0xA5C6, 0x81D1, 0x0000, 0x0000);
+    FLTP("FSNEG.P", "#9.12E+20, FP1",
+         0xF200|074, 0x405A|(3<<10)|(1<<7), 0x0020, 0x0009, 0x1200, 0x0000, 0x0000, 0x0000);
+    FLTD("FSNEG.D", "#-8.25, FP3",
+         0xF200|074, 0x405A|(5<<10)|(3<<7), 0xC020, 0x8000, 0x0000, 0x0000);
+
+    TEST("FDNEG.X FP0, FP1",            0xF200,     0x005E|(0<<10)|(1<<7));
+    TEST("FDNEG.X FP2",                 0xF200,     0x005E|(2<<10)|(2<<7));
+    TEST("FDNEG.L D2, FP3",             0xF200|002, 0x405E|(0<<10)|(3<<7));
+    TEST("FDNEG.S D2, FP3",             0xF200|002, 0x405E|(1<<10)|(3<<7));
+    ERRT("FDNEG.X D2, FP3", ILLEGAL_SIZE,
+         "FDNEG.X D2, FP3",             0xF200|002, 0x405E|(2<<10)|(3<<7));
+    ERRT("FDNEG.P D2, FP3", ILLEGAL_SIZE,
+         "FDNEG.P D2, FP3",             0xF200|002, 0x405E|(3<<10)|(3<<7));
+    TEST("FDNEG.W D2, FP3",             0xF200|002, 0x405E|(4<<10)|(3<<7));
+    ERRT("FDNEG.D D2, FP3", ILLEGAL_SIZE,
+         "FDNEG.D D2, FP3",             0xF200|002, 0x405E|(5<<10)|(3<<7));
+    TEST("FDNEG.B D2, FP3",             0xF200|002, 0x405E|(6<<10)|(3<<7));
+    ERRT("FDNEG.P D2, FP3", ILLEGAL_SIZE,
+         "FDNEG.P D2, FP3",             0xF200|002, 0x405E|(3<<10)|(3<<7));
+    ERRT("FDNEG.S A4, FP5", OPERAND_NOT_ALLOWED,
+         "A4, FP5",                     0xF200,     0x405E|(1<<10)|(5<<7));
+    TEST("FDNEG.X (A6), FP7",           0xF200|026, 0x405E|(2<<10)|(7<<7));
+    TEST("FDNEG.P (A0)+, FP1",          0xF200|030, 0x405E|(3<<10)|(1<<7));
+    TEST("FDNEG.W -(A2), FP3",          0xF200|042, 0x405E|(4<<10)|(3<<7));
+    TEST("FDNEG.D ($1234,A4), FP5",     0xF200|054, 0x405E|(5<<10)|(5<<7), 0x1234);
+    TEST("FDNEG.B ($23,A6,D7.W), FP0",  0xF200|066, 0x405E|(6<<10)|(0<<7), 0x7023);
+    TEST("FDNEG.L ($4566).W, FP1",      0xF200|070, 0x405E|(0<<10)|(1<<7), 0x4566);
+    TEST("FDNEG.S ($56789A).L, FP2",    0xF200|071, 0x405E|(1<<10)|(2<<7), 0x0056, 0x789A);
+    TEST("FDNEG.X (*+$1234,PC), FP3",   0xF200|072, 0x405E|(2<<10)|(3<<7), 0x1230);
+    TEST("FDNEG.P (*+90,PC,A4.L), FP5", 0xF200|073, 0x405E|(3<<10)|(5<<7), 0xC856);
+    TEST("FDNEG.L #$6789ABCD, FP6",     0xF200|074, 0x405E|(0<<10)|(6<<7), 0x6789, 0xABCD);
+    TEST("FDNEG.W #$1234, FP2",         0xF200|074, 0x405E|(4<<10)|(2<<7), 0x1234);
+    TEST("FDNEG.B #$23, FP4",           0xF200|074, 0x405E|(6<<10)|(4<<7), 0x0023);
+    FLTS("FDNEG.S", "#7.88999976E-10, FP7",
+         0xF200|074, 0x405E|(1<<10)|(7<<7), 0x3058, 0xE0F0);
+    FLTX("FDNEG.X", "#-89000000032, FP0",
+         0xF200|074, 0x405E|(2<<10)|(0<<7), 0xC023, 0x0000, 0xA5C6, 0x81D1, 0x0000, 0x0000);
+    FLTP("FDNEG.P", "#9.12E+20, FP1",
+         0xF200|074, 0x405E|(3<<10)|(1<<7), 0x0020, 0x0009, 0x1200, 0x0000, 0x0000, 0x0000);
+    FLTD("FDNEG.D", "#-8.25, FP3",
+         0xF200|074, 0x405E|(5<<10)|(3<<7), 0xC020, 0x8000, 0x0000, 0x0000);
+
+    TEST("FSDIV.X FP0, FP1",            0xF200,     0x0060|(0<<10)|(1<<7));
+    TEST("FSDIV.X FP2, FP2",            0xF200,     0x0060|(2<<10)|(2<<7));
+    TEST("FSDIV.L D2, FP3",             0xF200|002, 0x4060|(0<<10)|(3<<7));
+    TEST("FSDIV.S D2, FP3",             0xF200|002, 0x4060|(1<<10)|(3<<7));
+    ERRT("FSDIV.X D2, FP3", ILLEGAL_SIZE,
+         "FSDIV.X D2, FP3",             0xF200|002, 0x4060|(2<<10)|(3<<7));
+    ERRT("FSDIV.P D2, FP3", ILLEGAL_SIZE,
+         "FSDIV.P D2, FP3",             0xF200|002, 0x4060|(3<<10)|(3<<7));
+    TEST("FSDIV.W D2, FP3",             0xF200|002, 0x4060|(4<<10)|(3<<7));
+    ERRT("FSDIV.D D2, FP3", ILLEGAL_SIZE,
+         "FSDIV.D D2, FP3",             0xF200|002, 0x4060|(5<<10)|(3<<7));
+    TEST("FSDIV.B D2, FP3",             0xF200|002, 0x4060|(6<<10)|(3<<7));
+    ERRT("FSDIV.P D2, FP3", ILLEGAL_SIZE,
+         "FSDIV.P D2, FP3",             0xF200|002, 0x4060|(3<<10)|(3<<7));
+    ERRT("FSDIV.S A4, FP5", OPERAND_NOT_ALLOWED,
+         "A4, FP5",                     0xF200,     0x4060|(1<<10)|(5<<7));
+    TEST("FSDIV.X (A6), FP7",           0xF200|026, 0x4060|(2<<10)|(7<<7));
+    TEST("FSDIV.P (A0)+, FP1",          0xF200|030, 0x4060|(3<<10)|(1<<7));
+    TEST("FSDIV.W -(A2), FP3",          0xF200|042, 0x4060|(4<<10)|(3<<7));
+    TEST("FSDIV.D ($1234,A4), FP5",     0xF200|054, 0x4060|(5<<10)|(5<<7), 0x1234);
+    TEST("FSDIV.B ($23,A6,D7.W), FP0",  0xF200|066, 0x4060|(6<<10)|(0<<7), 0x7023);
+    TEST("FSDIV.L ($4566).W, FP1",      0xF200|070, 0x4060|(0<<10)|(1<<7), 0x4566);
+    TEST("FSDIV.S ($56789A).L, FP2",    0xF200|071, 0x4060|(1<<10)|(2<<7), 0x0056, 0x789A);
+    TEST("FSDIV.X (*+$1234,PC), FP3",   0xF200|072, 0x4060|(2<<10)|(3<<7), 0x1230);
+    TEST("FSDIV.P (*+90,PC,A4.L), FP5", 0xF200|073, 0x4060|(3<<10)|(5<<7), 0xC856);
+    TEST("FSDIV.L #$6789ABCD, FP6",     0xF200|074, 0x4060|(0<<10)|(6<<7), 0x6789, 0xABCD);
+    TEST("FSDIV.W #$1234, FP2",         0xF200|074, 0x4060|(4<<10)|(2<<7), 0x1234);
+    TEST("FSDIV.B #$23, FP4",           0xF200|074, 0x4060|(6<<10)|(4<<7), 0x0023);
+    FLTS("FSDIV.S", "#7.88999976E-10, FP7",
+         0xF200|074, 0x4060|(1<<10)|(7<<7), 0x3058, 0xE0F0);
+    FLTX("FSDIV.X", "#-89000000032, FP0",
+         0xF200|074, 0x4060|(2<<10)|(0<<7), 0xC023, 0x0000, 0xA5C6, 0x81D1, 0x0000, 0x0000);
+    FLTP("FSDIV.P", "#9.12E+20, FP1",
+         0xF200|074, 0x4060|(3<<10)|(1<<7), 0x0020, 0x0009, 0x1200, 0x0000, 0x0000, 0x0000);
+    FLTD("FSDIV.D", "#-8.25, FP3",
+         0xF200|074, 0x4060|(5<<10)|(3<<7), 0xC020, 0x8000, 0x0000, 0x0000);
+
+    TEST("FDDIV.X FP0, FP1",            0xF200,     0x0064|(0<<10)|(1<<7));
+    TEST("FDDIV.X FP2, FP2",            0xF200,     0x0064|(2<<10)|(2<<7));
+    TEST("FDDIV.L D2, FP3",             0xF200|002, 0x4064|(0<<10)|(3<<7));
+    TEST("FDDIV.S D2, FP3",             0xF200|002, 0x4064|(1<<10)|(3<<7));
+    ERRT("FDDIV.X D2, FP3", ILLEGAL_SIZE,
+         "FDDIV.X D2, FP3",             0xF200|002, 0x4064|(2<<10)|(3<<7));
+    ERRT("FDDIV.P D2, FP3", ILLEGAL_SIZE,
+         "FDDIV.P D2, FP3",             0xF200|002, 0x4064|(3<<10)|(3<<7));
+    TEST("FDDIV.W D2, FP3",             0xF200|002, 0x4064|(4<<10)|(3<<7));
+    ERRT("FDDIV.D D2, FP3", ILLEGAL_SIZE,
+         "FDDIV.D D2, FP3",             0xF200|002, 0x4064|(5<<10)|(3<<7));
+    TEST("FDDIV.B D2, FP3",             0xF200|002, 0x4064|(6<<10)|(3<<7));
+    ERRT("FDDIV.P D2, FP3", ILLEGAL_SIZE,
+         "FDDIV.P D2, FP3",             0xF200|002, 0x4064|(3<<10)|(3<<7));
+    ERRT("FDDIV.S A4, FP5", OPERAND_NOT_ALLOWED,
+         "A4, FP5",                     0xF200,     0x4064|(1<<10)|(5<<7));
+    TEST("FDDIV.X (A6), FP7",           0xF200|026, 0x4064|(2<<10)|(7<<7));
+    TEST("FDDIV.P (A0)+, FP1",          0xF200|030, 0x4064|(3<<10)|(1<<7));
+    TEST("FDDIV.W -(A2), FP3",          0xF200|042, 0x4064|(4<<10)|(3<<7));
+    TEST("FDDIV.D ($1234,A4), FP5",     0xF200|054, 0x4064|(5<<10)|(5<<7), 0x1234);
+    TEST("FDDIV.B ($23,A6,D7.W), FP0",  0xF200|066, 0x4064|(6<<10)|(0<<7), 0x7023);
+    TEST("FDDIV.L ($4566).W, FP1",      0xF200|070, 0x4064|(0<<10)|(1<<7), 0x4566);
+    TEST("FDDIV.S ($56789A).L, FP2",    0xF200|071, 0x4064|(1<<10)|(2<<7), 0x0056, 0x789A);
+    TEST("FDDIV.X (*+$1234,PC), FP3",   0xF200|072, 0x4064|(2<<10)|(3<<7), 0x1230);
+    TEST("FDDIV.P (*+90,PC,A4.L), FP5", 0xF200|073, 0x4064|(3<<10)|(5<<7), 0xC856);
+    TEST("FDDIV.L #$6789ABCD, FP6",     0xF200|074, 0x4064|(0<<10)|(6<<7), 0x6789, 0xABCD);
+    TEST("FDDIV.W #$1234, FP2",         0xF200|074, 0x4064|(4<<10)|(2<<7), 0x1234);
+    TEST("FDDIV.B #$23, FP4",           0xF200|074, 0x4064|(6<<10)|(4<<7), 0x0023);
+    FLTS("FDDIV.S", "#7.88999976E-10, FP7",
+         0xF200|074, 0x4064|(1<<10)|(7<<7), 0x3058, 0xE0F0);
+    FLTX("FDDIV.X", "#-89000000032, FP0",
+         0xF200|074, 0x4064|(2<<10)|(0<<7), 0xC023, 0x0000, 0xA5C6, 0x81D1, 0x0000, 0x0000);
+    FLTP("FDDIV.P", "#9.12E+20, FP1",
+         0xF200|074, 0x4064|(3<<10)|(1<<7), 0x0020, 0x0009, 0x1200, 0x0000, 0x0000, 0x0000);
+    FLTD("FDDIV.D", "#-8.25, FP3",
+         0xF200|074, 0x4064|(5<<10)|(3<<7), 0xC020, 0x8000, 0x0000, 0x0000);
+
+    TEST("FSADD.X FP0, FP1",            0xF200,     0x0062|(0<<10)|(1<<7));
+    TEST("FSADD.X FP2, FP2",            0xF200,     0x0062|(2<<10)|(2<<7));
+    TEST("FSADD.L D2, FP3",             0xF200|002, 0x4062|(0<<10)|(3<<7));
+    TEST("FSADD.S D2, FP3",             0xF200|002, 0x4062|(1<<10)|(3<<7));
+    ERRT("FSADD.X D2, FP3", ILLEGAL_SIZE,
+         "FSADD.X D2, FP3",             0xF200|002, 0x4062|(2<<10)|(3<<7));
+    ERRT("FSADD.P D2, FP3", ILLEGAL_SIZE,
+         "FSADD.P D2, FP3",             0xF200|002, 0x4062|(3<<10)|(3<<7));
+    TEST("FSADD.W D2, FP3",             0xF200|002, 0x4062|(4<<10)|(3<<7));
+    ERRT("FSADD.D D2, FP3", ILLEGAL_SIZE,
+         "FSADD.D D2, FP3",             0xF200|002, 0x4062|(5<<10)|(3<<7));
+    TEST("FSADD.B D2, FP3",             0xF200|002, 0x4062|(6<<10)|(3<<7));
+    ERRT("FSADD.P D2, FP3", ILLEGAL_SIZE,
+         "FSADD.P D2, FP3",             0xF200|002, 0x4062|(3<<10)|(3<<7));
+    ERRT("FSADD.S A4, FP5", OPERAND_NOT_ALLOWED,
+         "A4, FP5",                     0xF200,     0x4062|(1<<10)|(5<<7));
+    TEST("FSADD.X (A6), FP7",           0xF200|026, 0x4062|(2<<10)|(7<<7));
+    TEST("FSADD.P (A0)+, FP1",          0xF200|030, 0x4062|(3<<10)|(1<<7));
+    TEST("FSADD.W -(A2), FP3",          0xF200|042, 0x4062|(4<<10)|(3<<7));
+    TEST("FSADD.D ($1234,A4), FP5",     0xF200|054, 0x4062|(5<<10)|(5<<7), 0x1234);
+    TEST("FSADD.B ($23,A6,D7.W), FP0",  0xF200|066, 0x4062|(6<<10)|(0<<7), 0x7023);
+    TEST("FSADD.L ($4566).W, FP1",      0xF200|070, 0x4062|(0<<10)|(1<<7), 0x4566);
+    TEST("FSADD.S ($56789A).L, FP2",    0xF200|071, 0x4062|(1<<10)|(2<<7), 0x0056, 0x789A);
+    TEST("FSADD.X (*+$1234,PC), FP3",   0xF200|072, 0x4062|(2<<10)|(3<<7), 0x1230);
+    TEST("FSADD.P (*+90,PC,A4.L), FP5", 0xF200|073, 0x4062|(3<<10)|(5<<7), 0xC856);
+    TEST("FSADD.L #$6789ABCD, FP6",     0xF200|074, 0x4062|(0<<10)|(6<<7), 0x6789, 0xABCD);
+    TEST("FSADD.W #$1234, FP2",         0xF200|074, 0x4062|(4<<10)|(2<<7), 0x1234);
+    TEST("FSADD.B #$23, FP4",           0xF200|074, 0x4062|(6<<10)|(4<<7), 0x0023);
+    FLTS("FSADD.S", "#7.88999976E-10, FP7",
+         0xF200|074, 0x4062|(1<<10)|(7<<7), 0x3058, 0xE0F0);
+    FLTX("FSADD.X", "#-89000000032, FP0",
+         0xF200|074, 0x4062|(2<<10)|(0<<7), 0xC023, 0x0000, 0xA5C6, 0x81D1, 0x0000, 0x0000);
+    FLTP("FSADD.P", "#9.12E+20, FP1",
+         0xF200|074, 0x4062|(3<<10)|(1<<7), 0x0020, 0x0009, 0x1200, 0x0000, 0x0000, 0x0000);
+    FLTD("FSADD.D", "#-8.25, FP3",
+         0xF200|074, 0x4062|(5<<10)|(3<<7), 0xC020, 0x8000, 0x0000, 0x0000);
+
+    TEST("FDADD.X FP0, FP1",            0xF200,     0x0066|(0<<10)|(1<<7));
+    TEST("FDADD.X FP2, FP2",            0xF200,     0x0066|(2<<10)|(2<<7));
+    TEST("FDADD.L D2, FP3",             0xF200|002, 0x4066|(0<<10)|(3<<7));
+    TEST("FDADD.S D2, FP3",             0xF200|002, 0x4066|(1<<10)|(3<<7));
+    ERRT("FDADD.X D2, FP3", ILLEGAL_SIZE,
+         "FDADD.X D2, FP3",             0xF200|002, 0x4066|(2<<10)|(3<<7));
+    ERRT("FDADD.P D2, FP3", ILLEGAL_SIZE,
+         "FDADD.P D2, FP3",             0xF200|002, 0x4066|(3<<10)|(3<<7));
+    TEST("FDADD.W D2, FP3",             0xF200|002, 0x4066|(4<<10)|(3<<7));
+    ERRT("FDADD.D D2, FP3", ILLEGAL_SIZE,
+         "FDADD.D D2, FP3",             0xF200|002, 0x4066|(5<<10)|(3<<7));
+    TEST("FDADD.B D2, FP3",             0xF200|002, 0x4066|(6<<10)|(3<<7));
+    ERRT("FDADD.P D2, FP3", ILLEGAL_SIZE,
+         "FDADD.P D2, FP3",             0xF200|002, 0x4066|(3<<10)|(3<<7));
+    ERRT("FDADD.S A4, FP5", OPERAND_NOT_ALLOWED,
+         "A4, FP5",                     0xF200,     0x4066|(1<<10)|(5<<7));
+    TEST("FDADD.X (A6), FP7",           0xF200|026, 0x4066|(2<<10)|(7<<7));
+    TEST("FDADD.P (A0)+, FP1",          0xF200|030, 0x4066|(3<<10)|(1<<7));
+    TEST("FDADD.W -(A2), FP3",          0xF200|042, 0x4066|(4<<10)|(3<<7));
+    TEST("FDADD.D ($1234,A4), FP5",     0xF200|054, 0x4066|(5<<10)|(5<<7), 0x1234);
+    TEST("FDADD.B ($23,A6,D7.W), FP0",  0xF200|066, 0x4066|(6<<10)|(0<<7), 0x7023);
+    TEST("FDADD.L ($4566).W, FP1",      0xF200|070, 0x4066|(0<<10)|(1<<7), 0x4566);
+    TEST("FDADD.S ($56789A).L, FP2",    0xF200|071, 0x4066|(1<<10)|(2<<7), 0x0056, 0x789A);
+    TEST("FDADD.X (*+$1234,PC), FP3",   0xF200|072, 0x4066|(2<<10)|(3<<7), 0x1230);
+    TEST("FDADD.P (*+90,PC,A4.L), FP5", 0xF200|073, 0x4066|(3<<10)|(5<<7), 0xC856);
+    TEST("FDADD.L #$6789ABCD, FP6",     0xF200|074, 0x4066|(0<<10)|(6<<7), 0x6789, 0xABCD);
+    TEST("FDADD.W #$1234, FP2",         0xF200|074, 0x4066|(4<<10)|(2<<7), 0x1234);
+    TEST("FDADD.B #$23, FP4",           0xF200|074, 0x4066|(6<<10)|(4<<7), 0x0023);
+    FLTS("FDADD.S", "#7.88999976E-10, FP7",
+         0xF200|074, 0x4066|(1<<10)|(7<<7), 0x3058, 0xE0F0);
+    FLTX("FDADD.X", "#-89000000032, FP0",
+         0xF200|074, 0x4066|(2<<10)|(0<<7), 0xC023, 0x0000, 0xA5C6, 0x81D1, 0x0000, 0x0000);
+    FLTP("FDADD.P", "#9.12E+20, FP1",
+         0xF200|074, 0x4066|(3<<10)|(1<<7), 0x0020, 0x0009, 0x1200, 0x0000, 0x0000, 0x0000);
+    FLTD("FDADD.D", "#-8.25, FP3",
+         0xF200|074, 0x4066|(5<<10)|(3<<7), 0xC020, 0x8000, 0x0000, 0x0000);
+
+    TEST("FSMUL.X FP0, FP1",            0xF200,     0x0063|(0<<10)|(1<<7));
+    TEST("FSMUL.X FP2, FP2",            0xF200,     0x0063|(2<<10)|(2<<7));
+    TEST("FSMUL.L D2, FP3",             0xF200|002, 0x4063|(0<<10)|(3<<7));
+    TEST("FSMUL.S D2, FP3",             0xF200|002, 0x4063|(1<<10)|(3<<7));
+    ERRT("FSMUL.X D2, FP3", ILLEGAL_SIZE,
+         "FSMUL.X D2, FP3",             0xF200|002, 0x4063|(2<<10)|(3<<7));
+    ERRT("FSMUL.P D2, FP3", ILLEGAL_SIZE,
+         "FSMUL.P D2, FP3",             0xF200|002, 0x4063|(3<<10)|(3<<7));
+    TEST("FSMUL.W D2, FP3",             0xF200|002, 0x4063|(4<<10)|(3<<7));
+    ERRT("FSMUL.D D2, FP3", ILLEGAL_SIZE,
+         "FSMUL.D D2, FP3",             0xF200|002, 0x4063|(5<<10)|(3<<7));
+    TEST("FSMUL.B D2, FP3",             0xF200|002, 0x4063|(6<<10)|(3<<7));
+    ERRT("FSMUL.P D2, FP3", ILLEGAL_SIZE,
+         "FSMUL.P D2, FP3",             0xF200|002, 0x4063|(3<<10)|(3<<7));
+    ERRT("FSMUL.S A4, FP5", OPERAND_NOT_ALLOWED,
+         "A4, FP5",                     0xF200,     0x4063|(1<<10)|(5<<7));
+    TEST("FSMUL.X (A6), FP7",           0xF200|026, 0x4063|(2<<10)|(7<<7));
+    TEST("FSMUL.P (A0)+, FP1",          0xF200|030, 0x4063|(3<<10)|(1<<7));
+    TEST("FSMUL.W -(A2), FP3",          0xF200|042, 0x4063|(4<<10)|(3<<7));
+    TEST("FSMUL.D ($1234,A4), FP5",     0xF200|054, 0x4063|(5<<10)|(5<<7), 0x1234);
+    TEST("FSMUL.B ($23,A6,D7.W), FP0",  0xF200|066, 0x4063|(6<<10)|(0<<7), 0x7023);
+    TEST("FSMUL.L ($4566).W, FP1",      0xF200|070, 0x4063|(0<<10)|(1<<7), 0x4566);
+    TEST("FSMUL.S ($56789A).L, FP2",    0xF200|071, 0x4063|(1<<10)|(2<<7), 0x0056, 0x789A);
+    TEST("FSMUL.X (*+$1234,PC), FP3",   0xF200|072, 0x4063|(2<<10)|(3<<7), 0x1230);
+    TEST("FSMUL.P (*+90,PC,A4.L), FP5", 0xF200|073, 0x4063|(3<<10)|(5<<7), 0xC856);
+    TEST("FSMUL.L #$6789ABCD, FP6",     0xF200|074, 0x4063|(0<<10)|(6<<7), 0x6789, 0xABCD);
+    TEST("FSMUL.W #$1234, FP2",         0xF200|074, 0x4063|(4<<10)|(2<<7), 0x1234);
+    TEST("FSMUL.B #$23, FP4",           0xF200|074, 0x4063|(6<<10)|(4<<7), 0x0023);
+    FLTS("FSMUL.S", "#7.88999976E-10, FP7",
+         0xF200|074, 0x4063|(1<<10)|(7<<7), 0x3058, 0xE0F0);
+    FLTX("FSMUL.X", "#-89000000032, FP0",
+         0xF200|074, 0x4063|(2<<10)|(0<<7), 0xC023, 0x0000, 0xA5C6, 0x81D1, 0x0000, 0x0000);
+    FLTP("FSMUL.P", "#9.12E+20, FP1",
+         0xF200|074, 0x4063|(3<<10)|(1<<7), 0x0020, 0x0009, 0x1200, 0x0000, 0x0000, 0x0000);
+    FLTD("FSMUL.D", "#-8.25, FP3",
+         0xF200|074, 0x4063|(5<<10)|(3<<7), 0xC020, 0x8000, 0x0000, 0x0000);
+
+    TEST("FDMUL.X FP0, FP1",            0xF200,     0x0067|(0<<10)|(1<<7));
+    TEST("FDMUL.X FP2, FP2",            0xF200,     0x0067|(2<<10)|(2<<7));
+    TEST("FDMUL.L D2, FP3",             0xF200|002, 0x4067|(0<<10)|(3<<7));
+    TEST("FDMUL.S D2, FP3",             0xF200|002, 0x4067|(1<<10)|(3<<7));
+    ERRT("FDMUL.X D2, FP3", ILLEGAL_SIZE,
+         "FDMUL.X D2, FP3",             0xF200|002, 0x4067|(2<<10)|(3<<7));
+    ERRT("FDMUL.P D2, FP3", ILLEGAL_SIZE,
+         "FDMUL.P D2, FP3",             0xF200|002, 0x4067|(3<<10)|(3<<7));
+    TEST("FDMUL.W D2, FP3",             0xF200|002, 0x4067|(4<<10)|(3<<7));
+    ERRT("FDMUL.D D2, FP3", ILLEGAL_SIZE,
+         "FDMUL.D D2, FP3",             0xF200|002, 0x4067|(5<<10)|(3<<7));
+    TEST("FDMUL.B D2, FP3",             0xF200|002, 0x4067|(6<<10)|(3<<7));
+    ERRT("FDMUL.P D2, FP3", ILLEGAL_SIZE,
+         "FDMUL.P D2, FP3",             0xF200|002, 0x4067|(3<<10)|(3<<7));
+    ERRT("FDMUL.S A4, FP5", OPERAND_NOT_ALLOWED,
+         "A4, FP5",                     0xF200,     0x4067|(1<<10)|(5<<7));
+    TEST("FDMUL.X (A6), FP7",           0xF200|026, 0x4067|(2<<10)|(7<<7));
+    TEST("FDMUL.P (A0)+, FP1",          0xF200|030, 0x4067|(3<<10)|(1<<7));
+    TEST("FDMUL.W -(A2), FP3",          0xF200|042, 0x4067|(4<<10)|(3<<7));
+    TEST("FDMUL.D ($1234,A4), FP5",     0xF200|054, 0x4067|(5<<10)|(5<<7), 0x1234);
+    TEST("FDMUL.B ($23,A6,D7.W), FP0",  0xF200|066, 0x4067|(6<<10)|(0<<7), 0x7023);
+    TEST("FDMUL.L ($4566).W, FP1",      0xF200|070, 0x4067|(0<<10)|(1<<7), 0x4566);
+    TEST("FDMUL.S ($56789A).L, FP2",    0xF200|071, 0x4067|(1<<10)|(2<<7), 0x0056, 0x789A);
+    TEST("FDMUL.X (*+$1234,PC), FP3",   0xF200|072, 0x4067|(2<<10)|(3<<7), 0x1230);
+    TEST("FDMUL.P (*+90,PC,A4.L), FP5", 0xF200|073, 0x4067|(3<<10)|(5<<7), 0xC856);
+    TEST("FDMUL.L #$6789ABCD, FP6",     0xF200|074, 0x4067|(0<<10)|(6<<7), 0x6789, 0xABCD);
+    TEST("FDMUL.W #$1234, FP2",         0xF200|074, 0x4067|(4<<10)|(2<<7), 0x1234);
+    TEST("FDMUL.B #$23, FP4",           0xF200|074, 0x4067|(6<<10)|(4<<7), 0x0023);
+    FLTS("FDMUL.S", "#7.88999976E-10, FP7",
+         0xF200|074, 0x4067|(1<<10)|(7<<7), 0x3058, 0xE0F0);
+    FLTX("FDMUL.X", "#-89000000032, FP0",
+         0xF200|074, 0x4067|(2<<10)|(0<<7), 0xC023, 0x0000, 0xA5C6, 0x81D1, 0x0000, 0x0000);
+    FLTP("FDMUL.P", "#9.12E+20, FP1",
+         0xF200|074, 0x4067|(3<<10)|(1<<7), 0x0020, 0x0009, 0x1200, 0x0000, 0x0000, 0x0000);
+    FLTD("FDMUL.D", "#-8.25, FP3",
+         0xF200|074, 0x4067|(5<<10)|(3<<7), 0xC020, 0x8000, 0x0000, 0x0000);
+
+    TEST("FSSUB.X FP0, FP1",            0xF200,     0x0068|(0<<10)|(1<<7));
+    TEST("FSSUB.X FP2, FP2",            0xF200,     0x0068|(2<<10)|(2<<7));
+    TEST("FSSUB.L D2, FP3",             0xF200|002, 0x4068|(0<<10)|(3<<7));
+    TEST("FSSUB.S D2, FP3",             0xF200|002, 0x4068|(1<<10)|(3<<7));
+    ERRT("FSSUB.X D2, FP3", ILLEGAL_SIZE,
+         "FSSUB.X D2, FP3",             0xF200|002, 0x4068|(2<<10)|(3<<7));
+    ERRT("FSSUB.P D2, FP3", ILLEGAL_SIZE,
+         "FSSUB.P D2, FP3",             0xF200|002, 0x4068|(3<<10)|(3<<7));
+    TEST("FSSUB.W D2, FP3",             0xF200|002, 0x4068|(4<<10)|(3<<7));
+    ERRT("FSSUB.D D2, FP3", ILLEGAL_SIZE,
+         "FSSUB.D D2, FP3",             0xF200|002, 0x4068|(5<<10)|(3<<7));
+    TEST("FSSUB.B D2, FP3",             0xF200|002, 0x4068|(6<<10)|(3<<7));
+    ERRT("FSSUB.P D2, FP3", ILLEGAL_SIZE,
+         "FSSUB.P D2, FP3",             0xF200|002, 0x4068|(3<<10)|(3<<7));
+    ERRT("FSSUB.S A4, FP5", OPERAND_NOT_ALLOWED,
+         "A4, FP5",                     0xF200,     0x4068|(1<<10)|(5<<7));
+    TEST("FSSUB.X (A6), FP7",           0xF200|026, 0x4068|(2<<10)|(7<<7));
+    TEST("FSSUB.P (A0)+, FP1",          0xF200|030, 0x4068|(3<<10)|(1<<7));
+    TEST("FSSUB.W -(A2), FP3",          0xF200|042, 0x4068|(4<<10)|(3<<7));
+    TEST("FSSUB.D ($1234,A4), FP5",     0xF200|054, 0x4068|(5<<10)|(5<<7), 0x1234);
+    TEST("FSSUB.B ($23,A6,D7.W), FP0",  0xF200|066, 0x4068|(6<<10)|(0<<7), 0x7023);
+    TEST("FSSUB.L ($FFFF8566).W, FP1",  0xF200|070, 0x4068|(0<<10)|(1<<7), 0x8566);
+    TEST("FSSUB.S ($56789A).L, FP2",    0xF200|071, 0x4068|(1<<10)|(2<<7), 0x0056, 0x789A);
+    TEST("FSSUB.X (*+$1234,PC), FP3",   0xF200|072, 0x4068|(2<<10)|(3<<7), 0x1230);
+    TEST("FSSUB.P (*+90,PC,A4.L), FP5", 0xF200|073, 0x4068|(3<<10)|(5<<7), 0xC856);
+    TEST("FSSUB.L #$6789ABCD, FP6",     0xF200|074, 0x4068|(0<<10)|(6<<7), 0x6789, 0xABCD);
+    TEST("FSSUB.W #$1234, FP2",         0xF200|074, 0x4068|(4<<10)|(2<<7), 0x1234);
+    TEST("FSSUB.B #$23, FP4",           0xF200|074, 0x4068|(6<<10)|(4<<7), 0x0023);
+    FLTS("FSSUB.S", "#7.88999976E-10, FP7",
+         0xF200|074, 0x4068|(1<<10)|(7<<7), 0x3058, 0xE0F0);
+    FLTX("FSSUB.X", "#-89000000032, FP0",
+         0xF200|074, 0x4068|(2<<10)|(0<<7), 0xC023, 0x0000, 0xA5C6, 0x81D1, 0x0000, 0x0000);
+    FLTP("FSSUB.P", "#9.12E+20, FP1",
+         0xF200|074, 0x4068|(3<<10)|(1<<7), 0x0020, 0x0009, 0x1200, 0x0000, 0x0000, 0x0000);
+    FLTD("FSSUB.D", "#-8.25, FP3",
+         0xF200|074, 0x4068|(5<<10)|(3<<7), 0xC020, 0x8000, 0x0000, 0x0000);
+
+    TEST("FDSUB.X FP0, FP1",            0xF200,     0x006C|(0<<10)|(1<<7));
+    TEST("FDSUB.X FP2, FP2",            0xF200,     0x006C|(2<<10)|(2<<7));
+    TEST("FDSUB.L D2, FP3",             0xF200|002, 0x406C|(0<<10)|(3<<7));
+    TEST("FDSUB.S D2, FP3",             0xF200|002, 0x406C|(1<<10)|(3<<7));
+    ERRT("FDSUB.X D2, FP3", ILLEGAL_SIZE,
+         "FDSUB.X D2, FP3",             0xF200|002, 0x406C|(2<<10)|(3<<7));
+    ERRT("FDSUB.P D2, FP3", ILLEGAL_SIZE,
+         "FDSUB.P D2, FP3",             0xF200|002, 0x406C|(3<<10)|(3<<7));
+    TEST("FDSUB.W D2, FP3",             0xF200|002, 0x406C|(4<<10)|(3<<7));
+    ERRT("FDSUB.D D2, FP3", ILLEGAL_SIZE,
+         "FDSUB.D D2, FP3",             0xF200|002, 0x406C|(5<<10)|(3<<7));
+    TEST("FDSUB.B D2, FP3",             0xF200|002, 0x406C|(6<<10)|(3<<7));
+    ERRT("FDSUB.P D2, FP3", ILLEGAL_SIZE,
+         "FDSUB.P D2, FP3",             0xF200|002, 0x406C|(3<<10)|(3<<7));
+    ERRT("FDSUB.S A4, FP5", OPERAND_NOT_ALLOWED,
+         "A4, FP5",                     0xF200,     0x406C|(1<<10)|(5<<7));
+    TEST("FDSUB.X (A6), FP7",           0xF200|026, 0x406C|(2<<10)|(7<<7));
+    TEST("FDSUB.P (A0)+, FP1",          0xF200|030, 0x406C|(3<<10)|(1<<7));
+    TEST("FDSUB.W -(A2), FP3",          0xF200|042, 0x406C|(4<<10)|(3<<7));
+    TEST("FDSUB.D ($1234,A4), FP5",     0xF200|054, 0x406C|(5<<10)|(5<<7), 0x1234);
+    TEST("FDSUB.B ($23,A6,D7.W), FP0",  0xF200|066, 0x406C|(6<<10)|(0<<7), 0x7023);
+    TEST("FDSUB.L ($FFFF8566).W, FP1",  0xF200|070, 0x406C|(0<<10)|(1<<7), 0x8566);
+    TEST("FDSUB.S ($56789A).L, FP2",    0xF200|071, 0x406C|(1<<10)|(2<<7), 0x0056, 0x789A);
+    TEST("FDSUB.X (*+$1234,PC), FP3",   0xF200|072, 0x406C|(2<<10)|(3<<7), 0x1230);
+    TEST("FDSUB.P (*+90,PC,A4.L), FP5", 0xF200|073, 0x406C|(3<<10)|(5<<7), 0xC856);
+    TEST("FDSUB.L #$6789ABCD, FP6",     0xF200|074, 0x406C|(0<<10)|(6<<7), 0x6789, 0xABCD);
+    TEST("FDSUB.W #$1234, FP2",         0xF200|074, 0x406C|(4<<10)|(2<<7), 0x1234);
+    TEST("FDSUB.B #$23, FP4",           0xF200|074, 0x406C|(6<<10)|(4<<7), 0x0023);
+    FLTS("FDSUB.S", "#7.88999976E-10, FP7",
+         0xF200|074, 0x406C|(1<<10)|(7<<7), 0x3058, 0xE0F0);
+    FLTX("FDSUB.X", "#-89000000032, FP0",
+         0xF200|074, 0x406C|(2<<10)|(0<<7), 0xC023, 0x0000, 0xA5C6, 0x81D1, 0x0000, 0x0000);
+    FLTP("FDSUB.P", "#9.12E+20, FP1",
+         0xF200|074, 0x406C|(3<<10)|(1<<7), 0x0020, 0x0009, 0x1200, 0x0000, 0x0000, 0x0000);
+    FLTD("FDSUB.D", "#-8.25, FP3",
+         0xF200|074, 0x406C|(5<<10)|(3<<7), 0xC020, 0x8000, 0x0000, 0x0000);
+}
+
+void test_float_mc68881() {
+    TEST("FPU ON");
+
+    TEST("FINT.X FP0, FP1",            0xF200,     0x0001|(0<<10)|(1<<7));
+    TEST("FINT.X FP2",                 0xF200,     0x0001|(2<<10)|(2<<7));
+    TEST("FINT.L D2, FP3",             0xF200|002, 0x4001|(0<<10)|(3<<7));
+    TEST("FINT.S D2, FP3",             0xF200|002, 0x4001|(1<<10)|(3<<7));
+    ERRT("FINT.X D2, FP3", ILLEGAL_SIZE, "FINT.X D2, FP3",
+         0xF200|002, 0x4001|(2<<10)|(3<<7));
+    ERRT("FINT.P D2, FP3", ILLEGAL_SIZE, "FINT.P D2, FP3",
+         0xF200|002, 0x4001|(3<<10)|(3<<7));
+    TEST("FINT.W D2, FP3",             0xF200|002, 0x4001|(4<<10)|(3<<7));
+    ERRT("FINT.D D2, FP3", ILLEGAL_SIZE, "FINT.D D2, FP3",
+         0xF200|002, 0x4001|(5<<10)|(3<<7));
+    TEST("FINT.B D2, FP3",             0xF200|002, 0x4001|(6<<10)|(3<<7));
+    ERRT("FINT.S A4, FP5",             OPERAND_NOT_ALLOWED, "A4, FP5", 0xF200, 0x4681);
+    TEST("FINT.X (A6), FP7",           0xF200|026, 0x4001|(2<<10)|(7<<7));
+    TEST("FINT.P (A0)+, FP1",          0xF200|030, 0x4001|(3<<10)|(1<<7));
+    TEST("FINT.W -(A2), FP3",          0xF200|042, 0x4001|(4<<10)|(3<<7));
+    TEST("FINT.D ($1234,A4), FP5",     0xF200|054, 0x4001|(5<<10)|(5<<7), 0x1234);
+    TEST("FINT.B ($23,A6,D7.W), FP0",  0xF200|066, 0x4001|(6<<10)|(0<<7), 0x7023);
+    TEST("FINT.L ($004566).W, FP1",    0xF200|070, 0x4001|(0<<10)|(1<<7), 0x4566);
+    TEST("FINT.S ($56789A).L, FP2",    0xF200|071, 0x4001|(1<<10)|(2<<7), 0x0056, 0x789A);
+    TEST("FINT.X (*+$1234,PC), FP3",   0xF200|072, 0x4001|(2<<10)|(3<<7), 0x1230);
+    TEST("FINT.P (*+90,PC,A4.L), FP5", 0xF200|073, 0x4001|(3<<10)|(5<<7), 0xC856);
+    TEST("FINT.L #$6789ABCD, FP6",     0xF200|074, 0x4001|(0<<10)|(6<<7), 0x6789, 0xABCD);
+    TEST("FINT.W #$1234, FP2",         0xF200|074, 0x4001|(4<<10)|(2<<7), 0x1234);
+    TEST("FINT.B #$23, FP4",           0xF200|074, 0x4001|(6<<10)|(4<<7), 0x0023);
+    FLTS("FINT.S", "#7.88999976E-10, FP7", 0xF200|074, 0x4001|(1<<10)|(7<<7), 0x3058, 0xE0F0);
+    FLTX("FINT.X", "#-89000000032, FP0",   0xF200|074, 0x4001|(2<<10)|(0<<7),
+         0xC023, 0x0000, 0xA5C6, 0x81D1, 0x0000, 0x0000);
+    FLTP("FINT.P", "#9.12E20, FP1",        0xF200|074, 0x4001|(3<<10)|(1<<7),
+         0x0020, 0x0009, 0x1200, 0x0000, 0x0000, 0x0000);
+    FLTD("FINT.D", "#-8.25, FP3",          0xF200|074, 0x4001|(5<<10)|(3<<7),
+         0xC020, 0x8000, 0x0000, 0x0000);
+    
+    TEST("FSINH.X FP0, FP1",            0xF200,     0x0002|(0<<10)|(1<<7));
+    TEST("FSINH.X FP2",                 0xF200,     0x0002|(2<<10)|(2<<7));
+    TEST("FSINH.L D2, FP3",             0xF200|002, 0x4002|(0<<10)|(3<<7));
+    TEST("FSINH.S D2, FP3",             0xF200|002, 0x4002|(1<<10)|(3<<7));
+    ERRT("FSINH.X D2, FP3", ILLEGAL_SIZE, "FSINH.X D2, FP3",
+         0xF200|002, 0x4002|(2<<10)|(3<<7));
+    ERRT("FSINH.P D2, FP3", ILLEGAL_SIZE, "FSINH.P D2, FP3",
+         0xF200|002, 0x4002|(3<<10)|(3<<7));
+    TEST("FSINH.W D2, FP3",             0xF200|002, 0x4002|(4<<10)|(3<<7));
+    ERRT("FSINH.D D2, FP3", ILLEGAL_SIZE, "FSINH.D D2, FP3",
+         0xF200|002, 0x4002|(5<<10)|(3<<7));
+    TEST("FSINH.B D2, FP3",             0xF200|002, 0x4002|(6<<10)|(3<<7));
+    ERRT("FSINH.S A4, FP5",             OPERAND_NOT_ALLOWED, "A4, FP5", 0xF200, 0x4682);
+    TEST("FSINH.X (A6), FP7",           0xF200|026, 0x4002|(2<<10)|(7<<7));
+    TEST("FSINH.P (A0)+, FP1",          0xF200|030, 0x4002|(3<<10)|(1<<7));
+    TEST("FSINH.W -(A2), FP3",          0xF200|042, 0x4002|(4<<10)|(3<<7));
+    TEST("FSINH.D ($1234,A4), FP5",     0xF200|054, 0x4002|(5<<10)|(5<<7), 0x1234);
+    TEST("FSINH.B ($23,A6,D7.W), FP0",  0xF200|066, 0x4002|(6<<10)|(0<<7), 0x7023);
+    TEST("FSINH.L ($004566).W, FP1",    0xF200|070, 0x4002|(0<<10)|(1<<7), 0x4566);
+    TEST("FSINH.S ($56789A).L, FP2",    0xF200|071, 0x4002|(1<<10)|(2<<7), 0x0056, 0x789A);
+    TEST("FSINH.X (*+$1234,PC), FP3",   0xF200|072, 0x4002|(2<<10)|(3<<7), 0x1230);
+    TEST("FSINH.P (*+90,PC,A4.L), FP5", 0xF200|073, 0x4002|(3<<10)|(5<<7), 0xC856);
+    TEST("FSINH.L #$6789ABCD, FP6",     0xF200|074, 0x4002|(0<<10)|(6<<7), 0x6789, 0xABCD);
+    TEST("FSINH.W #$1234, FP2",         0xF200|074, 0x4002|(4<<10)|(2<<7), 0x1234);
+    TEST("FSINH.B #$23, FP4",           0xF200|074, 0x4002|(6<<10)|(4<<7), 0x0023);
+    FLTS("FSINH.S", "#7.88999976E-10, FP7", 0xF200|074, 0x4002|(1<<10)|(7<<7), 0x3058, 0xE0F0);
+    FLTX("FSINH.X", "#-8, FP0",             0xF200|074, 0x4002|(2<<10)|(0<<7),
+         0xC002, 0x0000, 0x8000, 0x0000, 0x0000, 0x0000);
+    FLTP("FSINH.P", "#9.12E20, FP1",        0xF200|074, 0x4002|(3<<10)|(1<<7),
+         0x0020, 0x0009, 0x1200, 0x0000, 0x0000, 0x0000);
+    FLTD("FSINH.D", "#-8.25, FP3",          0xF200|074, 0x4002|(5<<10)|(3<<7),
+         0xC020, 0x8000, 0x0000, 0x0000);
+    
+    TEST("FINTRZ.X FP0, FP1",            0xF200,     0x0003|(0<<10)|(1<<7));
+    TEST("FINTRZ.X FP2",                 0xF200,     0x0003|(2<<10)|(2<<7));
+    TEST("FINTRZ.L D2, FP3",             0xF200|002, 0x4003|(0<<10)|(3<<7));
+    TEST("FINTRZ.S D2, FP3",             0xF200|002, 0x4003|(1<<10)|(3<<7));
+    ERRT("FINTRZ.X D2, FP3", ILLEGAL_SIZE, "FINTRZ.X D2, FP3",
+         0xF200|002, 0x4003|(2<<10)|(3<<7));
+    ERRT("FINTRZ.P D2, FP3", ILLEGAL_SIZE, "FINTRZ.P D2, FP3",
+         0xF200|002, 0x4003|(3<<10)|(3<<7));
+    TEST("FINTRZ.W D2, FP3",             0xF200|002, 0x4003|(4<<10)|(3<<7));
+    ERRT("FINTRZ.D D2, FP3", ILLEGAL_SIZE, "FINTRZ.D D2, FP3",
+         0xF200|002, 0x4003|(5<<10)|(3<<7));
+    TEST("FINTRZ.B D2, FP3",             0xF200|002, 0x4003|(6<<10)|(3<<7));
+    ERRT("FINTRZ.S A4, FP5",             OPERAND_NOT_ALLOWED, "A4, FP5", 0xF200, 0x4683);
+    TEST("FINTRZ.X (A6), FP7",           0xF200|026, 0x4003|(2<<10)|(7<<7));
+    TEST("FINTRZ.P (A0)+, FP1",          0xF200|030, 0x4003|(3<<10)|(1<<7));
+    TEST("FINTRZ.W -(A2), FP3",          0xF200|042, 0x4003|(4<<10)|(3<<7));
+    TEST("FINTRZ.D ($1234,A4), FP5",     0xF200|054, 0x4003|(5<<10)|(5<<7), 0x1234);
+    TEST("FINTRZ.B ($23,A6,D7.W), FP0",  0xF200|066, 0x4003|(6<<10)|(0<<7), 0x7023);
+    TEST("FINTRZ.L ($004566).W, FP1",    0xF200|070, 0x4003|(0<<10)|(1<<7), 0x4566);
+    TEST("FINTRZ.S ($56789A).L, FP2",    0xF200|071, 0x4003|(1<<10)|(2<<7), 0x0056, 0x789A);
+    TEST("FINTRZ.X (*+$1234,PC), FP3",   0xF200|072, 0x4003|(2<<10)|(3<<7), 0x1230);
+    TEST("FINTRZ.P (*+90,PC,A4.L), FP5", 0xF200|073, 0x4003|(3<<10)|(5<<7), 0xC856);
+    TEST("FINTRZ.L #$6789ABCD, FP6",     0xF200|074, 0x4003|(0<<10)|(6<<7), 0x6789, 0xABCD);
+    TEST("FINTRZ.W #$1234, FP2",         0xF200|074, 0x4003|(4<<10)|(2<<7), 0x1234);
+    TEST("FINTRZ.B #$23, FP4",           0xF200|074, 0x4003|(6<<10)|(4<<7), 0x0023);
+    FLTS("FINTRZ.S", "#7.88999976E-10, FP7", 0xF200|074, 0x4003|(1<<10)|(7<<7), 0x3058, 0xE0F0);
+    FLTX("FINTRZ.X", "#-89000000032, FP0",   0xF200|074, 0x4003|(2<<10)|(0<<7),
+         0xC023, 0x0000, 0xA5C6, 0x81D1, 0x0000, 0x0000);
+    FLTP("FINTRZ.P", "#9.12E20, FP1",        0xF200|074, 0x4003|(3<<10)|(1<<7),
+         0x0020, 0x0009, 0x1200, 0x0000, 0x0000, 0x0000);
+    FLTD("FINTRZ.D", "#-8.25, FP3",          0xF200|074, 0x4003|(5<<10)|(3<<7),
+         0xC020, 0x8000, 0x0000, 0x0000);
+    
+    TEST("FLOGNP1.X FP0, FP1",            0xF200,     0x0006|(0<<10)|(1<<7));
+    TEST("FLOGNP1.X FP2",                 0xF200,     0x0006|(2<<10)|(2<<7));
+    TEST("FLOGNP1.L D2, FP3",             0xF200|002, 0x4006|(0<<10)|(3<<7));
+    TEST("FLOGNP1.S D2, FP3",             0xF200|002, 0x4006|(1<<10)|(3<<7));
+    ERRT("FLOGNP1.X D2, FP3", ILLEGAL_SIZE, "FLOGNP1.X D2, FP3",
+         0xF200|002, 0x4006|(2<<10)|(3<<7));
+    ERRT("FLOGNP1.P D2, FP3", ILLEGAL_SIZE, "FLOGNP1.P D2, FP3",
+         0xF200|002, 0x4006|(3<<10)|(3<<7));
+    TEST("FLOGNP1.W D2, FP3",             0xF200|002, 0x4006|(4<<10)|(3<<7));
+    ERRT("FLOGNP1.D D2, FP3", ILLEGAL_SIZE, "FLOGNP1.D D2, FP3",
+         0xF200|002, 0x4006|(5<<10)|(3<<7));
+    TEST("FLOGNP1.B D2, FP3",             0xF200|002, 0x4006|(6<<10)|(3<<7));
+    ERRT("FLOGNP1.S A4, FP5",             OPERAND_NOT_ALLOWED, "A4, FP5", 0xF200, 0x4686);
+    TEST("FLOGNP1.X (A6), FP7",           0xF200|026, 0x4006|(2<<10)|(7<<7));
+    TEST("FLOGNP1.P (A0)+, FP1",          0xF200|030, 0x4006|(3<<10)|(1<<7));
+    TEST("FLOGNP1.W -(A2), FP3",          0xF200|042, 0x4006|(4<<10)|(3<<7));
+    TEST("FLOGNP1.D ($1234,A4), FP5",     0xF200|054, 0x4006|(5<<10)|(5<<7), 0x1234);
+    TEST("FLOGNP1.B ($23,A6,D7.W), FP0",  0xF200|066, 0x4006|(6<<10)|(0<<7), 0x7023);
+    TEST("FLOGNP1.L ($004566).W, FP1",    0xF200|070, 0x4006|(0<<10)|(1<<7), 0x4566);
+    TEST("FLOGNP1.S ($56789A).L, FP2",    0xF200|071, 0x4006|(1<<10)|(2<<7), 0x0056, 0x789A);
+    TEST("FLOGNP1.X (*+$1234,PC), FP3",   0xF200|072, 0x4006|(2<<10)|(3<<7), 0x1230);
+    TEST("FLOGNP1.P (*+90,PC,A4.L), FP5", 0xF200|073, 0x4006|(3<<10)|(5<<7), 0xC856);
+    TEST("FLOGNP1.L #$6789ABCD, FP6",     0xF200|074, 0x4006|(0<<10)|(6<<7), 0x6789, 0xABCD);
+    TEST("FLOGNP1.W #$1234, FP2",         0xF200|074, 0x4006|(4<<10)|(2<<7), 0x1234);
+    TEST("FLOGNP1.B #$23, FP4",           0xF200|074, 0x4006|(6<<10)|(4<<7), 0x0023);
+    FLTS("FLOGNP1.S", "#7.88999976E-10, FP7", 0xF200|074, 0x4006|(1<<10)|(7<<7), 0x3058, 0xE0F0);
+    FLTX("FLOGNP1.X", "#-89000000032, FP0",   0xF200|074, 0x4006|(2<<10)|(0<<7),
+         0xC023, 0x0000, 0xA5C6, 0x81D1, 0x0000, 0x0000);
+    FLTP("FLOGNP1.P", "#9.12E20, FP1",        0xF200|074, 0x4006|(3<<10)|(1<<7),
+         0x0020, 0x0009, 0x1200, 0x0000, 0x0000, 0x0000);
+    FLTD("FLOGNP1.D", "#-8.25, FP3",          0xF200|074, 0x4006|(5<<10)|(3<<7),
+         0xC020, 0x8000, 0x0000, 0x0000);
+    
+    TEST("FETOXM1.X FP0, FP1",            0xF200,     0x0008|(0<<10)|(1<<7));
+    TEST("FETOXM1.X FP2",                 0xF200,     0x0008|(2<<10)|(2<<7));
+    TEST("FETOXM1.L D2, FP3",             0xF200|002, 0x4008|(0<<10)|(3<<7));
+    TEST("FETOXM1.S D2, FP3",             0xF200|002, 0x4008|(1<<10)|(3<<7));
+    ERRT("FETOXM1.X D2, FP3", ILLEGAL_SIZE, "FETOXM1.X D2, FP3",
+         0xF200|002, 0x4008|(2<<10)|(3<<7));
+    ERRT("FETOXM1.P D2, FP3", ILLEGAL_SIZE, "FETOXM1.P D2, FP3",
+         0xF200|002, 0x4008|(3<<10)|(3<<7));
+    TEST("FETOXM1.W D2, FP3",             0xF200|002, 0x4008|(4<<10)|(3<<7));
+    ERRT("FETOXM1.D D2, FP3", ILLEGAL_SIZE, "FETOXM1.D D2, FP3",
+         0xF200|002, 0x4008|(5<<10)|(3<<7));
+    TEST("FETOXM1.B D2, FP3",             0xF200|002, 0x4008|(6<<10)|(3<<7));
+    ERRT("FETOXM1.S A4, FP5",             OPERAND_NOT_ALLOWED, "A4, FP5", 0xF200, 0x4688);
+    TEST("FETOXM1.X (A6), FP7",           0xF200|026, 0x4008|(2<<10)|(7<<7));
+    TEST("FETOXM1.P (A0)+, FP1",          0xF200|030, 0x4008|(3<<10)|(1<<7));
+    TEST("FETOXM1.W -(A2), FP3",          0xF200|042, 0x4008|(4<<10)|(3<<7));
+    TEST("FETOXM1.D ($1234,A4), FP5",     0xF200|054, 0x4008|(5<<10)|(5<<7), 0x1234);
+    TEST("FETOXM1.B ($23,A6,D7.W), FP0",  0xF200|066, 0x4008|(6<<10)|(0<<7), 0x7023);
+    TEST("FETOXM1.L ($004566).W, FP1",    0xF200|070, 0x4008|(0<<10)|(1<<7), 0x4566);
+    TEST("FETOXM1.S ($56789A).L, FP2",    0xF200|071, 0x4008|(1<<10)|(2<<7), 0x0056, 0x789A);
+    TEST("FETOXM1.X (*+$1234,PC), FP3",   0xF200|072, 0x4008|(2<<10)|(3<<7), 0x1230);
+    TEST("FETOXM1.P (*+90,PC,A4.L), FP5", 0xF200|073, 0x4008|(3<<10)|(5<<7), 0xC856);
+    TEST("FETOXM1.L #$6789ABCD, FP6",     0xF200|074, 0x4008|(0<<10)|(6<<7), 0x6789, 0xABCD);
+    TEST("FETOXM1.W #$1234, FP2",         0xF200|074, 0x4008|(4<<10)|(2<<7), 0x1234);
+    TEST("FETOXM1.B #$23, FP4",           0xF200|074, 0x4008|(6<<10)|(4<<7), 0x0023);
+    FLTS("FETOXM1.S", "#7.88999976E-10, FP7", 0xF200|074, 0x4008|(1<<10)|(7<<7), 0x3058, 0xE0F0);
+    FLTX("FETOXM1.X", "#-89000000032, FP0",   0xF200|074, 0x4008|(2<<10)|(0<<7),
+         0xC023, 0x0000, 0xA5C6, 0x81D1, 0x0000, 0x0000);
+    FLTP("FETOXM1.P", "#9.12E20, FP1",        0xF200|074, 0x4008|(3<<10)|(1<<7),
+         0x0020, 0x0009, 0x1200, 0x0000, 0x0000, 0x0000);
+    FLTD("FETOXM1.D", "#-8.25, FP3",          0xF200|074, 0x4008|(5<<10)|(3<<7),
+         0xC020, 0x8000, 0x0000, 0x0000);
+    
+    TEST("FTANH.X FP0, FP1",            0xF200,     0x0009|(0<<10)|(1<<7));
+    TEST("FTANH.X FP2",                 0xF200,     0x0009|(2<<10)|(2<<7));
+    TEST("FTANH.L D2, FP3",             0xF200|002, 0x4009|(0<<10)|(3<<7));
+    TEST("FTANH.S D2, FP3",             0xF200|002, 0x4009|(1<<10)|(3<<7));
+    ERRT("FTANH.X D2, FP3", ILLEGAL_SIZE, "FTANH.X D2, FP3",
+         0xF200|002, 0x4009|(2<<10)|(3<<7));
+    ERRT("FTANH.P D2, FP3", ILLEGAL_SIZE, "FTANH.P D2, FP3",
+         0xF200|002, 0x4009|(3<<10)|(3<<7));
+    TEST("FTANH.W D2, FP3",             0xF200|002, 0x4009|(4<<10)|(3<<7));
+    ERRT("FTANH.D D2, FP3", ILLEGAL_SIZE, "FTANH.D D2, FP3",
+         0xF200|002, 0x4009|(5<<10)|(3<<7));
+    TEST("FTANH.B D2, FP3",             0xF200|002, 0x4009|(6<<10)|(3<<7));
+    ERRT("FTANH.S A4, FP5",             OPERAND_NOT_ALLOWED, "A4, FP5", 0xF200, 0x4689);
+    TEST("FTANH.X (A6), FP7",           0xF200|026, 0x4009|(2<<10)|(7<<7));
+    TEST("FTANH.P (A0)+, FP1",          0xF200|030, 0x4009|(3<<10)|(1<<7));
+    TEST("FTANH.W -(A2), FP3",          0xF200|042, 0x4009|(4<<10)|(3<<7));
+    TEST("FTANH.D ($1234,A4), FP5",     0xF200|054, 0x4009|(5<<10)|(5<<7), 0x1234);
+    TEST("FTANH.B ($23,A6,D7.W), FP0",  0xF200|066, 0x4009|(6<<10)|(0<<7), 0x7023);
+    TEST("FTANH.L ($004566).W, FP1",    0xF200|070, 0x4009|(0<<10)|(1<<7), 0x4566);
+    TEST("FTANH.S ($56789A).L, FP2",    0xF200|071, 0x4009|(1<<10)|(2<<7), 0x0056, 0x789A);
+    TEST("FTANH.X (*+$1234,PC), FP3",   0xF200|072, 0x4009|(2<<10)|(3<<7), 0x1230);
+    TEST("FTANH.P (*+90,PC,A4.L), FP5", 0xF200|073, 0x4009|(3<<10)|(5<<7), 0xC856);
+    TEST("FTANH.L #$6789ABCD, FP6",     0xF200|074, 0x4009|(0<<10)|(6<<7), 0x6789, 0xABCD);
+    TEST("FTANH.W #$1234, FP2",         0xF200|074, 0x4009|(4<<10)|(2<<7), 0x1234);
+    TEST("FTANH.B #$23, FP4",           0xF200|074, 0x4009|(6<<10)|(4<<7), 0x0023);
+    FLTS("FTANH.S", "#7.88999976E-10, FP7", 0xF200|074, 0x4009|(1<<10)|(7<<7), 0x3058, 0xE0F0);
+    FLTX("FTANH.X", "#-89000000032, FP0",   0xF200|074, 0x4009|(2<<10)|(0<<7),
+         0xC023, 0x0000, 0xA5C6, 0x81D1, 0x0000, 0x0000);
+    FLTP("FTANH.P", "#9.12E20, FP1",        0xF200|074, 0x4009|(3<<10)|(1<<7),
+         0x0020, 0x0009, 0x1200, 0x0000, 0x0000, 0x0000);
+    FLTD("FTANH.D", "#-8.25, FP3",          0xF200|074, 0x4009|(5<<10)|(3<<7),
+         0xC020, 0x8000, 0x0000, 0x0000);
+    
+    TEST("FATAN.X FP0, FP1",            0xF200,     0x000A|(0<<10)|(1<<7));
+    TEST("FATAN.X FP2",                 0xF200,     0x000A|(2<<10)|(2<<7));
+    TEST("FATAN.L D2, FP3",             0xF200|002, 0x400A|(0<<10)|(3<<7));
+    TEST("FATAN.S D2, FP3",             0xF200|002, 0x400A|(1<<10)|(3<<7));
+    ERRT("FATAN.X D2, FP3", ILLEGAL_SIZE, "FATAN.X D2, FP3",
+         0xF200|002, 0x400A|(2<<10)|(3<<7));
+    ERRT("FATAN.P D2, FP3", ILLEGAL_SIZE, "FATAN.P D2, FP3",
+         0xF200|002, 0x400A|(3<<10)|(3<<7));
+    TEST("FATAN.W D2, FP3",             0xF200|002, 0x400A|(4<<10)|(3<<7));
+    ERRT("FATAN.D D2, FP3", ILLEGAL_SIZE, "FATAN.D D2, FP3",
+         0xF200|002, 0x400A|(5<<10)|(3<<7));
+    TEST("FATAN.B D2, FP3",             0xF200|002, 0x400A|(6<<10)|(3<<7));
+    ERRT("FATAN.S A4, FP5",             OPERAND_NOT_ALLOWED, "A4, FP5", 0xF200, 0x468A);
+    TEST("FATAN.X (A6), FP7",           0xF200|026, 0x400A|(2<<10)|(7<<7));
+    TEST("FATAN.P (A0)+, FP1",          0xF200|030, 0x400A|(3<<10)|(1<<7));
+    TEST("FATAN.W -(A2), FP3",          0xF200|042, 0x400A|(4<<10)|(3<<7));
+    TEST("FATAN.D ($1234,A4), FP5",     0xF200|054, 0x400A|(5<<10)|(5<<7), 0x1234);
+    TEST("FATAN.B ($23,A6,D7.W), FP0",  0xF200|066, 0x400A|(6<<10)|(0<<7), 0x7023);
+    TEST("FATAN.L ($004566).W, FP1",    0xF200|070, 0x400A|(0<<10)|(1<<7), 0x4566);
+    TEST("FATAN.S ($56789A).L, FP2",    0xF200|071, 0x400A|(1<<10)|(2<<7), 0x0056, 0x789A);
+    TEST("FATAN.X (*+$1234,PC), FP3",   0xF200|072, 0x400A|(2<<10)|(3<<7), 0x1230);
+    TEST("FATAN.P (*+90,PC,A4.L), FP5", 0xF200|073, 0x400A|(3<<10)|(5<<7), 0xC856);
+    TEST("FATAN.L #$6789ABCD, FP6",     0xF200|074, 0x400A|(0<<10)|(6<<7), 0x6789, 0xABCD);
+    TEST("FATAN.W #$1234, FP2",         0xF200|074, 0x400A|(4<<10)|(2<<7), 0x1234);
+    TEST("FATAN.B #$23, FP4",           0xF200|074, 0x400A|(6<<10)|(4<<7), 0x0023);
+    FLTS("FATAN.S", "#7.88999976E-10, FP7", 0xF200|074, 0x400A|(1<<10)|(7<<7), 0x3058, 0xE0F0);
+    FLTX("FATAN.X", "#-89000000032, FP0",   0xF200|074, 0x400A|(2<<10)|(0<<7),
+         0xC023, 0x0000, 0xA5C6, 0x81D1, 0x0000, 0x0000);
+    FLTP("FATAN.P", "#9.12E20, FP1",        0xF200|074, 0x400A|(3<<10)|(1<<7),
+         0x0020, 0x0009, 0x1200, 0x0000, 0x0000, 0x0000);
+    FLTD("FATAN.D", "#-8.25, FP3",          0xF200|074, 0x400A|(5<<10)|(3<<7),
+         0xC020, 0x8000, 0x0000, 0x0000);
+    
+    TEST("FASIN.X FP0, FP1",            0xF200,     0x000C|(0<<10)|(1<<7));
+    TEST("FASIN.X FP2",                 0xF200,     0x000C|(2<<10)|(2<<7));
+    TEST("FASIN.L D2, FP3",             0xF200|002, 0x400C|(0<<10)|(3<<7));
+    TEST("FASIN.S D2, FP3",             0xF200|002, 0x400C|(1<<10)|(3<<7));
+    ERRT("FASIN.X D2, FP3", ILLEGAL_SIZE, "FASIN.X D2, FP3",
+         0xF200|002, 0x400C|(2<<10)|(3<<7));
+    ERRT("FASIN.P D2, FP3", ILLEGAL_SIZE, "FASIN.P D2, FP3",
+         0xF200|002, 0x400C|(3<<10)|(3<<7));
+    TEST("FASIN.W D2, FP3",             0xF200|002, 0x400C|(4<<10)|(3<<7));
+    ERRT("FASIN.D D2, FP3", ILLEGAL_SIZE, "FASIN.D D2, FP3",
+         0xF200|002, 0x400C|(5<<10)|(3<<7));
+    TEST("FASIN.B D2, FP3",             0xF200|002, 0x400C|(6<<10)|(3<<7));
+    ERRT("FASIN.S A4, FP5",             OPERAND_NOT_ALLOWED, "A4, FP5", 0xF200, 0x468C);
+    TEST("FASIN.X (A6), FP7",           0xF200|026, 0x400C|(2<<10)|(7<<7));
+    TEST("FASIN.P (A0)+, FP1",          0xF200|030, 0x400C|(3<<10)|(1<<7));
+    TEST("FASIN.W -(A2), FP3",          0xF200|042, 0x400C|(4<<10)|(3<<7));
+    TEST("FASIN.D ($1234,A4), FP5",     0xF200|054, 0x400C|(5<<10)|(5<<7), 0x1234);
+    TEST("FASIN.B ($23,A6,D7.W), FP0",  0xF200|066, 0x400C|(6<<10)|(0<<7), 0x7023);
+    TEST("FASIN.L ($004566).W, FP1",    0xF200|070, 0x400C|(0<<10)|(1<<7), 0x4566);
+    TEST("FASIN.S ($56789A).L, FP2",    0xF200|071, 0x400C|(1<<10)|(2<<7), 0x0056, 0x789A);
+    TEST("FASIN.X (*+$1234,PC), FP3",   0xF200|072, 0x400C|(2<<10)|(3<<7), 0x1230);
+    TEST("FASIN.P (*+90,PC,A4.L), FP5", 0xF200|073, 0x400C|(3<<10)|(5<<7), 0xC856);
+    TEST("FASIN.L #$6789ABCD, FP6",     0xF200|074, 0x400C|(0<<10)|(6<<7), 0x6789, 0xABCD);
+    TEST("FASIN.W #$1234, FP2",         0xF200|074, 0x400C|(4<<10)|(2<<7), 0x1234);
+    TEST("FASIN.B #$23, FP4",           0xF200|074, 0x400C|(6<<10)|(4<<7), 0x0023);
+    FLTS("FASIN.S", "#7.88999976E-10, FP7", 0xF200|074, 0x400C|(1<<10)|(7<<7), 0x3058, 0xE0F0);
+    FLTX("FASIN.X", "#-89000000032, FP0",   0xF200|074, 0x400C|(2<<10)|(0<<7),
+         0xC023, 0x0000, 0xA5C6, 0x81D1, 0x0000, 0x0000);
+    FLTP("FASIN.P", "#9.12E20, FP1",        0xF200|074, 0x400C|(3<<10)|(1<<7),
+         0x0020, 0x0009, 0x1200, 0x0000, 0x0000, 0x0000);
+    FLTD("FASIN.D", "#-8.25, FP3",          0xF200|074, 0x400C|(5<<10)|(3<<7),
+         0xC020, 0x8000, 0x0000, 0x0000);
+    
+    TEST("FATANH.X FP0, FP1",            0xF200,     0x000D|(0<<10)|(1<<7));
+    TEST("FATANH.X FP2",                 0xF200,     0x000D|(2<<10)|(2<<7));
+    TEST("FATANH.L D2, FP3",             0xF200|002, 0x400D|(0<<10)|(3<<7));
+    TEST("FATANH.S D2, FP3",             0xF200|002, 0x400D|(1<<10)|(3<<7));
+    ERRT("FATANH.X D2, FP3", ILLEGAL_SIZE, "FATANH.X D2, FP3",
+         0xF200|002, 0x400D|(2<<10)|(3<<7));
+    ERRT("FATANH.P D2, FP3", ILLEGAL_SIZE, "FATANH.P D2, FP3",
+         0xF200|002, 0x400D|(3<<10)|(3<<7));
+    TEST("FATANH.W D2, FP3",             0xF200|002, 0x400D|(4<<10)|(3<<7));
+    ERRT("FATANH.D D2, FP3", ILLEGAL_SIZE, "FATANH.D D2, FP3",
+         0xF200|002, 0x400D|(5<<10)|(3<<7));
+    TEST("FATANH.B D2, FP3",             0xF200|002, 0x400D|(6<<10)|(3<<7));
+    ERRT("FATANH.S A4, FP5",             OPERAND_NOT_ALLOWED, "A4, FP5", 0xF200, 0x468D);
+    TEST("FATANH.X (A6), FP7",           0xF200|026, 0x400D|(2<<10)|(7<<7));
+    TEST("FATANH.P (A0)+, FP1",          0xF200|030, 0x400D|(3<<10)|(1<<7));
+    TEST("FATANH.W -(A2), FP3",          0xF200|042, 0x400D|(4<<10)|(3<<7));
+    TEST("FATANH.D ($1234,A4), FP5",     0xF200|054, 0x400D|(5<<10)|(5<<7), 0x1234);
+    TEST("FATANH.B ($23,A6,D7.W), FP0",  0xF200|066, 0x400D|(6<<10)|(0<<7), 0x7023);
+    TEST("FATANH.L ($004566).W, FP1",    0xF200|070, 0x400D|(0<<10)|(1<<7), 0x4566);
+    TEST("FATANH.S ($56789A).L, FP2",    0xF200|071, 0x400D|(1<<10)|(2<<7), 0x0056, 0x789A);
+    TEST("FATANH.X (*+$1234,PC), FP3",   0xF200|072, 0x400D|(2<<10)|(3<<7), 0x1230);
+    TEST("FATANH.P (*+90,PC,A4.L), FP5", 0xF200|073, 0x400D|(3<<10)|(5<<7), 0xC856);
+    TEST("FATANH.L #$6789ABCD, FP6",     0xF200|074, 0x400D|(0<<10)|(6<<7), 0x6789, 0xABCD);
+    TEST("FATANH.W #$1234, FP2",         0xF200|074, 0x400D|(4<<10)|(2<<7), 0x1234);
+    TEST("FATANH.B #$23, FP4",           0xF200|074, 0x400D|(6<<10)|(4<<7), 0x0023);
+    FLTS("FATANH.S", "#7.88999976E-10, FP7", 0xF200|074, 0x400D|(1<<10)|(7<<7), 0x3058, 0xE0F0);
+    FLTX("FATANH.X", "#-89000000032, FP0",   0xF200|074, 0x400D|(2<<10)|(0<<7),
+         0xC023, 0x0000, 0xA5C6, 0x81D1, 0x0000, 0x0000);
+    FLTP("FATANH.P", "#9.12E20, FP1",        0xF200|074, 0x400D|(3<<10)|(1<<7),
+         0x0020, 0x0009, 0x1200, 0x0000, 0x0000, 0x0000);
+    FLTD("FATANH.D", "#-8.25, FP3",          0xF200|074, 0x400D|(5<<10)|(3<<7),
+         0xC020, 0x8000, 0x0000, 0x0000);
+    
+    TEST("FSIN.X FP0, FP1",            0xF200,     0x000E|(0<<10)|(1<<7));
+    TEST("FSIN.X FP2",                 0xF200,     0x000E|(2<<10)|(2<<7));
+    TEST("FSIN.L D2, FP3",             0xF200|002, 0x400E|(0<<10)|(3<<7));
+    TEST("FSIN.S D2, FP3",             0xF200|002, 0x400E|(1<<10)|(3<<7));
+    ERRT("FSIN.X D2, FP3", ILLEGAL_SIZE, "FSIN.X D2, FP3",
+         0xF200|002, 0x400E|(2<<10)|(3<<7));
+    ERRT("FSIN.P D2, FP3", ILLEGAL_SIZE, "FSIN.P D2, FP3",
+         0xF200|002, 0x400E|(3<<10)|(3<<7));
+    TEST("FSIN.W D2, FP3",             0xF200|002, 0x400E|(4<<10)|(3<<7));
+    ERRT("FSIN.D D2, FP3", ILLEGAL_SIZE, "FSIN.D D2, FP3",
+         0xF200|002, 0x400E|(5<<10)|(3<<7));
+    TEST("FSIN.B D2, FP3",             0xF200|002, 0x400E|(6<<10)|(3<<7));
+    ERRT("FSIN.S A4, FP5",             OPERAND_NOT_ALLOWED, "A4, FP5", 0xF200, 0x468E);
+    TEST("FSIN.X (A6), FP7",           0xF200|026, 0x400E|(2<<10)|(7<<7));
+    TEST("FSIN.P (A0)+, FP1",          0xF200|030, 0x400E|(3<<10)|(1<<7));
+    TEST("FSIN.W -(A2), FP3",          0xF200|042, 0x400E|(4<<10)|(3<<7));
+    TEST("FSIN.D ($1234,A4), FP5",     0xF200|054, 0x400E|(5<<10)|(5<<7), 0x1234);
+    TEST("FSIN.B ($23,A6,D7.W), FP0",  0xF200|066, 0x400E|(6<<10)|(0<<7), 0x7023);
+    TEST("FSIN.L ($004566).W, FP1",    0xF200|070, 0x400E|(0<<10)|(1<<7), 0x4566);
+    TEST("FSIN.S ($56789A).L, FP2",    0xF200|071, 0x400E|(1<<10)|(2<<7), 0x0056, 0x789A);
+    TEST("FSIN.X (*+$1234,PC), FP3",   0xF200|072, 0x400E|(2<<10)|(3<<7), 0x1230);
+    TEST("FSIN.P (*+90,PC,A4.L), FP5", 0xF200|073, 0x400E|(3<<10)|(5<<7), 0xC856);
+    TEST("FSIN.L #$6789ABCD, FP6",     0xF200|074, 0x400E|(0<<10)|(6<<7), 0x6789, 0xABCD);
+    TEST("FSIN.W #$1234, FP2",         0xF200|074, 0x400E|(4<<10)|(2<<7), 0x1234);
+    TEST("FSIN.B #$23, FP4",           0xF200|074, 0x400E|(6<<10)|(4<<7), 0x0023);
+    FLTS("FSIN.S", "#7.88999976E-10, FP7", 0xF200|074, 0x400E|(1<<10)|(7<<7), 0x3058, 0xE0F0);
+    FLTX("FSIN.X", "#-89000000032, FP0",   0xF200|074, 0x400E|(2<<10)|(0<<7),
+         0xC023, 0x0000, 0xA5C6, 0x81D1, 0x0000, 0x0000);
+    FLTP("FSIN.P", "#9.12E20, FP1",        0xF200|074, 0x400E|(3<<10)|(1<<7),
+         0x0020, 0x0009, 0x1200, 0x0000, 0x0000, 0x0000);
+    FLTD("FSIN.D", "#-8.25, FP3",          0xF200|074, 0x400E|(5<<10)|(3<<7),
+         0xC020, 0x8000, 0x0000, 0x0000);
+    
+    TEST("FTAN.X FP0, FP1",            0xF200,     0x000F|(0<<10)|(1<<7));
+    TEST("FTAN.X FP2",                 0xF200,     0x000F|(2<<10)|(2<<7));
+    TEST("FTAN.L D2, FP3",             0xF200|002, 0x400F|(0<<10)|(3<<7));
+    TEST("FTAN.S D2, FP3",             0xF200|002, 0x400F|(1<<10)|(3<<7));
+    ERRT("FTAN.X D2, FP3", ILLEGAL_SIZE, "FTAN.X D2, FP3",
+         0xF200|002, 0x400F|(2<<10)|(3<<7));
+    ERRT("FTAN.P D2, FP3", ILLEGAL_SIZE, "FTAN.P D2, FP3",
+         0xF200|002, 0x400F|(3<<10)|(3<<7));
+    TEST("FTAN.W D2, FP3",             0xF200|002, 0x400F|(4<<10)|(3<<7));
+    ERRT("FTAN.D D2, FP3", ILLEGAL_SIZE, "FTAN.D D2, FP3",
+         0xF200|002, 0x400F|(5<<10)|(3<<7));
+    TEST("FTAN.B D2, FP3",             0xF200|002, 0x400F|(6<<10)|(3<<7));
+    ERRT("FTAN.S A4, FP5",             OPERAND_NOT_ALLOWED, "A4, FP5", 0xF200, 0x468F);
+    TEST("FTAN.X (A6), FP7",           0xF200|026, 0x400F|(2<<10)|(7<<7));
+    TEST("FTAN.P (A0)+, FP1",          0xF200|030, 0x400F|(3<<10)|(1<<7));
+    TEST("FTAN.W -(A2), FP3",          0xF200|042, 0x400F|(4<<10)|(3<<7));
+    TEST("FTAN.D ($1234,A4), FP5",     0xF200|054, 0x400F|(5<<10)|(5<<7), 0x1234);
+    TEST("FTAN.B ($23,A6,D7.W), FP0",  0xF200|066, 0x400F|(6<<10)|(0<<7), 0x7023);
+    TEST("FTAN.L ($004566).W, FP1",    0xF200|070, 0x400F|(0<<10)|(1<<7), 0x4566);
+    TEST("FTAN.S ($56789A).L, FP2",    0xF200|071, 0x400F|(1<<10)|(2<<7), 0x0056, 0x789A);
+    TEST("FTAN.X (*+$1234,PC), FP3",   0xF200|072, 0x400F|(2<<10)|(3<<7), 0x1230);
+    TEST("FTAN.P (*+90,PC,A4.L), FP5", 0xF200|073, 0x400F|(3<<10)|(5<<7), 0xC856);
+    TEST("FTAN.L #$6789ABCD, FP6",     0xF200|074, 0x400F|(0<<10)|(6<<7), 0x6789, 0xABCD);
+    TEST("FTAN.W #$1234, FP2",         0xF200|074, 0x400F|(4<<10)|(2<<7), 0x1234);
+    TEST("FTAN.B #$23, FP4",           0xF200|074, 0x400F|(6<<10)|(4<<7), 0x0023);
+    FLTS("FTAN.S", "#7.88999976E-10, FP7", 0xF200|074, 0x400F|(1<<10)|(7<<7), 0x3058, 0xE0F0);
+    FLTX("FTAN.X", "#-89000000032, FP0",   0xF200|074, 0x400F|(2<<10)|(0<<7),
+         0xC023, 0x0000, 0xA5C6, 0x81D1, 0x0000, 0x0000);
+    FLTP("FTAN.P", "#9.12E20, FP1",        0xF200|074, 0x400F|(3<<10)|(1<<7),
+         0x0020, 0x0009, 0x1200, 0x0000, 0x0000, 0x0000);
+    FLTD("FTAN.D", "#-8.25, FP3",          0xF200|074, 0x400F|(5<<10)|(3<<7),
+         0xC020, 0x8000, 0x0000, 0x0000);
+    
+    TEST("FETOX.X FP0, FP1",            0xF200,     0x0010|(0<<10)|(1<<7));
+    TEST("FETOX.X FP2",                 0xF200,     0x0010|(2<<10)|(2<<7));
+    TEST("FETOX.L D2, FP3",             0xF200|002, 0x4010|(0<<10)|(3<<7));
+    TEST("FETOX.S D2, FP3",             0xF200|002, 0x4010|(1<<10)|(3<<7));
+    ERRT("FETOX.X D2, FP3", ILLEGAL_SIZE, "FETOX.X D2, FP3",
+         0xF200|002, 0x4010|(2<<10)|(3<<7));
+    ERRT("FETOX.P D2, FP3", ILLEGAL_SIZE, "FETOX.P D2, FP3",
+         0xF200|002, 0x4010|(3<<10)|(3<<7));
+    TEST("FETOX.W D2, FP3",             0xF200|002, 0x4010|(4<<10)|(3<<7));
+    ERRT("FETOX.D D2, FP3", ILLEGAL_SIZE, "FETOX.D D2, FP3",
+         0xF200|002, 0x4010|(5<<10)|(3<<7));
+    TEST("FETOX.B D2, FP3",             0xF200|002, 0x4010|(6<<10)|(3<<7));
+    ERRT("FETOX.S A4, FP5",             OPERAND_NOT_ALLOWED, "A4, FP5", 0xF200, 0x4690);
+    TEST("FETOX.X (A6), FP7",           0xF200|026, 0x4010|(2<<10)|(7<<7));
+    TEST("FETOX.P (A0)+, FP1",          0xF200|030, 0x4010|(3<<10)|(1<<7));
+    TEST("FETOX.W -(A2), FP3",          0xF200|042, 0x4010|(4<<10)|(3<<7));
+    TEST("FETOX.D ($1234,A4), FP5",     0xF200|054, 0x4010|(5<<10)|(5<<7), 0x1234);
+    TEST("FETOX.B ($23,A6,D7.W), FP0",  0xF200|066, 0x4010|(6<<10)|(0<<7), 0x7023);
+    TEST("FETOX.L ($004566).W, FP1",    0xF200|070, 0x4010|(0<<10)|(1<<7), 0x4566);
+    TEST("FETOX.S ($56789A).L, FP2",    0xF200|071, 0x4010|(1<<10)|(2<<7), 0x0056, 0x789A);
+    TEST("FETOX.X (*+$1234,PC), FP3",   0xF200|072, 0x4010|(2<<10)|(3<<7), 0x1230);
+    TEST("FETOX.P (*+90,PC,A4.L), FP5", 0xF200|073, 0x4010|(3<<10)|(5<<7), 0xC856);
+    TEST("FETOX.L #$6789ABCD, FP6",     0xF200|074, 0x4010|(0<<10)|(6<<7), 0x6789, 0xABCD);
+    TEST("FETOX.W #$1234, FP2",         0xF200|074, 0x4010|(4<<10)|(2<<7), 0x1234);
+    TEST("FETOX.B #$23, FP4",           0xF200|074, 0x4010|(6<<10)|(4<<7), 0x0023);
+    FLTS("FETOX.S", "#7.88999976E-10, FP7", 0xF200|074, 0x4010|(1<<10)|(7<<7), 0x3058, 0xE0F0);
+    FLTX("FETOX.X", "#-89000000032, FP0",   0xF200|074, 0x4010|(2<<10)|(0<<7),
+         0xC023, 0x0000, 0xA5C6, 0x81D1, 0x0000, 0x0000);
+    FLTP("FETOX.P", "#9.12E20, FP1",        0xF200|074, 0x4010|(3<<10)|(1<<7),
+         0x0020, 0x0009, 0x1200, 0x0000, 0x0000, 0x0000);
+    FLTD("FETOX.D", "#-8.25, FP3",          0xF200|074, 0x4010|(5<<10)|(3<<7),
+         0xC020, 0x8000, 0x0000, 0x0000);
+    
+    TEST("FTWOTOX.X FP0, FP1",            0xF200,     0x0011|(0<<10)|(1<<7));
+    TEST("FTWOTOX.X FP2",                 0xF200,     0x0011|(2<<10)|(2<<7));
+    TEST("FTWOTOX.L D2, FP3",             0xF200|002, 0x4011|(0<<10)|(3<<7));
+    TEST("FTWOTOX.S D2, FP3",             0xF200|002, 0x4011|(1<<10)|(3<<7));
+    ERRT("FTWOTOX.X D2, FP3", ILLEGAL_SIZE, "FTWOTOX.X D2, FP3",
+         0xF200|002, 0x4011|(2<<10)|(3<<7));
+    ERRT("FTWOTOX.P D2, FP3", ILLEGAL_SIZE, "FTWOTOX.P D2, FP3",
+         0xF200|002, 0x4011|(3<<10)|(3<<7));
+    TEST("FTWOTOX.W D2, FP3",             0xF200|002, 0x4011|(4<<10)|(3<<7));
+    ERRT("FTWOTOX.D D2, FP3", ILLEGAL_SIZE, "FTWOTOX.D D2, FP3",
+         0xF200|002, 0x4011|(5<<10)|(3<<7));
+    TEST("FTWOTOX.B D2, FP3",             0xF200|002, 0x4011|(6<<10)|(3<<7));
+    ERRT("FTWOTOX.S A4, FP5",             OPERAND_NOT_ALLOWED, "A4, FP5", 0xF200, 0x4691);
+    TEST("FTWOTOX.X (A6), FP7",           0xF200|026, 0x4011|(2<<10)|(7<<7));
+    TEST("FTWOTOX.P (A0)+, FP1",          0xF200|030, 0x4011|(3<<10)|(1<<7));
+    TEST("FTWOTOX.W -(A2), FP3",          0xF200|042, 0x4011|(4<<10)|(3<<7));
+    TEST("FTWOTOX.D ($1234,A4), FP5",     0xF200|054, 0x4011|(5<<10)|(5<<7), 0x1234);
+    TEST("FTWOTOX.B ($23,A6,D7.W), FP0",  0xF200|066, 0x4011|(6<<10)|(0<<7), 0x7023);
+    TEST("FTWOTOX.L ($004566).W, FP1",    0xF200|070, 0x4011|(0<<10)|(1<<7), 0x4566);
+    TEST("FTWOTOX.S ($56789A).L, FP2",    0xF200|071, 0x4011|(1<<10)|(2<<7), 0x0056, 0x789A);
+    TEST("FTWOTOX.X (*+$1234,PC), FP3",   0xF200|072, 0x4011|(2<<10)|(3<<7), 0x1230);
+    TEST("FTWOTOX.P (*+90,PC,A4.L), FP5", 0xF200|073, 0x4011|(3<<10)|(5<<7), 0xC856);
+    TEST("FTWOTOX.L #$6789ABCD, FP6",     0xF200|074, 0x4011|(0<<10)|(6<<7), 0x6789, 0xABCD);
+    TEST("FTWOTOX.W #$1234, FP2",         0xF200|074, 0x4011|(4<<10)|(2<<7), 0x1234);
+    TEST("FTWOTOX.B #$23, FP4",           0xF200|074, 0x4011|(6<<10)|(4<<7), 0x0023);
+    FLTS("FTWOTOX.S", "#7.88999976E-10, FP7", 0xF200|074, 0x4011|(1<<10)|(7<<7), 0x3058, 0xE0F0);
+    FLTX("FTWOTOX.X", "#-89000000032, FP0",   0xF200|074, 0x4011|(2<<10)|(0<<7),
+         0xC023, 0x0000, 0xA5C6, 0x81D1, 0x0000, 0x0000);
+    FLTP("FTWOTOX.P", "#9.12E20, FP1",        0xF200|074, 0x4011|(3<<10)|(1<<7),
+         0x0020, 0x0009, 0x1200, 0x0000, 0x0000, 0x0000);
+    FLTD("FTWOTOX.D", "#-8.25, FP3",          0xF200|074, 0x4011|(5<<10)|(3<<7),
+         0xC020, 0x8000, 0x0000, 0x0000);
+    
+    TEST("FTENTOX.X FP0, FP1",            0xF200,     0x0012|(0<<10)|(1<<7));
+    TEST("FTENTOX.X FP2",                 0xF200,     0x0012|(2<<10)|(2<<7));
+    TEST("FTENTOX.L D2, FP3",             0xF200|002, 0x4012|(0<<10)|(3<<7));
+    TEST("FTENTOX.S D2, FP3",             0xF200|002, 0x4012|(1<<10)|(3<<7));
+    ERRT("FTENTOX.X D2, FP3", ILLEGAL_SIZE, "FTENTOX.X D2, FP3",
+         0xF200|002, 0x4012|(2<<10)|(3<<7));
+    ERRT("FTENTOX.P D2, FP3", ILLEGAL_SIZE, "FTENTOX.P D2, FP3",
+         0xF200|002, 0x4012|(3<<10)|(3<<7));
+    TEST("FTENTOX.W D2, FP3",             0xF200|002, 0x4012|(4<<10)|(3<<7));
+    ERRT("FTENTOX.D D2, FP3", ILLEGAL_SIZE, "FTENTOX.D D2, FP3",
+         0xF200|002, 0x4012|(5<<10)|(3<<7));
+    TEST("FTENTOX.B D2, FP3",             0xF200|002, 0x4012|(6<<10)|(3<<7));
+    ERRT("FTENTOX.S A4, FP5",             OPERAND_NOT_ALLOWED, "A4, FP5", 0xF200, 0x4692);
+    TEST("FTENTOX.X (A6), FP7",           0xF200|026, 0x4012|(2<<10)|(7<<7));
+    TEST("FTENTOX.P (A0)+, FP1",          0xF200|030, 0x4012|(3<<10)|(1<<7));
+    TEST("FTENTOX.W -(A2), FP3",          0xF200|042, 0x4012|(4<<10)|(3<<7));
+    TEST("FTENTOX.D ($1234,A4), FP5",     0xF200|054, 0x4012|(5<<10)|(5<<7), 0x1234);
+    TEST("FTENTOX.B ($23,A6,D7.W), FP0",  0xF200|066, 0x4012|(6<<10)|(0<<7), 0x7023);
+    TEST("FTENTOX.L ($004566).W, FP1",    0xF200|070, 0x4012|(0<<10)|(1<<7), 0x4566);
+    TEST("FTENTOX.S ($56789A).L, FP2",    0xF200|071, 0x4012|(1<<10)|(2<<7), 0x0056, 0x789A);
+    TEST("FTENTOX.X (*+$1234,PC), FP3",   0xF200|072, 0x4012|(2<<10)|(3<<7), 0x1230);
+    TEST("FTENTOX.P (*+90,PC,A4.L), FP5", 0xF200|073, 0x4012|(3<<10)|(5<<7), 0xC856);
+    TEST("FTENTOX.L #$6789ABCD, FP6",     0xF200|074, 0x4012|(0<<10)|(6<<7), 0x6789, 0xABCD);
+    TEST("FTENTOX.W #$1234, FP2",         0xF200|074, 0x4012|(4<<10)|(2<<7), 0x1234);
+    TEST("FTENTOX.B #$23, FP4",           0xF200|074, 0x4012|(6<<10)|(4<<7), 0x0023);
+    FLTS("FTENTOX.S", "#7.88999976E-10, FP7", 0xF200|074, 0x4012|(1<<10)|(7<<7), 0x3058, 0xE0F0);
+    FLTX("FTENTOX.X", "#-89000000032, FP0",   0xF200|074, 0x4012|(2<<10)|(0<<7),
+         0xC023, 0x0000, 0xA5C6, 0x81D1, 0x0000, 0x0000);
+    FLTP("FTENTOX.P", "#9.12E20, FP1",        0xF200|074, 0x4012|(3<<10)|(1<<7),
+         0x0020, 0x0009, 0x1200, 0x0000, 0x0000, 0x0000);
+    FLTD("FTENTOX.D", "#-8.25, FP3",          0xF200|074, 0x4012|(5<<10)|(3<<7),
+         0xC020, 0x8000, 0x0000, 0x0000);
+    
+    TEST("FLOGN.X FP0, FP1",            0xF200,     0x0014|(0<<10)|(1<<7));
+    TEST("FLOGN.X FP2",                 0xF200,     0x0014|(2<<10)|(2<<7));
+    TEST("FLOGN.L D2, FP3",             0xF200|002, 0x4014|(0<<10)|(3<<7));
+    TEST("FLOGN.S D2, FP3",             0xF200|002, 0x4014|(1<<10)|(3<<7));
+    ERRT("FLOGN.X D2, FP3", ILLEGAL_SIZE, "FLOGN.X D2, FP3",
+         0xF200|002, 0x4014|(2<<10)|(3<<7));
+    ERRT("FLOGN.P D2, FP3", ILLEGAL_SIZE, "FLOGN.P D2, FP3",
+         0xF200|002, 0x4014|(3<<10)|(3<<7));
+    TEST("FLOGN.W D2, FP3",             0xF200|002, 0x4014|(4<<10)|(3<<7));
+    ERRT("FLOGN.D D2, FP3", ILLEGAL_SIZE, "FLOGN.D D2, FP3",
+         0xF200|002, 0x4014|(5<<10)|(3<<7));
+    TEST("FLOGN.B D2, FP3",             0xF200|002, 0x4014|(6<<10)|(3<<7));
+    ERRT("FLOGN.S A4, FP5",             OPERAND_NOT_ALLOWED, "A4, FP5", 0xF200, 0x4694);
+    TEST("FLOGN.X (A6), FP7",           0xF200|026, 0x4014|(2<<10)|(7<<7));
+    TEST("FLOGN.P (A0)+, FP1",          0xF200|030, 0x4014|(3<<10)|(1<<7));
+    TEST("FLOGN.W -(A2), FP3",          0xF200|042, 0x4014|(4<<10)|(3<<7));
+    TEST("FLOGN.D ($1234,A4), FP5",     0xF200|054, 0x4014|(5<<10)|(5<<7), 0x1234);
+    TEST("FLOGN.B ($23,A6,D7.W), FP0",  0xF200|066, 0x4014|(6<<10)|(0<<7), 0x7023);
+    TEST("FLOGN.L ($004566).W, FP1",    0xF200|070, 0x4014|(0<<10)|(1<<7), 0x4566);
+    TEST("FLOGN.S ($56789A).L, FP2",    0xF200|071, 0x4014|(1<<10)|(2<<7), 0x0056, 0x789A);
+    TEST("FLOGN.X (*+$1234,PC), FP3",   0xF200|072, 0x4014|(2<<10)|(3<<7), 0x1230);
+    TEST("FLOGN.P (*+90,PC,A4.L), FP5", 0xF200|073, 0x4014|(3<<10)|(5<<7), 0xC856);
+    TEST("FLOGN.L #$6789ABCD, FP6",     0xF200|074, 0x4014|(0<<10)|(6<<7), 0x6789, 0xABCD);
+    TEST("FLOGN.W #$1234, FP2",         0xF200|074, 0x4014|(4<<10)|(2<<7), 0x1234);
+    TEST("FLOGN.B #$23, FP4",           0xF200|074, 0x4014|(6<<10)|(4<<7), 0x0023);
+    FLTS("FLOGN.S", "#7.88999976E-10, FP7", 0xF200|074, 0x4014|(1<<10)|(7<<7), 0x3058, 0xE0F0);
+    FLTX("FLOGN.X", "#-89000000032, FP0",   0xF200|074, 0x4014|(2<<10)|(0<<7),
+         0xC023, 0x0000, 0xA5C6, 0x81D1, 0x0000, 0x0000);
+    FLTP("FLOGN.P", "#9.12E20, FP1",        0xF200|074, 0x4014|(3<<10)|(1<<7),
+         0x0020, 0x0009, 0x1200, 0x0000, 0x0000, 0x0000);
+    FLTD("FLOGN.D", "#-8.25, FP3",          0xF200|074, 0x4014|(5<<10)|(3<<7),
+         0xC020, 0x8000, 0x0000, 0x0000);
+    
+    TEST("FLOG10.X FP0, FP1",            0xF200,     0x0015|(0<<10)|(1<<7));
+    TEST("FLOG10.X FP2",                 0xF200,     0x0015|(2<<10)|(2<<7));
+    TEST("FLOG10.L D2, FP3",             0xF200|002, 0x4015|(0<<10)|(3<<7));
+    TEST("FLOG10.S D2, FP3",             0xF200|002, 0x4015|(1<<10)|(3<<7));
+    ERRT("FLOG10.X D2, FP3", ILLEGAL_SIZE, "FLOG10.X D2, FP3",
+         0xF200|002, 0x4015|(2<<10)|(3<<7));
+    ERRT("FLOG10.P D2, FP3", ILLEGAL_SIZE, "FLOG10.P D2, FP3",
+         0xF200|002, 0x4015|(3<<10)|(3<<7));
+    TEST("FLOG10.W D2, FP3",             0xF200|002, 0x4015|(4<<10)|(3<<7));
+    ERRT("FLOG10.D D2, FP3", ILLEGAL_SIZE, "FLOG10.D D2, FP3",
+         0xF200|002, 0x4015|(5<<10)|(3<<7));
+    TEST("FLOG10.B D2, FP3",             0xF200|002, 0x4015|(6<<10)|(3<<7));
+    ERRT("FLOG10.S A4, FP5",             OPERAND_NOT_ALLOWED, "A4, FP5", 0xF200, 0x4695);
+    TEST("FLOG10.X (A6), FP7",           0xF200|026, 0x4015|(2<<10)|(7<<7));
+    TEST("FLOG10.P (A0)+, FP1",          0xF200|030, 0x4015|(3<<10)|(1<<7));
+    TEST("FLOG10.W -(A2), FP3",          0xF200|042, 0x4015|(4<<10)|(3<<7));
+    TEST("FLOG10.D ($1234,A4), FP5",     0xF200|054, 0x4015|(5<<10)|(5<<7), 0x1234);
+    TEST("FLOG10.B ($23,A6,D7.W), FP0",  0xF200|066, 0x4015|(6<<10)|(0<<7), 0x7023);
+    TEST("FLOG10.L ($004566).W, FP1",    0xF200|070, 0x4015|(0<<10)|(1<<7), 0x4566);
+    TEST("FLOG10.S ($56789A).L, FP2",    0xF200|071, 0x4015|(1<<10)|(2<<7), 0x0056, 0x789A);
+    TEST("FLOG10.X (*+$1234,PC), FP3",   0xF200|072, 0x4015|(2<<10)|(3<<7), 0x1230);
+    TEST("FLOG10.P (*+90,PC,A4.L), FP5", 0xF200|073, 0x4015|(3<<10)|(5<<7), 0xC856);
+    TEST("FLOG10.L #$6789ABCD, FP6",     0xF200|074, 0x4015|(0<<10)|(6<<7), 0x6789, 0xABCD);
+    TEST("FLOG10.W #$1234, FP2",         0xF200|074, 0x4015|(4<<10)|(2<<7), 0x1234);
+    TEST("FLOG10.B #$23, FP4",           0xF200|074, 0x4015|(6<<10)|(4<<7), 0x0023);
+    FLTS("FLOG10.S", "#7.88999976E-10, FP7", 0xF200|074, 0x4015|(1<<10)|(7<<7), 0x3058, 0xE0F0);
+    FLTX("FLOG10.X", "#-89000000032, FP0",   0xF200|074, 0x4015|(2<<10)|(0<<7),
+         0xC023, 0x0000, 0xA5C6, 0x81D1, 0x0000, 0x0000);
+    FLTP("FLOG10.P", "#9.12E20, FP1",        0xF200|074, 0x4015|(3<<10)|(1<<7),
+         0x0020, 0x0009, 0x1200, 0x0000, 0x0000, 0x0000);
+    FLTD("FLOG10.D", "#-8.25, FP3",          0xF200|074, 0x4015|(5<<10)|(3<<7),
+         0xC020, 0x8000, 0x0000, 0x0000);
+    
+    TEST("FLOG2.X FP0, FP1",            0xF200,     0x0016|(0<<10)|(1<<7));
+    TEST("FLOG2.X FP2",                 0xF200,     0x0016|(2<<10)|(2<<7));
+    TEST("FLOG2.L D2, FP3",             0xF200|002, 0x4016|(0<<10)|(3<<7));
+    TEST("FLOG2.S D2, FP3",             0xF200|002, 0x4016|(1<<10)|(3<<7));
+    ERRT("FLOG2.X D2, FP3", ILLEGAL_SIZE, "FLOG2.X D2, FP3",
+         0xF200|002, 0x4016|(2<<10)|(3<<7));
+    ERRT("FLOG2.P D2, FP3", ILLEGAL_SIZE, "FLOG2.P D2, FP3",
+         0xF200|002, 0x4016|(3<<10)|(3<<7));
+    TEST("FLOG2.W D2, FP3",             0xF200|002, 0x4016|(4<<10)|(3<<7));
+    ERRT("FLOG2.D D2, FP3", ILLEGAL_SIZE, "FLOG2.D D2, FP3",
+         0xF200|002, 0x4016|(5<<10)|(3<<7));
+    TEST("FLOG2.B D2, FP3",             0xF200|002, 0x4016|(6<<10)|(3<<7));
+    ERRT("FLOG2.S A4, FP5",             OPERAND_NOT_ALLOWED, "A4, FP5", 0xF200, 0x4696);
+    TEST("FLOG2.X (A6), FP7",           0xF200|026, 0x4016|(2<<10)|(7<<7));
+    TEST("FLOG2.P (A0)+, FP1",          0xF200|030, 0x4016|(3<<10)|(1<<7));
+    TEST("FLOG2.W -(A2), FP3",          0xF200|042, 0x4016|(4<<10)|(3<<7));
+    TEST("FLOG2.D ($1234,A4), FP5",     0xF200|054, 0x4016|(5<<10)|(5<<7), 0x1234);
+    TEST("FLOG2.B ($23,A6,D7.W), FP0",  0xF200|066, 0x4016|(6<<10)|(0<<7), 0x7023);
+    TEST("FLOG2.L ($004566).W, FP1",    0xF200|070, 0x4016|(0<<10)|(1<<7), 0x4566);
+    TEST("FLOG2.S ($56789A).L, FP2",    0xF200|071, 0x4016|(1<<10)|(2<<7), 0x0056, 0x789A);
+    TEST("FLOG2.X (*+$1234,PC), FP3",   0xF200|072, 0x4016|(2<<10)|(3<<7), 0x1230);
+    TEST("FLOG2.P (*+90,PC,A4.L), FP5", 0xF200|073, 0x4016|(3<<10)|(5<<7), 0xC856);
+    TEST("FLOG2.L #$6789ABCD, FP6",     0xF200|074, 0x4016|(0<<10)|(6<<7), 0x6789, 0xABCD);
+    TEST("FLOG2.W #$1234, FP2",         0xF200|074, 0x4016|(4<<10)|(2<<7), 0x1234);
+    TEST("FLOG2.B #$23, FP4",           0xF200|074, 0x4016|(6<<10)|(4<<7), 0x0023);
+    FLTS("FLOG2.S", "#7.88999976E-10, FP7", 0xF200|074, 0x4016|(1<<10)|(7<<7), 0x3058, 0xE0F0);
+    FLTX("FLOG2.X", "#-89000000032, FP0",   0xF200|074, 0x4016|(2<<10)|(0<<7),
+         0xC023, 0x0000, 0xA5C6, 0x81D1, 0x0000, 0x0000);
+    FLTP("FLOG2.P", "#9.12E20, FP1",        0xF200|074, 0x4016|(3<<10)|(1<<7),
+         0x0020, 0x0009, 0x1200, 0x0000, 0x0000, 0x0000);
+    FLTD("FLOG2.D", "#-8.25, FP3",          0xF200|074, 0x4016|(5<<10)|(3<<7),
+         0xC020, 0x8000, 0x0000, 0x0000);
+    
+    TEST("FCOSH.X FP0, FP1",            0xF200,     0x0019|(0<<10)|(1<<7));
+    TEST("FCOSH.X FP2",                 0xF200,     0x0019|(2<<10)|(2<<7));
+    TEST("FCOSH.L D2, FP3",             0xF200|002, 0x4019|(0<<10)|(3<<7));
+    TEST("FCOSH.S D2, FP3",             0xF200|002, 0x4019|(1<<10)|(3<<7));
+    ERRT("FCOSH.X D2, FP3", ILLEGAL_SIZE, "FCOSH.X D2, FP3",
+         0xF200|002, 0x4019|(2<<10)|(3<<7));
+    ERRT("FCOSH.P D2, FP3", ILLEGAL_SIZE, "FCOSH.P D2, FP3",
+         0xF200|002, 0x4019|(3<<10)|(3<<7));
+    TEST("FCOSH.W D2, FP3",             0xF200|002, 0x4019|(4<<10)|(3<<7));
+    ERRT("FCOSH.D D2, FP3", ILLEGAL_SIZE, "FCOSH.D D2, FP3",
+         0xF200|002, 0x4019|(5<<10)|(3<<7));
+    TEST("FCOSH.B D2, FP3",             0xF200|002, 0x4019|(6<<10)|(3<<7));
+    ERRT("FCOSH.S A4, FP5",             OPERAND_NOT_ALLOWED, "A4, FP5", 0xF200, 0x4699);
+    TEST("FCOSH.X (A6), FP7",           0xF200|026, 0x4019|(2<<10)|(7<<7));
+    TEST("FCOSH.P (A0)+, FP1",          0xF200|030, 0x4019|(3<<10)|(1<<7));
+    TEST("FCOSH.W -(A2), FP3",          0xF200|042, 0x4019|(4<<10)|(3<<7));
+    TEST("FCOSH.D ($1234,A4), FP5",     0xF200|054, 0x4019|(5<<10)|(5<<7), 0x1234);
+    TEST("FCOSH.B ($23,A6,D7.W), FP0",  0xF200|066, 0x4019|(6<<10)|(0<<7), 0x7023);
+    TEST("FCOSH.L ($004566).W, FP1",    0xF200|070, 0x4019|(0<<10)|(1<<7), 0x4566);
+    TEST("FCOSH.S ($56789A).L, FP2",    0xF200|071, 0x4019|(1<<10)|(2<<7), 0x0056, 0x789A);
+    TEST("FCOSH.X (*+$1234,PC), FP3",   0xF200|072, 0x4019|(2<<10)|(3<<7), 0x1230);
+    TEST("FCOSH.P (*+90,PC,A4.L), FP5", 0xF200|073, 0x4019|(3<<10)|(5<<7), 0xC856);
+    TEST("FCOSH.L #$6789ABCD, FP6",     0xF200|074, 0x4019|(0<<10)|(6<<7), 0x6789, 0xABCD);
+    TEST("FCOSH.W #$1234, FP2",         0xF200|074, 0x4019|(4<<10)|(2<<7), 0x1234);
+    TEST("FCOSH.B #$23, FP4",           0xF200|074, 0x4019|(6<<10)|(4<<7), 0x0023);
+    FLTS("FCOSH.S", "#7.88999976E-10, FP7", 0xF200|074, 0x4019|(1<<10)|(7<<7), 0x3058, 0xE0F0);
+    FLTX("FCOSH.X", "#-89000000032, FP0",   0xF200|074, 0x4019|(2<<10)|(0<<7),
+         0xC023, 0x0000, 0xA5C6, 0x81D1, 0x0000, 0x0000);
+    FLTP("FCOSH.P", "#9.12E20, FP1",        0xF200|074, 0x4019|(3<<10)|(1<<7),
+         0x0020, 0x0009, 0x1200, 0x0000, 0x0000, 0x0000);
+    FLTD("FCOSH.D", "#-8.25, FP3",          0xF200|074, 0x4019|(5<<10)|(3<<7),
+         0xC020, 0x8000, 0x0000, 0x0000);
+    
+    TEST("FACOS.X FP0, FP1",            0xF200,     0x001C|(0<<10)|(1<<7));
+    TEST("FACOS.X FP2",                 0xF200,     0x001C|(2<<10)|(2<<7));
+    TEST("FACOS.L D2, FP3",             0xF200|002, 0x401C|(0<<10)|(3<<7));
+    TEST("FACOS.S D2, FP3",             0xF200|002, 0x401C|(1<<10)|(3<<7));
+    ERRT("FACOS.X D2, FP3", ILLEGAL_SIZE, "FACOS.X D2, FP3",
+         0xF200|002, 0x401C|(2<<10)|(3<<7));
+    ERRT("FACOS.P D2, FP3", ILLEGAL_SIZE, "FACOS.P D2, FP3",
+         0xF200|002, 0x401C|(3<<10)|(3<<7));
+    TEST("FACOS.W D2, FP3",             0xF200|002, 0x401C|(4<<10)|(3<<7));
+    ERRT("FACOS.D D2, FP3", ILLEGAL_SIZE, "FACOS.D D2, FP3",
+         0xF200|002, 0x401C|(5<<10)|(3<<7));
+    TEST("FACOS.B D2, FP3",             0xF200|002, 0x401C|(6<<10)|(3<<7));
+    ERRT("FACOS.S A4, FP5",             OPERAND_NOT_ALLOWED, "A4, FP5", 0xF200, 0x469C);
+    TEST("FACOS.X (A6), FP7",           0xF200|026, 0x401C|(2<<10)|(7<<7));
+    TEST("FACOS.P (A0)+, FP1",          0xF200|030, 0x401C|(3<<10)|(1<<7));
+    TEST("FACOS.W -(A2), FP3",          0xF200|042, 0x401C|(4<<10)|(3<<7));
+    TEST("FACOS.D ($1234,A4), FP5",     0xF200|054, 0x401C|(5<<10)|(5<<7), 0x1234);
+    TEST("FACOS.B ($23,A6,D7.W), FP0",  0xF200|066, 0x401C|(6<<10)|(0<<7), 0x7023);
+    TEST("FACOS.L ($004566).W, FP1",    0xF200|070, 0x401C|(0<<10)|(1<<7), 0x4566);
+    TEST("FACOS.S ($56789A).L, FP2",    0xF200|071, 0x401C|(1<<10)|(2<<7), 0x0056, 0x789A);
+    TEST("FACOS.X (*+$1234,PC), FP3",   0xF200|072, 0x401C|(2<<10)|(3<<7), 0x1230);
+    TEST("FACOS.P (*+90,PC,A4.L), FP5", 0xF200|073, 0x401C|(3<<10)|(5<<7), 0xC856);
+    TEST("FACOS.L #$6789ABCD, FP6",     0xF200|074, 0x401C|(0<<10)|(6<<7), 0x6789, 0xABCD);
+    TEST("FACOS.W #$1234, FP2",         0xF200|074, 0x401C|(4<<10)|(2<<7), 0x1234);
+    TEST("FACOS.B #$23, FP4",           0xF200|074, 0x401C|(6<<10)|(4<<7), 0x0023);
+    FLTS("FACOS.S", "#7.88999976E-10, FP7", 0xF200|074, 0x401C|(1<<10)|(7<<7), 0x3058, 0xE0F0);
+    FLTX("FACOS.X", "#-89000000032, FP0",   0xF200|074, 0x401C|(2<<10)|(0<<7),
+         0xC023, 0x0000, 0xA5C6, 0x81D1, 0x0000, 0x0000);
+    FLTP("FACOS.P", "#9.12E20, FP1",        0xF200|074, 0x401C|(3<<10)|(1<<7),
+         0x0020, 0x0009, 0x1200, 0x0000, 0x0000, 0x0000);
+    FLTD("FACOS.D", "#-8.25, FP3",          0xF200|074, 0x401C|(5<<10)|(3<<7),
+         0xC020, 0x8000, 0x0000, 0x0000);
+    
+    TEST("FCOS.X FP0, FP1",            0xF200,     0x001D|(0<<10)|(1<<7));
+    TEST("FCOS.X FP2",                 0xF200,     0x001D|(2<<10)|(2<<7));
+    TEST("FCOS.L D2, FP3",             0xF200|002, 0x401D|(0<<10)|(3<<7));
+    TEST("FCOS.S D2, FP3",             0xF200|002, 0x401D|(1<<10)|(3<<7));
+    ERRT("FCOS.X D2, FP3", ILLEGAL_SIZE, "FCOS.X D2, FP3",
+         0xF200|002, 0x401D|(2<<10)|(3<<7));
+    ERRT("FCOS.P D2, FP3", ILLEGAL_SIZE, "FCOS.P D2, FP3",
+         0xF200|002, 0x401D|(3<<10)|(3<<7));
+    TEST("FCOS.W D2, FP3",             0xF200|002, 0x401D|(4<<10)|(3<<7));
+    ERRT("FCOS.D D2, FP3", ILLEGAL_SIZE, "FCOS.D D2, FP3",
+         0xF200|002, 0x401D|(5<<10)|(3<<7));
+    TEST("FCOS.B D2, FP3",             0xF200|002, 0x401D|(6<<10)|(3<<7));
+    ERRT("FCOS.S A4, FP5",             OPERAND_NOT_ALLOWED, "A4, FP5", 0xF200, 0x469D);
+    TEST("FCOS.X (A6), FP7",           0xF200|026, 0x401D|(2<<10)|(7<<7));
+    TEST("FCOS.P (A0)+, FP1",          0xF200|030, 0x401D|(3<<10)|(1<<7));
+    TEST("FCOS.W -(A2), FP3",          0xF200|042, 0x401D|(4<<10)|(3<<7));
+    TEST("FCOS.D ($1234,A4), FP5",     0xF200|054, 0x401D|(5<<10)|(5<<7), 0x1234);
+    TEST("FCOS.B ($23,A6,D7.W), FP0",  0xF200|066, 0x401D|(6<<10)|(0<<7), 0x7023);
+    TEST("FCOS.L ($004566).W, FP1",    0xF200|070, 0x401D|(0<<10)|(1<<7), 0x4566);
+    TEST("FCOS.S ($56789A).L, FP2",    0xF200|071, 0x401D|(1<<10)|(2<<7), 0x0056, 0x789A);
+    TEST("FCOS.X (*+$1234,PC), FP3",   0xF200|072, 0x401D|(2<<10)|(3<<7), 0x1230);
+    TEST("FCOS.P (*+90,PC,A4.L), FP5", 0xF200|073, 0x401D|(3<<10)|(5<<7), 0xC856);
+    TEST("FCOS.L #$6789ABCD, FP6",     0xF200|074, 0x401D|(0<<10)|(6<<7), 0x6789, 0xABCD);
+    TEST("FCOS.W #$1234, FP2",         0xF200|074, 0x401D|(4<<10)|(2<<7), 0x1234);
+    TEST("FCOS.B #$23, FP4",           0xF200|074, 0x401D|(6<<10)|(4<<7), 0x0023);
+    FLTS("FCOS.S", "#7.88999976E-10, FP7", 0xF200|074, 0x401D|(1<<10)|(7<<7), 0x3058, 0xE0F0);
+    FLTX("FCOS.X", "#-89000000032, FP0",   0xF200|074, 0x401D|(2<<10)|(0<<7),
+         0xC023, 0x0000, 0xA5C6, 0x81D1, 0x0000, 0x0000);
+    FLTP("FCOS.P", "#9.12E20, FP1",        0xF200|074, 0x401D|(3<<10)|(1<<7),
+         0x0020, 0x0009, 0x1200, 0x0000, 0x0000, 0x0000);
+    FLTD("FCOS.D", "#-8.25, FP3",          0xF200|074, 0x401D|(5<<10)|(3<<7),
+         0xC020, 0x8000, 0x0000, 0x0000);
+    
+    TEST("FGETEXP.X FP0, FP1",            0xF200,     0x001E|(0<<10)|(1<<7));
+    TEST("FGETEXP.X FP2",                 0xF200,     0x001E|(2<<10)|(2<<7));
+    TEST("FGETEXP.L D2, FP3",             0xF200|002, 0x401E|(0<<10)|(3<<7));
+    TEST("FGETEXP.S D2, FP3",             0xF200|002, 0x401E|(1<<10)|(3<<7));
+    ERRT("FGETEXP.X D2, FP3", ILLEGAL_SIZE, "FGETEXP.X D2, FP3",
+         0xF200|002, 0x401E|(2<<10)|(3<<7));
+    ERRT("FGETEXP.P D2, FP3", ILLEGAL_SIZE, "FGETEXP.P D2, FP3",
+         0xF200|002, 0x401E|(3<<10)|(3<<7));
+    TEST("FGETEXP.W D2, FP3",             0xF200|002, 0x401E|(4<<10)|(3<<7));
+    ERRT("FGETEXP.D D2, FP3", ILLEGAL_SIZE, "FGETEXP.D D2, FP3",
+         0xF200|002, 0x401E|(5<<10)|(3<<7));
+    TEST("FGETEXP.B D2, FP3",             0xF200|002, 0x401E|(6<<10)|(3<<7));
+    ERRT("FGETEXP.S A4, FP5",             OPERAND_NOT_ALLOWED, "A4, FP5", 0xF200, 0x469E);
+    TEST("FGETEXP.X (A6), FP7",           0xF200|026, 0x401E|(2<<10)|(7<<7));
+    TEST("FGETEXP.P (A0)+, FP1",          0xF200|030, 0x401E|(3<<10)|(1<<7));
+    TEST("FGETEXP.W -(A2), FP3",          0xF200|042, 0x401E|(4<<10)|(3<<7));
+    TEST("FGETEXP.D ($1234,A4), FP5",     0xF200|054, 0x401E|(5<<10)|(5<<7), 0x1234);
+    TEST("FGETEXP.B ($23,A6,D7.W), FP0",  0xF200|066, 0x401E|(6<<10)|(0<<7), 0x7023);
+    TEST("FGETEXP.L ($004566).W, FP1",    0xF200|070, 0x401E|(0<<10)|(1<<7), 0x4566);
+    TEST("FGETEXP.S ($56789A).L, FP2",    0xF200|071, 0x401E|(1<<10)|(2<<7), 0x0056, 0x789A);
+    TEST("FGETEXP.X (*+$1234,PC), FP3",   0xF200|072, 0x401E|(2<<10)|(3<<7), 0x1230);
+    TEST("FGETEXP.P (*+90,PC,A4.L), FP5", 0xF200|073, 0x401E|(3<<10)|(5<<7), 0xC856);
+    TEST("FGETEXP.L #$6789ABCD, FP6",     0xF200|074, 0x401E|(0<<10)|(6<<7), 0x6789, 0xABCD);
+    TEST("FGETEXP.W #$1234, FP2",         0xF200|074, 0x401E|(4<<10)|(2<<7), 0x1234);
+    TEST("FGETEXP.B #$23, FP4",           0xF200|074, 0x401E|(6<<10)|(4<<7), 0x0023);
+    FLTS("FGETEXP.S", "#7.88999976E-10, FP7", 0xF200|074, 0x401E|(1<<10)|(7<<7), 0x3058, 0xE0F0);
+    FLTX("FGETEXP.X", "#-89000000032, FP0",   0xF200|074, 0x401E|(2<<10)|(0<<7),
+         0xC023, 0x0000, 0xA5C6, 0x81D1, 0x0000, 0x0000);
+    FLTP("FGETEXP.P", "#9.12E20, FP1",        0xF200|074, 0x401E|(3<<10)|(1<<7),
+         0x0020, 0x0009, 0x1200, 0x0000, 0x0000, 0x0000);
+    FLTD("FGETEXP.D", "#-8.25, FP3",          0xF200|074, 0x401E|(5<<10)|(3<<7),
+         0xC020, 0x8000, 0x0000, 0x0000);
+    
+    TEST("FGETMAN.X FP0, FP1",            0xF200,     0x001F|(0<<10)|(1<<7));
+    TEST("FGETMAN.X FP2",                 0xF200,     0x001F|(2<<10)|(2<<7));
+    TEST("FGETMAN.L D2, FP3",             0xF200|002, 0x401F|(0<<10)|(3<<7));
+    TEST("FGETMAN.S D2, FP3",             0xF200|002, 0x401F|(1<<10)|(3<<7));
+    ERRT("FGETMAN.X D2, FP3", ILLEGAL_SIZE, "FGETMAN.X D2, FP3",
+         0xF200|002, 0x401F|(2<<10)|(3<<7));
+    ERRT("FGETMAN.P D2, FP3", ILLEGAL_SIZE, "FGETMAN.P D2, FP3",
+         0xF200|002, 0x401F|(3<<10)|(3<<7));
+    TEST("FGETMAN.W D2, FP3",             0xF200|002, 0x401F|(4<<10)|(3<<7));
+    ERRT("FGETMAN.D D2, FP3", ILLEGAL_SIZE, "FGETMAN.D D2, FP3",
+         0xF200|002, 0x401F|(5<<10)|(3<<7));
+    TEST("FGETMAN.B D2, FP3",             0xF200|002, 0x401F|(6<<10)|(3<<7));
+    ERRT("FGETMAN.S A4, FP5",             OPERAND_NOT_ALLOWED, "A4, FP5", 0xF200, 0x469F);
+    TEST("FGETMAN.X (A6), FP7",           0xF200|026, 0x401F|(2<<10)|(7<<7));
+    TEST("FGETMAN.P (A0)+, FP1",          0xF200|030, 0x401F|(3<<10)|(1<<7));
+    TEST("FGETMAN.W -(A2), FP3",          0xF200|042, 0x401F|(4<<10)|(3<<7));
+    TEST("FGETMAN.D ($1234,A4), FP5",     0xF200|054, 0x401F|(5<<10)|(5<<7), 0x1234);
+    TEST("FGETMAN.B ($23,A6,D7.W), FP0",  0xF200|066, 0x401F|(6<<10)|(0<<7), 0x7023);
+    TEST("FGETMAN.L ($004566).W, FP1",    0xF200|070, 0x401F|(0<<10)|(1<<7), 0x4566);
+    TEST("FGETMAN.S ($56789A).L, FP2",    0xF200|071, 0x401F|(1<<10)|(2<<7), 0x0056, 0x789A);
+    TEST("FGETMAN.X (*+$1234,PC), FP3",   0xF200|072, 0x401F|(2<<10)|(3<<7), 0x1230);
+    TEST("FGETMAN.P (*+90,PC,A4.L), FP5", 0xF200|073, 0x401F|(3<<10)|(5<<7), 0xC856);
+    TEST("FGETMAN.L #$6789ABCD, FP6",     0xF200|074, 0x401F|(0<<10)|(6<<7), 0x6789, 0xABCD);
+    TEST("FGETMAN.W #$1234, FP2",         0xF200|074, 0x401F|(4<<10)|(2<<7), 0x1234);
+    TEST("FGETMAN.B #$23, FP4",           0xF200|074, 0x401F|(6<<10)|(4<<7), 0x0023);
+    FLTS("FGETMAN.S", "#7.88999976E-10, FP7", 0xF200|074, 0x401F|(1<<10)|(7<<7), 0x3058, 0xE0F0);
+    FLTX("FGETMAN.X", "#-89000000032, FP0",   0xF200|074, 0x401F|(2<<10)|(0<<7),
+         0xC023, 0x0000, 0xA5C6, 0x81D1, 0x0000, 0x0000);
+    FLTP("FGETMAN.P", "#9.12E20, FP1",        0xF200|074, 0x401F|(3<<10)|(1<<7),
+         0x0020, 0x0009, 0x1200, 0x0000, 0x0000, 0x0000);
+    FLTD("FGETMAN.D", "#-8.25, FP3",          0xF200|074, 0x401F|(5<<10)|(3<<7),
+         0xC020, 0x8000, 0x0000, 0x0000);
+    
+    TEST("FMOD.X FP0, FP1",            0xF200,     0x0021|(0<<10)|(1<<7));
+    ERRT("FMOD.X FP0",                 OPERAND_NOT_ALLOWED, "FP0");
+    TEST("FMOD.L D2, FP3",             0xF200|002, 0x4021|(0<<10)|(3<<7));
+    TEST("FMOD.S D2, FP3",             0xF200|002, 0x4021|(1<<10)|(3<<7));
+    ERRT("FMOD.X D2, FP3", ILLEGAL_SIZE, "FMOD.X D2, FP3",
+         0xF200|002, 0x4021|(2<<10)|(3<<7));
+    ERRT("FMOD.P D2, FP3", ILLEGAL_SIZE, "FMOD.P D2, FP3",
+         0xF200|002, 0x4021|(3<<10)|(3<<7));
+    TEST("FMOD.W D2, FP3",             0xF200|002, 0x4021|(4<<10)|(3<<7));
+    ERRT("FMOD.D D2, FP3", ILLEGAL_SIZE, "FMOD.D D2, FP3",
+         0xF200|002, 0x4021|(5<<10)|(3<<7));
+    TEST("FMOD.B D2, FP3",             0xF200|002, 0x4021|(6<<10)|(3<<7));
+    ERRT("FMOD.S A4, FP5",             OPERAND_NOT_ALLOWED, "A4, FP5", 0xF200, 0x46A1);
+    TEST("FMOD.X (A6), FP7",           0xF200|026, 0x4021|(2<<10)|(7<<7));
+    TEST("FMOD.P (A0)+, FP1",          0xF200|030, 0x4021|(3<<10)|(1<<7));
+    TEST("FMOD.W -(A2), FP3",          0xF200|042, 0x4021|(4<<10)|(3<<7));
+    TEST("FMOD.D ($1234,A4), FP5",     0xF200|054, 0x4021|(5<<10)|(5<<7), 0x1234);
+    TEST("FMOD.B ($23,A6,D7.W), FP0",  0xF200|066, 0x4021|(6<<10)|(0<<7), 0x7023);
+    TEST("FMOD.L ($004566).W, FP1",    0xF200|070, 0x4021|(0<<10)|(1<<7), 0x4566);
+    TEST("FMOD.S ($56789A).L, FP2",    0xF200|071, 0x4021|(1<<10)|(2<<7), 0x0056, 0x789A);
+    TEST("FMOD.X (*+$1234,PC), FP3",   0xF200|072, 0x4021|(2<<10)|(3<<7), 0x1230);
+    TEST("FMOD.P (*+90,PC,A4.L), FP5", 0xF200|073, 0x4021|(3<<10)|(5<<7), 0xC856);
+    TEST("FMOD.L #$6789ABCD, FP6",     0xF200|074, 0x4021|(0<<10)|(6<<7), 0x6789, 0xABCD);
+    TEST("FMOD.W #$1234, FP2",         0xF200|074, 0x4021|(4<<10)|(2<<7), 0x1234);
+    TEST("FMOD.B #$23, FP4",           0xF200|074, 0x4021|(6<<10)|(4<<7), 0x0023);
+    FLTS("FMOD.S", "#7.88999976E-10, FP7", 0xF200|074, 0x4021|(1<<10)|(7<<7), 0x3058, 0xE0F0);
+    FLTX("FMOD.X", "#-89000000032, FP0",   0xF200|074, 0x4021|(2<<10)|(0<<7),
+         0xC023, 0x0000, 0xA5C6, 0x81D1, 0x0000, 0x0000);
+    FLTP("FMOD.P", "#9.12E20, FP1",        0xF200|074, 0x4021|(3<<10)|(1<<7),
+         0x0020, 0x0009, 0x1200, 0x0000, 0x0000, 0x0000);
+    FLTD("FMOD.D", "#-8.25, FP3",          0xF200|074, 0x4021|(5<<10)|(3<<7),
+         0xC020, 0x8000, 0x0000, 0x0000);
+    
+    TEST("FREM.X FP0, FP1",            0xF200,     0x0025|(0<<10)|(1<<7));
+    ERRT("FREM.X FP0",                 OPERAND_NOT_ALLOWED, "FP0");
+    TEST("FREM.L D2, FP3",             0xF200|002, 0x4025|(0<<10)|(3<<7));
+    TEST("FREM.S D2, FP3",             0xF200|002, 0x4025|(1<<10)|(3<<7));
+    ERRT("FREM.X D2, FP3", ILLEGAL_SIZE, "FREM.X D2, FP3",
+         0xF200|002, 0x4025|(2<<10)|(3<<7));
+    ERRT("FREM.P D2, FP3", ILLEGAL_SIZE, "FREM.P D2, FP3",
+         0xF200|002, 0x4025|(3<<10)|(3<<7));
+    TEST("FREM.W D2, FP3",             0xF200|002, 0x4025|(4<<10)|(3<<7));
+    ERRT("FREM.D D2, FP3", ILLEGAL_SIZE, "FREM.D D2, FP3",
+         0xF200|002, 0x4025|(5<<10)|(3<<7));
+    TEST("FREM.B D2, FP3",             0xF200|002, 0x4025|(6<<10)|(3<<7));
+    ERRT("FREM.S A4, FP5",             OPERAND_NOT_ALLOWED, "A4, FP5", 0xF200, 0x46A5);
+    TEST("FREM.X (A6), FP7",           0xF200|026, 0x4025|(2<<10)|(7<<7));
+    TEST("FREM.P (A0)+, FP1",          0xF200|030, 0x4025|(3<<10)|(1<<7));
+    TEST("FREM.W -(A2), FP3",          0xF200|042, 0x4025|(4<<10)|(3<<7));
+    TEST("FREM.D ($1234,A4), FP5",     0xF200|054, 0x4025|(5<<10)|(5<<7), 0x1234);
+    TEST("FREM.B ($23,A6,D7.W), FP0",  0xF200|066, 0x4025|(6<<10)|(0<<7), 0x7023);
+    TEST("FREM.L ($004566).W, FP1",    0xF200|070, 0x4025|(0<<10)|(1<<7), 0x4566);
+    TEST("FREM.S ($56789A).L, FP2",    0xF200|071, 0x4025|(1<<10)|(2<<7), 0x0056, 0x789A);
+    TEST("FREM.X (*+$1234,PC), FP3",   0xF200|072, 0x4025|(2<<10)|(3<<7), 0x1230);
+    TEST("FREM.P (*+90,PC,A4.L), FP5", 0xF200|073, 0x4025|(3<<10)|(5<<7), 0xC856);
+    TEST("FREM.L #$6789ABCD, FP6",     0xF200|074, 0x4025|(0<<10)|(6<<7), 0x6789, 0xABCD);
+    TEST("FREM.W #$1234, FP2",         0xF200|074, 0x4025|(4<<10)|(2<<7), 0x1234);
+    TEST("FREM.B #$23, FP4",           0xF200|074, 0x4025|(6<<10)|(4<<7), 0x0023);
+    FLTS("FREM.S", "#7.88999976E-10, FP7", 0xF200|074, 0x4025|(1<<10)|(7<<7), 0x3058, 0xE0F0);
+    FLTX("FREM.X", "#-89000000032, FP0",   0xF200|074, 0x4025|(2<<10)|(0<<7),
+         0xC023, 0x0000, 0xA5C6, 0x81D1, 0x0000, 0x0000);
+    FLTP("FREM.P", "#9.12E20, FP1",        0xF200|074, 0x4025|(3<<10)|(1<<7),
+         0x0020, 0x0009, 0x1200, 0x0000, 0x0000, 0x0000);
+    FLTD("FREM.D", "#-8.25, FP3",          0xF200|074, 0x4025|(5<<10)|(3<<7),
+         0xC020, 0x8000, 0x0000, 0x0000);
+    
+    TEST("FSCALE.X FP0, FP1",            0xF200,     0x0026|(0<<10)|(1<<7));
+    ERRT("FSCALE.X FP0",                 OPERAND_NOT_ALLOWED, "FP0");
+    TEST("FSCALE.L D2, FP3",             0xF200|002, 0x4026|(0<<10)|(3<<7));
+    TEST("FSCALE.S D2, FP3",             0xF200|002, 0x4026|(1<<10)|(3<<7));
+    ERRT("FSCALE.X D2, FP3", ILLEGAL_SIZE, "FSCALE.X D2, FP3",
+         0xF200|002, 0x4026|(2<<10)|(3<<7));
+    ERRT("FSCALE.P D2, FP3", ILLEGAL_SIZE, "FSCALE.P D2, FP3",
+         0xF200|002, 0x4026|(3<<10)|(3<<7));
+    TEST("FSCALE.W D2, FP3",             0xF200|002, 0x4026|(4<<10)|(3<<7));
+    ERRT("FSCALE.D D2, FP3", ILLEGAL_SIZE, "FSCALE.D D2, FP3",
+         0xF200|002, 0x4026|(5<<10)|(3<<7));
+    TEST("FSCALE.B D2, FP3",             0xF200|002, 0x4026|(6<<10)|(3<<7));
+    ERRT("FSCALE.S A4, FP5",             OPERAND_NOT_ALLOWED, "A4, FP5", 0xF200, 0x46A6);
+    TEST("FSCALE.X (A6), FP7",           0xF200|026, 0x4026|(2<<10)|(7<<7));
+    TEST("FSCALE.P (A0)+, FP1",          0xF200|030, 0x4026|(3<<10)|(1<<7));
+    TEST("FSCALE.W -(A2), FP3",          0xF200|042, 0x4026|(4<<10)|(3<<7));
+    TEST("FSCALE.D ($1234,A4), FP5",     0xF200|054, 0x4026|(5<<10)|(5<<7), 0x1234);
+    TEST("FSCALE.B ($23,A6,D7.W), FP0",  0xF200|066, 0x4026|(6<<10)|(0<<7), 0x7023);
+    TEST("FSCALE.L ($004566).W, FP1",    0xF200|070, 0x4026|(0<<10)|(1<<7), 0x4566);
+    TEST("FSCALE.S ($56789A).L, FP2",    0xF200|071, 0x4026|(1<<10)|(2<<7), 0x0056, 0x789A);
+    TEST("FSCALE.X (*+$1234,PC), FP3",   0xF200|072, 0x4026|(2<<10)|(3<<7), 0x1230);
+    TEST("FSCALE.P (*+90,PC,A4.L), FP5", 0xF200|073, 0x4026|(3<<10)|(5<<7), 0xC856);
+    TEST("FSCALE.L #$6789ABCD, FP6",     0xF200|074, 0x4026|(0<<10)|(6<<7), 0x6789, 0xABCD);
+    TEST("FSCALE.W #$1234, FP2",         0xF200|074, 0x4026|(4<<10)|(2<<7), 0x1234);
+    TEST("FSCALE.B #$23, FP4",           0xF200|074, 0x4026|(6<<10)|(4<<7), 0x0023);
+    FLTS("FSCALE.S", "#7.88999976E-10, FP7", 0xF200|074, 0x4026|(1<<10)|(7<<7), 0x3058, 0xE0F0);
+    FLTX("FSCALE.X", "#-89000000032, FP0",   0xF200|074, 0x4026|(2<<10)|(0<<7),
+         0xC023, 0x0000, 0xA5C6, 0x81D1, 0x0000, 0x0000);
+    FLTP("FSCALE.P", "#9.12E20, FP1",        0xF200|074, 0x4026|(3<<10)|(1<<7),
+         0x0020, 0x0009, 0x1200, 0x0000, 0x0000, 0x0000);
+    FLTD("FSCALE.D", "#-8.25, FP3",          0xF200|074, 0x4026|(5<<10)|(3<<7),
+         0xC020, 0x8000, 0x0000, 0x0000);
+    
+    TEST("FSINCOS.X FP0, FP2:FP1",            0xF200,     0x0032|(0<<10)|(1<<7));
+    TEST("FSINCOS.X FP0, FP0:FP0",            0xF200,     0x0030|(0<<10)|(0<<7));
+    TEST("FSINCOS.L D2, FP1:FP3",             0xF200|002, 0x4031|(0<<10)|(3<<7));
+    TEST("FSINCOS.S D2, FP4:FP3",             0xF200|002, 0x4034|(1<<10)|(3<<7));
+    ERRT("FSINCOS.X D2, FP4:FP3", ILLEGAL_SIZE, "FSINCOS.X D2, FP4:FP3",
+         0xF200|002, 0x4034|(2<<10)|(3<<7));
+    ERRT("FSINCOS.P D2, FP4:FP3", ILLEGAL_SIZE, "FSINCOS.P D2, FP4:FP3",
+         0xF200|002, 0x4034|(3<<10)|(3<<7));
+    TEST("FSINCOS.W D2, FP4:FP3",             0xF200|002, 0x4034|(4<<10)|(3<<7));
+    ERRT("FSINCOS.D D2, FP4:FP3", ILLEGAL_SIZE, "FSINCOS.D D2, FP4:FP3",
+         0xF200|002, 0x4034|(5<<10)|(3<<7));
+    TEST("FSINCOS.B D2, FP4:FP3",             0xF200|002, 0x4034|(6<<10)|(3<<7));
+    ERRT("FSINCOS.S A4, FP2:FP5",             OPERAND_NOT_ALLOWED, "A4, FP2:FP5", 0xF200, 0x46B2);
+    TEST("FSINCOS.X (A6), FP0:FP7",           0xF200|026, 0x4030|(2<<10)|(7<<7));
+    TEST("FSINCOS.P (A0)+, FP7:FP1",          0xF200|030, 0x4037|(3<<10)|(1<<7));
+    TEST("FSINCOS.W -(A2), FP6:FP3",          0xF200|042, 0x4036|(4<<10)|(3<<7));
+    TEST("FSINCOS.D ($1234,A4), FP5:FP5",     0xF200|054, 0x4035|(5<<10)|(5<<7), 0x1234);
+    TEST("FSINCOS.B ($23,A6,D7.W), FP4:FP0",  0xF200|066, 0x4034|(6<<10)|(0<<7), 0x7023);
+    TEST("FSINCOS.L ($004566).W, FP3:FP1",    0xF200|070, 0x4033|(0<<10)|(1<<7), 0x4566);
+    TEST("FSINCOS.S ($56789A).L, FP1:FP2",    0xF200|071, 0x4031|(1<<10)|(2<<7), 0x0056, 0x789A);
+    TEST("FSINCOS.X (*+$1234,PC), FP0:FP3",   0xF200|072, 0x4030|(2<<10)|(3<<7), 0x1230);
+    TEST("FSINCOS.P (*+90,PC,A4.L), FP7:FP5", 0xF200|073, 0x4037|(3<<10)|(5<<7), 0xC856);
+    TEST("FSINCOS.L #$6789ABCD, FP5:FP6",     0xF200|074, 0x4035|(0<<10)|(6<<7), 0x6789, 0xABCD);
+    TEST("FSINCOS.W #$1234, FP1:FP2",         0xF200|074, 0x4031|(4<<10)|(2<<7), 0x1234);
+    TEST("FSINCOS.B #$23, FP7:FP4",           0xF200|074, 0x4037|(6<<10)|(4<<7), 0x0023);
+    FLTS("FSINCOS.S", "#7.88999976E-10, FP6:FP7", 0xF200|074, 0x4036|(1<<10)|(7<<7),
+         0x3058, 0xE0F0);
+    FLTX("FSINCOS.X", "#-89000000032, FP4:FP0",   0xF200|074, 0x4034|(2<<10)|(0<<7),
+         0xC023, 0x0000, 0xA5C6, 0x81D1, 0x0000, 0x0000);
+    FLTP("FSINCOS.P", "#9.12E20, FP3:FP1",        0xF200|074, 0x4033|(3<<10)|(1<<7),
+         0x0020, 0x0009, 0x1200, 0x0000, 0x0000, 0x0000);
+    FLTD("FSINCOS.D", "#-8.25, FP0:FP3",          0xF200|074, 0x4030|(5<<10)|(3<<7),
+         0xC020, 0x8000, 0x0000, 0x0000);
+}
+
+void test_float_branch() {
+    TEST("FPU ON");
+    
     TEST("FNOP",              0xF280, 0x0000);
     TEST("FBF    *+$1234",    0xF280, 0x1232);
     TEST("FBEQ.W *+$1234",    0xF281, 0x1232);
@@ -5499,7 +6111,7 @@ void test_float_branch() {
     TEST("FBST.X *+$70",      0xF2DF, 0x0000, 0x006E);
     ERRT("FBST.B *+$70", ILLEGAL_SIZE, "FBST.B *+$70", 0xF2DF, 0x0000, 0x006E);
     ERRT("FBST.S *+$70", ILLEGAL_SIZE, "FBST.S *+$70", 0xF2DF, 0x0000, 0x006E);
-
+    
     TEST("FBF    *+$123456",    0xF2C0, 0x0012, 0x3454);
     TEST("FBEQ.X *+$001234",    0xF2C1, 0x0000, 0x1232);
     TEST("FBOGT  *+$123456",    0xF2C2, 0x0012, 0x3454);
@@ -5545,7 +6157,7 @@ void test_float_branch() {
 
 void test_float_trap() {
     TEST("FPU ON");
-
+    
     TEST("FSF D2",              0xF240|002, 0x0000);
     TEST("FDBF D2, *+$1234",    0xF240|012, 0x0000, 0x1230);
     TEST("FSF (A2)",            0xF240|022, 0x0000);
@@ -5558,7 +6170,7 @@ void test_float_trap() {
     TEST("FTRAPF.W #$1234",     0xF240|072, 0x0000, 0x1234);
     TEST("FTRAPF.L #$12345678", 0xF240|073, 0x0000, 0x1234, 0x5678);
     TEST("FTRAPF",              0xF240|074, 0x0000);
-
+    
     TEST("FSEQ D2",              0xF240|002, 0x0001);
     TEST("FDBEQ D2, *+$1234",    0xF240|012, 0x0001, 0x1230);
     TEST("FDBEQ.L D2, *+$1234",  0xF240|012, 0x0001, 0x1230);
@@ -5576,7 +6188,7 @@ void test_float_trap() {
     TEST("FTRAPEQ.W #$1234",     0xF240|072, 0x0001, 0x1234);
     TEST("FTRAPEQ.L #$12345678", 0xF240|073, 0x0001, 0x1234, 0x5678);
     TEST("FTRAPEQ",              0xF240|074, 0x0001);
-
+    
     TEST("FSOGT D2",              0xF240|002, 0x0002);
     TEST("FDBOGT D2, *+$1234",    0xF240|012, 0x0002, 0x1230);
     TEST("FSOGT (A2)",            0xF240|022, 0x0002);
@@ -5589,7 +6201,7 @@ void test_float_trap() {
     TEST("FTRAPOGT.W #$1234",     0xF240|072, 0x0002, 0x1234);
     TEST("FTRAPOGT.L #$12345678", 0xF240|073, 0x0002, 0x1234, 0x5678);
     TEST("FTRAPOGT",              0xF240|074, 0x0002);
-
+    
     TEST("FSOGE D2",              0xF240|002, 0x0003);
     TEST("FDBOGE D2, *+$1234",    0xF240|012, 0x0003, 0x1230);
     TEST("FSOGE (A2)",            0xF240|022, 0x0003);
@@ -5602,7 +6214,7 @@ void test_float_trap() {
     TEST("FTRAPOGE.W #$1234",     0xF240|072, 0x0003, 0x1234);
     TEST("FTRAPOGE.L #$12345678", 0xF240|073, 0x0003, 0x1234, 0x5678);
     TEST("FTRAPOGE",              0xF240|074, 0x0003);
-
+    
     TEST("FSOLT D2",              0xF240|002, 0x0004);
     TEST("FDBOLT D2, *+$1234",    0xF240|012, 0x0004, 0x1230);
     TEST("FSOLT (A2)",            0xF240|022, 0x0004);
@@ -5615,7 +6227,7 @@ void test_float_trap() {
     TEST("FTRAPOLT.W #$1234",     0xF240|072, 0x0004, 0x1234);
     TEST("FTRAPOLT.L #$12345678", 0xF240|073, 0x0004, 0x1234, 0x5678);
     TEST("FTRAPOLT",              0xF240|074, 0x0004);
-
+    
     TEST("FSOLE D2",              0xF240|002, 0x0005);
     TEST("FDBOLE D2, *+$1234",    0xF240|012, 0x0005, 0x1230);
     TEST("FSOLE (A2)",            0xF240|022, 0x0005);
@@ -5628,7 +6240,7 @@ void test_float_trap() {
     TEST("FTRAPOLE.W #$1234",     0xF240|072, 0x0005, 0x1234);
     TEST("FTRAPOLE.L #$12345678", 0xF240|073, 0x0005, 0x1234, 0x5678);
     TEST("FTRAPOLE",              0xF240|074, 0x0005);
-
+    
     TEST("FSOGL D2",              0xF240|002, 0x0006);
     TEST("FDBOGL D2, *+$1234",    0xF240|012, 0x0006, 0x1230);
     TEST("FSOGL (A2)",            0xF240|022, 0x0006);
@@ -5641,7 +6253,7 @@ void test_float_trap() {
     TEST("FTRAPOGL.W #$1234",     0xF240|072, 0x0006, 0x1234);
     TEST("FTRAPOGL.L #$12345678", 0xF240|073, 0x0006, 0x1234, 0x5678);
     TEST("FTRAPOGL",              0xF240|074, 0x0006);
-
+    
     TEST("FSOR D2",              0xF240|002, 0x0007);
     TEST("FDBOR D2, *+$1234",    0xF240|012, 0x0007, 0x1230);
     TEST("FSOR (A2)",            0xF240|022, 0x0007);
@@ -5654,7 +6266,7 @@ void test_float_trap() {
     TEST("FTRAPOR.W #$1234",     0xF240|072, 0x0007, 0x1234);
     TEST("FTRAPOR.L #$12345678", 0xF240|073, 0x0007, 0x1234, 0x5678);
     TEST("FTRAPOR",              0xF240|074, 0x0007);
-
+    
     TEST("FSUN D2",              0xF240|002, 0x0008);
     TEST("FDBUN D2, *+$1234",    0xF240|012, 0x0008, 0x1230);
     TEST("FSUN (A2)",            0xF240|022, 0x0008);
@@ -5667,7 +6279,7 @@ void test_float_trap() {
     TEST("FTRAPUN.W #$1234",     0xF240|072, 0x0008, 0x1234);
     TEST("FTRAPUN.L #$12345678", 0xF240|073, 0x0008, 0x1234, 0x5678);
     TEST("FTRAPUN",              0xF240|074, 0x0008);
-
+    
     TEST("FSUEQ D2",              0xF240|002, 0x0009);
     TEST("FDBUEQ D2, *+$1234",    0xF240|012, 0x0009, 0x1230);
     TEST("FSUEQ (A2)",            0xF240|022, 0x0009);
@@ -5680,7 +6292,7 @@ void test_float_trap() {
     TEST("FTRAPUEQ.W #$1234",     0xF240|072, 0x0009, 0x1234);
     TEST("FTRAPUEQ.L #$12345678", 0xF240|073, 0x0009, 0x1234, 0x5678);
     TEST("FTRAPUEQ",              0xF240|074, 0x0009);
-
+    
     TEST("FSUGT D2",              0xF240|002, 0x000A);
     TEST("FDBUGT D2, *+$1234",    0xF240|012, 0x000A, 0x1230);
     TEST("FSUGT (A2)",            0xF240|022, 0x000A);
@@ -5693,7 +6305,7 @@ void test_float_trap() {
     TEST("FTRAPUGT.W #$1234",     0xF240|072, 0x000A, 0x1234);
     TEST("FTRAPUGT.L #$12345678", 0xF240|073, 0x000A, 0x1234, 0x5678);
     TEST("FTRAPUGT",              0xF240|074, 0x000A);
-
+    
     TEST("FSUGE D2",              0xF240|002, 0x000B);
     TEST("FDBUGE D2, *+$1234",    0xF240|012, 0x000B, 0x1230);
     TEST("FSUGE (A2)",            0xF240|022, 0x000B);
@@ -5706,7 +6318,7 @@ void test_float_trap() {
     TEST("FTRAPUGE.W #$1234",     0xF240|072, 0x000B, 0x1234);
     TEST("FTRAPUGE.L #$12345678", 0xF240|073, 0x000B, 0x1234, 0x5678);
     TEST("FTRAPUGE",              0xF240|074, 0x000B);
-
+    
     TEST("FSULT D2",              0xF240|002, 0x000C);
     TEST("FDBULT D2, *+$1234",    0xF240|012, 0x000C, 0x1230);
     TEST("FSULT (A2)",            0xF240|022, 0x000C);
@@ -5719,7 +6331,7 @@ void test_float_trap() {
     TEST("FTRAPULT.W #$1234",     0xF240|072, 0x000C, 0x1234);
     TEST("FTRAPULT.L #$12345678", 0xF240|073, 0x000C, 0x1234, 0x5678);
     TEST("FTRAPULT",              0xF240|074, 0x000C);
-
+    
     TEST("FSULE D2",              0xF240|002, 0x000D);
     TEST("FDBULE D2, *+$1234",    0xF240|012, 0x000D, 0x1230);
     TEST("FSULE (A2)",            0xF240|022, 0x000D);
@@ -5732,7 +6344,7 @@ void test_float_trap() {
     TEST("FTRAPULE.W #$1234",     0xF240|072, 0x000D, 0x1234);
     TEST("FTRAPULE.L #$12345678", 0xF240|073, 0x000D, 0x1234, 0x5678);
     TEST("FTRAPULE",              0xF240|074, 0x000D);
-
+    
     TEST("FSNE D2",              0xF240|002, 0x000E);
     TEST("FDBNE D2, *+$1234",    0xF240|012, 0x000E, 0x1230);
     TEST("FSNE (A2)",            0xF240|022, 0x000E);
@@ -5745,7 +6357,7 @@ void test_float_trap() {
     TEST("FTRAPNE.W #$1234",     0xF240|072, 0x000E, 0x1234);
     TEST("FTRAPNE.L #$12345678", 0xF240|073, 0x000E, 0x1234, 0x5678);
     TEST("FTRAPNE",              0xF240|074, 0x000E);
-
+    
     TEST("FST D2",              0xF240|002, 0x000F);
     TEST("FDBT D2, *+$1234",    0xF240|012, 0x000F, 0x1230);
     TEST("FST (A2)",            0xF240|022, 0x000F);
@@ -5758,7 +6370,7 @@ void test_float_trap() {
     TEST("FTRAPT.W #$1234",     0xF240|072, 0x000F, 0x1234);
     TEST("FTRAPT.L #$12345678", 0xF240|073, 0x000F, 0x1234, 0x5678);
     TEST("FTRAPT",              0xF240|074, 0x000F);
-
+    
     TEST("FSSF D2",              0xF240|002, 0x0010);
     TEST("FDBSF D2, *+$1234",    0xF240|012, 0x0010, 0x1230);
     TEST("FSSF (A2)",            0xF240|022, 0x0010);
@@ -5771,7 +6383,7 @@ void test_float_trap() {
     TEST("FTRAPSF.W #$1234",     0xF240|072, 0x0010, 0x1234);
     TEST("FTRAPSF.L #$12345678", 0xF240|073, 0x0010, 0x1234, 0x5678);
     TEST("FTRAPSF",              0xF240|074, 0x0010);
-
+    
     TEST("FSSEQ D2",              0xF240|002, 0x0011);
     TEST("FDBSEQ D2, *+$1234",    0xF240|012, 0x0011, 0x1230);
     TEST("FSSEQ (A2)",            0xF240|022, 0x0011);
@@ -5784,7 +6396,7 @@ void test_float_trap() {
     TEST("FTRAPSEQ.W #$1234",     0xF240|072, 0x0011, 0x1234);
     TEST("FTRAPSEQ.L #$12345678", 0xF240|073, 0x0011, 0x1234, 0x5678);
     TEST("FTRAPSEQ",              0xF240|074, 0x0011);
-
+    
     TEST("FSGT D2",              0xF240|002, 0x0012);
     TEST("FDBGT D2, *+$1234",    0xF240|012, 0x0012, 0x1230);
     TEST("FSGT (A2)",            0xF240|022, 0x0012);
@@ -5797,7 +6409,7 @@ void test_float_trap() {
     TEST("FTRAPGT.W #$1234",     0xF240|072, 0x0012, 0x1234);
     TEST("FTRAPGT.L #$12345678", 0xF240|073, 0x0012, 0x1234, 0x5678);
     TEST("FTRAPGT",              0xF240|074, 0x0012);
-
+    
     TEST("FSGE D2",              0xF240|002, 0x0013);
     TEST("FDBGE D2, *+$1234",    0xF240|012, 0x0013, 0x1230);
     TEST("FSGE (A2)",            0xF240|022, 0x0013);
@@ -5810,7 +6422,7 @@ void test_float_trap() {
     TEST("FTRAPGE.W #$1234",     0xF240|072, 0x0013, 0x1234);
     TEST("FTRAPGE.L #$12345678", 0xF240|073, 0x0013, 0x1234, 0x5678);
     TEST("FTRAPGE",              0xF240|074, 0x0013);
-
+    
     TEST("FSLT D2",              0xF240|002, 0x0014);
     TEST("FDBLT D2, *+$1234",    0xF240|012, 0x0014, 0x1230);
     TEST("FSLT (A2)",            0xF240|022, 0x0014);
@@ -5823,7 +6435,7 @@ void test_float_trap() {
     TEST("FTRAPLT.W #$1234",     0xF240|072, 0x0014, 0x1234);
     TEST("FTRAPLT.L #$12345678", 0xF240|073, 0x0014, 0x1234, 0x5678);
     TEST("FTRAPLT",              0xF240|074, 0x0014);
-
+    
     TEST("FSLE D2",              0xF240|002, 0x0015);
     TEST("FDBLE D2, *+$1234",    0xF240|012, 0x0015, 0x1230);
     TEST("FSLE (A2)",            0xF240|022, 0x0015);
@@ -5836,7 +6448,7 @@ void test_float_trap() {
     TEST("FTRAPLE.W #$1234",     0xF240|072, 0x0015, 0x1234);
     TEST("FTRAPLE.L #$12345678", 0xF240|073, 0x0015, 0x1234, 0x5678);
     TEST("FTRAPLE",              0xF240|074, 0x0015);
-
+    
     TEST("FSGL D2",              0xF240|002, 0x0016);
     TEST("FDBGL D2, *+$1234",    0xF240|012, 0x0016, 0x1230);
     TEST("FSGL (A2)",            0xF240|022, 0x0016);
@@ -5849,7 +6461,7 @@ void test_float_trap() {
     TEST("FTRAPGL.W #$1234",     0xF240|072, 0x0016, 0x1234);
     TEST("FTRAPGL.L #$12345678", 0xF240|073, 0x0016, 0x1234, 0x5678);
     TEST("FTRAPGL",              0xF240|074, 0x0016);
-
+    
     TEST("FSGLE D2",              0xF240|002, 0x0017);
     TEST("FDBGLE D2, *+$1234",    0xF240|012, 0x0017, 0x1230);
     TEST("FSGLE (A2)",            0xF240|022, 0x0017);
@@ -5862,7 +6474,7 @@ void test_float_trap() {
     TEST("FTRAPGLE.W #$1234",     0xF240|072, 0x0017, 0x1234);
     TEST("FTRAPGLE.L #$12345678", 0xF240|073, 0x0017, 0x1234, 0x5678);
     TEST("FTRAPGLE",              0xF240|074, 0x0017);
-
+    
     TEST("FSNGLE D2",              0xF240|002, 0x0018);
     TEST("FDBNGLE D2, *+$1234",    0xF240|012, 0x0018, 0x1230);
     TEST("FSNGLE (A2)",            0xF240|022, 0x0018);
@@ -5875,7 +6487,7 @@ void test_float_trap() {
     TEST("FTRAPNGLE.W #$1234",     0xF240|072, 0x0018, 0x1234);
     TEST("FTRAPNGLE.L #$12345678", 0xF240|073, 0x0018, 0x1234, 0x5678);
     TEST("FTRAPNGLE",              0xF240|074, 0x0018);
-
+    
     TEST("FSNGL D2",              0xF240|002, 0x0019);
     TEST("FDBNGL D2, *+$1234",    0xF240|012, 0x0019, 0x1230);
     TEST("FSNGL (A2)",            0xF240|022, 0x0019);
@@ -5888,7 +6500,7 @@ void test_float_trap() {
     TEST("FTRAPNGL.W #$1234",     0xF240|072, 0x0019, 0x1234);
     TEST("FTRAPNGL.L #$12345678", 0xF240|073, 0x0019, 0x1234, 0x5678);
     TEST("FTRAPNGL",              0xF240|074, 0x0019);
-
+    
     TEST("FSNLE D2",              0xF240|002, 0x001A);
     TEST("FDBNLE D2, *+$1234",    0xF240|012, 0x001A, 0x1230);
     TEST("FSNLE (A2)",            0xF240|022, 0x001A);
@@ -5901,7 +6513,7 @@ void test_float_trap() {
     TEST("FTRAPNLE.W #$1234",     0xF240|072, 0x001A, 0x1234);
     TEST("FTRAPNLE.L #$12345678", 0xF240|073, 0x001A, 0x1234, 0x5678);
     TEST("FTRAPNLE",              0xF240|074, 0x001A);
-
+    
     TEST("FSNLT D2",              0xF240|002, 0x001B);
     TEST("FDBNLT D2, *+$1234",    0xF240|012, 0x001B, 0x1230);
     TEST("FSNLT (A2)",            0xF240|022, 0x001B);
@@ -5914,7 +6526,7 @@ void test_float_trap() {
     TEST("FTRAPNLT.W #$1234",     0xF240|072, 0x001B, 0x1234);
     TEST("FTRAPNLT.L #$12345678", 0xF240|073, 0x001B, 0x1234, 0x5678);
     TEST("FTRAPNLT",              0xF240|074, 0x001B);
-
+    
     TEST("FSNGE D2",              0xF240|002, 0x001C);
     TEST("FDBNGE D2, *+$1234",    0xF240|012, 0x001C, 0x1230);
     TEST("FSNGE (A2)",            0xF240|022, 0x001C);
@@ -5927,7 +6539,7 @@ void test_float_trap() {
     TEST("FTRAPNGE.W #$1234",     0xF240|072, 0x001C, 0x1234);
     TEST("FTRAPNGE.L #$12345678", 0xF240|073, 0x001C, 0x1234, 0x5678);
     TEST("FTRAPNGE",              0xF240|074, 0x001C);
-
+    
     TEST("FSNGT D2",              0xF240|002, 0x001D);
     TEST("FDBNGT D2, *+$1234",    0xF240|012, 0x001D, 0x1230);
     TEST("FSNGT (A2)",            0xF240|022, 0x001D);
@@ -5940,7 +6552,7 @@ void test_float_trap() {
     TEST("FTRAPNGT.W #$1234",     0xF240|072, 0x001D, 0x1234);
     TEST("FTRAPNGT.L #$12345678", 0xF240|073, 0x001D, 0x1234, 0x5678);
     TEST("FTRAPNGT",              0xF240|074, 0x001D);
-
+    
     TEST("FSSNE D2",              0xF240|002, 0x001E);
     TEST("FDBSNE D2, *+$1234",    0xF240|012, 0x001E, 0x1230);
     TEST("FSSNE (A2)",            0xF240|022, 0x001E);
@@ -5953,7 +6565,7 @@ void test_float_trap() {
     TEST("FTRAPSNE.W #$1234",     0xF240|072, 0x001E, 0x1234);
     TEST("FTRAPSNE.L #$12345678", 0xF240|073, 0x001E, 0x1234, 0x5678);
     TEST("FTRAPSNE",              0xF240|074, 0x001E);
-
+    
     TEST("FSST D2",              0xF240|002, 0x001F);
     TEST("FDBST D2, *+$1234",    0xF240|012, 0x001F, 0x1230);
     TEST("FSST (A2)",            0xF240|022, 0x001F);
@@ -5970,7 +6582,7 @@ void test_float_trap() {
 
 void test_float_system() {
     TEST("FPU ON");
-
+    
     ERRT("FRESTORE D2",             OPERAND_NOT_ALLOWED, "D2", 0xF340);
     ERRT("FRESTORE A4",             OPERAND_NOT_ALLOWED, "A4", 0xF340);
     TEST("FRESTORE (A6)",           0xF340|026);
@@ -5983,7 +6595,7 @@ void test_float_system() {
     TEST("FRESTORE (*+$1234,PC)",   0xF340|072, 0x1232);
     TEST("FRESTORE (*+90,PC,A4.L)", 0xF340|073, 0xC858);
     ERRT("FRESTORE #$6789ABCD",     OPERAND_NOT_ALLOWED, "#$6789ABCD", 0xF340);
-
+    
     ERRT("FSAVE D2",             OPERAND_NOT_ALLOWED, "D2", 0xF300);
     ERRT("FSAVE A4",             OPERAND_NOT_ALLOWED, "A4", 0xF300);
     TEST("FSAVE (A6)",           0xF300|026);
@@ -5996,7 +6608,7 @@ void test_float_system() {
     ERRT("FSAVE (*+$1234,PC)",   OPERAND_NOT_ALLOWED, "(*+$1234,PC)",   0xF300);
     ERRT("FSAVE (*+90,PC,A4.L)", OPERAND_NOT_ALLOWED, "(*+90,PC,A4.L)", 0xF300);
     ERRT("FSAVE #$6789ABCD",     OPERAND_NOT_ALLOWED, "#$6789ABCD",     0xF300);
-
+    
     TEST("FADD.X FP0, FP1", 0171000, 0x0022|(0<<10)|(1<<7));
     as68000.setFpuCid(0);
     TEST("FADD.X FP0, FP1", 0171000, 0x0022|(0<<10)|(1<<7));
@@ -7465,7 +8077,11 @@ void run_tests(const char *cpu) {
         RUN_TEST(test_bitfield);
 #if !defined(LIBASM_MC68000_NOFPU)
     RUN_TEST(test_float_move);
-    RUN_TEST(test_float_arithmetic);
+    RUN_TEST(test_float_common);
+    if (mc68881())
+        RUN_TEST(test_float_mc68881);
+    if (mc68040())
+        RUN_TEST(test_float_mc68040);
     RUN_TEST(test_float_branch);
     RUN_TEST(test_float_trap);
     RUN_TEST(test_float_system);

@@ -18,6 +18,8 @@
 #include <stdlib.h>
 #include "table_mc68000.h"
 
+#include <stdio.h>
+
 namespace libasm {
 namespace mc68000 {
 
@@ -1694,8 +1696,17 @@ Error AsmMc68000::encodeImpl(StrScanner &scan, Insn &_insn) const {
     }
     scan.skipSpaces();
 
+    if (false && mc68040())
+    printf("@@ search: %s src=%d dst=%d ex1=%d ex2=%d\n", insn.name(), insn.srcOp.mode, insn.dstOp.mode, insn.ex1Op.mode, insn.ex2Op.mode);
     if (searchName(_cpuSpec, insn))
         return _insn.setError(insn.srcOp, insn);
+    if (false && mc68040()) {
+    if (insn.hasPostVal()) {
+        printf("@@  found: %06o %06o src=%d dst=%d ex1=%d ex2=%d\n", insn.opCode(), insn.postVal(), insn.src(), insn.dst(), insn.ex1(), insn.ex2());
+    } else {
+        printf("@@  found: %06o src=%d dst=%d ex1=%d ex2=%d\n", insn.opCode(), insn.src(), insn.dst(), insn.ex1(), insn.ex2());
+    }
+    }
 
     insn.setErrorIf(insn.srcOp);
     insn.setErrorIf(insn.dstOp);
