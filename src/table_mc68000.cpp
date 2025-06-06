@@ -1814,6 +1814,24 @@ constexpr uint8_t MC68EC030_PMMU_INDEX[] PROGMEM = {
       9,  // TEXT_PTESTW
 };
 
+constexpr Entry MC68040_PMMU_TABLE[] PROGMEM = {
+    E1(0172400, TEXT_PFLUSHN,  ISZ_NONE, M_AIND,  OP__0,  SZ_NONE, CF_0007),
+    E1(0172410, TEXT_PFLUSH,   ISZ_NONE, M_AIND,  OP__0,  SZ_NONE, CF_0007),
+    E0(0172420, TEXT_PFLUSHAN),
+    E0(0172430, TEXT_PFLUSHA),
+    E1(0172510, TEXT_PTESTW,   ISZ_NONE, M_AIND,  OP__0,  SZ_NONE, CF_0007),
+    E1(0172550, TEXT_PTESTR,   ISZ_NONE, M_AIND,  OP__0,  SZ_NONE, CF_0007),
+};
+
+constexpr uint8_t MC68040_PMMU_INDEX[] PROGMEM = {
+      1,  // TEXT_PFLUSH
+      3,  // TEXT_PFLUSHA
+      2,  // TEXT_PFLUSHAN
+      0,  // TEXT_PFLUSHN
+      5,  // TEXT_PTESTR
+      4,  // TEXT_PTESTW
+};
+
 #endif
 // clang-format on
 
@@ -1878,6 +1896,10 @@ constexpr EntryPage MC68EC030_PMMU_PAGES[] PROGMEM = {
 constexpr EntryPage MC68030_PMMU_PAGES[] PROGMEM = {
         {ARRAY_RANGE(MC68030_PMMU_TABLE), ARRAY_RANGE(MC68030_PMMU_INDEX)},
 };
+
+constexpr EntryPage MC68040_PMMU_PAGES[] PROGMEM = {
+        {ARRAY_RANGE(MC68040_PMMU_TABLE), ARRAY_RANGE(MC68040_PMMU_INDEX)},
+};
 #endif
 
 using Cpu = entry::CpuBase<CpuType, EntryPage>;
@@ -1915,8 +1937,10 @@ using Pmmu = entry::CpuBase<PmmuType, EntryPage>;
 
 constexpr Pmmu PMMU_TABLE[] PROGMEM = {
         {PMMU_MC68EC030, TEXT_PMMU_68EC030, ARRAY_RANGE(MC68EC030_PMMU_PAGES)},
+        {PMMU_MC68EC040, TEXT_PMMU_68EC040, EMPTY_RANGE(MC68040_PMMU_PAGES)},
         {PMMU_MC68851, TEXT_PMMU_68851, ARRAY_RANGE(MC68851_PAGES)},
         {PMMU_MC68030, TEXT_CPU_68030, ARRAY_RANGE(MC68030_PMMU_PAGES)},
+        {PMMU_MC68040, TEXT_CPU_68040, ARRAY_RANGE(MC68040_PMMU_PAGES)},
         {PMMU_NONE, TEXT_none, EMPTY_RANGE(MC68851_PAGES)},
 };
 
@@ -2271,7 +2295,13 @@ const /*PROGMEM*/ char *Config::pmmu_P() const {
 
 Error Config::setPmmuType(PmmuType pmmuType) {
     if (pmmuType == PMMU_NONE) {
-        _cpuSpec.pmmu = (_cpuSpec.cpu == MC68030) ? PMMU_MC68EC030 : PMMU_NONE;
+        if (_cpuSpec.cpu == MC68030) {
+            _cpuSpec.pmmu = PMMU_MC68EC030;
+        } else if (_cpuSpec.cpu == MC68040) {
+            _cpuSpec.pmmu = PMMU_MC68EC040;
+        } else {
+            _cpuSpec.pmmu = PMMU_NONE;
+        }
         return OK;
     }
 #if !defined(LIBASM_MC68000_NOPMMU)
@@ -2284,6 +2314,10 @@ Error Config::setPmmuType(PmmuType pmmuType) {
             _cpuSpec.pmmu = PMMU_MC68030;
             return OK;
         }
+        if (_cpuSpec.cpu == MC68040) {
+            _cpuSpec.pmmu = PMMU_MC68040;
+            return OK;
+        }
     } else if (pmmuType == PMMU_MC68851) {
         if (_cpuSpec.cpu == MC68020) {
             _cpuSpec.pmmu = PMMU_MC68851;
@@ -2292,6 +2326,11 @@ Error Config::setPmmuType(PmmuType pmmuType) {
     } else if (pmmuType == PMMU_MC68030) {
         if (_cpuSpec.cpu == MC68030) {
             _cpuSpec.pmmu = PMMU_MC68030;
+            return OK;
+        }
+    } else if (pmmuType == PMMU_MC68040) {
+        if (_cpuSpec.cpu == MC68040) {
+            _cpuSpec.pmmu = PMMU_MC68040;
             return OK;
         }
     }
@@ -2310,6 +2349,8 @@ Error Config::setPmmuName(StrScanner &scan) {
         return setPmmuType(PMMU_MC68851);
     if (scan.iequals_P(TEXT_CPU_MC68030) || scan.iequals_P(TEXT_CPU_MC68030))
         return setPmmuType(PMMU_MC68030);
+    if (scan.iequals_P(TEXT_CPU_MC68040) || scan.iequals_P(TEXT_CPU_MC68040))
+        return setPmmuType(PMMU_MC68040);
 #endif
     return UNKNOWN_OPERAND;
 }

@@ -2927,6 +2927,8 @@ void test_system() {
         TEST("MOVEC", "A3, ISP",  0047173, 0130000 | 0x804);
         ERRT("MOVEC", "D3, ",     ILLEGAL_REGISTER, "", 0047173, 0030000 | 0x805);
     } else if (mc68040()) {
+        // MC68040
+        disassembler.setOption("pmmu", "on");
         TEST("MOVEC", "SFC, D1",   0047172, 0010000 | 0x000);
         TEST("MOVEC", "DFC, A2",   0047172, 0120000 | 0x001);
         TEST("MOVEC", "CACR, D2",  0047172, 0020000 | 0x002);
@@ -2959,6 +2961,41 @@ void test_system() {
         TEST("MOVEC", "D3, MMUSR", 0047173, 0030000 | 0x805);
         TEST("MOVEC", "A4, URP",   0047173, 0140000 | 0x806);
         TEST("MOVEC", "D4, SRP",   0047173, 0040000 | 0x807);
+
+        // MC68EC040
+        disassembler.setOption("pmmu", "off");
+        TEST("MOVEC", "SFC, D1",    0047172, 0010000 | 0x000);
+        TEST("MOVEC", "DFC, A2",    0047172, 0120000 | 0x001);
+        TEST("MOVEC", "CACR, D2",   0047172, 0020000 | 0x002);
+        TEST("MOVEC", "TC, A3",     0047172, 0130000 | 0x003);
+        TEST("MOVEC", "IACR0, D3",  0047172, 0030000 | 0x004);
+        TEST("MOVEC", "IACR1, A4",  0047172, 0140000 | 0x005);
+        TEST("MOVEC", "DACR0, D4",  0047172, 0040000 | 0x006);
+        TEST("MOVEC", "DACR1, A5",  0047172, 0150000 | 0x007);
+        TEST("MOVEC", "USP, D3",    0047172, 0030000 | 0x800);
+        TEST("MOVEC", "VBR, A4",    0047172, 0140000 | 0x801);
+        ERRT("MOVEC", ", D4",  ILLEGAL_REGISTER, ", D4", 0047172, 0040000 | 0x802);
+        TEST("MOVEC", "MSP, A5",    0047172, 0150000 | 0x803);
+        TEST("MOVEC", "ISP, D5",    0047172, 0050000 | 0x804);
+        ERRT("MOVEC", ", A6",  ILLEGAL_REGISTER, ", A6", 0047172, 0160000 | 0x805);
+        ERRT("MOVEC", ", D6",  ILLEGAL_REGISTER, ", D6", 0047172, 0060000 | 0x806);
+        ERRT("MOVEC", ", A7",  ILLEGAL_REGISTER, ", A7", 0047172, 0170000 | 0x807);
+        TEST("MOVEC", "D5, SFC",    0047173, 0050000 | 0x000);
+        TEST("MOVEC", "A6, DFC",    0047173, 0160000 | 0x001);
+        TEST("MOVEC", "D7, CACR",   0047173, 0070000 | 0x002);
+        TEST("MOVEC", "A7, TC",     0047173, 0170000 | 0x003);
+        TEST("MOVEC", "D0, IACR0",  0047173, 0000000 | 0x004);
+        TEST("MOVEC", "A0, IACR1",  0047173, 0100000 | 0x005);
+        TEST("MOVEC", "D1, DACR0",  0047173, 0010000 | 0x006);
+        TEST("MOVEC", "A1, DACR1",  0047173, 0110000 | 0x007);
+        TEST("MOVEC", "A0, USP",    0047173, 0100000 | 0x800);
+        TEST("MOVEC", "D1, VBR",    0047173, 0010000 | 0x801);
+        ERRT("MOVEC", "A2, ",  ILLEGAL_REGISTER, "", 0047173, 0120000 | 0x802);
+        TEST("MOVEC", "D2, MSP",    0047173, 0020000 | 0x803);
+        TEST("MOVEC", "A3, ISP",    0047173, 0130000 | 0x804);
+        ERRT("MOVEC", "D3, ",  ILLEGAL_REGISTER, "", 0047173, 0030000 | 0x805);
+        ERRT("MOVEC", "A4, ",  ILLEGAL_REGISTER, "", 0047173, 0140000 | 0x806);
+        ERRT("MOVEC", "D4, ",  ILLEGAL_REGISTER, "", 0047173, 0040000 | 0x807);
     }
 
     // CHK src,Dn: 004|Dn|Sz|M|Rn, Sz:W=6/L=7
@@ -6652,6 +6689,16 @@ void test_pmmu_mc68030() {
     UNKN(0xF000|074, 0x8100);   // #n
 }
 
+void test_pmmu_mc68040() {
+    TEST("PFLUSHN", "(A2)", 0172402);
+    TEST("PFLUSH",  "(A2)", 0172412);
+    TEST("PFLUSHAN", "",    0172420);
+    TEST("PFLUSHA",  "",    0172430);
+
+    TEST("PTESTR", "(A2)", 0172552);
+    TEST("PTESTW", "(A2)", 0172512);
+}
+
 void test_pmove_mc68851() {
     TEST("PMOVE.L", "D2, TC",   0xF000|002, 0x4000|(0<<10));
     ERRT("PMOVE.Q", "D2, DRP", ILLEGAL_SIZE, "D2, DRP", 0xF000|002, 0x4000|(1<<10));
@@ -7422,6 +7469,9 @@ void run_tests(const char *cpu) {
     if (mc68030()) {
         RUN_TEST(test_pmove_mc68030);
         RUN_TEST(test_pmmu_mc68030);
+    }
+    if (mc68040()) {
+        RUN_TEST(test_pmmu_mc68040);
     }
 #endif
 }

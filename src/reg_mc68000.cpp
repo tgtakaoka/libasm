@@ -69,9 +69,13 @@ PROGMEM constexpr NameTable TABLE{ARRAY_RANGE(REG_ENTRIES)};
 constexpr NameEntry CREG_ENTRIES[] PROGMEM = {
     { TEXT_REG_CAAR,  CREG_CAAR  },
     { TEXT_REG_CACR,  CREG_CACR  },
+    { TEXT_REG_DACR0, CREG_DACR0 },
+    { TEXT_REG_DACR1, CREG_DACR1 },
     { TEXT_REG_DFC,   CREG_DFC   },
     { TEXT_REG_DTT0,  CREG_DTT0  },
     { TEXT_REG_DTT1,  CREG_DTT1  },
+    { TEXT_REG_IACR0, CREG_IACR0 },
+    { TEXT_REG_IACR1, CREG_IACR1 },
     { TEXT_REG_ISP,   CREG_ISP   },
     { TEXT_REG_ITT0,  CREG_ITT0  },
     { TEXT_REG_ITT1,  CREG_ITT1  },
@@ -210,8 +214,13 @@ bool validCntlReg(CntlReg name, const CpuSpec &cpuSpec) {
         return false;
     if (name >= CREG_TC && cpuSpec.cpu < MC68040)
         return false;
-    if (cpuSpec.cpu == MC68040)
-        return name != CREG_CAAR;
+    if (cpuSpec.cpu == MC68040) {
+        if (name == CREG_CAAR)
+            return false;
+        if (name <= CREG_ISP)
+            return true;
+        return (cpuSpec.pmmu == PMMU_MC68040) ? name <= CREG_SRP : name >= CREG_IACR0;
+    }
     return true;
 }
 
@@ -233,6 +242,10 @@ Config::opcode_t encodeCntlRegNo(CntlReg name) {
             0x805,  // CREG_MMUSR = 13,  // MC68040
             0x806,  // CREG_URP = 14,    // MC68040
             0x807,  // CREG_SRP = 15,    // MC68040
+            0x004,  // CREG_IACR0 = 16,  // MC68EC040
+            0x005,  // CREG_IACR1 = 17,  // MC68EC040
+            0x006,  // CREG_DACR0 = 18,  // MC68EC040
+            0x007,  // CREG_DACR1 = 19,  // MC68EC040
     };
     return pgm_read_word(CREGNO + name);
 }
@@ -254,6 +267,8 @@ CntlReg decodeCntlRegNo(Config::opcode_t regno, const CpuSpec &cpuSpec) {
             return CREG_UNDEF;
         if (regno >= 3 && cpuSpec.cpu < MC68040)
             return CREG_UNDEF;
+        if (regno >= 4 && cpuSpec.pmmu == PMMU_MC68EC040)
+            return CntlReg(CREG_IACR0 + (regno - 4));
         return CntlReg(pgm_read_byte(CREG_0xx + regno));
     }
     if (regno >= 0x800 && regno < 0x808) {
@@ -272,6 +287,8 @@ CntlReg decodeCntlRegNo(Config::opcode_t regno, const CpuSpec &cpuSpec) {
         if (regno >= 0x805 && cpuSpec.cpu < MC68040)
             return CREG_UNDEF;
         if (regno == 0x802 && cpuSpec.cpu == MC68040)
+            return CREG_UNDEF;
+        if (regno >= 0x805 && cpuSpec.pmmu == PMMU_MC68EC040)
             return CREG_UNDEF;
         return CntlReg(pgm_read_byte(CREG_8xx + (regno - 0x800)));
     }

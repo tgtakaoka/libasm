@@ -18,6 +18,7 @@
         include "test_mc68010.inc"
         include "test_mc68020.inc"
         fpu     on
+        pmmu    on
         include "test_mc68040.inc"
         end
 

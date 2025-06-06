@@ -85,6 +85,10 @@ enum CntlReg : int8_t {
     CREG_MMUSR = 13,  // MC68040
     CREG_URP = 14,    // MC68040
     CREG_SRP = 15,    // MC68040
+    CREG_IACR0 = 16,  // MC68EC040
+    CREG_IACR1 = 17,  // MC68EC040
+    CREG_DACR0 = 18,  // MC68EC040
+    CREG_DACR1 = 19,  // MC68EC040
 };
 
 #if !defined(LIBASM_MC68000_NOPMMU)

@@ -1180,6 +1180,14 @@
         fdneg.d #-8.25, fp3
         fdneg.b #$23, fp4
 
+;# MC68040 PMMU
+        pflushn (a2)
+        pflush  (a2)
+        pflushan
+        pflusha
+        ptestr  (a2)
+        ptestw  (a2)
+
 ;### Local Variables:
 ;### mode: asm
 ;### End:
