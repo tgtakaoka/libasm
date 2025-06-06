@@ -69,14 +69,22 @@ enum RegName : int8_t {
 
 enum CntlReg : int8_t {
     CREG_UNDEF = -1,
-    CREG_SFC = 0,   // MC68010/MC68020/MC68030/MC68851
-    CREG_DFC = 1,   // MC68010/MC68020/MC68030/MC68851
-    CREG_USP = 2,   // MC68010/MC68020/MC68030
-    CREG_VBR = 3,   // MC68010/MC68020/MC68030
-    CREG_CACR = 4,  // MC68020/MC68030
-    CREG_CAAR = 5,  // MC68020/MC68030
-    CREG_MSP = 6,   // MC68020/MC68030
-    CREG_ISP = 7,   // MC68020/MC68030
+    CREG_SFC = 0,     // MC68010/MC68020/MC68030/MC68040/MC68851
+    CREG_DFC = 1,     // MC68010/MC68020/MC68030/MC68040/MC68851
+    CREG_USP = 2,     // MC68010/MC68020/MC68030/MC68040
+    CREG_VBR = 3,     // MC68010/MC68020/MC68030/MC68040
+    CREG_CACR = 4,    // MC68020/MC68030/MC68040
+    CREG_CAAR = 5,    // MC68020/MC68030/MC68040
+    CREG_MSP = 6,     // MC68020/MC68030/MC68040
+    CREG_ISP = 7,     // MC68020/MC68030/MC68040
+    CREG_TC = 8,      // MC68040
+    CREG_ITT0 = 9,    // MC68040
+    CREG_ITT1 = 10,   // MC68040
+    CREG_DTT0 = 11,   // MC68040
+    CREG_DTT1 = 12,   // MC68040
+    CREG_MMUSR = 13,  // MC68040
+    CREG_URP = 14,    // MC68040
+    CREG_SRP = 15,    // MC68040
 };
 
 #if !defined(LIBASM_MC68000_NOPMMU)
@@ -117,6 +125,14 @@ enum PmmuReg : int8_t {
 };
 #endif
 
+enum CacheName : int8_t {
+    CACHE_UNDEF = -1,
+    CACHE_NONE = 0,  // NC
+    CACHE_DATA = 1,  // DC
+    CACHE_INST = 2,  // IC
+    CACHE_BOTH = 3,  // BC, IC/DC
+};
+
 namespace reg {
 
 RegName parseRegName(StrScanner &scan, const ValueParser &parser);
@@ -134,10 +150,11 @@ RegName decodeGeneralReg(uint_fast8_t regno);
 RegName decodeDataReg(uint_fast8_t regno);
 RegName decodeAddrReg(uint_fast8_t regno);
 
-CntlReg parseCntlReg(StrScanner &scan, const ValueParser &parser, CpuType cpuType);
+CntlReg parseCntlReg(StrScanner &scan, const ValueParser &parser, PmmuType pmmuType);
 StrBuffer &outCntlReg(StrBuffer &out, CntlReg name);
+bool validCntlReg(CntlReg name, const CpuSpec &cpuSpec);
 Config::opcode_t encodeCntlRegNo(CntlReg name);
-CntlReg decodeCntlRegNo(Config::opcode_t regno, CpuType cpuType);
+CntlReg decodeCntlRegNo(Config::opcode_t regno, const CpuSpec &cpuSpec);
 
 #if !defined(LIBASM_MC68000_NOPMMU)
 PmmuReg parsePmmuReg(StrScanner &scan, const ValueParser &parser);
@@ -156,6 +173,11 @@ InsnSize parseSize(StrScanner &scan);
 InsnSize parseIndexSize(StrScanner &scan);
 uint_fast8_t sizeNameLen(OprSize size);
 char sizeSuffix(OprSize size);
+
+CacheName parseCacheName(StrScanner &scan, const ValueParser &parser);
+StrBuffer &outCacheName(StrBuffer &out, CacheName name);
+Config::opcode_t encodeCacheNum(CacheName name);
+CacheName decodeCacheName(Config::opcode_t opc);
 
 }  // namespace reg
 }  // namespace mc68000

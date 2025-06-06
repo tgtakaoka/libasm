@@ -33,6 +33,7 @@ private:
     const TextOption<Config> _opt_fpu;
     const TextOption<Config> _opt_pmmu;
 
+    Error parseCacheList(StrScanner &scan, Operand &op) const;
     Error parseDisplacement(StrScanner &scan, Displacement &disp, ErrorAt &error, char delim) const;
     Error parseIndexScale(StrScanner &scan, Indexing &index, ErrorAt &error, char delim) const;
     Error parseIndexSuffix(StrScanner &scan, Indexing &index, ErrorAt &error, char delim) const;
@@ -52,6 +53,7 @@ private:
     void encodeImmediate(AsmInsn &insn, const Operand &op, OprSize size) const;
     void encodeAbsoluteMode(AsmInsn &insn, OprSize size, OprPos pos, const Addressing &addr,
             const ErrorAt &at) const;
+    void encodeCacheList(AsmInsn &insn, const Operand &op) const;
     void encodeFloatControlList(AsmInsn &insn, const Operand &o) const;
     void encodeFloatRegisterList(AsmInsn &insn, const Operand &o) const;
     void encodePmove(AsmInsn &insn, const Operand &op, AddrMode mode) const;

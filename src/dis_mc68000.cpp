@@ -65,6 +65,14 @@ StrBuffer &outOprSize(StrBuffer &out, OprSize size) {
 
 }  // namespace
 
+void DisMc68000::outCacheList(StrBuffer &out, CacheName cache) const {
+    if (cache == CACHE_BOTH && !_gnuAs) {
+        outCacheName(out, CACHE_DATA).letter('/');
+        cache = CACHE_INST;
+    }
+    outCacheName(out, cache);
+}
+
 void DisMc68000::outBitField(DisInsn &insn, StrBuffer &out) const {
     const auto post = insn.postfix();
     out.letter('{');
@@ -110,7 +118,7 @@ void DisMc68000::outPointerPair(DisInsn &insn, StrBuffer &out) const {
 }
 
 void DisMc68000::outControlReg(DisInsn &insn, StrBuffer &out) const {
-    const auto creg = decodeCntlRegNo(insn.postfix(), _cpuSpec.cpu);
+    const auto creg = decodeCntlRegNo(insn.postfix(), _cpuSpec);
     if (creg == CREG_UNDEF)
         insn.setErrorIf(out, ILLEGAL_REGISTER);
     outCntlReg(out, creg);
@@ -758,7 +766,7 @@ void DisMc68000::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode type, Opr
         outEffectiveAddr(insn, out, type, decodeDataReg(r), size);
         break;
     case M_AREG:
-        /* Fall-through */
+    case M_AIND:
     case M_PDEC:
     case M_PINC:
     case M_DISP:
@@ -766,6 +774,9 @@ void DisMc68000::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode type, Opr
         break;
     case M_GREG:
         outRegName(out, decodeGeneralReg(r));
+        break;
+    case M_ALONG:
+        outEffectiveAddr(insn, out, type, REG_UNDEF, SZ_NONE);
         break;
     case M_RADDR:
     case M_WADDR:
@@ -932,6 +943,11 @@ void DisMc68000::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode type, Opr
         outPmmuReg(out, PREG_VAL);
         break;
 #endif
+    case M_CACHE:
+        if ((insn.opCode() & 030) == 0)
+            insn.setErrorIf(out, ILLEGAL_OPERAND);
+        outCacheList(out, decodeCacheName(insn.opCode()));
+        break;
     default:
         break;
     }

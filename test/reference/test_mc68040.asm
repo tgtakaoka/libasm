@@ -12,27 +12,12 @@
 ;;; See the License for the specific language governing permissions and
 ;;; limitations under the License.
 
-        cpu     68020
-        fpu     on
+        cpu     68040
         org     $10000
         include "test_mc68000.inc"
-        include "test_mc68882.inc"
         include "test_mc68010.inc"
         include "test_mc68020.inc"
-        movec   caar, d2
-        movec   a6, caar
-        pmmu    on
-        include "test_mc68851.inc"
-;;; Module
-        rtm     d2
-        rtm     a2
-        callm   #$FF, (a2)
-        callm   #0, ($1234, a2)
-        callm   #1, (18,a2,d3.w)
-        callm   #2, ($ffffff00).w
-        callm   #3, ($12345678).l
-        callm   #4, (*+$1234,pc)
-        callm   #5, (*+18,pc,d3.l)
+        include "test_mc68040.inc"
         end
 
 ;;; Local Variables:

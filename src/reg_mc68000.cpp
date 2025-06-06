@@ -70,9 +70,17 @@ constexpr NameEntry CREG_ENTRIES[] PROGMEM = {
     { TEXT_REG_CAAR,  CREG_CAAR  },
     { TEXT_REG_CACR,  CREG_CACR  },
     { TEXT_REG_DFC,   CREG_DFC   },
+    { TEXT_REG_DTT0,  CREG_DTT0  },
+    { TEXT_REG_DTT1,  CREG_DTT1  },
     { TEXT_REG_ISP,   CREG_ISP   },
+    { TEXT_REG_ITT0,  CREG_ITT0  },
+    { TEXT_REG_ITT1,  CREG_ITT1  },
+    { TEXT_REG_MMUSR, CREG_MMUSR },
     { TEXT_REG_MSP,   CREG_MSP   },
     { TEXT_REG_SFC,   CREG_SFC   },
+    { TEXT_REG_SRP,   CREG_SRP   },
+    { TEXT_REG_TC,    CREG_TC    },
+    { TEXT_REG_URP,   CREG_URP   },
     { TEXT_REG_USP,   CREG_USP   },
     { TEXT_REG_VBR,   CREG_VBR   },
 };
@@ -100,6 +108,15 @@ constexpr NameEntry PREG_ENTRIES[] PROGMEM = {
 
 PROGMEM constexpr NameTable PREG_TABLE{ARRAY_RANGE(PREG_ENTRIES)};
 #endif
+
+constexpr NameEntry CACHE_ENTRIES[] PROGMEM = {
+    { TEXT_BC, CACHE_BOTH },
+    { TEXT_DC, CACHE_DATA },
+    { TEXT_IC, CACHE_INST },
+    { TEXT_NC, CACHE_NONE },
+};
+
+PROGMEM constexpr NameTable CACHE_TABLE{ARRAY_RANGE(CACHE_ENTRIES)};
 
 // clang-format on
 }  // namespace
@@ -168,15 +185,17 @@ RegName decodeAddrReg(uint_fast8_t regno) {
     return RegName((regno & 7) + 8);
 }
 
-CntlReg parseCntlReg(StrScanner &scan, const ValueParser &parser, CpuType cpuType) {
+CntlReg parseCntlReg(StrScanner &scan, const ValueParser &parser, PmmuType pmmuType) {
     auto p = scan;
     const auto *entry = CREG_TABLE.searchText(parser.readRegName(p));
     if (entry) {
-        const auto creg = CntlReg(entry->name());
-        if (creg >= CREG_CACR && cpuType == MC68010)
-            return CREG_UNDEF;
+        const auto name = CntlReg(entry->name());
+        if (pmmuType == PMMU_MC68851 || pmmuType == PMMU_MC68030) {
+            if (name == CREG_TC || name == CREG_SRP)
+                return CREG_UNDEF;  // those are PREG_TC, PREG_SRP
+        }
         scan = p;
-        return creg;
+        return name;
     }
     return CREG_UNDEF;
 }
@@ -186,43 +205,75 @@ StrBuffer &outCntlReg(StrBuffer &out, CntlReg name) {
     return entry ? entry->outText(out) : out;
 }
 
+bool validCntlReg(CntlReg name, const CpuSpec &cpuSpec) {
+    if (name >= CREG_CACR && cpuSpec.cpu == MC68010)
+        return false;
+    if (name >= CREG_TC && cpuSpec.cpu < MC68040)
+        return false;
+    if (cpuSpec.cpu == MC68040)
+        return name != CREG_CAAR;
+    return true;
+}
+
 Config::opcode_t encodeCntlRegNo(CntlReg name) {
     static constexpr Config::opcode_t CREGNO[] = {
-            0x000,  // CREG_SFC = 0,   // MC68010/MC68020/MC68030/MC68851
-            0x001,  // CREG_DFC = 1,   // MC68010/MC68020/MC68030/MC68851
-            0x800,  // CREG_USP = 2,   // MC68010/MC68020/MC68030
-            0x801,  // CREG_VBR = 3,   // MC68010/MC68020/MC68030
-            0x002,  // CREG_CACR = 4,  // MC68020/MC68030
-            0x802,  // CREG_CAAR = 5,  // MC68020/MC68030
-            0x803,  // CREG_MSP = 6,   // MC68020/MC68030
-            0x804,  // CREG_ISP = 7,   // MC68020/MC68030
+            0x000,  // CREG_SFC = 0,     // MC68010/MC68020/MC68030/MC68040/MC68851
+            0x001,  // CREG_DFC = 1,     // MC68010/MC68020/MC68030/MC68040/MC68851
+            0x800,  // CREG_USP = 2,     // MC68010/MC68020/MC68030/MC68040
+            0x801,  // CREG_VBR = 3,     // MC68010/MC68020/MC68030/MC68040
+            0x002,  // CREG_CACR = 4,    // MC68020/MC68030/MC68040
+            0x802,  // CREG_CAAR = 5,    // MC68020/MC68030/MC68040
+            0x803,  // CREG_MSP = 6,     // MC68020/MC68030/MC68040
+            0x804,  // CREG_ISP = 7,     // MC68020/MC68030/MC68040
+            0x003,  // CREG_TC = 8,      // MC68040
+            0x004,  // CREG_ITT0 = 9,    // MC68040
+            0x005,  // CREG_ITT1 = 10,   // MC68040
+            0x006,  // CREG_DTT0 = 11,   // MC68040
+            0x007,  // CREG_DTT1 = 12,   // MC68040
+            0x805,  // CREG_MMUSR = 13,  // MC68040
+            0x806,  // CREG_URP = 14,    // MC68040
+            0x807,  // CREG_SRP = 15,    // MC68040
     };
     return pgm_read_word(CREGNO + name);
 }
 
-CntlReg decodeCntlRegNo(Config::opcode_t regno, CpuType cpuType) {
+CntlReg decodeCntlRegNo(Config::opcode_t regno, const CpuSpec &cpuSpec) {
     regno &= 0xFFF;
-    if (regno < 3) {
-        static constexpr CntlReg CCREG_0xx[] PROGMEM = {
+    if (regno < 8) {
+        static constexpr CntlReg CREG_0xx[] PROGMEM = {
                 CREG_SFC,   // 0x000
                 CREG_DFC,   // 0x001
                 CREG_CACR,  // 0x002
+                CREG_TC,    // 0x003
+                CREG_ITT0,  // 0x004
+                CREG_ITT1,  // 0x005
+                CREG_DTT0,  // 0x006
+                CREG_DTT1,  // 0x007
         };
-        if (regno >= 2 && cpuType == MC68010)
+        if (regno >= 2 && cpuSpec.cpu == MC68010)
             return CREG_UNDEF;
-        return CntlReg(pgm_read_byte(CCREG_0xx + regno));
+        if (regno >= 3 && cpuSpec.cpu < MC68040)
+            return CREG_UNDEF;
+        return CntlReg(pgm_read_byte(CREG_0xx + regno));
     }
-    if (regno >= 0x800 && regno < 0x805) {
-        static constexpr CntlReg CCREG_8xx[] PROGMEM = {
-                CREG_USP,   // 0x800
-                CREG_VBR,   // 0x801
-                CREG_CAAR,  // 0x802
-                CREG_MSP,   // 0x803
-                CREG_ISP,   // 0x804
+    if (regno >= 0x800 && regno < 0x808) {
+        static constexpr CntlReg CREG_8xx[] PROGMEM = {
+                CREG_USP,    // 0x800
+                CREG_VBR,    // 0x801
+                CREG_CAAR,   // 0x802
+                CREG_MSP,    // 0x803
+                CREG_ISP,    // 0x804
+                CREG_MMUSR,  // 0x805
+                CREG_URP,    // 0x806
+                CREG_SRP,    // 0x807
         };
-        if (regno >= 0x802 && cpuType == MC68010)
+        if (regno >= 0x802 && cpuSpec.cpu == MC68010)
             return CREG_UNDEF;
-        return CntlReg(pgm_read_byte(CCREG_8xx + (regno - 0x800)));
+        if (regno >= 0x805 && cpuSpec.cpu < MC68040)
+            return CREG_UNDEF;
+        if (regno == 0x802 && cpuSpec.cpu == MC68040)
+            return CREG_UNDEF;
+        return CntlReg(pgm_read_byte(CREG_8xx + (regno - 0x800)));
     }
     return CREG_UNDEF;
 }
@@ -479,6 +530,29 @@ RegName decodeRegNo(uint_fast8_t mode, uint_fast8_t regno) {
     if (mode >= 1 && mode < 7)
         return decodeAddrReg(regno);
     return REG_UNDEF;
+}
+
+CacheName parseCacheName(StrScanner &scan, const ValueParser &parser) {
+    auto p = scan;
+    const auto *entry = CACHE_TABLE.searchText(parser.readRegName(p));
+    if (entry) {
+        scan = p;
+        return CacheName(entry->name());
+    }
+    return CACHE_UNDEF;
+}
+
+StrBuffer &outCacheName(StrBuffer &out, CacheName name) {
+    const auto *entry = CACHE_TABLE.searchName(name);
+    return entry ? entry->outText(out) : out;
+}
+
+Config::opcode_t encodeCacheNum(CacheName name) {
+    return (static_cast<Config::opcode_t>(name) & 3) << 6;
+}
+
+CacheName decodeCacheName(Config::opcode_t opc) {
+    return CacheName((opc >> 6) & 3);
 }
 
 }  // namespace reg

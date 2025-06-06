@@ -21,17 +21,19 @@ namespace text {
 namespace mc68000 {
 
 // clang-format off
-constexpr char TEXT_MC68000_LIST[] PROGMEM = "MC68000, MC68010, MC68020, MC68030";
+constexpr char TEXT_MC68000_LIST[] PROGMEM = "MC68000, MC68010, MC68020, MC68030, MC68040";
 constexpr char TEXT_CPU_MC68000[]  PROGMEM = "MC68000";
 constexpr char TEXT_CPU_MC68010[]  PROGMEM = "MC68010";
 constexpr char TEXT_CPU_MC68020[]  PROGMEM = "MC68020";
 constexpr char TEXT_CPU_MC68030[]  PROGMEM = "MC68030";
+constexpr char TEXT_CPU_MC68040[]  PROGMEM = "MC68040";
 constexpr char TEXT_FPU_MC68881[]  PROGMEM = "MC68881";
 constexpr char TEXT_PMMU_MC68851[] PROGMEM = "MC68851";
 constexpr char TEXT_CPU_68000[]    PROGMEM = "68000";
 constexpr char TEXT_CPU_68010[]    PROGMEM = "68010";
 constexpr char TEXT_CPU_68020[]    PROGMEM = "68020";
 constexpr char TEXT_CPU_68030[]    PROGMEM = "68030";
+constexpr char TEXT_CPU_68040[]    PROGMEM = "68040";
 constexpr char TEXT_FPU_68881[]    PROGMEM = "68881";
 constexpr char TEXT_PMMU_68851[]   PROGMEM = "68851";
 constexpr char TEXT_PMMU_68EC030[] PROGMEM = "68EC030";
@@ -247,6 +249,27 @@ constexpr char TEXT_REG_TT1[] PROGMEM = "TT1";
 constexpr char TEXT_REG_ACUSR[] PROGMEM = "ACUSR";
 // constexpr char TEXT_REG_AC0[]   PROGMEM = "AC0";
 // constexpr char TEXT_REG_AC1[]   PROGMEM = "AC1";
+
+// MC68040
+constexpr char TEXT_CINVA[]  PROGMEM = "CINVA";
+constexpr char TEXT_CINVL[]  PROGMEM = "CINVL";
+constexpr char TEXT_CINVP[]  PROGMEM = "CINVP";
+constexpr char TEXT_CPUSHA[] PROGMEM = "CPUSHA";
+constexpr char TEXT_CPUSHL[] PROGMEM = "CPUSHL";
+constexpr char TEXT_CPUSHP[] PROGMEM = "CPUSHP";
+constexpr char TEXT_MOVE16[] PROGMEM = "MOVE16";
+
+constexpr char TEXT_IC[] PROGMEM = "IC";
+constexpr char TEXT_DC[] PROGMEM = "DC";
+constexpr char TEXT_BC[] PROGMEM = "BC";
+constexpr char TEXT_NC[] PROGMEM = "NC";
+
+constexpr char TEXT_REG_DTT0[]  PROGMEM = "DTT0";
+constexpr char TEXT_REG_DTT1[]  PROGMEM = "DTT1";
+constexpr char TEXT_REG_ITT0[]  PROGMEM = "ITT0";
+constexpr char TEXT_REG_ITT1[]  PROGMEM = "ITT1";
+constexpr char TEXT_REG_MMUSR[] PROGMEM = "MMUSR";
+constexpr char TEXT_REG_URP[]   PROGMEM = "URP";
 
 // MC68881
 // constexpr char TEXT_FABS[]      PROGMEM = "FABS";

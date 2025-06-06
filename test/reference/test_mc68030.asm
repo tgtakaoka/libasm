@@ -20,6 +20,8 @@
         include "test_mc68882.inc"
         include "test_mc68010.inc"
         include "test_mc68020.inc"
+        movec   caar, d2
+        movec   a6, caar
         include "test_mc68030.inc"
         end
 

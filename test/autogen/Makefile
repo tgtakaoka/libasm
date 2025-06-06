@@ -27,12 +27,10 @@ help:
 .PHONY:: clean clean-gen clean-asm clean-asl clean-gas
 
 # target which has ".inc" suffix for output.
-INC_targets = w65c816 tlcs90 i8086 i80186 \
-    mc68000 mc68010 mc68020 mc68030 z8001 z8002 ns32000 mn1610 mn1613 \
-    tms370 tms7000 tms9980 j11 t11 mc146805 z80 z180 z380
+INC_targets = w65c816 tlcs90 i8086 i80186 $(TGT_mc68000) $(TGT_z8000) $(TGT_nm1610) \
+    ns32000 tms370 tms7000 tms9980 j11 t11 mc146805 z80 z180 z380
 # target which for GNU assembler (also ".ginc" targets)
-GINC_targets = mc68000 mc68010 mc68020 mc68030 z8001 z8002 ns32000 \
-    mc68hc11 mc68hc12 i8086 i80186 i80286
+GINC_targets = $(TGT_mc68000) $(TGT_z8000) ns32000 mc68hc11 mc68hc12 i8086 i80186 i80286
 # target which also has Zilog syntax (also ".zinc" targets)
 ZINC_targets = i8080 i8085 v30emu
 # target which doesn't need ".asm"

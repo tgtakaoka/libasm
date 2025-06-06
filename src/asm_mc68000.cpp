@@ -874,6 +874,8 @@ Error AsmMc68000::encodeOperand(
 #endif
     case M_USP:
     case M_CREG: {
+        if (!validCntlReg(op.creg, _cpuSpec))
+            insn.setErrorIf(op, UNKNOWN_REGISTER);
         auto creg = encodeCntlRegNo(op.creg);
 #if !defined(LIBASM_MC68000_NOPMMU)
         if (mode == M_PFC) {
@@ -907,10 +909,24 @@ Error AsmMc68000::encodeOperand(
         encodePmove(insn, op, mode);
         break;
 #endif
+    case M_CACHE:
+        encodeCacheList(insn, op);
+        break;
     default:
         break;
     }
     return insn.getError();
+}
+
+void AsmMc68000::encodeCacheList(AsmInsn &insn, const Operand &op) const {
+    auto p = op.list;
+    for (;;) {
+        const auto name = parseCacheName(p, parser());
+        insn.embed(encodeCacheNum(name));
+        if (!p.skipSpaces().expect('/'))
+            return;
+        p.skipSpaces();
+    }
 }
 
 #if !defined(LIBASM_MC68000_NOFPU)
@@ -926,7 +942,7 @@ void AsmMc68000::encodeFloatControlList(AsmInsn &insn, const Operand &op) const 
         insn.embedPostfix(1 << encodeFloatControlRegPos(reg));
         ++n;
         if (a.skipSpaces().expect('/')) {
-            p = a;
+            p = a.skipSpaces();
             continue;
         }
         if (*a != ',' && !endOfLine(a))
@@ -994,7 +1010,7 @@ void AsmMc68000::encodeFloatRegisterList(AsmInsn &insn, const Operand &op) const
                 bits |= bm;
             }
             if (a.skipSpaces().expect('/')) {
-                p = a;
+                p = a.skipSpaces();
                 continue;
             }
             if (*a != ',' && !endOfLine(a))
@@ -1047,6 +1063,26 @@ void AsmMc68000::encodeRegisterList(AsmInsn &insn, const Operand &op, bool rever
     if (reverse)
         bits = reverseUint16(bits);
     insn.emitOperand16(bits);
+}
+
+Error AsmMc68000::parseCacheList(StrScanner &scan, Operand &op) const {
+    auto p = scan;
+    for (;;) {
+        const auto at = p;
+        const auto cache = parseCacheName(p, parser());
+        if (cache == CACHE_UNDEF)
+            return op.setErrorIf(at, UNKNOWN_OPERAND);
+        if (p.skipSpaces().expect('/')) {
+            p.skipSpaces();
+            continue;
+        }
+        if (*p != ',' && !endOfLine(p))
+            return op.setErrorIf(p, UNKNOWN_OPERAND);
+        op.mode = M_CACHE;
+        op.list = StrScanner(scan.str(), p.str());
+        scan = p;
+        return OK;
+    }
 }
 
 Error AsmMc68000::parseBitField(StrScanner &scan, Operand &op) const {
@@ -1459,7 +1495,7 @@ Error AsmMc68000::parseOperand(StrScanner &scan, Operand &op) const {
         return OK;
     }
 
-    op.creg = parseCntlReg(a, parser(), _cpuSpec.cpu);
+    op.creg = parseCntlReg(a, parser(), _cpuSpec.pmmu);
     if (op.creg != CREG_UNDEF) {
         if (op.creg == CREG_USP) {
             op.mode = M_USP;
@@ -1478,6 +1514,13 @@ Error AsmMc68000::parseOperand(StrScanner &scan, Operand &op) const {
         return OK;
     }
 #endif
+
+    if (parseCacheName(p, parser()) != CACHE_UNDEF) {
+        if (parseCacheList(a, op))
+            return op.getError();
+        scan = a;
+        return OK;
+    }
 
     op.val = parseInteger(p, op);
     if (op.hasError())

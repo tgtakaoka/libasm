@@ -1,0 +1,65 @@
+;### Copyright 2025 Tadashi G. Takaoka
+;###
+;### Licensed under the Apache License, Version 2.0 (the "License");
+;### you may not use this file except in compliance with the License.
+;### You may obtain a copy of the License at
+;###
+;###     http://www.apache.org/licenses/LICENSE-2.0
+;###
+;### Unless required by applicable law or agreed to in writing, software
+;### distributed under the License is distributed on an "AS IS" BASIS,
+;### WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+;### See the License for the specific language governing permissions and
+;### limitations under the License.
+
+;### MC68040 CPU
+        move16  (a1)+, (a2)+
+        move16  (a1)+, ($12345678)
+        move16  ($12345678), (a1)+
+        move16  (a1), ($12345678)
+        move16  ($12345678), (a1)
+        cinvl   dc, (a2)
+        cinvl   ic, (a2)
+        cinvl   dc/ic, (a2)
+        cinvl   nc, (a2)
+        cinvp   dc, (a2)
+        cinvp   ic, (a2)
+        cinvp   dc/ic, (a2)
+        cinvp   nc, (a2)
+        cinva   dc
+        cinva   ic
+        cinva   dc/ic
+        cinva   nc
+        cpushl  dc, (a2)
+        cpushl  ic, (a2)
+        cpushl  dc/ic, (a2)
+        cpushl  nc, (a2)
+        cpushp  dc, (a2)
+        cpushp  ic, (a2)
+        cpushp  dc/ic, (a2)
+        cpushp  nc, (a2)
+        cpusha  dc
+        cpusha  ic
+        cpusha  dc/ic
+        cpusha  nc
+        movec   d1, tc
+        movec   a2, itt0
+        movec   d3, itt1
+        movec   a4, dtt0
+        movec   d5, dtt1
+        movec   a6, mmusr
+        movec   d7, urp
+        movec   a0, srp
+        movec   tc, d0
+        movec   itt0, a1
+        movec   itt1, d2
+        movec   dtt0, a3
+        movec   dtt1, d4
+        movec   mmusr, a5
+        movec   urp, d6
+        movec   srp, a7
+
+;### Local Variables:
+;### mode: asm
+;### End:
+;### vim: set ft=asm:
