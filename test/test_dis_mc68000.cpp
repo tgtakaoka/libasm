@@ -5119,6 +5119,7 @@ void test_float_arithmetic() {
 }
 
 void test_float_branch() {
+    TEST("FNOP", "",                       0xF280, 0x0000);
     ATEST(0x10000, "FBF",    "*+$1234",    0xF280, 0x1232);
     ATEST(0x10000, "FBEQ",   "*+$1234",    0xF281, 0x1232);
     ATEST(0x10000, "FBOGT",  "*-$1234",    0xF282, 0xEDCA);

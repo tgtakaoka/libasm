@@ -5524,6 +5524,7 @@
       FTRAPSNE
       FTRAPST
       FBF         *-$0C7C
+      FNOP
       FBEQ        *-$0C7C
       FBOGT       *-$0C7A
       FBOGE       *-$0C7A

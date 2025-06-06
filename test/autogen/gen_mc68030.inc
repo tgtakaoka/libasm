@@ -23676,7 +23676,6 @@
       MOVEM.L     ([*+$1266,PC]), D0-D1/D4/D6/A4
       TRAP        #0
       LINK        A0, #$4F51
-      LINK        A0, #-$8000
       UNLK        A0
       MOVE        A0, USP
       MOVE        USP, A0
@@ -25409,7 +25408,6 @@
       BLE         *+4
       BLE         *+$71007204
       MOVEQ       #0, D0
-      MOVEQ       #-$80, D0
       OR.B        D0, D0
       OR.B        (A0), D0
       OR.B        (A0)+, D0
@@ -31494,7 +31492,6 @@
       FMOVE.S     FP0, (A0)
       FMOVE.X     FP0, (A0)
       FMOVE.P     FP0, (A0){#0}
-      FMOVE.P     FP0, (A0){#-64}
       FMOVE.W     FP0, (A0)
       FMOVE.D     FP0, (A0)
       FMOVE.B     FP0, (A0)
@@ -31796,7 +31793,6 @@
       FMOVE.S     FP0, (A0)+
       FMOVE.X     FP0, (A0)+
       FMOVE.P     FP0, (A0)+{#0}
-      FMOVE.P     FP0, (A0)+{#-64}
       FMOVE.W     FP0, (A0)+
       FMOVE.D     FP0, (A0)+
       FMOVE.B     FP0, (A0)+
@@ -32092,7 +32088,6 @@
       FMOVE.S     FP0, -(A0)
       FMOVE.X     FP0, -(A0)
       FMOVE.P     FP0, -(A0){#0}
-      FMOVE.P     FP0, -(A0){#-64}
       FMOVE.W     FP0, -(A0)
       FMOVE.D     FP0, -(A0)
       FMOVE.B     FP0, -(A0)
@@ -32389,7 +32384,6 @@
       FMOVE.S     FP0, ($6501,A0)
       FMOVE.X     FP0, ($6901,A0)
       FMOVE.P     FP0, ($6D01,A0){#0}
-      FMOVE.P     FP0, ($6D41,A0){#-64}
       FMOVE.W     FP1, ($7181,A0)
       FMOVE.D     FP0, ($7501,A0)
       FMOVE.B     FP0, ($7901,A0)
@@ -47055,60 +47049,6 @@
       FMOVE.P     FP0, ([$6EF26FF4]){#0}
       FMOVE.P     FP0, ([$6EF46FF6],$70F771F8){#0}
       FMOVE.P     FP0, (0,A0,D6.L*8){#0}
-      FMOVE.P     FP0, (A0){#-64}
-      FMOVE.P     FP0, ([A0]){#-64}
-      FMOVE.P     FP0, ([A0],$6E53){#-64}
-      FMOVE.P     FP0, ([A0],$6E546F55){#-64}
-      FMOVE.P     FP0, ($6E61,A0){#-64}
-      FMOVE.P     FP0, ([$6E62,A0]){#-64}
-      FMOVE.P     FP0, ([$6E63,A0],$6F64){#-64}
-      FMOVE.P     FP0, ([$6E64,A0],$6F657066){#-64}
-      FMOVE.P     FP0, ($6E716F72,A0){#-64}
-      FMOVE.P     FP0, ([$6E726F73,A0]){#-64}
-      FMOVE.P     FP0, ([$6E746F75,A0],$70767177){#-64}
-      FMOVE.P     FP0, (D6.L*4){#-64}
-      FMOVE.P     FP0, ([D6.L*4]){#-64}
-      FMOVE.P     FP0, ([D6.L*4],$6E93){#-64}
-      FMOVE.P     FP0, ([D6.L*4],$6E946F95){#-64}
-      FMOVE.P     FP0, ($6EA1,D6.L*4){#-64}
-      FMOVE.P     FP0, ([$6EA2,D6.L*4]){#-64}
-      FMOVE.P     FP0, ([$6EA3,D6.L*4],$6FA4){#-64}
-      FMOVE.P     FP0, ([$6EA4,D6.L*4],$6FA570A6){#-64}
-      FMOVE.P     FP0, ([$6EA6],D6.L*4){#-64}
-      FMOVE.P     FP0, ([$6EA7],D6.L*4,$6FA8){#-64}
-      FMOVE.P     FP0, ([$6EA8],D6.L*4,$6FA970AA){#-64}
-      FMOVE.P     FP0, ($6EB16FB2,D6.L*4){#-64}
-      FMOVE.P     FP0, ([$6EB26FB3,D6.L*4]){#-64}
-      FMOVE.P     FP0, ([$6EB46FB5,D6.L*4],$70B671B7){#-64}
-      FMOVE.P     FP0, ([$6EB66FB7],D6.L*4){#-64}
-      FMOVE.P     FP0, ([$6EB86FB9],D6.L*4,$70BA71BB){#-64}
-      FMOVE.P     FP0, ($6EE2){#-64}
-      FMOVE.P     FP0, ([$6EE2]){#-64}
-      FMOVE.P     FP0, ([$6EE4],$6FE5){#-64}
-      FMOVE.P     FP0, ([$6EE4],$6FE570E6){#-64}
-      FMOVE.P     FP0, ($6EF16FF2){#-64}
-      FMOVE.P     FP0, ([$6EF26FF4]){#-64}
-      FMOVE.P     FP0, ([$6EF46FF6],$70F771F8){#-64}
-      FMOVE.P     FP0, (0,A0,D6.L*8){#-64}
-      FMOVE.P     FP0, (A0,D6.L*8){#-64}
-      FMOVE.P     FP0, ([A0,D6.L*8]){#-64}
-      FMOVE.P     FP0, ([A0,D6.L*8],$7013){#-64}
-      FMOVE.P     FP0, ([A0,D6.L*8],$70147115){#-64}
-      FMOVE.P     FP0, ([A0],D6.L*8){#-64}
-      FMOVE.P     FP0, ([A0],D6.L*8,$7017){#-64}
-      FMOVE.P     FP0, ([A0],D6.L*8,$70187119){#-64}
-      FMOVE.P     FP0, ($7021,A0,D6.L*8){#-64}
-      FMOVE.P     FP0, ([$7022,A0,D6.L*8]){#-64}
-      FMOVE.P     FP0, ([$7023,A0,D6.L*8],$7124){#-64}
-      FMOVE.P     FP0, ([$7024,A0,D6.L*8],$71257226){#-64}
-      FMOVE.P     FP0, ([$7026,A0],D6.L*8){#-64}
-      FMOVE.P     FP0, ([$7027,A0],D6.L*8,$7128){#-64}
-      FMOVE.P     FP0, ([$7028,A0],D6.L*8,$7129722A){#-64}
-      FMOVE.P     FP0, ($70317132,A0,D6.L*8){#-64}
-      FMOVE.P     FP0, ([$70327133,A0,D6.L*8]){#-64}
-      FMOVE.P     FP0, ([$70347135,A0,D6.L*8],$72367337){#-64}
-      FMOVE.P     FP0, ([$70367137,A0],D6.L*8){#-64}
-      FMOVE.P     FP0, ([$70387139,A0],D6.L*8,$723A733B){#-64}
       FMOVE.W     FP1, (D7.W)
       FMOVE.W     FP1, ([D7.W])
       FMOVE.W     FP1, ([D7.W],$7293)
@@ -49054,7 +48994,6 @@
       FMOVE.S     FP0, ($00006502).W
       FMOVE.X     FP0, ($00006902).W
       FMOVE.P     FP0, ($00006D02).W{#0}
-      FMOVE.P     FP0, ($00006D42).W{#-64}
       FMOVE.W     FP1, ($00007182).W
       FMOVE.D     FP0, ($00007502).W
       FMOVE.B     FP0, ($00007901).W
@@ -49357,7 +49296,6 @@
       FMOVE.S     FP0, ($65016602).L
       FMOVE.X     FP0, ($69016A02).L
       FMOVE.P     FP0, ($6D016E02).L{#0}
-      FMOVE.P     FP0, ($6D416E42).L{#-64}
       FMOVE.W     FP1, ($71817282).L
       FMOVE.D     FP0, ($75017602).L
       FMOVE.B     FP0, ($79017A02).L
@@ -59930,118 +59868,80 @@
       FTST.L      #$413B423C
       FMOVE.S     #2068.37549, FP0
       FMOVE.S     #2069, FP0
-      FMOVE.S     #-8965129, FP0
       FINT.S      #2084.37573, FP0
       FINT.S      #2085, FP0
-      FINT.S      #-2224834, FP0
       FSINH.S     #2100.37598, FP0
       FSINH.S     #2101, FP0
-      FSINH.S     #-9096203, FP0
       FINTRZ.S    #2116.37622, FP0
       FINTRZ.S    #2117, FP0
-      FINTRZ.S    #-9161740, FP0
       FSQRT.S     #2132.37646, FP0
       FSQRT.S     #2133, FP0
-      FSQRT.S     #-9227277, FP0
       FLOGNP1.S   #2164.37695, FP0
       FLOGNP1.S   #2165, FP0
-      FLOGNP1.S   #-9358351, FP0
       FETOXM1.S   #2196.37744, FP0
       FETOXM1.S   #2197, FP0
-      FETOXM1.S   #-9489425, FP0
       FTANH.S     #2212.37769, FP0
       FTANH.S     #2213, FP0
-      FTANH.S     #-2355908, FP0
       FATAN.S     #2228.37793, FP0
       FATAN.S     #2229, FP0
-      FATAN.S     #-9620499, FP0
       FASIN.S     #2260.37842, FP0
       FASIN.S     #2261, FP0
-      FASIN.S     #-9751573, FP0
       FATANH.S    #2276.37866, FP0
       FATANH.S    #2277, FP0
-      FATANH.S    #-2421445, FP0
       FSIN.S      #2292.37891, FP0
       FSIN.S      #2293, FP0
-      FSIN.S      #-9882647, FP0
       FTAN.S      #2308.37915, FP0
       FTAN.S      #2309, FP0
-      FTAN.S      #-9948184, FP0
       FETOX.S     #2324.37939, FP0
       FETOX.S     #2325, FP0
-      FETOX.S     #-10013721, FP0
       FTWOTOX.S   #2340.37964, FP0
       FTWOTOX.S   #2341, FP0
-      FTWOTOX.S   #-2486982, FP0
       FTENTOX.S   #2356.37988, FP0
       FTENTOX.S   #2357, FP0
-      FTENTOX.S   #-10144795, FP0
       FLOGN.S     #2388.38037, FP0
       FLOGN.S     #2389, FP0
-      FLOGN.S     #-10275869, FP0
       FLOG10.S    #2404.38062, FP0
       FLOG10.S    #2405, FP0
-      FLOG10.S    #-2552519, FP0
       FLOG2.S     #2420.38086, FP0
       FLOG2.S     #2421, FP0
-      FLOG2.S     #-10406943, FP0
       FABS.S      #2452.38135, FP0
       FABS.S      #2453, FP0
-      FABS.S      #-10538017, FP0
       FCOSH.S     #2468.38159, FP0
       FCOSH.S     #2469, FP0
-      FCOSH.S     #-2618056, FP0
       FNEG.S      #2484.38184, FP0
       FNEG.S      #2485, FP0
-      FNEG.S      #-10669091, FP0
       FACOS.S     #2516.38232, FP0
       FACOS.S     #2517, FP0
-      FACOS.S     #-10800165, FP0
       FCOS.S      #2532.38257, FP0
       FCOS.S      #2533, FP0
-      FCOS.S      #-2683593, FP0
       FGETEXP.S   #2548.38281, FP0
       FGETEXP.S   #2549, FP0
-      FGETEXP.S   #-10931239, FP0
       FGETMAN.S   #2564.38306, FP0
       FGETMAN.S   #2565, FP0
-      FGETMAN.S   #-10996776, FP0
       FDIV.S      #2580.3833, FP0
       FDIV.S      #2581, FP0
-      FDIV.S      #-11062313, FP0
       FMOD.S      #2596.38354, FP0
       FMOD.S      #2597, FP0
-      FMOD.S      #-2749130, FP0
       FADD.S      #2612.38379, FP0
       FADD.S      #2613, FP0
-      FADD.S      #-11193387, FP0
       FMUL.S      #2628.38403, FP0
       FMUL.S      #2629, FP0
-      FMUL.S      #-11258924, FP0
       FSGLDIV.S   #2644.38428, FP0
       FSGLDIV.S   #2645, FP0
-      FSGLDIV.S   #-11324461, FP0
       FREM.S      #2660.38452, FP0
       FREM.S      #2661, FP0
-      FREM.S      #-2814667, FP0
       FSCALE.S    #2676.38477, FP0
       FSCALE.S    #2677, FP0
-      FSCALE.S    #-11455535, FP0
       FSGLMUL.S   #2692.38501, FP0
       FSGLMUL.S   #2693, FP0
-      FSGLMUL.S   #-11521072, FP0
       FSUB.S      #2708.38525, FP0
       FSUB.S      #2709, FP0
-      FSUB.S      #-11586609, FP0
       FSINCOS.S   #2836.38721, FP0:FP0
       FSINCOS.S   #2837, FP0:FP0
-      FSINCOS.S   #-12110905, FP0:FP0
       FCMP.S      #2964.38916, FP0
       FCMP.S      #2965, FP0
-      FCMP.S      #-12635201, FP0
       FTST.S      #2996.38965
       FTST.S      #2997
-      FTST.S      #-12766275
       FMOVE.X     #1.50177792631662443937E+694, FP0
       FINT.X      #3.0036472127590050001E+694, FP0
       FSINH.X     #6.00747714576952224293E+694, FP0
@@ -62280,6 +62180,7 @@
       FTRAPSNE
       FTRAPST
       FBF         *-$0C7C
+      FNOP
       FBEQ        *-$0C7C
       FBOGT       *-$0C7A
       FBOGE       *-$0C7A

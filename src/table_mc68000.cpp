@@ -912,6 +912,7 @@ constexpr uint8_t MC68881_ARITH_INDEX[] PROGMEM = {
 
 constexpr Entry MC68881_BRANCH[] PROGMEM = {
     E1(0xF280, TEXT_FBF,      ISZ_NONE, M_REL32, OP___, SZ_LONG, CF_0100),
+    X0(0xF280, TEXT_FNOP,     CF_0000,  0x0000,  PF_0000),
     E1(0xF281, TEXT_FBEQ,     ISZ_NONE, M_REL32, OP___, SZ_LONG, CF_0100),
     E1(0xF282, TEXT_FBOGT,    ISZ_NONE, M_REL32, OP___, SZ_LONG, CF_0100),
     E1(0xF283, TEXT_FBOGE,    ISZ_NONE, M_REL32, OP___, SZ_LONG, CF_0100),
@@ -978,70 +979,71 @@ constexpr Entry MC68881_BRANCH[] PROGMEM = {
 };
 
 constexpr uint8_t MC68881_BRANCH_INDEX[] PROGMEM = {
-      1,  // TEXT_FBEQ
+      2,  // TEXT_FBEQ
       0,  // TEXT_FBF
-     19,  // TEXT_FBGE
-     22,  // TEXT_FBGL
-     23,  // TEXT_FBGLE
-     18,  // TEXT_FBGT
-     21,  // TEXT_FBLE
-     20,  // TEXT_FBLT
-     14,  // TEXT_FBNE
-     28,  // TEXT_FBNGE
-     25,  // TEXT_FBNGL
-     24,  // TEXT_FBNGLE
-     29,  // TEXT_FBNGT
-     26,  // TEXT_FBNLE
-     27,  // TEXT_FBNLT
-      3,  // TEXT_FBOGE
-      6,  // TEXT_FBOGL
-      2,  // TEXT_FBOGT
-      5,  // TEXT_FBOLE
-      4,  // TEXT_FBOLT
-      7,  // TEXT_FBOR
-     17,  // TEXT_FBSEQ
-     16,  // TEXT_FBSF
-     30,  // TEXT_FBSNE
-     31,  // TEXT_FBST
-     15,  // TEXT_FBT
-      9,  // TEXT_FBUEQ
-     11,  // TEXT_FBUGE
-     10,  // TEXT_FBUGT
-     13,  // TEXT_FBULE
-     12,  // TEXT_FBULT
-      8,  // TEXT_FBUN
-     33,  // TEXT_FDBEQ
-     32,  // TEXT_FDBF
-     51,  // TEXT_FDBGE
-     54,  // TEXT_FDBGL
-     55,  // TEXT_FDBGLE
-     50,  // TEXT_FDBGT
-     53,  // TEXT_FDBLE
-     52,  // TEXT_FDBLT
-     46,  // TEXT_FDBNE
-     60,  // TEXT_FDBNGE
-     57,  // TEXT_FDBNGL
-     56,  // TEXT_FDBNGLE
-     61,  // TEXT_FDBNGT
-     58,  // TEXT_FDBNLE
-     59,  // TEXT_FDBNLT
-     35,  // TEXT_FDBOGE
-     38,  // TEXT_FDBOGL
-     34,  // TEXT_FDBOGT
-     37,  // TEXT_FDBOLE
-     36,  // TEXT_FDBOLT
-     39,  // TEXT_FDBOR
-     49,  // TEXT_FDBSEQ
-     48,  // TEXT_FDBSF
-     62,  // TEXT_FDBSNE
-     63,  // TEXT_FDBST
-     47,  // TEXT_FDBT
-     41,  // TEXT_FDBUEQ
-     43,  // TEXT_FDBUGE
-     42,  // TEXT_FDBUGT
-     45,  // TEXT_FDBULE
-     44,  // TEXT_FDBULT
-     40,  // TEXT_FDBUN
+     20,  // TEXT_FBGE
+     23,  // TEXT_FBGL
+     24,  // TEXT_FBGLE
+     19,  // TEXT_FBGT
+     22,  // TEXT_FBLE
+     21,  // TEXT_FBLT
+     15,  // TEXT_FBNE
+     29,  // TEXT_FBNGE
+     26,  // TEXT_FBNGL
+     25,  // TEXT_FBNGLE
+     30,  // TEXT_FBNGT
+     27,  // TEXT_FBNLE
+     28,  // TEXT_FBNLT
+      4,  // TEXT_FBOGE
+      7,  // TEXT_FBOGL
+      3,  // TEXT_FBOGT
+      6,  // TEXT_FBOLE
+      5,  // TEXT_FBOLT
+      8,  // TEXT_FBOR
+     18,  // TEXT_FBSEQ
+     17,  // TEXT_FBSF
+     31,  // TEXT_FBSNE
+     32,  // TEXT_FBST
+     16,  // TEXT_FBT
+     10,  // TEXT_FBUEQ
+     12,  // TEXT_FBUGE
+     11,  // TEXT_FBUGT
+     14,  // TEXT_FBULE
+     13,  // TEXT_FBULT
+      9,  // TEXT_FBUN
+     34,  // TEXT_FDBEQ
+     33,  // TEXT_FDBF
+     52,  // TEXT_FDBGE
+     55,  // TEXT_FDBGL
+     56,  // TEXT_FDBGLE
+     51,  // TEXT_FDBGT
+     54,  // TEXT_FDBLE
+     53,  // TEXT_FDBLT
+     47,  // TEXT_FDBNE
+     61,  // TEXT_FDBNGE
+     58,  // TEXT_FDBNGL
+     57,  // TEXT_FDBNGLE
+     62,  // TEXT_FDBNGT
+     59,  // TEXT_FDBNLE
+     60,  // TEXT_FDBNLT
+     36,  // TEXT_FDBOGE
+     39,  // TEXT_FDBOGL
+     35,  // TEXT_FDBOGT
+     38,  // TEXT_FDBOLE
+     37,  // TEXT_FDBOLT
+     40,  // TEXT_FDBOR
+     50,  // TEXT_FDBSEQ
+     49,  // TEXT_FDBSF
+     63,  // TEXT_FDBSNE
+     64,  // TEXT_FDBST
+     48,  // TEXT_FDBT
+     42,  // TEXT_FDBUEQ
+     44,  // TEXT_FDBUGE
+     43,  // TEXT_FDBUGT
+     46,  // TEXT_FDBULE
+     45,  // TEXT_FDBULT
+     41,  // TEXT_FDBUN
+      1,  // TEXT_FNOP
 };
 
 constexpr Entry MC68881_TRAP[] = {

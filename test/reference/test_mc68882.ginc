@@ -858,6 +858,7 @@
         fgetmanb #0x23, fp4
 
 ;# program control operations
+        fnop
         fbf    .+0x1234
         fbeq   .+0x1234
         fbeq   .+0x1234         ;# fbeql 

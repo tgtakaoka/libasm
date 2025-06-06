@@ -5401,6 +5401,7 @@ void test_float_arithmetic() {
 void test_float_branch() {
     TEST("FPU ON");
 
+    TEST("FNOP",              0xF280, 0x0000);
     TEST("FBF    *+$1234",    0xF280, 0x1232);
     TEST("FBEQ.W *+$1234",    0xF281, 0x1232);
     TEST("FBEQ.L *+$1234",    0xF281, 0x1232);
