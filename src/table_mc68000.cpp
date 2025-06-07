@@ -19,10 +19,10 @@
 #include "entry_table.h"
 #include "text_mc68000.h"
 
-using namespace libasm::text::mc68000;
-
 namespace libasm {
 namespace mc68000 {
+
+using namespace libasm::text::mc68000;
 
 #define E3(_opc, _name, _isz, _src, _dst, _ex1, _srcp, _dstp, _ex1p, _osz, _mask) \
     {_opc, Entry::Flags::create(_src, _dst, _ex1, _srcp, _dstp, _ex1p, _osz, _isz, _mask), _name}
@@ -1670,6 +1670,32 @@ constexpr uint8_t MC68030_PMMU_INDEX[] PROGMEM = {
      32,  // TEXT_PTESTW
 };
 
+constexpr Entry MC68EC030_PMMU_TABLE[] PROGMEM = {
+    X2(0xF000, TEXT_PMOVE,  ISZ_FIXD, M_PADDR, M_PREG,  OP_10,  EX_PR, SZ_PMMU, CF_0077, 0x0000, PF_1C00),
+    X2(0xF000, TEXT_PMOVE,  ISZ_FIXD, M_PADDR, M_PREG,  OP_10,  EX_PR, SZ_PMMU, CF_0077, 0x6000, PF_1C00),
+    X2(0xF000, TEXT_PMOVE,  ISZ_FIXD, M_PREG,  M_PADDR, EX_PR,  OP_10, SZ_PMMU, CF_0077, 0x0200, PF_1C00),
+    X2(0xF000, TEXT_PMOVE,  ISZ_FIXD, M_PREG,  M_PADDR, EX_PR,  OP_10, SZ_PMMU, CF_0077, 0x6200, PF_1C00),
+    X2(0xF000, TEXT_PTESTR, ISZ_NONE, M_IMFC,  M_PADDR, EX_PFC, OP_10, SZ_NONE, CF_0077, 0x8210, PF_000F),
+    X2(0xF000, TEXT_PTESTR, ISZ_NONE, M_DREG,  M_PADDR, EX_DC,  OP_10, SZ_NONE, CF_0077, 0x8208, PF_0007),
+    X2(0xF000, TEXT_PTESTR, ISZ_NONE, M_PFC,   M_PADDR, EX_PFC, OP_10, SZ_NONE, CF_0077, 0x8200, PF_0007),
+    X2(0xF000, TEXT_PTESTW, ISZ_NONE, M_IMFC,  M_PADDR, EX_PFC, OP_10, SZ_NONE, CF_0077, 0x8010, PF_000F),
+    X2(0xF000, TEXT_PTESTW, ISZ_NONE, M_DREG,  M_PADDR, EX_DC,  OP_10, SZ_NONE, CF_0077, 0x8008, PF_0007),
+    X2(0xF000, TEXT_PTESTW, ISZ_NONE, M_PFC,   M_PADDR, EX_PFC, OP_10, SZ_NONE, CF_0077, 0x8000, PF_0007),
+};
+
+constexpr uint8_t MC68EC030_PMMU_INDEX[] PROGMEM = {
+      0,  // TEXT_PMOVE
+      1,  // TEXT_PMOVE
+      2,  // TEXT_PMOVE
+      3,  // TEXT_PMOVE
+      4,  // TEXT_PTESTR
+      5,  // TEXT_PTESTR
+      6,  // TEXT_PTESTR
+      7,  // TEXT_PTESTW
+      8,  // TEXT_PTESTW
+      9,  // TEXT_PTESTW
+};
+
 #endif
 // clang-format on
 
@@ -1712,6 +1738,10 @@ constexpr EntryPage MC68851_PAGES[] PROGMEM = {
         {ARRAY_RANGE(MC68851_TRAP), ARRAY_RANGE(MC68851_TRAP_INDEX)},
 };
 
+constexpr EntryPage MC68EC030_PMMU_PAGES[] PROGMEM = {
+        {ARRAY_RANGE(MC68EC030_PMMU_TABLE), ARRAY_RANGE(MC68EC030_PMMU_INDEX)},
+};
+
 constexpr EntryPage MC68030_PMMU_PAGES[] PROGMEM = {
         {ARRAY_RANGE(MC68030_PMMU_TABLE), ARRAY_RANGE(MC68030_PMMU_INDEX)},
 };
@@ -1749,6 +1779,7 @@ const Fpu *fpu(FpuType fpuType) {
 using Pmmu = entry::CpuBase<PmmuType, EntryPage>;
 
 constexpr Pmmu PMMU_TABLE[] PROGMEM = {
+        {PMMU_MC68EC030, TEXT_PMMU_68EC030, ARRAY_RANGE(MC68EC030_PMMU_PAGES)},
         {PMMU_MC68851, TEXT_PMMU_68851, ARRAY_RANGE(MC68851_PAGES)},
         {PMMU_MC68030, TEXT_CPU_68030, ARRAY_RANGE(MC68030_PMMU_PAGES)},
         {PMMU_NONE, TEXT_none, EMPTY_RANGE(MC68851_PAGES)},
@@ -2097,7 +2128,7 @@ const /*PROGMEM*/ char *Config::pmmu_P() const {
 
 Error Config::setPmmuType(PmmuType pmmuType) {
     if (pmmuType == PMMU_NONE) {
-        _cpuSpec.pmmu = PMMU_NONE;
+        _cpuSpec.pmmu = (_cpuSpec.cpu == MC68030) ? PMMU_MC68EC030 : PMMU_NONE;
         return OK;
     }
 #if !defined(LIBASM_MC68000_NOPMMU)
