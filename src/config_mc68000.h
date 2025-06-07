@@ -46,6 +46,7 @@ enum PmmuType : uint8_t {
     PMMU_NONE,
 #if !defined(LIBASM_MC68000_NOPMMU)
     PMMU_ON,
+    PMMU_MC68EC030,
     PMMU_MC68851,
     PMMU_MC68030,
 #endif

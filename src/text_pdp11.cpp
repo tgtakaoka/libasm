@@ -178,8 +178,8 @@ constexpr char TEXT_STFPS[] PROGMEM = "STFPS";
 // constexpr char TEXT_TSTD[]  PROGMEM = "TSTD";
 // constexpr char TEXT_TSTF[]  PROGMEM = "TSTF";
 
-constexpr char TEXT_REG_AC0[] PROGMEM = "AC0";
-constexpr char TEXT_REG_AC1[] PROGMEM = "AC1";
+// constexpr char TEXT_REG_AC0[] PROGMEM = "AC0";
+// constexpr char TEXT_REG_AC1[] PROGMEM = "AC1";
 constexpr char TEXT_REG_AC2[] PROGMEM = "AC2";
 constexpr char TEXT_REG_AC3[] PROGMEM = "AC3";
 constexpr char TEXT_REG_AC4[] PROGMEM = "AC4";

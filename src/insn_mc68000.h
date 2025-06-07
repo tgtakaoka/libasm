@@ -85,11 +85,14 @@ struct Addressing {
 struct Operand final : ErrorAt {
     AddrMode mode;
     Value val;
-    RegName reg;
-    RegName reg2;
+    union {
+        RegName reg;
+        CntlReg creg;
 #if !defined(LIBASM_MC68000_NOPMMU)
-    PmmuReg preg;
+        PmmuReg preg;
 #endif
+    };
+    RegName reg2;
     union {
         Addressing addr;
         Value val2;

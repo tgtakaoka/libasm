@@ -648,7 +648,7 @@ void AsmMc68000::encodePointerPair(AsmInsn &insn, const Operand &op) const {
 void AsmMc68000::encodePmove(AsmInsn &insn, const Operand &op, AddrMode mode) const {
     if (mode == M_PVAL)
         return;
-    const auto regSize = pmmuRegSize(op.preg, _cpuSpec);
+    const auto regSize = pmmuRegSize(op.preg, _cpuSpec.pmmu);
     if (insn.insnSize() != ISZ_NONE && insn.insnSize() != InsnSize(regSize))
         insn.setErrorIf(ILLEGAL_SIZE);
     if (regSize == SZ_QUAD) {
@@ -656,9 +656,9 @@ void AsmMc68000::encodePmove(AsmInsn &insn, const Operand &op, AddrMode mode) co
         if (other.mode == M_DREG || other.mode == M_AREG)
             insn.setErrorIf(other, REGISTER_NOT_ALLOWED);
     }
-    const auto preg = encodePmmuReg(op.preg, _cpuSpec);
+    const auto preg = encodePmmuReg(op.preg, _cpuSpec.pmmu);
     auto pval = insn.postfix();
-    if (mc68030()) {
+    if (_cpuSpec.pmmu == PMMU_MC68030) {
         // Check for PMOVEFD to PSR
         if ((pval & 0x100) && op.preg == PREG_PSR)
             insn.setErrorIf(op, REGISTER_NOT_ALLOWED);
@@ -874,10 +874,10 @@ Error AsmMc68000::encodeOperand(
 #endif
     case M_USP:
     case M_CREG: {
-        auto creg = encodeControlRegNo(op.reg);
+        auto creg = encodeCntlRegNo(op.creg);
 #if !defined(LIBASM_MC68000_NOPMMU)
         if (mode == M_PFC) {
-            if (op.reg != REG_SFC && op.reg != REG_DFC) {
+            if (op.creg != CREG_SFC && op.creg != CREG_DFC) {
                 insn.setErrorIf(op, REGISTER_NOT_ALLOWED);
                 creg = 0;
             }
@@ -1452,12 +1452,19 @@ Error AsmMc68000::parseOperand(StrScanner &scan, Operand &op) const {
             op.mode = M_CCR;
         } else if (op.reg == REG_SR) {
             op.mode = M_SR;
-        } else if (op.reg == REG_USP) {
-            op.mode = M_USP;
-        } else if (isControlReg(op.reg)) {
-            op.mode = M_CREG;
         } else {
-            return op.setError(p, REGISTER_NOT_ALLOWED);
+            return op.setErrorIf(p, REGISTER_NOT_ALLOWED);
+        }
+        scan = a;
+        return OK;
+    }
+
+    op.creg = parseCntlReg(a, parser(), _cpuSpec.cpu);
+    if (op.creg != CREG_UNDEF) {
+        if (op.creg == CREG_USP) {
+            op.mode = M_USP;
+        } else {
+            op.mode = M_CREG;
         }
         scan = a;
         return OK;

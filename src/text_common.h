@@ -596,6 +596,8 @@ extern const char TEXT_XORW[]  PROGMEM;
 extern const char TEXT_XRI[]   PROGMEM;
 extern const char TEXT_XRL[]   PROGMEM;
 
+extern const char TEXT_REG_AC0[] PROGMEM;
+extern const char TEXT_REG_AC1[] PROGMEM;
 extern const char TEXT_REG_AF[]  PROGMEM;
 extern const char TEXT_REG_A[]   PROGMEM;
 extern const char TEXT_REG_BC[]  PROGMEM;

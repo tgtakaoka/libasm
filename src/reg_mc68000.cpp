@@ -40,8 +40,6 @@ constexpr NameEntry REG_ENTRIES[] PROGMEM = {
     { TEXT_REG_A5,    REG_A5    },
     { TEXT_REG_A6,    REG_A6    },
     { TEXT_REG_A7,    REG_A7    },
-    { TEXT_REG_CAAR,  REG_CAAR  },
-    { TEXT_REG_CACR,  REG_CACR  },
     { TEXT_REG_CCR,   REG_CCR   },
     { TEXT_REG_D0,    REG_D0    },
     { TEXT_REG_D1,    REG_D1    },
@@ -51,7 +49,6 @@ constexpr NameEntry REG_ENTRIES[] PROGMEM = {
     { TEXT_REG_D5,    REG_D5    },
     { TEXT_REG_D6,    REG_D6    },
     { TEXT_REG_D7,    REG_D7    },
-    { TEXT_REG_DFC,   REG_DFC   },
     { TEXT_REG_FP0,   REG_FP0   },
     { TEXT_REG_FP1,   REG_FP1   },
     { TEXT_REG_FP2,   REG_FP2   },
@@ -63,31 +60,42 @@ constexpr NameEntry REG_ENTRIES[] PROGMEM = {
     { TEXT_REG_FPCR,  REG_FPCR  },
     { TEXT_REG_FPIAR, REG_FPIAR },
     { TEXT_REG_FPSR,  REG_FPSR  },
-    { TEXT_REG_ISP,   REG_ISP   },
-    { TEXT_REG_MSP,   REG_MSP   },
     { TEXT_REG_PC,    REG_PC    },
-    { TEXT_REG_SFC,   REG_SFC   },
     { TEXT_REG_SR,    REG_SR    },
-    { TEXT_REG_USP,   REG_USP   },
-    { TEXT_REG_VBR,   REG_VBR   },
 };
 
 PROGMEM constexpr NameTable TABLE{ARRAY_RANGE(REG_ENTRIES)};
 
+constexpr NameEntry CREG_ENTRIES[] PROGMEM = {
+    { TEXT_REG_CAAR,  CREG_CAAR  },
+    { TEXT_REG_CACR,  CREG_CACR  },
+    { TEXT_REG_DFC,   CREG_DFC   },
+    { TEXT_REG_ISP,   CREG_ISP   },
+    { TEXT_REG_MSP,   CREG_MSP   },
+    { TEXT_REG_SFC,   CREG_SFC   },
+    { TEXT_REG_USP,   CREG_USP   },
+    { TEXT_REG_VBR,   CREG_VBR   },
+};
+
+PROGMEM constexpr NameTable CREG_TABLE{ARRAY_RANGE(CREG_ENTRIES)};
+
 #if !defined(LIBASM_MC68000_NOPMMU)
 constexpr NameEntry PREG_ENTRIES[] PROGMEM = {
-    { TEXT_REG_AC,   PREG_AC   },
-    { TEXT_REG_CAL,  PREG_CAL  },
-    { TEXT_REG_CRP,  PREG_CRP  },
-    { TEXT_REG_DRP,  PREG_DRP  },
-    { TEXT_REG_PCSR, PREG_PCSR },
-    { TEXT_REG_PSR,  PREG_PSR  },
-    { TEXT_REG_SCC,  PREG_SCC  },
-    { TEXT_REG_SRP,  PREG_SRP  },
-    { TEXT_REG_TC,   PREG_TC   },
-    { TEXT_REG_TT0,  PREG_TT0  },
-    { TEXT_REG_TT1,  PREG_TT1  },
-    { TEXT_REG_VAL,  PREG_VAL  },
+    { TEXT_REG_AC,    PREG_AC    },
+    { TEXT_REG_AC0,   PREG_AC0   },
+    { TEXT_REG_AC1,   PREG_AC1   },
+    { TEXT_REG_ACUSR, PREG_ACUSR },
+    { TEXT_REG_CAL,   PREG_CAL   },
+    { TEXT_REG_CRP,   PREG_CRP   },
+    { TEXT_REG_DRP,   PREG_DRP   },
+    { TEXT_REG_PCSR,  PREG_PCSR  },
+    { TEXT_REG_PSR,   PREG_PSR   },
+    { TEXT_REG_SCC,   PREG_SCC   },
+    { TEXT_REG_SRP,   PREG_SRP   },
+    { TEXT_REG_TC,    PREG_TC    },
+    { TEXT_REG_TT0,   PREG_TT0   },
+    { TEXT_REG_TT1,   PREG_TT1   },
+    { TEXT_REG_VAL,   PREG_VAL   },
 };
 
 PROGMEM constexpr NameTable PREG_TABLE{ARRAY_RANGE(PREG_ENTRIES)};
@@ -124,10 +132,6 @@ bool isGeneralReg(RegName name) {
     return name >= REG_D0 && name <= REG_A7;
 }
 
-bool isControlReg(RegName name) {
-    return name >= REG_SFC;
-}
-
 bool isFloatReg(RegName name) {
     return name >= REG_FP0 && name <= REG_FP7;
 }
@@ -138,20 +142,6 @@ bool isFloatControlReg(RegName name) {
 
 Config::opcode_t encodeGeneralRegNo(RegName name) {
     return int8_t(name) & 7;
-}
-
-Config::opcode_t encodeControlRegNo(RegName name) {
-    static constexpr Config::opcode_t CREGNO[] = {
-            0x000,  // REG_SFC = 32 + 0,   // MC68010/MC68020
-            0x001,  // REG_DFC = 32 + 1,   // MC68010/MC68020
-            0x800,  // REG_USP = 32 + 2,   // MC68010/MC68020
-            0x801,  // REG_VBR = 32 + 3,   // MC68010/MC68020
-            0x002,  // REG_CACR = 32 + 4,  // MC68020
-            0x802,  // REG_CAAR = 32 + 5,  // MC68020
-            0x803,  // REG_MSP = 32 + 6,   // MC68020
-            0x804,  // REG_ISP = 32 + 7,   // MC68020
-    };
-    return pgm_read_word(&CREGNO[name - REG_SFC]);
 }
 
 uint_fast8_t encodeGeneralRegPos(RegName name) {
@@ -178,27 +168,63 @@ RegName decodeAddrReg(uint_fast8_t regno) {
     return RegName((regno & 7) + 8);
 }
 
-RegName decodeControlReg(Config::opcode_t regno) {
+CntlReg parseCntlReg(StrScanner &scan, const ValueParser &parser, CpuType cpuType) {
+    auto p = scan;
+    const auto *entry = CREG_TABLE.searchText(parser.readRegName(p));
+    if (entry) {
+        const auto creg = CntlReg(entry->name());
+        if (creg >= CREG_CACR && cpuType == MC68010)
+            return CREG_UNDEF;
+        scan = p;
+        return creg;
+    }
+    return CREG_UNDEF;
+}
+
+StrBuffer &outCntlReg(StrBuffer &out, CntlReg name) {
+    const auto *entry = CREG_TABLE.searchName(name);
+    return entry ? entry->outText(out) : out;
+}
+
+Config::opcode_t encodeCntlRegNo(CntlReg name) {
+    static constexpr Config::opcode_t CREGNO[] = {
+            0x000,  // CREG_SFC = 0,   // MC68010/MC68020/MC68030/MC68851
+            0x001,  // CREG_DFC = 1,   // MC68010/MC68020/MC68030/MC68851
+            0x800,  // CREG_USP = 2,   // MC68010/MC68020/MC68030
+            0x801,  // CREG_VBR = 3,   // MC68010/MC68020/MC68030
+            0x002,  // CREG_CACR = 4,  // MC68020/MC68030
+            0x802,  // CREG_CAAR = 5,  // MC68020/MC68030
+            0x803,  // CREG_MSP = 6,   // MC68020/MC68030
+            0x804,  // CREG_ISP = 7,   // MC68020/MC68030
+    };
+    return pgm_read_word(CREGNO + name);
+}
+
+CntlReg decodeCntlRegNo(Config::opcode_t regno, CpuType cpuType) {
     regno &= 0xFFF;
     if (regno < 3) {
-        static constexpr RegName CREG_0xx[] PROGMEM = {
-                REG_SFC,   // 0x000
-                REG_DFC,   // 0x001
-                REG_CACR,  // 0x002
+        static constexpr CntlReg CCREG_0xx[] PROGMEM = {
+                CREG_SFC,   // 0x000
+                CREG_DFC,   // 0x001
+                CREG_CACR,  // 0x002
         };
-        return RegName(pgm_read_byte(&CREG_0xx[regno]));
+        if (regno >= 2 && cpuType == MC68010)
+            return CREG_UNDEF;
+        return CntlReg(pgm_read_byte(CCREG_0xx + regno));
     }
     if (regno >= 0x800 && regno < 0x805) {
-        static constexpr RegName CREG_8xx[] PROGMEM = {
-                REG_USP,   // 0x800
-                REG_VBR,   // 0x801
-                REG_CAAR,  // 0x802
-                REG_MSP,   // 0x803
-                REG_ISP,   // 0x804
+        static constexpr CntlReg CCREG_8xx[] PROGMEM = {
+                CREG_USP,   // 0x800
+                CREG_VBR,   // 0x801
+                CREG_CAAR,  // 0x802
+                CREG_MSP,   // 0x803
+                CREG_ISP,   // 0x804
         };
-        return RegName(pgm_read_byte(&CREG_8xx[regno - 0x800]));
+        if (regno >= 0x802 && cpuType == MC68010)
+            return CREG_UNDEF;
+        return CntlReg(pgm_read_byte(CCREG_8xx + (regno - 0x800)));
     }
-    return REG_UNDEF;
+    return CREG_UNDEF;
 }
 
 #if !defined(LIBASM_MC68000_NOPMMU)
@@ -234,24 +260,32 @@ StrBuffer &outPmmuReg(StrBuffer &out, PmmuReg name) {
     return out;
 }
 
-Config::opcode_t encodePmmuReg(PmmuReg name, const CpuSpec &cpuSpec) {
-    if (cpuSpec.cpu == MC68020) {
-        if (name >= PREG_BAC0)
-            return (13 << 10) | ((name - PREG_BAC0) << 2);
-        if (name >= PREG_BAD0)
+Config::opcode_t encodePmmuReg(PmmuReg name, PmmuType pmmu) {
+    if (pmmu == PMMU_MC68851) {
+        if (name < PREG_BAD0)
+            return name << 10;
+        if (name <= PREG_BAD7)
             return (12 << 10) | ((name - PREG_BAD0) << 2);
-        return name << 10;
-    }
-    if (cpuSpec.cpu == MC68030) {
+        if (name <= PREG_BAC7)
+            return (13 << 10) | ((name - PREG_BAC0) << 2);
+    } else if (pmmu == PMMU_MC68030) {
+        if (name == PREG_TC || name == PREG_SRP || name == PREG_CRP || name == PREG_PSR)
+            return (name + 0x10) << 10;
         if (name == PREG_TT0 || name == PREG_TT1)
             return (name - PREG_TT0 + 2) << 10;
-        return (name + 0x10) << 10;
+    } else if (pmmu == PMMU_MC68EC030) {
+        if (name == PREG_AC0)
+            return 1 << 10;
+        if (name == PREG_AC1)
+            return 3 << 10;
+        if (name == PREG_ACUSR)
+            return 0x18 << 10;
     }
     return 0;
 }
 
-PmmuReg decodePmmuReg(Config::opcode_t post, const CpuSpec &cpuSpec) {
-    if (cpuSpec.cpu == MC68020) {
+PmmuReg decodePmmuReg(Config::opcode_t post, PmmuType pmmu) {
+    if (pmmu == PMMU_MC68851) {
         const auto regno = (post >> 10) & 0xF;
         if (regno < 10)
             return PmmuReg(regno);
@@ -259,8 +293,7 @@ PmmuReg decodePmmuReg(Config::opcode_t post, const CpuSpec &cpuSpec) {
             return PmmuReg(PREG_BAD0 + ((post >> 2) & 7));
         if (regno == 13)
             return PmmuReg(PREG_BAC0 + ((post >> 2) & 7));
-    }
-    if (cpuSpec.cpu == MC68030) {
+    } else if (pmmu == PMMU_MC68030) {
         const auto regno = (post >> 10) & 0x1F;
         if (regno == 2 || regno == 3)
             return PmmuReg(PREG_TT0 + regno - 2);
@@ -268,14 +301,22 @@ PmmuReg decodePmmuReg(Config::opcode_t post, const CpuSpec &cpuSpec) {
             return PmmuReg(PREG_TC + regno - 0x10);
         if (regno == 0x18)
             return PREG_PSR;
+    } else if (pmmu == PMMU_MC68EC030) {
+        const auto regno = (post >> 10) & 0x1F;
+        if (regno == 1 || regno == 3)
+            return PmmuReg(PREG_AC0 + (regno / 2));
+        if (regno == 0x18)
+            return PREG_ACUSR;
     }
     return PREG_UNDEF;
 }
 
-OprSize pmmuRegSize(PmmuReg name, const CpuSpec &cpuSpec) {
+OprSize pmmuRegSize(PmmuReg name, PmmuType pmmu) {
     if (name == PREG_UNDEF)
         return SZ_NONE;
-    if (cpuSpec.cpu == MC68020) {
+    if (pmmu == PMMU_MC68851) {
+        if (name > PREG_BAC7)
+            return SZ_NONE;
         if (name >= PREG_BAD0)
             return SZ_WORD;
         static constexpr OprSize SIZE[] PROGMEM = {
@@ -289,29 +330,20 @@ OprSize pmmuRegSize(PmmuReg name, const CpuSpec &cpuSpec) {
                 SZ_WORD,  // PREG_AC = 7
                 SZ_WORD,  // PREG_PSR = 8
                 SZ_WORD,  // PREG_PCSR = 9
-                SZ_NONE,  // PREG_TT0 = 10
-                SZ_NONE,  // PREG_TT1 = 11
         };
         return OprSize(pgm_read_byte(SIZE + name));
-    }
-    if (cpuSpec.cpu == MC68030) {
-        if (name >= PREG_BAD0)
-            return SZ_NONE;
-        static constexpr OprSize SIZE[] PROGMEM = {
-                SZ_LONG,  // PREG_TC = 0
-                SZ_NONE,  // PREG_DRP = 1
-                SZ_QUAD,  // PREG_SRP = 2
-                SZ_QUAD,  // PREG_CRP = 3
-                SZ_NONE,  // PREG_CAL = 4
-                SZ_NONE,  // PREG_VAL = 5
-                SZ_NONE,  // PREG_SCC = 6
-                SZ_NONE,  // PREG_AC = 7
-                SZ_WORD,  // PREG_PSR = 8
-                SZ_NONE,  // PREG_PCSR = 9
-                SZ_LONG,  // PREG_TT0 = 10
-                SZ_LONG,  // PREG_TT1 = 11
-        };
-        return OprSize(pgm_read_byte(SIZE + name));
+    } else if (pmmu == PMMU_MC68030) {
+        if (name == PREG_TT0 || name == PREG_TT1 || name == PREG_TC)
+            return SZ_LONG;
+        if (name == PREG_PSR)
+            return SZ_WORD;
+        if (name == PREG_SRP || name == PREG_CRP)
+            return SZ_QUAD;
+    } else if (pmmu == PMMU_MC68EC030) {
+        if (name == PREG_AC0 || name == PREG_AC1)
+            return SZ_LONG;
+        if (name == PREG_ACUSR)
+            return SZ_WORD;
     }
     return SZ_NONE;
 }

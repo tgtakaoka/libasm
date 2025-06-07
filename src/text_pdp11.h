@@ -181,8 +181,8 @@ using common::TEXT_SUBF;
 using common::TEXT_TSTD;
 using common::TEXT_TSTF;
 
-extern const char TEXT_REG_AC0[] PROGMEM;
-extern const char TEXT_REG_AC1[] PROGMEM;
+using common::TEXT_REG_AC0;
+using common::TEXT_REG_AC1;
 extern const char TEXT_REG_AC2[] PROGMEM;
 extern const char TEXT_REG_AC3[] PROGMEM;
 extern const char TEXT_REG_AC4[] PROGMEM;

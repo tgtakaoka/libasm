@@ -34,6 +34,7 @@ constexpr char TEXT_CPU_68020[]    PROGMEM = "68020";
 constexpr char TEXT_CPU_68030[]    PROGMEM = "68030";
 constexpr char TEXT_FPU_68881[]    PROGMEM = "68881";
 constexpr char TEXT_PMMU_68851[]   PROGMEM = "68851";
+constexpr char TEXT_PMMU_68EC030[] PROGMEM = "68EC030";
 
 // MC68000 instructions
 constexpr char TEXT_ABCD[]  PROGMEM = "ABCD";
@@ -241,6 +242,11 @@ constexpr char TEXT_PMOVEFD[] PROGMEM = "PMOVEFD";
 
 constexpr char TEXT_REG_TT0[] PROGMEM = "TT0";
 constexpr char TEXT_REG_TT1[] PROGMEM = "TT1";
+
+// MC68EC030
+constexpr char TEXT_REG_ACUSR[] PROGMEM = "ACUSR";
+// constexpr char TEXT_REG_AC0[]   PROGMEM = "AC0";
+// constexpr char TEXT_REG_AC1[]   PROGMEM = "AC1";
 
 // MC68881
 // constexpr char TEXT_FABS[]      PROGMEM = "FABS";

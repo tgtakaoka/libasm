@@ -6120,7 +6120,55 @@ void test_extension() {
 }
 
 #if !defined(LIBASM_MC68000_NOPMMU)
-void test_mmu_move() {
+void test_mc68030_move() {
+    // MC68EC030
+    TEST("PMMU OFF");
+
+    TEST("PMOVE.W (A2), ACUSR",          0xF000|022, 0x6000);
+    TEST("PMOVE.L (A2), AC0",            0xF000|022, 0x0000|(1<<10));
+    TEST("PMOVE.L (A2), AC1",            0xF000|022, 0x0000|(3<<10));
+    TEST("PMOVE.W ($1234,A2), ACUSR",    0xF000|052, 0x6000, 0x1234);
+    TEST("PMOVE.L ($1234,A2), AC0",      0xF000|052, 0x0000|(1<<10), 0x1234);
+    TEST("PMOVE.L ($1234,A2), AC1",      0xF000|052, 0x0000|(3<<10), 0x1234);
+    TEST("PMOVE.W ($34,A2,D3.W), ACUSR", 0xF000|062, 0x6000, 0x3034);
+    TEST("PMOVE.L ($34,A2,D3.W), AC0",   0xF000|062, 0x0000|(1<<10), 0x3034);
+    TEST("PMOVE.L ($34,A2,D3.W), AC1",   0xF000|062, 0x0000|(3<<10), 0x3034);
+    TEST("PMOVE.W ($00001234).W, ACUSR", 0xF000|070, 0x6000, 0x1234);
+    TEST("PMOVE.L ($00001234).W, AC0",   0xF000|070, 0x0000|(1<<10), 0x1234);
+    TEST("PMOVE.L ($00001234).W, AC1",   0xF000|070, 0x0000|(3<<10), 0x1234);
+    TEST("PMOVE.W ($12345678).L, ACUSR", 0xF000|071, 0x6000, 0x1234, 0x5678);
+    TEST("PMOVE.L ($12345678).L, AC0",   0xF000|071, 0x0000|(1<<10), 0x1234, 0x5678);
+    TEST("PMOVE.L ($12345678).L, AC1",   0xF000|071, 0x0000|(3<<10), 0x1234, 0x5678);
+
+    TEST("PMOVE.W ACUSR, (A2)",          0xF000|022, 0x6200);
+    TEST("PMOVE.L AC0, (A2)",            0xF000|022, 0x0200|(1<<10));
+    TEST("PMOVE.L AC1, (A2)",            0xF000|022, 0x0200|(3<<10));
+    TEST("PMOVE.W ACUSR, ($1234,A2)",    0xF000|052, 0x6200, 0x1234);
+    TEST("PMOVE.L AC0, ($1234,A2)"  ,    0xF000|052, 0x0200|(1<<10), 0x1234);
+    TEST("PMOVE.L AC1, ($1234,A2)",      0xF000|052, 0x0200|(3<<10), 0x1234);
+    TEST("PMOVE.W ACUSR, ($34,A2,D3.W)", 0xF000|062, 0x6200, 0x3034);
+    TEST("PMOVE.L AC0, ($34,A2,D3.W)",   0xF000|062, 0x0200|(1<<10), 0x3034);
+    TEST("PMOVE.L AC1, ($34,A2,D3.W)",   0xF000|062, 0x0200|(3<<10), 0x3034);
+    TEST("PMOVE.W ACUSR, ($00001234).W", 0xF000|070, 0x6200, 0x1234);
+    TEST("PMOVE.L AC0, ($00001234).W",   0xF000|070, 0x0200|(1<<10), 0x1234);
+    TEST("PMOVE.L AC1, ($00001234).W",   0xF000|070, 0x0200|(3<<10), 0x1234);
+    TEST("PMOVE.W ACUSR, ($12345678).L", 0xF000|071, 0x6200, 0x1234, 0x5678);
+    TEST("PMOVE.L AC0, ($12345678).L",   0xF000|071, 0x0200|(1<<10), 0x1234, 0x5678);
+    TEST("PMOVE.L AC1, ($12345678).L",   0xF000|071, 0x0200|(3<<10), 0x1234, 0x5678);
+
+    TEST("PTESTR #7, (A2)",           0xF000|022, 0x8210|7);
+    TEST("PTESTR D3, ($1234,A2)",     0xF000|052, 0x8208|3, 0x1234);
+    TEST("PTESTR SFC, ($34,A2,D3.W)", 0xF000|062, 0x8200|0, 0x3034);
+    TEST("PTESTR DFC, ($00001234).W", 0xF000|070, 0x8200|1, 0x1234);
+    TEST("PTESTR #7, ($12345678).L",  0xF000|071, 0x8210|7, 0x1234, 0x5678);
+
+    TEST("PTESTW #7, (A2)",           0xF000|022, 0x8010|7);
+    TEST("PTESTW D3, ($1234,A2)",     0xF000|052, 0x8008|3, 0x1234);
+    TEST("PTESTW SFC, ($34,A2,D3.W)", 0xF000|062, 0x8000|0, 0x3034);
+    TEST("PTESTW DFC, ($00001234).W", 0xF000|070, 0x8000|1, 0x1234);
+    TEST("PTESTW #3, ($12345678).L",  0xF000|071, 0x8010|3, 0x1234, 0x5678);
+
+    // MC68030
     TEST("PMMU ON");
 
     ERRT("PMOVE.L D2, TC",
@@ -6272,7 +6320,7 @@ void test_mmu_move() {
     TEST("PMOVE.L TT1, ($12345678).L", 0xF000|071, 0x0200|(3<<10), 0x1234, 0x5678);
 }
 
-void test_mmu_system() {
+void test_mc68030_system() {
     TEST("PMMU ON");
 
     TEST("PFLUSHA ",        0xF000, 0x2400);
@@ -6378,7 +6426,7 @@ void test_mmu_system() {
          OPERAND_NOT_ALLOWED, "#$1234, #5, A3",        0xF000, 0x8100|(5<<10)|1|(3<<5));
 }
 
-void test_pmmu_move() {
+void test_mc68851_move() {
     if (mc68020()) {
         TEST("PMMU MC68851");
         TEST("PMMU ON");
@@ -6675,7 +6723,7 @@ void test_pmmu_move() {
          OPERAND_NOT_ALLOWED, "#$34",          0xF000, 0x4200|(4<<10)); // #n
 }
 
-void test_pmmu_branch() {
+void test_mc68851_branch() {
     if (mc68020()) {
         TEST("PMMU MC68851");
     } else {
@@ -6737,7 +6785,7 @@ void test_pmmu_branch() {
     TEST("PDBCC D2, *+$1234", 0xF048|012, 0x000F, 0x1230);
 }
 
-void test_pmmu_trap() {
+void test_mc68851_trap() {
     if (mc68020()) {
         TEST("PMMU MC68851");
     } else {
@@ -6941,7 +6989,7 @@ void test_pmmu_trap() {
     TEST("PSCC ($12345678).L",   0xF040|071, 0x000F, 0x1234, 0x5678);
 }
 
-void test_pmmu_system() {
+void test_mc68851_system() {
     if (mc68020()) {
         TEST("PMMU MC68851");
     } else {
@@ -7367,13 +7415,15 @@ void run_tests(const char *cpu) {
 #endif
 #if !defined(LIBASM_MC68000_NOPMMU)
     if (mc68030()) {
-        RUN_TEST(test_mmu_move);
-        RUN_TEST(test_mmu_system);
+        RUN_TEST(test_mc68030_move);
+        RUN_TEST(test_mc68030_system);
     }
-    RUN_TEST(test_pmmu_move);
-    RUN_TEST(test_pmmu_branch);
-    RUN_TEST(test_pmmu_trap);
-    RUN_TEST(test_pmmu_system);
+    if (mc68020()) {
+        RUN_TEST(test_mc68851_move);
+        RUN_TEST(test_mc68851_branch);
+        RUN_TEST(test_mc68851_trap);
+        RUN_TEST(test_mc68851_system);
+    }
 #endif
     RUN_TEST(test_comment);
     RUN_TEST(test_undef);

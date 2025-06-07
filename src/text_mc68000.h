@@ -37,6 +37,7 @@ extern const char TEXT_CPU_68020[]    PROGMEM;
 extern const char TEXT_CPU_68030[]    PROGMEM;
 extern const char TEXT_FPU_68881[]    PROGMEM;
 extern const char TEXT_PMMU_68851[]   PROGMEM;
+extern const char TEXT_PMMU_68EC030[] PROGMEM;
 
 using common::TEXT_none;
 
@@ -249,6 +250,11 @@ extern const char TEXT_PMOVEFD[] PROGMEM;
 
 extern const char TEXT_REG_TT0[] PROGMEM;
 extern const char TEXT_REG_TT1[] PROGMEM;
+
+// MC68EC030
+extern const char TEXT_REG_ACUSR[] PROGMEM;
+using common::TEXT_REG_AC0;
+using common::TEXT_REG_AC1;
 
 // MC68881
 using common::TEXT_FABS;

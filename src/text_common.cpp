@@ -592,6 +592,8 @@ constexpr char TEXT_XORW[]  PROGMEM = "XORW";
 constexpr char TEXT_XRI[]   PROGMEM = "XRI";
 constexpr char TEXT_XRL[]   PROGMEM = "XRL";
 
+constexpr char TEXT_REG_AC0[] PROGMEM = "AC0";
+constexpr char TEXT_REG_AC1[] PROGMEM = "AC1";
 constexpr char TEXT_REG_AF[]  PROGMEM = "AF";
 constexpr char TEXT_REG_A[]   PROGMEM = "A";
 constexpr char TEXT_REG_BC[]  PROGMEM = "BC";
