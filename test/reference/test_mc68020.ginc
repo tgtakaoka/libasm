@@ -343,6 +343,14 @@
         traplt.l        #0x12345678
         trapgt.l        #0x12345678
         traple.l        #0x12345678
+        movec   cacr, d1
+        movec   caar, d2
+        movec   msp, a3
+        movec   isp, a4
+        movec   a5, cacr
+        movec   a6, caar
+        movec   d7, msp
+        movec   d0, isp
 ;# Brief extention
         ;# scaled index
         move.l  (0x23,a7,d1.w*1),d2
