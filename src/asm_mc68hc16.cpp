@@ -18,8 +18,6 @@
 #include "table_mc68hc16.h"
 #include "text_common.h"
 
-#include <stdio.h>
-
 namespace libasm {
 namespace mc68hc16 {
 
@@ -361,21 +359,8 @@ Error AsmMc68HC16::encodeImpl(StrScanner &scan, Insn &_insn) const {
     }
     scan.skipSpaces();
 
-#if 0
-    printf("@@ search: %s op1=%d op2=%d op3=%d\n", insn.name(), insn.op1.mode, insn.op2.mode,
-            insn.op3.mode);
-#endif
     if (searchName(cpuType(), insn))
         return _insn.setError(insn.op1, insn);
-#if 0
-    if (insn.hasPrefix()) {
-        printf("@@  found: %s op1=%d op2=%d op3=%d opc=%02X:%02X\n", insn.name(), insn.mode1(),
-                insn.mode2(), insn.mode3(), insn.prefix(), insn.opCode());
-    } else {
-        printf("@@  found: %s op1=%d op2=%d op3=%d opc=%02X\n", insn.name(), insn.mode1(),
-                insn.mode2(), insn.mode3(), insn.opCode());
-    }
-#endif
 
     if (insn.mode2() == M_IM8 || insn.mode2() == M_IXX8) {
         // Special operand order for BCLR/BSET/BRCLR/BRSET/MOVB/MOVW
