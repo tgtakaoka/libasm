@@ -686,6 +686,7 @@ constexpr char TEXT_dALIGN[] PROGMEM = ".align";
 constexpr char TEXT_dASCII[] PROGMEM = ".ascii";
 constexpr char TEXT_dBLKB[]  PROGMEM = ".blkb";
 constexpr char TEXT_dBLKW[]  PROGMEM = ".blkw";
+constexpr char TEXT_dBSS[]   PROGMEM = ".bss";
 constexpr char TEXT_dBYTE[]  PROGMEM = ".byte";
 constexpr char TEXT_dDBYTE[] PROGMEM = ".dbyte";
 constexpr char TEXT_dequal[] PROGMEM = ".=";

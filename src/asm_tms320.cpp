@@ -30,6 +30,7 @@ namespace {
 // clang-format off
 constexpr Pseudo PSEUDOS[] PROGMEM = {
     {TEXT_dALIGN,  &Assembler::alignOrigin},
+    {TEXT_dBSS,    &Assembler::allocateSpaces,     Assembler::DATA_WORD},
     {TEXT_dBYTE,   &Assembler::defineDataConstant, Assembler::DATA_BYTE_IN_WORD},
     {TEXT_dEVEN,   &Assembler::alignOrigin,        Assembler::ALIGN_EVEN},
     {TEXT_dLONG,   &Assembler::defineDataConstant, Assembler::DATA_LONG},

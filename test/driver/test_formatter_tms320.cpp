@@ -39,6 +39,7 @@ void test_asm_tms320() {
         sacl  *+, 0, ar0
 label:  .word label
         .byte 1,'''',3
+        .bss  1
         .string "A""B'C"
 )",
 
@@ -49,7 +50,8 @@ label:  .word label
         78b : 50a0                       sacl  *+, 0, ar0
         78c : 078c               label:  .word label
         78d : 0001 0027 0003             .byte 1,'''',3
-        790 : 2241 2742 0043             .string "A""B'C"
+        790 :                            .bss  1
+        791 : 2241 2742 0043             .string "A""B'C"
 )");
 }
 

@@ -20,7 +20,6 @@
 #include <stdint.h>
 
 #include "config_base.h"
-#include "entry_table.h"
 #include "error_reporter.h"
 #include "insn_base.h"
 #include "option_base.h"
