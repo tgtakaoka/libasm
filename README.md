@@ -113,55 +113,55 @@ It can generate Intel HEX or Motorola S-Record output.
 On POSIX environment, disassembler command line interface is provided.
 It can read Intel HEX or Motorola S-Record input.
 
-libasm disassembler (version 1.6.59)
-usage: dis -C <CPU> [-o <output>] [-l <list>] <input>
-  -C <CPU>         : target CPU
-     MC6800 MB8861 MC6801 HD6301 MC68HC11 MC6805 MC146805 MC68HC05
-     MC68HC08 MC68HCS08 MC6809 HD6309 MC68HC12 MC68HC16 MOS6502 R65C02
-     G65SC02 W65C02S W65C816S i8039 i8048 i80C39 i80C48 MSM80C39 MSM80C48
-     i8051 i8080 i8085 V30EMU Z80 Z180 Z280 Z380 Z8 Z86C Z88 TLCS90
-     INS8060 INS8070 CDP1802 CDP1804 CDP1804A SCN2650 F3850 IM6100 HD6120
-     TMS7000 TMS370 TMS32010 TMS32015 TMS32020 TMS320C25 TMS320C26
-     TMS320C20X TMS320C5X i8086 i80186 i80286 V30 i8096 MC68000 MC68010
-     MC68020 MC68030 MC68040 TMS9900 TMS9980 TMS9995 TMS99105 TMS99110
-     Z8001 Z8002 NS32032 MN1610 MN1613 MN1613A J11 T11
-  -o <output>      : output file
-  -l <list>        : list file
-  <input>          : file can be Motorola S-Record or Intel HEX format
-  -A start[,end]   : disassemble start address and optional end address
-  -r               : use program counter relative notation
-  -h               : use lower case letter for hexadecimal
-  -u               : use upper case letter for output
-  -v               : print progress verbosely
-  --<name>=<vale>  : extra options (<type> [, <CPU>])
-  --upper-hex      : use upper case letter for hexadecimal (bool)
-  --upper-case     : use upper case letter for output (bool)
-  --list-radix     : set listing radix (8, 16) (int)
-  --relative       : program counter relative branch target (bool)
-  --c-style        : C language style number constant (bool)
-  --intel-hex      : Intel style hexadecimal (bool)
-  --origin-char    : letter for origin symbol (char)
-  --gnu-as         : GNU assembler compatible (bool)
-  --external-paren : disp2(disp(ext)) as external addressing (bool: 32032)
-  --extmode        : Extended mode (bool: Z380)
-  --fpu            : floating point co-processor (text: 8086, 68000, 32032)
-  --indirect-long  : [] for indirect long operand (bool: 6502)
-  --longa          : enable 16-bit accumulator (bool: 6502)
-  --longi          : enable 16-bit index registers (bool: 6502)
-  --lwordmode      : Long word mode (bool: Z380)
-  --pc-bits        : program counter width in bit (default 13) (int: 6805)
-  --pmmu           : memory management unit (text: 68000, 32032)
-  --segment-insn   : segment override as instruction (bool: 8086)
-  --segmented-addr : use <<segment>> notation (bool: Z8001)
-  --short-direct   : use |addr| for short direct notation (bool: Z8001)
-  --string-insn    : string instruction as repeat operand (bool: 8086)
-  --use-absolute   : zero register indexing as absolute addressing (bool: 8096)
-  --use-aux-name   : use aux register name ARn (bool: 32010)
-  --use-port-name  : use port name PAn (bool: 32010)
-  --use-register   : use register name Rn (bool: 1802)
-  --use-sharp      : use # (default =) for immediate (bool: 8070)
-  --work-register  : prefer work register name than alias address (bool: Z8)
-  --zilog-syntax   : Use Zilog syntax (bool: 8080)
+    libasm disassembler (version 1.6.59)
+    usage: dis -C <CPU> [-o <output>] [-l <list>] <input>
+      -C <CPU>         : target CPU
+         MC6800 MB8861 MC6801 HD6301 MC68HC11 MC6805 MC146805 MC68HC05
+         MC68HC08 MC68HCS08 MC6809 HD6309 MC68HC12 MC68HC16 MOS6502 R65C02
+         G65SC02 W65C02S W65C816S i8039 i8048 i80C39 i80C48 MSM80C39 MSM80C48
+         i8051 i8080 i8085 V30EMU Z80 Z180 Z280 Z380 Z8 Z86C Z88 TLCS90
+         INS8060 INS8070 CDP1802 CDP1804 CDP1804A SCN2650 F3850 IM6100 HD6120
+         TMS7000 TMS370 TMS32010 TMS32015 TMS32020 TMS320C25 TMS320C26
+         TMS320C20X TMS320C5X i8086 i80186 i80286 V30 i8096 MC68000 MC68010
+         MC68020 MC68030 MC68040 TMS9900 TMS9980 TMS9995 TMS99105 TMS99110
+         Z8001 Z8002 NS32032 MN1610 MN1613 MN1613A J11 T11
+      -o <output>      : output file
+      -l <list>        : list file
+      <input>          : file can be Motorola S-Record or Intel HEX format
+      -A start[,end]   : disassemble start address and optional end address
+      -r               : use program counter relative notation
+      -h               : use lower case letter for hexadecimal
+      -u               : use upper case letter for output
+      -v               : print progress verbosely
+      --<name>=<vale>  : extra options (<type> [, <CPU>])
+      --upper-hex      : use upper case letter for hexadecimal (bool)
+      --upper-case     : use upper case letter for output (bool)
+      --list-radix     : set listing radix (8, 16) (int)
+      --relative       : program counter relative branch target (bool)
+      --c-style        : C language style number constant (bool)
+      --intel-hex      : Intel style hexadecimal (bool)
+      --origin-char    : letter for origin symbol (char)
+      --gnu-as         : GNU assembler compatible (bool)
+      --external-paren : disp2(disp(ext)) as external addressing (bool: 32032)
+      --extmode        : Extended mode (bool: Z380)
+      --fpu            : floating point co-processor (text: 8086, 68000, 32032)
+      --indirect-long  : [] for indirect long operand (bool: 6502)
+      --longa          : enable 16-bit accumulator (bool: 6502)
+      --longi          : enable 16-bit index registers (bool: 6502)
+      --lwordmode      : Long word mode (bool: Z380)
+      --pc-bits        : program counter width in bit (default 13) (int: 6805)
+      --pmmu           : memory management unit (text: 68000, 32032)
+      --segment-insn   : segment override as instruction (bool: 8086)
+      --segmented-addr : use <<segment>> notation (bool: Z8001)
+      --short-direct   : use |addr| for short direct notation (bool: Z8001)
+      --string-insn    : string instruction as repeat operand (bool: 8086)
+      --use-absolute   : zero register indexing as absolute addressing (bool: 8096)
+      --use-aux-name   : use aux register name ARn (bool: 32010)
+      --use-port-name  : use port name PAn (bool: 32010)
+      --use-register   : use register name Rn (bool: 1802)
+      --use-sharp      : use # (default =) for immediate (bool: 8070)
+      --work-register  : prefer work register name than alias address (bool: Z8)
+      --zilog-syntax   : Use Zilog syntax (bool: 8080)
 
 ## Supported host environment
 
