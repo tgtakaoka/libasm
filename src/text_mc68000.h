@@ -287,8 +287,8 @@ extern const char TEXT_PFLUSHAN[] PROGMEM;
 extern const char TEXT_PFLUSHN[]  PROGMEM;
 
 extern const char TEXT_IC[] PROGMEM;
-extern const char TEXT_DC[] PROGMEM;
-extern const char TEXT_BC[] PROGMEM;
+using common::TEXT_DC;
+using common::TEXT_BC;
 extern const char TEXT_NC[] PROGMEM;
 
 extern const char TEXT_REG_DTT0[]  PROGMEM;

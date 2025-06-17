@@ -279,8 +279,8 @@ constexpr char TEXT_PFLUSHAN[] PROGMEM = "PFLUSHAN";
 constexpr char TEXT_PFLUSHN[]  PROGMEM = "PFLUSHN";
 
 constexpr char TEXT_IC[] PROGMEM = "IC";
-constexpr char TEXT_DC[] PROGMEM = "DC";
-constexpr char TEXT_BC[] PROGMEM = "BC";
+// constexpr char TEXT_DC[] PROGMEM = "DC";
+// constexpr char TEXT_BC[] PROGMEM = "BC";
 constexpr char TEXT_NC[] PROGMEM = "NC";
 
 constexpr char TEXT_REG_DTT0[]  PROGMEM = "DTT0";
