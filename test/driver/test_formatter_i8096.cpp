@@ -64,13 +64,13 @@ void test_dis_i8096() {
             R"(      cpu   8096
       org   0abcdh
       mulb  130, 817bh[124]
-; test.bin: error: Operand not aligned: "121, 5634h[18]"
+; test.bin: error: Illegal register: "[18]"
 ;     abd3 : 67 13 34 56 79             add   121, 5634h[18]
 )",
             R"(       0 :                            cpu   8096
     abcd :                            org   0abcdh
     abcd : fe 7f 7d 7b 81 82          mulb  130, 817bh[124]
-test.bin: error: Operand not aligned: "121, 5634h[18]"
+test.bin: error: Illegal register: "[18]"
     abd3 : 67 13 34 56 79             add   121, 5634h[18]
 )",
             0xfe, 0x7f, 0x7d, 0x7b, 0x81, 0x82, 0x67, 0x13, 0x34, 0x56, 0x79);

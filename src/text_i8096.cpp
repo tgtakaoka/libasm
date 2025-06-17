@@ -21,8 +21,10 @@ namespace text {
 namespace i8096 {
 
 // clang-format off
-constexpr char TEXT_CPU_I8096[] PROGMEM = "i8096";
+constexpr char TEXT_CPU_LIST[]  PROGMEM = "i8096, i80196";
 constexpr char TEXT_CPU_8096[]  PROGMEM = "8096";
+constexpr char TEXT_CPU_80196[] PROGMEM = "80196";
+constexpr char TEXT_CPU_80196KB[] PROGMEM = "80196KB";
 
 // constexpr char TEXT_ADD[]   PROGMEM = "ADD";
 // constexpr char TEXT_ADDB[]  PROGMEM = "ADDB";
@@ -117,6 +119,22 @@ constexpr char TEXT_SKIP[]  PROGMEM = "SKIP";
 // constexpr char TEXT_XOR[]   PROGMEM = "XOR";
 // constexpr char TEXT_XORB[]  PROGMEM = "XORB";
 // clang-format on
+
+// i80C196KB
+constexpr char TEXT_BMOV[]  PROGMEM = "BMOV";
+// constexpr char TEXT_CMPL[]  PROGMEM = "CMPL";
+constexpr char TEXT_DJNZW[] PROGMEM = "DJNZW";
+constexpr char TEXT_IDLPD[] PROGMEM = "IDLPD";
+// constexpr char TEXT_POPA[]  PROGMEM = "POPA";
+// constexpr char TEXT_PUSHA[] PROGMEM = "PUSHA";
+
+// i80C196KC
+constexpr char TEXT_BMOVI[] PROGMEM = "BMOVI";
+constexpr char TEXT_DPTS[]  PROGMEM = "DPTS";
+constexpr char TEXT_EPTS[]  PROGMEM = "EPTS";
+constexpr char TEXT_TIJMP[] PROGMEM = "TIJMP";
+// constexpr char TEXT_XCH[]   PROGMEM = "XCH";
+// constexpr char TEXT_XCHB[]  PROGMEM = "XCHB";
 
 }  // namespace i8096
 }  // namespace text

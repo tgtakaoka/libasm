@@ -26,6 +26,14 @@ using namespace libasm::test;
 DisI8096 dis8096;
 Disassembler &disassembler(dis8096);
 
+bool is8096() {
+    return strcasecmp_P("8096", dis8096.cpu_P()) == 0;
+}
+
+bool is80196() {
+    return strcasecmp_P("80196", dis8096.cpu_P()) == 0;
+}
+
 void set_up() {
     disassembler.reset();
 }
@@ -41,6 +49,12 @@ void test_cpu() {
 
     EQUALS("cpu i8096", true,   disassembler.setCpu("i8096"));
     EQUALS_P("cpu i8096", "8096", disassembler.config().cpu_P());
+
+    EQUALS("cpu 80196", true,   disassembler.setCpu("80196"));
+    EQUALS_P("cpu 80196", "80196", disassembler.config().cpu_P());
+
+    EQUALS("cpu i80196", true,   disassembler.setCpu("i80196"));
+    EQUALS_P("cpu i80196", "80196", disassembler.config().cpu_P());
 }
 
 void test_2_operands() {
@@ -62,6 +76,11 @@ void test_2_operands() {
     TEST("ADD", "120, 5634H[0]",                    0x67, 0x01, 0x34, 0x56, 0x78);
     ONAL("ADD", "120, 5635H[0]",        "5635H[0]", 0x67, 0x01, 0x35, 0x56, 0x78);
     ONAL("ADD", "121, 5634H[32]", "121, 5634H[32]", 0x67, 0x21, 0x34, 0x56, 0x79);
+
+    ERRT("ADD", "52, [22]",      ILLEGAL_REGISTER, "[22]", 0x66, 0x16, 0x34);
+    ERRT("ADD", "52, [2]+",      ILLEGAL_REGISTER, "[2]+", 0x66, 0x03, 0x34);
+    ERRT("ADD", "52, 32[22]",    ILLEGAL_REGISTER, "[22]", 0x67, 0x16, 0x20, 0x34);
+    ERRT("ADD", "52, 5678H[22]", ILLEGAL_REGISTER, "[22]", 0x67, 0x17, 0x78, 0x56, 0x34);
 
     TEST("ADDB", "35, 32",        0x74, 0x20, 0x23);
     TEST("ADDB", "34, 33",        0x74, 0x21, 0x22);
@@ -127,6 +146,10 @@ void test_2_operands() {
     TEST("CMPB", "35, [32]+",     0x9A, 0x21, 0x23);
     TEST("CMPB", "52, 35[32]",    0x9B, 0x20, 0x23, 0x34);
     TEST("CMPB", "69, 3423H[32]", 0x9B, 0x21, 0x23, 0x34, 0x45);
+
+    if (is80196()) {
+        TEST("CMPL", "52, 32", 0xC5, 0x20, 0x34);
+    }
 
     TEST("MUL", "52, 16",           0xFE, 0x6C, 0x10, 0x34);
     ONAL("MUL", "52, 17",     "17", 0xFE, 0x6C, 0x11, 0x34);
@@ -391,14 +414,22 @@ void test_move() {
     TEST("LDB", "235, 0ECEDH[254]", 0xB3, 0xFF, 0xED, 0xEC, 0xEB);
 
     TEST("ST", "52, 32",           0xC0, 0x20, 0x34);
-    UNKN(                          0xC1);
+    if (is8096()) {
+        UNKN(0xC1);
+    } else {
+        TEST("BMOV", "52, 32", 0xC1, 0x20, 0x34);
+    }
     TEST("ST", "52, [32]",         0xC2, 0x20, 0x34);
     TEST("ST", "52, [32]+",        0xC2, 0x21, 0x34);
     TEST("ST", "86, 52[32]",       0xC3, 0x20, 0x34, 0x56);
     TEST("ST", "120, 5634H[32]",   0xC3, 0x21, 0x34, 0x56, 0x78);
 
     TEST("STB", "35, 32",           0xC4, 0x20, 0x23);
-    UNKN(                           0xC5);
+    if (is8096()) {
+        UNKN(0xC5);
+    } else {
+        TEST("CMPL", "52, 32", 0xC5, 0x20, 0x34);
+    }
     TEST("STB", "35, [32]",         0xC6, 0x20, 0x23);
     TEST("STB", "35, [32]+",        0xC6, 0x21, 0x23);
     TEST("STB", "236, -19[254]",    0xC7, 0xFE, 0xED, 0xEC);
@@ -439,7 +470,11 @@ void test_move() {
 
     TEST("POP", "32",       0xCC, 0x20);
     ONAL("POP", "33", "33", 0xCC, 0x21);
-    UNKN(                   0xCD); 
+    if (is8096()) {
+        UNKN(0xCD);
+    } else {
+        TEST("BMOVI", "52, 32", 0xCD, 0x20, 0x34);
+    }
     TEST("POP", "[32]",         0xCE, 0x20);
     TEST("POP", "[32]+",        0xCE, 0x21);
     TEST("POP", "52[32]",         0xCF, 0x20, 0x34);
@@ -453,6 +488,26 @@ void test_move() {
 
     TEST("PUSHF", "", 0xF2);
     TEST("POPF",  "", 0xF3);
+
+    if (is80196()) {
+        TEST("XCH", "52, 32",         0x04, 0x20, 0x34);
+        TEST("XCH", "86, 52[32]",     0x0B, 0x20, 0x34, 0x56);
+        TEST("XCH", "120, 5634H[32]", 0x0B, 0x21, 0x34, 0x56, 0x78);
+        TEST("XCH", "120, 5634H[0]",  0x0B, 0x01, 0x34, 0x56, 0x78);
+        ONAL("XCH", "120, 5635H[0]",  "5635H[0]", 0x0B, 0x01, 0x35, 0x56, 0x78);
+
+        TEST("XCHB", "52, 32",         0x14, 0x20, 0x34);
+        TEST("XCHB", "86, 52[32]",     0x1B, 0x20, 0x34, 0x56);
+        TEST("XCHB", "120, 5634H[32]", 0x1B, 0x21, 0x34, 0x56, 0x78);
+        TEST("XCHB", "120, 5634H[0]",  0x1B, 0x01, 0x34, 0x56, 0x78);
+        TEST("XCHB", "120, 5635H[0]",  0x1B, 0x01, 0x35, 0x56, 0x78);
+
+        TEST("BMOV",  "52, 32", 0xC1, 0x20, 0x34);
+        TEST("BMOVI", "52, 32", 0xCD, 0x20, 0x34);
+
+        TEST("PUSHA", "", 0xF4);
+        TEST("POPA",  "", 0xF5);
+    }
 }
 
 void test_jump() {
@@ -528,6 +583,13 @@ void test_jump() {
     ATEST(0x2000, "DJNZ", "18, 1F83H", 0xE0, 0x12, 0x80);
     ATEST(0x2000, "DJNZ", "18, 2003H", 0xE0, 0x12, 0x00);
 
+    if (is80196()) {
+        ATEST(0x2000, "DJNZW", "18, 2000H", 0xE1, 0x12, 0xFD);
+        ATEST(0x2000, "DJNZW", "18, 2082H", 0xE1, 0x12, 0x7F);
+        ATEST(0x2000, "DJNZW", "18, 1F83H", 0xE1, 0x12, 0x80);
+        ATEST(0x2000, "DJNZW", "18, 2003H", 0xE1, 0x12, 0x00);
+    }
+
     ATEST(0x2000, "JBC", "18, 0, 2000H", 0x30, 0x12, 0xFD);
     ATEST(0x2000, "JBC", "18, 1, 2082H", 0x31, 0x12, 0x7F);
     ATEST(0x2000, "JBC", "18, 2, 1F83H", 0x32, 0x12, 0x80);
@@ -544,6 +606,10 @@ void test_jump() {
     ATEST(0x2000, "JBS", "18, 5, 2082H", 0x3D, 0x12, 0x7F);
     ATEST(0x2000, "JBS", "18, 6, 1F83H", 0x3E, 0x12, 0x80);
     ATEST(0x2000, "JBS", "18, 7, 2003H", 0x3F, 0x12, 0x00);
+
+    if (is80196()) {
+        TEST("TIJMP", "86, 32, #15", 0xE2, 0x20, 0x0F, 0x56);
+    }
 }
 
 void test_jump_relative() {
@@ -686,6 +752,11 @@ void test_control() {
     TEST("NOP",   "",  0xFD);
     TEST("SKIP",  "1", 0x00, 0x01);
     TEST("TRAP",  "",  0xF7);
+    if (is80196()) {
+        TEST("DPTS",  "", 0xEC);
+        TEST("EPTS",  "", 0xED);
+        TEST("IDLPD", "#1", 0xF6, 0x01);
+    }
 }
 
 void test_absolute() {
@@ -705,13 +776,32 @@ void test_absolute() {
     TEST("PUSH", "5634H",              0xCB, 0x01, 0x34, 0x56);
 }
 
-void test_illegal() {
+void test_illegal_8096() {
     static constexpr Config::opcode_t ILLEGAL[] = {
             0x04, 0x0B,
             0x10, 0x14, 0x1B, 0x1C, 0x1D, 0x1E, 0x1F,
             0xC1, 0xC5, 0xCD,
             0xE1, 0xE2, 0xE4, 0xE5, 0xE6, 0xE8, 0xE9, 0xEA, 0xEB, 0xEC, 0xED, 0xEE,
             0xF1, 0xF4, 0xF5, 0xF6,
+    };
+    for (auto opc : ILLEGAL)
+        UNKN(opc);
+
+    for (auto i = 0; i < 0x100; i++) {
+        const Config::opcode_t opc = i;
+        const auto h4 = opc & 0xF0;
+        const auto l4 = opc & 0xF0;
+        if (h4 >= 0x40 && h4 < 0xA0 && l4 >= 0xC)
+            continue;
+        UNKN(0xFE, opc);
+    }
+}
+
+void test_illegal_80196() {
+    static constexpr Config::opcode_t ILLEGAL[] = {
+            0x10, 0x1C, 0x1D, 0x1E, 0x1F,
+            0xE4, 0xE5, 0xE6, 0xE8, 0xE9, 0xEA, 0xEB, 0xEE,
+            0xF1,
     };
     for (auto opc : ILLEGAL)
         UNKN(opc);
@@ -738,7 +828,10 @@ void run_tests(const char *cpu) {
     RUN_TEST(test_modify);
     RUN_TEST(test_control);
     RUN_TEST(test_absolute);
-    RUN_TEST(test_illegal);
+    if (is8096())
+        RUN_TEST(test_illegal_8096);
+    if (is80196())
+        RUN_TEST(test_illegal_80196);
 }
 
 // Local Variables:

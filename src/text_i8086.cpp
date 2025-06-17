@@ -173,8 +173,8 @@ constexpr char TEXT_LEAVE[]  PROGMEM = "LEAVE";
 // constexpr char TEXT_OUTS[]   PROGMEM = "OUTS";
 constexpr char TEXT_OUTSB[]  PROGMEM = "OUTSB";
 constexpr char TEXT_OUTSW[]  PROGMEM = "OUTSW";
-constexpr char TEXT_PUSHA[]  PROGMEM = "PUSHA";
-constexpr char TEXT_POPA[]   PROGMEM = "POPA";
+// constexpr char TEXT_PUSHA[]  PROGMEM = "PUSHA";
+// constexpr char TEXT_POPA[]   PROGMEM = "POPA";
 
 // i80286
 constexpr char TEXT_ARPL[] PROGMEM = "ARPL";

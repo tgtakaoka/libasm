@@ -45,13 +45,16 @@ enum AddrMode : uint8_t {
     M_BITNO = 9,   // bit number (0~7)
     M_COUNT = 10,  // #n (0~15) or M_BREG
     M_INDIR = 11,  // indirect (M_BAOP:2, M_WAOP:2)
-    M_IMM8 = 12,   // 8-bit immediate (M_BAOP:1)
-    M_IMM16 = 13,  // 16-bit immediate (M_WAOP:1)
+    M_BIDX = 12,   //  indexed (M_BAOP:3)
+    M_WIDX = 13,   //  indexed (M_WAOP:3)
+    M_IMM8 = 14,   // 8-bit immediate (M_BAOP:1)
+    M_IMM16 = 15,  // 16-bit immediate (M_WAOP:1)
     // not in TableI8096
-    M_AINC = 14,   // auto increment
-    M_IDX8 = 15,   // 8-bit indexed (M_BAOP:3, M_WAOP:3)
-    M_IDX16 = 16,  // 16-bit indexed (M_BAOP:3, M_WAOP:3)
-    M_ADDR = 17,   // 16-bit address or register number
+    M_AINC = 16,   // auto increment
+    M_IDX8 = 17,   // 8-bit indexed (M_BAOP:3, M_WAOP:3)
+    M_IDX16 = 18,  // 16-bit indexed (M_BAOP:3, M_WAOP:3)
+    M_REGNO = 19,  // 8-bit register number
+    M_ADDR = 20,   // 16-bit address
 };
 
 enum CodeFormat : uint8_t {

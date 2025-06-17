@@ -51,11 +51,14 @@ Error DisI8096::setUseAbsolute(bool enable) {
     return OK;
 }
 
-StrBuffer &DisI8096::outRegister(StrBuffer &out, uint8_t regno, bool indir) const {
+StrBuffer &DisI8096::outRegister(StrBuffer &out, DisInsn &insn, uint8_t regno, bool indir) const {
     if (regno == 0 && indir && _useAbsolute)  // omit [0]
         return out;
-    if (indir)
+    if (indir) {
+        if (ioAddress(regno))
+            insn.setError(out, ILLEGAL_REGISTER);
         out.letter('[');
+    }
     outDec(out, regno, 8);
     if (indir)
         out.letter(']');
@@ -97,15 +100,15 @@ StrBuffer &DisI8096::outOperand(StrBuffer &out, DisInsn &insn, const Operand &op
     case M_BREG:
     case M_WREG:
     case M_LREG:
-        return outRegister(out, op.regno);
+        return outRegister(out, insn, op.regno);
     case M_INDIR:
-        return outRegister(out, op.regno, true);
+        return outRegister(out, insn, op.regno, true);
     case M_AINC:
-        return outRegister(out, op.regno & ~1, true).letter('+');
+        return outRegister(out, insn, op.regno & ~1, true).letter('+');
     case M_IDX8:
-        return outRegister(outDec(out, op.int8(), -8), op.regno, true);
+        return outRegister(outDec(out, op.int8(), -8), insn, op.regno, true);
     case M_IDX16:
-        return outRegister(outAbsAddr(out, op.val16, 16), op.regno, true);
+        return outRegister(outAbsAddr(out, op.val16, 16), insn, op.regno, true);
     case M_REL8:
     case M_REL11:
     case M_REL16:
@@ -120,6 +123,28 @@ StrBuffer &DisI8096::outOperand(StrBuffer &out, DisInsn &insn, const Operand &op
         return outHex(out, op.val16, op.mode == M_IMM8 ? 8 : 16);
     default:
         return out;
+    }
+}
+
+void DisI8096::Operand::readIndirect(DisInsn &insn) {
+    regno = insn.readByte();
+    if (isWreg(regno)) {
+        mode = M_INDIR;
+    } else {
+        regno &= ~1;
+        mode = M_AINC;
+    }
+}
+
+void DisI8096::Operand::readIndexed(DisInsn &insn) {
+    regno = insn.readByte();
+    if (isWreg(regno)) {  // 8bit displacement
+        val16 = static_cast<int16_t>(insn.readByte());
+        mode = M_IDX8;
+    } else {  // 16bit displacement
+        regno &= ~1;
+        val16 = insn.readUint16();
+        mode = M_IDX16;
     }
 }
 
@@ -140,6 +165,14 @@ Error DisI8096::Operand::read(DisInsn &insn, AddrMode opMode) {
         if (!isLreg(regno))
             setErrorIf(OPERAND_NOT_ALIGNED);
         break;
+    case M_BIDX:
+        readIndexed(insn);
+        break;
+    case M_WIDX:
+        readIndexed(insn);
+        if (regno == 0 && !isWreg(val16))
+            setErrorIf(OPERAND_NOT_ALIGNED);
+        break;
     case M_BAOP:
         switch (insn.aa()) {
         case AA_REG:
@@ -151,23 +184,10 @@ Error DisI8096::Operand::read(DisInsn &insn, AddrMode opMode) {
             mode = M_IMM8;
             break;
         case AA_INDIR:
-            regno = insn.readByte();
-            if (isWreg(regno)) {
-                mode = M_INDIR;
-            } else {
-                mode = M_AINC;
-            }
+            readIndirect(insn);
             break;
         case AA_IDX:
-            regno = insn.readByte();
-            if (isWreg(regno)) {  // 8bit displacement
-                val16 = static_cast<int16_t>(insn.readByte());
-                mode = M_IDX8;
-            } else {  // 16bit displacement
-                regno &= ~1;
-                val16 = insn.readUint16();
-                mode = M_IDX16;
-            }
+            readIndexed(insn);
             break;
         }
         break;
@@ -184,28 +204,16 @@ Error DisI8096::Operand::read(DisInsn &insn, AddrMode opMode) {
             mode = M_IMM16;
             break;
         case AA_INDIR:
-            regno = insn.readByte();
-            if (isWreg(regno)) {
-                mode = M_INDIR;
-            } else {
-                mode = M_AINC;
-            }
+            readIndirect(insn);
             break;
         case AA_IDX:
-            regno = insn.readByte();
-            if (isWreg(regno)) {  // 8bit displacement
-                val16 = static_cast<int16_t>(insn.readByte());
-                mode = M_IDX8;
-            } else {
-                regno &= ~1;
-                val16 = insn.readUint16();
-                mode = M_IDX16;
-            }
+            readIndexed(insn);
             if (regno == 0 && !isWreg(val16))
                 setErrorIf(OPERAND_NOT_ALIGNED);
             break;
         }
         break;
+    case M_IMM8:
     case M_REL8:
         val16 = insn.readByte();
         break;
@@ -238,6 +246,7 @@ Error DisI8096::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) const
         return _insn.setErrorIf(insn);
 
     const auto jbx_djnz = insn.src2() == M_REL8 || insn.src1() == M_REL8;
+    const auto tijmp = insn.src2() == M_IMM8;
     Operand src2, src1, dst;
     if (jbx_djnz) {
         if (dst.read(insn, insn.dst()))
@@ -255,6 +264,19 @@ Error DisI8096::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) const
                 insn.setErrorIf(out, src2);
             outOperand(out, insn, src2);
         }
+    } else if (tijmp) {
+        // TIJMP dst, src1, #src2
+        src1.read(insn, insn.src1());
+        src2.read(insn, insn.src2());
+        if (dst.read(insn, insn.dst()))
+            insn.setErrorIf(out, dst);
+        outOperand(out, insn, dst);
+        if (src1.getError())
+            insn.setErrorIf(out, src1);
+        outOperand(out.comma(), insn, src1);
+        if (src2.getError())
+            insn.setErrorIf(out, src2);
+        outOperand(out.comma(), insn, src2);
     } else {
         src2.read(insn, insn.src2());
         src1.read(insn, insn.src1());

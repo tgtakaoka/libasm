@@ -36,9 +36,9 @@ struct EntryInsn : EntryInsnPrefix<Config, Entry> {
 struct Operand final : ErrorAt {
     AddrMode mode;
     Value regno;
-    Error regerr;
     Value val;
-    Operand() : mode(M_NONE), regno(), regerr(OK), val() {}
+    StrScanner regAt;
+    Operand() : mode(M_NONE), regno(), val() {}
 };
 
 struct AsmInsn final : AsmInsnImpl<Config>, EntryInsn {

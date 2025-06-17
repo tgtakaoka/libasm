@@ -24,8 +24,10 @@ namespace text {
 namespace i8096 {
 
 // clang-format off
-extern const char TEXT_CPU_I8096[] PROGMEM;
+extern const char TEXT_CPU_LIST[]  PROGMEM;
 extern const char TEXT_CPU_8096[]  PROGMEM;
+extern const char TEXT_CPU_80196[] PROGMEM;
+extern const char TEXT_CPU_80196KB[] PROGMEM;
 
 using common::TEXT_ADD;
 using common::TEXT_ADDB;
@@ -119,6 +121,23 @@ using common::TEXT_SUBCB;
 using common::TEXT_TRAP;
 using common::TEXT_XOR;
 using common::TEXT_XORB;
+
+// i80C196KB
+extern const char TEXT_BMOV[]  PROGMEM;
+using common::TEXT_CMPL;
+extern const char TEXT_DJNZW[] PROGMEM;
+extern const char TEXT_IDLPD[] PROGMEM;
+using common::TEXT_POPA;
+using common::TEXT_PUSHA;
+
+// i80C196KC
+extern const char TEXT_BMOVI[] PROGMEM;
+extern const char TEXT_DPTS[]  PROGMEM;
+extern const char TEXT_EPTS[]  PROGMEM;
+extern const char TEXT_TIJMP[] PROGMEM;
+using common::TEXT_XCH;
+using common::TEXT_XCHB;
+
 // clang-format on
 
 }  // namespace i8096

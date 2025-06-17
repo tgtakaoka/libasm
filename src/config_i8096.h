@@ -24,10 +24,17 @@ namespace i8096 {
 
 enum CpuType : uint8_t {
     I8096,
+    I80196KB,
+    I80196,
 };
 
 struct Config : ConfigImpl<CpuType, ADDRESS_16BIT, ADDRESS_BYTE, OPCODE_8BIT, ENDIAN_LITTLE, 7, 5> {
     Config(const InsnTable<CpuType> &table) : ConfigImpl(table, I8096) {}
+
+protected:
+    bool ioAddress(uint16_t addr) const {
+        return addr >= 2 && addr < 0x18;
+    }
 };
 
 }  // namespace i8096

@@ -44,9 +44,11 @@ private:
         int8_t int8() const { return static_cast<int8_t>(val16); }
         Operand() : mode(M_NONE), regno(0), val16(0) {}
         Error read(DisInsn &insn, AddrMode mode);
+        void readIndirect(DisInsn &insn);
+        void readIndexed(DisInsn &insn);
     };
 
-    StrBuffer &outRegister(StrBuffer &out, uint8_t regno, bool indir = false) const;
+    StrBuffer &outRegister(StrBuffer &out, DisInsn &insn, uint8_t regno, bool indir = false) const;
     StrBuffer &outRelative(StrBuffer &out, DisInsn &insn, const Operand &op) const;
     StrBuffer &outOperand(StrBuffer &out, DisInsn &insn, const Operand &op) const;
 

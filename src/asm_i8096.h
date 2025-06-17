@@ -30,6 +30,9 @@ struct AsmI8096 final : Assembler, Config {
 private:
     Error parseIndirect(StrScanner &scan, Operand &opr, const StrScanner &at, bool autoInc) const;
     Error parseOperand(StrScanner &scan, Operand &opr) const;
+    void emitIndirect(AsmInsn &insn, const Operand &op) const;
+    void emitIndexed(AsmInsn &insn, const Operand &op) const;
+    void emitAbsolute(AsmInsn &insn, const Operand &op) const;
     void emitAop(AsmInsn &insn, AddrMode mode, const Operand &op) const;
     void emitRelative(AsmInsn &insn, AddrMode mode, const Operand &op) const;
     void emitOperand(AsmInsn &insn, AddrMode mode, const Operand &op) const;

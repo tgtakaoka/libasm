@@ -1,4 +1,4 @@
-;;; Copyright 2022 Tadashi G. Takaoka
+;;; Copyright 2025 Tadashi G. Takaoka
 ;;;
 ;;; Licensed under the Apache License, Version 2.0 (the "License");
 ;;; you may not use this file except in compliance with the License.
@@ -12,6 +12,7 @@
 ;;; See the License for the specific language governing permissions and
 ;;; limitations under the License.
 
-        cpu     8096
+        cpu     80196
         org     2000h
         include "test_i8096.inc"
+        include "test_i80196.inc"

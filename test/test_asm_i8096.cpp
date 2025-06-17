@@ -26,6 +26,10 @@ using namespace libasm::test;
 AsmI8096 asm8096;
 Assembler &assembler(asm8096);
 
+bool is80196() {
+    return strcasecmp_P("80196", asm8096.cpu_P()) == 0;
+}
+
 void set_up() {
     assembler.reset();
 }
@@ -41,8 +45,13 @@ void test_cpu() {
 
     EQUALS("cpu i8096", true,   assembler.setCpu("i8096"));
     EQUALS_P("cpu i8096", "8096", assembler.config().cpu_P());
-}
 
+    EQUALS("cpu 80196", true,   assembler.setCpu("80196"));
+    EQUALS_P("cpu 80196", "80196", assembler.config().cpu_P());
+
+    EQUALS("cpu i80196", true,   assembler.setCpu("i80196"));
+    EQUALS_P("cpu i80196", "80196", assembler.config().cpu_P());
+}
 
 void test_2_operands() {
     TEST("ADD 52, 32",           0x64, 0x20, 0x34);
@@ -65,6 +74,11 @@ void test_2_operands() {
     TEST("ADD 120, 5634H",                  0x67, 0x01, 0x34, 0x56, 0x78);
     ONAL("ADD 120, 5635H",         "5635H", 0x67, 0x01, 0x35, 0x56, 0x78);
 
+    ERRT("ADD 52, [22]",      ILLEGAL_REGISTER, "[22]", 0x66, 0x16, 0x34);
+    ERRT("ADD 52, [2]+",      ILLEGAL_REGISTER, "[2]+", 0x66, 0x03, 0x34);
+    ERRT("ADD 52, 32[22]",    ILLEGAL_REGISTER, "[22]", 0x67, 0x16, 0x20, 0x34);
+    ERRT("ADD 52, 5678H[22]", ILLEGAL_REGISTER, "[22]", 0x67, 0x17, 0x78, 0x56, 0x34);
+
     TEST("ADDB 35, 32",  0x74, 0x20, 0x23);
     TEST("ADDB 35, 33",  0x74, 0x21, 0x23);
     TEST("ADDB 35, #32", 0x75, 0x20, 0x23);
@@ -73,7 +87,7 @@ void test_2_operands() {
     ONAL("ADDB 35, [33]+", "[33]+", 0x76, 0x21, 0x23);
     ONAL("ADDB 35, [33]", "[33]",   0x76, 0x21, 0x23);
     TEST("ADDB 52, 35[32]",           0x77, 0x20, 0x23, 0x34);
-    ONAL("ADDB 52, 35[33]", "35[33]", 0x77, 0x21, 0x23, 0x34);
+    ONAL("ADDB 52, 35[33]", "35[33]", 0x77, 0x20, 0x23, 0x34);
     TEST("ADDB 69, 3423H[32]",              0x77, 0x21, 0x23, 0x34, 0x45);
     ONAL("ADDB 69, 3423H[33]", "3423H[33]", 0x77, 0x21, 0x23, 0x34, 0x45);
     TEST("ADDB 69, 5634H",                  0x77, 0x01, 0x34, 0x56, 0x45);
@@ -135,6 +149,12 @@ void test_2_operands() {
     TEST("CMPB 52, 35[32]",    0x9B, 0x20, 0x23, 0x34);
     TEST("CMPB 69, 3423H[32]", 0x9B, 0x21, 0x23, 0x34, 0x45);
 
+    if (is80196()) {
+        TEST("CMPL 52, 32",            0xC5, 0x20, 0x34);
+        ONAL("CMPL 53, 32",  "53, 32", 0xC5, 0x20, 0x35);
+        ONAL("CMPL 52, 33",  "33",     0xC5, 0x21, 0x34);
+    }
+
     TEST("MUL 52, 16",         0xFE, 0x6C, 0x10, 0x34);
     TEST("MUL 84, #3412H",     0xFE, 0x6D, 0x12, 0x34, 0x54);
     TEST("MUL 52, [32]",       0xFE, 0x6E, 0x20, 0x34);
@@ -160,7 +180,7 @@ void test_2_operands() {
     TEST("MULU 52, [32]+",        0x6E, 0x21, 0x34);
     ONAL("MULU 52, [33]", "[33]", 0x6E, 0x21, 0x34);
     TEST("MULU 84, 52[32]",           0x6F, 0x20, 0x34, 0x54);
-    ONAL("MULU 84, 52[33]", "52[33]", 0x6F, 0x21, 0x34, 0x54);
+    ONAL("MULU 84, 52[33]", "52[33]", 0x6F, 0x20, 0x34, 0x54);
     TEST("MULU 120, 5633H[32]",              0x6F, 0x21, 0x33, 0x56, 0x78);
     ONAL("MULU 120, 5633H[33]", "5633H[33]", 0x6F, 0x21, 0x33, 0x56, 0x78);
     TEST("MULU 120, 5632H",                  0x6F, 0x01, 0x32, 0x56, 0x78);
@@ -290,7 +310,7 @@ void test_3_operands() {
     TEST("MUL 84, 52, [32]+",   0xFE, 0x4E, 0x21, 0x34, 0x54);
     TEST("MUL 120, 86, 52[32]",           0xFE, 0x4F, 0x20, 0x34, 0x56, 0x78);
     TEST("MUL 120, 86, 53[32]",           0xFE, 0x4F, 0x20, 0x35, 0x56, 0x78);
-    ONAL("MUL 120, 86, 52[33]", "52[33]", 0xFE, 0x4F, 0x21, 0x34, 0x56, 0x78);
+    ONAL("MUL 120, 86, 52[33]", "52[33]", 0xFE, 0x4F, 0x20, 0x34, 0x56, 0x78);
     TEST("MUL 152, 120, 5635H[32]",              0xFE, 0x4F, 0x21, 0x35, 0x56, 0x78, 0x98);
     ONAL("MUL 152, 120, 5634H[33]", "5634H[33]", 0xFE, 0x4F, 0x21, 0x34, 0x56, 0x78, 0x98);
     TEST("MUL 152, 120, 5634H",                  0xFE, 0x4F, 0x01, 0x34, 0x56, 0x78, 0x98);
@@ -409,7 +429,7 @@ void test_move() {
     TEST("PUSH [32]+",        0xCA, 0x21);
     ONAL("PUSH [33]", "[33]", 0xCA, 0x21);
     TEST("PUSH 53[32]",                 0xCB, 0x20, 0x35);
-    ONAL("PUSH 52[33]", "52[33]",       0xCB, 0x21, 0x34);
+    ONAL("PUSH 52[33]", "52[33]",       0xCB, 0x20, 0x34);
     TEST("PUSH 5635H[32]",              0xCB, 0x21, 0x35, 0x56);
     ONAL("PUSH 5634H[33]", "5634H[33]", 0xCB, 0x21, 0x34, 0x56);
     TEST("PUSH 5634H",                  0xCB, 0x01, 0x34, 0x56);
@@ -422,14 +442,48 @@ void test_move() {
     TEST("POP [32]+",        0xCE, 0x21);
     ONAL("POP [33]", "[33]", 0xCE, 0x21);
     TEST("POP 53[32]",                 0xCF, 0x20, 0x35);
-    ONAL("POP 52[33]", "52[33]",       0xCF, 0x21, 0x34);
+    ONAL("POP 52[33]", "52[33]",       0xCF, 0x20, 0x34);
     TEST("POP 5635H[32]",              0xCF, 0x21, 0x35, 0x56);
     ONAL("POP 5634H[33]", "5634H[33]", 0xCF, 0x21, 0x34, 0x56);
     TEST("POP 5634H",                  0xCF, 0x01, 0x34, 0x56);
     ONAL("POP 5635H", "5635H",         0xCF, 0x01, 0x35, 0x56);
 
-    TEST("PUSHF",              0xF2);
-    TEST("POPF",               0xF3);
+    TEST("PUSHF", 0xF2);
+    TEST("POPF",  0xF3);
+    if (is80196()) {
+        TEST("BMOV  52, 32",           0xC1, 0x20, 0x34);
+        ONAL("BMOV  54, 32", "54, 32", 0xC1, 0x20, 0x36);
+        ONAL("BMOV  52, 33", "33",     0xC1, 0x21, 0x34);
+
+        TEST("BMOVI  52, 32",           0xCD, 0x20, 0x34);
+        ONAL("BMOVI  54, 32", "54, 32", 0xCD, 0x20, 0x36);
+        ONAL("BMOVI  52, 33", "33",     0xCD, 0x21, 0x34);
+
+        TEST("XCH 52, 32",         0x04, 0x20, 0x34);
+        TEST("XCH 52, [32]",       0x0B, 0x20, 0x00, 0x34);
+        TEST("XCH 86, 52[32]",     0x0B, 0x20, 0x34, 0x56);
+        TEST("XCH 120, 5634H[32]", 0x0B, 0x21, 0x34, 0x56, 0x78);
+        TEST("XCH 120, 5634H",     0x0B, 0x01, 0x34, 0x56, 0x78);
+        ONAL("XCH 53, 32", "53, 32", 0x04, 0x20, 0x35);
+        ONAL("XCH 52, 33",     "33", 0x04, 0x21, 0x34);
+        ONAL("XCH 52, [33]",            "[33]", 0x0B, 0x20, 0x00, 0x34);
+        ONAL("XCH 86, 52[33]",        "52[33]", 0x0B, 0x20, 0x34, 0x56);
+        ONAL("XCH 120, 5634H[33]", "5634H[33]", 0x0B, 0x21, 0x34, 0x56, 0x78);
+        ONAL("XCH 120, 5635H",     "5635H",     0x0B, 0x01, 0x35, 0x56, 0x78);
+
+        TEST("XCHB 53, 32",         0x14, 0x20, 0x35);
+        TEST("XCHB 52, 33",         0x14, 0x21, 0x34);;
+        TEST("XCHB 52, [32]",       0x1B, 0x20, 0x00, 0x34);
+        TEST("XCHB 86, 52[32]",     0x1B, 0x20, 0x34, 0x56);
+        TEST("XCHB 120, 5634H[32]", 0x1B, 0x21, 0x34, 0x56, 0x78);
+        TEST("XCHB 120, 5635H",     0x1B, 0x01, 0x35, 0x56, 0x78);
+        ONAL("XCHB 52, [33]",            "[33]", 0x1B, 0x20, 0x00, 0x34);
+        ONAL("XCHB 86, 52[33]",        "52[33]", 0x1B, 0x20, 0x34, 0x56);
+        ONAL("XCHB 120, 5634H[33]", "5634H[33]", 0x1B, 0x21, 0x34, 0x56, 0x78);
+
+        TEST("PUSHA", 0xF4);
+        TEST("POPA",  0xF5);
+    }
 
     symtab.intern(255,    "?255");
     symtab.intern(-129,   "_129");
@@ -596,10 +650,25 @@ void test_smart_branch() {
     ATEST(0x2000, "DJNZ 32, 1F83H",                           0xE0, 0x20, 0x80);
     AERRT(0x2000, "DJNZ 32, 1F82H", OPERAND_TOO_FAR, "1F82H", 0xE0, 0x20, 0x7F);
 
+    if (is80196()) {
+        ATEST(0x2000, "DJNZW 32, 2082H",                           0xE1, 0x20, 0x7F);
+        AERRT(0x2000, "DJNZW 32, 2083H", OPERAND_TOO_FAR, "2083H", 0xE1, 0x20, 0x80);
+        ATEST(0x2000, "DJNZW 32, 1F83H",                           0xE1, 0x20, 0x80);
+        AERRT(0x2000, "DJNZW 32, 1F82H", OPERAND_TOO_FAR, "1F82H", 0xE1, 0x20, 0x7F);
+        ONAL(         "DJNZW 33, $", "33, $",                      0xE1, 0x21, 0xFD);
+    }
+
     ATEST(0x2000, "JBC 32, 1, 2082H",                           0x31, 0x20, 0x7F);
     AERRT(0x2000, "JBS 32, 7, 2083H", OPERAND_TOO_FAR, "2083H", 0x3F, 0x20, 0x80);
     ATEST(0x2000, "JBC 32, 2, 1F83H",                           0x32, 0x20, 0x80);
     AERRT(0x2000, "JBS 32, 7, 1F82H", OPERAND_TOO_FAR, "1F82H", 0x3F, 0x20, 0x7F);
+
+    if (is80196()) {
+        TEST("TIJMP 86, 32, #0FH",                           0xE2, 0x20, 0x0F, 0x56);
+        ONAL("TIJMP 87, 32, #0FH", "87, 32, #0FH",           0xE2, 0x20, 0x0F, 0x57);
+        ONAL("TIJMP 86, 33, #0FH", "33, #0FH",               0xE2, 0x21, 0x0F, 0x56);
+        ERRT("TIJMP 86, 32, #100H", OVERFLOW_RANGE, "#100H", 0xE2, 0x20, 0x00, 0x56);
+    }
 }
 
 void test_modify() {
@@ -662,6 +731,11 @@ void test_control() {
     TEST("NOP",    0xFD);
     TEST("SKIP 1", 0x00, 0x01);
     TEST("TRAP",   0xF7);
+    if (is80196()) {
+        TEST("DPTS",  0xEC);
+        TEST("EPTS",  0xED);
+        TEST("IDLPD #2", 0xF6, 0x02);
+    }
 }
 
 void test_comment() {

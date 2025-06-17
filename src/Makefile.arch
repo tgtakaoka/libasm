@@ -60,7 +60,7 @@ TGT_i8048    = i8039 i8048 i80c39 i80c48 msm80c39 msm80c48
 TGT_i8051    = i8051
 TGT_i8080    = i8080 i8085 v30emu
 TGT_i8086    = i8086 i80186 i80286 v30
-TGT_i8096    = i8096
+TGT_i8096    = i8096 i80196
 TGT_ins8060  = ins8060
 TGT_ins8070  = ins8070
 TGT_mc68000  = mc68000 mc68010 mc68020 mc68030 mc68040
@@ -104,6 +104,7 @@ CPU_i8080    = 8080
 CPU_i8085    = 8085
 CPU_i8086    = 8086
 CPU_i8096    = 8096
+CPU_i80196   = 80196
 CPU_i80c39   = 80C39
 CPU_i80c48   = 80C48
 CPU_im6100   = 6100
@@ -169,7 +170,7 @@ S28_OUTS = mc68000 mc68010 mc68hc16 w65c816 w65c816_m0x0 w65c816_m0x1 w65c816_m1
 # targets with Motorola S37 format
 S37_OUTS = mc68020 mc68030 mc68040
 # targets with Intel32 (32bit address) format
-I32_OUTS = $(TGT_i8086) $(TGT_mn1610) \
+I32_OUTS = $(TGT_i8086) $(TGT_i8096) $(TGT_mn1610) \
            z180 z280 z380 z8001 ns32032 tms320c25 tms320c26 tms320c20x tms320c5x
 # other targets use Intel8 format
 define __out-ext # target
