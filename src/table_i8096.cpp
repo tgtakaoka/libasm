@@ -24,7 +24,8 @@ using namespace libasm::text::i8096;
 namespace libasm {
 namespace i8096 {
 
-#define E3(_opc, _cf, _name, _dst, _src1, _src2) {_opc, Entry::Flags::create(_cf, _dst, _src1, _src2), _name}
+#define E3(_opc, _cf, _name, _dst, _src1, _src2) \
+    {_opc, Entry::Flags::create(_cf, _dst, _src1, _src2), _name}
 #define E2(_opc, _cf, _name, _dst, _src1) E3(_opc, _cf, _name, _dst, _src1, M_NONE)
 #define E1(_opc, _cf, _name, _dst) E2(_opc, _cf, _name, _dst, M_NONE)
 #define E0(_opc, _cf, _name) E1(_opc, _cf, _name, M_NONE)
@@ -249,6 +250,47 @@ constexpr uint8_t INDEX_FE[] PROGMEM = {
       4,  // TEXT_MULB
       5,  // TEXT_MULB
 };
+
+constexpr Entry I80196KB_TABLE[] PROGMEM = {
+    E2(0xC1, CF_00, TEXT_BMOV,  M_LREG, M_WREG),
+    E2(0xC5, CF_00, TEXT_CMPL,  M_LREG, M_LREG),
+    E2(0xE1, CF_00, TEXT_DJNZW, M_WREG, M_REL8),
+    E0(0xF4, CF_00, TEXT_PUSHA),
+    E0(0xF5, CF_00, TEXT_POPA),
+    E0(0xF6, CF_00, TEXT_IDLPD),
+};
+
+constexpr uint8_t I80196KB_INDEX[] PROGMEM = {
+      0,  // TEXT_BMOV
+      1,  // TEXT_BMOV
+      2,  // TEXT_DJNZW
+      5,  // TEXT_IDLPD
+      4,  // TEXT_POPA
+      3,  // TEXT_PUSHA
+};
+
+constexpr Entry I80196KC_TABLE[] PROGMEM = {
+    E2(0x04, CF_00, TEXT_XCH,   M_WREG, M_WREG),
+    E2(0x0B, CF_00, TEXT_XCH,   M_WREG, M_INDIR),
+    E2(0x14, CF_00, TEXT_XCHB,  M_BREG, M_BREG),
+    E2(0x1B, CF_00, TEXT_XCHB,  M_BREG, M_INDIR),
+    E2(0xCD, CF_00, TEXT_BMOVI, M_LREG, M_WREG),
+    E3(0xE2, CF_00, TEXT_TIJMP, M_WREG, M_WREG, M_IMM8),
+    E0(0xEC, CF_00, TEXT_DPTS),
+    E0(0xED, CF_00, TEXT_EPTS),
+};
+
+constexpr uint8_t I80196KC_INDEX[] PROGMEM = {
+      4,  // TEXT_BMOVI
+      6,  // TEXT_DPTS
+      7,  // TEXT_EPTS
+      5,  // TEXT_TIJMP
+      0,  // TEXT_XCH
+      1,  // TEXT_XCH
+      2,  // TEXT_XCHB
+      3,  // TEXT_XCHB
+};
+
 // clang-format on
 
 using EntryPage = entry::PrefixTableBase<Entry>;
@@ -258,10 +300,25 @@ constexpr EntryPage I8096_PAGES[] PROGMEM = {
         {0xFE, ARRAY_RANGE(TABLE_FE), ARRAY_RANGE(INDEX_FE)},
 };
 
+constexpr EntryPage I80196KB_PAGES[] PROGMEM = {
+        {0x00, ARRAY_RANGE(TABLE_00), ARRAY_RANGE(INDEX_00)},
+        {0xFE, ARRAY_RANGE(TABLE_FE), ARRAY_RANGE(INDEX_FE)},
+        {0x00, ARRAY_RANGE(I80196KB_TABLE), ARRAY_RANGE(I80196KB_INDEX)},
+};
+
+constexpr EntryPage I80196_PAGES[] PROGMEM = {
+        {0x00, ARRAY_RANGE(TABLE_00), ARRAY_RANGE(INDEX_00)},
+        {0xFE, ARRAY_RANGE(TABLE_FE), ARRAY_RANGE(INDEX_FE)},
+        {0x00, ARRAY_RANGE(I80196KB_TABLE), ARRAY_RANGE(I80196KB_INDEX)},
+        {0x00, ARRAY_RANGE(I80196KC_TABLE), ARRAY_RANGE(I80196KC_INDEX)},
+};
+
 using Cpu = entry::CpuBase<CpuType, EntryPage>;
 
 constexpr Cpu CPU_TABLE[] PROGMEM = {
         {I8096, TEXT_CPU_8096, ARRAY_RANGE(I8096_PAGES)},
+        {I80196KB, TEXT_CPU_80196KB, ARRAY_RANGE(I80196KB_PAGES)},
+        {I80196, TEXT_CPU_80196, ARRAY_RANGE(I80196_PAGES)},
 };
 
 const Cpu *cpu(CpuType) {
@@ -329,8 +386,9 @@ const /*PROGMEM*/ char *TableI8096::cpuName_P(CpuType cpuType) const {
 
 Error TableI8096::searchCpuName(StrScanner &name, CpuType &cpuType) const {
     name.iexpect('i');
-    if (name.iequals(TEXT_CPU_8096)) {
-        cpuType = I8096;
+    auto t = Cpu::search(name, ARRAY_RANGE(CPU_TABLE));
+    if (t) {
+        cpuType = t->readCpuType();
         return OK;
     }
     return UNSUPPORTED_CPU;

@@ -24,6 +24,10 @@ using namespace libasm::test;
 AsmI8096 asm8096;
 Assembler &assembler(asm8096);
 
+bool is80196() {
+    return strcasecmp_P("80196", asm8096.cpu_P()) == 0;
+}
+
 void set_up() {
     assembler.reset();
 }
@@ -39,8 +43,13 @@ void test_cpu() {
 
     EQUALS("cpu i8096", true,   assembler.setCpu("i8096"));
     EQUALS_P("cpu i8096", "8096", assembler.config().cpu_P());
-}
 
+    EQUALS("cpu 80196", true,   assembler.setCpu("80196"));
+    EQUALS_P("cpu 80196", "80196", assembler.config().cpu_P());
+
+    EQUALS("cpu i80196", true,   assembler.setCpu("i80196"));
+    EQUALS_P("cpu i80196", "80196", assembler.config().cpu_P());
+}
 
 void test_2_operands() {
     TEST("ADD   52, 18",                                  0x64, 0x12, 0x34);

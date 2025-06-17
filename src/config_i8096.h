@@ -24,6 +24,8 @@ namespace i8096 {
 
 enum CpuType : uint8_t {
     I8096,
+    I80196KB,
+    I80196,
 };
 
 struct Config : ConfigImpl<CpuType, ADDRESS_16BIT, ADDRESS_BYTE, OPCODE_8BIT, ENDIAN_LITTLE, 7, 5> {

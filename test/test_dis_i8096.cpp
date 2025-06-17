@@ -24,6 +24,10 @@ using namespace libasm::test;
 DisI8096 dis8096;
 Disassembler &disassembler(dis8096);
 
+bool is80196() {
+    return strcasecmp_P("80196", dis8096.cpu_P()) == 0;
+}
+
 void set_up() {
     disassembler.reset();
 }
@@ -39,6 +43,12 @@ void test_cpu() {
 
     EQUALS("cpu i8096", true,   disassembler.setCpu("i8096"));
     EQUALS_P("cpu i8096", "8096", disassembler.config().cpu_P());
+
+    EQUALS("cpu 80196", true,   disassembler.setCpu("80196"));
+    EQUALS_P("cpu 80196", "80196", disassembler.config().cpu_P());
+
+    EQUALS("cpu i80196", true,   disassembler.setCpu("i80196"));
+    EQUALS_P("cpu i80196", "80196", disassembler.config().cpu_P());
 }
 
 void test_2_operands() {

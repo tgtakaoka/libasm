@@ -178,8 +178,8 @@ using common::TEXT_INSW;
 using common::TEXT_OUTS;
 extern const char TEXT_OUTSB[]  PROGMEM;
 extern const char TEXT_OUTSW[]  PROGMEM;
-extern const char TEXT_POPA[]   PROGMEM;
-extern const char TEXT_PUSHA[]  PROGMEM;
+using common::TEXT_POPA;
+using common::TEXT_PUSHA;
 
 // i80286
 extern const char TEXT_ARPL[] PROGMEM;
