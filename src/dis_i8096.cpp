@@ -100,6 +100,8 @@ StrBuffer &DisI8096::outOperand(StrBuffer &out, DisInsn &insn, const Operand &op
         return outRegister(out, op.regno);
     case M_INDIR:
         return outRegister(out, op.regno, true);
+    case M_AINC:
+        return outRegister(out, op.regno & ~1, true).letter('+');
     case M_IDX8:
         return outRegister(outDec(out, op.int8(), -8), op.regno, true);
     case M_IDX16:
@@ -150,9 +152,11 @@ Error DisI8096::Operand::read(DisInsn &insn, AddrMode opMode) {
             break;
         case AA_INDIR:
             regno = insn.readByte();
-            if (!isWreg(regno))
-                setErrorIf(OPERAND_NOT_ALIGNED);
-            mode = M_INDIR;
+            if (isWreg(regno)) {
+                mode = M_INDIR;
+            } else {
+                mode = M_AINC;
+            }
             break;
         case AA_IDX:
             regno = insn.readByte();
@@ -181,9 +185,11 @@ Error DisI8096::Operand::read(DisInsn &insn, AddrMode opMode) {
             break;
         case AA_INDIR:
             regno = insn.readByte();
-            if (!isWreg(regno))
-                setErrorIf(OPERAND_NOT_ALIGNED);
-            mode = M_INDIR;
+            if (isWreg(regno)) {
+                mode = M_INDIR;
+            } else {
+                mode = M_AINC;
+            }
             break;
         case AA_IDX:
             regno = insn.readByte();
