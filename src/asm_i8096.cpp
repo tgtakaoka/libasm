@@ -51,12 +51,24 @@ AsmI8096::AsmI8096(const ValueParser::Plugins &plugins)
     reset();
 }
 
-Error AsmI8096::parseIndirect(StrScanner &scan, Operand &op) const {
+Error AsmI8096::parseIndirect(
+        StrScanner &scan, Operand &op, const StrScanner &at, bool autoInc) const {
+    auto p = scan;
+    if (!p.expect('['))
+        return NOT_AN_EXPECTED;
     ErrorAt error;
-    op.regno = parseInteger(scan, error);
+    op.regno = parseInteger(p, error);
     op.setErrorIf(error);
-    if (!scan.skipSpaces().expect(']'))
-        return op.setError(scan, MISSING_CLOSING_BRACKET);
+    if (!p.skipSpaces().expect(']'))
+        return op.setErrorIf(p, MISSING_CLOSING_BRACKET);
+    if (p.skipSpaces().expect('+')) {
+        if (!autoInc)
+            return op.setErrorIf(at, OPERAND_NOT_ALLOWED);
+        op.mode = M_AINC;
+    } else {
+        op.mode = M_INDIR;
+    }
+    scan = p;
     return OK;
 }
 
@@ -74,19 +86,20 @@ Error AsmI8096::parseOperand(StrScanner &scan, Operand &op) const {
         scan = p;
         return OK;
     }
-    if (p.expect('[')) {
-        if (parseIndirect(p, op))
+    if (parseIndirect(p, op, p, true) != NOT_AN_EXPECTED) {
+        if (op.hasError())
             return op.getError();
-        op.val = op.regno;
-        op.mode = M_INDIR;
         scan = p;
+        op.val = op.regno;
         return OK;
     }
+
+    auto at = p;
     op.val = parseInteger(p, op);
     if (op.hasError())
         return op.getError();
-    if (p.skipSpaces().expect('[')) {
-        if (parseIndirect(p, op))
+    if (parseIndirect(p, op, at, false) != NOT_AN_EXPECTED) {
+        if (op.hasError())
             return op.getError();
         op.mode = M_IDX16;
     } else {
@@ -115,6 +128,13 @@ void AsmI8096::emitAop(AsmInsn &insn, AddrMode mode, const Operand &op) const {
         if (!isWreg(regno))
             insn.setErrorIf(op, OPERAND_NOT_ALIGNED);
         insn.emitOperand8(regno);
+        return;
+        return;
+    case M_AINC:
+        insn.embedAa(AA_INDIR);
+        if (!isWreg(regno))
+            insn.setErrorIf(op, OPERAND_NOT_ALIGNED);
+        insn.emitOperand8(regno | 1);
         return;
     case M_IDX16:
         if (op.val.isZero())

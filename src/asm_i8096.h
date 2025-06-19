@@ -28,7 +28,7 @@ struct AsmI8096 final : Assembler, Config {
     AsmI8096(const ValueParser::Plugins &plugins = defaultPlugins());
 
 private:
-    Error parseIndirect(StrScanner &scan, Operand &opr) const;
+    Error parseIndirect(StrScanner &scan, Operand &opr, const StrScanner &at, bool autoInc) const;
     Error parseOperand(StrScanner &scan, Operand &opr) const;
     void emitAop(AsmInsn &insn, AddrMode mode, const Operand &op) const;
     void emitRelative(AsmInsn &insn, AddrMode mode, const Operand &op) const;

@@ -85,7 +85,7 @@
 ;;; 4X
         and     46h, 44h, 42h
         and     46h, 44h, #4342h
-        and     48h, 46h, [44h]
+        and     48h, 46h, [44h]+
         and     48h, 46h, 45h[44h]
         and     4ah, 48h, 4746h[44h]
         add     4ah, 48h, 46h
@@ -131,7 +131,7 @@
         mulub   66h, 64h, 6362h[60h]
         mulb    60h, 5fh, 5eh
         mulb    60h, 5fh, #5eh
-        mulb    62h, 61h, [60h]
+        mulb    62h, 61h, [60h]+
         mulb    64h, 62h, 61h[60h]
         mulb    66h, 64h, 6362h[60h]
 ;;; 6X
@@ -246,7 +246,7 @@
         ld      0a8h, 0a7a6h[0a4h]
         addc    0a8h, 0a6h
         addc    0a8h, #0a7a6h
-        addc    0aah, [0a8h]
+        addc    0aah, [0a8h]+
         addc    0aah, -87[0a8h]
         addc    0ach, 0abaah[0a8h]
         subc    0ach, 0aah
@@ -277,7 +277,7 @@
         subcb   0c0h, 0bfbeh[0bch]
         ldbse   0beh, 0bdh
         ldbse   0c0h, #0bfh
-        ldbse   0c2h, [0c0h]
+        ldbse   0c2h, [0c0h]+
         ldbse   0c2h, -63[0c0h]
         ldbse   0c4h, 0c3c2h[0c0h]
 ;;; CX
@@ -291,7 +291,7 @@
         stb     0cch, 0cbcah[0c8h]
         push    0cah
         push    #0cbcah
-        push    [0cch]
+        push    [0cch]+
         push    -51[0cch]
         push    0dfdeh[0cch]
         pop     0ceh

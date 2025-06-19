@@ -24,7 +24,8 @@ using namespace libasm::text::i8096;
 namespace libasm {
 namespace i8096 {
 
-#define E3(_opc, _cf, _name, _dst, _src1, _src2) {_opc, Entry::Flags::create(_cf, _dst, _src1, _src2), _name}
+#define E3(_opc, _cf, _name, _dst, _src1, _src2) \
+    {_opc, Entry::Flags::create(_cf, _dst, _src1, _src2), _name}
 #define E2(_opc, _cf, _name, _dst, _src1) E3(_opc, _cf, _name, _dst, _src1, M_NONE)
 #define E1(_opc, _cf, _name, _dst) E2(_opc, _cf, _name, _dst, M_NONE)
 #define E0(_opc, _cf, _name) E1(_opc, _cf, _name, M_NONE)
@@ -277,9 +278,7 @@ bool acceptMode(AddrMode opr, AddrMode table) {
                table == M_COUNT || table == M_BITNO;
     if (opr == M_IMM16)
         return table == M_BAOP || table == M_WAOP || table == M_COUNT;
-    if (opr == M_INDIR)
-        return table == M_BAOP || table == M_WAOP;
-    if (opr == M_IDX16)
+    if (opr == M_INDIR || opr == M_AINC || opr == M_IDX16)
         return table == M_BAOP || table == M_WAOP;
     return false;
 }
