@@ -33,7 +33,7 @@ RegName parseRegName(StrScanner &scan) {
         return REG_B;
     auto p = scan;
     if (p.iexpect('R')) {
-        const auto num = parseRegNumber(p);
+        const auto num = parseRegNumber(p, true);
         if (num >= 0 && num < 256) {
             scan = p;
             return toRegName(num);
@@ -41,7 +41,7 @@ RegName parseRegName(StrScanner &scan) {
         p = scan;
     }
     if (p.iexpect('P')) {
-        const auto num = parseRegNumber(p);
+        const auto num = parseRegNumber(p, true);
         if (num >= 0 && num < 256) {
             scan = p;
             return toPortName(num);

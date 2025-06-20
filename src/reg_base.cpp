@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
+#include "reg_base.h"
 #include <ctype.h>
 #include <string.h>
-#include "reg_base.h"
 #include "str_buffer.h"
 #include "str_scanner.h"
 
@@ -55,21 +55,32 @@ const NameEntry *NameTable::searchText(const StrScanner &symbol) const {
     return _table.binarySearch(text, textMatcher);
 }
 
-int16_t parseRegNumber(StrScanner &scan) {
+int16_t parseRegNumber(StrScanner &scan, bool allowHex) {
     auto p = scan;
     int16_t val = 0;
-    int8_t leading_zero = 0;
+    int_fast8_t leading_zero = 0;
     char c;
-    while (isdigit(c = *p) && val < 1000) {
-        if (val == 0 && c == '0')
-            leading_zero++;
-        val *= 10;
-        val += c - '0';
+    while (val < 256) {
+        c = *p;
+        if (allowHex && leading_zero && isxdigit(c)) {
+            val *= 16;
+        } else if (isdigit(c)) {
+            if (val == 0 && c == '0')
+                leading_zero++;
+            val *= 10;
+        } else {
+            break;
+        }
+        if (isdigit(c)) {
+            val += c - '0';
+        } else {
+            val += toupper(c) - 'A' + 10;
+        }
         ++p;
     }
     if (isIdLetter(c))
         return -1;
-    if ((val == 0 && leading_zero != 1) || (val != 0 && leading_zero >= 1))
+    if ((val == 0 && leading_zero != 1) || (val && leading_zero >= 1 && !allowHex))
         return -1;
     scan = p;
     return val;

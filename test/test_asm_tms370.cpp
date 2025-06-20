@@ -80,12 +80,14 @@ void test_single() {
     TEST("CLR A",    0xB5);
     TEST("CLR B",    0xC5);
     TEST("CLR R214", 0xD5, 0xD6);
+    TEST("CLR R0D6", 0xD5, 0xD6);
     TEST("CLR 0D6H", 0xD5, 0xD6);
     ERRT("CLR 100H", OPERAND_NOT_ALLOWED, "100H");
 
     TEST("DEC A",    0xB2);
     TEST("DEC B",    0xC2);
     TEST("DEC R211", 0xD2, 0xD3);
+    TEST("DEC R0D3", 0xD2, 0xD3);
     TEST("INCW #-2, R220", 0x70, 0xFE, 0xDC);
 
     TEST("INC A",    0xB3);
@@ -138,7 +140,9 @@ void test_register() {
     TEST("ADC A, B",       0x39, 0x00);
     TEST("ADC R26, A",     0x19, 0x1A);
     TEST("ADC R58, B",     0x39, 0x3A);
+    TEST("ADC R03A, B",    0x39, 0x3A);
     TEST("ADC A, R75",     0x49, 0x00, 0x4B);
+    TEST("ADC A, R04B",    0x49, 0x00, 0x4B);
     TEST("ADC B, R75",     0x49, 0x01, 0x4B);
     TEST("ADC R74, R75",   0x49, 0x4A, 0x4B);
     TEST("ADC #2AH, A",    0x29, 0x2A);
@@ -277,11 +281,13 @@ void test_register() {
 
 void test_peripheral() {
     TEST("AND A, P132",    0x83, 0x84);
+    TEST("AND A, P084",    0x83, 0x84);
     TEST("AND A, 132+256", 0x83, 0x84);
     TEST("AND B, P148",    0x93, 0x94);
     TEST("AND #0A4H,P165", 0xA3, 0xA4, 0xA5);
 
     TEST("MOV P129, A",    0x80, 0x81);
+    TEST("MOV P081, A",    0x80, 0x81);
     TEST("MOV P146, B",    0x91, 0x92);
     TEST("MOV P163, R164", 0xA2, 0xA3, 0xA4);
     TEST("MOV A, P131",    0x21, 0x83);
@@ -345,6 +351,7 @@ void test_dual_relative() {
     ATEST(0x1000, "BTJZ #78H, R121, $+126", 0x77, 0x78, 0x79, 0x7A);
 
     ATEST(0x1000, "BTJO A, P135, $-117",   0x86, 0x87, 0x88);
+    ATEST(0x1000, "BTJO A, P087, $-117",   0x86, 0x87, 0x88);
     ATEST(0x1000, "BTJO B, P151, $-101",   0x96, 0x97, 0x98);
     ATEST(0x1000, "BTJO #0A7H,P168, $-83", 0xA6, 0xA7, 0xA8, 0xA9);
 
@@ -395,14 +402,18 @@ void test_extended() {
 }
 
 void test_error() {
-    ERRT("CLR R214X ; comment", UNDEFINED_SYMBOL, "R214X ; comment", 0xD5, 0x00);
-    ERRT("CLR R000  ; comment", UNDEFINED_SYMBOL, "R000  ; comment", 0xD5, 0x00);
-    ERRT("CLR R256  ; comment", UNDEFINED_SYMBOL, "R256  ; comment", 0xD5, 0x00);
-    ERRT("CLR R     ; comment", UNDEFINED_SYMBOL, "R     ; comment", 0xD5, 0x00);
+    ERRT("CLR R214X", UNDEFINED_SYMBOL, "R214X", 0xD5, 0x00);
+    TEST("CLR R000",                             0xD5, 0x00);
+    ERRT("CLR R256",  UNDEFINED_SYMBOL, "R256",  0xD5, 0x00);
+    ERRT("CLR R0FG",  UNDEFINED_SYMBOL, "R0FG",  0xD5, 0x00);
+    ERRT("CLR R0100", UNDEFINED_SYMBOL, "R0100", 0xD5, 0x00);
+    ERRT("CLR R",     UNDEFINED_SYMBOL, "R",     0xD5, 0x00);
 
     ERRT("AND A, P132X", UNDEFINED_SYMBOL, "P132X", 0x43, 0x00, 0x00);
-    ERRT("AND A, P000",  UNDEFINED_SYMBOL, "P000",  0x43, 0x00, 0x00);
+    TEST("AND A, P000",                             0x83, 0x00);
     ERRT("AND A, P256",  UNDEFINED_SYMBOL, "P256",  0x43, 0x00, 0x00);
+    ERRT("AND A, P0EG",  UNDEFINED_SYMBOL, "P0EG",  0x43, 0x00, 0x00);
+    ERRT("AND A, P0100", UNDEFINED_SYMBOL, "P0100", 0x43, 0x00, 0x00);
     ERRT("AND A, P",     UNDEFINED_SYMBOL, "P",     0x43, 0x00, 0x00);
     ERRT("AND A, > 184", NOT_AN_EXPECTED,  "> 184");
 
