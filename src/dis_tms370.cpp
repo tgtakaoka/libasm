@@ -38,12 +38,27 @@ DisTms370::DisTms370(const ValueFormatter::Plugins &plugins)
     reset();
 }
 
+StrBuffer &DisTms370::outPortAddr(StrBuffer &out, uint_fast8_t port) const {
+    const auto addr = UINT16_C(0x1000) + port;
+    auto label = lookup(addr, addressWidth());
+    if (label) {
+        return out.rtext(label);
+    } else {
+        return outRegName(out, toPortName(port));
+    }
+}
+
 void DisTms370::decodeRegister(DisInsn &insn, StrBuffer &out) const {
     const auto regno = insn.readByte();
     if (insn.isOK() && regno < 2) {
         out.letter('A' + regno);
     } else {
-        outRegName(out, toRegName(regno));
+        const auto label = lookup(regno, addressWidth());
+        if (label) {
+            out.rtext(label);
+        } else {
+            outRegName(out, toRegName(regno));
+        }
     }
 }
 
@@ -105,7 +120,7 @@ void DisTms370::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) cons
         decodeRegister(insn, out);
         break;
     case M_PN:
-        outRegName(out, toPortName(insn.readByte()));
+        outPortAddr(out, insn.readByte());
         break;
     case M_IM8:
         if (insn.opCode() == 0xF0) {

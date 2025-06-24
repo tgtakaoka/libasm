@@ -28,6 +28,7 @@ struct DisTms7000 final : Disassembler, Config {
     DisTms7000(const ValueFormatter::Plugins &plugins = defaultPlugins());
 
 private:
+    StrBuffer &outPortAddr(StrBuffer &out, uint_fast8_t port) const;
     void decodeRegister(DisInsn &insn, StrBuffer &out) const;
     void decodeImmediate(DisInsn &insn, StrBuffer &out, AddrMode mode) const;
     void decodeAbsolute(DisInsn &insn, StrBuffer &out, AddrMode mode) const;

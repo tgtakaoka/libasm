@@ -292,7 +292,7 @@ void test_register() {
 void test_peripheral() {
     TEST("ANDP", "A, P132",    0x83, 0x84);
     TEST("ANDP", "B, P148",    0x93, 0x94);
-    TEST("ANDP", "%>A4, P165",      0xA3, 0xA4, 0xA5);
+    TEST("ANDP", "%>A4, P165",  0xA3, 0xA4, 0xA5);
     NMEM("ANDP", "%>A4, P0",  "P0", 0xA3, 0xA4);
     NMEM("ANDP", "%0, P0", "0, P0", 0xA3);
 

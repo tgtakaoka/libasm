@@ -148,6 +148,7 @@ void test_register() {
     TEST("ADC #2AH, A",    0x29, 0x2A);
     TEST("ADC #5AH, B",    0x59, 0x5A);
     TEST("ADC #122, R123", 0x79, 0x7A, 0x7B);
+    TEST("ADC #122, 7BH",  0x79, 0x7A, 0x7B);
     ERRT("ADC #122, 123H", OPERAND_NOT_ALLOWED, "#122, 123H");
     ERRT("ADC #122H, 123", OVERFLOW_RANGE, "#122H, 123", 0x79, 0x22, 0x7B);
 
@@ -277,12 +278,16 @@ void test_register() {
     TEST("MOVW #0A9AAH(B),R171", 0xA8, 0xA9, 0xAA, 0xAB);
     TEST("MOVW #-2(R139),R171",  0xF4, 0xE8, 0xFE, 0x8B, 0xAB);
     TEST("MOVW R153, R154",      0x98, 0x99, 0x9A);
+
+    TEST("SBB R080, A",    0x1B, 0x80);
+    symtab.intern(0x80, "REGA");
+    TEST("SBB REGA, A",    0x1B, 0x80);
 }
 
 void test_peripheral() {
     TEST("AND A, P132",    0x83, 0x84);
     TEST("AND A, P084",    0x83, 0x84);
-    TEST("AND A, 132+256", 0x83, 0x84);
+    TEST("AND A, 1084H",   0x83, 0x84);
     TEST("AND B, P148",    0x93, 0x94);
     TEST("AND #0A4H,P165", 0xA3, 0xA4, 0xA5);
 
@@ -301,6 +306,10 @@ void test_peripheral() {
     TEST("XOR A, P134",    0x85, 0x86);
     TEST("XOR B, P150",    0x95, 0x96);
     TEST("XOR #0A6H,P167", 0xA5, 0xA6, 0xA7);
+
+    TEST("AND B, P128",    0x93, 0x80);
+    symtab.intern(0x1080, "IOREG");
+    TEST("AND B, IOREG",   0x93, 0x80);
 }
 
 void test_single_relative() {

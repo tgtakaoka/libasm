@@ -279,12 +279,17 @@ void test_register() {
     TEST("MOVD %>898A, R139",    0x88, 0x89, 0x8A, 0x8B);
     TEST("MOVD %>A9AA(B), R171", 0xA8, 0xA9, 0xAA, 0xAB);
     TEST("MOVD R153, R154",      0x98, 0x99, 0x9A);
+
+    TEST("SUB R128, B",     0x3A, 0x80);
+    symtab.intern(0x80, "REGA");
+    TEST("SUB REGA, B",     0x3A, 0x80);
 }
 
 void test_peripheral() {
     TEST("ANDP A, P132",    0x83, 0x84);
     TEST("ANDP A, 132+256", 0x83, 0x84);
     TEST("ANDP B, P148",    0x93, 0x94);
+    TEST("ANDP B, >0194",   0x93, 0x94);
     TEST("ANDP %>A4, P165", 0xA3, 0xA4, 0xA5);
 
     TEST("MOVP P129, A",    0x80, 0x81);
@@ -300,6 +305,10 @@ void test_peripheral() {
     TEST("XORP A, P134",    0x85, 0x86);
     TEST("XORP B, P150",    0x95, 0x96);
     TEST("XORP %>A6, P167", 0xA5, 0xA6, 0xA7);
+
+    TEST("ANDP B, P128",    0x93, 0x80);
+    symtab.intern(0x0180, "IOREG");
+    TEST("ANDP B, IOREG",   0x93, 0x80);
 }
 
 void test_single_relative() {

@@ -156,12 +156,12 @@ Error AsmTms370::parseOperand(StrScanner &scan, Operand &op) const {
     } else if (op.hasError()) {
         return op.getError();
     } else {
-        if (op.val.overflow(0x1FF)) {
-            op.mode = M_REL;
-        } else if (op.val.overflow(UINT8_MAX)) {
+        if (!op.val.overflow(0xFF)) {
+            op.mode = M_ADRR;
+        } else if (!op.val.overflow(0x10FF, 0x1000)) {
             op.mode = M_ADRP;
         } else {
-            op.mode = M_ADRR;
+            op.mode = M_REL;
         }
     }
     scan = p;
