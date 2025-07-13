@@ -279,9 +279,17 @@ void test_register() {
     TEST("MOVW #-2(R139),R171",  0xF4, 0xE8, 0xFE, 0x8B, 0xAB);
     TEST("MOVW R153, R154",      0x98, 0x99, 0x9A);
 
-    TEST("SBB R080, A",    0x1B, 0x80);
-    symtab.intern(0x80, "REGA");
-    TEST("SBB REGA, A",    0x1B, 0x80);
+    symtab.intern(0x0080, "mem0080");
+    symtab.intern(0x1080, "mem1080");
+    symtab.intern(0x2080, "mem2080");
+
+    TEST("MOV mem0080, A", 0x12, 0x80);
+    TEST("MOV    R128, A", 0x12, 0x80);
+    TEST("MOV    R080, A", 0x12, 0x80);
+    TEST("MOV mem1080, A", 0x80, 0x80);
+    TEST("MOV    P128, A", 0x80, 0x80);
+    TEST("MOV    P080, A", 0x80, 0x80);
+    TEST("MOV mem2080, A", 0x8A, 0x20, 0x80);
 }
 
 void test_peripheral() {
@@ -307,9 +315,15 @@ void test_peripheral() {
     TEST("XOR B, P150",    0x95, 0x96);
     TEST("XOR #0A6H,P167", 0xA5, 0xA6, 0xA7);
 
+    symtab.intern(0x0080, "mem0080");
+    symtab.intern(0x1080, "mem1080");
+
+    TEST("AND B, mem0080", 0x43, 0x01, 0x80);
+    TEST("AND B, R128",    0x43, 0x01, 0x80);
+    TEST("AND B, R080",    0x43, 0x01, 0x80);
+    TEST("AND B, mem1080", 0x93, 0x80);
     TEST("AND B, P128",    0x93, 0x80);
-    symtab.intern(0x1080, "IOREG");
-    TEST("AND B, IOREG",   0x93, 0x80);
+    TEST("AND B, P080",    0x93, 0x80);
 }
 
 void test_single_relative() {
@@ -325,17 +339,9 @@ void test_single_relative() {
     ATEST(0x1000, "JNZ $-23",  0x06, 0xE7);
     ATEST(0x1000, "JNC $-22",  0x07, 0xE8);
 
-    symtab.intern(0x1040, "a40");
-    symtab.intern(0x1040, "b40");
-    symtab.intern(0x1040, "rr40");
-    symtab.intern(0x1040, "pa40");
-    symtab.intern(0x1040, "st40");
+    symtab.intern(0x1040, "label40");
 
-    ATEST(0x1000, "JMP a40",  0x00, 0x3E);
-    ATEST(0x1000, "JMP b40",  0x00, 0x3E);
-    ATEST(0x1000, "JMP rr40", 0x00, 0x3E);
-    ATEST(0x1000, "JMP pa40", 0x00, 0x3E);
-    ATEST(0x1000, "JMP st40", 0x00, 0x3E);
+    ATEST(0x1000, "JMP label40", 0x00, 0x3E);
 
     ATEST(0x1000, "DJNZ A, $-67",    0xBA, 0xBB);
     ATEST(0x1000, "DJNZ B, $-51",    0xCA, 0xCB);
@@ -408,6 +414,17 @@ void test_extended() {
     TEST("MOV A, 0ACADH(B)", 0xAB, 0xAC, 0xAD);
     TEST("MOV A, -2(SP)",    0xF2, 0xFE);
     TEST("MOV A, -2(R10)",   0xF4, 0xEB, 0xFE, 0x0A);
+
+    symtab.intern(0x0080, "sub0080");
+    symtab.intern(0x1080, "sub1080");
+    symtab.intern(0x2080, "sub2080");
+
+    ATEST(0x2000, "CALL sub0080", 0x8E, 0x00, 0x80);
+    ATEST(0x2000, "CALL sub1080", 0x8E, 0x10, 0x80);
+    ATEST(0x2000, "CALL sub2080", 0x8E, 0x20, 0x80);
+    ATEST(0x2000, "CALLR sub0080", 0x8F, 0xE0, 0x7D);
+    ATEST(0x2000, "CALLR sub1080", 0x8F, 0xF0, 0x7D);
+    ATEST(0x2000, "CALLR sub2080", 0x8F, 0x00, 0x7D);
 }
 
 void test_error() {

@@ -553,9 +553,9 @@ bool acceptMode(AddrMode opr, AddrMode table) {
     if (opr == M_IM16)
         return table == M_IM8 || table == M_SIM8;
     if (opr == M_ADRR)
-        return table == M_RN || table == M_REL || table == M_TVEC;
+        return table == M_RN || table == M_REL || table == M_ABS || table == M_LREL || table == M_TVEC;
     if (opr == M_ADRP)
-        return table == M_PN || table == M_REL;
+        return table == M_PN || table == M_REL || table == M_ABS || table == M_LREL;
     if (opr == M_REL)
         return table == M_ABS || table == M_LREL;
     if (opr == M_BIDX)
