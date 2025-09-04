@@ -27,8 +27,6 @@ namespace f3850 {
 extern const char TEXT_CPU_F3850[] PROGMEM;
 extern const char TEXT_CPU_3850[]  PROGMEM;
 
-using common::TEXT_null;
-
 // F3850
 using common::TEXT_ADC;
 using common::TEXT_AI;
@@ -100,7 +98,7 @@ extern const char TEXT_REG_KU[] PROGMEM;
 using common::TEXT_REG_P;
 using common::TEXT_REG_P0;
 extern const char TEXT_REG_Q[]  PROGMEM;
-extern const char TEXT_REG_QL[] PROGMEM;
+using common::TEXT_REG_QL;
 extern const char TEXT_REG_QU[] PROGMEM;
 using common::TEXT_REG_S;
 using common::TEXT_REG_W;

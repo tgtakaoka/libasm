@@ -24,8 +24,6 @@ namespace ins8060 {
 constexpr char TEXT_CPU_SCMP[]    PROGMEM = "SC/MP";
 constexpr char TEXT_CPU_INS8060[] PROGMEM = "INS8060";
 
-// constexpr char TEXT_null[] PROGMEM = "";
-
 // constexpr char TEXT_ADD[]  PROGMEM = "ADD";
 // constexpr char TEXT_ADE[]  PROGMEM = "ADE";
 // constexpr char TEXT_ADI[]  PROGMEM = "ADI";

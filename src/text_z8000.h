@@ -227,8 +227,8 @@ extern const char TEXT_REG_PSAP[]    PROGMEM;
 extern const char TEXT_REG_PSAPOFF[] PROGMEM;
 extern const char TEXT_REG_PSAPSEG[] PROGMEM;
 extern const char TEXT_REG_REFRESH[] PROGMEM;
-extern const char TEXT_REG_RH[]      PROGMEM;
-extern const char TEXT_REG_RL[]      PROGMEM;
+using common::TEXT_REG_RH;
+using common::TEXT_REG_RL;
 extern const char TEXT_REG_RQ[]      PROGMEM;
 using common::TEXT_REG_RR;
 

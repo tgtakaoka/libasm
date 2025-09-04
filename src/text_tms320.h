@@ -221,7 +221,7 @@ extern const char TEXT_MADS[]  PROGMEM;
 extern const char TEXT_OPL[]   PROGMEM;
 using common::TEXT_ORB;
 extern const char TEXT_RETCD[] PROGMEM;
-extern const char TEXT_RETD[]  PROGMEM;
+using common::TEXT_RETD;
 using common::TEXT_RETE;
 using common::TEXT_RETI;
 using common::TEXT_ROLB;

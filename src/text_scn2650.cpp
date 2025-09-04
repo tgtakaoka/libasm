@@ -24,8 +24,6 @@ namespace scn2650 {
 constexpr char TEXT_CPU_SCN2650[] PROGMEM = "SCN2650";
 constexpr char TEXT_CPU_2650[]    PROGMEM = "2650";
 
-// constexpr char TEXT_null[] PROGMEM = "";
-
 // SCN2650
 // constexpr char TEXT_ADDA[] PROGMEM = "ADDA";
 // constexpr char TEXT_ADDI[] PROGMEM = "ADDI";

@@ -26,8 +26,6 @@ constexpr char TEXT_CPU_1802[]  PROGMEM = "1802";
 constexpr char TEXT_CPU_1804[]  PROGMEM = "1804";
 constexpr char TEXT_CPU_1804A[] PROGMEM = "1804A";
 
-// constexpr char TEXT_null[] PROGMEM = "";
-
 // CDP1802
 // constexpr char TEXT_ADC[]  PROGMEM = "ADC";
 constexpr char TEXT_ADCI[] PROGMEM = "ADCI";
