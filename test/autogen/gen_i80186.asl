@@ -13,6 +13,7 @@
 ; limitations under the License.
 
         cpu     80186
+        fpu     on
         org     0000H
         include "gen_i80186.inc"
         end
