@@ -24,8 +24,6 @@ namespace f3850 {
 constexpr char TEXT_CPU_F3850[] PROGMEM = "F3850";
 constexpr char TEXT_CPU_3850[]  PROGMEM = "3850";
 
-// constexpr char TEXT_null[] PROGMEM = "";
-
 // F3850
 // constexpr char TEXT_ADC[]  PROGMEM = "ADC";
 // constexpr char TEXT_AI[]   PROGMEM = "AI";
@@ -97,7 +95,7 @@ constexpr char TEXT_REG_KU[] PROGMEM = "KU";
 // constexpr char TEXT_REG_P[]  PROGMEM = "P";
 // constexpr char TEXT_REG_P0[] PROGMEM = "P0";
 constexpr char TEXT_REG_Q[]  PROGMEM = "Q";
-constexpr char TEXT_REG_QL[] PROGMEM = "QL";
+// constexpr char TEXT_REG_QL[] PROGMEM = "QL";
 constexpr char TEXT_REG_QU[] PROGMEM = "QU";
 // constexpr char TEXT_REG_S[]  PROGMEM = "S";
 // constexpr char TEXT_REG_W[]  PROGMEM = "W";
