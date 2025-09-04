@@ -204,7 +204,7 @@ extern const char TEXT_COMF[]  PROGMEM;
 using common::TEXT_COMW;
 using common::TEXT_DECD;
 extern const char TEXT_DECE[]  PROGMEM;
-extern const char TEXT_DECF[]  PROGMEM;
+using common::TEXT_DECF;
 using common::TEXT_DECW;
 using common::TEXT_DIVD;
 extern const char TEXT_DIVQ[]  PROGMEM;
@@ -213,7 +213,7 @@ using common::TEXT_EORD;
 using common::TEXT_EORR;
 extern const char TEXT_INCD[]  PROGMEM;
 extern const char TEXT_INCE[]  PROGMEM;
-extern const char TEXT_INCF[]  PROGMEM;
+using common::TEXT_INCF;
 using common::TEXT_INCW;
 extern const char TEXT_LDBT[]  PROGMEM;
 using common::TEXT_LDE;
@@ -271,9 +271,9 @@ using common::TEXT_REG_Y;
 // HD6309
 extern const char TEXT_REG_0[] PROGMEM;
 using common::TEXT_REG_E;
-extern const char TEXT_REG_F[] PROGMEM;
-extern const char TEXT_REG_V[] PROGMEM;
+using common::TEXT_REG_F;
 using common::TEXT_REG_W;
+extern const char TEXT_REG_V[] PROGMEM;
 using common::TEXT_REG_Z;
 
 // clang-format on

@@ -55,7 +55,7 @@ using common::TEXT_INCW;
 using common::TEXT_INCX;
 using common::TEXT_JP;
 using common::TEXT_JR;
-extern const char TEXT_JRL[]  PROGMEM;
+using common::TEXT_JRL;
 using common::TEXT_LD;
 using common::TEXT_LDA;
 using common::TEXT_LDAR;

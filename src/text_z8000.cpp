@@ -224,8 +224,8 @@ constexpr char TEXT_REG_PSAP[]    PROGMEM = "PSAP";
 constexpr char TEXT_REG_PSAPOFF[] PROGMEM = "PSAPOFF";
 constexpr char TEXT_REG_PSAPSEG[] PROGMEM = "PSAPSEG";
 constexpr char TEXT_REG_REFRESH[] PROGMEM = "REFRESH";
-constexpr char TEXT_REG_RH[]      PROGMEM = "RH";
-constexpr char TEXT_REG_RL[]      PROGMEM = "RL";
+// constexpr char TEXT_REG_RH[]      PROGMEM = "RH";
+// constexpr char TEXT_REG_RL[]      PROGMEM = "RL";
 constexpr char TEXT_REG_RQ[]      PROGMEM = "RQ";
 // constexpr char TEXT_REG_RR[] PROGMEM = "RR";
 
