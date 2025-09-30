@@ -80,7 +80,7 @@ using common::TEXT_PSHM;
 extern const char TEXT_TRST[] PROGMEM;
 using common::TEXT_TSET;
 using common::TEXT_FLT;
-extern const char TEXT_FIX[]  PROGMEM;
+using common::TEXT_FIX;
 using common::TEXT_NEG;
 using common::TEXT_BD;
 extern const char TEXT_BALD[] PROGMEM;

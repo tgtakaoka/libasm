@@ -43,6 +43,16 @@ struct ArrayMemory {
             return word;
         }
 
+        uint32_t readUint32() {
+            uint32_t quad = readUint16();
+            if (_endian == ENDIAN_BIG) {
+                quad = (quad << 16) | readUint16();
+            } else {
+                quad |= readUint16() << 16;
+            }
+            return quad;
+        }
+
         /** rewind to the first byte */
         void rewind() {
             DisMemory::resetAddress(_memory.origin() * _memory.unit());
@@ -72,6 +82,7 @@ struct ArrayMemory {
         : _origin(origin),
           _bytes(bytes),
           _words(nullptr),
+          _quads(nullptr),
           _size(sizeof_bytes),
           _endian(endian),
           _unit(ADDRESS_BYTE) {}
@@ -82,7 +93,19 @@ struct ArrayMemory {
         : _origin(origin * unit),
           _bytes(nullptr),
           _words(words),
+          _quads(nullptr),
           _size(sizeof_words),
+          _endian(endian),
+          _unit(unit) {}
+
+    /** Construct byte/word addressable memory from uint32_t array */
+    ArrayMemory(uint32_t origin, const uint32_t *quads, size_t sizeof_quads, Endian endian,
+            AddressUnit unit)
+        : _origin(origin * unit),
+          _bytes(nullptr),
+          _words(nullptr),
+          _quads(quads),
+          _size(sizeof_quads),
           _endian(endian),
           _unit(unit) {}
 
@@ -95,7 +118,9 @@ struct ArrayMemory {
     /** memory size in byte */
     size_t size() const { return _size; }
 
-    bool word() const { return _words != nullptr; }
+    bool hasByte() const { return _bytes != nullptr; }
+    bool hasWord() const { return _words != nullptr; }
+    bool hasQuad() const { return _quads != nullptr; }
 
     /** endianess */
     Endian endian() const { return _endian; }
@@ -113,19 +138,34 @@ struct ArrayMemory {
             return 0;
         if (_bytes)
             return _bytes[offset];
-        const uint16_t word = _words[offset / 2];
-        if (_endian == ENDIAN_BIG) {
-            return (offset % 2) == 0 ? (word >> 8) : word;
-        } else {
-            return (offset % 2) == 0 ? word : (word >> 8);
+        if (_words) {
+            const auto word = _words[offset / 2];
+            if (_endian == ENDIAN_BIG) {
+                return (offset % 2) == 0 ? (word >> 8) : word;
+            } else {
+                return (offset % 2) == 0 ? word : (word >> 8);
+            }
         }
+        const auto quad = _quads[offset / 4];
+        switch (offset % 4) {
+        case 0:
+            return _endian == ENDIAN_BIG ? quad >> 24 : quad;
+        case 1:
+            return _endian == ENDIAN_BIG ? quad >> 16 : quad >> 8;
+        case 2:
+            return _endian == ENDIAN_BIG ? quad >> 9 : quad >> 16;
+        case 3:
+            return _endian == ENDIAN_BIG ? quad : quad >> 24;
+        }
+        return 0;
     }
 
 private:
     const uint32_t _origin;
-    /** one of |_bytes| or |_words| is non-null, and others is null */
+    /** one of |_bytes|, |_words|, or |_quads| is non-null, and others is null */
     const uint8_t *const _bytes;
     const uint16_t *const _words;
+    const uint32_t *const _quads;
     /** size in byte */
     const size_t _size;
     const Endian _endian;

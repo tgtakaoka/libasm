@@ -13,6 +13,18 @@
 ;;; limitations under the License.
 
 ;;; Load and Store
+        ldf     255.94, r0
+        ldf     0.0078125, r1
+        ldf     -0.0078163, r2
+        ldf     0.0, r2
+        ldf     1.0, r2
+        ldf     -1.0, r2
+        ldf     2.0, r2
+        ldf     -2.0, r2
+        ldf     3.0, r2
+        ldf     -3.0, r2
+        ldf     -255.99999999, r3
+
         ldi     r0, r1
         ldiu    @1234H, r2
         ldi     1234H, r3
@@ -45,7 +57,7 @@
         lde     0FFH, r7
         ldm     @1234, r0
         ldm     0FFH, r7
-        ldp     0FFH, dp
+        ldp     0FFFFFFH, dp
         pop     ar0
         popf    r0
         push    ar1

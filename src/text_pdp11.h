@@ -118,7 +118,7 @@ extern const char TEXT_PDP[]   PROGMEM;
 // PDP-11 return from varargs subroutine
 using common::TEXT_MARK;
 // PDP-11 extended instruction set (EIS)
-extern const char TEXT_ASH[]   PROGMEM;
+using common::TEXT_ASH;
 extern const char TEXT_ASHC[]  PROGMEM;
 using common::TEXT_DIV;
 using common::TEXT_MUL;

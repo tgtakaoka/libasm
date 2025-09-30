@@ -115,7 +115,7 @@ constexpr char TEXT_PDP[]   PROGMEM = "PDP";
 // PDP-11 return from varargs subroutine
 // constexpr char TEXT_MARK[]  PROGMEM = "MARK";
 // PDP-11 extended instruction set (EIS)
-constexpr char TEXT_ASH[]   PROGMEM = "ASH";
+// constexpr char TEXT_ASH[]   PROGMEM = "ASH";
 constexpr char TEXT_ASHC[]  PROGMEM = "ASHC";
 // constexpr char TEXT_DIV[]   PROGMEM = "DIV";
 // constexpr char TEXT_MUL[]   PROGMEM = "MUL";
