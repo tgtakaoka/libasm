@@ -25,12 +25,12 @@ namespace libasm {
 
 // true_type, false_type
 template <bool v>
-struct __bool_constant {
+struct libasm_bool_constant {
     static constexpr bool value = v;
     typedef bool value_type;
 };
-typedef __bool_constant<true> true_type;
-typedef __bool_constant<false> false_type;
+typedef libasm_bool_constant<true> true_type;
+typedef libasm_bool_constant<false> false_type;
 
 // enable_if
 template <bool, typename T = void>
@@ -42,11 +42,11 @@ struct enable_if<true, T> {
 
 // declval
 template <typename T, typename U = T &&>
-U __declval(int);
+U libasm_declval(int);
 template <typename T>
-T __declval(long);
+T libasm_declval(long);
 template <typename T>
-auto declval() noexcept -> decltype(__declval<T>(0));
+auto declval() noexcept -> decltype(libasm_declval<T>(0));
 
 // integral_cvonstant
 template <class T, T v>
@@ -68,142 +68,142 @@ struct is_base_of : integral_constant<bool, __is_base_of(BASE, DERIVED)> {};
 
 // is_base_of_template - is_base_of for template base class
 template <template <typename...> class BASE, typename DERIVED>
-struct __is_base_of_template {
+struct libasm_is_base_of_template {
     template <typename... Ts>
     static constexpr true_type test(const BASE<Ts...> *);
     static constexpr false_type test(...);
     using type = decltype(test(declval<DERIVED *>()));
 };
 template <template <typename...> class BASE, typename DERIVED>
-using is_base_of_template = typename __is_base_of_template<BASE, DERIVED>::type;
+using is_base_of_template = typename libasm_is_base_of_template<BASE, DERIVED>::type;
 
 // is_unsugned
 template <typename T>
-struct __is_unsigned_helper;
+struct libasm_is_unsigned_helper;
 template <>
-struct __is_unsigned_helper<int8_t> : public false_type {};
+struct libasm_is_unsigned_helper<int8_t> : public false_type {};
 template <>
-struct __is_unsigned_helper<uint8_t> : public true_type {};
+struct libasm_is_unsigned_helper<uint8_t> : public true_type {};
 template <>
-struct __is_unsigned_helper<int16_t> : public false_type {};
+struct libasm_is_unsigned_helper<int16_t> : public false_type {};
 template <>
-struct __is_unsigned_helper<uint16_t> : public true_type {};
+struct libasm_is_unsigned_helper<uint16_t> : public true_type {};
 template <>
-struct __is_unsigned_helper<int32_t> : public false_type {};
+struct libasm_is_unsigned_helper<int32_t> : public false_type {};
 template <>
-struct __is_unsigned_helper<uint32_t> : public true_type {};
+struct libasm_is_unsigned_helper<uint32_t> : public true_type {};
 template <>
-struct __is_unsigned_helper<int64_t> : public false_type {};
+struct libasm_is_unsigned_helper<int64_t> : public false_type {};
 template <>
-struct __is_unsigned_helper<uint64_t> : public true_type {};
+struct libasm_is_unsigned_helper<uint64_t> : public true_type {};
 template <typename T>
-struct is_unsigned : public __is_unsigned_helper<T> {};
+struct is_unsigned : public libasm_is_unsigned_helper<T> {};
 
 // is_signed
 template <typename T>
-struct __is_signed_helper;
+struct libasm_is_signed_helper;
 template <>
-struct __is_signed_helper<int8_t> : public true_type {};
+struct libasm_is_signed_helper<int8_t> : public true_type {};
 template <>
-struct __is_signed_helper<uint8_t> : public false_type {};
+struct libasm_is_signed_helper<uint8_t> : public false_type {};
 template <>
-struct __is_signed_helper<int16_t> : public true_type {};
+struct libasm_is_signed_helper<int16_t> : public true_type {};
 template <>
-struct __is_signed_helper<uint16_t> : public false_type {};
+struct libasm_is_signed_helper<uint16_t> : public false_type {};
 template <>
-struct __is_signed_helper<int32_t> : public true_type {};
+struct libasm_is_signed_helper<int32_t> : public true_type {};
 template <>
-struct __is_signed_helper<uint32_t> : public false_type {};
+struct libasm_is_signed_helper<uint32_t> : public false_type {};
 template <>
-struct __is_signed_helper<int64_t> : public true_type {};
+struct libasm_is_signed_helper<int64_t> : public true_type {};
 template <>
-struct __is_signed_helper<uint64_t> : public false_type {};
+struct libasm_is_signed_helper<uint64_t> : public false_type {};
 template <typename T>
-struct is_signed : public __is_signed_helper<T> {};
+struct is_signed : public libasm_is_signed_helper<T> {};
 
 // make_unsigned
 template <typename T>
-struct __make_unsigned {
-    typedef T __type;
+struct libasm_make_unsigned {
+    typedef T libasm_type;
 };
 template <>
-struct __make_unsigned<int8_t> {
-    typedef uint8_t __type;
+struct libasm_make_unsigned<int8_t> {
+    typedef uint8_t libasm_type;
 };
 template <>
-struct __make_unsigned<uint8_t> {
-    typedef uint8_t __type;
+struct libasm_make_unsigned<uint8_t> {
+    typedef uint8_t libasm_type;
 };
 template <>
-struct __make_unsigned<int16_t> {
-    typedef uint16_t __type;
+struct libasm_make_unsigned<int16_t> {
+    typedef uint16_t libasm_type;
 };
 template <>
-struct __make_unsigned<uint16_t> {
-    typedef uint16_t __type;
+struct libasm_make_unsigned<uint16_t> {
+    typedef uint16_t libasm_type;
 };
 template <>
-struct __make_unsigned<int32_t> {
-    typedef uint32_t __type;
+struct libasm_make_unsigned<int32_t> {
+    typedef uint32_t libasm_type;
 };
 template <>
-struct __make_unsigned<uint32_t> {
-    typedef uint32_t __type;
+struct libasm_make_unsigned<uint32_t> {
+    typedef uint32_t libasm_type;
 };
 template <>
-struct __make_unsigned<int64_t> {
-    typedef uint64_t __type;
+struct libasm_make_unsigned<int64_t> {
+    typedef uint64_t libasm_type;
 };
 template <>
-struct __make_unsigned<uint64_t> {
-    typedef uint64_t __type;
+struct libasm_make_unsigned<uint64_t> {
+    typedef uint64_t libasm_type;
 };
 // make_unsigned
 template <typename T>
 struct make_unsigned {
-    typedef typename __make_unsigned<T>::__type type;
+    typedef typename libasm_make_unsigned<T>::libasm_type type;
 };
 
 // make_signed
 template <typename T>
-struct __make_signed {
-    typedef T __type;
+struct libasm_make_signed {
+    typedef T libasm_type;
 };
 template <>
-struct __make_signed<int8_t> {
-    typedef int8_t __type;
+struct libasm_make_signed<int8_t> {
+    typedef int8_t libasm_type;
 };
 template <>
-struct __make_signed<uint8_t> {
-    typedef int8_t __type;
+struct libasm_make_signed<uint8_t> {
+    typedef int8_t libasm_type;
 };
 template <>
-struct __make_signed<int16_t> {
-    typedef int16_t __type;
+struct libasm_make_signed<int16_t> {
+    typedef int16_t libasm_type;
 };
 template <>
-struct __make_signed<uint16_t> {
-    typedef int16_t __type;
+struct libasm_make_signed<uint16_t> {
+    typedef int16_t libasm_type;
 };
 template <>
-struct __make_signed<int32_t> {
-    typedef int32_t __type;
+struct libasm_make_signed<int32_t> {
+    typedef int32_t libasm_type;
 };
 template <>
-struct __make_signed<uint32_t> {
-    typedef int32_t __type;
+struct libasm_make_signed<uint32_t> {
+    typedef int32_t libasm_type;
 };
 template <>
-struct __make_signed<int64_t> {
-    typedef int64_t __type;
+struct libasm_make_signed<int64_t> {
+    typedef int64_t libasm_type;
 };
 template <>
-struct __make_signed<uint64_t> {
-    typedef int64_t __type;
+struct libasm_make_signed<uint64_t> {
+    typedef int64_t libasm_type;
 };
 template <typename T>
 struct make_signed {
-    typedef typename __make_signed<T>::__type type;
+    typedef typename libasm_make_signed<T>::libasm_type type;
 };
 
 }  // namespace libasm
