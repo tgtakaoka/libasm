@@ -1445,6 +1445,8 @@ void test_inherent() {
     if (isZ280()) {
         TEST("DI", "34H", 0xED, 0x77, 0x34);
         TEST("EI", "34H", 0xED, 0x7F, 0x34);
+        ERRT("DI", "80H", OVERFLOW_RANGE, "80H", 0xED, 0x77, 0x80);
+        ERRT("EI", "80H", OVERFLOW_RANGE, "80H", 0xED, 0x7F, 0x80);
     }
 
     TEST("SCF", "", 0x37);

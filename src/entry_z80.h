@@ -68,30 +68,31 @@ enum AddrMode : uint8_t {
     M_SPDX = 36,   // Stack index: (SP+d16)
     M_PCDX = 37,   // Program counter relative: (PC+d16)
     M_BDX = 38,    // Base and index: (HL+IX)/(HL+IY)/(IX+IY)
+    M_IM7 = 39,    // Immediate 7-bit: interrupt mask
 #if defined(LIBASM_Z280_EPU)
-    M_EPU = 39,    // EPU 4-byte tmeplate
+    M_EPU = 40,    // EPU 4-byte tmeplate
 #endif
     // Z280/Z380
-    M_SR8X = 40,   // |......|rrr|: B/C/D/E/_/_/_/A
-    M_DR8X = 41,   // |..|rrr|...|: B/C/D/E/_/_/_/A
-    R_SXY = 42,    // |........|x|: 0=IXH/IYH/IXU/IYU 1=IXL/IYL
-    R_DXY = 43,    // |....|x|...|: 0=IXH/IYH/IXU/IYU 1=IXL/IYL
-    M_REL16 = 44,  // 16-bit PC-Relative: <r16>, 00:8-bit DD:16-bit FD:24-bit
+    M_SR8X = 41,   // |......|rrr|: B/C/D/E/_/_/_/A
+    M_DR8X = 42,   // |..|rrr|...|: B/C/D/E/_/_/_/A
+    R_SXY = 43,    // |........|x|: 0=IXH/IYH/IXU/IYU 1=IXL/IYL
+    R_DXY = 44,    // |....|x|...|: 0=IXH/IYH/IXU/IYU 1=IXL/IYL
+    M_REL16 = 45,  // 16-bit PC-Relative: <r16>, 00:8-bit DD:16-bit FD:24-bit
     // Z380
-    I_PTRL = 45,   // |........|p|: 0=(BC) 1=(DE)
-    R_PTRL = 46,   // |........|p|: 0=BC 1=DE
-    R_IDXL = 47,   // |........|y|: 0=IX 1=IY
-    M_DD = 48,     // |.......|dd|: Decoder Directive
-    M_IO16 = 49,   // 16-bit I/O address: (nnnn)
-    M_SPX = 50,    // Stack pointer relative: (SP+d8)
-    M_REL24 = 51,  // 24-bit PC-Relative: ED:8-bit DD:16-bit FD:24-bit
-    M_LW = 52,     // Control bit LW
-    M_LCK = 53,    // Control bit LCK
-    M_XM = 54,     // Control bit XM
-    M_XM16 = 55,   // Immediate 16-bit: nnnn
-    M_XABS = 56,   // Direct address 16-bit: (nnnn)
+    I_PTRL = 46,   // |........|p|: 0=(BC) 1=(DE)
+    R_PTRL = 47,   // |........|p|: 0=BC 1=DE
+    R_IDXL = 48,   // |........|y|: 0=IX 1=IY
+    M_DD = 49,     // |.......|dd|: Decoder Directive
+    M_IO16 = 50,   // 16-bit I/O address: (nnnn)
+    M_SPX = 51,    // Stack pointer relative: (SP+d8)
+    M_REL24 = 52,  // 24-bit PC-Relative: ED:8-bit DD:16-bit FD:24-bit
+    M_LW = 53,     // Control bit LW
+    M_LCK = 54,    // Control bit LCK
+    M_XM = 55,     // Control bit XM
+    M_XM16 = 56,   // Immediate 16-bit: nnnn
+    M_XABS = 57,   // Direct address 16-bit: (nnnn)
     // Z80/Z180/Z280/Z380
-    I_BASE = 57,
+    I_BASE = 58,
     I_HL = I_BASE + REG_HL,  // (HL)
     I_SP = I_BASE + REG_SP,  // (SP)
     I_C = I_BASE + REG_C,    // (C)

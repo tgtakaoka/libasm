@@ -864,7 +864,7 @@
       OUT    (C), A
       ADC    HL, SP
       LD     SP, (7D7CH)
-      EI     80H
+      EI     0
       INIW
       OUTIW
       LDUD   A, (HL)

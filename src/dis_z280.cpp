@@ -201,6 +201,13 @@ void DisZ280::decodeFullIndex(DisInsn &insn, StrBuffer &out) const {
 void DisZ280::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode, AddrMode other) const {
     auto opc = insn.opCode();
     switch (mode) {
+    case M_IM7: {
+        const auto mask = insn.readByte();
+        if (mask >= 0x80)
+            insn.setErrorIf(out, OVERFLOW_RANGE);
+        outHex(out, mask, 8);
+        break;
+    }
     case M_IM8:
         outHex(out, insn.readByte(), 8);
         break;

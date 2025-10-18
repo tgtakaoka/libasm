@@ -114,8 +114,8 @@ constexpr Entry TABLE_Z280_EXT[] PROGMEM = {
     E2(0x6E, 0000, TEXT_LDCTL,  I_C,    R_HL),
     E1(0x70, 0000, TEXT_TSTI,   I_C),
     E1(0x71, 0000, TEXT_SC,     M_IM16),
-    E1(0x77, 0000, TEXT_DI,     M_IM8),
-    E1(0x7F, 0000, TEXT_EI,     M_IM8),
+    E1(0x77, 0000, TEXT_DI,     M_IM7),
+    E1(0x7F, 0000, TEXT_EI,     M_IM7),
     E0(0x82, 0000, TEXT_INIW),
     E0(0x83, 0000, TEXT_OUTIW),
     E2(0x86, 0000, TEXT_LDUD,   R_A,    I_HL),
@@ -884,7 +884,7 @@ bool acceptMode(AddrMode opr, AddrMode table) {
         return table == M_FIDX || table == M_BIXH || table == M_BIXL;
     if (opr == M_IM16)
         return table == M_IM8 || table == M_REL8 || table == M_BIT || table == M_VEC ||
-               table == M_IMMD || table == M_LM16 || table == M_JABS
+               table == M_IMMD || table == M_LM16 || table == M_JABS || table == M_IM7
 #if defined(LIBASM_Z280_EPU)
             || table == M_EPU
 #endif

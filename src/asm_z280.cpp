@@ -193,6 +193,10 @@ void AsmZ280::encodeOperand(
     }
     auto val16 = op.val.getUnsigned();
     switch (mode) {
+    case M_IM7:
+        if (op.val.overflow(0x7F))
+            insn.setErrorIf(op, OVERFLOW_RANGE);
+        /* Fall-through */
     case M_IM8:
         if (op.val.overflowUint8())
             insn.setErrorIf(op, OVERFLOW_RANGE);

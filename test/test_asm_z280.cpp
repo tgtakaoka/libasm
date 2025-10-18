@@ -2081,8 +2081,10 @@ void test_inherent() {
     TEST("DI",  0xF3);
     TEST("EI",  0xFB);
     if (isZ280()) {
-        TEST("DI    23H", 0xED, 0x77, 0x23);
-        TEST("EI    45H", 0xED, 0x7F, 0x45);
+        TEST("DI 23H", 0xED, 0x77, 0x23);
+        TEST("EI 45H", 0xED, 0x7F, 0x45);
+        ERRT("DI 80H", OVERFLOW_RANGE, "80H", 0xED, 0x77, 0x80);
+        ERRT("EI 80H", OVERFLOW_RANGE, "80H", 0xED, 0x7F, 0x80);
     } else {
         ERRT("DI 23H", OPERAND_NOT_ALLOWED, "23H");
         ERRT("EI 45H", OPERAND_NOT_ALLOWED, "45H");
