@@ -113,9 +113,11 @@ constexpr char TEXT_OUT0[]  PROGMEM = "OUT0";
 // constexpr char TEXT_DIVU[]   PROGMEM = "DIVU";
 // constexpr char TEXT_DIVUW[]  PROGMEM = "DIVUW";
 // constexpr char TEXT_DIVW[]   PROGMEM = "DIVW";
+#if defined(LIBASM_Z280_EPU)
 constexpr char TEXT_EPUF[]   PROGMEM = "EPUF";
 constexpr char TEXT_EPUI[]   PROGMEM = "EPUI";
 constexpr char TEXT_EPUM[]   PROGMEM = "EPUM";
+#endif
 // constexpr char TEXT_EXTS[]   PROGMEM = "EXTS";
 // constexpr char TEXT_INCW[]   PROGMEM = "INCW";
 // constexpr char TEXT_INDRW[]  PROGMEM = "INDRW";
@@ -130,7 +132,9 @@ constexpr char TEXT_JAR[]    PROGMEM = "JAR";
 constexpr char TEXT_LDUD[]   PROGMEM = "LDUD";
 constexpr char TEXT_LDUP[]   PROGMEM = "LDUP";
 // constexpr char TEXT_LDW[]    PROGMEM = "LDW";
+#if defined(LIBASM_Z280_EPU)
 constexpr char TEXT_MEPU[]   PROGMEM = "MEPU";
+#endif
 // constexpr char TEXT_MULT[]   PROGMEM = "MULT";
 constexpr char TEXT_MULTU[]  PROGMEM = "MULTU";
 // constexpr char TEXT_MULTUW[] PROGMEM = "MULTUW";

@@ -1517,6 +1517,7 @@ void test_bitop() {
     TEST("SET", "7, (IY+127)", 0xFD, 0xCB, 0x7F, 0xFE);
 }
 
+#if defined(LIBASM_Z280_EPU)
 void test_epu() {
     TEST("EPUI", "12345678H", 0xED, 0x9F, 0x78, 0x56, 0x34, 0x12);
     TEST("EPUF", "12345678H", 0xED, 0x97, 0x78, 0x56, 0x34, 0x12);
@@ -1543,6 +1544,7 @@ void test_epu() {
     TEST("MEPU", "(HL+IY), 12345678H",    0xED, 0x95, 0x78, 0x56, 0x34, 0x12);
     TEST("MEPU", "(IX+IY), 12345678H",    0xED, 0x9D, 0x78, 0x56, 0x34, 0x12);
 }
+#endif
 
 bool contains(const uint8_t *begin, const uint8_t *end, const uint8_t opc) {
     do {
@@ -1717,8 +1719,10 @@ void run_tests(const char *cpu) {
     RUN_TEST(test_inherent);
     RUN_TEST(test_restart);
     RUN_TEST(test_bitop);
+#if defined(LIBASM_Z280_EPU)
     if (isZ280())
         RUN_TEST(test_epu);
+#endif
     if (isZ280())
         RUN_TEST(test_illegal_z280);
 }

@@ -65,8 +65,10 @@ void AsmZ280::encodeRelative(AsmInsn &insn, const Operand &op, AddrMode mode) co
         base += 1;
     } else if (insn.src() == M_IM16) {
         base += 2;
+#if defined(LIBASM_Z280_EPU)
     } else if (insn.src() == M_EPU) {
         base += 4;
+#endif
     }
     uint32_t target = 0;
     int32_t delta = 0;
@@ -322,9 +324,11 @@ void AsmZ280::encodeOperand(
             break;
         }
         break;
+#if defined(LIBASM_Z280_EPU)
     case M_EPU:
         insn.emitOperand32(op.val.getUnsigned());
         break;
+#endif
     default:
         break;
     }

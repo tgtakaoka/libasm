@@ -19,6 +19,9 @@
 
 #include "config_base.h"
 
+/** Enable Z280 EPU instructions */
+// #define LIBASM_Z280_EPU
+
 namespace libasm {
 namespace z280 {
 

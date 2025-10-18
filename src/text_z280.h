@@ -17,6 +17,7 @@
 #ifndef __LIBASM_TEXT_Z280__
 #define __LIBASM_TEXT_Z280__
 
+#include "config_z280.h"
 #include "text_common.h"
 
 namespace libasm {
@@ -105,9 +106,11 @@ using common::TEXT_DIV;
 using common::TEXT_DIVU;
 using common::TEXT_DIVUW;
 using common::TEXT_DIVW;
+#if defined(LIBASM_Z280_EPU)
 extern const char TEXT_EPUF[]   PROGMEM;
 extern const char TEXT_EPUI[]   PROGMEM;
 extern const char TEXT_EPUM[]   PROGMEM;
+#endif
 using common::TEXT_EXTS;
 using common::TEXT_INCW;
 using common::TEXT_INDRW;
@@ -122,7 +125,9 @@ using common::TEXT_LDCTL;
 extern const char TEXT_LDUD[]   PROGMEM;
 extern const char TEXT_LDUP[]   PROGMEM;
 using common::TEXT_LDW;
+#if defined(LIBASM_Z280_EPU)
 extern const char TEXT_MEPU[]   PROGMEM;
+#endif
 using common::TEXT_MULT;
 extern const char TEXT_MULTU[]  PROGMEM;
 using common::TEXT_MULTUW;

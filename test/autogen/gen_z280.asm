@@ -867,65 +867,35 @@
       EI     80H
       INIW
       OUTIW
-      EPUM   (SP-797BH), 8A898887H
-      EPUM   (SP+0085H), 04030201H
-      MEPU   (SP-787AH), 8B8A8988H
-      MEPU   (SP+0086H), 04030201H
       LDUD   A, (HL)
       LDCTL  HL, USP
       INDW
       OUTDW
-      EPUM   (HL+IX), 908F8E8DH
-      MEPU   (HL+IX), 91908F8EH
       LDUD   (HL), A
       LDCTL  USP, HL
       INIRW
       OTIRW
-      EPUM   (HL+IY), 98979695H
-      MEPU   (HL+IY), 99989796H
       LDUP   A, (HL)
-      EPUF   9B9A9998H
       INDRW
       OTDRW
-      EPUM   (IX+IY), 0A09F9E9DH
-      MEPU   (IX+IY), 0A1A09F9EH
       LDUP   (HL), A
-      EPUI   0A3A2A1A0H
       LDI
       CPI
       INI
       OUTI
-      EPUM   <$-0953H>, 0FAF9F8F7H
-      MEPU   <$-0952H>, 0FAF9F8F7H
-      EPUM   (HL), 0AAA9A8A7H
-      EPUM   (0A9A8H), 0ADACABAAH
       LDD
       CPD
       IND
       OUTD
-      EPUM   (IX-5153H), 0B2B1B0AFH
-      EPUM   (IX+00ADH), 04030201H
-      MEPU   (IX-5052H), 0B3B2B1B0H
-      MEPU   (IX+00AEH), 04030201H
-      MEPU   (HL), 0B2B1B0AFH
-      MEPU   (0B1B0H), 0B5B4B3B2H
       LDIR
       CPIR
       INIR
       OTIR
-      EPUM   (IY-494BH), 0BAB9B8B7H
-      EPUM   (IY+00B5H), 04030201H
-      MEPU   (IY-484AH), 0BBBAB9B8H
-      MEPU   (IY+00B6H), 04030201H
       INW    HL, (C)
       LDDR
       CPDR
       INDR
       OTDR
-      EPUM   (HL-4143H), 0C2C1C0BFH
-      EPUM   (HL+00BDH), 04030201H
-      MEPU   (HL-4042H), 0C3C2C1C0H
-      MEPU   (HL+00BEH), 04030201H
       OUTW   (C), HL
       MULT   A, B
       MULTU  A, B
@@ -1096,7 +1066,7 @@
       LD     A, IYL
       LD     A, (IY+127)
       LD     A, (IY-128)
-      ADD    A, <$-0C7BH>
+      ADD    A, <$-0B7BH>
       ADD    A, <$>
       ADD    A, (IX-7C7EH)
       ADD    A, (IX+0082H)
@@ -1108,7 +1078,7 @@
       ADD    A, IYL
       ADD    A, (IY-121)
       ADD    A, (IY+0)
-      ADC    A, <$-0C73H>
+      ADC    A, <$-0B73H>
       ADC    A, <$>
       ADC    A, (IX-7476H)
       ADC    A, (IX+008AH)
@@ -1120,7 +1090,7 @@
       ADC    A, IYL
       ADC    A, (IY-113)
       ADC    A, (IY+0)
-      SUB    A, <$-0C6BH>
+      SUB    A, <$-0B6BH>
       SUB    A, <$>
       SUB    A, (IX-6C6EH)
       SUB    A, (IX+0092H)
@@ -1132,7 +1102,7 @@
       SUB    A, IYL
       SUB    (IY-105)
       SUB    (IY+0)
-      SBC    A, <$-0C63H>
+      SBC    A, <$-0B63H>
       SBC    A, <$>
       SBC    A, (IX-6466H)
       SBC    A, (IX+009AH)
@@ -1144,7 +1114,7 @@
       SBC    A, IYL
       SBC    A, (IY-97)
       SBC    A, (IY+0)
-      AND    A, <$-0C5BH>
+      AND    A, <$-0B5BH>
       AND    A, <$>
       AND    A, (IX-5C5EH)
       AND    A, (IX+00A2H)
@@ -1156,7 +1126,7 @@
       AND    A, IYL
       AND    (IY-89)
       AND    (IY+0)
-      XOR    A, <$-0D53H>
+      XOR    A, <$-0C53H>
       XOR    A, <$>
       XOR    A, (IX-5456H)
       XOR    A, (IX+00AAH)
@@ -1168,7 +1138,7 @@
       XOR    A, IYL
       XOR    (IY-81)
       XOR    (IY+0)
-      OR     A, <$-0D4BH>
+      OR     A, <$-0C4BH>
       OR     A, <$>
       OR     A, (IX-4C4EH)
       OR     A, (IX+00B2H)
@@ -1180,7 +1150,7 @@
       OR     A, IYL
       OR     (IY-73)
       OR     (IY+0)
-      CP     A, <$-0D43H>
+      CP     A, <$-0C43H>
       CP     A, <$>
       CP     A, (IX-4446H)
       CP     A, (IX+00BAH)
@@ -1192,13 +1162,13 @@
       CP     A, IYL
       CP     (IY-65)
       CP     (IY+0)
-      JP     NZ, <$-0D39H>
+      JP     NZ, <$-0C39H>
       JP     NZ, <$>
-      JP     <$-0D38H>
+      JP     <$-0C38H>
       JP     <$>
-      CALL   NZ, <$-0D37H>
+      CALL   NZ, <$-0C37H>
       CALL   NZ, <$>
-      JP     Z, <$-0D31H>
+      JP     Z, <$-0C31H>
       JP     Z, <$>
       SET    1, (IY-52)
       RLC    (IY-52)
@@ -1222,30 +1192,30 @@
       BIT    0, (IY+0)
       RES    0, (IY+0)
       SET    0, (IY+0)
-      CALL   Z, <$-0E2FH>
+      CALL   Z, <$-0D2FH>
       CALL   Z, <$>
-      CALL   <$-0E2EH>
+      CALL   <$-0D2EH>
       CALL   <$>
-      JP     NC, <$-0E29H>
+      JP     NC, <$-0D29H>
       JP     NC, <$>
-      CALL   NC, <$-0E27H>
+      CALL   NC, <$-0D27H>
       CALL   NC, <$>
-      JP     C, <$-0E21H>
+      JP     C, <$-0D21H>
       JP     C, <$>
-      CALL   C, <$-0E1FH>
+      CALL   C, <$-0D1FH>
       CALL   C, <$>
       POP    IY
-      JP     PO, <$-0E19H>
+      JP     PO, <$-0D19H>
       JP     PO, <$>
       EX     (SP), IY
-      CALL   PO, <$-0E17H>
+      CALL   PO, <$-0D17H>
       CALL   PO, <$>
       PUSH   IY
       JP     (IY)
-      JP     PE, <$-0E11H>
+      JP     PE, <$-0D11H>
       JP     PE, <$>
       EX     IY, HL
-      CALL   PE, <$-0E0FH>
+      CALL   PE, <$-0D0FH>
       CALL   PE, <$>
       SUBW   HL, IY
       MULT   A, (IY-15)
@@ -1371,17 +1341,17 @@
       LDUP   A, (IY+0)
       LDUP   (IY-97), A
       LDUP   (IY+0), A
-      MULT   A, <$-103AH>
+      MULT   A, <$-0F3AH>
       MULT   A, <$>
-      MULTU  A, <$-1039H>
+      MULTU  A, <$-0F39H>
       MULTU  A, <$>
       MULTW  HL, (IX-3B3DH)
       MULTW  HL, (IX+00C3H)
       MULTUW HL, (IX-3A3CH)
       MULTUW HL, (IX+00C4H)
-      DIV    HL, <$-1036H>
+      DIV    HL, <$-0F36H>
       DIV    HL, <$>
-      DIVU   HL, <$-1035H>
+      DIVU   HL, <$-0F35H>
       DIVU   HL, <$>
       ADDW   HL, (IX-3739H)
       ADDW   HL, (IX+00C7H)

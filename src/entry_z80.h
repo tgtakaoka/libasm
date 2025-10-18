@@ -68,7 +68,9 @@ enum AddrMode : uint8_t {
     M_SPDX = 36,   // Stack index: (SP+d16)
     M_PCDX = 37,   // Program counter relative: (PC+d16)
     M_BDX = 38,    // Base and index: (HL+IX)/(HL+IY)/(IX+IY)
+#if defined(LIBASM_Z280_EPU)
     M_EPU = 39,    // EPU 4-byte tmeplate
+#endif
     // Z280/Z380
     M_SR8X = 40,   // |......|rrr|: B/C/D/E/_/_/_/A
     M_DR8X = 41,   // |..|rrr|...|: B/C/D/E/_/_/_/A

@@ -98,8 +98,10 @@ void DisZ280::decodeRelative(DisInsn &insn, StrBuffer &out, AddrMode mode) const
         base += 1;  // <rel16>, im8
     } else if (insn.src() == M_IM16) {
         base += 2;  // <rel16>, im16
+#if defined(LIBASM_Z280_EPU)
     } else if (insn.src() == M_EPU) {
         base += 4;  // <rel16>, EPU template
+#endif
     }
     auto target = base + delta;
     if ((base & ~UINT16_MAX) != (target & ~UINT16_MAX)) {
@@ -207,9 +209,11 @@ void DisZ280::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode, AddrMo
     case M_JABS:
         decodeImmediate16(insn, out);
         break;
+#if defined(LIBASM_Z280_EPU)
     case M_EPU:
         outHex(out, insn.readUint32(), 32);
         break;
+#endif
     case M_ABS:
     case M_DABS:
         decodeAbsolute(insn, out);

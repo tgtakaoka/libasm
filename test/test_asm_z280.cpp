@@ -24,10 +24,6 @@ using namespace libasm::test;
 AsmZ280 asz280;
 Assembler &assembler(asz280);
 
-bool isZ80() {
-    return strcasecmp_P("Z80", assembler.config().cpu_P()) == 0;
-}
-
 bool isZ280() {
     return strcasecmp_P("Z280", assembler.config().cpu_P()) == 0;
 }
@@ -2185,6 +2181,7 @@ void test_bitop() {
     ERRT("SET 2,(IX+128)", OVERFLOW_RANGE, "(IX+128)", 0xDD, 0xCB, 0x80, 0xD6);
 }
 
+#if defined(LIBASM_Z280_EPU)
 void test_epu() {
     TEST("EPUI 12345678H", 0xED, 0x9F, 0x78, 0x56, 0x34, 0x12);
     TEST("EPUF 12345678H", 0xED, 0x97, 0x78, 0x56, 0x34, 0x12);
@@ -2211,6 +2208,7 @@ void test_epu() {
     TEST("MEPU (HL+IY), 12345678H",    0xED, 0x95, 0x78, 0x56, 0x34, 0x12);
     TEST("MEPU (IX+IY), 12345678H",    0xED, 0x9D, 0x78, 0x56, 0x34, 0x12);
 }
+#endif
 
 void test_comment() {
     COMM("RST 18H        ; comment", "; comment", 0xDF);
@@ -2361,8 +2359,10 @@ void run_tests(const char *cpu) {
     RUN_TEST(test_inherent);
     RUN_TEST(test_restart);
     RUN_TEST(test_bitop);
+#if defined(LIBASM_Z280_EPU)
     if (isZ280())
         RUN_TEST(test_epu);
+#endif
     RUN_TEST(test_comment);
     RUN_TEST(test_undefined_symbol);
     RUN_TEST(test_data_constant);
