@@ -13,7 +13,7 @@
 ;;; limitations under the License.
 
         cpu     z280
-        org     0100h
+        org     1000h
         include "test_i8080.zinc"
         align   32
         include "test_z80.inc"

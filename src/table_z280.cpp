@@ -26,6 +26,10 @@ using namespace libasm::z80::common;
 
 // clang-format off
 constexpr Entry TABLE_Z280[] PROGMEM = {
+    E2(0x01, 0060, TEXT_LDW,  M_R16,  M_IM16),
+    E2(0x21, 0000, TEXT_LDA,  R_HL,   M_ABS),
+    E2(0x22, 0000, TEXT_LDW,  M_ABS,  R_HL),
+    E2(0x2A, 0000, TEXT_LDW,  R_HL,   M_ABS),
     E1(0x03, 0060, TEXT_INCW, M_R16),
     E1(0x0B, 0060, TEXT_DECW, M_R16),
     E1(0x80, 0007, TEXT_ADD,  M_SRC),
@@ -40,17 +44,21 @@ constexpr Entry TABLE_Z280[] PROGMEM = {
 };
 
 constexpr uint8_t INDEX_Z280[] PROGMEM = {
-      3,  // TEXT_ADC
-      6,  // TEXT_ADC
-      2,  // TEXT_ADD
-      5,  // TEXT_ADD
-      9,  // TEXT_CPL
-      8,  // TEXT_DAA
-      1,  // TEXT_DECW
-      0,  // TEXT_INCW
-     10,  // TEXT_LDW
-      4,  // TEXT_SBC
-      7,  // TEXT_SBC
+      7,  // TEXT_ADC
+     10,  // TEXT_ADC
+      6,  // TEXT_ADD
+      9,  // TEXT_ADD
+     13,  // TEXT_CPL
+     12,  // TEXT_DAA
+      5,  // TEXT_DECW
+      4,  // TEXT_INCW
+      1,  // TEXT_LDA
+      0,  // TEXT_LDW
+      2,  // TEXT_LDW
+      3,  // TEXT_LDW
+     14,  // TEXT_LDW
+      8,  // TEXT_SBC
+     11,  // TEXT_SBC
 };
 
 // Z280 ED:xx
@@ -78,8 +86,6 @@ constexpr Entry TABLE_Z280_EXT[] PROGMEM = {
     E2(0x4B, 0020, TEXT_LDW,    R_PTRH, M_ABS),
     E2(0x7B, 0000, TEXT_LDW,    R_SP,   M_ABS),
     E1(0x4C, 0000, TEXT_NEG,    R_HL),
-    E2(0x63, 0000, TEXT_LDW,    M_ABS,  R_HL),
-    I2(0x6B, 0000, TEXT_LDW,    R_HL,   M_DABS),
     E2(0xC0, 0070, TEXT_MULT,   R_A,    M_DST),
     E2(0xC1, 0070, TEXT_MULTU,  R_A,    M_DST),
     E2(0xC2, 0060, TEXT_MULTW,  R_HL,   M_R16),
@@ -137,34 +143,34 @@ constexpr Entry TABLE_Z280_EXT[] PROGMEM = {
 };
 
 constexpr uint8_t INDEX_Z280_EXT[] PROGMEM = {
-     55,  // TEXT_ADD
-     31,  // TEXT_ADDW
-     44,  // TEXT_ADDW
-     32,  // TEXT_CPW
-     45,  // TEXT_CPW
-     59,  // TEXT_DI
-     29,  // TEXT_DIV
-     42,  // TEXT_DIV
-     30,  // TEXT_DIVU
-     43,  // TEXT_DIVU
-     34,  // TEXT_DIVUW
-     47,  // TEXT_DIVUW
-     33,  // TEXT_DIVW
-     46,  // TEXT_DIVW
-     60,  // TEXT_EI
+     53,  // TEXT_ADD
+     29,  // TEXT_ADDW
+     42,  // TEXT_ADDW
+     30,  // TEXT_CPW
+     43,  // TEXT_CPW
+     57,  // TEXT_DI
+     27,  // TEXT_DIV
+     40,  // TEXT_DIV
+     28,  // TEXT_DIVU
+     41,  // TEXT_DIVU
+     32,  // TEXT_DIVUW
+     45,  // TEXT_DIVUW
+     31,  // TEXT_DIVW
+     44,  // TEXT_DIVW
+     58,  // TEXT_EI
       7,  // TEXT_EX
       8,  // TEXT_EX
-     36,  // TEXT_EX
-     37,  // TEXT_EX
-     50,  // TEXT_EXTS
-     51,  // TEXT_EXTS
-     54,  // TEXT_EXTS
-     76,  // TEXT_IN
-     72,  // TEXT_INDRW
-     65,  // TEXT_INDW
-     69,  // TEXT_INIRW
-     61,  // TEXT_INIW
-     75,  // TEXT_INW
+     34,  // TEXT_EX
+     35,  // TEXT_EX
+     48,  // TEXT_EXTS
+     49,  // TEXT_EXTS
+     52,  // TEXT_EXTS
+     74,  // TEXT_IN
+     70,  // TEXT_INDRW
+     63,  // TEXT_INDW
+     67,  // TEXT_INIRW
+     59,  // TEXT_INIW
+     73,  // TEXT_INW
       1,  // TEXT_LD
       3,  // TEXT_LD
       5,  // TEXT_LD
@@ -175,14 +181,14 @@ constexpr uint8_t INDEX_Z280_EXT[] PROGMEM = {
      18,  // TEXT_LD
      19,  // TEXT_LD
       0,  // TEXT_LDA
-     53,  // TEXT_LDCTL
-     56,  // TEXT_LDCTL
-     64,  // TEXT_LDCTL
-     68,  // TEXT_LDCTL
-     63,  // TEXT_LDUD
-     67,  // TEXT_LDUD
-     71,  // TEXT_LDUP
-     74,  // TEXT_LDUP
+     51,  // TEXT_LDCTL
+     54,  // TEXT_LDCTL
+     62,  // TEXT_LDCTL
+     66,  // TEXT_LDCTL
+     61,  // TEXT_LDUD
+     65,  // TEXT_LDUD
+     69,  // TEXT_LDUP
+     72,  // TEXT_LDUP
       2,  // TEXT_LDW
       4,  // TEXT_LDW
       6,  // TEXT_LDW
@@ -192,30 +198,28 @@ constexpr uint8_t INDEX_Z280_EXT[] PROGMEM = {
      16,  // TEXT_LDW
      20,  // TEXT_LDW
      21,  // TEXT_LDW
-     23,  // TEXT_LDW
-     24,  // TEXT_LDW
-     25,  // TEXT_MULT
-     38,  // TEXT_MULT
-     26,  // TEXT_MULTU
-     39,  // TEXT_MULTU
-     28,  // TEXT_MULTUW
-     41,  // TEXT_MULTUW
-     27,  // TEXT_MULTW
-     40,  // TEXT_MULTW
+     23,  // TEXT_MULT
+     36,  // TEXT_MULT
+     24,  // TEXT_MULTU
+     37,  // TEXT_MULTU
+     26,  // TEXT_MULTUW
+     39,  // TEXT_MULTUW
+     25,  // TEXT_MULTW
+     38,  // TEXT_MULTW
      17,  // TEXT_NEG
      22,  // TEXT_NEG
-     73,  // TEXT_OTDRW
-     70,  // TEXT_OTIRW
-     78,  // TEXT_OUT
-     66,  // TEXT_OUTDW
-     62,  // TEXT_OUTIW
-     77,  // TEXT_OUTW
-     52,  // TEXT_PCACHE
-     49,  // TEXT_RETIL
-     58,  // TEXT_SC
-     35,  // TEXT_SUBW
-     48,  // TEXT_SUBW
-     57,  // TEXT_TSTI
+     71,  // TEXT_OTDRW
+     68,  // TEXT_OTIRW
+     76,  // TEXT_OUT
+     64,  // TEXT_OUTDW
+     60,  // TEXT_OUTIW
+     75,  // TEXT_OUTW
+     50,  // TEXT_PCACHE
+     47,  // TEXT_RETIL
+     56,  // TEXT_SC
+     33,  // TEXT_SUBW
+     46,  // TEXT_SUBW
+     55,  // TEXT_TSTI
 };
 
 #if defined(LIBASM_Z280_EPU)
@@ -245,7 +249,7 @@ constexpr uint8_t INDEX_Z280_EPU[] PROGMEM = {
 
 // Z280 DD:xx
 constexpr Entry TABLE_Z280_IX[] PROGMEM = {
-    E2(0x01, 0020, TEXT_LDW,  M_MPTR, M_IM16),
+    E2(0x01, 0020, TEXT_LDW,  M_MPTR,  M_IM16),
     E1(0x03, 0020, TEXT_INCW, M_MPTR),
     E1(0x04, 0030, TEXT_INC,  M_BIXH),
     E1(0x05, 0030, TEXT_DEC,  M_BIXH),
@@ -261,22 +265,38 @@ constexpr Entry TABLE_Z280_IX[] PROGMEM = {
     E2(0x3E, 0000, TEXT_LD,   M_ABS,   M_IM8),
     E2(0x78, 0003, TEXT_LD,   R_A,     M_BIXL),
     E2(0x80, 0003, TEXT_ADD,  R_A,     M_BIXL),
+    E2(0x87, 0000, TEXT_ADD,  R_A,     M_ABS),
     E2(0x88, 0003, TEXT_ADC,  R_A,     M_BIXL),
+    E2(0x8F, 0000, TEXT_ADC,  R_A,     M_ABS),
     E2(0x90, 0003, TEXT_SUB,  R_A,     M_BIXL),
+    E2(0x97, 0000, TEXT_SUB,  R_A,     M_ABS),
     E2(0x98, 0003, TEXT_SBC,  R_A,     M_BIXL),
+    E2(0x9F, 0000, TEXT_SBC,  R_A,     M_ABS),
     E2(0xA0, 0003, TEXT_AND,  R_A,     M_BIXL),
+    E2(0xA7, 0000, TEXT_AND,  R_A,     M_ABS),
     E2(0xA8, 0003, TEXT_XOR,  R_A,     M_BIXL),
+    E2(0xAF, 0000, TEXT_XOR,  R_A,     M_ABS),
     E2(0xB0, 0003, TEXT_OR,   R_A,     M_BIXL),
+    E2(0xB7, 0000, TEXT_OR,   R_A,     M_ABS),
     E2(0xB8, 0003, TEXT_CP,   R_A,     M_BIXL),
+    E2(0xBF, 0000, TEXT_CP,   R_A,     M_ABS),
     E1(0x78, 0003, TEXT_LD,   M_BIXL),
     E1(0x80, 0003, TEXT_ADD,  M_BIXL),
+    E1(0x87, 0000, TEXT_ADD,  M_ABS),
     E1(0x88, 0003, TEXT_ADC,  M_BIXL),
+    E1(0x8F, 0000, TEXT_ADC,  M_ABS),
     E1(0x90, 0003, TEXT_SUB,  M_BIXL),
+    E1(0x97, 0003, TEXT_SUB,  M_ABS),
     E1(0x98, 0003, TEXT_SBC,  M_BIXL),
+    E1(0x9F, 0003, TEXT_SBC,  M_ABS),
     E1(0xA0, 0003, TEXT_AND,  M_BIXL),
+    E1(0xA7, 0000, TEXT_AND,  M_ABS),
     E1(0xA8, 0003, TEXT_XOR,  M_BIXL),
+    E1(0xAF, 0000, TEXT_XOR,  M_ABS),
     E1(0xB0, 0003, TEXT_OR,   M_BIXL),
+    E1(0xB7, 0000, TEXT_OR,   M_ABS),
     E1(0xB8, 0003, TEXT_CP,   M_BIXL),
+    E1(0xBF, 0000, TEXT_CP,   M_ABS),
     E1(0xC1, 0020, TEXT_POP,  M_MPTR),
     E2(0xC2, 0070, TEXT_JP,   M_CC8,   I_HL),
     E2(0xC4, 0070, TEXT_CALL, M_CC8,   I_HL),
@@ -287,16 +307,24 @@ constexpr Entry TABLE_Z280_IX[] PROGMEM = {
 };
 
 constexpr uint8_t INDEX_Z280_IX[] PROGMEM = {
-     16,  // TEXT_ADC
-     25,  // TEXT_ADC
+     17,  // TEXT_ADC
+     18,  // TEXT_ADC
+     34,  // TEXT_ADC
+     35,  // TEXT_ADC
      15,  // TEXT_ADD
-     24,  // TEXT_ADD
-     19,  // TEXT_AND
-     28,  // TEXT_AND
-     34,  // TEXT_CALL
-     36,  // TEXT_CALL
-     22,  // TEXT_CP
-     31,  // TEXT_CP
+     16,  // TEXT_ADD
+     32,  // TEXT_ADD
+     33,  // TEXT_ADD
+     23,  // TEXT_AND
+     24,  // TEXT_AND
+     40,  // TEXT_AND
+     41,  // TEXT_AND
+     50,  // TEXT_CALL
+     52,  // TEXT_CALL
+     29,  // TEXT_CP
+     30,  // TEXT_CP
+     46,  // TEXT_CP
+     47,  // TEXT_CP
       3,  // TEXT_DEC
      12,  // TEXT_DEC
       5,  // TEXT_DECW
@@ -307,25 +335,33 @@ constexpr uint8_t INDEX_Z280_IX[] PROGMEM = {
       9,  // TEXT_INCW
       7,  // TEXT_JAF
       6,  // TEXT_JAR
-     33,  // TEXT_JP
+     49,  // TEXT_JP
       4,  // TEXT_LD
      13,  // TEXT_LD
      14,  // TEXT_LD
-     23,  // TEXT_LD
+     31,  // TEXT_LD
       0,  // TEXT_LDW
       8,  // TEXT_LDW
-     21,  // TEXT_OR
-     30,  // TEXT_OR
-     32,  // TEXT_POP
-     37,  // TEXT_POP
-     35,  // TEXT_PUSH
-     38,  // TEXT_PUSH
-     18,  // TEXT_SBC
-     27,  // TEXT_SBC
-     17,  // TEXT_SUB
-     26,  // TEXT_SUB
-     20,  // TEXT_XOR
-     29,  // TEXT_XOR
+     27,  // TEXT_OR
+     28,  // TEXT_OR
+     44,  // TEXT_OR
+     45,  // TEXT_OR
+     48,  // TEXT_POP
+     53,  // TEXT_POP
+     51,  // TEXT_PUSH
+     54,  // TEXT_PUSH
+     21,  // TEXT_SBC
+     22,  // TEXT_SBC
+     38,  // TEXT_SBC
+     39,  // TEXT_SBC
+     19,  // TEXT_SUB
+     20,  // TEXT_SUB
+     36,  // TEXT_SUB
+     37,  // TEXT_SUB
+     25,  // TEXT_XOR
+     26,  // TEXT_XOR
+     42,  // TEXT_XOR
+     43,  // TEXT_XOR
 };
 
 // Z280 FD:xx
@@ -402,11 +438,15 @@ constexpr uint8_t INDEX_Z280_BIT[] PROGMEM = {
 
 // Z280 DD:xx, FD:xx
 constexpr Entry TABLE_Z280_IDX[] PROGMEM = {
+    E2(0x21, 0000, TEXT_LDW,  R_IDX,   M_IM16),
+    E2(0x21, 0000, TEXT_LDA,  R_IDX,   M_ABS),
+    E2(0x22, 0000, TEXT_LDW,  M_ABS,   R_IDX),
+    E1(0x23, 0000, TEXT_INCW, R_IDX),
     E1(0x24, 0010, TEXT_INC,  R_DXY),
     E1(0x25, 0010, TEXT_DEC,  R_DXY),
-    E1(0x23, 0000, TEXT_INCW, R_IDX),
-    E1(0x2B, 0000, TEXT_DECW, R_IDX),
     E2(0x26, 0010, TEXT_LD,   R_DXY,  M_IM8),
+    E2(0x2A, 0000, TEXT_LDW,  R_IDX,   M_ABS),
+    E1(0x2B, 0000, TEXT_DECW, R_IDX),
     E2(0x64, 0011, TEXT_LD,   R_DXY,  R_SXY),
     E2(0x44, 0071, TEXT_LD,   M_DR8X, R_SXY),
     E2(0x60, 0017, TEXT_LD,   R_DXY,  M_SR8X),
@@ -435,36 +475,40 @@ constexpr Entry TABLE_Z280_IDX[] PROGMEM = {
 };
 
 constexpr uint8_t INDEX_Z280_IDX[] PROGMEM = {
-     11,  // TEXT_ADC
-     13,  // TEXT_ADC
-     21,  // TEXT_ADC
-      9,  // TEXT_ADD
-     10,  // TEXT_ADD
-     20,  // TEXT_ADD
-     16,  // TEXT_AND
-     24,  // TEXT_AND
-     19,  // TEXT_CP
-     27,  // TEXT_CP
-      1,  // TEXT_DEC
-      3,  // TEXT_DECW
-      8,  // TEXT_EX
-     28,  // TEXT_EX
-      0,  // TEXT_INC
-      2,  // TEXT_INCW
-      4,  // TEXT_LD
-      5,  // TEXT_LD
+     15,  // TEXT_ADC
+     17,  // TEXT_ADC
+     25,  // TEXT_ADC
+     13,  // TEXT_ADD
+     14,  // TEXT_ADD
+     24,  // TEXT_ADD
+     20,  // TEXT_AND
+     28,  // TEXT_AND
+     23,  // TEXT_CP
+     31,  // TEXT_CP
+      5,  // TEXT_DEC
+      8,  // TEXT_DECW
+     12,  // TEXT_EX
+     32,  // TEXT_EX
+      4,  // TEXT_INC
+      3,  // TEXT_INCW
       6,  // TEXT_LD
-      7,  // TEXT_LD
-     29,  // TEXT_LDW
-     18,  // TEXT_OR
-     26,  // TEXT_OR
-     12,  // TEXT_SBC
-     15,  // TEXT_SBC
-     23,  // TEXT_SBC
-     14,  // TEXT_SUB
-     22,  // TEXT_SUB
-     17,  // TEXT_XOR
-     25,  // TEXT_XOR
+      9,  // TEXT_LD
+     10,  // TEXT_LD
+     11,  // TEXT_LD
+      1,  // TEXT_LDA
+      0,  // TEXT_LDW
+      2,  // TEXT_LDW
+      7,  // TEXT_LDW
+     33,  // TEXT_LDW
+     22,  // TEXT_OR
+     30,  // TEXT_OR
+     16,  // TEXT_SBC
+     19,  // TEXT_SBC
+     27,  // TEXT_SBC
+     18,  // TEXT_SUB
+     26,  // TEXT_SUB
+     21,  // TEXT_XOR
+     29,  // TEXT_XOR
 };
 
 // Z280 DD:ED:xx, FD:ED:xx
@@ -819,7 +863,6 @@ constexpr EntryPage Z280_PAGES[] PROGMEM = {
         {Entry::IX, ARRAY_RANGE(TABLE_Z280_IX), ARRAY_RANGE(INDEX_Z280_IX)},
         {Entry::IY, ARRAY_RANGE(TABLE_Z280_IY), ARRAY_RANGE(INDEX_Z280_IY)},
         {Entry::EXT, ARRAY_RANGE(TABLE_Z80_EXT), ARRAY_RANGE(INDEX_Z80_EXT)},
-        {Entry::EXT, ARRAY_RANGE(TABLE_Z280_EXT), ARRAY_RANGE(INDEX_Z280_EXT)},
 #if defined(LIBASM_Z280_EPU)
         {Entry::EXT, ARRAY_RANGE(TABLE_Z280_EPU), ARRAY_RANGE(INDEX_Z280_EPU)},
 #endif
@@ -827,6 +870,9 @@ constexpr EntryPage Z280_PAGES[] PROGMEM = {
         {Entry::IYEXT, ARRAY_RANGE(TABLE_Z280_IDXEXT), ARRAY_RANGE(INDEX_Z280_IDXEXT)},
         {Entry::IXEXT, ARRAY_RANGE(TABLE_Z280_IXEXT), ARRAY_RANGE(INDEX_Z280_IXEXT)},
         {Entry::IYEXT, ARRAY_RANGE(TABLE_Z280_IYEXT), ARRAY_RANGE(INDEX_Z280_IYEXT)},
+        // LD HL,(ix+disp) are in IXEXT/IYEXT pages and EXT page.  The former has 8-bit disp and the
+        // later has 16-bit disp. The former 8-bit disp must be checked first, then 16-bit disp.
+        {Entry::EXT, ARRAY_RANGE(TABLE_Z280_EXT), ARRAY_RANGE(INDEX_Z280_EXT)},
         {Entry::BIT, ARRAY_RANGE(TABLE_Z80_BIT), ARRAY_RANGE(INDEX_Z80_BIT)},
         {Entry::BIT, ARRAY_RANGE(TABLE_Z280_BIT), ARRAY_RANGE(INDEX_Z280_BIT)},
         {Entry::IXBIT, ARRAY_RANGE(TABLE_Z80_IDXBIT), ARRAY_RANGE(INDEX_Z80_IDXBIT)},

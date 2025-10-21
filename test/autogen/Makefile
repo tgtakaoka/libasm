@@ -36,7 +36,7 @@ ZINC_targets = i8080 i8085 v30emu
 # target which doesn't need ".asm"
 NOASM_targets = i80286
 # target which ASL could not assemble
-ASL_exclude = gen_mb8861 gen_i80286 gen_z280
+ASL_exclude = gen_mb8861 gen_i80286
 
 # file name of generating file
 define out-inc # target

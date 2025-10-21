@@ -621,6 +621,7 @@
       ADD    A, IXL
       ADD    A, (IX-121)
       ADD    A, (IX+0)
+      ADD    A, (8988H)
       ADC    A, (SP-7577H)
       ADC    A, (SP+0089H)
       ADC    A, (HL+IX)
@@ -630,6 +631,7 @@
       ADC    A, IXL
       ADC    A, (IX-113)
       ADC    A, (IX+0)
+      ADC    A, (9190H)
       SUB    A, (SP-6D6FH)
       SUB    A, (SP+0091H)
       SUB    A, (HL+IX)
@@ -639,6 +641,7 @@
       SUB    A, IXL
       SUB    (IX-105)
       SUB    (IX+0)
+      SUB    A, (9998H)
       SBC    A, (SP-6567H)
       SBC    A, (SP+0099H)
       SBC    A, (HL+IX)
@@ -648,6 +651,7 @@
       SBC    A, IXL
       SBC    A, (IX-97)
       SBC    A, (IX+0)
+      SBC    A, (0A1A0H)
       AND    A, (SP-5D5FH)
       AND    A, (SP+00A1H)
       AND    A, (HL+IX)
@@ -657,6 +661,7 @@
       AND    A, IXL
       AND    (IX-89)
       AND    (IX+0)
+      AND    A, (0A9A8H)
       XOR    A, (SP-5557H)
       XOR    A, (SP+00A9H)
       XOR    A, (HL+IX)
@@ -666,6 +671,7 @@
       XOR    A, IXL
       XOR    (IX-81)
       XOR    (IX+0)
+      XOR    A, (0B1B0H)
       OR     A, (SP-4D4FH)
       OR     A, (SP+00B1H)
       OR     A, (HL+IX)
@@ -675,6 +681,7 @@
       OR     A, IXL
       OR     (IX-73)
       OR     (IX+0)
+      OR     A, (0B9B8H)
       CP     A, (SP-4547H)
       CP     A, (SP+00B9H)
       CP     A, (HL+IX)
@@ -684,6 +691,7 @@
       CP     A, IXL
       CP     (IX-65)
       CP     (IX+0)
+      CP     A, (0C1C0H)
       POP    (HL)
       JP     NZ, (HL)
       CALL   NZ, (HL)
@@ -842,7 +850,6 @@
       IN     H, (C)
       OUT    (C), H
       SBC    HL, HL
-      LDW    (6564H), HL
       EXTS   A
       PCACHE
       LDCTL  HL, (C)
@@ -850,7 +857,6 @@
       IN     L, (C)
       OUT    (C), L
       ADC    HL, HL
-      LDW    HL, (6D6CH)
       EXTS   HL
       ADD    HL, A
       LDCTL  (C), HL
@@ -1114,7 +1120,7 @@
       SBC    A, IYL
       SBC    A, (IY-97)
       SBC    A, (IY+0)
-      AND    A, <$-0B5BH>
+      AND    A, <$-0C5BH>
       AND    A, <$>
       AND    A, (IX-5C5EH)
       AND    A, (IX+00A2H)
