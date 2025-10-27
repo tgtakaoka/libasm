@@ -43,12 +43,14 @@ enum AddressWidth : uint8_t {
 enum AddressUnit : uint8_t {
     ADDRESS_BYTE = 1,  // memory is byte addressable.
     ADDRESS_WORD = 2,  // memory is word addressable.
+    ADDRESS_QUAD = 4,  // memory is quad bytes addressable.
 };
 
 enum OpCodeWidth : uint8_t {
     OPCODE_8BIT = 8,
     OPCODE_12BIT = 12,
     OPCODE_16BIT = 16,
+    OPCODE_32BIT = 32,
 };
 
 enum Endian : uint8_t {
@@ -151,6 +153,8 @@ template <>
 struct __opcode_type<OPCODE_12BIT> : public __opcode_helper<uint16_t> {};
 template <>
 struct __opcode_type<OPCODE_16BIT> : public __opcode_helper<uint16_t> {};
+template <>
+struct __opcode_type<OPCODE_32BIT> : public __opcode_helper<uint32_t> {};
 }  // namespace
 
 /** Interface for setting CPU */
