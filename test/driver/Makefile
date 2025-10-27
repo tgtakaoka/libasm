@@ -60,14 +60,16 @@ OBJS = $(OBJS_common) $(OBJS_encdec) $(OBJS_formatter) $(OBJS_asm) \
 
 -include $(OBJS:%=%.d)
 
-define test-rule # test
+# $(call test-rule,<test>)
+define test-rule
 test:: $(1)
 	./$(1)
 
 endef
 $(eval $(foreach t,$(TESTS),$(call test-rule,$(t))))
 
-define test-formatter # arch
+# $(call test-formatter,<arch>)
+define test-formatter
 test_formatter_$(1): test_formatter_$(1).o $(OBJS_asm) $(OBJS_dis) $(OBJS_common) \
                      $(OBJS_formatter) asm_$(1).o dis_$(1).o $(OBJS_$(1))
 	$$(CXX) -o $$@ $$^
@@ -92,7 +94,7 @@ SRCS=\
 $(foreach s,$(sort $(OBJS:%.o=%.cpp)),\
     $(if $(wildcard $(s)),$(s),\
     $(if $(wildcard ../$(s)),../$(s),)))
-define tidy-rule # target
+define tidy-rule
 .PHONY:: $(1).tidy
 $(1).tidy: compile_commands.json $(1).cpp
 	clang-tidy $(1).cpp
