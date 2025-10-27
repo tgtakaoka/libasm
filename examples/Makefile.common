@@ -43,11 +43,13 @@ BOARD ?= $(firstword $(BOARDS))
 
 EXAMPLE = $(shell basename $(CURDIR))
 
-define pio-libdep-path # env libdep
+# $(call pio-libdep-path,<env>,<libdep>)
+define pio-libdep-path
 -l .pio/libdeps/$(1)/$(2)
 endef
 
-define pio-ci # board
+# $(call pio-ci,<board>)
+define pio-ci
 	ENV=$(shell awk 'BEGIN{RS="\n\n"} /$(1)/' platformio.ini | grep -Po '(?<=env:)[^]]+')
 	pio $(PIO_FLAGS) pkg install -l tgtakaoka/libcli
 	pio $(PIO_FLAGS) ci -l $(CURDIR)/../.. $(call pio-libdep-path,$(ENV),libcli) -b $(1) $(EXAMPLE).ino
@@ -63,7 +65,8 @@ pio-ci-all:
 boards: platformio.ini
 	@echo $(BOARDS)
 
-define pio-run # env
+# $(call pio-run,<env>)
+define pio-run
 	pio $(PIO_FLAGS) run $(PIO_RUN_FLAGS) -e $(1)
 
 endef
@@ -77,7 +80,8 @@ pio-run-all:
 envs: platformio.ini
 	@echo $(ENVS)
 
-define arduino-ci # fqbn
+# $(call arduino-ci,<fqbn>)
+define arduino-ci
 	arduino-cli $(ARDUINO_FLAGS) compile -b $(1) $(ARDUINO_CI_FLAGS)
 
 endef

@@ -27,10 +27,11 @@ help:
 .PHONY:: clean clean-gen clean-asm clean-asl clean-gas
 
 # target which has ".inc" suffix for output.
-INC_targets = w65c816 tlcs90 i8086 i80186 $(TGT_mc68000) $(TGT_z8000) $(TGT_nm1610) \
-    tms320c20x tms320c5x tms370 tms7000 tms9980 j11 t11 mc146805 z80 z180 z380
+INC_targets = w65c816 tlcs90 i8086 i80186 $(TGT_mc68000) $(TGT_z8000) $(TGT_mn1610) \
+    tms320c20x tms320c5x tms370 tms7000 tms9980 j11 t11 mc146805 z80 z180 z380 \
+    ns32032
 # target which for GNU assembler (also ".ginc" targets)
-GINC_targets = $(TGT_mc68000) $(TGT_z8000) ns32000 mc68hc11 mc68hc12 i8086 i80186 i80286
+GINC_targets = $(TGT_mc68000) $(TGT_z8000) ns32032 mc68hc11 mc68hc12 i8086 i80186 i80286
 # target which also has Zilog syntax (also ".zinc" targets)
 ZINC_targets = i8080 i8085 v30emu
 # target which doesn't need ".asm"
@@ -39,10 +40,12 @@ NOASM_targets = i80286
 ASL_exclude = gen_mb8861 gen_i80286
 
 # file name of generating file
-define out-inc # target
+# $(call out-inc,<target>)
+define out-inc
 $(filter $(1),$(INC_targets) $(ZINC_targets:%=%_inc))
 endef
-define gen-out # target
+# $(call gen-out,<target>)
+define gen-out
 $(if $(filter $(1),$(GINC_targets:%=%_ginc)),gen_$(1:%_ginc=%).ginc,\
 $(if $(filter $(1),$(ZINC_targets:%=%_zinc)),gen_$(1:%_zinc=%).zinc,\
 $(if $(filter $(1),$(NOASM_targets)),,\
@@ -63,29 +66,34 @@ define gen-opt
 $(if $(call ginc-out,$(1)),-g -i,$(if $(call out-inc,$(1)),-i -u,-u)) \
 $(if $(call zinc-out,$(1)),-z)
 endef
-define arch-target # arch
+# $(call arch-target,<arch>)
+define arch-target
 $(foreach t,$(TGT_$(1)),$(t) \
   $(if $(filter $(t),$(ZINC_targets)),$(t)_zinc) \
   $(if $(filter $(t),$(GINC_targets)),$(t)_ginc))
 endef
-define cpu-opt # out
+# $(call cpu-opt,<out>)
+define cpu-opt
 $(if $(call zinc-out,$(1)),-C $(CPU_$(1:%_zinc=%)),\
 $(if $(call ginc-out,$(1)),-C $(CPU_$(1:%_ginc=%)),-C $(CPU_$(1))))
 endef
 
 # make rule for auto generation file
-define gen-target # arch target out opt
+# $(call gen-target,<arch>,<target>,<out>,<opt>)
+define gen-target
 	../gen_$(1) $(4) $(call cpu-opt,$(2)) -o $(3) -l gen_$(2).lst
 endef
-define gen-target-rule # arch target out opt
+# $(call gen-target-rule,<arch>,<target>,<out>,<opt>)
+define gen-target-rule
 $(3): #../gen_$(1)
 	$(call gen-target,$(1),$(2),$(3),$(4))
 
 endef
-define gen-arch-rule # arch
-clean_$(1):
+# $(call gen-arch-rule,<arch>)
+define gen-arch-rule
+clean_$(1)::
 	rm -f $(foreach t,$(call arch-target,$(1)),$(call gen-out,$(t)))
-gen_$(1): clean_$(1) $(foreach t,$(call arch-target,$(1)),$(call gen-out,$(t)))
+gen_$(1):: clean_$(1) $(foreach t,$(call arch-target,$(1)),$(call gen-out,$(t)))
 
 endef
 
@@ -102,9 +110,13 @@ ASM=../../cli/asm
 $(ASM)-refresh:
 	+$(MAKE) -C ../../cli asm
 
-ASM_TESTS = $(patsubst %.asm,%,$(wildcard gen_*.asm))
+# ASM_TESTS = $(patsubst %.asm,%,$(wildcard gen_*.asm))
+ASM_TESTS = \
+    $(foreach a,$(ARCHS),$(foreach t,$(TGT_$(a)),gen_$(t))) \
+    $(foreach t,$(ZINC_targets),gen_$(t)_zilog)
 ASM_OUTS  = $(foreach f,$(ASM_TESTS),$(f).$(call out-ext,$(f)))
-define asm-rule # source stem suffix option
+# $(call asm-rule,<source>,<stem>,<suffux>,<option>
+define asm-rule
 .PHONY:: asm-$(2).$(3)
 asm-$(2).$(3):: $(ASM)-refresh
 asm-$(2).$(3):: $(1)
@@ -121,9 +133,11 @@ ASL_SRCS = $(foreach t,$(ASM_TESTS),$(if $(filter $(t),$(ASL_exclude)),,$(t)))
 ASL_TESTS = $(ASL_SRCS) \
 	$(foreach t,$(patsubst %.asl,%,$(wildcard gen_*.asl)),$(if $(filter $(t),$(ASL_SRCS)),,$(t)))
 ASL_OUTS  = $(foreach f,$(ASL_TESTS),$(f).$(call out-ext,$(f)))
-define asl-file # stem
+# $(call asl-file,<stem>)
+define asl-file
 $(if $(wildcard $(1).asl),$(1).asl,$(1).asm)
 endef
+# $(call asl-rule,<source>,<stem>,<suffux>,<option>
 define asl-rule # source stem suffix option
 .PHONY:: asl-$(2).$(3)
 asl-$(2).$(3): $(1)

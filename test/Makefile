@@ -78,7 +78,8 @@ BINS = $(TEST_OBJS:.o=) $(EXPR_OBJS:.o=) $(GEN_OBJS:.o=)
 -include $(OBJS:%=%.d)
 
 # make rule for testing an architecture.
-define test-rule # arch
+# $(call test-rule,<arch>)
+define test-rule
 test_asm_$(1): test_asm_$(1).o asm_$(1).o text_$(1).o $$(OBJS_$(1)) $$(OBJS_asm) $$(OBJS_test)
 	$$(CXX) -o $$@ $$(CXXFLAGS) $$^
 test_dis_$(1): test_dis_$(1).o dis_$(1).o text_$(1).o $$(OBJS_$(1)) $$(OBJS_dis) $$(OBJS_test)
@@ -91,20 +92,24 @@ test_$(1): $(if $(wildcard test_asm_$(1).cpp),test_asm_$(1)) \
 endef
 $(eval $(foreach a,$(ARCHS),$(call test-rule,$(a))))
 
-# make rule for testing expression.
 EXPRS = base fairchild intel motorola national zilog
-define test-expr # expr
+# make rule for testing expression.
+# $(call test-expr-rule,<expr>)
+define test-expr-rule
 test_expr_$(1): test_expr_$(1).o $$(OBJS_expr) $$(OBJS_test)
 	$$(CXX) -o $$@ $$(CXXFLAGS) $$^
 
 endef
-$(eval $(foreach e,$(EXPRS),$(call test-expr,$(e))))
+$(eval $(foreach e,$(EXPRS),$(call test-expr-rule,$(e))))
 
-define exec-test # test
+# make rule to invoke expression test executable
+# $(call exec-test,<expr>)
+define exec-test
 test_expr:: test_expr_$(1)
 	./test_expr_$(1)
 
 endef
+test_expr:: $(foreach e,$(EXPRS),test_expr_$(e))
 $(eval $(foreach e,$(EXPRS),$(call exec-test,$(e))))
 
 test: $(foreach a,$(ARCHS),test_$(a)) test_expr driver-test unit-test
@@ -115,6 +120,8 @@ driver-test:
 unit-test:
 	$(MAKE) -C unit test
 
+# make rule for auto generation executables
+# (call gen-rule,<arch>)
 define gen-rule
 gen_$(1): $(if $(wildcard gen_$(1).cpp),gen_$(1).o) \
           dis_$(1).o text_$(1).o $$(OBJS_$(1)) $$(OBJS_gen) $$(OBJS_test)
@@ -127,7 +134,7 @@ gen: $(GEN_OBJS:.o=)
 
 compile_commands.json:
 	bear -- $(MAKE) $(BINS:%=%.o)
-define tidy-rule # target
+define tidy-rule
 .PHONY:: $(1).tidy
 $(1).tidy: compile_commands.json $(1).cpp
 	clang-tidy $(1).cpp

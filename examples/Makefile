@@ -81,7 +81,8 @@ envs:
 fqbns:
 	@echo $(FQBNS)
 
-define update # example
+# $(call update,<example>)
+define update
 	cp -f Makefile.common $(1)/Makefile
 	cp -f platformio.common $(1)/platformio.ini
 
@@ -90,7 +91,8 @@ endef
 update: Makefile.common platformio.common
 	$(foreach ex,$(EXS),$(call update,$(ex)))
 
-define pio-ci # example, board
+# $(call pio-ci,<example>,<board>)
+define pio-ci
 	$(MAKE) -C $(1) pio-ci BOARD=$(2)
 
 endef
@@ -101,7 +103,8 @@ pio-ci:
 pio-ci-all:
 	$(foreach ex,$(EXS),$(foreach board,$(BOARDS),$(call pio-ci,$(ex),$(board))))
 
-define pio-run # example, env
+# $(call pio-run,<example>,<env>)
+define pio-run
 	$(MAKE) -C $(1) pio-run ENV=$(2)
 
 endef
@@ -112,7 +115,8 @@ pio-run:
 pio-run-all:
 	$(foreach ex,$(EXS),$(foreach env,$(ENVS),$(call pio-run,$(ex),$(env))))
 
-define arduino-ci # example, fqbn
+# $(call arduino-ci,<example>,<fqbn>)
+define arduino-ci
 	$(MAKE) -C $(1) arduino-ci FQBN=$(2)
 
 endef
@@ -123,13 +127,14 @@ arduino-ci:
 arduino-ci-all:
 	$(foreach ex,$(EXS),$(foreach fqbn,$(FQBNS),$(call arduino-ci,$(ex),$(fqbn))))
 
-define clean-ex # ex
+# $(call clean-example,<example>)
+define clean-example
 	$(MAKE) -s -C $(1) clean
 
 endef
 
 clean: $(EXS)
-	$(foreach ex,$(EXS),$(call clean-ex,$(ex)))
+	$(foreach ex,$(EXS),$(call clean-example,$(ex)))
 
 .PHONY: all clean update pio-ci pio-ci-all pio-run pio-run-all
 .PHONY: arduino-ci arduino-ci-all

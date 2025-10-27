@@ -62,7 +62,8 @@ $(eval $(foreach a,$(ARCHS),$(call objs-arch,$(a))))
 
 OBJS = $(OBJS_com) $(OBJS_asm) $(OBJS_dis) $(OBJS_bin)
 
-define bin-rule # bin
+# $(call bin-rule,<bin>)
+define bin-rule
 $(1): $(OBJS_com) $(OBJS_$(1))
 	$$(CXX) -o $$@ $$(CXXFLAGS) $$^
 
@@ -75,7 +76,7 @@ SRCS=\
 $(foreach s,$(sort $(OBJS:%.o=%.cpp)),\
     $(if $(wildcard $(s)),$(s),\
     $(if $(wildcard ../driver/$(s)),../driver/$(s),)))
-define tidy-rule # target
+define tidy-rule
 .PHONY:: $(1).tidy
 $(1).tidy: compile_commands.json $(1).cpp
 	clang-tidy $(1).cpp

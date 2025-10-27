@@ -40,7 +40,8 @@ BINS = $(TESTS)
 
 -include $(OBJS:%=%.d)
 
-define test-rule # test
+# $(call test-rule,<test>)
+define test-rule
 test:: $(1)
 	./$(1)
 

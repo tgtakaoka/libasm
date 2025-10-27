@@ -31,7 +31,8 @@ $(ASM)-refresh:
 
 ASM_TESTS = $(patsubst %.asm,%,$(wildcard test_*.asm))
 ASM_OUTS  = $(foreach t,$(ASM_TESTS),$(t).$(call out-ext,$(t)))
-define asm-rule # test suffix option
+# $(call asm-rule,<test>,<suffix>,<option>
+define asm-rule
 .PHONY:: asm-$(1).$(2)
 asm-$(1).$(2):: $(ASM)-refresh
 asm-$(1).$(2):: $(1).asm
@@ -49,13 +50,15 @@ ASL_TESTS = $(foreach a,$(ASM_TESTS) \
    $(foreach t,$(patsubst %.asl,%,$(wildcard test_*.asl)),$(if $(filter $(t),$(ASM_TESTS)),,$(t))),\
    $(if $(filter $(a),$(ASL_exclude)),,$(a)))
 ASL_OUTS  = $(foreach t,$(ASL_TESTS),$(t).$(call out-ext,$(t)))
-define asl-rule # test suffix option source
+# $(call asl-rule,<test>,<suffix>,<option>,<source>
+define asl-rule
 .PHONY:: asl-$(1).$(2)
 asl-$(1).$(2): $(4)
 	$$(ASL) $$(ASL_FLAGS) -L $$^ && p2hex $$(P2HEX_FLAGS) $(3) $(1).p $(1).$(2)
 
 endef
-define asl-source # test
+# $(call asl-source,<test>)
+define asl-source
 $(if $(wildcard $(1).asl),$(1).asl,$(1).asm)
 endef
 $(eval $(foreach t,$(ASL_TESTS),$(call asl-rule,$(t),$(call out-ext,$(t)),$(call asl-opt,$(t)),$(call asl-source,$(t)))))

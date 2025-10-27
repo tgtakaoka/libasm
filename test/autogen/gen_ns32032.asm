@@ -16,7 +16,7 @@
         fpu     ns32081
         pmmu    ns32082
         org     0x10000
-        include "gen_ns32000.inc"
+        include "gen_ns32032.inc"
         end
 
 ;# Local Variables:
