@@ -132,7 +132,7 @@ int AsmDriver::assemble(AsmSources &sources, BinMemory &memory, TextPrinter &lis
         for (auto offset = 0; offset < insn.length(); offset++) {
             memory.writeByte(base + offset, insn.bytes()[offset]);
         }
-        _origin = insn.address() + insn.length() / config.addressUnit();
+        _origin = insn.address() + insn.length() / unit;
         if (insn.length() == 0)
             _origin = directive.currentLocation();
 

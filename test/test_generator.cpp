@@ -70,13 +70,16 @@ DataGenerator::DataGenerator(DataGenerator &parent)
       _count(0) {}
 
 uint8_t DataGenerator::length() const {
-    if (_width == OPCODE_8BIT)
+    switch (_width) {
+    case OPCODE_8BIT:
         return _start + 1;
-    if (_width == OPCODE_16BIT)
+    case OPCODE_12BIT:
+    case OPCODE_16BIT:
         return _start + 2;
-    if (_width == OPCODE_12BIT)
-        return _start + 2;
-    return 100;
+    case OPCODE_32BIT:
+        return _start + 4;
+    }
+    return _start;
 }
 
 void DataGenerator::next() {
@@ -99,9 +102,9 @@ struct ByteGenerator : DataGenerator {
 
     ByteGenerator(DataGenerator &parent) : DataGenerator(parent) { _data = parent.data(); }
 
-    bool hasNext() const override { return _count < 0x100; }
+    bool hasNext() const override { return _count < UINT64_C(0x100); }
 
-    void outData(uint16_t data) override { _buffer[_start] = data; }
+    void outData(uint32_t data) override { _buffer[_start] = data; }
 };
 
 struct WordGenerator : DataGenerator {
@@ -112,14 +115,14 @@ struct WordGenerator : DataGenerator {
 
     WordGenerator(DataGenerator &parent) : DataGenerator(parent) { _data = parent.data() + 0x100; }
 
-    bool hasNext() const override { return _count < 0x10000; }
+    bool hasNext() const override { return _count < UINT64_C(0x10000); }
 
     void nextByte() override {
         _data += 0x101;
         _count += 0x101;
     }
 
-    void outData(uint16_t data) override {
+    void outData(uint32_t data) override {
         if (_endian == ENDIAN_BIG) {
             _buffer[_start + 0] = data >> 8;
             _buffer[_start + 1] = data;
@@ -130,25 +133,62 @@ struct WordGenerator : DataGenerator {
     }
 };
 
+struct LongGenerator : DataGenerator {
+    LongGenerator(uint8_t *buffer, const ConfigBase &config, GenDebugger &debugger)
+        : DataGenerator(buffer, config, debugger) {
+        _data = 0;
+    }
+
+    LongGenerator(DataGenerator &parent) : DataGenerator(parent) {
+        _data = parent.data() + 0x10000;
+    }
+
+    bool hasNext() const override { return _count < UINT64_C(0x100000000); }
+
+    void nextByte() override {
+        _data += 0x10001;
+        _count += 0x10001;
+    }
+
+    void outData(uint32_t data) override {
+        if (_endian == ENDIAN_BIG) {
+            _buffer[_start + 0] = data >> 24;
+            _buffer[_start + 1] = data >> 16;
+            _buffer[_start + 2] = data >> 8;
+            _buffer[_start + 3] = data;
+        } else {
+            _buffer[_start + 0] = data;
+            _buffer[_start + 1] = data >> 8;
+            _buffer[_start + 2] = data >> 16;
+            _buffer[_start + 3] = data >> 24;
+        }
+    }
+};
+
 DataGenerator *DataGenerator::newGenerator(
         uint8_t *buffer, const ConfigBase &config, GenDebugger &debugger) {
-    const auto width = config.opCodeWidth();
-    if (width == OPCODE_8BIT)
+    switch (config.opCodeWidth()) {
+    case OPCODE_8BIT:
         return new ByteGenerator(buffer, config, debugger);
-    if (width == OPCODE_16BIT)
+    case OPCODE_12BIT:
+    case OPCODE_16BIT:
         return new WordGenerator(buffer, config, debugger);
-    if (width == OPCODE_12BIT)
-        return new WordGenerator(buffer, config, debugger);
+    case OPCODE_32BIT:
+        return new LongGenerator(buffer, config, debugger);
+    }
     return nullptr;
 }
 
 DataGenerator *DataGenerator::newChild() {
-    if (_width == OPCODE_8BIT)
+    switch (_width) {
+    case OPCODE_8BIT:
         return new ByteGenerator(*this);
-    if (_width == OPCODE_16BIT)
+    case OPCODE_12BIT:
+    case OPCODE_16BIT:
         return new WordGenerator(*this);
-    if (_width == OPCODE_12BIT)
-        return new WordGenerator(*this);
+    case OPCODE_32BIT:
+        return new LongGenerator(*this);
+    }
     return nullptr;
 }
 

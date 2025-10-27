@@ -36,7 +36,8 @@ void test_asm_mn1610() {
         tbit  r3, 5, nz
 label:  dc    label      define label and constant
         ds    2          ; allocate space
-        dc    c'ABC',3   define constants
+        dc    c'ABC',3,5 define constants
+        a     r2, r4, pz
 )",
             R"(          0 :                            cpu   mn1610
           0 :                    * comment line
@@ -44,7 +45,9 @@ label:  dc    label      define label and constant
        ABCD : 2B55                       tbit  r3, 5, nz
        ABCE : ABCE               label:  dc    label      define label and constant
        ABCF :                            ds    2          ; allocate space
-       ABD1 : 4142 4300 0003             dc    c'ABC',3   define constants
+       ABD1 : 4142 4300 0003             dc    c'ABC',3,5 define constants
+       ABD4 : 0005
+       ABD5 : 5A3C                       a     r2, r4, pz
 )");
 }
 
@@ -59,14 +62,17 @@ void test_asm_mn1613() {
         loc   x'34567'
         mvwi  str, x'5678', skp
         fa    dr0, (r2)
-f1:     dc    7.8125e-03
+f1:     dc    7.8125e-03,1,2
+        mvi   r1, 255
 )",
             R"(          0 :                            cpu   mn1613
           0 :                    * comment line
       34567 :                            loc   x'34567'
       34567 : 7e1f 5678                  mvwi  str, x'5678', skp
       34569 : 6f0d                       fa    dr0, (r2)
-      3456a : 3f20 0000          f1:     dc    7.8125e-03
+      3456a : 3f20 0000 0001     f1:     dc    7.8125e-03,1,2
+      3456d : 0002
+      3456e : 09ff                       mvi   r1, 255
 )");
 }
 

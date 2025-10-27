@@ -83,7 +83,7 @@ StrBuffer &AsmFormatter::getLine(StrBuffer &out) {
         if (_nextLine < 0)
             _nextLine = 0;
         formatLineNumber(out);
-        _formatter.formatAddress(out, startAddress() + _nextLine);
+        _formatter.formatAddress(out, startAddress() + _nextLine / _config->addressUnit());
         const auto pos = out.len();
         uint8_t formatted = 0;
         if (_value && !_value->isUndefined()) {

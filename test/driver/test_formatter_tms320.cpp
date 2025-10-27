@@ -41,6 +41,7 @@ label:  .word label
         .byte 1,'''',3
         .bss  1
         .string "A""B'C"
+        addh  *
 )",
 
             R"(          0 :                            .cpu  tms32010
@@ -52,6 +53,7 @@ label:  .word label
         78d : 0001 0027 0003             .byte 1,'''',3
         790 :                            .bss  1
         791 : 2241 2742 0043             .string "A""B'C"
+        794 : 6088                       addh  *
 )");
 }
 

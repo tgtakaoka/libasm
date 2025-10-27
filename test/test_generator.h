@@ -50,8 +50,8 @@ struct DataGenerator {
     virtual bool hasNext() const = 0;
     void next();
     virtual void nextByte() {}
-    virtual void outData(uint16_t) = 0;
-    uint16_t data() const { return _data; }
+    virtual void outData(uint32_t) = 0;
+    uint32_t data() const { return _data; }
 
     void debug(const char *fmt, ...) const;
     void dump(const char *fmt, ...) const;
@@ -62,8 +62,8 @@ protected:
     const Endian _endian;
     const uint8_t _start;
     GenDebugger &_debugger;
-    uint32_t _count;
-    uint16_t _data;
+    uint64_t _count;
+    uint32_t _data;
 
     void genData();
     void dump(const char *msg, int start, int size, va_list args) const;

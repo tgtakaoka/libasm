@@ -119,7 +119,7 @@ uint_fast8_t ListFormatter::formatBytes(StrBuffer &out, uint_fast8_t offset) {
     auto len = 0;
     for (auto pos = 0; offset + len < size && pos < bytesInLine(); pos++) {
         out.letter(' ');
-        uint16_t val = _provider.getByte(offset + len++);
+        uint32_t val = _provider.getByte(offset + len++);
         if (width == OPCODE_16BIT && unit == ADDRESS_BYTE) {
             const auto digits = calcDigits(0xFFFF, _listRadix);
             if (pos == 0 && addr % 2 != 0) {  // the first byte
@@ -143,9 +143,24 @@ uint_fast8_t ListFormatter::formatBytes(StrBuffer &out, uint_fast8_t offset) {
             formatValue(out, val, 8);
         } else if (width == OPCODE_16BIT || width == OPCODE_12BIT) {
             const auto next8 = _provider.getByte(offset + len++);
-            val = endian == ENDIAN_BIG ? (val << 8) | next8 : val | (next8 << 8);
+            val = (endian == ENDIAN_BIG) ? (val << 8) | next8 : val | (next8 << 8);
             formatValue(out, val, width);
             pos++;
+        } else if (width == OPCODE_32BIT) {
+            if (endian == ENDIAN_BIG) {
+                val <<= 8;
+                val |= _provider.getByte(offset + len++);
+                val <<= 8;
+                val |= _provider.getByte(offset + len++);
+                val <<= 8;
+                val |= _provider.getByte(offset + len++);
+            } else {
+                val |= _provider.getByte(offset + len++) << 8;
+                val |= static_cast<uint32_t>(_provider.getByte(offset + len++)) << 16;
+                val |= static_cast<uint32_t>(_provider.getByte(offset + len++)) << 24;
+            }
+            formatValue(out, val, width);
+            pos += 3;
         }
     }
     return len;
