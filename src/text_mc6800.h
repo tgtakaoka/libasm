@@ -50,27 +50,11 @@ using common::TEXT_ASLB;
 using common::TEXT_ASR;
 using common::TEXT_ASRA;
 using common::TEXT_ASRB;
-using common::TEXT_BCC;
-using common::TEXT_BCS;
-using common::TEXT_BEQ;
-using common::TEXT_BGE;
-using common::TEXT_BGT;
-using common::TEXT_BHI;
-using common::TEXT_BHS;
+extern const char TEXT_Bcc[] PROGMEM;
 using common::TEXT_BIT;
 using common::TEXT_BITA;
 using common::TEXT_BITB;
-using common::TEXT_BLE;
-using common::TEXT_BLO;
-using common::TEXT_BLS;
-using common::TEXT_BLT;
-using common::TEXT_BMI;
-using common::TEXT_BNE;
-using common::TEXT_BPL;
-using common::TEXT_BRA;
 using common::TEXT_BSR;
-using common::TEXT_BVC;
-using common::TEXT_BVS;
 using common::TEXT_CBA;
 using common::TEXT_CLC;
 using common::TEXT_CLI;
@@ -213,6 +197,24 @@ using common::TEXT_XGDY;
 
 using common::TEXT_REG_X;
 using common::TEXT_REG_Y;
+
+extern const char TEXT_CC_RA[] PROGMEM;
+extern const char TEXT_CC_HI[] PROGMEM;
+extern const char TEXT_CC_LS[] PROGMEM;
+extern const char TEXT_CC_HS[] PROGMEM;
+extern const char TEXT_CC_CC[] PROGMEM;
+extern const char TEXT_CC_LO[] PROGMEM;
+extern const char TEXT_CC_CS[] PROGMEM;
+extern const char TEXT_CC_NE[] PROGMEM;
+extern const char TEXT_CC_EQ[] PROGMEM;
+extern const char TEXT_CC_VC[] PROGMEM;
+extern const char TEXT_CC_VS[] PROGMEM;
+extern const char TEXT_CC_PL[] PROGMEM;
+extern const char TEXT_CC_MI[] PROGMEM;
+extern const char TEXT_CC_GE[] PROGMEM;
+extern const char TEXT_CC_LT[] PROGMEM;
+extern const char TEXT_CC_GT[] PROGMEM;
+extern const char TEXT_CC_LE[] PROGMEM;
 
 // clang-format on
 

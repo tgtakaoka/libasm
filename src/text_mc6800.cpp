@@ -47,27 +47,11 @@ constexpr char TEXT_CPU_MB8861[] PROGMEM = "MB8861";
 // constexpr char TEXT_ASR[]  PROGMEM = "ASR";
 // constexpr char TEXT_ASRA[] PROGMEM = "ASRA";
 // constexpr char TEXT_ASRB[] PROGMEM = "ASRB";
-// constexpr char TEXT_BCC[]  PROGMEM = "BCC";
-// constexpr char TEXT_BCS[]  PROGMEM = "BCS";
-// constexpr char TEXT_BEQ[]  PROGMEM = "BEQ";
-// constexpr char TEXT_BGE[]  PROGMEM = "BGE";
-// constexpr char TEXT_BGT[]  PROGMEM = "BGT";
-// constexpr char TEXT_BHI[]  PROGMEM = "BHI";
-// constexpr char TEXT_BHS[]  PROGMEM = "BHS";
+constexpr char TEXT_Bcc[]  PROGMEM = "B";
 // constexpr char TEXT_BIT[]  PROGMEM = "BIT";
 // constexpr char TEXT_BITA[] PROGMEM = "BITA";
 // constexpr char TEXT_BITB[] PROGMEM = "BITB";
-// constexpr char TEXT_BLE[]  PROGMEM = "BLE";
-// constexpr char TEXT_BLO[]  PROGMEM = "BLO";
-// constexpr char TEXT_BLS[]  PROGMEM = "BLS";
-// constexpr char TEXT_BLT[]  PROGMEM = "BLT";
-// constexpr char TEXT_BMI[]  PROGMEM = "BMI";
-// constexpr char TEXT_BNE[]  PROGMEM = "BNE";
-// constexpr char TEXT_BPL[]  PROGMEM = "BPL";
-// constexpr char TEXT_BRA[]  PROGMEM = "BRA";
 // constexpr char TEXT_BSR[]  PROGMEM = "BSR";
-// constexpr char TEXT_BVC[]  PROGMEM = "BVC";
-// constexpr char TEXT_BVS[]  PROGMEM = "BVS";
 // constexpr char TEXT_CBA[]  PROGMEM = "CBA";
 // constexpr char TEXT_CLC[]  PROGMEM = "CLC";
 // constexpr char TEXT_CLI[]  PROGMEM = "CLI";
@@ -207,6 +191,25 @@ constexpr char TEXT_BTGL[] PROGMEM = "BTGL";
 // constexpr char TEXT_TSY[]   PROGMEM = "TSY";
 // constexpr char TEXT_TYS[]   PROGMEM = "TYS";
 // constexpr char TEXT_XGDY[]  PROGMEM = "XGDY";
+
+constexpr char TEXT_CC_RA[] PROGMEM = "RA";
+constexpr char TEXT_CC_HI[] PROGMEM = "HI";
+constexpr char TEXT_CC_LS[] PROGMEM = "LS";
+constexpr char TEXT_CC_HS[] PROGMEM = "HS";
+constexpr char TEXT_CC_CC[] PROGMEM = "CC";
+constexpr char TEXT_CC_LO[] PROGMEM = "LO";
+constexpr char TEXT_CC_CS[] PROGMEM = "CS";
+constexpr char TEXT_CC_NE[] PROGMEM = "NE";
+constexpr char TEXT_CC_EQ[] PROGMEM = "EQ";
+constexpr char TEXT_CC_VC[] PROGMEM = "VC";
+constexpr char TEXT_CC_VS[] PROGMEM = "VS";
+constexpr char TEXT_CC_PL[] PROGMEM = "PL";
+constexpr char TEXT_CC_MI[] PROGMEM = "MI";
+constexpr char TEXT_CC_GE[] PROGMEM = "GE";
+constexpr char TEXT_CC_LT[] PROGMEM = "LT";
+constexpr char TEXT_CC_GT[] PROGMEM = "GT";
+constexpr char TEXT_CC_LE[] PROGMEM = "LE";
+
 // clang-format on
 
 }  // namespace mc6800

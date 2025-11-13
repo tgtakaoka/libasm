@@ -14,15 +14,18 @@
  * limitations under the License.
  */
 
-#include "table_mc6800.h"
 #include "entry_mc6800.h"
 #include "entry_table.h"
+#include "reg_mc6800.h"
+#include "table_mc6800.h"
 #include "text_mc6800.h"
 
 using namespace libasm::text::mc6800;
 
 namespace libasm {
 namespace mc6800 {
+
+using namespace reg;
 
 #define E3(_opc, _cf, _name, _opr1, _opr2, _opr3) \
     {_opc, Entry::Flags::create(_cf, _opr1, _opr2, _opr3), _name}
@@ -49,23 +52,6 @@ constexpr Entry MC6800_TABLE[] PROGMEM = {
     E0(0x17, CF_00, TEXT_TBA),
     E0(0x19, CF_00, TEXT_DAA),
     E0(0x1B, CF_00, TEXT_ABA),
-    E1(0x20, CF_00, TEXT_BRA,  M_REL),
-    E1(0x22, CF_00, TEXT_BHI,  M_REL),
-    E1(0x23, CF_00, TEXT_BLS,  M_REL),
-    E1(0x24, CF_00, TEXT_BHS,  M_REL),
-    E1(0x24, CF_00, TEXT_BCC,  M_REL),
-    E1(0x25, CF_00, TEXT_BLO,  M_REL),
-    E1(0x25, CF_00, TEXT_BCS,  M_REL),
-    E1(0x26, CF_00, TEXT_BNE,  M_REL),
-    E1(0x27, CF_00, TEXT_BEQ,  M_REL),
-    E1(0x28, CF_00, TEXT_BVC,  M_REL),
-    E1(0x29, CF_00, TEXT_BVS,  M_REL),
-    E1(0x2A, CF_00, TEXT_BPL,  M_REL),
-    E1(0x2B, CF_00, TEXT_BMI,  M_REL),
-    E1(0x2C, CF_00, TEXT_BGE,  M_REL),
-    E1(0x2D, CF_00, TEXT_BLT,  M_REL),
-    E1(0x2E, CF_00, TEXT_BGT,  M_REL),
-    E1(0x2F, CF_00, TEXT_BLE,  M_REL),
     E0(0x30, CF_00, TEXT_TSX),
     E0(0x31, CF_00, TEXT_INS),
     E0(0x32, CF_00, TEXT_PULA),
@@ -157,127 +143,112 @@ constexpr Entry MC6800_TABLE[] PROGMEM = {
 
 constexpr uint8_t MC6800_INDEX[] PROGMEM = {
      16,  // TEXT_ABA
-    103,  // TEXT_ADCA
-    104,  // TEXT_ADCB
-    107,  // TEXT_ADDA
-    108,  // TEXT_ADDB
-     89,  // TEXT_ANDA
-     90,  // TEXT_ANDB
-     75,  // TEXT_ASL
-     56,  // TEXT_ASLA
-     57,  // TEXT_ASLB
-     74,  // TEXT_ASR
-     54,  // TEXT_ASRA
-     55,  // TEXT_ASRB
-     21,  // TEXT_BCC
-     23,  // TEXT_BCS
-     25,  // TEXT_BEQ
-     30,  // TEXT_BGE
-     32,  // TEXT_BGT
-     18,  // TEXT_BHI
-     20,  // TEXT_BHS
-     91,  // TEXT_BITA
-     92,  // TEXT_BITB
-     33,  // TEXT_BLE
-     22,  // TEXT_BLO
-     19,  // TEXT_BLS
-     31,  // TEXT_BLT
-     29,  // TEXT_BMI
-     24,  // TEXT_BNE
-     28,  // TEXT_BPL
-     17,  // TEXT_BRA
-    110,  // TEXT_BSR
-     26,  // TEXT_BVC
-     27,  // TEXT_BVS
+     86,  // TEXT_ADCA
+     87,  // TEXT_ADCB
+     90,  // TEXT_ADDA
+     91,  // TEXT_ADDB
+     72,  // TEXT_ANDA
+     73,  // TEXT_ANDB
+     58,  // TEXT_ASL
+     39,  // TEXT_ASLA
+     40,  // TEXT_ASLB
+     57,  // TEXT_ASR
+     37,  // TEXT_ASRA
+     38,  // TEXT_ASRB
+     74,  // TEXT_BITA
+     75,  // TEXT_BITB
+     93,  // TEXT_BSR
      12,  // TEXT_CBA
       7,  // TEXT_CLC
       9,  // TEXT_CLI
-     82,  // TEXT_CLR
-     68,  // TEXT_CLRA
-     69,  // TEXT_CLRB
+     65,  // TEXT_CLR
+     51,  // TEXT_CLRA
+     52,  // TEXT_CLRB
       5,  // TEXT_CLV
-     85,  // TEXT_CMPA
-     86,  // TEXT_CMPB
-     71,  // TEXT_COM
-     48,  // TEXT_COMA
-     49,  // TEXT_COMB
-    109,  // TEXT_CPX
+     68,  // TEXT_CMPA
+     69,  // TEXT_CMPB
+     54,  // TEXT_COM
+     31,  // TEXT_COMA
+     32,  // TEXT_COMB
+     92,  // TEXT_CPX
      15,  // TEXT_DAA
-     78,  // TEXT_DEC
-     62,  // TEXT_DECA
-     63,  // TEXT_DECB
-     38,  // TEXT_DES
+     61,  // TEXT_DEC
+     45,  // TEXT_DECA
+     46,  // TEXT_DECB
+     21,  // TEXT_DES
       4,  // TEXT_DEX
-    101,  // TEXT_EORA
-    102,  // TEXT_EORB
-     79,  // TEXT_INC
-     64,  // TEXT_INCA
-     65,  // TEXT_INCB
-     35,  // TEXT_INS
+     84,  // TEXT_EORA
+     85,  // TEXT_EORB
+     62,  // TEXT_INC
+     47,  // TEXT_INCA
+     48,  // TEXT_INCB
+     18,  // TEXT_INS
       3,  // TEXT_INX
-     81,  // TEXT_JMP
-    115,  // TEXT_JSR
-    116,  // TEXT_JSR
-     93,  // TEXT_LDAA
-     94,  // TEXT_LDAB
-    111,  // TEXT_LDS
-    117,  // TEXT_LDX
-     76,  // TEXT_LSL
-     58,  // TEXT_LSLA
-     59,  // TEXT_LSLB
-     72,  // TEXT_LSR
-     50,  // TEXT_LSRA
-     51,  // TEXT_LSRB
-     70,  // TEXT_NEG
-     46,  // TEXT_NEGA
-     47,  // TEXT_NEGB
+     64,  // TEXT_JMP
+     98,  // TEXT_JSR
+     99,  // TEXT_JSR
+     76,  // TEXT_LDAA
+     77,  // TEXT_LDAB
+     94,  // TEXT_LDS
+    100,  // TEXT_LDX
+     59,  // TEXT_LSL
+     41,  // TEXT_LSLA
+     42,  // TEXT_LSLB
+     55,  // TEXT_LSR
+     33,  // TEXT_LSRA
+     34,  // TEXT_LSRB
+     53,  // TEXT_NEG
+     29,  // TEXT_NEGA
+     30,  // TEXT_NEGB
       0,  // TEXT_NOP
-    105,  // TEXT_ORAA
-    106,  // TEXT_ORAB
-     40,  // TEXT_PSHA
-     41,  // TEXT_PSHB
-     36,  // TEXT_PULA
-     37,  // TEXT_PULB
-     77,  // TEXT_ROL
-     60,  // TEXT_ROLA
-     61,  // TEXT_ROLB
-     73,  // TEXT_ROR
-     52,  // TEXT_RORA
-     53,  // TEXT_RORB
-     43,  // TEXT_RTI
-     42,  // TEXT_RTS
+     88,  // TEXT_ORAA
+     89,  // TEXT_ORAB
+     23,  // TEXT_PSHA
+     24,  // TEXT_PSHB
+     19,  // TEXT_PULA
+     20,  // TEXT_PULB
+     60,  // TEXT_ROL
+     43,  // TEXT_ROLA
+     44,  // TEXT_ROLB
+     56,  // TEXT_ROR
+     35,  // TEXT_RORA
+     36,  // TEXT_RORB
+     26,  // TEXT_RTI
+     25,  // TEXT_RTS
      11,  // TEXT_SBA
-     87,  // TEXT_SBCA
-     88,  // TEXT_SBCB
+     70,  // TEXT_SBCA
+     71,  // TEXT_SBCB
       8,  // TEXT_SEC
      10,  // TEXT_SEI
       6,  // TEXT_SEV
-     95,  // TEXT_STAA
-     96,  // TEXT_STAA
-     97,  // TEXT_STAA
-     98,  // TEXT_STAB
-     99,  // TEXT_STAB
-    100,  // TEXT_STAB
-    112,  // TEXT_STS
-    113,  // TEXT_STS
-    114,  // TEXT_STS
-    118,  // TEXT_STX
-    119,  // TEXT_STX
-    120,  // TEXT_STX
-     83,  // TEXT_SUBA
-     84,  // TEXT_SUBB
-     45,  // TEXT_SWI
+     78,  // TEXT_STAA
+     79,  // TEXT_STAA
+     80,  // TEXT_STAA
+     81,  // TEXT_STAB
+     82,  // TEXT_STAB
+     83,  // TEXT_STAB
+     95,  // TEXT_STS
+     96,  // TEXT_STS
+     97,  // TEXT_STS
+    101,  // TEXT_STX
+    102,  // TEXT_STX
+    103,  // TEXT_STX
+     66,  // TEXT_SUBA
+     67,  // TEXT_SUBB
+     28,  // TEXT_SWI
      13,  // TEXT_TAB
       1,  // TEXT_TAP
      14,  // TEXT_TBA
       2,  // TEXT_TPA
-     80,  // TEXT_TST
-     66,  // TEXT_TSTA
-     67,  // TEXT_TSTB
-     34,  // TEXT_TSX
-     39,  // TEXT_TXS
-     44,  // TEXT_WAI
+     63,  // TEXT_TST
+     49,  // TEXT_TSTA
+     50,  // TEXT_TSTB
+     17,  // TEXT_TSX
+     22,  // TEXT_TXS
+     27,  // TEXT_WAI
 };
+
+constexpr Entry Bcc PROGMEM = E1(0x20, CF_00, TEXT_Bcc, M_REL);
 
 constexpr Entry MB8861_TABLE[] PROGMEM = {
     E2(0x71, CF_00, TEXT_NIM, M_IM8, M_IDX),
@@ -617,9 +588,18 @@ const Cpu *cpu(CpuType cpuType) {
     return Cpu::search(cpuType, ARRAY_RANGE(CPU_TABLE));
 }
 
+CcName isBcc(AsmInsn &insn) {
+    StrScanner scan(insn.name());
+    if (scan.iexpect('B'))
+        return parseCcName(scan);
+    return CC_UNDEF;
+}
+
 bool hasOperand(CpuType cpuType, AsmInsn &insn) {
-    cpu(cpuType)->searchName(insn, Cpu::acceptAll<AsmInsn, Entry>);
-    return insn.isOK() && insn.mode1() != M_NONE;
+    const auto entry = cpu(cpuType)->searchName(insn, Cpu::acceptAll<AsmInsn, Entry>);
+    if (entry && insn.mode1() != M_NONE)
+        return true;
+    return isBcc(insn) != CC_UNDEF;
 }
 
 bool acceptMode(AddrMode opr, AddrMode table) {
@@ -647,7 +627,18 @@ bool acceptModes(AsmInsn &insn, const Entry *entry) {
 }
 
 Error searchName(CpuType cpuType, AsmInsn &insn) {
-    cpu(cpuType)->searchName(insn, acceptModes);
+    auto entry = cpu(cpuType)->searchName(insn, acceptModes);
+    if (entry == nullptr) {
+        const auto cc = isBcc(insn);
+        if (cc != CC_UNDEF) {
+            entry = &Bcc;
+            if (acceptModes(insn, entry)) {
+                Cpu::defaultReadCode(insn, entry, &MC6800_PAGES[0]);
+                insn.embed(encodeCcName(cc));
+                insn.setOK();
+            }
+        }
+    }
     return insn.getError();
 }
 
@@ -662,7 +653,20 @@ const Entry *searchOpCodeImpl(const Cpu *cpu, DisInsn &insn, StrBuffer &out) {
 }
 
 Error searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) {
-    searchOpCodeImpl(cpu(cpuType), insn, out);
+    const auto entry = searchOpCodeImpl(cpu(cpuType), insn, out);
+    if (entry == nullptr) {
+        const auto opc = insn.opCode();
+        if (insn.prefix() == 0 && (opc & ~0x0F) == 0x20) {
+            const auto cc = decodeCcName(opc);
+            if (cc != CC_UNDEF) {
+                Cpu::defaultReadName(insn, &Bcc, out);
+                auto save{out};
+                outCcName(insn.nameBuffer().over(out), cc).over(insn.nameBuffer());
+                save.over(out);
+                insn.setOK();
+            }
+        }
+    }
     return insn.getError();
 }
 
