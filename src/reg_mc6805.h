@@ -31,10 +31,37 @@ enum RegName : int8_t {
     REG_SP = 'S',
 };
 
+enum CcName : int8_t {
+    CC_RA = 0x00,   // Always
+    CC_RN = 0x01,   // Never
+    CC_HI = 0x02,   // Higher
+    CC_LS = 0x03,   // Lower or same
+    CC_HS = 0x04,   // Higher or same
+    CC_LO = 0x05,   // Lower
+    CC_NE = 0x06,   // Not equal
+    CC_EQ = 0x07,   // Equal
+    CC_HCC = 0x08,  // Half-carry clear
+    CC_HCS = 0x09,  // Half-carry set
+    CC_PL = 0x0A,   // Plus
+    CC_MI = 0x0B,   // Minus
+    CC_MC = 0x0C,   // Mask clear
+    CC_MS = 0x0D,   // Mask set
+    CC_IL = 0x0E,   // Interrupt low
+    CC_IH = 0x0F,   // Interrupt high
+    // Aliases
+    CC_CC = 0x14,   // Carry clear
+    CC_CS = 0x15,   // Carry set
+};
+
 namespace reg {
 
 RegName parseRegName(StrScanner &scan);
 StrBuffer &outRegName(StrBuffer &out, RegName name);
+
+CcName parseCcName(StrScanner &scan);
+StrBuffer &outCcName(StrBuffer &out, CcName cc);
+uint_fast8_t encodeCcName(CcName name);
+CcName decodeCcName(uint_fast8_t num);
 
 }  // namespace reg
 }  // namespace mc6805
