@@ -84,7 +84,7 @@ __ibm_float32::operator float80_t() const {
     const auto ibm_sig = (_u32 & SIG_MASK);
     if (bexp == 0 && ibm_sig == 0)
         return float80_t::zero(sign);
-    fixed64_t ieee_sig{static_cast<uint64_t>(ibm_sig) << (64 - MANT_DIG)};
+    fixed64_t ieee_sig{static_cast<uint64_t>(ibm_sig) << (fixed64_t::DIG - MANT_DIG)};
     // IBM float fraction is [1/16 .. 1.0)
     // IEEE float fraction is [1.0 .. 2.0)
     auto ieee_exp = ibm_exp * 4 - 1;  // -1 for adjust
@@ -159,7 +159,7 @@ __ibm_float64::operator float80_t() const {
     const auto ibm_sig = (_u64 & SIG_MASK);
     if (bexp == 0 && ibm_sig == 0)
         return float80_t::zero(sign);
-    fixed64_t ieee_sig{static_cast<uint64_t>(ibm_sig) << (64 - MANT_DIG)};
+    fixed64_t ieee_sig{static_cast<uint64_t>(ibm_sig) << (fixed64_t::DIG - MANT_DIG)};
     // IBM float fraction is [1/16 .. 1.0)
     // IEEE float fraction is [1.0 .. 2.0)
     auto ieee_exp = ibm_exp * 4 - 1;  // -1 for adjust

@@ -80,7 +80,7 @@ __dec_float16::operator float80_t() const {
         return float80_t::zero(sign);
     const auto frac = (_u16 & SIG_MASK) | HIDDEN_MSB;
     const auto exp = static_cast<int16_t>(bexp) - EXP_BASE - 1;  // -1 for HIDDEN_MSB
-    fixed64_t sig{static_cast<uint64_t>(frac) << (64 - MANT_DIG)};
+    fixed64_t sig{static_cast<uint64_t>(frac) << (fixed64_t::DIG - MANT_DIG)};
     return float80_t::compose(sign, exp, sig);
 }
 
@@ -144,7 +144,7 @@ __dec_float32::operator float80_t() const {
         return float80_t::zero(sign);
     const auto frac = (_u32 & SIG_MASK) | HIDDEN_MSB;
     const auto exp = static_cast<int16_t>(bexp) - EXP_BASE - 1;  // -1 for HIDDEN_MSB
-    fixed64_t sig{static_cast<uint64_t>(frac) << (64 - MANT_DIG)};
+    fixed64_t sig{static_cast<uint64_t>(frac) << (fixed64_t::DIG - MANT_DIG)};
     return float80_t::compose(sign, exp, sig);
 }
 
@@ -212,7 +212,7 @@ __dec_float64::operator float80_t() const {
         return float80_t::zero(sign);
     const auto frac = (_u64 & SIG_MASK) | HIDDEN_MSB;
     const auto exp = static_cast<int16_t>(bexp) - EXP_BASE - 1;  // -1 for HIDDEN_MSB
-    fixed64_t sig{static_cast<uint64_t>(frac) << (64 - MANT_DIG)};
+    fixed64_t sig{static_cast<uint64_t>(frac) << (fixed64_t::DIG - MANT_DIG)};
     return float80_t::compose(sign, exp, sig);
 }
 
