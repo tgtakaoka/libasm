@@ -17,7 +17,7 @@ help:
 
 TESTS = test_array_memory test_dec_float test_fixed64 test_float32 \
     test_float64 test_float80_hard test_float80_soft test_ibm_float \
-    test_reg_base test_str_buffer test_str_scanner test_value
+    test_ti_float test_reg_base test_str_buffer test_str_scanner test_value
 
 .PHONY:: help test clean clean-objs
 
@@ -34,7 +34,8 @@ CPPFLAGS = -I../../src -I../../test -MD -MF $@.d
 
 OBJS_common = test_unit_helper.o test_asserter.o error_reporter.o \
    fixed64.o ieee_float.o float80_base.o float80_hard.o float80_soft.o \
-   dec_float.o ibm_float.o str_buffer.o str_scanner.o text_common.o value.o
+   dec_float.o ibm_float.o ti_float.o \
+   str_buffer.o str_scanner.o text_common.o value.o
 OBJS = $(OBJS_common) $(TESTS:=.o)
 BINS = $(TESTS)
 
@@ -62,6 +63,8 @@ test_float80_hard: test_float80_hard.o $(OBJS_common)
 test_float80_soft: test_float80_soft.o $(OBJS_common)
 	$(CXX) -o $@ $^
 test_ibm_float: test_ibm_float.o $(OBJS_common)
+	$(CXX) -o $@ $^
+test_ti_float: test_ti_float.o $(OBJS_common)
 	$(CXX) -o $@ $^
 test_reg_base: test_reg_base.o reg_base.o $(OBJS_common)
 	$(CXX) -o $@ $^
