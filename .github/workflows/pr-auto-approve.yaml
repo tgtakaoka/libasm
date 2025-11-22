@@ -1,6 +1,6 @@
 name: Auto Approve
 on:
-  pull_request:
+  pull_request_target:
     types:
       - opened
       - reopened
@@ -17,5 +17,8 @@ jobs:
     permissions:
       pull-requests: write
     steps:
-      # approve pull request
-      - uses: hmarr/auto-approve-action@v3
+      - name: Self Approve PR with Bot Token
+        uses: hmarr/auto-approve-action@v4
+        with:
+          github-token: ${{ secrets.TGTAKAOKA_BOT }}
+          review-message: 'Self-approved as owner.'
