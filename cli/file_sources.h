@@ -18,6 +18,7 @@
 #define __LIBASM_FILE_SOURCES_H__
 
 #include <list>
+#include <memory>
 #include <string>
 
 #include "asm_sources.h"
@@ -30,16 +31,18 @@ struct FileSources final : driver::AsmSources {
     Error open(const StrScanner &name) override {
         if (size() >= max_includes)
             return TOO_MANY_INCLUDE;
-        const auto *parent = _sources.empty() ? nullptr : &_sources.back();
+        const auto parent = _sources.empty() ? nullptr : _sources.back().get();
         const auto pos = parent ? parent->name().find_last_of('/') : std::string::npos;
+        std::string path;
         if (pos == std::string::npos || *name == '/') {
-            _sources.emplace_back(std::string(name.str(), name.size()));
+            path = std::string(name.str(), name.size());
         } else {
-            std::string path(parent->name().substr(0, pos + 1));
+            path = std::string(parent->name().substr(0, pos + 1));
             path.append(name.str(), name.size());
-            _sources.push_back(path);
         }
-        if (!_sources.back().open()) {
+        _sources.push_back(std::make_unique<FileReader>(path));
+        auto reader = _sources.back().get();
+        if (!reader->open()) {
             _sources.pop_back();
             return NO_INCLUDE_FOUND;
         }
@@ -47,23 +50,25 @@ struct FileSources final : driver::AsmSources {
     }
 
     Error closeCurrent() override {
-        auto &reader = _sources.back();
-        reader.close();
+        auto reader = _sources.back().get();
+        reader->close();
         _sources.pop_back();
         return OK;
     }
 
 private:
     static constexpr int max_includes = 4;
-    std::list<FileReader> _sources;
+    std::list<std::unique_ptr<FileReader>> _sources;
 
     int size() const override { return _sources.size(); }
-    driver::TextReader *last() override { return _sources.empty() ? nullptr : &_sources.back(); }
+    driver::TextReader *last() override {
+        return _sources.empty() ? nullptr : _sources.back().get();
+    }
     driver::TextReader *secondToLast() override {
         if (size() < 2)
             return nullptr;
         auto it = _sources.rbegin();
-        return &(*++it);
+        return (++it)->get();
     }
 };
 
