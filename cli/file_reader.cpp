@@ -15,33 +15,39 @@
  */
 
 #include "file_reader.h"
-
 #include <cstdlib>
 #include <cstring>
 
 namespace libasm {
 namespace cli {
 
-static int getLine(char *&lineptr, size_t &n, FILE *input) {
-    auto p = lineptr;
-    auto max = n - 1;
-    while (fgets(p, max, input)) {
-        const auto len = strlen(lineptr);
-        if (len > 0 && lineptr[len - 1] == '\n') {
-            lineptr[len - 1] = 0;
+ssize_t FileReader::getLine() {
+    if (_line == nullptr)
+        return -1;
+    auto len = 0;  // current size
+    auto available = _line_size;
+    while (fgets(_line + len, available, _file)) {
+        len += strlen(_line + len);
+        if (len > 0 && _line[len - 1] == '\n') {
+            _line[--len] = 0;  // remove end of line '\n'
             return len;
         }
-        max = 128;
-        n += max;
-        lineptr = static_cast<char *>(realloc(lineptr, n));
-        p = &lineptr[len];
+        _line_size += GROW_BY;
+        auto new_line = static_cast<char *>(realloc(_line, _line_size));
+        if (new_line == nullptr) {
+            free(_line);
+            _line = nullptr;
+            return -1;
+        }
+        _line = new_line;
+        available = _line_size - len;
     }
     return -1;
 }
 
 FileReader::FileReader(const std::string &name)
-    : _name(name), _file(nullptr), _lineno(0), _line_len(80) {
-    _line = static_cast<char *>(malloc(_line_len));
+    : _name(name), _file(nullptr), _lineno(0), _line_size(GROW_BY) {
+    _line = static_cast<char *>(malloc(_line_size));
 }
 
 FileReader::~FileReader() {
@@ -50,7 +56,7 @@ FileReader::~FileReader() {
 }
 
 StrScanner *FileReader::readLine() {
-    if (_file == nullptr || getLine(_line, _line_len, _file) < 0) {
+    if (_file == nullptr || getLine() < 0) {
         close();
         return nullptr;
     }

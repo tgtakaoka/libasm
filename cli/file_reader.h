@@ -20,6 +20,7 @@
 #include "text_reader.h"
 
 #include <cstdio>
+#include <cstdint>
 
 namespace libasm {
 namespace cli {
@@ -34,12 +35,16 @@ struct FileReader : driver::TextReader {
     void close();
 
 private:
+    static constexpr auto GROW_BY = 80;
     const std::string _name;
     FILE *_file;
     int _lineno;
-    size_t _line_len;
+    size_t _line_size;
     char *_line;
     StrScanner _line_scan;
+
+    ssize_t getLine();
+
 };
 
 }  // namespace cli
