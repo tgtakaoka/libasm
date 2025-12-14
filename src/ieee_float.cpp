@@ -146,7 +146,7 @@ uint64_t __float64::significand() const {
         return sig;
     if (t & EXP_MASK)
         sig |= HIDDEN_MSB;
-    sig <<= 64 - MANT_DIG;
+    sig <<= fixed64_t::DIG - MANT_DIG;
     return sig;
 }
 
