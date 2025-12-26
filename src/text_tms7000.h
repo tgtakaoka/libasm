@@ -79,7 +79,7 @@ using common::TEXT_ORP;
 using common::TEXT_POP;
 using common::TEXT_PUSH;
 using common::TEXT_RETI;
-extern const char TEXT_RETS[]  PROGMEM;
+using common::TEXT_RETS;
 using common::TEXT_RL;
 using common::TEXT_RLC;
 using common::TEXT_RR;

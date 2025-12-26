@@ -103,22 +103,34 @@ private:
         EQ("expected line eor", nullptr, lines.readLine());       \
     } while (0)
 
-#define DIS16(_cpu, _org, _contents, _expected, ...)      \
-    do {                                                  \
-        const auto unit = disassembler.addressUnit();     \
-        const auto endian = disassembler.endian();        \
-        TestMemory memory;                                \
-        auto writer = memory.writer(_org * unit, endian); \
-        const uint16_t _memory[] = {__VA_ARGS__};         \
-        for (auto byte : _memory)                         \
-            writer.add(byte);                             \
-        _DIS(_cpu, _contents, _expected, memory);         \
+#define DIS32(_cpu, _org, _contents, _expected, ...)        \
+    do {                                                    \
+        const auto unit = disassembler.addressUnit();       \
+        const auto endian = disassembler.endian();          \
+        TestMemory memory;                                  \
+        auto writer = memory.writer32(_org * unit, endian); \
+        const uint32_t _memory[] = {__VA_ARGS__};           \
+        for (auto lword : _memory)                          \
+            writer.add(lword);                              \
+        _DIS(_cpu, _contents, _expected, memory);           \
+    } while (0)
+
+#define DIS16(_cpu, _org, _contents, _expected, ...)        \
+    do {                                                    \
+        const auto unit = disassembler.addressUnit();       \
+        const auto endian = disassembler.endian();          \
+        TestMemory memory;                                  \
+        auto writer = memory.writer16(_org * unit, endian); \
+        const uint16_t _memory[] = {__VA_ARGS__};           \
+        for (auto word : _memory)                           \
+            writer.add(word);                               \
+        _DIS(_cpu, _contents, _expected, memory);           \
     } while (0)
 
 #define DIS8(_cpu, _org, _contents, _expected, ...) \
     do {                                            \
         TestMemory memory;                          \
-        auto writer = memory.writer(_org);          \
+        auto writer = memory.writer8(_org);         \
         const uint8_t _memory[] = {__VA_ARGS__};    \
         for (auto byte : _memory)                   \
             writer.add(byte);                       \

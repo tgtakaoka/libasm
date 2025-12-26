@@ -120,8 +120,8 @@ using common::TEXT_XOR;
 using common::TEXT_MARK;
 
 // PDP-11 extended instruction set (EIS)
-extern const char TEXT_ASH[]  PROGMEM;
-extern const char TEXT_ASHC[] PROGMEM;
+using common::TEXT_ASH;
+extern const char TEXT_ASHC[]  PROGMEM;
 using common::TEXT_DIV;
 using common::TEXT_MUL;
 

@@ -29,7 +29,7 @@ extern const char TEXT_CPU_8070[]    PROGMEM;
 
 using common::TEXT_ADD;
 using common::TEXT_AND;
-extern const char TEXT_BND[] PROGMEM;
+using common::TEXT_BND;
 using common::TEXT_BNZ;
 using common::TEXT_BP;
 using common::TEXT_BRA;

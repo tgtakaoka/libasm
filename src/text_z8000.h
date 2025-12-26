@@ -109,7 +109,7 @@ using common::TEXT_LDIR;
 extern const char TEXT_LDIRB[]  PROGMEM;
 extern const char TEXT_LDK[]    PROGMEM;
 extern const char TEXT_LDL[]    PROGMEM;
-extern const char TEXT_LDM[]    PROGMEM;
+using common::TEXT_LDM;
 extern const char TEXT_LDPS[]   PROGMEM;
 extern const char TEXT_LDR[]    PROGMEM;
 extern const char TEXT_LDRB[]   PROGMEM;

@@ -26,7 +26,7 @@ constexpr char TEXT_CPU_8070[]    PROGMEM = "8070";
 
 // constexpr char TEXT_ADD[]  PROGMEM = "ADD";
 // constexpr char TEXT_AND[]  PROGMEM = "AND";
-constexpr char TEXT_BND[] PROGMEM = "BND";
+// constexpr char TEXT_BND[]  PROGMEM = "BND";
 // constexpr char TEXT_BNZ[]  PROGMEM = "BNZ";
 // constexpr char TEXT_BP[]   PROGMEM = "BP";
 // constexpr char TEXT_BRA[]  PROGMEM = "BRA";

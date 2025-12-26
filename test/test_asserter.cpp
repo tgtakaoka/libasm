@@ -195,18 +195,23 @@ void TestAsserter::equals(const char *file, const int line, const char *message,
     }
     _fail_count++;
     const auto unit = expected.unit();
-    const auto word = (unit == ADDRESS_WORD) || (expected.word());
+    const auto hasByte = (unit == ADDRESS_BYTE) || (expected.hasByte());
+    const auto hasWord = (unit == ADDRESS_WORD) || (expected.hasWord());
+    const auto hasQuad = (unit == ADDRESS_QUAD) || (expected.hasQuad());
     const auto fmt8 = (radix == RADIX_8) ? "%03" PRIo8 : "%02" PRIX8;
     const auto fmt16 = (radix == RADIX_8) ? "%06" PRIo16 : "%04" PRIX16;
+    const auto fmt32 = (radix == RADIX_8) ? "%011" PRIo16 : "%08" PRIX16;
 
     printf("%s:%d: %s: expected [", file, line, message);
     for (i = 0, it.rewind(); it.hasNext(); i++) {
         if (i)
             printf(" ");
-        if (word) {
-            printf(fmt16, it.readUint16());
-        } else {
+        if (hasByte) {
             printf(fmt8, it.readByte());
+        } else if (hasWord) {
+            printf(fmt16, it.readUint16());
+        } else if (hasQuad) {
+            printf(fmt32, it.readUint32());
         }
     }
     printf("]\n");
@@ -216,10 +221,12 @@ void TestAsserter::equals(const char *file, const int line, const char *message,
     for (i = 0; m.hasNext(); i++) {
         if (i)
             printf(" ");
-        if (word) {
-            printf(fmt16, m.readUint16());
-        } else {
+        if (hasByte) {
             printf(fmt8, m.readByte());
+        } else if (hasWord) {
+            printf(fmt16, m.readUint16());
+        } else if (hasQuad) {
+            printf(fmt32, m.readUint32());
         }
     }
     printf("]\n");

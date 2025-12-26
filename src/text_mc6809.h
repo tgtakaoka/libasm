@@ -260,7 +260,7 @@ using common::TEXT_REG_A;
 using common::TEXT_REG_B;
 extern const char TEXT_REG_CC[]  PROGMEM;
 using common::TEXT_REG_D;
-extern const char TEXT_REG_DP[]  PROGMEM;
+using common::TEXT_REG_DP;
 using common::TEXT_REG_PC;
 extern const char TEXT_REG_PCR[] PROGMEM;
 using common::TEXT_REG_S;

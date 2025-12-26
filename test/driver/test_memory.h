@@ -66,8 +66,29 @@ struct TestMemory : BinMemory {
         const Endian _endian;
     };
 
-    auto writer(uint32_t addr) { return ByteWriter(*this, addr); }
-    auto writer(uint32_t addr, Endian endian) { return Uint16Writer(*this, addr, endian); }
+    // write uint32_t iterator
+    struct Uint32Writer : ByteWriter {
+        Uint32Writer &add(uint32_t val) { return emitUint32(val); }
+
+    private:
+        friend TestMemory;
+        Uint32Writer(BinMemory &memory, uint32_t addr, Endian endian)
+            : ByteWriter(memory, addr), _endian(endian) {}
+        Uint32Writer &emitUint32(uint32_t val) {
+            if (_endian == ENDIAN_BIG) {
+                emitByte(val >> 24).emitByte(val >> 16).emitByte(val >> 8).emitByte(val);
+            } else {
+                emitByte(val).emitByte(val >> 8).emitByte(val >> 16).emitByte(val >> 24);
+            }
+            return *this;
+        }
+
+        const Endian _endian;
+    };
+
+    auto writer8(uint32_t addr) { return ByteWriter(*this, addr); }
+    auto writer16(uint32_t addr, Endian endian) { return Uint16Writer(*this, addr, endian); }
+    auto writer32(uint32_t addr, Endian endian) { return Uint32Writer(*this, addr, endian); }
 };
 
 }  // namespace test

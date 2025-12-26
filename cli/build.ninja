@@ -66,7 +66,7 @@ build dis: link dis.o $
   str_scanner.o text_common.o value.o value_formatter.o $
   value_parser.o parsers.o operators.o $
   fixed64.o ieee_float.o float80_base.o float80_hard.o float80_soft.o $
-  dec_float.o ibm_float.o $
+  dec_float.o ibm_float.o ti_float.o $
   dis_cdp1802.o  reg_cdp1802.o  table_cdp1802.o  text_cdp1802.o  $
   dis_f3850.o    reg_f3850.o    table_f3850.o    text_f3850.o    $
   dis_i8048.o    reg_i8048.o    table_i8048.o    text_i8048.o    $
@@ -90,6 +90,7 @@ build dis: link dis.o $
   dis_scn2650.o  reg_scn2650.o  table_scn2650.o  text_scn2650.o  $
   dis_tlcs90.o   reg_tlcs90.o   table_tlcs90.o   text_tlcs90.o   $
   dis_tms320.o   reg_tms320.o   table_tms320.o   text_tms320.o   $
+  dis_tms320f.o  reg_tms320f.o  table_tms320f.o  text_tms320f.o  $
   dis_tms370.o   reg_tms370.o   table_tms370.o   text_tms370.o   $
   dis_tms7000.o  reg_tms7000.o  table_tms7000.o  text_tms7000.o  $
   dis_tms9900.o  reg_tms9900.o  table_tms9900.o  text_tms9900.o  $

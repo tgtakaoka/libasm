@@ -96,7 +96,7 @@ using common::TEXT_EORI;
 using common::TEXT_EORR;
 extern const char TEXT_FA[]   PROGMEM;
 extern const char TEXT_FD[]   PROGMEM;
-extern const char TEXT_FIX[]  PROGMEM;
+using common::TEXT_FIX;
 using common::TEXT_FLT;
 extern const char TEXT_FM[]   PROGMEM;
 extern const char TEXT_FS[]   PROGMEM;

@@ -24,8 +24,8 @@
 #include "dis_i8096.h"
 #include "dis_ins8060.h"
 #include "dis_ins8070.h"
-#include "dis_mc68000.h"
 #include "dis_mc6800.h"
+#include "dis_mc68000.h"
 #include "dis_mc6805.h"
 #include "dis_mc6809.h"
 #include "dis_mc68hc12.h"
@@ -38,14 +38,15 @@
 #include "dis_scn2650.h"
 #include "dis_tlcs90.h"
 #include "dis_tms320.h"
+#include "dis_tms320f.h"
 #include "dis_tms370.h"
 #include "dis_tms7000.h"
 #include "dis_tms9900.h"
 #include "dis_z280.h"
 #include "dis_z380.h"
-#include "dis_z8000.h"
-#include "dis_z80.h"
 #include "dis_z8.h"
+#include "dis_z80.h"
+#include "dis_z8000.h"
 
 using namespace libasm;
 using namespace libasm::cli;
@@ -74,6 +75,7 @@ pdp8::DisPdp8 dispdp8;
 scn2650::DisScn2650 dis2650;
 tlcs90::DisTlcs90 dis90;
 tms320::DisTms320 dis320;
+tms320f::DisTms320f dis320f;
 tms370::DisTms370 dis370;
 tms7000::DisTms7000 dis7000;
 tms9900::DisTms9900 dis9900;
@@ -107,6 +109,7 @@ DisCommander commander{
         &dis7000,
         &dis370,
         &dis320,
+        &dis320f,
         &dis8086,
         &dis8096,
         &dis68000,

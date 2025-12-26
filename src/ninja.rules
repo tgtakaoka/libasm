@@ -187,6 +187,12 @@ build reg_tms320.o:   cxx ${root}/src/reg_tms320.cpp
 build table_tms320.o: cxx ${root}/src/table_tms320.cpp
 build text_tms320.o:  cxx ${root}/src/text_tms320.cpp
 
+# tms320f
+build dis_tms320f.o:   cxx ${root}/src/dis_tms320f.cpp
+build reg_tms320f.o:   cxx ${root}/src/reg_tms320f.cpp
+build table_tms320f.o: cxx ${root}/src/table_tms320f.cpp
+build text_tms320f.o:  cxx ${root}/src/text_tms320f.cpp
+
 # tms370
 build asm_tms370.o:   cxx ${root}/src/asm_tms370.cpp
 build dis_tms370.o:   cxx ${root}/src/dis_tms370.cpp

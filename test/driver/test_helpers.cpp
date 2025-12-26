@@ -109,7 +109,7 @@ void test_memory() {
     TestMemory memory;
 
     const uint32_t start1 = 0x100;
-    auto writer1 = memory.writer(start1);
+    auto writer1 = memory.writer8(start1);
     writer1.add(0x11).add(0x22).add(0x33);
     EQ("3 bytes", 3, memory.size());
     EQ("3 bytes", 1, memory.blocks());
@@ -121,7 +121,7 @@ void test_memory() {
     EQ("3-2", 0x33, reader1.readByte());
 
     const uint32_t start2 = 0x1234;
-    auto writer2 = memory.writer(start2);
+    auto writer2 = memory.writer8(start2);
     writer2.add(0xff).add(0xee);
     EQ("2 bytes", 5, memory.size());
     EQ("2 bytes", 2, memory.blocks());
@@ -132,7 +132,7 @@ void test_memory() {
     EQ("2-1", 0xee, reader2.readByte());
 
     const uint32_t start3 = 0x2000;
-    auto writer3 = memory.writer(start3, ENDIAN_BIG);
+    auto writer3 = memory.writer16(start3, ENDIAN_BIG);
     writer3.add(0x1234).add(0x5678);
     EQ("2 big", 9, memory.size());
     EQ("2 big", 3, memory.blocks());
@@ -145,7 +145,7 @@ void test_memory() {
     EQ("2-3", 0x78, reader3.readByte());
 
     const uint32_t start4 = writer3.address();
-    auto writer4 = memory.writer(start4, ENDIAN_LITTLE);
+    auto writer4 = memory.writer16(start4, ENDIAN_LITTLE);
     writer4.add(0x1234).add(0x5678);
     EQ("2 little", 13, memory.size());
     EQ("2 little", 3, memory.blocks());
