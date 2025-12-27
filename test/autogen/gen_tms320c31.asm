@@ -14,7 +14,6 @@
 
         cpu     TMS320C31
         org     0100h
-        include "gen_tms320c30.inc"
         include "gen_tms320c31.inc"
         end
 

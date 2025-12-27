@@ -14,7 +14,7 @@
 
         cpu     TMS320C30
         org     0100h
-        include "gen_tms320c3x.inc"
+        include "gen_tms320c30.inc"
         end
 
 ; Local Variables:

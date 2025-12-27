@@ -1,0 +1,983 @@
+;;; Copyright 2025 Tadashi G. Takaoka
+;;;
+;;; Licensed under the Apache License, Version 2.0 (the "License");
+;;; you may not use this file except in compliance with the License.
+;;; You may obtain a copy of the License at
+;;;
+;;;     http://www.apache.org/licenses/LICENSE-2.0
+;;;
+;;; Unless required by applicable law or agreed to in writing, software
+;;; distributed under the License is distributed on an "AS IS" BASIS,
+;;; WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+;;; See the License for the specific language governing permissions and
+;;; limitations under the License.
+
+;;; Load
+        lde     r0, r1
+        lde     @0x1234, r2
+        lde     *+ar1(2), r3
+        lde     *-ar2(3), r4
+        lde     *++ar3(4), r5
+        lde     *--ar4(5), r6
+        lde     *ar5++(6), r7
+        lde     *ar6--(7), r0
+        lde     *ar7++(8)%, r1
+        lde     *ar0--(9)%, r2
+        lde     *+ar1(ir0), r3
+        lde     *-ar2(ir1), r4
+        lde     *++ar3(ir0), r5
+        lde     *--ar4(ir1), r6
+        lde     *ar5++(ir0), r7
+        lde     *ar6--(ir1), r0
+        lde     *ar7++(ir0)%, r1
+        lde     *ar0--(ir1)%, r2
+        lde     *ar1, r3
+        lde     *ar2++(ir0)b, r4
+        lde     1.0, r5
+        lde     -1.5, r6
+        lde     0.0, r7
+        lde     -0.50024, r0
+        ldf     r0, r1
+        ldf     @0x1234, r2
+        ldf     *+ar1(2), r3
+        ldf     *-ar2(3), r4
+        ldf     *++ar3(4), r5
+        ldf     *--ar4(5), r6
+        ldf     *ar5++(6), r7
+        ldf     *ar6--(7), r0
+        ldf     *ar7++(8)%, r1
+        ldf     *ar0--(9)%, r2
+        ldf     *+ar1(ir0), r3
+        ldf     *-ar2(ir1), r4
+        ldf     *++ar3(ir0), r5
+        ldf     *--ar4(ir1), r6
+        ldf     *ar5++(ir0), r7
+        ldf     *ar6--(ir1), r0
+        ldf     *ar7++(ir0)%, r1
+        ldf     *ar0--(ir1)%, r2
+        ldf     *ar1, r3
+        ldf     *ar2++(ir0)b, r4
+        ldf     1.0, r5
+        ldf     -1.5, r6
+        ldf     0.0, r7
+        ldf     -0.50024, r0
+        ldi     r0, r1
+        ldi     @0x1234, ar2
+        ldi     *+ar1(2), r3
+        ldi     *-ar2(3), r4
+        ldi     *++ar3(4), r5
+        ldi     *--ar4(5), r6
+        ldi     *ar5++(6), r7
+        ldi     *ar6--(7), r0
+        ldi     *ar7++(8)%, r1
+        ldi     *ar0--(9)%, r2
+        ldi     *+ar1(ir0), r3
+        ldi     *-ar2(ir1), r4
+        ldi     *++ar3(ir0), r5
+        ldi     *--ar4(ir1), r6
+        ldi     *ar5++(ir0), r7
+        ldi     *ar6--(ir1), r0
+        ldi     *ar7++(ir0)%, r1
+        ldi     *ar0--(ir1)%, r2
+        ldi     *ar1, r3
+        ldi     *ar2++(ir0)b, r4
+        ldi     0, r5
+        ldi     0x0c00, r6
+        ldi     -0x8000, r7
+        ldi     -1, r0
+        ldi     0x34, dp
+        ldm     r0, r1
+        ldm     @0x1234, r2
+        ldm     *+ar1(2), r3
+        ldm     *-ar2(3), r4
+        ldm     *++ar3(4), r5
+        ldm     *--ar4(5), r6
+        ldm     *ar5++(6), r7
+        ldm     *ar6--(7), r0
+        ldm     *ar7++(8)%, r1
+        ldm     *ar0--(9)%, r2
+        ldm     *+ar1(ir0), r3
+        ldm     *-ar2(ir1), r4
+        ldm     *++ar3(ir0), r5
+        ldm     *--ar4(ir1), r6
+        ldm     *ar5++(ir0), r7
+        ldm     *ar6--(ir1), r0
+        ldm     *ar7++(ir0)%, r1
+        ldm     *ar0--(ir1)%, r2
+        ldm     *ar1, r3
+        ldm     *ar2++(ir0)b, r4
+        ldm     1.0, r5
+        ldm     -1.5, r6
+        ldm     0.0, r7
+        ldm     -0.50024, r0
+        ldm     2.5508, r1
+        pop     r0
+        pop     ar7
+        pop     dp
+        pop     ir1
+        pop     rc
+        popf    r7
+        ldfu    r0, r1
+        ldflo   r1, r2
+        ldfls   *+ar1(2), r3
+        ldfhi   *-ar2(3), r4
+        ldfhs   *++ar3(4), r5
+        ldfeq   *--ar4(5), r6
+        ldfne   *ar5++(6), r7
+        ldflt   *ar6--(7), r0
+        ldfle   *ar7++(8)%, r1
+        ldfgt   *ar0--(9)%, r2
+        ldfge   *+ar1(ir0), r3
+        ldfnv   *-ar2(ir1), r4
+        ldfv    *++ar3(ir0), r5
+        ldfnuf  *--ar4(ir1), r6
+        ldfuf   *ar5++(ir0), r7
+        ldfnlv  *ar6--(ir1), r0
+        ldflv   *ar7++(ir0)%, r1
+        ldfnluf *ar0--(ir1)%, r2
+        ldfluf  *ar1, r3
+        ldfzuf  *ar2++(ir0)b, r4
+        ldfeq   1.0, r5
+        ldfne   -1.5, r6
+        ldfhi   0.0, r7
+        ldfhs   -0.50024, r0
+        ldiu    r0, r1
+        ldilo   r1, ar2
+        ldils   *+ar1(2), r3
+        ldihi   *-ar2(3), r4
+        ldihs   *++ar3(4), r5
+        ldieq   *--ar4(5), r6
+        ldine   *ar5++(6), r7
+        ldilt   *ar6--(7), r0
+        ldile   *ar7++(8)%, r1
+        ldigt   *ar0--(9)%, r2
+        ldige   *+ar1(ir0), r3
+        ldinv   *-ar2(ir1), r4
+        ldiv    *++ar3(ir0), r5
+        ldinuf  *--ar4(ir1), r6
+        ldiuf   *ar5++(ir0), r7
+        ldinlv  *ar6--(ir1), r0
+        ldilv   *ar7++(ir0)%, r1
+        ldinluf *ar0--(ir1)%, r2
+        ldiluf  *ar1, r3
+        ldizuf  *ar2++(ir0)b, r4
+        ldieq   0, r5
+        ldine   -32768, r6
+        ldihs   -1, r0
+;;; Store
+        stf     r2, @0x1234
+        stf     r3, *+ar4(5)
+        stf     r4, *-ar5(6)
+        stf     r5, *++ar6(7)
+        stf     r6, *--ar7(8)
+        stf     r7, *ar0++(9)
+        stf     r0, *ar1--(10)
+        stf     r1, *ar2++(11)%
+        stf     r2, *ar3--(12)%
+        stf     r3, *+ar4(ir1)
+        stf     r4, *-ar5(ir0)
+        stf     r5, *++ar6(ir1)
+        stf     r6, *--ar7(ir0)
+        stf     r7, *ar0++(ir1)
+        stf     r0, *ar1--(ir0)
+        stf     r1, *ar2++(ir1)%
+        stf     r2, *ar3--(ir0)%
+        stf     r3, *ar4
+        stf     r4, *ar5++(ir0)b
+        sti     r2, @0x1234
+        sti     ar3, *+ar4(5)
+        sti     r4, *-ar5(6)
+        sti     r5, *++ar6(7)
+        sti     r6, *--ar7(8)
+        sti     r7, *ar0++(9)
+        sti     r0, *ar1--(10)
+        sti     r1, *ar2++(11)%
+        sti     r2, *ar3--(12)%
+        sti     r3, *+ar4(ir1)
+        sti     r4, *-ar5(ir0)
+        sti     r5, *++ar6(ir1)
+        sti     r6, *--ar7(ir0)
+        sti     r7, *ar0++(ir1)
+        sti     r0, *ar1--(ir0)
+        sti     r1, *ar2++(ir1)%
+        sti     r2, *ar3--(ir0)%
+        sti     r3, *ar4
+        sti     r4, *ar5++(ir0)b
+        push    r7
+        push    ar0
+        push    dp
+        push    ir0
+        push    rc
+        pushf   r0
+;;; 2op
+        absf    r0, r1
+        absf    1.0, r2
+        absf    -5.0024, r3
+        absi    r0, r1
+        absi    ar2, r3
+        absi    -1, r4
+        addc    r0, r1
+        addc    ar1, r2
+        addc    -1, r3
+        addf    r0, r1
+        addf    *ar2, r3
+        addf    -1, r4
+        addi    r0, r1
+        addi    ar2, ar3
+        addi    -1, r4
+        and     r5, r6
+        and     ar7, r0
+        and     0xffff, r1
+        andn    r2, r3
+        andn    r4, ar5
+        andn    0xffff, ir1
+        ash     r0, ir1
+        ash     *ar2++, r3
+        ash     -64, r4
+        cmpf    r6, r7
+        cmpf    *+ar0, r0
+        cmpf    -1, r1
+        cmpi    r2, ar3
+        cmpi    *ar4, ir1
+        cmpi    -1, ar5
+        fix     r0, r1
+        fix     *--ar2, r3
+        fix     -0.50024, r4
+        float   r5, r6
+        float   *ar7++, r0
+        float   -1, r1
+        lsh     ir1, ar2
+        lsh     *ar3, r4
+        lsh     15, r5
+        mpyf    r6, r7
+        mpyf    *+ar0(255), r1
+        mpyf    2, r2
+        mpyi    ar3, ar4
+        mpyi    *-ar5(255), r6
+        mpyi    -1, r7
+        negb    r0, r1
+        negb    *ar2++(128), r3
+        negb    32767, r4
+        negf    r5, r6
+        negf    *ar7--(128), r0
+        negf    -1.5, r1
+        negi    r0, r1
+        negi    *ar2++(128), r3
+        negi    32767, r4
+        norm    r5, r6
+        norm    *ar7--(128), r0
+        norm    -1.5, r1
+        not     r2, r3
+        not     *++ar4(128), ar5
+        not     0xffff, r6
+        or      r2, r3
+        or      *++ar4(128), ar5
+        or      0xffff, r6
+        rnd     r5, r6
+        rnd     *ar7--(128), r0
+        rnd     -1.5, r1
+        rol     ar7
+        rolc    r0
+        ror     ir1
+        rorc    r2
+        subb    r3, ar4
+        subb    *ar5++(ir0)b, r6
+        subb    -1, r7
+        subc    ar0, r1
+        subc    *+ar2(3), r4
+        subc    0xffff ,r5
+        subf    r6, r7
+        subf    *+ar0(0), r1
+        subf    -1.5, r2
+        subi    r3, ar4
+        subi    *++ar5(1), r6
+        subi    -1, r7
+        subrb   r3, ar4
+        subrb   *ar5++(ir0)b, r6
+        subrb   -1, r7
+        subrf   r6, r7
+        subrf   *+ar0(0), r1
+        subrf   -1.5, r2
+        subri   r3, ar4
+        subri   *++ar5(1), r6
+        subri   -1, r7
+        tstb    r0, r1
+        tstb    *ar2--(3), r3
+        tstb    0xffff, r4
+        xor     r2, r3
+        xor     *++ar4(128), ar5
+        xor     0xffff, r6
+;;; unary
+        absf    r1
+        absi    r2
+        fix     r3
+        float   r4
+        negb    r5
+        negf    r6
+        negi    r7
+        norm    r0
+        not     r1
+        rnd     r2
+;;; 3op
+        addc3   r0, ar1, r2
+        addc3   *+ar1, r2, ar3
+        addc3   *-ar2(0), *ar3++(ir0)b, r4
+        addc3   *++ar3, *ar4, r5
+        addc3   *--ar4(1), *ar5--(ir1)%, r6
+        addc3   *ar3++(1), *ar6++(ir0)%, r7
+        addc3   *ar4--(1), *ar7--(ir1), r0
+        addc3   *+ar5(ir1), *ar0++(ir0), r1
+        addc3   r6, *+ar1(ir1), ar2
+        addc3   ir1, *ar2++(ir0), r3
+        addc3   *+ar1, *-ar2, r3
+        addf3   r0, r1, r2
+        addf3   *+ar1, r2, r3
+        addf3   *-ar2(0), *ar3++(ir0)b, r4
+        addf3   *++ar3, *ar4, r5
+        addf3   *--ar4(1), *ar5--(ir1)%, r6
+        addf3   *ar3++(1), *ar6++(ir0)%, r7
+        addf3   *ar4--(1), *ar7--(ir1), r0
+        addf3   *+ar5(ir1), *ar0++(ir0), r1
+        addf3   r6, *+ar1(ir1), r2
+        addf3   r1, *ar2++(ir0), r3
+        addf3   *+ar1, *-ar2, r3
+        addi3   r0, ar1, r2
+        addi3   *+ar1, r2, ar3
+        addi3   *-ar2(0), *ar3++(ir0)b, r4
+        addi3   *++ar3, *ar4, r5
+        addi3   *--ar4(1), *ar5--(ir1)%, r6
+        addi3   *ar3++(1), *ar6++(ir0)%, r7
+        addi3   *ar4--(1), *ar7--(ir1), r0
+        addi3   *+ar5(ir1), *ar0++(ir0), r1
+        addi3   r6, *+ar1(ir1), ar2
+        addi3   ir1, *ar2++(ir0), r3
+        addi3   *+ar1, *-ar2, r3
+        and3    r0, ar1, r2
+        and3    *+ar1, r2, ar3
+        and3    *-ar2(0), *ar3++(ir0)b, r4
+        and3    *++ar3, *ar4, r5
+        and3    *--ar4(1), *ar5--(ir1)%, r6
+        and3    *ar3++(1), *ar6++(ir0)%, r7
+        and3    *ar4--(1), *ar7--(ir1), r0
+        and3    *+ar5(ir1), *ar0++(ir0), r1
+        and3    r6, *+ar1(ir1), ar2
+        and3    ir1, *ar2++(ir0), r3
+        and3    *+ar1, *-ar2, r3
+        andn3   r0, ar1, r2
+        andn3   *+ar1, r2, ar3
+        andn3   *-ar2(0), *ar3++(ir0)b, r4
+        andn3   *++ar3, *ar4, r5
+        andn3   *--ar4(1), *ar5--(ir1)%, r6
+        andn3   *ar3++(1), *ar6++(ir0)%, r7
+        andn3   *ar4--(1), *ar7--(ir1), r0
+        andn3   *+ar5(ir1), *ar0++(ir0), r1
+        andn3   r6, *+ar1(ir1), ar2
+        andn3   ir1, *ar2++(ir0), r3
+        andn3   *+ar1, *-ar2, r3
+        ash3    r0, ar1, r2
+        ash3    *+ar1, r2, ar3
+        ash3    *-ar2(0), *ar3++(ir0)b, r4
+        ash3    *++ar3, *ar4, r5
+        ash3    *--ar4(1), *ar5--(ir1)%, r6
+        ash3    *ar3++(1), *ar6++(ir0)%, r7
+        ash3    *ar4--(1), *ar7--(ir1), r0
+        ash3    *+ar5(ir1), *ar0++(ir0), r1
+        ash3    r6, *+ar1(ir1), ar2
+        ash3    ir1, *ar2++(ir0), r3
+        ash3    *+ar1, *-ar2, r3
+        cmpf3   r0, r1
+        cmpf3   *+ar1, r2
+        cmpf3   *-ar2(0), *ar3++(ir0)b
+        cmpf3   *++ar3, *ar4
+        cmpf3   *--ar4(1), *ar5--(ir1)%
+        cmpf3   *ar3++(1), *ar6++(ir0)%
+        cmpf3   *ar4--(1), *ar7--(ir1)
+        cmpf3   *+ar5(ir1), *ar0++(ir0)
+        cmpf3   r6, *+ar1(ir1)
+        cmpf3   r1, *ar2++(ir0)
+        cmpf3   *+ar1, *-ar2
+        cmpi3   r0, ar1
+        cmpi3   *+ar1, r2
+        cmpi3   *-ar2(0), *ar3++(ir0)b
+        cmpi3   *++ar3, *ar4
+        cmpi3   *--ar4(1), *ar5--(ir1)%
+        cmpi3   *ar3++(1), *ar6++(ir0)%
+        cmpi3   *ar4--(1), *ar7--(ir1)
+        cmpi3   *+ar5(ir1), *ar0++(ir0)
+        cmpi3   r6, *+ar1(ir1)
+        cmpi3   ir1, *ar2++(ir0)
+        cmpi3   *+ar1, *-ar2
+        lsh3    r0, ar1, r2
+        lsh3    *+ar1, r2, ar3
+        lsh3    *-ar2(0), *ar3++(ir0)b, r4
+        lsh3    *++ar3, *ar4, r5
+        lsh3    *--ar4(1), *ar5--(ir1)%, r6
+        lsh3    *ar3++(1), *ar6++(ir0)%, r7
+        lsh3    *ar4--(1), *ar7--(ir1), r0
+        lsh3    *+ar5(ir1), *ar0++(ir0), r1
+        lsh3    r6, *+ar1(ir1), ar2
+        lsh3    ir1, *ar2++(ir0), r3
+        lsh3    *+ar1, *-ar2, r3
+        mpyf3   r0, r1, r2
+        mpyf3   *+ar1, r2, r3
+        mpyf3   *-ar2(0), *ar3++(ir0)b, r4
+        mpyf3   *++ar3, *ar4, r5
+        mpyf3   *--ar4(1), *ar5--(ir1)%, r6
+        mpyf3   *ar3++(1), *ar6++(ir0)%, r7
+        mpyf3   *ar4--(1), *ar7--(ir1), r0
+        mpyf3   *+ar5(ir1), *ar0++(ir0), r1
+        mpyf3   r6, *+ar1(ir1), r2
+        mpyf3   r1, *ar2++(ir0), r3
+        mpyf3   *+ar1, *-ar2, r3
+        mpyi3   r0, ar1, r2
+        mpyi3   *+ar1, r2, ar3
+        mpyi3   *-ar2(0), *ar3++(ir0)b, r4
+        mpyi3   *++ar3, *ar4, r5
+        mpyi3   *--ar4(1), *ar5--(ir1)%, r6
+        mpyi3   *ar3++(1), *ar6++(ir0)%, r7
+        mpyi3   *ar4--(1), *ar7--(ir1), r0
+        mpyi3   *+ar5(ir1), *ar0++(ir0), r1
+        mpyi3   r6, *+ar1(ir1), ar2
+        mpyi3   ir1, *ar2++(ir0), r3
+        mpyi3   *+ar1, *-ar2, r3
+        or3     r0, ar1, r2
+        or3     *+ar1, r2, ar3
+        or3     *-ar2(0), *ar3++(ir0)b, r4
+        or3     *++ar3, *ar4, r5
+        or3     *--ar4(1), *ar5--(ir1)%, r6
+        or3     *ar3++(1), *ar6++(ir0)%, r7
+        or3     *ar4--(1), *ar7--(ir1), r0
+        or3     *+ar5(ir1), *ar0++(ir0), r1
+        or3     r6, *+ar1(ir1), ar2
+        or3     ir1, *ar2++(ir0), r3
+        or3     *+ar1, *-ar2, r3
+        subb3   r0, ar1, r2
+        subb3   *+ar1, r2, ar3
+        subb3   *-ar2(0), *ar3++(ir0)b, r4
+        subb3   *++ar3, *ar4, r5
+        subb3   *--ar4(1), *ar5--(ir1)%, r6
+        subb3   *ar3++(1), *ar6++(ir0)%, r7
+        subb3   *ar4--(1), *ar7--(ir1), r0
+        subb3   *+ar5(ir1), *ar0++(ir0), r1
+        subb3   r6, *+ar1(ir1), ar2
+        subb3   ir1, *ar2++(ir0), r3
+        subb3   *+ar1, *-ar2, r3
+        subf3   r0, r1, r2
+        subf3   *+ar1, r2, r3
+        subf3   *-ar2(0), *ar3++(ir0)b, r4
+        subf3   *++ar3, *ar4, r5
+        subf3   *--ar4(1), *ar5--(ir1)%, r6
+        subf3   *ar3++(1), *ar6++(ir0)%, r7
+        subf3   *ar4--(1), *ar7--(ir1), r0
+        subf3   *+ar5(ir1), *ar0++(ir0), r1
+        subf3   r6, *+ar1(ir1), r2
+        subf3   r1, *ar2++(ir0), r3
+        subf3   *+ar1, *-ar2, r3
+        subi3   r0, ar1, r2
+        subi3   *+ar1, r2, ar3
+        subi3   *-ar2(0), *ar3++(ir0)b, r4
+        subi3   *++ar3, *ar4, r5
+        subi3   *--ar4(1), *ar5--(ir1)%, r6
+        subi3   *ar3++(1), *ar6++(ir0)%, r7
+        subi3   *ar4--(1), *ar7--(ir1), r0
+        subi3   *+ar5(ir1), *ar0++(ir0), r1
+        subi3   r6, *+ar1(ir1), ar2
+        subi3   ir1, *ar2++(ir0), r3
+        subi3   *+ar1, *-ar2, r3
+        tstb3   r0, ar1
+        tstb3   *+ar1, r2
+        tstb3   *-ar2(0), *ar3++(ir0)b
+        tstb3   *++ar3, *ar4
+        tstb3   *--ar4(1), *ar5--(ir1)%
+        tstb3   *ar3++(1), *ar6++(ir0)%
+        tstb3   *ar4--(1), *ar7--(ir1)
+        tstb3   *+ar5(ir1), *ar0++(ir0)
+        tstb3   r6, *+ar1(ir1)
+        tstb3   ir1, *ar2++(ir0)
+        tstb3   *+ar1, *-ar2
+        xor3    r0, ar1, r2
+        xor3    *+ar1, r2, ar3
+        xor3    *-ar2(0), *ar3++(ir0)b, r4
+        xor3    *++ar3, *ar4, r5
+        xor3    *--ar4(1), *ar5--(ir1)%, r6
+        xor3    *ar3++(1), *ar6++(ir0)%, r7
+        xor3    *ar4--(1), *ar7--(ir1), r0
+        xor3    *+ar5(ir1), *ar0++(ir0), r1
+        xor3    r6, *+ar1(ir1), ar2
+        xor3    ir1, *ar2++(ir0), r3
+        xor3    *+ar1, *-ar2, r3
+;;; Program
+        bu      r0
+        blo     r1
+        bls     r2
+        bhi     r3
+        bhs     r4
+        beq     r5
+        bne     r6
+        blt     r7
+        ble     ar0
+        bgt     ar1
+        bge     ar2
+        b       ar3
+        bc      ar4
+        bnc     ar5
+        bz      ar6
+        bnz     ar7
+        bnv     r0
+        bv      r1
+        bnuf    r2
+        buf     r3
+        bnlv    r4
+        blv     r5
+        bnluf   r6
+        bluf    r7
+        bzuf    ar0
+        bu      .+0x1000
+        blo     .
+        bls     .+0x1000
+        bhi     .+0x1000
+        bhs     .+0x1000
+        beq     .+0x1000
+        bne     .+0x1000
+        blt     .+0x1000
+        ble     .+0x1000
+        bgt     .+0x1000
+        bge     .+0x1000
+        b       .+0x1000
+        bc      .+0x1000
+        bnc     .+0x1000
+        bz      .+0x1000
+        bnz     .+0x1000
+        bnv     .+0x1000
+        bv      .+0x1000
+        bnuf    .+0x1000
+        buf     .+0x1000
+        bnlv    .+0x1000
+        blv     .+0x1000
+        bnluf   .+0x1000
+        bluf    .+0x1000
+        bzuf    .+0x1000
+        bud     r0
+        blod    r1
+        blsd    r2
+        bhid    r3
+        bhsd    r4
+        beqd    r5
+        bned    r6
+        bltd    r7
+        bled    ar0
+        bgtd    ar1
+        bged    ar2
+        b       ar3
+        bcd     ar4
+        bncd    ar5
+        bzd     ar6
+        bnzd    ar7
+        bnvd    r0
+        bvd     r1
+        bnufd   r2
+        bufd    r3
+        bnlvd   r4
+        blvd    r5
+        bnlufd  r6
+        blufd   r7
+        bzufd   ar0
+        bud     .+0x1000
+        blod    .+0x1000
+        blsd    .+0x1000
+        bhid    .+0x1000
+        bhsd    .+0x1000
+        beqd    .+0x1000
+        bned    .+0x1000
+        bltd    .+0x1000
+        bled    .+0x1000
+        bgtd    .+0x1000
+        bged    .+0x1000
+        b       .+0x1000
+        bcd     .+0x1000
+        bncd    .+0x1000
+        bzd     .+0x1000
+        bnzd    .+0x1000
+        bnvd    .+0x1000
+        bvd     .+0x1000
+        bnufd   .+0x1000
+        bufd    .+0x1000
+        bnlvd   .+0x1000
+        blvd    .+0x1000
+        bnlufd  .+0x1000
+        blufd   .+0x1000
+        bzufd   .+0x1000
+        br      0x123456
+        brd     0x123456
+        call    0x123456
+        callu   r0
+        calllo  r1
+        callls  r2
+        callhi  r3
+        callhs  r4
+        calleq  r5
+        callne  r6
+        calllt  r7
+        callle  ar0
+        callgt  ar1
+        callge  ar2
+        callc   ar4
+        callnc  ar5
+        callz   ar6
+        callnz  ar7
+        callnv  r0
+        callv   r1
+        callnuf r2
+        calluf  r3
+        callnlv r4
+        calllv  r5
+        callnluf r6
+        callluf r7
+        callzuf ar0
+        callu   .+0x1000
+        calllo  .+0x1000
+        callls  .+0x1000
+        callhi  .+0x1000
+        callhs  .+0x1000
+        calleq  .+0x1000
+        callne  .+0x1000
+        calllt  .+0x1000
+        callle  .+0x1000
+        callgt  .+0x1000
+        callge  .+0x1000
+        callc   .+0x1000
+        callnc  .+0x1000
+        callz   .+0x1000
+        callnz  .+0x1000
+        callnv  .+0x1000
+        callv   .+0x1000
+        callnuf .+0x1000
+        calluf  .+0x1000
+        callnlv .+0x1000
+        calllv  .+0x1000
+        callnluf .+0x1000
+        callluf .+0x1000
+        callzuf .+0x1000
+        dbu     ar7, r0
+        dblo    ar6, r1
+        dbls    ar5, r2
+        dbhi    ar4, r3
+        dbhs    ar3, r4
+        dbeq    ar2, r5
+        dbne    ar1, r6
+        dblt    ar0, r7
+        dble    ar7, ar0
+        dbgt    ar6, ar1
+        dbge    ar5, ar2
+        db      ar4, ar3
+        dbc     ar3, ar4
+        dbnc    ar2, ar5
+        dbz     ar1, ar6
+        dbnz    ar0, ar7
+        dbnv    ar7, r0
+        dbv     ar6, r1
+        dbnuf   ar5, r2
+        dbuf    ar4, r3
+        dbnlv   ar3, r4
+        dblv    ar2, r5
+        dbnluf  ar1, r6
+        dbluf   ar0, r7
+        dbzuf   ar7, ar0
+        dbu     ar6, .+0x1000
+        dblo    ar5, .+0x1000
+        dbls    ar4, .+0x1000
+        dbhi    ar3, .+0x1000
+        dbhs    ar2, .+0x1000
+        dbeq    ar1, .+0x1000
+        dbne    ar0, .+0x1000
+        dblt    ar7, .+0x1000
+        dble    ar6, .+0x1000
+        dbgt    ar5, .+0x1000
+        dbge    ar4, .+0x1000
+        db      ar3, .+0x1000
+        dbc     ar2, .+0x1000
+        dbnc    ar1, .+0x1000
+        dbz     ar0, .+0x1000
+        dbnz    ar7, .+0x1000
+        dbnv    ar6, .+0x1000
+        dbv     ar5, .+0x1000
+        dbnuf   ar4, .+0x1000
+        dbuf    ar3, .+0x1000
+        dbnlv   ar2, .+0x1000
+        dblv    ar1, .+0x1000
+        dbnluf  ar0, .+0x1000
+        dbluf   ar7, .+0x1000
+        dbzuf   ar6, .+0x1000
+        dbud    ar7, r0
+        dblod   ar6, r1
+        dblsd   ar5, r2
+        dbhid   ar4, r3
+        dbhsd   ar3, r4
+        dbeqd   ar2, r5
+        dbned   ar1, r6
+        dbltd   ar0, r7
+        dbled   ar7, ar0
+        dbgtd   ar6, ar1
+        dbged   ar5, ar2
+        db      ar4, ar3
+        dbcd    ar3, ar4
+        dbncd   ar2, ar5
+        dbzd    ar1, ar6
+        dbnzd   ar0, ar7
+        dbnvd   ar7, r0
+        dbvd    ar6, r1
+        dbnufd  ar5, r2
+        dbufd   ar4, r3
+        dbnlvd  ar3, r4
+        dblvd   ar2, r5
+        dbnlufd ar1, r6
+        dblufd  ar0, r7
+        dbzufd  ar7, ar0
+        dbud    ar6, .+0x1000
+        dblod   ar5, .+0x1000
+        dblsd   ar4, .+0x1000
+        dbhid   ar3, .+0x1000
+        dbhsd   ar2, .+0x1000
+        dbeqd   ar1, .+0x1000
+        dbned   ar0, .+0x1000
+        dbltd   ar7, .+0x1000
+        dbled   ar6, .+0x1000
+        dbgtd   ar5, .+0x1000
+        dbged   ar4, .+0x1000
+        db      ar3, .+0x1000
+        dbcd    ar2, .+0x1000
+        dbncd   ar1, .+0x1000
+        dbzd    ar0, .+0x1000
+        dbnzd   ar7, .+0x1000
+        dbnvd   ar6, .+0x1000
+        dbvd    ar5, .+0x1000
+        dbnufd  ar4, .+0x1000
+        dbufd   ar3, .+0x1000
+        dbnlvd  ar2, .+0x1000
+        dblvd   ar1, .+0x1000
+        dbnlufd ar0, .+0x1000
+        dblufd  ar7, .+0x1000
+        dbzufd  ar6, .+0x1000
+        iack    @0x1234
+        iack    *+ar1(2)
+        iack    *-ar2(3)
+        iack    *++ar3(4)
+        iack    *--ar4(5)
+        iack    *ar5++(6)
+        iack    *ar6--(7)
+        iack    *ar7++(8)%
+        iack    *ar0--(9)%
+        iack    *+ar1(ir0)
+        iack    *-ar2(ir1)
+        iack    *++ar3(ir0)
+        iack    *--ar4(ir1)
+        iack    *ar5++(ir0)
+        iack    *ar6--(ir1)
+        iack    *ar7++(ir0)%
+        iack    *ar0--(ir1)%
+        iack    *ar1
+        iack    *ar2++(ir0)b
+        idle
+        nop     r0
+        nop     ar0
+        nop     *+ar1(2)
+        nop     *-ar2(3)
+        nop     *++ar3(4)
+        nop     *--ar4(5)
+        nop     *ar5++(6)
+        nop     *ar6--(7)
+        nop     *ar7++(8)%
+        nop     *ar0--(9)%
+        nop     *+ar1(ir0)
+        nop     *-ar2(ir1)
+        nop     *++ar3(ir0)
+        nop     *--ar4(ir1)
+        nop     *ar5++(ir0)
+        nop     *ar6--(ir1)
+        nop     *ar7++(ir0)%
+        nop     *ar0--(ir1)%
+        nop     *ar1
+        nop     *ar2++(ir0)b
+        retiu
+        retilo
+        retils
+        retihi
+        retihs
+        retieq
+        retine
+        retilt
+        retile
+        retigt
+        retige
+        reti
+        retic
+        retinc
+        retiz
+        retinz
+        retinv
+        retiv
+        retinuf
+        retiuf
+        retinlv
+        retilv
+        retinluf
+        retiluf
+        retizuf
+        retsu
+        retslo
+        retsls
+        retshi
+        retshs
+        retseq
+        retsne
+        retslt
+        retsle
+        retsgt
+        retsge
+        rets
+        retsc
+        retsnc
+        retsz
+        retsnz
+        retsnv
+        retsv
+        retsnuf
+        retsuf
+        retsnlv
+        retslv
+        retsnluf
+        retsluf
+        retszuf
+        rptb    0x123456
+        rpts    r0
+        rpts    ar0
+        rpts    @0x1234
+        rpts    *+ar1(2)
+        rpts    *-ar2(3)
+        rpts    *++ar3(4)
+        rpts    *--ar4(5)
+        rpts    *ar5++(6)
+        rpts    *ar6--(7)
+        rpts    *ar7++(8)%
+        rpts    *ar0--(9)%
+        rpts    *+ar1(ir0)
+        rpts    *-ar2(ir1)
+        rpts    *++ar3(ir0)
+        rpts    *--ar4(ir1)
+        rpts    *ar5++(ir0)
+        rpts    *ar6--(ir1)
+        rpts    *ar7++(ir0)%
+        rpts    *ar0--(ir1)%
+        rpts    *ar1
+        rpts    *ar2++(ir0)b
+        rpts    0
+        rpts    0xffff
+        swi
+        trapu   0
+        traplo  1
+        trapls  2
+        traphi  3
+        traphs  4
+        trapeq  5
+        trapne  6
+        traplt  7
+        traple  8
+        trapgt  9
+        trapge  10
+        trap    11
+        trapc   13
+        trapnc  14
+        trapz   15
+        trapnz  16
+        trapnv  17
+        trapv   18
+        trapnuf 19
+        trapuf  10
+        trapnlv 20
+        traplv  21
+        trapnluf 22
+        trapluf 23
+        trapzuf 31
+;;; Interlock
+        sigi
+        ldfi    @0x1234, r2
+        ldfi    *+ar1(2), r3
+        ldfi    *-ar2(3), r4
+        ldfi    *++ar3(4), r5
+        ldfi    *--ar4(5), r6
+        ldfi    *ar5++(6), r7
+        ldfi    *ar6--(7), r0
+        ldfi    *ar7++(8)%, r1
+        ldfi    *ar0--(9)%, r2
+        ldfi    *+ar1(ir0), r3
+        ldfi    *-ar2(ir1), r4
+        ldfi    *++ar3(ir0), r5
+        ldfi    *--ar4(ir1), r6
+        ldfi    *ar5++(ir0), r7
+        ldfi    *ar6--(ir1), r0
+        ldfi    *ar7++(ir0)%, r1
+        ldfi    *ar0--(ir1)%, r2
+        ldfi    *ar1, r3
+        ldfi    *ar2++(ir0)b, r4
+        ldii    @0x1234, ar2
+        ldii    *+ar1(2), r3
+        ldii    *-ar2(3), r4
+        ldii    *++ar3(4), r5
+        ldii    *--ar4(5), r6
+        ldii    *ar5++(6), r7
+        ldii    *ar6--(7), r0
+        ldii    *ar7++(8)%, r1
+        ldii    *ar0--(9)%, r2
+        ldii    *+ar1(ir0), r3
+        ldii    *-ar2(ir1), r4
+        ldii    *++ar3(ir0), r5
+        ldii    *--ar4(ir1), r6
+        ldii    *ar5++(ir0), r7
+        ldii    *ar6--(ir1), r0
+        ldii    *ar7++(ir0)%, r1
+        ldii    *ar0--(ir1)%, r2
+        ldii    *ar1, r3
+        ldii    *ar2++(ir0)b, r4
+        stfi    r2, @0x1234
+        stfi    r3, *+ar4(5)
+        stfi    r4, *-ar5(6)
+        stfi    r5, *++ar6(7)
+        stfi    r6, *--ar7(8)
+        stfi    r7, *ar0++(9)
+        stfi    r0, *ar1--(10)
+        stfi    r1, *ar2++(11)%
+        stfi    r2, *ar3--(12)%
+        stfi    r3, *+ar4(ir1)
+        stfi    r4, *-ar5(ir0)
+        stfi    r5, *++ar6(ir1)
+        stfi    r6, *--ar7(ir0)
+        stfi    r7, *ar0++(ir1)
+        stfi    r0, *ar1--(ir0)
+        stfi    r1, *ar2++(ir1)%
+        stfi    r2, *ar3--(ir0)%
+        stfi    r3, *ar4
+        stfi    r4, *ar5++(ir0)b
+        stii    r2, @0x1234
+        stii    ar3, *+ar4(5)
+        stii    r4, *-ar5(6)
+        stii    r5, *++ar6(7)
+        stii    r6, *--ar7(8)
+        stii    r7, *ar0++(9)
+        stii    r0, *ar1--(10)
+        stii    r1, *ar2++(11)%
+        stii    r2, *ar3--(12)%
+        stii    r3, *+ar4(ir1)
+        stii    r4, *-ar5(ir0)
+        stii    r5, *++ar6(ir1)
+        stii    r6, *--ar7(ir0)
+        stii    r7, *ar0++(ir1)
+        stii    r0, *ar1--(ir0)
+        stii    r1, *ar2++(ir1)%
+        stii    r2, *ar3--(ir0)%
+        stii    r3, *ar4
+        stii    r4, *ar5++(ir0)b
+
+;;; Local Variables:
+;;; mode: asm
+;;; End:
+;;; vim: set ft=asm:
