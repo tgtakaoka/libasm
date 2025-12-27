@@ -408,6 +408,7 @@ constexpr char TEXT_TRAPU[]     PROGMEM = "TRAPU";
 // constexpr char TEXT_TRAPV[]     PROGMEM = "TRAPV";
 constexpr char TEXT_TRAPZUF[]   PROGMEM = "TRAPZUF";
 constexpr char TEXT_TRAPZ[]     PROGMEM = "TRAPZ";
+// constexpr char TEXT_TRAP[]      PROGMEM = "TRAP";
 constexpr char TEXT_TSTB3[]     PROGMEM = "TSTB3";
 // constexpr char TEXT_TSTB[]      PROGMEM = "TSTB";
 constexpr char TEXT_XOR3[]      PROGMEM = "XOR3";
@@ -427,6 +428,13 @@ constexpr char TEXT_REG_RS[]  PROGMEM = "RS";
 // constexpr char TEXT_REG_R[]   PROGMEM = "R";
 // constexpr char TEXT_REG_SP[]  PROGMEM = "SP";
 // constexpr char TEXT_REG_ST[]  PROGMEM = "ST";
+
+constexpr char TEXT_dFLOAT[]   PROGMEM = ".float";
+constexpr char TEXT_dHWORD[]   PROGMEM = ".hword";
+constexpr char TEXT_dINT[]     PROGMEM = ".int";
+constexpr char TEXT_dLDOUBLE[] PROGMEM = ".ldouble";
+constexpr char TEXT_dSFLOAT[]  PROGMEM = ".sfloat";
+constexpr char TEXT_dSPACE[]   PROGMEM = ".space";
 
 // clang-format on
 }  // namespace tms320f

@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+#include "asm_tms320f.h"
 #include "dis_tms320f.h"
 #include "test_formatter_helper.h"
 
@@ -24,6 +25,37 @@ namespace test {
 void set_up() {}
 
 void tear_down() {}
+
+void test_asm_tms320f() {
+    PREP_ASM(tms320f::AsmTms320f, IntelDirective);
+
+    driver.setUpperHex(false);
+
+    ASM("tms320c3x",
+            R"(        .cpu  tms320c3x
+* comment line
+        .org  1000h
+        call  123456h
+        addi3 *+ar1, *ar2++(ir0)b, r3
+label:  .word label
+        .byte 1,'''',3
+        .space 1
+        .string "A""B'C"
+        negf  -5.0024, r0
+)",
+            R"(          0 :                            .cpu  tms320c3x
+          0 :                    * comment line
+       1000 :                            .org  1000h
+       1000 : 62123456                   call  123456h
+       1001 : 2163ca01                   addi3 *+ar1, *ar2++(ir0)b, r3
+       1002 : 00001002           label:  .word label
+       1003 : 00000001 00000027          .byte 1,'''',3
+       1005 : 00000003
+       1006 :                            .space 1
+       1007 : 27422241 00000043          .string "A""B'C"
+       1009 : 0be02dff                   negf  -5.0024, r0
+)");
+}
 
 void test_dis_tms320f() {
     PREP_DIS(tms320f::DisTms320f);
@@ -51,6 +83,7 @@ test.bin: error: Unknown instruction
 }
 
 void run_tests() {
+    RUN_TEST(test_asm_tms320f);
     RUN_TEST(test_dis_tms320f);
 }
 

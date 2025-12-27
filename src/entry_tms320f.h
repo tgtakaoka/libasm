@@ -26,25 +26,32 @@ namespace libasm {
 namespace tms320f {
 
 enum AddrMode : uint8_t {
-    M_NONE = 0,   // TP: No operand
+    M_NONE = 0,  // TP: No operand
+    // M_IGEN-M_FLDM must be contiguous (direct, M_IMM)
+    // M_IGEN~M_IDAT must be contiguous (indirect)
     M_IGEN = 1,   // any reg, direct, indirect, 16-bit signed immediate
     M_UGEN = 2,   // any reg, direct, indirect, 16-bit unsigned immediate
     M_GCNT = 3,   // any reg, direct, indirecr, LSB 7-bit signed shift count
     M_FGEN = 4,   // R0~R7, direct, indirect, immediate
     M_FLDM = 5,   // R0~R7, direct, indirect, 12-bit immediate mantissa
-    M_IREG = 6,   // any reg
-    M_FREG = 7,   // R0~R7
-    M_MEM = 8,    // direct, inditrct
-    M_MREG = 9,   // reg, indirect
-    M_IDAT = 10,  // any reg, indirect (disp=0,1)
-    M_FDAT = 11,  // R0~R7, indirect (disp=0,1)
-    M_MSBA = 12,  // 8-bit msb of address
-    M_AD24 = 13,  // 24-bit absolute address
-    M_IREL = 14,  // any register or 16-bit relative (+1)
-    M_DREL = 15,  // any register or 16-bit relative (+3)
-    M_TVEC = 16,  // trap vector 00H~1FH
-    R_ARN = 17,   // register AR0~AR7
-    R_DP = 18,    // register DP
+    M_MEM = 6,    // direct, inditrct
+    M_MREG = 7,   // reg, indirect
+    M_FDAT = 8,   // R0~R7, indirect (disp=0,1)
+    M_IDAT = 9,   // any reg, indirect (disp=0,1)
+    M_FREG = 10,  // R0~R7
+    M_IREG = 11,  // any reg
+    R_ARN = 12,   // register AR0~AR7
+    R_DP = 13,    // register DP
+    // M_MSBA~M_TVEC must be contiguous (M_IMM)
+    M_MSBA = 14,  // 8-bit msb of address
+    M_AD24 = 15,  // 24-bit absolute address
+    M_IREL = 16,  // any register or 16-bit relative (+1)
+    M_DREL = 17,  // any register or 16-bit relative (+3)
+    M_TVEC = 18,  // trap vector 00H~1FH
+    // Assembler parser
+    M_IDIR = 19,  // Indirect
+    M_DIR = 20,   // @addr; direct addressing
+    M_IMM = 21,   // Integer/Float immediate
 };
 
 enum CodeFormat : uint8_t {

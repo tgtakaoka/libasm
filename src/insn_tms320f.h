@@ -21,6 +21,7 @@
 #include "entry_tms320f.h"
 #include "insn_base.h"
 #include "reg_tms320f.h"
+#include "str_scanner.h"
 #include "value.h"
 
 namespace libasm {
@@ -35,18 +36,42 @@ struct EntryInsn : EntryInsnBase<Config, Entry> {
     bool maybeUnary() const { return flags().maybeUnary(); }
 };
 
+enum SubMode : uint8_t {
+    SUB_NONE = 0,
+    SUB_DISP = 1,
+    SUB_PRE = 2,
+    SUB_POST = 3,
+    SUB_BASE_MASK = 0x3,
+    SUB_CIRC = 0x10,
+    SUB_BITR = 0x20,
+};
+
 struct Operand final : ErrorAt {
+    const uint_fast8_t pos;
     AddrMode mode;
     RegName reg;
-    StrScanner ccAt;
+    SubMode subMode;
+    bool indexSign;
+    RegName index;
+    bool hasDisp;
+    StrScanner dispAt;
     Value val;
-    Operand() : mode(M_NONE), reg(REG_UNDEF), val() {}
+    Operand(uint_fast8_t _pos)
+        : pos(_pos),
+          mode(M_NONE),
+          reg(REG_UNDEF),
+          subMode(SUB_NONE),
+          indexSign(false),
+          index(REG_UNDEF),
+          hasDisp(false),
+          dispAt(),
+          val() {}
 };
 
 struct AsmInsn final : AsmInsnImpl<Config>, EntryInsn {
     AsmInsn(Insn &insn) : AsmInsnImpl(insn) {}
 
-    Operand op1, op2, op3;
+    Operand op1{1}, op2{2}, op3{3};
 
     void emitInsn() { emitUint32(opCode(), 0); }
 };

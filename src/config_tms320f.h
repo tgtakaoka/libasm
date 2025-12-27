@@ -33,6 +33,7 @@ struct Config
 
 protected:
     uint8_t nameMax() const override { return 8; }
+    static constexpr Config::uintptr_t MAX_ADDRESS = (UINT32_C(1) << ADDRESS_24BIT) - 1;
 };
 
 }  // namespace tms320f

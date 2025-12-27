@@ -32,6 +32,7 @@ namespace tms320f {
 #define E1(_opc, _cf, _name, _opr1) E2(_opc, _cf, _name, _opr1, M_NONE)
 #define E0(_opc, _cf, _name) E1(_opc, _cf, _name, M_NONE)
 #define U2(_opc, _cf, _name, _opr1, _opr2) A3(_opc, _cf, LF_XX, _name, _opr1, _opr2, M_NONE, true)
+#define U1(_opc, _cf, _name, _opr1) U2(_opc, _cf, _name, _opr1, M_NONE)
 #define X3(_opc, _cf, _name, _opr1, _opr2, _opr3, _lf) \
     A3(_opc, _cf, _lf, _name, _opr1, _opr2, _opr3, false)
 #define X2(_opc, _cf, _name, _opr1, _opr2, _lf) X3(_opc, _cf, _name, _opr1, _opr2, M_NONE, _lf)
@@ -41,7 +42,9 @@ namespace tms320f {
 // clang-format off
 constexpr Entry TABLE_TMS320C30[] PROGMEM = {
     U2(0x0000, CF_GG, TEXT_ABSF,  M_FGEN, M_FREG),
+    U1(0x0000, CF_GG, TEXT_ABSF,  M_FREG),
     U2(0x0080, CF_GG, TEXT_ABSI,  M_IGEN, M_IREG),
+    U1(0x0080, CF_GG, TEXT_ABSI,  M_IREG),
     E2(0x0100, CF_GG, TEXT_ADDC,  M_IGEN, M_IREG),
     E2(0x0180, CF_GG, TEXT_ADDF,  M_FGEN, M_FREG),
     E2(0x0200, CF_GG, TEXT_ADDI,  M_IGEN, M_IREG),
@@ -51,7 +54,9 @@ constexpr Entry TABLE_TMS320C30[] PROGMEM = {
     E2(0x0400, CF_GG, TEXT_CMPF,  M_FGEN, M_FREG),
     E2(0x0480, CF_GG, TEXT_CMPI,  M_IGEN, M_IREG),
     U2(0x0500, CF_GG, TEXT_FIX,   M_FGEN, M_IREG),
+    U1(0x0500, CF_GG, TEXT_FIX,   M_FREG),
     U2(0x0580, CF_GG, TEXT_FLOAT, M_IGEN, M_FREG),
+    U1(0x0580, CF_GG, TEXT_FLOAT, M_FREG),
     X0(0x0600, CF_00, TEXT_IDLE,  LF_00),
     E2(0x0680, CF_GG, TEXT_LDE,   M_FGEN, M_FREG),
     E2(0x0700, CF_GG, TEXT_LDF,   M_FGEN, M_FREG),
@@ -65,18 +70,24 @@ constexpr Entry TABLE_TMS320C30[] PROGMEM = {
     E2(0x0A00, CF_GG, TEXT_MPYF,  M_FGEN, M_FREG),
     E2(0x0A80, CF_GG, TEXT_MPYI,  M_IGEN, M_IREG),
     U2(0x0B00, CF_GG, TEXT_NEGB,  M_IGEN, M_IREG),
+    U1(0x0B00, CF_GG, TEXT_NEGB,  M_IREG),
     U2(0x0B80, CF_GG, TEXT_NEGF,  M_FGEN, M_FREG),
+    U1(0x0B80, CF_GG, TEXT_NEGF,  M_FREG),
     U2(0x0C00, CF_GG, TEXT_NEGI,  M_IGEN, M_IREG),
+    U1(0x0C00, CF_GG, TEXT_NEGI,  M_IREG),
     E1(0x0C80, CF_0G, TEXT_NOP,   M_MREG),
     X0(0x0C80, CF_00, TEXT_NOP,   LF_00),
     U2(0x0D00, CF_GG, TEXT_NORM,  M_FGEN, M_FREG),
+    U1(0x0D00, CF_GG, TEXT_NORM,  M_FREG),
     U2(0x0D80, CF_GG, TEXT_NOT,   M_UGEN, M_IREG),
+    U1(0x0D80, CF_GG, TEXT_NOT,   M_IREG),
     X1(0x0E20, CF_GX, TEXT_POP,   M_IREG, LF_00),
     X1(0x0EA0, CF_GX, TEXT_POPF,  M_FREG, LF_00),
     X1(0x0F20, CF_GX, TEXT_PUSH,  M_IREG, LF_00),
     X1(0x0FA0, CF_GX, TEXT_PUSHF, M_FREG, LF_00),
     E2(0x1000, CF_GG, TEXT_OR,    M_UGEN, M_IREG),
     U2(0x1100, CF_GG, TEXT_RND,   M_FGEN, M_FREG),
+    U1(0x1100, CF_GG, TEXT_RND,   M_FREG),
     X1(0x11E0, CF_GX, TEXT_ROL,   M_IREG, LF_01),
     X1(0x1260, CF_GX, TEXT_ROLC,  M_IREG, LF_01),
     X1(0x12E0, CF_GX, TEXT_ROR,   M_IREG, LF_FF),
@@ -131,23 +142,6 @@ constexpr Entry TABLE_TMS320C30[] PROGMEM = {
     E2(0x2780, CF_TT, TEXT_TSTB,  M_IDAT, M_IDAT),
     E3(0x2800, CF_TT, TEXT_XOR3,  M_IDAT, M_IDAT, M_IREG),
     E3(0x2800, CF_TT, TEXT_XOR,   M_IDAT, M_IDAT, M_IREG),
-    E3(0x2000, CF_TT, TEXT_ADDC, M_IDAT, M_IDAT, M_IREG),
-    E3(0x2080, CF_TT, TEXT_ADDF, M_FDAT, M_FDAT, M_FREG),
-    E3(0x2100, CF_TT, TEXT_ADDI, M_IDAT, M_IDAT, M_IREG),
-    E3(0x2180, CF_TT, TEXT_AND,  M_IDAT, M_IDAT, M_IREG),
-    E3(0x2200, CF_TT, TEXT_ANDN, M_IDAT, M_IDAT, M_IREG),
-    E3(0x2280, CF_TT, TEXT_ASH,  M_IDAT, M_IDAT, M_IREG),
-    E2(0x2300, CF_T0, TEXT_CMPF, M_FDAT, M_FDAT),
-    E2(0x2380, CF_T0, TEXT_CMPI, M_IDAT, M_IDAT),
-    E3(0x2400, CF_TT, TEXT_LSH,  M_IDAT, M_IDAT, M_IREG),
-    E3(0x2480, CF_TT, TEXT_MPYF, M_FDAT, M_FDAT, M_FREG),
-    E3(0x2500, CF_TT, TEXT_MPYI, M_IDAT, M_IDAT, M_IREG),
-    E3(0x2580, CF_TT, TEXT_OR,   M_IDAT, M_IDAT, M_IREG),
-    E3(0x2680, CF_TT, TEXT_SUBB, M_IDAT, M_IDAT, M_IREG),
-    E3(0x2680, CF_TT, TEXT_SUBF, M_FDAT, M_FDAT, M_FREG),
-    E3(0x2700, CF_TT, TEXT_SUBI, M_IDAT, M_IDAT, M_IREG),
-    E3(0x2780, CF_TT, TEXT_TSTB, M_IDAT, M_IDAT, M_IREG),
-    E3(0x2800, CF_TT, TEXT_XOR,  M_IDAT, M_IDAT, M_IREG),
     E1(0x6000, CF_BR, TEXT_BR,   M_AD24),
     E1(0x6100, CF_BR, TEXT_BRD,  M_AD24),
     E1(0x6200, CF_BR, TEXT_CALL, M_AD24),
@@ -156,7 +150,112 @@ constexpr Entry TABLE_TMS320C30[] PROGMEM = {
 };
 
 constexpr uint8_t INDEX_TMS320C30[] PROGMEM = {
-    /* empty */
+      0,  // TEXT_ABSF
+      1,  // TEXT_ABSF
+      2,  // TEXT_ABSI
+      3,  // TEXT_ABSI
+      4,  // TEXT_ADDC
+     68,  // TEXT_ADDC
+     67,  // TEXT_ADDC3
+      5,  // TEXT_ADDF
+     70,  // TEXT_ADDF
+     69,  // TEXT_ADDF3
+      6,  // TEXT_ADDI
+     72,  // TEXT_ADDI
+     71,  // TEXT_ADDI3
+      7,  // TEXT_AND
+     74,  // TEXT_AND
+     73,  // TEXT_AND3
+      8,  // TEXT_ANDN
+     76,  // TEXT_ANDN
+     75,  // TEXT_ANDN3
+      9,  // TEXT_ASH
+     78,  // TEXT_ASH
+     77,  // TEXT_ASH3
+    101,  // TEXT_BR
+    102,  // TEXT_BRD
+    103,  // TEXT_CALL
+     10,  // TEXT_CMPF
+     80,  // TEXT_CMPF
+     79,  // TEXT_CMPF3
+     11,  // TEXT_CMPI
+     82,  // TEXT_CMPI
+     81,  // TEXT_CMPI3
+     12,  // TEXT_FIX
+     13,  // TEXT_FIX
+     14,  // TEXT_FLOAT
+     15,  // TEXT_FLOAT
+     66,  // TEXT_IACK
+     16,  // TEXT_IDLE
+     17,  // TEXT_LDE
+     18,  // TEXT_LDF
+     19,  // TEXT_LDFI
+     22,  // TEXT_LDI
+     23,  // TEXT_LDII
+     24,  // TEXT_LDM
+     20,  // TEXT_LDP
+     21,  // TEXT_LDP
+     25,  // TEXT_LSH
+     84,  // TEXT_LSH
+     83,  // TEXT_LSH3
+     26,  // TEXT_MPYF
+     86,  // TEXT_MPYF
+     85,  // TEXT_MPYF3
+     27,  // TEXT_MPYI
+     88,  // TEXT_MPYI
+     87,  // TEXT_MPYI3
+     28,  // TEXT_NEGB
+     29,  // TEXT_NEGB
+     30,  // TEXT_NEGF
+     31,  // TEXT_NEGF
+     32,  // TEXT_NEGI
+     33,  // TEXT_NEGI
+     34,  // TEXT_NOP
+     35,  // TEXT_NOP
+     36,  // TEXT_NORM
+     37,  // TEXT_NORM
+     38,  // TEXT_NOT
+     39,  // TEXT_NOT
+     44,  // TEXT_OR
+     90,  // TEXT_OR
+     89,  // TEXT_OR3
+     40,  // TEXT_POP
+     41,  // TEXT_POPF
+     42,  // TEXT_PUSH
+     43,  // TEXT_PUSHF
+     45,  // TEXT_RND
+     46,  // TEXT_RND
+     47,  // TEXT_ROL
+     48,  // TEXT_ROLC
+     49,  // TEXT_ROR
+     50,  // TEXT_RORC
+    104,  // TEXT_RPTB
+     51,  // TEXT_RPTS
+     56,  // TEXT_SIGI
+     52,  // TEXT_STF
+     53,  // TEXT_STFI
+     54,  // TEXT_STI
+     55,  // TEXT_STII
+     57,  // TEXT_SUBB
+     92,  // TEXT_SUBB
+     91,  // TEXT_SUBB3
+     58,  // TEXT_SUBC
+     59,  // TEXT_SUBF
+     94,  // TEXT_SUBF
+     93,  // TEXT_SUBF3
+     60,  // TEXT_SUBI
+     96,  // TEXT_SUBI
+     95,  // TEXT_SUBI3
+     61,  // TEXT_SUBRB
+     62,  // TEXT_SUBRF
+     63,  // TEXT_SUBRI
+    105,  // TEXT_SWI
+     64,  // TEXT_TSTB
+     98,  // TEXT_TSTB
+     97,  // TEXT_TSTB3
+     65,  // TEXT_XOR
+    100,  // TEXT_XOR
+     99,  // TEXT_XOR3
 };
 
 constexpr Entry TABLE_TMS320C31[] PROGMEM = {
@@ -166,7 +265,9 @@ constexpr Entry TABLE_TMS320C31[] PROGMEM = {
 };
 
 constexpr uint8_t INDEX_TMS320C31[] PROGMEM = {
-    /* empty */
+      0,  // TEXT_IDLE2
+      1,  // TEXT_LOPOWER
+      2,  // TEXT_MAXSPEED
 };
 
 constexpr Entry TABLE_LDCOND[] PROGMEM =  {
@@ -227,7 +328,60 @@ constexpr Entry TABLE_LDCOND[] PROGMEM =  {
 };
 
 constexpr uint8_t INDEX_LDCOND[] PROGMEM = {
-    /* empty */
+      2,  // TEXT_LDFC
+      7,  // TEXT_LDFEQ
+     16,  // TEXT_LDFGE
+     14,  // TEXT_LDFGT
+      4,  // TEXT_LDFHI
+      5,  // TEXT_LDFHS
+     13,  // TEXT_LDFLE
+      1,  // TEXT_LDFLO
+      3,  // TEXT_LDFLS
+     11,  // TEXT_LDFLT
+     25,  // TEXT_LDFLUF
+     23,  // TEXT_LDFLV
+     12,  // TEXT_LDFN
+      6,  // TEXT_LDFNC
+      9,  // TEXT_LDFNE
+     24,  // TEXT_LDFNLUF
+     22,  // TEXT_LDFNLV
+     17,  // TEXT_LDFNN
+     20,  // TEXT_LDFNUF
+     18,  // TEXT_LDFNV
+     10,  // TEXT_LDFNZ
+     15,  // TEXT_LDFP
+      0,  // TEXT_LDFU
+     21,  // TEXT_LDFUF
+     19,  // TEXT_LDFV
+      8,  // TEXT_LDFZ
+     26,  // TEXT_LDFZUF
+     29,  // TEXT_LDIC
+     34,  // TEXT_LDIEQ
+     43,  // TEXT_LDIGE
+     41,  // TEXT_LDIGT
+     31,  // TEXT_LDIHI
+     32,  // TEXT_LDIHS
+     40,  // TEXT_LDILE
+     28,  // TEXT_LDILO
+     30,  // TEXT_LDILS
+     38,  // TEXT_LDILT
+     52,  // TEXT_LDILUF
+     50,  // TEXT_LDILV
+     39,  // TEXT_LDIN
+     33,  // TEXT_LDINC
+     36,  // TEXT_LDINE
+     51,  // TEXT_LDINLUF
+     49,  // TEXT_LDINLV
+     44,  // TEXT_LDINN
+     47,  // TEXT_LDINUF
+     45,  // TEXT_LDINV
+     37,  // TEXT_LDINZ
+     42,  // TEXT_LDIP
+     27,  // TEXT_LDIU
+     48,  // TEXT_LDIUF
+     46,  // TEXT_LDIV
+     35,  // TEXT_LDIZ
+     53,  // TEXT_LDIZUF
 };
 
 constexpr Entry TABLE_BRCOND[] PROGMEM = {
@@ -346,7 +500,118 @@ constexpr Entry TABLE_BRCOND[] PROGMEM = {
 };
 
 constexpr uint8_t INDEX_BRCOND[] PROGMEM =  {
-    /* empty */
+      1,  // TEXT_B
+      3,  // TEXT_BC
+     31,  // TEXT_BCD
+     29,  // TEXT_BD
+      8,  // TEXT_BEQ
+     36,  // TEXT_BEQD
+     17,  // TEXT_BGE
+     45,  // TEXT_BGED
+     15,  // TEXT_BGT
+     43,  // TEXT_BGTD
+      5,  // TEXT_BHI
+     33,  // TEXT_BHID
+      6,  // TEXT_BHS
+     34,  // TEXT_BHSD
+     14,  // TEXT_BLE
+     42,  // TEXT_BLED
+      2,  // TEXT_BLO
+     30,  // TEXT_BLOD
+      4,  // TEXT_BLS
+     32,  // TEXT_BLSD
+     12,  // TEXT_BLT
+     40,  // TEXT_BLTD
+     26,  // TEXT_BLUF
+     54,  // TEXT_BLUFD
+     24,  // TEXT_BLV
+     52,  // TEXT_BLVD
+     13,  // TEXT_BN
+      7,  // TEXT_BNC
+     35,  // TEXT_BNCD
+     41,  // TEXT_BND
+     10,  // TEXT_BNE
+     38,  // TEXT_BNED
+     25,  // TEXT_BNLUF
+     53,  // TEXT_BNLUFD
+     23,  // TEXT_BNLV
+     51,  // TEXT_BNLVD
+     18,  // TEXT_BNN
+     46,  // TEXT_BNND
+     21,  // TEXT_BNUF
+     49,  // TEXT_BNUFD
+     19,  // TEXT_BNV
+     47,  // TEXT_BNVD
+     11,  // TEXT_BNZ
+     39,  // TEXT_BNZD
+     16,  // TEXT_BP
+     44,  // TEXT_BPD
+      0,  // TEXT_BU
+     28,  // TEXT_BUD
+     22,  // TEXT_BUF
+     50,  // TEXT_BUFD
+     20,  // TEXT_BV
+     48,  // TEXT_BVD
+      9,  // TEXT_BZ
+     37,  // TEXT_BZD
+     27,  // TEXT_BZUF
+     55,  // TEXT_BZUFD
+     57,  // TEXT_DB
+     59,  // TEXT_DBC
+     87,  // TEXT_DBCD
+     85,  // TEXT_DBD
+     64,  // TEXT_DBEQ
+     92,  // TEXT_DBEQD
+     73,  // TEXT_DBGE
+    101,  // TEXT_DBGED
+     71,  // TEXT_DBGT
+     99,  // TEXT_DBGTD
+     61,  // TEXT_DBHI
+     89,  // TEXT_DBHID
+     62,  // TEXT_DBHS
+     90,  // TEXT_DBHSD
+     70,  // TEXT_DBLE
+     98,  // TEXT_DBLED
+     58,  // TEXT_DBLO
+     86,  // TEXT_DBLOD
+     60,  // TEXT_DBLS
+     88,  // TEXT_DBLSD
+     68,  // TEXT_DBLT
+     96,  // TEXT_DBLTD
+     82,  // TEXT_DBLUF
+    110,  // TEXT_DBLUFD
+     80,  // TEXT_DBLV
+    108,  // TEXT_DBLVD
+     69,  // TEXT_DBN
+     63,  // TEXT_DBNC
+     91,  // TEXT_DBNCD
+     97,  // TEXT_DBND
+     66,  // TEXT_DBNE
+     94,  // TEXT_DBNED
+     81,  // TEXT_DBNLUF
+    109,  // TEXT_DBNLUFD
+     79,  // TEXT_DBNLV
+    107,  // TEXT_DBNLVD
+     74,  // TEXT_DBNN
+    102,  // TEXT_DBNND
+     77,  // TEXT_DBNUF
+    105,  // TEXT_DBNUFD
+     75,  // TEXT_DBNV
+    103,  // TEXT_DBNVD
+     67,  // TEXT_DBNZ
+     95,  // TEXT_DBNZD
+     72,  // TEXT_DBP
+    100,  // TEXT_DBPD
+     56,  // TEXT_DBU
+     84,  // TEXT_DBUD
+     78,  // TEXT_DBUF
+    106,  // TEXT_DBUFD
+     76,  // TEXT_DBV
+    104,  // TEXT_DBVD
+     65,  // TEXT_DBZ
+     93,  // TEXT_DBZD
+     83,  // TEXT_DBZUF
+    111,  // TEXT_DBZUFD
 };
 
 constexpr Entry TABLE_CALLCOND[] PROGMEM = {
@@ -378,6 +643,7 @@ constexpr Entry TABLE_CALLCOND[] PROGMEM = {
     E1(0x7013, CF_BB, TEXT_CALLLUF,  M_IREL),
     E1(0x7014, CF_BB, TEXT_CALLZUF,  M_IREL),
     E1(0x7400, CF_00, TEXT_TRAPU,    M_TVEC),
+    E1(0x7400, CF_00, TEXT_TRAP,     M_TVEC),
     E1(0x7401, CF_00, TEXT_TRAPLO,   M_TVEC),
     E1(0x7401, CF_00, TEXT_TRAPC,    M_TVEC),
     E1(0x7402, CF_00, TEXT_TRAPLS,   M_TVEC),
@@ -463,7 +729,117 @@ constexpr Entry TABLE_CALLCOND[] PROGMEM = {
 };
 
 constexpr uint8_t INDEX_CALLCOND[] PROGMEM = {
-    /* empty */
+      2,  // TEXT_CALLC
+      7,  // TEXT_CALLEQ
+     16,  // TEXT_CALLGE
+     14,  // TEXT_CALLGT
+      4,  // TEXT_CALLHI
+      5,  // TEXT_CALLHS
+     13,  // TEXT_CALLLE
+      1,  // TEXT_CALLLO
+      3,  // TEXT_CALLLS
+     11,  // TEXT_CALLLT
+     25,  // TEXT_CALLLUF
+     23,  // TEXT_CALLLV
+     12,  // TEXT_CALLN
+      6,  // TEXT_CALLNC
+      9,  // TEXT_CALLNE
+     24,  // TEXT_CALLNLUF
+     22,  // TEXT_CALLNLV
+     17,  // TEXT_CALLNN
+     20,  // TEXT_CALLNUF
+     18,  // TEXT_CALLNV
+     10,  // TEXT_CALLNZ
+     15,  // TEXT_CALLP
+      0,  // TEXT_CALLU
+     21,  // TEXT_CALLUF
+     19,  // TEXT_CALLV
+      8,  // TEXT_CALLZ
+     26,  // TEXT_CALLZUF
+     56,  // TEXT_RETI
+     58,  // TEXT_RETIC
+     63,  // TEXT_RETIEQ
+     72,  // TEXT_RETIGE
+     70,  // TEXT_RETIGT
+     60,  // TEXT_RETIHI
+     61,  // TEXT_RETIHS
+     69,  // TEXT_RETILE
+     57,  // TEXT_RETILO
+     59,  // TEXT_RETILS
+     67,  // TEXT_RETILT
+     81,  // TEXT_RETILUF
+     79,  // TEXT_RETILV
+     68,  // TEXT_RETIN
+     62,  // TEXT_RETINC
+     65,  // TEXT_RETINE
+     80,  // TEXT_RETINLUF
+     78,  // TEXT_RETINLV
+     73,  // TEXT_RETINN
+     76,  // TEXT_RETINUF
+     74,  // TEXT_RETINV
+     66,  // TEXT_RETINZ
+     71,  // TEXT_RETIP
+     55,  // TEXT_RETIU
+     77,  // TEXT_RETIUF
+     75,  // TEXT_RETIV
+     64,  // TEXT_RETIZ
+     82,  // TEXT_RETIZUF
+     84,  // TEXT_RETS
+     86,  // TEXT_RETSC
+     91,  // TEXT_RETSEQ
+    100,  // TEXT_RETSGE
+     98,  // TEXT_RETSGT
+     88,  // TEXT_RETSHI
+     89,  // TEXT_RETSHS
+     97,  // TEXT_RETSLE
+     85,  // TEXT_RETSLO
+     87,  // TEXT_RETSLS
+     95,  // TEXT_RETSLT
+    109,  // TEXT_RETSLUF
+    107,  // TEXT_RETSLV
+     96,  // TEXT_RETSN
+     90,  // TEXT_RETSNC
+     93,  // TEXT_RETSNE
+    108,  // TEXT_RETSNLUF
+    106,  // TEXT_RETSNLV
+    101,  // TEXT_RETSNN
+    104,  // TEXT_RETSNUF
+    102,  // TEXT_RETSNV
+     94,  // TEXT_RETSNZ
+     99,  // TEXT_RETSP
+     83,  // TEXT_RETSU
+    105,  // TEXT_RETSUF
+    103,  // TEXT_RETSV
+     92,  // TEXT_RETSZ
+    110,  // TEXT_RETSZUF
+     28,  // TEXT_TRAP
+     30,  // TEXT_TRAPC
+     35,  // TEXT_TRAPEQ
+     44,  // TEXT_TRAPGE
+     42,  // TEXT_TRAPGT
+     32,  // TEXT_TRAPHI
+     33,  // TEXT_TRAPHS
+     41,  // TEXT_TRAPLE
+     29,  // TEXT_TRAPLO
+     31,  // TEXT_TRAPLS
+     39,  // TEXT_TRAPLT
+     53,  // TEXT_TRAPLUF
+     51,  // TEXT_TRAPLV
+     40,  // TEXT_TRAPN
+     34,  // TEXT_TRAPNC
+     37,  // TEXT_TRAPNE
+     52,  // TEXT_TRAPNLUF
+     50,  // TEXT_TRAPNLV
+     45,  // TEXT_TRAPNN
+     48,  // TEXT_TRAPNUF
+     46,  // TEXT_TRAPNV
+     38,  // TEXT_TRAPNZ
+     43,  // TEXT_TRAPP
+     27,  // TEXT_TRAPU
+     49,  // TEXT_TRAPUF
+     47,  // TEXT_TRAPV
+     36,  // TEXT_TRAPZ
+     54,  // TEXT_TRAPZUF
 };
 // clang-format on
 
@@ -496,7 +872,17 @@ const Cpu *cpu(CpuType cpuType) {
 }
 
 bool acceptMode(AddrMode opr, AddrMode table) {
-    return opr == table;
+    if (opr == table)
+        return true;
+    if (opr == M_DIR)
+        return (table >= M_IGEN && table <= M_IDAT) || table == M_AD24 || table == M_MSBA;
+    if (opr == M_IDIR)
+        return table >= M_IGEN && table <= M_IDAT;
+    if (opr == M_IREG || opr == R_DP)
+        return (table >= M_IGEN && table <= R_DP) || table == M_IREL || table == M_DREL;
+    if (opr == M_IMM)
+        return (table >= M_IGEN && table <= M_IDAT) || (table >= M_MSBA && table <= M_TVEC);
+    return false;
 }
 
 bool acceptModes(AsmInsn &insn, const Entry *entry) {

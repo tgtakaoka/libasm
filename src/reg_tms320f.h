@@ -18,6 +18,7 @@
 #define __LIBASM_REG_TMS320F_H__
 
 #include <stdint.h>
+#include "config_tms320f.h"
 
 namespace libasm {
 
@@ -64,8 +65,12 @@ namespace reg {
 
 RegName parseRegName(StrScanner &scan, const ValueParser &parser);
 StrBuffer &outRegName(StrBuffer &out, RegName name);
-uint_fast8_t encodeRegName(RegName name);
+Config::opcode_t encodeRegName(RegName name);
+Config::opcode_t encodeAuxiliaryReg(RegName name);
 RegName decodeRegName(uint_fast16_t num);
+bool isFloatReg(RegName name);
+bool isAuxiliaryReg(RegName name);
+bool isIndexReg(RegName name);
 
 }  // namespace reg
 }  // namespace tms320f

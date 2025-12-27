@@ -39,6 +39,7 @@
 #include "asm_scn2650.h"
 #include "asm_tlcs90.h"
 #include "asm_tms320.h"
+#include "asm_tms320f.h"
 #include "asm_tms370.h"
 #include "asm_tms7000.h"
 #include "asm_tms9900.h"
@@ -75,6 +76,7 @@ pdp8::AsmPdp8 asmpdp8;
 scn2650::AsmScn2650 asm2650;
 tlcs90::AsmTlcs90 asm90;
 tms320::AsmTms320 asm320;
+tms320f::AsmTms320f asm320f;
 tms370::AsmTms370 asm370;
 tms7000::AsmTms7000 asm7000;
 tms9900::AsmTms9900 asm9900;
@@ -90,6 +92,7 @@ FairchildDirective dir3850(asm3850);
 IntelDirective dir1610(asm1610);
 IntelDirective dir2650(asm2650);
 IntelDirective dir320(asm320);
+IntelDirective dir320f(asm320f);
 IntelDirective dir370(asm370);
 IntelDirective dir7000(asm7000);
 IntelDirective dir8048(asm8048);
@@ -140,6 +143,7 @@ AsmCommander commander{
         &dir7000,
         &dir370,
         &dir320,
+        &dir320f,
         &dir8086,
         &dir8096,
         &dir68000,

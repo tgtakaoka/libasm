@@ -411,6 +411,7 @@ extern const char TEXT_TRAPU[]     PROGMEM;
 using common::TEXT_TRAPV;
 extern const char TEXT_TRAPZUF[]   PROGMEM;
 extern const char TEXT_TRAPZ[]     PROGMEM;
+using common::TEXT_TRAP;
 extern const char TEXT_TSTB3[]     PROGMEM;
 using common::TEXT_TSTB;
 extern const char TEXT_XOR3[]      PROGMEM;
@@ -430,6 +431,13 @@ extern const char TEXT_REG_RS[]  PROGMEM;
 using common::TEXT_REG_R;
 using common::TEXT_REG_SP;
 using common::TEXT_REG_ST;
+
+extern const char TEXT_dFLOAT[]   PROGMEM; // .float
+extern const char TEXT_dHWORD[]   PROGMEM; // .hword
+extern const char TEXT_dINT[]     PROGMEM; // .int
+extern const char TEXT_dLDOUBLE[] PROGMEM; // .ldouble
+extern const char TEXT_dSFLOAT[]  PROGMEM; // .sfloat
+extern const char TEXT_dSPACE[]   PROGMEM; // .space
 
 // clang-format on
 }  // namespace tms320f

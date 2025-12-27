@@ -57,7 +57,7 @@ RegName parseRegName(StrScanner &scan, const ValueParser &parser) {
             scan = p;
             return RegName(REG_R0 + num);
         }
-        return REG_UNDEF;
+        p = scan;
     }
     if (p.iexpectText_P(TEXT_REG_AR)) {
         const auto num = parseRegNumber(p);
@@ -65,7 +65,7 @@ RegName parseRegName(StrScanner &scan, const ValueParser &parser) {
             scan = p;
             return RegName(REG_AR0 + num);
         }
-        return REG_UNDEF;
+        p = scan;
     }
     const auto *entry = REG_TABLE.searchText(parser.readRegName(p));
     if (entry) {
@@ -85,12 +85,28 @@ StrBuffer &outRegName(StrBuffer &out, RegName name) {
     return out.text_P(TEXT_REG_R).int16(name);
 }
 
-uint_fast8_t encodeRegName(RegName name) {
-    return int8_t(name);
+Config::opcode_t encodeRegName(RegName name) {
+    return static_cast<Config::opcode_t>(name);
+}
+
+Config::opcode_t encodeAuxiliaryReg(RegName name) {
+    return static_cast<Config::opcode_t>(name - REG_AR0);
 }
 
 RegName decodeRegName(uint_fast16_t num) {
     return num < _REG_MAX ? RegName(num) : REG_UNDEF;
+}
+
+bool isFloatReg(RegName name) {
+    return name >= REG_R0 && name <= REG_R7;
+}
+
+bool isAuxiliaryReg(RegName name) {
+    return name >= REG_AR0 && name <= REG_AR7;
+}
+
+bool isIndexReg(RegName name) {
+    return name == REG_IR0 || name == REG_IR1;
 }
 
 }  // namespace reg
