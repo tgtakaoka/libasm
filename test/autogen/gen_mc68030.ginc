@@ -30977,6 +30977,2447 @@
       bfins       d0, (0x0222).l{0:d0}
       bfins       d0, (0x0a10).l{d0:13}
       bfins       d0, (0x0a22).l{d0:d0}
+      pflusha
+      pflush      sfc, #0
+      pflush      dfc, #0
+      pflush      d0, #0
+      pflush      #0, #0
+      pmovel      (a0), tt0
+      pmovefdl    (a0), tt0
+      pmovel      tt0, (a0)
+      ploadw      sfc, (a0)
+      ploadw      dfc, (a0)
+      ploadw      d0, (a0)
+      ploadw      #0, (a0)
+      ploadr      sfc, (a0)
+      ploadr      dfc, (a0)
+      ploadr      d0, (a0)
+      ploadr      #0, (a0)
+      pflush      sfc, #0, (a0)
+      pflush      dfc, #0, (a0)
+      pflush      d0, #0, (a0)
+      pflush      #0, #0, (a0)
+      pmovel      (a0), tc
+      pmovefdl    (a0), tc
+      pmovel      tc, (a0)
+      pmoveq      (a0), srp
+      pmovefdq    (a0), srp
+      pmoveq      srp, (a0)
+      pmoveq      (a0), crp
+      pmovefdq    (a0), crp
+      pmoveq      crp, (a0)
+      pmovew      (a0), psr
+      pmovew      psr, (a0)
+      ptestw      sfc, (a0), #0
+      ptestw      dfc, (a0), #0
+      ptestw      d0, (a0), #0
+      ptestw      #0, (a0), #0
+      ptestw      sfc, (a0), #0, a0
+      ptestw      dfc, (a0), #0, a0
+      ptestw      d0, (a0), #0, a0
+      ptestw      #0, (a0), #0, a0
+      ptestr      sfc, (a0), #0
+      ptestr      dfc, (a0), #0
+      ptestr      d0, (a0), #0
+      ptestr      #0, (a0), #0
+      ptestr      sfc, (a0), #0, a0
+      ptestr      dfc, (a0), #0, a0
+      ptestr      d0, (a0), #0, a0
+      ptestr      #0, (a0), #0, a0
+      pmovel      (0x0901,a0), tt0
+      pmovefdl    (0x0a01,a0), tt0
+      pmovel      tt0, (0x0b01,a0)
+      ploadw      sfc, (0x2101,a0)
+      ploadw      dfc, (0x2102,a0)
+      ploadw      d0, (0x2109,a0)
+      ploadw      #0, (0x2111,a0)
+      ploadr      sfc, (0x2301,a0)
+      ploadr      dfc, (0x2302,a0)
+      ploadr      d0, (0x2309,a0)
+      ploadr      #0, (0x2311,a0)
+      pflush      sfc, #0, (0x3901,a0)
+      pflush      dfc, #0, (0x3902,a0)
+      pflush      d0, #0, (0x3909,a0)
+      pflush      #0, #0, (0x3911,a0)
+      pmovel      (0x4101,a0), tc
+      pmovefdl    (0x4201,a0), tc
+      pmovel      tc, (0x4301,a0)
+      pmoveq      (0x4901,a0), srp
+      pmovefdq    (0x4a01,a0), srp
+      pmoveq      srp, (0x4b01,a0)
+      pmoveq      (0x4d01,a0), crp
+      pmovefdq    (0x4e01,a0), crp
+      pmoveq      crp, (0x4f01,a0)
+      pmovew      (0x6101,a0), psr
+      pmovew      psr, (0x6301,a0)
+      ptestw      sfc, (-0x7eff,a0), #0
+      ptestw      dfc, (-0x7efe,a0), #0
+      ptestw      d0, (-0x7ef7,a0), #0
+      ptestw      #0, (-0x7eef,a0), #0
+      ptestw      sfc, (-0x7dff,a0), #0, a0
+      ptestw      dfc, (-0x7dfe,a0), #0, a0
+      ptestw      d0, (-0x7df7,a0), #0, a0
+      ptestw      #0, (-0x7def,a0), #0, a0
+      ptestr      sfc, (-0x7cff,a0), #0
+      ptestr      dfc, (-0x7cfe,a0), #0
+      ptestr      d0, (-0x7cf7,a0), #0
+      ptestr      #0, (-0x7cef,a0), #0
+      ptestr      sfc, (-0x7bff,a0), #0, a0
+      ptestr      dfc, (-0x7bfe,a0), #0, a0
+      ptestr      d0, (-0x7bf7,a0), #0, a0
+      ptestr      #0, (-0x7bef,a0), #0, a0
+      pmovel      (a0,d0.l), tt0
+      pmovel      ([a0,d0.l]), tt0
+      pmovel      ([a0,d0.l],0x0a13), tt0
+      pmovel      ([a0,d0.l],0x0a140b15), tt0
+      pmovel      ([a0],d0.l), tt0
+      pmovel      ([a0],d0.l,0x0a17), tt0
+      pmovel      ([a0],d0.l,0x0a180b19), tt0
+      pmovel      (0x0a21,a0,d0.l), tt0
+      pmovel      ([0x0a22,a0,d0.l]), tt0
+      pmovel      ([0x0a23,a0,d0.l],0x0b24), tt0
+      pmovel      ([0x0a24,a0,d0.l],0x0b250c26), tt0
+      pmovel      ([0x0a26,a0],d0.l), tt0
+      pmovel      ([0x0a27,a0],d0.l,0x0b28), tt0
+      pmovel      ([0x0a28,a0],d0.l,0x0b290c2a), tt0
+      pmovel      (0x0a310b32,a0,d0.l), tt0
+      pmovel      ([0x0a320b33,a0,d0.l]), tt0
+      pmovel      ([0x0a340b35,a0,d0.l],0x0c360d37), tt0
+      pmovel      ([0x0a360b37,a0],d0.l), tt0
+      pmovel      ([0x0a380b39,a0],d0.l,0x0c3a0d3b), tt0
+      pmovel      (a0), tt0
+      pmovel      ([a0]), tt0
+      pmovel      ([a0],0x0a53), tt0
+      pmovel      ([a0],0x0a540b55), tt0
+      pmovel      (0x0a61,a0), tt0
+      pmovel      ([0x0a62,a0]), tt0
+      pmovel      ([0x0a63,a0],0x0b64), tt0
+      pmovel      ([0x0a64,a0],0x0b650c66), tt0
+      pmovel      (0x0a710b72,a0), tt0
+      pmovel      ([0x0a720b73,a0]), tt0
+      pmovel      ([0x0a740b75,a0],0x0c760d77), tt0
+      pmovel      (d0.l), tt0
+      pmovel      ([d0.l]), tt0
+      pmovel      ([d0.l],0x0a93), tt0
+      pmovel      ([d0.l],0x0a940b95), tt0
+      pmovel      (0x0aa1,d0.l), tt0
+      pmovel      ([0x0aa2,d0.l]), tt0
+      pmovel      ([0x0aa3,d0.l],0x0ba4), tt0
+      pmovel      ([0x0aa4,d0.l],0x0ba50ca6), tt0
+      pmovel      ([0x0aa6],d0.l), tt0
+      pmovel      ([0x0aa7],d0.l,0x0ba8), tt0
+      pmovel      ([0x0aa8],d0.l,0x0ba90caa), tt0
+      pmovel      (0x0ab10bb2,d0.l), tt0
+      pmovel      ([0x0ab20bb3,d0.l]), tt0
+      pmovel      ([0x0ab40bb5,d0.l],0x0cb60db7), tt0
+      pmovel      ([0x0ab60bb7],d0.l), tt0
+      pmovel      ([0x0ab80bb9],d0.l,0x0cba0dbb), tt0
+      pmovel      (0x0ae2), tt0
+      pmovel      ([0x0ae2]), tt0
+      pmovel      ([0x0ae4],0x0be5), tt0
+      pmovel      ([0x0ae4],0x0be50ce6), tt0
+      pmovel      (0x0af10bf2), tt0
+      pmovel      ([0x0af20bf4]), tt0
+      pmovel      ([0x0af40bf6],0x0cf70df8), tt0
+      pmovel      (0,a0,d0.l*2), tt0
+      pmovefdl    (1,a0,d0.l*2), tt0
+      pmovefdl    (a0,d0.l*2), tt0
+      pmovefdl    ([a0,d0.l*2]), tt0
+      pmovefdl    ([a0,d0.l*2],0x0c13), tt0
+      pmovefdl    ([a0,d0.l*2],0x0c140d15), tt0
+      pmovefdl    ([a0],d0.l*2), tt0
+      pmovefdl    ([a0],d0.l*2,0x0c17), tt0
+      pmovefdl    ([a0],d0.l*2,0x0c180d19), tt0
+      pmovefdl    (0x0c21,a0,d0.l*2), tt0
+      pmovefdl    ([0x0c22,a0,d0.l*2]), tt0
+      pmovefdl    ([0x0c23,a0,d0.l*2],0x0d24), tt0
+      pmovefdl    ([0x0c24,a0,d0.l*2],0x0d250e26), tt0
+      pmovefdl    ([0x0c26,a0],d0.l*2), tt0
+      pmovefdl    ([0x0c27,a0],d0.l*2,0x0d28), tt0
+      pmovefdl    ([0x0c28,a0],d0.l*2,0x0d290e2a), tt0
+      pmovefdl    (0x0c310d32,a0,d0.l*2), tt0
+      pmovefdl    ([0x0c320d33,a0,d0.l*2]), tt0
+      pmovefdl    ([0x0c340d35,a0,d0.l*2],0x0e360f37), tt0
+      pmovefdl    ([0x0c360d37,a0],d0.l*2), tt0
+      pmovefdl    ([0x0c380d39,a0],d0.l*2,0x0e3a0f3b), tt0
+      pmovefdl    (a0), tt0
+      pmovefdl    ([a0]), tt0
+      pmovefdl    ([a0],0x0c53), tt0
+      pmovefdl    ([a0],0x0c540d55), tt0
+      pmovefdl    (0x0c61,a0), tt0
+      pmovefdl    ([0x0c62,a0]), tt0
+      pmovefdl    ([0x0c63,a0],0x0d64), tt0
+      pmovefdl    ([0x0c64,a0],0x0d650e66), tt0
+      pmovefdl    (0x0c710d72,a0), tt0
+      pmovefdl    ([0x0c720d73,a0]), tt0
+      pmovefdl    ([0x0c740d75,a0],0x0e760f77), tt0
+      pmovefdl    (d0.l*2), tt0
+      pmovefdl    ([d0.l*2]), tt0
+      pmovefdl    ([d0.l*2],0x0c93), tt0
+      pmovefdl    ([d0.l*2],0x0c940d95), tt0
+      pmovefdl    (0x0ca1,d0.l*2), tt0
+      pmovefdl    ([0x0ca2,d0.l*2]), tt0
+      pmovefdl    ([0x0ca3,d0.l*2],0x0da4), tt0
+      pmovefdl    ([0x0ca4,d0.l*2],0x0da50ea6), tt0
+      pmovefdl    ([0x0ca6],d0.l*2), tt0
+      pmovefdl    ([0x0ca7],d0.l*2,0x0da8), tt0
+      pmovefdl    ([0x0ca8],d0.l*2,0x0da90eaa), tt0
+      pmovefdl    (0x0cb10db2,d0.l*2), tt0
+      pmovefdl    ([0x0cb20db3,d0.l*2]), tt0
+      pmovefdl    ([0x0cb40db5,d0.l*2],0x0eb60fb7), tt0
+      pmovefdl    ([0x0cb60db7],d0.l*2), tt0
+      pmovefdl    ([0x0cb80db9],d0.l*2,0x0eba0fbb), tt0
+      pmovefdl    (0x0ce2), tt0
+      pmovefdl    ([0x0ce2]), tt0
+      pmovefdl    ([0x0ce4],0x0de5), tt0
+      pmovefdl    ([0x0ce4],0x0de50ee6), tt0
+      pmovefdl    (0x0cf10df2), tt0
+      pmovefdl    ([0x0cf20df4]), tt0
+      pmovefdl    ([0x0cf40df6],0x0ef70ff8), tt0
+      pmovel      tt0, (a0,d0.l*2)
+      pmovel      tt0, ([a0,d0.l*2])
+      pmovel      tt0, ([a0,d0.l*2],0x0c13)
+      pmovel      tt0, ([a0,d0.l*2],0x0c140d15)
+      pmovel      tt0, ([a0],d0.l*2)
+      pmovel      tt0, ([a0],d0.l*2,0x0c17)
+      pmovel      tt0, ([a0],d0.l*2,0x0c180d19)
+      pmovel      tt0, (0x0c21,a0,d0.l*2)
+      pmovel      tt0, ([0x0c22,a0,d0.l*2])
+      pmovel      tt0, ([0x0c23,a0,d0.l*2],0x0d24)
+      pmovel      tt0, ([0x0c24,a0,d0.l*2],0x0d250e26)
+      pmovel      tt0, ([0x0c26,a0],d0.l*2)
+      pmovel      tt0, ([0x0c27,a0],d0.l*2,0x0d28)
+      pmovel      tt0, ([0x0c28,a0],d0.l*2,0x0d290e2a)
+      pmovel      tt0, (0x0c310d32,a0,d0.l*2)
+      pmovel      tt0, ([0x0c320d33,a0,d0.l*2])
+      pmovel      tt0, ([0x0c340d35,a0,d0.l*2],0x0e360f37)
+      pmovel      tt0, ([0x0c360d37,a0],d0.l*2)
+      pmovel      tt0, ([0x0c380d39,a0],d0.l*2,0x0e3a0f3b)
+      pmovel      tt0, (a0)
+      pmovel      tt0, ([a0])
+      pmovel      tt0, ([a0],0x0c53)
+      pmovel      tt0, ([a0],0x0c540d55)
+      pmovel      tt0, (0x0c61,a0)
+      pmovel      tt0, ([0x0c62,a0])
+      pmovel      tt0, ([0x0c63,a0],0x0d64)
+      pmovel      tt0, ([0x0c64,a0],0x0d650e66)
+      pmovel      tt0, (0x0c710d72,a0)
+      pmovel      tt0, ([0x0c720d73,a0])
+      pmovel      tt0, ([0x0c740d75,a0],0x0e760f77)
+      pmovel      tt0, (d0.l*2)
+      pmovel      tt0, ([d0.l*2])
+      pmovel      tt0, ([d0.l*2],0x0c93)
+      pmovel      tt0, ([d0.l*2],0x0c940d95)
+      pmovel      tt0, (0x0ca1,d0.l*2)
+      pmovel      tt0, ([0x0ca2,d0.l*2])
+      pmovel      tt0, ([0x0ca3,d0.l*2],0x0da4)
+      pmovel      tt0, ([0x0ca4,d0.l*2],0x0da50ea6)
+      pmovel      tt0, ([0x0ca6],d0.l*2)
+      pmovel      tt0, ([0x0ca7],d0.l*2,0x0da8)
+      pmovel      tt0, ([0x0ca8],d0.l*2,0x0da90eaa)
+      pmovel      tt0, (0x0cb10db2,d0.l*2)
+      pmovel      tt0, ([0x0cb20db3,d0.l*2])
+      pmovel      tt0, ([0x0cb40db5,d0.l*2],0x0eb60fb7)
+      pmovel      tt0, ([0x0cb60db7],d0.l*2)
+      pmovel      tt0, ([0x0cb80db9],d0.l*2,0x0eba0fbb)
+      pmovel      tt0, (0x0ce2)
+      pmovel      tt0, ([0x0ce2])
+      pmovel      tt0, ([0x0ce4],0x0de5)
+      pmovel      tt0, ([0x0ce4],0x0de50ee6)
+      pmovel      tt0, (0x0cf10df2)
+      pmovel      tt0, ([0x0cf20df4])
+      pmovel      tt0, ([0x0cf40df6],0x0ef70ff8)
+      pmovel      tt0, (0,a0,d0.l*4)
+      ploadw      sfc, (a0,d2.w)
+      ploadw      sfc, ([a0,d2.w])
+      ploadw      sfc, ([a0,d2.w],0x2213)
+      ploadw      sfc, ([a0,d2.w],0x22142315)
+      ploadw      sfc, ([a0],d2.w)
+      ploadw      sfc, ([a0],d2.w,0x2217)
+      ploadw      sfc, ([a0],d2.w,0x22182319)
+      ploadw      sfc, (0x2221,a0,d2.w)
+      ploadw      sfc, ([0x2222,a0,d2.w])
+      ploadw      sfc, ([0x2223,a0,d2.w],0x2324)
+      ploadw      sfc, ([0x2224,a0,d2.w],0x23252426)
+      ploadw      sfc, ([0x2226,a0],d2.w)
+      ploadw      sfc, ([0x2227,a0],d2.w,0x2328)
+      ploadw      sfc, ([0x2228,a0],d2.w,0x2329242a)
+      ploadw      sfc, (0x22312332,a0,d2.w)
+      ploadw      sfc, ([0x22322333,a0,d2.w])
+      ploadw      sfc, ([0x22342335,a0,d2.w],0x24362537)
+      ploadw      sfc, ([0x22362337,a0],d2.w)
+      ploadw      sfc, ([0x22382339,a0],d2.w,0x243a253b)
+      ploadw      sfc, (a0)
+      ploadw      sfc, ([a0])
+      ploadw      sfc, ([a0],0x2253)
+      ploadw      sfc, ([a0],0x22542355)
+      ploadw      sfc, (0x2261,a0)
+      ploadw      sfc, ([0x2262,a0])
+      ploadw      sfc, ([0x2263,a0],0x2364)
+      ploadw      sfc, ([0x2264,a0],0x23652466)
+      ploadw      sfc, (0x22712372,a0)
+      ploadw      sfc, ([0x22722373,a0])
+      ploadw      sfc, ([0x22742375,a0],0x24762577)
+      ploadw      sfc, (d2.w)
+      ploadw      sfc, ([d2.w])
+      ploadw      sfc, ([d2.w],0x2293)
+      ploadw      sfc, ([d2.w],0x22942395)
+      ploadw      sfc, (0x22a1,d2.w)
+      ploadw      sfc, ([0x22a2,d2.w])
+      ploadw      sfc, ([0x22a3,d2.w],0x23a4)
+      ploadw      sfc, ([0x22a4,d2.w],0x23a524a6)
+      ploadw      sfc, ([0x22a6],d2.w)
+      ploadw      sfc, ([0x22a7],d2.w,0x23a8)
+      ploadw      sfc, ([0x22a8],d2.w,0x23a924aa)
+      ploadw      sfc, (0x22b123b2,d2.w)
+      ploadw      sfc, ([0x22b223b3,d2.w])
+      ploadw      sfc, ([0x22b423b5,d2.w],0x24b625b7)
+      ploadw      sfc, ([0x22b623b7],d2.w)
+      ploadw      sfc, ([0x22b823b9],d2.w,0x24ba25bb)
+      ploadw      sfc, (0x22e2)
+      ploadw      sfc, ([0x22e2])
+      ploadw      sfc, ([0x22e4],0x23e5)
+      ploadw      sfc, ([0x22e4],0x23e524e6)
+      ploadw      sfc, (0x22f123f2)
+      ploadw      sfc, ([0x22f223f4])
+      ploadw      sfc, ([0x22f423f6],0x24f725f8)
+      ploadw      sfc, (0,a0,d2.w*2)
+      ploadw      dfc, (a0,d2.w)
+      ploadw      dfc, ([a0,d2.w])
+      ploadw      dfc, ([a0,d2.w],0x2213)
+      ploadw      dfc, ([a0,d2.w],0x22142315)
+      ploadw      dfc, ([a0],d2.w)
+      ploadw      dfc, ([a0],d2.w,0x2217)
+      ploadw      dfc, ([a0],d2.w,0x22182319)
+      ploadw      dfc, (0x2221,a0,d2.w)
+      ploadw      dfc, ([0x2222,a0,d2.w])
+      ploadw      dfc, ([0x2223,a0,d2.w],0x2324)
+      ploadw      dfc, ([0x2224,a0,d2.w],0x23252426)
+      ploadw      dfc, ([0x2226,a0],d2.w)
+      ploadw      dfc, ([0x2227,a0],d2.w,0x2328)
+      ploadw      dfc, ([0x2228,a0],d2.w,0x2329242a)
+      ploadw      dfc, (0x22312332,a0,d2.w)
+      ploadw      dfc, ([0x22322333,a0,d2.w])
+      ploadw      dfc, ([0x22342335,a0,d2.w],0x24362537)
+      ploadw      dfc, ([0x22362337,a0],d2.w)
+      ploadw      dfc, ([0x22382339,a0],d2.w,0x243a253b)
+      ploadw      dfc, (a0)
+      ploadw      dfc, ([a0])
+      ploadw      dfc, ([a0],0x2253)
+      ploadw      dfc, ([a0],0x22542355)
+      ploadw      dfc, (0x2261,a0)
+      ploadw      dfc, ([0x2262,a0])
+      ploadw      dfc, ([0x2263,a0],0x2364)
+      ploadw      dfc, ([0x2264,a0],0x23652466)
+      ploadw      dfc, (0x22712372,a0)
+      ploadw      dfc, ([0x22722373,a0])
+      ploadw      dfc, ([0x22742375,a0],0x24762577)
+      ploadw      dfc, (d2.w)
+      ploadw      dfc, ([d2.w])
+      ploadw      dfc, ([d2.w],0x2293)
+      ploadw      dfc, ([d2.w],0x22942395)
+      ploadw      dfc, (0x22a1,d2.w)
+      ploadw      dfc, ([0x22a2,d2.w])
+      ploadw      dfc, ([0x22a3,d2.w],0x23a4)
+      ploadw      dfc, ([0x22a4,d2.w],0x23a524a6)
+      ploadw      dfc, ([0x22a6],d2.w)
+      ploadw      dfc, ([0x22a7],d2.w,0x23a8)
+      ploadw      dfc, ([0x22a8],d2.w,0x23a924aa)
+      ploadw      dfc, (0x22b123b2,d2.w)
+      ploadw      dfc, ([0x22b223b3,d2.w])
+      ploadw      dfc, ([0x22b423b5,d2.w],0x24b625b7)
+      ploadw      dfc, ([0x22b623b7],d2.w)
+      ploadw      dfc, ([0x22b823b9],d2.w,0x24ba25bb)
+      ploadw      dfc, (0x22e2)
+      ploadw      dfc, ([0x22e2])
+      ploadw      dfc, ([0x22e4],0x23e5)
+      ploadw      dfc, ([0x22e4],0x23e524e6)
+      ploadw      dfc, (0x22f123f2)
+      ploadw      dfc, ([0x22f223f4])
+      ploadw      dfc, ([0x22f423f6],0x24f725f8)
+      ploadw      dfc, (0,a0,d2.w*2)
+      ploadw      d0, (a0,d2.w)
+      ploadw      d0, ([a0,d2.w])
+      ploadw      d0, ([a0,d2.w],0x2213)
+      ploadw      d0, ([a0,d2.w],0x22142315)
+      ploadw      d0, ([a0],d2.w)
+      ploadw      d0, ([a0],d2.w,0x2217)
+      ploadw      d0, ([a0],d2.w,0x22182319)
+      ploadw      d0, (0x2221,a0,d2.w)
+      ploadw      d0, ([0x2222,a0,d2.w])
+      ploadw      d0, ([0x2223,a0,d2.w],0x2324)
+      ploadw      d0, ([0x2224,a0,d2.w],0x23252426)
+      ploadw      d0, ([0x2226,a0],d2.w)
+      ploadw      d0, ([0x2227,a0],d2.w,0x2328)
+      ploadw      d0, ([0x2228,a0],d2.w,0x2329242a)
+      ploadw      d0, (0x22312332,a0,d2.w)
+      ploadw      d0, ([0x22322333,a0,d2.w])
+      ploadw      d0, ([0x22342335,a0,d2.w],0x24362537)
+      ploadw      d0, ([0x22362337,a0],d2.w)
+      ploadw      d0, ([0x22382339,a0],d2.w,0x243a253b)
+      ploadw      d0, (a0)
+      ploadw      d0, ([a0])
+      ploadw      d0, ([a0],0x2253)
+      ploadw      d0, ([a0],0x22542355)
+      ploadw      d0, (0x2261,a0)
+      ploadw      d0, ([0x2262,a0])
+      ploadw      d0, ([0x2263,a0],0x2364)
+      ploadw      d0, ([0x2264,a0],0x23652466)
+      ploadw      d0, (0x22712372,a0)
+      ploadw      d0, ([0x22722373,a0])
+      ploadw      d0, ([0x22742375,a0],0x24762577)
+      ploadw      d0, (d2.w)
+      ploadw      d0, ([d2.w])
+      ploadw      d0, ([d2.w],0x2293)
+      ploadw      d0, ([d2.w],0x22942395)
+      ploadw      d0, (0x22a1,d2.w)
+      ploadw      d0, ([0x22a2,d2.w])
+      ploadw      d0, ([0x22a3,d2.w],0x23a4)
+      ploadw      d0, ([0x22a4,d2.w],0x23a524a6)
+      ploadw      d0, ([0x22a6],d2.w)
+      ploadw      d0, ([0x22a7],d2.w,0x23a8)
+      ploadw      d0, ([0x22a8],d2.w,0x23a924aa)
+      ploadw      d0, (0x22b123b2,d2.w)
+      ploadw      d0, ([0x22b223b3,d2.w])
+      ploadw      d0, ([0x22b423b5,d2.w],0x24b625b7)
+      ploadw      d0, ([0x22b623b7],d2.w)
+      ploadw      d0, ([0x22b823b9],d2.w,0x24ba25bb)
+      ploadw      d0, (0x22e2)
+      ploadw      d0, ([0x22e2])
+      ploadw      d0, ([0x22e4],0x23e5)
+      ploadw      d0, ([0x22e4],0x23e524e6)
+      ploadw      d0, (0x22f123f2)
+      ploadw      d0, ([0x22f223f4])
+      ploadw      d0, ([0x22f423f6],0x24f725f8)
+      ploadw      d0, (0,a0,d2.w*2)
+      ploadw      #0, ([a0,d2.w])
+      ploadw      #0, ([a0,d2.w],0x2213)
+      ploadw      #0, ([a0,d2.w],0x22142315)
+      ploadw      #0, ([a0],d2.w)
+      ploadw      #0, ([a0],d2.w,0x2217)
+      ploadw      #0, ([a0],d2.w,0x22182319)
+      ploadw      #0, (0x2221,a0,d2.w)
+      ploadw      #0, ([0x2222,a0,d2.w])
+      ploadw      #0, ([0x2223,a0,d2.w],0x2324)
+      ploadw      #0, ([0x2224,a0,d2.w],0x23252426)
+      ploadw      #0, ([0x2226,a0],d2.w)
+      ploadw      #0, ([0x2227,a0],d2.w,0x2328)
+      ploadw      #0, ([0x2228,a0],d2.w,0x2329242a)
+      ploadw      #0, (0x22312332,a0,d2.w)
+      ploadw      #0, ([0x22322333,a0,d2.w])
+      ploadw      #0, ([0x22342335,a0,d2.w],0x24362537)
+      ploadw      #0, ([0x22362337,a0],d2.w)
+      ploadw      #0, ([0x22382339,a0],d2.w,0x243a253b)
+      ploadw      #0, (a0)
+      ploadw      #0, ([a0])
+      ploadw      #0, ([a0],0x2253)
+      ploadw      #0, ([a0],0x22542355)
+      ploadw      #0, (0x2261,a0)
+      ploadw      #0, ([0x2262,a0])
+      ploadw      #0, ([0x2263,a0],0x2364)
+      ploadw      #0, ([0x2264,a0],0x23652466)
+      ploadw      #0, (0x22712372,a0)
+      ploadw      #0, ([0x22722373,a0])
+      ploadw      #0, ([0x22742375,a0],0x24762577)
+      ploadw      #0, (d2.w)
+      ploadw      #0, ([d2.w])
+      ploadw      #0, ([d2.w],0x2293)
+      ploadw      #0, ([d2.w],0x22942395)
+      ploadw      #0, (0x22a1,d2.w)
+      ploadw      #0, ([0x22a2,d2.w])
+      ploadw      #0, ([0x22a3,d2.w],0x23a4)
+      ploadw      #0, ([0x22a4,d2.w],0x23a524a6)
+      ploadw      #0, ([0x22a6],d2.w)
+      ploadw      #0, ([0x22a7],d2.w,0x23a8)
+      ploadw      #0, ([0x22a8],d2.w,0x23a924aa)
+      ploadw      #0, (0x22b123b2,d2.w)
+      ploadw      #0, ([0x22b223b3,d2.w])
+      ploadw      #0, ([0x22b423b5,d2.w],0x24b625b7)
+      ploadw      #0, ([0x22b623b7],d2.w)
+      ploadw      #0, ([0x22b823b9],d2.w,0x24ba25bb)
+      ploadw      #0, (0x22e2)
+      ploadw      #0, ([0x22e2])
+      ploadw      #0, ([0x22e4],0x23e5)
+      ploadw      #0, ([0x22e4],0x23e524e6)
+      ploadw      #0, (0x22f123f2)
+      ploadw      #0, ([0x22f223f4])
+      ploadw      #0, ([0x22f423f6],0x24f725f8)
+      ploadw      #0, (0,a0,d2.w*2)
+      ploadw      #0, (a0,d2.w*2)
+      ploadr      sfc, (a0,d2.w*2)
+      ploadr      sfc, ([a0,d2.w*2])
+      ploadr      sfc, ([a0,d2.w*2],0x2413)
+      ploadr      sfc, ([a0,d2.w*2],0x24142515)
+      ploadr      sfc, ([a0],d2.w*2)
+      ploadr      sfc, ([a0],d2.w*2,0x2417)
+      ploadr      sfc, ([a0],d2.w*2,0x24182519)
+      ploadr      sfc, (0x2421,a0,d2.w*2)
+      ploadr      sfc, ([0x2422,a0,d2.w*2])
+      ploadr      sfc, ([0x2423,a0,d2.w*2],0x2524)
+      ploadr      sfc, ([0x2424,a0,d2.w*2],0x25252626)
+      ploadr      sfc, ([0x2426,a0],d2.w*2)
+      ploadr      sfc, ([0x2427,a0],d2.w*2,0x2528)
+      ploadr      sfc, ([0x2428,a0],d2.w*2,0x2529262a)
+      ploadr      sfc, (0x24312532,a0,d2.w*2)
+      ploadr      sfc, ([0x24322533,a0,d2.w*2])
+      ploadr      sfc, ([0x24342535,a0,d2.w*2],0x26362737)
+      ploadr      sfc, ([0x24362537,a0],d2.w*2)
+      ploadr      sfc, ([0x24382539,a0],d2.w*2,0x263a273b)
+      ploadr      sfc, (a0)
+      ploadr      sfc, ([a0])
+      ploadr      sfc, ([a0],0x2453)
+      ploadr      sfc, ([a0],0x24542555)
+      ploadr      sfc, (0x2461,a0)
+      ploadr      sfc, ([0x2462,a0])
+      ploadr      sfc, ([0x2463,a0],0x2564)
+      ploadr      sfc, ([0x2464,a0],0x25652666)
+      ploadr      sfc, (0x24712572,a0)
+      ploadr      sfc, ([0x24722573,a0])
+      ploadr      sfc, ([0x24742575,a0],0x26762777)
+      ploadr      sfc, (d2.w*2)
+      ploadr      sfc, ([d2.w*2])
+      ploadr      sfc, ([d2.w*2],0x2493)
+      ploadr      sfc, ([d2.w*2],0x24942595)
+      ploadr      sfc, (0x24a1,d2.w*2)
+      ploadr      sfc, ([0x24a2,d2.w*2])
+      ploadr      sfc, ([0x24a3,d2.w*2],0x25a4)
+      ploadr      sfc, ([0x24a4,d2.w*2],0x25a526a6)
+      ploadr      sfc, ([0x24a6],d2.w*2)
+      ploadr      sfc, ([0x24a7],d2.w*2,0x25a8)
+      ploadr      sfc, ([0x24a8],d2.w*2,0x25a926aa)
+      ploadr      sfc, (0x24b125b2,d2.w*2)
+      ploadr      sfc, ([0x24b225b3,d2.w*2])
+      ploadr      sfc, ([0x24b425b5,d2.w*2],0x26b627b7)
+      ploadr      sfc, ([0x24b625b7],d2.w*2)
+      ploadr      sfc, ([0x24b825b9],d2.w*2,0x26ba27bb)
+      ploadr      sfc, (0x24e2)
+      ploadr      sfc, ([0x24e2])
+      ploadr      sfc, ([0x24e4],0x25e5)
+      ploadr      sfc, ([0x24e4],0x25e526e6)
+      ploadr      sfc, (0x24f125f2)
+      ploadr      sfc, ([0x24f225f4])
+      ploadr      sfc, ([0x24f425f6],0x26f727f8)
+      ploadr      sfc, (0,a0,d2.w*4)
+      ploadr      dfc, (a0,d2.w*2)
+      ploadr      dfc, ([a0,d2.w*2])
+      ploadr      dfc, ([a0,d2.w*2],0x2413)
+      ploadr      dfc, ([a0,d2.w*2],0x24142515)
+      ploadr      dfc, ([a0],d2.w*2)
+      ploadr      dfc, ([a0],d2.w*2,0x2417)
+      ploadr      dfc, ([a0],d2.w*2,0x24182519)
+      ploadr      dfc, (0x2421,a0,d2.w*2)
+      ploadr      dfc, ([0x2422,a0,d2.w*2])
+      ploadr      dfc, ([0x2423,a0,d2.w*2],0x2524)
+      ploadr      dfc, ([0x2424,a0,d2.w*2],0x25252626)
+      ploadr      dfc, ([0x2426,a0],d2.w*2)
+      ploadr      dfc, ([0x2427,a0],d2.w*2,0x2528)
+      ploadr      dfc, ([0x2428,a0],d2.w*2,0x2529262a)
+      ploadr      dfc, (0x24312532,a0,d2.w*2)
+      ploadr      dfc, ([0x24322533,a0,d2.w*2])
+      ploadr      dfc, ([0x24342535,a0,d2.w*2],0x26362737)
+      ploadr      dfc, ([0x24362537,a0],d2.w*2)
+      ploadr      dfc, ([0x24382539,a0],d2.w*2,0x263a273b)
+      ploadr      dfc, (a0)
+      ploadr      dfc, ([a0])
+      ploadr      dfc, ([a0],0x2453)
+      ploadr      dfc, ([a0],0x24542555)
+      ploadr      dfc, (0x2461,a0)
+      ploadr      dfc, ([0x2462,a0])
+      ploadr      dfc, ([0x2463,a0],0x2564)
+      ploadr      dfc, ([0x2464,a0],0x25652666)
+      ploadr      dfc, (0x24712572,a0)
+      ploadr      dfc, ([0x24722573,a0])
+      ploadr      dfc, ([0x24742575,a0],0x26762777)
+      ploadr      dfc, (d2.w*2)
+      ploadr      dfc, ([d2.w*2])
+      ploadr      dfc, ([d2.w*2],0x2493)
+      ploadr      dfc, ([d2.w*2],0x24942595)
+      ploadr      dfc, (0x24a1,d2.w*2)
+      ploadr      dfc, ([0x24a2,d2.w*2])
+      ploadr      dfc, ([0x24a3,d2.w*2],0x25a4)
+      ploadr      dfc, ([0x24a4,d2.w*2],0x25a526a6)
+      ploadr      dfc, ([0x24a6],d2.w*2)
+      ploadr      dfc, ([0x24a7],d2.w*2,0x25a8)
+      ploadr      dfc, ([0x24a8],d2.w*2,0x25a926aa)
+      ploadr      dfc, (0x24b125b2,d2.w*2)
+      ploadr      dfc, ([0x24b225b3,d2.w*2])
+      ploadr      dfc, ([0x24b425b5,d2.w*2],0x26b627b7)
+      ploadr      dfc, ([0x24b625b7],d2.w*2)
+      ploadr      dfc, ([0x24b825b9],d2.w*2,0x26ba27bb)
+      ploadr      dfc, (0x24e2)
+      ploadr      dfc, ([0x24e2])
+      ploadr      dfc, ([0x24e4],0x25e5)
+      ploadr      dfc, ([0x24e4],0x25e526e6)
+      ploadr      dfc, (0x24f125f2)
+      ploadr      dfc, ([0x24f225f4])
+      ploadr      dfc, ([0x24f425f6],0x26f727f8)
+      ploadr      dfc, (0,a0,d2.w*4)
+      ploadr      d0, (a0,d2.w*2)
+      ploadr      d0, ([a0,d2.w*2])
+      ploadr      d0, ([a0,d2.w*2],0x2413)
+      ploadr      d0, ([a0,d2.w*2],0x24142515)
+      ploadr      d0, ([a0],d2.w*2)
+      ploadr      d0, ([a0],d2.w*2,0x2417)
+      ploadr      d0, ([a0],d2.w*2,0x24182519)
+      ploadr      d0, (0x2421,a0,d2.w*2)
+      ploadr      d0, ([0x2422,a0,d2.w*2])
+      ploadr      d0, ([0x2423,a0,d2.w*2],0x2524)
+      ploadr      d0, ([0x2424,a0,d2.w*2],0x25252626)
+      ploadr      d0, ([0x2426,a0],d2.w*2)
+      ploadr      d0, ([0x2427,a0],d2.w*2,0x2528)
+      ploadr      d0, ([0x2428,a0],d2.w*2,0x2529262a)
+      ploadr      d0, (0x24312532,a0,d2.w*2)
+      ploadr      d0, ([0x24322533,a0,d2.w*2])
+      ploadr      d0, ([0x24342535,a0,d2.w*2],0x26362737)
+      ploadr      d0, ([0x24362537,a0],d2.w*2)
+      ploadr      d0, ([0x24382539,a0],d2.w*2,0x263a273b)
+      ploadr      d0, (a0)
+      ploadr      d0, ([a0])
+      ploadr      d0, ([a0],0x2453)
+      ploadr      d0, ([a0],0x24542555)
+      ploadr      d0, (0x2461,a0)
+      ploadr      d0, ([0x2462,a0])
+      ploadr      d0, ([0x2463,a0],0x2564)
+      ploadr      d0, ([0x2464,a0],0x25652666)
+      ploadr      d0, (0x24712572,a0)
+      ploadr      d0, ([0x24722573,a0])
+      ploadr      d0, ([0x24742575,a0],0x26762777)
+      ploadr      d0, (d2.w*2)
+      ploadr      d0, ([d2.w*2])
+      ploadr      d0, ([d2.w*2],0x2493)
+      ploadr      d0, ([d2.w*2],0x24942595)
+      ploadr      d0, (0x24a1,d2.w*2)
+      ploadr      d0, ([0x24a2,d2.w*2])
+      ploadr      d0, ([0x24a3,d2.w*2],0x25a4)
+      ploadr      d0, ([0x24a4,d2.w*2],0x25a526a6)
+      ploadr      d0, ([0x24a6],d2.w*2)
+      ploadr      d0, ([0x24a7],d2.w*2,0x25a8)
+      ploadr      d0, ([0x24a8],d2.w*2,0x25a926aa)
+      ploadr      d0, (0x24b125b2,d2.w*2)
+      ploadr      d0, ([0x24b225b3,d2.w*2])
+      ploadr      d0, ([0x24b425b5,d2.w*2],0x26b627b7)
+      ploadr      d0, ([0x24b625b7],d2.w*2)
+      ploadr      d0, ([0x24b825b9],d2.w*2,0x26ba27bb)
+      ploadr      d0, (0x24e2)
+      ploadr      d0, ([0x24e2])
+      ploadr      d0, ([0x24e4],0x25e5)
+      ploadr      d0, ([0x24e4],0x25e526e6)
+      ploadr      d0, (0x24f125f2)
+      ploadr      d0, ([0x24f225f4])
+      ploadr      d0, ([0x24f425f6],0x26f727f8)
+      ploadr      d0, (0,a0,d2.w*4)
+      ploadr      #0, ([a0,d2.w*2])
+      ploadr      #0, ([a0,d2.w*2],0x2413)
+      ploadr      #0, ([a0,d2.w*2],0x24142515)
+      ploadr      #0, ([a0],d2.w*2)
+      ploadr      #0, ([a0],d2.w*2,0x2417)
+      ploadr      #0, ([a0],d2.w*2,0x24182519)
+      ploadr      #0, (0x2421,a0,d2.w*2)
+      ploadr      #0, ([0x2422,a0,d2.w*2])
+      ploadr      #0, ([0x2423,a0,d2.w*2],0x2524)
+      ploadr      #0, ([0x2424,a0,d2.w*2],0x25252626)
+      ploadr      #0, ([0x2426,a0],d2.w*2)
+      ploadr      #0, ([0x2427,a0],d2.w*2,0x2528)
+      ploadr      #0, ([0x2428,a0],d2.w*2,0x2529262a)
+      ploadr      #0, (0x24312532,a0,d2.w*2)
+      ploadr      #0, ([0x24322533,a0,d2.w*2])
+      ploadr      #0, ([0x24342535,a0,d2.w*2],0x26362737)
+      ploadr      #0, ([0x24362537,a0],d2.w*2)
+      ploadr      #0, ([0x24382539,a0],d2.w*2,0x263a273b)
+      ploadr      #0, (a0)
+      ploadr      #0, ([a0])
+      ploadr      #0, ([a0],0x2453)
+      ploadr      #0, ([a0],0x24542555)
+      ploadr      #0, (0x2461,a0)
+      ploadr      #0, ([0x2462,a0])
+      ploadr      #0, ([0x2463,a0],0x2564)
+      ploadr      #0, ([0x2464,a0],0x25652666)
+      ploadr      #0, (0x24712572,a0)
+      ploadr      #0, ([0x24722573,a0])
+      ploadr      #0, ([0x24742575,a0],0x26762777)
+      ploadr      #0, (d2.w*2)
+      ploadr      #0, ([d2.w*2])
+      ploadr      #0, ([d2.w*2],0x2493)
+      ploadr      #0, ([d2.w*2],0x24942595)
+      ploadr      #0, (0x24a1,d2.w*2)
+      ploadr      #0, ([0x24a2,d2.w*2])
+      ploadr      #0, ([0x24a3,d2.w*2],0x25a4)
+      ploadr      #0, ([0x24a4,d2.w*2],0x25a526a6)
+      ploadr      #0, ([0x24a6],d2.w*2)
+      ploadr      #0, ([0x24a7],d2.w*2,0x25a8)
+      ploadr      #0, ([0x24a8],d2.w*2,0x25a926aa)
+      ploadr      #0, (0x24b125b2,d2.w*2)
+      ploadr      #0, ([0x24b225b3,d2.w*2])
+      ploadr      #0, ([0x24b425b5,d2.w*2],0x26b627b7)
+      ploadr      #0, ([0x24b625b7],d2.w*2)
+      ploadr      #0, ([0x24b825b9],d2.w*2,0x26ba27bb)
+      ploadr      #0, (0x24e2)
+      ploadr      #0, ([0x24e2])
+      ploadr      #0, ([0x24e4],0x25e5)
+      ploadr      #0, ([0x24e4],0x25e526e6)
+      ploadr      #0, (0x24f125f2)
+      ploadr      #0, ([0x24f225f4])
+      ploadr      #0, ([0x24f425f6],0x26f727f8)
+      ploadr      #0, (0,a0,d2.w*4)
+      ploadr      #0, (a0,d2.w*4)
+      pflush      sfc, #0, (a0,d3.l)
+      pflush      sfc, #0, ([a0,d3.l])
+      pflush      sfc, #0, ([a0,d3.l],0x3a13)
+      pflush      sfc, #0, ([a0,d3.l],0x3a143b15)
+      pflush      sfc, #0, ([a0],d3.l)
+      pflush      sfc, #0, ([a0],d3.l,0x3a17)
+      pflush      sfc, #0, ([a0],d3.l,0x3a183b19)
+      pflush      sfc, #0, (0x3a21,a0,d3.l)
+      pflush      sfc, #0, ([0x3a22,a0,d3.l])
+      pflush      sfc, #0, ([0x3a23,a0,d3.l],0x3b24)
+      pflush      sfc, #0, ([0x3a24,a0,d3.l],0x3b253c26)
+      pflush      sfc, #0, ([0x3a26,a0],d3.l)
+      pflush      sfc, #0, ([0x3a27,a0],d3.l,0x3b28)
+      pflush      sfc, #0, ([0x3a28,a0],d3.l,0x3b293c2a)
+      pflush      sfc, #0, (0x3a313b32,a0,d3.l)
+      pflush      sfc, #0, ([0x3a323b33,a0,d3.l])
+      pflush      sfc, #0, ([0x3a343b35,a0,d3.l],0x3c363d37)
+      pflush      sfc, #0, ([0x3a363b37,a0],d3.l)
+      pflush      sfc, #0, ([0x3a383b39,a0],d3.l,0x3c3a3d3b)
+      pflush      sfc, #0, (a0)
+      pflush      sfc, #0, ([a0])
+      pflush      sfc, #0, ([a0],0x3a53)
+      pflush      sfc, #0, ([a0],0x3a543b55)
+      pflush      sfc, #0, (0x3a61,a0)
+      pflush      sfc, #0, ([0x3a62,a0])
+      pflush      sfc, #0, ([0x3a63,a0],0x3b64)
+      pflush      sfc, #0, ([0x3a64,a0],0x3b653c66)
+      pflush      sfc, #0, (0x3a713b72,a0)
+      pflush      sfc, #0, ([0x3a723b73,a0])
+      pflush      sfc, #0, ([0x3a743b75,a0],0x3c763d77)
+      pflush      sfc, #0, (d3.l)
+      pflush      sfc, #0, ([d3.l])
+      pflush      sfc, #0, ([d3.l],0x3a93)
+      pflush      sfc, #0, ([d3.l],0x3a943b95)
+      pflush      sfc, #0, (0x3aa1,d3.l)
+      pflush      sfc, #0, ([0x3aa2,d3.l])
+      pflush      sfc, #0, ([0x3aa3,d3.l],0x3ba4)
+      pflush      sfc, #0, ([0x3aa4,d3.l],0x3ba53ca6)
+      pflush      sfc, #0, ([0x3aa6],d3.l)
+      pflush      sfc, #0, ([0x3aa7],d3.l,0x3ba8)
+      pflush      sfc, #0, ([0x3aa8],d3.l,0x3ba93caa)
+      pflush      sfc, #0, (0x3ab13bb2,d3.l)
+      pflush      sfc, #0, ([0x3ab23bb3,d3.l])
+      pflush      sfc, #0, ([0x3ab43bb5,d3.l],0x3cb63db7)
+      pflush      sfc, #0, ([0x3ab63bb7],d3.l)
+      pflush      sfc, #0, ([0x3ab83bb9],d3.l,0x3cba3dbb)
+      pflush      sfc, #0, (0x3ae2)
+      pflush      sfc, #0, ([0x3ae2])
+      pflush      sfc, #0, ([0x3ae4],0x3be5)
+      pflush      sfc, #0, ([0x3ae4],0x3be53ce6)
+      pflush      sfc, #0, (0x3af13bf2)
+      pflush      sfc, #0, ([0x3af23bf4])
+      pflush      sfc, #0, ([0x3af43bf6],0x3cf73df8)
+      pflush      sfc, #0, (0,a0,d3.l*2)
+      pflush      dfc, #0, (a0,d3.l)
+      pflush      dfc, #0, ([a0,d3.l])
+      pflush      dfc, #0, ([a0,d3.l],0x3a13)
+      pflush      dfc, #0, ([a0,d3.l],0x3a143b15)
+      pflush      dfc, #0, ([a0],d3.l)
+      pflush      dfc, #0, ([a0],d3.l,0x3a17)
+      pflush      dfc, #0, ([a0],d3.l,0x3a183b19)
+      pflush      dfc, #0, (0x3a21,a0,d3.l)
+      pflush      dfc, #0, ([0x3a22,a0,d3.l])
+      pflush      dfc, #0, ([0x3a23,a0,d3.l],0x3b24)
+      pflush      dfc, #0, ([0x3a24,a0,d3.l],0x3b253c26)
+      pflush      dfc, #0, ([0x3a26,a0],d3.l)
+      pflush      dfc, #0, ([0x3a27,a0],d3.l,0x3b28)
+      pflush      dfc, #0, ([0x3a28,a0],d3.l,0x3b293c2a)
+      pflush      dfc, #0, (0x3a313b32,a0,d3.l)
+      pflush      dfc, #0, ([0x3a323b33,a0,d3.l])
+      pflush      dfc, #0, ([0x3a343b35,a0,d3.l],0x3c363d37)
+      pflush      dfc, #0, ([0x3a363b37,a0],d3.l)
+      pflush      dfc, #0, ([0x3a383b39,a0],d3.l,0x3c3a3d3b)
+      pflush      dfc, #0, (a0)
+      pflush      dfc, #0, ([a0])
+      pflush      dfc, #0, ([a0],0x3a53)
+      pflush      dfc, #0, ([a0],0x3a543b55)
+      pflush      dfc, #0, (0x3a61,a0)
+      pflush      dfc, #0, ([0x3a62,a0])
+      pflush      dfc, #0, ([0x3a63,a0],0x3b64)
+      pflush      dfc, #0, ([0x3a64,a0],0x3b653c66)
+      pflush      dfc, #0, (0x3a713b72,a0)
+      pflush      dfc, #0, ([0x3a723b73,a0])
+      pflush      dfc, #0, ([0x3a743b75,a0],0x3c763d77)
+      pflush      dfc, #0, (d3.l)
+      pflush      dfc, #0, ([d3.l])
+      pflush      dfc, #0, ([d3.l],0x3a93)
+      pflush      dfc, #0, ([d3.l],0x3a943b95)
+      pflush      dfc, #0, (0x3aa1,d3.l)
+      pflush      dfc, #0, ([0x3aa2,d3.l])
+      pflush      dfc, #0, ([0x3aa3,d3.l],0x3ba4)
+      pflush      dfc, #0, ([0x3aa4,d3.l],0x3ba53ca6)
+      pflush      dfc, #0, ([0x3aa6],d3.l)
+      pflush      dfc, #0, ([0x3aa7],d3.l,0x3ba8)
+      pflush      dfc, #0, ([0x3aa8],d3.l,0x3ba93caa)
+      pflush      dfc, #0, (0x3ab13bb2,d3.l)
+      pflush      dfc, #0, ([0x3ab23bb3,d3.l])
+      pflush      dfc, #0, ([0x3ab43bb5,d3.l],0x3cb63db7)
+      pflush      dfc, #0, ([0x3ab63bb7],d3.l)
+      pflush      dfc, #0, ([0x3ab83bb9],d3.l,0x3cba3dbb)
+      pflush      dfc, #0, (0x3ae2)
+      pflush      dfc, #0, ([0x3ae2])
+      pflush      dfc, #0, ([0x3ae4],0x3be5)
+      pflush      dfc, #0, ([0x3ae4],0x3be53ce6)
+      pflush      dfc, #0, (0x3af13bf2)
+      pflush      dfc, #0, ([0x3af23bf4])
+      pflush      dfc, #0, ([0x3af43bf6],0x3cf73df8)
+      pflush      dfc, #0, (0,a0,d3.l*2)
+      pflush      d0, #0, (a0,d3.l)
+      pflush      d0, #0, ([a0,d3.l])
+      pflush      d0, #0, ([a0,d3.l],0x3a13)
+      pflush      d0, #0, ([a0,d3.l],0x3a143b15)
+      pflush      d0, #0, ([a0],d3.l)
+      pflush      d0, #0, ([a0],d3.l,0x3a17)
+      pflush      d0, #0, ([a0],d3.l,0x3a183b19)
+      pflush      d0, #0, (0x3a21,a0,d3.l)
+      pflush      d0, #0, ([0x3a22,a0,d3.l])
+      pflush      d0, #0, ([0x3a23,a0,d3.l],0x3b24)
+      pflush      d0, #0, ([0x3a24,a0,d3.l],0x3b253c26)
+      pflush      d0, #0, ([0x3a26,a0],d3.l)
+      pflush      d0, #0, ([0x3a27,a0],d3.l,0x3b28)
+      pflush      d0, #0, ([0x3a28,a0],d3.l,0x3b293c2a)
+      pflush      d0, #0, (0x3a313b32,a0,d3.l)
+      pflush      d0, #0, ([0x3a323b33,a0,d3.l])
+      pflush      d0, #0, ([0x3a343b35,a0,d3.l],0x3c363d37)
+      pflush      d0, #0, ([0x3a363b37,a0],d3.l)
+      pflush      d0, #0, ([0x3a383b39,a0],d3.l,0x3c3a3d3b)
+      pflush      d0, #0, (a0)
+      pflush      d0, #0, ([a0])
+      pflush      d0, #0, ([a0],0x3a53)
+      pflush      d0, #0, ([a0],0x3a543b55)
+      pflush      d0, #0, (0x3a61,a0)
+      pflush      d0, #0, ([0x3a62,a0])
+      pflush      d0, #0, ([0x3a63,a0],0x3b64)
+      pflush      d0, #0, ([0x3a64,a0],0x3b653c66)
+      pflush      d0, #0, (0x3a713b72,a0)
+      pflush      d0, #0, ([0x3a723b73,a0])
+      pflush      d0, #0, ([0x3a743b75,a0],0x3c763d77)
+      pflush      d0, #0, (d3.l)
+      pflush      d0, #0, ([d3.l])
+      pflush      d0, #0, ([d3.l],0x3a93)
+      pflush      d0, #0, ([d3.l],0x3a943b95)
+      pflush      d0, #0, (0x3aa1,d3.l)
+      pflush      d0, #0, ([0x3aa2,d3.l])
+      pflush      d0, #0, ([0x3aa3,d3.l],0x3ba4)
+      pflush      d0, #0, ([0x3aa4,d3.l],0x3ba53ca6)
+      pflush      d0, #0, ([0x3aa6],d3.l)
+      pflush      d0, #0, ([0x3aa7],d3.l,0x3ba8)
+      pflush      d0, #0, ([0x3aa8],d3.l,0x3ba93caa)
+      pflush      d0, #0, (0x3ab13bb2,d3.l)
+      pflush      d0, #0, ([0x3ab23bb3,d3.l])
+      pflush      d0, #0, ([0x3ab43bb5,d3.l],0x3cb63db7)
+      pflush      d0, #0, ([0x3ab63bb7],d3.l)
+      pflush      d0, #0, ([0x3ab83bb9],d3.l,0x3cba3dbb)
+      pflush      d0, #0, (0x3ae2)
+      pflush      d0, #0, ([0x3ae2])
+      pflush      d0, #0, ([0x3ae4],0x3be5)
+      pflush      d0, #0, ([0x3ae4],0x3be53ce6)
+      pflush      d0, #0, (0x3af13bf2)
+      pflush      d0, #0, ([0x3af23bf4])
+      pflush      d0, #0, ([0x3af43bf6],0x3cf73df8)
+      pflush      d0, #0, (0,a0,d3.l*2)
+      pflush      #0, #0, ([a0,d3.l])
+      pflush      #0, #0, ([a0,d3.l],0x3a13)
+      pflush      #0, #0, ([a0,d3.l],0x3a143b15)
+      pflush      #0, #0, ([a0],d3.l)
+      pflush      #0, #0, ([a0],d3.l,0x3a17)
+      pflush      #0, #0, ([a0],d3.l,0x3a183b19)
+      pflush      #0, #0, (0x3a21,a0,d3.l)
+      pflush      #0, #0, ([0x3a22,a0,d3.l])
+      pflush      #0, #0, ([0x3a23,a0,d3.l],0x3b24)
+      pflush      #0, #0, ([0x3a24,a0,d3.l],0x3b253c26)
+      pflush      #0, #0, ([0x3a26,a0],d3.l)
+      pflush      #0, #0, ([0x3a27,a0],d3.l,0x3b28)
+      pflush      #0, #0, ([0x3a28,a0],d3.l,0x3b293c2a)
+      pflush      #0, #0, (0x3a313b32,a0,d3.l)
+      pflush      #0, #0, ([0x3a323b33,a0,d3.l])
+      pflush      #0, #0, ([0x3a343b35,a0,d3.l],0x3c363d37)
+      pflush      #0, #0, ([0x3a363b37,a0],d3.l)
+      pflush      #0, #0, ([0x3a383b39,a0],d3.l,0x3c3a3d3b)
+      pflush      #0, #0, (a0)
+      pflush      #0, #0, ([a0])
+      pflush      #0, #0, ([a0],0x3a53)
+      pflush      #0, #0, ([a0],0x3a543b55)
+      pflush      #0, #0, (0x3a61,a0)
+      pflush      #0, #0, ([0x3a62,a0])
+      pflush      #0, #0, ([0x3a63,a0],0x3b64)
+      pflush      #0, #0, ([0x3a64,a0],0x3b653c66)
+      pflush      #0, #0, (0x3a713b72,a0)
+      pflush      #0, #0, ([0x3a723b73,a0])
+      pflush      #0, #0, ([0x3a743b75,a0],0x3c763d77)
+      pflush      #0, #0, (d3.l)
+      pflush      #0, #0, ([d3.l])
+      pflush      #0, #0, ([d3.l],0x3a93)
+      pflush      #0, #0, ([d3.l],0x3a943b95)
+      pflush      #0, #0, (0x3aa1,d3.l)
+      pflush      #0, #0, ([0x3aa2,d3.l])
+      pflush      #0, #0, ([0x3aa3,d3.l],0x3ba4)
+      pflush      #0, #0, ([0x3aa4,d3.l],0x3ba53ca6)
+      pflush      #0, #0, ([0x3aa6],d3.l)
+      pflush      #0, #0, ([0x3aa7],d3.l,0x3ba8)
+      pflush      #0, #0, ([0x3aa8],d3.l,0x3ba93caa)
+      pflush      #0, #0, (0x3ab13bb2,d3.l)
+      pflush      #0, #0, ([0x3ab23bb3,d3.l])
+      pflush      #0, #0, ([0x3ab43bb5,d3.l],0x3cb63db7)
+      pflush      #0, #0, ([0x3ab63bb7],d3.l)
+      pflush      #0, #0, ([0x3ab83bb9],d3.l,0x3cba3dbb)
+      pflush      #0, #0, (0x3ae2)
+      pflush      #0, #0, ([0x3ae2])
+      pflush      #0, #0, ([0x3ae4],0x3be5)
+      pflush      #0, #0, ([0x3ae4],0x3be53ce6)
+      pflush      #0, #0, (0x3af13bf2)
+      pflush      #0, #0, ([0x3af23bf4])
+      pflush      #0, #0, ([0x3af43bf6],0x3cf73df8)
+      pflush      #0, #0, (0,a0,d3.l*2)
+      pflush      #0, #0, (a0,d3.l*2)
+      pmovel      (a0,d4.w), tc
+      pmovel      ([a0,d4.w]), tc
+      pmovel      ([a0,d4.w],0x4213), tc
+      pmovel      ([a0,d4.w],0x42144315), tc
+      pmovel      ([a0],d4.w), tc
+      pmovel      ([a0],d4.w,0x4217), tc
+      pmovel      ([a0],d4.w,0x42184319), tc
+      pmovel      (0x4221,a0,d4.w), tc
+      pmovel      ([0x4222,a0,d4.w]), tc
+      pmovel      ([0x4223,a0,d4.w],0x4324), tc
+      pmovel      ([0x4224,a0,d4.w],0x43254426), tc
+      pmovel      ([0x4226,a0],d4.w), tc
+      pmovel      ([0x4227,a0],d4.w,0x4328), tc
+      pmovel      ([0x4228,a0],d4.w,0x4329442a), tc
+      pmovel      (0x42314332,a0,d4.w), tc
+      pmovel      ([0x42324333,a0,d4.w]), tc
+      pmovel      ([0x42344335,a0,d4.w],0x44364537), tc
+      pmovel      ([0x42364337,a0],d4.w), tc
+      pmovel      ([0x42384339,a0],d4.w,0x443a453b), tc
+      pmovel      (a0), tc
+      pmovel      ([a0]), tc
+      pmovel      ([a0],0x4253), tc
+      pmovel      ([a0],0x42544355), tc
+      pmovel      (0x4261,a0), tc
+      pmovel      ([0x4262,a0]), tc
+      pmovel      ([0x4263,a0],0x4364), tc
+      pmovel      ([0x4264,a0],0x43654466), tc
+      pmovel      (0x42714372,a0), tc
+      pmovel      ([0x42724373,a0]), tc
+      pmovel      ([0x42744375,a0],0x44764577), tc
+      pmovel      (d4.w), tc
+      pmovel      ([d4.w]), tc
+      pmovel      ([d4.w],0x4293), tc
+      pmovel      ([d4.w],0x42944395), tc
+      pmovel      (0x42a1,d4.w), tc
+      pmovel      ([0x42a2,d4.w]), tc
+      pmovel      ([0x42a3,d4.w],0x43a4), tc
+      pmovel      ([0x42a4,d4.w],0x43a544a6), tc
+      pmovel      ([0x42a6],d4.w), tc
+      pmovel      ([0x42a7],d4.w,0x43a8), tc
+      pmovel      ([0x42a8],d4.w,0x43a944aa), tc
+      pmovel      (0x42b143b2,d4.w), tc
+      pmovel      ([0x42b243b3,d4.w]), tc
+      pmovel      ([0x42b443b5,d4.w],0x44b645b7), tc
+      pmovel      ([0x42b643b7],d4.w), tc
+      pmovel      ([0x42b843b9],d4.w,0x44ba45bb), tc
+      pmovel      (0x42e2), tc
+      pmovel      ([0x42e2]), tc
+      pmovel      ([0x42e4],0x43e5), tc
+      pmovel      ([0x42e4],0x43e544e6), tc
+      pmovel      (0x42f143f2), tc
+      pmovel      ([0x42f243f4]), tc
+      pmovel      ([0x42f443f6],0x44f745f8), tc
+      pmovel      (0,a0,d4.w*2), tc
+      pmovefdl    (1,a0,d4.w*2), tc
+      pmovefdl    (a0,d4.w*2), tc
+      pmovefdl    ([a0,d4.w*2]), tc
+      pmovefdl    ([a0,d4.w*2],0x4413), tc
+      pmovefdl    ([a0,d4.w*2],0x44144515), tc
+      pmovefdl    ([a0],d4.w*2), tc
+      pmovefdl    ([a0],d4.w*2,0x4417), tc
+      pmovefdl    ([a0],d4.w*2,0x44184519), tc
+      pmovefdl    (0x4421,a0,d4.w*2), tc
+      pmovefdl    ([0x4422,a0,d4.w*2]), tc
+      pmovefdl    ([0x4423,a0,d4.w*2],0x4524), tc
+      pmovefdl    ([0x4424,a0,d4.w*2],0x45254626), tc
+      pmovefdl    ([0x4426,a0],d4.w*2), tc
+      pmovefdl    ([0x4427,a0],d4.w*2,0x4528), tc
+      pmovefdl    ([0x4428,a0],d4.w*2,0x4529462a), tc
+      pmovefdl    (0x44314532,a0,d4.w*2), tc
+      pmovefdl    ([0x44324533,a0,d4.w*2]), tc
+      pmovefdl    ([0x44344535,a0,d4.w*2],0x46364737), tc
+      pmovefdl    ([0x44364537,a0],d4.w*2), tc
+      pmovefdl    ([0x44384539,a0],d4.w*2,0x463a473b), tc
+      pmovefdl    (a0), tc
+      pmovefdl    ([a0]), tc
+      pmovefdl    ([a0],0x4453), tc
+      pmovefdl    ([a0],0x44544555), tc
+      pmovefdl    (0x4461,a0), tc
+      pmovefdl    ([0x4462,a0]), tc
+      pmovefdl    ([0x4463,a0],0x4564), tc
+      pmovefdl    ([0x4464,a0],0x45654666), tc
+      pmovefdl    (0x44714572,a0), tc
+      pmovefdl    ([0x44724573,a0]), tc
+      pmovefdl    ([0x44744575,a0],0x46764777), tc
+      pmovefdl    (d4.w*2), tc
+      pmovefdl    ([d4.w*2]), tc
+      pmovefdl    ([d4.w*2],0x4493), tc
+      pmovefdl    ([d4.w*2],0x44944595), tc
+      pmovefdl    (0x44a1,d4.w*2), tc
+      pmovefdl    ([0x44a2,d4.w*2]), tc
+      pmovefdl    ([0x44a3,d4.w*2],0x45a4), tc
+      pmovefdl    ([0x44a4,d4.w*2],0x45a546a6), tc
+      pmovefdl    ([0x44a6],d4.w*2), tc
+      pmovefdl    ([0x44a7],d4.w*2,0x45a8), tc
+      pmovefdl    ([0x44a8],d4.w*2,0x45a946aa), tc
+      pmovefdl    (0x44b145b2,d4.w*2), tc
+      pmovefdl    ([0x44b245b3,d4.w*2]), tc
+      pmovefdl    ([0x44b445b5,d4.w*2],0x46b647b7), tc
+      pmovefdl    ([0x44b645b7],d4.w*2), tc
+      pmovefdl    ([0x44b845b9],d4.w*2,0x46ba47bb), tc
+      pmovefdl    (0x44e2), tc
+      pmovefdl    ([0x44e2]), tc
+      pmovefdl    ([0x44e4],0x45e5), tc
+      pmovefdl    ([0x44e4],0x45e546e6), tc
+      pmovefdl    (0x44f145f2), tc
+      pmovefdl    ([0x44f245f4]), tc
+      pmovefdl    ([0x44f445f6],0x46f747f8), tc
+      pmovel      tc, (a0,d4.w*2)
+      pmovel      tc, ([a0,d4.w*2])
+      pmovel      tc, ([a0,d4.w*2],0x4413)
+      pmovel      tc, ([a0,d4.w*2],0x44144515)
+      pmovel      tc, ([a0],d4.w*2)
+      pmovel      tc, ([a0],d4.w*2,0x4417)
+      pmovel      tc, ([a0],d4.w*2,0x44184519)
+      pmovel      tc, (0x4421,a0,d4.w*2)
+      pmovel      tc, ([0x4422,a0,d4.w*2])
+      pmovel      tc, ([0x4423,a0,d4.w*2],0x4524)
+      pmovel      tc, ([0x4424,a0,d4.w*2],0x45254626)
+      pmovel      tc, ([0x4426,a0],d4.w*2)
+      pmovel      tc, ([0x4427,a0],d4.w*2,0x4528)
+      pmovel      tc, ([0x4428,a0],d4.w*2,0x4529462a)
+      pmovel      tc, (0x44314532,a0,d4.w*2)
+      pmovel      tc, ([0x44324533,a0,d4.w*2])
+      pmovel      tc, ([0x44344535,a0,d4.w*2],0x46364737)
+      pmovel      tc, ([0x44364537,a0],d4.w*2)
+      pmovel      tc, ([0x44384539,a0],d4.w*2,0x463a473b)
+      pmovel      tc, (a0)
+      pmovel      tc, ([a0])
+      pmovel      tc, ([a0],0x4453)
+      pmovel      tc, ([a0],0x44544555)
+      pmovel      tc, (0x4461,a0)
+      pmovel      tc, ([0x4462,a0])
+      pmovel      tc, ([0x4463,a0],0x4564)
+      pmovel      tc, ([0x4464,a0],0x45654666)
+      pmovel      tc, (0x44714572,a0)
+      pmovel      tc, ([0x44724573,a0])
+      pmovel      tc, ([0x44744575,a0],0x46764777)
+      pmovel      tc, (d4.w*2)
+      pmovel      tc, ([d4.w*2])
+      pmovel      tc, ([d4.w*2],0x4493)
+      pmovel      tc, ([d4.w*2],0x44944595)
+      pmovel      tc, (0x44a1,d4.w*2)
+      pmovel      tc, ([0x44a2,d4.w*2])
+      pmovel      tc, ([0x44a3,d4.w*2],0x45a4)
+      pmovel      tc, ([0x44a4,d4.w*2],0x45a546a6)
+      pmovel      tc, ([0x44a6],d4.w*2)
+      pmovel      tc, ([0x44a7],d4.w*2,0x45a8)
+      pmovel      tc, ([0x44a8],d4.w*2,0x45a946aa)
+      pmovel      tc, (0x44b145b2,d4.w*2)
+      pmovel      tc, ([0x44b245b3,d4.w*2])
+      pmovel      tc, ([0x44b445b5,d4.w*2],0x46b647b7)
+      pmovel      tc, ([0x44b645b7],d4.w*2)
+      pmovel      tc, ([0x44b845b9],d4.w*2,0x46ba47bb)
+      pmovel      tc, (0x44e2)
+      pmovel      tc, ([0x44e2])
+      pmovel      tc, ([0x44e4],0x45e5)
+      pmovel      tc, ([0x44e4],0x45e546e6)
+      pmovel      tc, (0x44f145f2)
+      pmovel      tc, ([0x44f245f4])
+      pmovel      tc, ([0x44f445f6],0x46f747f8)
+      pmovel      tc, (0,a0,d4.w*4)
+      pmoveq      (a0,d4.l), srp
+      pmoveq      ([a0,d4.l]), srp
+      pmoveq      ([a0,d4.l],0x4a13), srp
+      pmoveq      ([a0,d4.l],0x4a144b15), srp
+      pmoveq      ([a0],d4.l), srp
+      pmoveq      ([a0],d4.l,0x4a17), srp
+      pmoveq      ([a0],d4.l,0x4a184b19), srp
+      pmoveq      (0x4a21,a0,d4.l), srp
+      pmoveq      ([0x4a22,a0,d4.l]), srp
+      pmoveq      ([0x4a23,a0,d4.l],0x4b24), srp
+      pmoveq      ([0x4a24,a0,d4.l],0x4b254c26), srp
+      pmoveq      ([0x4a26,a0],d4.l), srp
+      pmoveq      ([0x4a27,a0],d4.l,0x4b28), srp
+      pmoveq      ([0x4a28,a0],d4.l,0x4b294c2a), srp
+      pmoveq      (0x4a314b32,a0,d4.l), srp
+      pmoveq      ([0x4a324b33,a0,d4.l]), srp
+      pmoveq      ([0x4a344b35,a0,d4.l],0x4c364d37), srp
+      pmoveq      ([0x4a364b37,a0],d4.l), srp
+      pmoveq      ([0x4a384b39,a0],d4.l,0x4c3a4d3b), srp
+      pmoveq      (a0), srp
+      pmoveq      ([a0]), srp
+      pmoveq      ([a0],0x4a53), srp
+      pmoveq      ([a0],0x4a544b55), srp
+      pmoveq      (0x4a61,a0), srp
+      pmoveq      ([0x4a62,a0]), srp
+      pmoveq      ([0x4a63,a0],0x4b64), srp
+      pmoveq      ([0x4a64,a0],0x4b654c66), srp
+      pmoveq      (0x4a714b72,a0), srp
+      pmoveq      ([0x4a724b73,a0]), srp
+      pmoveq      ([0x4a744b75,a0],0x4c764d77), srp
+      pmoveq      (d4.l), srp
+      pmoveq      ([d4.l]), srp
+      pmoveq      ([d4.l],0x4a93), srp
+      pmoveq      ([d4.l],0x4a944b95), srp
+      pmoveq      (0x4aa1,d4.l), srp
+      pmoveq      ([0x4aa2,d4.l]), srp
+      pmoveq      ([0x4aa3,d4.l],0x4ba4), srp
+      pmoveq      ([0x4aa4,d4.l],0x4ba54ca6), srp
+      pmoveq      ([0x4aa6],d4.l), srp
+      pmoveq      ([0x4aa7],d4.l,0x4ba8), srp
+      pmoveq      ([0x4aa8],d4.l,0x4ba94caa), srp
+      pmoveq      (0x4ab14bb2,d4.l), srp
+      pmoveq      ([0x4ab24bb3,d4.l]), srp
+      pmoveq      ([0x4ab44bb5,d4.l],0x4cb64db7), srp
+      pmoveq      ([0x4ab64bb7],d4.l), srp
+      pmoveq      ([0x4ab84bb9],d4.l,0x4cba4dbb), srp
+      pmoveq      (0x4ae2), srp
+      pmoveq      ([0x4ae2]), srp
+      pmoveq      ([0x4ae4],0x4be5), srp
+      pmoveq      ([0x4ae4],0x4be54ce6), srp
+      pmoveq      (0x4af14bf2), srp
+      pmoveq      ([0x4af24bf4]), srp
+      pmoveq      ([0x4af44bf6],0x4cf74df8), srp
+      pmoveq      (0,a0,d4.l*2), srp
+      pmovefdq    (1,a0,d4.l*2), srp
+      pmovefdq    (a0,d4.l*2), srp
+      pmovefdq    ([a0,d4.l*2]), srp
+      pmovefdq    ([a0,d4.l*2],0x4c13), srp
+      pmovefdq    ([a0,d4.l*2],0x4c144d15), srp
+      pmovefdq    ([a0],d4.l*2), srp
+      pmovefdq    ([a0],d4.l*2,0x4c17), srp
+      pmovefdq    ([a0],d4.l*2,0x4c184d19), srp
+      pmovefdq    (0x4c21,a0,d4.l*2), srp
+      pmovefdq    ([0x4c22,a0,d4.l*2]), srp
+      pmovefdq    ([0x4c23,a0,d4.l*2],0x4d24), srp
+      pmovefdq    ([0x4c24,a0,d4.l*2],0x4d254e26), srp
+      pmovefdq    ([0x4c26,a0],d4.l*2), srp
+      pmovefdq    ([0x4c27,a0],d4.l*2,0x4d28), srp
+      pmovefdq    ([0x4c28,a0],d4.l*2,0x4d294e2a), srp
+      pmovefdq    (0x4c314d32,a0,d4.l*2), srp
+      pmovefdq    ([0x4c324d33,a0,d4.l*2]), srp
+      pmovefdq    ([0x4c344d35,a0,d4.l*2],0x4e364f37), srp
+      pmovefdq    ([0x4c364d37,a0],d4.l*2), srp
+      pmovefdq    ([0x4c384d39,a0],d4.l*2,0x4e3a4f3b), srp
+      pmovefdq    (a0), srp
+      pmovefdq    ([a0]), srp
+      pmovefdq    ([a0],0x4c53), srp
+      pmovefdq    ([a0],0x4c544d55), srp
+      pmovefdq    (0x4c61,a0), srp
+      pmovefdq    ([0x4c62,a0]), srp
+      pmovefdq    ([0x4c63,a0],0x4d64), srp
+      pmovefdq    ([0x4c64,a0],0x4d654e66), srp
+      pmovefdq    (0x4c714d72,a0), srp
+      pmovefdq    ([0x4c724d73,a0]), srp
+      pmovefdq    ([0x4c744d75,a0],0x4e764f77), srp
+      pmovefdq    (d4.l*2), srp
+      pmovefdq    ([d4.l*2]), srp
+      pmovefdq    ([d4.l*2],0x4c93), srp
+      pmovefdq    ([d4.l*2],0x4c944d95), srp
+      pmovefdq    (0x4ca1,d4.l*2), srp
+      pmovefdq    ([0x4ca2,d4.l*2]), srp
+      pmovefdq    ([0x4ca3,d4.l*2],0x4da4), srp
+      pmovefdq    ([0x4ca4,d4.l*2],0x4da54ea6), srp
+      pmovefdq    ([0x4ca6],d4.l*2), srp
+      pmovefdq    ([0x4ca7],d4.l*2,0x4da8), srp
+      pmovefdq    ([0x4ca8],d4.l*2,0x4da94eaa), srp
+      pmovefdq    (0x4cb14db2,d4.l*2), srp
+      pmovefdq    ([0x4cb24db3,d4.l*2]), srp
+      pmovefdq    ([0x4cb44db5,d4.l*2],0x4eb64fb7), srp
+      pmovefdq    ([0x4cb64db7],d4.l*2), srp
+      pmovefdq    ([0x4cb84db9],d4.l*2,0x4eba4fbb), srp
+      pmovefdq    (0x4ce2), srp
+      pmovefdq    ([0x4ce2]), srp
+      pmovefdq    ([0x4ce4],0x4de5), srp
+      pmovefdq    ([0x4ce4],0x4de54ee6), srp
+      pmovefdq    (0x4cf14df2), srp
+      pmovefdq    ([0x4cf24df4]), srp
+      pmovefdq    ([0x4cf44df6],0x4ef74ff8), srp
+      pmoveq      srp, (a0,d4.l*2)
+      pmoveq      srp, ([a0,d4.l*2])
+      pmoveq      srp, ([a0,d4.l*2],0x4c13)
+      pmoveq      srp, ([a0,d4.l*2],0x4c144d15)
+      pmoveq      srp, ([a0],d4.l*2)
+      pmoveq      srp, ([a0],d4.l*2,0x4c17)
+      pmoveq      srp, ([a0],d4.l*2,0x4c184d19)
+      pmoveq      srp, (0x4c21,a0,d4.l*2)
+      pmoveq      srp, ([0x4c22,a0,d4.l*2])
+      pmoveq      srp, ([0x4c23,a0,d4.l*2],0x4d24)
+      pmoveq      srp, ([0x4c24,a0,d4.l*2],0x4d254e26)
+      pmoveq      srp, ([0x4c26,a0],d4.l*2)
+      pmoveq      srp, ([0x4c27,a0],d4.l*2,0x4d28)
+      pmoveq      srp, ([0x4c28,a0],d4.l*2,0x4d294e2a)
+      pmoveq      srp, (0x4c314d32,a0,d4.l*2)
+      pmoveq      srp, ([0x4c324d33,a0,d4.l*2])
+      pmoveq      srp, ([0x4c344d35,a0,d4.l*2],0x4e364f37)
+      pmoveq      srp, ([0x4c364d37,a0],d4.l*2)
+      pmoveq      srp, ([0x4c384d39,a0],d4.l*2,0x4e3a4f3b)
+      pmoveq      srp, (a0)
+      pmoveq      srp, ([a0])
+      pmoveq      srp, ([a0],0x4c53)
+      pmoveq      srp, ([a0],0x4c544d55)
+      pmoveq      srp, (0x4c61,a0)
+      pmoveq      srp, ([0x4c62,a0])
+      pmoveq      srp, ([0x4c63,a0],0x4d64)
+      pmoveq      srp, ([0x4c64,a0],0x4d654e66)
+      pmoveq      srp, (0x4c714d72,a0)
+      pmoveq      srp, ([0x4c724d73,a0])
+      pmoveq      srp, ([0x4c744d75,a0],0x4e764f77)
+      pmoveq      srp, (d4.l*2)
+      pmoveq      srp, ([d4.l*2])
+      pmoveq      srp, ([d4.l*2],0x4c93)
+      pmoveq      srp, ([d4.l*2],0x4c944d95)
+      pmoveq      srp, (0x4ca1,d4.l*2)
+      pmoveq      srp, ([0x4ca2,d4.l*2])
+      pmoveq      srp, ([0x4ca3,d4.l*2],0x4da4)
+      pmoveq      srp, ([0x4ca4,d4.l*2],0x4da54ea6)
+      pmoveq      srp, ([0x4ca6],d4.l*2)
+      pmoveq      srp, ([0x4ca7],d4.l*2,0x4da8)
+      pmoveq      srp, ([0x4ca8],d4.l*2,0x4da94eaa)
+      pmoveq      srp, (0x4cb14db2,d4.l*2)
+      pmoveq      srp, ([0x4cb24db3,d4.l*2])
+      pmoveq      srp, ([0x4cb44db5,d4.l*2],0x4eb64fb7)
+      pmoveq      srp, ([0x4cb64db7],d4.l*2)
+      pmoveq      srp, ([0x4cb84db9],d4.l*2,0x4eba4fbb)
+      pmoveq      srp, (0x4ce2)
+      pmoveq      srp, ([0x4ce2])
+      pmoveq      srp, ([0x4ce4],0x4de5)
+      pmoveq      srp, ([0x4ce4],0x4de54ee6)
+      pmoveq      srp, (0x4cf14df2)
+      pmoveq      srp, ([0x4cf24df4])
+      pmoveq      srp, ([0x4cf44df6],0x4ef74ff8)
+      pmoveq      srp, (0,a0,d4.l*4)
+      pmoveq      (a0,d4.l*4), crp
+      pmoveq      ([a0,d4.l*4]), crp
+      pmoveq      ([a0,d4.l*4],0x4e13), crp
+      pmoveq      ([a0,d4.l*4],0x4e144f15), crp
+      pmoveq      ([a0],d4.l*4), crp
+      pmoveq      ([a0],d4.l*4,0x4e17), crp
+      pmoveq      ([a0],d4.l*4,0x4e184f19), crp
+      pmoveq      (0x4e21,a0,d4.l*4), crp
+      pmoveq      ([0x4e22,a0,d4.l*4]), crp
+      pmoveq      ([0x4e23,a0,d4.l*4],0x4f24), crp
+      pmoveq      ([0x4e24,a0,d4.l*4],0x4f255026), crp
+      pmoveq      ([0x4e26,a0],d4.l*4), crp
+      pmoveq      ([0x4e27,a0],d4.l*4,0x4f28), crp
+      pmoveq      ([0x4e28,a0],d4.l*4,0x4f29502a), crp
+      pmoveq      (0x4e314f32,a0,d4.l*4), crp
+      pmoveq      ([0x4e324f33,a0,d4.l*4]), crp
+      pmoveq      ([0x4e344f35,a0,d4.l*4],0x50365137), crp
+      pmoveq      ([0x4e364f37,a0],d4.l*4), crp
+      pmoveq      ([0x4e384f39,a0],d4.l*4,0x503a513b), crp
+      pmoveq      (a0), crp
+      pmoveq      ([a0]), crp
+      pmoveq      ([a0],0x4e53), crp
+      pmoveq      ([a0],0x4e544f55), crp
+      pmoveq      (0x4e61,a0), crp
+      pmoveq      ([0x4e62,a0]), crp
+      pmoveq      ([0x4e63,a0],0x4f64), crp
+      pmoveq      ([0x4e64,a0],0x4f655066), crp
+      pmoveq      (0x4e714f72,a0), crp
+      pmoveq      ([0x4e724f73,a0]), crp
+      pmoveq      ([0x4e744f75,a0],0x50765177), crp
+      pmoveq      (d4.l*4), crp
+      pmoveq      ([d4.l*4]), crp
+      pmoveq      ([d4.l*4],0x4e93), crp
+      pmoveq      ([d4.l*4],0x4e944f95), crp
+      pmoveq      (0x4ea1,d4.l*4), crp
+      pmoveq      ([0x4ea2,d4.l*4]), crp
+      pmoveq      ([0x4ea3,d4.l*4],0x4fa4), crp
+      pmoveq      ([0x4ea4,d4.l*4],0x4fa550a6), crp
+      pmoveq      ([0x4ea6],d4.l*4), crp
+      pmoveq      ([0x4ea7],d4.l*4,0x4fa8), crp
+      pmoveq      ([0x4ea8],d4.l*4,0x4fa950aa), crp
+      pmoveq      (0x4eb14fb2,d4.l*4), crp
+      pmoveq      ([0x4eb24fb3,d4.l*4]), crp
+      pmoveq      ([0x4eb44fb5,d4.l*4],0x50b651b7), crp
+      pmoveq      ([0x4eb64fb7],d4.l*4), crp
+      pmoveq      ([0x4eb84fb9],d4.l*4,0x50ba51bb), crp
+      pmoveq      (0x4ee2), crp
+      pmoveq      ([0x4ee2]), crp
+      pmoveq      ([0x4ee4],0x4fe5), crp
+      pmoveq      ([0x4ee4],0x4fe550e6), crp
+      pmoveq      (0x4ef14ff2), crp
+      pmoveq      ([0x4ef24ff4]), crp
+      pmoveq      ([0x4ef44ff6],0x50f751f8), crp
+      pmoveq      (0,a0,d4.l*8), crp
+      pmovefdq    (1,a0,d4.l*8), crp
+      pmovefdq    (a0,d4.l*8), crp
+      pmovefdq    ([a0,d4.l*8]), crp
+      pmovefdq    ([a0,d4.l*8],0x5013), crp
+      pmovefdq    ([a0,d4.l*8],0x50145115), crp
+      pmovefdq    ([a0],d4.l*8), crp
+      pmovefdq    ([a0],d4.l*8,0x5017), crp
+      pmovefdq    ([a0],d4.l*8,0x50185119), crp
+      pmovefdq    (0x5021,a0,d4.l*8), crp
+      pmovefdq    ([0x5022,a0,d4.l*8]), crp
+      pmovefdq    ([0x5023,a0,d4.l*8],0x5124), crp
+      pmovefdq    ([0x5024,a0,d4.l*8],0x51255226), crp
+      pmovefdq    ([0x5026,a0],d4.l*8), crp
+      pmovefdq    ([0x5027,a0],d4.l*8,0x5128), crp
+      pmovefdq    ([0x5028,a0],d4.l*8,0x5129522a), crp
+      pmovefdq    (0x50315132,a0,d4.l*8), crp
+      pmovefdq    ([0x50325133,a0,d4.l*8]), crp
+      pmovefdq    ([0x50345135,a0,d4.l*8],0x52365337), crp
+      pmovefdq    ([0x50365137,a0],d4.l*8), crp
+      pmovefdq    ([0x50385139,a0],d4.l*8,0x523a533b), crp
+      pmovefdq    (a0), crp
+      pmovefdq    ([a0]), crp
+      pmovefdq    ([a0],0x5053), crp
+      pmovefdq    ([a0],0x50545155), crp
+      pmovefdq    (0x5061,a0), crp
+      pmovefdq    ([0x5062,a0]), crp
+      pmovefdq    ([0x5063,a0],0x5164), crp
+      pmovefdq    ([0x5064,a0],0x51655266), crp
+      pmovefdq    (0x50715172,a0), crp
+      pmovefdq    ([0x50725173,a0]), crp
+      pmovefdq    ([0x50745175,a0],0x52765377), crp
+      pmovefdq    (d4.l*8), crp
+      pmovefdq    ([d4.l*8]), crp
+      pmovefdq    ([d4.l*8],0x5093), crp
+      pmovefdq    ([d4.l*8],0x50945195), crp
+      pmovefdq    (0x50a1,d4.l*8), crp
+      pmovefdq    ([0x50a2,d4.l*8]), crp
+      pmovefdq    ([0x50a3,d4.l*8],0x51a4), crp
+      pmovefdq    ([0x50a4,d4.l*8],0x51a552a6), crp
+      pmovefdq    ([0x50a6],d4.l*8), crp
+      pmovefdq    ([0x50a7],d4.l*8,0x51a8), crp
+      pmovefdq    ([0x50a8],d4.l*8,0x51a952aa), crp
+      pmovefdq    (0x50b151b2,d4.l*8), crp
+      pmovefdq    ([0x50b251b3,d4.l*8]), crp
+      pmovefdq    ([0x50b451b5,d4.l*8],0x52b653b7), crp
+      pmovefdq    ([0x50b651b7],d4.l*8), crp
+      pmovefdq    ([0x50b851b9],d4.l*8,0x52ba53bb), crp
+      pmovefdq    (0x50e2), crp
+      pmovefdq    ([0x50e2]), crp
+      pmovefdq    ([0x50e4],0x51e5), crp
+      pmovefdq    ([0x50e4],0x51e552e6), crp
+      pmovefdq    (0x50f151f2), crp
+      pmovefdq    ([0x50f251f4]), crp
+      pmovefdq    ([0x50f451f6],0x52f753f8), crp
+      pmoveq      crp, (a0,d4.l*8)
+      pmoveq      crp, ([a0,d4.l*8])
+      pmoveq      crp, ([a0,d4.l*8],0x5013)
+      pmoveq      crp, ([a0,d4.l*8],0x50145115)
+      pmoveq      crp, ([a0],d4.l*8)
+      pmoveq      crp, ([a0],d4.l*8,0x5017)
+      pmoveq      crp, ([a0],d4.l*8,0x50185119)
+      pmoveq      crp, (0x5021,a0,d4.l*8)
+      pmoveq      crp, ([0x5022,a0,d4.l*8])
+      pmoveq      crp, ([0x5023,a0,d4.l*8],0x5124)
+      pmoveq      crp, ([0x5024,a0,d4.l*8],0x51255226)
+      pmoveq      crp, ([0x5026,a0],d4.l*8)
+      pmoveq      crp, ([0x5027,a0],d4.l*8,0x5128)
+      pmoveq      crp, ([0x5028,a0],d4.l*8,0x5129522a)
+      pmoveq      crp, (0x50315132,a0,d4.l*8)
+      pmoveq      crp, ([0x50325133,a0,d4.l*8])
+      pmoveq      crp, ([0x50345135,a0,d4.l*8],0x52365337)
+      pmoveq      crp, ([0x50365137,a0],d4.l*8)
+      pmoveq      crp, ([0x50385139,a0],d4.l*8,0x523a533b)
+      pmoveq      crp, (a0)
+      pmoveq      crp, ([a0])
+      pmoveq      crp, ([a0],0x5053)
+      pmoveq      crp, ([a0],0x50545155)
+      pmoveq      crp, (0x5061,a0)
+      pmoveq      crp, ([0x5062,a0])
+      pmoveq      crp, ([0x5063,a0],0x5164)
+      pmoveq      crp, ([0x5064,a0],0x51655266)
+      pmoveq      crp, (0x50715172,a0)
+      pmoveq      crp, ([0x50725173,a0])
+      pmoveq      crp, ([0x50745175,a0],0x52765377)
+      pmoveq      crp, (d4.l*8)
+      pmoveq      crp, ([d4.l*8])
+      pmoveq      crp, ([d4.l*8],0x5093)
+      pmoveq      crp, ([d4.l*8],0x50945195)
+      pmoveq      crp, (0x50a1,d4.l*8)
+      pmoveq      crp, ([0x50a2,d4.l*8])
+      pmoveq      crp, ([0x50a3,d4.l*8],0x51a4)
+      pmoveq      crp, ([0x50a4,d4.l*8],0x51a552a6)
+      pmoveq      crp, ([0x50a6],d4.l*8)
+      pmoveq      crp, ([0x50a7],d4.l*8,0x51a8)
+      pmoveq      crp, ([0x50a8],d4.l*8,0x51a952aa)
+      pmoveq      crp, (0x50b151b2,d4.l*8)
+      pmoveq      crp, ([0x50b251b3,d4.l*8])
+      pmoveq      crp, ([0x50b451b5,d4.l*8],0x52b653b7)
+      pmoveq      crp, ([0x50b651b7],d4.l*8)
+      pmoveq      crp, ([0x50b851b9],d4.l*8,0x52ba53bb)
+      pmoveq      crp, (0x50e2)
+      pmoveq      crp, ([0x50e2])
+      pmoveq      crp, ([0x50e4],0x51e5)
+      pmoveq      crp, ([0x50e4],0x51e552e6)
+      pmoveq      crp, (0x50f151f2)
+      pmoveq      crp, ([0x50f251f4])
+      pmoveq      crp, ([0x50f451f6],0x52f753f8)
+      pmoveq      crp, (0,a0,d5.w)
+      pmovew      (a0,d6.w), psr
+      pmovew      ([a0,d6.w]), psr
+      pmovew      ([a0,d6.w],0x6213), psr
+      pmovew      ([a0,d6.w],0x62146315), psr
+      pmovew      ([a0],d6.w), psr
+      pmovew      ([a0],d6.w,0x6217), psr
+      pmovew      ([a0],d6.w,0x62186319), psr
+      pmovew      (0x6221,a0,d6.w), psr
+      pmovew      ([0x6222,a0,d6.w]), psr
+      pmovew      ([0x6223,a0,d6.w],0x6324), psr
+      pmovew      ([0x6224,a0,d6.w],0x63256426), psr
+      pmovew      ([0x6226,a0],d6.w), psr
+      pmovew      ([0x6227,a0],d6.w,0x6328), psr
+      pmovew      ([0x6228,a0],d6.w,0x6329642a), psr
+      pmovew      (0x62316332,a0,d6.w), psr
+      pmovew      ([0x62326333,a0,d6.w]), psr
+      pmovew      ([0x62346335,a0,d6.w],0x64366537), psr
+      pmovew      ([0x62366337,a0],d6.w), psr
+      pmovew      ([0x62386339,a0],d6.w,0x643a653b), psr
+      pmovew      (a0), psr
+      pmovew      ([a0]), psr
+      pmovew      ([a0],0x6253), psr
+      pmovew      ([a0],0x62546355), psr
+      pmovew      (0x6261,a0), psr
+      pmovew      ([0x6262,a0]), psr
+      pmovew      ([0x6263,a0],0x6364), psr
+      pmovew      ([0x6264,a0],0x63656466), psr
+      pmovew      (0x62716372,a0), psr
+      pmovew      ([0x62726373,a0]), psr
+      pmovew      ([0x62746375,a0],0x64766577), psr
+      pmovew      (d6.w), psr
+      pmovew      ([d6.w]), psr
+      pmovew      ([d6.w],0x6293), psr
+      pmovew      ([d6.w],0x62946395), psr
+      pmovew      (0x62a1,d6.w), psr
+      pmovew      ([0x62a2,d6.w]), psr
+      pmovew      ([0x62a3,d6.w],0x63a4), psr
+      pmovew      ([0x62a4,d6.w],0x63a564a6), psr
+      pmovew      ([0x62a6],d6.w), psr
+      pmovew      ([0x62a7],d6.w,0x63a8), psr
+      pmovew      ([0x62a8],d6.w,0x63a964aa), psr
+      pmovew      (0x62b163b2,d6.w), psr
+      pmovew      ([0x62b263b3,d6.w]), psr
+      pmovew      ([0x62b463b5,d6.w],0x64b665b7), psr
+      pmovew      ([0x62b663b7],d6.w), psr
+      pmovew      ([0x62b863b9],d6.w,0x64ba65bb), psr
+      pmovew      (0x62e2), psr
+      pmovew      ([0x62e2]), psr
+      pmovew      ([0x62e4],0x63e5), psr
+      pmovew      ([0x62e4],0x63e564e6), psr
+      pmovew      (0x62f163f2), psr
+      pmovew      ([0x62f263f4]), psr
+      pmovew      ([0x62f463f6],0x64f765f8), psr
+      pmovew      (0,a0,d6.w*2), psr
+      pmovew      psr, (a0,d6.w*2)
+      pmovew      psr, ([a0,d6.w*2])
+      pmovew      psr, ([a0,d6.w*2],0x6413)
+      pmovew      psr, ([a0,d6.w*2],0x64146515)
+      pmovew      psr, ([a0],d6.w*2)
+      pmovew      psr, ([a0],d6.w*2,0x6417)
+      pmovew      psr, ([a0],d6.w*2,0x64186519)
+      pmovew      psr, (0x6421,a0,d6.w*2)
+      pmovew      psr, ([0x6422,a0,d6.w*2])
+      pmovew      psr, ([0x6423,a0,d6.w*2],0x6524)
+      pmovew      psr, ([0x6424,a0,d6.w*2],0x65256626)
+      pmovew      psr, ([0x6426,a0],d6.w*2)
+      pmovew      psr, ([0x6427,a0],d6.w*2,0x6528)
+      pmovew      psr, ([0x6428,a0],d6.w*2,0x6529662a)
+      pmovew      psr, (0x64316532,a0,d6.w*2)
+      pmovew      psr, ([0x64326533,a0,d6.w*2])
+      pmovew      psr, ([0x64346535,a0,d6.w*2],0x66366737)
+      pmovew      psr, ([0x64366537,a0],d6.w*2)
+      pmovew      psr, ([0x64386539,a0],d6.w*2,0x663a673b)
+      pmovew      psr, (a0)
+      pmovew      psr, ([a0])
+      pmovew      psr, ([a0],0x6453)
+      pmovew      psr, ([a0],0x64546555)
+      pmovew      psr, (0x6461,a0)
+      pmovew      psr, ([0x6462,a0])
+      pmovew      psr, ([0x6463,a0],0x6564)
+      pmovew      psr, ([0x6464,a0],0x65656666)
+      pmovew      psr, (0x64716572,a0)
+      pmovew      psr, ([0x64726573,a0])
+      pmovew      psr, ([0x64746575,a0],0x66766777)
+      pmovew      psr, (d6.w*2)
+      pmovew      psr, ([d6.w*2])
+      pmovew      psr, ([d6.w*2],0x6493)
+      pmovew      psr, ([d6.w*2],0x64946595)
+      pmovew      psr, (0x64a1,d6.w*2)
+      pmovew      psr, ([0x64a2,d6.w*2])
+      pmovew      psr, ([0x64a3,d6.w*2],0x65a4)
+      pmovew      psr, ([0x64a4,d6.w*2],0x65a566a6)
+      pmovew      psr, ([0x64a6],d6.w*2)
+      pmovew      psr, ([0x64a7],d6.w*2,0x65a8)
+      pmovew      psr, ([0x64a8],d6.w*2,0x65a966aa)
+      pmovew      psr, (0x64b165b2,d6.w*2)
+      pmovew      psr, ([0x64b265b3,d6.w*2])
+      pmovew      psr, ([0x64b465b5,d6.w*2],0x66b667b7)
+      pmovew      psr, ([0x64b665b7],d6.w*2)
+      pmovew      psr, ([0x64b865b9],d6.w*2,0x66ba67bb)
+      pmovew      psr, (0x64e2)
+      pmovew      psr, ([0x64e2])
+      pmovew      psr, ([0x64e4],0x65e5)
+      pmovew      psr, ([0x64e4],0x65e566e6)
+      pmovew      psr, (0x64f165f2)
+      pmovew      psr, ([0x64f265f4])
+      pmovew      psr, ([0x64f465f6],0x66f767f8)
+      pmovew      psr, (0,a0,d6.w*4)
+      ptestw      sfc, (a0,a0.w), #0
+      ptestw      sfc, ([a0,a0.w]), #0
+      ptestw      sfc, ([a0,a0.w],-0x7ded), #0
+      ptestw      sfc, ([a0,a0.w],-0x7deb7ceb), #0
+      ptestw      sfc, ([a0],a0.w), #0
+      ptestw      sfc, ([a0],a0.w,-0x7de9), #0
+      ptestw      sfc, ([a0],a0.w,-0x7de77ce7), #0
+      ptestw      sfc, (-0x7ddf,a0,a0.w), #0
+      ptestw      sfc, ([-0x7dde,a0,a0.w]), #0
+      ptestw      sfc, ([-0x7ddd,a0,a0.w],-0x7cdc), #0
+      ptestw      sfc, ([-0x7ddc,a0,a0.w],-0x7cda7bda), #0
+      ptestw      sfc, ([-0x7dda,a0],a0.w), #0
+      ptestw      sfc, ([-0x7dd9,a0],a0.w,-0x7cd8), #0
+      ptestw      sfc, ([-0x7dd8,a0],a0.w,-0x7cd67bd6), #0
+      ptestw      sfc, (-0x7dce7cce,a0,a0.w), #0
+      ptestw      sfc, ([-0x7dcd7ccd,a0,a0.w]), #0
+      ptestw      sfc, ([-0x7dcb7ccb,a0,a0.w],-0x7bc97ac9), #0
+      ptestw      sfc, ([-0x7dc97cc9,a0],a0.w), #0
+      ptestw      sfc, ([-0x7dc77cc7,a0],a0.w,-0x7bc57ac5), #0
+      ptestw      sfc, (a0), #0
+      ptestw      sfc, ([a0]), #0
+      ptestw      sfc, ([a0],-0x7dad), #0
+      ptestw      sfc, ([a0],-0x7dab7cab), #0
+      ptestw      sfc, (-0x7d9f,a0), #0
+      ptestw      sfc, ([-0x7d9e,a0]), #0
+      ptestw      sfc, ([-0x7d9d,a0],-0x7c9c), #0
+      ptestw      sfc, ([-0x7d9c,a0],-0x7c9a7b9a), #0
+      ptestw      sfc, (-0x7d8e7c8e,a0), #0
+      ptestw      sfc, ([-0x7d8d7c8d,a0]), #0
+      ptestw      sfc, ([-0x7d8b7c8b,a0],-0x7b897a89), #0
+      ptestw      sfc, (a0.w), #0
+      ptestw      sfc, ([a0.w]), #0
+      ptestw      sfc, ([a0.w],-0x7d6d), #0
+      ptestw      sfc, ([a0.w],-0x7d6b7c6b), #0
+      ptestw      sfc, (-0x7d5f,a0.w), #0
+      ptestw      sfc, ([-0x7d5e,a0.w]), #0
+      ptestw      sfc, ([-0x7d5d,a0.w],-0x7c5c), #0
+      ptestw      sfc, ([-0x7d5c,a0.w],-0x7c5a7b5a), #0
+      ptestw      sfc, ([-0x7d5a],a0.w), #0
+      ptestw      sfc, ([-0x7d59],a0.w,-0x7c58), #0
+      ptestw      sfc, ([-0x7d58],a0.w,-0x7c567b56), #0
+      ptestw      sfc, (-0x7d4e7c4e,a0.w), #0
+      ptestw      sfc, ([-0x7d4d7c4d,a0.w]), #0
+      ptestw      sfc, ([-0x7d4b7c4b,a0.w],-0x7b497a49), #0
+      ptestw      sfc, ([-0x7d497c49],a0.w), #0
+      ptestw      sfc, ([-0x7d477c47],a0.w,-0x7b457a45), #0
+      ptestw      sfc, (-0x7d1e), #0
+      ptestw      sfc, ([-0x7d1e]), #0
+      ptestw      sfc, ([-0x7d1c],-0x7c1b), #0
+      ptestw      sfc, ([-0x7d1c],-0x7c1a7b1a), #0
+      ptestw      sfc, (-0x7d0e7c0e), #0
+      ptestw      sfc, ([-0x7d0d7c0c]), #0
+      ptestw      sfc, ([-0x7d0b7c0a],-0x7b087a08), #0
+      ptestw      sfc, (0,a0,a0.w*2), #0
+      ptestw      dfc, (a0,a0.w), #0
+      ptestw      dfc, ([a0,a0.w]), #0
+      ptestw      dfc, ([a0,a0.w],-0x7ded), #0
+      ptestw      dfc, ([a0,a0.w],-0x7deb7ceb), #0
+      ptestw      dfc, ([a0],a0.w), #0
+      ptestw      dfc, ([a0],a0.w,-0x7de9), #0
+      ptestw      dfc, ([a0],a0.w,-0x7de77ce7), #0
+      ptestw      dfc, (-0x7ddf,a0,a0.w), #0
+      ptestw      dfc, ([-0x7dde,a0,a0.w]), #0
+      ptestw      dfc, ([-0x7ddd,a0,a0.w],-0x7cdc), #0
+      ptestw      dfc, ([-0x7ddc,a0,a0.w],-0x7cda7bda), #0
+      ptestw      dfc, ([-0x7dda,a0],a0.w), #0
+      ptestw      dfc, ([-0x7dd9,a0],a0.w,-0x7cd8), #0
+      ptestw      dfc, ([-0x7dd8,a0],a0.w,-0x7cd67bd6), #0
+      ptestw      dfc, (-0x7dce7cce,a0,a0.w), #0
+      ptestw      dfc, ([-0x7dcd7ccd,a0,a0.w]), #0
+      ptestw      dfc, ([-0x7dcb7ccb,a0,a0.w],-0x7bc97ac9), #0
+      ptestw      dfc, ([-0x7dc97cc9,a0],a0.w), #0
+      ptestw      dfc, ([-0x7dc77cc7,a0],a0.w,-0x7bc57ac5), #0
+      ptestw      dfc, (a0), #0
+      ptestw      dfc, ([a0]), #0
+      ptestw      dfc, ([a0],-0x7dad), #0
+      ptestw      dfc, ([a0],-0x7dab7cab), #0
+      ptestw      dfc, (-0x7d9f,a0), #0
+      ptestw      dfc, ([-0x7d9e,a0]), #0
+      ptestw      dfc, ([-0x7d9d,a0],-0x7c9c), #0
+      ptestw      dfc, ([-0x7d9c,a0],-0x7c9a7b9a), #0
+      ptestw      dfc, (-0x7d8e7c8e,a0), #0
+      ptestw      dfc, ([-0x7d8d7c8d,a0]), #0
+      ptestw      dfc, ([-0x7d8b7c8b,a0],-0x7b897a89), #0
+      ptestw      dfc, (a0.w), #0
+      ptestw      dfc, ([a0.w]), #0
+      ptestw      dfc, ([a0.w],-0x7d6d), #0
+      ptestw      dfc, ([a0.w],-0x7d6b7c6b), #0
+      ptestw      dfc, (-0x7d5f,a0.w), #0
+      ptestw      dfc, ([-0x7d5e,a0.w]), #0
+      ptestw      dfc, ([-0x7d5d,a0.w],-0x7c5c), #0
+      ptestw      dfc, ([-0x7d5c,a0.w],-0x7c5a7b5a), #0
+      ptestw      dfc, ([-0x7d5a],a0.w), #0
+      ptestw      dfc, ([-0x7d59],a0.w,-0x7c58), #0
+      ptestw      dfc, ([-0x7d58],a0.w,-0x7c567b56), #0
+      ptestw      dfc, (-0x7d4e7c4e,a0.w), #0
+      ptestw      dfc, ([-0x7d4d7c4d,a0.w]), #0
+      ptestw      dfc, ([-0x7d4b7c4b,a0.w],-0x7b497a49), #0
+      ptestw      dfc, ([-0x7d497c49],a0.w), #0
+      ptestw      dfc, ([-0x7d477c47],a0.w,-0x7b457a45), #0
+      ptestw      dfc, (-0x7d1e), #0
+      ptestw      dfc, ([-0x7d1e]), #0
+      ptestw      dfc, ([-0x7d1c],-0x7c1b), #0
+      ptestw      dfc, ([-0x7d1c],-0x7c1a7b1a), #0
+      ptestw      dfc, (-0x7d0e7c0e), #0
+      ptestw      dfc, ([-0x7d0d7c0c]), #0
+      ptestw      dfc, ([-0x7d0b7c0a],-0x7b087a08), #0
+      ptestw      dfc, (0,a0,a0.w*2), #0
+      ptestw      d0, (a0,a0.w), #0
+      ptestw      d0, ([a0,a0.w]), #0
+      ptestw      d0, ([a0,a0.w],-0x7ded), #0
+      ptestw      d0, ([a0,a0.w],-0x7deb7ceb), #0
+      ptestw      d0, ([a0],a0.w), #0
+      ptestw      d0, ([a0],a0.w,-0x7de9), #0
+      ptestw      d0, ([a0],a0.w,-0x7de77ce7), #0
+      ptestw      d0, (-0x7ddf,a0,a0.w), #0
+      ptestw      d0, ([-0x7dde,a0,a0.w]), #0
+      ptestw      d0, ([-0x7ddd,a0,a0.w],-0x7cdc), #0
+      ptestw      d0, ([-0x7ddc,a0,a0.w],-0x7cda7bda), #0
+      ptestw      d0, ([-0x7dda,a0],a0.w), #0
+      ptestw      d0, ([-0x7dd9,a0],a0.w,-0x7cd8), #0
+      ptestw      d0, ([-0x7dd8,a0],a0.w,-0x7cd67bd6), #0
+      ptestw      d0, (-0x7dce7cce,a0,a0.w), #0
+      ptestw      d0, ([-0x7dcd7ccd,a0,a0.w]), #0
+      ptestw      d0, ([-0x7dcb7ccb,a0,a0.w],-0x7bc97ac9), #0
+      ptestw      d0, ([-0x7dc97cc9,a0],a0.w), #0
+      ptestw      d0, ([-0x7dc77cc7,a0],a0.w,-0x7bc57ac5), #0
+      ptestw      d0, (a0), #0
+      ptestw      d0, ([a0]), #0
+      ptestw      d0, ([a0],-0x7dad), #0
+      ptestw      d0, ([a0],-0x7dab7cab), #0
+      ptestw      d0, (-0x7d9f,a0), #0
+      ptestw      d0, ([-0x7d9e,a0]), #0
+      ptestw      d0, ([-0x7d9d,a0],-0x7c9c), #0
+      ptestw      d0, ([-0x7d9c,a0],-0x7c9a7b9a), #0
+      ptestw      d0, (-0x7d8e7c8e,a0), #0
+      ptestw      d0, ([-0x7d8d7c8d,a0]), #0
+      ptestw      d0, ([-0x7d8b7c8b,a0],-0x7b897a89), #0
+      ptestw      d0, (a0.w), #0
+      ptestw      d0, ([a0.w]), #0
+      ptestw      d0, ([a0.w],-0x7d6d), #0
+      ptestw      d0, ([a0.w],-0x7d6b7c6b), #0
+      ptestw      d0, (-0x7d5f,a0.w), #0
+      ptestw      d0, ([-0x7d5e,a0.w]), #0
+      ptestw      d0, ([-0x7d5d,a0.w],-0x7c5c), #0
+      ptestw      d0, ([-0x7d5c,a0.w],-0x7c5a7b5a), #0
+      ptestw      d0, ([-0x7d5a],a0.w), #0
+      ptestw      d0, ([-0x7d59],a0.w,-0x7c58), #0
+      ptestw      d0, ([-0x7d58],a0.w,-0x7c567b56), #0
+      ptestw      d0, (-0x7d4e7c4e,a0.w), #0
+      ptestw      d0, ([-0x7d4d7c4d,a0.w]), #0
+      ptestw      d0, ([-0x7d4b7c4b,a0.w],-0x7b497a49), #0
+      ptestw      d0, ([-0x7d497c49],a0.w), #0
+      ptestw      d0, ([-0x7d477c47],a0.w,-0x7b457a45), #0
+      ptestw      d0, (-0x7d1e), #0
+      ptestw      d0, ([-0x7d1e]), #0
+      ptestw      d0, ([-0x7d1c],-0x7c1b), #0
+      ptestw      d0, ([-0x7d1c],-0x7c1a7b1a), #0
+      ptestw      d0, (-0x7d0e7c0e), #0
+      ptestw      d0, ([-0x7d0d7c0c]), #0
+      ptestw      d0, ([-0x7d0b7c0a],-0x7b087a08), #0
+      ptestw      d0, (0,a0,a0.w*2), #0
+      ptestw      #0, ([a0,a0.w]), #0
+      ptestw      #0, ([a0,a0.w],-0x7ded), #0
+      ptestw      #0, ([a0,a0.w],-0x7deb7ceb), #0
+      ptestw      #0, ([a0],a0.w), #0
+      ptestw      #0, ([a0],a0.w,-0x7de9), #0
+      ptestw      #0, ([a0],a0.w,-0x7de77ce7), #0
+      ptestw      #0, (-0x7ddf,a0,a0.w), #0
+      ptestw      #0, ([-0x7dde,a0,a0.w]), #0
+      ptestw      #0, ([-0x7ddd,a0,a0.w],-0x7cdc), #0
+      ptestw      #0, ([-0x7ddc,a0,a0.w],-0x7cda7bda), #0
+      ptestw      #0, ([-0x7dda,a0],a0.w), #0
+      ptestw      #0, ([-0x7dd9,a0],a0.w,-0x7cd8), #0
+      ptestw      #0, ([-0x7dd8,a0],a0.w,-0x7cd67bd6), #0
+      ptestw      #0, (-0x7dce7cce,a0,a0.w), #0
+      ptestw      #0, ([-0x7dcd7ccd,a0,a0.w]), #0
+      ptestw      #0, ([-0x7dcb7ccb,a0,a0.w],-0x7bc97ac9), #0
+      ptestw      #0, ([-0x7dc97cc9,a0],a0.w), #0
+      ptestw      #0, ([-0x7dc77cc7,a0],a0.w,-0x7bc57ac5), #0
+      ptestw      #0, (a0), #0
+      ptestw      #0, ([a0]), #0
+      ptestw      #0, ([a0],-0x7dad), #0
+      ptestw      #0, ([a0],-0x7dab7cab), #0
+      ptestw      #0, (-0x7d9f,a0), #0
+      ptestw      #0, ([-0x7d9e,a0]), #0
+      ptestw      #0, ([-0x7d9d,a0],-0x7c9c), #0
+      ptestw      #0, ([-0x7d9c,a0],-0x7c9a7b9a), #0
+      ptestw      #0, (-0x7d8e7c8e,a0), #0
+      ptestw      #0, ([-0x7d8d7c8d,a0]), #0
+      ptestw      #0, ([-0x7d8b7c8b,a0],-0x7b897a89), #0
+      ptestw      #0, (a0.w), #0
+      ptestw      #0, ([a0.w]), #0
+      ptestw      #0, ([a0.w],-0x7d6d), #0
+      ptestw      #0, ([a0.w],-0x7d6b7c6b), #0
+      ptestw      #0, (-0x7d5f,a0.w), #0
+      ptestw      #0, ([-0x7d5e,a0.w]), #0
+      ptestw      #0, ([-0x7d5d,a0.w],-0x7c5c), #0
+      ptestw      #0, ([-0x7d5c,a0.w],-0x7c5a7b5a), #0
+      ptestw      #0, ([-0x7d5a],a0.w), #0
+      ptestw      #0, ([-0x7d59],a0.w,-0x7c58), #0
+      ptestw      #0, ([-0x7d58],a0.w,-0x7c567b56), #0
+      ptestw      #0, (-0x7d4e7c4e,a0.w), #0
+      ptestw      #0, ([-0x7d4d7c4d,a0.w]), #0
+      ptestw      #0, ([-0x7d4b7c4b,a0.w],-0x7b497a49), #0
+      ptestw      #0, ([-0x7d497c49],a0.w), #0
+      ptestw      #0, ([-0x7d477c47],a0.w,-0x7b457a45), #0
+      ptestw      #0, (-0x7d1e), #0
+      ptestw      #0, ([-0x7d1e]), #0
+      ptestw      #0, ([-0x7d1c],-0x7c1b), #0
+      ptestw      #0, ([-0x7d1c],-0x7c1a7b1a), #0
+      ptestw      #0, (-0x7d0e7c0e), #0
+      ptestw      #0, ([-0x7d0d7c0c]), #0
+      ptestw      #0, ([-0x7d0b7c0a],-0x7b087a08), #0
+      ptestw      #0, (0,a0,a0.w*2), #0
+      ptestw      #0, (a0,a0.w*2), #0
+      ptestw      sfc, (1,a0,a0.w*2), #0, a0
+      ptestw      sfc, (a0,a0.w*2), #0, a0
+      ptestw      sfc, ([a0,a0.w*2]), #0, a0
+      ptestw      sfc, ([a0,a0.w*2],-0x7bed), #0, a0
+      ptestw      sfc, ([a0,a0.w*2],-0x7beb7aeb), #0, a0
+      ptestw      sfc, ([a0],a0.w*2), #0, a0
+      ptestw      sfc, ([a0],a0.w*2,-0x7be9), #0, a0
+      ptestw      sfc, ([a0],a0.w*2,-0x7be77ae7), #0, a0
+      ptestw      sfc, (-0x7bdf,a0,a0.w*2), #0, a0
+      ptestw      sfc, ([-0x7bde,a0,a0.w*2]), #0, a0
+      ptestw      sfc, ([-0x7bdd,a0,a0.w*2],-0x7adc), #0, a0
+      ptestw      sfc, ([-0x7bdc,a0,a0.w*2],-0x7ada79da), #0, a0
+      ptestw      sfc, ([-0x7bda,a0],a0.w*2), #0, a0
+      ptestw      sfc, ([-0x7bd9,a0],a0.w*2,-0x7ad8), #0, a0
+      ptestw      sfc, ([-0x7bd8,a0],a0.w*2,-0x7ad679d6), #0, a0
+      ptestw      sfc, (-0x7bce7ace,a0,a0.w*2), #0, a0
+      ptestw      sfc, ([-0x7bcd7acd,a0,a0.w*2]), #0, a0
+      ptestw      sfc, ([-0x7bcb7acb,a0,a0.w*2],-0x79c978c9), #0, a0
+      ptestw      sfc, ([-0x7bc97ac9,a0],a0.w*2), #0, a0
+      ptestw      sfc, ([-0x7bc77ac7,a0],a0.w*2,-0x79c578c5), #0, a0
+      ptestw      sfc, (a0), #0, a0
+      ptestw      sfc, ([a0]), #0, a0
+      ptestw      sfc, ([a0],-0x7bad), #0, a0
+      ptestw      sfc, ([a0],-0x7bab7aab), #0, a0
+      ptestw      sfc, (-0x7b9f,a0), #0, a0
+      ptestw      sfc, ([-0x7b9e,a0]), #0, a0
+      ptestw      sfc, ([-0x7b9d,a0],-0x7a9c), #0, a0
+      ptestw      sfc, ([-0x7b9c,a0],-0x7a9a799a), #0, a0
+      ptestw      sfc, (-0x7b8e7a8e,a0), #0, a0
+      ptestw      sfc, ([-0x7b8d7a8d,a0]), #0, a0
+      ptestw      sfc, ([-0x7b8b7a8b,a0],-0x79897889), #0, a0
+      ptestw      sfc, (a0.w*2), #0, a0
+      ptestw      sfc, ([a0.w*2]), #0, a0
+      ptestw      sfc, ([a0.w*2],-0x7b6d), #0, a0
+      ptestw      sfc, ([a0.w*2],-0x7b6b7a6b), #0, a0
+      ptestw      sfc, (-0x7b5f,a0.w*2), #0, a0
+      ptestw      sfc, ([-0x7b5e,a0.w*2]), #0, a0
+      ptestw      sfc, ([-0x7b5d,a0.w*2],-0x7a5c), #0, a0
+      ptestw      sfc, ([-0x7b5c,a0.w*2],-0x7a5a795a), #0, a0
+      ptestw      sfc, ([-0x7b5a],a0.w*2), #0, a0
+      ptestw      sfc, ([-0x7b59],a0.w*2,-0x7a58), #0, a0
+      ptestw      sfc, ([-0x7b58],a0.w*2,-0x7a567956), #0, a0
+      ptestw      sfc, (-0x7b4e7a4e,a0.w*2), #0, a0
+      ptestw      sfc, ([-0x7b4d7a4d,a0.w*2]), #0, a0
+      ptestw      sfc, ([-0x7b4b7a4b,a0.w*2],-0x79497849), #0, a0
+      ptestw      sfc, ([-0x7b497a49],a0.w*2), #0, a0
+      ptestw      sfc, ([-0x7b477a47],a0.w*2,-0x79457845), #0, a0
+      ptestw      sfc, (-0x7b1e), #0, a0
+      ptestw      sfc, ([-0x7b1e]), #0, a0
+      ptestw      sfc, ([-0x7b1c],-0x7a1b), #0, a0
+      ptestw      sfc, ([-0x7b1c],-0x7a1a791a), #0, a0
+      ptestw      sfc, (-0x7b0e7a0e), #0, a0
+      ptestw      sfc, ([-0x7b0d7a0c]), #0, a0
+      ptestw      sfc, ([-0x7b0b7a0a],-0x79087808), #0, a0
+      ptestw      dfc, (2,a0,a0.w*2), #0, a0
+      ptestw      dfc, (a0,a0.w*2), #0, a0
+      ptestw      dfc, ([a0,a0.w*2]), #0, a0
+      ptestw      dfc, ([a0,a0.w*2],-0x7bed), #0, a0
+      ptestw      dfc, ([a0,a0.w*2],-0x7beb7aeb), #0, a0
+      ptestw      dfc, ([a0],a0.w*2), #0, a0
+      ptestw      dfc, ([a0],a0.w*2,-0x7be9), #0, a0
+      ptestw      dfc, ([a0],a0.w*2,-0x7be77ae7), #0, a0
+      ptestw      dfc, (-0x7bdf,a0,a0.w*2), #0, a0
+      ptestw      dfc, ([-0x7bde,a0,a0.w*2]), #0, a0
+      ptestw      dfc, ([-0x7bdd,a0,a0.w*2],-0x7adc), #0, a0
+      ptestw      dfc, ([-0x7bdc,a0,a0.w*2],-0x7ada79da), #0, a0
+      ptestw      dfc, ([-0x7bda,a0],a0.w*2), #0, a0
+      ptestw      dfc, ([-0x7bd9,a0],a0.w*2,-0x7ad8), #0, a0
+      ptestw      dfc, ([-0x7bd8,a0],a0.w*2,-0x7ad679d6), #0, a0
+      ptestw      dfc, (-0x7bce7ace,a0,a0.w*2), #0, a0
+      ptestw      dfc, ([-0x7bcd7acd,a0,a0.w*2]), #0, a0
+      ptestw      dfc, ([-0x7bcb7acb,a0,a0.w*2],-0x79c978c9), #0, a0
+      ptestw      dfc, ([-0x7bc97ac9,a0],a0.w*2), #0, a0
+      ptestw      dfc, ([-0x7bc77ac7,a0],a0.w*2,-0x79c578c5), #0, a0
+      ptestw      dfc, (a0), #0, a0
+      ptestw      dfc, ([a0]), #0, a0
+      ptestw      dfc, ([a0],-0x7bad), #0, a0
+      ptestw      dfc, ([a0],-0x7bab7aab), #0, a0
+      ptestw      dfc, (-0x7b9f,a0), #0, a0
+      ptestw      dfc, ([-0x7b9e,a0]), #0, a0
+      ptestw      dfc, ([-0x7b9d,a0],-0x7a9c), #0, a0
+      ptestw      dfc, ([-0x7b9c,a0],-0x7a9a799a), #0, a0
+      ptestw      dfc, (-0x7b8e7a8e,a0), #0, a0
+      ptestw      dfc, ([-0x7b8d7a8d,a0]), #0, a0
+      ptestw      dfc, ([-0x7b8b7a8b,a0],-0x79897889), #0, a0
+      ptestw      dfc, (a0.w*2), #0, a0
+      ptestw      dfc, ([a0.w*2]), #0, a0
+      ptestw      dfc, ([a0.w*2],-0x7b6d), #0, a0
+      ptestw      dfc, ([a0.w*2],-0x7b6b7a6b), #0, a0
+      ptestw      dfc, (-0x7b5f,a0.w*2), #0, a0
+      ptestw      dfc, ([-0x7b5e,a0.w*2]), #0, a0
+      ptestw      dfc, ([-0x7b5d,a0.w*2],-0x7a5c), #0, a0
+      ptestw      dfc, ([-0x7b5c,a0.w*2],-0x7a5a795a), #0, a0
+      ptestw      dfc, ([-0x7b5a],a0.w*2), #0, a0
+      ptestw      dfc, ([-0x7b59],a0.w*2,-0x7a58), #0, a0
+      ptestw      dfc, ([-0x7b58],a0.w*2,-0x7a567956), #0, a0
+      ptestw      dfc, (-0x7b4e7a4e,a0.w*2), #0, a0
+      ptestw      dfc, ([-0x7b4d7a4d,a0.w*2]), #0, a0
+      ptestw      dfc, ([-0x7b4b7a4b,a0.w*2],-0x79497849), #0, a0
+      ptestw      dfc, ([-0x7b497a49],a0.w*2), #0, a0
+      ptestw      dfc, ([-0x7b477a47],a0.w*2,-0x79457845), #0, a0
+      ptestw      dfc, (-0x7b1e), #0, a0
+      ptestw      dfc, ([-0x7b1e]), #0, a0
+      ptestw      dfc, ([-0x7b1c],-0x7a1b), #0, a0
+      ptestw      dfc, ([-0x7b1c],-0x7a1a791a), #0, a0
+      ptestw      dfc, (-0x7b0e7a0e), #0, a0
+      ptestw      dfc, ([-0x7b0d7a0c]), #0, a0
+      ptestw      dfc, ([-0x7b0b7a0a],-0x79087808), #0, a0
+      ptestw      d0, (9,a0,a0.w*2), #0, a0
+      ptestw      d0, (a0,a0.w*2), #0, a0
+      ptestw      d0, ([a0,a0.w*2]), #0, a0
+      ptestw      d0, ([a0,a0.w*2],-0x7bed), #0, a0
+      ptestw      d0, ([a0,a0.w*2],-0x7beb7aeb), #0, a0
+      ptestw      d0, ([a0],a0.w*2), #0, a0
+      ptestw      d0, ([a0],a0.w*2,-0x7be9), #0, a0
+      ptestw      d0, ([a0],a0.w*2,-0x7be77ae7), #0, a0
+      ptestw      d0, (-0x7bdf,a0,a0.w*2), #0, a0
+      ptestw      d0, ([-0x7bde,a0,a0.w*2]), #0, a0
+      ptestw      d0, ([-0x7bdd,a0,a0.w*2],-0x7adc), #0, a0
+      ptestw      d0, ([-0x7bdc,a0,a0.w*2],-0x7ada79da), #0, a0
+      ptestw      d0, ([-0x7bda,a0],a0.w*2), #0, a0
+      ptestw      d0, ([-0x7bd9,a0],a0.w*2,-0x7ad8), #0, a0
+      ptestw      d0, ([-0x7bd8,a0],a0.w*2,-0x7ad679d6), #0, a0
+      ptestw      d0, (-0x7bce7ace,a0,a0.w*2), #0, a0
+      ptestw      d0, ([-0x7bcd7acd,a0,a0.w*2]), #0, a0
+      ptestw      d0, ([-0x7bcb7acb,a0,a0.w*2],-0x79c978c9), #0, a0
+      ptestw      d0, ([-0x7bc97ac9,a0],a0.w*2), #0, a0
+      ptestw      d0, ([-0x7bc77ac7,a0],a0.w*2,-0x79c578c5), #0, a0
+      ptestw      d0, (a0), #0, a0
+      ptestw      d0, ([a0]), #0, a0
+      ptestw      d0, ([a0],-0x7bad), #0, a0
+      ptestw      d0, ([a0],-0x7bab7aab), #0, a0
+      ptestw      d0, (-0x7b9f,a0), #0, a0
+      ptestw      d0, ([-0x7b9e,a0]), #0, a0
+      ptestw      d0, ([-0x7b9d,a0],-0x7a9c), #0, a0
+      ptestw      d0, ([-0x7b9c,a0],-0x7a9a799a), #0, a0
+      ptestw      d0, (-0x7b8e7a8e,a0), #0, a0
+      ptestw      d0, ([-0x7b8d7a8d,a0]), #0, a0
+      ptestw      d0, ([-0x7b8b7a8b,a0],-0x79897889), #0, a0
+      ptestw      d0, (a0.w*2), #0, a0
+      ptestw      d0, ([a0.w*2]), #0, a0
+      ptestw      d0, ([a0.w*2],-0x7b6d), #0, a0
+      ptestw      d0, ([a0.w*2],-0x7b6b7a6b), #0, a0
+      ptestw      d0, (-0x7b5f,a0.w*2), #0, a0
+      ptestw      d0, ([-0x7b5e,a0.w*2]), #0, a0
+      ptestw      d0, ([-0x7b5d,a0.w*2],-0x7a5c), #0, a0
+      ptestw      d0, ([-0x7b5c,a0.w*2],-0x7a5a795a), #0, a0
+      ptestw      d0, ([-0x7b5a],a0.w*2), #0, a0
+      ptestw      d0, ([-0x7b59],a0.w*2,-0x7a58), #0, a0
+      ptestw      d0, ([-0x7b58],a0.w*2,-0x7a567956), #0, a0
+      ptestw      d0, (-0x7b4e7a4e,a0.w*2), #0, a0
+      ptestw      d0, ([-0x7b4d7a4d,a0.w*2]), #0, a0
+      ptestw      d0, ([-0x7b4b7a4b,a0.w*2],-0x79497849), #0, a0
+      ptestw      d0, ([-0x7b497a49],a0.w*2), #0, a0
+      ptestw      d0, ([-0x7b477a47],a0.w*2,-0x79457845), #0, a0
+      ptestw      d0, (-0x7b1e), #0, a0
+      ptestw      d0, ([-0x7b1e]), #0, a0
+      ptestw      d0, ([-0x7b1c],-0x7a1b), #0, a0
+      ptestw      d0, ([-0x7b1c],-0x7a1a791a), #0, a0
+      ptestw      d0, (-0x7b0e7a0e), #0, a0
+      ptestw      d0, ([-0x7b0d7a0c]), #0, a0
+      ptestw      d0, ([-0x7b0b7a0a],-0x79087808), #0, a0
+      ptestw      #0, (17,a0,a0.w*2), #0, a0
+      ptestw      #0, (a0,a0.w*2), #0, a0
+      ptestw      #0, ([a0,a0.w*2]), #0, a0
+      ptestw      #0, ([a0,a0.w*2],-0x7bed), #0, a0
+      ptestw      #0, ([a0,a0.w*2],-0x7beb7aeb), #0, a0
+      ptestw      #0, ([a0],a0.w*2), #0, a0
+      ptestw      #0, ([a0],a0.w*2,-0x7be9), #0, a0
+      ptestw      #0, ([a0],a0.w*2,-0x7be77ae7), #0, a0
+      ptestw      #0, (-0x7bdf,a0,a0.w*2), #0, a0
+      ptestw      #0, ([-0x7bde,a0,a0.w*2]), #0, a0
+      ptestw      #0, ([-0x7bdd,a0,a0.w*2],-0x7adc), #0, a0
+      ptestw      #0, ([-0x7bdc,a0,a0.w*2],-0x7ada79da), #0, a0
+      ptestw      #0, ([-0x7bda,a0],a0.w*2), #0, a0
+      ptestw      #0, ([-0x7bd9,a0],a0.w*2,-0x7ad8), #0, a0
+      ptestw      #0, ([-0x7bd8,a0],a0.w*2,-0x7ad679d6), #0, a0
+      ptestw      #0, (-0x7bce7ace,a0,a0.w*2), #0, a0
+      ptestw      #0, ([-0x7bcd7acd,a0,a0.w*2]), #0, a0
+      ptestw      #0, ([-0x7bcb7acb,a0,a0.w*2],-0x79c978c9), #0, a0
+      ptestw      #0, ([-0x7bc97ac9,a0],a0.w*2), #0, a0
+      ptestw      #0, ([-0x7bc77ac7,a0],a0.w*2,-0x79c578c5), #0, a0
+      ptestw      #0, (a0), #0, a0
+      ptestw      #0, ([a0]), #0, a0
+      ptestw      #0, ([a0],-0x7bad), #0, a0
+      ptestw      #0, ([a0],-0x7bab7aab), #0, a0
+      ptestw      #0, (-0x7b9f,a0), #0, a0
+      ptestw      #0, ([-0x7b9e,a0]), #0, a0
+      ptestw      #0, ([-0x7b9d,a0],-0x7a9c), #0, a0
+      ptestw      #0, ([-0x7b9c,a0],-0x7a9a799a), #0, a0
+      ptestw      #0, (-0x7b8e7a8e,a0), #0, a0
+      ptestw      #0, ([-0x7b8d7a8d,a0]), #0, a0
+      ptestw      #0, ([-0x7b8b7a8b,a0],-0x79897889), #0, a0
+      ptestw      #0, (a0.w*2), #0, a0
+      ptestw      #0, ([a0.w*2]), #0, a0
+      ptestw      #0, ([a0.w*2],-0x7b6d), #0, a0
+      ptestw      #0, ([a0.w*2],-0x7b6b7a6b), #0, a0
+      ptestw      #0, (-0x7b5f,a0.w*2), #0, a0
+      ptestw      #0, ([-0x7b5e,a0.w*2]), #0, a0
+      ptestw      #0, ([-0x7b5d,a0.w*2],-0x7a5c), #0, a0
+      ptestw      #0, ([-0x7b5c,a0.w*2],-0x7a5a795a), #0, a0
+      ptestw      #0, ([-0x7b5a],a0.w*2), #0, a0
+      ptestw      #0, ([-0x7b59],a0.w*2,-0x7a58), #0, a0
+      ptestw      #0, ([-0x7b58],a0.w*2,-0x7a567956), #0, a0
+      ptestw      #0, (-0x7b4e7a4e,a0.w*2), #0, a0
+      ptestw      #0, ([-0x7b4d7a4d,a0.w*2]), #0, a0
+      ptestw      #0, ([-0x7b4b7a4b,a0.w*2],-0x79497849), #0, a0
+      ptestw      #0, ([-0x7b497a49],a0.w*2), #0, a0
+      ptestw      #0, ([-0x7b477a47],a0.w*2,-0x79457845), #0, a0
+      ptestw      #0, (-0x7b1e), #0, a0
+      ptestw      #0, ([-0x7b1e]), #0, a0
+      ptestw      #0, ([-0x7b1c],-0x7a1b), #0, a0
+      ptestw      #0, ([-0x7b1c],-0x7a1a791a), #0, a0
+      ptestw      #0, (-0x7b0e7a0e), #0, a0
+      ptestw      #0, ([-0x7b0d7a0c]), #0, a0
+      ptestw      #0, ([-0x7b0b7a0a],-0x79087808), #0, a0
+      ptestr      sfc, (a0,a0.w*2), #0
+      ptestr      sfc, ([a0,a0.w*2]), #0
+      ptestr      sfc, ([a0,a0.w*2],-0x7bed), #0
+      ptestr      sfc, ([a0,a0.w*2],-0x7beb7aeb), #0
+      ptestr      sfc, ([a0],a0.w*2), #0
+      ptestr      sfc, ([a0],a0.w*2,-0x7be9), #0
+      ptestr      sfc, ([a0],a0.w*2,-0x7be77ae7), #0
+      ptestr      sfc, (-0x7bdf,a0,a0.w*2), #0
+      ptestr      sfc, ([-0x7bde,a0,a0.w*2]), #0
+      ptestr      sfc, ([-0x7bdd,a0,a0.w*2],-0x7adc), #0
+      ptestr      sfc, ([-0x7bdc,a0,a0.w*2],-0x7ada79da), #0
+      ptestr      sfc, ([-0x7bda,a0],a0.w*2), #0
+      ptestr      sfc, ([-0x7bd9,a0],a0.w*2,-0x7ad8), #0
+      ptestr      sfc, ([-0x7bd8,a0],a0.w*2,-0x7ad679d6), #0
+      ptestr      sfc, (-0x7bce7ace,a0,a0.w*2), #0
+      ptestr      sfc, ([-0x7bcd7acd,a0,a0.w*2]), #0
+      ptestr      sfc, ([-0x7bcb7acb,a0,a0.w*2],-0x79c978c9), #0
+      ptestr      sfc, ([-0x7bc97ac9,a0],a0.w*2), #0
+      ptestr      sfc, ([-0x7bc77ac7,a0],a0.w*2,-0x79c578c5), #0
+      ptestr      sfc, (a0), #0
+      ptestr      sfc, ([a0]), #0
+      ptestr      sfc, ([a0],-0x7bad), #0
+      ptestr      sfc, ([a0],-0x7bab7aab), #0
+      ptestr      sfc, (-0x7b9f,a0), #0
+      ptestr      sfc, ([-0x7b9e,a0]), #0
+      ptestr      sfc, ([-0x7b9d,a0],-0x7a9c), #0
+      ptestr      sfc, ([-0x7b9c,a0],-0x7a9a799a), #0
+      ptestr      sfc, (-0x7b8e7a8e,a0), #0
+      ptestr      sfc, ([-0x7b8d7a8d,a0]), #0
+      ptestr      sfc, ([-0x7b8b7a8b,a0],-0x79897889), #0
+      ptestr      sfc, (a0.w*2), #0
+      ptestr      sfc, ([a0.w*2]), #0
+      ptestr      sfc, ([a0.w*2],-0x7b6d), #0
+      ptestr      sfc, ([a0.w*2],-0x7b6b7a6b), #0
+      ptestr      sfc, (-0x7b5f,a0.w*2), #0
+      ptestr      sfc, ([-0x7b5e,a0.w*2]), #0
+      ptestr      sfc, ([-0x7b5d,a0.w*2],-0x7a5c), #0
+      ptestr      sfc, ([-0x7b5c,a0.w*2],-0x7a5a795a), #0
+      ptestr      sfc, ([-0x7b5a],a0.w*2), #0
+      ptestr      sfc, ([-0x7b59],a0.w*2,-0x7a58), #0
+      ptestr      sfc, ([-0x7b58],a0.w*2,-0x7a567956), #0
+      ptestr      sfc, (-0x7b4e7a4e,a0.w*2), #0
+      ptestr      sfc, ([-0x7b4d7a4d,a0.w*2]), #0
+      ptestr      sfc, ([-0x7b4b7a4b,a0.w*2],-0x79497849), #0
+      ptestr      sfc, ([-0x7b497a49],a0.w*2), #0
+      ptestr      sfc, ([-0x7b477a47],a0.w*2,-0x79457845), #0
+      ptestr      sfc, (-0x7b1e), #0
+      ptestr      sfc, ([-0x7b1e]), #0
+      ptestr      sfc, ([-0x7b1c],-0x7a1b), #0
+      ptestr      sfc, ([-0x7b1c],-0x7a1a791a), #0
+      ptestr      sfc, (-0x7b0e7a0e), #0
+      ptestr      sfc, ([-0x7b0d7a0c]), #0
+      ptestr      sfc, ([-0x7b0b7a0a],-0x79087808), #0
+      ptestr      sfc, (0,a0,a0.w*4), #0
+      ptestr      dfc, (a0,a0.w*2), #0
+      ptestr      dfc, ([a0,a0.w*2]), #0
+      ptestr      dfc, ([a0,a0.w*2],-0x7bed), #0
+      ptestr      dfc, ([a0,a0.w*2],-0x7beb7aeb), #0
+      ptestr      dfc, ([a0],a0.w*2), #0
+      ptestr      dfc, ([a0],a0.w*2,-0x7be9), #0
+      ptestr      dfc, ([a0],a0.w*2,-0x7be77ae7), #0
+      ptestr      dfc, (-0x7bdf,a0,a0.w*2), #0
+      ptestr      dfc, ([-0x7bde,a0,a0.w*2]), #0
+      ptestr      dfc, ([-0x7bdd,a0,a0.w*2],-0x7adc), #0
+      ptestr      dfc, ([-0x7bdc,a0,a0.w*2],-0x7ada79da), #0
+      ptestr      dfc, ([-0x7bda,a0],a0.w*2), #0
+      ptestr      dfc, ([-0x7bd9,a0],a0.w*2,-0x7ad8), #0
+      ptestr      dfc, ([-0x7bd8,a0],a0.w*2,-0x7ad679d6), #0
+      ptestr      dfc, (-0x7bce7ace,a0,a0.w*2), #0
+      ptestr      dfc, ([-0x7bcd7acd,a0,a0.w*2]), #0
+      ptestr      dfc, ([-0x7bcb7acb,a0,a0.w*2],-0x79c978c9), #0
+      ptestr      dfc, ([-0x7bc97ac9,a0],a0.w*2), #0
+      ptestr      dfc, ([-0x7bc77ac7,a0],a0.w*2,-0x79c578c5), #0
+      ptestr      dfc, (a0), #0
+      ptestr      dfc, ([a0]), #0
+      ptestr      dfc, ([a0],-0x7bad), #0
+      ptestr      dfc, ([a0],-0x7bab7aab), #0
+      ptestr      dfc, (-0x7b9f,a0), #0
+      ptestr      dfc, ([-0x7b9e,a0]), #0
+      ptestr      dfc, ([-0x7b9d,a0],-0x7a9c), #0
+      ptestr      dfc, ([-0x7b9c,a0],-0x7a9a799a), #0
+      ptestr      dfc, (-0x7b8e7a8e,a0), #0
+      ptestr      dfc, ([-0x7b8d7a8d,a0]), #0
+      ptestr      dfc, ([-0x7b8b7a8b,a0],-0x79897889), #0
+      ptestr      dfc, (a0.w*2), #0
+      ptestr      dfc, ([a0.w*2]), #0
+      ptestr      dfc, ([a0.w*2],-0x7b6d), #0
+      ptestr      dfc, ([a0.w*2],-0x7b6b7a6b), #0
+      ptestr      dfc, (-0x7b5f,a0.w*2), #0
+      ptestr      dfc, ([-0x7b5e,a0.w*2]), #0
+      ptestr      dfc, ([-0x7b5d,a0.w*2],-0x7a5c), #0
+      ptestr      dfc, ([-0x7b5c,a0.w*2],-0x7a5a795a), #0
+      ptestr      dfc, ([-0x7b5a],a0.w*2), #0
+      ptestr      dfc, ([-0x7b59],a0.w*2,-0x7a58), #0
+      ptestr      dfc, ([-0x7b58],a0.w*2,-0x7a567956), #0
+      ptestr      dfc, (-0x7b4e7a4e,a0.w*2), #0
+      ptestr      dfc, ([-0x7b4d7a4d,a0.w*2]), #0
+      ptestr      dfc, ([-0x7b4b7a4b,a0.w*2],-0x79497849), #0
+      ptestr      dfc, ([-0x7b497a49],a0.w*2), #0
+      ptestr      dfc, ([-0x7b477a47],a0.w*2,-0x79457845), #0
+      ptestr      dfc, (-0x7b1e), #0
+      ptestr      dfc, ([-0x7b1e]), #0
+      ptestr      dfc, ([-0x7b1c],-0x7a1b), #0
+      ptestr      dfc, ([-0x7b1c],-0x7a1a791a), #0
+      ptestr      dfc, (-0x7b0e7a0e), #0
+      ptestr      dfc, ([-0x7b0d7a0c]), #0
+      ptestr      dfc, ([-0x7b0b7a0a],-0x79087808), #0
+      ptestr      dfc, (0,a0,a0.w*4), #0
+      ptestr      d0, (a0,a0.w*2), #0
+      ptestr      d0, ([a0,a0.w*2]), #0
+      ptestr      d0, ([a0,a0.w*2],-0x7bed), #0
+      ptestr      d0, ([a0,a0.w*2],-0x7beb7aeb), #0
+      ptestr      d0, ([a0],a0.w*2), #0
+      ptestr      d0, ([a0],a0.w*2,-0x7be9), #0
+      ptestr      d0, ([a0],a0.w*2,-0x7be77ae7), #0
+      ptestr      d0, (-0x7bdf,a0,a0.w*2), #0
+      ptestr      d0, ([-0x7bde,a0,a0.w*2]), #0
+      ptestr      d0, ([-0x7bdd,a0,a0.w*2],-0x7adc), #0
+      ptestr      d0, ([-0x7bdc,a0,a0.w*2],-0x7ada79da), #0
+      ptestr      d0, ([-0x7bda,a0],a0.w*2), #0
+      ptestr      d0, ([-0x7bd9,a0],a0.w*2,-0x7ad8), #0
+      ptestr      d0, ([-0x7bd8,a0],a0.w*2,-0x7ad679d6), #0
+      ptestr      d0, (-0x7bce7ace,a0,a0.w*2), #0
+      ptestr      d0, ([-0x7bcd7acd,a0,a0.w*2]), #0
+      ptestr      d0, ([-0x7bcb7acb,a0,a0.w*2],-0x79c978c9), #0
+      ptestr      d0, ([-0x7bc97ac9,a0],a0.w*2), #0
+      ptestr      d0, ([-0x7bc77ac7,a0],a0.w*2,-0x79c578c5), #0
+      ptestr      d0, (a0), #0
+      ptestr      d0, ([a0]), #0
+      ptestr      d0, ([a0],-0x7bad), #0
+      ptestr      d0, ([a0],-0x7bab7aab), #0
+      ptestr      d0, (-0x7b9f,a0), #0
+      ptestr      d0, ([-0x7b9e,a0]), #0
+      ptestr      d0, ([-0x7b9d,a0],-0x7a9c), #0
+      ptestr      d0, ([-0x7b9c,a0],-0x7a9a799a), #0
+      ptestr      d0, (-0x7b8e7a8e,a0), #0
+      ptestr      d0, ([-0x7b8d7a8d,a0]), #0
+      ptestr      d0, ([-0x7b8b7a8b,a0],-0x79897889), #0
+      ptestr      d0, (a0.w*2), #0
+      ptestr      d0, ([a0.w*2]), #0
+      ptestr      d0, ([a0.w*2],-0x7b6d), #0
+      ptestr      d0, ([a0.w*2],-0x7b6b7a6b), #0
+      ptestr      d0, (-0x7b5f,a0.w*2), #0
+      ptestr      d0, ([-0x7b5e,a0.w*2]), #0
+      ptestr      d0, ([-0x7b5d,a0.w*2],-0x7a5c), #0
+      ptestr      d0, ([-0x7b5c,a0.w*2],-0x7a5a795a), #0
+      ptestr      d0, ([-0x7b5a],a0.w*2), #0
+      ptestr      d0, ([-0x7b59],a0.w*2,-0x7a58), #0
+      ptestr      d0, ([-0x7b58],a0.w*2,-0x7a567956), #0
+      ptestr      d0, (-0x7b4e7a4e,a0.w*2), #0
+      ptestr      d0, ([-0x7b4d7a4d,a0.w*2]), #0
+      ptestr      d0, ([-0x7b4b7a4b,a0.w*2],-0x79497849), #0
+      ptestr      d0, ([-0x7b497a49],a0.w*2), #0
+      ptestr      d0, ([-0x7b477a47],a0.w*2,-0x79457845), #0
+      ptestr      d0, (-0x7b1e), #0
+      ptestr      d0, ([-0x7b1e]), #0
+      ptestr      d0, ([-0x7b1c],-0x7a1b), #0
+      ptestr      d0, ([-0x7b1c],-0x7a1a791a), #0
+      ptestr      d0, (-0x7b0e7a0e), #0
+      ptestr      d0, ([-0x7b0d7a0c]), #0
+      ptestr      d0, ([-0x7b0b7a0a],-0x79087808), #0
+      ptestr      d0, (0,a0,a0.w*4), #0
+      ptestr      #0, ([a0,a0.w*2]), #0
+      ptestr      #0, ([a0,a0.w*2],-0x7bed), #0
+      ptestr      #0, ([a0,a0.w*2],-0x7beb7aeb), #0
+      ptestr      #0, ([a0],a0.w*2), #0
+      ptestr      #0, ([a0],a0.w*2,-0x7be9), #0
+      ptestr      #0, ([a0],a0.w*2,-0x7be77ae7), #0
+      ptestr      #0, (-0x7bdf,a0,a0.w*2), #0
+      ptestr      #0, ([-0x7bde,a0,a0.w*2]), #0
+      ptestr      #0, ([-0x7bdd,a0,a0.w*2],-0x7adc), #0
+      ptestr      #0, ([-0x7bdc,a0,a0.w*2],-0x7ada79da), #0
+      ptestr      #0, ([-0x7bda,a0],a0.w*2), #0
+      ptestr      #0, ([-0x7bd9,a0],a0.w*2,-0x7ad8), #0
+      ptestr      #0, ([-0x7bd8,a0],a0.w*2,-0x7ad679d6), #0
+      ptestr      #0, (-0x7bce7ace,a0,a0.w*2), #0
+      ptestr      #0, ([-0x7bcd7acd,a0,a0.w*2]), #0
+      ptestr      #0, ([-0x7bcb7acb,a0,a0.w*2],-0x79c978c9), #0
+      ptestr      #0, ([-0x7bc97ac9,a0],a0.w*2), #0
+      ptestr      #0, ([-0x7bc77ac7,a0],a0.w*2,-0x79c578c5), #0
+      ptestr      #0, (a0), #0
+      ptestr      #0, ([a0]), #0
+      ptestr      #0, ([a0],-0x7bad), #0
+      ptestr      #0, ([a0],-0x7bab7aab), #0
+      ptestr      #0, (-0x7b9f,a0), #0
+      ptestr      #0, ([-0x7b9e,a0]), #0
+      ptestr      #0, ([-0x7b9d,a0],-0x7a9c), #0
+      ptestr      #0, ([-0x7b9c,a0],-0x7a9a799a), #0
+      ptestr      #0, (-0x7b8e7a8e,a0), #0
+      ptestr      #0, ([-0x7b8d7a8d,a0]), #0
+      ptestr      #0, ([-0x7b8b7a8b,a0],-0x79897889), #0
+      ptestr      #0, (a0.w*2), #0
+      ptestr      #0, ([a0.w*2]), #0
+      ptestr      #0, ([a0.w*2],-0x7b6d), #0
+      ptestr      #0, ([a0.w*2],-0x7b6b7a6b), #0
+      ptestr      #0, (-0x7b5f,a0.w*2), #0
+      ptestr      #0, ([-0x7b5e,a0.w*2]), #0
+      ptestr      #0, ([-0x7b5d,a0.w*2],-0x7a5c), #0
+      ptestr      #0, ([-0x7b5c,a0.w*2],-0x7a5a795a), #0
+      ptestr      #0, ([-0x7b5a],a0.w*2), #0
+      ptestr      #0, ([-0x7b59],a0.w*2,-0x7a58), #0
+      ptestr      #0, ([-0x7b58],a0.w*2,-0x7a567956), #0
+      ptestr      #0, (-0x7b4e7a4e,a0.w*2), #0
+      ptestr      #0, ([-0x7b4d7a4d,a0.w*2]), #0
+      ptestr      #0, ([-0x7b4b7a4b,a0.w*2],-0x79497849), #0
+      ptestr      #0, ([-0x7b497a49],a0.w*2), #0
+      ptestr      #0, ([-0x7b477a47],a0.w*2,-0x79457845), #0
+      ptestr      #0, (-0x7b1e), #0
+      ptestr      #0, ([-0x7b1e]), #0
+      ptestr      #0, ([-0x7b1c],-0x7a1b), #0
+      ptestr      #0, ([-0x7b1c],-0x7a1a791a), #0
+      ptestr      #0, (-0x7b0e7a0e), #0
+      ptestr      #0, ([-0x7b0d7a0c]), #0
+      ptestr      #0, ([-0x7b0b7a0a],-0x79087808), #0
+      ptestr      #0, (0,a0,a0.w*4), #0
+      ptestr      #0, (a0,a0.w*4), #0
+      ptestr      sfc, (1,a0,a0.w*4), #0, a0
+      ptestr      sfc, (a0,a0.w*4), #0, a0
+      ptestr      sfc, ([a0,a0.w*4]), #0, a0
+      ptestr      sfc, ([a0,a0.w*4],-0x79ed), #0, a0
+      ptestr      sfc, ([a0,a0.w*4],-0x79eb78eb), #0, a0
+      ptestr      sfc, ([a0],a0.w*4), #0, a0
+      ptestr      sfc, ([a0],a0.w*4,-0x79e9), #0, a0
+      ptestr      sfc, ([a0],a0.w*4,-0x79e778e7), #0, a0
+      ptestr      sfc, (-0x79df,a0,a0.w*4), #0, a0
+      ptestr      sfc, ([-0x79de,a0,a0.w*4]), #0, a0
+      ptestr      sfc, ([-0x79dd,a0,a0.w*4],-0x78dc), #0, a0
+      ptestr      sfc, ([-0x79dc,a0,a0.w*4],-0x78da77da), #0, a0
+      ptestr      sfc, ([-0x79da,a0],a0.w*4), #0, a0
+      ptestr      sfc, ([-0x79d9,a0],a0.w*4,-0x78d8), #0, a0
+      ptestr      sfc, ([-0x79d8,a0],a0.w*4,-0x78d677d6), #0, a0
+      ptestr      sfc, (-0x79ce78ce,a0,a0.w*4), #0, a0
+      ptestr      sfc, ([-0x79cd78cd,a0,a0.w*4]), #0, a0
+      ptestr      sfc, ([-0x79cb78cb,a0,a0.w*4],-0x77c976c9), #0, a0
+      ptestr      sfc, ([-0x79c978c9,a0],a0.w*4), #0, a0
+      ptestr      sfc, ([-0x79c778c7,a0],a0.w*4,-0x77c576c5), #0, a0
+      ptestr      sfc, (a0), #0, a0
+      ptestr      sfc, ([a0]), #0, a0
+      ptestr      sfc, ([a0],-0x79ad), #0, a0
+      ptestr      sfc, ([a0],-0x79ab78ab), #0, a0
+      ptestr      sfc, (-0x799f,a0), #0, a0
+      ptestr      sfc, ([-0x799e,a0]), #0, a0
+      ptestr      sfc, ([-0x799d,a0],-0x789c), #0, a0
+      ptestr      sfc, ([-0x799c,a0],-0x789a779a), #0, a0
+      ptestr      sfc, (-0x798e788e,a0), #0, a0
+      ptestr      sfc, ([-0x798d788d,a0]), #0, a0
+      ptestr      sfc, ([-0x798b788b,a0],-0x77897689), #0, a0
+      ptestr      sfc, (a0.w*4), #0, a0
+      ptestr      sfc, ([a0.w*4]), #0, a0
+      ptestr      sfc, ([a0.w*4],-0x796d), #0, a0
+      ptestr      sfc, ([a0.w*4],-0x796b786b), #0, a0
+      ptestr      sfc, (-0x795f,a0.w*4), #0, a0
+      ptestr      sfc, ([-0x795e,a0.w*4]), #0, a0
+      ptestr      sfc, ([-0x795d,a0.w*4],-0x785c), #0, a0
+      ptestr      sfc, ([-0x795c,a0.w*4],-0x785a775a), #0, a0
+      ptestr      sfc, ([-0x795a],a0.w*4), #0, a0
+      ptestr      sfc, ([-0x7959],a0.w*4,-0x7858), #0, a0
+      ptestr      sfc, ([-0x7958],a0.w*4,-0x78567756), #0, a0
+      ptestr      sfc, (-0x794e784e,a0.w*4), #0, a0
+      ptestr      sfc, ([-0x794d784d,a0.w*4]), #0, a0
+      ptestr      sfc, ([-0x794b784b,a0.w*4],-0x77497649), #0, a0
+      ptestr      sfc, ([-0x79497849],a0.w*4), #0, a0
+      ptestr      sfc, ([-0x79477847],a0.w*4,-0x77457645), #0, a0
+      ptestr      sfc, (-0x791e), #0, a0
+      ptestr      sfc, ([-0x791e]), #0, a0
+      ptestr      sfc, ([-0x791c],-0x781b), #0, a0
+      ptestr      sfc, ([-0x791c],-0x781a771a), #0, a0
+      ptestr      sfc, (-0x790e780e), #0, a0
+      ptestr      sfc, ([-0x790d780c]), #0, a0
+      ptestr      sfc, ([-0x790b780a],-0x77087608), #0, a0
+      ptestr      dfc, (2,a0,a0.w*4), #0, a0
+      ptestr      dfc, (a0,a0.w*4), #0, a0
+      ptestr      dfc, ([a0,a0.w*4]), #0, a0
+      ptestr      dfc, ([a0,a0.w*4],-0x79ed), #0, a0
+      ptestr      dfc, ([a0,a0.w*4],-0x79eb78eb), #0, a0
+      ptestr      dfc, ([a0],a0.w*4), #0, a0
+      ptestr      dfc, ([a0],a0.w*4,-0x79e9), #0, a0
+      ptestr      dfc, ([a0],a0.w*4,-0x79e778e7), #0, a0
+      ptestr      dfc, (-0x79df,a0,a0.w*4), #0, a0
+      ptestr      dfc, ([-0x79de,a0,a0.w*4]), #0, a0
+      ptestr      dfc, ([-0x79dd,a0,a0.w*4],-0x78dc), #0, a0
+      ptestr      dfc, ([-0x79dc,a0,a0.w*4],-0x78da77da), #0, a0
+      ptestr      dfc, ([-0x79da,a0],a0.w*4), #0, a0
+      ptestr      dfc, ([-0x79d9,a0],a0.w*4,-0x78d8), #0, a0
+      ptestr      dfc, ([-0x79d8,a0],a0.w*4,-0x78d677d6), #0, a0
+      ptestr      dfc, (-0x79ce78ce,a0,a0.w*4), #0, a0
+      ptestr      dfc, ([-0x79cd78cd,a0,a0.w*4]), #0, a0
+      ptestr      dfc, ([-0x79cb78cb,a0,a0.w*4],-0x77c976c9), #0, a0
+      ptestr      dfc, ([-0x79c978c9,a0],a0.w*4), #0, a0
+      ptestr      dfc, ([-0x79c778c7,a0],a0.w*4,-0x77c576c5), #0, a0
+      ptestr      dfc, (a0), #0, a0
+      ptestr      dfc, ([a0]), #0, a0
+      ptestr      dfc, ([a0],-0x79ad), #0, a0
+      ptestr      dfc, ([a0],-0x79ab78ab), #0, a0
+      ptestr      dfc, (-0x799f,a0), #0, a0
+      ptestr      dfc, ([-0x799e,a0]), #0, a0
+      ptestr      dfc, ([-0x799d,a0],-0x789c), #0, a0
+      ptestr      dfc, ([-0x799c,a0],-0x789a779a), #0, a0
+      ptestr      dfc, (-0x798e788e,a0), #0, a0
+      ptestr      dfc, ([-0x798d788d,a0]), #0, a0
+      ptestr      dfc, ([-0x798b788b,a0],-0x77897689), #0, a0
+      ptestr      dfc, (a0.w*4), #0, a0
+      ptestr      dfc, ([a0.w*4]), #0, a0
+      ptestr      dfc, ([a0.w*4],-0x796d), #0, a0
+      ptestr      dfc, ([a0.w*4],-0x796b786b), #0, a0
+      ptestr      dfc, (-0x795f,a0.w*4), #0, a0
+      ptestr      dfc, ([-0x795e,a0.w*4]), #0, a0
+      ptestr      dfc, ([-0x795d,a0.w*4],-0x785c), #0, a0
+      ptestr      dfc, ([-0x795c,a0.w*4],-0x785a775a), #0, a0
+      ptestr      dfc, ([-0x795a],a0.w*4), #0, a0
+      ptestr      dfc, ([-0x7959],a0.w*4,-0x7858), #0, a0
+      ptestr      dfc, ([-0x7958],a0.w*4,-0x78567756), #0, a0
+      ptestr      dfc, (-0x794e784e,a0.w*4), #0, a0
+      ptestr      dfc, ([-0x794d784d,a0.w*4]), #0, a0
+      ptestr      dfc, ([-0x794b784b,a0.w*4],-0x77497649), #0, a0
+      ptestr      dfc, ([-0x79497849],a0.w*4), #0, a0
+      ptestr      dfc, ([-0x79477847],a0.w*4,-0x77457645), #0, a0
+      ptestr      dfc, (-0x791e), #0, a0
+      ptestr      dfc, ([-0x791e]), #0, a0
+      ptestr      dfc, ([-0x791c],-0x781b), #0, a0
+      ptestr      dfc, ([-0x791c],-0x781a771a), #0, a0
+      ptestr      dfc, (-0x790e780e), #0, a0
+      ptestr      dfc, ([-0x790d780c]), #0, a0
+      ptestr      dfc, ([-0x790b780a],-0x77087608), #0, a0
+      ptestr      d0, (9,a0,a0.w*4), #0, a0
+      ptestr      d0, (a0,a0.w*4), #0, a0
+      ptestr      d0, ([a0,a0.w*4]), #0, a0
+      ptestr      d0, ([a0,a0.w*4],-0x79ed), #0, a0
+      ptestr      d0, ([a0,a0.w*4],-0x79eb78eb), #0, a0
+      ptestr      d0, ([a0],a0.w*4), #0, a0
+      ptestr      d0, ([a0],a0.w*4,-0x79e9), #0, a0
+      ptestr      d0, ([a0],a0.w*4,-0x79e778e7), #0, a0
+      ptestr      d0, (-0x79df,a0,a0.w*4), #0, a0
+      ptestr      d0, ([-0x79de,a0,a0.w*4]), #0, a0
+      ptestr      d0, ([-0x79dd,a0,a0.w*4],-0x78dc), #0, a0
+      ptestr      d0, ([-0x79dc,a0,a0.w*4],-0x78da77da), #0, a0
+      ptestr      d0, ([-0x79da,a0],a0.w*4), #0, a0
+      ptestr      d0, ([-0x79d9,a0],a0.w*4,-0x78d8), #0, a0
+      ptestr      d0, ([-0x79d8,a0],a0.w*4,-0x78d677d6), #0, a0
+      ptestr      d0, (-0x79ce78ce,a0,a0.w*4), #0, a0
+      ptestr      d0, ([-0x79cd78cd,a0,a0.w*4]), #0, a0
+      ptestr      d0, ([-0x79cb78cb,a0,a0.w*4],-0x77c976c9), #0, a0
+      ptestr      d0, ([-0x79c978c9,a0],a0.w*4), #0, a0
+      ptestr      d0, ([-0x79c778c7,a0],a0.w*4,-0x77c576c5), #0, a0
+      ptestr      d0, (a0), #0, a0
+      ptestr      d0, ([a0]), #0, a0
+      ptestr      d0, ([a0],-0x79ad), #0, a0
+      ptestr      d0, ([a0],-0x79ab78ab), #0, a0
+      ptestr      d0, (-0x799f,a0), #0, a0
+      ptestr      d0, ([-0x799e,a0]), #0, a0
+      ptestr      d0, ([-0x799d,a0],-0x789c), #0, a0
+      ptestr      d0, ([-0x799c,a0],-0x789a779a), #0, a0
+      ptestr      d0, (-0x798e788e,a0), #0, a0
+      ptestr      d0, ([-0x798d788d,a0]), #0, a0
+      ptestr      d0, ([-0x798b788b,a0],-0x77897689), #0, a0
+      ptestr      d0, (a0.w*4), #0, a0
+      ptestr      d0, ([a0.w*4]), #0, a0
+      ptestr      d0, ([a0.w*4],-0x796d), #0, a0
+      ptestr      d0, ([a0.w*4],-0x796b786b), #0, a0
+      ptestr      d0, (-0x795f,a0.w*4), #0, a0
+      ptestr      d0, ([-0x795e,a0.w*4]), #0, a0
+      ptestr      d0, ([-0x795d,a0.w*4],-0x785c), #0, a0
+      ptestr      d0, ([-0x795c,a0.w*4],-0x785a775a), #0, a0
+      ptestr      d0, ([-0x795a],a0.w*4), #0, a0
+      ptestr      d0, ([-0x7959],a0.w*4,-0x7858), #0, a0
+      ptestr      d0, ([-0x7958],a0.w*4,-0x78567756), #0, a0
+      ptestr      d0, (-0x794e784e,a0.w*4), #0, a0
+      ptestr      d0, ([-0x794d784d,a0.w*4]), #0, a0
+      ptestr      d0, ([-0x794b784b,a0.w*4],-0x77497649), #0, a0
+      ptestr      d0, ([-0x79497849],a0.w*4), #0, a0
+      ptestr      d0, ([-0x79477847],a0.w*4,-0x77457645), #0, a0
+      ptestr      d0, (-0x791e), #0, a0
+      ptestr      d0, ([-0x791e]), #0, a0
+      ptestr      d0, ([-0x791c],-0x781b), #0, a0
+      ptestr      d0, ([-0x791c],-0x781a771a), #0, a0
+      ptestr      d0, (-0x790e780e), #0, a0
+      ptestr      d0, ([-0x790d780c]), #0, a0
+      ptestr      d0, ([-0x790b780a],-0x77087608), #0, a0
+      ptestr      #0, (17,a0,a0.w*4), #0, a0
+      ptestr      #0, (a0,a0.w*4), #0, a0
+      ptestr      #0, ([a0,a0.w*4]), #0, a0
+      ptestr      #0, ([a0,a0.w*4],-0x79ed), #0, a0
+      ptestr      #0, ([a0,a0.w*4],-0x79eb78eb), #0, a0
+      ptestr      #0, ([a0],a0.w*4), #0, a0
+      ptestr      #0, ([a0],a0.w*4,-0x79e9), #0, a0
+      ptestr      #0, ([a0],a0.w*4,-0x79e778e7), #0, a0
+      ptestr      #0, (-0x79df,a0,a0.w*4), #0, a0
+      ptestr      #0, ([-0x79de,a0,a0.w*4]), #0, a0
+      ptestr      #0, ([-0x79dd,a0,a0.w*4],-0x78dc), #0, a0
+      ptestr      #0, ([-0x79dc,a0,a0.w*4],-0x78da77da), #0, a0
+      ptestr      #0, ([-0x79da,a0],a0.w*4), #0, a0
+      ptestr      #0, ([-0x79d9,a0],a0.w*4,-0x78d8), #0, a0
+      ptestr      #0, ([-0x79d8,a0],a0.w*4,-0x78d677d6), #0, a0
+      ptestr      #0, (-0x79ce78ce,a0,a0.w*4), #0, a0
+      ptestr      #0, ([-0x79cd78cd,a0,a0.w*4]), #0, a0
+      ptestr      #0, ([-0x79cb78cb,a0,a0.w*4],-0x77c976c9), #0, a0
+      ptestr      #0, ([-0x79c978c9,a0],a0.w*4), #0, a0
+      ptestr      #0, ([-0x79c778c7,a0],a0.w*4,-0x77c576c5), #0, a0
+      ptestr      #0, (a0), #0, a0
+      ptestr      #0, ([a0]), #0, a0
+      ptestr      #0, ([a0],-0x79ad), #0, a0
+      ptestr      #0, ([a0],-0x79ab78ab), #0, a0
+      ptestr      #0, (-0x799f,a0), #0, a0
+      ptestr      #0, ([-0x799e,a0]), #0, a0
+      ptestr      #0, ([-0x799d,a0],-0x789c), #0, a0
+      ptestr      #0, ([-0x799c,a0],-0x789a779a), #0, a0
+      ptestr      #0, (-0x798e788e,a0), #0, a0
+      ptestr      #0, ([-0x798d788d,a0]), #0, a0
+      ptestr      #0, ([-0x798b788b,a0],-0x77897689), #0, a0
+      ptestr      #0, (a0.w*4), #0, a0
+      ptestr      #0, ([a0.w*4]), #0, a0
+      ptestr      #0, ([a0.w*4],-0x796d), #0, a0
+      ptestr      #0, ([a0.w*4],-0x796b786b), #0, a0
+      ptestr      #0, (-0x795f,a0.w*4), #0, a0
+      ptestr      #0, ([-0x795e,a0.w*4]), #0, a0
+      ptestr      #0, ([-0x795d,a0.w*4],-0x785c), #0, a0
+      ptestr      #0, ([-0x795c,a0.w*4],-0x785a775a), #0, a0
+      ptestr      #0, ([-0x795a],a0.w*4), #0, a0
+      ptestr      #0, ([-0x7959],a0.w*4,-0x7858), #0, a0
+      ptestr      #0, ([-0x7958],a0.w*4,-0x78567756), #0, a0
+      ptestr      #0, (-0x794e784e,a0.w*4), #0, a0
+      ptestr      #0, ([-0x794d784d,a0.w*4]), #0, a0
+      ptestr      #0, ([-0x794b784b,a0.w*4],-0x77497649), #0, a0
+      ptestr      #0, ([-0x79497849],a0.w*4), #0, a0
+      ptestr      #0, ([-0x79477847],a0.w*4,-0x77457645), #0, a0
+      ptestr      #0, (-0x791e), #0, a0
+      ptestr      #0, ([-0x791e]), #0, a0
+      ptestr      #0, ([-0x791c],-0x781b), #0, a0
+      ptestr      #0, ([-0x791c],-0x781a771a), #0, a0
+      ptestr      #0, (-0x790e780e), #0, a0
+      ptestr      #0, ([-0x790d780c]), #0, a0
+      ptestr      #0, ([-0x790b780a],-0x77087608), #0, a0
+      pmovel      (0x0902).w, tt0
+      pmovefdl    (0x0a02).w, tt0
+      pmovel      tt0, (0x0b02).w
+      ploadw      sfc, (0x2102).w
+      ploadw      dfc, (0x2102).w
+      ploadw      d0, (0x210a).w
+      ploadw      #0, (0x2112).w
+      ploadr      sfc, (0x2302).w
+      ploadr      dfc, (0x2302).w
+      ploadr      d0, (0x230a).w
+      ploadr      #0, (0x2312).w
+      pflush      sfc, #0, (0x3902).w
+      pflush      dfc, #0, (0x3902).w
+      pflush      d0, #0, (0x390a).w
+      pflush      #0, #0, (0x3912).w
+      pmovel      (0x4102).w, tc
+      pmovefdl    (0x4202).w, tc
+      pmovel      tc, (0x4302).w
+      pmoveq      (0x4902).w, srp
+      pmovefdq    (0x4a02).w, srp
+      pmoveq      srp, (0x4b02).w
+      pmoveq      (0x4d02).w, crp
+      pmovefdq    (0x4e02).w, crp
+      pmoveq      crp, (0x4f02).w
+      pmovew      (0x6102).w, psr
+      pmovew      psr, (0x6302).w
+      ptestw      sfc, (0x8102).w, #0
+      ptestw      dfc, (0x8102).w, #0
+      ptestw      d0, (0x810a).w, #0
+      ptestw      #0, (0x8112).w, #0
+      ptestw      sfc, (0x8202).w, #0, a0
+      ptestw      dfc, (0x8202).w, #0, a0
+      ptestw      d0, (0x820a).w, #0, a0
+      ptestw      #0, (0x8212).w, #0, a0
+      ptestr      sfc, (0x8302).w, #0
+      ptestr      dfc, (0x8302).w, #0
+      ptestr      d0, (0x830a).w, #0
+      ptestr      #0, (0x8312).w, #0
+      ptestr      sfc, (0x8402).w, #0, a0
+      ptestr      dfc, (0x8402).w, #0, a0
+      ptestr      d0, (0x840a).w, #0, a0
+      ptestr      #0, (0x8412).w, #0, a0
+      pmovel      (0x0a02).l, tt0
+      pmovefdl    (0x0b02).l, tt0
+      pmovel      tt0, (0x0c02).l
+      ploadw      sfc, (0x2202).l
+      ploadw      dfc, (0x2204).l
+      ploadw      d0, (0x220a).l
+      ploadw      #0, (0x2212).l
+      ploadr      sfc, (0x2402).l
+      ploadr      dfc, (0x2404).l
+      ploadr      d0, (0x240a).l
+      ploadr      #0, (0x2412).l
+      pflush      sfc, #0, (0x3a02).l
+      pflush      dfc, #0, (0x3a04).l
+      pflush      d0, #0, (0x3a0a).l
+      pflush      #0, #0, (0x3a12).l
+      pmovel      (0x4202).l, tc
+      pmovefdl    (0x4302).l, tc
+      pmovel      tc, (0x4402).l
+      pmoveq      (0x4a02).l, srp
+      pmovefdq    (0x4b02).l, srp
+      pmoveq      srp, (0x4c02).l
+      pmoveq      (0x4e02).l, crp
+      pmovefdq    (0x4f02).l, crp
+      pmoveq      crp, (0x5002).l
+      pmovew      (0x6202).l, psr
+      pmovew      psr, (0x6402).l
+      ptestw      sfc, (0x8202).l, #0
+      ptestw      dfc, (0x8204).l, #0
+      ptestw      d0, (0x820a).l, #0
+      ptestw      #0, (0x8212).l, #0
+      ptestw      sfc, (0x8302).l, #0, a0
+      ptestw      dfc, (0x8304).l, #0, a0
+      ptestw      d0, (0x830a).l, #0, a0
+      ptestw      #0, (0x8312).l, #0, a0
+      ptestr      sfc, (0x8402).l, #0
+      ptestr      dfc, (0x8404).l, #0
+      ptestr      d0, (0x840a).l, #0
+      ptestr      #0, (0x8412).l, #0
+      ptestr      sfc, (0x8502).l, #0, a0
+      ptestr      dfc, (0x8504).l, #0, a0
+      ptestr      d0, (0x850a).l, #0, a0
+      ptestr      #0, (0x8512).l, #0, a0
       fmovex      fp0, fp0
       fintx       fp0
       fsinhx      fp0

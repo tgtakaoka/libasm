@@ -55760,6 +55760,12 @@
       CPUSHL      DC/IC, (A0)
       CPUSHP      DC/IC, (A0)
       CPUSHA      DC/IC
+      PFLUSHN     (A0)
+      PFLUSH      (A0)
+      PFLUSHAN
+      PFLUSHA
+      PTESTW      (A0)
+      PTESTR      (A0)
       MOVE16      (A0)+, ($F701F802).L
       MOVE16      ($F709F80A).L, (A0)+
       MOVE16      (A0), ($F711F812).L

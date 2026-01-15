@@ -55727,6 +55727,12 @@
       cpushl      bc, (a0)
       cpushp      bc, (a0)
       cpusha      bc
+      pflushn     (a0)
+      pflush      (a0)
+      pflushan
+      pflusha
+      ptestw      (a0)
+      ptestr      (a0)
       move16      (a0)+, (0xf802).l
       move16      (0xf80a).l, (a0)+
       move16      (a0), (0xf812).l
