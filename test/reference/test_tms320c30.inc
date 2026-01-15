@@ -976,6 +976,504 @@
         stii    r2, *ar3--(ir0)%
         stii    r3, *ar4
         stii    r4, *ar5++(ir0)b
+;;; parallel
+        absf  *+ar0, r1
+||      stf   r2, *-ar3
+        stf   r2, *-ar3
+||      absf  *+ar0, r1
+        absi  *++ar4, r5
+||      sti   r6, *--ar7
+        sti   r6, *--ar7
+||      absi  *++ar4, r5
+        addf3 *ar0++, r1, r2
+||      stf   r3, *ar4--
+        addf3 r1, *ar0++, r2
+||      stf   r3, *ar4--
+        stf   r3, *ar4--
+||      addf3 *ar0++, r1, r2
+        stf   r3, *ar4--
+||      addf3 r1, *ar0++, r2
+        addi3 *ar5++%, r6, r7
+||      sti   r0, *ar1--%
+        addi3 r6, *ar5++%, r7
+||      sti   r0, *ar1--%
+        sti   r0, *ar1--%
+||      addi3 *ar5++%, r6, r7
+        sti   r0, *ar1--%
+||      addi3 r6, *ar5++%, r7
+        and3  *+ar2(ir0), r3, r4
+||      sti   r5, *-ar6(ir0)
+        and3  r3, *+ar2(ir0), r4
+||      sti   r5, *-ar6(ir0)
+        sti   r5, *-ar6(ir0)
+||      and3  *+ar2(ir0), r3, r4
+        sti   r5, *-ar6(ir0)
+||      and3  r3, *+ar2(ir0), r4
+        ash3  r6, *++ar7(ir0), r0
+||      sti   r1, *--ar2(ir0)
+        sti   r1, *--ar2(ir0)
+||      ash3  r6, *++ar7(ir0), r0
+        fix   *ar3++(ir0), r4
+||      sti   r5, *ar6--(ir0)
+        sti   r5, *ar6--(ir0)
+||      fix   *ar3++(ir0), r4
+        float *ar7++(ir0)%, r0
+||      stf   r1, *ar2--(ir0)%
+        stf   r1, *ar2--(ir0)%
+||      float *ar7++(ir0)%, r0
+        ldf   *+ar3(ir1), r4
+||      ldf   *-ar5(ir1), r6
+        ldf   *-ar5(ir1), r6
+||      ldf   *+ar3(ir1), r4
+        ldf   *++ar7(ir1), r0
+||      stf   r1, *--ar2(ir1)
+        stf   r1, *--ar2(ir1)
+||      ldf   *++ar7(ir1), r0
+        ldi   *ar3++(ir1), r4
+||      ldi   *ar5--(ir1), r6
+        ldi   *ar5--(ir1), r6
+||      ldi   *ar3++(ir1), r4
+        ldi   *ar4++(ir1)%, r5
+||      sti   r6, *ar7--(ir1)%
+        sti   r6, *ar7--(ir1)%
+||      ldi   *ar4++(ir1)%, r5
+        lsh3  r0, *ar1++(ir0)b, r2
+||      sti   r3, *ar4
+        sti   r3, *ar4
+||      lsh3  r0, *ar1++(ir0)b, r2
+        mpyf3 *+ar5, r6, r7
+||      stf   r0, *-ar1
+        mpyf3 r6, *+ar5, r7
+||      stf   r0, *-ar1
+        stf   r0, *-ar1
+||      mpyf3 *+ar5, r6, r7
+        stf   r0, *-ar1
+||      mpyf3 r6, *+ar5, r7
+        mpyi3 *++ar2, r3, r4
+||      sti   r5, *--ar6
+        mpyi3 r3, *++ar2, r4
+||      sti   r5, *--ar6
+        sti   r5, *--ar6
+||      mpyi3 *++ar2, r3, r4
+        sti   r5, *--ar6
+||      mpyi3 r3, *++ar2, r4
+        negf  *ar7++, r0
+||      stf   r1, *ar2--
+        stf   r1, *ar2--
+||      negf  *ar7++, r0
+        negi  *ar3++%, r4
+||      sti   r5, *ar6--%
+        sti   r5, *ar6--%
+||      negi  *ar3++%, r4
+        not   *+ar7(ir0), r0
+||      sti   r1, *-ar2(ir0)
+        sti   r1, *-ar2(ir0)
+||      not   *+ar7(ir0), r0
+        or3   *++ar3(ir0), r4, r5
+||      sti   r6, *--ar7(ir0)
+        or3   r4, *++ar3(ir0), r5
+||      sti   r6, *--ar7(ir0)
+        sti   r6, *--ar7(ir0)
+||      or3   *++ar3(ir0), r4, r5
+        sti   r6, *--ar7(ir0)
+||      or3   r4, *++ar3(ir0), r5
+        stf   r0, *ar1++(ir0)
+||      stf   r2, *ar3--(ir0)
+        stf   r2, *ar3--(ir0)
+||      stf   r0, *ar1++(ir0)
+        sti   r4, *ar5++(ir0)%
+||      sti   r6, *ar7--(ir0)%
+        sti   r6, *ar7--(ir0)%
+||      sti   r4, *ar5++(ir0)%
+        subf3 r0, *+ar1(ir1), r2
+||      stf   r3, *-ar4(ir1)
+        stf   r3, *-ar4(ir1)
+||      subf3 r0, *+ar1(ir1), r2
+        subi3 r5, *++ar6(ir1), r7
+||      sti   r0, *--ar1(ir1)
+        sti   r0, *--ar1(ir1)
+||      subi3 r5, *++ar6(ir1), r7
+        xor3  *ar2++(ir1), r3, r4
+||      sti   r5, *ar6--(ir1)
+        xor3  r3, *ar2++(ir1), r4
+||      sti   r5, *ar6--(ir1)
+        sti   r5, *ar6--(ir1)
+||      xor3  *ar2++(ir1), r3, r4
+        sti   r5, *ar6--(ir1)
+||      xor3  r3, *ar2++(ir1), r4
+        mpyf3 *ar4, *ar3, r1
+||      addf3 r5, r2, r2        ; p=0
+        addf3 r5, r2, r2
+||      mpyf3 *ar4, *ar3, r1
+        mpyf3 *ar3, r1, r1
+||      addf3 r2, *ar4, r2      ; p=1
+        addf3 r2, *ar4, r2
+||      mpyf3 *ar3, r1, r1
+        mpyf3 r2, r1, r1
+||      addf3 *ar3, *ar4, r2    ; p=2
+        addf3 *ar3, *ar4, r2
+||      mpyf3 r2, r1, r1
+        mpyf3 *ar3, r1, r1
+||      addf3 *ar4, r2, r2      ; p=3
+        addf3 *ar4, r2, r2
+||      mpyf3 *ar3, r1, r1
+
+        mpyf3 *ar4, *ar3, r1
+||      subf3 r5, r2, r2        ; p=0
+        subf3 r5, r2, r2
+||      mpyf3 *ar4, *ar3, r1
+        mpyf3 *ar3, r1, r1
+||      subf3 r2, *ar4, r2      ; p=1
+        subf3 r2, *ar4, r2
+||      mpyf3 *ar3, r1, r1
+        mpyf3 r2, r1, r1
+||      subf3 *ar3, *ar4, r2    ; p=2
+        subf3 *ar3, *ar4, r2
+||      mpyf3 r2, r1, r1
+        mpyf3 *ar3, r1, r1
+||      subf3 *ar4, r2, r2      ; p=3
+        subf3 *ar4, r2, r2
+||      mpyf3 *ar3, r1, r1
+
+        mpyi3 *ar4, *ar3, r1
+||      addi3 r5, r2, r2        ; p=0
+        addi3 r5, r2, r2
+||      mpyi3 *ar4, *ar3, r1
+        mpyi3 *ar3, r1, r1
+||      addi3 r2, *ar4, r2      ; p=1
+        addi3 r2, *ar4, r2
+||      mpyi3 *ar3, r1, r1
+        mpyi3 r2, r1, r1
+||      addi3 *ar3, *ar4, r2    ; p=2
+        addi3 *ar3, *ar4, r2
+||      mpyi3 r2, r1, r1
+        mpyi3 *ar3, r1, r1
+||      addi3 *ar4, r2, r2      ; p=3
+        addi3 *ar4, r2, r2
+||      mpyi3 *ar3, r1, r1
+
+        mpyi3 *ar4, *ar3, r1
+||      subi3 r5, r2, r2        ; p=0
+        subi3 r5, r2, r2
+||      mpyi3 *ar4, *ar3, r1
+        mpyi3 *ar3, r1, r1
+||      subi3 r2, *ar4, r2      ; p=1
+        subi3 r2, *ar4, r2
+||      mpyi3 *ar3, r1, r1
+        mpyi3 r2, r1, r1
+||      subi3 *ar3, *ar4, r2    ; p=2
+        subi3 *ar3, *ar4, r2
+||      mpyi3 r2, r1, r1
+        mpyi3 *ar3, r1, r1
+||      subi3 *ar4, r2, r2      ; p=3
+        subi3 *ar4, r2, r2
+||      mpyi3 *ar3, r1, r1
+;;; parallel no3
+        addf *ar0++, r1, r2
+||      stf  r3, *ar4--
+        stf  r3, *ar4--
+||      addf *ar0++, r1, r2
+        addf r1, *ar0++, r2
+||      stf  r3, *ar4--
+        stf  r3, *ar4--
+||      addf r1, *ar0++, r2
+        addi *ar5++%, r6, r7
+||      sti  r0, *ar1--%
+        sti  r0, *ar1--%
+||      addi *ar5++%, r6, r7
+        addi r6, *ar5++%, r7
+||      sti  r0, *ar1--%
+        sti  r0, *ar1--%
+||      addi r6, *ar5++%, r7
+        and  *+ar2(ir0), r3, r4
+||      sti  r5, *-ar6(ir0)
+        sti  r5, *-ar6(ir0)
+||      and  *+ar2(ir0), r3, r4
+        and  r3, *+ar2(ir0), r4
+||      sti  r5, *-ar6(ir0)
+        sti  r5, *-ar6(ir0)
+||      and  r3, *+ar2(ir0), r4
+        ash  r6, *++ar7(ir0), r0
+||      sti  r1, *--ar2(ir0)
+        sti  r1, *--ar2(ir0)
+||      ash  r6, *++ar7(ir0), r0
+        lsh  r0, *ar1++(ir0)b, r2
+||      sti  r3, *ar4
+        sti  r3, *ar4
+||      lsh  r0, *ar1++(ir0)b, r2
+        mpyf *+ar5, r6, r7
+||      stf  r0, *-ar1
+        stf  r0, *-ar1
+||      mpyf *+ar5, r6, r7
+        mpyf r6, *+ar5, r7
+||      stf  r0, *-ar1
+        stf  r0, *-ar1
+||      mpyf r6, *+ar5, r7
+        mpyi *++ar2, r3, r4
+||      sti  r5, *--ar6
+        sti  r5, *--ar6
+||      mpyi *++ar2, r3, r4
+        mpyi r3, *++ar2, r4
+||      sti  r5, *--ar6
+        sti  r5, *--ar6
+||      mpyi r3, *++ar2, r4
+        or   *++ar3(ir0), r4, r5
+||      sti  r6, *--ar7(ir0)
+        sti  r6, *--ar7(ir0)
+||      or   *++ar3(ir0), r4, r5
+        or   r4, *++ar3(ir0), r5
+||      sti  r6, *--ar7(ir0)
+        sti  r6, *--ar7(ir0)
+||      or   r4, *++ar3(ir0), r5
+        subf r0, *+ar1(ir1), r2
+||      stf  r3, *-ar4(ir1)
+        stf  r3, *-ar4(ir1)
+||      subf r0, *+ar1(ir1), r2
+        subi r5, *++ar6(ir1), r7
+||      sti  r0, *--ar1(ir1)
+        sti  r0, *--ar1(ir1)
+||      subi r5, *++ar6(ir1), r7
+        xor  *ar2++(ir1), r3, r4
+||      sti  r5, *ar6--(ir1)
+        sti  r5, *ar6--(ir1)
+||      xor  *ar2++(ir1), r3, r4
+        xor  r3, *ar2++(ir1), r4
+||      sti  r5, *ar6--(ir1)
+        sti  r5, *ar6--(ir1)
+||      xor  r3, *ar2++(ir1), r4
+        mpyf *ar4, *ar3, r1
+||      addf r5, r2, r2         ; p=0
+        addf r5, r2, r2
+||      mpyf *ar4, *ar3, r1
+        mpyf *ar3, r1, r1
+||      addf r2, *ar4, r2       ; p=1
+        addf r2, *ar4, r2
+||      mpyf *ar3, r1, r1
+        mpyf r2, r1, r1
+||      addf *ar3, *ar4, r2     ; p=2
+        addf *ar3, *ar4, r2
+||      mpyf r2, r1, r1
+        mpyf *ar3, r1, r1
+||      addf *ar4, r2, r2       ; p=3
+        addf *ar4, r2, r2
+||      mpyf *ar3, r1, r1
+        mpyf *ar4, *ar3, r1
+||      subf r5, r2, r2         ; p=0
+        subf r5, r2, r2
+||      mpyf *ar4, *ar3, r1
+        mpyf *ar3, r1, r1
+||      subf r2, *ar4, r2       ; p=1
+        subf r2, *ar4, r2
+||      mpyf *ar3, r1, r1
+        mpyf r2, r1, r1
+||      subf *ar3, *ar4, r2     ; p=2
+        subf *ar3, *ar4, r2
+||      mpyf r2, r1, r1
+        mpyf *ar3, r1, r1
+||      subf *ar4, r2, r2       ; p=3
+        subf *ar4, r2, r2
+||      mpyf *ar3, r1, r1
+        mpyi *ar4, *ar3, r1
+||      addi r5, r2, r2         ; p=0
+        addi r5, r2, r2
+||      mpyi *ar4, *ar3, r1
+        mpyi *ar3, r1, r1
+||      addi r2, *ar4, r2       ; p=1
+        addi r2, *ar4, r2
+||      mpyi *ar3, r1, r1
+        mpyi r2, r1, r1
+||      addi *ar3, *ar4, r2     ; p=2
+        addi *ar3, *ar4, r2
+||      mpyi r2, r1, r1
+        mpyi *ar3, r1, r1
+||      addi *ar4, r2, r2       ; p=3
+        addi *ar4, r2, r2
+||      mpyi *ar3, r1, r1
+        mpyi *ar4, *ar3, r1
+||      subi r5, r2, r2         ; p=0
+        subi r5, r2, r2
+||      mpyi *ar4, *ar3, r1
+        mpyi *ar3, r1, r1
+||      subi r2, *ar4, r2       ; p=1
+        subi r2, *ar4, r2
+||      mpyi *ar3, r1, r1
+        mpyi r2, r1, r1
+||      subi *ar3, *ar4, r2     ; p=2
+        subi *ar3, *ar4, r2
+||      mpyi r2, r1, r1
+        mpyi *ar3, r1, r1
+||      subi *ar4, r2, r2       ; p=3
+        subi *ar4, r2, r2
+||      mpyi *ar3, r1, r1
+;;; parallel unary
+        addf *ar0++, r1, r1
+||      stf  r3, *ar4--
+        addf *ar0++, r1
+||      stf  r3, *ar4--
+        stf  r3, *ar4--
+||      addf *ar0++, r1, r1
+        stf  r3, *ar4--
+||      addf *ar0++, r1
+        addi *ar5++%, r6, r6
+||      sti  r0, *ar1--%
+        addi *ar5++%, r6
+||      sti  r0, *ar1--%
+        sti  r0, *ar1--%
+||      addi *ar5++%, r6, r6
+        sti  r0, *ar1--%
+||      addi *ar5++%, r6
+        and  *+ar2(ir0), r3, r3
+||      sti  r5, *-ar6(ir0)
+        and  *+ar2(ir0), r3
+||      sti  r5, *-ar6(ir0)
+        sti  r5, *-ar6(ir0)
+||      and  *+ar2(ir0), r3, r3
+        sti  r5, *-ar6(ir0)
+||      and  *+ar2(ir0), r3
+        mpyf *+ar5, r6, r6
+||      stf  r0, *-ar1
+        mpyf *+ar5, r6
+||      stf  r0, *-ar1
+        stf  r0, *-ar1
+||      mpyf *+ar5, r6, r6
+        stf  r0, *-ar1
+||      mpyf *+ar5, r6
+        mpyi *++ar2, r4, r4
+||      sti  r5, *--ar6
+        mpyi *++ar2, r4
+||      sti  r5, *--ar6
+        sti  r5, *--ar6
+||      mpyi *++ar2, r3, r3
+        sti  r5, *--ar6
+||      mpyi *++ar2, r3
+        or  *++ar3(ir0), r4, r4
+||      sti r6, *--ar7(ir0)
+        or  *++ar3(ir0), r4
+||      sti r6, *--ar7(ir0)
+        sti r6, *--ar7(ir0)
+||      or  *++ar3(ir0), r4, r4
+        sti r6, *--ar7(ir0)
+||      or  *++ar3(ir0), r4
+        xor *ar2++(ir1), r3, r3
+||      sti r5, *ar6--(ir1)
+        xor *ar2++(ir1), r3
+||      sti r5, *ar6--(ir1)
+        sti r5, *ar6--(ir1)
+||      xor *ar2++(ir1), r3, r3
+        sti r5, *ar6--(ir1)
+||      xor *ar2++(ir1), r3
+        mpyf *ar4, *ar3, r1
+||      addf r5, r2             ; p=0
+        addf r5, r2
+||      mpyf *ar4, *ar3, r1
+        mpyf *ar3, r1
+||      addf r2, *ar4, r2       ; p=1
+        addf r2, *ar4, r2
+||      mpyf *ar3, r1
+        mpyf r2, r1
+||      addf *ar3, *ar4, r2     ; p=2
+        addf *ar3, *ar4, r2
+||      mpyf r2, r1
+        mpyf *ar3, r1
+||      addf *ar4, r2, r2       ; p=3
+        addf *ar4, r2, r2
+||      mpyf *ar3, r1
+        mpyf *ar3, r1
+||      addf *ar4, r2
+        addf *ar4, r2
+||      mpyf *ar3, r1
+        mpyf *ar3, r1, r1
+||      addf *ar4, r2
+        addf *ar4, r2
+||      mpyf *ar3, r1, r1
+        mpyf *ar3, r1, r1
+||      addf *ar4, r2
+        addf *ar4, r2
+||      mpyf *ar3, r1, r1
+        mpyf *ar4, *ar3, r1
+||      subf r5, r2             ; p=0
+        subf r5, r2
+||      mpyf *ar4, *ar3, r1
+        mpyf *ar3, r1
+||      subf r2, *ar4, r2       ; p=1
+        subf r2, *ar4, r2
+||      mpyf *ar3, r1
+        mpyf r2, r1
+||      subf *ar3, *ar4, r2     ; p=2
+        subf *ar3, *ar4, r2
+||      mpyf r2, r1
+        mpyf *ar3, r1
+||      subf *ar4, r2, r2       ; p=3
+        subf *ar4, r2, r2
+||      mpyf *ar3, r1
+        mpyf *ar3, r1
+||      subf *ar4, r2
+        subf *ar4, r2
+||      mpyf *ar3, r1
+        mpyf *ar3, r1, r1
+||      subf *ar4, r2
+        subf *ar4, r2
+||      mpyf *ar3, r1, r1
+        mpyf *ar3, r1, r1
+||      subf *ar4, r2
+        subf *ar4, r2
+||      mpyf *ar3, r1, r1
+        mpyi *ar4, *ar3, r1
+||      addi r5, r2             ; p=0
+        addi r5, r2
+||      mpyi *ar4, *ar3, r1
+        mpyi *ar3, r1
+||      addi r2, *ar4, r2       ; p=1
+        addi r2, *ar4, r2
+||      mpyi *ar3, r1
+        mpyi r2, r1
+||      addi *ar3, *ar4, r2     ; p=2
+        addi *ar3, *ar4, r2
+||      mpyi r2, r1
+        mpyi *ar3, r1
+||      addi *ar4, r2, r2       ; p=3
+        addi *ar4, r2, r2
+||      mpyi *ar3, r1
+        mpyi *ar3, r1
+||      addi *ar4, r2
+        addi *ar4, r2
+||      mpyi *ar3, r1
+        mpyi *ar3, r1, r1
+||      addi *ar4, r2
+        addi *ar4, r2
+||      mpyi *ar3, r1, r1
+        mpyi *ar3, r1, r1
+||      addi *ar4, r2
+        addi *ar4, r2
+||      mpyi *ar3, r1, r1
+        mpyi *ar4, *ar3, r1
+||      subi r5, r2             ; p=0
+        subi r5, r2
+||      mpyi *ar4, *ar3, r1
+        mpyi *ar3, r1
+||      subi r2, *ar4, r2       ; p=1
+        subi r2, *ar4, r2
+||      mpyi *ar3, r1
+        mpyi r2, r1
+||      subi *ar3, *ar4, r2     ; p=2
+        subi *ar3, *ar4, r2
+||      mpyi r2, r1
+        mpyi *ar3, r1
+||      subi *ar4, r2, r2       ; p=3
+        subi *ar4, r2, r2
+||      mpyi *ar3, r1
+        mpyi *ar3, r1
+||      subi *ar4, r2
+        subi *ar4, r2
+||      mpyi *ar3, r1
+        mpyi *ar3, r1, r1
+||      subi *ar4, r2
+        subi *ar4, r2
+||      mpyi *ar3, r1, r1
+        mpyi *ar3, r1, r1
+||      subi *ar4, r2
+        subi *ar4, r2
+||      mpyi *ar3, r1, r1
 
 ;;; Local Variables:
 ;;; mode: asm
