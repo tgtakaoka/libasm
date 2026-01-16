@@ -23,12 +23,13 @@
 namespace libasm {
 namespace text {
 namespace z280 {
-
 // clang-format off
-extern const char TEXT_Z280_LIST[] PROGMEM;
-using common::TEXT_CPU_Z80;
-extern const char TEXT_CPU_Z280[] PROGMEM;
 
+extern const char TEXT_Z280_LIST[] PROGMEM;
+extern const char TEXT_CPU_Z280[]  PROGMEM;
+using common::TEXT_CPU_Z80;
+
+// Z80
 using common::TEXT_ADC;
 using common::TEXT_ADD;
 using common::TEXT_AND;
@@ -145,22 +146,22 @@ using common::TEXT_TSET;
 extern const char TEXT_TSTI[]   PROGMEM;
 
 // Z80
-using common::TEXT_REG_BC;
-using common::TEXT_REG_DE;
-using common::TEXT_REG_HL;
-using common::TEXT_REG_IX;
-using common::TEXT_REG_IY;
-using common::TEXT_REG_SP;
-using common::TEXT_REG_AF;
 using common::TEXT_REG_A;
+using common::TEXT_REG_AF;
 using common::TEXT_REG_B;
+using common::TEXT_REG_BC;
 using common::TEXT_REG_C;
 using common::TEXT_REG_D;
+using common::TEXT_REG_DE;
 using common::TEXT_REG_E;
 using common::TEXT_REG_H;
+using common::TEXT_REG_HL;
+using common::TEXT_REG_I;
+using common::TEXT_REG_IX;
+using common::TEXT_REG_IY;
 using common::TEXT_REG_L;
 using common::TEXT_REG_R;
-using common::TEXT_REG_I;
+using common::TEXT_REG_SP;
 
 // Z280
 extern const char TEXT_REG_DEHL[] PROGMEM;
@@ -171,14 +172,14 @@ using common::TEXT_REG_IYL;
 using common::TEXT_REG_USP;
 
 // Z80
-using common::TEXT_CC_NZ;
-using common::TEXT_CC_Z;
-using common::TEXT_CC_NC;
 using common::TEXT_CC_C;
-using common::TEXT_CC_PO;
-using common::TEXT_CC_PE;
-using common::TEXT_CC_P;
 using common::TEXT_CC_M;
+using common::TEXT_CC_NC;
+using common::TEXT_CC_NZ;
+using common::TEXT_CC_P;
+using common::TEXT_CC_PE;
+using common::TEXT_CC_PO;
+using common::TEXT_CC_Z;
 
 // Z280
 using common::TEXT_CC_NS;
@@ -187,7 +188,6 @@ using common::TEXT_CC_S;
 using common::TEXT_CC_V;
 
 // clang-format on
-
 }  // namespace z280
 }  // namespace text
 }  // namespace libasm

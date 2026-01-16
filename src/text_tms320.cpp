@@ -19,17 +19,16 @@
 namespace libasm {
 namespace text {
 namespace tms320 {
-
 // clang-format off
-constexpr char TEXT_TMS320_LIST[] PROGMEM =
-    "TMS32010, TMS32015, TMS32020, TMS320C25, TMS320C26, TMS320C20X, TMS320C5X";
-constexpr char TEXT_CPU_32010[] PROGMEM = "32010";
-constexpr char TEXT_CPU_32015[] PROGMEM = "32015";
-constexpr char TEXT_CPU_32020[] PROGMEM = "32020";
-constexpr char TEXT_CPU_320C25[] PROGMEM = "320C25";
-constexpr char TEXT_CPU_320C26[] PROGMEM = "320C26";
+
+constexpr char TEXT_TMS320_LIST[] PROGMEM = "TMS32010, TMS32015, TMS32020, TMS320C25, TMS320C26, TMS320C20X, TMS320C5X";
+constexpr char TEXT_CPU_32010[]   PROGMEM = "32010";
+constexpr char TEXT_CPU_32015[]   PROGMEM = "32015";
+constexpr char TEXT_CPU_32020[]   PROGMEM = "32020";
 constexpr char TEXT_CPU_320C20X[] PROGMEM = "320C20X";
-constexpr char TEXT_CPU_320C5X[] PROGMEM = "320C5X";
+constexpr char TEXT_CPU_320C25[]  PROGMEM = "320C25";
+constexpr char TEXT_CPU_320C26[]  PROGMEM = "320C26";
+constexpr char TEXT_CPU_320C5X[]  PROGMEM = "320C5X";
 
 // TMS320
 // constexpr char TEXT_ABS[]  PROGMEM = "ABS";
@@ -138,8 +137,8 @@ constexpr char TEXT_SQRA[] PROGMEM = "SQRA";
 constexpr char TEXT_SQRS[] PROGMEM = "SQRS";
 constexpr char TEXT_SST1[] PROGMEM = "SST1";
 constexpr char TEXT_SSXM[] PROGMEM = "SSXM";
-constexpr char TEXT_SUBT[] PROGMEM = "SUBT";
 constexpr char TEXT_STXM[] PROGMEM = "STXM";
+constexpr char TEXT_SUBT[] PROGMEM = "SUBT";
 constexpr char TEXT_SXF[]  PROGMEM = "SXF";
 // constexpr char TEXT_TRAP[] PROGMEM = "TRAP";
 constexpr char TEXT_XORK[] PROGMEM = "XORK";
@@ -270,7 +269,6 @@ constexpr char TEXT_CC_TC[]  PROGMEM = "TC";
 constexpr char TEXT_CC_UNC[] PROGMEM = "UNC";
 
 // clang-format on
-
 }  // namespace tms320
 }  // namespace text
 }  // namespace libasm

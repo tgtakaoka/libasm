@@ -22,10 +22,10 @@
 namespace libasm {
 namespace text {
 namespace tlcs90 {
+// clang-format off
 
 extern const char TEXT_CPU_TLCS90[] PROGMEM;
 
-// clang-format off
 using common::TEXT_ADC;
 using common::TEXT_ADD;
 using common::TEXT_AND;
@@ -100,46 +100,46 @@ using common::TEXT_SWI;
 using common::TEXT_TSET;
 using common::TEXT_XOR;
 
+using common::TEXT_REG_A;
+using common::TEXT_REG_AF;
+using common::TEXT_REG_B;
 using common::TEXT_REG_BC;
+using common::TEXT_REG_C;
+using common::TEXT_REG_D;
 using common::TEXT_REG_DE;
+using common::TEXT_REG_E;
+using common::TEXT_REG_H;
 using common::TEXT_REG_HL;
 using common::TEXT_REG_IX;
 using common::TEXT_REG_IY;
-using common::TEXT_REG_SP;
-using common::TEXT_REG_AF;
-using common::TEXT_REG_A;
-using common::TEXT_REG_B;
-using common::TEXT_REG_C;
-using common::TEXT_REG_D;
-using common::TEXT_REG_E;
-using common::TEXT_REG_H;
 using common::TEXT_REG_L;
+using common::TEXT_REG_SP;
 
-using common::TEXT_CC_F;
-using common::TEXT_CC_LT;
-using common::TEXT_CC_LE;
-using common::TEXT_CC_ULE;
-using common::TEXT_CC_OV;
-using common::TEXT_CC_MI;
-using common::TEXT_CC_Z;
 using common::TEXT_CC_C;
+using common::TEXT_CC_EQ;
+using common::TEXT_CC_F;
 using common::TEXT_CC_GE;
 using common::TEXT_CC_GT;
-using common::TEXT_CC_UGT;
-using common::TEXT_CC_NOV;
-using common::TEXT_CC_PL;
-using common::TEXT_CC_NZ;
-using common::TEXT_CC_NC;
-using common::TEXT_CC_PE;
+using common::TEXT_CC_LE;
+using common::TEXT_CC_LT;
 using common::TEXT_CC_M;
-using common::TEXT_CC_EQ;
-using common::TEXT_CC_ULT;
-using common::TEXT_CC_PO;
-using common::TEXT_CC_P;
+using common::TEXT_CC_MI;
+using common::TEXT_CC_NC;
 using common::TEXT_CC_NE;
+using common::TEXT_CC_NOV;
+using common::TEXT_CC_NZ;
+using common::TEXT_CC_OV;
+using common::TEXT_CC_P;
+using common::TEXT_CC_PE;
+using common::TEXT_CC_PL;
+using common::TEXT_CC_PO;
 using common::TEXT_CC_UGE;
-// clang-format on
+using common::TEXT_CC_UGT;
+using common::TEXT_CC_ULE;
+using common::TEXT_CC_ULT;
+using common::TEXT_CC_Z;
 
+// clang-format on
 }  // namespace tlcs90
 }  // namespace text
 }  // namespace libasm

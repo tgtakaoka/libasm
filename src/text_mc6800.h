@@ -22,16 +22,16 @@
 namespace libasm {
 namespace text {
 namespace mc6800 {
-
 // clang-format off
+
 extern const char TEXT_MC6800_LIST[] PROGMEM;
-extern const char TEXT_CPU_6800[]  PROGMEM;
-extern const char TEXT_CPU_6801[]  PROGMEM;
-extern const char TEXT_CPU_6301[]  PROGMEM;
-extern const char TEXT_CPU_6811[]  PROGMEM;
-extern const char TEXT_CPU_68HC11[] PROGMEM;
-extern const char TEXT_CPU_HD6301[] PROGMEM;
-extern const char TEXT_CPU_MB8861[] PROGMEM;
+extern const char TEXT_CPU_6800[]    PROGMEM;
+extern const char TEXT_CPU_6801[]    PROGMEM;
+extern const char TEXT_CPU_6301[]    PROGMEM;
+extern const char TEXT_CPU_6811[]    PROGMEM;
+extern const char TEXT_CPU_68HC11[]  PROGMEM;
+extern const char TEXT_CPU_HD6301[]  PROGMEM;
+extern const char TEXT_CPU_MB8861[]  PROGMEM;
 
 // MC6800
 using common::TEXT_ABA;
@@ -119,10 +119,10 @@ using common::TEXT_NOP;
 using common::TEXT_ORA;
 using common::TEXT_ORAA;
 using common::TEXT_ORAB;
-extern const char TEXT_PSH[]  PROGMEM;
+extern const char TEXT_PSH[] PROGMEM;
 using common::TEXT_PSHA;
 using common::TEXT_PSHB;
-extern const char TEXT_PUL[]  PROGMEM;
+extern const char TEXT_PUL[] PROGMEM;
 using common::TEXT_PULA;
 using common::TEXT_PULB;
 using common::TEXT_ROL;
@@ -175,10 +175,10 @@ using common::TEXT_LDD;
 using common::TEXT_LSLD;
 using common::TEXT_LSRD;
 using common::TEXT_MUL;
-using common::TEXT_STD;
-using common::TEXT_SUBD;
 using common::TEXT_PSHX;
 using common::TEXT_PULX;
+using common::TEXT_STD;
+using common::TEXT_SUBD;
 
 // HD6301
 using common::TEXT_AIM;
@@ -215,7 +215,6 @@ using common::TEXT_REG_X;
 using common::TEXT_REG_Y;
 
 // clang-format on
-
 }  // namespace mc6800
 }  // namespace text
 }  // namespace libasm

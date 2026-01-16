@@ -22,14 +22,14 @@
 namespace libasm {
 namespace text {
 namespace tms9900 {
-
 // clang-format off
-extern const char TEXT_TMS9900_LIST[]  PROGMEM;
-extern const char TEXT_CPU_9900[]  PROGMEM;
-extern const char TEXT_CPU_9980[]  PROGMEM;
-extern const char TEXT_CPU_9995[]  PROGMEM;
-extern const char TEXT_CPU_99105[] PROGMEM;
-extern const char TEXT_CPU_99110[] PROGMEM;
+
+extern const char TEXT_TMS9900_LIST[] PROGMEM;
+extern const char TEXT_CPU_9900[]     PROGMEM;
+extern const char TEXT_CPU_99105[]    PROGMEM;
+extern const char TEXT_CPU_99110[]    PROGMEM;
+extern const char TEXT_CPU_9980[]     PROGMEM;
+extern const char TEXT_CPU_9995[]     PROGMEM;
 
 // TMS9900
 using common::TEXT_A;
@@ -88,11 +88,11 @@ extern const char TEXT_SBO[]  PROGMEM;
 extern const char TEXT_SBZ[]  PROGMEM;
 extern const char TEXT_SETO[] PROGMEM;
 using common::TEXT_SLA;
+extern const char TEXT_SOC[]  PROGMEM;
+extern const char TEXT_SOCB[] PROGMEM;
 using common::TEXT_SRA;
 extern const char TEXT_SRC[]  PROGMEM;
 using common::TEXT_SRL;
-extern const char TEXT_SOC[]  PROGMEM;
-extern const char TEXT_SOCB[] PROGMEM;
 extern const char TEXT_STCR[] PROGMEM;
 using common::TEXT_STST;
 extern const char TEXT_STWP[] PROGMEM;
@@ -105,10 +105,10 @@ extern const char TEXT_XOP[]  PROGMEM;
 using common::TEXT_XOR;
 
 // TMS9995
-using common::TEXT_MPYS;
 using common::TEXT_DIVS;
 using common::TEXT_LST;
-extern const char TEXT_LWP[]  PROGMEM;
+extern const char TEXT_LWP[] PROGMEM;
+using common::TEXT_MPYS;
 
 // TMS999105
 using common::TEXT_AM;

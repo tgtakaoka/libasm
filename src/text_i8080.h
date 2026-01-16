@@ -22,8 +22,8 @@
 namespace libasm {
 namespace text {
 namespace i8080 {
-
 // clang-format off
+
 extern const char TEXT_I8080_LIST[] PROGMEM;
 extern const char TEXT_CPU_8080[]   PROGMEM;
 extern const char TEXT_CPU_8085[]   PROGMEM;
@@ -123,9 +123,9 @@ using common::TEXT_REG_D;
 using common::TEXT_REG_E;
 using common::TEXT_REG_H;
 using common::TEXT_REG_L;
-extern const char TEXT_REG_M[]   PROGMEM;
-using common::TEXT_REG_SP;
+extern const char TEXT_REG_M[] PROGMEM;
 using common::TEXT_REG_PSW;
+using common::TEXT_REG_SP;
 
 // zilog syntax
 using common::TEXT_AND;
@@ -145,19 +145,19 @@ using common::TEXT_SBC;
 using common::TEXT_SCF;
 using common::TEXT_XOR;
 
+using common::TEXT_CC_C;
+using common::TEXT_CC_M;
+using common::TEXT_CC_NC;
+using common::TEXT_CC_NZ;
+using common::TEXT_CC_P;
+using common::TEXT_CC_PE;
+using common::TEXT_CC_PO;
+using common::TEXT_CC_Z;
 using common::TEXT_REG_AF;
 using common::TEXT_REG_BC;
 using common::TEXT_REG_DE;
 using common::TEXT_REG_HL;
-extern const char TEXT_REG_IM[]  PROGMEM;
-using common::TEXT_CC_NZ;
-using common::TEXT_CC_Z;
-using common::TEXT_CC_NC;
-using common::TEXT_CC_C;
-using common::TEXT_CC_PO;
-using common::TEXT_CC_PE;
-using common::TEXT_CC_P;
-using common::TEXT_CC_M;
+extern const char TEXT_REG_IM[] PROGMEM;
 
 // clang-format on
 }  // namespace i8080

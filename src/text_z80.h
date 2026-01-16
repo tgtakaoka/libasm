@@ -22,12 +22,13 @@
 namespace libasm {
 namespace text {
 namespace z80 {
-
 // clang-format off
+
 extern const char TEXT_Z80_LIST[] PROGMEM;
 using common::TEXT_CPU_Z80;
 using common::TEXT_CPU_Z180;
 
+// Z80
 using common::TEXT_ADC;
 using common::TEXT_ADD;
 using common::TEXT_AND;
@@ -98,46 +99,46 @@ using common::TEXT_SUB;
 using common::TEXT_XOR;
 
 // Z180
-using common::TEXT_MLT;
-using common::TEXT_TST;
-using common::TEXT_TSTIO;
 using common::TEXT_IN0;
+using common::TEXT_MLT;
 using common::TEXT_OTDM;
 using common::TEXT_OTDMR;
 using common::TEXT_OTIM;
 using common::TEXT_OTIMR;
 using common::TEXT_OUT0;
 using common::TEXT_SLP;
+using common::TEXT_TST;
+using common::TEXT_TSTIO;
 
 // Z80, Z180
-using common::TEXT_REG_BC;
-using common::TEXT_REG_DE;
-using common::TEXT_REG_HL;
-using common::TEXT_REG_IX;
-using common::TEXT_REG_IY;
-using common::TEXT_REG_SP;
-using common::TEXT_REG_AF;
 using common::TEXT_REG_A;
+using common::TEXT_REG_AF;
 using common::TEXT_REG_B;
+using common::TEXT_REG_BC;
 using common::TEXT_REG_C;
 using common::TEXT_REG_D;
+using common::TEXT_REG_DE;
 using common::TEXT_REG_E;
 using common::TEXT_REG_H;
+using common::TEXT_REG_HL;
+using common::TEXT_REG_I;
+using common::TEXT_REG_IX;
+using common::TEXT_REG_IY;
 using common::TEXT_REG_L;
 using common::TEXT_REG_R;
-using common::TEXT_REG_I;
+using common::TEXT_REG_SP;
 
 // Z80, Z180
-using common::TEXT_CC_NZ;
-using common::TEXT_CC_Z;
-using common::TEXT_CC_NC;
 using common::TEXT_CC_C;
-using common::TEXT_CC_PO;
-using common::TEXT_CC_PE;
-using common::TEXT_CC_P;
 using common::TEXT_CC_M;
-// clang-format on
+using common::TEXT_CC_NC;
+using common::TEXT_CC_NZ;
+using common::TEXT_CC_P;
+using common::TEXT_CC_PE;
+using common::TEXT_CC_PO;
+using common::TEXT_CC_Z;
 
+// clang-format on
 }  // namespace z80
 }  // namespace text
 }  // namespace libasm

@@ -24,11 +24,11 @@ namespace text {
 namespace pdp8 {
 // clang-format off
 
-extern const char TEXT_PDP8_LIST[] PROGMEM;
-extern const char TEXT_CPU_IM6100[] PROGMEM;
-extern const char TEXT_CPU_HD6120[] PROGMEM;
+extern const char TEXT_PDP8_LIST[]  PROGMEM;
 extern const char TEXT_CPU_6100[]   PROGMEM;
 extern const char TEXT_CPU_6120[]   PROGMEM;
+extern const char TEXT_CPU_HD6120[] PROGMEM;
+extern const char TEXT_CPU_IM6100[] PROGMEM;
 
 // IM6100
 extern const char TEXT_ACL[]  PROGMEM;

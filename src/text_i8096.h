@@ -22,11 +22,11 @@
 namespace libasm {
 namespace text {
 namespace i8096 {
-
 // clang-format off
-extern const char TEXT_CPU_LIST[]  PROGMEM;
-extern const char TEXT_CPU_8096[]  PROGMEM;
-extern const char TEXT_CPU_80196[] PROGMEM;
+
+extern const char TEXT_CPU_LIST[]    PROGMEM;
+extern const char TEXT_CPU_8096[]    PROGMEM;
+extern const char TEXT_CPU_80196[]   PROGMEM;
 extern const char TEXT_CPU_80196KB[] PROGMEM;
 
 using common::TEXT_ADD;
@@ -139,7 +139,6 @@ using common::TEXT_XCH;
 using common::TEXT_XCHB;
 
 // clang-format on
-
 }  // namespace i8096
 }  // namespace text
 }  // namespace libasm

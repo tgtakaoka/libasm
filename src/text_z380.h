@@ -22,13 +22,14 @@
 namespace libasm {
 namespace text {
 namespace z380 {
-
 // clang-format off
-extern const char TEXT_Z380_LIST[] PROGMEM;
-using common::TEXT_CPU_Z80;
-using common::TEXT_CPU_Z180;
-extern const char TEXT_CPU_Z380[] PROGMEM;
 
+extern const char TEXT_Z380_LIST[] PROGMEM;
+using common::TEXT_CPU_Z180;
+extern const char TEXT_CPU_Z380[]  PROGMEM;
+using common::TEXT_CPU_Z80;
+
+// Z80
 using common::TEXT_ADC;
 using common::TEXT_ADD;
 using common::TEXT_AND;
@@ -99,16 +100,16 @@ using common::TEXT_SUB;
 using common::TEXT_XOR;
 
 // Z180
-using common::TEXT_MLT;
-using common::TEXT_TST;
-using common::TEXT_TSTIO;
 using common::TEXT_IN0;
+using common::TEXT_MLT;
 using common::TEXT_OTDM;
 using common::TEXT_OTDMR;
 using common::TEXT_OTIM;
 using common::TEXT_OTIMR;
 using common::TEXT_OUT0;
 using common::TEXT_SLP;
+using common::TEXT_TST;
+using common::TEXT_TSTIO;
 
 // Z380
 extern const char TEXT_ADCW[]  PROGMEM;
@@ -118,11 +119,11 @@ extern const char TEXT_BTEST[] PROGMEM;
 using common::TEXT_CALR;
 extern const char TEXT_CPLW[]  PROGMEM;
 using common::TEXT_CPW;
-using common::TEXT_DECW;
 extern const char TEXT_DDIR[]  PROGMEM;
-extern const char TEXT_EXALL[] PROGMEM;
+using common::TEXT_DECW;
 using common::TEXT_DIVUW;
 using common::TEXT_DIVW;
+extern const char TEXT_EXALL[] PROGMEM;
 using common::TEXT_EXTS;
 using common::TEXT_EXTSW;
 extern const char TEXT_EXXX[]  PROGMEM;
@@ -136,14 +137,14 @@ using common::TEXT_INIRW;
 using common::TEXT_INIW;
 using common::TEXT_INW;
 using common::TEXT_LDCTL;
+extern const char TEXT_LDDRW[] PROGMEM;
 extern const char TEXT_LDDW[]  PROGMEM;
 extern const char TEXT_LDIRW[] PROGMEM;
 extern const char TEXT_LDIW[]  PROGMEM;
-extern const char TEXT_LDDRW[] PROGMEM;
 using common::TEXT_LDW;
+extern const char TEXT_MTEST[] PROGMEM;
 using common::TEXT_MULTUW;
 using common::TEXT_MULTW;
-extern const char TEXT_MTEST[]  PROGMEM;
 using common::TEXT_NEGW;
 using common::TEXT_ORW;
 using common::TEXT_OTDRW;
@@ -169,48 +170,49 @@ using common::TEXT_SWAP;
 using common::TEXT_XORW;
 
 // Z80, Z180
-using common::TEXT_REG_BC;
-using common::TEXT_REG_DE;
-using common::TEXT_REG_HL;
-using common::TEXT_REG_IX;
-using common::TEXT_REG_IY;
-using common::TEXT_REG_SP;
-using common::TEXT_REG_AF;
 using common::TEXT_REG_A;
+using common::TEXT_REG_AF;
 using common::TEXT_REG_B;
+using common::TEXT_REG_BC;
 using common::TEXT_REG_C;
 using common::TEXT_REG_D;
+using common::TEXT_REG_DE;
 using common::TEXT_REG_E;
 using common::TEXT_REG_H;
+using common::TEXT_REG_HL;
+using common::TEXT_REG_I;
+using common::TEXT_REG_IX;
+using common::TEXT_REG_IY;
 using common::TEXT_REG_L;
 using common::TEXT_REG_R;
-using common::TEXT_REG_I;
+using common::TEXT_REG_SP;
 
 // Z380
-using common::TEXT_REG_IXL;
-using common::TEXT_REG_IYL;
 extern const char TEXT_REG_DSR[] PROGMEM;
+using common::TEXT_REG_IXL;
 extern const char TEXT_REG_IXU[] PROGMEM;
+using common::TEXT_REG_IYL;
 extern const char TEXT_REG_IYU[] PROGMEM;
 using common::TEXT_REG_SR;
 extern const char TEXT_REG_XSR[] PROGMEM;
 extern const char TEXT_REG_YSR[] PROGMEM;
 
 // Z80, Z180
-using common::TEXT_CC_NZ;
-using common::TEXT_CC_Z;
-using common::TEXT_CC_NC;
 using common::TEXT_CC_C;
-using common::TEXT_CC_PO;
-using common::TEXT_CC_PE;
-using common::TEXT_CC_P;
 using common::TEXT_CC_M;
+using common::TEXT_CC_NC;
+using common::TEXT_CC_NZ;
+using common::TEXT_CC_P;
+using common::TEXT_CC_PE;
+using common::TEXT_CC_PO;
+using common::TEXT_CC_Z;
 
 // Z380
 using common::TEXT_CC_NS;
 using common::TEXT_CC_NV;
 using common::TEXT_CC_S;
 using common::TEXT_CC_V;
+
 extern const char PSTR_IB[]  PROGMEM;
 extern const char PSTR_IW[]  PROGMEM;
 extern const char PSTR_LCK[] PROGMEM;
@@ -219,7 +221,6 @@ extern const char PSTR_W[]   PROGMEM;
 extern const char PSTR_XM[]  PROGMEM;
 
 // clang-format on
-
 }  // namespace z380
 }  // namespace text
 }  // namespace libasm

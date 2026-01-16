@@ -19,13 +19,14 @@
 namespace libasm {
 namespace text {
 namespace z380 {
-
 // clang-format off
+
 constexpr char TEXT_Z380_LIST[] PROGMEM = "Z380, Z180, Z80";
-// constexpr char TEXT_CPU_Z80[]  PROGMEM = "Z80";
 // constexpr char TEXT_CPU_Z180[] PROGMEM = "Z180";
 constexpr char TEXT_CPU_Z380[] PROGMEM = "Z380";
+// constexpr char TEXT_CPU_Z80[]  PROGMEM = "Z80";
 
+// Z80
 // constexpr char TEXT_ADC[]  PROGMEM = "ADC";
 // constexpr char TEXT_ADD[]  PROGMEM = "ADD";
 // constexpr char TEXT_AND[]  PROGMEM = "AND";
@@ -95,59 +96,59 @@ constexpr char TEXT_CPU_Z380[] PROGMEM = "Z380";
 // constexpr char TEXT_XOR[]  PROGMEM = "XOR";
 
 // Z180
-// constexpr char TEXT_MLT[]   PROGMEM = "MLT";
-// constexpr char TEXT_TST[]   PROGMEM = "TST";
-// constexpr char TEXT_TSTIO[] PROGMEM = "TSTIO";
 // constexpr char TEXT_IN0[]   PROGMEM = "IN0";
+// constexpr char TEXT_MLT[]   PROGMEM = "MLT";
 // constexpr char TEXT_OTDM[]  PROGMEM = "OTDM";
 // constexpr char TEXT_OTDMR[] PROGMEM = "OTDMR";
 // constexpr char TEXT_OTIM[]  PROGMEM = "OTIM";
 // constexpr char TEXT_OTIMR[] PROGMEM = "OTIMR";
 // constexpr char TEXT_OUT0[]  PROGMEM = "OUT0";
 // constexpr char TEXT_SLP[]   PROGMEM = "SLP";
+// constexpr char TEXT_TST[]   PROGMEM = "TST";
+// constexpr char TEXT_TSTIO[] PROGMEM = "TSTIO";
 
 // Z380
 constexpr char TEXT_ADCW[]  PROGMEM = "ADCW";
-// constexpr char TEXT_ADDW[]  PROGMEM = "ADDW";
-// constexpr char TEXT_ANDW[]  PROGMEM = "ANDW";
+// constexpr char TEXT_ADDW[]   PROGMEM = "ADDW";
+// constexpr char TEXT_ANDW[]   PROGMEM = "ANDW";
 constexpr char TEXT_BTEST[] PROGMEM = "BTEST";
-// constexpr char TEXT_CALR[]  PROGMEM = "CALR";
+// constexpr char TEXT_CALR[]   PROGMEM = "CALR";
 constexpr char TEXT_CPLW[]  PROGMEM = "CPLW";
-// constexpr char TEXT_CPW[]   PROGMEM = "CPW";
+// constexpr char TEXT_CPW[]    PROGMEM = "CPW";
+constexpr char TEXT_DDIR[]  PROGMEM = "DDIR";
 // constexpr char TEXT_DECW[]   PROGMEM = "DECW";
 // constexpr char TEXT_DIVUW[]  PROGMEM = "DIVUW";
 // constexpr char TEXT_DIVW[]   PROGMEM = "DIVW";
-constexpr char TEXT_DDIR[]  PROGMEM = "DDIR";
 constexpr char TEXT_EXALL[] PROGMEM = "EXALL";
-// constexpr char TEXT_EXTS[]  PROGMEM = "EXTS";
-// constexpr char TEXT_EXTSW[] PROGMEM = "EXTSW";
+// constexpr char TEXT_EXTS[]   PROGMEM = "EXTS";
+// constexpr char TEXT_EXTSW[]  PROGMEM = "EXTSW";
 constexpr char TEXT_EXXX[]  PROGMEM = "EXXX";
 constexpr char TEXT_EXXY[]  PROGMEM = "EXXY";
 constexpr char TEXT_INA[]   PROGMEM = "INA";
 constexpr char TEXT_INAW[]  PROGMEM = "INAW";
 // constexpr char TEXT_INCW[]   PROGMEM = "INCW";
-// constexpr char TEXT_INDRW[] PROGMEM = "INDRW";
-// constexpr char TEXT_INDW[]  PROGMEM = "INDW";
-// constexpr char TEXT_INIRW[] PROGMEM = "INIRW";
-// constexpr char TEXT_INIW[]  PROGMEM = "INIW";
+// constexpr char TEXT_INDRW[]  PROGMEM = "INDRW";
+// constexpr char TEXT_INDW[]   PROGMEM = "INDW";
+// constexpr char TEXT_INIRW[]  PROGMEM = "INIRW";
+// constexpr char TEXT_INIW[]   PROGMEM = "INIW";
 // constexpr char TEXT_INW[]    PROGMEM = "INW";
 // constexpr char TEXT_LDCTL[]  PROGMEM = "LDCTL";
+constexpr char TEXT_LDDRW[] PROGMEM = "LDDRW";
 constexpr char TEXT_LDDW[]  PROGMEM = "LDDW";
 constexpr char TEXT_LDIRW[] PROGMEM = "LDIRW";
 constexpr char TEXT_LDIW[]  PROGMEM = "LDIW";
-constexpr char TEXT_LDDRW[] PROGMEM = "LDDRW";
 // constexpr char TEXT_LDW[]    PROGMEM = "LDW";
+constexpr char TEXT_MTEST[] PROGMEM = "MTEST";
 // constexpr char TEXT_MULTUW[] PROGMEM = "MULTUW";
 // constexpr char TEXT_MULTW[]  PROGMEM = "MULTW";
-constexpr char TEXT_MTEST[]  PROGMEM = "MTEST";
-// constexpr char TEXT_NEGW[]  PROGMEM = "NEGW";
-// constexpr char TEXT_ORW[]   PROGMEM = "ORW";
-// constexpr char TEXT_OTDRW[] PROGMEM = "OTDRW";
-// constexpr char TEXT_OTIRW[] PROGMEM = "OTIRW";
+// constexpr char TEXT_NEGW[]   PROGMEM = "NEGW";
+// constexpr char TEXT_ORW[]    PROGMEM = "ORW";
+// constexpr char TEXT_OTDRW[]  PROGMEM = "OTDRW";
+// constexpr char TEXT_OTIRW[]  PROGMEM = "OTIRW";
 constexpr char TEXT_OUTA[]  PROGMEM = "OUTA";
 constexpr char TEXT_OUTAW[] PROGMEM = "OUTAW";
-// constexpr char TEXT_OUTDW[] PROGMEM = "OUTDW";
-// constexpr char TEXT_OUTIW[] PROGMEM = "OUTIW";
+// constexpr char TEXT_OUTDW[]  PROGMEM = "OUTDW";
+// constexpr char TEXT_OUTIW[]  PROGMEM = "OUTIW";
 // constexpr char TEXT_OUTW[]   PROGMEM = "OUTW";
 constexpr char TEXT_RESC[]  PROGMEM = "RESC";
 constexpr char TEXT_RETB[]  PROGMEM = "RETB";
@@ -156,66 +157,65 @@ constexpr char TEXT_RLW[]   PROGMEM = "RLW";
 constexpr char TEXT_RRCW[]  PROGMEM = "RRCW";
 constexpr char TEXT_RRW[]   PROGMEM = "RRW";
 constexpr char TEXT_SBCW[]  PROGMEM = "SBCW";
-// constexpr char TEXT_SETC[]  PROGMEM = "SETC";
+// constexpr char TEXT_SETC[]   PROGMEM = "SETC";
 constexpr char TEXT_SLAW[]  PROGMEM = "SLAW";
 constexpr char TEXT_SRAW[]  PROGMEM = "SRAW";
 constexpr char TEXT_SRLW[]  PROGMEM = "SRLW";
-// constexpr char TEXT_SUBW[]  PROGMEM = "SUBW";
-// constexpr char TEXT_SWAP[]  PROGMEM = "SWAP";
-// constexpr char TEXT_XORW[]  PROGMEM = "XORW";
+// constexpr char TEXT_SUBW[]   PROGMEM = "SUBW";
+// constexpr char TEXT_SWAP[]   PROGMEM = "SWAP";
+// constexpr char TEXT_XORW[]   PROGMEM = "XORW";
 
 // Z80, Z180
-// constexpr char TEXT_REG_BC[]  PROGMEM = "BC";
-// constexpr char TEXT_REG_DE[]  PROGMEM = "DE";
-// constexpr char TEXT_REG_HL[]  PROGMEM = "HL";
-// constexpr char TEXT_REG_IX[]  PROGMEM = "IX";
-// constexpr char TEXT_REG_IY[]  PROGMEM = "IY";
-// constexpr char TEXT_REG_SP[]  PROGMEM = "SP";
-// constexpr char TEXT_REG_AF[]  PROGMEM = "AF";
-// constexpr char TEXT_REG_A[]   PROGMEM = "A";
-// constexpr char TEXT_REG_B[]   PROGMEM = "B";
-// constexpr char TEXT_REG_C[]   PROGMEM = "C";
-// constexpr char TEXT_REG_D[]   PROGMEM = "D";
-// constexpr char TEXT_REG_E[]   PROGMEM = "E";
-// constexpr char TEXT_REG_H[]   PROGMEM = "H";
-// constexpr char TEXT_REG_L[]   PROGMEM = "L";
-// constexpr char TEXT_REG_R[]   PROGMEM = "R";
-// constexpr char TEXT_REG_I[]   PROGMEM = "I";
+// constexpr char TEXT_REG_A[]  PROGMEM = "A";
+// constexpr char TEXT_REG_AF[] PROGMEM = "AF";
+// constexpr char TEXT_REG_B[]  PROGMEM = "B";
+// constexpr char TEXT_REG_BC[] PROGMEM = "BC";
+// constexpr char TEXT_REG_C[]  PROGMEM = "C";
+// constexpr char TEXT_REG_D[]  PROGMEM = "D";
+// constexpr char TEXT_REG_DE[] PROGMEM = "DE";
+// constexpr char TEXT_REG_E[]  PROGMEM = "E";
+// constexpr char TEXT_REG_H[]  PROGMEM = "H";
+// constexpr char TEXT_REG_HL[] PROGMEM = "HL";
+// constexpr char TEXT_REG_I[]  PROGMEM = "I";
+// constexpr char TEXT_REG_IX[] PROGMEM = "IX";
+// constexpr char TEXT_REG_IY[] PROGMEM = "IY";
+// constexpr char TEXT_REG_L[]  PROGMEM = "L";
+// constexpr char TEXT_REG_R[]  PROGMEM = "R";
+// constexpr char TEXT_REG_SP[] PROGMEM = "SP";
 
 // Z380
-// constexpr char TEXT_REG_IXL[] PROGMEM = "IXL";
-// constexpr char TEXT_REG_IYL[] PROGMEM = "IYL";
 constexpr char TEXT_REG_DSR[] PROGMEM = "DSR";
+// constexpr char TEXT_REG_IXL[] PROGMEM = "IXL";
 constexpr char TEXT_REG_IXU[] PROGMEM = "IXU";
+// constexpr char TEXT_REG_IYL[] PROGMEM = "IYL";
 constexpr char TEXT_REG_IYU[] PROGMEM = "IYU";
 // constexpr char TEXT_REG_SR[]  PROGMEM = "SR";
 constexpr char TEXT_REG_XSR[] PROGMEM = "XSR";
 constexpr char TEXT_REG_YSR[] PROGMEM = "YSR";
 
 // Z80, Z180
-// constexpr char TEXT_CC_NZ[] PROGMEM = "NZ";
-// constexpr char TEXT_CC_Z[]  PROGMEM = "Z";
-// constexpr char TEXT_CC_NC[] PROGMEM = "NC";
 // constexpr char TEXT_CC_C[]  PROGMEM = "C";
-// constexpr char TEXT_CC_PO[] PROGMEM = "PO";
-// constexpr char TEXT_CC_PE[] PROGMEM = "PE";
-// constexpr char TEXT_CC_P[]  PROGMEM = "P";
 // constexpr char TEXT_CC_M[]  PROGMEM = "M";
+// constexpr char TEXT_CC_NC[] PROGMEM = "NC";
+// constexpr char TEXT_CC_NZ[] PROGMEM = "NZ";
+// constexpr char TEXT_CC_P[]  PROGMEM = "P";
+// constexpr char TEXT_CC_PE[] PROGMEM = "PE";
+// constexpr char TEXT_CC_PO[] PROGMEM = "PO";
+// constexpr char TEXT_CC_Z[]  PROGMEM = "Z";
 
 // Z380
-// constexpr char TEXT_CC_NS[] PROGMEM = "NS";
-// constexpr char TEXT_CC_NV[] PROGMEM = "NV";
-// constexpr char TEXT_CC_S[]  PROGMEM = "S";
-// constexpr char TEXT_CC_V[]  PROGMEM = "V";
 constexpr char PSTR_IB[]  PROGMEM = "IB";
 constexpr char PSTR_IW[]  PROGMEM = "IW";
 constexpr char PSTR_LCK[] PROGMEM = "LCK";
 constexpr char PSTR_LW[]  PROGMEM = "LW";
 constexpr char PSTR_W[]   PROGMEM = "W";
 constexpr char PSTR_XM[]  PROGMEM = "XM";
+// constexpr char TEXT_CC_NS[] PROGMEM = "NS";
+// constexpr char TEXT_CC_NV[] PROGMEM = "NV";
+// constexpr char TEXT_CC_S[]  PROGMEM = "S";
+// constexpr char TEXT_CC_V[]  PROGMEM = "V";
 
 // clang-format on
-
 }  // namespace z380
 }  // namespace text
 }  // namespace libasm

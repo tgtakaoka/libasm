@@ -22,24 +22,24 @@
 namespace libasm {
 namespace text {
 namespace mc6805 {
-
 // clang-format off
+
 extern const char TEXT_MC6805_LIST[] PROGMEM;
-extern const char TEXT_CPU_6805[] PROGMEM;
-extern const char TEXT_CPU_146805[] PROGMEM;
-extern const char TEXT_CPU_68HC05[] PROGMEM;
-extern const char TEXT_CPU_68HC08[] PROGMEM;
+extern const char TEXT_CPU_6805[]    PROGMEM;
+extern const char TEXT_CPU_146805[]  PROGMEM;
+extern const char TEXT_CPU_68HC05[]  PROGMEM;
+extern const char TEXT_CPU_68HC08[]  PROGMEM;
 extern const char TEXT_CPU_68HCS08[] PROGMEM;
 
 using common::TEXT_ADC;
 using common::TEXT_ADD;
 using common::TEXT_AND;
-using common::TEXT_ASR;
-using common::TEXT_ASRA;
-extern const char TEXT_ASRX[] PROGMEM;
 using common::TEXT_ASL;
 using common::TEXT_ASLA;
 extern const char TEXT_ASLX[] PROGMEM;
+using common::TEXT_ASR;
+using common::TEXT_ASRA;
+extern const char TEXT_ASRX[] PROGMEM;
 using common::TEXT_BCC;
 using common::TEXT_BCLR;
 using common::TEXT_BCS;
@@ -128,8 +128,8 @@ using common::TEXT_BGE;
 using common::TEXT_BGT;
 using common::TEXT_BLE;
 using common::TEXT_BLT;
-extern const char TEXT_CBEQA[] PROGMEM;
 extern const char TEXT_CBEQ[]  PROGMEM;
+extern const char TEXT_CBEQA[] PROGMEM;
 extern const char TEXT_CBEQX[] PROGMEM;
 extern const char TEXT_CLRH[]  PROGMEM;
 extern const char TEXT_CPHX[]  PROGMEM;

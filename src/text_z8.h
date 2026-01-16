@@ -22,8 +22,8 @@
 namespace libasm {
 namespace text {
 namespace z8 {
-
 // clang-format off
+
 extern const char TEXT_Z8_LIST[]    PROGMEM;
 extern const char TEXT_CPU_Z8[]     PROGMEM;
 extern const char TEXT_CPU_Z86[]    PROGMEM;
@@ -115,30 +115,29 @@ extern const char TEXT_SRP0[]   PROGMEM;
 extern const char TEXT_SRP1[]   PROGMEM;
 extern const char TEXT_WFI[]    PROGMEM;
 
-using common::TEXT_CC_F;
-using common::TEXT_CC_LT;
-using common::TEXT_CC_LE;
-using common::TEXT_CC_ULE;
-using common::TEXT_CC_OV;
-using common::TEXT_CC_MI;
-using common::TEXT_CC_Z;
 using common::TEXT_CC_C;
+using common::TEXT_CC_EQ;
+using common::TEXT_CC_F;
 using common::TEXT_CC_GE;
 using common::TEXT_CC_GT;
-using common::TEXT_CC_UGT;
-using common::TEXT_CC_NOV;
-using common::TEXT_CC_PL;
-using common::TEXT_CC_NZ;
+using common::TEXT_CC_LE;
+using common::TEXT_CC_LT;
+using common::TEXT_CC_MI;
 using common::TEXT_CC_NC;
-using common::TEXT_CC_EQ;
-using common::TEXT_CC_ULT;
 using common::TEXT_CC_NE;
+using common::TEXT_CC_NOV;
+using common::TEXT_CC_NZ;
+using common::TEXT_CC_OV;
+using common::TEXT_CC_PL;
 using common::TEXT_CC_UGE;
+using common::TEXT_CC_UGT;
+using common::TEXT_CC_ULE;
+using common::TEXT_CC_ULT;
+using common::TEXT_CC_Z;
 
 using common::TEXT_REG_RR;
 
 // clang-format on
-
 }  // namespace z8
 }  // namespace text
 }  // namespace libasm

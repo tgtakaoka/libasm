@@ -22,8 +22,8 @@
 namespace libasm {
 namespace text {
 namespace ins8060 {
-
 // clang-format off
+
 extern const char TEXT_CPU_SCMP[]    PROGMEM;
 extern const char TEXT_CPU_INS8060[] PROGMEM;
 
@@ -81,8 +81,8 @@ using common::TEXT_REG_P1;
 using common::TEXT_REG_P2;
 using common::TEXT_REG_P3;
 using common::TEXT_REG_PC;
-// clang-format on
 
+// clang-format on
 }  // namespace ins8060
 }  // namespace text
 }  // namespace libasm

@@ -22,11 +22,11 @@
 namespace libasm {
 namespace text {
 namespace z8000 {
-
 // clang-format off
+
 extern const char TEXT_Z8000_LIST[] PROGMEM;
-extern const char TEXT_CPU_Z8001[] PROGMEM;
-extern const char TEXT_CPU_Z8002[] PROGMEM;
+extern const char TEXT_CPU_Z8001[]  PROGMEM;
+extern const char TEXT_CPU_Z8002[]  PROGMEM;
 
 using common::TEXT_ADC;
 using common::TEXT_ADCB;
@@ -220,11 +220,11 @@ using common::TEXT_XORB;
 
 extern const char TEXT_REG_FCW[]     PROGMEM;
 extern const char TEXT_REG_FLAGS[]   PROGMEM;
-extern const char TEXT_REG_NSPOFF[]  PROGMEM;
 extern const char TEXT_REG_NSP[]     PROGMEM;
+extern const char TEXT_REG_NSPOFF[]  PROGMEM;
 extern const char TEXT_REG_NSPSEG[]  PROGMEM;
-extern const char TEXT_REG_PSAPOFF[] PROGMEM;
 extern const char TEXT_REG_PSAP[]    PROGMEM;
+extern const char TEXT_REG_PSAPOFF[] PROGMEM;
 extern const char TEXT_REG_PSAPSEG[] PROGMEM;
 extern const char TEXT_REG_REFRESH[] PROGMEM;
 extern const char TEXT_REG_RH[]      PROGMEM;
@@ -253,16 +253,15 @@ using common::TEXT_CC_ULT;
 using common::TEXT_CC_Z;
 
 extern const char TEXT_FLAG_C[] PROGMEM;
-extern const char TEXT_FLAG_Z[] PROGMEM;
-extern const char TEXT_FLAG_S[] PROGMEM;
 extern const char TEXT_FLAG_P[] PROGMEM;
+extern const char TEXT_FLAG_S[] PROGMEM;
 extern const char TEXT_FLAG_V[] PROGMEM;
+extern const char TEXT_FLAG_Z[] PROGMEM;
 
-extern const char TEXT_INTR_VI[]  PROGMEM;
 extern const char TEXT_INTR_NVI[] PROGMEM;
+extern const char TEXT_INTR_VI[]  PROGMEM;
 
 // clang-format on
-
 }  // namespace z8000
 }  // namespace text
 }  // namespace libasm

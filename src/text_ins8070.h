@@ -22,14 +22,14 @@
 namespace libasm {
 namespace text {
 namespace ins8070 {
-
 // clang-format off
+
 extern const char TEXT_CPU_INS8070[] PROGMEM;
 extern const char TEXT_CPU_8070[]    PROGMEM;
 
 using common::TEXT_ADD;
 using common::TEXT_AND;
-extern const char TEXT_BND[]  PROGMEM;
+extern const char TEXT_BND[] PROGMEM;
 using common::TEXT_BNZ;
 using common::TEXT_BP;
 using common::TEXT_BRA;
@@ -44,16 +44,16 @@ using common::TEXT_LD;
 using common::TEXT_MPY;
 using common::TEXT_NOP;
 using common::TEXT_OR;
-extern const char TEXT_PLI[]  PROGMEM;
+extern const char TEXT_PLI[] PROGMEM;
 using common::TEXT_POP;
 using common::TEXT_PUSH;
 using common::TEXT_RET;
-using common::TEXT_RRL;
 using common::TEXT_RR;
+using common::TEXT_RRL;
 using common::TEXT_SL;
-using common::TEXT_SRL;
 using common::TEXT_SR;
-extern const char TEXT_SSM[]  PROGMEM;
+using common::TEXT_SRL;
+extern const char TEXT_SSM[] PROGMEM;
 using common::TEXT_ST;
 using common::TEXT_SUB;
 using common::TEXT_XCH;
@@ -62,14 +62,14 @@ using common::TEXT_XOR;
 using common::TEXT_REG_A;
 using common::TEXT_REG_E;
 extern const char TEXT_REG_EA[] PROGMEM;
-using common::TEXT_REG_T;
-using common::TEXT_REG_S;
-using common::TEXT_REG_PC;
-using common::TEXT_REG_SP;
 using common::TEXT_REG_P2;
 using common::TEXT_REG_P3;
-// clang-format on
+using common::TEXT_REG_PC;
+using common::TEXT_REG_S;
+using common::TEXT_REG_SP;
+using common::TEXT_REG_T;
 
+// clang-format on
 }  // namespace ins8070
 }  // namespace text
 }  // namespace libasm

@@ -19,8 +19,8 @@
 namespace libasm {
 namespace text {
 namespace ins8060 {
-
 // clang-format off
+
 constexpr char TEXT_CPU_SCMP[]    PROGMEM = "SC/MP";
 constexpr char TEXT_CPU_INS8060[] PROGMEM = "INS8060";
 
@@ -74,14 +74,14 @@ constexpr char TEXT_XPPC[] PROGMEM = "XPPC";
 constexpr char TEXT_XRE[]  PROGMEM = "XRE";
 // constexpr char TEXT_XRI[]  PROGMEM = "XRI";
 
-// constexpr char TEXT_REG_E[]  PROGMEM  = "E";
+// constexpr char TEXT_REG_E[]  PROGMEM = "E";
 // constexpr char TEXT_REG_P0[] PROGMEM = "P0";
 // constexpr char TEXT_REG_P1[] PROGMEM = "P1";
 // constexpr char TEXT_REG_P2[] PROGMEM = "P2";
 // constexpr char TEXT_REG_P3[] PROGMEM = "P3";
 // constexpr char TEXT_REG_PC[] PROGMEM = "PC";
-// clang-format on
 
+// clang-format on
 }  // namespace ins8060
 }  // namespace text
 }  // namespace libasm

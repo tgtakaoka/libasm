@@ -19,13 +19,13 @@
 namespace libasm {
 namespace text {
 namespace mc6800 {
-
 // clang-format off
+
 constexpr char TEXT_MC6800_LIST[] PROGMEM = "MC6800, MB8861, MC6801, HD6301, MC68HC11";
-constexpr char TEXT_CPU_6800[] PROGMEM = "6800";
-constexpr char TEXT_CPU_6801[] PROGMEM = "6801";
-constexpr char TEXT_CPU_6301[] PROGMEM = "6301";
-constexpr char TEXT_CPU_6811[] PROGMEM = "6811";
+constexpr char TEXT_CPU_6800[]   PROGMEM = "6800";
+constexpr char TEXT_CPU_6801[]   PROGMEM = "6801";
+constexpr char TEXT_CPU_6301[]   PROGMEM = "6301";
+constexpr char TEXT_CPU_6811[]   PROGMEM = "6811";
 constexpr char TEXT_CPU_68HC11[] PROGMEM = "68HC11";
 constexpr char TEXT_CPU_HD6301[] PROGMEM = "HD6301";
 constexpr char TEXT_CPU_MB8861[] PROGMEM = "MB8861";
@@ -116,10 +116,10 @@ constexpr char TEXT_CPU_MB8861[] PROGMEM = "MB8861";
 // constexpr char TEXT_ORA[]  PROGMEM = "ORA";
 // constexpr char TEXT_ORAA[] PROGMEM = "ORAA";
 // constexpr char TEXT_ORAB[] PROGMEM = "ORAB";
-constexpr char TEXT_PSH[]  PROGMEM = "PSH";
+constexpr char TEXT_PSH[] PROGMEM = "PSH";
 // constexpr char TEXT_PSHA[] PROGMEM = "PSHA";
 // constexpr char TEXT_PSHB[] PROGMEM = "PSHB";
-constexpr char TEXT_PUL[]  PROGMEM = "PUL";
+constexpr char TEXT_PUL[] PROGMEM = "PUL";
 // constexpr char TEXT_PULA[] PROGMEM = "PULA";
 // constexpr char TEXT_PULB[] PROGMEM = "PULB";
 // constexpr char TEXT_ROL[]  PROGMEM = "ROL";
@@ -172,10 +172,10 @@ constexpr char TEXT_XIM[] PROGMEM = "XIM";
 // constexpr char TEXT_LSLD[] PROGMEM = "LSLD";
 // constexpr char TEXT_LSRD[] PROGMEM = "LSRD";
 // constexpr char TEXT_MUL[]  PROGMEM = "MUL";
-// constexpr char TEXT_STD[]  PROGMEM = "STD";
-// constexpr char TEXT_SUBD[] PROGMEM = "SUBD";
 // constexpr char TEXT_PSHX[] PROGMEM = "PSHX";
 // constexpr char TEXT_PULX[] PROGMEM = "PULX";
+// constexpr char TEXT_STD[]  PROGMEM = "STD";
+// constexpr char TEXT_SUBD[] PROGMEM = "SUBD";
 
 // HD6301
 // constexpr char TEXT_AIM[]  PROGMEM = "AIM";
@@ -189,7 +189,7 @@ constexpr char TEXT_BTGL[] PROGMEM = "BTGL";
 // constexpr char TEXT_TIM[]  PROGMEM = "TIM";
 // constexpr char TEXT_XGDX[] PROGMEM = "XGDX";
  
-// // MC68HC11
+// MC68HC11
 // constexpr char TEXT_ABY[]   PROGMEM = "ABY";
 // constexpr char TEXT_BRCLR[] PROGMEM = "BRCLR";
 // constexpr char TEXT_BRSET[] PROGMEM = "BRSET";
@@ -207,8 +207,8 @@ constexpr char TEXT_BTGL[] PROGMEM = "BTGL";
 // constexpr char TEXT_TSY[]   PROGMEM = "TSY";
 // constexpr char TEXT_TYS[]   PROGMEM = "TYS";
 // constexpr char TEXT_XGDY[]  PROGMEM = "XGDY";
-// clang-format on
 
+// clang-format on
 }  // namespace mc6800
 }  // namespace text
 }  // namespace libasm

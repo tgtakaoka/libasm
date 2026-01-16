@@ -22,17 +22,17 @@
 namespace libasm {
 namespace text {
 namespace i8051 {
-
 // clang-format off
+
 extern const char TEXT_CPU_I8051[] PROGMEM;
 extern const char TEXT_CPU_8051[]  PROGMEM;
 
-extern const char TEXT_ACALL[] PROGMEM;
+extern const char TEXT_ACALL[]    PROGMEM;
 using common::TEXT_ADD;
 using common::TEXT_ADDC;
-extern const char TEXT_AJMP[]  PROGMEM;
+extern const char TEXT_AJMP[]     PROGMEM;
 using common::TEXT_ANL;
-extern const char TEXT_CJNE[]  PROGMEM;
+extern const char TEXT_CJNE[]     PROGMEM;
 using common::TEXT_CLR;
 using common::TEXT_CPL;
 using common::TEXT_CPU;
@@ -52,13 +52,26 @@ using common::TEXT_JZ;
 using common::TEXT_LCALL;
 using common::TEXT_LJMP;
 using common::TEXT_MOV;
-extern const char TEXT_MOVC[]  PROGMEM;
+extern const char TEXT_MOVC[]     PROGMEM;
 using common::TEXT_MOVX;
 using common::TEXT_MUL;
 using common::TEXT_NOP;
 using common::TEXT_ORL;
 using common::TEXT_POP;
 using common::TEXT_PUSH;
+using common::TEXT_REG_A;
+extern const char TEXT_REG_AB[]   PROGMEM;
+using common::TEXT_REG_C;
+extern const char TEXT_REG_DPTR[] PROGMEM;
+using common::TEXT_REG_PC;
+using common::TEXT_REG_R0;
+using common::TEXT_REG_R1;
+using common::TEXT_REG_R2;
+using common::TEXT_REG_R3;
+using common::TEXT_REG_R4;
+using common::TEXT_REG_R5;
+using common::TEXT_REG_R6;
+using common::TEXT_REG_R7;
 using common::TEXT_RET;
 using common::TEXT_RETI;
 using common::TEXT_RL;
@@ -73,21 +86,7 @@ using common::TEXT_XCH;
 using common::TEXT_XCHD;
 using common::TEXT_XRL;
 
-using common::TEXT_REG_A;
-using common::TEXT_REG_C;
-extern const char TEXT_REG_AB[]   PROGMEM;
-using common::TEXT_REG_R0;
-using common::TEXT_REG_R1;
-using common::TEXT_REG_R2;
-using common::TEXT_REG_R3;
-using common::TEXT_REG_R4;
-using common::TEXT_REG_R5;
-using common::TEXT_REG_R6;
-using common::TEXT_REG_R7;
-using common::TEXT_REG_PC;
-extern const char TEXT_REG_DPTR[] PROGMEM;
 // clang-format on
-
 }  // namespace i8051
 }  // namespace text
 }  // namespace libasm

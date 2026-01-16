@@ -21,7 +21,7 @@ namespace text {
 namespace cdp1802 {
 // clang-format off
 
-constexpr char TEXT_CDP1802_LIST[]  PROGMEM = "CDP1802, CDP1804, CDP1804A";
+constexpr char TEXT_CDP1802_LIST[] PROGMEM = "CDP1802, CDP1804, CDP1804A";
 constexpr char TEXT_CPU_1802[]  PROGMEM = "1802";
 constexpr char TEXT_CPU_1804[]  PROGMEM = "1804";
 constexpr char TEXT_CPU_1804A[] PROGMEM = "1804A";
@@ -63,13 +63,13 @@ constexpr char TEXT_GLO[]  PROGMEM = "GLO";
 constexpr char TEXT_INP[]  PROGMEM = "INP";
 constexpr char TEXT_IRX[]  PROGMEM = "IRX";
 constexpr char TEXT_LBDF[] PROGMEM = "LBDF";
-constexpr char TEXT_LBPZ[] PROGMEM = "LBPZ";
 // constexpr char TEXT_LBGE[] PROGMEM = "LBGE";
-constexpr char TEXT_LBNF[] PROGMEM = "LBNF";
-constexpr char TEXT_LBM[]  PROGMEM = "LBM";
 constexpr char TEXT_LBL[]  PROGMEM = "LBL";
+constexpr char TEXT_LBM[]  PROGMEM = "LBM";
+constexpr char TEXT_LBNF[] PROGMEM = "LBNF";
 constexpr char TEXT_LBNQ[] PROGMEM = "LBNQ";
 constexpr char TEXT_LBNZ[] PROGMEM = "LBNZ";
+constexpr char TEXT_LBPZ[] PROGMEM = "LBPZ";
 constexpr char TEXT_LBQ[]  PROGMEM = "LBQ";
 constexpr char TEXT_LBR[]  PROGMEM = "LBR";
 constexpr char TEXT_LBZ[]  PROGMEM = "LBZ";
@@ -129,7 +129,7 @@ constexpr char TEXT_CIE[]  PROGMEM = "CIE";
 constexpr char TEXT_DTC[]  PROGMEM = "DTC";
 constexpr char TEXT_ETQ[]  PROGMEM = "ETQ";
 constexpr char TEXT_GEC[]  PROGMEM = "GEC";
-// constexpr char TEXT_LDC[]  PROGMEM = "LDC";
+// constexpr char TEXT_LDC[] PROGMEM = "LDC";
 constexpr char TEXT_RLDI[] PROGMEM = "RLDI";
 constexpr char TEXT_RLXA[] PROGMEM = "RLXA";
 constexpr char TEXT_RNX[]  PROGMEM = "RNX";

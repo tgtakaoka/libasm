@@ -22,16 +22,16 @@
 namespace libasm {
 namespace text {
 namespace tms320 {
-
 // clang-format off
-extern const char TEXT_TMS320_LIST[]  PROGMEM;
-extern const char TEXT_CPU_32010[] PROGMEM;
-extern const char TEXT_CPU_32015[] PROGMEM;
-extern const char TEXT_CPU_32020[]  PROGMEM;
-extern const char TEXT_CPU_320C25[] PROGMEM;
-extern const char TEXT_CPU_320C26[] PROGMEM;
+
+extern const char TEXT_TMS320_LIST[] PROGMEM;
+extern const char TEXT_CPU_32010[]   PROGMEM;
+extern const char TEXT_CPU_32015[]   PROGMEM;
+extern const char TEXT_CPU_32020[]   PROGMEM;
 extern const char TEXT_CPU_320C20X[] PROGMEM;
-extern const char TEXT_CPU_320C5X[] PROGMEM;
+extern const char TEXT_CPU_320C25[]  PROGMEM;
+extern const char TEXT_CPU_320C26[]  PROGMEM;
+extern const char TEXT_CPU_320C5X[]  PROGMEM;
 
 // TMS320
 using common::TEXT_ABS;
@@ -67,7 +67,6 @@ using common::TEXT_LST;
 extern const char TEXT_LT[]   PROGMEM;
 extern const char TEXT_LTA[]  PROGMEM;
 extern const char TEXT_LTD[]  PROGMEM;
-    extern const char TEXT_MAR[]  PROGMEM;
 using common::TEXT_MPY;
 extern const char TEXT_MPYK[] PROGMEM;
 using common::TEXT_NOP;
@@ -94,6 +93,7 @@ using common::TEXT_XOR;
 extern const char TEXT_ZAC[]  PROGMEM;
 extern const char TEXT_ZALH[] PROGMEM;
 extern const char TEXT_ZALS[] PROGMEM;
+extern const char TEXT_MAR[]  PROGMEM;
 
 // TMS32020
 extern const char TEXT_ADDT[] PROGMEM;
@@ -140,8 +140,8 @@ extern const char TEXT_SQRA[] PROGMEM;
 extern const char TEXT_SQRS[] PROGMEM;
 extern const char TEXT_SST1[] PROGMEM;
 extern const char TEXT_SSXM[] PROGMEM;
-extern const char TEXT_SUBT[] PROGMEM;
 extern const char TEXT_STXM[] PROGMEM;
+extern const char TEXT_SUBT[] PROGMEM;
 extern const char TEXT_SXF[]  PROGMEM;
 using common::TEXT_TRAP;
 extern const char TEXT_XORK[] PROGMEM;
@@ -186,8 +186,8 @@ using common::TEXT_SETC;
 
 // TMS320C20X
 using common::TEXT_CC;
-extern const char TEXT_NMI[]  PROGMEM;
 extern const char TEXT_INTR[] PROGMEM;
+extern const char TEXT_NMI[]  PROGMEM;
 using common::TEXT_RETC;
 extern const char TEXT_SPLK[] PROGMEM;
 
@@ -244,8 +244,8 @@ extern const char TEXT_ZAP[]   PROGMEM;
 extern const char TEXT_ZPR[]   PROGMEM;
 
 // TMS320C2X Enhanced instruction
-extern const char TEXT_REG_CNF[]  PROGMEM;
 using common::TEXT_REG_C;
+extern const char TEXT_REG_CNF[]  PROGMEM;
 extern const char TEXT_REG_HM[]   PROGMEM;
 extern const char TEXT_REG_INTM[] PROGMEM;
 extern const char TEXT_REG_OVM[]  PROGMEM;
@@ -272,7 +272,6 @@ extern const char TEXT_CC_TC[]  PROGMEM;
 extern const char TEXT_CC_UNC[] PROGMEM;
 
 // clang-format on
-
 }  // namespace tms320
 }  // namespace text
 }  // namespace libasm

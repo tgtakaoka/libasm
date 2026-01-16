@@ -22,10 +22,10 @@
 namespace libasm {
 namespace text {
 namespace mc68hc12 {
-
 // clang-format off
+
 extern const char TEXT_CPU_MC68HC12[] PROGMEM;
-extern const char TEXT_CPU_68HC12[] PROGMEM;
+extern const char TEXT_CPU_68HC12[]   PROGMEM;
 
 // MC68HC12
 using common::TEXT_ABA;
@@ -224,11 +224,11 @@ extern const char TEXT_TBNE[];
 using common::TEXT_TFR;
 using common::TEXT_TPA;
 using common::TEXT_TRAP;
-using common::TEXT_TSX;
-using common::TEXT_TSY;
 using common::TEXT_TST;
 using common::TEXT_TSTA;
 using common::TEXT_TSTB;
+using common::TEXT_TSX;
+using common::TEXT_TSY;
 using common::TEXT_TXS;
 using common::TEXT_TYS;
 using common::TEXT_WAI;
@@ -246,7 +246,6 @@ using common::TEXT_REG_X;
 using common::TEXT_REG_Y;
 
 // clang-format on
-
 }  // namespace mc68hc12
 }  // namespace text
 }  // namespace libasm

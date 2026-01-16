@@ -22,19 +22,19 @@
 namespace libasm {
 namespace text {
 namespace mos6502 {
-
 // clang-format off
+
 extern const char TEXT_MOS6502_LIST[] PROGMEM;
-extern const char TEXT_CPU_6502[]    PROGMEM;
-extern const char TEXT_CPU_65SC02[]  PROGMEM;
-extern const char TEXT_CPU_65C02[]   PROGMEM;
-extern const char TEXT_CPU_W65C02S[] PROGMEM;
-extern const char TEXT_CPU_65816[]   PROGMEM;
-extern const char TEXT_CPU_MOS6502[] PROGMEM;
-extern const char TEXT_CPU_R65C02[]  PROGMEM;
-extern const char TEXT_CPU_G65SC02[] PROGMEM;
-extern const char TEXT_CPU_65C816[]  PROGMEM;
-extern const char TEXT_CPU_65C816S[] PROGMEM;
+extern const char TEXT_CPU_6502[]     PROGMEM;
+extern const char TEXT_CPU_65816[]    PROGMEM;
+extern const char TEXT_CPU_65C02[]    PROGMEM;
+extern const char TEXT_CPU_65C816[]   PROGMEM;
+extern const char TEXT_CPU_65C816S[]  PROGMEM;
+extern const char TEXT_CPU_65SC02[]   PROGMEM;
+extern const char TEXT_CPU_G65SC02[]  PROGMEM;
+extern const char TEXT_CPU_MOS6502[]  PROGMEM;
+extern const char TEXT_CPU_R65C02[]   PROGMEM;
+extern const char TEXT_CPU_W65C02S[]  PROGMEM;
 
 // MOS6502 instructions
 using common::TEXT_ADC;
@@ -95,7 +95,6 @@ using common::TEXT_TXS;
 extern const char TEXT_TYA[] PROGMEM;
 
 // G65SC02 instructions
-
 using common::TEXT_BRA;
 extern const char TEXT_PHX[] PROGMEM;
 extern const char TEXT_PHY[] PROGMEM;
@@ -106,7 +105,6 @@ extern const char TEXT_TRB[] PROGMEM;
 extern const char TEXT_TSB[] PROGMEM;
 
 // R65C02 instructions
-
 extern const char TEXT_BBR0[] PROGMEM;
 extern const char TEXT_BBR1[] PROGMEM;
 extern const char TEXT_BBR2[] PROGMEM;
@@ -141,57 +139,53 @@ extern const char TEXT_SMB6[] PROGMEM;
 extern const char TEXT_SMB7[] PROGMEM;
 
 // W65C02 instructions
-
 extern const char TEXT_STP[] PROGMEM;
 using common::TEXT_WAI;
 
 // W65C816 instructions
-
-extern const char TEXT_BRL[] PROGMEM;
-extern const char TEXT_COP[] PROGMEM;
-extern const char TEXT_JML[] PROGMEM;
-extern const char TEXT_JSL[] PROGMEM;
-extern const char TEXT_MVN[] PROGMEM;
-extern const char TEXT_MVP[] PROGMEM;
-using common::TEXT_PEA;
-extern const char TEXT_PEI[] PROGMEM;
-extern const char TEXT_PER[] PROGMEM;
-extern const char TEXT_PHB[] PROGMEM;
-extern const char TEXT_PHD[] PROGMEM;
-extern const char TEXT_PHK[] PROGMEM;
-extern const char TEXT_PLB[] PROGMEM;
-extern const char TEXT_PLD[] PROGMEM;
-extern const char TEXT_PSD[] PROGMEM;
-using common::TEXT_REP;
-using common::TEXT_RTL;
-using common::TEXT_SEP;
-extern const char TEXT_TCD[] PROGMEM;
-extern const char TEXT_TCS[] PROGMEM;
-extern const char TEXT_TDC[] PROGMEM;
-extern const char TEXT_TSC[] PROGMEM;
-using common::TEXT_TXY;
-using common::TEXT_TYX;
-extern const char TEXT_WDM[] PROGMEM;
-extern const char TEXT_XBA[] PROGMEM;
-extern const char TEXT_XCE[] PROGMEM;
-
-using common::TEXT_JMPL;
 extern const char TEXT_ADCL[] PROGMEM;
 extern const char TEXT_ANDL[] PROGMEM;
+extern const char TEXT_BRL[]  PROGMEM;
 using common::TEXT_CMPL;
+extern const char TEXT_COP[]  PROGMEM;
 extern const char TEXT_EORL[] PROGMEM;
+extern const char TEXT_JML[]  PROGMEM;
+using common::TEXT_JMPL;
+extern const char TEXT_JSL[]  PROGMEM;
 extern const char TEXT_LDAL[] PROGMEM;
+extern const char TEXT_MVN[]  PROGMEM;
+extern const char TEXT_MVP[]  PROGMEM;
 extern const char TEXT_ORAL[] PROGMEM;
+using common::TEXT_PEA;
+extern const char TEXT_PEI[]  PROGMEM;
+extern const char TEXT_PER[]  PROGMEM;
+extern const char TEXT_PHB[]  PROGMEM;
+extern const char TEXT_PHD[]  PROGMEM;
+extern const char TEXT_PHK[]  PROGMEM;
+extern const char TEXT_PLB[]  PROGMEM;
+extern const char TEXT_PLD[]  PROGMEM;
+extern const char TEXT_PSD[]  PROGMEM;
+using common::TEXT_REP;
+using common::TEXT_RTL;
 extern const char TEXT_SBCL[] PROGMEM;
+using common::TEXT_SEP;
 extern const char TEXT_STAL[] PROGMEM;
+extern const char TEXT_TCD[]  PROGMEM;
+extern const char TEXT_TCS[]  PROGMEM;
+extern const char TEXT_TDC[]  PROGMEM;
+extern const char TEXT_TSC[]  PROGMEM;
+using common::TEXT_TXY;
+using common::TEXT_TYX;
+extern const char TEXT_WDM[]  PROGMEM;
+extern const char TEXT_XBA[]  PROGMEM;
+extern const char TEXT_XCE[]  PROGMEM;
 
 using common::TEXT_REG_A;
+using common::TEXT_REG_S;
 using common::TEXT_REG_X;
 using common::TEXT_REG_Y;
-using common::TEXT_REG_S;
 
 // clang-format on
-
 }  // namespace mos6502
 }  // namespace text
 }  // namespace libasm

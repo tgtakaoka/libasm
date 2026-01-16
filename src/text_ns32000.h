@@ -22,8 +22,8 @@
 namespace libasm {
 namespace text {
 namespace ns32000 {
-
 // clang-format off
+
 extern const char TEXT_CPU_NS32032[]  PROGMEM;
 extern const char TEXT_FPU_NS32081[]  PROGMEM;
 extern const char TEXT_PMMU_NS32082[] PROGMEM;
@@ -151,10 +151,10 @@ extern const char TEXT_INSSW[]   PROGMEM;
 using common::TEXT_INSW;
 using common::TEXT_JSR;
 extern const char TEXT_JUMP[]    PROGMEM;
+extern const char TEXT_LFSR[]    PROGMEM;
 extern const char TEXT_LPRB[]    PROGMEM;
 extern const char TEXT_LPRD[]    PROGMEM;
 extern const char TEXT_LPRW[]    PROGMEM;
-extern const char TEXT_LFSR[]    PROGMEM;
 extern const char TEXT_LSHB[]    PROGMEM;
 extern const char TEXT_LSHD[]    PROGMEM;
 extern const char TEXT_LSHW[]    PROGMEM;
@@ -285,7 +285,8 @@ using common::TEXT_WAIT;
 using common::TEXT_XORB;
 extern const char TEXT_XORD[]    PROGMEM;
 using common::TEXT_XORW;
-// Floating point instructions
+
+// NS32081
 using common::TEXT_ABSF;
 extern const char TEXT_ABSL[]    PROGMEM;
 using common::TEXT_ADDF;
@@ -328,18 +329,22 @@ extern const char TEXT_TRUNCFW[] PROGMEM;
 extern const char TEXT_TRUNCLB[] PROGMEM;
 extern const char TEXT_TRUNCLD[] PROGMEM;
 extern const char TEXT_TRUNCLW[] PROGMEM;
-// Memory management instructions
-extern const char TEXT_LMR[]     PROGMEM;
-extern const char TEXT_MOVSUB[]  PROGMEM;
-extern const char TEXT_MOVSUD[]  PROGMEM;
-extern const char TEXT_MOVSUW[]  PROGMEM;
-extern const char TEXT_MOVUSB[]  PROGMEM;
-extern const char TEXT_MOVUSD[]  PROGMEM;
-extern const char TEXT_MOVUSW[]  PROGMEM;
-extern const char TEXT_RDVAL[]   PROGMEM;
-extern const char TEXT_SMR[]     PROGMEM;
-extern const char TEXT_WRVAL[]   PROGMEM;
 
+// NS32082
+extern const char TEXT_LMR[]    PROGMEM;
+extern const char TEXT_MOVSUB[] PROGMEM;
+extern const char TEXT_MOVSUD[] PROGMEM;
+extern const char TEXT_MOVSUW[] PROGMEM;
+extern const char TEXT_MOVUSB[] PROGMEM;
+extern const char TEXT_MOVUSD[] PROGMEM;
+extern const char TEXT_MOVUSW[] PROGMEM;
+extern const char TEXT_RDVAL[]  PROGMEM;
+extern const char TEXT_SMR[]    PROGMEM;
+extern const char TEXT_WRVAL[]  PROGMEM;
+
+extern const char TEXT_REG_EXT[] PROGMEM;
+extern const char TEXT_REG_FP[]  PROGMEM;
+using common::TEXT_REG_PC;
 using common::TEXT_REG_R0;
 using common::TEXT_REG_R1;
 using common::TEXT_REG_R2;
@@ -348,45 +353,40 @@ using common::TEXT_REG_R4;
 using common::TEXT_REG_R5;
 using common::TEXT_REG_R6;
 using common::TEXT_REG_R7;
-
-extern const char TEXT_REG_FP[]  PROGMEM;
-using common::TEXT_REG_SP;
 extern const char TEXT_REG_SB[]  PROGMEM;
-using common::TEXT_REG_PC;
+using common::TEXT_REG_SP;
 extern const char TEXT_REG_TOS[] PROGMEM;
-extern const char TEXT_REG_EXT[] PROGMEM;
 
-// NS32081/FPU Registers
+// NS32081
 using common::TEXT_REG_F0;
 using common::TEXT_REG_F1;
-extern const char TEXT_REG_F2[] PROGMEM;
-extern const char TEXT_REG_F3[] PROGMEM;
-extern const char TEXT_REG_F4[] PROGMEM;
-extern const char TEXT_REG_F5[] PROGMEM;
-extern const char TEXT_REG_F6[] PROGMEM;
-extern const char TEXT_REG_F7[] PROGMEM;
-
-extern const char TEXT_REG_UPSR[]    PROGMEM;
-extern const char TEXT_REG_US[]      PROGMEM;
-using common::TEXT_REG_PSR;
+extern const char TEXT_REG_F2[]      PROGMEM;
+extern const char TEXT_REG_F3[]      PROGMEM;
+extern const char TEXT_REG_F4[]      PROGMEM;
+extern const char TEXT_REG_F5[]      PROGMEM;
+extern const char TEXT_REG_F6[]      PROGMEM;
+extern const char TEXT_REG_F7[]      PROGMEM;
 extern const char TEXT_REG_INTBASE[] PROGMEM;
 extern const char TEXT_REG_MOD[]     PROGMEM;
+using common::TEXT_REG_PSR;
+extern const char TEXT_REG_UPSR[]    PROGMEM;
+extern const char TEXT_REG_US[]      PROGMEM;
 
-// NS32082/PMMU registers.
+// NS32082
+extern const char TEXT_REG_BCNT[] PROGMEM;
 extern const char TEXT_REG_BPR0[] PROGMEM;
 extern const char TEXT_REG_BPR1[] PROGMEM;
+extern const char TEXT_REG_EIA[]  PROGMEM;
 extern const char TEXT_REG_MSR[]  PROGMEM;
-extern const char TEXT_REG_BCNT[] PROGMEM;
 extern const char TEXT_REG_PTB0[] PROGMEM;
 extern const char TEXT_REG_PTB1[] PROGMEM;
-extern const char TEXT_REG_EIA[]  PROGMEM;
 
-extern const char TEXT_CONFIG_I[] PROGMEM;
-extern const char TEXT_CONFIG_F[] PROGMEM;
-extern const char TEXT_CONFIG_M[] PROGMEM;
 extern const char TEXT_CONFIG_C[] PROGMEM;
-// clang-format on
+extern const char TEXT_CONFIG_F[] PROGMEM;
+extern const char TEXT_CONFIG_I[] PROGMEM;
+extern const char TEXT_CONFIG_M[] PROGMEM;
 
+// clang-format on
 }  // namespace ns32000
 }  // namespace text
 }  // namespace libasm

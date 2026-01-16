@@ -22,13 +22,13 @@
 namespace libasm {
 namespace text {
 namespace pdp11 {
-
 // clang-format off
+
 extern const char TEXT_PDP11_LIST[] PROGMEM;
-extern const char TEXT_CPU_DCJ11[] PROGMEM;
-extern const char TEXT_CPU_DCT11[] PROGMEM;
-extern const char TEXT_CPU_J11[] PROGMEM;
-extern const char TEXT_CPU_T11[] PROGMEM;
+extern const char TEXT_CPU_DCJ11[]  PROGMEM;
+extern const char TEXT_CPU_DCT11[]  PROGMEM;
+extern const char TEXT_CPU_J11[]    PROGMEM;
+extern const char TEXT_CPU_T11[]    PROGMEM;
 
 // PDP11 base instructions
 using common::TEXT_ADC;
@@ -44,16 +44,16 @@ using common::TEXT_BEQ;
 using common::TEXT_BGE;
 using common::TEXT_BGT;
 using common::TEXT_BHI;
-extern const char TEXT_BHIS[]  PROGMEM;
-extern const char TEXT_BIC[]   PROGMEM;
+extern const char TEXT_BHIS[] PROGMEM;
+extern const char TEXT_BIC[]  PROGMEM;
 using common::TEXT_BICB;
-extern const char TEXT_BIS[]   PROGMEM;
-extern const char TEXT_BISB[]  PROGMEM;
+extern const char TEXT_BIS[]  PROGMEM;
+extern const char TEXT_BISB[] PROGMEM;
 using common::TEXT_BIT;
 using common::TEXT_BITB;
 using common::TEXT_BLE;
 using common::TEXT_BLO;
-extern const char TEXT_BLOS[]  PROGMEM;
+extern const char TEXT_BLOS[] PROGMEM;
 using common::TEXT_BLT;
 using common::TEXT_BMI;
 using common::TEXT_BNE;
@@ -62,34 +62,35 @@ using common::TEXT_BPT;
 using common::TEXT_BR;
 using common::TEXT_BVC;
 using common::TEXT_BVS;
-extern const char TEXT_CCC[]   PROGMEM;
+extern const char TEXT_CCC[]  PROGMEM;
 using common::TEXT_CLC;
-extern const char TEXT_CLN[]   PROGMEM;
+extern const char TEXT_CLN[]  PROGMEM;
 using common::TEXT_CLR;
 using common::TEXT_CLRB;
 using common::TEXT_CLV;
-extern const char TEXT_CLZ[]   PROGMEM;
+extern const char TEXT_CLZ[]  PROGMEM;
 using common::TEXT_CMP;
 using common::TEXT_CMPB;
 using common::TEXT_COM;
 using common::TEXT_COMB;
 using common::TEXT_DEC;
 using common::TEXT_DECB;
-extern const char TEXT_EMT[]   PROGMEM;
+extern const char TEXT_EMT[]  PROGMEM;
 using common::TEXT_HALT;
 using common::TEXT_INC;
 using common::TEXT_INCB;
 using common::TEXT_IOT;
 using common::TEXT_JMP;
 using common::TEXT_JSR;
-extern const char TEXT_MFPS[]  PROGMEM;
-extern const char TEXT_MFPT[]  PROGMEM;
+extern const char TEXT_MFPS[] PROGMEM;
+extern const char TEXT_MFPT[] PROGMEM;
 using common::TEXT_MOV;
 using common::TEXT_MOVB;
-extern const char TEXT_MTPS[]  PROGMEM;
+extern const char TEXT_MTPS[] PROGMEM;
 using common::TEXT_NEG;
 using common::TEXT_NEGB;
 using common::TEXT_NOP;
+extern const char TEXT_PDP[]  PROGMEM;
 using common::TEXT_RESET;
 using common::TEXT_ROL;
 using common::TEXT_ROLB;
@@ -97,38 +98,41 @@ using common::TEXT_ROR;
 using common::TEXT_RORB;
 using common::TEXT_RTI;
 using common::TEXT_RTS;
-extern const char TEXT_RTT[]   PROGMEM;
+extern const char TEXT_RTT[]  PROGMEM;
 using common::TEXT_SBC;
 using common::TEXT_SBCB;
 using common::TEXT_SCC;
 using common::TEXT_SEC;
-extern const char TEXT_SEN[]   PROGMEM;
+extern const char TEXT_SEN[]  PROGMEM;
 using common::TEXT_SEV;
-extern const char TEXT_SEZ[]   PROGMEM;
-extern const char TEXT_SOB[]   PROGMEM;
+extern const char TEXT_SEZ[]  PROGMEM;
+extern const char TEXT_SOB[]  PROGMEM;
 using common::TEXT_SUB;
-extern const char TEXT_SWAB[]  PROGMEM;
+extern const char TEXT_SWAB[] PROGMEM;
 using common::TEXT_SXT;
 using common::TEXT_TRAP;
 using common::TEXT_TST;
 using common::TEXT_TSTB;
 using common::TEXT_WAIT;
 using common::TEXT_XOR;
-extern const char TEXT_PDP[]   PROGMEM;
+
 // PDP-11 return from varargs subroutine
 using common::TEXT_MARK;
+
 // PDP-11 extended instruction set (EIS)
-extern const char TEXT_ASH[]   PROGMEM;
-extern const char TEXT_ASHC[]  PROGMEM;
+extern const char TEXT_ASH[]  PROGMEM;
+extern const char TEXT_ASHC[] PROGMEM;
 using common::TEXT_DIV;
 using common::TEXT_MUL;
+
 // PDP-11 memory management
-extern const char TEXT_MFPD[]  PROGMEM;
-extern const char TEXT_MFPI[]  PROGMEM;
-extern const char TEXT_MTPD[]  PROGMEM;
-extern const char TEXT_MTPI[]  PROGMEM;
+extern const char TEXT_MFPD[] PROGMEM;
+extern const char TEXT_MFPI[] PROGMEM;
+extern const char TEXT_MTPD[] PROGMEM;
+extern const char TEXT_MTPI[] PROGMEM;
+
 // DCJ11
-extern const char TEXT_CSM[]   PROGMEM;
+extern const char TEXT_CSM[]    PROGMEM;
 using common::TEXT_SPL;
 extern const char TEXT_TSTSET[] PROGMEM;
 extern const char TEXT_WRTLCK[] PROGMEM;
@@ -145,7 +149,6 @@ using common::TEXT_CMPD;
 using common::TEXT_CMPF;
 using common::TEXT_DIVD;
 using common::TEXT_DIVF;
-extern const char TEXT_LDEXP[] PROGMEM;
 extern const char TEXT_LDCDF[] PROGMEM;
 extern const char TEXT_LDCFD[] PROGMEM;
 extern const char TEXT_LDCID[] PROGMEM;
@@ -153,6 +156,7 @@ extern const char TEXT_LDCIF[] PROGMEM;
 extern const char TEXT_LDCLD[] PROGMEM;
 extern const char TEXT_LDCLF[] PROGMEM;
 using common::TEXT_LDD;
+extern const char TEXT_LDEXP[] PROGMEM;
 using common::TEXT_LDF;
 extern const char TEXT_LDFPS[] PROGMEM;
 using common::TEXT_MODD;
@@ -197,9 +201,8 @@ using common::TEXT_REG_R5;
 using common::TEXT_REG_R6;
 using common::TEXT_REG_R7;
 using common::TEXT_REG_SP;
+
 // clang-format on
-
-
 }  // namespace pdp11
 }  // namespace text
 }  // namespace libasm

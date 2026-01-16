@@ -19,14 +19,14 @@
 namespace libasm {
 namespace text {
 namespace tms9900 {
-
 // clang-format off
+
 constexpr char TEXT_TMS9900_LIST[] PROGMEM = "TMS9900, TMS9980, TMS9995, TMS99105, TMS99110";
 constexpr char TEXT_CPU_9900[]  PROGMEM = "9900";
-constexpr char TEXT_CPU_9980[]  PROGMEM = "9980";
-constexpr char TEXT_CPU_9995[]  PROGMEM = "9995";
 constexpr char TEXT_CPU_99105[] PROGMEM = "99105";
 constexpr char TEXT_CPU_99110[] PROGMEM = "99110";
+constexpr char TEXT_CPU_9980[]  PROGMEM = "9980";
+constexpr char TEXT_CPU_9995[]  PROGMEM = "9995";
 
 // TMS9900
 // constexpr char TEXT_A[]    PROGMEM = "A";
@@ -84,11 +84,11 @@ constexpr char TEXT_SBO[]  PROGMEM = "SBO";
 constexpr char TEXT_SBZ[]  PROGMEM = "SBZ";
 constexpr char TEXT_SETO[] PROGMEM = "SETO";
 // constexpr char TEXT_SLA[]  PROGMEM = "SLA";
+constexpr char TEXT_SOC[]  PROGMEM = "SOC";
+constexpr char TEXT_SOCB[] PROGMEM = "SOCB";
 // constexpr char TEXT_SRA[]  PROGMEM = "SRA";
 constexpr char TEXT_SRC[]  PROGMEM = "SRC";
 // constexpr char TEXT_SRL[]  PROGMEM = "SRL";
-constexpr char TEXT_SOC[]  PROGMEM = "SOC";
-constexpr char TEXT_SOCB[] PROGMEM = "SOCB";
 constexpr char TEXT_STCR[] PROGMEM = "STCR";
 // constexpr char TEXT_STST[] PROGMEM = "STST";
 constexpr char TEXT_STWP[] PROGMEM = "STWP";
@@ -101,18 +101,18 @@ constexpr char TEXT_XOP[]  PROGMEM = "XOP";
 // constexpr char TEXT_XOR[]  PROGMEM = "XOR";
 
 // TMS9995
-// constexpr char TEXT_MPYS[] PROGMEM = "MPYS";
 // constexpr char TEXT_DIVS[] PROGMEM = "DIVS";
 // constexpr char TEXT_LST[]  PROGMEM = "LST";
-constexpr char TEXT_LWP[]  PROGMEM = "LWP";
+constexpr char TEXT_LWP[] PROGMEM = "LWP";
+// constexpr char TEXT_MPYS[] PROGMEM = "MPYS";
 
 // TMS999105
-// constexpr char TEXT_AM[]   PROGMEM = "AM";
+// constexpr char TEXT_AM[] PROGMEM = "AM";
 constexpr char TEXT_BIND[] PROGMEM = "BIND";
 constexpr char TEXT_BLSK[] PROGMEM = "BLSK";
 constexpr char TEXT_EVAD[] PROGMEM = "EVAD";
 constexpr char TEXT_SLAM[] PROGMEM = "SLAM";
-// constexpr char TEXT_SM[]   PROGMEM = "SM";
+// constexpr char TEXT_SM[] PROGMEM = "SM";
 constexpr char TEXT_SRAM[] PROGMEM = "SRAM";
 constexpr char TEXT_TCMB[] PROGMEM = "TCMB";
 constexpr char TEXT_TMB[]  PROGMEM = "TMB";
@@ -126,14 +126,14 @@ constexpr char TEXT_CR[]   PROGMEM = "CR";
 constexpr char TEXT_CRE[]  PROGMEM = "CRE";
 constexpr char TEXT_CRI[]  PROGMEM = "CRI";
 constexpr char TEXT_DR[]   PROGMEM = "DR";
-// constexpr char TEXT_LDD[]  PROGMEM = "LDD";
-// constexpr char TEXT_LDS[]  PROGMEM = "LDS";
-// constexpr char TEXT_LR[]   PROGMEM = "LR";
+// constexpr char TEXT_LDD[] PROGMEM = "LDD";
+// constexpr char TEXT_LDS[] PROGMEM = "LDS";
+// constexpr char TEXT_LR[]  PROGMEM = "LR";
 constexpr char TEXT_MM[]   PROGMEM = "MM";
 constexpr char TEXT_MR[]   PROGMEM = "MR";
 constexpr char TEXT_NEGR[] PROGMEM = "NEGR";
-// constexpr char TEXT_SR[]   PROGMEM = "SR";
-// constexpr char TEXT_STR[]  PROGMEM = "STR";
+// constexpr char TEXT_SR[]  PROGMEM = "SR";
+// constexpr char TEXT_STR[] PROGMEM = "STR";
 
 constexpr char TEXT_SINGLE[] PROGMEM = "SINGLE";
 

@@ -19,21 +19,21 @@
 namespace libasm {
 namespace text {
 namespace mos6502 {
-
 // clang-format off
+
 constexpr char TEXT_MOS6502_LIST[] PROGMEM = "MOS6502, R65C02, G65SC02, W65C02S, W65C816S";
 constexpr char TEXT_CPU_6502[]    PROGMEM = "6502";
-constexpr char TEXT_CPU_65SC02[]  PROGMEM = "65SC02";
-constexpr char TEXT_CPU_65C02[]   PROGMEM = "65C02";
-constexpr char TEXT_CPU_W65C02S[] PROGMEM = "W65C02S";
 constexpr char TEXT_CPU_65816[]   PROGMEM = "65816";
-constexpr char TEXT_CPU_MOS6502[] PROGMEM = "MOS6502";
-constexpr char TEXT_CPU_R65C02[]  PROGMEM = "R65C02";
-constexpr char TEXT_CPU_G65SC02[] PROGMEM = "G65SC02";
+constexpr char TEXT_CPU_65C02[]   PROGMEM = "65C02";
 constexpr char TEXT_CPU_65C816[]  PROGMEM = "65C816";
 constexpr char TEXT_CPU_65C816S[] PROGMEM = "65C816S";
+constexpr char TEXT_CPU_65SC02[]  PROGMEM = "65SC02";
+constexpr char TEXT_CPU_G65SC02[] PROGMEM = "G65SC02";
+constexpr char TEXT_CPU_MOS6502[] PROGMEM = "MOS6502";
+constexpr char TEXT_CPU_R65C02[]  PROGMEM = "R65C02";
+constexpr char TEXT_CPU_W65C02S[] PROGMEM = "W65C02S";
 
-// MOS6502 instructions
+// MOS6502
 // constexpr char TEXT_ADC[] PROGMEM = "ADC";
 // constexpr char TEXT_AND[] PROGMEM = "AND";
 // constexpr char TEXT_ASL[] PROGMEM = "ASL";
@@ -91,8 +91,7 @@ constexpr char TEXT_TAY[] PROGMEM = "TAY";
 // constexpr char TEXT_TXS[] PROGMEM = "TXS";
 constexpr char TEXT_TYA[] PROGMEM = "TYA";
 
-// G65SC02 instructions
-
+// G65SC02
 // constexpr char TEXT_BRA[] PROGMEM = "BRA";
 constexpr char TEXT_PHX[] PROGMEM = "PHX";
 constexpr char TEXT_PHY[] PROGMEM = "PHY";
@@ -102,8 +101,7 @@ constexpr char TEXT_PLY[] PROGMEM = "PLY";
 constexpr char TEXT_TRB[] PROGMEM = "TRB";
 constexpr char TEXT_TSB[] PROGMEM = "TSB";
 
-// R65C02 instructions
-
+// R65C02
 constexpr char TEXT_BBR0[] PROGMEM = "BBR0";
 constexpr char TEXT_BBR1[] PROGMEM = "BBR1";
 constexpr char TEXT_BBR2[] PROGMEM = "BBR2";
@@ -137,53 +135,49 @@ constexpr char TEXT_SMB5[] PROGMEM = "SMB5";
 constexpr char TEXT_SMB6[] PROGMEM = "SMB6";
 constexpr char TEXT_SMB7[] PROGMEM = "SMB7";
 
-// W65C02 instructions
+// W65C02
+constexpr char TEXT_STP[] PROGMEM = "STP";
+// constexpr char TEXT_WAI[] PROGMEM = "WAI";
 
-constexpr char TEXT_STP[] PROGMEM  = "STP";
-// constexpr char TEXT_WAI[] PROGMEM  = "WAI";
-
-// W65C816 instructions
-
-constexpr char TEXT_BRL[] PROGMEM  = "BRL";
-constexpr char TEXT_COP[] PROGMEM  = "COP";
-constexpr char TEXT_JML[] PROGMEM  = "JML";
-constexpr char TEXT_JSL[] PROGMEM  = "JSL";
-constexpr char TEXT_MVN[] PROGMEM  = "MVN";
-constexpr char TEXT_MVP[] PROGMEM  = "MVP";
-// constexpr char TEXT_PEA[] PROGMEM  = "PEA";
-constexpr char TEXT_PEI[] PROGMEM  = "PEI";
-constexpr char TEXT_PER[] PROGMEM  = "PER";
-constexpr char TEXT_PHB[] PROGMEM  = "PHB";
-constexpr char TEXT_PHD[] PROGMEM  = "PHD";
-constexpr char TEXT_PHK[] PROGMEM  = "PHK";
-constexpr char TEXT_PLB[] PROGMEM  = "PLB";
-constexpr char TEXT_PLD[] PROGMEM  = "PLD";
-constexpr char TEXT_PSD[] PROGMEM  = "PSD";
-// constexpr char TEXT_REP[] PROGMEM  = "REP";
-// constexpr char TEXT_RTL[] PROGMEM  = "RTL";
-// constexpr char TEXT_SEP[] PROGMEM  = "SEP";
-constexpr char TEXT_TCD[] PROGMEM  = "TCD";
-constexpr char TEXT_TCS[] PROGMEM  = "TCS";
-constexpr char TEXT_TDC[] PROGMEM  = "TDC";
-constexpr char TEXT_TSC[] PROGMEM  = "TSC";
-// constexpr char TEXT_TXY[] PROGMEM  = "TXY";
-// constexpr char TEXT_TYX[] PROGMEM  = "TYX";
-constexpr char TEXT_WDM[] PROGMEM  = "WDM";
-constexpr char TEXT_XBA[] PROGMEM  = "XBA";
-constexpr char TEXT_XCE[] PROGMEM  = "XCE";
-
-// constexpr char TEXT_JMPL[] PROGMEM = "JMPL";
+// W65C816
 constexpr char TEXT_ADCL[] PROGMEM = "ADCL";
 constexpr char TEXT_ANDL[] PROGMEM = "ANDL";
+constexpr char TEXT_BRL[]  PROGMEM = "BRL";
 // constexpr char TEXT_CMPL[] PROGMEM = "CMPL";
+constexpr char TEXT_COP[]  PROGMEM = "COP";
 constexpr char TEXT_EORL[] PROGMEM = "EORL";
+constexpr char TEXT_JML[]  PROGMEM = "JML";
+// constexpr char TEXT_JMPL[] PROGMEM = "JMPL";
+constexpr char TEXT_JSL[]  PROGMEM = "JSL";
 constexpr char TEXT_LDAL[] PROGMEM = "LDAL";
+constexpr char TEXT_MVN[]  PROGMEM = "MVN";
+constexpr char TEXT_MVP[]  PROGMEM = "MVP";
 constexpr char TEXT_ORAL[] PROGMEM = "ORAL";
+// constexpr char TEXT_PEA[]  PROGMEM = "PEA";
+constexpr char TEXT_PEI[]  PROGMEM = "PEI";
+constexpr char TEXT_PER[]  PROGMEM = "PER";
+constexpr char TEXT_PHB[]  PROGMEM = "PHB";
+constexpr char TEXT_PHD[]  PROGMEM = "PHD";
+constexpr char TEXT_PHK[]  PROGMEM = "PHK";
+constexpr char TEXT_PLB[]  PROGMEM = "PLB";
+constexpr char TEXT_PLD[]  PROGMEM = "PLD";
+constexpr char TEXT_PSD[]  PROGMEM = "PSD";
+// constexpr char TEXT_REP[]  PROGMEM = "REP";
+// constexpr char TEXT_RTL[]  PROGMEM = "RTL";
 constexpr char TEXT_SBCL[] PROGMEM = "SBCL";
+// constexpr char TEXT_SEP[]  PROGMEM = "SEP";
 constexpr char TEXT_STAL[] PROGMEM = "STAL";
+constexpr char TEXT_TCD[]  PROGMEM = "TCD";
+constexpr char TEXT_TCS[]  PROGMEM = "TCS";
+constexpr char TEXT_TDC[]  PROGMEM = "TDC";
+constexpr char TEXT_TSC[]  PROGMEM = "TSC";
+// constexpr char TEXT_TXY[]  PROGMEM = "TXY";
+// constexpr char TEXT_TYX[]  PROGMEM = "TYX";
+constexpr char TEXT_WDM[]  PROGMEM = "WDM";
+constexpr char TEXT_XBA[]  PROGMEM = "XBA";
+constexpr char TEXT_XCE[]  PROGMEM = "XCE";
 
 // clang-format on
-
 }  // namespace mos6502
 }  // namespace text
 }  // namespace libasm

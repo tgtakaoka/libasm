@@ -22,8 +22,8 @@
 namespace libasm {
 namespace text {
 namespace tms7000 {
-
 // clang-format off
+
 extern const char TEXT_CPU_TMS7000[] PROGMEM;
 extern const char TEXT_CPU_TMS70C[]  PROGMEM;
 
@@ -32,16 +32,16 @@ using common::TEXT_ADC;
 using common::TEXT_ADD;
 using common::TEXT_AND;
 using common::TEXT_ANDP;
+using common::TEXT_BR;
 using common::TEXT_BTJO;
 extern const char TEXT_BTJOP[] PROGMEM;
 using common::TEXT_BTJZ;
 extern const char TEXT_BTJZP[] PROGMEM;
-using common::TEXT_BR;
 using common::TEXT_CALL;
 using common::TEXT_CLR;
 using common::TEXT_CLRC;
-using common::TEXT_CMPA;
 using common::TEXT_CMP;
+using common::TEXT_CMPA;
 using common::TEXT_DAC;
 using common::TEXT_DEC;
 using common::TEXT_DECD;
@@ -69,8 +69,8 @@ using common::TEXT_JPZ;
 using common::TEXT_JZ;
 using common::TEXT_LDA;
 using common::TEXT_LDSP;
-using common::TEXT_MOVD;
 using common::TEXT_MOV;
+using common::TEXT_MOVD;
 using common::TEXT_MOVP;
 using common::TEXT_MPY;
 using common::TEXT_NOP;
@@ -90,19 +90,18 @@ using common::TEXT_STA;
 using common::TEXT_STSP;
 using common::TEXT_SUB;
 using common::TEXT_SWAP;
+using common::TEXT_TRAP;
 using common::TEXT_TSTA;
 using common::TEXT_TSTB;
-using common::TEXT_TRAP;
 using common::TEXT_XCHB;
 using common::TEXT_XOR;
-extern const char TEXT_XORP[] PROGMEM;
+extern const char TEXT_XORP[]  PROGMEM;
 
 using common::TEXT_REG_A;
 using common::TEXT_REG_B;
 using common::TEXT_REG_ST;
 
 // clang-format on
-
 }  // namespace tms7000
 }  // namespace text
 }  // namespace libasm

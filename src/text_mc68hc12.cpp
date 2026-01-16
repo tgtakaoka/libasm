@@ -19,8 +19,8 @@
 namespace libasm {
 namespace text {
 namespace mc68hc12 {
-
 // clang-format off
+
 constexpr char TEXT_CPU_MC68HC12[] PROGMEM = "MC68HC12";
 constexpr char TEXT_CPU_68HC12[]   PROGMEM = "68HC12";
 
@@ -226,8 +226,8 @@ constexpr char TEXT_TBNE[]  PROGMEM = "TBNE";
 // constexpr char TEXT_TSTB[]  PROGMEM = "TSTB";
 // constexpr char TEXT_WAI[]   PROGMEM = "WAI";
 constexpr char TEXT_WAV[]   PROGMEM = "WAV";
-// constexpr char TEXT_XGDX[]   PROGMEM = "XGDX";
-// constexpr char TEXT_XGDY[]   PROGMEM = "XGDY";
+// constexpr char TEXT_XGDX[]  PROGMEM = "XGDX";
+// constexpr char TEXT_XGDY[]  PROGMEM = "XGDY";
 
 // constexpr char TEXT_REG_A[]   PROGMEM = "REG_A";
 // constexpr char TEXT_REG_B[]   PROGMEM = "REG_B";
@@ -240,7 +240,6 @@ constexpr char TEXT_WAV[]   PROGMEM = "WAV";
 // constexpr char TEXT_REG_Y[]   PROGMEM = "REG_Y";
 
 // clang-format on
-
 }  // namespace mc68hc12
 }  // namespace text
 }  // namespace libasm

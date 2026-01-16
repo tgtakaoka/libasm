@@ -22,8 +22,8 @@
 namespace libasm {
 namespace text {
 namespace scn2650 {
-
 // clang-format off
+
 extern const char TEXT_CPU_SCN2650[] PROGMEM;
 extern const char TEXT_CPU_2650[]    PROGMEM;
 
@@ -114,8 +114,8 @@ using common::TEXT_CC_EQ;
 using common::TEXT_CC_GT;
 using common::TEXT_CC_LT;
 extern const char TEXT_CC_UN[] PROGMEM;
-// clang-format on
 
+// clang-format on
 }  // namespace scn2650
 }  // namespace text
 }  // namespace libasm

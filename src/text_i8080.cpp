@@ -19,13 +19,14 @@
 namespace libasm {
 namespace text {
 namespace i8080 {
-
 // clang-format off
+
 constexpr char TEXT_I8080_LIST[] PROGMEM = "i8080, i8085, V30EMU";
 constexpr char TEXT_CPU_8080[]   PROGMEM = "8080";
 constexpr char TEXT_CPU_8085[]   PROGMEM = "8085";
 constexpr char TEXT_CPU_V30EMU[] PROGMEM = "V30EMU";
 
+// i8080
 constexpr char TEXT_ACI[]  PROGMEM = "ACI";
 // constexpr char TEXT_ADC[]  PROGMEM = "ADC";
 // constexpr char TEXT_ADD[]  PROGMEM = "ADD";
@@ -106,38 +107,38 @@ constexpr char TEXT_XRA[]  PROGMEM = "XRA";
 constexpr char TEXT_XTHL[] PROGMEM = "XTHL";
 
 // i8085
-constexpr char TEXT_RIM[]  PROGMEM = "RIM";
-constexpr char TEXT_SIM[]  PROGMEM = "SIM";
+constexpr char TEXT_RIM[] PROGMEM = "RIM";
+constexpr char TEXT_SIM[] PROGMEM = "SIM";
 
 // V30EMU
 // constexpr char TEXT_CALLN[] PROGMEM = "CALLN";
 // constexpr char TEXT_RETEM[] PROGMEM = "RETEM";
 
-// constexpr char TEXT_REG_A[]   PROGMEM  = "A";
-// constexpr char TEXT_REG_B[]   PROGMEM  = "B";
-// constexpr char TEXT_REG_C[]   PROGMEM  = "C";
-// constexpr char TEXT_REG_D[]   PROGMEM  = "D";
-// constexpr char TEXT_REG_E[]   PROGMEM  = "E";
-// constexpr char TEXT_REG_H[]   PROGMEM  = "H";
-// constexpr char TEXT_REG_L[]   PROGMEM  = "L";
-constexpr char TEXT_REG_M[]   PROGMEM  = "M";
-// constexpr char TEXT_REG_SP[]  PROGMEM = "SP";
+// constexpr char TEXT_REG_A[]   PROGMEM = "A";
+// constexpr char TEXT_REG_B[]   PROGMEM = "B";
+// constexpr char TEXT_REG_C[]   PROGMEM = "C";
+// constexpr char TEXT_REG_D[]   PROGMEM = "D";
+// constexpr char TEXT_REG_E[]   PROGMEM = "E";
+// constexpr char TEXT_REG_H[]   PROGMEM = "H";
+// constexpr char TEXT_REG_L[]   PROGMEM = "L";
+constexpr char TEXT_REG_M[] PROGMEM = "M";
 // constexpr char TEXT_REG_PSW[] PROGMEM = "PSW";
+// constexpr char TEXT_REG_SP[]  PROGMEM = "SP";
 
 // Zilog syntax
-// constexpr char TEXT_REG_AF[]  PROGMEM = "AF";
-// constexpr char TEXT_REG_BC[]  PROGMEM = "BC";
-// constexpr char TEXT_REG_DE[]  PROGMEM = "DE";
-// constexpr char TEXT_REG_HL[]  PROGMEM = "HL";
+// constexpr char TEXT_CC_C[]   PROGMEM = "C";
+// constexpr char TEXT_CC_M[]   PROGMEM = "M";
+// constexpr char TEXT_CC_NC[]  PROGMEM = "NC";
+// constexpr char TEXT_CC_NZ[]  PROGMEM = "NZ";
+// constexpr char TEXT_CC_P[]   PROGMEM = "P";
+// constexpr char TEXT_CC_PE[]  PROGMEM = "PE";
+// constexpr char TEXT_CC_PO[]  PROGMEM = "PO";
+// constexpr char TEXT_CC_Z[]   PROGMEM = "Z";
+// constexpr char TEXT_REG_AF[] PROGMEM = "AF";
+// constexpr char TEXT_REG_BC[] PROGMEM = "BC";
+// constexpr char TEXT_REG_DE[] PROGMEM = "DE";
+// constexpr char TEXT_REG_HL[] PROGMEM = "HL";
 constexpr char TEXT_REG_IM[] PROGMEM = "IM";
-// constexpr char TEXT_CC_NZ[] PROGMEM = "NZ";
-// constexpr char TEXT_CC_Z[]  PROGMEM = "Z";
-// constexpr char TEXT_CC_NC[] PROGMEM = "NC";
-// constexpr char TEXT_CC_C[]  PROGMEM = "C";
-// constexpr char TEXT_CC_PO[] PROGMEM = "PO";
-// constexpr char TEXT_CC_PE[] PROGMEM = "PE";
-// constexpr char TEXT_CC_P[]  PROGMEM = "P";
-// constexpr char TEXT_CC_M[]  PROGMEM = "M";
 
 // clang-format on
 }  // namespace i8080

@@ -70,21 +70,21 @@ constexpr char TEXT_MOVC[]  PROGMEM = "MOVC";
 // constexpr char TEXT_XCHD[]  PROGMEM = "XCHD";
 // constexpr char TEXT_XRL[]   PROGMEM = "XRL";
 
-// constexpr char TEXT_REG_A[]    PROGMEM = "A";
-// constexpr char TEXT_REG_C[]    PROGMEM = "C";
+// constexpr char TEXT_REG_A[]  PROGMEM = "A";
 constexpr char TEXT_REG_AB[]   PROGMEM = "AB";
-// constexpr char TEXT_REG_R0[]   PROGMEM = "R0";
-// constexpr char TEXT_REG_R1[]   PROGMEM = "R1";
-// constexpr char TEXT_REG_R2[]   PROGMEM = "R2";
-// constexpr char TEXT_REG_R3[]   PROGMEM = "R3";
-// constexpr char TEXT_REG_R4[]   PROGMEM = "R4";
-// constexpr char TEXT_REG_R5[]   PROGMEM = "R5";
-// constexpr char TEXT_REG_R6[]   PROGMEM = "R6";
-// constexpr char TEXT_REG_R7[]   PROGMEM = "R7";
-// constexpr char TEXT_REG_PC[]   PROGMEM = "PC";
+// constexpr char TEXT_REG_C[]  PROGMEM = "C";
 constexpr char TEXT_REG_DPTR[] PROGMEM = "DPTR";
-// clang-format on
+// constexpr char TEXT_REG_PC[] PROGMEM = "PC";
+// constexpr char TEXT_REG_R0[] PROGMEM = "R0";
+// constexpr char TEXT_REG_R1[] PROGMEM = "R1";
+// constexpr char TEXT_REG_R2[] PROGMEM = "R2";
+// constexpr char TEXT_REG_R3[] PROGMEM = "R3";
+// constexpr char TEXT_REG_R4[] PROGMEM = "R4";
+// constexpr char TEXT_REG_R5[] PROGMEM = "R5";
+// constexpr char TEXT_REG_R6[] PROGMEM = "R6";
+// constexpr char TEXT_REG_R7[] PROGMEM = "R7";
 
+// clang-format on
 }  // namespace i8051
 }  // namespace text
 }  // namespace libasm

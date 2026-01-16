@@ -19,14 +19,14 @@
 namespace libasm {
 namespace text {
 namespace z8 {
-
 // clang-format off
+
 constexpr char TEXT_Z8_LIST[]    PROGMEM = "Z8, Z86C, Z88";
+constexpr char TEXT_CPU_SUPER8[] PROGMEM = "Super8";
 constexpr char TEXT_CPU_Z8[]     PROGMEM = "Z8";
 constexpr char TEXT_CPU_Z86[]    PROGMEM = "Z86";
 constexpr char TEXT_CPU_Z86C[]   PROGMEM = "Z86C";
 constexpr char TEXT_CPU_Z88[]    PROGMEM = "Z88";;
-constexpr char TEXT_CPU_SUPER8[] PROGMEM = "Super8";
 
 // Z8
 // constexpr char TEXT_ADC[]  PROGMEM = "ADC";
@@ -78,29 +78,29 @@ constexpr char TEXT_TM[]   PROGMEM = "TM";
 // constexpr char TEXT_STOP[] PROGMEM = "STOP";
 
 // SUPER8
-// constexpr char TEXT_BAND[]   PROGMEM = "BAND";
+// constexpr char TEXT_BAND[]  PROGMEM = "BAND";
 constexpr char TEXT_BCP[]    PROGMEM = "BCP";
 constexpr char TEXT_BITC[]   PROGMEM = "BITC";
 constexpr char TEXT_BITR[]   PROGMEM = "BITR";
 constexpr char TEXT_BITS[]   PROGMEM = "BITS";
-// constexpr char TEXT_BOR[]    PROGMEM = "BOR";
+// constexpr char TEXT_BOR[]   PROGMEM = "BOR";
 constexpr char TEXT_BTJRF[]  PROGMEM = "BTJRF";
 constexpr char TEXT_BTJRT[]  PROGMEM = "BTJRT";
 constexpr char TEXT_BXOR[]   PROGMEM = "BXOR";
 constexpr char TEXT_CPIJE[]  PROGMEM = "CPIJE";
 constexpr char TEXT_CPIJNE[] PROGMEM = "CPIJNE";
-// constexpr char TEXT_DIV[]    PROGMEM = "DIV";
-// constexpr char TEXT_ENTER[]  PROGMEM = "ENTER";
-// constexpr char TEXT_EXIT[]   PROGMEM = "EXIT";
-// constexpr char TEXT_LDB[]    PROGMEM = "LDB";
+// constexpr char TEXT_DIV[]   PROGMEM = "DIV";
+// constexpr char TEXT_ENTER[] PROGMEM = "ENTER";
+// constexpr char TEXT_EXIT[]  PROGMEM = "EXIT";
+// constexpr char TEXT_LDB[]   PROGMEM = "LDB";
 constexpr char TEXT_LDCD[]   PROGMEM = "LDCD";
 constexpr char TEXT_LDCPD[]  PROGMEM = "LDCPD";
 constexpr char TEXT_LDCPI[]  PROGMEM = "LDCPI";
-// constexpr char TEXT_LDED[]   PROGMEM = "LDED";
+// constexpr char TEXT_LDED[]  PROGMEM = "LDED";
 constexpr char TEXT_LDEPD[]  PROGMEM = "LDEPD";
 constexpr char TEXT_LDEPI[]  PROGMEM = "LDEPI";
-// constexpr char TEXT_LDW[]    PROGMEM = "LDW";
-// constexpr char TEXT_MULT[]   PROGMEM = "MULT";
+// constexpr char TEXT_LDW[]   PROGMEM = "LDW";
+// constexpr char TEXT_MULT[]  PROGMEM = "MULT";
 constexpr char TEXT_NEXT[]   PROGMEM = "NEXT";
 constexpr char TEXT_POPUD[]  PROGMEM = "POPUD";
 constexpr char TEXT_POPUI[]  PROGMEM = "POPUI";
@@ -112,28 +112,28 @@ constexpr char TEXT_SRP0[]   PROGMEM = "SRP0";
 constexpr char TEXT_SRP1[]   PROGMEM = "SRP1";
 constexpr char TEXT_WFI[]    PROGMEM = "WFI";
 
-// constexpr char TEXT_CC_F[]   PROGMEM = "F";
-// constexpr char TEXT_CC_LT[]  PROGMEM = "LT";
-// constexpr char TEXT_CC_LE[]  PROGMEM = "LE";
-// constexpr char TEXT_CC_ULE[] PROGMEM = "ULE";
-// constexpr char TEXT_CC_OV[]  PROGMEM = "OV";
-// constexpr char TEXT_CC_MI[]  PROGMEM = "MI";
-// constexpr char TEXT_CC_Z[]   PROGMEM = "Z";
 // constexpr char TEXT_CC_C[]   PROGMEM = "C";
-// constexpr char TEXT_CC_T[]   PROGMEM = "";
+// constexpr char TEXT_CC_EQ[]  PROGMEM = "EQ";
+// constexpr char TEXT_CC_F[]   PROGMEM = "F";
 // constexpr char TEXT_CC_GE[]  PROGMEM = "GE";
 // constexpr char TEXT_CC_GT[]  PROGMEM = "GT";
-// constexpr char TEXT_CC_UGT[] PROGMEM = "UGT";
-// constexpr char TEXT_CC_NOV[] PROGMEM = "NOV";
-// constexpr char TEXT_CC_PL[]  PROGMEM = "PL";
-// constexpr char TEXT_CC_NZ[]  PROGMEM = "NZ";
+// constexpr char TEXT_CC_LE[]  PROGMEM = "LE";
+// constexpr char TEXT_CC_LT[]  PROGMEM = "LT";
+// constexpr char TEXT_CC_MI[]  PROGMEM = "MI";
 // constexpr char TEXT_CC_NC[]  PROGMEM = "NC";
-// constexpr char TEXT_CC_EQ[]  PROGMEM = "EQ";
-// constexpr char TEXT_CC_ULT[] PROGMEM = "ULT";
 // constexpr char TEXT_CC_NE[]  PROGMEM = "NE";
+// constexpr char TEXT_CC_NOV[] PROGMEM = "NOV";
+// constexpr char TEXT_CC_NZ[]  PROGMEM = "NZ";
+// constexpr char TEXT_CC_OV[]  PROGMEM = "OV";
+// constexpr char TEXT_CC_PL[]  PROGMEM = "PL";
+// constexpr char TEXT_CC_T[]   PROGMEM = "";
 // constexpr char TEXT_CC_UGE[] PROGMEM = "UGE";
-// clang-format on
+// constexpr char TEXT_CC_UGT[] PROGMEM = "UGT";
+// constexpr char TEXT_CC_ULE[] PROGMEM = "ULE";
+// constexpr char TEXT_CC_ULT[] PROGMEM = "ULT";
+// constexpr char TEXT_CC_Z[]   PROGMEM = "Z";
 
+// clang-format on
 }  // namespace z8
 }  // namespace text
 }  // namespace libasm

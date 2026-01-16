@@ -22,8 +22,8 @@
 namespace libasm {
 namespace text {
 namespace i8086 {
-
 // clang-format off
+
 extern const char TEXT_I8086_LIST[] PROGMEM;
 extern const char TEXT_CPU_8086[]  PROGMEM;
 extern const char TEXT_CPU_80186[] PROGMEM;
@@ -166,18 +166,18 @@ using common::TEXT_XOR;
 // GNU assembler compatibility
 using common::TEXT_LCALL;
 using common::TEXT_LJMP;
-extern const char TEXT_LRET[]  PROGMEM;
+extern const char TEXT_LRET[] PROGMEM;
 
 // i80186
-extern const char TEXT_BOUND[]  PROGMEM;
+extern const char TEXT_BOUND[] PROGMEM;
 using common::TEXT_ENTER;
-extern const char TEXT_LEAVE[]  PROGMEM;
 using common::TEXT_INS;
 using common::TEXT_INSB;
 using common::TEXT_INSW;
+extern const char TEXT_LEAVE[] PROGMEM;
 using common::TEXT_OUTS;
-extern const char TEXT_OUTSB[]  PROGMEM;
-extern const char TEXT_OUTSW[]  PROGMEM;
+extern const char TEXT_OUTSB[] PROGMEM;
+extern const char TEXT_OUTSW[] PROGMEM;
 using common::TEXT_POPA;
 using common::TEXT_PUSHA;
 
@@ -200,53 +200,54 @@ extern const char TEXT_VERR[] PROGMEM;
 extern const char TEXT_VERW[] PROGMEM;
 
 // V30
-extern const char TEXT_ADD4S[]  PROGMEM;
-extern const char TEXT_BRKEM[]  PROGMEM;
-extern const char TEXT_CLR1[]   PROGMEM;
-extern const char TEXT_CMP4S[]  PROGMEM;
+extern const char TEXT_ADD4S[] PROGMEM;
+extern const char TEXT_BRKEM[] PROGMEM;
+extern const char TEXT_CLR1[]  PROGMEM;
+extern const char TEXT_CMP4S[] PROGMEM;
 using common::TEXT_EXT;
-extern const char TEXT_NOT1[]   PROGMEM;
-extern const char TEXT_REPC[]   PROGMEM;
-extern const char TEXT_REPNC[]  PROGMEM;
-extern const char TEXT_ROL4[]   PROGMEM;
-extern const char TEXT_ROR4[]   PROGMEM;
-extern const char TEXT_SET1[]   PROGMEM;
-extern const char TEXT_SUB4S[]  PROGMEM;
-extern const char TEXT_TEST1[]  PROGMEM;
+extern const char TEXT_NOT1[]  PROGMEM;
+extern const char TEXT_REPC[]  PROGMEM;
+extern const char TEXT_REPNC[] PROGMEM;
+extern const char TEXT_ROL4[]  PROGMEM;
+extern const char TEXT_ROR4[]  PROGMEM;
+extern const char TEXT_SET1[]  PROGMEM;
+extern const char TEXT_SUB4S[] PROGMEM;
+extern const char TEXT_TEST1[] PROGMEM;
 
 // i8087
 extern const char TEXT_F2XM1[]   PROGMEM;
 using common::TEXT_FABS;
-extern const char TEXT_FADDP[]   PROGMEM;
 using common::TEXT_FADD;
+extern const char TEXT_FADDP[]   PROGMEM;
 extern const char TEXT_FBLD[]    PROGMEM;
 extern const char TEXT_FBSTP[]   PROGMEM;
 extern const char TEXT_FCHS[]    PROGMEM;
 extern const char TEXT_FCLEX[]   PROGMEM;
-extern const char TEXT_FCOMPP[]  PROGMEM;
-extern const char TEXT_FCOMP[]   PROGMEM;
 extern const char TEXT_FCOM[]    PROGMEM;
+extern const char TEXT_FCOMP[]   PROGMEM;
+extern const char TEXT_FCOMPP[]  PROGMEM;
 extern const char TEXT_FDECSTP[] PROGMEM;
 extern const char TEXT_FDISI[]   PROGMEM;
-extern const char TEXT_FDIVP[]   PROGMEM;
 using common::TEXT_FDIV;
-extern const char TEXT_FDIVRP[]  PROGMEM;
+extern const char TEXT_FDIVP[]   PROGMEM;
 extern const char TEXT_FDIVR[]   PROGMEM;
+extern const char TEXT_FDIVRP[]  PROGMEM;
 extern const char TEXT_FENI[]    PROGMEM;
 extern const char TEXT_FFREE[]   PROGMEM;
 extern const char TEXT_FIADD[]   PROGMEM;
-extern const char TEXT_FICOMP[]  PROGMEM;
 extern const char TEXT_FICOM[]   PROGMEM;
+extern const char TEXT_FICOMP[]  PROGMEM;
 extern const char TEXT_FIDIV[]   PROGMEM;
 extern const char TEXT_FIDIVR[]  PROGMEM;
 extern const char TEXT_FILD[]    PROGMEM;
 extern const char TEXT_FIMUL[]   PROGMEM;
 extern const char TEXT_FINCSTP[] PROGMEM;
 extern const char TEXT_FINIT[]   PROGMEM;
-extern const char TEXT_FISTP[]   PROGMEM;
 extern const char TEXT_FIST[]    PROGMEM;
+extern const char TEXT_FISTP[]   PROGMEM;
 extern const char TEXT_FISUB[]   PROGMEM;
 extern const char TEXT_FISUBR[]  PROGMEM;
+extern const char TEXT_FLD[]     PROGMEM;
 extern const char TEXT_FLD1[]    PROGMEM;
 extern const char TEXT_FLDCW[]   PROGMEM;
 extern const char TEXT_FLDENV[]  PROGMEM;
@@ -255,11 +256,18 @@ extern const char TEXT_FLDL2T[]  PROGMEM;
 extern const char TEXT_FLDLG2[]  PROGMEM;
 extern const char TEXT_FLDLN2[]  PROGMEM;
 extern const char TEXT_FLDPI[]   PROGMEM;
-extern const char TEXT_FLD[]     PROGMEM;
 extern const char TEXT_FLDZ[]    PROGMEM;
-extern const char TEXT_FMULP[]   PROGMEM;
 using common::TEXT_FMUL;
+extern const char TEXT_FMULP[]   PROGMEM;
+extern const char TEXT_FNCLEX[]  PROGMEM;
+extern const char TEXT_FNDISI[]  PROGMEM;
+extern const char TEXT_FNENI[]   PROGMEM;
+extern const char TEXT_FNINIT[]  PROGMEM;
 using common::TEXT_FNOP;
+extern const char TEXT_FNSAVE[]  PROGMEM;
+extern const char TEXT_FNSTCW[]  PROGMEM;
+extern const char TEXT_FNSTENV[] PROGMEM;
+extern const char TEXT_FNSTSW[]  PROGMEM;
 extern const char TEXT_FPATAN[]  PROGMEM;
 extern const char TEXT_FPREM[]   PROGMEM;
 extern const char TEXT_FPTAN[]   PROGMEM;
@@ -268,31 +276,22 @@ extern const char TEXT_FRSTOR[]  PROGMEM;
 using common::TEXT_FSAVE;
 using common::TEXT_FSCALE;
 using common::TEXT_FSQRT;
+using common::TEXT_FST;
 extern const char TEXT_FSTCW[]   PROGMEM;
 extern const char TEXT_FSTENV[]  PROGMEM;
 extern const char TEXT_FSTP[]    PROGMEM;
-using common::TEXT_FST;
 extern const char TEXT_FSTSW[]   PROGMEM;
-extern const char TEXT_FSUBP[]   PROGMEM;
 using common::TEXT_FSUB;
-extern const char TEXT_FSUBRP[]  PROGMEM;
+extern const char TEXT_FSUBP[]   PROGMEM;
 extern const char TEXT_FSUBR[]   PROGMEM;
+extern const char TEXT_FSUBRP[]  PROGMEM;
 using common::TEXT_FTST;
 extern const char TEXT_FWAIT[]   PROGMEM;
 extern const char TEXT_FXAM[]    PROGMEM;
 extern const char TEXT_FXCH[]    PROGMEM;
 extern const char TEXT_FXTRACT[] PROGMEM;
-extern const char TEXT_FYL2XP1[] PROGMEM;
 extern const char TEXT_FYL2X[]   PROGMEM;
-// no wait
-extern const char TEXT_FNINIT[]  PROGMEM;
-extern const char TEXT_FNENI[]   PROGMEM;
-extern const char TEXT_FNDISI[]  PROGMEM;
-extern const char TEXT_FNSTCW[]  PROGMEM;
-extern const char TEXT_FNSTSW[]  PROGMEM;
-extern const char TEXT_FNCLEX[]  PROGMEM;
-extern const char TEXT_FNSTENV[] PROGMEM;
-extern const char TEXT_FNSAVE[]  PROGMEM;
+extern const char TEXT_FYL2XP1[] PROGMEM;
 
 // i80287
 extern const char TEXT_FNSETPM[] PROGMEM;
@@ -306,35 +305,36 @@ extern const char TEXT_FUCOM[]   PROGMEM;
 extern const char TEXT_FUCOMP[]  PROGMEM;
 extern const char TEXT_FUCOMPP[] PROGMEM;
 
-extern const char TEXT_REG_AL[]   PROGMEM;
-extern const char TEXT_REG_BL[]   PROGMEM;
-extern const char TEXT_REG_CL[]   PROGMEM;
-extern const char TEXT_REG_DL[]   PROGMEM;
-extern const char TEXT_REG_AH[]   PROGMEM;
-extern const char TEXT_REG_BH[]   PROGMEM;
-extern const char TEXT_REG_CH[]   PROGMEM;
-extern const char TEXT_REG_DH[]   PROGMEM;
-extern const char TEXT_REG_AX[]   PROGMEM;
-extern const char TEXT_REG_BX[]   PROGMEM;
-extern const char TEXT_REG_CX[]   PROGMEM;
-extern const char TEXT_REG_DX[]   PROGMEM;
+extern const char TEXT_REG_AH[] PROGMEM;
+extern const char TEXT_REG_AL[] PROGMEM;
+extern const char TEXT_REG_AX[] PROGMEM;
+extern const char TEXT_REG_BH[] PROGMEM;
+extern const char TEXT_REG_BL[] PROGMEM;
+extern const char TEXT_REG_BP[] PROGMEM;
+extern const char TEXT_REG_BX[] PROGMEM;
+extern const char TEXT_REG_CH[] PROGMEM;
+extern const char TEXT_REG_CL[] PROGMEM;
+extern const char TEXT_REG_CS[] PROGMEM;
+extern const char TEXT_REG_CX[] PROGMEM;
+extern const char TEXT_REG_DH[] PROGMEM;
+extern const char TEXT_REG_DI[] PROGMEM;
+extern const char TEXT_REG_DL[] PROGMEM;
+extern const char TEXT_REG_DS[] PROGMEM;
+extern const char TEXT_REG_DX[] PROGMEM;
+extern const char TEXT_REG_ES[] PROGMEM;
+extern const char TEXT_REG_SI[] PROGMEM;
 using common::TEXT_REG_SP;
+extern const char TEXT_REG_SS[] PROGMEM;
 using common::TEXT_REG_ST;
-extern const char TEXT_REG_BP[]   PROGMEM;
-extern const char TEXT_REG_SI[]   PROGMEM;
-extern const char TEXT_REG_DI[]   PROGMEM;
-extern const char TEXT_REG_CS[]   PROGMEM;
-extern const char TEXT_REG_DS[]   PROGMEM;
-extern const char TEXT_REG_ES[]   PROGMEM;
-extern const char TEXT_REG_SS[]   PROGMEM;
-extern const char TEXT_PRE_PTR[]  PROGMEM;
-extern const char TEXT_PRE_BYTE[] PROGMEM;
-extern const char TEXT_PRE_WORD[] PROGMEM;
+
+extern const char TEXT_PRE_BYTE[]  PROGMEM;
 extern const char TEXT_PRE_DWORD[] PROGMEM;
+extern const char TEXT_PRE_PTR[]   PROGMEM;
 extern const char TEXT_PRE_QWORD[] PROGMEM;
 extern const char TEXT_PRE_TBYTE[] PROGMEM;
-// clang-format on
+extern const char TEXT_PRE_WORD[]  PROGMEM;
 
+// clang-format on
 }  // namespace i8086
 }  // namespace text
 }  // namespace libasm

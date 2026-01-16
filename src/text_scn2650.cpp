@@ -19,8 +19,8 @@
 namespace libasm {
 namespace text {
 namespace scn2650 {
-
 // clang-format off
+
 constexpr char TEXT_CPU_SCN2650[] PROGMEM = "SCN2650";
 constexpr char TEXT_CPU_2650[]    PROGMEM = "2650";
 
@@ -113,8 +113,8 @@ constexpr char TEXT_ZBSR[] PROGMEM = "ZBSR";
 // constexpr char TEXT_CC_GT[] PROGMEM = "GT";
 // constexpr char TEXT_CC_LT[] PROGMEM = "LT";
 constexpr char TEXT_CC_UN[] PROGMEM = "UN";
-// clang-format on
 
+// clang-format on
 }  // namespace scn2650
 }  // namespace text
 }  // namespace libasm

@@ -22,8 +22,8 @@
 namespace libasm {
 namespace text {
 namespace tms370 {
-
 // clang-format off
+
 extern const char TEXT_CPU_TMS370[]  PROGMEM;
 extern const char TEXT_CPU_TMS370C[] PROGMEM;
 
@@ -64,9 +64,9 @@ extern const char TEXT_JLO[]   PROGMEM;
 using common::TEXT_JLT;
 using common::TEXT_JMP;
 using common::TEXT_JMPL;
+using common::TEXT_JN;
 using common::TEXT_JNC;
 using common::TEXT_JNE;
-using common::TEXT_JN;
 using common::TEXT_JNV;
 using common::TEXT_JNZ;
 using common::TEXT_JP;
@@ -104,7 +104,6 @@ using common::TEXT_REG_SP;
 using common::TEXT_REG_ST;
 
 // clang-format on
-
 }  // namespace tms370
 }  // namespace text
 }  // namespace libasm
