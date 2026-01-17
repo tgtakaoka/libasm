@@ -47,8 +47,12 @@ using namespace libasm::test;
 DisTms320f dis320f;
 Disassembler &disassembler(dis320f);
 
+bool is320c32() {
+    return strcasecmp_P("320C32", disassembler.config().cpu_P()) == 0;
+}
+
 bool is320c31() {
-    return strcasecmp_P("320C31", disassembler.config().cpu_P()) == 0;
+    return strcasecmp_P("320C31", disassembler.config().cpu_P()) == 0 || is320c32();
 }
 
 void set_up() {
@@ -2044,6 +2048,173 @@ void test_parallel() {
           "SUBI3", "*AR4, *AR5, R2", 0x8E91C5C4);
     PTEST("MPYI3", "*AR1, R2, R1",
           "SUBI3", "*AR4, R5, R3",   0x8FD5C1C4);
+
+    if (is320c32()) {
+        PTEST("ABSF",  "R0, R1",
+              "STF",   "R2, *-AR3",        0xC8420BE0);
+        PTEST("ABSI",  "AR4, R5",
+              "STI",   "R6, *--AR7",       0xCB461FEC);
+        PTEST("ADDF3", "R5, R1, R2",
+              "STF",   "R3, *AR4--",       0xCC8B2CE5);
+        PTEST("ADDI3", "AR5, R6, R7",
+              "STI",   "R0, *AR1--%",      0xCFF039ED);
+        PTEST("AND3",  "AR2, R3, R4",
+              "STI",   "R5, *-AR6(IR0)",   0xD11D4EEA);
+        PTEST("ASH3",  "R6, AR7, R0",
+              "STI",   "R1, *--AR2(IR0)",  0xD2315AEF);
+        PTEST("FIX",   "R3, R4",
+              "STI",   "R5, *AR6--(IR0)",  0xD5056EE3);
+        PTEST("FLOAT", "R7, R0",
+              "STF",   "R1, *AR2--(IR0)%", 0xD6017AE7);
+        PTEST("LDF",   "R3, R4",
+              "LDF",   "*-AR5(IR1), R6",   0xC5308DE3);
+        PTEST("LDF",   "R7, R0",
+              "STF",   "R1, *--AR2(IR1)",  0xD8019AE7);
+        PTEST("LDI",   "AR3, R4",
+              "LDI",   "*AR5--(IR1), R6",  0xC730ADEB);
+        PTEST("LDI",   "AR4, R5",
+              "STI",   "R6, *AR7--(IR1)%", 0xDB46BFEC);
+        PTEST("LSH3",  "R0, AR1, R2",
+              "STI",   "R3, *AR4",         0xDC83C4E9);
+        PTEST("MPYF3", "R5, R6, R7",
+              "STF",   "R0, *-AR1",        0xDFF009E5);
+        PTEST("MPYI3", "AR2, R3, R4",
+              "STI",   "R5, *--AR6",       0xE11D1EEA);
+        PTEST("NEGF",  "R7, R0",
+              "STF",   "R1, *AR2--",       0xE2012AE7);
+        PTEST("NEGI",  "AR3, R4",
+              "STI",   "R5, *AR6--%",      0xE5053EEB);
+        PTEST("NOT",   "AR7, R0",
+              "STI",   "R1, *-AR2(IR0)",   0xE6014AEF);
+        PTEST("OR3",   "AR3, R4, R5",
+              "STI",   "R6, *--AR7(IR0)",  0xE9665FEB);
+#if 0
+        PTEST("STF",   "R0, R1",
+              "STF",   "R2, *AR3--(IR0)",  0xC0026BE1);
+        PTEST("STI",   "R4, AR5",
+              "STI",   "R6, *AR7--(IR0)%", 0xC3067FED);
+#endif
+        PTEST("SUBF3", "R0, R1, R2",
+              "STF",   "R3, *-AR4(IR1)",   0xEA838CE1);
+        PTEST("SUBI3", "R5, AR6, R7",
+              "STI",   "R0, *--AR1(IR1)",  0xEDE899EE);
+        PTEST("XOR3",  "AR2, R3, R4",
+              "STI",   "R5, *AR6--(IR1)",  0xEF1DAEEA);
+
+        PTEST("MPYF3", "R1, *AR2, R0",
+              "ADDF3", "R4, R5, R2",   0x802CC2E1);
+        PTEST("MPYF3", "*AR1, R2, R0",
+              "ADDF3", "R4, R5, R2",   0x802CE2C1);
+        PTEST("MPYF3", "R1, R2, R0",
+              "ADDF3", "R4, R5, R2",   0x802CE2E1);
+        PTEST("MPYF3", "*AR1, R2, R0",
+              "ADDF3", "R4, R5, R3",   0x8154C1E5);
+        PTEST("MPYF3", "R1, R2, R0",
+              "ADDF3", "R4, *AR5, R3", 0x8154E1C5);
+        PTEST("MPYF3", "R1, R2, R0",
+              "ADDF3", "R4, R5, R3",   0x8154E1E5);
+        PTEST("MPYF3", "R1, R2, R1",
+              "ADDF3", "R4, *AR5, R2", 0x8291C5E4);
+        PTEST("MPYF3", "R1, R2, R1",
+              "ADDF3", "*AR4, R5, R2", 0x8291E5C4);
+        PTEST("MPYF3", "R1, R2, R1",
+              "ADDF3", "R4, R5, R2",   0x8291E5E4);
+        PTEST("MPYF3", "*AR1, R2, R1",
+              "ADDF3", "R4, R5, R3",   0x83D5C1E4);
+        PTEST("MPYF3", "R1, R2, R1",
+              "ADDF3", "*AR4, R5, R3", 0x83D5E1C4);
+        PTEST("MPYF3", "R1, R2, R1",
+              "ADDF3", "R4, R5, R3",   0x83D5E1E4);
+
+        PTEST("MPYF3", "R1, *AR2, R0",
+              "SUBF3", "R4, R5, R2",   0x842CC2E1);
+        PTEST("MPYF3", "*AR1, R2, R0",
+              "SUBF3", "R4, R5, R2",   0x842CE2C1);
+        PTEST("MPYF3", "R1, R2, R0",
+              "SUBF3", "R4, R5, R2",   0x842CE2E1);
+        PTEST("MPYF3", "*AR1, R2, R0",
+              "SUBF3", "R4, R5, R3",   0x8554C1E5);
+        PTEST("MPYF3", "R1, R2, R0",
+              "SUBF3", "R4, *AR5, R3", 0x8554E1C5);
+        PTEST("MPYF3", "R1, R2, R0",
+              "SUBF3", "R4, R5, R3",   0x8554E1E5);
+        PTEST("MPYF3", "R1, R2, R1",
+              "SUBF3", "R4, *AR5, R2", 0x8691C5E4);
+        PTEST("MPYF3", "R1, R2, R1",
+              "SUBF3", "*AR4, R5, R2", 0x8691E5C4);
+        PTEST("MPYF3", "R1, R2, R1",
+              "SUBF3", "R4, R5, R2",   0x8691E5E4);
+        PTEST("MPYF3", "*AR1, R2, R1",
+              "SUBF3", "R4, R5, R3",   0x87D5C1E4);
+        PTEST("MPYF3", "R1, R2, R1",
+              "SUBF3", "*AR4, R5, R3", 0x87D5E1C4);
+        PTEST("MPYF3", "R1, R2, R1",
+              "SUBF3", "R4, R5, R3",   0x87D5E1E4);
+
+        PTEST("MPYI3", "AR1, *AR2, R0",
+              "ADDI3", "R4, R5, R2",    0x882CC2E9);
+        PTEST("MPYI3", "*AR1, AR2, R0",
+              "ADDI3", "R4, R5, R2",    0x882CEAC1);
+        PTEST("MPYI3", "R1, R2, R0",
+              "ADDI3", "R4, R5, R2",    0x882CE2E1);
+        PTEST("MPYI3", "*AR1, R2, R0",
+              "ADDI3", "R4, AR5, R3",   0x8954C1ED);
+        PTEST("MPYI3", "AR1, R2, R0",
+              "ADDI3", "R4, *AR5, R3",  0x8954E9C5);
+        PTEST("MPYI3", "R1, R2, R0",
+              "ADDI3", "R4, R5, R3",    0x8954E1E5);
+        PTEST("MPYI3", "R1, R2, R1",
+              "ADDI3", "AR4, *AR5, R2", 0x8A91C5EC);
+        PTEST("MPYI3", "R1, R2, R1",
+              "ADDI3", "*AR4, AR5, R2", 0x8A91EDC4);
+        PTEST("MPYI3", "R1, R2, R1",
+              "ADDI3", "R4, R5, R2",    0x8A91E5E4);
+        PTEST("MPYI3", "*AR1, R2, R1",
+              "ADDI3", "AR4, R5, R3",   0x8BD5C1EC);
+        PTEST("MPYI3", "AR1, R2, R1",
+              "ADDI3", "*AR4, R5, R3",  0x8BD5E9C4);
+        PTEST("MPYI3", "R1, R2, R1",
+              "ADDI3", "R4, R5, R3",    0x8BD5E1E4);
+
+        PTEST("MPYI3", "AR1, *AR2, R0",
+              "SUBI3", "R4, R5, R2",    0x8C2CC2E9);
+        PTEST("MPYI3", "*AR1, AR2, R0",
+              "SUBI3", "R4, R5, R2",    0x8C2CEAC1);
+        PTEST("MPYI3", "R1, R2, R0",
+              "SUBI3", "R4, R5, R2",    0x8C2CE2E1);
+        PTEST("MPYI3", "*AR1, R2, R0",
+              "SUBI3", "R4, AR5, R3",   0x8D54C1ED);
+        PTEST("MPYI3", "AR1, R2, R0",
+              "SUBI3", "R4, *AR5, R3",  0x8D54E9C5);
+        PTEST("MPYI3", "R1, R2, R0",
+              "SUBI3", "R4, R5, R3",    0x8D54E1E5);
+        PTEST("MPYI3", "R1, R2, R1",
+              "SUBI3", "AR4, *AR5, R2", 0x8E91C5EC);
+        PTEST("MPYI3", "R1, R2, R1",
+              "SUBI3", "*AR4, AR5, R2", 0x8E91EDC4);
+        PTEST("MPYI3", "R1, R2, R1",
+              "SUBI3", "R4, R5, R2",    0x8E91E5E4);
+        PTEST("MPYI3", "*AR1, R2, R1",
+              "SUBI3", "AR4, R5, R3",   0x8FD5C1EC);
+        PTEST("MPYI3", "AR1, R2, R1",
+              "SUBI3", "*AR4, R5, R3",  0x8FD5E9C4);
+        PTEST("MPYI3", "R1, R2, R1",
+              "SUBI3", "R4, R5, R3",    0x8FD5E1E4);
+    } else {
+        PERRT("ABSF",  ", R1",      ILLEGAL_OPERAND_MODE, ", R1",
+              "STF",   "R2, *-AR3", OK, "",
+              0xC8420BE0);
+
+        PERRT("MPYI3", "*AR1, R2, R1", OK, "",
+              "SUBI3", ", R5, R3",     ILLEGAL_OPERAND_MODE, ", R5, R3",
+              0x8FD5C1EC);
+        PERRT("MPYI3", ", R2, R1",     ILLEGAL_OPERAND_MODE, ", R2, R1",
+              "SUBI3", "*AR4, R5, R3", OK, "",
+              0x8FD5E9C4);
+        PERRT("MPYI3", ", R2, R1", ILLEGAL_OPERAND_MODE, ", R2, R1",
+              "SUBI3", ", R5, R3", ILLEGAL_OPERAND_MODE, ", R5, R3",
+              0x8FD5E1E4);
+    }
 }
 
 // clang-format on

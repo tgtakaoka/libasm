@@ -21,9 +21,10 @@ namespace text {
 namespace tms320f {
 
 // clang-format off
-constexpr char TEXT_TMS320F_LIST[] PROGMEM = "TMS320C30, TMS320C31";
+constexpr char TEXT_TMS320F_LIST[] PROGMEM = "TMS320C30, TMS320C31, TMS320C32";
 constexpr char TEXT_CPU_320C30[]   PROGMEM = "320C30";
 constexpr char TEXT_CPU_320C31[]   PROGMEM = "320C31";
+constexpr char TEXT_CPU_320C32[]   PROGMEM = "320C32";
 
 // TMS320C3x
 // constexpr char TEXT_ABSF[]      PROGMEM = "ABSF";

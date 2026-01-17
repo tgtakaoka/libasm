@@ -134,7 +134,9 @@ Error AsmTms320f::parseOperand(StrScanner &scan, Operand &op) const {
 
     op.reg = parseRegName(p, parser());
     if (op.reg != REG_UNDEF) {
-        if (op.reg == REG_DP) {
+        if (isFloatReg(op.reg)) {
+            op.mode = M_FREG;
+        } else if (op.reg == REG_DP) {
             op.mode = R_DP;
         } else {
             op.mode = M_IREG;
@@ -152,7 +154,7 @@ Error AsmTms320f::parseOperand(StrScanner &scan, Operand &op) const {
 }
 
 Error AsmTms320f::encodeRelative(AsmInsn &insn, const Operand &op, AddrMode mode) const {
-    if (op.mode == M_IREG || op.mode == R_DP) {
+    if (op.mode == M_FREG || op.mode == M_IREG || op.mode == R_DP) {
         insn.embed(encodeRegName(op.reg));
         return OK;
     }
@@ -168,9 +170,21 @@ Error AsmTms320f::encodeRelative(AsmInsn &insn, const Operand &op, AddrMode mode
 
 Error AsmTms320f::encodeIndirect(
         AsmInsn &insn, const Operand &op, AddrMode mode, OprPos pos) const {
+    if (op.mode == M_FREG || op.mode == M_IREG || op.mode == R_DP) {
+        if (mode == M_FIDR && !isFloatReg(op.reg))
+            insn.setErrorIf(op, REGISTER_NOT_ALLOWED);
+        const auto reg = encodeRegName(op.reg) | 0xE0;
+        if (pos == P_00FF) {
+            insn.embed(reg);
+        } else {  // P_FF00
+            insn.embed(reg << 8);
+        }
+        return insn.getError();
+    }
     if (!isAuxiliaryReg(op.reg))
         return insn.setErrorIf(op, REGISTER_NOT_ALLOWED);
-    const auto noDisp = (mode == M_IDAT || mode == M_FDAT || mode == M_IDIR);
+    const auto noDisp = (mode == M_IDAT || mode == M_FDAT || mode == M_IDIR || mode == M_IIDR ||
+                         mode == M_FIDR);
     const auto cf = insn.codeFormat();
     const auto opr3 = (cf == CF_TT) || (cf == CF_T0);
     const auto baseMode = op.subMode & SUB_BASE_MASK;
@@ -274,6 +288,7 @@ Error AsmTms320f::encodeInteger(AsmInsn &insn, const Operand &op, AddrMode mode,
     const auto cf = insn.codeFormat();
     const auto opr3 = (cf == CF_TT) || (cf == CF_T0);
     switch (op.mode) {
+    case M_FREG:
     case M_IREG:
     case R_DP:
         if (mode == M_MEM)
@@ -324,6 +339,7 @@ Error AsmTms320f::encodeFloat(AsmInsn &insn, const Operand &op, AddrMode mode, O
     const auto opr3 = (cf == CF_TT || cf == CF_T0);
     ti_float16_t f16;
     switch (op.mode) {
+    case M_FREG:
     case M_IREG:
     case R_DP:
         if (!isFloatReg(op.reg) || mode == M_MEM)
@@ -450,6 +466,8 @@ Error AsmTms320f::encodeOperand(
         }
         break;
     case M_IDIR:
+    case M_IIDR:
+    case M_FIDR:
         encodeIndirect(out, op, mode, pos);
         break;
     default:

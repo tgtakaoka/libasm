@@ -35,9 +35,14 @@ using namespace libasm::test;
 AsmTms320f asm320f;
 Assembler &assembler(asm320f);
 
+bool is320c32() {
+    return strcasecmp_P("320C32", assembler.config().cpu_P()) == 0;
+}
+
 bool is320c31() {
-    return strcasecmp_P("320C31", assembler.config().cpu_P()) == 0;
-}    
+    return strcasecmp_P("320C31", assembler.config().cpu_P()) == 0 || is320c32();
+}
+
 void set_up() {
     assembler.reset();
 }
@@ -63,7 +68,7 @@ void test_cpu() {
 // clang-format off
 void test_load() {
     TEST("LDE R0, R1",           0x06810000);
-    ERRT("LDE AR0, R1", REGISTER_NOT_ALLOWED, "AR0, R1", 0x06810008);
+    ERRT("LDE AR0, R1", OPERAND_NOT_ALLOWED, "AR0, R1");
     TEST("LDE @000001H, R2",     0x06A20001);
     TEST("LDE *+AR1(0), R3",     0x06C30100);
     TEST("LDE *+AR1(2), R3",     0x06C30102);
@@ -105,7 +110,7 @@ void test_load() {
     TEST("LDE -0.50024, R0",     0x06E0FFFF);
 
     TEST("LDF R0, R1",           0x07010000);
-    ERRT("LDF AR0, R1", REGISTER_NOT_ALLOWED, "AR0, R1", 0x07010008);
+    ERRT("LDF AR0, R1", OPERAND_NOT_ALLOWED, "AR0, R1");
     TEST("LDF @000001H, R2",     0x07220001);
     TEST("LDF *+AR1(2), R3",     0x07430102);
     TEST("LDF *-AR2(3), R4",     0x07440A03);
@@ -185,7 +190,7 @@ void test_load() {
     TEST("LDP @120000H, DP",     0x08700012);
 
     TEST("LDM R0, R1",           0x09010000);
-    ERRT("LDM AR0, R1", REGISTER_NOT_ALLOWED, "AR0, R1", 0x09010008);
+    ERRT("LDM AR0, R1", OPERAND_NOT_ALLOWED, "AR0, R1");
     TEST("LDM @000001H, R2",     0x09220001);
     TEST("LDM *+AR1(2), R3",     0x09430102);
     TEST("LDM *-AR2(3), R4",     0x09440A03);
@@ -284,48 +289,48 @@ void test_load() {
     TEST("POPF R5",  0x0EA50000);
     TEST("POPF R6",  0x0EA60000);
     TEST("POPF R7",  0x0EA70000);
-    ERRT("POPF AR0", REGISTER_NOT_ALLOWED, "AR0", 0x0EA80000);
-    ERRT("POPF AR1", REGISTER_NOT_ALLOWED, "AR1", 0x0EA90000);
-    ERRT("POPF AR2", REGISTER_NOT_ALLOWED, "AR2", 0x0EAA0000);
-    ERRT("POPF AR3", REGISTER_NOT_ALLOWED, "AR3", 0x0EAB0000);
-    ERRT("POPF AR4", REGISTER_NOT_ALLOWED, "AR4", 0x0EAC0000);
-    ERRT("POPF AR5", REGISTER_NOT_ALLOWED, "AR5", 0x0EAD0000);
-    ERRT("POPF AR6", REGISTER_NOT_ALLOWED, "AR6", 0x0EAE0000);
-    ERRT("POPF AR7", REGISTER_NOT_ALLOWED, "AR7", 0x0EAF0000);
-    ERRT("POPF DP",  REGISTER_NOT_ALLOWED, "DP",  0x0EB00000);
-    ERRT("POPF IR0", REGISTER_NOT_ALLOWED, "IR0", 0x0EB10000);
-    ERRT("POPF IR1", REGISTER_NOT_ALLOWED, "IR1", 0x0EB20000);
-    ERRT("POPF BK",  REGISTER_NOT_ALLOWED, "BK",  0x0EB30000);
-    ERRT("POPF SP",  REGISTER_NOT_ALLOWED, "SP",  0x0EB40000);
-    ERRT("POPF ST",  REGISTER_NOT_ALLOWED, "ST",  0x0EB50000);
-    ERRT("POPF IE",  REGISTER_NOT_ALLOWED, "IE",  0x0EB60000);
-    ERRT("POPF IF",  REGISTER_NOT_ALLOWED, "IF",  0x0EB70000);
-    ERRT("POPF IOF", REGISTER_NOT_ALLOWED, "IOF", 0x0EB80000);
-    ERRT("POPF RS",  REGISTER_NOT_ALLOWED, "RS",  0x0EB90000);
-    ERRT("POPF RE",  REGISTER_NOT_ALLOWED, "RE",  0x0EBA0000);
-    ERRT("POPF RC",  REGISTER_NOT_ALLOWED, "RC",  0x0EBB0000);
+    ERRT("POPF AR0", OPERAND_NOT_ALLOWED, "AR0");
+    ERRT("POPF AR1", OPERAND_NOT_ALLOWED, "AR1");
+    ERRT("POPF AR2", OPERAND_NOT_ALLOWED, "AR2");
+    ERRT("POPF AR3", OPERAND_NOT_ALLOWED, "AR3");
+    ERRT("POPF AR4", OPERAND_NOT_ALLOWED, "AR4");
+    ERRT("POPF AR5", OPERAND_NOT_ALLOWED, "AR5");
+    ERRT("POPF AR6", OPERAND_NOT_ALLOWED, "AR6");
+    ERRT("POPF AR7", OPERAND_NOT_ALLOWED, "AR7");
+    ERRT("POPF DP",  OPERAND_NOT_ALLOWED, "DP");
+    ERRT("POPF IR0", OPERAND_NOT_ALLOWED, "IR0");
+    ERRT("POPF IR1", OPERAND_NOT_ALLOWED, "IR1");
+    ERRT("POPF BK",  OPERAND_NOT_ALLOWED, "BK");
+    ERRT("POPF SP",  OPERAND_NOT_ALLOWED, "SP");
+    ERRT("POPF ST",  OPERAND_NOT_ALLOWED, "ST");
+    ERRT("POPF IE",  OPERAND_NOT_ALLOWED, "IE");
+    ERRT("POPF IF",  OPERAND_NOT_ALLOWED, "IF");
+    ERRT("POPF IOF", OPERAND_NOT_ALLOWED, "IOF");
+    ERRT("POPF RS",  OPERAND_NOT_ALLOWED, "RS");
+    ERRT("POPF RE",  OPERAND_NOT_ALLOWED, "RE");
+    ERRT("POPF RC",  OPERAND_NOT_ALLOWED, "RC");
 
-    ERRT("POPF R8",  REGISTER_NOT_ALLOWED, "R8",  0x0EA80000);
-    ERRT("POPF R9",  REGISTER_NOT_ALLOWED, "R9",  0x0EA90000);
-    ERRT("POPF R10", REGISTER_NOT_ALLOWED, "R10", 0x0EAA0000);
-    ERRT("POPF R11", REGISTER_NOT_ALLOWED, "R11", 0x0EAB0000);
-    ERRT("POPF R12", REGISTER_NOT_ALLOWED, "R12", 0x0EAC0000);
-    ERRT("POPF R13", REGISTER_NOT_ALLOWED, "R13", 0x0EAD0000);
-    ERRT("POPF R14", REGISTER_NOT_ALLOWED, "R14", 0x0EAE0000);
-    ERRT("POPF R15", REGISTER_NOT_ALLOWED, "R15", 0x0EAF0000);
-    ERRT("POPF R16", REGISTER_NOT_ALLOWED, "R16", 0x0EB00000);
-    ERRT("POPF R17", REGISTER_NOT_ALLOWED, "R17", 0x0EB10000);
-    ERRT("POPF R18", REGISTER_NOT_ALLOWED, "R18", 0x0EB20000);
-    ERRT("POPF R19", REGISTER_NOT_ALLOWED, "R19", 0x0EB30000);
-    ERRT("POPF R20", REGISTER_NOT_ALLOWED, "R20", 0x0EB40000);
-    ERRT("POPF R21", REGISTER_NOT_ALLOWED, "R21", 0x0EB50000);
-    ERRT("POPF R22", REGISTER_NOT_ALLOWED, "R22", 0x0EB60000);
-    ERRT("POPF R23", REGISTER_NOT_ALLOWED, "R23", 0x0EB70000);
-    ERRT("POPF R24", REGISTER_NOT_ALLOWED, "R24", 0x0EB80000);
-    ERRT("POPF R25", REGISTER_NOT_ALLOWED, "R25", 0x0EB90000);
-    ERRT("POPF R26", REGISTER_NOT_ALLOWED, "R26", 0x0EBA0000);
-    ERRT("POPF R27", REGISTER_NOT_ALLOWED, "R27", 0x0EBB0000);
-    ERRT("POPF R28", OPERAND_NOT_ALLOWED,  "R28");
+    ERRT("POPF R8",  OPERAND_NOT_ALLOWED, "R8");
+    ERRT("POPF R9",  OPERAND_NOT_ALLOWED, "R9");
+    ERRT("POPF R10", OPERAND_NOT_ALLOWED, "R10");
+    ERRT("POPF R11", OPERAND_NOT_ALLOWED, "R11");
+    ERRT("POPF R12", OPERAND_NOT_ALLOWED, "R12");
+    ERRT("POPF R13", OPERAND_NOT_ALLOWED, "R13");
+    ERRT("POPF R14", OPERAND_NOT_ALLOWED, "R14");
+    ERRT("POPF R15", OPERAND_NOT_ALLOWED, "R15");
+    ERRT("POPF R16", OPERAND_NOT_ALLOWED, "R16");
+    ERRT("POPF R17", OPERAND_NOT_ALLOWED, "R17");
+    ERRT("POPF R18", OPERAND_NOT_ALLOWED, "R18");
+    ERRT("POPF R19", OPERAND_NOT_ALLOWED, "R19");
+    ERRT("POPF R20", OPERAND_NOT_ALLOWED, "R20");
+    ERRT("POPF R21", OPERAND_NOT_ALLOWED, "R21");
+    ERRT("POPF R22", OPERAND_NOT_ALLOWED, "R22");
+    ERRT("POPF R23", OPERAND_NOT_ALLOWED, "R23");
+    ERRT("POPF R24", OPERAND_NOT_ALLOWED, "R24");
+    ERRT("POPF R25", OPERAND_NOT_ALLOWED, "R25");
+    ERRT("POPF R26", OPERAND_NOT_ALLOWED, "R26");
+    ERRT("POPF R27", OPERAND_NOT_ALLOWED, "R27");
+    ERRT("POPF R28", OPERAND_NOT_ALLOWED, "R28");
 
     TEST("LDFU    R0, R1",           0x40010000);
     TEST("LDFLO   R1, R2",           0x40820001);
@@ -405,8 +410,8 @@ void test_load() {
 }
 
 void test_store() {
-    ERRT("STF R1, R0",  REGISTER_NOT_ALLOWED, "R0",  0x14010000);
-    ERRT("STF R1, AR0", REGISTER_NOT_ALLOWED, "AR0", 0x14010008);
+    ERRT("STF R1, R0",  REGISTER_NOT_ALLOWED, "R0", 0x14010000);
+    ERRT("STF R1, AR0", OPERAND_NOT_ALLOWED, "R1, AR0");
     TEST("STF R2, @000001H",     0x14220001);
     TEST("STF R3, *+AR1(2)",     0x14430102);
     TEST("STF R4, *-AR2(3)",     0x14440A03);
@@ -438,7 +443,7 @@ void test_store() {
     ERRT("STF R6, -1.5", ILLEGAL_OPERAND_MODE, "-1.5", 0x14060000);
 
     ERRT("STI R1, R0",  REGISTER_NOT_ALLOWED, "R0",   0x15010000);
-    ERRT("STI R1, AR0", REGISTER_NOT_ALLOWED, "AR0",  0x15010008);
+    ERRT("STI R1, AR0", OPERAND_NOT_ALLOWED, "R1, AR0");
     TEST("STI R2, @000001H",     0x15220001);
     TEST("STI R3, *+AR1(2)",     0x15430102);
     TEST("STI R4, *-AR2(3)",     0x15440A03);
@@ -506,31 +511,31 @@ void test_store() {
     TEST("PUSHF R5",  0x0FA50000);
     TEST("PUSHF R6",  0x0FA60000);
     TEST("PUSHF R7",  0x0FA70000);
-    ERRT("PUSHF AR0", REGISTER_NOT_ALLOWED, "AR0", 0x0FA80000);
-    ERRT("PUSHF AR1", REGISTER_NOT_ALLOWED, "AR1", 0x0FA90000);
-    ERRT("PUSHF AR2", REGISTER_NOT_ALLOWED, "AR2", 0x0FAA0000);
-    ERRT("PUSHF AR3", REGISTER_NOT_ALLOWED, "AR3", 0x0FAB0000);
-    ERRT("PUSHF AR4", REGISTER_NOT_ALLOWED, "AR4", 0x0FAC0000);
-    ERRT("PUSHF AR5", REGISTER_NOT_ALLOWED, "AR5", 0x0FAD0000);
-    ERRT("PUSHF AR6", REGISTER_NOT_ALLOWED, "AR6", 0x0FAE0000);
-    ERRT("PUSHF AR7", REGISTER_NOT_ALLOWED, "AR7", 0x0FAF0000);
-    ERRT("PUSHF DP",  REGISTER_NOT_ALLOWED, "DP",  0x0FB00000);
-    ERRT("PUSHF IR0", REGISTER_NOT_ALLOWED, "IR0", 0x0FB10000);
-    ERRT("PUSHF IR1", REGISTER_NOT_ALLOWED, "IR1", 0x0FB20000);
-    ERRT("PUSHF BK",  REGISTER_NOT_ALLOWED, "BK",  0x0FB30000);
-    ERRT("PUSHF SP",  REGISTER_NOT_ALLOWED, "SP",  0x0FB40000);
-    ERRT("PUSHF ST",  REGISTER_NOT_ALLOWED, "ST",  0x0FB50000);
-    ERRT("PUSHF IE",  REGISTER_NOT_ALLOWED, "IE",  0x0FB60000);
-    ERRT("PUSHF IF",  REGISTER_NOT_ALLOWED, "IF",  0x0FB70000);
-    ERRT("PUSHF IOF", REGISTER_NOT_ALLOWED, "IOF", 0x0FB80000);
-    ERRT("PUSHF RS",  REGISTER_NOT_ALLOWED, "RS",  0x0FB90000);
-    ERRT("PUSHF RE",  REGISTER_NOT_ALLOWED, "RE",  0x0FBA0000);
-    ERRT("PUSHF RC",  REGISTER_NOT_ALLOWED, "RC",  0x0FBB0000);
+    ERRT("PUSHF AR0", OPERAND_NOT_ALLOWED, "AR0");
+    ERRT("PUSHF AR1", OPERAND_NOT_ALLOWED, "AR1");
+    ERRT("PUSHF AR2", OPERAND_NOT_ALLOWED, "AR2");
+    ERRT("PUSHF AR3", OPERAND_NOT_ALLOWED, "AR3");
+    ERRT("PUSHF AR4", OPERAND_NOT_ALLOWED, "AR4");
+    ERRT("PUSHF AR5", OPERAND_NOT_ALLOWED, "AR5");
+    ERRT("PUSHF AR6", OPERAND_NOT_ALLOWED, "AR6");
+    ERRT("PUSHF AR7", OPERAND_NOT_ALLOWED, "AR7");
+    ERRT("PUSHF DP",  OPERAND_NOT_ALLOWED, "DP");
+    ERRT("PUSHF IR0", OPERAND_NOT_ALLOWED, "IR0");
+    ERRT("PUSHF IR1", OPERAND_NOT_ALLOWED, "IR1");
+    ERRT("PUSHF BK",  OPERAND_NOT_ALLOWED, "BK");
+    ERRT("PUSHF SP",  OPERAND_NOT_ALLOWED, "SP");
+    ERRT("PUSHF ST",  OPERAND_NOT_ALLOWED, "ST");
+    ERRT("PUSHF IE",  OPERAND_NOT_ALLOWED, "IE");
+    ERRT("PUSHF IF",  OPERAND_NOT_ALLOWED, "IF");
+    ERRT("PUSHF IOF", OPERAND_NOT_ALLOWED, "IOF");
+    ERRT("PUSHF RS",  OPERAND_NOT_ALLOWED, "RS");
+    ERRT("PUSHF RE",  OPERAND_NOT_ALLOWED, "RE");
+    ERRT("PUSHF RC",  OPERAND_NOT_ALLOWED, "RC");
 }
 
 void test_2op() {
     TEST("ABSF R0, R1",       0x00010000);
-    ERRT("ABSF AR0, R1", REGISTER_NOT_ALLOWED, "AR0, R1", 0x00010008);
+    ERRT("ABSF AR0, R1", OPERAND_NOT_ALLOWED, "AR0, R1");
     TEST("ABSF 1, R5",        0x00650000);
     TEST("ABSF -1.5, R6",     0x00660C00);
     TEST("ABSF 0, R7",        0x00678000);
@@ -552,7 +557,7 @@ void test_2op() {
 
     TEST("ADDF R0, R1",   0x01810000);
     TEST("ADDF R1, R1",   0x01810001);
-    ERRT("ADDF AR0, R1", REGISTER_NOT_ALLOWED, "AR0, R1", 0x01810008);
+    ERRT("ADDF AR0, R1", OPERAND_NOT_ALLOWED, "AR0, R1");
     TEST("ADDF 1, R5",    0x01E50000);
     TEST("ADDF -1.5, R6", 0x01E60C00);
     TEST("ADDF 0, R7",    0x01E78000);
@@ -614,7 +619,7 @@ void test_2op() {
 
     TEST("CMPF R0, R1",   0x04010000);
     TEST("CMPF R1, R1",   0x04010001);
-    ERRT("CMPF AR0, R1", REGISTER_NOT_ALLOWED, "AR0, R1", 0x04010008);
+    ERRT("CMPF AR0, R1", OPERAND_NOT_ALLOWED, "AR0, R1");
     TEST("CMPF 1, R5",    0x04650000);
     TEST("CMPF -1.5, R6", 0x04660C00);
     TEST("CMPF 0, R7",    0x04678000);
@@ -627,7 +632,7 @@ void test_2op() {
     TEST("CMPI -1, R7",     0x04E7FFFF);
 
     TEST("FIX R0, R1",       0x05010000);
-    ERRT("FIX AR0, R1", REGISTER_NOT_ALLOWED, "AR0, R1", 0x05010008);
+    ERRT("FIX AR0, R1", OPERAND_NOT_ALLOWED, "AR0, R1");
     TEST("FIX 1, R5",        0x05650000);
     TEST("FIX -1.5, R6",     0x05660C00);
     TEST("FIX 0, R7",        0x05678000);
@@ -676,7 +681,7 @@ void test_2op() {
 
     TEST("MPYF R0, R1",   0x0A010000);
     TEST("MPYF R1, R1",   0x0A010001);
-    ERRT("MPYF AR0, R1", REGISTER_NOT_ALLOWED, "AR0, R1", 0x0A010008);
+    ERRT("MPYF AR0, R1", OPERAND_NOT_ALLOWED, "AR0, R1");
     TEST("MPYF 1, R5",    0x0A650000);
     TEST("MPYF -1.5, R6", 0x0A660C00);
     TEST("MPYF 0, R7",    0x0A678000);
@@ -695,7 +700,7 @@ void test_2op() {
     TEST("NEGB -1, R7",     0x0B67FFFF);
 
     TEST("NEGF R0, R1",       0x0B810000);
-    ERRT("NEGF AR0, R1", REGISTER_NOT_ALLOWED, "AR0, R1", 0x0B810008);
+    ERRT("NEGF AR0, R1", OPERAND_NOT_ALLOWED, "AR0, R1");
     TEST("NEGF 1, R5",        0x0BE50000);
     TEST("NEGF -1.5, R6",     0x0BE60C00);
     TEST("NEGF 0, R7",        0x0BE78000);
@@ -708,7 +713,7 @@ void test_2op() {
     TEST("NEGI -1, R7",     0x0C67FFFF);
 
     TEST("NORM R0, R1",       0x0D010000);
-    ERRT("NORM AR0, R1", REGISTER_NOT_ALLOWED, "AR0, R1", 0x0D010008);
+    ERRT("NORM AR0, R1", OPERAND_NOT_ALLOWED, "AR0, R1");
     TEST("NORM 1, R5",        0x0D650000);
     TEST("NORM -1.5, R6",     0x0D660C00);
     TEST("NORM 0, R7",        0x0D678000);
@@ -728,7 +733,7 @@ void test_2op() {
     TEST("OR 0FFFFH, R7", 0x1067FFFF);
 
     TEST("RND R0, R1",       0x11010000);
-    ERRT("RND AR0, R1", REGISTER_NOT_ALLOWED, "AR0, R1", 0x11010008);
+    ERRT("RND AR0, R1", OPERAND_NOT_ALLOWED, "AR0, R1");
     TEST("RND 1, R5",        0x11650000);
     TEST("RND -1.5, R6",     0x11660C00);
     TEST("RND 0, R7",        0x11678000);
@@ -766,7 +771,7 @@ void test_2op() {
 
     TEST("SUBF R0, R1",   0x17810000);
     TEST("SUBF R1, R1",   0x17810001);
-    ERRT("SUBF AR0, R1", REGISTER_NOT_ALLOWED, "AR0, R1", 0x17810008);
+    ERRT("SUBF AR0, R1", OPERAND_NOT_ALLOWED, "AR0, R1");
     TEST("SUBF 1, R5",    0x17E50000);
     TEST("SUBF -1.5, R6", 0x17E60C00);
     TEST("SUBF 0, R7",    0x17E78000);
@@ -787,7 +792,7 @@ void test_2op() {
 
     TEST("SUBRF R0, R1",   0x19010000);
     TEST("SUBRF R1, R1",   0x19010001);
-    ERRT("SUBRF AR0, R1", REGISTER_NOT_ALLOWED, "AR0, R1", 0x19010008);
+    ERRT("SUBRF AR0, R1", OPERAND_NOT_ALLOWED, "AR0, R1");
     TEST("SUBRF 1, R5",    0x19650000);
     TEST("SUBRF -1.5, R6", 0x19660C00);
     TEST("SUBRF 0, R7",    0x19678000);
@@ -942,9 +947,9 @@ void test_3op() {
     TEST("ADDC3 *+AR2, *-AR2, R5",              0x20650A02);
     TEST("ADDC3 *++AR2, *AR2--, R5",            0x20652A12);
 
-    ERRT("ADDF3 R1, AR0, R2", REGISTER_NOT_ALLOWED, "AR0, R2",     0x20820801);
-    ERRT("ADDF3 AR1, R0, R2", REGISTER_NOT_ALLOWED, "AR1, R0, R2", 0x20820009);
-    ERRT("ADDF3 R1, R0, AR2", REGISTER_NOT_ALLOWED, "AR2",         0x208A0001);
+    ERRT("ADDF3 R1, AR0, R2", OPERAND_NOT_ALLOWED, "R1, AR0, R2");
+    ERRT("ADDF3 AR1, R0, R2", OPERAND_NOT_ALLOWED, "AR1, R0, R2");
+    ERRT("ADDF3 R1, R0, AR2", OPERAND_NOT_ALLOWED, "R1, R0, AR2");
     TEST("ADDF3 *+AR1, *AR2++(IR0)B, R3",       0x20E3CA01);
     TEST("ADDF3 *-AR2, *AR3, R4",               0x20E4C30A);
     TEST("ADDF3 *++AR3, *AR4--(IR1)%, R5",      0x20E5BC13);
@@ -1092,8 +1097,8 @@ void test_3op() {
     TEST("ASH3 *AR1, *-AR2, R4",               0x22E40AC1);
     TEST("ASH3 *AR2++(IR0)B, *+AR3, R5",       0x22E503CA);
 
-    ERRT("CMPF3 R1, AR0", REGISTER_NOT_ALLOWED, "AR0",     0x23000801);
-    ERRT("CMPF3 AR1, R0", REGISTER_NOT_ALLOWED, "AR1, R0", 0x23000009);
+    ERRT("CMPF3 R1, AR0", OPERAND_NOT_ALLOWED, "R1, AR0");
+    ERRT("CMPF3 AR1, R0", OPERAND_NOT_ALLOWED, "AR1, R0");
     TEST("CMPF3 *+AR1, *AR2++(IR0)B",       0x2360CA01);
     TEST("CMPF3 *-AR2, *AR3",               0x2360C30A);
     TEST("CMPF3 *++AR3, *AR4--(IR1)%",      0x2360BC13);
@@ -1180,9 +1185,9 @@ void test_3op() {
     TEST("LSH3 *AR1, *-AR2, R4",               0x24640AC1);
     TEST("LSH3 *AR2++(IR0)B, *+AR3, R5",       0x246503CA);
 
-    ERRT("MPYF3 R1, AR0, R2", REGISTER_NOT_ALLOWED, "AR0, R2",     0x24820801);
-    ERRT("MPYF3 AR1, R0, R2", REGISTER_NOT_ALLOWED, "AR1, R0, R2", 0x24820009);
-    ERRT("MPYF3 R1, R0, AR2", REGISTER_NOT_ALLOWED, "AR2",         0x248A0001);
+    ERRT("MPYF3 R1, AR0, R2", OPERAND_NOT_ALLOWED, "R1, AR0, R2");
+    ERRT("MPYF3 AR1, R0, R2", OPERAND_NOT_ALLOWED, "AR1, R0, R2");
+    ERRT("MPYF3 R1, R0, AR2", OPERAND_NOT_ALLOWED, "R1, R0, AR2");
     TEST("MPYF3 *+AR1, *AR2++(IR0)B, R3",       0x24E3CA01);
     TEST("MPYF3 *-AR2, *AR3, R4",               0x24E4C30A);
     TEST("MPYF3 *++AR3, *AR4--(IR1)%, R5",      0x24E5BC13);
@@ -1300,9 +1305,9 @@ void test_3op() {
     TEST("SUBB3 *AR1, *-AR2, R4",               0x26640AC1);
     TEST("SUBB3 *AR2++(IR0)B, *+AR3, R5",       0x266503CA);
 
-    ERRT("SUBF3 R1, AR0, R2", REGISTER_NOT_ALLOWED, "AR0, R2",     0x26820801);
-    ERRT("SUBF3 AR1, R0, R2", REGISTER_NOT_ALLOWED, "AR1, R0, R2", 0x26820009);
-    ERRT("SUBF3 R1, R0, AR2", REGISTER_NOT_ALLOWED, "AR2",         0x268A0001);
+    ERRT("SUBF3 R1, AR0, R2", OPERAND_NOT_ALLOWED, "R1, AR0, R2");
+    ERRT("SUBF3 AR1, R0, R2", OPERAND_NOT_ALLOWED, "AR1, R0, R2");
+    ERRT("SUBF3 R1, R0, AR2", OPERAND_NOT_ALLOWED, "R1, R0, AR2");
     TEST("SUBF3 *+AR1, *AR2++(IR0)B, R3",       0x26E3CA01);
     TEST("SUBF3 *-AR2, *AR3, R4",               0x26E4C30A);
     TEST("SUBF3 *++AR3, *AR4--(IR1)%, R5",      0x26E5BC13);
@@ -1506,9 +1511,9 @@ void test_3op_no3() {
     TEST("ADDC *+AR2, *-AR2, R5",    0x20650A02);
     TEST("ADDC *++AR2, *AR2--, R5",  0x20652A12);
 
-    ERRT("ADDF R1, AR0, R2", REGISTER_NOT_ALLOWED, "AR0, R2",     0x20820801);
-    ERRT("ADDF AR1, R0, R2", REGISTER_NOT_ALLOWED, "AR1, R0, R2", 0x20820009);
-    ERRT("ADDF R1, R0, AR2", REGISTER_NOT_ALLOWED, "AR2",         0x208A0001);
+    ERRT("ADDF R1, AR0, R2", OPERAND_NOT_ALLOWED, "R1, AR0, R2");
+    ERRT("ADDF AR1, R0, R2", OPERAND_NOT_ALLOWED, "AR1, R0, R2");
+    ERRT("ADDF R1, R0, AR2", OPERAND_NOT_ALLOWED, "R1, R0, AR2");
     TEST("ADDF *+AR1, *AR2++(IR0)B, R3",       0x20E3CA01);
     TEST("ADDF *-AR2, *AR3, R4",               0x20E4C30A);
     TEST("ADDF *++AR3, *AR4--(IR1)%, R5",      0x20E5BC13);
@@ -1656,8 +1661,8 @@ void test_3op_no3() {
     TEST("ASH *AR1, *-AR2, R4",               0x22E40AC1);
     TEST("ASH *AR2++(IR0)B, *+AR3, R5",       0x22E503CA);
 
-    ERRT("CMPF R1, AR0", REGISTER_NOT_ALLOWED, "AR0",     0x04080001);
-    ERRT("CMPF AR1, R0", REGISTER_NOT_ALLOWED, "AR1, R0", 0x04000009);
+    ERRT("CMPF R1, AR0", OPERAND_NOT_ALLOWED, "R1, AR0");
+    ERRT("CMPF AR1, R0", OPERAND_NOT_ALLOWED, "AR1, R0");
     TEST("CMPF *+AR1, *AR2++(IR0)B",       0x2360CA01);
     TEST("CMPF *-AR2, *AR3",               0x2360C30A);
     TEST("CMPF *++AR3, *AR4--(IR1)%",      0x2360BC13);
@@ -1744,9 +1749,9 @@ void test_3op_no3() {
     TEST("LSH *AR1, *-AR2, R4",               0x24640AC1);
     TEST("LSH *AR2++(IR0)B, *+AR3, R5",       0x246503CA);
 
-    ERRT("MPYF R1, AR0, R2", REGISTER_NOT_ALLOWED, "AR0, R2",     0x24820801);
-    ERRT("MPYF AR1, R0, R2", REGISTER_NOT_ALLOWED, "AR1, R0, R2", 0x24820009);
-    ERRT("MPYF R1, R0, AR2", REGISTER_NOT_ALLOWED, "AR2",         0x248A0001);
+    ERRT("MPYF R1, AR0, R2", OPERAND_NOT_ALLOWED, "R1, AR0, R2");
+    ERRT("MPYF AR1, R0, R2", OPERAND_NOT_ALLOWED, "AR1, R0, R2");
+    ERRT("MPYF R1, R0, AR2", OPERAND_NOT_ALLOWED, "R1, R0, AR2");
     TEST("MPYF *+AR1, *AR2++(IR0)B, R3",       0x24E3CA01);
     TEST("MPYF *-AR2, *AR3, R4",               0x24E4C30A);
     TEST("MPYF *++AR3, *AR4--(IR1)%, R5",      0x24E5BC13);
@@ -1864,9 +1869,9 @@ void test_3op_no3() {
     TEST("SUBB *AR1, *-AR2, R4",               0x26640AC1);
     TEST("SUBB *AR2++(IR0)B, *+AR3, R5",       0x266503CA);
 
-    ERRT("SUBF R1, AR0, R2", REGISTER_NOT_ALLOWED, "AR0, R2",     0x26820801);
-    ERRT("SUBF AR1, R0, R2", REGISTER_NOT_ALLOWED, "AR1, R0, R2", 0x26820009);
-    ERRT("SUBF R1, R0, AR2", REGISTER_NOT_ALLOWED, "AR2",         0x268A0001);
+    ERRT("SUBF R1, AR0, R2", OPERAND_NOT_ALLOWED, "R1, AR0, R2");
+    ERRT("SUBF AR1, R0, R2", OPERAND_NOT_ALLOWED, "AR1, R0, R2");
+    ERRT("SUBF R1, R0, AR2", OPERAND_NOT_ALLOWED, "R1, R0, AR2");
     TEST("SUBF *+AR1, *AR2++(IR0)B, R3",       0x26E3CA01);
     TEST("SUBF *-AR2, *AR3, R4",               0x26E4C30A);
     TEST("SUBF *++AR3, *AR4--(IR1)%, R5",      0x26E5BC13);
@@ -2263,7 +2268,7 @@ void test_program() {
     ATEST(0x10000, "DBZUFD  AR4, 00F003H", 0x6F34F000);
 
     ERRT("IACK R0",  REGISTER_NOT_ALLOWED, "R0",   0x1B000000);
-    ERRT("IACK AR0", REGISTER_NOT_ALLOWED, "AR0",  0x1B000008);
+    ERRT("IACK AR0", OPERAND_NOT_ALLOWED, "AR0");
     TEST("IACK @000001H",     0x1B200001);
     TEST("IACK *+AR1(2)",     0x1B400102);
     TEST("IACK *-AR2(3)",     0x1B400A03);
@@ -2467,7 +2472,7 @@ void test_interlock() {
     TEST("SIGI", 0x16000000);
 
     ERRT("LDFI R0, R1",  REGISTER_NOT_ALLOWED, "R0, R1",  0x07810000);
-    ERRT("LDFI AR0, R1", REGISTER_NOT_ALLOWED, "AR0, R1", 0x07810008);
+    ERRT("LDFI AR0, R1", OPERAND_NOT_ALLOWED, "AR0, R1");
     TEST("LDFI @000001H, R2",   0x07A20001);
     TEST("LDFI *+AR1(2), R3",   0x07C30102);
     TEST("LDFI *-AR2(3), R4",   0x07C40A03);
@@ -2499,7 +2504,7 @@ void test_interlock() {
     ERRT("LDFI -1.5, R6", ILLEGAL_OPERAND_MODE, "-1.5, R6", 0x07860000);
 
     ERRT("LDII R0, R1",  REGISTER_NOT_ALLOWED, "R0, R1",  0x08810000);
-    ERRT("LDII AR0, R1", REGISTER_NOT_ALLOWED, "AR0, R1", 0x08810008);
+    ERRT("LDII AR0, R1", OPERAND_NOT_ALLOWED, "AR0, R1");
     TEST("LDII @000001H, R2",   0x08A20001);
     TEST("LDII *+AR1(2), R3",   0x08C30102);
     TEST("LDII *-AR2(3), R4",   0x08C40A03);
@@ -2531,7 +2536,7 @@ void test_interlock() {
     ERRT("LDII -8000H, R6", ILLEGAL_OPERAND_MODE, "-8000H, R6", 0x08860000);
 
     ERRT("STFI R1, R0",  REGISTER_NOT_ALLOWED, "R0",  0x14810000);
-    ERRT("STFI R1, AR0", REGISTER_NOT_ALLOWED, "AR0", 0x14810008);
+    ERRT("STFI R1, AR0", OPERAND_NOT_ALLOWED, "R1, AR0");
     TEST("STFI R2, @000001H",   0x14A20001);
     TEST("STFI R3, *+AR1(2)",   0x14C30102);
     TEST("STFI R4, *-AR2(3)",   0x14C40A03);
@@ -2562,8 +2567,8 @@ void test_interlock() {
     ERRT("STFI R5, 1",    ILLEGAL_OPERAND_MODE, "1",    0x14850000);
     ERRT("STFI R6, -1.5", ILLEGAL_OPERAND_MODE, "-1.5", 0x14860000);
 
-    ERRT("STII R1, R0",  REGISTER_NOT_ALLOWED, "R0",   0x15810000);
-    ERRT("STII R1, AR0", REGISTER_NOT_ALLOWED, "AR0",  0x15810008);
+    ERRT("STII R1, R0",  REGISTER_NOT_ALLOWED, "R0", 0x15810000);
+    ERRT("STII R1, AR0", OPERAND_NOT_ALLOWED, "R1, AR0");
     TEST("STII R2, @000001H",   0x15A20001);
     TEST("STII R3, *+AR1(2)",   0x15C30102);
     TEST("STII R4, *-AR2(3)",   0x15C40A03);
@@ -2840,6 +2845,159 @@ void test_parallel() {
           "SUBI3 *AR4, R2, R2",   0x8F8AC3C4); // P=3
     PTEST("SUBI3 *AR4, R2, R2",   0x274202C4,
           "MPYI3 *AR3, R1, R1",   0x8F8AC3C4);
+
+    if (is320c32()) {
+        PTEST("ABSF  R0, R1",           0x00010000,
+              "STF   R2, *-AR3",        0xC8420BE0);
+        PTEST("ABSI  AR4, R5",          0x0085000C,
+              "STI   R6, *--AR7",       0xCB461FEC);
+        PTEST("ADDF3 R5, R1, R2",       0x20820105,
+              "STF   R3, *AR4--",       0xCC8B2CE5);
+        PTEST("ADDI3 AR5, R6, R7",      0x2107060D,
+              "STI   R0, *AR1--%",      0xCFF039ED);
+        PTEST("AND3  AR2, R3, R4",      0x2184030A,
+              "STI   R5, *-AR6(IR0)",   0xD11D4EEA);
+        PTEST("ASH3  R6, AR7, R0",      0x22800F06,
+              "STI   R1, *--AR2(IR0)",  0xD2315AEF);
+        PTEST("FIX   R3, R4",           0x05040003,
+              "STI   R5, *AR6--(IR0)",  0xD5056EE3);
+        PTEST("FLOAT R7, R0",           0x05800007,
+              "STF   R1, *AR2--(IR0)%", 0xD6017AE7);
+        PTEST("LDF   R3, R4",           0x07040003,
+              "LDF   *-AR5(IR1), R6",   0xC5308DE3);
+        PTEST("LDF   R7, R0",           0x07000007,
+              "STF   R1, *--AR2(IR1)",  0xD8019AE7);
+        PTEST("LDI   AR3, R4",          0x0804000B,
+              "LDI   *AR5--(IR1), R6",  0xC730ADEB);
+        PTEST("LDI   AR4, R5",          0x0805000C,
+              "STI   R6, *AR7--(IR1)%", 0xDB46BFEC);
+        PTEST("LSH3  R0, AR1, R2",      0x24020900,
+              "STI   R3, *AR4",         0xDC83C4E9);
+        PTEST("MPYF3 R5, R6, R7",       0x24870605,
+              "STF   R0, *-AR1",        0xDFF009E5);
+        PTEST("MPYI3 AR2, R3, R4",      0x2504030A,
+              "STI   R5, *--AR6",       0xE11D1EEA);
+        PTEST("NEGF  R7, R0",           0x0B800007,
+              "STF   R1, *AR2--",       0xE2012AE7);
+        PTEST("NEGI  AR3, R4",          0x0C04000B,
+              "STI   R5, *AR6--%",      0xE5053EEB);
+        PTEST("NOT   AR7, R0",          0x0D80000F,
+              "STI   R1, *-AR2(IR0)",   0xE6014AEF);
+        PTEST("OR3   AR3, R4, R5",      0x2585040B,
+              "STI   R6, *--AR7(IR0)",  0xE9665FEB);
+#if 0
+        PTEST("STF   R0, R1",           0,
+              "STF   R2, *AR3--(IR0)",  0xC0026BE1);
+        PTEST("STI   R4, AR5",          0,
+              "STI   R6, *AR7--(IR0)%", 0xC3067FED);
+#endif
+        PTEST("SUBF3 R0, R1, R2",       0x26820100,
+              "STF   R3, *-AR4(IR1)",   0xEA838CE1);
+        PTEST("SUBI3 R5, AR6, R7",      0x27070E05,
+              "STI   R0, *--AR1(IR1)",  0xEDE899EE);
+        PTEST("XOR3  AR2, R3, R4",      0x2804030A,
+              "STI   R5, *AR6--(IR1)",  0xEF1DAEEA);
+
+        PTEST("MPYF3 R1, *AR2, R0", 0x24A0C201,
+              "ADDF3 R4, R5, R2",   0x802CC2E1);
+        PTEST("MPYF3 *AR1, R2, R0", 0x24C002C1,
+              "ADDF3 R4, R5, R2",   0x802CE2C1);
+        PTEST("MPYF3 R1, R2, R0",   0x24800201,
+              "ADDF3 R4, R5, R2",   0x802CE2E1);
+        PTEST("MPYF3 *AR1, R2, R0", 0x24C002C1,
+              "ADDF3 R4, R5, R3",   0x806CE2C1);
+        PTEST("MPYF3 R1, R2, R0",   0x24800201,
+              "ADDF3 R4, *AR5, R3", 0x8154E1C5);
+        PTEST("MPYF3 R1, R2, R0",   0x24800201,
+              "ADDF3 R4, R5, R3",   0x806CE2E1);
+        PTEST("MPYF3 R1, R2, R1",   0x24810201,
+              "ADDF3 R4, *AR5, R2", 0x8194E1C5);
+        PTEST("MPYF3 R1, R2, R1",   0x24810201,
+              "ADDF3 *AR4, R5, R2", 0x8291E5C4);
+        PTEST("MPYF3 R1, R2, R1",   0x24810201,
+              "ADDF3 R4, R5, R2",   0x80ACE2E1);
+        PTEST("MPYF3 *AR1, R2, R1", 0x24C102C1,
+              "ADDF3 R4, R5, R3",   0x80ECE2C1);
+        PTEST("MPYF3 R1, R2, R1",   0x24810201,
+              "ADDF3 *AR4, R5, R3", 0x82D1E5C4);
+        PTEST("MPYF3 R1, R2, R1",   0x24810201,
+              "ADDF3 R4, R5, R3",   0x80ECE2E1);
+
+        PTEST("MPYF3 R1, *AR2, R0", 0x24A0C201,
+              "SUBF3 R4, R5, R2",   0x842CC2E1);
+        PTEST("MPYF3 *AR1, R2, R0", 0x24C002C1,
+              "SUBF3 R4, R5, R2",   0x842CE2C1);
+        PTEST("MPYF3 R1, R2, R0",   0x24800201,
+              "SUBF3 R4, R5, R2",   0x842CE2E1);
+        PTEST("MPYF3 *AR1, R2, R0", 0x24C002C1,
+              "SUBF3 R4, R5, R3",   0x846CE2C1);
+        PTEST("MPYF3 R1, R2, R0",   0x24800201,
+              "SUBF3 R4, *AR5, R3", 0x8554E1C5);
+        PTEST("MPYF3 R1, R2, R0",   0x24800201,
+              "SUBF3 R4, R5, R3",   0x846CE2E1);
+        PTEST("MPYF3 R1, R2, R1",   0x24810201,
+              "SUBF3 R4, *AR5, R2", 0x8594E1C5);
+        PTEST("MPYF3 R1, R2, R1",   0x24810201,
+              "SUBF3 *AR4, R5, R2", 0x8691E5C4);
+        PTEST("MPYF3 R1, R2, R1",   0x24810201,
+              "SUBF3 R4, R5, R2",   0x84ACE2E1);
+        PTEST("MPYF3 *AR1, R2, R1", 0x24C102C1,
+              "SUBF3 R4, R5, R3",   0x84ECE2C1);
+        PTEST("MPYF3 R1, R2, R1",   0x24810201,
+              "SUBF3 *AR4, R5, R3", 0x86D1E5C4);
+        PTEST("MPYF3 R1, R2, R1",   0x24810201,
+              "SUBF3 R4, R5, R3",   0x84ECE2E1);
+
+        PTEST("MPYI3 AR1, *AR2, R0", 0x2520C209,
+              "ADDI3 R4, R5, R2",    0x882CC2E9);
+        PTEST("MPYI3 *AR1, AR2, R0", 0x25400AC1,
+              "ADDI3 R4, R5, R2",    0x882CEAC1);
+        PTEST("MPYI3 R1, R2, R0",    0x25000201,
+              "ADDI3 R4, R5, R2",    0x882CE2E1);
+        PTEST("MPYI3 *AR1, R2, R0",  0x254002C1,
+              "ADDI3 R4, AR5, R3",   0x8954C1ED);
+        PTEST("MPYI3 AR1, R2, R0",   0x25000209,
+              "ADDI3 R4, *AR5, R3",  0x8954E9C5);
+        PTEST("MPYI3 R1, R2, R0",    0x25000201,
+              "ADDI3 R4, R5, R3",    0x886CE2E1);
+        PTEST("MPYI3 R1, R2, R1",    0x25010201,
+              "ADDI3 AR4, *AR5, R2", 0x8A91C5EC);
+        PTEST("MPYI3 R1, R2, R1",    0x25010201,
+              "ADDI3 *AR4, AR5, R2", 0x8A91EDC4);
+        PTEST("MPYI3 R1, R2, R1",    0x25010201,
+              "ADDI3 R4, R5, R2",    0x88ACE2E1);
+        PTEST("MPYI3 *AR1, R2, R1",  0x254102C1,
+              "ADDI3 AR4, R5, R3",   0x8BD5C1EC);
+        PTEST("MPYI3 AR1, R2, R1",   0x25010209,
+              "ADDI3 *AR4, R5, R3",  0x8BD5E9C4);
+        PTEST("MPYI3 R1, R2, R1",    0x25010201,
+              "ADDI3 R4, R5, R3",    0x88ECE2E1);
+
+        PTEST("MPYI3 AR1, *AR2, R0", 0x2520C209,
+              "SUBI3 R4, R5, R2",    0x8C2CC2E9);
+        PTEST("MPYI3 *AR1, AR2, R0", 0x25400AC1,
+              "SUBI3 R4, R5, R2",    0x8C2CEAC1);
+        PTEST("MPYI3 R1, R2, R0",    0x25000201,
+              "SUBI3 R4, R5, R2",    0x8C2CE2E1);
+        PTEST("MPYI3 *AR1, R2, R0",  0x254002C1,
+              "SUBI3 R4, AR5, R3",   0x8D54C1ED);
+        PTEST("MPYI3 AR1, R2, R0",   0x25000209,
+              "SUBI3 R4, *AR5, R3",  0x8D54E9C5);
+        PTEST("MPYI3 R1, R2, R0",    0x25000201,
+              "SUBI3 R4, R5, R3",    0x8C6CE2E1);
+        PTEST("MPYI3 R1, R2, R1",    0x25010201,
+              "SUBI3 AR4, *AR5, R2", 0x8E91C5EC);
+        PTEST("MPYI3 R1, R2, R1",    0x25010201,
+              "SUBI3 *AR4, AR5, R2", 0x8E91EDC4);
+        PTEST("MPYI3 R1, R2, R1",    0x25010201,
+              "SUBI3 R4, R5, R2",    0x8CACE2E1);
+        PTEST("MPYI3 *AR1, R2, R1",  0x254102C1,
+              "SUBI3 AR4, R5, R3",   0x8FD5C1EC);
+        PTEST("MPYI3 AR1, R2, R1",   0x25010209,
+              "SUBI3 *AR4, R5, R3",  0x8FD5E9C4);
+        PTEST("MPYI3 R1, R2, R1",    0x25010201,
+              "SUBI3 R4, R5, R3",    0x8CECE2E1);
+    }
 }
 
 void test_parallel_no3() {
@@ -2993,6 +3151,131 @@ void test_parallel_no3() {
           "SUBI *AR4, R2, R2",   0x8F8AC3C4); // P=3
     PTEST("SUBI *AR4, R2, R2",   0x274202C4,
           "MPYI *AR3, R1, R1",   0x8F8AC3C4);
+
+    if (is320c32()) {
+        PTEST("ADDF R5, R1, R2",       0x20820105,
+              "STF   R3, *AR4--",      0xCC8B2CE5);
+        PTEST("ADDI AR5, R6, R7",      0x2107060D,
+              "STI   R0, *AR1--%",     0xCFF039ED);
+        PTEST("AND  AR2, R3, R4",      0x2184030A,
+              "STI   R5, *-AR6(IR0)",  0xD11D4EEA);
+        PTEST("ASH  R6, AR7, R0",      0x22800F06,
+              "STI   R1, *--AR2(IR0)", 0xD2315AEF);
+        PTEST("LSH  R0, AR1, R2",      0x24020900,
+              "STI   R3, *AR4",        0xDC83C4E9);
+        PTEST("MPYF R5, R6, R7",       0x24870605,
+              "STF   R0, *-AR1",       0xDFF009E5);
+        PTEST("MPYI AR2, R3, R4",      0x2504030A,
+              "STI   R5, *--AR6",      0xE11D1EEA);
+        PTEST("OR   AR3, R4, R5",      0x2585040B,
+              "STI   R6, *--AR7(IR0)", 0xE9665FEB);
+        PTEST("SUBF R0, R1, R2",       0x26820100,
+              "STF   R3, *-AR4(IR1)",  0xEA838CE1);
+        PTEST("SUBI R5, AR6, R7",      0x27070E05,
+              "STI   R0, *--AR1(IR1)", 0xEDE899EE);
+        PTEST("XOR  AR2, R3, R4",      0x2804030A,
+              "STI   R5, *AR6--(IR1)", 0xEF1DAEEA);
+
+        PTEST("MPYF R1, *AR2, R0", 0x24A0C201,
+              "ADDF R4, R5, R2",   0x802CC2E1);
+        PTEST("MPYF *AR1, R2, R0", 0x24C002C1,
+              "ADDF R4, R5, R2",   0x802CE2C1);
+        PTEST("MPYF R1, R2, R0",   0x24800201,
+              "ADDF R4, R5, R2",   0x802CE2E1);
+        PTEST("MPYF *AR1, R2, R0", 0x24C002C1,
+              "ADDF R4, R5, R3",   0x806CE2C1);
+        PTEST("MPYF R1, R2, R0",   0x24800201,
+              "ADDF R4, *AR5, R3", 0x8154E1C5);
+        PTEST("MPYF R1, R2, R0",   0x24800201,
+              "ADDF R4, R5, R3",   0x806CE2E1);
+        PTEST("MPYF R1, R2, R1",   0x24810201,
+              "ADDF R4, *AR5, R2", 0x8194E1C5);
+        PTEST("MPYF R1, R2, R1",   0x24810201,
+              "ADDF *AR4, R5, R2", 0x8291E5C4);
+        PTEST("MPYF R1, R2, R1",   0x24810201,
+              "ADDF R4, R5, R2",   0x80ACE2E1);
+        PTEST("MPYF *AR1, R2, R1", 0x24C102C1,
+              "ADDF R4, R5, R3",   0x80ECE2C1);
+        PTEST("MPYF R1, R2, R1",   0x24810201,
+              "ADDF *AR4, R5, R3", 0x82D1E5C4);
+        PTEST("MPYF R1, R2, R1",   0x24810201,
+              "ADDF R4, R5, R3",   0x80ECE2E1);
+
+        PTEST("MPYF R1, *AR2, R0", 0x24A0C201,
+              "SUBF R4, R5, R2",   0x842CC2E1);
+        PTEST("MPYF *AR1, R2, R0", 0x24C002C1,
+              "SUBF R4, R5, R2",   0x842CE2C1);
+        PTEST("MPYF R1, R2, R0",   0x24800201,
+              "SUBF R4, R5, R2",   0x842CE2E1);
+        PTEST("MPYF *AR1, R2, R0", 0x24C002C1,
+              "SUBF R4, R5, R3",   0x846CE2C1);
+        PTEST("MPYF R1, R2, R0",   0x24800201,
+              "SUBF R4, *AR5, R3", 0x8554E1C5);
+        PTEST("MPYF R1, R2, R0",   0x24800201,
+              "SUBF R4, R5, R3",   0x846CE2E1);
+        PTEST("MPYF R1, R2, R1",   0x24810201,
+              "SUBF R4, *AR5, R2", 0x8594E1C5);
+        PTEST("MPYF R1, R2, R1",   0x24810201,
+              "SUBF *AR4, R5, R2", 0x8691E5C4);
+        PTEST("MPYF R1, R2, R1",   0x24810201,
+              "SUBF R4, R5, R2",   0x84ACE2E1);
+        PTEST("MPYF *AR1, R2, R1", 0x24C102C1,
+              "SUBF R4, R5, R3",   0x84ECE2C1);
+        PTEST("MPYF R1, R2, R1",   0x24810201,
+              "SUBF *AR4, R5, R3", 0x86D1E5C4);
+        PTEST("MPYF R1, R2, R1",   0x24810201,
+              "SUBF R4, R5, R3",   0x84ECE2E1);
+
+        PTEST("MPYI AR1, *AR2, R0", 0x2520C209,
+              "ADDI R4, R5, R2",    0x882CC2E9);
+        PTEST("MPYI *AR1, AR2, R0", 0x25400AC1,
+              "ADDI R4, R5, R2",    0x882CEAC1);
+        PTEST("MPYI R1, R2, R0",    0x25000201,
+              "ADDI R4, R5, R2",    0x882CE2E1);
+        PTEST("MPYI *AR1, R2, R0",  0x254002C1,
+              "ADDI R4, AR5, R3",   0x8954C1ED);
+        PTEST("MPYI AR1, R2, R0",   0x25000209,
+              "ADDI R4, *AR5, R3",  0x8954E9C5);
+        PTEST("MPYI R1, R2, R0",    0x25000201,
+              "ADDI R4, R5, R3",    0x886CE2E1);
+        PTEST("MPYI R1, R2, R1",    0x25010201,
+              "ADDI AR4, *AR5, R2", 0x8A91C5EC);
+        PTEST("MPYI R1, R2, R1",    0x25010201,
+              "ADDI *AR4, AR5, R2", 0x8A91EDC4);
+        PTEST("MPYI R1, R2, R1",    0x25010201,
+              "ADDI R4, R5, R2",    0x88ACE2E1);
+        PTEST("MPYI *AR1, R2, R1",  0x254102C1,
+              "ADDI AR4, R5, R3",   0x8BD5C1EC);
+        PTEST("MPYI AR1, R2, R1",   0x25010209,
+              "ADDI *AR4, R5, R3",  0x8BD5E9C4);
+        PTEST("MPYI R1, R2, R1",    0x25010201,
+              "ADDI R4, R5, R3",    0x88ECE2E1);
+
+        PTEST("MPYI AR1, *AR2, R0", 0x2520C209,
+              "SUBI R4, R5, R2",    0x8C2CC2E9);
+        PTEST("MPYI *AR1, AR2, R0", 0x25400AC1,
+              "SUBI R4, R5, R2",    0x8C2CEAC1);
+        PTEST("MPYI R1, R2, R0",    0x25000201,
+              "SUBI R4, R5, R2",    0x8C2CE2E1);
+        PTEST("MPYI *AR1, R2, R0",  0x254002C1,
+              "SUBI R4, AR5, R3",   0x8D54C1ED);
+        PTEST("MPYI AR1, R2, R0",   0x25000209,
+              "SUBI R4, *AR5, R3",  0x8D54E9C5);
+        PTEST("MPYI R1, R2, R0",    0x25000201,
+              "SUBI R4, R5, R3",    0x8C6CE2E1);
+        PTEST("MPYI R1, R2, R1",    0x25010201,
+              "SUBI AR4, *AR5, R2", 0x8E91C5EC);
+        PTEST("MPYI R1, R2, R1",    0x25010201,
+              "SUBI *AR4, AR5, R2", 0x8E91EDC4);
+        PTEST("MPYI R1, R2, R1",    0x25010201,
+              "SUBI R4, R5, R2",    0x8CACE2E1);
+        PTEST("MPYI *AR1, R2, R1",  0x254102C1,
+              "SUBI AR4, R5, R3",   0x8FD5C1EC);
+        PTEST("MPYI AR1, R2, R1",   0x25010209,
+              "SUBI *AR4, R5, R3",  0x8FD5E9C4);
+        PTEST("MPYI R1, R2, R1",    0x25010201,
+              "SUBI R4, R5, R3",    0x8CECE2E1);
+    }
 }
 
 void test_parallel_unary() {

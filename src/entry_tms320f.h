@@ -28,7 +28,7 @@ namespace tms320f {
 enum AddrMode : uint8_t {
     M_NONE = 0,  // TP: No operand
     // M_IGEN-M_FLDM must be contiguous (direct, M_IMM)
-    // M_IGEN~M_IDAT must be contiguous (indirect)
+    // M_IGEN~M_FIDR must be contiguous (indirect)
     M_IGEN = 1,   // any reg, direct, indirect, 16-bit signed immediate
     M_UGEN = 2,   // any reg, direct, indirect, 16-bit unsigned immediate
     M_GCNT = 3,   // any reg, direct, indirecr, LSB 7-bit signed shift count
@@ -38,22 +38,24 @@ enum AddrMode : uint8_t {
     M_MREG = 7,   // reg, indirect
     M_FDAT = 8,   // R0~R7, indirect (disp=0,1)
     M_IDAT = 9,   // any reg, indirect (disp=0,1)
-    M_FREG = 10,  // R0~R7
-    M_IREG = 11,  // any reg
-    R_ARN = 12,   // register AR0~AR7
-    R_DP = 13,    // register DP
-    R_R01 = 14,   // R0/R1
-    R_R23 = 15,   // R2/R3
+    M_IDIR = 10,  // Indirect for parallel
+    M_IIDR = 11,  // Indirect and any reg for parallel
+    M_FIDR = 12,  // Indirect and R0~R7 for parallel
+    M_FREG = 13,  // R0~R7
+    M_IREG = 14,  // any reg
+    R_ARN = 15,   // register AR0~AR7
+    R_DP = 16,    // register DP
+    R_R01 = 17,   // R0/R1
+    R_R23 = 18,   // R2/R3
     // M_MSBA~M_TVEC must be contiguous (M_IMM)
-    M_MSBA = 16,  // 8-bit msb of address
-    M_AD24 = 17,  // 24-bit absolute address
-    M_IREL = 18,  // any register or 16-bit relative (+1)
-    M_DREL = 19,  // any register or 16-bit relative (+3)
-    M_TVEC = 20,  // trap vector 00H~1FH
+    M_MSBA = 19,  // 8-bit msb of address
+    M_AD24 = 20,  // 24-bit absolute address
+    M_IREL = 21,  // any register or 16-bit relative (+1)
+    M_DREL = 22,  // any register or 16-bit relative (+3)
+    M_TVEC = 23,  // trap vector 00H~1FH
     // Assembler parser
-    M_IDIR = 21,  // Indirect for parallel
-    M_DIR = 22,  // @addr; direct addressing
-    M_IMM = 23,  // Integer/Float immediate
+    M_DIR = 24,  // @addr; direct addressing
+    M_IMM = 25,  // Integer/Float immediate
 };
 
 enum OprPos : uint8_t {

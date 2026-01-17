@@ -25,6 +25,7 @@ namespace tms320f {
 enum CpuType : uint8_t {
     TMS320C30,
     TMS320C31,
+    TMS320C32,
 };
 
 struct Config

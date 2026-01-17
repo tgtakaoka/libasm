@@ -27,6 +27,7 @@ namespace tms320f {
 extern const char TEXT_TMS320F_LIST[] PROGMEM;
 extern const char TEXT_CPU_320C30[] PROGMEM;
 extern const char TEXT_CPU_320C31[] PROGMEM;
+extern const char TEXT_CPU_320C32[] PROGMEM;
 
 // TMS320C3x
 using common::TEXT_ABSF;

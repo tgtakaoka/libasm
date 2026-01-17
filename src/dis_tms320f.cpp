@@ -181,8 +181,14 @@ RegName DisTms320f::decodeRegister(DisInsn &insn, OprPos pos) const {
             return decodeRegName((opc >> 16) & 7);
         case P_0038:
             return decodeRegName((opc >> 19) & 7);
-        default:  // P_01C0
+        case P_01C0:
             return decodeRegName((opc >> 22) & 7);
+        case P_00FF:  // M_IIDR/M_FIDR
+            return ((opc >> 5) & 7) == 7 ? decodeRegName((opc >> 0) & 0x1F) : REG_UNDEF;
+        case P_FF00:  // M_IIDR/M_FIDR
+            return ((opc >> 13) & 7) == 7 ? decodeRegName((opc >> 8) & 0x1F) : REG_UNDEF;
+        default:
+            return REG_UNDEF;
         }
     }
     return decodeRegName((opc >> 16) & 0x1F);
@@ -237,11 +243,29 @@ void DisTms320f::decodeOperand(
         }
         break;
     case M_IDIR:
+    case M_IIDR:
+    case M_FIDR:
         if (no == 2)
             out.comma();
         if (pos == P_FF00) {
+            if (mode != M_IDIR && ((opc >> 13) & 7) == 7) {
+                if (reg == REG_UNDEF) {
+                    insn.setErrorIf(out, ILLEGAL_REGISTER);
+                } else {
+                    outRegName(out, reg);
+                }
+                break;
+            }
             decodeIndirect(insn, out, (opc >> 11) & 0x1F, (opc >> 8) & 7, -1);
         } else {  // P_00FF
+            if (mode != M_IDIR && ((opc >> 5) & 7) == 7) {
+                if (reg == REG_UNDEF) {
+                    insn.setErrorIf(out, ILLEGAL_REGISTER);
+                } else {
+                    outRegName(out, reg);
+                }
+                break;
+            }
             decodeIndirect(insn, out, (opc >> 3) & 0x1F, opc & 7, -1);
         }
         break;
