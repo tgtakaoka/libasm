@@ -28,11 +28,11 @@ help:
 
 # target which has ".inc" suffix for output.
 INC_targets = w65c816 tlcs90 i8086 i80186 $(TGT_mc68000) $(TGT_z8000) $(TGT_nm1610) \
-    ns32000 tms320c20x tms320c5x tms320c30 tms320c31 tms370 tms7000 tms9980 j11 t11 \
-    mc146805 z80 z180 z380
+    ns32000 tms320c20x tms320c5x tms320c30 tms320c31 tms320c32 tms370 tms7000 tms9980 \
+    j11 t11 mc146805 z80 z180 z380
 # target which for GNU assembler (also ".ginc" targets)
 GINC_targets = $(TGT_mc68000) $(TGT_z8000) ns32000 mc68hc11 mc68hc12 i8086 i80186 i80286 \
-    tms320c30 tms320c31
+    tms320c30 tms320c31 tms320c32
 # target which also has Zilog syntax (also ".zinc" targets)
 ZINC_targets = i8080 i8085 v30emu
 # target which doesn't need ".asm"

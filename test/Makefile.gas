@@ -157,6 +157,14 @@ gas-%_tms320c31.hex: %_tms320c31.gas
 	| tr -d '\015' > $(^:.gas=.hex)
 	tic4x-coff-objdump -m c31 -D $(^:.gas=.hex) > $(^:.gas=.dis)
 
+# TMS320C32 target
+gas-%_tms320c32.hex: %_tms320c32.gas
+	tic4x-coff-as -mcpu=32 --mrev=2 --warn -o $(^:.gas=.p) -al=$(^:.gas=.lst) $^
+	tic4x-coff-ld --entry=0 -section-start=.text=0x300 -o $(^:.gas=.o) $(^:.gas=.p)
+	tic4x-coff-objcopy -I coff1-tic4x -O ihex $(^:.gas=.o) /dev/stdout \
+	| tr -d '\015' > $(^:.gas=.hex)
+	tic4x-coff-objdump -m c32 -D $(^:.gas=.hex) > $(^:.gas=.dis)
+
 # Z80 target
 gas-%_z80.hex: %_z80.gas
 	z80-elf-as -march=z80 --warn -o $(^:.gas=.p) -al=$(^:.gas=.lst) $^
