@@ -30,7 +30,7 @@ const char *__ti_float16::str() const {
 }
 
 __ti_float16 &__ti_float16::set(int8_t exp, uint16_t frac) {
-    return set((exp << EXP_POS) | (frac & (SGN_MASK | FRAC_MASK)));
+    return set((static_cast<uint16_t>(exp) << EXP_POS) | (frac & (SGN_MASK | FRAC_MASK)));
 }
 
 __ti_float16 &__ti_float16::set(uint16_t bits) {
@@ -73,7 +73,7 @@ Error __ti_float16::set(const float80_t &f80) {
 }
 
 uint16_t __ti_float16::bits(bool sign, int8_t exp, uint16_t frac) {
-    return (exp << EXP_POS) | (sign ? SGN_MASK : 0) | (frac & FRAC_MASK);
+    return (static_cast<uint16_t>(exp) << EXP_POS) | (sign ? SGN_MASK : 0) | (frac & FRAC_MASK);
 }
 
 __ti_float16::operator float80_t() const {
@@ -103,7 +103,7 @@ const char *__ti_float32::str() const {
 }
 
 __ti_float32 &__ti_float32::set(int8_t exp, uint32_t frac) {
-    return set((exp << EXP_POS) | (frac & (SGN_MASK | FRAC_MASK)));
+    return set((static_cast<uint32_t>(exp) << EXP_POS) | (frac & (SGN_MASK | FRAC_MASK)));
 }
 
 __ti_float32 &__ti_float32::set(uint32_t bits) {
@@ -146,7 +146,7 @@ Error __ti_float32::set(const float80_t &f80) {
 }
 
 uint32_t __ti_float32::bits(bool sign, int8_t exp, uint32_t frac) {
-    return (exp << EXP_POS) | (sign ? SGN_MASK : 0) | (frac & FRAC_MASK);
+    return (static_cast<uint32_t>(exp) << EXP_POS) | (sign ? SGN_MASK : 0) | (frac & FRAC_MASK);
 }
 
 __ti_float32::operator float80_t() const {
@@ -250,7 +250,7 @@ const char *__ti_float16_external::str() const {
 }
 
 __ti_float16_external &__ti_float16_external::set(int8_t exp, uint8_t frac) {
-    return set((exp << EXP_POS) | (frac & (SGN_MASK | FRAC_MASK)));
+    return set((static_cast<uint16_t>(exp) << EXP_POS) | (frac & (SGN_MASK | FRAC_MASK)));
 }
 
 __ti_float16_external &__ti_float16_external::set(uint16_t bits) {
@@ -293,7 +293,7 @@ Error __ti_float16_external::set(const float80_t &f80) {
 }
 
 uint16_t __ti_float16_external::bits(bool sign, int8_t exp, uint8_t frac) {
-    return (exp << EXP_POS) | (sign ? SGN_MASK : 0) | (frac & FRAC_MASK);
+    return (static_cast<uint16_t>(exp) << EXP_POS) | (sign ? SGN_MASK : 0) | (frac & FRAC_MASK);
 }
 
 __ti_float16_external::operator float80_t() const {

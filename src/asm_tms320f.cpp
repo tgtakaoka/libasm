@@ -383,7 +383,7 @@ Error AsmTms320f::encodeOperand(
             if (pos == P_0038)
                 out.embed(encodeRegName(op.reg) << 19);
             if (pos == P_0080 || (insn.maybeUnary() && insn.pos3() == P_0080))
-                out.embed((op.reg == REG_R1) << 23);
+                out.embed(static_cast<uint32_t>(op.reg == REG_R1) << 23);
         } else {
             out.setErrorIf(op, REGISTER_NOT_ALLOWED);
         }
@@ -395,7 +395,7 @@ Error AsmTms320f::encodeOperand(
             if (pos == P_0038)
                 out.embed(encodeRegName(op.reg) << 19);
             if (pos == P_0040 || (insn.maybeUnary() && insn.pos3() == P_0040))
-                out.embed((op.reg == REG_R3) << 22);
+                out.embed(static_cast<uint32_t>(op.reg == REG_R3) << 22);
         } else {
             out.setErrorIf(op, REGISTER_NOT_ALLOWED);
         }

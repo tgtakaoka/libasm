@@ -43,7 +43,7 @@ DisTms320f::DisTms320f(const ValueFormatter::Plugins &plugins)
 }
 
 void DisTms320f::decodeRelative(DisInsn &insn, StrBuffer &out, AddrMode mode) const {
-    if ((insn.opCode() & (1 << 25)) == 0) {
+    if ((insn.opCode() & (UINT32_C(1) << 25)) == 0) {
         const auto reg = decodeRegName(insn.opCode() & UINT16_MAX);
         if (reg == REG_UNDEF) {
             insn.setErrorIf(out, ILLEGAL_REGISTER);
@@ -227,11 +227,11 @@ void DisTms320f::decodeOperand(
     case M_FDAT:
         if (no == 1) {
             // src2
-            insn.src2AReg = decode3OpGeneric(insn, out, mode, opc & (1 << 22), opr);
+            insn.src2AReg = decode3OpGeneric(insn, out, mode, opc & (UINT32_C(1) << 22), opr);
         } else if (no == 2) {
             // src1
             const auto at = out.comma().mark();
-            const auto ar = decode3OpGeneric(insn, out, mode, opc & (1 << 21), opr >> 8);
+            const auto ar = decode3OpGeneric(insn, out, mode, opc & (UINT32_C(1) << 21), opr >> 8);
             if (ar != REG_UNDEF && ar == insn.src2AReg)
                 insn.setErrorIf(at, REGISTERS_OVERLAPPED);
         }
