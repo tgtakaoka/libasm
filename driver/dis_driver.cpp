@@ -133,6 +133,18 @@ void DisDriver::disassemble(BinReader &memory, const char *inputName, TextPrinte
                 if (!insn.isOK())
                     errorout.println(out.str());
             }
+            if (insn.hasContinue()) {
+                const auto mark_P = insn.continueMark_P();
+                disassembler.decode(reader, insn, operands.mark(), operands.capacity());
+                formatter.set(insn, mark_P);
+                while (formatter.hasNextContent())
+                    output.println(formatter.getContent(out).str());
+                while (formatter.hasNextLine()) {
+                    listout.println(formatter.getLine(out).str());
+                    if (!insn.isOK())
+                        errorout.println(out.str());
+                }
+            }
             mem_offset += insn.length();
         }
     }

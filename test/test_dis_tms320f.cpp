@@ -17,6 +17,29 @@
 #include "dis_tms320f.h"
 #include "test_dis_helper.h"
 
+#define __PVASSERT(file, line, addr, name1, opr1, err1, at1, name2, opr2, err2, at2, ...) \
+    do {                                                                                  \
+        const Config::opcode_t codes[] = {__VA_ARGS__};                                   \
+        const auto endian = disassembler.config().endian();                               \
+        const auto unit = disassembler.config().addressUnit();                            \
+        const ArrayMemory memory(addr, codes, sizeof(codes), endian, unit);               \
+        Insn insn(memory.origin());                                                       \
+        ErrorAt error;                                                                    \
+        error.setError(at1, err1);                                                        \
+        dis_assert(file, line, error, memory, name1, opr1, insn);                         \
+        asserter.isTrue(file, line, "1st parallel", insn.hasContinue());                  \
+        error.setError(at2, err2);                                                        \
+        dis_assert(file, line, error, memory, name2, opr2, insn);                         \
+        asserter.isFalse(file, line, "2nd parallel", insn.hasContinue());                 \
+    } while (0)
+#define PVASSERT(addr, name1, opr1, err1, at1, name2, opr2, err2, at2, ...) \
+    __PVASSERT(                                                             \
+            __FILE__, __LINE__, addr, name1, opr1, err1, at1, name2, opr2, err2, at2, __VA_ARGS__)
+#define PERRT(name1, opr1, err1, at1, name2, opr2, err2, at2, ...) \
+    PVASSERT(0, name1, opr1, err1, at1, name2, opr2, err2, at2, __VA_ARGS__)
+#define PTEST(name1, opr1, name2, opr2, ...) \
+    PERRT(name1, opr1, OK, "", name2, opr2, OK, "", __VA_ARGS__)
+
 using namespace libasm;
 using namespace libasm::tms320f;
 using namespace libasm::test;
@@ -26,7 +49,7 @@ Disassembler &disassembler(dis320f);
 
 bool is320c31() {
     return strcasecmp_P("320C31", disassembler.config().cpu_P()) == 0;
-}    
+}
 
 void set_up() {
     disassembler.reset();
@@ -1936,6 +1959,93 @@ void test_interlock() {
     ERRT("STII", "R6, 0C00H", ILLEGAL_OPERAND_MODE, "0C00H", 0x15E60C00);
 }
 
+void test_parallel() {
+    PTEST("ABSF",  "*+AR0, R1",
+          "STF",   "R2, *-AR3",            0xC8420B00);
+    PTEST("ABSI",  "*++AR4, R5",
+          "STI",   "R6, *--AR7",           0xCB461F14);
+    PTEST("ADDF3", "*AR0++, R1, R2",
+          "STF",   "R3, *AR4--",           0xCC8B2C20);
+    PTEST("ADDI3", "*AR5++%, R6, R7",
+          "STI",   "R0, *AR1--%",          0xCFF03935);
+    PTEST("AND3",  "*+AR2(IR0), R3, R4",
+          "STI",   "R5, *-AR6(IR0)",       0xD11D4E42);
+    PTEST("ASH3",  "R6, *++AR7(IR0), R0",
+          "STI",   "R1, *--AR2(IR0)",      0xD2315A57);
+    PTEST("FIX",   "*AR3++(IR0), R4",
+          "STI",   "R5, *AR6--(IR0)",      0xD5056E63);
+    PTEST("FLOAT", "*AR7++(IR0)%, R0",
+          "STF",   "R1, *AR2--(IR0)%",     0xD6017A77);
+    PTEST("LDF",   "*+AR3(IR1), R4",
+          "LDF",   "*-AR5(IR1), R6",       0xC5308D83);
+    PTEST("LDF",   "*++AR7(IR1), R0",
+          "STF",   "R1, *--AR2(IR1)",      0xD8019A97);
+    PTEST("LDI",   "*AR3++(IR1), R4",
+          "LDI",   "*AR5--(IR1), R6",      0xC730ADA3);
+    PTEST("LDI",   "*AR4++(IR1)%, R5",
+          "STI",   "R6, *AR7--(IR1)%",     0xDB46BFB4);
+    PTEST("LSH3",  "R0, *AR1++(IR0)B, R2",
+          "STI",   "R3, *AR4",             0xDC83C4C9);
+    PTEST("MPYF3", "*+AR5, R6, R7",
+          "STF",   "R0, *-AR1",            0xDFF00905);
+    PTEST("MPYI3", "*++AR2, R3, R4",
+          "STI",   "R5, *--AR6",           0xE11D1E12);
+    PTEST("NEGF",  "*AR7++, R0",
+          "STF",   "R1, *AR2--",           0xE2012A27);
+    PTEST("NEGI",  "*AR3++%, R4",
+          "STI",   "R5, *AR6--%",          0xE5053E33);
+    PTEST("NOT",   "*+AR7(IR0), R0",
+          "STI",   "R1, *-AR2(IR0)",       0xE6014A47);
+    PTEST("OR3",   "*++AR3(IR0), R4, R5",
+          "STI",   "R6, *--AR7(IR0)",      0xE9665F53);
+    PTEST("STF",   "R0, *AR1++(IR0)",
+          "STF",   "R2, *AR3--(IR0)",      0xC0026B61);
+    PTEST("STI",   "R4, *AR5++(IR0)%",
+          "STI",   "R6, *AR7--(IR0)%",     0xC3067F75);
+    PTEST("SUBF3", "R0, *+AR1(IR1), R2",
+          "STF",   "R3, *-AR4(IR1)",       0xEA838C81);
+    PTEST("SUBI3", "R5, *++AR6(IR1), R7",
+          "STI",   "R0, *--AR1(IR1)",      0xEDE89996);
+    PTEST("XOR3",  "*AR2++(IR1), R3, R4",
+          "STI",   "R5, *AR6--(IR1)",      0xEF1DAEA2);
+
+    PTEST("MPYF3", "*AR1, *AR2, R0",
+          "ADDF3", "R4, R5, R2",     0x802CC2C1);
+    PTEST("MPYF3", "*AR1, R2, R0",
+          "ADDF3", "R4, *AR5, R3",   0x8154C1C5);
+    PTEST("MPYF3", "R1, R2, R1",
+          "ADDF3", "*AR4, *AR5, R2", 0x8291C5C4);
+    PTEST("MPYF3", "*AR1, R2, R1",
+          "ADDF3", "*AR4, R5, R3",   0x83D5C1C4);
+
+    PTEST("MPYF3", "*AR1, *AR2, R0",
+          "SUBF3", "R4, R5, R2",     0x842CC2C1);
+    PTEST("MPYF3", "*AR1, R2, R0",
+          "SUBF3", "R4, *AR5, R3",   0x8554C1C5);
+    PTEST("MPYF3", "R1, R2, R1",
+          "SUBF3", "*AR4, *AR5, R2", 0x8691C5C4);
+    PTEST("MPYF3", "*AR1, R2, R1",
+          "SUBF3", "*AR4, R5, R3",   0x87D5C1C4);
+
+    PTEST("MPYI3", "*AR1, *AR2, R0",
+          "ADDI3", "R4, R5, R2",     0x882CC2C1);
+    PTEST("MPYI3", "*AR1, R2, R0",
+          "ADDI3", "R4, *AR5, R3",   0x8954C1C5);
+    PTEST("MPYI3", "R1, R2, R1",
+          "ADDI3", "*AR4, *AR5, R2", 0x8A91C5C4);
+    PTEST("MPYI3", "*AR1, R2, R1",
+          "ADDI3", "*AR4, R5, R3",   0x8BD5C1C4);
+
+    PTEST("MPYI3", "*AR1, *AR2, R0",
+          "SUBI3", "R4, R5, R2",     0x8C2CC2C1);
+    PTEST("MPYI3", "*AR1, R2, R0",
+          "SUBI3", "R4, *AR5, R3",   0x8D54C1C5);
+    PTEST("MPYI3", "R1, R2, R1",
+          "SUBI3", "*AR4, *AR5, R2", 0x8E91C5C4);
+    PTEST("MPYI3", "*AR1, R2, R1",
+          "SUBI3", "*AR4, R5, R3",   0x8FD5C1C4);
+}
+
 // clang-format on
 
 void run_tests(const char *cpu) {
@@ -1947,6 +2057,7 @@ void run_tests(const char *cpu) {
     RUN_TEST(test_program);
     RUN_TEST(test_misc);
     RUN_TEST(test_interlock);
+    RUN_TEST(test_parallel);
 }
 
 // Local Variables:

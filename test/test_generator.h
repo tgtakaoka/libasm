@@ -104,8 +104,11 @@ private:
     std::unordered_map<std::string, TokenizedText::Set> _error;
 
     void printInsn(const libasm::driver::DisFormatter &data);
-    const TokenizedText &meaningfulTestData(std::string &name, bool withSize = true);
-    const TokenizedText &meaningfulError(std::string &name);
+    const TokenizedText *_meaningfulTestData(
+            std::string &name, bool withSize, const Insn *cont, const char *contOpr);
+    const TokenizedText *meaningfulTestData(
+            std::string &name, const Insn *cont = nullptr, const char *contOpr = nullptr);
+    const TokenizedText *meaningfulError(std::string &name);
     static constexpr uint8_t MAX_DROP_BYTE = 22;
     static uint8_t calcDrop(const TokenizedText &text);
     uint8_t generateTests(DataGenerator &gen, const bool root);

@@ -272,9 +272,14 @@ void TestGenerator::dump() const {
     }
 }
 
-const TokenizedText &TestGenerator::meaningfulTestData(std::string &name, bool withSize) {
+const TokenizedText *TestGenerator::_meaningfulTestData(
+        std::string &name, bool withSize, const Insn *cont, const char *contOpr) {
     const auto &insn = _disFormatter.insn();
     name = insn.name();
+    if (insn.hasContinue() && cont) {
+        name += insn.continueMark_P();
+        name += cont->name();
+    }
     if (withSize) {
         const auto size = insn.length();
         name += ':';
@@ -284,15 +289,30 @@ const TokenizedText &TestGenerator::meaningfulTestData(std::string &name, bool w
     if (seen == _map.end())
         seen = _map.emplace(name, TokenizedText::Set()).first;
     auto &oprVariants = seen->second;
-    const TokenizedText opr{_disFormatter.operands().str()};
+    std::string operands{_disFormatter.operands().str()};
+    if (insn.hasContinue() && contOpr) {
+        operands += insn.continueMark_P();
+        operands += contOpr;
+    }
+    const TokenizedText opr{operands.c_str()};
     auto found = oprVariants.find(opr);
     if (found == oprVariants.end())
         found = oprVariants.insert(opr).first;
     found->increment();
-    return *found;
+    return &*found;
 }
 
-const TokenizedText &TestGenerator::meaningfulError(std::string &name) {
+const TokenizedText *TestGenerator::meaningfulTestData(
+        std::string &name, const Insn *cont, const char *contOpr) {
+    auto found = _meaningfulTestData(name, true, cont, contOpr);
+    if (found->count() == 1 && _ignoreSizeVariation) {
+        std::string mnemonic;
+        found = _meaningfulTestData(mnemonic, false, cont, contOpr);
+    }
+    return found;
+}
+
+const TokenizedText *TestGenerator::meaningfulError(std::string &name) {
     const auto &insn = _disFormatter.insn();
     name = insn.name();
     const auto size = insn.length();
@@ -307,7 +327,7 @@ const TokenizedText &TestGenerator::meaningfulError(std::string &name) {
     if (found == oprVariants.end())
         found = oprVariants.insert(opr).first;
     found->increment();
-    return *found;
+    return &*found;
 }
 
 uint8_t TestGenerator::calcDrop(const TokenizedText &text) {
@@ -327,44 +347,57 @@ uint8_t TestGenerator::generateTests(DataGenerator &gen, const bool root) {
         auto &insn = _disFormatter.insn();
         auto &operands = _disFormatter.operands();
         insn.reset(_address / _addressUnit);
-        const auto error = _disassembler.decode(it, insn, operands.mark(), operands.capacity());
+        insn.setContinueMark_P(nullptr);
+        auto error = _disassembler.decode(it, insn, operands.mark(), operands.capacity());
         _disFormatter.set(insn);
+        const TokenizedText *found = nullptr;
         if (insn.isOK()) {
             const int len = gen.length();
-            const int newLen = _disFormatter.insn().length();
+            const int newLen = insn.length();
             std::string name;
-            const auto &found = meaningfulTestData(name);
-            if (found.count() == 1) {
+            if (insn.hasContinue()) {
+                Insn cont(insn.address());
+                for (auto i = 0; i < newLen; ++i)
+                    cont.emitByte(insn.bytes()[i]);
+                cont.setContinueMark_P(insn.continueMark_P());
+                char operands[128];
+                error = _disassembler.decode(it, cont, operands, sizeof(operands));
+                if (error)
+                    goto error_handling;
+                found = meaningfulTestData(name, &cont, operands);
+            } else {
+                found = meaningfulTestData(name);
+            }
+            if (found->count() == 1) {
                 // Found the first occurence of name/size/operand combination
-                if (_ignoreSizeVariation) {
-                    std::string mnemonic;
-                    const auto &uniq = meaningfulTestData(mnemonic, false);
-                    if (uniq.count() == 1) {
-                        _formatter.printList();
-                        _address += newLen;
-                    }
-                } else {
+                _formatter.printList();
+                if (insn.hasContinue()) {
+                    const auto mark_P = insn.continueMark_P();
+                    _disassembler.decode(it, insn, operands.mark(), operands.capacity());
+                    _disFormatter.set(insn, mark_P);
                     _formatter.printList();
-                    _address += newLen;
                 }
+                _address += newLen;
             }
             if (newLen < len && !root) {
                 // Byte/word sequence is correct instruction but there are unnecessary bytes. Drop
                 // these.
-                gen.dump("@@ shrink length=%d count=%#x: %s %s", newLen, found.count(),
-                        name.c_str(), found.tokens().c_str());
+                gen.dump("@@ shrink length=%d count=%#x: %s %s", newLen, found->count(),
+                        name.c_str(), found->tokens().c_str());
                 return len - newLen;
             }
             // This iteration is the first byte/word of instruction or doesn't iterate over all
             // possible operand combination yet. Try next sequence.
-            if (root || found.count() < (1U << 16))
+            if (root || found->count() < (1U << 16))
                 continue;
             // This byte/word seems unnecessary to iterate remaining. Drop some last bytes/words.
-            const auto drop = calcDrop(found);
-            gen.dump("@@ break drop=%d count=%#x: %s %s", drop, found.count(), name.c_str(),
-                    found.tokens().c_str());
+            const auto drop = calcDrop(*found);
+            gen.dump("@@ break drop=%d count=%#x: %s %s", drop, found->count(), name.c_str(),
+                    found->tokens().c_str());
             return drop;
-        } else if (error == NO_MEMORY) {
+        }
+    error_handling:
+        if (error == NO_MEMORY) {
             // Byte/word sequence seems a correct instruction but needs more bytes/words.
             auto *child = gen.newChild();
             const auto drop = generateTests(*child, false);
@@ -395,15 +428,15 @@ uint8_t TestGenerator::generateTests(DataGenerator &gen, const bool root) {
             }
         } else if (error != UNKNOWN_INSTRUCTION && error != OPERAND_NOT_ALIGNED) {
             std::string name;
-            const auto &error = meaningfulError(name);
-            if (error.count() == 1)
-                gen.dump("@@ error: %s %s: %s", name.c_str(), error.tokens().c_str(),
+            const auto *error = meaningfulError(name);
+            if (error->count() == 1)
+                gen.dump("@@ error: %s %s: %s", name.c_str(), error->tokens().c_str(),
                         insn.errorText_P());
-            if (root || error.count() < (1U << 16))
+            if (root || error->count() < (1U << 16))
                 continue;
-            const auto drop = calcDrop(error);
-            gen.dump("@@ break drop=%d error=%#x: %s %s: %s", drop, error.count(), name.c_str(),
-                    error.tokens().c_str(), insn.errorText_P());
+            const auto drop = calcDrop(*error);
+            gen.dump("@@ break drop=%d error=%#x: %s %s: %s", drop, error->count(), name.c_str(),
+                    error->tokens().c_str(), insn.errorText_P());
             return drop;
         }
     } while (gen.hasNext());

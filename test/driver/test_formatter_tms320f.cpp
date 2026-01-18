@@ -42,6 +42,10 @@ label:  .word label
         .space 1
         .string "A""B'C"
         negf  -5.0024, r0
+        absf  *+ar0, r1
+||      stf   r2, *-ar3
+        mpyf3 *ar1, *ar2, r0
+||      addf3 r4, r5, r2
 )",
             R"(          0 :                            .cpu  tms320c3x
           0 :                    * comment line
@@ -54,6 +58,10 @@ label:  .word label
        1006 :                            .space 1
        1007 : 27422241 00000043          .string "A""B'C"
        1009 : 0be02dff                   negf  -5.0024, r0
+       100a : 00410001                   absf  *+ar0, r1
+       100a : c8420b00           ||      stf   r2, *-ar3
+       100b : 24e0c2c1                   mpyf3 *ar1, *ar2, r0
+       100b : 802cc2c1           ||      addf3 r4, r5, r2
 )");
 }
 
@@ -70,6 +78,10 @@ void test_dis_tms320f() {
 * test.bin: error: Unknown instruction
 *     1002 : 788b0000
       negf     -0.50024, r0
+      absf     *+ar0, r1
+||    stf      r2, *-ar3
+      mpyf3    *ar1, *ar2, r0
+||    addf3    r4, r5, r2
 )",
             R"(       0 :                            cpu      320c3x
     1000 :                            org      001000h
@@ -78,8 +90,12 @@ void test_dis_tms320f() {
 test.bin: error: Unknown instruction
     1002 : 788b0000
     1003 : 0be0ffff                   negf     -0.50024, r0
+    1004 : c8420b00                   absf     *+ar0, r1
+    1004 :                    ||      stf      r2, *-ar3
+    1005 : 802cc2c1                   mpyf3    *ar1, *ar2, r0
+    1005 :                    ||      addf3    r4, r5, r2
 )",
-          0x62123456, 0x2163CA01, 0x788B0000, 0x0BE0FFFF);
+          0x62123456, 0x2163CA01, 0x788B0000, 0x0BE0FFFF, 0xC8420B00, 0x802CC2C1);
 }
 
 void run_tests() {

@@ -32,7 +32,7 @@ extern TestAsserter asserter;
 extern TestSymtab symtab;
 
 void dis_assert(const char *file, int line, const ErrorAt &error, const ArrayMemory &src,
-        const char *expected_name, const char *expected_opr);
+        const char *expected_name, const char *expected_opr, Insn &insn);
 
 void run_test(void (*test)(), const char *name, void (*set_up)(), void (*tear_down)());
 
@@ -50,9 +50,10 @@ void run_test(void (*test)(), const char *name, void (*set_up)(), void (*tear_do
         const auto endian = disassembler.config().endian();                 \
         const auto unit = disassembler.config().addressUnit();              \
         const ArrayMemory memory(addr, codes, sizeof(codes), endian, unit); \
+        Insn insn(memory.origin());                                         \
         ErrorAt error;                                                      \
         error.setError(at, err);                                            \
-        dis_assert(file, line, error, memory, name, opr);                   \
+        dis_assert(file, line, error, memory, name, opr, insn);             \
     } while (0)
 #define VASSERT(err, at, addr, name, opr, ...) \
     __VASSERT(__FILE__, __LINE__, err, at, addr, name, opr, __VA_ARGS__)

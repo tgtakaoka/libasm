@@ -20,7 +20,7 @@
 
 namespace libasm {
 
-Insn::Insn(uint32_t addr) : ErrorAt(), _address(addr), _length(0) {
+Insn::Insn(uint32_t addr) : ErrorAt(), _address(addr), _length(0), _continueMark_P(nullptr) {
     memset(_bytes, 0, sizeof(_bytes));
 }
 

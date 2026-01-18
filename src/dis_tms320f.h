@@ -35,7 +35,9 @@ private:
     void decodeGeneric(DisInsn &insn, StrBuffer &out, AddrMode mode, uint_fast8_t pos) const;
     RegName decode3OpGeneric(
             DisInsn &insn, StrBuffer &out, AddrMode mode, bool indir, uint_fast8_t modar) const;
-    void decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode, uint_fast8_t pos) const;
+    RegName decodeRegister(DisInsn &insn, OprPos pos) const;
+    void decodeOperand(
+            DisInsn &insn, StrBuffer &out, AddrMode mode, OprPos pos, uint_fast8_t no) const;
 
     Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) const override;
     const ConfigBase &config() const override { return *this; }

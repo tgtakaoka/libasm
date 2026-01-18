@@ -15,7 +15,6 @@
  */
 
 #include "dis_formatter.h"
-
 #include "str_buffer.h"
 
 namespace libasm {
@@ -55,11 +54,16 @@ void DisFormatter::reset() {
     _error.resetError();
     _errorMessage = _errorContent = _errorLine = false;
     _nextContent = _nextLine = -1;
+    _continueMark_P = nullptr;
 }
 
-void DisFormatter::set(const ErrorAt &error) {
+void DisFormatter::set(const ErrorAt &error, const /*PROGMEM*/ char *mark_P) {
     _error.setError(error);
     _errorMessage = _errorContent = _errorLine = _error.getError();
+    if (mark_P) {
+        _continueMark_P = mark_P;
+        _nextContent = _nextLine = -1;
+    }
 }
 
 void DisFormatter::setCpu(const char *cpu) {
@@ -91,7 +95,7 @@ static int max(int a, int b) {
 }
 
 void DisFormatter::formatComment(StrBuffer &out) {
-    out.text_P(_disassembler.lineComment_P()).letter(' ');
+    out.rtext_P(_disassembler.lineComment_P()).letter(' ');
 }
 
 void DisFormatter::formatError(StrBuffer &out) {
@@ -103,10 +107,16 @@ void DisFormatter::formatError(StrBuffer &out) {
 void DisFormatter::formatLine(StrBuffer &out, int &next) {
     _formatter.formatAddress(out, startAddress() + next);
     auto pos = out.len();
-    const auto formatted = _formatter.formatBytes(out, next);
+    char buf[1];
+    StrBuffer null{buf, sizeof(buf)};
+    auto &bytesOut = _continueMark_P ? null : out;
+    const auto formatted = _formatter.formatBytes(bytesOut, next);
     if (next == 0 && *_insn.name()) {
         _formatter.formatTab(out, pos + _formatter.bytesColumnWidth() + 1);
-        _formatter.formatTab(out, out.len() + 8);  // label width
+        const auto namePos = out.len() + 8;  // label width
+        if (_continueMark_P)
+            out.rtext_P(_continueMark_P);
+        _formatter.formatTab(out, namePos);
         pos = out.len();
         out.text(_insn.name());
         if (*_operands) {
@@ -133,7 +143,10 @@ StrBuffer &DisFormatter::getContent(StrBuffer &out) {
         if (_nextContent < 0)
             _nextContent = 0;
         if (*_insn.name()) {
-            _formatter.formatTab(out, out.len() + 6);  // label width
+            const auto namePos = out.len() + 6;  // label width
+            if (_continueMark_P)
+                out.rtext_P(_continueMark_P);
+            _formatter.formatTab(out, namePos);
             const auto pos = out.len();
             out.text(_insn.name());
             if (*_operands) {

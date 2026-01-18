@@ -435,6 +435,7 @@ constexpr char TEXT_dINT[]     PROGMEM = ".int";
 constexpr char TEXT_dLDOUBLE[] PROGMEM = ".ldouble";
 constexpr char TEXT_dSFLOAT[]  PROGMEM = ".sfloat";
 constexpr char TEXT_dSPACE[]   PROGMEM = ".space";
+constexpr char TEXT_PARALLEL[] PROGMEM = "||";
 
 // clang-format on
 }  // namespace tms320f

@@ -438,6 +438,7 @@ extern const char TEXT_dINT[]     PROGMEM; // .int
 extern const char TEXT_dLDOUBLE[] PROGMEM; // .ldouble
 extern const char TEXT_dSFLOAT[]  PROGMEM; // .sfloat
 extern const char TEXT_dSPACE[]   PROGMEM; // .space
+extern const char TEXT_PARALLEL[] PROGMEM; // ||
 
 // clang-format on
 }  // namespace tms320f

@@ -43,6 +43,9 @@ struct Insn final : ErrorAt {
     void setAddress(uint32_t addr) { _address = addr; }
     void reset(uint32_t addr, uint8_t length = 0);
     uint32_t align(uint8_t step);
+    bool hasContinue() const { return _continueMark_P != nullptr; }
+    const /*PROGMEM*/ char *continueMark_P() const { return _continueMark_P; }
+    void setContinueMark_P(const /*PROGMEM*/ char *mark_P) { _continueMark_P = mark_P; }
 
     /** No copy constructor. */
     Insn(Insn const &) = delete;
@@ -122,6 +125,7 @@ struct Insn final : ErrorAt {
 private:
     uint32_t _address;
     uint8_t _length;
+    const /*PROGMEM*/ char *_continueMark_P;
 
     static constexpr size_t MAX_NAME = 11;
     char _name[MAX_NAME + 1];
@@ -227,7 +231,7 @@ struct AsmInsnBase : ErrorAt {
     }
 #endif
 
-    //protected:
+protected:
     Insn &_insn;
 };
 

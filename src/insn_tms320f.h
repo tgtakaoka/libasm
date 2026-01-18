@@ -31,9 +31,13 @@ struct EntryInsn : EntryInsnBase<Config, Entry> {
     AddrMode mode1() const { return flags().mode1(); }
     AddrMode mode2() const { return flags().mode2(); }
     AddrMode mode3() const { return flags().mode3(); }
+    OprPos pos1() const { return flags().pos1(); }
+    OprPos pos2() const { return flags().pos2(); }
+    OprPos pos3() const { return flags().pos3(); }
     CodeFormat codeFormat() const { return flags().codeFormat(); }
     LswFormat lswFormat() const { return flags().lswFormat(); }
     bool maybeUnary() const { return flags().maybeUnary(); }
+    bool isParallel() const { return flags().isParallel(); }
 };
 
 enum SubMode : uint8_t {
@@ -78,6 +82,11 @@ struct AsmInsn final : AsmInsnImpl<Config>, EntryInsn {
 
 struct DisInsn final : DisInsnImpl<Config>, EntryInsn {
     DisInsn(Insn &insn, DisMemory &memory, const StrBuffer &out) : DisInsnImpl(insn, memory, out) {}
+    void bytesToOpCode();
+    bool hasContinue() const { return _insn.hasContinue(); }
+    void setContinueMark_P(const /*PROGMEM*/ char *mark_P) const {
+        _insn.setContinueMark_P(mark_P);
+    }
 
     RegName srcReg = REG_UNDEF;
     RegName src2AReg = REG_UNDEF;

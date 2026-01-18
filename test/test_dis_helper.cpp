@@ -33,8 +33,7 @@ TestSymtab symtab;
 char actual_opr[128];
 
 void dis_assert(const char *file, int line, const ErrorAt &error, const ArrayMemory &memory,
-        const char *expected_name, const char *expected_opr) {
-    Insn insn(memory.origin());
+        const char *expected_name, const char *expected_opr, Insn &insn) {
     auto mem = memory.iterator();
     disassembler.decode(mem, insn, actual_opr, sizeof(actual_opr), &symtab);
 

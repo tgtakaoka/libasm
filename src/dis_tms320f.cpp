@@ -17,7 +17,7 @@
 #include "dis_tms320f.h"
 #include "reg_tms320f.h"
 #include "table_tms320f.h"
-#include "text_common.h"
+#include "text_tms320f.h"
 #include "ti_float.h"
 
 namespace libasm {
@@ -25,6 +25,7 @@ namespace tms320f {
 
 using namespace reg;
 using namespace text::common;
+using namespace text::tms320f;
 
 const ValueFormatter::Plugins &DisTms320f::defaultPlugins() {
     static const struct final : ValueFormatter::Plugins {
@@ -168,12 +169,33 @@ RegName DisTms320f::decode3OpGeneric(
     return REG_UNDEF;
 }
 
+RegName DisTms320f::decodeRegister(DisInsn &insn, OprPos pos) const {
+    const auto opc = insn.opCode();
+    if (insn.isParallel()) {
+        switch (pos) {
+        case P_0040:
+            return decodeRegName(((opc >> 22) & 1) + 2);
+        case P_0080:
+            return decodeRegName((opc >> 23) & 1);
+        case P_0007:
+            return decodeRegName((opc >> 16) & 7);
+        case P_0038:
+            return decodeRegName((opc >> 19) & 7);
+        default:  // P_01C0
+            return decodeRegName((opc >> 22) & 7);
+        }
+    }
+    return decodeRegName((opc >> 16) & 0x1F);
+}
+
 void DisTms320f::decodeOperand(
-        DisInsn &insn, StrBuffer &out, AddrMode mode, uint_fast8_t pos) const {
+        DisInsn &insn, StrBuffer &out, AddrMode mode, OprPos pos, uint_fast8_t no) const {
     const auto opc = insn.opCode();
     auto opr = opc & UINT16_MAX;
-    const auto reg = decodeRegName((opc >> 16) & 0x1F);
+    const auto reg = decodeRegister(insn, pos);
     switch (mode) {
+    case R_R01:
+    case R_R23:
     case M_FREG:
         if (reg > REG_R7)
             insn.setErrorIf(out, ILLEGAL_REGISTER);
@@ -182,10 +204,10 @@ void DisTms320f::decodeOperand(
     case M_IREG:
         if (reg == REG_UNDEF) {
             insn.setErrorIf(out, ILLEGAL_REGISTER);
-        } else if (!_gnuAs && insn.maybeUnary() && pos == 2 && reg == insn.srcReg) {
+        } else if (!_gnuAs && insn.maybeUnary() && no == 2 && reg == insn.srcReg) {
             ;  // omit destination register
         } else {
-            if (pos == 2)
+            if (no == 2)
                 out.comma();
             outRegName(out, reg);
         }
@@ -197,16 +219,16 @@ void DisTms320f::decodeOperand(
     case M_FLDM:
     case M_GCNT:
     case M_MREG:
-        if (pos == 2)
+        if (no == 2)
             out.comma();
-        decodeGeneric(insn, out, mode, pos);
+        decodeGeneric(insn, out, mode, no);
         break;
     case M_IDAT:
     case M_FDAT:
-        if (pos == 1) {
+        if (no == 1) {
             // src2
             insn.src2AReg = decode3OpGeneric(insn, out, mode, opc & (1 << 22), opr);
-        } else if (pos == 2) {
+        } else if (no == 2) {
             // src1
             const auto at = out.comma().mark();
             const auto ar = decode3OpGeneric(insn, out, mode, opc & (1 << 21), opr >> 8);
@@ -214,16 +236,25 @@ void DisTms320f::decodeOperand(
                 insn.setErrorIf(at, REGISTERS_OVERLAPPED);
         }
         break;
+    case M_IDIR:
+        if (no == 2)
+            out.comma();
+        if (pos == P_FF00) {
+            decodeIndirect(insn, out, (opc >> 11) & 0x1F, (opc >> 8) & 7, -1);
+        } else {  // P_00FF
+            decodeIndirect(insn, out, (opc >> 3) & 0x1F, opc & 7, -1);
+        }
+        break;
     case M_MSBA:
         if ((opr & ~UINT8_MAX) != 0)
             insn.setErrorIf(out, OVERFLOW_RANGE);
-        if (pos == 2)
+        if (no == 2)
             out.comma();
         outHex(out, opr << 16, 24);
         break;
     case M_IREL:
     case M_DREL:
-        if (pos == 2)
+        if (no == 2)
             out.comma();
         decodeRelative(insn, out, mode);
         break;
@@ -246,22 +277,41 @@ void DisTms320f::decodeOperand(
     }
 }
 
+void DisInsn::bytesToOpCode() {
+    const auto *ptr = bytes();
+    Config::opcode_t opc = *ptr++;
+    opc |= static_cast<uint16_t>(*ptr++) << 8;
+    opc |= static_cast<uint32_t>(*ptr++) << 16;
+    opc |= static_cast<uint32_t>(*ptr++) << 24;
+    setOpCode(opc);
+}
+
 Error DisTms320f::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) const {
     DisInsn insn(_insn, memory, out);
-    insn.setOpCode(insn.readUint32());
+    if (insn.hasContinue()) {
+        insn.bytesToOpCode();
+    } else {
+        insn.setOpCode(insn.readUint32());
+    }
     if (searchOpCode(cpuType(), insn, out))
         return _insn.setError(insn);
 
     if (insn.codeFormat() != CF_00 && insn.lswFormat() == LF_00 &&
             (insn.opCode() & UINT16_MAX) != 0)
         insn.setErrorIf(out, ILLEGAL_OPERAND);
-    decodeOperand(insn, out, insn.mode1(), 1);
+    decodeOperand(insn, out, insn.mode1(), insn.pos1(), 1);
     const auto mode2 = insn.mode2();
     if (mode2 != M_NONE) {
-        decodeOperand(insn, out, mode2, 2);
+        decodeOperand(insn, out, mode2, insn.pos2(), 2);
         const auto mode3 = insn.mode3();
         if (mode3 != M_NONE)
-            decodeOperand(insn, out.comma(), mode3, 3);
+            decodeOperand(insn, out.comma(), mode3, insn.pos3(), 3);
+    }
+
+    if (insn.hasContinue()) {
+        insn.setContinueMark_P(nullptr);
+    } else if (insn.isParallel()) {
+        insn.setContinueMark_P(TEXT_PARALLEL);
     }
     return _insn.setError(insn);
 }
