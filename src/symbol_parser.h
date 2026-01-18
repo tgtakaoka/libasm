@@ -159,6 +159,11 @@ struct Tms320SymbolParser final : SimpleSymbolParser, Singleton<Tms320SymbolPars
     bool instructionLetter(char c) const override;
 };
 
+struct Tms320fSymbolParser final : SimpleSymbolParser, Singleton<Tms320fSymbolParser> {
+    Tms320fSymbolParser() : SimpleSymbolParser(text::common::PSTR_UNDER_DOLLAR) {}
+    bool instructionLetter(char c) const override;
+};
+
 struct Z8SymbolParser final : SimpleSymbolParser, Singleton<Z8SymbolParser> {
     Z8SymbolParser() : SimpleSymbolParser(text::common::PSTR_UNDER_DOT_DOLLAR_QUESTION) {}
 };

@@ -1404,7 +1404,8 @@ bool acceptMode(AddrMode opr, AddrMode table) {
     if (opr == M_IDIR)
         return table >= M_IGEN && table <= M_IDAT;
     if (opr == M_IREG || opr == R_DP)
-        return (table >= M_IGEN && table <= R_DP) || table == M_IREL || table == M_DREL;
+        return (table >= M_IGEN && table <= R_DP) || table == M_IREL || table == M_DREL ||
+               table == R_R01 || table == R_R23; /* || table == M_IIDR | tablr == M_FIDR */
     if (opr == M_IMM)
         return (table >= M_IGEN && table <= M_IDAT) || (table >= M_MSBA && table <= M_TVEC);
     return false;
@@ -1416,8 +1417,28 @@ bool acceptModes(AsmInsn &insn, const Entry *entry) {
            acceptMode(insn.op3.mode, table.mode3());
 }
 
+bool acceptParallels(AsmInsn &insn, const Entry *entry) {
+    const auto table = entry->readFlags();
+    if (table.isParallel()) {
+        const auto parallel = parallelInsn(entry);
+        return strcasecmp_P(insn.para->name(), parallel->name_P()) == 0 &&
+               acceptModes(insn, entry) && acceptModes(*insn.para, parallel);
+    }
+    return false;
+}
+
+void readParallel(AsmInsn &insn, const Entry *entry, const EntryPage *page) {
+    const auto parallel = parallelInsn(entry);
+    Cpu::defaultReadCode(insn, entry, page);
+    Cpu::defaultReadCode(*insn.para, parallel, page);
+}
+
 Error searchName(CpuType cpuType, AsmInsn &insn) {
-    cpu(cpuType)->searchName(insn, acceptModes);
+    if (insn.para) {
+        cpu(cpuType)->searchName(insn, acceptParallels, Cpu::defaultPageSetup, readParallel);
+    } else {
+        cpu(cpuType)->searchName(insn, acceptModes);
+    }
     return insn.getError();
 }
 

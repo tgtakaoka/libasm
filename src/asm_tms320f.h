@@ -28,12 +28,16 @@ struct AsmTms320f final : Assembler, Config {
     AsmTms320f(const ValueParser::Plugins &plugins = defaultPlugins());
 
 private:
+    mutable Insn _prevInsn;
+    mutable AsmInsn _prev;
+
     Error parseOperand(StrScanner &scan, Operand &op) const;
     Error encodeRelative(AsmInsn &insn, const Operand &op, AddrMode mode) const;
-    Error encodeIndirect(AsmInsn &insn, const Operand &op, AddrMode mode) const;
-    Error encodeInteger(AsmInsn &insn, const Operand &op, AddrMode mode) const;
-    Error encodeFloat(AsmInsn &insn, const Operand &op, AddrMode mode) const;
-    Error encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode) const;
+    Error encodeIndirect(AsmInsn &insn, const Operand &op, AddrMode mode, OprPos pos) const;
+    Error encodeInteger(AsmInsn &insn, const Operand &op, AddrMode mode, OprPos pos) const;
+    Error encodeFloat(AsmInsn &insn, const Operand &op, AddrMode mode, OprPos pos) const;
+    Error encodeOperand(
+            AsmInsn &out, const AsmInsn &insn, const Operand &op, AddrMode mode, OprPos pos) const;
 
     Error alignOrigin(StrScanner &scan, Insn &insn);
     Error defineFloat(StrScanner &scan, Insn &insn, uint_fast8_t bits);

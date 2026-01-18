@@ -336,6 +336,10 @@ bool Tms320SymbolParser::instructionLetter(char c) const {
     return SimpleSymbolParser::instructionLetter(c) || c == '.';
 }
 
+bool Tms320fSymbolParser::instructionLetter(char c) const {
+    return SimpleSymbolParser::instructionLetter(c) || c == '.' || c == '|';
+}
+
 Error LetterParser::parseLetter(StrScanner &scan, char &letter) const {
     auto p = scan;
     if (!letterPrefix(p))

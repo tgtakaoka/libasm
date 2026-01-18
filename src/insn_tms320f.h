@@ -51,7 +51,7 @@ enum SubMode : uint8_t {
 };
 
 struct Operand final : ErrorAt {
-    const uint_fast8_t pos;
+    uint_fast8_t pos;
     AddrMode mode;
     RegName reg;
     SubMode subMode;
@@ -70,14 +70,19 @@ struct Operand final : ErrorAt {
           hasDisp(false),
           dispAt(),
           val() {}
+    void copyFrom(const Operand &from);
 };
 
 struct AsmInsn final : AsmInsnImpl<Config>, EntryInsn {
     AsmInsn(Insn &insn) : AsmInsnImpl(insn) {}
 
     Operand op1{1}, op2{2}, op3{3};
+    AsmInsn *para;
 
     void emitInsn() { emitUint32(opCode(), 0); }
+    bool hasContinue() const { return _insn.hasContinue(); }
+    void clearContinueMark() const { _insn.setContinueMark_P(nullptr); }
+    void copyFrom(const AsmInsn &from);
 };
 
 struct DisInsn final : DisInsnImpl<Config>, EntryInsn {
