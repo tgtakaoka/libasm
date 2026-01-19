@@ -32,7 +32,7 @@ void test_asm_tms320f() {
     driver.setUpperHex(false);
 
     ASM("tms320c3x",
-            R"(        .cpu  tms320c3x
+            R"(        .cpu  tms320c31
 * comment line
         .org  1000h
         call  123456h
@@ -47,7 +47,7 @@ label:  .word label
         mpyf3 *ar1, *ar2, r0
 ||      addf3 r4, r5, r2
 )",
-            R"(          0 :                            .cpu  tms320c3x
+            R"(          0 :                            .cpu  tms320c31
           0 :                    * comment line
        1000 :                            .org  1000h
        1000 : 62123456                   call  123456h
@@ -70,8 +70,8 @@ void test_dis_tms320f() {
 
     driver.setUpperHex(false);
 
-    DIS32("tms320c3x", 0x1000,
-            R"(      cpu      320c3x
+    DIS32("tms320c31", 0x1000,
+            R"(      cpu      320c31
       org      001000h
       call     123456h
       addi3    *+ar1, *ar2++(ir0)b, r3
@@ -83,7 +83,7 @@ void test_dis_tms320f() {
       mpyf3    *ar1, *ar2, r0
 ||    addf3    r4, r5, r2
 )",
-            R"(       0 :                            cpu      320c3x
+            R"(       0 :                            cpu      320c31
     1000 :                            org      001000h
     1000 : 62123456                   call     123456h
     1001 : 2163ca01                   addi3    *+ar1, *ar2++(ir0)b, r3
