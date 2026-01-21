@@ -1666,14 +1666,25 @@ void test_string_manipulation() {
 void test_control_transfer() {
     disassembler.setOption("relative", "off");
 
-    ATEST(0x01000, "CALL", "01082H",                             0xE8, 0x7F, 0x00);
-    ATEST(0x01000, "CALL", "09002H",                             0xE8, 0xFF, 0x7F);
-    AERRT(0x0F000, "CALL", "17002H", OVERWRAP_SEGMENT, "17002H", 0xE8, 0xFF, 0x7F);
-    AERRT(0xFF000, "CALL", "07002H", OVERFLOW_RANGE,   "07002H", 0xE8, 0xFF, 0x7F);
-    ATEST(0x01000, "CALL", "00F81H",                             0xE8, 0x7E, 0xFF);
-    ATEST(0x09000, "CALL", "01003H",                             0xE8, 0x00, 0x80);
-    AERRT(0x11000, "CALL", "09003H", OVERWRAP_SEGMENT, "09003H", 0xE8, 0x00, 0x80);
-    AERRT(0x01000, "CALL", "0F9003H", OVERFLOW_RANGE, "0F9003H", 0xE8, 0x00, 0x80);
+    if (is80286()) {
+        ATEST(0x001000, "CALL", "001082H",                              0xE8, 0x7F, 0x00);
+        ATEST(0x001000, "CALL", "009002H",                              0xE8, 0xFF, 0x7F);
+        AERRT(0x00F000, "CALL", "017002H", OVERWRAP_SEGMENT, "017002H", 0xE8, 0xFF, 0x7F);
+        AERRT(0xFFF000, "CALL", "007002H", OVERFLOW_RANGE,   "007002H", 0xE8, 0xFF, 0x7F);
+        ATEST(0x001000, "CALL", "000F81H",                              0xE8, 0x7E, 0xFF);
+        ATEST(0x009000, "CALL", "001003H",                              0xE8, 0x00, 0x80);
+        AERRT(0x011000, "CALL", "009003H", OVERWRAP_SEGMENT, "009003H", 0xE8, 0x00, 0x80);
+        AERRT(0x001000, "CALL", "0FF9003H", OVERFLOW_RANGE, "0FF9003H", 0xE8, 0x00, 0x80);
+    } else {
+        ATEST(0x01000, "CALL", "01082H",                             0xE8, 0x7F, 0x00);
+        ATEST(0x01000, "CALL", "09002H",                             0xE8, 0xFF, 0x7F);
+        AERRT(0x0F000, "CALL", "17002H", OVERWRAP_SEGMENT, "17002H", 0xE8, 0xFF, 0x7F);
+        AERRT(0xFF000, "CALL", "07002H", OVERFLOW_RANGE,   "07002H", 0xE8, 0xFF, 0x7F);
+        ATEST(0x01000, "CALL", "00F81H",                             0xE8, 0x7E, 0xFF);
+        ATEST(0x09000, "CALL", "01003H",                             0xE8, 0x00, 0x80);
+        AERRT(0x11000, "CALL", "09003H", OVERWRAP_SEGMENT, "09003H", 0xE8, 0x00, 0x80);
+        AERRT(0x01000, "CALL", "0F9003H", OVERFLOW_RANGE, "0F9003H", 0xE8, 0x00, 0x80);
+    }
 
     TEST("CALL", "AX",            0xFF, 0320);
     TEST("CALL", "SI",            0xFF, 0326);
@@ -1695,16 +1706,33 @@ void test_control_transfer() {
     TEST("CALLF", "[BX+DI+52]",    0xFF, 0131, 0x34);
     TEST("CALLF", "[BP+SI+1234H]", 0xFF, 0232, 0x34, 0x12);
 
-    ATEST(0x01000, "JMP", "01081H",                             0xEB, 0x7F);
-    AERRT(0x0FFF0, "JMP", "10071H", OVERWRAP_SEGMENT, "10071H", 0xEB, 0x7F);
-    ATEST(0x01000, "JMP", "01082H",                             0xE9, 0x7F, 0x00);
-    ATEST(0x01000, "JMP", "09002H",                             0xE9, 0xFF, 0x7F);
-    AERRT(0x0F000, "JMP", "17002H", OVERWRAP_SEGMENT, "17002H", 0xE9, 0xFF, 0x7F);
-    ATEST(0x01000, "JMP", "00F82H",                             0xEB, 0x80);
-    AERRT(0x10010, "JMP", "0FF92H", OVERWRAP_SEGMENT, "0FF92H", 0xEB, 0x80);
-    ATEST(0x01000, "JMP", "00F81H",                             0xE9, 0x7E, 0xFF);
-    ATEST(0x09000, "JMP", "01003H",                             0xE9, 0x00, 0x80);
-    AERRT(0x11000, "JMP", "09003H", OVERWRAP_SEGMENT, "09003H", 0xE9, 0x00, 0x80);
+    if (is80286()) {
+        ATEST(0x001000, "JMP", "001081H",                              0xEB, 0x7F);
+        AERRT(0x00FFF0, "JMP", "010071H", OVERWRAP_SEGMENT, "010071H", 0xEB, 0x7F);
+        ATEST(0x001000, "JMP", "001082H",                              0xE9, 0x7F, 0x00);
+        ATEST(0x001000, "JMP", "009002H",                              0xE9, 0xFF, 0x7F);
+        AERRT(0x00F000, "JMP", "017002H", OVERWRAP_SEGMENT, "017002H", 0xE9, 0xFF, 0x7F);
+        AERRT(0xFFF000, "JMP", "007002H", OVERFLOW_RANGE,   "007002H", 0xE9, 0xFF, 0x7F);
+        ATEST(0x001000, "JMP", "000F82H",                              0xEB, 0x80);
+        AERRT(0x010010, "JMP", "00FF92H", OVERWRAP_SEGMENT, "00FF92H", 0xEB, 0x80);
+        ATEST(0x001000, "JMP", "000F81H",                              0xE9, 0x7E, 0xFF);
+        ATEST(0x009000, "JMP", "001003H",                              0xE9, 0x00, 0x80);
+        AERRT(0x011000, "JMP", "009003H", OVERWRAP_SEGMENT, "009003H", 0xE9, 0x00, 0x80);
+        AERRT(0x001000, "JMP", "0FF9003H", OVERFLOW_RANGE, "0FF9003H", 0xE9, 0x00, 0x80);
+    } else {
+        ATEST(0x01000, "JMP", "01081H",                             0xEB, 0x7F);
+        AERRT(0x0FFF0, "JMP", "10071H", OVERWRAP_SEGMENT, "10071H", 0xEB, 0x7F);
+        ATEST(0x01000, "JMP", "01082H",                             0xE9, 0x7F, 0x00);
+        ATEST(0x01000, "JMP", "09002H",                             0xE9, 0xFF, 0x7F);
+        AERRT(0x0F000, "JMP", "17002H", OVERWRAP_SEGMENT, "17002H", 0xE9, 0xFF, 0x7F);
+        AERRT(0xFF000, "JMP", "07002H", OVERFLOW_RANGE,   "07002H", 0xE9, 0xFF, 0x7F);
+        ATEST(0x01000, "JMP", "00F82H",                             0xEB, 0x80);
+        AERRT(0x10010, "JMP", "0FF92H", OVERWRAP_SEGMENT, "0FF92H", 0xEB, 0x80);
+        ATEST(0x01000, "JMP", "00F81H",                             0xE9, 0x7E, 0xFF);
+        ATEST(0x09000, "JMP", "01003H",                             0xE9, 0x00, 0x80);
+        AERRT(0x11000, "JMP", "09003H", OVERWRAP_SEGMENT, "09003H", 0xE9, 0x00, 0x80);
+        AERRT(0x01000, "JMP", "0F9003H", OVERFLOW_RANGE, "0F9003H", 0xE9, 0x00, 0x80);
+    }
 
     TEST("JMP", "AX",            0xFF, 0340);
     TEST("JMP", "SI",            0xFF, 0346);

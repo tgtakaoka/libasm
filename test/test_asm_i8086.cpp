@@ -1812,7 +1812,11 @@ void test_string_manipulation() {
 void test_control_transfer() {
     ATEST(0x01000, "CALL 01082H",                             0xE8, 0x7F, 0x00);
     ATEST(0x01000, "CALL 09002H",                             0xE8, 0xFF, 0x7F);
-    AERRT(0xFF000, "CALL $+8002H", OVERFLOW_RANGE, "$+8002H", 0xE8, 0xFF, 0x7F);
+    if (is80286()) {
+        AERRT(0xFFF000, "CALL $+8002H", OVERFLOW_RANGE, "$+8002H", 0xE8, 0xFF, 0x7F);
+    } else {    
+        AERRT(0xFF000, "CALL $+8002H", OVERFLOW_RANGE, "$+8002H", 0xE8, 0xFF, 0x7F);
+    }
     AERRT(0x0F000, "CALL 17002H", OVERWRAP_SEGMENT, "17002H", 0xE8, 0xFF, 0x7F);
     AERRT(0x01000, "CALL 09003H", OPERAND_TOO_FAR,  "09003H", 0xE8, 0x00, 0x80);
     ATEST(0x01000, "CALL 00F81H",                             0xE8, 0x7E, 0xFF);
@@ -1853,11 +1857,19 @@ void test_control_transfer() {
 
     ATEST(0x01000, "JMP 01081H",                             0xEB, 0x7F);
     AERRT(0x0FFF0, "JMP 10071H", OVERWRAP_SEGMENT, "10071H", 0xEB, 0x7F);
-    AERRT(0xFFFF0, "JMP $+81H",  OVERFLOW_RANGE,    "$+81H", 0xEB, 0x7F);
+    if (is80286()) {
+        AERRT(0xFFFFF0, "JMP $+81H", OVERFLOW_RANGE, "$+81H", 0xEB, 0x7F);
+    } else {
+        AERRT(0xFFFF0, "JMP $+81H",  OVERFLOW_RANGE, "$+81H", 0xEB, 0x7F);
+    }
     ATEST(0x01000, "JMP 01082H",                             0xE9, 0x7F, 0x00);
     ATEST(0x01000, "JMP 09002H",                             0xE9, 0xFF, 0x7F);
     AERRT(0x0F000, "JMP 17002H", OVERWRAP_SEGMENT, "17002H", 0xE9, 0xFF, 0x7F);
-    AERRT(0xFF000, "JMP $+8002H", OVERFLOW_RANGE, "$+8002H", 0xE9, 0xFF, 0x7F);
+    if (is80286()) {
+        AERRT(0xFFF000, "JMP $+8002H", OVERFLOW_RANGE, "$+8002H", 0xE9, 0xFF, 0x7F);
+    } else {
+        AERRT(0xFF000,  "JMP $+8002H", OVERFLOW_RANGE, "$+8002H", 0xE9, 0xFF, 0x7F);
+    }
     AERRT(0x01000, "JMP 09003H", OPERAND_TOO_FAR,  "09003H", 0xE9, 0x00, 0x80);
     ATEST(0x01000, "JMP 00F82H",                             0xEB, 0x80);
     AERRT(0x10010, "JMP 0FF92H", OVERWRAP_SEGMENT, "0FF92H", 0xEB, 0x80);
@@ -1942,7 +1954,11 @@ void test_control_transfer() {
     TEST("JNLE $", 0x7F, 0xFE);
     ATEST(0x01000, "JS $+129",                               0x78, 0x7F);
     AERRT(0x0FFC0, "JS $+129", OVERWRAP_SEGMENT,    "$+129", 0x78, 0x7F);
-    AERRT(0xFFFC0, "JS $+129", OVERFLOW_RANGE,      "$+129", 0x78, 0x7F);
+    if (is80286()) {
+        AERRT(0xFFFFC0, "JS $+129", OVERFLOW_RANGE, "$+129", 0x78, 0x7F);
+    } else {
+        AERRT(0xFFFC0,  "JS $+129", OVERFLOW_RANGE, "$+129", 0x78, 0x7F);
+    }
     AERRT(0x01000, "JS $+130", OPERAND_TOO_FAR,     "$+130", 0x78, 0x80);
     ATEST(0x01000, "JS $-126",                               0x78, 0x80);
     AERRT(0x10040, "JS $-126", OVERWRAP_SEGMENT,    "$-126", 0x78, 0x80);

@@ -28,8 +28,8 @@ namespace i8086 {
 enum CpuType : uint8_t {
     I8086,
     I80186,
-    I80286,
     V30,
+    I80286,
 };
 
 enum FpuType : uint8_t {
@@ -48,9 +48,12 @@ struct CpuSpec final {
     FpuType fpu;
 };
 
-struct Config : ConfigImpl<CpuType, ADDRESS_20BIT, ADDRESS_BYTE, OPCODE_8BIT, ENDIAN_LITTLE, 6, 7> {
+struct Config : ConfigImpl<CpuType, ADDRESS_24BIT, ADDRESS_BYTE, OPCODE_8BIT, ENDIAN_LITTLE, 6, 7> {
     Config(const InsnTable<CpuType> &table) : ConfigImpl(table, I8086), _cpuSpec(I8086, FPU_NONE) {}
 
+    AddressWidth addressWidth() const override {
+        return _cpuSpec.cpu < I80286 ? ADDRESS_20BIT : ADDRESS_24BIT;
+    }        
     uint8_t nameMax() const override { return fpuType() == FPU_NONE ? 6 : 7; }
 
     void setCpuType(CpuType cpuType) override;
