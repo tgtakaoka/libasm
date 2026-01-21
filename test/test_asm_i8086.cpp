@@ -282,6 +282,13 @@ void test_data_transfer() {
     TEST("OUT  DX,AX",  0xEF);
 
     TEST("XLAT", 0xD7);
+    if (is80286()) {
+        TEST("XLATB",     0xD7);
+        TEST("XLAT [BX]", 0xD7);
+        ERRT("XLAT [SI]",    ILLEGAL_OPERAND_MODE, "[SI]",    0xD7);
+        ERRT("XLAT [BX+SI]", ILLEGAL_OPERAND_MODE, "[BX+SI]", 0xD7);
+        ERRT("XLAT [BX+52]", ILLEGAL_OPERAND_MODE, "[BX+52]", 0xD7);
+    }
 
     TEST("LEA  CX,[SI]",          0x8D, 0014);
     TEST("LEA  DX,[1234H]",       0x8D, 0026, 0x34, 0x12);

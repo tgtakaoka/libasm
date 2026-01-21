@@ -257,6 +257,10 @@ StrBuffer &DisI8086::outMemReg(
 }
 
 void DisI8086::decodeMemReg(DisInsn &insn, StrBuffer &out, AddrMode mode, OprPos pos) const {
+    if (pos == P_NONE) {  // XLAT [BX]
+        outRegName(out.letter('['), REG_BX).letter(']');
+        return;
+    }
     const auto mod = insn.modReg() >> 6;
     if (mod == 3) {
         if (mode >= M_BMEM && mode <= M_MEM)

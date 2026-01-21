@@ -156,6 +156,7 @@ constexpr char TEXT_STOSW[]  PROGMEM = "STOSW";
 // constexpr char TEXT_WAIT[]  PROGMEM = "WAIT";
 // constexpr char TEXT_XCHG[]  PROGMEM = "XCHG";
 constexpr char TEXT_XLAT[]   PROGMEM = "XLAT";
+constexpr char TEXT_XLATB[]  PROGMEM = "XLATB";
 // constexpr char TEXT_XOR[]   PROGMEM = "XOR";
 
 // GNU assembler compatibility

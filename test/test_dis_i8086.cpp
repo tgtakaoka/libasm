@@ -258,7 +258,11 @@ void test_data_transfer() {
     TEST("OUT",  "34H, AX", 0xE7, 0x34);
     TEST("OUT",  "DX, AX",  0xEF);
 
-    TEST("XLAT", "", 0xD7);
+    if (is80286()) {
+        TEST("XLAT", "[BX]", 0xD7);
+    } else {
+        TEST("XLAT", "", 0xD7);
+    }
 
     TEST("LEA", "CX, [SI]",          0x8D, 0014);
     TEST("LEA", "DX, [1235H]",       0x8D, 0026, 0x35, 0x12);

@@ -757,11 +757,15 @@ constexpr Entry T80186_C1[] PROGMEM = {
 // i80286
 
 constexpr Entry T80286_00[] PROGMEM = {
-    E2(0x63, CF_00, TEXT_ARPL, SZ_WORD, M_WMOD, M_WREG, P_MOD, P_REG),
+    E2(0x63, CF_00, TEXT_ARPL,  SZ_WORD, M_WMOD, M_WREG, P_MOD, P_REG),
+    E1(0xD7, CF_00, TEXT_XLAT,  SZ_NONE, M_BMEM, P_NONE),
+    E0(0xD7, CF_00, TEXT_XLATB, SZ_NONE),
 };
 
 constexpr uint8_t I80286_00[] PROGMEM = {
       0,  // TEXT_ARPL
+      1,  // TEXT_XLAT
+      2,  // TEXT_XLATB
 };
 
 constexpr Entry T80286_0F[] PROGMEM = {

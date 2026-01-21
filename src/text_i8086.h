@@ -162,6 +162,7 @@ using common::TEXT_TEST;
 using common::TEXT_WAIT;
 using common::TEXT_XCHG;
 extern const char TEXT_XLAT[]   PROGMEM;
+extern const char TEXT_XLATB[]  PROGMEM;
 using common::TEXT_XOR;
 
 // GNU assembler compatibility

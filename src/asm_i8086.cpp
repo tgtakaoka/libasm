@@ -471,7 +471,11 @@ void AsmI8086::emitModReg(AsmInsn &insn, const Operand &op, OprPos pos) const {
         mod = op.encodeMod();
         modReg = mod << 6;
         modReg |= op.encodeR_m();
-        if (pos == P_OMOD) {
+        if (pos == P_NONE) {  // XLAT [BX]
+            if (op.reg != REG_BX || op.index != REG_UNDEF || op.hasDisp)
+                insn.setErrorIf(op, ILLEGAL_OPERAND_MODE);
+            mod = 0;  // no displacement
+        } else if (pos == P_OMOD) {
             insn.embed(modReg);
         } else {
             insn.embedModReg(modReg);
