@@ -210,7 +210,7 @@ Error AsmTms320f::encodeIndirect(
     switch (baseMode) {
     case SUB_DISP:
         if (op.index == REG_UNDEF) {
-            if ((noDisp || opr3) && op.val.isZero()) {
+            if (op.val.isZero()) {
                 mod = 0x18;
             } else if (!noDisp) {
                 insn.embed(disp & UINT8_MAX);

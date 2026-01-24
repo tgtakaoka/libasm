@@ -70,9 +70,9 @@ void test_load() {
     TEST("LDE R0, R1",           0x06810000);
     ERRT("LDE AR0, R1", OPERAND_NOT_ALLOWED, "AR0, R1");
     TEST("LDE @000001H, R2",     0x06A20001);
-    TEST("LDE *+AR1(0), R3",     0x06C30100);
+    TEST("LDE *+AR1(0), R3",     0x06C3C100);
     TEST("LDE *+AR1(2), R3",     0x06C30102);
-    TEST("LDE *-AR2(0), R4",     0x06C40A00);
+    TEST("LDE *-AR2(0), R4",     0x06C4C200);
     TEST("LDE *-AR2(3), R4",     0x06C40A03);
     TEST("LDE *++AR3, R5",       0x06C51301);
     TEST("LDE *++AR3(4), R5",    0x06C51304);
