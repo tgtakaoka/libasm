@@ -19,8 +19,6 @@
 #include "entry_tms320f.h"
 #include "text_tms320f.h"
 
-#include <stdio.h>
-
 using namespace libasm::text::tms320f;
 
 namespace libasm {

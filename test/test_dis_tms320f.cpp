@@ -2131,6 +2131,23 @@ void test_parallel() {
         PTEST("MPYF3", "R1, R2, R1",
               "ADDF3", "R4, R5, R3",   0x83D5E1E4);
 
+        PERRT("MPYF3", "AR1, *AR2, R0", REGISTER_NOT_ALLOWED, "AR1, *AR2, R0",
+              "ADDF3", "R4, R5, R2",    OK, "", 0x802CC2E9);
+        PERRT("MPYF3", "*AR1, AR2, R0", REGISTER_NOT_ALLOWED, "AR2, R0",
+              "ADDF3", "R4, R5, R2",    OK, "", 0x802CEAC1);
+        PERRT("MPYF3", "*AR1, R2, R0",  OK, "",
+              "ADDF3", "R4, AR5, R3",   REGISTER_NOT_ALLOWED, "AR5, R3", 0x8154C1ED);
+        PERRT("MPYF3", "AR1, R2, R0",   REGISTER_NOT_ALLOWED, "AR1, R2, R0",
+              "ADDF3", "R4, *AR5, R3",  OK, "", 0x8154E9C5);
+        PERRT("MPYF3", "R1, R2, R1",    OK, "",
+              "ADDF3", "AR4, *AR5, R2", REGISTER_NOT_ALLOWED, "AR4, *AR5, R2",0x8291C5EC);
+        PERRT("MPYF3", "R1, R2, R1",    OK, "",
+              "ADDF3", "*AR4, AR5, R2", REGISTER_NOT_ALLOWED, "AR5, R2", 0x8291EDC4);
+        PERRT("MPYF3", "*AR1, R2, R1",  OK, "",
+              "ADDF3", "AR4, R5, R3",   REGISTER_NOT_ALLOWED, "AR4, R5, R3", 0x83D5C1EC);
+        PERRT("MPYF3", "AR1, R2, R1",   REGISTER_NOT_ALLOWED, "AR1, R2, R1",
+              "ADDF3", "*AR4, R5, R3",  OK, "", 0x83D5E9C4);
+
         PTEST("MPYF3", "R1, *AR2, R0",
               "SUBF3", "R4, R5, R2",   0x842CC2E1);
         PTEST("MPYF3", "*AR1, R2, R0",
@@ -2155,6 +2172,15 @@ void test_parallel() {
               "SUBF3", "*AR4, R5, R3", 0x87D5E1C4);
         PTEST("MPYF3", "R1, R2, R1",
               "SUBF3", "R4, R5, R3",   0x87D5E1E4);
+
+        PERRT("MPYF3", "AR1, AR2, R0", REGISTER_NOT_ALLOWED, "AR1, AR2, R0",
+              "SUBF3", "R4, R5, R2",   OK, "", 0x842CEAE9);
+        PERRT("MPYF3", "AR1, R2, R0", REGISTER_NOT_ALLOWED, "AR1, R2, R0",
+              "SUBF3", "R4, AR5, R3", REGISTER_NOT_ALLOWED, "AR5, R3", 0x8554E9ED);
+        PERRT("MPYF3", "R1, R2, R1",   OK, "",
+              "SUBF3", "AR4, AR5, R2", REGISTER_NOT_ALLOWED, "AR4, AR5, R2", 0x8691EDEC);
+        PERRT("MPYF3", "AR1, R2, R1", REGISTER_NOT_ALLOWED, "AR1, R2, R1",
+              "SUBF3", "AR4, R5, R3", REGISTER_NOT_ALLOWED, "AR4, R5, R3", 0x87D5E9EC);
 
         PTEST("MPYI3", "AR1, *AR2, R0",
               "ADDI3", "R4, R5, R2",    0x882CC2E9);

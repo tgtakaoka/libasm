@@ -253,21 +253,21 @@ void DisTms320f::decodeOperand(
             out.comma();
         if (pos == P_FF00) {
             if (mode != M_IDIR && ((opc >> 13) & 7) == 7) {
-                if (reg == REG_UNDEF) {
+                if (reg == REG_UNDEF)
                     insn.setErrorIf(out, ILLEGAL_REGISTER);
-                } else {
-                    outRegName(out, reg);
-                }
+                if (mode == M_FIDR && !isFloatReg(reg))
+                    insn.setErrorIf(out, REGISTER_NOT_ALLOWED);
+                outRegName(out, reg);
                 break;
             }
             decodeIndirect(insn, out, (opc >> 11) & 0x1F, (opc >> 8) & 7, -1);
         } else {  // P_00FF
             if (mode != M_IDIR && ((opc >> 5) & 7) == 7) {
-                if (reg == REG_UNDEF) {
+                if (reg == REG_UNDEF)
                     insn.setErrorIf(out, ILLEGAL_REGISTER);
-                } else {
-                    outRegName(out, reg);
-                }
+                if (mode == M_FIDR && !isFloatReg(reg))
+                    insn.setErrorIf(out, REGISTER_NOT_ALLOWED);
+                outRegName(out, reg);
                 break;
             }
             decodeIndirect(insn, out, (opc >> 3) & 0x1F, opc & 7, -1);
