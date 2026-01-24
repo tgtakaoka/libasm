@@ -2012,6 +2012,11 @@ void test_parallel() {
           "STI",   "R0, *--AR1(IR1)",      0xEDE89996);
     PTEST("XOR3",  "*AR2++(IR1), R3, R4",
           "STI",   "R5, *AR6--(IR1)",      0xEF1DAEA2);
+    // duplicat destination registers
+    PERRT("LDF",   "*+AR3(IR1), R4", OK, "",
+          "LDF",   "*-AR5(IR1), R4", DUPLICATE_REGISTER, "R4", 0xC5208D83);
+    PERRT("LDI",   "*AR3++(IR1), R4", OK, "",
+          "LDI",   "*AR5--(IR1), R4", DUPLICATE_REGISTER, "R4", 0xC720ADA3);
 
     PTEST("MPYF3", "*AR1, *AR2, R0",
           "ADDF3", "R4, R5, R2",     0x802CC2C1);

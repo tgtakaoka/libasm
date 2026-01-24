@@ -28,6 +28,8 @@ struct DisTms320f final : Disassembler, Config {
     DisTms320f(const ValueFormatter::Plugins &plugins = defaultPlugins());
 
 private:
+    mutable RegName _paraDstReg;
+
     void decodeRelative(DisInsn &insn, StrBuffer &out, AddrMode mode) const;
     void decodeAbsolute(DisInsn &insn, StrBuffer &out) const;
     RegName decodeIndirect(DisInsn &insn, StrBuffer &out, uint_fast8_t mod, uint_fast8_t ar,

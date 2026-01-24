@@ -215,6 +215,10 @@ void DisTms320f::decodeOperand(
         } else {
             if (no == 2)
                 out.comma();
+            if (_paraDstReg != REG_UNDEF) {
+                if (no == 2 && insn.mode3() == M_NONE && _paraDstReg == reg)
+                    insn.setErrorIf(out, DUPLICATE_REGISTER);
+            }
             outRegName(out, reg);
         }
         break;
@@ -334,8 +338,13 @@ Error DisTms320f::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) con
 
     if (insn.hasContinue()) {
         insn.setContinueMark_P(nullptr);
+        _paraDstReg = REG_UNDEF;
     } else if (insn.isParallel()) {
         insn.setContinueMark_P(TEXT_PARALLEL);
+        if (insn.mode3() == M_NONE && mode2 == M_FREG)
+            _paraDstReg = decodeRegister(insn, insn.pos2());
+    } else {
+        _paraDstReg = REG_UNDEF;
     }
     return _insn.setError(insn);
 }

@@ -621,10 +621,17 @@ Error AsmTms320f::encodeImpl(StrScanner &scan, Insn &_insn) const {
     encodeOperand(insn, search, search.op1, search.mode1(), search.pos1());
     encodeOperand(insn, search, search.op2, search.mode2(), search.pos2());
     encodeOperand(insn, search, search.op3, search.mode3(), search.pos3());
+    auto paraDstReg = REG_UNDEF;
+    if (search.mode3() == M_NONE && search.mode2() == M_FREG && search.op2.mode == M_FREG)
+        paraDstReg = search.op2.reg;
     if (search.para) {
         auto &para = *search.para;
         para.resetAddress(_prev.address());
         encodeOperand(insn, para, para.op1, para.mode1(), para.pos1());
+        if (para.mode3() == M_NONE && para.mode2() == M_FREG && para.op2.mode == M_FREG &&
+            paraDstReg == para.op2.reg) {
+            insn.setErrorIf(para.op2, DUPLICATE_REGISTER);
+        }
         encodeOperand(insn, para, para.op2, para.mode2(), para.pos2());
         encodeOperand(insn, para, para.op3, para.mode3(), para.pos3());
     }

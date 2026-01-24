@@ -2657,6 +2657,8 @@ void test_parallel() {
           "LDF   *-AR5(IR1), R6", 0xC5308D83);
     PTEST("LDF   *-AR5(IR1), R6", 0x07468D00,
           "LDF   *+AR3(IR1), R4", 0xC5A0838D); // swapped
+    PERRT("LDF   *-AR5(IR1), R6", 0x07468D00, OK, "",
+          "LDF   *+AR3(IR1), R6", 0xC5B0838D, DUPLICATE_REGISTER, "R6"); // swapped
 
     PTEST("LDF   *++AR7(IR1), R0", 0x07409700,
           "STF   R1, *--AR2(IR1)", 0xD8019A97);
@@ -2667,6 +2669,8 @@ void test_parallel() {
           "LDI   *AR5--(IR1), R6", 0xC730ADA3);
     PTEST("LDI   *AR5--(IR1), R6", 0x0846AD00,
           "LDI   *AR3++(IR1), R4", 0xC7A0A3AD); // swapped
+    PERRT("LDI   *AR3++(IR1), R4", 0x0844A300, OK, "",
+          "LDI   *AR5--(IR1), R4", 0xC720ADA3, DUPLICATE_REGISTER, "R4");
 
     PTEST("LDI   *AR4++(IR1)%, R5", 0x0845B400,
           "STI   R6, *AR7--(IR1)%", 0xDB46BFB4);
