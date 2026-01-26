@@ -146,13 +146,36 @@ bool isNs32kScale(const char *p) {
     return false;
 }
 
+bool isX86Reg8(const char *p) {
+    const auto c1 = toupper(p[0]);
+    const auto c2 = toupper(p[1]);
+    return (c1 >= 'A' && c1 <= 'D') && (c2 == 'L' || c2 == 'H');
+}
+
+bool isX86Reg16(const char *p) {
+    const auto c1 = toupper(p[0]);
+    const auto c2 = toupper(p[1]);
+    if (c2 == 'X')
+        return c1 >= 'B' && c1 <= 'D';  // BX/CX/DX
+    if (c2 == 'P')
+        return c1 == 'B' || c1 == 'S';  // BP/SP
+    if (c2 == 'I')
+        return c1 == 'D' || c1 == 'S';  // DI/SI
+    return false;
+}
+
 bool isX86Seg(const char *p) {
     const auto s = toupper(p[1]);
     if (s == 'S' && p[2] == ':') {
         const auto c = toupper(*p);
-        return c == 'E' || c == 'C' || c == 'S' || c == 'D'; // ES:/CS:/SS:/DS:
+        return (c >= 'C' && c <= 'G') || c == 'S';  // CS/DS/ES/FS/GS/SS
     }
     return false;
+}
+
+bool isX86Reg32(const char *p) {
+    const auto c1 = toupper(p[0]);
+    return c1 == 'E' && isX86Reg16(p + 1);
 }
 
 TokenizedText::TokenizedText(const char *text) : _tokens(tokenize(text)), _count(0) {}
@@ -206,6 +229,35 @@ std::string TokenizedText::tokenize(const char *text) {
             // reduce index size variants of NS32000; [Rn:B], [Rn:W], [Rn:D] and [Rn:Q]
             t.push_back(':');
             t.push_back('s');
+            t.push_back(b[2]);
+            b += 3;
+        } else if (isX86Reg16(b) && (b[2] == '+' || b[2] == '-') && isNumber(b + 3, tmp) && *tmp == ']') {
+            // reduce indexing variants of 80X86; AX/BX/CX/DX+n, BP/SP+n, DI/SI+n
+            t.push_back(b[1]);
+            t.push_back('+');
+            t.push_back('n');
+            b = tmp + 1;
+        } else if (isX86Reg32(b) && (b[3] == '+' || b[3] == '-') && isNumber(b + 4, tmp) && *tmp == ']') {
+            // reduce indexing variants of 80X86; EAX/EBX/ECX/EDX+n, EBP/ESP+n, EDI/ESI+n
+            t.push_back(b[2]);
+            t.push_back('+');
+            t.push_back('n');
+            b = tmp + 1;
+        } else if (b[0] == '*' && (b[1] == '2' || b[1] == '4' || b[1] == '8')) {
+            // reduce index scaling variants of 80X86
+            t.push_back('*');
+            t.push_back('s');
+            b += 2;
+        } else if (isX86Reg8(b)) {
+            // reduce 8 bit register variation of 80X86; AL/BL/CL/DL, AH/BH/CH/DH
+            t.push_back(b[1]);
+            b += 2;
+        } else if (isX86Reg16(b)) {
+            // reduce 16 bit register variation of 80X86; BX/CX/DX, BP/SP, DI/SI
+            t.push_back(b[1]);
+            b += 2;
+        } else if (isX86Reg32(b)) {
+            // reduce 32 bit register variation of 80X86; EBX/ECX/EDX, EBP/ESP, EDI/ESI
             t.push_back(b[2]);
             b += 3;
         } else if (isX86Seg(b)) {

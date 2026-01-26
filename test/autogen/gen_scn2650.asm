@@ -47,12 +47,16 @@
       BCTR,UN *015BH
       BCTA,EQ 1D1EH
       BCTA,EQ *0081H
+      BCTA,EQ *20A1H
       BCTA,GT 1E1FH
       BCTA,GT *0081H
+      BCTA,GT *20A1H
       BCTA,LT 1F20H
       BCTA,LT *0081H
+      BCTA,LT *20A1H
       BCTA,UN 2021H
       BCTA,UN *0081H
+      BCTA,UN *20A1H
       EORZ,R0
       EORZ,R1
       EORZ,R2
@@ -61,14 +65,14 @@
       EORI,R1 26H
       EORI,R2 27H
       EORI,R3 28H
-      EORR,R0 01AAH
-      EORR,R0 *0183H
-      EORR,R1 01AFH
-      EORR,R1 *0187H
-      EORR,R2 01B4H
-      EORR,R2 *018BH
-      EORR,R3 01B9H
-      EORR,R3 *018FH
+      EORR,R0 01B6H
+      EORR,R0 *018FH
+      EORR,R1 01BBH
+      EORR,R1 *0193H
+      EORR,R2 01C0H
+      EORR,R2 *0197H
+      EORR,R3 01C5H
+      EORR,R3 *019BH
       EORA,R0 0D2EH, R0, +
       EORA,R0 0041H, R0, -
       EORA,R0 0061H, R0
@@ -91,22 +95,26 @@
       RETE,GT
       RETE,LT
       RETE,UN
-      BSTR,EQ 01FCH
-      BSTR,EQ *01C5H
-      BSTR,GT 0201H
-      BSTR,GT *01C9H
-      BSTR,LT 0206H
-      BSTR,LT *01CDH
-      BSTR,UN 020BH
-      BSTR,UN *01D1H
+      BSTR,EQ 0208H
+      BSTR,EQ *01D1H
+      BSTR,GT 020DH
+      BSTR,GT *01D5H
+      BSTR,LT 0212H
+      BSTR,LT *01D9H
+      BSTR,UN 0217H
+      BSTR,UN *01DDH
       BSTA,EQ 3D3EH
       BSTA,EQ *0081H
+      BSTA,EQ *20A1H
       BSTA,GT 3E3FH
       BSTA,GT *0081H
+      BSTA,GT *20A1H
       BSTA,LT 3F40H
       BSTA,LT *0081H
+      BSTA,LT *20A1H
       BSTA,UN 4041H
       BSTA,UN *0081H
+      BSTA,UN *20A1H
       HALT
       ANDZ,R1
       ANDZ,R2
@@ -115,14 +123,14 @@
       ANDI,R1 46H
       ANDI,R2 47H
       ANDI,R3 48H
-      ANDR,R0 01C0H
-      ANDR,R0 *01F9H
-      ANDR,R1 01C5H
-      ANDR,R1 *01FDH
-      ANDR,R2 01CAH
-      ANDR,R2 *0201H
-      ANDR,R3 01CFH
-      ANDR,R3 *0205H
+      ANDR,R0 01D8H
+      ANDR,R0 *0211H
+      ANDR,R1 01DDH
+      ANDR,R1 *0215H
+      ANDR,R2 01E2H
+      ANDR,R2 *0219H
+      ANDR,R3 01E7H
+      ANDR,R3 *021DH
       ANDA,R0 0D4EH, R0, -
       ANDA,R0 0061H, R0
       ANDA,R0 *0081H
@@ -145,22 +153,26 @@
       REDE,R1 56H
       REDE,R2 57H
       REDE,R3 58H
-      BRNR,R0 0216H
-      BRNR,R0 *023FH
-      BRNR,R1 021BH
-      BRNR,R1 *0243H
-      BRNR,R2 0220H
-      BRNR,R2 *0247H
-      BRNR,R3 0225H
-      BRNR,R3 *024BH
+      BRNR,R0 022EH
+      BRNR,R0 *0257H
+      BRNR,R1 0233H
+      BRNR,R1 *025BH
+      BRNR,R2 0238H
+      BRNR,R2 *025FH
+      BRNR,R3 023DH
+      BRNR,R3 *0263H
       BRNA,R0 5D5EH
       BRNA,R0 *0081H
+      BRNA,R0 *20A1H
       BRNA,R1 5E5FH
       BRNA,R1 *0081H
+      BRNA,R1 *20A1H
       BRNA,R2 5F60H
       BRNA,R2 *0081H
+      BRNA,R2 *20A1H
       BRNA,R3 6061H
       BRNA,R3 *0081H
+      BRNA,R3 *20A1H
       LODZ,R0
       IORZ,R1
       IORZ,R2
@@ -169,14 +181,14 @@
       IORI,R1 66H
       IORI,R2 67H
       IORI,R3 68H
-      IORR,R0 025AH
-      IORR,R0 *0273H
-      IORR,R1 025FH
-      IORR,R1 *0277H
-      IORR,R2 0264H
-      IORR,R2 *027BH
-      IORR,R3 0269H
-      IORR,R3 *027FH
+      IORR,R0 027EH
+      IORR,R0 *0297H
+      IORR,R1 0283H
+      IORR,R1 *029BH
+      IORR,R2 0288H
+      IORR,R2 *029FH
+      IORR,R3 028DH
+      IORR,R3 *02A3H
       IORA,R0 0D6EH, R0
       IORA,R0 *0081H
       IORA,R0 *00A1H, R0, +
@@ -199,21 +211,25 @@
       CPSL    76H
       PPSU    77H
       PPSL    78H
-      BSNR,R0 02B0H
-      BSNR,R0 *02B9H
-      BSNR,R1 02B5H
-      BSNR,R1 *02BDH
-      BSNR,R2 02BAH
-      BSNR,R2 *02C1H
-      BSNR,R3 02BFH
-      BSNR,R3 *02C5H
+      BSNR,R0 02D4H
+      BSNR,R0 *02DDH
+      BSNR,R1 02D9H
+      BSNR,R1 *02E1H
+      BSNR,R2 02DEH
+      BSNR,R2 *02E5H
+      BSNR,R3 02E3H
+      BSNR,R3 *02E9H
       BSNA,R0 7D7EH
       BSNA,R0 *0081H
+      BSNA,R0 *20A1H
       BSNA,R1 7E7FH
       BSNA,R1 *0081H
+      BSNA,R1 *20A1H
       BSNA,R2 7F80H
       BSNA,R2 *0081H
+      BSNA,R2 *20A1H
       BSNA,R3 *0081H
+      BSNA,R3 *20A1H
       BSNA,R3 0001H
       ADDZ,R0
       ADDZ,R1
@@ -223,14 +239,14 @@
       ADDI,R1 86H
       ADDI,R2 87H
       ADDI,R3 88H
-      ADDR,R0 *02F4H
-      ADDR,R0 02EDH
-      ADDR,R1 *02F9H
-      ADDR,R1 02F1H
-      ADDR,R2 *02FEH
-      ADDR,R2 02F5H
-      ADDR,R3 *0303H
-      ADDR,R3 02F9H
+      ADDR,R0 *0324H
+      ADDR,R0 031DH
+      ADDR,R1 *0329H
+      ADDR,R1 0321H
+      ADDR,R2 *032EH
+      ADDR,R2 0325H
+      ADDR,R3 *0333H
+      ADDR,R3 0329H
       ADDA,R0 *0D8EH
       ADDA,R0 *00A1H, R0, +
       ADDA,R0 *00C1H, R0, -
@@ -251,21 +267,25 @@
       DAR,R1
       DAR,R2
       DAR,R3
-      BCFR,EQ *0344H
-      BCFR,EQ 032DH
-      BCFR,GT *0349H
-      BCFR,GT 0331H
-      BCFR,LT *034EH
-      BCFR,LT 0335H
+      BCFR,EQ *0374H
+      BCFR,EQ 035DH
+      BCFR,GT *0379H
+      BCFR,GT 0361H
+      BCFR,LT *037EH
+      BCFR,LT 0365H
       ZBRR    *001CH
       ZBRR    0000H
       BCFA,EQ *1D9EH
+      BCFA,EQ *20A1H
       BCFA,EQ 0001H
       BCFA,GT *1E9FH
+      BCFA,GT *20A1H
       BCFA,GT 0001H
       BCFA,LT *1FA0H
+      BCFA,LT *20A1H
       BCFA,LT 0001H
       BXA     *20A1H, R3
+      BXA     *30B1H, R3
       BXA     0001H, R3
       SUBZ,R0
       SUBZ,R1
@@ -275,14 +295,14 @@
       SUBI,R1 0A6H
       SUBI,R2 0A7H
       SUBI,R3 0A8H
-      SUBR,R0 *0388H
-      SUBR,R0 0361H
-      SUBR,R1 *038DH
-      SUBR,R1 0365H
-      SUBR,R2 *0392H
-      SUBR,R2 0369H
-      SUBR,R3 *0397H
-      SUBR,R3 036DH
+      SUBR,R0 *03C4H
+      SUBR,R0 039DH
+      SUBR,R1 *03C9H
+      SUBR,R1 03A1H
+      SUBR,R2 *03CEH
+      SUBR,R2 03A5H
+      SUBR,R3 *03D3H
+      SUBR,R3 03A9H
       SUBA,R0 *0DAEH, R0, +
       SUBA,R0 *00C1H, R0, -
       SUBA,R0 *00E1H, R0
@@ -303,34 +323,38 @@
       WRTC,R3
       TPSU    0B5H
       TPSL    0B6H
-      BSFR,EQ *03DAH
-      BSFR,EQ 03A3H
-      BSFR,GT *03DFH
-      BSFR,GT 03A7H
-      BSFR,LT *03E4H
-      BSFR,LT 03ABH
+      BSFR,EQ *0416H
+      BSFR,EQ 03DFH
+      BSFR,GT *041BH
+      BSFR,GT 03E3H
+      BSFR,LT *0420H
+      BSFR,LT 03E7H
       ZBSR    *003CH
       ZBSR    0000H
       BSFA,EQ *3DBEH
+      BSFA,EQ *40C1H
       BSFA,EQ 0001H
       BSFA,GT *3EBFH
+      BSFA,GT *40C1H
       BSFA,GT 0001H
       BSFA,LT *3FC0H
+      BSFA,LT *40C1H
       BSFA,LT 0001H
       BSXA    *40C1H, R3
+      BSXA    *50D1H, R3
       BSXA    0001H, R3
       NOP
       STRZ,R1
       STRZ,R2
       STRZ,R3
-      STRR,R0 *0396H
-      STRR,R0 03CFH
-      STRR,R1 *039BH
-      STRR,R1 03D3H
-      STRR,R2 *03A0H
-      STRR,R2 03D7H
-      STRR,R3 *03A5H
-      STRR,R3 03DBH
+      STRR,R0 *03DEH
+      STRR,R0 0417H
+      STRR,R1 *03E3H
+      STRR,R1 041BH
+      STRR,R2 *03E8H
+      STRR,R2 041FH
+      STRR,R3 *03EDH
+      STRR,R3 0423H
       STRA,R0 *0DCEH, R0, -
       STRA,R0 *00E1H, R0
       STRA,R0 0001H
@@ -353,22 +377,26 @@
       WRTE,R1 0D6H
       WRTE,R2 0D7H
       WRTE,R3 0D8H
-      BIRR,R0 *03ECH
-      BIRR,R0 0415H
-      BIRR,R1 *03F1H
-      BIRR,R1 0419H
-      BIRR,R2 *03F6H
-      BIRR,R2 041DH
-      BIRR,R3 *03FBH
-      BIRR,R3 0421H
+      BIRR,R0 *0434H
+      BIRR,R0 045DH
+      BIRR,R1 *0439H
+      BIRR,R1 0461H
+      BIRR,R2 *043EH
+      BIRR,R2 0465H
+      BIRR,R3 *0443H
+      BIRR,R3 0469H
       BIRA,R0 *5DDEH
       BIRA,R0 0001H
+      BIRA,R0 *20A1H
       BIRA,R1 *5EDFH
       BIRA,R1 0001H
+      BIRA,R1 *20A1H
       BIRA,R2 *5FE0H
       BIRA,R2 0001H
+      BIRA,R2 *20A1H
       BIRA,R3 *60E1H
       BIRA,R3 0001H
+      BIRA,R3 *20A1H
       COMZ,R0
       COMZ,R1
       COMZ,R2
@@ -377,14 +405,14 @@
       COMI,R1 0E6H
       COMI,R2 0E7H
       COMI,R3 0E8H
-      COMR,R0 *0430H
-      COMR,R0 0449H
-      COMR,R1 *0435H
-      COMR,R1 044DH
-      COMR,R2 *043AH
-      COMR,R2 0451H
-      COMR,R3 *043FH
-      COMR,R3 0455H
+      COMR,R0 *0484H
+      COMR,R0 049DH
+      COMR,R1 *0489H
+      COMR,R1 04A1H
+      COMR,R2 *048EH
+      COMR,R2 04A5H
+      COMR,R3 *0493H
+      COMR,R3 04A9H
       COMA,R0 *0DEEH, R0
       COMA,R0 0001H
       COMA,R0 0021H, R0, +
@@ -407,19 +435,23 @@
       TMI,R1  0F6H
       TMI,R2  0F7H
       TMI,R3  0F8H
-      BDRR,R0 *0486H
-      BDRR,R0 048FH
-      BDRR,R1 *048BH
-      BDRR,R1 0493H
-      BDRR,R2 *0490H
-      BDRR,R2 0497H
-      BDRR,R3 *0495H
-      BDRR,R3 049BH
+      BDRR,R0 *04DAH
+      BDRR,R0 04E3H
+      BDRR,R1 *04DFH
+      BDRR,R1 04E7H
+      BDRR,R2 *04E4H
+      BDRR,R2 04EBH
+      BDRR,R3 *04E9H
+      BDRR,R3 04EFH
       BDRA,R0 *7DFEH
       BDRA,R0 0001H
+      BDRA,R0 *20A1H
       BDRA,R1 *7EFFH
       BDRA,R1 0001H
+      BDRA,R1 *20A1H
       BDRA,R2 *7F00H
       BDRA,R2 0001H
+      BDRA,R2 *20A1H
       BDRA,R3 0001H
       BDRA,R3 *0081H
+      BDRA,R3 *20A1H
