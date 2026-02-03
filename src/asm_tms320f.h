@@ -39,14 +39,20 @@ private:
     Error encodeOperand(
             AsmInsn &out, const AsmInsn &insn, const Operand &op, AddrMode mode, OprPos pos) const;
 
-    Error alignOrigin(StrScanner &scan, Insn &insn);
-    Error defineFloat(StrScanner &scan, Insn &insn, uint_fast8_t bits);
-    Error defineInteger(StrScanner &scan, Insn &insn, uint32_t max, int32_t min);
+    Error alignOrigin(StrScanner &scan, Insn &insn, uint16_t);
+    Error defineFloat(StrScanner &scan, Insn &insn, uint16_t bits);
+    Error defineInteger(StrScanner &scan, Insn &insn, uint16_t max);
     Error processPseudo(StrScanner &scan, Insn &insn) override;
+    Error encodeParallel(StrScanner &scan, Insn &insn, uint16_t);
     Error encodeImpl(StrScanner &scan, Insn &insn) const override;
     const ConfigBase &config() const override { return *this; }
     ConfigSetter &configSetter() override { return *this; }
     static const ValueParser::Plugins &defaultPlugins();
+
+    using PseudoTms320F = pseudo::__Pseudo<AsmTms320f>;
+    using PseudosTms320F = pseudo::__Pseudos<PseudoTms320F>;
+    static const PseudoTms320F PSEUDO_TMS320F_TABLE[] PROGMEM;
+    static const PseudosTms320F PSEUDOS_TMS320F PROGMEM;
 };
 
 }  // namespace tms320f

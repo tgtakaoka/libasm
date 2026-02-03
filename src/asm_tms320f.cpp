@@ -27,8 +27,6 @@ using namespace reg;
 using namespace text::common;
 using namespace text::tms320f;
 
-namespace {
-
 // clang-format off
 constexpr Pseudo PSEUDOS[] PROGMEM = {
     {TEXT_dINT,    &Assembler::defineDataConstant, Assembler::DATA_LONG},
@@ -38,10 +36,20 @@ constexpr Pseudo PSEUDOS[] PROGMEM = {
     {TEXT_dSTRING, &Assembler::defineDataConstant, Assembler::DATA_LONG},
     {TEXT_dWORD,   &Assembler::defineDataConstant, Assembler::DATA_LONG},
 };
-// clang-format on
 PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
 
-}  // namespace
+constexpr AsmTms320f::PseudoTms320F AsmTms320f::PSEUDO_TMS320F_TABLE[] PROGMEM = {
+    {TEXT_dALIGN,   &AsmTms320f::alignOrigin},
+    {TEXT_dBYTE,    &AsmTms320f::defineInteger, UINT8_MAX},
+    {TEXT_dFLOAT,   &AsmTms320f::defineFloat, 32},
+    {TEXT_dHWORD,   &AsmTms320f::defineInteger, UINT16_MAX},
+    {TEXT_dLDOUBLE, &AsmTms320f::defineFloat, 40},
+    {TEXT_dSFLOAT,  &AsmTms320f::defineFloat, 16},
+    {TEXT_PARALLEL, &AsmTms320f::encodeParallel},
+};
+PROGMEM constexpr AsmTms320f::PseudosTms320F AsmTms320f::PSEUDOS_TMS320F{
+        ARRAY_RANGE(PSEUDO_TMS320F_TABLE)};
+// clang-format on
 
 const ValueParser::Plugins &AsmTms320f::defaultPlugins() {
     static const struct final : ValueParser::Plugins {
@@ -476,7 +484,7 @@ Error AsmTms320f::encodeOperand(
     return out.getError();
 }
 
-Error AsmTms320f::alignOrigin(StrScanner &scan, Insn &insn) {
+Error AsmTms320f::alignOrigin(StrScanner &scan, Insn &insn, uint16_t) {
     const auto start = insn.address();
     if ((start & 0x1F) == 0)
         return OK;
@@ -492,7 +500,8 @@ Error AsmTms320f::alignOrigin(StrScanner &scan, Insn &insn) {
     return OK;
 }
 
-Error AsmTms320f::defineInteger(StrScanner &scan, Insn &insn, uint32_t max, int32_t min) {
+Error AsmTms320f::defineInteger(StrScanner &scan, Insn &insn, uint16_t max) {
+    const int32_t min = (max == UINT8_MAX) ? INT8_MIN : INT16_MIN;
     ErrorAt error;
     do {
         scan.skipSpaces();
@@ -513,7 +522,7 @@ Error AsmTms320f::defineInteger(StrScanner &scan, Insn &insn, uint32_t max, int3
     return insn.setErrorIf(error);
 }
 
-Error AsmTms320f::defineFloat(StrScanner &scan, Insn &insn, uint_fast8_t bits) {
+Error AsmTms320f::defineFloat(StrScanner &scan, Insn &insn, uint16_t bits) {
     ErrorAt error;
     do {
         scan.skipSpaces();
@@ -562,26 +571,8 @@ Error AsmTms320f::defineFloat(StrScanner &scan, Insn &insn, uint_fast8_t bits) {
 }
 
 Error AsmTms320f::processPseudo(StrScanner &scan, Insn &insn) {
-    if (strcasecmp_P(insn.name(), TEXT_dALIGN) == 0)
-        return alignOrigin(scan, insn);
-    if (strcasecmp_P(insn.name(), TEXT_dBYTE) == 0)
-        return defineInteger(scan, insn, UINT8_MAX, INT8_MIN);
-    if (strcasecmp_P(insn.name(), TEXT_dHWORD) == 0)
-        return defineInteger(scan, insn, UINT16_MAX, INT16_MIN);
-    if (strcasecmp_P(insn.name(), TEXT_dFLOAT) == 0)
-        return defineFloat(scan, insn, 32);
-    if (strcasecmp_P(insn.name(), TEXT_dLDOUBLE) == 0)
-        return defineFloat(scan, insn, 40);
-    if (strcasecmp_P(insn.name(), TEXT_dSFLOAT) == 0)
-        return defineFloat(scan, insn, 16);
-    if (strcmp_P(insn.name(), TEXT_PARALLEL) == 0) {
-        insn.setContinueMark_P(TEXT_PARALLEL);
-        StrScanner symbol;
-        _parser.readInstruction(scan, symbol);
-        insn.nameBuffer().reset().text(symbol);
-        return encodeImpl(scan.skipSpaces(), insn);
-    }
-    return Assembler::processPseudo(scan, insn);
+    const auto *p = PSEUDOS_TMS320F.search(insn);
+    return p ? p->invoke(this, scan, insn) : Assembler::processPseudo(scan, insn);
 }
 
 void AsmInsn::copyFrom(const AsmInsn &from) {
@@ -592,6 +583,14 @@ void AsmInsn::copyFrom(const AsmInsn &from) {
     this->op3 = from.op3;
     this->setOpCode(from.opCode());
     this->setFlags(from.flags());
+}
+
+Error AsmTms320f::encodeParallel(StrScanner &scan, Insn &insn, uint16_t) {
+    insn.setContinueMark_P(TEXT_PARALLEL);
+    StrScanner symbol;
+    _parser.readInstruction(scan, symbol);
+    insn.nameBuffer().reset().text(symbol);
+    return encodeImpl(scan.skipSpaces(), insn);
 }
 
 Error AsmTms320f::encodeImpl(StrScanner &scan, Insn &_insn) const {
@@ -629,7 +628,7 @@ Error AsmTms320f::encodeImpl(StrScanner &scan, Insn &_insn) const {
         para.resetAddress(_prev.address());
         encodeOperand(insn, para, para.op1, para.mode1(), para.pos1());
         if (para.mode3() == M_NONE && para.mode2() == M_FREG && para.op2.mode == M_FREG &&
-            paraDstReg == para.op2.reg) {
+                paraDstReg == para.op2.reg) {
             insn.setErrorIf(para.op2, DUPLICATE_REGISTER);
         }
         encodeOperand(insn, para, para.op2, para.mode2(), para.pos2());

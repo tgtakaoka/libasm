@@ -36,9 +36,11 @@ private:
 
     bool _implicitWord;
 
-    Error defineDoubleDecimal(StrScanner &scan, Insn &insn, uint8_t extra = 0);
-    Error alignOnPage(StrScanner &scan, Insn &insn, uint8_t extra = 0);
-    Error defineField(StrScanner &scan, Insn &insn, uint8_t extra = 0);
+    Error defineDec6String(StrScanner &scan, Insn &Insn, uint16_t);
+    Error defineDoubleDecimal(StrScanner &scan, Insn &insn, uint16_t);
+    Error alignOnPage(StrScanner &scan, Insn &insn, uint16_t);
+    Error defineField(StrScanner &scan, Insn &insn, uint16_t);
+    Error setRadix(StrScanner &scan, Insn &insn, uint16_t);
 
     Error parseMemReferenceOperand(StrScanner &scan, AsmInsn &insn) const;
     Error parseIoTransferOperand(StrScanner &scan, AsmInsn &insn) const;
@@ -47,13 +49,17 @@ private:
     Error parseOperateOperand(StrScanner &scan, AsmInsn &insn) const;
     Error encodeMicro(AsmInsn &insn, const AsmInsn &micro, Config::opcode_t &done) const;
 
-    Error defineDec6String(StrScanner &scan, Insn &Insn);
     Error processPseudo(StrScanner &scan, Insn &insn) override;
     Error encodeImpl(StrScanner &scan, Insn &insn) const override;
     const ConfigBase &config() const override { return *this; }
     ConfigSetter &configSetter() override { return *this; }
     static const ValueParser::Plugins &defaultPlugins();
     static const pseudo::Pseudo PSEUDOS[] PROGMEM;
+
+    using PseudoPdp8 = pseudo::__Pseudo<AsmPdp8>;
+    using PseudosPdp8 = pseudo::__Pseudos<PseudoPdp8>;
+    static const PseudoPdp8 PSEUDO_PDP8_TABLE[] PROGMEM;
+    static const PseudosPdp8 PSEUDOS_PDP8 PROGMEM;
 };
 
 }  // namespace pdp8

@@ -26,9 +26,8 @@ using namespace reg;
 using namespace text::common;
 using namespace text::option;
 
-namespace {
-
 // clang-format off
+namespace {
 constexpr char TEXT_DC_B[] PROGMEM = "dc.b";
 constexpr char TEXT_DC_D[] PROGMEM = "dc.d";
 constexpr char TEXT_DC_L[] PROGMEM = "dc.l";
@@ -39,6 +38,7 @@ constexpr char TEXT_DC_X[] PROGMEM = "dc.x";
 constexpr char TEXT_DS_B[] PROGMEM = "ds.b";
 constexpr char TEXT_DS_L[] PROGMEM = "ds.l";
 constexpr char TEXT_DS_W[] PROGMEM = "ds.w";
+}
 
 constexpr Pseudo PSEUDOS[] PROGMEM = {
     {TEXT_dALIGN, &Assembler::alignOrigin},
@@ -57,10 +57,20 @@ constexpr Pseudo PSEUDOS[] PROGMEM = {
     {TEXT_DS_L,   &Assembler::allocateSpaces,     Assembler::DATA_LONG|Assembler::DATA_ALIGN2},
     {TEXT_DS_W,   &Assembler::allocateSpaces,     Assembler::DATA_WORD|Assembler::DATA_ALIGN2},
 };
-// clang-format on
+
 PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
 
-}  // namespace
+constexpr AsmMc68000::PseudoMc68000 AsmMc68000::PSEUDO_MC68000_TABLE[] PROGMEM = {
+#if !defined(LIBASM_MC68000_NOFPU)
+    {TEXT_DC_P, &AsmMc68000::defineConstant, DATA_DCP},
+    {TEXT_DC_X, &AsmMc68000::defineConstant, DATA_DCX},
+#endif
+    {TEXT_FPU,  &AsmMc68000::setCoprocessor, COPRO_FPU},
+    {TEXT_PMMU, &AsmMc68000::setCoprocessor, COPRO_PMMU},
+};
+PROGMEM constexpr AsmMc68000::PseudosMc68000 AsmMc68000::PSEUDOS_MC68000{
+        ARRAY_RANGE(PSEUDO_MC68000_TABLE)};
+// clang-format on
 
 const ValueParser::Plugins &AsmMc68000::defaultPlugins() {
     static const struct final : ValueParser::MotorolaPlugins {
@@ -1613,9 +1623,9 @@ Error AsmInsn::emitDecimalString(const float80_t &value, uint_fast8_t pos) {
 
 #endif
 
-Error AsmMc68000::defineDataConstant(
-        AsmInsn &insn, StrScanner &scan, Mc68881Type type, ErrorAt &_error) const {
-    insn.insnBase().align(2);
+Error AsmMc68000::defineConstant(StrScanner &scan, Insn &_insn, uint16_t dataType) {
+    _insn.align(2);
+    AsmInsn insn(_insn);
     ErrorAt error;
     do {
         scan.skipSpaces();
@@ -1638,36 +1648,31 @@ Error AsmMc68000::defineDataConstant(
         insn.emitUint32(0, insn.length());
         insn.emitUint64(0, insn.length());
 #else
-        if (type == DATA_DCX)
+        if (dataType == DATA_DCX)
             exprErr.setErrorIf(scan, insn.emitExtendedReal(val.getFloat(), insn.length()));
-        if (type == DATA_DCP)
+        if (dataType == DATA_DCP)
             exprErr.setErrorIf(scan, insn.emitDecimalString(val.getFloat(), insn.length()));
 #endif
         scan = p;
         if (error.setErrorIf(exprErr) == NO_MEMORY)
             break;
     } while (scan.skipSpaces().expect(',') && error.getError() != NO_MEMORY);
-    return _error.setError(error);
+    return _insn.setError(error);
 }
 
-Error AsmMc68000::processPseudo(StrScanner &scan, Insn &_insn) {
-    AsmInsn insn(_insn);
+Error AsmMc68000::setCoprocessor(StrScanner &scan, Insn &insn, uint16_t procType) {
     const auto at = scan;
-    if (strcasecmp_P(insn.name(), TEXT_FPU) == 0) {
-        const auto error = _opt_fpu.set(scan);
-        return error ? _insn.setErrorIf(at, error) : OK;
-    }
-    if (strcasecmp_P(insn.name(), TEXT_PMMU) == 0) {
-        const auto error = _opt_pmmu.set(scan);
-        return error ? _insn.setErrorIf(at, error) : OK;
-    }
-#if !defined(LIBASM_MC68000_NOFPU)
-    if (strcasecmp_P(insn.name(), TEXT_DC_X) == 0)
-        return defineDataConstant(insn, scan, DATA_DCX, _insn);
-    if (strcasecmp_P(insn.name(), TEXT_DC_P) == 0)
-        return defineDataConstant(insn, scan, DATA_DCP, _insn);
-#endif
-    return Assembler::processPseudo(scan, _insn);
+    auto error = OK;
+    if (procType == COPRO_FPU)
+        error = _opt_fpu.set(scan);
+    else if (procType == COPRO_PMMU)
+        error = _opt_pmmu.set(scan);
+    return error ? insn.setErrorIf(at, error) : OK;
+}
+
+Error AsmMc68000::processPseudo(StrScanner &scan, Insn &insn) {
+    const auto *p = PSEUDOS_MC68000.search(insn);
+    return p ? p->invoke(this, scan, insn) : Assembler::processPseudo(scan, insn);
 }
 
 Error AsmMc68000::encodeImpl(StrScanner &scan, Insn &_insn) const {

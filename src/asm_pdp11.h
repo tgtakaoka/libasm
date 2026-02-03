@@ -46,17 +46,23 @@ private:
     void encodeRegister(AsmInsn &insn, const Operand &op, AddrMode mode, OprPos pos) const;
     void encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode, OprPos pos) const;
 
+    Error setRadix(StrScanner &scan, Insn &insn, uint16_t);
     enum DecType : char {
         DATA_FLT2 = 'F',  // 32-bit DEC Single Precision floating point
         DATA_FLT4 = 'D',  // 64-bit DEC Double Precision floating point
     };
-    Error defineDecFloat(StrScanner &scan, AsmInsn &insn, DecType type, ErrorAt &error) const;
-    Error defineAscii(StrScanner &scan, Insn &insn) const;
+    Error defineDecFloat(StrScanner &scan, Insn &insn, uint16_t type);
+    Error defineAscii(StrScanner &scan, Insn &insn, uint16_t);
     Error processPseudo(StrScanner &scan, Insn &insn) override;
     Error encodeImpl(StrScanner &scan, Insn &insn) const override;
     const ConfigBase &config() const override { return *this; }
     ConfigSetter &configSetter() override { return *this; }
     static const ValueParser::Plugins &defaultPlugins();
+
+    using PseudoPdp11 = pseudo::__Pseudo<AsmPdp11>;
+    using PseudosPdp11 = pseudo::__Pseudos<PseudoPdp11>;
+    static const PseudoPdp11 PSEUDO_PDP11_TABLE[] PROGMEM;
+    static const PseudosPdp11 PSEUDOS_PDP11 PROGMEM;
 };
 
 }  // namespace pdp11

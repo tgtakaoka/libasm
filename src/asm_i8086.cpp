@@ -16,7 +16,6 @@
 
 #include "asm_i8086.h"
 #include "table_i8086.h"
-#include "text_i8086.h"
 
 namespace libasm {
 namespace i8086 {
@@ -25,19 +24,18 @@ using namespace pseudo;
 using namespace reg;
 using namespace text::common;
 using namespace text::option;
-using namespace text::i8086;
-
-namespace {
 
 // clang-format off
+namespace {
 constexpr char OPT_BOOL_OPTIMIZE_SEGMENT[] PROGMEM = "optimize-segment";
 constexpr char OPT_DESC_OPTIMIZE_SEGMENT[] PROGMEM = "optimize segment override";
 
-constexpr char TEXT_DQ[] PROGMEM = "dq";
-constexpr char TEXT_DT[] PROGMEM = "dt";
+constexpr char TEXT_DQ[]   PROGMEM = "dq";
+constexpr char TEXT_DT[]   PROGMEM = "dt";
 constexpr char TEXT_RESB[] PROGMEM = "resb";
 constexpr char TEXT_RESD[] PROGMEM = "resd";
 constexpr char TEXT_RESW[] PROGMEM = "resw";
+}  // namespace
 
 constexpr Pseudo PSEUDOS[] PROGMEM = {
     {TEXT_DB,   &Assembler::defineDataConstant, Assembler::DATA_BYTE},
@@ -47,14 +45,21 @@ constexpr Pseudo PSEUDOS[] PROGMEM = {
     {TEXT_RESD, &Assembler::allocateSpaces,     Assembler::DATA_LONG},
     {TEXT_RESW, &Assembler::allocateSpaces,     Assembler::DATA_WORD},
 };
-// clang-format on
 PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
+
+constexpr AsmI8086::PseudoI8086 AsmI8086::PSEUDO_I8086_TABLE[] PROGMEM = {
+    {TEXT_DD,  &AsmI8086::defineConstant, DATA_DD},
+    {TEXT_DQ,  &AsmI8086::defineConstant, DATA_DQ},
+    {TEXT_DT,  &AsmI8086::defineConstant, DATA_DT},
+    {TEXT_FPU, &AsmI8086::setCoprocessor},
+};
+PROGMEM constexpr AsmI8086::PseudosI8086 AsmI8086::PSEUDOS_I8086{ARRAY_RANGE(PSEUDO_I8086_TABLE)};
+
+// clang-format on
 
 struct I8086SymbolParser final : SimpleSymbolParser, Singleton<I8086SymbolParser> {
     I8086SymbolParser() : SimpleSymbolParser(PSTR_UNDER_AT_QUESTION) {}
 };
-
-}  // namespace
 
 const ValueParser::Plugins &AsmI8086::defaultPlugins() {
     static struct final : ValueParser::IntelPlugins {
@@ -639,8 +644,9 @@ Error AsmInsn::emitTemporaryReal(const float80_t &val80) {
 
 #endif
 
-Error AsmI8086::defineDataConstant(
-        AsmInsn &insn, StrScanner &scan, I8087Type type, ErrorAt &_error) const {
+Error AsmI8086::defineConstant(StrScanner &scan, Insn &_insn, uint16_t extra) {
+    const auto type = static_cast<I8087Type>(extra);
+    AsmInsn insn(_insn);
     ErrorAt error;
     do {
         scan.skipSpaces();
@@ -649,7 +655,7 @@ Error AsmI8086::defineDataConstant(
             auto end = scan;
             const auto err = isString(end, strErr);
             if (err == OK) {
-                generateString(scan, end, insn.insnBase(), DATA_LONG, strErr);
+                generateString(scan, end, _insn, DATA_LONG, strErr);
                 if (error.setErrorIf(strErr) == NO_MEMORY)
                     break;
                 continue;
@@ -725,23 +731,18 @@ Error AsmI8086::defineDataConstant(
         if (error.setErrorIf(exprErr) == NO_MEMORY)
             break;
     } while (scan.skipSpaces().expect(','));
-    return _error.setError(error);
+    return _insn.setError(error);
 }
 
-Error AsmI8086::processPseudo(StrScanner &scan, Insn &_insn) {
-    AsmInsn insn(_insn);
+Error AsmI8086::setCoprocessor(StrScanner &scan, Insn &insn, uint16_t) {
     const auto at = scan;
-    if (strcasecmp_P(insn.name(), TEXT_FPU) == 0) {
-        const auto error = _opt_fpu.set(scan);
-        return error ? _insn.setErrorIf(at, error) : OK;
-    }
-    if (strcasecmp_P(insn.name(), TEXT_DD) == 0)
-        return defineDataConstant(insn, scan, DATA_DD, _insn);
-    if (strcasecmp_P(insn.name(), TEXT_DQ) == 0)
-        return defineDataConstant(insn, scan, DATA_DQ, _insn);
-    if (strcasecmp_P(insn.name(), TEXT_DT) == 0)
-        return defineDataConstant(insn, scan, DATA_DT, _insn);
-    return Assembler::processPseudo(scan, _insn);
+    const auto error = _opt_fpu.set(scan);
+    return error ? insn.setErrorIf(at, error) : OK;
+}
+
+Error AsmI8086::processPseudo(StrScanner &scan, Insn &insn) {
+    const auto *p = PSEUDOS_I8086.search(insn);
+    return p ? p->invoke(this, scan, insn) : Assembler::processPseudo(scan, insn);
 }
 
 void AsmInsn::prepairModReg() {

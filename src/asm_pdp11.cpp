@@ -28,14 +28,14 @@ using namespace reg;
 using namespace text::common;
 using namespace text::option;
 
-namespace {
-
 // clang-format off
+namespace {
 constexpr char TEXT_dEVEN[]  PROGMEM = ".EVEN";
-constexpr char TEXT_dODD[]   PROGMEM = ".ODD";
 constexpr char TEXT_dFLT2[]  PROGMEM = ".FLT2";
 constexpr char TEXT_dFLT4[]  PROGMEM = ".FLT4";
+constexpr char TEXT_dODD[]   PROGMEM = ".ODD";
 constexpr char TEXT_dRADIX[] PROGMEM = ".RADIX";
+}  // namespace
 
 constexpr Pseudo PSEUDOS[] PROGMEM = {
     {TEXT_dequal, &Assembler::defineOrigin},
@@ -46,10 +46,16 @@ constexpr Pseudo PSEUDOS[] PROGMEM = {
     {TEXT_dODD,   &Assembler::alignOrigin,        Assembler::ALIGN_ODD},
     {TEXT_dWORD,  &Assembler::defineDataConstant, Assembler::DATA_WORD_NO_STRING | Assembler::DATA_ALIGN2},
 };
-// clang-format on
 PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
 
-}  // namespace
+constexpr AsmPdp11::PseudoPdp11 AsmPdp11::PSEUDO_PDP11_TABLE[] PROGMEM = {
+    {TEXT_dASCII, &AsmPdp11::defineAscii},
+    {TEXT_dFLT2,  &AsmPdp11::defineDecFloat, DATA_FLT2},
+    {TEXT_dFLT4,  &AsmPdp11::defineDecFloat, DATA_FLT4},
+    {TEXT_dRADIX, &AsmPdp11::setRadix},
+};
+PROGMEM constexpr AsmPdp11::PseudosPdp11 AsmPdp11::PSEUDOS_PDP11{ARRAY_RANGE(PSEUDO_PDP11_TABLE)};
+// clang-format on
 
 const ValueParser::Plugins &AsmPdp11::defaultPlugins() {
     static const struct final : ValueParser::Plugins {
@@ -415,9 +421,9 @@ void AsmPdp11::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode, Op
     }
 }
 
-Error AsmPdp11::defineDecFloat(
-        StrScanner &scan, AsmInsn &insn, DecType type, ErrorAt &_error) const {
-    insn.insnBase().align(2);
+Error AsmPdp11::defineDecFloat(StrScanner &scan, Insn &_insn, uint16_t type) {
+    _insn.align(2);
+    AsmInsn insn(_insn);
     ErrorAt error;
     do {
         scan.skipSpaces();
@@ -453,10 +459,10 @@ Error AsmPdp11::defineDecFloat(
         if (error.setErrorIf(exprErr) == NO_MEMORY)
             break;
     } while (scan.skipSpaces().expect(','));
-    return _error.setError(error);
+    return _insn.setError(error);
 }
 
-Error AsmPdp11::defineAscii(StrScanner &scan, Insn &insn) const {
+Error AsmPdp11::defineAscii(StrScanner &scan, Insn &insn, uint16_t) {
     ErrorAt error;
     do {
         auto p = scan;
@@ -483,29 +489,24 @@ Error AsmPdp11::defineAscii(StrScanner &scan, Insn &insn) const {
     return insn.setError(error);
 }
 
-Error AsmPdp11::processPseudo(StrScanner &scan, Insn &_insn) {
-    if (strcasecmp_P(_insn.name(), TEXT_dRADIX) == 0) {
-        const auto saved = _inputRadix;
-        setInputRadix(RADIX_10);  // argument is always parsed with RADIX 10
-        int32_t radix;
-        auto p = scan;
-        const auto error = parseIntOption(p, radix);
-        if (error == OK && (radix == 2 || radix == 8 || radix == 10)) {
-            scan = p;
-        } else {
-            radix = saved;
-        }
-        setInputRadix(static_cast<Radix>(radix));
-        return error;
+Error AsmPdp11::setRadix(StrScanner &scan, Insn &insn, uint16_t) {
+    const auto saved = _inputRadix;
+    setInputRadix(RADIX_10);  // argument is always parsed with RADIX 10
+    int32_t radix;
+    auto p = scan;
+    const auto error = parseIntOption(p, radix);
+    if (error == OK && (radix == 2 || radix == 8 || radix == 10)) {
+        scan = p;
+    } else {
+        radix = saved;
     }
-    if (strcasecmp_P(_insn.name(), TEXT_dASCII) == 0)
-        return defineAscii(scan, _insn);
-    AsmInsn insn(_insn);
-    if (strcasecmp_P(insn.name(), TEXT_dFLT2) == 0)
-        return defineDecFloat(scan, insn, DATA_FLT2, _insn);
-    if (strcasecmp_P(insn.name(), TEXT_dFLT4) == 0)
-        return defineDecFloat(scan, insn, DATA_FLT4, _insn);
-    return Assembler::processPseudo(scan, _insn);
+    setInputRadix(static_cast<Radix>(radix));
+    return error;
+}
+
+Error AsmPdp11::processPseudo(StrScanner &scan, Insn &insn) {
+    const auto *p = PSEUDOS_PDP11.search(insn);
+    return p ? p->invoke(this, scan, insn) : Assembler::processPseudo(scan, insn);
 }
 
 Error AsmPdp11::encodeImpl(StrScanner &scan, Insn &_insn) const {

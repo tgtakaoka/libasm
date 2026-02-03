@@ -57,17 +57,23 @@ private:
     void emitStringOperand(AsmInsn &insn, const Operand &op, RegName seg, RegName index) const;
     void emitStringInst(AsmInsn &insn, const Operand &src, const Operand &dst) const;
 
-    enum I8087Type : char {
+    Error setCoprocessor(StrScanner &scan, Insn &insn, uint16_t);
+    enum I8087Type : uint16_t {
         DATA_DD = 'D',  // 32-bit binary or IEEE 754 floating point number
         DATA_DQ = 'Q',  // 64-bit binary or IEEE 754 floating point number
         DATA_DT = 'T'   // 80-bit BCD or i8087 Temporary Real
     };
-    Error defineDataConstant(AsmInsn &insn, StrScanner &scan, I8087Type type, ErrorAt &error) const;
+    Error defineConstant(StrScanner &scan, Insn &insn, uint16_t i8087Type);
     Error processPseudo(StrScanner &scan, Insn &insn) override;
     Error encodeImpl(StrScanner &scan, Insn &insn) const override;
     const ConfigBase &config() const override { return *this; }
     ConfigSetter &configSetter() override { return *this; }
     static const ValueParser::Plugins &defaultPlugins();
+
+    using PseudoI8086 = pseudo::__Pseudo<AsmI8086>;
+    using PseudosI8086 = pseudo::__Pseudos<PseudoI8086>;
+    static const PseudoI8086 PSEUDO_I8086_TABLE[] PROGMEM;
+    static const PseudosI8086 PSEUDOS_I8086 PROGMEM;
 };
 
 }  // namespace i8086

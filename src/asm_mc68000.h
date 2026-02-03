@@ -65,17 +65,26 @@ private:
     Error encodeOperand(
             AsmInsn &insn, OprSize size, const Operand &op, AddrMode mode, OprPos pos) const;
 
+    enum CoprocessorType : char {
+        COPRO_FPU = 'F',
+        COPRO_PMMU = 'P',
+    };
+    Error setCoprocessor(StrScanner &scan, Insn &insn, uint16_t procType);
     enum Mc68881Type : char {
         DATA_DCX = 'X',  // 96-bit MC68881 Extended Binary Real
         DATA_DCP = 'P',  // 96-bit MC68881 Packed Decimal String
     };
-    Error defineDataConstant(
-            AsmInsn &insn, StrScanner &scan, Mc68881Type type, ErrorAt &error) const;
+    Error defineConstant(StrScanner &scan, Insn &insn, uint16_t mc68881Type);
     Error processPseudo(StrScanner &scan, Insn &insn) override;
     Error encodeImpl(StrScanner &scan, Insn &insn) const override;
     const ConfigBase &config() const override { return *this; }
     ConfigSetter &configSetter() override { return *this; }
     static const ValueParser::Plugins &defaultPlugins();
+
+    using PseudoMc68000 = pseudo::__Pseudo<AsmMc68000>;
+    using PseudosMc68000 = pseudo::__Pseudos<PseudoMc68000>;
+    static const PseudoMc68000 PSEUDO_MC68000_TABLE[] PROGMEM;
+    static const PseudosMc68000 PSEUDOS_MC68000 PROGMEM;
 };
 
 }  // namespace mc68000

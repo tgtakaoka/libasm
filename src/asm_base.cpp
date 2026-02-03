@@ -147,7 +147,7 @@ Error Assembler::setOption(const StrScanner &name, StrScanner &text) {
     return options().setOption(name, text);
 }
 
-Error Assembler::setOption(StrScanner &scan, Insn &insn, uint8_t) {
+Error Assembler::setOption(StrScanner &scan, Insn &insn, uint16_t) {
     // parse "name", "text" in |scan|
     auto p = scan.skipSpaces();
     const auto dquote = p.expect('"');
@@ -163,7 +163,7 @@ Error Assembler::setOption(StrScanner &scan, Insn &insn, uint8_t) {
     return OK;
 }
 
-Error Assembler::defineOrigin(StrScanner &scan, Insn &insn, uint8_t) {
+Error Assembler::defineOrigin(StrScanner &scan, Insn &insn, uint16_t) {
     auto p = scan;
     ErrorAt error;
     const auto value = parseExpr(p, error);
@@ -177,7 +177,7 @@ Error Assembler::defineOrigin(StrScanner &scan, Insn &insn, uint8_t) {
     return OK;
 }
 
-Error Assembler::alignOrigin(StrScanner &scan, Insn &insn, uint8_t step) {
+Error Assembler::alignOrigin(StrScanner &scan, Insn &insn, uint16_t step) {
     auto at = insn.errorAt();
     if (step == ALIGN_ODD) {
         if (insn.address() % 2 == 0)
@@ -201,7 +201,7 @@ Error Assembler::alignOrigin(StrScanner &scan, Insn &insn, uint8_t step) {
     return insn.setErrorIf(at, setCurrentLocation(insn.address()));
 }
 
-Error Assembler::allocateSpaces(StrScanner &scan, Insn &insn, uint8_t dataType) {
+Error Assembler::allocateSpaces(StrScanner &scan, Insn &insn, uint16_t dataType) {
     const auto align = (dataType & DATA_ALIGN2) != 0;
     if (align && insn.address() % 2)
         insn.align(2);
@@ -214,7 +214,7 @@ Error Assembler::allocateSpaces(StrScanner &scan, Insn &insn, uint8_t dataType) 
     if (value.overflowUint16())
         return insn.setError(scan, OVERFLOW_RANGE);
 
-    uint8_t unit;
+    size_t unit;
     switch (type) {
     case DATA_WORD:
         unit = sizeof(uint16_t);
@@ -232,7 +232,7 @@ Error Assembler::allocateSpaces(StrScanner &scan, Insn &insn, uint8_t dataType) 
     return OK;
 }
 
-Error Assembler::defineString(StrScanner &scan, Insn &insn, uint8_t) {
+Error Assembler::defineString(StrScanner &scan, Insn &insn, uint16_t) {
     ErrorAt error;
     do {
         const auto delim = *scan.skipSpaces()++;
@@ -315,7 +315,7 @@ void Assembler::generateString(
     }
 }
 
-Error Assembler::defineDataConstant(StrScanner &scan, Insn &insn, uint8_t dataType) {
+Error Assembler::defineDataConstant(StrScanner &scan, Insn &insn, uint16_t dataType) {
     // Do alignment if requested.
     if (dataType & DATA_ALIGN2)
         setCurrentLocation(insn.align(2));

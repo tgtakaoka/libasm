@@ -27,22 +27,30 @@ using namespace reg;
 using namespace text::common;
 using namespace text::option;
 
-namespace {
-
 // clang-format off
-constexpr char TEXT_OCTAL[]   PROGMEM = "OCTAL";
+namespace {
 constexpr char TEXT_DECIMAL[] PROGMEM = "DECIMAL";
-constexpr char TEXT_FIELD[]   PROGMEM = "FIELD";
-constexpr char TEXT_PAGE[]    PROGMEM = "PAGE";
 constexpr char TEXT_DUBL[]    PROGMEM = "DUBL";
+constexpr char TEXT_FIELD[]   PROGMEM = "FIELD";
+constexpr char TEXT_OCTAL[]   PROGMEM = "OCTAL";
+constexpr char TEXT_PAGE[]    PROGMEM = "PAGE";
+}  // namespace
 
 constexpr Pseudo PSEUDOS[] PROGMEM = {
     {PSTR_STAR, &Assembler::defineOrigin},
 };
-// clang-format on
 PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
 
-}  // namespace
+constexpr AsmPdp8::PseudoPdp8 AsmPdp8::PSEUDO_PDP8_TABLE[] PROGMEM = {
+    {TEXT_DECIMAL, &AsmPdp8::setRadix, RADIX_10},
+    {TEXT_DUBL,    &AsmPdp8::defineDoubleDecimal},
+    {TEXT_FIELD,   &AsmPdp8::defineField},
+    {TEXT_OCTAL,   &AsmPdp8::setRadix, RADIX_8},
+    {TEXT_PAGE,    &AsmPdp8::alignOnPage},
+    {TEXT_TEXT,    &AsmPdp8::defineDec6String},
+};
+PROGMEM constexpr AsmPdp8::PseudosPdp8 AsmPdp8::PSEUDOS_PDP8{ARRAY_RANGE(PSEUDO_PDP8_TABLE)};
+// clang-format on
 
 const ValueParser::Plugins &AsmPdp8::defaultPlugins() {
     static const struct final : ValueParser::Plugins {
@@ -81,7 +89,12 @@ Error emitUint12(Insn &insn, uint16_t data) {
 }
 }  // namespace
 
-Error AsmPdp8::defineDoubleDecimal(StrScanner &scan, Insn &insn, uint8_t) {
+Error AsmPdp8::setRadix(StrScanner &, Insn &, uint16_t radix) {
+    setInputRadix(Radix(radix));
+    return OK;
+}
+
+Error AsmPdp8::defineDoubleDecimal(StrScanner &scan, Insn &insn, uint16_t) {
     const auto radix = _inputRadix;
     setInputRadix(RADIX_10);
     const auto save = scan;
@@ -99,7 +112,7 @@ Error AsmPdp8::defineDoubleDecimal(StrScanner &scan, Insn &insn, uint8_t) {
     return insn.getError();
 }
 
-Error AsmPdp8::alignOnPage(StrScanner &scan, Insn &insn, uint8_t) {
+Error AsmPdp8::alignOnPage(StrScanner &scan, Insn &insn, uint16_t) {
     auto p = scan.skipSpaces();
     auto page = pageOf(insn.address());
     if (endOfLine(p)) {
@@ -118,7 +131,9 @@ Error AsmPdp8::alignOnPage(StrScanner &scan, Insn &insn, uint8_t) {
     return OK;
 }
 
-Error AsmPdp8::defineField(StrScanner &scan, Insn &insn, uint8_t) {
+Error AsmPdp8::defineField(StrScanner &scan, Insn &insn, uint16_t) {
+    if (cpuType() == IM6100)
+        return insn.setErrorIf(scan, UNKNOWN_DIRECTIVE);
     auto p = scan.skipSpaces();
     const auto field = parseInteger(p, insn).getUnsigned();
     if (insn.getError())
@@ -275,7 +290,7 @@ Error AsmPdp8::parseOperateOperand(StrScanner &scan, AsmInsn &insn) const {
     return OK;
 }
 
-Error AsmPdp8::defineDec6String(StrScanner &scan, Insn &insn) {
+Error AsmPdp8::defineDec6String(StrScanner &scan, Insn &insn, uint16_t) {
     ErrorAt error;
     do {
         uint8_t count = 0;
@@ -312,19 +327,8 @@ Error AsmPdp8::defineDec6String(StrScanner &scan, Insn &insn) {
 }
 
 Error AsmPdp8::processPseudo(StrScanner &scan, Insn &insn) {
-    if (strcasecmp_P(insn.name(), TEXT_OCTAL) == 0)
-        return setInputRadix(RADIX_8);
-    if (strcasecmp_P(insn.name(), TEXT_DECIMAL) == 0)
-        return setInputRadix(RADIX_10);
-    if (strcasecmp_P(insn.name(), TEXT_DUBL) == 0)
-        return defineDoubleDecimal(scan, insn);
-    if (strcasecmp_P(insn.name(), TEXT_PAGE) == 0)
-        return alignOnPage(scan, insn);
-    if (cpuType() == HD6120 && strcasecmp_P(insn.name(), TEXT_FIELD) == 0)
-        return defineField(scan, insn);
-    if (strcasecmp_P(insn.name(), TEXT_TEXT) == 0)
-        return defineDec6String(scan, insn);
-    return Assembler::processPseudo(scan, insn);
+    const auto *p = PSEUDOS_PDP8.search(insn);
+    return p ? p->invoke(this, scan, insn) : Assembler::processPseudo(scan, insn);
 }
 
 Error AsmPdp8::encodeImpl(StrScanner &scan, Insn &_insn) const {

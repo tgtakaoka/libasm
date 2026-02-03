@@ -61,17 +61,17 @@ struct Assembler {
     uint32_t currentLocation() const { return _currentLocation; }
 
     virtual Error processPseudo(StrScanner &scan, Insn &insn);
-    Error setOption(StrScanner &scan, Insn &insn, uint8_t extra = 0);
-    Error defineOrigin(StrScanner &scan, Insn &insn, uint8_t extra = 0);
-    enum AlignStep : uint8_t {
+    Error setOption(StrScanner &scan, Insn &insn, uint16_t extra = 0);
+    Error defineOrigin(StrScanner &scan, Insn &insn, uint16_t extra = 0);
+    enum AlignStep : uint16_t {
         ALIGN_VAR = 0,
         ALIGN_ODD = 1,
         ALIGN_EVEN = 2,
     };
-    Error alignOrigin(StrScanner &scan, Insn &insn, uint8_t alignStep = ALIGN_VAR);
-    Error defineString(StrScanner &scan, Insn &insn, uint8_t extra = 0);
+    Error alignOrigin(StrScanner &scan, Insn &insn, uint16_t alignStep = ALIGN_VAR);
+    Error defineString(StrScanner &scan, Insn &insn, uint16_t extra = 0);
     Error isString(StrScanner &scan, ErrorAt &error) const;
-    enum DataType : uint8_t {
+    enum DataType : uint16_t {
         DATA_BYTE,
         DATA_BYTE_OR_WORD,
         DATA_BYTE_IN_WORD,
@@ -83,8 +83,8 @@ struct Assembler {
         DATA_FLOAT64,
         DATA_ALIGN2 = 0x80,
     };
-    Error defineDataConstant(StrScanner &scan, Insn &insn, uint8_t dataType);
-    Error allocateSpaces(StrScanner &scan, Insn &insn, uint8_t dataType);
+    Error defineDataConstant(StrScanner &scan, Insn &insn, uint16_t dataType);
+    Error allocateSpaces(StrScanner &scan, Insn &insn, uint16_t dataType);
 
 protected:
     const ValueParser _parser;

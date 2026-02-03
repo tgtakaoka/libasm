@@ -28,25 +28,26 @@ struct Assembler;
 
 namespace pseudo {
 
-struct Pseudo {
-    using Handler = Error (Assembler::*)(StrScanner &scan, Insn &insn, uint8_t);
+template <typename APP>
+struct __Pseudo {
+    using Handler = Error (APP::*)(StrScanner &scan, Insn &insn, uint16_t extra);
 
-    constexpr Pseudo(const /*PROGMEM*/ char *name_P, Handler handler, uint8_t extra = 0)
+    constexpr __Pseudo(const /*PROGMEM*/ char *name_P, Handler handler, uint16_t extra = 0)
         : _name_P(name_P), _handler_P(handler), _extra_P(extra) {}
 
     const /*PROGMEM*/ char *name_P() const {
         return reinterpret_cast<const char *>(pgm_read_ptr(&_name_P));
     }
 
-    Error invoke(Assembler *assembler, StrScanner &scan, Insn &insn) const {
+    Error invoke(APP *app, StrScanner &scan, Insn &insn) const {
         const auto h = handler();
-        return (assembler->*h)(scan, insn, extra());
+        return (app->*h)(scan, insn, extra());
     }
 
 private:
     const /*PROGMEM*/ char *const _name_P;
     const Handler _handler_P;
-    const uint8_t _extra_P;
+    const uint16_t _extra_P;
 
     Handler handler() const {
         Handler h;
@@ -54,22 +55,26 @@ private:
         return h;
     }
 
-    uint8_t extra() const { return pgm_read_byte(&_extra_P); }
+    uint16_t extra() const { return pgm_read_word(&_extra_P); }
 };
 
-struct Pseudos {
-    constexpr Pseudos(const /*PROGMEM*/ Pseudo *table_P, const /*PROGMEM*/ Pseudo *end_P)
+template <typename PSEUDO>
+struct __Pseudos {
+    constexpr __Pseudos(const /*PROGMEM*/ PSEUDO *table_P, const /*PROGMEM*/ PSEUDO *end_P)
         : _table(table_P, end_P) {}
 
-    const Pseudo *search(const Insn &insn) const { return _table.binarySearch(insn, comparator); }
+    const PSEUDO *search(const Insn &insn) const { return _table.binarySearch(insn, comparator); }
 
 private:
-    const table::Table<Pseudo> _table;
+    const table::Table<PSEUDO> _table;
 
-    static int comparator(const Insn &insn, const /*PROGMEM*/ Pseudo *item) {
+    static int comparator(const Insn &insn, const /*PROGMEM*/ PSEUDO *item) {
         return strcasecmp_P(insn.name(), item->name_P());
     }
 };
+
+using Pseudo = __Pseudo<Assembler>;
+using Pseudos = __Pseudos<Pseudo>;
 
 }  // namespace pseudo
 }  // namespace libasm
