@@ -16,6 +16,7 @@
 
 #include "asm_i8086.h"
 #include "table_i8086.h"
+#include "text_i8086.h"
 
 namespace libasm {
 namespace i8086 {
@@ -23,6 +24,7 @@ namespace i8086 {
 using namespace pseudo;
 using namespace reg;
 using namespace text::common;
+using namespace text::i8086;
 using namespace text::option;
 
 // clang-format off
@@ -52,6 +54,13 @@ constexpr AsmI8086::PseudoI8086 AsmI8086::PSEUDO_I8086_TABLE[] PROGMEM = {
     {TEXT_DQ,  &AsmI8086::defineConstant, DATA_DQ},
     {TEXT_DT,  &AsmI8086::defineConstant, DATA_DT},
     {TEXT_FPU, &AsmI8086::setCoprocessor},
+    {TEXT_REP,   &AsmI8086::encodeRepeatInsn, 0xF3},
+    {TEXT_REPC,  &AsmI8086::encodeRepeatInsn, 0x65}, // V30
+    {TEXT_REPE,  &AsmI8086::encodeRepeatInsn, 0xF3},
+    {TEXT_REPNC, &AsmI8086::encodeRepeatInsn, 0x64}, // V30
+    {TEXT_REPNE, &AsmI8086::encodeRepeatInsn, 0xF2},
+    {TEXT_REPNZ, &AsmI8086::encodeRepeatInsn, 0xF2},
+    {TEXT_REPZ,  &AsmI8086::encodeRepeatInsn, 0xF3},
 };
 PROGMEM constexpr AsmI8086::PseudosI8086 AsmI8086::PSEUDOS_I8086{ARRAY_RANGE(PSEUDO_I8086_TABLE)};
 
@@ -85,24 +94,6 @@ void AsmI8086::reset() {
 
 Error AsmI8086::setOptimizeSegment(bool enable) {
     _optimizeSegment = enable;
-    return OK;
-}
-
-Error AsmI8086::parseStringInst(StrScanner &scan, Operand &op) const {
-    auto p = scan;
-    StrScanner opr;
-    if (parser().readSymbol(p, opr) != OK)
-        return UNKNOWN_INSTRUCTION;
-    Insn _insn(0);
-    AsmInsn insn(_insn);
-    insn.nameBuffer().text(opr);
-    if (searchName(_cpuSpec, insn))
-        return UNKNOWN_INSTRUCTION;
-    if (!insn.stringInst())
-        return UNKNOWN_INSTRUCTION;
-    scan = p.skipSpaces();
-    op.val.setUnsigned(insn.opCode());
-    op.mode = M_ISTR;
     return OK;
 }
 
@@ -193,10 +184,6 @@ Error AsmI8086::parseOperand(StrScanner &scan, Operand &op) const {
     if (endOfLine(p))
         return OK;
 
-    if (parseStringInst(p, op) == OK) {
-        scan = p;
-        return OK;
-    }
     if (parsePointerSize(p, op))
         return op.getError();
     parseSegmentOverride(p, op);
@@ -572,9 +559,6 @@ void AsmI8086::emitOperand(AsmInsn &insn, AddrMode mode, const Operand &op, OprP
         emitImmediate(insn, mode, SZ_WORD, op.val, op);
         emitImmediate(insn, M_SEG, SZ_WORD, insn.dstOp.val, op);
         break;
-    case M_ISTR:
-        insn.emitOperand8(op.val.getUnsigned());
-        break;
     case M_STI:
         insn.embed(op.val.getUnsigned() & 7);
         break;
@@ -734,6 +718,20 @@ Error AsmI8086::defineConstant(StrScanner &scan, Insn &_insn, uint16_t extra) {
     return _insn.setError(error);
 }
 
+Error AsmI8086::encodeRepeatInsn(StrScanner &scan, Insn &_insn, uint16_t opc) {
+    if (endOfLine(scan))
+        return UNKNOWN_DIRECTIVE;
+    if ((opc == 0x64 || opc == 0x65) && _cpuSpec.cpu != V30)
+        return UNKNOWN_DIRECTIVE;
+
+    AsmInsn insn(_insn);
+    insn.setRepeat(opc);
+    StrScanner symbol;
+    _parser.readInstruction(scan, symbol);
+    insn.nameBuffer().reset().text(symbol);
+    return encodeImpl(scan.skipSpaces(), insn);
+}
+
 Error AsmI8086::setCoprocessor(StrScanner &scan, Insn &insn, uint16_t) {
     const auto at = scan;
     const auto error = _opt_fpu.set(scan);
@@ -766,6 +764,8 @@ void AsmInsn::emitInsn() {
         pre &= UINT8_MAX;
         emitByte(FWAIT, pos++);
     }
+    if (_repeat)
+        emitByte(_repeat, pos++);
     if (_segment)
         emitByte(_segment, pos++);
     if (pre) {
@@ -795,26 +795,25 @@ uint_fast8_t AsmInsn::operandPos() const {
     return pos;
 }
 
-Error AsmI8086::encodeImpl(StrScanner &scan, Insn &_insn) const {
-    AsmInsn insn(_insn);
+Error AsmI8086::encodeImpl(StrScanner &scan, AsmInsn &insn) const {
     if (parseOperand(scan, insn.dstOp) && insn.dstOp.hasError())
-        return _insn.setError(insn.dstOp);
+        return insn.setError(insn.dstOp);
     if (scan.skipSpaces().expect(',')) {
         if (parseOperand(scan, insn.srcOp) && insn.srcOp.hasError())
-            return _insn.setError(insn.srcOp);
+            return insn.setError(insn.srcOp);
         scan.skipSpaces();
     }
     if (scan.expect(',')) {
         if (parseOperand(scan, insn.extOp) && insn.extOp.hasError())
-            return _insn.setError(insn.extOp);
+            return insn.setError(insn.extOp);
         scan.skipSpaces();
     }
 
     if (searchName(_cpuSpec, insn))
-        return _insn.setError(insn.dstOp, insn);
+        return insn.setError(insn.dstOp, insn);
     insn.prepairModReg();
 
-    if (insn.stringInst()) {
+    if (insn.stringInsn()) {
         emitStringInst(insn, insn.dstOp, insn.srcOp);
     } else {
         emitOperand(insn, insn.dst(), insn.dstOp, insn.dstPos());
@@ -822,6 +821,12 @@ Error AsmI8086::encodeImpl(StrScanner &scan, Insn &_insn) const {
         emitOperand(insn, insn.ext(), insn.extOp, insn.extPos());
     }
     insn.emitInsn();
+    return insn.setError(insn);
+}
+
+Error AsmI8086::encodeImpl(StrScanner &scan, Insn &_insn) const {
+    AsmInsn insn(_insn);
+    encodeImpl(scan, insn);
     return _insn.setError(insn);
 }
 

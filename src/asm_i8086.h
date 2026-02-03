@@ -38,7 +38,6 @@ private:
 
     bool _optimizeSegment;
 
-    Error parseStringInst(StrScanner &scan, Operand &op) const;
     Error parsePointerSize(StrScanner &scan, Operand &op) const;
     void parseSegmentOverride(StrScanner &scan, Operand &op) const;
     void parseBaseRegister(StrScanner &scan, Operand &op) const;
@@ -64,7 +63,9 @@ private:
         DATA_DT = 'T'   // 80-bit BCD or i8087 Temporary Real
     };
     Error defineConstant(StrScanner &scan, Insn &insn, uint16_t i8087Type);
+    Error encodeRepeatInsn(StrScanner &scan, Insn &insn, uint16_t opc);
     Error processPseudo(StrScanner &scan, Insn &insn) override;
+    Error encodeImpl(StrScanner &scan, AsmInsn &insn) const;
     Error encodeImpl(StrScanner &scan, Insn &insn) const override;
     const ConfigBase &config() const override { return *this; }
     ConfigSetter &configSetter() override { return *this; }

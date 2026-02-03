@@ -75,6 +75,16 @@ bool fpu_on() {
     return true;
 }
 
+constexpr auto SEGES = 0x26;
+constexpr auto SEGCS = 0x2E;
+constexpr auto SEGSS = 0x36;
+constexpr auto SEGDS = 0x3E;
+constexpr auto FWAIT = 0x9B;
+constexpr auto REPNE = 0xF2;
+constexpr auto REP = 0xF3;
+constexpr auto REPNC = 0x64;  // V30
+constexpr auto REPC = 0x65;   // V30
+
 void set_up() {
     disassembler.reset();
     if (is80186() && !v30()) {
@@ -1554,62 +1564,68 @@ void test_logic() {
     }
 }
 
-void test_string_manipulation() {
-    disassembler.setOption("string-insn", "false");
-    TEST("REPNE", "", 0xF2);
-    TEST("REP",   "", 0xF3);
+void test_repeat() {
+    disassembler.setOption("repeat-insn", "true");
+    TEST("REPNE", "", REPNE);
+    TEST("REP",   "", REP);
     if (v30()) {
-        TEST("REPNC", "", 0x64);
-        TEST("REPC",  "", 0x65);
+        TEST("REPNC", "", REPNC);
+        TEST("REPC",  "", REPC);
     }
 
-    disassembler.setOption("string-insn", "enable");
-    ERRT("REPNE", "", NO_MEMORY, "", 0xF2);
-    ERRT("REP",   "", NO_MEMORY, "", 0xF3);
+    disassembler.setOption("repeat-insn", "false");
+    NMEM("", "", "", REPNE);
+    NMEM("", "", "", REP);
+    ERRT("", "", OPCODE_HAS_NO_EFFECT, "", REP,   REP);
+    ERRT("", "", OPCODE_HAS_NO_EFFECT, "", REP,   REPNE);
+    ERRT("", "", OPCODE_HAS_NO_EFFECT, "", REPNE, REP);
+    ERRT("", "", OPCODE_HAS_NO_EFFECT, "", REPNE, REPNE);
     if (v30()) {
-        ERRT("REPNC", "", NO_MEMORY, "", 0x64);
-        ERRT("REPC",  "", NO_MEMORY, "", 0x65);
+        NMEM("", "", "", REPNC);
+        NMEM("", "", "", REPC);
+        ERRT("", "", OPCODE_HAS_NO_EFFECT, "", REPNE, REPNC);
+        ERRT("", "", OPCODE_HAS_NO_EFFECT, "", REPC,  REP);
     }
 
-    TEST("REPNE", "MOVSB", 0xF2, 0xA4);
-    TEST("REPNE", "MOVSW", 0xF2, 0xA5);
-    TEST("REPNE", "CMPSB", 0xF2, 0xA6);
-    TEST("REPNE", "CMPSW", 0xF2, 0xA7);
-    TEST("REPNE", "STOSB", 0xF2, 0xAA);
-    TEST("REPNE", "STOSW", 0xF2, 0xAB);
-    TEST("REPNE", "LODSB", 0xF2, 0xAC);
-    TEST("REPNE", "LODSW", 0xF2, 0xAD);
-    TEST("REPNE", "SCASB", 0xF2, 0xAE);
-    TEST("REPNE", "SCASW", 0xF2, 0xAF);
-    ERRT("REPNE", "NOP", INVALID_INSTRUCTION, "NOP", 0xF2, 0x90);
-    ERRT("REPNE", "",    UNKNOWN_INSTRUCTION, "",    0xF2, 0xFF);
+    TEST("REPNE MOVSB", "", REPNE, 0xA4);
+    TEST("REPNE MOVSW", "", REPNE, 0xA5);
+    TEST("REPNE CMPSB", "", REPNE, 0xA6);
+    TEST("REPNE CMPSW", "", REPNE, 0xA7);
+    TEST("REPNE STOSB", "", REPNE, 0xAA);
+    TEST("REPNE STOSW", "", REPNE, 0xAB);
+    TEST("REPNE LODSB", "", REPNE, 0xAC);
+    TEST("REPNE LODSW", "", REPNE, 0xAD);
+    TEST("REPNE SCASB", "", REPNE, 0xAE);
+    TEST("REPNE SCASW", "", REPNE, 0xAF);
+    ERRT("REPNE NOP", "", ILLEGAL_COMBINATION, "NOP", REPNE, 0x90);
+    NMEM("", "", "",        REPNE, 0xFF);
     if (is80186()) {
-        TEST("REPNE", "INSB",  0xF2, 0x6C);
-        TEST("REPNE", "INSW",  0xF2, 0x6D);
-        TEST("REPNE", "OUTSB", 0xF2, 0x6E);
-        TEST("REPNE", "OUTSW", 0xF2, 0x6F);
+        TEST("REPNE INSB", "",  REPNE, 0x6C);
+        TEST("REPNE INSW", "",  REPNE, 0x6D);
+        TEST("REPNE OUTSB", "", REPNE, 0x6E);
+        TEST("REPNE OUTSW", "", REPNE, 0x6F);
     }
 
-    TEST("REP", "MOVSB", 0xF3, 0xA4);
-    TEST("REP", "MOVSW", 0xF3, 0xA5);
-    TEST("REP", "CMPSB", 0xF3, 0xA6);
-    TEST("REP", "CMPSW", 0xF3, 0xA7);
-    TEST("REP", "STOSB", 0xF3, 0xAA);
-    TEST("REP", "STOSW", 0xF3, 0xAB);
-    TEST("REP", "LODSB", 0xF3, 0xAC);
-    TEST("REP", "LODSW", 0xF3, 0xAD);
-    TEST("REP", "SCASB", 0xF3, 0xAE);
-    TEST("REP", "SCASW", 0xF3, 0xAF);
+    TEST("REP MOVSB", "", REP, 0xA4);
+    TEST("REP MOVSW", "", REP, 0xA5);
+    TEST("REP CMPSB", "", REP, 0xA6);
+    TEST("REP CMPSW", "", REP, 0xA7);
+    TEST("REP STOSB", "", REP, 0xAA);
+    TEST("REP STOSW", "", REP, 0xAB);
+    TEST("REP LODSB", "", REP, 0xAC);
+    TEST("REP LODSW", "", REP, 0xAD);
+    TEST("REP SCASB", "", REP, 0xAE);
+    TEST("REP SCASW", "", REP, 0xAF);
     if (is80186()) {
-        TEST("REP", "INSB",  0xF3, 0x6C);
-        TEST("REP", "INSW",  0xF3, 0x6D);
-        TEST("REP", "OUTSB", 0xF3, 0x6E);
-        TEST("REP", "OUTSW", 0xF3, 0x6F);
+        TEST("REP INSB", "",  REP, 0x6C);
+        TEST("REP INSW", "",  REP, 0x6D);
+        TEST("REP OUTSB", "", REP, 0x6E);
+        TEST("REP OUTSW", "", REP, 0x6F);
     }
 
     if (v30()) {
-        TEST("REPNC", "CMPSB", 0x64, 0xA6);
-        TEST("REPC",  "SCASW", 0x65, 0xAF);
+        TEST("REPNC CMPSB", "", REPNC, 0xA6);
+        TEST("REPC SCASW", "", REPC, 0xAF);
     }
 
     TEST("MOVSB", "", 0xA4);
@@ -2001,12 +2017,6 @@ void test_processor_control() {
 }
 
 void test_segment_override() {
-    constexpr auto SEGES = 0x26;
-    constexpr auto SEGCS = 0x2E;
-    constexpr auto SEGSS = 0x36;
-    constexpr auto SEGDS = 0x3E;
-    constexpr auto FWAIT = 0x9B;
-
     disassembler.setOption("segment-insn", "enable");
 
     TEST("SEGES", "", SEGES);
@@ -2020,6 +2030,8 @@ void test_segment_override() {
     NMEM("", "", "", SEGCS);
     NMEM("", "", "", SEGSS);
     NMEM("", "", "", SEGDS);
+    ERRT("", "", OPCODE_HAS_NO_EFFECT, "", SEGES, SEGCS);
+    ERRT("", "", OPCODE_HAS_NO_EFFECT, "", SEGDS, REP, SEGSS);
 
     TEST("MOV", "ES:[BX], AH",    SEGES, 0x88, 0047);
     TEST("MOV", "ES:[BP+0], AH",  SEGES, 0x88, 0146, 0x00);
@@ -2155,9 +2167,10 @@ void test_segment_override() {
         return;
 
     NMEM("", "", "", FWAIT, SEGES);
-    NMEM("", "", "", FWAIT, SEGCS);
-    NMEM("", "", "", FWAIT, SEGSS);
-    NMEM("", "", "", FWAIT, SEGDS);
+    NMEM("", "", "", FWAIT, REP, SEGCS);
+    NMEM("", "", "", FWAIT, SEGSS, REP);
+    UNKN(            FWAIT, FWAIT);
+    ERRT("WAIT", "", ILLEGAL_SEGMENT, "", SEGDS, FWAIT);
 
     TEST("FLDCW", "SS:[SI]",          SEGSS, 0xD9, 0054);
     TEST("FLDCW", "CS:[1234H]",       SEGCS, 0xD9, 0056, 0x34, 0x12);
@@ -3046,7 +3059,7 @@ void run_tests(const char *cpu) {
     RUN_TEST(test_data_transfer);
     RUN_TEST(test_arithmetic);
     RUN_TEST(test_logic);
-    RUN_TEST(test_string_manipulation);
+    RUN_TEST(test_repeat);
     RUN_TEST(test_control_transfer);
     RUN_TEST(test_processor_control);
     RUN_TEST(test_segment_override);

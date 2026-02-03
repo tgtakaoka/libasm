@@ -4530,6 +4530,22 @@
       fistp   qword ptr es:[si+0xbebd]
       fistp   qword ptr es:[bp+0xc0bf]
       fistp   qword ptr es:[bx+0xc1c0]
+      repne outsb dx, es:[si]
+      repne outsw dx, es:[si]
+      repne movsb es:[di], es:[si]
+      repne movsw es:[di], es:[si]
+      repne cmpsb es:[si], es:[di]
+      repne cmpsw es:[si], es:[di]
+      repne lodsb es:[si]
+      repne lodsw es:[si]
+      rep outsb   dx, es:[si]
+      rep outsw   dx, es:[si]
+      rep movsb   es:[di], es:[si]
+      rep movsw   es:[di], es:[si]
+      rep cmpsb   es:[si], es:[di]
+      rep cmpsw   es:[si], es:[di]
+      rep lodsb   es:[si]
+      rep lodsw   es:[si]
       test    byte ptr es:[bx+si], 1
       test    byte ptr es:[bp+si], 3
       test    byte ptr es:[si], 5
@@ -9749,34 +9765,34 @@
       out     dx, al
       out     dx, ax
       lock
-      repne   insb
-      repne   insw
-      repne   outsb
-      repne   outsw
-      repne   movsb
-      repne   movsw
-      repne   cmpsb
-      repne   cmpsw
-      repne   stosb
-      repne   stosw
-      repne   lodsb
-      repne   lodsw
-      repne   scasb
-      repne   scasw
-      rep     insb
-      rep     insw
-      rep     outsb
-      rep     outsw
-      rep     movsb
-      rep     movsw
-      rep     cmpsb
-      rep     cmpsw
-      rep     stosb
-      rep     stosw
-      rep     lodsb
-      rep     lodsw
-      rep     scasb
-      rep     scasw
+      repne insb  es:[di], dx
+      repne insw  es:[di], dx
+      repne outsb dx, ds:[si]
+      repne outsw dx, ds:[si]
+      repne movsb es:[di], ds:[si]
+      repne movsw es:[di], ds:[si]
+      repne cmpsb ds:[si], es:[di]
+      repne cmpsw ds:[si], es:[di]
+      repne stosb es:[di]
+      repne stosw es:[di]
+      repne lodsb ds:[si]
+      repne lodsw ds:[si]
+      repne scasb es:[di]
+      repne scasw es:[di]
+      rep insb    es:[di], dx
+      rep insw    es:[di], dx
+      rep outsb   dx, ds:[si]
+      rep outsw   dx, ds:[si]
+      rep movsb   es:[di], ds:[si]
+      rep movsw   es:[di], ds:[si]
+      rep cmpsb   ds:[si], es:[di]
+      rep cmpsw   ds:[si], es:[di]
+      rep stosb   es:[di]
+      rep stosw   es:[di]
+      rep lodsb   ds:[si]
+      rep lodsw   ds:[si]
+      rep scasb   es:[di]
+      rep scasw   es:[di]
       hlt
       cmc
       div     bh
