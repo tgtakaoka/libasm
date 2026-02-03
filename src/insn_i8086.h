@@ -27,7 +27,7 @@ namespace libasm {
 namespace i8086 {
 
 struct EntryInsn : EntryInsnPrefix<Config, Entry> {
-    EntryInsn() : _segment(0) {}
+    EntryInsn() : _repeat(0), _segment(0) {}
 
     AddrMode dst() const { return flags().dst(); }
     AddrMode src() const { return flags().src(); }
@@ -36,9 +36,11 @@ struct EntryInsn : EntryInsnPrefix<Config, Entry> {
     OprPos srcPos() const { return flags().srcPos(); }
     OprPos extPos() const { return flags().extPos(); }
     OprSize size() const { return flags().size(); }
-    bool stringInst() const { return flags().stringInst(); }
+    bool stringInsn() const { return flags().stringInsn(); }
     bool leaInsn() const { return prefix() == 0 && opCode() == 0x8D; }
 
+    void setRepeat(Config::opcode_t repeat) { _repeat = repeat; }
+    Config::opcode_t repeat() const { return _repeat; }
     void setSegment(Config::opcode_t segment) { _segment = segment; }
     Config::opcode_t segment() const { return _segment; }
 
@@ -46,6 +48,7 @@ struct EntryInsn : EntryInsnPrefix<Config, Entry> {
     static bool escapeInsn(Config::opcode_t opc) { return opc >= 0xD8 && opc < 0xE0; }
 
 protected:
+    Config::opcode_t _repeat;
     Config::opcode_t _segment;
 };
 

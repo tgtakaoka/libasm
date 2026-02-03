@@ -231,11 +231,6 @@ constexpr Entry T8086_00[] PROGMEM = {
     E2(0xEE, CF_00, TEXT_OUT,    SZ_BYTE, M_DX,   M_AL,   P_NONE, P_NONE),
     E2(0xEF, CF_00, TEXT_OUT,    SZ_WORD, M_DX,   M_AX,   P_NONE, P_NONE),
     E0(0xF0, CF_00, TEXT_LOCK,   SZ_NONE),
-    E1(0xF2, CF_00, TEXT_REPNE,  SZ_NONE, M_ISTR, P_OPR),
-    E1(0xF2, CF_00, TEXT_REPNZ,  SZ_NONE, M_ISTR, P_OPR),
-    E1(0xF3, CF_00, TEXT_REP,    SZ_NONE, M_ISTR, P_OPR),
-    E1(0xF3, CF_00, TEXT_REPE,   SZ_NONE, M_ISTR, P_OPR),
-    E1(0xF3, CF_00, TEXT_REPZ,   SZ_NONE, M_ISTR, P_OPR),
     E0(0xF2, CF_00, TEXT_REPNE,  SZ_NONE),
     E0(0xF2, CF_00, TEXT_REPNZ,  SZ_NONE),
     E0(0xF3, CF_00, TEXT_REP,    SZ_NONE),
@@ -275,10 +270,10 @@ constexpr uint8_t I8086_00[] PROGMEM = {
     182,  // TEXT_CALL
     118,  // TEXT_CALLF
     116,  // TEXT_CBW
-    204,  // TEXT_CLC
-    208,  // TEXT_CLD
-    206,  // TEXT_CLI
-    203,  // TEXT_CMC
+    199,  // TEXT_CLC
+    203,  // TEXT_CLD
+    201,  // TEXT_CLI
+    198,  // TEXT_CMC
      58,  // TEXT_CMP
      59,  // TEXT_CMP
      60,  // TEXT_CMP
@@ -295,7 +290,7 @@ constexpr uint8_t I8086_00[] PROGMEM = {
      41,  // TEXT_DAA
      49,  // TEXT_DAS
      67,  // TEXT_DEC
-    202,  // TEXT_HLT
+    197,  // TEXT_HLT
     178,  // TEXT_IN
     179,  // TEXT_IN
     187,  // TEXT_IN
@@ -397,15 +392,10 @@ constexpr uint8_t I8086_00[] PROGMEM = {
      68,  // TEXT_PUSH
     121,  // TEXT_PUSHF
     194,  // TEXT_REP
-    199,  // TEXT_REP
     195,  // TEXT_REPE
-    200,  // TEXT_REPE
     192,  // TEXT_REPNE
-    197,  // TEXT_REPNE
     193,  // TEXT_REPNZ
-    198,  // TEXT_REPNZ
     196,  // TEXT_REPZ
-    201,  // TEXT_REPZ
     159,  // TEXT_RET
     160,  // TEXT_RET
     163,  // TEXT_RETF
@@ -427,9 +417,9 @@ constexpr uint8_t I8086_00[] PROGMEM = {
      64,  // TEXT_SEGDS
      40,  // TEXT_SEGES
      56,  // TEXT_SEGSS
-    205,  // TEXT_STC
-    209,  // TEXT_STD
-    207,  // TEXT_STI
+    200,  // TEXT_STC
+    204,  // TEXT_STD
+    202,  // TEXT_STI
     141,  // TEXT_STOS
     142,  // TEXT_STOS
     139,  // TEXT_STOSB
@@ -819,17 +809,13 @@ constexpr uint8_t I80286_0F01[] PROGMEM = {
 // V30
 
 constexpr Entry TV30_00[] PROGMEM = {
-    E1(0x64, CF_00, TEXT_REPNC,  SZ_NONE, M_ISTR, P_OPR),
     E0(0x64, CF_00, TEXT_REPNC,  SZ_NONE),
-    E1(0x65, CF_00, TEXT_REPC,   SZ_NONE, M_ISTR, P_OPR),
     E0(0x65, CF_00, TEXT_REPC,   SZ_NONE),
 };
 
 constexpr uint8_t IV30_00[] PROGMEM = {
-      2,  // TEXT_REPC
-      3,  // TEXT_REPC
+      1,  // TEXT_REPC
       0,  // TEXT_REPNC
-      1,  // TEXT_REPNC
 };
 
 constexpr Entry TV30_0F[] PROGMEM = {
@@ -1496,10 +1482,10 @@ bool acceptSize(const AsmInsn &insn, const Entry *entry) {
     if (dst == M_MEM || dst == M_DIR) {
         if (src == M_NONE)
             return flags.size() == SZ_NONE;
-        return hasSize(src) || flags.stringInst();
+        return hasSize(src) || flags.stringInsn();
     }
     if (src == M_MEM || src == M_DIR)
-        return hasSize(dst) || flags.stringInst();
+        return hasSize(dst) || flags.stringInsn();
     if (dst == M_FMEM) {
         const auto ptrSize = OprSize(insn.dstOp.ptr - PRE_PTR);
         return ptrSize == flags.size();
@@ -1524,6 +1510,12 @@ Error searchName(const CpuSpec &cpuSpec, AsmInsn &insn) {
 
 bool isSegmentPrefix(Config::opcode_t opCode) {
     return overrideSeg(opCode) != REG_UNDEF;
+}
+
+bool isRepeatPrefix(const CpuSpec &cpuSpec, Config::opcode_t opCode) {
+    if (opCode == 0xF2 || opCode == 0xF3)
+        return true;
+    return cpuSpec.cpu == V30 && (opCode == 0x64 || opCode == 0x65);
 }
 
 RegName overrideSeg(Config::opcode_t opCode, RegName defSeg) {

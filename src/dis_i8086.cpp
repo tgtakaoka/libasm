@@ -27,10 +27,10 @@ using namespace text::option;
 
 namespace {
 
-const char OPT_BOOL_SEGMENT_INSN[] PROGMEM = "segment-insn";
-const char OPT_DESC_SEGMENT_INSN[] PROGMEM = "segment override as instruction";
-const char OPT_BOOL_STRING_INSN[] PROGMEM = "string-insn";
-const char OPT_DESC_STRING_INSN[] PROGMEM = "string instruction as repeat operand";
+const char OPT_BOOL_SEG_INSN[] PROGMEM = "segment-insn";
+const char OPT_DESC_SEG_INSN[] PROGMEM = "segment override as instruction";
+const char OPT_BOOL_REP_INSN[] PROGMEM = "repeat-insn";
+const char OPT_DESC_REP_INSN[] PROGMEM = "repeat prefix as instruction";
 
 }  // namespace
 
@@ -41,10 +41,10 @@ const ValueFormatter::Plugins &DisI8086::defaultPlugins() {
 DisI8086::DisI8086(const ValueFormatter::Plugins &plugins)
     : Disassembler(plugins, &_opt_fpu),
       Config(TABLE),
-      _opt_fpu(this, &Config::setFpuName, OPT_TEXT_FPU, OPT_DESC_FPU, &_opt_segmentInsn),
-      _opt_segmentInsn(this, &DisI8086::setSegmentInsn, OPT_BOOL_SEGMENT_INSN,
-              OPT_DESC_SEGMENT_INSN, &_opt_stringInsn),
-      _opt_stringInsn(this, &DisI8086::setStringInsn, OPT_BOOL_STRING_INSN, OPT_DESC_STRING_INSN) {
+      _opt_fpu(this, &Config::setFpuName, OPT_TEXT_FPU, OPT_DESC_FPU, &_opt_segInsn),
+      _opt_segInsn(
+              this, &DisI8086::setSegmentInsn, OPT_BOOL_SEG_INSN, OPT_DESC_SEG_INSN, &_opt_repInsn),
+      _opt_repInsn(this, &DisI8086::setRepeatInsn, OPT_BOOL_REP_INSN, OPT_DESC_REP_INSN) {
     reset();
 }
 
@@ -55,16 +55,16 @@ void DisI8086::reset() {
     setFpuType(FPU_ON);
 #endif
     setSegmentInsn(false);
-    setStringInsn(false);
+    setRepeatInsn(false);
 }
 
 Error DisI8086::setSegmentInsn(bool enable) {
-    _segOverrideInsn = enable;
+    _segInsn = enable;
     return OK;
 }
 
-Error DisI8086::setStringInsn(bool enable) {
-    _repeatHasStringInst = enable;
+Error DisI8086::setRepeatInsn(bool enable) {
+    _repInsn = enable;
     return OK;
 }
 
@@ -186,7 +186,7 @@ OprSize operandSize(const DisInsn &insn, AddrMode mode) {
 }
 
 OprSize operandSize(const DisInsn &insn) {
-    if (insn.stringInst())
+    if (insn.stringInsn())
         return insn.size();
     OprSize size;
     if ((size = operandSize(insn, insn.dst())) != SZ_NONE)
@@ -273,22 +273,6 @@ void DisI8086::decodeMemReg(DisInsn &insn, StrBuffer &out, AddrMode mode, OprPos
     }
 }
 
-void DisI8086::decodeRepeatStr(DisInsn &insn, StrBuffer &out) const {
-    if (_repeatHasStringInst) {
-        Insn _istr(0);
-        DisInsn istr(_istr, insn, out);
-        const auto opc = insn.readByte();
-        if (insn.getError())
-            return;
-        istr.setOpCode(opc);
-        if (searchOpCode(_cpuSpec, istr, out))
-            insn.setErrorIf(out, istr);
-        if (!istr.stringInst())
-            insn.setErrorIf(out, INVALID_INSTRUCTION);
-        out.text(istr.name());
-    }
-}
-
 void DisI8086::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode, OprPos pos) const {
     RegName name;
     switch (mode) {
@@ -357,9 +341,6 @@ void DisI8086::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode, OprPo
     case M_REL8:
         decodeRelative(insn, out, mode);
         break;
-    case M_ISTR:
-        decodeRepeatStr(insn, out);
-        break;
     case M_ST0:
         outRegName(out, REG_ST);
         break;
@@ -382,7 +363,7 @@ bool memoryOperand(AddrMode mode, uint_fast8_t mod) {
 bool validSegOverride(const DisInsn &insn) {
     if (insn.segment() == 0)
         return true;
-    if (insn.stringInst())
+    if (insn.stringInsn())
         return true;
     const auto mod = insn.modReg() >> 6;
     return memoryOperand(insn.dst(), mod) || memoryOperand(insn.src(), mod);
@@ -390,7 +371,7 @@ bool validSegOverride(const DisInsn &insn) {
 
 }  // namespace
 
-void DisI8086::decodeStringInst(DisInsn &insn, StrBuffer &out) const {
+void DisI8086::decodeStringInsn(DisInsn &insn, StrBuffer &out) const {
     const auto opc = insn.opCode() & ~1;
     constexpr auto MOVS = 0xA4;   // ES:[DI], xS:[SI]
     constexpr auto CMPS = 0xA6;   // xS:[SI], ES:[DI]
@@ -459,12 +440,27 @@ Error DisI8086::searchCodes(DisInsn &insn, StrBuffer &out) const {
         return insn.getError();
     }
 
-    if ((!_segOverrideInsn || _gnuAs) && isSegmentPrefix(opc)) {
-        insn.setSegment(opc);
+    while (true) {
+        if ((!_segInsn || _gnuAs) && isSegmentPrefix(opc)) {
+            if (insn.segment()) {
+                insn.setErrorIf(out, OPCODE_HAS_NO_EFFECT);
+                break;
+            }
+            insn.setSegment(opc);
+        } else if ((!_repInsn || _gnuAs) && isRepeatPrefix(_cpuSpec, opc)) {
+            if (insn.repeat()) {
+                insn.setErrorIf(out, OPCODE_HAS_NO_EFFECT);
+                break;
+            }
+            insn.setRepeat(opc);
+        } else {
+            break;
+        }
         opc = insn.readByte();
-        if (insn.getError())
-            return insn.getError();
     }
+    if (insn.getError())
+        return insn.getError();
+
     auto prefix = opc;
     if (fwait) {
         if (!DisInsn::escapeInsn(opc))
@@ -490,6 +486,28 @@ Error DisI8086::searchCodes(DisInsn &insn, StrBuffer &out) const {
     insn.setOpCode(opc);
     searchOpCode(_cpuSpec, insn, out);
     return insn.getError();
+}
+
+StrBuffer &DisI8086::prependRepeatInsn(DisInsn &insn, StrBuffer &out) const {
+    // Save main instruction name
+    char name[Insn::MAX_NAME + 1];
+    strcpy(name, insn.name());
+
+    DisInsn rep{insn};
+    rep.setOpCode(insn.repeat());
+    searchOpCode(_cpuSpec, rep, out);
+    // Save repeat instruction name
+    char rep_name[Insn::MAX_NAME + 1];
+    strcpy(rep_name, rep.name());
+
+    auto save{out};
+    insn.nameBuffer().reset().over(out).text(rep_name).letter(' ');
+
+    if (!insn.stringInsn())
+        insn.setErrorIf(out.mark(), ILLEGAL_COMBINATION);
+
+    out.text(name).over(insn.nameBuffer());
+    return save.over(out);
 }
 
 namespace {
@@ -537,13 +555,15 @@ Error DisI8086::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) const
         return _insn.setErrorIf(insn, ILLEGAL_SEGMENT);
 
     if (_gnuAs && insn.farInsn()) {
-        char name[insn.nameBuffer().len() + 1];
+        char name[Insn::MAX_NAME + 1];
         strcpy(name, insn.name());
         name[insn.nameBuffer().len() - 1] = 0;             // omit 'F' suffix
         insn.nameBuffer().reset().letter('L').text(name);  // add 'L' prefix
     }
-    if (insn.stringInst()) {
-        decodeStringInst(insn, out);
+    if (insn.repeat())
+        prependRepeatInsn(insn, out);
+    if (insn.stringInsn()) {
+        decodeStringInsn(insn, out);
     } else {
         decodeOperand(insn, out, insn.dst(), insn.dstPos());
         if (insn.src() != M_NONE && !imulHasSameDstSrc(insn))

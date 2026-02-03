@@ -30,29 +30,29 @@ struct DisI8086 final : Disassembler, Config {
 
     void reset() override;
 
-    Error setStringInsn(bool enable);
+    Error setRepeatInsn(bool enable);
     Error setSegmentInsn(bool enable);
 
 private:
     const TextOption<Config> _opt_fpu;
-    const BoolOption<DisI8086> _opt_segmentInsn;
-    const BoolOption<DisI8086> _opt_stringInsn;
+    const BoolOption<DisI8086> _opt_segInsn;
+    const BoolOption<DisI8086> _opt_repInsn;
 
-    bool _segOverrideInsn;
-    bool _repeatHasStringInst;
+    bool _segInsn;
+    bool _repInsn;
 
     StrBuffer &outRegister(StrBuffer &out, RegName name, const char prefix = 0) const;
     StrBuffer &outMemReg(
             DisInsn &insn, StrBuffer &out, RegName seg, uint8_t mode, uint8_t r_m) const;
+    StrBuffer &prependRepeatInsn(DisInsn &insn, StrBuffer &out) const;
 
     RegName decodeRegister(const DisInsn &insn, AddrMode mode, OprPos pos) const;
     void decodeRelative(DisInsn &insn, StrBuffer &out, AddrMode mode) const;
     void decodeImmediate(DisInsn &insn, StrBuffer &out, AddrMode mode) const;
-    void decodeRepeatStr(DisInsn &insn, StrBuffer &out) const;
     void decodeMemReg(DisInsn &insn, StrBuffer &out, AddrMode mode, OprPos pos) const;
     void decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode, OprPos pos) const;
+    void decodeStringInsn(DisInsn &insn, StrBuffer &out) const;
     Error searchCodes(DisInsn &insn, StrBuffer &out) const;
-    void decodeStringInst(DisInsn &insn, StrBuffer &out) const;
 
     Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) const override;
     const ConfigBase &config() const override { return *this; }

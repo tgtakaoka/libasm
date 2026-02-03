@@ -4222,26 +4222,26 @@
       OUT     DX, AL
       OUT     DX, AX
       LOCK
-      REPNE   MOVSB
-      REPNE   MOVSW
-      REPNE   CMPSB
-      REPNE   CMPSW
-      REPNE   STOSB
-      REPNE   STOSW
-      REPNE   LODSB
-      REPNE   LODSW
-      REPNE   SCASB
-      REPNE   SCASW
-      REP     MOVSB
-      REP     MOVSW
-      REP     CMPSB
-      REP     CMPSW
-      REP     STOSB
-      REP     STOSW
-      REP     LODSB
-      REP     LODSW
-      REP     SCASB
-      REP     SCASW
+      REPNE MOVSB
+      REPNE MOVSW
+      REPNE CMPSB
+      REPNE CMPSW
+      REPNE STOSB
+      REPNE STOSW
+      REPNE LODSB
+      REPNE LODSW
+      REPNE SCASB
+      REPNE SCASW
+      REP MOVSB
+      REP MOVSW
+      REP CMPSB
+      REP CMPSW
+      REP STOSB
+      REP STOSW
+      REP LODSB
+      REP LODSW
+      REP SCASB
+      REP SCASW
       HLT
       CMC
       DIV     BH

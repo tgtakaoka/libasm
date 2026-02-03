@@ -1968,34 +1968,37 @@
       BOUND  CX, [SI+77]
       BOUND  CX, [BP+79]
       BOUND  CX, [BX+80]
-      REPNC  INSB
-      REPNC  INSW
-      REPNC  OUTSB
-      REPNC  OUTSW
-      REPNC  MOVSB
-      REPNC  MOVSW
-      REPNC  CMPSB
-      REPNC  CMPSW
-      REPNC  STOSB
-      REPNC  STOSW
-      REPNC  LODSB
-      REPNC  LODSW
-      REPNC  SCASB
-      REPNC  SCASW
-      REPC   INSB
-      REPC   INSW
-      REPC   OUTSB
-      REPC   OUTSW
-      REPC   MOVSB
-      REPC   MOVSW
-      REPC   CMPSB
-      REPC   CMPSW
-      REPC   STOSB
-      REPC   STOSW
-      REPC   LODSB
-      REPC   LODSW
-      REPC   SCASB
-      REPC   SCASW
+      REPNC INSB
+      REPNC INSW
+      REPNC OUTSB
+      REPNC OUTSW
+      REPNC MOVSB
+      REPNC MOVSW
+      REPNC CMPSB
+      REPNC CMPSW
+      REPNC STOSB
+      REPNC STOSW
+      REPNC LODSB
+      REPNC LODSW
+      REPNC SCASB
+      REPNC SCASW
+      ADD4S ADD4S
+      SUB4S SUB4S
+      CMP4S CMP4S
+      REPC INSB
+      REPC INSW
+      REPC OUTSB
+      REPC OUTSW
+      REPC MOVSB
+      REPC MOVSW
+      REPC CMPSB
+      REPC CMPSW
+      REPC STOSB
+      REPC STOSW
+      REPC LODSB
+      REPC LODSW
+      REPC SCASB
+      REPC SCASW
       PUSH   6A69H
       IMUL   BP, [BP+SI+107], 6D6CH
       IMUL   BP, [SI+109], 6F6EH
@@ -3998,34 +4001,34 @@
       OUT    DX, AL
       OUT    DX, AX
       LOCK
-      REPNE  INSB
-      REPNE  INSW
-      REPNE  OUTSB
-      REPNE  OUTSW
-      REPNE  MOVSB
-      REPNE  MOVSW
-      REPNE  CMPSB
-      REPNE  CMPSW
-      REPNE  STOSB
-      REPNE  STOSW
-      REPNE  LODSB
-      REPNE  LODSW
-      REPNE  SCASB
-      REPNE  SCASW
-      REP    INSB
-      REP    INSW
-      REP    OUTSB
-      REP    OUTSW
-      REP    MOVSB
-      REP    MOVSW
-      REP    CMPSB
-      REP    CMPSW
-      REP    STOSB
-      REP    STOSW
-      REP    LODSB
-      REP    LODSW
-      REP    SCASB
-      REP    SCASW
+      REPNE INSB
+      REPNE INSW
+      REPNE OUTSB
+      REPNE OUTSW
+      REPNE MOVSB
+      REPNE MOVSW
+      REPNE CMPSB
+      REPNE CMPSW
+      REPNE STOSB
+      REPNE STOSW
+      REPNE LODSB
+      REPNE LODSW
+      REPNE SCASB
+      REPNE SCASW
+      REP INSB
+      REP INSW
+      REP OUTSB
+      REP OUTSW
+      REP MOVSB
+      REP MOVSW
+      REP CMPSB
+      REP CMPSW
+      REP STOSB
+      REP STOSW
+      REP LODSB
+      REP LODSW
+      REP SCASB
+      REP SCASW
       HLT
       CMC
       DIV    BH
@@ -4445,4 +4448,4 @@
       PUSH   CX
       PUSH   SP
       PUSH   SI
-      ORG    037E0H
+      ORG    037E9H

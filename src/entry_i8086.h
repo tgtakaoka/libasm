@@ -70,7 +70,6 @@ enum AddrMode : uint8_t {
     M_SEG = 24,   // Segment: nnnn
     M_OFF = 25,   // Offset: nnnn
     M_FAR = 26,   // Far address: M_SEG:M_OFF
-    M_ISTR = 27,  // String instruction: MOVSi/CMPSi/STOSi/LODSi/SCASi
     M_CS = 28,    // Code Segment Register: CS
     M_UI16 = 29,  // 16-bit unsigned immediate
     M_UI8 = 30,   // 8-bit unsigned immediate
@@ -130,7 +129,7 @@ struct Entry final : entry::Base<Config::opcode_t> {
         OprPos srcPos() const { return OprPos((_attr >> spos_gp) & spos_gm); }
         OprPos extPos() const { return OprPos((_attr >> epos_gp) & epos_gm); }
         OprSize size() const { return OprSize((_attr >> size_gp) & size_gm); }
-        bool stringInst() const { return _attr & strInst_bm; }
+        bool stringInsn() const { return _attr & strInsn_bm; }
         uint8_t mask() const {
             static constexpr uint8_t MASK[] PROGMEM = {
                     0000,  // CF_00 = 0
@@ -145,10 +144,10 @@ struct Entry final : entry::Base<Config::opcode_t> {
             return static_cast<uint16_t>((dst << dst_gp) | (src << src_gp) | (ext << ext_gp));
         }
         static constexpr uint16_t attr(OprPos dpos, OprPos spos, OprPos epos, OprSize size,
-                CodeFormat cf, bool strInst = false) {
+                CodeFormat cf, bool strInsn = false) {
             return static_cast<uint16_t>((dpos << dpos_gp) | (spos << spos_gp) | (epos << epos_gp) |
                                          (size << size_gp) | (cf << cf_gp) |
-                                         (strInst ? strInst_bm : 0));
+                                         (strInsn ? strInsn_bm : 0));
         }
 
         // |_mode|
@@ -164,13 +163,13 @@ struct Entry final : entry::Base<Config::opcode_t> {
         static constexpr auto epos_gp = 6;
         static constexpr auto size_gp = 7;
         static constexpr auto cf_gp = 10;
-        static constexpr auto strInst_bp = 12;
+        static constexpr auto strInsn_bp = 12;
         static constexpr uint_fast8_t dpos_gm = 0x7;
         static constexpr uint_fast8_t spos_gm = 0x7;
         static constexpr uint_fast8_t epos_gm = 0x1;
         static constexpr uint_fast8_t size_gm = 0x7;
         static constexpr uint_fast8_t cf_gm = 0x3;
-        static constexpr uint_fast16_t strInst_bm = (1 << strInst_bp);
+        static constexpr uint_fast16_t strInsn_bm = (1 << strInsn_bp);
     };
 
     constexpr Entry(Config::opcode_t opc, Flags flags, const /* PROGMEM */ char *name_P)

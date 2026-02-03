@@ -1689,7 +1689,7 @@ void test_logic() {
     }
 }
 
-void test_string_manipulation() {
+void test_repeat() {
     TEST("REPNE", 0xF2);
     TEST("REPNZ", 0xF2);
     TEST("REPE",  0xF3);
@@ -3256,7 +3256,7 @@ void run_tests(const char *cpu) {
     RUN_TEST(test_data_transfer);
     RUN_TEST(test_arithmetic);
     RUN_TEST(test_logic);
-    RUN_TEST(test_string_manipulation);
+    RUN_TEST(test_repeat);
     RUN_TEST(test_control_transfer);
     RUN_TEST(test_processor_control);
     RUN_TEST(test_segment_override);
