@@ -6,7 +6,7 @@
 # How to use:
 # - Copy main Entry table and change element type to uint8_t
 # - Mark start and end of table.
-# - C-u M-x shell-command-on-region ./make-index-array.sh
+# - C-u M-x shell-command-on-region ../scripts/make-index-array.sh
 
 grep -Po '(TEXT_[A-Za-z0-9]+)' |
     sed 's/TEXT_null/@@@@_null/' |

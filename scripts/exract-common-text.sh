@@ -1,4 +1,10 @@
 #!/bin/bash
+#
+# Extract duplicate text constants
+# How to use:
+# - under src/ directory
+# - ../scripts/extract-common-text.sh
+
 
 function get_text {
     grep -hPo '(?<=^extern const char )TEXT_[\w_]+' "$@"

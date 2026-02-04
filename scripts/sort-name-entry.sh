@@ -3,7 +3,7 @@
 # Create name entries table.
 # How to use:
 # - Mark start and end of name entries
-# - C-u M-x shell-command-on-region ./sort-name-entry.sh
+# - C-u M-x shell-command-on-region ../scripts/sort-name-entry.sh
 
 tr -d '{},' |
     awk 'NF == 2 { print $1,$2,$1 }' |

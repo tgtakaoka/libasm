@@ -3,7 +3,7 @@
 # Sort text constants.
 # How to use:
 # - Mark start and end of text constants.
-# - C-u M-x shell-command-on-region ./sort-text-constant.sh
+# - C-u M-x shell-command-on-region ../scripts/sort-text-constant.sh
 
 awk 'match($0, /(TEXT|PSTR)_[A-Za-z0-9_]+/) {
      sub(/^ +/, "");
