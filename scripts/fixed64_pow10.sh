@@ -41,7 +41,7 @@ void print_q(const char *str, __float128 q, int16_t exp10) {
 int main() {
     printf(R"(
 const struct {
-    const __fixed64 sig    // siginificand of 10^|exp10|
+    const __fixed64 sig;   // siginificand of 10^|exp10|
     const int16_t exp2;    // exponent of 2
     const uint16_t exp10;  // exponent of 10
 } P10[] = {
