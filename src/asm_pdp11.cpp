@@ -38,21 +38,21 @@ constexpr char TEXT_dRADIX[] PROGMEM = ".RADIX";
 }  // namespace
 
 constexpr Pseudo PSEUDOS[] PROGMEM = {
-    {TEXT_dequal, &Assembler::defineOrigin},
-    {TEXT_dBLKB,  &Assembler::allocateSpaces,     Assembler::DATA_BYTE},
-    {TEXT_dBLKW,  &Assembler::allocateSpaces,     Assembler::DATA_WORD | Assembler::DATA_ALIGN2},
-    {TEXT_dBYTE,  &Assembler::defineDataConstant, Assembler::DATA_BYTE_NO_STRING},
-    {TEXT_dEVEN,  &Assembler::alignOrigin,        Assembler::ALIGN_EVEN},
-    {TEXT_dODD,   &Assembler::alignOrigin,        Assembler::ALIGN_ODD},
-    {TEXT_dWORD,  &Assembler::defineDataConstant, Assembler::DATA_WORD_NO_STRING | Assembler::DATA_ALIGN2},
+    { TEXT_dequal, &Assembler::defineOrigin       },
+    { TEXT_dBLKB,  &Assembler::allocateSpaces,     Assembler::DATA_BYTE                                  },
+    { TEXT_dBLKW,  &Assembler::allocateSpaces,     Assembler::DATA_WORD|Assembler::DATA_ALIGN2           },
+    { TEXT_dBYTE,  &Assembler::defineDataConstant, Assembler::DATA_BYTE_NO_STRING                        },
+    { TEXT_dEVEN,  &Assembler::alignOrigin,        Assembler::ALIGN_EVEN                                 },
+    { TEXT_dODD,   &Assembler::alignOrigin,        Assembler::ALIGN_ODD                                  },
+    { TEXT_dWORD,  &Assembler::defineDataConstant, Assembler::DATA_WORD_NO_STRING|Assembler::DATA_ALIGN2 },
 };
 PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
 
 constexpr AsmPdp11::PseudoPdp11 AsmPdp11::PSEUDO_PDP11_TABLE[] PROGMEM = {
-    {TEXT_dASCII, &AsmPdp11::defineAscii},
-    {TEXT_dFLT2,  &AsmPdp11::defineDecFloat, DATA_FLT2},
-    {TEXT_dFLT4,  &AsmPdp11::defineDecFloat, DATA_FLT4},
-    {TEXT_dRADIX, &AsmPdp11::setRadix},
+    { TEXT_dASCII, &AsmPdp11::defineAscii    },
+    { TEXT_dFLT2,  &AsmPdp11::defineDecFloat, DATA_FLT2 },
+    { TEXT_dFLT4,  &AsmPdp11::defineDecFloat, DATA_FLT4 },
+    { TEXT_dRADIX, &AsmPdp11::setRadix       },
 };
 PROGMEM constexpr AsmPdp11::PseudosPdp11 AsmPdp11::PSEUDOS_PDP11{ARRAY_RANGE(PSEUDO_PDP11_TABLE)};
 // clang-format on

@@ -33,9 +33,9 @@ constexpr char OPT_BOOL_SMART_BRANCH[] PROGMEM = "smart-branch";
 constexpr char OPT_DESC_SMART_BRANCH[] PROGMEM = "optimize branch instruction";
 
 constexpr Pseudo PSEUDOS[] PROGMEM = {
-    {TEXT_ALIGN,  &Assembler::alignOrigin},
-    {TEXT_OPTION, &Assembler::setOption},
-    {TEXT_ORG,    &Assembler::defineOrigin},
+    { TEXT_ALIGN,  &Assembler::alignOrigin  },
+    { TEXT_OPTION, &Assembler::setOption    },
+    { TEXT_ORG,    &Assembler::defineOrigin },
 };
 // clang-format on
 PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};

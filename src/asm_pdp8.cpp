@@ -37,17 +37,17 @@ constexpr char TEXT_PAGE[]    PROGMEM = "PAGE";
 }  // namespace
 
 constexpr Pseudo PSEUDOS[] PROGMEM = {
-    {PSTR_STAR, &Assembler::defineOrigin},
+    { PSTR_STAR, &Assembler::defineOrigin },
 };
 PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
 
 constexpr AsmPdp8::PseudoPdp8 AsmPdp8::PSEUDO_PDP8_TABLE[] PROGMEM = {
-    {TEXT_DECIMAL, &AsmPdp8::setRadix, RADIX_10},
-    {TEXT_DUBL,    &AsmPdp8::defineDoubleDecimal},
-    {TEXT_FIELD,   &AsmPdp8::defineField},
-    {TEXT_OCTAL,   &AsmPdp8::setRadix, RADIX_8},
-    {TEXT_PAGE,    &AsmPdp8::alignOnPage},
-    {TEXT_TEXT,    &AsmPdp8::defineDec6String},
+    { TEXT_DECIMAL, &AsmPdp8::setRadix,            RADIX_10 },
+    { TEXT_DUBL,    &AsmPdp8::defineDoubleDecimal },
+    { TEXT_FIELD,   &AsmPdp8::defineField         },
+    { TEXT_OCTAL,   &AsmPdp8::setRadix,            RADIX_8  },
+    { TEXT_PAGE,    &AsmPdp8::alignOnPage         },
+    { TEXT_TEXT,    &AsmPdp8::defineDec6String    },
 };
 PROGMEM constexpr AsmPdp8::PseudosPdp8 AsmPdp8::PSEUDOS_PDP8{ARRAY_RANGE(PSEUDO_PDP8_TABLE)};
 // clang-format on

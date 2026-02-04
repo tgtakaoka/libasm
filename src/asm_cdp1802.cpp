@@ -33,10 +33,10 @@ constexpr char OPT_BOOL_USE_REGISTER[] PROGMEM = "use-register";
 constexpr char OPT_DESC_USE_REGISTER[] PROGMEM = "enable register name Rn";
 
 constexpr Pseudo PSEUDOS[] PROGMEM = {
-    {TEXT_DC, &Assembler::defineDataConstant, Assembler::DATA_BYTE_OR_WORD},
+    { TEXT_DC, &Assembler::defineDataConstant, Assembler::DATA_BYTE_OR_WORD },
 };
-// clang-format on
 PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
+// clang-format on
 
 }  // namespace
 

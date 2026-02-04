@@ -40,27 +40,27 @@ constexpr char TEXT_RESW[] PROGMEM = "resw";
 }  // namespace
 
 constexpr Pseudo PSEUDOS[] PROGMEM = {
-    {TEXT_DB,   &Assembler::defineDataConstant, Assembler::DATA_BYTE},
-    {TEXT_DS,   &Assembler::allocateSpaces,     Assembler::DATA_BYTE},
-    {TEXT_DW,   &Assembler::defineDataConstant, Assembler::DATA_WORD},
-    {TEXT_RESB, &Assembler::allocateSpaces,     Assembler::DATA_BYTE},
-    {TEXT_RESD, &Assembler::allocateSpaces,     Assembler::DATA_LONG},
-    {TEXT_RESW, &Assembler::allocateSpaces,     Assembler::DATA_WORD},
+    { TEXT_DB,   &Assembler::defineDataConstant, Assembler::DATA_BYTE },
+    { TEXT_DS,   &Assembler::allocateSpaces,     Assembler::DATA_BYTE },
+    { TEXT_DW,   &Assembler::defineDataConstant, Assembler::DATA_WORD },
+    { TEXT_RESB, &Assembler::allocateSpaces,     Assembler::DATA_BYTE },
+    { TEXT_RESD, &Assembler::allocateSpaces,     Assembler::DATA_LONG },
+    { TEXT_RESW, &Assembler::allocateSpaces,     Assembler::DATA_WORD },
 };
 PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
 
 constexpr AsmI8086::PseudoI8086 AsmI8086::PSEUDO_I8086_TABLE[] PROGMEM = {
-    {TEXT_DD,  &AsmI8086::defineConstant, DATA_DD},
-    {TEXT_DQ,  &AsmI8086::defineConstant, DATA_DQ},
-    {TEXT_DT,  &AsmI8086::defineConstant, DATA_DT},
-    {TEXT_FPU, &AsmI8086::setCoprocessor},
-    {TEXT_REP,   &AsmI8086::encodeRepeatInsn, 0xF3},
-    {TEXT_REPC,  &AsmI8086::encodeRepeatInsn, 0x65}, // V30
-    {TEXT_REPE,  &AsmI8086::encodeRepeatInsn, 0xF3},
-    {TEXT_REPNC, &AsmI8086::encodeRepeatInsn, 0x64}, // V30
-    {TEXT_REPNE, &AsmI8086::encodeRepeatInsn, 0xF2},
-    {TEXT_REPNZ, &AsmI8086::encodeRepeatInsn, 0xF2},
-    {TEXT_REPZ,  &AsmI8086::encodeRepeatInsn, 0xF3},
+    { TEXT_DD,    &AsmI8086::defineConstant,   DATA_DD },
+    { TEXT_DQ,    &AsmI8086::defineConstant,   DATA_DQ },
+    { TEXT_DT,    &AsmI8086::defineConstant,   DATA_DT },
+    { TEXT_FPU,   &AsmI8086::setCoprocessor   },
+    { TEXT_REP,   &AsmI8086::encodeRepeatInsn, 0xF3    },
+    { TEXT_REPC,  &AsmI8086::encodeRepeatInsn, 0x65,   },  //V30
+    { TEXT_REPE,  &AsmI8086::encodeRepeatInsn, 0xF3    },
+    { TEXT_REPNC, &AsmI8086::encodeRepeatInsn, 0x64,   },  //V30
+    { TEXT_REPNE, &AsmI8086::encodeRepeatInsn, 0xF2    },
+    { TEXT_REPNZ, &AsmI8086::encodeRepeatInsn, 0xF2    },
+    { TEXT_REPZ,  &AsmI8086::encodeRepeatInsn, 0xF3    },
 };
 PROGMEM constexpr AsmI8086::PseudosI8086 AsmI8086::PSEUDOS_I8086{ARRAY_RANGE(PSEUDO_I8086_TABLE)};
 

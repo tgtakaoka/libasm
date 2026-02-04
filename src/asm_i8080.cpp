@@ -30,16 +30,16 @@ namespace {
 
 // clang-format off
 constexpr Pseudo PSEUDOS[] PROGMEM = {
-    {TEXT_DB,   &Assembler::defineDataConstant, Assembler::DATA_BYTE},
-    {TEXT_DEFB, &Assembler::defineDataConstant, Assembler::DATA_BYTE},
-    {TEXT_DEFM, &Assembler::defineDataConstant, Assembler::DATA_BYTE},
-    {TEXT_DEFS, &Assembler::allocateSpaces,     Assembler::DATA_BYTE},
-    {TEXT_DEFW, &Assembler::defineDataConstant, Assembler::DATA_WORD},
-    {TEXT_DS,   &Assembler::allocateSpaces,     Assembler::DATA_BYTE},
-    {TEXT_DW,   &Assembler::defineDataConstant, Assembler::DATA_WORD},
+    { TEXT_DB,   &Assembler::defineDataConstant, Assembler::DATA_BYTE },
+    { TEXT_DEFB, &Assembler::defineDataConstant, Assembler::DATA_BYTE },
+    { TEXT_DEFM, &Assembler::defineDataConstant, Assembler::DATA_BYTE },
+    { TEXT_DEFS, &Assembler::allocateSpaces,     Assembler::DATA_BYTE },
+    { TEXT_DEFW, &Assembler::defineDataConstant, Assembler::DATA_WORD },
+    { TEXT_DS,   &Assembler::allocateSpaces,     Assembler::DATA_BYTE },
+    { TEXT_DW,   &Assembler::defineDataConstant, Assembler::DATA_WORD },
 };
-// clang-format on
 PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
+// clang-format on
 
 struct I8080SymbolParser final : PrefixSymbolParser, Singleton<I8080SymbolParser> {
     I8080SymbolParser() : PrefixSymbolParser(PSTR_AT_QUESTION) {}

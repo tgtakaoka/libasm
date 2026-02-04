@@ -94,18 +94,6 @@ constexpr char TEXT_CPU_Z280[]  PROGMEM = "Z280";
 // constexpr char TEXT_SUB[]  PROGMEM = "SUB";
 // constexpr char TEXT_XOR[]  PROGMEM = "XOR";
 
-// Z180
-constexpr char TEXT_IN0[]   PROGMEM = "IN0";
-constexpr char TEXT_MLT[]   PROGMEM = "MLT";
-constexpr char TEXT_OTDM[]  PROGMEM = "OTDM";
-constexpr char TEXT_OTDMR[] PROGMEM = "OTDMR";
-constexpr char TEXT_OTIM[]  PROGMEM = "OTIM";
-constexpr char TEXT_OTIMR[] PROGMEM = "OTIMR";
-constexpr char TEXT_OUT0[]  PROGMEM = "OUT0";
-// constexpr char TEXT_SLP[] PROGMEM = "SLP";
-// constexpr char TEXT_TST[] PROGMEM = "TST";
-constexpr char TEXT_TSTIO[] PROGMEM = "TSTIO";
-
 // Z280
 // constexpr char TEXT_ADDW[]   PROGMEM = "ADDW";
 // constexpr char TEXT_CPW[]    PROGMEM = "CPW";

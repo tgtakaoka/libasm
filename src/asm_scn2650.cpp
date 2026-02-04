@@ -33,13 +33,13 @@ constexpr char TEXT_ALIT[] PROGMEM = "alit";
 constexpr char TEXT_RES[]  PROGMEM = "res";
 
 constexpr Pseudo PSEUDOS[] PROGMEM = {
-    {TEXT_ACON, &Assembler::defineDataConstant, Assembler::DATA_WORD},
-    {TEXT_ALIT, &Assembler::defineDataConstant, Assembler::DATA_BYTE},
-    {TEXT_DATA, &Assembler::defineDataConstant, Assembler::DATA_BYTE},
-    {TEXT_RES,  &Assembler::allocateSpaces,     Assembler::DATA_BYTE},
+    { TEXT_ACON, &Assembler::defineDataConstant, Assembler::DATA_WORD },
+    { TEXT_ALIT, &Assembler::defineDataConstant, Assembler::DATA_BYTE },
+    { TEXT_DATA, &Assembler::defineDataConstant, Assembler::DATA_BYTE },
+    { TEXT_RES,  &Assembler::allocateSpaces,     Assembler::DATA_BYTE },
 };
-// clang-format on
 PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
+// clang-format on
 
 }  // namespace
 

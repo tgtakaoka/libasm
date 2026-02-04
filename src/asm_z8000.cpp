@@ -36,13 +36,13 @@ constexpr char TEXT_STRING[] PROGMEM = "string";
 constexpr char TEXT_WORD[]   PROGMEM = "word";
 
 constexpr Pseudo PSEUDOS[] PROGMEM = {
-    {TEXT_BYTE,   &Assembler::defineDataConstant, Assembler::DATA_BYTE},
-    {TEXT_LONG,   &Assembler::defineDataConstant, Assembler::DATA_LONG|Assembler::DATA_ALIGN2},
-    {TEXT_STRING, &Assembler::defineDataConstant, Assembler::DATA_BYTE},
-    {TEXT_WORD,   &Assembler::defineDataConstant, Assembler::DATA_WORD|Assembler::DATA_ALIGN2},
+    { TEXT_BYTE,   &Assembler::defineDataConstant, Assembler::DATA_BYTE                        },
+    { TEXT_LONG,   &Assembler::defineDataConstant, Assembler::DATA_LONG|Assembler::DATA_ALIGN2 },
+    { TEXT_STRING, &Assembler::defineDataConstant, Assembler::DATA_BYTE                        },
+    { TEXT_WORD,   &Assembler::defineDataConstant, Assembler::DATA_WORD|Assembler::DATA_ALIGN2 },
 };
-// clang-format on
 PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
+// clang-format on
 
 }  // namespace
 

@@ -32,11 +32,11 @@ namespace {
 constexpr char TEXT_LOC[] PROGMEM = "loc";
 
 constexpr Pseudo PSEUDOS[] PROGMEM = {
-    {TEXT_DS,  &Assembler::allocateSpaces,     Assembler::DATA_WORD},
-    {TEXT_LOC, &Assembler::defineOrigin},
+    { TEXT_DS,  &Assembler::allocateSpaces, Assembler::DATA_WORD },
+    { TEXT_LOC, &Assembler::defineOrigin   },
 };
-// clang-format on
 PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
+// clang-format on
 
 }  // namespace
 

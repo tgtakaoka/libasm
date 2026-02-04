@@ -33,17 +33,17 @@ constexpr char TEXT_aequal[] PROGMEM = "*=";
 
 // clang-format off
 constexpr Pseudo PSEUDOS[] PROGMEM = {
-    {TEXT_aequal, &Assembler::defineOrigin},
-    {TEXT_dALIGN, &Assembler::alignOrigin},
-    {TEXT_dBYTE,  &Assembler::defineDataConstant, Assembler::DATA_BYTE},
-    {TEXT_dWORD,  &Assembler::defineDataConstant, Assembler::DATA_WORD},
-    {TEXT_FCB,    &Assembler::defineDataConstant, Assembler::DATA_BYTE},
-    {TEXT_FCC,    &Assembler::defineString},
-    {TEXT_FDB,    &Assembler::defineDataConstant, Assembler::DATA_WORD_NO_STRING},
-    {TEXT_RMB,    &Assembler::allocateSpaces,     Assembler::DATA_BYTE},
+    { TEXT_aequal, &Assembler::defineOrigin       },
+    { TEXT_dALIGN, &Assembler::alignOrigin        },
+    { TEXT_dBYTE,  &Assembler::defineDataConstant, Assembler::DATA_BYTE           },
+    { TEXT_dWORD,  &Assembler::defineDataConstant, Assembler::DATA_WORD           },
+    { TEXT_FCB,    &Assembler::defineDataConstant, Assembler::DATA_BYTE           },
+    { TEXT_FCC,    &Assembler::defineString       },
+    { TEXT_FDB,    &Assembler::defineDataConstant, Assembler::DATA_WORD_NO_STRING },
+    { TEXT_RMB,    &Assembler::allocateSpaces,     Assembler::DATA_BYTE           },
 };
-// clang-format on
 PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
+// clang-format on
 
 }  // namespace
 

@@ -29,12 +29,12 @@ namespace {
 
 // clang-format off
 constexpr Pseudo PSEUDOS[] PROGMEM = {
-    {TEXT_DB, &Assembler::defineDataConstant, Assembler::DATA_BYTE},
-    {TEXT_DS, &Assembler::allocateSpaces,     Assembler::DATA_BYTE},
-    {TEXT_DW, &Assembler::defineDataConstant, Assembler::DATA_WORD},
+    { TEXT_DB, &Assembler::defineDataConstant, Assembler::DATA_BYTE },
+    { TEXT_DS, &Assembler::allocateSpaces,     Assembler::DATA_BYTE },
+    { TEXT_DW, &Assembler::defineDataConstant, Assembler::DATA_WORD },
 };
-// clang-format on
 PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
+// clang-format on
 
 }  // namespace
 

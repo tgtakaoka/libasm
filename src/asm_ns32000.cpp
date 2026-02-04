@@ -38,23 +38,23 @@ constexpr char TEXT_dLONG[]   PROGMEM = ".long";
 constexpr char TEXT_dSPACE[]  PROGMEM = ".space";
 
 constexpr Pseudo PSEUDOS[] PROGMEM = {
-    {TEXT_dALIGN,  &Assembler::alignOrigin},
-    {TEXT_dASCII,  &Assembler::defineDataConstant, Assembler::DATA_BYTE},
-    {TEXT_dBLKB,   &Assembler::allocateSpaces,     Assembler::DATA_BYTE},
-    {TEXT_dBLKD,   &Assembler::allocateSpaces,     Assembler::DATA_LONG},
-    {TEXT_dBLKW,   &Assembler::allocateSpaces,     Assembler::DATA_WORD},
-    {TEXT_dBYTE,   &Assembler::defineDataConstant, Assembler::DATA_BYTE},
-    {TEXT_dDOUBLE, &Assembler::defineDataConstant, Assembler::DATA_LONG},
+    { TEXT_dALIGN,  &Assembler::alignOrigin        },
+    { TEXT_dASCII,  &Assembler::defineDataConstant, Assembler::DATA_BYTE    },
+    { TEXT_dBLKB,   &Assembler::allocateSpaces,     Assembler::DATA_BYTE    },
+    { TEXT_dBLKD,   &Assembler::allocateSpaces,     Assembler::DATA_LONG    },
+    { TEXT_dBLKW,   &Assembler::allocateSpaces,     Assembler::DATA_WORD    },
+    { TEXT_dBYTE,   &Assembler::defineDataConstant, Assembler::DATA_BYTE    },
 #if !defined(LIBASM_NS32000_NOFPU)
-    {TEXT_dFLOAT,  &Assembler::defineDataConstant, Assembler::DATA_FLOAT32},
-    {TEXT_dLONG,   &Assembler::defineDataConstant, Assembler::DATA_FLOAT64},
+    { TEXT_dDOUBLE, &Assembler::defineDataConstant, Assembler::DATA_LONG    },
+    { TEXT_dFLOAT,  &Assembler::defineDataConstant, Assembler::DATA_FLOAT32 },
 #endif
-    {TEXT_dORG,    &Assembler::defineOrigin},
-    {TEXT_dSPACE,  &Assembler::allocateSpaces,     Assembler::DATA_BYTE},
-    {TEXT_dWORD,   &Assembler::defineDataConstant, Assembler::DATA_WORD},
+    { TEXT_dLONG,   &Assembler::defineDataConstant, Assembler::DATA_FLOAT64 },
+    { TEXT_dORG,    &Assembler::defineOrigin       },
+    { TEXT_dSPACE,  &Assembler::allocateSpaces,     Assembler::DATA_BYTE    },
+    { TEXT_dWORD,   &Assembler::defineDataConstant, Assembler::DATA_WORD    },
 };
-// clang-format on
 PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
+// clang-format on
 
 }  // namespace
 

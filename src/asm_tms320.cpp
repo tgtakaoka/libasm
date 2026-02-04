@@ -29,17 +29,17 @@ namespace {
 
 // clang-format off
 constexpr Pseudo PSEUDOS[] PROGMEM = {
-    {TEXT_dALIGN,  &Assembler::alignOrigin},
-    {TEXT_dBSS,    &Assembler::allocateSpaces,     Assembler::DATA_WORD},
-    {TEXT_dBYTE,   &Assembler::defineDataConstant, Assembler::DATA_BYTE_IN_WORD},
-    {TEXT_dEVEN,   &Assembler::alignOrigin,        Assembler::ALIGN_EVEN},
-    {TEXT_dLONG,   &Assembler::defineDataConstant, Assembler::DATA_LONG},
-    {TEXT_dORG,    &Assembler::defineOrigin},
-    {TEXT_dSTRING, &Assembler::defineDataConstant, Assembler::DATA_WORD},
-    {TEXT_dWORD,   &Assembler::defineDataConstant, Assembler::DATA_WORD},
+    { TEXT_dALIGN,  &Assembler::alignOrigin        },
+    { TEXT_dBSS,    &Assembler::allocateSpaces,     Assembler::DATA_WORD         },
+    { TEXT_dBYTE,   &Assembler::defineDataConstant, Assembler::DATA_BYTE_IN_WORD },
+    { TEXT_dEVEN,   &Assembler::alignOrigin,        Assembler::ALIGN_EVEN        },
+    { TEXT_dLONG,   &Assembler::defineDataConstant, Assembler::DATA_LONG         },
+    { TEXT_dORG,    &Assembler::defineOrigin       },
+    { TEXT_dSTRING, &Assembler::defineDataConstant, Assembler::DATA_WORD         },
+    { TEXT_dWORD,   &Assembler::defineDataConstant, Assembler::DATA_WORD         },
 };
-// clang-format on
 PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
+// clang-format on
 
 }  // namespace
 

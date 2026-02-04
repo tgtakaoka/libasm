@@ -29,23 +29,23 @@ using namespace text::tms320f;
 
 // clang-format off
 constexpr Pseudo PSEUDOS[] PROGMEM = {
-    {TEXT_dINT,    &Assembler::defineDataConstant, Assembler::DATA_LONG},
-    {TEXT_dLONG,   &Assembler::defineDataConstant, Assembler::DATA_LONG},
-    {TEXT_dORG,    &Assembler::defineOrigin},
-    {TEXT_dSPACE,  &Assembler::allocateSpaces,     Assembler::DATA_LONG},
-    {TEXT_dSTRING, &Assembler::defineDataConstant, Assembler::DATA_LONG},
-    {TEXT_dWORD,   &Assembler::defineDataConstant, Assembler::DATA_LONG},
+    { TEXT_dINT,    &Assembler::defineDataConstant, Assembler::DATA_LONG },
+    { TEXT_dLONG,   &Assembler::defineDataConstant, Assembler::DATA_LONG },
+    { TEXT_dORG,    &Assembler::defineOrigin       },
+    { TEXT_dSPACE,  &Assembler::allocateSpaces,     Assembler::DATA_LONG },
+    { TEXT_dSTRING, &Assembler::defineDataConstant, Assembler::DATA_LONG },
+    { TEXT_dWORD,   &Assembler::defineDataConstant, Assembler::DATA_LONG },
 };
 PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
 
 constexpr AsmTms320f::PseudoTms320F AsmTms320f::PSEUDO_TMS320F_TABLE[] PROGMEM = {
-    {TEXT_dALIGN,   &AsmTms320f::alignOrigin},
-    {TEXT_dBYTE,    &AsmTms320f::defineInteger, UINT8_MAX},
-    {TEXT_dFLOAT,   &AsmTms320f::defineFloat, 32},
-    {TEXT_dHWORD,   &AsmTms320f::defineInteger, UINT16_MAX},
-    {TEXT_dLDOUBLE, &AsmTms320f::defineFloat, 40},
-    {TEXT_dSFLOAT,  &AsmTms320f::defineFloat, 16},
-    {TEXT_PARALLEL, &AsmTms320f::encodeParallel},
+    { TEXT_dALIGN,   &AsmTms320f::alignOrigin    },
+    { TEXT_dBYTE,    &AsmTms320f::defineInteger,  UINT8_MAX  },
+    { TEXT_dFLOAT,   &AsmTms320f::defineFloat,    32         },
+    { TEXT_dHWORD,   &AsmTms320f::defineInteger,  UINT16_MAX },
+    { TEXT_dLDOUBLE, &AsmTms320f::defineFloat,    40         },
+    { TEXT_dSFLOAT,  &AsmTms320f::defineFloat,    16         },
+    { TEXT_PARALLEL, &AsmTms320f::encodeParallel },
 };
 PROGMEM constexpr AsmTms320f::PseudosTms320F AsmTms320f::PSEUDOS_TMS320F{
         ARRAY_RANGE(PSEUDO_TMS320F_TABLE)};

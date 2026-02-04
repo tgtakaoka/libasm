@@ -31,15 +31,15 @@ namespace {
 
 // clang-format off
 constexpr Pseudo PSEUDOS[] PROGMEM = {
-    {TEXT_AORG, &Assembler::defineOrigin},
-    {TEXT_BSS,  &Assembler::allocateSpaces,     Assembler::DATA_BYTE},
-    {TEXT_BYTE, &Assembler::defineDataConstant, Assembler::DATA_BYTE},
-    {TEXT_DATA, &Assembler::defineDataConstant, Assembler::DATA_WORD|Assembler::DATA_ALIGN2},
-    {TEXT_EVEN, &Assembler::alignOrigin,        Assembler::ALIGN_EVEN},
-    {TEXT_TEXT, &Assembler::defineDataConstant, Assembler::DATA_BYTE},
+    { TEXT_AORG, &Assembler::defineOrigin       },
+    { TEXT_BSS,  &Assembler::allocateSpaces,     Assembler::DATA_BYTE                        },
+    { TEXT_BYTE, &Assembler::defineDataConstant, Assembler::DATA_BYTE                        },
+    { TEXT_DATA, &Assembler::defineDataConstant, Assembler::DATA_WORD|Assembler::DATA_ALIGN2 },
+    { TEXT_EVEN, &Assembler::alignOrigin,        Assembler::ALIGN_EVEN                       },
+    { TEXT_TEXT, &Assembler::defineDataConstant, Assembler::DATA_BYTE                        },
 };
-// clang-format on
 PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
+// clang-format on
 
 }  // namespace
 

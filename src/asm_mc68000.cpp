@@ -41,32 +41,31 @@ constexpr char TEXT_DS_W[] PROGMEM = "ds.w";
 }
 
 constexpr Pseudo PSEUDOS[] PROGMEM = {
-    {TEXT_dALIGN, &Assembler::alignOrigin},
-    {TEXT_DC,     &Assembler::defineDataConstant, Assembler::DATA_WORD|Assembler::DATA_ALIGN2},
-    {TEXT_DC_B,   &Assembler::defineDataConstant, Assembler::DATA_BYTE},
+    { TEXT_dALIGN, &Assembler::alignOrigin        },
+    { TEXT_DC,     &Assembler::defineDataConstant, Assembler::DATA_WORD|Assembler::DATA_ALIGN2    },
+    { TEXT_DC_B,   &Assembler::defineDataConstant, Assembler::DATA_BYTE                           },
 #if !defined(LIBASM_MC68000_NOFPU)
-    {TEXT_DC_D,   &Assembler::defineDataConstant, Assembler::DATA_FLOAT64|Assembler::DATA_ALIGN2},
+    { TEXT_DC_D,   &Assembler::defineDataConstant, Assembler::DATA_FLOAT64|Assembler::DATA_ALIGN2 },
 #endif
-    {TEXT_DC_L,   &Assembler::defineDataConstant, Assembler::DATA_LONG|Assembler::DATA_ALIGN2},
+    { TEXT_DC_L,   &Assembler::defineDataConstant, Assembler::DATA_LONG|Assembler::DATA_ALIGN2    },
 #if !defined(LIBASM_MC68000_NOFPU)
-    {TEXT_DC_S,   &Assembler::defineDataConstant, Assembler::DATA_FLOAT32|Assembler::DATA_ALIGN2},
+    { TEXT_DC_S,   &Assembler::defineDataConstant, Assembler::DATA_FLOAT32|Assembler::DATA_ALIGN2 },
 #endif
-    {TEXT_DC_W,   &Assembler::defineDataConstant, Assembler::DATA_WORD|Assembler::DATA_ALIGN2},
-    {TEXT_DS,     &Assembler::allocateSpaces,     Assembler::DATA_BYTE},
-    {TEXT_DS_B,   &Assembler::allocateSpaces,     Assembler::DATA_BYTE},
-    {TEXT_DS_L,   &Assembler::allocateSpaces,     Assembler::DATA_LONG|Assembler::DATA_ALIGN2},
-    {TEXT_DS_W,   &Assembler::allocateSpaces,     Assembler::DATA_WORD|Assembler::DATA_ALIGN2},
+    { TEXT_DC_W,   &Assembler::defineDataConstant, Assembler::DATA_WORD|Assembler::DATA_ALIGN2    },
+    { TEXT_DS,     &Assembler::allocateSpaces,     Assembler::DATA_BYTE                           },
+    { TEXT_DS_B,   &Assembler::allocateSpaces,     Assembler::DATA_BYTE                           },
+    { TEXT_DS_L,   &Assembler::allocateSpaces,     Assembler::DATA_LONG|Assembler::DATA_ALIGN2    },
+    { TEXT_DS_W,   &Assembler::allocateSpaces,     Assembler::DATA_WORD|Assembler::DATA_ALIGN2    },
 };
-
 PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
 
 constexpr AsmMc68000::PseudoMc68000 AsmMc68000::PSEUDO_MC68000_TABLE[] PROGMEM = {
 #if !defined(LIBASM_MC68000_NOFPU)
-    {TEXT_DC_P, &AsmMc68000::defineConstant, DATA_DCP},
-    {TEXT_DC_X, &AsmMc68000::defineConstant, DATA_DCX},
+    { TEXT_DC_P, &AsmMc68000::defineConstant, DATA_DCP   },
+    { TEXT_DC_X, &AsmMc68000::defineConstant, DATA_DCX   },
 #endif
-    {TEXT_FPU,  &AsmMc68000::setCoprocessor, COPRO_FPU},
-    {TEXT_PMMU, &AsmMc68000::setCoprocessor, COPRO_PMMU},
+    { TEXT_FPU,  &AsmMc68000::setCoprocessor, COPRO_FPU  },
+    { TEXT_PMMU, &AsmMc68000::setCoprocessor, COPRO_PMMU },
 };
 PROGMEM constexpr AsmMc68000::PseudosMc68000 AsmMc68000::PSEUDOS_MC68000{
         ARRAY_RANGE(PSEUDO_MC68000_TABLE)};
