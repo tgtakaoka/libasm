@@ -30,6 +30,7 @@ struct DisI8086 final : Disassembler, Config {
 
     void reset() override;
 
+    Error setLockInsn(bool enable);
     Error setRepeatInsn(bool enable);
     Error setSegmentInsn(bool enable);
 
@@ -37,13 +38,16 @@ private:
     const TextOption<Config> _opt_fpu;
     const BoolOption<DisI8086> _opt_segInsn;
     const BoolOption<DisI8086> _opt_repInsn;
+    const BoolOption<DisI8086> _opt_lockInsn;
 
     bool _segInsn;
     bool _repInsn;
+    bool _lockInsn;
 
     StrBuffer &outRegister(StrBuffer &out, RegName name, const char prefix = 0) const;
     StrBuffer &outMemReg(
             DisInsn &insn, StrBuffer &out, RegName seg, uint8_t mode, uint8_t r_m) const;
+    StrBuffer &prependLockPrefix(DisInsn &insn, StrBuffer &out) const;
     StrBuffer &prependRepeatInsn(DisInsn &insn, StrBuffer &out) const;
 
     RegName decodeRegister(const DisInsn &insn, AddrMode mode, OprPos pos) const;

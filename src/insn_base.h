@@ -121,7 +121,7 @@ struct Insn final : ErrorAt {
     Error emitFloat64Le(const float80_t &data, uint8_t pos);
 #endif
 
-    static constexpr size_t MAX_NAME = 11;
+    static constexpr size_t MAX_NAME = 31;
 
 private:
     uint32_t _address;

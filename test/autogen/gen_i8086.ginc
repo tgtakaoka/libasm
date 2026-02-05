@@ -3802,6 +3802,1126 @@
       fistp   qword ptr es:[si+0xbebd]
       fistp   qword ptr es:[bp+0xc0bf]
       fistp   qword ptr es:[bx+0xc1c0]
+      lock not    byte ptr es:[bx+si]
+      lock not    byte ptr es:[bp+si]
+      lock not    byte ptr es:[si]
+      lock not    byte ptr es:[0x1817]
+      lock not    byte ptr es:[bx]
+      lock neg    byte ptr es:[bx+si]
+      lock neg    byte ptr es:[bp+si]
+      lock neg    byte ptr es:[si]
+      lock neg    byte ptr es:[0x201f]
+      lock neg    byte ptr es:[bx]
+      lock not    byte ptr es:[bx+si+81]
+      lock not    byte ptr es:[bp+si+83]
+      lock not    byte ptr es:[si+85]
+      lock not    byte ptr es:[bp+87]
+      lock not    byte ptr es:[bx+88]
+      lock neg    byte ptr es:[bx+si+89]
+      lock neg    byte ptr es:[bp+si+91]
+      lock neg    byte ptr es:[si+93]
+      lock neg    byte ptr es:[bp+95]
+      lock neg    byte ptr es:[bx+96]
+      lock not    byte ptr es:[bx+si+0x9291]
+      lock not    byte ptr es:[bp+si+0x9493]
+      lock not    byte ptr es:[si+0x9695]
+      lock not    byte ptr es:[bp+0x9897]
+      lock not    byte ptr es:[bx+0x9998]
+      lock neg    byte ptr es:[bx+si+0x9a99]
+      lock neg    byte ptr es:[bp+si+0x9c9b]
+      lock neg    byte ptr es:[si+0x9e9d]
+      lock neg    byte ptr es:[bp+0xa09f]
+      lock neg    byte ptr es:[bx+0xa1a0]
+      lock not    word ptr es:[bx+si]
+      lock not    word ptr es:[bp+si]
+      lock not    word ptr es:[si]
+      lock not    word ptr es:[0x1817]
+      lock not    word ptr es:[bx]
+      lock neg    word ptr es:[bx+si]
+      lock neg    word ptr es:[bp+si]
+      lock neg    word ptr es:[si]
+      lock neg    word ptr es:[0x201f]
+      lock neg    word ptr es:[bx]
+      lock not    word ptr es:[bx+si+81]
+      lock not    word ptr es:[bp+si+83]
+      lock not    word ptr es:[si+85]
+      lock not    word ptr es:[bp+87]
+      lock not    word ptr es:[bx+88]
+      lock neg    word ptr es:[bx+si+89]
+      lock neg    word ptr es:[bp+si+91]
+      lock neg    word ptr es:[si+93]
+      lock neg    word ptr es:[bp+95]
+      lock neg    word ptr es:[bx+96]
+      lock not    word ptr es:[bx+si+0x9291]
+      lock not    word ptr es:[bp+si+0x9493]
+      lock not    word ptr es:[si+0x9695]
+      lock not    word ptr es:[bp+0x9897]
+      lock not    word ptr es:[bx+0x9998]
+      lock neg    word ptr es:[bx+si+0x9a99]
+      lock neg    word ptr es:[bp+si+0x9c9b]
+      lock neg    word ptr es:[si+0x9e9d]
+      lock neg    word ptr es:[bp+0xa09f]
+      lock neg    word ptr es:[bx+0xa1a0]
+      lock inc    byte ptr es:[bx+si]
+      lock inc    byte ptr es:[bp+si]
+      lock inc    byte ptr es:[si]
+      lock inc    byte ptr es:[0x0807]
+      lock inc    byte ptr es:[bx]
+      lock dec    byte ptr es:[bx+si]
+      lock dec    byte ptr es:[bp+si]
+      lock dec    byte ptr es:[si]
+      lock dec    byte ptr es:[0x100f]
+      lock dec    byte ptr es:[bx]
+      lock inc    byte ptr es:[bx+si+65]
+      lock inc    byte ptr es:[bp+si+67]
+      lock inc    byte ptr es:[si+69]
+      lock inc    byte ptr es:[bp+71]
+      lock inc    byte ptr es:[bx+72]
+      lock dec    byte ptr es:[bx+si+73]
+      lock dec    byte ptr es:[bp+si+75]
+      lock dec    byte ptr es:[si+77]
+      lock dec    byte ptr es:[bp+79]
+      lock dec    byte ptr es:[bx+80]
+      lock inc    byte ptr es:[bx+si+0x8281]
+      lock inc    byte ptr es:[bp+si+0x8483]
+      lock inc    byte ptr es:[si+0x8685]
+      lock inc    byte ptr es:[bp+0x8887]
+      lock inc    byte ptr es:[bx+0x8988]
+      lock dec    byte ptr es:[bx+si+0x8a89]
+      lock dec    byte ptr es:[bp+si+0x8c8b]
+      lock dec    byte ptr es:[si+0x8e8d]
+      lock dec    byte ptr es:[bp+0x908f]
+      lock dec    byte ptr es:[bx+0x9190]
+      lock inc    word ptr es:[bx+si]
+      lock inc    word ptr es:[bp+si]
+      lock inc    word ptr es:[si]
+      lock inc    word ptr es:[0x0807]
+      lock inc    word ptr es:[bx]
+      lock dec    word ptr es:[bx+si]
+      lock dec    word ptr es:[bp+si]
+      lock dec    word ptr es:[si]
+      lock dec    word ptr es:[0x100f]
+      lock dec    word ptr es:[bx]
+      lock inc    word ptr es:[bx+si+65]
+      lock inc    word ptr es:[bp+si+67]
+      lock inc    word ptr es:[si+69]
+      lock inc    word ptr es:[bp+71]
+      lock inc    word ptr es:[bx+72]
+      lock dec    word ptr es:[bx+si+73]
+      lock dec    word ptr es:[bp+si+75]
+      lock dec    word ptr es:[si+77]
+      lock dec    word ptr es:[bp+79]
+      lock dec    word ptr es:[bx+80]
+      lock inc    word ptr es:[bx+si+0x8281]
+      lock inc    word ptr es:[bp+si+0x8483]
+      lock inc    word ptr es:[si+0x8685]
+      lock inc    word ptr es:[bp+0x8887]
+      lock inc    word ptr es:[bx+0x8988]
+      lock dec    word ptr es:[bx+si+0x8a89]
+      lock dec    word ptr es:[bp+si+0x8c8b]
+      lock dec    word ptr es:[si+0x8e8d]
+      lock dec    word ptr es:[bp+0x908f]
+      lock dec    word ptr es:[bx+0x9190]
+      lock add    es:[bx+di], al
+      lock add    es:[bp+si], al
+      lock add    es:[si], al
+      lock add    es:[0x0807], al
+      lock add    es:[bx], al
+      lock add    es:[bx+si], ah
+      lock add    es:[bp+si], ah
+      lock add    es:[si], ah
+      lock add    es:[0x2827], ah
+      lock add    es:[bx], ah
+      lock add    es:[bx+si+65], al
+      lock add    es:[bp+si+67], al
+      lock add    es:[si+69], al
+      lock add    es:[bp+71], al
+      lock add    es:[bx+72], al
+      lock add    es:[bx+si+97], ah
+      lock add    es:[bp+si+99], ah
+      lock add    es:[si+101], ah
+      lock add    es:[bp+103], ah
+      lock add    es:[bx+104], ah
+      lock add    es:[bx+si+0x8281], al
+      lock add    es:[bp+si+0x8483], al
+      lock add    es:[si+0x8685], al
+      lock add    es:[bp+0x8887], al
+      lock add    es:[bx+0x8988], al
+      lock add    es:[bx+si+0xa2a1], ah
+      lock add    es:[bp+si+0xa4a3], ah
+      lock add    es:[si+0xa6a5], ah
+      lock add    es:[bp+0xa8a7], ah
+      lock add    es:[bx+0xa9a8], ah
+      lock add    es:[bp+si], ax
+      lock add    es:[si], ax
+      lock add    es:[0x0807], ax
+      lock add    es:[bx], ax
+      lock add    es:[bx+si], cx
+      lock add    es:[bp+si], cx
+      lock add    es:[si], cx
+      lock add    es:[0x100f], cx
+      lock add    es:[bx], cx
+      lock add    es:[bx+si], sp
+      lock add    es:[bp+si], sp
+      lock add    es:[si], sp
+      lock add    es:[0x2827], sp
+      lock add    es:[bx], sp
+      lock add    es:[bx+si], si
+      lock add    es:[bp+si], si
+      lock add    es:[si], si
+      lock add    es:[0x3837], si
+      lock add    es:[bx], si
+      lock add    es:[bx+si+65], ax
+      lock add    es:[bp+si+67], ax
+      lock add    es:[si+69], ax
+      lock add    es:[bp+71], ax
+      lock add    es:[bx+72], ax
+      lock add    es:[bx+si+73], cx
+      lock add    es:[bp+si+75], cx
+      lock add    es:[si+77], cx
+      lock add    es:[bp+79], cx
+      lock add    es:[bx+80], cx
+      lock add    es:[bx+si+97], sp
+      lock add    es:[bp+si+99], sp
+      lock add    es:[si+101], sp
+      lock add    es:[bp+103], sp
+      lock add    es:[bx+104], sp
+      lock add    es:[bx+si+113], si
+      lock add    es:[bp+si+115], si
+      lock add    es:[si+117], si
+      lock add    es:[bp+119], si
+      lock add    es:[bx+120], si
+      lock add    es:[bx+si+0x8281], ax
+      lock add    es:[bp+si+0x8483], ax
+      lock add    es:[si+0x8685], ax
+      lock add    es:[bp+0x8887], ax
+      lock add    es:[bx+0x8988], ax
+      lock add    es:[bx+si+0x8a89], cx
+      lock add    es:[bp+si+0x8c8b], cx
+      lock add    es:[si+0x8e8d], cx
+      lock add    es:[bp+0x908f], cx
+      lock add    es:[bx+0x9190], cx
+      lock add    es:[bx+si+0xa2a1], sp
+      lock add    es:[bp+si+0xa4a3], sp
+      lock add    es:[si+0xa6a5], sp
+      lock add    es:[bp+0xa8a7], sp
+      lock add    es:[bx+0xa9a8], sp
+      lock add    es:[bx+si+0xb2b1], si
+      lock add    es:[bp+si+0xb4b3], si
+      lock add    es:[si+0xb6b5], si
+      lock add    es:[bp+0xb8b7], si
+      lock add    es:[bx+0xb9b8], si
+      lock add    es:[bx+si], ax
+      lock or es:[bx+di], cl
+      lock or es:[bp+si], cl
+      lock or es:[si], cl
+      lock or es:[0x100f], cl
+      lock or es:[bx], cl
+      lock or es:[bx+si], ah
+      lock or es:[bp+si], ah
+      lock or es:[si], ah
+      lock or es:[0x2827], ah
+      lock or es:[bx], ah
+      lock or es:[bx+si+65], al
+      lock or es:[bp+si+67], al
+      lock or es:[si+69], al
+      lock or es:[bp+71], al
+      lock or es:[bx+72], al
+      lock or es:[bx+si+97], ah
+      lock or es:[bp+si+99], ah
+      lock or es:[si+101], ah
+      lock or es:[bp+103], ah
+      lock or es:[bx+104], ah
+      lock or es:[bx+si+0x8281], al
+      lock or es:[bp+si+0x8483], al
+      lock or es:[si+0x8685], al
+      lock or es:[bp+0x8887], al
+      lock or es:[bx+0x8988], al
+      lock or es:[bx+si+0xa2a1], ah
+      lock or es:[bp+si+0xa4a3], ah
+      lock or es:[si+0xa6a5], ah
+      lock or es:[bp+0xa8a7], ah
+      lock or es:[bx+0xa9a8], ah
+      lock or es:[bp+si], cx
+      lock or es:[si], cx
+      lock or es:[0x100f], cx
+      lock or es:[bx], cx
+      lock or es:[bx+si], dx
+      lock or es:[bx+si], sp
+      lock or es:[bp+si], sp
+      lock or es:[si], sp
+      lock or es:[0x2827], sp
+      lock or es:[bx], sp
+      lock or es:[bx+si], si
+      lock or es:[bp+si], si
+      lock or es:[si], si
+      lock or es:[0x3837], si
+      lock or es:[bx], si
+      lock or es:[bx+si+65], ax
+      lock or es:[bp+si+67], ax
+      lock or es:[si+69], ax
+      lock or es:[bp+71], ax
+      lock or es:[bx+72], ax
+      lock or es:[bx+si+73], cx
+      lock or es:[bp+si+75], cx
+      lock or es:[si+77], cx
+      lock or es:[bp+79], cx
+      lock or es:[bx+80], cx
+      lock or es:[bx+si+97], sp
+      lock or es:[bp+si+99], sp
+      lock or es:[si+101], sp
+      lock or es:[bp+103], sp
+      lock or es:[bx+104], sp
+      lock or es:[bx+si+113], si
+      lock or es:[bp+si+115], si
+      lock or es:[si+117], si
+      lock or es:[bp+119], si
+      lock or es:[bx+120], si
+      lock or es:[bx+si+0x8281], ax
+      lock or es:[bp+si+0x8483], ax
+      lock or es:[si+0x8685], ax
+      lock or es:[bp+0x8887], ax
+      lock or es:[bx+0x8988], ax
+      lock or es:[bx+si+0x8a89], cx
+      lock or es:[bp+si+0x8c8b], cx
+      lock or es:[si+0x8e8d], cx
+      lock or es:[bp+0x908f], cx
+      lock or es:[bx+0x9190], cx
+      lock or es:[bx+si+0xa2a1], sp
+      lock or es:[bp+si+0xa4a3], sp
+      lock or es:[si+0xa6a5], sp
+      lock or es:[bp+0xa8a7], sp
+      lock or es:[bx+0xa9a8], sp
+      lock or es:[bx+si+0xb2b1], si
+      lock or es:[bp+si+0xb4b3], si
+      lock or es:[si+0xb6b5], si
+      lock or es:[bp+0xb8b7], si
+      lock or es:[bx+0xb9b8], si
+      lock or es:[bx+si], ax
+      lock or es:[bp+si], ax
+      lock or es:[si], ax
+      lock or es:[0x0807], ax
+      lock or es:[bx], ax
+      lock adc    es:[bx+di], dl
+      lock adc    es:[bp+si], dl
+      lock adc    es:[si], dl
+      lock adc    es:[0x1817], dl
+      lock adc    es:[bx], dl
+      lock adc    es:[bx+si], ah
+      lock adc    es:[bp+si], ah
+      lock adc    es:[si], ah
+      lock adc    es:[0x2827], ah
+      lock adc    es:[bx], ah
+      lock adc    es:[bx+si+65], al
+      lock adc    es:[bp+si+67], al
+      lock adc    es:[si+69], al
+      lock adc    es:[bp+71], al
+      lock adc    es:[bx+72], al
+      lock adc    es:[bx+si+97], ah
+      lock adc    es:[bp+si+99], ah
+      lock adc    es:[si+101], ah
+      lock adc    es:[bp+103], ah
+      lock adc    es:[bx+104], ah
+      lock adc    es:[bx+si+0x8281], al
+      lock adc    es:[bp+si+0x8483], al
+      lock adc    es:[si+0x8685], al
+      lock adc    es:[bp+0x8887], al
+      lock adc    es:[bx+0x8988], al
+      lock adc    es:[bx+si+0xa2a1], ah
+      lock adc    es:[bp+si+0xa4a3], ah
+      lock adc    es:[si+0xa6a5], ah
+      lock adc    es:[bp+0xa8a7], ah
+      lock adc    es:[bx+0xa9a8], ah
+      lock adc    es:[bp+si], dx
+      lock adc    es:[si], dx
+      lock adc    es:[0x1817], dx
+      lock adc    es:[bx], dx
+      lock adc    es:[bx+si], bx
+      lock adc    es:[bx+si], sp
+      lock adc    es:[bp+si], sp
+      lock adc    es:[si], sp
+      lock adc    es:[0x2827], sp
+      lock adc    es:[bx], sp
+      lock adc    es:[bx+si], si
+      lock adc    es:[bp+si], si
+      lock adc    es:[si], si
+      lock adc    es:[0x3837], si
+      lock adc    es:[bx], si
+      lock adc    es:[bx+si+65], ax
+      lock adc    es:[bp+si+67], ax
+      lock adc    es:[si+69], ax
+      lock adc    es:[bp+71], ax
+      lock adc    es:[bx+72], ax
+      lock adc    es:[bx+si+73], cx
+      lock adc    es:[bp+si+75], cx
+      lock adc    es:[si+77], cx
+      lock adc    es:[bp+79], cx
+      lock adc    es:[bx+80], cx
+      lock adc    es:[bx+si+97], sp
+      lock adc    es:[bp+si+99], sp
+      lock adc    es:[si+101], sp
+      lock adc    es:[bp+103], sp
+      lock adc    es:[bx+104], sp
+      lock adc    es:[bx+si+113], si
+      lock adc    es:[bp+si+115], si
+      lock adc    es:[si+117], si
+      lock adc    es:[bp+119], si
+      lock adc    es:[bx+120], si
+      lock adc    es:[bx+si+0x8281], ax
+      lock adc    es:[bp+si+0x8483], ax
+      lock adc    es:[si+0x8685], ax
+      lock adc    es:[bp+0x8887], ax
+      lock adc    es:[bx+0x8988], ax
+      lock adc    es:[bx+si+0x8a89], cx
+      lock adc    es:[bp+si+0x8c8b], cx
+      lock adc    es:[si+0x8e8d], cx
+      lock adc    es:[bp+0x908f], cx
+      lock adc    es:[bx+0x9190], cx
+      lock adc    es:[bx+si+0xa2a1], sp
+      lock adc    es:[bp+si+0xa4a3], sp
+      lock adc    es:[si+0xa6a5], sp
+      lock adc    es:[bp+0xa8a7], sp
+      lock adc    es:[bx+0xa9a8], sp
+      lock adc    es:[bx+si+0xb2b1], si
+      lock adc    es:[bp+si+0xb4b3], si
+      lock adc    es:[si+0xb6b5], si
+      lock adc    es:[bp+0xb8b7], si
+      lock adc    es:[bx+0xb9b8], si
+      lock adc    es:[bx+si], ax
+      lock adc    es:[bp+si], ax
+      lock adc    es:[si], ax
+      lock adc    es:[0x0807], ax
+      lock adc    es:[bx], ax
+      lock sbb    es:[bx+di], bl
+      lock sbb    es:[bp+si], bl
+      lock sbb    es:[si], bl
+      lock sbb    es:[0x201f], bl
+      lock sbb    es:[bx], bl
+      lock sbb    es:[bx+si], ah
+      lock sbb    es:[bp+si], ah
+      lock sbb    es:[si], ah
+      lock sbb    es:[0x2827], ah
+      lock sbb    es:[bx], ah
+      lock sbb    es:[bx+si+65], al
+      lock sbb    es:[bp+si+67], al
+      lock sbb    es:[si+69], al
+      lock sbb    es:[bp+71], al
+      lock sbb    es:[bx+72], al
+      lock sbb    es:[bx+si+97], ah
+      lock sbb    es:[bp+si+99], ah
+      lock sbb    es:[si+101], ah
+      lock sbb    es:[bp+103], ah
+      lock sbb    es:[bx+104], ah
+      lock sbb    es:[bx+si+0x8281], al
+      lock sbb    es:[bp+si+0x8483], al
+      lock sbb    es:[si+0x8685], al
+      lock sbb    es:[bp+0x8887], al
+      lock sbb    es:[bx+0x8988], al
+      lock sbb    es:[bx+si+0xa2a1], ah
+      lock sbb    es:[bp+si+0xa4a3], ah
+      lock sbb    es:[si+0xa6a5], ah
+      lock sbb    es:[bp+0xa8a7], ah
+      lock sbb    es:[bx+0xa9a8], ah
+      lock sbb    es:[bp+si], bx
+      lock sbb    es:[si], bx
+      lock sbb    es:[0x201f], bx
+      lock sbb    es:[bx], bx
+      lock sbb    es:[bx+si], sp
+      lock sbb    es:[bp+si], sp
+      lock sbb    es:[si], sp
+      lock sbb    es:[0x2827], sp
+      lock sbb    es:[bx], sp
+      lock sbb    es:[bx+si], si
+      lock sbb    es:[bp+si], si
+      lock sbb    es:[si], si
+      lock sbb    es:[0x3837], si
+      lock sbb    es:[bx], si
+      lock sbb    es:[bx+si+65], ax
+      lock sbb    es:[bp+si+67], ax
+      lock sbb    es:[si+69], ax
+      lock sbb    es:[bp+71], ax
+      lock sbb    es:[bx+72], ax
+      lock sbb    es:[bx+si+73], cx
+      lock sbb    es:[bp+si+75], cx
+      lock sbb    es:[si+77], cx
+      lock sbb    es:[bp+79], cx
+      lock sbb    es:[bx+80], cx
+      lock sbb    es:[bx+si+97], sp
+      lock sbb    es:[bp+si+99], sp
+      lock sbb    es:[si+101], sp
+      lock sbb    es:[bp+103], sp
+      lock sbb    es:[bx+104], sp
+      lock sbb    es:[bx+si+113], si
+      lock sbb    es:[bp+si+115], si
+      lock sbb    es:[si+117], si
+      lock sbb    es:[bp+119], si
+      lock sbb    es:[bx+120], si
+      lock sbb    es:[bx+si+0x8281], ax
+      lock sbb    es:[bp+si+0x8483], ax
+      lock sbb    es:[si+0x8685], ax
+      lock sbb    es:[bp+0x8887], ax
+      lock sbb    es:[bx+0x8988], ax
+      lock sbb    es:[bx+si+0x8a89], cx
+      lock sbb    es:[bp+si+0x8c8b], cx
+      lock sbb    es:[si+0x8e8d], cx
+      lock sbb    es:[bp+0x908f], cx
+      lock sbb    es:[bx+0x9190], cx
+      lock sbb    es:[bx+si+0xa2a1], sp
+      lock sbb    es:[bp+si+0xa4a3], sp
+      lock sbb    es:[si+0xa6a5], sp
+      lock sbb    es:[bp+0xa8a7], sp
+      lock sbb    es:[bx+0xa9a8], sp
+      lock sbb    es:[bx+si+0xb2b1], si
+      lock sbb    es:[bp+si+0xb4b3], si
+      lock sbb    es:[si+0xb6b5], si
+      lock sbb    es:[bp+0xb8b7], si
+      lock sbb    es:[bx+0xb9b8], si
+      lock sbb    es:[bx+si], ax
+      lock sbb    es:[bp+si], ax
+      lock sbb    es:[si], ax
+      lock sbb    es:[0x0807], ax
+      lock sbb    es:[bx], ax
+      lock sbb    es:[bx+si], cx
+      lock and    es:[bx+di], ah
+      lock and    es:[bp+si], ah
+      lock and    es:[si], ah
+      lock and    es:[0x2827], ah
+      lock and    es:[bx], ah
+      lock and    es:[bx+si+65], al
+      lock and    es:[bp+si+67], al
+      lock and    es:[si+69], al
+      lock and    es:[bp+71], al
+      lock and    es:[bx+72], al
+      lock and    es:[bx+si+97], ah
+      lock and    es:[bp+si+99], ah
+      lock and    es:[si+101], ah
+      lock and    es:[bp+103], ah
+      lock and    es:[bx+104], ah
+      lock and    es:[bx+si+0x8281], al
+      lock and    es:[bp+si+0x8483], al
+      lock and    es:[si+0x8685], al
+      lock and    es:[bp+0x8887], al
+      lock and    es:[bx+0x8988], al
+      lock and    es:[bx+si+0xa2a1], ah
+      lock and    es:[bp+si+0xa4a3], ah
+      lock and    es:[si+0xa6a5], ah
+      lock and    es:[bp+0xa8a7], ah
+      lock and    es:[bx+0xa9a8], ah
+      lock and    es:[bx+si], al
+      lock and    es:[bp+si], al
+      lock and    es:[si], al
+      lock and    es:[0x0807], al
+      lock and    es:[bx], al
+      lock and    es:[bp+si], sp
+      lock and    es:[si], sp
+      lock and    es:[0x2827], sp
+      lock and    es:[bx], sp
+      lock and    es:[bx+si], bp
+      lock and    es:[bx+si], si
+      lock and    es:[bp+si], si
+      lock and    es:[si], si
+      lock and    es:[0x3837], si
+      lock and    es:[bx], si
+      lock and    es:[bx+si+65], ax
+      lock and    es:[bp+si+67], ax
+      lock and    es:[si+69], ax
+      lock and    es:[bp+71], ax
+      lock and    es:[bx+72], ax
+      lock and    es:[bx+si+73], cx
+      lock and    es:[bp+si+75], cx
+      lock and    es:[si+77], cx
+      lock and    es:[bp+79], cx
+      lock and    es:[bx+80], cx
+      lock and    es:[bx+si+97], sp
+      lock and    es:[bp+si+99], sp
+      lock and    es:[si+101], sp
+      lock and    es:[bp+103], sp
+      lock and    es:[bx+104], sp
+      lock and    es:[bx+si+113], si
+      lock and    es:[bp+si+115], si
+      lock and    es:[si+117], si
+      lock and    es:[bp+119], si
+      lock and    es:[bx+120], si
+      lock and    es:[bx+si+0x8281], ax
+      lock and    es:[bp+si+0x8483], ax
+      lock and    es:[si+0x8685], ax
+      lock and    es:[bp+0x8887], ax
+      lock and    es:[bx+0x8988], ax
+      lock and    es:[bx+si+0x8a89], cx
+      lock and    es:[bp+si+0x8c8b], cx
+      lock and    es:[si+0x8e8d], cx
+      lock and    es:[bp+0x908f], cx
+      lock and    es:[bx+0x9190], cx
+      lock and    es:[bx+si+0xa2a1], sp
+      lock and    es:[bp+si+0xa4a3], sp
+      lock and    es:[si+0xa6a5], sp
+      lock and    es:[bp+0xa8a7], sp
+      lock and    es:[bx+0xa9a8], sp
+      lock and    es:[bx+si+0xb2b1], si
+      lock and    es:[bp+si+0xb4b3], si
+      lock and    es:[si+0xb6b5], si
+      lock and    es:[bp+0xb8b7], si
+      lock and    es:[bx+0xb9b8], si
+      lock and    es:[bx+si], ax
+      lock and    es:[bp+si], ax
+      lock and    es:[si], ax
+      lock and    es:[0x0807], ax
+      lock and    es:[bx], ax
+      lock and    es:[bx+si], cx
+      lock and    es:[bp+si], cx
+      lock and    es:[si], cx
+      lock and    es:[0x100f], cx
+      lock and    es:[bx], cx
+      lock sub    es:[bx+di], ch
+      lock sub    es:[bp+si], ch
+      lock sub    es:[si], ch
+      lock sub    es:[0x302f], ch
+      lock sub    es:[bx], ch
+      lock sub    es:[bx+si+65], al
+      lock sub    es:[bp+si+67], al
+      lock sub    es:[si+69], al
+      lock sub    es:[bp+71], al
+      lock sub    es:[bx+72], al
+      lock sub    es:[bx+si+97], ah
+      lock sub    es:[bp+si+99], ah
+      lock sub    es:[si+101], ah
+      lock sub    es:[bp+103], ah
+      lock sub    es:[bx+104], ah
+      lock sub    es:[bx+si+0x8281], al
+      lock sub    es:[bp+si+0x8483], al
+      lock sub    es:[si+0x8685], al
+      lock sub    es:[bp+0x8887], al
+      lock sub    es:[bx+0x8988], al
+      lock sub    es:[bx+si+0xa2a1], ah
+      lock sub    es:[bp+si+0xa4a3], ah
+      lock sub    es:[si+0xa6a5], ah
+      lock sub    es:[bp+0xa8a7], ah
+      lock sub    es:[bx+0xa9a8], ah
+      lock sub    es:[bx+si], al
+      lock sub    es:[bp+si], al
+      lock sub    es:[si], al
+      lock sub    es:[0x0807], al
+      lock sub    es:[bx], al
+      lock sub    es:[bp+si], bp
+      lock sub    es:[si], bp
+      lock sub    es:[0x302f], bp
+      lock sub    es:[bx], bp
+      lock sub    es:[bx+si], si
+      lock sub    es:[bp+si], si
+      lock sub    es:[si], si
+      lock sub    es:[0x3837], si
+      lock sub    es:[bx], si
+      lock sub    es:[bx+si+65], ax
+      lock sub    es:[bp+si+67], ax
+      lock sub    es:[si+69], ax
+      lock sub    es:[bp+71], ax
+      lock sub    es:[bx+72], ax
+      lock sub    es:[bx+si+73], cx
+      lock sub    es:[bp+si+75], cx
+      lock sub    es:[si+77], cx
+      lock sub    es:[bp+79], cx
+      lock sub    es:[bx+80], cx
+      lock sub    es:[bx+si+97], sp
+      lock sub    es:[bp+si+99], sp
+      lock sub    es:[si+101], sp
+      lock sub    es:[bp+103], sp
+      lock sub    es:[bx+104], sp
+      lock sub    es:[bx+si+113], si
+      lock sub    es:[bp+si+115], si
+      lock sub    es:[si+117], si
+      lock sub    es:[bp+119], si
+      lock sub    es:[bx+120], si
+      lock sub    es:[bx+si+0x8281], ax
+      lock sub    es:[bp+si+0x8483], ax
+      lock sub    es:[si+0x8685], ax
+      lock sub    es:[bp+0x8887], ax
+      lock sub    es:[bx+0x8988], ax
+      lock sub    es:[bx+si+0x8a89], cx
+      lock sub    es:[bp+si+0x8c8b], cx
+      lock sub    es:[si+0x8e8d], cx
+      lock sub    es:[bp+0x908f], cx
+      lock sub    es:[bx+0x9190], cx
+      lock sub    es:[bx+si+0xa2a1], sp
+      lock sub    es:[bp+si+0xa4a3], sp
+      lock sub    es:[si+0xa6a5], sp
+      lock sub    es:[bp+0xa8a7], sp
+      lock sub    es:[bx+0xa9a8], sp
+      lock sub    es:[bx+si+0xb2b1], si
+      lock sub    es:[bp+si+0xb4b3], si
+      lock sub    es:[si+0xb6b5], si
+      lock sub    es:[bp+0xb8b7], si
+      lock sub    es:[bx+0xb9b8], si
+      lock sub    es:[bx+si], ax
+      lock sub    es:[bp+si], ax
+      lock sub    es:[si], ax
+      lock sub    es:[0x0807], ax
+      lock sub    es:[bx], ax
+      lock sub    es:[bx+si], cx
+      lock sub    es:[bp+si], cx
+      lock sub    es:[si], cx
+      lock sub    es:[0x100f], cx
+      lock sub    es:[bx], cx
+      lock sub    es:[bx+si], sp
+      lock xor    es:[bx+di], dh
+      lock xor    es:[bp+si], dh
+      lock xor    es:[si], dh
+      lock xor    es:[0x3837], dh
+      lock xor    es:[bx], dh
+      lock xor    es:[bx+si+65], al
+      lock xor    es:[bp+si+67], al
+      lock xor    es:[si+69], al
+      lock xor    es:[bp+71], al
+      lock xor    es:[bx+72], al
+      lock xor    es:[bx+si+97], ah
+      lock xor    es:[bp+si+99], ah
+      lock xor    es:[si+101], ah
+      lock xor    es:[bp+103], ah
+      lock xor    es:[bx+104], ah
+      lock xor    es:[bx+si+0x8281], al
+      lock xor    es:[bp+si+0x8483], al
+      lock xor    es:[si+0x8685], al
+      lock xor    es:[bp+0x8887], al
+      lock xor    es:[bx+0x8988], al
+      lock xor    es:[bx+si+0xa2a1], ah
+      lock xor    es:[bp+si+0xa4a3], ah
+      lock xor    es:[si+0xa6a5], ah
+      lock xor    es:[bp+0xa8a7], ah
+      lock xor    es:[bx+0xa9a8], ah
+      lock xor    es:[bx+si], al
+      lock xor    es:[bp+si], al
+      lock xor    es:[si], al
+      lock xor    es:[0x0807], al
+      lock xor    es:[bx], al
+      lock xor    es:[bp+si], si
+      lock xor    es:[si], si
+      lock xor    es:[0x3837], si
+      lock xor    es:[bx], si
+      lock xor    es:[bx+si], di
+      lock xor    es:[bx+si+65], ax
+      lock xor    es:[bp+si+67], ax
+      lock xor    es:[si+69], ax
+      lock xor    es:[bp+71], ax
+      lock xor    es:[bx+72], ax
+      lock xor    es:[bx+si+73], cx
+      lock xor    es:[bp+si+75], cx
+      lock xor    es:[si+77], cx
+      lock xor    es:[bp+79], cx
+      lock xor    es:[bx+80], cx
+      lock xor    es:[bx+si+97], sp
+      lock xor    es:[bp+si+99], sp
+      lock xor    es:[si+101], sp
+      lock xor    es:[bp+103], sp
+      lock xor    es:[bx+104], sp
+      lock xor    es:[bx+si+113], si
+      lock xor    es:[bp+si+115], si
+      lock xor    es:[si+117], si
+      lock xor    es:[bp+119], si
+      lock xor    es:[bx+120], si
+      lock xor    es:[bx+si+0x8281], ax
+      lock xor    es:[bp+si+0x8483], ax
+      lock xor    es:[si+0x8685], ax
+      lock xor    es:[bp+0x8887], ax
+      lock xor    es:[bx+0x8988], ax
+      lock xor    es:[bx+si+0x8a89], cx
+      lock xor    es:[bp+si+0x8c8b], cx
+      lock xor    es:[si+0x8e8d], cx
+      lock xor    es:[bp+0x908f], cx
+      lock xor    es:[bx+0x9190], cx
+      lock xor    es:[bx+si+0xa2a1], sp
+      lock xor    es:[bp+si+0xa4a3], sp
+      lock xor    es:[si+0xa6a5], sp
+      lock xor    es:[bp+0xa8a7], sp
+      lock xor    es:[bx+0xa9a8], sp
+      lock xor    es:[bx+si+0xb2b1], si
+      lock xor    es:[bp+si+0xb4b3], si
+      lock xor    es:[si+0xb6b5], si
+      lock xor    es:[bp+0xb8b7], si
+      lock xor    es:[bx+0xb9b8], si
+      lock xor    es:[bx+si], ax
+      lock xor    es:[bp+si], ax
+      lock xor    es:[si], ax
+      lock xor    es:[0x0807], ax
+      lock xor    es:[bx], ax
+      lock xor    es:[bx+si], cx
+      lock xor    es:[bp+si], cx
+      lock xor    es:[si], cx
+      lock xor    es:[0x100f], cx
+      lock xor    es:[bx], cx
+      lock xor    es:[bx+si], sp
+      lock xor    es:[bp+si], sp
+      lock xor    es:[si], sp
+      lock xor    es:[0x2827], sp
+      lock xor    es:[bx], sp
+      lock add    byte ptr es:[bx+di+0x8382], 0x84
+      lock add    byte ptr es:[bp+si+0x8483], 0x85
+      lock add    byte ptr es:[si+0x8685], 0x87
+      lock add    byte ptr es:[bp+0x8887], 0x89
+      lock add    byte ptr es:[bx+0x8988], 0x8a
+      lock or byte ptr es:[bx+si+0x8a89], 0x8b
+      lock or byte ptr es:[bp+si+0x8c8b], 0x8d
+      lock or byte ptr es:[si+0x8e8d], 0x8f
+      lock or byte ptr es:[bp+0x908f], 0x91
+      lock or byte ptr es:[bx+0x9190], 0x92
+      lock adc    byte ptr es:[bx+si+0x9291], 0x93
+      lock adc    byte ptr es:[bp+si+0x9493], 0x95
+      lock adc    byte ptr es:[si+0x9695], 0x97
+      lock adc    byte ptr es:[bp+0x9897], 0x99
+      lock adc    byte ptr es:[bx+0x9998], 0x9a
+      lock sbb    byte ptr es:[bx+si+0x9a99], 0x9b
+      lock sbb    byte ptr es:[bp+si+0x9c9b], 0x9d
+      lock sbb    byte ptr es:[si+0x9e9d], 0x9f
+      lock sbb    byte ptr es:[bp+0xa09f], 0xa1
+      lock sbb    byte ptr es:[bx+0xa1a0], 0xa2
+      lock and    byte ptr es:[bx+si+0xa2a1], 0xa3
+      lock and    byte ptr es:[bp+si+0xa4a3], 0xa5
+      lock and    byte ptr es:[si+0xa6a5], 0xa7
+      lock and    byte ptr es:[bp+0xa8a7], 0xa9
+      lock and    byte ptr es:[bx+0xa9a8], 0xaa
+      lock sub    byte ptr es:[bx+si+0xaaa9], 0xab
+      lock sub    byte ptr es:[bp+si+0xacab], 0xad
+      lock sub    byte ptr es:[si+0xaead], 0xaf
+      lock sub    byte ptr es:[bp+0xb0af], 0xb1
+      lock sub    byte ptr es:[bx+0xb1b0], 0xb2
+      lock xor    byte ptr es:[bx+si+0xb2b1], 0xb3
+      lock xor    byte ptr es:[bp+si+0xb4b3], 0xb5
+      lock xor    byte ptr es:[si+0xb6b5], 0xb7
+      lock xor    byte ptr es:[bp+0xb8b7], 0xb9
+      lock xor    byte ptr es:[bx+0xb9b8], 0xba
+      lock add    byte ptr es:[bx+si], 1
+      lock add    byte ptr es:[bp+si], 3
+      lock add    byte ptr es:[si], 5
+      lock add    byte ptr es:[0x0807], 9
+      lock add    byte ptr es:[bx], 8
+      lock or byte ptr es:[bx+si], 9
+      lock or byte ptr es:[bp+si], 11
+      lock or byte ptr es:[si], 13
+      lock or byte ptr es:[0x100f], 17
+      lock or byte ptr es:[bx], 16
+      lock adc    byte ptr es:[bx+si], 17
+      lock adc    byte ptr es:[bp+si], 19
+      lock adc    byte ptr es:[si], 21
+      lock adc    byte ptr es:[0x1817], 25
+      lock adc    byte ptr es:[bx], 24
+      lock sbb    byte ptr es:[bx+si], 25
+      lock sbb    byte ptr es:[bp+si], 27
+      lock sbb    byte ptr es:[si], 29
+      lock sbb    byte ptr es:[0x201f], 0x21
+      lock sbb    byte ptr es:[bx], 32
+      lock and    byte ptr es:[bx+si], 0x21
+      lock and    byte ptr es:[bp+si], 0x23
+      lock and    byte ptr es:[si], 0x25
+      lock and    byte ptr es:[0x2827], 0x29
+      lock and    byte ptr es:[bx], 0x28
+      lock sub    byte ptr es:[bx+si], 0x29
+      lock sub    byte ptr es:[bp+si], 0x2b
+      lock sub    byte ptr es:[si], 0x2d
+      lock sub    byte ptr es:[0x302f], 0x31
+      lock sub    byte ptr es:[bx], 0x30
+      lock xor    byte ptr es:[bx+si], 0x31
+      lock xor    byte ptr es:[bp+si], 0x33
+      lock xor    byte ptr es:[si], 0x35
+      lock xor    byte ptr es:[0x3837], 0x39
+      lock xor    byte ptr es:[bx], 0x38
+      lock add    byte ptr es:[bx+si+65], 0x42
+      lock add    byte ptr es:[bp+si+67], 0x44
+      lock add    byte ptr es:[si+69], 0x46
+      lock add    byte ptr es:[bp+71], 0x48
+      lock add    byte ptr es:[bx+72], 0x49
+      lock or byte ptr es:[bx+si+73], 0x4a
+      lock or byte ptr es:[bp+si+75], 0x4c
+      lock or byte ptr es:[si+77], 0x4e
+      lock or byte ptr es:[bp+79], 0x50
+      lock or byte ptr es:[bx+80], 0x51
+      lock adc    byte ptr es:[bx+si+81], 0x52
+      lock adc    byte ptr es:[bp+si+83], 0x54
+      lock adc    byte ptr es:[si+85], 0x56
+      lock adc    byte ptr es:[bp+87], 0x58
+      lock adc    byte ptr es:[bx+88], 0x59
+      lock sbb    byte ptr es:[bx+si+89], 0x5a
+      lock sbb    byte ptr es:[bp+si+91], 0x5c
+      lock sbb    byte ptr es:[si+93], 0x5e
+      lock sbb    byte ptr es:[bp+95], 0x60
+      lock sbb    byte ptr es:[bx+96], 0x61
+      lock and    byte ptr es:[bx+si+97], 0x62
+      lock and    byte ptr es:[bp+si+99], 0x64
+      lock and    byte ptr es:[si+101], 0x66
+      lock and    byte ptr es:[bp+103], 0x68
+      lock and    byte ptr es:[bx+104], 0x69
+      lock sub    byte ptr es:[bx+si+105], 0x6a
+      lock sub    byte ptr es:[bp+si+107], 0x6c
+      lock sub    byte ptr es:[si+109], 0x6e
+      lock sub    byte ptr es:[bp+111], 0x70
+      lock sub    byte ptr es:[bx+112], 0x71
+      lock xor    byte ptr es:[bx+si+113], 0x72
+      lock xor    byte ptr es:[bp+si+115], 0x74
+      lock xor    byte ptr es:[si+117], 0x76
+      lock xor    byte ptr es:[bp+119], 0x78
+      lock xor    byte ptr es:[bx+120], 0x79
+      lock add    word ptr es:[bp+si+0x8483], 0x8685
+      lock add    word ptr es:[si+0x8685], 0x8887
+      lock add    word ptr es:[bp+0x8887], 0x8a89
+      lock add    word ptr es:[bx+0x8988], 0x8b8a
+      lock or word ptr es:[bx+si+0x8a89], 0x8c8b
+      lock or word ptr es:[bp+si+0x8c8b], 0x8e8d
+      lock or word ptr es:[si+0x8e8d], 0x908f
+      lock or word ptr es:[bp+0x908f], 0x9291
+      lock or word ptr es:[bx+0x9190], 0x9392
+      lock adc    word ptr es:[bx+si+0x9291], 0x9493
+      lock adc    word ptr es:[bp+si+0x9493], 0x9695
+      lock adc    word ptr es:[si+0x9695], 0x9897
+      lock adc    word ptr es:[bp+0x9897], 0x9a99
+      lock adc    word ptr es:[bx+0x9998], 0x9b9a
+      lock sbb    word ptr es:[bx+si+0x9a99], 0x9c9b
+      lock sbb    word ptr es:[bp+si+0x9c9b], 0x9e9d
+      lock sbb    word ptr es:[si+0x9e9d], 0xa09f
+      lock sbb    word ptr es:[bp+0xa09f], 0xa2a1
+      lock sbb    word ptr es:[bx+0xa1a0], 0xa3a2
+      lock and    word ptr es:[bx+si+0xa2a1], 0xa4a3
+      lock and    word ptr es:[bp+si+0xa4a3], 0xa6a5
+      lock and    word ptr es:[si+0xa6a5], 0xa8a7
+      lock and    word ptr es:[bp+0xa8a7], 0xaaa9
+      lock and    word ptr es:[bx+0xa9a8], 0xabaa
+      lock sub    word ptr es:[bx+si+0xaaa9], 0xacab
+      lock sub    word ptr es:[bp+si+0xacab], 0xaead
+      lock sub    word ptr es:[si+0xaead], 0xb0af
+      lock sub    word ptr es:[bp+0xb0af], 0xb2b1
+      lock sub    word ptr es:[bx+0xb1b0], 0xb3b2
+      lock xor    word ptr es:[bx+si+0xb2b1], 0xb4b3
+      lock xor    word ptr es:[bp+si+0xb4b3], 0xb6b5
+      lock xor    word ptr es:[si+0xb6b5], 0xb8b7
+      lock xor    word ptr es:[bp+0xb8b7], 0xbab9
+      lock xor    word ptr es:[bx+0xb9b8], 0xbbba
+      lock add    word ptr es:[bx+si], 0x0201
+      lock add    word ptr es:[bp+si], 0x0403
+      lock add    word ptr es:[si], 0x0605
+      lock add    word ptr es:[0x0807], 0x0a09
+      lock add    word ptr es:[bx], 0x0908
+      lock or word ptr es:[bx+si], 0x0a09
+      lock or word ptr es:[bp+si], 0x0c0b
+      lock or word ptr es:[si], 0x0e0d
+      lock or word ptr es:[0x100f], 0x1211
+      lock or word ptr es:[bx], 0x1110
+      lock adc    word ptr es:[bx+si], 0x1211
+      lock adc    word ptr es:[bp+si], 0x1413
+      lock adc    word ptr es:[si], 0x1615
+      lock adc    word ptr es:[0x1817], 0x1a19
+      lock adc    word ptr es:[bx], 0x1918
+      lock sbb    word ptr es:[bx+si], 0x1a19
+      lock sbb    word ptr es:[bp+si], 0x1c1b
+      lock sbb    word ptr es:[si], 0x1e1d
+      lock sbb    word ptr es:[0x201f], 0x2221
+      lock sbb    word ptr es:[bx], 0x2120
+      lock and    word ptr es:[bx+si], 0x2221
+      lock and    word ptr es:[bp+si], 0x2423
+      lock and    word ptr es:[si], 0x2625
+      lock and    word ptr es:[0x2827], 0x2a29
+      lock and    word ptr es:[bx], 0x2928
+      lock sub    word ptr es:[bx+si], 0x2a29
+      lock sub    word ptr es:[bp+si], 0x2c2b
+      lock sub    word ptr es:[si], 0x2e2d
+      lock sub    word ptr es:[0x302f], 0x3231
+      lock sub    word ptr es:[bx], 0x3130
+      lock xor    word ptr es:[bx+si], 0x3231
+      lock xor    word ptr es:[bp+si], 0x3433
+      lock xor    word ptr es:[si], 0x3635
+      lock xor    word ptr es:[0x3837], 0x3a39
+      lock xor    word ptr es:[bx], 0x3938
+      lock add    word ptr es:[bx+si+65], 0x4342
+      lock add    word ptr es:[bp+si+67], 0x4544
+      lock add    word ptr es:[si+69], 0x4746
+      lock add    word ptr es:[bp+71], 0x4948
+      lock add    word ptr es:[bx+72], 0x4a49
+      lock or word ptr es:[bx+si+73], 0x4b4a
+      lock or word ptr es:[bp+si+75], 0x4d4c
+      lock or word ptr es:[si+77], 0x4f4e
+      lock or word ptr es:[bp+79], 0x5150
+      lock or word ptr es:[bx+80], 0x5251
+      lock adc    word ptr es:[bx+si+81], 0x5352
+      lock adc    word ptr es:[bp+si+83], 0x5554
+      lock adc    word ptr es:[si+85], 0x5756
+      lock adc    word ptr es:[bp+87], 0x5958
+      lock adc    word ptr es:[bx+88], 0x5a59
+      lock sbb    word ptr es:[bx+si+89], 0x5b5a
+      lock sbb    word ptr es:[bp+si+91], 0x5d5c
+      lock sbb    word ptr es:[si+93], 0x5f5e
+      lock sbb    word ptr es:[bp+95], 0x6160
+      lock sbb    word ptr es:[bx+96], 0x6261
+      lock and    word ptr es:[bx+si+97], 0x6362
+      lock and    word ptr es:[bp+si+99], 0x6564
+      lock and    word ptr es:[si+101], 0x6766
+      lock and    word ptr es:[bp+103], 0x6968
+      lock and    word ptr es:[bx+104], 0x6a69
+      lock sub    word ptr es:[bx+si+105], 0x6b6a
+      lock sub    word ptr es:[bp+si+107], 0x6d6c
+      lock sub    word ptr es:[si+109], 0x6f6e
+      lock sub    word ptr es:[bp+111], 0x7170
+      lock sub    word ptr es:[bx+112], 0x7271
+      lock xor    word ptr es:[bx+si+113], 0x7372
+      lock xor    word ptr es:[bp+si+115], 0x7574
+      lock xor    word ptr es:[si+117], 0x7776
+      lock xor    word ptr es:[bp+119], 0x7978
+      lock xor    word ptr es:[bx+120], 0x7a79
+      lock add    word ptr es:[bx+si+0x8281], 0x8483
+      lock add    word ptr es:[bx+si], 1
+      lock add    word ptr es:[bp+si], 3
+      lock add    word ptr es:[si], 5
+      lock add    word ptr es:[0x0807], 9
+      lock add    word ptr es:[bx], 8
+      lock or word ptr es:[bx+si], 9
+      lock or word ptr es:[bp+si], 11
+      lock or word ptr es:[si], 13
+      lock or word ptr es:[0x100f], 17
+      lock or word ptr es:[bx], 16
+      lock adc    word ptr es:[bx+si], 17
+      lock adc    word ptr es:[bp+si], 19
+      lock adc    word ptr es:[si], 21
+      lock adc    word ptr es:[0x1817], 25
+      lock adc    word ptr es:[bx], 24
+      lock sbb    word ptr es:[bx+si], 25
+      lock sbb    word ptr es:[bp+si], 27
+      lock sbb    word ptr es:[si], 29
+      lock sbb    word ptr es:[0x201f], 0x21
+      lock sbb    word ptr es:[bx], 32
+      lock and    word ptr es:[bx+si], 0x21
+      lock and    word ptr es:[bp+si], 0x23
+      lock and    word ptr es:[si], 0x25
+      lock and    word ptr es:[0x2827], 0x29
+      lock and    word ptr es:[bx], 0x28
+      lock sub    word ptr es:[bx+si], 0x29
+      lock sub    word ptr es:[bp+si], 0x2b
+      lock sub    word ptr es:[si], 0x2d
+      lock sub    word ptr es:[0x302f], 0x31
+      lock sub    word ptr es:[bx], 0x30
+      lock xor    word ptr es:[bx+si], 0x31
+      lock xor    word ptr es:[bp+si], 0x33
+      lock xor    word ptr es:[si], 0x35
+      lock xor    word ptr es:[0x3837], 0x39
+      lock xor    word ptr es:[bx], 0x38
+      lock add    word ptr es:[bx+si+65], 0x42
+      lock add    word ptr es:[bp+si+67], 0x44
+      lock add    word ptr es:[si+69], 0x46
+      lock add    word ptr es:[bp+71], 0x48
+      lock add    word ptr es:[bx+72], 0x49
+      lock or word ptr es:[bx+si+73], 0x4a
+      lock or word ptr es:[bp+si+75], 0x4c
+      lock or word ptr es:[si+77], 0x4e
+      lock or word ptr es:[bp+79], 0x50
+      lock or word ptr es:[bx+80], 0x51
+      lock adc    word ptr es:[bx+si+81], 0x52
+      lock adc    word ptr es:[bp+si+83], 0x54
+      lock adc    word ptr es:[si+85], 0x56
+      lock adc    word ptr es:[bp+87], 0x58
+      lock adc    word ptr es:[bx+88], 0x59
+      lock sbb    word ptr es:[bx+si+89], 0x5a
+      lock sbb    word ptr es:[bp+si+91], 0x5c
+      lock sbb    word ptr es:[si+93], 0x5e
+      lock sbb    word ptr es:[bp+95], 0x60
+      lock sbb    word ptr es:[bx+96], 0x61
+      lock and    word ptr es:[bx+si+97], 0x62
+      lock and    word ptr es:[bp+si+99], 0x64
+      lock and    word ptr es:[si+101], 0x66
+      lock and    word ptr es:[bp+103], 0x68
+      lock and    word ptr es:[bx+104], 0x69
+      lock sub    word ptr es:[bx+si+105], 0x6a
+      lock sub    word ptr es:[bp+si+107], 0x6c
+      lock sub    word ptr es:[si+109], 0x6e
+      lock sub    word ptr es:[bp+111], 0x70
+      lock sub    word ptr es:[bx+112], 0x71
+      lock xor    word ptr es:[bx+si+113], 0x72
+      lock xor    word ptr es:[bp+si+115], 0x74
+      lock xor    word ptr es:[si+117], 0x76
+      lock xor    word ptr es:[bp+119], 0x78
+      lock xor    word ptr es:[bx+120], 0x79
+      lock xchg   es:[bx+0x8988], al
+      lock xchg   es:[bx+si+0x8a89], cl
+      lock xchg   es:[bp+si+0x8c8b], cl
+      lock xchg   es:[si+0x8e8d], cl
+      lock xchg   es:[bp+0x908f], cl
+      lock xchg   es:[bx+si+0xa2a1], ah
+      lock xchg   es:[bp+si+0xa4a3], ah
+      lock xchg   es:[si+0xa6a5], ah
+      lock xchg   es:[bp+0xa8a7], ah
+      lock xchg   es:[bx+0xa9a8], ah
+      lock xchg   es:[bx+si], al
+      lock xchg   es:[bp+si], al
+      lock xchg   es:[si], al
+      lock xchg   es:[0x0807], al
+      lock xchg   es:[bx], al
+      lock xchg   es:[bx+si], ah
+      lock xchg   es:[bp+si], ah
+      lock xchg   es:[si], ah
+      lock xchg   es:[0x2827], ah
+      lock xchg   es:[bx], ah
+      lock xchg   es:[bx+si+65], al
+      lock xchg   es:[bp+si+67], al
+      lock xchg   es:[si+69], al
+      lock xchg   es:[bp+71], al
+      lock xchg   es:[bx+72], al
+      lock xchg   es:[bx+si+97], ah
+      lock xchg   es:[bp+si+99], ah
+      lock xchg   es:[si+101], ah
+      lock xchg   es:[bp+103], ah
+      lock xchg   es:[bx+104], ah
+      lock xchg   es:[bx+si+0x8a89], cx
+      lock xchg   es:[bp+si+0x8c8b], cx
+      lock xchg   es:[si+0x8e8d], cx
+      lock xchg   es:[bp+0x908f], cx
+      lock xchg   es:[bx+0x9190], cx
+      lock xchg   es:[bx+si+0xa2a1], sp
+      lock xchg   es:[bp+si+0xa4a3], sp
+      lock xchg   es:[si+0xa6a5], sp
+      lock xchg   es:[bp+0xa8a7], sp
+      lock xchg   es:[bx+0xa9a8], sp
+      lock xchg   es:[bx+si+0xb2b1], si
+      lock xchg   es:[bp+si+0xb4b3], si
+      lock xchg   es:[si+0xb6b5], si
+      lock xchg   es:[bp+0xb8b7], si
+      lock xchg   es:[bx+0xb9b8], si
+      lock xchg   es:[bx+si], ax
+      lock xchg   es:[bp+si], ax
+      lock xchg   es:[si], ax
+      lock xchg   es:[0x0807], ax
+      lock xchg   es:[bx], ax
+      lock xchg   es:[bx+si], cx
+      lock xchg   es:[bp+si], cx
+      lock xchg   es:[si], cx
+      lock xchg   es:[0x100f], cx
+      lock xchg   es:[bx], cx
+      lock xchg   es:[bx+si], sp
+      lock xchg   es:[bp+si], sp
+      lock xchg   es:[si], sp
+      lock xchg   es:[0x2827], sp
+      lock xchg   es:[bx], sp
+      lock xchg   es:[bx+si], si
+      lock xchg   es:[bp+si], si
+      lock xchg   es:[si], si
+      lock xchg   es:[0x3837], si
+      lock xchg   es:[bx], si
+      lock xchg   es:[bx+si+65], ax
+      lock xchg   es:[bp+si+67], ax
+      lock xchg   es:[si+69], ax
+      lock xchg   es:[bp+71], ax
+      lock xchg   es:[bx+72], ax
+      lock xchg   es:[bx+si+73], cx
+      lock xchg   es:[bp+si+75], cx
+      lock xchg   es:[si+77], cx
+      lock xchg   es:[bp+79], cx
+      lock xchg   es:[bx+80], cx
+      lock xchg   es:[bx+si+97], sp
+      lock xchg   es:[bp+si+99], sp
+      lock xchg   es:[si+101], sp
+      lock xchg   es:[bp+103], sp
+      lock xchg   es:[bx+104], sp
+      lock xchg   es:[bx+si+113], si
+      lock xchg   es:[bp+si+115], si
+      lock xchg   es:[si+117], si
+      lock xchg   es:[bp+119], si
+      lock xchg   es:[bx+120], si
+      lock xchg   es:[bx+si+0x8281], ax
+      lock xchg   es:[bp+si+0x8483], ax
+      lock xchg   es:[si+0x8685], ax
+      lock xchg   es:[bp+0x8887], ax
+      lock xchg   es:[bx+0x8988], ax
       repne movsb es:[di], es:[si]
       repne movsw es:[di], es:[si]
       repne cmpsb es:[si], es:[di]
@@ -8264,7 +9384,1126 @@
       in      ax, dx
       out     dx, al
       out     dx, ax
-      lock
+      lock not    byte ptr [bx+si]
+      lock not    byte ptr [bp+si]
+      lock not    byte ptr [si]
+      lock not    byte ptr [0x1817]
+      lock not    byte ptr [bx]
+      lock neg    byte ptr [bx+si]
+      lock neg    byte ptr [bp+si]
+      lock neg    byte ptr [si]
+      lock neg    byte ptr [0x201f]
+      lock neg    byte ptr [bx]
+      lock not    byte ptr [bx+si+81]
+      lock not    byte ptr [bp+si+83]
+      lock not    byte ptr [si+85]
+      lock not    byte ptr [bp+87]
+      lock not    byte ptr [bx+88]
+      lock neg    byte ptr [bx+si+89]
+      lock neg    byte ptr [bp+si+91]
+      lock neg    byte ptr [si+93]
+      lock neg    byte ptr [bp+95]
+      lock neg    byte ptr [bx+96]
+      lock not    byte ptr [bx+si+0x9291]
+      lock not    byte ptr [bp+si+0x9493]
+      lock not    byte ptr [si+0x9695]
+      lock not    byte ptr [bp+0x9897]
+      lock not    byte ptr [bx+0x9998]
+      lock neg    byte ptr [bx+si+0x9a99]
+      lock neg    byte ptr [bp+si+0x9c9b]
+      lock neg    byte ptr [si+0x9e9d]
+      lock neg    byte ptr [bp+0xa09f]
+      lock neg    byte ptr [bx+0xa1a0]
+      lock not    word ptr [bx+si]
+      lock not    word ptr [bp+si]
+      lock not    word ptr [si]
+      lock not    word ptr [0x1817]
+      lock not    word ptr [bx]
+      lock neg    word ptr [bx+si]
+      lock neg    word ptr [bp+si]
+      lock neg    word ptr [si]
+      lock neg    word ptr [0x201f]
+      lock neg    word ptr [bx]
+      lock not    word ptr [bx+si+81]
+      lock not    word ptr [bp+si+83]
+      lock not    word ptr [si+85]
+      lock not    word ptr [bp+87]
+      lock not    word ptr [bx+88]
+      lock neg    word ptr [bx+si+89]
+      lock neg    word ptr [bp+si+91]
+      lock neg    word ptr [si+93]
+      lock neg    word ptr [bp+95]
+      lock neg    word ptr [bx+96]
+      lock not    word ptr [bx+si+0x9291]
+      lock not    word ptr [bp+si+0x9493]
+      lock not    word ptr [si+0x9695]
+      lock not    word ptr [bp+0x9897]
+      lock not    word ptr [bx+0x9998]
+      lock neg    word ptr [bx+si+0x9a99]
+      lock neg    word ptr [bp+si+0x9c9b]
+      lock neg    word ptr [si+0x9e9d]
+      lock neg    word ptr [bp+0xa09f]
+      lock neg    word ptr [bx+0xa1a0]
+      lock inc    byte ptr [bx+si]
+      lock inc    byte ptr [bp+si]
+      lock inc    byte ptr [si]
+      lock inc    byte ptr [0x0807]
+      lock inc    byte ptr [bx]
+      lock dec    byte ptr [bx+si]
+      lock dec    byte ptr [bp+si]
+      lock dec    byte ptr [si]
+      lock dec    byte ptr [0x100f]
+      lock dec    byte ptr [bx]
+      lock inc    byte ptr [bx+si+65]
+      lock inc    byte ptr [bp+si+67]
+      lock inc    byte ptr [si+69]
+      lock inc    byte ptr [bp+71]
+      lock inc    byte ptr [bx+72]
+      lock dec    byte ptr [bx+si+73]
+      lock dec    byte ptr [bp+si+75]
+      lock dec    byte ptr [si+77]
+      lock dec    byte ptr [bp+79]
+      lock dec    byte ptr [bx+80]
+      lock inc    byte ptr [bx+si+0x8281]
+      lock inc    byte ptr [bp+si+0x8483]
+      lock inc    byte ptr [si+0x8685]
+      lock inc    byte ptr [bp+0x8887]
+      lock inc    byte ptr [bx+0x8988]
+      lock dec    byte ptr [bx+si+0x8a89]
+      lock dec    byte ptr [bp+si+0x8c8b]
+      lock dec    byte ptr [si+0x8e8d]
+      lock dec    byte ptr [bp+0x908f]
+      lock dec    byte ptr [bx+0x9190]
+      lock inc    word ptr [bx+si]
+      lock inc    word ptr [bp+si]
+      lock inc    word ptr [si]
+      lock inc    word ptr [0x0807]
+      lock inc    word ptr [bx]
+      lock dec    word ptr [bx+si]
+      lock dec    word ptr [bp+si]
+      lock dec    word ptr [si]
+      lock dec    word ptr [0x100f]
+      lock dec    word ptr [bx]
+      lock inc    word ptr [bx+si+65]
+      lock inc    word ptr [bp+si+67]
+      lock inc    word ptr [si+69]
+      lock inc    word ptr [bp+71]
+      lock inc    word ptr [bx+72]
+      lock dec    word ptr [bx+si+73]
+      lock dec    word ptr [bp+si+75]
+      lock dec    word ptr [si+77]
+      lock dec    word ptr [bp+79]
+      lock dec    word ptr [bx+80]
+      lock inc    word ptr [bx+si+0x8281]
+      lock inc    word ptr [bp+si+0x8483]
+      lock inc    word ptr [si+0x8685]
+      lock inc    word ptr [bp+0x8887]
+      lock inc    word ptr [bx+0x8988]
+      lock dec    word ptr [bx+si+0x8a89]
+      lock dec    word ptr [bp+si+0x8c8b]
+      lock dec    word ptr [si+0x8e8d]
+      lock dec    word ptr [bp+0x908f]
+      lock dec    word ptr [bx+0x9190]
+      lock add    [bx+di], al
+      lock add    [bp+si], al
+      lock add    [si], al
+      lock add    [0x0807], al
+      lock add    [bx], al
+      lock add    [bx+si], ah
+      lock add    [bp+si], ah
+      lock add    [si], ah
+      lock add    [0x2827], ah
+      lock add    [bx], ah
+      lock add    [bx+si+65], al
+      lock add    [bp+si+67], al
+      lock add    [si+69], al
+      lock add    [bp+71], al
+      lock add    [bx+72], al
+      lock add    [bx+si+97], ah
+      lock add    [bp+si+99], ah
+      lock add    [si+101], ah
+      lock add    [bp+103], ah
+      lock add    [bx+104], ah
+      lock add    [bx+si+0x8281], al
+      lock add    [bp+si+0x8483], al
+      lock add    [si+0x8685], al
+      lock add    [bp+0x8887], al
+      lock add    [bx+0x8988], al
+      lock add    [bx+si+0xa2a1], ah
+      lock add    [bp+si+0xa4a3], ah
+      lock add    [si+0xa6a5], ah
+      lock add    [bp+0xa8a7], ah
+      lock add    [bx+0xa9a8], ah
+      lock add    [bp+si], ax
+      lock add    [si], ax
+      lock add    [0x0807], ax
+      lock add    [bx], ax
+      lock add    [bx+si], cx
+      lock add    [bp+si], cx
+      lock add    [si], cx
+      lock add    [0x100f], cx
+      lock add    [bx], cx
+      lock add    [bx+si], sp
+      lock add    [bp+si], sp
+      lock add    [si], sp
+      lock add    [0x2827], sp
+      lock add    [bx], sp
+      lock add    [bx+si], si
+      lock add    [bp+si], si
+      lock add    [si], si
+      lock add    [0x3837], si
+      lock add    [bx], si
+      lock add    [bx+si+65], ax
+      lock add    [bp+si+67], ax
+      lock add    [si+69], ax
+      lock add    [bp+71], ax
+      lock add    [bx+72], ax
+      lock add    [bx+si+73], cx
+      lock add    [bp+si+75], cx
+      lock add    [si+77], cx
+      lock add    [bp+79], cx
+      lock add    [bx+80], cx
+      lock add    [bx+si+97], sp
+      lock add    [bp+si+99], sp
+      lock add    [si+101], sp
+      lock add    [bp+103], sp
+      lock add    [bx+104], sp
+      lock add    [bx+si+113], si
+      lock add    [bp+si+115], si
+      lock add    [si+117], si
+      lock add    [bp+119], si
+      lock add    [bx+120], si
+      lock add    [bx+si+0x8281], ax
+      lock add    [bp+si+0x8483], ax
+      lock add    [si+0x8685], ax
+      lock add    [bp+0x8887], ax
+      lock add    [bx+0x8988], ax
+      lock add    [bx+si+0x8a89], cx
+      lock add    [bp+si+0x8c8b], cx
+      lock add    [si+0x8e8d], cx
+      lock add    [bp+0x908f], cx
+      lock add    [bx+0x9190], cx
+      lock add    [bx+si+0xa2a1], sp
+      lock add    [bp+si+0xa4a3], sp
+      lock add    [si+0xa6a5], sp
+      lock add    [bp+0xa8a7], sp
+      lock add    [bx+0xa9a8], sp
+      lock add    [bx+si+0xb2b1], si
+      lock add    [bp+si+0xb4b3], si
+      lock add    [si+0xb6b5], si
+      lock add    [bp+0xb8b7], si
+      lock add    [bx+0xb9b8], si
+      lock add    [bx+si], ax
+      lock or [bx+di], cl
+      lock or [bp+si], cl
+      lock or [si], cl
+      lock or [0x100f], cl
+      lock or [bx], cl
+      lock or [bx+si], ah
+      lock or [bp+si], ah
+      lock or [si], ah
+      lock or [0x2827], ah
+      lock or [bx], ah
+      lock or [bx+si+65], al
+      lock or [bp+si+67], al
+      lock or [si+69], al
+      lock or [bp+71], al
+      lock or [bx+72], al
+      lock or [bx+si+97], ah
+      lock or [bp+si+99], ah
+      lock or [si+101], ah
+      lock or [bp+103], ah
+      lock or [bx+104], ah
+      lock or [bx+si+0x8281], al
+      lock or [bp+si+0x8483], al
+      lock or [si+0x8685], al
+      lock or [bp+0x8887], al
+      lock or [bx+0x8988], al
+      lock or [bx+si+0xa2a1], ah
+      lock or [bp+si+0xa4a3], ah
+      lock or [si+0xa6a5], ah
+      lock or [bp+0xa8a7], ah
+      lock or [bx+0xa9a8], ah
+      lock or [bp+si], cx
+      lock or [si], cx
+      lock or [0x100f], cx
+      lock or [bx], cx
+      lock or [bx+si], dx
+      lock or [bx+si], sp
+      lock or [bp+si], sp
+      lock or [si], sp
+      lock or [0x2827], sp
+      lock or [bx], sp
+      lock or [bx+si], si
+      lock or [bp+si], si
+      lock or [si], si
+      lock or [0x3837], si
+      lock or [bx], si
+      lock or [bx+si+65], ax
+      lock or [bp+si+67], ax
+      lock or [si+69], ax
+      lock or [bp+71], ax
+      lock or [bx+72], ax
+      lock or [bx+si+73], cx
+      lock or [bp+si+75], cx
+      lock or [si+77], cx
+      lock or [bp+79], cx
+      lock or [bx+80], cx
+      lock or [bx+si+97], sp
+      lock or [bp+si+99], sp
+      lock or [si+101], sp
+      lock or [bp+103], sp
+      lock or [bx+104], sp
+      lock or [bx+si+113], si
+      lock or [bp+si+115], si
+      lock or [si+117], si
+      lock or [bp+119], si
+      lock or [bx+120], si
+      lock or [bx+si+0x8281], ax
+      lock or [bp+si+0x8483], ax
+      lock or [si+0x8685], ax
+      lock or [bp+0x8887], ax
+      lock or [bx+0x8988], ax
+      lock or [bx+si+0x8a89], cx
+      lock or [bp+si+0x8c8b], cx
+      lock or [si+0x8e8d], cx
+      lock or [bp+0x908f], cx
+      lock or [bx+0x9190], cx
+      lock or [bx+si+0xa2a1], sp
+      lock or [bp+si+0xa4a3], sp
+      lock or [si+0xa6a5], sp
+      lock or [bp+0xa8a7], sp
+      lock or [bx+0xa9a8], sp
+      lock or [bx+si+0xb2b1], si
+      lock or [bp+si+0xb4b3], si
+      lock or [si+0xb6b5], si
+      lock or [bp+0xb8b7], si
+      lock or [bx+0xb9b8], si
+      lock or [bx+si], ax
+      lock or [bp+si], ax
+      lock or [si], ax
+      lock or [0x0807], ax
+      lock or [bx], ax
+      lock adc    [bx+di], dl
+      lock adc    [bp+si], dl
+      lock adc    [si], dl
+      lock adc    [0x1817], dl
+      lock adc    [bx], dl
+      lock adc    [bx+si], ah
+      lock adc    [bp+si], ah
+      lock adc    [si], ah
+      lock adc    [0x2827], ah
+      lock adc    [bx], ah
+      lock adc    [bx+si+65], al
+      lock adc    [bp+si+67], al
+      lock adc    [si+69], al
+      lock adc    [bp+71], al
+      lock adc    [bx+72], al
+      lock adc    [bx+si+97], ah
+      lock adc    [bp+si+99], ah
+      lock adc    [si+101], ah
+      lock adc    [bp+103], ah
+      lock adc    [bx+104], ah
+      lock adc    [bx+si+0x8281], al
+      lock adc    [bp+si+0x8483], al
+      lock adc    [si+0x8685], al
+      lock adc    [bp+0x8887], al
+      lock adc    [bx+0x8988], al
+      lock adc    [bx+si+0xa2a1], ah
+      lock adc    [bp+si+0xa4a3], ah
+      lock adc    [si+0xa6a5], ah
+      lock adc    [bp+0xa8a7], ah
+      lock adc    [bx+0xa9a8], ah
+      lock adc    [bp+si], dx
+      lock adc    [si], dx
+      lock adc    [0x1817], dx
+      lock adc    [bx], dx
+      lock adc    [bx+si], bx
+      lock adc    [bx+si], sp
+      lock adc    [bp+si], sp
+      lock adc    [si], sp
+      lock adc    [0x2827], sp
+      lock adc    [bx], sp
+      lock adc    [bx+si], si
+      lock adc    [bp+si], si
+      lock adc    [si], si
+      lock adc    [0x3837], si
+      lock adc    [bx], si
+      lock adc    [bx+si+65], ax
+      lock adc    [bp+si+67], ax
+      lock adc    [si+69], ax
+      lock adc    [bp+71], ax
+      lock adc    [bx+72], ax
+      lock adc    [bx+si+73], cx
+      lock adc    [bp+si+75], cx
+      lock adc    [si+77], cx
+      lock adc    [bp+79], cx
+      lock adc    [bx+80], cx
+      lock adc    [bx+si+97], sp
+      lock adc    [bp+si+99], sp
+      lock adc    [si+101], sp
+      lock adc    [bp+103], sp
+      lock adc    [bx+104], sp
+      lock adc    [bx+si+113], si
+      lock adc    [bp+si+115], si
+      lock adc    [si+117], si
+      lock adc    [bp+119], si
+      lock adc    [bx+120], si
+      lock adc    [bx+si+0x8281], ax
+      lock adc    [bp+si+0x8483], ax
+      lock adc    [si+0x8685], ax
+      lock adc    [bp+0x8887], ax
+      lock adc    [bx+0x8988], ax
+      lock adc    [bx+si+0x8a89], cx
+      lock adc    [bp+si+0x8c8b], cx
+      lock adc    [si+0x8e8d], cx
+      lock adc    [bp+0x908f], cx
+      lock adc    [bx+0x9190], cx
+      lock adc    [bx+si+0xa2a1], sp
+      lock adc    [bp+si+0xa4a3], sp
+      lock adc    [si+0xa6a5], sp
+      lock adc    [bp+0xa8a7], sp
+      lock adc    [bx+0xa9a8], sp
+      lock adc    [bx+si+0xb2b1], si
+      lock adc    [bp+si+0xb4b3], si
+      lock adc    [si+0xb6b5], si
+      lock adc    [bp+0xb8b7], si
+      lock adc    [bx+0xb9b8], si
+      lock adc    [bx+si], ax
+      lock adc    [bp+si], ax
+      lock adc    [si], ax
+      lock adc    [0x0807], ax
+      lock adc    [bx], ax
+      lock sbb    [bx+di], bl
+      lock sbb    [bp+si], bl
+      lock sbb    [si], bl
+      lock sbb    [0x201f], bl
+      lock sbb    [bx], bl
+      lock sbb    [bx+si], ah
+      lock sbb    [bp+si], ah
+      lock sbb    [si], ah
+      lock sbb    [0x2827], ah
+      lock sbb    [bx], ah
+      lock sbb    [bx+si+65], al
+      lock sbb    [bp+si+67], al
+      lock sbb    [si+69], al
+      lock sbb    [bp+71], al
+      lock sbb    [bx+72], al
+      lock sbb    [bx+si+97], ah
+      lock sbb    [bp+si+99], ah
+      lock sbb    [si+101], ah
+      lock sbb    [bp+103], ah
+      lock sbb    [bx+104], ah
+      lock sbb    [bx+si+0x8281], al
+      lock sbb    [bp+si+0x8483], al
+      lock sbb    [si+0x8685], al
+      lock sbb    [bp+0x8887], al
+      lock sbb    [bx+0x8988], al
+      lock sbb    [bx+si+0xa2a1], ah
+      lock sbb    [bp+si+0xa4a3], ah
+      lock sbb    [si+0xa6a5], ah
+      lock sbb    [bp+0xa8a7], ah
+      lock sbb    [bx+0xa9a8], ah
+      lock sbb    [bp+si], bx
+      lock sbb    [si], bx
+      lock sbb    [0x201f], bx
+      lock sbb    [bx], bx
+      lock sbb    [bx+si], sp
+      lock sbb    [bp+si], sp
+      lock sbb    [si], sp
+      lock sbb    [0x2827], sp
+      lock sbb    [bx], sp
+      lock sbb    [bx+si], si
+      lock sbb    [bp+si], si
+      lock sbb    [si], si
+      lock sbb    [0x3837], si
+      lock sbb    [bx], si
+      lock sbb    [bx+si+65], ax
+      lock sbb    [bp+si+67], ax
+      lock sbb    [si+69], ax
+      lock sbb    [bp+71], ax
+      lock sbb    [bx+72], ax
+      lock sbb    [bx+si+73], cx
+      lock sbb    [bp+si+75], cx
+      lock sbb    [si+77], cx
+      lock sbb    [bp+79], cx
+      lock sbb    [bx+80], cx
+      lock sbb    [bx+si+97], sp
+      lock sbb    [bp+si+99], sp
+      lock sbb    [si+101], sp
+      lock sbb    [bp+103], sp
+      lock sbb    [bx+104], sp
+      lock sbb    [bx+si+113], si
+      lock sbb    [bp+si+115], si
+      lock sbb    [si+117], si
+      lock sbb    [bp+119], si
+      lock sbb    [bx+120], si
+      lock sbb    [bx+si+0x8281], ax
+      lock sbb    [bp+si+0x8483], ax
+      lock sbb    [si+0x8685], ax
+      lock sbb    [bp+0x8887], ax
+      lock sbb    [bx+0x8988], ax
+      lock sbb    [bx+si+0x8a89], cx
+      lock sbb    [bp+si+0x8c8b], cx
+      lock sbb    [si+0x8e8d], cx
+      lock sbb    [bp+0x908f], cx
+      lock sbb    [bx+0x9190], cx
+      lock sbb    [bx+si+0xa2a1], sp
+      lock sbb    [bp+si+0xa4a3], sp
+      lock sbb    [si+0xa6a5], sp
+      lock sbb    [bp+0xa8a7], sp
+      lock sbb    [bx+0xa9a8], sp
+      lock sbb    [bx+si+0xb2b1], si
+      lock sbb    [bp+si+0xb4b3], si
+      lock sbb    [si+0xb6b5], si
+      lock sbb    [bp+0xb8b7], si
+      lock sbb    [bx+0xb9b8], si
+      lock sbb    [bx+si], ax
+      lock sbb    [bp+si], ax
+      lock sbb    [si], ax
+      lock sbb    [0x0807], ax
+      lock sbb    [bx], ax
+      lock sbb    [bx+si], cx
+      lock and    [bx+di], ah
+      lock and    [bp+si], ah
+      lock and    [si], ah
+      lock and    [0x2827], ah
+      lock and    [bx], ah
+      lock and    [bx+si+65], al
+      lock and    [bp+si+67], al
+      lock and    [si+69], al
+      lock and    [bp+71], al
+      lock and    [bx+72], al
+      lock and    [bx+si+97], ah
+      lock and    [bp+si+99], ah
+      lock and    [si+101], ah
+      lock and    [bp+103], ah
+      lock and    [bx+104], ah
+      lock and    [bx+si+0x8281], al
+      lock and    [bp+si+0x8483], al
+      lock and    [si+0x8685], al
+      lock and    [bp+0x8887], al
+      lock and    [bx+0x8988], al
+      lock and    [bx+si+0xa2a1], ah
+      lock and    [bp+si+0xa4a3], ah
+      lock and    [si+0xa6a5], ah
+      lock and    [bp+0xa8a7], ah
+      lock and    [bx+0xa9a8], ah
+      lock and    [bx+si], al
+      lock and    [bp+si], al
+      lock and    [si], al
+      lock and    [0x0807], al
+      lock and    [bx], al
+      lock and    [bp+si], sp
+      lock and    [si], sp
+      lock and    [0x2827], sp
+      lock and    [bx], sp
+      lock and    [bx+si], bp
+      lock and    [bx+si], si
+      lock and    [bp+si], si
+      lock and    [si], si
+      lock and    [0x3837], si
+      lock and    [bx], si
+      lock and    [bx+si+65], ax
+      lock and    [bp+si+67], ax
+      lock and    [si+69], ax
+      lock and    [bp+71], ax
+      lock and    [bx+72], ax
+      lock and    [bx+si+73], cx
+      lock and    [bp+si+75], cx
+      lock and    [si+77], cx
+      lock and    [bp+79], cx
+      lock and    [bx+80], cx
+      lock and    [bx+si+97], sp
+      lock and    [bp+si+99], sp
+      lock and    [si+101], sp
+      lock and    [bp+103], sp
+      lock and    [bx+104], sp
+      lock and    [bx+si+113], si
+      lock and    [bp+si+115], si
+      lock and    [si+117], si
+      lock and    [bp+119], si
+      lock and    [bx+120], si
+      lock and    [bx+si+0x8281], ax
+      lock and    [bp+si+0x8483], ax
+      lock and    [si+0x8685], ax
+      lock and    [bp+0x8887], ax
+      lock and    [bx+0x8988], ax
+      lock and    [bx+si+0x8a89], cx
+      lock and    [bp+si+0x8c8b], cx
+      lock and    [si+0x8e8d], cx
+      lock and    [bp+0x908f], cx
+      lock and    [bx+0x9190], cx
+      lock and    [bx+si+0xa2a1], sp
+      lock and    [bp+si+0xa4a3], sp
+      lock and    [si+0xa6a5], sp
+      lock and    [bp+0xa8a7], sp
+      lock and    [bx+0xa9a8], sp
+      lock and    [bx+si+0xb2b1], si
+      lock and    [bp+si+0xb4b3], si
+      lock and    [si+0xb6b5], si
+      lock and    [bp+0xb8b7], si
+      lock and    [bx+0xb9b8], si
+      lock and    [bx+si], ax
+      lock and    [bp+si], ax
+      lock and    [si], ax
+      lock and    [0x0807], ax
+      lock and    [bx], ax
+      lock and    [bx+si], cx
+      lock and    [bp+si], cx
+      lock and    [si], cx
+      lock and    [0x100f], cx
+      lock and    [bx], cx
+      lock sub    [bx+di], ch
+      lock sub    [bp+si], ch
+      lock sub    [si], ch
+      lock sub    [0x302f], ch
+      lock sub    [bx], ch
+      lock sub    [bx+si+65], al
+      lock sub    [bp+si+67], al
+      lock sub    [si+69], al
+      lock sub    [bp+71], al
+      lock sub    [bx+72], al
+      lock sub    [bx+si+97], ah
+      lock sub    [bp+si+99], ah
+      lock sub    [si+101], ah
+      lock sub    [bp+103], ah
+      lock sub    [bx+104], ah
+      lock sub    [bx+si+0x8281], al
+      lock sub    [bp+si+0x8483], al
+      lock sub    [si+0x8685], al
+      lock sub    [bp+0x8887], al
+      lock sub    [bx+0x8988], al
+      lock sub    [bx+si+0xa2a1], ah
+      lock sub    [bp+si+0xa4a3], ah
+      lock sub    [si+0xa6a5], ah
+      lock sub    [bp+0xa8a7], ah
+      lock sub    [bx+0xa9a8], ah
+      lock sub    [bx+si], al
+      lock sub    [bp+si], al
+      lock sub    [si], al
+      lock sub    [0x0807], al
+      lock sub    [bx], al
+      lock sub    [bp+si], bp
+      lock sub    [si], bp
+      lock sub    [0x302f], bp
+      lock sub    [bx], bp
+      lock sub    [bx+si], si
+      lock sub    [bp+si], si
+      lock sub    [si], si
+      lock sub    [0x3837], si
+      lock sub    [bx], si
+      lock sub    [bx+si+65], ax
+      lock sub    [bp+si+67], ax
+      lock sub    [si+69], ax
+      lock sub    [bp+71], ax
+      lock sub    [bx+72], ax
+      lock sub    [bx+si+73], cx
+      lock sub    [bp+si+75], cx
+      lock sub    [si+77], cx
+      lock sub    [bp+79], cx
+      lock sub    [bx+80], cx
+      lock sub    [bx+si+97], sp
+      lock sub    [bp+si+99], sp
+      lock sub    [si+101], sp
+      lock sub    [bp+103], sp
+      lock sub    [bx+104], sp
+      lock sub    [bx+si+113], si
+      lock sub    [bp+si+115], si
+      lock sub    [si+117], si
+      lock sub    [bp+119], si
+      lock sub    [bx+120], si
+      lock sub    [bx+si+0x8281], ax
+      lock sub    [bp+si+0x8483], ax
+      lock sub    [si+0x8685], ax
+      lock sub    [bp+0x8887], ax
+      lock sub    [bx+0x8988], ax
+      lock sub    [bx+si+0x8a89], cx
+      lock sub    [bp+si+0x8c8b], cx
+      lock sub    [si+0x8e8d], cx
+      lock sub    [bp+0x908f], cx
+      lock sub    [bx+0x9190], cx
+      lock sub    [bx+si+0xa2a1], sp
+      lock sub    [bp+si+0xa4a3], sp
+      lock sub    [si+0xa6a5], sp
+      lock sub    [bp+0xa8a7], sp
+      lock sub    [bx+0xa9a8], sp
+      lock sub    [bx+si+0xb2b1], si
+      lock sub    [bp+si+0xb4b3], si
+      lock sub    [si+0xb6b5], si
+      lock sub    [bp+0xb8b7], si
+      lock sub    [bx+0xb9b8], si
+      lock sub    [bx+si], ax
+      lock sub    [bp+si], ax
+      lock sub    [si], ax
+      lock sub    [0x0807], ax
+      lock sub    [bx], ax
+      lock sub    [bx+si], cx
+      lock sub    [bp+si], cx
+      lock sub    [si], cx
+      lock sub    [0x100f], cx
+      lock sub    [bx], cx
+      lock sub    [bx+si], sp
+      lock xor    [bx+di], dh
+      lock xor    [bp+si], dh
+      lock xor    [si], dh
+      lock xor    [0x3837], dh
+      lock xor    [bx], dh
+      lock xor    [bx+si+65], al
+      lock xor    [bp+si+67], al
+      lock xor    [si+69], al
+      lock xor    [bp+71], al
+      lock xor    [bx+72], al
+      lock xor    [bx+si+97], ah
+      lock xor    [bp+si+99], ah
+      lock xor    [si+101], ah
+      lock xor    [bp+103], ah
+      lock xor    [bx+104], ah
+      lock xor    [bx+si+0x8281], al
+      lock xor    [bp+si+0x8483], al
+      lock xor    [si+0x8685], al
+      lock xor    [bp+0x8887], al
+      lock xor    [bx+0x8988], al
+      lock xor    [bx+si+0xa2a1], ah
+      lock xor    [bp+si+0xa4a3], ah
+      lock xor    [si+0xa6a5], ah
+      lock xor    [bp+0xa8a7], ah
+      lock xor    [bx+0xa9a8], ah
+      lock xor    [bx+si], al
+      lock xor    [bp+si], al
+      lock xor    [si], al
+      lock xor    [0x0807], al
+      lock xor    [bx], al
+      lock xor    [bp+si], si
+      lock xor    [si], si
+      lock xor    [0x3837], si
+      lock xor    [bx], si
+      lock xor    [bx+si], di
+      lock xor    [bx+si+65], ax
+      lock xor    [bp+si+67], ax
+      lock xor    [si+69], ax
+      lock xor    [bp+71], ax
+      lock xor    [bx+72], ax
+      lock xor    [bx+si+73], cx
+      lock xor    [bp+si+75], cx
+      lock xor    [si+77], cx
+      lock xor    [bp+79], cx
+      lock xor    [bx+80], cx
+      lock xor    [bx+si+97], sp
+      lock xor    [bp+si+99], sp
+      lock xor    [si+101], sp
+      lock xor    [bp+103], sp
+      lock xor    [bx+104], sp
+      lock xor    [bx+si+113], si
+      lock xor    [bp+si+115], si
+      lock xor    [si+117], si
+      lock xor    [bp+119], si
+      lock xor    [bx+120], si
+      lock xor    [bx+si+0x8281], ax
+      lock xor    [bp+si+0x8483], ax
+      lock xor    [si+0x8685], ax
+      lock xor    [bp+0x8887], ax
+      lock xor    [bx+0x8988], ax
+      lock xor    [bx+si+0x8a89], cx
+      lock xor    [bp+si+0x8c8b], cx
+      lock xor    [si+0x8e8d], cx
+      lock xor    [bp+0x908f], cx
+      lock xor    [bx+0x9190], cx
+      lock xor    [bx+si+0xa2a1], sp
+      lock xor    [bp+si+0xa4a3], sp
+      lock xor    [si+0xa6a5], sp
+      lock xor    [bp+0xa8a7], sp
+      lock xor    [bx+0xa9a8], sp
+      lock xor    [bx+si+0xb2b1], si
+      lock xor    [bp+si+0xb4b3], si
+      lock xor    [si+0xb6b5], si
+      lock xor    [bp+0xb8b7], si
+      lock xor    [bx+0xb9b8], si
+      lock xor    [bx+si], ax
+      lock xor    [bp+si], ax
+      lock xor    [si], ax
+      lock xor    [0x0807], ax
+      lock xor    [bx], ax
+      lock xor    [bx+si], cx
+      lock xor    [bp+si], cx
+      lock xor    [si], cx
+      lock xor    [0x100f], cx
+      lock xor    [bx], cx
+      lock xor    [bx+si], sp
+      lock xor    [bp+si], sp
+      lock xor    [si], sp
+      lock xor    [0x2827], sp
+      lock xor    [bx], sp
+      lock add    byte ptr [bx+di+0x8382], 0x84
+      lock add    byte ptr [bp+si+0x8483], 0x85
+      lock add    byte ptr [si+0x8685], 0x87
+      lock add    byte ptr [bp+0x8887], 0x89
+      lock add    byte ptr [bx+0x8988], 0x8a
+      lock or byte ptr [bx+si+0x8a89], 0x8b
+      lock or byte ptr [bp+si+0x8c8b], 0x8d
+      lock or byte ptr [si+0x8e8d], 0x8f
+      lock or byte ptr [bp+0x908f], 0x91
+      lock or byte ptr [bx+0x9190], 0x92
+      lock adc    byte ptr [bx+si+0x9291], 0x93
+      lock adc    byte ptr [bp+si+0x9493], 0x95
+      lock adc    byte ptr [si+0x9695], 0x97
+      lock adc    byte ptr [bp+0x9897], 0x99
+      lock adc    byte ptr [bx+0x9998], 0x9a
+      lock sbb    byte ptr [bx+si+0x9a99], 0x9b
+      lock sbb    byte ptr [bp+si+0x9c9b], 0x9d
+      lock sbb    byte ptr [si+0x9e9d], 0x9f
+      lock sbb    byte ptr [bp+0xa09f], 0xa1
+      lock sbb    byte ptr [bx+0xa1a0], 0xa2
+      lock and    byte ptr [bx+si+0xa2a1], 0xa3
+      lock and    byte ptr [bp+si+0xa4a3], 0xa5
+      lock and    byte ptr [si+0xa6a5], 0xa7
+      lock and    byte ptr [bp+0xa8a7], 0xa9
+      lock and    byte ptr [bx+0xa9a8], 0xaa
+      lock sub    byte ptr [bx+si+0xaaa9], 0xab
+      lock sub    byte ptr [bp+si+0xacab], 0xad
+      lock sub    byte ptr [si+0xaead], 0xaf
+      lock sub    byte ptr [bp+0xb0af], 0xb1
+      lock sub    byte ptr [bx+0xb1b0], 0xb2
+      lock xor    byte ptr [bx+si+0xb2b1], 0xb3
+      lock xor    byte ptr [bp+si+0xb4b3], 0xb5
+      lock xor    byte ptr [si+0xb6b5], 0xb7
+      lock xor    byte ptr [bp+0xb8b7], 0xb9
+      lock xor    byte ptr [bx+0xb9b8], 0xba
+      lock add    byte ptr [bx+si], 1
+      lock add    byte ptr [bp+si], 3
+      lock add    byte ptr [si], 5
+      lock add    byte ptr [0x0807], 9
+      lock add    byte ptr [bx], 8
+      lock or byte ptr [bx+si], 9
+      lock or byte ptr [bp+si], 11
+      lock or byte ptr [si], 13
+      lock or byte ptr [0x100f], 17
+      lock or byte ptr [bx], 16
+      lock adc    byte ptr [bx+si], 17
+      lock adc    byte ptr [bp+si], 19
+      lock adc    byte ptr [si], 21
+      lock adc    byte ptr [0x1817], 25
+      lock adc    byte ptr [bx], 24
+      lock sbb    byte ptr [bx+si], 25
+      lock sbb    byte ptr [bp+si], 27
+      lock sbb    byte ptr [si], 29
+      lock sbb    byte ptr [0x201f], 0x21
+      lock sbb    byte ptr [bx], 32
+      lock and    byte ptr [bx+si], 0x21
+      lock and    byte ptr [bp+si], 0x23
+      lock and    byte ptr [si], 0x25
+      lock and    byte ptr [0x2827], 0x29
+      lock and    byte ptr [bx], 0x28
+      lock sub    byte ptr [bx+si], 0x29
+      lock sub    byte ptr [bp+si], 0x2b
+      lock sub    byte ptr [si], 0x2d
+      lock sub    byte ptr [0x302f], 0x31
+      lock sub    byte ptr [bx], 0x30
+      lock xor    byte ptr [bx+si], 0x31
+      lock xor    byte ptr [bp+si], 0x33
+      lock xor    byte ptr [si], 0x35
+      lock xor    byte ptr [0x3837], 0x39
+      lock xor    byte ptr [bx], 0x38
+      lock add    byte ptr [bx+si+65], 0x42
+      lock add    byte ptr [bp+si+67], 0x44
+      lock add    byte ptr [si+69], 0x46
+      lock add    byte ptr [bp+71], 0x48
+      lock add    byte ptr [bx+72], 0x49
+      lock or byte ptr [bx+si+73], 0x4a
+      lock or byte ptr [bp+si+75], 0x4c
+      lock or byte ptr [si+77], 0x4e
+      lock or byte ptr [bp+79], 0x50
+      lock or byte ptr [bx+80], 0x51
+      lock adc    byte ptr [bx+si+81], 0x52
+      lock adc    byte ptr [bp+si+83], 0x54
+      lock adc    byte ptr [si+85], 0x56
+      lock adc    byte ptr [bp+87], 0x58
+      lock adc    byte ptr [bx+88], 0x59
+      lock sbb    byte ptr [bx+si+89], 0x5a
+      lock sbb    byte ptr [bp+si+91], 0x5c
+      lock sbb    byte ptr [si+93], 0x5e
+      lock sbb    byte ptr [bp+95], 0x60
+      lock sbb    byte ptr [bx+96], 0x61
+      lock and    byte ptr [bx+si+97], 0x62
+      lock and    byte ptr [bp+si+99], 0x64
+      lock and    byte ptr [si+101], 0x66
+      lock and    byte ptr [bp+103], 0x68
+      lock and    byte ptr [bx+104], 0x69
+      lock sub    byte ptr [bx+si+105], 0x6a
+      lock sub    byte ptr [bp+si+107], 0x6c
+      lock sub    byte ptr [si+109], 0x6e
+      lock sub    byte ptr [bp+111], 0x70
+      lock sub    byte ptr [bx+112], 0x71
+      lock xor    byte ptr [bx+si+113], 0x72
+      lock xor    byte ptr [bp+si+115], 0x74
+      lock xor    byte ptr [si+117], 0x76
+      lock xor    byte ptr [bp+119], 0x78
+      lock xor    byte ptr [bx+120], 0x79
+      lock add    word ptr [bp+si+0x8483], 0x8685
+      lock add    word ptr [si+0x8685], 0x8887
+      lock add    word ptr [bp+0x8887], 0x8a89
+      lock add    word ptr [bx+0x8988], 0x8b8a
+      lock or word ptr [bx+si+0x8a89], 0x8c8b
+      lock or word ptr [bp+si+0x8c8b], 0x8e8d
+      lock or word ptr [si+0x8e8d], 0x908f
+      lock or word ptr [bp+0x908f], 0x9291
+      lock or word ptr [bx+0x9190], 0x9392
+      lock adc    word ptr [bx+si+0x9291], 0x9493
+      lock adc    word ptr [bp+si+0x9493], 0x9695
+      lock adc    word ptr [si+0x9695], 0x9897
+      lock adc    word ptr [bp+0x9897], 0x9a99
+      lock adc    word ptr [bx+0x9998], 0x9b9a
+      lock sbb    word ptr [bx+si+0x9a99], 0x9c9b
+      lock sbb    word ptr [bp+si+0x9c9b], 0x9e9d
+      lock sbb    word ptr [si+0x9e9d], 0xa09f
+      lock sbb    word ptr [bp+0xa09f], 0xa2a1
+      lock sbb    word ptr [bx+0xa1a0], 0xa3a2
+      lock and    word ptr [bx+si+0xa2a1], 0xa4a3
+      lock and    word ptr [bp+si+0xa4a3], 0xa6a5
+      lock and    word ptr [si+0xa6a5], 0xa8a7
+      lock and    word ptr [bp+0xa8a7], 0xaaa9
+      lock and    word ptr [bx+0xa9a8], 0xabaa
+      lock sub    word ptr [bx+si+0xaaa9], 0xacab
+      lock sub    word ptr [bp+si+0xacab], 0xaead
+      lock sub    word ptr [si+0xaead], 0xb0af
+      lock sub    word ptr [bp+0xb0af], 0xb2b1
+      lock sub    word ptr [bx+0xb1b0], 0xb3b2
+      lock xor    word ptr [bx+si+0xb2b1], 0xb4b3
+      lock xor    word ptr [bp+si+0xb4b3], 0xb6b5
+      lock xor    word ptr [si+0xb6b5], 0xb8b7
+      lock xor    word ptr [bp+0xb8b7], 0xbab9
+      lock xor    word ptr [bx+0xb9b8], 0xbbba
+      lock add    word ptr [bx+si], 0x0201
+      lock add    word ptr [bp+si], 0x0403
+      lock add    word ptr [si], 0x0605
+      lock add    word ptr [0x0807], 0x0a09
+      lock add    word ptr [bx], 0x0908
+      lock or word ptr [bx+si], 0x0a09
+      lock or word ptr [bp+si], 0x0c0b
+      lock or word ptr [si], 0x0e0d
+      lock or word ptr [0x100f], 0x1211
+      lock or word ptr [bx], 0x1110
+      lock adc    word ptr [bx+si], 0x1211
+      lock adc    word ptr [bp+si], 0x1413
+      lock adc    word ptr [si], 0x1615
+      lock adc    word ptr [0x1817], 0x1a19
+      lock adc    word ptr [bx], 0x1918
+      lock sbb    word ptr [bx+si], 0x1a19
+      lock sbb    word ptr [bp+si], 0x1c1b
+      lock sbb    word ptr [si], 0x1e1d
+      lock sbb    word ptr [0x201f], 0x2221
+      lock sbb    word ptr [bx], 0x2120
+      lock and    word ptr [bx+si], 0x2221
+      lock and    word ptr [bp+si], 0x2423
+      lock and    word ptr [si], 0x2625
+      lock and    word ptr [0x2827], 0x2a29
+      lock and    word ptr [bx], 0x2928
+      lock sub    word ptr [bx+si], 0x2a29
+      lock sub    word ptr [bp+si], 0x2c2b
+      lock sub    word ptr [si], 0x2e2d
+      lock sub    word ptr [0x302f], 0x3231
+      lock sub    word ptr [bx], 0x3130
+      lock xor    word ptr [bx+si], 0x3231
+      lock xor    word ptr [bp+si], 0x3433
+      lock xor    word ptr [si], 0x3635
+      lock xor    word ptr [0x3837], 0x3a39
+      lock xor    word ptr [bx], 0x3938
+      lock add    word ptr [bx+si+65], 0x4342
+      lock add    word ptr [bp+si+67], 0x4544
+      lock add    word ptr [si+69], 0x4746
+      lock add    word ptr [bp+71], 0x4948
+      lock add    word ptr [bx+72], 0x4a49
+      lock or word ptr [bx+si+73], 0x4b4a
+      lock or word ptr [bp+si+75], 0x4d4c
+      lock or word ptr [si+77], 0x4f4e
+      lock or word ptr [bp+79], 0x5150
+      lock or word ptr [bx+80], 0x5251
+      lock adc    word ptr [bx+si+81], 0x5352
+      lock adc    word ptr [bp+si+83], 0x5554
+      lock adc    word ptr [si+85], 0x5756
+      lock adc    word ptr [bp+87], 0x5958
+      lock adc    word ptr [bx+88], 0x5a59
+      lock sbb    word ptr [bx+si+89], 0x5b5a
+      lock sbb    word ptr [bp+si+91], 0x5d5c
+      lock sbb    word ptr [si+93], 0x5f5e
+      lock sbb    word ptr [bp+95], 0x6160
+      lock sbb    word ptr [bx+96], 0x6261
+      lock and    word ptr [bx+si+97], 0x6362
+      lock and    word ptr [bp+si+99], 0x6564
+      lock and    word ptr [si+101], 0x6766
+      lock and    word ptr [bp+103], 0x6968
+      lock and    word ptr [bx+104], 0x6a69
+      lock sub    word ptr [bx+si+105], 0x6b6a
+      lock sub    word ptr [bp+si+107], 0x6d6c
+      lock sub    word ptr [si+109], 0x6f6e
+      lock sub    word ptr [bp+111], 0x7170
+      lock sub    word ptr [bx+112], 0x7271
+      lock xor    word ptr [bx+si+113], 0x7372
+      lock xor    word ptr [bp+si+115], 0x7574
+      lock xor    word ptr [si+117], 0x7776
+      lock xor    word ptr [bp+119], 0x7978
+      lock xor    word ptr [bx+120], 0x7a79
+      lock add    word ptr [bx+si+0x8281], 0x8483
+      lock add    word ptr [bx+si], 1
+      lock add    word ptr [bp+si], 3
+      lock add    word ptr [si], 5
+      lock add    word ptr [0x0807], 9
+      lock add    word ptr [bx], 8
+      lock or word ptr [bx+si], 9
+      lock or word ptr [bp+si], 11
+      lock or word ptr [si], 13
+      lock or word ptr [0x100f], 17
+      lock or word ptr [bx], 16
+      lock adc    word ptr [bx+si], 17
+      lock adc    word ptr [bp+si], 19
+      lock adc    word ptr [si], 21
+      lock adc    word ptr [0x1817], 25
+      lock adc    word ptr [bx], 24
+      lock sbb    word ptr [bx+si], 25
+      lock sbb    word ptr [bp+si], 27
+      lock sbb    word ptr [si], 29
+      lock sbb    word ptr [0x201f], 0x21
+      lock sbb    word ptr [bx], 32
+      lock and    word ptr [bx+si], 0x21
+      lock and    word ptr [bp+si], 0x23
+      lock and    word ptr [si], 0x25
+      lock and    word ptr [0x2827], 0x29
+      lock and    word ptr [bx], 0x28
+      lock sub    word ptr [bx+si], 0x29
+      lock sub    word ptr [bp+si], 0x2b
+      lock sub    word ptr [si], 0x2d
+      lock sub    word ptr [0x302f], 0x31
+      lock sub    word ptr [bx], 0x30
+      lock xor    word ptr [bx+si], 0x31
+      lock xor    word ptr [bp+si], 0x33
+      lock xor    word ptr [si], 0x35
+      lock xor    word ptr [0x3837], 0x39
+      lock xor    word ptr [bx], 0x38
+      lock add    word ptr [bx+si+65], 0x42
+      lock add    word ptr [bp+si+67], 0x44
+      lock add    word ptr [si+69], 0x46
+      lock add    word ptr [bp+71], 0x48
+      lock add    word ptr [bx+72], 0x49
+      lock or word ptr [bx+si+73], 0x4a
+      lock or word ptr [bp+si+75], 0x4c
+      lock or word ptr [si+77], 0x4e
+      lock or word ptr [bp+79], 0x50
+      lock or word ptr [bx+80], 0x51
+      lock adc    word ptr [bx+si+81], 0x52
+      lock adc    word ptr [bp+si+83], 0x54
+      lock adc    word ptr [si+85], 0x56
+      lock adc    word ptr [bp+87], 0x58
+      lock adc    word ptr [bx+88], 0x59
+      lock sbb    word ptr [bx+si+89], 0x5a
+      lock sbb    word ptr [bp+si+91], 0x5c
+      lock sbb    word ptr [si+93], 0x5e
+      lock sbb    word ptr [bp+95], 0x60
+      lock sbb    word ptr [bx+96], 0x61
+      lock and    word ptr [bx+si+97], 0x62
+      lock and    word ptr [bp+si+99], 0x64
+      lock and    word ptr [si+101], 0x66
+      lock and    word ptr [bp+103], 0x68
+      lock and    word ptr [bx+104], 0x69
+      lock sub    word ptr [bx+si+105], 0x6a
+      lock sub    word ptr [bp+si+107], 0x6c
+      lock sub    word ptr [si+109], 0x6e
+      lock sub    word ptr [bp+111], 0x70
+      lock sub    word ptr [bx+112], 0x71
+      lock xor    word ptr [bx+si+113], 0x72
+      lock xor    word ptr [bp+si+115], 0x74
+      lock xor    word ptr [si+117], 0x76
+      lock xor    word ptr [bp+119], 0x78
+      lock xor    word ptr [bx+120], 0x79
+      lock xchg   [bx+0x8988], al
+      lock xchg   [bx+si+0x8a89], cl
+      lock xchg   [bp+si+0x8c8b], cl
+      lock xchg   [si+0x8e8d], cl
+      lock xchg   [bp+0x908f], cl
+      lock xchg   [bx+si+0xa2a1], ah
+      lock xchg   [bp+si+0xa4a3], ah
+      lock xchg   [si+0xa6a5], ah
+      lock xchg   [bp+0xa8a7], ah
+      lock xchg   [bx+0xa9a8], ah
+      lock xchg   [bx+si], al
+      lock xchg   [bp+si], al
+      lock xchg   [si], al
+      lock xchg   [0x0807], al
+      lock xchg   [bx], al
+      lock xchg   [bx+si], ah
+      lock xchg   [bp+si], ah
+      lock xchg   [si], ah
+      lock xchg   [0x2827], ah
+      lock xchg   [bx], ah
+      lock xchg   [bx+si+65], al
+      lock xchg   [bp+si+67], al
+      lock xchg   [si+69], al
+      lock xchg   [bp+71], al
+      lock xchg   [bx+72], al
+      lock xchg   [bx+si+97], ah
+      lock xchg   [bp+si+99], ah
+      lock xchg   [si+101], ah
+      lock xchg   [bp+103], ah
+      lock xchg   [bx+104], ah
+      lock xchg   [bx+si+0x8a89], cx
+      lock xchg   [bp+si+0x8c8b], cx
+      lock xchg   [si+0x8e8d], cx
+      lock xchg   [bp+0x908f], cx
+      lock xchg   [bx+0x9190], cx
+      lock xchg   [bx+si+0xa2a1], sp
+      lock xchg   [bp+si+0xa4a3], sp
+      lock xchg   [si+0xa6a5], sp
+      lock xchg   [bp+0xa8a7], sp
+      lock xchg   [bx+0xa9a8], sp
+      lock xchg   [bx+si+0xb2b1], si
+      lock xchg   [bp+si+0xb4b3], si
+      lock xchg   [si+0xb6b5], si
+      lock xchg   [bp+0xb8b7], si
+      lock xchg   [bx+0xb9b8], si
+      lock xchg   [bx+si], ax
+      lock xchg   [bp+si], ax
+      lock xchg   [si], ax
+      lock xchg   [0x0807], ax
+      lock xchg   [bx], ax
+      lock xchg   [bx+si], cx
+      lock xchg   [bp+si], cx
+      lock xchg   [si], cx
+      lock xchg   [0x100f], cx
+      lock xchg   [bx], cx
+      lock xchg   [bx+si], sp
+      lock xchg   [bp+si], sp
+      lock xchg   [si], sp
+      lock xchg   [0x2827], sp
+      lock xchg   [bx], sp
+      lock xchg   [bx+si], si
+      lock xchg   [bp+si], si
+      lock xchg   [si], si
+      lock xchg   [0x3837], si
+      lock xchg   [bx], si
+      lock xchg   [bx+si+65], ax
+      lock xchg   [bp+si+67], ax
+      lock xchg   [si+69], ax
+      lock xchg   [bp+71], ax
+      lock xchg   [bx+72], ax
+      lock xchg   [bx+si+73], cx
+      lock xchg   [bp+si+75], cx
+      lock xchg   [si+77], cx
+      lock xchg   [bp+79], cx
+      lock xchg   [bx+80], cx
+      lock xchg   [bx+si+97], sp
+      lock xchg   [bp+si+99], sp
+      lock xchg   [si+101], sp
+      lock xchg   [bp+103], sp
+      lock xchg   [bx+104], sp
+      lock xchg   [bx+si+113], si
+      lock xchg   [bp+si+115], si
+      lock xchg   [si+117], si
+      lock xchg   [bp+119], si
+      lock xchg   [bx+120], si
+      lock xchg   [bx+si+0x8281], ax
+      lock xchg   [bp+si+0x8483], ax
+      lock xchg   [si+0x8685], ax
+      lock xchg   [bp+0x8887], ax
+      lock xchg   [bx+0x8988], ax
       repne movsb es:[di], ds:[si]
       repne movsw es:[di], ds:[si]
       repne cmpsb ds:[si], es:[di]

@@ -27,7 +27,7 @@ namespace libasm {
 namespace i8086 {
 
 struct EntryInsn : EntryInsnPrefix<Config, Entry> {
-    EntryInsn() : _repeat(0), _segment(0) {}
+    EntryInsn() : _lock(0), _repeat(0), _segment(0) {}
 
     AddrMode dst() const { return flags().dst(); }
     AddrMode src() const { return flags().src(); }
@@ -37,17 +37,23 @@ struct EntryInsn : EntryInsnPrefix<Config, Entry> {
     OprPos extPos() const { return flags().extPos(); }
     OprSize size() const { return flags().size(); }
     bool stringInsn() const { return flags().stringInsn(); }
+    bool lockCapable() const { return flags().lockCapable(); }
     bool leaInsn() const { return prefix() == 0 && opCode() == 0x8D; }
 
+    void setLock(Config::opcode_t lock) { _lock = lock; }
+    Config::opcode_t lock() const { return _lock; }
     void setRepeat(Config::opcode_t repeat) { _repeat = repeat; }
     Config::opcode_t repeat() const { return _repeat; }
     void setSegment(Config::opcode_t segment) { _segment = segment; }
     Config::opcode_t segment() const { return _segment; }
 
+    static constexpr Config::opcode_t LOCK_PREFIX = 0xF0;
     static constexpr Config::opcode_t FWAIT = 0x9B;
     static bool escapeInsn(Config::opcode_t opc) { return opc >= 0xD8 && opc < 0xE0; }
+    static bool repeatInsn(Config::opcode_t opc, CpuType cpuType);
 
 protected:
+    Config::opcode_t _lock;
     Config::opcode_t _repeat;
     Config::opcode_t _segment;
 };
@@ -97,9 +103,14 @@ struct AsmInsn final : AsmInsnImpl<Config>, EntryInsn {
     Error emitTemporaryReal(const float80_t &val80);
 #endif
 
+    void saveAsPrefix() { _prefixSave.rtext(name()).letter(' '); }
+    void prependPrefix();
+
 private:
     Config::opcode_t _modReg;
     bool _hasModReg;
+    char _prefixBuffer[Insn::MAX_NAME + 1];
+    StrBuffer _prefixSave{_prefixBuffer, sizeof(_prefixBuffer)};
 
     uint_fast8_t operandPos() const;
 };
@@ -113,10 +124,12 @@ struct DisInsn final : DisInsnImpl<Config>, EntryInsn {
     bool farInsn() const;
 
     void readModReg();
-    Config::opcode_t modReg() const { return _modReg; }
+    uint_fast8_t mod() const { return (_modReg >> 6) & 3; }
+    uint_fast8_t r_m() const { return _modReg & 7; }
+    uint_fast8_t reg() const { return (_modReg >> 3) & 7; }
 
 private:
-    Config::opcode_t _modReg;
+    uint_fast8_t _modReg;
 };
 
 }  // namespace i8086

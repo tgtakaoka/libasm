@@ -50,7 +50,7 @@ private:
     void emitRelative(AsmInsn &insn, const Operand &op, AddrMode mode) const;
     void emitRegister(AsmInsn &insn, const Operand &op, OprPos pos) const;
     Config::opcode_t encodeSegmentOverride(RegName seg, RegName base) const;
-    void emitModReg(AsmInsn &insn, const Operand &op, OprPos pos) const;
+    void emitModReg(AsmInsn &insn, AddrMode mode, const Operand &op, OprPos pos) const;
     void emitDirect(AsmInsn &insn, const Operand &op, OprPos pos) const;
     void emitOperand(AsmInsn &insn, AddrMode mode, const Operand &op, OprPos pos) const;
     void emitStringOperand(AsmInsn &insn, const Operand &op, RegName seg, RegName index) const;
@@ -63,7 +63,7 @@ private:
         DATA_DT = 'T'   // 80-bit BCD or i8087 Temporary Real
     };
     Error defineConstant(StrScanner &scan, AsmInsn &insn, uint16_t i8087Type);
-    Error encodeRepeatInsn(StrScanner &scan, AsmInsn &insn, uint16_t opc);
+    Error encodePrefix(StrScanner &scan, AsmInsn &insn, uint16_t opc);
     Error processPseudo(StrScanner &scan, Insn &insn) override;
     Error encodeImpl(StrScanner &scan, AsmInsn &insn) const;
     Error encodeImpl(StrScanner &scan, Insn &insn) const override;
@@ -75,6 +75,8 @@ private:
     using PseudosI8086 = pseudo::__Pseudos<PseudoI8086>;
     static const PseudoI8086 PSEUDO_I8086_TABLE[] PROGMEM;
     static const PseudosI8086 PSEUDOS_I8086 PROGMEM;
+    static const PseudoI8086 PREFIX_TABLE[] PROGMEM;
+    static const PseudosI8086 PREFIXES PROGMEM;
 };
 
 }  // namespace i8086

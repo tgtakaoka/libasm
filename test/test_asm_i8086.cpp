@@ -71,6 +71,13 @@ bool fpu_on() {
     return true;
 }
 
+constexpr auto LOCK = 0xF0;
+constexpr auto SEGES = 0x26;
+constexpr auto SEGCS = 0x2E;
+constexpr auto SEGSS = 0x36;
+constexpr auto SEGDS = 0x3E;
+constexpr auto FWAIT = 0x9B;
+
 void set_up() {
     assembler.reset();
 }
@@ -271,6 +278,13 @@ void test_data_transfer() {
     TEST("XCHG [BX+DI+52],SI",    0x87, 0161, 0x34);
     TEST("XCHG [BP+SI+1234H],DI", 0x87, 0272, 0x34, 0x12);
     TEST("XCHG AX,BP",            0225);
+
+    ERRT("LOCK XCHG CH, AL", ILLEGAL_COMBINATION, "CH, AL", LOCK, 0x86, 0305);
+    TEST("LOCK XCHG [SI], CL",     LOCK, 0x86, 0014);
+    TEST("LOCK XCHG CL, [SI]",     LOCK, 0x86, 0014);
+    ERRT("LOCK XCHG AX, BP", ILLEGAL_COMBINATION, "LOCK XCHG", LOCK, 0225);
+    TEST("LOCK XCHG [1234H], DL",  LOCK, 0x86, 0026, 0x34, 0x12);
+    TEST("LOCK XCHG DL, [1234H]",  LOCK, 0x86, 0026, 0x34, 0x12);
 
     TEST("IN   AL,34H", 0xE4, 0x34);
     TEST("IN   AL,DX",  0xEC);
@@ -1695,10 +1709,14 @@ void test_repeat() {
     TEST("REPE",  0xF3);
     TEST("REPZ",  0xF3);
     TEST("REP",   0xF3);
+    ERRT("REP REP",    ILLEGAL_COMBINATION, "REP");
+    ERRT("REPNE REPE", ILLEGAL_COMBINATION, "REPE");
 
     if (v30()) {
         TEST("REPC",  0x65);
         TEST("REPNC", 0x64);
+        ERRT("REP REPC",   ILLEGAL_COMBINATION, "REPC");
+        ERRT("REPNC REPE", ILLEGAL_COMBINATION, "REPE");
     } else {
         ERUI("REPC");
         ERUI("REPNC");
@@ -1807,6 +1825,30 @@ void test_repeat() {
         TEST("SUB4S",                  0x0F, 0x22);
         TEST("SUB4S ES:[DI], DS:[SI]", 0x0F, 0x22);
     }
+}
+
+void test_lock() {
+    TEST("LOCK XCHG [BX], AL",              0xF0, 0x86, 0007);
+    TEST("LOCK ADD BYTE PTR [SI], 1",       0xF0, 0x80, 0004, 1);
+    TEST("LOCK OR  [DI], AX",               0xF0, 0x09, 0x05);
+    TEST("LOCK ADC BYTE PTR [BP+SI+1234H], 5", 0xF0, 0x80, 0222, 0x34, 0x12, 5);
+    TEST("LOCK SBB [BX+DI-52], DX",         0xF0, 0x19, 0121, 0xCC);
+    TEST("LOCK AND BYTE PTR [SI+1234H], 0FFH", 0xF0, 0x80, 0244, 0x34, 0x12, 0xFF);
+    TEST("LOCK SUB [BX], SI",               0xF0, 0x29, 0067);
+    TEST("LOCK XOR [BP+52], CL",            0xF0, 0x30, 0x4E, 0x34);
+    ERRT("LOCK CMP WORD PTR [SI], 1234H",
+         ILLEGAL_COMBINATION, "LOCK CMP",   0xF0, 0x81, 0074, 0x34, 0x12);
+    TEST("LOCK NOT BYTE PTR [DI]",          0xF0, 0xF6, 0025);
+    TEST("LOCK NEG WORD PTR [BX+SI]",       0xF0, 0xF7, 0030);
+    TEST("LOCK INC BYTE PTR [BX+DI+52]",    0xF0, 0xFE, 0101, 0x34);
+    TEST("LOCK DEC WORD PTR [BP+SI+1234H]", 0xF0, 0xFF, 0212, 0x34, 0x12);
+
+    ERRT("LOCK MOV [BX], AL", ILLEGAL_COMBINATION, "LOCK MOV",  0xF0, 0x88, 0007);
+    ERRT("LOCK ADD AL, 1",    ILLEGAL_COMBINATION, "LOCK ADD",  0xF0, 0x04, 0001);
+    ERRT("LOCK PUSH AX",      ILLEGAL_COMBINATION, "LOCK PUSH", 0xF0, 0120);
+    ERRT("LOCK LOCK NOP",     ILLEGAL_COMBINATION, "LOCK");
+
+    TEST("LOCK ADD ES:[BX], AL", 0xF0, 0x26, 0x00, 0007);
 }
 
 void test_control_transfer() {
@@ -2162,11 +2204,6 @@ void test_processor_control() {
 }
 
 void test_segment_override() {
-    constexpr auto SEGES = 0x26;
-    constexpr auto SEGCS = 0x2E;
-    constexpr auto SEGSS = 0x36;
-    constexpr auto SEGDS = 0x3E;
-
     TEST("option optimize-segment, off");
 
     TEST("MOV ES:[BX],AH",    SEGES, 0x88, 0047);
@@ -2300,8 +2337,6 @@ void test_segment_override() {
 #if !defined(LIBASM_I8086_NOFPU)
     if (!fpu_on())
         return;
-
-    constexpr auto FWAIT = 0x9B;
 
     TEST("FLDCW ES:[BX+SI]",       SEGES, 0xD9, 0050);
     TEST("FLDCW DS:[BX+SI]",              0xD9, 0050);
@@ -3257,6 +3292,7 @@ void run_tests(const char *cpu) {
     RUN_TEST(test_arithmetic);
     RUN_TEST(test_logic);
     RUN_TEST(test_repeat);
+    RUN_TEST(test_lock);
     RUN_TEST(test_control_transfer);
     RUN_TEST(test_processor_control);
     RUN_TEST(test_segment_override);

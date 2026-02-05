@@ -50,19 +50,24 @@ constexpr Pseudo PSEUDOS[] PROGMEM = {
 PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
 
 constexpr AsmI8086::PseudoI8086 AsmI8086::PSEUDO_I8086_TABLE[] PROGMEM = {
-    { TEXT_DD,    &AsmI8086::defineConstant,   DATA_DD },
-    { TEXT_DQ,    &AsmI8086::defineConstant,   DATA_DQ },
-    { TEXT_DT,    &AsmI8086::defineConstant,   DATA_DT },
-    { TEXT_FPU,   &AsmI8086::setCoprocessor   },
-    { TEXT_REP,   &AsmI8086::encodeRepeatInsn, 0xF3    },
-    { TEXT_REPC,  &AsmI8086::encodeRepeatInsn, 0x65,   },  //V30
-    { TEXT_REPE,  &AsmI8086::encodeRepeatInsn, 0xF3    },
-    { TEXT_REPNC, &AsmI8086::encodeRepeatInsn, 0x64,   },  //V30
-    { TEXT_REPNE, &AsmI8086::encodeRepeatInsn, 0xF2    },
-    { TEXT_REPNZ, &AsmI8086::encodeRepeatInsn, 0xF2    },
-    { TEXT_REPZ,  &AsmI8086::encodeRepeatInsn, 0xF3    },
+    { TEXT_DD,    &AsmI8086::defineConstant, DATA_DD       },
+    { TEXT_DQ,    &AsmI8086::defineConstant, DATA_DQ       },
+    { TEXT_DT,    &AsmI8086::defineConstant, DATA_DT       },
+    { TEXT_FPU,   &AsmI8086::setCoprocessor },
 };
 PROGMEM constexpr AsmI8086::PseudosI8086 AsmI8086::PSEUDOS_I8086{ARRAY_RANGE(PSEUDO_I8086_TABLE)};
+
+constexpr AsmI8086::PseudoI8086 AsmI8086::PREFIX_TABLE[] PROGMEM = {
+    { TEXT_LOCK,  &AsmI8086::encodePrefix,   AsmInsn::LOCK_PREFIX },
+    { TEXT_REP,   &AsmI8086::encodePrefix,   0xF3          },
+    { TEXT_REPC,  &AsmI8086::encodePrefix,   0x65,         },  //V30
+    { TEXT_REPE,  &AsmI8086::encodePrefix,   0xF3          },
+    { TEXT_REPNC, &AsmI8086::encodePrefix,   0x64,         },  //V30
+    { TEXT_REPNE, &AsmI8086::encodePrefix,   0xF2          },
+    { TEXT_REPNZ, &AsmI8086::encodePrefix,   0xF2          },
+    { TEXT_REPZ,  &AsmI8086::encodePrefix,   0xF3          },
+};
+PROGMEM constexpr AsmI8086::PseudosI8086 AsmI8086::PREFIXES{ARRAY_RANGE(PREFIX_TABLE)};
 
 // clang-format on
 
@@ -428,7 +433,7 @@ Config::opcode_t AsmI8086::encodeSegmentOverride(RegName seg, RegName base) cons
     return segPrefix;
 }
 
-void AsmI8086::emitModReg(AsmInsn &insn, const Operand &op, OprPos pos) const {
+void AsmI8086::emitModReg(AsmInsn &insn, AddrMode mode, const Operand &op, OprPos pos) const {
     uint8_t mod;
     uint8_t modReg;
     switch (op.mode) {
@@ -438,6 +443,8 @@ void AsmI8086::emitModReg(AsmInsn &insn, const Operand &op, OprPos pos) const {
     case M_DX:
     case M_BREG:
     case M_WREG:
+        if (insn.lock() && insn.lockCapable() && (mode == M_BMOD || mode == M_WMOD))
+            insn.setErrorIf(op, ILLEGAL_COMBINATION);
         emitRegister(insn, op, pos);
         break;
     case M_BDIR:
@@ -515,7 +522,7 @@ void AsmI8086::emitOperand(AsmInsn &insn, AddrMode mode, const Operand &op, OprP
     case M_DMEM:
     case M_FMEM:
     case M_MEM:
-        emitModReg(insn, op, pos);
+        emitModReg(insn, mode, op, pos);
         break;
     case M_BDIR:
     case M_WDIR:
@@ -717,17 +724,42 @@ Error AsmI8086::defineConstant(StrScanner &scan, AsmInsn &insn, uint16_t extra) 
     return insn.insnBase().setError(error);
 }
 
-Error AsmI8086::encodeRepeatInsn(StrScanner &scan, AsmInsn &insn, uint16_t opc) {
+Error AsmI8086::encodePrefix(StrScanner &scan, AsmInsn &insn, uint16_t opc) {
     if (endOfLine(scan))
-        return UNKNOWN_DIRECTIVE;
-    if ((opc == 0x64 || opc == 0x65) && _cpuSpec.cpu != V30)
-        return UNKNOWN_DIRECTIVE;
-
-    insn.setRepeat(opc);
-    StrScanner symbol;
-    _parser.readInstruction(scan, symbol);
-    insn.nameBuffer().reset().text(symbol);
+        return encodeImpl(scan, insn);
+    while (true) {
+        if (opc == AsmInsn::LOCK_PREFIX) {
+            if (insn.lock()) {
+                insn.setErrorIf(insn.name(), ILLEGAL_COMBINATION);
+                break;
+            }
+            insn.setLock(opc);
+        } else if (AsmInsn::repeatInsn(opc, _cpuSpec.cpu)) {
+            if (insn.repeat()) {
+                insn.setErrorIf(insn.name(), ILLEGAL_COMBINATION);
+                break;
+            }
+            insn.setRepeat(opc);
+        } else {
+            break;
+        }
+        insn.saveAsPrefix();
+        StrScanner symbol;
+        _parser.readInstruction(scan, symbol);
+        insn.nameBuffer().reset().rtext(symbol);
+        const auto *p = PREFIXES.search(insn.name());
+        if (p == nullptr)
+            break;
+        opc = p->readExtra();
+    }
     return encodeImpl(scan.skipSpaces(), insn);
+}
+
+void AsmInsn::prependPrefix() {
+    if (_prefixSave.len()) {
+        _prefixSave.rtext(name());
+        nameBuffer().reset().rtext(_prefixSave.str());
+    }
 }
 
 Error AsmI8086::setCoprocessor(StrScanner &scan, AsmInsn &insn, uint16_t) {
@@ -738,7 +770,12 @@ Error AsmI8086::setCoprocessor(StrScanner &scan, AsmInsn &insn, uint16_t) {
 
 Error AsmI8086::processPseudo(StrScanner &scan, Insn &_insn) {
     AsmInsn insn(_insn);
-    const auto *p = PSEUDOS_I8086.search(insn.name());
+    auto *p = PREFIXES.search(insn.name());
+    if (p) {
+        p->invoke(this, scan, insn);
+        return _insn.setErrorIf(insn);
+    }
+    p = PSEUDOS_I8086.search(insn.name());
     return p ? p->invoke(this, scan, insn) : Assembler::processPseudo(scan, _insn);
 }
 
@@ -763,12 +800,14 @@ void AsmInsn::emitInsn() {
         pre &= UINT8_MAX;
         emitByte(FWAIT, pos++);
     }
+    if (_lock)
+        emitByte(_lock, pos++);
     if (_repeat)
         emitByte(_repeat, pos++);
     if (_segment)
         emitByte(_segment, pos++);
     if (pre) {
-        if (pre >= 0x100)
+        if (pre > UINT8_MAX)
             emitByte(pre >> 8, pos++);
         emitByte(pre, pos++);
     }
@@ -780,10 +819,14 @@ void AsmInsn::emitInsn() {
 uint_fast8_t AsmInsn::operandPos() const {
     uint_fast8_t pos = length();
     if (pos == 0) {
+        if (_lock)
+            pos++;
+        if (_repeat)
+            pos++;
         if (_segment)
             pos++;
         if (hasPrefix()) {
-            if (prefix() >= 0x100)
+            if (prefix() > UINT8_MAX)
                 pos++;
             pos++;
         }
@@ -795,6 +838,8 @@ uint_fast8_t AsmInsn::operandPos() const {
 }
 
 Error AsmI8086::encodeImpl(StrScanner &scan, AsmInsn &insn) const {
+    if (insn.getError())
+        return insn.getError();
     if (parseOperand(scan, insn.dstOp) && insn.dstOp.hasError())
         return insn.setError(insn.dstOp);
     if (scan.skipSpaces().expect(',')) {
@@ -808,10 +853,16 @@ Error AsmI8086::encodeImpl(StrScanner &scan, AsmInsn &insn) const {
         scan.skipSpaces();
     }
 
-    if (searchName(_cpuSpec, insn))
-        return insn.setError(insn.dstOp, insn);
+    if (searchName(_cpuSpec, insn)) {
+        if (insn.getError() == OPERAND_NOT_ALLOWED)
+            insn.setError(insn.dstOp, insn);
+        return insn.getError();
+    }
     insn.prepairModReg();
+    insn.prependPrefix();
 
+    if (insn.lock() && !insn.lockCapable())
+        insn.setErrorIf(insn.name(), ILLEGAL_COMBINATION);
     if (insn.stringInsn()) {
         emitStringInst(insn, insn.dstOp, insn.srcOp);
     } else {
