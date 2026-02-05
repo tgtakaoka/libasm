@@ -150,6 +150,7 @@ It can read Intel HEX or Motorola S-Record input.
       --extmode        : Extended mode (bool: Z380)
       --fpu            : floating point co-processor (text: 8086, 68000, 32032)
       --indirect-long  : [] for indirect long operand (bool: 6502)
+      --lock-insn      : lock prefix as instruction (bool: 8086)
       --longa          : enable 16-bit accumulator (bool: 6502)
       --longi          : enable 16-bit index registers (bool: 6502)
       --lwordmode      : Long word mode (bool: Z380)

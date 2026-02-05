@@ -77,7 +77,7 @@ enum AddrMode : uint8_t {
     M_ST0 = 32,   // i8087 stack top ST(0)
     M_STI = 33,   // i8087 stack ST(i)
     // Assembler
-    M_DIR = 34,   // Direct mode: [nnnn]
+    M_DIR = 34,  // Direct mode: [nnnn]
 };
 
 enum OprSize : uint8_t {
@@ -114,12 +114,13 @@ struct Entry final : entry::Base<Config::opcode_t> {
         uint16_t _attr;
 
         static constexpr Flags create(CodeFormat cf, AddrMode dst, AddrMode src, AddrMode ext,
-                OprPos dpos, OprPos spos, OprPos epos, OprSize size) {
-            return Flags{mode(dst, src, ext), attr(dpos, spos, epos, size, cf)};
+                OprPos dpos, OprPos spos, OprPos epos, OprSize size, bool lockCapable) {
+            return Flags{mode(dst, src, ext), attr(dpos, spos, epos, size, cf, false, lockCapable)};
         }
 
         static constexpr Flags strInst(CodeFormat cf, AddrMode dst, AddrMode src, OprSize size) {
-            return Flags{mode(dst, src, M_NONE), attr(P_NONE, P_NONE, P_NONE, size, cf, true)};
+            return Flags{
+                    mode(dst, src, M_NONE), attr(P_NONE, P_NONE, P_NONE, size, cf, true, false)};
         }
 
         AddrMode dst() const { return AddrMode((_mode >> dst_gp) & dst_gm); }
@@ -130,6 +131,7 @@ struct Entry final : entry::Base<Config::opcode_t> {
         OprPos extPos() const { return OprPos((_attr >> epos_gp) & epos_gm); }
         OprSize size() const { return OprSize((_attr >> size_gp) & size_gm); }
         bool stringInsn() const { return _attr & strInsn_bm; }
+        bool lockCapable() const { return _attr & lockCapable_bm; }
         uint8_t mask() const {
             static constexpr uint8_t MASK[] PROGMEM = {
                     0000,  // CF_00 = 0
@@ -144,10 +146,11 @@ struct Entry final : entry::Base<Config::opcode_t> {
             return static_cast<uint16_t>((dst << dst_gp) | (src << src_gp) | (ext << ext_gp));
         }
         static constexpr uint16_t attr(OprPos dpos, OprPos spos, OprPos epos, OprSize size,
-                CodeFormat cf, bool strInsn = false) {
+                CodeFormat cf, bool strInsn, bool lockCapable) {
             return static_cast<uint16_t>((dpos << dpos_gp) | (spos << spos_gp) | (epos << epos_gp) |
                                          (size << size_gp) | (cf << cf_gp) |
-                                         (strInsn ? strInsn_bm : 0));
+                                         (strInsn ? strInsn_bm : 0) |
+                                         (lockCapable ? lockCapable_bm : 0));
         }
 
         // |_mode|
@@ -164,12 +167,14 @@ struct Entry final : entry::Base<Config::opcode_t> {
         static constexpr auto size_gp = 7;
         static constexpr auto cf_gp = 10;
         static constexpr auto strInsn_bp = 12;
+        static constexpr auto lockCapable_bp = 13;
         static constexpr uint_fast8_t dpos_gm = 0x7;
         static constexpr uint_fast8_t spos_gm = 0x7;
         static constexpr uint_fast8_t epos_gm = 0x1;
         static constexpr uint_fast8_t size_gm = 0x7;
         static constexpr uint_fast8_t cf_gm = 0x3;
         static constexpr uint_fast16_t strInsn_bm = (1 << strInsn_bp);
+        static constexpr uint_fast16_t lockCapable_bm = (1 << lockCapable_bp);
     };
 
     constexpr Entry(Config::opcode_t opc, Flags flags, const /* PROGMEM */ char *name_P)

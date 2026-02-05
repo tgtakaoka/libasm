@@ -75,6 +75,7 @@ bool fpu_on() {
     return true;
 }
 
+constexpr auto LOCK = 0xF0;
 constexpr auto SEGES = 0x26;
 constexpr auto SEGCS = 0x2E;
 constexpr auto SEGSS = 0x36;
@@ -85,12 +86,21 @@ constexpr auto REP = 0xF3;
 constexpr auto REPNC = 0x64;  // V30
 constexpr auto REPC = 0x65;   // V30
 
+void lockInsn(bool enable) {
+    dis8086.setOption("lock-insn", enable ? "on" : "off");
+}
+
+void repeatInsn(bool enable) {
+    dis8086.setOption("repeat-insn", enable ? "on" : "off");
+}
+
 void set_up() {
     disassembler.reset();
     if (is80186() && !v30()) {
         // Use i80186 with i80C187
         disassembler.setOption("fpu", "on");
     }
+    lockInsn(true);
 }
 
 void tear_down() {
@@ -257,6 +267,14 @@ void test_data_transfer() {
     TEST("XCHG", "[BX+DI+52], SI",    0x87, 0161, 0x34);
     TEST("XCHG", "[BP+SI+1234H], DI", 0x87, 0272, 0x34, 0x12);
     TEST("XCHG", "AX, BP",            0225);
+    lockInsn(false);
+    ERRT("LOCK XCHG", "CH, AL",
+         ILLEGAL_COMBINATION, "XCHG", LOCK, 0x86, 0305);
+    TEST("LOCK XCHG", "[SI], CL",     LOCK, 0x86, 0014);
+    ERRT("LOCK XCHG", "AX, BP",
+         ILLEGAL_COMBINATION, "XCHG", LOCK, 0x87, 0350);
+    TEST("LOCK XCHG", "[1234H], DL",  LOCK, 0x86, 0026, 0x34, 0x12);
+    lockInsn(true);
 
     TEST("IN",   "AL, 34H", 0xE4, 0x34);
     TEST("IN",   "AL, DX",  0xEC);
@@ -375,6 +393,30 @@ void test_arithmetic() {
     TEST("ADD", "AL, 56H",   0x04, 0x56);
     TEST("ADD", "AX, 5678H", 0x05, 0x78, 0x56);
 
+    lockInsn(false);
+    ERRT("LOCK ADD", "AH, CH",
+         ILLEGAL_COMBINATION, "ADD", LOCK, 0x00, 0354);
+    TEST("LOCK ADD", "[DI+52], AL",  LOCK, 0x00, 0105, 0x34);
+    ERRT("LOCK ADD", "CL, [BP+1234H]",
+         ILLEGAL_COMBINATION, "ADD", LOCK, 0x02, 0216, 0x34, 0x12);
+    ERRT("LOCK ADD", "SP, BP",
+         ILLEGAL_COMBINATION, "ADD", LOCK, 0x01, 0354);
+    TEST("LOCK ADD", "[BX+SI], DX",  LOCK, 0x01, 0020);
+    ERRT("LOCK ADD", "BX, [BX+DI+52]",
+         ILLEGAL_COMBINATION, "ADD", LOCK, 0x03, 0131, 0x34);
+    ERRT("LOCK ADD", "CL, 56H",
+         ILLEGAL_COMBINATION, "ADD", LOCK, 0x80, 0301, 0x56);
+    TEST("LOCK ADD", "BYTE PTR [BP+SI+1234H], 56H", LOCK, 0x80, 0202, 0x34, 0x12, 0x56);
+    ERRT("LOCK ADD", "AX, 5678H",
+         ILLEGAL_COMBINATION, "ADD", LOCK, 0x81, 0300, 0x78, 0x56);
+    TEST("LOCK ADD", "WORD PTR [SI], 5678H", LOCK, 0x81, 0004, 0x78, 0x56);
+    ERRT("LOCK ADD", "AX, -16",
+         ILLEGAL_COMBINATION, "ADD", LOCK, 0x83, 0300, 0xF0);
+    TEST("LOCK ADD", "WORD PTR [1234H], 56H", LOCK, 0x83, 0006, 0x34, 0x12, 0x56);
+    ERRT("LOCK ADD", "AL, 56H",   ILLEGAL_COMBINATION, "ADD", LOCK, 0x04, 0x56);
+    ERRT("LOCK ADD", "AX, 5678H", ILLEGAL_COMBINATION, "ADD", LOCK, 0x05, 0x78, 0x56);
+    lockInsn(true);
+
     TEST("ADC", "AL, CL",            0x10, 0310);
     TEST("ADC", "DL, BL",            0x10, 0332);
     TEST("ADC", "AH, CH",            0x10, 0354);
@@ -461,6 +503,14 @@ void test_arithmetic() {
     TEST("INC", "WORD PTR [BP+SI+1234H]", 0xFF, 0202, 0x34, 0x12);
 
     TEST("INC", "BP", 0105);
+
+    lockInsn(false);
+    ERRT("LOCK INC", "CH", ILLEGAL_COMBINATION, "INC", LOCK, 0xFE, 0305);
+    TEST("LOCK INC", "BYTE PTR [SI]",     LOCK, 0xFE, 0004);
+    ERRT("LOCK INC", "BP", ILLEGAL_COMBINATION, "INC", LOCK, 0xFF, 0305);
+    TEST("LOCK INC", "WORD PTR [1234H]",  LOCK, 0xFF, 0006, 0x34, 0x12);
+    ERRT("LOCK INC", "BP", ILLEGAL_COMBINATION, "INC", LOCK, 0105);
+    lockInsn(true);
 
     TEST("AAA", "", 0x37);
     TEST("DAA", "", 0x27);
@@ -1565,7 +1615,7 @@ void test_logic() {
 }
 
 void test_repeat() {
-    disassembler.setOption("repeat-insn", "true");
+    repeatInsn(true);
     TEST("REPNE", "", REPNE);
     TEST("REP",   "", REP);
     if (v30()) {
@@ -1573,7 +1623,7 @@ void test_repeat() {
         TEST("REPC",  "", REPC);
     }
 
-    disassembler.setOption("repeat-insn", "false");
+    repeatInsn(false);
     NMEM("", "", "", REPNE);
     NMEM("", "", "", REP);
     ERRT("", "", OPCODE_HAS_NO_EFFECT, "", REP,   REP);
@@ -1677,6 +1727,31 @@ void test_repeat() {
         TEST("CMP4S", "ES:[DI], DS:[SI]", 0x0F, 0x26);
         TEST("SUB4S", "ES:[DI], DS:[SI]", 0x0F, 0x22);
     }
+}
+
+void test_lock() {
+    lockInsn(false);
+    TEST("LOCK XCHG", "[BX], AL",              0xF0, 0x86, 0007);
+    TEST("LOCK ADD", "BYTE PTR [SI], 1",       0xF0, 0x80, 0004, 1);
+    TEST("LOCK OR",  "[DI], AX",               0xF0, 0x09, 0x05);
+    TEST("LOCK ADC", "BYTE PTR [BP+SI+1234H], 5", 0xF0, 0x80, 0222, 0x34, 0x12, 5);
+    TEST("LOCK SBB", "[BX+DI-52], DX",         0xF0, 0x19, 0121, 0xCC);
+    TEST("LOCK AND", "BYTE PTR [SI+1234H], 0FFH", 0xF0, 0x80, 0244, 0x34, 0x12, 0xFF);
+    TEST("LOCK SUB", "[BX], SI",               0xF0, 0x29, 0067);
+    TEST("LOCK XOR", "[BP+52], CL",            0xF0, 0x30, 0x4E, 0x34);
+    ERRT("LOCK CMP", "WORD PTR [SI], 1234H",
+         ILLEGAL_COMBINATION, "CMP",          0xF0, 0x81, 0074, 0x34, 0x12);
+    TEST("LOCK NOT", "BYTE PTR [DI]",          0xF0, 0xF6, 0025);
+    TEST("LOCK NEG", "WORD PTR [BX+SI]",       0xF0, 0xF7, 0030);
+    TEST("LOCK INC", "BYTE PTR [BX+DI+52]",    0xF0, 0xFE, 0101, 0x34);
+    TEST("LOCK DEC", "WORD PTR [BP+SI+1234H]", 0xF0, 0xFF, 0212, 0x34, 0x12);
+
+    ERRT("LOCK MOV", "[BX], AL", ILLEGAL_COMBINATION, "MOV",  0xF0, 0x88, 0007);
+    ERRT("LOCK ADD", "AL, 1",    ILLEGAL_COMBINATION, "ADD",  0xF0, 0x04, 0001);
+    ERRT("LOCK PUSH", "AX",      ILLEGAL_COMBINATION, "PUSH", 0xF0, 0120);
+    ERRT("", "", OPCODE_HAS_NO_EFFECT, "", 0xF0, 0xF0);
+
+    TEST("LOCK ADD", "ES:[BX], AL", 0xF0, 0x26, 0x00, 0007);
 }
 
 void test_control_transfer() {
@@ -1864,6 +1939,62 @@ void test_processor_control() {
     TEST("WAIT", "", 0x9B);
     TEST("LOCK", "", 0xF0);
     TEST("NOP",  "", 0x90);
+
+    lockInsn(false);
+    NMEM("", "", "", LOCK);
+    ERRT("", "", OPCODE_HAS_NO_EFFECT, "", LOCK, LOCK);
+    TEST("LOCK ADD",  "[SI], CL", LOCK, 0x00, 0014);
+    TEST("LOCK ADD",  "[SI], DX", LOCK, 0x01, 0024);
+    TEST("LOCK ADC",  "[SI], CL", LOCK, 0x10, 0014);
+    TEST("LOCK ADC",  "[SI], DX", LOCK, 0x11, 0024);
+    TEST("LOCK SBB",  "[SI], CL", LOCK, 0x18, 0014);
+    TEST("LOCK SBB",  "[SI], DX", LOCK, 0x19, 0024);
+    TEST("LOCK SUB",  "[SI], CL", LOCK, 0x28, 0014);
+    TEST("LOCK SUB",  "[SI], DX", LOCK, 0x29, 0024);
+    TEST("LOCK OR",   "[SI], CL", LOCK, 0x08, 0014);
+    TEST("LOCK OR",   "[SI], DX", LOCK, 0x09, 0024);
+    TEST("LOCK AND",  "[SI], CL", LOCK, 0x20, 0014);
+    TEST("LOCK AND",  "[SI], DX", LOCK, 0x21, 0024);
+    TEST("LOCK XOR",  "[SI], CL", LOCK, 0x30, 0014);
+    TEST("LOCK XOR",  "[SI], DX", LOCK, 0x31, 0024);
+    TEST("LOCK XCHG", "[SI], CL", LOCK, 0x86, 0014);
+    TEST("LOCK XCHG", "[SI], DX", LOCK, 0x87, 0024);
+    TEST("LOCK ADD", "BYTE PTR [SI], 0CCH", LOCK, 0x80, 0004, 0xCC);
+    TEST("LOCK OR",  "BYTE PTR [SI], 0CCH", LOCK, 0x80, 0014, 0xCC);
+    TEST("LOCK ADC", "BYTE PTR [SI], 0CCH", LOCK, 0x80, 0024, 0xCC);
+    TEST("LOCK SBB", "BYTE PTR [SI], 0CCH", LOCK, 0x80, 0034, 0xCC);
+    TEST("LOCK AND", "BYTE PTR [SI], 0CCH", LOCK, 0x80, 0044, 0xCC);
+    TEST("LOCK SUB", "BYTE PTR [SI], 0CCH", LOCK, 0x80, 0054, 0xCC);
+    TEST("LOCK XOR", "BYTE PTR [SI], 0CCH", LOCK, 0x80, 0064, 0xCC);
+    ERRT("LOCK CMP", "BYTE PTR [SI], 0CCH",
+         ILLEGAL_COMBINATION, "CMP",       LOCK, 0x80, 0074, 0xCC);
+    TEST("LOCK ADD", "WORD PTR [SI], -34H", LOCK, 0x83, 0004, 0xCC);
+    TEST("LOCK OR",  "WORD PTR [SI], -34H", LOCK, 0x83, 0014, 0xCC);
+    TEST("LOCK ADC", "WORD PTR [SI], -34H", LOCK, 0x83, 0024, 0xCC);
+    TEST("LOCK SBB", "WORD PTR [SI], -34H", LOCK, 0x83, 0034, 0xCC);
+    TEST("LOCK AND", "WORD PTR [SI], -34H", LOCK, 0x83, 0044, 0xCC);
+    TEST("LOCK SUB", "WORD PTR [SI], -34H", LOCK, 0x83, 0054, 0xCC);
+    TEST("LOCK XOR", "WORD PTR [SI], -34H", LOCK, 0x83, 0064, 0xCC);
+    ERRT("LOCK CMP", "WORD PTR [SI], -34H",
+         ILLEGAL_COMBINATION, "CMP",        LOCK, 0x83, 0074, 0xCC);
+    TEST("LOCK ADD", "WORD PTR [SI], 1234H", LOCK, 0x81, 0004, 0x34, 0x12);
+    TEST("LOCK OR",  "WORD PTR [SI], 1234H", LOCK, 0x81, 0014, 0x34, 0x12);
+    TEST("LOCK ADC", "WORD PTR [SI], 1234H", LOCK, 0x81, 0024, 0x34, 0x12);
+    TEST("LOCK SBB", "WORD PTR [SI], 1234H", LOCK, 0x81, 0034, 0x34, 0x12);
+    TEST("LOCK AND", "WORD PTR [SI], 1234H", LOCK, 0x81, 0044, 0x34, 0x12);
+    TEST("LOCK SUB", "WORD PTR [SI], 1234H", LOCK, 0x81, 0054, 0x34, 0x12);
+    TEST("LOCK XOR", "WORD PTR [SI], 1234H", LOCK, 0x81, 0064, 0x34, 0x12);
+    ERRT("LOCK CMP", "WORD PTR [SI], 1234H",
+         ILLEGAL_COMBINATION, "CMP",         LOCK, 0x81, 0074, 0x34, 0x12);
+    TEST("LOCK NOT", "BYTE PTR [SI]", LOCK, 0xF6, 0024);
+    TEST("LOCK NEG", "BYTE PTR [SI]", LOCK, 0xF6, 0034);
+    TEST("LOCK NOT", "WORD PTR [SI]", LOCK, 0xF7, 0024);
+    TEST("LOCK NEG", "WORD PTR [SI]", LOCK, 0xF7, 0034);
+    TEST("LOCK INC", "BYTE PTR [SI]", LOCK, 0xFE, 0004);
+    TEST("LOCK DEC", "BYTE PTR [SI]", LOCK, 0xFE, 0014);
+    TEST("LOCK INC", "WORD PTR [SI]", LOCK, 0xFF, 0004);
+    TEST("LOCK DEC", "WORD PTR [SI]", LOCK, 0xFF, 0014);
+    lockInsn(true);
 
     if (is80286()) {
         TEST("ARPL", "[BX+SI], SI",       0x63, 0060);
@@ -3060,6 +3191,7 @@ void run_tests(const char *cpu) {
     RUN_TEST(test_arithmetic);
     RUN_TEST(test_logic);
     RUN_TEST(test_repeat);
+    RUN_TEST(test_lock);
     RUN_TEST(test_control_transfer);
     RUN_TEST(test_processor_control);
     RUN_TEST(test_segment_override);

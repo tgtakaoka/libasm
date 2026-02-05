@@ -17,12 +17,14 @@
 #include "dis_i8086.h"
 #include "reg_i8086.h"
 #include "table_i8086.h"
+#include "text_i8086.h"
 
 namespace libasm {
 namespace i8086 {
 
 using namespace reg;
 using namespace text::common;
+using namespace text::i8086;
 using namespace text::option;
 
 namespace {
@@ -31,6 +33,8 @@ const char OPT_BOOL_SEG_INSN[] PROGMEM = "segment-insn";
 const char OPT_DESC_SEG_INSN[] PROGMEM = "segment override as instruction";
 const char OPT_BOOL_REP_INSN[] PROGMEM = "repeat-insn";
 const char OPT_DESC_REP_INSN[] PROGMEM = "repeat prefix as instruction";
+const char OPT_BOOL_LOCK_INSN[] PROGMEM = "lock-insn";
+const char OPT_DESC_LOCK_INSN[] PROGMEM = "lock prefix as instruction";
 
 }  // namespace
 
@@ -44,7 +48,9 @@ DisI8086::DisI8086(const ValueFormatter::Plugins &plugins)
       _opt_fpu(this, &Config::setFpuName, OPT_TEXT_FPU, OPT_DESC_FPU, &_opt_segInsn),
       _opt_segInsn(
               this, &DisI8086::setSegmentInsn, OPT_BOOL_SEG_INSN, OPT_DESC_SEG_INSN, &_opt_repInsn),
-      _opt_repInsn(this, &DisI8086::setRepeatInsn, OPT_BOOL_REP_INSN, OPT_DESC_REP_INSN) {
+      _opt_repInsn(
+              this, &DisI8086::setRepeatInsn, OPT_BOOL_REP_INSN, OPT_DESC_REP_INSN, &_opt_lockInsn),
+      _opt_lockInsn(this, &DisI8086::setLockInsn, OPT_BOOL_LOCK_INSN, OPT_DESC_LOCK_INSN) {
     reset();
 }
 
@@ -56,6 +62,7 @@ void DisI8086::reset() {
 #endif
     setSegmentInsn(false);
     setRepeatInsn(false);
+    setLockInsn(false);
 }
 
 Error DisI8086::setSegmentInsn(bool enable) {
@@ -65,6 +72,11 @@ Error DisI8086::setSegmentInsn(bool enable) {
 
 Error DisI8086::setRepeatInsn(bool enable) {
     _repInsn = enable;
+    return OK;
+}
+
+Error DisI8086::setLockInsn(bool enable) {
+    _lockInsn = enable;
     return OK;
 }
 
@@ -88,10 +100,10 @@ RegName DisI8086::decodeRegister(const DisInsn &insn, AddrMode mode, OprPos pos)
         break;
     case P_MOD:
     case P_OMOD:
-        num = insn.modReg();
+        num = insn.r_m();
         break;
     case P_REG:
-        num = insn.modReg() >> 3;
+        num = insn.reg();
         break;
     default:
         return REG_UNDEF;
@@ -179,7 +191,7 @@ OprSize operandSize(const DisInsn &insn, AddrMode mode) {
         return SZ_WORD;
     case M_BMOD:
     case M_WMOD:
-        return (insn.modReg() >> 6) == 3 ? insn.size() : SZ_NONE;
+        return insn.mod() == 3 ? insn.size() : SZ_NONE;
     default:
         return SZ_NONE;
     }
@@ -261,15 +273,14 @@ void DisI8086::decodeMemReg(DisInsn &insn, StrBuffer &out, AddrMode mode, OprPos
         outRegName(out.letter('['), REG_BX).letter(']');
         return;
     }
-    const auto mod = insn.modReg() >> 6;
+    const auto mod = insn.mod();
     if (mod == 3) {
         if (mode >= M_BMEM && mode <= M_MEM)
             insn.setErrorIf(out, ILLEGAL_OPERAND);
         const auto regMode = (mode == M_BMOD ? M_BREG : M_WREG);
         outRegister(out, decodeRegister(insn, regMode, pos));
     } else {
-        const auto r_m = insn.modReg() & 07;
-        outMemReg(insn, out, overrideSeg(insn.segment()), mod, r_m);
+        outMemReg(insn, out, overrideSeg(insn.segment()), mod, insn.r_m());
     }
 }
 
@@ -365,7 +376,7 @@ bool validSegOverride(const DisInsn &insn) {
         return true;
     if (insn.stringInsn())
         return true;
-    const auto mod = insn.modReg() >> 6;
+    const auto mod = insn.mod();
     return memoryOperand(insn.dst(), mod) || memoryOperand(insn.src(), mod);
 }
 
@@ -441,7 +452,13 @@ Error DisI8086::searchCodes(DisInsn &insn, StrBuffer &out) const {
     }
 
     while (true) {
-        if ((!_segInsn || _gnuAs) && isSegmentPrefix(opc)) {
+        if (!_lockInsn && opc == DisInsn::LOCK_PREFIX) {
+            if (insn.lock()) {
+                insn.setErrorIf(out, OPCODE_HAS_NO_EFFECT);
+                break;
+            }
+            insn.setLock(opc);
+        } else if ((!_segInsn || _gnuAs) && isSegmentPrefix(opc)) {
             if (insn.segment()) {
                 insn.setErrorIf(out, OPCODE_HAS_NO_EFFECT);
                 break;
@@ -488,10 +505,27 @@ Error DisI8086::searchCodes(DisInsn &insn, StrBuffer &out) const {
     return insn.getError();
 }
 
+StrBuffer &DisI8086::prependLockPrefix(DisInsn &insn, StrBuffer &out) const {
+    // Save main instruction name
+    char name[Insn::MAX_NAME + 1];
+    strncpy(name, insn.name(), Insn::MAX_NAME);
+    name[Insn::MAX_NAME] = 0;
+
+    auto save{out};
+    insn.nameBuffer().reset().over(out).text_P(TEXT_LOCK).letter(' ');
+
+    if (!insn.lockCapable() || insn.mod() == 3)
+        insn.setErrorIf(out.mark(), ILLEGAL_COMBINATION);
+
+    out.text(name).over(insn.nameBuffer());
+    return save.over(out);
+}
+
 StrBuffer &DisI8086::prependRepeatInsn(DisInsn &insn, StrBuffer &out) const {
     // Save main instruction name
     char name[Insn::MAX_NAME + 1];
-    strcpy(name, insn.name());
+    strncpy(name, insn.name(), Insn::MAX_NAME);
+    name[Insn::MAX_NAME] = 0;
 
     DisInsn rep{insn};
     rep.setOpCode(insn.repeat());
@@ -513,11 +547,9 @@ StrBuffer &DisI8086::prependRepeatInsn(DisInsn &insn, StrBuffer &out) const {
 namespace {
 
 bool imulHasSameDstSrc(const DisInsn &insn) {
-    const auto modreg = insn.modReg();
-    const auto reg = (modreg >> 3) & 7;
     return (insn.opCode() & ~2) == 0x69 &&  // IMUL
-           (modreg >> 6) == 3 &&            // regsiter
-           (modreg & 7) == reg;             // dst==src
+           insn.mod() == 3 &&               // regsiter
+           insn.r_m() == insn.reg();        // dst==src
 }
 
 }  // namespace
@@ -560,6 +592,8 @@ Error DisI8086::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) const
         name[insn.nameBuffer().len() - 1] = 0;             // omit 'F' suffix
         insn.nameBuffer().reset().letter('L').text(name);  // add 'L' prefix
     }
+    if (insn.lock())
+        prependLockPrefix(insn, out);
     if (insn.repeat())
         prependRepeatInsn(insn, out);
     if (insn.stringInsn()) {
