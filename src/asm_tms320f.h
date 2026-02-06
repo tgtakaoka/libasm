@@ -49,7 +49,7 @@ private:
     ConfigSetter &configSetter() override { return *this; }
     static const ValueParser::Plugins &defaultPlugins();
 
-    using PseudoTms320F = pseudo::__Pseudo<AsmTms320f>;
+    using PseudoTms320F = pseudo::__Pseudo<AsmTms320f, Insn>;
     using PseudosTms320F = pseudo::__Pseudos<PseudoTms320F>;
     static const PseudoTms320F PSEUDO_TMS320F_TABLE[] PROGMEM;
     static const PseudosTms320F PSEUDOS_TMS320F PROGMEM;

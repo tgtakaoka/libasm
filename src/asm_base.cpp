@@ -103,9 +103,9 @@ Error Assembler::encode(const char *line, Insn &insn, const SymbolTable *symtab)
 }
 
 Error Assembler::processPseudo(StrScanner &scan, Insn &insn) {
-    const auto *p = _pseudos->search(insn);
+    const auto *p = _pseudos->search(insn.name());
     if (p == nullptr)
-        p = PSEUDO_TABLE.search(insn);
+        p = PSEUDO_TABLE.search(insn.name());
     return p ? p->invoke(this, scan, insn) : UNKNOWN_DIRECTIVE;
 }
 

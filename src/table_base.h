@@ -81,6 +81,30 @@ struct Table {
         return found;
     }
 
+    using NameComparator = int (*)(const char *, const ITEM *);
+    const ITEM *binarySearch(const char *name, NameComparator comparator) const {
+        const auto *head = readHead();
+        const auto *tail = readTail();
+        const ITEM *found = nullptr;
+        for (;;) {
+            const auto diff = tail - head;
+            if (diff == 0)
+                break;
+            const auto *middle = head;
+            middle += diff / 2;
+            const auto res = comparator(name, middle);
+            if (res > 0) {
+                head = middle + 1;
+            } else if (res < 0) {
+                tail = middle;
+            } else {
+                // search the head occurrence in table
+                tail = found = middle;
+            }
+        }
+        return found;
+    }
+
 private:
     const /* PROGMEM */ ITEM *const _head_P;
     const /* PROGMEM */ ITEM *const _tail_P;

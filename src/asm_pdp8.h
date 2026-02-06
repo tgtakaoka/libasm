@@ -56,7 +56,7 @@ private:
     static const ValueParser::Plugins &defaultPlugins();
     static const pseudo::Pseudo PSEUDOS[] PROGMEM;
 
-    using PseudoPdp8 = pseudo::__Pseudo<AsmPdp8>;
+    using PseudoPdp8 = pseudo::__Pseudo<AsmPdp8, Insn>;
     using PseudosPdp8 = pseudo::__Pseudos<PseudoPdp8>;
     static const PseudoPdp8 PSEUDO_PDP8_TABLE[] PROGMEM;
     static const PseudosPdp8 PSEUDOS_PDP8 PROGMEM;

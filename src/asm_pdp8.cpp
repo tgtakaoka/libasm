@@ -327,7 +327,7 @@ Error AsmPdp8::defineDec6String(StrScanner &scan, Insn &insn, uint16_t) {
 }
 
 Error AsmPdp8::processPseudo(StrScanner &scan, Insn &insn) {
-    const auto *p = PSEUDOS_PDP8.search(insn);
+    const auto *p = PSEUDOS_PDP8.search(insn.name());
     return p ? p->invoke(this, scan, insn) : Assembler::processPseudo(scan, insn);
 }
 

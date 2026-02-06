@@ -1670,7 +1670,7 @@ Error AsmMc68000::setCoprocessor(StrScanner &scan, Insn &insn, uint16_t procType
 }
 
 Error AsmMc68000::processPseudo(StrScanner &scan, Insn &insn) {
-    const auto *p = PSEUDOS_MC68000.search(insn);
+    const auto *p = PSEUDOS_MC68000.search(insn.name());
     return p ? p->invoke(this, scan, insn) : Assembler::processPseudo(scan, insn);
 }
 

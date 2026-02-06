@@ -28,9 +28,9 @@ struct Assembler;
 
 namespace pseudo {
 
-template <typename APP>
+template <typename APP, typename INSN>
 struct __Pseudo {
-    using Handler = Error (APP::*)(StrScanner &scan, Insn &insn, uint16_t extra);
+    using Handler = Error (APP::*)(StrScanner &scan, INSN &insn, uint16_t extra);
 
     constexpr __Pseudo(const /*PROGMEM*/ char *name_P, Handler handler, uint16_t extra = 0)
         : _name_P(name_P), _handler_P(handler), _extra_P(extra) {}
@@ -39,23 +39,23 @@ struct __Pseudo {
         return reinterpret_cast<const char *>(pgm_read_ptr(&_name_P));
     }
 
-    Error invoke(APP *app, StrScanner &scan, Insn &insn) const {
-        const auto h = handler();
-        return (app->*h)(scan, insn, extra());
+    Error invoke(APP *app, StrScanner &scan, INSN &insn) const {
+        const auto h = readHandler();
+        return (app->*h)(scan, insn, readExtra());
     }
+
+    uint16_t readExtra() const { return pgm_read_word(&_extra_P); }
 
 private:
     const /*PROGMEM*/ char *const _name_P;
     const Handler _handler_P;
     const uint16_t _extra_P;
 
-    Handler handler() const {
+    Handler readHandler() const {
         Handler h;
         memcpy_P(&h, &_handler_P, sizeof(Handler));
         return h;
     }
-
-    uint16_t extra() const { return pgm_read_word(&_extra_P); }
 };
 
 template <typename PSEUDO>
@@ -63,17 +63,17 @@ struct __Pseudos {
     constexpr __Pseudos(const /*PROGMEM*/ PSEUDO *table_P, const /*PROGMEM*/ PSEUDO *end_P)
         : _table(table_P, end_P) {}
 
-    const PSEUDO *search(const Insn &insn) const { return _table.binarySearch(insn, comparator); }
+    const PSEUDO *search(const char *name) const { return _table.binarySearch(name, comparator); }
 
 private:
     const table::Table<PSEUDO> _table;
 
-    static int comparator(const Insn &insn, const /*PROGMEM*/ PSEUDO *item) {
-        return strcasecmp_P(insn.name(), item->name_P());
+    static int comparator(const char *name, const /*PROGMEM*/ PSEUDO *item) {
+        return strcasecmp_P(name, item->name_P());
     }
 };
 
-using Pseudo = __Pseudo<Assembler>;
+using Pseudo = __Pseudo<Assembler, Insn>;
 using Pseudos = __Pseudos<Pseudo>;
 
 }  // namespace pseudo

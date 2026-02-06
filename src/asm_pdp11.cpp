@@ -505,7 +505,7 @@ Error AsmPdp11::setRadix(StrScanner &scan, Insn &insn, uint16_t) {
 }
 
 Error AsmPdp11::processPseudo(StrScanner &scan, Insn &insn) {
-    const auto *p = PSEUDOS_PDP11.search(insn);
+    const auto *p = PSEUDOS_PDP11.search(insn.name());
     return p ? p->invoke(this, scan, insn) : Assembler::processPseudo(scan, insn);
 }
 

@@ -59,7 +59,7 @@ private:
     ConfigSetter &configSetter() override { return *this; }
     static const ValueParser::Plugins &defaultPlugins();
 
-    using PseudoPdp11 = pseudo::__Pseudo<AsmPdp11>;
+    using PseudoPdp11 = pseudo::__Pseudo<AsmPdp11, Insn>;
     using PseudosPdp11 = pseudo::__Pseudos<PseudoPdp11>;
     static const PseudoPdp11 PSEUDO_PDP11_TABLE[] PROGMEM;
     static const PseudosPdp11 PSEUDOS_PDP11 PROGMEM;

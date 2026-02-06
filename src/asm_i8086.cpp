@@ -628,9 +628,8 @@ Error AsmInsn::emitTemporaryReal(const float80_t &val80) {
 
 #endif
 
-Error AsmI8086::defineConstant(StrScanner &scan, Insn &_insn, uint16_t extra) {
+Error AsmI8086::defineConstant(StrScanner &scan, AsmInsn &insn, uint16_t extra) {
     const auto type = static_cast<I8087Type>(extra);
-    AsmInsn insn(_insn);
     ErrorAt error;
     do {
         scan.skipSpaces();
@@ -639,7 +638,7 @@ Error AsmI8086::defineConstant(StrScanner &scan, Insn &_insn, uint16_t extra) {
             auto end = scan;
             const auto err = isString(end, strErr);
             if (err == OK) {
-                generateString(scan, end, _insn, DATA_LONG, strErr);
+                generateString(scan, end, insn.insnBase(), DATA_LONG, strErr);
                 if (error.setErrorIf(strErr) == NO_MEMORY)
                     break;
                 continue;
@@ -715,16 +714,15 @@ Error AsmI8086::defineConstant(StrScanner &scan, Insn &_insn, uint16_t extra) {
         if (error.setErrorIf(exprErr) == NO_MEMORY)
             break;
     } while (scan.skipSpaces().expect(','));
-    return _insn.setError(error);
+    return insn.insnBase().setError(error);
 }
 
-Error AsmI8086::encodeRepeatInsn(StrScanner &scan, Insn &_insn, uint16_t opc) {
+Error AsmI8086::encodeRepeatInsn(StrScanner &scan, AsmInsn &insn, uint16_t opc) {
     if (endOfLine(scan))
         return UNKNOWN_DIRECTIVE;
     if ((opc == 0x64 || opc == 0x65) && _cpuSpec.cpu != V30)
         return UNKNOWN_DIRECTIVE;
 
-    AsmInsn insn(_insn);
     insn.setRepeat(opc);
     StrScanner symbol;
     _parser.readInstruction(scan, symbol);
@@ -732,15 +730,16 @@ Error AsmI8086::encodeRepeatInsn(StrScanner &scan, Insn &_insn, uint16_t opc) {
     return encodeImpl(scan.skipSpaces(), insn);
 }
 
-Error AsmI8086::setCoprocessor(StrScanner &scan, Insn &insn, uint16_t) {
+Error AsmI8086::setCoprocessor(StrScanner &scan, AsmInsn &insn, uint16_t) {
     const auto at = scan;
     const auto error = _opt_fpu.set(scan);
-    return error ? insn.setErrorIf(at, error) : OK;
+    return error ? insn.insnBase().setErrorIf(at, error) : OK;
 }
 
-Error AsmI8086::processPseudo(StrScanner &scan, Insn &insn) {
-    const auto *p = PSEUDOS_I8086.search(insn);
-    return p ? p->invoke(this, scan, insn) : Assembler::processPseudo(scan, insn);
+Error AsmI8086::processPseudo(StrScanner &scan, Insn &_insn) {
+    AsmInsn insn(_insn);
+    const auto *p = PSEUDOS_I8086.search(insn.name());
+    return p ? p->invoke(this, scan, insn) : Assembler::processPseudo(scan, _insn);
 }
 
 void AsmInsn::prepairModReg() {

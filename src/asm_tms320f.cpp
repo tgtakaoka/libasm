@@ -571,7 +571,7 @@ Error AsmTms320f::defineFloat(StrScanner &scan, Insn &insn, uint16_t bits) {
 }
 
 Error AsmTms320f::processPseudo(StrScanner &scan, Insn &insn) {
-    const auto *p = PSEUDOS_TMS320F.search(insn);
+    const auto *p = PSEUDOS_TMS320F.search(insn.name());
     return p ? p->invoke(this, scan, insn) : Assembler::processPseudo(scan, insn);
 }
 
