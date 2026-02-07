@@ -94,6 +94,8 @@ It can generate Intel HEX or Motorola S-Record output.
       -n                : output line number to list file
       -v                : print progress verbosely
       --<name>=<vale>   : extra options (<type> [, <CPU>])
+      --<name>          : --<name>=true
+      --no-<name>       : --<name>=false
       --list-radix      : set listing radix (8, 16) (int)
       --smart-branch    : optimize branch instruction (bool)
       --extmode         : Extended mode (bool: Z380)

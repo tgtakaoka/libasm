@@ -55,7 +55,7 @@ private:
     static constexpr const char *PROG_PREFIX = "dis";
     Disassembler *defaultDisassembler();
     int readBinary(driver::BinMemory &memory, driver::TextReader &input);
-    int parseOptionValue(const char *option);
+    void parseOptionValue(const char *option);
 };
 
 }  // namespace cli

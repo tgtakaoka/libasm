@@ -57,6 +57,12 @@ Error parseInt(StrScanner &scan, int32_t &value) {
 Error OptionBase::parseBoolOption(StrScanner &scan, bool &value) {
     if (parseBool(scan, value) == OK)
         return OK;
+    auto p = scan;
+    if (*p.skipSpaces() == 0) {
+        scan = p;
+        value = true;
+        return OK;
+    }
     int32_t val;
     const auto error = parseIntOption(scan, val);
     if (error == OK)

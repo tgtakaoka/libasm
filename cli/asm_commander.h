@@ -53,7 +53,7 @@ private:
 
     static constexpr const char *PROG_PREFIX = "asm";
     bool defaultDirective();
-    int parseOptionValue(const char *option);
+    void parseOptionValue(const char *option);
     char encoderType(const char *output_name) const;
 };
 

@@ -207,12 +207,18 @@ static const char *basename(const char *str, char sep_char = '/') {
     return sep ? sep + 1 : str;
 }
 
-int DisCommander::parseOptionValue(const char *option) {
+void DisCommander::parseOptionValue(const char *option) {
     const auto equ = strchr(option, '=');
-    if (equ == nullptr)
-        return 1;
-    _options.emplace(std::string(option, equ), std::string(equ + 1));
-    return 0;
+    if (equ) {
+        // --<name>=<value>
+        _options.emplace(std::string(option, equ), std::string(equ + 1));
+    } else if (strncmp(option, "no-", 3) == 0) {
+        // --no-<name>
+        _options.emplace(option + 3, "false");
+    } else {
+        // --<name>
+        _options.emplace(option, "true");
+    }
 }
 
 int DisCommander::parseArgs(int argc, const char **argv) {
@@ -299,10 +305,8 @@ int DisCommander::parseArgs(int argc, const char **argv) {
                 }
                 break;
             case '-':
-                if (parseOptionValue(++opt) == 0)
-                    break;
-                fprintf(stderr, "long option requires option=value\n");
-                return 1;
+                parseOptionValue(++opt);
+                break;
             default:
                 fprintf(stderr, "unknown option: %s\n", opt);
                 return 1;

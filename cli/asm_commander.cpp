@@ -38,14 +38,14 @@ char AsmCommander::encoderType(const char *output_name) const {
             if (_encoder == 'S')
                 fprintf(stderr, "ignore -S option");
             return 'H';
-        }            
+        }
         if (strcasecmp(dot, ".s19") == 0 || strcasecmp(dot, ".s28") == 0 ||
-            strcasecmp(dot, ".s37") == 0) {
+                strcasecmp(dot, ".s37") == 0) {
             if (_encoder == 'H')
                 fprintf(stderr, "ignore -H option");
             return 'S';
-        }            
-    }    
+        }
+    }
     return _encoder;
 }
 
@@ -191,6 +191,8 @@ usage: %s [-o <output>] [-l <list>] <input>
         longOptions |= (dir->commonOptions().head() || dir->options().head());
     if (longOptions) {
         fprintf(stderr, "  --<name>=<vale>   : extra options (<type> [, <CPU>])\n");
+        fprintf(stderr, "  --<name>          : --<name>=true\n");
+        fprintf(stderr, "  --no-<name>       : --<name>=false\n");
         const auto dir = *_driver.begin();
         for (const auto *opt = dir->commonOptions().head(); opt; opt = opt->next()) {
             fprintf(stderr, "  --%-16s: %s (%s)\n", opt->name_P(), opt->description_P(),
@@ -227,12 +229,18 @@ static const char *basename(const char *str, char sep_char = '/') {
     return sep ? sep + 1 : str;
 }
 
-int AsmCommander::parseOptionValue(const char *option) {
+void AsmCommander::parseOptionValue(const char *option) {
     const auto equ = strchr(option, '=');
-    if (equ == nullptr)
-        return 1;
-    _options.emplace(std::string(option, equ), std::string(equ + 1));
-    return 0;
+    if (equ) {
+        // --<name>=<value>
+        _options.emplace(std::string(option, equ), std::string(equ + 1));
+    } else if (strncmp(option, "no-", 3) == 0) {
+        // --no-<name>
+        _options.emplace(option + 3, "false");
+    } else {
+        // --<name>
+        _options.emplace(option, "true");
+    }
 }
 
 int AsmCommander::parseArgs(int argc, const char **argv) {
@@ -294,10 +302,8 @@ int AsmCommander::parseArgs(int argc, const char **argv) {
                 _verbose = true;
                 break;
             case '-':
-                if (parseOptionValue(++opt) == 0)
-                    break;
-                fprintf(stderr, "long option requires option=value\n");
-                return 1;
+                parseOptionValue(++opt);
+                break;
             default:
                 fprintf(stderr, "unknown option: %s\n", opt);
                 return 1;
