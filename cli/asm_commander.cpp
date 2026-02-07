@@ -31,6 +31,24 @@ using namespace libasm::driver;
 AsmCommander::AsmCommander(std::initializer_list<AsmDirective *> directives)
     : _driver(directives) {}
 
+char AsmCommander::encoderType(const char *output_name) const {
+    const auto dot = strrchr(output_name, '.');
+    if (dot) {
+        if (strcasecmp(dot, ".hex") == 0) {
+            if (_encoder == 'S')
+                fprintf(stderr, "ignore -S option");
+            return 'H';
+        }            
+        if (strcasecmp(dot, ".s19") == 0 || strcasecmp(dot, ".s28") == 0 ||
+            strcasecmp(dot, ".s37") == 0) {
+            if (_encoder == 'H')
+                fprintf(stderr, "ignore -H option");
+            return 'S';
+        }            
+    }    
+    return _encoder;
+}
+
 int AsmCommander::assemble() {
     if (_cpu && !_driver.setCpu(_cpu)) {
         fprintf(stderr, "unknown CPU '%s'\n", _cpu);
@@ -99,13 +117,14 @@ int AsmCommander::assemble() {
             fprintf(stderr, "Can't open output file %s\n", _output_name);
             ++errors;
         } else {
-            auto &encoder = _driver.current()->defaultEncoder();
-            if (_encoder == 'S')
-                encoder = MotoSrec::encoder();
-            else if (_encoder == 'H')
-                encoder = IntelHex::encoder();
-            encoder.reset(_record_bytes);
-            encoder.encode(memory, output);
+            const auto type = encoderType(_output_name);
+            auto *encoder = &_driver.current()->defaultEncoder();
+            if (type == 'S')
+                encoder = &MotoSrec::encoder();
+            else if (type == 'H')
+                encoder = &IntelHex::encoder();
+            encoder->reset(_record_bytes);
+            encoder->encode(memory, output);
             if (_verbose) {
                 const auto unit = _driver.current()->config().addressUnit();
                 for (auto block = memory.begin(); block != nullptr; block = block->next()) {
