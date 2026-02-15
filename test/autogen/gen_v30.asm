@@ -1982,9 +1982,9 @@
       REPNC LODSW
       REPNC SCASB
       REPNC SCASW
-      ADD4S ADD4S
-      SUB4S SUB4S
-      CMP4S CMP4S
+      REPNC ADD4S
+      REPNC SUB4S
+      REPNC CMP4S
       REPC INSB
       REPC INSW
       REPC OUTSB
@@ -1999,6 +1999,9 @@
       REPC LODSW
       REPC SCASB
       REPC SCASW
+      REPC ADD4S
+      REPC SUB4S
+      REPC CMP4S
       PUSH   6A69H
       IMUL   BP, [BP+SI+107], 6D6CH
       IMUL   BP, [SI+109], 6F6EH
@@ -5120,6 +5123,9 @@
       LOCK XCHG  [SI+8685H], AX
       LOCK XCHG  [BP+8887H], AX
       LOCK XCHG  [BX+8988H], AX
+      REPNE ADD4S
+      REPNE SUB4S
+      REPNE CMP4S
       REPNE INSB
       REPNE INSW
       REPNE OUTSB
@@ -5134,6 +5140,9 @@
       REPNE LODSW
       REPNE SCASB
       REPNE SCASW
+      REP ADD4S
+      REP SUB4S
+      REP CMP4S
       REP INSB
       REP INSW
       REP OUTSB
@@ -5567,4 +5576,4 @@
       PUSH   CX
       PUSH   SP
       PUSH   SI
-      ORG    04B60H
+      ORG    04B7BH
