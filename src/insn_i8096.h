@@ -31,6 +31,7 @@ struct EntryInsn : EntryInsnPrefix<Config, Entry> {
     AddrMode src1() const { return flags().src1(); }
     AddrMode src2() const { return flags().src2(); }
     void embedAa(AaMode aa) { embed(uint8_t(aa)); }
+    bool mulDivInsn() const;
 };
 
 struct Operand final : ErrorAt {

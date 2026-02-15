@@ -184,6 +184,8 @@ void AsmI8096::emitAop(AsmInsn &insn, AddrMode mode, const Operand &op) const {
         if (waop && !isWreg(val16))
             insn.setErrorIf(op, OPERAND_NOT_ALIGNED);
         if (op.isOK() && !op.val.overflow(UINT8_MAX)) {
+            if (insn.mulDivInsn() && ioAddress(val16))
+                insn.setErrorIf(op, ILLEGAL_REGISTER);
             insn.embedAa(AA_REG);
             insn.emitOperand8(val16);
         } else {
@@ -277,6 +279,8 @@ void AsmI8096::emitOperand(AsmInsn &insn, AddrMode mode, const Operand &op) cons
     case M_COUNT:
     case M_BREG:
         if (op.val.overflow(UINT8_MAX))
+            insn.setErrorIf(op, ILLEGAL_REGISTER);
+        if (insn.mulDivInsn() && ioAddress(val16))
             insn.setErrorIf(op, ILLEGAL_REGISTER);
         insn.emitOperand8(val16);
         return;
