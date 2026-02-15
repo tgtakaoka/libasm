@@ -58,6 +58,8 @@ StrBuffer &DisI8096::outRegister(StrBuffer &out, DisInsn &insn, uint8_t regno, b
         if (ioAddress(regno))
             insn.setError(out, ILLEGAL_REGISTER);
         out.letter('[');
+    } else if (insn.mulDivInsn() && ioAddress(regno)) {
+        insn.setError(out, ILLEGAL_REGISTER);
     }
     outDec(out, regno, 8);
     if (indir)

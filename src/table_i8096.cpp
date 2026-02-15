@@ -396,6 +396,17 @@ Error TableI8096::searchCpuName(StrScanner &name, CpuType &cpuType) const {
     return UNSUPPORTED_CPU;
 }
 
+bool EntryInsn::mulDivInsn() const {
+    const auto pre = prefix();
+    if (pre == 0 || pre == 0xFE) {
+        const auto opc = opCode();
+        const auto opc_lo = opc & 0x0F;
+        const auto opc_hi = opc & 0xF0;
+        return opc_lo >= 0x0C && (opc_hi >= 0x40 && opc_hi <= 0x90);
+    }
+    return false;
+}
+
 const TableI8096 TABLE;
 
 }  // namespace i8096

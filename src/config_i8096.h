@@ -33,7 +33,7 @@ struct Config : ConfigImpl<CpuType, ADDRESS_16BIT, ADDRESS_BYTE, OPCODE_8BIT, EN
 
 protected:
     bool ioAddress(uint16_t addr) const {
-        return addr >= 2 && addr < 0x18;
+        return addr >= 0x02 && addr < 0x18;
     }
 };
 
