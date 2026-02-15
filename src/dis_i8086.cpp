@@ -528,6 +528,7 @@ StrBuffer &DisI8086::prependRepeatInsn(DisInsn &insn, StrBuffer &out) const {
     name[Insn::MAX_NAME] = 0;
 
     DisInsn rep{insn};
+    rep.setPrefix(0);
     rep.setOpCode(insn.repeat());
     searchOpCode(_cpuSpec, rep, out);
     // Save repeat instruction name

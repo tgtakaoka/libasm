@@ -1675,7 +1675,14 @@ void test_repeat() {
 
     if (v30()) {
         TEST("REPNC CMPSB", "", REPNC, 0xA6);
+        TEST("REP SCASW", "", REP, 0xAF);
+        TEST("REP ADD4S", "", REP, 0x0F, 0x20);
+        TEST("REP SUB4S", "", REP, 0x0F, 0x22);
+        TEST("REP CMP4S", "", REP, 0x0F, 0x26);
         TEST("REPC SCASW", "", REPC, 0xAF);
+        TEST("REPC ADD4S", "", REPC, 0x0F, 0x20);
+        TEST("REPC SUB4S", "", REPC, 0x0F, 0x22);
+        TEST("REPC CMP4S", "", REPC, 0x0F, 0x26);
     }
 
     TEST("MOVSB", "", 0xA4);
