@@ -18,6 +18,8 @@
 #include "table_i8086.h"
 #include "text_i8086.h"
 
+#include <stdio.h>
+
 namespace libasm {
 namespace i8086 {
 
@@ -840,6 +842,7 @@ uint_fast8_t AsmInsn::operandPos() const {
 Error AsmI8086::encodeImpl(StrScanner &scan, AsmInsn &insn) const {
     if (insn.getError())
         return insn.getError();
+    printf("@@ encode: %s%s%s %s\n", insn.lock() ? "LOCK" : "", insn.repeat() ? "REP" : "", insn.name(), scan.str());
     if (parseOperand(scan, insn.dstOp) && insn.dstOp.hasError())
         return insn.setError(insn.dstOp);
     if (scan.skipSpaces().expect(',')) {
@@ -853,11 +856,13 @@ Error AsmI8086::encodeImpl(StrScanner &scan, AsmInsn &insn) const {
         scan.skipSpaces();
     }
 
+    printf("@@ search: %s dst=%d src=%d ext=%d\n", insn.name(), insn.dstOp.mode, insn.srcOp.mode, insn.extOp.mode);
     if (searchName(_cpuSpec, insn)) {
         if (insn.getError() == OPERAND_NOT_ALLOWED)
             insn.setError(insn.dstOp, insn);
         return insn.getError();
     }
+    printf("@@  found: %s dst=%d src=%d ext=%d prefix=%02X opc=%02X\n", insn.name(), insn.dst(), insn.src(), insn.ext(), insn.prefix(), insn.opCode());
     insn.prepairModReg();
     insn.prependPrefix();
 
