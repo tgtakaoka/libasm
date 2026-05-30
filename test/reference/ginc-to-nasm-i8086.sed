@@ -1,5 +1,7 @@
-# Transform .ginc (GAS/libasm Intel syntax) into nasm-compatible source.
-# Read by test/Makefile.nasm to produce .ninc build artifacts.
+# Base i8086-family .ginc → nasm transform: converts GAS/libasm Intel
+# syntax into nasm's stricter dialect. Read by test/Makefile.nasm to
+# produce .ninc build artifacts. CPU- and mode-specific overrides live in
+# ginc-to-nasm-i80386.sed (32-bit / .code32) and ginc-to-nasm-i80486.sed.
 
 # nasm uses 'tword' for 10-byte FPU extended precision (libasm/GAS use 'tbyte')
 s/\btbyte\b/tword/g
