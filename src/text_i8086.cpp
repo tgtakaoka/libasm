@@ -221,6 +221,7 @@ constexpr char TEXT_OUTSD[]  PROGMEM = "OUTSD";
 constexpr char TEXT_POPAD[]  PROGMEM = "POPAD";
 constexpr char TEXT_POPFD[]  PROGMEM = "POPFD";
 constexpr char TEXT_PUSHAD[] PROGMEM = "PUSHAD";
+constexpr char TEXT_PUSHD[]  PROGMEM = "PUSHD";
 constexpr char TEXT_PUSHFD[] PROGMEM = "PUSHFD";
 constexpr char TEXT_SCASD[]  PROGMEM = "SCASD";
 constexpr char TEXT_SEGFS[]  PROGMEM = "SEGFS";

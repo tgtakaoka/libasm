@@ -85,8 +85,10 @@ enum AddrMode : uint8_t {
     M_CTLR = 38,  // Control register
     M_DBGR = 39,  // Debug register
     M_TSTR = 40,  // Test register
+    M_CX = 41,   // Counter register CX  (LOOP explicit operand)
+    M_ECX = 42,  // Counter register ECX (LOOP explicit operand)
     // Assembler
-    M_DIR = 41,  // Direct mode: [nnnn]
+    M_DIR = 43,  // Direct mode: [nnnn]
 };
 
 enum OprSize : uint8_t {
@@ -125,9 +127,9 @@ struct Entry final : entry::Base<Config::opcode_t> {
 
         static constexpr Flags create(CodeFormat cf, AddrMode dst, AddrMode src, AddrMode ext,
                 OprPos dpos, OprPos spos, OprPos epos, OprSize size, bool strInsn, bool lockCapable,
-                bool needSize) {
+                bool needSize, bool noData32) {
             return Flags{mode(dst, src, ext),
-                    attr(dpos, spos, epos, size, cf, strInsn, lockCapable, needSize)};
+                    attr(dpos, spos, epos, size, cf, strInsn, lockCapable, needSize, noData32)};
         }
 
         AddrMode dst() const { return AddrMode((_mode >> dst_gp) & dst_gm); }
@@ -140,6 +142,7 @@ struct Entry final : entry::Base<Config::opcode_t> {
         bool stringInsn() const { return _attr & strInsn_bm; }
         bool lockCapable() const { return _attr & lockCapable_bm; }
         bool needSize() const { return _attr & needSize_bm; }
+        bool noData32() const { return _attr & noData32_bm; }
         uint8_t mask() const {
             static constexpr uint8_t MASK[] PROGMEM = {
                     0000,  // CF_00 = 0
@@ -154,11 +157,12 @@ struct Entry final : entry::Base<Config::opcode_t> {
             return static_cast<uint16_t>((dst << dst_gp) | (src << src_gp) | (ext << ext_gp));
         }
         static constexpr uint16_t attr(OprPos dpos, OprPos spos, OprPos epos, OprSize size,
-                CodeFormat cf, bool strInsn, bool lockCapable, bool needSize) {
+                CodeFormat cf, bool strInsn, bool lockCapable, bool needSize, bool noData32) {
             return static_cast<uint16_t>(
                     (dpos << dpos_gp) | (spos << spos_gp) | (epos << epos_gp) | (size << size_gp) |
                     (cf << cf_gp) | (strInsn ? strInsn_bm : 0) |
-                    (lockCapable ? lockCapable_bm : 0) | (needSize ? needSize_bm : 0));
+                    (lockCapable ? lockCapable_bm : 0) | (needSize ? needSize_bm : 0) |
+                    (noData32 ? noData32_bm : 0));
         }
 
         // |_mode|
@@ -177,6 +181,7 @@ struct Entry final : entry::Base<Config::opcode_t> {
         static constexpr auto strInsn_bp = 12;
         static constexpr auto lockCapable_bp = 13;
         static constexpr auto needSize_bp = 14;
+        static constexpr auto noData32_bp = 15;
         static constexpr uint_fast8_t dpos_gm = 0x7;
         static constexpr uint_fast8_t spos_gm = 0x7;
         static constexpr uint_fast8_t epos_gm = 0x1;
@@ -185,6 +190,7 @@ struct Entry final : entry::Base<Config::opcode_t> {
         static constexpr uint_fast16_t strInsn_bm = (1 << strInsn_bp);
         static constexpr uint_fast16_t lockCapable_bm = (1 << lockCapable_bp);
         static constexpr uint_fast16_t needSize_bm = (1 << needSize_bp);
+        static constexpr uint_fast16_t noData32_bm = (1 << noData32_bp);
     };
 
     constexpr Entry(Config::opcode_t opc, Flags flags, const /* PROGMEM */ char *name_P)

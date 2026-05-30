@@ -93,6 +93,7 @@ RegName parseRegName(StrScanner &scan, const CpuSpec &cpuSpec, const ValueParser
             return reg;
         }
     } else if (cpuSpec.cpu == I80386) {
+        p = scan;
         auto base = REG_UNDEF;
         if (p.iexpectText_P(TEXT_REG_CR)) {
             base = REG_CR_BASE;
@@ -103,12 +104,18 @@ RegName parseRegName(StrScanner &scan, const CpuSpec &cpuSpec, const ValueParser
         }
         const auto num = parseRegNumber(p);
         if (num >= 0 && num < 8) {
-            if (base == REG_CR_BASE && num < 4)
+            if (base == REG_CR_BASE && num < 4) {
+                scan = p;
                 return RegName(base + num);
-            if (base == REG_DR_BASE && (num < 4 || num >= 6))
+            }
+            if (base == REG_DR_BASE && (num < 4 || num >= 6)) {
+                scan = p;
                 return RegName(base + num);
-            if (base == REG_TR_BASE && num >= 6)
+            }
+            if (base == REG_TR_BASE && num >= 6) {
+                scan = p;
                 return RegName(base + num);
+            }
         }
     }
     return REG_UNDEF;

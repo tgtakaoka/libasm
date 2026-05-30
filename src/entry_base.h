@@ -42,6 +42,10 @@ struct Base {
         }
     }
 
+    // Compile-time accessor used by static_asserts; mirrors readOpCode()
+    // without going through PROGMEM macros.
+    constexpr OPCODE opCode() const { return _opCode_P; }
+
 private:
     const /* PROGMEM */ char *const _name_P;
     const OPCODE _opCode_P;

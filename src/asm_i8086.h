@@ -34,6 +34,8 @@ struct AsmI8086 final : Assembler, Config {
 
 private:
     const TextOption<Config> _opt_fpu;
+    const BoolOption<Config> _opt_use16;
+    const BoolOption<Config> _opt_use32;
     const BoolOption<AsmI8086> _opt_optimizeSegment;
 
     bool _optimizeSegment;
