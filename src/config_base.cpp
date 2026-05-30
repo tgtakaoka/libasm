@@ -19,6 +19,8 @@
 namespace libasm {
 
 bool ConfigBase::overflowDelta(int32_t s32, uint_fast8_t bitw) {
+    if (bitw >= 32)
+        return false;
     const auto sign = INT32_C(1) << (bitw - 1);
     return s32 < -sign || s32 >= sign;
 }

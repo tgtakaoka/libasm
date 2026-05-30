@@ -264,6 +264,8 @@ StrBuffer &DisI8086::outMemPrefix(DisInsn &insn, StrBuffer &out, RegName seg) co
         auto size = insn.size();
         if (size == SZ_DATA && insn.src() == M_BMOD)
             size = SZ_BYTE;  // MOVSX/MOVZX r16/r32, r/m8
+        if (size == SZ_DATA && insn.src() == M_WMOD16)
+            size = SZ_WORD;  // MOVSX/MOVZX r16/r32, r/m16
         if (size == SZ_DATA)
             size = _cpuSpec.has32bit() && insn.useData32() ? SZ_DWORD : SZ_WORD;
         const auto ptr = decodePrefixName(size);
@@ -404,6 +406,10 @@ void DisI8086::decodeMemReg(DisInsn &insn, StrBuffer &out, AddrMode mode, OprPos
     if (mod == 3) {
         if (mode >= M_BMEM && mode <= M_MEM)
             insn.setErrorIf(out, ILLEGAL_OPERAND);
+        if (mode == M_WMOD16) {  // Ew register form: always 16-bit
+            outRegister(out, decodeWordReg(insn.r_m()));
+            return;
+        }
         auto regMode = (mode == M_BMOD ? M_BREG : M_WREG);
         if (mode == M_DREG)
             regMode = mode;
@@ -470,6 +476,7 @@ void DisI8086::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode, OprPo
         // Fall-through
     case M_BMOD:
     case M_WMOD:
+    case M_WMOD16:
         decodeMemReg(insn, out, mode, pos);
         break;
     case M_VAL1:
@@ -527,7 +534,7 @@ void DisI8086::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode, OprPo
 namespace {
 
 bool memoryOperand(AddrMode mode, uint_fast8_t mod) {
-    if (mode == M_BMOD || mode == M_WMOD)
+    if (mode == M_BMOD || mode == M_WMOD || mode == M_WMOD16)
         return mod != 3;
     return mode >= M_BMEM && mode <= M_WDIR;
 }

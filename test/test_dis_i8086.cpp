@@ -414,15 +414,25 @@ void test_data_transfer() {
         TEST("MOVSX", "EBX, BYTE [BX+DI-52]",    DATA32, 0x0F, 0xBE, 0131, 0xCC);
         TEST("MOVSX", "ESP, BYTE [BP+SI+1234H]", DATA32, 0x0F, 0xBE, 0242, 0x34, 0x12);
 
-        // MOVSX r32,r/m16
-        TEST("MOVSX", "EAX, CX",                 0x0F, 0xBF, 0301);
-        TEST("MOVSX", "ESI, WORD [SI]",          0x0F, 0xBF, 0064);
-        TEST("MOVSX", "EDI, WORD [1234H]",       0x0F, 0xBF, 0076, 0x34, 0x12);
-        TEST("MOVSX", "EAX, WORD [DI-52]",       0x0F, 0xBF, 0105, 0xCC);
-        TEST("MOVSX", "ECX, WORD [BP+1234H]",    0x0F, 0xBF, 0216, 0x34, 0x12);
-        TEST("MOVSX", "EDX, WORD [BX+SI]",       0x0F, 0xBF, 0020);
-        TEST("MOVSX", "EBX, WORD [BX+DI-52]",    0x0F, 0xBF, 0131, 0xCC);
-        TEST("MOVSX", "ESP, WORD [BP+SI+1234H]", 0x0F, 0xBF, 0242, 0x34, 0x12);
+        // MOVSX r16,r/m16 (word dest: operand-size follows the model, no DATA32)
+        TEST("MOVSX", "AX, CX",                 0x0F, 0xBF, 0301);
+        TEST("MOVSX", "SI, WORD [SI]",          0x0F, 0xBF, 0064);
+        TEST("MOVSX", "DI, WORD [1234H]",       0x0F, 0xBF, 0076, 0x34, 0x12);
+        TEST("MOVSX", "AX, WORD [DI-52]",       0x0F, 0xBF, 0105, 0xCC);
+        TEST("MOVSX", "CX, WORD [BP+1234H]",    0x0F, 0xBF, 0216, 0x34, 0x12);
+        TEST("MOVSX", "DX, WORD [BX+SI]",       0x0F, 0xBF, 0020);
+        TEST("MOVSX", "BX, WORD [BX+DI-52]",    0x0F, 0xBF, 0131, 0xCC);
+        TEST("MOVSX", "SP, WORD [BP+SI+1234H]", 0x0F, 0xBF, 0242, 0x34, 0x12);
+
+        // MOVSX r32,r/m16 (dword dest via DATA32; the r/m16 source stays word)
+        TEST("MOVSX", "EAX, CX",                 DATA32, 0x0F, 0xBF, 0301);
+        TEST("MOVSX", "ESI, WORD [SI]",          DATA32, 0x0F, 0xBF, 0064);
+        TEST("MOVSX", "EDI, WORD [1234H]",       DATA32, 0x0F, 0xBF, 0076, 0x34, 0x12);
+        TEST("MOVSX", "EAX, WORD [DI-52]",       DATA32, 0x0F, 0xBF, 0105, 0xCC);
+        TEST("MOVSX", "ECX, WORD [BP+1234H]",    DATA32, 0x0F, 0xBF, 0216, 0x34, 0x12);
+        TEST("MOVSX", "EDX, WORD [BX+SI]",       DATA32, 0x0F, 0xBF, 0020);
+        TEST("MOVSX", "EBX, WORD [BX+DI-52]",    DATA32, 0x0F, 0xBF, 0131, 0xCC);
+        TEST("MOVSX", "ESP, WORD [BP+SI+1234H]", DATA32, 0x0F, 0xBF, 0242, 0x34, 0x12);
 
         // MOVZX r16,r/m8
         TEST("MOVZX", "AX, CL",                 0x0F, 0xB6, 0301);
@@ -444,15 +454,25 @@ void test_data_transfer() {
         TEST("MOVZX", "EBX, BYTE [BX+DI-52]",    DATA32, 0x0F, 0xB6, 0131, 0xCC);
         TEST("MOVZX", "ESP, BYTE [BP+SI+1234H]", DATA32, 0x0F, 0xB6, 0242, 0x34, 0x12);
 
-        // MOVZX r32,r/m16
-        TEST("MOVZX", "EAX, CX",                 0x0F, 0xB7, 0301);
-        TEST("MOVZX", "ESI, WORD [SI]",          0x0F, 0xB7, 0064);
-        TEST("MOVZX", "EDI, WORD [1234H]",       0x0F, 0xB7, 0076, 0x34, 0x12);
-        TEST("MOVZX", "EAX, WORD [DI-52]",       0x0F, 0xB7, 0105, 0xCC);
-        TEST("MOVZX", "ECX, WORD [BP+1234H]",    0x0F, 0xB7, 0216, 0x34, 0x12);
-        TEST("MOVZX", "EDX, WORD [BX+SI]",       0x0F, 0xB7, 0020);
-        TEST("MOVZX", "EBX, WORD [BX+DI-52]",    0x0F, 0xB7, 0131, 0xCC);
-        TEST("MOVZX", "ESP, WORD [BP+SI+1234H]", 0x0F, 0xB7, 0242, 0x34, 0x12);
+        // MOVZX r16,r/m16 (word dest: operand-size follows the model, no DATA32)
+        TEST("MOVZX", "AX, CX",                 0x0F, 0xB7, 0301);
+        TEST("MOVZX", "SI, WORD [SI]",          0x0F, 0xB7, 0064);
+        TEST("MOVZX", "DI, WORD [1234H]",       0x0F, 0xB7, 0076, 0x34, 0x12);
+        TEST("MOVZX", "AX, WORD [DI-52]",       0x0F, 0xB7, 0105, 0xCC);
+        TEST("MOVZX", "CX, WORD [BP+1234H]",    0x0F, 0xB7, 0216, 0x34, 0x12);
+        TEST("MOVZX", "DX, WORD [BX+SI]",       0x0F, 0xB7, 0020);
+        TEST("MOVZX", "BX, WORD [BX+DI-52]",    0x0F, 0xB7, 0131, 0xCC);
+        TEST("MOVZX", "SP, WORD [BP+SI+1234H]", 0x0F, 0xB7, 0242, 0x34, 0x12);
+
+        // MOVZX r32,r/m16 (dword dest via DATA32; the r/m16 source stays word)
+        TEST("MOVZX", "EAX, CX",                 DATA32, 0x0F, 0xB7, 0301);
+        TEST("MOVZX", "ESI, WORD [SI]",          DATA32, 0x0F, 0xB7, 0064);
+        TEST("MOVZX", "EDI, WORD [1234H]",       DATA32, 0x0F, 0xB7, 0076, 0x34, 0x12);
+        TEST("MOVZX", "EAX, WORD [DI-52]",       DATA32, 0x0F, 0xB7, 0105, 0xCC);
+        TEST("MOVZX", "ECX, WORD [BP+1234H]",    DATA32, 0x0F, 0xB7, 0216, 0x34, 0x12);
+        TEST("MOVZX", "EDX, WORD [BX+SI]",       DATA32, 0x0F, 0xB7, 0020);
+        TEST("MOVZX", "EBX, WORD [BX+DI-52]",    DATA32, 0x0F, 0xB7, 0131, 0xCC);
+        TEST("MOVZX", "ESP, WORD [BP+SI+1234H]", DATA32, 0x0F, 0xB7, 0242, 0x34, 0x12);
     }
 
     // PUSH r16

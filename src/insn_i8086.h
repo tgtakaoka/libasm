@@ -39,6 +39,7 @@ struct EntryInsn : EntryInsnPrefix<Config, Entry> {
     bool stringInsn() const { return flags().stringInsn(); }
     bool lockCapable() const { return flags().lockCapable(); }
     bool needSize() const { return flags().needSize(); }
+    bool noData32() const { return flags().noData32(); }
     bool farInsn() const;
     bool leaInsn() const;
 
@@ -50,6 +51,7 @@ struct EntryInsn : EntryInsnPrefix<Config, Entry> {
     Config::opcode_t segment() const { return _segment; }
 
     void setModel(bool model32) { _model32 = model32; }
+    bool model32() const { return _model32; }
 
     static constexpr Config::opcode_t DATA32 = 0x66;
     static constexpr Config::opcode_t ADDR32 = 0x67;
@@ -72,6 +74,7 @@ struct Operand final : ErrorAt {
     RegName seg;
     RegName reg;
     RegName index;
+    uint8_t scale;
     bool hasDisp;
     Value val;
     Value segval;
@@ -81,17 +84,22 @@ struct Operand final : ErrorAt {
           seg(REG_UNDEF),
           reg(REG_UNDEF),
           index(REG_UNDEF),
+          scale(1),
           hasDisp(false),
           val(),
           segval() {}
     uint8_t encodeMod() const;
     uint8_t encodeR_m() const;
+    uint8_t encodeMod32() const;
+    uint8_t encodeR_m32() const;
+    uint8_t encodeSib32() const;
     AddrMode immediateMode() const;
     void print(const char *) const;
 };
 
 struct AsmInsn final : AsmInsnImpl<Config>, EntryInsn {
-    AsmInsn(Insn &insn) : AsmInsnImpl(insn), _modReg(0), _hasModReg(false) {}
+    AsmInsn(Insn &insn)
+        : AsmInsnImpl(insn), _modReg(0), _hasModReg(false), _data32(0), _addr32(0) {}
 
     Operand dstOp, srcOp, extOp;
 
@@ -101,9 +109,17 @@ struct AsmInsn final : AsmInsnImpl<Config>, EntryInsn {
     void embedModReg(Config::opcode_t data);
     Config::opcode_t modReg() const { return _modReg; }
 
+    void setData32() { _data32 = DATA32; }
+    bool hasData32Prefix() const { return _data32 != 0; }
+
+    void setAddr32() { _addr32 = ADDR32; }
+    bool hasAddr32Prefix() const { return _addr32 != 0; }
+    bool useAddr32() const { return _model32 ^ (_addr32 != 0); }
+
     void emitInsn();
     Error emitOperand8(uint8_t val8) { return emitByte(val8, operandPos()); }
     Error emitOperand16(uint16_t val16) { return emitUint16(val16, operandPos()); }
+    Error emitOperand32(uint32_t val32) { return emitUint32Le(val32, operandPos()); }
 #if !defined(LIBASM_ASM_NOFLOAT)
     Error emitFloat32(const float80_t &value) { return emitFloat32Le(value); }
     Error emitFloat64(const float80_t &value) { return emitFloat64Le(value); }
@@ -114,9 +130,17 @@ struct AsmInsn final : AsmInsnImpl<Config>, EntryInsn {
     void saveAsPrefix() { _prefixSave.rtext(name()).letter(' '); }
     void prependPrefix();
 
+    // Emit DATA32/ADDR32 prefixes when the user's operand sizing doesn't match
+    // the current model's defaults (e.g. 32-bit reg in use16, or 16-bit reg
+    // in use32). Driven by the parsed operand modes and the table entry's
+    // expected modes.
+    void applyAutoSizePrefix();
+
 private:
     Config::opcode_t _modReg;
     bool _hasModReg;
+    Config::opcode_t _data32;
+    Config::opcode_t _addr32;
     char _prefixBuffer[Insn::MAX_NAME + 1];
     StrBuffer _prefixSave{_prefixBuffer, sizeof(_prefixBuffer)};
 

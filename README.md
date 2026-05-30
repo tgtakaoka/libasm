@@ -113,6 +113,8 @@ It can generate Intel HEX or Motorola S-Record output.
       --reg-alias       : emit register alias for the current setrp value (bool: Z8)
       --short-direct    : optimize direct addressing (bool: Z8001)
       --use-register    : enable register name Rn (bool: 1802)
+      --use16           : 16-bit program model (bool: 8086)
+      --use32           : 32-bit program model (bool: 8086)
       --zilog-syntax    : Use Zilog syntax (bool: 8080)
 
 ## Disassembler command line interface
