@@ -31,6 +31,8 @@ using namespace text::option;
 namespace {
 constexpr char OPT_BOOL_OPTIMIZE_SEGMENT[] PROGMEM = "optimize-segment";
 constexpr char OPT_DESC_OPTIMIZE_SEGMENT[] PROGMEM = "optimize segment override";
+constexpr char OPT_BOOL_GNU_AS[] PROGMEM = "gnu-as";
+constexpr char OPT_DESC_GNU_AS[] PROGMEM = "GNU assembler compatible";
 
 constexpr char TEXT_DQ[]   PROGMEM = "dq";
 constexpr char TEXT_DT[]   PROGMEM = "dt";
@@ -92,7 +94,8 @@ AsmI8086::AsmI8086(const ValueParser::Plugins &plugins)
       _opt_use16(this, &Config::setUse16, OPT_BOOL_USE16, OPT_DESC_USE16, &_opt_use32),
       _opt_use32(this, &Config::setUse32, OPT_BOOL_USE32, OPT_DESC_USE32, &_opt_optimizeSegment),
       _opt_optimizeSegment(this, &AsmI8086::setOptimizeSegment, OPT_BOOL_OPTIMIZE_SEGMENT,
-              OPT_DESC_OPTIMIZE_SEGMENT) {
+              OPT_DESC_OPTIMIZE_SEGMENT, &_opt_gnuAs),
+      _opt_gnuAs(this, &AsmI8086::setGnuAs, OPT_BOOL_GNU_AS, OPT_DESC_GNU_AS) {
     reset();
 }
 
@@ -100,10 +103,16 @@ void AsmI8086::reset() {
     Assembler::reset();
     setFpuType(FPU_NONE);
     setOptimizeSegment(true);
+    setGnuAs(false);
 }
 
 Error AsmI8086::setOptimizeSegment(bool enable) {
     _optimizeSegment = enable;
+    return OK;
+}
+
+Error AsmI8086::setGnuAs(bool enable) {
+    _gnuAs = enable;
     return OK;
 }
 
@@ -1157,6 +1166,15 @@ Error AsmI8086::encodeImpl(StrScanner &scan, AsmInsn &insn) const {
 
     if (insn.lock() && !insn.lockCapable())
         insn.setErrorIf(insn.name(), ILLEGAL_COMBINATION);
+    // GAS with -mtune=i486 encodes a shift/rotate by 1 as the long form
+    // (C0/C1 + imm8=1) instead of the short form (D0/D1). Match that in
+    // GNU-as mode only; the default keeps the canonical short form. The page
+    // prefix holds the opcode byte (0xD0/0xD1); the reg-field op is in modReg.
+    const auto pre = insn.prefix();
+    const auto shiftByOneLong = _gnuAs && _cpuSpec.cpu >= I80486 &&
+                                insn.srcOp.mode == M_VAL1 && (pre == 0xD0 || pre == 0xD1);
+    if (shiftByOneLong)
+        insn.setPrefix(pre - 0x10);
     if (insn.stringInsn()) {
         emitStringInst(insn, insn.dstOp, insn.srcOp);
     } else {
@@ -1165,6 +1183,8 @@ Error AsmI8086::encodeImpl(StrScanner &scan, AsmInsn &insn) const {
         emitOperand(insn, insn.ext(), insn.extOp, insn.extPos());
     }
     insn.emitInsn();
+    if (shiftByOneLong)
+        insn.emitOperand8(1);
     return insn.setError(insn);
 }
 

@@ -75,6 +75,9 @@ bool fpu_on() {
     } else if (is80386()) {
         TEST("FPU ON");
         EQUALS_P("80386", "80387", asm8086.fpu_P());
+    } else if (is80486()) {
+        TEST("FPU ON");
+        EQUALS_P("80486", "80487", asm8086.fpu_P());
     } else {
         EQUALS("unknown CPU", "", asm8086.cpu_P());
         return false;
@@ -1871,7 +1874,7 @@ void test_control_transfer() {
     ATEST(0x01000, "CALL 09002H",                             0xE8, 0xFF, 0x7F);
     if (is80286()) {
         AERRT(0xFFF000, "CALL $+8002H", OVERFLOW_RANGE,    "$+8002H", 0xE8, 0xFF, 0x7F);
-    } else if (is80386()) {
+    } else if (is80386() || is80486()) {
         AERRT(0xFF000,  "CALL $+8002H", OVERWRAP_SEGMENT,  "$+8002H", 0xE8, 0xFF, 0x7F);
     } else {
         AERRT(0xFF000,  "CALL $+8002H", OVERFLOW_RANGE,    "$+8002H", 0xE8, 0xFF, 0x7F);
@@ -1880,7 +1883,7 @@ void test_control_transfer() {
     AERRT(0x01000, "CALL 09003H", OPERAND_TOO_FAR,  "09003H", 0xE8, 0x00, 0x80);
     ATEST(0x01000, "CALL 00F81H",                             0xE8, 0x7E, 0xFF);
     ATEST(0x09000, "CALL 01003H",                             0xE8, 0x00, 0x80);
-    if (is80386()) {
+    if (is80386() || is80486()) {
         AERRT(0x01000, "CALL $-7FFDH", OVERWRAP_SEGMENT, "$-7FFDH", 0xE8, 0x00, 0x80);
     } else {
         AERRT(0x01000, "CALL $-7FFDH", OVERFLOW_RANGE,   "$-7FFDH", 0xE8, 0x00, 0x80);
@@ -1922,7 +1925,7 @@ void test_control_transfer() {
     AERRT(0x0FFF0, "JMP 10071H", OVERWRAP_SEGMENT, "10071H", 0xEB, 0x7F);
     if (is80286()) {
         AERRT(0xFFFFF0, "JMP $+81H", OVERFLOW_RANGE,   "$+81H", 0xEB, 0x7F);
-    } else if (is80386()) {
+    } else if (is80386() || is80486()) {
         AERRT(0xFFFF0,  "JMP $+81H", OVERWRAP_SEGMENT, "$+81H", 0xEB, 0x7F);
     } else {
         AERRT(0xFFFF0,  "JMP $+81H", OVERFLOW_RANGE,   "$+81H", 0xEB, 0x7F);
@@ -1932,7 +1935,7 @@ void test_control_transfer() {
     AERRT(0x0F000, "JMP 17002H", OVERWRAP_SEGMENT, "17002H", 0xE9, 0xFF, 0x7F);
     if (is80286()) {
         AERRT(0xFFF000, "JMP $+8002H", OVERFLOW_RANGE,   "$+8002H", 0xE9, 0xFF, 0x7F);
-    } else if (is80386()) {
+    } else if (is80386() || is80486()) {
         AERRT(0xFF000,  "JMP $+8002H", OVERWRAP_SEGMENT, "$+8002H", 0xE9, 0xFF, 0x7F);
     } else {
         AERRT(0xFF000,  "JMP $+8002H", OVERFLOW_RANGE,   "$+8002H", 0xE9, 0xFF, 0x7F);
@@ -1940,7 +1943,7 @@ void test_control_transfer() {
     AERRT(0x01000, "JMP 09003H", OPERAND_TOO_FAR,  "09003H", 0xE9, 0x00, 0x80);
     ATEST(0x01000, "JMP 00F82H",                             0xEB, 0x80);
     AERRT(0x10010, "JMP 0FF92H", OVERWRAP_SEGMENT, "0FF92H", 0xEB, 0x80);
-    if (is80386()) {
+    if (is80386() || is80486()) {
         AERRT(0x00010, "JMP $-7EH", OVERWRAP_SEGMENT, "$-7EH", 0xEB, 0x80);
     } else {
         AERRT(0x00010, "JMP $-7EH", OVERFLOW_RANGE,   "$-7EH", 0xEB, 0x80);
@@ -1948,7 +1951,7 @@ void test_control_transfer() {
     ATEST(0x01000, "JMP 00F81H",                             0xE9, 0x7E, 0xFF);
     ATEST(0x09000, "JMP 01003H",                             0xE9, 0x00, 0x80);
     AERRT(0x11000, "JMP 09003H", OVERWRAP_SEGMENT, "09003H", 0xE9, 0x00, 0x80);
-    if (is80386()) {
+    if (is80386() || is80486()) {
         AERRT(0x01000, "JMP $-7FFDH", OVERWRAP_SEGMENT, "$-7FFDH", 0xE9, 0x00, 0x80);
     } else {
         AERRT(0x01000, "JMP $-7FFDH", OVERFLOW_RANGE,   "$-7FFDH", 0xE9, 0x00, 0x80);
@@ -2031,19 +2034,19 @@ void test_control_transfer() {
     AERRT(0x0FFC0, "JS $+129", OVERWRAP_SEGMENT,    "$+129", 0x78, 0x7F);
     if (is80286()) {
         AERRT(0xFFFFC0, "JS $+129", OVERFLOW_RANGE,   "$+129", 0x78, 0x7F);
-    } else if (is80386()) {
+    } else if (is80386() || is80486()) {
         AERRT(0xFFFC0,  "JS $+129", OVERWRAP_SEGMENT, "$+129", 0x78, 0x7F);
     } else {
         AERRT(0xFFFC0,  "JS $+129", OVERFLOW_RANGE,   "$+129", 0x78, 0x7F);
     }
-    if (is80386()) {
+    if (is80386() || is80486()) {
         ATEST(0x01000, "JS $+130", 0x0F, 0x88, 0x7E, 0x00);
     } else {
         AERRT(0x01000, "JS $+130", OPERAND_TOO_FAR, "$+130", 0x78, 0x80);
     }
     ATEST(0x01000, "JS $-126",                               0x78, 0x80);
     AERRT(0x10040, "JS $-126", OVERWRAP_SEGMENT,    "$-126", 0x78, 0x80);
-    if (is80386()) {
+    if (is80386() || is80486()) {
         AERRT(0x00040, "JS $-126", OVERWRAP_SEGMENT, "$-126", 0x78, 0x80);
         ATEST(0x01000, "JS $-127", 0x0F, 0x88, 0x7D, 0xFF);
     } else {
@@ -2102,7 +2105,7 @@ void test_processor_control() {
     TEST("CLI ", 0xFA);
     TEST("STI ", 0xFB);
     TEST("HLT ", 0xF4);
-    TEST("WAIT", 0x9B);
+    TEST("WAIT", FWAIT);
     TEST("LOCK", LOCK);
     TEST("NOP ", 0x90);
 
@@ -3189,7 +3192,7 @@ void test_error() {
     ERRT("MOV [SI], 34H", OPERAND_NOT_ALLOWED, "[SI], 34H");
     ERRT("INC [SI]",      OPERAND_NOT_ALLOWED, "[SI]");
 
-    if (is80386()) {
+    if (is80386() || is80486()) {
         ATEST(0x1000, "JE $+130", 0x0F, 0x84, 0x7E, 0x00);
         ATEST(0x1000, "JE $-127", 0x0F, 0x84, 0x7D, 0xFF);
     } else {
@@ -3544,7 +3547,9 @@ void test_i80386_d_suffix() {
     TEST("PUSHFD", DATA32, 0x9C);
     TEST("POPFD",  DATA32, 0x9D);
     TEST("IRETD",  DATA32, 0xCF);
-    // JECXZ auto-adds ADDR32 prefix
+    // JECXZ auto-adds ADDR32 prefix; instruction is 3 bytes
+    // (prefix + opcode + disp8) so the displacement is measured from
+    // address + 3.
     ATEST(0x1000, "JECXZ $",     ADDR32, 0xE3, 0xFD);
     ATEST(0x1000, "JECXZ $+3",   ADDR32, 0xE3, 0x00);
     // LOOP/LOOPcc with explicit ECX in use16: ADDR32 prefix; 3-byte instruction
@@ -3650,7 +3655,7 @@ void test_i80386_32bit_addressing() {
     // Explicit ADDR32 prefix keyword
     TEST("ADDR32 XOR AX, [EAX]", ADDR32, 0x33, 0000);
     TEST("ADDR32 XOR AX, [EBX]", ADDR32, 0x33, 0003);
-    // LOCK prefix is emitted before ADDR32 (emit order: lock, seg, addr32, data32)
+    // GAS/nasm order: addr32, data32, lock (lock follows the size prefixes)
     TEST("ADDR32 LOCK ADD [EAX], BX",  ADDR32, LOCK, 0x01, 0030);
     TEST("ADDR32 LOCK ADD [EAX], EBX", ADDR32, DATA32, LOCK, 0x01, 0030);
     // Explicit DATA32 prefix keyword
@@ -3669,6 +3674,102 @@ void test_i80386_32bit_addressing() {
     assembler.setOption("use16", "enable");
 }
 
+void test_i80486() {
+    // BSWAP r32: in use16 mode, DATA32 (0x66) prefix is required by the i486 PRM
+    // ("undefined" without it). Matches GAS and nasm.
+    TEST("BSWAP EAX", DATA32, 0x0F, 0xC8);
+    TEST("BSWAP ECX", DATA32, 0x0F, 0xC9);
+    TEST("BSWAP EDX", DATA32, 0x0F, 0xCA);
+    TEST("BSWAP EBX", DATA32, 0x0F, 0xCB);
+    TEST("BSWAP ESP", DATA32, 0x0F, 0xCC);
+    TEST("BSWAP EBP", DATA32, 0x0F, 0xCD);
+    TEST("BSWAP ESI", DATA32, 0x0F, 0xCE);
+    TEST("BSWAP EDI", DATA32, 0x0F, 0xCF);
+    // INVD / WBINVD
+    TEST("INVD",   0x0F, 0x08);
+    TEST("WBINVD", 0x0F, 0x09);
+    // INVLPG m (memory only)
+    TEST("INVLPG [BX+SI]",       0x0F, 0x01, 0070);
+    TEST("INVLPG [BX]",          0x0F, 0x01, 0077);
+    TEST("INVLPG [1234H]",       0x0F, 0x01, 0076, 0x34, 0x12);
+    // XADD r/m8, r8 and r/m16, r16; r/m32, r32 needs DATA32
+    TEST("XADD AL, BL",                       0x0F, 0xC0, 0330);
+    TEST("XADD BYTE PTR [BX+SI], CL",         0x0F, 0xC0, 0010);
+    TEST("XADD AX, BX",                       0x0F, 0xC1, 0330);
+    TEST("XADD WORD PTR [BX+SI], CX",         0x0F, 0xC1, 0010);
+    TEST("XADD EAX, EBX",             DATA32, 0x0F, 0xC1, 0330);
+    TEST("XADD DWORD PTR [BX+SI], ECX", DATA32, 0x0F, 0xC1, 0010);
+    // CMPXCHG r/m8, r8 / r/m16, r16 / r/m32, r32
+    TEST("CMPXCHG AL, BL",                       0x0F, 0xB0, 0330);
+    TEST("CMPXCHG BYTE PTR [BX+SI], CL",         0x0F, 0xB0, 0010);
+    TEST("CMPXCHG AX, BX",                       0x0F, 0xB1, 0330);
+    TEST("CMPXCHG WORD PTR [BX+SI], CX",         0x0F, 0xB1, 0010);
+    TEST("CMPXCHG EAX, EBX",             DATA32, 0x0F, 0xB1, 0330);
+    TEST("CMPXCHG DWORD PTR [BX+SI], ECX", DATA32, 0x0F, 0xB1, 0010);
+    // LOCK XADD / LOCK CMPXCHG: byte, word, dword forms
+    TEST("LOCK XADD    BYTE PTR [BX+SI], CL",          LOCK, 0x0F, 0xC0, 0010);
+    TEST("LOCK XADD    WORD PTR [BX+SI], CX",          LOCK, 0x0F, 0xC1, 0010);
+    TEST("LOCK XADD    DWORD PTR [BX+SI], ECX", DATA32, LOCK, 0x0F, 0xC1, 0010);
+    TEST("LOCK CMPXCHG BYTE PTR [BX+SI], CL",          LOCK, 0x0F, 0xB0, 0010);
+    TEST("LOCK CMPXCHG WORD PTR [BX+SI], CX",          LOCK, 0x0F, 0xB1, 0010);
+    TEST("LOCK CMPXCHG DWORD PTR [BX+SI], ECX", DATA32, LOCK, 0x0F, 0xB1, 0010);
+    // BSWAP r32 in use32 mode: opcode alone, no DATA32 needed
+    assembler.setOption("use32", "enable");
+    TEST("BSWAP EAX", 0x0F, 0xC8);
+    TEST("BSWAP EDI", 0x0F, 0xCF);
+    assembler.setOption("use16", "enable");
+    // BSWAP r16 is rejected (BSWAP only takes r32 operands)
+    ERRT("BSWAP AX", OPERAND_NOT_ALLOWED, "AX");
+    ERRT("BSWAP BX", OPERAND_NOT_ALLOWED, "BX");
+    // XADD / CMPXCHG: mixed 16/32-bit operand pairs are rejected
+    // (the matched entry would silently DATA32-promote one side).
+    ERRT("XADD    AX, ECX", OPERAND_NOT_ALLOWED, "AX, ECX");
+    ERRT("XADD    EAX, BX", OPERAND_NOT_ALLOWED, "EAX, BX");
+    ERRT("CMPXCHG AX, ECX", OPERAND_NOT_ALLOWED, "AX, ECX");
+    ERRT("CMPXCHG EAX, BX", OPERAND_NOT_ALLOWED, "EAX, BX");
+    // GNU-as mode: i486 encodes a shift/rotate by 1 in the long form (C0/C1 +
+    // imm8=1) to match GAS -mtune=i486; the default keeps the short form
+    // (D0/D1) tested above and across the family.
+    assembler.setOption("gnu-as", "on");
+    TEST("SHL CH,1",               0xC0, 0345, 1);
+    TEST("SHR BYTE PTR [BX+SI],1", 0xC0, 0050, 1);
+    TEST("ROL BX,1",               0xC1, 0303, 1);
+    TEST("SAR WORD PTR [BX+SI],1", 0xC1, 0070, 1);
+    assembler.setOption("use32", "enable");
+    TEST("SAL EAX,1",              0xC1, 0340, 1);
+    TEST("ROR ECX,1",              0xC1, 0311, 1);
+    assembler.setOption("use16", "enable");
+    assembler.setOption("gnu-as", "off");
+}
+
+void test_prefix_order() {
+    // libasm emits legacy prefixes in GAS/nasm order:
+    // segment override -> addr32 (67) -> data32 (66) -> lock (F0) ->
+    // rep (F2/F3) -> opcode. The Intel SDM permits any order (Vol 2A
+    // 2.1.1); we follow GAS/nasm so libasm bytes match reference
+    // assemblies.
+
+    // Single-prefix cases: order is unambiguous.
+    TEST("REP MOVSW",                            REP, 0xA5);
+    TEST("LOCK ADD [BX+SI], AX",                 LOCK, 0x01, 0000);
+    TEST("MOV ES:[BX], AH",                SEGES,      0x88, 0047);
+
+    // REP + DATA32: data-size before group-1 (rep).
+    TEST("REP MOVSD",                      DATA32, REP,   0xA5);
+    TEST("REP STOSD",                      DATA32, REP,   0xAB);
+    TEST("REPNE CMPSD",                    DATA32, REPNE, 0xA7);
+
+    // LOCK + DATA32: data-size before lock.
+    TEST("LOCK ADD [BX+SI], EAX",          DATA32, LOCK, 0x01, 0000);
+
+    // Segment + ADDR32: segment first, then addr32.
+    assembler.setOption("use32", "enable");
+    TEST("MOV ES:[SI], AH",                SEGES,   ADDR32, 0x88, 0044);
+    // Segment + ADDR32 + DATA32 + opcode: full chain.
+    TEST("MOV ES:[BX+SI], AX",             SEGES,   ADDR32, DATA32, 0x89, 0000);
+    assembler.setOption("use16", "enable");
+}
+
 // clang-format on
 
 void run_tests(const char *cpu) {
@@ -3678,15 +3779,16 @@ void run_tests(const char *cpu) {
     // written for use16 mode, so switch explicitly.
     if (is80386() || is80486())
         assembler.setOption("use16", "enable");
-    if (is80486())
-        return;
-    if (is80386()) {
+    if (is80386() || is80486()) {
         RUN_TEST(test_i80386_data_transfer);
         RUN_TEST(test_i80386_control_transfer);
         RUN_TEST(test_bit_manipulation);
         RUN_TEST(test_i80386_d_suffix);
         RUN_TEST(test_i80386_32bit_addressing);
+        RUN_TEST(test_prefix_order);
     }
+    if (is80486())
+        RUN_TEST(test_i80486);
     RUN_TEST(test_data_transfer);
     RUN_TEST(test_arithmetic);
     RUN_TEST(test_logic);
