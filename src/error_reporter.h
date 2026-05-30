@@ -96,6 +96,7 @@ enum Error : uint8_t {
 
     // Command line
     UNKNOWN_OPTION = 200,
+    OPTION_NOT_SUPPORTED = 201,
 };
 
 struct ErrorReporter {
