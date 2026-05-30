@@ -1199,6 +1199,26 @@ constexpr uint8_t I80386_0FBA[] PROGMEM = {
     1,  // TEXT_BTS
 };
 
+// i80486
+
+constexpr Entry T80486_0F[] PROGMEM = {
+    E0(0x08, CF_00, TEXT_INVD,    SZ_NONE),
+    E0(0x09, CF_00, TEXT_WBINVD,  SZ_NONE),
+    E1(0xC8, CF_07, TEXT_BSWAP,   SZ_DATA,  M_DREG, P_OREG),
+    L2(0xC0, CF_00, TEXT_XADD,    SZ_BYTE,  M_BMOD, M_BREG, P_MOD, P_REG),
+    L2(0xC1, CF_00, TEXT_XADD,    SZ_DATA,  M_WMOD, M_WREG, P_MOD, P_REG),
+    L2(0xB0, CF_00, TEXT_CMPXCHG, SZ_BYTE,  M_BMOD, M_BREG, P_MOD, P_REG),
+    L2(0xB1, CF_00, TEXT_CMPXCHG, SZ_DATA,  M_WMOD, M_WREG, P_MOD, P_REG),
+};
+
+constexpr uint8_t I80486_0F[] PROGMEM = {};
+
+constexpr Entry T80486_0F01[] PROGMEM = {
+    N1(0070, CF_00, TEXT_INVLPG, SZ_NONE, M_MEM, P_OMOD),
+};
+
+constexpr uint8_t I80486_0F01[] PROGMEM = {};
+
 // V30
 
 constexpr Entry TV30_00[] PROGMEM = {
@@ -1745,6 +1765,46 @@ constexpr EntryPage I80386_PAGES[] PROGMEM = {
         {0x0FBA, ARRAY_RANGE(T80386_0FBA), ARRAY_RANGE(I80386_0FBA)},
 };
 
+constexpr EntryPage I80486_PAGES[] PROGMEM = {
+        // i80386 inherited
+        {0x00, ARRAY_RANGE(TCODE16_00), ARRAY_RANGE(ICODE16_00)},
+        {0x00, ARRAY_RANGE(TCODE32_00), ARRAY_RANGE(ICODE32_00)},
+        // i80186
+        {0x00, ARRAY_RANGE(T80186_00), ARRAY_RANGE(I80186_00)},
+        {0xD0, ARRAY_RANGE(T8086_D0), ARRAY_RANGE(I8086_DX)},    // M_VAL1
+        {0xD1, ARRAY_RANGE(T8086_D1), ARRAY_RANGE(I8086_DX)},    // M_VAL1
+        {0xC0, ARRAY_RANGE(T80186_C0), ARRAY_RANGE(I80186_CX)},  // M_BIT
+        {0xC1, ARRAY_RANGE(T80186_C1), ARRAY_RANGE(I80186_CX)},  // M_BIT
+        // i80286
+        {0x00, ARRAY_RANGE(T80286_00), ARRAY_RANGE(I80286_00)},
+        {0x0F, ARRAY_RANGE(T80286_0F), ARRAY_RANGE(I80286_0F)},
+        {0x0F00, ARRAY_RANGE(T80286_0F00), ARRAY_RANGE(I80286_0F00)},
+        {0x0F01, ARRAY_RANGE(T80286_0F01), ARRAY_RANGE(I80286_0F01)},
+        // i8086
+        {0x83, ARRAY_RANGE(T8086_83), ARRAY_RANGE(I8086_8X)},  // M_BIMM
+        {0x00, ARRAY_RANGE(T8086_00), ARRAY_RANGE(I8086_00)},
+        {0x80, ARRAY_RANGE(T8086_80), ARRAY_RANGE(I8086_8X)},
+        {0x81, ARRAY_RANGE(T8086_81), ARRAY_RANGE(I8086_8X)},   // M_WIMM
+        {0x8F, ARRAY_RANGE(T80386_8F), ARRAY_RANGE(I8086_8F)},  // i80386
+        {0xC6, ARRAY_RANGE(T8086_C6), ARRAY_RANGE(I8086_C6)},
+        {0xC7, ARRAY_RANGE(T8086_C7), ARRAY_RANGE(I8086_C7)},
+        {0xD2, ARRAY_RANGE(T8086_D2), ARRAY_RANGE(I8086_DX)},
+        {0xD3, ARRAY_RANGE(T8086_D3), ARRAY_RANGE(I8086_DX)},
+        {0xD4, ARRAY_RANGE(T8086_D4), ARRAY_RANGE(I8086_D4)},
+        {0xD5, ARRAY_RANGE(T8086_D5), ARRAY_RANGE(I8086_D5)},
+        {0xF6, ARRAY_RANGE(T8086_F6), ARRAY_RANGE(I8086_FX)},
+        {0xF7, ARRAY_RANGE(T8086_F7), ARRAY_RANGE(I8086_FX)},
+        {0xFE, ARRAY_RANGE(T8086_FE), ARRAY_RANGE(I8086_FE)},
+        {0xFF, ARRAY_RANGE(T80386_FF), ARRAY_RANGE(I8086_FF)},  // i80386
+        // i80386
+        {0x00, ARRAY_RANGE(T80386_00), ARRAY_RANGE(I80386_00)},
+        {0x0F, ARRAY_RANGE(T80386_0F), ARRAY_RANGE(I80386_0F)},
+        {0x0FBA, ARRAY_RANGE(T80386_0FBA), ARRAY_RANGE(I80386_0FBA)},
+        // i80486
+        {0x0F,   ARRAY_RANGE(T80486_0F),   ARRAY_RANGE(I80486_0F)},
+        {0x0F01, ARRAY_RANGE(T80486_0F01), ARRAY_RANGE(I80486_0F01)},
+};
+
 constexpr EntryPage V30_PAGES[] PROGMEM = {
         // V30
         {0x00, ARRAY_RANGE(TV30_00), ARRAY_RANGE(IV30_00)},
@@ -1780,6 +1840,7 @@ constexpr Cpu CPU_TABLE[] PROGMEM = {
         {I80186, TEXT_CPU_80186, ARRAY_RANGE(I80186_PAGES)},
         {I80286, TEXT_CPU_80286, ARRAY_RANGE(I80286_PAGES)},
         {I80386, TEXT_CPU_80386, ARRAY_RANGE(I80386_PAGES)},
+        {I80486, TEXT_CPU_80486, ARRAY_RANGE(I80486_PAGES)},
         {V30, TEXT_CPU_V30, ARRAY_RANGE(V30_PAGES)},
 };
 
@@ -1854,6 +1915,7 @@ constexpr Fpu FPU_TABLE[] PROGMEM = {
         {FPU_I8087, TEXT_FPU_8087, ARRAY_RANGE(I8087_PAGES)},
         {FPU_I80287, TEXT_FPU_80287, ARRAY_RANGE(I80287_PAGES)},
         {FPU_I80387, TEXT_FPU_80387, ARRAY_RANGE(I80387_PAGES)},
+        {FPU_I80487, TEXT_FPU_80487, ARRAY_RANGE(I80387_PAGES)},
         {FPU_I80C187, TEXT_FPU_80C187, ARRAY_RANGE(I80387_PAGES)},
         {FPU_NONE, TEXT_none, EMPTY_RANGE(I8087_PAGES)},
 };
@@ -2250,6 +2312,9 @@ Error Config::setFpuType(FpuType fpuType) {
         } else if (cpuType == I80386) {
             _cpuSpec.fpu = FPU_I80387;
             return OK;
+        } else if (cpuType == I80486) {
+            _cpuSpec.fpu = FPU_I80487;
+            return OK;
         }
     } else if (fpuType == FPU_I8087) {
         if (cpuType == I8086 || cpuType == I80186) {
@@ -2264,6 +2329,11 @@ Error Config::setFpuType(FpuType fpuType) {
     } else if (fpuType == FPU_I80387) {
         if (cpuType == I80386) {
             _cpuSpec.fpu = FPU_I80387;
+            return OK;
+        }
+    } else if (fpuType == FPU_I80487) {
+        if (cpuType == I80486) {
+            _cpuSpec.fpu = FPU_I80487;
             return OK;
         }
     } else if (fpuType == FPU_I80C187) {
@@ -2291,6 +2361,8 @@ Error Config::setFpuName(StrScanner &scan) {
         return setFpuType(FPU_I80287);
     if (p.iequals_P(TEXT_FPU_80387))
         return setFpuType(FPU_I80387);
+    if (p.iequals_P(TEXT_FPU_80487))
+        return setFpuType(FPU_I80487);
     if (p.iequals_P(TEXT_FPU_80C187))
         return setFpuType(FPU_I80C187);
 #endif

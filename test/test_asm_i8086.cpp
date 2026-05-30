@@ -44,6 +44,10 @@ bool is80386() {
     return strcmp_P("80386", assembler.config().cpu_P()) == 0;
 }
 
+bool is80486() {
+    return strcmp_P("80486", assembler.config().cpu_P()) == 0;
+}
+
 bool is80287() {
     return strcmp_P("80287", asm8086.fpu_P()) == 0;
 }
@@ -3672,8 +3676,10 @@ void run_tests(const char *cpu) {
     // 32-bit CPUs default to use32 mode after setCpu; existing tests (both
     // the i80386-specific suite and the base i8086-family suites) are
     // written for use16 mode, so switch explicitly.
-    if (is80386())
+    if (is80386() || is80486())
         assembler.setOption("use16", "enable");
+    if (is80486())
+        return;
     if (is80386()) {
         RUN_TEST(test_i80386_data_transfer);
         RUN_TEST(test_i80386_control_transfer);
