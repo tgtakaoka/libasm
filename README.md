@@ -103,6 +103,7 @@ It can generate Intel HEX or Motorola S-Record output.
       --advanced-mode   : H8/300H 24-bit advanced mode (bool: H8/300)
       --extmode         : Extended mode (bool: Z380)
       --fpu             : floating point co-processor (text: 8086, 68000, SH-1, 32032)
+      --gnu-as          : GNU assembler compatible (bool: 8086)
       --implicit-word   : unknown instruction defines word (bool: 6100, J11)
       --lwordmode       : Long word mode (bool: Z380)
       --maximum-mode    : enable maximum mode (bool: TLCS900, H8/500)

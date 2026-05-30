@@ -112,7 +112,7 @@ RegName parseRegName(StrScanner &scan, const CpuSpec &cpuSpec, const ValueParser
                 scan = p;
                 return RegName(base + num);
             }
-            if (base == REG_TR_BASE && num >= 6) {
+            if (base == REG_TR_BASE && cpuSpec.hasTstReg(num)) {
                 scan = p;
                 return RegName(base + num);
             }

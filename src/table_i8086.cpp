@@ -1211,13 +1211,23 @@ constexpr Entry T80486_0F[] PROGMEM = {
     L2(0xB1, CF_00, TEXT_CMPXCHG, SZ_DATA,  M_WMOD, M_WREG, P_MOD, P_REG),
 };
 
-constexpr uint8_t I80486_0F[] PROGMEM = {};
+constexpr uint8_t I80486_0F[] PROGMEM = {
+      2,  // TEXT_BSWAP
+      5,  // TEXT_CMPXCHG (byte)
+      6,  // TEXT_CMPXCHG (data)
+      0,  // TEXT_INVD
+      1,  // TEXT_WBINVD
+      3,  // TEXT_XADD (byte)
+      4,  // TEXT_XADD (data)
+};
 
 constexpr Entry T80486_0F01[] PROGMEM = {
     N1(0070, CF_00, TEXT_INVLPG, SZ_NONE, M_MEM, P_OMOD),
 };
 
-constexpr uint8_t I80486_0F01[] PROGMEM = {};
+constexpr uint8_t I80486_0F01[] PROGMEM = {
+      0,  // TEXT_INVLPG
+};
 
 // V30
 

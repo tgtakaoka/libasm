@@ -94,6 +94,32 @@ test.bin: error: Unknown instruction
             0xf7, 0x83, 0xff, 0xfe, 0xaa, 0xbb, 0xd1, 0xf7);
 }
 
+void test_asm_i80486() {
+    PREP_ASM(i8086::AsmI8086, IntelDirective);
+
+    driver.setUpperHex(false);
+
+    ASM("i80486",
+        R"(        cpu    i80486
+        org    01000h
+        mov    ax, bx
+        movzx  eax, cl
+        jmp    label2
+        jmp    label3
+label2: equ    01080h
+label3: equ    02000h
+)",
+        R"(          0 :                            cpu    i80486
+       1000 :                            org    01000h
+       1000 : 66 89 d8                   mov    ax, bx
+       1003 : 0f b6 c1                   movzx  eax, cl
+       1006 : eb 78                      jmp    label2
+       1008 : e9 f3 0f 00 00             jmp    label3
+       100d : =1080              label2: equ    01080h
+       100d : =2000              label3: equ    02000h
+)");
+}
+
 void test_dis_i80486() {
     PREP_DIS(i8086::DisI8086);
 
@@ -129,6 +155,7 @@ void test_dis_i80486() {
 void run_tests() {
     RUN_TEST(test_asm_i8086);
     RUN_TEST(test_dis_i8086);
+    RUN_TEST(test_asm_i80486);
     RUN_TEST(test_dis_i80486);
 }
 
