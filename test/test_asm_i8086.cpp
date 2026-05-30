@@ -68,6 +68,9 @@ bool fpu_on() {
     } else if (is80286()) {
         TEST("FPU ON");
         EQUALS_P("80286", "80287", asm8086.fpu_P());
+    } else if (is80386()) {
+        TEST("FPU ON");
+        EQUALS_P("80386", "80387", asm8086.fpu_P());
     } else {
         EQUALS("unknown CPU", "", asm8086.cpu_P());
         return false;
@@ -76,6 +79,8 @@ bool fpu_on() {
 }
 
 constexpr auto LOCK = 0xF0;
+constexpr auto DATA32 = 0x66;
+constexpr auto ADDR32 = 0x67;
 constexpr auto SEGES = 0x26;
 constexpr auto SEGCS = 0x2E;
 constexpr auto SEGSS = 0x36;
@@ -1859,15 +1864,21 @@ void test_control_transfer() {
     ATEST(0x01000, "CALL 01082H",                             0xE8, 0x7F, 0x00);
     ATEST(0x01000, "CALL 09002H",                             0xE8, 0xFF, 0x7F);
     if (is80286()) {
-        AERRT(0xFFF000, "CALL $+8002H", OVERFLOW_RANGE, "$+8002H", 0xE8, 0xFF, 0x7F);
-    } else {    
-        AERRT(0xFF000, "CALL $+8002H", OVERFLOW_RANGE, "$+8002H", 0xE8, 0xFF, 0x7F);
+        AERRT(0xFFF000, "CALL $+8002H", OVERFLOW_RANGE,    "$+8002H", 0xE8, 0xFF, 0x7F);
+    } else if (is80386()) {
+        AERRT(0xFF000,  "CALL $+8002H", OVERWRAP_SEGMENT,  "$+8002H", 0xE8, 0xFF, 0x7F);
+    } else {
+        AERRT(0xFF000,  "CALL $+8002H", OVERFLOW_RANGE,    "$+8002H", 0xE8, 0xFF, 0x7F);
     }
     AERRT(0x0F000, "CALL 17002H", OVERWRAP_SEGMENT, "17002H", 0xE8, 0xFF, 0x7F);
     AERRT(0x01000, "CALL 09003H", OPERAND_TOO_FAR,  "09003H", 0xE8, 0x00, 0x80);
     ATEST(0x01000, "CALL 00F81H",                             0xE8, 0x7E, 0xFF);
     ATEST(0x09000, "CALL 01003H",                             0xE8, 0x00, 0x80);
-    AERRT(0x01000, "CALL $-7FFDH", OVERFLOW_RANGE, "$-7FFDH", 0xE8, 0x00, 0x80);
+    if (is80386()) {
+        AERRT(0x01000, "CALL $-7FFDH", OVERWRAP_SEGMENT, "$-7FFDH", 0xE8, 0x00, 0x80);
+    } else {
+        AERRT(0x01000, "CALL $-7FFDH", OVERFLOW_RANGE,   "$-7FFDH", 0xE8, 0x00, 0x80);
+    }
     AERRT(0x11000, "CALL 09003H", OVERWRAP_SEGMENT, "09003H", 0xE8, 0x00, 0x80);
     AERRT(0x09000, "CALL 01002H", OPERAND_TOO_FAR,  "01002H", 0xE8, 0xFF, 0x7F);
 
@@ -1904,26 +1915,38 @@ void test_control_transfer() {
     ATEST(0x01000, "JMP 01081H",                             0xEB, 0x7F);
     AERRT(0x0FFF0, "JMP 10071H", OVERWRAP_SEGMENT, "10071H", 0xEB, 0x7F);
     if (is80286()) {
-        AERRT(0xFFFFF0, "JMP $+81H", OVERFLOW_RANGE, "$+81H", 0xEB, 0x7F);
+        AERRT(0xFFFFF0, "JMP $+81H", OVERFLOW_RANGE,   "$+81H", 0xEB, 0x7F);
+    } else if (is80386()) {
+        AERRT(0xFFFF0,  "JMP $+81H", OVERWRAP_SEGMENT, "$+81H", 0xEB, 0x7F);
     } else {
-        AERRT(0xFFFF0, "JMP $+81H",  OVERFLOW_RANGE, "$+81H", 0xEB, 0x7F);
+        AERRT(0xFFFF0,  "JMP $+81H", OVERFLOW_RANGE,   "$+81H", 0xEB, 0x7F);
     }
     ATEST(0x01000, "JMP 01082H",                             0xE9, 0x7F, 0x00);
     ATEST(0x01000, "JMP 09002H",                             0xE9, 0xFF, 0x7F);
     AERRT(0x0F000, "JMP 17002H", OVERWRAP_SEGMENT, "17002H", 0xE9, 0xFF, 0x7F);
     if (is80286()) {
-        AERRT(0xFFF000, "JMP $+8002H", OVERFLOW_RANGE, "$+8002H", 0xE9, 0xFF, 0x7F);
+        AERRT(0xFFF000, "JMP $+8002H", OVERFLOW_RANGE,   "$+8002H", 0xE9, 0xFF, 0x7F);
+    } else if (is80386()) {
+        AERRT(0xFF000,  "JMP $+8002H", OVERWRAP_SEGMENT, "$+8002H", 0xE9, 0xFF, 0x7F);
     } else {
-        AERRT(0xFF000,  "JMP $+8002H", OVERFLOW_RANGE, "$+8002H", 0xE9, 0xFF, 0x7F);
+        AERRT(0xFF000,  "JMP $+8002H", OVERFLOW_RANGE,   "$+8002H", 0xE9, 0xFF, 0x7F);
     }
     AERRT(0x01000, "JMP 09003H", OPERAND_TOO_FAR,  "09003H", 0xE9, 0x00, 0x80);
     ATEST(0x01000, "JMP 00F82H",                             0xEB, 0x80);
     AERRT(0x10010, "JMP 0FF92H", OVERWRAP_SEGMENT, "0FF92H", 0xEB, 0x80);
-    AERRT(0x00010, "JMP $-7EH",  OVERFLOW_RANGE,    "$-7EH", 0xEB, 0x80);
+    if (is80386()) {
+        AERRT(0x00010, "JMP $-7EH", OVERWRAP_SEGMENT, "$-7EH", 0xEB, 0x80);
+    } else {
+        AERRT(0x00010, "JMP $-7EH", OVERFLOW_RANGE,   "$-7EH", 0xEB, 0x80);
+    }
     ATEST(0x01000, "JMP 00F81H",                             0xE9, 0x7E, 0xFF);
     ATEST(0x09000, "JMP 01003H",                             0xE9, 0x00, 0x80);
     AERRT(0x11000, "JMP 09003H", OVERWRAP_SEGMENT, "09003H", 0xE9, 0x00, 0x80);
-    AERRT(0x01000, "JMP $-7FFDH", OVERFLOW_RANGE, "$-7FFDH", 0xE9, 0x00, 0x80);
+    if (is80386()) {
+        AERRT(0x01000, "JMP $-7FFDH", OVERWRAP_SEGMENT, "$-7FFDH", 0xE9, 0x00, 0x80);
+    } else {
+        AERRT(0x01000, "JMP $-7FFDH", OVERFLOW_RANGE,   "$-7FFDH", 0xE9, 0x00, 0x80);
+    }
     AERRT(0x09000, "JMP 01002H", OPERAND_TOO_FAR,  "01002H", 0xE9, 0xFF, 0x7F);
 
     TEST("JMP AX",            0xFF, 0340);
@@ -2001,15 +2024,26 @@ void test_control_transfer() {
     ATEST(0x01000, "JS $+129",                               0x78, 0x7F);
     AERRT(0x0FFC0, "JS $+129", OVERWRAP_SEGMENT,    "$+129", 0x78, 0x7F);
     if (is80286()) {
-        AERRT(0xFFFFC0, "JS $+129", OVERFLOW_RANGE, "$+129", 0x78, 0x7F);
+        AERRT(0xFFFFC0, "JS $+129", OVERFLOW_RANGE,   "$+129", 0x78, 0x7F);
+    } else if (is80386()) {
+        AERRT(0xFFFC0,  "JS $+129", OVERWRAP_SEGMENT, "$+129", 0x78, 0x7F);
     } else {
-        AERRT(0xFFFC0,  "JS $+129", OVERFLOW_RANGE, "$+129", 0x78, 0x7F);
+        AERRT(0xFFFC0,  "JS $+129", OVERFLOW_RANGE,   "$+129", 0x78, 0x7F);
     }
-    AERRT(0x01000, "JS $+130", OPERAND_TOO_FAR,     "$+130", 0x78, 0x80);
+    if (is80386()) {
+        ATEST(0x01000, "JS $+130", 0x0F, 0x88, 0x7E, 0x00);
+    } else {
+        AERRT(0x01000, "JS $+130", OPERAND_TOO_FAR, "$+130", 0x78, 0x80);
+    }
     ATEST(0x01000, "JS $-126",                               0x78, 0x80);
     AERRT(0x10040, "JS $-126", OVERWRAP_SEGMENT,    "$-126", 0x78, 0x80);
-    AERRT(0x00040, "JS $-126", OVERFLOW_RANGE,      "$-126", 0x78, 0x80);
-    AERRT(0x01000, "JS $-127", OPERAND_TOO_FAR,     "$-127", 0x78, 0x7F);
+    if (is80386()) {
+        AERRT(0x00040, "JS $-126", OVERWRAP_SEGMENT, "$-126", 0x78, 0x80);
+        ATEST(0x01000, "JS $-127", 0x0F, 0x88, 0x7D, 0xFF);
+    } else {
+        AERRT(0x00040, "JS $-126", OVERFLOW_RANGE,   "$-126", 0x78, 0x80);
+        AERRT(0x01000, "JS $-127", OPERAND_TOO_FAR,  "$-127", 0x78, 0x7F);
+    }
 
     TEST("LOOP   $", 0xE2, 0xFE);
     TEST("LOOPE  $", 0xE1, 0xFE);
@@ -3142,8 +3176,13 @@ void test_error() {
     ERRT("MOV [SI], 34H", OPERAND_NOT_ALLOWED, "[SI], 34H");
     ERRT("INC [SI]",      OPERAND_NOT_ALLOWED, "[SI]");
 
-    AERRT(0x1000, "JE $+130", OPERAND_TOO_FAR, "$+130", 0x74, 0x80);
-    AERRT(0x1000, "JE $-127", OPERAND_TOO_FAR, "$-127", 0x74, 0x7F);
+    if (is80386()) {
+        ATEST(0x1000, "JE $+130", 0x0F, 0x84, 0x7E, 0x00);
+        ATEST(0x1000, "JE $-127", 0x0F, 0x84, 0x7D, 0xFF);
+    } else {
+        AERRT(0x1000, "JE $+130", OPERAND_TOO_FAR, "$+130", 0x74, 0x80);
+        AERRT(0x1000, "JE $-127", OPERAND_TOO_FAR, "$-127", 0x74, 0x7F);
+    }
 
     ERRT("MOVSB ES:[DI],[SI+0]", ILLEGAL_OPERAND, "[SI+0]",         0xA4);
     ERRT("MOVSB ES:[DI],[DI]",   ILLEGAL_OPERAND, "[DI]",           0xA4);
@@ -3288,12 +3327,289 @@ void test_data_constant() {
 #endif
 }
 
+void test_i80386_data_transfer() {
+    // MOVZX: r16, r/m8
+    TEST("MOVZX AX,  CL",            0x0F, 0xB6, 0301);
+    TEST("MOVZX SI,  BYTE PTR [SI]", 0x0F, 0xB6, 0064);
+    TEST("MOVZX DI,  BYTE PTR [1234H]", 0x0F, 0xB6, 0076, 0x34, 0x12);
+    TEST("MOVZX CX,  BYTE PTR [BX+SI]", 0x0F, 0xB6, 0010);
+    // MOVZX: r32, r/m8 (DATA32 prefix)
+    TEST("MOVZX EAX, CL",            DATA32, 0x0F, 0xB6, 0301);
+    TEST("MOVZX ESI, BYTE PTR [SI]", DATA32, 0x0F, 0xB6, 0064);
+    TEST("MOVZX EDI, BYTE PTR [1234H]", DATA32, 0x0F, 0xB6, 0076, 0x34, 0x12);
+    // MOVZX: r32, r/m16 (DATA32 prefix promotes 32-bit dst in use16 mode)
+    TEST("MOVZX EAX, CX",               DATA32, 0x0F, 0xB7, 0301);
+    TEST("MOVZX ESI, WORD PTR [SI]",    DATA32, 0x0F, 0xB7, 0064);
+    TEST("MOVZX ECX, WORD PTR [BX+SI]", DATA32, 0x0F, 0xB7, 0010);
+    // MOVSX: r16, r/m8
+    TEST("MOVSX AX,  CL",            0x0F, 0xBE, 0301);
+    TEST("MOVSX SI,  BYTE PTR [SI]", 0x0F, 0xBE, 0064);
+    TEST("MOVSX DI,  BYTE PTR [1234H]", 0x0F, 0xBE, 0076, 0x34, 0x12);
+    // MOVSX: r32, r/m8 (DATA32 prefix)
+    TEST("MOVSX EAX, CL",            DATA32, 0x0F, 0xBE, 0301);
+    TEST("MOVSX ESI, BYTE PTR [SI]", DATA32, 0x0F, 0xBE, 0064);
+    TEST("MOVSX EDI, BYTE PTR [1234H]", DATA32, 0x0F, 0xBE, 0076, 0x34, 0x12);
+    // MOVSX: r32, r/m16 (DATA32 prefix promotes 32-bit dst in use16 mode)
+    TEST("MOVSX EAX, CX",               DATA32, 0x0F, 0xBF, 0301);
+    TEST("MOVSX ESI, WORD PTR [SI]",    DATA32, 0x0F, 0xBF, 0064);
+    TEST("MOVSX ECX, WORD PTR [BX+SI]", DATA32, 0x0F, 0xBF, 0010);
+    // MOV r32, CRx (no DATA32)
+    TEST("MOV EDI, CR0",             0x0F, 0x20, 0307);
+    TEST("MOV ESI, CR1",             0x0F, 0x20, 0316);
+    TEST("MOV EBX, CR2",             0x0F, 0x20, 0323);
+    TEST("MOV EDX, CR3",             0x0F, 0x20, 0332);
+    // MOV CRx, r32 (no DATA32)
+    TEST("MOV CR0, EBX",             0x0F, 0x22, 0303);
+    TEST("MOV CR1, EDX",             0x0F, 0x22, 0312);
+    TEST("MOV CR2, ECX",             0x0F, 0x22, 0321);
+    TEST("MOV CR3, EAX",             0x0F, 0x22, 0330);
+    // MOV r32, DRx (no DATA32)
+    TEST("MOV EDI, DR0",             0x0F, 0x21, 0307);
+    TEST("MOV ESI, DR1",             0x0F, 0x21, 0316);
+    TEST("MOV EBX, DR2",             0x0F, 0x21, 0323);
+    // MOV DRx, r32 (no DATA32)
+    TEST("MOV DR0, EDI",             0x0F, 0x23, 0307);
+    TEST("MOV DR2, EBX",             0x0F, 0x23, 0323);
+    // MOV r32, TRx (no DATA32)
+    TEST("MOV EBX, TR6",             0x0F, 0x24, 0363);
+    TEST("MOV EAX, TR7",             0x0F, 0x24, 0370);
+    // MOV TRx, r32 (no DATA32)
+    TEST("MOV TR6, EBX",             0x0F, 0x26, 0363);
+    TEST("MOV TR7, EAX",             0x0F, 0x26, 0370);
+    // PUSH/POP FS and GS: 0F-prefixed encoding (the 0x06+rd / 0x07+rd
+    // pattern only encodes ES/CS/SS/DS; FS/GS must use 0F A0/A1/A8/A9)
+    TEST("PUSH FS",                  0x0F, 0xA0);
+    TEST("POP  FS",                  0x0F, 0xA1);
+    TEST("PUSH GS",                  0x0F, 0xA8);
+    TEST("POP  GS",                  0x0F, 0xA9);
+    // MOV r/m16, Sreg / MOV Sreg, r/m16 still work for FS/GS via P_REG
+    TEST("MOV AX, FS",               0x8C, 0xE0);
+    TEST("MOV FS, AX",               0x8E, 0xE0);
+    TEST("MOV AX, GS",               0x8C, 0xE8);
+    TEST("MOV GS, AX",               0x8E, 0xE8);
+    // PUSH/POP r32 (DATA32 + opcode 0x50+rd / 0x58+rd)
+    TEST("PUSH EAX",                 DATA32, 0x50);
+    TEST("PUSH EDI",                 DATA32, 0x57);
+    TEST("POP  EBX",                 DATA32, 0x5B);
+    TEST("POP  EBP",                 DATA32, 0x5D);
+    // FS:/GS: segment override prefix
+    TEST("MOV AL, FS:[BX]",          0x64, 0x8A, 0007);
+    TEST("MOV GS:[BX], AX",          0x65, 0x89, 0007);
+    TEST("MOV AX, FS:[BX+SI]",       0x64, 0x8B, 0000);
+}
+
+void test_bit_manipulation() {
+    // BT: bit test (r/m, reg) - P_MOD=dst, P_REG=src
+    TEST("BT  AX, CX",              0x0F, 0xA3, 0310);
+    TEST("BT  [SI], DX",            0x0F, 0xA3, 0024);
+    TEST("BT  [1234H], BX",         0x0F, 0xA3, 0036, 0x34, 0x12);
+    TEST("BT  EAX, ECX",            DATA32, 0x0F, 0xA3, 0310);
+    TEST("BT  [SI], EDX",           DATA32, 0x0F, 0xA3, 0024);
+    // BTS: bit test and set
+    TEST("BTS BX, DX",              0x0F, 0xAB, 0323);
+    TEST("BTS [DI], BX",            0x0F, 0xAB, 0035);
+    TEST("BTS EBX, EDX",            DATA32, 0x0F, 0xAB, 0323);
+    TEST("BTS [DI], EBX",           DATA32, 0x0F, 0xAB, 0035);
+    // BTR: bit test and reset
+    TEST("BTR AX, SI",              0x0F, 0xB3, 0300 | (6 << 3) | 0);  // SI=6, AX=0
+    TEST("BTR EAX, ESI",            DATA32, 0x0F, 0xB3, 0300 | (6 << 3) | 0);
+    // BTC: bit test and complement (P_REG=dst, P_MOD=src - swapped)
+    TEST("BTC SP, AX",              0x0F, 0xBB, 0340);
+    TEST("BTC ESP, EAX",            DATA32, 0x0F, 0xBB, 0340);
+    // BT with immediate
+    TEST("BT  AX, 5",               0x0F, 0xBA, 0340, 5);
+    TEST("BT  AX, 15",              0x0F, 0xBA, 0340, 15);
+    TEST("BTS AX, 7",               0x0F, 0xBA, 0350, 7);
+    TEST("BTR AX, 3",               0x0F, 0xBA, 0360, 3);
+    TEST("BTC AX, 8",               0x0F, 0xBA, 0370, 8);
+    TEST("BT  EAX, 5",              DATA32, 0x0F, 0xBA, 0340, 5);
+    TEST("BTC EAX, 25",             DATA32, 0x0F, 0xBA, 0370, 25);
+    // BSF: bit scan forward
+    TEST("BSF CX, AX",              0x0F, 0xBC, 0310);
+    TEST("BSF DX, [SI]",            0x0F, 0xBC, 0024);
+    TEST("BSF ECX, EAX",            DATA32, 0x0F, 0xBC, 0310);
+    TEST("BSF EDX, [SI]",           DATA32, 0x0F, 0xBC, 0024);
+    // BSR: bit scan reverse
+    TEST("BSR CX, AX",              0x0F, 0xBD, 0310);
+    TEST("BSR DX, [SI]",            0x0F, 0xBD, 0024);
+    TEST("BSR ECX, EAX",            DATA32, 0x0F, 0xBD, 0310);
+    // SHLD: shift left double
+    TEST("SHLD BP, AX, 8",          0x0F, 0xA4, 0305, 8);
+    TEST("SHLD [SI], CX, 9",        0x0F, 0xA4, 0014, 9);
+    TEST("SHLD BP, AX, CL",         0x0F, 0xA5, 0305);
+    TEST("SHLD EBP, EDI, 16",       DATA32, 0x0F, 0xA4, 0375, 16);
+    TEST("SHLD EBP, EDI, CL",       DATA32, 0x0F, 0xA5, 0375);
+    // SHRD: shift right double
+    TEST("SHRD BP, AX, 8",          0x0F, 0xAC, 0305, 8);
+    TEST("SHRD BP, AX, CL",         0x0F, 0xAD, 0305);
+    TEST("SHRD EBP, EDI, 16",       DATA32, 0x0F, 0xAC, 0375, 16);
+    TEST("SHRD EBP, EDI, CL",       DATA32, 0x0F, 0xAD, 0375);
+    // SETcc: set byte on condition
+    TEST("SETO  CH",                0x0F, 0x90, 0305);
+    TEST("SETB  BYTE PTR [1234H]",  0x0F, 0x92, 0006, 0x34, 0x12);
+    TEST("SETE  BYTE PTR [BP+1234H]", 0x0F, 0x94, 0206, 0x34, 0x12);
+    TEST("SETNE BYTE PTR [BX+SI]",  0x0F, 0x95, 0000);
+    TEST("SETBE BYTE PTR [BX+DI+52]", 0x0F, 0x96, 0101, 0x34);
+    TEST("SETL  BYTE PTR [BP+1234H]", 0x0F, 0x9C, 0206, 0x34, 0x12);
+    TEST("SETLE BYTE PTR [BX+DI+52]", 0x0F, 0x9E, 0101, 0x34);
+    // LSS/LFS/LGS: load full pointer
+    TEST("LSS CX, [SI]",            0x0F, 0xB2, 0014);
+    TEST("LSS DX, [1234H]",         0x0F, 0xB2, 0026, 0x34, 0x12);
+    TEST("LSS BP, [BX+SI]",         0x0F, 0xB2, 0050);
+    TEST("LSS ECX, [SI]",           DATA32, 0x0F, 0xB2, 0014);
+    TEST("LFS CX, [SI]",            0x0F, 0xB4, 0014);
+    TEST("LFS ECX, [SI]",           DATA32, 0x0F, 0xB4, 0014);
+    TEST("LGS CX, [SI]",            0x0F, 0xB5, 0014);
+    TEST("LGS ECX, [SI]",           DATA32, 0x0F, 0xB5, 0014);
+}
+
+void test_i80386_control_transfer() {
+    // Short Jcc still applies when delta fits in signed 8 bits
+    ATEST(0x1000, "JO  $",       0x70, 0xFE);
+    ATEST(0x1000, "JNO $+0081H", 0x71, 0x7F);
+    ATEST(0x1000, "JB  $-007EH", 0x72, 0x80);
+
+    // Long Jcc: auto-upgrade short 0x7n to 0x0F 0x8n + 16-bit displacement
+    // $+0082H: target=0x1082, base_long=0x1004, delta=0x7E
+    ATEST(0x1000, "JO   $+0082H", 0x0F, 0x80, 0x7E, 0x00);
+    ATEST(0x1000, "JNO  $+0082H", 0x0F, 0x81, 0x7E, 0x00);
+    ATEST(0x1000, "JB   $+0082H", 0x0F, 0x82, 0x7E, 0x00);
+    ATEST(0x1000, "JAE  $+0082H", 0x0F, 0x83, 0x7E, 0x00);
+    ATEST(0x1000, "JE   $+0082H", 0x0F, 0x84, 0x7E, 0x00);
+    ATEST(0x1000, "JNE  $+0082H", 0x0F, 0x85, 0x7E, 0x00);
+    ATEST(0x1000, "JBE  $+0082H", 0x0F, 0x86, 0x7E, 0x00);
+    ATEST(0x1000, "JA   $+0082H", 0x0F, 0x87, 0x7E, 0x00);
+    ATEST(0x1000, "JS   $+0082H", 0x0F, 0x88, 0x7E, 0x00);
+    ATEST(0x1000, "JNS  $+0082H", 0x0F, 0x89, 0x7E, 0x00);
+    ATEST(0x1000, "JPE  $+0082H", 0x0F, 0x8A, 0x7E, 0x00);
+    ATEST(0x1000, "JPO  $+0082H", 0x0F, 0x8B, 0x7E, 0x00);
+    ATEST(0x1000, "JL   $+0082H", 0x0F, 0x8C, 0x7E, 0x00);
+    ATEST(0x1000, "JGE  $+0082H", 0x0F, 0x8D, 0x7E, 0x00);
+    ATEST(0x1000, "JLE  $+0082H", 0x0F, 0x8E, 0x7E, 0x00);
+    ATEST(0x1000, "JG   $+0082H", 0x0F, 0x8F, 0x7E, 0x00);
+    // backward long Jcc: $-007FH: target=0x0F81, delta=-131=0xFF7D
+    ATEST(0x1000, "JO   $-007FH", 0x0F, 0x80, 0x7D, 0xFF);
+
+    // Long Jcc with 32-bit displacement (use32 mode)
+    // In 32-bit model: [0x0F][0x8n][d0][d1][d2][d3], base = addr+6
+    assembler.setOption("use32", "enable");
+    // Short Jcc still applies when delta fits in signed 8 bits
+    ATEST(0x1000, "JO  $",       0x70, 0xFE);
+    // $+0082H: target=0x1082, base_long=0x1006, delta=0x7C
+    ATEST(0x1000, "JO   $+0082H", 0x0F, 0x80, 0x7C, 0x00, 0x00, 0x00);
+    ATEST(0x1000, "JNO  $+0082H", 0x0F, 0x81, 0x7C, 0x00, 0x00, 0x00);
+    ATEST(0x1000, "JE   $+0082H", 0x0F, 0x84, 0x7C, 0x00, 0x00, 0x00);
+    ATEST(0x1000, "JNE  $+0082H", 0x0F, 0x85, 0x7C, 0x00, 0x00, 0x00);
+    ATEST(0x1000, "JL   $+0082H", 0x0F, 0x8C, 0x7C, 0x00, 0x00, 0x00);
+    ATEST(0x1000, "JG   $+0082H", 0x0F, 0x8F, 0x7C, 0x00, 0x00, 0x00);
+    // backward: $-0085H: target=0x0F7B, delta=-139=0xFFFFFF75
+    ATEST(0x1000, "JO   $-0085H", 0x0F, 0x80, 0x75, 0xFF, 0xFF, 0xFF);
+    assembler.setOption("use16", "enable");
+}
+
+void test_i80386_d_suffix() {
+    // Zero-operand D-suffix instructions (auto-add DATA32 prefix in 16-bit mode)
+    TEST("CWDE",   DATA32, 0x98);
+    TEST("CDQ",    DATA32, 0x99);
+    TEST("PUSHAD", DATA32, 0x60);
+    TEST("POPAD",  DATA32, 0x61);
+    TEST("PUSHFD", DATA32, 0x9C);
+    TEST("POPFD",  DATA32, 0x9D);
+    TEST("IRETD",  DATA32, 0xCF);
+    // JECXZ auto-adds ADDR32 prefix
+    ATEST(0x1000, "JECXZ $",     ADDR32, 0xE3, 0xFE);
+    ATEST(0x1000, "JECXZ $+3",   ADDR32, 0xE3, 0x01);
+    // D-suffix string instructions with explicit segment:register operands
+    TEST("MOVSD ES:[DI], DS:[SI]", DATA32, 0xA5);
+    TEST("CMPSD DS:[SI], ES:[DI]", DATA32, 0xA7);
+    TEST("STOSD ES:[DI]",          DATA32, 0xAB);
+    TEST("LODSD DS:[SI]",          DATA32, 0xAD);
+    TEST("SCASD ES:[DI]",          DATA32, 0xAF);
+    TEST("INSD  ES:[DI], DX",      DATA32, 0x6D);
+    TEST("OUTSD DX, DS:[SI]",      DATA32, 0x6F);
+    // D-suffix string instructions without explicit operands
+    TEST("MOVSD", DATA32, 0xA5);
+    TEST("STOSD", DATA32, 0xAB);
+    TEST("LODSD", DATA32, 0xAD);
+    TEST("SCASD", DATA32, 0xAF);
+    // REP + D-suffix string instructions
+    TEST("REP MOVSD",   0xF3, DATA32, 0xA5);
+    TEST("REP STOSD",   0xF3, DATA32, 0xAB);
+    TEST("REPNE CMPSD", 0xF2, DATA32, 0xA7);
+    TEST("REPNE SCASD", 0xF2, DATA32, 0xAF);
+}
+
+void test_i80386_32bit_addressing() {
+    // Auto-detect ADDR32 from 32-bit base register in memory operand
+    TEST("XOR AX, [EAX]",     ADDR32, 0x33, 0000);  // mod=0, r/m=EAX(0)
+    TEST("XOR AX, [ECX]",     ADDR32, 0x33, 0001);  // mod=0, r/m=ECX(1)
+    TEST("XOR AX, [EDX]",     ADDR32, 0x33, 0002);
+    TEST("XOR AX, [EBX]",     ADDR32, 0x33, 0003);
+    // ESP base requires SIB (ESP=4 as r/m means SIB)
+    TEST("XOR AX, [ESP]",     ADDR32, 0x33, 0004, 0044);  // SIB: idx=none(4), base=ESP(4)
+    // EBP base forces mod=1+disp8=0 (EBP(5) as r/m with mod=0 means disp32-only)
+    TEST("XOR AX, [EBP]",     ADDR32, 0x33, 0105, 0);     // mod=1, r/m=EBP(5), disp8=0
+    TEST("XOR AX, [ESI]",     ADDR32, 0x33, 0006);
+    TEST("XOR AX, [EDI]",     ADDR32, 0x33, 0007);
+    // disp8
+    TEST("XOR AX, [EAX+52]",          ADDR32, 0x33, 0100, 52);
+    TEST("XOR AX, [EBP+52]",          ADDR32, 0x33, 0105, 52);
+    // disp32
+    TEST("XOR AX, [EAX+0x12345678]",  ADDR32, 0x33, 0200, 0x78, 0x56, 0x34, 0x12);
+    TEST("XOR AX, [EBP+0x12345678]",  ADDR32, 0x33, 0205, 0x78, 0x56, 0x34, 0x12);
+    // SIB: base+index (scale=1)
+    TEST("XOR AX, [ECX+EAX]",    ADDR32, 0x33, 0004, 0001);  // SIB: idx=EAX(0), base=ECX(1)
+    TEST("XOR AX, [EAX+ECX]",    ADDR32, 0x33, 0004, 0010);  // SIB: idx=ECX(1), base=EAX(0)
+    // SIB: base+index*scale
+    TEST("XOR AX, [EDX+ECX*2]",  ADDR32, 0x33, 0004, 0112);  // SIB: ss=1, idx=ECX(1), base=EDX(2)
+    TEST("XOR AX, [EBX+EDX*4]",  ADDR32, 0x33, 0004, 0223);  // SIB: ss=2, idx=EDX(2), base=EBX(3)
+    TEST("XOR AX, [ESP+EBX*8]",  ADDR32, 0x33, 0004, 0334);  // SIB: ss=3, idx=EBX(3), base=ESP(4)
+    // SIB: EBP base + index forces mod=1+disp8=0
+    TEST("XOR AX, [EBP+EBX]",    ADDR32, 0x33, 0104, 0035, 0);  // mod=1, SIB: idx=EBX(3), base=EBP(5)
+    TEST("XOR AX, [EBP+ECX*2]",  ADDR32, 0x33, 0104, 0115, 0);  // mod=1, SIB: ss=1, idx=ECX(1), base=EBP(5)
+    // SIB: EBP base + index + disp8
+    TEST("XOR AX, [EBP+EBX+52]", ADDR32, 0x33, 0104, 0035, 52);
+    // SIB: EBP base + index + disp32
+    TEST("XOR AX, [EBP+EBX+0x12345678]", ADDR32, 0x33, 0204, 0035, 0x78, 0x56, 0x34, 0x12);
+    // SIB: index*scale only, no base (disp32 required)
+    TEST("XOR AX, [EBX*2+0x12345678]",   ADDR32, 0x33, 0004, 0135, 0x78, 0x56, 0x34, 0x12);
+    TEST("XOR AX, [ECX*4+0x12345678]",   ADDR32, 0x33, 0004, 0215, 0x78, 0x56, 0x34, 0x12);
+    TEST("XOR AX, [EBX*8+0x12345678]",   ADDR32, 0x33, 0004, 0335, 0x78, 0x56, 0x34, 0x12);
+    // Direct 32-bit address: must use explicit ADDR32 prefix (no register to auto-detect from)
+    TEST("ADDR32 XOR AX, [0x12345678]", ADDR32, 0x33, 0005, 0x78, 0x56, 0x34, 0x12);
+    // Segment override + 32-bit addressing (segment prefix before ADDR32)
+    TEST("XOR AX, ES:[EAX]",          0x26, ADDR32, 0x33, 0000);
+    TEST("XOR AX, ES:[EBX+EDX*4+52]", 0x26, ADDR32, 0x33, 0104, 0223, 52);
+    // Auto-detect both ADDR32 and DATA32 from 32-bit registers
+    TEST("ADD EAX, [ECX]",            ADDR32, DATA32, 0x03, 0001);
+    TEST("MOV EBX, [EAX+EBX*2+52]",  ADDR32, DATA32, 0x8B, 0134, 0130, 52);
+    // Explicit ADDR32 prefix keyword
+    TEST("ADDR32 XOR AX, [EAX]", ADDR32, 0x33, 0000);
+    TEST("ADDR32 XOR AX, [EBX]", ADDR32, 0x33, 0003);
+    // LOCK prefix is emitted before ADDR32 (emit order: lock, seg, addr32, data32)
+    TEST("ADDR32 LOCK ADD [EAX], BX",  LOCK, ADDR32, 0x01, 0030);
+    TEST("ADDR32 LOCK ADD [EAX], EBX", LOCK, ADDR32, DATA32, 0x01, 0030);
+    // Explicit DATA32 prefix keyword
+    TEST("DATA32 ADD EAX, ECX", DATA32, 0x01, 0xC8);
+    TEST("DATA32 PUSH 0x1234",  DATA32, 0x68, 0x34, 0x12, 0x00, 0x00);
+}
+
 // clang-format on
 
 void run_tests(const char *cpu) {
     assembler.setCpu(cpu);
+    // 32-bit CPUs default to use32 mode after setCpu; existing tests (both
+    // the i80386-specific suite and the base i8086-family suites) are
+    // written for use16 mode, so switch explicitly.
     if (is80386())
-        return;
+        assembler.setOption("use16", "enable");
+    if (is80386()) {
+        RUN_TEST(test_i80386_data_transfer);
+        RUN_TEST(test_i80386_control_transfer);
+        RUN_TEST(test_bit_manipulation);
+        RUN_TEST(test_i80386_d_suffix);
+        RUN_TEST(test_i80386_32bit_addressing);
+    }
     RUN_TEST(test_data_transfer);
     RUN_TEST(test_arithmetic);
     RUN_TEST(test_logic);

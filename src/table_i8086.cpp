@@ -846,10 +846,14 @@ constexpr uint8_t I80286_0F01[] PROGMEM = {
 constexpr Entry T80386_00[] PROGMEM = {
     E0(0x64, CF_00, TEXT_SEGFS, SZ_NONE),
     E0(0x65, CF_00, TEXT_SEGGS, SZ_NONE),
+    // PUSHD imm32: asm-only alias for "DATA32 PUSH imm32" in use16 / "PUSH
+    // imm32" in use32. Disasm prefers TEXT_PUSH (with explicit data32) so the
+    // existing roundtrip text stays unchanged.
+    E1(0x68, CF_00, TEXT_PUSHD, SZ_DWORD, M_WIMM, P_OPR),
 };
 
 constexpr uint8_t I80386_00[] PROGMEM = {
-    /* empty */
+      2,  // TEXT_PUSHD
 };
 
 constexpr Entry T80386_8F[] PROGMEM = {
@@ -1012,7 +1016,93 @@ constexpr Entry T80386_0F[] PROGMEM = {
 };
 
 constexpr uint8_t I80386_0F[] PROGMEM = {
-    /* empty */
+     82,  // TEXT_BSF
+     83,  // TEXT_BSR
+     68,  // TEXT_BT
+     81,  // TEXT_BTC
+     78,  // TEXT_BTR
+     73,  // TEXT_BTS
+     76,  // TEXT_IMUL
+     20,  // TEXT_JA
+     11,  // TEXT_JAE
+      8,  // TEXT_JB
+     18,  // TEXT_JBE
+      9,  // TEXT_JC
+     14,  // TEXT_JE
+     34,  // TEXT_JG
+     30,  // TEXT_JGE
+     28,  // TEXT_JL
+     32,  // TEXT_JLE
+     19,  // TEXT_JNA
+     10,  // TEXT_JNAE
+     12,  // TEXT_JNB
+     21,  // TEXT_JNBE
+     13,  // TEXT_JNC
+     33,  // TEXT_JNG
+     29,  // TEXT_JNGE
+     31,  // TEXT_JNL
+     35,  // TEXT_JNLE
+      7,  // TEXT_JNO
+     27,  // TEXT_JNP
+     23,  // TEXT_JNS
+     17,  // TEXT_JNZ
+      6,  // TEXT_JO
+     25,  // TEXT_JP
+     24,  // TEXT_JPE
+     26,  // TEXT_JPO
+     22,  // TEXT_JS
+     15,  // TEXT_JZ
+     79,  // TEXT_LFS
+     80,  // TEXT_LGS
+     77,  // TEXT_LSS
+      0,  // TEXT_MOV
+      1,  // TEXT_MOV
+      2,  // TEXT_MOV
+      3,  // TEXT_MOV
+      4,  // TEXT_MOV
+      5,  // TEXT_MOV
+     86,  // TEXT_MOVSX
+     87,  // TEXT_MOVSX
+     84,  // TEXT_MOVZX
+     85,  // TEXT_MOVZX
+     67,  // TEXT_POP
+     72,  // TEXT_POP
+     66,  // TEXT_PUSH
+     71,  // TEXT_PUSH
+     50,  // TEXT_SETA
+     41,  // TEXT_SETAE
+     38,  // TEXT_SETB
+     48,  // TEXT_SETBE
+     39,  // TEXT_SETC
+     44,  // TEXT_SETE
+     64,  // TEXT_SETG
+     60,  // TEXT_SETGE
+     58,  // TEXT_SETL
+     62,  // TEXT_SETLE
+     49,  // TEXT_SETNA
+     40,  // TEXT_SETNAE
+     42,  // TEXT_SETNB
+     51,  // TEXT_SETNBE
+     43,  // TEXT_SETNC
+     46,  // TEXT_SETNE
+     63,  // TEXT_SETNG
+     59,  // TEXT_SETNGE
+     61,  // TEXT_SETNL
+     65,  // TEXT_SETNLE
+     37,  // TEXT_SETNO
+     57,  // TEXT_SETNP
+     53,  // TEXT_SETNS
+     47,  // TEXT_SETNZ
+     36,  // TEXT_SETO
+     55,  // TEXT_SETP
+     54,  // TEXT_SETPE
+     56,  // TEXT_SETPO
+     52,  // TEXT_SETS
+     45,  // TEXT_SETZ
+     69,  // TEXT_SHLD
+     70,  // TEXT_SHLD
+     74,  // TEXT_SHRD
+     75,  // TEXT_SHRD
 };
 
 constexpr Entry T80386_0FBA[] PROGMEM = {
@@ -1023,7 +1113,10 @@ constexpr Entry T80386_0FBA[] PROGMEM = {
 };
 
 constexpr uint8_t I80386_0FBA[] PROGMEM = {
-    /* empty */
+    0,  // TEXT_BT
+    3,  // TEXT_BTC
+    2,  // TEXT_BTR
+    1,  // TEXT_BTS
 };
 
 // V30
@@ -1700,8 +1793,11 @@ bool acceptMode(AddrMode opr, AddrMode table) {
         return table == M_BMOD;
     if (opr == M_WREG)
         return table == M_WMOD;
+    if (opr == M_DREG)
+        return table == M_WMOD || table == M_WREG || table == M_DREG || table == M_AX;
     if (opr == M_MEM)  // checked by |acceptSize| later.
-        return table == M_BMOD || table == M_BMEM || table == M_WMOD || table == M_WMEM;
+        return table == M_BMOD || table == M_BMEM || table == M_WMOD || table == M_WMEM ||
+               table == M_DMEM;
     if (opr == M_DIR)  // checked by |acceptSize| later.
         return table == M_BMOD || table == M_BMEM || table == M_BDIR || table == M_WMOD ||
                table == M_WMEM || table == M_WDIR || table == M_MEM;
@@ -1717,20 +1813,24 @@ bool acceptMode(AddrMode opr, AddrMode table) {
         return table == M_BMOD;
     if (opr == M_WMEM)
         return table == M_WMOD;
+    if (opr == M_DMEM)
+        return table == M_WMOD || table == M_WMEM;
     if (opr == M_BDIR)
         return table == M_BMOD || table == M_BMEM;
     if (opr == M_WDIR)
         return table == M_WMOD || table == M_WMEM;
     if (opr == M_CS)
         return table == M_SREG;
+    if (opr == M_FS || opr == M_GS)
+        return table == M_SREG;  // FS/GS act as Sreg in MOV r/m,Sreg / MOV Sreg,r/m
     if (opr == M_ST0)
         return table == M_STI;
     return false;
 }
 
 bool hasSize(AddrMode mode) {
-    return mode == M_AX || mode == M_DX || mode == M_WREG || mode == M_AL || mode == M_CL ||
-           mode == M_BREG || mode == M_CS || mode == M_SREG;
+    return mode == M_AX || mode == M_DX || mode == M_WREG || mode == M_DREG || mode == M_AL ||
+           mode == M_CL || mode == M_BREG || mode == M_CS || mode == M_SREG;
 }
 
 bool acceptSize(const AsmInsn &insn, const Entry *entry) {
@@ -1738,8 +1838,13 @@ bool acceptSize(const AsmInsn &insn, const Entry *entry) {
     const auto src = insn.srcOp.mode;
     const auto flags = entry->readFlags();
     if (dst == M_MEM || dst == M_DIR) {
-        if (src == M_NONE)
-            return !flags.needSize();
+        if (src == M_NONE) {
+            // Memory operand without explicit size. PUSH/CALL/JMP have no
+            // competing byte form, so default size is unambiguous in either
+            // model. Lock-capable entries (INC/DEC and friends) coexist with
+            // byte forms via FE/FF and still require explicit size.
+            return !flags.needSize() || !flags.lockCapable();
+        }
         return hasSize(src) || flags.stringInsn();
     }
     if (src == M_MEM || src == M_DIR)
@@ -1751,22 +1856,65 @@ bool acceptSize(const AsmInsn &insn, const Entry *entry) {
     return true;
 }
 
+// FS/GS cannot use the opcode-embedded Sreg encoding (P_OSEG) — that encoding
+// is the PUSH/POP r,Sreg form (0x06+rd / 0x07+rd) which only supports ES/CS/SS/DS.
+// FS/GS must use the 0F-prefixed form (PUSH FS=0F A0 etc.), or appear in
+// M_SREG slots that use P_REG (modreg field, supports 0-7) such as MOV Sreg,r/m.
+bool rejectFsGsAsOseg(AddrMode opMode, AddrMode tableMode, OprPos pos) {
+    return tableMode == M_SREG && pos == P_OSEG && (opMode == M_FS || opMode == M_GS);
+}
+
 bool acceptModes(AsmInsn &insn, const Entry *entry) {
     const auto table = entry->readFlags();
-    // if (strcasecmp(insn.name(), "CALL") == 0 && strcasecmp_P(entry->name_P(), "CALL") == 0) {
-    //     const auto dst = acceptMode(insn.dstOp.mode, table.dst());
-    //     const auto src = acceptMode(insn.srcOp.mode, table.src());
-    //     const auto ext = acceptMode(insn.extOp.mode, table.ext());
-    //     const auto size = acceptSize(insn, entry);
-    //     printf("@@ insn: dst=%d src=%d  table: opc=%02X(%04o) dst=%d src=%d size=%d  accept: "
-    //            "dst=%d "
-    //            "src=%d size=%d\n",
-    //             insn.dstOp.mode, insn.srcOp.mode, entry->readOpCode(), entry->readOpCode(),
-    //             table.dst(), table.src(), table.size(), dst, src, size);
-    //     return dst && src && ext && size;
-    // }
+    if (rejectFsGsAsOseg(insn.dstOp.mode, table.dst(), table.dstPos()) ||
+            rejectFsGsAsOseg(insn.srcOp.mode, table.src(), table.srcPos()))
+        return false;
     return acceptMode(insn.dstOp.mode, table.dst()) && acceptMode(insn.srcOp.mode, table.src()) &&
            acceptMode(insn.extOp.mode, table.ext()) && acceptSize(insn, entry);
+}
+
+// JCXZ (use16) / JECXZ (use32) share opcode 0xE3 and switch on address
+// size; every other TCODE16<->TCODE32 pair switches on data size.
+constexpr Config::opcode_t JCXZ_OPCODE = 0xE3;
+// PUSHA/POPA/PUSHF/POPF/IRET share opcodes with their D-suffix forms
+// (PUSHAD/POPAD/PUSHFD/POPFD/IRETD); GAS treats W and D as equivalent in
+// use32 (emits the no-prefix encoding for both). Match that behavior so the
+// existing committed hexes line up.
+constexpr Config::opcode_t PUSHA_OPCODE = 0x60;
+constexpr Config::opcode_t POPA_OPCODE = 0x61;
+constexpr Config::opcode_t PUSHF_OPCODE = 0x9C;
+constexpr Config::opcode_t POPF_OPCODE = 0x9D;
+constexpr Config::opcode_t IRET_OPCODE = 0xCF;
+
+bool isStatePreservingTcode16(Config::opcode_t opc) {
+    return opc == PUSHA_OPCODE || opc == POPA_OPCODE || opc == PUSHF_OPCODE ||
+           opc == POPF_OPCODE || opc == IRET_OPCODE;
+}
+
+void applyTcodeSizePrefix(AsmInsn &insn) {
+    if (insn.opCode() == JCXZ_OPCODE)
+        insn.setAddr32();
+    else
+        insn.setData32();
+}
+
+// In use32 mode a TCODE16_00 mnemonic (CBW, CWD, MOVSW, ...) shares an opcode
+// with a TCODE32_00 mnemonic (CWDE, CDQ, MOVSD, ...). Emit DATA32 so the
+// user's mnemonic choice wins. State-preserving forms (PUSHA/POPA/PUSHF/POPF/
+// IRET) are excluded — GAS does not flip those in use32.
+// Match by both name AND opcode so PUSH r/m (0x50, 0xFF) isn't conflated with
+// the PUSH imm16 / PUSHD imm32 pair (0x68) that lives in TCODE16/32_00.
+void applyTcode16PrefixForUse32(AsmInsn &insn) {
+    if (isStatePreservingTcode16(insn.opCode()))
+        return;
+    for (const auto *e = TCODE16_00; e < ARRAY_END(TCODE16_00); ++e) {
+        if (e->readOpCode() != insn.opCode())
+            continue;
+        if (strcasecmp_P(insn.name(), e->name_P()) != 0)
+            continue;
+        applyTcodeSizePrefix(insn);
+        return;
+    }
 }
 
 Error searchName(const CpuSpec &cpuSpec, AsmInsn &insn) {
@@ -1775,6 +1923,27 @@ Error searchName(const CpuSpec &cpuSpec, AsmInsn &insn) {
     if (insn.getError() == UNKNOWN_INSTRUCTION)
         fpu(cpuSpec.fpu)->searchName(insn, acceptModes);
 #endif
+    // Search TCODE32_00 for D-suffix (data32) variants not in any search page
+    if (insn.getError() == UNKNOWN_INSTRUCTION && cpuSpec.has32bit()) {
+        for (const auto *e = TCODE32_00; e < ARRAY_END(TCODE32_00); ++e) {
+            if (strcasecmp_P(insn.name(), e->name_P()) != 0)
+                continue;
+            if (acceptModes(insn, e)) {
+                insn.setOK();
+                insn.setOpCode(e->readOpCode());
+                insn.setFlags(e->readFlags());
+                // In 16-bit mode, add appropriate size prefix for the
+                // D-suffix mnemonic (JECXZ flips address size, others flip
+                // data size).
+                if (!insn.model32())
+                    applyTcodeSizePrefix(insn);
+                return OK;
+            }
+            insn.setErrorIf(OPERAND_NOT_ALLOWED);
+        }
+    }
+    if (insn.getError() == OK && insn.model32())
+        applyTcode16PrefixForUse32(insn);
     if (insn.getError() == UNKNOWN_INSTRUCTION)
         insn.setError(insn.name(), insn);
     return insn.getError();
@@ -1861,11 +2030,20 @@ bool isData16(const Entry *entry) {
     return entry >= TCODE16_00 && entry < ARRAY_END(TCODE16_00);
 }
 
+// TCODE16_00 and TCODE32_00 must be parallel arrays: same length, with each
+// TCODE32_00[i] being the 32-bit data form of TCODE16_00[i] (matching opcode).
+static_assert(sizeof(TCODE16_00) == sizeof(TCODE32_00),
+        "TCODE16_00 and TCODE32_00 must be the same length");
+constexpr bool tcodeParallel(size_t i = 0) {
+    return i == sizeof(TCODE16_00) / sizeof(Entry)
+                   ? true
+                   : (TCODE16_00[i].opCode() == TCODE32_00[i].opCode() &&
+                             tcodeParallel(i + 1));
+}
+static_assert(tcodeParallel(),
+        "TCODE16_00[i] and TCODE32_00[i] must share the same opcode");
+
 const Entry *toData32(const Entry *entry) {
-    // TCODE16_00 and TCODE32_00 must be parallel arrays: same length, with
-    // each TCODE32_00[i] being the 32-bit data form of TCODE16_00[i].
-    static_assert(sizeof(TCODE16_00) == sizeof(TCODE32_00),
-            "TCODE16_00 and TCODE32_00 must be parallel arrays");
     return (entry - TCODE16_00) + TCODE32_00;
 }
 
@@ -1922,6 +2100,9 @@ void Config::setCpuType(CpuType cpuType) {
     _cpuSpec.cpu = cpuType;
     ConfigImpl::setCpuType(cpuType);
     setFpuType(_cpuSpec.fpu == FPU_NONE ? FPU_NONE : FPU_ON);
+    // Reset model to the CPU's natural default: 32-bit CPUs default to use32,
+    // 16-bit CPUs to use16. This keeps asm and dis defaults consistent.
+    _model32 = _cpuSpec.has32bit();
 }
 
 const char *Config::fpu_P() const {

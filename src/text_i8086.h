@@ -227,6 +227,7 @@ extern const char TEXT_OUTSD[]  PROGMEM;
 extern const char TEXT_POPAD[]  PROGMEM;
 extern const char TEXT_POPFD[]  PROGMEM;
 extern const char TEXT_PUSHAD[] PROGMEM;
+extern const char TEXT_PUSHD[]  PROGMEM;
 extern const char TEXT_PUSHFD[] PROGMEM;
 extern const char TEXT_SCASD[]  PROGMEM;
 extern const char TEXT_SEGFS[]  PROGMEM;
