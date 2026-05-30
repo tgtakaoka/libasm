@@ -772,13 +772,13 @@ void AsmI8086::emitOperand(AsmInsn &insn, AddrMode mode, const Operand &op, OprP
         emitRelative(insn, op, mode);
         break;
     case M_FAR:
-        emitImmediate(insn, M_OFF, SZ_WORD, op.val, op);
+        emitImmediate(insn, M_OFF, SZ_DATA, op.val, op);
         emitImmediate(insn, M_SEG, SZ_WORD, op.segval, op);
         break;
     case M_SEG:
         break;  // emit with M_OFF
     case M_OFF:
-        emitImmediate(insn, mode, SZ_WORD, op.val, op);
+        emitImmediate(insn, mode, SZ_DATA, op.val, op);
         emitImmediate(insn, M_SEG, SZ_WORD, insn.dstOp.val, op);
         break;
     case M_STI:
@@ -997,7 +997,9 @@ void AsmInsn::applyAutoSizePrefix() {
                 (size() == SZ_DATA &&
                         (is32BitReg(dstMode) || is32BitReg(srcMode) || is32BitReg(extMode))) ||
                 (dstMode == M_DMEM && (dst() == M_WMOD || dst() == M_WMEM)) ||
-                (srcMode == M_DMEM && (src() == M_WMOD || src() == M_WMEM)))
+                (srcMode == M_DMEM && (src() == M_WMOD || src() == M_WMEM)) ||
+                (dst() == M_FAR && dstOp.val.overflow(UINT16_MAX)) ||
+                (src() == M_OFF && srcOp.val.overflow(UINT16_MAX)))
             setData32();
         if (!hasAddr32Prefix() && (uses32BitAddressing(dstOp) ||
                                           uses32BitAddressing(srcOp) ||
@@ -1154,6 +1156,19 @@ Error AsmI8086::encodeImpl(StrScanner &scan, AsmInsn &insn) const {
 
     if (insn.lock() && !insn.lockCapable())
         insn.setErrorIf(insn.name(), ILLEGAL_COMBINATION);
+    // On i486+ the Intel manual recommends the long-form (page C0/C1 +
+    // imm8) shift-by-1 over the short form (page D0/D1) -- the long form
+    // pairs better with the i486 pipeline. GAS uses the long form by
+    // default for i486 targets via -mtune=i486; libasm matches that as
+    // the default i486 encoding (independent of the gnu-as toggle).
+    // The page prefix is the actual opcode byte; insn.opCode() is the
+    // reg-field of the modR/M.
+    const auto pre = insn.prefix();
+    const bool shiftByOneLong = _cpuSpec.cpu >= I80486 &&
+                                insn.srcOp.mode == M_VAL1 &&
+                                (pre == 0xD0 || pre == 0xD1);
+    if (shiftByOneLong)
+        insn.setPrefix(pre - 0x10);
     if (insn.stringInsn()) {
         emitStringInst(insn, insn.dstOp, insn.srcOp);
     } else {
@@ -1162,6 +1177,8 @@ Error AsmI8086::encodeImpl(StrScanner &scan, AsmInsn &insn) const {
         emitOperand(insn, insn.ext(), insn.extOp, insn.extPos());
     }
     insn.emitInsn();
+    if (shiftByOneLong)
+        insn.emitOperand8(1);
     return insn.setError(insn);
 }
 

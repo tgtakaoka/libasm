@@ -80,17 +80,43 @@ void test_dis_i8086() {
     DIS8("i8086", 0xbcdef,
          R"(      cpu     8086
       org     0bcdefh
-      test    word ptr [bp+di+0feffh], 0bbaah
+      test    word [bp+di+0feffh], 0bbaah
 ; test.bin: error: Unknown instruction
 ;    bcdf5 : d1 f7
 )",
          R"(       0 :                            cpu     8086
    bcdef :                            org     0bcdefh
-   bcdef : f7 83 ff fe aa bb          test    word ptr [bp+di+0feffh], 0bbaah
+   bcdef : f7 83 ff fe aa bb          test    word [bp+di+0feffh], 0bbaah
 test.bin: error: Unknown instruction
    bcdf5 : d1 f7
 )",
             0xf7, 0x83, 0xff, 0xfe, 0xaa, 0xbb, 0xd1, 0xf7);
+}
+
+void test_asm_i80486() {
+    PREP_ASM(i8086::AsmI8086, IntelDirective);
+
+    driver.setUpperHex(false);
+
+    ASM("i80486",
+        R"(        cpu    i80486
+        org    01000h
+        mov    ax, bx
+        movzx  eax, cl
+        jmp    label2
+        jmp    label3
+label2: equ    01080h
+label3: equ    02000h
+)",
+        R"(          0 :                            cpu    i80486
+       1000 :                            org    01000h
+       1000 : 66 89 d8                   mov    ax, bx
+       1003 : 0f b6 c1                   movzx  eax, cl
+       1006 : eb 78                      jmp    label2
+       1008 : e9 f3 0f 00 00             jmp    label3
+       100d : =1080              label2: equ    01080h
+       100d : =2000              label3: equ    02000h
+)");
 }
 
 void test_dis_i80486() {
@@ -103,19 +129,19 @@ void test_dis_i80486() {
       org     00001000h
       bswap   eax
       xadd    al, bl
-      cmpxchg [bx+si], cl
+      cmpxchg [eax], cl
       invd
       wbinvd
-      invlpg  [bx]
+      invlpg  [edi]
 )",
          R"(       0 :                            cpu     80486
     1000 :                            org     00001000h
     1000 : 0f c8                      bswap   eax
     1002 : 0f c0 d8                   xadd    al, bl
-    1005 : 0f b0 08                   cmpxchg [bx+si], cl
+    1005 : 0f b0 08                   cmpxchg [eax], cl
     1008 : 0f 08                      invd
     100a : 0f 09                      wbinvd
-    100c : 0f 01 3f                   invlpg  [bx]
+    100c : 0f 01 3f                   invlpg  [edi]
 )",
             0x0f, 0xc8,
             0x0f, 0xc0, 0xd8,
@@ -128,6 +154,7 @@ void test_dis_i80486() {
 void run_tests() {
     RUN_TEST(test_asm_i8086);
     RUN_TEST(test_dis_i8086);
+    RUN_TEST(test_asm_i80486);
     RUN_TEST(test_dis_i80486);
 }
 
