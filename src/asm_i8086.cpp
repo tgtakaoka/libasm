@@ -58,14 +58,17 @@ constexpr AsmI8086::PseudoI8086 AsmI8086::PSEUDO_I8086_TABLE[] PROGMEM = {
 PROGMEM constexpr AsmI8086::PseudosI8086 AsmI8086::PSEUDOS_I8086{ARRAY_RANGE(PSEUDO_I8086_TABLE)};
 
 constexpr AsmI8086::PseudoI8086 AsmI8086::PREFIX_TABLE[] PROGMEM = {
-    { TEXT_LOCK,  &AsmI8086::encodePrefix,   AsmInsn::LOCK_PREFIX },
-    { TEXT_REP,   &AsmI8086::encodePrefix,   0xF3          },
-    { TEXT_REPC,  &AsmI8086::encodePrefix,   0x65,         },  //V30
-    { TEXT_REPE,  &AsmI8086::encodePrefix,   0xF3          },
-    { TEXT_REPNC, &AsmI8086::encodePrefix,   0x64,         },  //V30
-    { TEXT_REPNE, &AsmI8086::encodePrefix,   0xF2          },
-    { TEXT_REPNZ, &AsmI8086::encodePrefix,   0xF2          },
-    { TEXT_REPZ,  &AsmI8086::encodePrefix,   0xF3          },
+    { TEXT_PRE_ADDR32, &AsmI8086::encodePrefix,  AsmInsn::ADDR32      },
+    { TEXT_PRE_DATA16, &AsmI8086::encodePrefix,  AsmInsn::DATA32      },  // 0x66: use32 -> 16-bit
+    { TEXT_PRE_DATA32, &AsmI8086::encodePrefix,  AsmInsn::DATA32      },
+    { TEXT_LOCK,       &AsmI8086::encodePrefix,  AsmInsn::LOCK_PREFIX },
+    { TEXT_REP,        &AsmI8086::encodePrefix,  0xF3                 },
+    { TEXT_REPC,       &AsmI8086::encodePrefix,  0x65,                },  //V30
+    { TEXT_REPE,       &AsmI8086::encodePrefix,  0xF3                 },
+    { TEXT_REPNC,      &AsmI8086::encodePrefix,  0x64,                },  //V30
+    { TEXT_REPNE,      &AsmI8086::encodePrefix,  0xF2                 },
+    { TEXT_REPNZ,      &AsmI8086::encodePrefix,  0xF2                 },
+    { TEXT_REPZ,       &AsmI8086::encodePrefix,  0xF3                 },
 };
 PROGMEM constexpr AsmI8086::PseudosI8086 AsmI8086::PREFIXES{ARRAY_RANGE(PREFIX_TABLE)};
 
@@ -85,7 +88,9 @@ const ValueParser::Plugins &AsmI8086::defaultPlugins() {
 AsmI8086::AsmI8086(const ValueParser::Plugins &plugins)
     : Assembler(plugins, PSEUDO_TABLE, &_opt_fpu),
       Config(TABLE),
-      _opt_fpu(this, &Config::setFpuName, OPT_TEXT_FPU, OPT_DESC_FPU, &_opt_optimizeSegment),
+      _opt_fpu(this, &Config::setFpuName, OPT_TEXT_FPU, OPT_DESC_FPU, &_opt_use16),
+      _opt_use16(this, &Config::setUse16, OPT_BOOL_USE16, OPT_DESC_USE16, &_opt_use32),
+      _opt_use32(this, &Config::setUse32, OPT_BOOL_USE32, OPT_DESC_USE32, &_opt_optimizeSegment),
       _opt_optimizeSegment(this, &AsmI8086::setOptimizeSegment, OPT_BOOL_OPTIMIZE_SEGMENT,
               OPT_DESC_OPTIMIZE_SEGMENT) {
     reset();
@@ -135,6 +140,13 @@ void AsmI8086::parseBaseRegister(StrScanner &scan, Operand &op) const {
     if (reg == REG_BX || reg == REG_BP) {
         op.reg = reg;
         scan = p.skipSpaces();
+    } else if (reg >= REG_EAX && reg <= REG_EDI) {
+        // 32-bit register: accept as base unless followed by '*' (scale factor means it's an index)
+        auto q = p;
+        if (*q.skipSpaces() != '*') {
+            op.reg = reg;
+            scan = p.skipSpaces();
+        }
     }
 }
 
@@ -148,6 +160,27 @@ void AsmI8086::parseIndexRegister(StrScanner &scan, Operand &op) const {
     const auto reg = parseRegName(p, _cpuSpec, parser());
     if (reg == REG_SI || reg == REG_DI) {
         op.index = reg;
+        scan = p.skipSpaces();
+    } else if (reg >= REG_EAX && reg <= REG_EDI && reg != REG_ESP) {
+        // 32-bit index register (ESP cannot be used as index)
+        op.index = reg;
+        auto q = p.skipSpaces();
+        if (*q == '*') {
+            q.expect('*');
+            q.skipSpaces();
+            const auto scaleP = q;
+            // Parse scale as a single decimal integer literal (1, 2, 4, or 8).
+            // Cannot use parseInteger() here: it evaluates expressions like "4+disp".
+            const auto c = *q;
+            const uint8_t s = c - '0';
+            ++q;
+            if (c < '1' || c > '9' || (s != 1 && s != 2 && s != 4 && s != 8)) {
+                op.setError(scaleP, ILLEGAL_CONSTANT);
+            } else {
+                op.scale = s;
+            }
+            p = q;
+        }
         scan = p.skipSpaces();
     }
 }
@@ -229,8 +262,16 @@ Error AsmI8086::parseOperand(StrScanner &scan, Operand &op) const {
         case REG_DX:
             op.mode = M_DX;
             break;
+        case REG_CX:
+            op.mode = M_CX;
+            break;
+        case REG_ECX:
+            op.mode = M_ECX;
+            break;
         default:
-            op.mode = (generalRegSize(reg) == SZ_BYTE) ? M_BREG : M_WREG;
+            op.mode = (generalRegSize(reg) == SZ_BYTE) ? M_BREG
+                      : (generalRegSize(reg) == SZ_DWORD) ? M_DREG
+                      : M_WREG;
             break;
         }
         scan = a;
@@ -238,7 +279,10 @@ Error AsmI8086::parseOperand(StrScanner &scan, Operand &op) const {
     }
     if (isSegmentReg(reg, _cpuSpec)) {
         op.reg = reg;
-        op.mode = (reg == REG_CS) ? M_CS : M_SREG;
+        op.mode = (reg == REG_CS) ? M_CS
+                : (reg == REG_FS) ? M_FS
+                : (reg == REG_GS) ? M_GS
+                                  : M_SREG;
         scan = a;
         return OK;
     }
@@ -258,6 +302,24 @@ Error AsmI8086::parseOperand(StrScanner &scan, Operand &op) const {
             return op.setErrorIf(a, MISSING_CLOSING_PAREN);
         }
         op.mode = M_ST0;
+        scan = a;
+        return OK;
+    }
+    if (reg >= REG_CR_BASE && reg < REG_CR_BASE + 4) {
+        op.reg = reg;
+        op.mode = M_CTLR;
+        scan = a;
+        return OK;
+    }
+    if (reg >= REG_DR_BASE && reg < REG_DR_BASE + 8) {
+        op.reg = reg;
+        op.mode = M_DBGR;
+        scan = a;
+        return OK;
+    }
+    if (reg >= REG_TR_BASE && reg < REG_TR_BASE + 8) {
+        op.reg = reg;
+        op.mode = M_TSTR;
         scan = a;
         return OK;
     }
@@ -307,6 +369,13 @@ void AsmI8086::emitImmediate(
         if (!imm && val.overflow(UINT8_MAX))
             insn.setErrorIf(at, OVERFLOW_RANGE);
         insn.emitOperand8(val.getUnsigned());
+    } else if (size == SZ_DWORD ||
+               (size == SZ_DATA && (insn.model32() ^ insn.hasData32Prefix()))) {
+        if (imm && val.overflowUint32())
+            insn.setErrorIf(at, OVERFLOW_RANGE);
+        if (!imm && val.overflow(UINT32_MAX))
+            insn.setErrorIf(at, OVERFLOW_RANGE);
+        insn.emitOperand32(val.getUnsigned());
     } else if (size == SZ_WORD || size == SZ_DATA) {
         if (imm && val.overflowUint16())
             insn.setErrorIf(at, OVERFLOW_RANGE);
@@ -321,8 +390,42 @@ namespace {
 constexpr Config::opcode_t JMP_rel8 = 0xEB;
 constexpr Config::opcode_t JMP_rel16 = 0xE9;
 
+bool is16BitReg(AddrMode m) {
+    return m == M_WREG || m == M_AX || m == M_DX || m == M_CX;
+}
+
+bool is32BitReg(AddrMode m) {
+    return m == M_DREG || m == M_ECX;
+}
+
+bool is16BitMem(AddrMode m) {
+    return m == M_WMEM || m == M_WDIR;
+}
+
+bool isMemOperand(const Operand &op) {
+    return op.mode == M_MEM || op.mode == M_BMEM || op.mode == M_WMEM ||
+           op.mode == M_DMEM || op.mode == M_FMEM;
+}
+
+bool is16BitAddrReg(RegName r) {
+    return r == REG_BX || r == REG_BP || r == REG_SI || r == REG_DI;
+}
+
+bool uses16BitAddressing(const Operand &op) {
+    return isMemOperand(op) && (is16BitAddrReg(op.reg) || is16BitAddrReg(op.index));
+}
+
+bool uses32BitAddressing(const Operand &op) {
+    return isMemOperand(op) && ((op.reg >= REG_EAX && op.reg <= REG_EDI) ||
+                                       (op.index >= REG_EAX && op.index <= REG_EDI));
+}
+
 constexpr bool maySmartBranch(Config::opcode_t opc) {
     return opc == JMP_rel8;
+}
+
+constexpr bool isShortJcc(Config::opcode_t opc) {
+    return (opc & 0xF0) == 0x70;
 }
 
 void shortBranch(AsmInsn &insn) {
@@ -334,6 +437,11 @@ void longBranch(AsmInsn &insn, const Operand &op) {
     insn.setError(op);
 }
 
+void longJcc(AsmInsn &insn) {
+    insn.setPrefix(0x0F);
+    insn.setOpCode(insn.opCode() + 0x10);  // 0x7n -> 0x0F 0x8n
+}
+
 constexpr Config::uintptr_t segment(Config::uintptr_t addr) {
     return addr & ~0xFFFF;
 }
@@ -341,31 +449,65 @@ constexpr Config::uintptr_t segment(Config::uintptr_t addr) {
 }  // namespace
 
 void AsmI8086::emitRelative(AsmInsn &insn, const Operand &op, AddrMode mode) const {
-    const auto base = insn.address() + 2;
+    // PC at end of instruction = address + prefix bytes + opcode + disp.
+    const auto prefixLen =
+            (insn.hasAddr32Prefix() ? 1 : 0) + (insn.hasData32Prefix() ? 1 : 0);
+    const auto base = insn.address() + prefixLen + 2;
     const auto target = op.getError() ? base : op.val.getUnsigned();
-    insn.setErrorIf(op, checkAddr(target, insn.address(), 16));
+    // Segment-boundary check is meaningful only in use16 mode. Apply it
+    // BEFORE branchDelta() -- that helper also reports OVERFLOW_RANGE on
+    // signed/unsigned wrap, and setErrorIf only honours the first error.
+    if (!insn.model32())
+        insn.setErrorIf(op, checkAddr(target, insn.address(), 16));
     const auto delta = branchDelta(base, target, insn, op);
     const auto smartBranch = maySmartBranch(insn.opCode());
     if (mode == M_REL8 && !smartBranch) {
-        if (overflowDelta(delta, 8))
+        if (overflowDelta(delta, 8)) {
+            if (_cpuSpec.has32bit() && isShortJcc(insn.opCode())) {
+                longJcc(insn);
+                const auto data32 = insn.model32() ^ insn.hasData32Prefix();
+                const auto bits = data32 ? 32 : 16;
+                // [DATA32?][0x0F][0x8n][dispN]: base is PC after instruction
+                const auto lbase =
+                        insn.address() + (insn.hasData32Prefix() ? 1 : 0) + 2 + bits / 8;
+                const auto ltarget = op.getError() ? lbase : op.val.getUnsigned();
+                const auto ldelta = branchDelta(lbase, ltarget, insn, op);
+                if (overflowDelta(ldelta, bits))
+                    insn.setErrorIf(op, OPERAND_TOO_FAR);
+                if (bits == 32)
+                    insn.emitOperand32(ldelta);
+                else
+                    insn.emitOperand16(ldelta);
+                return;
+            }
             insn.setErrorIf(op, OPERAND_TOO_FAR);
+        }
     short_branch:
         insn.emitOperand8(delta);
         return;
     }
     if (mode == M_REL && !smartBranch) {
     long_branch:
-        const auto base = insn.address() + 3;
+        // In use32 mode the relative displacement is 32-bit by default
+        // (toggled to 16-bit by an explicit DATA32 prefix). In use16 the
+        // reverse holds. Instruction length = prefix + 1 (opcode) + N/8 disp.
+        const auto data32 = insn.model32() ^ insn.hasData32Prefix();
+        const auto bits = data32 ? 32 : 16;
+        const auto base = insn.address() + prefixLen + 1 + bits / 8;
         const auto target = op.getError() ? base : op.val.getUnsigned();
-        insn.setErrorIf(op, checkAddr(target, insn.address(), 16));
         const auto delta = branchDelta(base, target, insn, op);
-        if (overflowDelta(delta, 16))
+        if (overflowDelta(delta, bits))
             insn.setErrorIf(op, OPERAND_TOO_FAR);
-        insn.emitOperand16(delta);
+        if (bits == 32)
+            insn.emitOperand32(delta);
+        else
+            insn.emitOperand16(delta);
         return;
     }
     if (op.getError() || overflowDelta(delta, 8)) {
-        longBranch(insn, op);
+        longBranch(insn, op);  // resets insn error to op's; re-check segment.
+        if (!insn.model32())
+            insn.setErrorIf(op, checkAddr(target, insn.address(), 16));
         goto long_branch;
     }
     shortBranch(insn);
@@ -421,12 +563,38 @@ uint8_t Operand::encodeR_m() const {
     return r_m;
 }
 
+uint8_t Operand::encodeMod32() const {
+    if (reg == REG_UNDEF)
+        return 0;  // no base: mod=0 (SIB.base=5 handles disp32)
+    // EBP as base (with or without index): SIB.base=5 with mod=0 means disp32-only, so force mod>=1
+    const auto ebpBase = (reg == REG_EBP);
+    const auto needDisp = ebpBase || (hasDisp && (!val.isZero() || getError()));
+    if (needDisp)
+        return val.overflowInt8() || getError() ? 2 : 1;
+    return 0;
+}
+
+uint8_t Operand::encodeR_m32() const {
+    if (reg == REG_UNDEF && index == REG_UNDEF)
+        return 5;  // mod=0+r/m=5: disp32 direct (no SIB)
+    if (index != REG_UNDEF || reg == REG_ESP)
+        return 4;  // SIB byte follows
+    return encodeRegNum(reg);
+}
+
+uint8_t Operand::encodeSib32() const {
+    const auto ss = (scale == 8) ? 3 : (scale == 4) ? 2 : (scale == 2) ? 1 : 0;
+    const auto idx = (index == REG_UNDEF) ? 4 : encodeRegNum(index);
+    const auto bas = (reg == REG_UNDEF) ? 5 : encodeRegNum(reg);
+    return (ss << 6) | (idx << 3) | bas;
+}
+
 Config::opcode_t AsmI8086::encodeSegmentOverride(RegName seg, RegName base) const {
     if (seg == REG_UNDEF)
         return 0;
     const Config::opcode_t segPrefix = segOverridePrefix(_cpuSpec, seg);
     if (_optimizeSegment) {
-        if (base == REG_BP || base == REG_SP)
+        if (base == REG_BP || base == REG_SP || base == REG_EBP || base == REG_ESP)
             return seg == REG_SS ? 0 : segPrefix;
         return seg == REG_DS ? 0 : segPrefix;
     }
@@ -441,8 +609,11 @@ void AsmI8086::emitModReg(AsmInsn &insn, AddrMode mode, const Operand &op, OprPo
     case M_CL:
     case M_AX:
     case M_DX:
+    case M_CX:
+    case M_ECX:
     case M_BREG:
     case M_WREG:
+    case M_DREG:
         if (insn.lock() && insn.lockCapable() && (mode == M_BMOD || mode == M_WMOD))
             insn.setErrorIf(op, ILLEGAL_COMBINATION);
         emitRegister(insn, op, pos);
@@ -467,26 +638,52 @@ void AsmI8086::emitModReg(AsmInsn &insn, AddrMode mode, const Operand &op, OprPo
         if (insn.leaInsn() && op.seg != REG_UNDEF)
             insn.setErrorIf(op, OPCODE_HAS_NO_EFFECT);
         insn.setSegment(encodeSegmentOverride(op.seg, op.reg));
-        mod = op.encodeMod();
-        modReg = mod << 6;
-        modReg |= op.encodeR_m();
-        if (pos == P_NONE) {  // XLAT [BX]
-            if (op.reg != REG_BX || op.index != REG_UNDEF || op.hasDisp)
-                insn.setErrorIf(op, ILLEGAL_OPERAND_MODE);
-            mod = 0;  // no displacement
-        } else if (pos == P_OMOD) {
-            insn.embed(modReg);
+        if (insn.useAddr32()) {
+            const auto r_m = op.encodeR_m32();
+            mod = op.encodeMod32();
+            if (pos == P_NONE) {  // XLAT [EBX]
+                if (op.reg != REG_EBX || op.index != REG_UNDEF || op.hasDisp)
+                    insn.setErrorIf(op, ILLEGAL_OPERAND_MODE);
+                mod = 0;
+            } else if (pos == P_OMOD) {
+                insn.embed((mod << 6) | r_m);
+            } else {
+                insn.embedModReg((mod << 6) | r_m);
+            }
+            if (r_m == 4)
+                insn.emitOperand8(op.encodeSib32());
+            const auto sibNoBase = (r_m == 4 && op.reg == REG_UNDEF);
+            if (mod == 1) {
+                if (op.val.overflowInt8())
+                    insn.setErrorIf(op, OVERFLOW_RANGE);
+                insn.emitOperand8(op.val.getUnsigned());
+            } else if (mod == 2 || (mod == 0 && r_m == 5) || sibNoBase) {
+                if (op.val.overflowUint32())
+                    insn.setErrorIf(op, OVERFLOW_RANGE);
+                insn.emitOperand32(op.hasDisp ? op.val.getUnsigned() : 0);
+            }
         } else {
-            insn.embedModReg(modReg);
-        }
-        if (mod == 1) {
-            if (op.val.overflowInt8())
-                insn.setErrorIf(op, OVERFLOW_RANGE);
-            insn.emitOperand8(op.val.getUnsigned());
-        } else if (mod == 2) {
-            if (op.val.overflowUint16())
-                insn.setErrorIf(op, OVERFLOW_RANGE);
-            insn.emitOperand16(op.val.getUnsigned());
+            mod = op.encodeMod();
+            modReg = mod << 6;
+            modReg |= op.encodeR_m();
+            if (pos == P_NONE) {  // XLAT [BX]
+                if (op.reg != REG_BX || op.index != REG_UNDEF || op.hasDisp)
+                    insn.setErrorIf(op, ILLEGAL_OPERAND_MODE);
+                mod = 0;
+            } else if (pos == P_OMOD) {
+                insn.embed(modReg);
+            } else {
+                insn.embedModReg(modReg);
+            }
+            if (mod == 1) {
+                if (op.val.overflowInt8())
+                    insn.setErrorIf(op, OVERFLOW_RANGE);
+                insn.emitOperand8(op.val.getUnsigned());
+            } else if (mod == 2) {
+                if (op.val.overflowUint16())
+                    insn.setErrorIf(op, OVERFLOW_RANGE);
+                insn.emitOperand16(op.val.getUnsigned());
+            }
         }
         break;
     default:
@@ -496,11 +693,21 @@ void AsmI8086::emitModReg(AsmInsn &insn, AddrMode mode, const Operand &op, OprPo
 
 void AsmI8086::emitDirect(AsmInsn &insn, const Operand &op, OprPos pos) const {
     insn.setSegment(encodeSegmentOverride(op.seg, REG_UNDEF));
-    if (pos == P_MOD)
-        insn.embedModReg(0006);
-    if (pos == P_OMOD)
-        insn.embed(0006);
-    emitImmediate(insn, M_DIR, SZ_WORD, op.val, op);
+    if (insn.useAddr32()) {
+        if (pos == P_MOD)
+            insn.embedModReg(0005);  // mod=0, r/m=5: 32-bit direct
+        if (pos == P_OMOD)
+            insn.embed(0005);
+        if (op.val.overflowUint32())
+            insn.setErrorIf(op, OVERFLOW_RANGE);
+        insn.emitOperand32(op.val.getUnsigned());
+    } else {
+        if (pos == P_MOD)
+            insn.embedModReg(0006);  // mod=0, r/m=6: 16-bit direct
+        if (pos == P_OMOD)
+            insn.embed(0006);
+        emitImmediate(insn, M_DIR, SZ_WORD, op.val, op);
+    }
 }
 
 void AsmI8086::emitOperand(AsmInsn &insn, AddrMode mode, const Operand &op, OprPos pos) const {
@@ -512,7 +719,11 @@ void AsmI8086::emitOperand(AsmInsn &insn, AddrMode mode, const Operand &op, OprP
         /* Fall-through */
     case M_BREG:
     case M_WREG:
+    case M_DREG:
     case M_SREG:
+    case M_CTLR:
+    case M_DBGR:
+    case M_TSTR:
         emitRegister(insn, op, pos);
         break;
     case M_BMOD:
@@ -541,8 +752,13 @@ void AsmI8086::emitOperand(AsmInsn &insn, AddrMode mode, const Operand &op, OprP
     case M_BIT:
         if (insn.size() == SZ_BYTE && op.val.overflow(7))
             insn.setErrorIf(op, OVERFLOW_RANGE);
-        if ((insn.size() == SZ_WORD || insn.size() == SZ_DATA) && op.val.overflow(15))
+        if (insn.size() == SZ_WORD && op.val.overflow(15))
             insn.setErrorIf(op, OVERFLOW_RANGE);
+        if (insn.size() == SZ_DATA) {
+            const auto max = (insn.model32() ^ insn.hasData32Prefix()) ? 31 : 15;
+            if (op.val.overflow(max))
+                insn.setErrorIf(op, OVERFLOW_RANGE);
+        }
         insn.emitOperand8(op.val.getUnsigned());
         break;
     case M_WIMM:
@@ -557,13 +773,13 @@ void AsmI8086::emitOperand(AsmInsn &insn, AddrMode mode, const Operand &op, OprP
         emitRelative(insn, op, mode);
         break;
     case M_FAR:
-        emitImmediate(insn, M_OFF, SZ_WORD, op.val, op);
+        emitImmediate(insn, M_OFF, SZ_DATA, op.val, op);
         emitImmediate(insn, M_SEG, SZ_WORD, op.segval, op);
         break;
     case M_SEG:
         break;  // emit with M_OFF
     case M_OFF:
-        emitImmediate(insn, mode, SZ_WORD, op.val, op);
+        emitImmediate(insn, mode, SZ_DATA, op.val, op);
         emitImmediate(insn, M_SEG, SZ_WORD, insn.dstOp.val, op);
         break;
     case M_STI:
@@ -740,12 +956,16 @@ Error AsmI8086::encodePrefix(StrScanner &scan, AsmInsn &insn, uint16_t opc) {
                 break;
             }
             insn.setRepeat(opc);
+        } else if (opc == AsmInsn::ADDR32 && _cpuSpec.has32bit()) {
+            insn.setAddr32();
+        } else if (opc == AsmInsn::DATA32 && _cpuSpec.has32bit()) {
+            insn.setData32();
         } else {
             break;
         }
         insn.saveAsPrefix();
         StrScanner symbol;
-        _parser.readInstruction(scan, symbol);
+        _parser.readInstruction(scan.skipSpaces(), symbol);
         insn.nameBuffer().reset().rtext(symbol);
         const auto *p = PREFIXES.search(insn.name());
         if (p == nullptr)
@@ -759,6 +979,65 @@ void AsmInsn::prependPrefix() {
     if (_prefixSave.len()) {
         _prefixSave.rtext(name());
         nameBuffer().reset().rtext(_prefixSave.str());
+    }
+}
+
+void AsmInsn::applyAutoSizePrefix() {
+    const auto dstMode = dstOp.mode;
+    const auto srcMode = srcOp.mode;
+    const auto extMode = extOp.mode;
+    if (!model32()) {
+        // use16: 32-bit register or 32-bit memory operand needs DATA32 to
+        // promote, and 32-bit base/index needs ADDR32. SZ_DWORD entries
+        // with an immediate slot (e.g. PUSHD imm32) also need DATA32 since
+        // the opcode's operand width follows the mode in use16.
+        if ((size() == SZ_DWORD && (dst() == M_WIMM || src() == M_WIMM)) ||
+                (size() == SZ_WORD && dst() == M_DREG) ||  // MOVZX/MOVSX r32,r/m16
+                (is32BitReg(dstMode) && (dst() == M_WREG || dst() == M_WMOD)) ||
+                (is32BitReg(srcMode) && (src() == M_WREG || src() == M_WMOD)) ||
+                (size() == SZ_DATA &&
+                        (is32BitReg(dstMode) || is32BitReg(srcMode) || is32BitReg(extMode))) ||
+                (dstMode == M_DMEM && (dst() == M_WMOD || dst() == M_WMEM)) ||
+                (srcMode == M_DMEM && (src() == M_WMOD || src() == M_WMEM)) ||
+                (dst() == M_FAR && dstOp.val.overflow(UINT16_MAX)) ||
+                (src() == M_OFF && srcOp.val.overflow(UINT16_MAX)))
+            setData32();
+        if (!hasAddr32Prefix() && (uses32BitAddressing(dstOp) ||
+                                          uses32BitAddressing(srcOp) ||
+                                          uses32BitAddressing(extOp)))
+            setAddr32();
+        if (src() == M_ECX)  // ECX counter overrides 16-bit default -> ADDR32
+            setAddr32();
+    } else {
+        // use32: 16-bit register or 16-bit memory operand needs DATA32 to
+        // flip back to 16-bit, and 16-bit base/index needs ADDR32. Skip
+        // entries whose operand width is intrinsically 16-bit so DATA32
+        // would be meaningless or wrong:
+        //   * MOV Sreg,r/m (M_SREG dst) is intrinsically 16-bit;
+        //   * MOVZX/MOVSX r32,r/m16 (SZ_WORD + M_DREG dst) is fixed-width
+        //     on the r/m side;
+        //   * the fixed-width forms tagged with noData32 (ARPL, LLDT/LTR/
+        //     VERR/VERW, LMSW) assemble identically in use16 and use32;
+        //   * FPU escape opcodes (D8..DF) carry operand size in the opcode.
+        const auto dstIsSreg = dst() == M_SREG;
+        const auto isFpuEscape = AsmInsn::escapeInsn(prefix());
+        const auto fixedWordEntry =
+                (size() == SZ_WORD && dst() == M_DREG) || noData32();
+        if (!dstIsSreg && !fixedWordEntry && !isFpuEscape &&
+                ((is16BitReg(dstMode) && (dst() == M_WREG || dst() == M_WMOD)) ||
+                        (is16BitReg(srcMode) && (src() == M_WREG || src() == M_WMOD)) ||
+                        (size() == SZ_DATA &&
+                                (is16BitReg(dstMode) || is16BitReg(srcMode) ||
+                                        is16BitReg(extMode))) ||
+                        (is16BitMem(dstMode) && (dst() == M_WMOD || dst() == M_WMEM)) ||
+                        (is16BitMem(srcMode) && (src() == M_WMOD || src() == M_WMEM))))
+            setData32();
+        if (!hasAddr32Prefix() && (uses16BitAddressing(dstOp) ||
+                                          uses16BitAddressing(srcOp) ||
+                                          uses16BitAddressing(extOp)))
+            setAddr32();
+        if (src() == M_CX)  // CX counter overrides 32-bit default -> ADDR32
+            setAddr32();
     }
 }
 
@@ -800,12 +1079,21 @@ void AsmInsn::emitInsn() {
         pre &= UINT8_MAX;
         emitByte(FWAIT, pos++);
     }
+    // Prefix emission order matches GAS and nasm: segment override -> addr32
+    // (67) -> data32 (66) -> lock (F0) / rep (F2/F3) -> opcode prefix ->
+    // opcode. The Intel SDM allows any order (Vol 2A 2.1.1); we follow the
+    // de-facto convention so libasm bytes byte-match GAS/nasm reference
+    // assemblies for multi-prefix instructions.
+    if (_segment)
+        emitByte(_segment, pos++);
+    if (_addr32)
+        emitByte(_addr32, pos++);
+    if (_data32)
+        emitByte(_data32, pos++);
     if (_lock)
         emitByte(_lock, pos++);
     if (_repeat)
         emitByte(_repeat, pos++);
-    if (_segment)
-        emitByte(_segment, pos++);
     if (pre) {
         if (pre > UINT8_MAX)
             emitByte(pre >> 8, pos++);
@@ -825,6 +1113,10 @@ uint_fast8_t AsmInsn::operandPos() const {
             pos++;
         if (_segment)
             pos++;
+        if (_addr32)
+            pos++;
+        if (_data32)
+            pos++;
         if (hasPrefix()) {
             if (prefix() > UINT8_MAX)
                 pos++;
@@ -840,6 +1132,7 @@ uint_fast8_t AsmInsn::operandPos() const {
 Error AsmI8086::encodeImpl(StrScanner &scan, AsmInsn &insn) const {
     if (insn.getError())
         return insn.getError();
+    insn.setModel(model32());
     if (parseOperand(scan, insn.dstOp) && insn.dstOp.hasError())
         return insn.setError(insn.dstOp);
     if (scan.skipSpaces().expect(',')) {
@@ -858,6 +1151,7 @@ Error AsmI8086::encodeImpl(StrScanner &scan, AsmInsn &insn) const {
             insn.setError(insn.dstOp, insn);
         return insn.getError();
     }
+    insn.applyAutoSizePrefix();
     insn.prepareModReg();
     insn.prependPrefix();
 

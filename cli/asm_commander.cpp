@@ -82,11 +82,11 @@ int AsmCommander::assemble() {
         _driver.setUpperHex(_upper_hex);
         _driver.setLineNumber(_line_number);
         _driver.reset();
+        if (_cpu)
+            _driver.setCpu(_cpu);
         for (const auto &it : _options) {
             _driver.setOption(it.first.c_str(), it.second.c_str());
         }
-        if (_cpu)
-            _driver.setCpu(_cpu);
         _driver.assemble(sources, memory, listout, errorout, reportError);
         reportError = true;
     } while (errorout.size() == 0 && (memory != prev || symbols != _driver.symbols()));
