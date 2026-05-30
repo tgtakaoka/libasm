@@ -31,8 +31,6 @@ using namespace text::option;
 namespace {
 constexpr char OPT_BOOL_OPTIMIZE_SEGMENT[] PROGMEM = "optimize-segment";
 constexpr char OPT_DESC_OPTIMIZE_SEGMENT[] PROGMEM = "optimize segment override";
-constexpr char OPT_BOOL_GNU_AS[] PROGMEM = "gnu-as";
-constexpr char OPT_DESC_GNU_AS[] PROGMEM = "GNU assembler compatible encoding";
 
 constexpr char TEXT_DQ[]   PROGMEM = "dq";
 constexpr char TEXT_DT[]   PROGMEM = "dt";
@@ -93,8 +91,7 @@ AsmI8086::AsmI8086(const ValueParser::Plugins &plugins)
       _opt_use16(this, &Config::setUse16, OPT_BOOL_USE16, OPT_DESC_USE16, &_opt_use32),
       _opt_use32(this, &Config::setUse32, OPT_BOOL_USE32, OPT_DESC_USE32, &_opt_optimizeSegment),
       _opt_optimizeSegment(this, &AsmI8086::setOptimizeSegment, OPT_BOOL_OPTIMIZE_SEGMENT,
-              OPT_DESC_OPTIMIZE_SEGMENT, &_opt_gnuAs),
-      _opt_gnuAs(this, &AsmI8086::setGnuAs, OPT_BOOL_GNU_AS, OPT_DESC_GNU_AS) {
+              OPT_DESC_OPTIMIZE_SEGMENT) {
     reset();
 }
 
@@ -102,16 +99,10 @@ void AsmI8086::reset() {
     Assembler::reset();
     setFpuType(FPU_NONE);
     setOptimizeSegment(true);
-    setGnuAs(false);
 }
 
 Error AsmI8086::setOptimizeSegment(bool enable) {
     _optimizeSegment = enable;
-    return OK;
-}
-
-Error AsmI8086::setGnuAs(bool enable) {
-    _gnuAs = enable;
     return OK;
 }
 
@@ -769,13 +760,13 @@ void AsmI8086::emitOperand(AsmInsn &insn, AddrMode mode, const Operand &op, OprP
         emitRelative(insn, op, mode);
         break;
     case M_FAR:
-        emitImmediate(insn, M_OFF, SZ_WORD, op.val, op);
+        emitImmediate(insn, M_OFF, SZ_DATA, op.val, op);
         emitImmediate(insn, M_SEG, SZ_WORD, op.segval, op);
         break;
     case M_SEG:
         break;  // emit with M_OFF
     case M_OFF:
-        emitImmediate(insn, mode, SZ_WORD, op.val, op);
+        emitImmediate(insn, mode, SZ_DATA, op.val, op);
         emitImmediate(insn, M_SEG, SZ_WORD, insn.dstOp.val, op);
         break;
     case M_STI:
@@ -994,7 +985,9 @@ void AsmInsn::applyAutoSizePrefix() {
                 (size() == SZ_DATA &&
                         (dstMode == M_DREG || srcMode == M_DREG || extMode == M_DREG)) ||
                 (dstMode == M_DMEM && (dst() == M_WMOD || dst() == M_WMEM)) ||
-                (srcMode == M_DMEM && (src() == M_WMOD || src() == M_WMEM)))
+                (srcMode == M_DMEM && (src() == M_WMOD || src() == M_WMEM)) ||
+                (dst() == M_FAR && dstOp.val.overflow(UINT16_MAX)) ||
+                (src() == M_OFF && srcOp.val.overflow(UINT16_MAX)))
             setData32();
         if (!hasAddr32Prefix() && (uses32BitAddressing(dstOp) ||
                                           uses32BitAddressing(srcOp) ||
@@ -1049,7 +1042,6 @@ Error AsmI8086::setCoprocessor(StrScanner &scan, AsmInsn &insn, uint16_t) {
 
 Error AsmI8086::processPseudo(StrScanner &scan, Insn &_insn) {
     AsmInsn insn(_insn);
-    insn.setGnuAs(_gnuAs);
     auto *p = PREFIXES.search(insn.name());
     if (p) {
         p->invoke(this, scan, insn);
@@ -1080,33 +1072,21 @@ void AsmInsn::emitInsn() {
         pre &= UINT8_MAX;
         emitByte(FWAIT, pos++);
     }
-    // GAS order: segment override → addr32 (67) → data32 (66) → lock (F0)
-    // → rep (F2/F3) → opcode. Intel SDM's recommended order has LOCK/REP
-    // first and size prefixes last. Both decode identically; gnu-as flips
-    // the emission so libasm output matches the committed GAS hex.
-    if (_gnuAs) {
-        if (_segment)
-            emitByte(_segment, pos++);
-        if (_addr32)
-            emitByte(_addr32, pos++);
-        if (_data32)
-            emitByte(_data32, pos++);
-        if (_lock)
-            emitByte(_lock, pos++);
-        if (_repeat)
-            emitByte(_repeat, pos++);
-    } else {
-        if (_lock)
-            emitByte(_lock, pos++);
-        if (_repeat)
-            emitByte(_repeat, pos++);
-        if (_segment)
-            emitByte(_segment, pos++);
-        if (_addr32)
-            emitByte(_addr32, pos++);
-        if (_data32)
-            emitByte(_data32, pos++);
-    }
+    // Prefix emission order: segment override → addr32 (67) → data32 (66)
+    // → lock (F0) → rep (F2/F3) → opcode. This matches GAS's output so
+    // libasm bytes line up with the committed GAS reference hex. The
+    // Intel SDM recommends the reverse order (LOCK/REP first, size
+    // prefixes last); both decode identically.
+    if (_segment)
+        emitByte(_segment, pos++);
+    if (_addr32)
+        emitByte(_addr32, pos++);
+    if (_data32)
+        emitByte(_data32, pos++);
+    if (_lock)
+        emitByte(_lock, pos++);
+    if (_repeat)
+        emitByte(_repeat, pos++);
     if (pre) {
         if (pre > UINT8_MAX)
             emitByte(pre >> 8, pos++);
@@ -1170,15 +1150,18 @@ Error AsmI8086::encodeImpl(StrScanner &scan, AsmInsn &insn) const {
 
     if (insn.lock() && !insn.lockCapable())
         insn.setErrorIf(insn.name(), ILLEGAL_COMBINATION);
-    // gnu-as on i486+: rewrite shift-by-1 from short form (page D0/D1) to
-    // the long form (page C0/C1, imm8=1) to match GAS -mtune=i486 output.
+    // On i486+ the Intel manual recommends the long-form (page C0/C1 +
+    // imm8) shift-by-1 over the short form (page D0/D1) — the long form
+    // pairs better with the i486 pipeline. GAS uses the long form by
+    // default for i486 targets via -mtune=i486; libasm matches that as
+    // the default i486 encoding (independent of the gnu-as toggle).
     // The page prefix is the actual opcode byte; insn.opCode() is the
     // reg-field of the modR/M.
     const auto pre = insn.prefix();
-    const bool gnuShiftRewrite = insn.gnuAs() && _cpuSpec.cpu >= I80486 &&
-                                 insn.srcOp.mode == M_VAL1 &&
-                                 (pre == 0xD0 || pre == 0xD1);
-    if (gnuShiftRewrite)
+    const bool shiftByOneLong = _cpuSpec.cpu >= I80486 &&
+                                insn.srcOp.mode == M_VAL1 &&
+                                (pre == 0xD0 || pre == 0xD1);
+    if (shiftByOneLong)
         insn.setPrefix(pre - 0x10);
     if (insn.stringInsn()) {
         emitStringInst(insn, insn.dstOp, insn.srcOp);
@@ -1188,14 +1171,13 @@ Error AsmI8086::encodeImpl(StrScanner &scan, AsmInsn &insn) const {
         emitOperand(insn, insn.ext(), insn.extOp, insn.extPos());
     }
     insn.emitInsn();
-    if (gnuShiftRewrite)
+    if (shiftByOneLong)
         insn.emitOperand8(1);
     return insn.setError(insn);
 }
 
 Error AsmI8086::encodeImpl(StrScanner &scan, Insn &_insn) const {
     AsmInsn insn(_insn);
-    insn.setGnuAs(_gnuAs);
     encodeImpl(scan, insn);
     return _insn.setError(insn);
 }

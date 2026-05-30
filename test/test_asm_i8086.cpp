@@ -75,6 +75,9 @@ bool fpu_on() {
     } else if (is80386()) {
         TEST("FPU ON");
         EQUALS_P("80386", "80387", asm8086.fpu_P());
+    } else if (is80486()) {
+        TEST("FPU ON");
+        EQUALS_P("80486", "80487", asm8086.fpu_P());
     } else {
         EQUALS("unknown CPU", "", asm8086.cpu_P());
         return false;
@@ -920,7 +923,11 @@ void test_logic() {
         ERRT("SAL BP,3", OPERAND_NOT_ALLOWED, "BP,3");
     } else {
         TEST("SAL CH,0",                      0xC0, 0345, 0);
-        TEST("SAL BYTE PTR [SI],1",           0xD0, 0044);
+        if (is80486()) {
+            TEST("SAL BYTE PTR [SI],1",           0xC0, 0044, 0x01);
+        } else {
+            TEST("SAL BYTE PTR [SI],1",           0xD0, 0044);
+        }
         TEST("SAL BYTE PTR [1234H],2",        0xC0, 0046, 0x34, 0x12, 2);
         TEST("SAL BYTE PTR [DI-52],3",        0xC0, 0145, 0xCC, 3);
         TEST("SAL BYTE PTR [BP+1234H],4",     0xC0, 0246, 0x34, 0x12, 4);
@@ -934,7 +941,11 @@ void test_logic() {
         TEST("SAL WORD PTR [BP+1234H],12",    0xC1, 0246, 0x34, 0x12, 12);
         TEST("SAL WORD PTR [BX+SI],13",       0xC1, 0040, 13);
         TEST("SAL WORD PTR [BX+DI+52],14",    0xC1, 0141, 0x34, 14);
-        TEST("SAL WORD PTR [BP+SI+1234H],1",  0xD1, 0242, 0x34, 0x12);
+        if (is80486()) {
+            TEST("SAL WORD PTR [BP+SI+1234H],1",  0xC1, 0242, 0x34, 0x12, 0x01);
+        } else {
+            TEST("SAL WORD PTR [BP+SI+1234H],1",  0xD1, 0242, 0x34, 0x12);
+        }
         ERRT("SAL CH,8",  OVERFLOW_RANGE,  "8", 0xC0, 0345, 8);
         ERRT("SAL BP,16", OVERFLOW_RANGE, "16", 0xC1, 0345, 16);
     }
@@ -984,9 +995,17 @@ void test_logic() {
         TEST("SHL BYTE PTR [BP+1234H],6",     0xC0, 0246, 0x34, 0x12, 6);
         TEST("SHL BYTE PTR [BX+SI],7",        0xC0, 0040, 7);
         TEST("SHL BYTE PTR [BX+DI+52],0",     0xC0, 0141, 0x34, 0);
-        TEST("SHL BYTE PTR [BP+SI+1234H],1",  0xD0, 0242, 0x34, 0x12);
+        if (is80486()) {
+            TEST("SHL BYTE PTR [BP+SI+1234H],1",  0xC0, 0242, 0x34, 0x12, 0x01);
+        } else {
+            TEST("SHL BYTE PTR [BP+SI+1234H],1",  0xD0, 0242, 0x34, 0x12);
+        }
         TEST("SHL BP,8",                      0xC1, 0345, 8);
-        TEST("SHL WORD PTR [SI],1",           0xD1, 0044);
+        if (is80486()) {
+            TEST("SHL WORD PTR [SI],1",           0xC1, 0044, 0x01);
+        } else {
+            TEST("SHL WORD PTR [SI],1",           0xD1, 0044);
+        }
         TEST("SHL WORD PTR [1234H],10",       0xC1, 0046, 0x34, 0x12, 10);
         TEST("SHL WORD PTR [DI-52],11",       0xC1, 0145, 0xCC, 11);
         TEST("SHL WORD PTR [BP+1234H],12",    0xC1, 0246, 0x34, 0x12, 12);
@@ -1035,11 +1054,19 @@ void test_logic() {
         TEST("SHR BYTE PTR [DI-52],6",        0xC0, 0155, 0xCC, 6);
         TEST("SHR BYTE PTR [BP+1234H],7",     0xC0, 0256, 0x34, 0x12, 7);
         TEST("SHR BYTE PTR [BX+SI],0",        0xC0, 0050, 0);
-        TEST("SHR BYTE PTR [BX+DI+52],1",     0xD0, 0151, 0x34);
+        if (is80486()) {
+            TEST("SHR BYTE PTR [BX+DI+52],1",     0xC0, 0151, 0x34, 0x01);
+        } else {
+            TEST("SHR BYTE PTR [BX+DI+52],1",     0xD0, 0151, 0x34);
+        }
         TEST("SHR BYTE PTR [BP+SI+1234H],2",  0xC0, 0252, 0x34, 0x12, 2);
         TEST("SHR BP,8",                      0xC1, 0355, 8);
         TEST("SHR WORD PTR [SI],9",           0xC1, 0054, 9);
-        TEST("SHR WORD PTR [1234H],1",        0xD1, 0056, 0x34, 0x12);
+        if (is80486()) {
+            TEST("SHR WORD PTR [1234H],1",        0xC1, 0056, 0x34, 0x12, 0x01);
+        } else {
+            TEST("SHR WORD PTR [1234H],1",        0xD1, 0056, 0x34, 0x12);
+        }
         TEST("SHR WORD PTR [DI-52],11",       0xC1, 0155, 0xCC, 11);
         TEST("SHR WORD PTR [BP+1234H],12",    0xC1, 0256, 0x34, 0x12, 12);
         TEST("SHR WORD PTR [BX+SI],13",       0xC1, 0050, 13);
@@ -1081,7 +1108,11 @@ void test_logic() {
         TEST("SAR WORD PTR [BX+DI+52],1",     0xD1, 0171, 0x34);
         TEST("SAR WORD PTR [BP+SI+1234H],1",  0xD1, 0272, 0x34, 0x12);
     } else {
-        TEST("SAR CH,1",                      0xD0, 0375);
+        if (is80486()) {
+            TEST("SAR CH,1",                      0xC0, 0375, 0x01);
+        } else {
+            TEST("SAR CH,1",                      0xD0, 0375);
+        }
         TEST("SAR BYTE PTR [SI],2",           0xC0, 0074, 2);
         TEST("SAR BYTE PTR [1234H],3",        0xC0, 0076, 0x34, 0x12, 3);
         TEST("SAR BYTE PTR [DI-52],4",        0xC0, 0175, 0xCC, 4);
@@ -1091,7 +1122,11 @@ void test_logic() {
         TEST("SAR BYTE PTR [BP+SI+1234H],0",  0xC0, 0272, 0x34, 0x12, 0);
         TEST("SAR BP,8",                      0xC1, 0375, 8);
         TEST("SAR WORD PTR [SI],9",           0xC1, 0074, 9);
-        TEST("SAR WORD PTR [1234H],1",        0xD1, 0076, 0x34, 0x12);
+        if (is80486()) {
+            TEST("SAR WORD PTR [1234H],1",        0xC1, 0076, 0x34, 0x12, 0x01);
+        } else {
+            TEST("SAR WORD PTR [1234H],1",        0xD1, 0076, 0x34, 0x12);
+        }
         TEST("SAR WORD PTR [DI-52],11",       0xC1, 0175, 0xCC, 11);
         TEST("SAR WORD PTR [BP+1234H],12",    0xC1, 0276, 0x34, 0x12, 12);
         TEST("SAR WORD PTR [BX+SI],13",       0xC1, 0070, 13);
@@ -1138,13 +1173,21 @@ void test_logic() {
         TEST("ROL BYTE PTR [1234H],6",        0xC0, 0006, 0x34, 0x12, 6);
         TEST("ROL BYTE PTR [DI-52],7",        0xC0, 0105, 0xCC, 7);
         TEST("ROL BYTE PTR [BP+1234H],0",     0xC0, 0206, 0x34, 0x12, 0);
-        TEST("ROL BYTE PTR [BX+SI],1",        0xD0, 0000);
+        if (is80486()) {
+            TEST("ROL BYTE PTR [BX+SI],1",        0xC0, 0000, 0x01);
+        } else {
+            TEST("ROL BYTE PTR [BX+SI],1",        0xD0, 0000);
+        }
         TEST("ROL BYTE PTR [BX+DI+52],2",     0xC0, 0101, 0x34, 2);
         TEST("ROL BYTE PTR [BP+SI+1234H],3",  0xC0, 0202, 0x34, 0x12, 3);
         TEST("ROL BP,8",                      0xC1, 0305, 8);
         TEST("ROL WORD PTR [SI],9",           0xC1, 0004, 9);
         TEST("ROL WORD PTR [1234H],10",       0xC1, 0006, 0x34, 0x12, 10);
-        TEST("ROL WORD PTR [DI-52],1",        0xD1, 0105, 0xCC);
+        if (is80486()) {
+            TEST("ROL WORD PTR [DI-52],1",        0xC1, 0105, 0xCC, 0x01);
+        } else {
+            TEST("ROL WORD PTR [DI-52],1",        0xD1, 0105, 0xCC);
+        }
         TEST("ROL WORD PTR [BP+1234H],12",    0xC1, 0206, 0x34, 0x12, 12);
         TEST("ROL WORD PTR [BX+SI],13",       0xC1, 0000, 13);
         TEST("ROL WORD PTR [BX+DI+52],14",    0xC1, 0101, 0x34, 14);
@@ -1189,7 +1232,11 @@ void test_logic() {
         TEST("ROR BYTE PTR [SI],6",           0xC0, 0014, 6);
         TEST("ROR BYTE PTR [1234H],7",        0xC0, 0016, 0x34, 0x12, 7);
         TEST("ROR BYTE PTR [DI-52],0",        0xC0, 0115, 0xCC, 0);
-        TEST("ROR BYTE PTR [BP+1234H],1",     0xD0, 0216, 0x34, 0x12);
+        if (is80486()) {
+            TEST("ROR BYTE PTR [BP+1234H],1",     0xC0, 0216, 0x34, 0x12, 0x01);
+        } else {
+            TEST("ROR BYTE PTR [BP+1234H],1",     0xD0, 0216, 0x34, 0x12);
+        }
         TEST("ROR BYTE PTR [BX+SI],2",        0xC0, 0010, 2);
         TEST("ROR BYTE PTR [BX+DI+52],3",     0xC0, 0111, 0x34, 3);
         TEST("ROR BYTE PTR [BP+SI+1234H],4",  0xC0, 0212, 0x34, 0x12, 4);
@@ -1197,7 +1244,11 @@ void test_logic() {
         TEST("ROR WORD PTR [SI],9",           0xC1, 0014, 9);
         TEST("ROR WORD PTR [1234H],10",       0xC1, 0016, 0x34, 0x12, 10);
         TEST("ROR WORD PTR [DI-52],11",       0xC1, 0115, 0xCC, 11);
-        TEST("ROR WORD PTR [BP+1234H],1",     0xD1, 0216, 0x34, 0x12);
+        if (is80486()) {
+            TEST("ROR WORD PTR [BP+1234H],1",     0xC1, 0216, 0x34, 0x12, 0x01);
+        } else {
+            TEST("ROR WORD PTR [BP+1234H],1",     0xD1, 0216, 0x34, 0x12);
+        }
         TEST("ROR WORD PTR [BX+SI],13",       0xC1, 0010, 13);
         TEST("ROR WORD PTR [BX+DI+52],14",    0xC1, 0111, 0x34, 14);
         TEST("ROR WORD PTR [BP+SI+1234H],15", 0xC1, 0212, 0x34, 0x12, 15);
@@ -1240,7 +1291,11 @@ void test_logic() {
         TEST("RCL CH,6",                      0xC0, 0325, 6);
         TEST("RCL BYTE PTR [SI],7",           0xC0, 0024, 7);
         TEST("RCL BYTE PTR [1234H],0",        0xC0, 0026, 0x34, 0x12, 0);
-        TEST("RCL BYTE PTR [DI-52],1",        0xD0, 0125, 0xCC);
+        if (is80486()) {
+            TEST("RCL BYTE PTR [DI-52],1",        0xC0, 0125, 0xCC, 0x01);
+        } else {
+            TEST("RCL BYTE PTR [DI-52],1",        0xD0, 0125, 0xCC);
+        }
         TEST("RCL BYTE PTR [BP+1234H],2",     0xC0, 0226, 0x34, 0x12, 2);
         TEST("RCL BYTE PTR [BX+SI],3",        0xC0, 0020, 3);
         TEST("RCL BYTE PTR [BX+DI+52],4",     0xC0, 0121, 0x34, 4);
@@ -1250,7 +1305,11 @@ void test_logic() {
         TEST("RCL WORD PTR [1234H],10",       0xC1, 0026, 0x34, 0x12, 10);
         TEST("RCL WORD PTR [DI-52],11",       0xC1, 0125, 0xCC, 11);
         TEST("RCL WORD PTR [BP+1234H],12",    0xC1, 0226, 0x34, 0x12, 12);
-        TEST("RCL WORD PTR [BX+SI],1",        0xD1, 0020);
+        if (is80486()) {
+            TEST("RCL WORD PTR [BX+SI],1",        0xC1, 0020, 0x01);
+        } else {
+            TEST("RCL WORD PTR [BX+SI],1",        0xD1, 0020);
+        }
         TEST("RCL WORD PTR [BX+DI+52],14",    0xC1, 0121, 0x34, 14);
         TEST("RCL WORD PTR [BP+SI+1234H],15", 0xC1, 0222, 0x34, 0x12, 15);
     }
@@ -1291,7 +1350,11 @@ void test_logic() {
     } else {
         TEST("RCR CH,7",                      0xC0, 0335, 7);
         TEST("RCR BYTE PTR [SI],0",           0xC0, 0034, 0);
-        TEST("RCR BYTE PTR [1234H],1",        0xD0, 0036, 0x34, 0x12);
+        if (is80486()) {
+            TEST("RCR BYTE PTR [1234H],1",        0xC0, 0036, 0x34, 0x12, 0x01);
+        } else {
+            TEST("RCR BYTE PTR [1234H],1",        0xD0, 0036, 0x34, 0x12);
+        }
         TEST("RCR BYTE PTR [DI-52],2",        0xC0, 0135, 0xCC, 2);
         TEST("RCR BYTE PTR [BP+1234H],3",     0xC0, 0236, 0x34, 0x12, 3);
         TEST("RCR BYTE PTR [BX+SI],4",        0xC0, 0030, 4);
@@ -1303,7 +1366,11 @@ void test_logic() {
         TEST("RCR WORD PTR [DI-52],11",       0xC1, 0135, 0xCC, 11);
         TEST("RCR WORD PTR [BP+1234H],12",    0xC1, 0236, 0x34, 0x12, 12);
         TEST("RCR WORD PTR [BX+SI],13",       0xC1, 0030, 13);
-        TEST("RCR WORD PTR [BX+DI+52],1",     0xD1, 0131, 0x34);
+        if (is80486()) {
+            TEST("RCR WORD PTR [BX+DI+52],1",     0xC1, 0131, 0x34, 0x01);
+        } else {
+            TEST("RCR WORD PTR [BX+DI+52],1",     0xD1, 0131, 0x34);
+        }
         TEST("RCR WORD PTR [BP+SI+1234H],15", 0xC1, 0232, 0x34, 0x12, 15);
     }
     TEST("RCR CH,CL",                     0xD2, 0335);
@@ -1861,7 +1928,7 @@ void test_lock() {
     ERRT("LOCK PUSH AX",      ILLEGAL_COMBINATION, "LOCK PUSH", 0xF0, 0120);
     ERRT("LOCK LOCK NOP",     ILLEGAL_COMBINATION, "LOCK");
 
-    TEST("LOCK ADD ES:[BX], AL", 0xF0, 0x26, 0x00, 0007);
+    TEST("LOCK ADD ES:[BX], AL", 0x26, 0xF0, 0x00, 0007);
 }
 
 void test_control_transfer() {
@@ -1869,7 +1936,7 @@ void test_control_transfer() {
     ATEST(0x01000, "CALL 09002H",                             0xE8, 0xFF, 0x7F);
     if (is80286()) {
         AERRT(0xFFF000, "CALL $+8002H", OVERFLOW_RANGE,    "$+8002H", 0xE8, 0xFF, 0x7F);
-    } else if (is80386()) {
+    } else if (is80386() || is80486()) {
         AERRT(0xFF000,  "CALL $+8002H", OVERWRAP_SEGMENT,  "$+8002H", 0xE8, 0xFF, 0x7F);
     } else {
         AERRT(0xFF000,  "CALL $+8002H", OVERFLOW_RANGE,    "$+8002H", 0xE8, 0xFF, 0x7F);
@@ -1878,7 +1945,7 @@ void test_control_transfer() {
     AERRT(0x01000, "CALL 09003H", OPERAND_TOO_FAR,  "09003H", 0xE8, 0x00, 0x80);
     ATEST(0x01000, "CALL 00F81H",                             0xE8, 0x7E, 0xFF);
     ATEST(0x09000, "CALL 01003H",                             0xE8, 0x00, 0x80);
-    if (is80386()) {
+    if (is80386() || is80486()) {
         AERRT(0x01000, "CALL $-7FFDH", OVERWRAP_SEGMENT, "$-7FFDH", 0xE8, 0x00, 0x80);
     } else {
         AERRT(0x01000, "CALL $-7FFDH", OVERFLOW_RANGE,   "$-7FFDH", 0xE8, 0x00, 0x80);
@@ -1920,7 +1987,7 @@ void test_control_transfer() {
     AERRT(0x0FFF0, "JMP 10071H", OVERWRAP_SEGMENT, "10071H", 0xEB, 0x7F);
     if (is80286()) {
         AERRT(0xFFFFF0, "JMP $+81H", OVERFLOW_RANGE,   "$+81H", 0xEB, 0x7F);
-    } else if (is80386()) {
+    } else if (is80386() || is80486()) {
         AERRT(0xFFFF0,  "JMP $+81H", OVERWRAP_SEGMENT, "$+81H", 0xEB, 0x7F);
     } else {
         AERRT(0xFFFF0,  "JMP $+81H", OVERFLOW_RANGE,   "$+81H", 0xEB, 0x7F);
@@ -1930,7 +1997,7 @@ void test_control_transfer() {
     AERRT(0x0F000, "JMP 17002H", OVERWRAP_SEGMENT, "17002H", 0xE9, 0xFF, 0x7F);
     if (is80286()) {
         AERRT(0xFFF000, "JMP $+8002H", OVERFLOW_RANGE,   "$+8002H", 0xE9, 0xFF, 0x7F);
-    } else if (is80386()) {
+    } else if (is80386() || is80486()) {
         AERRT(0xFF000,  "JMP $+8002H", OVERWRAP_SEGMENT, "$+8002H", 0xE9, 0xFF, 0x7F);
     } else {
         AERRT(0xFF000,  "JMP $+8002H", OVERFLOW_RANGE,   "$+8002H", 0xE9, 0xFF, 0x7F);
@@ -1938,7 +2005,7 @@ void test_control_transfer() {
     AERRT(0x01000, "JMP 09003H", OPERAND_TOO_FAR,  "09003H", 0xE9, 0x00, 0x80);
     ATEST(0x01000, "JMP 00F82H",                             0xEB, 0x80);
     AERRT(0x10010, "JMP 0FF92H", OVERWRAP_SEGMENT, "0FF92H", 0xEB, 0x80);
-    if (is80386()) {
+    if (is80386() || is80486()) {
         AERRT(0x00010, "JMP $-7EH", OVERWRAP_SEGMENT, "$-7EH", 0xEB, 0x80);
     } else {
         AERRT(0x00010, "JMP $-7EH", OVERFLOW_RANGE,   "$-7EH", 0xEB, 0x80);
@@ -1946,7 +2013,7 @@ void test_control_transfer() {
     ATEST(0x01000, "JMP 00F81H",                             0xE9, 0x7E, 0xFF);
     ATEST(0x09000, "JMP 01003H",                             0xE9, 0x00, 0x80);
     AERRT(0x11000, "JMP 09003H", OVERWRAP_SEGMENT, "09003H", 0xE9, 0x00, 0x80);
-    if (is80386()) {
+    if (is80386() || is80486()) {
         AERRT(0x01000, "JMP $-7FFDH", OVERWRAP_SEGMENT, "$-7FFDH", 0xE9, 0x00, 0x80);
     } else {
         AERRT(0x01000, "JMP $-7FFDH", OVERFLOW_RANGE,   "$-7FFDH", 0xE9, 0x00, 0x80);
@@ -2029,19 +2096,19 @@ void test_control_transfer() {
     AERRT(0x0FFC0, "JS $+129", OVERWRAP_SEGMENT,    "$+129", 0x78, 0x7F);
     if (is80286()) {
         AERRT(0xFFFFC0, "JS $+129", OVERFLOW_RANGE,   "$+129", 0x78, 0x7F);
-    } else if (is80386()) {
+    } else if (is80386() || is80486()) {
         AERRT(0xFFFC0,  "JS $+129", OVERWRAP_SEGMENT, "$+129", 0x78, 0x7F);
     } else {
         AERRT(0xFFFC0,  "JS $+129", OVERFLOW_RANGE,   "$+129", 0x78, 0x7F);
     }
-    if (is80386()) {
+    if (is80386() || is80486()) {
         ATEST(0x01000, "JS $+130", 0x0F, 0x88, 0x7E, 0x00);
     } else {
         AERRT(0x01000, "JS $+130", OPERAND_TOO_FAR, "$+130", 0x78, 0x80);
     }
     ATEST(0x01000, "JS $-126",                               0x78, 0x80);
     AERRT(0x10040, "JS $-126", OVERWRAP_SEGMENT,    "$-126", 0x78, 0x80);
-    if (is80386()) {
+    if (is80386() || is80486()) {
         AERRT(0x00040, "JS $-126", OVERWRAP_SEGMENT, "$-126", 0x78, 0x80);
         ATEST(0x01000, "JS $-127", 0x0F, 0x88, 0x7D, 0xFF);
     } else {
@@ -3180,7 +3247,7 @@ void test_error() {
     ERRT("MOV [SI], 34H", OPERAND_NOT_ALLOWED, "[SI], 34H");
     ERRT("INC [SI]",      OPERAND_NOT_ALLOWED, "[SI]");
 
-    if (is80386()) {
+    if (is80386() || is80486()) {
         ATEST(0x1000, "JE $+130", 0x0F, 0x84, 0x7E, 0x00);
         ATEST(0x1000, "JE $-127", 0x0F, 0x84, 0x7D, 0xFF);
     } else {
@@ -3520,9 +3587,11 @@ void test_i80386_d_suffix() {
     TEST("PUSHFD", DATA32, 0x9C);
     TEST("POPFD",  DATA32, 0x9D);
     TEST("IRETD",  DATA32, 0xCF);
-    // JECXZ auto-adds ADDR32 prefix
-    ATEST(0x1000, "JECXZ $",     ADDR32, 0xE3, 0xFE);
-    ATEST(0x1000, "JECXZ $+3",   ADDR32, 0xE3, 0x01);
+    // JECXZ auto-adds ADDR32 prefix; instruction is 3 bytes
+    // (prefix + opcode + disp8) so the displacement is measured from
+    // address + 3.
+    ATEST(0x1000, "JECXZ $",     ADDR32, 0xE3, 0xFD);
+    ATEST(0x1000, "JECXZ $+3",   ADDR32, 0xE3, 0x00);
     // D-suffix string instructions with explicit segment:register operands
     TEST("MOVSD ES:[DI], DS:[SI]", DATA32, 0xA5);
     TEST("CMPSD DS:[SI], ES:[DI]", DATA32, 0xA7);
@@ -3537,10 +3606,10 @@ void test_i80386_d_suffix() {
     TEST("LODSD", DATA32, 0xAD);
     TEST("SCASD", DATA32, 0xAF);
     // REP + D-suffix string instructions
-    TEST("REP MOVSD",   0xF3, DATA32, 0xA5);
-    TEST("REP STOSD",   0xF3, DATA32, 0xAB);
-    TEST("REPNE CMPSD", 0xF2, DATA32, 0xA7);
-    TEST("REPNE SCASD", 0xF2, DATA32, 0xAF);
+    TEST("REP MOVSD",   DATA32, 0xF3, 0xA5);
+    TEST("REP STOSD",   DATA32, 0xF3, 0xAB);
+    TEST("REPNE CMPSD", DATA32, 0xF2, 0xA7);
+    TEST("REPNE SCASD", DATA32, 0xF2, 0xAF);
 }
 
 void test_i80386_32bit_addressing() {
@@ -3591,11 +3660,86 @@ void test_i80386_32bit_addressing() {
     TEST("ADDR32 XOR AX, [EAX]", ADDR32, 0x33, 0000);
     TEST("ADDR32 XOR AX, [EBX]", ADDR32, 0x33, 0003);
     // LOCK prefix is emitted before ADDR32 (emit order: lock, seg, addr32, data32)
-    TEST("ADDR32 LOCK ADD [EAX], BX",  LOCK, ADDR32, 0x01, 0030);
-    TEST("ADDR32 LOCK ADD [EAX], EBX", LOCK, ADDR32, DATA32, 0x01, 0030);
+    TEST("ADDR32 LOCK ADD [EAX], BX",  ADDR32, LOCK, 0x01, 0030);
+    TEST("ADDR32 LOCK ADD [EAX], EBX", ADDR32, DATA32, LOCK, 0x01, 0030);
     // Explicit DATA32 prefix keyword
     TEST("DATA32 ADD EAX, ECX", DATA32, 0x01, 0xC8);
     TEST("DATA32 PUSH 0x1234",  DATA32, 0x68, 0x34, 0x12, 0x00, 0x00);
+}
+
+void test_i80486() {
+    // BSWAP r32: in use16 mode, DATA32 (0x66) prefix is required by the i486 PRM
+    // ("undefined" without it). Matches GAS and nasm.
+    TEST("BSWAP EAX", DATA32, 0x0F, 0xC8);
+    TEST("BSWAP ECX", DATA32, 0x0F, 0xC9);
+    TEST("BSWAP EDX", DATA32, 0x0F, 0xCA);
+    TEST("BSWAP EBX", DATA32, 0x0F, 0xCB);
+    TEST("BSWAP ESP", DATA32, 0x0F, 0xCC);
+    TEST("BSWAP EBP", DATA32, 0x0F, 0xCD);
+    TEST("BSWAP ESI", DATA32, 0x0F, 0xCE);
+    TEST("BSWAP EDI", DATA32, 0x0F, 0xCF);
+    // INVD / WBINVD
+    TEST("INVD",   0x0F, 0x08);
+    TEST("WBINVD", 0x0F, 0x09);
+    // INVLPG m (memory only)
+    TEST("INVLPG [BX+SI]",       0x0F, 0x01, 0070);
+    TEST("INVLPG [BX]",          0x0F, 0x01, 0077);
+    TEST("INVLPG [1234H]",       0x0F, 0x01, 0076, 0x34, 0x12);
+    // XADD r/m8, r8 and r/m16, r16; r/m32, r32 needs DATA32
+    TEST("XADD AL, BL",                       0x0F, 0xC0, 0330);
+    TEST("XADD BYTE PTR [BX+SI], CL",         0x0F, 0xC0, 0010);
+    TEST("XADD AX, BX",                       0x0F, 0xC1, 0330);
+    TEST("XADD WORD PTR [BX+SI], CX",         0x0F, 0xC1, 0010);
+    TEST("XADD EAX, EBX",             DATA32, 0x0F, 0xC1, 0330);
+    TEST("XADD DWORD PTR [BX+SI], ECX", DATA32, 0x0F, 0xC1, 0010);
+    // CMPXCHG r/m8, r8 / r/m16, r16 / r/m32, r32
+    TEST("CMPXCHG AL, BL",                       0x0F, 0xB0, 0330);
+    TEST("CMPXCHG BYTE PTR [BX+SI], CL",         0x0F, 0xB0, 0010);
+    TEST("CMPXCHG AX, BX",                       0x0F, 0xB1, 0330);
+    TEST("CMPXCHG WORD PTR [BX+SI], CX",         0x0F, 0xB1, 0010);
+    TEST("CMPXCHG EAX, EBX",             DATA32, 0x0F, 0xB1, 0330);
+    TEST("CMPXCHG DWORD PTR [BX+SI], ECX", DATA32, 0x0F, 0xB1, 0010);
+    // LOCK XADD / LOCK CMPXCHG: byte, word, dword forms
+    TEST("LOCK XADD    BYTE PTR [BX+SI], CL",          LOCK, 0x0F, 0xC0, 0010);
+    TEST("LOCK XADD    WORD PTR [BX+SI], CX",          LOCK, 0x0F, 0xC1, 0010);
+    TEST("LOCK XADD    DWORD PTR [BX+SI], ECX", DATA32, LOCK, 0x0F, 0xC1, 0010);
+    TEST("LOCK CMPXCHG BYTE PTR [BX+SI], CL",          LOCK, 0x0F, 0xB0, 0010);
+    TEST("LOCK CMPXCHG WORD PTR [BX+SI], CX",          LOCK, 0x0F, 0xB1, 0010);
+    TEST("LOCK CMPXCHG DWORD PTR [BX+SI], ECX", DATA32, LOCK, 0x0F, 0xB1, 0010);
+    // BSWAP r32 in use32 mode: opcode alone, no DATA32 needed
+    assembler.setOption("use32", "enable");
+    TEST("BSWAP EAX", 0x0F, 0xC8);
+    TEST("BSWAP EDI", 0x0F, 0xCF);
+    assembler.setOption("use16", "enable");
+    // BSWAP r16 is rejected (BSWAP only takes r32 operands)
+    ERRT("BSWAP AX", OPERAND_NOT_ALLOWED, "AX");
+    ERRT("BSWAP BX", OPERAND_NOT_ALLOWED, "BX");
+}
+
+void test_prefix_order() {
+    // libasm emits legacy prefixes in GAS order:
+    // segment override → addr32 (67) → data32 (66) → lock (F0) → rep (F2/F3)
+    // → opcode. The Intel SDM recommends the reverse; both decode identically.
+
+    // Single-prefix cases: order is unambiguous.
+    TEST("REP MOVSW",                            0xF3, 0xA5);
+    TEST("LOCK ADD [BX+SI], AX",                 0xF0, 0x01, 0000);
+    TEST("MOV ES:[BX], AH",                SEGES,      0x88, 0047);
+
+    // REP + DATA32: data-size before group-1 (rep).
+    TEST("REP MOVSD",                      DATA32, 0xF3, 0xA5);
+    TEST("REP STOSD",                      DATA32, 0xF3, 0xAB);
+    TEST("REPNE CMPSD",                    DATA32, 0xF2, 0xA7);
+
+    // LOCK + DATA32: data-size before lock.
+    TEST("LOCK ADD [BX+SI], EAX",          DATA32, 0xF0, 0x01, 0000);
+
+    // Segment + ADDR32: segment first, then addr32.
+    assembler.setOption("use32", "enable");
+    TEST("MOV ES:[SI], AH",                SEGES,   ADDR32, 0x88, 0044);
+    // Segment + ADDR32 + DATA32 + opcode: full chain.
+    TEST("MOV ES:[BX+SI], AX",             SEGES,   ADDR32, DATA32, 0x89, 0000);
+    assembler.setOption("use16", "enable");
 }
 
 // clang-format on
@@ -3607,15 +3751,16 @@ void run_tests(const char *cpu) {
     // written for use16 mode, so switch explicitly.
     if (is80386() || is80486())
         assembler.setOption("use16", "enable");
-    if (is80486())
-        return;
-    if (is80386()) {
+    if (is80386() || is80486()) {
         RUN_TEST(test_i80386_data_transfer);
         RUN_TEST(test_i80386_control_transfer);
         RUN_TEST(test_bit_manipulation);
         RUN_TEST(test_i80386_d_suffix);
         RUN_TEST(test_i80386_32bit_addressing);
+        RUN_TEST(test_prefix_order);
     }
+    if (is80486())
+        RUN_TEST(test_i80486);
     RUN_TEST(test_data_transfer);
     RUN_TEST(test_arithmetic);
     RUN_TEST(test_logic);

@@ -98,15 +98,7 @@ struct Operand final : ErrorAt {
 
 struct AsmInsn final : AsmInsnImpl<Config>, EntryInsn {
     AsmInsn(Insn &insn)
-        : AsmInsnImpl(insn),
-          _modReg(0),
-          _hasModReg(false),
-          _data32(0),
-          _addr32(0),
-          _gnuAs(false) {}
-
-    void setGnuAs(bool enable) { _gnuAs = enable; }
-    bool gnuAs() const { return _gnuAs; }
+        : AsmInsnImpl(insn), _modReg(0), _hasModReg(false), _data32(0), _addr32(0) {}
 
     Operand dstOp, srcOp, extOp;
 
@@ -148,7 +140,6 @@ private:
     bool _hasModReg;
     Config::opcode_t _data32;
     Config::opcode_t _addr32;
-    bool _gnuAs;
     char _prefixBuffer[Insn::MAX_NAME + 1];
     StrBuffer _prefixSave{_prefixBuffer, sizeof(_prefixBuffer)};
 

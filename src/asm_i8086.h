@@ -31,18 +31,14 @@ struct AsmI8086 final : Assembler, Config {
     void reset() override;
 
     Error setOptimizeSegment(bool enable);
-    Error setGnuAs(bool enable);
-    bool gnuAs() const { return _gnuAs; }
 
 private:
     const TextOption<Config> _opt_fpu;
     const BoolOption<Config> _opt_use16;
     const BoolOption<Config> _opt_use32;
     const BoolOption<AsmI8086> _opt_optimizeSegment;
-    const BoolOption<AsmI8086> _opt_gnuAs;
 
     bool _optimizeSegment;
-    bool _gnuAs;
 
     Error parsePointerSize(StrScanner &scan, Operand &op) const;
     void parseSegmentOverride(StrScanner &scan, Operand &op) const;
