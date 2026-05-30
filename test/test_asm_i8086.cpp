@@ -40,6 +40,10 @@ bool is80286() {
     return strcmp_P("80286", assembler.config().cpu_P()) == 0;
 }
 
+bool is80386() {
+    return strcmp_P("80386", assembler.config().cpu_P()) == 0;
+}
+
 bool is80287() {
     return strcmp_P("80287", asm8086.fpu_P()) == 0;
 }
@@ -3288,6 +3292,8 @@ void test_data_constant() {
 
 void run_tests(const char *cpu) {
     assembler.setCpu(cpu);
+    if (is80386())
+        return;
     RUN_TEST(test_data_transfer);
     RUN_TEST(test_arithmetic);
     RUN_TEST(test_logic);

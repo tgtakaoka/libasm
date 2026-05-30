@@ -60,7 +60,7 @@ struct Disassembler {
     Error setIntelStyle(bool enable);
     Error setMotorolaStyle(bool enable);
     Error setCurSym(char curSym);
-    Error setGnuAs(bool enable);
+    virtual Error setGnuAs(bool enable);
 
     Radix listRadix() const { return _listRadix; }
 

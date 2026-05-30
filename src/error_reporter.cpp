@@ -158,6 +158,8 @@ const /*PROGMEM*/ char *ErrorReporter::errorText_P(Error error) {
     // Command line
     case UNKNOWN_OPTION:
         return PSTR("Unknown option");
+    case OPTION_NOT_SUPPORTED:
+        return PSTR("Option not supported");
     }
 
     return PSTR("Unknown error");

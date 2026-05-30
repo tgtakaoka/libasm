@@ -33,24 +33,37 @@ struct DisI8086 final : Disassembler, Config {
     Error setLockInsn(bool enable);
     Error setRepeatInsn(bool enable);
     Error setSegmentInsn(bool enable);
+    Error setFarInsn(bool enable);
+    Error setPtrSuffix(bool enable);
 
 private:
     const TextOption<Config> _opt_fpu;
     const BoolOption<DisI8086> _opt_segInsn;
     const BoolOption<DisI8086> _opt_repInsn;
     const BoolOption<DisI8086> _opt_lockInsn;
+    const BoolOption<DisI8086> _opt_farInsn;
+    const BoolOption<DisI8086> _opt_ptrSuffix;
+    const BoolOption<DisI8086> _opt_use16;
+    const BoolOption<DisI8086> _opt_use32;
 
     bool _segInsn;
     bool _repInsn;
     bool _lockInsn;
+    FarMode _farMode;
+    bool _ptrSuffix;
 
+    Error setGnuAs(bool enable) override;
     StrBuffer &outRegister(StrBuffer &out, RegName name, const char prefix = 0) const;
+    StrBuffer &outMemPrefix(DisInsn &insn, StrBuffer &out, RegName seg) const;
     StrBuffer &outMemReg(
-            DisInsn &insn, StrBuffer &out, RegName seg, uint8_t mode, uint8_t r_m) const;
+            DisInsn &insn, StrBuffer &out, RegName seg, uint_fast8_t mode, uint_fast8_t r_m) const;
     StrBuffer &prependLockPrefix(DisInsn &insn, StrBuffer &out) const;
     StrBuffer &prependRepeatInsn(DisInsn &insn, StrBuffer &out) const;
+    StrBuffer &outDisplacement(DisInsn &insn, StrBuffer &out, uint_fast8_t mod) const;
+    StrBuffer &outScaledIndex(DisInsn &insn, StrBuffer &out, uint_fast8_t mod) const;
+    StrBuffer &out32bitAddr(DisInsn &insn, StrBuffer &out, uint_fast8_t mod) const;
 
-    RegName decodeRegister(const DisInsn &insn, AddrMode mode, OprPos pos) const;
+    RegName decodeRegister(DisInsn &insn, AddrMode mode, OprPos pos) const;
     void decodeRelative(DisInsn &insn, StrBuffer &out, AddrMode mode) const;
     void decodeImmediate(DisInsn &insn, StrBuffer &out, AddrMode mode) const;
     void decodeMemReg(DisInsn &insn, StrBuffer &out, AddrMode mode, OprPos pos) const;
