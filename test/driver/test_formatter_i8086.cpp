@@ -94,9 +94,42 @@ test.bin: error: Unknown instruction
             0xf7, 0x83, 0xff, 0xfe, 0xaa, 0xbb, 0xd1, 0xf7);
 }
 
+void test_dis_i80486() {
+    PREP_DIS(i8086::DisI8086);
+
+    driver.setUpperHex(false);
+
+    DIS8("i80486", 0x1000,
+         R"(      cpu     80486
+      org     00001000h
+      bswap   eax
+      xadd    al, bl
+      cmpxchg [eax], cl
+      invd
+      wbinvd
+      invlpg  [edi]
+)",
+         R"(       0 :                            cpu     80486
+    1000 :                            org     00001000h
+    1000 : 0f c8                      bswap   eax
+    1002 : 0f c0 d8                   xadd    al, bl
+    1005 : 0f b0 08                   cmpxchg [eax], cl
+    1008 : 0f 08                      invd
+    100a : 0f 09                      wbinvd
+    100c : 0f 01 3f                   invlpg  [edi]
+)",
+            0x0f, 0xc8,
+            0x0f, 0xc0, 0xd8,
+            0x0f, 0xb0, 0x08,
+            0x0f, 0x08,
+            0x0f, 0x09,
+            0x0f, 0x01, 0x3f);
+}
+
 void run_tests() {
     RUN_TEST(test_asm_i8086);
     RUN_TEST(test_dis_i8086);
+    RUN_TEST(test_dis_i80486);
 }
 
 }  // namespace test
