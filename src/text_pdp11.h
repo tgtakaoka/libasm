@@ -168,7 +168,7 @@ using common::TEXT_NEGF;
 extern const char TEXT_SETD[]  PROGMEM;
 extern const char TEXT_SETF[]  PROGMEM;
 extern const char TEXT_SETI[]  PROGMEM;
-extern const char TEXT_SETL[]  PROGMEM;
+using common::TEXT_SETL;
 extern const char TEXT_STCDF[] PROGMEM;
 extern const char TEXT_STCDI[] PROGMEM;
 extern const char TEXT_STCDL[] PROGMEM;

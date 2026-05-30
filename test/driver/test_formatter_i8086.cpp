@@ -76,6 +76,7 @@ void test_dis_i8086() {
     PREP_DIS(i8086::DisI8086);
 
     driver.setUpperHex(false);
+    driver.setOption("ptr-suffix", "on");
 
     DIS8("i8086", 0xbcdef,
          R"(      cpu     8086

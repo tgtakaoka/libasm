@@ -120,7 +120,7 @@ extern const char TEXT_RETL[] PROGMEM;
 using common::TEXT_SD;
 using common::TEXT_SETB;
 extern const char TEXT_SETH[] PROGMEM;
-extern const char TEXT_SETS[] PROGMEM;
+using common::TEXT_SETS;
 extern const char TEXT_SRBT[] PROGMEM;
 using common::TEXT_STB;
 using common::TEXT_STD;
