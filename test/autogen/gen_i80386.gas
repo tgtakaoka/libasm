@@ -12,7 +12,7 @@
 ;### See the License for the specific language governing permissions and
 ;### limitations under the License.
 
-        .code16
+        .code32
         .include "gen_i80386.ginc"
 
 ;### Local Variables:
