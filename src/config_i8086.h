@@ -31,6 +31,7 @@ enum CpuType : uint8_t {
     V30,
     I80286,
     I80386,
+    I80486,
 };
 
 enum FpuType : uint8_t {
@@ -40,6 +41,7 @@ enum FpuType : uint8_t {
     FPU_I8087,
     FPU_I80287,
     FPU_I80387,
+    FPU_I80487,
     FPU_I80C187,
 #endif
 };
@@ -48,8 +50,8 @@ struct CpuSpec final {
     CpuSpec(CpuType cpu_, FpuType fpu_) : cpu(cpu_), fpu(fpu_) {}
     CpuType cpu;
     FpuType fpu;
-    bool hasExtraSeg() const { return cpu == I80386; }
-    bool has32bit() const { return cpu == I80386; }
+    bool hasExtraSeg() const { return cpu == I80386 || cpu == I80486; }
+    bool has32bit() const { return cpu == I80386 || cpu == I80486; }
 };
 
 struct Config : ConfigImpl<CpuType, ADDRESS_32BIT, ADDRESS_BYTE, OPCODE_8BIT, ENDIAN_LITTLE, 6, 7> {

@@ -29,10 +29,12 @@ extern const char TEXT_CPU_8086[]  PROGMEM;
 extern const char TEXT_CPU_80186[] PROGMEM;
 extern const char TEXT_CPU_80286[] PROGMEM;
 extern const char TEXT_CPU_80386[] PROGMEM;
+extern const char TEXT_CPU_80486[] PROGMEM;
 extern const char TEXT_CPU_V30[]   PROGMEM;
 extern const char TEXT_FPU_8087[]  PROGMEM;
 extern const char TEXT_FPU_80287[] PROGMEM;
 extern const char TEXT_FPU_80387[] PROGMEM;
+extern const char TEXT_FPU_80487[] PROGMEM;
 extern const char TEXT_FPU_80C187[] PROGMEM;
 using common::TEXT_none;
 using common::TEXT_FPU;
@@ -265,6 +267,14 @@ extern const char TEXT_SETZ[]   PROGMEM;
 using common::TEXT_SHLD;
 extern const char TEXT_SHRD[]   PROGMEM;
 extern const char TEXT_STOSD[]  PROGMEM;
+
+// i80486
+extern const char TEXT_BSWAP[]   PROGMEM;
+extern const char TEXT_CMPXCHG[] PROGMEM;
+extern const char TEXT_INVD[]    PROGMEM;
+extern const char TEXT_INVLPG[]  PROGMEM;
+extern const char TEXT_WBINVD[]  PROGMEM;
+extern const char TEXT_XADD[]    PROGMEM;
 
 // V30
 extern const char TEXT_ADD4S[] PROGMEM;

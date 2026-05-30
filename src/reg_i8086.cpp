@@ -92,7 +92,7 @@ RegName parseRegName(StrScanner &scan, const CpuSpec &cpuSpec, const ValueParser
             scan = p;
             return reg;
         }
-    } else if (cpuSpec.cpu == I80386) {
+    } else if (cpuSpec.has32bit()) {
         p = scan;
         auto base = REG_UNDEF;
         if (p.iexpectText_P(TEXT_REG_CR)) {
@@ -153,7 +153,7 @@ RegName decodeSegReg(uint8_t num, const CpuSpec &cpuSpec) {
 }
 
 RegName decodeCtlReg(uint8_t num, const CpuSpec &cpuSpec) {
-    if (cpuSpec.cpu == I80386) {
+    if (cpuSpec.has32bit()) {
         num &= 7;
         if (num < 4)
             return RegName(REG_CR_BASE + num);
@@ -162,7 +162,7 @@ RegName decodeCtlReg(uint8_t num, const CpuSpec &cpuSpec) {
 }
 
 RegName decodeDbgReg(uint8_t num, const CpuSpec &cpuSpec) {
-    if (cpuSpec.cpu == I80386) {
+    if (cpuSpec.has32bit()) {
         num &= 7;
         if (num < 4 || num >= 6)
             return RegName(REG_DR_BASE + num);
@@ -171,7 +171,7 @@ RegName decodeDbgReg(uint8_t num, const CpuSpec &cpuSpec) {
 }
 
 RegName decodeTstReg(uint8_t num, const CpuSpec &cpuSpec) {
-    if (cpuSpec.cpu == I80386) {
+    if (cpuSpec.has32bit()) {
         num &= 7;
         if (num >= 6)
             return RegName(REG_TR_BASE + num);
