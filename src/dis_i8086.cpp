@@ -142,6 +142,11 @@ RegName DisI8086::decodeRegister(DisInsn &insn, AddrMode mode, OprPos pos) const
         return insn.size() == SZ_DATA && insn.useData32() ? decodeDwordReg(num)
                                                           : decodeWordReg(num);
     case M_DREG:
+        // Mark DATA32 as used when the entry's operand size is data-size dependent
+        // (e.g. BSWAP). DATA32 doesn't change the decoded register (M_DREG is always
+        // 32-bit) but its presence is what makes the operand-size attribute well-defined.
+        if (insn.size() == SZ_DATA)
+            (void)insn.useData32();
         return decodeDwordReg(num);
     case M_SREG:
         return decodeSegReg(num, _cpuSpec);
@@ -756,7 +761,7 @@ Error DisI8086::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) const
             decodeOperand(insn, out.comma(), insn.ext(), insn.extPos());
         if (_cpuSpec.has32bit()) {
             const auto opc = insn.opCode();
-            if (insn.loopInsn(opc) && !insn.fpuInsn()) {
+            if (insn.loopInsn(opc) && insn.prefix() == 0) {
                 const bool show = !_gnuAs && (_model32 || insn.hasAddr32());
                 const bool use_ecx = insn.useAddr32();
                 if (show)
