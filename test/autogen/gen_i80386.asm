@@ -1,4 +1,4 @@
-; Copyright 2023 Tadashi G. Takaoka
+; Copyright 2025 Tadashi G. Takaoka
 ;
 ; Licensed under the Apache License, Version 2.0 (the "License");
 ; you may not use this file except in compliance with the License.
@@ -12,10 +12,10 @@
 ; See the License for the specific language governing permissions and
 ; limitations under the License.
 
-        cpu     8086
+        cpu     80386
         fpu     on
         org     0x1000
-        include "gen_i8086.ginc"
+        include "gen_i80386.inc"
         end
 
 ; Local Variables:
