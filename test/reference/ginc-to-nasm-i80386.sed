@@ -1,5 +1,5 @@
-# 32-bit-mode .ginc transform, applied AFTER ginc-to-nasm.sed only for
-# the test_i80386 / test_i80486 (32-bit) nasm targets.
+# 32-bit-mode .ginc transform, applied AFTER ginc-to-nasm-i8086.sed only
+# for the test_i80386 / test_i80486 (32-bit / .code32) nasm targets.
 #
 # In [bits 32] mode nasm picks 16-bit operand size for memory-only operands
 # whose addressing register is 16-bit (e.g. `pop [si]` → `pop word`); GAS

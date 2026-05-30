@@ -1,0 +1,93 @@
+;### Copyright 2026 Tadashi G. Takaoka
+;###
+;### Licensed under the Apache License, Version 2.0 (the "License");
+;### you may not use this file except in compliance with the License.
+;### You may obtain a copy of the License at
+;###
+;###     http://www.apache.org/licenses/LICENSE-2.0
+;###
+;### Unless required by applicable law or agreed to in writing, software
+;### distributed under the License is distributed on an "AS IS" BASIS,
+;### WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+;### See the License for the specific language governing permissions and
+;### limitations under the License.
+
+;### BSWAP r32
+        bswap   eax
+        bswap   ecx
+        bswap   edx
+        bswap   ebx
+        bswap   esp
+        bswap   ebp
+        bswap   esi
+        bswap   edi
+;### XADD r/m8, r8
+        xadd    al, bl
+        xadd    cl, dl
+        xadd    byte ptr [bx+si], cl
+        xadd    byte ptr [bx+di], dl
+        xadd    byte ptr [bp+si], bl
+        xadd    byte ptr [si], al
+        xadd    byte ptr [bx], ah
+        xadd    byte ptr [bx+0x34], bl
+        xadd    byte ptr [bp+0x1234], cl
+        xadd    byte ptr [0x1234], dl
+;### XADD r/m16, r16
+        xadd    ax, bx
+        xadd    cx, dx
+        xadd    word ptr [bx+si], cx
+        xadd    word ptr [bx+di], dx
+        xadd    word ptr [si], ax
+        xadd    word ptr [bx], ax
+        xadd    word ptr [bx+0x34], bx
+        xadd    word ptr [bp+0x1234], cx
+        xadd    word ptr [0x1234], dx
+;### XADD r/m32, r32
+        xadd    eax, ebx
+        xadd    ecx, edx
+        xadd    dword ptr [bx+si], ecx
+        xadd    dword ptr [si], eax
+        xadd    dword ptr [bx], eax
+        xadd    dword ptr [bx+0x34], ebx
+        xadd    dword ptr [0x1234], edx
+;### CMPXCHG r/m8, r8
+        cmpxchg al, bl
+        cmpxchg byte ptr [bx+si], cl
+        cmpxchg byte ptr [bx], dl
+        cmpxchg byte ptr [bx+0x34], bl
+        cmpxchg byte ptr [0x1234], cl
+;### CMPXCHG r/m16, r16
+        cmpxchg ax, bx
+        cmpxchg word ptr [bx+si], cx
+        cmpxchg word ptr [bx], dx
+        cmpxchg word ptr [0x1234], bx
+;### CMPXCHG r/m32, r32
+        cmpxchg eax, ebx
+        cmpxchg dword ptr [bx+si], ecx
+        cmpxchg dword ptr [bx], edx
+        cmpxchg dword ptr [0x1234], ebx
+;### INVD
+        invd
+;### WBINVD
+        wbinvd
+;### INVLPG m
+        invlpg  [bx+si]
+        invlpg  [bx+di]
+        invlpg  [si]
+        invlpg  [bx]
+        invlpg  [bx+0x34]
+        invlpg  [bp+0x1234]
+        invlpg  [0x1234]
+;### LOCK XADD
+        lock xadd byte ptr [bx+si], cl
+        lock xadd word ptr [bx+si], cx
+        lock xadd dword ptr [bx+si], ecx
+;### LOCK CMPXCHG
+        lock cmpxchg byte ptr [bx+si], cl
+        lock cmpxchg word ptr [bx+si], cx
+        lock cmpxchg dword ptr [bx+si], ecx
+
+;### Local Variables:
+;### mode: asm
+;### End:
+;### vim: set ft=asm:
