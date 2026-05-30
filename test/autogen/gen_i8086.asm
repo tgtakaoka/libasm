@@ -14,7 +14,7 @@
 
         cpu     8086
         fpu     on
-        org     0x0000
+        org     0x1000
         include "gen_i8086.ginc"
         end
 

@@ -310,6 +310,22 @@ bool isX86Reg32(const char *p) {
     return c1 == 'E' && isX86Reg16(p + 1);
 }
 
+// A trailing signed displacement of an 80X86 memory operand: "(+|-)number]".
+// Both signs are the same addressing form (the 80386 displacement is a signed
+// integer), so they collapse to one token. This catches the base+index(*scale)
+// cases the [REG+n] rules above do not, e.g. [eax+ecx*4-n] and [eax+ecx*4+n].
+// (MC680x0 "[-n]" is reduced earlier by the '['-prefixed rule, so unaffected.)
+bool isX86Disp(const char *p, const char *&r) {
+    if (*p != '+' && *p != '-')
+        return false;
+    const char *tmp;
+    if (isNumber(p + 1, tmp) && *tmp == ']') {
+        r = tmp;
+        return true;
+    }
+    return false;
+}
+
 bool TokenizedText::reduceSizeSuffix = false;
 
 TokenizedText::TokenizedText(const char *text) : _tokens(tokenize(text)), _count(0) {}
@@ -327,6 +343,11 @@ std::string TokenizedText::tokenize(const char *text) {
             t.push_back('E');
             t.push_back('+');
             t.push_back('e');
+            b = tmp;
+        } else if (isX86Disp(b, tmp)) {
+            // reduce signed displacement variants of 80X86; [...+n] and [...-n]
+            t.push_back('+');
+            t.push_back('n');
             b = tmp;
         } else if (isNumber(b, tmp) || (*b == '-' && isNumber(b + 1, tmp))) {
             t.push_back('n');
