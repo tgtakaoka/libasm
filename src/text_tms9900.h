@@ -86,7 +86,7 @@ using common::TEXT_S;
 extern const char TEXT_SB[]   PROGMEM;
 extern const char TEXT_SBO[]  PROGMEM;
 extern const char TEXT_SBZ[]  PROGMEM;
-extern const char TEXT_SETO[] PROGMEM;
+using common::TEXT_SETO;
 using common::TEXT_SLA;
 extern const char TEXT_SOC[]  PROGMEM;
 extern const char TEXT_SOCB[] PROGMEM;

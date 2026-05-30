@@ -36,8 +36,6 @@ GINC_targets = $(TGT_mc68000) $(TGT_z8000) $(TGT_pdp11) $(TGT_h8300) $(TGT_h8500
     tms320c30 tms320c31 tms320c32
 # target which also has Zilog syntax (also ".zinc" targets)
 ZINC_targets = i8080 i8085 v30emu
-# target which doesn't need ".asm"
-NOASM_targets = i80286 h8s2000n h8s2000 h8s2600n h8s2600
 # CPU variants whose generated source ASL cannot assemble. This filters
 # which asl-X.hex rules exist (asl-test target). Generation of .inc/.ginc
 # still happens because libasm and gas consume them.
@@ -55,7 +53,6 @@ endef
 define gen-out # target
 $(if $(filter $(1),$(GINC_targets:%=%_ginc)),gen_$(1:%_ginc=%).ginc,\
 $(if $(filter $(1),$(ZINC_targets:%=%_zinc)),gen_$(1:%_zinc=%).zinc,\
-$(if $(filter $(1),$(NOASM_targets)),,\
 $(if $(call out-inc,$(1)),gen_$(1).inc,gen_$(1).asm))))
 endef
 
