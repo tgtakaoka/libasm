@@ -17,14 +17,16 @@
 # nasm is a third-party reference (alongside GAS and libasm asm).  Each
 # nasm-compatible target has a small .nasm wrapper that %includes
 # sed-transformed copies of the shared .ginc files.  The transformation
-# (ginc-to-nasm.sed) converts GAS/libasm Intel syntax into the more
+# (ginc-to-nasm-i8086.sed) converts GAS/libasm Intel syntax into the more
 # restrictive nasm dialect.
 #
 NASM = nasm
 
-# Transform a .ginc into nasm-compatible form via ginc-to-nasm.sed
-%.ninc: %.ginc ginc-to-nasm.sed
-	sed -f ginc-to-nasm.sed $< > $@
+# Transform a .ginc into nasm-compatible form via ginc-to-nasm-i8086.sed.
+# The real_i80486 / i80486 targets additionally apply ginc-to-nasm-i80486.sed,
+# and the 32-bit .code32 targets apply ginc-to-nasm-i80386.sed (see below).
+%.ninc: %.ginc ginc-to-nasm-i8086.sed
+	sed -f ginc-to-nasm-i8086.sed $< > $@
 
 # Per-target dependency declarations: each .nasm wrapper %includes a fixed
 # set of .ninc files. Listing them here lets make build them on demand.
@@ -36,9 +38,20 @@ nasm-test_real_i80386.bin: test_i8086.ninc test_i80186.ninc test_i80286.ninc tes
 # i80386 (32-bit / .code32) uses 32-bit-mode transformed copies (named %.b32.ninc).
 nasm-test_i80386.bin: test_i8086.b32.ninc test_i80186.b32.ninc test_i80286.b32.ninc test_i80386.b32.ninc test_i8087.b32.ninc test_i80287.b32.ninc test_i80387.b32.ninc
 
-%.b32.ninc: %.ginc ginc-to-nasm.sed ginc-to-nasm-32.sed
-	sed -f ginc-to-nasm.sed $< | sed -f ginc-to-nasm-32.sed > $@
+# real_i80486 uses i486-specific transformed copies (named %.i486.ninc).
+nasm-test_real_i80486.bin: test_i8086.i486.ninc test_i80186.i486.ninc test_i80286.i486.ninc test_i80386.i486.ninc test_i80486.i486.ninc test_i8087.i486.ninc test_i80287.i486.ninc test_i80387.i486.ninc
 
+# i80486 (32-bit / .code32) combines i486 + 32-bit-mode transforms (named %.i486.b32.ninc).
+nasm-test_i80486.bin: test_i8086.i486.b32.ninc test_i80186.i486.b32.ninc test_i80286.i486.b32.ninc test_i80386.i486.b32.ninc test_i80486.i486.b32.ninc test_i8087.i486.b32.ninc test_i80287.i486.b32.ninc test_i80387.i486.b32.ninc
+
+%.i486.ninc: %.ginc ginc-to-nasm-i8086.sed ginc-to-nasm-i80486.sed
+	sed -f ginc-to-nasm-i8086.sed $< | sed -f ginc-to-nasm-i80486.sed > $@
+
+%.b32.ninc: %.ginc ginc-to-nasm-i8086.sed ginc-to-nasm-i80386.sed
+	sed -f ginc-to-nasm-i8086.sed $< | sed -f ginc-to-nasm-i80386.sed > $@
+
+%.i486.b32.ninc: %.ginc ginc-to-nasm-i8086.sed ginc-to-nasm-i80486.sed ginc-to-nasm-i80386.sed
+	sed -f ginc-to-nasm-i8086.sed $< | sed -f ginc-to-nasm-i80486.sed | sed -f ginc-to-nasm-i80386.sed > $@
 
 # Assemble a .nasm wrapper to a flat binary; the wrapper %includes the
 # corresponding .ninc files (which the build generates above).
