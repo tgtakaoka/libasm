@@ -92,7 +92,7 @@ void AsmTms320::encodeNextAR(AsmInsn &insn, const Operand &op) const {
         val &= maxAR();
         insn.setErrorIf(op, UNKNOWN_REGISTER);
     }
-    if (is3202x())
+    if (!is3201x())
         insn.embed(8);
     insn.embed(val);
 }
@@ -237,19 +237,19 @@ void AsmTms320::encodeConditionCode(AsmInsn &insn, const Operand &op) const {
     if (is320C2x()) {
         static constexpr uint8_t CC[] PROGMEM = {
                 0xFF,  // CC_UNC = 0,   Unconditional
-                0xF9,  // CC_TC = 13,   TC=1:   BBNZ
-                0xF8,  // CC_NTC = 12,  TC=0:   BBZ
-                0xFA,  // CC_BIO = 11,  BIO=0:  BIOZ
-                0xF6,  // CC_EQ = 1,    Z=1:    BZ
-                0xF5,  // CC_NEQ = 2,   Z=0:    BNZ
-                0xF3,  // CC_LT = 3,    ACC<0:  BLZ
-                0xF4,  // CC_GEQ = 6,   ACC>=0: BGEZ
+                0xF9,  // CC_TC = 1,    TC=1:   BBNZ
+                0xF8,  // CC_NTC = 2,   TC=0:   BBZ
+                0xFA,  // CC_BIO = 3,   BIO=0:  BIOZ
+                0xF6,  // CC_EQ = 4,    Z=1:    BZ
+                0xF5,  // CC_NEQ = 5,   Z=0:    BNZ
+                0xF3,  // CC_LT = 6,    ACC<0:  BLZ
+                0xF4,  // CC_GEQ = 7,   ACC>=0: BGEZ
                 0xF0,  // CC_OV = 8,    V=1:    BV
-                0xF7,  // CC_NOV = 7,   V=0:    BNV
+                0xF7,  // CC_NOV = 9,   V=0:    BNV
                 0x5E,  // CC_C = 10,    C=1:    BC
-                0x5F,  // CC_NC = 9,    C=0:    BNC
-                0xF2,  // CC_LEQ = 4,   ACC<=0: BLEZ
-                0xF1,  // CC_GT = 5,    ACC>0:  BGZ
+                0x5F,  // CC_NC = 11,   C=0:    BNC
+                0xF2,  // CC_LEQ = 12,  ACC<=0: BLEZ
+                0xF1,  // CC_GT = 13,   ACC>0:  BGZ
         };
         insn.embed(pgm_read_byte(CC + op.cc) << 8);
         return;

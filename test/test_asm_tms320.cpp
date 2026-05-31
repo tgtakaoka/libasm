@@ -2324,9 +2324,11 @@ void test_control_c5x() {
     TEST("LST #1, *-, AR7", 0x0F9F);
     TEST("LST #1, *+, AR4", 0x0FAC);
 
+    TEST("SST #0, 0H",      0x8E00);
     TEST("SST #0, 10H",     0x8E10);
     TEST("SST #0, 1FH",     0x8E1F);
     TEST("SST #0, 7FH",     0x8E7F);
+    ERRT("SST #0, 80H", OVERFLOW_RANGE, "80H", 0x8E00);
     TEST("SST #0, *",       0x8E80);
     TEST("SST #0, *-",      0x8E90);
     TEST("SST #0, *+",      0x8EA0);
@@ -2336,6 +2338,7 @@ void test_control_c5x() {
     TEST("SST #1, 10H",     0x8F10);
     TEST("SST #1, 1FH",     0x8F1F);
     TEST("SST #1, 7FH",     0x8F7F);
+    ERRT("SST #1, 80H", OVERFLOW_RANGE, "80H", 0x8F00);
     TEST("SST #1, *",       0x8F80);
     TEST("SST #1, *-",      0x8F90);
     TEST("SST #1, *+",      0x8FA0);

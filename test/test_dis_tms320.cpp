@@ -2184,6 +2184,7 @@ void test_control_c5x() {
     TEST("LST", "#1, *-, AR7", 0x0F9F);
     TEST("LST", "#1, *+, AR4", 0x0FAC);
 
+    TEST("SST", "#0, 00H",     0x8E00);
     TEST("SST", "#0, 10H",     0x8E10);
     TEST("SST", "#0, 1FH",     0x8E1F);
     TEST("SST", "#0, 7FH",     0x8E7F);

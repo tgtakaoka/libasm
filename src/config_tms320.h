@@ -41,7 +41,7 @@ struct Config
 
 protected:
     bool is3201x() const { return cpuType() == TMS32010 || cpuType() == TMS32015; }
-    bool is3202x() const { return !is3201x(); }
+
     bool is320C2x() const { return cpuType() == TMS320C25 || cpuType() == TMS320C26; }
     bool is320C20x() const { return cpuType() == TMS320C20X; }
     bool is320C5x() const { return cpuType() == TMS320C5X; }
@@ -69,7 +69,9 @@ protected:
 
     bool isSST2x(opcode_t opc) const {
         const uint8_t insn = (opc >> 8) & 0xFE;
-        return is3202x() && insn == 0x78;  // SST and SST1;
+        if (is320C20x() || is320C5x())
+            return insn == 0x8E;  // SST0/SST1 for C20X/C5X (0x8E00/0x8F00)
+        return !is3201x() && insn == 0x78;  // SST/SST1 for 2x family (0x7800/0x7900)
     }
 
     bool validDmAddr(opcode_t opc, uint32_t dma) const {

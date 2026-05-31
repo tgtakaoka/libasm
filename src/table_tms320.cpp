@@ -1030,12 +1030,18 @@ bool matchOpCode2x(DisInsn &insn, const Entry *entry, const EntryPage *) {
     return matchOpCode(insn, entry, TMS320C25);
 }
 
+bool matchOpCodeC20x(DisInsn &insn, const Entry *entry, const EntryPage *) {
+    return matchOpCode(insn, entry, TMS320C20X);
+}
+
 Error searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) {
     const auto c = cpu(cpuType);
     if (cpuType == TMS32010 || cpuType == TMS32015) {
         c->searchOpCode(insn, out, matchOpCode1x);
     } else if (cpuType == TMS32020) {
         c->searchOpCode(insn, out, matchOpCode20);
+    } else if (cpuType == TMS320C20X || cpuType == TMS320C5X) {
+        c->searchOpCode(insn, out, matchOpCodeC20x);
     } else {
         c->searchOpCode(insn, out, matchOpCode2x);
     }
