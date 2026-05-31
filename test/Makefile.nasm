@@ -31,6 +31,14 @@ NASM = nasm
 nasm-test_i8086.bin: test_i8086.ninc test_i8086_far.ninc test_i8087.ninc
 nasm-test_i80186.bin: test_i8086.ninc test_i8086_far.ninc test_i80186.ninc test_i8087.ninc test_i80c187.ninc
 nasm-test_i80286.bin: test_i8086.ninc test_i80186.ninc test_i80286.ninc test_i8087.ninc test_i80287.ninc
+nasm-test_real_i80386.bin: test_i8086.ninc test_i80186.ninc test_i80286.ninc test_i80386.ninc test_i8087.ninc test_i80287.ninc test_i80387.ninc
+
+# i80386 (32-bit / .code32) uses 32-bit-mode transformed copies (named %.b32.ninc).
+nasm-test_i80386.bin: test_i8086.b32.ninc test_i80186.b32.ninc test_i80286.b32.ninc test_i80386.b32.ninc test_i8087.b32.ninc test_i80287.b32.ninc test_i80387.b32.ninc
+
+%.b32.ninc: %.ginc ginc-to-nasm.sed ginc-to-nasm-32.sed
+	sed -f ginc-to-nasm.sed $< | sed -f ginc-to-nasm-32.sed > $@
+
 
 # Assemble a .nasm wrapper to a flat binary; the wrapper %includes the
 # corresponding .ninc files (which the build generates above).
