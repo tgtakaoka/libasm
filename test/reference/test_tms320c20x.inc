@@ -62,6 +62,8 @@
         sph     *0+, AR7
         sst     #0, *-, 2
         sst     #1, *+, AR3
+        sst     #0, 00H
+        sst     #1, 7FH
         sacl    *, 7, AR1
         sach    *+, 0, AR4
         norm    *

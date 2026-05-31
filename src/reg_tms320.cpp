@@ -144,25 +144,6 @@ CcName parseCcName(StrScanner &scan, const ValueParser &parser) {
     return CC_UNDEF;
 }
 
-uint16_t encodeCcName(CcName name) {
-    static constexpr uint8_t CC[] PROGMEM = {
-            0xFF,  // CC_UNC = 0,   Unconditional
-            0xF6,  // CC_EQ = 1,    Z=1:    BZ
-            0xF5,  // CC_NEQ = 2,   Z=0:    BNZ
-            0xF3,  // CC_LT = 3,    ACC<0:  BLZ
-            0xF2,  // CC_LEQ = 4,   ACC<=0: BLEZ
-            0xF1,  // CC_GT = 5,    ACC>0:  BGZ
-            0xF4,  // CC_GEQ = 6,   ACC>=0: BGEZ
-            0xF7,  // CC_NOV = 7,   V=0:    BNV
-            0xF0,  // CC_OV = 8,    V=1:    BV
-            0x5F,  // CC_NC = 9,    C=0:    BNC
-            0x5E,  // CC_C = 10,    C=1:    BC
-            0xFA,  // CC_BIO = 11,  BIO=0:  BIOZ
-            0xF8,  // CC_NTC = 12,  TC=0:   BBZ
-            0xF9,  // CC_TC = 13,   TC=1:   BBNZ
-    };
-    return pgm_read_byte(CC + name) << 8;
-}
 
 }  // namespace reg
 }  // namespace tms320

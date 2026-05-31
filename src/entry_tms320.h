@@ -95,7 +95,7 @@ enum CodeFormat : uint8_t {
     CF_07FF = 12,  // 0x07FF
     CF_0F00 = 13,  // 0x0F00
     CF_0FFF = 14,  // 0x0FFF
-    CF_13FF = 15,  // 0x1FFF
+    CF_13FF = 15,  // 0x13FF
     CF_1FFF = 16,  // 0x1FFF
 };
 
