@@ -21,9 +21,10 @@ help:
 -include ../Makefile.asm
 -include ../Makefile.asl
 -include ../Makefile.gas
+-include ../Makefile.nasm
 
 .PHONY:: asm-test asl-test gas-test
-.PHONY:: clean clean-asm clean-asl clean-gas
+.PHONY:: clean clean-asm clean-asl clean-gas clean-nasm
 
 ASM=../../cli/asm
 $(ASM)-refresh:
@@ -70,7 +71,7 @@ gas-test: clean-gas $(GAS_OUTS:%=gas-%)
 clean-gas:
 	-rm -f $(GAS_OUTS)
 
-clean:
+clean: clean-nasm
 	-rm -f *.o *.p *.lst *.dis
 
 # Local Variables:
