@@ -70,3 +70,9 @@ s/^\([[:space:]]\+\)xchg\([[:space:]]\+\)\(ax\|bx\|cx\|dx\|si\|di\|bp\|sp\|al\|b
 
 # Force long-form movsx ax,al (nasm optimizes the 0F BE C0 form to CBW)
 s/^\([[:space:]]\+\)movsx[[:space:]]\+ax[[:space:]]*,[[:space:]]*al[[:space:]]*$/\1db 0x0f,0xbe,0xc0 ; movsx ax,al/
+
+# i80386 D-suffix imm push: pushd N -> push dword N
+s/^\([[:space:]]\+\)pushd[[:space:]]\+/\1push dword /
+
+# Section header `### ...` becomes `;### ...` (GAS treats # as comment)
+s/^###/;###/
