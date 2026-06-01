@@ -60,6 +60,12 @@ struct Insn final : ErrorAt {
     /** Generate 16 bit little endian |data| (Assembler). */
     Error emitUint16Le(uint16_t data) { return emitUint16Le(data, _length); }
 
+    /** Generate 24 bit big endian |data| (Assembler). */
+    Error emitUint24Be(uint32_t data) { return emitUint24Be(data, _length); }
+
+    /** Generate 24 bit little endian |data| (Assembler). */
+    Error emitUint24Le(uint32_t data) { return emitUint24Le(data, _length); }
+
     /** Generate 32 bit big endian |data| (Assembler). */
     Error emitUint32Be(uint32_t data) { return emitUint32Be(data, _length); }
 
@@ -94,6 +100,12 @@ struct Insn final : ErrorAt {
 
     /** Generate 16 bit little endian |data| at |pos| (Assembler). */
     Error emitUint16Le(uint16_t data, uint8_t pos);
+
+    /** Generate 24 bit big endian |data| at |pos| (Assembler). */
+    Error emitUint24Be(uint32_t data, uint8_t pos);
+
+    /** Generate 24 bit little endian |data| at |pos| (Assembler). */
+    Error emitUint24Le(uint32_t data, uint8_t pos);
 
     /** Generate 32 bit big endian |data| at |pos| (Assembler). */
     Error emitUint32Be(uint32_t data, uint8_t pos);
@@ -172,6 +184,12 @@ struct AsmInsnBase : ErrorAt {
 
     /** Generate 16 bit little endian |data| at |pos| (Assembler). */
     Error emitUint16Le(uint16_t data, uint8_t pos) { return _insn.emitUint16Le(data, pos); }
+
+    /** Generate 24 bit big endian |data| (Assembler). */
+    Error emitUint24Be(uint32_t data) { return _insn.emitUint24Be(data); }
+
+    /** Generate 24 bit little endian |data| (Assembler). */
+    Error emitUint24Le(uint32_t data) { return _insn.emitUint24Le(data); }
 
     /** Generate 32 bit big endian |data| (Assembler). */
     Error emitUint32Be(uint32_t data) { return _insn.emitUint32Be(data); }
@@ -256,6 +274,12 @@ struct DisInsnBase : ErrorAt {
 
     /** Read 16 bit little endian data */
     uint16_t readUint16Le();
+
+    /** Read 24 bit big endian data */
+    uint32_t readUint24Be();
+
+    /** Read 24 bit little endian data */
+    uint32_t readUint24Le();
 
     /** Read 32 bit big endian data */
     uint32_t readUint32Be();
@@ -362,6 +386,9 @@ struct AsmInsnImpl : AsmInsnBase {
         return big ? emitUint16Be(data, pos) : emitUint16Le(data, pos);
     }
 
+    /** Generate 24 bit |data| */
+    Error emitUint24(uint32_t data) { return big ? emitUint24Be(data) : emitUint24Le(data); }
+
     /** Generate 32 bit |data| */
     Error emitUint32(uint32_t data) { return big ? emitUint32Be(data) : emitUint32Le(data); }
 
@@ -391,6 +418,9 @@ struct DisInsnImpl : DisInsnBase {
 
     /** Read 16 bit data */
     uint16_t readUint16() { return big ? readUint16Be() : readUint16Le(); }
+
+    /** Read 24 bit data */
+    uint32_t readUint24() { return big ? readUint24Be() : readUint24Le(); }
 
     /** Read 32 bit data */
     uint32_t readUint32() { return big ? readUint32Be() : readUint32Le(); }

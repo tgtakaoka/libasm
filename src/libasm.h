@@ -61,6 +61,7 @@
 #include "dis_pdp8.h"
 #include "dis_scn2650.h"
 #include "dis_tlcs90.h"
+#include "dis_tlcs900.h"
 #include "dis_tms320.h"
 #include "dis_tms7000.h"
 #include "dis_tms9900.h"

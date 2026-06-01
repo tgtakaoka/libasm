@@ -165,9 +165,9 @@ using common::TEXT_REG_SP;
 
 // Z280
 extern const char TEXT_REG_DEHL[] PROGMEM;
-extern const char TEXT_REG_IXH[]  PROGMEM;
+using common::TEXT_REG_IXH;
 using common::TEXT_REG_IXL;
-extern const char TEXT_REG_IYH[]  PROGMEM;
+using common::TEXT_REG_IYH;
 using common::TEXT_REG_IYL;
 using common::TEXT_REG_USP;
 

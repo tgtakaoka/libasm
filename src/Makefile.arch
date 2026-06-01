@@ -37,6 +37,7 @@ ARCHS = \
 	pdp8     \
 	scn2650  \
 	tlcs90   \
+	tlcs900  \
 	tms320   \
 	tms320f  \
 	tms370   \
@@ -82,6 +83,7 @@ TGT_pdp11    = j11 t11
 TGT_pdp8     = im6100 hd6120
 TGT_scn2650  = scn2650
 TGT_tlcs90   = tlcs90
+TGT_tlcs900  = tlcs900h2
 TGT_tms320   = tms32010 tms320c25 tms320c26 tms320c20x tms320c5x
 TGT_tms320f  = tms320c30 tms320c31 tms320c32
 TGT_tms370   = tms370
@@ -151,6 +153,7 @@ CPU_r65c02   = 65C02
 CPU_scn2650  = 2650
 CPU_t11      = T11
 CPU_tlcs90   = TLCS90
+CPU_tlcs900h2 = TLCS900H2
 CPU_tms32010 = 32010
 CPU_tms320c20x = 320C20X
 CPU_tms320c25 = 320C25

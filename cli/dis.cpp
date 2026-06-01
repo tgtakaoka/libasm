@@ -38,6 +38,7 @@
 #include "dis_pdp8.h"
 #include "dis_scn2650.h"
 #include "dis_tlcs90.h"
+#include "dis_tlcs900.h"
 #include "dis_tms320.h"
 #include "dis_tms320f.h"
 #include "dis_tms370.h"
@@ -76,6 +77,7 @@ pdp11::DisPdp11 dispdp11;
 pdp8::DisPdp8 dispdp8;
 scn2650::DisScn2650 dis2650;
 tlcs90::DisTlcs90 dis90;
+tlcs900::DisTlcs900 dis900;
 tms320::DisTms320 dis320;
 tms320f::DisTms320f dis320f;
 tms370::DisTms370 dis370;
@@ -102,6 +104,7 @@ DisCommander commander{
         &disz380,
         &disz8,
         &dis90,
+        &dis900,
         &dis8060,
         &dis8070,
         &dis1802,
