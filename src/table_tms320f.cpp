@@ -1614,6 +1614,11 @@ constexpr uint8_t INDEX_TMS320C30_PARA2ND[] PROGMEM = {
 
 using EntryPage = entry::TableBase<Entry>;
 
+static_assert(sizeof(TABLE_TMS320C32_PARA1ST) == sizeof(TABLE_TMS320C30_PARA1ST),
+        "C32 and C30 parallel 1st tables must have the same entry count");
+static_assert(sizeof(TABLE_TMS320C32_PARA2ND) == sizeof(TABLE_TMS320C30_PARA2ND),
+        "C32 and C30 parallel 2nd tables must have the same entry count");
+
 constexpr EntryPage TMS320C30_PAGES[] PROGMEM = {
         {ARRAY_RANGE(TABLE_TMS320C30), ARRAY_RANGE(INDEX_TMS320C30)},
         {ARRAY_RANGE(TABLE_LDCOND), ARRAY_RANGE(INDEX_LDCOND)},

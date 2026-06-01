@@ -373,12 +373,17 @@ Error AsmTms320f::encodeFloat(AsmInsn &insn, const Operand &op, AddrMode mode, O
         if (mode == M_FDAT || mode == M_MEM || opr3)
             return insn.setErrorIf(op, ILLEGAL_OPERAND_MODE);
         insn.embed(UINT32_C(3) << 21);
+#if defined(LIBASM_ASM_NOFLOAT)
+        insn.setErrorIf(op, FLOAT_NOT_SUPPORTED);
+        insn.embed(0);
+#else
         f16.set(op.val.getFloat());
         if (mode == M_FLDM) {
             insn.embed(f16.bits() & 0xFFF);
         } else {
             insn.embed(f16.bits());
         }
+#endif
         break;
     default:
         break;
@@ -535,36 +540,28 @@ Error AsmTms320f::defineFloat(StrScanner &scan, Insn &insn, uint16_t bits) {
         }
         if (at.getError())
             error.setErrorIf(scan, at);
+#if defined(LIBASM_ASM_NOFLOAT)
+        error.setErrorIf(scan, FLOAT_NOT_SUPPORTED);
+        insn.emitUint32Le(0);
+        if (bits == 40)
+            insn.emitUint32Le(0);
+        (void)val;
+#else
         if (bits == 16) {
-#if !defined(LIBASM_ASM_NOFLOAT)
             ti_float16_t f16;
             f16.set(val.getFloat());
             insn.emitUint32Le(f16.bits());
-#else
-            error.setErrorIf(scam, FLOAT_NOT_SUPPORTED);
-            insn.emitUint32Le(0);
-#endif
         } else if (bits == 32) {
-#if !defined(LIBASM_ASM_NOFLOAT)
             ti_float32_t f32;
             f32.set(val.getFloat());
             insn.emitUint32Le(f32.bits());
-#else
-            error.setErrorIf(scam, FLOAT_NOT_SUPPORTED);
-            insn.emitUint32Le(0);
-#endif
-        } else {  // bits == 40) {
-#if !defined(LIBASM_ASM_NOFLOAT)
+        } else {  // bits == 40
             ti_float40_t f40;
             f40.set(val.getFloat());
             insn.emitUint32Le(f40.bits());
             insn.emitUint32Le(f40.bits() >> 8);
-#else
-            error.setErrorIf(scam, FLOAT_NOT_SUPPORTED);
-            insn.emitUint32Le(0);
-            insn.emitUint32Le(0);
-#endif
         }
+#endif
         scan = p;
     } while (scan.skipSpaces().expect(','));
     return insn.setErrorIf(error);

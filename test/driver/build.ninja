@@ -301,7 +301,7 @@ build test_formatter_tms320: test test_formatter_tms320.o $
   dec_float.o ibm_float.o ti_float.o test_driver_helper.o test_asserter.o
 
 build test_formatter_tms320f: test test_formatter_tms320f.o $
-  asm_tms320.o dis_tms320.o reg_tms320.o table_tms320.o text_tms320.o $
+  asm_tms320f.o dis_tms320f.o reg_tms320f.o table_tms320f.o text_tms320f.o $
   asm_base.o asm_directive.o asm_driver.o asm_formatter.o bin_decoder.o $
   bin_encoder.o bin_memory.o config_base.o dis_base.o dis_driver.o $
   dis_formatter.o error_reporter.o formatters.o function_store.o insn_base.o $
