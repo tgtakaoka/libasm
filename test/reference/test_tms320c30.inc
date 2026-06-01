@@ -227,10 +227,10 @@
         addi    -1, r4
         and     r5, r6
         and     ar7, r0
-        and     ffffH, r1
+        and     0ffffH, r1
         andn    r2, r3
         andn    r4, ar5
-        andn    ffffH, ir1
+        andn    0ffffH, ir1
         ash     r0, ir1
         ash     *ar2++, r3
         ash     -64, r4
@@ -269,10 +269,10 @@
         norm    -1.5, r1
         not     r2, r3
         not     *++ar4(128), ar5
-        not     ffffH, r6
+        not     0ffffH, r6
         or      r2, r3
         or      *++ar4(128), ar5
-        or      ffffH, r6
+        or      0ffffH, r6
         rnd     r5, r6
         rnd     *ar7--(128), r0
         rnd     -1.5, r1
@@ -285,7 +285,7 @@
         subb    -1, r7
         subc    ar0, r1
         subc    *+ar2(3), r4
-        subc    ffffH ,r5
+        subc    0ffffH ,r5
         subf    r6, r7
         subf    *+ar0(0), r1
         subf    -1.5, r2
@@ -303,10 +303,10 @@
         subri   -1, r7
         tstb    r0, r1
         tstb    *ar2--(3), r3
-        tstb    ffffH, r4
+        tstb    0ffffH, r4
         xor     r2, r3
         xor     *++ar4(128), ar5
-        xor     ffffH, r6
+        xor     0ffffH, r6
 ;;; unary
         absf    r1
         absi    r2
@@ -871,7 +871,7 @@
         rpts    *ar1
         rpts    *ar2++(ir0)b
         rpts    0
-        rpts    ffffH
+        rpts    0ffffH
         swi
         trapu   0
         traplo  1
