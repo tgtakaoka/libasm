@@ -187,6 +187,12 @@ build reg_tlcs90.o:   cxx ${root}/src/reg_tlcs90.cpp
 build table_tlcs90.o: cxx ${root}/src/table_tlcs90.cpp
 build text_tlcs90.o:  cxx ${root}/src/text_tlcs90.cpp
 
+# tlcs900
+build dis_tlcs900.o:   cxx ${root}/src/dis_tlcs900.cpp
+build reg_tlcs900.o:   cxx ${root}/src/reg_tlcs900.cpp
+build table_tlcs900.o: cxx ${root}/src/table_tlcs900.cpp
+build text_tlcs900.o:  cxx ${root}/src/text_tlcs900.cpp
+
 # tms320
 build asm_tms320.o:   cxx ${root}/src/asm_tms320.cpp
 build dis_tms320.o:   cxx ${root}/src/dis_tms320.cpp

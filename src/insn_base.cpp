@@ -61,6 +61,16 @@ Error Insn::emitUint16Le(uint16_t data, uint8_t pos) {
     return emitByte(data >> 8, pos + 1);
 }
 
+Error Insn::emitUint24Be(uint32_t data, uint8_t pos) {
+    emitByte(data >> 16, pos + 0);
+    return emitUint16Be(data, pos + 1);
+}
+
+Error Insn::emitUint24Le(uint32_t data, uint8_t pos) {
+    emitUint16Le(data, pos + 0);
+    return emitByte(data >> 16, pos + 2);
+}
+
 Error Insn::emitUint32Be(uint32_t data, uint8_t pos) {
     emitUint16Be(data >> 16, pos + 0);
     return emitUint16Be(data >> 0, pos + 2);
@@ -154,6 +164,18 @@ uint16_t DisInsnBase::readUint16Le() {
     const auto lsb = readByte();
     const auto msb = readByte();
     return static_cast<uint16_t>(msb) << 8 | lsb;
+}
+
+uint32_t DisInsnBase::readUint24Be() {
+    const auto msb = readByte();
+    const auto lsw = readUint16Be();
+    return static_cast<uint32_t>(msb) << 16 | lsw;
+}
+
+uint32_t DisInsnBase::readUint24Le() {
+    const auto lsw = readUint16Le();
+    const auto msb = readByte();
+    return static_cast<uint32_t>(msb) << 16 | lsw;
 }
 
 uint32_t DisInsnBase::readUint32Be() {

@@ -220,15 +220,15 @@ using common::TEXT_XORB;
 
 extern const char TEXT_REG_FCW[]     PROGMEM;
 extern const char TEXT_REG_FLAGS[]   PROGMEM;
-extern const char TEXT_REG_NSP[]     PROGMEM;
+using common::TEXT_REG_NSP;
 extern const char TEXT_REG_NSPOFF[]  PROGMEM;
 extern const char TEXT_REG_NSPSEG[]  PROGMEM;
 extern const char TEXT_REG_PSAP[]    PROGMEM;
 extern const char TEXT_REG_PSAPOFF[] PROGMEM;
 extern const char TEXT_REG_PSAPSEG[] PROGMEM;
 extern const char TEXT_REG_REFRESH[] PROGMEM;
-extern const char TEXT_REG_RH[]      PROGMEM;
-extern const char TEXT_REG_RL[]      PROGMEM;
+using common::TEXT_REG_RH;
+using common::TEXT_REG_RL;
 extern const char TEXT_REG_RQ[]      PROGMEM;
 using common::TEXT_REG_RR;
 
