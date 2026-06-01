@@ -13,6 +13,7 @@
 ;;; limitations under the License.
 
         .text
+        .org    0xc0
         .include "test_tms320c30.ginc"
         .include "test_tms320c31.ginc"
         .end

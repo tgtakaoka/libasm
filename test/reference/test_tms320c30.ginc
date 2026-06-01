@@ -533,7 +533,7 @@
         bluf    r7
         bzuf    ar0
         bu      .+0x1000
-        blo     .
+        blo     .+0x1000
         bls     .+0x1000
         bhi     .+0x1000
         bhs     .+0x1000
