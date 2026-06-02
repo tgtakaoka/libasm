@@ -49,6 +49,7 @@ struct ValueParser {
         virtual const FunctionTable &function() const;
 
         static const Plugins &defaultPlugins();
+        static const Plugins &hitachi();
         static const Plugins &intel();
         static const Plugins &texas();
         static const Plugins &motorola();

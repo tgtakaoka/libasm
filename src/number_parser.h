@@ -189,6 +189,19 @@ struct Pdp11NumberParser final : NumberParser, Singleton<Pdp11NumberParser> {
     Error parseNumber(StrScanner &scan, Value &val, Radix defaultRadix) const override;
 };
 
+/**
+ * Hitachi style numbers are
+ * - Decimal:     "[0-9]+|[dD]'[0-9]+'?"
+ * - Hexadecimal: "[hH]'[0-9A-Fa-f]+'?"
+ * - Octal:       "[qQ]'[0-7]+'?"
+ * - Binary:      "[bB]'[01]+'?"
+ * - Multi-char:  '"c..."' up to 4 chars, '""' as escaped double-quote
+ */
+struct HitachiNumberParser final : NationalNumberParser, Singleton<HitachiNumberParser> {
+    HitachiNumberParser() : NationalNumberParser('H', 'B', 'Q', 'D') {}
+    Error parseNumber(StrScanner &scan, Value &val, Radix defaultRadix) const override;
+};
+
 }  // namespace libasm
 
 #endif

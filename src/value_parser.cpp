@@ -55,6 +55,21 @@ const ValueParser::Plugins &ValueParser::Plugins::defaultPlugins() {
     return PLUGINS;
 }
 
+const ValueParser::Plugins &ValueParser::Plugins::hitachi() {
+    static const struct final : Plugins {
+        const NumberParser &number() const override { return HitachiNumberParser::singleton(); }
+        const CommentParser &comment() const override {
+            return SemicolonCommentParser::singleton();
+        }
+        const SymbolParser &symbol() const override { return HitachiSymbolParser::singleton(); }
+        const LetterParser &letter() const override { return HitachiLetterParser::singleton(); }
+        const OperatorParser &operators() const override {
+            return HitachiOperatorParser::singleton();
+        }
+    } PLUGINS;
+    return PLUGINS;
+}
+
 const ValueParser::Plugins &ValueParser::Plugins::intel() {
     static const IntelPlugins PLUGINS;
     return PLUGINS;

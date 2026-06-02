@@ -248,6 +248,39 @@ Error Pdp11NumberParser::parseNumber(StrScanner &scan, Value &val, Radix default
     return IntelNumberParser::singleton().parseNumber(scan, val, defaultRadix);
 }
 
+Error HitachiNumberParser::parseNumber(StrScanner &scan, Value &val, Radix defaultRadix) const {
+    if (*scan != '"')
+        return NationalNumberParser::parseNumber(scan, val, defaultRadix);
+    auto p = scan;
+    p++;  // consume opening '"'
+    uint32_t result = 0;
+    int count = 0;
+    for (;;) {
+        if (*p == 0)
+            return MISSING_CLOSING_DQUOTE;
+        if (*p == '"') {
+            p++;
+            if (*p == '"') {
+                p++;
+                result = (result << 8) | static_cast<uint8_t>('"');
+                count++;
+            } else {
+                break;  // closing '"'
+            }
+        } else if (count >= 4) {
+            return OVERFLOW_RANGE;
+        } else {
+            result = (result << 8) | static_cast<uint8_t>(*p++);
+            count++;
+        }
+    }
+    if (count == 0)
+        return ILLEGAL_CONSTANT;
+    val.setUnsigned(result);
+    scan = p;
+    return OK;
+}
+
 bool SymbolParser::symbolLetter(char c, bool headOfSymbol) const {
     return isalpha(c) || (!headOfSymbol && isdigit(c)) || c == '_';
 }
@@ -450,6 +483,21 @@ Error MotorolaLetterParser::parseLetter(StrScanner &scan, char &letter) const {
         return OK;
     }
     return NOT_AN_EXPECTED;
+}
+
+Error HitachiLetterParser::parseLetter(StrScanner &scan, char &letter) const {
+    auto p = scan;
+    if (!p.expect('"'))
+        return NOT_AN_EXPECTED;
+    ErrorAt error;
+    letter = readLetter(p, error, '"');
+    if (!error.isOK())
+        return error.getError();
+    if (p.expect('"')) {
+        scan = p;
+        return OK;
+    }
+    return NOT_AN_EXPECTED;  // multi-char constant; let number parser handle
 }
 
 char ZilogLetterParser::readLetter(StrScanner &scan, ErrorAt &error, char delim) const {

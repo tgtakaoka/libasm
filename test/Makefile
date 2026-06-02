@@ -92,7 +92,7 @@ endef
 $(eval $(foreach a,$(ARCHS),$(call test-rule,$(a))))
 
 # make rule for testing expression.
-EXPRS = base fairchild intel motorola national zilog
+EXPRS = base fairchild hitachi intel motorola national zilog
 define test-expr # expr
 test_expr_$(1): test_expr_$(1).o $$(OBJS_expr) $$(OBJS_test)
 	$$(CXX) -o $$@ $$(CXXFLAGS) $$^

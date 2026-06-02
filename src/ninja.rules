@@ -69,6 +69,7 @@ build table_i8086.o: cxx ${root}/src/table_i8086.cpp
 build text_i8086.o:  cxx ${root}/src/text_i8086.cpp
 
 # h8300
+build asm_h8300.o:   cxx ${root}/src/asm_h8300.cpp
 build dis_h8300.o:   cxx ${root}/src/dis_h8300.cpp
 build reg_h8300.o:   cxx ${root}/src/reg_h8300.cpp
 build table_h8300.o: cxx ${root}/src/table_h8300.cpp

@@ -39,6 +39,33 @@ struct EntryInsn : EntryInsnPrefix<Config, Entry> {
     OprPos prefixPos;
 };
 
+struct Operand final : ErrorAt {
+    AddrMode mode;
+    RegName reg;
+    Value val;
+    int_fast8_t bitSuffix;
+    Operand() : mode(M_NONE), reg(REG_UNDEF), val(), bitSuffix(0) {}
+};
+
+struct AsmInsn final : AsmInsnImpl<Config>, EntryInsn {
+    AsmInsn(Insn &insn) : AsmInsnImpl(insn), sizeSuffix(SZ_NONE) {}
+
+    Operand srcOp, dstOp;
+
+    AddrMode dst() const { return dstPos() == POS_PRX ? prefixMode : EntryInsn::dst(); }
+
+    OprSize parseSizeSuffix();
+
+    void emitInsn();
+    void emitOperand16(uint16_t val16) { emitUint16(val16, operandPos()); }
+
+    OprSize sizeSuffix;
+    ;
+
+private:
+    uint_fast8_t operandPos() const;
+};
+
 struct DisInsn final : DisInsnImpl<Config>, EntryInsn {
     DisInsn(Insn &insn, DisMemory &memory, const StrBuffer &out) : DisInsnImpl(insn, memory, out) {}
 
