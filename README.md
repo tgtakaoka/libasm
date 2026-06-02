@@ -127,8 +127,8 @@ It can read Intel HEX or Motorola S-Record input.
          TMS7000 TMS370 TMS32010 TMS32015 TMS32020 TMS320C25 TMS320C26
          TMS320C20X TMS320C5X TMS320C30 TMS320C31 TMS320C32 i8086 i80186
          i80286 V30 i8096 i80196 MC68000 MC68010 MC68020 MC68030 MC68040
-         TMS9900 TMS9980 TMS9995 TMS99105 TMS99110 Z8001 Z8002 NS32032 MN1610
-         MN1613 MN1613A J11 T11
+         H8/300 TMS9900 TMS9980 TMS9995 TMS99105 TMS99110 Z8001 Z8002 NS32032
+         MN1610 MN1613 MN1613A J11 T11
       -o <output>      : output file
       -l <list>        : list file
       <input>          : file can be Motorola S-Record or Intel HEX format
@@ -160,6 +160,7 @@ It can read Intel HEX or Motorola S-Record input.
       --segment-insn   : segment override as instruction (bool: 8086)
       --segmented-addr : use <<segment>> notation (bool: Z8001)
       --short-direct   : use |addr| for short direct notation (bool: Z8001)
+      --sp-alias       : emit SP alias for ER7/R7 in indirect addressing (bool: H8/300)
       --use-absolute   : zero register indexing as absolute addressing (bool: 8096)
       --use-aux-name   : use aux register name ARn (bool: 32010)
       --use-port-name  : use port name PAn (bool: 32010)

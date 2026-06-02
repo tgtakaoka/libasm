@@ -244,6 +244,7 @@ struct DisInsnBase : ErrorAt {
     uint8_t length() const { return _insn.length(); }
     const char *name() const { return _insn.name(); }
     StrBuffer &nameBuffer() { return _insn.nameBuffer(); }
+    void appendName(StrBuffer &out, char c);
 
     void resetLength(uint8_t length = 0);
 

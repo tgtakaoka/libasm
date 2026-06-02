@@ -89,7 +89,7 @@ extern const char TEXT_BITS[]   PROGMEM;
 using common::TEXT_BOR;
 extern const char TEXT_BTJRF[]  PROGMEM;
 extern const char TEXT_BTJRT[]  PROGMEM;
-extern const char TEXT_BXOR[]   PROGMEM;
+using common::TEXT_BXOR;
 extern const char TEXT_CPIJE[]  PROGMEM;
 extern const char TEXT_CPIJNE[] PROGMEM;
 using common::TEXT_DIV;

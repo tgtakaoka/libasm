@@ -29,10 +29,10 @@ help:
 # target which has ".inc" suffix for output.
 INC_targets = w65c816 tlcs90 i8086 i80186 $(TGT_mc68000) $(TGT_z8000) $(TGT_nm1610) \
     ns32000 tms320c20x tms320c5x tms320c30 tms320c31 tms320c32 tms370 tms7000 tms9980 \
-    j11 t11 mc146805 z80 z180 z380
+    j11 t11 mc146805 z80 z180 z380 h8300
 # target which for GNU assembler (also ".ginc" targets)
 GINC_targets = $(TGT_mc68000) $(TGT_z8000) ns32000 mc68hc11 mc68hc12 i8086 i80186 i80286 \
-    tms320c30 tms320c31 tms320c32
+    tms320c30 tms320c31 tms320c32 h8300
 # target which also has Zilog syntax (also ".zinc" targets)
 ZINC_targets = i8080 i8085 v30emu
 # target which doesn't need ".asm"
@@ -41,6 +41,11 @@ NOASM_targets = i80286
 # which asl-X.hex rules exist (asl-test target). Generation of .inc/.ginc
 # still happens because libasm and gas consume them.
 ASL_exclude = mb8861 i80286
+# CPU variants whose gas toolchain does not produce a manual-conforming
+# encoding. h8300-elf-as has no -mach=h8300; it always emits the H8/300H
+# 4-byte form for JMP/JSR @aa:16, producing bytes that don't execute on
+# real H8/300 silicon. Excluded from gas-test.
+GAS_exclude = h8300
 
 # file name of generating file
 define out-inc # target
@@ -90,7 +95,7 @@ define gen-arch-rule # arch
 clean_$(1):
 	rm -f $(foreach t,$(call arch-target,$(1)),$(call gen-out,$(t)))
 gen_$(1): clean_$(1)
-	make $(foreach t,$(call arch-target,$(1)),$(call gen-out,$(t)))
+	@make -j $(foreach t,$(call arch-target,$(1)),$(call gen-out,$(t)))
 
 endef
 
@@ -142,7 +147,8 @@ clean-asl:
 	-rm -f $(ASL_OUTS)
 
 
-GAS_TESTS = $(wildcard gen_*.gas)
+GAS_TESTS = $(foreach f,$(wildcard gen_*.gas),\
+            $(if $(filter $(patsubst gen_%.gas,%,$(f)),$(GAS_exclude)),,$(f)))
 GAS_OUTS    = $(foreach f,$(GAS_TESTS),$(f:.gas=).$(call out-ext,$(f:.gas=)))
 gas-test: clean-gas $(GAS_OUTS:%=gas-%)
 clean-gas:

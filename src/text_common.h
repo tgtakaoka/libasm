@@ -56,7 +56,9 @@ extern const char TEXT_ADDF[]    PROGMEM;
 extern const char TEXT_ADDI[]    PROGMEM;
 extern const char TEXT_ADDL[]    PROGMEM;
 extern const char TEXT_ADDR[]    PROGMEM;
+extern const char TEXT_ADDS[]    PROGMEM;
 extern const char TEXT_ADDW[]    PROGMEM;
+extern const char TEXT_ADDX[]    PROGMEM;
 extern const char TEXT_ADE[]     PROGMEM;
 extern const char TEXT_ADI[]     PROGMEM;
 extern const char TEXT_ADX[]     PROGMEM;
@@ -93,12 +95,15 @@ extern const char TEXT_BCLR[]    PROGMEM;
 extern const char TEXT_BCS[]     PROGMEM;
 extern const char TEXT_BD[]      PROGMEM;
 extern const char TEXT_BEQ[]     PROGMEM;
+extern const char TEXT_BF[]      PROGMEM;
 extern const char TEXT_BGE[]     PROGMEM;
 extern const char TEXT_BGND[]    PROGMEM;
 extern const char TEXT_BGT[]     PROGMEM;
 extern const char TEXT_BHI[]     PROGMEM;
 extern const char TEXT_BHS[]     PROGMEM;
+extern const char TEXT_BIAND[]   PROGMEM;
 extern const char TEXT_BICB[]    PROGMEM;
+extern const char TEXT_BIOR[]    PROGMEM;
 extern const char TEXT_BIT[]     PROGMEM;
 extern const char TEXT_BITA[]    PROGMEM;
 extern const char TEXT_BITB[]    PROGMEM;
@@ -132,6 +137,7 @@ extern const char TEXT_BTST[]    PROGMEM;
 extern const char TEXT_BV[]      PROGMEM;
 extern const char TEXT_BVC[]     PROGMEM;
 extern const char TEXT_BVS[]     PROGMEM;
+extern const char TEXT_BXOR[]    PROGMEM;
 extern const char TEXT_BZ[]      PROGMEM;
 extern const char TEXT_C[]       PROGMEM;
 extern const char TEXT_CALL[]    PROGMEM;
@@ -509,6 +515,7 @@ extern const char TEXT_RRD[]     PROGMEM;
 extern const char TEXT_RRL[]     PROGMEM;
 extern const char TEXT_RST[]     PROGMEM;
 extern const char TEXT_RTC[]     PROGMEM;
+extern const char TEXT_RTE[]     PROGMEM;
 extern const char TEXT_RTI[]     PROGMEM;
 extern const char TEXT_RTL[]     PROGMEM;
 extern const char TEXT_RTR[]     PROGMEM;
@@ -536,6 +543,7 @@ extern const char TEXT_SEV[]     PROGMEM;
 extern const char TEXT_SEX[]     PROGMEM;
 extern const char TEXT_SGT[]     PROGMEM;
 extern const char TEXT_SHL[]     PROGMEM;
+extern const char TEXT_SHLL[]    PROGMEM;
 extern const char TEXT_SHR[]     PROGMEM;
 extern const char TEXT_SJMP[]    PROGMEM;
 extern const char TEXT_SKP[]     PROGMEM;
@@ -578,7 +586,9 @@ extern const char TEXT_SUBF[]    PROGMEM;
 extern const char TEXT_SUBI[]    PROGMEM;
 extern const char TEXT_SUBL[]    PROGMEM;
 extern const char TEXT_SUBR[]    PROGMEM;
+extern const char TEXT_SUBS[]    PROGMEM;
 extern const char TEXT_SUBW[]    PROGMEM;
+extern const char TEXT_SUBX[]    PROGMEM;
 extern const char TEXT_SVC[]     PROGMEM;
 extern const char TEXT_SWAP[]    PROGMEM;
 extern const char TEXT_SWI[]     PROGMEM;
@@ -784,6 +794,7 @@ extern const char PSTR_HAT_B[]          PROGMEM; // "^B"
 extern const char PSTR_HAT_D[]          PROGMEM; // "^D"
 extern const char PSTR_H_DASH[]         PROGMEM; // "H'"
 extern const char PSTR_O_DASH[]         PROGMEM; // "O'"
+extern const char PSTR_Q_DASH[]         PROGMEM; // "Q'"
 extern const char PSTR_UNDER_DOLLAR[]   PROGMEM; // "_$"
 extern const char PSTR_UNDER_DOT[]      PROGMEM; // "_."
 extern const char PSTR_UNDER_QUESTION[] PROGMEM; // "_?"

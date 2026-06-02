@@ -512,7 +512,7 @@ void DisMc68000::decodeRelative(DisInsn &insn, StrBuffer &out, AddrMode mode) co
         if (_gnuAs) {
             insn.appendName(out, 'L');
         } else if (!overflowDelta(delta, 16)) {
-            insn.appendName(out, '.');
+            insn.nameBuffer().letter('.');
             insn.appendName(out, 'X');
         }
     } else if (type == M_REL16) {
@@ -526,7 +526,7 @@ void DisMc68000::decodeRelative(DisInsn &insn, StrBuffer &out, AddrMode mode) co
             return;
         }
         if (!_gnuAs && mode == M_REL8 && !overflowDelta(delta, 8)) {
-            insn.appendName(out, '.');
+            insn.nameBuffer().letter('.');
             insn.appendName(out, 'W');
         }
     } else {  // type == M_REL8
@@ -1017,13 +1017,6 @@ char DisMc68000::decodeInsnSize(const DisInsn &insn, OprSize osize) const {
     return sizeSuffix(size);
 }
 
-void DisInsn::appendName(StrBuffer &out, char c) {
-    auto save{out};
-    nameBuffer().over(out);
-    out.letter(c).over(nameBuffer());
-    save.over(out);
-}
-
 Error DisMc68000::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) const {
     DisInsn insn(_insn, memory, out);
     const auto opc = insn.readUint16();
@@ -1035,7 +1028,7 @@ Error DisMc68000::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) con
     const auto suffix = decodeInsnSize(insn, osize);
     if (suffix) {
         if (!_gnuAs)
-            insn.appendName(out, '.');
+            insn.nameBuffer().letter('.');
         insn.appendName(out, suffix);
     }
 

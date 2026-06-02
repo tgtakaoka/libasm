@@ -74,6 +74,7 @@ build dis: link dis.o $
   dis_i8051.o    reg_i8051.o    table_i8051.o    text_i8051.o    $
   dis_i8080.o    reg_i8080.o    table_i8080.o    text_i8080.o    $
   dis_i8086.o    reg_i8086.o    table_i8086.o    text_i8086.o    $
+  dis_h8300.o    reg_h8300.o    table_h8300.o    text_h8300.o    $
   dis_i8096.o    reg_i8096.o    table_i8096.o    text_i8096.o    $
   dis_pdp11.o    reg_pdp11.o    table_pdp11.o    text_pdp11.o    $
   dis_pdp8.o     reg_pdp8.o     table_pdp8.o     text_pdp8.o     $

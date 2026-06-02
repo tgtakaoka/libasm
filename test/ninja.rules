@@ -22,6 +22,10 @@ build test_asm_f3850.o: cxx ${root}/test/test_asm_f3850.cpp
 build test_dis_f3850.o: cxx ${root}/test/test_dis_f3850.cpp
 build gen_f3850.o:      cxx ${root}/test/gen_f3850.cpp
 
+# h8300
+build test_dis_h8300.o: cxx ${root}/test/test_dis_h8300.cpp
+build gen_h8300.o:      cxx ${root}/test/gen_h8300.cpp
+
 # i8086
 build test_asm_i8086.o: cxx ${root}/test/test_asm_i8086.cpp
 build test_dis_i8086.o: cxx ${root}/test/test_dis_i8086.cpp
