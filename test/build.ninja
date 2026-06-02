@@ -68,6 +68,23 @@ build gen_f3850: link gen_f3850.o $
   dec_float.o value_parser.o parsers.o operators.o $
   gen_driver.o tokenized_text.o
 
+# h8300
+build test_dis_h8300: run test_dis_h8300.o $
+  dis_h8300.o reg_h8300.o table_h8300.o text_h8300.o $
+  dis_base.o config_base.o error_reporter.o formatters.o insn_base.o $
+  option_base.o reg_base.o str_buffer.o str_scanner.o text_common.o value.o $
+  value_formatter.o value_parser.o parsers.o operators.o dec_float.o $
+  fixed64.o ieee_float.o float80_base.o float80_hard.o float80_soft.o $
+  test_dis_helper.o test_asserter.o
+build gen_h8300: link gen_h8300.o $
+  dis_h8300.o reg_h8300.o table_h8300.o text_h8300.o $
+  config_base.o dis_base.o dis_formatter.o error_reporter.o formatters.o $
+  insn_base.o list_formatter.o option_base.o reg_base.o str_buffer.o $
+  str_scanner.o test_generator.o text_common.o value.o value_formatter.o $
+  fixed64.o ieee_float.o float80_base.o float80_hard.o float80_soft.o $
+  dec_float.o value_parser.o parsers.o operators.o $
+  gen_driver.o tokenized_text.o
+
 # i8048
 build test_asm_i8048: run test_asm_i8048.o $
   asm_i8048.o reg_i8048.o table_i8048.o text_i8048.o $
@@ -828,6 +845,7 @@ build test_expr_zilog: run test_expr_zilog.o $
 
 build test_cdp1802:  phony test_asm_cdp1802  test_dis_cdp1802
 build test_f3850:    phony test_asm_f3850    test_dis_f3850
+build test_h8300:    phony                   test_dis_h8300
 build test_i8048:    phony test_asm_i8048    test_dis_i8048
 build test_i8051:    phony test_asm_i8051    test_dis_i8051
 build test_i8080:    phony test_asm_i8080    test_dis_i8080
@@ -870,6 +888,7 @@ build test_expr: phony $
 build test: phony $
   test_cdp1802  $
   test_f3850    $
+  test_h8300    $
   test_i8048    $
   test_i8051    $
   test_i8080    $
@@ -905,6 +924,7 @@ build test: phony $
 build gen: phony $
   gen_cdp1802  $
   gen_f3850    $
+  gen_h8300    $
   gen_i8048    $
   gen_i8051    $
   gen_i8080    $

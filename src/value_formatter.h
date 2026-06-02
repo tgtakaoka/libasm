@@ -36,6 +36,7 @@ struct ValueFormatter final {
         static const Plugins &singleton();
         static const Plugins &cstyle();
         static const Plugins &fairchild();
+        static const Plugins &hitachi();
         static const Plugins &intel();
         static const Plugins &motorola();
         static const Plugins &national();

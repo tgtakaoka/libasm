@@ -772,18 +772,19 @@ constexpr char PSTR_STAR[]   PROGMEM = "*";
 constexpr char PSTR_UNDER[]  PROGMEM = "_";
 
 constexpr char PSTR_AT_QUESTION[]    PROGMEM = "@?";
-constexpr char PSTR_B_DASH[]         PROGMEM = "b'";
+constexpr char PSTR_B_DASH[]         PROGMEM = "B'";
 constexpr char PSTR_DOT_DOLLAR[]     PROGMEM = ".$";
 constexpr char PSTR_DOT_DOT[]        PROGMEM = "..";
 constexpr char PSTR_DOT_STAR[]       PROGMEM = ".*";
 constexpr char PSTR_HAT_B[]          PROGMEM = "^B";
 constexpr char PSTR_HAT_D[]          PROGMEM = "^D";
-constexpr char PSTR_H_DASH[]         PROGMEM = "h'";
-constexpr char PSTR_O_DASH[]         PROGMEM = "o'";
+constexpr char PSTR_H_DASH[]         PROGMEM = "H'";
+constexpr char PSTR_O_DASH[]         PROGMEM = "O'";
+constexpr char PSTR_Q_DASH[]         PROGMEM = "Q'";
 constexpr char PSTR_UNDER_DOLLAR[]   PROGMEM = "_$";
 constexpr char PSTR_UNDER_DOT[]      PROGMEM = "_.";
 constexpr char PSTR_UNDER_QUESTION[] PROGMEM = "_?";
-constexpr char PSTR_X_DASH[]         PROGMEM = "x'";
+constexpr char PSTR_X_DASH[]         PROGMEM = "X'";
 constexpr char PSTR_ZERO_B[]         PROGMEM = "0b";
 constexpr char PSTR_ZERO_X[]         PROGMEM = "0x";
 

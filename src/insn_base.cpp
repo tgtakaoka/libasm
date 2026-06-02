@@ -121,6 +121,13 @@ Error Insn::emitFloat64Le(const float80_t &data, uint8_t pos) {
 
 #endif
 
+void DisInsnBase::appendName(StrBuffer &out, char c) {
+    auto save{out};
+    nameBuffer().over(out);
+    out.letter(c).over(nameBuffer());
+    save.over(out);
+}
+
 void DisInsnBase::resetLength(uint8_t length) {
     resetError();
     _insn.reset(_insn.address(), length);
