@@ -109,13 +109,17 @@ struct CpuBase {
             const /* PROGMEM */ ENTRY_PAGE *head_P, const /* PROGMEM */ ENTRY_PAGE *tail_P)
         : _pages(head_P, tail_P), _cpuType_P(cpuType), _name_P(name_P) {}
 
-    bool isPrefix(uint16_t code) const {
+    template <typename PAGE>
+    static bool defaultPrefixMatcher(uint16_t code, const PAGE *page_P) {
+        const auto prefix = page_P->readPrefix();
+        return prefix && prefix == code;
+    }
+
+    bool isPrefix(uint16_t code,
+            bool (*prefixMatcher)(uint16_t, const ENTRY_PAGE *) = defaultPrefixMatcher) const {
         const auto *tail = _pages.readTail();
         for (const auto *page = _pages.readHead(); page < tail; page++) {
-            const auto prefix = page->readPrefix();
-            if (prefix == 0)
-                continue;
-            if (prefix == code)
+            if (prefixMatcher(code, page))
                 return true;
         }
         return false;

@@ -84,6 +84,15 @@ const ValueFormatter::Plugins &ValueFormatter::Plugins::motorola() {
     return PLUGINS;
 }
 
+const ValueFormatter::Plugins &ValueFormatter::Plugins::hitachi() {
+    static const struct fianl : Plugins {
+        const BinFormatter &bin() const override { return NationalBinFormatter::singleton(); }
+        const OctFormatter &oct() const override { return HitachiOctFormatter::singleton(); }
+        const HexFormatter &hex() const override { return HitachiHexFormatter::singleton(); }
+    } PLUGINS{};
+    return PLUGINS;
+}
+
 const ValueFormatter::Plugins &ValueFormatter::Plugins::fairchild() {
     static const struct fianl : Plugins {
         const BinFormatter &bin() const override { return FairchildBinFormatter::singleton(); }

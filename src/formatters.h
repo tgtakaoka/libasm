@@ -330,6 +330,14 @@ struct NationalHexFormatter final : PrefixStrHexFormatter, Singleton<NationalHex
     NationalHexFormatter() : PrefixStrHexFormatter(text::common::PSTR_X_DASH) {}
 };
 
+struct HitachiOctFormatter final : PrefixStrOctFormatter, Singleton<HitachiOctFormatter> {
+    HitachiOctFormatter() : PrefixStrOctFormatter(text::common::PSTR_Q_DASH) {}
+};
+
+struct HitachiHexFormatter final : PrefixStrHexFormatter, Singleton<HitachiHexFormatter> {
+    HitachiHexFormatter() : PrefixStrHexFormatter(text::common::PSTR_H_DASH) {}
+};
+
 struct TexasBinFormatter final : PrefixBinFormatter, Singleton<TexasBinFormatter> {
     TexasBinFormatter() : PrefixBinFormatter('?') {}
 };

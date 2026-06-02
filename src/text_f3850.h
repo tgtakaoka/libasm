@@ -37,7 +37,7 @@ extern const char TEXT_AMD[]  PROGMEM;
 extern const char TEXT_AS[]   PROGMEM;
 extern const char TEXT_ASD[]  PROGMEM;
 using common::TEXT_BC;
-extern const char TEXT_BF[]   PROGMEM;
+using common::TEXT_BF;
 using common::TEXT_BM;
 using common::TEXT_BNC;
 extern const char TEXT_BNO[]  PROGMEM;
