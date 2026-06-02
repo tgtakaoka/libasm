@@ -45,6 +45,9 @@ static bool is_tlcs900h() {
 static bool is_tlcs900l1() {
     return strcmp_P("TLCS900L1", disassembler.config().cpu_P()) == 0;
 }
+static bool is_tlcs900h2() {
+    return strcmp_P("TLCS900H2", disassembler.config().cpu_P()) == 0;
+}
 // clang-format off
 void test_cpu() {
     EQUALS("cpu tlcs900",   true, disassembler.setCpu("tlcs900"));
@@ -55,6 +58,8 @@ void test_cpu() {
     EQUALS_P("get cpu", "TLCS900H",  disassembler.config().cpu_P());
     EQUALS("cpu tlcs900l1", true, disassembler.setCpu("tlcs900l1"));
     EQUALS_P("get cpu", "TLCS900L1", disassembler.config().cpu_P());
+    EQUALS("cpu tlcs900h2", true, disassembler.setCpu("tlcs900h2"));
+    EQUALS_P("get cpu", "TLCS900H2", disassembler.config().cpu_P());
 }
 
 void test_single() {
@@ -86,8 +91,12 @@ void test_single() {
     TEST("EX",    "F, F'",           0x16);
     TEST("INCF",   "", 0x0C);
     TEST("DECF",   "", 0x0D);
-    TEST("LDX",   "(0034H), 0056H",  0xF7, 0x00, 0x34, 0x00, 0x56, 0x00);
-    // sub-byte 0x3C decodes as NSP/XNSP on base; as INTNEST on /L, /H, /L1 (16-bit only).
+    if (!is_tlcs900h2()) {
+        TEST("LDX",   "(0034H), 0056H",  0xF7, 0x00, 0x34, 0x00, 0x56, 0x00);
+    } else {
+        UNKN(0xF7);
+    }
+    // sub-byte 0x3C decodes as NSP/XNSP on base; as INTNEST on /L, /H, /L1, /H2 (16-bit only).
     if (is_tlcs900()) {
         TEST("LDC",   "XNSP, XSP",      0xEF, 0x2E, 0x3C);
         TEST("LDC",   "XSP, XNSP",      0xEF, 0x2F, 0x3C);
@@ -633,14 +642,17 @@ void test_illegal() {
     for (uint8_t opc = 0x50; opc <= 0x57; opc++)
         UNKN(opc);
 
-    // NORMAL (0x01) is base only; /L has only MIN at 0x04. /H and /L1
-    // expose neither, so both 0x01 and 0x04 are illegal.
+    // NORMAL (0x01) is base only; /L has only MIN at 0x04. /H, /L1, /H2
+    // expose neither, so both 0x01 and 0x04 are illegal. /H2 additionally
+    // drops LDX, so 0xF7 is illegal there too.
     if (is_tlcs900l())
         UNKN(0x01);
-    if (is_tlcs900h() || is_tlcs900l1()) {
+    if (is_tlcs900h() || is_tlcs900l1() || is_tlcs900h2()) {
         UNKN(0x01);
         UNKN(0x04);
     }
+    if (is_tlcs900h2())
+        UNKN(0xF7);
 
     // PM_BLOCK (0x83) valid sub-byte range is 0x10-0x17.
     UNKN(0x83, 0x00);

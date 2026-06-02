@@ -28,6 +28,7 @@ extern const char TEXT_CPU_TLCS900[] PROGMEM;   // +NORMAL, +MAX, +LDX
 extern const char TEXT_CPU_TLCS900L[] PROGMEM;  // -NORMAL, -MAX, +MIN, +LDX
 extern const char TEXT_CPU_TLCS900H[] PROGMEM;  // -NORMAL, -MAX, +LDX
 extern const char TEXT_CPU_TLCS900L1[] PROGMEM; // -NORMAL, -MAX, +LDX (CPU core = /H)
+extern const char TEXT_CPU_TLCS900H2[] PROGMEM;  // -NORMAL, -MAX, -LDX
 
 // clang-format off
 using common::TEXT_ADC;
