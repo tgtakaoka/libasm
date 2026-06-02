@@ -33,13 +33,12 @@ namespace tlcs900 {
 
 // clang-format off
 
-// First-byte opcodes (no prefix byte).
 constexpr Entry TABLE_OPC[] PROGMEM = {
     E0(0x00, CF_00, TEXT_NOP),
     E1(0x02, CF_00, TEXT_PUSH,  R_SR),
     E1(0x03, CF_00, TEXT_POP,   R_SR),
     E0(0x05, CF_00, TEXT_HALT),
-    E1(0x06, CF_00, TEXT_EI,    M_LDF),
+    E1(0x06, CF_00, TEXT_EI,    M_INTLVL),
     E0(0x07, CF_00, TEXT_RETI),
     E2(0x08, CF_00, TEXT_LD,    M_ABS8,  M_IMM8),
     E1(0x09, CF_00, TEXT_PUSH,  M_IMM8),
@@ -74,6 +73,11 @@ constexpr Entry TABLE_OPC[] PROGMEM = {
     E2(0x60, CF_0F, TEXT_JR,    M_CC,    M_REL8),
     E2(0x70, CF_0F, TEXT_JRL,   M_CC,    M_REL16),
     E1(0xF8, CF_07, TEXT_SWI,   M_SWI),
+    // Bare-operand aliases: placed after the operand-bearing entries so dis still
+    // matches the explicit-operand form first (first table match wins).
+    E0(0xFF, CF_00, TEXT_SWI),
+    E1(0x06, CF_00, TEXT_EI,    M_ZERO),
+    E1(0x06, CF_00, TEXT_DI,    M_DISUF),
 };
 constexpr uint8_t INDEX_OPC[] PROGMEM = {
      26,  // TEXT_CALL
@@ -81,7 +85,9 @@ constexpr uint8_t INDEX_OPC[] PROGMEM = {
      28,  // TEXT_CALR
      16,  // TEXT_CCF
      11,  // TEXT_DECF
+     41,  // TEXT_DI
       4,  // TEXT_EI
+     40,  // TEXT_EI
      20,  // TEXT_EX
       3,  // TEXT_HALT
      10,  // TEXT_INCF
@@ -114,12 +120,10 @@ constexpr uint8_t INDEX_OPC[] PROGMEM = {
       5,  // TEXT_RETI
      15,  // TEXT_SCF
      38,  // TEXT_SWI
+     39,  // TEXT_SWI
      17,  // TEXT_ZCF
 };
 
-// clang-format on
-
-// First-byte opcodes (NORMAL at 0x01, MAX at 0x04).
 constexpr Entry TABLE_OPC_TLCS900[] PROGMEM = {
         E0(0x01, CF_00, TEXT_NORMAL),
         E0(0x04, CF_00, TEXT_MAX),
@@ -129,9 +133,6 @@ constexpr uint8_t INDEX_OPC_TLCS900[] PROGMEM = {
         0,  // TEXT_NORMAL
 };
 
-// clang-format off
-
-// Register-context second-byte table (PM_REG8, PM_REG16, PM_REG32).
 constexpr Entry TABLE_SRC_REG[] PROGMEM = {
     E1(0x06, CF_00, TEXT_CPL,   M_SRC),
     E1(0x07, CF_00, TEXT_NEG,   M_SRC),
@@ -147,6 +148,7 @@ constexpr Entry TABLE_SRC_REG[] PROGMEM = {
     E1(0x14, CF_00, TEXT_PAA,   M_SRC),
     E1(0x16, CF_00, TEXT_MIRR,  M_SRC),
     E1(0x19, CF_00, TEXT_MULA,  M_SRC),
+    E1(0x19, CF_00, TEXT_MULA,  M_R32SRC),
     E2(0x1C, CF_00, TEXT_DJNZ,  M_SRC,   M_REL8),
     E2(0x20, CF_00, TEXT_ANDCF, M_BIT,   M_SRC),
     E2(0x21, CF_00, TEXT_ORCF,  M_BIT,   M_SRC),
@@ -199,73 +201,73 @@ constexpr Entry TABLE_SRC_REG[] PROGMEM = {
     E2(0xF0, CF_07, TEXT_CP,    M_DST,   M_SRC),
 };
 constexpr uint8_t INDEX_SRC_REG[] PROGMEM = {
-     40,  // TEXT_ADC
-     46,  // TEXT_ADC
-     38,  // TEXT_ADD
-     45,  // TEXT_ADD
-     44,  // TEXT_AND
-     49,  // TEXT_AND
-     15,  // TEXT_ANDCF
-     25,  // TEXT_BIT
+     41,  // TEXT_ADC
+     47,  // TEXT_ADC
+     39,  // TEXT_ADD
+     46,  // TEXT_ADD
+     45,  // TEXT_AND
+     50,  // TEXT_AND
+     16,  // TEXT_ANDCF
+     26,  // TEXT_BIT
       7,  // TEXT_BS1B
       6,  // TEXT_BS1F
-     24,  // TEXT_CHG
-     52,  // TEXT_CP
-     63,  // TEXT_CP
+     25,  // TEXT_CHG
+     53,  // TEXT_CP
+     64,  // TEXT_CP
       0,  // TEXT_CPL
       8,  // TEXT_DAA
-     34,  // TEXT_DEC
      35,  // TEXT_DEC
      36,  // TEXT_DEC
-     29,  // TEXT_DIV
-     30,  // TEXT_DIVS
-     14,  // TEXT_DJNZ
-     43,  // TEXT_EX
+     37,  // TEXT_DEC
+     30,  // TEXT_DIV
+     31,  // TEXT_DIVS
+     15,  // TEXT_DJNZ
+     44,  // TEXT_EX
      10,  // TEXT_EXTS
       9,  // TEXT_EXTZ
-     31,  // TEXT_INC
      32,  // TEXT_INC
      33,  // TEXT_INC
-     39,  // TEXT_LD
-     20,  // TEXT_LDC
+     34,  // TEXT_INC
+     40,  // TEXT_LD
      21,  // TEXT_LDC
-     18,  // TEXT_LDCF
+     22,  // TEXT_LDC
+     19,  // TEXT_LDCF
       4,  // TEXT_LINK
      12,  // TEXT_MIRR
       2,  // TEXT_MUL
-     27,  // TEXT_MUL
+     28,  // TEXT_MUL
      13,  // TEXT_MULA
+     14,  // TEXT_MULA
       3,  // TEXT_MULS
-     28,  // TEXT_MULS
+     29,  // TEXT_MULS
       1,  // TEXT_NEG
-     51,  // TEXT_OR
-     54,  // TEXT_OR
-     16,  // TEXT_ORCF
+     52,  // TEXT_OR
+     55,  // TEXT_OR
+     17,  // TEXT_ORCF
      11,  // TEXT_PAA
-     22,  // TEXT_RES
-     57,  // TEXT_RL
-     55,  // TEXT_RLC
-     58,  // TEXT_RR
-     56,  // TEXT_RRC
-     42,  // TEXT_SBC
-     48,  // TEXT_SBC
-     37,  // TEXT_SCC
-     23,  // TEXT_SET
-     59,  // TEXT_SLA
-     61,  // TEXT_SLL
-     60,  // TEXT_SRA
-     62,  // TEXT_SRL
-     19,  // TEXT_STCF
-     41,  // TEXT_SUB
-     47,  // TEXT_SUB
-     26,  // TEXT_TSET
+     23,  // TEXT_RES
+     58,  // TEXT_RL
+     56,  // TEXT_RLC
+     59,  // TEXT_RR
+     57,  // TEXT_RRC
+     43,  // TEXT_SBC
+     49,  // TEXT_SBC
+     38,  // TEXT_SCC
+     24,  // TEXT_SET
+     60,  // TEXT_SLA
+     62,  // TEXT_SLL
+     61,  // TEXT_SRA
+     63,  // TEXT_SRL
+     20,  // TEXT_STCF
+     42,  // TEXT_SUB
+     48,  // TEXT_SUB
+     27,  // TEXT_TSET
       5,  // TEXT_UNLK
-     50,  // TEXT_XOR
-     53,  // TEXT_XOR
-     17,  // TEXT_XORCF
+     51,  // TEXT_XOR
+     54,  // TEXT_XOR
+     18,  // TEXT_XORCF
 };
 
-// Absolute-bank-register destination second-byte table (PM_ABREG8/16/32 only).
 constexpr Entry TABLE_SRC_ABREG[] PROGMEM = {
     E2(0x03, CF_00, TEXT_LD,    M_ABSDST, M_IMMX),
     E2(0x98, CF_07, TEXT_LD,    M_ABSDST, M_DST),
@@ -276,7 +278,6 @@ constexpr uint8_t INDEX_SRC_ABREG[] PROGMEM = {
 };
 
 
-// Memory-source second-byte table (PM_MEM8, PM_MEM16, PM_MEM32).
 constexpr Entry TABLE_SRC_MEM[] PROGMEM = {
     E1(0x04, CF_00, TEXT_PUSH,  M_SRC),
     E2(0x06, CF_00, TEXT_RLD,   R_A,     M_SRC),
@@ -349,7 +350,6 @@ constexpr uint8_t INDEX_SRC_MEM[] PROGMEM = {
 };
 
 
-// Memory-destination second-byte table (PM_MEMD).
 constexpr Entry TABLE_DST_MEM[] PROGMEM = {
     E2(0x00, CF_00, TEXT_LD,    M_DST,   M_IMM8),
     E2(0x01, CF_00, TEXT_LD,    M_DST,   M_IMM16),
@@ -399,7 +399,6 @@ constexpr uint8_t INDEX_DST_MEM[] PROGMEM = {
      12,  // TEXT_XORCF
 };
 
-// LDX: F7 00 addr16 imm16 (M_LDXDST handles the 0x00 + addr16 emission/decoding).
 constexpr Entry TABLE_LDX[] PROGMEM = {
     E2(0xF7, CF_00, TEXT_LDX,   M_LDXDST, M_IMM16),
 };
@@ -408,7 +407,6 @@ constexpr uint8_t INDEX_LDX[] PROGMEM = {
 };
 
 
-// Block transfer instructions (prefix 0x83).
 constexpr Entry TABLE_BLOCK[] PROGMEM = {
     E0(0x10, CF_00, TEXT_LDI),
     E0(0x11, CF_00, TEXT_LDIR),
@@ -431,7 +429,6 @@ constexpr uint8_t INDEX_BLOCK[] PROGMEM = {
       1,  // TEXT_LDIR
 };
 
-// Conditional return instructions (prefix 0xB0).
 constexpr Entry TABLE_RETCC[] PROGMEM = {
     E1(0xF0, CF_0F, TEXT_RET,   M_CC),
 };
@@ -440,11 +437,19 @@ constexpr uint8_t INDEX_RETCC[] PROGMEM = {
       0,  // TEXT_RET
 };
 
+// LDAR layout: F3 13 rel16 reg_byte (rel16 between prefix and opcode).
+constexpr Entry TABLE_LDAR[] PROGMEM = {
+    E2(0x20, CF_07, TEXT_LDAR,  M_REG16, M_LDARREL),
+    E2(0x30, CF_07, TEXT_LDAR,  M_REG32, M_LDARREL),
+};
+
+constexpr uint8_t INDEX_LDAR[] PROGMEM = {
+      0,  // TEXT_LDAR
+      1,  // TEXT_LDAR
+};
+
 // clang-format on
 
-// EntryPage carries a uint16_t bitmask of PrefixModes it can be searched under,
-// so TABLE_SRC_REG (six PMs) can sit on a CPU's pages list once with a six-bit
-// mask rather than as six separate entries.
 static constexpr uint16_t PM_BIT(PrefixMode pm) {
     return uint16_t(1) << pm;
 }
@@ -453,16 +458,15 @@ static constexpr uint16_t PM_BITS_ABREG =
         PM_BIT(PM_ABREG8) | PM_BIT(PM_ABREG16) | PM_BIT(PM_ABREG32);
 static constexpr uint16_t PM_BITS_MEM = PM_BIT(PM_MEM8) | PM_BIT(PM_MEM16) | PM_BIT(PM_MEM32);
 
-// EntryPage carries a uint16_t bitmask of PrefixModes it can be searched under,
-// so TABLE_SRC_REG (six PMs) can sit on a CPU's pages list once with a six-bit
-// mask rather than as six separate entries. `prefixMatcher(pm)` reports whether
-// this page is valid for a given PrefixMode (cf. tlcs90's EntryPage::prefixMatcher).
-struct EntryPage : entry::TableBase<Entry> {
+// EntryPage carries a PrefixMode bitmask so a single page can match multiple
+// PMs (e.g. PM_REG8/16/32 share the same table) and inherits PrefixTableBase
+// for an optional fixed prefix byte.
+struct EntryPage : entry::PrefixTableBase<Entry> {
     uint16_t readPmMask() const { return pgm_read_word(&_pm_mask_P); }
     bool prefixMatcher(PrefixMode pm) const { return readPmMask() & PM_BIT(pm); }
-    constexpr EntryPage(uint16_t pm_mask, const Entry *head_P, const Entry *tail_P,
+    constexpr EntryPage(uint16_t pm_mask, uint16_t prefix, const Entry *head_P, const Entry *tail_P,
             const uint8_t *index_P, const uint8_t *itail_P)
-        : TableBase(head_P, tail_P, index_P, itail_P), _pm_mask_P(pm_mask) {}
+        : PrefixTableBase(prefix, head_P, tail_P, index_P, itail_P), _pm_mask_P(pm_mask) {}
 
 private:
     const uint16_t _pm_mask_P;
@@ -478,16 +482,19 @@ struct Cpu : entry::CpuBase<CpuType, EntryPage> {
 
 // clang-format off
 constexpr EntryPage TLCS900_PAGES[] PROGMEM = {
-    {PM_BIT(PM_NONE),  ARRAY_RANGE(TABLE_OPC_TLCS900), ARRAY_RANGE(INDEX_OPC_TLCS900)},
-    {PM_BIT(PM_NONE),  ARRAY_RANGE(TABLE_LDX),         ARRAY_RANGE(INDEX_LDX)},
-    {PM_BIT(PM_NONE),  ARRAY_RANGE(TABLE_OPC),         ARRAY_RANGE(INDEX_OPC)},
-    {PM_BITS_REG | PM_BITS_ABREG,
-                       ARRAY_RANGE(TABLE_SRC_REG),     ARRAY_RANGE(INDEX_SRC_REG)},
-    {PM_BITS_ABREG,    ARRAY_RANGE(TABLE_SRC_ABREG),   ARRAY_RANGE(INDEX_SRC_ABREG)},
-    {PM_BITS_MEM,      ARRAY_RANGE(TABLE_SRC_MEM),     ARRAY_RANGE(INDEX_SRC_MEM)},
-    {PM_BIT(PM_MEMD),  ARRAY_RANGE(TABLE_DST_MEM),     ARRAY_RANGE(INDEX_DST_MEM)},
-    {PM_BIT(PM_BLOCK), ARRAY_RANGE(TABLE_BLOCK),       ARRAY_RANGE(INDEX_BLOCK)},
-    {PM_BIT(PM_RETCC), ARRAY_RANGE(TABLE_RETCC),       ARRAY_RANGE(INDEX_RETCC)},
+    {PM_BIT(PM_NONE),  0,    ARRAY_RANGE(TABLE_OPC_TLCS900), ARRAY_RANGE(INDEX_OPC_TLCS900)},
+    {PM_BIT(PM_NONE),  0,    ARRAY_RANGE(TABLE_LDX),         ARRAY_RANGE(INDEX_LDX)},
+    {PM_BIT(PM_NONE),  0,    ARRAY_RANGE(TABLE_OPC),         ARRAY_RANGE(INDEX_OPC)},
+    {PM_BITS_REG | PM_BITS_ABREG, 0,
+                             ARRAY_RANGE(TABLE_SRC_REG),     ARRAY_RANGE(INDEX_SRC_REG)},
+    {PM_BITS_ABREG,    0,    ARRAY_RANGE(TABLE_SRC_ABREG),   ARRAY_RANGE(INDEX_SRC_ABREG)},
+    // TABLE_DST_MEM precedes TABLE_SRC_MEM so the encoder prefers the ASL-style
+    // PM_MEMD (destination-prefixed) form for LD (mem),(mem) ambiguities.
+    {PM_BIT(PM_MEMD),  0,    ARRAY_RANGE(TABLE_DST_MEM),     ARRAY_RANGE(INDEX_DST_MEM)},
+    {PM_BITS_MEM,      0,    ARRAY_RANGE(TABLE_SRC_MEM),     ARRAY_RANGE(INDEX_SRC_MEM)},
+    {PM_BIT(PM_BLOCK), 0x83,   ARRAY_RANGE(TABLE_BLOCK),     ARRAY_RANGE(INDEX_BLOCK)},
+    {PM_BIT(PM_RETCC), 0xB0,   ARRAY_RANGE(TABLE_RETCC),     ARRAY_RANGE(INDEX_RETCC)},
+    {PM_BIT(PM_LDAR),  0xF313, ARRAY_RANGE(TABLE_LDAR),      ARRAY_RANGE(INDEX_LDAR)},
 };
 
 constexpr Cpu CPU_TABLE[] PROGMEM = {
@@ -548,6 +555,191 @@ static bool matchOpCode(const Entry *entry, Config::opcode_t opc) {
     return (opc & ~flags.mask()) == entry->readOpCode();
 }
 
+static bool isMem(AddrMode mode) {
+    return mode == M_IND || mode == M_PRDC || mode == M_PINC || mode == M_IDX8 || mode == M_IDX16 ||
+           mode == M_IDXR || mode == M_ABS8 || mode == M_ABS16 || mode == M_ABS24;
+}
+
+static bool modeMatch(AddrMode actual, AddrMode expected, RegName reg) {
+    if (actual == expected)
+        return true;
+    if (expected == M_NONE)
+        return actual == M_NONE;
+    if (actual == R_C)
+        return expected == M_REG8 || expected == M_CC;
+    if (expected == M_IMM16 && actual == M_IMM8)
+        return true;
+    if (expected == M_IMM32 && (actual == M_IMM8 || actual == M_IMM16))
+        return true;
+    if (expected == M_REL16 && actual == M_REL8)
+        return true;
+    if (expected == R_WA && actual == M_REG16 && reg == REG_WA)
+        return true;
+    if (expected == R_A && actual == M_REG8 && reg == REG_A)
+        return true;
+    if (expected == R_SR && actual == R_SR)
+        return true;
+    if ((expected == M_LDF || expected == M_INTLVL) && actual == M_IMM8)
+        return true;
+    if (expected == M_SWI && actual == M_IMM8)
+        return true;
+    if (expected == M_BIT && actual == M_IMM8)
+        return true;
+    if (expected == M_RCOUNT && actual == M_IMM8)
+        return true;
+    if (expected == M_BUF)
+        return actual == M_IMM8 || actual == M_IMM16;
+    if (expected == M_LDXDST)
+        return actual == M_ABS8 || actual == M_ABS16;
+    if (expected == M_ZERO)
+        return actual == M_NONE;
+    if (expected == M_DISUF)
+        return actual == M_NONE;
+    if (expected == M_R32SRC)
+        return actual == M_REG32;
+    if (expected == M_LDARREG)
+        return actual == M_REG16 || actual == M_REG32;
+    if (expected == M_LDARREL)
+        return actual == M_IMM8 || actual == M_IMM16 || actual == M_IMM32;
+    if (expected == M_SRC || expected == M_DST)
+        return isMem(actual);
+    if (expected == M_REL8 || expected == M_REL16)
+        return actual == M_IMM8 || actual == M_IMM16 || actual == M_IMM32;
+    if (expected == M_STEP1 || expected == M_STEP2 || expected == M_STEP4)
+        return actual == M_IMM8;
+    return false;
+}
+
+// Resolve a context-relative AddrMode (M_DST/M_SRC/M_ABSDST/M_IMMX) to a
+// concrete AddrMode for the current PrefixMode. Returns expected unchanged
+// when no resolution applies.
+static AddrMode resolveMode(AddrMode expected, PrefixMode pm, bool dstSlot, const Operand &op) {
+    switch (expected) {
+    case M_DST:
+        switch (pm) {
+        case PM_REG8:
+        case PM_MEM8:
+        case PM_ABREG8:
+            return M_REG8;
+        case PM_REG16:
+        case PM_MEM16:
+        case PM_ABREG16:
+            return M_REG16;
+        case PM_REG32:
+        case PM_MEM32:
+        case PM_ABREG32:
+            return M_REG32;
+        default:
+            return expected;
+        }
+    case M_SRC:
+        switch (pm) {
+        case PM_REG8:
+            return M_REG8;
+        case PM_REG16:
+            return M_REG16;
+        case PM_REG32:
+            return M_REG32;
+        case PM_ABREG8:
+            return M_ABREG8;
+        case PM_ABREG16:
+            return M_ABREG16;
+        case PM_ABREG32:
+            return M_ABREG32;
+        case PM_MEM8:
+        case PM_MEM16:
+        case PM_MEM32:
+            // src slot keeps the operand's actual memory mode; dst slot
+            // never reaches PM_MEM* with M_SRC in real entries.
+            return dstSlot ? expected : (isMem(op.mode) ? op.mode : M_NONE);
+        default:
+            return expected;
+        }
+    case M_ABSDST:
+        switch (pm) {
+        case PM_ABREG8:
+            return M_ABREG8;
+        case PM_ABREG16:
+            return M_ABREG16;
+        case PM_ABREG32:
+            return M_ABREG32;
+        default:
+            return expected;
+        }
+    case M_IMMX:
+        switch (pm) {
+        case PM_REG8:
+        case PM_MEM8:
+        case PM_ABREG8:
+            return M_IMM8;
+        case PM_REG16:
+        case PM_MEM16:
+        case PM_ABREG16:
+            return M_IMM16;
+        case PM_REG32:
+        case PM_MEM32:
+        case PM_ABREG32:
+            return M_IMM32;
+        default:
+            return M_IMM8;
+        }
+    default:
+        return expected;
+    }
+}
+
+static bool acceptMode(const Operand &op, AddrMode expected, PrefixMode pm, bool dstSlot) {
+    const auto resolved = resolveMode(expected, pm, dstSlot, op);
+    if (resolved == R_F)
+        return op.mode == M_CC && op.cc == CC_F;
+    return modeMatch(op.mode, resolved, op.reg);
+}
+
+static bool acceptModes(AsmInsn &insn, const Entry *entry, PrefixMode pm) {
+    const auto flags = entry->readFlags();
+    if (!acceptMode(insn.dstOp, flags.dst(), pm, /*dstSlot=*/true))
+        return false;
+    if (!acceptMode(insn.srcOp, flags.src(), pm, /*dstSlot=*/false))
+        return false;
+    const auto dst = flags.dst();
+    if (dst == M_STEP1 && insn.dstOp.val.getUnsigned() != 1)
+        return false;
+    if (dst == M_STEP2 && insn.dstOp.val.getUnsigned() != 2)
+        return false;
+    if (dst == M_STEP4 && insn.dstOp.val.getUnsigned() != 4)
+        return false;
+    return true;
+}
+
+// searchName callbacks (CpuBase::searchName).
+
+// Store the page's PrefixMode mask on insn so acceptOperands can iterate it.
+static void pageSetup(AsmInsn &insn, const EntryPage *page) {
+    insn.setPmMask(page->readPmMask());
+}
+
+// Try each PrefixMode in the page's mask; on first match, record the PM on
+// insn so readCode can finalize the entry. Called by binarySearch once per
+// candidate entry with the current page's mask already stored on insn.
+static bool acceptOperands(AsmInsn &insn, const Entry *entry) {
+    const auto mask = insn.pmMask();
+    for (uint8_t bit = 0; bit <= PM_LDAR; bit++) {
+        const auto pm = PrefixMode(bit);
+        if (!(mask & PM_BIT(pm)))
+            continue;
+        if (acceptModes(insn, entry, pm)) {
+            insn.setPrefixMode(pm);
+            return true;
+        }
+    }
+    return false;
+}
+
+Error searchName(CpuType cpuType, AsmInsn &insn) {
+    cpu(cpuType)->searchName(insn, acceptOperands, pageSetup);
+    return insn.getError();
+}
+
 // searchOpCode callbacks (CpuBase::searchOpCode).
 
 // Set the page's PrefixMode bitmask on insn and pick the PM (derived from
@@ -557,8 +749,13 @@ static bool prefixMatcher(DisInsn &insn, const EntryPage *page) {
     const auto mask = page->readPmMask();
     insn.setPmMask(mask);
     PrefixMode pm = PM_NONE;
-    if (insn.prefix() != 0 && !isPrefix(TLCS900, static_cast<Config::opcode_t>(insn.prefix()), pm))
+    const auto prefix = insn.prefix();
+    if (prefix > UINT8_MAX) {
+        // Only PM_LDAR uses a 2-byte prefix (F3 13).
+        pm = PM_LDAR;
+    } else if (prefix != 0 && !isPrefix(TLCS900, static_cast<Config::opcode_t>(prefix), pm)) {
         return false;
+    }
     if ((mask & PM_BIT(pm)) == 0)
         return false;
     insn.setPrefixMode(pm);

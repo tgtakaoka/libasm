@@ -28,6 +28,7 @@ struct DisTlcs900 final : Disassembler, Config {
     DisTlcs900(const ValueFormatter::Plugins &plugins = defaultPlugins());
 
 private:
+    Error readPrefix(DisInsn &insn, Operand &prefixOp) const;
     Error decodePrefixAddr(
             DisInsn &insn, PrefixMode pm, Operand &op, Config::opcode_t prefix) const;
     void outMemAddr(StrBuffer &out, const Operand &op) const;

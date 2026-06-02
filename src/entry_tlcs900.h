@@ -78,6 +78,10 @@ enum AddrMode : uint8_t {
     M_ABSDST  = 41,  // absolute bank register in dst (prefix-encoded), resolves to M_ABREG{8,16,32} by PM
     M_ZERO    = 42,  // implicit zero operand: matches M_NONE in asm; emits 0x00 trailing byte
     M_INTLVL  = 43,  // EI interrupt level 0-7 (in following byte, low 3 bits)
+    M_DISUF   = 44,  // DI suffix: matches M_NONE in asm; emits 0x07 trailing byte
+    M_R32SRC  = 45,  // 32-bit register passed as PM_REG16 prefix (MULA xrr32 alias)
+    M_LDARREG = 46,  // LDAR destination register: emits 0x20|reg16 or 0x30|reg32 as trailing byte
+    M_LDARREL = 47,  // LDAR rel16 target with base = instruction_start + 4
 };
 // clang-format on
 

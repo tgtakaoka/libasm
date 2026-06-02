@@ -39,6 +39,7 @@
 #include "asm_pdp8.h"
 #include "asm_scn2650.h"
 #include "asm_tlcs90.h"
+#include "asm_tlcs900.h"
 #include "asm_tms320.h"
 #include "asm_tms320f.h"
 #include "asm_tms370.h"
@@ -77,6 +78,7 @@ pdp11::AsmPdp11 asmpdp11;
 pdp8::AsmPdp8 asmpdp8;
 scn2650::AsmScn2650 asm2650;
 tlcs90::AsmTlcs90 asm90;
+tlcs900::AsmTlcs900 asm900;
 tms320::AsmTms320 asm320;
 tms320f::AsmTms320f asm320f;
 tms370::AsmTms370 asm370;
@@ -117,6 +119,7 @@ NationalDirective dir8070(asm8070);
 RcaDirective dir1802(asm1802);
 Z8Directive dirz8(asmz8);
 ZilogDirective dir90(asm90);
+ZilogDirective dir900(asm900);
 ZilogDirective dirz280(asmz280);
 ZilogDirective dirz380(asmz380);
 ZilogDirective dirz8000(asmz8000);
@@ -137,6 +140,7 @@ AsmCommander commander{
         &dirz380,
         &dirz8,
         &dir90,
+        &dir900,
         &dir8060,
         &dir8070,
         &dir1802,

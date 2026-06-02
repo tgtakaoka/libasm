@@ -62,6 +62,7 @@ struct Assembler {
 
     virtual Error processPseudo(StrScanner &scan, Insn &insn);
     Error setOption(StrScanner &scan, Insn &insn, uint16_t extra = 0);
+    Error ignoreLine(StrScanner &scan, Insn &insn, uint16_t extra = 0);
     Error defineOrigin(StrScanner &scan, Insn &insn, uint16_t extra = 0);
     enum AlignStep : uint16_t {
         ALIGN_VAR = 0,

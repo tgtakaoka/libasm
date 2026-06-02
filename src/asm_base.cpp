@@ -163,6 +163,12 @@ Error Assembler::setOption(StrScanner &scan, Insn &insn, uint16_t) {
     return OK;
 }
 
+Error Assembler::ignoreLine(StrScanner &scan, Insn &insn, uint16_t) {
+    while (scan.size() && !endOfLine(scan))
+        ++scan;
+    return OK;
+}
+
 Error Assembler::defineOrigin(StrScanner &scan, Insn &insn, uint16_t) {
     auto p = scan;
     ErrorAt error;
