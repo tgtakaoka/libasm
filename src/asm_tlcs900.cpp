@@ -556,6 +556,14 @@ void AsmTlcs900::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode) 
     case M_RCOUNT:
         insn.emitOperand8(op.val.getUnsigned());
         break;
+    case M_BUF: {
+        const auto step = 1u << (insn.opCode() & 3);
+        const auto bufSize = op.val.getUnsigned();
+        if (bufSize < step || (bufSize & (bufSize - 1)) != 0)
+            insn.setErrorIf(op, OVERFLOW_RANGE);
+        insn.emitOperand16(static_cast<uint16_t>(bufSize - step));
+        break;
+    }
     case M_LDXDST:
         insn.emitOperand8(0x00);
         insn.emitOperand16(static_cast<uint16_t>(op.val.getUnsigned()));

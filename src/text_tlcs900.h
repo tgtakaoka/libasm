@@ -24,7 +24,8 @@ namespace text {
 namespace tlcs900 {
 
 extern const char TEXT_TLCS900_LIST[] PROGMEM;
-extern const char TEXT_CPU_TLCS900[] PROGMEM;
+extern const char TEXT_CPU_TLCS900[] PROGMEM;   // +NORMAL, +MAX, +LDX
+extern const char TEXT_CPU_TLCS900L[] PROGMEM;  // -NORMAL, -MAX, +MIN, +LDX
 
 // clang-format off
 using common::TEXT_ADC;
