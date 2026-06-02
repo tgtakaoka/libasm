@@ -69,6 +69,17 @@ build test_formatter_f3850: test test_formatter_f3850.o $
   fixed64.o ieee_float.o float80_base.o float80_hard.o float80_soft.o $
   dec_float.o ibm_float.o ti_float.o test_driver_helper.o test_asserter.o
 
+build test_formatter_h8300: test test_formatter_h8300.o $
+  asm_h8300.o dis_h8300.o reg_h8300.o table_h8300.o text_h8300.o $
+  asm_base.o asm_directive.o asm_driver.o asm_formatter.o bin_decoder.o $
+  bin_encoder.o bin_memory.o config_base.o dis_base.o dis_driver.o $
+  dis_formatter.o error_reporter.o formatters.o function_store.o insn_base.o $
+  intel_hex.o list_formatter.o moto_srec.o operators.o option_base.o $
+  parsers.o reg_base.o str_buffer.o str_scanner.o symbol_store.o $
+  text_common.o value.o value_formatter.o value_parser.o $
+  fixed64.o ieee_float.o float80_base.o float80_hard.o float80_soft.o $
+  dec_float.o ibm_float.o ti_float.o test_driver_helper.o test_asserter.o
+
 build test_formatter_i8048: test test_formatter_i8048.o $
   asm_i8048.o dis_i8048.o reg_i8048.o table_i8048.o text_i8048.o $
   asm_base.o asm_directive.o asm_driver.o asm_formatter.o bin_decoder.o $
@@ -428,6 +439,7 @@ build test: phony test_helpers test_bin_memory test_intel_hex test_moto_srec $
   test_formatter_tms370   $
   test_formatter_tms7000  $
   test_formatter_tms9900  $
+  test_formatter_h8300    $
   test_formatter_z380     $
   test_formatter_z280     $
   test_formatter_z8       $

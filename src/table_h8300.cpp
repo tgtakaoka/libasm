@@ -155,6 +155,125 @@ constexpr Entry H8300_TABLE[] PROGMEM = {
 };
 
 constexpr uint8_t H8300_INDEX[] PROGMEM = {
+      2,  // TEXT_ADD
+     31,  // TEXT_ADD
+     32,  // TEXT_ADD
+     42,  // TEXT_ADDS
+     43,  // TEXT_ADDS
+      7,  // TEXT_ADDX
+     40,  // TEXT_ADDX
+      6,  // TEXT_AND
+     39,  // TEXT_AND
+    117,  // TEXT_ANDC
+    105,  // TEXT_BAND
+     68,  // TEXT_BCC
+     93,  // TEXT_BCLR
+     98,  // TEXT_BCLR
+     70,  // TEXT_BCS
+     73,  // TEXT_BEQ
+     65,  // TEXT_BF
+     78,  // TEXT_BGE
+     80,  // TEXT_BGT
+     66,  // TEXT_BHI
+     69,  // TEXT_BHS
+    106,  // TEXT_BIAND
+    108,  // TEXT_BILD
+    102,  // TEXT_BIOR
+     95,  // TEXT_BIST
+    104,  // TEXT_BIXOR
+    107,  // TEXT_BLD
+     81,  // TEXT_BLE
+     71,  // TEXT_BLO
+     67,  // TEXT_BLS
+     79,  // TEXT_BLT
+     77,  // TEXT_BMI
+     72,  // TEXT_BNE
+     92,  // TEXT_BNOT
+     97,  // TEXT_BNOT
+    101,  // TEXT_BOR
+     76,  // TEXT_BPL
+     62,  // TEXT_BRA
+     64,  // TEXT_BRN
+     91,  // TEXT_BSET
+     96,  // TEXT_BSET
+     82,  // TEXT_BSR
+     94,  // TEXT_BST
+     63,  // TEXT_BT
+     99,  // TEXT_BTST
+    100,  // TEXT_BTST
+     74,  // TEXT_BVC
+     75,  // TEXT_BVS
+    103,  // TEXT_BXOR
+      3,  // TEXT_CMP
+     35,  // TEXT_CMP
+     36,  // TEXT_CMP
+     52,  // TEXT_DAA
+     53,  // TEXT_DAS
+     49,  // TEXT_DEC
+     47,  // TEXT_DIVXU
+     48,  // TEXT_INC
+     85,  // TEXT_JMP
+     86,  // TEXT_JMP
+     87,  // TEXT_JMP
+     88,  // TEXT_JSR
+     89,  // TEXT_JSR
+     90,  // TEXT_JSR
+    114,  // TEXT_LDC
+    118,  // TEXT_LDC
+      0,  // TEXT_MOV
+      1,  // TEXT_MOV
+      9,  // TEXT_MOV
+     10,  // TEXT_MOV
+     11,  // TEXT_MOV
+     12,  // TEXT_MOV
+     13,  // TEXT_MOV
+     14,  // TEXT_MOV
+     15,  // TEXT_MOV
+     16,  // TEXT_MOV
+     17,  // TEXT_MOV
+     18,  // TEXT_MOV
+     19,  // TEXT_MOV
+     20,  // TEXT_MOV
+     21,  // TEXT_MOV
+     22,  // TEXT_MOV
+     25,  // TEXT_MOV
+     26,  // TEXT_MOV
+     27,  // TEXT_MOV
+     28,  // TEXT_MOV
+     29,  // TEXT_MOV
+     30,  // TEXT_MOV
+    109,  // TEXT_MOVFPE
+    110,  // TEXT_MOVTPE
+     46,  // TEXT_MULXU
+     51,  // TEXT_NEG
+    111,  // TEXT_NOP
+     50,  // TEXT_NOT
+      4,  // TEXT_OR
+     37,  // TEXT_OR
+    115,  // TEXT_ORC
+     23,  // TEXT_POP
+     24,  // TEXT_PUSH
+     59,  // TEXT_ROTL
+     61,  // TEXT_ROTR
+     58,  // TEXT_ROTXL
+     60,  // TEXT_ROTXR
+     84,  // TEXT_RTE
+     83,  // TEXT_RTS
+     55,  // TEXT_SHAL
+     57,  // TEXT_SHAR
+     54,  // TEXT_SHLL
+     56,  // TEXT_SHLR
+    112,  // TEXT_SLEEP
+    113,  // TEXT_STC
+     33,  // TEXT_SUB
+     34,  // TEXT_SUB
+     44,  // TEXT_SUBS
+     45,  // TEXT_SUBS
+      8,  // TEXT_SUBX
+     41,  // TEXT_SUBX
+      5,  // TEXT_XOR
+     38,  // TEXT_XOR
+    116,  // TEXT_XORC
 };
 
 // 0x7B5C, CF_0000
@@ -163,6 +282,7 @@ constexpr Entry H8300_7B5C_TABLE[] PROGMEM = {
 };
 
 constexpr uint8_t H8300_7B5C_INDEX[] PROGMEM = {
+      0,  // TEXT_EEPMOV
 };
 
 // 0x7C00, M_INDIR, POS__7_
@@ -181,6 +301,16 @@ constexpr Entry H8300_7C00_TABLE[] = {
 };
 
 constexpr uint8_t H8300_7C00_INDEX[] PROGMEM = {
+      6,  // TEXT_BAND
+      7,  // TEXT_BIAND
+      9,  // TEXT_BILD
+      3,  // TEXT_BIOR
+      5,  // TEXT_BIXOR
+      8,  // TEXT_BLD
+      2,  // TEXT_BOR
+      0,  // TEXT_BTST
+      1,  // TEXT_BTST
+      4,  // TEXT_BXOR
 };
 
 // 0x7D00, M_INDIR, POS__7_
@@ -197,6 +327,14 @@ constexpr Entry H8300_7D00_TABLE[] = {
 };
 
 constexpr uint8_t H8300_7D00_INDEX[] PROGMEM = {
+      2,  // TEXT_BCLR
+      7,  // TEXT_BCLR
+      4,  // TEXT_BIST
+      1,  // TEXT_BNOT
+      6,  // TEXT_BNOT
+      0,  // TEXT_BSET
+      5,  // TEXT_BSET
+      3,  // TEXT_BST
 };
 
 // clang-format on
@@ -258,6 +396,35 @@ Error searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) {
     cpu(cpuType)->searchOpCode(insn, out, matchOpCode, pageMatcher, readName);
     if (insn.getError() == UNKNOWN_INSTRUCTION)
         insn.nameBuffer().reset();
+    return insn.getError();
+}
+
+bool acceptMode(const Operand &op, AddrMode table) {
+    if (op.mode == table)
+        return true;
+    if (op.mode == M_VAL1 || op.mode == M_VAL2 || op.mode == M_IMM3 || op.mode == M_IMM8)
+        return table == M_IMM3 || table == M_IMM8 || table == M_IMM16;
+    if (op.mode == M_ABS8)
+        return table == M_ABS16;
+    if (op.mode == M_REG16)
+        return table == M_ADREG;
+    return false;
+}
+
+bool acceptModes(AsmInsn &insn, const Entry *entry) {
+    const auto flags = entry->readFlags();
+    const auto dst = (insn.prefixMode != M_NONE) ? insn.prefixMode : flags.dst();
+    return acceptMode(insn.srcOp, flags.src()) && acceptMode(insn.dstOp, dst);
+}
+
+void pageSetup(AsmInsn &insn, const EntryPage *page_P) {
+    insn.setPrefix(page_P->readPrefix());
+    insn.prefixMode = page_P->readDstMode();
+    insn.prefixPos = page_P->readDstPos();
+}
+
+Error searchName(CpuType cpuType, AsmInsn &insn) {
+    cpu(cpuType)->searchName(insn, acceptModes, pageSetup);
     return insn.getError();
 }
 

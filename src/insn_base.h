@@ -320,6 +320,7 @@ struct EntryInsnPrefix : virtual EntryInsnBase<Conf, Entry> {
     void setPrefix(uint16_t prefix) { _prefix = prefix; }
     bool hasPrefix() const { return _prefix != 0; }
     uint16_t prefix() const { return _prefix; }
+    void embedPrefix(opcode_t data) { setPrefix(_prefix | data); }
 
 private:
     uint16_t _prefix;

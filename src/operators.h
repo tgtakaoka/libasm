@@ -181,6 +181,11 @@ struct Pdp8OperatorParser final : OperatorParser, Singleton<Pdp8OperatorParser> 
     const Operator *readInfix(StrScanner &, ValueStack &, ParserContext &) const override;
 };
 
+struct HitachiOperatorParser final : OperatorParser, Singleton<HitachiOperatorParser> {
+    const Operator *readPrefix(StrScanner &, ValueStack &, ParserContext &) const override;
+    const Operator *readInfix(StrScanner &, ValueStack &, ParserContext &) const override;
+};
+
 }  // namespace libasm
 
 #endif

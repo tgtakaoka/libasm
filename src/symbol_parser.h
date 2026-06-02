@@ -87,6 +87,16 @@ struct MotorolaSymbolParser final : PrefixSymbolParser, Singleton<MotorolaSymbol
     }
 };
 
+struct HitachiSymbolParser final : PrefixSymbolParser, Singleton<HitachiSymbolParser> {
+    HitachiSymbolParser()
+        : PrefixSymbolParser(text::common::PSTR_DOT, text::common::PSTR_UNDER_DOT_DOLLAR) {}
+    bool locationSymbol(StrScanner &scan) const override {
+        return SymbolParser::locationSymbol(scan, '$') ||
+               SymbolParser::locationSymbol(scan, '*') ||
+               SymbolParser::locationSymbol(scan, '.');
+    }
+};
+
 struct RcaSymbolParser final : SymbolParser, Singleton<RcaSymbolParser> {
     /** Pre-defined function name may have '.' */
     bool functionNameLetter(char c) const override;

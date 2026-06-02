@@ -152,6 +152,18 @@ struct Tms320LetterParser final : LetterParser, Singleton<Tms320LetterParser> {
     char stringDelimiter(StrScanner &scan) const override { return scan.expect('"'); }
 };
 
+/**
+ * Hitachi style letter constant uses double-quote delimiter:
+ * - "c"   single printable character
+ * - """"  doubled double-quote = literal '"' (0x22)
+ * Multi-char constants ("AB", "ABCD") are handled by HitachiNumberParser.
+ */
+struct HitachiLetterParser final : LetterParser, Singleton<HitachiLetterParser> {
+    Error parseLetter(StrScanner &scan, char &letter) const override;
+    char letterDelimiter(StrScanner &scan) const override { return scan.expect('"'); }
+    char stringDelimiter(StrScanner &scan) const override { return scan.expect('"'); }
+};
+
 }  // namespace libasm
 
 #endif

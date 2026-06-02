@@ -609,6 +609,35 @@ const Operator *Pdp8OperatorParser::readInfix(
     return CStyleOperatorParser::singleton().readInfix(scan, stack, context);
 }
 
+const Operator *HitachiOperatorParser::readPrefix(
+        StrScanner &scan, ValueStack &stack, ParserContext &context) const {
+    auto p = scan;
+    p.trimStart(isalnum);
+    const StrScanner name(scan.str(), p.str());
+    const Operator *opr = nullptr;
+    if (name.iequals_P(PSTR("HIGH"))) {
+        opr = &INTEL_HIGH;
+    } else if (name.iequals_P(PSTR("LOW"))) {
+        opr = &INTEL_LOW;
+    } else if (name.iequals_P(PSTR("HWORD"))) {
+        opr = &INTEL_MSW;
+    } else if (name.iequals_P(PSTR("LWORD"))) {
+        opr = &INTEL_LSW;
+    }
+    if (opr) {
+        scan = p;
+        return opr;
+    }
+    return CStyleOperatorParser::singleton().readPrefix(scan, stack, context);
+}
+
+const Operator *HitachiOperatorParser::readInfix(
+        StrScanner &scan, ValueStack &stack, ParserContext &context) const {
+    if (scan.expect('~'))
+        return &Operator::OP_BITWISE_XOR;
+    return CStyleOperatorParser::singleton().readInfix(scan, stack, context);
+}
+
 const struct : Functor {
     int_fast8_t nargs() const override { return 1; }
     Error eval(ValueStack &stack, ParserContext &, uint_fast8_t) const override {
