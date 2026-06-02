@@ -82,7 +82,8 @@ std::vector<std::string> cpu_list() {
 int main(int argc, char **argv) {
     test_failed = false;
     test_cpu();
-    for (const auto &cpu : cpu_list()) {
+    const auto cpus = (argc > 1) ? std::vector<std::string>(argv + 1, argv + argc) : cpu_list();
+    for (const auto &cpu : cpus) {
         printf("  TEST %s disassembler\n", cpu.c_str());
         run_tests(cpu.c_str());
     }
