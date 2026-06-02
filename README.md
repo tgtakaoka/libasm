@@ -79,8 +79,8 @@ It can generate Intel HEX or Motorola S-Record output.
          MC68HC08 MC68HCS08 MC6809 HD6309 MC68HC12 MC68HC16 MOS6502 R65C02
          G65SC02 W65C02S W65C816S i8039 i8048 i80C39 i80C48 MSM80C39 MSM80C48
          i8051 i8080 i8085 V30EMU Z80 Z180 Z280 Z380 Z8 Z86C Z88 TLCS90
-         INS8060 INS8070 CDP1802 CDP1804 CDP1804A SCN2650 F3850 IM6100 HD6120
-         TMS7000 TMS370 TMS32010 TMS32015 TMS32020 TMS320C25 TMS320C26
+         TLCS900 INS8060 INS8070 CDP1802 CDP1804 CDP1804A SCN2650 F3850 IM6100
+         HD6120 TMS7000 TMS370 TMS32010 TMS32015 TMS32020 TMS320C25 TMS320C26
          TMS320C20X TMS320C5X TMS320C30 TMS320C31 TMS320C32 i8086 i80186
          i80286 V30 i8096 i80196 MC68000 MC68010 MC68020 MC68030 MC68040
          H8/300 H8/300H H8S/2000 H8S/2600 TMS9900 TMS9980 TMS9995 TMS99105
@@ -99,6 +99,7 @@ It can generate Intel HEX or Motorola S-Record output.
       --list-radix      : set listing radix (8, 16) (int)
       --smart-branch    : optimize branch instruction (bool)
       --advanced-mode   : H8/300H 24-bit advanced mode (bool: H8/300)
+      --complex-indir   : use complex encoding for (-xrr) and (xrr+) addressing (bool: TLCS900)
       --extmode         : Extended mode (bool: Z380)
       --fpu             : floating point co-processor (text: 8086, 68000, 32032)
       --implicit-word   : unknown instruction defines word (bool: 6100, J11)

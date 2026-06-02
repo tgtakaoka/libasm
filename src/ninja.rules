@@ -188,6 +188,7 @@ build table_tlcs90.o: cxx ${root}/src/table_tlcs90.cpp
 build text_tlcs90.o:  cxx ${root}/src/text_tlcs90.cpp
 
 # tlcs900
+build asm_tlcs900.o:   cxx ${root}/src/asm_tlcs900.cpp
 build dis_tlcs900.o:   cxx ${root}/src/dis_tlcs900.cpp
 build reg_tlcs900.o:   cxx ${root}/src/reg_tlcs900.cpp
 build table_tlcs900.o: cxx ${root}/src/table_tlcs900.cpp
