@@ -45,7 +45,7 @@ static RegName decodeSubReg(uint8_t sub, uint8_t &size) {
 // sub_byte == 0x03: register-indexed (reads base_reg + idx_reg bytes)
 // sub_byte 0xF0+: d16-indexed (reads reg from sub-byte, then 16-bit displacement)
 static Error decodeComplexAddr(DisInsn &insn, Operand &op) {
-    const uint8_t sub = insn.readByte();
+    const uint8_t sub = insn.sub;
     if (sub == 0x03) {
         // Register-indexed: (XIx + r8)
         // Next byte selects base register (F0=XIX, F4=XIY, F8=XIZ, FC=XSP)
@@ -123,6 +123,8 @@ Error DisTlcs900::decodePrefixAddr(
         op.val.setUnsigned(insn.readByte());
         return OK;
     }
+    if (pm == PM_BLOCK || pm == PM_RETCC)
+        return OK;
 
     // Memory context: decode addressing mode from prefix byte.
     // 0x80-0xBF: bits[1:0] = register index (XIX=0..XSP=3)
@@ -161,6 +163,7 @@ Error DisTlcs900::decodePrefixAddr(
             op.mode = M_ABS24;
             break;
         case 3:  // complex sub-byte
+            insn.sub = insn.readByte();
             decodeComplexAddr(insn, op);
             break;
         case 4: {  // complex pre-decrement
@@ -356,6 +359,14 @@ void DisTlcs900::decodeOperand(
         outRelAddr(out, target, insn.address(), 16);
         break;
     }
+    case M_LDARREL: {
+        // rel16 was read into prefixOp at decodeImpl time; base = address + 4.
+        const auto delta = static_cast<int16_t>(prefixOp.val.getSigned());
+        const auto target = static_cast<uint32_t>(insn.address() + 4 + delta);
+        insn.setErrorIf(out, checkAddr(target));
+        outRelAddr(out, target, insn.address(), 16);
+        break;
+    }
     case M_ABS8:
         outHex(out.letter('('), insn.readByte(), 8).letter(')');
         break;
@@ -430,31 +441,68 @@ void DisTlcs900::decodeOperand(
         outCtrlRegName(out, creg);
         break;
     }
+    case M_DISUF:
+        if (insn.readByte() != 0x07)
+            insn.setError(UNKNOWN_INSTRUCTION);
+        break;
+    case M_R32SRC:
+        // MULA xrr32 (alias): the PM_REG16 prefix encodes XWA..XHL (low 2 bits
+        // of the reg field), so map the prefix register back to its 32-bit form.
+        outRegName(out, RegName(uint8_t(REG_XWA) + (uint8_t(prefixOp.reg) - uint8_t(REG_WA))));
+        break;
     default:
         break;
     }
 }
 
-Error DisTlcs900::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) const {
-    DisInsn insn(_insn, memory, out);
+// Read the instruction's prefix byte(s), addressing sub-bytes, and final
+// opcode. Sets insn.prefixMode and insn.opCode; for prefix modes that carry
+// an operand in the prefix slot (M_LDARREL for PM_LDAR, memory addressing
+// for PM_MEMD etc.) the operand is decoded into |prefixOp|.
+Error DisTlcs900::readPrefix(DisInsn &insn, Operand &prefixOp) const {
     const auto firstByte = insn.readByte();
-    PrefixMode pm = PM_NONE;
-    Operand prefixOp;
 
+    // 0xF3 is ambiguous: LDAR's 2-byte prefix (F3 13) or PM_MEMD's complex
+    // addressing (F3 + complex sub-byte). Read the second byte once into
+    // insn.sub and route based on its value.
+    if (firstByte == 0xF3) {
+        insn.sub = insn.readByte();
+        if (insn.sub == 0x13) {
+            // pageMatcher derives PM_LDAR from prefix > UINT8_MAX.
+            insn.setPrefix(0xF313);
+            prefixOp.val.setSigned(static_cast<int16_t>(insn.readUint16()));
+            insn.setOpCode(insn.readByte());
+        } else {
+            // pageMatcher derives PM_MEMD from 0xF3 byte.
+            insn.setPrefix(firstByte);
+            if (decodeComplexAddr(insn, prefixOp))
+                return insn.getError();
+            insn.setOpCode(insn.readByte());
+        }
+        return insn.getError();
+    }
+
+    PrefixMode pm;
     if (isPrefix(cpuType(), firstByte, pm)) {
         // Record the prefix byte so searchOpCode's pageMatcher can derive
         // the PrefixMode and accept the right page.
         insn.setPrefix(firstByte);
         if (decodePrefixAddr(insn, pm, prefixOp, firstByte))
-            return _insn.setError(insn);
+            return insn.getError();
         insn.setOpCode(insn.readByte());
-        // Preserve NO_MEMORY etc. that readByte may have set; CpuBase::searchOpCode
-        // would call setOK() and replace it with UNKNOWN_INSTRUCTION.
-        if (insn.getError())
-            return _insn.setError(insn);
-    } else {
-        insn.setOpCode(firstByte);
+        return insn.getError();
     }
+
+    insn.setOpCode(firstByte);
+    return insn.getError();
+}
+
+Error DisTlcs900::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) const {
+    DisInsn insn(_insn, memory, out);
+    Operand prefixOp;
+
+    if (readPrefix(insn, prefixOp))
+        return _insn.setError(insn);
 
     if (searchOpCode(cpuType(), insn, out))
         return _insn.setError(insn);

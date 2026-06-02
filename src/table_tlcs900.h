@@ -31,6 +31,7 @@ struct TableTlcs900 final : InsnTable<CpuType> {
 
 extern const TableTlcs900 TABLE;
 
+Error searchName(CpuType cpuType, AsmInsn &insn);
 Error searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out);
 
 // Determine prefix mode for a given first byte.

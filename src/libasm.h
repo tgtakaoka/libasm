@@ -36,6 +36,7 @@
 #include "asm_ns32000.h"
 #include "asm_scn2650.h"
 #include "asm_tlcs90.h"
+#include "asm_tlcs900.h"
 #include "asm_tms320.h"
 #include "asm_tms7000.h"
 #include "asm_tms9900.h"

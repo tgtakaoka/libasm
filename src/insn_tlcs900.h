@@ -42,6 +42,7 @@ enum PrefixMode : uint8_t {
     PM_ABREG8 = 10,   // prefix 0xC7: 8-bit absolute bank register context
     PM_ABREG16 = 11,  // prefix 0xD7: 16-bit absolute bank register context
     PM_ABREG32 = 12,  // prefix 0xE7: 32-bit absolute bank register context
+    PM_LDAR = 13,     // 2-byte prefix 0xF313: LDAR, rel16 src sits between prefix and opcode
 };
 
 struct EntryInsn : EntryInsnPrefix<Config, Entry> {
@@ -74,13 +75,27 @@ struct AsmInsn final : AsmInsnImpl<Config>, EntryInsn {
 
     Operand dstOp, srcOp;
 
-    void setEmitInsn() { _emitInsn = true; }
-    void emitInsn(Config::opcode_t opc) {
-        if (_emitInsn) {
-            emitByte(opc);
-            _emitInsn = false;
-        }
+    // Stashed by AsmTlcs900 before encoding so prefixSize() can decide
+    // between the compact (1-byte) and complex (2-byte) M_PRDC/M_PINC
+    // prefix forms without having to consult the assembler instance.
+    bool complexIndir = false;
+
+    // Opcode position computed from the resolved AddrMode / PrefixMode /
+    // prefix() state — independent of the current emit length.
+    uint_fast8_t prefixSize() const;
+    // First byte past the opcode slot, growing past prior operand trailings.
+    uint_fast8_t operandPos() const;
+    // Write the final opcode at prefixSize(). Skipped when encodeOperand
+    // reset bytes for a structural error so failures leave no encoded output.
+    void emitInsn();
+    void emitOperand8(uint8_t val) { emitByte(val, operandPos()); }
+    void emitOperand16(uint16_t val) { emitUint16(val, operandPos()); }
+    void emitOperand24(uint32_t val) {
+        const auto pos = operandPos();
+        emitUint16(static_cast<uint16_t>(val), pos);
+        emitByte(static_cast<uint8_t>(val >> 16), pos + 2);
     }
+    void emitOperand32(uint32_t val) { emitUint32(val, operandPos()); }
 
     // Per-page PrefixMode bitmask, set by searchName's pageSetup callback so
     // that acceptOperands can iterate the page's valid PMs.
@@ -88,12 +103,17 @@ struct AsmInsn final : AsmInsnImpl<Config>, EntryInsn {
     void setPmMask(uint16_t mask) { _pmMask = mask; }
 
 private:
-    bool _emitInsn = false;
     uint16_t _pmMask = 0;
 };
 
 struct DisInsn final : DisInsnImpl<Config>, EntryInsn {
     DisInsn(Insn &insn, DisMemory &memory, const StrBuffer &out) : DisInsnImpl(insn, memory, out) {}
+
+    // Sub-byte read after the prefix byte, kept on the insn so the addressing
+    // helpers can look at it without re-reading. Set by decodeImpl when the
+    // sub-byte must be inspected up front (e.g. 0xF3 routing between LDAR's
+    // 2-byte prefix and PM_MEMD's complex addressing).
+    uint8_t sub = 0;
 
     // Per-page PrefixMode bitmask, set by searchOpCode's pageMatcher callback
     // so downstream decode code can consult the page's accepted PMs.
