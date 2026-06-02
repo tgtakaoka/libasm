@@ -38,6 +38,9 @@ static bool is_tlcs900() {
 static bool is_tlcs900l() {
     return strcmp_P("TLCS900L", assembler.config().cpu_P()) == 0;
 }
+static bool is_tlcs900h2() {
+    return strcmp_P("TLCS900H2", assembler.config().cpu_P()) == 0;
+}
 // clang-format off
 void test_cpu() {
     EQUALS("cpu tlcs900",   true, assembler.setCpu("tlcs900"));
@@ -48,6 +51,8 @@ void test_cpu() {
     EQUALS_P("get cpu", "TLCS900H",  assembler.config().cpu_P());
     EQUALS("cpu tlcs900l1", true, assembler.setCpu("tlcs900l1"));
     EQUALS_P("get cpu", "TLCS900L1", assembler.config().cpu_P());
+    EQUALS("cpu tlcs900h2", true, assembler.setCpu("tlcs900h2"));
+    EQUALS_P("get cpu", "TLCS900H2", assembler.config().cpu_P());
 }
 
 void test_single() {
@@ -84,9 +89,14 @@ void test_single() {
     TEST("EX F,F'", 0x16);
     TEST("INCF",    0x0C);
     TEST("DECF",    0x0D);
-    TEST("LDX (034H),056H",   0xF7, 0x00, 0x34, 0x00, 0x56, 0x00);
-    TEST("LDX (01234H),056H", 0xF7, 0x00, 0x34, 0x12, 0x56, 0x00);
-    // NSP/XNSP exists only on base; INTNEST exists on /L, /H, /L1. Both use sub-byte 0x3C.
+    if (!is_tlcs900h2()) {
+        TEST("LDX (034H),056H",   0xF7, 0x00, 0x34, 0x00, 0x56, 0x00);
+        TEST("LDX (01234H),056H", 0xF7, 0x00, 0x34, 0x12, 0x56, 0x00);
+    } else {
+        ERRT("LDX (034H),056H",   UNKNOWN_INSTRUCTION, "LDX (034H),056H");
+        ERRT("LDX (01234H),056H", UNKNOWN_INSTRUCTION, "LDX (01234H),056H");
+    }
+    // NSP/XNSP exists only on base; INTNEST exists on /L, /H, /L1, /H2. Both use sub-byte 0x3C.
     if (is_tlcs900()) {
         TEST("LDC XNSP,XSP",    0xEF, 0x2E, 0x3C);
         TEST("LDC XSP,XNSP",    0xEF, 0x2F, 0x3C);
