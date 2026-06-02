@@ -26,6 +26,8 @@ namespace tlcs900 {
 extern const char TEXT_TLCS900_LIST[] PROGMEM;
 extern const char TEXT_CPU_TLCS900[] PROGMEM;   // +NORMAL, +MAX, +LDX
 extern const char TEXT_CPU_TLCS900L[] PROGMEM;  // -NORMAL, -MAX, +MIN, +LDX
+extern const char TEXT_CPU_TLCS900H[] PROGMEM;  // -NORMAL, -MAX, +LDX
+extern const char TEXT_CPU_TLCS900L1[] PROGMEM; // -NORMAL, -MAX, +LDX (CPU core = /H)
 
 // clang-format off
 using common::TEXT_ADC;
