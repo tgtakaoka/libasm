@@ -133,6 +133,13 @@ constexpr uint8_t INDEX_OPC_TLCS900[] PROGMEM = {
         0,  // TEXT_NORMAL
 };
 
+constexpr Entry TABLE_OPC_TLCS900L[] PROGMEM = {
+    E0(0x04, CF_00, TEXT_MIN),
+};
+constexpr uint8_t INDEX_OPC_TLCS900L[] PROGMEM = {
+      0,  // TEXT_MIN
+};
+
 constexpr Entry TABLE_SRC_REG[] PROGMEM = {
     E1(0x06, CF_00, TEXT_CPL,   M_SRC),
     E1(0x07, CF_00, TEXT_NEG,   M_SRC),
@@ -199,6 +206,12 @@ constexpr Entry TABLE_SRC_REG[] PROGMEM = {
     E2(0xEE, CF_00, TEXT_SLL,   M_RCOUNT, M_SRC),
     E2(0xEF, CF_00, TEXT_SRL,   M_RCOUNT, M_SRC),
     E2(0xF0, CF_07, TEXT_CP,    M_DST,   M_SRC),
+    E2(0x38, CF_00, TEXT_MINC1, M_BUF,   M_SRC),
+    E2(0x39, CF_00, TEXT_MINC2, M_BUF,   M_SRC),
+    E2(0x3A, CF_00, TEXT_MINC4, M_BUF,   M_SRC),
+    E2(0x3C, CF_00, TEXT_MDEC1, M_BUF,   M_SRC),
+    E2(0x3D, CF_00, TEXT_MDEC2, M_BUF,   M_SRC),
+    E2(0x3E, CF_00, TEXT_MDEC4, M_BUF,   M_SRC),
 };
 constexpr uint8_t INDEX_SRC_REG[] PROGMEM = {
      41,  // TEXT_ADC
@@ -233,6 +246,12 @@ constexpr uint8_t INDEX_SRC_REG[] PROGMEM = {
      22,  // TEXT_LDC
      19,  // TEXT_LDCF
       4,  // TEXT_LINK
+     68,  // TEXT_MDEC1
+     69,  // TEXT_MDEC2
+     70,  // TEXT_MDEC4
+     65,  // TEXT_MINC1
+     66,  // TEXT_MINC2
+     67,  // TEXT_MINC4
      12,  // TEXT_MIRR
       2,  // TEXT_MUL
      28,  // TEXT_MUL
@@ -276,7 +295,6 @@ constexpr uint8_t INDEX_SRC_ABREG[] PROGMEM = {
       0,  // TEXT_LD
       1,  // TEXT_LD
 };
-
 
 constexpr Entry TABLE_SRC_MEM[] PROGMEM = {
     E1(0x04, CF_00, TEXT_PUSH,  M_SRC),
@@ -497,8 +515,23 @@ constexpr EntryPage TLCS900_PAGES[] PROGMEM = {
     {PM_BIT(PM_LDAR),  0xF313, ARRAY_RANGE(TABLE_LDAR),      ARRAY_RANGE(INDEX_LDAR)},
 };
 
+constexpr EntryPage TLCS900L_PAGES[] PROGMEM = {
+    {PM_BIT(PM_NONE),  0,    ARRAY_RANGE(TABLE_OPC_TLCS900L), ARRAY_RANGE(INDEX_OPC_TLCS900L)},
+    {PM_BIT(PM_NONE),  0,    ARRAY_RANGE(TABLE_LDX),          ARRAY_RANGE(INDEX_LDX)},
+    {PM_BIT(PM_NONE),  0,    ARRAY_RANGE(TABLE_OPC),          ARRAY_RANGE(INDEX_OPC)},
+    {PM_BITS_REG | PM_BITS_ABREG, 0,
+                             ARRAY_RANGE(TABLE_SRC_REG),      ARRAY_RANGE(INDEX_SRC_REG)},
+    {PM_BITS_ABREG,    0,    ARRAY_RANGE(TABLE_SRC_ABREG),    ARRAY_RANGE(INDEX_SRC_ABREG)},
+    {PM_BIT(PM_MEMD),  0,    ARRAY_RANGE(TABLE_DST_MEM),      ARRAY_RANGE(INDEX_DST_MEM)},
+    {PM_BITS_MEM,      0,    ARRAY_RANGE(TABLE_SRC_MEM),      ARRAY_RANGE(INDEX_SRC_MEM)},
+    {PM_BIT(PM_BLOCK), 0x83,   ARRAY_RANGE(TABLE_BLOCK),      ARRAY_RANGE(INDEX_BLOCK)},
+    {PM_BIT(PM_RETCC), 0xB0,   ARRAY_RANGE(TABLE_RETCC),      ARRAY_RANGE(INDEX_RETCC)},
+    {PM_BIT(PM_LDAR),  0xF313, ARRAY_RANGE(TABLE_LDAR),       ARRAY_RANGE(INDEX_LDAR)},
+};
+
 constexpr Cpu CPU_TABLE[] PROGMEM = {
     {TLCS900,   TEXT_CPU_TLCS900,   ARRAY_RANGE(TLCS900_PAGES)},
+    {TLCS900L,  TEXT_CPU_TLCS900L,  ARRAY_RANGE(TLCS900L_PAGES)},
 };
 // clang-format on
 

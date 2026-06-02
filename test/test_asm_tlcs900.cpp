@@ -32,19 +32,36 @@ void tear_down() {
     symtab.reset();
 }
 
+static bool is_tlcs900() {
+    return strcmp_P("TLCS900", assembler.config().cpu_P()) == 0;
+}
+static bool is_tlcs900l() {
+    return strcmp_P("TLCS900L", assembler.config().cpu_P()) == 0;
+}
 // clang-format off
 void test_cpu() {
     EQUALS("cpu tlcs900",   true, assembler.setCpu("tlcs900"));
     EQUALS_P("get cpu", "TLCS900",   assembler.config().cpu_P());
+    EQUALS("cpu tlcs900l",  true, assembler.setCpu("tlcs900l"));
+    EQUALS_P("get cpu", "TLCS900L",  assembler.config().cpu_P());
 }
 
 void test_single() {
     TEST("NOP",     0x00);
-    TEST("NORMAL",  0x01);
+    if (is_tlcs900()) {
+        TEST("NORMAL",  0x01);
+    } else {
+        ERRT("NORMAL", UNKNOWN_INSTRUCTION, "NORMAL");
+    }
     TEST("PUSH SR", 0x02);
     TEST("POP SR",  0x03);
-    TEST("MAX", 0x04);
-    ERRT("MIN", UNKNOWN_INSTRUCTION, "MIN");
+    if (is_tlcs900()) {
+        TEST("MAX", 0x04);
+        ERRT("MIN", UNKNOWN_INSTRUCTION, "MIN");
+    } else {
+        TEST("MIN", 0x04);
+        ERRT("MAX", UNKNOWN_INSTRUCTION, "MAX");
+    }
     TEST("HALT",    0x05);
     TEST("RETI",    0x07);
     TEST("LD (034H),056H",    0x08, 0x34, 0x56);
@@ -62,10 +79,19 @@ void test_single() {
     TEST("DECF",    0x0D);
     TEST("LDX (034H),056H",   0xF7, 0x00, 0x34, 0x00, 0x56, 0x00);
     TEST("LDX (01234H),056H", 0xF7, 0x00, 0x34, 0x12, 0x56, 0x00);
-    TEST("LDC XNSP,XSP",    0xEF, 0x2E, 0x3C);
-    TEST("LDC XSP,XNSP",    0xEF, 0x2F, 0x3C);
-    TEST("LDC NSP,SP",      0xDF, 0x2E, 0x3C);
-    TEST("LDC SP,NSP",      0xDF, 0x2F, 0x3C);
+    // NSP/XNSP exists only on base; INTNEST exists on /L. Both use sub-byte 0x3C.
+    if (is_tlcs900()) {
+        TEST("LDC XNSP,XSP",    0xEF, 0x2E, 0x3C);
+        TEST("LDC XSP,XNSP",    0xEF, 0x2F, 0x3C);
+        TEST("LDC NSP,SP",      0xDF, 0x2E, 0x3C);
+        TEST("LDC SP,NSP",      0xDF, 0x2F, 0x3C);
+        ERRT("LDC INTNEST,WA",  REGISTER_NOT_ALLOWED, "INTNEST,WA");
+    } else {
+        TEST("LDC INTNEST,WA",  0xD8, 0x2E, 0x3C);
+        TEST("LDC WA,INTNEST",  0xD8, 0x2F, 0x3C);
+        ERRT("LDC NSP,SP",      REGISTER_NOT_ALLOWED, "NSP,SP");
+        ERRT("LDC XNSP,XSP",    REGISTER_NOT_ALLOWED, "XNSP,XSP");
+    }
     // LDC DMA control registers
     TEST("LDC DMAS0,XWA",   0xE8, 0x2E, 0x00);
     TEST("LDC DMAS1,XBC",   0xE9, 0x2E, 0x04);
@@ -92,12 +118,31 @@ void test_single() {
     TEST("DI",      0x06, 0x07);
     TEST("LDF 0",   0x17, 0x00);
     TEST("LDF 3",   0x17, 0x03);
-    // MIN register mode (reset default): RFP range 0-7.
+    // MIN register mode (reset default): RFP range 0-7. Both base and /L reset to MIN.
     TEST("LDF 7",   0x17, 0x07);
     ERRT("LDF 8",   OVERFLOW_RANGE, "8", 0x17, 0x00);
     TEST("SWI 0",   0xF8);
     TEST("SWI 7",   0xFF);
     TEST("SWI",     0xFF);  // bare SWI defaults to vec 7 (ASL convention)
+}
+
+void test_tlcs900l() {
+    // MAXMODE directive (ASL convention). /L is MIN-only: rejects MAXMODE ON,
+    // accepts MAXMODE OFF as a no-op.
+    ERRT("MAXMODE ON",  OPERAND_NOT_ALLOWED, "ON");
+    TEST("MAXMODE OFF");
+    // MINC1 buf_size, r16: prefix(D8+r) + 0x38 + uint16(buf_size-1)
+    TEST("MINC1 2,BC",    0xD9, 0x38, 0x01, 0x00); // BC=reg1, 2-1=1
+    TEST("MINC1 4,DE",    0xDA, 0x38, 0x03, 0x00); // DE=reg2, 4-1=3
+    TEST("MINC1 8,HL",    0xDB, 0x38, 0x07, 0x00); // HL=reg3, 8-1=7
+    TEST("MINC2 4,BC",    0xD9, 0x39, 0x02, 0x00); // 4-2=2
+    TEST("MINC2 8,WA",    0xD8, 0x39, 0x06, 0x00); // WA=reg0, 8-2=6
+    TEST("MINC4 8,BC",    0xD9, 0x3A, 0x04, 0x00); // 8-4=4
+    TEST("MINC4 16,DE",   0xDA, 0x3A, 0x0C, 0x00); // 16-4=12
+    // MDEC1 buf_size, r16: prefix(D8+r) + 0x3C + uint16(buf_size-1)
+    TEST("MDEC1 2,BC",    0xD9, 0x3C, 0x01, 0x00);
+    TEST("MDEC2 4,DE",    0xDA, 0x3D, 0x02, 0x00);
+    TEST("MDEC4 8,HL",    0xDB, 0x3E, 0x04, 0x00);
 }
 
 void test_ld_reg8_reg8() {
@@ -656,6 +701,8 @@ void test_complex_indir() {
 void run_tests(const char *cpu) {
     assembler.setCpu(cpu);
     RUN_TEST(test_single);
+    if (is_tlcs900l())
+        RUN_TEST(test_tlcs900l);
     RUN_TEST(test_ld_reg8_reg8);
     RUN_TEST(test_ld_reg8_imm);
     RUN_TEST(test_ld_reg8_mem);

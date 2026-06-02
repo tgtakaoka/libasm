@@ -33,16 +33,29 @@ void tear_down() {
     symtab.reset();
 }
 
+static bool is_tlcs900() {
+    return strcmp_P("TLCS900", disassembler.config().cpu_P()) == 0;
+}
+static bool is_tlcs900l() {
+    return strcmp_P("TLCS900L", disassembler.config().cpu_P()) == 0;
+}
 // clang-format off
 void test_cpu() {
     EQUALS("cpu tlcs900",   true, disassembler.setCpu("tlcs900"));
     EQUALS_P("get cpu", "TLCS900",   disassembler.config().cpu_P());
+    EQUALS("cpu tlcs900l",  true, disassembler.setCpu("tlcs900l"));
+    EQUALS_P("get cpu", "TLCS900L",  disassembler.config().cpu_P());
 }
 
 void test_single() {
     TEST("NOP",    "", 0x00);
-    TEST("NORMAL", "", 0x01);
-    TEST("MAX",    "", 0x04);
+    if (is_tlcs900()) {
+        TEST("NORMAL", "", 0x01);
+        TEST("MAX",    "", 0x04);
+    } else {
+        UNKN(0x01);
+        TEST("MIN",    "", 0x04);
+    }
     TEST("PUSH",   "SR", 0x02);
     TEST("POP",    "SR", 0x03);
     TEST("HALT",   "", 0x05);
@@ -61,10 +74,16 @@ void test_single() {
     TEST("INCF",   "", 0x0C);
     TEST("DECF",   "", 0x0D);
     TEST("LDX",   "(0034H), 0056H",  0xF7, 0x00, 0x34, 0x00, 0x56, 0x00);
-    TEST("LDC",   "XNSP, XSP",      0xEF, 0x2E, 0x3C);
-    TEST("LDC",   "XSP, XNSP",      0xEF, 0x2F, 0x3C);
-    TEST("LDC",   "NSP, SP",        0xDF, 0x2E, 0x3C);
-    TEST("LDC",   "SP, NSP",        0xDF, 0x2F, 0x3C);
+    // sub-byte 0x3C decodes as NSP/XNSP on base; as INTNEST on /L (16-bit only).
+    if (is_tlcs900()) {
+        TEST("LDC",   "XNSP, XSP",      0xEF, 0x2E, 0x3C);
+        TEST("LDC",   "XSP, XNSP",      0xEF, 0x2F, 0x3C);
+        TEST("LDC",   "NSP, SP",        0xDF, 0x2E, 0x3C);
+        TEST("LDC",   "SP, NSP",        0xDF, 0x2F, 0x3C);
+    } else {
+        TEST("LDC",   "INTNEST, WA",    0xD8, 0x2E, 0x3C);
+        TEST("LDC",   "WA, INTNEST",    0xD8, 0x2F, 0x3C);
+    }
     TEST("LDC",   "DMAS0, XWA",    0xE8, 0x2E, 0x00);
     TEST("LDC",   "DMAS1, XBC",    0xE9, 0x2E, 0x04);
     TEST("LDC",   "DMAS3, XHL",    0xEB, 0x2E, 0x0C);
@@ -83,10 +102,25 @@ void test_single() {
     TEST("EI",     "7", 0x06, 0x07);
     TEST("LDF",    "0", 0x17, 0x00);
     TEST("LDF",    "3", 0x17, 0x03);
-    // MIN register mode: 3-bit RFP field.
+    // MIN register mode: 3-bit RFP field. Both base and /L reset to MIN.
     TEST("LDF",    "7", 0x17, 0x07);
     TEST("SWI",    "0", 0xF8);
     TEST("SWI",    "7", 0xFF);
+}
+
+void test_tlcs900l() {
+    // MINC1 #buf_size, r16: prefix(D8+r) + 0x38 + uint16(buf_size-1)
+    TEST("MINC1", "2, BC",  0xD9, 0x38, 0x01, 0x00); // BC=reg1, 2-1=1
+    TEST("MINC1", "4, DE",  0xDA, 0x38, 0x03, 0x00); // DE=reg2, 4-1=3
+    TEST("MINC1", "8, HL",  0xDB, 0x38, 0x07, 0x00); // HL=reg3, 8-1=7
+    TEST("MINC2", "4, BC",  0xD9, 0x39, 0x02, 0x00); // 4-2=2
+    TEST("MINC2", "8, WA",  0xD8, 0x39, 0x06, 0x00); // WA=reg0, 8-2=6
+    TEST("MINC4", "8, BC",  0xD9, 0x3A, 0x04, 0x00); // 8-4=4
+    TEST("MINC4", "16, DE", 0xDA, 0x3A, 0x0C, 0x00); // 16-4=12
+    // MDEC1 #buf_size, r16: prefix(D8+r) + 0x3C + uint16(buf_size-1)
+    TEST("MDEC1", "2, BC",  0xD9, 0x3C, 0x01, 0x00);
+    TEST("MDEC2", "4, DE",  0xDA, 0x3D, 0x02, 0x00);
+    TEST("MDEC4", "8, HL",  0xDB, 0x3E, 0x04, 0x00);
 }
 
 void test_ld8() {
@@ -581,6 +615,10 @@ void test_illegal() {
     for (uint8_t opc = 0x50; opc <= 0x57; opc++)
         UNKN(opc);
 
+    // NORMAL (0x01) is base only; /L has only MIN at 0x04.
+    if (is_tlcs900l())
+        UNKN(0x01);
+
     // PM_BLOCK (0x83) valid sub-byte range is 0x10-0x17.
     UNKN(0x83, 0x00);
     UNKN(0x83, 0x0F);
@@ -605,6 +643,8 @@ void test_illegal() {
 void run_tests(const char *cpu) {
     disassembler.setCpu(cpu);
     RUN_TEST(test_single);
+    if (is_tlcs900l())
+        RUN_TEST(test_tlcs900l);
     RUN_TEST(test_ld8);
     RUN_TEST(test_ld16);
     RUN_TEST(test_ld32);
