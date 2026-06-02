@@ -18,6 +18,7 @@
 #include "asm_commander.h"
 #include "asm_directive.h"
 #include "asm_f3850.h"
+#include "asm_h8300.h"
 #include "asm_i8048.h"
 #include "asm_i8051.h"
 #include "asm_i8080.h"
@@ -25,8 +26,8 @@
 #include "asm_i8096.h"
 #include "asm_ins8060.h"
 #include "asm_ins8070.h"
-#include "asm_mc68000.h"
 #include "asm_mc6800.h"
+#include "asm_mc68000.h"
 #include "asm_mc6805.h"
 #include "asm_mc6809.h"
 #include "asm_mc68hc12.h"
@@ -45,9 +46,9 @@
 #include "asm_tms9900.h"
 #include "asm_z280.h"
 #include "asm_z380.h"
-#include "asm_z8000.h"
-#include "asm_z80.h"
 #include "asm_z8.h"
+#include "asm_z80.h"
+#include "asm_z8000.h"
 
 using namespace libasm;
 using namespace libasm::cli;
@@ -59,6 +60,7 @@ i8048::AsmI8048 asm8048;
 i8051::AsmI8051 asm8051;
 i8080::AsmI8080 asm8080;
 i8086::AsmI8086 asm8086;
+h8300::AsmH8300 asm8300;
 i8096::AsmI8096 asm8096;
 ins8060::AsmIns8060 asm8060;
 ins8070::AsmIns8070 asm8070;
@@ -103,6 +105,7 @@ IntelDirective dir8096(asm8096);
 IntelDirective dir9900(asm9900);
 MostekDirective dir6502(asm6502);
 MotorolaDirective dir68000(asm68000);
+MotorolaDirective dir8300(asm8300);
 MotorolaDirective dir6800(asm6800);
 MotorolaDirective dir6805(asm6805);
 MotorolaDirective dir6809(asm6809);
@@ -147,6 +150,7 @@ AsmCommander commander{
         &dir8086,
         &dir8096,
         &dir68000,
+        &dir8300,
         &dir9900,
         &dirz8000,
         &dir32000,

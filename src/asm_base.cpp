@@ -237,13 +237,28 @@ Error Assembler::defineString(StrScanner &scan, Insn &insn, uint16_t) {
     do {
         const auto delim = *scan.skipSpaces()++;
         auto p = scan;
-        while (!p.expect(delim)) {
-            const auto c = *p;
-            if (c == 0)
-                return insn.setErrorIf(p, MISSING_CLOSING_DELIMITER);
-            error.setErrorIf(p, insn.emitByte(c));
-            ++p;
+        auto closed = false;
+        while (*p) {
+            if (*p == delim) {
+                // End of string when the next char is end-of-line or comma;
+                // otherwise a doubled delimiter is an escape handled by
+                // readLetter (mc6809 'A''B', H8/300 .sdata "ab""cd", ...).
+                auto next = p;
+                ++next;
+                if (endOfLine(next) || *next == ',') {
+                    p = next;
+                    closed = true;
+                    break;
+                }
+            }
+            auto save = p;
+            const auto c = parser().readLetter(p, error, delim);
+            if (error.hasError())
+                return insn.setError(error);
+            error.setErrorIf(save, insn.emitByte(c));
         }
+        if (!closed)
+            return insn.setErrorIf(p, MISSING_CLOSING_DELIMITER);
         scan = p;
     } while (scan.skipSpaces().expect(','));
 

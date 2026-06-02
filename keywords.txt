@@ -12,6 +12,7 @@ SymbolTable     KEYWORD1        libasm
 Error           KEYWORD1        libasm
 AsmCdp1802      KEYWORD1        libasm
 AsmF3850        KEYWORD1        libasm
+AsmH8300        KEYWORD1        libasm
 AsmI8048        KEYWORD1        libasm
 AsmI8051        KEYWORD1        libasm
 AsmI8080        KEYWORD1        libasm

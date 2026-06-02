@@ -11,6 +11,7 @@ build test_moto_srec.o:     cxx test_moto_srec.cpp
 
 build test_formatter_cdp1802.o:  cxx test_formatter_cdp1802.cpp
 build test_formatter_f3850.o:    cxx test_formatter_f3850.cpp
+build test_formatter_h8300.o:    cxx test_formatter_h8300.cpp
 build test_formatter_i8048.o:    cxx test_formatter_i8048.cpp
 build test_formatter_i8051.o:    cxx test_formatter_i8051.cpp
 build test_formatter_i8080.o:    cxx test_formatter_i8080.cpp

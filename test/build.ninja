@@ -69,6 +69,13 @@ build gen_f3850: link gen_f3850.o $
   gen_driver.o tokenized_text.o
 
 # h8300
+build test_asm_h8300: run test_asm_h8300.o $
+  asm_h8300.o reg_h8300.o table_h8300.o text_h8300.o $
+  asm_base.o config_base.o error_reporter.o insn_base.o operators.o $
+  option_base.o parsers.o reg_base.o str_buffer.o str_scanner.o $
+  text_common.o value.o value_parser.o $
+  fixed64.o ieee_float.o float80_base.o float80_hard.o float80_soft.o $
+  dec_float.o ibm_float.o ti_float.o test_asm_helper.o test_asserter.o
 build test_dis_h8300: run test_dis_h8300.o $
   dis_h8300.o reg_h8300.o table_h8300.o text_h8300.o $
   dis_base.o config_base.o error_reporter.o formatters.o insn_base.o $
@@ -845,7 +852,7 @@ build test_expr_zilog: run test_expr_zilog.o $
 
 build test_cdp1802:  phony test_asm_cdp1802  test_dis_cdp1802
 build test_f3850:    phony test_asm_f3850    test_dis_f3850
-build test_h8300:    phony                   test_dis_h8300
+build test_h8300:    phony test_asm_h8300    test_dis_h8300
 build test_i8048:    phony test_asm_i8048    test_dis_i8048
 build test_i8051:    phony test_asm_i8051    test_dis_i8051
 build test_i8080:    phony test_asm_i8080    test_dis_i8080
