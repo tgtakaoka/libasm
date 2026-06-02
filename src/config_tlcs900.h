@@ -27,6 +27,7 @@ enum CpuType : uint8_t {
     TLCS900L,
     TLCS900H,
     TLCS900L1,
+    TLCS900H2,
 };
 
 struct Config : ConfigImpl<CpuType, ADDRESS_24BIT, ADDRESS_BYTE, OPCODE_8BIT, ENDIAN_LITTLE, 8, 6> {
@@ -40,10 +41,10 @@ struct Config : ConfigImpl<CpuType, ADDRESS_24BIT, ADDRESS_BYTE, OPCODE_8BIT, EN
 
     bool maxMode() const { return _maxMode; }
 
-    // /L is MIN-only (rejects MAXMODE ON); /H and /L1 are MAX-only (reject MAXMODE OFF).
+    // /L is MIN-only (rejects MAXMODE ON); /H, /L1, /H2 are MAX-only (reject MAXMODE OFF).
     Error setMaxMode(bool enable) {
         const auto ct = cpuType();
-        const bool maxOnly = (ct == TLCS900H || ct == TLCS900L1);
+        const bool maxOnly = (ct == TLCS900H || ct == TLCS900L1 || ct == TLCS900H2);
         const bool minOnly = (ct == TLCS900L);
         if ((maxOnly && !enable) || (minOnly && enable))
             return OPERAND_NOT_ALLOWED;
@@ -53,7 +54,7 @@ struct Config : ConfigImpl<CpuType, ADDRESS_24BIT, ADDRESS_BYTE, OPCODE_8BIT, EN
 
     void setCpuType(CpuType cpuType) override {
         ConfigImpl::setCpuType(cpuType);
-        _maxMode = (cpuType == TLCS900H || cpuType == TLCS900L1);
+        _maxMode = (cpuType == TLCS900H || cpuType == TLCS900L1 || cpuType == TLCS900H2);
     }
 
 protected:
