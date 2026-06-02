@@ -20,9 +20,11 @@ namespace libasm {
 namespace text {
 namespace tlcs900 {
 
-constexpr char TEXT_TLCS900_LIST[] PROGMEM = "TLCS900, TLCS900L";
+constexpr char TEXT_TLCS900_LIST[] PROGMEM = "TLCS900, TLCS900L, TLCS900H, TLCS900L1";
 constexpr char TEXT_CPU_TLCS900[] PROGMEM = "TLCS900";
 constexpr char TEXT_CPU_TLCS900L[] PROGMEM = "TLCS900L";
+constexpr char TEXT_CPU_TLCS900H[] PROGMEM = "TLCS900H";
+constexpr char TEXT_CPU_TLCS900L1[] PROGMEM = "TLCS900L1";
 
 // clang-format off
 // constexpr char TEXT_ADC[]   PROGMEM = "ADC";

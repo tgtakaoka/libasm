@@ -39,12 +39,22 @@ static bool is_tlcs900() {
 static bool is_tlcs900l() {
     return strcmp_P("TLCS900L", disassembler.config().cpu_P()) == 0;
 }
+static bool is_tlcs900h() {
+    return strcmp_P("TLCS900H", disassembler.config().cpu_P()) == 0;
+}
+static bool is_tlcs900l1() {
+    return strcmp_P("TLCS900L1", disassembler.config().cpu_P()) == 0;
+}
 // clang-format off
 void test_cpu() {
     EQUALS("cpu tlcs900",   true, disassembler.setCpu("tlcs900"));
     EQUALS_P("get cpu", "TLCS900",   disassembler.config().cpu_P());
     EQUALS("cpu tlcs900l",  true, disassembler.setCpu("tlcs900l"));
     EQUALS_P("get cpu", "TLCS900L",  disassembler.config().cpu_P());
+    EQUALS("cpu tlcs900h",  true, disassembler.setCpu("tlcs900h"));
+    EQUALS_P("get cpu", "TLCS900H",  disassembler.config().cpu_P());
+    EQUALS("cpu tlcs900l1", true, disassembler.setCpu("tlcs900l1"));
+    EQUALS_P("get cpu", "TLCS900L1", disassembler.config().cpu_P());
 }
 
 void test_single() {
@@ -52,9 +62,12 @@ void test_single() {
     if (is_tlcs900()) {
         TEST("NORMAL", "", 0x01);
         TEST("MAX",    "", 0x04);
-    } else {
+    } else if (is_tlcs900l()) {
         UNKN(0x01);
         TEST("MIN",    "", 0x04);
+    } else {
+        UNKN(0x01);
+        UNKN(0x04);
     }
     TEST("PUSH",   "SR", 0x02);
     TEST("POP",    "SR", 0x03);
@@ -74,7 +87,7 @@ void test_single() {
     TEST("INCF",   "", 0x0C);
     TEST("DECF",   "", 0x0D);
     TEST("LDX",   "(0034H), 0056H",  0xF7, 0x00, 0x34, 0x00, 0x56, 0x00);
-    // sub-byte 0x3C decodes as NSP/XNSP on base; as INTNEST on /L (16-bit only).
+    // sub-byte 0x3C decodes as NSP/XNSP on base; as INTNEST on /L, /H, /L1 (16-bit only).
     if (is_tlcs900()) {
         TEST("LDC",   "XNSP, XSP",      0xEF, 0x2E, 0x3C);
         TEST("LDC",   "XSP, XNSP",      0xEF, 0x2F, 0x3C);
@@ -102,8 +115,13 @@ void test_single() {
     TEST("EI",     "7", 0x06, 0x07);
     TEST("LDF",    "0", 0x17, 0x00);
     TEST("LDF",    "3", 0x17, 0x03);
-    // MIN register mode: 3-bit RFP field. Both base and /L reset to MIN.
-    TEST("LDF",    "7", 0x17, 0x07);
+    // RFP width depends on reset register mode: base and /L start in MIN (3-bit),
+    // /H and /L1 start in MAX (2-bit, top bit masked off).
+    if (is_tlcs900() || is_tlcs900l()) {
+        TEST("LDF", "7", 0x17, 0x07);
+    } else {
+        TEST("LDF", "3", 0x17, 0x07);
+    }
     TEST("SWI",    "0", 0xF8);
     TEST("SWI",    "7", 0xFF);
 }
@@ -615,9 +633,14 @@ void test_illegal() {
     for (uint8_t opc = 0x50; opc <= 0x57; opc++)
         UNKN(opc);
 
-    // NORMAL (0x01) is base only; /L has only MIN at 0x04.
+    // NORMAL (0x01) is base only; /L has only MIN at 0x04. /H and /L1
+    // expose neither, so both 0x01 and 0x04 are illegal.
     if (is_tlcs900l())
         UNKN(0x01);
+    if (is_tlcs900h() || is_tlcs900l1()) {
+        UNKN(0x01);
+        UNKN(0x04);
+    }
 
     // PM_BLOCK (0x83) valid sub-byte range is 0x10-0x17.
     UNKN(0x83, 0x00);
