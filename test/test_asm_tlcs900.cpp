@@ -44,6 +44,10 @@ void test_cpu() {
     EQUALS_P("get cpu", "TLCS900",   assembler.config().cpu_P());
     EQUALS("cpu tlcs900l",  true, assembler.setCpu("tlcs900l"));
     EQUALS_P("get cpu", "TLCS900L",  assembler.config().cpu_P());
+    EQUALS("cpu tlcs900h",  true, assembler.setCpu("tlcs900h"));
+    EQUALS_P("get cpu", "TLCS900H",  assembler.config().cpu_P());
+    EQUALS("cpu tlcs900l1", true, assembler.setCpu("tlcs900l1"));
+    EQUALS_P("get cpu", "TLCS900L1", assembler.config().cpu_P());
 }
 
 void test_single() {
@@ -58,9 +62,12 @@ void test_single() {
     if (is_tlcs900()) {
         TEST("MAX", 0x04);
         ERRT("MIN", UNKNOWN_INSTRUCTION, "MIN");
-    } else {
+    } else if (is_tlcs900l()) {
         TEST("MIN", 0x04);
         ERRT("MAX", UNKNOWN_INSTRUCTION, "MAX");
+    } else {
+        ERRT("MAX", UNKNOWN_INSTRUCTION, "MAX");
+        ERRT("MIN", UNKNOWN_INSTRUCTION, "MIN");
     }
     TEST("HALT",    0x05);
     TEST("RETI",    0x07);
@@ -79,7 +86,7 @@ void test_single() {
     TEST("DECF",    0x0D);
     TEST("LDX (034H),056H",   0xF7, 0x00, 0x34, 0x00, 0x56, 0x00);
     TEST("LDX (01234H),056H", 0xF7, 0x00, 0x34, 0x12, 0x56, 0x00);
-    // NSP/XNSP exists only on base; INTNEST exists on /L. Both use sub-byte 0x3C.
+    // NSP/XNSP exists only on base; INTNEST exists on /L, /H, /L1. Both use sub-byte 0x3C.
     if (is_tlcs900()) {
         TEST("LDC XNSP,XSP",    0xEF, 0x2E, 0x3C);
         TEST("LDC XSP,XNSP",    0xEF, 0x2F, 0x3C);
@@ -118,9 +125,15 @@ void test_single() {
     TEST("DI",      0x06, 0x07);
     TEST("LDF 0",   0x17, 0x00);
     TEST("LDF 3",   0x17, 0x03);
-    // MIN register mode (reset default): RFP range 0-7. Both base and /L reset to MIN.
-    TEST("LDF 7",   0x17, 0x07);
-    ERRT("LDF 8",   OVERFLOW_RANGE, "8", 0x17, 0x00);
+    // LDF range depends on the reset register mode: base and /L start in MIN (0-7),
+    // /H and /L1 start in MAX (0-3).
+    if (is_tlcs900() || is_tlcs900l()) {
+        TEST("LDF 7",   0x17, 0x07);
+        ERRT("LDF 8",   OVERFLOW_RANGE, "8", 0x17, 0x00);
+    } else {
+        ERRT("LDF 4",   OVERFLOW_RANGE, "4", 0x17, 0x00);
+        ERRT("LDF 7",   OVERFLOW_RANGE, "7", 0x17, 0x03);
+    }
     TEST("SWI 0",   0xF8);
     TEST("SWI 7",   0xFF);
     TEST("SWI",     0xFF);  // bare SWI defaults to vec 7 (ASL convention)
