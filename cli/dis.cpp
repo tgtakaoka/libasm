@@ -17,6 +17,7 @@
 #include "dis_cdp1802.h"
 #include "dis_commander.h"
 #include "dis_f3850.h"
+#include "dis_h8500.h"
 #include "dis_i8048.h"
 #include "dis_i8051.h"
 #include "dis_i8080.h"
@@ -54,6 +55,7 @@ using namespace libasm::driver;
 
 cdp1802::DisCdp1802 dis1802;
 f3850::DisF3850 dis3850;
+h8500::DisH8500 dish8500;
 i8048::DisI8048 dis8048;
 i8051::DisI8051 dis8051;
 i8080::DisI8080 dis8080;
@@ -105,6 +107,7 @@ DisCommander commander{
         &dis1802,
         &dis2650,
         &dis3850,
+        &dish8500,
         &dispdp8,
         &dis7000,
         &dis370,

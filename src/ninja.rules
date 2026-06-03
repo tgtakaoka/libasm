@@ -40,6 +40,13 @@ build reg_f3850.o:   cxx ${root}/src/reg_f3850.cpp
 build table_f3850.o: cxx ${root}/src/table_f3850.cpp
 build text_f3850.o:  cxx ${root}/src/text_f3850.cpp
 
+# h8500
+build asm_h8500.o:   cxx ${root}/src/asm_h8500.cpp
+build dis_h8500.o:   cxx ${root}/src/dis_h8500.cpp
+build reg_h8500.o:   cxx ${root}/src/reg_h8500.cpp
+build table_h8500.o: cxx ${root}/src/table_h8500.cpp
+build text_h8500.o:  cxx ${root}/src/text_h8500.cpp
+
 # i8048
 build asm_i8048.o:   cxx ${root}/src/asm_i8048.cpp
 build dis_i8048.o:   cxx ${root}/src/dis_i8048.cpp
