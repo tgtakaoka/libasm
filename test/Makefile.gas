@@ -94,6 +94,14 @@ gas-%_h8s2000.hex: %_h8s2000.gas
 	| tr -d '\015' > $(^:.gas=.hex)
 	h8300-elf-objdump -m h8300s -D $(^:.gas=.hex) > $(^:.gas=.dis)
 
+# H8S/2600 normal mode target
+gas-%_h8s2600n.hex: %_h8s2600n.gas
+	h8300-elf-as -mach=h8300sn --warn -o $(^:.gas=.p) -al=$(^:.gas=.lst) $^
+	h8300-elf-ld -mh8300snelf --entry=0 -section-start=.text=0x0100 -o $(^:.gas=.o) $(^:.gas=.p)
+	h8300-elf-objcopy -I elf32-h8300 -O ihex $(^:.gas=.o) /dev/stdout \
+	| tr -d '\015' > $(^:.gas=.hex)
+	h8300-elf-objdump -m h8300s -D $(^:.gas=.hex) > $(^:.gas=.dis)
+
 # i8086 target
 gas-%_i8086.hex: %_i8086.gas
 	i386-elf-as -mtune=i8086 --warn -mnaked-reg -msyntax=intel \
