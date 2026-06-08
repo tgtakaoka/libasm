@@ -75,10 +75,10 @@ constexpr Entry H8300_TABLE[] PROGMEM = {
     E2(0x1600, TEXT_AND,   ISZ_NONE, SZ_BYTE, M_REG8,  M_REG8,  POS__F_, POS___F), // AND   Rs, Rd
     E2(0x0E00, TEXT_ADDX,  ISZ_NONE, SZ_BYTE, M_REG8,  M_REG8,  POS__F_, POS___F), // ADDX  Rs, Rd
     E2(0x1E00, TEXT_SUBX,  ISZ_NONE, SZ_BYTE, M_REG8,  M_REG8,  POS__F_, POS___F), // SUBX  Rs, Rd
-    E2(0x0B00, TEXT_ADDS,  ISZ_NONE, SZ_WORD, M_VAL1,  M_ADREG, POS____, POS___F), // ADDS  #1, Rd
-    E2(0x0B80, TEXT_ADDS,  ISZ_NONE, SZ_WORD, M_VAL2,  M_ADREG, POS____, POS___F), // ADDS  #2, Rd
-    E2(0x1B00, TEXT_SUBS,  ISZ_NONE, SZ_WORD, M_VAL1,  M_ADREG, POS____, POS___F), // SUBS  #1, Rd
-    E2(0x1B80, TEXT_SUBS,  ISZ_NONE, SZ_WORD, M_VAL2,  M_ADREG, POS____, POS___F), // SUBS  #2, Rd
+    E2(0x0B00, TEXT_ADDS,  ISZ_ADDR, SZ_WORD, M_VAL1,  M_ADREG, POS____, POS___F), // ADDS  #1, Rd/ERd
+    E2(0x0B80, TEXT_ADDS,  ISZ_ADDR, SZ_WORD, M_VAL2,  M_ADREG, POS____, POS___F), // ADDS  #2, Rd/ERd
+    E2(0x1B00, TEXT_SUBS,  ISZ_ADDR, SZ_WORD, M_VAL1,  M_ADREG, POS____, POS___F), // SUBS  #1, Rd/ERd
+    E2(0x1B80, TEXT_SUBS,  ISZ_ADDR, SZ_WORD, M_VAL2,  M_ADREG, POS____, POS___F), // SUBS  #2, Rd/ERd
     E2(0x5000, TEXT_MULXU, ISZ_NONE, SZ_BYTE, M_REG8,  M_REG16, POS__F_, POS___F), // MULXU Rs, Rd
     E2(0x5100, TEXT_DIVXU, ISZ_NONE, SZ_BYTE, M_REG8,  M_REG16, POS__F_, POS___F), // DIVXU Rs, Rd
     E1(0x0A00, TEXT_INC,   ISZ_NONE, SZ_BYTE, M_REG8,  POS___F), // INC   Rd
@@ -278,7 +278,7 @@ constexpr uint8_t H8300_INDEX[] PROGMEM = {
 
 // 0x7B5C, CF_0000
 constexpr Entry H8300_7B5C_TABLE[] PROGMEM = {
-    E0(0x598F, TEXT_EEPMOV), // EEPMOV
+    E1(0x598F, TEXT_EEPMOV, ISZ_NONE, SZ_BYTE, M_NONE, POS____),  // EEPMOV / EEPMOV.B
 };
 
 constexpr uint8_t H8300_7B5C_INDEX[] PROGMEM = {
@@ -326,6 +326,156 @@ constexpr Entry H8300_7D00_TABLE[] = {
     E2(0x7200, TEXT_BCLR, ISZ_NONE, SZ_BYTE, M_IMM3, M_INDIR, POS__7_, POS_PRX), // BCLR #xx:3, @Rd/@aa:8
 };
 
+// 0x0100 prefix: MOV.L addressing modes (reuses MOV.W opcode patterns).
+// POP.L / PUSH.L entries come first so they win over MOV.L @SP+/@-SP for
+// the ER7 register slot.
+constexpr Entry H8300H_0100_TABLE[] PROGMEM = {
+    E1(0x6D70, TEXT_POP,  ISZ_DATA, SZ_LONG, M_REG32, POS___7),                   // POP.L  ERd
+    E1(0x6DF0, TEXT_PUSH, ISZ_DATA, SZ_LONG, M_REG32, POS___7),                   // PUSH.L ERs
+    E2(0x6900, TEXT_MOV,  ISZ_DATA, SZ_LONG, M_INDIR, M_REG32, POS__7_, POS___7), // MOV.L @ERs, ERd
+    E2(0x6980, TEXT_MOV,  ISZ_DATA, SZ_LONG, M_REG32, M_INDIR, POS___7, POS__7_), // MOV.L ERs, @ERd
+    E2(0x6D00, TEXT_MOV,  ISZ_DATA, SZ_LONG, M_PINC,  M_REG32, POS__7_, POS___7), // MOV.L @ERs+, ERd
+    E2(0x6D80, TEXT_MOV,  ISZ_DATA, SZ_LONG, M_REG32, M_PDEC,  POS___7, POS__7_), // MOV.L ERs, @-ERd
+    E2(0x6B00, TEXT_MOV,  ISZ_DATA, SZ_LONG, M_ABS16, M_REG32, POS____, POS___7), // MOV.L @aa:16, ERd
+    E2(0x6B80, TEXT_MOV,  ISZ_DATA, SZ_LONG, M_REG32, M_ABS16, POS___7, POS____), // MOV.L ERs, @aa:16
+    E2(0x6F00, TEXT_MOV,  ISZ_DATA, SZ_LONG, M_IDX16, M_REG32, POS__7_, POS___7), // MOV.L @(d:16,ERs), ERd
+    E2(0x6F80, TEXT_MOV,  ISZ_DATA, SZ_LONG, M_REG32, M_IDX16, POS___7, POS__7_), // MOV.L ERs, @(d:16,ERd)
+    E2(0x6B20, TEXT_MOV,  ISZ_DATA, SZ_LONG, M_ABS24, M_REG32, POS____, POS___7), // MOV.L @aa:24, ERd
+    E2(0x6BA0, TEXT_MOV,  ISZ_DATA, SZ_LONG, M_REG32, M_ABS24, POS___7, POS____), // MOV.L ERs, @aa:24
+};
+
+constexpr uint8_t H8300H_0100_INDEX[] PROGMEM = {
+      2,  // TEXT_MOV
+      3,  // TEXT_MOV
+      4,  // TEXT_MOV
+      5,  // TEXT_MOV
+      6,  // TEXT_MOV
+      7,  // TEXT_MOV
+      8,  // TEXT_MOV
+      9,  // TEXT_MOV
+     10,  // TEXT_MOV
+     11,  // TEXT_MOV
+      0,  // TEXT_POP
+      1,  // TEXT_PUSH
+};
+
+// 0x01F0 prefix: OR.L / XOR.L / AND.L reg-reg.
+constexpr Entry H8300H_01F0_TABLE[] PROGMEM = {
+    E2(0x6400, TEXT_OR,  ISZ_DATA, SZ_LONG, M_REG32, M_REG32, POS__7_, POS___7), // OR.L  ERs, ERd
+    E2(0x6500, TEXT_XOR, ISZ_DATA, SZ_LONG, M_REG32, M_REG32, POS__7_, POS___7), // XOR.L ERs, ERd
+    E2(0x6600, TEXT_AND, ISZ_DATA, SZ_LONG, M_REG32, M_REG32, POS__7_, POS___7), // AND.L ERs, ERd
+};
+
+constexpr uint8_t H8300H_01F0_INDEX[] PROGMEM = {
+      2,  // TEXT_AND
+      0,  // TEXT_OR
+      1,  // TEXT_XOR
+};
+
+// 0x0140 prefix: LDC/STC ccr with memory operand (reuses MOV.W byte patterns
+// with the register operand rewritten to CCR).
+constexpr Entry H8300H_0140_TABLE[] PROGMEM = {
+    E2(0x6900, TEXT_LDC, ISZ_NONE, SZ_WORD, M_INDIR, M_CCR,  POS__7_, POS____), // LDC @ER, CCR
+    E2(0x6980, TEXT_STC, ISZ_NONE, SZ_WORD, M_CCR,   M_INDIR,POS____, POS__7_), // STC CCR, @ER
+    E2(0x6D00, TEXT_LDC, ISZ_NONE, SZ_WORD, M_PINC,  M_CCR,  POS__7_, POS____), // LDC @ER+, CCR
+    E2(0x6D80, TEXT_STC, ISZ_NONE, SZ_WORD, M_CCR,   M_PDEC, POS____, POS__7_), // STC CCR, @-ER
+    E2(0x6B00, TEXT_LDC, ISZ_NONE, SZ_WORD, M_ABS16, M_CCR,  POS____, POS____), // LDC @aa:16, CCR
+    E2(0x6B80, TEXT_STC, ISZ_NONE, SZ_WORD, M_CCR,   M_ABS16,POS____, POS____), // STC CCR, @aa:16
+    E2(0x6F00, TEXT_LDC, ISZ_NONE, SZ_WORD, M_IDX16, M_CCR,  POS__7_, POS____), // LDC @(d:16,ER), CCR
+    E2(0x6F80, TEXT_STC, ISZ_NONE, SZ_WORD, M_CCR,   M_IDX16,POS____, POS__7_), // STC CCR, @(d:16,ER)
+    E2(0x6B20, TEXT_LDC, ISZ_NONE, SZ_WORD, M_ABS24, M_CCR,  POS____, POS____), // LDC @aa:24, CCR
+    E2(0x6BA0, TEXT_STC, ISZ_NONE, SZ_WORD, M_CCR,   M_ABS24,POS____, POS____), // STC CCR, @aa:24
+};
+
+constexpr uint8_t H8300H_0140_INDEX[] PROGMEM = {
+      0,  // TEXT_LDC
+      2,  // TEXT_LDC
+      4,  // TEXT_LDC
+      6,  // TEXT_LDC
+      8,  // TEXT_LDC
+      1,  // TEXT_STC
+      3,  // TEXT_STC
+      5,  // TEXT_STC
+      7,  // TEXT_STC
+      9,  // TEXT_STC
+};
+
+// 0x7800 prefix: ERn pointer for @(d:24,ERn) MOV.B / MOV.W variants.
+// ERn is encoded at bits 6:4 of the prefix word; disp24 follows the opcode.
+constexpr Entry H8300H_7800_TABLE[] PROGMEM = {
+    E2(0x6A20, TEXT_MOV, ISZ_DATA, SZ_BYTE, M_IDX24, M_REG8,  POS_PRX, POS___F), // MOV.B @(d:24,ER), Rd
+    E2(0x6AA0, TEXT_MOV, ISZ_DATA, SZ_BYTE, M_REG8,  M_IDX24, POS___F, POS_PRX), // MOV.B Rs, @(d:24,ER)
+    E2(0x6B20, TEXT_MOV, ISZ_DATA, SZ_WORD, M_IDX24, M_REG16, POS_PRX, POS___F), // MOV.W @(d:24,ER), Rd
+    E2(0x6BA0, TEXT_MOV, ISZ_DATA, SZ_WORD, M_REG16, M_IDX24, POS___F, POS_PRX), // MOV.W Rs, @(d:24,ER)
+};
+
+constexpr uint8_t H8300H_7800_INDEX[] PROGMEM = {
+      0,  // TEXT_MOV
+      1,  // TEXT_MOV
+      2,  // TEXT_MOV
+      3,  // TEXT_MOV
+};
+
+// 0x0140 super-prefix + 0x7800 normal prefix: LDC/STC ccr,@(d:24,ERn).
+constexpr Entry H8300H_0140_7800_TABLE[] PROGMEM = {
+    E2(0x6B20, TEXT_LDC, ISZ_NONE, SZ_WORD, M_IDX24, M_CCR,   POS_PRX, POS____), // LDC @(d:24,ER), CCR
+    E2(0x6BA0, TEXT_STC, ISZ_NONE, SZ_WORD, M_CCR,   M_IDX24, POS____, POS_PRX), // STC CCR, @(d:24,ER)
+};
+
+constexpr uint8_t H8300H_0140_7800_INDEX[] PROGMEM = {
+      0,  // TEXT_LDC
+      1,  // TEXT_STC
+};
+
+// 0x0100 super-prefix + 0x7800 normal prefix: MOV.L @(d:24,ERs), ERd (load).
+constexpr Entry H8300H_0100_7800_TABLE[] PROGMEM = {
+    E2(0x6B20, TEXT_MOV, ISZ_DATA, SZ_LONG, M_IDX24, M_REG32, POS_PRX, POS___7), // MOV.L @(d:24,ERs), ERd
+};
+
+constexpr uint8_t H8300H_0100_7800_INDEX[] PROGMEM = {
+      0,  // TEXT_MOV
+};
+
+// 0x0100 super-prefix + 0x7880 normal prefix: MOV.L ERs, @(d:24,ERd) (store).
+constexpr Entry H8300H_0100_7880_TABLE[] PROGMEM = {
+    E2(0x6BA0, TEXT_MOV, ISZ_DATA, SZ_LONG, M_REG32, M_IDX24, POS___7, POS_PRX), // MOV.L ERs, @(d:24,ERd)
+};
+
+constexpr uint8_t H8300H_0100_7880_INDEX[] PROGMEM = {
+      0,  // TEXT_MOV
+};
+
+// 0x01C0 prefix: MULXS (signed multiply).
+constexpr Entry H8300H_01C0_TABLE[] PROGMEM = {
+    E2(0x5000, TEXT_MULXS, ISZ_DATA, SZ_BYTE, M_REG8,  M_REG16, POS__F_, POS___F), // MULXS.B Rs, Rd
+    E2(0x5200, TEXT_MULXS, ISZ_DATA, SZ_WORD, M_REG16, M_REG32, POS__F_, POS___7), // MULXS.W Rs, ERd
+};
+
+constexpr uint8_t H8300H_01C0_INDEX[] PROGMEM = {
+      0,  // TEXT_MULXS
+      1,  // TEXT_MULXS
+};
+
+// 0x7BD4 prefix: EEPMOV.W (the 0x7B5C prefix is EEPMOV / EEPMOV.B).
+constexpr Entry H8300H_7BD4_TABLE[] PROGMEM = {
+    E1(0x598F, TEXT_EEPMOV, ISZ_DATA, SZ_WORD, M_NONE, POS____),  // EEPMOV.W
+};
+
+constexpr uint8_t H8300H_7BD4_INDEX[] PROGMEM = {
+      0,  // TEXT_EEPMOV
+};
+
+// 0x01D0 prefix: DIVXS (signed divide).
+constexpr Entry H8300H_01D0_TABLE[] PROGMEM = {
+    E2(0x5100, TEXT_DIVXS, ISZ_DATA, SZ_BYTE, M_REG8,  M_REG16, POS__F_, POS___F), // DIVXS.B Rs, Rd
+    E2(0x5300, TEXT_DIVXS, ISZ_DATA, SZ_WORD, M_REG16, M_REG32, POS__F_, POS___7), // DIVXS.W Rs, ERd
+};
+
+constexpr uint8_t H8300H_01D0_INDEX[] PROGMEM = {
+      0,  // TEXT_DIVXS
+      1,  // TEXT_DIVXS
+};
+
 constexpr uint8_t H8300_7D00_INDEX[] PROGMEM = {
       2,  // TEXT_BCLR
       7,  // TEXT_BCLR
@@ -337,32 +487,237 @@ constexpr uint8_t H8300_7D00_INDEX[] PROGMEM = {
       3,  // TEXT_BST
 };
 
+// H8/300H-only instructions.
+constexpr Entry H8300H_TABLE[] PROGMEM = {
+    E2(0x0F80, TEXT_MOV,   ISZ_DATA, SZ_LONG, M_REG32, M_REG32, POS__7_, POS___7), // MOV.L  ERs, ERd
+    E2(0x0A80, TEXT_ADD,   ISZ_DATA, SZ_LONG, M_REG32, M_REG32, POS__7_, POS___7), // ADD.L  ERs, ERd
+    E2(0x1A80, TEXT_SUB,   ISZ_DATA, SZ_LONG, M_REG32, M_REG32, POS__7_, POS___7), // SUB.L  ERs, ERd
+    E2(0x1F80, TEXT_CMP,   ISZ_DATA, SZ_LONG, M_REG32, M_REG32, POS__7_, POS___7), // CMP.L  ERs, ERd
+    E2(0x5200, TEXT_MULXU, ISZ_DATA, SZ_WORD, M_REG16, M_REG32, POS__F_, POS___7), // MULXU.W Rs, ERd
+    E2(0x5300, TEXT_DIVXU, ISZ_DATA, SZ_WORD, M_REG16, M_REG32, POS__F_, POS___7), // DIVXU.W Rs, ERd
+    E1(0x1710, TEXT_NOT,   ISZ_DATA, SZ_WORD, M_REG16, POS___F),                   // NOT.W  Rd
+    E1(0x1730, TEXT_NOT,   ISZ_DATA, SZ_LONG, M_REG32, POS___7),                   // NOT.L  ERd
+    E1(0x1790, TEXT_NEG,   ISZ_DATA, SZ_WORD, M_REG16, POS___F),                   // NEG.W  Rd
+    E1(0x17B0, TEXT_NEG,   ISZ_DATA, SZ_LONG, M_REG32, POS___7),                   // NEG.L  ERd
+    E1(0x1750, TEXT_EXTU,  ISZ_DATA, SZ_WORD, M_REG16, POS___F),                   // EXTU.W Rd
+    E1(0x1770, TEXT_EXTU,  ISZ_DATA, SZ_LONG, M_REG32, POS___7),                   // EXTU.L ERd
+    E1(0x17D0, TEXT_EXTS,  ISZ_DATA, SZ_WORD, M_REG16, POS___F),                   // EXTS.W Rd
+    E1(0x17F0, TEXT_EXTS,  ISZ_DATA, SZ_LONG, M_REG32, POS___7),                   // EXTS.L ERd
+    E1(0x1010, TEXT_SHLL,  ISZ_DATA, SZ_WORD, M_REG16, POS___F),                   // SHLL.W Rd
+    E1(0x1030, TEXT_SHLL,  ISZ_DATA, SZ_LONG, M_REG32, POS___7),                   // SHLL.L ERd
+    E1(0x1090, TEXT_SHAL,  ISZ_DATA, SZ_WORD, M_REG16, POS___F),                   // SHAL.W Rd
+    E1(0x10B0, TEXT_SHAL,  ISZ_DATA, SZ_LONG, M_REG32, POS___7),                   // SHAL.L ERd
+    E1(0x1110, TEXT_SHLR,  ISZ_DATA, SZ_WORD, M_REG16, POS___F),                   // SHLR.W Rd
+    E1(0x1130, TEXT_SHLR,  ISZ_DATA, SZ_LONG, M_REG32, POS___7),                   // SHLR.L ERd
+    E1(0x1190, TEXT_SHAR,  ISZ_DATA, SZ_WORD, M_REG16, POS___F),                   // SHAR.W Rd
+    E1(0x11B0, TEXT_SHAR,  ISZ_DATA, SZ_LONG, M_REG32, POS___7),                   // SHAR.L ERd
+    E1(0x1210, TEXT_ROTXL, ISZ_DATA, SZ_WORD, M_REG16, POS___F),                   // ROTXL.W Rd
+    E1(0x1230, TEXT_ROTXL, ISZ_DATA, SZ_LONG, M_REG32, POS___7),                   // ROTXL.L ERd
+    E1(0x1290, TEXT_ROTL,  ISZ_DATA, SZ_WORD, M_REG16, POS___F),                   // ROTL.W Rd
+    E1(0x12B0, TEXT_ROTL,  ISZ_DATA, SZ_LONG, M_REG32, POS___7),                   // ROTL.L ERd
+    E1(0x1310, TEXT_ROTXR, ISZ_DATA, SZ_WORD, M_REG16, POS___F),                   // ROTXR.W Rd
+    E1(0x1330, TEXT_ROTXR, ISZ_DATA, SZ_LONG, M_REG32, POS___7),                   // ROTXR.L ERd
+    E1(0x1390, TEXT_ROTR,  ISZ_DATA, SZ_WORD, M_REG16, POS___F),                   // ROTR.W Rd
+    E1(0x13B0, TEXT_ROTR,  ISZ_DATA, SZ_LONG, M_REG32, POS___7),                   // ROTR.L ERd
+    E2(0x0B50, TEXT_INC,   ISZ_DATA, SZ_WORD, M_VAL1, M_REG16, POS____, POS___F),  // INC.W  #1, Rd
+    E2(0x0BD0, TEXT_INC,   ISZ_DATA, SZ_WORD, M_VAL2, M_REG16, POS____, POS___F),  // INC.W  #2, Rd
+    E2(0x0B70, TEXT_INC,   ISZ_DATA, SZ_LONG, M_VAL1, M_REG32, POS____, POS___7),  // INC.L  #1, ERd
+    E2(0x0BF0, TEXT_INC,   ISZ_DATA, SZ_LONG, M_VAL2, M_REG32, POS____, POS___7),  // INC.L  #2, ERd
+    E2(0x1B50, TEXT_DEC,   ISZ_DATA, SZ_WORD, M_VAL1, M_REG16, POS____, POS___F),  // DEC.W  #1, Rd
+    E2(0x1BD0, TEXT_DEC,   ISZ_DATA, SZ_WORD, M_VAL2, M_REG16, POS____, POS___F),  // DEC.W  #2, Rd
+    E2(0x1B70, TEXT_DEC,   ISZ_DATA, SZ_LONG, M_VAL1, M_REG32, POS____, POS___7),  // DEC.L  #1, ERd
+    E2(0x1BF0, TEXT_DEC,   ISZ_DATA, SZ_LONG, M_VAL2, M_REG32, POS____, POS___7),  // DEC.L  #2, ERd
+    E2(0x7A00, TEXT_MOV,   ISZ_DATA, SZ_LONG, M_IMM32, M_REG32, POS____, POS___7), // MOV.L  #imm32, ERd
+    E2(0x7A10, TEXT_ADD,   ISZ_DATA, SZ_LONG, M_IMM32, M_REG32, POS____, POS___7), // ADD.L  #imm32, ERd
+    E2(0x7A20, TEXT_CMP,   ISZ_DATA, SZ_LONG, M_IMM32, M_REG32, POS____, POS___7), // CMP.L  #imm32, ERd
+    E2(0x7A30, TEXT_SUB,   ISZ_DATA, SZ_LONG, M_IMM32, M_REG32, POS____, POS___7), // SUB.L  #imm32, ERd
+    E2(0x7A40, TEXT_OR,    ISZ_DATA, SZ_LONG, M_IMM32, M_REG32, POS____, POS___7), // OR.L   #imm32, ERd
+    E2(0x7A50, TEXT_XOR,   ISZ_DATA, SZ_LONG, M_IMM32, M_REG32, POS____, POS___7), // XOR.L  #imm32, ERd
+    E2(0x7A60, TEXT_AND,   ISZ_DATA, SZ_LONG, M_IMM32, M_REG32, POS____, POS___7), // AND.L  #imm32, ERd
+    E2(0x6400, TEXT_OR,    ISZ_DATA, SZ_WORD, M_REG16, M_REG16, POS__F_, POS___F), // OR.W   Rs, Rd
+    E2(0x6500, TEXT_XOR,   ISZ_DATA, SZ_WORD, M_REG16, M_REG16, POS__F_, POS___F), // XOR.W  Rs, Rd
+    E2(0x6600, TEXT_AND,   ISZ_DATA, SZ_WORD, M_REG16, M_REG16, POS__F_, POS___F), // AND.W  Rs, Rd
+    E2(0x7940, TEXT_OR,    ISZ_DATA, SZ_WORD, M_IMM16, M_REG16, POS____, POS___F), // OR.W   #imm16, Rd
+    E2(0x7950, TEXT_XOR,   ISZ_DATA, SZ_WORD, M_IMM16, M_REG16, POS____, POS___F), // XOR.W  #imm16, Rd
+    E2(0x7960, TEXT_AND,   ISZ_DATA, SZ_WORD, M_IMM16, M_REG16, POS____, POS___F), // AND.W  #imm16, Rd
+    E2(0x7910, TEXT_ADD,   ISZ_DATA, SZ_WORD, M_IMM16, M_REG16, POS____, POS___F), // ADD.W  #imm16, Rd
+    E2(0x7920, TEXT_CMP,   ISZ_DATA, SZ_WORD, M_IMM16, M_REG16, POS____, POS___F), // CMP.W  #imm16, Rd
+    E2(0x7930, TEXT_SUB,   ISZ_DATA, SZ_WORD, M_IMM16, M_REG16, POS____, POS___F), // SUB.W  #imm16, Rd
+    E1(0x5800, TEXT_BRA,   ISZ_NONE, SZ_WORD, M_REL16, POS____),                   // BRA :16
+    E1(0x5800, TEXT_BT,    ISZ_NONE, SZ_WORD, M_REL16, POS____),                   // BT  :16 (alias)
+    E1(0x5810, TEXT_BRN,   ISZ_NONE, SZ_WORD, M_REL16, POS____),                   // BRN :16
+    E1(0x5810, TEXT_BF,    ISZ_NONE, SZ_WORD, M_REL16, POS____),                   // BF  :16 (alias)
+    E1(0x5820, TEXT_BHI,   ISZ_NONE, SZ_WORD, M_REL16, POS____),                   // BHI :16
+    E1(0x5830, TEXT_BLS,   ISZ_NONE, SZ_WORD, M_REL16, POS____),                   // BLS :16
+    E1(0x5840, TEXT_BCC,   ISZ_NONE, SZ_WORD, M_REL16, POS____),                   // BCC :16
+    E1(0x5840, TEXT_BHS,   ISZ_NONE, SZ_WORD, M_REL16, POS____),                   // BHS :16 (alias)
+    E1(0x5850, TEXT_BCS,   ISZ_NONE, SZ_WORD, M_REL16, POS____),                   // BCS :16
+    E1(0x5850, TEXT_BLO,   ISZ_NONE, SZ_WORD, M_REL16, POS____),                   // BLO :16 (alias)
+    E1(0x5860, TEXT_BNE,   ISZ_NONE, SZ_WORD, M_REL16, POS____),                   // BNE :16
+    E1(0x5870, TEXT_BEQ,   ISZ_NONE, SZ_WORD, M_REL16, POS____),                   // BEQ :16
+    E1(0x5880, TEXT_BVC,   ISZ_NONE, SZ_WORD, M_REL16, POS____),                   // BVC :16
+    E1(0x5890, TEXT_BVS,   ISZ_NONE, SZ_WORD, M_REL16, POS____),                   // BVS :16
+    E1(0x58A0, TEXT_BPL,   ISZ_NONE, SZ_WORD, M_REL16, POS____),                   // BPL :16
+    E1(0x58B0, TEXT_BMI,   ISZ_NONE, SZ_WORD, M_REL16, POS____),                   // BMI :16
+    E1(0x58C0, TEXT_BGE,   ISZ_NONE, SZ_WORD, M_REL16, POS____),                   // BGE :16
+    E1(0x58D0, TEXT_BLT,   ISZ_NONE, SZ_WORD, M_REL16, POS____),                   // BLT :16
+    E1(0x58E0, TEXT_BGT,   ISZ_NONE, SZ_WORD, M_REL16, POS____),                   // BGT :16
+    E1(0x58F0, TEXT_BLE,   ISZ_NONE, SZ_WORD, M_REL16, POS____),                   // BLE :16
+    E1(0x5C00, TEXT_BSR,   ISZ_NONE, SZ_WORD, M_REL16, POS____),                   // BSR :16
+    E2(0x0B90, TEXT_ADDS,  ISZ_ADDR, SZ_WORD, M_VAL4, M_ADREG, POS____, POS___7),  // ADDS #4, ERd
+    E2(0x1B90, TEXT_SUBS,  ISZ_ADDR, SZ_WORD, M_VAL4, M_ADREG, POS____, POS___7),  // SUBS #4, ERd
+    E1(0x5700, TEXT_TRAPA, ISZ_NONE, SZ_NONE, M_IMM3, POS__7_),                    // TRAPA #vec (2-bit)
+    E2(0x6A20, TEXT_MOV,   ISZ_DATA, SZ_BYTE, M_ABS24, M_REG8,  POS____, POS___F), // MOV.B @aa:24, Rd
+    E2(0x6AA0, TEXT_MOV,   ISZ_DATA, SZ_BYTE, M_REG8,  M_ABS24, POS___F, POS____), // MOV.B Rs, @aa:24
+    E2(0x6B20, TEXT_MOV,   ISZ_DATA, SZ_WORD, M_ABS24, M_REG16, POS____, POS___F), // MOV.W @aa:24, Rd
+    E2(0x6BA0, TEXT_MOV,   ISZ_DATA, SZ_WORD, M_REG16, M_ABS24, POS___F, POS____), // MOV.W Rs, @aa:24
+    E1(0x5A00, TEXT_JMP,   ISZ_NONE, SZ_NONE, M_ABS24, POS__FF),                   // JMP @aa:24
+    E1(0x5E00, TEXT_JSR,   ISZ_NONE, SZ_NONE, M_ABS24, POS__FF),                   // JSR @aa:24
+};
+
+constexpr uint8_t H8300H_INDEX[] PROGMEM = {
+      1,  // TEXT_ADD
+     39,  // TEXT_ADD
+     51,  // TEXT_ADD
+     75,  // TEXT_ADDS
+     44,  // TEXT_AND
+     47,  // TEXT_AND
+     50,  // TEXT_AND
+     60,  // TEXT_BCC
+     62,  // TEXT_BCS
+     65,  // TEXT_BEQ
+     57,  // TEXT_BF
+     70,  // TEXT_BGE
+     72,  // TEXT_BGT
+     58,  // TEXT_BHI
+     61,  // TEXT_BHS
+     73,  // TEXT_BLE
+     63,  // TEXT_BLO
+     59,  // TEXT_BLS
+     71,  // TEXT_BLT
+     69,  // TEXT_BMI
+     64,  // TEXT_BNE
+     68,  // TEXT_BPL
+     54,  // TEXT_BRA
+     56,  // TEXT_BRN
+     74,  // TEXT_BSR
+     55,  // TEXT_BT
+     66,  // TEXT_BVC
+     67,  // TEXT_BVS
+      3,  // TEXT_CMP
+     40,  // TEXT_CMP
+     52,  // TEXT_CMP
+     34,  // TEXT_DEC
+     35,  // TEXT_DEC
+     36,  // TEXT_DEC
+     37,  // TEXT_DEC
+      5,  // TEXT_DIVXU
+     12,  // TEXT_EXTS
+     13,  // TEXT_EXTS
+     10,  // TEXT_EXTU
+     11,  // TEXT_EXTU
+     30,  // TEXT_INC
+     31,  // TEXT_INC
+     32,  // TEXT_INC
+     33,  // TEXT_INC
+     82,  // TEXT_JMP
+     83,  // TEXT_JSR
+      0,  // TEXT_MOV
+     38,  // TEXT_MOV
+     78,  // TEXT_MOV
+     79,  // TEXT_MOV
+     80,  // TEXT_MOV
+     81,  // TEXT_MOV
+      4,  // TEXT_MULXU
+      8,  // TEXT_NEG
+      9,  // TEXT_NEG
+      6,  // TEXT_NOT
+      7,  // TEXT_NOT
+     42,  // TEXT_OR
+     45,  // TEXT_OR
+     48,  // TEXT_OR
+     24,  // TEXT_ROTL
+     25,  // TEXT_ROTL
+     28,  // TEXT_ROTR
+     29,  // TEXT_ROTR
+     22,  // TEXT_ROTXL
+     23,  // TEXT_ROTXL
+     26,  // TEXT_ROTXR
+     27,  // TEXT_ROTXR
+     16,  // TEXT_SHAL
+     17,  // TEXT_SHAL
+     20,  // TEXT_SHAR
+     21,  // TEXT_SHAR
+     14,  // TEXT_SHLL
+     15,  // TEXT_SHLL
+     18,  // TEXT_SHLR
+     19,  // TEXT_SHLR
+      2,  // TEXT_SUB
+     41,  // TEXT_SUB
+     53,  // TEXT_SUB
+     76,  // TEXT_SUBS
+     77,  // TEXT_TRAPA
+     43,  // TEXT_XOR
+     46,  // TEXT_XOR
+     49,  // TEXT_XOR
+};
+
 // clang-format on
 
 struct EntryPage : entry::PrefixTableBase<Entry> {
-    constexpr EntryPage(Config::opcode_t prefix, AddrMode dmode, OprPos dpos, const Entry *head_P,
-            const Entry *tail_P, const uint8_t *index_P, const uint8_t *itail_P)
+    constexpr EntryPage(Config::opcode_t prefix, SuperPrefix rprx, AddrMode dmode, OprPos dpos,
+            const Entry *head_P, const Entry *tail_P, const uint8_t *index_P,
+            const uint8_t *itail_P)
         : PrefixTableBase(prefix, head_P, tail_P, index_P, itail_P),
           _dmode_P(dmode),
-          _dpos_P(dpos) {}
+          _attr_P(static_cast<uint8_t>((dpos << dpos_gp) | (rprx << rprx_gp))) {}
 
     Config::opcode_t prefixMask() const { return Entry::posMask(readDstPos()); }
     AddrMode readDstMode() const { return static_cast<AddrMode>(pgm_read_byte(&_dmode_P)); }
-    OprPos readDstPos() const { return static_cast<OprPos>(pgm_read_byte(&_dpos_P)); }
+    OprPos readDstPos() const {
+        return static_cast<OprPos>((pgm_read_byte(&_attr_P) >> dpos_gp) & dpos_gm);
+    }
+    SuperPrefix readSuperPrefix() const {
+        return static_cast<SuperPrefix>((pgm_read_byte(&_attr_P) >> rprx_gp) & rprx_gm);
+    }
 
 private:
     const AddrMode _dmode_P;
-    const OprPos _dpos_P;
+    const uint8_t _attr_P;
+    static constexpr int dpos_gp = 0;
+    static constexpr uint_fast8_t dpos_gm = 0x7;
+    static constexpr int rprx_gp = 4;
+    static constexpr uint_fast8_t rprx_gm = 0x3;
 };
 
 // clang-format off
 constexpr EntryPage H8300_PAGES[] PROGMEM = {
-        {0x0000, M_NONE,  POS____, ARRAY_RANGE(H8300_TABLE),      ARRAY_RANGE(H8300_INDEX)},
-        {0x7C00, M_INDIR, POS__7_, ARRAY_RANGE(H8300_7C00_TABLE), ARRAY_RANGE(H8300_7C00_INDEX)},
-        {0x7E00, M_ABS8,  POS__FF, ARRAY_RANGE(H8300_7C00_TABLE), ARRAY_RANGE(H8300_7C00_INDEX)},
-        {0x7D00, M_INDIR, POS__7_, ARRAY_RANGE(H8300_7D00_TABLE), ARRAY_RANGE(H8300_7D00_INDEX)},
-        {0x7F00, M_ABS8,  POS__FF, ARRAY_RANGE(H8300_7D00_TABLE), ARRAY_RANGE(H8300_7D00_INDEX)},
-        {0x7B5C, M_NONE,  POS____, ARRAY_RANGE(H8300_7B5C_TABLE), ARRAY_RANGE(H8300_7B5C_INDEX)},
+        {0x0000, SPRX_NONE, M_NONE,  POS____, ARRAY_RANGE(H8300_TABLE),      ARRAY_RANGE(H8300_INDEX)},
+        {0x7C00, SPRX_NONE, M_INDIR, POS__7_, ARRAY_RANGE(H8300_7C00_TABLE), ARRAY_RANGE(H8300_7C00_INDEX)},
+        {0x7E00, SPRX_NONE, M_ABS8,  POS__FF, ARRAY_RANGE(H8300_7C00_TABLE), ARRAY_RANGE(H8300_7C00_INDEX)},
+        {0x7D00, SPRX_NONE, M_INDIR, POS__7_, ARRAY_RANGE(H8300_7D00_TABLE), ARRAY_RANGE(H8300_7D00_INDEX)},
+        {0x7F00, SPRX_NONE, M_ABS8,  POS__FF, ARRAY_RANGE(H8300_7D00_TABLE), ARRAY_RANGE(H8300_7D00_INDEX)},
+        {0x7B5C, SPRX_NONE, M_NONE,  POS____, ARRAY_RANGE(H8300_7B5C_TABLE), ARRAY_RANGE(H8300_7B5C_INDEX)},
+};
+
+constexpr EntryPage H8300H_PAGES[] PROGMEM = {
+        {0x0000, SPRX_NONE, M_NONE,  POS____, ARRAY_RANGE(H8300_TABLE),       ARRAY_RANGE(H8300_INDEX)},
+        {0x7C00, SPRX_NONE, M_INDIR, POS__7_, ARRAY_RANGE(H8300_7C00_TABLE),  ARRAY_RANGE(H8300_7C00_INDEX)},
+        {0x7E00, SPRX_NONE, M_ABS8,  POS__FF, ARRAY_RANGE(H8300_7C00_TABLE),  ARRAY_RANGE(H8300_7C00_INDEX)},
+        {0x7D00, SPRX_NONE, M_INDIR, POS__7_, ARRAY_RANGE(H8300_7D00_TABLE),  ARRAY_RANGE(H8300_7D00_INDEX)},
+        {0x7F00, SPRX_NONE, M_ABS8,  POS__FF, ARRAY_RANGE(H8300_7D00_TABLE),  ARRAY_RANGE(H8300_7D00_INDEX)},
+        {0x7B5C, SPRX_NONE, M_NONE,  POS____, ARRAY_RANGE(H8300_7B5C_TABLE),  ARRAY_RANGE(H8300_7B5C_INDEX)},
+        {0x0000, SPRX_NONE, M_NONE,  POS____, ARRAY_RANGE(H8300H_TABLE),      ARRAY_RANGE(H8300H_INDEX)},
+        {0x0000, SPRX_0100, M_NONE,  POS____, ARRAY_RANGE(H8300H_0100_TABLE), ARRAY_RANGE(H8300H_0100_INDEX)},
+        {0x0000, SPRX_0140, M_NONE,  POS____, ARRAY_RANGE(H8300H_0140_TABLE), ARRAY_RANGE(H8300H_0140_INDEX)},
+        {0x7800, SPRX_NONE, M_IDX24, POS__7_, ARRAY_RANGE(H8300H_7800_TABLE), ARRAY_RANGE(H8300H_7800_INDEX)},
+        {0x7800, SPRX_0140, M_IDX24, POS__7_, ARRAY_RANGE(H8300H_0140_7800_TABLE), ARRAY_RANGE(H8300H_0140_7800_INDEX)},
+        {0x7800, SPRX_0100, M_IDX24, POS__7_, ARRAY_RANGE(H8300H_0100_7800_TABLE), ARRAY_RANGE(H8300H_0100_7800_INDEX)},
+        {0x7880, SPRX_0100, M_IDX24, POS__7_, ARRAY_RANGE(H8300H_0100_7880_TABLE), ARRAY_RANGE(H8300H_0100_7880_INDEX)},
+        {0x01C0, SPRX_NONE, M_NONE,  POS____, ARRAY_RANGE(H8300H_01C0_TABLE), ARRAY_RANGE(H8300H_01C0_INDEX)},
+        {0x01D0, SPRX_NONE, M_NONE,  POS____, ARRAY_RANGE(H8300H_01D0_TABLE), ARRAY_RANGE(H8300H_01D0_INDEX)},
+        {0x01F0, SPRX_NONE, M_NONE,  POS____, ARRAY_RANGE(H8300H_01F0_TABLE), ARRAY_RANGE(H8300H_01F0_INDEX)},
+        {0x7BD4, SPRX_NONE, M_NONE,  POS____, ARRAY_RANGE(H8300H_7BD4_TABLE), ARRAY_RANGE(H8300H_7BD4_INDEX)},
 };
 // clang-format on
 
@@ -370,6 +725,7 @@ using Cpu = entry::CpuBase<CpuType, EntryPage>;
 
 constexpr Cpu CPU_TABLE[] PROGMEM = {
         {H8300, TEXT_CPU_H8300, ARRAY_RANGE(H8300_PAGES)},
+        {H8300H, TEXT_CPU_H8300H, ARRAY_RANGE(H8300H_PAGES)},
 };
 
 const Cpu *cpu(CpuType cpuType) {
@@ -377,7 +733,32 @@ const Cpu *cpu(CpuType cpuType) {
 }
 
 bool pageMatcher(DisInsn &insn, const EntryPage *page_P) {
-    return (insn.prefix() & ~page_P->prefixMask()) == page_P->readPrefix();
+    return insn.superPrefix == page_P->readSuperPrefix() &&
+           (insn.prefix() & ~page_P->prefixMask()) == page_P->readPrefix();
+}
+
+SuperPrefix toSuperPrefix(CpuType cpuType, Config::opcode_t code) {
+    if (cpuType == H8300)
+        return SPRX_NONE;
+    switch (code) {
+    case 0x0100:
+        return SPRX_0100;
+    case 0x0140:
+        return SPRX_0140;
+    default:
+        return SPRX_NONE;
+    }
+}
+
+Config::opcode_t fromSuperPrefix(SuperPrefix rprx) {
+    switch (rprx) {
+    case SPRX_0100:
+        return 0x0100;
+    case SPRX_0140:
+        return 0x0140;
+    default:
+        return 0;
+    }
 }
 
 bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *) {
@@ -399,31 +780,67 @@ Error searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) {
     return insn.getError();
 }
 
-bool acceptMode(const Operand &op, AddrMode table) {
+bool acceptMode(const Operand &op, AddrMode table, bool hasReg32) {
     if (op.mode == table)
         return true;
-    if (op.mode == M_VAL1 || op.mode == M_VAL2 || op.mode == M_IMM3 || op.mode == M_IMM8)
-        return table == M_IMM3 || table == M_IMM8 || table == M_IMM16;
+    if (op.mode == M_VAL1 || op.mode == M_VAL2 || op.mode == M_VAL4 || op.mode == M_IMM3 ||
+            op.mode == M_IMM8)
+        return table == M_IMM3 || table == M_IMM8 || table == M_IMM16 || table == M_IMM32;
+    if (op.mode == M_IMM16)
+        return table == M_IMM32;
     if (op.mode == M_ABS8)
-        return table == M_ABS16;
-    if (op.mode == M_REG16)
-        return table == M_ADREG;
+        return table == M_ABS16 || table == M_ABS24;
+    if (op.mode == M_ABS16)
+        return table == M_ABS24;
+    if (table == M_ADREG) {
+        if (hasReg32)
+            return op.mode == M_REG32 || op.mode == M_REG16;
+        return op.mode == M_REG16;
+    }
     return false;
 }
 
 bool acceptModes(AsmInsn &insn, const Entry *entry) {
     const auto flags = entry->readFlags();
-    const auto dst = (insn.prefixMode != M_NONE) ? insn.prefixMode : flags.dst();
-    return acceptMode(insn.srcOp, flags.src()) && acceptMode(insn.dstOp, dst);
+    // The prefix page can override either operand, but only the one that
+    // declares POS_PRX in its position field.
+    const auto src = (flags.srcPos() == POS_PRX) ? insn.prefixMode : flags.src();
+    const auto dst = (flags.dstPos() == POS_PRX) ? insn.prefixMode : flags.dst();
+    const auto reg32 = insn.hasReg32();
+    return acceptMode(insn.srcOp, src, reg32) && acceptMode(insn.dstOp, dst, reg32);
+}
+
+bool acceptModesSized(AsmInsn &insn, const Entry *entry) {
+    const auto flags = entry->readFlags();
+    if (insn.sizeSuffix != SZ_NONE) {
+        // ISZ_ADDR entries take their size from the CpuType: SZ_WORD on
+        // H8/300, SZ_LONG on H8/300H. Everything else compares to the
+        // entry's static oprSize.
+        const auto expected = (flags.insnSize() == ISZ_ADDR) ? (insn.hasReg32() ? SZ_LONG : SZ_WORD)
+                                                             : flags.oprSize();
+        if (insn.sizeSuffix != expected)
+            return false;
+    }
+    return acceptModes(insn, entry);
 }
 
 void pageSetup(AsmInsn &insn, const EntryPage *page_P) {
     insn.setPrefix(page_P->readPrefix());
     insn.prefixMode = page_P->readDstMode();
     insn.prefixPos = page_P->readDstPos();
+    insn.superPrefix = page_P->readSuperPrefix();
 }
 
 Error searchName(CpuType cpuType, AsmInsn &insn) {
+    // Pass 1: require the user's size suffix to match the entry's oprSize so
+    // multi-size mnemonics (EEPMOV / EEPMOV.W, MOV.B / MOV.W / MOV.L, etc.)
+    // can each find their canonical entry. If that fails, fall back to the
+    // size-ignoring search so a true size mismatch surfaces as ILLEGAL_SIZE
+    // via the post-search check in encodeImpl.
+    cpu(cpuType)->searchName(insn, acceptModesSized, pageSetup);
+    if (insn.getError() == OK)
+        return OK;
+    insn.setOK();
     cpu(cpuType)->searchName(insn, acceptModes, pageSetup);
     return insn.getError();
 }
@@ -434,6 +851,10 @@ bool prefixMatcher(uint16_t code, const EntryPage *page_P) {
 }
 
 bool isPrefix(CpuType cpuType, Config::opcode_t code) {
+    // SuperPrefix codes (0x0140) are consumed separately in decodeImpl; don't
+    // double-count them here.
+    if (toSuperPrefix(cpuType, code) != SPRX_NONE)
+        return false;
     return cpu(cpuType)->isPrefix(code, prefixMatcher);
 }
 

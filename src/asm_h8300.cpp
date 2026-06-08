@@ -64,7 +64,9 @@ AsmH8300::AsmH8300(const ValueParser::Plugins &plugins)
 
 RegName AsmH8300::parseRegOperand(StrScanner &scan) const {
     const auto reg = parseRegName(scan, parser());
-    return (reg == REG_SP) ? REG_R7 : reg;
+    if (reg == REG_SP)
+        return hasReg32() ? REG_ER7 : REG_R7;
+    return reg;
 }
 
 Error AsmH8300::parseBitSuffix(StrScanner &scan, Operand &op) const {
@@ -74,6 +76,8 @@ Error AsmH8300::parseBitSuffix(StrScanner &scan, Operand &op) const {
             op.bitSuffix = 8;
         } else if (p.iexpectWord_P(PSTR("16"))) {
             op.bitSuffix = 16;
+        } else if (p.iexpectWord_P(PSTR("24"))) {
+            op.bitSuffix = 24;
         } else {
             return op.setErrorIf(scan, ILLEGAL_SIZE);
         }
@@ -113,14 +117,17 @@ Error AsmH8300::parseOperand(StrScanner &scan, Operand &op) const {
             case 2:
                 op.mode = M_VAL2;
                 break;
+            case 4:
+                op.mode = M_VAL4;
+                break;
             default:
                 op.mode = M_IMM8;
                 break;
             }
-        } else {
-            if (op.val.overflowUint16())
-                op.setErrorIf(s, OVERFLOW_RANGE);
+        } else if (!op.val.overflowUint16()) {
             op.mode = M_IMM16;
+        } else {
+            op.mode = M_IMM32;
         }
         scan = p;
         return OK;
@@ -146,7 +153,7 @@ Error AsmH8300::parseOperand(StrScanner &scan, Operand &op) const {
             s = p;
             // Pre-decrement: @-Rn
             op.reg = parseRegOperand(p);
-            if (isReg16(op.reg)) {
+            if (isAddrReg(op.reg, hasReg32())) {
                 op.mode = M_PDEC;
                 scan = p;
                 return OK;
@@ -157,22 +164,23 @@ Error AsmH8300::parseOperand(StrScanner &scan, Operand &op) const {
         }
         if (p.expect('(')) {
             s = p;
-            // Indexed: @(disp16,Rn)
+            // Indexed: @(disp16,Rn) or @(d:24,ERn)
             op.val = parseInteger(p, op);
             if (op.hasError())
                 return op.getError();
             auto z = p;
             if (parseBitSuffix(p, op) || op.bitSuffix == 8)
                 return op.setErrorIf(z, ILLEGAL_SIZE);
-            if (op.val.overflowUint16())
+            const bool idx24 = (op.bitSuffix == 24);
+            if (idx24 ? op.val.overflow(UINT24_MAX) : op.val.overflowUint16())
                 op.setErrorIf(s, OVERFLOW_RANGE);
             if (!p.skipSpaces().expect(','))
                 return op.setError(MISSING_COMMA);
             s = p;
             op.reg = parseRegOperand(p.skipSpaces());
-            if (isReg16(op.reg)) {
+            if (isAddrReg(op.reg, hasReg32())) {
                 if (p.skipSpaces().expect(')')) {
-                    op.mode = M_IDX16;
+                    op.mode = idx24 ? M_IDX24 : M_IDX16;
                     scan = p;
                     return OK;
                 }
@@ -184,7 +192,7 @@ Error AsmH8300::parseOperand(StrScanner &scan, Operand &op) const {
         }
         // Try register indirect: @Rn or @Rn+
         op.reg = parseRegOperand(p);
-        if (isReg16(op.reg)) {
+        if (isAddrReg(op.reg, hasReg32())) {
             op.mode = p.expect('+') ? M_PINC : M_INDIR;
             scan = p;
             return OK;
@@ -198,15 +206,22 @@ Error AsmH8300::parseOperand(StrScanner &scan, Operand &op) const {
             return op.getError();
         if (parseBitSuffix(p, op))
             return op.setErrorIf(p, ILLEGAL_SIZE);
+        if (op.bitSuffix == 24) {
+            if (op.val.overflow(UINT24_MAX))
+                op.setErrorIf(s, OVERFLOW_RANGE);
+            op.mode = M_ABS24;
+            scan = p;
+            return OK;
+        }
         if (op.bitSuffix == 16) {
-            if (op.val.overflow(UINT16_MAX))
+            if (overflowAbs16(op.val))
                 op.setErrorIf(s, OVERFLOW_RANGE);
             op.mode = M_ABS16;
             scan = p;
             return OK;
         }
         if (op.bitSuffix == 8) {
-            if (op.val.overflow(UINT8_MAX) && op.val.overflow(0xFFFF, 0xFF00))
+            if (overflowAbs8(op.val))
                 op.setErrorIf(s, OVERFLOW_RANGE);
             op.val.setUnsigned(op.val.getUnsigned() | 0xFF00);
             op.mode = M_ABS8;
@@ -230,6 +245,8 @@ Error AsmH8300::parseOperand(StrScanner &scan, Operand &op) const {
         op.reg = reg;
         if (isReg8(reg)) {
             op.mode = M_REG8;
+        } else if (isReg32(reg)) {
+            op.mode = M_REG32;
         } else if (isReg16(reg)) {
             op.mode = M_REG16;
         } else if (reg == REG_CCR) {
@@ -280,7 +297,38 @@ void AsmH8300::encodeOprReg16(AsmInsn &insn, const Operand &op, OprPos pos) cons
     insn.embed(regno);
 }
 
+void AsmH8300::encodeOprReg32(AsmInsn &insn, const Operand &op, OprPos pos) const {
+    if (!isReg32(op.reg)) {
+        insn.setErrorIf(op, REGISTER_NOT_ALLOWED);
+        return;
+    }
+    Config::opcode_t regno = encodeReg32(op.reg);
+    if (pos == POS_PRX) {
+        regno <<= Entry::bitGroupPos(insn.prefixPos);
+        insn.embedPrefix(regno);
+        return;
+    }
+    regno <<= Entry::bitGroupPos(pos);
+    insn.embed(regno);
+}
+
+void AsmH8300::encodeOprAddrReg(AsmInsn &insn, const Operand &op, OprPos pos) const {
+    if (!isAddrReg(op.reg, insn.hasReg32())) {
+        insn.setErrorIf(op, REGISTER_NOT_ALLOWED);
+        return;
+    }
+    Config::opcode_t regno = encodeAddrReg(op.reg);
+    if (pos == POS_PRX) {
+        regno <<= Entry::bitGroupPos(insn.prefixPos);
+        insn.embedPrefix(regno);
+        return;
+    }
+    regno <<= Entry::bitGroupPos(pos);
+    insn.embed(regno);
+}
+
 void AsmH8300::encodeAbsolute(AsmInsn &insn, const Operand &op, AddrMode mode, OprPos pos) const {
+    insn.setErrorIf(op);
     const auto addr = op.val.getUnsigned();
     if (mode == M_ABS8 || mode == M_MIND8) {
         const auto addr8 = addr & UINT8_MAX;
@@ -299,9 +347,28 @@ void AsmH8300::encodeRelative(AsmInsn &insn, const Operand &op) const {
     const auto target = op.getError() ? base : op.val.getUnsigned();
     insn.setErrorIf(op, checkAddr(target, true));
     const auto delta = branchDelta(base, target, insn, op);
-    if (overflowDelta(delta, 8))
+    if (!overflowDelta(delta, 8)) {
+        insn.embed(delta & UINT8_MAX);
+        return;
+    }
+    // 8-bit delta doesn't fit. On H8/300H, promote to the matching :16
+    // long-branch form (0x40+cc -> 0x5800 | cc<<4, BSR 0x55 -> 0x5C00).
+    // On H8/300 there is no long branch, so flag the error.
+    const auto opcHi = insn.opCode() >> 8;
+    const bool hasLong = hasReg32() && ((opcHi >= 0x40 && opcHi <= 0x4F) || opcHi == 0x55);
+    if (!hasLong) {
         insn.setErrorIf(op, OPERAND_TOO_FAR);
-    insn.embed(delta & UINT8_MAX);
+        insn.embed(delta & UINT8_MAX);
+        return;
+    }
+    const uint16_t longOpc = (opcHi == 0x55) ? 0x5C00 : 0x5800 | ((opcHi - 0x40) << 4);
+    insn.setOpCode(longOpc);
+    const auto base16 = insn.address() + 4;
+    const auto target16 = op.getError() ? base16 : op.val.getUnsigned();
+    const auto delta16 = branchDelta(base16, target16, insn, op);
+    if (overflowDelta(delta16, 16))
+        insn.setErrorIf(op, OPERAND_TOO_FAR);
+    insn.emitOperand16(delta16);
 }
 
 void AsmH8300::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode, OprPos pos) const {
@@ -314,20 +381,44 @@ void AsmH8300::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode, Op
         encodeOprReg8(insn, op, pos);
         break;
     case M_REG16:
-    case M_ADREG:
+        encodeOprReg16(insn, op, pos);
+        break;
     case M_INDIR:
     case M_PDEC:
     case M_PINC:
     case M_IDX16:
-        encodeOprReg16(insn, op, pos);
+        encodeOprAddrReg(insn, op, pos);
         if (mode == M_IDX16)
             insn.emitOperand16(op.val.getUnsigned());
+        break;
+    case M_IDX24: {
+        // ERn goes into the prefix word at insn.prefixPos; disp24 follows
+        // in a 4-byte slot with the top byte reserved as zero.
+        encodeOprAddrReg(insn, op, pos);
+        insn.emitOperand32(op.val.getUnsigned() & UINT24_MAX);
+        break;
+    }
+    case M_REG32:
+        encodeOprReg32(insn, op, pos);
+        break;
+    case M_ADREG:
+        encodeOprAddrReg(insn, op, pos);
         break;
     case M_ABS8:
     case M_ABS16:
     case M_MIND8:
         encodeAbsolute(insn, op, mode, pos);
         break;
+    case M_ABS24: {
+        const auto addr = op.val.getUnsigned() & UINT24_MAX;
+        if (pos == POS__FF) {
+            insn.embed(static_cast<uint8_t>(addr >> 16));
+            insn.emitOperand16(static_cast<uint16_t>(addr));
+        } else {
+            insn.emitOperand32(addr);
+        }
+        break;
+    }
     case M_REL8:
         encodeRelative(insn, op);
         break;
@@ -337,6 +428,9 @@ void AsmH8300::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode, Op
     case M_IMM16:
         insn.emitOperand16(op.val.getUnsigned());
         break;
+    case M_IMM32:
+        insn.emitOperand32(op.val.getUnsigned());
+        break;
     case M_IMM3:
         if (op.val.overflow(7))
             insn.setErrorIf(op, ILLEGAL_BIT_NUMBER);
@@ -344,6 +438,7 @@ void AsmH8300::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode, Op
         break;
     case M_VAL1:
     case M_VAL2:
+    case M_VAL4:
         break;
     case M_NONE:
     case M_CCR:
@@ -362,6 +457,8 @@ OprSize AsmInsn::parseSizeSuffix() {
             sizeSuffix = SZ_BYTE;
         } else if (p.iexpect('W')) {
             sizeSuffix = SZ_WORD;
+        } else if (p.iexpect('L')) {
+            sizeSuffix = SZ_LONG;
         }
         if (sizeSuffix == SZ_NONE || *p) {
             setErrorIf(p, ILLEGAL_SIZE);
@@ -373,13 +470,21 @@ OprSize AsmInsn::parseSizeSuffix() {
 }
 
 uint_fast8_t AsmInsn::operandPos() const {
-    const auto pos = hasPrefix() ? 4 : 2;
+    uint_fast8_t pos = 2;
+    if (superPrefix != SPRX_NONE)
+        pos += 2;
+    if (hasPrefix())
+        pos += 2;
     const auto len = length();
     return len < pos ? pos : len;
 }
 
 void AsmInsn::emitInsn() {
     uint_fast8_t pos = 0;
+    if (superPrefix != SPRX_NONE) {
+        emitUint16(fromSuperPrefix(superPrefix), pos);
+        pos += 2;
+    }
     if (hasPrefix()) {
         emitUint16(prefix(), pos);
         pos += 2;
@@ -389,6 +494,7 @@ void AsmInsn::emitInsn() {
 
 Error AsmH8300::encodeImpl(StrScanner &scan, Insn &_insn) const {
     AsmInsn insn(_insn);
+    insn.setHasReg32(hasReg32());
     insn.parseSizeSuffix();
 
     if (parseOperand(scan, insn.srcOp) && insn.srcOp.hasError())
@@ -402,10 +508,17 @@ Error AsmH8300::encodeImpl(StrScanner &scan, Insn &_insn) const {
     if (searchName(cpuType(), insn))
         return _insn.setError(insn.srcOp, insn);
 
-    if (insn.sizeSuffix != SZ_NONE && insn.sizeSuffix != insn.oprSize()) {
-        StrScanner p{_insn.errorAt()};
-        p.trimStart([](char c) { return c != '.'; });
-        return _insn.setErrorIf(p, ILLEGAL_SIZE);
+    if (insn.sizeSuffix != SZ_NONE) {
+        const auto expected = (insn.insnSize() == ISZ_ADDR) ? (insn.hasReg32() ? SZ_LONG : SZ_WORD)
+                                                            : insn.oprSize();
+        // ISZ_ADDR on H8/300H also tolerates .W for back-compat with H8/300
+        // assembly: ADDS/SUBS share the same encoding regardless of suffix.
+        const bool addrFallback = insn.insnSize() == ISZ_ADDR && insn.sizeSuffix == SZ_WORD;
+        if (insn.sizeSuffix != expected && !addrFallback) {
+            StrScanner p{_insn.errorAt()};
+            p.trimStart([](char c) { return c != '.'; });
+            return _insn.setErrorIf(p, ILLEGAL_SIZE);
+        }
     }
 
     encodeOperand(insn, insn.srcOp, insn.src(), insn.srcPos());

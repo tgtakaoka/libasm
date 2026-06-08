@@ -32,9 +32,12 @@ private:
 
     RegName decodeOprReg8(DisInsn &insn, OprPos pos) const;
     RegName decodeOprReg16(DisInsn &insn, const StrBuffer &out, AddrMode mode, OprPos pos) const;
+    RegName decodeOprReg32(DisInsn &insn, const StrBuffer &out, AddrMode mode, OprPos pos) const;
+    RegName decodeOprAddrReg(DisInsn &insn, const StrBuffer &out, AddrMode mode, OprPos pos) const;
     void decodeRelative(DisInsn &insn, StrBuffer &out) const;
+    void decodeRelative16(DisInsn &insn, StrBuffer &out) const;
     void decodeAbsolute(DisInsn &insn, StrBuffer &out, AddrMode mode, OprPos pos) const;
-    void decodeImmediate(DisInsn &insn, StrBuffer &out, AddrMode mode, uint16_t val) const;
+    void decodeImmediate(DisInsn &insn, StrBuffer &out, AddrMode mode, uint32_t val) const;
     void decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode, OprPos pos) const;
 
     Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) const override;

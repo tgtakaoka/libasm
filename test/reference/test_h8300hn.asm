@@ -13,11 +13,10 @@
 ;;; limitations under the License.
 
         cpu     H8/300H
-        org     0x0100
+far_label:   equ   H'1000
+        org     H'0100
         include "test_h8300h.inc"
         include "test_h8300h_ext.inc"
-        org     0x1000
-far_label:
         end
 
 ;;; Local Variables:

@@ -27,14 +27,12 @@
 namespace libasm {
 namespace h8300 {
 
-// 8-bit register encoding: bit3=0 (high byte), bit3=1 (low byte), bits[2:0]=reg number
-// R0H=0x00, R0L=0x08, R1H=0x01, ..., R7H=0x07, R7L=0x0F
-// 16-bit register encoding: bits[2:0]=reg number, bit3=0
-// R0=0, R1=1, ..., R7=7
+// Register encodings: 4-bit nibble for 8-bit (R0H..R7L) and 16-bit (R/E),
+// 3-bit nibble for 32-bit (ER).
 
 enum RegName : int8_t {
     REG_UNDEF = -1,
-    // 8-bit registers (encoded as nibble: bit3=low/high, bits[2:0]=number)
+    // 8-bit registers
     REG_R0H = 0x00,
     REG_R1H = 0x01,
     REG_R2H = 0x02,
@@ -51,7 +49,7 @@ enum RegName : int8_t {
     REG_R5L = 0x0D,
     REG_R6L = 0x0E,
     REG_R7L = 0x0F,
-    // 16-bit registers (encoded as 0x10|number so they don't overlap 8-bit)
+    // 16-bit R-half (numbered contiguously with E-halves).
     REG_R0 = 0x10,
     REG_R1 = 0x11,
     REG_R2 = 0x12,
@@ -60,10 +58,28 @@ enum RegName : int8_t {
     REG_R5 = 0x15,
     REG_R6 = 0x16,
     REG_R7 = 0x17,
-    // SP is an alias for R7
-    REG_SP = 0x18,
-    // Control registers
-    REG_CCR = 0x20,
+    // 16-bit E-half (H8/300H): upper halves of ER0..ER7.
+    REG_E0 = 0x18,
+    REG_E1 = 0x19,
+    REG_E2 = 0x1A,
+    REG_E3 = 0x1B,
+    REG_E4 = 0x1C,
+    REG_E5 = 0x1D,
+    REG_E6 = 0x1E,
+    REG_E7 = 0x1F,
+    // 32-bit ER registers (H8/300H).
+    REG_ER0 = 0x20,
+    REG_ER1 = 0x21,
+    REG_ER2 = 0x22,
+    REG_ER3 = 0x23,
+    REG_ER4 = 0x24,
+    REG_ER5 = 0x25,
+    REG_ER6 = 0x26,
+    REG_ER7 = 0x27,
+    // SP alias: R7 on H8/300, ER7 on H8/300H.
+    REG_SP = 0x28,
+    // Control registers.
+    REG_CCR = 0x30,
 };
 
 namespace reg {
@@ -71,14 +87,20 @@ namespace reg {
 RegName parseRegName(StrScanner &scan, const ValueParser &parser);
 StrBuffer &outRegName(StrBuffer &out, RegName name);
 
-uint_fast8_t encodeReg8(RegName reg);   // returns 4-bit encoding
-uint_fast8_t encodeReg16(RegName reg);  // returns 3-bit encoding
+uint_fast8_t encodeReg8(RegName reg);
+uint_fast8_t encodeReg16(RegName reg);
+uint_fast8_t encodeReg32(RegName reg);
+uint_fast8_t encodeAddrReg(RegName reg);
 
-RegName decodeReg8(uint_fast8_t nibble);   // decode 4-bit field
-RegName decodeReg16(uint_fast8_t nibble);  // decode 3-bit field (0..7)
+RegName decodeReg8(uint_fast8_t nibble);
+RegName decodeReg16(uint_fast8_t nibble);
+RegName decodeReg32(uint_fast8_t nibble);
 
 bool isReg8(RegName reg);
 bool isReg16(RegName reg);
+bool isReg32(RegName reg);
+// Matches R0..R7 on H8/300, and both R0..R7 (alias) and ER0..ER7 on H8/300H
+bool isAddrReg(RegName reg, bool hasReg32);
 
 char sizeSuffix(OprSize size);
 

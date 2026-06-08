@@ -18,7 +18,6 @@
       inc    r0h
       inc    r0l
       adds   #1, r0
-      adds   #1, sp
       mov.b  r0h, r0h
       mov.b  r0h, r0l
       mov.b  r0l, r0h
@@ -70,7 +69,6 @@
       dec    r0h
       dec    r0l
       subs   #1, r0
-      subs   #1, sp
       cmp.b  r0h, r0h
       cmp.b  r0h, r0l
       cmp.b  r0l, r0h
@@ -187,10 +185,10 @@
       mov.b  r0l, @(0x6f89,r0)
       mov.b  r0h, @(0x6ff1,sp)
       mov.b  r0l, @(0x6ff9,sp)
-      mov.w  @(0x7002,r0), r0
-      mov.w  @(0x7072,sp), r0
-      mov.w  r0, @(0x7082,r0)
-      mov.w  r0, @(0x70f2,sp)
+      mov.w  @(0x7001,r0), r0
+      mov.w  @(0x7071,sp), r0
+      mov.w  r0, @(0x7081,r0)
+      mov.w  r0, @(0x70f1,sp)
       bset   #0, r0h
       bset   #0, r0l
       bnot   #0, r0h

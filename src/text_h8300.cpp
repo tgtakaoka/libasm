@@ -21,8 +21,9 @@ namespace text {
 namespace h8300 {
 // clang-format off
 
-constexpr char TEXT_H8300_LIST[] PROGMEM = "H8/300";
+constexpr char TEXT_H8300_LIST[] PROGMEM = "H8/300, H8/300H";
 constexpr char TEXT_CPU_H8300[]  PROGMEM = "H8/300";
+constexpr char TEXT_CPU_H8300H[] PROGMEM = "H8/300H";
 
 // constexpr char TEXT_ADD[]   PROGMEM = "ADD";
 constexpr char TEXT_ADDS[]  PROGMEM = "ADDS";
@@ -70,7 +71,10 @@ constexpr char TEXT_BXOR[]  PROGMEM = "BXOR";
 // constexpr char TEXT_DAS[]   PROGMEM = "DAS";
 // constexpr char TEXT_DEC[]   PROGMEM = "DEC";
 constexpr char TEXT_DIVXU[]  PROGMEM = "DIVXU";
+constexpr char TEXT_DIVXS[]  PROGMEM = "DIVXS";
 constexpr char TEXT_EEPMOV[] PROGMEM = "EEPMOV";
+// constexpr char TEXT_EXTS[]   PROGMEM = "EXTS";
+constexpr char TEXT_EXTU[]   PROGMEM = "EXTU";
 // constexpr char TEXT_INC[]   PROGMEM = "INC";
 // constexpr char TEXT_JMP[]   PROGMEM = "JMP";
 // constexpr char TEXT_JSR[]   PROGMEM = "JSR";
@@ -79,6 +83,7 @@ constexpr char TEXT_EEPMOV[] PROGMEM = "EEPMOV";
 constexpr char TEXT_MOVFPE[] PROGMEM = "MOVFPE";
 constexpr char TEXT_MOVTPE[] PROGMEM = "MOVTPE";
 constexpr char TEXT_MULXU[]  PROGMEM = "MULXU";
+constexpr char TEXT_MULXS[]  PROGMEM = "MULXS";
 // constexpr char TEXT_NEG[]   PROGMEM = "NEG";
 // constexpr char TEXT_NOP[]   PROGMEM = "NOP";
 // constexpr char TEXT_NOT[]   PROGMEM = "NOT";
@@ -101,6 +106,7 @@ constexpr char TEXT_SLEEP[]  PROGMEM = "SLEEP";
 // constexpr char TEXT_SUB[]   PROGMEM = "SUB";
 constexpr char TEXT_SUBS[]  PROGMEM = "SUBS";
 constexpr char TEXT_SUBX[]  PROGMEM = "SUBX";
+constexpr char TEXT_TRAPA[] PROGMEM = "TRAPA";
 // constexpr char TEXT_XOR[]   PROGMEM = "XOR";
 constexpr char TEXT_XORC[]   PROGMEM = "XORC";
 
@@ -130,6 +136,24 @@ constexpr char TEXT_REG_R6L[] PROGMEM = "R6L";
 constexpr char TEXT_REG_R7H[] PROGMEM = "R7H";
 constexpr char TEXT_REG_R7L[] PROGMEM = "R7L";
 // constexpr char TEXT_REG_SP[]  PROGMEM = "SP";
+
+constexpr char TEXT_REG_E0[]  PROGMEM = "E0";
+constexpr char TEXT_REG_E1[]  PROGMEM = "E1";
+constexpr char TEXT_REG_E2[]  PROGMEM = "E2";
+constexpr char TEXT_REG_E3[]  PROGMEM = "E3";
+constexpr char TEXT_REG_E4[]  PROGMEM = "E4";
+constexpr char TEXT_REG_E5[]  PROGMEM = "E5";
+constexpr char TEXT_REG_E6[]  PROGMEM = "E6";
+constexpr char TEXT_REG_E7[]  PROGMEM = "E7";
+
+constexpr char TEXT_REG_ER0[] PROGMEM = "ER0";
+constexpr char TEXT_REG_ER1[] PROGMEM = "ER1";
+constexpr char TEXT_REG_ER2[] PROGMEM = "ER2";
+constexpr char TEXT_REG_ER3[] PROGMEM = "ER3";
+constexpr char TEXT_REG_ER4[] PROGMEM = "ER4";
+constexpr char TEXT_REG_ER5[] PROGMEM = "ER5";
+constexpr char TEXT_REG_ER6[] PROGMEM = "ER6";
+constexpr char TEXT_REG_ER7[] PROGMEM = "ER7";
 
 // Options
 constexpr char OPT_BOOL_SP_ALIAS[] PROGMEM = "sp-alias";
