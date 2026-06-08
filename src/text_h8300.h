@@ -24,8 +24,9 @@ namespace text {
 namespace h8300 {
 // clang-format off
 
-extern const char TEXT_H8300_LIST[] PROGMEM;
-extern const char TEXT_CPU_H8300[]  PROGMEM;
+extern const char TEXT_H8300_LIST[]  PROGMEM;
+extern const char TEXT_CPU_H8300[]   PROGMEM;
+extern const char TEXT_CPU_H8300H[]  PROGMEM;
 
 using common::TEXT_ADD;
 using common::TEXT_ADDS;
@@ -72,7 +73,10 @@ using common::TEXT_DAA;
 using common::TEXT_DAS;
 using common::TEXT_DEC;
 extern const char TEXT_DIVXU[]  PROGMEM;
+extern const char TEXT_DIVXS[]  PROGMEM;
 extern const char TEXT_EEPMOV[] PROGMEM;
+using common::TEXT_EXTS;
+extern const char TEXT_EXTU[]   PROGMEM;
 using common::TEXT_INC;
 using common::TEXT_JMP;
 using common::TEXT_JSR;
@@ -81,6 +85,7 @@ using common::TEXT_MOV;
 extern const char TEXT_MOVFPE[] PROGMEM;
 extern const char TEXT_MOVTPE[] PROGMEM;
 extern const char TEXT_MULXU[]  PROGMEM;
+extern const char TEXT_MULXS[]  PROGMEM;
 using common::TEXT_NEG;
 using common::TEXT_NOP;
 using common::TEXT_NOT;
@@ -103,6 +108,7 @@ using common::TEXT_STC;
 using common::TEXT_SUB;
 using common::TEXT_SUBS;
 using common::TEXT_SUBX;
+extern const char TEXT_TRAPA[]  PROGMEM;
 using common::TEXT_XOR;
 extern const char TEXT_XORC[]   PROGMEM;
 
@@ -132,6 +138,26 @@ using common::TEXT_REG_R7;
 extern const char TEXT_REG_R7H[] PROGMEM;
 extern const char TEXT_REG_R7L[] PROGMEM;
 using common::TEXT_REG_SP;
+
+// H8/300H 16-bit upper-half registers (E0..E7)
+extern const char TEXT_REG_E0[] PROGMEM;
+extern const char TEXT_REG_E1[] PROGMEM;
+extern const char TEXT_REG_E2[] PROGMEM;
+extern const char TEXT_REG_E3[] PROGMEM;
+extern const char TEXT_REG_E4[] PROGMEM;
+extern const char TEXT_REG_E5[] PROGMEM;
+extern const char TEXT_REG_E6[] PROGMEM;
+extern const char TEXT_REG_E7[] PROGMEM;
+
+// H8/300H 32-bit extended registers (ER0..ER7)
+extern const char TEXT_REG_ER0[] PROGMEM;
+extern const char TEXT_REG_ER1[] PROGMEM;
+extern const char TEXT_REG_ER2[] PROGMEM;
+extern const char TEXT_REG_ER3[] PROGMEM;
+extern const char TEXT_REG_ER4[] PROGMEM;
+extern const char TEXT_REG_ER5[] PROGMEM;
+extern const char TEXT_REG_ER6[] PROGMEM;
+extern const char TEXT_REG_ER7[] PROGMEM;
 
 // Options
 extern const char OPT_BOOL_SP_ALIAS[] PROGMEM;

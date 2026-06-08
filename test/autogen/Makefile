@@ -29,10 +29,10 @@ help:
 # target which has ".inc" suffix for output.
 INC_targets = w65c816 tlcs90 i8086 i80186 $(TGT_mc68000) $(TGT_z8000) $(TGT_nm1610) \
     ns32000 tms320c20x tms320c5x tms320c30 tms320c31 tms320c32 tms370 tms7000 tms9980 \
-    j11 t11 mc146805 z80 z180 z380 h8300
+    j11 t11 mc146805 z80 z180 z380 h8300 h8300hn
 # target which for GNU assembler (also ".ginc" targets)
 GINC_targets = $(TGT_mc68000) $(TGT_z8000) ns32000 mc68hc11 mc68hc12 i8086 i80186 i80286 \
-    tms320c30 tms320c31 tms320c32 h8300
+    tms320c30 tms320c31 tms320c32 h8300 h8300hn
 # target which also has Zilog syntax (also ".zinc" targets)
 ZINC_targets = i8080 i8085 v30emu
 # target which doesn't need ".asm"
@@ -40,7 +40,7 @@ NOASM_targets = i80286
 # CPU variants whose generated source ASL cannot assemble. This filters
 # which asl-X.hex rules exist (asl-test target). Generation of .inc/.ginc
 # still happens because libasm and gas consume them.
-ASL_exclude = mb8861 i80286
+ASL_exclude = mb8861 i80286 h8300hn
 # CPU variants whose gas toolchain does not produce a manual-conforming
 # encoding. h8300-elf-as has no -mach=h8300; it always emits the H8/300H
 # 4-byte form for JMP/JSR @aa:16, producing bytes that don't execute on

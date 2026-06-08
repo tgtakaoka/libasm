@@ -13,11 +13,9 @@
 ;;; limitations under the License.
 
         cpu     H8/300H
-        org     0x0100
-        include "test_h8300h.inc"
-        include "test_h8300h_ext.inc"
-        org     0x1000
-far_label:
+        option  smart-branch, on
+        org     H'0100
+        include "gen_h8300hn.inc"
         end
 
 ;;; Local Variables:

@@ -37,6 +37,7 @@ struct EntryInsn : EntryInsnPrefix<Config, Entry> {
 
     AddrMode prefixMode;
     OprPos prefixPos;
+    SuperPrefix superPrefix{SPRX_NONE};
 };
 
 struct Operand final : ErrorAt {
@@ -48,7 +49,7 @@ struct Operand final : ErrorAt {
 };
 
 struct AsmInsn final : AsmInsnImpl<Config>, EntryInsn {
-    AsmInsn(Insn &insn) : AsmInsnImpl(insn), sizeSuffix(SZ_NONE) {}
+    AsmInsn(Insn &insn) : AsmInsnImpl(insn), sizeSuffix(SZ_NONE), _hasReg32(false) {}
 
     Operand srcOp, dstOp;
 
@@ -58,17 +59,22 @@ struct AsmInsn final : AsmInsnImpl<Config>, EntryInsn {
 
     void emitInsn();
     void emitOperand16(uint16_t val16) { emitUint16(val16, operandPos()); }
+    void emitOperand32(uint32_t val32) { emitUint32(val32, operandPos()); }
 
-    OprSize sizeSuffix;;
+    bool hasReg32() const { return _hasReg32; }
+    void setHasReg32(bool v) { _hasReg32 = v; }
+
+    OprSize sizeSuffix;
 
 private:
     uint_fast8_t operandPos() const;
+    bool _hasReg32;
 };
 
 struct DisInsn final : DisInsnImpl<Config>, EntryInsn {
     DisInsn(Insn &insn, DisMemory &memory, const StrBuffer &out) : DisInsnImpl(insn, memory, out) {}
 
-    AddrMode dst() const { return prefixMode == M_NONE ? EntryInsn::dst() : prefixMode; }
+    AddrMode dst() const { return dstPos() == POS_PRX ? prefixMode : EntryInsn::dst(); }
 };
 
 }  // namespace h8300

@@ -32,6 +32,22 @@ namespace {
 // Sorted alphabetically for binary search
 constexpr NameEntry REG_ENTRIES[] PROGMEM = {
     { TEXT_REG_CCR, REG_CCR },
+    { TEXT_REG_E0,  REG_E0  },
+    { TEXT_REG_E1,  REG_E1  },
+    { TEXT_REG_E2,  REG_E2  },
+    { TEXT_REG_E3,  REG_E3  },
+    { TEXT_REG_E4,  REG_E4  },
+    { TEXT_REG_E5,  REG_E5  },
+    { TEXT_REG_E6,  REG_E6  },
+    { TEXT_REG_E7,  REG_E7  },
+    { TEXT_REG_ER0, REG_ER0 },
+    { TEXT_REG_ER1, REG_ER1 },
+    { TEXT_REG_ER2, REG_ER2 },
+    { TEXT_REG_ER3, REG_ER3 },
+    { TEXT_REG_ER4, REG_ER4 },
+    { TEXT_REG_ER5, REG_ER5 },
+    { TEXT_REG_ER6, REG_ER6 },
+    { TEXT_REG_ER7, REG_ER7 },
     { TEXT_REG_R0,  REG_R0  },
     { TEXT_REG_R0H, REG_R0H },
     { TEXT_REG_R0L, REG_R0L },
@@ -84,6 +100,10 @@ uint_fast8_t encodeReg8(RegName reg) {
 }
 
 uint_fast8_t encodeReg16(RegName reg) {
+    return static_cast<uint_fast8_t>(reg) & 0x0F;
+}
+
+uint_fast8_t encodeReg32(RegName reg) {
     return static_cast<uint_fast8_t>(reg) & 0x07;
 }
 
@@ -92,7 +112,11 @@ RegName decodeReg8(uint_fast8_t nibble) {
 }
 
 RegName decodeReg16(uint_fast8_t nibble) {
-    return RegName((nibble & 0x07) + REG_R0);
+    return RegName((nibble & 0x0F) + REG_R0);
+}
+
+RegName decodeReg32(uint_fast8_t nibble) {
+    return RegName((nibble & 0x07) + REG_ER0);
 }
 
 bool isReg8(RegName reg) {
@@ -102,7 +126,25 @@ bool isReg8(RegName reg) {
 
 bool isReg16(RegName reg) {
     const auto r = static_cast<uint_fast8_t>(reg);
+    return r >= REG_R0 && r <= REG_E7;
+}
+
+bool isReg32(RegName reg) {
+    const auto r = static_cast<uint_fast8_t>(reg);
+    return r >= REG_ER0 && r <= REG_ER7;
+}
+
+bool isAddrReg(RegName reg, bool hasReg32) {
+    const auto r = static_cast<uint_fast8_t>(reg);
+    if (hasReg32) {
+        // H8/300H accepts R0..R7 as alias for ER0..ER7 (GAS -mach=h8300hn).
+        return (r >= REG_R0 && r <= REG_R7) || (r >= REG_ER0 && r <= REG_ER7);
+    }
     return r >= REG_R0 && r <= REG_R7;
+}
+
+uint_fast8_t encodeAddrReg(RegName reg) {
+    return static_cast<uint_fast8_t>(reg) & 0x07;
 }
 
 char sizeSuffix(OprSize size) {
@@ -111,6 +153,8 @@ char sizeSuffix(OprSize size) {
         return 'B';
     case SZ_WORD:
         return 'W';
+    case SZ_LONG:
+        return 'L';
     default:
         return 0;
     }

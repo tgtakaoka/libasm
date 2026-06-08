@@ -25,6 +25,15 @@ using namespace libasm::test;
 DisH8300 dis8300;
 Disassembler &disassembler(dis8300);
 
+bool is_h8300h() {
+    return strcmp_P("H8/300H", disassembler.config().cpu_P()) == 0;
+}
+
+// Pick the H8/300 (r16) or H8/300H (r32) form of an address-register-bearing
+// operand string. Pointers like @R0 disasm to @ER0 on H8/300H because the
+// address register is 32-bit there.
+#define AREG(r16, r32) (is_h8300h() ? (r32) : (r16))
+
 void set_up() {
     disassembler.reset();
 }
@@ -50,8 +59,20 @@ void test_system() {
     TEST("EEPMOV", "", 0x7B5C, 0x598F);
 
     UNKN(0x0000|0x01);        // NOP: byte2 must be 0x00
-    UNKN(0x0180 ^ 0x80);        // SLEEP: byte2 must be 0x80
-    UNKN(0x7B5C, 0x598E);       // EEPMOV: wrong trailing bytes
+    if (!is_h8300h())
+        UNKN(0x0180 ^ 0x80);  // SLEEP: byte2 must be 0x80 (H8/300H uses 0x0100 as super-prefix)
+    UNKN(0x7B5C, 0x598E);     // EEPMOV: wrong trailing bytes
+
+    if (is_h8300h()) {
+        // TRAPA #vec
+        TEST("TRAPA", "#0", 0x5700|(0<<4));
+        TEST("TRAPA", "#1", 0x5700|(1<<4));
+        TEST("TRAPA", "#2", 0x5700|(2<<4));
+        TEST("TRAPA", "#3", 0x5700|(3<<4));
+
+        // EEPMOV.W (0x7BD4 prefix)
+        TEST("EEPMOV.W", "", 0x7BD4, 0x598F);
+    }
 }
 
 void test_ccr() {
@@ -72,6 +93,24 @@ void test_ccr() {
     TEST("XORC", "#15, CCR",   0x0500|0x0F);
     TEST("ANDC", "#H'F0, CCR", 0x0600|0xF0);
     TEST("LDC",  "#0, CCR",    0x0700|0x00);
+
+    if (is_h8300h()) {
+        // LDC / STC ccr with memory operand via 0x0140 super-prefix
+        TEST("LDC", "@ER0, CCR",       0x0140, 0x6900|(0<<4));
+        TEST("LDC", "@SP, CCR",        0x0140, 0x6900|(7<<4));   // ER7 -> SP
+        TEST("STC", "CCR, @ER0",       0x0140, 0x6980|(0<<4));
+        TEST("STC", "CCR, @SP",        0x0140, 0x6980|(7<<4));
+        TEST("LDC", "@ER0+, CCR",      0x0140, 0x6D00|(0<<4));
+        TEST("STC", "CCR, @-ER1",      0x0140, 0x6D80|(1<<4));
+        TEST("LDC", "@H'1234, CCR", 0x0140, 0x6B00, 0x1234);   // low addr, no :16
+        TEST("STC", "CCR, @H'1234", 0x0140, 0x6B80, 0x1234);
+        TEST("LDC", "@(H'1234,ER0), CCR", 0x0140, 0x6F00|(0<<4), 0x1234);
+        TEST("STC", "CCR, @(H'1234,ER0)", 0x0140, 0x6F80|(0<<4), 0x1234);
+
+        // LDC / STC ccr,@(d:24,ERn) via SPRX_0140 + 0x7800 prefix
+        TEST("LDC", "@(H'001234:24,ER0), CCR", 0x0140, 0x7800|(0<<4), 0x6B20, 0x0000, 0x1234);
+        TEST("STC", "CCR, @(H'FFFFE0:24,SP)",  0x0140, 0x7800|(7<<4), 0x6BA0, 0x00FF, 0xFFE0);
+    }
 }
 
 void test_data_move() {
@@ -98,20 +137,20 @@ void test_data_move() {
     TEST("MOV.B", "R7L, @H'FFFF:8", 0x3000|(0xF<<8)|0xFF);
 
     // MOV.B @Rn,Rd (0x68, bit7=0): byte2=(Rn3<<4)|Rd
-    TEST("MOV.B", "@R0, R0H", 0x6800|(0<<4)|0x0);
-    TEST("MOV.B", "@R2, R5L", 0x6800|(2<<4)|0xD);
+    TEST("MOV.B", AREG("@R0, R0H", "@ER0, R0H"), 0x6800|(0<<4)|0x0);
+    TEST("MOV.B", AREG("@R2, R5L", "@ER2, R5L"), 0x6800|(2<<4)|0xD);
 
     // MOV.B Rs,@Rn (0x68, bit7=1): byte2=0x80|(Rn3<<4)|Rs
-    TEST("MOV.B", "R0H, @R0", 0x6880|(0<<4)|0x0);
-    TEST("MOV.B", "R3L, @R6", 0x6880|(6<<4)|0xB);
+    TEST("MOV.B", AREG("R0H, @R0", "R0H, @ER0"), 0x6880|(0<<4)|0x0);
+    TEST("MOV.B", AREG("R3L, @R6", "R3L, @ER6"), 0x6880|(6<<4)|0xB);
 
     // MOV.W @Rn,Rd (0x69, bit7=0): byte2=(Rn3<<4)|Rd3
-    TEST("MOV.W", "@R0, R0", 0x6900|(0<<4)|0);
-    TEST("MOV.W", "@SP, R5", 0x6900|(7<<4)|5);
+    TEST("MOV.W", AREG("@R0, R0", "@ER0, R0"), 0x6900|(0<<4)|0);
+    TEST("MOV.W", "@SP, R5",                   0x6900|(7<<4)|5);
 
     // MOV.W Rs,@Rn (0x69, bit7=1): byte2=0x80|(Rn3<<4)|Rs3
-    TEST("MOV.W", "R0, @R0", 0x6980|(0<<4)|0);
-    TEST("MOV.W", "R7, @SP", 0x6980|(7<<4)|7);
+    TEST("MOV.W", AREG("R0, @R0", "R0, @ER0"), 0x6980|(0<<4)|0);
+    TEST("MOV.W", "R7, @SP",                   0x6980|(7<<4)|7);
 
     // MOV.B @abs16,Rd (0x6A, bits[7:6]=00): byte2=Rd nibble
     TEST("MOV.B", "@H'1234, R0H",    0x6A00|0x0, 0x1234);
@@ -130,47 +169,47 @@ void test_data_move() {
     TEST("MOV.W", "R5, @H'0200", 0x6B80|5, 0x0200);
 
     // MOV.B @Rn+,Rd (0x6C, bit7=0): byte2=(Rn3<<4)|Rd
-    TEST("MOV.B", "@R0+, R0H", 0x6C00|(0<<4)|0x0);
-    TEST("MOV.B", "@R3+, R5L", 0x6C00|(3<<4)|0xD);
+    TEST("MOV.B", AREG("@R0+, R0H", "@ER0+, R0H"), 0x6C00|(0<<4)|0x0);
+    TEST("MOV.B", AREG("@R3+, R5L", "@ER3+, R5L"), 0x6C00|(3<<4)|0xD);
     ERRT("MOV.B", "@SP+, R5L", ILLEGAL_SIZE, "@SP+, R5L", 0x6C00|(7<<4)|0xD);
 
     // MOV.B Rs,@-Rn (0x6C, bit7=1): byte2=0x80|(Rn3<<4)|Rs
-    TEST("MOV.B", "R0H, @-R0", 0x6C80|(0<<4)|0x0);
-    TEST("MOV.B", "R4L, @-R2", 0x6C80|(2<<4)|0xC);
+    TEST("MOV.B", AREG("R0H, @-R0", "R0H, @-ER0"), 0x6C80|(0<<4)|0x0);
+    TEST("MOV.B", AREG("R4L, @-R2", "R4L, @-ER2"), 0x6C80|(2<<4)|0xC);
     ERRT("MOV.B", "R4L, @-SP", ILLEGAL_SIZE, "@-SP", 0x6C80|(7<<4)|0xC);
 
     // MOV.W @Rn+,Rd (0x6D, bit7=0, Rn!=SP): byte2=(Rn3<<4)|Rd3
-    TEST("MOV.W", "@R0+, R0", 0x6D00|(0<<4)|0);
-    TEST("MOV.W", "@R2+, R4", 0x6D00|(2<<4)|4);
+    TEST("MOV.W", AREG("@R0+, R0", "@ER0+, R0"), 0x6D00|(0<<4)|0);
+    TEST("MOV.W", AREG("@R2+, R4", "@ER2+, R4"), 0x6D00|(2<<4)|4);
 
     // POP Rd (0x6D, Rn=SP=R7, bit7=0): byte2=0x70|Rd3
     TEST("POP",  "R0", 0x6D70|0);
     TEST("POP",  "R5", 0x6D70|5);
 
     // MOV.W Rs,@-Rn (0x6D, bit7=1, Rn!=SP): byte2=0x80|(Rn3<<4)|Rs3
-    TEST("MOV.W", "R0, @-R0", 0x6D80|(0<<4)|0);
-    TEST("MOV.W", "R5, @-R5", 0x6D80|(5<<4)|5);
+    TEST("MOV.W", AREG("R0, @-R0", "R0, @-ER0"), 0x6D80|(0<<4)|0);
+    TEST("MOV.W", AREG("R5, @-R5", "R5, @-ER5"), 0x6D80|(5<<4)|5);
 
     // PUSH Rs (0x6D, Rn=SP=R7, bit7=1): byte2=0xF0|Rs3
     TEST("PUSH", "R0", 0x6DF0|0);
     TEST("PUSH", "R6", 0x6DF0|6);
 
     // MOV.B @(d16,Rn),Rd (0x6E, bit7=0): byte2=(Rn3<<4)|Rd, then disp16
-    TEST("MOV.B", "@(H'0000,R0), R0H", 0x6E00|(0<<4)|0x0, 0x0000);
-    TEST("MOV.B", "@(H'0010,R2), R3L", 0x6E00|(2<<4)|0xB, 0x0010);
-    TEST("MOV.B", "@(H'FFFF,SP), R7H", 0x6E00|(7<<4)|0x7, 0xFFFF);
+    TEST("MOV.B", AREG("@(H'0000,R0), R0H", "@(H'0000,ER0), R0H"), 0x6E00|(0<<4)|0x0, 0x0000);
+    TEST("MOV.B", AREG("@(H'0010,R2), R3L", "@(H'0010,ER2), R3L"), 0x6E00|(2<<4)|0xB, 0x0010);
+    TEST("MOV.B", "@(H'FFFF,SP), R7H",                             0x6E00|(7<<4)|0x7, 0xFFFF);
 
     // MOV.B Rs,@(d16,Rn) (0x6E, bit7=1): byte2=0x80|(Rn3<<4)|Rs
-    TEST("MOV.B", "R0H, @(H'0000,R0)", 0x6E80|(0<<4)|0x0, 0x0000);
-    TEST("MOV.B", "R4L, @(H'0001,R3)", 0x6E80|(3<<4)|0xC, 0x0001);
+    TEST("MOV.B", AREG("R0H, @(H'0000,R0)", "R0H, @(H'0000,ER0)"), 0x6E80|(0<<4)|0x0, 0x0000);
+    TEST("MOV.B", AREG("R4L, @(H'0001,R3)", "R4L, @(H'0001,ER3)"), 0x6E80|(3<<4)|0xC, 0x0001);
 
     // MOV.W @(d16,Rn),Rd (0x6F, bit7=0): byte2=(Rn3<<4)|Rd3
-    TEST("MOV.W", "@(H'0000,R0), R0",  0x6F00|(0<<4)|0, 0x0000);
-    TEST("MOV.W", "@(H'0020,SP), R2",  0x6F00|(7<<4)|2, 0x0020);
+    TEST("MOV.W", AREG("@(H'0000,R0), R0", "@(H'0000,ER0), R0"),   0x6F00|(0<<4)|0, 0x0000);
+    TEST("MOV.W", "@(H'0020,SP), R2",                              0x6F00|(7<<4)|2, 0x0020);
 
     // MOV.W Rs,@(d16,Rn) (0x6F, bit7=1): byte2=0x80|(Rn3<<4)|Rs3
-    TEST("MOV.W", "R0, @(H'0000,R0)", 0x6F80|(0<<4)|0, 0x0000);
-    TEST("MOV.W", "R5, @(H'FFFE,R6)", 0x6F80|(6<<4)|5, 0xFFFE);
+    TEST("MOV.W", AREG("R0, @(H'0000,R0)", "R0, @(H'0000,ER0)"),   0x6F80|(0<<4)|0, 0x0000);
+    TEST("MOV.W", AREG("R5, @(H'FFFE,R6)", "R5, @(H'FFFE,ER6)"),   0x6F80|(6<<4)|5, 0xFFFE);
 
     // MOV.W #imm,Rd (0x79): byte2=Rd3, then imm16
     TEST("MOV.W", "#0, R0",     0x7900|0, 0x0000);
@@ -187,6 +226,60 @@ void test_data_move() {
     // MOVTPE Rs,@abs16 (0x6A, bits[7:6]=11): byte2=0xC0|Rs nibble (full 16 byte registers)
     TEST("MOVTPE", "R0H, @H'1234", 0x6AC0|0x0, 0x1234);
     TEST("MOVTPE", "R5L, @H'5678", 0x6AC0|0xD, 0x5678);
+
+    if (is_h8300h()) {
+        // MOV.L ERs,ERd: 0x0F80 | (ERs<<4) | ERd. Both fields are 3-bit
+        // (POS__7_ / POS___7); the destination bit-3 reserved bit is checked.
+        TEST("MOV.L", "ER0, ER1",                0x0F80|(0<<4)|1);
+        TEST("MOV.L", "ER2, ER5",                0x0F80|(2<<4)|5);
+        TEST("MOV.L", "ER7, ER0",                0x0F80|(7<<4)|0);
+        UNKN(                                    0x0F80|(0<<4)|0x8);  // bit 3 of ERd reserved
+
+        // MOV.L #imm32, ERd via 0x7A00 prefix
+        TEST("MOV.L", "#H'12345678, ER0",        0x7A00|0, 0x1234, 0x5678);
+        TEST("MOV.L", "#H'FFFFFFFF, ER7",        0x7A00|7, 0xFFFF, 0xFFFF);
+
+        // MOV.B / MOV.W with ER pointer (decoded via decodeOprAddrReg).
+        TEST("MOV.B", "@ER0, R0H",               0x6800|(0<<4)|0x0);
+        TEST("MOV.B", "R0H, @SP",                0x6880|(7<<4)|0x0);  // ER7 prints as SP
+        TEST("MOV.W", "@ER3, R5",                0x6900|(3<<4)|0x5);
+        TEST("MOV.W", "R0, @-ER1",               0x6D80|(1<<4)|0x0);
+        TEST("MOV.B", "@(H'1234,ER0), R0H",      0x6E00|(0<<4)|0x0, 0x1234);
+        TEST("MOV.W", "@(H'FFFE,SP), R0",        0x6F00|(7<<4)|0x0, 0xFFFE);
+
+        // MOV.B / MOV.W @(d:24,ERn) via 0x7800 normal prefix
+        TEST("MOV.B", "@(H'000000:24,ER0), R0H", 0x7800|(0<<4), 0x6A20|0x0, 0x0000, 0x0000);
+        TEST("MOV.B", "@(H'FFFFFF:24,SP), R7L",  0x7800|(7<<4), 0x6A20|0xF, 0x00FF, 0xFFFF);
+        TEST("MOV.B", "R0H, @(H'000000:24,ER0)", 0x7800|(0<<4), 0x6AA0|0x0, 0x0000, 0x0000);
+        TEST("MOV.W", "@(H'001234:24,ER3), R5",  0x7800|(3<<4), 0x6B20|0x5, 0x0000, 0x1234);
+
+        // MOV.B / MOV.W @aa:24 and MOV.L @aa:24 (MOV.L uses 0x0100 super-prefix)
+        TEST("MOV.B", "@H'000000:24, R0H",       0x6A20|0x0,         0x0000, 0x0000);
+        TEST("MOV.B", "@H'FFFFFF:24, R7L",       0x6A20|0xF,         0x00FF, 0xFFFF);
+        TEST("MOV.B", "R0H, @H'000000:24",       0x6AA0|0x0,         0x0000, 0x0000);
+        TEST("MOV.W", "@H'000100:24, R0",        0x6B20|0x0,         0x0000, 0x0100);
+        TEST("MOV.W", "R7, @H'FFFFFE:24",        0x6BA0|0x7,         0x00FF, 0xFFFE);
+        TEST("MOV.L", "@H'000100:24, ER0",       0x0100, 0x6B20|0,   0x0000, 0x0100);
+        TEST("MOV.L", "ER7, @H'FFFFFE:24",       0x0100, 0x6BA0|7,   0x00FF, 0xFFFE);
+
+        // MOV.L with addressing modes via 0x0100 super-prefix
+        TEST("MOV.L", "@ER0, ER1",               0x0100, 0x6900|(0<<4)|1);
+        TEST("MOV.L", "ER1, @ER0",               0x0100, 0x6980|(0<<4)|1);
+        TEST("MOV.L", "@ER0+, ER1",              0x0100, 0x6D00|(0<<4)|1);
+        TEST("MOV.L", "ER0, @-ER1",              0x0100, 0x6D80|(1<<4)|0);
+        TEST("MOV.L", "@H'1234, ER0",            0x0100, 0x6B00|0,        0x1234);
+        TEST("MOV.L", "ER0, @H'1234",            0x0100, 0x6B80|0,        0x1234);
+        TEST("MOV.L", "@(H'1234,ER0), ER1",      0x0100, 0x6F00|(0<<4)|1, 0x1234);
+        TEST("MOV.L", "ER0, @(H'1234,ER1)",      0x0100, 0x6F80|(1<<4)|0, 0x1234);
+        // ER7 prints as SP for pointer-style operands (non-PINC/PDEC forms)
+        TEST("MOV.L", "@SP, ER0",                0x0100, 0x6900|(7<<4)|0);
+
+        // POP.L / PUSH.L decode (preferred over MOV.L @SP+/-SP for ER7)
+        TEST("POP.L",  "ER0",                    0x0100, 0x6D70|0);
+        TEST("POP.L",  "ER5",                    0x0100, 0x6D70|5);
+        TEST("PUSH.L", "ER0",                    0x0100, 0x6DF0|0);
+        TEST("PUSH.L", "ER6",                    0x0100, 0x6DF0|6);
+    }
 }
 
 void test_arithmetic() {
@@ -215,18 +308,19 @@ void test_arithmetic() {
 
     TEST("DEC", "R0H", 0x1A00|0x0);
     TEST("DEC", "R4H", 0x1A00|0x4);
-    UNKN(0x1A00|0xF0);        // DEC: high nibble of byte2 must be 0
+    if (!is_h8300h())
+        UNKN(0x1A00|0xF0);    // DEC: high nibble of byte2 must be 0 (H8/300H reuses bit 7 for SUB.L)
 
     // ADDS/SUBS #1/#2,Rd: byte2=Rd3 (bit7=0→#1, bit7=1→#2)
-    TEST("ADDS", "#1, R0", 0x0B00|0);
-    TEST("ADDS", "#1, R5", 0x0B00|5);
-    TEST("ADDS", "#2, R0", 0x0B80|0);
-    TEST("ADDS", "#2, SP", 0x0B80|7);
+    TEST("ADDS", AREG("#1, R0", "#1, ER0"), 0x0B00|0);
+    TEST("ADDS", AREG("#1, R5", "#1, ER5"), 0x0B00|5);
+    TEST("ADDS", AREG("#2, R0", "#2, ER0"), 0x0B80|0);
+    TEST("ADDS", AREG("#2, R7", "#2, ER7"), 0x0B80|7);
 
-    TEST("SUBS", "#1, R0", 0x1B00|0);
-    TEST("SUBS", "#1, R3", 0x1B00|3);
-    TEST("SUBS", "#2, R0", 0x1B80|0);
-    TEST("SUBS", "#2, SP", 0x1B80|7);
+    TEST("SUBS", AREG("#1, R0", "#1, ER0"), 0x1B00|0);
+    TEST("SUBS", AREG("#1, R3", "#1, ER3"), 0x1B00|3);
+    TEST("SUBS", AREG("#2, R0", "#2, ER0"), 0x1B80|0);
+    TEST("SUBS", AREG("#2, R7", "#2, ER7"), 0x1B80|7);
 
     TEST("DAA", "R0H", 0x0F00|0x0);
     TEST("DAA", "R7L", 0x0F00|0xF);
@@ -234,7 +328,8 @@ void test_arithmetic() {
 
     TEST("DAS", "R0H", 0x1F00|0x0);
     TEST("DAS", "R7L", 0x1F00|0xF);
-    UNKN(0x1F00|0x80);        // DAS: high nibble of byte2 must be 0
+    if (!is_h8300h())
+        UNKN(0x1F00|0x80);    // DAS: high nibble of byte2 must be 0 (H8/300H reuses bit 7 for CMP.L)
 
     // MULXU/DIVXU Rs8,Rd16: byte2=(Rs nibble<<4)|Rd3
     TEST("MULXU", "R0H, R0", 0x5000|(0x0<<4)|0);
@@ -245,7 +340,8 @@ void test_arithmetic() {
     // NEG Rd (0x17, bit7=1): byte2=0x80|Rd nibble
     TEST("NEG", "R0H", 0x1780|0x0);
     TEST("NEG", "R7L", 0x1780|0xF);
-    UNKN(0x1780|0x10);        // NEG: bits[6:4] of byte2 must be 0
+    if (!is_h8300h())
+        UNKN(0x1780|0x10);    // NEG: bits[6:4] of byte2 must be 0 (H8/300H reuses for NEG.W)
 
     // ADD/ADDX/CMP/SUBX #imm,Rd (0x80-0xBF): byte1=0x?0|(Rd nibble), byte2=imm8
     TEST("ADD.B", "#0, R0H",    0x8000|(0x0<<8)|0x00);
@@ -253,6 +349,67 @@ void test_arithmetic() {
     TEST("ADDX",  "#1, R0H",    0x9000|(0x0<<8)|0x01);
     TEST("CMP.B", "#H'55, R5H", 0xA000|(0x5<<8)|0x55);
     TEST("SUBX",  "#2, R2L",    0xB000|(0xA<<8)|0x02);
+
+    if (is_h8300h()) {
+        // ADD.L / SUB.L / CMP.L ERs,ERd (same shape as MOV.L)
+        TEST("ADD.L",   "ER0, ER1",         0x0A80|(0<<4)|1);
+        TEST("ADD.L",   "ER7, ER0",         0x0A80|(7<<4)|0);
+        TEST("SUB.L",   "ER0, ER1",         0x1A80|(0<<4)|1);
+        TEST("CMP.L",   "ER3, ER5",         0x1F80|(3<<4)|5);
+
+        // NEG.W / NEG.L Rd
+        TEST("NEG.W",   "R3",               0x1790|0x3);
+        TEST("NEG.L",   "ER2",              0x17B0|2);
+
+        // INC.W / INC.L / DEC.W / DEC.L
+        TEST("INC.W",   "#1, R0",           0x0B50|0x0);
+        TEST("INC.W",   "#2, R7",           0x0BD0|0x7);
+        TEST("INC.W",   "#1, E5",           0x0B50|0xD);
+        TEST("INC.L",   "#1, ER0",          0x0B70|0);
+        TEST("INC.L",   "#2, ER7",          0x0BF0|7);
+        TEST("DEC.W",   "#1, R0",           0x1B50|0x0);
+        TEST("DEC.W",   "#2, R7",           0x1BD0|0x7);
+        TEST("DEC.L",   "#1, ER3",          0x1B70|3);
+        TEST("DEC.L",   "#2, ER5",          0x1BF0|5);
+
+        // ADDS / SUBS via M_ADREG: ER target on H8/300H (suffix is implicit).
+        TEST("ADDS",    "#1, ER0",          0x0B00|0);
+        TEST("ADDS",    "#1, ER7",          0x0B00|7);
+        TEST("ADDS",    "#2, ER3",          0x0B80|3);
+        TEST("SUBS",    "#1, ER4",          0x1B00|4);
+        TEST("SUBS",    "#2, ER5",          0x1B80|5);
+        // ADDS / SUBS #4 (H8/300H-only encoding 0x0B90 / 0x1B90)
+        TEST("ADDS",    "#4, ER0",          0x0B90|0);
+        TEST("ADDS",    "#4, ER7",          0x0B90|7);
+        TEST("SUBS",    "#4, ER3",          0x1B90|3);
+
+        // ADD.W / SUB.W / CMP.W #imm16, Rd
+        TEST("ADD.W",   "#H'1234, R0",      0x7910|0x0, 0x1234);
+        TEST("ADD.W",   "#H'FFFF, E7",      0x7910|0xF, 0xFFFF);
+        TEST("CMP.W",   "#H'1234, R0",      0x7920|0x0, 0x1234);
+        TEST("SUB.W",   "#H'1234, R0",      0x7930|0x0, 0x1234);
+
+        // ADD.L / SUB.L / CMP.L #imm32, ERd
+        TEST("ADD.L",   "#H'12345678, ER0", 0x7A10|0, 0x1234, 0x5678);
+        TEST("CMP.L",   "#1, ER1",          0x7A20|1, 0x0000, 0x0001);
+        TEST("SUB.L",   "#H'00010000, ER2", 0x7A30|2, 0x0001, 0x0000);
+
+        // MULXU.W / DIVXU.W Rs,ERd
+        TEST("MULXU.W", "R0, ER0",          0x5200|(0x0<<4)|0);
+        TEST("MULXU.W", "R3, ER5",          0x5200|(0x3<<4)|5);
+        TEST("MULXU.W", "E2, ER7",          0x5200|(0xA<<4)|7);
+        TEST("DIVXU.W", "R0, ER1",          0x5300|(0x0<<4)|1);
+        TEST("DIVXU.W", "E7, ER7",          0x5300|(0xF<<4)|7);
+        UNKN(                               0x5200|(0x0<<4)|0x8);  // bit 3 of ERd reserved
+
+        // MULXS / DIVXS via 0x01C0 / 0x01D0 prefix
+        TEST("MULXS.B", "R0H, R0",          0x01C0, 0x5000|(0x0<<4)|0x0);
+        TEST("MULXS.B", "R3H, R5",          0x01C0, 0x5000|(0x3<<4)|0x5);
+        TEST("MULXS.W", "R0, ER0",          0x01C0, 0x5200|(0x0<<4)|0);
+        TEST("MULXS.W", "E7, ER7",          0x01C0, 0x5200|(0xF<<4)|7);
+        TEST("DIVXS.B", "R0H, R0",          0x01D0, 0x5100|(0x0<<4)|0x0);
+        TEST("DIVXS.W", "R3, ER2",          0x01D0, 0x5300|(0x3<<4)|2);
+    }
 }
 
 void test_logic() {
@@ -267,12 +424,52 @@ void test_logic() {
     // NOT Rd (0x17, bit7=0): byte2=Rd nibble (bits[6:4] must be 0)
     TEST("NOT", "R0H", 0x1700|0x0);
     TEST("NOT", "R7L", 0x1700|0xF);
-    UNKN(0x1700|0x10);        // NOT: bits[6:4] of byte2 must be 0
+    if (!is_h8300h())
+        UNKN(0x1700|0x10);    // NOT: bits[6:4] must be 0 (H8/300H reuses for NOT.W)
 
     // OR/XOR/AND #imm,Rd (0xC0-0xEF): byte1=0x?0|(Rd nibble), byte2=imm8
     TEST("OR",  "#H'FF, R7L", 0xC000|(0xF<<8)|0xFF);
     TEST("XOR", "#H'AA, R5H", 0xD000|(0x5<<8)|0xAA);
     TEST("AND", "#H'F0, R0H", 0xE000|(0x0<<8)|0xF0);
+
+    if (is_h8300h()) {
+        // NOT.W / NOT.L Rd
+        TEST("NOT.W",  "R0",                0x1710|0x0);
+        TEST("NOT.W",  "E5",                0x1710|0xD);
+        TEST("NOT.L",  "ER0",               0x1730|0);
+        TEST("NOT.L",  "ER7",               0x1730|7);
+        UNKN(                               0x1730|0x8);  // bit 3 of ERd reserved
+
+        // EXTU.W / EXTU.L Rd  (zero-extend)
+        TEST("EXTU.W", "R0",                0x1750|0x0);
+        TEST("EXTU.W", "E7",                0x1750|0xF);
+        TEST("EXTU.L", "ER4",               0x1770|4);
+        // EXTS.W / EXTS.L Rd  (sign-extend)
+        TEST("EXTS.W", "R1",                0x17D0|0x1);
+        TEST("EXTS.L", "ER6",               0x17F0|6);
+
+        // AND.W / OR.W / XOR.W Rs,Rd
+        TEST("AND.W",  "R0, R1",            0x6600|(0x0<<4)|0x1);
+        TEST("AND.W",  "E0, R1",            0x6600|(0x8<<4)|0x1);
+        TEST("OR.W",   "R0, E7",            0x6400|(0x0<<4)|0xF);
+        TEST("XOR.W",  "E0, E7",            0x6500|(0x8<<4)|0xF);
+        // AND.W / OR.W / XOR.W #imm16, Rd
+        TEST("AND.W",  "#H'1234, R0",       0x7960|0x0, 0x1234);
+        TEST("AND.W",  "#H'FFFF, E7",       0x7960|0xF, 0xFFFF);
+        TEST("OR.W",   "#H'1234, R0",       0x7940|0x0, 0x1234);
+        TEST("XOR.W",  "#H'1234, R0",       0x7950|0x0, 0x1234);
+
+        // OR.L / XOR.L / AND.L #imm32, ERd
+        TEST("OR.L",   "#H'AABBCCDD, ER3",  0x7A40|3, 0xAABB, 0xCCDD);
+        TEST("XOR.L",  "#H'5A5A5A5A, ER4",  0x7A50|4, 0x5A5A, 0x5A5A);
+        TEST("AND.L",  "#H'F0F0F0F0, ER5",  0x7A60|5, 0xF0F0, 0xF0F0);
+
+        // AND.L / OR.L / XOR.L reg-reg via 0x01F0 prefix
+        TEST("AND.L",  "ER0, ER1",          0x01F0, 0x6600|(0<<4)|1);
+        TEST("AND.L",  "ER5, ER6",          0x01F0, 0x6600|(5<<4)|6);
+        TEST("OR.L",   "ER0, ER1",          0x01F0, 0x6400|(0<<4)|1);
+        TEST("XOR.L",  "ER3, ER4",          0x01F0, 0x6500|(3<<4)|4);
+    }
 }
 
 void test_shift_rotate() {
@@ -280,11 +477,13 @@ void test_shift_rotate() {
     // bit7=0: SHLL/SHLR/ROTXL/ROTXR; bit7=1: SHAL/SHAR/ROTL/ROTR
     TEST("SHLL",  "R0H", 0x1000|0x0);
     TEST("SHLL",  "R7L", 0x1000|0xF);
-    UNKN(0x1000|0x10);        // SHLL: bits[6:4] of byte2 must be 0
+    if (!is_h8300h())
+        UNKN(0x1000|0x10);    // SHLL: bits[6:4] must be 0 (H8/300H reuses for SHLL.W)
 
     TEST("SHAL",  "R0H", 0x1080|0x0);
     TEST("SHAL",  "R5L", 0x1080|0xD);
-    UNKN(0x1080|0x10);        // SHAL: bits[6:4] of byte2 must be 0
+    if (!is_h8300h())
+        UNKN(0x1080|0x10);    // SHAL: bits[6:4] must be 0 (H8/300H reuses for SHAL.W)
 
     TEST("SHLR",  "R0H", 0x1100|0x0);
     TEST("SHAR",  "R3L", 0x1180|0xB);
@@ -294,6 +493,26 @@ void test_shift_rotate() {
 
     TEST("ROTXR", "R0H", 0x1300|0x0);
     TEST("ROTR",  "R7L", 0x1380|0xF);
+
+    if (is_h8300h()) {
+        // Shift / rotate .W and .L
+        TEST("SHLL.W",  "R0",  0x1010|0x0);
+        TEST("SHLL.L",  "ER0", 0x1030|0);
+        TEST("SHAL.W",  "R3",  0x1090|0x3);
+        TEST("SHAL.L",  "ER5", 0x10B0|5);
+        TEST("SHLR.W",  "E0",  0x1110|0x8);
+        TEST("SHLR.L",  "ER7", 0x1130|7);
+        TEST("SHAR.W",  "R7",  0x1190|0x7);
+        TEST("SHAR.L",  "ER1", 0x11B0|1);
+        TEST("ROTXL.W", "R0",  0x1210|0x0);
+        TEST("ROTXL.L", "ER2", 0x1230|2);
+        TEST("ROTL.W",  "R4",  0x1290|0x4);
+        TEST("ROTL.L",  "ER3", 0x12B0|3);
+        TEST("ROTXR.W", "R0",  0x1310|0x0);
+        TEST("ROTXR.L", "ER6", 0x1330|6);
+        TEST("ROTR.W",  "E6",  0x1390|0xE);
+        TEST("ROTR.L",  "ER0", 0x13B0|0);
+    }
 }
 
 void test_bit_ops() {
@@ -315,21 +534,21 @@ void test_bit_ops() {
     TEST("BTST", "#1, R0H", 0x7300|(1<<4)|0x0);
 
     // BSET/BNOT/BCLR/BTST Rs,@Rd (0x60-0x63): byte2=(Rd<<4) byte4=(Rs<<4)
-    TEST("BSET", "R0H, @R0", 0x7D00, 0x6000|(0x0<<4));
-    TEST("BSET", "R2H, @R1", 0x7D10, 0x6000|(0x2<<4));
-    TEST("BNOT", "R0H, @R2", 0x7D20, 0x6100|(0x0<<4));
-    TEST("BNOT", "R3L, @R3", 0x7D30, 0x6100|(0xB<<4));
-    TEST("BCLR", "R0H, @R4", 0x7D40, 0x6200|(0x0<<4));
-    TEST("BCLR", "R7L, @R5", 0x7D50, 0x6200|(0xF<<4));
-    TEST("BTST", "R0H, @R6", 0x7C60, 0x6300|(0x0<<4));
-    TEST("BTST", "R5H, @SP", 0x7C70, 0x6300|(0x5<<4));
+    TEST("BSET", AREG("R0H, @R0", "R0H, @ER0"), 0x7D00, 0x6000|(0x0<<4));
+    TEST("BSET", AREG("R2H, @R1", "R2H, @ER1"), 0x7D10, 0x6000|(0x2<<4));
+    TEST("BNOT", AREG("R0H, @R2", "R0H, @ER2"), 0x7D20, 0x6100|(0x0<<4));
+    TEST("BNOT", AREG("R3L, @R3", "R3L, @ER3"), 0x7D30, 0x6100|(0xB<<4));
+    TEST("BCLR", AREG("R0H, @R4", "R0H, @ER4"), 0x7D40, 0x6200|(0x0<<4));
+    TEST("BCLR", AREG("R7L, @R5", "R7L, @ER5"), 0x7D50, 0x6200|(0xF<<4));
+    TEST("BTST", AREG("R0H, @R6", "R0H, @ER6"), 0x7C60, 0x6300|(0x0<<4));
+    TEST("BTST", "R5H, @SP",                    0x7C70, 0x6300|(0x5<<4));
 
     // BSET/BNOT/BCLR/BTST #bit,@Rd (0x70-0x73): byte2=(Rd<<4) byte4=(bit<<4)
-    TEST("BSET", "#0, @SP", 0x7D70, 0x7000|(0<<4));
-    TEST("BSET", "#7, @R6", 0x7D60, 0x7000|(7<<4));
-    TEST("BNOT", "#3, @R5", 0x7D50, 0x7100|(3<<4));
-    TEST("BCLR", "#5, @R4", 0x7D40, 0x7200|(5<<4));
-    TEST("BTST", "#1, @R3", 0x7C30, 0x7300|(1<<4));
+    TEST("BSET", "#0, @SP",                  0x7D70, 0x7000|(0<<4));
+    TEST("BSET", AREG("#7, @R6", "#7, @ER6"), 0x7D60, 0x7000|(7<<4));
+    TEST("BNOT", AREG("#3, @R5", "#3, @ER5"), 0x7D50, 0x7100|(3<<4));
+    TEST("BCLR", AREG("#5, @R4", "#5, @ER4"), 0x7D40, 0x7200|(5<<4));
+    TEST("BTST", AREG("#1, @R3", "#1, @ER3"), 0x7C30, 0x7300|(1<<4));
 
     // BSET/BNOT/BCLR/BTST Rs,@aa:8 (0x60-0x63): byte2=aa:8 byte4=(Rs<<4)
     TEST("BSET", "R0H, @H'FF00:8", 0x7F00, 0x6000|(0x0<<4));
@@ -367,22 +586,22 @@ void test_bit_ops() {
     TEST("BILD",  "#0, R7L", 0x7780|(0<<4)|0xF);
 
     // BST/BIST #bit,@Rd (0x67): byte2=Rd byte4=(bit<<4)(bit7=0→BST, bit7=1→BIST)
-    TEST("BST",  "#0, @R0", 0x7D00, 0x6700|(0<<4));
-    TEST("BST",  "#7, @R5", 0x7D50, 0x6700|(7<<4));
-    TEST("BIST", "#1, @R2", 0x7D20, 0x6780|(1<<4));
-    TEST("BIST", "#3, @R6", 0x7D60, 0x6780|(3<<4));
+    TEST("BST",  AREG("#0, @R0", "#0, @ER0"), 0x7D00, 0x6700|(0<<4));
+    TEST("BST",  AREG("#7, @R5", "#7, @ER5"), 0x7D50, 0x6700|(7<<4));
+    TEST("BIST", AREG("#1, @R2", "#1, @ER2"), 0x7D20, 0x6780|(1<<4));
+    TEST("BIST", AREG("#3, @R6", "#3, @ER6"), 0x7D60, 0x6780|(3<<4));
 
     // BOR/BIOR/BXOR/BIXOR/BAND/BIAND/BLD/BILD #bit,@Rd (0x74-0x77):
     // byte2=Rd byte4=(bit<<4) (bit7=0→Bxx, bit7=1→BIxx)
-    TEST("BOR",   "#0, @R0", 0x7C00, 0x7400|(0<<4));
-    TEST("BOR",   "#5, @R3", 0x7C30, 0x7400|(5<<4));
-    TEST("BIOR",  "#2, @R1", 0x7C10, 0x7480|(2<<4));
-    TEST("BXOR",  "#4, @R0", 0x7C00, 0x7500|(4<<4));
-    TEST("BIXOR", "#1, @SP", 0x7C70, 0x7580|(1<<4));
-    TEST("BAND",  "#6, @R2", 0x7C20, 0x7600|(6<<4));
-    TEST("BIAND", "#3, @R4", 0x7C40, 0x7680|(3<<4));
-    TEST("BLD",   "#7, @R0", 0x7C00, 0x7700|(7<<4));
-    TEST("BILD",  "#0, @SP", 0x7C70, 0x7780|(0<<4));
+    TEST("BOR",   AREG("#0, @R0", "#0, @ER0"), 0x7C00, 0x7400|(0<<4));
+    TEST("BOR",   AREG("#5, @R3", "#5, @ER3"), 0x7C30, 0x7400|(5<<4));
+    TEST("BIOR",  AREG("#2, @R1", "#2, @ER1"), 0x7C10, 0x7480|(2<<4));
+    TEST("BXOR",  AREG("#4, @R0", "#4, @ER0"), 0x7C00, 0x7500|(4<<4));
+    TEST("BIXOR", "#1, @SP",                   0x7C70, 0x7580|(1<<4));
+    TEST("BAND",  AREG("#6, @R2", "#6, @ER2"), 0x7C20, 0x7600|(6<<4));
+    TEST("BIAND", AREG("#3, @R4", "#3, @ER4"), 0x7C40, 0x7680|(3<<4));
+    TEST("BLD",   AREG("#7, @R0", "#7, @ER0"), 0x7C00, 0x7700|(7<<4));
+    TEST("BILD",  "#0, @SP",                   0x7C70, 0x7780|(0<<4));
 
     // BST/BIST #bit,@aa:8 (0x67): byte2=aa:8 byte4=(bit<<4)(bit7=0→BST, bit7=1→BIST)
     TEST("BST",  "#0, @H'FF00:8", 0x7F00, 0x6700|(0<<4));
@@ -440,13 +659,24 @@ void test_branch() {
     ATEST(0x1000, "BGE", "H'1012", 0x4C00|0x10);
     ATEST(0x1000, "BLT", "H'0FF4", 0x4D00|0xF2);
     ATEST(0x1000, "BGT", "H'0FFA", 0x4E00|0xF8);
+
+    if (is_h8300h()) {
+        // Long branches BRA/Bcc/BSR :16 (post-instruction PC + disp16)
+        ATEST(0x1000, "BRA", "H'1234", 0x5800, 0x1234 - 0x1004);
+        ATEST(0x1000, "BHI", "H'1234", 0x5820, 0x1234 - 0x1004);
+        ATEST(0x1000, "BEQ", "H'1234", 0x5870, 0x1234 - 0x1004);
+        ATEST(0x1000, "BLE", "H'1234", 0x58F0, 0x1234 - 0x1004);
+        ATEST(0x1000, "BSR", "H'1234", 0x5C00, 0x1234 - 0x1004);
+        // Backward branch (negative disp16)
+        ATEST(0x1000, "BRA", "H'0FF0", 0x5800, 0xFFEC);
+    }
 }
 
 void test_jump() {
     // JMP @Rn (0x59): byte2=(Rn3<<4)
-    TEST("JMP", "@R0", 0x5900|(0<<4));
-    TEST("JMP", "@R5", 0x5900|(5<<4));
-    TEST("JMP", "@SP", 0x5900|(7<<4));
+    TEST("JMP", AREG("@R0", "@ER0"), 0x5900|(0<<4));
+    TEST("JMP", AREG("@R5", "@ER5"), 0x5900|(5<<4));
+    TEST("JMP", "@SP",               0x5900|(7<<4));
 
     // JMP @abs16 (0x5A): byte2 ignored, addr from next word
     TEST("JMP", "@H'1234", 0x5A00, 0x1234);
@@ -457,51 +687,139 @@ void test_jump() {
     TEST("JMP", "@@H'00FF", 0x5B00|0xFF);
 
     // JSR @Rn (0x5D): byte2=(Rn3<<4)
-    TEST("JSR", "@R0", 0x5D00|(0<<4));
-    TEST("JSR", "@R3", 0x5D00|(3<<4));
+    TEST("JSR", AREG("@R0", "@ER0"), 0x5D00|(0<<4));
+    TEST("JSR", AREG("@R3", "@ER3"), 0x5D00|(3<<4));
 
     // JSR @abs16 (0x5E)
     TEST("JSR", "@H'5678", 0x5E00, 0x5678);
 
     // JSR @@abs8 (0x5F): byte2=abs8
     TEST("JSR", "@@H'0080", 0x5F00|0x80);
+
+    if (is_h8300h()) {
+        // JMP / JSR @aa:24 (high byte 0 falls through to @aa:16 entry; non-zero
+        // high byte routes here)
+        TEST("JMP", "@H'FFFFE0:24", 0x5AFF, 0xFFE0);
+        TEST("JSR", "@H'FFFFE0:24", 0x5EFF, 0xFFE0);
+    }
+}
+
+// {byte-1, mask, canonical byte-2}: flip each constrained bit of byte 2.
+struct IllegalCase { uint8_t b1, mask, value; };
+
+#define WALK_ILLEGAL_CASES(cases)                                              \
+    for (const auto &c : cases) {                                              \
+        for (uint_fast8_t pos = 0; pos < 8; pos++) {                           \
+            const uint8_t bit = static_cast<uint8_t>(1u << pos);               \
+            if (!(c.mask & bit))                                               \
+                continue;                                                      \
+            const uint8_t b2 = static_cast<uint8_t>(c.value ^ bit);            \
+            UNKN(static_cast<Config::opcode_t>((c.b1 << 8) | b2));             \
+        }                                                                      \
+    }
+
+// Constraints identical on H8/300 and H8/300H.
+void test_illegal_common() {
+    // 0x01 SLEEP and 0x59/0x5D JMP/JSR @Rn are NOT in this shared set
+    // because byte-2 flips on H8/300H land on valid prefixes
+    // (0x0100/0x0140/0x01C0/0x01D0/0x01F0) or ERn (E0..E7) operands.
+    static constexpr IllegalCase shared[] = {
+        { 0x00, 0xFF, 0x00 },   // NOP
+        { 0x02, 0xF0, 0x00 },   // STC.B CCR, Rd
+        { 0x03, 0xF0, 0x00 },   // LDC.B Rs, CCR
+        { 0x54, 0xFF, 0x70 },   // RTS
+        { 0x56, 0xFF, 0x70 },   // RTE
+        { 0x70, 0x80, 0x00 },   // BSET #bit, Rd
+        { 0x71, 0x80, 0x00 },   // BNOT #bit, Rd
+        { 0x72, 0x80, 0x00 },   // BCLR #bit, Rd
+        { 0x73, 0x80, 0x00 },   // BTST #bit, Rd
+        { 0x7B, 0xFF, 0x5C },   // EEPMOV
+        { 0x7C, 0x8F, 0x00 },   // bit-op @Rn read   (prefix)
+        { 0x7D, 0x8F, 0x00 },   // bit-op @Rn write  (prefix)
+    };
+    WALK_ILLEGAL_CASES(shared);
+
+    // EEPMOV  (prefix 0x7B5C, second word = 0x598F).
+    for (uint_fast8_t pos = 0; pos < 16; pos++)
+        UNKN(0x7B5C, static_cast<Config::opcode_t>(0x598F ^ (1u << pos)));
+
+    // bit-op read second word: BTST Rn,@ / BTST #i,@ / BOR / BIOR / BXOR /
+    // BIXOR / BAND / BIAND / BLD / BILD.
+    auto valid_read = [](uint16_t w) {
+        return ((w & 0xFF0F) == 0x6300) ||
+               ((w & 0xFF8F) == 0x7300) ||
+               ((w & 0xFF0F) == 0x7400) ||
+               ((w & 0xFF0F) == 0x7500) ||
+               ((w & 0xFF0F) == 0x7600) ||
+               ((w & 0xFF0F) == 0x7700);
+    };
+    static constexpr uint16_t canon_read[] = {
+            0x6300, 0x7300, 0x7400, 0x7500, 0x7600, 0x7700,
+    };
+    static constexpr uint16_t read_prefixes[] = {0x7C00, 0x7E00};   // @Rn / @aa:8
+    for (const auto prefix : read_prefixes) {
+        for (const auto canon : canon_read) {
+            for (uint_fast8_t pos = 0; pos < 16; pos++) {
+                const uint16_t flipped = canon ^ static_cast<uint16_t>(1u << pos);
+                if (!valid_read(flipped))
+                    UNKN(prefix, static_cast<Config::opcode_t>(flipped));
+            }
+        }
+    }
+
+    // bit-op write second word: BSET / BNOT / BCLR Rn,@ /
+    // BST / BIST / BSET / BNOT / BCLR #i,@.
+    auto valid_write = [](uint16_t w) {
+        return ((w & 0xFF0F) == 0x6000) ||
+               ((w & 0xFF0F) == 0x6100) ||
+               ((w & 0xFF0F) == 0x6200) ||
+               ((w & 0xFF8F) == 0x6700) ||
+               ((w & 0xFF8F) == 0x6780) ||
+               ((w & 0xFF8F) == 0x7000) ||
+               ((w & 0xFF8F) == 0x7100) ||
+               ((w & 0xFF8F) == 0x7200);
+    };
+    static constexpr uint16_t canon_write[] = {
+            0x6000, 0x6100, 0x6200, 0x6700, 0x6780, 0x7000, 0x7100, 0x7200,
+    };
+    static constexpr uint16_t write_prefixes[] = {0x7D00, 0x7F00};  // @Rn / @aa:8
+    for (const auto prefix : write_prefixes) {
+        for (const auto canon : canon_write) {
+            for (uint_fast8_t pos = 0; pos < 16; pos++) {
+                const uint16_t flipped = canon ^ static_cast<uint16_t>(1u << pos);
+                if (!valid_write(flipped))
+                    UNKN(prefix, static_cast<Config::opcode_t>(flipped));
+            }
+        }
+    }
 }
 
 void test_illegal_h8300() {
     // First-byte slots with no H8/300 instruction. Any byte-2 value is
     // illegal; one spot-check per slot is enough to lock in coverage.
     static constexpr uint8_t illegal_first[] = {
-        0x52, 0x53,                     // gap between DIVXU and RTS
-        0x57,                           // no TRAPA in H8/300 (added H8/300H)
-        0x58,                           // no long Bcc :16 (added H8/300H)
-        0x5C,                           // no long BSR :16 (added H8/300H)
-        0x64, 0x65, 0x66,               // no AND.L / OR.L / XOR.L (added H8/300H)
-        0x78,                           // no @(d:24,ERn) prefix (added H8/300H)
-        0x7A,                           // no MOV.L #imm32 (added H8/300H)
+        0x52, 0x53,                     // (H8/300H: MULXU.W / DIVXU.W)
+        0x57,                           // (H8/300H: TRAPA)
+        0x58,                           // (H8/300H: long Bcc :16)
+        0x5C,                           // (H8/300H: long BSR :16)
+        0x64, 0x65, 0x66,               // (H8/300H: OR.W / XOR.W / AND.W Rs,Rd)
+        0x78,                           // (H8/300H: @(d:24,ERn) prefix)
+        0x7A,                           // (H8/300H: MOV.L #imm32 prefix)
     };
     for (const auto b1 : illegal_first)
         UNKN(static_cast<Config::opcode_t>(b1 << 8));
 
-    // For each "byte-1 fixes the opcode, byte-2 has constrained bits"
-    // encoding: flip every constrained bit of byte 2 in turn and check it
-    // disassembles as unknown. Covers each reserved-bit assertion without
-    // enumerating every byte-2 value.
-    // The dual-canonical entries (SHLL/SHAL, SHLR/SHAR, ROTXL/ROTL,
-    // ROTXR/ROTR, NOT/NEG) list both canonical byte-2 values; a single
-    // {b1, mask, value} only flips bits around one canonical and would miss
-    // the other family's reserved-bit violations.
-    struct Case { uint8_t b1, mask, value; };
-    static constexpr Case cases[] = {
-        { 0x00, 0xFF, 0x00 },   // NOP:    byte2 = 0x00 only
-        { 0x01, 0xFF, 0x80 },   // SLEEP:  byte2 = 0x80 only
-        { 0x02, 0xF0, 0x00 },   // STC.B CCR,Rd:  byte2 = 0|Rd nibble
-        { 0x03, 0xF0, 0x00 },   // LDC.B Rs,CCR:  byte2 = 0|Rs nibble
-        { 0x09, 0x88, 0x00 },   // ADD.W Rs,Rd:   byte2 bits[7] and [3] must be 0
-        { 0x0A, 0xF0, 0x00 },   // INC.B Rd:      byte2 high nibble = 0
-        { 0x0B, 0x78, 0x00 },   // ADDS.W #1/#2,Rd: bits[6:4] and [3] must be 0
+    test_illegal_common();
+
+    // H8/300-specific byte-2 constraints.
+    static constexpr IllegalCase cases[] = {
+        { 0x01, 0xFF, 0x80 },   // SLEEP (H8/300H reuses 0x01 byte-2 for prefixes)
+        { 0x09, 0x88, 0x00 },   // ADD.W Rs,Rd
+        { 0x0A, 0xF0, 0x00 },   // INC.B Rd
+        { 0x0B, 0x78, 0x00 },   // ADDS #1/#2, Rd
         { 0x0D, 0x88, 0x00 },   // MOV.W Rs,Rd
-        { 0x0F, 0xF0, 0x00 },   // DAA.B Rd
-        { 0x10, 0x70, 0x00 },   // SHLL.B Rd: bits[6:4] = 0
+        { 0x0F, 0xF0, 0x00 },   // DAA Rd
+        { 0x10, 0x70, 0x00 },   // SHLL.B Rd
         { 0x10, 0x70, 0x80 },   // SHAL.B Rd
         { 0x11, 0x70, 0x00 },   // SHLR.B Rd
         { 0x11, 0x70, 0x80 },   // SHAR.B Rd
@@ -513,152 +831,334 @@ void test_illegal_h8300() {
         { 0x17, 0x70, 0x80 },   // NEG.B Rd
         { 0x19, 0x88, 0x00 },   // SUB.W Rs,Rd
         { 0x1A, 0xF0, 0x00 },   // DEC.B Rd
-        { 0x1B, 0x78, 0x00 },   // SUBS.W #1/#2,Rd
+        { 0x1B, 0x78, 0x00 },   // SUBS #1/#2, Rd
         { 0x1D, 0x88, 0x00 },   // CMP.W Rs,Rd
-        { 0x1F, 0xF0, 0x00 },   // DAS.B Rd
-        { 0x50, 0x08, 0x00 },   // MULXU.B Rs8,Rd16: bit 3 of Rd (16-bit, 3-bit) reserved
+        { 0x1F, 0xF0, 0x00 },   // DAS Rd
+        { 0x50, 0x08, 0x00 },   // MULXU.B Rs8,Rd16
         { 0x51, 0x08, 0x00 },   // DIVXU.B Rs8,Rd16
-        { 0x54, 0xFF, 0x70 },   // RTS:  byte2 = 0x70 only
-        { 0x56, 0xFF, 0x70 },   // RTE:  byte2 = 0x70 only
-        { 0x59, 0x8F, 0x00 },   // JMP @Rn: byte2 = Rn3<<4 (bit[7] and bits[3:0] = 0)
-        { 0x5A, 0xFF, 0x00 },   // JMP @aa:16: byte2 = 0x00 only
-        { 0x5D, 0x8F, 0x00 },   // JSR @Rn
-        { 0x5E, 0xFF, 0x00 },   // JSR @aa:16: byte2 = 0x00 only
-        // MOV.W register pointers: Rd is a 16-bit register (3-bit field on
-        // H8/300), so bit 3 of byte 2 is reserved across both load (bit 7 =
-        // 0) and store (bit 7 = 1) canonical forms. 0x69 / 0x6D are 2-byte
-        // instructions so the Rd check fires before any additional read;
-        // 0x6B / 0x6F / 0x79 read trailing bytes first and are handled
-        // separately below.
-        { 0x69, 0x08, 0x00 },   // MOV.W @Rs, Rd  (load)
-        { 0x69, 0x08, 0x80 },   // MOV.W Rs, @Rd  (store)
-        { 0x6A, 0x30, 0x00 },   // MOV.B @aa:16, Rd  (load)
+        { 0x59, 0x8F, 0x00 },   // JMP @Rn (H8/300H also allows ERn)
+        { 0x5A, 0xFF, 0x00 },   // JMP @aa:16
+        { 0x5D, 0x8F, 0x00 },   // JSR @Rn (H8/300H also allows ERn)
+        { 0x5E, 0xFF, 0x00 },   // JSR @aa:16
+        { 0x69, 0x08, 0x00 },   // MOV.W @Rs, Rd
+        { 0x69, 0x08, 0x80 },   // MOV.W Rs, @Rd
+        { 0x6A, 0x30, 0x00 },   // MOV.B @aa:16, Rd
         { 0x6A, 0x30, 0x40 },   // MOVFPE @aa:16, Rd
-        { 0x6A, 0x30, 0x80 },   // MOV.B Rs, @aa:16  (store)
+        { 0x6A, 0x30, 0x80 },   // MOV.B Rs, @aa:16
         { 0x6A, 0x30, 0xC0 },   // MOVTPE Rs, @aa:16
-        { 0x6B, 0x70, 0x00 },   // MOV.W @aa:16, Rd  (load): bits[6:4] = 0
-        { 0x6B, 0x70, 0x80 },   // MOV.W Rs, @aa:16  (store)
-        { 0x6D, 0x08, 0x00 },   // MOV.W @Rs+, Rd / POP   (Rs = SP)
+        { 0x6B, 0x70, 0x00 },   // MOV.W @aa:16, Rd
+        { 0x6B, 0x70, 0x80 },   // MOV.W Rs, @aa:16
+        { 0x6D, 0x08, 0x00 },   // MOV.W @Rs+, Rd / POP
         { 0x6D, 0x08, 0x80 },   // MOV.W Rs, @-Rd / PUSH
-        // MOV.W #imm16, Rd: byte 2 high nibble must be 0; bit 3 of Rd
-        // also reserved, but that needs the imm16 trailer (handled below).
-        { 0x79, 0xF0, 0x00 },
-        // BSET/BNOT/BCLR/BTST #bit, Rd: byte 2 bit 7 reserved (bit field
-        // is 3-bit).
-        { 0x70, 0x80, 0x00 },
-        { 0x71, 0x80, 0x00 },
-        { 0x72, 0x80, 0x00 },
-        { 0x73, 0x80, 0x00 },
-        { 0x7B, 0xFF, 0x5C },   // EEPMOV: byte2 = 0x5C only
-        { 0x7C, 0x8F, 0x00 },   // bit-op @Rd (read):  byte2 = 0|Rd3<<4|0
-        { 0x7D, 0x8F, 0x00 },   // bit-op @Rd (write): byte2 = 0|Rd3<<4|0
+        { 0x79, 0xF0, 0x00 },   // MOV.W #imm16, Rd
     };
-    for (const auto &c : cases) {
-        for (uint_fast8_t pos = 0; pos < 8; pos++) {
-            const uint8_t bit = static_cast<uint8_t>(1u << pos);
-            if (!(c.mask & bit))
-                continue;  // bit unconstrained, nothing to verify
-            const uint8_t b2 = static_cast<uint8_t>(c.value ^ bit);
-            UNKN(static_cast<Config::opcode_t>((c.b1 << 8) | b2));
-        }
-    }
+    WALK_ILLEGAL_CASES(cases);
 
-    // 4-byte instructions with bit-3-of-Rd reserved: the disasm reads the
-    // trailing word (abs16 / disp16 / imm16) before reaching the Rd check,
-    // so we supply that trailer explicitly. The mnemonic decode then errors
-    // UNKNOWN once it sees Rd = 8..F (16-bit Rd is 3-bit on H8/300).
-    UNKN(0x6B08, 0x0000);   // MOV.W @aa:16, Rd  bit 3 of Rd (load)
-    UNKN(0x6B88, 0x0000);   // MOV.W Rs, @aa:16  bit 3 of Rd (store)
-    UNKN(0x6F08, 0x0000);   // MOV.W @(d:16,Rs), Rd  (load)
-    UNKN(0x6F88, 0x0000);   // MOV.W Rs, @(d:16,Rd)  (store)
+    // 4-byte forms: bit-3-of-Rd flip lands past the abs16/disp16/imm16 read,
+    // so supply the trailing word.
+    UNKN(0x6B08, 0x0000);   // MOV.W @aa:16, Rd
+    UNKN(0x6B88, 0x0000);   // MOV.W Rs, @aa:16
+    UNKN(0x6F08, 0x0000);   // MOV.W @(d:16,Rs), Rd
+    UNKN(0x6F88, 0x0000);   // MOV.W Rs, @(d:16,Rd)
     UNKN(0x7908, 0x0000);   // MOV.W #imm16, Rd
 
-    // Two-word opcodes: walk single-bit flips of each canonical valid
-    // second word, skipping any flip that happens to land on another
-    // valid template (e.g., 0x6300 -> 0x7300 is still valid in 0x7C00).
+}
 
-    // EEPMOV (0x7B5C ...): second word must be exactly 0x598F.
+void test_illegal_h8300hn() {
+    test_illegal_common();
+
+    // 0x0A / 0x0F / 0x1A / 0x1F: .B (high nibble 0) paired with .L
+    // (high nibble 0x80, ERd 3-bit so bit 3 reserved).
+    //   0x0A INC.B Rd  | ADD.L ERs,ERd
+    //   0x0F DAA Rd    | MOV.L ERs,ERd
+    //   0x1A DEC.B Rd  | SUB.L ERs,ERd
+    //   0x1F DAS Rd    | CMP.L ERs,ERd
+    auto valid_b_l_pair = [](uint16_t w) {
+        const uint8_t b2 = static_cast<uint8_t>(w & 0xFF);
+        if ((b2 & 0xF0) == 0x00) return true;   // .B  Rd (any low nibble)
+        // .L: bit 7 = 1, bit 3 (ERd) = 0; ERs lives in bits[6:4] (3-bit 0..7).
+        if ((b2 & 0x88) == 0x80) return true;
+        return false;
+    };
+    static constexpr uint16_t canon_b_l_pair[] = {
+            0x0A00, 0x0A80, 0x0F00, 0x0F80,
+            0x1A00, 0x1A80, 0x1F00, 0x1F80,
+    };
+    for (const auto canon : canon_b_l_pair) {
+        for (uint_fast8_t pos = 0; pos < 8; pos++) {
+            const uint16_t flipped = canon ^ static_cast<uint16_t>(1u << pos);
+            if (!valid_b_l_pair(flipped))
+                UNKN(static_cast<Config::opcode_t>(flipped));
+        }
+    }
+
+    static constexpr IllegalCase cases[] = {
+        { 0x52, 0x08, 0x00 },   // MULXU.W Rs, ERd
+        { 0x53, 0x08, 0x00 },   // DIVXU.W Rs, ERd
+        // 0x6A MOV.B @aa:16/24, MOVFPE, MOVTPE — 6 templates, bit 4 reserved.
+        { 0x6A, 0x10, 0x00 },   // MOV.B @aa:16, Rd
+        { 0x6A, 0x10, 0x20 },   // MOV.B @aa:24, Rd
+        { 0x6A, 0x10, 0x40 },   // MOVFPE @aa:16, Rd
+        { 0x6A, 0x10, 0x80 },   // MOV.B Rs, @aa:16
+        { 0x6A, 0x10, 0xA0 },   // MOV.B Rs, @aa:24
+        { 0x6A, 0x10, 0xC0 },   // MOVTPE Rs, @aa:16
+        // 0x6B MOV.W @aa:16/24 — 4 templates, bits 4 and 6 reserved.
+        { 0x6B, 0x50, 0x00 },   // MOV.W @aa:16, Rd
+        { 0x6B, 0x50, 0x20 },   // MOV.W @aa:24, Rd
+        { 0x6B, 0x50, 0x80 },   // MOV.W Rs, @aa:16
+        { 0x6B, 0x50, 0xA0 },   // MOV.W Rs, @aa:24
+    };
+    WALK_ILLEGAL_CASES(cases);
+
+    // 0x79xx: MOV.W / ADD.W / CMP.W / SUB.W / OR.W / XOR.W / AND.W #imm16, Rd.
+    // Byte-2 high nibble selects op (0..6); bit 7 reserved and bits 6:4 = 7
+    // is illegal.
+    auto valid_79 = [](uint16_t w) {
+        const uint8_t b2 = static_cast<uint8_t>(w & 0xFF);
+        if (b2 & 0x80) return false;
+        return (b2 & 0x70) <= 0x60;
+    };
+    static constexpr uint16_t canon_79[] = {
+            0x7900, 0x7910, 0x7920, 0x7930, 0x7940, 0x7950, 0x7960,
+    };
+    for (const auto canon : canon_79) {
+        for (uint_fast8_t pos = 0; pos < 8; pos++) {
+            const uint16_t flipped = canon ^ static_cast<uint16_t>(1u << pos);
+            if (!valid_79(flipped))
+                UNKN(static_cast<Config::opcode_t>(flipped));
+        }
+    }
+
+    // 0x17xx family: NOT / EXTU / NEG / EXTS in .B / .W / .L variants share
+    // the byte-1 opcode; the byte-2 high nibble selects the operation, and
+    // the .L variants require low-nibble bit 3 = 0 (ERd is a 3-bit field).
+    auto valid_17 = [](uint16_t w) {
+        const uint8_t b2 = static_cast<uint8_t>(w & 0xFF);
+        switch (b2 & 0xF0) {
+        case 0x00: case 0x80:                              // NOT.B / NEG.B
+        case 0x10: case 0x50: case 0x90: case 0xD0:        // .W: R0..E7
+            return true;
+        case 0x30: case 0x70: case 0xB0: case 0xF0:        // .L: ERd 3-bit
+            return (b2 & 0x08) == 0;
+        default:                                           // 0x20/40/60/A0/C0/E0
+            return false;
+        }
+    };
+    static constexpr uint16_t canon_17[] = {
+            0x1700, 0x1710, 0x1730, 0x1750, 0x1770,
+            0x1780, 0x1790, 0x17B0, 0x17D0, 0x17F0,
+    };
+    for (const auto canon : canon_17) {
+        for (uint_fast8_t pos = 0; pos < 8; pos++) {
+            const uint16_t flipped = canon ^ static_cast<uint16_t>(1u << pos);
+            if (!valid_17(flipped))
+                UNKN(static_cast<Config::opcode_t>(flipped));
+        }
+    }
+
+    // 0x0Bxx / 0x1Bxx: ADDS / SUBS (#1/#2/#4) and INC.W / INC.L / DEC.W /
+    // DEC.L share the byte-1 opcode; templates by byte-2 high nibble.
+    //   0x0B / 0x1B  byte-2 hi-nibble templates:
+    //     0x00 ADDS/SUBS #1 ER    (bit 3 = 0)
+    //     0x50 INC.W   #1 R/E
+    //     0x70 INC.L   #1 ER     (bit 3 = 0)
+    //     0x80 ADDS/SUBS #2 ER   (bit 3 = 0)
+    //     0x90 ADDS/SUBS #4 ER   (bit 3 = 0)  -- H8/300H-only
+    //     0xD0 DEC.W   #2 R/E
+    //     0xF0 DEC.L   #2 ER     (bit 3 = 0)
+    auto valid_0b_1b = [](uint16_t w) {
+        const uint8_t b2 = static_cast<uint8_t>(w & 0xFF);
+        const uint8_t hi = b2 & 0xF0;
+        const bool needs_lo3 = (hi == 0x00 || hi == 0x70 || hi == 0x80 ||
+                                hi == 0x90 || hi == 0xF0);
+        switch (hi) {
+        case 0x00: case 0x50: case 0x70: case 0x80:
+        case 0x90: case 0xD0: case 0xF0:
+            return !needs_lo3 || (b2 & 0x08) == 0;
+        default:
+            return false;
+        }
+    };
+    static constexpr uint16_t canon_0b[] = {
+            0x0B00, 0x0B50, 0x0B70, 0x0B80, 0x0B90, 0x0BD0, 0x0BF0,
+            0x1B00, 0x1B50, 0x1B70, 0x1B80, 0x1B90, 0x1BD0, 0x1BF0,
+    };
+    for (const auto canon : canon_0b) {
+        for (uint_fast8_t pos = 0; pos < 8; pos++) {
+            const uint16_t flipped = canon ^ static_cast<uint16_t>(1u << pos);
+            if (!valid_0b_1b(flipped))
+                UNKN(static_cast<Config::opcode_t>(flipped));
+        }
+    }
+
+    // 0x10 / 0x11 / 0x12 / 0x13: shift / rotate in .B (POS___F),
+    // .W (POS___F), and .L (POS___7) variants. Valid high nibbles per
+    // byte-1 are {0x0, 0x1, 0x3, 0x8, 0x9, 0xB}; .L requires bit 3 = 0.
+    auto valid_shift_rot = [](uint16_t w) {
+        const uint8_t b2 = static_cast<uint8_t>(w & 0xFF);
+        switch (b2 & 0xF0) {
+        case 0x00: case 0x10: case 0x80: case 0x90:    // .B / .W
+            return true;
+        case 0x30: case 0xB0:                          // .L: bit 3 reserved
+            return (b2 & 0x08) == 0;
+        default:                                       // 0x20/40/50/60/70/A0/C0/D0/E0/F0
+            return false;
+        }
+    };
+    static constexpr uint16_t canon_shift_rot[] = {
+            0x1000, 0x1010, 0x1030, 0x1080, 0x1090, 0x10B0,    // 0x10 SHLL/SHAL
+            0x1100, 0x1110, 0x1130, 0x1180, 0x1190, 0x11B0,    // 0x11 SHLR/SHAR
+            0x1200, 0x1210, 0x1230, 0x1280, 0x1290, 0x12B0,    // 0x12 ROTXL/ROTL
+            0x1300, 0x1310, 0x1330, 0x1380, 0x1390, 0x13B0,    // 0x13 ROTXR/ROTR
+    };
+    for (const auto canon : canon_shift_rot) {
+        for (uint_fast8_t pos = 0; pos < 8; pos++) {
+            const uint16_t flipped = canon ^ static_cast<uint16_t>(1u << pos);
+            if (!valid_shift_rot(flipped))
+                UNKN(static_cast<Config::opcode_t>(flipped));
+        }
+    }
+
+    // Constrained byte-2 cases on H8/300H. (0x09/0x19/0x0D/0x1D have no
+    // reserved bits on H8/300H — all 4 register bits are valid for E0..E7.)
+    static constexpr IllegalCase lcases[] = {
+        { 0x57, 0x8F, 0x00 },   // TRAPA #vec: bits 6:4 = vec, bit 7 and bits 3:0 = 0
+        { 0x58, 0x0F, 0x00 },   // Bcc :16: byte-2 low nibble = 0 (4-bit cc in hi)
+        { 0x5C, 0xFF, 0x00 },   // BSR :16: byte-2 = 0
+    };
+    WALK_ILLEGAL_CASES(lcases);
+
+    // 0x7A family (MOV.L / ADD.L / CMP.L / SUB.L / OR.L / XOR.L / AND.L
+    // #imm32, ERd). High nibble of byte 2 selects the op (0..6); bit 3
+    // of the low nibble (ERd) is reserved; bit 7 must be 0.
+    auto valid_7a = [](uint16_t w) {
+        const uint8_t b2 = static_cast<uint8_t>(w & 0xFF);
+        if ((b2 & 0x80) != 0) return false;
+        if ((b2 & 0x70) > 0x60) return false;
+        return (b2 & 0x08) == 0;
+    };
+    static constexpr uint16_t canon_7a[] = {
+            0x7A00, 0x7A10, 0x7A20, 0x7A30, 0x7A40, 0x7A50, 0x7A60,
+    };
+    for (const auto canon : canon_7a) {
+        for (uint_fast8_t pos = 0; pos < 8; pos++) {
+            const uint16_t flipped = canon ^ static_cast<uint16_t>(1u << pos);
+            if (!valid_7a(flipped))
+                UNKN(static_cast<Config::opcode_t>(flipped));
+        }
+    }
+
+    // 0x7BD4 EEPMOV.W: second word must be exactly 0x598F.
     for (uint_fast8_t pos = 0; pos < 16; pos++)
-        UNKN(0x7B5C, static_cast<Config::opcode_t>(0x598F ^ (1u << pos)));
+        UNKN(0x7BD4, static_cast<Config::opcode_t>(0x598F ^ (1u << pos)));
 
-    // Bit op @Rn (read, 0x7C00 prefix): second word must match one of
-    //   BTST Rn,@      : 0x63|rn|0   (low nibble = 0)
-    //   BTST #imm,@    : 0x73|imm|0  (bit[7] = 0, bits[3:0] = 0)
-    //   BOR/BIOR #imm,@: 0x74|imm|0
-    //   BXOR/BIXOR     : 0x75|imm|0
-    //   BAND/BIAND     : 0x76|imm|0
-    //   BLD/BILD       : 0x77|imm|0
-    auto valid_7c00 = [](uint16_t w) {
-        return ((w & 0xFF0F) == 0x6300) ||
-               ((w & 0xFF8F) == 0x7300) ||
-               ((w & 0xFF0F) == 0x7400) ||
-               ((w & 0xFF0F) == 0x7500) ||
-               ((w & 0xFF0F) == 0x7600) ||
-               ((w & 0xFF0F) == 0x7700);
+    // 0x01F0 (OR.L / XOR.L / AND.L reg-reg): second-word patterns
+    // 0x64XX/0x65XX/0x66XX; both ERs and ERd are 3-bit so bit 7 and bit 3
+    // of the second-word byte 2 are reserved.
+    auto valid_01f0 = [](uint16_t w) {
+        const uint8_t hi = static_cast<uint8_t>(w >> 8);
+        if (hi != 0x64 && hi != 0x65 && hi != 0x66) return false;
+        return (w & 0x88) == 0;
     };
-    static constexpr uint16_t canon_7c00[] = {0x6300, 0x7300, 0x7400, 0x7500, 0x7600, 0x7700};
-    for (const auto canon : canon_7c00) {
+    static constexpr uint16_t canon_01f0[] = {0x6400, 0x6500, 0x6600};
+    for (const auto canon : canon_01f0) {
         for (uint_fast8_t pos = 0; pos < 16; pos++) {
             const uint16_t flipped = canon ^ static_cast<uint16_t>(1u << pos);
-            if (!valid_7c00(flipped))
-                UNKN(0x7C00, static_cast<Config::opcode_t>(flipped));
+            if (!valid_01f0(flipped))
+                UNKN(0x01F0, static_cast<Config::opcode_t>(flipped));
         }
     }
 
-    // Bit op @Rn (write, 0x7D00 prefix): second word must match one of
-    //   BSET/BNOT/BCLR Rn,@   : 0x60/61/62|rn|0
-    //   BST/BIST #imm,@       : 0x67|0/8|imm|0
-    //   BSET/BNOT/BCLR #imm,@ : 0x70/71/72|imm|0
-    auto valid_7d00 = [](uint16_t w) {
-        return ((w & 0xFF0F) == 0x6000) ||
-               ((w & 0xFF0F) == 0x6100) ||
-               ((w & 0xFF0F) == 0x6200) ||
-               ((w & 0xFF8F) == 0x6700) ||
-               ((w & 0xFF8F) == 0x6780) ||
-               ((w & 0xFF8F) == 0x7000) ||
-               ((w & 0xFF8F) == 0x7100) ||
-               ((w & 0xFF8F) == 0x7200);
+    // 0x01C0 (MULXS) / 0x01D0 (DIVXS): second-word patterns
+    // 0x50XX|Rs<<4|Rd (.B, all bits valid) and 0x52XX|Rs<<4|ERd (.W, ERd
+    // 3-bit so bit 3 reserved). 0x01D0 mirrors with 0x51/0x53.
+    auto valid_01c0 = [](uint16_t w) {
+        const uint8_t hi = static_cast<uint8_t>(w >> 8);
+        if (hi == 0x50) return true;                      // MULXS.B
+        if (hi == 0x52) return (w & 0x08) == 0;           // MULXS.W
+        return false;
     };
-    static constexpr uint16_t canon_7d00[] = {
-            0x6000, 0x6100, 0x6200, 0x6700, 0x6780, 0x7000, 0x7100, 0x7200,
-    };
-    for (const auto canon : canon_7d00) {
+    static constexpr uint16_t canon_01c0[] = {0x5000, 0x5200};
+    for (const auto canon : canon_01c0) {
         for (uint_fast8_t pos = 0; pos < 16; pos++) {
             const uint16_t flipped = canon ^ static_cast<uint16_t>(1u << pos);
-            if (!valid_7d00(flipped))
-                UNKN(0x7D00, static_cast<Config::opcode_t>(flipped));
+            if (!valid_01c0(flipped))
+                UNKN(0x01C0, static_cast<Config::opcode_t>(flipped));
         }
     }
-    // bit-op @aa:8 read (prefix 0x7E00) / write (prefix 0x7F00): same
-    // second-word tables as 0x7C00 / 0x7D00.
-    for (const auto canon : canon_7c00) {
+    auto valid_01d0 = [](uint16_t w) {
+        const uint8_t hi = static_cast<uint8_t>(w >> 8);
+        if (hi == 0x51) return true;                      // DIVXS.B
+        if (hi == 0x53) return (w & 0x08) == 0;           // DIVXS.W
+        return false;
+    };
+    static constexpr uint16_t canon_01d0[] = {0x5100, 0x5300};
+    for (const auto canon : canon_01d0) {
         for (uint_fast8_t pos = 0; pos < 16; pos++) {
             const uint16_t flipped = canon ^ static_cast<uint16_t>(1u << pos);
-            if (!valid_7c00(flipped))
-                UNKN(0x7E00, static_cast<Config::opcode_t>(flipped));
+            if (!valid_01d0(flipped))
+                UNKN(0x01D0, static_cast<Config::opcode_t>(flipped));
         }
     }
-    for (const auto canon : canon_7d00) {
+
+    // 0x7800 (MOV @(d:24,ERn)): second-word patterns 0x6A20/0x6AA0/
+    // 0x6B20/0x6BA0; Rd/Rs are 4-bit (POS___F) so only the high nibble
+    // of byte 2 is constrained (0x20 load / 0xA0 store).
+    auto valid_7800 = [](uint16_t w) {
+        const uint8_t hi = static_cast<uint8_t>(w >> 8);
+        if (hi != 0x6A && hi != 0x6B) return false;
+        const uint8_t lo_hi = (w & 0xF0);
+        return lo_hi == 0x20 || lo_hi == 0xA0;
+    };
+    static constexpr uint16_t canon_7800[] = {0x6A20, 0x6AA0, 0x6B20, 0x6BA0};
+    for (const auto canon : canon_7800) {
         for (uint_fast8_t pos = 0; pos < 16; pos++) {
             const uint16_t flipped = canon ^ static_cast<uint16_t>(1u << pos);
-            if (!valid_7d00(flipped))
-                UNKN(0x7F00, static_cast<Config::opcode_t>(flipped));
+            if (!valid_7800(flipped))
+                UNKN(0x7800, static_cast<Config::opcode_t>(flipped));
         }
+    }
+
+    // Super-prefix 0x0100 / 0x0140: an unrecognized body word is illegal.
+    UNKN(0x0100, 0x0000);
+    UNKN(0x0140, 0x0000);
+
+    // 24-bit absolute / displacement: the top byte of the 32-bit operand
+    // slot is reserved and must be zero. The disasm bails out after only
+    // the high half is consumed (see M_ABS24 / M_IDX24 split-read in
+    // dis_h8300), so we feed only as many bytes as the disasm actually
+    // reads before flagging the error. Walk each bit of the reserved byte.
+    for (uint_fast8_t pos = 0; pos < 8; pos++) {
+        const uint16_t hi = static_cast<uint16_t>(1u << pos) << 8;
+        UNKN(0x6A20, hi);                         // MOV.B @aa:24, R0H
+        UNKN(0x6B20, hi);                         // MOV.W @aa:24, R0
+        UNKN(0x0100, 0x6B20, hi);                 // MOV.L @aa:24, ER0
+        UNKN(0x7800, 0x6A20, hi);                 // MOV.B @(d:24,ER0), R0H
     }
 }
 
 void test_sp_alias() {
-    // Default: SP alias for R7 in indirect modes.
-    TEST("MOV.W", "@SP, R0",    0x6900|(7<<4)|0);
-    // Disable the alias: expect canonical R7.
+    // Default: SP alias for ER7 (H8/300H) / R7 (H8/300) in indirect modes.
+    if (is_h8300h()) {
+        TEST("MOV.L", "@SP, ER0",   0x0100, 0x6900|(7<<4)|0);
+        TEST("MOV.W", "R7, @SP",    0x6980|(7<<4)|7);
+    } else {
+        TEST("MOV.W", "@SP, R0",    0x6900|(7<<4)|0);
+    }
+
+    // Disable the alias: expect canonical ER7/R7 instead.
     disassembler.setOption("sp-alias", "off");
-    TEST("MOV.W", "@R7, R0",    0x6900|(7<<4)|0);
+    if (is_h8300h()) {
+        TEST("MOV.L", "@ER7, ER0",  0x0100, 0x6900|(7<<4)|0);
+        TEST("MOV.W", "R7, @ER7",   0x6980|(7<<4)|7);
+    } else {
+        TEST("MOV.W", "@R7, R0",    0x6900|(7<<4)|0);
+    }
     disassembler.setOption("sp-alias", "on");
 }
 
 void run_tests(const char *cpu) {
     disassembler.setCpu(cpu);
-    RUN_TEST(test_cpu);
     RUN_TEST(test_system);
     RUN_TEST(test_ccr);
     RUN_TEST(test_data_move);
@@ -669,7 +1169,11 @@ void run_tests(const char *cpu) {
     RUN_TEST(test_branch);
     RUN_TEST(test_jump);
     RUN_TEST(test_sp_alias);
-    RUN_TEST(test_illegal_h8300);
+    if (is_h8300h()) {
+        RUN_TEST(test_illegal_h8300hn);
+    } else {
+        RUN_TEST(test_illegal_h8300);
+    }
 }
 
 // Local Variables:

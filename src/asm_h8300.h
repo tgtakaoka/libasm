@@ -33,6 +33,8 @@ private:
     Error parseOperand(StrScanner &scan, Operand &op) const;
     void encodeOprReg8(AsmInsn &insn, const Operand &op, OprPos pos) const;
     void encodeOprReg16(AsmInsn &insn, const Operand &op, OprPos pos) const;
+    void encodeOprReg32(AsmInsn &insn, const Operand &op, OprPos pos) const;
+    void encodeOprAddrReg(AsmInsn &insn, const Operand &op, OprPos pos) const;
     void encodeAbsolute(AsmInsn &insn, const Operand &op, AddrMode mode, OprPos pos) const;
     void encodeRelative(AsmInsn &insn, const Operand &op) const;
     void encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode, OprPos pos) const;
