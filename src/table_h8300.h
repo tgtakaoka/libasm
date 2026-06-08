@@ -33,6 +33,8 @@ extern const TableH8300 TABLE;
 
 Error searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out);
 bool isPrefix(CpuType cpuType, Config::opcode_t code);
+SuperPrefix toSuperPrefix(CpuType cpuType, Config::opcode_t code);
+Config::opcode_t fromSuperPrefix(SuperPrefix sprx);
 Error searchName(CpuType cpuType, AsmInsn &insn);
 bool hasOperand(CpuType cpuType, AsmInsn &insn);
 

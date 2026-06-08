@@ -44,18 +44,27 @@ enum AddrMode : uint8_t {
     M_VAL1 = 15,   // implicit #1 (ADDS/SUBS)
     M_VAL2 = 16,   // implicit #2 (ADDS/SUBS)
     M_CCR = 17,    // CCR control register
+    // H8/300H additions:
+    M_REG32 = 18,  // 32-bit register: ER0..ER7
+    M_IMM32 = 19,  // 32-bit immediate: #imm:32
+    M_IDX24 = 20,  // 24-bit displacement: @(d:24,ERn)
+    M_ABS24 = 21,  // 24-bit absolute: @aa:24
+    M_REL16 = 22,  // PC-relative 16-bit (long branches)
+    M_VAL4 = 23,   // implicit #4 (ADDS.L/SUBS.L)
 };
 
 // Instruction name size suffix
 enum InsnSize : uint8_t {
     ISZ_NONE = 0,  // no size suffix
     ISZ_DATA = 1,  // depends on OprSize
+    ISZ_ADDR = 2,  // size follows the M_ADREG register width (SZ_WORD or SZ_LONG)
 };
 
 enum OprSize : uint8_t {
     SZ_NONE = Size::SZ_NONE,
     SZ_BYTE = Size::SZ_BYTE,  // byte
     SZ_WORD = Size::SZ_WORD,  // word, aligned to even address
+    SZ_LONG = Size::SZ_QUAD,  // longword (32-bit, H8/300H)
 };
 
 enum OprPos : uint8_t {
@@ -65,7 +74,15 @@ enum OprPos : uint8_t {
     POS__F_ = 3,  // ________ xxxx____
     POS__7_ = 4,  // ________ _xxx____
     POS___F = 5,  // ________ ____xxxx
-    POS_PRX = 6,  // in prefix
+    POS___7 = 6,  // ________ _____xxx (3-bit field at bits[2:0], H8/300H)
+    POS_PRX = 7,  // in prefix
+};
+
+// Super-prefix word consumed before any normal prefix.
+enum SuperPrefix : uint8_t {
+    SPRX_NONE = 0,
+    SPRX_0100 = 1,
+    SPRX_0140 = 2,
 };
 
 struct Entry final : entry::Base<Config::opcode_t> {
@@ -100,9 +117,9 @@ struct Entry final : entry::Base<Config::opcode_t> {
         // |_src|, |_dst|
         static constexpr int mode_gp = 0;
         static constexpr uint_fast8_t mode_gm = 0x1F;
-        // |_src|
-        static constexpr int isz_gp = 7;
-        static constexpr uint_fast8_t isz_gm = 0x01;
+        // |_src| InsnSize widened to 2 bits at bits 6-7 to fit ISZ_ADDR.
+        static constexpr int isz_gp = 6;
+        static constexpr uint_fast8_t isz_gm = 0x03;
         // |_dst|
         static constexpr int osz_gp = 6;
         static constexpr uint_fast8_t osz_gm = 0x03;
@@ -132,6 +149,7 @@ struct Entry final : entry::Base<Config::opcode_t> {
                 0x00F0,  // POS__F_
                 0x0070,  // POS__7_
                 0x000F,  // POS___F
+                0x0007,  // POS___7
                 0x0000,  // POS_PRX
         };
         return pgm_read_word(&MASK[pos]);
@@ -145,6 +163,7 @@ struct Entry final : entry::Base<Config::opcode_t> {
                 4,  // POS__F_
                 4,  // POS__7_
                 0,  // POS___F
+                0,  // POS___7
                 0,  // POS_PRX
         };
         return pgm_read_word(&GPOS[pos]);
