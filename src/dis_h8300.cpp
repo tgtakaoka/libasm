@@ -143,6 +143,12 @@ RegName DisH8300::decodeOprReg32(
 
 RegName DisH8300::decodeOprAddrReg(
         DisInsn &insn, const StrBuffer &out, AddrMode mode, OprPos pos) const {
+    if (pos == POS____) {
+        // Implicit @SP (LDM/STM).
+        if (spAlias())
+            return REG_SP;
+        return hasReg32() ? REG_ER7 : REG_R7;
+    }
     return hasReg32() ? decodeOprReg32(insn, out, mode, pos) : decodeOprReg16(insn, out, mode, pos);
 }
 
@@ -209,6 +215,17 @@ void DisH8300::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode, OprPo
         outRegName(out, reg).letter(')');
         break;
     }
+    case M_IDX32: {
+        // H8S @(d:32, ERn): full 32-bit displacement follows the opcode.
+        const auto reg = decodeOprAddrReg(insn, out, mode, pos);
+        const auto disp = insn.readUint32Be();
+        out.letter('@').letter('(');
+        outHex(out, disp, 32, false);
+        out.letter(':').int16(32);
+        out.letter(',');
+        outRegName(out, reg).letter(')');
+        break;
+    }
     case M_ABS8:
     case M_MIND8:
     case M_ABS16:
@@ -237,6 +254,26 @@ void DisH8300::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode, OprPo
         else
             outHex(out, addr, 24, false);
         out.letter(':').int16(24);
+        break;
+    }
+    case M_RLIST: {
+        // LDM/STM: count = (prefix low nibble of low byte) + 1. Byte 4
+        // bits[2:0] hold the last register (LDM = dst slot) or the first
+        // register (STM = src slot). Valid first-register values:
+        //   count = 2: 0, 2, 4, 6 (any even start)
+        //   count = 3 or 4: 0 or 4
+        const auto count = ((insn.prefix() >> 4) & 0xF) + 1;
+        const auto regno = Entry::decodeOperand(opc, pos);
+        const int first = (insn.dst() == M_RLIST) ? regno - static_cast<int>(count - 1) : regno;
+        const bool ok = (count == 2 && first >= 0 && (first & 1) == 0) ||
+                        ((count == 3 || count == 4) && (first == 0 || first == 4));
+        if (!ok) {
+            insn.setErrorIf(out, UNKNOWN_INSTRUCTION);
+            break;
+        }
+        outRegName(out, decodeReg32(first));
+        out.letter('-');
+        outRegName(out, decodeReg32(first + count - 1));
         break;
     }
     case M_REL8:
@@ -268,6 +305,9 @@ void DisH8300::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode, OprPo
         break;
     case M_CCR:
         outRegName(out, REG_CCR);
+        break;
+    case M_EXR:
+        outRegName(out, REG_EXR);
         break;
     case M_NONE:
     default:

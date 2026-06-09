@@ -83,6 +83,8 @@ Error AsmH8300::parseBitSuffix(StrScanner &scan, Operand &op) const {
             op.bitSuffix = 16;
         } else if (p.iexpectWord_P(PSTR("24"))) {
             op.bitSuffix = 24;
+        } else if (p.iexpectWord_P(PSTR("32"))) {
+            op.bitSuffix = 32;
         } else {
             return op.setErrorIf(scan, ILLEGAL_SIZE);
         }
@@ -169,22 +171,26 @@ Error AsmH8300::parseOperand(StrScanner &scan, Operand &op) const {
         }
         if (p.expect('(')) {
             s = p;
-            // Indexed: @(disp16,Rn) or @(d:24,ERn)
+            // Indexed: @(disp16,Rn), @(d:24,ERn), or @(d:32,ERn)
             op.val = parseInteger(p, op);
             if (op.hasError())
                 return op.getError();
             auto z = p;
             if (parseBitSuffix(p, op) || op.bitSuffix == 8)
                 return op.setErrorIf(z, ILLEGAL_SIZE);
-            const bool idx24 = (op.bitSuffix == 24);
+            const auto idx = (op.bitSuffix == 32)   ? M_IDX32
+                             : (op.bitSuffix == 24) ? M_IDX24
+                                                    : M_IDX16;
             // d:16 is sign-extended (manual section 1.7). In advanced mode
             // it must be a strict signed 16-bit value [-32768,32767];
             // in normal mode either signed or unsigned [0,65535] is fine
             // because only the low 16 bits of the address are observable.
-            // d:24 stays unsigned (high reserved byte must be zero).
-            const bool overflow = idx24            ? op.val.overflow(UINT24_MAX)
-                                  : advancedMode() ? op.val.overflowInt16()
-                                                   : op.val.overflowUint16();
+            // d:24 stays unsigned (high reserved byte must be zero);
+            // d:32 spans the full 32-bit signed/unsigned range.
+            const bool overflow = (idx == M_IDX32)   ? op.val.overflow(UINT32_MAX, INT32_MIN)
+                                  : (idx == M_IDX24) ? op.val.overflow(UINT24_MAX)
+                                  : advancedMode()   ? op.val.overflowInt16()
+                                                     : op.val.overflowUint16();
             if (overflow)
                 op.setErrorIf(s, OVERFLOW_RANGE);
             if (!p.skipSpaces().expect(','))
@@ -193,7 +199,7 @@ Error AsmH8300::parseOperand(StrScanner &scan, Operand &op) const {
             op.reg = parseRegOperand(p.skipSpaces());
             if (isAddrReg(op.reg, hasReg32())) {
                 if (p.skipSpaces().expect(')')) {
-                    op.mode = idx24 ? M_IDX24 : M_IDX16;
+                    op.mode = idx;
                     scan = p;
                     return OK;
                 }
@@ -264,8 +270,32 @@ Error AsmH8300::parseOperand(StrScanner &scan, Operand &op) const {
             op.mode = M_REG16;
         } else if (reg == REG_CCR) {
             op.mode = M_CCR;
+        } else if (reg == REG_EXR) {
+            op.mode = M_EXR;
         } else {
             return op.setError(p, UNKNOWN_OPERAND);
+        }
+        // H8S register list: ERn-ERm (LDM/STM operand).
+        if (p.skipSpaces().expect('-')) {
+            if (op.mode != M_REG32)
+                return op.setError(s, ILLEGAL_REGISTER);
+            auto q = p.skipSpaces();
+            const auto last = parseRegOperand(p);
+            if (!isReg32(last))
+                return op.setError(q, ILLEGAL_REGISTER);
+            const auto first = encodeReg32(reg);
+            const auto end = encodeReg32(last);
+            if (end <= first)
+                return op.setError(s, ILLEGAL_REGISTER);
+            const auto count = end - first + 1;
+            // Architectural: 2-reg lists must start on an even boundary;
+            // 3-/4-reg lists must start at 0 or 4.
+            const bool ok = (count == 2 && (first & 1) == 0) ||
+                            ((count == 3 || count == 4) && (first == 0 || first == 4));
+            if (!ok)
+                return op.setError(s, ILLEGAL_REGISTER);
+            op.val.setUnsigned(count);
+            op.mode = M_RLIST;
         }
         scan = p;
         return OK;
@@ -328,6 +358,12 @@ void AsmH8300::encodeOprReg32(AsmInsn &insn, const Operand &op, OprPos pos) cons
 void AsmH8300::encodeOprAddrReg(AsmInsn &insn, const Operand &op, OprPos pos) const {
     if (!isAddrReg(op.reg, insn.hasReg32())) {
         insn.setErrorIf(op, REGISTER_NOT_ALLOWED);
+        return;
+    }
+    if (pos == POS____) {
+        // Implicit register slot (LDM/STM): only @SP / @ER7 is allowed.
+        if (encodeAddrReg(op.reg) != 7)
+            insn.setErrorIf(op, REGISTER_NOT_ALLOWED);
         return;
     }
     Config::opcode_t regno = encodeAddrReg(op.reg);
@@ -410,6 +446,11 @@ void AsmH8300::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode, Op
         insn.emitOperand32(op.val.getUnsigned() & UINT24_MAX);
         break;
     }
+    case M_IDX32:
+        // H8S: ERn in the prefix word; full 32-bit displacement follows.
+        encodeOprAddrReg(insn, op, pos);
+        insn.emitOperand32(op.val.getUnsigned());
+        break;
     case M_REG32:
         encodeOprReg32(insn, op, pos);
         break;
@@ -448,12 +489,24 @@ void AsmH8300::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode, Op
             insn.setErrorIf(op, ILLEGAL_BIT_NUMBER);
         insn.embed((op.val.getUnsigned() & 7) << 4);  // bit number in high nibble
         break;
+    case M_RLIST: {
+        // LDM/STM: prefix is 0x01(count-1)0; byte 4's low 3 bits encode the
+        // last register (LDM, dst slot) or the first register (STM, src slot).
+        const auto count = op.val.getUnsigned();
+        insn.setPrefix(0x0100 | ((count - 1) << 4));
+        auto regno = encodeReg32(op.reg);
+        if (mode == insn.dst())  // LDM: last register
+            regno += count - 1;
+        insn.embed(regno & 7);
+        break;
+    }
     case M_VAL1:
     case M_VAL2:
     case M_VAL4:
         break;
     case M_NONE:
     case M_CCR:
+    case M_EXR:
     default:
         break;
     }

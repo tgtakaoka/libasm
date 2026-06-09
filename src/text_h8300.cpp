@@ -21,9 +21,10 @@ namespace text {
 namespace h8300 {
 // clang-format off
 
-constexpr char TEXT_H8300_LIST[] PROGMEM = "H8/300, H8/300H";
-constexpr char TEXT_CPU_H8300[]  PROGMEM = "H8/300";
-constexpr char TEXT_CPU_H8300H[] PROGMEM = "H8/300H";
+constexpr char TEXT_H8300_LIST[]   PROGMEM = "H8/300, H8/300H, H8S/2000";
+constexpr char TEXT_CPU_H8300[]    PROGMEM = "H8/300";
+constexpr char TEXT_CPU_H8300H[]   PROGMEM = "H8/300H";
+constexpr char TEXT_CPU_H8S2000[]  PROGMEM = "H8S/2000";
 
 // constexpr char TEXT_ADD[]   PROGMEM = "ADD";
 constexpr char TEXT_ADDS[]  PROGMEM = "ADDS";
@@ -103,9 +104,11 @@ constexpr char TEXT_SHLL[]  PROGMEM = "SHLL";
 constexpr char TEXT_SHLR[]   PROGMEM = "SHLR";
 constexpr char TEXT_SLEEP[]  PROGMEM = "SLEEP";
 // constexpr char TEXT_STC[]   PROGMEM = "STC";
+constexpr char TEXT_STM[]   PROGMEM = "STM";
 // constexpr char TEXT_SUB[]   PROGMEM = "SUB";
 constexpr char TEXT_SUBS[]  PROGMEM = "SUBS";
 constexpr char TEXT_SUBX[]  PROGMEM = "SUBX";
+constexpr char TEXT_TAS[]   PROGMEM = "TAS";
 constexpr char TEXT_TRAPA[] PROGMEM = "TRAPA";
 // constexpr char TEXT_XOR[]   PROGMEM = "XOR";
 constexpr char TEXT_XORC[]   PROGMEM = "XORC";
@@ -154,6 +157,8 @@ constexpr char TEXT_REG_ER4[] PROGMEM = "ER4";
 constexpr char TEXT_REG_ER5[] PROGMEM = "ER5";
 constexpr char TEXT_REG_ER6[] PROGMEM = "ER6";
 constexpr char TEXT_REG_ER7[] PROGMEM = "ER7";
+
+constexpr char TEXT_REG_EXR[] PROGMEM = "EXR";
 
 // Options
 constexpr char OPT_BOOL_ADVANCED_MODE[] PROGMEM = "advanced-mode";

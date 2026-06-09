@@ -24,9 +24,10 @@ namespace text {
 namespace h8300 {
 // clang-format off
 
-extern const char TEXT_H8300_LIST[]  PROGMEM;
-extern const char TEXT_CPU_H8300[]   PROGMEM;
-extern const char TEXT_CPU_H8300H[]  PROGMEM;
+extern const char TEXT_H8300_LIST[]   PROGMEM;
+extern const char TEXT_CPU_H8300[]    PROGMEM;
+extern const char TEXT_CPU_H8300H[]   PROGMEM;
+extern const char TEXT_CPU_H8S2000[]  PROGMEM;
 
 using common::TEXT_ADD;
 extern const char TEXT_ADDS[]   PROGMEM;
@@ -81,6 +82,7 @@ using common::TEXT_INC;
 using common::TEXT_JMP;
 using common::TEXT_JSR;
 using common::TEXT_LDC;
+using common::TEXT_LDM;
 using common::TEXT_MOV;
 extern const char TEXT_MOVFPE[] PROGMEM;
 extern const char TEXT_MOVTPE[] PROGMEM;
@@ -105,9 +107,11 @@ extern const char TEXT_SHLL[]   PROGMEM;
 extern const char TEXT_SHLR[]   PROGMEM;
 extern const char TEXT_SLEEP[]  PROGMEM;
 using common::TEXT_STC;
+extern const char TEXT_STM[]    PROGMEM;
 using common::TEXT_SUB;
 extern const char TEXT_SUBS[]   PROGMEM;
 extern const char TEXT_SUBX[]   PROGMEM;
+extern const char TEXT_TAS[]    PROGMEM;
 extern const char TEXT_TRAPA[]  PROGMEM;
 using common::TEXT_XOR;
 extern const char TEXT_XORC[]   PROGMEM;
@@ -158,6 +162,8 @@ extern const char TEXT_REG_ER4[] PROGMEM;
 extern const char TEXT_REG_ER5[] PROGMEM;
 extern const char TEXT_REG_ER6[] PROGMEM;
 extern const char TEXT_REG_ER7[] PROGMEM;
+
+extern const char TEXT_REG_EXR[] PROGMEM;
 
 // Options
 extern const char OPT_BOOL_ADVANCED_MODE[] PROGMEM;
