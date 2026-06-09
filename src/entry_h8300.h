@@ -51,6 +51,10 @@ enum AddrMode : uint8_t {
     M_ABS24 = 21,  // 24-bit absolute: @aa:24
     M_REL16 = 22,  // PC-relative 16-bit (long branches)
     M_VAL4 = 23,   // implicit #4 (ADDS.L/SUBS.L)
+    // H8S additions:
+    M_RLIST = 24,  // register list (LDM/STM): op.reg = first ER, op.val = count
+    M_EXR = 25,    // EXR extended control register
+    M_IDX32 = 26,  // 32-bit displacement: @(d:32,ERn)
 };
 
 // Instruction name size suffix
@@ -83,6 +87,7 @@ enum SuperPrefix : uint8_t {
     SPRX_NONE = 0,
     SPRX_0100 = 1,
     SPRX_0140 = 2,
+    SPRX_0141 = 3,  // H8S LDC/STC/ANDC/ORC/XORC with EXR
 };
 
 struct Entry final : entry::Base<Config::opcode_t> {

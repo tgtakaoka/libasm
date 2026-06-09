@@ -141,7 +141,7 @@ extern const char TEXT_SCM2[] PROGMEM;
 extern const char TEXT_SPM1[] PROGMEM;
 extern const char TEXT_SPM2[] PROGMEM;
 extern const char TEXT_SRET[] PROGMEM;
-extern const char TEXT_STM[]  PROGMEM;
+using common::TEXT_STM;
 extern const char TEXT_STPC[] PROGMEM;
 extern const char TEXT_XID[]  PROGMEM;
 extern const char TEXT_XIE[]  PROGMEM;

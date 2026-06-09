@@ -25,6 +25,11 @@ using namespace libasm::test;
 DisH8300 dis8300;
 Disassembler &disassembler(dis8300);
 
+// True for any CPU in the H8S family (currently H8S/2000; extend when H8S/2600 lands).
+bool is_h8s() {
+    return strcmp_P("H8S/2000", disassembler.config().cpu_P()) == 0;
+}
+
 bool is_h8300h() {
     return strcmp_P("H8/300H", disassembler.config().cpu_P()) == 0;
 }
@@ -32,7 +37,7 @@ bool is_h8300h() {
 // Pick the H8/300 (r16) or H8/300H (r32) form of an address-register-bearing
 // operand string. Pointers like @R0 disasm to @ER0 on H8/300H because the
 // address register is 32-bit there.
-#define AREG(r16, r32) (is_h8300h() ? (r32) : (r16))
+#define AREG(r16, r32) ((is_h8300h() || is_h8s()) ? (r32) : (r16))
 
 void set_up() {
     disassembler.reset();
@@ -59,11 +64,11 @@ void test_system() {
     TEST("EEPMOV", "", 0x7B5C, 0x598F);
 
     UNKN(0x0000|0x01);        // NOP: byte2 must be 0x00
-    if (!is_h8300h())
+    if (!is_h8300h() && !is_h8s())
         UNKN(0x0180 ^ 0x80);  // SLEEP: byte2 must be 0x80 (H8/300H uses 0x0100 as super-prefix)
     UNKN(0x7B5C, 0x598E);     // EEPMOV: wrong trailing bytes
 
-    if (is_h8300h()) {
+    if (is_h8300h() || is_h8s()) {
         // TRAPA #vec
         TEST("TRAPA", "#0", 0x5700|(0<<4));
         TEST("TRAPA", "#1", 0x5700|(1<<4));
@@ -79,13 +84,15 @@ void test_ccr() {
     // STC CCR,Rd: byte2=Rd nibble (high nibble must be 0)
     TEST("STC", "CCR, R0H", 0x0200|0x0);
     TEST("STC", "CCR, R4L", 0x0200|0xC);
-    UNKN(0x0200|0x10);
+    if (!is_h8s())  // 0x0210 is STC EXR,Rd on H8S
+        UNKN(0x0200|0x10);
     UNKN(0x0200|0x80);
 
     // LDC Rs,CCR: byte2=Rs nibble
     TEST("LDC",  "R0H, CCR", 0x0300|0x0);
     TEST("LDC",  "R2L, CCR", 0x0300|0xA);
-    UNKN(0x0300|0x10);
+    if (!is_h8s())  // 0x0310 is LDC Rs,EXR on H8S
+        UNKN(0x0300|0x10);
     UNKN(0x0300|0x80);
 
     // ORC/XORC/ANDC/LDC #imm,CCR: byte2=imm8
@@ -94,7 +101,7 @@ void test_ccr() {
     TEST("ANDC", "#H'F0, CCR", 0x0600|0xF0);
     TEST("LDC",  "#0, CCR",    0x0700|0x00);
 
-    if (is_h8300h()) {
+    if (is_h8300h() || is_h8s()) {
         // LDC / STC ccr with memory operand via 0x0140 super-prefix
         TEST("LDC", "@ER0, CCR",       0x0140, 0x6900|(0<<4));
         TEST("LDC", "@SP, CCR",        0x0140, 0x6900|(7<<4));   // ER7 -> SP
@@ -107,9 +114,12 @@ void test_ccr() {
         TEST("LDC", "@(H'1234,ER0), CCR", 0x0140, 0x6F00|(0<<4), 0x1234);
         TEST("STC", "CCR, @(H'1234,ER0)", 0x0140, 0x6F80|(0<<4), 0x1234);
 
-        // LDC / STC ccr,@(d:24,ERn) via SPRX_0140 + 0x7800 prefix
-        TEST("LDC", "@(H'001234:24,ER0), CCR", 0x0140, 0x7800|(0<<4), 0x6B20, 0x0000, 0x1234);
-        TEST("STC", "CCR, @(H'FFFFE0:24,SP)",  0x0140, 0x7800|(7<<4), 0x6BA0, 0x00FF, 0xFFE0);
+        if (!is_h8s()) {
+            // LDC / STC ccr,@(d:24,ERn) via SPRX_0140 + 0x7800 prefix.
+            // H8S decodes this as @(d:32, ERn) instead.
+            TEST("LDC", "@(H'001234:24,ER0), CCR", 0x0140, 0x7800|(0<<4), 0x6B20, 0x0000, 0x1234);
+            TEST("STC", "CCR, @(H'FFFFE0:24,SP)",  0x0140, 0x7800|(7<<4), 0x6BA0, 0x00FF, 0xFFE0);
+        }
     }
 }
 
@@ -227,7 +237,7 @@ void test_data_move() {
     TEST("MOVTPE", "R0H, @H'1234", 0x6AC0|0x0, 0x1234);
     TEST("MOVTPE", "R5L, @H'5678", 0x6AC0|0xD, 0x5678);
 
-    if (is_h8300h()) {
+    if (is_h8300h() || is_h8s()) {
         // MOV.L ERs,ERd: 0x0F80 | (ERs<<4) | ERd. Both fields are 3-bit
         // (POS__7_ / POS___7); the destination bit-3 reserved bit is checked.
         TEST("MOV.L", "ER0, ER1",                0x0F80|(0<<4)|1);
@@ -247,11 +257,14 @@ void test_data_move() {
         TEST("MOV.B", "@(H'1234,ER0), R0H",      0x6E00|(0<<4)|0x0, 0x1234);
         TEST("MOV.W", "@(-2,SP), R0",            0x6F00|(7<<4)|0x0, 0xFFFE);
 
-        // MOV.B / MOV.W @(d:24,ERn) via 0x7800 normal prefix
-        TEST("MOV.B", "@(H'000000:24,ER0), R0H", 0x7800|(0<<4), 0x6A20|0x0, 0x0000, 0x0000);
-        TEST("MOV.B", "@(H'FFFFFF:24,SP), R7L",  0x7800|(7<<4), 0x6A20|0xF, 0x00FF, 0xFFFF);
-        TEST("MOV.B", "R0H, @(H'000000:24,ER0)", 0x7800|(0<<4), 0x6AA0|0x0, 0x0000, 0x0000);
-        TEST("MOV.W", "@(H'001234:24,ER3), R5",  0x7800|(3<<4), 0x6B20|0x5, 0x0000, 0x1234);
+        if (!is_h8s()) {
+            // MOV.B / MOV.W @(d:24,ERn) via 0x7800 normal prefix.
+            // H8S decodes this as @(d:32, ERn).
+            TEST("MOV.B", "@(H'000000:24,ER0), R0H", 0x7800|(0<<4), 0x6A20|0x0, 0x0000, 0x0000);
+            TEST("MOV.B", "@(H'FFFFFF:24,SP), R7L",  0x7800|(7<<4), 0x6A20|0xF, 0x00FF, 0xFFFF);
+            TEST("MOV.B", "R0H, @(H'000000:24,ER0)", 0x7800|(0<<4), 0x6AA0|0x0, 0x0000, 0x0000);
+            TEST("MOV.W", "@(H'001234:24,ER3), R5",  0x7800|(3<<4), 0x6B20|0x5, 0x0000, 0x1234);
+        }
 
         // MOV.B / MOV.W @aa:24 and MOV.L @aa:24 (MOV.L uses 0x0100 super-prefix)
         TEST("MOV.B", "@H'000000:24, R0H",       0x6A20|0x0,         0x0000, 0x0000);
@@ -308,7 +321,7 @@ void test_arithmetic() {
 
     TEST("DEC", "R0H", 0x1A00|0x0);
     TEST("DEC", "R4H", 0x1A00|0x4);
-    if (!is_h8300h())
+    if (!is_h8300h() && !is_h8s())
         UNKN(0x1A00|0xF0);    // DEC: high nibble of byte2 must be 0 (H8/300H reuses bit 7 for SUB.L)
 
     // ADDS/SUBS #1/#2,Rd: byte2=Rd3 (bit7=0→#1, bit7=1→#2)
@@ -328,7 +341,7 @@ void test_arithmetic() {
 
     TEST("DAS", "R0H", 0x1F00|0x0);
     TEST("DAS", "R7L", 0x1F00|0xF);
-    if (!is_h8300h())
+    if (!is_h8300h() && !is_h8s())
         UNKN(0x1F00|0x80);    // DAS: high nibble of byte2 must be 0 (H8/300H reuses bit 7 for CMP.L)
 
     // MULXU/DIVXU Rs8,Rd16: byte2=(Rs nibble<<4)|Rd3
@@ -340,7 +353,7 @@ void test_arithmetic() {
     // NEG Rd (0x17, bit7=1): byte2=0x80|Rd nibble
     TEST("NEG", "R0H", 0x1780|0x0);
     TEST("NEG", "R7L", 0x1780|0xF);
-    if (!is_h8300h())
+    if (!is_h8300h() && !is_h8s())
         UNKN(0x1780|0x10);    // NEG: bits[6:4] of byte2 must be 0 (H8/300H reuses for NEG.W)
 
     // ADD/ADDX/CMP/SUBX #imm,Rd (0x80-0xBF): byte1=0x?0|(Rd nibble), byte2=imm8
@@ -350,7 +363,7 @@ void test_arithmetic() {
     TEST("CMP.B", "#H'55, R5H", 0xA000|(0x5<<8)|0x55);
     TEST("SUBX",  "#2, R2L",    0xB000|(0xA<<8)|0x02);
 
-    if (is_h8300h()) {
+    if (is_h8300h() || is_h8s()) {
         // ADD.L / SUB.L / CMP.L ERs,ERd (same shape as MOV.L)
         TEST("ADD.L",   "ER0, ER1",         0x0A80|(0<<4)|1);
         TEST("ADD.L",   "ER7, ER0",         0x0A80|(7<<4)|0);
@@ -424,7 +437,7 @@ void test_logic() {
     // NOT Rd (0x17, bit7=0): byte2=Rd nibble (bits[6:4] must be 0)
     TEST("NOT", "R0H", 0x1700|0x0);
     TEST("NOT", "R7L", 0x1700|0xF);
-    if (!is_h8300h())
+    if (!is_h8300h() && !is_h8s())
         UNKN(0x1700|0x10);    // NOT: bits[6:4] must be 0 (H8/300H reuses for NOT.W)
 
     // OR/XOR/AND #imm,Rd (0xC0-0xEF): byte1=0x?0|(Rd nibble), byte2=imm8
@@ -432,7 +445,7 @@ void test_logic() {
     TEST("XOR", "#H'AA, R5H", 0xD000|(0x5<<8)|0xAA);
     TEST("AND", "#H'F0, R0H", 0xE000|(0x0<<8)|0xF0);
 
-    if (is_h8300h()) {
+    if (is_h8300h() || is_h8s()) {
         // NOT.W / NOT.L Rd
         TEST("NOT.W",  "R0",                0x1710|0x0);
         TEST("NOT.W",  "E5",                0x1710|0xD);
@@ -477,12 +490,12 @@ void test_shift_rotate() {
     // bit7=0: SHLL/SHLR/ROTXL/ROTXR; bit7=1: SHAL/SHAR/ROTL/ROTR
     TEST("SHLL",  "R0H", 0x1000|0x0);
     TEST("SHLL",  "R7L", 0x1000|0xF);
-    if (!is_h8300h())
+    if (!is_h8300h() && !is_h8s())
         UNKN(0x1000|0x10);    // SHLL: bits[6:4] must be 0 (H8/300H reuses for SHLL.W)
 
     TEST("SHAL",  "R0H", 0x1080|0x0);
     TEST("SHAL",  "R5L", 0x1080|0xD);
-    if (!is_h8300h())
+    if (!is_h8300h() && !is_h8s())
         UNKN(0x1080|0x10);    // SHAL: bits[6:4] must be 0 (H8/300H reuses for SHAL.W)
 
     TEST("SHLR",  "R0H", 0x1100|0x0);
@@ -494,7 +507,7 @@ void test_shift_rotate() {
     TEST("ROTXR", "R0H", 0x1300|0x0);
     TEST("ROTR",  "R7L", 0x1380|0xF);
 
-    if (is_h8300h()) {
+    if (is_h8300h() || is_h8s()) {
         // Shift / rotate .W and .L
         TEST("SHLL.W",  "R0",  0x1010|0x0);
         TEST("SHLL.L",  "ER0", 0x1030|0);
@@ -660,7 +673,7 @@ void test_branch() {
     ATEST(0x1000, "BLT", "H'0FF4", 0x4D00|0xF2);
     ATEST(0x1000, "BGT", "H'0FFA", 0x4E00|0xF8);
 
-    if (is_h8300h()) {
+    if (is_h8300h() || is_h8s()) {
         // Long branches BRA/Bcc/BSR :16 (post-instruction PC + disp16)
         ATEST(0x1000, "BRA", "H'1234", 0x5800, 0x1234 - 0x1004);
         ATEST(0x1000, "BHI", "H'1234", 0x5820, 0x1234 - 0x1004);
@@ -696,7 +709,7 @@ void test_jump() {
     // JSR @@abs8 (0x5F): byte2=abs8
     TEST("JSR", "@@H'0080", 0x5F00|0x80);
 
-    if (is_h8300h()) {
+    if (is_h8300h() || is_h8s()) {
         // JMP / JSR @aa:24 (high byte 0 falls through to @aa:16 entry; non-zero
         // high byte routes here)
         TEST("JMP", "@H'FFFFE0:24", 0x5AFF, 0xFFE0);
@@ -723,11 +736,14 @@ void test_illegal_common() {
     // 0x01 SLEEP and 0x59/0x5D JMP/JSR @Rn are NOT in this shared set
     // because byte-2 flips on H8/300H land on valid prefixes
     // (0x0100/0x0140/0x01C0/0x01D0/0x01F0) or ERn (E0..E7) operands.
-    static constexpr IllegalCase shared[] = {
-        { 0x00, 0xFF, 0x00 },   // NOP
-        { 0x02, 0xF0, 0x00 },   // STC.B CCR, Rd
-        { 0x03, 0xF0, 0x00 },   // LDC.B Rs, CCR
-        { 0x54, 0xFF, 0x70 },   // RTS
+    // On H8S, bit 4 of byte 2 selects EXR (vs CCR) for STC/LDC; restrict
+    // the illegal mask to 0xE0 so those encodings are not flagged here.
+    const uint8_t stc_ldc_mask = is_h8s() ? 0xE0 : 0xF0;
+    const IllegalCase shared[] = {
+        { 0x00, 0xFF, 0x00 },           // NOP
+        { 0x02, stc_ldc_mask, 0x00 },   // STC.B CCR, Rd
+        { 0x03, stc_ldc_mask, 0x00 },   // LDC.B Rs, CCR
+        { 0x54, 0xFF, 0x70 },           // RTS
         { 0x56, 0xFF, 0x70 },   // RTE
         { 0x70, 0x80, 0x00 },   // BSET #bit, Rd
         { 0x71, 0x80, 0x00 },   // BNOT #bit, Rd
@@ -992,16 +1008,23 @@ void test_illegal_h8300hn() {
     }
 
     // 0x10 / 0x11 / 0x12 / 0x13: shift / rotate in .B (POS___F),
-    // .W (POS___F), and .L (POS___7) variants. Valid high nibbles per
-    // byte-1 are {0x0, 0x1, 0x3, 0x8, 0x9, 0xB}; .L requires bit 3 = 0.
-    auto valid_shift_rot = [](uint16_t w) {
+    // .W (POS___F), and .L (POS___7) variants. Valid high nibbles of
+    // byte-2 on H8/300H: {0x0, 0x1, 0x3, 0x8, 0x9, 0xB}. H8S adds the
+    // #2,Rd forms: {0x4, 0x5, 0x7, 0xC, 0xD, 0xF}. .L variants require
+    // bit 3 = 0.
+    const bool h8s = is_h8s();
+    auto valid_shift_rot = [h8s](uint16_t w) {
         const uint8_t b2 = static_cast<uint8_t>(w & 0xFF);
         switch (b2 & 0xF0) {
-        case 0x00: case 0x10: case 0x80: case 0x90:    // .B / .W
+        case 0x00: case 0x10: case 0x80: case 0x90:    // #1 .B / .W
             return true;
-        case 0x30: case 0xB0:                          // .L: bit 3 reserved
+        case 0x30: case 0xB0:                          // #1 .L: bit 3 reserved
             return (b2 & 0x08) == 0;
-        default:                                       // 0x20/40/50/60/70/A0/C0/D0/E0/F0
+        case 0x40: case 0x50: case 0xC0: case 0xD0:    // H8S #2 .B / .W
+            return h8s;
+        case 0x70: case 0xF0:                          // H8S #2 .L: bit 3 reserved
+            return h8s && (b2 & 0x08) == 0;
+        default:                                       // 0x20/60/A0/E0
             return false;
         }
     };
@@ -1133,13 +1156,91 @@ void test_illegal_h8300hn() {
         UNKN(0x6A20, hi);                         // MOV.B @aa:24, R0H
         UNKN(0x6B20, hi);                         // MOV.W @aa:24, R0
         UNKN(0x0100, 0x6B20, hi);                 // MOV.L @aa:24, ER0
-        UNKN(0x7800, 0x6A20, hi);                 // MOV.B @(d:24,ER0), R0H
+        if (!is_h8s())                            // H8S uses @(d:32,ER) here
+            UNKN(0x7800, 0x6A20, hi);             // MOV.B @(d:24,ER0), R0H
+    }
+}
+
+// H8S/2000 normal-mode illegal patterns: inherits all of test_illegal_h8300hn
+// minus the patterns now claimed by H8S extensions (handled inline via
+// is_h8s()), and adds prefix-walks for TAS / LDM / STM / EXR / @(d:32,ERn).
+void test_illegal_h8s2000n() {
+    test_illegal_h8300hn();
+
+    // 0x01E0 prefix (TAS): only 0x7B|er*16|C is a TAS body. Walk byte 4
+    // bits to flip away from a canonical TAS.
+    const IllegalCase tas_cases[] = {
+        // byte 2 of opcode word: high nibble = ER (any 0..7), low nibble = C.
+        { 0x7B, 0x0F, 0x0C },   // byte 4 low nibble must be C
+    };
+    for (const auto &c : tas_cases) {
+        for (uint_fast8_t pos = 0; pos < 8; pos++) {
+            const uint8_t bit = static_cast<uint8_t>(1u << pos);
+            if (!(c.mask & bit))
+                continue;
+            const uint8_t b2 = static_cast<uint8_t>(c.value ^ bit);
+            UNKN(0x01E0, static_cast<Config::opcode_t>((c.b1 << 8) | b2));
+        }
+    }
+    // 0x01E0 with a non-7B byte 1 is illegal (no other instruction shares
+    // this super-prefix on H8S/2000).
+    for (uint_fast8_t pos = 0; pos < 8; pos++)
+        UNKN(0x01E0, static_cast<Config::opcode_t>(((0x7B ^ (1u << pos)) << 8) | 0x0C));
+
+    // 0x0110/0x0120/0x0130 prefix (LDM/STM): body must be 0x6D 7n (LDM) or
+    // 0x6D Fn (STM). The low 3 bits must be a valid last/first register; the
+    // high nibble must be 0x7 (LDM load) or 0xF (STM store).
+    const Config::opcode_t ldm_stm_prefixes[] = {0x0110, 0x0120, 0x0130};
+    for (auto prefix : ldm_stm_prefixes) {
+        // Flip each bit of the 0x6D byte 1.
+        for (uint_fast8_t pos = 0; pos < 8; pos++)
+            UNKN(prefix, static_cast<Config::opcode_t>(((0x6D ^ (1u << pos)) << 8) | 0x70));
+        // Byte 2 high nibble must be 7 (LDM) or F (STM); flipping bits 6:4
+        // produces unrecognized direction.
+        for (uint_fast8_t hi = 0; hi < 16; hi++) {
+            if (hi == 0x7 || hi == 0xF)
+                continue;
+            UNKN(prefix, static_cast<Config::opcode_t>(0x6D00 | (hi << 4)));
+        }
+    }
+
+    // 0x0141 super-prefix (EXR memory ops). Valid second words mirror the
+    // 0x0140 CCR set: 0x07/06/05/04 (immediate), 0x69/6B/6D/6F (memory).
+    // 0x78 is a normal prefix word (@(d:32,ERn)); 0x7C..0x7F are bit-op
+    // prefixes. The decoder treats those as prefixes regardless of the
+    // active super-prefix, so testing them under 0x0141 would consume
+    // bytes beyond our 4-byte test stream and yield "Not enough memory"
+    // instead of "Unknown instruction" -- skip them here.
+    auto valid_0141_body = [](uint16_t w) {
+        const uint8_t b1 = static_cast<uint8_t>(w >> 8);
+        switch (b1) {
+        case 0x04: case 0x05: case 0x06: case 0x07:    // ORC/XORC/ANDC/LDC #imm
+        case 0x69: case 0x6B: case 0x6D: case 0x6F:    // memory forms
+        case 0x78:                                      // @(d:32,ERn) prefix
+        case 0x7C: case 0x7D: case 0x7E: case 0x7F:    // bit-op prefixes
+            return true;
+        default:
+            return false;
+        }
+    };
+    // Walk byte 1 of body to confirm only the listed prefixes are accepted.
+    static constexpr uint16_t canon_0141[] = {
+        0x0700, 0x0600, 0x0500, 0x0400,        // immediate forms
+        0x6900, 0x6980, 0x6B00, 0x6B80,        // @ER / @ER store / @aa:16 / @aa:16 store
+        0x6D00, 0x6D80, 0x6F00, 0x6F80,        // @ER+ / @-ER / @(d:16) / @(d:16) store
+    };
+    for (const auto canon : canon_0141) {
+        for (uint_fast8_t pos = 8; pos < 16; pos++) {
+            const uint16_t flipped = canon ^ static_cast<uint16_t>(1u << pos);
+            if (!valid_0141_body(flipped))
+                UNKN(0x0141, flipped);
+        }
     }
 }
 
 void test_sp_alias() {
-    // Default: SP alias for ER7 (H8/300H) / R7 (H8/300) in indirect modes.
-    if (is_h8300h()) {
+    // Default: SP alias for ER7 (H8/300H+) / R7 (H8/300) in indirect modes.
+    if (is_h8300h() || is_h8s()) {
         TEST("MOV.L", "@SP, ER0",   0x0100, 0x6900|(7<<4)|0);
         TEST("MOV.W", "R7, @SP",    0x6980|(7<<4)|7);
     } else {
@@ -1148,7 +1249,7 @@ void test_sp_alias() {
 
     // Disable the alias: expect canonical ER7/R7 instead.
     disassembler.setOption("sp-alias", "off");
-    if (is_h8300h()) {
+    if (is_h8300h() || is_h8s()) {
         TEST("MOV.L", "@ER7, ER0",  0x0100, 0x6900|(7<<4)|0);
         TEST("MOV.W", "R7, @ER7",   0x6980|(7<<4)|7);
     } else {
@@ -1185,6 +1286,94 @@ void test_advanced_mode() {
     TEST("MOV.B", "@H'FF80:16, R0H", 0x6A00|0x0, 0xFF80);
 }
 
+void test_h8s_extensions() {
+
+    // TAS @ERn (01E0 7B|er*16|C); ER7 disassembles to @SP per convention.
+    TEST("TAS", "@ER0",           0x01E0, 0x7B0C);
+    TEST("TAS", "@ER1",           0x01E0, 0x7B1C);
+    TEST("TAS", "@ER4",           0x01E0, 0x7B4C);
+    TEST("TAS", "@ER5",           0x01E0, 0x7B5C);
+    TEST("TAS", "@SP",            0x01E0, 0x7B7C);
+
+    // LDM.L @SP+, ER list -- byte 4 low bits = last register.
+    TEST("LDM.L", "@SP+, ER0-ER1", 0x0110, 0x6D71);
+    TEST("LDM.L", "@SP+, ER2-ER3", 0x0110, 0x6D73);
+    TEST("LDM.L", "@SP+, ER4-ER5", 0x0110, 0x6D75);
+    TEST("LDM.L", "@SP+, ER0-ER2", 0x0120, 0x6D72);
+    TEST("LDM.L", "@SP+, ER4-ER6", 0x0120, 0x6D76);
+    TEST("LDM.L", "@SP+, ER0-ER3", 0x0130, 0x6D73);
+    // STM.L ER list, @-SP -- byte 4 low bits = first register.
+    TEST("STM.L", "ER0-ER1, @-SP", 0x0110, 0x6DF0);
+    TEST("STM.L", "ER2-ER3, @-SP", 0x0110, 0x6DF2);
+    TEST("STM.L", "ER4-ER5, @-SP", 0x0110, 0x6DF4);
+    TEST("STM.L", "ER0-ER2, @-SP", 0x0120, 0x6DF0);
+    TEST("STM.L", "ER4-ER6, @-SP", 0x0120, 0x6DF4);
+    TEST("STM.L", "ER0-ER3, @-SP", 0x0130, 0x6DF0);
+
+    // LDC/STC EXR direct, immediate, and memory forms.
+    TEST("LDC",  "R0L, EXR",           0x0318);
+    TEST("LDC",  "R3H, EXR",           0x0313);
+    TEST("STC",  "EXR, R1L",           0x0219);
+    TEST("LDC",  "#H'A5, EXR",         0x0141, 0x07A5);
+    TEST("ANDC", "#H'F0, EXR",         0x0141, 0x06F0);
+    TEST("ORC",  "#H'A5, EXR",         0x0141, 0x04A5);
+    TEST("XORC", "#15, EXR",           0x0141, 0x050F);
+    TEST("LDC",  "@ER0, EXR",          0x0141, 0x6900);
+    TEST("LDC",  "@SP, EXR",           0x0141, 0x6970);
+    TEST("STC",  "EXR, @ER0",          0x0141, 0x6980);
+    TEST("STC",  "EXR, @SP",           0x0141, 0x69F0);
+    TEST("LDC",  "@ER0+, EXR",         0x0141, 0x6D00);
+    TEST("STC",  "EXR, @-ER1",         0x0141, 0x6D90);
+    TEST("LDC",  "@H'1234, EXR",       0x0141, 0x6B00, 0x1234);
+    TEST("STC",  "EXR, @H'1234",       0x0141, 0x6B80, 0x1234);
+    TEST("LDC",  "@(H'1234,ER0), EXR", 0x0141, 0x6F00, 0x1234);
+    TEST("STC",  "EXR, @(H'1234,ER0)", 0x0141, 0x6F80, 0x1234);
+
+    // 2-bit shift/rotate #2,Rd forms.
+    TEST("SHLL",   "#2, R0H", 0x1040);
+    TEST("SHLL",   "#2, R7L", 0x104F);
+    TEST("SHLL.W", "#2, R0",  0x1050);
+    TEST("SHLL.W", "#2, E7",  0x105F);
+    TEST("SHLL.L", "#2, ER0", 0x1070);
+    TEST("SHLL.L", "#2, ER7", 0x1077);
+    TEST("SHAL",   "#2, R0H", 0x10C0);
+    TEST("SHAL.W", "#2, R0",  0x10D0);
+    TEST("SHAL.L", "#2, ER0", 0x10F0);
+    TEST("SHLR",   "#2, R0H", 0x1140);
+    TEST("SHLR.W", "#2, R0",  0x1150);
+    TEST("SHLR.L", "#2, ER0", 0x1170);
+    TEST("SHAR",   "#2, R0H", 0x11C0);
+    TEST("SHAR.W", "#2, R0",  0x11D0);
+    TEST("SHAR.L", "#2, ER0", 0x11F0);
+    TEST("ROTXL",   "#2, R0H", 0x1240);
+    TEST("ROTXL.W", "#2, R0",  0x1250);
+    TEST("ROTXL.L", "#2, ER0", 0x1270);
+    TEST("ROTL",    "#2, R0H", 0x12C0);
+    TEST("ROTL.W",  "#2, R0",  0x12D0);
+    TEST("ROTL.L",  "#2, ER0", 0x12F0);
+    TEST("ROTXR",   "#2, R0H", 0x1340);
+    TEST("ROTXR.W", "#2, R0",  0x1350);
+    TEST("ROTXR.L", "#2, ER0", 0x1370);
+    TEST("ROTR",    "#2, R0H", 0x13C0);
+    TEST("ROTR.W",  "#2, R0",  0x13D0);
+    TEST("ROTR.L",  "#2, ER0", 0x13F0);
+
+    // @(d:32, ERn) addressing for MOV.B/W/L and LDC/STC CCR/EXR.
+    TEST("MOV.B", "@(H'12345678:32,ER0), R0H", 0x7800, 0x6A20, 0x1234, 0x5678);
+    TEST("MOV.B", "@(H'7FFFFFFF:32,SP), R7L",  0x7870, 0x6A2F, 0x7FFF, 0xFFFF);
+    TEST("MOV.B", "R0H, @(H'12345678:32,ER0)", 0x7800, 0x6AA0, 0x1234, 0x5678);
+    TEST("MOV.B", "R7L, @(H'7FFFFFFF:32,SP)",  0x7870, 0x6AAF, 0x7FFF, 0xFFFF);
+    TEST("MOV.W", "@(H'12345678:32,ER0), R0",  0x7800, 0x6B20, 0x1234, 0x5678);
+    TEST("MOV.W", "R7, @(H'7FFFFFFF:32,SP)",   0x7870, 0x6BA7, 0x7FFF, 0xFFFF);
+    TEST("MOV.L", "@(H'12345678:32,ER0), ER1", 0x0100, 0x7800, 0x6B21, 0x1234, 0x5678);
+    TEST("MOV.L", "ER0, @(H'12345678:32,ER0)", 0x0100, 0x7880, 0x6BA0, 0x1234, 0x5678);
+    TEST("MOV.L", "ER6, @(H'7FFFFFFF:32,SP)",  0x0100, 0x78F0, 0x6BA6, 0x7FFF, 0xFFFF);
+    TEST("LDC",   "@(H'12345678:32,ER0), CCR", 0x0140, 0x7800, 0x6B20, 0x1234, 0x5678);
+    TEST("STC",   "CCR, @(H'12345678:32,ER0)", 0x0140, 0x7800, 0x6BA0, 0x1234, 0x5678);
+    TEST("LDC",   "@(H'12345678:32,ER0), EXR", 0x0141, 0x7800, 0x6B20, 0x1234, 0x5678);
+    TEST("STC",   "EXR, @(H'12345678:32,ER0)", 0x0141, 0x7800, 0x6BA0, 0x1234, 0x5678);
+}
+
 void run_tests(const char *cpu) {
     disassembler.setCpu(cpu);
     RUN_TEST(test_system);
@@ -1197,9 +1386,13 @@ void run_tests(const char *cpu) {
     RUN_TEST(test_branch);
     RUN_TEST(test_jump);
     RUN_TEST(test_sp_alias);
-    if (is_h8300h())
+    if (is_h8300h() || is_h8s())
         RUN_TEST(test_advanced_mode);
-    if (is_h8300h()) {
+    if (is_h8s())
+        RUN_TEST(test_h8s_extensions);
+    if (is_h8s()) {
+        RUN_TEST(test_illegal_h8s2000n);
+    } else if (is_h8300h()) {
         RUN_TEST(test_illegal_h8300hn);
     } else {
         RUN_TEST(test_illegal_h8300);

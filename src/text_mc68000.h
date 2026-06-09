@@ -167,7 +167,7 @@ using common::TEXT_SUBX;
 using common::TEXT_SVC;
 extern const char TEXT_SVS[]     PROGMEM;
 using common::TEXT_SWAP;
-extern const char TEXT_TAS[]     PROGMEM;
+using common::TEXT_TAS;
 using common::TEXT_TRAP;
 using common::TEXT_TRAPV;
 using common::TEXT_TST;

@@ -28,13 +28,15 @@ static constexpr uint32_t UINT24_MAX = 0xFFFFFFu;
 enum CpuType : uint8_t {
     H8300,
     H8300H,
+    H8S2000,
 };
 
-// MaxCode = 10: largest H8/300H instruction is MOV.L @(d:24,ERn),ERd / MOV.L
-// @aa:24,ERd at 10 bytes (0100 78n0 6B20|6BA0 disp24). H8/300 max is 4.
+// MaxCode = 10: largest instruction is MOV.L @(d:24,ERn),ERd / MOV.L
+// @aa:24,ERd at 10 bytes (0100 78n0 6B20|6BA0 disp24). H8S/2000 also
+// reaches 10 bytes via MOV.L @(d:32,ERn). H8/300 max is 4.
 // The template's ADDRESS_24BIT widens Config::uintptr_t to uint32_t so the
-// @aa:24 operand fits; addressWidth() is overridden to 16 unless H8/300H
-// advanced-mode is enabled (then 24-bit).
+// @aa:24 operand fits; addressWidth() is overridden to 16 unless the
+// advanced-mode option is enabled on H8/300H or H8S/2000.
 struct Config
     : public ConfigImpl<CpuType, ADDRESS_24BIT, ADDRESS_BYTE, OPCODE_16BIT, ENDIAN_BIG, 10, 6> {
     Config(const InsnTable<CpuType> &table)
@@ -44,7 +46,9 @@ struct Config
         return advancedMode() ? ADDRESS_24BIT : ADDRESS_16BIT;
     }
     bool hasReg32() const { return cpuType() != H8300; }
-    bool advancedMode() const { return cpuType() == H8300H && _advancedMode; }
+    // EXR belongs to the H8S family; extend when H8S/2600 lands.
+    bool hasExr() const { return cpuType() == H8S2000; }
+    bool advancedMode() const { return cpuType() != H8300 && _advancedMode; }
     Error setAdvancedMode(bool on) {
         _advancedMode = on;
         return OK;
