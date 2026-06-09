@@ -736,6 +736,59 @@ void test_jump() {
 }
 
 
+void test_advanced_mode() {
+    assembler.setOption("advanced-mode", "on");
+
+    // @aa:8 short-page widens 0xnn -> 0xFFFFnn in advanced mode (24-bit).
+    TEST("MOV.B @H'FFFFFF:8, R0H", 0x2000|(0<<8)|0xFF);
+    TEST("MOV.B @H'FFFF80:8, R7L", 0x2000|(0xF<<8)|0x80);
+    TEST("MOV.B @H'80:8,     R7L", 0x2000|(0xF<<8)|0x80);
+
+    // @aa:16 sign-extends bit 15 in advanced mode: 0x0000..0x7FFF and
+    // 0xFF8000..0xFFFFFF reachable; 0x008000..0xFF7FFF is overflow.
+    TEST("MOV.B @H'FFFF80:16, R0H", 0x6A00|0x0, 0xFF80);
+    TEST("MOV.B @H'FF8000:16, R0H", 0x6A00|0x0, 0x8000);
+    TEST("MOV.B @H'0080:16,   R0H", 0x6A00|0x0, 0x0080);
+    TEST("MOV.B @H'7FFF:16,   R0H", 0x6A00|0x0, 0x7FFF);
+    ERRT("MOV.B @H'008000:16, R0H", OVERFLOW_RANGE, "H'008000:16, R0H",
+            0x6A00|0x0, 0x8000);
+    ERRT("MOV.B @H'FF7FFF:16, R0H", OVERFLOW_RANGE, "H'FF7FFF:16, R0H",
+            0x6A00|0x0, 0x7FFF);
+
+    // @(d:16, ERn) displacement: in advanced mode it must be a strict
+    // signed 16-bit value [-32768,32767]; unsigned values >0x7FFF are
+    // rejected. (Normal mode is more permissive -- see test_data_move.)
+    TEST("MOV.W @(-1, ER0), R0",      0x6F00|(0<<4)|0x0, 0xFFFF);
+    TEST("MOV.W @(-32768, ER0), R0",  0x6F00|(0<<4)|0x0, 0x8000);
+    TEST("MOV.W @(32767, ER0), R0",   0x6F00|(0<<4)|0x0, 0x7FFF);
+    ERRT("MOV.W @(H'FFFF, ER0), R0",  OVERFLOW_RANGE, "H'FFFF, ER0), R0",
+            0x6F00|(0<<4)|0x0, 0xFFFF);
+    ERRT("MOV.W @(-32769, ER0), R0",  OVERFLOW_RANGE, "-32769, ER0), R0",
+            0x6F00|(0<<4)|0x0, 0x7FFF);
+
+    // @aa:24 form always covers full 24-bit space.
+    TEST("MOV.B @H'001234:24, R0H", 0x6A20|0x0, 0x0000, 0x1234);
+    TEST("MOV.B @H'FFFFE0:24, R7L", 0x6A20|0xF, 0x00FF, 0xFFE0);
+
+    // JMP / JSR @aa:24 targets up to 0xFFFFFF.
+    TEST("JMP @H'FFFFFF:24", 0x5AFF, 0xFFFF);
+    TEST("JSR @H'FFFFFF:24", 0x5EFF, 0xFFFF);
+
+    assembler.setOption("advanced-mode", "off");
+
+    // After turning advanced-mode off, the 24-bit short/absolute forms are
+    // still accepted as aliases of the 16-bit forms (they encode identically),
+    // so sources shared with advanced mode assemble without modification.
+    TEST("MOV.B @H'FFFFFF:8, R0H",  0x2000|(0<<8)|0xFF);
+    TEST("MOV.B @H'FFFF80:16, R0H", 0x6A00|0x0, 0xFF80);
+    // Values outside both the normal page and the advanced-mode high page
+    // still overflow.
+    ERRT("MOV.B @H'FF0000:8, R0H",  OVERFLOW_RANGE, "H'FF0000:8, R0H",
+            0x2000|(0<<8)|0x00);
+    ERRT("MOV.B @H'FE0000:16, R0H", OVERFLOW_RANGE, "H'FE0000:16, R0H",
+            0x6A00|0x0, 0x0000);
+}
+
 void test_data_constant() {
     // .DATA defaults to word, big-endian; strings not allowed.
     TEST(".data H'1234, H'5678", 0x1234, 0x5678);
@@ -743,9 +796,17 @@ void test_data_constant() {
     TEST(".data.b H'AB, H'CD", 0xABCD);
     TEST(".data.l H'12345678", 0x1234, 0x5678);
 
-    // .SDATA emits raw string bytes.
-    TEST(R"(.sdata "Hi")", 0x4869);
+    // .SDATA emits raw string bytes; comma-separated operands concatenate.
+    TEST(R"(.sdata "Hi")",       0x4869);
     TEST(R"(.sdata "")");
+    BTEST(R"(.sdata "Hi", "!")", 0x48, 0x69, 0x21);
+
+    // Hitachi letter syntax: "X" delimits a single character; "" inside the
+    // delimiters is an escaped double-quote (0x22).
+    TEST(R"(MOV.B #"A", R0H)",   0xF041);
+    TEST(R"(MOV.B #"0", R0H)",   0xF030);
+    TEST(R"(MOV.B #" ", R0H)",   0xF020);
+    TEST(R"(MOV.B #"""", R0H)",  0xF022);
 
     // .RES reserves space without emitting bytes; output buffer is empty.
     TEST(".res 2");
@@ -765,6 +826,8 @@ void run_tests(const char *cpu) {
     RUN_TEST(test_bit_ops);
     RUN_TEST(test_branch);
     RUN_TEST(test_jump);
+    if (is_h8300h())
+        RUN_TEST(test_advanced_mode);
     RUN_TEST(test_data_constant);
 }
 

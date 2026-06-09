@@ -156,6 +156,8 @@ constexpr char TEXT_REG_ER6[] PROGMEM = "ER6";
 constexpr char TEXT_REG_ER7[] PROGMEM = "ER7";
 
 // Options
+constexpr char OPT_BOOL_ADVANCED_MODE[] PROGMEM = "advanced-mode";
+constexpr char OPT_DESC_ADVANCED_MODE[] PROGMEM = "H8/300H 24-bit advanced mode";
 constexpr char OPT_BOOL_SP_ALIAS[] PROGMEM = "sp-alias";
 constexpr char OPT_DESC_SP_ALIAS[] PROGMEM = "emit SP alias for ER7/R7 in indirect addressing";
 

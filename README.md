@@ -98,6 +98,7 @@ It can generate Intel HEX or Motorola S-Record output.
       --no-<name>       : --<name>=false
       --list-radix      : set listing radix (8, 16) (int)
       --smart-branch    : optimize branch instruction (bool)
+      --advanced-mode   : H8/300H 24-bit advanced mode (bool: H8/300)
       --extmode         : Extended mode (bool: Z380)
       --fpu             : floating point co-processor (text: 8086, 68000, 32032)
       --implicit-word   : unknown instruction defines word (bool: 6100, J11)
@@ -146,6 +147,7 @@ It can read Intel HEX or Motorola S-Record input.
       --intel-hex      : Intel style hexadecimal (bool)
       --origin-char    : letter for origin symbol (char)
       --gnu-as         : GNU assembler compatible (bool)
+      --advanced-mode  : H8/300H 24-bit advanced mode (bool: H8/300)
       --external-paren : disp2(disp(ext)) as external addressing (bool: 32032)
       --extmode        : Extended mode (bool: Z380)
       --fpu            : floating point co-processor (text: 8086, 68000, 32032)

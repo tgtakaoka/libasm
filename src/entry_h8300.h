@@ -44,7 +44,7 @@ enum AddrMode : uint8_t {
     M_VAL1 = 15,   // implicit #1 (ADDS/SUBS)
     M_VAL2 = 16,   // implicit #2 (ADDS/SUBS)
     M_CCR = 17,    // CCR control register
-    // H8/300H additions:
+    // H8/300H
     M_REG32 = 18,  // 32-bit register: ER0..ER7
     M_IMM32 = 19,  // 32-bit immediate: #imm:32
     M_IDX24 = 20,  // 24-bit displacement: @(d:24,ERn)

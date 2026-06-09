@@ -29,8 +29,11 @@ const ValueFormatter::Plugins &DisH8300::defaultPlugins() {
 }
 
 DisH8300::DisH8300(const ValueFormatter::Plugins &plugins)
-    : Disassembler(plugins, &_opt_spAlias),
+    : Disassembler(plugins, &_opt_advancedMode),
       Config(TABLE),
+      _opt_advancedMode(this, &Config::setAdvancedMode,
+              ::libasm::text::h8300::OPT_BOOL_ADVANCED_MODE,
+              ::libasm::text::h8300::OPT_DESC_ADVANCED_MODE, &_opt_spAlias),
       _opt_spAlias(this, &Config::setSpAlias, ::libasm::text::h8300::OPT_BOOL_SP_ALIAS,
               ::libasm::text::h8300::OPT_DESC_SP_ALIAS) {
     reset();
@@ -62,16 +65,26 @@ Config::uintptr_t readAddress(DisInsn &insn, OprPos pos, uint_fast8_t bits, bool
 
 void DisH8300::decodeAbsolute(DisInsn &insn, StrBuffer &out, AddrMode mode, OprPos pos) const {
     const auto bits = (mode == M_MIND8 || mode == M_ABS8) ? 8 : 16;
-    const auto addr = readAddress(insn, pos, bits, mode == M_MIND8);
+    auto addr = readAddress(insn, pos, bits, mode == M_MIND8);
+    if (advancedMode()) {
+        // Advanced mode: @aa:16 sign-extends bit 15 into the 24-bit space
+        // (0x8000..0xFFFF -> 0xFF8000..0xFFFFFF). @aa:8 already lives in the
+        // 0xFF00..0xFFFF page; widen further to 0xFFFF00..0xFFFFFF.
+        if (mode == M_ABS16 && (addr & 0x8000))
+            addr |= 0xFF0000;
+        else if (mode == M_ABS8)
+            addr |= 0xFFFF00;
+    }
     insn.setErrorIf(out, checkAddr(addr, insn.oprSize() == SZ_WORD));
     if (mode == M_MIND8)
         out.letter('@');
+    const auto outBits = (advancedMode() && (addr & 0xFF0000) != 0) ? 24 : 16;
     const auto *label = lookup(addr, addressWidth());
     if (label) {
         out.rtext(label).letter(':').int16(bits);
     } else {
-        outHex(out, addr, 16, false);
-        if (mode == M_ABS8 || (mode == M_ABS16 && defaultsToAbs8(addr)))
+        outHex(out, addr, outBits, false);
+        if (mode == M_ABS8 || advancedMode() || (mode == M_ABS16 && defaultsToAbs8(addr)))
             out.letter(':').int16(bits);
     }
 }
@@ -160,12 +173,21 @@ void DisH8300::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode, OprPo
             out.letter('+');
         break;
     }
-    case M_IDX16:
+    case M_IDX16: {
+        // @(d:16, ERn) -- d:16 is a signed displacement (sign-extended at
+        // runtime). Negative values are written as signed decimal so the
+        // dis output round-trips through the assembler in advanced mode,
+        // where unsigned values above 0x7FFF are rejected.
         out.letter('@').letter('(');
-        decodeAbsolute(insn, out, mode, pos);
+        const auto disp = insn.readUint16();
+        if (disp & 0x8000)
+            outHex(out, disp, -16, true);
+        else
+            outHex(out, disp, 16, false);
         out.letter(',');
         outRegName(out, decodeOprAddrReg(insn, out, mode, pos)).letter(')');
         break;
+    }
     case M_IDX24: {
         // ERn lives in the prefix word; disp24 follows the opcode in a
         // 4-byte slot with a reserved top byte (must be zero). Read the

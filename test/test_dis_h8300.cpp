@@ -197,7 +197,7 @@ void test_data_move() {
     // MOV.B @(d16,Rn),Rd (0x6E, bit7=0): byte2=(Rn3<<4)|Rd, then disp16
     TEST("MOV.B", AREG("@(H'0000,R0), R0H", "@(H'0000,ER0), R0H"), 0x6E00|(0<<4)|0x0, 0x0000);
     TEST("MOV.B", AREG("@(H'0010,R2), R3L", "@(H'0010,ER2), R3L"), 0x6E00|(2<<4)|0xB, 0x0010);
-    TEST("MOV.B", "@(H'FFFF,SP), R7H",                             0x6E00|(7<<4)|0x7, 0xFFFF);
+    TEST("MOV.B", "@(-1,SP), R7H",                                 0x6E00|(7<<4)|0x7, 0xFFFF);
 
     // MOV.B Rs,@(d16,Rn) (0x6E, bit7=1): byte2=0x80|(Rn3<<4)|Rs
     TEST("MOV.B", AREG("R0H, @(H'0000,R0)", "R0H, @(H'0000,ER0)"), 0x6E80|(0<<4)|0x0, 0x0000);
@@ -209,7 +209,7 @@ void test_data_move() {
 
     // MOV.W Rs,@(d16,Rn) (0x6F, bit7=1): byte2=0x80|(Rn3<<4)|Rs3
     TEST("MOV.W", AREG("R0, @(H'0000,R0)", "R0, @(H'0000,ER0)"),   0x6F80|(0<<4)|0, 0x0000);
-    TEST("MOV.W", AREG("R5, @(H'FFFE,R6)", "R5, @(H'FFFE,ER6)"),   0x6F80|(6<<4)|5, 0xFFFE);
+    TEST("MOV.W", AREG("R5, @(-2,R6)", "R5, @(-2,ER6)"),           0x6F80|(6<<4)|5, 0xFFFE);
 
     // MOV.W #imm,Rd (0x79): byte2=Rd3, then imm16
     TEST("MOV.W", "#0, R0",     0x7900|0, 0x0000);
@@ -245,7 +245,7 @@ void test_data_move() {
         TEST("MOV.W", "@ER3, R5",                0x6900|(3<<4)|0x5);
         TEST("MOV.W", "R0, @-ER1",               0x6D80|(1<<4)|0x0);
         TEST("MOV.B", "@(H'1234,ER0), R0H",      0x6E00|(0<<4)|0x0, 0x1234);
-        TEST("MOV.W", "@(H'FFFE,SP), R0",        0x6F00|(7<<4)|0x0, 0xFFFE);
+        TEST("MOV.W", "@(-2,SP), R0",            0x6F00|(7<<4)|0x0, 0xFFFE);
 
         // MOV.B / MOV.W @(d:24,ERn) via 0x7800 normal prefix
         TEST("MOV.B", "@(H'000000:24,ER0), R0H", 0x7800|(0<<4), 0x6A20|0x0, 0x0000, 0x0000);
@@ -1157,6 +1157,34 @@ void test_sp_alias() {
     disassembler.setOption("sp-alias", "on");
 }
 
+void test_advanced_mode() {
+    disassembler.setOption("advanced-mode", "on");
+
+    // @aa:8 short page in advanced mode disassembles to 0xFFFFnn.
+    TEST("MOV.B", "@H'FFFFFF:8, R0H", 0x2000|(0<<8)|0xFF);
+    TEST("MOV.B", "@H'FFFF80:8, R7L", 0x2000|(0xF<<8)|0x80);
+
+    // @aa:16 sign-extends bit 15 in advanced mode.
+    TEST("MOV.B", "@H'FFFF80:16, R0H", 0x6A00|0x0, 0xFF80);
+    TEST("MOV.B", "@H'FF8000:16, R0H", 0x6A00|0x0, 0x8000);
+    TEST("MOV.B", "@H'0080:16, R0H",   0x6A00|0x0, 0x0080);
+    TEST("MOV.B", "@H'7FFF:16, R0H",   0x6A00|0x0, 0x7FFF);
+
+    // @aa:24 still spans the full 24-bit space.
+    TEST("MOV.B", "@H'001234:24, R0H", 0x6A20|0x0, 0x0000, 0x1234);
+    TEST("MOV.B", "@H'FFFFE0:24, R7L", 0x6A20|0xF, 0x00FF, 0xFFE0);
+
+    // JMP / JSR @aa:24 reach the top of advanced-mode space.
+    TEST("JMP", "@H'FFFFFF:24", 0x5AFF, 0xFFFF);
+    TEST("JSR", "@H'FFFFFF:24", 0x5EFF, 0xFFFF);
+
+    disassembler.setOption("advanced-mode", "off");
+
+    // Back to normal mode: same bytes disassemble to 16-bit page.
+    TEST("MOV.B", "@H'FFFF:8, R0H",  0x2000|(0<<8)|0xFF);
+    TEST("MOV.B", "@H'FF80:16, R0H", 0x6A00|0x0, 0xFF80);
+}
+
 void run_tests(const char *cpu) {
     disassembler.setCpu(cpu);
     RUN_TEST(test_system);
@@ -1169,6 +1197,8 @@ void run_tests(const char *cpu) {
     RUN_TEST(test_branch);
     RUN_TEST(test_jump);
     RUN_TEST(test_sp_alias);
+    if (is_h8300h())
+        RUN_TEST(test_advanced_mode);
     if (is_h8300h()) {
         RUN_TEST(test_illegal_h8300hn);
     } else {

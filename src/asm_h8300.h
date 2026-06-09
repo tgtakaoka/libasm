@@ -28,6 +28,8 @@ struct AsmH8300 final : Assembler, Config {
     AsmH8300(const ValueParser::Plugins &plugins = defaultPlugins());
 
 private:
+    const BoolOption<Config> _opt_advancedMode;
+
     RegName parseRegOperand(StrScanner &scan) const;
     Error parseBitSuffix(StrScanner &scan, Operand &op) const;
     Error parseOperand(StrScanner &scan, Operand &op) const;

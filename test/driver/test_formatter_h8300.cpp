@@ -71,9 +71,51 @@ void test_dis_h8300() {
             0x0000, 0x0C00);
 }
 
+void test_asm_h8300h() {
+    PREP_ASM(h8300::AsmH8300, MotorolaDirective);
+
+    driver.setUpperHex(false);
+
+    ASM("H8/300H",
+            R"(        cpu     H8/300H
+        option  advanced-mode, on
+        org     H'abcdee
+        nop
+        mov.b   r0h, @H'fedcba:24
+)",
+            R"(          0 :                            cpu     H8/300H
+          0 :                            option  advanced-mode, on
+     abcdee :                            org     H'abcdee
+     abcdee : 0000                       nop
+     abcdf0 : 6aa0 00fe dcba             mov.b   r0h, @H'fedcba:24
+)");
+}
+
+void test_dis_h8300h() {
+    PREP_DIS(h8300::DisH8300);
+
+    driver.setUppercase(true);
+    driver.setOption("advanced-mode", "on");
+
+    DIS16("H8/300H", 0xabcdee,
+            R"(      CPU    H8/300H
+      ORG    H'ABCDEE
+      NOP
+      MOV.B  R0H, @H'FEDCBA:24
+)",
+            R"(       0 :                            CPU    H8/300H
+  ABCDEE :                            ORG    H'ABCDEE
+  ABCDEE : 0000                       NOP
+  ABCDF0 : 6AA0 00FE DCBA             MOV.B  R0H, @H'FEDCBA:24
+)",
+            0x0000, 0x6AA0, 0x00FE, 0xDCBA);
+}
+
 void run_tests() {
     RUN_TEST(test_asm_h8300);
     RUN_TEST(test_dis_h8300);
+    RUN_TEST(test_asm_h8300h);
+    RUN_TEST(test_dis_h8300h);
 }
 
 }  // namespace test
