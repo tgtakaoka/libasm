@@ -274,6 +274,10 @@ Error AsmH8300::parseOperand(StrScanner &scan, Operand &op) const {
             op.mode = M_CCR;
         } else if (reg == REG_EXR) {
             op.mode = M_EXR;
+        } else if (reg == REG_MACH) {
+            op.mode = M_MACH;
+        } else if (reg == REG_MACL) {
+            op.mode = M_MACL;
         } else {
             return op.setError(p, UNKNOWN_OPERAND);
         }
@@ -514,6 +518,8 @@ void AsmH8300::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode, Op
     case M_NONE:
     case M_CCR:
     case M_EXR:
+    case M_MACH:
+    case M_MACL:
     default:
         break;
     }

@@ -29,6 +29,7 @@ enum CpuType : uint8_t {
     H8300,
     H8300H,
     H8S2000,
+    H8S2600,
 };
 
 // MaxCode = 10: largest instruction is MOV.L @(d:24,ERn),ERd / MOV.L
@@ -46,8 +47,8 @@ struct Config
         return advancedMode() ? ADDRESS_24BIT : ADDRESS_16BIT;
     }
     bool hasReg32() const { return cpuType() != H8300; }
-    // EXR belongs to the H8S family; extend when H8S/2600 lands.
-    bool hasExr() const { return cpuType() == H8S2000; }
+    bool hasExr() const { return cpuType() == H8S2000 || cpuType() == H8S2600; }
+    bool hasMac() const { return cpuType() == H8S2600; }
     bool advancedMode() const { return cpuType() != H8300 && _advancedMode; }
     Error setAdvancedMode(bool on) {
         _advancedMode = on;

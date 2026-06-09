@@ -21,10 +21,11 @@ namespace text {
 namespace h8300 {
 // clang-format off
 
-constexpr char TEXT_H8300_LIST[]   PROGMEM = "H8/300, H8/300H, H8S/2000";
+constexpr char TEXT_H8300_LIST[]   PROGMEM = "H8/300, H8/300H, H8S/2000, H8S/2600";
 constexpr char TEXT_CPU_H8300[]    PROGMEM = "H8/300";
 constexpr char TEXT_CPU_H8300H[]   PROGMEM = "H8/300H";
 constexpr char TEXT_CPU_H8S2000[]  PROGMEM = "H8S/2000";
+constexpr char TEXT_CPU_H8S2600[]  PROGMEM = "H8S/2600";
 
 // constexpr char TEXT_ADD[]   PROGMEM = "ADD";
 constexpr char TEXT_ADDS[]  PROGMEM = "ADDS";
@@ -67,6 +68,7 @@ constexpr char TEXT_BST[]    PROGMEM = "BST";
 // constexpr char TEXT_BVC[]   PROGMEM = "BVC";
 // constexpr char TEXT_BVS[]   PROGMEM = "BVS";
 constexpr char TEXT_BXOR[]  PROGMEM = "BXOR";
+constexpr char TEXT_CLRMAC[] PROGMEM = "CLRMAC";
 // constexpr char TEXT_CMP[]   PROGMEM = "CMP";
 // constexpr char TEXT_DAA[]   PROGMEM = "DAA";
 // constexpr char TEXT_DAS[]   PROGMEM = "DAS";
@@ -80,6 +82,8 @@ constexpr char TEXT_EXTU[]   PROGMEM = "EXTU";
 // constexpr char TEXT_JMP[]   PROGMEM = "JMP";
 // constexpr char TEXT_JSR[]   PROGMEM = "JSR";
 // constexpr char TEXT_LDC[]   PROGMEM = "LDC";
+constexpr char TEXT_LDMAC[]  PROGMEM = "LDMAC";
+// constexpr char TEXT_MAC[]   PROGMEM = "MAC";
 // constexpr char TEXT_MOV[]   PROGMEM = "MOV";
 constexpr char TEXT_MOVFPE[] PROGMEM = "MOVFPE";
 constexpr char TEXT_MOVTPE[] PROGMEM = "MOVTPE";
@@ -105,6 +109,7 @@ constexpr char TEXT_SHLR[]   PROGMEM = "SHLR";
 constexpr char TEXT_SLEEP[]  PROGMEM = "SLEEP";
 // constexpr char TEXT_STC[]   PROGMEM = "STC";
 constexpr char TEXT_STM[]   PROGMEM = "STM";
+constexpr char TEXT_STMAC[]  PROGMEM = "STMAC";
 // constexpr char TEXT_SUB[]   PROGMEM = "SUB";
 constexpr char TEXT_SUBS[]  PROGMEM = "SUBS";
 constexpr char TEXT_SUBX[]  PROGMEM = "SUBX";
@@ -158,7 +163,9 @@ constexpr char TEXT_REG_ER5[] PROGMEM = "ER5";
 constexpr char TEXT_REG_ER6[] PROGMEM = "ER6";
 constexpr char TEXT_REG_ER7[] PROGMEM = "ER7";
 
-constexpr char TEXT_REG_EXR[] PROGMEM = "EXR";
+constexpr char TEXT_REG_EXR[]  PROGMEM = "EXR";
+constexpr char TEXT_REG_MACH[] PROGMEM = "MACH";
+constexpr char TEXT_REG_MACL[] PROGMEM = "MACL";
 
 // Options
 constexpr char OPT_BOOL_ADVANCED_MODE[] PROGMEM = "advanced-mode";

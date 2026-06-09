@@ -24,9 +24,14 @@ using namespace libasm::test;
 AsmH8300 as8300;
 Assembler &assembler(as8300);
 
-// True for any CPU in the H8S family (currently H8S/2000; extend when H8S/2600 lands).
+// True for any CPU in the H8S family (H8S/2000 and H8S/2600).
 bool is_h8s() {
-    return strcmp_P("H8S/2000", assembler.config().cpu_P()) == 0;
+    const auto *cpu_P = assembler.config().cpu_P();
+    return strcmp_P("H8S/2000", cpu_P) == 0 || strcmp_P("H8S/2600", cpu_P) == 0;
+}
+
+bool is_h8s2600() {
+    return strcmp_P("H8S/2600", assembler.config().cpu_P()) == 0;
 }
 
 bool is_h8300h() {
@@ -946,6 +951,33 @@ void test_h8s_extensions() {
     TEST("STC EXR, @(H'12345678:32,ER0)",   0x0141, 0x7800, 0x6BA0, 0x1234, 0x5678);
 }
 
+void test_h8s2600_mac() {
+    // CLRMAC (0x01A0): single-word opcode, no operands.
+    TEST("CLRMAC", 0x01A0);
+
+    // MAC @ERn+,@ERm+: prefix 0x0160, body 0x6D|n*16|m.
+    TEST("MAC @ER0+, @ER0+", 0x0160, 0x6D00);
+    TEST("MAC @ER0+, @ER7+", 0x0160, 0x6D07);
+    TEST("MAC @ER7+, @ER0+", 0x0160, 0x6D70);
+    TEST("MAC @SP+,  @SP+",  0x0160, 0x6D77);
+    TEST("MAC @ER3+, @ER4+", 0x0160, 0x6D34);
+
+    // LDMAC ERs, MACH/MACL: byte2 low 3 bits = ERs.
+    TEST("LDMAC ER0, MACH", 0x0320);
+    TEST("LDMAC ER7, MACH", 0x0327);
+    TEST("LDMAC SP,  MACH", 0x0327);
+    TEST("LDMAC ER0, MACL", 0x0330);
+    TEST("LDMAC ER7, MACL", 0x0337);
+
+    // STMAC MACH/MACL, ERd: byte2 low 3 bits = ERd.
+    TEST("STMAC MACH, ER0", 0x0220);
+    TEST("STMAC MACH, ER7", 0x0227);
+    TEST("STMAC MACL, ER0", 0x0230);
+    TEST("STMAC MACL, SP",  0x0237);
+
+    // MAC/LDMAC/STMAC are H8S/2600-only; not accepted on other CPUs.
+}
+
 void run_tests(const char *cpu) {
     assembler.setCpu(cpu);
     RUN_TEST(test_system);
@@ -957,6 +989,8 @@ void run_tests(const char *cpu) {
     RUN_TEST(test_bit_ops);
     if (is_h8s())
         RUN_TEST(test_h8s_extensions);
+    if (is_h8s2600())
+        RUN_TEST(test_h8s2600_mac);
     RUN_TEST(test_branch);
     RUN_TEST(test_jump);
     if (is_h8300h() || is_h8s())

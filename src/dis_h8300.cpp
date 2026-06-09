@@ -316,6 +316,12 @@ void DisH8300::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode, OprPo
     case M_EXR:
         outRegName(out, REG_EXR);
         break;
+    case M_MACH:
+        outRegName(out, REG_MACH);
+        break;
+    case M_MACL:
+        outRegName(out, REG_MACL);
+        break;
     case M_NONE:
     default:
         break;

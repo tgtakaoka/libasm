@@ -56,6 +56,9 @@ enum AddrMode : uint8_t {
     M_EXR = 25,    // EXR extended control register
     M_IDX32 = 26,  // 32-bit displacement: @(d:32,ERn)
     M_ABS32 = 27,  // 32-bit absolute: @aa:32 (advanced-mode-only data form)
+    // H8S/2600 additions:
+    M_MACH = 28,  // MAC high register (H8S/2600 LDMAC/STMAC)
+    M_MACL = 29,  // MAC low register (H8S/2600 LDMAC/STMAC)
 };
 
 // Instruction name size suffix
