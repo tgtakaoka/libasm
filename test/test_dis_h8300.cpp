@@ -1151,20 +1151,26 @@ void test_illegal_h8300hn() {
     // the high half is consumed (see M_ABS24 / M_IDX24 split-read in
     // dis_h8300), so we feed only as many bytes as the disasm actually
     // reads before flagging the error. Walk each bit of the reserved byte.
+    // H8S advanced mode reuses the same slot as @aa:32 (per H8S table 1.5),
+    // so any high-byte value is part of the address and not illegal.
+    const bool h8s_advanced = is_h8s() && dis8300.advancedMode();
     for (uint_fast8_t pos = 0; pos < 8; pos++) {
         const uint16_t hi = static_cast<uint16_t>(1u << pos) << 8;
-        UNKN(0x6A20, hi);                         // MOV.B @aa:24, R0H
-        UNKN(0x6B20, hi);                         // MOV.W @aa:24, R0
-        UNKN(0x0100, 0x6B20, hi);                 // MOV.L @aa:24, ER0
+        if (!h8s_advanced) {
+            UNKN(0x6A20, hi);                     // MOV.B @aa:24, R0H
+            UNKN(0x6B20, hi);                     // MOV.W @aa:24, R0
+            UNKN(0x0100, 0x6B20, hi);             // MOV.L @aa:24, ER0
+        }
         if (!is_h8s())                            // H8S uses @(d:32,ER) here
             UNKN(0x7800, 0x6A20, hi);             // MOV.B @(d:24,ER0), R0H
     }
 }
 
-// H8S/2000 normal-mode illegal patterns: inherits all of test_illegal_h8300hn
-// minus the patterns now claimed by H8S extensions (handled inline via
-// is_h8s()), and adds prefix-walks for TAS / LDM / STM / EXR / @(d:32,ERn).
-void test_illegal_h8s2000n() {
+// H8S/2000 illegal patterns (both normal and advanced mode): inherits all
+// of test_illegal_h8300hn (which gates @aa:24 reserved-byte tests on H8S
+// advanced mode itself) and adds prefix-walks for TAS / LDM / STM / EXR /
+// @(d:32,ERn). Called twice from run_tests, once per mode.
+void test_illegal_h8s2000() {
     test_illegal_h8300hn();
 
     // 0x01E0 prefix (TAS): only 0x7B|er*16|C is a TAS body. Walk byte 4
@@ -1271,13 +1277,36 @@ void test_advanced_mode() {
     TEST("MOV.B", "@H'0080:16, R0H",   0x6A00|0x0, 0x0080);
     TEST("MOV.B", "@H'7FFF:16, R0H",   0x6A00|0x0, 0x7FFF);
 
-    // @aa:24 still spans the full 24-bit space.
-    TEST("MOV.B", "@H'001234:24, R0H", 0x6A20|0x0, 0x0000, 0x1234);
-    TEST("MOV.B", "@H'FFFFE0:24, R7L", 0x6A20|0xF, 0x00FF, 0xFFE0);
+    // Data @aa:24 vs @aa:32 in advanced mode: H8/300H prints :24, H8S
+    // prints :32 (per H8S manual table 1.5; same bytes, different syntax).
+    if (is_h8s()) {
+        TEST("MOV.B", "@H'00001234:32, R0H", 0x6A20|0x0, 0x0000, 0x1234);
+        TEST("MOV.B", "@H'00FFFFE0:32, R7L", 0x6A20|0xF, 0x00FF, 0xFFE0);
+    } else {
+        TEST("MOV.B", "@H'001234:24, R0H", 0x6A20|0x0, 0x0000, 0x1234);
+        TEST("MOV.B", "@H'FFFFE0:24, R7L", 0x6A20|0xF, 0x00FF, 0xFFE0);
+    }
 
-    // JMP / JSR @aa:24 reach the top of advanced-mode space.
+    // JMP / JSR @aa:24 reach the top of advanced-mode space (program
+    // address; same :24 form on both CPUs).
     TEST("JMP", "@H'FFFFFF:24", 0x5AFF, 0xFFFF);
     TEST("JSR", "@H'FFFFFF:24", 0x5EFF, 0xFFFF);
+
+    if (is_h8s()) {
+        // H8S advanced mode: data @aa:32 takes the full 32-bit slot.
+        TEST("MOV.B", "@H'00000000:32, R0H", 0x6A20|0x0, 0x0000, 0x0000);
+        TEST("MOV.B", "@H'FFFFFFFF:32, R7L", 0x6A20|0xF, 0xFFFF, 0xFFFF);
+        TEST("MOV.B", "R0H, @H'00000000:32", 0x6AA0|0x0, 0x0000, 0x0000);
+        TEST("MOV.B", "R7L, @H'FFFFFFFF:32", 0x6AA0|0xF, 0xFFFF, 0xFFFF);
+        TEST("MOV.W", "@H'00000100:32, R0",  0x6B20|0x0, 0x0000, 0x0100);
+        TEST("MOV.W", "R7, @H'FFFFFFFE:32",  0x6BA0|0x7, 0xFFFF, 0xFFFE);
+        TEST("MOV.L", "@H'00000100:32, ER0", 0x0100, 0x6B20|0x0, 0x0000, 0x0100);
+        TEST("MOV.L", "ER7, @H'FFFFFFFE:32", 0x0100, 0x6BA0|0x7, 0xFFFF, 0xFFFE);
+        TEST("LDC",   "@H'12345678:32, CCR", 0x0140, 0x6B20, 0x1234, 0x5678);
+        TEST("STC",   "CCR, @H'12345678:32", 0x0140, 0x6BA0, 0x1234, 0x5678);
+        TEST("LDC",   "@H'12345678:32, EXR", 0x0141, 0x6B20, 0x1234, 0x5678);
+        TEST("STC",   "EXR, @H'12345678:32", 0x0141, 0x6BA0, 0x1234, 0x5678);
+    }
 
     disassembler.setOption("advanced-mode", "off");
 
@@ -1391,7 +1420,10 @@ void run_tests(const char *cpu) {
     if (is_h8s())
         RUN_TEST(test_h8s_extensions);
     if (is_h8s()) {
-        RUN_TEST(test_illegal_h8s2000n);
+        RUN_TEST(test_illegal_h8s2000);
+        disassembler.setOption("advanced-mode", "on");
+        RUN_TEST(test_illegal_h8s2000);
+        disassembler.setOption("advanced-mode", "off");
     } else if (is_h8300h()) {
         RUN_TEST(test_illegal_h8300hn);
     } else {

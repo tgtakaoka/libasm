@@ -89,6 +89,24 @@ struct Config
         return true;
     }
 
+    // @(d:16, Rn) index displacement. Returns true if |val| is outside
+    // the accepted range:
+    //   normal:    [0, 0xFFFF] (unsigned; only the low 16 bits of the
+    //              effective address are observable in normal mode)
+    //   advanced:  [-0x8000, 0x7FFF] or [0xFF8000, 0xFFFFFF]
+    // d:16 is sign-extended at runtime in advanced mode (manual section 1.7).
+    // The 24-bit sign-extended high page is accepted as an alias of the signed
+    // range so shared sources assemble identically -- same rule as overflowAbs16.
+    bool overflowDisp16(const Value &val) const {
+        if (!advancedMode())
+            return val.overflowUint16();
+        if (!val.overflowInt16())
+            return false;
+        if (!val.overflow(UINT24_MAX, 0xFF8000))
+            return false;
+        return true;
+    }
+
     // Returns true if a bare absolute @|addr| (no :8/:16 qualifier) would
     // be assembled as M_ABS8 by the assembler's default-mode selection,
     // i.e. |addr| falls in the high page [0xFF00, 0xFFFF]. The disassembler

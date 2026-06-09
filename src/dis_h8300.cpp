@@ -240,9 +240,16 @@ void DisH8300::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode, OprPo
         // @aa:24). POS____: 4-byte standalone form (MOV.B/W/L @aa:24); the
         // top byte is reserved and must be zero. See M_IDX24 above for why
         // the standalone form reads the high half first.
+        // On H8S advanced mode, the standalone form's 4-byte slot is a
+        // full 32-bit displacement (@aa:32 per the H8S manual table 1.5);
+        // the high byte is no longer reserved.
         Config::uintptr_t addr;
+        int_fast8_t bits = 24;
         if (pos == POS__FF) {
             addr = ((insn.opCode() & 0xFF) << 16) | insn.readUint16();
+        } else if (hasExr() && advancedMode()) {
+            addr = insn.readUint32Be();
+            bits = 32;
         } else {
             const auto hi = insn.readUint16();
             if (hi & 0xFF00) {
@@ -252,12 +259,12 @@ void DisH8300::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode, OprPo
             addr = ((hi & 0xFF) << 16) | insn.readUint16();
         }
         out.letter('@');
-        const auto *label = lookup(addr, ADDRESS_24BIT);
+        const auto *label = lookup(addr, bits == 32 ? ADDRESS_32BIT : ADDRESS_24BIT);
         if (label)
             out.rtext(label);
         else
-            outHex(out, addr, 24, false);
-        out.letter(':').int16(24);
+            outHex(out, addr, bits, false);
+        out.letter(':').int16(bits);
         break;
     }
     case M_RLIST: {
