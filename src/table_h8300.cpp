@@ -608,6 +608,8 @@ constexpr Entry H8S2000_0141_TABLE[] PROGMEM = {
     E2(0x6B80, TEXT_STC,  ISZ_NONE, SZ_WORD, M_EXR,   M_ABS16, POS____, POS____), // STC EXR, @aa:16
     E2(0x6F00, TEXT_LDC,  ISZ_NONE, SZ_WORD, M_IDX16, M_EXR,   POS__7_, POS____), // LDC @(d:16,ER), EXR
     E2(0x6F80, TEXT_STC,  ISZ_NONE, SZ_WORD, M_EXR,   M_IDX16, POS____, POS__7_), // STC EXR, @(d:16,ER)
+    E2(0x6B20, TEXT_LDC,  ISZ_NONE, SZ_WORD, M_ABS24, M_EXR,   POS____, POS____), // LDC @aa:32, EXR (M_ABS32 widens to M_ABS24)
+    E2(0x6BA0, TEXT_STC,  ISZ_NONE, SZ_WORD, M_EXR,   M_ABS24, POS____, POS____), // STC EXR, @aa:32
 };
 
 constexpr uint8_t H8S2000_0141_INDEX[] PROGMEM = {
@@ -617,11 +619,13 @@ constexpr uint8_t H8S2000_0141_INDEX[] PROGMEM = {
       6,  // TEXT_LDC
       8,  // TEXT_LDC
      10,  // TEXT_LDC
+     12,  // TEXT_LDC
       0,  // TEXT_ORC
       5,  // TEXT_STC
       7,  // TEXT_STC
       9,  // TEXT_STC
      11,  // TEXT_STC
+     13,  // TEXT_STC
       1,  // TEXT_XORC
 };
 
@@ -999,6 +1003,10 @@ bool acceptMode(const Operand &op, AddrMode table, bool hasReg32) {
     if (op.mode == M_ABS8)
         return table == M_ABS16 || table == M_ABS24;
     if (op.mode == M_ABS16)
+        return table == M_ABS24;
+    // H8S @aa:32 byte-encodes identically to H8/300H @aa:24; matched
+    // against the same M_ABS24 entries.
+    if (op.mode == M_ABS32)
         return table == M_ABS24;
     if (table == M_ADREG) {
         if (hasReg32)

@@ -181,16 +181,11 @@ Error AsmH8300::parseOperand(StrScanner &scan, Operand &op) const {
             const auto idx = (op.bitSuffix == 32)   ? M_IDX32
                              : (op.bitSuffix == 24) ? M_IDX24
                                                     : M_IDX16;
-            // d:16 is sign-extended (manual section 1.7). In advanced mode
-            // it must be a strict signed 16-bit value [-32768,32767];
-            // in normal mode either signed or unsigned [0,65535] is fine
-            // because only the low 16 bits of the address are observable.
-            // d:24 stays unsigned (high reserved byte must be zero);
-            // d:32 spans the full 32-bit signed/unsigned range.
-            const bool overflow = (idx == M_IDX32)   ? op.val.overflow(UINT32_MAX, INT32_MIN)
+            // d:24 and d:32 are unsigned; only d:16 is sign-extended.
+            // d:16 mode-dependence is in Config::overflowDisp16.
+            const bool overflow = (idx == M_IDX32)   ? op.val.overflow(UINT32_MAX)
                                   : (idx == M_IDX24) ? op.val.overflow(UINT24_MAX)
-                                  : advancedMode()   ? op.val.overflowInt16()
-                                                     : op.val.overflowUint16();
+                                                     : overflowDisp16(op.val);
             if (overflow)
                 op.setErrorIf(s, OVERFLOW_RANGE);
             if (!p.skipSpaces().expect(','))
@@ -225,6 +220,13 @@ Error AsmH8300::parseOperand(StrScanner &scan, Operand &op) const {
             return op.getError();
         if (parseBitSuffix(p, op))
             return op.setErrorIf(p, ILLEGAL_SIZE);
+        if (op.bitSuffix == 32) {
+            if (op.val.overflow(UINT32_MAX))
+                op.setErrorIf(s, OVERFLOW_RANGE);
+            op.mode = M_ABS32;
+            scan = p;
+            return OK;
+        }
         if (op.bitSuffix == 24) {
             if (op.val.overflow(UINT24_MAX))
                 op.setErrorIf(s, OVERFLOW_RANGE);
@@ -463,7 +465,12 @@ void AsmH8300::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode, Op
         encodeAbsolute(insn, op, mode, pos);
         break;
     case M_ABS24: {
-        const auto addr = op.val.getUnsigned() & UINT24_MAX;
+        // The matched entry is always M_ABS24; on H8S the user may have
+        // written @aa:32 (op.mode == M_ABS32), which byte-encodes the
+        // same way but takes a full 32-bit displacement instead of the
+        // H8/300H zero-reserved high byte.
+        const auto mask = (op.mode == M_ABS32) ? UINT32_MAX : UINT24_MAX;
+        const auto addr = op.val.getUnsigned() & mask;
         if (pos == POS__FF) {
             insn.embed(static_cast<uint8_t>(addr >> 16));
             insn.emitOperand16(static_cast<uint16_t>(addr));

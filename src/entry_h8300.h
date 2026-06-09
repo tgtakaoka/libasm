@@ -55,6 +55,7 @@ enum AddrMode : uint8_t {
     M_RLIST = 24,  // register list (LDM/STM): op.reg = first ER, op.val = count
     M_EXR = 25,    // EXR extended control register
     M_IDX32 = 26,  // 32-bit displacement: @(d:32,ERn)
+    M_ABS32 = 27,  // 32-bit absolute: @aa:32 (advanced-mode-only data form)
 };
 
 // Instruction name size suffix
