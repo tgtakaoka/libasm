@@ -33,14 +33,22 @@ enum CpuType : uint8_t {
 // MaxCode = 10: largest H8/300H instruction is MOV.L @(d:24,ERn),ERd / MOV.L
 // @aa:24,ERd at 10 bytes (0100 78n0 6B20|6BA0 disp24). H8/300 max is 4.
 // The template's ADDRESS_24BIT widens Config::uintptr_t to uint32_t so the
-// @aa:24 operand fits; addressWidth() is overridden to 16 since H8/300 and
-// H8/300H normal mode both run in a 16-bit address space.
+// @aa:24 operand fits; addressWidth() is overridden to 16 unless H8/300H
+// advanced-mode is enabled (then 24-bit).
 struct Config
     : public ConfigImpl<CpuType, ADDRESS_24BIT, ADDRESS_BYTE, OPCODE_16BIT, ENDIAN_BIG, 10, 6> {
-    Config(const InsnTable<CpuType> &table) : ConfigImpl(table, H8300), _spAlias(true) {}
+    Config(const InsnTable<CpuType> &table)
+        : ConfigImpl(table, H8300), _advancedMode(false), _spAlias(true) {}
 
-    AddressWidth addressWidth() const override { return ADDRESS_16BIT; }
+    AddressWidth addressWidth() const override {
+        return advancedMode() ? ADDRESS_24BIT : ADDRESS_16BIT;
+    }
     bool hasReg32() const { return cpuType() != H8300; }
+    bool advancedMode() const { return cpuType() == H8300H && _advancedMode; }
+    Error setAdvancedMode(bool on) {
+        _advancedMode = on;
+        return OK;
+    }
 
     bool spAlias() const { return _spAlias; }
     Error setSpAlias(bool on) {
@@ -48,25 +56,29 @@ struct Config
         return OK;
     }
 
-    // @aa:8 short page. Returns true if |val| is outside the accepted range
-    // [0, 0xFF], [0xFF00, 0xFFFF], or [0xFFFF00, 0xFFFFFF]. The high page
-    // [0xFFFF00, 0xFFFFFF] is accepted as an alias so that sources shared
-    // with H8/300H advanced mode (e.g. @0xFFFFXX:8) assemble identically.
+    // @aa:8 short page. Returns true if |val| is outside the accepted range:
+    //   normal:    [0, 0xFF], [0xFF00, 0xFFFF], or [0xFFFF00, 0xFFFFFF]
+    //   advanced:  [0, 0xFF] or [0xFFFF00, 0xFFFFFF]
+    // Normal mode also accepts the advanced-mode high page as an alias so
+    // sources shared with advanced mode assemble identically.
     bool overflowAbs8(const Value &val) const {
         if (!val.overflow(0xFF))
             return false;
-        if (!val.overflow(0xFFFF, 0xFF00))
-            return false;
         if (!val.overflow(UINT24_MAX, 0xFFFF00))
+            return false;
+        if (!advancedMode() && !val.overflow(0xFFFF, 0xFF00))
             return false;
         return true;
     }
 
-    // @aa:16 absolute. Returns true if |val| is outside the accepted range
-    // [0, 0xFFFF] or [0xFF8000, 0xFFFFFF]. The advanced-mode sign-extended
-    // high page is accepted as an alias so shared sources assemble identically.
+    // @aa:16 absolute. Returns true if |val| is outside the accepted range:
+    //   normal:    [0, 0xFFFF] or [0xFF8000, 0xFFFFFF]
+    //   advanced:  [0, 0x7FFF] or [0xFF8000, 0xFFFFFF]
+    // In advanced mode bit 15 is sign-extended; normal mode also accepts the
+    // sign-extended high page so shared sources assemble identically.
     bool overflowAbs16(const Value &val) const {
-        if (!val.overflow(UINT16_MAX))
+        const uint32_t lowMax = advancedMode() ? 0x7FFF : UINT16_MAX;
+        if (!val.overflow(lowMax))
             return false;
         if (!val.overflow(UINT24_MAX, 0xFF8000))
             return false;
@@ -83,6 +95,7 @@ struct Config
     }
 
 protected:
+    bool _advancedMode;
     bool _spAlias;
 };
 
