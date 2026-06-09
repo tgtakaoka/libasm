@@ -80,6 +80,7 @@ enum RegName : int8_t {
     REG_SP = 0x28,
     // Control registers.
     REG_CCR = 0x30,
+    REG_EXR = 0x31,  // H8S extended control register
 };
 
 namespace reg {

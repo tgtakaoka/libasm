@@ -58,7 +58,7 @@ $(eval $(foreach a,$(ARCHS),$(call objs-arch,$(a))))
 # target list for each architecture.
 TGT_cdp1802  = cdp1802 cdp1804 cdp1804a
 TGT_f3850    = f3850
-TGT_h8300    = h8300 h8300hn h8300h
+TGT_h8300    = h8300 h8300hn h8300h h8s2000n
 OPT_h8300h   = -O advanced-mode=on
 TGT_i8048    = i8039 i8048 i80c39 i80c48 msm80c39 msm80c48
 TGT_i8051    = i8051
@@ -100,6 +100,7 @@ CPU_g65sc02  = 65SC02
 CPU_h8300    = h8/300
 CPU_h8300h   = h8/300h
 CPU_h8300hn  = h8/300h
+CPU_h8s2000n = h8s/2000
 CPU_hd6120   = 6120
 CPU_hd6301   = 6301
 CPU_hd6309   = 6309
