@@ -25,9 +25,14 @@ using namespace libasm::test;
 DisH8300 dis8300;
 Disassembler &disassembler(dis8300);
 
-// True for any CPU in the H8S family (currently H8S/2000; extend when H8S/2600 lands).
+// True for any CPU in the H8S family (H8S/2000 and H8S/2600).
 bool is_h8s() {
-    return strcmp_P("H8S/2000", disassembler.config().cpu_P()) == 0;
+    const auto *cpu_P = disassembler.config().cpu_P();
+    return strcmp_P("H8S/2000", cpu_P) == 0 || strcmp_P("H8S/2600", cpu_P) == 0;
+}
+
+bool is_h8s2600() {
+    return strcmp_P("H8S/2600", disassembler.config().cpu_P()) == 0;
 }
 
 bool is_h8300h() {
@@ -736,9 +741,10 @@ void test_illegal_common() {
     // 0x01 SLEEP and 0x59/0x5D JMP/JSR @Rn are NOT in this shared set
     // because byte-2 flips on H8/300H land on valid prefixes
     // (0x0100/0x0140/0x01C0/0x01D0/0x01F0) or ERn (E0..E7) operands.
-    // On H8S, bit 4 of byte 2 selects EXR (vs CCR) for STC/LDC; restrict
-    // the illegal mask to 0xE0 so those encodings are not flagged here.
-    const uint8_t stc_ldc_mask = is_h8s() ? 0xE0 : 0xF0;
+    // On H8S, bit 4 of byte 2 selects EXR (vs CCR) for STC/LDC. On H8S/2600,
+    // bit 5 additionally selects STMAC/LDMAC (0x02|0x20 = STMAC MACH/MACL,
+    // 0x03|0x20 = LDMAC ERs,MACH/MACL). Mask only the truly reserved bits.
+    const uint8_t stc_ldc_mask = is_h8s2600() ? 0xC0 : is_h8s() ? 0xE0 : 0xF0;
     const IllegalCase shared[] = {
         { 0x00, 0xFF, 0x00 },           // NOP
         { 0x02, stc_ldc_mask, 0x00 },   // STC.B CCR, Rd
@@ -1166,11 +1172,12 @@ void test_illegal_h8300hn() {
     }
 }
 
-// H8S/2000 illegal patterns (both normal and advanced mode): inherits all
+// H8S family illegal patterns (both normal and advanced mode): inherits all
 // of test_illegal_h8300hn (which gates @aa:24 reserved-byte tests on H8S
 // advanced mode itself) and adds prefix-walks for TAS / LDM / STM / EXR /
-// @(d:32,ERn). Called twice from run_tests, once per mode.
-void test_illegal_h8s2000() {
+// @(d:32,ERn). H8S/2600 adds CLRMAC / MAC / LDMAC / STMAC reservations under
+// an is_h8s2600() guard. Called twice from run_tests, once per mode.
+void test_illegal_h8s() {
     test_illegal_h8300hn();
 
     // 0x01E0 prefix (TAS): only 0x7B|er*16|C is a TAS body. Walk byte 4
@@ -1240,6 +1247,51 @@ void test_illegal_h8s2000() {
             const uint16_t flipped = canon ^ static_cast<uint16_t>(1u << pos);
             if (!valid_0141_body(flipped))
                 UNKN(0x0141, flipped);
+        }
+    }
+
+    if (is_h8s2600()) {
+        // 0x01A0 CLRMAC: byte 2 flips must land on undefined or known prefix.
+        // Skip flips that hit SLEEP (0x80), CLRMAC itself (0xA0), or any
+        // 0x01xx prefix (super-prefixes, LDM/STM, MAC, MULXS, DIVXS, TAS,
+        // OR/XOR/AND.L).
+        auto valid_or_prefix_01 = [](uint8_t b2) {
+            const uint8_t hi = b2 & 0xF0;
+            switch (hi) {
+            case 0x00: case 0x10: case 0x20: case 0x30:
+            case 0x40: case 0x60: case 0xC0: case 0xD0:
+            case 0xE0: case 0xF0:
+                return true;
+            }
+            return b2 == 0x80 || b2 == 0xA0;
+        };
+        for (uint_fast8_t pos = 0; pos < 8; pos++) {
+            const uint8_t b2 = static_cast<uint8_t>(0xA0u ^ (1u << pos));
+            if (!valid_or_prefix_01(b2))
+                UNKN(static_cast<Config::opcode_t>(0x0100 | b2));
+        }
+
+        // MAC body under 0x0160 prefix: must be 0x6Dnm with n,m in 0..7.
+        // Bit 3 of byte 2 (ERm > 7) and bit 7 (ERn > 7) are reserved as 0.
+        UNKN(0x0160, 0x6D08);
+        UNKN(0x0160, 0x6D80);
+        UNKN(0x0160, 0x6D88);
+        // Body byte 1 must be 0x6D under the 0x0160 prefix.
+        for (uint_fast8_t pos = 0; pos < 8; pos++)
+            UNKN(0x0160, static_cast<Config::opcode_t>((0x6Du ^ (1u << pos)) << 8));
+    } else {
+        // H8S/2600-only MAC family: canonical encodings must be illegal on
+        // H8S/2000. CLRMAC (0x01A0), MAC (0x0160 6D|n*16|m), LDMAC/STMAC
+        // (0x02/0x03 with bit 5 set, ERd/ERs in bits 2:0).
+        UNKN(0x01A0);
+        // 0x0160 is not a recognized prefix on H8S/2000; reject at the
+        // first word without reading the body.
+        UNKN(0x0160);
+        for (uint_fast8_t r = 0; r < 8; r++) {
+            UNKN(static_cast<Config::opcode_t>(0x0220 | r));   // STMAC MACH, ERd
+            UNKN(static_cast<Config::opcode_t>(0x0230 | r));   // STMAC MACL, ERd
+            UNKN(static_cast<Config::opcode_t>(0x0320 | r));   // LDMAC ERs, MACH
+            UNKN(static_cast<Config::opcode_t>(0x0330 | r));   // LDMAC ERs, MACL
         }
     }
 }
@@ -1403,6 +1455,28 @@ void test_h8s_extensions() {
     TEST("STC",   "EXR, @(H'12345678:32,ER0)", 0x0141, 0x7800, 0x6BA0, 0x1234, 0x5678);
 }
 
+void test_h8s2600_mac() {
+    TEST("CLRMAC", "", 0x01A0);
+
+    // M_PINC with ER7 disassembles as @SP+; M_REG32 keeps the ER7 form.
+    TEST("MAC", "@ER0+, @ER0+", 0x0160, 0x6D00);
+    TEST("MAC", "@ER0+, @SP+",  0x0160, 0x6D07);
+    TEST("MAC", "@SP+, @ER0+",  0x0160, 0x6D70);
+    TEST("MAC", "@SP+, @SP+",   0x0160, 0x6D77);
+    TEST("MAC", "@ER3+, @ER4+", 0x0160, 0x6D34);
+
+    TEST("LDMAC", "ER0, MACH", 0x0320);
+    TEST("LDMAC", "ER7, MACH", 0x0327);
+    TEST("LDMAC", "ER0, MACL", 0x0330);
+    TEST("LDMAC", "ER7, MACL", 0x0337);
+
+    TEST("STMAC", "MACH, ER0", 0x0220);
+    TEST("STMAC", "MACH, ER7", 0x0227);
+    TEST("STMAC", "MACL, ER0", 0x0230);
+    TEST("STMAC", "MACL, ER7", 0x0237);
+}
+
+
 void run_tests(const char *cpu) {
     disassembler.setCpu(cpu);
     RUN_TEST(test_system);
@@ -1419,10 +1493,12 @@ void run_tests(const char *cpu) {
         RUN_TEST(test_advanced_mode);
     if (is_h8s())
         RUN_TEST(test_h8s_extensions);
+    if (is_h8s2600())
+        RUN_TEST(test_h8s2600_mac);
     if (is_h8s()) {
-        RUN_TEST(test_illegal_h8s2000);
+        RUN_TEST(test_illegal_h8s);
         disassembler.setOption("advanced-mode", "on");
-        RUN_TEST(test_illegal_h8s2000);
+        RUN_TEST(test_illegal_h8s);
         disassembler.setOption("advanced-mode", "off");
     } else if (is_h8300h()) {
         RUN_TEST(test_illegal_h8300hn);

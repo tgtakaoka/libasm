@@ -28,6 +28,7 @@ extern const char TEXT_H8300_LIST[]   PROGMEM;
 extern const char TEXT_CPU_H8300[]    PROGMEM;
 extern const char TEXT_CPU_H8300H[]   PROGMEM;
 extern const char TEXT_CPU_H8S2000[]  PROGMEM;
+extern const char TEXT_CPU_H8S2600[]  PROGMEM;
 
 using common::TEXT_ADD;
 using common::TEXT_ADDS;
@@ -69,6 +70,7 @@ using common::TEXT_BTST;
 using common::TEXT_BVC;
 using common::TEXT_BVS;
 using common::TEXT_BXOR;
+extern const char TEXT_CLRMAC[] PROGMEM;
 using common::TEXT_CMP;
 using common::TEXT_DAA;
 using common::TEXT_DAS;
@@ -83,6 +85,8 @@ using common::TEXT_JMP;
 using common::TEXT_JSR;
 using common::TEXT_LDC;
 using common::TEXT_LDM;
+extern const char TEXT_LDMAC[]  PROGMEM;
+using common::TEXT_MAC;
 using common::TEXT_MOV;
 extern const char TEXT_MOVFPE[] PROGMEM;
 extern const char TEXT_MOVTPE[] PROGMEM;
@@ -108,6 +112,7 @@ extern const char TEXT_SHLR[]   PROGMEM;
 extern const char TEXT_SLEEP[]  PROGMEM;
 using common::TEXT_STC;
 using common::TEXT_STM;
+extern const char TEXT_STMAC[]  PROGMEM;
 using common::TEXT_SUB;
 using common::TEXT_SUBS;
 using common::TEXT_SUBX;
@@ -164,6 +169,8 @@ extern const char TEXT_REG_ER6[] PROGMEM;
 extern const char TEXT_REG_ER7[] PROGMEM;
 
 extern const char TEXT_REG_EXR[] PROGMEM;
+extern const char TEXT_REG_MACH[] PROGMEM;
+extern const char TEXT_REG_MACL[] PROGMEM;
 
 // Options
 extern const char OPT_BOOL_ADVANCED_MODE[] PROGMEM;
