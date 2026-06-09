@@ -785,6 +785,23 @@ void test_advanced_mode() {
     TEST("JMP @H'FFFFFF:24", 0x5AFF, 0xFFFF);
     TEST("JSR @H'FFFFFF:24", 0x5EFF, 0xFFFF);
 
+    if (is_h8s()) {
+        // H8S advanced mode adds @aa:32 data addressing (manual table 1.5).
+        // Byte encoding is identical to @aa:24 but takes a full 32-bit value.
+        TEST("MOV.B @H'00000000:32, R0H", 0x6A20|0x0, 0x0000, 0x0000);
+        TEST("MOV.B @H'FFFFFFFF:32, R7L", 0x6A20|0xF, 0xFFFF, 0xFFFF);
+        TEST("MOV.B R0H, @H'00000000:32", 0x6AA0|0x0, 0x0000, 0x0000);
+        TEST("MOV.B R7L, @H'FFFFFFFF:32", 0x6AA0|0xF, 0xFFFF, 0xFFFF);
+        TEST("MOV.W @H'00000100:32, R0",  0x6B20|0x0, 0x0000, 0x0100);
+        TEST("MOV.W R7, @H'FFFFFFFE:32",  0x6BA0|0x7, 0xFFFF, 0xFFFE);
+        TEST("MOV.L @H'00000100:32, ER0", 0x0100, 0x6B20|0x0, 0x0000, 0x0100);
+        TEST("MOV.L ER7, @H'FFFFFFFE:32", 0x0100, 0x6BA0|0x7, 0xFFFF, 0xFFFE);
+        TEST("LDC @H'12345678:32, CCR",   0x0140, 0x6B20, 0x1234, 0x5678);
+        TEST("STC CCR, @H'12345678:32",   0x0140, 0x6BA0, 0x1234, 0x5678);
+        TEST("LDC @H'12345678:32, EXR",   0x0141, 0x6B20, 0x1234, 0x5678);
+        TEST("STC EXR, @H'12345678:32",   0x0141, 0x6BA0, 0x1234, 0x5678);
+    }
+
     assembler.setOption("advanced-mode", "off");
 
     // After turning advanced-mode off, the 24-bit short/absolute forms are

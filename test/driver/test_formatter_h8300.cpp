@@ -111,11 +111,53 @@ void test_dis_h8300h() {
             0x0000, 0x6AA0, 0x00FE, 0xDCBA);
 }
 
+void test_asm_h8s2000() {
+    PREP_ASM(h8300::AsmH8300, MotorolaDirective);
+
+    driver.setUpperHex(false);
+
+    ASM("H8S/2000",
+            R"(        cpu     H8S/2000
+        option  advanced-mode, on
+        org     H'abcdee
+        nop
+        mov.b   r0h, @H'fedcba12:32
+)",
+            R"(          0 :                            cpu     H8S/2000
+          0 :                            option  advanced-mode, on
+     abcdee :                            org     H'abcdee
+     abcdee : 0000                       nop
+     abcdf0 : 6aa0 fedc ba12             mov.b   r0h, @H'fedcba12:32
+)");
+}
+
+void test_dis_h8s2000() {
+    PREP_DIS(h8300::DisH8300);
+
+    driver.setUppercase(true);
+    driver.setOption("advanced-mode", "on");
+
+    DIS16("H8S/2000", 0xabcdee,
+            R"(      CPU    H8S/2000
+      ORG    H'ABCDEE
+      NOP
+      MOV.B  R0H, @H'FEDCBA12:32
+)",
+            R"(       0 :                            CPU    H8S/2000
+  ABCDEE :                            ORG    H'ABCDEE
+  ABCDEE : 0000                       NOP
+  ABCDF0 : 6AA0 FEDC BA12             MOV.B  R0H, @H'FEDCBA12:32
+)",
+            0x0000, 0x6AA0, 0xFEDC, 0xBA12);
+}
+
 void run_tests() {
     RUN_TEST(test_asm_h8300);
     RUN_TEST(test_dis_h8300);
     RUN_TEST(test_asm_h8300h);
     RUN_TEST(test_dis_h8300h);
+    RUN_TEST(test_asm_h8s2000);
+    RUN_TEST(test_dis_h8s2000);
 }
 
 }  // namespace test
