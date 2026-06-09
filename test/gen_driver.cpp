@@ -170,6 +170,23 @@ int GenDriver::parseOption(int argc, const char **argv) {
             case 'd':
                 _dump = true;
                 break;
+            case 'O': {
+                if (++i >= argc) {
+                    fprintf(stderr, "-O requires <name>=<value>\n");
+                    return 1;
+                }
+                const char *eq = strchr(argv[i], '=');
+                if (eq == nullptr) {
+                    fprintf(stderr, "-O expects <name>=<value>, got '%s'\n", argv[i]);
+                    return 1;
+                }
+                const std::string name(argv[i], eq - argv[i]);
+                if (_disassembler.setOption(name.c_str(), eq + 1) != OK) {
+                    fprintf(stderr, "unknown option: %s\n", argv[i]);
+                    return 4;
+                }
+                break;
+            }
             default:
                 fprintf(stderr, "unknown option: %s\n", opt);
                 return 1;

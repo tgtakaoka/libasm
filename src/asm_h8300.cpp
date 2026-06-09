@@ -17,6 +17,7 @@
 #include "asm_h8300.h"
 #include "reg_h8300.h"
 #include "table_h8300.h"
+#include "text_h8300.h"
 
 namespace libasm {
 namespace h8300 {
@@ -58,7 +59,11 @@ const ValueParser::Plugins &AsmH8300::defaultPlugins() {
 }
 
 AsmH8300::AsmH8300(const ValueParser::Plugins &plugins)
-    : Assembler(plugins, PSEUDO_TABLE), Config(TABLE) {
+    : Assembler(plugins, PSEUDO_TABLE, &_opt_advancedMode),
+      Config(TABLE),
+      _opt_advancedMode(this, &Config::setAdvancedMode,
+              ::libasm::text::h8300::OPT_BOOL_ADVANCED_MODE,
+              ::libasm::text::h8300::OPT_DESC_ADVANCED_MODE) {
     reset();
 }
 
@@ -172,7 +177,15 @@ Error AsmH8300::parseOperand(StrScanner &scan, Operand &op) const {
             if (parseBitSuffix(p, op) || op.bitSuffix == 8)
                 return op.setErrorIf(z, ILLEGAL_SIZE);
             const bool idx24 = (op.bitSuffix == 24);
-            if (idx24 ? op.val.overflow(UINT24_MAX) : op.val.overflowUint16())
+            // d:16 is sign-extended (manual section 1.7). In advanced mode
+            // it must be a strict signed 16-bit value [-32768,32767];
+            // in normal mode either signed or unsigned [0,65535] is fine
+            // because only the low 16 bits of the address are observable.
+            // d:24 stays unsigned (high reserved byte must be zero).
+            const bool overflow = idx24 ? op.val.overflow(UINT24_MAX)
+                                        : advancedMode() ? op.val.overflowInt16()
+                                                         : op.val.overflowUint16();
+            if (overflow)
                 op.setErrorIf(s, OVERFLOW_RANGE);
             if (!p.skipSpaces().expect(','))
                 return op.setError(MISSING_COMMA);
@@ -328,7 +341,6 @@ void AsmH8300::encodeOprAddrReg(AsmInsn &insn, const Operand &op, OprPos pos) co
 }
 
 void AsmH8300::encodeAbsolute(AsmInsn &insn, const Operand &op, AddrMode mode, OprPos pos) const {
-    insn.setErrorIf(op);
     const auto addr = op.val.getUnsigned();
     if (mode == M_ABS8 || mode == M_MIND8) {
         const auto addr8 = addr & UINT8_MAX;

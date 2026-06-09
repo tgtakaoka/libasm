@@ -28,6 +28,7 @@ struct DisH8300 final : Disassembler, Config {
     DisH8300(const ValueFormatter::Plugins &plugins = defaultPlugins());
 
 private:
+    const BoolOption<Config> _opt_advancedMode;
     const BoolOption<Config> _opt_spAlias;
 
     RegName decodeOprReg8(DisInsn &insn, OprPos pos) const;

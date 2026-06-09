@@ -160,6 +160,8 @@ extern const char TEXT_REG_ER6[] PROGMEM;
 extern const char TEXT_REG_ER7[] PROGMEM;
 
 // Options
+extern const char OPT_BOOL_ADVANCED_MODE[] PROGMEM;
+extern const char OPT_DESC_ADVANCED_MODE[] PROGMEM;
 extern const char OPT_BOOL_SP_ALIAS[] PROGMEM;
 extern const char OPT_DESC_SP_ALIAS[] PROGMEM;
 
