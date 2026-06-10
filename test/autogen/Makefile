@@ -87,7 +87,8 @@ endef
 define gen-arch-rule # arch
 clean_$(1):
 	rm -f $(foreach t,$(call arch-target,$(1)),$(call gen-out,$(t)))
-gen_$(1): clean_$(1) $(foreach t,$(call arch-target,$(1)),$(call gen-out,$(t)))
+gen_$(1): clean_$(1)
+	make $(foreach t,$(call arch-target,$(1)),$(call gen-out,$(t)))
 
 endef
 
