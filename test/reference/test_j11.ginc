@@ -1,0 +1,131 @@
+;# Copyright 2024 Tadashi G. Takaoka
+;#
+;# Licensed under the Apache License, Version 2.0 (the "License");
+;# you may not use this file except in compliance with the License.
+;# You may obtain a copy of the License at
+;#
+;#     http://www.apache.org/licenses/LICENSE-2.0
+;#
+;# Unless required by applicable law or agreed to in writing, software
+;# distributed under the License is distributed on an "AS IS" BASIS,
+;# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+;# See the License for the specific language governing permissions and
+;# limitations under the License.
+
+        MFPI    (R0)
+        MTPI    (R1)
+        MFPD    (R2)
+        MTPD    (R3)
+;#       MFPI    R0              ; should be warning
+;#       MTPI    R1              ; should be warning
+;#       MFPD    R2              ; should be warning
+;#       MTPD    R3              ; should be warning
+        MUL     @SP, R1
+        DIV     (R2), R3
+        ASH     (R0)+, R4
+        ASHC    R1, R2
+        MARK    023
+        CSM     (R0)
+;# GAS bug: TSTSET opcode encoded as 0071NN instead of 0072NN. Use .word.
+;#       TSTSET    (R1)
+        .word   0x0E89
+;# GAS bug: WRTLCK opcode encoded as 0072NN instead of 0073NN. Use .word.
+;#       WRTLCK    (R2)
+        .word   0x0ECA
+;#       TSTSET  R1              ; must be error (trap 10)
+;#       WRTLCK  R2              ; error (trap 10)
+
+        ABSD    AC0
+        ABSF    AC1
+;# GAS bug: FP-11 double immediate truncated to 1 word (4 expected).
+;#       ADDD    #1.23, AC2
+        .word   0xF497, 0x409D, 0x70A3, 0xD70A, 0x3D71
+;# GAS bug: FP-11 single immediate truncated to 1 word (2 expected).
+;#       ADDF    #1.23, AC1
+        .word   0xF457, 0x409D, 0x70A4
+        CFCC
+        CLRD    -(R2)
+        CLRF    @(R1)+
+        CMPD    AC5, AC0
+        CMPF    -02(SP), AC1
+        DIVD    (R1)+, AC2
+        DIVF    -(R2), AC3
+        LDCFD   @(R3)+, AC3
+        LDCDF   AC0, AC0
+        LDCLD   R1, AC2
+;# GAS bug: 32-bit integer immediate truncated to 1 word (2 expected).
+;#       LDCLD    #1234567, AC1
+        .word   0xFE57, 0x0005, 0x3977
+        LDCID   (R2), AC3
+        LDCID   $012345, AC2
+        LDCLF   @(R3)+, AC0
+;# GAS bug: 32-bit integer immediate truncated to 1 word (2 expected).
+;#       LDCLF    #1234567, AC1
+        .word   0xFE57, 0x0005, 0x3977
+        LDCIF   R4, AC1
+        LDCIF   $012345, AC2
+        LDEXP   R5, AC2
+        LDEXP   $020, AC2
+        LDD     @(SP)+, AC3
+        LDF     06(SP), AC2
+;# GAS bug: FP-11 single immediate truncated to 1 word (2 expected).
+;#       LDCFD    #2.34, AC3
+        .word   0xFFD7, 0x4115, 0xC28F
+;# GAS bug: FP-11 double immediate truncated to 1 word (4 expected).
+;#       LDCDF    #-3.45, AC0
+        .word   0xFF17, 0xC15C, 0xCCCC, 0xCCCC, 0xCCCD
+;# .radix 10
+;# GAS bug: 32-bit integer immediate truncated to 1 word (2 expected).
+;#       LDCLD    #1234567, AC2
+        .word   0xFE97, 0x0012, 0xD687
+        LDCID   $12345, AC3
+;# GAS bug: 32-bit integer immediate truncated to 1 word (2 expected).
+;#       LDCLF    #1234567, AC0
+        .word   0xFE17, 0x0012, 0xD687
+        LDCIF   $12345, AC1
+;# .radix 8
+        LDEXP   $020, AC2
+;# GAS bug: FP-11 double immediate truncated to 1 word (4 expected).
+;#       LDD    #4.56, AC3
+        .word   0xF5D7, 0x4191, 0xEB85, 0x1EB8, 0x51EC
+;# GAS bug: FP-11 single immediate truncated to 1 word (2 expected).
+;#       LDF    #-4.56, AC2
+        .word   0xF597, 0xC191, 0xEB85
+        LDFPS   R5
+        MODD    AC0, AC1
+        MODF    (R2)+, AC3
+;# GAS bug: FP-11 double immediate truncated to 1 word (4 expected).
+;#       MODD    #2, AC1
+        .word   0xF357, 0x4100, 0x0000, 0x0000, 0x0000
+;# GAS bug: FP-11 single immediate truncated to 1 word (2 expected).
+;#       MODF    #3, AC3
+        .word   0xF3D7, 0x4140, 0x0000
+        MULD    -(R3), AC2
+        MULF    06(R4), AC1
+        NEGD    AC2
+        NEGF    -04(SP)
+        SETF
+        SETD
+        SETI
+        SETL
+        STCFD   AC1, (R2)
+        STCDF   AC3, *$02000
+        STD     AC1, -(SP)
+        STF     AC2, @R1
+        STCDL   AC0, R1
+        STCDI   AC1, -(SP)
+        STCFL   AC2, -04(SP)
+        STCFI   AC3, (R2)
+        STEXP   AC0, R1
+        STFPS   R2
+        STST    R4
+        STST    02(R4)
+        SUBD    (R0), AC2
+        SUBF    (R1)+, AC1
+        TSTD    AC2
+        TSTF    (R1)+
+
+;# Local Variables:
+;# mode: asm
+;# End:
+;# vim: set ft=asm:
