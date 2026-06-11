@@ -37,8 +37,10 @@ GINC_targets = $(TGT_mc68000) $(TGT_z8000) ns32000 mc68hc11 mc68hc12 i8086 i8018
 ZINC_targets = i8080 i8085 v30emu
 # target which doesn't need ".asm"
 NOASM_targets = i80286
-# target which ASL could not assemble
-ASL_exclude = gen_mb8861 gen_i80286
+# CPU variants whose generated source ASL cannot assemble. This filters
+# which asl-X.hex rules exist (asl-test target). Generation of .inc/.ginc
+# still happens because libasm and gas consume them.
+ASL_exclude = mb8861 i80286
 
 # file name of generating file
 define out-inc # target
@@ -120,7 +122,7 @@ asm-test: $(ASM)-refresh clean-asm $(ASM_OUTS:%=asm-%)
 clean-asm:
 	-rm -f $(ASM_OUTS)
 
-ASL_SRCS = $(foreach t,$(ASM_TESTS),$(if $(filter $(t),$(ASL_exclude)),,$(t)))
+ASL_SRCS = $(foreach t,$(ASM_TESTS),$(if $(filter $(t:gen_%=%),$(ASL_exclude)),,$(t)))
 ASL_TESTS = $(ASL_SRCS) \
 	$(foreach t,$(patsubst %.asl,%,$(wildcard gen_*.asl)),$(if $(filter $(t),$(ASL_SRCS)),,$(t)))
 ASL_OUTS  = $(foreach f,$(ASL_TESTS),$(f).$(call out-ext,$(f)))
