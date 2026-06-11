@@ -72,7 +72,7 @@ void DisPdp11::decodeImmediate(DisInsn &insn, StrBuffer &out) const {
 #if defined(LIBASM_DIS_NOFLOAT)
     const auto at = out.mark();
 #endif
-    out.letter('#');
+    out.letter(_gnuAs ? '$' : '#');
     switch (insn.size()) {
     case SZ_BYTE: {
         const auto val = insn.readUint16();
@@ -92,6 +92,8 @@ void DisPdp11::decodeImmediate(DisInsn &insn, StrBuffer &out) const {
         insn.setErrorIf(at, FLOAT_NOT_SUPPORTED);
         out.oct(insn.readUint32Mix());
 #else
+        if (_gnuAs)
+            out.text_P(PSTR("0f"));
         out.float32(insn.readDecFloat32());
 #endif
         break;
@@ -100,6 +102,8 @@ void DisPdp11::decodeImmediate(DisInsn &insn, StrBuffer &out) const {
         insn.setErrorIf(at, FLOAT_NOT_SUPPORTED);
         out.oct(insn.readUint64Mix());
 #else
+        if (_gnuAs)
+            out.text_P(PSTR("0d"));
         out.float80(insn.readDecFloat64());
 #endif
         break;
@@ -139,18 +143,26 @@ void DisPdp11::decodeGeneralMode(DisInsn &insn, StrBuffer &out, AddrMode mode, u
     case 1:  // (Rn)
         outRegName(out.letter('('), reg).letter(')');
         break;
-    case 3:  // @(Rn)+
-        out.letter('@');
-        // Fall-through
-    case 2:  // (Rn)+
+    case 3:  // @(Rn)+ or @#X (absolute, when reg=PC)
         if (reg == REG_PC) {
-            if (m == 3) {
-                const auto addr = insn.readUint16();
-                insn.setErrorIf(errpos, checkAddr(addr, insn.size() != SZ_BYTE));
-                outAbsAddr(out.letter('#'), addr);
+            const auto addr = insn.readUint16();
+            insn.setErrorIf(errpos, checkAddr(addr, insn.size() != SZ_BYTE));
+            // GAS rejects `@#X` for the source of two-operand instructions
+            // (parses it as `@` then `#X`); `*$X` reaches the same mode-3
+            // PC-deferred absolute and works in both 1- and 2-operand forms.
+            if (_gnuAs) {
+                out.letter('*').letter('$');
             } else {
-                decodeImmediate(insn, out);
+                out.letter('@').letter('#');
             }
+            outAbsAddr(out, addr);
+        } else {
+            outRegName(out.letter('@').letter('('), reg).letter(')').letter('+');
+        }
+        break;
+    case 2:  // (Rn)+ or #immediate (when reg=PC)
+        if (reg == REG_PC) {
+            decodeImmediate(insn, out);
         } else {
             outRegName(out.letter('('), reg).letter(')').letter('+');
         }
