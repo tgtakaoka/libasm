@@ -671,14 +671,14 @@ void test_misc() {
 void test_formatter() {
     disassembler.setOption("c-style", "on");
     TEST("L",  "R1, 0x10",   0xC000|(0<<11)|(1<<8)|0x10);
-    disassembler.setOption("intel-hex", "on");
+    disassembler.setOption("intel-style", "on");
     TEST("ST", "R3, (0FFH)", 0x8000|(2<<11)|(3<<8)|0xFF);
 
     if (is1613()) {
         TEST("LD",  "R1, 1234H",       0x2708|(0<<4)|1, 0x1234);
-        disassembler.setOption("intel-hex", "off");
+        disassembler.setOption("intel-style", "off");
         TEST("CWI", "R0, X'1234', LPZ",0x500F|(0<<8)|(14<<4), 0x1234);
-        disassembler.setOption("intel-hex", "on");
+        disassembler.setOption("intel-style", "on");
         TEST("BD",  "1234H",           0x2607, 0x1234);
         disassembler.setOption("c-style", "on");
         TEST("BL",  "(0x1234)",        0x270F, 0x1234);

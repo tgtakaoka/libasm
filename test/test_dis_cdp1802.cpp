@@ -566,7 +566,7 @@ void test_call() {
     TEST("SCAL", "14, X'1234'",            0x68, 0x8E, 0x12, 0x34);
     NMEM("SCAL", "14, X'1200'", "X'1200'", 0x68, 0x8E, 0x12);
     NMEM("SCAL", "14, X'0000'", "X'0000'", 0x68, 0x8E);
-    disassembler.setOption("intel-hex", "on");
+    disassembler.setOption("intel-style", "on");
     TEST("SCAL", "15, 1234H",   0x68, 0x8F, 0x12, 0x34);
 
     TEST("SRET", "0",  0x68, 0x90);

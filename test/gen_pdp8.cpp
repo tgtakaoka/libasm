@@ -27,7 +27,7 @@ int main(int argc, const char **argv) {
         return 1;
 
     dispdp8.setOption("list-radix", "16");
-    dispdp8.setOption("intel-hex", "on");
+    dispdp8.setOption("intel-style", "on");
 
     TestGenerator generator(driver, dispdp8, 0x080);
     generator.generate();

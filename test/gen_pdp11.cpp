@@ -28,7 +28,7 @@ int main(int argc, const char **argv) {
 
     dispdp11.setOption("relative", "on");
     dispdp11.setOption("origin-char", "*");
-    dispdp11.setOption("intel-hex", "on");
+    dispdp11.setOption("intel-style", "on");
     dispdp11.setOption("ignore-literal", "on");
 
     TestGenerator generator(driver, dispdp11, 0x080);

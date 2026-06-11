@@ -27,7 +27,7 @@ int main(int argc, const char **argv) {
         return 1;
 
     dis8060.setOption("relative", "enable");
-    dis8060.setOption("intel-hex", "enable");
+    dis8060.setOption("intel-style", "enable");
 
     TestGenerator generator(driver, dis8060, 0x0100);
     generator.generate();

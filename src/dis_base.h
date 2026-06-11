@@ -57,7 +57,8 @@ struct Disassembler {
     Error setListRadix(int32_t radix);
     Error setRelativeTarget(bool enable);
     Error setCStyle(bool enable);
-    Error setIntelHex(bool enable);
+    Error setIntelStyle(bool enable);
+    Error setMotorolaStyle(bool enable);
     Error setCurSym(char curSym);
     Error setGnuAs(bool enable);
 
@@ -80,7 +81,8 @@ protected:
     const IntOption<Disassembler> _opt_listRadix;
     const BoolOption<Disassembler> _opt_relative;
     const BoolOption<Disassembler> _opt_cstyle;
-    const BoolOption<Disassembler> _opt_intelhex;
+    const BoolOption<Disassembler> _opt_intelStyle;
+    const BoolOption<Disassembler> _opt_motorolaStyle;
     const CharOption<Disassembler> _opt_curSym;
     const BoolOption<Disassembler> _opt_gnuAs;
 
@@ -89,7 +91,8 @@ protected:
     Radix _listRadix;
     bool _relativeTarget;
     bool _cstyle;
-    bool _intelHex;
+    bool _intelStyle;
+    bool _motorolaStyle;
     char _curSym;
     bool _gnuAs;
     SymbolTable *_symtab = nullptr;
