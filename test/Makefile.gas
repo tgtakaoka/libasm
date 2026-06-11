@@ -14,6 +14,33 @@
 
 # GNU assembler rules
 
+# PDP-11 targets.
+#
+# binutils 2.46.1's --target-help advertises -mt11/-mj11, but the option
+# table in this build only contains the kd11/ka11/kb11 entries, so those
+# flags are rejected. Pass each instruction-set extension explicitly per
+# the J-11 / T-11 architecture handbooks until upstream lands the CPU
+# aliases:
+#   T-11: limited EIS (incl. RTT), MTPS/MFPS, MFPT
+#   J-11: full EIS,  MTPS/MFPS, MFPT, SPL, CSM, TSTSET/WRTLCK
+#          (-mmultiproc), and FP-11 floating point.
+T11_FLAGS = -mno-extensions -mlimited-eis -mmxps -mmfpt
+J11_FLAGS = -mno-extensions -meis -mmxps -mmfpt -mspl -mcsm -mmultiproc -mfpp
+
+gas-%_t11.hex: %_t11.gas
+	pdp11-aout-as $(T11_FLAGS) --warn -o $(^:.gas=.p) -al=$(^:.gas=.lst) $^
+	pdp11-aout-ld --entry=0 -section-start=.text=0 -o $(^:.gas=.o) $(^:.gas=.p)
+	pdp11-aout-objcopy -I a.out-pdp11 -O ihex $(^:.gas=.o) /dev/stdout \
+	| tr -d '\015' > $(^:.gas=.hex)
+	pdp11-aout-objdump -m pdp11 -D $(^:.gas=.hex) > $(^:.gas=.dis)
+
+gas-%_j11.hex: %_j11.gas
+	pdp11-aout-as $(J11_FLAGS) --warn -o $(^:.gas=.p) -al=$(^:.gas=.lst) $^
+	pdp11-aout-ld --entry=0 -section-start=.text=0 -o $(^:.gas=.o) $(^:.gas=.p)
+	pdp11-aout-objcopy -I a.out-pdp11 -O ihex $(^:.gas=.o) /dev/stdout \
+	| tr -d '\015' > $(^:.gas=.hex)
+	pdp11-aout-objdump -m pdp11 -D $(^:.gas=.hex) > $(^:.gas=.dis)
+
 # Z8001 target
 gas-%_z8001.hex: %_z8001.gas
 	z8k-coff-as --warn -o $(^:.gas=.p) -al=$(^:.gas=.lst) $^
