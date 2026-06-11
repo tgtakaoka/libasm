@@ -30,6 +30,8 @@ int main(int argc, const char **argv) {
     dispdp11.setOption("origin-char", "*");
     dispdp11.setOption("intel-style", "on");
     dispdp11.setOption("ignore-literal", "on");
+    if (driver.generateGas())
+        dispdp11.setOption("gnu-as", "on");
 
     TestGenerator generator(driver, dispdp11, 0x080);
     generator.generate();
