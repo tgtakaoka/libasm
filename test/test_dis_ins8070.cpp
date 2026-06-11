@@ -353,13 +353,13 @@ void test_formatter() {
     disassembler.setOption("c-style", "on");
     TEST("XOR", "A, =0x55",  0xE4, 0x55);
 
-    disassembler.setOption("intel-hex", "on");
+    disassembler.setOption("intel-style", "on");
     TEST("ADD", "A, =0AAH",  0xF4, 0xAA);
 
-    disassembler.setOption("intel-hex", "off");
+    disassembler.setOption("intel-style", "off");
     TEST("SUB", "A, =X'FF",  0xFC, 0xFF);
 
-    disassembler.setOption("intel-hex", "on");
+    disassembler.setOption("intel-style", "on");
     TEST("JSR", "1234H",      0x20, 0x33, 0x12);
 
     disassembler.setOption("c-style", "on");
