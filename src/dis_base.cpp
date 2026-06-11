@@ -30,8 +30,10 @@ constexpr char OPT_BOOL_RELATIVE[] PROGMEM = "relative";
 constexpr char OPT_DESC_RELATIVE[] PROGMEM = "program counter relative branch target";
 constexpr char OPT_BOOL_CSTYLE[] PROGMEM = "c-style";
 constexpr char OPT_DESC_CSTYLE[] PROGMEM = "C language style number constant";
-constexpr char OPT_BOOL_INTELHEX[] PROGMEM = "intel-hex";
-constexpr char OPT_DESC_INTELHEX[] PROGMEM = "Intel style hexadecimal";
+constexpr char OPT_BOOL_INTEL_STYLE[] PROGMEM = "intel-style";
+constexpr char OPT_DESC_INTEL_STYLE[] PROGMEM = "Intel style hexadecimal/octal/binary";
+constexpr char OPT_BOOL_MOTOROLA_STYLE[] PROGMEM = "motorola-style";
+constexpr char OPT_DESC_MOTOROLA_STYLE[] PROGMEM = "Motorola style hexadecimal/octal/binary";
 constexpr char OPT_CHAR_ORIGIN[] PROGMEM = "origin-char";
 constexpr char OPT_DESC_ORIGIN[] PROGMEM = "letter for origin symbol";
 constexpr char OPT_BOOL_GNU_AS[] PROGMEM = "gnu-as";
@@ -51,9 +53,12 @@ Disassembler::Disassembler(const ValueFormatter::Plugins &plugins, const OptionB
               &_opt_relative),
       _opt_relative(this, &Disassembler::setRelativeTarget, OPT_BOOL_RELATIVE, OPT_DESC_RELATIVE,
               &_opt_cstyle),
-      _opt_cstyle(this, &Disassembler::setCStyle, OPT_BOOL_CSTYLE, OPT_DESC_CSTYLE, &_opt_intelhex),
-      _opt_intelhex(
-              this, &Disassembler::setIntelHex, OPT_BOOL_INTELHEX, OPT_DESC_INTELHEX, &_opt_curSym),
+      _opt_cstyle(
+              this, &Disassembler::setCStyle, OPT_BOOL_CSTYLE, OPT_DESC_CSTYLE, &_opt_intelStyle),
+      _opt_intelStyle(this, &Disassembler::setIntelStyle, OPT_BOOL_INTEL_STYLE,
+              OPT_DESC_INTEL_STYLE, &_opt_motorolaStyle),
+      _opt_motorolaStyle(this, &Disassembler::setMotorolaStyle, OPT_BOOL_MOTOROLA_STYLE,
+              OPT_DESC_MOTOROLA_STYLE, &_opt_curSym),
       _opt_curSym(this, &Disassembler::setCurSym, OPT_CHAR_ORIGIN, OPT_DESC_ORIGIN, &_opt_gnuAs),
       _opt_gnuAs(this, &Disassembler::setGnuAs, OPT_BOOL_GNU_AS, OPT_DESC_GNU_AS) {
     reset();
@@ -65,7 +70,8 @@ void Disassembler::reset() {
     setListRadix(RADIX_16);
     setRelativeTarget(false);
     setCStyle(false);
-    setIntelHex(false);
+    setIntelStyle(false);
+    setMotorolaStyle(false);
     setCurSym(0);
     setGnuAs(false);
 }
@@ -75,8 +81,12 @@ const ValueFormatter &Disassembler::formatter() const {
         static ValueFormatter formatter{ValueFormatter::Plugins::cstyle()};
         return formatter;
     }
-    if (_intelHex) {
+    if (_intelStyle) {
         static ValueFormatter formatter{ValueFormatter::Plugins::intel()};
+        return formatter;
+    }
+    if (_motorolaStyle) {
+        static ValueFormatter formatter{ValueFormatter::Plugins::motorola()};
         return formatter;
     }
     return _formatter;
@@ -104,15 +114,28 @@ Error Disassembler::setRelativeTarget(bool enable) {
 
 Error Disassembler::setCStyle(bool enable) {
     _cstyle = enable;
-    if (_cstyle && _intelHex)
-        _intelHex = false;
+    if (_cstyle) {
+        _intelStyle = false;
+        _motorolaStyle = false;
+    }
     return OK;
 }
 
-Error Disassembler::setIntelHex(bool enable) {
-    _intelHex = enable;
-    if (_intelHex && _cstyle)
+Error Disassembler::setIntelStyle(bool enable) {
+    _intelStyle = enable;
+    if (_intelStyle) {
         _cstyle = false;
+        _motorolaStyle = false;
+    }
+    return OK;
+}
+
+Error Disassembler::setMotorolaStyle(bool enable) {
+    _motorolaStyle = enable;
+    if (_motorolaStyle) {
+        _cstyle = false;
+        _intelStyle = false;
+    }
     return OK;
 }
 

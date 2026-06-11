@@ -64,7 +64,7 @@ void test_accumlator() {
     TEST("AI",  "H'FB'",  0x24, 0xFB);
     TEST("CI",  "5",      0x25, 0x05);
     NMEM("CI",  "0", "0", 0x25);
-    disassembler.setOption("intel-hex", "on");
+    disassembler.setOption("intel-style", "on");
     TEST("CI",  "0FAH",   0x25, 0xFA);
 }
 
