@@ -450,7 +450,7 @@ void test_undef() {
 }
 
 void test_error() {
-    ERRT("LD A,@@1,P3", NOT_AN_EXPECTED, "@1,P3");
+    TEST("LD A,@@1,P3", 0xC7, 0x01); // @1 parses as Motorola octal 1
     ERRT("LD A,@#1",    NOT_AN_EXPECTED, "#1");
     ERRT("LD A,@=1",    NOT_AN_EXPECTED, "=1");
     ERRT("LD A,1(P3)",  MISSING_COMMA,     "1(P3)"); // SC/MP style
