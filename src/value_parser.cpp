@@ -424,6 +424,28 @@ Error ValueParser::parseConstant(StrScanner &scan, Value &val, ParserContext &co
         return err;
     }
 
+    // Motorola-style number fallback: $hex, %bin, @oct. Skip any prefix char
+    // that the architecture's symbol parser treats as a head-of-symbol letter,
+    // so it can be resolved as a symbol or location reference instead.
+    Radix motoRadix = RADIX_NONE;
+    if (*p == '$' && !_symbol.symbolLetter('$', true))
+        motoRadix = RADIX_16;
+    else if (*p == '%' && !_symbol.symbolLetter('%', true))
+        motoRadix = RADIX_2;
+    else if (*p == '@' && !_symbol.symbolLetter('@', true))
+        motoRadix = RADIX_8;
+    if (motoRadix != RADIX_NONE) {
+        auto q = p;
+        ++q;
+        Value motoVal;
+        const auto motoErr = motoVal.read(q, motoRadix);
+        if (motoErr != NOT_AN_EXPECTED) {
+            val = motoVal;
+            scan = q;
+            return motoErr;
+        }
+    }
+
     if (_symbol.locationSymbol(p)) {
         val.setUnsigned(context.currentLocation);
         scan = p;
