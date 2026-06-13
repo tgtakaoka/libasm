@@ -92,6 +92,23 @@ build gen_h8300: link gen_h8300.o $
   dec_float.o value_parser.o parsers.o operators.o $
   gen_driver.o tokenized_text.o
 
+# h8500
+build test_dis_h8500: run test_dis_h8500.o $
+  dis_h8500.o reg_h8500.o table_h8500.o text_h8500.o $
+  dis_base.o config_base.o error_reporter.o formatters.o insn_base.o $
+  option_base.o reg_base.o str_buffer.o str_scanner.o text_common.o value.o $
+  value_formatter.o value_parser.o parsers.o operators.o dec_float.o $
+  fixed64.o ieee_float.o float80_base.o float80_hard.o float80_soft.o $
+  test_dis_helper.o test_asserter.o
+build gen_h8500: link gen_h8500.o $
+  dis_h8500.o reg_h8500.o table_h8500.o text_h8500.o $
+  config_base.o dis_base.o dis_formatter.o error_reporter.o formatters.o $
+  insn_base.o list_formatter.o option_base.o reg_base.o str_buffer.o $
+  str_scanner.o test_generator.o text_common.o value.o value_formatter.o $
+  fixed64.o ieee_float.o float80_base.o float80_hard.o float80_soft.o $
+  dec_float.o value_parser.o parsers.o operators.o $
+  gen_driver.o tokenized_text.o
+
 # i8048
 build test_asm_i8048: run test_asm_i8048.o $
   asm_i8048.o reg_i8048.o table_i8048.o text_i8048.o $
@@ -932,6 +949,7 @@ build gen: phony $
   gen_cdp1802  $
   gen_f3850    $
   gen_h8300    $
+  gen_h8500    $
   gen_i8048    $
   gen_i8051    $
   gen_i8080    $
