@@ -27,6 +27,7 @@ build asm: link asm.o $
   fixed64.o ieee_float.o float80_base.o float80_hard.o float80_soft.o $
   dec_float.o ibm_float.o ti_float.o $
   asm_cdp1802.o  reg_cdp1802.o  table_cdp1802.o  text_cdp1802.o  $
+  asm_cp1600.o   reg_cp1600.o   table_cp1600.o   text_cp1600.o   $
   asm_f3850.o    reg_f3850.o    table_f3850.o    text_f3850.o    $
   asm_i8048.o    reg_i8048.o    table_i8048.o    text_i8048.o    $
   asm_i8051.o    reg_i8051.o    table_i8051.o    text_i8051.o    $

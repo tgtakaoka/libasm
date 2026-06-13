@@ -39,6 +39,43 @@ struct EntryInsn : EntryInsnPrefix<Config, Entry> {
     }
 };
 
+struct Operand final : ErrorAt {
+    AddrMode mode;
+    RegName reg;
+    Value val;
+    Operand() : mode(M_NONE), reg(REG_UNDEF), val() {}
+};
+
+struct AsmInsn final : AsmInsnImpl<Config>, EntryInsn {
+    AsmInsn(Insn &insn) : AsmInsnImpl(insn) {}
+
+    Operand srcOp, dstOp;
+
+    // Position of the first operand word.  For prefix-table entries (Jump
+    // family) the prefix occupies position 0..1 and the opcode 2..3, so
+    // operands start at 4; otherwise the opcode occupies 0..1 and operands
+    // start at 2.  Lets emitOperand16 be called before emitInsn.
+    uint8_t operandPos() const { return hasPrefix() ? 4 : 2; }
+
+    // Writes prefix (when present) and opcode at the head of the buffer.
+    void emitInsn() {
+        if (hasPrefix()) {
+            emitUint16(prefix(), 0);
+            emitUint16(opCode(), 2);
+        } else {
+            emitUint16(opCode(), 0);
+        }
+    }
+    // Appends an operand word at operandPos(), or at length() if some operands
+    // have already been emitted.  Order of emitInsn vs emitOperand16 does not
+    // matter -- the header slot is always preserved for the prefix/opcode.
+    void emitOperand16(uint16_t val) {
+        const auto pos = length() < operandPos() ? operandPos() : length();
+        emitUint16(val, pos);
+    }
+    void emitSdbd() { emitUint16(0x0001, 0); }
+};
+
 struct DisInsn final : DisInsnImpl<Config>, EntryInsn {
     DisInsn(Insn &insn, DisMemory &memory, const StrBuffer &out)
         : DisInsnImpl(insn, memory, out), sdbd_prefix(false) {}

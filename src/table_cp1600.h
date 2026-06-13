@@ -33,6 +33,7 @@ extern const TableCp1600 TABLE;
 
 bool isPrefix(CpuType, Config::opcode_t opc);
 Error searchOpCode(CpuType, DisInsn &insn, StrBuffer &out);
+Error searchName(CpuType, AsmInsn &insn);
 
 }  // namespace cp1600
 }  // namespace libasm
