@@ -137,6 +137,26 @@ gas-%_h8s2600.hex: %_h8s2600.gas
 	| tr -d '\015' > $(^:.gas=.hex)
 	h8300-elf-objdump -m h8300s -D $(^:.gas=.hex) > $(^:.gas=.dis)
 
+# H8/500 family targets (h8500, h8520)
+# h8500-hms-as (binutils 2.16.1) supports .include but rejects ';' as a
+# comment character. The .gas wrapper uses cpp-style #include directives
+# so that cpp can inline the .inc files into a single source; sed then
+# strips ';...' comments and substitutes 'rte' with '.byte 0x0a' (RTE is
+# missing from h8500-hms-as). See ~/gas_bugs_h8500.md.
+define gas-h8500-rule
+gas-%_$(1).hex: %_$(1).gas
+	cpp -E -P -nostdinc -traditional -I . $$^ \
+	  | sed -e 's/;.*$$$$//' -e 's/^\(\s*\)rte\s*$$$$/\1.byte 0x0a/' \
+	    > $$(^:.gas=.s)
+	h8500-hms-as --warn -o $$(^:.gas=.p) -als=$$(^:.gas=.lst) $$(^:.gas=.s)
+	h8500-hms-ld --entry=0 -Ttext 0x0100 -o $$(^:.gas=.o) $$(^:.gas=.p)
+	h8500-hms-objcopy -O ihex $$(^:.gas=.o) /dev/stdout \
+	  | tr -d '\015' > $$(^:.gas=.hex)
+	h8500-hms-objdump -m h8500 -D $$(^:.gas=.hex) > $$(^:.gas=.dis)
+endef
+$(eval $(call gas-h8500-rule,h8500))
+$(eval $(call gas-h8500-rule,h8520))
+
 # i8086 target
 gas-%_i8086.hex: %_i8086.gas
 	i386-elf-as -mtune=i8086 --warn -mnaked-reg -msyntax=intel \
