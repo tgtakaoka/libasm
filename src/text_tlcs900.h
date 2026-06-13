@@ -79,7 +79,7 @@ using common::TEXT_LDW;
 using common::TEXT_LDX;
 using common::TEXT_LINK;
 extern const char TEXT_MAX[]     PROGMEM;
-extern const char TEXT_MAXMODE[] PROGMEM;
+using common::TEXT_MAXMODE;
 extern const char TEXT_MDEC1[]   PROGMEM;
 extern const char TEXT_MDEC2[]  PROGMEM;
 extern const char TEXT_MDEC4[]  PROGMEM;

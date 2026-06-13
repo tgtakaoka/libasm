@@ -198,7 +198,7 @@ using common::TEXT_REG_USP;
 extern const char TEXT_BKPT[]  PROGMEM;
 extern const char TEXT_MOVEC[] PROGMEM;
 extern const char TEXT_MOVES[] PROGMEM;
-extern const char TEXT_RTD[]   PROGMEM;
+using common::TEXT_RTD;
 
 extern const char TEXT_REG_DFC[] PROGMEM;
 extern const char TEXT_REG_SFC[] PROGMEM;

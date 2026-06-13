@@ -49,6 +49,7 @@ DisCdp1802      KEYWORD1        libasm
 DisCp1600       KEYWORD1        libasm
 DisF3850        KEYWORD1        libasm
 DisH8300        KEYWORD1        libasm
+DisH8500        KEYWORD1        libasm
 DisI8048        KEYWORD1        libasm
 DisI8051        KEYWORD1        libasm
 DisI8080        KEYWORD1        libasm

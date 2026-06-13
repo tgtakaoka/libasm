@@ -133,12 +133,12 @@ usage: dis -C <CPU> [-o <output>] [-l <list>] <input>
      G65SC02 W65C02S W65C816S i8039 i8048 i80C39 i80C48 MSM80C39 MSM80C48
      i8051 i8080 i8085 V30EMU Z80 Z180 Z280 Z380 Z8 Z86C Z88 TLCS90
      TLCS900 TLCS900L TLCS900H TLCS900L1 TLCS900H2 INS8060 INS8070 CP1600
-     CDP1802 CDP1804 CDP1804A SCN2650 F3850 IM6100 HD6120 TMS7000 TMS370
-     TMS32010 TMS32015 TMS32020 TMS320C25 TMS320C26 TMS320C20X TMS320C5X
-     TMS320C30 TMS320C31 TMS320C32 i8086 i80186 i80286 V30 i8096 i80196
-     MC68000 MC68010 MC68020 MC68030 MC68040 H8/300 H8/300H H8S/2000
-     H8S/2600 TMS9900 TMS9980 TMS9995 TMS99105 TMS99110 Z8001 Z8002
-     NS32032 MN1610 MN1613 MN1613A J11 T11
+     CDP1802 CDP1804 CDP1804A SCN2650 F3850 H8/500 H8/520 IM6100 HD6120
+     TMS7000 TMS370 TMS32010 TMS32015 TMS32020 TMS320C25 TMS320C26
+     TMS320C20X TMS320C5X TMS320C30 TMS320C31 TMS320C32 i8086 i80186 i80286
+     V30 i8096 i80196 MC68000 MC68010 MC68020 MC68030 MC68040 H8/300
+     H8/300H H8S/2000 H8S/2600 TMS9900 TMS9980 TMS9995 TMS99105 TMS99110
+     Z8001 Z8002 NS32032 MN1610 MN1613 MN1613A J11 T11
   -o <output>      : output file
   -l <list>        : list file
   <input>          : file can be Motorola S-Record or Intel HEX format
@@ -160,6 +160,7 @@ usage: dis -C <CPU> [-o <output>] [-l <list>] <input>
   --advanced-mode  : H8/300H 24-bit advanced mode (bool: H8/300)
   --external-paren : disp2(disp(ext)) as external addressing (bool: 32032)
   --extmode        : Extended mode (bool: Z380)
+  --fp-alias       : emit FP alias for R6 in indirect addressing (bool: H8/500)
   --fpu            : floating point co-processor (text: 8086, 68000, 32032)
   --indirect-long  : [] for indirect long operand (bool: 6502)
   --lock-insn      : lock prefix as instruction (bool: 8086)
@@ -173,7 +174,7 @@ usage: dis -C <CPU> [-o <output>] [-l <list>] <input>
   --segment-insn   : segment override as instruction (bool: 8086)
   --segmented-addr : use <<segment>> notation (bool: Z8001)
   --short-direct   : use |addr| for short direct notation (bool: Z8001)
-  --sp-alias       : decode R6 as SP (bool: CP1600, H8/300)
+  --sp-alias       : decode R6 as SP (bool: CP1600, H8/300, H8/500)
   --use-absolute   : zero register indexing as absolute addressing (bool: 8096)
   --use-aux-name   : use aux register name ARn (bool: 32010)
   --use-port-name  : use port name PAn (bool: 32010)

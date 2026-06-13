@@ -146,7 +146,7 @@ constexpr char TEXT_XIE[]  PROGMEM = "XIE";
 // CDP1804A
 constexpr char TEXT_DACI[] PROGMEM = "DACI";
 constexpr char TEXT_DADC[] PROGMEM = "DADC";
-constexpr char TEXT_DADD[] PROGMEM = "DADD";
+// constexpr char TEXT_DADD[] PROGMEM = "DADD";
 constexpr char TEXT_DADI[] PROGMEM = "DADI";
 // constexpr char TEXT_DBNZ[] PROGMEM = "DBNZ";
 constexpr char TEXT_DSAV[] PROGMEM = "DSAV";
