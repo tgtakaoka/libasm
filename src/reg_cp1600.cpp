@@ -26,8 +26,32 @@ namespace libasm {
 namespace cp1600 {
 namespace reg {
 
+RegName parseRegName(StrScanner &scan) {
+    auto p = scan;
+    if (p.iexpect('R')) {
+        const auto num = parseRegNumber(p);
+        if (num < 0 || num >= 8)
+            return REG_UNDEF;
+        scan = p;
+        return RegName(num);
+    }
+    if (p.iexpectWord_P(TEXT_REG_SP)) {
+        scan = p;
+        return REG_SP;
+    }
+    if (p.iexpectWord_P(TEXT_REG_PC)) {
+        scan = p;
+        return REG_PC;
+    }
+    return REG_UNDEF;
+}
+
 StrBuffer &outRegName(StrBuffer &out, uint_fast8_t num) {
     return out.letter('R').int16(num & 7);
+}
+
+uint8_t encodeRegNumber(RegName name) {
+    return uint8_t(name);
 }
 
 }  // namespace reg

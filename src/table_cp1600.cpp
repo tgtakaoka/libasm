@@ -122,6 +122,98 @@ constexpr Entry TABLE_CP1600[] PROGMEM = {
     E0(00007, TEXT_SETC),
 };
 
+static constexpr uint8_t INDEX_CP1600[] PROGMEM = {
+     13,  // TEXT_ADCR
+     42,  // TEXT_ADD
+     44,  // TEXT_ADDAT
+     45,  // TEXT_ADDAT
+     43,  // TEXT_ADDI
+      4,  // TEXT_ADDR
+     54,  // TEXT_AND
+     56,  // TEXT_ANDAT
+     57,  // TEXT_ANDAT
+     55,  // TEXT_ANDI
+      7,  // TEXT_ANDR
+     62,  // TEXT_B
+     64,  // TEXT_BC
+     74,  // TEXT_BEQ
+     81,  // TEXT_BESC
+     82,  // TEXT_BEXT
+     77,  // TEXT_BGE
+     79,  // TEXT_BGT
+     78,  // TEXT_BLE
+     66,  // TEXT_BLGE
+     67,  // TEXT_BLLT
+     76,  // TEXT_BLT
+     71,  // TEXT_BMI
+     65,  // TEXT_BNC
+     75,  // TEXT_BNEQ
+     69,  // TEXT_BNOV
+     73,  // TEXT_BNZE
+     68,  // TEXT_BOV
+     70,  // TEXT_BPL
+     80,  // TEXT_BUSC
+     72,  // TEXT_BZE
+     88,  // TEXT_CLRC
+      1,  // TEXT_CLRR
+     50,  // TEXT_CMP
+     52,  // TEXT_CMPAT
+     53,  // TEXT_CMPAT
+     51,  // TEXT_CMPI
+      6,  // TEXT_CMPR
+     11,  // TEXT_COMR
+     10,  // TEXT_DECR
+     86,  // TEXT_DIS
+     85,  // TEXT_EIS
+     14,  // TEXT_GSWD
+     83,  // TEXT_HLT
+      9,  // TEXT_INCR
+      2,  // TEXT_JR
+      3,  // TEXT_MOVR
+     38,  // TEXT_MVI
+     41,  // TEXT_MVIAT
+     40,  // TEXT_MVII
+     34,  // TEXT_MVO
+     37,  // TEXT_MVOAT
+     36,  // TEXT_MVOI
+     12,  // TEXT_NEGR
+     15,  // TEXT_NOP
+     63,  // TEXT_NOPP
+     35,  // TEXT_PSHR
+     39,  // TEXT_PULR
+     22,  // TEXT_RLC
+     23,  // TEXT_RLC
+     30,  // TEXT_RRC
+     31,  // TEXT_RRC
+     17,  // TEXT_RSWD
+     28,  // TEXT_SAR
+     29,  // TEXT_SAR
+     32,  // TEXT_SARC
+     33,  // TEXT_SARC
+     84,  // TEXT_SDBD
+     89,  // TEXT_SETC
+     16,  // TEXT_SIN
+     20,  // TEXT_SLL
+     21,  // TEXT_SLL
+     24,  // TEXT_SLLC
+     25,  // TEXT_SLLC
+     26,  // TEXT_SLR
+     27,  // TEXT_SLR
+     46,  // TEXT_SUB
+     48,  // TEXT_SUBAT
+     49,  // TEXT_SUBAT
+     47,  // TEXT_SUBI
+      5,  // TEXT_SUBR
+     18,  // TEXT_SWAP
+     19,  // TEXT_SWAP
+     87,  // TEXT_TCI
+      0,  // TEXT_TSTR
+     58,  // TEXT_XOR
+     60,  // TEXT_XORAT
+     61,  // TEXT_XORAT
+     59,  // TEXT_XORI
+      8,  // TEXT_XORR
+};
 
 constexpr Entry TABLE_JUMP[] = {
     E1(01400, TEXT_J,    M_JADDR),
@@ -132,14 +224,22 @@ constexpr Entry TABLE_JUMP[] = {
     E2(00002, TEXT_JSRD, M_BREG, M_JADDR),
 };
 
+static constexpr uint8_t INDEX_JUMP[] PROGMEM = {
+      0,  // TEXT_J
+      2,  // TEXT_JD
+      1,  // TEXT_JE
+      3,  // TEXT_JSR
+      5,  // TEXT_JSRD
+      4,  // TEXT_JSRE
+};
 
 // clang-format on
 
 using EntryPage = entry::PrefixTableBase<Entry>;
 
 constexpr EntryPage CP1600_PAGES[] PROGMEM = {
-        {0x0000, ARRAY_RANGE(TABLE_CP1600), nullptr, nullptr},
-        {0x0004, ARRAY_RANGE(TABLE_JUMP), nullptr, nullptr},
+        {0x0000, ARRAY_RANGE(TABLE_CP1600), ARRAY_RANGE(INDEX_CP1600)},
+        {0x0004, ARRAY_RANGE(TABLE_JUMP), ARRAY_RANGE(INDEX_JUMP)},
 };
 
 using Cpu = entry::CpuBase<CpuType, EntryPage>;
@@ -150,6 +250,31 @@ constexpr Cpu CPU_TABLE[] PROGMEM = {
 
 const Cpu *cpu(CpuType cpuType) {
     return Cpu::search(cpuType, ARRAY_RANGE(CPU_TABLE));
+}
+
+bool acceptMode(AddrMode opr, AddrMode table) {
+    if (opr == table)
+        return true;
+    if (opr == M_REG)
+        return table == M_DREG || table == M_SREG || table == M_LREG ||
+               table == M_BREG || table == M_INDIR || table == M_XREG;
+    if (opr == M_DADDR)
+        return table == M_IMM16 || table == M_BDISP || table == M_JADDR ||
+               table == M_BCOND || table == M_SHCNT || table == M_BIT0;
+    if (opr == M_NONE)
+        return table == M_SHCNT || table == M_BIT0 || table == M_NOPP;
+    return false;
+}
+
+bool acceptModes(AsmInsn &insn, const Entry *entry) {
+    const auto flags = entry->readFlags();
+    return acceptMode(insn.srcOp.mode, flags.src()) &&
+           acceptMode(insn.dstOp.mode, flags.dst());
+}
+
+Error searchName(CpuType cpuType, AsmInsn &insn) {
+    cpu(cpuType)->searchName(insn, acceptModes);
+    return insn.getError();
 }
 
 bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *) {
