@@ -43,6 +43,8 @@ enum AddrMode : uint8_t {
     M_DADDR = 13,  // |_|___|000|___|: direct memory address: next word
     M_STACK = 14,  // |_|___|110|___|: R6 stack
     M_IMM16 = 15,  // |_|___|111|___|: immediate next word = data (MVII/ADDI/etc.)
+    // Assembler parser
+    M_REG = 16,
 };
 
 struct Entry final : entry::Base<Config::opcode_t> {

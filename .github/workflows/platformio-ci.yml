@@ -29,6 +29,7 @@ jobs:
       matrix:
         example:
           - cdp1802
+          - cp1600
           - f3850
           - h8300
           - i8048

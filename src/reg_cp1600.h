@@ -35,11 +35,16 @@ enum RegName : int8_t {
     REG_R5 = 5,
     REG_R6 = 6,
     REG_R7 = 7,
+    REG_SP = REG_R6 + 8,
+    REG_PC = REG_R7 + 8,
 };
 
 namespace reg {
 
+RegName parseRegName(StrScanner &scan);
 StrBuffer &outRegName(StrBuffer &out, uint_fast8_t num);
+
+uint8_t encodeRegNumber(RegName name);
 
 }  // namespace reg
 }  // namespace cp1600

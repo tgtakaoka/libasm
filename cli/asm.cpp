@@ -16,6 +16,7 @@
 
 #include "asm_cdp1802.h"
 #include "asm_commander.h"
+#include "asm_cp1600.h"
 #include "asm_directive.h"
 #include "asm_f3850.h"
 #include "asm_h8300.h"
@@ -56,6 +57,7 @@ using namespace libasm::cli;
 using namespace libasm::driver;
 
 cdp1802::AsmCdp1802 asm1802;
+cp1600::AsmCp1600 asm1600;
 f3850::AsmF3850 asm3850;
 i8048::AsmI8048 asm8048;
 i8051::AsmI8051 asm8051;
@@ -116,6 +118,7 @@ MotorolaDirective dir6816(asm6816);
 NationalDirective dir32000(asm32000);
 NationalDirective dir8060(asm8060);
 NationalDirective dir8070(asm8070);
+MotorolaDirective dir1600(asm1600);
 RcaDirective dir1802(asm1802);
 Z8Directive dirz8(asmz8);
 ZilogDirective dir90(asm90);
@@ -143,6 +146,7 @@ AsmCommander commander{
         &dir900,
         &dir8060,
         &dir8070,
+        &dir1600,
         &dir1802,
         &dir2650,
         &dir3850,
