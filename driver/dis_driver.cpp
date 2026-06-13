@@ -145,6 +145,8 @@ void DisDriver::disassemble(BinReader &memory, const char *inputName, TextPrinte
                         errorout.println(out.str());
                 }
             }
+            if (insn.length() == 0)
+                break;
             mem_offset += insn.length();
         }
     }
