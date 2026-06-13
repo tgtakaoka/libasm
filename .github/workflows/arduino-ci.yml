@@ -50,7 +50,7 @@ jobs:
               vendor: teensy
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Install Arduino CLI
         uses: arduino/setup-arduino-cli@v2
       - name: Compile examples
