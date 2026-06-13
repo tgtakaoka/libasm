@@ -33,6 +33,12 @@ build reg_cdp1802.o:   cxx ${root}/src/reg_cdp1802.cpp
 build table_cdp1802.o: cxx ${root}/src/table_cdp1802.cpp
 build text_cdp1802.o:  cxx ${root}/src/text_cdp1802.cpp
 
+# cp1600
+build dis_cp1600.o:   cxx ${root}/src/dis_cp1600.cpp
+build reg_cp1600.o:   cxx ${root}/src/reg_cp1600.cpp
+build table_cp1600.o: cxx ${root}/src/table_cp1600.cpp
+build text_cp1600.o:  cxx ${root}/src/text_cp1600.cpp
+
 # f3850
 build asm_f3850.o:   cxx ${root}/src/asm_f3850.cpp
 build dis_f3850.o:   cxx ${root}/src/dis_f3850.cpp

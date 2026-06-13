@@ -165,7 +165,7 @@ extern const char TEXT_SDLL[]   PROGMEM;
 using common::TEXT_SET;
 using common::TEXT_SETB;
 extern const char TEXT_SETFLG[] PROGMEM;
-extern const char TEXT_SIN[]    PROGMEM;
+using common::TEXT_SIN;
 extern const char TEXT_SINB[]   PROGMEM;
 extern const char TEXT_SIND[]   PROGMEM;
 extern const char TEXT_SINDB[]  PROGMEM;

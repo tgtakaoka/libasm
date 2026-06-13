@@ -135,7 +135,7 @@ using common::TEXT_LDS;
 using common::TEXT_LR;
 extern const char TEXT_MM[]   PROGMEM;
 extern const char TEXT_MR[]   PROGMEM;
-extern const char TEXT_NEGR[] PROGMEM;
+using common::TEXT_NEGR;
 using common::TEXT_SR;
 using common::TEXT_STR;
 
