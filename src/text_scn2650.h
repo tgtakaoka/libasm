@@ -56,7 +56,7 @@ extern const char TEXT_BSXA[] PROGMEM;
 extern const char TEXT_BXA[]  PROGMEM;
 using common::TEXT_COMA;
 extern const char TEXT_COMI[] PROGMEM;
-extern const char TEXT_COMR[] PROGMEM;
+using common::TEXT_COMR;
 extern const char TEXT_COMZ[] PROGMEM;
 extern const char TEXT_CPSL[] PROGMEM;
 extern const char TEXT_CPSU[] PROGMEM;

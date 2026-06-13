@@ -18,6 +18,7 @@
 #define __LIBASM_H__
 
 #include "asm_cdp1802.h"
+#include "asm_cp1600.h"
 #include "asm_f3850.h"
 #include "asm_i8048.h"
 #include "asm_i8051.h"
@@ -44,6 +45,7 @@
 #include "asm_z80.h"
 #include "asm_z8000.h"
 #include "dis_cdp1802.h"
+#include "dis_cp1600.h"
 #include "dis_f3850.h"
 #include "dis_i8048.h"
 #include "dis_i8051.h"
