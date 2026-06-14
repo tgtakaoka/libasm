@@ -48,6 +48,7 @@
 #include "dis_tms7000.h"
 #include "dis_tms9900.h"
 #include "dis_z280.h"
+#include "dis_h16.h"
 #include "dis_z380.h"
 #include "dis_z8.h"
 #include "dis_z80.h"
@@ -60,6 +61,7 @@ using namespace libasm::driver;
 cdp1802::DisCdp1802 dis1802;
 cp1600::DisCp1600 dis1600;
 f3850::DisF3850 dis3850;
+h16::DisH16 dish16;
 h8300::DisH8300 dish8300;
 h8500::DisH8500 dish8500;
 i8048::DisI8048 dis8048;
@@ -125,6 +127,7 @@ DisCommander commander{
         &dis8086,
         &dis8096,
         &dis68000,
+        &dish16,
         &dish8300,
         &dish8500,
         &dissuperh,

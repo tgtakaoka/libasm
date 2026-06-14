@@ -17,6 +17,7 @@ ARCHS = \
 	cdp1802  \
 	cp1600   \
 	f3850    \
+	h16      \
 	h8300    \
 	h8500    \
 	i8048    \
@@ -63,6 +64,7 @@ $(eval $(foreach a,$(ARCHS),$(call objs-arch,$(a))))
 TGT_cdp1802  = cdp1802 cdp1804 cdp1804a
 TGT_cp1600   = cp1600
 TGT_f3850    = f3850
+TGT_h16      = h16
 TGT_h8300    = h8300 h8300hn h8300h h8s2000n h8s2000 h8s2600n h8s2600
 OPT_h8300h   = -O advanced-mode=on
 OPT_h8s2000  = -O advanced-mode=on
@@ -107,6 +109,7 @@ CPU_cdp1804  = 1804
 CPU_cdp1804a = 1804A
 CPU_cp1600   = CP1600
 CPU_f3850    = F3850
+CPU_h16      = HD641016
 CPU_h8500    = H8/500
 CPU_g65sc02  = 65SC02
 CPU_h8300    = h8/300

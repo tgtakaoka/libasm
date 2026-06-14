@@ -76,6 +76,7 @@ build dis: link dis.o $
   dis_cdp1802.o  reg_cdp1802.o  table_cdp1802.o  text_cdp1802.o  $
   dis_cp1600.o   reg_cp1600.o   table_cp1600.o   text_cp1600.o   $
   dis_f3850.o    reg_f3850.o    table_f3850.o    text_f3850.o    $
+  dis_h16.o      reg_h16.o      table_h16.o      text_h16.o      $
   dis_h8500.o    reg_h8500.o    table_h8500.o    text_h8500.o    $
   dis_i8048.o    reg_i8048.o    table_i8048.o    text_i8048.o    $
   dis_i8051.o    reg_i8051.o    table_i8051.o    text_i8051.o    $
