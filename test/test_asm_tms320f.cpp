@@ -21,16 +21,28 @@ using namespace libasm;
 using namespace libasm::tms320f;
 using namespace libasm::test;
 
-#define PTEST(line1, opc1, line2, opc2)           \
-    do {                                          \
-        ATEST(0x1000, line1, opc1);               \
-        CTEST(0x1001, 0x1000, "|| " line2, opc2); \
+// Parallel-form state is carried on the Insn (Insn::state<T>), so both halves
+// of the pair must share one Insn.
+#define __PERRT(file, line, src1, opc1, err1, at1, src2, opc2, err2, at2) \
+    do {                                                                  \
+        const Config::opcode_t e1[] = {opc1};                             \
+        const Config::opcode_t e2[] = {opc2};                             \
+        const auto endian = assembler.config().endian();                  \
+        const auto unit = assembler.config().addressUnit();               \
+        const ArrayMemory m1(0x1000, e1, sizeof(e1), endian, unit);       \
+        const ArrayMemory m2(0x1001, e2, sizeof(e2), endian, unit);       \
+        Insn insn(m1.origin());                                           \
+        ErrorAt err_1;                                                    \
+        err_1.setError(at1, err1);                                        \
+        asm_assert(file, line, err_1, src1, m1, insn);                    \
+        ErrorAt err_2;                                                    \
+        err_2.setError(at2, err2);                                        \
+        cont_assert(file, line, err_2, "|| " src2, 0x1000, m2, insn);     \
     } while (0)
+#define PTEST(line1, opc1, line2, opc2) \
+    __PERRT(__FILE__, __LINE__, line1, opc1, OK, "", line2, opc2, OK, "")
 #define PERRT(line1, opc1, err1, at1, line2, opc2, err2, at2) \
-    do {                                                      \
-        AERRT(0x1000, line1, err1, at1, opc1);                \
-        CERRT(0x1001, 0x1000, "|| " line2, err2, at2, opc2);  \
-    } while (0)
+    __PERRT(__FILE__, __LINE__, line1, opc1, err1, at1, line2, opc2, err2, at2)
 
 AsmTms320f asm320f;
 Assembler &assembler(asm320f);

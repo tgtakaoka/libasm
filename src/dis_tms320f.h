@@ -28,7 +28,14 @@ struct DisTms320f final : Disassembler, Config {
     DisTms320f(const ValueFormatter::Plugins &plugins = defaultPlugins());
 
 private:
-    mutable RegName _paraDstReg;
+    // Cross-instruction state carried on the Insn (per Insn::state<T>).
+    // hasParaDst: set during the first half of a parallel pair, consumed by
+    // the second to flag DUPLICATE_REGISTER. All-zero (hasParaDst == false)
+    // is the natural fresh state.
+    struct State {
+        bool hasParaDst;
+        int8_t paraDstReg;  // valid only when hasParaDst is true; RegName fits in int8_t
+    };
 
     void decodeRelative(DisInsn &insn, StrBuffer &out, AddrMode mode) const;
     void decodeAbsolute(DisInsn &insn, StrBuffer &out) const;

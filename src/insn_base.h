@@ -135,6 +135,48 @@ struct Insn final : ErrorAt {
 
     static constexpr size_t MAX_NAME = 31;
 
+    /**
+     * Per-Insn opaque slot for architectures whose encode/decode must
+     * carry state across instructions (CP1600 SDBD, TMS320F parallel
+     * form, Z380 DDIR).
+     *
+     * Two-tier storage: if sizeof(T) fits in a uintptr_t, the slot IS
+     * the storage and T must be a trivial type whose all-zero bit
+     * pattern is its natural "fresh state" (no constructor side
+     * effects, no destructor). If T is larger, the slot holds a
+     * heap-allocated T; ~Insn() releases it.
+     *
+     * reset() preserves state; clearState() discards it.
+     */
+    template <typename T>
+    T &state() {
+        // Inline path needs the alignment to fit uintptr_t; the heap path
+        // (used when T is too big) doesn't care -- operator new honours
+        // T's alignment requirements.
+        static_assert(sizeof(T) > sizeof(uintptr_t) ||
+                              alignof(T) <= alignof(uintptr_t),
+                "Insn::state<T>: inline T over-aligned for uintptr_t");
+        if (sizeof(T) <= sizeof(uintptr_t)) {
+            // Inline: _stateBuf IS the storage, zero-init = fresh state.
+            return *reinterpret_cast<T *>(&_stateBuf);
+        }
+        // Heap fallback: _stateBuf carries a pointer; alloc on first use.
+        if (!_stateDestroyer) {
+            T *p = new T();  // value-init -> zero for trivial T
+            _stateBuf = reinterpret_cast<uintptr_t>(p);
+            _stateDestroyer = +[](void *q) { delete static_cast<T *>(q); };
+        }
+        return *reinterpret_cast<T *>(_stateBuf);
+    }
+    void clearState() {
+        if (_stateDestroyer) {
+            _stateDestroyer(reinterpret_cast<void *>(_stateBuf));
+            _stateDestroyer = nullptr;
+        }
+        _stateBuf = 0;
+    }
+    ~Insn() { clearState(); }
+
 private:
     uint32_t _address;
     uint8_t _length;
@@ -145,6 +187,9 @@ private:
 
     static constexpr size_t MAX_CODE = 64;
     uint8_t _bytes[MAX_CODE];
+
+    uintptr_t _stateBuf = 0;
+    void (*_stateDestroyer)(void *) = nullptr;
 };
 
 /**
@@ -262,6 +307,7 @@ struct DisInsnBase : ErrorAt {
     uint8_t length() const { return _insn.length(); }
     const char *name() const { return _insn.name(); }
     StrBuffer &nameBuffer() { return _insn.nameBuffer(); }
+    Insn &insnBase() { return _insn; }
     void appendName(StrBuffer &out, char c);
 
     void resetLength(uint8_t length = 0);

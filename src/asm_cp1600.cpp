@@ -99,7 +99,6 @@ AsmCp1600::AsmCp1600(const ValueParser::Plugins &plugins)
 void AsmCp1600::reset() {
     Assembler::reset();
     setInputRadix(RADIX_8);
-    _sdbdPrefix = false;
 }
 
 namespace {
@@ -381,15 +380,16 @@ void AsmCp1600::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode) c
         insn.emitOperand16(op.val.getUnsigned());
         break;
     case M_IMM16: {
+        auto &state = insn.insnBase().state<State>();
         // Validate the SDBD prefix here, before the SDBD-aware emit: if it has
         // no effect on this instruction (e.g. MVOI), the double-byte form must
         // not be used and PREFIX_HAS_NO_EFFECT is flagged.
-        if (_sdbdPrefix && (insn.hasPrefix() || !isValidSdbdTarget(insn.opCode()))) {
+        if (state.sdbdPrefix && (insn.hasPrefix() || !isValidSdbdTarget(insn.opCode()))) {
             insn.setErrorIf(PREFIX_HAS_NO_EFFECT);
-            _sdbdPrefix = false;
+            state.sdbdPrefix = false;
         }
         const auto val = op.val.getUnsigned();
-        if (_sdbdPrefix) {
+        if (state.sdbdPrefix) {
             insn.emitOperand16(val & UINT8_MAX);
             uint16_t hi = (val >> 8) & UINT8_MAX;
             if (op.val.isNegative())
@@ -429,15 +429,16 @@ Error AsmCp1600::encodeImpl(StrScanner &scan, Insn &_insn) const {
     encodeOperand(insn, insn.srcOp, insn.src());
     encodeOperand(insn, insn.dstOp, insn.dst());
 
+    auto &state = _insn.state<State>();
     // SDBD continuation: flag if the prefix has no effect on this instruction.
     // Any prefix-table entry (Jump) never consumes SDBD.
-    if (_sdbdPrefix && (insn.hasPrefix() || !isValidSdbdTarget(insn.opCode())))
+    if (state.sdbdPrefix && (insn.hasPrefix() || !isValidSdbdTarget(insn.opCode())))
         insn.setErrorIf(PREFIX_HAS_NO_EFFECT);
 
     // Write the prefix+opcode header into the reserved leading slot.
     insn.emitInsn();
 
-    _sdbdPrefix = insn.isSdbd();
+    state.sdbdPrefix = insn.isSdbd();
 
     return _insn.setError(insn);
 }
