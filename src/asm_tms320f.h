@@ -27,10 +27,17 @@ namespace tms320f {
 struct AsmTms320f final : Assembler, Config {
     AsmTms320f(const ValueParser::Plugins &plugins = defaultPlugins());
 
-private:
-    mutable Insn _prevInsn;
-    mutable AsmInsn _prev;
+    // Cross-instruction state carried on the Insn (per Insn::state<T>).
+    // Holds the previous AsmInsn so a parallel continuation can re-search
+    // and re-encode the first half against the second. Size exceeds
+    // uintptr_t, so Insn allocates this on the heap (see Insn::state).
+    struct State {
+        State() : prevInsn(0), prev(prevInsn) {}
+        Insn prevInsn;
+        AsmInsn prev;
+    };
 
+private:
     Error parseOperand(StrScanner &scan, Operand &op) const;
     Error encodeRelative(AsmInsn &insn, const Operand &op, AddrMode mode) const;
     Error encodeIndirect(AsmInsn &insn, const Operand &op, AddrMode mode, OprPos pos) const;

@@ -31,10 +31,14 @@ namespace test {
 extern TestAsserter asserter;
 extern TestSymtab symtab;
 
+// Caller supplies the Insn, so any cross-instruction state carried via
+// Insn::state<T> survives across consecutive calls. Per-arch DTEST-style
+// macros that exercise prefix carry-over (CP1600 SDBD, Z380 DDIR) reuse one
+// Insn across both halves; ordinary TEST/ERRT macros allocate a fresh Insn.
 void asm_assert(const char *file, int line, const ErrorAt &error, const char *src,
-        const ArrayMemory &expected);
+        const ArrayMemory &expected, Insn &insn);
 void cont_assert(const char *file, int line, const ErrorAt &error, const char *src,
-        uint32_t expected_addr, const ArrayMemory &expected);
+        uint32_t expected_addr, const ArrayMemory &expected, Insn &insn);
 
 void run_test(void (*test)(), const char *name, void (*set_up)(), void (*tear_down)());
 
@@ -52,7 +56,8 @@ void run_test(void (*test)(), const char *name, void (*set_up)(), void (*tear_do
         const ArrayMemory memory(addr, expected, sizeof(expected), endian, unit); \
         ErrorAt error;                                                            \
         error.setError(at, err);                                                  \
-        asm_assert(file, line, error, src, memory);                               \
+        Insn insn(memory.origin());                                               \
+        asm_assert(file, line, error, src, memory, insn);                         \
     } while (0)
 #define __CASSERT(file, line, err, at, addr, src, expected_addr, ...)             \
     do {                                                                          \
@@ -62,7 +67,8 @@ void run_test(void (*test)(), const char *name, void (*set_up)(), void (*tear_do
         const ArrayMemory memory(addr, expected, sizeof(expected), endian, unit); \
         ErrorAt error;                                                            \
         error.setError(at, err);                                                  \
-        cont_assert(file, line, error, src, expected_addr, memory);               \
+        Insn insn(memory.origin());                                               \
+        cont_assert(file, line, error, src, expected_addr, memory, insn);         \
     } while (0)
 #define __BVASSERT(file, line, err, at, addr, src, ...)             \
     do {                                                            \
@@ -70,7 +76,8 @@ void run_test(void (*test)(), const char *name, void (*set_up)(), void (*tear_do
         const ArrayMemory memory(addr, expected, sizeof(expected)); \
         ErrorAt error;                                              \
         error.setError(at, err);                                    \
-        asm_assert(file, line, error, src, memory);                 \
+        Insn insn(memory.origin());                                 \
+        asm_assert(file, line, error, src, memory, insn);           \
     } while (0)
 #define VASSERT(error, at, addr, src, ...) \
     __VASSERT(__FILE__, __LINE__, error, at, addr, src, ##__VA_ARGS__)

@@ -53,9 +53,13 @@ private:
     static const PseudoCp1600 PSEUDO_CP1600_TABLE[] PROGMEM;
     static const PseudosCp1600 PSEUDOS_CP1600 PROGMEM;
 
-    // True if the previously assembled instruction was SDBD (0x0001).
-    // Mutable because encodeImpl is const but this state spans instructions.
-    mutable bool _sdbdPrefix = false;
+public:
+    // Cross-instruction state carried on the Insn (per Insn::state<T>).
+    // sdbdPrefix: true if the previously assembled instruction was SDBD
+    // (0x0001). All-zero (sdbdPrefix == false) is the natural fresh state.
+    struct State {
+        bool sdbdPrefix;
+    };
 };
 
 }  // namespace cp1600

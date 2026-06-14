@@ -215,8 +215,9 @@ void DisTms320f::decodeOperand(
         } else {
             if (no == 2)
                 out.comma();
-            if (_paraDstReg != REG_UNDEF) {
-                if (no == 2 && insn.mode3() == M_NONE && _paraDstReg == reg)
+            const auto &state = insn.insnBase().state<State>();
+            if (state.hasParaDst) {
+                if (no == 2 && insn.mode3() == M_NONE && state.paraDstReg == reg)
                     insn.setErrorIf(out, DUPLICATE_REGISTER);
             }
             outRegName(out, reg);
@@ -336,15 +337,20 @@ Error DisTms320f::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) con
             decodeOperand(insn, out.comma(), mode3, insn.pos3(), 3);
     }
 
+    auto &state = _insn.state<State>();
     if (insn.hasContinue()) {
         insn.setContinueMark_P(nullptr);
-        _paraDstReg = REG_UNDEF;
+        state.hasParaDst = false;
     } else if (insn.isParallel()) {
         insn.setContinueMark_P(TEXT_PARALLEL);
-        if (insn.mode3() == M_NONE && mode2 == M_FREG)
-            _paraDstReg = decodeRegister(insn, insn.pos2());
+        if (insn.mode3() == M_NONE && mode2 == M_FREG) {
+            state.paraDstReg = static_cast<int8_t>(decodeRegister(insn, insn.pos2()));
+            state.hasParaDst = true;
+        } else {
+            state.hasParaDst = false;
+        }
     } else {
-        _paraDstReg = REG_UNDEF;
+        state.hasParaDst = false;
     }
     return _insn.setError(insn);
 }

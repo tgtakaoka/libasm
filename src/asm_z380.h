@@ -29,15 +29,16 @@ struct AsmZ380 final : Assembler, Config {
 
     void reset() override;
 
+    using State = Ddir;
+
 private:
     const BoolOption<AsmZ380> _opt_extmode;
     const BoolOption<AsmZ380> _opt_lwordmode;
-    mutable Ddir _ddir;
 
     Error parseOperand(StrScanner &scan, Operand &op) const;
 
-    bool wordMode() const;
-    bool lwordMode() const;
+    bool wordMode(AsmInsn &insn) const;
+    bool lwordMode(AsmInsn &insn) const;
     int32_t calcDeltaZ380(AsmInsn &insn, const ErrorAt &at, AddrMode &mode, int32_t delta) const;
     void encodeRelative(AsmInsn &insn, const Operand &op, AddrMode mode) const;
     void encodeAbsolute(AsmInsn &insn, const Operand &op, AddrMode mode) const;

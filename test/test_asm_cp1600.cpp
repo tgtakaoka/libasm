@@ -17,20 +17,43 @@
 #include "asm_cp1600.h"
 #include "test_asm_helper.h"
 
-// DTEST/DERRT(addr, src1, src2, opc1, ...) asserts a two-step encode: the first
-// line |src1| (typically "SDBD") emits |opc1|, and the second line |src2| is the
-// prefixed instruction whose bytes are given by the varargs.  DERRT additionally
-// asserts the continuation reports PREFIX_HAS_NO_EFFECT.  Modelled after the
-// PTEST macro in test_asm_tms320f.cpp.
-#define DTEST(addr, src1, src2, opc1, ...)                \
-    do {                                                  \
-        ATEST(addr, src1, opc1);                          \
-        CTEST((addr) + 1, (addr) + 1, src2, __VA_ARGS__); \
+// DTEST/DERRT(addr1, src1, opc1, addr2, eaddr2, src2, ...) asserts a two-step
+// encode: |src1| (typically "SDBD") emits |opc1|, then |src2| is the prefixed
+// instruction whose bytes are given by varargs.  DERRT additionally asserts
+// the continuation reports PREFIX_HAS_NO_EFFECT.  Parameter order matches Z380's
+// DTEST/DERRT so the two arches read the same way.
+//
+// SDBD cross-instruction state is carried on the Insn (Insn::state<T>), so
+// both encodes must share the same Insn -- we hold it locally and pass it to
+// the asm_assert / cont_assert helpers.
+#define DTEST(addr1, src1, opc1, addr2, eaddr2, src2, ...)               \
+    do {                                                                 \
+        const Config::opcode_t e1[] = {opc1};                            \
+        const Config::opcode_t e2[] = {__VA_ARGS__};                     \
+        const auto endian = assembler.config().endian();                 \
+        const auto unit = assembler.config().addressUnit();              \
+        const ArrayMemory m1((addr1), e1, sizeof(e1), endian, unit);     \
+        const ArrayMemory m2((addr2), e2, sizeof(e2), endian, unit);     \
+        Insn insn(m1.origin());                                          \
+        ErrorAt err0;                                                    \
+        asm_assert(__FILE__, __LINE__, err0, src1, m1, insn);            \
+        ErrorAt err1;                                                    \
+        cont_assert(__FILE__, __LINE__, err1, src2, (eaddr2), m2, insn); \
     } while (0)
-#define DERRT(addr, src1, src2, opc1, ...)                                          \
-    do {                                                                            \
-        ATEST(addr, src1, opc1);                                                    \
-        CERRT((addr) + 1, (addr) + 1, src2, PREFIX_HAS_NO_EFFECT, "", __VA_ARGS__); \
+#define DERRT(addr1, src1, opc1, addr2, eaddr2, src2, ...)               \
+    do {                                                                 \
+        const Config::opcode_t e1[] = {opc1};                            \
+        const Config::opcode_t e2[] = {__VA_ARGS__};                     \
+        const auto endian = assembler.config().endian();                 \
+        const auto unit = assembler.config().addressUnit();              \
+        const ArrayMemory m1((addr1), e1, sizeof(e1), endian, unit);     \
+        const ArrayMemory m2((addr2), e2, sizeof(e2), endian, unit);     \
+        Insn insn(m1.origin());                                          \
+        ErrorAt err0;                                                    \
+        asm_assert(__FILE__, __LINE__, err0, src1, m1, insn);            \
+        ErrorAt err1;                                                    \
+        err1.setError("", PREFIX_HAS_NO_EFFECT);                         \
+        cont_assert(__FILE__, __LINE__, err1, src2, (eaddr2), m2, insn); \
     } while (0)
 
 using namespace libasm;
@@ -200,23 +223,23 @@ void test_data_constant() {
 // immediate or indirect operand.  SDBD is also flagged when it has no effect.
 void test_sdbd() {
     // Immediate: 16-bit value emitted as two words holding low/high byte.
-    DTEST(0x0100, "SDBD", "MVII X'1234', R0", 0x0001, 0x02B8, 0x0034, 0x0012);
-    DTEST(0x0100, "SDBD", "ADDI X'ABCD', R1", 0x0001, 0x02F9, 0x00CD, 0x00AB);
-    DTEST(0x0100, "SDBD", "SUBI X'5678', R2", 0x0001, 0x033A, 0x0078, 0x0056);
-    DTEST(0x0100, "SDBD", "CMPI X'DEF0', R3", 0x0001, 0x037B, 0x00F0, 0x00DE);
-    DTEST(0x0100, "SDBD", "ANDI X'1234', R4", 0x0001, 0x03BC, 0x0034, 0x0012);
-    DTEST(0x0100, "SDBD", "XORI X'FFFF', R5", 0x0001, 0x03FD, 0x00FF, 0x00FF);
+    DTEST(0x0100, "SDBD", 0x0001, 0x0101, 0x0101, "MVII X'1234', R0", 0x02B8, 0x0034, 0x0012);
+    DTEST(0x0100, "SDBD", 0x0001, 0x0101, 0x0101, "ADDI X'ABCD', R1", 0x02F9, 0x00CD, 0x00AB);
+    DTEST(0x0100, "SDBD", 0x0001, 0x0101, 0x0101, "SUBI X'5678', R2", 0x033A, 0x0078, 0x0056);
+    DTEST(0x0100, "SDBD", 0x0001, 0x0101, 0x0101, "CMPI X'DEF0', R3", 0x037B, 0x00F0, 0x00DE);
+    DTEST(0x0100, "SDBD", 0x0001, 0x0101, 0x0101, "ANDI X'1234', R4", 0x03BC, 0x0034, 0x0012);
+    DTEST(0x0100, "SDBD", 0x0001, 0x0101, 0x0101, "XORI X'FFFF', R5", 0x03FD, 0x00FF, 0x00FF);
     // Indirect: instruction encoding unchanged; CPU reads two words via pointer.
-    DTEST(0x0100, "SDBD", "MVI@ R1, R0", 0x0001, 0x0288);
-    DTEST(0x0100, "SDBD", "ADD@ R4, R2", 0x0001, 0x02E2);
-    DTEST(0x0100, "SDBD", "XOR@ R5, R7", 0x0001, 0x03EF);
+    DTEST(0x0100, "SDBD", 0x0001, 0x0101, 0x0101, "MVI@ R1, R0", 0x0288);
+    DTEST(0x0100, "SDBD", 0x0001, 0x0101, 0x0101, "ADD@ R4, R2", 0x02E2);
+    DTEST(0x0100, "SDBD", 0x0001, 0x0101, 0x0101, "XOR@ R5, R7", 0x03EF);
     // No-effect: SDBD before an unsupported instruction is flagged.
-    DERRT(0x0100, "SDBD", "EIS", 0x0001, 0x0002);
-    DERRT(0x0100, "SDBD", "MVO R0, X'1234'", 0x0001, 0x0240, 0x1234);
-    DERRT(0x0100, "SDBD", "MVO@ R0, R1", 0x0001, 0x0248);
-    DERRT(0x0100, "SDBD", "MVOI R0, X'34'", 0x0001, 0x0278, 0x0034);
-    DERRT(0x0100, "SDBD", "MVI X'1234', R0", 0x0001, 0x0280, 0x1234);
-    DERRT(0x0100, "SDBD", "PULR R0", 0x0001, 0x02B0);
+    DERRT(0x0100, "SDBD", 0x0001, 0x0101, 0x0101, "EIS", 0x0002);
+    DERRT(0x0100, "SDBD", 0x0001, 0x0101, 0x0101, "MVO R0, X'1234'", 0x0240, 0x1234);
+    DERRT(0x0100, "SDBD", 0x0001, 0x0101, 0x0101, "MVO@ R0, R1", 0x0248);
+    DERRT(0x0100, "SDBD", 0x0001, 0x0101, 0x0101, "MVOI R0, X'34'", 0x0278, 0x0034);
+    DERRT(0x0100, "SDBD", 0x0001, 0x0101, 0x0101, "MVI X'1234', R0", 0x0280, 0x1234);
+    DERRT(0x0100, "SDBD", 0x0001, 0x0101, 0x0101, "PULR R0", 0x02B0);
 }
 
 // Operand-validity errors the assembler should catch even when the mnemonic is

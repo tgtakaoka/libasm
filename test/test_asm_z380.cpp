@@ -41,6 +41,45 @@ bool isZ380() {
 #define DDIR_IWL 0xFD, 0xC2  // DDIR IW,LW
 #define DDIR_IW 0xFD, 0xC3   // DDIR IW
 
+// DTEST/DERRT(addr1, src1, dd, addr2, eaddr2, src2, ...) asserts a two-step
+// encode: |src1| (a "DDIR ..." line) emits the bytes given by |dd| (one of
+// the DDIR_* macros above), then |src2| is the directive-affected instruction
+// with bytes given by varargs.  DERRT additionally asserts the continuation
+// reports |err| at |at|.
+//
+// DDIR cross-instruction state is carried on the Insn (Insn::state<T>), so
+// both encodes must share the same Insn -- we hold it locally and pass it to
+// the asm_assert / cont_assert helpers.
+#define DTEST(addr1, src1, dd, addr2, eaddr2, src2, ...)                 \
+    do {                                                                 \
+        const Config::opcode_t e1[] = {dd};                              \
+        const Config::opcode_t e2[] = {__VA_ARGS__};                     \
+        const auto endian = assembler.config().endian();                 \
+        const auto unit = assembler.config().addressUnit();              \
+        const ArrayMemory m1((addr1), e1, sizeof(e1), endian, unit);     \
+        const ArrayMemory m2((addr2), e2, sizeof(e2), endian, unit);     \
+        Insn insn(m1.origin());                                          \
+        ErrorAt err0;                                                    \
+        asm_assert(__FILE__, __LINE__, err0, src1, m1, insn);            \
+        ErrorAt err1;                                                    \
+        cont_assert(__FILE__, __LINE__, err1, src2, (eaddr2), m2, insn); \
+    } while (0)
+#define DERRT(addr1, src1, dd, addr2, eaddr2, src2, err, at, ...)        \
+    do {                                                                 \
+        const Config::opcode_t e1[] = {dd};                              \
+        const Config::opcode_t e2[] = {__VA_ARGS__};                     \
+        const auto endian = assembler.config().endian();                 \
+        const auto unit = assembler.config().addressUnit();              \
+        const ArrayMemory m1((addr1), e1, sizeof(e1), endian, unit);     \
+        const ArrayMemory m2((addr2), e2, sizeof(e2), endian, unit);     \
+        Insn insn(m1.origin());                                          \
+        ErrorAt err0;                                                    \
+        asm_assert(__FILE__, __LINE__, err0, src1, m1, insn);            \
+        ErrorAt err1;                                                    \
+        err1.setError(at, err);                                          \
+        cont_assert(__FILE__, __LINE__, err1, src2, (eaddr2), m2, insn); \
+    } while (0)
+
 void set_up() {
     assembler.reset();
 }
@@ -205,16 +244,14 @@ void test_load_registers() {
         TEST("LD  I, HL", 0xDD, 0x47);
         TEST("LDW HL, I", 0xDD, 0x57);
         TEST("LD  HL, I", 0xDD, 0x57);
-        ATEST(0x1000, "DDIR W",  DDIR_W);
-        CTEST(0x1002, 0x1002, "LD  I, HL", 0xDD, 0x47);
-        ATEST(0x1000, "DDIR LW", DDIR_LW);
-        CTEST(0x1002, 0x1002, "LD  HL, I", 0xDD, 0x57);
-        ATEST(0x1000, "DDIR IW", DDIR_IW);
-        CERRT(0x1002, 0x1002, "LD  HL, I",
-              PREFIX_HAS_NO_EFFECT, "LD  HL, I", 0xDD, 0x57);
-        ATEST(0x1000, "DDIR IB,W", DDIR_IBW);
-        CERRT(0x1002, 0x1000, "LD  HL, I",
-              SUBOPTIMAL_INSTRUCTION, "LD  HL, I", DDIR_W, 0xDD, 0x57);
+        DTEST(0x1000, "DDIR W",    DDIR_W,
+              0x1002, 0x1002, "LD  I, HL", 0xDD,                   0x47);
+        DTEST(0x1000, "DDIR LW",   DDIR_LW,
+              0x1002, 0x1002, "LD  HL, I", 0xDD,                   0x57);
+        DERRT(0x1000, "DDIR IW",   DDIR_IW,
+              0x1002, 0x1002, "LD  HL, I", PREFIX_HAS_NO_EFFECT,   "LD  HL, I", 0xDD, 0x57);
+        DERRT(0x1000, "DDIR IB,W", DDIR_IBW,
+              0x1002, 0x1000, "LD  HL, I", SUBOPTIMAL_INSTRUCTION, "LD  HL, I", DDIR_W, 0xDD, 0x57);
     }
 
     TEST("LD SP,HL", 0xF9);
@@ -228,8 +265,8 @@ void test_load_registers() {
         TEST("LD  BC, DE", 0xDD, 0x02);
         TEST("LD  DE, DE", 0xDD, 0x12);
         TEST("LD  HL, DE", 0xDD, 0x32);
-        ATEST(0x1000, "DDIR LW", DDIR_LW);
-        CTEST(0x1002, 0x1002, "LD  HL, DE", 0xDD, 0x32);
+        DTEST(0x1000, "DDIR LW", DDIR_LW,
+              0x1002, 0x1002, "LD  HL, DE", 0xDD, 0x32);
 
         TEST("LDW BC, BC", 0xED, 0x02);
         TEST("LDW DE, BC", 0xED, 0x12);
@@ -237,8 +274,8 @@ void test_load_registers() {
         TEST("LD  BC, BC", 0xED, 0x02);
         TEST("LD  DE, BC", 0xED, 0x12);
         TEST("LD  HL, BC", 0xED, 0x32);
-        ATEST(0x1000, "DDIR W", DDIR_W);
-        CTEST(0x1002, 0x1002, "LDW DE, BC", 0xED, 0x12);
+        DTEST(0x1000, "DDIR W", DDIR_W,
+              0x1002, 0x1002, "LDW DE, BC", 0xED, 0x12);
 
         TEST("LDW BC, HL", 0xFD, 0x02);
         TEST("LDW DE, HL", 0xFD, 0x12);
@@ -246,9 +283,8 @@ void test_load_registers() {
         TEST("LD  BC, HL", 0xFD, 0x02);
         TEST("LD  DE, HL", 0xFD, 0x12);
         TEST("LD  HL, HL", 0xFD, 0x32);
-        ATEST(0x1000, "DDIR IB", DDIR_IB);
-        CERRT(0x1002, 0x1002, "LDW HL, HL",
-              PREFIX_HAS_NO_EFFECT, "LDW HL, HL", 0xFD, 0x32);
+        DERRT(0x1000, "DDIR IB", DDIR_IB,
+              0x1002, 0x1002, "LDW HL, HL", PREFIX_HAS_NO_EFFECT, "LDW HL, HL", 0xFD, 0x32);
 
         TEST("LDW BC, IX", 0xDD, 0x0B);
         TEST("LDW DE, IX", 0xDD, 0x1B);
@@ -258,9 +294,8 @@ void test_load_registers() {
         TEST("LD  DE, IX", 0xDD, 0x1B);
         TEST("LD  HL, IX", 0xDD, 0x3B);
         TEST("LD  IY, IX", 0xFD, 0x27);
-        ATEST(0x1000, "DDIR IW", DDIR_IW);
-        CERRT(0x1002, 0x1002, "LD  IY, IX",
-              PREFIX_HAS_NO_EFFECT, "LD  IY, IX", 0xFD, 0x27);
+        DERRT(0x1000, "DDIR IW", DDIR_IW,
+              0x1002, 0x1002, "LD  IY, IX", PREFIX_HAS_NO_EFFECT, "LD  IY, IX", 0xFD, 0x27);
 
         TEST("LDW BC, IY", 0xFD, 0x0B);
         TEST("LDW DE, IY", 0xFD, 0x1B);
@@ -270,13 +305,11 @@ void test_load_registers() {
         TEST("LD  DE, IY", 0xFD, 0x1B);
         TEST("LD  HL, IY", 0xFD, 0x3B);
         TEST("LD  IX, IY", 0xDD, 0x27);
-        ATEST(0x10000, "DDIR IW,LW", DDIR_IWL);
-        CERRT(0x10002, 0x10000, "LD  BC, IY",
-              SUBOPTIMAL_INSTRUCTION, "LD  BC, IY", DDIR_LW, 0xFD, 0x0B);
+        DERRT(0x10000, "DDIR IW,LW", DDIR_IWL,
+              0x10002, 0x10000, "LD  BC, IY", SUBOPTIMAL_INSTRUCTION, "LD  BC, IY", DDIR_LW, 0xFD, 0x0B);
 
-        ATEST(0x01000, "DDIR IB,W", DDIR_IBW);
-        CERRT(0x01002, 0x01000, "LD  SP, IX",
-              SUBOPTIMAL_INSTRUCTION, "LD  SP, IX", DDIR_W, 0xDD, 0xF9);
+        DERRT(0x01000, "DDIR IB,W", DDIR_IBW,
+              0x01002, 0x01000, "LD  SP, IX", SUBOPTIMAL_INSTRUCTION, "LD  SP, IX", DDIR_W, 0xDD, 0xF9);
     }
 }
 
@@ -326,16 +359,16 @@ void test_load_immediate() {
         ERRT("LD DE, 123456H",    OVERFLOW_RANGE,    "123456H", 0x11, 0x56, 0x34);
         ERRT("LD HL, 0BEEFCAFEH", OVERFLOW_RANGE, "0BEEFCAFEH", 0x21, 0xFE, 0xCA);
         ERRT("LD IY, 0ABCDEF01H", OVERFLOW_RANGE, "0ABCDEF01H", 0xFD, 0x21, 0x01, 0xEF);
-        ATEST(0x1000, "DDIR LW", DDIR_LW);
-        CTEST(0x1002, 0x1002, "LD IX, 0ABCDH",               0xDD, 0x21, 0xCD, 0xAB);
-        ATEST(0x1000, "DDIR LW", DDIR_LW);
-        CTEST(0X1002, 0X1000, "LD SP, 346789H",    DDIR_IBL, 0x31, 0x89, 0x67, 0x34);
-        ATEST(0x1000, "DDIR LW", DDIR_LW);
-        CTEST(0X1002, 0X1000, "LD DE, 123456H",    DDIR_IBL, 0x11, 0x56, 0x34, 0x12);
-        ATEST(0x1000, "DDIR LW", DDIR_LW);
-        CTEST(0X1002, 0X1000, "LD HL, 0BEEFCAFEH", DDIR_IWL, 0x21, 0xFE, 0xCA, 0xEF, 0xBE);
-        ATEST(0x1000, "DDIR LW", DDIR_LW);
-        CTEST(0X1002, 0X1000, "LD IY, 0ABCDEF01H", DDIR_IWL, 0xFD, 0x21, 0x01, 0xEF, 0xCD, 0xAB);
+        DTEST(0x1000, "DDIR LW", DDIR_LW,
+              0x1002, 0x1002, "LD IX, 0ABCDH",     0xDD,     0x21, 0xCD, 0xAB);
+        DTEST(0x1000, "DDIR LW", DDIR_LW,
+              0X1002, 0X1000, "LD SP, 346789H",    DDIR_IBL, 0x31, 0x89, 0x67, 0x34);
+        DTEST(0x1000, "DDIR LW", DDIR_LW,
+              0X1002, 0X1000, "LD DE, 123456H",    DDIR_IBL, 0x11, 0x56, 0x34, 0x12);
+        DTEST(0x1000, "DDIR LW", DDIR_LW,
+              0X1002, 0X1000, "LD HL, 0BEEFCAFEH", DDIR_IWL, 0x21, 0xFE, 0xCA, 0xEF, 0xBE);
+        DTEST(0x1000, "DDIR LW", DDIR_LW,
+              0X1002, 0X1000, "LD IY, 0ABCDEF01H", DDIR_IWL, 0xFD, 0x21, 0x01, 0xEF, 0xCD, 0xAB);
 
         TEST("LDW (BC), 1234H", 0xED, 0x06, 0x34, 0x12);
         TEST("LDW (DE), 1234H", 0xED, 0x16, 0x34, 0x12);
@@ -352,12 +385,12 @@ void test_load_immediate() {
         TEST("PUSH 1234H",                                  0xFD, 0xF5, 0x34, 0x12);
         ERRT("PUSH 123456H",   OVERFLOW_RANGE,   "123456H", 0xFD, 0xF5, 0x56, 0x34);
         ERRT("PUSH 12345678H", OVERFLOW_RANGE, "12345678H", 0xFD, 0xF5, 0x78, 0x56);
-        ATEST(0x1000, "DDIR LW", DDIR_LW);
-        CTEST(0x1002, 0x1002, "PUSH 1234H",     0xFD, 0xF5, 0x34, 0x12);
-        ATEST(0x1000, "DDIR LW", DDIR_LW);
-        CTEST(0x1002, 0x1000, "PUSH 123456H",   DDIR_IBL, 0xFD, 0xF5, 0x56, 0x34, 0x12);
-        ATEST(0x1000, "DDIR LW", DDIR_LW);
-        CTEST(0x1002, 0x1000, "PUSH 12345678H", DDIR_IWL, 0xFD, 0xF5, 0x78, 0x56, 0x34, 0x12);
+        DTEST(0x1000, "DDIR LW", DDIR_LW,
+              0x1002, 0x1002, "PUSH 1234H",     0xFD,     0xF5, 0x34, 0x12);
+        DTEST(0x1000, "DDIR LW", DDIR_LW,
+              0x1002, 0x1000, "PUSH 123456H",   DDIR_IBL, 0xFD, 0xF5, 0x56, 0x34, 0x12);
+        DTEST(0x1000, "DDIR LW", DDIR_LW,
+              0x1002, 0x1000, "PUSH 12345678H", DDIR_IWL, 0xFD, 0xF5, 0x78, 0x56, 0x34, 0x12);
     }
 
     symtab.intern(-1,  "minus_1");
@@ -414,45 +447,40 @@ void test_load() {
         TEST("LD  BC, (BC)", 0xDD, 0x0C);
         TEST("LDW BC, (DE)", 0xDD, 0x0D);
         TEST("LDW BC, (HL)", 0xDD, 0x0F);
-        ATEST(0x1000, "DDIR W", DDIR_W);
-        CTEST(0x1002, 0x1002, "LDW BC, (DE)", 0xDD, 0x0D);
+        DTEST(0x1000, "DDIR W", DDIR_W,
+              0x1002, 0x1002, "LDW BC, (DE)", 0xDD, 0x0D);
 
         TEST("LDW DE, (BC)", 0xDD, 0x1C);
         TEST("LD  DE, (DE)", 0xDD, 0x1D);
         TEST("LDW DE, (HL)", 0xDD, 0x1F);
-        ATEST(0x1000, "DDIR LW", DDIR_LW);
-        CTEST(0x1002, 0x1002, "LDW DE, (HL)", 0xDD, 0x1F);
+        DTEST(0x1000, "DDIR LW", DDIR_LW,
+              0x1002, 0x1002, "LDW DE, (HL)", 0xDD, 0x1F);
 
         TEST("LDW HL, (BC)", 0xDD, 0x3C);
         TEST("LDW HL, (DE)", 0xDD, 0x3D);
         TEST("LD  HL, (HL)", 0xDD, 0x3F);
-        ATEST(0x1000, "DDIR IB", DDIR_IB);
-        CERRT(0x1002, 0x1002, "LD  HL, (HL)",
-              PREFIX_HAS_NO_EFFECT, "LD  HL, (HL)", 0xDD, 0x3F);
+        DERRT(0x1000, "DDIR IB", DDIR_IB,
+              0x1002, 0x1002, "LD  HL, (HL)", PREFIX_HAS_NO_EFFECT, "LD  HL, (HL)", 0xDD, 0x3F);
 
         TEST("LD  IX, (BC)", 0xDD, 0x03);
         TEST("LDW IX, (DE)", 0xDD, 0x13);
         TEST("LDW IX, (HL)", 0xDD, 0x33);
-        ATEST(0x1234, "DDIR IW,LW", DDIR_IWL);
-        CERRT(0x1236, 0x1234, "LDW IX, (DE)",
-              SUBOPTIMAL_INSTRUCTION, "LDW IX, (DE)", DDIR_LW, 0xDD, 0x13);
+        DERRT(0x1234, "DDIR IW,LW", DDIR_IWL,
+              0x1236, 0x1234, "LDW IX, (DE)", SUBOPTIMAL_INSTRUCTION, "LDW IX, (DE)", DDIR_LW, 0xDD, 0x13);
 
         TEST("LDW IY, (BC)", 0xFD, 0x03);
         TEST("LD  IY, (DE)", 0xFD, 0x13);
         TEST("LDW IY, (HL)", 0xFD, 0x33);
-        ATEST(0x1000, "DDIR IB,W", DDIR_IBW);
-        CERRT(0x1002, 0x1000, "LD  IY, (DE)",
-              SUBOPTIMAL_INSTRUCTION, "LD  IY, (DE)", DDIR_W, 0xFD, 0x13);
+        DERRT(0x1000, "DDIR IB,W", DDIR_IBW,
+              0x1002, 0x1000, "LD  IY, (DE)", SUBOPTIMAL_INSTRUCTION, "LD  IY, (DE)", DDIR_W, 0xFD, 0x13);
 
         TEST("LDW HL, (5678H)",              0x2A, 0x78, 0x56);
         TEST("LD  HL, (345678H)",   DDIR_IB, 0x2A, 0x78, 0x56, 0x34);
         TEST("LDW HL, (12345678H)", DDIR_IW, 0x2A, 0x78, 0x56, 0x34, 0x12);
-        ATEST(0x1000, "DDIR LW", DDIR_LW);
-        CTEST(0x1002, 0x1000, "LD  HL, (345678H)",
-              DDIR_IBL, 0x2A, 0x78, 0x56, 0x34);
-        ATEST(0x1000, "DDIR W", DDIR_W);
-        CTEST(0x1002, 0x1000, "LDW HL, (12345678H)",
-              DDIR_IWW, 0x2A, 0x78, 0x56, 0x34, 0x12);
+        DTEST(0x1000, "DDIR LW", DDIR_LW,
+              0x1002, 0x1000, "LD  HL, (345678H)",   DDIR_IBL, 0x2A, 0x78, 0x56, 0x34);
+        DTEST(0x1000, "DDIR W",  DDIR_W,
+              0x1002, 0x1000, "LDW HL, (12345678H)", DDIR_IWW, 0x2A, 0x78, 0x56, 0x34, 0x12);
 
         TEST("LDW BC, (IX+127)", 0xDD, 0xCB, 0x7F, 0x03);
         TEST("LDW DE, (IX+127)", 0xDD, 0xCB, 0x7F, 0x13);
@@ -559,8 +587,8 @@ void test_store() {
         TEST("LD  (BC), HL", 0xFD, 0x3C);
         TEST("LD  (BC), IX", 0xDD, 0x01);
         TEST("LD  (BC), IY", 0xFD, 0x01);
-        ATEST(0x1000, "DDIR LW", DDIR_LW);
-        CTEST(0x1002, 0x1002, "LD  (BC), IY", 0xFD, 0x01);
+        DTEST(0x1000, "DDIR LW", DDIR_LW,
+              0x1002, 0x1002, "LD  (BC), IY", 0xFD, 0x01);
 
         TEST("LDW (DE), BC", 0xFD, 0x0D);
         TEST("LDW (DE), DE", 0xFD, 0x1D);
@@ -572,8 +600,8 @@ void test_store() {
         TEST("LD  (DE), HL", 0xFD, 0x3D);
         TEST("LD  (DE), IX", 0xDD, 0x11);
         TEST("LD  (DE), IY", 0xFD, 0x11);
-        ATEST(0x1000, "DDIR W", DDIR_W);
-        CTEST(0x1002, 0x1002, "LD  (DE), HL", 0xFD, 0x3D);
+        DTEST(0x1000, "DDIR W", DDIR_W,
+              0x1002, 0x1002, "LD  (DE), HL", 0xFD, 0x3D);
 
         TEST("LDW (HL), BC", 0xFD, 0x0F);
         TEST("LDW (HL), DE", 0xFD, 0x1F);
@@ -585,8 +613,8 @@ void test_store() {
         TEST("LD  (HL), HL", 0xFD, 0x3F);
         TEST("LD  (HL), IX", 0xDD, 0x31);
         TEST("LD  (HL), IY", 0xFD, 0x31);
-        ATEST(0x1000, "DDIR LW", DDIR_LW);
-        CTEST(0x1002, 0x1002, "LDW (HL), IX", 0xDD, 0x31);
+        DTEST(0x1000, "DDIR LW", DDIR_LW,
+              0x1002, 0x1002, "LDW (HL), IX", 0xDD, 0x31);
 
         TEST("LDW (IX-128), BC", 0xDD, 0xCB, 0x80, 0x0B);
         TEST("LDW (IX-128), DE", 0xDD, 0xCB, 0x80, 0x1B);
@@ -630,9 +658,8 @@ void test_store() {
         TEST("LD  (0ABCDEFH), IX",   DDIR_IB, 0xDD, 0x22, 0xEF, 0xCD, 0xAB);
         TEST("LD  (0ABCDEF01H), IY", DDIR_IW, 0xFD, 0x22, 0x01, 0xEF, 0xCD, 0xAB);
         TEST("LD  (0ABCDEFH), SP",   DDIR_IB, 0xED, 0x73, 0xEF, 0xCD, 0xAB);
-        ATEST(0x10000, "DDIR LW", DDIR_LW);
-        CTEST(0x10002, 0x10000, "LD  (0ABCDEFH), SP",
-              DDIR_IBL, 0xED, 0x73, 0xEF, 0xCD, 0xAB);
+        DTEST(0x10000, "DDIR LW", DDIR_LW,
+              0x10002, 0x10000, "LD  (0ABCDEFH), SP", DDIR_IBL, 0xED, 0x73, 0xEF, 0xCD, 0xAB);
     }
 }
 
@@ -658,29 +685,27 @@ void test_exchange() {
         TEST("EX HL, BC", 0xED, 0x0D);
         TEST("EX IX, BC", 0xED, 0x03);
         TEST("EX IY, BC", 0xED, 0x0B);
-        ATEST(0x1000, "DDIR LW", DDIR_LW);
-        CTEST(0x1002, 0x1002, "EX IY, BC", 0xED, 0x0B);
+        DTEST(0x1000, "DDIR LW", DDIR_LW,
+              0x1002, 0x1002, "EX IY, BC", 0xED, 0x0B);
 
         TEST("EX DE, IX", 0xED, 0x13);
         TEST("EX DE, IY", 0xED, 0x1B);
         TEST("EX IX, DE", 0xED, 0x13);
         TEST("EX IY, DE", 0xED, 0x1B);
-        ATEST(0x1000, "DDIR W", DDIR_W);
-        CTEST(0x1002, 0x1002, "EX IX, DE", 0xED, 0x13);
+        DTEST(0x1000, "DDIR W", DDIR_W,
+              0x1002, 0x1002, "EX IX, DE", 0xED, 0x13);
 
         TEST("EX HL, IX", 0xED, 0x33);
         TEST("EX HL, IY", 0xED, 0x3B);
         TEST("EX IX, HL", 0xED, 0x33);
         TEST("EX IY, HL", 0xED, 0x3B);
-        ATEST(0x1000, "DDIR IB,LW", DDIR_IBL);
-        CERRT(0x1002, 0x1000, "EX IY, HL",
-              SUBOPTIMAL_INSTRUCTION, "EX IY, HL", DDIR_LW, 0xED, 0x3B);
+        DERRT(0x1000, "DDIR IB,LW", DDIR_IBL,
+              0x1002, 0x1000, "EX IY, HL", SUBOPTIMAL_INSTRUCTION, "EX IY, HL", DDIR_LW, 0xED, 0x3B);
 
         TEST("EX IX, IY", 0xED, 0x2B);
         TEST("EX IY, IX", 0xED, 0x2B);
-        ATEST(0x1000, "DDIR W,IW", DDIR_IWW);
-        CERRT(0x1002, 0x1000, "EX IY, IX",
-              SUBOPTIMAL_INSTRUCTION, "EX IY, IX", DDIR_W, 0xED, 0x2B);
+        DERRT(0x1000, "DDIR W,IW", DDIR_IWW,
+              0x1002, 0x1000, "EX IY, IX", SUBOPTIMAL_INSTRUCTION, "EX IY, IX", DDIR_W, 0xED, 0x2B);
     }
 
     TEST("EX AF,AF'", 0x08);
@@ -690,10 +715,10 @@ void test_exchange() {
         TEST("EX HL, HL'", 0xED, 0xCB, 0x33);
         TEST("EX IX, IX'", 0xED, 0xCB, 0x34);
         TEST("EX IY, IY'", 0xED, 0xCB, 0x35);
-        ATEST(0x1000, "DDIR LW", DDIR_LW);
-        CTEST(0x1002, 0x1002, "EX HL, HL'", 0xED, 0xCB, 0x33);
-        ATEST(0x1000, "DDIR W", DDIR_W);
-        CTEST(0x1002, 0x1002, "EX IY, IY'", 0xED, 0xCB, 0x35);
+        DTEST(0x1000, "DDIR LW", DDIR_LW,
+              0x1002, 0x1002, "EX HL, HL'", 0xED, 0xCB, 0x33);
+        DTEST(0x1000, "DDIR W",  DDIR_W,
+              0x1002, 0x1002, "EX IY, IY'", 0xED, 0xCB, 0x35);
     }
 
     TEST("EX (SP),HL", 0xE3);
@@ -703,10 +728,10 @@ void test_exchange() {
     TEST("EX (SP),IY", 0xFD, 0xE3);
     TEST("EX IY,(SP)", 0xFD, 0xE3);
     if (isZ380()) {
-        ATEST(0x1000, "DDIR LW", DDIR_LW);
-        CTEST(0x1002, 0x1002, "EX (SP),HL", 0xE3);
-        ATEST(0x1000, "DDIR W", DDIR_W);
-        CTEST(0x1002, 0x1002, "EX IY,(SP)", 0xFD, 0xE3);
+        DTEST(0x1000, "DDIR LW", DDIR_LW,
+              0x1002, 0x1002, "EX (SP),HL", 0xE3);
+        DTEST(0x1000, "DDIR W",  DDIR_W,
+              0x1002, 0x1002, "EX IY,(SP)", 0xFD, 0xE3);
     }
 
     TEST("EXX", 0xD9);
@@ -731,12 +756,12 @@ void test_stack() {
     TEST("PUSH IX", 0xDD, 0xE5);
     TEST("PUSH IY", 0xFD, 0xE5);
     if (isZ380()) {
-        ATEST(0x1000, "DDIR LW", DDIR_LW);
-        CTEST(0x1002, 0x1002, "PUSH DE", 0xD5);
+        DTEST(0x1000, "DDIR LW", DDIR_LW,
+              0x1002, 0x1002, "PUSH DE", 0xD5);
 
         TEST("PUSH SR", 0xED, 0xC5);
-        ATEST(0x1000, "DDIR LW", DDIR_LW);
-        CTEST(0x1002, 0x1002, "PUSH SR", 0xED, 0xC5);
+        DTEST(0x1000, "DDIR LW", DDIR_LW,
+              0x1002, 0x1002, "PUSH SR", 0xED, 0xC5);
     }
 
     TEST("POP BC", 0xC1);
@@ -746,12 +771,12 @@ void test_stack() {
     TEST("POP IX", 0xDD, 0xE1);
     TEST("POP IY", 0xFD, 0xE1);
     if (isZ380()) {
-        ATEST(0x1000, "DDIR LW", DDIR_LW);
-        CTEST(0x1002, 0x1002, "POP IX", 0xDD, 0xE1);
+        DTEST(0x1000, "DDIR LW", DDIR_LW,
+              0x1002, 0x1002, "POP IX", 0xDD, 0xE1);
 
         TEST("POP SR", 0xED, 0xC1);
-        ATEST(0x1000, "DDIR LW", DDIR_LW);
-        CTEST(0x1002, 0x1002, "POP SR", 0xED, 0xC1);
+        DTEST(0x1000, "DDIR LW", DDIR_LW,
+              0x1002, 0x1002, "POP SR", 0xED, 0xC1);
     }
 
     TEST("RET",    0xC9);
@@ -1097,10 +1122,10 @@ void test_alu_8bit() {
     if (isZ380()) {
         TEST("EXTS A", 0xED, 0x65);
         TEST("EXTS",   0xED, 0x65);
-        ATEST(0x1000, "DDIR LW", DDIR_LW);
-        CTEST(0x1002, 0x1002, "EXTS A",  0xED, 0x65);
-        ATEST(0x1000, "DDIR W",  DDIR_W);
-        CTEST(0x1002, 0x1002, "EXTS",    0xED, 0x65);
+        DTEST(0x1000, "DDIR LW", DDIR_LW,
+              0x1002, 0x1002, "EXTS A", 0xED, 0x65);
+        DTEST(0x1000, "DDIR W",  DDIR_W,
+              0x1002, 0x1002, "EXTS",   0xED, 0x65);
     } else {
         ERUI("EXTS");
     }
@@ -2007,10 +2032,10 @@ void test_io() {
         TEST("LDCTL SR, A",  0xDD, 0xC8);
         TEST("LDCTL SR, HL", 0xED, 0xC8);
         TEST("LDCTL SR, 18", 0xDD, 0xCA, 0x12);
-        ATEST(0x1000, "DDIR W",  DDIR_W);
-        CTEST(0x1002, 0x1002, "LDCTL SR, HL", 0xED, 0xC8);
-        ATEST(0x1000, "DDIR LW", DDIR_LW);
-        CTEST(0x1002, 0x1002, "LDCTL SR, HL", 0xED, 0xC8);
+        DTEST(0x1000, "DDIR W",  DDIR_W,
+              0x1002, 0x1002, "LDCTL SR, HL", 0xED, 0xC8);
+        DTEST(0x1000, "DDIR LW", DDIR_LW,
+              0x1002, 0x1002, "LDCTL SR, HL", 0xED, 0xC8);
 
         TEST("LDCTL DSR, A",  0xED, 0xD8);
         TEST("LDCTL XSR, A",  0xDD, 0xD8);
@@ -2023,10 +2048,10 @@ void test_io() {
         TEST("LDCTL A, DSR", 0xED, 0xD0);
         TEST("LDCTL A, XSR", 0xDD, 0xD0);
         TEST("LDCTL A, YSR", 0xFD, 0xD0);
-        ATEST(0x1000, "DDIR W",  DDIR_W);
-        CTEST(0x1002, 0x1002, "LDCTL HL, SR", 0xED, 0xC0);
-        ATEST(0x1000, "DDIR LW", DDIR_LW);
-        CTEST(0x1002, 0x1002, "LDCTL HL, SR", 0xED, 0xC0);
+        DTEST(0x1000, "DDIR W",  DDIR_W,
+              0x1002, 0x1002, "LDCTL HL, SR", 0xED, 0xC0);
+        DTEST(0x1000, "DDIR LW", DDIR_LW,
+              0x1002, 0x1002, "LDCTL HL, SR", 0xED, 0xC0);
     } else {
         ERUI("LDCTL");
     }
@@ -2046,14 +2071,14 @@ void test_block() {
         TEST("LDIRW", 0xED, 0xF0);
         TEST("LDDW",  0xED, 0xE8);
         TEST("LDDRW", 0xED, 0xF8);
-        ATEST(0x1000, "DDIR W",  DDIR_W);
-        CTEST(0x1002, 0x1002, "LDIW",    0xED, 0xE0);
-        ATEST(0x1000, "DDIR LW", DDIR_LW);
-        CTEST(0x1002, 0x1002, "LDIRW",   0xED, 0xF0);
-        ATEST(0x1000, "DDIR W",  DDIR_W);
-        CTEST(0x1002, 0x1002, "LDDW",    0xED, 0xE8);
-        ATEST(0x1000, "DDIR LW", DDIR_LW);
-        CTEST(0x1002, 0x1002, "LDDRW",   0xED, 0xF8);
+        DTEST(0x1000, "DDIR W",  DDIR_W,
+              0x1002, 0x1002, "LDIW",  0xED, 0xE0);
+        DTEST(0x1000, "DDIR LW", DDIR_LW,
+              0x1002, 0x1002, "LDIRW", 0xED, 0xF0);
+        DTEST(0x1000, "DDIR W",  DDIR_W,
+              0x1002, 0x1002, "LDDW",  0xED, 0xE8);
+        DTEST(0x1000, "DDIR LW", DDIR_LW,
+              0x1002, 0x1002, "LDDRW", 0xED, 0xF8);
     } else {
         ERUI("LDIW");
         ERUI("LDIRW");
@@ -2239,43 +2264,35 @@ void test_ddir() {
         return;
     }
 
-    ATEST(0x1000, "DDIR W",  DDIR_W);
-    CTEST(0x1002, 0x1002, "POP HL",  0xE1);
-    ATEST(0x1000, "DDIR LW", DDIR_LW);
-    CTEST(0x1002, 0x1002, "POP HL",  0xE1);
+    DTEST(0x1000, "DDIR W",  DDIR_W,
+          0x1002, 0x1002, "POP HL", 0xE1);
+    DTEST(0x1000, "DDIR LW", DDIR_LW,
+          0x1002, 0x1002, "POP HL", 0xE1);
 
     TEST("extmode on");
     TEST("JP 1234H",              0xC3, 0x34, 0x12);
     TEST("JP 123456H",   DDIR_IB, 0xC3, 0x56, 0x34, 0x12);
     TEST("JP 12345678H", DDIR_IW, 0xC3, 0x78, 0x56, 0x34, 0x12);
-    ATEST(0x1000, "DDIR W",     DDIR_W);
-    CERRT(0x1002, 0x1002, "JP 1234H",
-          PREFIX_HAS_NO_EFFECT,   "1234H", 0xC3, 0x34, 0x12);
-    ATEST(0x1000, "DDIR W",     DDIR_W);
-    CERRT(0x1002, 0x1002, "JP 123456H",
-          PREFIX_HAS_NO_EFFECT, "123456H", 0xC3, 0x56, 0x34);
-    ATEST(0x1000, "DDIR IB,W",  DDIR_IBW);
-    CERRT(0x1002, 0x1002, "JP 1234H",
-          SUBOPTIMAL_INSTRUCTION, "1234H", 0xC3, 0x34, 0x12, 0x00);
-    ATEST(0x1000, "DDIR W,IW",  DDIR_IWW);
-    CERRT(0x1002, 0x1002, "JP 1234H",
-          SUBOPTIMAL_INSTRUCTION, "1234H", 0xC3, 0x34, 0x12, 0x00, 0x00);
-    ATEST(0x1000, "DDIR IB",    DDIR_IB);
-    CTEST(0x1002, 0x1002, "JP 1234H",   0xC3, 0x34, 0x12, 0x00);
-    ATEST(0x1000, "DDIR LW",    DDIR_LW);
-    CERRT(0x1002, 0x1002, "JP 1234H",
-          PREFIX_HAS_NO_EFFECT,     "1234H", 0xC3, 0x34, 0x12);
-    ATEST(0x1000, "DDIR LW",      DDIR_LW);
-    CERRT(0x1002, 0x1002, "JP 12345678H",
-          PREFIX_HAS_NO_EFFECT, "12345678H", 0xC3, 0x78, 0x56);
-    ATEST(0x1000, "DDIR LW,IB", DDIR_IBL);
-    CERRT(0x1002, 0x1002, "JP 1234H",
-          SUBOPTIMAL_INSTRUCTION, "1234H", 0xC3, 0x34, 0x12, 0x00);
-    ATEST(0x1000, "DDIR IW,LW", DDIR_IWL);
-    CERRT(0x1002, 0x1002, "JP 1234H",
-          SUBOPTIMAL_INSTRUCTION, "1234H", 0xC3, 0x34, 0x12, 0x00, 0x00);
-    ATEST(0x1000, "DDIR IW",    DDIR_IW);
-    CTEST(0x1002, 0x1002, "JP 1234H",   0xC3, 0x34, 0x12, 0x00, 0x00);
+    DERRT(0x1000, "DDIR W",     DDIR_W,
+          0x1002, 0x1002, "JP 1234H",     PREFIX_HAS_NO_EFFECT,   "1234H", 0xC3, 0x34, 0x12);
+    DERRT(0x1000, "DDIR W",     DDIR_W,
+          0x1002, 0x1002, "JP 123456H",   PREFIX_HAS_NO_EFFECT,   "123456H", 0xC3, 0x56, 0x34);
+    DERRT(0x1000, "DDIR IB,W",  DDIR_IBW,
+          0x1002, 0x1002, "JP 1234H",     SUBOPTIMAL_INSTRUCTION, "1234H", 0xC3, 0x34, 0x12, 0x00);
+    DERRT(0x1000, "DDIR W,IW",  DDIR_IWW,
+          0x1002, 0x1002, "JP 1234H",     SUBOPTIMAL_INSTRUCTION, "1234H", 0xC3, 0x34, 0x12, 0x00, 0x00);
+    DTEST(0x1000, "DDIR IB",    DDIR_IB,
+          0x1002, 0x1002, "JP 1234H",     0xC3,                   0x34, 0x12, 0x00);
+    DERRT(0x1000, "DDIR LW",    DDIR_LW,
+          0x1002, 0x1002, "JP 1234H",     PREFIX_HAS_NO_EFFECT,   "1234H", 0xC3, 0x34, 0x12);
+    DERRT(0x1000, "DDIR LW",    DDIR_LW,
+          0x1002, 0x1002, "JP 12345678H", PREFIX_HAS_NO_EFFECT,   "12345678H", 0xC3, 0x78, 0x56);
+    DERRT(0x1000, "DDIR LW,IB", DDIR_IBL,
+          0x1002, 0x1002, "JP 1234H",     SUBOPTIMAL_INSTRUCTION, "1234H", 0xC3, 0x34, 0x12, 0x00);
+    DERRT(0x1000, "DDIR IW,LW", DDIR_IWL,
+          0x1002, 0x1002, "JP 1234H",     SUBOPTIMAL_INSTRUCTION, "1234H", 0xC3, 0x34, 0x12, 0x00, 0x00);
+    DTEST(0x1000, "DDIR IW",    DDIR_IW,
+          0x1002, 0x1002, "JP 1234H",     0xC3,                   0x34, 0x12, 0x00, 0x00);
     TEST("extmode off");
     TEST("JP 1234H",                                  0xC3, 0x34, 0x12);
     ERRT("JP 123456H",   OVERFLOW_RANGE,   "123456H", 0xC3, 0x56, 0x34);
@@ -2285,22 +2302,22 @@ void test_ddir() {
     TEST("LD HL, (123456H)",   DDIR_IB, 0x2A, 0x56, 0x34, 0x12);
     TEST("LD HL, (12345678H)", DDIR_IW, 0x2A, 0x78, 0x56, 0x34, 0x12);
 
-    ATEST(0x1000, "DDIR W",         DDIR_W);
-    CTEST(0x1002, 0x1002, "LD HL, (1234H)", 0x2A, 0x34, 0x12);
-    ATEST(0x1000, "DDIR IB,W",      DDIR_IBW);
-    CTEST(0x1002, 0x1002, "LD HL, (1234H)", 0x2A, 0x34, 0x12, 0x00);
-    ATEST(0x1000, "DDIR W,IW",      DDIR_IWW);
-    CTEST(0x1002, 0x1002, "LD HL, (1234H)", 0x2A, 0x34, 0x12, 0x00, 0x00);
-    ATEST(0x1000, "DDIR IB",        DDIR_IB);
-    CTEST(0x1002, 0x1002, "LD HL, (1234H)", 0x2A, 0x34, 0x12, 0x00);
-    ATEST(0x1000, "DDIR LW",        DDIR_LW);
-    CTEST(0x1002, 0x1002, "LD HL, (1234H)", 0x2A, 0x34, 0x12);
-    ATEST(0x1000, "DDIR LW,IB",     DDIR_IBL);
-    CTEST(0x1002, 0x1002, "LD HL, (1234H)", 0x2A, 0x34, 0x12, 0x00);
-    ATEST(0x1000, "DDIR IW,LW",     DDIR_IWL);
-    CTEST(0x1002, 0x1002, "LD HL, (1234H)", 0x2A, 0x34, 0x12, 0x00, 0x00);
-    ATEST(0x1000, "DDIR IW",        DDIR_IW);
-    CTEST(0x1002, 0x1002, "LD HL, (1234H)", 0x2A, 0x34, 0x12, 0x00, 0x00);
+    DTEST(0x1000, "DDIR W",     DDIR_W,
+          0x1002, 0x1002, "LD HL, (1234H)", 0x2A, 0x34, 0x12);
+    DTEST(0x1000, "DDIR IB,W",  DDIR_IBW,
+          0x1002, 0x1002, "LD HL, (1234H)", 0x2A, 0x34, 0x12, 0x00);
+    DTEST(0x1000, "DDIR W,IW",  DDIR_IWW,
+          0x1002, 0x1002, "LD HL, (1234H)", 0x2A, 0x34, 0x12, 0x00, 0x00);
+    DTEST(0x1000, "DDIR IB",    DDIR_IB,
+          0x1002, 0x1002, "LD HL, (1234H)", 0x2A, 0x34, 0x12, 0x00);
+    DTEST(0x1000, "DDIR LW",    DDIR_LW,
+          0x1002, 0x1002, "LD HL, (1234H)", 0x2A, 0x34, 0x12);
+    DTEST(0x1000, "DDIR LW,IB", DDIR_IBL,
+          0x1002, 0x1002, "LD HL, (1234H)", 0x2A, 0x34, 0x12, 0x00);
+    DTEST(0x1000, "DDIR IW,LW", DDIR_IWL,
+          0x1002, 0x1002, "LD HL, (1234H)", 0x2A, 0x34, 0x12, 0x00, 0x00);
+    DTEST(0x1000, "DDIR IW",    DDIR_IW,
+          0x1002, 0x1002, "LD HL, (1234H)", 0x2A, 0x34, 0x12, 0x00, 0x00);
 
     TEST("lwordmode on");
     TEST("LD HL, 1234H",              0x21, 0x34, 0x12);
@@ -2310,31 +2327,26 @@ void test_ddir() {
     TEST("LD HL, 1234H",               0x21, 0x34, 0x12);
     ERRT("LD HL, 123456H",   OVERFLOW_RANGE,   "123456H", 0x21, 0x56, 0x34);
     ERRT("LD HL, 12345678H", OVERFLOW_RANGE, "12345678H", 0x21, 0x78, 0x56);
-    ATEST(0x1000, "DDIR W",       DDIR_W);
-    CERRT(0x1002, 0x1002, "LD HL, 1234H",
-          PREFIX_HAS_NO_EFFECT, "1234H", 0x21, 0x34, 0x12);
-    ATEST(0x1000, "DDIR IB,W",    DDIR_IBW);
-    CERRT(0x1002, 0x1002, "LD HL, 1234H",
-          PREFIX_HAS_NO_EFFECT, "1234H", 0x21, 0x34, 0x12);
-    ATEST(0x1000, "DDIR W,IW",    DDIR_IWW);
-    CERRT(0x1002, 0x1002, "LD HL, 1234H",
-          PREFIX_HAS_NO_EFFECT, "1234H", 0x21, 0x34, 0x12);
-    ATEST(0x1000, "DDIR IB",      DDIR_IB);
-    CERRT(0x1002, 0x1002, "LD HL, 1234H",
-          PREFIX_HAS_NO_EFFECT, "1234H", 0x21, 0x34, 0x12);
-    ATEST(0x1000,"DDIR LW",       DDIR_LW);
-    CTEST(0x1002, 0x1002, "LD HL, 1234H", 0x21, 0x34, 0x12);
-    ATEST(0x1000, "DDIR LW,IB",   DDIR_IBL);
-    CTEST(0x1002, 0x1002, "LD HL, 1234H", 0x21, 0x34, 0x12, 0x00);
-    ATEST(0x1000, "DDIR LW",      DDIR_LW);
-    CTEST(0x1002, 0x1000, "LD HL, 123456H", DDIR_IBL, 0x21, 0x56, 0x34, 0x12);
-    ATEST(0x1000, "DDIR IW,LW",   DDIR_IWL);
-    CTEST(0x1002, 0x1002, "LD HL, 1234H", 0x21, 0x34, 0x12, 0x00, 0x00);
-    ATEST(0x1000, "DDIR LW",      DDIR_LW);
-    CTEST(0x1002, 0x1000, "LD HL, 12345678H", DDIR_IWL, 0x21, 0x78, 0x56, 0x34, 0x12);
-    ATEST(0x1000, "DDIR IW",      DDIR_IW);
-    CERRT(0x1002, 0x1002, "LD HL, 1234H",
-          PREFIX_HAS_NO_EFFECT, "1234H", 0x21, 0x34, 0x12);
+    DERRT(0x1000, "DDIR W",     DDIR_W,
+          0x1002, 0x1002, "LD HL, 1234H",     PREFIX_HAS_NO_EFFECT, "1234H", 0x21, 0x34, 0x12);
+    DERRT(0x1000, "DDIR IB,W",  DDIR_IBW,
+          0x1002, 0x1002, "LD HL, 1234H",     PREFIX_HAS_NO_EFFECT, "1234H", 0x21, 0x34, 0x12);
+    DERRT(0x1000, "DDIR W,IW",  DDIR_IWW,
+          0x1002, 0x1002, "LD HL, 1234H",     PREFIX_HAS_NO_EFFECT, "1234H", 0x21, 0x34, 0x12);
+    DERRT(0x1000, "DDIR IB",    DDIR_IB,
+          0x1002, 0x1002, "LD HL, 1234H",     PREFIX_HAS_NO_EFFECT, "1234H", 0x21, 0x34, 0x12);
+    DTEST(0x1000, "DDIR LW",    DDIR_LW,
+          0x1002, 0x1002, "LD HL, 1234H",     0x21,                 0x34, 0x12);
+    DTEST(0x1000, "DDIR LW,IB", DDIR_IBL,
+          0x1002, 0x1002, "LD HL, 1234H",     0x21,                 0x34, 0x12, 0x00);
+    DTEST(0x1000, "DDIR LW",    DDIR_LW,
+          0x1002, 0x1000, "LD HL, 123456H",   DDIR_IBL,             0x21, 0x56, 0x34, 0x12);
+    DTEST(0x1000, "DDIR IW,LW", DDIR_IWL,
+          0x1002, 0x1002, "LD HL, 1234H",     0x21,                 0x34, 0x12, 0x00, 0x00);
+    DTEST(0x1000, "DDIR LW",    DDIR_LW,
+          0x1002, 0x1000, "LD HL, 12345678H", DDIR_IWL,             0x21, 0x78, 0x56, 0x34, 0x12);
+    DERRT(0x1000, "DDIR IW",    DDIR_IW,
+          0x1002, 0x1002, "LD HL, 1234H",     PREFIX_HAS_NO_EFFECT, "1234H", 0x21, 0x34, 0x12);
 
     TEST("LD HL, (IX+34H)",              0xDD, 0xCB, 0x34, 0x33);
     TEST("LD HL, (IX+1234H)",   DDIR_IB, 0xDD, 0xCB, 0x34, 0x12, 0x33);
@@ -2342,22 +2354,22 @@ void test_ddir() {
     ERRT("LD HL, (IX+12345678H)", OVERFLOW_RANGE,
          "(IX+12345678H)",               0xDD, 0xCB, 0x78, 0x33);
 
-    ATEST(0x1000,"DDIR W",          DDIR_W);
-    CTEST(0x1002, 0x1002, "LD HL, (IX+34H)", 0xDD, 0xCB, 0x34, 0x33);
-    ATEST(0x1000, "DDIR IB,W",       DDIR_IBW);
-    CTEST(0x1002, 0x1002, "LD HL, (IX+34H)", 0xDD, 0xCB, 0x34, 0x00, 0x33);
-    ATEST(0x1000, "DDIR W,IW",       DDIR_IWW);
-    CTEST(0x1002, 0x1002, "LD HL, (IX+34H)", 0xDD, 0xCB, 0x34, 0x00, 0x00, 0x33);
-    ATEST(0x1000, "DDIR IB",         DDIR_IB);
-    CTEST(0x1002, 0x1002, "LD HL, (IX+34H)", 0xDD, 0xCB, 0x34, 0x00, 0x33);
-    ATEST(0x1000, "DDIR LW",         DDIR_LW);
-    CTEST(0x1002, 0x1002, "LD HL, (IX+34H)", 0xDD, 0xCB, 0x34, 0x33);
-    ATEST(0x1000, "DDIR LW,IB",      DDIR_IBL);
-    CTEST(0x1002, 0x1002, "LD HL, (IX+34H)", 0xDD, 0xCB, 0x34, 0x00, 0x33);
-    ATEST(0x1000, "DDIR IW,LW",      DDIR_IWL);
-    CTEST(0x1002, 0x1002, "LD HL, (IX+34H)", 0xDD, 0xCB, 0x34, 0x00, 0x00, 0x33);
-    ATEST(0x1000, "DDIR IW",         DDIR_IW);
-    CTEST(0x1002, 0x1002, "LD HL, (IX+34H)", 0xDD, 0xCB, 0x34, 0x00, 0x00, 0x33);
+    DTEST(0x1000, "DDIR W",     DDIR_W,
+          0x1002, 0x1002, "LD HL, (IX+34H)", 0xDD, 0xCB, 0x34, 0x33);
+    DTEST(0x1000, "DDIR IB,W",  DDIR_IBW,
+          0x1002, 0x1002, "LD HL, (IX+34H)", 0xDD, 0xCB, 0x34, 0x00, 0x33);
+    DTEST(0x1000, "DDIR W,IW",  DDIR_IWW,
+          0x1002, 0x1002, "LD HL, (IX+34H)", 0xDD, 0xCB, 0x34, 0x00, 0x00, 0x33);
+    DTEST(0x1000, "DDIR IB",    DDIR_IB,
+          0x1002, 0x1002, "LD HL, (IX+34H)", 0xDD, 0xCB, 0x34, 0x00, 0x33);
+    DTEST(0x1000, "DDIR LW",    DDIR_LW,
+          0x1002, 0x1002, "LD HL, (IX+34H)", 0xDD, 0xCB, 0x34, 0x33);
+    DTEST(0x1000, "DDIR LW,IB", DDIR_IBL,
+          0x1002, 0x1002, "LD HL, (IX+34H)", 0xDD, 0xCB, 0x34, 0x00, 0x33);
+    DTEST(0x1000, "DDIR IW,LW", DDIR_IWL,
+          0x1002, 0x1002, "LD HL, (IX+34H)", 0xDD, 0xCB, 0x34, 0x00, 0x00, 0x33);
+    DTEST(0x1000, "DDIR IW",    DDIR_IW,
+          0x1002, 0x1002, "LD HL, (IX+34H)", 0xDD, 0xCB, 0x34, 0x00, 0x00, 0x33);
 }
 
 void test_comment() {

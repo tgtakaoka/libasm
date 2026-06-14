@@ -62,7 +62,7 @@ const ValueParser::Plugins &AsmTms320f::defaultPlugins() {
 }
 
 AsmTms320f::AsmTms320f(const ValueParser::Plugins &plugins)
-    : Assembler(plugins, PSEUDO_TABLE), Config(TABLE), _prevInsn(0), _prev(_prevInsn) {
+    : Assembler(plugins, PSEUDO_TABLE), Config(TABLE) {
     reset();
 }
 
@@ -605,7 +605,8 @@ Error AsmTms320f::encodeImpl(StrScanner &scan, Insn &_insn) const {
         scan.skipSpaces();
     }
 
-    auto &search = _insn.hasContinue() ? _prev : insn;
+    auto &state = _insn.state<State>();
+    auto &search = _insn.hasContinue() ? state.prev : insn;
     if (_insn.hasContinue()) {
         search.para = &insn;
     } else {
@@ -622,7 +623,7 @@ Error AsmTms320f::encodeImpl(StrScanner &scan, Insn &_insn) const {
         paraDstReg = search.op2.reg;
     if (search.para) {
         auto &para = *search.para;
-        para.resetAddress(_prev.address());
+        para.resetAddress(state.prev.address());
         encodeOperand(insn, para, para.op1, para.mode1(), para.pos1());
         if (para.mode3() == M_NONE && para.mode2() == M_FREG && para.op2.mode == M_FREG &&
                 paraDstReg == para.op2.reg) {
@@ -635,7 +636,7 @@ Error AsmTms320f::encodeImpl(StrScanner &scan, Insn &_insn) const {
     if (insn.hasContinue()) {
         insn.clearContinueMark();
     } else {
-        _prev.copyFrom(insn);
+        state.prev.copyFrom(insn);
     }
     return _insn.setErrorIf(insn);
 }

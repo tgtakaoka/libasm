@@ -31,8 +31,8 @@ TestAsserter asserter;
 TestSymtab symtab;
 
 void asm_assert(const char *file, int line, const ErrorAt &error, const char *src,
-        const ArrayMemory &expected) {
-    Insn insn(expected.origin());
+        const ArrayMemory &expected, Insn &insn) {
+    insn.reset(expected.origin());
     assembler.encode(src, insn, &symtab);
     asserter.equals(file, line, src, error.errorText_P(), insn.errorText_P());
     asserter.equals(file, line, "error at", error.errorAt(), insn.errorAt());
@@ -40,8 +40,8 @@ void asm_assert(const char *file, int line, const ErrorAt &error, const char *sr
 }
 
 void cont_assert(const char *file, int line, const ErrorAt &error, const char *src,
-        uint32_t expected_addr, const ArrayMemory &expected) {
-    Insn insn(expected.origin());
+        uint32_t expected_addr, const ArrayMemory &expected, Insn &insn) {
+    insn.reset(expected.origin());
     assembler.encode(src, insn, &symtab);
     asserter.equals(file, line, src, error.errorText_P(), insn.errorText_P());
     asserter.equals(file, line, "error at", error.errorAt(), insn.errorAt());

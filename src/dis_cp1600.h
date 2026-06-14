@@ -39,10 +39,13 @@ private:
     bool _spAlias;
     bool _pcAlias;
 
-    // True if the previously decoded instruction was a standalone SDBD; the
-    // next decode interprets M_IMM16 as an SDBD-prefixed two-word immediate.
-    // Mutable because decodeImpl is const but this state spans instructions.
-    mutable bool _sdbdPrefix = false;
+    // Cross-instruction state carried on the Insn (per Insn::state<T>).
+    // sdbdPrefix: true when the previous decode was a standalone SDBD; the
+    // next decode then interprets M_IMM16 as an SDBD-prefixed two-word
+    // immediate. All-zero (sdbdPrefix == false) is the natural fresh state.
+    struct State {
+        bool sdbdPrefix;
+    };
 
     StrBuffer &outReg(StrBuffer &out, uint_fast8_t num) const;
     void decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) const;

@@ -58,7 +58,6 @@ void DisCp1600::reset() {
     Disassembler::reset();
     setSpAlias(false);
     setPcAlias(false);
-    _sdbdPrefix = false;
 }
 
 Error DisCp1600::setSpAlias(bool enable) {
@@ -175,9 +174,10 @@ void DisCp1600::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) cons
 
 Error DisCp1600::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) const {
     DisInsn insn(_insn, memory, out);
+    auto &state = _insn.state<State>();
     // One-shot: consume the carry-over flag set by the previous decode.
-    insn.sdbd_prefix = _sdbdPrefix;
-    _sdbdPrefix = false;
+    insn.sdbd_prefix = state.sdbdPrefix;
+    state.sdbdPrefix = false;
 
     const auto raw1 = insn.readUint16();
     insn.setOpCode(raw1);
@@ -201,7 +201,7 @@ Error DisCp1600::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) cons
     // Standalone SDBD: emit a one-line "sdbd" insn and carry the flag forward
     // so the next decode reads its M_IMM16 as a two-word immediate.
     if (insn.isSdbd() && !insn.sdbd_prefix) {
-        _sdbdPrefix = true;
+        state.sdbdPrefix = true;
         return _insn.setError(insn);
     }
 
