@@ -20,6 +20,7 @@
 #include "asm_directive.h"
 #include "asm_f3850.h"
 #include "asm_h8300.h"
+#include "asm_h8500.h"
 #include "asm_i8048.h"
 #include "asm_i8051.h"
 #include "asm_i8080.h"
@@ -59,11 +60,12 @@ using namespace libasm::driver;
 cdp1802::AsmCdp1802 asm1802;
 cp1600::AsmCp1600 asm1600;
 f3850::AsmF3850 asm3850;
+h8300::AsmH8300 asm8300;
+h8500::AsmH8500 ash8500;
 i8048::AsmI8048 asm8048;
 i8051::AsmI8051 asm8051;
 i8080::AsmI8080 asm8080;
 i8086::AsmI8086 asm8086;
-h8300::AsmH8300 asm8300;
 i8096::AsmI8096 asm8096;
 ins8060::AsmIns8060 asm8060;
 ins8070::AsmIns8070 asm8070;
@@ -110,6 +112,7 @@ IntelDirective dir9900(asm9900);
 MostekDirective dir6502(asm6502);
 MotorolaDirective dir68000(asm68000);
 MotorolaDirective dir8300(asm8300);
+MotorolaDirective dirh8500(ash8500);
 MotorolaDirective dir6800(asm6800);
 MotorolaDirective dir6805(asm6805);
 MotorolaDirective dir6809(asm6809);
@@ -159,6 +162,7 @@ AsmCommander commander{
         &dir8096,
         &dir68000,
         &dir8300,
+        &dirh8500,
         &dir9900,
         &dirz8000,
         &dir32000,
