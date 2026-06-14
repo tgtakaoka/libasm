@@ -29,7 +29,7 @@ namespace {
 
 // clang-format off
 constexpr char OPT_BOOL_ALIAS[]  PROGMEM = "reg-alias";
-constexpr char OPT_DESC_ALIAS[]  PROGMEM = "emit register alias regarding setrp value";
+constexpr char OPT_DESC_ALIAS[]  PROGMEM = "emit register alias for the current setrp value";
 constexpr char OPT_BOOL_OPTIMIZE_INDEX[] PROGMEM = "optimize-index";
 constexpr char OPT_DESC_OPTIMIZE_INDEX[] PROGMEM = "optimize zero index";
 constexpr char OPT_INT_SETRP[]   PROGMEM = "setrp";

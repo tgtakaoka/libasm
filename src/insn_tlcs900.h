@@ -81,7 +81,7 @@ struct AsmInsn final : AsmInsnImpl<Config>, EntryInsn {
     bool complexIndir = false;
 
     // Opcode position computed from the resolved AddrMode / PrefixMode /
-    // prefix() state — independent of the current emit length.
+    // prefix() state -- independent of the current emit length.
     uint_fast8_t prefixSize() const;
     // First byte past the opcode slot, growing past prior operand trailings.
     uint_fast8_t operandPos() const;

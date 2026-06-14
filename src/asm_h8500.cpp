@@ -349,7 +349,7 @@ Error AsmH8500::parseOperand(StrScanner &scan, Operand &op) const {
         }
     }
 
-    // Bare address — branch target (assume short form)
+    // Bare address -- branch target (assume short form)
     {
         const auto addr = parseInteger(p, op);
         if (op.hasError())
@@ -440,7 +440,7 @@ Error AsmH8500::encodeSpcFmt(AsmInsn &insn) const {
     const auto edst = flags.dst();
     const auto base = insn.opCode();
 
-    // ADD:Q #imm2, Rn — encoded as GEN format (EA=Rn word, OP=opcode-for-const)
+    // ADD:Q #imm2, Rn -- encoded as GEN format (EA=Rn word, OP=opcode-for-const)
     if (esrc == M_IMM2 && edst == M_REG) {
         const auto imm = insn.op1.val.getSigned();
         uint8_t opByte;

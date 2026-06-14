@@ -32,7 +32,7 @@ struct AsmZ8000 final : Assembler, Config {
     Error setShortDirect(bool enable);
 
 private:
-    const BoolOption<AsmZ8000> _opt_shortDitrect;
+    const BoolOption<AsmZ8000> _opt_shortDirect;
 
     bool _autoShortDirect;
 

@@ -211,7 +211,7 @@ uint8_t encodeReg8(RegName name) {
 }
 
 RegName decodeReg8(uint8_t num) {
-    return RegName(num & 7);  // 0..7 → REG_W..REG_L
+    return RegName(num & 7);  // 0..7 -> REG_W..REG_L
 }
 
 // Current-bank 16-bit register index (0=WA,1=BC,...,7=SP)
