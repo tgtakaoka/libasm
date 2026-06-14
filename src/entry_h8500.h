@@ -51,7 +51,7 @@ enum AddrMode : uint8_t {
     M_ABS24 = 17,    // page + 16-bit addr (PJMP/PJSR)
     M_TRAPV = 18,    // trap vector 0-3 (TRAPA)
     M_SCB = 19,      // SCB count register
-    M_IMM2 = 20,     // #±1 or #±2 for SUBS/ADDS (word add/subtract 1 or 2)
+    M_IMM2 = 20,     // #+/-1 or #+/-2 for SUBS/ADDS (word add/subtract 1 or 2)
     M_EA = 21,       // general EA (any value in the range above)
     M_FP = 22,       // FP register (R6) for LINK/UNLK
 };

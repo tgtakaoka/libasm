@@ -31,7 +31,7 @@ private:
     const BoolOption<Config> _opt_fpAlias;
     const BoolOption<Config> _opt_spAlias;
 
-    // EA byte → operand output helpers
+    // EA byte -> operand output helpers
     void outEaOperand(DisInsn &insn, StrBuffer &out, uint8_t ea) const;
     void outReg(StrBuffer &out, RegName reg) const;
     void outAddrReg(StrBuffer &out, RegName reg) const;

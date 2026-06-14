@@ -54,9 +54,9 @@ const ValueParser::Plugins &AsmZ8000::defaultPlugins() {
 }
 
 AsmZ8000::AsmZ8000(const ValueParser::Plugins &plugins)
-    : Assembler(plugins, PSEUDO_TABLE, &_opt_shortDitrect),
+    : Assembler(plugins, PSEUDO_TABLE, &_opt_shortDirect),
       Config(TABLE),
-      _opt_shortDitrect(
+      _opt_shortDirect(
               this, &AsmZ8000::setShortDirect, OPT_BOOL_SHORT_DIRECT, OPT_DESC_SHORT_DIRECT) {
     reset();
 }

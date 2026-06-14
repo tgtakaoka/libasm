@@ -68,7 +68,7 @@ enum RegName : int8_t {
     // DMAS/DMAD: 32-bit.  Sub = 0x00..0x1C (stride 4).
     REG_DMAS0 = 0x40, REG_DMAS1 = 0x44, REG_DMAS2 = 0x48, REG_DMAS3 = 0x4C,
     REG_DMAD0 = 0x50, REG_DMAD1 = 0x54, REG_DMAD2 = 0x58, REG_DMAD3 = 0x5C,
-    // DMAC: 16-bit. DMAM: 8-bit. Interleaved: DMAC sub even×4, DMAM sub odd×4+2.
+    // DMAC: 16-bit. DMAM: 8-bit. Interleaved: DMAC sub even*4, DMAM sub odd*4+2.
     REG_DMAC0 = 0x60, REG_DMAM0 = 0x62, REG_DMAC1 = 0x64, REG_DMAM1 = 0x66,
     REG_DMAC2 = 0x68, REG_DMAM2 = 0x6A, REG_DMAC3 = 0x6C, REG_DMAM3 = 0x6E,
 };

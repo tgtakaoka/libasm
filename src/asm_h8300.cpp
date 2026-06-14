@@ -309,7 +309,7 @@ Error AsmH8300::parseOperand(StrScanner &scan, Operand &op) const {
         return OK;
     }
 
-    // Plain number → branch target address (M_REL8)
+    // Plain number -> branch target address (M_REL8)
     op.val = parseInteger(p, op);
     if (op.hasError())
         return op.getError();
