@@ -14,6 +14,7 @@ AsmCdp1802      KEYWORD1        libasm
 AsmCp1600       KEYWORD1        libasm
 AsmF3850        KEYWORD1        libasm
 AsmH8300        KEYWORD1        libasm
+AsmH8500        KEYWORD1        libasm
 AsmI8048        KEYWORD1        libasm
 AsmI8051        KEYWORD1        libasm
 AsmI8080        KEYWORD1        libasm
