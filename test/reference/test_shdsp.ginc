@@ -1,0 +1,228 @@
+! Copyright 2026 Tadashi G. Takaoka
+!
+! Licensed under the Apache License, Version 2.0 (the "License");
+! you may not use this file except in compliance with the License.
+! You may obtain a copy of the License at
+!
+!     http://www.apache.org/licenses/LICENSE-2.0
+!
+! Unless required by applicable law or agreed to in writing, software
+! distributed under the License is distributed on an "AS IS" BASIS,
+! WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+! See the License for the specific language governing permissions and
+! limitations under the License.
+
+!!! SH-DSP additional instructions (DSP register transfers, repeat control)
+
+!! LDS Rm,DSR
+        lds     r0,dsr                  ! 406A
+        lds     r7,dsr                  ! 476A
+        lds     r15,dsr                 ! 4F6A
+
+!! LDS Rm,A0
+        lds     r0,a0                   ! 407A
+        lds     r7,a0                   ! 477A
+        lds     r15,a0                  ! 4F7A
+
+!! LDS Rm,X0
+        lds     r0,x0                   ! 408A
+        lds     r7,x0                   ! 478A
+        lds     r15,x0                  ! 4F8A
+
+!! LDS Rm,X1
+        lds     r0,x1                   ! 409A
+        lds     r7,x1                   ! 479A
+        lds     r15,x1                  ! 4F9A
+
+!! LDS Rm,Y0
+        lds     r0,y0                   ! 40AA
+        lds     r7,y0                   ! 47AA
+        lds     r15,y0                  ! 4FAA
+
+!! LDS Rm,Y1
+        lds     r0,y1                   ! 40BA
+        lds     r7,y1                   ! 47BA
+        lds     r15,y1                  ! 4FBA
+
+!! LDS.L @Rm+,DSR
+        lds.l   @r0+,dsr                ! 4066
+        lds.l   @r7+,dsr                ! 4766
+        lds.l   @r15+,dsr               ! 4F66
+
+!! LDS.L @Rm+,A0
+        lds.l   @r0+,a0                 ! 4076
+        lds.l   @r7+,a0                 ! 4776
+        lds.l   @r15+,a0                ! 4F76
+
+!! LDS.L @Rm+,X0
+        lds.l   @r0+,x0                 ! 4086
+        lds.l   @r7+,x0                 ! 4786
+        lds.l   @r15+,x0                ! 4F86
+
+!! LDS.L @Rm+,X1
+        lds.l   @r0+,x1                 ! 4096
+        lds.l   @r7+,x1                 ! 4796
+        lds.l   @r15+,x1                ! 4F96
+
+!! LDS.L @Rm+,Y0
+        lds.l   @r0+,y0                 ! 40A6
+        lds.l   @r7+,y0                 ! 47A6
+        lds.l   @r15+,y0                ! 4FA6
+
+!! LDS.L @Rm+,Y1
+        lds.l   @r0+,y1                 ! 40B6
+        lds.l   @r7+,y1                 ! 47B6
+        lds.l   @r15+,y1                ! 4FB6
+
+!! STS DSR,Rn
+        sts     dsr,r0                  ! 006A
+        sts     dsr,r7                  ! 076A
+        sts     dsr,r15                 ! 0F6A
+
+!! STS A0,Rn
+        sts     a0,r0                   ! 007A
+        sts     a0,r7                   ! 077A
+        sts     a0,r15                  ! 0F7A
+
+!! STS X0,Rn
+        sts     x0,r0                   ! 008A
+        sts     x0,r7                   ! 078A
+        sts     x0,r15                  ! 0F8A
+
+!! STS X1,Rn
+        sts     x1,r0                   ! 009A
+        sts     x1,r7                   ! 079A
+        sts     x1,r15                  ! 0F9A
+
+!! STS Y0,Rn
+        sts     y0,r0                   ! 00AA
+        sts     y0,r7                   ! 07AA
+        sts     y0,r15                  ! 0FAA
+
+!! STS Y1,Rn
+        sts     y1,r0                   ! 00BA
+        sts     y1,r7                   ! 07BA
+        sts     y1,r15                  ! 0FBA
+
+!! STS.L DSR,@-Rn
+        sts.l   dsr,@-r0                ! 4062
+        sts.l   dsr,@-r7                ! 4762
+        sts.l   dsr,@-r15               ! 4F62
+
+!! STS.L A0,@-Rn
+        sts.l   a0,@-r0                 ! 4072
+        sts.l   a0,@-r7                 ! 4772
+        sts.l   a0,@-r15                ! 4F72
+
+!! STS.L X0,@-Rn
+        sts.l   x0,@-r0                 ! 4082
+        sts.l   x0,@-r7                 ! 4782
+        sts.l   x0,@-r15                ! 4F82
+
+!! STS.L X1,@-Rn
+        sts.l   x1,@-r0                 ! 4092
+        sts.l   x1,@-r7                 ! 4792
+        sts.l   x1,@-r15                ! 4F92
+
+!! STS.L Y0,@-Rn
+        sts.l   y0,@-r0                 ! 40A2
+        sts.l   y0,@-r7                 ! 47A2
+        sts.l   y0,@-r15                ! 4FA2
+
+!! STS.L Y1,@-Rn
+        sts.l   y1,@-r0                 ! 40B2
+        sts.l   y1,@-r7                 ! 47B2
+        sts.l   y1,@-r15                ! 4FB2
+
+!! LDC Rm,MOD
+        ldc     r0,mod                  ! 405E
+        ldc     r7,mod                  ! 475E
+        ldc     r15,mod                 ! 4F5E
+
+!! LDC Rm,RS
+        ldc     r0,rs                   ! 406E
+        ldc     r7,rs                   ! 476E
+        ldc     r15,rs                  ! 4F6E
+
+!! LDC Rm,RE
+        ldc     r0,re                   ! 407E
+        ldc     r7,re                   ! 477E
+        ldc     r15,re                  ! 4F7E
+
+!! LDC.L @Rm+,MOD
+        ldc.l   @r0+,mod                ! 4057
+        ldc.l   @r7+,mod                ! 4757
+        ldc.l   @r15+,mod               ! 4F57
+
+!! LDC.L @Rm+,RS
+        ldc.l   @r0+,rs                 ! 4067
+        ldc.l   @r7+,rs                 ! 4767
+        ldc.l   @r15+,rs                ! 4F67
+
+!! LDC.L @Rm+,RE
+        ldc.l   @r0+,re                 ! 4077
+        ldc.l   @r7+,re                 ! 4777
+        ldc.l   @r15+,re                ! 4F77
+
+!! STC MOD,Rn
+        stc     mod,r0                  ! 0052
+        stc     mod,r7                  ! 0752
+        stc     mod,r15                 ! 0F52
+
+!! STC RS,Rn
+        stc     rs,r0                   ! 0062
+        stc     rs,r7                   ! 0762
+        stc     rs,r15                  ! 0F62
+
+!! STC RE,Rn
+        stc     re,r0                   ! 0072
+        stc     re,r7                   ! 0772
+        stc     re,r15                  ! 0F72
+
+!! STC.L MOD,@-Rn
+        stc.l   mod,@-r0                ! 4053
+        stc.l   mod,@-r7                ! 4753
+        stc.l   mod,@-r15               ! 4F53
+
+!! STC.L RS,@-Rn
+        stc.l   rs,@-r0                 ! 4063
+        stc.l   rs,@-r7                 ! 4763
+        stc.l   rs,@-r15                ! 4F63
+
+!! STC.L RE,@-Rn
+        stc.l   re,@-r0                 ! 4073
+        stc.l   re,@-r7                 ! 4773
+        stc.l   re,@-r15                ! 4F73
+
+!! LDRS @(disp,PC) -- target = (PC+4) + disp*2
+        ldrs    shdsp_ldrs_1            ! 8C00
+        nop
+shdsp_ldrs_1:
+        ldrs    shdsp_ldrs_2            ! 8C1E
+        .skip   62
+shdsp_ldrs_2:
+        nop
+
+!! LDRE @(disp,PC)
+        ldre    shdsp_ldre_1            ! 8E00
+        nop
+shdsp_ldre_1:
+        ldre    shdsp_ldre_2            ! 8E1E
+        .skip   62
+shdsp_ldre_2:
+        nop
+
+!! SETRC #imm
+        setrc   #0                      ! 8200
+        setrc   #0x7F                   ! 827F
+        setrc   #0xFF                   ! 82FF
+
+!! SETRC Rm
+        setrc   r0                      ! 4014
+        setrc   r7                      ! 4714
+        setrc   r15                     ! 4F14
+
+! Local Variables:
+! mode: asm
+! End:
+! vim: set ft=asm:
