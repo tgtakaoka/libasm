@@ -70,6 +70,7 @@ DisNs32000      KEYWORD1        libasm
 DisPdp11        KEYWORD1        libasm
 DisPdp8         KEYWORD1        libasm
 DisScn2650      KEYWORD1        libasm
+DisSuperH       KEYWORD1        libasm
 DisTlcs90       KEYWORD1        libasm
 DisTlcs900      KEYWORD1        libasm
 DisTms320       KEYWORD1        libasm

@@ -572,6 +572,16 @@ build gen_scn2650: link gen_scn2650.o $
   dec_float.o value_parser.o parsers.o operators.o $
   gen_driver.o tokenized_text.o
 
+# superh
+build gen_superh: link gen_superh.o $
+  dis_superh.o reg_superh.o table_superh.o text_superh.o $
+  config_base.o dis_base.o dis_formatter.o error_reporter.o formatters.o $
+  insn_base.o list_formatter.o option_base.o reg_base.o str_buffer.o $
+  str_scanner.o test_generator.o text_common.o value.o value_formatter.o $
+  fixed64.o ieee_float.o float80_base.o float80_hard.o float80_soft.o $
+  dec_float.o value_parser.o parsers.o operators.o $
+  gen_driver.o tokenized_text.o
+
 # tlcs90
 build test_asm_tlcs90: run test_asm_tlcs90.o $
   asm_tlcs90.o reg_tlcs90.o table_tlcs90.o text_tlcs90.o $
@@ -977,6 +987,7 @@ build gen: phony $
   gen_pdp11    $
   gen_pdp8     $
   gen_scn2650  $
+  gen_superh   $
   gen_tlcs90   $
   gen_tms320   $
   gen_tms320f  $
