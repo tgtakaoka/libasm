@@ -70,6 +70,15 @@ struct Disassembler {
      */
     virtual StrBuffer &outAbsAddr(StrBuffer &out, uint32_t val, uint8_t addrWidth = 0) const;
 
+    // Per-architecture configuration emission for the disassembler driver.
+    // Override to return a (name, value) pair for any non-default per-arch
+    // setting (e.g. SH-2A's optional FPU) that the assembler needs in the
+    // source to re-encode the output cleanly.  Return false (the default)
+    // when nothing extra needs surfacing.
+    virtual bool currentOption(const char *&name, const char *&value) const {
+        return false;
+    }
+
 private:
     const ValueFormatter _formatter;
 

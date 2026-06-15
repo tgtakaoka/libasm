@@ -27,6 +27,11 @@ namespace superh {
 struct DisSuperH final : Disassembler, Config {
     DisSuperH(const ValueFormatter::Plugins &plugins = defaultPlugins());
 
+    // SH-2A's FPU is optional; surface it as an `option "fpu", "true"`
+    // pseudo in the disassembler output when --fpu is on, so the source
+    // re-assembles without manual injection.
+    bool currentOption(const char *&name, const char *&value) const override;
+
 private:
     const TextOption<Config> _opt_fpu;
 

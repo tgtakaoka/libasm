@@ -33,6 +33,14 @@ namespace {
 // Sorted alphabetically by text for binary search
 constexpr NameEntry REG_ENTRIES[] PROGMEM = {
     { TEXT_REG_A0,    REG_A0    },
+    { TEXT_REG_DR0,   REG_DR0   },
+    { TEXT_REG_DR10,  REG_DR10  },
+    { TEXT_REG_DR12,  REG_DR12  },
+    { TEXT_REG_DR14,  REG_DR14  },
+    { TEXT_REG_DR2,   REG_DR2   },
+    { TEXT_REG_DR4,   REG_DR4   },
+    { TEXT_REG_DR6,   REG_DR6   },
+    { TEXT_REG_DR8,   REG_DR8   },
     { TEXT_REG_DSR,   REG_DSR   },
     { TEXT_REG_FPSCR, REG_FPSCR },
     { TEXT_REG_FPUL,  REG_FPUL  },
@@ -77,6 +85,7 @@ constexpr NameEntry REG_ENTRIES[] PROGMEM = {
     { TEXT_REG_RE,    REG_RE    },
     { TEXT_REG_RS,    REG_RS    },
     { TEXT_REG_SR,    REG_SR    },
+    { TEXT_REG_TBR,   REG_TBR   },
     { TEXT_REG_VBR,   REG_VBR   },
     { TEXT_REG_X0,    REG_X0    },
     { TEXT_REG_X1,    REG_X1    },
@@ -120,9 +129,19 @@ RegName decodeFm(uint16_t word) {
     return RegName(REG_FR0 + ((word >> 4) & 0xF));
 }
 
+RegName decodeDn(uint16_t word) {
+    return RegName(REG_DR0 + ((word >> 9) & 0x7));
+}
+
+RegName decodeDm(uint16_t word) {
+    return RegName(REG_DR0 + ((word >> 5) & 0x7));
+}
+
 uint8_t encodeRegNum(RegName r) {
     if (isFr(r))
         return static_cast<uint8_t>(r - REG_FR0) & 0x0F;
+    if (isDr(r))
+        return static_cast<uint8_t>(r - REG_DR0) & 0x07;  // 0..7
     return static_cast<uint8_t>(r) & 0x0F;
 }
 

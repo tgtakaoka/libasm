@@ -29,6 +29,7 @@ namespace superh {
 struct EntryInsn : EntryInsnBase<Config, Entry> {
     AddrMode src() const { return flags().src(); }
     AddrMode dst() const { return flags().dst(); }
+    bool longForm() const { return flags().longForm(); }
 };
 
 struct Operand final : ErrorAt {
@@ -39,9 +40,14 @@ struct Operand final : ErrorAt {
 };
 
 struct AsmInsn final : AsmInsnImpl<Config>, EntryInsn {
-    AsmInsn(Insn &insn) : AsmInsnImpl(insn) {}
+    AsmInsn(Insn &insn) : AsmInsnImpl(insn), _opCode2(0) {}
 
     Operand srcOp, dstOp;
+
+    // Second 16-bit word for SH-2A 32-bit instructions (MOVI20, MOV with
+    // 12-bit displacement, bit-manipulation memory forms, etc.).
+    Config::opcode_t opCode2() const { return _opCode2; }
+    void setOpCode2(Config::opcode_t opc) { _opCode2 = opc; }
 
     // Offset of the first operand byte after the opcode header. SH operands
     // are normally folded into the 16-bit opcode itself (the encoder sets
@@ -65,11 +71,26 @@ struct AsmInsn final : AsmInsnImpl<Config>, EntryInsn {
     }
 
     // Finalize the instruction. Call after all encodeOperand() invocations.
-    void emitInsn() { emitUint16Be(opCode(), 0); }
+    // Long-form (SH-2A 32-bit) instructions emit a second 16-bit word too.
+    void emitInsn() {
+        emitUint16Be(opCode(), 0);
+        if (longForm())
+            emitUint16Be(_opCode2, 2);
+    }
+
+private:
+    Config::opcode_t _opCode2;
 };
 
 struct DisInsn final : DisInsnImpl<Config>, EntryInsn {
-    DisInsn(Insn &insn, DisMemory &memory, const StrBuffer &out) : DisInsnImpl(insn, memory, out) {}
+    DisInsn(Insn &insn, DisMemory &memory, const StrBuffer &out)
+        : DisInsnImpl(insn, memory, out), _opCode2(0) {}
+
+    Config::opcode_t opCode2() const { return _opCode2; }
+    void setOpCode2(Config::opcode_t opc) { _opCode2 = opc; }
+
+private:
+    Config::opcode_t _opCode2;
 };
 
 }  // namespace superh

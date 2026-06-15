@@ -36,6 +36,7 @@ struct DisFormatter : ListFormatter::Provider {
     void reset();
     void set(const ErrorAt &error, const /*PROGMEM*/ char *mark_P = nullptr);
     void setCpu(const char *cpu);
+    void setOption(const char *name, const char *value);
     Error setOrigin(uint32_t origin);
 
     Insn &insn() { return _insn; }

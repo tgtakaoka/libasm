@@ -72,20 +72,37 @@ enum AddrMode : uint8_t {
     M_FRM = 40,    // FRm, bits[7:4]                      bits: 0x00F0
     M_FPUL = 41,   // FPUL FPU communication register     bits: none
     M_FPSCR = 42,  // FPSCR FPU status/control register   bits: none
+    // SH-2A additions
+    M_D12N = 43,    // @(disp12,Rn), n=bits[11:8], disp in 2nd word bits: 0x0F00
+    M_D12M = 44,    // @(disp12,Rm), m=bits[7:4],  disp in 2nd word bits: 0x00F0
+    M_IMM20 = 45,   // 20-bit signed imm, hi nibble in bits[7:4], lo16 in 2nd word
+    M_IMM20S = 46,  // 20-bit signed imm shifted-left 8 (MOVI20S)  bits: 0x00F0
+    M_IMM3 = 47,    // 3-bit unsigned imm, bits[6:4]               bits: 0x0070
+    M_DRN = 48,     // DRn (even FRn pair), bits[11:9]             bits: 0x0E00
+    M_DRM = 49,     // DRm (even FRm pair), bits[7:5]              bits: 0x00E0
+    M_BANK = 50,    // implicit R0 destination for STBANK/LDBANK  bits: none
+    M_R15 = 51,     // implicit R15 for MOVML/MOVMU stack         bits: none
 };
 
 struct Entry final : entry::Base<Config::opcode_t> {
     struct Flags final {
         uint16_t _attr;
 
-        // [13:8]=src(6), [5:0]=dst(6); bits 15:14 and 7:6 are spare
+        // [13:8]=src(6), [5:0]=dst(6); bit 15 = longForm (32-bit insn), bits 14, 7:6 are spare
+        static constexpr uint16_t LONG_FORM = 1u << 15;
+
         static constexpr Flags create(AddrMode src, AddrMode dst) {
             return Flags{static_cast<uint16_t>(
                     (static_cast<uint16_t>(src) << 8) | static_cast<uint16_t>(dst))};
         }
+        static constexpr Flags createLong(AddrMode src, AddrMode dst) {
+            return Flags{static_cast<uint16_t>(
+                    LONG_FORM | (static_cast<uint16_t>(src) << 8) | static_cast<uint16_t>(dst))};
+        }
 
         AddrMode src() const { return AddrMode((_attr >> 8) & 0x3F); }
         AddrMode dst() const { return AddrMode(_attr & 0x3F); }
+        bool longForm() const { return (_attr & LONG_FORM) != 0; }
 
         // Returns the OR of all variable bits in the 16-bit instruction word.
         Config::opcode_t opcodeMask() const { return modeMask(src()) | modeMask(dst()); }
@@ -99,13 +116,24 @@ struct Entry final : entry::Base<Config::opcode_t> {
             case M_DECN:
             case M_IDXN:
             case M_FRN:
+            case M_D12N:
                 return 0x0F00;
             case M_RM:
             case M_IRM:
             case M_INCM:
             case M_IDXM:
             case M_FRM:
+            case M_D12M:
+            case M_IMM20S:
                 return 0x00F0;
+            case M_IMM20:
+                return 0x00F0;  // hi nibble of immediate in word 1's bits[7:4]
+            case M_IMM3:
+                return 0x0070;
+            case M_DRN:
+                return 0x0E00;
+            case M_DRM:
+                return 0x00E0;
             case M_D4N:
                 return 0x0F0F;
             case M_D4M:

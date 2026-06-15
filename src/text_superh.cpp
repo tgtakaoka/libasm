@@ -22,13 +22,15 @@ namespace superh {
 // clang-format off
 
 // clang-format off
-const char TEXT_SUPERH_LIST[] PROGMEM = "SH-1, SH-2, SH-DSP, SH-2E";
+const char TEXT_SUPERH_LIST[] PROGMEM = "SH-1, SH-2, SH-DSP, SH-2E, SH-2A";
 const char TEXT_CPU_SH1[]     PROGMEM = "SH-1";
 const char TEXT_CPU_SH2[]     PROGMEM = "SH-2";
 const char TEXT_CPU_SH_DSP[]  PROGMEM = "SH-DSP";
 const char TEXT_CPU_SH2E[]    PROGMEM = "SH-2E";
+const char TEXT_CPU_SH2A[]    PROGMEM = "SH-2A";
 const char TEXT_FPU_NONE[]    PROGMEM = "none";
 const char TEXT_FPU_SH2E[]    PROGMEM = "SH-2E";
+const char TEXT_FPU_SH2A[]    PROGMEM = "SH-2A";
 
 const char TEXT_ADDV[]    PROGMEM = "ADDV";
 const char TEXT_AND_B[]   PROGMEM = "AND.B";
@@ -100,6 +102,48 @@ const char TEXT_TST_B[]   PROGMEM = "TST.B";
 const char TEXT_XOR_B[]   PROGMEM = "XOR.B";
 const char TEXT_XTRCT[]   PROGMEM = "XTRCT";
 
+// SH-2A instruction mnemonics
+const char TEXT_BCLR[]      PROGMEM = "BCLR";
+const char TEXT_BSET[]      PROGMEM = "BSET";
+const char TEXT_BLD[]       PROGMEM = "BLD";
+const char TEXT_BST[]       PROGMEM = "BST";
+const char TEXT_BAND_B[]    PROGMEM = "BAND.B";
+const char TEXT_BANDNOT_B[] PROGMEM = "BANDNOT.B";
+const char TEXT_BLD_B[]     PROGMEM = "BLD.B";
+const char TEXT_BLDNOT_B[]  PROGMEM = "BLDNOT.B";
+const char TEXT_BOR_B[]     PROGMEM = "BOR.B";
+const char TEXT_BORNOT_B[]  PROGMEM = "BORNOT.B";
+const char TEXT_BST_B[]     PROGMEM = "BST.B";
+const char TEXT_BXOR_B[]    PROGMEM = "BXOR.B";
+const char TEXT_CLIPS_B[]   PROGMEM = "CLIPS.B";
+const char TEXT_CLIPS_W[]   PROGMEM = "CLIPS.W";
+const char TEXT_CLIPU_B[]   PROGMEM = "CLIPU.B";
+const char TEXT_CLIPU_W[]   PROGMEM = "CLIPU.W";
+const char TEXT_DIVS[]      PROGMEM = "DIVS";
+const char TEXT_DIVU[]      PROGMEM = "DIVU";
+const char TEXT_JSR_N[]     PROGMEM = "JSR/N";
+const char TEXT_LDBANK[]    PROGMEM = "LDBANK";
+const char TEXT_MOVI20[]    PROGMEM = "MOVI20";
+const char TEXT_MOVI20S[]   PROGMEM = "MOVI20S";
+const char TEXT_MOVML_L[]   PROGMEM = "MOVML.L";
+const char TEXT_MOVMU_L[]   PROGMEM = "MOVMU.L";
+const char TEXT_MOVRT[]     PROGMEM = "MOVRT";
+const char TEXT_MOVU_B[]    PROGMEM = "MOVU.B";
+const char TEXT_MOVU_W[]    PROGMEM = "MOVU.W";
+const char TEXT_MULR[]      PROGMEM = "MULR";
+const char TEXT_NOTT[]      PROGMEM = "NOTT";
+const char TEXT_PREF[]      PROGMEM = "PREF";
+const char TEXT_RESBANK[]   PROGMEM = "RESBANK";
+const char TEXT_RTS_N[]     PROGMEM = "RTS/N";
+const char TEXT_RTV_N[]     PROGMEM = "RTV/N";
+const char TEXT_SHAD[]      PROGMEM = "SHAD";
+const char TEXT_SHLD[]      PROGMEM = "SHLD";
+const char TEXT_STBANK[]    PROGMEM = "STBANK";
+
+// SH-2A FPU additions
+const char TEXT_FCNVDS[]    PROGMEM = "FCNVDS";
+const char TEXT_FCNVSD[]    PROGMEM = "FCNVSD";
+
 // SH-2E FPU instruction mnemonics
 const char TEXT_FABS[]    PROGMEM = "FABS";
 const char TEXT_FADD[]    PROGMEM = "FADD";
@@ -144,6 +188,17 @@ const char TEXT_REG_Y1[]   PROGMEM = "Y1";
 const char TEXT_REG_MOD[]  PROGMEM = "MOD";
 const char TEXT_REG_RS[]   PROGMEM = "RS";
 const char TEXT_REG_RE[]   PROGMEM = "RE";
+
+// SH-2A register names
+const char TEXT_REG_DR0[]   PROGMEM = "DR0";
+const char TEXT_REG_DR2[]   PROGMEM = "DR2";
+const char TEXT_REG_DR4[]   PROGMEM = "DR4";
+const char TEXT_REG_DR6[]   PROGMEM = "DR6";
+const char TEXT_REG_DR8[]   PROGMEM = "DR8";
+const char TEXT_REG_DR10[]  PROGMEM = "DR10";
+const char TEXT_REG_DR12[]  PROGMEM = "DR12";
+const char TEXT_REG_DR14[]  PROGMEM = "DR14";
+const char TEXT_REG_TBR[]   PROGMEM = "TBR";
 
 // SH-2E FPU register names
 const char TEXT_REG_FR0[]   PROGMEM = "FR0";

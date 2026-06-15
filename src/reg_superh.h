@@ -84,6 +84,15 @@ enum RegName : int8_t {
     REG_FR15 = 47,
     REG_FPUL = 48,
     REG_FPSCR = 49,
+    REG_DR0 = 50,
+    REG_DR2 = 51,
+    REG_DR4 = 52,
+    REG_DR6 = 53,
+    REG_DR8 = 54,
+    REG_DR10 = 55,
+    REG_DR12 = 56,
+    REG_DR14 = 57,
+    REG_TBR = 58,
 };
 
 namespace reg {
@@ -94,6 +103,8 @@ RegName decodeRn(uint16_t word);  // extract 4-bit field from bits[11:8]
 RegName decodeRm(uint16_t word);  // extract 4-bit field from bits[7:4]
 RegName decodeFn(uint16_t word);  // FRn: 4-bit field from bits[11:8]
 RegName decodeFm(uint16_t word);  // FRm: 4-bit field from bits[7:4]
+RegName decodeDn(uint16_t word);  // DRn: 3-bit field from bits[11:9], shifted *2
+RegName decodeDm(uint16_t word);  // DRm: 3-bit field from bits[7:5],  shifted *2
 
 inline bool isGpr(RegName r) {
     return r >= REG_R0 && r <= REG_R15;
@@ -101,7 +112,10 @@ inline bool isGpr(RegName r) {
 inline bool isFr(RegName r) {
     return r >= REG_FR0 && r <= REG_FR15;
 }
-uint8_t encodeRegNum(RegName r);  // 0..15 for GPRs or FRs; undefined otherwise
+inline bool isDr(RegName r) {
+    return r >= REG_DR0 && r <= REG_DR14;
+}
+uint8_t encodeRegNum(RegName r);  // 0..15 for GPRs/FRs; 0..14(even) for DRs; undefined otherwise
 
 }  // namespace reg
 }  // namespace superh

@@ -40,6 +40,10 @@ bool isSh2e() {
     return strcasecmp_P("SH-2E", disassembler.config().cpu_P()) == 0;
 }
 
+bool isSh2a() {
+    return strcasecmp_P("SH-2A", disassembler.config().cpu_P()) == 0;
+}
+
 void set_up() {
     disassembler.reset();
 }
@@ -64,6 +68,9 @@ void test_cpu() {
 
     EQUALS("cpu SH-2E",   true, disassembler.setCpu("SH-2E"));
     EQUALS_P("cpu SH-2E", "SH-2E", disassembler.config().cpu_P());
+
+    EQUALS("cpu SH-2A",   true, disassembler.setCpu("SH-2A"));
+    EQUALS_P("cpu SH-2A", "SH-2A", disassembler.config().cpu_P());
 }
 
 // Representative positive tests for SH-1 (which SH-2 also inherits).  Covers
@@ -331,6 +338,56 @@ void test_sh2e_fpu() {
 }
 
 
+// SH-2A adds CPU extensions (CLIPS/CLIPU, DIVS/DIVU, MULR, SHAD/SHLD, bank
+// instructions, bit instructions, MOVI20 / MOVI20S) plus a few FPU additions
+// (FCNVDS / FCNVSD on DR registers, requires --fpu).
+void test_sh2a_additions() {
+    // CPU extensions
+    TEST("CLIPS.B", "R0",             0x4091);
+    TEST("CLIPS.W", "R15",            0x4F95);
+    TEST("CLIPU.B", "R0",             0x4081);
+    TEST("CLIPU.W", "R15",            0x4F85);
+    TEST("DIVS",    "R0, R1",         0x4194);
+    TEST("DIVU",    "R0, R1",         0x4184);
+    TEST("MULR",    "R0, R1",         0x4180);
+    TEST("SHAD",    "R0, R1",         0x410C);
+    TEST("SHLD",    "R0, R1",         0x410D);
+    TEST("MOVRT",   "R0",             0x0039);
+    TEST("NOTT",    "",               0x0068);
+    TEST("RTS/N",   "",               0x006B);
+    TEST("RTV/N",   "R0",             0x007B);
+    TEST("PREF",    "@R0",            0x0083);
+    TEST("RESBANK", "",               0x005B);
+    TEST("JSR/N",   "@R0",            0x404B);
+    TEST("JSR/N",   "@R15",           0x4F4B);
+    TEST("LDBANK",  "@R0, R0",        0x40E5);
+    TEST("LDBANK",  "@R15, R0",       0x4FE5);
+    TEST("STBANK",  "R0, @R0",        0x40E1);
+    TEST("STBANK",  "R0, @R15",       0x4FE1);
+    TEST("MOVMU.L", "R0, @-R15",      0x40F0);
+    TEST("MOVML.L", "R0, @-R15",      0x40F1);
+    TEST("MOVMU.L", "@R15+, R0",      0x40F4);
+    TEST("MOVML.L", "@R15+, R0",      0x40F5);
+    // Bit instructions
+    TEST("BCLR",    "#0, R0",         0x8600);
+    TEST("BSET",    "#7, R15",        0x86FF);
+    TEST("BLD",     "#0, R0",         0x8701);
+    TEST("BST",     "#7, R15",        0x87FE);
+    // MOVI20 / MOVI20S (two-word instructions; pass each word as uint16_t)
+    TEST("MOVI20",  "#0, R0",                  uint16_t(0x0000), uint16_t(0x0000));
+    TEST("MOVI20",  "#H'7FFFF, R1",            uint16_t(0x0170), uint16_t(0xFFFF));
+    TEST("MOVI20",  "#-H'80000, R2",           uint16_t(0x0280), uint16_t(0x0000));
+    TEST("MOVI20S", "#0, R0",                  uint16_t(0x0001), uint16_t(0x0000));
+    TEST("MOVI20S", "#H'0FF0000, R1",          uint16_t(0x0101), uint16_t(0xFF00));
+    // FPU additions (require --fpu enabled)
+    disassembler.setOption("fpu", "true");
+    TEST("FCNVDS",  "DR0, FPUL",      0xF0BD);
+    TEST("FCNVDS",  "DR14, FPUL",     0xFEBD);
+    TEST("FCNVSD",  "FPUL, DR0",      0xF0AD);
+    TEST("FCNVSD",  "FPUL, DR14",     0xFEAD);
+    disassembler.setOption("fpu", "false");
+}
+
 void test_illegal_sh1() {
     // Unmapped opcodes in the 0x0000..0x00FF region.
     SH_UNKN(0x0000);
@@ -400,6 +457,16 @@ void test_illegal_sh2e() {
     SH_UNKN(0x8E00);    // LDRE
 }
 
+void test_illegal_sh2a() {
+    // Without --fpu enabled the FPU pages aren't searched; FCNVDS / FCNVSD
+    // and the SH-2E FPU instructions must all be rejected.
+    SH_UNKN(0xF0BD);    // FCNVDS DR0,FPUL (needs FPU_SH2A)
+    SH_UNKN(0xF0AD);    // FCNVSD FPUL,DR0 (needs FPU_SH2A)
+    SH_UNKN(0xF000);    // FADD FR0,FR0    (needs FPU)
+    SH_UNKN(0xF005);    // FCMP/GT FR0,FR0 (needs FPU)
+    SH_UNKN(0xF09D);    // FLDI1 FR0       (needs FPU)
+}
+
 // clang-format on
 
 void run_tests(const char *cpu) {
@@ -418,6 +485,8 @@ void run_tests(const char *cpu) {
         RUN_TEST(test_shdsp_additions);
     if (isSh2e())
         RUN_TEST(test_sh2e_fpu);
+    if (isSh2a())
+        RUN_TEST(test_sh2a_additions);
     // Per-CPU illegal-instruction probes.
     if (isSh1())
         RUN_TEST(test_illegal_sh1);
@@ -427,6 +496,8 @@ void run_tests(const char *cpu) {
         RUN_TEST(test_illegal_shdsp);
     if (isSh2e())
         RUN_TEST(test_illegal_sh2e);
+    if (isSh2a())
+        RUN_TEST(test_illegal_sh2a);
 }
 
 // Local Variables:

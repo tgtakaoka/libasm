@@ -37,6 +37,18 @@ DisSuperH::DisSuperH(const ValueFormatter::Plugins &plugins)
     reset();
 }
 
+// SH-2A's FPU is optional; SH-2E's is mandatory and implied by the CPU
+// name.  Only SH-2A needs an explicit `option "fpu", "true"` pseudo to
+// survive a disassemble-then-reassemble round-trip.
+bool DisSuperH::currentOption(const char *&name, const char *&value) const {
+    if (cpuType() == SH2A && fpuType() != FPU_NONE) {
+        name = "fpu";
+        value = "true";
+        return true;
+    }
+    return false;
+}
+
 namespace {
 
 // 16-bit instruction word -> 4-bit fields.
@@ -259,6 +271,65 @@ void DisSuperH::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) cons
     case M_FPSCR:
         outRegName(out, REG_FPSCR);
         break;
+    case M_DRN:
+        outRegName(out, decodeDn(opc));
+        break;
+    case M_DRM:
+        outRegName(out, decodeDm(opc));
+        break;
+    case M_IMM3: {
+        const auto v = (opc >> 4) & 0x7;
+        out.letter('#');
+        outHex(out, v, 3);
+        break;
+    }
+    case M_IMM20: {
+        // 20-bit signed: hi 4 bits in opc[7:4], lo 16 in opc2
+        const auto hi = (opc >> 4) & 0xF;
+        const auto lo = insn.opCode2() & 0xFFFFu;
+        auto val = static_cast<int32_t>((hi << 16) | lo);
+        if (val & 0x80000)
+            val |= 0xFFF00000u;  // sign-extend 20 -> 32
+        out.letter('#');
+        outHex(out, val, -20);
+        break;
+    }
+    case M_IMM20S: {
+        // 20-bit signed shifted left 8: hi 4 in opc[7:4], next 16 in opc2;
+        // print the "real" 28-bit value (hi:lo << 8).
+        const auto hi = (opc >> 4) & 0xF;
+        const auto lo = insn.opCode2() & 0xFFFFu;
+        auto val = static_cast<int32_t>((hi << 24) | (lo << 8));
+        if (val & 0x08000000)
+            val |= 0xF0000000u;  // sign-extend 28 -> 32
+        out.letter('#');
+        outHex(out, val, -28);
+        break;
+    }
+    case M_D12N:
+    case M_D12M: {
+        // 12-bit displacement is in opc2[11:0]; the size sub-op (in opc2[15:12])
+        // selects scale 1/2/4 for B/W/L, which we already encoded by mnemonic.
+        const auto name = insn.name();
+        auto scale = 1u;
+        if (pgm_read_byte(&name[4]) == 'W' || pgm_read_byte(&name[4]) == 'w')
+            scale = 2;
+        else if (pgm_read_byte(&name[4]) == 'L' || pgm_read_byte(&name[4]) == 'l')
+            scale = 4;
+        const auto d = insn.opCode2() & 0xFFFu;
+        out.text_P(PSTR("@("));
+        outHex(out, d * scale, 16);
+        out.letter(',');
+        outRegName(out, (mode == M_D12N) ? decodeRn(opc) : decodeRm(opc));
+        out.letter(')');
+        break;
+    }
+    case M_BANK:
+        outRegName(out, REG_R0);
+        break;
+    case M_R15:
+        outRegName(out, REG_R15);
+        break;
     case M_IGBR:
         out.text_P(PSTR("@(R0,"));
         outRegName(out, REG_GBR);
@@ -272,7 +343,7 @@ Error DisSuperH::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) cons
     // SH instructions are 16-bit; PC must be even.
     if (insn.address() & 1)
         return _insn.setError(OPERAND_NOT_ALIGNED);
-    const auto opc = insn.readUint16Be();
+    const auto opc = insn.readUint16();
     insn.setOpCode(opc);
 
     if (searchOpCode(cpuType(), fpuType(), insn, out) != OK) {
@@ -280,6 +351,12 @@ Error DisSuperH::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) cons
         out.reset();
         return _insn.setError(insn.getError());
     }
+
+    // SH-2A 32-bit instructions have a second 16-bit word carrying the
+    // displacement, immediate or bit field. The matched entry's longForm
+    // flag tells us to fetch it.
+    if (insn.longForm())
+        insn.setOpCode2(insn.readUint16());
 
     const auto src = insn.src();
     const auto dst = insn.dst();

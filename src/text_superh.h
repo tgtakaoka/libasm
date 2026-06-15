@@ -29,8 +29,10 @@ extern const char TEXT_CPU_SH1[]     PROGMEM;
 extern const char TEXT_CPU_SH2[]     PROGMEM;
 extern const char TEXT_CPU_SH_DSP[]  PROGMEM;
 extern const char TEXT_CPU_SH2E[]    PROGMEM;
+extern const char TEXT_CPU_SH2A[]    PROGMEM;
 extern const char TEXT_FPU_NONE[]    PROGMEM;
 extern const char TEXT_FPU_SH2E[]    PROGMEM;
+extern const char TEXT_FPU_SH2A[]    PROGMEM;
 
 // Instructions reused from common
 using common::TEXT_ADD;
@@ -136,6 +138,48 @@ extern const char TEXT_TST_B[]    PROGMEM;  // "TST.B"
 extern const char TEXT_XOR_B[]    PROGMEM;  // "XOR.B"
 extern const char TEXT_XTRCT[]    PROGMEM;
 
+// SH-2A instruction mnemonics
+extern const char TEXT_BCLR[]     PROGMEM;
+extern const char TEXT_BSET[]     PROGMEM;
+extern const char TEXT_BLD[]      PROGMEM;
+extern const char TEXT_BST[]      PROGMEM;
+extern const char TEXT_BAND_B[]   PROGMEM;  // "BAND.B"
+extern const char TEXT_BANDNOT_B[] PROGMEM; // "BANDNOT.B"
+extern const char TEXT_BLD_B[]    PROGMEM;  // "BLD.B"
+extern const char TEXT_BLDNOT_B[] PROGMEM;  // "BLDNOT.B"
+extern const char TEXT_BOR_B[]    PROGMEM;  // "BOR.B"
+extern const char TEXT_BORNOT_B[] PROGMEM;  // "BORNOT.B"
+extern const char TEXT_BST_B[]    PROGMEM;  // "BST.B"
+extern const char TEXT_BXOR_B[]   PROGMEM;  // "BXOR.B"
+extern const char TEXT_CLIPS_B[]  PROGMEM;  // "CLIPS.B"
+extern const char TEXT_CLIPS_W[]  PROGMEM;  // "CLIPS.W"
+extern const char TEXT_CLIPU_B[]  PROGMEM;  // "CLIPU.B"
+extern const char TEXT_CLIPU_W[]  PROGMEM;  // "CLIPU.W"
+extern const char TEXT_DIVS[]     PROGMEM;
+extern const char TEXT_DIVU[]     PROGMEM;
+extern const char TEXT_JSR_N[]    PROGMEM;  // "JSR/N"
+extern const char TEXT_LDBANK[]   PROGMEM;
+extern const char TEXT_MOVI20[]   PROGMEM;
+extern const char TEXT_MOVI20S[]  PROGMEM;
+extern const char TEXT_MOVML_L[]  PROGMEM;  // "MOVML.L"
+extern const char TEXT_MOVMU_L[]  PROGMEM;  // "MOVMU.L"
+extern const char TEXT_MOVRT[]    PROGMEM;
+extern const char TEXT_MOVU_B[]   PROGMEM;  // "MOVU.B"
+extern const char TEXT_MOVU_W[]   PROGMEM;  // "MOVU.W"
+extern const char TEXT_MULR[]     PROGMEM;
+extern const char TEXT_NOTT[]     PROGMEM;
+extern const char TEXT_PREF[]     PROGMEM;
+extern const char TEXT_RESBANK[]  PROGMEM;
+extern const char TEXT_RTS_N[]    PROGMEM;  // "RTS/N"
+extern const char TEXT_RTV_N[]    PROGMEM;  // "RTV/N"
+extern const char TEXT_SHAD[]     PROGMEM;
+extern const char TEXT_SHLD[]     PROGMEM;
+extern const char TEXT_STBANK[]   PROGMEM;
+
+// SH-2A FPU additions
+extern const char TEXT_FCNVDS[]   PROGMEM;
+extern const char TEXT_FCNVSD[]   PROGMEM;
+
 // SH-2E FPU instruction mnemonics
 extern const char TEXT_FABS[]     PROGMEM;
 extern const char TEXT_FADD[]     PROGMEM;
@@ -191,6 +235,17 @@ extern const char TEXT_REG_Y1[]   PROGMEM;
 extern const char TEXT_REG_MOD[]  PROGMEM;
 extern const char TEXT_REG_RS[]   PROGMEM;
 extern const char TEXT_REG_RE[]   PROGMEM;
+
+// SH-2A register names
+extern const char TEXT_REG_DR0[]   PROGMEM;
+extern const char TEXT_REG_DR2[]   PROGMEM;
+extern const char TEXT_REG_DR4[]   PROGMEM;
+extern const char TEXT_REG_DR6[]   PROGMEM;
+extern const char TEXT_REG_DR8[]   PROGMEM;
+extern const char TEXT_REG_DR10[]  PROGMEM;
+extern const char TEXT_REG_DR12[]  PROGMEM;
+extern const char TEXT_REG_DR14[]  PROGMEM;
+extern const char TEXT_REG_TBR[]   PROGMEM;
 
 // SH-2E FPU register names
 extern const char TEXT_REG_FR0[]   PROGMEM;

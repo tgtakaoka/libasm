@@ -109,6 +109,17 @@ void DisDriver::disassemble(BinReader &memory, const char *inputName, TextPrinte
     output.println(formatter.getContent(out).str());
     listout.println(formatter.getLine(out).str());
 
+    // Surface any non-default per-arch option that the assembler needs to
+    // see in the source (e.g. SH-2A's `option "fpu", "true"`) so the
+    // disassembled output re-assembles cleanly.
+    const char *opt_name;
+    const char *opt_value;
+    if (disassembler.currentOption(opt_name, opt_value)) {
+        formatter.setOption(opt_name, opt_value);
+        output.println(formatter.getContent(out).str());
+        listout.println(formatter.getLine(out).str());
+    }
+
     const auto unit = disassembler.config().addressUnit();
     for (auto block = memory.begin(); block != nullptr; block = block->next()) {
         auto reader = block->reader();

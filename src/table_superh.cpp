@@ -228,6 +228,60 @@ constexpr Entry TABLE_DSP[] PROGMEM = {
     E1(0x8E00, TEXT_LDRE,    M_REL8P),         // LDRE @(disp,PC)
 };
 
+// SH-2A 16-bit CPU additions.
+constexpr Entry TABLE_SH2A[] PROGMEM = {
+    E1(0x0039, TEXT_MOVRT,    M_RN),            // MOVRT Rn        0000nnnn00111001
+    E0(0x005B, TEXT_RESBANK),                   // RESBANK         0000000001011011
+    E0(0x0068, TEXT_NOTT),                      // NOTT            0000000001101000
+    E0(0x006B, TEXT_RTS_N),                     // RTS/N           0000000001101011
+    E1(0x007B, TEXT_RTV_N,    M_RN),            // RTV/N Rm        0000mmmm01111011  (m in n slot per encoding)
+    E1(0x0083, TEXT_PREF,     M_IRN),           // PREF @Rn        0000nnnn10000011
+    E2(0x010F, TEXT_MAC_W,    M_INCM, M_INCN),  // MAC.W @Rm+,@Rn+ 0000nnnnmmmm1111  SH-2A reuses MAC.W
+    E1(0x404B, TEXT_JSR_N,    M_IRN),           // JSR/N @Rn       0100nnnn01001011  (manual labels n as "m")
+    E2(0x400C, TEXT_SHAD,     M_RM,   M_RN),    // SHAD Rm,Rn      0100nnnnmmmm1100
+    E2(0x400D, TEXT_SHLD,     M_RM,   M_RN),    // SHLD Rm,Rn      0100nnnnmmmm1101
+    E1(0x4081, TEXT_CLIPU_B,  M_RN),            // CLIPU.B Rn      0100nnnn10000001
+    E1(0x4085, TEXT_CLIPU_W,  M_RN),            // CLIPU.W Rn      0100nnnn10000101
+    E2(0x4084, TEXT_DIVU,     M_R0,   M_RN),    // DIVU R0,Rn      0100nnnn10000100
+    E2(0x4080, TEXT_MULR,     M_R0,   M_RN),    // MULR R0,Rn      0100nnnn10000000
+    E1(0x4091, TEXT_CLIPS_B,  M_RN),            // CLIPS.B Rn      0100nnnn10010001
+    E1(0x4095, TEXT_CLIPS_W,  M_RN),            // CLIPS.W Rn      0100nnnn10010101
+    E2(0x4094, TEXT_DIVS,     M_R0,   M_RN),    // DIVS R0,Rn      0100nnnn10010100
+    E2(0x40E1, TEXT_STBANK,   M_R0,   M_IRN),   // STBANK R0,@Rn   0100nnnn11100001
+    E2(0x40E5, TEXT_LDBANK,   M_IRN,  M_R0),    // LDBANK @Rn,R0   0100nnnn11100101  (manual labels n as "m")
+    E2(0x40F0, TEXT_MOVMU_L,  M_RN,    M_DECR15),// MOVMU.L Rn,@-R15
+    E2(0x40F1, TEXT_MOVML_L,  M_RN,    M_DECR15),// MOVML.L Rn,@-R15
+    E2(0x40F4, TEXT_MOVMU_L,  M_INCR15,M_RN),    // MOVMU.L @R15+,Rn
+    E2(0x40F5, TEXT_MOVML_L,  M_INCR15,M_RN),    // MOVML.L @R15+,Rn
+    E2(0x8600, TEXT_BCLR,     M_IMM3, M_RM),    // BCLR #imm3,Rn   10000110nnnniii0  (n in bits[7:4])
+    E2(0x8601, TEXT_BSET,     M_IMM3, M_RM),    // BSET #imm3,Rn   10000110nnnniii1
+    E2(0x8700, TEXT_BST,      M_IMM3, M_RM),    // BST #imm3,Rn    10000111nnnniii0
+    E2(0x8701, TEXT_BLD,      M_IMM3, M_RM),    // BLD #imm3,Rn    10000111nnnniii1
+};
+
+#define LE2(opc, name, src, dst) \
+    {opc, Entry::Flags::createLong(src, dst), name}
+#define LE1(opc, name, src) LE2(opc, name, src, M_NONE)
+#define LE0(opc, name) LE1(opc, name, M_NONE)
+
+// SH-2A 32-bit CPU additions. Each entry's opcode is the FIRST 16-bit word
+// template (with variable bits zero); the disassembler reads a 2nd word
+// when matched. Word 2 carries the displacement, immediate, or bit field.
+constexpr Entry TABLE_SH2A_LONG[] PROGMEM = {
+    LE2(0x0000, TEXT_MOVI20,  M_IMM20,  M_RN),  // MOVI20 #imm20,Rn
+    LE2(0x0001, TEXT_MOVI20S, M_IMM20S, M_RN),  // MOVI20S #imm20<<8,Rn
+};
+
+#undef LE0
+#undef LE1
+#undef LE2
+
+// SH-2A FPU additions.
+constexpr Entry TABLE_FPU_SH2A[] PROGMEM = {
+    E2(0xF0AD, TEXT_FCNVSD,   M_FPUL, M_DRN),   // FCNVSD FPUL,DRn 1111nnn010101101
+    E2(0xF0BD, TEXT_FCNVDS,   M_DRN,  M_FPUL),  // FCNVDS DRn,FPUL 1111nnn010111101
+};
+
 // SH-2E FPU instructions (shared with SH-2A when FPU is enabled).
 // All encodings have the 0xF000 high nibble.
 constexpr Entry TABLE_FPU[] PROGMEM = {
@@ -415,6 +469,44 @@ constexpr uint8_t INDEX_SH2[] PROGMEM = {
       1,  // TEXT_MUL_L
 };
 
+constexpr uint8_t INDEX_SH2A[] PROGMEM = {
+     23,  // TEXT_BCLR
+     26,  // TEXT_BLD
+     24,  // TEXT_BSET
+     25,  // TEXT_BST
+     14,  // TEXT_CLIPS_B
+     15,  // TEXT_CLIPS_W
+     10,  // TEXT_CLIPU_B
+     11,  // TEXT_CLIPU_W
+     16,  // TEXT_DIVS
+     12,  // TEXT_DIVU
+      7,  // TEXT_JSR_N
+     18,  // TEXT_LDBANK
+      6,  // TEXT_MAC_W
+     20,  // TEXT_MOVML_L
+     22,  // TEXT_MOVML_L
+     19,  // TEXT_MOVMU_L
+     21,  // TEXT_MOVMU_L
+      0,  // TEXT_MOVRT
+     13,  // TEXT_MULR
+      2,  // TEXT_NOTT
+      5,  // TEXT_PREF
+      1,  // TEXT_RESBANK
+      3,  // TEXT_RTS_N
+      4,  // TEXT_RTV_N
+      8,  // TEXT_SHAD
+      9,  // TEXT_SHLD
+     17,  // TEXT_STBANK
+};
+constexpr uint8_t INDEX_SH2A_LONG[] PROGMEM = {
+    0,  // TEXT_MOVI20
+    1,  // TEXT_MOVI20S
+};
+constexpr uint8_t INDEX_FPU_SH2A[] PROGMEM = {
+    1,  // TEXT_FCNVDS
+    0,  // TEXT_FCNVSD
+};
+
 constexpr uint8_t INDEX_FPU[] PROGMEM = {
      27,  // TEXT_FABS
       8,  // TEXT_FADD
@@ -517,8 +609,21 @@ constexpr EntryPage SH2E_PAGES[] PROGMEM = {
         {ARRAY_RANGE(TABLE_SH2), ARRAY_RANGE(INDEX_SH2)},
 };
 
+// SH-2A: SH-2 + SH-2A 16-bit + SH-2A 32-bit. FPU is optional via FPU_TABLE.
+constexpr EntryPage SH2A_PAGES[] PROGMEM = {
+        {ARRAY_RANGE(TABLE_COMMON), ARRAY_RANGE(INDEX_COMMON)},
+        {ARRAY_RANGE(TABLE_SH2), ARRAY_RANGE(INDEX_SH2)},
+        {ARRAY_RANGE(TABLE_SH2A), ARRAY_RANGE(INDEX_SH2A)},
+        {ARRAY_RANGE(TABLE_SH2A_LONG), ARRAY_RANGE(INDEX_SH2A_LONG)},
+};
+
 constexpr EntryPage FPU_PAGES[] PROGMEM = {
         {ARRAY_RANGE(TABLE_FPU), ARRAY_RANGE(INDEX_FPU)},
+};
+
+constexpr EntryPage FPU_SH2A_PAGES[] PROGMEM = {
+        {ARRAY_RANGE(TABLE_FPU), ARRAY_RANGE(INDEX_FPU)},
+        {ARRAY_RANGE(TABLE_FPU_SH2A), ARRAY_RANGE(INDEX_FPU_SH2A)},
 };
 
 #define EMPTY_RANGE(a) ARRAY_BEGIN(a), ARRAY_BEGIN(a)
@@ -531,11 +636,13 @@ constexpr Cpu CPU_TABLE[] PROGMEM = {
         {SH2, TEXT_CPU_SH2, ARRAY_RANGE(SH2_PAGES)},
         {SH_DSP, TEXT_CPU_SH_DSP, ARRAY_RANGE(SH_DSP_PAGES)},
         {SH2E, TEXT_CPU_SH2E, ARRAY_RANGE(SH2E_PAGES)},
+        {SH2A, TEXT_CPU_SH2A, ARRAY_RANGE(SH2A_PAGES)},
 };
 
 constexpr Fpu FPU_TABLE[] PROGMEM = {
         {FPU_NONE, TEXT_FPU_NONE, EMPTY_RANGE(FPU_PAGES)},
         {FPU_SH2E, TEXT_FPU_SH2E, ARRAY_RANGE(FPU_PAGES)},
+        {FPU_SH2A, TEXT_FPU_SH2A, ARRAY_RANGE(FPU_SH2A_PAGES)},
 };
 
 static const Cpu *cpu(CpuType cpuType) {
@@ -596,6 +703,19 @@ static bool acceptMode(const Operand &op, AddrMode table) {
         return op.mode == M_REL8;
     case M_FRM:
         return op.mode == M_FRN;  // parser tags FR registers as M_FRN
+    case M_DRM:
+        return op.mode == M_DRN;  // parser tags DR registers as M_DRN
+    case M_IMM3:
+        return op.mode == M_IMM8;  // unsigned 3-bit fits in IMM8
+    case M_IMM20:
+    case M_IMM20S:
+        return op.mode == M_IMM8;  // 20/28-bit signed via integer parse
+    case M_DECR15:
+        return op.mode == M_DECN && op.reg == REG_R15;  // @-R15 implicit
+    case M_INCR15:
+        return op.mode == M_INCN && op.reg == REG_R15;  // @R15+ implicit
+    case M_BANK:
+        return op.mode == M_RN && op.reg == REG_R0;  // STBANK/LDBANK R0
     default:
         return false;
     }
@@ -639,7 +759,8 @@ Error TableSuperH::searchCpuName(StrScanner &name, CpuType &cpuType) const {
 
 void Config::setCpuType(CpuType cpuType) {
     ConfigImpl::setCpuType(cpuType);
-    // SH-2E mandates the FPU; other CPUs default to FPU_NONE.
+    // SH-2E mandates the FPU; SH-2A defaults to FPU_NONE (user enables via
+    // setFpu); SH-1/SH-2/SH-DSP have no FPU at all.
     _fpu = (cpuType == SH2E) ? FPU_SH2E : FPU_NONE;
 }
 
@@ -648,7 +769,7 @@ const /* PROGMEM */ char *Config::fpu_P() const {
 }
 
 Error Config::setFpuType(FpuType fpuType) {
-    if (fpuType == FPU_NONE || fpuType == FPU_SH2E) {
+    if (fpuType == FPU_NONE || fpuType == FPU_SH2E || fpuType == FPU_SH2A) {
         _fpu = fpuType;
         return OK;
     }
@@ -659,7 +780,7 @@ Error Config::setFpuName(StrScanner &scan) {
     if (scan.expectFalse())
         return setFpuType(FPU_NONE);
     if (scan.expectTrue())
-        return setFpuType(FPU_SH2E);
+        return setFpuType(cpuType() == SH2A ? FPU_SH2A : FPU_SH2E);
     const auto *t = Fpu::search(scan, ARRAY_RANGE(FPU_TABLE));
     if (t == nullptr)
         return UNKNOWN_OPERAND;

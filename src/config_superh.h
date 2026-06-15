@@ -27,11 +27,13 @@ enum CpuType : uint8_t {
     SH2,
     SH_DSP,
     SH2E,
+    SH2A,
 };
 
 enum FpuType : uint8_t {
     FPU_NONE,
     FPU_SH2E,
+    FPU_SH2A,
 };
 
 struct Config

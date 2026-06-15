@@ -42,7 +42,7 @@ NOASM_targets = i80286 h8s2000n h8s2000 h8s2600n h8s2600
 # CPU variants whose generated source ASL cannot assemble. This filters
 # which asl-X.hex rules exist (asl-test target). Generation of .inc/.ginc
 # still happens because libasm and gas consume them.
-ASL_exclude = mb8861 i80286 h8300hn h8300h h8s2000n h8s2000 h8s2600n h8s2600 shdsp sh2e
+ASL_exclude = mb8861 i80286 h8300hn h8300h h8s2000n h8s2000 h8s2600n h8s2600 shdsp sh2e sh2a
 # CPU variants whose gas toolchain does not produce a manual-conforming
 # encoding. h8300-elf-as has no -mach=h8300; it always emits the H8/300H
 # 4-byte form for JMP/JSR @aa:16, producing bytes that don't execute on

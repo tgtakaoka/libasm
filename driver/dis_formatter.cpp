@@ -74,6 +74,16 @@ void DisFormatter::setCpu(const char *cpu) {
     opr.text(cpu).over(_operands);
 }
 
+// Emit `option "name", "value"` -- used to surface non-default per-arch
+// settings (e.g. SH-2A's FPU) that the assembler needs to see in the source
+// to re-encode the disassembled instructions cleanly.
+void DisFormatter::setOption(const char *name, const char *value) {
+    reset();
+    StrCaseBuffer name_out{_insn.nameBuffer(), _uppercase};
+    name_out.text_P(PSTR("OPTION"));
+    _operands.letter('"').text(name).letter('"').comma().letter('"').text(value).letter('"');
+}
+
 Error DisFormatter::setOrigin(uint32_t origin) {
     reset();
     const auto error = _disassembler.config().checkAddr(origin);
