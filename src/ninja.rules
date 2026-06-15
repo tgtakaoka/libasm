@@ -195,6 +195,7 @@ build table_scn2650.o: cxx ${root}/src/table_scn2650.cpp
 build text_scn2650.o:  cxx ${root}/src/text_scn2650.cpp
 
 # superh
+build asm_superh.o:   cxx ${root}/src/asm_superh.cpp
 build dis_superh.o:   cxx ${root}/src/dis_superh.cpp
 build reg_superh.o:   cxx ${root}/src/reg_superh.cpp
 build table_superh.o: cxx ${root}/src/table_superh.cpp

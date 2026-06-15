@@ -34,6 +34,7 @@ AsmNs32000      KEYWORD1        libasm
 AsmPdp11        KEYWORD1        libasm
 AsmPdp8         KEYWORD1        libasm
 AsmScn2650      KEYWORD1        libasm
+AsmSuperH       KEYWORD1        libasm
 AsmTlcs90       KEYWORD1        libasm
 AsmTlcs900      KEYWORD1        libasm
 AsmTms320       KEYWORD1        libasm

@@ -32,6 +32,7 @@ build test_formatter_ns32000.o:  cxx test_formatter_ns32000.cpp
 build test_formatter_pdp11.o:    cxx test_formatter_pdp11.cpp
 build test_formatter_pdp8.o:     cxx test_formatter_pdp8.cpp
 build test_formatter_scn2650.o:  cxx test_formatter_scn2650.cpp
+build test_formatter_superh.o:   cxx test_formatter_superh.cpp
 build test_formatter_tlcs90.o:   cxx test_formatter_tlcs90.cpp
 build test_formatter_tms320.o:   cxx test_formatter_tms320.cpp
 build test_formatter_tms320f.o:  cxx test_formatter_tms320f.cpp

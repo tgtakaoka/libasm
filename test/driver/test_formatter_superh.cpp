@@ -1,0 +1,131 @@
+/*
+ * Copyright 2026 Tadashi G. Takaoka
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+#include "asm_superh.h"
+#include "dis_superh.h"
+#include "test_formatter_helper.h"
+
+namespace libasm {
+namespace driver {
+namespace test {
+
+void set_up() {}
+
+void tear_down() {}
+
+void test_asm_sh1() {
+    PREP_ASM(superh::AsmSuperH, MotorolaDirective);
+
+    driver.setUpperHex(false);
+
+    ASM("SH-1",
+            R"(        cpu   SH-1
+; comment line
+        org   H'1000
+label1: equ   H'1100
+        nop
+        mov   r0, r1
+        bra   label1
+label2: nop
+)",
+            R"(          0 :                            cpu   SH-1
+          0 :                    ; comment line
+       1000 :                            org   H'1000
+       1000 : =1100              label1: equ   H'1100
+       1000 : 0009                       nop
+       1002 : 6103                       mov   r0, r1
+       1004 : a07c                       bra   label1
+       1006 : 0009               label2: nop
+)");
+}
+
+void test_dis_sh1() {
+    PREP_DIS(superh::DisSuperH);
+
+    driver.setUppercase(true);
+
+    DIS16("SH-1", 0x1000,
+            R"(      CPU    SH-1
+      ORG    H'00001000
+      NOP
+      MOV    R0, R1
+)",
+            R"(       0 :                            CPU    SH-1
+    1000 :                            ORG    H'00001000
+    1000 : 0009                       NOP
+    1002 : 6103                       MOV    R0, R1
+)",
+            0x0009, 0x6103);
+}
+
+void test_asm_sh2() {
+    PREP_ASM(superh::AsmSuperH, MotorolaDirective);
+
+    driver.setUpperHex(false);
+
+    ASM("SH-2",
+            R"(        cpu   SH-2
+        org   H'2000
+        dt    r0
+        braf  r0
+        dmuls.l r0, r1
+)",
+            R"(          0 :                            cpu   SH-2
+       2000 :                            org   H'2000
+       2000 : 4010                       dt    r0
+       2002 : 0023                       braf  r0
+       2004 : 310d                       dmuls.l r0, r1
+)");
+}
+
+void test_dis_sh2() {
+    PREP_DIS(superh::DisSuperH);
+
+    driver.setUppercase(true);
+
+    DIS16("SH-2", 0x2000,
+            R"(      CPU    SH-2
+      ORG    H'00002000
+      DT     R0
+      BRAF   R0
+      DMULS.L    R0, R1
+)",
+            R"(       0 :                            CPU    SH-2
+    2000 :                            ORG    H'00002000
+    2000 : 4010                       DT     R0
+    2002 : 0023                       BRAF   R0
+    2004 : 310D                       DMULS.L    R0, R1
+)",
+            0x4010, 0x0023, 0x310D);
+}
+
+void run_tests() {
+    RUN_TEST(test_asm_sh1);
+    RUN_TEST(test_dis_sh1);
+    RUN_TEST(test_asm_sh2);
+    RUN_TEST(test_dis_sh2);
+}
+
+}  // namespace test
+}  // namespace driver
+}  // namespace libasm
+
+// Local Variables:
+// mode: c++
+// c-basic-offset: 4
+// tab-width: 4
+// End:
+// vim: set ft=cpp et ts=4 sw=4:

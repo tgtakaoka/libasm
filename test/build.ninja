@@ -573,6 +573,13 @@ build gen_scn2650: link gen_scn2650.o $
   gen_driver.o tokenized_text.o
 
 # superh
+build test_asm_superh: run test_asm_superh.o $
+  asm_superh.o reg_superh.o table_superh.o text_superh.o $
+  asm_base.o config_base.o error_reporter.o insn_base.o operators.o $
+  option_base.o parsers.o reg_base.o str_buffer.o str_scanner.o $
+  text_common.o value.o value_parser.o $
+  fixed64.o ieee_float.o float80_base.o float80_hard.o float80_soft.o $
+  dec_float.o ibm_float.o ti_float.o test_asm_helper.o test_asserter.o
 build test_dis_superh: run test_dis_superh.o $
   dis_superh.o reg_superh.o table_superh.o text_superh.o $
   dis_base.o config_base.o error_reporter.o formatters.o insn_base.o $
@@ -914,7 +921,7 @@ build test_ns32000:  phony test_asm_ns32000  test_dis_ns32000
 build test_pdp11:    phony test_asm_pdp11    test_dis_pdp11
 build test_pdp8:     phony test_asm_pdp8     test_dis_pdp8
 build test_scn2650:  phony test_asm_scn2650  test_dis_scn2650
-build test_superh:   phony test_dis_superh
+build test_superh:   phony test_asm_superh   test_dis_superh
 build test_tlcs90:   phony test_asm_tlcs90   test_dis_tlcs90
 build test_tms320:   phony test_asm_tms320   test_dis_tms320
 build test_tms320f:  phony test_asm_tms320f  test_dis_tms320f

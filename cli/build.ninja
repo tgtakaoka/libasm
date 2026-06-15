@@ -50,6 +50,7 @@ build asm: link asm.o $
   asm_mos6502.o  reg_mos6502.o  table_mos6502.o  text_mos6502.o  $
   asm_ns32000.o  reg_ns32000.o  table_ns32000.o  text_ns32000.o  $
   asm_scn2650.o  reg_scn2650.o  table_scn2650.o  text_scn2650.o  $
+  asm_superh.o   reg_superh.o   table_superh.o   text_superh.o   $
   asm_tlcs90.o   reg_tlcs90.o   table_tlcs90.o   text_tlcs90.o   $
   asm_tlcs900.o  reg_tlcs900.o  table_tlcs900.o  text_tlcs900.o  $
   asm_tms320.o   reg_tms320.o   table_tms320.o   text_tms320.o   $
