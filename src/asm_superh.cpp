@@ -207,6 +207,8 @@ Error AsmSuperH::parseOperand(StrScanner &scan, Operand &op) const {
             op.mode = M_RN;
         } else if (isFr(reg)) {
             op.mode = M_FRN;
+        } else if (isDr(reg)) {
+            op.mode = M_DRN;
         } else {
             switch (reg) {
             case REG_SR:
@@ -332,6 +334,9 @@ void AsmSuperH::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode) c
     case M_RE:
     case M_FPUL:
     case M_FPSCR:
+    case M_BANK:
+    case M_DECR15:
+    case M_INCR15:
         break;
     case M_FRN:
         opc |= static_cast<Config::opcode_t>(encodeRegNum(op.reg) & 0xF) << 8;
@@ -340,6 +345,54 @@ void AsmSuperH::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode) c
     case M_FRM:
         opc |= static_cast<Config::opcode_t>(encodeRegNum(op.reg) & 0xF) << 4;
         insn.setOpCode(opc);
+        break;
+    case M_DRN:
+        // DR registers are even-numbered FR pairs; encoded as 3-bit field
+        // in bits[11:9] (value = DR_index/2, but encodeRegNum already
+        // returns 0..7 for DR0..DR14).
+        opc |= static_cast<Config::opcode_t>(encodeRegNum(op.reg) & 0x7) << 9;
+        insn.setOpCode(opc);
+        break;
+    case M_DRM:
+        opc |= static_cast<Config::opcode_t>(encodeRegNum(op.reg) & 0x7) << 5;
+        insn.setOpCode(opc);
+        break;
+    case M_IMM3: {
+        const auto v = op.val.getUnsigned();
+        if (v > 7)
+            insn.setErrorIf(op, OVERFLOW_RANGE);
+        opc |= static_cast<Config::opcode_t>(v & 0x7) << 1;  // bits[3:1]
+        insn.setOpCode(opc);
+        break;
+    }
+    case M_IMM20: {
+        // 20-bit signed: hi nibble in bits[7:4] of word1, lo 16 in word2.
+        const auto v = static_cast<int32_t>(op.val.getSigned());
+        if (v < -0x80000 || v > 0x7FFFF)
+            insn.setErrorIf(op, OVERFLOW_RANGE);
+        opc |= static_cast<Config::opcode_t>((v >> 16) & 0xF) << 4;
+        insn.setOpCode(opc);
+        insn.setOpCode2(static_cast<Config::opcode_t>(v & 0xFFFF));
+        break;
+    }
+    case M_IMM20S: {
+        // 28-bit signed shifted-left-8: top 12 bits stored as (hi:lo).
+        auto v = static_cast<int32_t>(op.val.getSigned());
+        if (v & 0xFF)
+            insn.setErrorIf(op, OVERFLOW_RANGE);  // low 8 bits must be 0
+        if (v < -0x8000000 || v > 0x7FFFFFF)
+            insn.setErrorIf(op, OVERFLOW_RANGE);
+        v >>= 8;
+        opc |= static_cast<Config::opcode_t>((v >> 16) & 0xF) << 4;
+        insn.setOpCode(opc);
+        insn.setOpCode2(static_cast<Config::opcode_t>(v & 0xFFFF));
+        break;
+    }
+    case M_D12N:
+    case M_D12M:
+        // The disp12 forms are deferred -- the assembler still emits an
+        // error if the table reaches them. Reserved for future commits.
+        insn.setErrorIf(op, OPERAND_NOT_ALLOWED);
         break;
     case M_RN:
     case M_IRN:

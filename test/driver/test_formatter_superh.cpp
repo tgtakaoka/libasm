@@ -194,6 +194,47 @@ void test_dis_sh2e() {
             0xF100, 0xF01D, 0x406A);
 }
 
+void test_asm_sh2a() {
+    PREP_ASM(superh::AsmSuperH, MotorolaDirective);
+
+    driver.setUpperHex(false);
+
+    ASM("SH-2A",
+            R"(        cpu   SH-2A
+        org   H'5000
+        movrt r0
+        nott
+        movi20 #0, r0
+)",
+            R"(          0 :                            cpu   SH-2A
+       5000 :                            org   H'5000
+       5000 : 0039                       movrt r0
+       5002 : 0068                       nott
+       5004 : 0000 0000                  movi20 #0, r0
+)");
+}
+
+void test_dis_sh2a() {
+    PREP_DIS(superh::DisSuperH);
+
+    driver.setUppercase(true);
+
+    DIS16("SH-2A", 0x5000,
+            R"(      CPU    SH-2A
+      ORG    H'00005000
+      MOVRT  R0
+      NOTT
+      MOVI20 #0, R0
+)",
+            R"(       0 :                            CPU    SH-2A
+    5000 :                            ORG    H'00005000
+    5000 : 0039                       MOVRT  R0
+    5002 : 0068                       NOTT
+    5004 : 0000 0000                  MOVI20 #0, R0
+)",
+            0x0039, 0x0068, 0x0000, 0x0000);
+}
+
 void run_tests() {
     RUN_TEST(test_asm_sh1);
     RUN_TEST(test_dis_sh1);
@@ -203,6 +244,8 @@ void run_tests() {
     RUN_TEST(test_dis_shdsp);
     RUN_TEST(test_asm_sh2e);
     RUN_TEST(test_dis_sh2e);
+    RUN_TEST(test_asm_sh2a);
+    RUN_TEST(test_dis_sh2a);
 }
 
 }  // namespace test

@@ -278,7 +278,7 @@ void DisSuperH::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) cons
         outRegName(out, decodeDm(opc));
         break;
     case M_IMM3: {
-        const auto v = (opc >> 4) & 0x7;
+        const auto v = (opc >> 1) & 0x7;  // bits[3:1]
         out.letter('#');
         outHex(out, v, 3);
         break;
@@ -327,8 +327,14 @@ void DisSuperH::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) cons
     case M_BANK:
         outRegName(out, REG_R0);
         break;
-    case M_R15:
+    case M_DECR15:
+        out.text_P(PSTR("@-"));
         outRegName(out, REG_R15);
+        break;
+    case M_INCR15:
+        out.letter('@');
+        outRegName(out, REG_R15);
+        out.letter('+');
         break;
     case M_IGBR:
         out.text_P(PSTR("@(R0,"));

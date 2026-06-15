@@ -27,7 +27,7 @@ Assembler &assembler(asmsuperh);
 bool isSh2() {
     const auto *cpu = assembler.config().cpu_P();
     return strcasecmp_P("SH-2", cpu) == 0 || strcasecmp_P("SH-DSP", cpu) == 0 ||
-           strcasecmp_P("SH-2E", cpu) == 0;
+           strcasecmp_P("SH-2E", cpu) == 0 || strcasecmp_P("SH-2A", cpu) == 0;
 }
 
 void set_up() {
@@ -426,6 +426,10 @@ bool isSh2e() {
     return strcasecmp_P("SH-2E", assembler.config().cpu_P()) == 0;
 }
 
+bool isSh2a() {
+    return strcasecmp_P("SH-2A", assembler.config().cpu_P()) == 0;
+}
+
 void test_shdsp_only() {
     if (isShDsp()) {
         // DSP register transfers
@@ -526,6 +530,59 @@ void test_sh2e_only() {
     }
 }
 
+void test_sh2a_only() {
+    if (isSh2a()) {
+        // SH-2A 16-bit CPU additions
+        TEST("CLIPS.B R0",         0x4091);
+        TEST("CLIPS.W R15",        0x4F95);
+        TEST("CLIPU.B R0",         0x4081);
+        TEST("CLIPU.W R15",        0x4F85);
+        TEST("DIVS R0, R1",        0x4194);
+        TEST("DIVU R0, R1",        0x4184);
+        TEST("MULR R0, R1",        0x4180);
+        TEST("SHAD R0, R1",        0x410C);
+        TEST("SHLD R0, R1",        0x410D);
+        TEST("MOVRT R0",           0x0039);
+        TEST("NOTT",               0x0068);
+        TEST("RTS/N",              0x006B);
+        TEST("RTV/N R0",           0x007B);
+        TEST("PREF @R0",           0x0083);
+        TEST("RESBANK",            0x005B);
+        TEST("JSR/N @R0",          0x404B);
+        TEST("STBANK R0, @R0",     0x40E1);
+        TEST("LDBANK @R0, R0",     0x40E5);
+        TEST("MOVMU.L R0, @-R15",  0x40F0);
+        TEST("MOVML.L R0, @-R15",  0x40F1);
+        TEST("MOVMU.L @R15+, R0",  0x40F4);
+        TEST("MOVML.L @R15+, R0",  0x40F5);
+        TEST("BCLR #0, R0",        0x8600);
+        TEST("BSET #7, R15",       0x86FF);
+        TEST("BLD #0, R0",         0x8701);
+        TEST("BST #7, R15",        0x87FE);
+        // SH-2A 32-bit CPU additions (MOVI20 / MOVI20S).
+        // Use uint16_t casts so the two 16-bit opcode words in a long-form
+        // instruction read clearly as a pair of words.
+        TEST("MOVI20 #0, R0",          uint16_t(0x0000), uint16_t(0x0000));
+        TEST("MOVI20 #H'7FFFF, R1",    uint16_t(0x0170), uint16_t(0xFFFF));
+        TEST("MOVI20 #-H'80000, R2",   uint16_t(0x0280), uint16_t(0x0000));
+        TEST("MOVI20S #0, R0",         uint16_t(0x0001), uint16_t(0x0000));
+        TEST("MOVI20S #H'FF0000, R1",  uint16_t(0x0101), uint16_t(0xFF00));
+        // SH-2A FPU additions (require --fpu enabled)
+        assembler.setOption("fpu", "true");
+        TEST("FCNVDS DR0, FPUL",   0xF0BD);
+        TEST("FCNVDS DR14, FPUL",  0xFEBD);
+        TEST("FCNVSD FPUL, DR0",   0xF0AD);
+        TEST("FCNVSD FPUL, DR14", 0xFEAD);
+    } else {
+        ERRT("CLIPS.B R0",         UNKNOWN_INSTRUCTION, "CLIPS.B R0");
+        ERRT("MULR R0, R1",        UNKNOWN_INSTRUCTION, "MULR R0, R1");
+        ERRT("MOVI20 #0, R0",      UNKNOWN_INSTRUCTION, "MOVI20 #0, R0");
+        ERRT("MOVRT R0",           UNKNOWN_INSTRUCTION, "MOVRT R0");
+        ERRT("JSR/N @R0",          UNKNOWN_INSTRUCTION, "JSR/N @R0");
+        ERRT("RESBANK",            UNKNOWN_INSTRUCTION, "RESBANK");
+    }
+}
+
 void test_data_constant() {
     // .data emits 16-bit big-endian words; multiple comma-separated values
     // and strings are both accepted.
@@ -549,6 +606,35 @@ void test_data_constant() {
 // permissive parser doesn't cleanly report these as UNKNOWN_INSTRUCTION
 // (it errors on register-operand parsing instead), so we don't have an
 // ERRT-based pin here.  Adding these is a SH-DSP scope-extension task.
+
+// Sanity-extend the SH-2A bank / return instructions (Rn variations) and
+// pin the asm-side encoding for JSR/N / LDBANK / STBANK.  Note: the SH-2A
+// disassembler does NOT currently recognise the bytes asm produces for
+// JSR/N (0x404B) and the LDBANK / STBANK families (0x40E5 / 0x40E1) --
+// they decode as "Unknown instruction".  Tracking that as a known dis gap.
+void test_sh2a_bank_extras() {
+    if (!isSh2a())
+        return;
+    // JSR/N @Rn  (0100 nnnn 0100 1011) -- register field at bits[11:8].
+    TEST("JSR/N @R0",   0x404B);
+    TEST("JSR/N @R7",   0x474B);
+    TEST("JSR/N @R15",  0x4F4B);
+    // LDBANK @Rn, R0  (0100 nnnn 1110 0101) -- register field at bits[11:8].
+    TEST("LDBANK @R0, R0",   0x40E5);
+    TEST("LDBANK @R7, R0",   0x47E5);
+    TEST("LDBANK @R15, R0",  0x4FE5);
+    // STBANK R0, @Rn  (0100 nnnn 1110 0001) -- register field at bits[11:8].
+    TEST("STBANK R0, @R0",   0x40E1);
+    TEST("STBANK R0, @R7",   0x47E1);
+    TEST("STBANK R0, @R15",  0x4FE1);
+    // MOVMU.L / MOVML.L (push/pop multi)
+    TEST("MOVMU.L R0, @-R15",   0x40F0);
+    TEST("MOVMU.L R7, @-R15",   0x47F0);
+    TEST("MOVML.L R0, @-R15",   0x40F1);
+    TEST("MOVML.L R7, @-R15",   0x47F1);
+    TEST("MOVMU.L @R15+, R0",   0x40F4);
+    TEST("MOVML.L @R15+, R0",   0x40F5);
+}
 
 // clang-format on
 
@@ -578,6 +664,8 @@ void run_tests(const char *cpu) {
     RUN_TEST(test_sh2_only);
     RUN_TEST(test_shdsp_only);
     RUN_TEST(test_sh2e_only);
+    RUN_TEST(test_sh2a_only);
+    RUN_TEST(test_sh2a_bank_extras);
     RUN_TEST(test_data_constant);
 }
 

@@ -77,11 +77,12 @@ enum AddrMode : uint8_t {
     M_D12M = 44,    // @(disp12,Rm), m=bits[7:4],  disp in 2nd word bits: 0x00F0
     M_IMM20 = 45,   // 20-bit signed imm, hi nibble in bits[7:4], lo16 in 2nd word
     M_IMM20S = 46,  // 20-bit signed imm shifted-left 8 (MOVI20S)  bits: 0x00F0
-    M_IMM3 = 47,    // 3-bit unsigned imm, bits[6:4]               bits: 0x0070
+    M_IMM3 = 47,    // 3-bit unsigned imm, bits[3:1] (BCLR/BSET/BLD/BST) bits: 0x000E
     M_DRN = 48,     // DRn (even FRn pair), bits[11:9]             bits: 0x0E00
     M_DRM = 49,     // DRm (even FRm pair), bits[7:5]              bits: 0x00E0
     M_BANK = 50,    // implicit R0 destination for STBANK/LDBANK  bits: none
-    M_R15 = 51,     // implicit R15 for MOVML/MOVMU stack         bits: none
+    M_DECR15 = 51,  // implicit @-R15 (MOVML.L/MOVMU.L save)      bits: none
+    M_INCR15 = 52,  // implicit @R15+ (MOVML.L/MOVMU.L restore)   bits: none
 };
 
 struct Entry final : entry::Base<Config::opcode_t> {
@@ -129,7 +130,7 @@ struct Entry final : entry::Base<Config::opcode_t> {
             case M_IMM20:
                 return 0x00F0;  // hi nibble of immediate in word 1's bits[7:4]
             case M_IMM3:
-                return 0x0070;
+                return 0x000E;
             case M_DRN:
                 return 0x0E00;
             case M_DRM:
