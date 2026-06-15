@@ -25,6 +25,7 @@ namespace superh {
 enum CpuType : uint8_t {
     SH1,
     SH2,
+    SH_DSP,
 };
 
 struct Config

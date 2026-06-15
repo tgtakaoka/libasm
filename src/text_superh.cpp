@@ -22,9 +22,10 @@ namespace superh {
 // clang-format off
 
 // clang-format off
-const char TEXT_SUPERH_LIST[] PROGMEM = "SH-1, SH-2";
+const char TEXT_SUPERH_LIST[] PROGMEM = "SH-1, SH-2, SH-DSP";
 const char TEXT_CPU_SH1[]     PROGMEM = "SH-1";
 const char TEXT_CPU_SH2[]     PROGMEM = "SH-2";
+const char TEXT_CPU_SH_DSP[]  PROGMEM = "SH-DSP";
 
 const char TEXT_ADDV[]    PROGMEM = "ADDV";
 const char TEXT_AND_B[]   PROGMEM = "AND.B";
@@ -53,6 +54,8 @@ const char TEXT_EXTS_W[]  PROGMEM = "EXTS.W";
 const char TEXT_EXTU_B[]  PROGMEM = "EXTU.B";
 const char TEXT_EXTU_W[]  PROGMEM = "EXTU.W";
 const char TEXT_LDC_L[]   PROGMEM = "LDC.L";
+const char TEXT_LDRE[]    PROGMEM = "LDRE";
+const char TEXT_LDRS[]    PROGMEM = "LDRS";
 const char TEXT_LDS_L[]   PROGMEM = "LDS.L";
 const char TEXT_MAC_L[]   PROGMEM = "MAC.L";
 const char TEXT_MAC_W[]   PROGMEM = "MAC.W";
@@ -71,6 +74,7 @@ const char TEXT_ROTCL[]   PROGMEM = "ROTCL";
 const char TEXT_ROTCR[]   PROGMEM = "ROTCR";
 const char TEXT_ROTL[]    PROGMEM = "ROTL";
 const char TEXT_ROTR[]    PROGMEM = "ROTR";
+const char TEXT_SETRC[]   PROGMEM = "SETRC";
 const char TEXT_SETT[]    PROGMEM = "SETT";
 const char TEXT_SHAL[]    PROGMEM = "SHAL";
 const char TEXT_SHAR[]    PROGMEM = "SHAR";
@@ -107,6 +111,17 @@ const char TEXT_REG_MACH[] PROGMEM = "MACH";
 const char TEXT_REG_MACL[] PROGMEM = "MACL";
 const char TEXT_REG_PC[]   PROGMEM = "PC";
 const char TEXT_REG_PR[]   PROGMEM = "PR";
+
+// SH-DSP register names
+const char TEXT_REG_DSR[]  PROGMEM = "DSR";
+const char TEXT_REG_A0[]   PROGMEM = "A0";
+const char TEXT_REG_X0[]   PROGMEM = "X0";
+const char TEXT_REG_X1[]   PROGMEM = "X1";
+const char TEXT_REG_Y0[]   PROGMEM = "Y0";
+const char TEXT_REG_Y1[]   PROGMEM = "Y1";
+const char TEXT_REG_MOD[]  PROGMEM = "MOD";
+const char TEXT_REG_RS[]   PROGMEM = "RS";
+const char TEXT_REG_RE[]   PROGMEM = "RE";
 
 // clang-format on
 }  // namespace superh

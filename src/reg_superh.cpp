@@ -32,9 +32,12 @@ namespace {
 // clang-format off
 // Sorted alphabetically by text for binary search
 constexpr NameEntry REG_ENTRIES[] PROGMEM = {
+    { TEXT_REG_A0,   REG_A0   },
+    { TEXT_REG_DSR,  REG_DSR  },
     { TEXT_REG_GBR,  REG_GBR  },
     { TEXT_REG_MACH, REG_MACH },
     { TEXT_REG_MACL, REG_MACL },
+    { TEXT_REG_MOD,  REG_MOD  },
     { TEXT_REG_PC,   REG_PC   },
     { TEXT_REG_PR,   REG_PR   },
     { TEXT_REG_R0,   REG_R0   },
@@ -53,8 +56,14 @@ constexpr NameEntry REG_ENTRIES[] PROGMEM = {
     { TEXT_REG_R7,   REG_R7   },
     { TEXT_REG_R8,   REG_R8   },
     { TEXT_REG_R9,   REG_R9   },
+    { TEXT_REG_RE,   REG_RE   },
+    { TEXT_REG_RS,   REG_RS   },
     { TEXT_REG_SR,   REG_SR   },
     { TEXT_REG_VBR,  REG_VBR  },
+    { TEXT_REG_X0,   REG_X0   },
+    { TEXT_REG_X1,   REG_X1   },
+    { TEXT_REG_Y0,   REG_Y0   },
+    { TEXT_REG_Y1,   REG_Y1   },
 };
 // clang-format on
 

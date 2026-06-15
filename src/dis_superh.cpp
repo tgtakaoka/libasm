@@ -176,6 +176,19 @@ void DisSuperH::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) cons
         outRelAddr(out, target, insn.address(), 9);
         break;
     }
+    case M_REL8P: {
+        // LDRS/LDRE wrap the relative target in "@(*+N,PC)" form per the
+        // Hitachi manual, distinguishing it from BT/BF's bare label form.
+        const auto d = static_cast<int8_t>(opc & 0xFF);
+        const auto target =
+                static_cast<Config::uintptr_t>(insn.address() + 4 + static_cast<int32_t>(d) * 2);
+        out.text_P(PSTR("@("));
+        outRelAddr(out, target, insn.address(), 9);
+        out.letter(',');
+        outRegName(out, REG_PC);
+        out.letter(')');
+        break;
+    }
     case M_REL12: {
         auto d = static_cast<int16_t>(opc & 0xFFF);
         if (d & 0x800)
@@ -202,6 +215,33 @@ void DisSuperH::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) cons
         break;
     case M_PR:
         outRegName(out, REG_PR);
+        break;
+    case M_DSR:
+        outRegName(out, REG_DSR);
+        break;
+    case M_A0:
+        outRegName(out, REG_A0);
+        break;
+    case M_X0:
+        outRegName(out, REG_X0);
+        break;
+    case M_X1:
+        outRegName(out, REG_X1);
+        break;
+    case M_Y0:
+        outRegName(out, REG_Y0);
+        break;
+    case M_Y1:
+        outRegName(out, REG_Y1);
+        break;
+    case M_MOD:
+        outRegName(out, REG_MOD);
+        break;
+    case M_RS:
+        outRegName(out, REG_RS);
+        break;
+    case M_RE:
+        outRegName(out, REG_RE);
         break;
     case M_IGBR:
         out.text_P(PSTR("@(R0,"));

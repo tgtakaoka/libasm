@@ -27,6 +27,7 @@ namespace superh {
 extern const char TEXT_SUPERH_LIST[] PROGMEM;
 extern const char TEXT_CPU_SH1[]     PROGMEM;
 extern const char TEXT_CPU_SH2[]     PROGMEM;
+extern const char TEXT_CPU_SH_DSP[]  PROGMEM;
 
 // Instructions reused from common
 using common::TEXT_ADD;
@@ -89,6 +90,8 @@ extern const char TEXT_EXTS_W[]   PROGMEM;  // "EXTS.W"
 extern const char TEXT_EXTU_B[]   PROGMEM;  // "EXTU.B"
 extern const char TEXT_EXTU_W[]   PROGMEM;  // "EXTU.W"
 extern const char TEXT_LDC_L[]    PROGMEM;  // "LDC.L"
+extern const char TEXT_LDRE[]     PROGMEM;
+extern const char TEXT_LDRS[]     PROGMEM;
 extern const char TEXT_LDS_L[]    PROGMEM;  // "LDS.L"
 extern const char TEXT_MAC_L[]    PROGMEM;  // "MAC.L"
 extern const char TEXT_MAC_W[]    PROGMEM;  // "MAC.W"
@@ -107,6 +110,7 @@ extern const char TEXT_ROTCL[]    PROGMEM;
 extern const char TEXT_ROTCR[]    PROGMEM;
 extern const char TEXT_ROTL[]     PROGMEM;
 extern const char TEXT_ROTR[]     PROGMEM;
+extern const char TEXT_SETRC[]    PROGMEM;
 extern const char TEXT_SETT[]     PROGMEM;
 extern const char TEXT_SHAL[]     PROGMEM;
 extern const char TEXT_SHAR[]     PROGMEM;
@@ -154,6 +158,17 @@ extern const char TEXT_REG_MACH[] PROGMEM;
 extern const char TEXT_REG_MACL[] PROGMEM;
 extern const char TEXT_REG_PC[]   PROGMEM;
 extern const char TEXT_REG_PR[]   PROGMEM;
+
+// SH-DSP register names
+extern const char TEXT_REG_DSR[]  PROGMEM;
+extern const char TEXT_REG_A0[]   PROGMEM;
+extern const char TEXT_REG_X0[]   PROGMEM;
+extern const char TEXT_REG_X1[]   PROGMEM;
+extern const char TEXT_REG_Y0[]   PROGMEM;
+extern const char TEXT_REG_Y1[]   PROGMEM;
+extern const char TEXT_REG_MOD[]  PROGMEM;
+extern const char TEXT_REG_RS[]   PROGMEM;
+extern const char TEXT_REG_RE[]   PROGMEM;
 
 // clang-format on
 }  // namespace superh

@@ -582,6 +582,7 @@ build test_asm_superh: run test_asm_superh.o $
   dec_float.o ibm_float.o ti_float.o test_asm_helper.o test_asserter.o
 build test_dis_superh: run test_dis_superh.o $
   dis_superh.o reg_superh.o table_superh.o text_superh.o $
+  text_h8300.o text_mc68000.o $
   dis_base.o config_base.o error_reporter.o formatters.o insn_base.o $
   option_base.o reg_base.o str_buffer.o str_scanner.o text_common.o value.o $
   value_formatter.o value_parser.o parsers.o operators.o dec_float.o $

@@ -32,6 +32,10 @@ bool isSh2() {
     return strcasecmp_P("SH-2", disassembler.config().cpu_P()) == 0;
 }
 
+bool isShDsp() {
+    return strcasecmp_P("SH-DSP", disassembler.config().cpu_P()) == 0;
+}
+
 void set_up() {
     disassembler.reset();
 }
@@ -50,6 +54,9 @@ void test_cpu() {
 
     EQUALS("cpu SH-2",   true, disassembler.setCpu("SH-2"));
     EQUALS_P("cpu SH-2", "SH-2", disassembler.config().cpu_P());
+
+    EQUALS("cpu SH-DSP",   true, disassembler.setCpu("SH-DSP"));
+    EQUALS_P("cpu SH-DSP", "SH-DSP", disassembler.config().cpu_P());
 }
 
 // Representative positive tests for SH-1 (which SH-2 also inherits).  Covers
@@ -242,6 +249,35 @@ void test_sh2_additions() {
     ATEST(0x0100, "BT/S", "H'00000104", 0x8D00);
 }
 
+// SH-DSP adds DSP-register transfers (DSR/A0/X0/X1/Y0/Y1) plus the
+// repeat-control registers (MOD/RS/RE) and SETRC / LDRS / LDRE.
+void test_shdsp_additions() {
+    // DSP register transfers via LDS/STS
+    TEST("LDS",   "R0, DSR",       0x406A);
+    TEST("LDS",   "R7, A0",        0x477A);
+    TEST("LDS",   "R15, X0",       0x4F8A);
+    TEST("LDS",   "R0, X1",        0x409A);
+    TEST("LDS",   "R7, Y0",        0x47AA);
+    TEST("LDS",   "R15, Y1",       0x4FBA);
+    TEST("STS",   "DSR, R0",       0x006A);
+    TEST("STS",   "A0, R7",        0x077A);
+    TEST("STS",   "Y1, R15",       0x0FBA);
+    TEST("LDS.L", "@R0+, DSR",     0x4066);
+    TEST("STS.L", "A0, @-R0",      0x4072);
+    // Repeat-control registers via LDC/STC
+    TEST("LDC",   "R0, MOD",       0x405E);
+    TEST("LDC",   "R7, RS",        0x476E);
+    TEST("LDC",   "R15, RE",       0x4F7E);
+    TEST("STC",   "MOD, R0",       0x0052);
+    TEST("STC",   "RE, R15",       0x0F72);
+    // SETRC (Rm form and #imm form)
+    TEST("SETRC", "#0",            0x8200);
+    TEST("SETRC", "#H'7F",         0x827F);
+    TEST("SETRC", "R0",            0x4014);
+    TEST("SETRC", "R15",           0x4F14);
+}
+
+
 void test_illegal_sh1() {
     // Unmapped opcodes in the 0x0000..0x00FF region.
     SH_UNKN(0x0000);
@@ -279,6 +315,22 @@ void test_illegal_sh2() {
     SH_UNKN(0x010B);    // RTS  + n=1
     // STC variant index 3 is reserved on SH-2 too.
     SH_UNKN(0x0032);
+    // SH-DSP-only DSP register transfers must not decode on SH-2.
+    SH_UNKN(0x406A);    // LDS Rm,DSR (SH-DSP)
+    SH_UNKN(0x407A);    // LDS Rm,A0  (SH-DSP)
+    SH_UNKN(0x4014);    // SETRC Rm   (SH-DSP)
+    SH_UNKN(0x8200);    // SETRC #imm (SH-DSP)
+    SH_UNKN(0x8C00);    // LDRS       (SH-DSP)
+    SH_UNKN(0x8E00);    // LDRE       (SH-DSP)
+}
+
+void test_illegal_shdsp() {
+    SH_UNKN(0x0000);
+    SH_UNKN(0x0001);
+    SH_UNKN(0x0032);
+    // The 0xF000 family belongs to SH-2E FPU; SH-DSP itself does not map it.
+    SH_UNKN(0xF000);
+    SH_UNKN(0xF001);
 }
 
 // clang-format on
@@ -295,11 +347,15 @@ void run_tests(const char *cpu) {
     RUN_TEST(test_control_regs);
     if (!isSh1())
         RUN_TEST(test_sh2_additions);
+    if (isShDsp())
+        RUN_TEST(test_shdsp_additions);
     // Per-CPU illegal-instruction probes.
     if (isSh1())
         RUN_TEST(test_illegal_sh1);
     if (isSh2())
         RUN_TEST(test_illegal_sh2);
+    if (isShDsp())
+        RUN_TEST(test_illegal_shdsp);
 }
 
 // Local Variables:

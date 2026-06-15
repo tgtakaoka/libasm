@@ -183,6 +183,51 @@ constexpr Entry TABLE_SH2[] PROGMEM = {
     E1(0x8F00, TEXT_BF_S,    M_REL8),          // BF/S label
 };
 
+// SH-DSP additions: DSP register file (DSR/A0/X0/X1/Y0/Y1), repeat control
+// (MOD/RS/RE), and the LDRS/LDRE/SETRC repeat instructions.
+constexpr Entry TABLE_DSP[] PROGMEM = {
+    E2(0x0052, TEXT_STC,     M_MOD,  M_RN),    // STC MOD,Rn
+    E2(0x0062, TEXT_STC,     M_RS,   M_RN),    // STC RS,Rn
+    E2(0x006A, TEXT_STS,     M_DSR,  M_RN),    // STS DSR,Rn
+    E2(0x0072, TEXT_STC,     M_RE,   M_RN),    // STC RE,Rn
+    E2(0x007A, TEXT_STS,     M_A0,   M_RN),    // STS A0,Rn
+    E2(0x008A, TEXT_STS,     M_X0,   M_RN),    // STS X0,Rn
+    E2(0x009A, TEXT_STS,     M_X1,   M_RN),    // STS X1,Rn
+    E2(0x00AA, TEXT_STS,     M_Y0,   M_RN),    // STS Y0,Rn
+    E2(0x00BA, TEXT_STS,     M_Y1,   M_RN),    // STS Y1,Rn
+    E1(0x4014, TEXT_SETRC,   M_RN),            // SETRC Rm  (n-field used for Rm)
+    E2(0x4053, TEXT_STC_L,   M_MOD,  M_DECN),  // STC.L MOD,@-Rn
+    E2(0x4057, TEXT_LDC_L,   M_INCN, M_MOD),   // LDC.L @Rm+,MOD
+    E2(0x405E, TEXT_LDC,     M_RN,   M_MOD),   // LDC Rm,MOD
+    E2(0x4062, TEXT_STS_L,   M_DSR,  M_DECN),  // STS.L DSR,@-Rn
+    E2(0x4063, TEXT_STC_L,   M_RS,   M_DECN),  // STC.L RS,@-Rn
+    E2(0x4066, TEXT_LDS_L,   M_INCN, M_DSR),   // LDS.L @Rm+,DSR
+    E2(0x4067, TEXT_LDC_L,   M_INCN, M_RS),    // LDC.L @Rm+,RS
+    E2(0x406A, TEXT_LDS,     M_RN,   M_DSR),   // LDS Rm,DSR
+    E2(0x406E, TEXT_LDC,     M_RN,   M_RS),    // LDC Rm,RS
+    E2(0x4072, TEXT_STS_L,   M_A0,   M_DECN),  // STS.L A0,@-Rn
+    E2(0x4073, TEXT_STC_L,   M_RE,   M_DECN),  // STC.L RE,@-Rn
+    E2(0x4076, TEXT_LDS_L,   M_INCN, M_A0),    // LDS.L @Rm+,A0
+    E2(0x4077, TEXT_LDC_L,   M_INCN, M_RE),    // LDC.L @Rm+,RE
+    E2(0x407A, TEXT_LDS,     M_RN,   M_A0),    // LDS Rm,A0
+    E2(0x407E, TEXT_LDC,     M_RN,   M_RE),    // LDC Rm,RE
+    E2(0x4082, TEXT_STS_L,   M_X0,   M_DECN),  // STS.L X0,@-Rn
+    E2(0x4086, TEXT_LDS_L,   M_INCN, M_X0),    // LDS.L @Rm+,X0
+    E2(0x408A, TEXT_LDS,     M_RN,   M_X0),    // LDS Rm,X0
+    E2(0x4092, TEXT_STS_L,   M_X1,   M_DECN),  // STS.L X1,@-Rn
+    E2(0x4096, TEXT_LDS_L,   M_INCN, M_X1),    // LDS.L @Rm+,X1
+    E2(0x409A, TEXT_LDS,     M_RN,   M_X1),    // LDS Rm,X1
+    E2(0x40A2, TEXT_STS_L,   M_Y0,   M_DECN),  // STS.L Y0,@-Rn
+    E2(0x40A6, TEXT_LDS_L,   M_INCN, M_Y0),    // LDS.L @Rm+,Y0
+    E2(0x40AA, TEXT_LDS,     M_RN,   M_Y0),    // LDS Rm,Y0
+    E2(0x40B2, TEXT_STS_L,   M_Y1,   M_DECN),  // STS.L Y1,@-Rn
+    E2(0x40B6, TEXT_LDS_L,   M_INCN, M_Y1),    // LDS.L @Rm+,Y1
+    E2(0x40BA, TEXT_LDS,     M_RN,   M_Y1),    // LDS Rm,Y1
+    E1(0x8200, TEXT_SETRC,   M_TNUM),          // SETRC #imm
+    E1(0x8C00, TEXT_LDRS,    M_REL8P),         // LDRS @(disp,PC)
+    E1(0x8E00, TEXT_LDRE,    M_REL8P),         // LDRE @(disp,PC)
+};
+
 // INDEX arrays sorted alphabetically by the mnemonic STRING (not by the
 // TEXT_X identifier), so the binary-search comparator (strcasecmp_P on
 // the mnemonic) sees the index ordering match its sort. Regenerate via
@@ -335,6 +380,11 @@ constexpr uint8_t INDEX_SH2[] PROGMEM = {
       1,  // TEXT_MUL_L
 };
 
+// DSP-page index. The disassembler reaches the table via linearSearch
+// in searchOpCode and does not consult the index; the real
+// alphabetically-sorted INDEX_DSP[] lands with the assembler.
+constexpr uint8_t INDEX_DSP[] PROGMEM = {0};
+
 // clang-format on
 
 using EntryPage = entry::TableBase<Entry>;
@@ -348,11 +398,18 @@ constexpr EntryPage SH2_PAGES[] PROGMEM = {
         {ARRAY_RANGE(TABLE_SH2), ARRAY_RANGE(INDEX_SH2)},
 };
 
+constexpr EntryPage SH_DSP_PAGES[] PROGMEM = {
+        {ARRAY_RANGE(TABLE_COMMON), ARRAY_RANGE(INDEX_COMMON)},
+        {ARRAY_RANGE(TABLE_SH2), ARRAY_RANGE(INDEX_SH2)},
+        {ARRAY_RANGE(TABLE_DSP), ARRAY_RANGE(INDEX_DSP)},
+};
+
 using Cpu = entry::CpuBase<CpuType, EntryPage>;
 
 constexpr Cpu CPU_TABLE[] PROGMEM = {
         {SH1, TEXT_CPU_SH1, ARRAY_RANGE(SH1_PAGES)},
         {SH2, TEXT_CPU_SH2, ARRAY_RANGE(SH2_PAGES)},
+        {SH_DSP, TEXT_CPU_SH_DSP, ARRAY_RANGE(SH_DSP_PAGES)},
 };
 
 static const Cpu *cpu(CpuType cpuType) {

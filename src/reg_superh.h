@@ -57,6 +57,15 @@ enum RegName : int8_t {
     REG_MACL = 20,
     REG_PR = 21,
     REG_PC = 22,
+    REG_DSR = 23,
+    REG_A0 = 24,
+    REG_X0 = 25,
+    REG_X1 = 26,
+    REG_Y0 = 27,
+    REG_Y1 = 28,
+    REG_MOD = 29,
+    REG_RS = 30,
+    REG_RE = 31,
 };
 
 namespace reg {

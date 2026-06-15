@@ -58,20 +58,30 @@ enum AddrMode : uint8_t {
     M_MACL = 26,   // MACL system register                bits: none
     M_PR = 27,     // PR system register                  bits: none
     M_IGBR = 28,   // @(R0,GBR) implied (bitwise .B forms) bits: none
+    M_DSR = 29,    // DSR DSP status register             bits: none
+    M_A0 = 30,     // A0 DSP accumulator low              bits: none
+    M_X0 = 31,     // X0 DSP data register                bits: none
+    M_X1 = 32,     // X1 DSP data register                bits: none
+    M_Y0 = 33,     // Y0 DSP data register                bits: none
+    M_Y1 = 34,     // Y1 DSP data register                bits: none
+    M_MOD = 35,    // MOD DSP modulo register             bits: none
+    M_RS = 36,     // RS DSP repeat-start register        bits: none
+    M_RE = 37,     // RE DSP repeat-end register          bits: none
+    M_REL8P = 38,  // 8-bit signed PC-rel as "@(*+N,PC)"  bits: 0x00FF
 };
 
 struct Entry final : entry::Base<Config::opcode_t> {
     struct Flags final {
         uint16_t _attr;
 
-        // [14:8]=src(7), [6:0]=dst(7); top bit of each half is spare
+        // [13:8]=src(6), [5:0]=dst(6); bits 15:14 and 7:6 are spare
         static constexpr Flags create(AddrMode src, AddrMode dst) {
             return Flags{static_cast<uint16_t>(
                     (static_cast<uint16_t>(src) << 8) | static_cast<uint16_t>(dst))};
         }
 
-        AddrMode src() const { return AddrMode((_attr >> 8) & 0x1F); }
-        AddrMode dst() const { return AddrMode(_attr & 0x1F); }
+        AddrMode src() const { return AddrMode((_attr >> 8) & 0x3F); }
+        AddrMode dst() const { return AddrMode(_attr & 0x3F); }
 
         // Returns the OR of all variable bits in the 16-bit instruction word.
         Config::opcode_t opcodeMask() const { return modeMask(src()) | modeMask(dst()); }
@@ -100,6 +110,7 @@ struct Entry final : entry::Base<Config::opcode_t> {
             case M_PCL:
             case M_IMM8:
             case M_REL8:
+            case M_REL8P:
             case M_TNUM:
                 return 0x00FF;
             case M_REL12:
