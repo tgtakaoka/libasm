@@ -149,7 +149,7 @@ extern const char TEXT_XIE[]  PROGMEM;
 // CDP1804A
 extern const char TEXT_DACI[] PROGMEM;
 extern const char TEXT_DADC[] PROGMEM;
-extern const char TEXT_DADD[] PROGMEM;
+using common::TEXT_DADD;
 extern const char TEXT_DADI[] PROGMEM;
 using common::TEXT_DBNZ;
 extern const char TEXT_DSAV[] PROGMEM;

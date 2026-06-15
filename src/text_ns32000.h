@@ -343,7 +343,7 @@ extern const char TEXT_SMR[]    PROGMEM;
 extern const char TEXT_WRVAL[]  PROGMEM;
 
 extern const char TEXT_REG_EXT[] PROGMEM;
-extern const char TEXT_REG_FP[]  PROGMEM;
+using common::TEXT_REG_FP;
 using common::TEXT_REG_PC;
 using common::TEXT_REG_R0;
 using common::TEXT_REG_R1;

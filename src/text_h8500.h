@@ -33,7 +33,7 @@ extern const char OPT_DESC_FP_ALIAS[] PROGMEM;
 extern const char OPT_BOOL_SP_ALIAS[] PROGMEM;
 extern const char OPT_DESC_SP_ALIAS[] PROGMEM;
 
-extern const char TEXT_MAXMODE[] PROGMEM;
+using common::TEXT_MAXMODE;
 
 // Instructions reused from common
 using common::TEXT_ADD;
@@ -91,49 +91,47 @@ using common::TEXT_UNLK;
 using common::TEXT_XCH;
 using common::TEXT_XOR;
 
-// Instructions reused from h8300
-extern const char TEXT_ANDC[]   PROGMEM;
-extern const char TEXT_BNOT[]   PROGMEM;
-extern const char TEXT_DIVXU[]   PROGMEM;
-extern const char TEXT_EXTU[]   PROGMEM;
-extern const char TEXT_MOVFPE[]   PROGMEM;
-extern const char TEXT_MOVTPE[]   PROGMEM;
-extern const char TEXT_MULXU[]   PROGMEM;
-extern const char TEXT_ORC[]   PROGMEM;
-extern const char TEXT_ROTL[]   PROGMEM;
-extern const char TEXT_ROTR[]   PROGMEM;
-extern const char TEXT_ROTXL[]   PROGMEM;
-extern const char TEXT_ROTXR[]   PROGMEM;
-extern const char TEXT_SHAL[]   PROGMEM;
-extern const char TEXT_SHAR[]   PROGMEM;
-extern const char TEXT_SHLR[]   PROGMEM;
-extern const char TEXT_SLEEP[]   PROGMEM;
-extern const char TEXT_TRAPA[]   PROGMEM;
-extern const char TEXT_XORC[]   PROGMEM;
-
 // H8/500-specific instruction mnemonics
 extern const char TEXT_ADD_G[]   PROGMEM;  // "ADD:G"
 extern const char TEXT_ADD_Q[]   PROGMEM;  // "ADD:Q"
+using common::TEXT_ANDC;
+using common::TEXT_BNOT;
 extern const char TEXT_CMP_E[]   PROGMEM;  // "CMP:E"
 extern const char TEXT_CMP_G[]   PROGMEM;  // "CMP:G"
 extern const char TEXT_CMP_I[]   PROGMEM;  // "CMP:I"
-extern const char TEXT_DADD[] PROGMEM;
+using common::TEXT_DADD;
+using common::TEXT_DIVXU;
 extern const char TEXT_DSUB[]    PROGMEM;
+using common::TEXT_EXTU;
 extern const char TEXT_MOV_E[]   PROGMEM;  // "MOV:E"
 extern const char TEXT_MOV_F[]   PROGMEM;  // "MOV:F"
 extern const char TEXT_MOV_G[]   PROGMEM;  // "MOV:G"
 extern const char TEXT_MOV_I[]   PROGMEM;  // "MOV:I"
 extern const char TEXT_MOV_L[]   PROGMEM;  // "MOV:L"
 extern const char TEXT_MOV_S[]   PROGMEM;  // "MOV:S"
+using common::TEXT_MOVFPE;
+using common::TEXT_MOVTPE;
+using common::TEXT_MULXU;
+using common::TEXT_ORC;
 extern const char TEXT_PJMP[]    PROGMEM;
 extern const char TEXT_PJSR[]    PROGMEM;
 extern const char TEXT_PRTD[]    PROGMEM;
 extern const char TEXT_PRTS[]    PROGMEM;
-extern const char TEXT_RTD[] PROGMEM;
+using common::TEXT_ROTL;
+using common::TEXT_ROTR;
+using common::TEXT_ROTXL;
+using common::TEXT_ROTXR;
+using common::TEXT_RTD;
 extern const char TEXT_SCB_EQ[]  PROGMEM;  // "SCB/EQ"
 extern const char TEXT_SCB_F[]   PROGMEM;  // "SCB/F"
 extern const char TEXT_SCB_NE[]  PROGMEM;  // "SCB/NE"
+using common::TEXT_SHAL;
+using common::TEXT_SHAR;
+using common::TEXT_SHLR;
+using common::TEXT_SLEEP;
 extern const char TEXT_TRAP_VS[] PROGMEM;  // "TRAP/VS"
+using common::TEXT_TRAPA;
+using common::TEXT_XORC;
 
 // Register names from common
 using common::TEXT_REG_CCR;
@@ -153,7 +151,7 @@ using common::TEXT_REG_SR;
 extern const char TEXT_REG_BR[] PROGMEM;
 extern const char TEXT_REG_CP[] PROGMEM;
 extern const char TEXT_REG_EP[] PROGMEM;
-extern const char TEXT_REG_FP[] PROGMEM;
+using common::TEXT_REG_FP;
 extern const char TEXT_REG_TP[] PROGMEM;
 
 // clang-format on

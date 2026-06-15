@@ -30,55 +30,55 @@ constexpr char OPT_DESC_FP_ALIAS[] PROGMEM = "emit FP alias for R6 in indirect a
 constexpr char OPT_BOOL_SP_ALIAS[] PROGMEM = "sp-alias";
 constexpr char OPT_DESC_SP_ALIAS[] PROGMEM = "emit SP alias for R7 in indirect addressing";
 
-constexpr char TEXT_MAXMODE[] PROGMEM = "MAXMODE";
+// constexpr char TEXT_MAXMODE[] PROGMEM = "MAXMODE";
 
 // H8/500-specific instruction mnemonics
 constexpr char TEXT_ADD_G[]   PROGMEM = "ADD:G";
 constexpr char TEXT_ADD_Q[]   PROGMEM = "ADD:Q";
-constexpr char TEXT_ANDC[]    PROGMEM = "ANDC";
-constexpr char TEXT_BNOT[]    PROGMEM = "BNOT";
+// constexpr char TEXT_ANDC[]    PROGMEM = "ANDC";
+// constexpr char TEXT_BNOT[]    PROGMEM = "BNOT";
 constexpr char TEXT_CMP_E[]   PROGMEM = "CMP:E";
 constexpr char TEXT_CMP_G[]   PROGMEM = "CMP:G";
 constexpr char TEXT_CMP_I[]   PROGMEM = "CMP:I";
-constexpr char TEXT_DADD[]    PROGMEM = "DADD";
-constexpr char TEXT_DIVXU[]   PROGMEM = "DIVXU";
+// constexpr char TEXT_DADD[]    PROGMEM = "DADD";
+// constexpr char TEXT_DIVXU[]   PROGMEM = "DIVXU";
 constexpr char TEXT_DSUB[]    PROGMEM = "DSUB";
-constexpr char TEXT_EXTU[]    PROGMEM = "EXTU";
+// constexpr char TEXT_EXTU[]    PROGMEM = "EXTU";
 constexpr char TEXT_MOV_E[]   PROGMEM = "MOV:E";
 constexpr char TEXT_MOV_F[]   PROGMEM = "MOV:F";
 constexpr char TEXT_MOV_G[]   PROGMEM = "MOV:G";
 constexpr char TEXT_MOV_I[]   PROGMEM = "MOV:I";
 constexpr char TEXT_MOV_L[]   PROGMEM = "MOV:L";
 constexpr char TEXT_MOV_S[]   PROGMEM = "MOV:S";
-constexpr char TEXT_MOVFPE[]  PROGMEM = "MOVFPE";
-constexpr char TEXT_MOVTPE[]  PROGMEM = "MOVTPE";
-constexpr char TEXT_MULXU[]   PROGMEM = "MULXU";
-constexpr char TEXT_ORC[]     PROGMEM = "ORC";
+// constexpr char TEXT_MOVFPE[]  PROGMEM = "MOVFPE";
+// constexpr char TEXT_MOVTPE[]  PROGMEM = "MOVTPE";
+// constexpr char TEXT_MULXU[]   PROGMEM = "MULXU";
+// constexpr char TEXT_ORC[]     PROGMEM = "ORC";
 constexpr char TEXT_PJMP[]    PROGMEM = "PJMP";
 constexpr char TEXT_PJSR[]    PROGMEM = "PJSR";
 constexpr char TEXT_PRTD[]    PROGMEM = "PRTD";
 constexpr char TEXT_PRTS[]    PROGMEM = "PRTS";
-constexpr char TEXT_ROTL[]    PROGMEM = "ROTL";
-constexpr char TEXT_ROTR[]    PROGMEM = "ROTR";
-constexpr char TEXT_ROTXL[]   PROGMEM = "ROTXL";
-constexpr char TEXT_ROTXR[]   PROGMEM = "ROTXR";
-constexpr char TEXT_RTD[]     PROGMEM = "RTD";
+// constexpr char TEXT_ROTL[]    PROGMEM = "ROTL";
+// constexpr char TEXT_ROTR[]    PROGMEM = "ROTR";
+// constexpr char TEXT_ROTXL[]   PROGMEM = "ROTXL";
+// constexpr char TEXT_ROTXR[]   PROGMEM = "ROTXR";
+// constexpr char TEXT_RTD[]     PROGMEM = "RTD";
 constexpr char TEXT_SCB_EQ[]  PROGMEM = "SCB/EQ";
 constexpr char TEXT_SCB_F[]   PROGMEM = "SCB/F";
 constexpr char TEXT_SCB_NE[]  PROGMEM = "SCB/NE";
-constexpr char TEXT_SHAL[]    PROGMEM = "SHAL";
-constexpr char TEXT_SHAR[]    PROGMEM = "SHAR";
-constexpr char TEXT_SHLR[]    PROGMEM = "SHLR";
-constexpr char TEXT_SLEEP[]   PROGMEM = "SLEEP";
+// constexpr char TEXT_SHAL[]    PROGMEM = "SHAL";
+// constexpr char TEXT_SHAR[]    PROGMEM = "SHAR";
+// constexpr char TEXT_SHLR[]    PROGMEM = "SHLR";
+// constexpr char TEXT_SLEEP[]   PROGMEM = "SLEEP";
 constexpr char TEXT_TRAP_VS[] PROGMEM = "TRAP/VS";
-constexpr char TEXT_TRAPA[]   PROGMEM = "TRAPA";
-constexpr char TEXT_XORC[]    PROGMEM = "XORC";
+// constexpr char TEXT_TRAPA[]   PROGMEM = "TRAPA";
+// constexpr char TEXT_XORC[]    PROGMEM = "XORC";
 
 // H8/500-specific register names
 constexpr char TEXT_REG_BR[] PROGMEM = "BR";
 constexpr char TEXT_REG_CP[] PROGMEM = "CP";
 constexpr char TEXT_REG_EP[] PROGMEM = "EP";
-constexpr char TEXT_REG_FP[] PROGMEM = "FP";
+// constexpr char TEXT_REG_FP[] PROGMEM = "FP";
 constexpr char TEXT_REG_TP[] PROGMEM = "TP";
 
 // clang-format on

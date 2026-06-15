@@ -191,7 +191,7 @@ constexpr char TEXT_REG_D7[] PROGMEM = "D7";
 constexpr char TEXT_BKPT[]  PROGMEM = "BKPT";
 constexpr char TEXT_MOVEC[] PROGMEM = "MOVEC";
 constexpr char TEXT_MOVES[] PROGMEM = "MOVES";
-constexpr char TEXT_RTD[]   PROGMEM = "RTD";
+// constexpr char TEXT_RTD[]   PROGMEM = "RTD";
 
 constexpr char TEXT_REG_DFC[] PROGMEM = "DFC";
 constexpr char TEXT_REG_SFC[] PROGMEM = "SFC";

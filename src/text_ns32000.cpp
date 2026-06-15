@@ -337,7 +337,7 @@ constexpr char TEXT_WRVAL[]  PROGMEM = "WRVAL";
 
 // NS32032
 constexpr char TEXT_REG_EXT[] PROGMEM = "EXT";
-constexpr char TEXT_REG_FP[]  PROGMEM = "FP";
+// constexpr char TEXT_REG_FP[]  PROGMEM = "FP";
 // constexpr char TEXT_REG_PC[] PROGMEM = "PC";
 // constexpr char TEXT_REG_R0[] PROGMEM = "R0";
 // constexpr char TEXT_REG_R1[] PROGMEM = "R1";
