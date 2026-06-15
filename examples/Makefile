@@ -46,6 +46,7 @@ EXS = \
 	pdp11    \
 	pdp8     \
 	scn2650  \
+	superh   \
 	tlcs90   \
 	tms320   \
 	tms320f  \
