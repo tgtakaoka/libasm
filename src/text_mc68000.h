@@ -202,7 +202,7 @@ using common::TEXT_RTD;
 
 extern const char TEXT_REG_DFC[] PROGMEM;
 extern const char TEXT_REG_SFC[] PROGMEM;
-extern const char TEXT_REG_VBR[] PROGMEM;
+using common::TEXT_REG_VBR;
 
 // MC68020
 extern const char TEXT_BFCHG[]  PROGMEM;

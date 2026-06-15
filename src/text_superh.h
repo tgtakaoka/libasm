@@ -36,12 +36,14 @@ using common::TEXT_BF;
 using common::TEXT_BRA;
 using common::TEXT_BSR;
 using common::TEXT_BT;
+using common::TEXT_CLRMAC;
 using common::TEXT_EXTS;
 using common::TEXT_JMP;
 using common::TEXT_JSR;
 using common::TEXT_LDC;
 using common::TEXT_LDS;
 using common::TEXT_MAC;
+using common::TEXT_MOV;
 using common::TEXT_MUL;
 using common::TEXT_MULS;
 using common::TEXT_MULU;
@@ -49,14 +51,21 @@ using common::TEXT_NEG;
 using common::TEXT_NOP;
 using common::TEXT_NOT;
 using common::TEXT_OR;
+using common::TEXT_ROTL;
+using common::TEXT_ROTR;
 using common::TEXT_RTE;
 using common::TEXT_RTS;
+using common::TEXT_SHAL;
+using common::TEXT_SHAR;
 using common::TEXT_SHLL;
+using common::TEXT_SHLR;
+using common::TEXT_SLEEP;
 using common::TEXT_STC;
 using common::TEXT_STS;
 using common::TEXT_SUB;
 using common::TEXT_SUBC;
 using common::TEXT_SWAP;
+using common::TEXT_TRAPA;
 using common::TEXT_TST;
 using common::TEXT_XOR;
 
@@ -68,7 +77,6 @@ extern const char TEXT_BF_S[]     PROGMEM;  // "BF/S"
 extern const char TEXT_BRAF[]     PROGMEM;
 extern const char TEXT_BSRF[]     PROGMEM;
 extern const char TEXT_BT_S[]     PROGMEM;  // "BT/S"
-extern const char TEXT_CLRMAC[]   PROGMEM;
 extern const char TEXT_CLRT[]     PROGMEM;
 extern const char TEXT_CMP_EQ[]   PROGMEM;  // "CMP/EQ"
 extern const char TEXT_CMP_GE[]   PROGMEM;  // "CMP/GE"
@@ -92,7 +100,6 @@ extern const char TEXT_LDC_L[]    PROGMEM;  // "LDC.L"
 extern const char TEXT_LDS_L[]    PROGMEM;  // "LDS.L"
 extern const char TEXT_MAC_L[]    PROGMEM;  // "MAC.L"
 extern const char TEXT_MAC_W[]    PROGMEM;  // "MAC.W"
-extern const char TEXT_MOV[]      PROGMEM;
 extern const char TEXT_MOV_B[]    PROGMEM;  // "MOV.B"
 extern const char TEXT_MOV_L[]    PROGMEM;  // "MOV.L"
 extern const char TEXT_MOV_W[]    PROGMEM;  // "MOV.W"
@@ -105,26 +112,19 @@ extern const char TEXT_NEGC[]     PROGMEM;
 extern const char TEXT_OR_B[]     PROGMEM;  // "OR.B"
 extern const char TEXT_ROTCL[]    PROGMEM;
 extern const char TEXT_ROTCR[]    PROGMEM;
-extern const char TEXT_ROTL[]     PROGMEM;
-extern const char TEXT_ROTR[]     PROGMEM;
 extern const char TEXT_SETT[]     PROGMEM;
-extern const char TEXT_SHAL[]     PROGMEM;
-extern const char TEXT_SHAR[]     PROGMEM;
-extern const char TEXT_SHLR[]     PROGMEM;
 extern const char TEXT_SHLL2[]    PROGMEM;
 extern const char TEXT_SHLL8[]    PROGMEM;
 extern const char TEXT_SHLL16[]   PROGMEM;
 extern const char TEXT_SHLR2[]    PROGMEM;
 extern const char TEXT_SHLR8[]    PROGMEM;
 extern const char TEXT_SHLR16[]   PROGMEM;
-extern const char TEXT_SLEEP[]    PROGMEM;
 extern const char TEXT_STC_L[]    PROGMEM;  // "STC.L"
 extern const char TEXT_STS_L[]    PROGMEM;  // "STS.L"
 extern const char TEXT_SUBV[]     PROGMEM;
 extern const char TEXT_SWAP_B[]   PROGMEM;  // "SWAP.B"
 extern const char TEXT_SWAP_W[]   PROGMEM;  // "SWAP.W"
 extern const char TEXT_TAS_B[]    PROGMEM;  // "TAS.B"
-extern const char TEXT_TRAPA[]    PROGMEM;
 extern const char TEXT_TST_B[]    PROGMEM;  // "TST.B"
 extern const char TEXT_XOR_B[]    PROGMEM;  // "XOR.B"
 extern const char TEXT_XTRCT[]    PROGMEM;
@@ -138,7 +138,11 @@ using common::TEXT_REG_R4;
 using common::TEXT_REG_R5;
 using common::TEXT_REG_R6;
 using common::TEXT_REG_R7;
+using common::TEXT_REG_MACH;
+using common::TEXT_REG_MACL;
+using common::TEXT_REG_PC;
 using common::TEXT_REG_SR;
+using common::TEXT_REG_VBR;
 
 extern const char TEXT_REG_R8[]   PROGMEM;
 extern const char TEXT_REG_R9[]   PROGMEM;
@@ -149,10 +153,6 @@ extern const char TEXT_REG_R13[]  PROGMEM;
 extern const char TEXT_REG_R14[]  PROGMEM;
 extern const char TEXT_REG_R15[]  PROGMEM;
 extern const char TEXT_REG_GBR[]  PROGMEM;
-extern const char TEXT_REG_VBR[]  PROGMEM;
-extern const char TEXT_REG_MACH[] PROGMEM;
-extern const char TEXT_REG_MACL[] PROGMEM;
-extern const char TEXT_REG_PC[]   PROGMEM;
 extern const char TEXT_REG_PR[]   PROGMEM;
 
 // clang-format on

@@ -195,7 +195,7 @@ constexpr char TEXT_MOVES[] PROGMEM = "MOVES";
 
 constexpr char TEXT_REG_DFC[] PROGMEM = "DFC";
 constexpr char TEXT_REG_SFC[] PROGMEM = "SFC";
-constexpr char TEXT_REG_VBR[] PROGMEM = "VBR";
+// constexpr char TEXT_REG_VBR[] PROGMEM = "VBR";
 
 // MC68020
 constexpr char TEXT_BFCHG[]  PROGMEM = "BFCHG";
