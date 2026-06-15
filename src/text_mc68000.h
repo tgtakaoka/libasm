@@ -173,7 +173,7 @@ using common::TEXT_TRAPV;
 using common::TEXT_TST;
 using common::TEXT_UNLK;
 
-extern const char TEXT_REG_A0[] PROGMEM;
+using common::TEXT_REG_A0;
 extern const char TEXT_REG_A1[] PROGMEM;
 extern const char TEXT_REG_A2[] PROGMEM;
 extern const char TEXT_REG_A3[] PROGMEM;
@@ -202,7 +202,7 @@ using common::TEXT_RTD;
 
 extern const char TEXT_REG_DFC[] PROGMEM;
 extern const char TEXT_REG_SFC[] PROGMEM;
-extern const char TEXT_REG_VBR[] PROGMEM;
+using common::TEXT_REG_VBR;
 
 // MC68020
 extern const char TEXT_BFCHG[]  PROGMEM;
@@ -393,7 +393,7 @@ extern const char TEXT_FMOVE[]     PROGMEM;
 extern const char TEXT_FMOVECR[]   PROGMEM;
 extern const char TEXT_FMOVEM[]    PROGMEM;
 using common::TEXT_FMUL;
-extern const char TEXT_FNEG[]      PROGMEM;
+using common::TEXT_FNEG;
 using common::TEXT_FNOP;
 extern const char TEXT_FREM[]      PROGMEM;
 extern const char TEXT_FRESTORE[]  PROGMEM;

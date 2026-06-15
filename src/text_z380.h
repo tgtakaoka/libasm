@@ -188,7 +188,7 @@ using common::TEXT_REG_R;
 using common::TEXT_REG_SP;
 
 // Z380
-extern const char TEXT_REG_DSR[] PROGMEM;
+using common::TEXT_REG_DSR;
 using common::TEXT_REG_IXL;
 extern const char TEXT_REG_IXU[] PROGMEM;
 using common::TEXT_REG_IYL;

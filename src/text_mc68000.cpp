@@ -166,7 +166,7 @@ constexpr char TEXT_SVS[]     PROGMEM = "SVS";
 // constexpr char TEXT_TST[]   PROGMEM = "TST";
 // constexpr char TEXT_UNLK[]    PROGMEM = "UNLK";
 
-constexpr char TEXT_REG_A0[] PROGMEM = "A0";
+// constexpr char TEXT_REG_A0[] PROGMEM = "A0";
 constexpr char TEXT_REG_A1[] PROGMEM = "A1";
 constexpr char TEXT_REG_A2[] PROGMEM = "A2";
 constexpr char TEXT_REG_A3[] PROGMEM = "A3";
@@ -195,7 +195,7 @@ constexpr char TEXT_MOVES[] PROGMEM = "MOVES";
 
 constexpr char TEXT_REG_DFC[] PROGMEM = "DFC";
 constexpr char TEXT_REG_SFC[] PROGMEM = "SFC";
-constexpr char TEXT_REG_VBR[] PROGMEM = "VBR";
+// constexpr char TEXT_REG_VBR[] PROGMEM = "VBR";
 
 // MC68020
 constexpr char TEXT_BFCHG[]  PROGMEM = "BFCHG";
@@ -386,7 +386,7 @@ constexpr char TEXT_FMOVE[]     PROGMEM = "FMOVE";
 constexpr char TEXT_FMOVECR[]   PROGMEM = "FMOVECR";
 constexpr char TEXT_FMOVEM[]    PROGMEM = "FMOVEM";
 // constexpr char TEXT_FMUL[]    PROGMEM = "FMUL";
-constexpr char TEXT_FNEG[]      PROGMEM = "FNEG";
+// constexpr char TEXT_FNEG[]      PROGMEM = "FNEG";
 // constexpr char TEXT_FNOP[]    PROGMEM = "FNOP";
 constexpr char TEXT_FREM[]      PROGMEM = "FREM";
 constexpr char TEXT_FRESTORE[]  PROGMEM = "FRESTORE";

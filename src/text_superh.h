@@ -41,13 +41,16 @@ using common::TEXT_AND;
 using common::TEXT_BF;
 using common::TEXT_BRA;
 using common::TEXT_BSR;
+using common::TEXT_BST;
 using common::TEXT_BT;
+using common::TEXT_CLRMAC;
 using common::TEXT_EXTS;
 using common::TEXT_JMP;
 using common::TEXT_JSR;
 using common::TEXT_LDC;
 using common::TEXT_LDS;
 using common::TEXT_MAC;
+using common::TEXT_MOV;
 using common::TEXT_MUL;
 using common::TEXT_MULS;
 using common::TEXT_MULU;
@@ -55,14 +58,21 @@ using common::TEXT_NEG;
 using common::TEXT_NOP;
 using common::TEXT_NOT;
 using common::TEXT_OR;
+using common::TEXT_ROTL;
+using common::TEXT_ROTR;
 using common::TEXT_RTE;
 using common::TEXT_RTS;
+using common::TEXT_SHAL;
+using common::TEXT_SHAR;
 using common::TEXT_SHLL;
+using common::TEXT_SHLR;
+using common::TEXT_SLEEP;
 using common::TEXT_STC;
 using common::TEXT_STS;
 using common::TEXT_SUB;
 using common::TEXT_SUBC;
 using common::TEXT_SWAP;
+using common::TEXT_TRAPA;
 using common::TEXT_TST;
 using common::TEXT_XOR;
 
@@ -74,7 +84,6 @@ extern const char TEXT_BF_S[]     PROGMEM;  // "BF/S"
 extern const char TEXT_BRAF[]     PROGMEM;
 extern const char TEXT_BSRF[]     PROGMEM;
 extern const char TEXT_BT_S[]     PROGMEM;  // "BT/S"
-extern const char TEXT_CLRMAC[]   PROGMEM;
 extern const char TEXT_CLRT[]     PROGMEM;
 extern const char TEXT_CMP_EQ[]   PROGMEM;  // "CMP/EQ"
 extern const char TEXT_CMP_GE[]   PROGMEM;  // "CMP/GE"
@@ -100,7 +109,6 @@ extern const char TEXT_LDRS[]     PROGMEM;
 extern const char TEXT_LDS_L[]    PROGMEM;  // "LDS.L"
 extern const char TEXT_MAC_L[]    PROGMEM;  // "MAC.L"
 extern const char TEXT_MAC_W[]    PROGMEM;  // "MAC.W"
-extern const char TEXT_MOV[]      PROGMEM;
 extern const char TEXT_MOV_B[]    PROGMEM;  // "MOV.B"
 extern const char TEXT_MOV_L[]    PROGMEM;  // "MOV.L"
 extern const char TEXT_MOV_W[]    PROGMEM;  // "MOV.W"
@@ -113,36 +121,28 @@ extern const char TEXT_NEGC[]     PROGMEM;
 extern const char TEXT_OR_B[]     PROGMEM;  // "OR.B"
 extern const char TEXT_ROTCL[]    PROGMEM;
 extern const char TEXT_ROTCR[]    PROGMEM;
-extern const char TEXT_ROTL[]     PROGMEM;
-extern const char TEXT_ROTR[]     PROGMEM;
 extern const char TEXT_SETRC[]    PROGMEM;
 extern const char TEXT_SETT[]     PROGMEM;
-extern const char TEXT_SHAL[]     PROGMEM;
-extern const char TEXT_SHAR[]     PROGMEM;
-extern const char TEXT_SHLR[]     PROGMEM;
 extern const char TEXT_SHLL2[]    PROGMEM;
 extern const char TEXT_SHLL8[]    PROGMEM;
 extern const char TEXT_SHLL16[]   PROGMEM;
 extern const char TEXT_SHLR2[]    PROGMEM;
 extern const char TEXT_SHLR8[]    PROGMEM;
 extern const char TEXT_SHLR16[]   PROGMEM;
-extern const char TEXT_SLEEP[]    PROGMEM;
 extern const char TEXT_STC_L[]    PROGMEM;  // "STC.L"
 extern const char TEXT_STS_L[]    PROGMEM;  // "STS.L"
 extern const char TEXT_SUBV[]     PROGMEM;
 extern const char TEXT_SWAP_B[]   PROGMEM;  // "SWAP.B"
 extern const char TEXT_SWAP_W[]   PROGMEM;  // "SWAP.W"
 extern const char TEXT_TAS_B[]    PROGMEM;  // "TAS.B"
-extern const char TEXT_TRAPA[]    PROGMEM;
 extern const char TEXT_TST_B[]    PROGMEM;  // "TST.B"
 extern const char TEXT_XOR_B[]    PROGMEM;  // "XOR.B"
 extern const char TEXT_XTRCT[]    PROGMEM;
 
 // SH-2A instruction mnemonics
-extern const char TEXT_BCLR[]     PROGMEM;
-extern const char TEXT_BSET[]     PROGMEM;
-extern const char TEXT_BLD[]      PROGMEM;
-extern const char TEXT_BST[]      PROGMEM;
+using common::TEXT_BCLR;
+using common::TEXT_BSET;
+using common::TEXT_BLD;
 extern const char TEXT_BAND_B[]   PROGMEM;  // "BAND.B"
 extern const char TEXT_BANDNOT_B[] PROGMEM; // "BANDNOT.B"
 extern const char TEXT_BLD_B[]    PROGMEM;  // "BLD.B"
@@ -155,8 +155,8 @@ extern const char TEXT_CLIPS_B[]  PROGMEM;  // "CLIPS.B"
 extern const char TEXT_CLIPS_W[]  PROGMEM;  // "CLIPS.W"
 extern const char TEXT_CLIPU_B[]  PROGMEM;  // "CLIPU.B"
 extern const char TEXT_CLIPU_W[]  PROGMEM;  // "CLIPU.W"
-extern const char TEXT_DIVS[]     PROGMEM;
-extern const char TEXT_DIVU[]     PROGMEM;
+using common::TEXT_DIVS;
+using common::TEXT_DIVU;
 extern const char TEXT_JSR_N[]    PROGMEM;  // "JSR/N"
 extern const char TEXT_LDBANK[]   PROGMEM;
 extern const char TEXT_MOVI20[]   PROGMEM;
@@ -181,22 +181,22 @@ extern const char TEXT_FCNVDS[]   PROGMEM;
 extern const char TEXT_FCNVSD[]   PROGMEM;
 
 // SH-2E FPU instruction mnemonics
-extern const char TEXT_FABS[]     PROGMEM;
-extern const char TEXT_FADD[]     PROGMEM;
+using common::TEXT_FABS;
+using common::TEXT_FADD;
 extern const char TEXT_FCMP_EQ[]  PROGMEM;  // "FCMP/EQ"
 extern const char TEXT_FCMP_GT[]  PROGMEM;  // "FCMP/GT"
-extern const char TEXT_FDIV[]     PROGMEM;
+using common::TEXT_FDIV;
 extern const char TEXT_FLDI0[]    PROGMEM;
 extern const char TEXT_FLDI1[]    PROGMEM;
 extern const char TEXT_FLDS[]     PROGMEM;
-extern const char TEXT_FLOAT[]    PROGMEM;
+using common::TEXT_FLOAT;
 extern const char TEXT_FMAC[]     PROGMEM;
 extern const char TEXT_FMOV[]     PROGMEM;
 extern const char TEXT_FMOV_S[]   PROGMEM;  // "FMOV.S"
-extern const char TEXT_FMUL[]     PROGMEM;
-extern const char TEXT_FNEG[]     PROGMEM;
+using common::TEXT_FMUL;
+using common::TEXT_FNEG;
 extern const char TEXT_FSTS[]     PROGMEM;
-extern const char TEXT_FSUB[]     PROGMEM;
+using common::TEXT_FSUB;
 extern const char TEXT_FTRC[]     PROGMEM;
 
 // Register names
@@ -219,25 +219,25 @@ extern const char TEXT_REG_R13[]  PROGMEM;
 extern const char TEXT_REG_R14[]  PROGMEM;
 extern const char TEXT_REG_R15[]  PROGMEM;
 extern const char TEXT_REG_GBR[]  PROGMEM;
-extern const char TEXT_REG_VBR[]  PROGMEM;
-extern const char TEXT_REG_MACH[] PROGMEM;
-extern const char TEXT_REG_MACL[] PROGMEM;
-extern const char TEXT_REG_PC[]   PROGMEM;
+using common::TEXT_REG_VBR;
+using common::TEXT_REG_MACH;
+using common::TEXT_REG_MACL;
+using common::TEXT_REG_PC;
 extern const char TEXT_REG_PR[]   PROGMEM;
 
 // SH-DSP register names
-extern const char TEXT_REG_DSR[]  PROGMEM;
-extern const char TEXT_REG_A0[]   PROGMEM;
-extern const char TEXT_REG_X0[]   PROGMEM;
-extern const char TEXT_REG_X1[]   PROGMEM;
+using common::TEXT_REG_DSR;
+using common::TEXT_REG_A0;
+using common::TEXT_REG_X0;
+using common::TEXT_REG_X1;
 extern const char TEXT_REG_Y0[]   PROGMEM;
 extern const char TEXT_REG_Y1[]   PROGMEM;
-extern const char TEXT_REG_MOD[]  PROGMEM;
-extern const char TEXT_REG_RS[]   PROGMEM;
-extern const char TEXT_REG_RE[]   PROGMEM;
+using common::TEXT_REG_MOD;
+using common::TEXT_REG_RS;
+using common::TEXT_REG_RE;
 
 // SH-2A register names
-extern const char TEXT_REG_DR0[]   PROGMEM;
+using common::TEXT_REG_DR0;
 extern const char TEXT_REG_DR2[]   PROGMEM;
 extern const char TEXT_REG_DR4[]   PROGMEM;
 extern const char TEXT_REG_DR6[]   PROGMEM;

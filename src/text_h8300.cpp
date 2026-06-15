@@ -47,7 +47,7 @@ constexpr char TEXT_BILD[]   PROGMEM = "BILD";
 // constexpr char TEXT_BIOR[]  PROGMEM = "BIOR";
 constexpr char TEXT_BIST[]   PROGMEM = "BIST";
 constexpr char TEXT_BIXOR[]  PROGMEM = "BIXOR";
-constexpr char TEXT_BLD[]    PROGMEM = "BLD";
+// constexpr char TEXT_BLD[]    PROGMEM = "BLD";
 // constexpr char TEXT_BLE[]   PROGMEM = "BLE";
 // constexpr char TEXT_BLO[]   PROGMEM = "BLO";
 // constexpr char TEXT_BLS[]   PROGMEM = "BLS";
@@ -61,14 +61,14 @@ constexpr char TEXT_BLD[]    PROGMEM = "BLD";
 // constexpr char TEXT_BRN[]   PROGMEM = "BRN";
 // constexpr char TEXT_BSET[]  PROGMEM = "BSET";
 // constexpr char TEXT_BSR[]   PROGMEM = "BSR";
-constexpr char TEXT_BST[]    PROGMEM = "BST";
+// constexpr char TEXT_BST[]    PROGMEM = "BST";
 // constexpr char TEXT_BT[]    PROGMEM = "BT";
 // constexpr char TEXT_BT[]    PROGMEM = "BT";
 // constexpr char TEXT_BTST[]  PROGMEM = "BTST";
 // constexpr char TEXT_BVC[]   PROGMEM = "BVC";
 // constexpr char TEXT_BVS[]   PROGMEM = "BVS";
 // constexpr char TEXT_BXOR[]  PROGMEM = "BXOR";
-constexpr char TEXT_CLRMAC[] PROGMEM = "CLRMAC";
+// constexpr char TEXT_CLRMAC[] PROGMEM = "CLRMAC";
 // constexpr char TEXT_CMP[]   PROGMEM = "CMP";
 // constexpr char TEXT_DAA[]   PROGMEM = "DAA";
 // constexpr char TEXT_DAS[]   PROGMEM = "DAS";
@@ -164,8 +164,8 @@ constexpr char TEXT_REG_ER6[] PROGMEM = "ER6";
 constexpr char TEXT_REG_ER7[] PROGMEM = "ER7";
 
 constexpr char TEXT_REG_EXR[]  PROGMEM = "EXR";
-constexpr char TEXT_REG_MACH[] PROGMEM = "MACH";
-constexpr char TEXT_REG_MACL[] PROGMEM = "MACL";
+// constexpr char TEXT_REG_MACH[] PROGMEM = "MACH";
+// constexpr char TEXT_REG_MACL[] PROGMEM = "MACL";
 
 // Options
 constexpr char OPT_BOOL_ADVANCED_MODE[] PROGMEM = "advanced-mode";

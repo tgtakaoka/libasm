@@ -133,7 +133,7 @@ using common::TEXT_TSET;
 extern const char TEXT_WTR[]  PROGMEM;
 
 extern const char TEXT_REG_CSBR[] PROGMEM;
-extern const char TEXT_REG_DR0[]  PROGMEM;
+using common::TEXT_REG_DR0;
 extern const char TEXT_REG_IC[]   PROGMEM;
 extern const char TEXT_REG_ICB[]  PROGMEM;
 extern const char TEXT_REG_IISR[] PROGMEM;
@@ -160,8 +160,8 @@ extern const char TEXT_REG_TIR[]  PROGMEM;
 extern const char TEXT_REG_TSR[]  PROGMEM;
 extern const char TEXT_REG_TSR0[] PROGMEM;
 extern const char TEXT_REG_TSR1[] PROGMEM;
-extern const char TEXT_REG_X0[]   PROGMEM;
-extern const char TEXT_REG_X1[]   PROGMEM;
+using common::TEXT_REG_X0;
+using common::TEXT_REG_X1;
 
 using common::TEXT_CC_C;
 extern const char TEXT_CC_CE[]   PROGMEM;

@@ -184,7 +184,7 @@ constexpr char TEXT_SRLW[]  PROGMEM = "SRLW";
 // constexpr char TEXT_REG_SP[] PROGMEM = "SP";
 
 // Z380
-constexpr char TEXT_REG_DSR[] PROGMEM = "DSR";
+// constexpr char TEXT_REG_DSR[] PROGMEM = "DSR";
 // constexpr char TEXT_REG_IXL[] PROGMEM = "IXL";
 constexpr char TEXT_REG_IXU[] PROGMEM = "IXU";
 // constexpr char TEXT_REG_IYL[] PROGMEM = "IYL";

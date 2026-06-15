@@ -50,7 +50,7 @@ extern const char TEXT_BILD[]   PROGMEM;
 using common::TEXT_BIOR;
 extern const char TEXT_BIST[]   PROGMEM;
 extern const char TEXT_BIXOR[]  PROGMEM;
-extern const char TEXT_BLD[]    PROGMEM;
+using common::TEXT_BLD;
 using common::TEXT_BLE;
 using common::TEXT_BLO;
 using common::TEXT_BLS;
@@ -64,13 +64,13 @@ using common::TEXT_BRA;
 using common::TEXT_BRN;
 using common::TEXT_BSET;
 using common::TEXT_BSR;
-extern const char TEXT_BST[]    PROGMEM;
+using common::TEXT_BST;
 using common::TEXT_BT;
 using common::TEXT_BTST;
 using common::TEXT_BVC;
 using common::TEXT_BVS;
 using common::TEXT_BXOR;
-extern const char TEXT_CLRMAC[] PROGMEM;
+using common::TEXT_CLRMAC;
 using common::TEXT_CMP;
 using common::TEXT_DAA;
 using common::TEXT_DAS;
@@ -169,8 +169,8 @@ extern const char TEXT_REG_ER6[] PROGMEM;
 extern const char TEXT_REG_ER7[] PROGMEM;
 
 extern const char TEXT_REG_EXR[] PROGMEM;
-extern const char TEXT_REG_MACH[] PROGMEM;
-extern const char TEXT_REG_MACL[] PROGMEM;
+using common::TEXT_REG_MACH;
+using common::TEXT_REG_MACL;
 
 // Options
 extern const char OPT_BOOL_ADVANCED_MODE[] PROGMEM;

@@ -130,7 +130,7 @@ constexpr char TEXT_TRST[] PROGMEM = "TRST";
 constexpr char TEXT_WTR[]  PROGMEM = "WTR";
 
 constexpr char TEXT_REG_CSBR[] PROGMEM = "CSBR";
-constexpr char TEXT_REG_DR0[]  PROGMEM = "DR0";
+// constexpr char TEXT_REG_DR0[]  PROGMEM = "DR0";
 constexpr char TEXT_REG_IC[]   PROGMEM = "IC";
 constexpr char TEXT_REG_ICB[]  PROGMEM = "ICB";
 constexpr char TEXT_REG_IISR[] PROGMEM = "IISR";
@@ -157,8 +157,8 @@ constexpr char TEXT_REG_TIR[]  PROGMEM = "TIR";
 constexpr char TEXT_REG_TSR[]  PROGMEM = "TSR";
 constexpr char TEXT_REG_TSR0[] PROGMEM = "TSR0";
 constexpr char TEXT_REG_TSR1[] PROGMEM = "TSR1";
-constexpr char TEXT_REG_X0[]   PROGMEM = "X0";
-constexpr char TEXT_REG_X1[]   PROGMEM = "X1";
+// constexpr char TEXT_REG_X0[]   PROGMEM = "X0";
+// constexpr char TEXT_REG_X1[]   PROGMEM = "X1";
 
 // constexpr char TEXT_CC_C[]  PROGMEM = "C";
 constexpr char TEXT_CC_CE[]   PROGMEM = "CE";

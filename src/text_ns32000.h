@@ -367,7 +367,7 @@ extern const char TEXT_REG_F5[]      PROGMEM;
 extern const char TEXT_REG_F6[]      PROGMEM;
 extern const char TEXT_REG_F7[]      PROGMEM;
 extern const char TEXT_REG_INTBASE[] PROGMEM;
-extern const char TEXT_REG_MOD[]     PROGMEM;
+using common::TEXT_REG_MOD;
 using common::TEXT_REG_PSR;
 extern const char TEXT_REG_UPSR[]    PROGMEM;
 extern const char TEXT_REG_US[]      PROGMEM;
