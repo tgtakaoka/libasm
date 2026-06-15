@@ -22,10 +22,13 @@ namespace superh {
 // clang-format off
 
 // clang-format off
-const char TEXT_SUPERH_LIST[] PROGMEM = "SH-1, SH-2, SH-DSP";
+const char TEXT_SUPERH_LIST[] PROGMEM = "SH-1, SH-2, SH-DSP, SH-2E";
 const char TEXT_CPU_SH1[]     PROGMEM = "SH-1";
 const char TEXT_CPU_SH2[]     PROGMEM = "SH-2";
 const char TEXT_CPU_SH_DSP[]  PROGMEM = "SH-DSP";
+const char TEXT_CPU_SH2E[]    PROGMEM = "SH-2E";
+const char TEXT_FPU_NONE[]    PROGMEM = "none";
+const char TEXT_FPU_SH2E[]    PROGMEM = "SH-2E";
 
 const char TEXT_ADDV[]    PROGMEM = "ADDV";
 const char TEXT_AND_B[]   PROGMEM = "AND.B";
@@ -97,6 +100,25 @@ const char TEXT_TST_B[]   PROGMEM = "TST.B";
 const char TEXT_XOR_B[]   PROGMEM = "XOR.B";
 const char TEXT_XTRCT[]   PROGMEM = "XTRCT";
 
+// SH-2E FPU instruction mnemonics
+const char TEXT_FABS[]    PROGMEM = "FABS";
+const char TEXT_FADD[]    PROGMEM = "FADD";
+const char TEXT_FCMP_EQ[] PROGMEM = "FCMP/EQ";
+const char TEXT_FCMP_GT[] PROGMEM = "FCMP/GT";
+const char TEXT_FDIV[]    PROGMEM = "FDIV";
+const char TEXT_FLDI0[]   PROGMEM = "FLDI0";
+const char TEXT_FLDI1[]   PROGMEM = "FLDI1";
+const char TEXT_FLDS[]    PROGMEM = "FLDS";
+const char TEXT_FLOAT[]   PROGMEM = "FLOAT";
+const char TEXT_FMAC[]    PROGMEM = "FMAC";
+const char TEXT_FMOV[]    PROGMEM = "FMOV";
+const char TEXT_FMOV_S[]  PROGMEM = "FMOV.S";
+const char TEXT_FMUL[]    PROGMEM = "FMUL";
+const char TEXT_FNEG[]    PROGMEM = "FNEG";
+const char TEXT_FSTS[]    PROGMEM = "FSTS";
+const char TEXT_FSUB[]    PROGMEM = "FSUB";
+const char TEXT_FTRC[]    PROGMEM = "FTRC";
+
 const char TEXT_REG_R8[]   PROGMEM = "R8";
 const char TEXT_REG_R9[]   PROGMEM = "R9";
 const char TEXT_REG_R10[]  PROGMEM = "R10";
@@ -122,6 +144,26 @@ const char TEXT_REG_Y1[]   PROGMEM = "Y1";
 const char TEXT_REG_MOD[]  PROGMEM = "MOD";
 const char TEXT_REG_RS[]   PROGMEM = "RS";
 const char TEXT_REG_RE[]   PROGMEM = "RE";
+
+// SH-2E FPU register names
+const char TEXT_REG_FR0[]   PROGMEM = "FR0";
+const char TEXT_REG_FR1[]   PROGMEM = "FR1";
+const char TEXT_REG_FR2[]   PROGMEM = "FR2";
+const char TEXT_REG_FR3[]   PROGMEM = "FR3";
+const char TEXT_REG_FR4[]   PROGMEM = "FR4";
+const char TEXT_REG_FR5[]   PROGMEM = "FR5";
+const char TEXT_REG_FR6[]   PROGMEM = "FR6";
+const char TEXT_REG_FR7[]   PROGMEM = "FR7";
+const char TEXT_REG_FR8[]   PROGMEM = "FR8";
+const char TEXT_REG_FR9[]   PROGMEM = "FR9";
+const char TEXT_REG_FR10[]  PROGMEM = "FR10";
+const char TEXT_REG_FR11[]  PROGMEM = "FR11";
+const char TEXT_REG_FR12[]  PROGMEM = "FR12";
+const char TEXT_REG_FR13[]  PROGMEM = "FR13";
+const char TEXT_REG_FR14[]  PROGMEM = "FR14";
+const char TEXT_REG_FR15[]  PROGMEM = "FR15";
+const char TEXT_REG_FPUL[]  PROGMEM = "FPUL";
+const char TEXT_REG_FPSCR[] PROGMEM = "FPSCR";
 
 // clang-format on
 }  // namespace superh

@@ -16,6 +16,7 @@
 
 #include "dis_superh.h"
 
+#include "option_base.h"
 #include "reg_superh.h"
 #include "table_superh.h"
 
@@ -23,13 +24,16 @@ namespace libasm {
 namespace superh {
 
 using namespace reg;
+using namespace text::option;
 
 const ValueFormatter::Plugins &DisSuperH::defaultPlugins() {
     return ValueFormatter::Plugins::hitachi();
 }
 
 DisSuperH::DisSuperH(const ValueFormatter::Plugins &plugins)
-    : Disassembler(plugins), Config(TABLE) {
+    : Disassembler(plugins, &_opt_fpu),
+      Config(TABLE),
+      _opt_fpu(this, &Config::setFpuName, OPT_TEXT_FPU, OPT_DESC_FPU) {
     reset();
 }
 
@@ -243,6 +247,18 @@ void DisSuperH::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) cons
     case M_RE:
         outRegName(out, REG_RE);
         break;
+    case M_FRN:
+        outRegName(out, decodeFn(opc));
+        break;
+    case M_FRM:
+        outRegName(out, decodeFm(opc));
+        break;
+    case M_FPUL:
+        outRegName(out, REG_FPUL);
+        break;
+    case M_FPSCR:
+        outRegName(out, REG_FPSCR);
+        break;
     case M_IGBR:
         out.text_P(PSTR("@(R0,"));
         outRegName(out, REG_GBR);
@@ -259,7 +275,7 @@ Error DisSuperH::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) cons
     const auto opc = insn.readUint16Be();
     insn.setOpCode(opc);
 
-    if (searchOpCode(cpuType(), insn, out) != OK) {
+    if (searchOpCode(cpuType(), fpuType(), insn, out) != OK) {
         insn.nameBuffer().reset();
         out.reset();
         return _insn.setError(insn.getError());

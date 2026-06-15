@@ -31,8 +31,8 @@ struct TableSuperH final : InsnTable<CpuType> {
 
 extern const TableSuperH TABLE;
 
-Error searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out);
-Error searchName(CpuType cpuType, AsmInsn &insn);
+Error searchOpCode(CpuType cpuType, FpuType fpuType, DisInsn &insn, StrBuffer &out);
+Error searchName(CpuType cpuType, FpuType fpuType, AsmInsn &insn);
 
 }  // namespace superh
 }  // namespace libasm

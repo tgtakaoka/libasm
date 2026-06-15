@@ -131,8 +131,9 @@ It can read Intel HEX or Motorola S-Record input.
          TMS32010 TMS32015 TMS32020 TMS320C25 TMS320C26 TMS320C20X TMS320C5X
          TMS320C30 TMS320C31 TMS320C32 i8086 i80186 i80286 V30 i8096 i80196
          MC68000 MC68010 MC68020 MC68030 MC68040 H8/300 H8/300H H8S/2000
-         H8S/2600 H8/500 H8/520 SH-1 SH-2 SH-DSP TMS9900 TMS9980 TMS9995
-         TMS99105 TMS99110 Z8001 Z8002 NS32032 MN1610 MN1613 MN1613A J11 T11
+         H8S/2600 H8/500 H8/520 SH-1 SH-2 SH-DSP SH-2E TMS9900 TMS9980
+         TMS9995 TMS99105 TMS99110 Z8001 Z8002 NS32032 MN1610 MN1613
+         MN1613A J11 T11
       -o <output>      : output file
       -l <list>        : list file
       <input>          : file can be Motorola S-Record or Intel HEX format
@@ -155,7 +156,7 @@ It can read Intel HEX or Motorola S-Record input.
       --external-paren : disp2(disp(ext)) as external addressing (bool: 32032)
       --extmode        : Extended mode (bool: Z380)
       --fp-alias       : emit FP alias for R6 in indirect addressing (bool: H8/500)
-      --fpu            : floating point co-processor (text: 8086, 68000, 32032)
+      --fpu            : floating point co-processor (text: 8086, 68000, SH-1, 32032)
       --indirect-long  : [] for indirect long operand (bool: 6502)
       --lock-insn      : lock prefix as instruction (bool: 8086)
       --longa          : enable 16-bit accumulator (bool: 6502)

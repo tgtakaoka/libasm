@@ -68,6 +68,10 @@ enum AddrMode : uint8_t {
     M_RS = 36,     // RS DSP repeat-start register        bits: none
     M_RE = 37,     // RE DSP repeat-end register          bits: none
     M_REL8P = 38,  // 8-bit signed PC-rel as "@(*+N,PC)"  bits: 0x00FF
+    M_FRN = 39,    // FRn, bits[11:8]                     bits: 0x0F00
+    M_FRM = 40,    // FRm, bits[7:4]                      bits: 0x00F0
+    M_FPUL = 41,   // FPUL FPU communication register     bits: none
+    M_FPSCR = 42,  // FPSCR FPU status/control register   bits: none
 };
 
 struct Entry final : entry::Base<Config::opcode_t> {
@@ -94,11 +98,13 @@ struct Entry final : entry::Base<Config::opcode_t> {
             case M_INCN:
             case M_DECN:
             case M_IDXN:
+            case M_FRN:
                 return 0x0F00;
             case M_RM:
             case M_IRM:
             case M_INCM:
             case M_IDXM:
+            case M_FRM:
                 return 0x00F0;
             case M_D4N:
                 return 0x0F0F;

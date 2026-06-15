@@ -228,6 +228,41 @@ constexpr Entry TABLE_DSP[] PROGMEM = {
     E1(0x8E00, TEXT_LDRE,    M_REL8P),         // LDRE @(disp,PC)
 };
 
+// SH-2E FPU instructions (shared with SH-2A when FPU is enabled).
+// All encodings have the 0xF000 high nibble.
+constexpr Entry TABLE_FPU[] PROGMEM = {
+    E2(0x005A, TEXT_STS,     M_FPUL,  M_RN),    // STS FPUL,Rn
+    E2(0x006A, TEXT_STS,     M_FPSCR, M_RN),    // STS FPSCR,Rn
+    E2(0x4052, TEXT_STS_L,   M_FPUL,  M_DECN),  // STS.L FPUL,@-Rn
+    E2(0x4056, TEXT_LDS_L,   M_INCN,  M_FPUL),  // LDS.L @Rm+,FPUL
+    E2(0x405A, TEXT_LDS,     M_RN,    M_FPUL),  // LDS Rm,FPUL
+    E2(0x4062, TEXT_STS_L,   M_FPSCR, M_DECN),  // STS.L FPSCR,@-Rn
+    E2(0x4066, TEXT_LDS_L,   M_INCN,  M_FPSCR), // LDS.L @Rm+,FPSCR
+    E2(0x406A, TEXT_LDS,     M_RN,    M_FPSCR), // LDS Rm,FPSCR
+    E2(0xF000, TEXT_FADD,    M_FRM,   M_FRN),   // FADD FRm,FRn
+    E2(0xF001, TEXT_FSUB,    M_FRM,   M_FRN),   // FSUB FRm,FRn
+    E2(0xF002, TEXT_FMUL,    M_FRM,   M_FRN),   // FMUL FRm,FRn
+    E2(0xF003, TEXT_FDIV,    M_FRM,   M_FRN),   // FDIV FRm,FRn
+    E2(0xF004, TEXT_FCMP_EQ, M_FRM,   M_FRN),   // FCMP/EQ FRm,FRn
+    E2(0xF005, TEXT_FCMP_GT, M_FRM,   M_FRN),   // FCMP/GT FRm,FRn
+    E2(0xF006, TEXT_FMOV_S,  M_IDXM,  M_FRN),   // FMOV.S @(R0,Rm),FRn
+    E2(0xF007, TEXT_FMOV_S,  M_FRM,   M_IDXN),  // FMOV.S FRm,@(R0,Rn)
+    E2(0xF008, TEXT_FMOV_S,  M_IRM,   M_FRN),   // FMOV.S @Rm,FRn
+    E2(0xF009, TEXT_FMOV_S,  M_INCM,  M_FRN),   // FMOV.S @Rm+,FRn
+    E2(0xF00A, TEXT_FMOV_S,  M_FRM,   M_IRN),   // FMOV.S FRm,@Rn
+    E2(0xF00B, TEXT_FMOV_S,  M_FRM,   M_DECN),  // FMOV.S FRm,@-Rn
+    E2(0xF00C, TEXT_FMOV,    M_FRM,   M_FRN),   // FMOV FRm,FRn
+    E2(0xF00D, TEXT_FSTS,    M_FPUL,  M_FRN),   // FSTS FPUL,FRn
+    E2(0xF00E, TEXT_FMAC,    M_FRM,   M_FRN),   // FMAC FR0,FRm,FRn
+    E2(0xF01D, TEXT_FLDS,    M_FRN,   M_FPUL),  // FLDS FRm,FPUL  (FRm in n-slot)
+    E2(0xF02D, TEXT_FLOAT,   M_FPUL,  M_FRN),   // FLOAT FPUL,FRn
+    E2(0xF03D, TEXT_FTRC,    M_FRN,   M_FPUL),  // FTRC FRm,FPUL  (FRm in n-slot)
+    E1(0xF04D, TEXT_FNEG,    M_FRN),            // FNEG FRn
+    E1(0xF05D, TEXT_FABS,    M_FRN),            // FABS FRn
+    E1(0xF08D, TEXT_FLDI0,   M_FRN),            // FLDI0 FRn
+    E1(0xF09D, TEXT_FLDI1,   M_FRN),            // FLDI1 FRn
+};
+
 // INDEX arrays sorted alphabetically by the mnemonic STRING (not by the
 // TEXT_X identifier), so the binary-search comparator (strcasecmp_P on
 // the mnemonic) sees the index ordering match its sort. Regenerate via
@@ -380,6 +415,8 @@ constexpr uint8_t INDEX_SH2[] PROGMEM = {
       1,  // TEXT_MUL_L
 };
 
+constexpr uint8_t INDEX_FPU[] PROGMEM = {0};
+
 constexpr uint8_t INDEX_DSP[] PROGMEM = {
      12,  // TEXT_LDC
      18,  // TEXT_LDC
@@ -442,16 +479,40 @@ constexpr EntryPage SH_DSP_PAGES[] PROGMEM = {
         {ARRAY_RANGE(TABLE_DSP), ARRAY_RANGE(INDEX_DSP)},
 };
 
+// SH-2E inherits SH-2 instructions. The FPU page comes from the FPU
+// dispatch table below (mandatory FPU_SH2E).
+constexpr EntryPage SH2E_PAGES[] PROGMEM = {
+        {ARRAY_RANGE(TABLE_COMMON), ARRAY_RANGE(INDEX_COMMON)},
+        {ARRAY_RANGE(TABLE_SH2), ARRAY_RANGE(INDEX_SH2)},
+};
+
+constexpr EntryPage FPU_PAGES[] PROGMEM = {
+        {ARRAY_RANGE(TABLE_FPU), ARRAY_RANGE(INDEX_FPU)},
+};
+
+#define EMPTY_RANGE(a) ARRAY_BEGIN(a), ARRAY_BEGIN(a)
+
 using Cpu = entry::CpuBase<CpuType, EntryPage>;
+using Fpu = entry::CpuBase<FpuType, EntryPage>;
 
 constexpr Cpu CPU_TABLE[] PROGMEM = {
         {SH1, TEXT_CPU_SH1, ARRAY_RANGE(SH1_PAGES)},
         {SH2, TEXT_CPU_SH2, ARRAY_RANGE(SH2_PAGES)},
         {SH_DSP, TEXT_CPU_SH_DSP, ARRAY_RANGE(SH_DSP_PAGES)},
+        {SH2E, TEXT_CPU_SH2E, ARRAY_RANGE(SH2E_PAGES)},
+};
+
+constexpr Fpu FPU_TABLE[] PROGMEM = {
+        {FPU_NONE, TEXT_FPU_NONE, EMPTY_RANGE(FPU_PAGES)},
+        {FPU_SH2E, TEXT_FPU_SH2E, ARRAY_RANGE(FPU_PAGES)},
 };
 
 static const Cpu *cpu(CpuType cpuType) {
     return Cpu::search(cpuType, ARRAY_RANGE(CPU_TABLE));
+}
+
+static const Fpu *fpu(FpuType fpuType) {
+    return Fpu::search(fpuType, ARRAY_RANGE(FPU_TABLE));
 }
 
 // matchOpCode: mask out variable bits (register/immediate fields) before comparing.
@@ -461,8 +522,14 @@ static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *) {
     return opc == entry->readOpCode();
 }
 
-Error searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) {
+Error searchOpCode(CpuType cpuType, FpuType fpuType, DisInsn &insn, StrBuffer &out) {
     cpu(cpuType)->searchOpCode(insn, out, matchOpCode);
+    if (insn.getError() == UNKNOWN_INSTRUCTION) {
+        insn.nameBuffer().reset();
+        out.reset();
+        insn.setError(insn.errorAt(), OK);
+        fpu(fpuType)->searchOpCode(insn, out, matchOpCode);
+    }
     return insn.getError();
 }
 
@@ -506,8 +573,12 @@ static bool acceptModes(AsmInsn &insn, const Entry *entry) {
     return acceptMode(insn.srcOp, flags.src()) && acceptMode(insn.dstOp, flags.dst());
 }
 
-Error searchName(CpuType cpuType, AsmInsn &insn) {
+Error searchName(CpuType cpuType, FpuType fpuType, AsmInsn &insn) {
     cpu(cpuType)->searchName(insn, acceptModes);
+    if (insn.getError() == UNKNOWN_INSTRUCTION) {
+        insn.setError(insn.errorAt(), OK);
+        fpu(fpuType)->searchName(insn, acceptModes);
+    }
     return insn.getError();
 }
 
@@ -525,6 +596,35 @@ Error TableSuperH::searchCpuName(StrScanner &name, CpuType &cpuType) const {
         return UNSUPPORTED_CPU;
     cpuType = t->readCpuType();
     return OK;
+}
+
+void Config::setCpuType(CpuType cpuType) {
+    ConfigImpl::setCpuType(cpuType);
+    // SH-2E mandates the FPU; other CPUs default to FPU_NONE.
+    _fpu = (cpuType == SH2E) ? FPU_SH2E : FPU_NONE;
+}
+
+const /* PROGMEM */ char *Config::fpu_P() const {
+    return fpu(_fpu)->name_P();
+}
+
+Error Config::setFpuType(FpuType fpuType) {
+    if (fpuType == FPU_NONE || fpuType == FPU_SH2E) {
+        _fpu = fpuType;
+        return OK;
+    }
+    return UNKNOWN_OPERAND;
+}
+
+Error Config::setFpuName(StrScanner &scan) {
+    if (scan.expectFalse())
+        return setFpuType(FPU_NONE);
+    if (scan.expectTrue())
+        return setFpuType(FPU_SH2E);
+    const auto *t = Fpu::search(scan, ARRAY_RANGE(FPU_TABLE));
+    if (t == nullptr)
+        return UNKNOWN_OPERAND;
+    return setFpuType(t->readCpuType());
 }
 
 const TableSuperH TABLE;

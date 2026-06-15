@@ -26,11 +26,27 @@ enum CpuType : uint8_t {
     SH1,
     SH2,
     SH_DSP,
+    SH2E,
+};
+
+enum FpuType : uint8_t {
+    FPU_NONE,
+    FPU_SH2E,
 };
 
 struct Config
     : public ConfigImpl<CpuType, ADDRESS_32BIT, ADDRESS_BYTE, OPCODE_16BIT, ENDIAN_BIG, 6, 6> {
-    Config(const InsnTable<CpuType> &table) : ConfigImpl(table, SH1) {}
+    Config(const InsnTable<CpuType> &table) : ConfigImpl(table, SH1), _fpu(FPU_NONE) {}
+
+    void setCpuType(CpuType cpuType) override;
+
+    const /* PROGMEM */ char *fpu_P() const;
+    FpuType fpuType() const { return _fpu; }
+    Error setFpuType(FpuType fpuType);
+    Error setFpuName(StrScanner &scan) override;
+
+protected:
+    FpuType _fpu;
 };
 
 }  // namespace superh

@@ -36,6 +36,10 @@ bool isShDsp() {
     return strcasecmp_P("SH-DSP", disassembler.config().cpu_P()) == 0;
 }
 
+bool isSh2e() {
+    return strcasecmp_P("SH-2E", disassembler.config().cpu_P()) == 0;
+}
+
 void set_up() {
     disassembler.reset();
 }
@@ -57,6 +61,9 @@ void test_cpu() {
 
     EQUALS("cpu SH-DSP",   true, disassembler.setCpu("SH-DSP"));
     EQUALS_P("cpu SH-DSP", "SH-DSP", disassembler.config().cpu_P());
+
+    EQUALS("cpu SH-2E",   true, disassembler.setCpu("SH-2E"));
+    EQUALS_P("cpu SH-2E", "SH-2E", disassembler.config().cpu_P());
 }
 
 // Representative positive tests for SH-1 (which SH-2 also inherits).  Covers
@@ -278,6 +285,52 @@ void test_shdsp_additions() {
 }
 
 
+// SH-2E adds single-precision FPU.
+void test_sh2e_fpu() {
+    // Arithmetic
+    TEST("FADD",    "FR0, FR1",       0xF100);
+    TEST("FADD",    "FR14, FR15",     0xFFE0);
+    TEST("FSUB",    "FR0, FR1",       0xF101);
+    TEST("FMUL",    "FR0, FR1",       0xF102);
+    TEST("FDIV",    "FR0, FR1",       0xF103);
+    // Compare
+    TEST("FCMP/EQ", "FR0, FR1",       0xF104);
+    TEST("FCMP/GT", "FR0, FR1",       0xF105);
+    // Unary
+    TEST("FABS",    "FR0",            0xF05D);
+    TEST("FABS",    "FR15",           0xFF5D);
+    TEST("FNEG",    "FR0",            0xF04D);
+    TEST("FNEG",    "FR15",           0xFF4D);
+    // Data transfer
+    TEST("FMOV",    "FR0, FR1",       0xF10C);
+    TEST("FMOV.S",  "@R0, FR0",       0xF008);
+    TEST("FMOV.S",  "FR0, @R0",       0xF00A);
+    TEST("FMOV.S",  "@R0+, FR0",      0xF009);
+    TEST("FMOV.S",  "FR0, @-R0",      0xF00B);
+    TEST("FMOV.S",  "@(R0,R1), FR0",  0xF016);
+    TEST("FMOV.S",  "FR0, @(R0,R1)",  0xF107);
+    // Constants
+    TEST("FLDI0",   "FR0",            0xF08D);
+    TEST("FLDI1",   "FR0",            0xF09D);
+    // Conversion
+    TEST("FLOAT",   "FPUL, FR0",      0xF02D);
+    TEST("FTRC",    "FR0, FPUL",      0xF03D);
+    // FMAC: dis omits the implicit FR0 source.
+    TEST("FMAC",    "FR1, FR2",  0xF21E);
+    TEST("FMAC",    "FR14, FR15",0xFFEE);
+    // FLDS / FSTS
+    TEST("FLDS",    "FR0, FPUL",      0xF01D);
+    TEST("FSTS",    "FPUL, FR0",      0xF00D);
+    // LDS/STS for FPUL / FPSCR
+    TEST("LDS",    "R0, FPUL",        0x405A);
+    TEST("LDS",    "R15, FPSCR",      0x4F6A);
+    TEST("STS",    "FPUL, R0",        0x005A);
+    TEST("STS",    "FPSCR, R15",      0x0F6A);
+    TEST("LDS.L",  "@R0+, FPUL",      0x4056);
+    TEST("STS.L",  "FPUL, @-R0",      0x4052);
+}
+
+
 void test_illegal_sh1() {
     // Unmapped opcodes in the 0x0000..0x00FF region.
     SH_UNKN(0x0000);
@@ -333,6 +386,20 @@ void test_illegal_shdsp() {
     SH_UNKN(0xF001);
 }
 
+void test_illegal_sh2e() {
+    SH_UNKN(0x0000);
+    SH_UNKN(0x0001);
+    SH_UNKN(0x0032);
+    // FPU sub-op nibble 0x0F is reserved (FADD..FMAC use 0..E).
+    SH_UNKN(0xF00F);
+    SH_UNKN(0xFF0F);
+    // SH-DSP register-transfer instructions must not decode on SH-2E.
+    SH_UNKN(0x4014);    // SETRC Rm
+    SH_UNKN(0x8200);    // SETRC #imm
+    SH_UNKN(0x8C00);    // LDRS
+    SH_UNKN(0x8E00);    // LDRE
+}
+
 // clang-format on
 
 void run_tests(const char *cpu) {
@@ -349,6 +416,8 @@ void run_tests(const char *cpu) {
         RUN_TEST(test_sh2_additions);
     if (isShDsp())
         RUN_TEST(test_shdsp_additions);
+    if (isSh2e())
+        RUN_TEST(test_sh2e_fpu);
     // Per-CPU illegal-instruction probes.
     if (isSh1())
         RUN_TEST(test_illegal_sh1);
@@ -356,6 +425,8 @@ void run_tests(const char *cpu) {
         RUN_TEST(test_illegal_sh2);
     if (isShDsp())
         RUN_TEST(test_illegal_shdsp);
+    if (isSh2e())
+        RUN_TEST(test_illegal_sh2e);
 }
 
 // Local Variables:

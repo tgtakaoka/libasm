@@ -28,6 +28,8 @@ struct DisSuperH final : Disassembler, Config {
     DisSuperH(const ValueFormatter::Plugins &plugins = defaultPlugins());
 
 private:
+    const TextOption<Config> _opt_fpu;
+
     void decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) const;
 
     Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) const override;

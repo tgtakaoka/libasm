@@ -66,6 +66,24 @@ enum RegName : int8_t {
     REG_MOD = 29,
     REG_RS = 30,
     REG_RE = 31,
+    REG_FR0 = 32,
+    REG_FR1 = 33,
+    REG_FR2 = 34,
+    REG_FR3 = 35,
+    REG_FR4 = 36,
+    REG_FR5 = 37,
+    REG_FR6 = 38,
+    REG_FR7 = 39,
+    REG_FR8 = 40,
+    REG_FR9 = 41,
+    REG_FR10 = 42,
+    REG_FR11 = 43,
+    REG_FR12 = 44,
+    REG_FR13 = 45,
+    REG_FR14 = 46,
+    REG_FR15 = 47,
+    REG_FPUL = 48,
+    REG_FPSCR = 49,
 };
 
 namespace reg {
@@ -74,11 +92,16 @@ RegName parseRegName(StrScanner &scan, const ValueParser &parser);
 StrBuffer &outRegName(StrBuffer &out, RegName reg);
 RegName decodeRn(uint16_t word);  // extract 4-bit field from bits[11:8]
 RegName decodeRm(uint16_t word);  // extract 4-bit field from bits[7:4]
+RegName decodeFn(uint16_t word);  // FRn: 4-bit field from bits[11:8]
+RegName decodeFm(uint16_t word);  // FRm: 4-bit field from bits[7:4]
 
 inline bool isGpr(RegName r) {
     return r >= REG_R0 && r <= REG_R15;
 }
-uint8_t encodeRegNum(RegName r);  // 0..15 for GPRs; undefined for special regs
+inline bool isFr(RegName r) {
+    return r >= REG_FR0 && r <= REG_FR15;
+}
+uint8_t encodeRegNum(RegName r);  // 0..15 for GPRs or FRs; undefined otherwise
 
 }  // namespace reg
 }  // namespace superh

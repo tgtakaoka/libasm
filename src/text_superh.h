@@ -28,6 +28,9 @@ extern const char TEXT_SUPERH_LIST[] PROGMEM;
 extern const char TEXT_CPU_SH1[]     PROGMEM;
 extern const char TEXT_CPU_SH2[]     PROGMEM;
 extern const char TEXT_CPU_SH_DSP[]  PROGMEM;
+extern const char TEXT_CPU_SH2E[]    PROGMEM;
+extern const char TEXT_FPU_NONE[]    PROGMEM;
+extern const char TEXT_FPU_SH2E[]    PROGMEM;
 
 // Instructions reused from common
 using common::TEXT_ADD;
@@ -133,6 +136,25 @@ extern const char TEXT_TST_B[]    PROGMEM;  // "TST.B"
 extern const char TEXT_XOR_B[]    PROGMEM;  // "XOR.B"
 extern const char TEXT_XTRCT[]    PROGMEM;
 
+// SH-2E FPU instruction mnemonics
+extern const char TEXT_FABS[]     PROGMEM;
+extern const char TEXT_FADD[]     PROGMEM;
+extern const char TEXT_FCMP_EQ[]  PROGMEM;  // "FCMP/EQ"
+extern const char TEXT_FCMP_GT[]  PROGMEM;  // "FCMP/GT"
+extern const char TEXT_FDIV[]     PROGMEM;
+extern const char TEXT_FLDI0[]    PROGMEM;
+extern const char TEXT_FLDI1[]    PROGMEM;
+extern const char TEXT_FLDS[]     PROGMEM;
+extern const char TEXT_FLOAT[]    PROGMEM;
+extern const char TEXT_FMAC[]     PROGMEM;
+extern const char TEXT_FMOV[]     PROGMEM;
+extern const char TEXT_FMOV_S[]   PROGMEM;  // "FMOV.S"
+extern const char TEXT_FMUL[]     PROGMEM;
+extern const char TEXT_FNEG[]     PROGMEM;
+extern const char TEXT_FSTS[]     PROGMEM;
+extern const char TEXT_FSUB[]     PROGMEM;
+extern const char TEXT_FTRC[]     PROGMEM;
+
 // Register names
 using common::TEXT_REG_R0;
 using common::TEXT_REG_R1;
@@ -169,6 +191,26 @@ extern const char TEXT_REG_Y1[]   PROGMEM;
 extern const char TEXT_REG_MOD[]  PROGMEM;
 extern const char TEXT_REG_RS[]   PROGMEM;
 extern const char TEXT_REG_RE[]   PROGMEM;
+
+// SH-2E FPU register names
+extern const char TEXT_REG_FR0[]   PROGMEM;
+extern const char TEXT_REG_FR1[]   PROGMEM;
+extern const char TEXT_REG_FR2[]   PROGMEM;
+extern const char TEXT_REG_FR3[]   PROGMEM;
+extern const char TEXT_REG_FR4[]   PROGMEM;
+extern const char TEXT_REG_FR5[]   PROGMEM;
+extern const char TEXT_REG_FR6[]   PROGMEM;
+extern const char TEXT_REG_FR7[]   PROGMEM;
+extern const char TEXT_REG_FR8[]   PROGMEM;
+extern const char TEXT_REG_FR9[]   PROGMEM;
+extern const char TEXT_REG_FR10[]  PROGMEM;
+extern const char TEXT_REG_FR11[]  PROGMEM;
+extern const char TEXT_REG_FR12[]  PROGMEM;
+extern const char TEXT_REG_FR13[]  PROGMEM;
+extern const char TEXT_REG_FR14[]  PROGMEM;
+extern const char TEXT_REG_FR15[]  PROGMEM;
+extern const char TEXT_REG_FPUL[]  PROGMEM;
+extern const char TEXT_REG_FPSCR[] PROGMEM;
 
 // clang-format on
 }  // namespace superh

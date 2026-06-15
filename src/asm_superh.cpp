@@ -318,6 +318,16 @@ void AsmSuperH::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode) c
     case M_MOD:
     case M_RS:
     case M_RE:
+    case M_FPUL:
+    case M_FPSCR:
+        break;
+    case M_FRN:
+        opc |= static_cast<Config::opcode_t>(encodeRegNum(op.reg) & 0xF) << 8;
+        insn.setOpCode(opc);
+        break;
+    case M_FRM:
+        opc |= static_cast<Config::opcode_t>(encodeRegNum(op.reg) & 0xF) << 4;
+        insn.setOpCode(opc);
         break;
     case M_RN:
     case M_IRN:
@@ -457,7 +467,7 @@ Error AsmSuperH::encodeImpl(StrScanner &scan, Insn &_insn) const {
     }
     scan.skipSpaces();
 
-    if (searchName(cpuType(), insn))
+    if (searchName(cpuType(), fpuType(), insn))
         return _insn.setError(insn.srcOp, insn);
 
     encodeOperand(insn, insn.srcOp, insn.src());
