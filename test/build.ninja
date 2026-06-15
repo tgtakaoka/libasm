@@ -572,6 +572,23 @@ build gen_scn2650: link gen_scn2650.o $
   dec_float.o value_parser.o parsers.o operators.o $
   gen_driver.o tokenized_text.o
 
+# superh
+build test_dis_superh: run test_dis_superh.o $
+  dis_superh.o reg_superh.o table_superh.o text_superh.o $
+  dis_base.o config_base.o error_reporter.o formatters.o insn_base.o $
+  option_base.o reg_base.o str_buffer.o str_scanner.o text_common.o value.o $
+  value_formatter.o value_parser.o parsers.o operators.o dec_float.o $
+  fixed64.o ieee_float.o float80_base.o float80_hard.o float80_soft.o $
+  test_dis_helper.o test_asserter.o
+build gen_superh: link gen_superh.o $
+  dis_superh.o reg_superh.o table_superh.o text_superh.o $
+  config_base.o dis_base.o dis_formatter.o error_reporter.o formatters.o $
+  insn_base.o list_formatter.o option_base.o reg_base.o str_buffer.o $
+  str_scanner.o test_generator.o text_common.o value.o value_formatter.o $
+  fixed64.o ieee_float.o float80_base.o float80_hard.o float80_soft.o $
+  dec_float.o value_parser.o parsers.o operators.o $
+  gen_driver.o tokenized_text.o
+
 # tlcs90
 build test_asm_tlcs90: run test_asm_tlcs90.o $
   asm_tlcs90.o reg_tlcs90.o table_tlcs90.o text_tlcs90.o $
@@ -897,6 +914,7 @@ build test_ns32000:  phony test_asm_ns32000  test_dis_ns32000
 build test_pdp11:    phony test_asm_pdp11    test_dis_pdp11
 build test_pdp8:     phony test_asm_pdp8     test_dis_pdp8
 build test_scn2650:  phony test_asm_scn2650  test_dis_scn2650
+build test_superh:   phony test_dis_superh
 build test_tlcs90:   phony test_asm_tlcs90   test_dis_tlcs90
 build test_tms320:   phony test_asm_tms320   test_dis_tms320
 build test_tms320f:  phony test_asm_tms320f  test_dis_tms320f
@@ -941,6 +959,7 @@ build test: phony $
   test_pdp11    $
   test_pdp8     $
   test_scn2650  $
+  test_superh   $
   test_tlcs90   $
   test_tms320   $
   test_tms320f  $
@@ -977,6 +996,7 @@ build gen: phony $
   gen_pdp11    $
   gen_pdp8     $
   gen_scn2650  $
+  gen_superh   $
   gen_tlcs90   $
   gen_tms320   $
   gen_tms320f  $
