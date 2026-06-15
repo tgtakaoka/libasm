@@ -26,7 +26,8 @@ Assembler &assembler(asmsuperh);
 
 bool isSh2() {
     const auto *cpu = assembler.config().cpu_P();
-    return strcasecmp_P("SH-2", cpu) == 0 || strcasecmp_P("SH-DSP", cpu) == 0;
+    return strcasecmp_P("SH-2", cpu) == 0 || strcasecmp_P("SH-DSP", cpu) == 0 ||
+           strcasecmp_P("SH-2E", cpu) == 0;
 }
 
 void set_up() {
@@ -421,6 +422,10 @@ bool isShDsp() {
     return strcasecmp_P("SH-DSP", assembler.config().cpu_P()) == 0;
 }
 
+bool isSh2e() {
+    return strcasecmp_P("SH-2E", assembler.config().cpu_P()) == 0;
+}
+
 void test_shdsp_only() {
     if (isShDsp()) {
         // DSP register transfers
@@ -465,6 +470,59 @@ void test_shdsp_only() {
         ERRT("LDRE @(*+4,PC)",    UNKNOWN_INSTRUCTION, "LDRE @(*+4,PC)");
         ERRT("SETRC #0",          UNKNOWN_INSTRUCTION, "SETRC #0");
         ERRT("SETRC R0",          UNKNOWN_INSTRUCTION, "SETRC R0");
+    }
+}
+
+void test_sh2e_only() {
+    if (isSh2e()) {
+        // Arithmetic
+        TEST("FADD FR0, FR1",     0xF100);
+        TEST("FADD FR14, FR15",   0xFFE0);
+        TEST("FSUB FR0, FR1",     0xF101);
+        TEST("FMUL FR0, FR1",     0xF102);
+        TEST("FDIV FR0, FR1",     0xF103);
+        // Compare
+        TEST("FCMP/EQ FR0, FR1",  0xF104);
+        TEST("FCMP/GT FR0, FR1",  0xF105);
+        // Unary
+        TEST("FABS FR0",          0xF05D);
+        TEST("FABS FR15",         0xFF5D);
+        TEST("FNEG FR0",          0xF04D);
+        TEST("FNEG FR15",         0xFF4D);
+        // Data transfer
+        TEST("FMOV FR0, FR1",     0xF10C);
+        TEST("FMOV.S @R0, FR0",   0xF008);
+        TEST("FMOV.S FR0, @R0",   0xF00A);
+        TEST("FMOV.S @R0+, FR0",  0xF009);
+        TEST("FMOV.S FR0, @-R0",  0xF00B);
+        TEST("FMOV.S @(R0,R1), FR0", 0xF016);
+        TEST("FMOV.S FR0, @(R0,R1)", 0xF107);
+        // Constants
+        TEST("FLDI0 FR0",         0xF08D);
+        TEST("FLDI1 FR0",         0xF09D);
+        // Conversion
+        TEST("FLOAT FPUL, FR0",   0xF02D);
+        TEST("FTRC FR0, FPUL",    0xF03D);
+        // FMAC (3-operand form with explicit FR0)
+        TEST("FMAC FR0, FR1, FR2",   0xF21E);
+        TEST("FMAC FR0, FR14, FR15", 0xFFEE);
+        // System
+        TEST("FLDS FR0, FPUL",    0xF01D);
+        TEST("FSTS FPUL, FR0",    0xF00D);
+        // LDS/STS FPUL/FPSCR
+        TEST("LDS R0, FPUL",      0x405A);
+        TEST("LDS R15, FPSCR",    0x4F6A);
+        TEST("STS FPUL, R0",      0x005A);
+        TEST("STS FPSCR, R15",    0x0F6A);
+        TEST("LDS.L @R0+, FPUL",  0x4056);
+        TEST("STS.L FPUL, @-R0",  0x4052);
+        TEST("LDS.L @R0+, FPSCR", 0x4066);
+        TEST("STS.L FPSCR, @-R0", 0x4062);
+    } else {
+        ERRT("FADD FR0, FR1",     UNKNOWN_INSTRUCTION, "FADD FR0, FR1");
+        ERRT("FABS FR0",          UNKNOWN_INSTRUCTION, "FABS FR0");
+        ERRT("FMOV FR0, FR1",     UNKNOWN_INSTRUCTION, "FMOV FR0, FR1");
+        ERRT("FLDI0 FR0",         UNKNOWN_INSTRUCTION, "FLDI0 FR0");
     }
 }
 
@@ -519,6 +577,7 @@ void run_tests(const char *cpu) {
     RUN_TEST(test_ldc_stc_lds_sts);
     RUN_TEST(test_sh2_only);
     RUN_TEST(test_shdsp_only);
+    RUN_TEST(test_sh2e_only);
     RUN_TEST(test_data_constant);
 }
 

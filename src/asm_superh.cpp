@@ -16,6 +16,7 @@
 
 #include "asm_superh.h"
 
+#include "option_base.h"
 #include "reg_superh.h"
 #include "table_superh.h"
 
@@ -25,6 +26,7 @@ namespace superh {
 using namespace pseudo;
 using namespace reg;
 using namespace text::common;
+using namespace text::option;
 
 namespace {
 // clang-format off
@@ -75,7 +77,9 @@ const ValueParser::Plugins &AsmSuperH::defaultPlugins() {
 }
 
 AsmSuperH::AsmSuperH(const ValueParser::Plugins &plugins)
-    : Assembler(plugins, PSEUDO_TABLE), Config(TABLE) {
+    : Assembler(plugins, PSEUDO_TABLE, &_opt_fpu),
+      Config(TABLE),
+      _opt_fpu(this, &Config::setFpuName, OPT_TEXT_FPU, OPT_DESC_FPU) {
     reset();
 }
 
@@ -201,6 +205,8 @@ Error AsmSuperH::parseOperand(StrScanner &scan, Operand &op) const {
         op.reg = reg;
         if (isGpr(reg)) {
             op.mode = M_RN;
+        } else if (isFr(reg)) {
+            op.mode = M_FRN;
         } else {
             switch (reg) {
             case REG_SR:
@@ -247,6 +253,12 @@ Error AsmSuperH::parseOperand(StrScanner &scan, Operand &op) const {
                 break;
             case REG_RE:
                 op.mode = M_RE;
+                break;
+            case REG_FPUL:
+                op.mode = M_FPUL;
+                break;
+            case REG_FPSCR:
+                op.mode = M_FPSCR;
                 break;
             default:
                 return op.setError(s, REGISTER_NOT_ALLOWED);
@@ -464,6 +476,15 @@ Error AsmSuperH::encodeImpl(StrScanner &scan, Insn &_insn) const {
     if (scan.skipSpaces().expect(',')) {
         if (parseOperand(scan, insn.dstOp) && insn.dstOp.hasError())
             return _insn.setError(insn.dstOp);
+        // FMAC FR0,FRm,FRn -- consume the optional implicit FR0 prefix and
+        // shift the remaining two operands into the (srcOp, dstOp) slots.
+        if (scan.skipSpaces().expect(',')) {
+            if (insn.srcOp.mode != M_FRN || insn.srcOp.reg != REG_FR0)
+                return _insn.setError(insn.srcOp, REGISTER_NOT_ALLOWED);
+            insn.srcOp = insn.dstOp;
+            if (parseOperand(scan, insn.dstOp) && insn.dstOp.hasError())
+                return _insn.setError(insn.dstOp);
+        }
     }
     scan.skipSpaces();
 

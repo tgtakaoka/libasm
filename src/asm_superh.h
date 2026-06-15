@@ -28,6 +28,8 @@ struct AsmSuperH final : Assembler, Config {
     AsmSuperH(const ValueParser::Plugins &plugins = defaultPlugins());
 
 private:
+    const TextOption<Config> _opt_fpu;
+
     Error parseAtParen(StrScanner &scan, Operand &op) const;
     Error parseOperand(StrScanner &scan, Operand &op) const;
 

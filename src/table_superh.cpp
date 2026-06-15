@@ -415,7 +415,38 @@ constexpr uint8_t INDEX_SH2[] PROGMEM = {
       1,  // TEXT_MUL_L
 };
 
-constexpr uint8_t INDEX_FPU[] PROGMEM = {0};
+constexpr uint8_t INDEX_FPU[] PROGMEM = {
+     27,  // TEXT_FABS
+      8,  // TEXT_FADD
+     12,  // TEXT_FCMP_EQ
+     13,  // TEXT_FCMP_GT
+     11,  // TEXT_FDIV
+     28,  // TEXT_FLDI0
+     29,  // TEXT_FLDI1
+     23,  // TEXT_FLDS
+     24,  // TEXT_FLOAT
+     22,  // TEXT_FMAC
+     20,  // TEXT_FMOV
+     14,  // TEXT_FMOV_S
+     15,  // TEXT_FMOV_S
+     16,  // TEXT_FMOV_S
+     17,  // TEXT_FMOV_S
+     18,  // TEXT_FMOV_S
+     19,  // TEXT_FMOV_S
+     10,  // TEXT_FMUL
+     26,  // TEXT_FNEG
+     21,  // TEXT_FSTS
+      9,  // TEXT_FSUB
+     25,  // TEXT_FTRC
+      4,  // TEXT_LDS
+      7,  // TEXT_LDS
+      3,  // TEXT_LDS_L
+      6,  // TEXT_LDS_L
+      0,  // TEXT_STS
+      1,  // TEXT_STS
+      2,  // TEXT_STS_L
+      5,  // TEXT_STS_L
+};
 
 constexpr uint8_t INDEX_DSP[] PROGMEM = {
      12,  // TEXT_LDC
@@ -563,6 +594,8 @@ static bool acceptMode(const Operand &op, AddrMode table) {
         return op.mode == M_IMM8;
     case M_REL12:
         return op.mode == M_REL8;
+    case M_FRM:
+        return op.mode == M_FRN;  // parser tags FR registers as M_FRN
     default:
         return false;
     }
@@ -575,9 +608,15 @@ static bool acceptModes(AsmInsn &insn, const Entry *entry) {
 
 Error searchName(CpuType cpuType, FpuType fpuType, AsmInsn &insn) {
     cpu(cpuType)->searchName(insn, acceptModes);
-    if (insn.getError() == UNKNOWN_INSTRUCTION) {
+    // LDS / STS exist on both the CPU page (DSR / MACH / MACL / PR) and the
+    // FPU page (FPUL / FPSCR), so an operand-not-allowed from the CPU page
+    // can mean "try the FPU page" rather than a real error.
+    const auto cpuErr = insn.getError();
+    if (cpuErr == UNKNOWN_INSTRUCTION || cpuErr == OPERAND_NOT_ALLOWED) {
         insn.setError(insn.errorAt(), OK);
         fpu(fpuType)->searchName(insn, acceptModes);
+        if (insn.getError() == UNKNOWN_INSTRUCTION)
+            insn.setError(insn.errorAt(), cpuErr);
     }
     return insn.getError();
 }
