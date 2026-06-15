@@ -324,6 +324,14 @@ gas-%_sh2e.s37: %_sh2e.gas
 	| tr -d '\015' > $(^:.gas=.s37)
 	sh-elf-objdump -m sh2e -D $(^:.gas=.s37) > $(^:.gas=.dis)
 
+# SH-2A target (SH-2E + extra CPU instructions, optional FPU; use FPU here)
+gas-%_sh2a.s37: %_sh2a.gas
+	sh-elf-as --isa=sh2a --warn -o $(^:.gas=.p) -al=$(^:.gas=.lst) $^
+	sh-elf-ld --entry=0 -section-start=.text=0x0000 -o $(^:.gas=.o) $(^:.gas=.p)
+	sh-elf-objcopy -I elf32-sh -O srec --srec-len=16 $(^:.gas=.o) /dev/stdout \
+	| tr -d '\015' > $(^:.gas=.s37)
+	sh-elf-objdump -m sh2a -D $(^:.gas=.s37) > $(^:.gas=.dis)
+
 # Local Variables:
 # mode: makefile-gmake
 # End:
