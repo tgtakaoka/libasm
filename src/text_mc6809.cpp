@@ -170,7 +170,7 @@ constexpr char TEXT_SYNC[] PROGMEM = "SYNC";
 
 // HD6309
 // constexpr char TEXT_ADCD[]   PROGMEM = "ADCD";
-constexpr char TEXT_ADCR[]    PROGMEM = "ADCR";
+// constexpr char TEXT_ADCR[]    PROGMEM = "ADCR";
 // constexpr char TEXT_ADDE[]   PROGMEM = "ADDE";
 // constexpr char TEXT_ADDF[]   PROGMEM = "ADDF";
 // constexpr char TEXT_ADDR[]   PROGMEM = "ADDR";

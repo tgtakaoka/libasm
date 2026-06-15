@@ -172,7 +172,7 @@ using common::TEXT_TSTB;
 
 // HD6309
 using common::TEXT_ADCD;
-extern const char TEXT_ADCR[]  PROGMEM;
+using common::TEXT_ADCR;
 using common::TEXT_ADDE;
 using common::TEXT_ADDF;
 using common::TEXT_ADDR;

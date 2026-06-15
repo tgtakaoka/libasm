@@ -131,7 +131,7 @@ constexpr char TEXT_DR[]   PROGMEM = "DR";
 // constexpr char TEXT_LR[]  PROGMEM = "LR";
 constexpr char TEXT_MM[]   PROGMEM = "MM";
 constexpr char TEXT_MR[]   PROGMEM = "MR";
-constexpr char TEXT_NEGR[] PROGMEM = "NEGR";
+// constexpr char TEXT_NEGR[] PROGMEM = "NEGR";
 // constexpr char TEXT_SR[]  PROGMEM = "SR";
 // constexpr char TEXT_STR[] PROGMEM = "STR";
 
