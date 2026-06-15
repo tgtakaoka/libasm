@@ -292,6 +292,22 @@ gas-%_z180.hex: %_z180.gas
 	| tr -d '\015' > $(^:.gas=.hex)
 	z80-elf-objdump -mz180 -D $(^:.gas=.o) > $(^:.gas=.dis)
 
+# SH-1 target
+gas-%_sh1.s37: %_sh1.gas
+	sh-elf-as --isa=sh --warn -o $(^:.gas=.p) -al=$(^:.gas=.lst) $^
+	sh-elf-ld --entry=0 -section-start=.text=0x0000 -o $(^:.gas=.o) $(^:.gas=.p)
+	sh-elf-objcopy -I elf32-sh -O srec --srec-len=16 $(^:.gas=.o) /dev/stdout \
+	| tr -d '\015' > $(^:.gas=.s37)
+	sh-elf-objdump -m sh -D $(^:.gas=.s37) > $(^:.gas=.dis)
+
+# SH-2 target
+gas-%_sh2.s37: %_sh2.gas
+	sh-elf-as --isa=sh2 --warn -o $(^:.gas=.p) -al=$(^:.gas=.lst) $^
+	sh-elf-ld --entry=0 -section-start=.text=0x0000 -o $(^:.gas=.o) $(^:.gas=.p)
+	sh-elf-objcopy -I elf32-sh -O srec --srec-len=16 $(^:.gas=.o) /dev/stdout \
+	| tr -d '\015' > $(^:.gas=.s37)
+	sh-elf-objdump -m sh2 -D $(^:.gas=.s37) > $(^:.gas=.dis)
+
 # Local Variables:
 # mode: makefile-gmake
 # End:

@@ -1,0 +1,661 @@
+! Copyright 2026 Tadashi G. Takaoka
+!
+! Licensed under the Apache License, Version 2.0 (the "License");
+! you may not use this file except in compliance with the License.
+! You may obtain a copy of the License at
+!
+!     http://www.apache.org/licenses/LICENSE-2.0
+!
+! Unless required by applicable law or agreed to in writing, software
+! distributed under the License is distributed on an "AS IS" BASIS,
+! WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+! See the License for the specific language governing permissions and
+! limitations under the License.
+
+!!! Data Transfer
+
+!! MOV #imm,Rn (1110 nnnn iiii iiii)
+        mov     #0, r0                  ! E000
+        mov     #0x7f, r1               ! E17F
+        mov     #-0x80, r2              ! E280
+        mov     #-1, r15                ! EFFF
+
+!! MOV Rm,Rn (0110 nnnn mmmm 0011)
+        mov     r0, r1                  ! 6103
+        mov     r14, r15                ! 6FE3
+
+!! MOV.W @(disp,PC),Rn (1001 nnnn dddd dddd) -- d=byte_offset/2 from (PC+4)
+        mov.w   pcw0, r0                ! 9000
+        nop
+pcw0:   .word   0x1234
+
+        mov.w   pcw1, r3                ! 9301
+        nop
+        nop
+pcw1:   .word   0x5678
+
+        mov.w   pcw2, r7                ! 9702
+        nop
+        nop
+        nop
+pcw2:   .word   0xabcd
+
+!! MOV.L @(disp,PC),Rn (1101 nnnn dddd dddd) -- d=byte_offset/4 from ((PC+4)&~3)
+        .align  4
+        mov.l   pcl0, r0                ! D000
+        nop
+pcl0:   .long   0x11223344
+
+        mov.l   pcl1, r5                ! D501
+        nop
+        nop
+        nop
+pcl1:   .long   0x55667788
+
+        mov.l   pcl2, r9                ! D902
+        nop
+        nop
+        nop
+        nop
+        nop
+pcl2:   .long   0x99aabbcc
+
+!! MOVA @(disp,PC),R0 (1100 0111 dddd dddd) -- d=byte_offset/4 from ((PC+4)&~3)
+        .align  4
+        mova    mova0, r0               ! C700
+        nop
+mova0:  .long   0xdeadbeef
+
+        mova    mova1, r0               ! C701
+        nop
+        nop
+        nop
+mova1:  .long   0xcafebabe
+
+!! MOV.B @Rm,Rn (0110 nnnn mmmm 0000)
+        mov.b   @r1, r0                 ! 6010
+        mov.b   @r3, r2                 ! 6230
+
+!! MOV.W @Rm,Rn (0110 nnnn mmmm 0001)
+        mov.w   @r5, r4                 ! 6451
+        mov.w   @r7, r6                 ! 6671
+
+!! MOV.L @Rm,Rn (0110 nnnn mmmm 0010)
+        mov.l   @r9, r8                 ! 6892
+        mov.l   @r11, r10               ! 6AB2
+
+!! MOV.B Rm,@Rn (0010 nnnn mmmm 0000)
+        mov.b   r0, @r1                 ! 2100
+        mov.b   r2, @r3                 ! 2320
+
+!! MOV.W Rm,@Rn (0010 nnnn mmmm 0001)
+        mov.w   r4, @r5                 ! 2541
+        mov.w   r6, @r7                 ! 2761
+
+!! MOV.L Rm,@Rn (0010 nnnn mmmm 0010)
+        mov.l   r8, @r9                 ! 2982
+        mov.l   r10, @r11               ! 2BA2
+
+!! MOV.B @Rm+,Rn (0110 nnnn mmmm 0100)
+        mov.b   @r1+, r0                ! 6014
+        mov.b   @r3+, r2                ! 6234
+
+!! MOV.W @Rm+,Rn (0110 nnnn mmmm 0101)
+        mov.w   @r5+, r4                ! 6455
+        mov.w   @r7+, r6                ! 6675
+
+!! MOV.L @Rm+,Rn (0110 nnnn mmmm 0110)
+        mov.l   @r9+, r8                ! 6896
+        mov.l   @r11+, r10              ! 6AB6
+
+!! MOV.B Rm,@-Rn (0010 nnnn mmmm 0100)
+        mov.b   r0, @-r1                ! 2104
+        mov.b   r2, @-r3                ! 2324
+
+!! MOV.W Rm,@-Rn (0010 nnnn mmmm 0101)
+        mov.w   r4, @-r5                ! 2545
+        mov.w   r6, @-r7                ! 2765
+
+!! MOV.L Rm,@-Rn (0010 nnnn mmmm 0110)
+        mov.l   r8, @-r9                ! 2986
+        mov.l   r10, @-r11              ! 2BA6
+
+!! MOV.B @(R0,Rm),Rn (0000 nnnn mmmm 1100)
+        mov.b   @(r0, r1), r2           ! 021C
+        mov.b   @(r0, r13), r14         ! 0EDC
+
+!! MOV.W @(R0,Rm),Rn (0000 nnnn mmmm 1101)
+        mov.w   @(r0, r3), r4           ! 043D
+        mov.w   @(r0, r12), r15         ! 0FCD
+
+!! MOV.L @(R0,Rm),Rn (0000 nnnn mmmm 1110)
+        mov.l   @(r0, r5), r6           ! 065E
+        mov.l   @(r0, r11), r13         ! 0DBE
+
+!! MOV.B Rm,@(R0,Rn) (0000 nnnn mmmm 0100)
+        mov.b   r0, @(r0, r2)           ! 0204
+        mov.b   r7, @(r0, r15)          ! 0F74
+
+!! MOV.W Rm,@(R0,Rn) (0000 nnnn mmmm 0101)
+        mov.w   r0, @(r0, r4)           ! 0405
+        mov.w   r8, @(r0, r14)          ! 0E85
+
+!! MOV.L Rm,@(R0,Rn) (0000 nnnn mmmm 0110)
+        mov.l   r0, @(r0, r6)           ! 0606
+        mov.l   r9, @(r0, r13)          ! 0D96
+
+!! MOV.B R0,@(disp,Rn) (1000 0000 nnnn dddd) disp in bytes [0,15]
+        mov.b   r0, @(0, r0)            ! 8000
+        mov.b   r0, @(7, r4)            ! 8047
+        mov.b   r0, @(15, r15)          ! 80FF
+
+!! MOV.W R0,@(disp,Rn) (1000 0001 nnnn dddd) disp in bytes/2 [0,30]
+        mov.w   r0, @(0, r0)            ! 8100
+        mov.w   r0, @(14, r5)           ! 8157
+        mov.w   r0, @(30, r15)          ! 81FF
+
+!! MOV.B @(disp,Rm),R0 (1000 0100 mmmm dddd) disp in bytes [0,15]
+        mov.b   @(0, r0), r0            ! 8400
+        mov.b   @(7, r6), r0            ! 8467
+        mov.b   @(15, r15), r0          ! 84FF
+
+!! MOV.W @(disp,Rm),R0 (1000 0101 mmmm dddd) disp in bytes/2 [0,30]
+        mov.w   @(0, r0), r0            ! 8500
+        mov.w   @(14, r7), r0           ! 8577
+        mov.w   @(30, r15), r0          ! 85FF
+
+!! MOV.L Rm,@(disp,Rn) (0001 nnnn mmmm dddd) disp in bytes/4 [0,60]
+        mov.l   r0, @(0, r1)            ! 1100
+        mov.l   r5, @(8, r6)            ! 1652
+        mov.l   r14, @(60, r15)         ! 1FEF
+
+!! MOV.L @(disp,Rm),Rn (0101 nnnn mmmm dddd) disp in bytes/4 [0,60]
+        mov.l   @(0, r0), r1            ! 5100
+        mov.l   @(8, r7), r8            ! 5872
+        mov.l   @(60, r14), r15         ! 5FEF
+
+!! MOV.B R0,@(disp,GBR) (1100 0000 dddd dddd) disp = byte offset [0,255]
+        mov.b   r0, @(0, gbr)           ! C000
+        mov.b   r0, @(0x80, gbr)        ! C080
+        mov.b   r0, @(0xff, gbr)        ! C0FF
+
+!! MOV.W R0,@(disp,GBR) (1100 0001 dddd dddd) disp = byte offset/2 [0,510]
+        mov.w   r0, @(0, gbr)           ! C100
+        mov.w   r0, @(0x100, gbr)       ! C180
+        mov.w   r0, @(0x1fe, gbr)       ! C1FF
+
+!! MOV.L R0,@(disp,GBR) (1100 0010 dddd dddd) disp = byte offset/4 [0,1020]
+        mov.l   r0, @(0, gbr)           ! C200
+        mov.l   r0, @(0x200, gbr)       ! C280
+        mov.l   r0, @(0x3fc, gbr)       ! C2FF
+
+!! MOV.B @(disp,GBR),R0 (1100 0100 dddd dddd)
+        mov.b   @(0, gbr), r0           ! C400
+        mov.b   @(0x80, gbr), r0        ! C480
+        mov.b   @(0xff, gbr), r0        ! C4FF
+
+!! MOV.W @(disp,GBR),R0 (1100 0101 dddd dddd)
+        mov.w   @(0, gbr), r0           ! C500
+        mov.w   @(0x100, gbr), r0       ! C580
+        mov.w   @(0x1fe, gbr), r0       ! C5FF
+
+!! MOV.L @(disp,GBR),R0 (1100 0110 dddd dddd)
+        mov.l   @(0, gbr), r0           ! C600
+        mov.l   @(0x200, gbr), r0       ! C680
+        mov.l   @(0x3fc, gbr), r0       ! C6FF
+
+!! MOVT Rn (0000 nnnn 0010 1001)
+        movt    r0                      ! 0029
+        movt    r7                      ! 0729
+        movt    r15                     ! 0F29
+
+!!! Arithmetic
+
+!! ADD Rm,Rn (0011 nnnn mmmm 1100)
+        add     r0, r1                  ! 310C
+        add     r14, r15                ! 3FEC
+
+!! ADD #imm,Rn (0111 nnnn iiii iiii) 8-bit signed
+        add     #0, r0                  ! 7000
+        add     #1, r1                  ! 7101
+        add     #0x7f, r7               ! 777F
+        add     #-1, r8                 ! 78FF
+        add     #-0x80, r15             ! 7F80
+
+!! ADDC Rm,Rn (0011 nnnn mmmm 1110)
+        addc    r0, r1                  ! 310E
+        addc    r14, r15                ! 3FEE
+
+!! ADDV Rm,Rn (0011 nnnn mmmm 1111)
+        addv    r0, r1                  ! 310F
+        addv    r14, r15                ! 3FEF
+
+!! SUB Rm,Rn (0011 nnnn mmmm 1000)
+        sub     r0, r1                  ! 3108
+        sub     r14, r15                ! 3FE8
+
+!! SUBC Rm,Rn (0011 nnnn mmmm 1010)
+        subc    r0, r1                  ! 310A
+        subc    r14, r15                ! 3FEA
+
+!! SUBV Rm,Rn (0011 nnnn mmmm 1011)
+        subv    r0, r1                  ! 310B
+        subv    r14, r15                ! 3FEB
+
+!! CMP/EQ #imm,R0 (1000 1000 iiii iiii) 8-bit signed
+        cmp/eq  #0, r0                  ! 8800
+        cmp/eq  #0x7f, r0               ! 887F
+        cmp/eq  #-1, r0                 ! 88FF
+
+!! CMP/EQ Rm,Rn (0011 nnnn mmmm 0000)
+        cmp/eq  r0, r1                  ! 3100
+        cmp/eq  r14, r15                ! 3FE0
+
+!! CMP/GE Rm,Rn (0011 nnnn mmmm 0011) signed >=
+        cmp/ge  r0, r1                  ! 3103
+        cmp/ge  r14, r15                ! 3FE3
+
+!! CMP/GT Rm,Rn (0011 nnnn mmmm 0111) signed >
+        cmp/gt  r0, r1                  ! 3107
+        cmp/gt  r14, r15                ! 3FE7
+
+!! CMP/HI Rm,Rn (0011 nnnn mmmm 0110) unsigned >
+        cmp/hi  r0, r1                  ! 3106
+        cmp/hi  r14, r15                ! 3FE6
+
+!! CMP/HS Rm,Rn (0011 nnnn mmmm 0010) unsigned >=
+        cmp/hs  r0, r1                  ! 3102
+        cmp/hs  r14, r15                ! 3FE2
+
+!! CMP/PL Rn (0100 nnnn 0001 0101) Rn > 0
+        cmp/pl  r0                      ! 4015
+        cmp/pl  r7                      ! 4715
+        cmp/pl  r15                     ! 4F15
+
+!! CMP/PZ Rn (0100 nnnn 0001 0001) Rn >= 0
+        cmp/pz  r0                      ! 4011
+        cmp/pz  r7                      ! 4711
+        cmp/pz  r15                     ! 4F11
+
+!! CMP/STR Rm,Rn (0010 nnnn mmmm 1100) any byte equal
+        cmp/str r0, r1                  ! 210C
+        cmp/str r14, r15                ! 2FEC
+
+!! DIV0S Rm,Rn (0010 nnnn mmmm 0111) init signed division
+        div0s   r0, r1                  ! 2107
+        div0s   r14, r15                ! 2FE7
+
+!! DIV0U (0000 0000 0001 1001) init unsigned division
+        div0u                           ! 0019
+
+!! DIV1 Rm,Rn (0011 nnnn mmmm 0100) single step division
+        div1    r0, r1                  ! 3104
+        div1    r14, r15                ! 3FE4
+
+!! EXTS.B Rm,Rn (0110 nnnn mmmm 1110)
+        exts.b  r0, r1                  ! 610E
+        exts.b  r14, r15                ! 6FEE
+
+!! EXTS.W Rm,Rn (0110 nnnn mmmm 1111)
+        exts.w  r0, r1                  ! 610F
+        exts.w  r14, r15                ! 6FEF
+
+!! EXTU.B Rm,Rn (0110 nnnn mmmm 1100)
+        extu.b  r0, r1                  ! 610C
+        extu.b  r14, r15                ! 6FEC
+
+!! EXTU.W Rm,Rn (0110 nnnn mmmm 1101)
+        extu.w  r0, r1                  ! 610D
+        extu.w  r14, r15                ! 6FED
+
+!! MAC.W @Rm+,@Rn+ (0100 nnnn mmmm 1111) multiply-accumulate word
+        mac.w   @r0+, @r1+              ! 410F
+        mac.w   @r14+, @r15+            ! 4FEF
+
+!! MULS.W Rm,Rn (0010 nnnn mmmm 1111) signed word multiply -> MACL
+        muls.w  r0, r1                  ! 210F
+        muls.w  r14, r15                ! 2FEF
+
+!! MULU.W Rm,Rn (0010 nnnn mmmm 1110) unsigned word multiply -> MACL
+        mulu.w  r0, r1                  ! 210E
+        mulu.w  r14, r15                ! 2FEE
+
+!! NEG Rm,Rn (0110 nnnn mmmm 1011)
+        neg     r0, r1                  ! 610B
+        neg     r14, r15                ! 6FEB
+
+!! NEGC Rm,Rn (0110 nnnn mmmm 1010)
+        negc    r0, r1                  ! 610A
+        negc    r14, r15                ! 6FEA
+
+!! SWAP.B Rm,Rn (0110 nnnn mmmm 1000) swap bytes in lower word
+        swap.b  r0, r1                  ! 6108
+        swap.b  r14, r15                ! 6FE8
+
+!! SWAP.W Rm,Rn (0110 nnnn mmmm 1001) swap upper and lower words
+        swap.w  r0, r1                  ! 6109
+        swap.w  r14, r15                ! 6FE9
+
+!! XTRCT Rm,Rn (0010 nnnn mmmm 1101) extract middle 32 bits of Rm:Rn
+        xtrct   r0, r1                  ! 210D
+        xtrct   r14, r15                ! 2FED
+
+!!! Logic
+
+!! AND Rm,Rn (0010 nnnn mmmm 1001)
+        and     r0, r1                  ! 2109
+        and     r14, r15                ! 2FE9
+
+!! AND #imm,R0 (1100 1001 iiii iiii)
+        and     #0, r0                  ! C900
+        and     #0xaa, r0               ! C9AA
+        and     #0xff, r0               ! C9FF
+
+!! AND.B #imm,@(R0,GBR) (1100 1101 iiii iiii)
+        and.b   #0, @(r0, gbr)          ! CD00
+        and.b   #0xaa, @(r0, gbr)       ! CDAA
+        and.b   #0xff, @(r0, gbr)       ! CDFF
+
+!! NOT Rm,Rn (0110 nnnn mmmm 0111)
+        not     r0, r1                  ! 6107
+        not     r14, r15                ! 6FE7
+
+!! OR Rm,Rn (0010 nnnn mmmm 1011)
+        or      r0, r1                  ! 210B
+        or      r14, r15                ! 2FEB
+
+!! OR #imm,R0 (1100 1011 iiii iiii)
+        or      #0, r0                  ! CB00
+        or      #0x55, r0               ! CB55
+        or      #0xff, r0               ! CBFF
+
+!! OR.B #imm,@(R0,GBR) (1100 1111 iiii iiii)
+        or.b    #0, @(r0, gbr)          ! CF00
+        or.b    #0x55, @(r0, gbr)       ! CF55
+        or.b    #0xff, @(r0, gbr)       ! CFFF
+
+!! TAS.B @Rn (0100 nnnn 0001 1011)
+        tas.b   @r0                     ! 401B
+        tas.b   @r7                     ! 471B
+        tas.b   @r15                    ! 4F1B
+
+!! TST Rm,Rn (0010 nnnn mmmm 1000)
+        tst     r0, r1                  ! 2108
+        tst     r14, r15                ! 2FE8
+
+!! TST #imm,R0 (1100 1000 iiii iiii)
+        tst     #0, r0                  ! C800
+        tst     #0xff, r0               ! C8FF
+
+!! TST.B #imm,@(R0,GBR) (1100 1100 iiii iiii)
+        tst.b   #0, @(r0, gbr)          ! CC00
+        tst.b   #0xff, @(r0, gbr)       ! CCFF
+
+!! XOR Rm,Rn (0010 nnnn mmmm 1010)
+        xor     r0, r1                  ! 210A
+        xor     r14, r15                ! 2FEA
+
+!! XOR #imm,R0 (1100 1010 iiii iiii)
+        xor     #0, r0                  ! CA00
+        xor     #0x0f, r0               ! CA0F
+        xor     #0xff, r0               ! CAFF
+
+!! XOR.B #imm,@(R0,GBR) (1100 1110 iiii iiii)
+        xor.b   #0, @(r0, gbr)          ! CE00
+        xor.b   #0x0f, @(r0, gbr)       ! CE0F
+        xor.b   #0xff, @(r0, gbr)       ! CEFF
+
+!!! Shift and Rotate
+
+!! ROTL Rn (0100 nnnn 0000 0100) rotate left, T <- MSB
+        rotl    r0                      ! 4004
+        rotl    r7                      ! 4704
+        rotl    r15                     ! 4F04
+
+!! ROTR Rn (0100 nnnn 0000 0101) rotate right, T <- LSB
+        rotr    r0                      ! 4005
+        rotr    r7                      ! 4705
+        rotr    r15                     ! 4F05
+
+!! ROTCL Rn (0100 nnnn 0010 0100) rotate left through T
+        rotcl   r0                      ! 4024
+        rotcl   r7                      ! 4724
+        rotcl   r15                     ! 4F24
+
+!! ROTCR Rn (0100 nnnn 0010 0101) rotate right through T
+        rotcr   r0                      ! 4025
+        rotcr   r7                      ! 4725
+        rotcr   r15                     ! 4F25
+
+!! SHAL Rn (0100 nnnn 0010 0000) arithmetic shift left (same encoding as SHLL)
+        shal    r0                      ! 4020
+        shal    r7                      ! 4720
+        shal    r15                     ! 4F20
+
+!! SHAR Rn (0100 nnnn 0010 0001) arithmetic shift right
+        shar    r0                      ! 4021
+        shar    r7                      ! 4721
+        shar    r15                     ! 4F21
+
+!! SHLL Rn (0100 nnnn 0000 0000) logical shift left by 1
+        shll    r0                      ! 4000
+        shll    r7                      ! 4700
+        shll    r15                     ! 4F00
+
+!! SHLR Rn (0100 nnnn 0000 0001) logical shift right by 1
+        shlr    r0                      ! 4001
+        shlr    r7                      ! 4701
+        shlr    r15                     ! 4F01
+
+!! SHLL2 Rn (0100 nnnn 0000 1000) logical shift left by 2
+        shll2   r0                      ! 4008
+        shll2   r7                      ! 4708
+        shll2   r15                     ! 4F08
+
+!! SHLR2 Rn (0100 nnnn 0000 1001) logical shift right by 2
+        shlr2   r0                      ! 4009
+        shlr2   r7                      ! 4709
+        shlr2   r15                     ! 4F09
+
+!! SHLL8 Rn (0100 nnnn 0001 1000) logical shift left by 8
+        shll8   r0                      ! 4018
+        shll8   r7                      ! 4718
+        shll8   r15                     ! 4F18
+
+!! SHLR8 Rn (0100 nnnn 0001 1001) logical shift right by 8
+        shlr8   r0                      ! 4019
+        shlr8   r7                      ! 4719
+        shlr8   r15                     ! 4F19
+
+!! SHLL16 Rn (0100 nnnn 0010 1000) logical shift left by 16
+        shll16  r0                      ! 4028
+        shll16  r7                      ! 4728
+        shll16  r15                     ! 4F28
+
+!! SHLR16 Rn (0100 nnnn 0010 1001) logical shift right by 16
+        shlr16  r0                      ! 4029
+        shlr16  r7                      ! 4729
+        shlr16  r15                     ! 4F29
+
+!!! Branch
+!! All branches forward before label, all backward after (H8/300 style)
+
+        bf      label                   ! 8B04
+        bt      label                   ! 8903
+        bra     label                   ! A002
+        nop
+        bsr     label                   ! B000
+        nop
+label:
+        bf      label                   ! 8BFE
+        bt      label                   ! 89FD
+        bra     label                   ! AFFC
+        nop
+        bsr     label                   ! BFFA
+        nop
+
+!! JMP @Rm (0100 mmmm 0010 1011) indirect branch, delay slot
+        jmp     @r0                     ! 402B
+        nop
+        jmp     @r7                     ! 472B
+        nop
+        jmp     @r15                    ! 4F2B
+        nop
+
+!! JSR @Rm (0100 mmmm 0000 1011) jump to subroutine, delay slot
+        jsr     @r0                     ! 400B
+        nop
+        jsr     @r7                     ! 470B
+        nop
+        jsr     @r15                    ! 4F0B
+        nop
+
+!! RTS (0000 0000 0000 1011) return from subroutine, delay slot
+        rts                             ! 000B
+        nop
+
+!!! System Control
+
+!! CLRMAC (0000 0000 0010 1000)
+        clrmac                          ! 0028
+
+!! CLRT (0000 0000 0001 0000)
+        clrt                            ! 0010
+
+!! LDC Rm,SR (0100 mmmm 0000 1110)
+        ldc     r0, sr                  ! 400E
+        ldc     r7, sr                  ! 470E
+        ldc     r15, sr                 ! 4F0E
+
+!! LDC Rm,GBR (0100 mmmm 0001 1110)
+        ldc     r0, gbr                 ! 401E
+        ldc     r7, gbr                 ! 471E
+        ldc     r15, gbr                ! 4F1E
+
+!! LDC Rm,VBR (0100 mmmm 0010 1110)
+        ldc     r0, vbr                 ! 402E
+        ldc     r7, vbr                 ! 472E
+        ldc     r15, vbr                ! 4F2E
+
+!! LDC.L @Rm+,SR (0100 mmmm 0000 0111)
+        ldc.l   @r0+, sr                ! 4007
+        ldc.l   @r7+, sr                ! 4707
+        ldc.l   @r15+, sr               ! 4F07
+
+!! LDC.L @Rm+,GBR (0100 mmmm 0001 0111)
+        ldc.l   @r0+, gbr               ! 4017
+        ldc.l   @r7+, gbr               ! 4717
+        ldc.l   @r15+, gbr              ! 4F17
+
+!! LDC.L @Rm+,VBR (0100 mmmm 0010 0111)
+        ldc.l   @r0+, vbr               ! 4027
+        ldc.l   @r7+, vbr               ! 4727
+        ldc.l   @r15+, vbr              ! 4F27
+
+!! LDS Rm,MACH (0100 mmmm 0000 1010)
+        lds     r0, mach                ! 400A
+        lds     r7, mach                ! 470A
+        lds     r15, mach               ! 4F0A
+
+!! LDS Rm,MACL (0100 mmmm 0001 1010)
+        lds     r0, macl                ! 401A
+        lds     r7, macl                ! 471A
+        lds     r15, macl               ! 4F1A
+
+!! LDS Rm,PR (0100 mmmm 0010 1010)
+        lds     r0, pr                  ! 402A
+        lds     r7, pr                  ! 472A
+        lds     r15, pr                 ! 4F2A
+
+!! LDS.L @Rm+,MACH (0100 mmmm 0000 0110)
+        lds.l   @r0+, mach              ! 4006
+        lds.l   @r7+, mach              ! 4706
+        lds.l   @r15+, mach             ! 4F06
+
+!! LDS.L @Rm+,MACL (0100 mmmm 0001 0110)
+        lds.l   @r0+, macl              ! 4016
+        lds.l   @r7+, macl              ! 4716
+        lds.l   @r15+, macl             ! 4F16
+
+!! LDS.L @Rm+,PR (0100 mmmm 0010 0110)
+        lds.l   @r0+, pr                ! 4026
+        lds.l   @r7+, pr                ! 4726
+        lds.l   @r15+, pr               ! 4F26
+
+!! NOP (0000 0000 0000 1001)
+        nop                             ! 0009
+
+!! RTE (0000 0000 0010 1011) return from exception, delay slot
+        rte                             ! 002B
+        nop
+
+!! SETT (0000 0000 0001 1000)
+        sett                            ! 0018
+
+!! SLEEP (0000 0000 0001 1011)
+        sleep                           ! 001B
+
+!! STC SR,Rn (0000 nnnn 0000 0010)
+        stc     sr, r0                  ! 0002
+        stc     sr, r7                  ! 0702
+        stc     sr, r15                 ! 0F02
+
+!! STC GBR,Rn (0000 nnnn 0001 0010)
+        stc     gbr, r0                 ! 0012
+        stc     gbr, r7                 ! 0712
+        stc     gbr, r15                ! 0F12
+
+!! STC VBR,Rn (0000 nnnn 0010 0010)
+        stc     vbr, r0                 ! 0022
+        stc     vbr, r7                 ! 0722
+        stc     vbr, r15                ! 0F22
+
+!! STC.L SR,@-Rn (0100 nnnn 0000 0011)
+        stc.l   sr, @-r0                ! 4003
+        stc.l   sr, @-r7                ! 4703
+        stc.l   sr, @-r15               ! 4F03
+
+!! STC.L GBR,@-Rn (0100 nnnn 0001 0011)
+        stc.l   gbr, @-r0               ! 4013
+        stc.l   gbr, @-r7               ! 4713
+        stc.l   gbr, @-r15              ! 4F13
+
+!! STC.L VBR,@-Rn (0100 nnnn 0010 0011)
+        stc.l   vbr, @-r0               ! 4023
+        stc.l   vbr, @-r7               ! 4723
+        stc.l   vbr, @-r15              ! 4F23
+
+!! STS MACH,Rn (0000 nnnn 0000 1010)
+        sts     mach, r0                ! 000A
+        sts     mach, r7                ! 070A
+        sts     mach, r15               ! 0F0A
+
+!! STS MACL,Rn (0000 nnnn 0001 1010)
+        sts     macl, r0                ! 001A
+        sts     macl, r7                ! 071A
+        sts     macl, r15               ! 0F1A
+
+!! STS PR,Rn (0000 nnnn 0010 1010)
+        sts     pr, r0                  ! 002A
+        sts     pr, r7                  ! 072A
+        sts     pr, r15                 ! 0F2A
+
+!! STS.L MACH,@-Rn (0100 nnnn 0000 0010)
+        sts.l   mach, @-r0              ! 4002
+        sts.l   mach, @-r7              ! 4702
+        sts.l   mach, @-r15             ! 4F02
+
+!! STS.L MACL,@-Rn (0100 nnnn 0001 0010)
+        sts.l   macl, @-r0              ! 4012
+        sts.l   macl, @-r7              ! 4712
+        sts.l   macl, @-r15             ! 4F12
+
+!! STS.L PR,@-Rn (0100 nnnn 0010 0010)
+        sts.l   pr, @-r0                ! 4022
+        sts.l   pr, @-r7                ! 4722
+        sts.l   pr, @-r15               ! 4F22
+
+!! TRAPA #imm (1100 0011 iiii iiii)
+        trapa   #0                      ! C300
+        trapa   #0x20                   ! C320
+        trapa   #0xff                   ! C3FF
