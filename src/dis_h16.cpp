@@ -392,23 +392,9 @@ void DisH16::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) const {
         return;
     }
     case M_FRMSZ: {
-        const auto sd = insn.opCode() & 0x03;
-        int32_t v = 0;
-        switch (sd) {
-        case 0: v = static_cast<int8_t>(insn.readByte()); break;
-        case 1: v = static_cast<int16_t>(insn.readUint16()); break;
-        case 2: v = static_cast<int32_t>(insn.readUint32()); break;
-        }
-        out.letter('#');
-        outHex(out, v, sd == 0 ? -8 : (sd == 1 ? -16 : -32));
-        return;
-    }
-    case M_RFRM: {
-        const auto rn = insn.readByte();
-        requireZero(insn, rn, 0xF0);  // Rn byte upper nibble zero-required
-        outRegName(out, decodeReg(rn));
-        out.comma();
-        const auto sd = insn.opCode() & 0x03;
+        // Sd is in low 2 bits of the OPERAND-CARRYING first byte (which
+        // matches insn.oprSize since both come from the same field).
+        const auto sd = uint8_t(insn.oprSize);
         int32_t v = 0;
         switch (sd) {
         case 0:
@@ -444,12 +430,14 @@ void DisH16::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) const {
 
 void DisH16::outSize(DisInsn &insn) const {
     const auto isz = insn.insnSize();
-    if (isz == ISZ_DATA) {
+    if (isz == ISZ_DATA || isz == ISZ_AUTO) {
         appendSizeSuffix(insn, insn.oprSize);
     } else if (isz == ISZ_WORD) {
         appendSizeSuffix(insn, SZ_WORD);
     } else if (isz == ISZ_FIXB) {
         appendSizeSuffix(insn, SZ_BYTE);
+    } else if (isz == ISZ_FIXL) {
+        appendSizeSuffix(insn, SZ_LONG);
     } else if (isz == ISZ_EXTU) {
         // EXTU/EXTS Sz mapping: 00=W, 01=L, 10=B
         OprSize sz = SZ_NONE;

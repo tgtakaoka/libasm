@@ -116,7 +116,7 @@ void test_data_move() {
     TEST("CLR.B",    "R0",      0x14, 0x40);
     TEST("CLR.W",    "R0",      0x15, 0x40);
     TEST("CLR.L",    "R0",      0x16, 0x40);
-    TEST("XCH",      "R0, R1",  0xB3, 0x01);
+    TEST("XCH.L",    "R0, R1",  0xB3, 0x01);
     TEST("SWAP.W",   "R0",      0xEB, 0x40);
 }
 

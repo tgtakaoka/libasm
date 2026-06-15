@@ -47,6 +47,7 @@ build reg_f3850.o:   cxx ${root}/src/reg_f3850.cpp
 build table_f3850.o: cxx ${root}/src/table_f3850.cpp
 build text_f3850.o:  cxx ${root}/src/text_f3850.cpp
 # h16
+build asm_h16.o:     cxx ${root}/src/asm_h16.cpp
 build dis_h16.o:     cxx ${root}/src/dis_h16.cpp
 build reg_h16.o:     cxx ${root}/src/reg_h16.cpp
 build table_h16.o:   cxx ${root}/src/table_h16.cpp

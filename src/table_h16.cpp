@@ -58,8 +58,8 @@ constexpr Entry TABLE_MAIN[] PROGMEM = {
     E2(0x54, ISZ_DATA, TEXT_SUBX,   M_EA,   M_EAD),  // SUBX
     E1(0x58, ISZ_DATA, TEXT_TST,    M_EA),           // TST    read-only
     E1(0x5C, ISZ_DATA, TEXT_MOVF,   M_EAD),          // MOVF   from R0
-    E2(0x78, ISZ_WORD, TEXT_MOVTPE, M_EA,   M_EAD),  // MOVTPE peripheral+E
-    E2(0x7C, ISZ_WORD, TEXT_MOVFPE, M_EA,   M_EAD),  // MOVFPE peripheral+E
+    E2(0x79, ISZ_WORD, TEXT_MOVTPE, M_EA,   M_EAD),  // MOVTPE.W peripheral+E
+    E2(0x7D, ISZ_WORD, TEXT_MOVFPE, M_EA,   M_EAD),  // MOVFPE.W peripheral+E
     E2(0x80, ISZ_DATA, TEXT_AND,    M_EA,   M_EAD),  // AND
     E2(0x83, ISZ_NONE, TEXT_DADD,   M_EA,   M_EAD),  // DADD   decimal add
     E2(0x84, ISZ_DATA, TEXT_XOR,    M_EA,   M_EAD),  // XOR
@@ -76,12 +76,12 @@ constexpr Entry TABLE_MAIN[] PROGMEM = {
     E1(0xAC, ISZ_EXTU, TEXT_EXTU,   M_RNNO),         // EXTU   Sz: 0=W,1=L,2=B
     E1(0xAF, ISZ_FIXB, TEXT_DNEG,   M_EAD),          // DNEG.B decimal neg
     E1(0xB0, ISZ_DATA, TEXT_BNE,    M_DISP),         // BNE
-    E1(0xB3, ISZ_NONE, TEXT_XCH,    M_RR),           // XCH    exchange regs
-    E1(0xB8, ISZ_DATA, TEXT_RTD,    M_FRMSZ),        // RTD    deallocate
+    E1(0xB3, ISZ_FIXL, TEXT_XCH,    M_RR),           // XCH    exchange regs (.L)
+    E1(0xB8, ISZ_AUTO, TEXT_RTD,    M_FRMSZ),        // RTD    deallocate
     E0(0xBB,           TEXT_RTS),                    // RTS
     E1(0xBC, ISZ_EXTU, TEXT_EXTS,   M_RNNO),         // EXTS   Sz: 0=W,1=L,2=B
     E2(0xBF, ISZ_NONE, TEXT_MOVA,   M_EA,   M_EAD),  // MOVA   move EA to R0
-    E1(0xD0, ISZ_DATA, TEXT_LINK,   M_RFRM),         // LINK   Rn,#frame
+    E2(0xD0, ISZ_AUTO, TEXT_LINK,   M_RNNO, M_FRMSZ), // LINK   Rn,#frame
     E1(0xD3, ISZ_NONE, TEXT_UNLK,   M_RNNO),         // UNLK
     E2(0xE0, ISZ_WORD, TEXT_MOVTP,  M_EA,   M_EAD),  // MOVTP  peripheral
     E2(0xE2, ISZ_WORD, TEXT_MOVFP,  M_EA,   M_EAD),  // MOVFP  peripheral
@@ -180,9 +180,29 @@ constexpr Entry TABLE_BCC_G[] PROGMEM = {
     E1(0x0F, ISZ_PRSZ, TEXT_BLE_G, M_DISP),          // cc=F LE
 };
 
-// Sorted INDEX arrays are regenerated via scripts/make-index-array.sh when the
-// assembler lands.  Disassembly uses linear scan and so does not need them.
-constexpr uint8_t INDEX_EMPTY[] PROGMEM = {};
+// Sorted name -> entry-index arrays, used by searchName's binary search.
+// Generated via scripts/make-index-array.sh.
+constexpr uint8_t INDEX_MAIN[] PROGMEM = {
+     0,  4,  8, 12, 16, 20, 26, 58, 36, 41,
+    33, 37, 51,  5,  2,  6, 10, 14, 18, 27,
+    64, 40, 29, 45, 39, 63, 34, 38, 61, 47,
+     3,  7, 11, 15, 46, 23, 50, 25, 19, 49,
+    24, 31, 35, 65, 32, 30, 59, 53, 43, 54,
+    56, 44, 57, 62,  1,  9, 13, 17, 21, 52,
+    55, 22, 48, 42, 28, 60,
+};
+constexpr uint8_t INDEX_SFT[] PROGMEM = {
+    6, 2, 7, 3, 4, 0, 5, 1,
+};
+constexpr uint8_t INDEX_BIT[] PROGMEM = {
+    2, 1, 0, 3,
+};
+constexpr uint8_t INDEX_MUL_DIV[] PROGMEM = {
+    0, 1,
+};
+constexpr uint8_t INDEX_BCC_G[] PROGMEM = {
+    4, 5, 7, 1, 12, 14, 2, 15, 3, 13, 11, 6, 10, 0, 8, 9,
+};
 
 #undef E0
 #undef E1
@@ -221,29 +241,29 @@ private:
 // they're non-zero).
 constexpr EntryPage H16_PAGES[] PROGMEM = {
     // main page: no prefix; entry-level mask applies; no zero-required bits
-    {0x0000, 0x00, 0x00, 0x00, ARRAY_RANGE(TABLE_MAIN),     ARRAY_RANGE(INDEX_EMPTY)},
+    {0x0000, 0x00, 0x00, 0x00, ARRAY_RANGE(TABLE_MAIN),     ARRAY_RANGE(INDEX_MAIN)},
     // SFT dynamic 0x60-0x62; opcode [MODE(3)|*|Rn(4)]:
     //   opMask 0x1F = ignore Rn + bit 4 for matching
     //   zeroMask 0x10 = bit 4 ("*") must be 0
-    {0x0060, 0x03, 0x1F, 0x10, ARRAY_RANGE(TABLE_SFT_DYN),  ARRAY_RANGE(INDEX_EMPTY)},
+    {0x0060, 0x03, 0x1F, 0x10, ARRAY_RANGE(TABLE_SFT_DYN),  ARRAY_RANGE(INDEX_SFT)},
     // SFT static 0x64-0x66; opcode [MODE(3)|Imm5(5)]:
-    {0x0064, 0x03, 0x1F, 0x00, ARRAY_RANGE(TABLE_SFT_STAT), ARRAY_RANGE(INDEX_EMPTY)},
+    {0x0064, 0x03, 0x1F, 0x00, ARRAY_RANGE(TABLE_SFT_STAT), ARRAY_RANGE(INDEX_SFT)},
     // BIT dynamic 0x68-0x6A; opcode [*|MODE(2)|*|Rn(4)]:
     //   zeroMask 0x90 = bits 7 and 4 must be 0
-    {0x0068, 0x03, 0x9F, 0x90, ARRAY_RANGE(TABLE_BIT_DYN),  ARRAY_RANGE(INDEX_EMPTY)},
+    {0x0068, 0x03, 0x9F, 0x90, ARRAY_RANGE(TABLE_BIT_DYN),  ARRAY_RANGE(INDEX_BIT)},
     // BIT static 0x6C-0x6E; opcode [*|MODE(2)|Imm5(5)]:
     //   zeroMask 0x80 = bit 7 must be 0
-    {0x006C, 0x03, 0x9F, 0x80, ARRAY_RANGE(TABLE_BIT_STAT), ARRAY_RANGE(INDEX_EMPTY)},
+    {0x006C, 0x03, 0x9F, 0x80, ARRAY_RANGE(TABLE_BIT_STAT), ARRAY_RANGE(INDEX_BIT)},
     // MUL 0xEE; opcode [MODE(4)|****]:
     //   opMask 0xBF = ignore bit 4 (size) + bits 7,5,3-0 for matching
     //   zeroMask 0xAF = bits 7,5,3-0 must be 0
-    {0x00EE, 0x00, 0xBF, 0xAF, ARRAY_RANGE(TABLE_MUL),      ARRAY_RANGE(INDEX_EMPTY)},
+    {0x00EE, 0x00, 0xBF, 0xAF, ARRAY_RANGE(TABLE_MUL),      ARRAY_RANGE(INDEX_MUL_DIV)},
     // DIV 0xEF; same layout
-    {0x00EF, 0x00, 0xBF, 0xAF, ARRAY_RANGE(TABLE_DIV),      ARRAY_RANGE(INDEX_EMPTY)},
+    {0x00EF, 0x00, 0xBF, 0xAF, ARRAY_RANGE(TABLE_DIV),      ARRAY_RANGE(INDEX_MUL_DIV)},
     // Bcc:G 0xA4-0xA6; opcode [****|cc(4)]:
     //   opMask 0xF0 = ignore high nibble for matching
     //   zeroMask 0xF0 = high nibble must be 0
-    {0x00A4, 0x03, 0xF0, 0xF0, ARRAY_RANGE(TABLE_BCC_G),    ARRAY_RANGE(INDEX_EMPTY)},
+    {0x00A4, 0x03, 0xF0, 0xF0, ARRAY_RANGE(TABLE_BCC_G),    ARRAY_RANGE(INDEX_BCC_G)},
 };
 
 using Cpu = entry::CpuBase<CpuType, EntryPage>;
@@ -291,12 +311,59 @@ Error searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) {
     return insn.getError();
 }
 
-static bool acceptMode(AsmInsn &, const Entry *) {
-    return false;
+// Lead-with-equality acceptMode helper; the parser sets the exact AddrMode the
+// table expects so the switch only carries fit-relaxations.
+static bool acceptMode(const Operand &op, AddrMode table) {
+    if (op.mode == table)
+        return true;
+    switch (table) {
+    case M_EA:
+    case M_EAD:
+        return isEaMode(op.mode);
+    case M_RNNO:
+        // CGBN/UNLK Rn: parser produces register-direct M_DREG.
+        return op.mode == M_DREG;
+    case M_IQ:
+    case M_ITRPN:
+    case M_FRMSZ:
+    case M_SCNTI:
+    case M_BNUMI:
+        // ADD:Q / CMP:Q / MOV:Q / TRAPA / RTD / SFT-stat / BIT-stat: parser
+        // produces M_IMM for the immediate operand.
+        return op.mode == M_IMM;
+    case M_SCNTR:
+    case M_BNUMR:
+        // SFT-dyn / BIT-dyn: dynamic count is a register, parser sees M_DREG.
+        return op.mode == M_DREG && isGlobalReg(op.reg);
+    case M_DISP:
+        // Branch target written as a bare expression.
+        return op.mode == M_IMM;
+    case M_CR:
+        // ANDC/ORC/XORC/LDC/STC: M_CR operand parsed as itself (M_CR).
+        return op.mode == M_CR;
+    default:
+        return false;
+    }
+}
+
+static bool acceptOperands(AsmInsn &insn, const Entry *entry) {
+    const auto flags = entry->readFlags();
+    // M_RR / M_IRQ combine two user operands into a single byte; the table
+    // marks them as src-only with M_NONE dst, but the parsed operand pair
+    // must both be register-direct (M_RR) or imm+register (M_IRQ).
+    if (flags.dst() == M_NONE) {
+        if (flags.src() == M_RR)
+            return insn.op1.mode == M_DREG && isGlobalReg(insn.op1.reg) &&
+                   insn.op2.mode == M_DREG && isGlobalReg(insn.op2.reg);
+        if (flags.src() == M_IRQ)
+            return insn.op1.mode == M_IMM &&
+                   insn.op2.mode == M_DREG && isGlobalReg(insn.op2.reg);
+    }
+    return acceptMode(insn.op1, flags.src()) && acceptMode(insn.op2, flags.dst());
 }
 
 Error searchName(CpuType cpuType, AsmInsn &insn) {
-    cpu(cpuType)->searchName(insn, acceptMode);
+    cpu(cpuType)->searchName(insn, acceptOperands);
     return insn.getError();
 }
 

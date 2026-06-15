@@ -13,6 +13,7 @@ Error           KEYWORD1        libasm
 AsmCdp1802      KEYWORD1        libasm
 AsmCp1600       KEYWORD1        libasm
 AsmF3850        KEYWORD1        libasm
+AsmH16          KEYWORD1        libasm
 AsmH8300        KEYWORD1        libasm
 AsmH8500        KEYWORD1        libasm
 AsmI8048        KEYWORD1        libasm
@@ -50,6 +51,7 @@ AsmZ8           KEYWORD1        libasm
 DisCdp1802      KEYWORD1        libasm
 DisCp1600       KEYWORD1        libasm
 DisF3850        KEYWORD1        libasm
+DisH16          KEYWORD1        libasm
 DisH8300        KEYWORD1        libasm
 DisH8500        KEYWORD1        libasm
 DisI8048        KEYWORD1        libasm

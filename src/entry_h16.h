@@ -62,12 +62,11 @@ enum AddrMode : uint8_t {
     M_CR = 21,    // control register (ANDC, ORC, XORC, LDC, STC)
     M_ITRPN = 22, // TRAPA trap number 0..15
     M_FRMSZ = 23, // LINK frame size, RTD dealloc size (Sd-coded)
-    M_RFRM = 24,  // LINK Rn (8-bit Rn) followed by Sd-sized frame disp
     // ---- Multi-byte family operand modes (in prefix pages) -------------
-    M_SCNTR = 25, // SFT dynamic count: Rn in low 4 bits of opcode byte
-    M_SCNTI = 26, // SFT static count: Imm5 in low 5 bits of opcode byte
-    M_BNUMR = 27, // BIT dynamic bit-no: Rn in low 4 bits of opcode byte
-    M_BNUMI = 28, // BIT static bit-no: Imm5 in low 5 bits of opcode byte
+    M_SCNTR = 24, // SFT dynamic count: Rn in low 4 bits of opcode byte
+    M_SCNTI = 25, // SFT static count: Imm5 in low 5 bits of opcode byte
+    M_BNUMR = 26, // BIT dynamic bit-no: Rn in low 4 bits of opcode byte
+    M_BNUMI = 27, // BIT static bit-no: Imm5 in low 5 bits of opcode byte
 };
 
 static inline bool isEaMode(AddrMode mode) {
@@ -83,6 +82,9 @@ enum InsnSize : uint8_t {
     ISZ_EXTU = 4,  // EXTU/EXTS remapped Sz: 00=W, 01=L, 10=B
     ISZ_PRSZ = 5,  // .B/.W/.L from Sz field in low 2 bits of prefix
     ISZ_OBIT4 = 6, // .B/.W from bit 4 of opcode (MUL/DIV mode byte)
+    ISZ_FIXL = 7,  // always .L (e.g., XCH)
+    ISZ_AUTO = 8,  // .B/.W/.L from explicit suffix OR auto-picked from the
+                   // operand's value size (e.g., RTD/LINK frame size)
 };
 
 // Per-entry attribute flags packed into 16 bits.
@@ -94,17 +96,17 @@ struct Entry final : entry::Base<Config::opcode_t> {
     struct Flags final {
         uint16_t _attr;
 
-        // [15:13]=isz(3) [12:7]=dst(6) [6:1]=src(6) [0]=unused
+        // [15:12]=isz(4) [11:6]=dst(6) [5:0]=src(6)
         static constexpr Flags create(InsnSize isz, AddrMode src, AddrMode dst) {
             return Flags{static_cast<uint16_t>(
-                    (static_cast<uint16_t>(isz) << 13) |
-                    (static_cast<uint16_t>(dst) << 7) |
-                    (static_cast<uint16_t>(src) << 1))};
+                    (static_cast<uint16_t>(isz) << 12) |
+                    (static_cast<uint16_t>(dst) << 6) |
+                    (static_cast<uint16_t>(src)))};
         }
 
-        InsnSize insnSize() const { return InsnSize((_attr >> 13) & 0x7); }
-        AddrMode dst() const { return AddrMode((_attr >> 7) & 0x3F); }
-        AddrMode src() const { return AddrMode((_attr >> 1) & 0x3F); }
+        InsnSize insnSize() const { return InsnSize((_attr >> 12) & 0xF); }
+        AddrMode dst() const { return AddrMode((_attr >> 6) & 0x3F); }
+        AddrMode src() const { return AddrMode(_attr & 0x3F); }
 
         // Mask of variable bits in the opcode byte (Sz/Sd field for sized
         // instructions, 0 for fixed-opcode instructions).
@@ -112,6 +114,7 @@ struct Entry final : entry::Base<Config::opcode_t> {
             switch (insnSize()) {
             case ISZ_DATA:
             case ISZ_EXTU:
+            case ISZ_AUTO:
                 return 0x03;
             default:
                 return 0x00;

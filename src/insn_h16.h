@@ -37,11 +37,34 @@ struct EntryInsn : EntryInsnPrefix<Config, Entry> {
 
 struct Operand final : ErrorAt {
     AddrMode mode;
-    reg::RegName reg;
-    reg::CrName creg;
-    reg::CcName cc;
-    Value val;
-    Operand() : mode(M_NONE), reg(reg::REG_UNDEF), creg(reg::CR_UNDEF), cc(reg::CC_UNDEF), val() {}
+    reg::RegName reg;       // base register (Rn) or for M_DREG the register itself
+    reg::RegName indexReg;  // index register Xm (M_INDEX, M_PCIDX)
+    reg::CrName creg;       // M_CR
+    reg::CcName cc;         // M_CC
+    uint8_t scale;          // 1, 2, 4, or 8 (M_SCALE, M_INDEX, M_PCIDX)
+    uint8_t indexSize;      // L bit: 0=word, 1=long (M_INDEX, M_PCIDX)
+    uint8_t dispSize;       // requested displacement size (8/16/32, 0=auto)
+    uint8_t immSize;        // requested immediate size (8/16/32, 0=auto)
+    uint8_t absSize;        // requested absolute size (8/16/32, 0=auto)
+    Value val;              // displacement / immediate / absolute / ds1
+    Value val2;             // ds2 for M_DIND
+    uint8_t ds1Size;        // ds1 size for M_DIND (1 or 4 bytes)
+    uint8_t ds2Size;        // ds2 size for M_DIND
+    Operand()
+        : mode(M_NONE),
+          reg(reg::REG_UNDEF),
+          indexReg(reg::REG_UNDEF),
+          creg(reg::CR_UNDEF),
+          cc(reg::CC_UNDEF),
+          scale(1),
+          indexSize(0),
+          dispSize(0),
+          immSize(0),
+          absSize(0),
+          val(),
+          val2(),
+          ds1Size(0),
+          ds2Size(0) {}
 };
 
 struct AsmInsn final : AsmInsnImpl<Config>, EntryInsn {
@@ -50,6 +73,34 @@ struct AsmInsn final : AsmInsnImpl<Config>, EntryInsn {
     Operand op1, op2;
 
     using AsmInsnImpl::emitByte;
+
+    // Emit the prefix byte (if any) and the opcode byte at the start of the
+    // instruction.  Call after encodeOperand has filled the trailing bytes.
+    void emitInsn() {
+        uint8_t pos = 0;
+        if (hasPrefix())
+            emitByte(prefix(), pos++);
+        emitByte(opCode(), pos);
+    }
+
+    // Position past the opcode/prefix; operand bytes append at length() once
+    // any have been emitted.
+    uint8_t operandPos() const {
+        uint8_t pos = length();
+        if (pos == 0)
+            pos = hasPrefix() ? 2 : 1;
+        return pos;
+    }
+
+    void emitOperand8(uint8_t v)  { emitByte(v, operandPos()); }
+    void emitOperand16(uint16_t v) { emitUint16(v, operandPos()); }
+    void emitOperand32(uint32_t v) { emitUint32(v, operandPos()); }
+
+    // Strip a trailing ".B" / ".W" / ".L" from the mnemonic, returning the
+    // size and recording it in sizeSuffix.  Returns SZ_NONE if no suffix.
+    OprSize parseSizeSuffix();
+
+    OprSize sizeSuffix = SZ_NONE;
 };
 
 struct DisInsn final : DisInsnImpl<Config>, EntryInsn {
