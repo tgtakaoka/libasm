@@ -25,7 +25,8 @@ AsmSuperH asmsuperh;
 Assembler &assembler(asmsuperh);
 
 bool isSh2() {
-    return strcasecmp_P("SH-2", assembler.config().cpu_P()) == 0;
+    const auto *cpu = assembler.config().cpu_P();
+    return strcasecmp_P("SH-2", cpu) == 0 || strcasecmp_P("SH-DSP", cpu) == 0;
 }
 
 void set_up() {
@@ -416,6 +417,57 @@ void test_sh2_only() {
     }
 }
 
+bool isShDsp() {
+    return strcasecmp_P("SH-DSP", assembler.config().cpu_P()) == 0;
+}
+
+void test_shdsp_only() {
+    if (isShDsp()) {
+        // DSP register transfers
+        TEST("LDS R0, DSR",       0x406A);
+        TEST("LDS R7, A0",        0x477A);
+        TEST("LDS R15, X0",       0x4F8A);
+        TEST("LDS R0, X1",        0x409A);
+        TEST("LDS R7, Y0",        0x47AA);
+        TEST("LDS R15, Y1",       0x4FBA);
+        TEST("STS DSR, R0",       0x006A);
+        TEST("STS A0, R7",        0x077A);
+        TEST("STS X0, R15",       0x0F8A);
+        TEST("STS X1, R0",        0x009A);
+        TEST("STS Y0, R7",        0x07AA);
+        TEST("STS Y1, R15",       0x0FBA);
+        TEST("LDS.L @R0+, DSR",   0x4066);
+        TEST("LDS.L @R15+, Y1",   0x4FB6);
+        TEST("STS.L A0, @-R0",    0x4072);
+        TEST("STS.L Y1, @-R15",   0x4FB2);
+        // Repeat-control registers
+        TEST("LDC R0, MOD",       0x405E);
+        TEST("LDC R7, RS",        0x476E);
+        TEST("LDC R15, RE",       0x4F7E);
+        TEST("STC MOD, R0",       0x0052);
+        TEST("STC RS, R7",        0x0762);
+        TEST("STC RE, R15",       0x0F72);
+        TEST("LDC.L @R0+, MOD",   0x4057);
+        TEST("STC.L RE, @-R15",   0x4F73);
+        // LDRS / LDRE / SETRC
+        ATEST(0x0100, "LDRS @(*+4,PC)",      0x8C00);
+        ATEST(0x0100, "LDRE @(*+4,PC)",      0x8E00);
+        ATEST(0x0100, "LDRS @(*+H'40,PC)",   0x8C1E);
+        TEST("SETRC #0",          0x8200);
+        TEST("SETRC #H'7F",       0x827F);
+        TEST("SETRC #H'FF",       0x82FF);
+        TEST("SETRC R0",          0x4014);
+        TEST("SETRC R15",         0x4F14);
+    } else {
+        // LDS/STS/LDC/STC are SH-1/SH-2 mnemonics too; the operand fails
+        // rather than the mnemonic, so just check the DSP-only ones.
+        ERRT("LDRS @(*+4,PC)",    UNKNOWN_INSTRUCTION, "LDRS @(*+4,PC)");
+        ERRT("LDRE @(*+4,PC)",    UNKNOWN_INSTRUCTION, "LDRE @(*+4,PC)");
+        ERRT("SETRC #0",          UNKNOWN_INSTRUCTION, "SETRC #0");
+        ERRT("SETRC R0",          UNKNOWN_INSTRUCTION, "SETRC R0");
+    }
+}
+
 void test_data_constant() {
     // .data emits 16-bit big-endian words; multiple comma-separated values
     // and strings are both accepted.
@@ -431,6 +483,14 @@ void test_data_constant() {
     TEST(R"(.data "Hi!")",                        0x4869, 0x2100);  // odd-length string padded
     TEST(R"(.data H'1234, "OK")",                 0x1234, 0x4F4B);
 }
+
+// Documentation note: the libasm SH-DSP table does NOT yet implement the
+// DSP compute / parallel-data-transfer instructions: PADD, PSUB, PMULS,
+// PMAC, PCMP, PABS, PNEG, PINC, PDEC, PCOPY, PSHA, PSHL, PRND, DCT/DCF
+// (DSP conditionals), MOVX.W, MOVY.W, MOVS.W, MOVS.L.  The assembler's
+// permissive parser doesn't cleanly report these as UNKNOWN_INSTRUCTION
+// (it errors on register-operand parsing instead), so we don't have an
+// ERRT-based pin here.  Adding these is a SH-DSP scope-extension task.
 
 // clang-format on
 
@@ -458,6 +518,7 @@ void run_tests(const char *cpu) {
     RUN_TEST(test_system_control);
     RUN_TEST(test_ldc_stc_lds_sts);
     RUN_TEST(test_sh2_only);
+    RUN_TEST(test_shdsp_only);
     RUN_TEST(test_data_constant);
 }
 

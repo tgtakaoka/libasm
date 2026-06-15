@@ -380,10 +380,48 @@ constexpr uint8_t INDEX_SH2[] PROGMEM = {
       1,  // TEXT_MUL_L
 };
 
-// DSP-page index. The disassembler reaches the table via linearSearch
-// in searchOpCode and does not consult the index; the real
-// alphabetically-sorted INDEX_DSP[] lands with the assembler.
-constexpr uint8_t INDEX_DSP[] PROGMEM = {0};
+constexpr uint8_t INDEX_DSP[] PROGMEM = {
+     12,  // TEXT_LDC
+     18,  // TEXT_LDC
+     24,  // TEXT_LDC
+     11,  // TEXT_LDC_L
+     16,  // TEXT_LDC_L
+     22,  // TEXT_LDC_L
+     39,  // TEXT_LDRE
+     38,  // TEXT_LDRS
+     17,  // TEXT_LDS
+     23,  // TEXT_LDS
+     27,  // TEXT_LDS
+     30,  // TEXT_LDS
+     33,  // TEXT_LDS
+     36,  // TEXT_LDS
+     15,  // TEXT_LDS_L
+     21,  // TEXT_LDS_L
+     26,  // TEXT_LDS_L
+     29,  // TEXT_LDS_L
+     32,  // TEXT_LDS_L
+     35,  // TEXT_LDS_L
+      9,  // TEXT_SETRC
+     37,  // TEXT_SETRC
+      0,  // TEXT_STC
+      1,  // TEXT_STC
+      3,  // TEXT_STC
+     10,  // TEXT_STC_L
+     14,  // TEXT_STC_L
+     20,  // TEXT_STC_L
+      2,  // TEXT_STS
+      4,  // TEXT_STS
+      5,  // TEXT_STS
+      6,  // TEXT_STS
+      7,  // TEXT_STS
+      8,  // TEXT_STS
+     13,  // TEXT_STS_L
+     19,  // TEXT_STS_L
+     25,  // TEXT_STS_L
+     28,  // TEXT_STS_L
+     31,  // TEXT_STS_L
+     34,  // TEXT_STS_L
+};
 
 // clang-format on
 
@@ -452,6 +490,8 @@ static bool acceptMode(const Operand &op, AddrMode table) {
         return op.mode == M_D8B;  // parser collapses GBR-relative to M_D8B
     case M_PCW:
         return op.mode == M_PCL;  // parser collapses PC-relative to M_PCL
+    case M_REL8P:
+        return op.mode == M_PCL;  // LDRS/LDRE accept @(target,PC)
     case M_TNUM:
         return op.mode == M_IMM8;
     case M_REL12:

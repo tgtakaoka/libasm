@@ -112,11 +112,54 @@ void test_dis_sh2() {
             0x4010, 0x0023, 0x310D);
 }
 
+void test_asm_shdsp() {
+    PREP_ASM(superh::AsmSuperH, MotorolaDirective);
+
+    driver.setUpperHex(false);
+
+    ASM("SH-DSP",
+            R"(        cpu   SH-DSP
+        org   H'3000
+        lds   r0, dsr
+        lds   r0, a0
+        setrc #0
+)",
+            R"(          0 :                            cpu   SH-DSP
+       3000 :                            org   H'3000
+       3000 : 406a                       lds   r0, dsr
+       3002 : 407a                       lds   r0, a0
+       3004 : 8200                       setrc #0
+)");
+}
+
+void test_dis_shdsp() {
+    PREP_DIS(superh::DisSuperH);
+
+    driver.setUppercase(true);
+
+    DIS16("SH-DSP", 0x3000,
+            R"(      CPU    SH-DSP
+      ORG    H'00003000
+      LDS    R0, DSR
+      LDS    R0, A0
+      SETRC  #0
+)",
+            R"(       0 :                            CPU    SH-DSP
+    3000 :                            ORG    H'00003000
+    3000 : 406A                       LDS    R0, DSR
+    3002 : 407A                       LDS    R0, A0
+    3004 : 8200                       SETRC  #0
+)",
+            0x406A, 0x407A, 0x8200);
+}
+
 void run_tests() {
     RUN_TEST(test_asm_sh1);
     RUN_TEST(test_dis_sh1);
     RUN_TEST(test_asm_sh2);
     RUN_TEST(test_dis_sh2);
+    RUN_TEST(test_asm_shdsp);
+    RUN_TEST(test_dis_shdsp);
 }
 
 }  // namespace test

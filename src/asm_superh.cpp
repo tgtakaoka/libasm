@@ -221,6 +221,33 @@ Error AsmSuperH::parseOperand(StrScanner &scan, Operand &op) const {
             case REG_PR:
                 op.mode = M_PR;
                 break;
+            case REG_DSR:
+                op.mode = M_DSR;
+                break;
+            case REG_A0:
+                op.mode = M_A0;
+                break;
+            case REG_X0:
+                op.mode = M_X0;
+                break;
+            case REG_X1:
+                op.mode = M_X1;
+                break;
+            case REG_Y0:
+                op.mode = M_Y0;
+                break;
+            case REG_Y1:
+                op.mode = M_Y1;
+                break;
+            case REG_MOD:
+                op.mode = M_MOD;
+                break;
+            case REG_RS:
+                op.mode = M_RS;
+                break;
+            case REG_RE:
+                op.mode = M_RE;
+                break;
             default:
                 return op.setError(s, REGISTER_NOT_ALLOWED);
             }
@@ -282,6 +309,15 @@ void AsmSuperH::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode) c
     case M_MACL:
     case M_PR:
     case M_IGBR:
+    case M_DSR:
+    case M_A0:
+    case M_X0:
+    case M_X1:
+    case M_Y0:
+    case M_Y1:
+    case M_MOD:
+    case M_RS:
+    case M_RE:
         break;
     case M_RN:
     case M_IRN:
@@ -385,8 +421,9 @@ void AsmSuperH::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode) c
         opc |= val & 0xFF;
         break;
     }
-    case M_REL8: {
-        // 8-bit signed PC-relative branch: d = (target - (PC+4)) / 2, [-128, 127]
+    case M_REL8:
+    case M_REL8P: {
+        // 8-bit signed PC-relative: d = (target - (PC+4)) / 2, [-128, 127]
         const auto target = op.val.getUnsigned();
         const auto pc4 = insn.address() + 4;
         const auto delta = static_cast<int32_t>(target - pc4);
