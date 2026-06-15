@@ -183,11 +183,157 @@ constexpr Entry TABLE_SH2[] PROGMEM = {
     E1(0x8F00, TEXT_BF_S,    M_REL8),          // BF/S label
 };
 
-// Placeholder index arrays. The disassembler reaches the tables via
-// linearSearch in searchOpCode and never consults the index; the real
-// alphabetically-sorted INDEX[] arrays land alongside the assembler.
-constexpr uint8_t INDEX_COMMON[] PROGMEM = {0};
-constexpr uint8_t INDEX_SH2[] PROGMEM = {0};
+// INDEX arrays sorted alphabetically by the mnemonic STRING (not by the
+// TEXT_X identifier), so the binary-search comparator (strcasecmp_P on
+// the mnemonic) sees the index ordering match its sort. Regenerate via
+// the awk pipeline in this file's commit history if TABLE_* changes.
+constexpr uint8_t INDEX_COMMON[] PROGMEM = {
+    104,  // TEXT_ADD
+     46,  // TEXT_ADD
+     47,  // TEXT_ADDC
+     48,  // TEXT_ADDV
+    124,  // TEXT_AND
+     30,  // TEXT_AND
+    128,  // TEXT_AND_B
+    111,  // TEXT_BF
+    113,  // TEXT_BRA
+    114,  // TEXT_BSR
+    110,  // TEXT_BT
+     17,  // TEXT_CLRMAC
+     12,  // TEXT_CLRT
+    109,  // TEXT_CMP_EQ
+     37,  // TEXT_CMP_EQ
+     39,  // TEXT_CMP_GE
+     42,  // TEXT_CMP_GT
+     41,  // TEXT_CMP_HI
+     38,  // TEXT_CMP_HS
+     66,  // TEXT_CMP_PL
+     63,  // TEXT_CMP_PZ
+     33,  // TEXT_CMP_STR
+     28,  // TEXT_DIV0S
+     14,  // TEXT_DIV0U
+     40,  // TEXT_DIV1
+    102,  // TEXT_EXTS_B
+    103,  // TEXT_EXTS_W
+    100,  // TEXT_EXTU_B
+    101,  // TEXT_EXTU_W
+     85,  // TEXT_JMP
+     60,  // TEXT_JSR
+     61,  // TEXT_LDC
+     73,  // TEXT_LDC
+     86,  // TEXT_LDC
+     56,  // TEXT_LDC_L
+     68,  // TEXT_LDC_L
+     81,  // TEXT_LDC_L
+     59,  // TEXT_LDS
+     71,  // TEXT_LDS
+     84,  // TEXT_LDS
+     55,  // TEXT_LDS_L
+     67,  // TEXT_LDS_L
+     80,  // TEXT_LDS_L
+     62,  // TEXT_MAC_W
+    132,  // TEXT_MOV
+     91,  // TEXT_MOV
+    105,  // TEXT_MOV_B
+    107,  // TEXT_MOV_B
+    115,  // TEXT_MOV_B
+    119,  // TEXT_MOV_B
+     22,  // TEXT_MOV_B
+     25,  // TEXT_MOV_B
+      3,  // TEXT_MOV_B
+     88,  // TEXT_MOV_B
+      9,  // TEXT_MOV_B
+     92,  // TEXT_MOV_B
+     11,  // TEXT_MOV_L
+    117,  // TEXT_MOV_L
+    121,  // TEXT_MOV_L
+    131,  // TEXT_MOV_L
+     21,  // TEXT_MOV_L
+     24,  // TEXT_MOV_L
+     27,  // TEXT_MOV_L
+      5,  // TEXT_MOV_L
+     87,  // TEXT_MOV_L
+     90,  // TEXT_MOV_L
+     94,  // TEXT_MOV_L
+     10,  // TEXT_MOV_W
+    106,  // TEXT_MOV_W
+    108,  // TEXT_MOV_W
+    112,  // TEXT_MOV_W
+    116,  // TEXT_MOV_W
+    120,  // TEXT_MOV_W
+     23,  // TEXT_MOV_W
+     26,  // TEXT_MOV_W
+      4,  // TEXT_MOV_W
+     89,  // TEXT_MOV_W
+     93,  // TEXT_MOV_W
+    122,  // TEXT_MOVA
+     18,  // TEXT_MOVT
+     36,  // TEXT_MULS_W
+     35,  // TEXT_MULU_W
+     99,  // TEXT_NEG
+     98,  // TEXT_NEGC
+      6,  // TEXT_NOP
+     95,  // TEXT_NOT
+    126,  // TEXT_OR
+     32,  // TEXT_OR
+    130,  // TEXT_OR_B
+     78,  // TEXT_ROTCL
+     79,  // TEXT_ROTCR
+     53,  // TEXT_ROTL
+     54,  // TEXT_ROTR
+     20,  // TEXT_RTE
+      8,  // TEXT_RTS
+     13,  // TEXT_SETT
+     74,  // TEXT_SHAL
+     75,  // TEXT_SHAR
+     49,  // TEXT_SHLL
+     82,  // TEXT_SHLL16
+     57,  // TEXT_SHLL2
+     69,  // TEXT_SHLL8
+     50,  // TEXT_SHLR
+     83,  // TEXT_SHLR16
+     58,  // TEXT_SHLR2
+     70,  // TEXT_SHLR8
+     16,  // TEXT_SLEEP
+      0,  // TEXT_STC
+      1,  // TEXT_STC
+      2,  // TEXT_STC
+     52,  // TEXT_STC_L
+     65,  // TEXT_STC_L
+     77,  // TEXT_STC_L
+     15,  // TEXT_STS
+     19,  // TEXT_STS
+      7,  // TEXT_STS
+     51,  // TEXT_STS_L
+     64,  // TEXT_STS_L
+     76,  // TEXT_STS_L
+     43,  // TEXT_SUB
+     44,  // TEXT_SUBC
+     45,  // TEXT_SUBV
+     96,  // TEXT_SWAP_B
+     97,  // TEXT_SWAP_W
+     72,  // TEXT_TAS_B
+    118,  // TEXT_TRAPA
+    123,  // TEXT_TST
+     29,  // TEXT_TST
+    127,  // TEXT_TST_B
+    125,  // TEXT_XOR
+     31,  // TEXT_XOR
+    129,  // TEXT_XOR_B
+     34,  // TEXT_XTRCT
+};
+
+constexpr uint8_t INDEX_SH2[] PROGMEM = {
+      8,  // TEXT_BF_S
+      3,  // TEXT_BRAF
+      0,  // TEXT_BSRF
+      7,  // TEXT_BT_S
+      5,  // TEXT_DMULS_L
+      4,  // TEXT_DMULU_L
+      6,  // TEXT_DT
+      2,  // TEXT_MAC_L
+      1,  // TEXT_MUL_L
+};
 
 // clang-format on
 
@@ -222,6 +368,39 @@ static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *) {
 
 Error searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) {
     cpu(cpuType)->searchOpCode(insn, out, matchOpCode);
+    return insn.getError();
+}
+
+// acceptMode: the parser produces "broad" modes; the table holds narrower
+// variants that share encoding shape. Lead with the equality fast path per
+// the libasm convention, then list per-table-mode relaxations.
+static bool acceptMode(const Operand &op, AddrMode table) {
+    if (op.mode == table)
+        return true;
+    switch (table) {
+    case M_RM:   return op.mode == M_RN;
+    case M_R0:   return op.mode == M_RN && op.reg == REG_R0;
+    case M_IRM:  return op.mode == M_IRN;
+    case M_INCM: return op.mode == M_INCN;
+    case M_IDXM: return op.mode == M_IDXN;
+    case M_D4M:  return op.mode == M_D4N;
+    case M_D8W:
+    case M_D8L:
+        return op.mode == M_D8B;     // parser collapses GBR-relative to M_D8B
+    case M_PCW:  return op.mode == M_PCL;  // parser collapses PC-relative to M_PCL
+    case M_TNUM: return op.mode == M_IMM8;
+    case M_REL12: return op.mode == M_REL8;
+    default:     return false;
+    }
+}
+
+static bool acceptModes(AsmInsn &insn, const Entry *entry) {
+    const auto flags = entry->readFlags();
+    return acceptMode(insn.srcOp, flags.src()) && acceptMode(insn.dstOp, flags.dst());
+}
+
+Error searchName(CpuType cpuType, AsmInsn &insn) {
+    cpu(cpuType)->searchName(insn, acceptModes);
     return insn.getError();
 }
 

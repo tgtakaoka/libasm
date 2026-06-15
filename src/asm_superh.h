@@ -14,30 +14,35 @@
  * limitations under the License.
  */
 
-#ifndef __LIBASM_TABLE_SUPERH_H__
-#define __LIBASM_TABLE_SUPERH_H__
+#ifndef __LIBASM_ASM_SUPERH_H__
+#define __LIBASM_ASM_SUPERH_H__
 
+#include "asm_base.h"
 #include "config_superh.h"
 #include "insn_superh.h"
 
 namespace libasm {
 namespace superh {
 
-struct TableSuperH final : InsnTable<CpuType> {
-    const /* PROGMEM */ char *listCpu_P() const override;
-    const /* PROGMEM */ char *cpuName_P(CpuType cpuType) const override;
-    Error searchCpuName(StrScanner &name, CpuType &cpuType) const override;
+struct AsmSuperH final : Assembler, Config {
+    AsmSuperH(const ValueParser::Plugins &plugins = defaultPlugins());
+
+private:
+    Error parseAtParen(StrScanner &scan, Operand &op) const;
+    Error parseOperand(StrScanner &scan, Operand &op) const;
+
+    void encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode) const;
+
+    Error encodeImpl(StrScanner &scan, Insn &insn) const override;
+    const ConfigBase &config() const override { return *this; }
+    ConfigSetter &configSetter() override { return *this; }
+    static const ValueParser::Plugins &defaultPlugins();
 };
-
-extern const TableSuperH TABLE;
-
-Error searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out);
-Error searchName(CpuType cpuType, AsmInsn &insn);
 
 }  // namespace superh
 }  // namespace libasm
 
-#endif  // __LIBASM_TABLE_SUPERH_H__
+#endif  // __LIBASM_ASM_SUPERH_H__
 
 // Local Variables:
 // mode: c++

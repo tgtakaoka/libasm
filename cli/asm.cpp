@@ -40,6 +40,7 @@
 #include "asm_pdp11.h"
 #include "asm_pdp8.h"
 #include "asm_scn2650.h"
+#include "asm_superh.h"
 #include "asm_tlcs90.h"
 #include "asm_tlcs900.h"
 #include "asm_tms320.h"
@@ -81,6 +82,7 @@ ns32000::AsmNs32000 asm32000;
 pdp11::AsmPdp11 asmpdp11;
 pdp8::AsmPdp8 asmpdp8;
 scn2650::AsmScn2650 asm2650;
+superh::AsmSuperH asmsuperh;
 tlcs90::AsmTlcs90 asm90;
 tlcs900::AsmTlcs900 asm900;
 tms320::AsmTms320 asm320;
@@ -113,6 +115,7 @@ MostekDirective dir6502(asm6502);
 MotorolaDirective dir68000(asm68000);
 MotorolaDirective dir8300(asm8300);
 MotorolaDirective dirh8500(ash8500);
+MotorolaDirective dirsuperh(asmsuperh);
 MotorolaDirective dir6800(asm6800);
 MotorolaDirective dir6805(asm6805);
 MotorolaDirective dir6809(asm6809);
@@ -163,6 +166,7 @@ AsmCommander commander{
         &dir68000,
         &dir8300,
         &dirh8500,
+        &dirsuperh,
         &dir9900,
         &dirz8000,
         &dir32000,
