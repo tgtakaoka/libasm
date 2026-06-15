@@ -100,7 +100,7 @@ extern const char TEXT_REG_KU[] PROGMEM;
 using common::TEXT_REG_P;
 using common::TEXT_REG_P0;
 extern const char TEXT_REG_Q[]  PROGMEM;
-extern const char TEXT_REG_QL[] PROGMEM;
+using common::TEXT_REG_QL;
 extern const char TEXT_REG_QU[] PROGMEM;
 using common::TEXT_REG_S;
 using common::TEXT_REG_W;

@@ -160,9 +160,9 @@ constexpr char TEXT_TSTI[]   PROGMEM = "TSTI";
 
 // Z280
 constexpr char TEXT_REG_DEHL[] PROGMEM = "DEHL";
-constexpr char TEXT_REG_IXH[]  PROGMEM = "IXH";
+// constexpr char TEXT_REG_IXH[]  PROGMEM = "IXH";
 // constexpr char TEXT_REG_IXL[] PROGMEM = "IXL";
-constexpr char TEXT_REG_IYH[]  PROGMEM = "IYH";
+// constexpr char TEXT_REG_IYH[]  PROGMEM = "IYH";
 // constexpr char TEXT_REG_IYL[] PROGMEM = "IYL";
 // constexpr char TEXT_REG_USP[] PROGMEM = "USP";
 

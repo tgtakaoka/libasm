@@ -217,15 +217,15 @@ constexpr char TEXT_TSETB[]  PROGMEM = "TSETB";
 
 constexpr char TEXT_REG_FCW[]     PROGMEM = "FCW";
 constexpr char TEXT_REG_FLAGS[]   PROGMEM = "FLAGS";
-constexpr char TEXT_REG_NSP[]     PROGMEM = "NSP";
+// constexpr char TEXT_REG_NSP[]     PROGMEM = "NSP";
 constexpr char TEXT_REG_NSPOFF[]  PROGMEM = "NSPOFF";
 constexpr char TEXT_REG_NSPSEG[]  PROGMEM = "NSPSEG";
 constexpr char TEXT_REG_PSAP[]    PROGMEM = "PSAP";
 constexpr char TEXT_REG_PSAPOFF[] PROGMEM = "PSAPOFF";
 constexpr char TEXT_REG_PSAPSEG[] PROGMEM = "PSAPSEG";
 constexpr char TEXT_REG_REFRESH[] PROGMEM = "REFRESH";
-constexpr char TEXT_REG_RH[]      PROGMEM = "RH";
-constexpr char TEXT_REG_RL[]      PROGMEM = "RL";
+// constexpr char TEXT_REG_RH[]      PROGMEM = "RH";
+// constexpr char TEXT_REG_RL[]      PROGMEM = "RL";
 constexpr char TEXT_REG_RQ[]      PROGMEM = "RQ";
 // constexpr char TEXT_REG_RR[] PROGMEM = "RR";
 
@@ -270,4 +270,3 @@ constexpr char TEXT_INTR_VI[]  PROGMEM = "VI";
 // tab-width: 4
 // End:
 // vim: set ft=cpp et ts=4 sw=4:
-
