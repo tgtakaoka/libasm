@@ -39,7 +39,16 @@ struct EntryInsn : EntryInsnPrefix<Config, Entry> {
 struct AsmInsn;
 struct DisInsn;
 
-/** Z380 Decoder Directive */
+/**
+ * Z380 Decoder Directive.
+ *
+ * Lifetime asymmetry between asm and dis is intentional.  In the source text
+ * a DDIR is its own line and affects the NEXT encode() call -- the asm side
+ * persists this via Insn::state<Ddir>() across calls.  In the byte stream a
+ * DDIR's bytes are contiguous with the affected instruction's bytes -- the
+ * dis side consumes both inside one decodeImpl() call via a goto-retry and
+ * keeps Ddir on the short-lived DisInsn wrapper.
+ */
 struct Ddir final {
     Ddir() : _prefix(0), _opc(0), _addr(0) {}
     void operator=(const AsmInsn &insn);

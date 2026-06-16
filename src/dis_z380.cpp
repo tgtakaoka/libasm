@@ -40,6 +40,7 @@ DisZ380::DisZ380(const ValueFormatter::Plugins &plugins)
 void DisZ380::reset() {
     Disassembler::reset();
     setExtendedMode(false);
+    setLongWordMode(false);
 }
 
 StrBuffer &DisZ380::outIndirectReg(StrBuffer &out, RegName reg) const {
@@ -156,7 +157,10 @@ void DisZ380::decodeRelative(DisInsn &insn, StrBuffer &out, AddrMode mode) const
     }
     auto target = base + delta;
     if (z380() && _extmode) {
-        ;
+        // Reject wraparound where the source expression "$+N"/"$-N" would not
+        // round-trip through the assembler's matching overflow check.
+        if ((delta >= 0 && target < base) || (delta < 0 && target >= base))
+            insn.setErrorIf(out, OVERFLOW_RANGE);
     } else if ((base & ~UINT16_MAX) != (target & ~UINT16_MAX)) {
         insn.setErrorIf(out, OVERFLOW_RANGE);
         const auto width = addressWidth();
@@ -232,7 +236,6 @@ void DisZ380::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode, AddrMo
         break;
     case M_IOA:
         outHex(out.letter('('), insn.readByte(), 8).letter(')');
-        break;
         break;
     case M_IDX:
     case M_IDX8:
