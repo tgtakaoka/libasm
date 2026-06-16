@@ -87,11 +87,6 @@ void DisZ280::decodeRelative(DisInsn &insn, StrBuffer &out, AddrMode mode) const
     } else if (mode == M_REL16) {
         bits = 16;
         delta = static_cast<int16_t>(insn.readUint16());
-    } else if (mode == M_REL24) {
-        bits = 24;
-        const uint16_t lsw = insn.readUint16();
-        const int8_t msb = insn.readByte();
-        delta = (static_cast<int32_t>(msb) << 16) | lsw;
     }
     auto base = insn.address() + insn.length();
     if (insn.src() == M_IM8) {
@@ -228,7 +223,6 @@ void DisZ280::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode, AddrMo
     case M_IOA:
         outHex(out.letter('('), insn.readByte(), 8).letter(')');
         break;
-        break;
     case M_IDX:
     case M_IDX8:
         decodeShortIndex(insn, out, Entry::decodeIndex(insn.prefix()));
@@ -258,7 +252,6 @@ void DisZ280::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode, AddrMo
         break;
     case M_REL8:
     case M_REL16:
-    case M_REL24:
         decodeRelative(insn, out, mode);
         break;
     case M_R16:

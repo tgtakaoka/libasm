@@ -90,9 +90,6 @@ void AsmZ280::encodeRelative(AsmInsn &insn, const Operand &op, AddrMode mode) co
         if (overflowDelta(delta, 16))
             insn.setErrorIf(op, OPERAND_TOO_FAR);
         insn.emitOperand16(delta);
-    } else if (mode == M_REL24) {
-        insn.emitOperand16(delta);
-        insn.emitOperand8(delta >> 16);
     }
 }
 
