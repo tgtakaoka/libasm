@@ -98,6 +98,7 @@ struct DisZ8::Operand : ErrorReporter {
         case OP_W2LE:
             val16 = word2.val16;
             setError(word2);
+            break;
         default:
             break;
         }

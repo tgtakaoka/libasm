@@ -51,16 +51,6 @@ private:
 
     Error parseOperand(StrScanner &scan, Operand &op) const;
 
-    void encodeRegImmOperand(AsmInsn &insn, const AddrMode mode, const Operand &op) const;
-    void encodeAbsolute(AsmInsn &insn, const Operand &dstOp, const Operand &srcOp) const;
-    void encodeRelative(AsmInsn &insn, const Operand &op) const;
-    void encodeIndexed(AsmInsn &insn, const Operand &dstOp, const Operand &srcOp) const;
-    void encodeIndirectRegPair(AsmInsn &insn, const Operand &dstOp, const Operand &srcOp) const;
-    void encodeInOpCode(AsmInsn &insn, const Operand &dstOp, const Operand &srcOp) const;
-    void encodeMultiOperands(
-            AsmInsn &insn, const Operand &dstOp, const Operand &srcOp, const Operand &extOp) const;
-    void encodePostByte(
-            AsmInsn &insn, const Operand &dstOp, const Operand &srcOp, const Operand &extOp) const;
     void encodeRelative(AsmInsn &insn, OprPos pos, const Operand &op) const;
     void encodeIndexed(AsmInsn &insn, AddrMode mode, OprPos pos, const Operand &srcOp) const;
     void encodeRegAddr(AsmInsn &insn, OprPos pos, const Operand &op) const;

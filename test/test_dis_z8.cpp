@@ -82,6 +82,14 @@ void test_implied() {
         TEST("STOP", "", 0x6F);
         TEST("HALT", "", 0x7F);
     }
+    if (z88()) {
+        TEST("NEXT",  "", 0x0F);
+        TEST("ENTER", "", 0x1F);
+        TEST("EXIT",  "", 0x2F);
+        TEST("WFI",   "", 0x3F);
+        TEST("SB0",   "", 0x4F);
+        TEST("SB1",   "", 0x5F);
+    }
 }
 
 void test_absolute() {
@@ -732,11 +740,11 @@ void run_tests(const char *cpu) {
         RUN_TEST(test_bit_operation);
     if (z86c()) {
         RUN_TEST(test_illegal_z86c);
-    } else if (z86c()) {
+    } else if (z88()) {
+        RUN_TEST(test_illegal_z88);
+    } else {
         RUN_TEST(test_illegal_z8);
     }
-    if (z88())
-        RUN_TEST(test_illegal_z88);
 }
 
 // Local Variables:
