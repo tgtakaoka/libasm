@@ -1602,8 +1602,8 @@ void test_illegal_z80() {
     for (auto i = 0; i < 0x100; i++) {
         const auto opc = static_cast<Config::opcode_t>(i);
         if (!contains(ARRAY_RANGE(legal_ixbit), opc)) {
-            UNKN(0xDD, 0xCB, opc, 0);
-            UNKN(0xFD, 0xCB, opc, 0);
+            UNKN(0xDD, 0xCB, 0, opc);
+            UNKN(0xFD, 0xCB, 0, opc);
         }
     }
 }

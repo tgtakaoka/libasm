@@ -130,7 +130,6 @@ void DisZ80::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode, AddrMod
     case M_IOA:
         outHex(out.letter('('), insn.readByte(), 8).letter(')');
         break;
-        break;
     case M_IDX:
     case M_IDX8:
         decodeShortIndex(insn, out, Entry::decodeIndex(insn.prefix()));
