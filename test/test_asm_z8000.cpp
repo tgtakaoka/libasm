@@ -2309,7 +2309,7 @@ void test_output() {
     }
 }
 
-void test_cpu_conrtol() {
+void test_cpu_control() {
     // Complement Flag
     ERRT("COMFLG",         OPCODE_HAS_NO_EFFECT, "", 0x8D05);
     TEST("COMFLG P",       0x8D15);
@@ -2725,7 +2725,7 @@ void run_tests(const char *cpu) {
     RUN_TEST(test_translation);
     RUN_TEST(test_input);
     RUN_TEST(test_output);
-    RUN_TEST(test_cpu_conrtol);
+    RUN_TEST(test_cpu_control);
     if (z8001()) {
         RUN_TEST(test_short_direct);
     }

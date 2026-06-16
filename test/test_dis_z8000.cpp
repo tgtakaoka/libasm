@@ -2520,7 +2520,7 @@ void test_output() {
     }
 }
 
-void test_cpu_conrtol() {
+void test_cpu_control() {
     // Complement Flag
     ERRT("COMFLG", "", OPCODE_HAS_NO_EFFECT, "", 0x8D05);
     TEST("COMFLG", "P",       0x8D15);
@@ -2671,6 +2671,47 @@ void test_direct_address() {
     TEST("CLR", "<<%56>>%1234(R2)", 0x4D28, 0xD600, 0x1234);
 }
 
+void test_illegal() {
+    // Top-byte holes — every low byte in these sub-pages decodes as Unknown.
+    // Probe at the boundaries (0x??00 and 0x??FF) so a future encoding regression
+    // that fills in a partial mask gets caught.
+    UNKN(0x0E00); UNKN(0x0EFF);
+    UNKN(0x0F00); UNKN(0x0FFF);
+    UNKN(0x3600); UNKN(0x36FF);
+    UNKN(0x3800); UNKN(0x38FF);
+    UNKN(0x4E00); UNKN(0x4EFF);
+    UNKN(0x4F00); UNKN(0x4FFF);
+    UNKN(0x7800); UNKN(0x78FF);
+    UNKN(0x7E00); UNKN(0x7EFF);
+    UNKN(0x8E00); UNKN(0x8EFF);
+    UNKN(0x8F00); UNKN(0x8FFF);
+    UNKN(0xBF00); UNKN(0xBFFF);
+    // Partial holes — specific low-byte gaps within otherwise-legal sub-pages.
+    UNKN(0x0C0F); UNKN(0x0CFF);  // COMB family: 0x0C00..0x0C08 legal, others not
+    UNKN(0x0D0F); UNKN(0x0DFF);
+    UNKN(0x1C00); UNKN(0x1CFF);
+    UNKN(0x39FF);
+    UNKN(0x3AFF);
+    UNKN(0x3BFF);
+    UNKN(0x4CFF);
+    UNKN(0x4DFF);
+    UNKN(0x5C00); UNKN(0x5CFF);
+    UNKN(0x79FF);
+    UNKN(0x7AFF);
+    UNKN(0x7BFF);
+    UNKN(0x7CFF);
+    UNKN(0x8CFF);
+    UNKN(0x8DFF);
+    UNKN(0x9C00); UNKN(0x9CFF);
+    UNKN(0xB0FF);
+    UNKN(0xB1FF);
+    UNKN(0xB2FF);
+    UNKN(0xB8FF);
+    UNKN(0xB9FF);
+    UNKN(0xBAFF);
+    UNKN(0xBBFF);
+}
+
 // clang-format on
 
 void run_tests(const char *cpu) {
@@ -2688,10 +2729,11 @@ void run_tests(const char *cpu) {
     RUN_TEST(test_translation);
     RUN_TEST(test_input);
     RUN_TEST(test_output);
-    RUN_TEST(test_cpu_conrtol);
+    RUN_TEST(test_cpu_control);
     if (z8001()) {
         RUN_TEST(test_direct_address);
     }
+    RUN_TEST(test_illegal);
 }
 
 // Local Variables:
