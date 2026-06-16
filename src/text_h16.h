@@ -32,6 +32,7 @@ using common::TEXT_ADD;
 using common::TEXT_ADDS;
 using common::TEXT_ADDX;
 using common::TEXT_AND;
+using common::TEXT_ANDC;
 using common::TEXT_BCC;
 using common::TEXT_BCLR;
 using common::TEXT_BCS;
@@ -46,6 +47,7 @@ using common::TEXT_BLS;
 using common::TEXT_BLT;
 using common::TEXT_BMI;
 using common::TEXT_BNE;
+using common::TEXT_BNOT;
 using common::TEXT_BPL;
 using common::TEXT_BRA;
 using common::TEXT_BSR;
@@ -55,22 +57,41 @@ using common::TEXT_BTST;
 using common::TEXT_BVC;
 using common::TEXT_BVS;
 using common::TEXT_CLR;
+using common::TEXT_CMPS;
+using common::TEXT_DADD;
+using common::TEXT_DIVXU;
 using common::TEXT_EXTS;
+using common::TEXT_EXTU;
 using common::TEXT_JMP;
 using common::TEXT_JSR;
 using common::TEXT_LDC;
 using common::TEXT_LDM;
 using common::TEXT_LINK;
 using common::TEXT_MOV;
+using common::TEXT_MOVFPE;
+using common::TEXT_MOVTPE;
+using common::TEXT_MULXU;
 using common::TEXT_NEG;
 using common::TEXT_NEGX;
 using common::TEXT_NOP;
 using common::TEXT_NOT;
 using common::TEXT_OR;
+using common::TEXT_ORC;
 using common::TEXT_RESET;
+using common::TEXT_ROTL;
+using common::TEXT_ROTR;
+using common::TEXT_ROTXL;
+using common::TEXT_ROTXR;
+using common::TEXT_RTD;
 using common::TEXT_RTE;
+using common::TEXT_RTR;
 using common::TEXT_RTS;
+using common::TEXT_SET;
+using common::TEXT_SHAL;
+using common::TEXT_SHAR;
 using common::TEXT_SHLL;
+using common::TEXT_SHLR;
+using common::TEXT_SLEEP;
 using common::TEXT_STC;
 using common::TEXT_STM;
 using common::TEXT_SUB;
@@ -78,10 +99,13 @@ using common::TEXT_SUBS;
 using common::TEXT_SUBX;
 using common::TEXT_SWAP;
 using common::TEXT_TAS;
+using common::TEXT_TRAP;
+using common::TEXT_TRAPA;
 using common::TEXT_TST;
 using common::TEXT_UNLK;
 using common::TEXT_XCH;
 using common::TEXT_XOR;
+using common::TEXT_XORC;
 
 // Condition code names (used for Bcc:G, SET etc.)
 using common::TEXT_CC_EQ;   // "EQ"
@@ -97,14 +121,15 @@ using common::TEXT_CC_T;    // "T"
 
 // CR register name constants (used by the CR_TABLE NameEntry lookup).
 using common::TEXT_REG_CCR;
+using common::TEXT_REG_PC;
 using common::TEXT_REG_SR;
+using common::TEXT_REG_USP;
 
 // H16-specific instructions
 extern const char TEXT_ADD_G[]   PROGMEM;  // "ADD:G"
 extern const char TEXT_ADD_Q[]   PROGMEM;  // "ADD:Q"
 extern const char TEXT_ADD_R[]   PROGMEM;  // "ADD:R"
 extern const char TEXT_ADD_RQ[]  PROGMEM;  // "ADD:RQ"
-extern const char TEXT_ANDC[]    PROGMEM;
 extern const char TEXT_BCC_G[]   PROGMEM;  // "BCC:G"
 extern const char TEXT_BCLR_X[]  PROGMEM;  // (unused; use TEXT_BCLR from common)
 extern const char TEXT_BCS_G[]   PROGMEM;  // "BCS:G"
@@ -118,7 +143,6 @@ extern const char TEXT_BLS_G[]   PROGMEM;  // "BLS:G"
 extern const char TEXT_BLT_G[]   PROGMEM;  // "BLT:G"
 extern const char TEXT_BMI_G[]   PROGMEM;  // "BMI:G"
 extern const char TEXT_BNE_G[]   PROGMEM;  // "BNE:G"
-extern const char TEXT_BNOT[]    PROGMEM;
 extern const char TEXT_BPL_G[]   PROGMEM;  // "BPL:G"
 extern const char TEXT_BT_G[]    PROGMEM;  // "BT:G"
 extern const char TEXT_BVC_G[]   PROGMEM;  // "BVC:G"
@@ -128,14 +152,10 @@ extern const char TEXT_CMP_G[]   PROGMEM;  // "CMP:G"
 extern const char TEXT_CMP_Q[]   PROGMEM;  // "CMP:Q"
 extern const char TEXT_CMP_R[]   PROGMEM;  // "CMP:R"
 extern const char TEXT_CMP_RQ[]  PROGMEM;  // "CMP:RQ"
-extern const char TEXT_CMPS[]    PROGMEM;
-extern const char TEXT_DADD[]    PROGMEM;
 extern const char TEXT_DCBN[]    PROGMEM;
 extern const char TEXT_DIVXS[]   PROGMEM;
-extern const char TEXT_DIVXU[]   PROGMEM;
 extern const char TEXT_DNEG[]    PROGMEM;
 extern const char TEXT_DSUB[]    PROGMEM;
-extern const char TEXT_EXTU[]    PROGMEM;
 extern const char TEXT_ICBN[]    PROGMEM;
 extern const char TEXT_MOV_G[]   PROGMEM;  // "MOV:G"
 extern const char TEXT_MOV_Q[]   PROGMEM;  // "MOV:Q"
@@ -144,36 +164,18 @@ extern const char TEXT_MOV_RQ[]  PROGMEM;  // "MOV:RQ"
 extern const char TEXT_MOVA[]    PROGMEM;
 extern const char TEXT_MOVF[]    PROGMEM;
 extern const char TEXT_MOVFP[]   PROGMEM;
-extern const char TEXT_MOVFPE[]  PROGMEM;
 extern const char TEXT_MOVS[]    PROGMEM;
 extern const char TEXT_MOVTP[]   PROGMEM;
-extern const char TEXT_MOVTPE[]  PROGMEM;
 extern const char TEXT_MULXS[]   PROGMEM;
-extern const char TEXT_MULXU[]   PROGMEM;
-extern const char TEXT_ORC[]     PROGMEM;
 extern const char TEXT_PGBN[]    PROGMEM;
-extern const char TEXT_ROTL[]    PROGMEM;
-extern const char TEXT_ROTR[]    PROGMEM;
-extern const char TEXT_ROTXL[]   PROGMEM;
-extern const char TEXT_ROTXR[]   PROGMEM;
-extern const char TEXT_RTD[]     PROGMEM;
-extern const char TEXT_RTR[]     PROGMEM;
 extern const char TEXT_SCB[]     PROGMEM;
 extern const char TEXT_SCMP[]    PROGMEM;
-extern const char TEXT_SET[]     PROGMEM;
-extern const char TEXT_SHAL[]    PROGMEM;
-extern const char TEXT_SHAR[]    PROGMEM;
-extern const char TEXT_SHLR[]    PROGMEM;
-extern const char TEXT_SLEEP[]   PROGMEM;
 extern const char TEXT_SMOV[]    PROGMEM;
 extern const char TEXT_SSCH[]    PROGMEM;
 extern const char TEXT_SSTR[]    PROGMEM;
 extern const char TEXT_SUB_G[]   PROGMEM;  // "SUB:G"
 extern const char TEXT_SUB_R[]   PROGMEM;  // "SUB:R"
 extern const char TEXT_SUB_RQ[]  PROGMEM;  // "SUB:RQ"
-extern const char TEXT_TRAP[]    PROGMEM;
-extern const char TEXT_TRAPA[]   PROGMEM;
-extern const char TEXT_XORC[]    PROGMEM;
 
 // Additional condition code names
 extern const char TEXT_CC_CC[]   PROGMEM;  // "CC"
@@ -193,11 +195,7 @@ extern const char TEXT_REG_EBR[]  PROGMEM;
 extern const char TEXT_REG_GBNR[] PROGMEM;
 extern const char TEXT_REG_IBR[]  PROGMEM;
 extern const char TEXT_REG_RBR[]  PROGMEM;
-extern const char TEXT_REG_USP[]  PROGMEM;
 extern const char TEXT_REG_VBNR[] PROGMEM;
-
-// PC register (used in PC-relative addressing)
-extern const char TEXT_REG_PC[]  PROGMEM;
 
 // clang-format on
 }  // namespace h16
