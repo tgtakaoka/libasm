@@ -103,7 +103,7 @@ extern const char TEXT_SCALL[] PROGMEM;
 using common::TEXT_SETC;
 using common::TEXT_SHL;
 extern const char TEXT_SHLB[]  PROGMEM;
-extern const char TEXT_SHLL[]  PROGMEM;
+using common::TEXT_SHLL;
 using common::TEXT_SHR;
 extern const char TEXT_SHRA[]  PROGMEM;
 extern const char TEXT_SHRAB[] PROGMEM;
