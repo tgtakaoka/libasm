@@ -159,7 +159,17 @@ GAS_TESTS = $(foreach f,$(wildcard gen_*.gas),\
 GAS_OUTS    = $(foreach f,$(GAS_TESTS),$(f:.gas=).$(call out-ext,$(f:.gas=)))
 gas-test: clean-gas $(GAS_OUTS:%=gas-%)
 clean-gas:
-	-rm -f $(GAS_OUTS)
+	-rm -f $(GAS_OUTS) gen_*.syms gen_*.ld_flags
+
+# Z8001 per-segment helper sections + linker --section-start flags are
+# scraped from the dis output (.ginc).  Reference tests ship a hand-
+# written .ld_flags; this autogen-only rule generates both files.  The
+# text origin must match gen_z8001.asm's `org` and the org passed to
+# gen_z8000 (see TestGenerator), chosen so .text lands in a segment not
+# referenced by any direct-address operand the dis emits.
+GEN_Z8001_TEXT_ORG = 0x020000
+%_z8001.syms %_z8001.ld_flags: %_z8001.ginc
+	../../scripts/scrape-z8001-syms.sh $< $*_z8001.syms $*_z8001.ld_flags $(GEN_Z8001_TEXT_ORG)
 
 # Z8002 has no segmented relocation, so the autogen @file is just a
 # single --section-start=.text line; gen on demand (kept out of git so

@@ -13,7 +13,7 @@
 ; limitations under the License.
 
         cpu    z8001
-        org    10000h
+        org    20000h
         include "gen_z8001.inc"
         end
 
