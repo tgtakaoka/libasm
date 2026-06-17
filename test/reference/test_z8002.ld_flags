@@ -1,0 +1,3 @@
+--section-start=.text=0x1000
+--section-start=bss1=0x1234
+--section-start=bss2=0x5678

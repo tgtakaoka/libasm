@@ -161,6 +161,13 @@ gas-test: clean-gas $(GAS_OUTS:%=gas-%)
 clean-gas:
 	-rm -f $(GAS_OUTS)
 
+# Z8002 has no segmented relocation, so the autogen @file is just a
+# single --section-start=.text line; gen on demand (kept out of git so
+# clean-gas can wipe it).  Reference tests ship a hand-written file.
+GEN_Z8002_TEXT_ORG = 0x1000
+gen_z8002.ld_flags:
+	printf -- '--section-start=.text=%s\n' '$(GEN_Z8002_TEXT_ORG)' > $@
+
 clean-gen:
 	-rm -f $(GEN_OUTS)
 
