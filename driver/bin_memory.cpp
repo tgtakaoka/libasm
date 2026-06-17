@@ -135,9 +135,11 @@ void BinMemory::createBlock(uint32_t addr, uint8_t val) {
     auto next = it;
     if (++next != _blocks.end())
         block.connect(&next->second);
-    auto prev = it;
-    if (prev-- != _blocks.begin())
+    if (it != _blocks.begin()) {
+        auto prev = it;
+        --prev;
         prev->second.connect(&block);
+    }
     block.append(val);
     aggregate(block);
 }
@@ -151,10 +153,13 @@ void BinMemory::aggregate(Block &block) {
         it->second.aggregate(next->second);
         _blocks.erase(next);
     }
-    auto prev = it;
-    if (prev-- != _blocks.begin() && prev->second.atEnd(it->second.base())) {
-        prev->second.aggregate(it->second);
-        _blocks.erase(it);
+    if (it != _blocks.begin()) {
+        auto prev = it;
+        --prev;
+        if (prev->second.atEnd(it->second.base())) {
+            prev->second.aggregate(it->second);
+            _blocks.erase(it);
+        }
     }
 }
 
