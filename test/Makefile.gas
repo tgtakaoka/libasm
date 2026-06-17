@@ -42,16 +42,20 @@ gas-%_j11.hex: %_j11.gas
 	pdp11-aout-objdump -m pdp11 -D $(^:.gas=.hex) > $(^:.gas=.dis)
 
 # Z8001 target
-gas-%_z8001.hex: %_z8001.gas
-	z8k-coff-as --warn -o $(^:.gas=.p) -al=$(^:.gas=.lst) $^
-	z8k-coff-ld -m z8001 --entry=0 -o $(^:.gas=.o) $(^:.gas=.p) \
-		--section-start=text=0x010000 \
-		--section-start=bss1=0x0A1234 \
-		--section-start=bss2=0x0B5678
-	z8k-coff-objcopy -I coff-z8k -O ihex $(^:.gas=.o) /dev/stdout \
-		--adjust-section-vma .text=0x010000 \
-	| tr -d '\015' > $(^:.gas=.hex)
-	z8k-coff-objdump -m z8001 -D $(^:.gas=.hex) > $(^:.gas=.dis)
+# all --section-start linker flags (text + per-segment helpers) live in
+# <stem>.ld_flags and are passed to ld via @<stem>.ld_flags.  The text
+# VMA is extracted from the same file for objcopy's --adjust-section-vma.
+# Helper sections are discarded from the .hex via `-j .text` so only
+# emitted instructions appear.
+gas-%_z8001.hex: %_z8001.gas %_z8001.ld_flags
+	z8k-coff-as --warn -o $(<:.gas=.p) -al=$(<:.gas=.lst) $<
+	z8k-coff-ld -m z8001 --entry=0 -o $(<:.gas=.o) $(<:.gas=.p) \
+		@$*_z8001.ld_flags
+	text_vma=$$(sed -n 's/^--section-start=\.text=//p' $*_z8001.ld_flags); \
+	z8k-coff-objcopy -I coff-z8k -O ihex -j .text $(<:.gas=.o) /dev/stdout \
+		--adjust-section-vma .text=$$text_vma \
+	| tr -d '\015' > $(<:.gas=.hex)
+	z8k-coff-objdump -m z8001 -D $(<:.gas=.hex) > $(<:.gas=.dis)
 
 # Z8002 target
 # all --section-start linker flags live in <stem>.ld_flags and are

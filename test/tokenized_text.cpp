@@ -83,6 +83,27 @@ bool isNumber(const char *p, const char *&r) {
     return false;
 }
 
+bool isHexDigit(char c) {
+    return (c >= '0' && c <= '9') || (c >= 'a' && c <= 'f') || (c >= 'A' && c <= 'F');
+}
+
+// Match Z8001 extern symbol seg_SS_off_XXXX (2 + 4 lowercase hex digits)
+// emitted by DisZ8000 when extern-symbol option is enabled.  Treated as
+// a single collapsed token so the generator dedups across addresses
+// instead of producing one test per unique segmented address.
+bool isZ8001ExternSym(const char *p, const char *&r) {
+    if (p[0] != 's' || p[1] != 'e' || p[2] != 'g' || p[3] != '_')
+        return false;
+    if (!isHexDigit(p[4]) || !isHexDigit(p[5]))
+        return false;
+    if (p[6] != '_' || p[7] != 'o' || p[8] != 'f' || p[9] != 'f' || p[10] != '_')
+        return false;
+    if (!isHexDigit(p[11]) || !isHexDigit(p[12]) || !isHexDigit(p[13]) || !isHexDigit(p[14]))
+        return false;
+    r = p + 15;
+    return true;
+}
+
 bool isRelative(const char *p, const char *&r) {
     const auto o = *p;
     if (o == '$' || o == '*' || o == '.') {
@@ -196,6 +217,10 @@ std::string TokenizedText::tokenize(const char *text) {
             b = tmp;
         } else if (isNumber(b, tmp) || (*b == '-' && isNumber(b + 1, tmp))) {
             t.push_back('n');
+            b = tmp;
+        } else if (isZ8001ExternSym(b, tmp)) {
+            // collapse seg_SS_off_XXXX to 's'
+            t.push_back('s');
             b = tmp;
         } else if (isRelative(b, tmp)) {
             // reduce relative variant

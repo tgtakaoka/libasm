@@ -15,6 +15,10 @@
         .z8001
         .text
         .include "gen_z8001.ginc"
+        # Per-segment helper sections that anchor the seg_SS_off_XXXX
+        # direct-address symbols emitted by the dis.  Generated from the
+        # .ginc by scrape-z8001-syms.sh together with gen_z8001.ld_flags.
+        .include "gen_z8001.syms"
         .end
 
 # Local Variables:

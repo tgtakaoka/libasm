@@ -1,0 +1,3 @@
+--section-start=.text=0x010000
+--section-start=seg_0a=0x0A0000
+--section-start=seg_0b=0x0B0000

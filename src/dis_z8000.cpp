@@ -29,6 +29,8 @@ constexpr char OPT_BOOL_SHORT_DIRECT[] PROGMEM = "short-direct";
 constexpr char OPT_DESC_SHORT_DIRECT[] PROGMEM = "use |addr| for short direct notation";
 constexpr char OPT_BOOL_SEGMENTED_ADDR[] PROGMEM = "segmented-addr";
 constexpr char OPT_DESC_SEGMENTED_ADDR[] PROGMEM = "use <<segment>> notation";
+constexpr char OPT_BOOL_EXTERN_SYMBOL[] PROGMEM = "extern-symbol";
+constexpr char OPT_DESC_EXTERN_SYMBOL[] PROGMEM = "emit direct address as seg_SS_off_XXXX symbol";
 
 }  // namespace
 
@@ -41,8 +43,10 @@ DisZ8000::DisZ8000(const ValueFormatter::Plugins &plugins)
       Config(TABLE),
       _opt_shortDirect(this, &DisZ8000::setShortDirect, OPT_BOOL_SHORT_DIRECT,
               OPT_DESC_SHORT_DIRECT, &_opt_segmentedAddr),
-      _opt_segmentedAddr(
-              this, &DisZ8000::setSegmentedAddr, OPT_BOOL_SEGMENTED_ADDR, OPT_DESC_SEGMENTED_ADDR) {
+      _opt_segmentedAddr(this, &DisZ8000::setSegmentedAddr, OPT_BOOL_SEGMENTED_ADDR,
+              OPT_DESC_SEGMENTED_ADDR, &_opt_externSymbol),
+      _opt_externSymbol(
+              this, &DisZ8000::setExternSymbol, OPT_BOOL_EXTERN_SYMBOL, OPT_DESC_EXTERN_SYMBOL) {
     reset();
 }
 
@@ -50,6 +54,7 @@ void DisZ8000::reset() {
     Disassembler::reset();
     setShortDirect(true);
     setSegmentedAddr(true);
+    setExternSymbol(false);
 }
 
 Error DisZ8000::setShortDirect(bool enable) {
@@ -59,6 +64,11 @@ Error DisZ8000::setShortDirect(bool enable) {
 
 Error DisZ8000::setSegmentedAddr(bool enable) {
     _segmentedAddr = enable;
+    return OK;
+}
+
+Error DisZ8000::setExternSymbol(bool enable) {
+    _externSymbol = enable;
     return OK;
 }
 
@@ -203,6 +213,17 @@ void DisZ8000::decodeDirectAddress(DisInsn &insn, StrBuffer &out, AddrMode mode)
         }
         const auto addr = (static_cast<Config::uintptr_t>(seg) << 16) | disp;
         insn.setErrorIf(out, checkAddr(addr, align));
+        if (_externSymbol) {
+            out.rtext_P(PSTR("seg_"));
+            StrCaseBuffer lower(out, false);
+            lower.hex(static_cast<uint8_t>(seg), 2);
+            lower.over(out);
+            out.rtext_P(PSTR("_off_"));
+            StrCaseBuffer lower2(out, false);
+            lower2.hex(static_cast<uint16_t>(disp), 4);
+            lower2.over(out);
+            return;
+        }
         if (shortDirect)
             out.letter('|');
         if (_segmentedAddr && !_gnuAs) {

@@ -15,9 +15,16 @@
         .z8001
 
         .equ    off1234,0x1234
-        .section        bss1
+
+        # Per-segment sections placed at seg<<16 by the linker; .org
+        # positions each label at its offset.  Validates the autogen
+        # mechanism (one section per Z8001 segment, --section-start
+        # per segment, .org inside the section) on the reference test.
+        .section        seg_0a
+        .org    0x1234
 data1234:
-        .section        bss2
+        .section        seg_0b
+        .org    0x5678
 data5678:
 
         .text
