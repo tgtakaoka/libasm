@@ -292,6 +292,10 @@ void test_format_5() {
     TEST("SKPSB [W,B]", 0x0E, 0x0C, 0x03);
     TEST("SKPSB W,B",   0x0E, 0x0C, 0x03);
     TEST("SKPSB W/B",   0x0E, 0x0C, 0x03);
+    TEST("CMPST",       0x0E, 0x84, 0x00);
+    TEST("CMPST B,U",   0x0E, 0x84, 0x07);
+    TEST("SKPST",       0x0E, 0x8C, 0x00);
+    TEST("SKPST W,B",   0x0E, 0x8C, 0x03);
 
     TEST("SETCFG [I,F,M]", 0x0E, 0x8B, 0x03);
     TEST("SETCFG []",      0x0E, 0x0B, 0x00);
@@ -305,6 +309,7 @@ void test_format_6() {
     TEST("ASHB  2,16(SB)",   0x4E, 0x84, 0xA6, 0x02, 0x10);
     TEST("ASHW  TOS,16(SB)", 0x4E, 0x85, 0xBE, 0x10);
     TEST("CBITW R0,0(R1)", 0x4E, 0x49, 0x02, 0x00);
+    TEST("CBITIW R0,0(R1)", 0x4E, 0x4D, 0x02, 0x00);
     TEST("COMB R0,-4(FP)", 0x4E, 0x34, 0x06, 0x7C);
     TEST("IBITW R0,1(R1)", 0x4E, 0x79, 0x02, 0x01);
     TEST("LSHB 4,8(SB)",      0x4E, 0x94, 0xA6, 0x04, 0x08);
@@ -316,6 +321,7 @@ void test_format_6() {
     TEST("ROTB 4,R5",      0x4E, 0x40, 0xA1, 0x04);
     TEST("ROTW -3,16(SP)", 0x4E, 0x41, 0xA6, 0xFD, 0x10);
     TEST("SBITW R0,1(R1)", 0x4E, 0x59, 0x02, 0x01);
+    TEST("SBITIW R0,1(R1)", 0x4E, 0x5D, 0x02, 0x01);
     TEST("SUBPB -8(FP),16(FP)", 0x4E, 0x2C, 0xC6, 0x78, 0x10);
     TEST("SUBPD 0x00000099,R1", 0x4E, 0x6F, 0xA0, 0x00, 0x00, 0x00, 0x99);
 }
@@ -919,6 +925,21 @@ void test_data_constant() {
 #endif
 }
 
+void test_errors() {
+    // Unknown mnemonic.
+    ERRT("FOOBAR R0, R1",      UNKNOWN_INSTRUCTION, "FOOBAR R0, R1");
+    // Size is part of the mnemonic on NS32000, so a missing or wrong size
+    // suffix is an unknown instruction, not ILLEGAL_SIZE.
+    ERRT("ADD    R0, R1",      UNKNOWN_INSTRUCTION, "ADD    R0, R1");
+    ERRT("ADDX   R0, R1",      UNKNOWN_INSTRUCTION, "ADDX   R0, R1");
+    // Non-existent register in a register-only position.
+    ERRT("MOVD   R0, R16",     OPERAND_NOT_ALLOWED, "R0, R16");
+    // Out-of-table index register.
+    ERRT("MOVD   4(SB)[R16:B], R1", UNKNOWN_OPERAND, "R16:B], R1");
+    // Displacement out of the spec range (manual S.4.2.3, double-word disp
+    // tops out at -0x1F000000..+0x1FFFFFFF) is exercised in test_format_1.
+}
+
 // clang-format on
 
 void run_tests(const char *cpu) {
@@ -944,6 +965,7 @@ void run_tests(const char *cpu) {
     RUN_TEST(test_comment);
     RUN_TEST(test_undef);
     RUN_TEST(test_data_constant);
+    RUN_TEST(test_errors);
 }
 
 // Local Variables:

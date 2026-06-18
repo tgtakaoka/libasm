@@ -356,6 +356,8 @@ void test_format_5() {
     UNKN(                0x0E, 0x04, 0x08);
     UNKN(                0x0E, 0x04, 0x80);
     TEST("MOVST", "",    0x0E, 0x80, 0x00);
+    TEST("CMPST", "",    0x0E, 0x84, 0x00);
+    TEST("CMPST", "B,U", 0x0E, 0x84, 0x07);
     TEST("MOVSB", "B",   0x0E, 0x00, 0x01);
     UNKN(                0x0E, 0x00, 0x80);
     UNKN(                0x0E, 0x00, 0x40);
@@ -366,6 +368,8 @@ void test_format_5() {
     TEST("SKPSB", "W",   0x0E, 0x0C, 0x02);
     TEST("SKPSB", "B,U", 0x0E, 0x0C, 0x07);
     TEST("SKPSB", "B,W", 0x0E, 0x0C, 0x03);
+    TEST("SKPST", "",    0x0E, 0x8C, 0x00);
+    TEST("SKPST", "B,W", 0x0E, 0x8C, 0x03);
     UNKN(                0x0E, 0x0C, 0x80);
     UNKN(                0x0E, 0x0C, 0x40);
     UNKN(                0x0E, 0x0C, 0x20);
@@ -398,6 +402,7 @@ void test_format_6() {
     TEST("ASHB",  "2, 16(SB)",     0x4E, 0x84, 0xA6, 0x02, 0x10);
     TEST("ASHW",  "TOS, 16(SB)",   0x4E, 0x85, 0xBE, 0x10);
     TEST("CBITW", "R0, 0(R1)",     0x4E, 0x49, 0x02, 0x00);
+    TEST("CBITIW", "R0, 0(R1)",    0x4E, 0x4D, 0x02, 0x00);
     TEST("COMB",  "R0, -4(FP)",    0x4E, 0x34, 0x06, 0x7C);
     TEST("IBITW", "R0, 1(R1)",     0x4E, 0x79, 0x02, 0x01);
     TEST("LSHB",  "4, 8(SB)",      0x4E, 0x94, 0xA6, 0x04, 0x08);
@@ -409,6 +414,7 @@ void test_format_6() {
     TEST("ROTB",  "4, R5",         0x4E, 0x40, 0xA1, 0x04);
     TEST("ROTW",  "-3, 16(SP)",    0x4E, 0x41, 0xA6, 0xFD, 0x10);
     TEST("SBITW", "R0, 1(R1)",     0x4E, 0x59, 0x02, 0x01);
+    TEST("SBITIW", "R0, 1(R1)",    0x4E, 0x5D, 0x02, 0x01);
     TEST("SUBPB", "-8(FP), 16(FP)", 0x4E, 0x2C, 0xC6, 0x78, 0x10);
     TEST("SUBPD", "0x00000099, R1", 0x4E, 0x6F, 0xA0, 0x00, 0x00, 0x00, 0x99);
 }
@@ -774,6 +780,12 @@ void test_generic_addressing() {
     TEST("ADDW", "8(R2)[R3:Q], 4(SP)[R5:W]",    0x41, 0xFF, 0x53, 0xCD, 0x08, 0x04);
     TEST("ADDW", "8(R2)[R3:Q], .+4[R5:W]",      0x41, 0xFF, 0x53, 0xDD, 0x08, 0x04);
 
+    // PC-relative Memory Space operand in the default (relative, non-GNU)
+    // syntax: the location symbol carries the target for +, -, and 0 deltas.
+    ATEST(0x10000, "MOVD", "4(SB), .+16", 0xD7, 0xD6, 0x04, 0x10);
+    ATEST(0x10000, "MOVD", "4(SB), .-4",  0xD7, 0xD6, 0x04, 0x7C);
+    ATEST(0x10000, "MOVD", "4(SB), .",    0xD7, 0xD6, 0x04, 0x00);
+
     TEST("EXTD", "R1, 0x00112233(0x00334455(FP))[R3:W], 0x00556677(0x00778899(SB))[R4:W], 32",
          // 11101|111 01|001|0|11 00101111
          // 10000 011 10010 100
@@ -873,160 +885,195 @@ void assert_unknown(const char *file, int line, Config::opcode_t opc) {
     __VASSERT(file, line, UNKNOWN_INSTRUCTION, "", 0x0000, "", "", opc);
 }
 
+// The table search matches an entry when (opcode & ~mask) == entry opcode
+// (see matchOpCode in table_ns32000.cpp); mask marks the operand bits.
+struct OpcodePage {
+    Config::opcode_t mask;
+    const Config::opcode_t *begin;
+    const Config::opcode_t *end;
+};
+
+bool match_opcode(Config::opcode_t opc, const OpcodePage &page) {
+    const auto bits = Config::opcode_t(opc & Config::opcode_t(~page.mask));
+    for (auto p = page.begin; p < page.end; p++) {
+        if (bits == *p)
+            return true;
+    }
+    return false;
+}
+
+// Enumerate every operation byte after a format selector and assert that each
+// pattern matching no defined opcode (in any page sharing the selector) is
+// rejected. This covers unassigned operations, the reserved i field 10
+// (ii==2), and reserved bits that must be zero, in one sweep.
+void sweep_illegal(const char *file, int line, Config::opcode_t prefix, const OpcodePage *pages,
+        size_t npages) {
+    for (auto opc = 0x00; opc <= 0xFF; opc++) {
+        auto legal = false;
+        for (size_t i = 0; i < npages && !legal; i++)
+            legal = match_opcode(opc, pages[i]);
+        if (!legal)
+            assert_unknown(file, line, opc, prefix);
+    }
+}
+
+// Enumerate every primary opcode byte (no format selector) and reject each one
+// that matches no legal opcode in any of the primary pages -- which include the
+// format-selector bytes themselves (as a mask-0 page) so a valid selector is
+// not flagged. This rejects unassigned bytes, the reserved Formats 10/12/13/15
+// selectors, Bcc condition 15, and unclaimed Format-4 size/operation patterns.
+void sweep_primary(const char *file, int line, const OpcodePage *pages, size_t npages) {
+    for (auto opc = 0x00; opc <= 0xFF; opc++) {
+        auto legal = false;
+        for (size_t i = 0; i < npages && !legal; i++)
+            legal = match_opcode(opc, pages[i]);
+        if (!legal)
+            assert_unknown(file, line, opc);
+    }
+}
+
+#define PAGE(mask, defs) OpcodePage { mask, defs, defs + (sizeof(defs) / sizeof(defs[0])) }
+#define SWEEP_ILLEGAL(prefix, ...)                              \
+    do {                                                        \
+        const OpcodePage pages[] = {__VA_ARGS__};               \
+        sweep_illegal(__FILE__, __LINE__, prefix, pages,        \
+                sizeof(pages) / sizeof(pages[0]));              \
+    } while (0)
+#define SWEEP_PRIMARY(...)                                      \
+    do {                                                        \
+        const OpcodePage pages[] = {__VA_ARGS__};               \
+        sweep_primary(__FILE__, __LINE__, pages,                \
+                sizeof(pages) / sizeof(pages[0]));              \
+    } while (0)
+
 #define UNKNOWN(...) assert_unknown(__FILE__, __LINE__, __VA_ARGS__)
 
 void test_illegal() {
-    // Format 0: |cond|1010|
-    UNKN(0xFA);
+    // All legal opcode maps below are read from the Series 32000 manual
+    // (Chapter 5 encoding figures), independent of libasm's table.
 
-    // Format 3: |_gen_|_op| |011111|ii|
-    for (auto gen = 0x00; gen <= 0x1F; gen++) {
-        for (auto ii = 0; ii <= 3; ii++) {
-            static constexpr Config::opcode_t opc[] = {0x1, 0x3, 0x5, 0x7, 0x8, 0x9, 0xB, 0xD, 0xF};
-            for (size_t i = 0; i < sizeof(opc); i++) {
-                if (ii != 2) {
-                    UNKNOWN((gen << 3) | (opc[i] >> 1), (opc[i] << 7) | (0x7C | ii));
-                }
-            }
-            if (ii == 3) {
-                UNKNOWN((gen << 3) | (0x2 >> 1), (0x2 << 7) | 0x7C | ii);  // BICPSR
-                UNKNOWN((gen << 3) | (0x6 >> 1), (0x6 << 7) | 0x7C | ii);  // BISPSR
-            }
-            if (ii != 3) {
-                UNKNOWN((gen << 3) | (0x0 >> 1), (0x0 << 7) | 0x7C | ii);  // CXPD
-                UNKNOWN((gen << 3) | (0x4 >> 1), (0x4 << 7) | 0x7C | ii);  // JUMP
-                UNKNOWN((gen << 3) | (0xC >> 1), (0xC << 7) | 0x7C | ii);  // JSR
-            }
-        }
-    }
+    // Primary opcode byte: Format 0 (Bcc), 1, 2 (quick/short) and 4, plus every
+    // format-selector byte (legal here; its operation byte is swept below).
+    // Every other first byte is rejected -- this covers Bcc condition 15, the
+    // unassigned/reserved selectors (Formats 10/12/13/15, 0x5E/0x8E/0xDE), and
+    // Format-4 size/operation patterns not claimed by any format.
+    static constexpr Config::opcode_t F0_BCOND[] = {  // |cond|1010|, cond 0..14
+        0x0A, 0x1A, 0x2A, 0x3A, 0x4A, 0x5A, 0x6A, 0x7A,
+        0x8A, 0x9A, 0xAA, 0xBA, 0xCA, 0xDA, 0xEA};
+    static constexpr Config::opcode_t F1[] = {  // |op|0010|, all 16 ops
+        0x02, 0x12, 0x22, 0x32, 0x42, 0x52, 0x62, 0x72,
+        0x82, 0x92, 0xA2, 0xB2, 0xC2, 0xD2, 0xE2, 0xF2};
+    static constexpr Config::opcode_t F2_QUICK[] = {  // ADDQ/CMPQ/SPR/ACB/MOVQ/LPR
+        0x0C, 0x0D, 0x0F, 0x1C, 0x1D, 0x1F, 0x2C, 0x2D, 0x2F,
+        0x4C, 0x4D, 0x4F, 0x5C, 0x5D, 0x5F, 0x6C, 0x6D, 0x6F};
+    static constexpr Config::opcode_t F4[] = {  // ADD..XOR, ADDR (op 0,1,2,4,5,6,8,9,A,C,D,E)
+        0x00, 0x01, 0x03, 0x04, 0x05, 0x07, 0x08, 0x09, 0x0B,
+        0x10, 0x11, 0x13, 0x14, 0x15, 0x17, 0x18, 0x19, 0x1B,
+        0x20, 0x21, 0x23, 0x27, 0x28, 0x29, 0x2B,
+        0x30, 0x31, 0x33, 0x34, 0x35, 0x37, 0x38, 0x39, 0x3B};
+    static constexpr Config::opcode_t SELECTORS[] = {
+        0x0E, 0x2E, 0x4E, 0x6E, 0xAE, 0xCE, 0xEE,  // Formats 5, 6, 7, 8
+        0x3C, 0xBC, 0x3D, 0xBD, 0x3F, 0xBF,        // Format 2 Scondi
+        0x7C, 0x7D, 0x7F,                          // Format 3
+#if !defined(LIBASM_NS32000_NOFPU)
+        0x3E, 0xBE,                                // Formats 9, 11
+#endif
+#if !defined(LIBASM_NS32000_NOPMMU)
+        0x1E,                                      // Format 14
+#endif
+    };
+    SWEEP_PRIMARY(PAGE(0x00, F0_BCOND), PAGE(0x00, F1), PAGE(0x80, F2_QUICK),
+            PAGE(0xC0, F4), PAGE(0x00, SELECTORS));
 
-    // Format 4: |gen1_|gen| |2_|_op_|ii|
-    for (auto gen2 = 0x00; gen2 <= 0x1F; gen2++) {
-        for (auto ii = 0; ii <= 3; ii++) {
-            if (ii != 3)
-                UNKNOWN((gen2 << 6) | (0x9 << 2) | ii, 0x0E);  // ADDR
-        }
-    }
+    // Format 2 Scondi: |gen|cond| |d|011|11|ii|  selectors carry size + d bit;
+    // the 3-bit condition field uses 0..6, operation code 0x07 is reserved.
+    static constexpr Config::opcode_t SCOND[] = {0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06};
+    SWEEP_ILLEGAL(0x3C, PAGE(0xF8, SCOND));
+    SWEEP_ILLEGAL(0xBC, PAGE(0xF8, SCOND));
+    SWEEP_ILLEGAL(0x3D, PAGE(0xF8, SCOND));
+    SWEEP_ILLEGAL(0xBD, PAGE(0xF8, SCOND));
+    SWEEP_ILLEGAL(0x3F, PAGE(0xF8, SCOND));
+    SWEEP_ILLEGAL(0xBF, PAGE(0xF8, SCOND));
 
-    // Format 5: |00000|sho| |r|0|_op_|ii| |0000|1110|
-    for (auto ii = 0; ii <= 3; ii++) {
-        for (auto data = 0; data <= 0xF; data++) {
-            for (auto opc = 0x4; opc <= 0xF; opc++) {
-                UNKNOWN((data << 7) | (opc << 2) | ii, 0x0E);
-            }
-            if (ii != 3)
-                UNKNOWN((data << 7) | (0x2 << 2) | ii, 0x0E);  // SETCFG
-        }
-        if (ii == 2) {
-            UNKNOWN(0x00 | (0x0 << 2) | ii, 0x0E);  // MOVSi
-            UNKNOWN(0x00 | (0x1 << 2) | ii, 0x0E);  // CMPSi
-            UNKNOWN(0x00 | (0x3 << 2) | ii, 0x0E);  // SKPSi
-        }
-        if (ii != 0) {
-            UNKNOWN(0x80 | (0x0 << 2) | ii, 0x0E);  // MOVST
-            UNKNOWN(0x80 | (0x1 << 2) | ii, 0x0E);  // CMPST
-            UNKNOWN(0x80 | (0x3 << 2) | ii, 0x0E);  // SKPST
-        }
-    }
+    // Format 3: |gen|_op_| |011111|ii|  (size selects the selector 0x7C/0x7D/0x7F)
+    static constexpr Config::opcode_t F3_BW[] = {0x01, 0x03, 0x05, 0x07};  // BICPSR/BISPSR/ADJSP/CASE
+    static constexpr Config::opcode_t F3_D[]  = {0x00, 0x02, 0x05, 0x06, 0x07};  // CXPD/JUMP/ADJSP/JSR/CASE
+    SWEEP_ILLEGAL(0x7C, PAGE(0xF8, F3_BW));
+    SWEEP_ILLEGAL(0x7D, PAGE(0xF8, F3_BW));
+    SWEEP_ILLEGAL(0x7F, PAGE(0xF8, F3_D));
 
-    // Format 6: |gen1_|gen| |2_|_op_|ii|0100|1110|
-    for (auto gen2 = 0x00; gen2 <= 0x1F; gen2++) {
-        for (auto ii = 0; ii <= 3; ii++) {
-            static constexpr Config::opcode_t opc[] = {0x4, 0xA};
-            for (size_t i = 0; i < sizeof(opc); i++) {
-                UNKNOWN((gen2 << 6) | (opc[i] << 2) | ii, 0x4E);
-            }
-        }
-    }
+    // Format 5: |00000|short|t|0|_op_|ii| |0000|1110|
+    static constexpr Config::opcode_t F5_SETCFG[] = {0x0B};
+    static constexpr Config::opcode_t F5_STR[] = {  // MOVS/CMPS/SKPS, i and T forms
+        0x00, 0x01, 0x03, 0x04, 0x05, 0x07, 0x0C, 0x0D, 0x0F, 0x80, 0x84, 0x8C};
+    SWEEP_ILLEGAL(0x0E, PAGE(0x80, F5_SETCFG), PAGE(0x00, F5_STR));
 
-    // Format 7: |gen1_|gen| |2_|_op_|ii| |1100|1110|
-    for (auto gen2 = 0x00; gen2 <= 0x1F; gen2++) {
-        for (auto ii = 0; ii <= 3; ii++) {
-            UNKNOWN((gen2 << 6) | (0xA << 2) | ii, 0xCE);
-            if (ii != 0) {
-                UNKNOWN((gen2 << 6) | (0x4 << 2) | ii, 0xCE);  // MOVXBW
-                UNKNOWN((gen2 << 6) | (0x5 << 2) | ii, 0xCE);  // MOVZBW
-            }
-            if (ii == 2 || ii == 3) {
-                UNKNOWN((gen2 << 6) | (0x6 << 2) | ii, 0xCE);  // MOVZiD
-                UNKNOWN((gen2 << 6) | (0x7 << 2) | ii, 0xCE);  // MOVXiD
-            }
-        }
-    }
+    // Formats 6-9 and 11 carry a single operation byte after the format
+    // selector. The legal operation codes below are read from the Series 32000
+    // manual (Chapter 5 instruction encodings), independent of libasm's table.
+    // sweep_illegal() enumerates every operation byte and rejects each pattern
+    // that matches no legal opcode -- covering unassigned operations, the
+    // reserved i field 10 (ii==2), and reserved bits that must be zero.
 
-    // Format 8: |gen1_|gen| |2_|reg|o|ii| |op|10|1110|
-    for (auto gen2 = 0x00; gen2 <= 0x1F; gen2++) {
-        for (auto ii = 0; ii <= 3; ii++) {
-            for (auto reg = 0; reg <= 7; reg++) {
-                if (reg != 1 && reg != 3) {
-                    auto opc = 6;
-                    UNKNOWN((gen2 << 6) | (reg << 3) | (opc & 4) | ii,
-                            (opc << 6) | 0x2E);  // MOVSUi/MOVUSi
-                }
-                if (ii != 3) {
-                    auto opc = 1;
-                    UNKNOWN((gen2 << 6) | (reg << 3) | (opc & 4) | ii, (opc << 6) | 0x6E);  // CVP
-                }
-            }
-        }
-    }
+    // Format 6: |gen1_|gen| |2_|_op_|ii| |0100|1110|  ops 0..3,5..9,B..F
+    static constexpr Config::opcode_t LEGAL_6[] = {
+        0x00, 0x01, 0x03,  0x04, 0x05, 0x07,  0x08, 0x09, 0x0B,  0x0C, 0x0D, 0x0F,
+        0x14, 0x15, 0x17,  0x18, 0x19, 0x1B,  0x1C, 0x1D, 0x1F,  0x20, 0x21, 0x23,
+        0x24, 0x25, 0x27,  0x2C, 0x2D, 0x2F,  0x30, 0x31, 0x33,  0x34, 0x35, 0x37,
+        0x38, 0x39, 0x3B,  0x3C, 0x3D, 0x3F};
+    SWEEP_ILLEGAL(0x4E, PAGE(0xC0, LEGAL_6));
+
+    // Format 7: |gen1_|gen| |2_|_op_|ii| |1100|1110|  (MOVXii/MOVZii at 0x10..0x1D)
+    static constexpr Config::opcode_t LEGAL_7[] = {
+        0x00, 0x01, 0x03,  0x04, 0x05, 0x07,  0x08, 0x09, 0x0B,  0x0C, 0x0D, 0x0F,
+        0x10, 0x14, 0x18, 0x19, 0x1C, 0x1D,
+        0x20, 0x21, 0x23,  0x24, 0x25, 0x27,  0x2C, 0x2D, 0x2F,  0x30, 0x31, 0x33,
+        0x34, 0x35, 0x37,  0x38, 0x39, 0x3B,  0x3C, 0x3D, 0x3F};
+    SWEEP_ILLEGAL(0xCE, PAGE(0xC0, LEGAL_7));
+
+    // Format 8: |gen1_|gen| |2_|reg|o|ii| |op|10|1110|  (reg is an operand)
+    static constexpr Config::opcode_t LEGAL_8_EXT[] = {0x00, 0x01, 0x03, 0x04, 0x05, 0x07};
+    SWEEP_ILLEGAL(0x2E, PAGE(0xF8, LEGAL_8_EXT));  // EXTi / INDEXi
+    static constexpr Config::opcode_t LEGAL_8_CVTP[] = {0x03};
+    static constexpr Config::opcode_t LEGAL_8_FFS[] = {0x04, 0x05, 0x07};
+    SWEEP_ILLEGAL(0x6E, PAGE(0xF8, LEGAL_8_CVTP), PAGE(0xC0, LEGAL_8_FFS));
+    static constexpr Config::opcode_t LEGAL_8_INS[] = {0x00, 0x01, 0x03};
+#if !defined(LIBASM_NS32000_NOPMMU)
+    static constexpr Config::opcode_t LEGAL_8_MOVSU[] = {0x0C, 0x0D, 0x0F, 0x1C, 0x1D, 0x1F};
+    SWEEP_ILLEGAL(0xAE, PAGE(0xF8, LEGAL_8_INS), PAGE(0xC0, LEGAL_8_MOVSU));
+#else
+    SWEEP_ILLEGAL(0xAE, PAGE(0xF8, LEGAL_8_INS));
+#endif
+    static constexpr Config::opcode_t LEGAL_8_CHECK[] = {0x00, 0x01, 0x03};
+    SWEEP_ILLEGAL(0xEE, PAGE(0xF8, LEGAL_8_CHECK));
 
     // Format 9: |gen1_|gen| |2_|_op|f|ii| |0011|1110|
-    for (auto gen2 = 0x00; gen2 <= 0x1F; gen2++) {
-        for (auto ii = 0; ii <= 3; ii++) {
-            for (auto f = 0; f <= 4; f += 4) {
-                if (ii != 3) {
-                    UNKNOWN((gen2 << 6) | (1 << 3) | f | ii, 0x3E);  // LFSR
-                    UNKNOWN((gen2 << 6) | (6 << 3) | f | ii, 0x3E);  // SFSR
-                }
-            }
-            if (ii != 3)
-                UNKNOWN((gen2 << 6) | (2 << 3) | 0 | ii, 0x3E);  // MOVLF
-            if (ii != 2)
-                UNKNOWN((gen2 << 6) | (3 << 3) | 4 | ii, 0x3E);  // MOVFL
-        }
-    }
+    static constexpr Config::opcode_t LEGAL_9[] = {
+        0x00, 0x01, 0x03, 0x04, 0x05, 0x07,  // MOVif
+        0x0F,                                // LFSR
+        0x16,                                // MOVLF
+        0x1B,                                // MOVFL
+        0x20, 0x21, 0x23, 0x24, 0x25, 0x27,  // ROUNDfi
+        0x28, 0x29, 0x2B, 0x2C, 0x2D, 0x2F,  // TRUNCfi
+        0x37,                                // SFSR
+        0x38, 0x39, 0x3B, 0x3C, 0x3D, 0x3F}; // FLOORfi
+    SWEEP_ILLEGAL(0x3E, PAGE(0xC0, LEGAL_9));
 
-    // Format 10
-    UNKNOWN(0x7E);
+    // Format 11: |gen1_|gen| |2_|_op_|0f| |1011|1110|  (bit 1 must be 0)
+    static constexpr Config::opcode_t LEGAL_11[] = {
+        0x00, 0x01,  0x04, 0x05,  0x08, 0x09,  0x10, 0x11,
+        0x14, 0x15,  0x20, 0x21,  0x30, 0x31,  0x34, 0x35};
+    SWEEP_ILLEGAL(0xBE, PAGE(0xC0, LEGAL_11));
 
-    // Format 11: |gen1_|gen| |2_|_op_|0f| |1011|1110|
-    for (int8_t gen2 = 0x00; gen2 <= 0x1F; gen2++) {
-        static constexpr Config::opcode_t opc[] = {0x3, 0x6, 0x7, 0x9, 0xA, 0xB, 0xE, 0xF};
-        for (size_t i = 0; i < sizeof(opc); i++) {
-            for (auto f = 0; f <= 1; f++) {
-                UNKNOWN((gen2 << 6) | (opc[i] << 2) | f, 0xBE);
-            }
-        }
-    }
+    // Format 14: |gen1_|short|t|0|_op_|ii| |0001|1110|
+    static constexpr Config::opcode_t F14_RW[] = {0x03, 0x07};  // RDVAL/WRVAL
+    static constexpr Config::opcode_t F14_MR[] = {0x0B, 0x0F};  // LMR/SMR (short MMU reg)
+    SWEEP_ILLEGAL(0x1E, PAGE(0x00, F14_RW), PAGE(0x80, F14_MR));
 
-    // Format 12
-    UNKNOWN(0xFE);
-
-    // Format 13
-    UNKNOWN(0x9E);
-
-    // Format 14: |gen1_|sho| |t|0|_op_|ii| |0001|1110|
-    for (auto ii = 0; ii <= 3; ii++) {
-        for (auto data = 0x0; data <= 0xF; data++) {
-            if (ii != 3) {
-                UNKNOWN((data << 7) | (2 << 2) | ii, 0x1E);  // LMR
-                UNKNOWN((data << 7) | (3 << 2) | ii, 0x1E);  // SMR
-            }
-            for (auto opc = 0x4; opc <= 0xF; opc++) {
-                UNKNOWN((data << 7) | (opc << 2) | ii, 0x1E);
-            }
-        }
-        if (ii != 3) {
-            UNKNOWN(0x80 | (0 << 2) | ii, 0x1E);  // RDVAL
-            UNKNOWN(0x80 | (1 << 2) | ii, 0x1E);  // WRVAL
-        }
-    }
-
-    // Format 15
-    for (auto nnn = 0; nnn <= 7; nnn++) {
-        UNKNOWN((nnn << 5) | 0x16);
-    }
+    // Formats 10 (0x7E), 12 (0xFE), 13 (0x9E) are unimplemented coprocessor
+    // formats; Format 15 (0xNNN1'0110) and the unassigned selectors
+    // 0x5E/0x8E/0xDE are all rejected as single illegal bytes by the primary
+    // sweep above.
 }
 
 void run_tests(const char *cpu) {
