@@ -88,6 +88,7 @@ void test_inherent() {
     TEST("SEC", "", 0x99);
     TEST("CLI", "", 0x9A);
     TEST("SEI", "", 0x9B);
+    TEST("RSP", "", 0x9C);
 
     TEST("RTS", "", 0x81);
     TEST("RTI", "", 0x80);
@@ -95,8 +96,10 @@ void test_inherent() {
 
     TEST("TAX",  "", 0x97);
     TEST("TXA",  "", 0x9F);
-    if (m146805() || m68hc05() || m68hc08() || m68hcs08())
+    if (m146805() || m68hc05() || m68hc08() || m68hcs08()) {
+        TEST("STOP", "", 0x8E);
         TEST("WAIT", "", 0x8F);
+    }
     if (m68hc05() || m68hc08() || m68hcs08())
         TEST("MUL", "", 0x42);
     if (m68hc08() || m68hcs08()) {
@@ -455,6 +458,7 @@ void test_indexed() {
 
 void test_relative() {
     ATEST(0x1000, "BRA", "$1002", 0x20, 0x00);
+    ATEST(0x1000, "BRN", "$1081", 0x21, 0x7F);
     ATEST(0x1000, "BHI", "$1004", 0x22, 0x02);
     ATEST(0x1000, "BLS", "$1002", 0x23, 0x00);
     ATEST(0x1000, "BHS", "$1002", 0x24, 0x00);

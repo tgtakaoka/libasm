@@ -87,6 +87,7 @@ void test_inherent() {
     TEST("SEC", 0x99);
     TEST("CLI", 0x9A);
     TEST("SEI", 0x9B);
+    TEST("RSP", 0x9C);
 
     TEST("RTS", 0x81);
     TEST("RTI", 0x80);
@@ -105,6 +106,7 @@ void test_inherent() {
     TEST("RORA", 0x46);
     TEST("ASRA", 0x47);
     TEST("ASLA", 0x48);
+    TEST("LSLA", 0x48);
     TEST("ROLA", 0x49);
     TEST("DECA", 0x4A);
     TEST("INCA", 0x4C);
@@ -117,6 +119,7 @@ void test_inherent() {
     TEST("RORX", 0x56);
     TEST("ASRX", 0x57);
     TEST("ASLX", 0x58);
+    TEST("LSLX", 0x58);
     TEST("ROLX", 0x59);
     TEST("DECX", 0x5A);
     TEST("INCX", 0x5C);
@@ -177,7 +180,9 @@ void test_relative() {
     ATEST(0x1000, "BHI $1004", 0x22, 0x02);
     ATEST(0x1000, "BLS $0F82", 0x23, 0x80);
     ATEST(0x1000, "BHS $1081", 0x24, 0x7F);
+    ATEST(0x1000, "BCC $1081", 0x24, 0x7F);
     ATEST(0x1000, "BLO $1002", 0x25, 0x00);
+    ATEST(0x1000, "BCS $1002", 0x25, 0x00);
     ATEST(0x1000, "BNE $1002", 0x26, 0x00);
     ATEST(0x1000, "BEQ $1002", 0x27, 0x00);
     ATEST(0x1000, "BPL $1002", 0x2A, 0x00);
