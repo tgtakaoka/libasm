@@ -2708,11 +2708,14 @@ void test_bcd() {
 void test_program() {
     // Bcc label: 006|cc|disp
     TEST("BRA *", 0060000 | 0x000 | 0xFE);
+    TEST("BT  *", 0060000 | 0x000 | 0xFE);
     TEST("BSR *", 0060000 | 0x100 | 0xFE);
     TEST("BHI *", 0060000 | 0x200 | 0xFE);
     TEST("BLS *", 0060000 | 0x300 | 0xFE);
     TEST("BCC *", 0060000 | 0x400 | 0xFE);
+    TEST("BHS *", 0060000 | 0x400 | 0xFE);
     TEST("BCS *", 0060000 | 0x500 | 0xFE);
+    TEST("BLO *", 0060000 | 0x500 | 0xFE);
     TEST("BNE *", 0060000 | 0x600 | 0xFE);
     TEST("BEQ *", 0060000 | 0x700 | 0xFE);
     TEST("BVC *", 0060000 | 0x800 | 0xFE);
@@ -2773,10 +2776,13 @@ void test_program() {
     AERRT(0x010000, "DBRA.S D2,*-2",  ILLEGAL_SIZE, "DBRA.S D2,*-2", 0050312 | 0x100, 0xFFFC);
     AERRT(0x010000, "DBRA.X D2,*-2",  ILLEGAL_SIZE, "DBRA.X D2,*-2", 0050312 | 0x100, 0xFFFC);
     TEST("DBT  D2,*", 0050312 | 0x000, 0xFFFE);
+    TEST("DBF  D2,*", 0050312 | 0x100, 0xFFFE);
     TEST("DBHI D2,*", 0050312 | 0x200, 0xFFFE);
     TEST("DBLS D2,*", 0050312 | 0x300, 0xFFFE);
     TEST("DBCC D2,*", 0050312 | 0x400, 0xFFFE);
+    TEST("DBHS D2,*", 0050312 | 0x400, 0xFFFE);
     TEST("DBCS D2,*", 0050312 | 0x500, 0xFFFE);
+    TEST("DBLO D2,*", 0050312 | 0x500, 0xFFFE);
     TEST("DBNE D2,*", 0050312 | 0x600, 0xFFFE);
     TEST("DBEQ D2,*", 0050312 | 0x700, 0xFFFE);
     TEST("DBVC D2,*", 0050312 | 0x800, 0xFFFE);
@@ -2838,6 +2844,7 @@ void test_program() {
     ERRT("SLS (*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "(*+$12,PC,D3)", 0051700);
     ERRT("SLS #$1234",        OPERAND_NOT_ALLOWED, "#$1234",        0051700);
     TEST("SCC D2",            0050302 | 0x400);
+    TEST("SHS D2",            0050302 | 0x400);
     ERRT("SCC A2",            OPERAND_NOT_ALLOWED, "A2", 0052300);
     TEST("SCC (A2)",          0050322 | 0x400);
     TEST("SCC (A2)+",         0050332 | 0x400);
@@ -2850,6 +2857,7 @@ void test_program() {
     ERRT("SCC (*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "(*+$12,PC,D3)", 0052300);
     ERRT("SCC #$1234",        OPERAND_NOT_ALLOWED, "#$1234",        0052300);
     TEST("SCS D2",            0050302 | 0x500);
+    TEST("SLO D2",            0050302 | 0x500);
     ERRT("SCS A2",            OPERAND_NOT_ALLOWED, "A2", 0052700);
     TEST("SCS (A2)",          0050322 | 0x500);
     TEST("SCS (A2)+",         0050332 | 0x500);
@@ -3212,7 +3220,9 @@ void test_system() {
         TEST("TRAPHI", 0050374 | 0x200);
         TEST("TRAPLS", 0050374 | 0x300);
         TEST("TRAPCC", 0050374 | 0x400);
+        TEST("TRAPHS", 0050374 | 0x400);
         TEST("TRAPCS", 0050374 | 0x500);
+        TEST("TRAPLO", 0050374 | 0x500);
         TEST("TRAPNE", 0050374 | 0x600);
         TEST("TRAPEQ", 0050374 | 0x700);
         TEST("TRAPVC", 0050374 | 0x800);
