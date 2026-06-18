@@ -762,6 +762,8 @@ void test_modify() {
     ONAL("EXTB", "7", "7",  0x16, 0x07);
     TEST("NOT",  "8", 0x02, 0x08);
     TEST("NOTB", "9", 0x12, 0x09);
+    TEST("NEG",  "8", 0x03, 0x08);
+    TEST("NEGB", "9", 0x13, 0x09);
     TEST("CLR",  "6", 0x01, 0x06);
     TEST("CLRB", "7", 0x11, 0x07);
 
@@ -847,7 +849,7 @@ void test_illegal_8096() {
     for (auto i = 0; i < 0x100; i++) {
         const Config::opcode_t opc = i;
         const auto h4 = opc & 0xF0;
-        const auto l4 = opc & 0xF0;
+        const auto l4 = opc & 0x0F;
         if (h4 >= 0x40 && h4 < 0xA0 && l4 >= 0xC)
             continue;
         UNKN(0xFE, opc);
@@ -866,7 +868,7 @@ void test_illegal_80196() {
     for (auto i = 0; i < 0x100; i++) {
         const Config::opcode_t opc = i;
         const auto h4 = opc & 0xF0;
-        const auto l4 = opc & 0xF0;
+        const auto l4 = opc & 0x0F;
         if (h4 >= 0x40 && h4 < 0xA0 && l4 >= 0xC)
             continue;
         UNKN(0xFE, opc);
