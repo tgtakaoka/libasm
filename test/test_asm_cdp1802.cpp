@@ -403,8 +403,10 @@ void test_logic_op() {
     TEST("ANI 45H",  0xFA, 0x45);
     TEST("SHR",      0xF6);
     TEST("SHRC",     0x76);
+    TEST("RSHR",     0x76);
     TEST("SHL",      0xFE);
     TEST("SHLC",     0x7E);
+    TEST("RSHL",     0x7E);
 }
 
 void test_arith_op() {
