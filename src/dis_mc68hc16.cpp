@@ -153,6 +153,10 @@ void DisMc68HC16::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) co
             outHex(out, insn.readByte(), 8);
         }
         break;
+    case M_SIM8:
+        out.letter('#');
+        outHex(out, insn.readByte(), -8);
+        break;
     case M_IM16:
         out.letter('#');
         outHex(out, insn.readUint16(), 16);

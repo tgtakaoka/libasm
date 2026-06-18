@@ -231,6 +231,7 @@ void AsmMc68HC16::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode)
         insn.emitOperand16(op.val.getUnsigned());
         insn.embed(encodeIndexNum(op.base));
         break;
+    case M_SIM8:
     case M_IM8:
         insn.emitOperand8(op.val.getUnsigned());
         break;

@@ -1335,4 +1335,4 @@
       BITB   #$FA
       JSR    $00102
       RMAC   -1, -4
-      ADDD   #$FD
+      ADDD   #-3

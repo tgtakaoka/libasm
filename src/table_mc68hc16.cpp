@@ -60,10 +60,10 @@ constexpr Entry MC68HC16_TABLE[] PROGMEM = {
     E2(0x39, CF_00, TEXT_BSET,  M_EX16, M_IM8),
     E3(0x3A, CF_00, TEXT_BRCLR, M_EX16, M_IM8, M_RL16),
     E3(0x3B, CF_00, TEXT_BRSET, M_EX16, M_IM8, M_RL16),
-    E1(0x3C, CF_00, TEXT_AIX,   M_IM8),
-    E1(0x3D, CF_00, TEXT_AIY,   M_IM8),
-    E1(0x3E, CF_00, TEXT_AIZ,   M_IM8),
-    E1(0x3F, CF_00, TEXT_AIS,   M_IM8),
+    E1(0x3C, CF_00, TEXT_AIX,  M_SIM8),
+    E1(0x3D, CF_00, TEXT_AIY,  M_SIM8),
+    E1(0x3E, CF_00, TEXT_AIZ,  M_SIM8),
+    E1(0x3F, CF_00, TEXT_AIS,  M_SIM8),
     E1(0x40, CF_30, TEXT_SUBA,  M_IX8),
     E1(0x41, CF_30, TEXT_ADDA,  M_IX8),
     E1(0x42, CF_30, TEXT_SBCA,  M_IX8),
@@ -92,7 +92,7 @@ constexpr Entry MC68HC16_TABLE[] PROGMEM = {
     E1(0x79, CF_00, TEXT_BITA,  M_IM8),
     E1(0x7A, CF_00, TEXT_JMP,   M_EX20),
     E2(0x7B, CF_00, TEXT_MAC,   M_IM4H, M_IM4L),
-    E1(0x7C, CF_00, TEXT_ADDE,  M_IM8),
+    E1(0x7C, CF_00, TEXT_ADDE,  M_SIM8),
     E1(0x80, CF_30, TEXT_SUBD,  M_IX8),
     E1(0x81, CF_30, TEXT_ADDD,  M_IX8),
     E1(0x82, CF_30, TEXT_SBCD,  M_IX8),
@@ -155,7 +155,7 @@ constexpr Entry MC68HC16_TABLE[] PROGMEM = {
     E1(0xF9, CF_00, TEXT_BITB,  M_IM8),
     E1(0xFA, CF_00, TEXT_JSR,   M_EX20),
     E2(0xFB, CF_00, TEXT_RMAC,  M_IM4H, M_IM4L),
-    E1(0xFC, CF_00, TEXT_ADDD,  M_IM8),
+    E1(0xFC, CF_00, TEXT_ADDD,  M_SIM8),
 };
 
 constexpr uint8_t MC68HC16_INDEX[] PROGMEM = {
@@ -1199,18 +1199,30 @@ bool acceptMode(AddrMode opr, AddrMode table) {
         return table == M_RL8 || table == M_RL16 || table == M_EX16 || table == M_EX20 ||
                table == M_IM4H || table == M_IM4L;
     if (opr == M_IM8)
-        return table == M_IM16;
+        return table == M_IM16 || table == M_SIM8;
+    if (opr == M_IM16)
+        return table == M_SIM8;
     if (opr == M_IX8)
         return table == M_IX16 || table == M_IX20 || table == M_IXX8;
     if (opr == M_IX16)
         return table == M_IX20;
-    if (opr == M_NONE)
-        return table == M_POST;
     return false;
+}
+
+// M_SIM8 (ADDD/ADDE/AIS/AIX/AIY/AIZ short form) sign-extends an 8-bit operand to
+// 16 bits, so it is usable only when the value fits signed 8 bits; otherwise the
+// 16-bit (M_IM16) form is required.  A forward reference falls back to M_IM16.
+static bool fitsSignExtend8(const Operand &op) {
+    if (op.val.isUndefined() || op.val.overflowUint16())
+        return false;
+    const auto v16 = static_cast<uint16_t>(op.val.getUnsigned());
+    return Config::signExtend(v16 & 0xFF, 8) == Config::signExtend(v16, 16);
 }
 
 bool acceptModes(AsmInsn &insn, const Entry *entry) {
     const auto table = entry->readFlags();
+    if (table.mode1() == M_SIM8 && !fitsSignExtend8(insn.op1))
+        return false;
     return acceptMode(insn.op1.mode, table.mode1()) && acceptMode(insn.op2.mode, table.mode2()) &&
            acceptMode(insn.op3.mode, table.mode3());
 }

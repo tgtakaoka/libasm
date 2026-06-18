@@ -157,7 +157,9 @@ void test_add_sub() {
     TEST("ADDB E,X",      0x27, 0xC1);
 
     TEST("ADDD $82,X",    0x81, 0x82);
-    TEST("ADDD #$FD",     0xFC, 0xFD);
+    TEST("ADDD #-3",      0xFC, 0xFD);              // IM8 sign-extended
+    TEST("ADDD #$7F",     0xFC, 0x7F);              // IM8 sign-extended
+    TEST("ADDD #$FD",     0x37, 0xB1, 0x00, 0xFD);  // $00FD needs IM16 (IM8 would sign-extend)
     TEST("ADDD #$B2B3",   0x37, 0xB1, 0xB2, 0xB3);
     TEST("ADDD -$2D2D,Y", 0x37, 0xD1, 0xD2, 0xD3);
     TEST("ADDD $F2F3",    0x37, 0xF1, 0xF2, 0xF3);
@@ -169,6 +171,7 @@ void test_add_sub() {
     TEST("ADDE $7273",   0x37, 0x71, 0x72, 0x73);
 
     TEST("ADE", 0x27, 0x78);
+    TEST("SDE", 0x27, 0x79);
 
     TEST("SBA", 0x37, 0x0A);
 

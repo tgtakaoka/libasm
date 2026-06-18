@@ -41,8 +41,7 @@ enum AddrMode : uint8_t {
     M_IXE = 12,   // Accumulate indexed, E,X/E,Y/E,Z
     M_IXX8 = 13,  // 8-bit X-Indexed, d8,X
     M_LIST = 14,  // Register list
-    // mode3
-    M_POST = 15,  // has post byte
+    M_SIM8 = 15,  // 8-bit Immediate, sign-extended to 16 bits (ADDD/ADDE/AIS/AIX/AIY/AIZ)
 };
 
 enum CodeFormat : uint8_t {
@@ -63,9 +62,7 @@ struct Entry final : entry::Base<Config::opcode_t> {
         }
 
         static constexpr Flags postbyte(uint8_t post) {
-            return Flags{static_cast<uint16_t>((static_cast<uint16_t>(post) << post_gp) |
-                                               (static_cast<uint16_t>(M_POST) << opr3_gp) |
-                                               (static_cast<uint16_t>(CF_00) << cf_gp))};
+            return Flags{static_cast<uint16_t>((static_cast<uint16_t>(post) << post_gp) | post_fm)};
         }
 
         AddrMode mode1() const {
@@ -74,8 +71,8 @@ struct Entry final : entry::Base<Config::opcode_t> {
         AddrMode mode2() const {
             return hasPost() ? M_NONE : AddrMode((_attr >> opr2_gp) & opr2_gm);
         }
-        AddrMode mode3() const { return AddrMode((_attr >> opr3_gp) & opr3_gm); }
-        bool hasPost() const { return mode3() == M_POST; }
+        AddrMode mode3() const { return hasPost() ? M_NONE : AddrMode((_attr >> opr3_gp) & opr3_gm); }
+        bool hasPost() const { return _attr & post_fm; }
         uint8_t post() const { return (_attr >> post_gp) & post_gm; }
         CodeFormat format() const { return CodeFormat((_attr >> cf_gp) & cf_gm); }
         uint8_t mask() const {
@@ -96,8 +93,9 @@ struct Entry final : entry::Base<Config::opcode_t> {
         static constexpr uint_fast8_t opr1_gm = 0x0F;
         static constexpr uint_fast8_t opr2_gm = 0x0F;
         static constexpr uint_fast8_t opr3_gm = 0x0F;
-        static constexpr uint_fast8_t cf_gm = 0x0F;
+        static constexpr uint_fast8_t cf_gm = 0x03;
         static constexpr uint_fast8_t post_gm = 0xFF;
+        static constexpr uint16_t post_fm = uint16_t(1) << 14;  // has post byte
     };
 
     constexpr Entry(Config::opcode_t opc, Flags flags, const /* PROGMEM */ char *name_P)

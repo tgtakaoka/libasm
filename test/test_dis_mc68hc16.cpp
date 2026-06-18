@@ -157,7 +157,7 @@ void test_add_sub() {
     TEST("ADDB", "E,X",      0x27, 0xC1);
 
     TEST("ADDD", "$82,X",    0x81, 0x82);
-    TEST("ADDD", "#$FD",     0xFC, 0xFD);
+    TEST("ADDD", "#-3",      0xFC, 0xFD);
     TEST("ADDD", "#$B2B3",   0x37, 0xB1, 0xB2, 0xB3);
     TEST("ADDD", "-$2D2D,Y", 0x37, 0xD1, 0xD2, 0xD3);
     TEST("ADDD", "$F2F3",    0x37, 0xF1, 0xF2, 0xF3);
@@ -169,6 +169,7 @@ void test_add_sub() {
     TEST("ADDE", "$7273",   0x37, 0x71, 0x72, 0x73);
 
     TEST("ADE", "", 0x27, 0x78);
+    TEST("SDE", "", 0x27, 0x79);
 
     TEST("SBA", "", 0x37, 0x0A);
 
@@ -822,7 +823,7 @@ void test_illegal() {
     for (const auto opc : illegals_17) {
         UNKN(0x17, opc);
     }
-    for (Config::opcode_t opc = 0xB0; opc < 0xC0; opc++) {
+    for (Config::opcode_t opc = 0x80; opc < 0xC0; opc++) {
         if ((opc & 0xF) < 0x0C)
             UNKN(0x17, opc);
     }
