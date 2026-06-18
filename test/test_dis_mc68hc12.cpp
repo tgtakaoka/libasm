@@ -799,6 +799,27 @@ void test_interrupt() {
     TEST("TRAP", "$80", 0x18, 0x80);
     TEST("TRAP", "$FF", 0x18, 0xFF);
 }
+
+void test_inherent() {
+    TEST("NOP",  "", 0xA7);
+    TEST("BGND", "", 0x00);
+    TEST("WAI",  "", 0x3E);
+    TEST("STOP", "", 0x18, 0x3E);
+
+    TEST("PSHA", "", 0x36);
+    TEST("PSHB", "", 0x37);
+    TEST("PSHC", "", 0x39);
+    TEST("PSHD", "", 0x3B);
+    TEST("PSHX", "", 0x34);
+    TEST("PSHY", "", 0x35);
+
+    TEST("PULA", "", 0x32);
+    TEST("PULB", "", 0x33);
+    TEST("PULC", "", 0x38);
+    TEST("PULD", "", 0x3A);
+    TEST("PULX", "", 0x30);
+    TEST("PULY", "", 0x31);
+}
 // clang-format on
 
 void run_tests(const char *cpu) {
@@ -825,6 +846,7 @@ void run_tests(const char *cpu) {
     RUN_TEST(test_loop);
     RUN_TEST(test_jump);
     RUN_TEST(test_interrupt);
+    RUN_TEST(test_inherent);
 }
 
 // Local Variables:
