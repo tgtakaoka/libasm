@@ -70,6 +70,7 @@ void test_inherent() {
     TEST("RORA", 0x46);
     TEST("ASRA", 0x47);
     TEST("ASLA", 0x48);
+    TEST("LSLA", 0x48);
     TEST("ROLA", 0x49);
     TEST("DECA", 0x4A);
     TEST("INCA", 0x4C);
@@ -82,6 +83,7 @@ void test_inherent() {
     TEST("RORB", 0x56);
     TEST("ASRB", 0x57);
     TEST("ASLB", 0x58);
+    TEST("LSLB", 0x58);
     TEST("ROLB", 0x59);
     TEST("DECB", 0x5A);
     TEST("INCB", 0x5C);
@@ -101,11 +103,21 @@ void test_inherent() {
         TEST("RORD",  0x10, 0x46);
         TEST("ASRD",  0x10, 0x47);
         TEST("ASLD",  0x10, 0x48);
+        TEST("LSLD",  0x10, 0x48);
         TEST("ROLD",  0x10, 0x49);
         TEST("DECD",  0x10, 0x4A);
         TEST("INCD",  0x10, 0x4C);
         TEST("TSTD",  0x10, 0x4D);
         TEST("CLRD",  0x10, 0x4F);
+
+        TEST("COMW",  0x10, 0x53);
+        TEST("LSRW",  0x10, 0x54);
+        TEST("RORW",  0x10, 0x56);
+        TEST("ROLW",  0x10, 0x59);
+        TEST("DECW",  0x10, 0x5A);
+        TEST("INCW",  0x10, 0x5C);
+        TEST("TSTW",  0x10, 0x5D);
+        TEST("CLRW",  0x10, 0x5F);
 
         TEST("COME",  0x11, 0x43);
         TEST("DECE",  0x11, 0x4A);
@@ -130,11 +142,20 @@ void test_inherent() {
         ERUI("RORD");
         ERUI("ASRD");
         ERUI("ASLD");
+        ERUI("LSLD");
         ERUI("ROLD");
         ERUI("DECD");
         ERUI("INCD");
         ERUI("TSTD");
         ERUI("CLRD");
+        ERUI("COMW");
+        ERUI("LSRW");
+        ERUI("RORW");
+        ERUI("ROLW");
+        ERUI("DECW");
+        ERUI("INCW");
+        ERUI("TSTW");
+        ERUI("CLRW");
         ERUI("COME");
         ERUI("DECE");
         ERUI("INCE");
@@ -339,6 +360,7 @@ void test_relative() {
     ATEST(0x1000, "BLS $1081", 0x23, 0x7F);
     ATEST(0x1000, "BHS $0F82", 0x24, 0x80);
     ATEST(0x1000, "BLO $1002", 0x25, 0x00);
+    ATEST(0x1000, "BCS $1002", 0x25, 0x00);
     ATEST(0x1000, "BNE $1002", 0x26, 0x00);
     ATEST(0x1000, "BEQ $1002", 0x27, 0x00);
     ATEST(0x1000, "BVC $1002", 0x28, 0x00);
@@ -362,6 +384,7 @@ void test_relative() {
     AERRT(0x1000, "LBLS $9004", OVERFLOW_RANGE, "$9004", 0x10, 0x23, 0x80, 0x00);
     ATEST(0x9000, "LBHS $1004", 0x10, 0x24, 0x80, 0x00);
     ATEST(0x1000, "LBLO $1004", 0x10, 0x25, 0x00, 0x00);
+    ATEST(0x1000, "LBCS $1004", 0x10, 0x25, 0x00, 0x00);
     ATEST(0x1000, "LBNE $1004", 0x10, 0x26, 0x00, 0x00);
     ATEST(0x1000, "LBEQ $1004", 0x10, 0x27, 0x00, 0x00);
     ATEST(0x1000, "LBVC $1004", 0x10, 0x28, 0x00, 0x00);
@@ -568,6 +591,7 @@ void test_direct() {
     TEST("ROR $10", 0x06, 0x10);
     TEST("ASR $10", 0x07, 0x10);
     TEST("ASL $10", 0x08, 0x10);
+    TEST("LSL $10", 0x08, 0x10);
     TEST("ROL $10", 0x09, 0x10);
     TEST("DEC $10", 0x0A, 0x10);
     TEST("INC $10", 0x0C, 0x10);
