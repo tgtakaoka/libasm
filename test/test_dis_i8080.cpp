@@ -774,7 +774,7 @@ void zilog_restart() {
 // clang-format on
 
 void test_illegal() {
-    if (is8080()) {
+    if (!is8085()) {  // RIM/SIM exist only on 8085
         UNKN(0x20);
         UNKN(0x30);
     }
@@ -786,10 +786,9 @@ void test_illegal() {
     UNKN(0xCB);
     UNKN(0xD9);
     UNKN(0xDD);
-    if (!v30emu()) {
+    UNKN(0xFD);
+    if (!v30emu())  // ED is the CALLN/RETEM prefix on V30EMU
         UNKN(0xED);
-        UNKN(0xFD);
-    }
 }
 
 void run_tests(const char *cpu) {
