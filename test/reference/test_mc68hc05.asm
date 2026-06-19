@@ -15,4 +15,5 @@
         cpu     68HC05
         org     $0100
 abs:    equ     $1000
+        include "test_mc6805.inc"
         include "test_mc68hc05.inc"

@@ -12,9 +12,10 @@
 ;;; See the License for the specific language governing permissions and
 ;;; limitations under the License.
 
-        cpu     68HC08
+        cpu     68HCS08
         org     $0100
 abs:    equ     $C000
         include "test_mc6805.inc"
         include "test_mc68hc05.inc"
         include "test_mc68hc08.inc"
+        include "test_mc68hcs08.inc"

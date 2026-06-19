@@ -12,9 +12,17 @@
 ;;; See the License for the specific language governing permissions and
 ;;; limitations under the License.
 
-        cpu     68HC08
-        org     $0100
-abs:    equ     $C000
-        include "test_mc6805.inc"
-        include "test_mc68hc05.inc"
-        include "test_mc68hc08.inc"
+;;; MC68HCS08 additions over MC68HC08
+        sthx    $90
+        ldhx    $90
+        cphx    $90
+        ldhx    $1000
+        cphx    $2000
+        sthx    $8000
+        bgnd
+        ldhx    ,x
+        ldhx    $1234,x
+        ldhx    $12,x
+        ldhx    5,sp
+        sthx    5,sp
+        cphx    5,sp
