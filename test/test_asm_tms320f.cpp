@@ -381,6 +381,7 @@ void test_load() {
     TEST("LDFLE   -1.5, R6",         0x44660C00);
     TEST("LDFGT   0, R7",            0x44E78000);
     TEST("LDFGE   -0.50024, R0",     0x4560FFFF);
+    TEST("LDFNN   -0.50024, R0",     0x4560FFFF);
 
     TEST("LDIU    R0, R1",           0x50010000);
     TEST("LDILO   AR0, R1",          0x50810008);
@@ -419,6 +420,7 @@ void test_load() {
     TEST("LDILE   0, R5",            0x54650000);
     TEST("LDIGT   -8000H, R6",       0x54E68000);
     TEST("LDIGE   -1, R7",           0x5567FFFF);
+    TEST("LDINN   -1, R7",           0x5567FFFF);
 }
 
 void test_store() {
@@ -2019,6 +2021,7 @@ void test_program() {
     ATEST(0x10000, "BGT   AR1", 0x68090009);
     ATEST(0x10000, "BP    AR1", 0x68090009);
     ATEST(0x10000, "BGE   AR2", 0x680A000A);
+    ATEST(0x10000, "BNN   AR2", 0x680A000A);
     ATEST(0x10000, "BNV   AR4", 0x680C000C);
     ATEST(0x10000, "BV    AR5", 0x680D000D);
     ATEST(0x10000, "BNUF  AR6", 0x680E000E);
@@ -2057,6 +2060,7 @@ void test_program() {
     ATEST(0x10000, "BZUF  00F001H", 0x6A14F000);
 
     ATEST(0x10000, "BUD    RC",  0x6820001B);
+    ATEST(0x10000, "BD     RC",  0x6820001B);
     ATEST(0x10000, "BLOD   RE",  0x6821001A);
     ATEST(0x10000, "BCD    RE",  0x6821001A);
     ATEST(0x10000, "BLSD   RS",  0x68220019);
@@ -2073,6 +2077,7 @@ void test_program() {
     ATEST(0x10000, "BGTD   IR1", 0x68290012);
     ATEST(0x10000, "BPD    IR1", 0x68290012);
     ATEST(0x10000, "BGED   IR0", 0x682A0011);
+    ATEST(0x10000, "BNND   IR0", 0x682A0011);
     ATEST(0x10000, "BNVD   AR7", 0x682C000F);
     ATEST(0x10000, "BVD    AR6", 0x682D000E);
     ATEST(0x10000, "BNUFD  AR5", 0x682E000D);
@@ -2134,6 +2139,7 @@ void test_program() {
     ATEST(0x10000, "CALLGT   AR1", 0x70090009);
     ATEST(0x10000, "CALLP    AR1", 0x70090009);
     ATEST(0x10000, "CALLGE   AR2", 0x700A000A);
+    ATEST(0x10000, "CALLNN   AR2", 0x700A000A);
     ATEST(0x10000, "CALLNV   AR4", 0x700C000C);
     ATEST(0x10000, "CALLV    AR5", 0x700D000D);
     ATEST(0x10000, "CALLNUF  AR6", 0x700E000E);
@@ -2172,6 +2178,7 @@ void test_program() {
     ATEST(0x10000, "CALLZUF  00F001H", 0x7214F000);
 
     ATEST(0x10000, "DBU    AR7, R0",  0x6DC00000);
+    ATEST(0x10000, "DB     AR7, R0",  0x6DC00000);
     ATEST(0x10000, "DBLO   AR6, R1",  0x6D810001);
     ATEST(0x10000, "DBC    AR6, R1",  0x6D810001);
     ATEST(0x10000, "DBLS   AR5, R2",  0x6D420002);
@@ -2188,6 +2195,7 @@ void test_program() {
     ATEST(0x10000, "DBGT   AR6, AR1", 0x6D890009);
     ATEST(0x10000, "DBP    AR6, AR1", 0x6D890009);
     ATEST(0x10000, "DBGE   AR5, AR2", 0x6D4A000A);
+    ATEST(0x10000, "DBNN   AR5, AR2", 0x6D4A000A);
     ATEST(0x10000, "DBNV   AR3, AR4", 0x6CCC000C);
     ATEST(0x10000, "DBV    AR2, AR5", 0x6C8D000D);
     ATEST(0x10000, "DBNUF  AR1, AR6", 0x6C4E000E);
@@ -2226,6 +2234,8 @@ void test_program() {
     ATEST(0x10000, "DBZUF  AR4, 00F001H", 0x6F14F000);
 
     ATEST(0x10000, "DBUD    AR7, R0",  0x6DE00000);
+    ATEST(0x10000, "DBD     AR7, R0",  0x6DE00000);
+    ATEST(0x10000, "DBNND   AR7, R0",  0x6DEA0000);
     ATEST(0x10000, "DBLOD   AR6, R1",  0x6DA10001);
     ATEST(0x10000, "DBCD    AR6, R1",  0x6DA10001);
     ATEST(0x10000, "DBLSD   AR5, R2",  0x6D620002);
@@ -2347,6 +2357,8 @@ void test_program() {
     ERRT("NOP 0C00H", ILLEGAL_OPERAND_MODE, "0C00H", 0x0C800000);
 
     TEST("RETIU",     0x78000000);
+    TEST("RETI",      0x78000000);
+    TEST("RETINN",    0x780A0000);
     TEST("RETILO",    0x78010000);
     TEST("RETIC",     0x78010000);
     TEST("RETILS",    0x78020000);
@@ -2374,6 +2386,8 @@ void test_program() {
     TEST("RETIZUF",   0x78140000);
 
     TEST("RETSU",     0x78800000);
+    TEST("RETS",      0x78800000);
+    TEST("RETSNN",    0x788A0000);
     TEST("RETSLO",    0x78810000);
     TEST("RETSC",     0x78810000);
     TEST("RETSLS",    0x78820000);
@@ -2439,6 +2453,8 @@ void test_program() {
     TEST("SWI", 0x66000000);
 
     TEST("TRAPU    0",  0x74000020);
+    TEST("TRAP     0",  0x74000020);
+    TEST("TRAPNN   0",  0x740A0020);
     TEST("TRAPLO   1",  0x74010021);
     TEST("TRAPC    1",  0x74010021);
     TEST("TRAPLS   2",  0x74020022);
