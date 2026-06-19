@@ -54,6 +54,8 @@ void IntelHex::encode(TextPrinter &out, uint32_t addr, const uint8_t *data, uint
         size -= chunk;
         if (size == 0)
             return;
+        // The remaining bytes are in the next 64K page; emit its ELA record.
+        formatEla(out, addr);
     }
     encodeLine(out, addr, data, size);
     _last_addr = addr;

@@ -104,6 +104,17 @@ void test_encoder() {
     EQ("lines", 4, out.size());
     EQ("low-checksum ELA", ":0200000400EB0F", out.line(1));
     EQ("end", ":00000001FF", out.line(4));
+
+    // A single record straddling a 64K boundary must emit an ELA record for the
+    // upper page, else the upper bytes decode into the wrong page.
+    BinMemory straddle;
+    WRITE_BLOCK(straddle, 0xFFF0, block1);
+    out.clear();
+    encoder.reset(32);
+    encoder.encode(straddle, out);
+    EQ("lines", 4, out.size());
+    EQ("straddle ELA", ":020000040001F9", out.line(2));
+    EQ("end", ":00000001FF", out.line(4));
 }
 
 void test_encoder_blocks() {
