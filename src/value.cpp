@@ -320,9 +320,9 @@ Value Value::negate() const {
     Value v;
     if (isInteger()) {
         if (isNegative()) {
-            v.setU(static_cast<unsigned_t>(-_signed));
+            v.setU(-static_cast<unsigned_t>(_signed));
         } else {
-            v.setS(-static_cast<signed_t>(_unsigned));
+            v.setS(static_cast<signed_t>(-_unsigned));
         }
     } else {
 #if defined(LIBASM_ASM_NOFLOAT)
@@ -335,7 +335,7 @@ Value Value::negate() const {
 }
 
 Value::unsigned_t Value::absolute() const {
-    return isNegative() ? static_cast<unsigned_t>(-_signed) : _unsigned;
+    return isNegative() ? -static_cast<unsigned_t>(_signed) : _unsigned;
 }
 
 Value Value::operator+(const Value &rhs) const {
@@ -346,14 +346,14 @@ Value Value::operator+(const Value &rhs) const {
         if (isNegative() == rhs.isNegative()) {
             const auto a = l + r;
             if (isNegative()) {
-                v.setS(-static_cast<signed_t>(a));
+                v.setS(static_cast<signed_t>(-a));
             } else {
                 v.setU(a);
             }
         } else if (l >= r) {
             const auto u = l - r;
             if (isNegative()) {
-                v.setS(-static_cast<signed_t>(u));
+                v.setS(static_cast<signed_t>(-u));
             } else {
                 v.setU(u);
             }
@@ -362,7 +362,7 @@ Value Value::operator+(const Value &rhs) const {
             if (isNegative()) {
                 v.setU(u);
             } else {
-                v.setS(-static_cast<signed_t>(u));
+                v.setS(static_cast<signed_t>(-u));
             }
         }
     } else {
@@ -386,7 +386,7 @@ Value Value::operator*(const Value &rhs) const {
         if (isNegative() == rhs.isNegative()) {
             v.setU(p);
         } else {
-            v.setS(-static_cast<signed_t>(p));
+            v.setS(static_cast<signed_t>(-p));
         }
     } else {
 #if defined(LIBASM_ASM_NOFLOAT)
@@ -407,7 +407,7 @@ Value Value::operator/(const Value &rhs) const {
         if (isNegative() == rhs.isNegative()) {
             v.setU(q);
         } else {
-            v.setS(-static_cast<signed_t>(q));
+            v.setS(static_cast<signed_t>(-q));
         }
     } else {
 #if defined(LIBASM_ASM_NOFLOAT)
@@ -426,7 +426,7 @@ Value Value::operator%(const Value &rhs) const {
     } else if (isInteger() && rhs.isInteger()) {
         const auto r = absolute() % rhs.absolute();
         if (isNegative()) {
-            v.setS(-static_cast<signed_t>(r));
+            v.setS(static_cast<signed_t>(-r));
         } else {
             v.setU(r);
         }
