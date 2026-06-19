@@ -77,7 +77,8 @@ uint16_t __ti_float16::bits(bool sign, int8_t exp, uint16_t frac) {
 }
 
 __ti_float16::operator float80_t() const {
-    if (_u16 == bits(false, EXP_ZERO, 0))
+    // The most-negative exponent encodes 0 regardless of the sign/mantissa bits.
+    if (exp() == EXP_ZERO)
         return float80_t::zero(false);
     const auto sign = (_u16 & SGN_MASK) != 0;
     uint16_t frac = _u16 & FRAC_MASK;
@@ -150,7 +151,8 @@ uint32_t __ti_float32::bits(bool sign, int8_t exp, uint32_t frac) {
 }
 
 __ti_float32::operator float80_t() const {
-    if (_u32 == bits(false, EXP_ZERO, 0))
+    // The most-negative exponent encodes 0 regardless of the sign/mantissa bits.
+    if (exp() == EXP_ZERO)
         return float80_t::zero(false);
     const auto sign = (_u32 & SGN_MASK) != 0;
     uint32_t frac = _u32 & FRAC_MASK;
@@ -223,7 +225,8 @@ uint64_t __ti_float40::bits(bool sign, int8_t exp, uint32_t frac) {
 }
 
 __ti_float40::operator float80_t() const {
-    if (_u40 == bits(false, EXP_ZERO, 0))
+    // The most-negative exponent encodes 0 regardless of the sign/mantissa bits.
+    if (exp() == EXP_ZERO)
         return float80_t::zero(false);
     const auto sign = (_u40 & SGN_MASK) != 0;
     uint64_t frac = _u40 & FRAC_MASK;
@@ -297,7 +300,8 @@ uint16_t __ti_float16_external::bits(bool sign, int8_t exp, uint8_t frac) {
 }
 
 __ti_float16_external::operator float80_t() const {
-    if (_u16 == bits(false, EXP_ZERO, 0))
+    // The most-negative exponent encodes 0 regardless of the sign/mantissa bits.
+    if (exp() == EXP_ZERO)
         return float80_t::zero(false);
     const auto sign = (_u16 & SGN_MASK) != 0;
     uint16_t frac = _u16 & FRAC_MASK;

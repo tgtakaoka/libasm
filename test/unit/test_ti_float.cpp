@@ -102,6 +102,12 @@ void test_ti_float16() {
     EQ("0.0", OK, f16.set(f80));
     EQ("0.0", "8.000", f16.str());
 
+    // Non-canonical zeros: the most-negative exponent decodes to 0 regardless
+    // of the sign/mantissa bits.
+    EQ("0.0 (8.001)", "0", gcvt(f16.set(-8, 0x001)));
+    EQ("0.0 (8.800)", "0", gcvt(f16.set(-8, ti_float16_t::SGN_MASK)));
+    EQ("0.0 (8.FFF)", "0", gcvt(f16.set(-8, ti_float16_t::SGN_MASK | ti_float16_t::FRAC_MASK)));
+
     EQ("1.0", "0.000", f16.set(0, 0x000).str());
     EQ("1.0", "1", gcvt(f16));
     EQ("1.0", OK, f16.set(f80));
