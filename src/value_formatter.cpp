@@ -157,7 +157,8 @@ bool ValueFormatter::absolute(uint32_t &val, int8_t bits) {
             val = ~val + 1;
         }
     }
-    const auto mask = (1UL << bw) - 1;
+    // |bw| can be 32; 1<<32 is UB where long is 32-bit (e.g. AVR).
+    const uint32_t mask = bw >= 32 ? UINT32_MAX : ((UINT32_C(1) << bw) - 1);
     val &= mask;
     return negative;
 }
