@@ -93,6 +93,17 @@ void test_encoder() {
     EQ("extended", ":020000041235B3", out.line(3));
     EQ("line 2", ":020000001234B8", out.line(4));
     EQ("line 3", ":00000001FF", out.line(5));
+
+    // ELA record whose checksum is < 0x10 must be zero-padded ("%02X"), not
+    // space-padded, so it stays a valid 2-hex-digit field.
+    BinMemory lowsum;
+    WRITE_BLOCK(lowsum, 0x00EB0000, block1);
+    out.clear();
+    encoder.reset(16);
+    encoder.encode(lowsum, out);
+    EQ("lines", 4, out.size());
+    EQ("low-checksum ELA", ":0200000400EB0F", out.line(1));
+    EQ("end", ":00000001FF", out.line(4));
 }
 
 void test_encoder_blocks() {

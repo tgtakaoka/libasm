@@ -74,7 +74,7 @@ void IntelHex::formatEla(TextPrinter &out, uint32_t addr) {
     addSum16(dummy);
     addSum8(type);
     addSum16(ela);
-    out.format(":%02X%04X%02X%04X%2X\n", len, dummy, type, ela, getSum());
+    out.format(":%02X%04X%02X%04X%02X\n", len, dummy, type, ela, getSum());
 }
 
 void IntelHex::encodeLine(TextPrinter &out, uint16_t addr, const uint8_t *data, uint_fast8_t size) {
