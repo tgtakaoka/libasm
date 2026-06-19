@@ -236,7 +236,10 @@ Error FairchildNumberParser::parseNumber(StrScanner &scan, Value &val, Radix def
 
 Error Pdp11NumberParser::parseNumber(StrScanner &scan, Value &val, Radix defaultRadix) const {
     if (scan[0] == '"' && scan[1] && scan[2]) {
-        const auto value = (static_cast<uint16_t>(scan[2]) << 8) | scan[1];
+        // Mask to uint8_t: a high-bit char would otherwise sign-extend.
+        const auto hi = static_cast<uint8_t>(scan[2]);
+        const auto lo = static_cast<uint8_t>(scan[1]);
+        const auto value = (static_cast<uint16_t>(hi) << 8) | lo;
         val.setUnsigned(value);
         scan += 3;
         return OK;
