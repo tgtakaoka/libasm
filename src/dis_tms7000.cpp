@@ -49,16 +49,14 @@ StrBuffer &DisTms7000::outPortAddr(StrBuffer &out, uint_fast8_t port) const {
 }
 
 void DisTms7000::decodeRegister(DisInsn &insn, StrBuffer &out) const {
+    // A register that is encoded in an operand byte is shown as Rn (including
+    // R0/R1); only the opcode-implicit A/B operands (M_A/M_B) are shown as A/B.
     const auto regno = insn.readByte();
-    if (insn.isOK() && regno < 2) {
-        out.letter('A' + regno);
+    const auto label = lookup(regno, addressWidth());
+    if (label) {
+        out.rtext(label);
     } else {
-        const auto label = lookup(regno, addressWidth());
-        if (label) {
-            out.rtext(label);
-        } else {
-            outRegName(out, toRegName(regno));
-        }
+        outRegName(out, toRegName(regno));
     }
 }
 

@@ -324,6 +324,15 @@ void test_single_relative() {
     ATEST(0x1000, "JNZ $-23", 0xE6, 0xE7);
     ATEST(0x1000, "JNC $-22", 0xE7, 0xE8);
 
+    // signed-comparison alias mnemonics (same opcodes as the canonical jumps)
+    ATEST(0x1000, "JLT $-28", 0xE1, 0xE2);  // == JN
+    ATEST(0x1000, "JEQ $-27", 0xE2, 0xE3);  // == JZ
+    ATEST(0x1000, "JHS $-26", 0xE3, 0xE4);  // == JC
+    ATEST(0x1000, "JGT $-25", 0xE4, 0xE5);  // == JP
+    ATEST(0x1000, "JGE $-24", 0xE5, 0xE6);  // == JPZ
+    ATEST(0x1000, "JNE $-23", 0xE6, 0xE7);  // == JNZ
+    ATEST(0x1000, "JL  $-22", 0xE7, 0xE8);  // == JNC
+
     symtab.intern(0x1040, "a40");
     symtab.intern(0x1040, "b40");
     symtab.intern(0x1040, "rr40");

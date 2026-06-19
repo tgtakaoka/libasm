@@ -28,7 +28,7 @@ namespace tms7000 {
 enum AddrMode : uint8_t {
     M_NONE = 0,
     M_A = 1,      // Register A
-    M_B = 2,      // Regoster B
+    M_B = 2,      // Register B
     M_RN = 3,     // Register N
     M_ST = 4,     // Register ST
     M_IM8 = 5,    // 8-bit Immediate data

@@ -12,47 +12,19 @@
       LDSP
       PUSH  ST
       MOV   R19, A
-      MOV   A, A
-      MOV   B, A
       AND   R20, A
-      AND   A, A
-      AND   B, A
       OR    R21, A
-      OR    A, A
-      OR    B, A
       XOR   R22, A
-      XOR   A, A
-      XOR   B, A
       BTJO  R23, A, $+27
-      BTJO  A, A, $+4
-      BTJO  B, A, $+5
       BTJZ  R24, A, $+28
-      BTJZ  A, A, $+4
-      BTJZ  B, A, $+5
       ADD   R25, A
-      ADD   A, A
-      ADD   B, A
       ADC   R26, A
-      ADC   A, A
-      ADC   B, A
       SUB   R27, A
-      SUB   A, A
-      SUB   B, A
       SBB   R28, A
-      SBB   A, A
-      SBB   B, A
       MPY   R29, A
-      MPY   A, A
-      MPY   B, A
       CMP   R30, A
-      CMP   A, A
-      CMP   B, A
       DAC   R31, A
-      DAC   A, A
-      DAC   B, A
       DSB   R32, A
-      DSB   A, A
-      DSB   B, A
       MOV   %23H, A
       AND   %24H, A
       OR    %25H, A
@@ -68,173 +40,33 @@
       DAC   %2FH, A
       DSB   %30H, A
       MOV   R51, B
-      MOV   A, B
-      MOV   B, B
       AND   R52, B
-      AND   A, B
-      AND   B, B
       OR    R53, B
-      OR    A, B
-      OR    B, B
       XOR   R54, B
-      XOR   A, B
-      XOR   B, B
       BTJO  R55, B, $+59
-      BTJO  A, B, $+4
-      BTJO  B, B, $+5
       BTJZ  R56, B, $+60
-      BTJZ  A, B, $+4
-      BTJZ  B, B, $+5
       ADD   R57, B
-      ADD   A, B
-      ADD   B, B
       ADC   R58, B
-      ADC   A, B
-      ADC   B, B
       SUB   R59, B
-      SUB   A, B
-      SUB   B, B
       SBB   R60, B
-      SBB   A, B
-      SBB   B, B
       MPY   R61, B
-      MPY   A, B
-      MPY   B, B
       CMP   R62, B
-      CMP   A, B
-      CMP   B, B
       DAC   R63, B
-      DAC   A, B
-      DAC   B, B
       DSB   R64, B
-      DSB   A, B
-      DSB   B, B
       MOV   R67, R68
-      MOV   R67, A
-      MOV   R67, B
-      MOV   A, B
-      MOV   A, R2
-      MOV   A, A
-      MOV   B, R2
-      MOV   B, A
-      MOV   B, B
       AND   R68, R69
-      AND   R68, A
-      AND   R68, B
-      AND   A, B
-      AND   A, R2
-      AND   A, A
-      AND   B, R2
-      AND   B, A
-      AND   B, B
       OR    R69, R70
-      OR    R69, A
-      OR    R69, B
-      OR    A, B
-      OR    A, R2
-      OR    A, A
-      OR    B, R2
-      OR    B, A
-      OR    B, B
       XOR   R70, R71
-      XOR   R70, A
-      XOR   R70, B
-      XOR   A, B
-      XOR   A, R2
-      XOR   A, A
-      XOR   B, R2
-      XOR   B, A
-      XOR   B, B
       BTJO  R71, R72, $+77
-      BTJO  R71, A, $+5
-      BTJO  R71, B, $+6
-      BTJO  A, B, $+6
-      BTJO  A, R2, $+7
-      BTJO  A, A, $+5
-      BTJO  B, R2, $+7
-      BTJO  B, A, $+5
-      BTJO  B, B, $+6
       BTJZ  R72, R73, $+78
-      BTJZ  R72, A, $+5
-      BTJZ  R72, B, $+6
-      BTJZ  A, B, $+6
-      BTJZ  A, R2, $+7
-      BTJZ  A, A, $+5
-      BTJZ  B, R2, $+7
-      BTJZ  B, A, $+5
-      BTJZ  B, B, $+6
       ADD   R73, R74
-      ADD   R73, A
-      ADD   R73, B
-      ADD   A, B
-      ADD   A, R2
-      ADD   A, A
-      ADD   B, R2
-      ADD   B, A
-      ADD   B, B
       ADC   R74, R75
-      ADC   R74, A
-      ADC   R74, B
-      ADC   A, B
-      ADC   A, R2
-      ADC   A, A
-      ADC   B, R2
-      ADC   B, A
-      ADC   B, B
       SUB   R75, R76
-      SUB   R75, A
-      SUB   R75, B
-      SUB   A, B
-      SUB   A, R2
-      SUB   A, A
-      SUB   B, R2
-      SUB   B, A
-      SUB   B, B
       SBB   R76, R77
-      SBB   R76, A
-      SBB   R76, B
-      SBB   A, B
-      SBB   A, R2
-      SBB   A, A
-      SBB   B, R2
-      SBB   B, A
-      SBB   B, B
       MPY   R77, R78
-      MPY   R77, A
-      MPY   R77, B
-      MPY   A, B
-      MPY   A, R2
-      MPY   A, A
-      MPY   B, R2
-      MPY   B, A
-      MPY   B, B
       CMP   R78, R79
-      CMP   R78, A
-      CMP   R78, B
-      CMP   A, B
-      CMP   A, R2
-      CMP   A, A
-      CMP   B, R2
-      CMP   B, A
-      CMP   B, B
       DAC   R79, R80
-      DAC   R79, A
-      DAC   R79, B
-      DAC   A, B
-      DAC   A, R2
-      DAC   A, A
-      DAC   B, R2
-      DAC   B, A
-      DAC   B, B
       DSB   R80, R81
-      DSB   R80, A
-      DSB   R80, B
-      DSB   A, B
-      DSB   A, R2
-      DSB   A, A
-      DSB   B, R2
-      DSB   B, A
-      DSB   B, B
       MOV   %53H, B
       AND   %54H, B
       OR    %55H, B
@@ -264,47 +96,19 @@
       DAC   B, A
       DSB   B, A
       MOV   %73H, R116
-      MOV   %73H, A
-      MOV   %73H, B
       AND   %74H, R117
-      AND   %74H, A
-      AND   %74H, B
       OR    %75H, R118
-      OR    %75H, A
-      OR    %75H, B
       XOR   %76H, R119
-      XOR   %76H, A
-      XOR   %76H, B
       BTJO  %77H, R120, $+125
-      BTJO  %77H, A, $+5
-      BTJO  %77H, B, $+6
       BTJZ  %78H, R121, $+126
-      BTJZ  %78H, A, $+5
-      BTJZ  %78H, B, $+6
       ADD   %79H, R122
-      ADD   %79H, A
-      ADD   %79H, B
       ADC   %7AH, R123
-      ADC   %7AH, A
-      ADC   %7AH, B
       SUB   %7BH, R124
-      SUB   %7BH, A
-      SUB   %7BH, B
       SBB   %7CH, R125
-      SBB   %7CH, A
-      SBB   %7CH, B
       MPY   %7DH, R126
-      MPY   %7DH, A
-      MPY   %7DH, B
       CMP   %7EH, R127
-      CMP   %7EH, A
-      CMP   %7EH, B
       DAC   %7FH, R128
-      DAC   %7FH, A
-      DAC   %7FH, B
       DSB   %80H, R129
-      DSB   %80H, A
-      DSB   %80H, B
       MOVP  P129, A
       MOVP  A, P131
       ANDP  A, P132
@@ -313,8 +117,6 @@
       BTJOP A, P135, $-117
       BTJZP A, P136, $-116
       MOVD  %898AH, R139
-      MOVD  %898AH, A
-      MOVD  %898AH, B
       LDA   @8B8CH
       STA   @8C8DH
       BR    @8D8EH
@@ -328,14 +130,6 @@
       BTJOP B, P151, $-101
       BTJZP B, P152, $-100
       MOVD  R153, R154
-      MOVD  R153, A
-      MOVD  R153, B
-      MOVD  A, B
-      MOVD  A, R2
-      MOVD  A, A
-      MOVD  B, R2
-      MOVD  B, A
-      MOVD  B, B
       LDA   *R155
       STA   *R156
       BR    *R157
@@ -348,8 +142,6 @@
       BTJOP %0A7H, P168, $-83
       BTJZP %0A8H, P169, $-82
       MOVD  %0A9AAH(B), R171
-      MOVD  %0A9AAH(B), A
-      MOVD  %0A9AAH(B), B
       LDA   @0ABACH(B)
       STA   @0ACADH(B)
       BR    @0ADAEH(B)
@@ -389,47 +181,19 @@
       MOV   A, R209
       MOV   B, R210
       DEC   R211
-      DEC   A
-      DEC   B
       INC   R212
-      INC   A
-      INC   B
       INV   R213
-      INV   A
-      INV   B
       CLR   R214
-      CLR   A
-      CLR   B
       XCHB  R215
-      XCHB  A
-      XCHB  B
       SWAP  R216
-      SWAP  A
-      SWAP  B
       PUSH  R217
-      PUSH  A
-      PUSH  B
       POP   R218
-      POP   A
-      POP   B
       DJNZ  R219, $-33
-      DJNZ  A, $+4
-      DJNZ  B, $+5
       DECD  R220
-      DECD  A
-      DECD  B
       RR    R221
-      RR    A
-      RR    B
       RRC   R222
-      RRC   A
-      RRC   B
       RL    R223
-      RL    A
-      RL    B
       RLC   R224
-      RLC   A
-      RLC   B
       JMP   $-29
       JN    $-28
       JZ    $-27
