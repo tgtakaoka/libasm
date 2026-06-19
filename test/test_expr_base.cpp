@@ -191,6 +191,8 @@ void test_unary_operator() {
     E32("!-1", 0);
     E32("~!-1", 0xFFFFFFFF);
     E32("!~!-1", 0);
+    // A >32-bit intermediate must not be truncated before the logical-not test.
+    E32("!(0x100000 * 0x100000)", 0);
 }
 
 void test_binary_operator() {

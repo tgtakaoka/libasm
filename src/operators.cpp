@@ -55,8 +55,8 @@ static Error bitwise_not(ValueStack &stack, ParserContext &) {
 }
 
 static Error logical_not(ValueStack &stack, ParserContext &) {
-    const auto v = stack.pop().getUnsigned();
-    stack.pushUnsigned(!v);
+    // isZero() tests the full width; getUnsigned() would truncate to 32 bits.
+    stack.pushUnsigned(stack.pop().isZero());
     return OK;
 }
 
