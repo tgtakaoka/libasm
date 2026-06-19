@@ -153,7 +153,7 @@ struct ArrayMemory {
         case 1:
             return _endian == ENDIAN_BIG ? quad >> 16 : quad >> 8;
         case 2:
-            return _endian == ENDIAN_BIG ? quad >> 9 : quad >> 16;
+            return _endian == ENDIAN_BIG ? quad >> 8 : quad >> 16;
         case 3:
             return _endian == ENDIAN_BIG ? quad : quad >> 24;
         }

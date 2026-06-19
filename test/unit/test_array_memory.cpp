@@ -236,12 +236,42 @@ void test_word_addr_little() {
     FALSE("little-6", little.hasNext());
 }
 
+void test_quad_big() {
+    static const uint32_t block[] = {0x11223344, 0x55667788};
+    constexpr uint32_t origin = 0x10000000;
+    const ArrayMemory mem(origin, block, sizeof(block), ENDIAN_BIG, ADDRESS_BYTE);
+
+    EQ("mem[origin+0]", 0x11, mem.byteAt(origin + 0));
+    EQ("mem[origin+1]", 0x22, mem.byteAt(origin + 1));
+    EQ("mem[origin+2]", 0x33, mem.byteAt(origin + 2));
+    EQ("mem[origin+3]", 0x44, mem.byteAt(origin + 3));
+    EQ("mem[origin+4]", 0x55, mem.byteAt(origin + 4));
+    EQ("mem[origin+5]", 0x66, mem.byteAt(origin + 5));
+    EQ("mem[origin+6]", 0x77, mem.byteAt(origin + 6));
+    EQ("mem[origin+7]", 0x88, mem.byteAt(origin + 7));
+}
+
+void test_quad_little() {
+    static const uint32_t block[] = {0x11223344, 0x55667788};
+    constexpr uint32_t origin = 0x10000000;
+    const ArrayMemory mem(origin, block, sizeof(block), ENDIAN_LITTLE, ADDRESS_BYTE);
+
+    EQ("mem[origin+0]", 0x44, mem.byteAt(origin + 0));
+    EQ("mem[origin+1]", 0x33, mem.byteAt(origin + 1));
+    EQ("mem[origin+2]", 0x22, mem.byteAt(origin + 2));
+    EQ("mem[origin+3]", 0x11, mem.byteAt(origin + 3));
+    EQ("mem[origin+4]", 0x88, mem.byteAt(origin + 4));
+    EQ("mem[origin+7]", 0x55, mem.byteAt(origin + 7));
+}
+
 void run_tests() {
     RUN_TEST(test_byte);
     RUN_TEST(test_word_big);
     RUN_TEST(test_word_little);
     RUN_TEST(test_word_addr_big);
     RUN_TEST(test_word_addr_little);
+    RUN_TEST(test_quad_big);
+    RUN_TEST(test_quad_little);
 }
 
 }  // namespace test
