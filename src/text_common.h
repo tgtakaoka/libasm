@@ -835,7 +835,7 @@ extern const char TEXT_dSTRING[] PROGMEM; // .string
 extern const char TEXT_dWORD[]   PROGMEM; // .word
 extern const char TEXT_dequal[]  PROGMEM; // .=
 
-extern const char PSTR_AT[]     PROGMEM; // "*"
+extern const char PSTR_AT[]     PROGMEM; // "@"
 extern const char PSTR_COMMA[]  PROGMEM; // ","
 extern const char PSTR_DOLLAR[] PROGMEM; // "$"
 extern const char PSTR_DOT[]    PROGMEM; // "."
