@@ -42,7 +42,8 @@ ssize_t FileReader::getLine() {
         _line = new_line;
         available = _line_size - len;
     }
-    return -1;
+    // At EOF, return any buffered final line that lacked a trailing newline.
+    return len > 0 ? len : -1;
 }
 
 FileReader::FileReader(const std::string &name)
