@@ -98,7 +98,10 @@ struct StrBuffer : ErrorReporter {
         if (negative)
             letter('-');
         using U = typename make_unsigned<T>::type;
-        U u = negative ? static_cast<U>(-v) : v;
+        // Negate in unsigned space: -v on the signed minimum is overflow UB.
+        U u = static_cast<U>(v);
+        if (negative)
+            u = -u;
         auto *start = mark();
         do {
             const uint8_t digit = u % 10;
