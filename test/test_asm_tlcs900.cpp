@@ -560,6 +560,9 @@ void test_unary() {
     TEST("SCC NZ,A",  0xC9, 0x7E);
     TEST("SCC C,A",   0xC9, 0x77);
     TEST("SCC NC,BC", 0xD9, 0x7F);
+    TEST("SCC OV,A",  0xC9, 0x74);
+    TEST("SCC T,A",   0xC9, 0x78);
+    TEST("SCC PL,A",  0xC9, 0x7D);
     // DJNZ: decrement and jump
     TEST("DJNZ A,3",  0xC9, 0x1C, 0x00);
     TEST("DJNZ B,3",  0xCA, 0x1C, 0x00);
