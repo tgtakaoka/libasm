@@ -424,6 +424,10 @@ void test_accumrator_2x() {
     TEST("ANDK", "0FFFFH, 15", 0xDF04, 0xFFFF);
 
     TEST("CMPL", "", 0xCE27);
+    TEST("CMPR", "0", 0xCE50);
+    TEST("CMPR", "1", 0xCE51);
+    TEST("CMPR", "2", 0xCE52);
+    TEST("CMPR", "3", 0xCE53);
 
     TEST("LAC", "70H",         0x2070);
     TEST("LAC", "70H, 15",     0x2F70);
@@ -836,6 +840,10 @@ void test_accumrator_c5x() {
     }
 
     TEST("CMPL", "", 0xBE01);
+    TEST("CMPR", "0", 0xBF44);
+    TEST("CMPR", "1", 0xBF45);
+    TEST("CMPR", "2", 0xBF46);
+    TEST("CMPR", "3", 0xBF47);
 
     TEST("LACC", "70H",         0x1070);
     TEST("LACC", "70H, 15",     0x1F70);
@@ -2029,6 +2037,8 @@ void test_control_1x() {
 
 void test_control_2x() {
     TEST("BIT",  "70H, 0", 0x9070);
+    TEST("BITT", "70H",    0x5770);
+    TEST("BITT", "*, AR0", 0x5788);
     if (is320C26()) {
         UNKN(0xCE04);
         UNKN(0xCE05);
@@ -2116,6 +2126,8 @@ void test_control_2x() {
 
 void test_control_c5x() {
     TEST("BIT",  "70H, 2", 0x4270);
+    TEST("BITT", "70H",    0x6F70);
+    TEST("BITT", "*, AR0", 0x6F88);
 
     TEST("CLRC", "INTM", 0xBE40);
     TEST("SETC", "INTM", 0xBE41);
@@ -2321,6 +2333,8 @@ void test_dataio_2x() {
     }
     TEST("RXF",  "", 0xCE0C);
     TEST("SXF",  "", 0xCE0D);
+    TEST("RTXM", "", 0xCE20);
+    TEST("STXM", "", 0xCE21);
 
     TEST("TBLR", "00H",     0x5800);
     TEST("TBLR", "70H",     0x5870);
