@@ -27,6 +27,8 @@ int BinDecoder::decode(TextReader &in, BinMemory &memory) {
     BinDecoder *decoder = nullptr;
     int size = 0;
     while ((line = in.readLine()) != nullptr) {
+        if (line->skipSpaces().size() == 0)
+            continue;  // tolerate blank / whitespace-only lines
         if (decoder == nullptr) {
             switch (**line) {
             case 'S':

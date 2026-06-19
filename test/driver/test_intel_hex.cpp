@@ -162,6 +162,18 @@ void test_decoder() {
     EQ("16bit-32block1", end_expected16, mem16_32.endAddress());
     BLOCK_EQ("16bit-32block1", expected16, mem16_32.begin(), start_expected16);
 
+    // Blank / whitespace-only lines (leading, interior, trailing) are tolerated.
+    hex.clear("blank-lines")
+            .add("")
+            .add(":12340000112233445566778899AABBCCDDEEFF0012347C")
+            .add("   ")
+            .add(":00000001FF")
+            .add("");
+    BinMemory mem_blank;
+    EQ("blank-lines", 18, BinDecoder::decode(hex, mem_blank));
+    EQ("blank-lines", start_expected16, mem_blank.startAddress());
+    EQ("blank-lines", end_expected16, mem_blank.endAddress());
+
     hex.clear("16bit-8block1")
             .add(":10340000112233445566778899AABBCCDDEEFF00C4")
             .add(":02341000123474")
