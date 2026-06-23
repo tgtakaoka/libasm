@@ -12,12 +12,13 @@
 ;;; See the License for the specific language governing permissions and
 ;;; limitations under the License.
 
-;;; H8/500 in maximum mode - full instruction set (E-clock + page jumps).
-
-        cpu     H8/500
+        cpu     HD6475328
         maxmode on
         org     H'0100
-        include "test_h8500.inc"
-        include "test_h8500_eclk.inc"
-        include "test_h8500_pjmp.inc"
-        include "test_h8500_pjmp24.inc"
+        include "gen_h8530.inc"
+        end
+
+;;; Local Variables:
+;;; mode: asm
+;;; End:
+;;; vim: set ft=asm:

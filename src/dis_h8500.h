@@ -27,32 +27,34 @@ namespace h8500 {
 struct DisH8500 final : Disassembler, Config {
     DisH8500(const ValueFormatter::Plugins &plugins = defaultPlugins());
 
+    void reset() override;
+
 private:
+    const BoolOption<Config> _opt_maxMode;
     const BoolOption<Config> _opt_fpAlias;
     const BoolOption<Config> _opt_spAlias;
 
-    // EA byte -> operand output helpers
-    void outEaOperand(DisInsn &insn, StrBuffer &out, uint8_t ea) const;
     void outReg(StrBuffer &out, RegName reg) const;
     void outAddrReg(StrBuffer &out, RegName reg) const;
     void outCr(StrBuffer &out, CrName cr) const;
     void outImm8(StrBuffer &out, uint8_t val) const;
-    void outImm16(DisInsn &insn, StrBuffer &out) const;
     void outAbs8(StrBuffer &out, uint8_t addr) const;
     void outAbs16(DisInsn &insn, StrBuffer &out) const;
     void outPcRel8(DisInsn &insn, StrBuffer &out) const;
     void outPcRel16(DisInsn &insn, StrBuffer &out) const;
     void outBit(StrBuffer &out, uint8_t bit) const;
+    void outRegList(DisInsn &insn, StrBuffer &out) const;
 
-    // Decode one operand into |out|. The opByte is the FMT-specific opcode
-    // byte that may carry the register field; for FMT_GEN it is insn.opByte.
-    void decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode, uint8_t opByte) const;
+    // Emit the EA operand resolved once in readLead (insn.eaMode/eaReg/eaVal).
+    void outEa(DisInsn &insn, StrBuffer &out) const;
+    // Decode an operand: the resolved EA (M_EASRC/M_EADST/M_EAREG, or the
+    // immediate EA of ANDC/ORC/XORC), a register field from insn.opByte, or
+    // trailing bytes for immediate/absolute/relative/list/SEC-addressing modes.
+    void decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) const;
 
-    // Decode helpers
-    Error decodeGenFmt(DisInsn &insn, StrBuffer &out) const;
-    Error decodeSpcFmt(DisInsn &insn, StrBuffer &out) const;
-    Error decodeSecFmt(DisInsn &insn, StrBuffer &out) const;
-
+    // Read the prefix + opcode and resolve the EA; append/validate the suffix.
+    Error readLead(DisInsn &insn) const;
+    void decodeSize(DisInsn &insn, StrBuffer &out) const;
     Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) const override;
     const ConfigBase &config() const override { return *this; }
     ConfigSetter &configSetter() override { return *this; }

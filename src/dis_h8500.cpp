@@ -25,33 +25,24 @@ namespace h8500 {
 using namespace reg;
 using namespace text::h8500;
 
-namespace {
-
-// Returns the number of EA extension bytes for the given EA byte.
-uint8_t eaExtCount(uint8_t ea) {
-    if ((ea >> 4) == 0xE)
-        return 1;  // @(d:8,Rn)
-    if ((ea >> 4) == 0xF)
-        return 2;  // @(d:16,Rn)
-    if (ea == 0x04 || ea == 0x05 || ea == 0x0D)
-        return 1;
-    if (ea == 0x0C || ea == 0x15 || ea == 0x1D)
-        return 2;
-    return 0;
-}
-
-}  // namespace
-
 const ValueFormatter::Plugins &DisH8500::defaultPlugins() {
     return ValueFormatter::Plugins::hitachi();
 }
 
 DisH8500::DisH8500(const ValueFormatter::Plugins &plugins)
-    : Disassembler(plugins, &_opt_fpAlias),
+    : Disassembler(plugins, &_opt_maxMode),
       Config(TABLE),
+      _opt_maxMode(this, &Config::setMaxMode, OPT_BOOL_MAX_MODE, OPT_DESC_MAX_MODE, &_opt_fpAlias),
       _opt_fpAlias(this, &Config::setFpAlias, OPT_BOOL_FP_ALIAS, OPT_DESC_FP_ALIAS, &_opt_spAlias),
       _opt_spAlias(this, &Config::setSpAlias, OPT_BOOL_SP_ALIAS, OPT_DESC_SP_ALIAS) {
     reset();
+}
+
+void DisH8500::reset() {
+    Disassembler::reset();
+    setMaxMode(false);
+    setFpAlias(true);
+    setSpAlias(true);
 }
 
 void DisH8500::outReg(StrBuffer &out, RegName reg) const {
@@ -79,11 +70,6 @@ void DisH8500::outImm8(StrBuffer &out, uint8_t val) const {
     outHex(out, val, 8);
 }
 
-void DisH8500::outImm16(DisInsn &insn, StrBuffer &out) const {
-    out.letter('#');
-    outHex(out, insn.readUint16Be(), 16);
-}
-
 void DisH8500::outAbs8(StrBuffer &out, uint8_t addr) const {
     out.letter('@');
     outAbsAddr(out, addr, 8);
@@ -93,7 +79,10 @@ void DisH8500::outAbs8(StrBuffer &out, uint8_t addr) const {
 
 void DisH8500::outAbs16(DisInsn &insn, StrBuffer &out) const {
     out.letter('@');
-    outAbsAddr(out, insn.readUint16Be());
+    // @aa:16 encodes only the 16-bit field; its high byte comes from a page
+    // register at run time, so print it at its true 16-bit width rather than
+    // zero-padded to the (24-bit) address width in maximum mode.
+    outAbsAddr(out, insn.readUint16Be(), 16);
     if (!_gnuAs)
         out.text_P(PSTR(":16"));
 }
@@ -119,109 +108,130 @@ void DisH8500::outBit(StrBuffer &out, uint8_t bit) const {
     outHex(out, bit, 4);
 }
 
-// Decode and output the EA operand. EA extensions are pre-buffered in insn.eaExt1/eaExt2.
-void DisH8500::outEaOperand(DisInsn &insn, StrBuffer &out, uint8_t ea) const {
-    const auto hi = ea >> 4;
-    const auto rrr = ea & 0x07;
-    const auto reg = decodeReg(rrr);
-
-    switch (hi) {
-    case 0xA:  // Rn direct
-        outReg(out, reg);
+// Emit the EA operand resolved in decodeImpl. eaVal holds the displacement /
+// absolute address / immediate when the mode needs one.
+void DisH8500::outEa(DisInsn &insn, StrBuffer &out) const {
+    switch (insn.eaMode) {
+    case M_REG:
+        outReg(out, insn.eaReg);
         break;
-    case 0xB:  // @-Rn pre-decrement
-        out.text_P(PSTR("@-"));
-        outAddrReg(out, reg);
-        break;
-    case 0xC:  // @Rn+ post-increment
+    case M_IND:
         out.letter('@');
-        outAddrReg(out, reg);
+        outAddrReg(out, insn.eaReg);
+        break;
+    case M_PDEC:
+        out.text_P(PSTR("@-"));
+        outAddrReg(out, insn.eaReg);
+        break;
+    case M_PINC:
+        out.letter('@');
+        outAddrReg(out, insn.eaReg);
         out.letter('+');
         break;
-    case 0xD:  // @Rn indirect
+    case M_IDX8:
+        out.letter('@').letter('(');
+        outHex(out, static_cast<int8_t>(insn.eaVal), -8);
+        out.letter(',');
+        outAddrReg(out, insn.eaReg);
+        out.letter(')');
+        break;
+    case M_IDX16:
+        out.letter('@').letter('(');
+        outHex(out, static_cast<int16_t>(insn.eaVal), -16);
+        out.letter(',');
+        outAddrReg(out, insn.eaReg);
+        out.letter(')');
+        break;
+    case M_ABS8:
+        outAbs8(out, static_cast<uint8_t>(insn.eaVal));
+        break;
+    case M_ABS16:
         out.letter('@');
-        outAddrReg(out, reg);
+        outAbsAddr(out, insn.eaVal, 16);  // 16-bit field; high byte is the DP page
+        if (!_gnuAs)
+            out.text_P(PSTR(":16"));
         break;
-    case 0xE:  // @(d:8,Rn)
-        out.letter('@').letter('(');
-        outHex(out, static_cast<int8_t>(insn.eaExt1), -8);
-        out.comma();
-        outAddrReg(out, reg);
-        out.letter(')');
+    case M_IMM8:
+        outImm8(out, static_cast<uint8_t>(insn.eaVal));
         break;
-    case 0xF:  // @(d:16,Rn)
-        out.letter('@').letter('(');
-        outHex(out, static_cast<int16_t>((static_cast<uint16_t>(insn.eaExt1) << 8) | insn.eaExt2),
-                -16);
-        out.comma();
-        outAddrReg(out, reg);
-        out.letter(')');
+    case M_IMM16:
+        out.letter('#');
+        outHex(out, insn.eaVal, 16);
         break;
     default:
-        // Low-range EA bytes
-        switch (ea) {
-        case 0x04:  // #xx:8 immediate
-            outImm8(out, insn.eaExt1);
-            break;
-        case 0x0C:  // #xx:16 immediate
-            out.letter('#');
-            outHex(out,
-                    static_cast<uint16_t>((static_cast<uint16_t>(insn.eaExt1) << 8) | insn.eaExt2),
-                    16);
-            break;
-        case 0x05:  // @aa:8 short absolute (byte)
-        case 0x0D:  // @aa:8 short absolute (word)
-            outAbs8(out, insn.eaExt1);
-            break;
-        case 0x15:    // @aa:16 absolute (byte)
-        case 0x1D: {  // @aa:16 absolute (word)
-            const auto addr =
-                    static_cast<uint16_t>((static_cast<uint16_t>(insn.eaExt1) << 8) | insn.eaExt2);
-            out.letter('@');
-            outAbsAddr(out, addr);
-            if (!_gnuAs)
-                out.text_P(PSTR(":16"));
-            break;
-        }
-        default:
-            insn.setError(UNKNOWN_INSTRUCTION);
-            break;
-        }
+        insn.setError(UNKNOWN_INSTRUCTION);
         break;
     }
 }
 
-// Output register list byte as {R7, R6, ...} (high-numbered first).
-static void outRegList(DisInsn &insn, StrBuffer &out) {
+// Output register list byte as (R0,R2-R4): low-numbered first, with runs of
+// consecutive registers collapsed to Rm-Rn (the manual / ASL syntax).
+void DisH8500::outRegList(DisInsn &insn, StrBuffer &out) const {
     const auto list = insn.readByte();
-    out.letter('{');
+    const auto at(out);  // mark the '(' position before emitting the list
+    out.letter('(');
     bool first = true;
-    for (int i = 7; i >= 0; i--) {
-        if (list & (1 << i)) {
-            if (!first)
-                out.comma();
-            first = false;
-            outRegName(out, decodeReg(i));
+    for (int i = 0; i < 8;) {
+        if ((list & (1 << i)) == 0) {
+            i++;
+            continue;
         }
+        int j = i;
+        while (j + 1 < 8 && (list & (1 << (j + 1))))
+            j++;
+        if (!first)
+            out.letter(',');
+        first = false;
+        outReg(out, decodeReg(i));
+        if (j > i) {
+            out.letter('-');
+            outReg(out, decodeReg(j));
+        }
+        i = j + 1;
     }
-    out.letter('}');
+    out.letter(')');
+    if (list == 0)
+        insn.setErrorIf(at, OPCODE_HAS_NO_EFFECT);
 }
 
-// Decode a single operand into |out|. |opByte| supplies the register field
-// for modes that take it from the FMT-specific opcode byte (M_REG, M_CR,
-// M_BIT in GEN; M_IND/M_DISP8/M_DISP16 in SEC; etc.). Modes that consume
-// following bytes (M_IMM*, M_ABS*, M_PCREL*, M_TRAPV, M_SCB, M_DISP8F)
-// read them off insn directly. Per-instruction byte validation lives here
-// so the per-FMT callers stay a simple src-then-dst dispatch.
-void DisH8500::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode, uint8_t opByte) const {
+static bool isEaPlaceholder(AddrMode mode) {
+    return mode == M_EASRC || mode == M_EADST || mode == M_EAREG || mode == M_EAMEM;
+}
+
+// In a GEN/EXT entry whose neither slot is an EA placeholder, the immediate slot
+// is itself the resolved EA (ANDC/ORC/XORC #imm,CR). Otherwise (MOV:G #imm,<EAd>)
+// the immediate is trailing data after the OP byte.
+static bool immIsEa(const DisInsn &insn) {
+    const auto pm = insn.prefixMode();
+    return (pm == PM_GEN || pm == PM_EXT) && !isEaPlaceholder(insn.src()) &&
+           !isEaPlaceholder(insn.dst());
+}
+
+void DisH8500::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) const {
     switch (mode) {
     case M_NONE:
         break;
-    case M_REG:
-        outReg(out, decodeReg(opByte & 0x07));
+    case M_EASRC:
+    case M_EADST:
+    case M_EAREG:
+    case M_EAMEM:
+        outEa(insn, out);
         break;
+    case M_REG:
+        outReg(out, decodeReg(insn.opByte & 0x07));
+        break;
+    case M_REGP: {
+        // MULXU.W/DIVXU.W place the 32-bit result in the pair Rd:Rd+1, so Rd
+        // must be even. Only the word form (EA Sz bit set) forms a pair; the
+        // byte form uses a single register.
+        const auto regno = insn.opByte & 0x07;
+        if (((insn.eaByte >> 3) & 1) && (regno & 1))
+            insn.setErrorIf(out, REGISTER_NOT_ALIGNED);
+        outReg(out, decodeReg(regno));
+        break;
+    }
     case M_CR: {
-        const auto cr = decodeCr(opByte & 0x07);
+        const auto cr = decodeCr(insn.opByte & 0x07);
         if (cr == CR_UNDEF) {
             insn.setError(UNKNOWN_INSTRUCTION);
             break;
@@ -229,23 +239,68 @@ void DisH8500::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode, uint8
         outCr(out, cr);
         break;
     }
-    case M_BIT:
-        outBit(out, opByte & 0x0F);
+    case M_BIT: {
+        const auto bit = insn.opByte & 0x0F;
+        // A byte-size target (EA Sz bit = 0) only has bits 0-7.
+        if (((insn.eaByte >> 3) & 1) == 0 && bit > 7) {
+            insn.setError(ILLEGAL_BIT_NUMBER);
+            break;
+        }
+        outBit(out, bit);
         break;
+    }
+    case M_IMM2: {
+        // ADD:Q quick immediate encoded in the OP byte: 08=+1 09=+2 0C=-1 0D=-2.
+        int8_t v;
+        switch (insn.opByte) {
+        case 0x08:
+            v = 1;
+            break;
+        case 0x09:
+            v = 2;
+            break;
+        case 0x0C:
+            v = -1;
+            break;
+        case 0x0D:
+            v = -2;
+            break;
+        default:
+            insn.setError(UNKNOWN_INSTRUCTION);
+            return;
+        }
+        out.letter('#');
+        outDec(out, static_cast<uint32_t>(v), -8);
+        break;
+    }
     case M_FP:
         outReg(out, REG_FP);
         break;
-    case M_PCREL8:
+    case M_REL8:
         outPcRel8(insn, out);
         break;
-    case M_PCREL16:
+    case M_REL16:
         outPcRel16(insn, out);
         break;
     case M_IMM8:
-        outImm8(out, insn.readByte());
+        if (immIsEa(insn))
+            outEa(insn, out);
+        else
+            outImm8(out, insn.readByte());
         break;
     case M_IMM16:
-        outImm16(insn, out);
+        if (immIsEa(insn)) {
+            outEa(insn, out);
+        } else {
+            const auto val = insn.readUint16Be();
+            out.letter('#');
+            outHex(out, val, 16);
+            // RTD/LINK/PRTD (no class) also have a #xx:8 form; a value that fits
+            // a byte needs an explicit :16 to round-trip to this long form. The
+            // :I forms (MOV:I/CMP:I) are unambiguous, so they take no suffix.
+            if (insn.insnClass() == IC_N && val <= 0xFF)
+                out.text_P(PSTR(":16"));
+        }
         break;
     case M_ABS8:
         outAbs8(out, insn.readByte());
@@ -256,33 +311,54 @@ void DisH8500::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode, uint8
     case M_ABS24: {
         const auto page = insn.readByte();
         const auto addr = insn.readUint16Be();
+        const auto target = (static_cast<uint32_t>(page) << 16) | addr;
+        // A page-jump address beyond the chip's physical space (20-bit on the
+        // pin-limited H8/520/530) is a non-canonical encoding. The physical
+        // width applies regardless of operating mode (page jumps are max-mode).
+        const auto max = (UINT32_C(1) << physicalWidth()) - 1;
+        if (target > max)
+            insn.setError(out, OVERFLOW_RANGE);
         out.letter('@');
-        outHex(out, (static_cast<uint32_t>(page) << 16) | addr, 24);
+        outHex(out, target, 24);
+        // PJMP/PJSR have only the @aa:24 form; a page-0 (<=0xFFFF) address would
+        // otherwise re-parse as @aa:16 (which they reject), so make it explicit.
+        if (!_gnuAs)
+            out.text_P(PSTR(":24"));
         break;
     }
     case M_REGLIST:
         outRegList(insn, out);
         break;
-    case M_DISP8F: {
+    case M_SP:
+        // Implicit stack operand: @SP+ when it is the source (LDM pop), @-SP
+        // when the destination (STM push).
+        if (insn.dst() == M_SP)
+            out.text_P(PSTR("@-"));
+        else
+            out.letter('@');
+        outAddrReg(out, REG_SP);
+        if (insn.src() == M_SP)
+            out.letter('+');
+        break;
+    case M_FPX8: {
         const auto disp = static_cast<int8_t>(insn.readByte());
         out.letter('@').letter('(');
         outHex(out, disp, -8);
-        out.comma();
+        out.letter(',');
         outReg(out, REG_FP);
         out.letter(')');
         break;
     }
     case M_TRAPV: {
         const auto b1 = insn.readByte();
-        if ((b1 & 0xFC) != 0x10) {
+        if ((b1 & 0xF0) != 0x10) {
             insn.setError(UNKNOWN_INSTRUCTION);
             break;
         }
-        outImm8(out, b1 & 0x03);
+        outImm8(out, b1 & 0x0F);
         break;
     }
     case M_SCB: {
-        // SCB's count-register byte; the dst (M_PCREL8) is dispatched next.
         const auto b1 = insn.readByte();
         if ((b1 & 0xF8) != 0xB8) {
             insn.setError(UNKNOWN_INSTRUCTION);
@@ -293,23 +369,33 @@ void DisH8500::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode, uint8
     }
     case M_IND:
         out.letter('@');
-        outAddrReg(out, decodeReg(opByte & 0x07));
+        outAddrReg(out, decodeReg(insn.opByte & 0x07));
         break;
-    case M_DISP8: {
+    case M_INDP: {
+        // PJMP/PJSR @Rn copy Rn->CP and Rn+1->PC, so Rn must be the even base
+        // of a register pair.
+        const auto regno = insn.opByte & 0x07;
+        if (regno & 1)
+            insn.setErrorIf(out, REGISTER_NOT_ALIGNED);
+        out.letter('@');
+        outAddrReg(out, decodeReg(regno));
+        break;
+    }
+    case M_IDX8: {
         const auto disp = static_cast<int8_t>(insn.readByte());
         out.letter('@').letter('(');
         outHex(out, disp, -8);
-        out.comma();
-        outAddrReg(out, decodeReg(opByte & 0x07));
+        out.letter(',');
+        outAddrReg(out, decodeReg(insn.opByte & 0x07));
         out.letter(')');
         break;
     }
-    case M_DISP16: {
+    case M_IDX16: {
         const auto disp = static_cast<int16_t>(insn.readUint16Be());
         out.letter('@').letter('(');
         outHex(out, disp, -16);
-        out.comma();
-        outAddrReg(out, decodeReg(opByte & 0x07));
+        out.letter(',');
+        outAddrReg(out, decodeReg(insn.opByte & 0x07));
         out.letter(')');
         break;
     }
@@ -318,104 +404,129 @@ void DisH8500::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode, uint8
     }
 }
 
-// Decode GEN (Format A) or EXT (Format C) instruction.
-// insn.insnFmt, insn.eaByte, insn.opByte, insn.eaExt1/eaExt2 must be set.
-Error DisH8500::decodeGenFmt(DisInsn &insn, StrBuffer &out) const {
-    searchOpCode(cpuType(), insn, out);
-    if (insn.getError())
-        return insn.getError();
+// Read the lead byte(s): an EA prefix (+ext) then the OP byte (PM_GEN/EXT), the
+// 0x11 prefix then OP byte (PM_SEC), or a bare OP byte (PM_SPC). The EA operand
+// is resolved once into insn.eaMode/eaReg/eaVal. Reading past the end sets
+// NO_MEMORY, which the caller surfaces before searchOpCode's setOK() drops it.
+Error DisH8500::readLead(DisInsn &insn) const {
+    const auto b0 = insn.readByte();
+    insn.setOpCode(b0);
 
-    const auto flags = insn.flags();
-    const auto esrc = flags.src();
-    const auto edst = flags.dst();
-
-    // FMT_GEN dispatch: one of src/dst is M_EA. ANDC/ORC/XORC declare src=
-    // M_IMM8 in the table but their EA byte (0x04) already encodes the imm8
-    // in eaExt1, so outEaOperand handles them identically to M_EA.
-    const bool srcIsEa = (esrc == M_EA || esrc == M_IMM8);
-    if (srcIsEa) {
-        outEaOperand(insn, out, insn.eaByte);
-        if (edst != M_NONE) {
-            out.comma();
-            decodeOperand(insn, out, edst, insn.opByte);
+    AddrMode eaMode = M_NONE;
+    const auto ext = classifyLead(cpuType(), b0, eaMode);
+    PrefixMode pm;
+    if (ext >= 0) {
+        insn.eaByte = b0;
+        insn.eaMode = eaMode;
+        insn.eaReg = decodeReg(b0 & 0x07);
+        if (ext == 1)
+            insn.eaVal = insn.readByte();
+        else if (ext == 2)
+            insn.eaVal = insn.readUint16Be();
+        const auto bN = insn.readByte();
+        if (bN == 0x00) {
+            insn.opByte = insn.readByte();
+            pm = PM_EXT;
+        } else {
+            insn.opByte = bN;
+            pm = PM_GEN;
         }
+    } else if (isPrefix(cpuType(), b0)) {
+        insn.setPrefix(b0);
+        insn.opByte = insn.readByte();
+        pm = PM_SEC;
     } else {
-        decodeOperand(insn, out, esrc, insn.opByte);
-        out.comma();
-        outEaOperand(insn, out, insn.eaByte);
+        insn.opByte = b0;
+        pm = PM_SPC;
     }
+    insn.setPrefixMode(pm);
+    insn.setOpCode(insn.opByte);
     return insn.getError();
 }
 
-// Decode secondary (0x11-prefix) instruction. Always single-operand
-// (or no-operand for PRTS).
-Error DisH8500::decodeSecFmt(DisInsn &insn, StrBuffer &out) const {
-    searchOpCode(cpuType(), insn, out);
-    if (insn.getError())
-        return insn.getError();
-    decodeOperand(insn, out, insn.flags().src(), insn.opByte);
-    return insn.getError();
-}
+// Append the .B/.W size suffix from the live Sz bit (the EA byte for GEN/EXT, the
+// OP byte for the SPC MOV:S/F/L forms) and reject encodings whose Sz bit
+// contradicts a fixed or control-register-determined size.
+void DisH8500::decodeSize(DisInsn &insn, StrBuffer &out) const {
+    const auto src = insn.src();
+    const auto dst = insn.dst();
+    const auto pm = insn.prefixMode();
 
-// Decode special format (Format B) instruction.
-Error DisH8500::decodeSpcFmt(DisInsn &insn, StrBuffer &out) const {
-    searchOpCode(cpuType(), insn, out);
-    if (insn.getError())
-        return insn.getError();
-    const auto flags = insn.flags();
-    decodeOperand(insn, out, flags.src(), insn.opByte);
-    if (insn.getError())
-        return insn.getError();
-    if (flags.dst() != M_NONE) {
-        out.comma();
-        decodeOperand(insn, out, flags.dst(), insn.opByte);
+    // LDC/STC/ANDC/ORC/XORC <imm|EA>,CR: the operand size (EA Sz bit) must match
+    // the control register width (SR is word, CCR/BR/EP/DP/TP are byte). A
+    // mismatch is a non-canonical encoding, not this instruction.
+    if ((pm == PM_GEN || pm == PM_EXT) && (src == M_CR || dst == M_CR)) {
+        const bool word = (insn.eaByte >> 3) & 1;
+        if (word != (decodeCr(insn.opByte & 0x07) == CR_SR)) {
+            insn.setError(UNKNOWN_INSTRUCTION);
+            return;
+        }
     }
-    return insn.getError();
+
+    // A fixed-size GEN/EXT op carries no .B/.W suffix (TAS/SWAP/EXTS/EXTU/DADD/
+    // DSUB/MOVFPE/MOVTPE are byte; XCH is word). Its live EA Sz bit must match
+    // the fixed size; a contradicting Sz bit is a non-canonical encoding.
+    if ((pm == PM_GEN || pm == PM_EXT) && insn.insnSize() == ISZ_NONE) {
+        const auto osz = insn.oprSize();
+        if ((osz == SZ_BYTE || osz == SZ_WORD) && (((insn.eaByte >> 3) & 1) != (osz == SZ_WORD))) {
+            insn.setError(UNKNOWN_INSTRUCTION);
+            return;
+        }
+    }
+
+    // Emit the ":x" class suffix (MOV/ADD/CMP carry only the stem as the name).
+    static const char CLASS_LETTER[] = {0, 'G', 'E', 'F', 'I', 'L', 'S', 'Q'};
+    // CLASS_LETTER is indexed by the InsnClass value; keep the two in lockstep.
+    static_assert(IC_N == 0 && IC_G == 1 && IC_E == 2 && IC_F == 3 && IC_I == 4 && IC_L == 5 &&
+                          IC_S == 6 && IC_Q == 7 && sizeof(CLASS_LETTER) == IC_Q + 1,
+            "CLASS_LETTER[] must track the InsnClass enum order");
+    const auto cls = insn.insnClass();
+    if (cls != IC_N) {
+        insn.nameBuffer().letter(':');
+        insn.appendName(out, CLASS_LETTER[cls]);
+    }
+
+    // The .B/.W suffix follows the live Sz bit (the EA byte, or the OP byte for
+    // the SPC short forms). For MOV:G #imm,<EAd> the OP byte (0x06 8-bit data /
+    // 0x07 16-bit data) is the data length, independent of the operation size:
+    // 0x06 with a word EA is the legal sign-extended form (manual 2.2.24 note 3),
+    // so only the impossible 0x07-with-byte-EA (16-bit data, byte op) is rejected.
+    if (insn.insnSize() == ISZ_DATA) {
+        const bool word = ((pm == PM_SPC ? insn.opByte : insn.eaByte) >> 3) & 1;
+        if (insn.oprSize() == SZ_WORD && !word) {
+            insn.setError(UNKNOWN_INSTRUCTION);
+            return;
+        }
+        insn.nameBuffer().letter('.');
+        insn.appendName(out, word ? 'W' : 'B');
+    }
 }
 
 Error DisH8500::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) const {
     DisInsn insn(_insn, memory, out);
+    // Gate page jumps by mode (see pageMatcher), like the assembler.
     insn.maxMode = maxMode();
-    const auto b0 = insn.readByte();
-    insn.setOpCode(b0);
 
-    Error err;
-    if (isEaByte(b0)) {
-        insn.eaByte = b0;
-        const auto cnt = eaExtCount(b0);
-        if (cnt >= 1)
-            insn.eaExt1 = insn.readByte();
-        if (cnt >= 2)
-            insn.eaExt2 = insn.readByte();
-        const auto bN = insn.readByte();
-        if (bN == 0x00) {
-            insn.opByte = insn.readByte();
-            insn.insnFmt = FMT_EXT;
-        } else {
-            insn.opByte = bN;
-            insn.insnFmt = FMT_GEN;
-        }
-        insn.setOpCode(insn.opByte);
-        err = decodeGenFmt(insn, out);
-    } else if (isPrefix(cpuType(), b0)) {
-        insn.setPrefix(b0);
-        insn.opByte = insn.readByte();
-        insn.insnFmt = FMT_SEC;
-        insn.setOpCode(insn.opByte);
-        err = decodeSecFmt(insn, out);
-    } else {
-        insn.opByte = b0;
-        insn.insnFmt = FMT_SPC;
-        err = decodeSpcFmt(insn, out);
+    // NO_MEMORY from reading past the end must surface before searchOpCode below.
+    if (readLead(insn))
+        return _insn.setErrorIf(insn);
+
+    if (searchOpCode(cpuType(), insn, out) == OK)
+        decodeSize(insn, out);
+
+    if (insn.isOK()) {
+        decodeOperand(insn, out, insn.src());
+        if (insn.dst() != M_NONE && insn.isOK())
+            decodeOperand(insn, out.comma(), insn.dst());
     }
-    // If decode bailed midway, the partial mnemonic / operand text would
-    // otherwise leak into the caller's buffer; reset both so the caller
-    // sees a clean "unknown instruction" line.
-    if (err == UNKNOWN_INSTRUCTION) {
+
+    // A mid-decode failure (unknown opcode / non-canonical encoding) would leak a
+    // partial mnemonic or operand; reset so the caller sees a clean line.
+    if (insn.getError() == UNKNOWN_INSTRUCTION) {
         insn.nameBuffer().reset();
         out.reset();
     }
-    return _insn.setError(err);
+    return _insn.setErrorIf(insn);
 }
 
 }  // namespace h8500

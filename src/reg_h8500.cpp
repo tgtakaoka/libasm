@@ -189,10 +189,6 @@ CrName decodeCr(uint8_t ccc) {
     }
 }
 
-bool isBytesCr(CrName cr) {
-    return cr != CR_SR;
-}
-
 }  // namespace reg
 }  // namespace h8500
 }  // namespace libasm

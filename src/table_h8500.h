@@ -31,19 +31,17 @@ struct TableH8500 final : InsnTable<CpuType> {
 
 extern const TableH8500 TABLE;
 
-// True if |b| is a valid EA byte (starts a Format A/C instruction sequence).
-bool isEaByte(uint8_t b);
+// If |b| is an EA prefix byte for |cpuType|, set |mode| to the resolved EA
+// AddrMode and return the extension-byte count (0..2); otherwise return -1.
+int classifyLead(CpuType cpuType, uint8_t b, AddrMode &mode);
 
 // True if |code| is a secondary-format prefix byte (0x11).
 bool isPrefix(CpuType cpuType, Config::opcode_t code);
 
 // Search all CPU pages by OP byte for disassembly.
-// insn.insnFmt and insn.opCode() (and insn.prefix() for FMT_SEC) must be set
-// before calling.
+// insn.prefixMode(), insn.opCode() (and insn.eaByte/eaMode for GEN/EXT, or
+// insn.prefix() for SEC) must be set before calling.
 Error searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out);
-
-// Search all CPU pages by name + operand modes for assembly.
-Error searchName(CpuType cpuType, AsmInsn &insn);
 
 }  // namespace h8500
 }  // namespace libasm

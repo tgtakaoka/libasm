@@ -26,74 +26,82 @@ namespace h8500 {
 
 // clang-format off
 
-#define E2(opc, fmt, esz, name, src, dst) \
-    {opc, Entry::Flags::create(fmt, esz, src, dst), name}
-#define E1(opc, fmt, esz, name, src) E2(opc, fmt, esz, name, src, M_NONE)
-#define E0(opc, fmt, name)           E1(opc, fmt, EA_WORD, name, M_NONE)
+// Entry layout mirrors the assembly form "name[:class[.size]] [src[,dst]]":
+// the class follows the name and the operand size follows the class.
+#define E2(opc, cf, name, cls, isz, osz, src, dst) \
+    {opc, Entry::Flags::create(cf, osz, isz, cls, src, dst), name}
+#define E1(opc, cf, name, cls, isz, osz, src) E2(opc, cf, name, cls, isz, osz, src, M_NONE)
+#define E0(opc, name) E2(opc, CF_00, name, IC_N, ISZ_NONE, SZ_NONE, M_NONE, M_NONE)
 
-// General/Extended format instructions, valid on all CPU variants.
+// General format (PM_GEN): [EA byte][ext 0-2][OP byte]. The EA operand is the
+// M_EASRC/M_EADST/M_IMM* slot; matchCode validates the resolved EA mode against
+// it, which is how immediate-vs-reg/mem restriction (ANDC vs BCLR at 0x58) is
+// expressed without an eaByte special case.
 constexpr Entry TABLE_GEN[] PROGMEM = {
-    E2(0x20, FMT_GEN, EA_WORD, TEXT_ADD_G,  M_EA,   M_REG),
-    E2(0x08, FMT_GEN, EA_WORD, TEXT_ADD_Q,  M_EA,   M_NONE),
-    E2(0x09, FMT_GEN, EA_WORD, TEXT_ADD_Q,  M_EA,   M_NONE),
-    E2(0x0C, FMT_GEN, EA_WORD, TEXT_ADD_Q,  M_EA,   M_NONE),
-    E2(0x0D, FMT_GEN, EA_WORD, TEXT_ADD_Q,  M_EA,   M_NONE),
-    E2(0x28, FMT_GEN, EA_WORD, TEXT_ADDS,   M_EA,   M_REG),
-    E2(0xA0, FMT_GEN, EA_BYTE, TEXT_ADDX,   M_EA,   M_REG),
-    E2(0x58, FMT_GEN, EA_BYTE, TEXT_ANDC,   M_IMM8, M_CR),
-    E2(0x58, FMT_GEN, EA_BYTE, TEXT_BCLR,   M_REG,  M_EA),
-    E2(0xD0, FMT_GEN, EA_BYTE, TEXT_BCLR,   M_BIT,  M_EA),
-    E2(0x68, FMT_GEN, EA_BYTE, TEXT_BNOT,   M_REG,  M_EA),
-    E2(0xE0, FMT_GEN, EA_BYTE, TEXT_BNOT,   M_BIT,  M_EA),
-    E2(0x48, FMT_GEN, EA_BYTE, TEXT_BSET,   M_REG,  M_EA),
-    E2(0xC0, FMT_GEN, EA_BYTE, TEXT_BSET,   M_BIT,  M_EA),
-    E2(0x78, FMT_GEN, EA_BYTE, TEXT_BTST,   M_REG,  M_EA),
-    E2(0xF0, FMT_GEN, EA_BYTE, TEXT_BTST,   M_BIT,  M_EA),
-    E2(0x13, FMT_GEN, EA_WORD, TEXT_CLR,    M_EA,   M_NONE),
-    E2(0x70, FMT_GEN, EA_WORD, TEXT_CMP_G,  M_EA,   M_REG),
-    E2(0xA0, FMT_EXT, EA_BYTE, TEXT_DADD,   M_EA,   M_REG),
-    E2(0xB8, FMT_GEN, EA_BYTE, TEXT_DIVXU,  M_EA,   M_REG),
-    E2(0xB0, FMT_EXT, EA_BYTE, TEXT_DSUB,   M_EA,   M_REG),
-    E2(0x11, FMT_GEN, EA_BYTE, TEXT_EXTS,   M_EA,   M_NONE),
-    E2(0x12, FMT_GEN, EA_BYTE, TEXT_EXTU,   M_EA,   M_NONE),
-    E2(0x88, FMT_GEN, EA_WORD, TEXT_LDC,    M_EA,   M_CR),
-    E2(0x80, FMT_GEN, EA_WORD, TEXT_MOV_G,  M_EA,   M_REG),
-    E2(0x90, FMT_GEN, EA_WORD, TEXT_MOV_G,  M_REG,  M_EA),
-    E2(0xA8, FMT_GEN, EA_BYTE, TEXT_MULXU,  M_EA,   M_REG),
-    E2(0x14, FMT_GEN, EA_WORD, TEXT_NEG,    M_EA,   M_NONE),
-    E2(0x15, FMT_GEN, EA_WORD, TEXT_NOT,    M_EA,   M_NONE),
-    E2(0x40, FMT_GEN, EA_WORD, TEXT_OR,     M_EA,   M_REG),
-    E2(0x78, FMT_GEN, EA_BYTE, TEXT_ORC,    M_IMM8, M_CR),
-    E2(0x3C, FMT_GEN, EA_WORD, TEXT_ROTL,   M_EA,   M_NONE),
-    E2(0x3D, FMT_GEN, EA_WORD, TEXT_ROTR,   M_EA,   M_NONE),
-    E2(0x3E, FMT_GEN, EA_WORD, TEXT_ROTXL,  M_EA,   M_NONE),
-    E2(0x3F, FMT_GEN, EA_WORD, TEXT_ROTXR,  M_EA,   M_NONE),
-    E2(0x18, FMT_GEN, EA_WORD, TEXT_SHAL,   M_EA,   M_NONE),
-    E2(0x19, FMT_GEN, EA_WORD, TEXT_SHAR,   M_EA,   M_NONE),
-    E2(0x1A, FMT_GEN, EA_WORD, TEXT_SHLL,   M_EA,   M_NONE),
-    E2(0x1B, FMT_GEN, EA_WORD, TEXT_SHLR,   M_EA,   M_NONE),
-    E2(0x98, FMT_GEN, EA_WORD, TEXT_STC,    M_CR,   M_EA),
-    E2(0x30, FMT_GEN, EA_WORD, TEXT_SUB,    M_EA,   M_REG),
-    E2(0xB0, FMT_GEN, EA_BYTE, TEXT_SUBX,   M_EA,   M_REG),
-    E2(0x38, FMT_GEN, EA_WORD, TEXT_SUBS,   M_EA,   M_REG),
-    E2(0x10, FMT_GEN, EA_BYTE, TEXT_SWAP,   M_EA,   M_NONE),
-    E2(0x17, FMT_GEN, EA_BYTE, TEXT_TAS,    M_EA,   M_NONE),
-    E2(0x16, FMT_GEN, EA_WORD, TEXT_TST,    M_EA,   M_NONE),
-    E2(0x90, FMT_GEN, EA_WORD, TEXT_XCH,    M_REG,  M_EA),
-    E2(0x50, FMT_GEN, EA_WORD, TEXT_AND,    M_EA,   M_REG),
-    E2(0x60, FMT_GEN, EA_WORD, TEXT_XOR,    M_EA,   M_REG),
-    E2(0x68, FMT_GEN, EA_BYTE, TEXT_XORC,   M_IMM8, M_CR),
+    // ADD:Q precedes ADD:G so a bare "ADD #1" selects the shorter quick form;
+    // acceptMode rejects ADD:Q when the value is not +/-1/+/-2, falling to ADD:G.
+    E2(0x08, CF_00, TEXT_ADD,    IC_Q, ISZ_DATA, SZ_DATA, M_IMM2,    M_EADST),    // ADD:Q.B/.W #1/2,<EAd>
+    E2(0x09, CF_00, TEXT_ADD,    IC_Q, ISZ_DATA, SZ_DATA, M_IMM2,    M_EADST),    // ADD:Q.B/.W #1/2,<EAd>
+    E2(0x0C, CF_00, TEXT_ADD,    IC_Q, ISZ_DATA, SZ_DATA, M_IMM2,    M_EADST),    // ADD:Q.B/.W #1/2,<EAd>
+    E2(0x0D, CF_00, TEXT_ADD,    IC_Q, ISZ_DATA, SZ_DATA, M_IMM2,    M_EADST),    // ADD:Q.B/.W #1/2,<EAd>
+    E2(0x20, CF_07, TEXT_ADD,    IC_G, ISZ_DATA, SZ_DATA, M_EASRC,   M_REG),      // ADD:G.B/.W <EAs>,Rd
+    E2(0x28, CF_07, TEXT_ADDS,   IC_N, ISZ_DATA, SZ_DATA, M_EASRC,   M_REG),      // ADDS.B/.W <EAs>,Rd
+    E2(0xA0, CF_07, TEXT_ADDX,   IC_N, ISZ_DATA, SZ_DATA, M_EASRC,   M_REG),      // ADDX.B/.W <EAs>,Rd
+    E2(0x58, CF_07, TEXT_ANDC,   IC_N, ISZ_DATA, SZ_DATA, M_IMM8,    M_CR),       // ANDC.B/.W #xx:8,<CR>
+    E2(0x58, CF_07, TEXT_BCLR,   IC_N, ISZ_DATA, SZ_DATA, M_REG,     M_EADST),    // BCLR.B/.W Rs,<EAd>
+    E2(0xD0, CF_0F, TEXT_BCLR,   IC_N, ISZ_DATA, SZ_DATA, M_BIT,     M_EADST),    // BCLR.B/.W #bit,<EAd>
+    E2(0x68, CF_07, TEXT_BNOT,   IC_N, ISZ_DATA, SZ_DATA, M_REG,     M_EADST),    // BNOT.B/.W Rs,<EAd>
+    E2(0xE0, CF_0F, TEXT_BNOT,   IC_N, ISZ_DATA, SZ_DATA, M_BIT,     M_EADST),    // BNOT.B/.W #bit,<EAd>
+    E2(0x48, CF_07, TEXT_BSET,   IC_N, ISZ_DATA, SZ_DATA, M_REG,     M_EADST),    // BSET.B/.W Rs,<EAd>
+    E2(0xC0, CF_0F, TEXT_BSET,   IC_N, ISZ_DATA, SZ_DATA, M_BIT,     M_EADST),    // BSET.B/.W #bit,<EAd>
+    E2(0x78, CF_07, TEXT_BTST,   IC_N, ISZ_DATA, SZ_DATA, M_REG,     M_EADST),    // BTST.B/.W Rs,<EAd>
+    E2(0xF0, CF_0F, TEXT_BTST,   IC_N, ISZ_DATA, SZ_DATA, M_BIT,     M_EADST),    // BTST.B/.W #bit,<EAd>
+    E1(0x13, CF_00, TEXT_CLR,    IC_N, ISZ_DATA, SZ_DATA, M_EADST),               // CLR.B/.W <EAd>
+    E2(0x70, CF_07, TEXT_CMP,    IC_G, ISZ_DATA, SZ_DATA, M_EASRC,   M_REG),      // CMP:G.B/.W <EAs>,Rd
+    E2(0x04, CF_00, TEXT_CMP,    IC_G, ISZ_DATA, SZ_BYTE, M_IMM8,    M_EAMEM),    // CMP:G.B #xx:8,<EAd>
+    E2(0x05, CF_00, TEXT_CMP,    IC_G, ISZ_DATA, SZ_WORD, M_IMM16,   M_EAMEM),    // CMP:G.W #xx:16,<EAd>
+    E2(0xB8, CF_07, TEXT_DIVXU,  IC_N, ISZ_DATA, SZ_DATA, M_EASRC,   M_REGP),     // DIVXU.B/.W <EAs>,Rd
+    E1(0x11, CF_00, TEXT_EXTS,   IC_N, ISZ_NONE, SZ_BYTE, M_EAREG),               // EXTS Rn
+    E1(0x12, CF_00, TEXT_EXTU,   IC_N, ISZ_NONE, SZ_BYTE, M_EAREG),               // EXTU Rn
+    E2(0x88, CF_07, TEXT_LDC,    IC_N, ISZ_NONE, SZ_DATA, M_EASRC,   M_CR),       // LDC <EAs>,<CR>
+    E2(0x80, CF_07, TEXT_MOV,    IC_G, ISZ_DATA, SZ_DATA, M_EASRC,   M_REG),      // MOV:G.B/.W <EAs>,Rd
+    E2(0x90, CF_07, TEXT_MOV,    IC_G, ISZ_DATA, SZ_DATA, M_REG,     M_EADST),    // MOV:G.B/.W Rs,<EAd>
+    E2(0x06, CF_00, TEXT_MOV,    IC_G, ISZ_DATA, SZ_BYTE, M_IMM8,    M_EAMEM),    // MOV:G.B #xx:8,<EAd>
+    E2(0x07, CF_00, TEXT_MOV,    IC_G, ISZ_DATA, SZ_WORD, M_IMM16,   M_EAMEM),    // MOV:G.W #xx:16,<EAd>
+    E2(0xA8, CF_07, TEXT_MULXU,  IC_N, ISZ_DATA, SZ_DATA, M_EASRC,   M_REGP),     // MULXU.B/.W <EAs>,Rd
+    E1(0x14, CF_00, TEXT_NEG,    IC_N, ISZ_DATA, SZ_DATA, M_EADST),               // NEG.B/.W <EAd>
+    E1(0x15, CF_00, TEXT_NOT,    IC_N, ISZ_DATA, SZ_DATA, M_EADST),               // NOT.B/.W <EAd>
+    E2(0x40, CF_07, TEXT_OR,     IC_N, ISZ_DATA, SZ_DATA, M_EASRC,   M_REG),      // OR.B/.W <EAs>,Rd
+    E2(0x48, CF_07, TEXT_ORC,    IC_N, ISZ_DATA, SZ_DATA, M_IMM8,    M_CR),       // ORC.B/.W #xx:8,<CR>
+    E1(0x1C, CF_00, TEXT_ROTL,   IC_N, ISZ_DATA, SZ_DATA, M_EADST),               // ROTL.B/.W <EAd>
+    E1(0x1D, CF_00, TEXT_ROTR,   IC_N, ISZ_DATA, SZ_DATA, M_EADST),               // ROTR.B/.W <EAd>
+    E1(0x1E, CF_00, TEXT_ROTXL,  IC_N, ISZ_DATA, SZ_DATA, M_EADST),               // ROTXL.B/.W <EAd>
+    E1(0x1F, CF_00, TEXT_ROTXR,  IC_N, ISZ_DATA, SZ_DATA, M_EADST),               // ROTXR.B/.W <EAd>
+    E1(0x18, CF_00, TEXT_SHAL,   IC_N, ISZ_DATA, SZ_DATA, M_EADST),               // SHAL.B/.W <EAd>
+    E1(0x19, CF_00, TEXT_SHAR,   IC_N, ISZ_DATA, SZ_DATA, M_EADST),               // SHAR.B/.W <EAd>
+    E1(0x1A, CF_00, TEXT_SHLL,   IC_N, ISZ_DATA, SZ_DATA, M_EADST),               // SHLL.B/.W <EAd>
+    E1(0x1B, CF_00, TEXT_SHLR,   IC_N, ISZ_DATA, SZ_DATA, M_EADST),               // SHLR.B/.W <EAd>
+    E2(0x98, CF_07, TEXT_STC,    IC_N, ISZ_NONE, SZ_DATA, M_CR,      M_EADST),    // STC <CR>,<EAd>
+    E2(0x30, CF_07, TEXT_SUB,    IC_N, ISZ_DATA, SZ_DATA, M_EASRC,   M_REG),      // SUB.B/.W <EAs>,Rd
+    E2(0xB0, CF_07, TEXT_SUBX,   IC_N, ISZ_DATA, SZ_DATA, M_EASRC,   M_REG),      // SUBX.B/.W <EAs>,Rd
+    E2(0x38, CF_07, TEXT_SUBS,   IC_N, ISZ_DATA, SZ_DATA, M_EASRC,   M_REG),      // SUBS.B/.W <EAs>,Rd
+    E1(0x10, CF_00, TEXT_SWAP,   IC_N, ISZ_NONE, SZ_BYTE, M_EAREG),               // SWAP Rn
+    E1(0x17, CF_00, TEXT_TAS,    IC_N, ISZ_NONE, SZ_BYTE, M_EADST),               // TAS <EAd>
+    E1(0x16, CF_00, TEXT_TST,    IC_N, ISZ_DATA, SZ_DATA, M_EADST),               // TST.B/.W <EAd>
+    E2(0x50, CF_07, TEXT_AND,    IC_N, ISZ_DATA, SZ_DATA, M_EASRC,   M_REG),      // AND.B/.W <EAs>,Rd
+    E2(0x60, CF_07, TEXT_XOR,    IC_N, ISZ_DATA, SZ_DATA, M_EASRC,   M_REG),      // XOR.B/.W <EAs>,Rd
+    E2(0x68, CF_07, TEXT_XORC,   IC_N, ISZ_DATA, SZ_DATA, M_IMM8,    M_CR),       // XORC.B/.W #xx:8,<CR>
 };
 
 constexpr uint8_t INDEX_GEN[] PROGMEM = {
-      0,  // TEXT_ADD_G
-      1,  // TEXT_ADD_Q
-      2,  // TEXT_ADD_Q
-      3,  // TEXT_ADD_Q
-      4,  // TEXT_ADD_Q
+      0,  // TEXT_ADD
+      1,  // TEXT_ADD
+      2,  // TEXT_ADD
+      3,  // TEXT_ADD
+      4,  // TEXT_ADD
       5,  // TEXT_ADDS
       6,  // TEXT_ADDX
-     47,  // TEXT_AND
+     48,  // TEXT_AND
       7,  // TEXT_ANDC
       8,  // TEXT_BCLR
       9,  // TEXT_BCLR
@@ -104,194 +112,228 @@ constexpr uint8_t INDEX_GEN[] PROGMEM = {
      14,  // TEXT_BTST
      15,  // TEXT_BTST
      16,  // TEXT_CLR
-     17,  // TEXT_CMP_G
-     18,  // TEXT_DADD
-     19,  // TEXT_DIVXU
-     20,  // TEXT_DSUB
+     17,  // TEXT_CMP
+     18,  // TEXT_CMP
+     19,  // TEXT_CMP
+     20,  // TEXT_DIVXU
      21,  // TEXT_EXTS
      22,  // TEXT_EXTU
      23,  // TEXT_LDC
-     24,  // TEXT_MOV_G
-     25,  // TEXT_MOV_G
-     26,  // TEXT_MULXU
-     27,  // TEXT_NEG
-     28,  // TEXT_NOT
-     29,  // TEXT_OR
-     30,  // TEXT_ORC
-     31,  // TEXT_ROTL
-     32,  // TEXT_ROTR
-     33,  // TEXT_ROTXL
-     34,  // TEXT_ROTXR
-     35,  // TEXT_SHAL
-     36,  // TEXT_SHAR
-     37,  // TEXT_SHLL
-     38,  // TEXT_SHLR
-     39,  // TEXT_STC
-     40,  // TEXT_SUB
-     42,  // TEXT_SUBS
-     41,  // TEXT_SUBX
-     43,  // TEXT_SWAP
-     44,  // TEXT_TAS
-     45,  // TEXT_TST
-     46,  // TEXT_XCH
-     48,  // TEXT_XOR
-     49,  // TEXT_XORC
+     24,  // TEXT_MOV
+     25,  // TEXT_MOV
+     26,  // TEXT_MOV
+     27,  // TEXT_MOV
+     28,  // TEXT_MULXU
+     29,  // TEXT_NEG
+     30,  // TEXT_NOT
+     31,  // TEXT_OR
+     32,  // TEXT_ORC
+     33,  // TEXT_ROTL
+     34,  // TEXT_ROTR
+     35,  // TEXT_ROTXL
+     36,  // TEXT_ROTXR
+     37,  // TEXT_SHAL
+     38,  // TEXT_SHAR
+     39,  // TEXT_SHLL
+     40,  // TEXT_SHLR
+     41,  // TEXT_STC
+     42,  // TEXT_SUB
+     44,  // TEXT_SUBS
+     43,  // TEXT_SUBX
+     45,  // TEXT_SWAP
+     46,  // TEXT_TAS
+     47,  // TEXT_TST
+     49,  // TEXT_XOR
+     50,  // TEXT_XORC
 };
 
-// GEN/EXT instructions for H8/500 only (E-clock peripheral bus).
-constexpr Entry TABLE_GEN_ECLOCK[] PROGMEM = {
-    E2(0x80, FMT_EXT, EA_BYTE, TEXT_MOVFPE, M_EA,  M_REG),
-    E2(0x90, FMT_EXT, EA_WORD, TEXT_MOVTPE, M_REG, M_EA),
+// XCH Rs,Rd shares OP byte 0x90 with MOV:G Rs,<EAd> but takes a register EA only.
+// It lives in its own one-entry table whose page (register EA, searched before
+// the shared TABLE_GEN page) claims 0x90 for a register EA; a memory EA at 0x90
+// is left to MOV:G.
+constexpr Entry TABLE_XCH[] PROGMEM = {
+    E2(0x90, CF_07, TEXT_XCH,    IC_N, ISZ_NONE, SZ_WORD, M_EAREG,   M_REG),      // XCH Rn,Rd
 };
 
-constexpr uint8_t INDEX_GEN_ECLOCK[] PROGMEM = {
+constexpr uint8_t INDEX_XCH[] PROGMEM = {
+      0,  // TEXT_XCH
+};
+
+// Extended format (PM_EXT): [EA byte][ext 0-2][00][OP byte]. DADD/DSUB are valid
+// on every variant; MOVFPE/MOVTPE need the E-clock pin, so they live in a
+// separate table that only the E-clock page lists include (no array slicing).
+constexpr Entry TABLE_EXT[] PROGMEM = {
+    E2(0xA0, CF_07, TEXT_DADD,   IC_N, ISZ_NONE, SZ_BYTE, M_EAREG,   M_REG),      // DADD Rn,Rd
+    E2(0xB0, CF_07, TEXT_DSUB,   IC_N, ISZ_NONE, SZ_BYTE, M_EAREG,   M_REG),      // DSUB Rn,Rd
+};
+
+constexpr uint8_t INDEX_EXT[] PROGMEM = {
+      0,  // TEXT_DADD
+      1,  // TEXT_DSUB
+};
+
+// E-clock peripheral transfer (H8/500 and H8/530 only).
+constexpr Entry TABLE_ECLK[] PROGMEM = {
+    E2(0x80, CF_07, TEXT_MOVFPE, IC_N, ISZ_NONE, SZ_BYTE, M_EAMEM,   M_REG),      // MOVFPE <EA>,Rd
+    E2(0x90, CF_07, TEXT_MOVTPE, IC_N, ISZ_NONE, SZ_BYTE, M_REG,     M_EAMEM),    // MOVTPE Rs,<EA>
+};
+
+constexpr uint8_t INDEX_ECLK[] PROGMEM = {
       0,  // TEXT_MOVFPE
       1,  // TEXT_MOVTPE
 };
 
-// Special (Format B) instructions, valid on all CPU variants.
-// PJMP/PJSR @aa:24 are max-mode only.
+// Special format (PM_SPC): [OP byte][...]. No EA byte.
 constexpr Entry TABLE_SPC[] PROGMEM = {
-    E2(0x09, FMT_SPC, EA_WORD, TEXT_ADD_Q,  M_IMM2,   M_REG),
-    E1(0x24, FMT_SPC, EA_WORD, TEXT_BCC,    M_PCREL8),
-    E1(0x25, FMT_SPC, EA_WORD, TEXT_BCS,    M_PCREL8),
-    E1(0x27, FMT_SPC, EA_WORD, TEXT_BEQ,    M_PCREL8),
-    E1(0x21, FMT_SPC, EA_WORD, TEXT_BF,     M_PCREL8),
-    E1(0x2C, FMT_SPC, EA_WORD, TEXT_BGE,    M_PCREL8),
-    E1(0x2E, FMT_SPC, EA_WORD, TEXT_BGT,    M_PCREL8),
-    E1(0x22, FMT_SPC, EA_WORD, TEXT_BHI,    M_PCREL8),
-    E1(0x24, FMT_SPC, EA_WORD, TEXT_BHS,    M_PCREL8),
-    E1(0x2F, FMT_SPC, EA_WORD, TEXT_BLE,    M_PCREL8),
-    E1(0x25, FMT_SPC, EA_WORD, TEXT_BLO,    M_PCREL8),
-    E1(0x23, FMT_SPC, EA_WORD, TEXT_BLS,    M_PCREL8),
-    E1(0x2D, FMT_SPC, EA_WORD, TEXT_BLT,    M_PCREL8),
-    E1(0x2B, FMT_SPC, EA_WORD, TEXT_BMI,    M_PCREL8),
-    E1(0x26, FMT_SPC, EA_WORD, TEXT_BNE,    M_PCREL8),
-    E1(0x2A, FMT_SPC, EA_WORD, TEXT_BPL,    M_PCREL8),
-    E1(0x20, FMT_SPC, EA_WORD, TEXT_BRA,    M_PCREL8),
-    E1(0x21, FMT_SPC, EA_WORD, TEXT_BRN,    M_PCREL8),
-    E1(0x0E, FMT_SPC, EA_WORD, TEXT_BSR,    M_PCREL8),
-    E1(0x20, FMT_SPC, EA_WORD, TEXT_BT,     M_PCREL8),
-    E1(0x28, FMT_SPC, EA_WORD, TEXT_BVC,    M_PCREL8),
-    E1(0x29, FMT_SPC, EA_WORD, TEXT_BVS,    M_PCREL8),
-    E1(0x34, FMT_SPC, EA_WORD, TEXT_BCC,    M_PCREL16),
-    E1(0x35, FMT_SPC, EA_WORD, TEXT_BCS,    M_PCREL16),
-    E1(0x37, FMT_SPC, EA_WORD, TEXT_BEQ,    M_PCREL16),
-    E1(0x34, FMT_SPC, EA_WORD, TEXT_BHS,    M_PCREL16),
-    E1(0x35, FMT_SPC, EA_WORD, TEXT_BLO,    M_PCREL16),
-    E1(0x33, FMT_SPC, EA_WORD, TEXT_BLS,    M_PCREL16),
-    E1(0x3D, FMT_SPC, EA_WORD, TEXT_BLT,    M_PCREL16),
-    E1(0x3B, FMT_SPC, EA_WORD, TEXT_BMI,    M_PCREL16),
-    E1(0x36, FMT_SPC, EA_WORD, TEXT_BNE,    M_PCREL16),
-    E1(0x3A, FMT_SPC, EA_WORD, TEXT_BPL,    M_PCREL16),
-    E1(0x30, FMT_SPC, EA_WORD, TEXT_BRA,    M_PCREL16),
-    E1(0x1E, FMT_SPC, EA_WORD, TEXT_BSR,    M_PCREL16),
-    E1(0x30, FMT_SPC, EA_WORD, TEXT_BT,     M_PCREL16),
-    E1(0x38, FMT_SPC, EA_WORD, TEXT_BVC,    M_PCREL16),
-    E1(0x39, FMT_SPC, EA_WORD, TEXT_BVS,    M_PCREL16),
-    E2(0x40, FMT_SPC, EA_BYTE, TEXT_CMP_E,  M_IMM8,   M_REG),
-    E2(0x48, FMT_SPC, EA_WORD, TEXT_CMP_I,  M_IMM16,  M_REG),
-    E1(0x10, FMT_SPC, EA_WORD, TEXT_JMP,    M_ABS16),
-    E1(0x18, FMT_SPC, EA_WORD, TEXT_JSR,    M_ABS16),
-    E1(0x02, FMT_SPC, EA_WORD, TEXT_LDM,    M_REGLIST),
-    E2(0x17, FMT_SPC, EA_WORD, TEXT_LINK,   M_FP,     M_IMM8),
-    E2(0x1F, FMT_SPC, EA_WORD, TEXT_LINK,   M_FP,     M_IMM16),
-    E2(0x50, FMT_SPC, EA_BYTE, TEXT_MOV_E,  M_IMM8,   M_REG),
-    E2(0x80, FMT_SPC, EA_WORD, TEXT_MOV_F,  M_DISP8F, M_REG),
-    E2(0x90, FMT_SPC, EA_WORD, TEXT_MOV_F,  M_REG,    M_DISP8F),
-    E2(0x58, FMT_SPC, EA_WORD, TEXT_MOV_I,  M_IMM16,  M_REG),
-    E2(0x60, FMT_SPC, EA_WORD, TEXT_MOV_L,  M_ABS8,   M_REG),
-    E2(0x70, FMT_SPC, EA_WORD, TEXT_MOV_S,  M_REG,    M_ABS8),
-    E0(0x00, FMT_SPC,           TEXT_NOP),
-    E1(0x14, FMT_SPC, EA_WORD, TEXT_RTD,    M_IMM8),
-    E1(0x1C, FMT_SPC, EA_WORD, TEXT_RTD,    M_IMM16),
-    E0(0x0A, FMT_SPC,           TEXT_RTE),
-    E0(0x19, FMT_SPC,           TEXT_RTS),
-    E2(0x07, FMT_SPC, EA_WORD, TEXT_SCB_EQ, M_SCB,    M_PCREL8),
-    E2(0x01, FMT_SPC, EA_WORD, TEXT_SCB_F,  M_SCB,    M_PCREL8),
-    E2(0x06, FMT_SPC, EA_WORD, TEXT_SCB_NE, M_SCB,    M_PCREL8),
-    E0(0x1A, FMT_SPC,           TEXT_SLEEP),
-    E1(0x12, FMT_SPC, EA_WORD, TEXT_STM,    M_REGLIST),
-    E0(0x09, FMT_SPC,           TEXT_TRAP_VS),
-    E1(0x08, FMT_SPC, EA_WORD, TEXT_TRAPA,  M_TRAPV),
-    E1(0x0F, FMT_SPC, EA_WORD, TEXT_UNLK,   M_FP),
+    E1(0x24, CF_00, TEXT_BCC,    IC_N, ISZ_NONE, SZ_NONE, M_REL8),                // BCC d:8
+    E1(0x25, CF_00, TEXT_BCS,    IC_N, ISZ_NONE, SZ_NONE, M_REL8),                // BCS d:8
+    E1(0x27, CF_00, TEXT_BEQ,    IC_N, ISZ_NONE, SZ_NONE, M_REL8),                // BEQ d:8
+    E1(0x21, CF_00, TEXT_BF,     IC_N, ISZ_NONE, SZ_NONE, M_REL8),                // BF d:8
+    E1(0x2C, CF_00, TEXT_BGE,    IC_N, ISZ_NONE, SZ_NONE, M_REL8),                // BGE d:8
+    E1(0x2E, CF_00, TEXT_BGT,    IC_N, ISZ_NONE, SZ_NONE, M_REL8),                // BGT d:8
+    E1(0x22, CF_00, TEXT_BHI,    IC_N, ISZ_NONE, SZ_NONE, M_REL8),                // BHI d:8
+    E1(0x24, CF_00, TEXT_BHS,    IC_N, ISZ_NONE, SZ_NONE, M_REL8),                // BHS d:8
+    E1(0x2F, CF_00, TEXT_BLE,    IC_N, ISZ_NONE, SZ_NONE, M_REL8),                // BLE d:8
+    E1(0x25, CF_00, TEXT_BLO,    IC_N, ISZ_NONE, SZ_NONE, M_REL8),                // BLO d:8
+    E1(0x23, CF_00, TEXT_BLS,    IC_N, ISZ_NONE, SZ_NONE, M_REL8),                // BLS d:8
+    E1(0x2D, CF_00, TEXT_BLT,    IC_N, ISZ_NONE, SZ_NONE, M_REL8),                // BLT d:8
+    E1(0x2B, CF_00, TEXT_BMI,    IC_N, ISZ_NONE, SZ_NONE, M_REL8),                // BMI d:8
+    E1(0x26, CF_00, TEXT_BNE,    IC_N, ISZ_NONE, SZ_NONE, M_REL8),                // BNE d:8
+    E1(0x2A, CF_00, TEXT_BPL,    IC_N, ISZ_NONE, SZ_NONE, M_REL8),                // BPL d:8
+    E1(0x20, CF_00, TEXT_BRA,    IC_N, ISZ_NONE, SZ_NONE, M_REL8),                // BRA d:8
+    E1(0x21, CF_00, TEXT_BRN,    IC_N, ISZ_NONE, SZ_NONE, M_REL8),                // BRN d:8
+    E1(0x0E, CF_00, TEXT_BSR,    IC_N, ISZ_NONE, SZ_NONE, M_REL8),                // BSR d:8
+    E1(0x20, CF_00, TEXT_BT,     IC_N, ISZ_NONE, SZ_NONE, M_REL8),                // BT d:8
+    E1(0x28, CF_00, TEXT_BVC,    IC_N, ISZ_NONE, SZ_NONE, M_REL8),                // BVC d:8
+    E1(0x29, CF_00, TEXT_BVS,    IC_N, ISZ_NONE, SZ_NONE, M_REL8),                // BVS d:8
+    E1(0x34, CF_00, TEXT_BCC,    IC_N, ISZ_NONE, SZ_NONE, M_REL16),               // BCC d:16
+    E1(0x35, CF_00, TEXT_BCS,    IC_N, ISZ_NONE, SZ_NONE, M_REL16),               // BCS d:16
+    E1(0x37, CF_00, TEXT_BEQ,    IC_N, ISZ_NONE, SZ_NONE, M_REL16),               // BEQ d:16
+    E1(0x34, CF_00, TEXT_BHS,    IC_N, ISZ_NONE, SZ_NONE, M_REL16),               // BHS d:16
+    E1(0x35, CF_00, TEXT_BLO,    IC_N, ISZ_NONE, SZ_NONE, M_REL16),               // BLO d:16
+    E1(0x33, CF_00, TEXT_BLS,    IC_N, ISZ_NONE, SZ_NONE, M_REL16),               // BLS d:16
+    E1(0x3D, CF_00, TEXT_BLT,    IC_N, ISZ_NONE, SZ_NONE, M_REL16),               // BLT d:16
+    E1(0x3B, CF_00, TEXT_BMI,    IC_N, ISZ_NONE, SZ_NONE, M_REL16),               // BMI d:16
+    E1(0x36, CF_00, TEXT_BNE,    IC_N, ISZ_NONE, SZ_NONE, M_REL16),               // BNE d:16
+    E1(0x3A, CF_00, TEXT_BPL,    IC_N, ISZ_NONE, SZ_NONE, M_REL16),               // BPL d:16
+    E1(0x30, CF_00, TEXT_BRA,    IC_N, ISZ_NONE, SZ_NONE, M_REL16),               // BRA d:16
+    E1(0x1E, CF_00, TEXT_BSR,    IC_N, ISZ_NONE, SZ_NONE, M_REL16),               // BSR d:16
+    E1(0x30, CF_00, TEXT_BT,     IC_N, ISZ_NONE, SZ_NONE, M_REL16),               // BT d:16
+    E1(0x38, CF_00, TEXT_BVC,    IC_N, ISZ_NONE, SZ_NONE, M_REL16),               // BVC d:16
+    E1(0x39, CF_00, TEXT_BVS,    IC_N, ISZ_NONE, SZ_NONE, M_REL16),               // BVS d:16
+    E1(0x31, CF_00, TEXT_BF,     IC_N, ISZ_NONE, SZ_NONE, M_REL16),               // BF d:16
+    E1(0x32, CF_00, TEXT_BHI,    IC_N, ISZ_NONE, SZ_NONE, M_REL16),               // BHI d:16
+    E1(0x3C, CF_00, TEXT_BGE,    IC_N, ISZ_NONE, SZ_NONE, M_REL16),               // BGE d:16
+    E1(0x3E, CF_00, TEXT_BGT,    IC_N, ISZ_NONE, SZ_NONE, M_REL16),               // BGT d:16
+    E1(0x3F, CF_00, TEXT_BLE,    IC_N, ISZ_NONE, SZ_NONE, M_REL16),               // BLE d:16
+    E1(0x31, CF_00, TEXT_BRN,    IC_N, ISZ_NONE, SZ_NONE, M_REL16),               // BRN d:16
+    E2(0x40, CF_07, TEXT_CMP,    IC_E, ISZ_NONE, SZ_BYTE, M_IMM8,    M_REG),      // CMP:E #xx:8,Rd
+    E2(0x48, CF_07, TEXT_CMP,    IC_I, ISZ_NONE, SZ_WORD, M_IMM16,   M_REG),      // CMP:I #xx:16,Rd
+    E1(0x10, CF_00, TEXT_JMP,    IC_N, ISZ_NONE, SZ_NONE, M_ABS16),               // JMP @aa:16
+    E1(0x18, CF_00, TEXT_JSR,    IC_N, ISZ_NONE, SZ_NONE, M_ABS16),               // JSR @aa:16
+    E2(0x02, CF_00, TEXT_LDM,    IC_N, ISZ_NONE, SZ_WORD, M_SP,      M_REGLIST),  // LDM @SP+,(rlist)
+    E2(0x17, CF_00, TEXT_LINK,   IC_N, ISZ_NONE, SZ_NONE, M_FP,      M_IMM8),     // LINK FP,#xx:8
+    E2(0x1F, CF_00, TEXT_LINK,   IC_N, ISZ_NONE, SZ_NONE, M_FP,      M_IMM16),    // LINK FP,#xx:16
+    E2(0x50, CF_07, TEXT_MOV,    IC_E, ISZ_NONE, SZ_BYTE, M_IMM8,    M_REG),      // MOV:E #xx:8,Rd
+    E2(0x80, CF_0F, TEXT_MOV,    IC_F, ISZ_DATA, SZ_DATA, M_FPX8,    M_REG),      // MOV:F.B/.W @(d:8,R6),Rd
+    E2(0x90, CF_0F, TEXT_MOV,    IC_F, ISZ_DATA, SZ_DATA, M_REG,     M_FPX8),     // MOV:F.B/.W Rs,@(d:8,R6)
+    E2(0x58, CF_07, TEXT_MOV,    IC_I, ISZ_NONE, SZ_WORD, M_IMM16,   M_REG),      // MOV:I #xx:16,Rd
+    E2(0x60, CF_0F, TEXT_MOV,    IC_L, ISZ_DATA, SZ_DATA, M_ABS8,    M_REG),      // MOV:L.B/.W @aa:8,Rd
+    E2(0x70, CF_0F, TEXT_MOV,    IC_S, ISZ_DATA, SZ_DATA, M_REG,     M_ABS8),     // MOV:S.B/.W Rs,@aa:8
+    E0(0x00,                 TEXT_NOP),                                           // NOP
+    E1(0x14, CF_00, TEXT_RTD,    IC_N, ISZ_NONE, SZ_NONE, M_IMM8),                // RTD #xx:8
+    E1(0x1C, CF_00, TEXT_RTD,    IC_N, ISZ_NONE, SZ_NONE, M_IMM16),               // RTD #xx:16
+    E0(0x0A,                 TEXT_RTE),                                           // RTE
+    E0(0x19,                 TEXT_RTS),                                           // RTS
+    E2(0x07, CF_00, TEXT_SCB_EQ, IC_N, ISZ_NONE, SZ_NONE, M_SCB,     M_REL8),     // SCB/EQ Rn,d:8
+    E2(0x01, CF_00, TEXT_SCB_F,  IC_N, ISZ_NONE, SZ_NONE, M_SCB,     M_REL8),     // SCB/F Rn,d:8
+    E2(0x06, CF_00, TEXT_SCB_NE, IC_N, ISZ_NONE, SZ_NONE, M_SCB,     M_REL8),     // SCB/NE Rn,d:8
+    E0(0x1A,                 TEXT_SLEEP),                                         // SLEEP
+    E2(0x12, CF_00, TEXT_STM,    IC_N, ISZ_NONE, SZ_WORD, M_REGLIST, M_SP),       // STM (rlist),@-SP
+    E0(0x09,                 TEXT_TRAP_VS),                                       // TRAP/VS
+    E1(0x08, CF_00, TEXT_TRAPA,  IC_N, ISZ_NONE, SZ_NONE, M_TRAPV),               // TRAPA #vec
+    E1(0x0F, CF_00, TEXT_UNLK,   IC_N, ISZ_NONE, SZ_NONE, M_FP),                  // UNLK FP
 };
 
 constexpr uint8_t INDEX_SPC[] PROGMEM = {
-      0,  // TEXT_ADD_Q
-      1,  // TEXT_BCC
-     22,  // TEXT_BCC
-      2,  // TEXT_BCS
-     23,  // TEXT_BCS
-      3,  // TEXT_BEQ
-     24,  // TEXT_BEQ
-      4,  // TEXT_BF
-      5,  // TEXT_BGE
-      6,  // TEXT_BGT
-      7,  // TEXT_BHI
-      8,  // TEXT_BHS
-     25,  // TEXT_BHS
-      9,  // TEXT_BLE
-     10,  // TEXT_BLO
-     26,  // TEXT_BLO
-     11,  // TEXT_BLS
-     27,  // TEXT_BLS
-     12,  // TEXT_BLT
-     28,  // TEXT_BLT
-     13,  // TEXT_BMI
-     29,  // TEXT_BMI
-     14,  // TEXT_BNE
-     30,  // TEXT_BNE
-     15,  // TEXT_BPL
-     31,  // TEXT_BPL
-     16,  // TEXT_BRA
-     32,  // TEXT_BRA
-     17,  // TEXT_BRN
-     18,  // TEXT_BSR
-     33,  // TEXT_BSR
-     19,  // TEXT_BT
-     34,  // TEXT_BT
-     20,  // TEXT_BVC
-     35,  // TEXT_BVC
-     21,  // TEXT_BVS
-     36,  // TEXT_BVS
-     37,  // TEXT_CMP_E
-     38,  // TEXT_CMP_I
-     39,  // TEXT_JMP
-     40,  // TEXT_JSR
-     41,  // TEXT_LDM
-     42,  // TEXT_LINK
-     43,  // TEXT_LINK
-     44,  // TEXT_MOV_E
-     45,  // TEXT_MOV_F
-     46,  // TEXT_MOV_F
-     47,  // TEXT_MOV_I
-     48,  // TEXT_MOV_L
-     49,  // TEXT_MOV_S
-     50,  // TEXT_NOP
-     51,  // TEXT_RTD
-     52,  // TEXT_RTD
-     53,  // TEXT_RTE
-     54,  // TEXT_RTS
-     55,  // TEXT_SCB_EQ
-     56,  // TEXT_SCB_F
-     57,  // TEXT_SCB_NE
-     58,  // TEXT_SLEEP
-     59,  // TEXT_STM
-     60,  // TEXT_TRAP_VS
-     61,  // TEXT_TRAPA
-     62,  // TEXT_UNLK
+      0,  // TEXT_BCC
+     21,  // TEXT_BCC
+      1,  // TEXT_BCS
+     22,  // TEXT_BCS
+      2,  // TEXT_BEQ
+     23,  // TEXT_BEQ
+      3,  // TEXT_BF
+     36,  // TEXT_BF
+      4,  // TEXT_BGE
+     38,  // TEXT_BGE
+      5,  // TEXT_BGT
+     39,  // TEXT_BGT
+      6,  // TEXT_BHI
+     37,  // TEXT_BHI
+      7,  // TEXT_BHS
+     24,  // TEXT_BHS
+      8,  // TEXT_BLE
+     40,  // TEXT_BLE
+      9,  // TEXT_BLO
+     25,  // TEXT_BLO
+     10,  // TEXT_BLS
+     26,  // TEXT_BLS
+     11,  // TEXT_BLT
+     27,  // TEXT_BLT
+     12,  // TEXT_BMI
+     28,  // TEXT_BMI
+     13,  // TEXT_BNE
+     29,  // TEXT_BNE
+     14,  // TEXT_BPL
+     30,  // TEXT_BPL
+     15,  // TEXT_BRA
+     31,  // TEXT_BRA
+     16,  // TEXT_BRN
+     41,  // TEXT_BRN
+     17,  // TEXT_BSR
+     32,  // TEXT_BSR
+     18,  // TEXT_BT
+     33,  // TEXT_BT
+     19,  // TEXT_BVC
+     34,  // TEXT_BVC
+     20,  // TEXT_BVS
+     35,  // TEXT_BVS
+     42,  // TEXT_CMP
+     43,  // TEXT_CMP
+     44,  // TEXT_JMP
+     45,  // TEXT_JSR
+     46,  // TEXT_LDM
+     47,  // TEXT_LINK
+     48,  // TEXT_LINK
+     49,  // TEXT_MOV
+     50,  // TEXT_MOV
+     51,  // TEXT_MOV
+     52,  // TEXT_MOV
+     53,  // TEXT_MOV
+     54,  // TEXT_MOV
+     55,  // TEXT_NOP
+     56,  // TEXT_RTD
+     57,  // TEXT_RTD
+     58,  // TEXT_RTE
+     59,  // TEXT_RTS
+     60,  // TEXT_SCB
+     61,  // TEXT_SCB
+     62,  // TEXT_SCB
+     63,  // TEXT_SLEEP
+     64,  // TEXT_STM
+     65,  // TEXT_TRAP
+     66,  // TEXT_TRAPA
+     67,  // TEXT_UNLK
 };
 
-// Secondary (0x11-prefix) instructions, valid on all CPU variants.
-// PJMP @Rn / PJSR @Rn / PRTS / PRTD are max-mode only at runtime.
+// Secondary (0x11-prefix) instructions, all CPUs: JMP/JSR @Rn / @(d,Rn).
 constexpr Entry TABLE_SEC[] PROGMEM = {
-    E1(0xD0, FMT_SEC, EA_WORD, TEXT_JMP,    M_IND),
-    E1(0xE0, FMT_SEC, EA_WORD, TEXT_JMP,    M_DISP8),
-    E1(0xF0, FMT_SEC, EA_WORD, TEXT_JMP,    M_DISP16),
-    E1(0xD8, FMT_SEC, EA_WORD, TEXT_JSR,    M_IND),
-    E1(0xE8, FMT_SEC, EA_WORD, TEXT_JSR,    M_DISP8),
-    E1(0xF8, FMT_SEC, EA_WORD, TEXT_JSR,    M_DISP16),
+    E1(0xD0, CF_07, TEXT_JMP,    IC_N, ISZ_NONE, SZ_NONE, M_IND),                 // JMP @Rn
+    E1(0xE0, CF_07, TEXT_JMP,    IC_N, ISZ_NONE, SZ_NONE, M_IDX8),                // JMP @(d:8,Rn)
+    E1(0xF0, CF_07, TEXT_JMP,    IC_N, ISZ_NONE, SZ_NONE, M_IDX16),               // JMP @(d:16,Rn)
+    E1(0xD8, CF_07, TEXT_JSR,    IC_N, ISZ_NONE, SZ_NONE, M_IND),                 // JSR @Rn
+    E1(0xE8, CF_07, TEXT_JSR,    IC_N, ISZ_NONE, SZ_NONE, M_IDX8),                // JSR @(d:8,Rn)
+    E1(0xF8, CF_07, TEXT_JSR,    IC_N, ISZ_NONE, SZ_NONE, M_IDX16),               // JSR @(d:16,Rn)
 };
 
 constexpr uint8_t INDEX_SEC[] PROGMEM = {
@@ -303,28 +345,27 @@ constexpr uint8_t INDEX_SEC[] PROGMEM = {
       5,  // TEXT_JSR
 };
 
-// Page-jump SPC instructions (max-mode only): PJMP/PJSR with absolute 24-bit
-// address. Hosted in a separate page that is only searched when MAXMODE is on.
-constexpr Entry TABLE_SPC_MAX[] PROGMEM = {
-    E1(0x03, FMT_SPC, EA_WORD, TEXT_PJSR,   M_ABS24),
-    E1(0x13, FMT_SPC, EA_WORD, TEXT_PJMP,   M_ABS24),
+// Page-jump SPC instructions (maximum-mode, all variants): PJMP/PJSR @aa:24.
+constexpr Entry TABLE_SPC_PJ[] PROGMEM = {
+    E1(0x03, CF_00, TEXT_PJSR,   IC_N, ISZ_NONE, SZ_NONE, M_ABS24),               // PJSR @aa:24
+    E1(0x13, CF_00, TEXT_PJMP,   IC_N, ISZ_NONE, SZ_NONE, M_ABS24),               // PJMP @aa:24
 };
 
-constexpr uint8_t INDEX_SPC_MAX[] PROGMEM = {
+constexpr uint8_t INDEX_SPC_PJ[] PROGMEM = {
       1,  // TEXT_PJMP
       0,  // TEXT_PJSR
 };
 
-// Page-jump SEC instructions (max-mode only): PJMP/PJSR @Rn, PRTS, PRTD.
-constexpr Entry TABLE_SEC_MAX[] PROGMEM = {
-    E1(0xC0, FMT_SEC, EA_WORD, TEXT_PJMP,   M_IND),
-    E1(0xC8, FMT_SEC, EA_WORD, TEXT_PJSR,   M_IND),
-    E1(0x14, FMT_SEC, EA_WORD, TEXT_PRTD,   M_IMM8),
-    E1(0x1C, FMT_SEC, EA_WORD, TEXT_PRTD,   M_IMM16),
-    E0(0x19, FMT_SEC,           TEXT_PRTS),
+// Page-jump SEC instructions (maximum-mode, all variants): PJMP/PJSR @Rn, PRTS, PRTD.
+constexpr Entry TABLE_SEC_PJ[] PROGMEM = {
+    E1(0xC0, CF_07, TEXT_PJMP,   IC_N, ISZ_NONE, SZ_NONE, M_INDP),                // PJMP @Rn
+    E1(0xC8, CF_07, TEXT_PJSR,   IC_N, ISZ_NONE, SZ_NONE, M_INDP),                // PJSR @Rn
+    E1(0x14, CF_00, TEXT_PRTD,   IC_N, ISZ_NONE, SZ_NONE, M_IMM8),                // PRTD #xx:8
+    E1(0x1C, CF_00, TEXT_PRTD,   IC_N, ISZ_NONE, SZ_NONE, M_IMM16),               // PRTD #xx:16
+    E0(0x19,                 TEXT_PRTS),                                          // PRTS
 };
 
-constexpr uint8_t INDEX_SEC_MAX[] PROGMEM = {
+constexpr uint8_t INDEX_SEC_PJ[] PROGMEM = {
       0,  // TEXT_PJMP
       1,  // TEXT_PJSR
       2,  // TEXT_PRTD
@@ -335,173 +376,262 @@ constexpr uint8_t INDEX_SEC_MAX[] PROGMEM = {
 #undef E2
 #undef E1
 #undef E0
-#undef E2M
-#undef E1M
-#undef E0M
 
 // clang-format on
 
-// EntryPage: extends PrefixTableBase with a maxModeOnly bit so the page
-// matcher can skip pages whose instructions are only valid in maximum mode.
-// The framework's defaultPageMatcher checks insn.prefix() against
-// page->readPrefix(); pageMatcher below adds the maxMode guard.
+// EntryPage stores the EA/prefix classifier entirely in the generic 16-bit
+// prefix slot; the constructor takes the fields explicitly and packs them with
+// the named position/mask constants below (no LEAD macro, no extra field). The
+// EA-byte mask is not stored -- it is a pure function of the resolved mode.
 struct EntryPage : entry::PrefixTableBase<Entry> {
-    constexpr EntryPage(Config::opcode_t prefix, bool maxModeOnly, const Entry *head_P,
-            const Entry *tail_P, const uint8_t *index_P, const uint8_t *itail_P)
-        : PrefixTableBase(prefix, head_P, tail_P, index_P, itail_P), _maxModeOnly(maxModeOnly) {}
-
-    bool maxModeOnly() const { return pgm_read_byte(&_maxModeOnly) != 0; }
-
 private:
-    const uint8_t _maxModeOnly;
+    // prefix slot layout: [15:8]=eaMatch [7:6]=pm [4]=maxModeOnly [3:0]=eaMode
+    static constexpr int match_gp = 8;
+    static constexpr int pm_gp = 6;
+    static constexpr int mmo_gp = 4;
+    static constexpr int mode_gp = 0;
+    static constexpr uint_fast16_t match_gm = 0xFF;
+    static constexpr uint_fast16_t pm_gm = 0x3;
+    static constexpr uint_fast16_t mmo_gm = 0x1;
+    static constexpr uint_fast16_t mode_gm = 0xF;
+
+    static constexpr uint16_t pack(
+            uint8_t eaMatch, PrefixMode pm, AddrMode eaMode, bool maxModeOnly) {
+        return static_cast<uint16_t>((static_cast<uint16_t>(eaMatch) << match_gp) |
+                                     (static_cast<uint16_t>(pm) << pm_gp) |
+                                     (static_cast<uint16_t>(maxModeOnly ? 1 : 0) << mmo_gp) |
+                                     (static_cast<uint16_t>(eaMode) << mode_gp));
+    }
+
+public:
+    constexpr EntryPage(uint8_t eaMatch, PrefixMode pm, AddrMode eaMode, const Entry *head_P,
+            const Entry *tail_P, const uint8_t *index_P, const uint8_t *itail_P,
+            bool maxModeOnly = false)
+        : PrefixTableBase(
+                  pack(eaMatch, pm, eaMode, maxModeOnly), head_P, tail_P, index_P, itail_P) {}
+
+    uint8_t eaMatch() const { return (readPrefix() >> match_gp) & match_gm; }
+    PrefixMode pm() const { return PrefixMode((readPrefix() >> pm_gp) & pm_gm); }
+    AddrMode eaMode() const { return AddrMode((readPrefix() >> mode_gp) & mode_gm); }
+    // Page-jump pages are valid only in maximum mode; both the assembler and
+    // the disassembler hide them in minimum mode.
+    bool maxModeOnly() const { return (readPrefix() >> mmo_gp) & mmo_gm; }
+
+    // The EA-byte mask follows the resolved mode: reg-field for register/
+    // indirect/displacement modes, Sz for @aa, exact for #imm / no-EA.
+    CodeFormat eaMaskSel() const {
+        switch (eaMode()) {
+        case M_ABS8:
+        case M_ABS16:
+            return CF_08;
+        case M_IMM8:
+        case M_IMM16:
+        case M_NONE:
+            return CF_00;
+        default:
+            return CF_0F;
+        }
+    }
+    bool eaMatches(uint8_t b) const { return (b & ~CODE_MASK[eaMaskSel()]) == eaMatch(); }
 };
 
+// clang-format off
+
+// One row per EA mode for GEN; all share TABLE_GEN. Reused by every CPU.
+#define GEN_PAGES                                                                      \
+    {0xA0, PM_GEN, M_REG,     ARRAY_RANGE(TABLE_GEN), ARRAY_RANGE(INDEX_GEN)},  \
+    {0xB0, PM_GEN, M_PDEC,    ARRAY_RANGE(TABLE_GEN), ARRAY_RANGE(INDEX_GEN)},  \
+    {0xC0, PM_GEN, M_PINC,    ARRAY_RANGE(TABLE_GEN), ARRAY_RANGE(INDEX_GEN)},  \
+    {0xD0, PM_GEN, M_IND,     ARRAY_RANGE(TABLE_GEN), ARRAY_RANGE(INDEX_GEN)},  \
+    {0xE0, PM_GEN, M_IDX8,    ARRAY_RANGE(TABLE_GEN), ARRAY_RANGE(INDEX_GEN)},  \
+    {0xF0, PM_GEN, M_IDX16,   ARRAY_RANGE(TABLE_GEN), ARRAY_RANGE(INDEX_GEN)},  \
+    {0x05, PM_GEN, M_ABS8,    ARRAY_RANGE(TABLE_GEN), ARRAY_RANGE(INDEX_GEN)},  \
+    {0x15, PM_GEN, M_ABS16,   ARRAY_RANGE(TABLE_GEN), ARRAY_RANGE(INDEX_GEN)},  \
+    {0x04, PM_GEN, M_IMM8,    ARRAY_RANGE(TABLE_GEN), ARRAY_RANGE(INDEX_GEN)},  \
+    {0x0C, PM_GEN, M_IMM16,   ARRAY_RANGE(TABLE_GEN), ARRAY_RANGE(INDEX_GEN)}
+
+// One row per (reg/mem) EA mode for EXT, pointing at |table|/|index|.
+#define EXT_PAGES(table, index)                                                   \
+    {0xA0, PM_EXT, M_REG,     ARRAY_RANGE(table), ARRAY_RANGE(index)},     \
+    {0xB0, PM_EXT, M_PDEC,    ARRAY_RANGE(table), ARRAY_RANGE(index)},     \
+    {0xC0, PM_EXT, M_PINC,    ARRAY_RANGE(table), ARRAY_RANGE(index)},     \
+    {0xD0, PM_EXT, M_IND,     ARRAY_RANGE(table), ARRAY_RANGE(index)},     \
+    {0xE0, PM_EXT, M_IDX8,    ARRAY_RANGE(table), ARRAY_RANGE(index)},     \
+    {0xF0, PM_EXT, M_IDX16,   ARRAY_RANGE(table), ARRAY_RANGE(index)},     \
+    {0x05, PM_EXT, M_ABS8,    ARRAY_RANGE(table), ARRAY_RANGE(index)},     \
+    {0x15, PM_EXT, M_ABS16,   ARRAY_RANGE(table), ARRAY_RANGE(index)}
+
+// Page jumps (PJMP/PJSR/PRTS/PRTD) are a maximum-mode feature available on every
+// variant; both the assembler and the disassembler gate them by operating mode,
+// so every page list carries the *_PJ pages (maxModeOnly=true).
+#define MAXMODE_PAGES                                                                          \
+    {0x00, PM_SPC, M_NONE, ARRAY_RANGE(TABLE_SPC_PJ), ARRAY_RANGE(INDEX_SPC_PJ), true},   \
+    {0x11, PM_SEC, M_NONE, ARRAY_RANGE(TABLE_SEC_PJ), ARRAY_RANGE(INDEX_SEC_PJ), true}
+
+// The register-EA page for XCH precedes GEN so it claims OP 0x90 for a register
+// EA; every other register-EA opcode falls through to the shared TABLE_GEN.
+#define XCH_PAGE \
+    {0xA0, PM_GEN, M_REG, ARRAY_RANGE(TABLE_XCH), ARRAY_RANGE(INDEX_XCH)}
+
+// The special-format page precedes the general page so a bare stem assembles to
+// the shorter special form (MOV:E/F/I/L/S, CMP:E/I) before falling to MOV:G/
+// CMP:G. Page order is name-search only; disassembly filters pages by prefix
+// mode, so the special page never shadows a general-format opcode.
+#define SPC_PAGE {0x00, PM_SPC, M_NONE, ARRAY_RANGE(TABLE_SPC), ARRAY_RANGE(INDEX_SPC)}
+#define SEC_PAGE {0x11, PM_SEC, M_NONE, ARRAY_RANGE(TABLE_SEC), ARRAY_RANGE(INDEX_SEC)}
+
+// ORDER-SENSITIVE: page order is load-bearing for the assembler's name search.
+// SPC must precede the GEN pages (bare-stem picks the short MOV:E/F/.. over
+// MOV:G), XCH must precede GEN (claims OP 0x90 for a register EA), and within
+// TABLE_GEN the ADD:Q rows precede ADD:G. Disassembly is unaffected (pages are
+// filtered by prefix mode). Do not reorder these for tidiness.
 constexpr EntryPage H8500_PAGES[] PROGMEM = {
-        {0x00, false, ARRAY_RANGE(TABLE_GEN), ARRAY_RANGE(INDEX_GEN)},
-        {0x00, false, ARRAY_RANGE(TABLE_GEN_ECLOCK), ARRAY_RANGE(INDEX_GEN_ECLOCK)},
-        {0x00, false, ARRAY_RANGE(TABLE_SPC), ARRAY_RANGE(INDEX_SPC)},
-        {0x00, true, ARRAY_RANGE(TABLE_SPC_MAX), ARRAY_RANGE(INDEX_SPC_MAX)},
-        {0x11, false, ARRAY_RANGE(TABLE_SEC), ARRAY_RANGE(INDEX_SEC)},
-        {0x11, true, ARRAY_RANGE(TABLE_SEC_MAX), ARRAY_RANGE(INDEX_SEC_MAX)},
+        SPC_PAGE,
+        XCH_PAGE,
+        GEN_PAGES,
+        EXT_PAGES(TABLE_EXT, INDEX_EXT),
+        EXT_PAGES(TABLE_ECLK, INDEX_ECLK),
+        SEC_PAGE,
+        MAXMODE_PAGES,
 };
 
-// H8/520 has no E-clock peripheral interface.
+// H8/520: no E-clock, so no TABLE_ECLK pages.
 constexpr EntryPage H8520_PAGES[] PROGMEM = {
-        {0x00, false, ARRAY_RANGE(TABLE_GEN), ARRAY_RANGE(INDEX_GEN)},
-        {0x00, false, ARRAY_RANGE(TABLE_SPC), ARRAY_RANGE(INDEX_SPC)},
-        {0x00, true, ARRAY_RANGE(TABLE_SPC_MAX), ARRAY_RANGE(INDEX_SPC_MAX)},
-        {0x11, false, ARRAY_RANGE(TABLE_SEC), ARRAY_RANGE(INDEX_SEC)},
-        {0x11, true, ARRAY_RANGE(TABLE_SEC_MAX), ARRAY_RANGE(INDEX_SEC_MAX)},
+        SPC_PAGE,
+        XCH_PAGE,
+        GEN_PAGES,
+        EXT_PAGES(TABLE_EXT, INDEX_EXT),
+        SEC_PAGE,
+        MAXMODE_PAGES,
 };
+
+constexpr EntryPage H8530_PAGES[] PROGMEM = {
+        SPC_PAGE,
+        XCH_PAGE,
+        GEN_PAGES,
+        EXT_PAGES(TABLE_EXT, INDEX_EXT),
+        EXT_PAGES(TABLE_ECLK, INDEX_ECLK),
+        SEC_PAGE,
+        MAXMODE_PAGES,
+};
+#undef SPC_PAGE
+#undef SEC_PAGE
+#undef XCH_PAGE
+#undef GEN_PAGES
+#undef EXT_PAGES
+#undef MAXMODE_PAGES
+
+// clang-format on
 
 using Cpu = entry::CpuBase<CpuType, EntryPage>;
 
 constexpr Cpu CPU_TABLE[] PROGMEM = {
         {H8_500, TEXT_CPU_H8500, ARRAY_RANGE(H8500_PAGES)},
         {H8_520, TEXT_CPU_H8520, ARRAY_RANGE(H8520_PAGES)},
+        {H8_530, TEXT_CPU_H8530, ARRAY_RANGE(H8530_PAGES)},
 };
 
 static const Cpu *cpu(CpuType cpuType) {
     return Cpu::search(cpuType, ARRAY_RANGE(CPU_TABLE));
 }
 
-// Mask of variable bits in the OP byte for GEN/EXT instructions.
-static uint8_t opMaskOf(const Entry::Flags &flags) {
-    const auto src = flags.src();
-    const auto dst = flags.dst();
-    if (src == M_BIT)
-        return 0x0F;
-    if (src == M_REG || src == M_CR || dst == M_REG || dst == M_CR)
-        return 0x07;
-    return 0x00;
-}
-
-// Mask of variable bits in the SEC opcode byte. Register-bearing forms
-// (JMP/JSR/PJMP/PJSR with @Rn or @(d,Rn)) embed the register in low 3 bits.
-static uint8_t secMaskOf(const Entry::Flags &flags) {
-    const auto src = flags.src();
-    if (src == M_IND || src == M_DISP8 || src == M_DISP16)
-        return 0x07;
-    return 0x00;
-}
-
-bool isEaByte(uint8_t b) {
-    if (b >= 0xA0)
-        return true;
-    return b == 0x04 || b == 0x05 || b == 0x0C || b == 0x0D || b == 0x15 || b == 0x1D;
-}
-
-// matchOpCode: used by searchOpCode for disassembly.
-// insn.insnFmt must be set before calling searchOpCode.
-static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *) {
-    const auto flags = entry->readFlags();
-    if (flags.fmt() != insn.insnFmt)
-        return false;
-    if (insn.insnFmt == FMT_SPC) {
-        if (flags.src() == M_IMM2)
-            return false;  // ADD:Q SPC entry is for assembly only
-        const auto mask = opMaskOf(flags);
-        if (mask && (entry->readOpCode() & mask))
-            return insn.opCode() == entry->readOpCode();
-        return (insn.opCode() & ~mask) == entry->readOpCode();
+// Number of EA extension bytes for the resolved EA mode.
+static uint8_t extOf(AddrMode mode) {
+    switch (mode) {
+    case M_IDX16:
+    case M_ABS16:
+    case M_IMM16:
+        return 2;
+    case M_IDX8:
+    case M_FPX8:
+    case M_ABS8:
+    case M_IMM8:
+        return 1;
+    default:
+        return 0;  // M_REG, M_IND, M_PDEC, M_PINC
     }
-    if (insn.insnFmt == FMT_SEC) {
-        const auto mask = secMaskOf(flags);
-        return (insn.opCode() & ~mask) == entry->readOpCode();
+}
+
+int classifyLead(CpuType cpuType, uint8_t b, AddrMode &mode) {
+    const auto *c = cpu(cpuType);
+    for (const auto *page = c->pagesBegin(); page < c->pagesEnd(); page++) {
+        const auto pm = page->pm();
+        if ((pm == PM_GEN || pm == PM_EXT) && page->eaMatches(b)) {
+            mode = page->eaMode();
+            return extOf(mode);
+        }
     }
-    // GEN/EXT: disambiguate M_IMM8-src (ANDC/ORC/XORC) from M_REG-src
-    // (BCLR/BTST/BNOT) instructions sharing the same base OP byte.
-    if (flags.src() == M_IMM8 && insn.eaByte != 0x04)
-        return false;
-    if (flags.src() == M_REG && insn.eaByte == 0x04)
-        return false;
-    return (insn.opByte & ~opMaskOf(flags)) == entry->readOpCode();
+    return -1;
 }
 
 bool isPrefix(CpuType /*cpuType*/, Config::opcode_t code) {
     return code == 0x11;
 }
 
-// The disassembler decodes page-jump opcodes unconditionally - the byte
-// sequences uniquely identify them, so emitting "PJMP" against an unknown
-// max-mode setting is more useful than reporting "unknown instruction".
-// The MAXMODE-only gating is enforced only at assembly time (acceptModes).
-
-Error searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) {
-    cpu(cpuType)->searchOpCode(insn, out, matchOpCode);
-    return insn.getError();
+// The EA-operand slot of a GEN/EXT entry (M_EASRC/M_EADST/M_IMM*), else M_NONE.
+static AddrMode eaSlotOf(Entry::Flags f) {
+    const auto s = f.src();
+    const auto d = f.dst();
+    // The M_EASRC/M_EADST placeholder is the EA; prefer it (MOV:G #xx,<EAd> has
+    // an EA dst and an immediate src that is trailing data, not the EA). Only
+    // when neither side is a placeholder does an immediate act as the EA (ANDC).
+    if (d == M_EASRC || d == M_EADST || d == M_EAMEM)
+        return d;
+    if (s == M_EASRC || s == M_EADST || s == M_EAREG || s == M_EAMEM)
+        return s;
+    if (s == M_IMM8 || s == M_IMM16)
+        return s;
+    if (d == M_IMM8 || d == M_IMM16)
+        return d;
+    return M_NONE;
 }
 
-// EA-encodable modes occupy a contiguous range in AddrMode (see entry_h8500.h)
-// so the check reduces to a single comparison.
-static bool isEaMode(AddrMode mode) {
-    return mode >= M_REG && mode <= M_IMM16;
-}
-
-// Accept |op| as a value for the |table|-declared mode. The fast path is the
-// exact-match check; the switch only covers the H8/500's "fits-into-this-mode"
-// relaxations (M_DISP8F satisfies M_DISP8, etc.) and the catch-all table modes.
-static bool acceptMode(const Operand &op, AddrMode table) {
-    if (op.mode == table)
+// Does the entry's EA slot accept the resolved EA mode? This is where the
+// immediate-vs-reg/mem restriction lives (e.g. ANDC needs #imm, BCLR can't).
+static bool eaSlotAccepts(AddrMode slot, AddrMode eaMode) {
+    switch (slot) {
+    case M_EASRC:
         return true;
-    switch (table) {
-    case M_EA:
-        return isEaMode(op.mode);
-    case M_BIT:
-        return op.mode == M_IMM8;
-    case M_IMM2:
-    case M_TRAPV:
-        return op.mode == M_IMM8;
-    case M_SCB:
-        return op.mode == M_REG;
-    case M_FP:
-        // LINK/UNLK take the frame pointer (R6) as a fixed register.
-        return op.mode == M_REG && op.reg == REG_FP;
-    case M_DISP8:
-        // M_DISP8 also accepts @(d:8,FP); the parser produces M_DISP8F when
-        // the base register is FP, but the encoding is the same as @(d:8,Rn).
-        return op.mode == M_DISP8F;
+    case M_EAREG:
+        return eaMode == M_REG;
+    case M_EAMEM:
+        return eaMode >= M_IND && eaMode <= M_ABS16;
+    case M_EADST:
+        return eaMode != M_IMM8 && eaMode != M_IMM16;
+    case M_IMM8:
+    case M_IMM16:
+        return eaMode == M_IMM8 || eaMode == M_IMM16;
     default:
         return false;
     }
 }
 
-static bool acceptModes(AsmInsn &insn, const Entry *entry) {
-    // The framework has no built-in page reject; pageSetup stashes the page's
-    // maxModeOnly bit on insn so acceptModes can drop entries from a MAXMODE-
-    // only page when MIN-mode is active.
-    if (insn.currentPageMaxOnly && !insn.maxMode)
-        return false;
+static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page) {
     const auto flags = entry->readFlags();
-    return acceptMode(insn.op1, flags.src()) && acceptMode(insn.op2, flags.dst());
+    const auto pm = page->pm();
+    if (pm == PM_GEN || pm == PM_EXT) {
+        if (!eaSlotAccepts(eaSlotOf(flags), insn.eaMode))
+            return false;
+        return (insn.opByte & ~flags.mask()) == entry->readOpCode();
+    }
+    // PM_SPC / PM_SEC: no EA byte.
+    return (insn.opCode() & ~flags.mask()) == entry->readOpCode();
 }
 
-static void pageSetup(AsmInsn &insn, const EntryPage *page) {
-    insn.currentPageMaxOnly = page->maxModeOnly();
+static bool pageMatcher(DisInsn &insn, const EntryPage *page) {
+    // Page jumps are maxMode-only; skip those pages in minimum mode (-> unknown).
+    if (page->maxModeOnly() && !insn.maxMode)
+        return false;
+    if (page->pm() != insn.prefixMode())
+        return false;
+    const auto pm = insn.prefixMode();
+    if (pm == PM_GEN || pm == PM_EXT)
+        return page->eaMatches(insn.eaByte);
+    return true;
 }
 
-Error searchName(CpuType cpuType, AsmInsn &insn) {
-    cpu(cpuType)->searchName(insn, acceptModes, pageSetup);
+Error searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) {
+    cpu(cpuType)->searchOpCode(insn, out, matchOpCode, pageMatcher);
     return insn.getError();
 }
 

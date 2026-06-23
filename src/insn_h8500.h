@@ -21,7 +21,6 @@
 #include "entry_h8500.h"
 #include "insn_base.h"
 #include "reg_h8500.h"
-#include "value.h"
 
 namespace libasm {
 namespace h8500 {
@@ -29,41 +28,34 @@ namespace h8500 {
 struct EntryInsn : EntryInsnPrefix<Config, Entry> {
     AddrMode src() const { return flags().src(); }
     AddrMode dst() const { return flags().dst(); }
-    InsnFmt fmt() const { return flags().fmt(); }
-    EaSz eaSz() const { return flags().eaSz(); }
+    OprSize oprSize() const { return flags().oprSize(); }
+    InsnSize insnSize() const { return flags().insnSize(); }
+    InsnClass insnClass() const { return flags().insnClass(); }
 
-    // Stashed by encode/decode before invoking the table search so the page
-    // matcher can skip MAXMODE-only pages when MIN-mode is active.
+    // The routing class of this instruction's leading byte(s): set during
+    // decode (from the lead byte) and during table search (from the page).
+    void setPrefixMode(PrefixMode pm) { _prefixMode = pm; }
+    PrefixMode prefixMode() const { return _prefixMode; }
+
+    // Operating mode, used to gate page-jump (maxMode-only) instructions: the
+    // disassembler hides them in minimum mode.
     bool maxMode = false;
-    // Tracks whether the page currently visited by searchName declares its
-    // entries as MAXMODE-only; set in pageSetup, read in acceptOperands.
-    bool currentPageMaxOnly = false;
-};
 
-struct Operand final : ErrorAt {
-    AddrMode mode;
-    RegName reg;
-    CrName creg;
-    Value val;
-    Operand() : mode(M_NONE), reg(REG_UNDEF), creg(CR_UNDEF), val() {}
-};
-
-struct AsmInsn final : AsmInsnImpl<Config>, EntryInsn {
-    AsmInsn(Insn &insn) : AsmInsnImpl(insn) {}
-
-    Operand op1, op2;
-
-    using AsmInsnImpl::emitByte;
+private:
+    PrefixMode _prefixMode = PM_SPC;
 };
 
 struct DisInsn final : DisInsnImpl<Config>, EntryInsn {
     DisInsn(Insn &insn, DisMemory &memory, const StrBuffer &out) : DisInsnImpl(insn, memory, out) {}
 
-    uint8_t eaByte = 0;
-    uint8_t opByte = 0;
-    uint8_t eaExt1 = 0;         // first EA extension byte (buffered before OP byte)
-    uint8_t eaExt2 = 0;         // second EA extension byte
-    InsnFmt insnFmt = FMT_GEN;  // set in decodeImpl before searchOpCode
+    uint8_t eaByte = 0;  // the EA prefix byte (0 if none)
+    uint8_t opByte = 0;  // the opcode byte
+
+    // EA operand resolved once from the EA byte + extension bytes, then emitted
+    // by the M_EASRC/M_EADST arm of decodeOperand.
+    AddrMode eaMode = M_NONE;
+    RegName eaReg = REG_UNDEF;
+    uint16_t eaVal = 0;
 };
 
 }  // namespace h8500

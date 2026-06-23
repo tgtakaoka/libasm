@@ -44,15 +44,15 @@ enum RegName : int8_t {
 
 // Control registers encoded as 3-bit ccc field in LDC/STC/ANDC/ORC/XORC
 // 000=SR (word), 001=CCR (byte), 010=invalid, 011=BR (byte)
-// 100=EP (byte H8/532), 101=DP (byte H8/532), 110=invalid, 111=TP (byte H8/532)
+// 100=EP (byte H8/530), 101=DP (byte H8/530), 110=invalid, 111=TP (byte H8/530)
 enum CrName : int8_t {
     CR_UNDEF = -1,
     CR_SR = 0,   // status register (word)
     CR_CCR = 1,  // condition code register (byte, low of SR)
     CR_BR = 3,   // base register (byte)
-    CR_EP = 4,   // extra page register (byte, H8/532)
-    CR_DP = 5,   // data page register (byte, H8/532)
-    CR_TP = 7,   // stack page register (byte, H8/532)
+    CR_EP = 4,   // extra page register (byte, H8/530)
+    CR_DP = 5,   // data page register (byte, H8/530)
+    CR_TP = 7,   // stack page register (byte, H8/530)
 };
 
 // Condition codes for Bcc, encoded as 4-bit cc field
@@ -92,8 +92,6 @@ RegName decodeReg(uint8_t bits3);  // decode 3-bit field
 
 uint8_t encodeCr(CrName cr);   // returns 3-bit ccc encoding
 CrName decodeCr(uint8_t ccc);  // decode 3-bit ccc field
-
-bool isBytesCr(CrName cr);  // true if CR is byte-sized (CCR, BR, EP, DP, TP)
 
 }  // namespace reg
 }  // namespace h8500

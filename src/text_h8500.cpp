@@ -21,35 +21,28 @@ namespace text {
 namespace h8500 {
 // clang-format off
 
-constexpr char TEXT_H8500_LIST[] PROGMEM = "H8/500, H8/520";
+constexpr char TEXT_H8500_LIST[] PROGMEM = "H8/500, H8/520, H8/530";
 constexpr char TEXT_CPU_H8500[]  PROGMEM = "H8/500";
 constexpr char TEXT_CPU_H8520[]  PROGMEM = "H8/520";
+constexpr char TEXT_CPU_H8530[]  PROGMEM = "H8/530";
 
+constexpr char OPT_BOOL_MAX_MODE[] PROGMEM = "maximum-mode";
+constexpr char OPT_DESC_MAX_MODE[] PROGMEM = "enable maximum mode";
 constexpr char OPT_BOOL_FP_ALIAS[] PROGMEM = "fp-alias";
-constexpr char OPT_DESC_FP_ALIAS[] PROGMEM = "emit FP alias for R6 in indirect addressing";
+constexpr char OPT_DESC_FP_ALIAS[] PROGMEM = "emit FP alias for R6";
 constexpr char OPT_BOOL_SP_ALIAS[] PROGMEM = "sp-alias";
 constexpr char OPT_DESC_SP_ALIAS[] PROGMEM = "emit SP alias for R7 in indirect addressing";
 
 // constexpr char TEXT_MAXMODE[] PROGMEM = "MAXMODE";
 
-// H8/500-specific instruction mnemonics
-constexpr char TEXT_ADD_G[]   PROGMEM = "ADD:G";
-constexpr char TEXT_ADD_Q[]   PROGMEM = "ADD:Q";
+// H8/500-specific instruction mnemonics. MOV/ADD/CMP keep only the stem; the
+// ":x" class is carried as an Entry attribute (see InsnClass).
 // constexpr char TEXT_ANDC[]    PROGMEM = "ANDC";
 // constexpr char TEXT_BNOT[]    PROGMEM = "BNOT";
-constexpr char TEXT_CMP_E[]   PROGMEM = "CMP:E";
-constexpr char TEXT_CMP_G[]   PROGMEM = "CMP:G";
-constexpr char TEXT_CMP_I[]   PROGMEM = "CMP:I";
 // constexpr char TEXT_DADD[]    PROGMEM = "DADD";
 // constexpr char TEXT_DIVXU[]   PROGMEM = "DIVXU";
 constexpr char TEXT_DSUB[]    PROGMEM = "DSUB";
 // constexpr char TEXT_EXTU[]    PROGMEM = "EXTU";
-constexpr char TEXT_MOV_E[]   PROGMEM = "MOV:E";
-constexpr char TEXT_MOV_F[]   PROGMEM = "MOV:F";
-constexpr char TEXT_MOV_G[]   PROGMEM = "MOV:G";
-constexpr char TEXT_MOV_I[]   PROGMEM = "MOV:I";
-constexpr char TEXT_MOV_L[]   PROGMEM = "MOV:L";
-constexpr char TEXT_MOV_S[]   PROGMEM = "MOV:S";
 // constexpr char TEXT_MOVFPE[]  PROGMEM = "MOVFPE";
 // constexpr char TEXT_MOVTPE[]  PROGMEM = "MOVTPE";
 // constexpr char TEXT_MULXU[]   PROGMEM = "MULXU";

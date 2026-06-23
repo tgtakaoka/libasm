@@ -109,6 +109,9 @@ struct CpuBase {
             const /* PROGMEM */ ENTRY_PAGE *head_P, const /* PROGMEM */ ENTRY_PAGE *tail_P)
         : _pages(head_P, tail_P), _cpuType_P(cpuType), _name_P(name_P) {}
 
+    const ENTRY_PAGE *pagesBegin() const { return _pages.readHead(); }
+    const ENTRY_PAGE *pagesEnd() const { return _pages.readTail(); }
+
     template <typename PAGE>
     static bool defaultPrefixMatcher(uint16_t code, const PAGE *page_P) {
         const auto prefix = page_P->readPrefix();

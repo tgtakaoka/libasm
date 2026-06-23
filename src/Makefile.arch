@@ -69,7 +69,7 @@ TGT_h8300    = h8300 h8300hn h8300h h8s2000n h8s2000 h8s2600n h8s2600
 OPT_h8300h   = -O advanced-mode=on
 OPT_h8s2000  = -O advanced-mode=on
 OPT_h8s2600  = -O advanced-mode=on
-TGT_h8500    = h8500
+TGT_h8500    = h8500 h8520 h8530
 TGT_i8048    = i8039 i8048 i80c39 i80c48 msm80c39 msm80c48
 TGT_i8051    = i8051
 TGT_i8080    = i8080 i8085 v30emu
@@ -111,6 +111,8 @@ CPU_cp1600   = CP1600
 CPU_f3850    = F3850
 CPU_h16      = HD641016
 CPU_h8500    = H8/500
+CPU_h8520    = H8/520
+CPU_h8530    = H8/530
 CPU_g65sc02  = 65SC02
 CPU_h8300    = h8/300
 CPU_h8300h   = h8/300h

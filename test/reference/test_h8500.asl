@@ -23,4 +23,5 @@
         include "test_h8500.inc"
         include "test_h8500_eclk.inc"
         include "test_h8500_pjmp.inc"
+        include "test_h8500_pjmp24.inc"
         end

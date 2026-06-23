@@ -1,21 +1,26 @@
-;;; Copyright 2026 Tadashi G. Takaoka
-;;;
-;;; Licensed under the Apache License, Version 2.0 (the "License");
-;;; you may not use this file except in compliance with the License.
-;;; You may obtain a copy of the License at
-;;;
-;;;     http://www.apache.org/licenses/LICENSE-2.0
-;;;
-;;; Unless required by applicable law or agreed to in writing, software
-;;; distributed under the License is distributed on an "AS IS" BASIS,
-;;; WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-;;; See the License for the specific language governing permissions and
-;;; limitations under the License.
+### Copyright 2026 Tadashi G. Takaoka
+###
+### Licensed under the Apache License, Version 2.0 (the "License");
+### you may not use this file except in compliance with the License.
+### You may obtain a copy of the License at
+###
+###     http://www.apache.org/licenses/LICENSE-2.0
+###
+### Unless required by applicable law or agreed to in writing, software
+### distributed under the License is distributed on an "AS IS" BASIS,
+### WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+### See the License for the specific language governing permissions and
+### limitations under the License.
 
-;;; H8/500 in maximum mode - full instruction set.
+### H8/500 in maximum mode - full instruction set.
 
+### RTE (0x0A) is unknown to h8500-hms-as; supply it as a byte macro.
+        .macro rte
+        .byte 0x0a
+        .endm
         .text
         .org 0x0000
-#include "test_h8500.inc"
-#include "test_h8500_eclk.inc"
-#include "test_h8500_pjmp.inc"
+        .include "test_h8500.inc"
+        .include "test_h8500_eclk.inc"
+        .include "test_h8500_pjmp.inc"
+        .include "test_h8500_pjmp24.inc"

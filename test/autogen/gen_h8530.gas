@@ -12,13 +12,15 @@
 ### See the License for the specific language governing permissions and
 ### limitations under the License.
 
-### H8/520 in maximum mode - same as H8/500 minus E-clock instructions.
-
-### RTE (0x0A) is unknown to h8500-hms-as; supply it as a byte macro.
-        .macro rte
-        .byte 0x0a
-        .endm
         .text
-        .org 0x0000
-        .include "test_h8500.inc"
-        .include "test_h8500_pjmp.inc"
+        .org    0x0000
+        ### RTE is missing from h8500-hms-as
+        .macro  rte
+        .byte   0x0a
+        .endm
+        .include "gen_h8530.ginc"
+
+### Local Variables:
+### mode: asm
+### End:
+### vim: set ft=asm:

@@ -27,7 +27,10 @@ namespace h8500 {
 extern const char TEXT_H8500_LIST[] PROGMEM;
 extern const char TEXT_CPU_H8500[]  PROGMEM;
 extern const char TEXT_CPU_H8520[]  PROGMEM;
+extern const char TEXT_CPU_H8530[]  PROGMEM;
 
+extern const char OPT_BOOL_MAX_MODE[] PROGMEM;
+extern const char OPT_DESC_MAX_MODE[] PROGMEM;
 extern const char OPT_BOOL_FP_ALIAS[] PROGMEM;
 extern const char OPT_DESC_FP_ALIAS[] PROGMEM;
 extern const char OPT_BOOL_SP_ALIAS[] PROGMEM;
@@ -91,24 +94,15 @@ using common::TEXT_UNLK;
 using common::TEXT_XCH;
 using common::TEXT_XOR;
 
-// H8/500-specific instruction mnemonics
-extern const char TEXT_ADD_G[]   PROGMEM;  // "ADD:G"
-extern const char TEXT_ADD_Q[]   PROGMEM;  // "ADD:Q"
+// H8/500-specific instruction mnemonics. MOV/ADD/CMP store only the stem; the
+// ":x" class (G/E/F/I/L/S/Q) is an Entry attribute, not part of the name.
 using common::TEXT_ANDC;
 using common::TEXT_BNOT;
-extern const char TEXT_CMP_E[]   PROGMEM;  // "CMP:E"
-extern const char TEXT_CMP_G[]   PROGMEM;  // "CMP:G"
-extern const char TEXT_CMP_I[]   PROGMEM;  // "CMP:I"
+using common::TEXT_CMP;
 using common::TEXT_DADD;
 using common::TEXT_DIVXU;
 extern const char TEXT_DSUB[]    PROGMEM;
 using common::TEXT_EXTU;
-extern const char TEXT_MOV_E[]   PROGMEM;  // "MOV:E"
-extern const char TEXT_MOV_F[]   PROGMEM;  // "MOV:F"
-extern const char TEXT_MOV_G[]   PROGMEM;  // "MOV:G"
-extern const char TEXT_MOV_I[]   PROGMEM;  // "MOV:I"
-extern const char TEXT_MOV_L[]   PROGMEM;  // "MOV:L"
-extern const char TEXT_MOV_S[]   PROGMEM;  // "MOV:S"
 using common::TEXT_MOVFPE;
 using common::TEXT_MOVTPE;
 using common::TEXT_MULXU;

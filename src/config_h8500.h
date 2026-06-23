@@ -22,9 +22,17 @@
 namespace libasm {
 namespace h8500 {
 
+// Three H8/500-family variants. The only instruction-set difference is the
+// E-clock peripheral transfer (MOVFPE/MOVTPE); they differ otherwise only in
+// maximum-mode physical address width. Page jumps (PJMP/PJSR/PRTS/PRTD) are a
+// maximum-mode feature on every variant, not CPU-specific.
+//   H8_500 - E-clock; 24-bit (16MB) maximum-mode physical address
+//   H8_520 - no E-clock pin; 20-bit (1MB) physical
+//   H8_530 - E-clock; 20-bit (1MB) physical
 enum CpuType : uint8_t {
     H8_500,
     H8_520,
+    H8_530,
 };
 
 struct Config
@@ -32,8 +40,16 @@ struct Config
     Config(const InsnTable<CpuType> &table)
         : ConfigImpl(table, H8_500), _maxMode(false), _fpAlias(true), _spAlias(true) {}
 
-    AddressWidth addressWidth() const override { return maxMode() ? ADDRESS_24BIT : ADDRESS_16BIT; }
-    bool hasEclock() const { return cpuType() == H8_500; }
+    // Minimum mode is a flat 64K (16-bit) space; maximum mode reaches the chip's
+    // physical width: 16M (24-bit) for H8/510 ("H8/500"), 1M (20-bit) for the
+    // pin-limited H8/520 and H8/530.
+    AddressWidth physicalWidth() const {
+        return cpuType() == H8_500 ? ADDRESS_24BIT : ADDRESS_20BIT;
+    }
+    AddressWidth addressWidth() const override {
+        return maxMode() ? physicalWidth() : ADDRESS_16BIT;
+    }
+
     bool maxMode() const { return _maxMode; }
     Error setMaxMode(bool on) {
         _maxMode = on;

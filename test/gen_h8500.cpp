@@ -26,6 +26,20 @@ int main(int argc, const char **argv) {
     if (driver.main(argc, argv))
         return 1;
 
+    // C-style numbers + relative branch targets so the test generator can
+    // tokenize operand values and collapse address/branch variants (Hitachi
+    // H'xxxx and absolute targets are not recognized by the tokenizer).
+    dish8500.setOption("c-style", "enable");
+    dish8500.setOption("relative", "enable");
+    if (driver.generateGas()) {
+        // h8500-hms-as rejects the FP alias inside a register list; emit R6.
+        dish8500.setOption("fp-alias", "off");
+        // h8500-hms-as uses '.' as the current-location symbol, not '$'.
+        dish8500.setOption("origin-char", ".");
+    } else {
+        dish8500.setOption("origin-char", "*");
+    }
+
     TestGenerator generator(driver, dish8500, 0x0100);
     generator.generate();
 

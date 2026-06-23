@@ -28,27 +28,10 @@ struct AsmH8500 final : Assembler, Config {
     AsmH8500(const ValueParser::Plugins &plugins = defaultPlugins());
 
 private:
-    Error parseOperand(StrScanner &scan, Operand &op) const;
-
-    void emitPcRel8(AsmInsn &insn, const Operand &op) const;
-    void emitPcRel16(AsmInsn &insn, const Operand &op) const;
-
-    Error encodeGenFmt(AsmInsn &insn) const;
-    Error encodeSpcFmt(AsmInsn &insn) const;
-    Error encodeSecFmt(AsmInsn &insn) const;
-
-    Error processMaxMode(StrScanner &scan, Insn &insn, uint16_t extra);
-
-    Error processPseudo(StrScanner &scan, Insn &insn) override;
     Error encodeImpl(StrScanner &scan, Insn &insn) const override;
     const ConfigBase &config() const override { return *this; }
     ConfigSetter &configSetter() override { return *this; }
     static const ValueParser::Plugins &defaultPlugins();
-
-    using PseudoH8500 = pseudo::__Pseudo<AsmH8500, Insn>;
-    using PseudosH8500 = pseudo::__Pseudos<PseudoH8500>;
-    static const PseudoH8500 PSEUDO_H8500_TABLE[] PROGMEM;
-    static const PseudosH8500 PSEUDOS_H8500 PROGMEM;
 };
 
 }  // namespace h8500
