@@ -40,7 +40,9 @@ int main(int argc, const char **argv) {
         dish8500.setOption("origin-char", "*");
     }
 
-    TestGenerator generator(driver, dish8500, 0x0100);
+    // Maximum mode reaches past 0xFFFF (S2 records); minimum mode stays 16-bit.
+    const auto org = dish8500.maxMode() ? 0x010000 : 0x0100;
+    TestGenerator generator(driver, dish8500, org);
     generator.generate();
 
     return driver.close();

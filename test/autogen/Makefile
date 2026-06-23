@@ -43,12 +43,19 @@ NOASM_targets = i80286 h8s2000n h8s2000 h8s2600n h8s2600
 # CPU variants whose generated source ASL cannot assemble. This filters
 # which asl-X.hex rules exist (asl-test target). Generation of .inc/.ginc
 # still happens because libasm and gas consume them.
-ASL_exclude = mb8861 i80286 h8300hn h8300h h8s2000n h8s2000 h8s2600n h8s2600 shdsp sh2e sh2a
+# h8500: the disassembler emits MOV:F negative displacements as @(-0x7F,FP),
+# which ASL rejects (it needs @((-0x7F),fp)); the curated reference test, which
+# spells them ASL-compatibly, is byte-identical with ASL.
+ASL_exclude = mb8861 i80286 h8300hn h8300h h8s2000n h8s2000 h8s2600n h8s2600 shdsp sh2e sh2a \
+    $(TGT_h8500)
 # CPU variants whose gas toolchain does not produce a manual-conforming
 # encoding. h8300-elf-as has no -mach=h8300; it always emits the H8/300H
 # 4-byte form for JMP/JSR @aa:16, producing bytes that don't execute on
 # real H8/300 silicon. Excluded from gas-test.
-GAS_exclude = h8300
+# h8500-hms-as encodes the general (:g) immediate forms with a leading EA
+# prefix (e.g. A0 04 55) where libasm/ASL use the EA-suffix form (04 55 70);
+# both decode the same, but the bytes never match the ASL-conformant output.
+GAS_exclude = h8300 $(TGT_h8500)
 
 # file name of generating file
 define out-inc # target

@@ -19,7 +19,7 @@
 
         cpu     HD6475328
         maxmode on
-        org     H'0100
+        org     H'010000
         include "test_h8500.inc"
         include "test_h8500_pjmp.inc"
         end

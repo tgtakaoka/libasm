@@ -14,8 +14,8 @@
 
 ;;; H8/520 in maximum mode - same as H8/500 minus E-clock instructions.
 
-        cpu     H8/520
-        maxmode on
-        org     H'0100
-        include "test_h8500.inc"
-        include "test_h8500_pjmp.inc"
+        .cpu     H8/520
+        .maxmode on
+        .org     H'010000
+        .include "test_h8500.inc"
+        .include "test_h8500_pjmp.inc"

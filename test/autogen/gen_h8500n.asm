@@ -12,11 +12,10 @@
 ;;; See the License for the specific language governing permissions and
 ;;; limitations under the License.
 
-        cpu     HD6475328
-        maxmode on
-        org     H'010000
-        include "gen_h8530.inc"
-        end
+        .cpu     H8/500
+        .org     H'0100
+        .include "gen_h8500n.inc"
+        .end
 
 ;;; Local Variables:
 ;;; mode: asm

@@ -110,6 +110,7 @@ usage: asm [-o <output>] [-l <list>] <input>
   --fpu             : floating point co-processor (text: 8086, 68000, SH-1, 32032)
   --implicit-word   : unknown instruction defines word (bool: 6100, J11)
   --lwordmode       : Long word mode (bool: Z380)
+  --maximum-mode    : enable maximum mode (bool: H8/500)
   --optimize-index  : optimize zero index (bool: Z8)
   --optimize-segment: optimize segment override (bool: 8086)
   --pc-bits         : program counter width in bit, default 13 (int: 6805)

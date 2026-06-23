@@ -43,6 +43,9 @@ bool isPrefix(CpuType cpuType, Config::opcode_t code);
 // insn.prefix() for SEC) must be set before calling.
 Error searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out);
 
+// Search all CPU pages by name + operand modes for assembly.
+Error searchName(CpuType cpuType, AsmInsn &insn);
+
 }  // namespace h8500
 }  // namespace libasm
 

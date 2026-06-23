@@ -14,7 +14,7 @@
 
         cpu     HD6475328
         maxmode on
-        org     H'0100
+        org     H'010000
         include "gen_h8500.inc"
         end
 

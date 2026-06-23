@@ -635,6 +635,132 @@ Error searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) {
     return insn.getError();
 }
 
+static bool isEaMode(AddrMode mode) {
+    return mode >= M_REG && mode <= M_IMM16;
+}
+
+// Accept |op| as a value for the |table|-declared mode (assembler). |insnSz| is
+// the parsed .B/.W suffix, used to widen an EA-immediate slot to word.
+static bool acceptMode(const Operand &op, AddrMode table, OprSize insnSz) {
+    if (op.mode == table)
+        return true;
+    // A no-suffix absolute that overflowed 16 bits (parsed M_ABS24) has no
+    // @aa:24 data form; it is accepted by the EA / @aa:16 / @aa:8 slots and
+    // shortened (high byte dropped, page-validated at emit). An explicit :size
+    // (absSize != 0) is honored as written.
+    const bool absDowngrade = op.mode == M_ABS24 && op.absSize == 0;
+    switch (table) {
+    case M_EASRC:
+        return isEaMode(op.mode) || absDowngrade;
+    case M_EAREG:
+        return op.mode == M_REG;
+    case M_EAMEM:
+        return (op.mode >= M_IND && op.mode <= M_ABS16) || absDowngrade;
+    case M_EADST:
+        return (isEaMode(op.mode) || absDowngrade) && op.mode != M_IMM8 && op.mode != M_IMM16;
+    case M_ABS8:
+        // MOV:L/MOV:S @aa:8: a no-suffix absolute is re-formed to it (BR-paged).
+        return op.absSize == 0 && (op.mode == M_ABS16 || op.mode == M_ABS24);
+    case M_ABS16:
+        // JMP/JSR @aa:16: a no-suffix >64K address shortens to it (CP-paged).
+        return absDowngrade;
+    case M_IMM8:
+        // ANDC/ORC/XORC .w widens the immediate-EA operand to 16 bits.
+        return op.mode == M_IMM16 && insnSz == SZ_WORD;
+    case M_IMM16:
+        // MOV:I/CMP:I are the explicit 16-bit forms: a value that parsed as
+        // imm8 (e.g. a small or negative #-1) still encodes as a word.
+        return op.mode == M_IMM8;
+    case M_BIT:
+        // A .W bit op widens the (bit-number) immediate to M_IMM16; accept it.
+        return op.mode == M_IMM8 || op.mode == M_IMM16;
+    case M_IMM2:
+        // ADD:Q encodes the quick value (+/-1, +/-2) in the OP byte, so a .W that
+        // widened the immediate to M_IMM16 is still acceptable; the value range
+        // is checked in acceptOperands (bare stem) or the encoder (explicit :Q).
+        return op.mode == M_IMM8 || op.mode == M_IMM16;
+    case M_TRAPV:
+        return op.mode == M_IMM8;
+    case M_SCB:
+        return op.mode == M_REG;
+    case M_FP:
+        return op.mode == M_REG && op.reg == REG_FP;
+    case M_SP:
+        // LDM @SP+ (post-inc) / STM @-SP (pre-dec): the stack pointer R7.
+        return (op.mode == M_PINC || op.mode == M_PDEC) && op.reg == REG_SP;
+    case M_IDX8:
+        return op.mode == M_FPX8;
+    case M_REGP:
+        // MULXU/DIVXU.W Rd register pair: parsed as a plain register; the encoder
+        // flags an odd (misaligned) register as REGISTER_NOT_ALIGNED.
+        return op.mode == M_REG;
+    case M_INDP:
+        // PJMP/PJSR @Rn register pair: parsed as @Rn; the encoder flags an odd
+        // (misaligned) register as REGISTER_NOT_ALIGNED.
+        return op.mode == M_IND;
+    default:
+        return false;
+    }
+}
+
+static bool acceptOperands(AsmInsn &insn, const Entry *entry) {
+    // Page jumps live on maxMode-only pages; reject them in minimum mode.
+    if (insn.currentPageMaxOnly && !insn.maxMode)
+        return false;
+    const auto flags = entry->readFlags();
+    // An explicit ":x" class (MOV:F etc) matches only that class; a bare stem
+    // (IC_N) matches every class and the page/index order picks the optimum.
+    if (insn.insnCls != IC_N && flags.insnClass() != insn.insnCls)
+        return false;
+    // A written .B/.W must agree with a fixed byte/word operand size. This
+    // selects the right MOV:G immediate (0x06/0x07) and, for a bare stem, skips
+    // wrong-sized classes so the matching one is reached (mov.w -> MOV:I not
+    // MOV:E). With an explicit class a size mismatch is left to encodeImpl's
+    // ILLEGAL_SIZE check instead of silently skipping the entry.
+    const auto osz = flags.oprSize();
+    if (insn.insnSz != SZ_NONE && (osz == SZ_BYTE || osz == SZ_WORD) && insn.insnSz != osz &&
+            (insn.insnCls == IC_N || flags.insnSize() == ISZ_DATA))
+        return false;
+    // A bare stem with no size defaults to word like ASL/GAS: skip a byte-fixed
+    // class form (MOV:E/CMP:E, MOV:G.B #imm) so the word form (MOV:I/CMP:I,
+    // MOV:G.W) is chosen. Byte-only ops with no class (EXTS/DADD/...) are kept.
+    if (insn.insnSz == SZ_NONE && insn.insnCls == IC_N && osz == SZ_BYTE &&
+            flags.insnClass() != IC_N)
+        return false;
+    // Optimal selection for a bare stem: a short form that can't encode the
+    // operand value is skipped so the search reaches the general form. ADD:Q
+    // only encodes +/-1, +/-2; a larger quick value falls through to ADD:G. An
+    // explicit ADD:Q keeps its OVERFLOW_RANGE error from the encoder instead.
+    if (insn.insnCls == IC_N && (flags.src() == M_IMM2 || flags.dst() == M_IMM2)) {
+        const auto &q = (flags.src() == M_IMM2) ? insn.op1 : insn.op2;
+        const auto v = q.val.getSigned();
+        if (q.hasError() || (v != 1 && v != 2 && v != -1 && v != -2))
+            return false;
+    }
+    return acceptMode(insn.op1, flags.src(), insn.insnSz) &&
+           acceptMode(insn.op2, flags.dst(), insn.insnSz);
+}
+
+// pageSetup runs before each page's name search; stash its maxMode-only flag so
+// acceptOperands can reject page-jump entries in minimum mode.
+static void pageSetup(AsmInsn &insn, const EntryPage *page) {
+    insn.currentPageMaxOnly = page->maxModeOnly();
+}
+
+// readCode runs once for the matched entry; record the page's PrefixMode (the
+// EA byte / 0x11 prefix is rebuilt from operands by the encoder, so the generic
+// prefix-setting readCode is not used).
+static void readCodeName(AsmInsn &insn, const Entry *entry, const EntryPage *page) {
+    insn.setPrefixMode(page->pm());
+    insn.setOpCode(entry->readOpCode());
+    insn.setFlags(entry->readFlags());
+}
+
+Error searchName(CpuType cpuType, AsmInsn &insn) {
+    cpu(cpuType)->searchName(insn, acceptOperands, pageSetup, readCodeName);
+    return insn.getError();
+}
+
 const /*PROGMEM*/ char *TableH8500::listCpu_P() const {
     return text::h8500::TEXT_H8500_LIST;
 }

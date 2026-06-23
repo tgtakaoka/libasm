@@ -12,13 +12,12 @@
 ;;; See the License for the specific language governing permissions and
 ;;; limitations under the License.
 
-        cpu     HD6475328
-        maxmode on
-        org     H'010000
-        include "gen_h8530.inc"
-        end
+;;; H8/520 in minimum mode - identical to H8/500 except no E-clock instructions
+;;; (MOVTPE/MOVFPE) because H8/520 has no E-clock output pin.
+;;; HD6475328 is the only H8/500-family code ASL knows; the omitted .inc file
+;;; covers the only H8/520-vs-H8/500 difference.
 
-;;; Local Variables:
-;;; mode: asm
-;;; End:
-;;; vim: set ft=asm:
+        cpu     HD6475328
+        org     H'0100
+        include "test_h8500.inc"
+        end

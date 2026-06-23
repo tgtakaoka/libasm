@@ -283,6 +283,10 @@ MostekDirective::MostekDirective(Assembler &assembler) : MotorolaDirective(assem
     registerPseudo(":=", &MostekDirective::defineConstant);
 }
 
+H8500Directive::H8500Directive(Assembler &assembler) : HitachiDirective(assembler) {
+    disablePseudo(".set");
+}
+
 Z8Directive::Z8Directive(Assembler &assembler) : IntelDirective(assembler) {
     disablePseudo(".set");
     registerPseudo("var", &Z8Directive::setVariable);

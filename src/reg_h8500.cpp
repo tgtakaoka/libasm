@@ -61,6 +61,16 @@ constexpr NameEntry CR_ENTRIES[] PROGMEM = {
 
 PROGMEM constexpr NameTable CR_TABLE{ARRAY_RANGE(CR_ENTRIES)};
 
+constexpr NameEntry PAGE_ENTRIES[] PROGMEM = {
+    { TEXT_REG_BR,  PAGE_BR },
+    { TEXT_REG_CP,  PAGE_CP },
+    { TEXT_REG_DP,  PAGE_DP },
+    { TEXT_REG_EP,  PAGE_EP },
+    { TEXT_REG_TP,  PAGE_TP },
+};
+
+PROGMEM constexpr NameTable PAGE_TABLE{ARRAY_RANGE(PAGE_ENTRIES)};
+
 constexpr NameEntry CC_ENTRIES[] PROGMEM = {
     { TEXT_BCC,    CC_CC  },
     { TEXT_BCS,    CC_CS  },
@@ -120,6 +130,16 @@ CrName parseCrName(StrScanner &scan, const ValueParser &parser) {
 StrBuffer &outCrName(StrBuffer &out, CrName name) {
     const auto *entry = CR_TABLE.searchName(name);
     return entry ? entry->outText(out) : out;
+}
+
+PageReg parsePageReg(StrScanner &scan, const ValueParser &parser) {
+    auto p = scan;
+    const auto *entry = PAGE_TABLE.searchText(parser.readRegName(p));
+    if (entry) {
+        scan = p;
+        return PageReg(entry->name());
+    }
+    return PAGE_ENUM_END;
 }
 
 CcName parseCcName(StrScanner &scan, const ValueParser &parser) {

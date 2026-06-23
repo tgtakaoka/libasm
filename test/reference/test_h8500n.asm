@@ -12,13 +12,9 @@
 ;;; See the License for the specific language governing permissions and
 ;;; limitations under the License.
 
-        cpu     HD6475328
-        maxmode on
-        org     H'010000
-        include "gen_h8530.inc"
-        end
+;;; H8/500 in minimum mode - base + E-clock instructions (no page jumps).
 
-;;; Local Variables:
-;;; mode: asm
-;;; End:
-;;; vim: set ft=asm:
+        .cpu     H8/500
+        .org     H'0100
+        .include "test_h8500.inc"
+        .include "test_h8500_eclk.inc"

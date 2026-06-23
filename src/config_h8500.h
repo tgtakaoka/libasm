@@ -35,10 +35,26 @@ enum CpuType : uint8_t {
     H8_530,
 };
 
+// Page registers whose assumed value the assembler may be told via the `.set`
+// directive. DP backs the 16-bit absolute mode (@aa:16) and BR the short
+// absolute mode (@aa:8); EP/TP/CP back register-indirect / code addressing.
+enum PageReg : uint8_t {
+    PAGE_DP,
+    PAGE_EP,
+    PAGE_TP,
+    PAGE_CP,
+    PAGE_BR,
+    PAGE_ENUM_END,
+};
+
 struct Config
     : public ConfigImpl<CpuType, ADDRESS_24BIT, ADDRESS_BYTE, OPCODE_8BIT, ENDIAN_BIG, 5, 8> {
     Config(const InsnTable<CpuType> &table)
-        : ConfigImpl(table, H8_500), _maxMode(false), _fpAlias(true), _spAlias(true) {}
+        : ConfigImpl(table, H8_500),
+          _maxMode(false),
+          _fpAlias(true),
+          _spAlias(true),
+          _pageReg{-1, -1, -1, -1, -1} {}
 
     // Minimum mode is a flat 64K (16-bit) space; maximum mode reaches the chip's
     // physical width: 16M (24-bit) for H8/510 ("H8/500"), 1M (20-bit) for the
@@ -66,10 +82,26 @@ struct Config
         return OK;
     }
 
+    // Assumed page-register value; negative = UNDEFINED (initial state). When
+    // undefined the assembler drops an absolute operand's high bits; once
+    // defined it validates them and rejects a page mismatch.
+    int16_t getPageRegister(PageReg reg) const { return _pageReg[reg]; }
+    Error setPageRegister(PageReg reg, int32_t value) {
+        if (value >= 0 && (value & ~0xFF))
+            return OVERFLOW_RANGE;
+        _pageReg[reg] = static_cast<int16_t>(value);
+        return OK;
+    }
+    void resetPageRegisters() {
+        for (auto &p : _pageReg)
+            p = -1;
+    }
+
 protected:
     bool _maxMode;
     bool _fpAlias;
     bool _spAlias;
+    int16_t _pageReg[PAGE_ENUM_END];
 };
 
 }  // namespace h8500

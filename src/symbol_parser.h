@@ -87,7 +87,7 @@ struct MotorolaSymbolParser final : PrefixSymbolParser, Singleton<MotorolaSymbol
     }
 };
 
-struct HitachiSymbolParser final : PrefixSymbolParser, Singleton<HitachiSymbolParser> {
+struct HitachiSymbolParser : PrefixSymbolParser, Singleton<HitachiSymbolParser> {
     HitachiSymbolParser()
         : PrefixSymbolParser(text::common::PSTR_DOT, text::common::PSTR_UNDER_DOT_DOLLAR) {}
     bool locationSymbol(StrScanner &scan) const override {

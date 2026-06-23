@@ -146,17 +146,23 @@ gas-%_h8s2600.s28: %_h8s2600.gas
 # H8/500 family targets (h8500, h8520, h8530)
 # The .gas wrapper uses a .include directive so h8500-hms-as inlines the
 # .ginc directly (no cpp pass).
+# $(1) target suffix, $(2) S-record extension, $(3) link text origin.
+# Maximum-mode targets link past 0xFFFF (24-bit physical, S2 records); the
+# minimum-mode "n" targets stay in the 16-bit space (S1 records).
 define gas-h8500-rule
-gas-%_$(1).hex: %_$(1).gas
+gas-%_$(1).$(2): %_$(1).gas
 	h8500-hms-as --warn -o $$(^:.gas=.p) -als=$$(^:.gas=.lst) $$^
-	h8500-hms-ld --entry=0 -Ttext 0x0100 -o $$(^:.gas=.o) $$(^:.gas=.p)
-	h8500-hms-objcopy -O ihex $$(^:.gas=.o) /dev/stdout \
-	  | tr -d '\015' > $$(^:.gas=.hex)
-	h8500-hms-objdump -m h8500 -D $$(^:.gas=.hex) > $$(^:.gas=.dis)
+	h8500-hms-ld --entry=0 -Ttext $(3) -o $$(^:.gas=.o) $$(^:.gas=.p)
+	h8500-hms-objcopy -O srec --srec-len=16 $$(^:.gas=.o) /dev/stdout \
+	  | tr -d '\015' > $$(^:.gas=.$(2))
+	h8500-hms-objdump -m h8500 -D $$(^:.gas=.$(2)) > $$(^:.gas=.dis)
 endef
-$(eval $(call gas-h8500-rule,h8500))
-$(eval $(call gas-h8500-rule,h8520))
-$(eval $(call gas-h8500-rule,h8530))
+$(eval $(call gas-h8500-rule,h8500,s28,0x010000))
+$(eval $(call gas-h8500-rule,h8500n,s19,0x0100))
+$(eval $(call gas-h8500-rule,h8520,s28,0x010000))
+$(eval $(call gas-h8500-rule,h8520n,s19,0x0100))
+$(eval $(call gas-h8500-rule,h8530,s28,0x010000))
+$(eval $(call gas-h8500-rule,h8530n,s19,0x0100))
 
 # i8086 target
 gas-%_i8086.hex: %_i8086.gas

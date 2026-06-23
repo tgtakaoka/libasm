@@ -14,10 +14,10 @@
 
 ;;; H8/500 in maximum mode - full instruction set (E-clock + page jumps).
 
-        cpu     H8/500
-        maxmode on
-        org     H'0100
-        include "test_h8500.inc"
-        include "test_h8500_eclk.inc"
-        include "test_h8500_pjmp.inc"
-        include "test_h8500_pjmp24.inc"
+        .cpu     H8/500
+        .maxmode on
+        .org     H'010000
+        .include "test_h8500.inc"
+        .include "test_h8500_eclk.inc"
+        .include "test_h8500_pjmp.inc"
+        .include "test_h8500_pjmp24.inc"

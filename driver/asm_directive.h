@@ -117,6 +117,12 @@ struct MostekDirective : MotorolaDirective {
     MostekDirective(Assembler &assembler);
 };
 
+// Hitachi target (.assign + S-record), but `.set` is H8/500's page-register
+// directive (handled in AsmH8500), so the driver's symbol-`.set` is dropped.
+struct H8500Directive : HitachiDirective {
+    H8500Directive(Assembler &assembler);
+};
+
 struct Z8Directive : IntelDirective {
     Z8Directive(Assembler &assembler);
 };

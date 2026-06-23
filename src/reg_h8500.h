@@ -19,6 +19,7 @@
 
 #include <stdint.h>
 
+#include "config_h8500.h"
 #include "str_buffer.h"
 #include "str_scanner.h"
 #include "value_parser.h"
@@ -83,6 +84,10 @@ StrBuffer &outRegName(StrBuffer &out, RegName name);
 
 CrName parseCrName(StrScanner &scan, const ValueParser &parser);
 StrBuffer &outCrName(StrBuffer &out, CrName name);
+
+// Parse a page-register name (DP/EP/TP/CP/BR) for the `.set` directive.
+// Returns PAGE_ENUM_END when the token is not a page register.
+PageReg parsePageReg(StrScanner &scan, const ValueParser &parser);
 
 CcName parseCcName(StrScanner &scan, const ValueParser &parser);
 StrBuffer &outCcName(StrBuffer &out, CcName name);

@@ -28,10 +28,38 @@ struct AsmH8500 final : Assembler, Config {
     AsmH8500(const ValueParser::Plugins &plugins = defaultPlugins());
 
 private:
+    const BoolOption<Config> _opt_maxMode;
+
+    Error parseOperand(StrScanner &scan, Operand &op) const;
+
+    void emitPcRel8(AsmInsn &insn, const Operand &op) const;
+    void emitPcRel16(AsmInsn &insn, const Operand &op) const;
+    // Low 16/8 bits of an absolute operand, validated against the assumed page
+    // register (DP/CP for @aa:16, BR for @aa:8): undefined -> silently drop the
+    // high byte, defined -> OVERFLOW_RANGE on a page mismatch.
+    uint16_t pageLow16(AsmInsn &insn, const Operand &op, PageReg page) const;
+    uint8_t pageLow8(AsmInsn &insn, const Operand &op) const;
+    void emitEaExt(AsmInsn &insn, const Operand &op, AddrMode mode) const;
+    Error emitOperand(AsmInsn &insn, const Operand &op, AddrMode mode) const;
+
+    Error encodeGenFmt(AsmInsn &insn) const;
+    Error encodeSpcFmt(AsmInsn &insn) const;
+    Error encodeSecFmt(AsmInsn &insn) const;
+
+    Error processMaxMode(StrScanner &scan, Insn &insn, uint16_t extra);
+    Error processSet(StrScanner &scan, Insn &insn, uint16_t extra);
+
+    void reset() override;
+    Error processPseudo(StrScanner &scan, Insn &insn) override;
     Error encodeImpl(StrScanner &scan, Insn &insn) const override;
     const ConfigBase &config() const override { return *this; }
     ConfigSetter &configSetter() override { return *this; }
     static const ValueParser::Plugins &defaultPlugins();
+
+    using PseudoH8500 = pseudo::__Pseudo<AsmH8500, Insn>;
+    using PseudosH8500 = pseudo::__Pseudos<PseudoH8500>;
+    static const PseudoH8500 PSEUDO_H8500_TABLE[] PROGMEM;
+    static const PseudosH8500 PSEUDOS_H8500 PROGMEM;
 };
 
 }  // namespace h8500
