@@ -198,27 +198,29 @@ usage: %s [-o <output>] [-l <list>] <input>
             fprintf(stderr, "  --%-16s: %s (%s)\n", opt->name_P(), opt->description_P(),
                     Options::nameof(opt->spec()));
         }
-        std::map<std::string, std::string> cpus;
-        std::map<std::string, std::string> descs;
-        std::map<std::string, OptionBase::OptionSpec> specs;
+        // Group options by (name, description): a name shared across CPUs with
+        // differing descriptions is listed once per distinct description, each
+        // with the CPUs that use it, rather than collapsing to the first text.
+        std::map<std::pair<std::string, std::string>, std::string> cpus;
+        std::map<std::pair<std::string, std::string>, OptionBase::OptionSpec> specs;
         for (const auto *dir : _driver) {
             for (const auto *opt = dir->options().head(); opt; opt = opt->next()) {
-                const std::string name{opt->name_P()};
-                if (descs.find(name) == descs.end()) {
-                    descs[name] = opt->description_P();
-                    specs[name] = opt->spec();
-                    cpus[name] = dir->cpu_P();
+                const std::pair<std::string, std::string> key{
+                        opt->name_P(), opt->description_P()};
+                if (cpus.find(key) == cpus.end()) {
+                    cpus[key] = dir->cpu_P();
+                    specs[key] = opt->spec();
                 } else {
-                    cpus[name] += ", ";
-                    cpus[name] += dir->cpu_P();
+                    cpus[key] += ", ";
+                    cpus[key] += dir->cpu_P();
                 }
             }
         }
-        for (const auto &opt : descs) {
-            const auto &name = opt.first;
-            const auto &desc = opt.second;
+        for (const auto &opt : cpus) {
+            const auto &name = opt.first.first;
+            const auto &desc = opt.first.second;
             fprintf(stderr, "  --%-16s: %s (%s: %s)\n", name.c_str(), desc.c_str(),
-                    Options::nameof(specs[name]), cpus[name].c_str());
+                    Options::nameof(specs[opt.first]), opt.second.c_str());
         }
     }
     return 2;
