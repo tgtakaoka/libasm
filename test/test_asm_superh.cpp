@@ -636,10 +636,79 @@ void test_sh2a_bank_extras() {
     TEST("MOVML.L @R15+, R0",   0x40F5);
 }
 
+// An undefined symbol reads as value 0 and must surface UNDEFINED_SYMBOL --
+// never silently assemble, and never report a misleading OVERFLOW/TOO_FAR
+// caused by the placeholder 0. The PC-relative modes emit a zero
+// displacement (the base opcode) rather than a delta from address 0.
+void test_undef() {
+    // M_IMM8 -- signed immediate (MOV/ADD/CMP) and unsigned (AND/OR/XOR/TST).
+    ERUS("MOV    #UNDEF, R0",         "UNDEF, R0",          0xE000);
+    ERUS("ADD    #UNDEF, R1",         "UNDEF, R1",          0x7100);
+    ERUS("CMP/EQ #UNDEF, R0",         "UNDEF, R0",          0x8800);
+    ERUS("AND    #UNDEF, R0",         "UNDEF, R0",          0xC900);
+    ERUS("OR     #UNDEF, R0",         "UNDEF, R0",          0xCB00);
+    ERUS("XOR    #UNDEF, R0",         "UNDEF, R0",          0xCA00);
+    ERUS("TST    #UNDEF, R0",         "UNDEF, R0",          0xC800);
+    ERUS("AND.B  #UNDEF, @(R0, GBR)", "UNDEF, @(R0, GBR)",  0xCD00);
+    ERUS("OR.B   #UNDEF, @(R0, GBR)", "UNDEF, @(R0, GBR)",  0xCF00);
+    ERUS("XOR.B  #UNDEF, @(R0, GBR)", "UNDEF, @(R0, GBR)",  0xCE00);
+    ERUS("TST.B  #UNDEF, @(R0, GBR)", "UNDEF, @(R0, GBR)",  0xCC00);
+    // M_TNUM -- TRAPA #imm (unsigned 8-bit).
+    ERUS("TRAPA  #UNDEF",             "UNDEF",              0xC300);
+    // M_D4N -- MOV.L Rm,@(disp,Rn), disp scaled by 4.
+    ERUS("MOV.L  R0, @(UNDEF, R1)",   "UNDEF, R1)",         0x1100);
+    // M_D4M -- @(disp,Rm), disp scaled by mnemonic size.
+    ERUS("MOV.B  R0, @(UNDEF, R1)",   "UNDEF, R1)",         0x8010);
+    ERUS("MOV.W  R0, @(UNDEF, R1)",   "UNDEF, R1)",         0x8110);
+    ERUS("MOV.B  @(UNDEF, R1), R0",   "UNDEF, R1), R0",     0x8410);
+    ERUS("MOV.W  @(UNDEF, R1), R0",   "UNDEF, R1), R0",     0x8510);
+    ERUS("MOV.L  @(UNDEF, R1), R2",   "UNDEF, R1), R2",     0x5210);
+    // M_D8B/W/L -- @(disp,GBR), disp scaled by size.
+    ERUS("MOV.B  R0, @(UNDEF, GBR)",  "UNDEF, GBR)",        0xC000);
+    ERUS("MOV.W  R0, @(UNDEF, GBR)",  "UNDEF, GBR)",        0xC100);
+    ERUS("MOV.L  R0, @(UNDEF, GBR)",  "UNDEF, GBR)",        0xC200);
+    ERUS("MOV.B  @(UNDEF, GBR), R0",  "UNDEF, GBR), R0",    0xC400);
+    ERUS("MOV.W  @(UNDEF, GBR), R0",  "UNDEF, GBR), R0",    0xC500);
+    ERUS("MOV.L  @(UNDEF, GBR), R0",  "UNDEF, GBR), R0",    0xC600);
+    // M_PCW / M_PCL -- @(target,PC); emit zero displacement (base opcode).
+    ERUS("MOV.W  @(UNDEF, PC), R0",   "UNDEF, PC), R0",     0x9000);
+    ERUS("MOV.L  @(UNDEF, PC), R0",   "UNDEF, PC), R0",     0xD000);
+    ERUS("MOVA   @(UNDEF, PC), R0",   "UNDEF, PC), R0",     0xC700);
+    // M_REL8 / M_REL12 -- PC-relative branch targets; emit zero delta.
+    ERUS("BT     UNDEF",              "UNDEF",              0x8900);
+    ERUS("BF     UNDEF",              "UNDEF",              0x8B00);
+    ERUS("BRA    UNDEF",              "UNDEF",              0xA000);
+    ERUS("BSR    UNDEF",              "UNDEF",              0xB000);
+    // Same, but pinned at a non-zero address to prove the delta is still 0.
+    AERRT(0x0100, "BRA UNDEF", UNDEFINED_SYMBOL, "UNDEF", 0xA000);
+    AERRT(0x0100, "BF  UNDEF", UNDEFINED_SYMBOL, "UNDEF", 0x8B00);
+
+    if (isSh2()) {
+        // M_REL8 delay-slot branches (SH-2).
+        ERUS("BT/S UNDEF",            "UNDEF",              0x8D00);
+        ERUS("BF/S UNDEF",            "UNDEF",              0x8F00);
+    }
+    if (isShDsp()) {
+        // M_REL8P -- LDRS/LDRE @(target,PC); M_TNUM -- SETRC #imm (SH-DSP).
+        ERUS("LDRS  @(UNDEF, PC)",    "UNDEF, PC)",         0x8C00);
+        ERUS("LDRE  @(UNDEF, PC)",    "UNDEF, PC)",         0x8E00);
+        ERUS("SETRC #UNDEF",          "UNDEF",              0x8200);
+    }
+    if (isSh2a()) {
+        // M_IMM3 -- BCLR/BSET/BST #imm3,Rn (SH-2A).
+        ERUS("BCLR #UNDEF, R0",       "UNDEF, R0",          0x8600);
+        ERUS("BSET #UNDEF, R0",       "UNDEF, R0",          0x8601);
+        ERUS("BST  #UNDEF, R0",       "UNDEF, R0",          0x8700);
+        // M_IMM20 / M_IMM20S -- 32-bit MOVI20/MOVI20S (two words).
+        ERUS("MOVI20  #UNDEF, R0",    "UNDEF, R0", uint16_t(0x0000), uint16_t(0x0000));
+        ERUS("MOVI20S #UNDEF, R0",    "UNDEF, R0", uint16_t(0x0001), uint16_t(0x0000));
+    }
+}
 // clang-format on
 
 void run_tests(const char *cpu) {
     assembler.setCpu(cpu);
+    RUN_TEST(test_undef);
     RUN_TEST(test_mov_imm);
     RUN_TEST(test_mov_reg);
     RUN_TEST(test_mov_indirect);

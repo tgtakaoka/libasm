@@ -311,6 +311,13 @@ unsigned sizeScale(char suffix) {
 }  // namespace
 
 void AsmSuperH::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode) const {
+    // Carry the operand's own error (notably UNDEFINED_SYMBOL) onto the
+    // instruction first, so a later range/distance check -- which only fires
+    // via setErrorIf when the instruction is still OK -- can't mask it. An
+    // undefined symbol has an undefined value (read as 0); the PC-relative
+    // modes below substitute the base address for it to avoid a spurious
+    // OPERAND_TOO_FAR and to emit a clean zero displacement.
+    insn.setErrorIf(op);
     auto opc = insn.opCode();
     const auto regnum = encodeRegNum(op.reg);
     switch (mode) {
@@ -451,8 +458,8 @@ void AsmSuperH::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode) c
     case M_PCW: {
         // Operand is the absolute target address. The CPU computes
         // target = (PC+4) + d*2, so d = (target - (PC+4)) / 2 in [0, 255].
-        const auto target = op.val.getUnsigned();
         const auto pc4 = insn.address() + 4;
+        const auto target = op.getError() ? pc4 : op.val.getUnsigned();
         const auto delta = static_cast<int32_t>(target - pc4);
         if (delta < 0 || delta > 510 || (delta & 1)) {
             insn.setErrorIf(op, OPERAND_TOO_FAR);
@@ -466,12 +473,12 @@ void AsmSuperH::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode) c
         // target = ((PC+4) & ~3) + d*4, so d = (target - ((PC+4) & ~3)) / 4.
         // PC may be any even value (the mask handles non-4-aligned PC);
         // target itself must be 4-aligned for the encoding to round-trip.
-        const auto target = op.val.getUnsigned();
+        const auto pc4 = (insn.address() + 4) & ~Config::uintptr_t(3);
+        const auto target = op.getError() ? pc4 : op.val.getUnsigned();
         if (target & 3) {
             insn.setErrorIf(op, OPERAND_NOT_ALIGNED);
             break;
         }
-        const auto pc4 = (insn.address() + 4) & ~Config::uintptr_t(3);
         const auto delta = static_cast<int32_t>(target - pc4);
         if (delta < 0 || delta > 1020) {
             insn.setErrorIf(op, OPERAND_TOO_FAR);
@@ -499,8 +506,8 @@ void AsmSuperH::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode) c
     case M_REL8:
     case M_REL8P: {
         // 8-bit signed PC-relative: d = (target - (PC+4)) / 2, [-128, 127]
-        const auto target = op.val.getUnsigned();
         const auto pc4 = insn.address() + 4;
+        const auto target = op.getError() ? pc4 : op.val.getUnsigned();
         const auto delta = static_cast<int32_t>(target - pc4);
         if (delta < -256 || delta > 254 || (delta & 1))
             insn.setErrorIf(op, OPERAND_TOO_FAR);
@@ -509,8 +516,8 @@ void AsmSuperH::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode) c
     }
     case M_REL12: {
         // 12-bit signed PC-relative branch: d = (target - (PC+4)) / 2, [-2048, 2047]
-        const auto target = op.val.getUnsigned();
         const auto pc4 = insn.address() + 4;
+        const auto target = op.getError() ? pc4 : op.val.getUnsigned();
         const auto delta = static_cast<int32_t>(target - pc4);
         if (delta < -4096 || delta > 4094 || (delta & 1))
             insn.setErrorIf(op, OPERAND_TOO_FAR);
