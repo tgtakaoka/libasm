@@ -269,6 +269,10 @@ void test_illegal_cp1600() {
     // JSR return register must be R4, R5, or R6.
     ERRT("JSR R3, X'0124'", REGISTER_NOT_ALLOWED, "R3, X'0124'", 0x0004, 0xFF00, 0x0124);
     ERRT("JSR R7, X'0124'", REGISTER_NOT_ALLOWED, "R7, X'0124'", 0x0004, 0x0300, 0x0124);
+    // Trailing text after the operands is not an implicit comment (CP1600 uses
+    // ';'), so it is rejected, not silently ignored.
+    ERRT("TSTR R0 junk",   GARBAGE_AT_END, "junk");
+    ERRT("MVI X'1234', R0 junk", GARBAGE_AT_END, "junk");
 }
 
 // Undefined symbol in every value-bearing operand position.  The assembler must

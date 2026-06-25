@@ -426,6 +426,12 @@ Error AsmCp1600::encodeImpl(StrScanner &scan, Insn &_insn) const {
     if (searchName(cpuType(), insn))
         return _insn.setError(insn.srcOp, insn);
 
+    // After the operands, only end-of-line or a (semicolon) comment may follow.
+    // Trailing text is not an implicit comment in CP1600, so reject it instead
+    // of silently ignoring it (e.g. "TSTR R0 junk").
+    if (!endOfLine(scan))
+        return _insn.setError(scan, GARBAGE_AT_END);
+
     // Set opcode bits AND emit operand data words; M_NONE is a no-op.
     encodeOperand(insn, insn.srcOp, insn.src());
     encodeOperand(insn, insn.dstOp, insn.dst());
