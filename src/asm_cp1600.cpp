@@ -304,6 +304,7 @@ void AsmCp1600::emitBranch(AsmInsn &insn, const Operand &op) const {
 // slot, so emitOperand16 (via operandPos) safely emits into the right place
 // regardless of call order.
 void AsmCp1600::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode) const {
+    insn.setErrorIf(op);  // propagate operand parse errors (e.g. UNDEFINED_SYMBOL)
     const auto opc = insn.opCode();
     const auto reg = encodeRegNumber(op.reg);
     switch (mode) {

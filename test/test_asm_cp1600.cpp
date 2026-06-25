@@ -55,6 +55,23 @@
         err1.setError("", PREFIX_HAS_NO_EFFECT);                         \
         cont_assert(__FILE__, __LINE__, err1, src2, (eaddr2), m2, insn); \
     } while (0)
+// Like DTEST but asserts the prefixed instruction reports UNDEFINED_SYMBOL at
+// |eat2| (used when its operand references an undefined symbol).
+#define DERUS(addr1, src1, opc1, addr2, eaddr2, src2, eat2, ...)         \
+    do {                                                                 \
+        const Config::opcode_t e1[] = {opc1};                            \
+        const Config::opcode_t e2[] = {__VA_ARGS__};                     \
+        const auto endian = assembler.config().endian();                 \
+        const auto unit = assembler.config().addressUnit();              \
+        const ArrayMemory m1((addr1), e1, sizeof(e1), endian, unit);     \
+        const ArrayMemory m2((addr2), e2, sizeof(e2), endian, unit);     \
+        Insn insn(m1.origin());                                          \
+        ErrorAt err0;                                                    \
+        asm_assert(__FILE__, __LINE__, err0, src1, m1, insn);            \
+        ErrorAt err1;                                                    \
+        err1.setError((eat2), UNDEFINED_SYMBOL);                         \
+        cont_assert(__FILE__, __LINE__, err1, src2, (eaddr2), m2, insn); \
+    } while (0)
 
 using namespace libasm;
 using namespace libasm::cp1600;
@@ -254,6 +271,37 @@ void test_illegal_cp1600() {
     ERRT("JSR R7, X'0124'", REGISTER_NOT_ALLOWED, "R7, X'0124'", 0x0004, 0x0300, 0x0124);
 }
 
+// Undefined symbol in every value-bearing operand position.  The assembler must
+// report UNDEFINED_SYMBOL (pointing at the offending symbol) yet still emit the
+// correct instruction length with the symbol taken as zero, so a first pass can
+// size the code before the symbol is resolved.
+void test_undef() {
+    // M_DADDR -- direct address, source and destination positions.
+    ERUS("MVI UNDEF, R1", "UNDEF, R1", 0x0281, 0x0000);
+    ERUS("MVO R0, UNDEF", "UNDEF",     0x0240, 0x0000);
+    // M_IMM16 -- immediate.
+    ERUS("MVII UNDEF, R7", "UNDEF, R7", 0x02BF, 0x0000);
+    ERUS("ADDI UNDEF, R1", "UNDEF, R1", 0x02F9, 0x0000);
+    // M_IMM16 under an SDBD prefix: still one report, two operand words.
+    DERUS(0x0100, "SDBD", 0x0001, 0x0101, 0x0101, "MVII UNDEF, R0", "UNDEF, R0",
+            0x02B8, 0x0000, 0x0000);
+    // M_JADDR -- jump / JSR target.
+    AERUS(0x0100, "J        UNDEF", "UNDEF",     0x0004, 0x0300, 0x0000);
+    AERUS(0x0100, "JSR  R4, UNDEF", "UNDEF",     0x0004, 0x0000, 0x0000);
+    // M_BDISP -- branch displacement (undefined target encodes as zero offset).
+    AERUS(0x0100, "B    UNDEF", "UNDEF", 0x0200, 0x0000);
+    AERUS(0x0100, "BC   UNDEF", "UNDEF", 0x0201, 0x0000);
+    // M_BCOND -- BEXT target and/or condition.
+    AERUS(0x0100, "BEXT X'0105', UNDEF", "UNDEF",         0x0210, 0x0003);
+    AERUS(0x0100, "BEXT UNDEF, 0",       "UNDEF, 0",      0x0210, 0x0000);
+    AERUS(0x0100, "BEXT UNDEF, UNDEF",   "UNDEF, UNDEF",  0x0210, 0x0000);
+    // M_SHCNT / M_BIT0 -- count operands (a symbol there is degenerate but must
+    // still be diagnosed as undefined rather than silently accepted).
+    ERUS("SWAP R0, UNDEF", "UNDEF", 0x0040);
+    ERUS("NOP  UNDEF",     "UNDEF", 0x0034);
+    ERUS("SIN  UNDEF",     "UNDEF", 0x0036);
+}
+
 void run_tests(const char *cpu) {
     assembler.setCpu(cpu);
     RUN_TEST(test_cpu);
@@ -267,6 +315,7 @@ void run_tests(const char *cpu) {
     RUN_TEST(test_data_constant);
     RUN_TEST(test_sdbd);
     RUN_TEST(test_illegal_cp1600);
+    RUN_TEST(test_undef);
 }
 
 // Local Variables:
