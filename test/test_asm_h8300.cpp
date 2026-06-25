@@ -978,6 +978,91 @@ void test_h8s2600_mac() {
     // MAC/LDMAC/STMAC are H8S/2600-only; not accepted on other CPUs.
 }
 
+void test_undef() {
+    // An undefined symbol is a soft error: ErrorReporter::hasError() returns
+    // false for UNDEFINED_SYMBOL, so parseOperand keeps going with value 0 and
+    // the instruction is still encoded at its proper length (the value bytes
+    // come out 0). encodeImpl then propagates UNDEFINED_SYMBOL so the final
+    // assembler pass reports it. Cover every operand mode that takes a value.
+
+    // ----- Immediate (size fixed by suffix/opcode, not by the value) -----
+    ERUS("MOV.B  #UNDEF, R0H", "UNDEF, R0H", 0xF000);
+    ERUS("MOV.W  #UNDEF, R0",  "UNDEF, R0",  0x7900|0, 0x0000);
+    ERUS("ADD.B  #UNDEF, R0H", "UNDEF, R0H", 0x8000);
+    ERUS("ADDX.B #UNDEF, R0H", "UNDEF, R0H", 0x9000);
+    ERUS("CMP.B  #UNDEF, R5H", "UNDEF, R5H", 0xA000|(0x5<<8));
+    ERUS("SUBX.B #UNDEF, R2L", "UNDEF, R2L", 0xB000|(0xA<<8));
+    ERUS("OR.B   #UNDEF, R7L", "UNDEF, R7L", 0xC000|(0xF<<8));
+    ERUS("XOR.B  #UNDEF, R5H", "UNDEF, R5H", 0xD000|(0x5<<8));
+    ERUS("AND.B  #UNDEF, R0H", "UNDEF, R0H", 0xE000|(0x0<<8));
+
+    // ----- Bit number immediate (M_IMM3) -----
+    ERUS("BSET #UNDEF, R0H", "UNDEF, R0H", 0x7000);
+    ERUS("BCLR #UNDEF, R4L", "UNDEF, R4L", 0x7200|0xC);
+    ERUS("BTST #UNDEF, R0H", "UNDEF, R0H", 0x7300);
+
+    // ----- Absolute @aa:8 (value 0 -> short form, byte 0) -----
+    ERUS("MOV.B @UNDEF:8, R0H", "UNDEF:8, R0H", 0x2000);
+    // No suffix: an undefined value can't be proven to live in the 0xFF00..0xFFFF
+    // zero page, so the safe @aa:16 form is selected (same as any out-of-page value).
+    ERUS("MOV.B @UNDEF,   R0H", "UNDEF,   R0H", 0x6A00, 0x0000);
+
+    // ----- Absolute @aa:16 -----
+    ERUS("MOV.B @UNDEF:16, R0H", "UNDEF:16, R0H", 0x6A00, 0x0000);
+    ERUS("MOV.W @UNDEF:16, R0",  "UNDEF:16, R0",  0x6B00, 0x0000);
+
+    // ----- Memory indirect @@aa:8 -----
+    ERUS("JMP @@UNDEF:8", "UNDEF:8", 0x5B00);
+    ERUS("JSR @@UNDEF:8", "UNDEF:8", 0x5F00);
+
+    // ----- Jump absolute @aa:16 -----
+    ERUS("JMP @UNDEF:16", "UNDEF:16", 0x5A00, 0x0000);
+    ERUS("JSR @UNDEF:16", "UNDEF:16", 0x5E00, 0x0000);
+
+    // ----- Indexed @(d:16,Rn) -----
+    ERUS("MOV.B @(UNDEF, R0), R0H", "UNDEF, R0), R0H", 0x6E00, 0x0000);
+    ERUS("MOV.W @(UNDEF, R0), R0",  "UNDEF, R0), R0",  0x6F00, 0x0000);
+
+    // ----- Branch relative (value 0 -> displacement 0) -----
+    ERUS("BRA UNDEF", "UNDEF", 0x4000);
+    ERUS("BEQ UNDEF", "UNDEF", 0x4700);
+    ERUS("BSR UNDEF", "UNDEF", 0x5500);
+
+    if (is_h8300h() || is_h8s()) {
+        // 32-bit immediate.
+        ERUS("MOV.L #UNDEF, ER0", "UNDEF, ER0", 0x7A00|0, 0x0000, 0x0000);
+        ERUS("ADD.L #UNDEF, ER0", "UNDEF, ER0", 0x7A10|0, 0x0000, 0x0000);
+        ERUS("CMP.L #UNDEF, ER1", "UNDEF, ER1", 0x7A20|1, 0x0000, 0x0000);
+        ERUS("ADD.W #UNDEF, R0",  "UNDEF, R0",  0x7910|0, 0x0000);
+
+        // Absolute @aa:24.
+        ERUS("MOV.B @UNDEF:24, R0H", "UNDEF:24, R0H", 0x6A20|0x0, 0x0000, 0x0000);
+        ERUS("MOV.W @UNDEF:24, R0",  "UNDEF:24, R0",  0x6B20|0x0, 0x0000, 0x0000);
+        ERUS("JMP @UNDEF:24", "UNDEF:24", 0x5A00, 0x0000);
+        ERUS("JSR @UNDEF:24", "UNDEF:24", 0x5E00, 0x0000);
+    }
+
+    if (is_h8300h()) {
+        // Indexed @(d:24,ERn) via 0x7800 prefix (H8/300H only; H8S uses :32).
+        ERUS("MOV.B @(UNDEF:24, ER0), R0H", "UNDEF:24, ER0), R0H",
+                0x7800|(0<<4), 0x6A20|0x0, 0x0000, 0x0000);
+        ERUS("MOV.W @(UNDEF:24, ER3), R5",  "UNDEF:24, ER3), R5",
+                0x7800|(3<<4), 0x6B20|0x5, 0x0000, 0x0000);
+    }
+
+    if (is_h8s()) {
+        // H8S advanced @aa:32 data addressing (byte encoding as @aa:24).
+        ERUS("MOV.B @UNDEF:32, R0H", "UNDEF:32, R0H", 0x6A20|0x0, 0x0000, 0x0000);
+        ERUS("MOV.W @UNDEF:32, R0",  "UNDEF:32, R0",  0x6B20|0x0, 0x0000, 0x0000);
+        ERUS("MOV.L @UNDEF:32, ER0", "UNDEF:32, ER0", 0x0100, 0x6B20|0x0, 0x0000, 0x0000);
+        // Indexed @(d:32,ERn) via 0x7800 prefix.
+        ERUS("MOV.B @(UNDEF:32, ER0), R0H", "UNDEF:32, ER0), R0H",
+                0x7800|(0<<4), 0x6A20|0x0, 0x0000, 0x0000);
+        ERUS("MOV.W @(UNDEF:32, ER3), R5",  "UNDEF:32, ER3), R5",
+                0x7800|(3<<4), 0x6B20|0x5, 0x0000, 0x0000);
+    }
+}
+
 void run_tests(const char *cpu) {
     assembler.setCpu(cpu);
     RUN_TEST(test_system);
@@ -996,6 +1081,7 @@ void run_tests(const char *cpu) {
     if (is_h8300h() || is_h8s())
         RUN_TEST(test_advanced_mode);
     RUN_TEST(test_data_constant);
+    RUN_TEST(test_undef);
 }
 
 // Local Variables:
