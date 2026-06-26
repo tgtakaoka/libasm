@@ -69,6 +69,14 @@ struct ValueParser {
         const OperatorParser &operators() const override;
     };
 
+    struct HitachiPlugins : Plugins {
+        const NumberParser &number() const override;
+        const CommentParser &comment() const override;
+        const SymbolParser &symbol() const override;
+        const LetterParser &letter() const override;
+        const OperatorParser &operators() const override;
+    };
+
     struct TexasPlugins : Plugins {
         const NumberParser &number() const override;
         const CommentParser &comment() const override;

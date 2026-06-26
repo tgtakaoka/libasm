@@ -80,68 +80,68 @@ gas-%_ns32032.hex: %_ns32032.gas
 	ns32k-openbsd-objdump -m ns32k:32032 -D $(^:.gas=.hex) > $(^:.gas=.dis)
 
 # H8/300 target
-gas-%_h8300.hex: %_h8300.gas
+gas-%_h8300.s19: %_h8300.gas
 	h8300-elf-as --warn -o $(^:.gas=.p) -al=$(^:.gas=.lst) $^
 	h8300-elf-ld --entry=0 -section-start=.text=0x0100 -o $(^:.gas=.o) $(^:.gas=.p)
-	h8300-elf-objcopy -I elf32-h8300 -O ihex $(^:.gas=.o) /dev/stdout \
-	| tr -d '\015' > $(^:.gas=.hex)
-	h8300-elf-objdump -m h8300 -D $(^:.gas=.hex) > $(^:.gas=.dis)
+	h8300-elf-objcopy -I elf32-h8300 -O srec --srec-len=16 $(^:.gas=.o) /dev/stdout \
+	| tr -d '\015' > $(^:.gas=.s19)
+	h8300-elf-objdump -m h8300 -D $(^:.gas=.s19) > $(^:.gas=.dis)
 
 # H8/300H target
-gas-%_h8300h.hex: %_h8300h.gas
+gas-%_h8300h.s28: %_h8300h.gas
 	h8300-elf-as -mach=h8300h --warn -o $(^:.gas=.p) -al=$(^:.gas=.lst) $^
 	h8300-elf-ld -mh8300helf --entry=0 -section-start=.text=0x0100 -o $(^:.gas=.o) $(^:.gas=.p)
-	h8300-elf-objcopy -I elf32-h8300 -O ihex $(^:.gas=.o) /dev/stdout \
-	| tr -d '\015' > $(^:.gas=.hex)
-	h8300-elf-objdump -m h8300h -D $(^:.gas=.hex) > $(^:.gas=.dis)
+	h8300-elf-objcopy -I elf32-h8300 -O srec --srec-len=16 $(^:.gas=.o) /dev/stdout \
+	| tr -d '\015' > $(^:.gas=.s28)
+	h8300-elf-objdump -m h8300h -D $(^:.gas=.s28) > $(^:.gas=.dis)
 
 # H8/300H normal mode target
-gas-%_h8300hn.hex: %_h8300hn.gas
+gas-%_h8300hn.s19: %_h8300hn.gas
 	h8300-elf-as -mach=h8300hn --warn -o $(^:.gas=.p) -al=$(^:.gas=.lst) $^
 	h8300-elf-ld -mh8300hnelf --entry=0 -section-start=.text=0x0100 -o $(^:.gas=.o) $(^:.gas=.p)
-	h8300-elf-objcopy -I elf32-h8300 -O ihex $(^:.gas=.o) /dev/stdout \
-	| tr -d '\015' > $(^:.gas=.hex)
-	h8300-elf-objdump -m h8300h -D $(^:.gas=.hex) > $(^:.gas=.dis)
+	h8300-elf-objcopy -I elf32-h8300 -O srec --srec-len=16 $(^:.gas=.o) /dev/stdout \
+	| tr -d '\015' > $(^:.gas=.s19)
+	h8300-elf-objdump -m h8300h -D $(^:.gas=.s19) > $(^:.gas=.dis)
 
 # H8/300H advanced mode target
-gas-%_h8s2000.hex: %_h8s2000.gas
+gas-%_h8s2000.s28: %_h8s2000.gas
 	h8300-elf-as -mach=h8300s --warn -o $(^:.gas=.p) -al=$(^:.gas=.lst) $^
 	h8300-elf-ld -mh8300self --entry=0 -section-start=.text=0x0100 -o $(^:.gas=.o) $(^:.gas=.p)
-	h8300-elf-objcopy -I elf32-h8300 -O ihex $(^:.gas=.o) /dev/stdout \
-	| tr -d '\015' > $(^:.gas=.hex)
-	h8300-elf-objdump -m h8300s -D $(^:.gas=.hex) > $(^:.gas=.dis)
+	h8300-elf-objcopy -I elf32-h8300 -O srec --srec-len=16 $(^:.gas=.o) /dev/stdout \
+	| tr -d '\015' > $(^:.gas=.s28)
+	h8300-elf-objdump -m h8300s -D $(^:.gas=.s28) > $(^:.gas=.dis)
 
 # H8S/2000 normal mode target
-gas-%_h8s2000n.hex: %_h8s2000n.gas
+gas-%_h8s2000n.s19: %_h8s2000n.gas
 	h8300-elf-as -mach=h8300sn --warn -o $(^:.gas=.p) -al=$(^:.gas=.lst) $^
 	h8300-elf-ld -mh8300snelf --entry=0 -section-start=.text=0x0100 -o $(^:.gas=.o) $(^:.gas=.p)
-	h8300-elf-objcopy -I elf32-h8300 -O ihex $(^:.gas=.o) /dev/stdout \
-	| tr -d '\015' > $(^:.gas=.hex)
-	h8300-elf-objdump -m h8300s -D $(^:.gas=.hex) > $(^:.gas=.dis)
+	h8300-elf-objcopy -I elf32-h8300 -O srec --srec-len=16 $(^:.gas=.o) /dev/stdout \
+	| tr -d '\015' > $(^:.gas=.s19)
+	h8300-elf-objdump -m h8300s -D $(^:.gas=.s19) > $(^:.gas=.dis)
 
 # H8S/2000 advanced mode target
-gas-%_h8s2000.hex: %_h8s2000.gas
+gas-%_h8s2000.s28: %_h8s2000.gas
 	h8300-elf-as -mach=h8300s --warn -o $(^:.gas=.p) -al=$(^:.gas=.lst) $^
 	h8300-elf-ld -mh8300self --entry=0 -section-start=.text=0x0100 -o $(^:.gas=.o) $(^:.gas=.p)
-	h8300-elf-objcopy -I elf32-h8300 -O ihex $(^:.gas=.o) /dev/stdout \
-	| tr -d '\015' > $(^:.gas=.hex)
-	h8300-elf-objdump -m h8300s -D $(^:.gas=.hex) > $(^:.gas=.dis)
+	h8300-elf-objcopy -I elf32-h8300 -O srec --srec-len=16 $(^:.gas=.o) /dev/stdout \
+	| tr -d '\015' > $(^:.gas=.s28)
+	h8300-elf-objdump -m h8300s -D $(^:.gas=.s28) > $(^:.gas=.dis)
 
 # H8S/2600 normal mode target
-gas-%_h8s2600n.hex: %_h8s2600n.gas
+gas-%_h8s2600n.s19: %_h8s2600n.gas
 	h8300-elf-as -mach=h8300sn --warn -o $(^:.gas=.p) -al=$(^:.gas=.lst) $^
 	h8300-elf-ld -mh8300snelf --entry=0 -section-start=.text=0x0100 -o $(^:.gas=.o) $(^:.gas=.p)
-	h8300-elf-objcopy -I elf32-h8300 -O ihex $(^:.gas=.o) /dev/stdout \
-	| tr -d '\015' > $(^:.gas=.hex)
-	h8300-elf-objdump -m h8300s -D $(^:.gas=.hex) > $(^:.gas=.dis)
+	h8300-elf-objcopy -I elf32-h8300 -O srec --srec-len=16 $(^:.gas=.o) /dev/stdout \
+	| tr -d '\015' > $(^:.gas=.s19)
+	h8300-elf-objdump -m h8300s -D $(^:.gas=.s19) > $(^:.gas=.dis)
 
 # H8S/2600 advanced mode target
-gas-%_h8s2600.hex: %_h8s2600.gas
+gas-%_h8s2600.s28: %_h8s2600.gas
 	h8300-elf-as -mach=h8300s --warn -o $(^:.gas=.p) -al=$(^:.gas=.lst) $^
 	h8300-elf-ld -mh8300self --entry=0 -section-start=.text=0x0100 -o $(^:.gas=.o) $(^:.gas=.p)
-	h8300-elf-objcopy -I elf32-h8300 -O ihex $(^:.gas=.o) /dev/stdout \
-	| tr -d '\015' > $(^:.gas=.hex)
-	h8300-elf-objdump -m h8300s -D $(^:.gas=.hex) > $(^:.gas=.dis)
+	h8300-elf-objcopy -I elf32-h8300 -O srec --srec-len=16 $(^:.gas=.o) /dev/stdout \
+	| tr -d '\015' > $(^:.gas=.s28)
+	h8300-elf-objdump -m h8300s -D $(^:.gas=.s28) > $(^:.gas=.dis)
 
 # H8/500 family targets (h8500, h8520)
 # h8500-hms-as (binutils 2.16.1) supports .include but rejects ';' as a

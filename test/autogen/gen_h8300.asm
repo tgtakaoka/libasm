@@ -12,10 +12,10 @@
 ;;; See the License for the specific language governing permissions and
 ;;; limitations under the License.
 
-        cpu     H8/300
+        .cpu     H8/300
         .org     H'0100
-        include "gen_h8300.inc"
-        end
+        .include "gen_h8300.inc"
+        .end
 
 ;;; Local Variables:
 ;;; mode: asm

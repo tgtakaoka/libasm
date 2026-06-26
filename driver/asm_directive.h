@@ -104,6 +104,11 @@ struct MotorolaDirective : AsmDirective {
     BinEncoder &defaultEncoder() const override;
 };
 
+struct HitachiDirective : AsmDirective {
+    HitachiDirective(Assembler &assembler);
+    BinEncoder &defaultEncoder() const override;
+};
+
 struct IntelDirective : AsmDirective {
     IntelDirective(Assembler &assembler);
 };

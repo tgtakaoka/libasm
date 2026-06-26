@@ -56,18 +56,28 @@ const ValueParser::Plugins &ValueParser::Plugins::defaultPlugins() {
 }
 
 const ValueParser::Plugins &ValueParser::Plugins::hitachi() {
-    static const struct final : Plugins {
-        const NumberParser &number() const override { return HitachiNumberParser::singleton(); }
-        const CommentParser &comment() const override {
-            return SemicolonCommentParser::singleton();
-        }
-        const SymbolParser &symbol() const override { return HitachiSymbolParser::singleton(); }
-        const LetterParser &letter() const override { return HitachiLetterParser::singleton(); }
-        const OperatorParser &operators() const override {
-            return HitachiOperatorParser::singleton();
-        }
-    } PLUGINS;
+    static const HitachiPlugins PLUGINS;
     return PLUGINS;
+}
+
+const NumberParser &ValueParser::HitachiPlugins::number() const {
+    return HitachiNumberParser::singleton();
+}
+
+const CommentParser &ValueParser::HitachiPlugins::comment() const {
+    return SemicolonCommentParser::singleton();
+}
+
+const SymbolParser &ValueParser::HitachiPlugins::symbol() const {
+    return HitachiSymbolParser::singleton();
+}
+
+const LetterParser &ValueParser::HitachiPlugins::letter() const {
+    return HitachiLetterParser::singleton();
+}
+
+const OperatorParser &ValueParser::HitachiPlugins::operators() const {
+    return HitachiOperatorParser::singleton();
 }
 
 const ValueParser::Plugins &ValueParser::Plugins::intel() {

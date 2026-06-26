@@ -13,9 +13,9 @@
 ;;; limitations under the License.
 
         cpu     H8S/2600
-        .option  advanced-mode, on
-        .option  smart-branch,  on
-        .org     H'000100
+        option  advanced-mode, on
+        option  smart-branch,  on
+        org     H'000100
         include "gen_h8s2600.ginc"
         end
 

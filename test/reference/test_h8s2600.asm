@@ -12,17 +12,17 @@
 ;;; See the License for the specific language governing permissions and
 ;;; limitations under the License.
 
-        cpu     H8S/2600
+        .cpu     H8S/2600
         .option  advanced-mode, on
 far_label:   equ   H'001000
 farer_label: equ   H'FFFFE0
         .org     H'000100
-        include "test_h8300h.inc"
-        include "test_h8300h_ext.inc"
-        include "test_h8s2000.inc"
-        include "test_h8s2000_adv.inc"
-        include "test_h8s2600_mac.inc"
-        end
+        .include "test_h8300h.inc"
+        .include "test_h8300h_ext.inc"
+        .include "test_h8s2000.inc"
+        .include "test_h8s2000_adv.inc"
+        .include "test_h8s2600_mac.inc"
+        .end
 
 ;;; Local Variables:
 ;;; mode: asm

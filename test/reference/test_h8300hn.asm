@@ -12,12 +12,12 @@
 ;;; See the License for the specific language governing permissions and
 ;;; limitations under the License.
 
-        cpu     H8/300H
+        .cpu     H8/300H
 far_label:   equ   H'1000
         .org     H'0100
-        include "test_h8300h.inc"
-        include "test_h8300h_ext.inc"
-        end
+        .include "test_h8300h.inc"
+        .include "test_h8300h_ext.inc"
+        .end
 
 ;;; Local Variables:
 ;;; mode: asm

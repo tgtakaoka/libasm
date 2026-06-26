@@ -268,6 +268,14 @@ BinEncoder &MotorolaDirective::defaultEncoder() const {
     return MotoSrec::encoder();
 }
 
+HitachiDirective::HitachiDirective(Assembler &assembler) : AsmDirective(assembler) {
+    registerPseudo(".assign", &HitachiDirective::setVariable);
+}
+
+BinEncoder &HitachiDirective::defaultEncoder() const {
+    return MotoSrec::encoder();
+}
+
 IntelDirective::IntelDirective(Assembler &assembler) : AsmDirective(assembler) {}
 
 MostekDirective::MostekDirective(Assembler &assembler) : MotorolaDirective(assembler) {
