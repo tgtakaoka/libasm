@@ -1,0 +1,39 @@
+! Copyright 2026 Tadashi G. Takaoka
+!
+! Licensed under the Apache License, Version 2.0 (the "License");
+! you may not use this file except in compliance with the License.
+! You may obtain a copy of the License at
+!
+!     http://www.apache.org/licenses/LICENSE-2.0
+!
+! Unless required by applicable law or agreed to in writing, software
+! distributed under the License is distributed on an "AS IS" BASIS,
+! WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+! See the License for the specific language governing permissions and
+! limitations under the License.
+
+!!! SH-2A 32-bit @(disp12,Rn) instruction forms. Not assembled by libasm yet
+!!! (no table rows), so the wrappers do not include this file; it records the
+!!! expected encodings as a reference.
+
+        mov.b   r0,@(0xFFF,r1)          ;# 31010FFF
+        mov.b   @(0,r0),r1              ;# 31014000
+        mov.w   @(0,r0),r1              ;# 31015000
+        movu.b  @(0,r0),r1              ;# 31018000
+        movu.w  @(0,r0),r1              ;# 31019000
+        fmov.s  @(0,r0),fr1             ;# 31017000
+        bclr.b  #0,@(0,r0)              ;# 30090000
+        bset.b  #0,@(0,r0)              ;# 30091000
+        bst.b   #0,@(0,r0)              ;# 30092000
+        bld.b   #0,@(0,r0)              ;# 30093000
+        band.b  #0,@(0,r0)              ;# 30094000
+        bor.b   #0,@(0,r0)              ;# 30095000
+        bxor.b  #0,@(0,r0)              ;# 30096000
+        bldnot.b  #0,@(0,r0)            ;# 3009B000
+        bandnot.b #0,@(0,r0)            ;# 3009C000
+        bornot.b  #0,@(0,r0)            ;# 3009D000
+
+! Local Variables:
+! mode: asm
+! End:
+! vim: set ft=asm:

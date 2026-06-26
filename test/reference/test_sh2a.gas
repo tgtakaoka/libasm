@@ -16,8 +16,10 @@
         .org    0x0000
         .include "test_sh1.ginc"
         .include "test_sh2.ginc"
-        .include "test_sh2e.ginc"
         .include "test_sh2a.ginc"
+        .include "test_sh2e.ginc"
+        .include "test_sh2e_fpu.ginc"
+        .include "test_sh2a_fpu.ginc"
 
 ! Local Variables:
 ! mode: asm

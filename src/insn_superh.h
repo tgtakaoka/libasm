@@ -30,6 +30,7 @@ struct EntryInsn : EntryInsnBase<Config, Entry> {
     AddrMode src() const { return flags().src(); }
     AddrMode dst() const { return flags().dst(); }
     bool longForm() const { return flags().longForm(); }
+    InsnSize insnSize() const { return flags().insnSize(); }
 };
 
 struct Operand final : ErrorAt {
@@ -43,6 +44,19 @@ struct AsmInsn final : AsmInsnImpl<Config>, EntryInsn {
     AsmInsn(Insn &insn) : AsmInsnImpl(insn), _opCode2(0) {}
 
     Operand srcOp, dstOp;
+
+    // Strip a trailing .B/.W/.L size suffix off the mnemonic (in place) and
+    // record it. A non-size dot (FMOV.S) or trailing garbage is left in the
+    // name for the table lookup to resolve. '/'-suffix names (CMP/EQ) have no
+    // '.' and pass through untouched.
+    InsnSize parseInsnSize();
+    InsnSize parsedSize() const { return _parsedSize; }
+
+    // Effective access size: ISZ_DATA entries carry it in the opcode (resolved
+    // once the size field has been inserted), fixed entries carry it directly.
+    InsnSize effectiveSize() const {
+        return insnSize() == ISZ_DATA ? decodeDataSize(src(), dst(), opCode()) : insnSize();
+    }
 
     // Second 16-bit word for SH-2A 32-bit instructions (MOVI20, MOV with
     // 12-bit displacement, bit-manipulation memory forms, etc.).
@@ -80,6 +94,7 @@ struct AsmInsn final : AsmInsnImpl<Config>, EntryInsn {
 
 private:
     Config::opcode_t _opCode2;
+    InsnSize _parsedSize{ISZ_NONE};
 };
 
 struct DisInsn final : DisInsnImpl<Config>, EntryInsn {
@@ -88,6 +103,12 @@ struct DisInsn final : DisInsnImpl<Config>, EntryInsn {
 
     Config::opcode_t opCode2() const { return _opCode2; }
     void setOpCode2(Config::opcode_t opc) { _opCode2 = opc; }
+
+    // Effective access size: resolve ISZ_DATA from the opcode bits, otherwise
+    // the entry's fixed size. Drives the disassembly suffix and disp scaling.
+    InsnSize effectiveSize() const {
+        return insnSize() == ISZ_DATA ? decodeDataSize(src(), dst(), opCode()) : insnSize();
+    }
 
 private:
     Config::opcode_t _opCode2;

@@ -104,9 +104,16 @@ void test_data_transfer() {
     TEST("MOV.L", "@(H'03FC,GBR), R0",    0xC6FF);
     // PC-relative load: target = (PC+4) + d*2 for .W,
     //                            (PC+4) & ~3 + d*4 for .L / MOVA
-    ATEST(0x0100, "MOV.W", "@(H'00000104,PC), R3",    0x9300);
-    ATEST(0x0100, "MOV.L", "@(H'00000104,PC), R5",    0xD500);
-    ATEST(0x0100, "MOVA",  "@(H'00000104,PC), R0",    0xC700);
+    // PC-relative loads disassemble to the bare target (no "@(disp,PC)"):
+    // the absolute address when no symbol is known, ...
+    ATEST(0x0100, "MOV.W", "H'00000104, R3",          0x9300);
+    ATEST(0x0100, "MOV.L", "H'00000104, R5",          0xD500);
+    ATEST(0x0100, "MOVA",  "H'00000104, R0",          0xC700);
+    // ... and the bare label when one is defined at the target.
+    symtab.intern(0x0104, "litw");
+    ATEST(0x0100, "MOV.W", "litw, R3",                0x9300);
+    ATEST(0x0100, "MOV.L", "litw, R5",                0xD500);
+    ATEST(0x0100, "MOVA",  "litw, R0",                0xC700);
     // MOVT
     TEST("MOVT",  "R0",                            0x0029);
     TEST("MOVT",  "R15",                           0x0F29);
@@ -163,10 +170,13 @@ void test_logic_shift() {
     TEST("AND.B", "#-1, @(R0,GBR)",  0xCDFF);
     TEST("OR",    "R0, R1",          0x210B);
     TEST("OR",    "#-H'80, R0",      0xCB80);
+    TEST("OR.B",  "#-1, @(R0,GBR)",  0xCFFF);
     TEST("XOR",   "R0, R1",          0x210A);
     TEST("XOR",   "#H'7F, R0",       0xCA7F);
+    TEST("XOR.B", "#H'7F, @(R0,GBR)", 0xCE7F);
     TEST("TST",   "R0, R1",          0x2108);
     TEST("TST",   "#-H'80, R0",      0xC880);
+    TEST("TST.B", "#-H'80, @(R0,GBR)", 0xCC80);
     // NOT
     TEST("NOT",   "R0, R1",        0x6107);
     // SHAL / SHAR / SHLL / SHLR (single bit)
@@ -289,6 +299,11 @@ void test_shdsp_additions() {
     TEST("SETRC", "#H'7F",         0x827F);
     TEST("SETRC", "R0",            0x4014);
     TEST("SETRC", "R15",           0x4F14);
+    // LDRS / LDRE disassemble as the bare PC-relative target.
+    TEST("LDRS",  "H'00000004",    0x8C00);  // (PC+4) + 0
+    TEST("LDRE",  "H'00000040",    0x8E1E);  // (PC+4) + 0x1E*2
+    symtab.intern(0x0104, "loop");
+    ATEST(0x0100, "LDRS", "loop",  0x8C00);  // label when defined at the target
 }
 
 
@@ -458,8 +473,10 @@ void test_illegal_sh2e() {
 }
 
 void test_illegal_sh2a() {
-    // Without --fpu enabled the FPU pages aren't searched; FCNVDS / FCNVSD
-    // and the SH-2E FPU instructions must all be rejected.
+    // With the FPU disabled the FPU pages aren't searched; FCNVDS / FCNVSD
+    // and the SH-2E FPU instructions must all be rejected. (The disassembler
+    // enables the FPU by default, so turn it off explicitly here.)
+    disassembler.setOption("fpu", "false");
     SH_UNKN(0xF0BD);    // FCNVDS DR0,FPUL (needs FPU_SH2A)
     SH_UNKN(0xF0AD);    // FCNVSD FPUL,DR0 (needs FPU_SH2A)
     SH_UNKN(0xF000);    // FADD FR0,FR0    (needs FPU)

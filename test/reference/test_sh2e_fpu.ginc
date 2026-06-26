@@ -1,0 +1,112 @@
+! Copyright 2026 Tadashi G. Takaoka
+!
+! Licensed under the Apache License, Version 2.0 (the "License");
+! you may not use this file except in compliance with the License.
+! You may obtain a copy of the License at
+!
+!     http://www.apache.org/licenses/LICENSE-2.0
+!
+! Unless required by applicable law or agreed to in writing, software
+! distributed under the License is distributed on an "AS IS" BASIS,
+! WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+! See the License for the specific language governing permissions and
+! limitations under the License.
+
+!!! SH-2E floating-point instructions (single-precision FPU)
+
+!! FADD FRm,FRn
+        fadd    fr0,fr1                 ;# F100
+        fadd    fr14,fr15               ;# FFE0
+
+!! FSUB FRm,FRn
+        fsub    fr0,fr1                 ;# F101
+        fsub    fr14,fr15               ;# FFE1
+
+!! FMUL FRm,FRn
+        fmul    fr0,fr1                 ;# F102
+        fmul    fr14,fr15               ;# FFE2
+
+!! FDIV FRm,FRn
+        fdiv    fr0,fr1                 ;# F103
+        fdiv    fr14,fr15               ;# FFE3
+
+!! FCMP/EQ FRm,FRn
+        fcmp/eq fr0,fr1                 ;# F104
+        fcmp/eq fr14,fr15               ;# FFE4
+
+!! FCMP/GT FRm,FRn
+        fcmp/gt fr0,fr1                 ;# F105
+        fcmp/gt fr14,fr15               ;# FFE5
+
+!! FABS FRn
+        fabs    fr0                     ;# F05D
+        fabs    fr7                     ;# F75D
+        fabs    fr15                    ;# FF5D
+
+!! FNEG FRn
+        fneg    fr0                     ;# F04D
+        fneg    fr7                     ;# F74D
+        fneg    fr15                    ;# FF4D
+
+!! FMOV FRm,FRn
+        fmov    fr0,fr1                 ;# F10C
+        fmov    fr14,fr15               ;# FFEC
+
+!! FMOV.S @Rm,FRn
+        fmov.s  @r0,fr0                 ;# F008
+        fmov.s  @r7,fr8                 ;# F878
+        fmov.s  @r15,fr15               ;# FFF8
+
+!! FMOV.S FRm,@Rn
+        fmov.s  fr0,@r0                 ;# F00A
+        fmov.s  fr8,@r7                 ;# F78A
+        fmov.s  fr15,@r15               ;# FFFA
+
+!! FMOV.S @Rm+,FRn
+        fmov.s  @r0+,fr0                ;# F009
+        fmov.s  @r15+,fr15              ;# FFF9
+
+!! FMOV.S FRm,@-Rn
+        fmov.s  fr0,@-r0                ;# F00B
+        fmov.s  fr15,@-r15              ;# FFFB
+
+!! FMOV.S @(R0,Rm),FRn
+        fmov.s  @(r0,r1),fr0            ;# F016
+        fmov.s  @(r0,r15),fr15          ;# FFF6
+
+!! FMOV.S FRm,@(R0,Rn)
+        fmov.s  fr0,@(r0,r1)            ;# F107
+        fmov.s  fr15,@(r0,r15)          ;# FFF7
+
+!! FLDI0 FRn
+        fldi0   fr0                     ;# F08D
+        fldi0   fr15                    ;# FF8D
+
+!! FLDI1 FRn
+        fldi1   fr0                     ;# F09D
+        fldi1   fr15                    ;# FF9D
+
+!! FLOAT FPUL,FRn
+        float   fpul,fr0                ;# F02D
+        float   fpul,fr15               ;# FF2D
+
+!! FTRC FRm,FPUL
+        ftrc    fr0,fpul                ;# F03D
+        ftrc    fr15,fpul               ;# FF3D
+
+!! FMAC FR0,FRm,FRn
+        fmac    fr0,fr1,fr2             ;# F21E
+        fmac    fr0,fr14,fr15           ;# FFEE
+
+!! FLDS FRm,FPUL
+        flds    fr0,fpul                ;# F01D
+        flds    fr15,fpul               ;# FF1D
+
+!! FSTS FPUL,FRn
+        fsts    fpul,fr0                ;# F00D
+        fsts    fpul,fr15               ;# FF0D
+
+! Local Variables:
+! mode: asm
+! End:
+! vim: set ft=asm:

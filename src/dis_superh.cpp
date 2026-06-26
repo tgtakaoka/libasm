@@ -37,6 +37,11 @@ DisSuperH::DisSuperH(const ValueFormatter::Plugins &plugins)
     reset();
 }
 
+void DisSuperH::reset() {
+    Disassembler::reset();
+    setFpuType(FPU_ON);  // disassembler decodes FPU instructions by default
+}
+
 // SH-2A's FPU is optional; SH-2E's is mandatory and implied by the CPU
 // name.  Only SH-2A needs an explicit `option "fpu", "true"` pseudo to
 // survive a disassemble-then-reassemble round-trip.
@@ -65,6 +70,33 @@ void outRn(StrBuffer &out, uint16_t w) {
 
 void outRm(StrBuffer &out, uint16_t w) {
     outRegName(out, RegName(fieldM(w)));
+}
+
+// Disassembly suffix character for the access size ('B'/'W'/'L'); 0 for none.
+char insnSizeSuffix(InsnSize sz) {
+    switch (sz) {
+    case ISZ_BYTE:
+        return 'B';
+    case ISZ_WORD:
+        return 'W';
+    case ISZ_LONG:
+        return 'L';
+    default:
+        return 0;
+    }
+}
+
+// Displacement scale for size-bearing displacement modes (.B=1, .W=2, .L=4);
+// ISZ_NONE -> 4 so MOVA's suffix-less PC-relative operand scales by 4.
+unsigned dispScale(InsnSize sz) {
+    switch (sz) {
+    case ISZ_BYTE:
+        return 1;
+    case ISZ_WORD:
+        return 2;
+    default:
+        return 4;
+    }
 }
 
 }  // namespace
@@ -126,17 +158,10 @@ void DisSuperH::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) cons
         break;
     }
     case M_D4M: {
-        // For MOV.L Rm,@(disp,Rn): disp scaled *4; for MOV.B/W via @(disp,Rn)
-        // also scaled by size. The mnemonic encodes the scale; for raw disp
-        // output we show the scaled byte offset to match assembler input.
+        // @(disp,Rm): disp scaled by the access size (.B=1, .W=2, .L=4). We
+        // print the scaled byte offset to match assembler input.
         const auto d = opc & 0xF;
-        const auto name = insn.name();
-        // disp scale is 1 (.B), 2 (.W), or 4 (.L); name suffix tells us
-        auto scale = 1u;
-        if (pgm_read_byte(&name[4]) == 'W' || pgm_read_byte(&name[4]) == 'w')
-            scale = 2;
-        else if (pgm_read_byte(&name[4]) == 'L' || pgm_read_byte(&name[4]) == 'l')
-            scale = 4;
+        const auto scale = dispScale(insn.effectiveSize());
         out.text_P(PSTR("@("));
         outHex(out, d * scale, 8);
         out.letter(',');
@@ -144,11 +169,9 @@ void DisSuperH::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) cons
         out.letter(')');
         break;
     }
-    case M_D8B:
-    case M_D8W:
-    case M_D8L: {
+    case M_D8: {
         const auto d = opc & 0xFF;
-        const auto scale = (mode == M_D8B) ? 1u : (mode == M_D8W) ? 2u : 4u;
+        const auto scale = dispScale(insn.effectiveSize());
         out.text_P(PSTR("@("));
         outHex(out, d * scale, 16);
         out.letter(',');
@@ -156,21 +179,20 @@ void DisSuperH::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) cons
         out.letter(')');
         break;
     }
-    case M_PCW:
-    case M_PCL: {
-        // M_PCW:  target = (PC+4) + d*2
-        // M_PCL:  target = ((PC+4) & ~3) + d*4
-        // outRelAddr emits "*+N" when --relative is set (Hitachi/ASL idiom),
-        // absolute form otherwise (GAS-compatible). The assembler accepts
-        // both because '*' is the location symbol.
+    case M_PCREL: {
+        // .W: target = (PC+4) + d*2; .L (and MOVA): target = ((PC+4)&~3) + d*4.
         const auto d = static_cast<uint8_t>(opc & 0xFF);
         const auto pc4 = insn.address() + 4;
-        const auto target = (mode == M_PCW) ? pc4 + d * 2u : (pc4 & ~Config::uintptr_t(3)) + d * 4u;
-        out.text_P(PSTR("@("));
-        outRelAddr(out, target, insn.address(), (mode == M_PCW) ? 9 : 10);
-        out.letter(',');
-        outRegName(out, REG_PC);
-        out.letter(')');
+        const auto word = dispScale(insn.effectiveSize()) == 2;
+        const auto target = word ? pc4 + d * 2u : (pc4 & ~Config::uintptr_t(3)) + d * 4u;
+        // Emit the bare target (manual table 3-1 "symbol" form), never the
+        // "@(disp,PC)" notation: a label if one is defined at the target,
+        // otherwise the absolute address ("$+N" under --relative).
+        if (const auto *label = lookup(target, config().addressWidth())) {
+            out.rtext(label);
+        } else {
+            outRelAddr(out, target, insn.address(), word ? 9 : 10);
+        }
         break;
     }
     case M_IMM8: {
@@ -179,7 +201,7 @@ void DisSuperH::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) cons
         outHex(out, imm, -8);
         break;
     }
-    case M_TNUM: {
+    case M_TVEC: {
         const auto imm = opc & 0xFF;
         out.letter('#');
         outHex(out, imm, 8);
@@ -193,16 +215,16 @@ void DisSuperH::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) cons
         break;
     }
     case M_REL8P: {
-        // LDRS/LDRE wrap the relative target in "@(*+N,PC)" form per the
-        // Hitachi manual, distinguishing it from BT/BF's bare label form.
+        // LDRS/LDRE emit the bare target (label if defined, else address), like
+        // the PC-relative loads -- never the "@(disp,PC)" notation.
         const auto d = static_cast<int8_t>(opc & 0xFF);
         const auto target =
                 static_cast<Config::uintptr_t>(insn.address() + 4 + static_cast<int32_t>(d) * 2);
-        out.text_P(PSTR("@("));
-        outRelAddr(out, target, insn.address(), 9);
-        out.letter(',');
-        outRegName(out, REG_PC);
-        out.letter(')');
+        if (const auto *label = lookup(target, config().addressWidth())) {
+            out.rtext(label);
+        } else {
+            outRelAddr(out, target, insn.address(), 9);
+        }
         break;
     }
     case M_REL12: {
@@ -308,14 +330,8 @@ void DisSuperH::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) cons
     }
     case M_D12N:
     case M_D12M: {
-        // 12-bit displacement is in opc2[11:0]; the size sub-op (in opc2[15:12])
-        // selects scale 1/2/4 for B/W/L, which we already encoded by mnemonic.
-        const auto name = insn.name();
-        auto scale = 1u;
-        if (pgm_read_byte(&name[4]) == 'W' || pgm_read_byte(&name[4]) == 'w')
-            scale = 2;
-        else if (pgm_read_byte(&name[4]) == 'L' || pgm_read_byte(&name[4]) == 'l')
-            scale = 4;
+        // 12-bit displacement is in opc2[11:0]; scaled 1/2/4 by the access size.
+        const auto scale = dispScale(insn.effectiveSize());
         const auto d = insn.opCode2() & 0xFFFu;
         out.text_P(PSTR("@("));
         outHex(out, d * scale, 16);
@@ -327,11 +343,11 @@ void DisSuperH::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) cons
     case M_BANK:
         outRegName(out, REG_R0);
         break;
-    case M_DECR15:
+    case M_PUSH:
         out.text_P(PSTR("@-"));
         outRegName(out, REG_R15);
         break;
-    case M_INCR15:
+    case M_PULL:
         out.letter('@');
         outRegName(out, REG_R15);
         out.letter('+');
@@ -352,7 +368,7 @@ Error DisSuperH::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) cons
     const auto opc = insn.readUint16();
     insn.setOpCode(opc);
 
-    if (searchOpCode(cpuType(), fpuType(), insn, out) != OK) {
+    if (searchOpCode(cpuSpec(), insn, out) != OK) {
         insn.nameBuffer().reset();
         out.reset();
         return _insn.setError(insn.getError());
@@ -363,6 +379,15 @@ Error DisSuperH::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) cons
     // flag tells us to fetch it.
     if (insn.longForm())
         insn.setOpCode2(insn.readUint16());
+
+    // Append the access-size suffix (.B/.W/.L). For ISZ_DATA the size comes
+    // from the opcode bits; fixed entries carry it directly; ISZ_NONE (and the
+    // float forms whose suffix is part of the name) get none.
+    const auto suffix = insnSizeSuffix(insn.effectiveSize());
+    if (suffix) {
+        insn.nameBuffer().letter('.');
+        insn.appendName(out, suffix);
+    }
 
     const auto src = insn.src();
     const auto dst = insn.dst();

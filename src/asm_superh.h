@@ -27,6 +27,8 @@ namespace superh {
 struct AsmSuperH final : Assembler, Config {
     AsmSuperH(const ValueParser::Plugins &plugins = defaultPlugins());
 
+    void reset() override;
+
 private:
     const TextOption<Config> _opt_fpu;
 
@@ -35,6 +37,7 @@ private:
 
     void encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode) const;
 
+    Error processPseudo(StrScanner &scan, Insn &insn) override;
     Error encodeImpl(StrScanner &scan, Insn &insn) const override;
     const ConfigBase &config() const override { return *this; }
     ConfigSetter &configSetter() override { return *this; }

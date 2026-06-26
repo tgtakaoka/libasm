@@ -30,58 +30,20 @@ namespace reg {
 namespace {
 
 // clang-format off
-// Sorted alphabetically by text for binary search
+// Special (non-numbered) registers, sorted alphabetically for binary search.
+// The numbered families R0-R15, FR0-FR15 and DR0-DR14 are parsed/emitted as a
+// prefix plus number instead of being enumerated here.
 constexpr NameEntry REG_ENTRIES[] PROGMEM = {
     { TEXT_REG_A0,    REG_A0    },
-    { TEXT_REG_DR0,   REG_DR0   },
-    { TEXT_REG_DR10,  REG_DR10  },
-    { TEXT_REG_DR12,  REG_DR12  },
-    { TEXT_REG_DR14,  REG_DR14  },
-    { TEXT_REG_DR2,   REG_DR2   },
-    { TEXT_REG_DR4,   REG_DR4   },
-    { TEXT_REG_DR6,   REG_DR6   },
-    { TEXT_REG_DR8,   REG_DR8   },
     { TEXT_REG_DSR,   REG_DSR   },
     { TEXT_REG_FPSCR, REG_FPSCR },
     { TEXT_REG_FPUL,  REG_FPUL  },
-    { TEXT_REG_FR0,   REG_FR0   },
-    { TEXT_REG_FR1,   REG_FR1   },
-    { TEXT_REG_FR10,  REG_FR10  },
-    { TEXT_REG_FR11,  REG_FR11  },
-    { TEXT_REG_FR12,  REG_FR12  },
-    { TEXT_REG_FR13,  REG_FR13  },
-    { TEXT_REG_FR14,  REG_FR14  },
-    { TEXT_REG_FR15,  REG_FR15  },
-    { TEXT_REG_FR2,   REG_FR2   },
-    { TEXT_REG_FR3,   REG_FR3   },
-    { TEXT_REG_FR4,   REG_FR4   },
-    { TEXT_REG_FR5,   REG_FR5   },
-    { TEXT_REG_FR6,   REG_FR6   },
-    { TEXT_REG_FR7,   REG_FR7   },
-    { TEXT_REG_FR8,   REG_FR8   },
-    { TEXT_REG_FR9,   REG_FR9   },
     { TEXT_REG_GBR,   REG_GBR   },
     { TEXT_REG_MACH,  REG_MACH  },
     { TEXT_REG_MACL,  REG_MACL  },
     { TEXT_REG_MOD,   REG_MOD   },
     { TEXT_REG_PC,    REG_PC    },
     { TEXT_REG_PR,    REG_PR    },
-    { TEXT_REG_R0,    REG_R0    },
-    { TEXT_REG_R1,    REG_R1    },
-    { TEXT_REG_R10,   REG_R10   },
-    { TEXT_REG_R11,   REG_R11   },
-    { TEXT_REG_R12,   REG_R12   },
-    { TEXT_REG_R13,   REG_R13   },
-    { TEXT_REG_R14,   REG_R14   },
-    { TEXT_REG_R15,   REG_R15   },
-    { TEXT_REG_R2,    REG_R2    },
-    { TEXT_REG_R3,    REG_R3    },
-    { TEXT_REG_R4,    REG_R4    },
-    { TEXT_REG_R5,    REG_R5    },
-    { TEXT_REG_R6,    REG_R6    },
-    { TEXT_REG_R7,    REG_R7    },
-    { TEXT_REG_R8,    REG_R8    },
-    { TEXT_REG_R9,    REG_R9    },
     { TEXT_REG_RE,    REG_RE    },
     { TEXT_REG_RS,    REG_RS    },
     { TEXT_REG_SR,    REG_SR    },
@@ -96,11 +58,58 @@ constexpr NameEntry REG_ENTRIES[] PROGMEM = {
 
 PROGMEM constexpr NameTable TABLE{ARRAY_RANGE(REG_ENTRIES)};
 
+// Parse 0..15.  Returns -1 on failure (no digit, or value > 15).
+int8_t parseRegNum(StrScanner &p) {
+    if (!isdigit(*p))
+        return -1;
+    int8_t n = *p++ - '0';
+    if (isdigit(*p))
+        n = n * 10 + (*p++ - '0');
+    return n > 15 ? -1 : n;
+}
+
+StrBuffer &outRegNum(StrBuffer &out, uint8_t num) {  // num = 0..15
+    if (num >= 10)
+        out.letter('1');
+    return out.letter('0' + (num % 10));
+}
+
 }  // namespace
 
+// Parse Rn/FRn (n=0..15) or DRn (n=0,2..14) as a prefix plus number; fall
+// back to the special-register table (SR, GBR, FPUL, ...).
 RegName parseRegName(StrScanner &scan, const ValueParser &parser) {
     auto p = scan;
-    const auto *entry = TABLE.searchText(parser.readRegName(p));
+    const auto token = parser.readRegName(p);
+    if (token.size() == 0)
+        return REG_UNDEF;
+    auto t = token;
+    auto base = REG_UNDEF;
+    auto step = 1;  // DR registers step by 2 (even-numbered only)
+    if (t.iexpect('F')) {
+        if (t.iexpect('R'))
+            base = REG_FR0;
+    } else if (t.iexpect('D')) {
+        if (t.iexpect('R')) {
+            base = REG_DR0;
+            step = 2;
+        }
+    } else if (t.iexpect('R')) {
+        base = REG_R0;
+    }
+    if (base != REG_UNDEF) {
+        const auto num = parseRegNum(t);
+        if (num >= 0 && t.size() == 0 && (num % step) == 0) {
+            scan = p;
+            return RegName(base + num / step);
+        }
+    }
+    // SP is an alias for R15 (stack pointer): accepted on input, emitted as R15.
+    if (token.iequals_P(TEXT_REG_SP)) {
+        scan = p;
+        return REG_R15;
+    }
+    const auto *entry = TABLE.searchText(token);
     if (entry) {
         scan = p;
         return RegName(entry->name());
@@ -109,6 +118,12 @@ RegName parseRegName(StrScanner &scan, const ValueParser &parser) {
 }
 
 StrBuffer &outRegName(StrBuffer &out, RegName name) {
+    if (isGpr(name))
+        return outRegNum(out.letter('R'), uint8_t(name - REG_R0));
+    if (isFr(name))
+        return outRegNum(out.letter('F').letter('R'), uint8_t(name - REG_FR0));
+    if (isDr(name))
+        return outRegNum(out.letter('D').letter('R'), uint8_t(name - REG_DR0) * 2);
     const auto *entry = TABLE.searchName(name);
     return entry ? entry->outText(out) : out;
 }

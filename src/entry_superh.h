@@ -28,131 +28,225 @@ namespace superh {
 // SH-1/SH-2 addressing modes with their instruction-word bit positions.
 // Each mode determines which bits in the 16-bit instruction word are variable;
 // opcodeMask() ORs these together so the table search can mask them out.
+//
+// The GBR-relative @(disp,GBR) and PC-relative @(disp,PC) operands use a single
+// mode each (M_D8, M_PCREL); the access width (and thus the displacement scale)
+// comes from the InsnSize attribute, not from a per-width mode.
+// Modes are ordered so that all "no variable bits" modes come first (M_NONE..
+// M_PULL) and every mode that masks instruction-word bits is contiguous from
+// M_RN onward, grouped by which bits it varies. modeMask() exploits this: a
+// mode below M_RN has no mask, otherwise a small table indexed by (mode - M_RN)
+// selects the variation. M_NONE must stay 0 (used as the empty-operand sentinel).
 enum AddrMode : uint8_t {
-    M_NONE = 0,    // no operand                         bits: none
-    M_RN = 1,      // Rn, bits[11:8]                     bits: 0x0F00
-    M_RM = 2,      // Rm, bits[7:4]                      bits: 0x00F0
-    M_R0 = 3,      // R0 implied                         bits: none
-    M_IRN = 4,     // @Rn, bits[11:8]                    bits: 0x0F00
-    M_IRM = 5,     // @Rm, bits[7:4]                     bits: 0x00F0
-    M_INCN = 6,    // @Rn+, bits[11:8]                   bits: 0x0F00
-    M_INCM = 7,    // @Rm+, bits[7:4]                    bits: 0x00F0
-    M_DECN = 8,    // @-Rn, bits[11:8]                   bits: 0x0F00
-    M_IDXN = 9,    // @(R0,Rn), bits[11:8]               bits: 0x0F00
-    M_IDXM = 10,   // @(R0,Rm), bits[7:4]                bits: 0x00F0
-    M_D4N = 11,    // @(d4,Rn), n=bits[11:8],d=bits[3:0] bits: 0x0F0F
-    M_D4M = 12,    // @(d4,Rm), m=bits[7:4], d=bits[3:0] bits: 0x00FF
-    M_D8B = 13,    // @(d8*1,GBR), d=bits[7:0]           bits: 0x00FF
-    M_D8W = 14,    // @(d8*2,GBR), d=bits[7:0]           bits: 0x00FF
-    M_D8L = 15,    // @(d8*4,GBR), d=bits[7:0]           bits: 0x00FF
-    M_PCW = 16,    // @(d8*2,PC),  d=bits[7:0] (MOV.W)  bits: 0x00FF
-    M_PCL = 17,    // @(d8*4,PC),  d=bits[7:0] (MOV.L/MOVA) bits: 0x00FF
-    M_IMM8 = 18,   // #imm8 sign-extended, bits[7:0]     bits: 0x00FF
-    M_REL8 = 19,   // 8-bit signed PC-rel branch, bits[7:0] bits: 0x00FF
-    M_REL12 = 20,  // 12-bit signed PC-rel branch, bits[11:0] bits: 0x0FFF
-    M_TNUM = 21,   // TRAPA vector, bits[7:0]             bits: 0x00FF
-    M_SR = 22,     // SR control register                 bits: none
-    M_GBR = 23,    // GBR control register                bits: none
-    M_VBR = 24,    // VBR control register                bits: none
-    M_MACH = 25,   // MACH system register                bits: none
-    M_MACL = 26,   // MACL system register                bits: none
-    M_PR = 27,     // PR system register                  bits: none
-    M_IGBR = 28,   // @(R0,GBR) implied (bitwise .B forms) bits: none
-    M_DSR = 29,    // DSR DSP status register             bits: none
-    M_A0 = 30,     // A0 DSP accumulator low              bits: none
-    M_X0 = 31,     // X0 DSP data register                bits: none
-    M_X1 = 32,     // X1 DSP data register                bits: none
-    M_Y0 = 33,     // Y0 DSP data register                bits: none
-    M_Y1 = 34,     // Y1 DSP data register                bits: none
-    M_MOD = 35,    // MOD DSP modulo register             bits: none
-    M_RS = 36,     // RS DSP repeat-start register        bits: none
-    M_RE = 37,     // RE DSP repeat-end register          bits: none
-    M_REL8P = 38,  // 8-bit signed PC-rel as "@(*+N,PC)"  bits: 0x00FF
-    M_FRN = 39,    // FRn, bits[11:8]                     bits: 0x0F00
-    M_FRM = 40,    // FRm, bits[7:4]                      bits: 0x00F0
-    M_FPUL = 41,   // FPUL FPU communication register     bits: none
-    M_FPSCR = 42,  // FPSCR FPU status/control register   bits: none
-    // SH-2A additions
-    M_D12N = 43,    // @(disp12,Rn), n=bits[11:8], disp in 2nd word bits: 0x0F00
-    M_D12M = 44,    // @(disp12,Rm), m=bits[7:4],  disp in 2nd word bits: 0x00F0
-    M_IMM20 = 45,   // 20-bit signed imm, hi nibble in bits[7:4], lo16 in 2nd word
-    M_IMM20S = 46,  // 20-bit signed imm shifted-left 8 (MOVI20S)  bits: 0x00F0
-    M_IMM3 = 47,    // 3-bit unsigned imm, bits[3:1] (BCLR/BSET/BLD/BST) bits: 0x000E
-    M_DRN = 48,     // DRn (even FRn pair), bits[11:9]             bits: 0x0E00
-    M_DRM = 49,     // DRm (even FRm pair), bits[7:5]              bits: 0x00E0
-    M_BANK = 50,    // implicit R0 destination for STBANK/LDBANK  bits: none
-    M_DECR15 = 51,  // implicit @-R15 (MOVML.L/MOVMU.L save)      bits: none
-    M_INCR15 = 52,  // implicit @R15+ (MOVML.L/MOVMU.L restore)   bits: none
+    M_NONE = 0,    // no operand
+    // No variable bits: implicit operands, control/system/DSP/FPU registers.
+    M_R0 = 1,      // R0 implied
+    M_SR = 2,      // SR control register
+    M_GBR = 3,     // GBR control register
+    M_VBR = 4,     // VBR control register
+    M_MACH = 5,    // MACH system register
+    M_MACL = 6,    // MACL system register
+    M_PR = 7,      // PR system register
+    M_IGBR = 8,    // @(R0,GBR) implied (bitwise .B forms)
+    M_DSR = 9,     // DSR DSP status register
+    M_A0 = 10,     // A0 DSP accumulator low
+    M_X0 = 11,     // X0 DSP data register
+    M_X1 = 12,     // X1 DSP data register
+    M_Y0 = 13,     // Y0 DSP data register
+    M_Y1 = 14,     // Y1 DSP data register
+    M_MOD = 15,    // MOD DSP modulo register
+    M_RS = 16,     // RS DSP repeat-start register
+    M_RE = 17,     // RE DSP repeat-end register
+    M_FPUL = 18,   // FPUL FPU communication register
+    M_FPSCR = 19,  // FPSCR FPU status/control register
+    M_BANK = 20,   // implicit R0 destination for STBANK/LDBANK
+    M_PUSH = 21,   // implicit @-R15 (MOVML.L/MOVMU.L save)
+    M_PULL = 22,   // implicit @R15+ (MOVML.L/MOVMU.L restore)
+    // --- masked modes start here (M_RN); keep contiguous, grouped by mask ---
+    // V_N: n-field bits[11:8], 0x0F00
+    M_RN = 23,     // Rn
+    M_IRN = 24,    // @Rn
+    M_INCN = 25,   // @Rn+
+    M_DECN = 26,   // @-Rn
+    M_IDXN = 27,   // @(R0,Rn)
+    M_FRN = 28,    // FRn
+    M_D12N = 29,   // @(disp12,Rn), disp in 2nd word
+    // V_M: m-field bits[7:4], 0x00F0
+    M_RM = 30,     // Rm
+    M_IRM = 31,    // @Rm
+    M_INCM = 32,   // @Rm+
+    M_IDXM = 33,   // @(R0,Rm)
+    M_FRM = 34,    // FRm
+    M_D12M = 35,   // @(disp12,Rm), disp in 2nd word
+    M_IMM20 = 36,  // 20-bit signed imm, hi nibble in bits[7:4], lo16 in 2nd word
+    M_IMM20S = 37, // 20-bit signed imm shifted-left 8 (MOVI20S)
+    // V_D8: 8-bit field bits[7:0], 0x00FF
+    M_D4M = 38,    // @(d4,Rm), m=bits[7:4], d=bits[3:0] -> 0x00FF
+    M_D8 = 39,     // @(disp,GBR), d=bits[7:0]; scale from size
+    M_PCREL = 40,  // @(disp,PC),  d=bits[7:0]; scale from size
+    M_IMM8 = 41,   // #imm8 sign-extended, bits[7:0]
+    M_REL8 = 42,   // 8-bit signed PC-rel branch, bits[7:0]
+    M_REL8P = 43,  // 8-bit signed PC-rel as "@(*+N,PC)"
+    M_TVEC = 44,   // TRAPA vector, bits[7:0]
+    // singleton variations
+    M_D4N = 45,    // @(d4,Rn), n=bits[11:8],d=bits[3:0] -> 0x0F0F
+    M_REL12 = 46,  // 12-bit signed PC-rel branch, bits[11:0] -> 0x0FFF
+    M_IMM3 = 47,   // 3-bit unsigned imm, bits[3:1] -> 0x000E
+    M_DRN = 48,    // DRn (even FRn pair), bits[11:9] -> 0x0E00
+    M_DRM = 49,    // DRm (even FRm pair), bits[7:5]  -> 0x00E0
 };
+
+// Integer access size from the mnemonic suffix (.B/.W/.L). ISZ_BYTE/WORD/LONG
+// are fixed single-size entries (the suffix is appended on disassembly and
+// required, or defaulted, on assembly). ISZ_DATA marks an entry whose size is
+// encoded in the opcode itself: sizeFieldOf(src,dst) says which bits hold it
+// and how field values map to sizes. The base opcode stored in the table holds
+// the *default* size, so a bare (no-suffix) mnemonic assembles to it. Float
+// precision suffixes (FMOV.S) stay part of the mnemonic name, not encoded here.
+enum InsnSize : uint8_t {
+    ISZ_NONE = 0,  // no size suffix (ADD, register FMOV, ...)
+    ISZ_BYTE = 1,  // fixed .B
+    ISZ_WORD = 2,  // fixed .W
+    ISZ_LONG = 3,  // fixed .L
+    ISZ_DATA = 4,  // size embedded in opcode; field from (src,dst) pair
+};
+
+// Describes the opcode bits that hold the access size of an ISZ_DATA entry.
+// mask==0 marks "no embedded size" (a defensive default). sizes[] maps the
+// right-justified field value to an InsnSize; ISZ_NONE marks an unused or
+// illegal slot. The mapping is per (src,dst) pair so it absorbs the SH quirks:
+// PC-relative starts at .W (no .B), and MAC runs .L/.W (bit set means .W).
+struct SizeField {
+    Config::opcode_t mask;
+    uint8_t shift;
+    InsnSize sizes[4];
+};
+
+// B/W/L in opcode bits[1:0] (MOV register-indirect family).
+inline SizeField sizeFieldOf(AddrMode src, AddrMode dst) {
+    constexpr SizeField NONE_FIELD = {0, 0, {ISZ_NONE, ISZ_NONE, ISZ_NONE, ISZ_NONE}};
+    constexpr InsnSize BWL[4] = {ISZ_BYTE, ISZ_WORD, ISZ_LONG, ISZ_NONE};
+    constexpr InsnSize BW[4] = {ISZ_BYTE, ISZ_WORD, ISZ_NONE, ISZ_NONE};
+    switch (src) {
+    case M_RM:
+        if (dst == M_IDXN || dst == M_IRN || dst == M_DECN)
+            return {0x0003, 0, {BWL[0], BWL[1], BWL[2], BWL[3]}};
+        if (dst == M_RN)  // SWAP/EXTS/EXTU, bit[0]
+            return {0x0001, 0, {BW[0], BW[1], BW[2], BW[3]}};
+        break;
+    case M_IDXM:
+    case M_IRM:
+    case M_INCM:
+        if (dst == M_RN)
+            return {0x0003, 0, {BWL[0], BWL[1], BWL[2], BWL[3]}};
+        break;
+    case M_R0:
+        if (dst == M_D8)  // MOV.{B,W,L} R0,@(disp,GBR), bits[9:8]
+            return {0x0300, 8, {BWL[0], BWL[1], BWL[2], BWL[3]}};
+        if (dst == M_D4M)  // MOV.{B,W} R0,@(d4,Rn), bit[8]
+            return {0x0100, 8, {BW[0], BW[1], BW[2], BW[3]}};
+        break;
+    case M_D8:
+        if (dst == M_R0)
+            return {0x0300, 8, {BWL[0], BWL[1], BWL[2], BWL[3]}};
+        break;
+    case M_D4M:
+        if (dst == M_R0)
+            return {0x0100, 8, {BW[0], BW[1], BW[2], BW[3]}};
+        break;
+    case M_RN:
+        if (dst == M_NONE)  // CLIPS/CLIPU, bit[2]
+            return {0x0004, 2, {BW[0], BW[1], BW[2], BW[3]}};
+        break;
+    case M_PCREL:
+        if (dst == M_RN)  // MOV.W/MOV.L @(disp,PC),Rn, bit[14], base .W
+            return {0x4000, 14, {ISZ_WORD, ISZ_LONG, ISZ_NONE, ISZ_NONE}};
+        break;
+    default:
+        break;
+    }
+    return NONE_FIELD;
+}
+
+// Decode the access size carried in an ISZ_DATA opcode.
+inline InsnSize decodeDataSize(AddrMode src, AddrMode dst, Config::opcode_t opc) {
+    const auto sf = sizeFieldOf(src, dst);
+    return sf.sizes[(opc & sf.mask) >> sf.shift];
+}
+
+// Operand modes whose data lives in a second 16-bit word (SH-2A 32-bit forms).
+// Their presence is what makes an entry "long form", so no flag bit is needed.
+inline bool isLongMode(AddrMode mode) {
+    return mode == M_IMM20 || mode == M_IMM20S || mode == M_D12N || mode == M_D12M;
+}
 
 struct Entry final : entry::Base<Config::opcode_t> {
     struct Flags final {
+        // _attr bit layout: [14:12]=InsnSize, [11:6]=src(6), [5:0]=dst(6).
+        // Long-form (SH-2A 32-bit) is inferred from the operand modes, so no
+        // bit is stored. bp_=bit position of each field, gm_=its group mask.
+        static constexpr int bp_dst = 0;
+        static constexpr int bp_src = 6;
+        static constexpr int bp_size = 12;
+        static constexpr uint16_t gm_dst = uint16_t(0x3F) << bp_dst;   // [5:0]
+        static constexpr uint16_t gm_src = uint16_t(0x3F) << bp_src;   // [11:6]
+        static constexpr uint16_t gm_size = uint16_t(0x07) << bp_size; // [14:12]
+
         uint16_t _attr;
 
-        // [13:8]=src(6), [5:0]=dst(6); bit 15 = longForm (32-bit insn), bits 14, 7:6 are spare
-        static constexpr uint16_t LONG_FORM = 1u << 15;
-
-        static constexpr Flags create(AddrMode src, AddrMode dst) {
+        static constexpr Flags create(InsnSize isz, AddrMode src, AddrMode dst) {
             return Flags{static_cast<uint16_t>(
-                    (static_cast<uint16_t>(src) << 8) | static_cast<uint16_t>(dst))};
-        }
-        static constexpr Flags createLong(AddrMode src, AddrMode dst) {
-            return Flags{static_cast<uint16_t>(
-                    LONG_FORM | (static_cast<uint16_t>(src) << 8) | static_cast<uint16_t>(dst))};
+                    ((static_cast<uint16_t>(isz) << bp_size) & gm_size) |
+                    ((static_cast<uint16_t>(src) << bp_src) & gm_src) |
+                    ((static_cast<uint16_t>(dst) << bp_dst) & gm_dst))};
         }
 
-        AddrMode src() const { return AddrMode((_attr >> 8) & 0x3F); }
-        AddrMode dst() const { return AddrMode(_attr & 0x3F); }
-        bool longForm() const { return (_attr & LONG_FORM) != 0; }
+        InsnSize insnSize() const { return InsnSize((_attr & gm_size) >> bp_size); }
+        AddrMode src() const { return AddrMode((_attr & gm_src) >> bp_src); }
+        AddrMode dst() const { return AddrMode((_attr & gm_dst) >> bp_dst); }
+        bool longForm() const { return isLongMode(src()) || isLongMode(dst()); }
 
-        // Returns the OR of all variable bits in the 16-bit instruction word.
-        Config::opcode_t opcodeMask() const { return modeMask(src()) | modeMask(dst()); }
+        // Returns the OR of all variable bits in the 16-bit instruction word,
+        // including the embedded size field for ISZ_DATA entries.
+        Config::opcode_t opcodeMask() const {
+            auto m = modeMask(src()) | modeMask(dst());
+            if (insnSize() == ISZ_DATA)
+                m |= sizeFieldOf(src(), dst()).mask;
+            return m;
+        }
 
     private:
+        // Double-indexed lookup over the contiguous masked-mode range [M_RN..]:
+        // each mode selects a bit-mask variation, and the variation maps to the
+        // actual instruction-word mask. Modes below M_RN have no variable bits.
+        // Function-local PROGMEM tables keep the header ODR-clean.
         static Config::opcode_t modeMask(AddrMode mode) {
-            switch (mode) {
-            case M_RN:
-            case M_IRN:
-            case M_INCN:
-            case M_DECN:
-            case M_IDXN:
-            case M_FRN:
-            case M_D12N:
-                return 0x0F00;
-            case M_RM:
-            case M_IRM:
-            case M_INCM:
-            case M_IDXM:
-            case M_FRM:
-            case M_D12M:
-            case M_IMM20S:
-                return 0x00F0;
-            case M_IMM20:
-                return 0x00F0;  // hi nibble of immediate in word 1's bits[7:4]
-            case M_IMM3:
-                return 0x000E;
-            case M_DRN:
-                return 0x0E00;
-            case M_DRM:
-                return 0x00E0;
-            case M_D4N:
-                return 0x0F0F;
-            case M_D4M:
-            case M_D8B:
-            case M_D8W:
-            case M_D8L:
-            case M_PCW:
-            case M_PCL:
-            case M_IMM8:
-            case M_REL8:
-            case M_REL8P:
-            case M_TNUM:
-                return 0x00FF;
-            case M_REL12:
-                return 0x0FFF;
-            default:
+            if (mode < M_RN)
                 return 0;
-            }
+            enum : uint8_t {
+                V_N,     // 0x0F00  n-field bits[11:8]
+                V_M,     // 0x00F0  m-field bits[7:4]
+                V_D8,    // 0x00FF  8-bit disp/imm/rel
+                V_D4N,   // 0x0F0F  n-field + 4-bit disp
+                V_REL12, // 0x0FFF  12-bit rel
+                V_IMM3,  // 0x000E  bits[3:1]
+                V_DRN,   // 0x0E00  bits[11:9]
+                V_DRM,   // 0x00E0  bits[7:5]
+            };
+            static constexpr uint8_t MODE_VAR[] PROGMEM = {  // indexed by mode - M_RN
+                V_N, V_N, V_N, V_N, V_N, V_N, V_N,            // M_RN M_IRN M_INCN M_DECN M_IDXN M_FRN M_D12N
+                V_M, V_M, V_M, V_M, V_M, V_M, V_M, V_M,       // M_RM M_IRM M_INCM M_IDXM M_FRM M_D12M M_IMM20 M_IMM20S
+                V_D8, V_D8, V_D8, V_D8, V_D8, V_D8, V_D8,     // M_D4M M_D8 M_PCREL M_IMM8 M_REL8 M_REL8P M_TVEC
+                V_D4N,                                        // M_D4N
+                V_REL12,                                      // M_REL12
+                V_IMM3,                                       // M_IMM3
+                V_DRN,                                        // M_DRN
+                V_DRM,                                        // M_DRM
+            };
+            static constexpr Config::opcode_t VAR_MASK[] PROGMEM = {
+                0x0F00, 0x00F0, 0x00FF, 0x0F0F, 0x0FFF, 0x000E, 0x0E00, 0x00E0,
+            };
+            return pgm_read_word(&VAR_MASK[pgm_read_byte(&MODE_VAR[mode - M_RN])]);
         }
     };
 

@@ -92,6 +92,9 @@ void test_mov_inc_dec() {
     TEST("MOV.B R0, @-R1",   0x2104);
     TEST("MOV.W R4, @-R5",   0x2545);
     TEST("MOV.L R8, @-R9",   0x2986);
+    // SP is an input alias for R15 (disassembly emits R15).
+    TEST("MOV.L @SP+, R8",   0x68F6);
+    TEST("MOV.L R8, @-SP",   0x2F86);
 }
 
 void test_mov_indexed() {
@@ -163,41 +166,49 @@ void test_mov_disp_gbr() {
 }
 
 void test_mov_pcrel() {
-    // "@(target,PC),Rn" -- the operand is the absolute target address.
-    // The CPU computes:
-    //   M_PCW: target = (PC+4) + d*2
-    //   M_PCL: target = ((PC+4) & ~3) + d*4
-    // The Hitachi "@(*+N,PC)" idiom works because '*' is the location
-    // symbol; parseExpr resolves *+N to PC+N, the absolute target.
+    // Two PC-relative operand forms (manual table 3-1):
+    //   @(disp,PC)            -- disp is a raw byte displacement; field = disp/scale.
+    //   bare symbol / address -- the operand is the target; the assembler derives
+    //                            the field (.W: target-(PC+4); .L/MOVA: -((PC+4)&~3)).
+    // .W scales by 2, .L and MOVA scale by 4.
 
-    // MOV.W absolute target at PC=0x100, d = (target - 0x104)/2.
-    ATEST(0x0100, "MOV.W @(H'104, PC), R0",  0x9000);  // d=0
-    ATEST(0x0100, "MOV.W @(H'106, PC), R3",  0x9301);  // d=1
-    ATEST(0x0100, "MOV.W @(H'302, PC), R7",  0x97FF);  // d=0xFF (max)
-    // Same set via *+N form.
-    ATEST(0x0100, "MOV.W @(*+4, PC), R0",    0x9000);
-    ATEST(0x0100, "MOV.W @(*+6, PC), R3",    0x9301);
+    // @(disp,PC): raw displacement.
+    ATEST(0x0100, "MOV.W @(0, PC), R0",      0x9000);  // field 0
+    ATEST(0x0100, "MOV.W @(4, PC), R3",      0x9302);  // field 4/2=2
+    ATEST(0x0100, "MOV.W @(H'1FE, PC), R7",  0x97FF);  // field 510/2=255 (max)
+    ATEST(0x0100, "MOV.L @(0, PC), R0",      0xD000);
+    ATEST(0x0100, "MOV.L @(8, PC), R5",      0xD502);  // field 8/4=2
+    ATEST(0x0100, "MOV.L @(H'3FC, PC), R9",  0xD9FF);  // field 1020/4=255
+    ATEST(0x0100, "MOVA @(0, PC), R0",       0xC700);
+    ATEST(0x0100, "MOVA @(4, PC), R0",       0xC701);
+    // @(disp,PC) errors: misaligned disp, out of range.
+    AERRT(0x0100, "MOV.W @(1, PC), R0",     OPERAND_NOT_ALIGNED, "@(1, PC), R0",     0x9000);
+    AERRT(0x0100, "MOV.L @(2, PC), R0",     OPERAND_NOT_ALIGNED, "@(2, PC), R0",     0xD000);
+    AERRT(0x0100, "MOV.W @(H'200, PC), R0", OPERAND_TOO_FAR,     "@(H'200, PC), R0", 0x9000);
 
-    // MOV.L absolute target at PC=0x100 (4-aligned), d = (target - 0x104)/4.
-    ATEST(0x0100, "MOV.L @(H'104, PC), R0",  0xD000);  // d=0
-    ATEST(0x0100, "MOV.L @(H'108, PC), R5",  0xD501);  // d=1
-    ATEST(0x0100, "MOV.L @(H'500, PC), R9",  0xD9FF);  // d=0xFF
-    ATEST(0x0100, "MOV.L @(*+4, PC), R0",    0xD000);
-    ATEST(0x0100, "MOV.L @(*+8, PC), R5",    0xD501);
+    // Bare symbol/address target form. .W: field = (target-(PC+4))/2.
+    ATEST(0x0100, "MOV.W H'104, R0",   0x9000);  // target 0x104 -> field 0
+    ATEST(0x0100, "MOV.W H'106, R3",   0x9301);  // field (0x106-0x104)/2=1
+    ATEST(0x0100, "MOV.W $+4, R0",     0x9000);  // $=PC=0x100 -> target 0x104
+    ATEST(0x0100, "MOV.L H'104, R0",   0xD000);
+    ATEST(0x0100, "MOV.L H'108, R5",   0xD501);  // field (0x108-0x104)/4=1
+    ATEST(0x0100, "MOVA H'104, R0",    0xC700);
+    // PC need not be 4-aligned for .L/MOVA: base is (PC+4)&~3.
+    ATEST(0x0102, "MOV.L H'108, R0",   0xD001);
+    // Bare-target errors: misaligned target, backward (before PC+4).
+    AERRT(0x0100, "MOV.L H'106, R0", OPERAND_NOT_ALIGNED, "H'106, R0", 0xD000);
+    AERRT(0x0100, "MOV.W H'100, R0", OPERAND_TOO_FAR,     "H'100, R0", 0x9000);
 
-    // MOVA -- same encoding as MOV.L PC-rel.
-    ATEST(0x0100, "MOVA @(H'104, PC), R0",   0xC700);
-    ATEST(0x0100, "MOVA @(*+4, PC), R0",     0xC700);
+    // Bare "symbol" form with a defined label.
+    symtab.intern(0x0104, "litw");
+    ATEST(0x0100, "MOV.W litw, R0",  0x9000);
+    ATEST(0x0100, "MOV.L litw, R1",  0xD100);
+    ATEST(0x0100, "MOVA litw, R0",   0xC700);
 
-    // PC need not be 4-aligned: (PC+4)&~3 handles it. At PC=0x102 the
-    // aligned slot is 0x104, so target=0x108 -> d=1.
-    ATEST(0x0102, "MOV.L @(H'108, PC), R0",  0xD001);
-    ATEST(0x0102, "MOV.L @(*+6, PC), R0",    0xD001);
-
-    // Target must be 4-byte aligned; out-of-range errors.
-    AERRT(0x0100, "MOV.L @(H'106, PC), R0", OPERAND_NOT_ALIGNED, "@(H'106, PC), R0", 0xD000);
-    AERRT(0x0100, "MOV.W @(H'103, PC), R0", OPERAND_TOO_FAR,     "@(H'103, PC), R0", 0x9000);
-    AERRT(0x0100, "MOV.L @(0, PC), R0",     OPERAND_TOO_FAR,     "@(0, PC), R0",     0xD000);
+    // Undefined target: the displacement field is left zero.
+    AERUS(0x0100, "MOV.W UNDEF, R0",  "UNDEF, R0",  0x9000);
+    AERUS(0x0100, "MOV.L UNDEF, R1",  "UNDEF, R1",  0xD100);
+    AERUS(0x0100, "MOVA UNDEF, R0",   "UNDEF, R0",  0xC700);
 }
 
 void test_movt() {
@@ -458,10 +469,12 @@ void test_shdsp_only() {
         TEST("STC RE, R15",       0x0F72);
         TEST("LDC.L @R0+, MOD",   0x4057);
         TEST("STC.L RE, @-R15",   0x4F73);
-        // LDRS / LDRE / SETRC
-        ATEST(0x0100, "LDRS @(*+4,PC)",      0x8C00);
-        ATEST(0x0100, "LDRE @(*+4,PC)",      0x8E00);
-        ATEST(0x0100, "LDRS @(*+H'40,PC)",   0x8C1E);
+        // LDRS / LDRE / SETRC. Bare symbol/address = target; @(disp,PC) = raw.
+        ATEST(0x0100, "LDRS $+4",            0x8C00);  // target -> field 0
+        ATEST(0x0100, "LDRE $+4",            0x8E00);
+        ATEST(0x0100, "LDRS $+H'40",         0x8C1E);  // (0x40-4)/2 = 0x1E
+        ATEST(0x0100, "LDRS @(4, PC)",       0x8C02);  // raw disp 4 -> field 2
+        ATEST(0x0100, "LDRS @(-2, PC)",      0x8CFF);  // raw disp -2 -> field -1
         TEST("SETRC #0",          0x8200);
         TEST("SETRC #H'7F",       0x827F);
         TEST("SETRC #H'FF",       0x82FF);
@@ -470,8 +483,8 @@ void test_shdsp_only() {
     } else {
         // LDS/STS/LDC/STC are SH-1/SH-2 mnemonics too; the operand fails
         // rather than the mnemonic, so just check the DSP-only ones.
-        ERRT("LDRS @(*+4,PC)",    UNKNOWN_INSTRUCTION, "LDRS @(*+4,PC)");
-        ERRT("LDRE @(*+4,PC)",    UNKNOWN_INSTRUCTION, "LDRE @(*+4,PC)");
+        ERRT("LDRS $+4",          UNKNOWN_INSTRUCTION, "LDRS $+4");
+        ERRT("LDRE $+4",          UNKNOWN_INSTRUCTION, "LDRE $+4");
         ERRT("SETRC #0",          UNKNOWN_INSTRUCTION, "SETRC #0");
         ERRT("SETRC R0",          UNKNOWN_INSTRUCTION, "SETRC R0");
     }
@@ -567,8 +580,21 @@ void test_sh2a_only() {
         TEST("MOVI20 #-H'80000, R2",   uint16_t(0x0280), uint16_t(0x0000));
         TEST("MOVI20S #0, R0",         uint16_t(0x0001), uint16_t(0x0000));
         TEST("MOVI20S #H'FF0000, R1",  uint16_t(0x0101), uint16_t(0xFF00));
-        // SH-2A FPU additions (require --fpu enabled)
+        // Without the FPU the SH-2A has no FPU system registers, so the
+        // FPU-related CPU instructions (LDS/STS FPUL/FPSCR) are undefined code.
+        ERRT("LDS R0, FPUL",       OPERAND_NOT_ALLOWED, "R0, FPUL");
+        ERRT("STS.L FPSCR, @-R0",  OPERAND_NOT_ALLOWED, "FPSCR, @-R0");
+        // The FPU-related CPU instructions and the SH-2A FPU additions require
+        // the FPU (--fpu enabled).
         assembler.setOption("fpu", "true");
+        TEST("LDS R0, FPUL",       0x405A);
+        TEST("LDS R15, FPSCR",     0x4F6A);
+        TEST("STS FPUL, R0",       0x005A);
+        TEST("STS FPSCR, R15",     0x0F6A);
+        TEST("LDS.L @R0+, FPUL",   0x4056);
+        TEST("STS.L FPUL, @-R0",   0x4052);
+        TEST("LDS.L @R0+, FPSCR",  0x4066);
+        TEST("STS.L FPSCR, @-R0",  0x4062);
         TEST("FCNVDS DR0, FPUL",   0xF0BD);
         TEST("FCNVDS DR14, FPUL",  0xFEBD);
         TEST("FCNVSD FPUL, DR0",   0xF0AD);
@@ -689,9 +715,9 @@ void test_undef() {
         ERUS("BF/S UNDEF",            "UNDEF",              0x8F00);
     }
     if (isShDsp()) {
-        // M_REL8P -- LDRS/LDRE @(target,PC); M_TNUM -- SETRC #imm (SH-DSP).
-        ERUS("LDRS  @(UNDEF, PC)",    "UNDEF, PC)",         0x8C00);
-        ERUS("LDRE  @(UNDEF, PC)",    "UNDEF, PC)",         0x8E00);
+        // M_REL8P -- LDRS/LDRE bare symbol target; M_TNUM -- SETRC #imm (SH-DSP).
+        ERUS("LDRS  UNDEF",           "UNDEF",              0x8C00);
+        ERUS("LDRE  UNDEF",           "UNDEF",              0x8E00);
         ERUS("SETRC #UNDEF",          "UNDEF",              0x8200);
     }
     if (isSh2a()) {

@@ -12,89 +12,68 @@
 ! See the License for the specific language governing permissions and
 ! limitations under the License.
 
-!!! SH-2A additional instructions (CPU additions and FPU additions FCNVDS/FCNVSD)
+!!! SH-2A CPU additions (no FPU). The 32-bit @(disp12,Rn) forms live in
+!!! test_sh2a_disp12.ginc; the FPU additions FCNVDS/FCNVSD in test_sh2a_fpu.ginc.
 
 !! ====== 16-bit CPU additions ======
-        clips.b r0                      ! 4091
-        clips.b r15                     ! 4F91
-        clips.w r0                      ! 4095
-        clips.w r15                     ! 4F95
-        clipu.b r0                      ! 4081
-        clipu.b r15                     ! 4F81
-        clipu.w r0                      ! 4085
-        clipu.w r15                     ! 4F85
-        divs    r0,r1                   ! 4194
-        divs    r0,r15                  ! 4F94
-        divu    r0,r1                   ! 4184
-        divu    r0,r15                  ! 4F84
-        mulr    r0,r1                   ! 4180
-        mulr    r0,r15                  ! 4F80
-        shad    r0,r1                   ! 410C
-        shad    r14,r15                 ! 4FEC
-        shld    r0,r1                   ! 410D
-        shld    r14,r15                 ! 4FED
-        mac.w   @r0+,@r1+               ! 010F
-        mac.w   @r14+,@r15+             ! 0FEF
-        bclr    #0,r0                   ! 8600
-        bclr    #7,r15                  ! 86FE
-        bset    #0,r0                   ! 8601
-        bset    #7,r15                  ! 86FF
-        bld     #0,r0                   ! 8701
-        bld     #7,r15                  ! 87FF
-        bst     #0,r0                   ! 8700
-        bst     #7,r15                  ! 87FE
-        movrt   r0                      ! 0039
-        movrt   r15                     ! 0F39
-        nott                            ! 0068
-        movml.l r0,@-r15                ! 40F1
-        movml.l r15,@-r15               ! 4FF1
-        movml.l @r15+,r0                ! 40F5
-        movml.l @r15+,r15               ! 4FF5
-        movmu.l r0,@-r15                ! 40F0
-        movmu.l r15,@-r15               ! 4FF0
-        movmu.l @r15+,r0                ! 40F4
-        movmu.l @r15+,r15               ! 4FF4
-        jsr/n   @r0                     ! 404B
-        jsr/n   @r15                    ! 4F4B
-        rts/n                           ! 006B
-        rtv/n   r0                      ! 007B
-        rtv/n   r15                     ! 0F7B
-        pref    @r0                     ! 0083
-        pref    @r15                    ! 0F83
-        resbank                         ! 005B
-        ldbank  @r0,r0                  ! 40E5
-        ldbank  @r15,r0                 ! 4FE5
-        stbank  r0,@r0                  ! 40E1
-        stbank  r0,@r15                 ! 4FE1
+        clips.b r0                      ;# 4091
+        clips.b r15                     ;# 4F91
+        clips.w r0                      ;# 4095
+        clips.w r15                     ;# 4F95
+        clipu.b r0                      ;# 4081
+        clipu.b r15                     ;# 4F81
+        clipu.w r0                      ;# 4085
+        clipu.w r15                     ;# 4F85
+        divs    r0,r1                   ;# 4194
+        divs    r0,r15                  ;# 4F94
+        divu    r0,r1                   ;# 4184
+        divu    r0,r15                  ;# 4F84
+        mulr    r0,r1                   ;# 4180
+        mulr    r0,r15                  ;# 4F80
+        shad    r0,r1                   ;# 410C
+        shad    r14,r15                 ;# 4FEC
+        shld    r0,r1                   ;# 410D
+        shld    r14,r15                 ;# 4FED
+        mac.w   @r0+,@r1+               ;# 010F
+        mac.w   @r14+,@r15+             ;# 0FEF
+        bclr    #0,r0                   ;# 8600
+        bclr    #7,r15                  ;# 86FE
+        bset    #0,r0                   ;# 8601
+        bset    #7,r15                  ;# 86FF
+        bld     #0,r0                   ;# 8701
+        bld     #7,r15                  ;# 87FF
+        bst     #0,r0                   ;# 8700
+        bst     #7,r15                  ;# 87FE
+        movrt   r0                      ;# 0039
+        movrt   r15                     ;# 0F39
+        nott                            ;# 0068
+        movml.l r0,@-r15                ;# 40F1
+        movml.l r15,@-r15               ;# 4FF1
+        movml.l @r15+,r0                ;# 40F5
+        movml.l @r15+,r15               ;# 4FF5
+        movmu.l r0,@-r15                ;# 40F0
+        movmu.l r15,@-r15               ;# 4FF0
+        movmu.l @r15+,r0                ;# 40F4
+        movmu.l @r15+,r15               ;# 4FF4
+        jsr/n   @r0                     ;# 404B
+        jsr/n   @r15                    ;# 4F4B
+        rts/n                           ;# 006B
+        rtv/n   r0                      ;# 007B
+        rtv/n   r15                     ;# 0F7B
+        pref    @r0                     ;# 0083
+        pref    @r15                    ;# 0F83
+        resbank                         ;# 005B
+        ldbank  @r0,r0                  ;# 40E5
+        ldbank  @r15,r0                 ;# 4FE5
+        stbank  r0,@r0                  ;# 40E1
+        stbank  r0,@r15                 ;# 4FE1
 
 !! ====== 32-bit CPU additions ======
-        movi20  #0,r0                   ! 00000000
-        movi20  #0x7FFFF,r1             ! 0170FFFF
-        movi20  #-0x80000,r2            ! 02800000
-        movi20s #0,r0                   ! 00010000
-        movi20s #0xFF0000,r1            ! 0101FF00
-        mov.b   r0,@(0xFFF,r1)          ! 31010FFF
-        mov.b   @(0,r0),r1              ! 31014000
-        mov.w   @(0,r0),r1              ! 31015000
-        movu.b  @(0,r0),r1              ! 31018000
-        movu.w  @(0,r0),r1              ! 31019000
-        fmov.s  @(0,r0),fr1             ! 31017000
-        bclr.b  #0,@(0,r0)              ! 30090000
-        bset.b  #0,@(0,r0)              ! 30091000
-        bst.b   #0,@(0,r0)              ! 30092000
-        bld.b   #0,@(0,r0)              ! 30093000
-        band.b  #0,@(0,r0)              ! 30094000
-        bor.b   #0,@(0,r0)              ! 30095000
-        bxor.b  #0,@(0,r0)              ! 30096000
-        bldnot.b  #0,@(0,r0)            ! 3009B000
-        bandnot.b #0,@(0,r0)            ! 3009C000
-        bornot.b  #0,@(0,r0)            ! 3009D000
-
-!! ====== FPU additions ======
-        fcnvds  dr0,fpul                ! F0BD
-        fcnvds  dr14,fpul               ! FEBD
-        fcnvsd  fpul,dr0                ! F0AD
-        fcnvsd  fpul,dr14               ! FEAD
+        movi20  #0,r0                   ;# 00000000
+        movi20  #0x7FFFF,r1             ;# 0170FFFF
+        movi20  #-0x80000,r2            ;# 02800000
+        movi20s #0,r0                   ;# 00010000
+        movi20s #0xFF0000,r1            ;# 0101FF00
 
 ! Local Variables:
 ! mode: asm

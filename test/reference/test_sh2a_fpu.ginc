@@ -12,12 +12,15 @@
 ! See the License for the specific language governing permissions and
 ! limitations under the License.
 
-        .text
-        .org    0x0000
-        .include "test_sh1.ginc"
-        .include "test_sh2.ginc"
-        .include "test_sh2e_fpu.ginc"
-        .include "test_sh2e.ginc"
+!!! SH-2A FPU additions (double <-> single conversion). Require the FPU.
+
+!! FCNVDS DRm,FPUL
+        fcnvds  dr0,fpul                ;# F0BD
+        fcnvds  dr14,fpul               ;# FEBD
+
+!! FCNVSD FPUL,DRn
+        fcnvsd  fpul,dr0                ;# F0AD
+        fcnvsd  fpul,dr14               ;# FEAD
 
 ! Local Variables:
 ! mode: asm

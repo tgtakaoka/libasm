@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache..org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -26,247 +26,74 @@ void set_up() {}
 
 void tear_down() {}
 
-void test_asm_sh1() {
-    PREP_ASM(superh::AsmSuperH, HitachiDirective);
+// clang-format off
 
-    driver.setUpperHex(false);
-
-    ASM("SH-1",
-            R"(        .cpu   SH-1
-; comment line
-        .org   H'1000
-label1: .equ   H'1100
-        nop
-        mov   r0, r1
-        bra   label1
-label2: nop
-)",
-            R"(          0 :                            .cpu   SH-1
-          0 :                    ; comment line
-       1000 :                            .org   H'1000
-       1000 : =1100              label1: .equ   H'1100
-       1000 : 0009                       nop
-       1002 : 6103                       mov   r0, r1
-       1004 : a07c                       bra   label1
-       1006 : 0009               label2: nop
-)");
-}
-
-void test_dis_sh1() {
-    PREP_DIS(superh::DisSuperH);
-
-    driver.setUppercase(true);
-
-    DIS16("SH-1", 0x1000,
-            R"(      CPU    SH-1
-      ORG    H'00001000
-      NOP
-      MOV    R0, R1
-)",
-            R"(       0 :                            CPU    SH-1
-    1000 :                            ORG    H'00001000
-    1000 : 0009                       NOP
-    1002 : 6103                       MOV    R0, R1
-)",
-            0x0009, 0x6103);
-}
-
-void test_asm_sh2() {
-    PREP_ASM(superh::AsmSuperH, HitachiDirective);
-
-    driver.setUpperHex(false);
-
-    ASM("SH-2",
-            R"(        .cpu   SH-2
-        .org   H'2000
-        dt    r0
-        braf  r0
-        dmuls.l r0, r1
-)",
-            R"(          0 :                            .cpu   SH-2
-       2000 :                            .org   H'2000
-       2000 : 4010                       dt    r0
-       2002 : 0023                       braf  r0
-       2004 : 310d                       dmuls.l r0, r1
-)");
-}
-
-void test_dis_sh2() {
-    PREP_DIS(superh::DisSuperH);
-
-    driver.setUppercase(true);
-
-    DIS16("SH-2", 0x2000,
-            R"(      CPU    SH-2
-      ORG    H'00002000
-      DT     R0
-      BRAF   R0
-      DMULS.L    R0, R1
-)",
-            R"(       0 :                            CPU    SH-2
-    2000 :                            ORG    H'00002000
-    2000 : 4010                       DT     R0
-    2002 : 0023                       BRAF   R0
-    2004 : 310D                       DMULS.L    R0, R1
-)",
-            0x4010, 0x0023, 0x310D);
-}
-
-void test_asm_shdsp() {
-    PREP_ASM(superh::AsmSuperH, HitachiDirective);
-
-    driver.setUpperHex(false);
-
-    ASM("SH-DSP",
-            R"(        .cpu   SH-DSP
-        .org   H'3000
-        lds   r0, dsr
-        lds   r0, a0
-        setrc #0
-)",
-            R"(          0 :                            .cpu   SH-DSP
-       3000 :                            .org   H'3000
-       3000 : 406a                       lds   r0, dsr
-       3002 : 407a                       lds   r0, a0
-       3004 : 8200                       setrc #0
-)");
-}
-
-void test_dis_shdsp() {
-    PREP_DIS(superh::DisSuperH);
-
-    driver.setUppercase(true);
-
-    DIS16("SH-DSP", 0x3000,
-            R"(      CPU    SH-DSP
-      ORG    H'00003000
-      LDS    R0, DSR
-      LDS    R0, A0
-      SETRC  #0
-)",
-            R"(       0 :                            CPU    SH-DSP
-    3000 :                            ORG    H'00003000
-    3000 : 406A                       LDS    R0, DSR
-    3002 : 407A                       LDS    R0, A0
-    3004 : 8200                       SETRC  #0
-)",
-            0x406A, 0x407A, 0x8200);
-}
-
-void test_asm_sh2e() {
-    PREP_ASM(superh::AsmSuperH, HitachiDirective);
-
-    driver.setUpperHex(false);
-
-    ASM("SH-2E",
-            R"(        .cpu   SH-2E
-        .org   H'4000
-        fadd  fr0, fr1
-        flds  fr0, fpul
-        lds   r0, fpscr
-)",
-            R"(          0 :                            .cpu   SH-2E
-       4000 :                            .org   H'4000
-       4000 : f100                       fadd  fr0, fr1
-       4002 : f01d                       flds  fr0, fpul
-       4004 : 406a                       lds   r0, fpscr
-)");
-}
-
-void test_dis_sh2e() {
-    PREP_DIS(superh::DisSuperH);
-
-    driver.setUppercase(true);
-
-    DIS16("SH-2E", 0x4000,
-            R"(      CPU    SH-2E
-      ORG    H'00004000
-      FADD   FR0, FR1
-      FLDS   FR0, FPUL
-      LDS    R0, FPSCR
-)",
-            R"(       0 :                            CPU    SH-2E
-    4000 :                            ORG    H'00004000
-    4000 : F100                       FADD   FR0, FR1
-    4002 : F01D                       FLDS   FR0, FPUL
-    4004 : 406A                       LDS    R0, FPSCR
-)",
-            0xF100, 0xF01D, 0x406A);
-}
-
-void test_asm_sh2a() {
+// One assembler listing test (not a CPU-variant test): it exercises the listing
+// formatting -- comment line, directives with and without an emitted value, a
+// label column, a one-word and a two-word (32-bit) instruction in the code
+// column, and a symbol reference resolved in an operand.
+void test_asm_listing() {
     PREP_ASM(superh::AsmSuperH, HitachiDirective);
 
     driver.setUpperHex(false);
 
     ASM("SH-2A",
-            R"(        .cpu   SH-2A
-        .org   H'5000
-        movrt r0
-        nott
-        movi20 #0, r0
+            R"(        .cpu    SH-2A
+; comment line
+        .org    H'1000
+const:  .equ    H'1234
+start:  movi20  #H'7FFFF, r0
+        mov.w   data, r1
+        bra     start
+        nop
+data:   .data   const
 )",
-            R"(          0 :                            .cpu   SH-2A
-       5000 :                            .org   H'5000
-       5000 : 0039                       movrt r0
-       5002 : 0068                       nott
-       5004 : 0000 0000                  movi20 #0, r0
+            R"(          0 :                            .cpu    SH-2A
+          0 :                    ; comment line
+       1000 :                            .org    H'1000
+       1000 : =1234              const:  .equ    H'1234
+       1000 : 0070 ffff          start:  movi20  #H'7FFFF, r0
+       1004 : 9101                       mov.w   data, r1
+       1006 : affb                       bra     start
+       1008 : 0009                       nop
+       100a : 1234               data:   .data   const
 )");
 }
 
-void test_dis_sh2a() {
+// One disassembler listing test: header pseudos, a one-word and a two-word
+// (32-bit) instruction, and PC-relative operands rendered as the bare target.
+void test_dis_listing() {
     PREP_DIS(superh::DisSuperH);
 
     driver.setUppercase(true);
 
-    DIS16("SH-2A", 0x5000,
+    DIS16("SH-2A", 0x1000,
             R"(      CPU    SH-2A
-      ORG    H'00005000
+      OPTION "fpu", "true"
+      ORG    H'00001000
       MOVRT  R0
-      NOTT
-      MOVI20 #0, R0
+      MOVI20 #H'7FFFF, R0
+      MOV.W  H'0000100C, R1
+      BRA    H'00001000
+      NOP
 )",
             R"(       0 :                            CPU    SH-2A
-    5000 :                            ORG    H'00005000
-    5000 : 0039                       MOVRT  R0
-    5002 : 0068                       NOTT
-    5004 : 0000 0000                  MOVI20 #0, R0
+       0 :                            OPTION "fpu", "true"
+    1000 :                            ORG    H'00001000
+    1000 : 0039                       MOVRT  R0
+    1002 : 0070 FFFF                  MOVI20 #H'7FFFF, R0
+    1006 : 9101                       MOV.W  H'0000100C, R1
+    1008 : AFFA                       BRA    H'00001000
+    100A : 0009                       NOP
 )",
-            0x0039, 0x0068, 0x0000, 0x0000);
+            0x0039, 0x0070, 0xFFFF, 0x9101, 0xAFFA, 0x0009);
 }
 
-void test_asm_superh_assign() {
-    PREP_ASM(superh::AsmSuperH, HitachiDirective);
-
-    driver.setUpperHex(false);
-
-    ASM("SH-1",
-            R"(        .cpu   SH-1
-        .assign var1, H'1000
-        .data var1
-        .assign var1, H'1100
-        .data var1
-)",
-            R"(          0 :                            .cpu   SH-1
-          0 : =1000                      .assign var1, H'1000
-          0 : 1000                       .data var1
-          2 : =1100                      .assign var1, H'1100
-          2 : 1100                       .data var1
-)");
-}
+// clang-format on
 
 void run_tests() {
-    RUN_TEST(test_asm_sh1);
-    RUN_TEST(test_dis_sh1);
-    RUN_TEST(test_asm_sh2);
-    RUN_TEST(test_dis_sh2);
-    RUN_TEST(test_asm_shdsp);
-    RUN_TEST(test_dis_shdsp);
-    RUN_TEST(test_asm_sh2e);
-    RUN_TEST(test_dis_sh2e);
-    RUN_TEST(test_asm_sh2a);
-    RUN_TEST(test_dis_sh2a);
-    RUN_TEST(test_asm_superh_assign);
+    RUN_TEST(test_asm_listing);
+    RUN_TEST(test_dis_listing);
 }
 
 }  // namespace test

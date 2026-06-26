@@ -15,13 +15,13 @@
 !!! SH-2 additional instructions
 
 !! DMULS.L Rm,Rn (0011 nnnn mmmm 1101) 32x32 signed multiply -> 64-bit MACH:MACL
-        dmuls.l r0, r1                  ! 310D
-        dmuls.l r14, r15                ! 3FED
+        dmuls.l r0, r1                  ;# 310D
+        dmuls.l r14, r15                ;# 3FED
 
 !! DMULU.L Rm,Rn (0011 nnnn mmmm 0101) 32x32 unsigned multiply -> 64-bit MACH:MACL
-        dmulu.l r0, r1                  ! 3105
-        dmulu.l r14, r15                ! 3FE5
+        dmulu.l r0, r1                  ;# 3105
+        dmulu.l r14, r15                ;# 3FE5
 
 !! MAC.L @Rm+,@Rn+ (0000 nnnn mmmm 1111) 32x32 multiply-accumulate with post-increment
-        mac.l   @r0+, @r1+              ! 010F
-        mac.l   @r14+, @r15+            ! 0FEF
+        mac.l   @r0+, @r1+              ;# 010F
+        mac.l   @r14+, @r15+            ;# 0FEF

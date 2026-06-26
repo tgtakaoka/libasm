@@ -12,13 +12,16 @@
 ;;; See the License for the specific language governing permissions and
 ;;; limitations under the License.
 
-        .cpu     SH-2E
-        .org     0
-        .include "test_sh1.inc"
-        .include "test_sh2.inc"
-        .include "test_sh2e_fpu.inc"
-        .include "test_sh2e.inc"
-        .end
+;;; SH-2A FPU additions (double <-> single conversion). Require the optional
+;;; SH-2A FPU (.fpu on).
+
+;;; FCNVDS DRm,FPUL (m format: 1111mmm010111101) double -> single+truncate -> FPUL
+        FCNVDS  DR0,FPUL                ;# F0BD
+        FCNVDS  DR14,FPUL               ;# FEBD
+
+;;; FCNVSD FPUL,DRn (n format: 1111nnn010101101) FPUL -> single -> double
+        FCNVSD  FPUL,DR0                ;# F0AD
+        FCNVSD  FPUL,DR14               ;# FEAD
 
 ;;; Local Variables:
 ;;; mode: asm

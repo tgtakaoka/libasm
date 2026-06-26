@@ -40,15 +40,12 @@ PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
 
 // SH mnemonics embed '.' (size suffix: MOV.B, AND.B, ...) and '/' (condition
 // suffix: CMP/EQ, BF/S, BT/S) directly in the name token. Extend the default
-// SymbolParser so the tokenizer doesn't split the mnemonic at those chars.
-// Also accept '*' (Hitachi convention) as the current-PC location symbol so
-// idioms like "BF *+4" and "MOV.W @(*+H'40,PC),R0" assemble.
+// SymbolParser so the tokenizer doesn't split the mnemonic at those chars. The
+// location counter is '$' (the inherited default); per the SuperH Assembler
+// manual '*' is the multiplication operator, not the location counter.
 struct SuperHSymbolParser final : SymbolParser {
     bool instructionLetter(char c) const override {
         return SymbolParser::instructionLetter(c) || c == '/' || c == '.';
-    }
-    bool locationSymbol(StrScanner &scan) const override {
-        return SymbolParser::locationSymbol(scan, '*');
     }
 };
 
@@ -71,13 +68,31 @@ AsmSuperH::AsmSuperH(const ValueParser::Plugins &plugins)
     reset();
 }
 
+void AsmSuperH::reset() {
+    Assembler::reset();
+    setFpuType(FPU_NONE);  // assembler requires the FPU to be enabled explicitly
+}
+
+Error AsmSuperH::processPseudo(StrScanner &scan, Insn &insn) {
+    // "[.]fpu on/off" toggles the optional SH-2A FPU. Accept an optional leading
+    // dot like the base directive lookup does.
+    auto name = insn.name();
+    if (*name == '.')
+        ++name;
+    if (strcasecmp_P(name, TEXT_FPU) == 0) {
+        const auto at = scan;
+        const auto error = _opt_fpu.set(scan);
+        return error ? insn.setErrorIf(at, error) : OK;
+    }
+    return Assembler::processPseudo(scan, insn);
+}
+
 // Parse the disp/size part of "@(disp,Rn)" / "@(R0,Rn)" / "@(disp,GBR)" /
-// "@(target,PC)" / "@(R0,GBR)". The leading '@(' has been consumed.
+// "@(disp,PC)" / "@(R0,GBR)". The leading '@(' has been consumed.
 //
-// For "@(target,PC)" the operand is the absolute target address. The user's
-// idiom "@(*+N,PC)" works naturally because '*' is registered as the
-// location symbol -- parseExpr evaluates *+N to current_PC + N, which is
-// exactly the target the M_PCL encoder consumes.
+// For "@(disp,PC)" the value is a raw byte displacement (manual table 3-1); the
+// M_PCREL encoder scales it by the access size. The target-as-symbol form
+// (MOV.W label,Rn) is a bare operand handled in parseOperand, not here.
 Error AsmSuperH::parseAtParen(StrScanner &scan, Operand &op) const {
     auto p = scan.skipSpaces();
     auto s = p;
@@ -108,7 +123,7 @@ Error AsmSuperH::parseAtParen(StrScanner &scan, Operand &op) const {
     if (first != REG_UNDEF)
         return op.setError(s, UNKNOWN_OPERAND);
 
-    // Case 2: starts with a value -> @(disp,Rn) or @(disp,GBR) or @(target,PC)
+    // Case 2: starts with a value -> @(disp,Rn) or @(disp,GBR) or @(disp,PC)
     op.val = parseInteger(p, op);
     if (op.hasError())
         return op.getError();
@@ -119,12 +134,12 @@ Error AsmSuperH::parseAtParen(StrScanner &scan, Operand &op) const {
     if (!p.skipSpaces().expect(')'))
         return op.setError(p, MISSING_CLOSING_PAREN);
     if (base == REG_GBR) {
-        op.mode = M_D8B;  // generic GBR-relative; encoder picks B/W/L scale
+        op.mode = M_D8;  // GBR-relative; encoder scales by the access size
         scan = p;
         return OK;
     }
     if (base == REG_PC) {
-        op.mode = M_PCL;  // absolute target; encoder picks W/L scale
+        op.mode = M_PCREL;  // @(disp,PC): raw displacement, scaled by access size
         scan = p;
         return OK;
     }
@@ -269,34 +284,51 @@ Error AsmSuperH::parseOperand(StrScanner &scan, Operand &op) const {
 
 namespace {
 
-// Extract the mnemonic size suffix: 'B', 'W', 'L' from the trailing
-// ".B"/".W"/".L" of the name. Returns 0 if no suffix.
-char nameSizeSuffix(const char *name) {
-    const auto len = strlen(name);
-    if (len < 3)
-        return 0;
-    if (name[len - 2] != '.')
-        return 0;
-    const auto last = name[len - 1];
-    if (last == 'B' || last == 'W' || last == 'L')
-        return last;
-    return 0;
+bool notDot(char c) {
+    return c != '.';
 }
 
-unsigned sizeScale(char suffix) {
-    switch (suffix) {
-    case 'B':
+// Displacement scale for the size-bearing displacement modes (M_D4M/M_D8/
+// M_PCREL): .B=1, .W=2, .L=4. ISZ_NONE maps to 4 so MOVA's suffix-less
+// PC-relative operand scales by 4 like a long access.
+unsigned dispScale(InsnSize sz) {
+    switch (sz) {
+    case ISZ_BYTE:
         return 1;
-    case 'W':
+    case ISZ_WORD:
         return 2;
-    case 'L':
-        return 4;
     default:
-        return 1;
+        return 4;
     }
 }
 
 }  // namespace
+
+InsnSize AsmInsn::parseInsnSize() {
+    StrScanner p{name()};
+    p.trimStart(notDot);
+    auto eos = const_cast<char *>(p.str());
+    auto sz = ISZ_NONE;
+    if (p.expect('.')) {
+        if (p.iexpect('B')) {
+            sz = ISZ_BYTE;
+        } else if (p.iexpect('W')) {
+            sz = ISZ_WORD;
+        } else if (p.iexpect('L')) {
+            sz = ISZ_LONG;
+        }
+        // Only a genuine .B/.W/.L with nothing trailing is a size suffix; a
+        // non-size dot (FMOV.S) or trailing garbage stays in the name and is
+        // resolved by the table lookup.
+        if (sz != ISZ_NONE && *p == 0) {
+            *eos = 0;
+        } else {
+            sz = ISZ_NONE;
+        }
+    }
+    _parsedSize = sz;
+    return sz;
+}
 
 void AsmSuperH::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode) const {
     // Carry the operand's own error (notably UNDEFINED_SYMBOL) onto the
@@ -330,8 +362,8 @@ void AsmSuperH::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode) c
     case M_FPUL:
     case M_FPSCR:
     case M_BANK:
-    case M_DECR15:
-    case M_INCR15:
+    case M_PUSH:
+    case M_PULL:
         break;
     case M_FRN:
         opc |= static_cast<Config::opcode_t>(encodeRegNum(op.reg) & 0xF) << 8;
@@ -417,8 +449,8 @@ void AsmSuperH::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode) c
     }
     case M_D4M: {
         // @(disp,Rn/Rm) with register in bits[7:4]; disp in bits[3:0], scale
-        // depends on mnemonic suffix (.B=1, .W=2, .L=4).
-        const auto scale = sizeScale(nameSizeSuffix(insn.name()));
+        // depends on the access size (.B=1, .W=2, .L=4).
+        const auto scale = dispScale(insn.effectiveSize());
         const auto disp = op.val.getUnsigned();
         if ((disp % scale) != 0) {
             insn.setErrorIf(op, OPERAND_NOT_ALIGNED);
@@ -429,11 +461,9 @@ void AsmSuperH::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode) c
         opc |= (disp / scale) & 0xF;
         break;
     }
-    case M_D8B:
-    case M_D8W:
-    case M_D8L: {
-        // @(disp,GBR); disp in bits[7:0]; scale by mode (B=1, W=2, L=4).
-        const auto scale = (mode == M_D8B) ? 1u : (mode == M_D8W) ? 2u : 4u;
+    case M_D8: {
+        // @(disp,GBR); disp in bits[7:0]; scale by access size (B=1, W=2, L=4).
+        const auto scale = dispScale(insn.effectiveSize());
         const auto disp = op.val.getUnsigned();
         if ((disp % scale) != 0) {
             insn.setErrorIf(op, OPERAND_NOT_ALIGNED);
@@ -443,35 +473,31 @@ void AsmSuperH::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode) c
         opc |= (disp / scale) & 0xFF;
         break;
     }
-    case M_PCW: {
-        // Operand is the absolute target address. The CPU computes
-        // target = (PC+4) + d*2, so d = (target - (PC+4)) / 2 in [0, 255].
-        const auto pc4 = insn.address() + 4;
-        const auto target = op.getError() ? pc4 : op.val.getUnsigned();
-        const auto delta = static_cast<int32_t>(target - pc4);
-        if (delta < 0 || delta > 510 || (delta & 1)) {
-            insn.setErrorIf(op, OPERAND_TOO_FAR);
+    case M_PCREL: {
+        // .W scales the displacement by 2 (base PC+4); .L and MOVA scale by 4
+        // (base (PC+4)&~3). d is the 8-bit field in [0, 255].
+        const Config::ptrdiff_t scale = dispScale(insn.effectiveSize());
+        Config::ptrdiff_t delta;
+        if (op.mode == M_PCREL) {
+            // @(disp,PC): disp is a raw byte displacement (manual table 3-1).
+            delta = op.getError() ? 0 : static_cast<Config::ptrdiff_t>(op.val.getUnsigned());
         } else {
-            opc |= (delta >> 1) & 0xFF;
+            // Bare symbol/address: the operand is the target ("symbol" mode);
+            // branchDelta validates the target address (incl. word alignment).
+            const Config::uintptr_t base = (scale == 2) ? (insn.address() + 4)
+                                                        : ((insn.address() + 4) & ~Config::uintptr_t(3));
+            const Config::uintptr_t target = op.getError() ? base : op.val.getUnsigned();
+            insn.setErrorIf(op, checkAddr(target, true));
+            delta = branchDelta(base, target, insn, op);
         }
-        break;
-    }
-    case M_PCL: {
-        // Operand is the absolute target address. The CPU computes
-        // target = ((PC+4) & ~3) + d*4, so d = (target - ((PC+4) & ~3)) / 4.
-        // PC may be any even value (the mask handles non-4-aligned PC);
-        // target itself must be 4-aligned for the encoding to round-trip.
-        const auto pc4 = (insn.address() + 4) & ~Config::uintptr_t(3);
-        const auto target = op.getError() ? pc4 : op.val.getUnsigned();
-        if (target & 3) {
+        // The field is an unsigned 8-bit displacement, so overflowDelta (signed)
+        // does not apply; the displacement must also be a multiple of the scale.
+        if (delta % scale) {
             insn.setErrorIf(op, OPERAND_NOT_ALIGNED);
-            break;
-        }
-        const auto delta = static_cast<int32_t>(target - pc4);
-        if (delta < 0 || delta > 1020) {
+        } else if (delta < 0 || delta > 255 * scale) {
             insn.setErrorIf(op, OPERAND_TOO_FAR);
         } else {
-            opc |= (delta >> 2) & 0xFF;
+            opc |= (delta / scale) & 0xFF;
         }
         break;
     }
@@ -483,7 +509,7 @@ void AsmSuperH::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode) c
         opc |= val & 0xFF;
         break;
     }
-    case M_TNUM: {
+    case M_TVEC: {
         // TRAPA #imm, unsigned 8-bit.
         const auto val = op.val.getUnsigned();
         if (val > 255)
@@ -493,21 +519,30 @@ void AsmSuperH::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode) c
     }
     case M_REL8:
     case M_REL8P: {
-        // 8-bit signed PC-relative: d = (target - (PC+4)) / 2, [-128, 127]
-        const auto pc4 = insn.address() + 4;
-        const auto target = op.getError() ? pc4 : op.val.getUnsigned();
-        const auto delta = static_cast<int32_t>(target - pc4);
-        if (delta < -256 || delta > 254 || (delta & 1))
+        // 8-bit signed PC-relative, scale 2. BF/BT (M_REL8) take a bare branch
+        // target; LDRS/LDRE (M_REL8P) take a bare symbol/address target or, via
+        // @(disp,PC), a raw byte displacement.
+        Config::ptrdiff_t delta;
+        if (op.mode == M_PCREL) {
+            delta = op.getError() ? 0 : static_cast<Config::ptrdiff_t>(op.val.getUnsigned());
+        } else {
+            const Config::uintptr_t base = insn.address() + 4;
+            const Config::uintptr_t target = op.getError() ? base : op.val.getUnsigned();
+            insn.setErrorIf(op, checkAddr(target, true));
+            delta = branchDelta(base, target, insn, op);
+        }
+        if ((delta & 1) || overflowDelta(delta / 2, 8))
             insn.setErrorIf(op, OPERAND_TOO_FAR);
         opc |= (delta >> 1) & 0xFF;
         break;
     }
     case M_REL12: {
-        // 12-bit signed PC-relative branch: d = (target - (PC+4)) / 2, [-2048, 2047]
-        const auto pc4 = insn.address() + 4;
-        const auto target = op.getError() ? pc4 : op.val.getUnsigned();
-        const auto delta = static_cast<int32_t>(target - pc4);
-        if (delta < -4096 || delta > 4094 || (delta & 1))
+        // 12-bit signed PC-relative branch: d = (target - (PC+4)) / 2.
+        const Config::uintptr_t base = insn.address() + 4;
+        const Config::uintptr_t target = op.getError() ? base : op.val.getUnsigned();
+        insn.setErrorIf(op, checkAddr(target, true));
+        const Config::ptrdiff_t delta = branchDelta(base, target, insn, op);
+        if ((delta & 1) || overflowDelta(delta / 2, 12))
             insn.setErrorIf(op, OPERAND_TOO_FAR);
         opc |= (delta >> 1) & 0xFFF;
         break;
@@ -536,8 +571,26 @@ Error AsmSuperH::encodeImpl(StrScanner &scan, Insn &_insn) const {
     }
     scan.skipSpaces();
 
-    if (searchName(cpuType(), fpuType(), insn))
-        return _insn.setError(insn.srcOp, insn);
+    // Try the full mnemonic first so names whose '.' suffix is part of the name
+    // (FMOV.S, MAC.W, MAC.L) match directly; otherwise strip a .B/.W/.L size
+    // suffix and search again for the base mnemonic.
+    if (searchName(cpuSpec(), insn)) {
+        if (insn.parseInsnSize() == ISZ_NONE || searchName(cpuSpec(), insn))
+            return _insn.setError(insn.srcOp, insn);
+    }
+
+    // For ISZ_DATA, an explicit suffix replaces the default size bits in the
+    // matched opcode template; a bare mnemonic keeps the stored default.
+    if (insn.insnSize() == ISZ_DATA && insn.parsedSize() != ISZ_NONE) {
+        const auto sf = sizeFieldOf(insn.src(), insn.dst());
+        for (uint8_t i = 0; i < 4; i++) {
+            if (sf.sizes[i] == insn.parsedSize()) {
+                insn.setOpCode((insn.opCode() & ~sf.mask) |
+                        (static_cast<Config::opcode_t>(i) << sf.shift));
+                break;
+            }
+        }
+    }
 
     encodeOperand(insn, insn.srcOp, insn.src());
     encodeOperand(insn, insn.dstOp, insn.dst());

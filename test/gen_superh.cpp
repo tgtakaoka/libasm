@@ -27,20 +27,18 @@ int main(int argc, const char **argv) {
     if (driver.main(argc, argv))
         return 1;
 
+    // SH assembly is conventionally lowercase; emit lowercase mnemonics,
+    // registers and hex regardless of the driver's -u flag.
+    dis.setOption("upper-case", "false");
+    dis.setOption("upper-hex", "false");
+
     if (driver.generateGas()) {
         dis.setOption("gnu-as", "enable");
     } else {
         dis.setOption("relative", "enable");
-        dis.setOption("origin-char", "*");
+        dis.setOption("origin-char", "$");
         dis.setOption("motorola-style", "enable");
     }
-    // SH-2A has optional FPU; enable it for SH-2A autogen so FCNVDS / FCNVSD
-    // appear.  Leave it off for SH-1 / SH-2 / SH-DSP -- those CPUs don't have
-    // an FPU and ASL rejects FADD / FLDI0 / ... when targeting them.  SH-2E's
-    // FPU is mandatory and is enabled automatically by setCpu.
-    if (strcasecmp_P("SH-2A", dis.config().cpu_P()) == 0)
-        dis.setOption("fpu", "true");
-
     TestGenerator generator(driver, dis, 0x0000);
     generator.generate();
 
