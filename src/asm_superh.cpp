@@ -55,22 +55,10 @@ struct SuperHSymbolParser final : SymbolParser {
 }  // namespace
 
 const ValueParser::Plugins &AsmSuperH::defaultPlugins() {
-    static const struct final : ValueParser::Plugins {
-        const NumberParser &number() const override {
-            return ValueParser::Plugins::hitachi().number();
-        }
-        const CommentParser &comment() const override {
-            return ValueParser::Plugins::hitachi().comment();
-        }
+    static const struct final : ValueParser::HitachiPlugins {
         const SymbolParser &symbol() const override {
             static const SuperHSymbolParser SYMBOL;
             return SYMBOL;
-        }
-        const LetterParser &letter() const override {
-            return ValueParser::Plugins::hitachi().letter();
-        }
-        const OperatorParser &operators() const override {
-            return ValueParser::Plugins::hitachi().operators();
         }
     } PLUGINS{};
     return PLUGINS;

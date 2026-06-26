@@ -12,10 +12,10 @@
 ;;; See the License for the specific language governing permissions and
 ;;; limitations under the License.
 
-        cpu     SH-2E
+        .cpu     SH-2E
         .org     0
-        include "gen_sh2e.inc"
-        end
+        .include "gen_sh2e.inc"
+        .end
 
 ;;; Local Variables:
 ;;; mode: asm

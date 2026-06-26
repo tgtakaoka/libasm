@@ -12,10 +12,10 @@
 ;;; See the License for the specific language governing permissions and
 ;;; limitations under the License.
 
-        cpu     SH-1
+        .cpu     SH-1
         .org     0
-        include "test_sh1.inc"
-        end
+        .include "test_sh1.inc"
+        .end
 
 ;;; Local Variables:
 ;;; mode: asm

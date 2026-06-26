@@ -12,11 +12,11 @@
 ;;; See the License for the specific language governing permissions and
 ;;; limitations under the License.
 
-        cpu     SH-2A
+        .cpu     SH-2A
         .option  "fpu", "true"
         .org     0
-        include "gen_sh2a.inc"
-        end
+        .include "gen_sh2a.inc"
+        .end
 
 ;;; Local Variables:
 ;;; mode: asm

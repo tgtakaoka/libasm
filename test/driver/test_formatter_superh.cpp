@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache..org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -27,24 +27,24 @@ void set_up() {}
 void tear_down() {}
 
 void test_asm_sh1() {
-    PREP_ASM(superh::AsmSuperH, MotorolaDirective);
+    PREP_ASM(superh::AsmSuperH, HitachiDirective);
 
     driver.setUpperHex(false);
 
     ASM("SH-1",
-            R"(        cpu   SH-1
+            R"(        .cpu   SH-1
 ; comment line
-        org   H'1000
-label1: equ   H'1100
+        .org   H'1000
+label1: .equ   H'1100
         nop
         mov   r0, r1
         bra   label1
 label2: nop
 )",
-            R"(          0 :                            cpu   SH-1
+            R"(          0 :                            .cpu   SH-1
           0 :                    ; comment line
-       1000 :                            org   H'1000
-       1000 : =1100              label1: equ   H'1100
+       1000 :                            .org   H'1000
+       1000 : =1100              label1: .equ   H'1100
        1000 : 0009                       nop
        1002 : 6103                       mov   r0, r1
        1004 : a07c                       bra   label1
@@ -72,19 +72,19 @@ void test_dis_sh1() {
 }
 
 void test_asm_sh2() {
-    PREP_ASM(superh::AsmSuperH, MotorolaDirective);
+    PREP_ASM(superh::AsmSuperH, HitachiDirective);
 
     driver.setUpperHex(false);
 
     ASM("SH-2",
-            R"(        cpu   SH-2
-        org   H'2000
+            R"(        .cpu   SH-2
+        .org   H'2000
         dt    r0
         braf  r0
         dmuls.l r0, r1
 )",
-            R"(          0 :                            cpu   SH-2
-       2000 :                            org   H'2000
+            R"(          0 :                            .cpu   SH-2
+       2000 :                            .org   H'2000
        2000 : 4010                       dt    r0
        2002 : 0023                       braf  r0
        2004 : 310d                       dmuls.l r0, r1
@@ -113,19 +113,19 @@ void test_dis_sh2() {
 }
 
 void test_asm_shdsp() {
-    PREP_ASM(superh::AsmSuperH, MotorolaDirective);
+    PREP_ASM(superh::AsmSuperH, HitachiDirective);
 
     driver.setUpperHex(false);
 
     ASM("SH-DSP",
-            R"(        cpu   SH-DSP
-        org   H'3000
+            R"(        .cpu   SH-DSP
+        .org   H'3000
         lds   r0, dsr
         lds   r0, a0
         setrc #0
 )",
-            R"(          0 :                            cpu   SH-DSP
-       3000 :                            org   H'3000
+            R"(          0 :                            .cpu   SH-DSP
+       3000 :                            .org   H'3000
        3000 : 406a                       lds   r0, dsr
        3002 : 407a                       lds   r0, a0
        3004 : 8200                       setrc #0
@@ -154,19 +154,19 @@ void test_dis_shdsp() {
 }
 
 void test_asm_sh2e() {
-    PREP_ASM(superh::AsmSuperH, MotorolaDirective);
+    PREP_ASM(superh::AsmSuperH, HitachiDirective);
 
     driver.setUpperHex(false);
 
     ASM("SH-2E",
-            R"(        cpu   SH-2E
-        org   H'4000
+            R"(        .cpu   SH-2E
+        .org   H'4000
         fadd  fr0, fr1
         flds  fr0, fpul
         lds   r0, fpscr
 )",
-            R"(          0 :                            cpu   SH-2E
-       4000 :                            org   H'4000
+            R"(          0 :                            .cpu   SH-2E
+       4000 :                            .org   H'4000
        4000 : f100                       fadd  fr0, fr1
        4002 : f01d                       flds  fr0, fpul
        4004 : 406a                       lds   r0, fpscr
@@ -195,19 +195,19 @@ void test_dis_sh2e() {
 }
 
 void test_asm_sh2a() {
-    PREP_ASM(superh::AsmSuperH, MotorolaDirective);
+    PREP_ASM(superh::AsmSuperH, HitachiDirective);
 
     driver.setUpperHex(false);
 
     ASM("SH-2A",
-            R"(        cpu   SH-2A
-        org   H'5000
+            R"(        .cpu   SH-2A
+        .org   H'5000
         movrt r0
         nott
         movi20 #0, r0
 )",
-            R"(          0 :                            cpu   SH-2A
-       5000 :                            org   H'5000
+            R"(          0 :                            .cpu   SH-2A
+       5000 :                            .org   H'5000
        5000 : 0039                       movrt r0
        5002 : 0068                       nott
        5004 : 0000 0000                  movi20 #0, r0
@@ -235,6 +235,26 @@ void test_dis_sh2a() {
             0x0039, 0x0068, 0x0000, 0x0000);
 }
 
+void test_asm_superh_assign() {
+    PREP_ASM(superh::AsmSuperH, HitachiDirective);
+
+    driver.setUpperHex(false);
+
+    ASM("SH-1",
+            R"(        .cpu   SH-1
+        .assign var1, H'1000
+        .data var1
+        .assign var1, H'1100
+        .data var1
+)",
+            R"(          0 :                            .cpu   SH-1
+          0 : =1000                      .assign var1, H'1000
+          0 : 1000                       .data var1
+          2 : =1100                      .assign var1, H'1100
+          2 : 1100                       .data var1
+)");
+}
+
 void run_tests() {
     RUN_TEST(test_asm_sh1);
     RUN_TEST(test_dis_sh1);
@@ -246,6 +266,7 @@ void run_tests() {
     RUN_TEST(test_dis_sh2e);
     RUN_TEST(test_asm_sh2a);
     RUN_TEST(test_dis_sh2a);
+    RUN_TEST(test_asm_superh_assign);
 }
 
 }  // namespace test

@@ -17,15 +17,15 @@
 ;;; manipulation memory variants) are excluded from the libasm assembler
 ;;; for now; this wrapper exercises everything else.
 
-        cpu     SH-2A
+        .cpu     SH-2A
         .option  "fpu", "true"
         .org     0
-        include "test_sh1.inc"
-        include "test_sh2.inc"
-        include "test_sh2e.inc"
+        .include "test_sh1.inc"
+        .include "test_sh2.inc"
+        .include "test_sh2e.inc"
 ;;; test_sh2a.inc not yet included: contains 12-bit-displacement and 20-bit-
 ;;; immediate forms that need M_D12N/M_D12M encoders.
-        end
+        .end
 
 ;;; Local Variables:
 ;;; mode: asm

@@ -118,7 +118,7 @@ MotorolaDirective dir68000(asm68000);
 HitachiDirective dir8300(asm8300);
 MotorolaDirective dirh16(ash16);
 MotorolaDirective dirh8500(ash8500);
-MotorolaDirective dirsuperh(asmsuperh);
+HitachiDirective dirsuperh(asmsuperh);
 MotorolaDirective dir6800(asm6800);
 MotorolaDirective dir6805(asm6805);
 MotorolaDirective dir6809(asm6809);
