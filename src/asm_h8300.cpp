@@ -77,17 +77,13 @@ RegName AsmH8300::parseRegOperand(StrScanner &scan) const {
 Error AsmH8300::parseBitSuffix(StrScanner &scan, Operand &op) const {
     auto p = scan;
     if (p.expect(':')) {
-        if (p.skipSpaces().iexpectWord_P(PSTR("8"))) {
-            op.bitSuffix = 8;
-        } else if (p.iexpectWord_P(PSTR("16"))) {
-            op.bitSuffix = 16;
-        } else if (p.iexpectWord_P(PSTR("24"))) {
-            op.bitSuffix = 24;
-        } else if (p.iexpectWord_P(PSTR("32"))) {
-            op.bitSuffix = 32;
-        } else {
+        Value value;
+        if (value.read(p.skipSpaces(), RADIX_10) != OK)
             return op.setErrorIf(scan, ILLEGAL_SIZE);
-        }
+        const auto bits = value.getUnsigned();
+        if (bits != 8 && bits != 16 && bits != 24 && bits != 32)
+            return op.setErrorIf(scan, ILLEGAL_SIZE);
+        op.bitSuffix = bits;
         scan = p;
     }
     return OK;
