@@ -13,7 +13,7 @@
 ;;; limitations under the License.
 
         cpu     SH-2
-        org     0
+        .org     0
         include "gen_sh2.inc"
         end
 

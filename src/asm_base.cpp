@@ -103,9 +103,18 @@ Error Assembler::encode(const char *line, Insn &insn, const SymbolTable *symtab)
 }
 
 Error Assembler::processPseudo(StrScanner &scan, Insn &insn) {
-    const auto *p = _pseudos->search(insn.name());
+    const auto *name = insn.name();
+    const auto *p = _pseudos->search(name);
     if (p == nullptr)
-        p = PSEUDO_TABLE.search(insn.name());
+        p = PSEUDO_TABLE.search(name);
+    if (p == nullptr && *name == '.') {
+        // Accept an optional leading dot on directives, so e.g. ".org"
+        // also matches the bare "org" pseudo.
+        const auto *bare = name + 1;
+        p = _pseudos->search(bare);
+        if (p == nullptr)
+            p = PSEUDO_TABLE.search(bare);
+    }
     return p ? p->invoke(this, scan, insn) : UNKNOWN_DIRECTIVE;
 }
 

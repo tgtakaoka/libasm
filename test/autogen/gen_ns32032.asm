@@ -15,7 +15,7 @@
         cpu     ns32032
         fpu     ns32081
         pmmu    ns32082
-        org     0x10000
+        .org     0x10000
         include "gen_ns32000.inc"
         end
 

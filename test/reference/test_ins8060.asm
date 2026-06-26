@@ -13,7 +13,7 @@
 ;;; limitations under the License.
 
         cpu     sc/mp
-        org     0x0100
+        .org     0x0100
         include "test_ins8060.inc"
         end
 

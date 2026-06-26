@@ -13,10 +13,10 @@
 ;;; limitations under the License.
 
         cpu     H8S/2000
-        option  advanced-mode, on
+        .option  advanced-mode, on
 far_label:   equ   H'001000
 farer_label: equ   H'FFFFE0
-        org     H'000100
+        .org     H'000100
         include "test_h8300h.inc"
         include "test_h8300h_ext.inc"
         include "test_h8s2000.inc"

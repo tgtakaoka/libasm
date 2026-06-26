@@ -14,7 +14,7 @@
 
         cpu     T11
 
-        org     0100H
+        .org     0100H
         include "gen_t11.inc"
         end
 

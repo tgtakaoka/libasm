@@ -13,7 +13,7 @@
 ;;; limitations under the License.
 
         cpu     320C31
-        org     0C0H
+        .org     0C0H
         include "test_tms320c30.inc"
         include "test_tms320c31.inc"
         end

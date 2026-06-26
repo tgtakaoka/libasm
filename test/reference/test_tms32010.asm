@@ -13,7 +13,7 @@
 ;;; limitations under the License.
 
         cpu     32010
-        org     0800H
+        .org     0800H
 ;;; 0x0
         add     23H, 1
         add     *, 1

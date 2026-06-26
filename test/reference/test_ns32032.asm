@@ -13,7 +13,7 @@
 ; limitations under the License.
 
         cpu     ns32032
-        org     0x10000
+        .org     0x10000
         include "test_ns32000.inc"
 
         fpu     ns32081

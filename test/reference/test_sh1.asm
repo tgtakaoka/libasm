@@ -13,7 +13,7 @@
 ;;; limitations under the License.
 
         cpu     SH-1
-        org     0
+        .org     0
         include "test_sh1.inc"
         end
 

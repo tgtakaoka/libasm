@@ -13,7 +13,7 @@
 ;;; limitations under the License.
 
         cpu     8070
-        org     0x0100
+        .org     0x0100
         include "test_ins8070.inc"
         end
 

@@ -18,8 +18,8 @@
 ;;; for now; this wrapper exercises everything else.
 
         cpu     SH-2A
-        option  "fpu", "true"
-        org     0
+        .option  "fpu", "true"
+        .org     0
         include "test_sh1.inc"
         include "test_sh2.inc"
         include "test_sh2e.inc"

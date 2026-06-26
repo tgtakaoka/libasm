@@ -13,7 +13,7 @@
 ; limitations under the License.
 
         cpu     TMS370C156
-        org     0200h
+        .org     0200h
         include "gen_tms370.inc"
         end
 

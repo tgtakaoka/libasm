@@ -13,7 +13,7 @@
 ;;; limitations under the License.
 
         cpu     SH-DSP
-        org     0
+        .org     0
         include "gen_shdsp.inc"
         end
 

@@ -14,22 +14,22 @@
 
         cpu     W65C816
 
-        org     $100200
+        .org     $100200
         longa   off
         longi   off
         include "gen_w65c816.inc"
 
-        org     $200200
+        .org     $200200
         longa   off
         longi   on
         include "gen_w65c816.inc"
 
-        org     $300200
+        .org     $300200
         longa   on
         longi   off
         include "gen_w65c816.inc"
 
-        org     $400200
+        .org     $400200
         longa   on
         longi   on
         include "gen_w65c816.inc"

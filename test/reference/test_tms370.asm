@@ -13,7 +13,7 @@
 ;;; limitations under the License.
 
         cpu     TMS370C050
-        org     0200h
+        .org     0200h
         include "test_tms370.inc"
         end
 

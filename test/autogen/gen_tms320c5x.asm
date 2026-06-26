@@ -13,7 +13,7 @@
 ; limitations under the License.
 
         cpu     TMS320C5X
-        org     0100h
+        .org     0100h
         include "gen_tms320c5x.inc"
         end
 

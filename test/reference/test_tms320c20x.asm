@@ -13,7 +13,7 @@
 ;;; limitations under the License.
 
         cpu     320C20X
-        org     8000H
+        .org     8000H
         include "test_tms320c20x.inc"
         end
 

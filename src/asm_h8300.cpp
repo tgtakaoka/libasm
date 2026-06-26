@@ -28,26 +28,26 @@ using namespace reg;
 namespace {
 
 // clang-format off
-constexpr char TEXT_DATA[]   PROGMEM = ".DATA";
-constexpr char TEXT_DATA_B[] PROGMEM = ".DATA.B";
-constexpr char TEXT_DATA_W[] PROGMEM = ".DATA.W";
-constexpr char TEXT_DATA_L[] PROGMEM = ".DATA.L";
-constexpr char TEXT_SDATA[]  PROGMEM = ".SDATA";
-constexpr char TEXT_RES[]    PROGMEM = ".RES";
-constexpr char TEXT_RES_B[]  PROGMEM = ".RES.B";
-constexpr char TEXT_RES_W[]  PROGMEM = ".RES.W";
-constexpr char TEXT_RES_L[]  PROGMEM = ".RES.L";
+constexpr char TEXT_dDATA[]   PROGMEM = ".DATA";
+constexpr char TEXT_dDATA_B[] PROGMEM = ".DATA.B";
+constexpr char TEXT_dDATA_W[] PROGMEM = ".DATA.W";
+constexpr char TEXT_dDATA_L[] PROGMEM = ".DATA.L";
+constexpr char TEXT_dSDATA[]  PROGMEM = ".SDATA";
+constexpr char TEXT_dRES[]    PROGMEM = ".RES";
+constexpr char TEXT_dRES_B[]  PROGMEM = ".RES.B";
+constexpr char TEXT_dRES_W[]  PROGMEM = ".RES.W";
+constexpr char TEXT_dRES_L[]  PROGMEM = ".RES.L";
 
 constexpr Pseudo PSEUDOS[] PROGMEM = {
-    { TEXT_DATA,   &Assembler::defineDataConstant, Assembler::DATA_WORD_NO_STRING },
-    { TEXT_DATA_B, &Assembler::defineDataConstant, Assembler::DATA_BYTE_NO_STRING },
-    { TEXT_DATA_L, &Assembler::defineDataConstant, Assembler::DATA_LONG           },
-    { TEXT_DATA_W, &Assembler::defineDataConstant, Assembler::DATA_WORD_NO_STRING },
-    { TEXT_RES,    &Assembler::allocateSpaces,     Assembler::DATA_WORD           },
-    { TEXT_RES_B,  &Assembler::allocateSpaces,     Assembler::DATA_BYTE           },
-    { TEXT_RES_L,  &Assembler::allocateSpaces,     Assembler::DATA_LONG           },
-    { TEXT_RES_W,  &Assembler::allocateSpaces,     Assembler::DATA_WORD           },
-    { TEXT_SDATA,  &Assembler::defineString,       0                              },
+    { TEXT_dDATA,   &Assembler::defineDataConstant, Assembler::DATA_WORD_NO_STRING },
+    { TEXT_dDATA_B, &Assembler::defineDataConstant, Assembler::DATA_BYTE_NO_STRING },
+    { TEXT_dDATA_L, &Assembler::defineDataConstant, Assembler::DATA_LONG           },
+    { TEXT_dDATA_W, &Assembler::defineDataConstant, Assembler::DATA_WORD_NO_STRING },
+    { TEXT_dRES,    &Assembler::allocateSpaces,     Assembler::DATA_WORD           },
+    { TEXT_dRES_B,  &Assembler::allocateSpaces,     Assembler::DATA_BYTE           },
+    { TEXT_dRES_L,  &Assembler::allocateSpaces,     Assembler::DATA_LONG           },
+    { TEXT_dRES_W,  &Assembler::allocateSpaces,     Assembler::DATA_WORD           },
+    { TEXT_dSDATA,  &Assembler::defineString,       0                              },
 };
 PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
 // clang-format on

@@ -13,7 +13,7 @@
 ;;; limitations under the License.
 
         cpu     6502
-        org     $0100
+        .org     $0100
         include "test_mos6502.inc"
         end
 

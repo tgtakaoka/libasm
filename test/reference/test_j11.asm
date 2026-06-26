@@ -14,7 +14,7 @@
 
         cpu     J11
         .radix  8
-        org     0
+        .org     0
         include "test_t11.inc"
         include "test_j11.inc"
         end

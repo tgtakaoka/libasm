@@ -13,8 +13,8 @@
 ;;; limitations under the License.
 
         cpu     SH-2A
-        option  "fpu", "true"
-        org     0
+        .option  "fpu", "true"
+        .org     0
         include "gen_sh2a.inc"
         end
 

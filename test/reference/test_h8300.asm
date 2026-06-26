@@ -13,7 +13,7 @@
 ;;; limitations under the License.
 
         cpu     H8/300
-        org     H'0100
+        .org     H'0100
         include "test_h8300.inc"
         end
 

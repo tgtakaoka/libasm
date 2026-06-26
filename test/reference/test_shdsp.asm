@@ -13,7 +13,7 @@
 ;;; limitations under the License.
 
         cpu     SH-DSP
-        org     0
+        .org     0
         include "test_sh1.inc"
         include "test_sh2.inc"
         include "test_shdsp.inc"

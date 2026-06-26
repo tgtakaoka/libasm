@@ -13,7 +13,7 @@
 ;;; limitations under the License.
 
         cpu     65sc02
-        org     $0100
+        .org     $0100
         include "test_mos6502.inc"
         align   32
         include "test_g65sc02.inc"

@@ -13,8 +13,8 @@
 ;;; limitations under the License.
 
         cpu     H8/300H
-        option  smart-branch, on
-        org     H'0100
+        .option  smart-branch, on
+        .org     H'0100
         include "gen_h8300hn.inc"
         end
 

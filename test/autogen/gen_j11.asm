@@ -14,7 +14,7 @@
 
         cpu     J11
 
-        org     0100H
+        .org     0100H
         include "gen_j11.inc"
         end
 

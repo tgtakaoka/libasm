@@ -13,7 +13,7 @@
 ;;; limitations under the License.
 
         cpu     320C25
-        org     8000H
+        .org     8000H
         include "test_tms3202x.inc"
         include "test_tms320c2x.inc"
         cnfd
