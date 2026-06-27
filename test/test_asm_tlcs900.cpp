@@ -618,6 +618,11 @@ void test_branch() {
     TEST("RET Z",          0xB0, 0xF6);
     TEST("RET NZ",         0xB0, 0xFE);
     TEST("RET NC",         0xB0, 0xFF);
+    // Undefined target: the displacement field is left zero.
+    ERUS("JR Z,UNDEF",     "UNDEF", 0x66, 0x00);
+    ERUS("JRL Z,UNDEF",    "UNDEF", 0x76, 0x00, 0x00);
+    ERUS("CALR UNDEF",     "UNDEF", 0x1E, 0x00, 0x00);
+    ERUS("LDAR WA, UNDEF", "UNDEF", 0xF3, 0x13, 0x00, 0x00, 0x20);
 }
 
 void test_block() {

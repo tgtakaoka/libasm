@@ -452,9 +452,9 @@ void AsmTlcs900::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode) 
         // PM_LDAR's rel16 sits BETWEEN the prefix bytes and the opcode, so
         // it's emitted by appending while encodePrefixAddr is still running;
         // operandPos() (past the opcode slot) would be the wrong target.
-        const auto base = static_cast<uint32_t>(insn.address() + 4);
-        const auto target = op.getError() ? base : op.val.getUnsigned();
-        const auto delta = branchDelta(base, target, insn, op);
+        const Config::uintptr_t base = insn.address() + 4;
+        const Config::uintptr_t target = op.getError() ? base : op.val.getUnsigned();
+        const Config::ptrdiff_t delta = branchDelta(base, target, insn, op);
         if (overflowDelta(delta, 16))
             insn.setErrorIf(op, OPERAND_TOO_FAR);
         insn.emitUint16(static_cast<uint16_t>(delta));
@@ -509,18 +509,18 @@ void AsmTlcs900::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode) 
         }
         break;
     case M_REL8: {
-        const auto base = static_cast<uint32_t>(insn.address() + insn.operandPos() + 1);
-        const auto target = op.getError() ? base : op.val.getUnsigned();
-        const auto delta = branchDelta(base, target, insn, op);
+        const Config::uintptr_t base = insn.address() + insn.operandPos() + 1;
+        const Config::uintptr_t target = op.getError() ? base : op.val.getUnsigned();
+        const Config::ptrdiff_t delta = branchDelta(base, target, insn, op);
         if (overflowDelta(delta, 8))
             insn.setErrorIf(op, OPERAND_TOO_FAR);
         insn.emitOperand8(static_cast<uint8_t>(delta));
         break;
     }
     case M_REL16: {
-        const auto base = static_cast<uint32_t>(insn.address() + insn.operandPos() + 2);
-        const auto target = op.getError() ? base : op.val.getUnsigned();
-        const auto delta = branchDelta(base, target, insn, op);
+        const Config::uintptr_t base = insn.address() + insn.operandPos() + 2;
+        const Config::uintptr_t target = op.getError() ? base : op.val.getUnsigned();
+        const Config::ptrdiff_t delta = branchDelta(base, target, insn, op);
         if (overflowDelta(delta, 16))
             insn.setErrorIf(op, OPERAND_TOO_FAR);
         insn.emitOperand16(static_cast<uint16_t>(delta));
