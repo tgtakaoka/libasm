@@ -27,9 +27,13 @@ namespace libasm {
 namespace h16 {
 
 struct EntryInsn : EntryInsnPrefix<Config, Entry> {
-    AddrMode src() const { return flags().src(); }
-    AddrMode dst() const { return flags().dst(); }
+    AddrMode mode1() const { return flags().mode1(); }
+    AddrMode mode2() const { return flags().mode2(); }
+    AddrMode mode3() const { return flags().mode3(); }
     InsnSize insnSize() const { return flags().insnSize(); }
+    InsnClass insnClass() const { return flags().insnClass(); }
+    // Fixed operand size from the table (ISZ_FIXED ops); SZ_NONE otherwise.
+    OprSize fixedSize() const { return flags().oprSize(); }
 
     // Set by encode/decode from the Sz field in the opcode byte.
     OprSize oprSize = SZ_NONE;
@@ -70,7 +74,32 @@ struct Operand final : ErrorAt {
 struct AsmInsn final : AsmInsnImpl<Config>, EntryInsn {
     AsmInsn(Insn &insn) : AsmInsnImpl(insn) {}
 
-    Operand op1, op2;
+    // At most three operands; a register run folds into one M_RLIST slot.
+    Operand op1, op2, op3;
+
+    // Every register of a run (STM/LDM/PGBN list or BFMOV/string/bit-field
+    // tuple), ranges expanded; the single source of truth regardless of how it
+    // folds into op1..op3 (see parseRegList).
+    uint8_t regList[16];    // register numbers (0..15) in parse order
+    uint8_t regCount = 0;
+    bool regRange = false;  // a "Rn-Rm" range appeared -> always M_RLIST
+    bool regGlobal = true;  // every run register is a global Rn (lists forbid CR/PR)
+
+    void addReg(reg::RegName r) {
+        if (regCount < 16)
+            regList[regCount++] = reg::regNum(r);
+    }
+    void addRegNum(uint8_t n) {
+        if (regCount < 16)
+            regList[regCount++] = n;
+    }
+    // 16-bit list mask (bit n = Rn present), for STM/LDM/PGBN.
+    uint16_t regMask() const {
+        uint16_t mask = 0;
+        for (uint8_t i = 0; i < regCount; ++i)
+            mask |= uint16_t(1u << regList[i]);
+        return mask;
+    }
 
     using AsmInsnImpl::emitByte;
 
@@ -96,25 +125,32 @@ struct AsmInsn final : AsmInsnImpl<Config>, EntryInsn {
     void emitOperand16(uint16_t v) { emitUint16(v, operandPos()); }
     void emitOperand32(uint32_t v) { emitUint32(v, operandPos()); }
 
-    // Strip a trailing ".B" / ".W" / ".L" from the mnemonic, returning the
-    // size and recording it in sizeSuffix.  Returns SZ_NONE if no suffix.
-    OprSize parseSizeSuffix();
+    // Split the mnemonic token STEM[/cc][:CLASS][.SIZE]: record the "/cc" in
+    // ccSuffix, ":CLASS" in classSuffix, ".SIZE" in sizeSuffix, leaving
+    // name() = stem.
+    void parseClassAndSize(const ValueParser &parser);
 
     OprSize sizeSuffix = SZ_NONE;
+    InsnClass classSuffix = IC_N;
+    reg::CcName ccSuffix = reg::CC_UNDEF;  // /cc condition (SCB/SET/TRAP/SCMP/SSCH)
+    StrDir dirSuffix = DIR_NONE;           // /F or /B direction (string ops)
+    bool ccFromLoneF = false;              // ccSuffix is a tentative lone "/F"
 };
 
 struct DisInsn final : DisInsnImpl<Config>, EntryInsn {
     DisInsn(Insn &insn, DisMemory &memory, const StrBuffer &out)
         : DisInsnImpl(insn, memory, out) {}
 
-    // Set by decodeEa when the source EA byte has bit 7 set (accumulator
-    // form): destination is implicitly R0 and no EAd byte follows.
+    // accumulatorForm: an EA byte had bit 7 set (dst is implicitly R0, no EAd
+    // byte).  accConsumed: a dst EA honored it; set-but-not-consumed is illegal.
     bool accumulatorForm = false;
+    bool accConsumed = false;
 
-    // Pre-decoded CR register for ANDC/ORC/XORC/LDC/STC.  These ops have
-    // byte order [opcode][CR-code][EA] but mnemonic order varies.  We
-    // pre-read the CR byte before operand dispatch so M_CR just outputs it.
+    // CR register pre-read before operand dispatch (byte order [opcode][CR][EA],
+    // mnemonic operand order varies) so M_CR just outputs it.
     reg::CrName crReg = reg::CR_UNDEF;
+    reg::CcName ccReg = reg::CC_UNDEF;       // /cc condition (SCB/SET/TRAP)
+    reg::RegName scbReg = reg::REG_UNDEF;    // SCB's Rn (pre-read with cc)
 };
 
 }  // namespace h16

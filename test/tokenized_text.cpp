@@ -159,6 +159,117 @@ bool isM68kList(const char *p, const char *&r) {
     return false;
 }
 
+// H16 scaled-index / scaled-base operand.  Two forms collapse here:
+//   index   "Rn.W"/"Rn.L" with optional "*1/2/4/8" (Xm is global R0-R15), and
+//   base    "Rn"/"CRn"/"PRn" with a required "*1/2/4/8" scale (@(Rn*Sf)).
+// A bare register (no size and no scale) is left alone -- it is not a scaled
+// form and must not be collapsed.
+bool isH16Index(const char *p, const char *&r) {
+    const char *q = p;
+    if (toupper(q[0]) == 'C' || toupper(q[0]) == 'P')
+        q++;  // optional current/previous-bank prefix of a CRn/PRn base
+    if (toupper(*q) != 'R' || !isdigit(q[1]))
+        return false;
+    q += 2;
+    if (isdigit(*q))
+        q++;  // Rn 10-15
+    bool sized = false;
+    if (*q == '.') {
+        const auto sz = toupper(q[1]);
+        if (sz != 'W' && sz != 'L')
+            return false;
+        q += 2;
+        sized = true;
+    }
+    bool scaled = false;
+    if (*q == '*' && (q[1] == '1' || q[1] == '2' || q[1] == '4' || q[1] == '8')) {
+        q += 2;
+        scaled = true;
+    }
+    if (!sized && !scaled)
+        return false;
+    r = q;
+    return true;
+}
+
+// H16 register-list range "Rn-Rm" (STM/LDM/PGBN).  ASL spells a list as
+// comma-separated elements, each a single Rn or a range Rn-Rm; single
+// registers collapse via the generic number rule, so only the range needs a
+// dedicated collapse here.
+bool isH16List(const char *p, const char *&r) {
+    if (toupper(*p) != 'R' || !isdigit(p[1]))
+        return false;
+    const char *q = p + 2;
+    if (isdigit(*q))
+        q++;  // R10-R15
+    if (*q != '-')
+        return false;
+    ++q;
+    if (toupper(*q) != 'R' || !isdigit(q[1]))
+        return false;
+    q += 2;
+    if (isdigit(*q))
+        q++;  // R10-R15
+    r = q;
+    return true;
+}
+
+// H16 register with an optional current/previous-bank prefix: Rn, CRn or PRn.
+// Collapse the bank class to one register token (as MC680xx An/Dn collapse to
+// Xn) so the src x dst bank cross product does not explode the generated set.
+// Scaled bases (Rn*Sf, CRn*Sf) and list ranges (Rn-Rm) are matched earlier.
+bool isH16Reg(const char *p, const char *&r) {
+    const char *q = p;
+    if (toupper(q[0]) == 'C' || toupper(q[0]) == 'P')
+        q++;  // optional current/previous-bank prefix
+    if (toupper(*q) != 'R' || !isdigit(q[1]))
+        return false;
+    q += 2;
+    if (isdigit(*q))
+        q++;  // Rn 10-15
+    r = q;
+    return true;
+}
+
+// H16 register list (STM/LDM/PGBN): a comma-separated sequence of Rn or Rn-Rm
+// elements.  Collapse the whole list -- any length, any mix of singles and
+// ranges -- to one token so these instructions do not emit a separate test per
+// list shape (the 16-bit list mask otherwise explodes the generated set).
+// Modeled on isM68kList (MC68000 MOVEM): that keys on the list-only '/'
+// separator so it never fires on ordinary operands of other CPUs.  H16 lists
+// use ", " (not list-specific), so key instead on a range element "Rn-Rm",
+// which appears only inside an H16 register list -- never as a normal operand.
+// Fires for a multi-element list containing a range; a single range is left to
+// isH16List, and all-singleton lists collapse by count via the register rule.
+bool isH16RegList(const char *p, const char *&r) {
+    const char *q = p;
+    int elements = 0;
+    bool hasRange = false;
+    for (;;) {
+        if (toupper(q[0]) != 'R' || !isdigit(q[1]))
+            break;
+        q += 2;
+        if (isdigit(*q))
+            q++;  // Rn 10-15
+        if (q[0] == '-' && toupper(q[1]) == 'R' && isdigit(q[2])) {
+            q += 3;
+            if (isdigit(*q))
+                q++;  // -Rm 10-15
+            hasRange = true;
+        }
+        elements++;
+        if (q[0] == ',' && q[1] == ' ' && toupper(q[2]) == 'R' && isdigit(q[3])) {
+            q += 2;  // skip ", " before the next element
+            continue;
+        }
+        break;
+    }
+    if (elements < 2 || !hasRange)
+        return false;  // not a range-bearing multi-element list
+    r = q;
+    return true;
+}
+
 bool isNs32kScale(const char *p) {
     if (p[1] == ']') {
         const auto c = toupper(*p);
@@ -199,6 +310,8 @@ bool isX86Reg32(const char *p) {
     return c1 == 'E' && isX86Reg16(p + 1);
 }
 
+bool TokenizedText::reduceSizeSuffix = false;
+
 TokenizedText::TokenizedText(const char *text) : _tokens(tokenize(text)), _count(0) {}
 
 std::string TokenizedText::tokenize(const char *text) {
@@ -238,6 +351,29 @@ std::string TokenizedText::tokenize(const char *text) {
             t.push_back('R');
             t.push_back('n');
             t.push_back('/');
+            b = tmp;
+        } else if (isH16RegList(b, tmp)) {
+            // collapse H16 multi-element register-list shapes (STM/LDM/PGBN)
+            t.push_back('R');
+            t.push_back('L');
+            b = tmp;
+        } else if (isH16Index(b, tmp)) {
+            // reduce scaled-index variants of H16; Rn.[WL] optionally *1/2/4/8
+            t.push_back('X');
+            t.push_back('n');
+            b = tmp;
+        } else if (isH16List(b, tmp)) {
+            // reduce register-list range variants of H16; Rn-Rm
+            t.push_back('R');
+            t.push_back('n');
+            t.push_back('-');
+            t.push_back('R');
+            t.push_back('n');
+            b = tmp;
+        } else if (isH16Reg(b, tmp)) {
+            // reduce bank-class variants of H16; Rn/CRn/PRn collapse to one
+            t.push_back('R');
+            t.push_back('n');
             b = tmp;
         } else if ((b[0] == '(' || b[0] == '[') && b[1] == '-' && isNumber(b + 2, tmp)) {
             // reduce displacement variants of MC68000; (-n...) and (n...), [-n...] and [n...]
@@ -294,6 +430,16 @@ std::string TokenizedText::tokenize(const char *text) {
         } else {
             t.push_back(*b++);
         }
+    }
+    if (reduceSizeSuffix) {
+        // Drop ":n" size-suffix tokens so a forced-width value (H16's :8/:16/:32
+        // displacement/immediate/absolute) dedups with its natural-width form.
+        // Done on the finished token string to catch every value branch (plain,
+        // MC68000-style "(-n", double-indirect, ...).  Only gen_h16 enables this
+        // (its operands' sole ":number" is the size suffix); NS32000's ":letter"
+        // scale tokenizes to ":s" and is unaffected.
+        for (std::string::size_type p; (p = t.find(":n")) != std::string::npos;)
+            t.erase(p, 2);
     }
     return t;
 }

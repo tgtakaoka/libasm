@@ -35,8 +35,8 @@ void tear_down() {
 // clang-format off
 
 void test_cpu() {
-    EQUALS("cpu HD641016", true, disassembler.setCpu("HD641016"));
-    EQUALS_P("cpu HD641016", "HD641016", disassembler.config().cpu_P());
+    EQUALS("cpu H16", true, disassembler.setCpu("H16"));
+    EQUALS_P("cpu H16", "H16", disassembler.config().cpu_P());
 }
 
 // System / no-op / exception / bank-control instructions.
@@ -53,6 +53,12 @@ void test_system() {
     TEST("TRAPA", "#5", 0xF2, 0x05);
     TEST("TRAPA", "#0", 0xF2, 0x00);
     TEST("TRAPA", "#15", 0xF2, 0x0F);
+    TEST("TAS",   "@R0", 0xEC, 0x00);
+    TEST("TRAP/T",  "",    0xF3, 0x00);
+    TEST("TRAP/EQ", "",    0xF3, 0x07);
+    TEST("SET/NE",  "@R0", 0xB7, 0x06, 0x00);
+    ATEST(0x1000, "SCB/EQ.B", "R1, $00001003", 0xB4, 0x17, 0x00);
+    ATEST(0x1000, "SCB/EQ.W", "R1, $00001010", 0xB5, 0x17, 0x00, 0x0C);
 }
 
 // Arithmetic: ADD/SUB variants, sign-extend, CX-flag, negate, decimal.
@@ -84,7 +90,7 @@ void test_arith() {
     // Decimal arithmetic (no Sz)
     TEST("DADD",   "R0, R1", 0x83, 0x40, 0x41);
     TEST("DSUB",   "R0, R1", 0x87, 0x40, 0x41);
-    TEST("DNEG.B", "R0",     0xAF, 0x40);
+    TEST("DNEG",   "R0",     0xAF, 0x40);  // byte-only, no suffix
 }
 
 // Compare and test (read-only).
@@ -94,12 +100,50 @@ void test_compare() {
     TEST("CMP:G.L",  "R0, R1",  0x0A, 0x40, 0x41);
     TEST("CMP:Q.B",  "#16, R0", 0x18, 0x10, 0x40);
     TEST("CMP:R.B",  "R0, R1",  0x28, 0x01);
+    // CMP:RQ imm4 is signed -8..7 (sign-extended).
     TEST("CMP:RQ.B", "#5, R0",  0x38, 0x05);
+    TEST("CMP:RQ.B", "#-8, R0", 0x38, 0x08);
+    TEST("CMP:RQ.B", "#-1, R1", 0x38, 0x1F);
     TEST("CMPS.B",   "R0, R1",  0x48, 0x40, 0x41);
     TEST("TST.B",    "R0",      0x58, 0x40);
+    // Accumulator form (src EA bit 7 set): the implicit-R0 second operand has
+    // no byte.  CMP:G / CMPS carry it as M_EASRC, which must substitute R0
+    // rather than consuming the next instruction's byte.
+    TEST("CMP:G.W",  "@R1, R0", 0x09, 0x81);
+    TEST("CMPS.W",   "@R1, R0", 0x49, 0x81);
 }
 
 // Data movement: MOV variants, MOVA, MOVF, CLR, XCH, SWAP.
+void test_bitfield() {
+    TEST("BFEXT", "R0, R1, @R2, R3", 0xD4, 0x01, 0x02, 0x43);
+    TEST("BFINS", "R0, R1, R2, @R3", 0xD5, 0x01, 0x42, 0x03);
+    TEST("BFSCH", "R0, R1, @R2, R3", 0xD6, 0x01, 0x02, 0x43);
+    TEST("BFMOV", "R0, R1, R2, R3, R4, R5", 0xD7, 0x01, 0x23, 0x45);
+}
+
+void test_string() {
+    TEST("SMOV/F.W", "R0, R1, R2",     0x95, 0x22, 0x01);
+    TEST("SMOV/B.W", "R0, R1, R2",     0x95, 0x52, 0x01);
+    TEST("SMOV/F.B", "R0, R1, R2",     0x94, 0x22, 0x01);
+    TEST("SSTR/F.W", "R0, R1, R2",     0x95, 0x02, 0x01);
+    TEST("SCMP/EQ/F.W", "R0, R1, R2, R3", 0x95, 0xA2, 0x01, 0x37);
+    TEST("SCMP/EQ/B.W", "R0, R1, R2, R3", 0x95, 0xD2, 0x01, 0x37);
+    TEST("SSCH/NE/F.W", "R0, R1, R2, R3", 0x95, 0x82, 0x01, 0x36);
+}
+
+void test_reg_list() {
+    TEST("STM.W", "R0-R3, @R4",   0x71, 0x04, 0x00, 0x0F);
+    TEST("STM.B", "R0-R15, @R4",  0x70, 0x04, 0xFF, 0xFF);
+    // List elements are comma-separated single registers and ranges (ASL).
+    TEST("STM.W", "R0, R2, R5, @R4",        0x71, 0x04, 0x00, 0x25);
+    TEST("STM.L", "R0, R3-R12, R15, @R4",   0x72, 0x04, 0x9F, 0xF9);
+    TEST("LDM.W", "@R4, R0-R3",   0x75, 0x04, 0x00, 0x0F);
+    TEST("LDM.W", "@R4, R0, R3-R12, R15",   0x75, 0x04, 0x9F, 0xF9);
+    TEST("PGBN",  "",             0xE8);
+    TEST("PGBN",  "R0-R3",        0xE9, 0x00, 0x0F);
+    TEST("PGBN",  "R0-R3, R8",    0xE9, 0x01, 0x0F);
+}
+
 void test_data_move() {
     TEST("MOV:G.B",  "R0, R1",  0x0C, 0x40, 0x41);
     TEST("MOV:G.W",  "R0, R1",  0x0D, 0x40, 0x41);
@@ -109,6 +153,7 @@ void test_data_move() {
     TEST("MOV:R.W",  "R0, R1",  0x2D, 0x01);
     TEST("MOV:R.L",  "R0, R1",  0x2E, 0x01);
     TEST("MOV:RQ.B", "#5, R0",  0x3C, 0x05);
+    TEST("MOV:RQ.B", "#-3, R0", 0x3C, 0x0D);  // signed imm4
     TEST("MOVS.B",   "R0, R1",  0x4C, 0x40, 0x41);
     TEST("MOVF.B",   "R1",      0x5C, 0x41);
     TEST("MOVF.W",   "R1",      0x5D, 0x41);
@@ -116,8 +161,16 @@ void test_data_move() {
     TEST("CLR.B",    "R0",      0x14, 0x40);
     TEST("CLR.W",    "R0",      0x15, 0x40);
     TEST("CLR.L",    "R0",      0x16, 0x40);
-    TEST("XCH.L",    "R0, R1",  0xB3, 0x01);
+    TEST("XCH",      "R0, R1",  0xB3, 0x01);  // long-only, no suffix
+    TEST("SWAP.B",   "R0",      0xEA, 0x40);
     TEST("SWAP.W",   "R0",      0xEB, 0x40);
+    TEST("MOVTP.W",  "R0, @R1", 0xE0, 0x40, 0x01);
+    TEST("MOVTP.L",  "R0, @R1", 0xE1, 0x40, 0x01);
+    TEST("MOVFP.W",  "@R1, R0", 0xE2, 0x01, 0x40);
+    TEST("MOVFP.L",  "@R1, R0", 0xE3, 0x01, 0x40);
+    TEST("MOVTPE.B", "R0, @R1", 0x78, 0x40, 0x01);
+    TEST("MOVTPE.L", "R0, @R1", 0x7A, 0x40, 0x01);
+    TEST("MOVFPE.W", "@R1, R0", 0x7D, 0x01, 0x40);
 }
 
 // Logical ops AND/OR/XOR/NOT.
@@ -203,7 +256,28 @@ void test_jump() {
     TEST("JMP", "@R0",          0x9B, 0x00);
     TEST("JMP", "@($1234, R0)", 0x9B, 0x20, 0x12, 0x34);
     TEST("JSR", "@R0",          0xAB, 0x00);
-    TEST("JSR", "@$1234:16", 0xAB, 0x76, 0x12, 0x34);
+    TEST("JSR", "@$1234", 0xAB, 0x76, 0x12, 0x34);  // 16-bit minimal -> bare
+}
+
+// EA field size suffix: disp/abs auto-size, so a bare value is emitted when the
+// encoded field is its natural (signed) width and an explicit :N only when the
+// field is wider -- the bare form then re-assembles to the same bytes.
+void test_ea_size() {
+    // Displacement: bare at 8-bit minimal, :16/:32 when the field is wider.
+    TEST("ADD:G.W", "@(5, R0), R1",     0x01, 0x10, 0x05, 0x41);
+    TEST("ADD:G.W", "@(5:16, R0), R1",  0x01, 0x20, 0x00, 0x05, 0x41);
+    TEST("ADD:G.W", "@(5:32, R0), R1",  0x01, 0x30, 0x00, 0x00, 0x00, 0x05, 0x41);
+    TEST("ADD:G.W", "@($1234, R0), R1", 0x01, 0x20, 0x12, 0x34, 0x41);  // 16-bit minimal
+    // Absolute: bare when minimal, :N when wider.  A negative absolute uses its
+    // full 32-bit form (a leading "@-" would be the @-Rn auto-decrement mode).
+    TEST("ADD:G.W", "@5, R1",           0x01, 0x75, 0x05, 0x41);
+    TEST("ADD:G.W", "@$1234, R1",       0x01, 0x76, 0x12, 0x34, 0x41);
+    TEST("ADD:G.W", "@5:16, R1",        0x01, 0x76, 0x00, 0x05, 0x41);
+    TEST("ADD:G.W", "@$FFFFFF80, R1",   0x01, 0x75, 0x80, 0x41);
+    // Immediate keeps :N always (ASL auto-sizes a bare immediate to word) and
+    // renders signed.
+    TEST("ADD:G.W", "#5:8, R1",         0x01, 0x71, 0x05, 0x41);
+    TEST("ADD:G.W", "#-1:8, R1",        0x01, 0x71, 0xFF, 0x41);
 }
 
 // Stack-frame setup/teardown.
@@ -254,6 +328,54 @@ void test_illegal_zero() {
     // TRAPA, UNLK Rn: upper nibble of operand byte must be 0
     ERRT("TRAPA", "#5", ILLEGAL_OPERAND_MODE, "", 0xF2, 0x15);
     ERRT("UNLK",  "R0", ILLEGAL_OPERAND_MODE, "", 0xD3, 0x10);
+    // TRAP/SET: the [*|cc] byte's high nibble (don't-care) must be 0.
+    ERRT("TRAP/EQ", "",    ILLEGAL_OPERAND_MODE, "", 0xF3, 0x17);
+    ERRT("SET/EQ",  "@R0", ILLEGAL_OPERAND_MODE, "", 0xB7, 0x17, 0x00);
+    // Double-indirect: each Sd field must be byte (01) or long (11); a 0 or
+    // word (10) field is illegal (here s1=s2=00).
+    ERRT("ADD:G.W", "@(0,@(0, R0)), R1", ILLEGAL_OPERAND_MODE, "",
+            0x01, 0x7E, 0x00, 0x41);
+    // Scale mode (0x78-0x7B) ext byte [*|*|Sf|Rn]: mode 7 has no index-size
+    // bit, so both spare top bits (7 and 6) must be 0.
+    ERRT("ADD:G.W", "@(R5*4), R2", ILLEGAL_OPERAND_MODE, "", 0x01, 0x78, 0x65, 0x42);
+    ERRT("ADD:G.W", "@(R5*4), R2", ILLEGAL_OPERAND_MODE, "", 0x01, 0x78, 0xA5, 0x42);
+    // Index mode (0x7C) ext byte [**|Sf|Xm]: the top 2 bits are "don't care"
+    // (manual Second Expansion Byte) and must be 0 to round-trip exactly.
+    ERRT("ADD:G.W", "@(R2.W*2, R1), R1", ILLEGAL_OPERAND_MODE, "", 0x01, 0x7C, 0x01, 0x52, 0x41);
+    ERRT("ADD:G.W", "@(R2.W*2, R1), R1", ILLEGAL_OPERAND_MODE, "", 0x01, 0x7C, 0x01, 0x92, 0x41);
+    // Bit-field EAs/EAd never use accumulator form, so bit 7 of either EA byte
+    // is a reserved bit that must be 0.
+    ERRT("BFINS", "R0, R1, @R2, @R3", ILLEGAL_OPERAND_MODE, "", 0xD5, 0x01, 0x82, 0x03);
+    ERRT("BFINS", "R0, R1, @R2, @R3", ILLEGAL_OPERAND_MODE, "", 0xD5, 0x01, 0x02, 0x83);
+    ERRT("BFEXT", "R0, R1, @R2, @R3", ILLEGAL_OPERAND_MODE, "", 0xD4, 0x01, 0x82, 0x03);
+    // STM/LDM/PGBN with an empty register list (mask 0) is not valid: the
+    // assembler requires at least one register, so it can't round-trip.
+    ERRT("LDM.W", "@R3, ", ILLEGAL_OPERAND_MODE, "", 0x75, 0x03, 0x00, 0x00);
+    ERRT("STM.W", ", @R3", ILLEGAL_OPERAND_MODE, "", 0x71, 0x03, 0x00, 0x00);
+    ERRT("PGBN",  "",      ILLEGAL_OPERAND_MODE, "", 0xE9, 0x00, 0x00);
+    // Bit-field operands forbid immediate and auto-inc/dec (manual Available
+    // EA), on both the source and the destination.
+    ERRT("BFEXT", "R1, R2, @R3, #5:8", ILLEGAL_OPERAND_MODE, "",
+            0xD4, 0x12, 0x03, 0x71, 0x05);
+    ERRT("BFEXT", "R1, R2, @R3+, @R4", ILLEGAL_OPERAND_MODE, "",
+            0xD4, 0x12, 0x53, 0x04);
+    // The EA byte's bit 7 is the accumulator marker, valid only on the source
+    // EA of a two-EA instruction.  Set on a single-operand EA (NOT) or on a
+    // destination byte (ADDS dst), nothing consumes it -- illegal.
+    ERRT("NOT.B",  "@R9", ILLEGAL_OPERAND_MODE, "", 0x90, 0x89);
+    ERRT("ADDS.L", "@R3+, @(-$77, R0)", ILLEGAL_OPERAND_MODE, "",
+            0x42, 0x53, 0x90, 0x89);
+    // JMP/JSR target forbids register-direct and immediate (manual Available
+    // EA): both have no effective address to jump to.
+    ERRT("JMP", "R0",   ILLEGAL_OPERAND_MODE, "", 0x9B, 0x40);
+    ERRT("JMP", "#5:8", ILLEGAL_OPERAND_MODE, "", 0x9B, 0x71, 0x05);
+    ERRT("JSR", "R0",   ILLEGAL_OPERAND_MODE, "", 0xAB, 0x40);
+    // STM/LDM memory operand: register-direct is illegal (manual Available EA).
+    ERRT("STM.W", "R0-R3, R4", ILLEGAL_OPERAND_MODE, "", 0x71, 0x44, 0x00, 0x0F);
+    ERRT("LDM.W", "R4, R0-R3", ILLEGAL_OPERAND_MODE, "", 0x75, 0x44, 0x00, 0x0F);
+    // MOVTP/MOVFP peripheral operand: register-direct and auto-inc/dec illegal.
+    ERRT("MOVTP.W", "R0, R1",   ILLEGAL_OPERAND_MODE, "", 0xE0, 0x40, 0x41);
+    ERRT("MOVFP.W", "@R1+, R0", ILLEGAL_OPERAND_MODE, "", 0xE2, 0x51, 0x40);
 }
 
 // clang-format on
@@ -263,6 +385,9 @@ void run_tests(const char *cpu) {
     RUN_TEST(test_system);
     RUN_TEST(test_arith);
     RUN_TEST(test_compare);
+    RUN_TEST(test_reg_list);
+    RUN_TEST(test_string);
+    RUN_TEST(test_bitfield);
     RUN_TEST(test_data_move);
     RUN_TEST(test_logic);
     RUN_TEST(test_shift_bit);
@@ -270,6 +395,7 @@ void run_tests(const char *cpu) {
     RUN_TEST(test_extend);
     RUN_TEST(test_branch);
     RUN_TEST(test_jump);
+    RUN_TEST(test_ea_size);
     RUN_TEST(test_frame);
     RUN_TEST(test_cr);
     RUN_TEST(test_bank_prefix);

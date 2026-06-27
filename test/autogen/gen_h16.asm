@@ -12,6 +12,6 @@
 ;;; See the License for the specific language governing permissions and
 ;;; limitations under the License.
 
-        cpu     HD641016
-        org     $1000
-        include "gen_h16.inc"
+        .cpu     H16
+        .org     $1000
+        .include "gen_h16.inc"

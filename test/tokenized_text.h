@@ -44,6 +44,13 @@ struct TokenizedText {
 
     typedef std::unordered_set<TokenizedText, TokenizedText::hashOp, TokenizedText::eqOp> Set;
 
+    // When set, a ":N" size suffix on a number is collapsed into the bare value
+    // (H16's :8/:16/:32 forced displacement/immediate/absolute widths), so a
+    // forced-width operand dedups with its natural-width form.  Off by default;
+    // a generator opts in (only gen_h16 does -- other CPUs share the ":N"
+    // syntax for distinct addressing modes that must NOT collapse).
+    static bool reduceSizeSuffix;
+
 private:
     const std::string _tokens;
     mutable uint32_t _count;

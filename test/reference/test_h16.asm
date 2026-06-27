@@ -12,6 +12,17 @@
 ;;; See the License for the specific language governing permissions and
 ;;; limitations under the License.
 
-        cpu     HD641016
-        org     0
-        include "test_h16.inc"
+        .cpu     H16
+        .org     0
+        .include "test_h16.inc"
+
+;;; BIT dynamic forms (0x68-0x6A per the HD641016 manual): libasm
+;;; assembles the mnemonics directly.  ASL diverges (0x64-0x66), so its
+;;; wrapper emits the manual's bytes as raw data instead.
+        bset.b  r2,@r1                  ; 68 02 01
+        bnot.b  r2,@r1                  ; 68 22 01
+        bclr.b  r2,@r1                  ; 68 42 01
+        btst.b  r2,@r1                  ; 68 62 01
+        bset.w  r2,@r1                  ; 69 02 01
+        bset.l  r2,@r1                  ; 6A 02 01
+        bset.b  r14,@($10:8,r0)         ; 68 0E 10 10

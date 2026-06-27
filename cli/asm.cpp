@@ -116,7 +116,7 @@ IntelDirective dir9900(asm9900);
 MostekDirective dir6502(asm6502);
 MotorolaDirective dir68000(asm68000);
 HitachiDirective dir8300(asm8300);
-MotorolaDirective dirh16(ash16);
+HitachiDirective dirh16(ash16);
 H8500Directive dirh8500(ash8500);
 HitachiDirective dirsuperh(asmsuperh);
 MotorolaDirective dir6800(asm6800);

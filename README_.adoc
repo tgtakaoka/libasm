@@ -87,7 +87,7 @@ usage: asm [-o <output>] [-l <list>] <input>
      CDP1802 CDP1804 CDP1804A SCN2650 F3850 IM6100 HD6120 TMS7000 TMS370
      TMS32010 TMS32015 TMS32020 TMS320C25 TMS320C26 TMS320C20X TMS320C5X
      TMS320C30 TMS320C31 TMS320C32 i8086 i80186 i80286 V30 i8096 i80196
-     MC68000 MC68010 MC68020 MC68030 MC68040 HD641016 H8/300 H8/300H
+     MC68000 MC68010 MC68020 MC68030 MC68040 H16 H8/300 H8/300H
      H8S/2000 H8S/2600 H8/500 H8/520 H8/530 SH-1 SH-2 SH-DSP SH-2E SH-2A
      TMS9900 TMS9980 TMS9995 TMS99105 TMS99110 Z8001 Z8002 NS32032 MN1610
      MN1613 MN1613A J11 T11
@@ -115,7 +115,7 @@ usage: asm [-o <output>] [-l <list>] <input>
   --optimize-segment: optimize segment override (bool: 8086)
   --pc-bits         : program counter width in bit, default 13 (int: 6805)
   --pmmu            : memory management unit (text: 68000, 32032)
-  --reg-alias       : emit register alias for the current setrp value (bool: Z8)
+  --reg-alias       : emit register alias regarding setrp value (bool: Z8)
   --short-direct    : optimize direct addressing (bool: Z8001)
   --use-register    : enable register name Rn (bool: 1802)
   --zilog-syntax    : Use Zilog syntax (bool: 8080)
@@ -138,7 +138,7 @@ usage: dis -C <CPU> [-o <output>] [-l <list>] <input>
      CDP1802 CDP1804 CDP1804A SCN2650 F3850 IM6100 HD6120 TMS7000 TMS370
      TMS32010 TMS32015 TMS32020 TMS320C25 TMS320C26 TMS320C20X TMS320C5X
      TMS320C30 TMS320C31 TMS320C32 i8086 i80186 i80286 V30 i8096 i80196
-     MC68000 MC68010 MC68020 MC68030 MC68040 HD641016 H8/300 H8/300H
+     MC68000 MC68010 MC68020 MC68030 MC68040 H16 H8/300 H8/300H
      H8S/2000 H8S/2600 H8/500 H8/520 H8/530 SH-1 SH-2 SH-DSP SH-2E SH-2A
      TMS9900 TMS9980 TMS9995 TMS99105 TMS99110 Z8001 Z8002 NS32032 MN1610
      MN1613 MN1613A J11 T11
@@ -161,7 +161,6 @@ usage: dis -C <CPU> [-o <output>] [-l <list>] <input>
   --origin-char    : letter for origin symbol (char)
   --gnu-as         : GNU assembler compatible (bool)
   --advanced-mode  : H8/300H 24-bit advanced mode (bool: H8/300)
-  --extern-symbol  : emit direct address as seg_SS_off_XXXX symbol (bool: Z8001)
   --external-paren : disp2(disp(ext)) as external addressing (bool: 32032)
   --extmode        : Extended mode (bool: Z380)
   --fp-alias       : emit FP alias for R6 (bool: H8/500)
@@ -179,9 +178,7 @@ usage: dis -C <CPU> [-o <output>] [-l <list>] <input>
   --segment-insn   : segment override as instruction (bool: 8086)
   --segmented-addr : use <<segment>> notation (bool: Z8001)
   --short-direct   : use |addr| for short direct notation (bool: Z8001)
-  --sp-alias       : decode R6 as SP (bool: CP1600)
-  --sp-alias       : emit SP alias for ER7/R7 in indirect addressing (bool: H8/300)
-  --sp-alias       : emit SP alias for R7 in indirect addressing (bool: H8/500)
+  --sp-alias       : decode R6 as SP (bool: CP1600, H8/300, H8/500)
   --use-absolute   : zero register indexing as absolute addressing (bool: 8096)
   --use-aux-name   : use aux register name ARn (bool: 32010)
   --use-port-name  : use port name PAn (bool: 32010)

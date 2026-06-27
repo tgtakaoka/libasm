@@ -270,19 +270,11 @@ pc_rel_end:
 ;;; Static  (0x6C-0x6E): [opcode][*MODE(2)Imm5(5)][EAd]
 ;;; MODE: BSET=00 BNOT=01 BCLR=10 BTST=11
 ;;;
-;;; Note: ASL encodes BIT dynamic with 0x64-0x66 (same as SFT static).
-;;; libasm uses 0x68-0x6A per the HD641016 manual.  ASL assembles BIT
-;;; dynamic instructions using raw dc.b directives below.
+;;; Note: ASL encodes BIT dynamic with 0x64-0x66 (same as SFT static);
+;;; libasm uses 0x68-0x6A per the HD641016 manual.  Because the two
+;;; assemblers diverge, the dynamic forms live in the per-assembler
+;;; wrappers (mnemonics in test_h16.asm, raw bytes in test_h16.asl).
 ;;; ============================================================
-
-;;; Dynamic: bit number in register (0x68-0x6A per manual)
-        dc.b $68,$02,$01                ; 68 02 01  bset.b r2,@r1
-        dc.b $68,$22,$01                ; 68 22 01  bnot.b r2,@r1
-        dc.b $68,$42,$01                ; 68 42 01  bclr.b r2,@r1
-        dc.b $68,$62,$01                ; 68 62 01  btst.b r2,@r1
-        dc.b $69,$02,$01                ; 69 02 01  bset.w r2,@r1
-        dc.b $6A,$02,$01                ; 6A 02 01  bset.l r2,@r1
-        dc.b $68,$0E,$10,$10            ; 68 0E 10 10  bset.b r14,@(H'10:8,r0)
 
 ;;; Static: bit number as 5-bit immediate
         bset.b #3,@r1                   ; 6C 03 01
@@ -308,7 +300,7 @@ pc_rel_end:
         and.w r0,r1                     ; 81 40 41
         and.l r0,r1                     ; 82 40 41
         and.b r1,r0                     ; 80 C1
-        and.w #$FF:8,r0              ; 81 F1 FF
+        and.w #-1:8,r0              ; 81 F1 FF
         and.w @r0,r1                    ; 81 00 41
 
         dadd r0,r1                      ; 83 40 41
@@ -520,3 +512,36 @@ not_end:
         icbn                            ; FD
         dcbn                            ; FE
         nop                             ; FF
+
+;;; ============================================================
+;;; Extended coverage: register-list, string, bit-field and
+;;; condition-code families (cross-checked against ASL).
+;;; ============================================================
+;;; STM/LDM (0x70-0x76)  PGBN (0xE8-0xE9)
+        stm.b r0-r3, @r4                ; 70 04 00 0F
+        stm.w r0, r2, r5, @r4           ; 71 04 00 25
+        stm.l r0-r15, @-r4              ; 72 64 FF FF
+        ldm.w @r4, r0-r3                ; 75 04 00 0F
+        ldm.l @r4+, r0, r5-r8           ; 76 54 01 E1
+        pgbn                            ; E8
+        pgbn r0-r3                      ; E9 00 0F
+;;; String family (0x94-0x95): /F|/B direction, SCMP/SSCH add /cc
+        smov/f.b r0, r1, r2             ; 94 22 01
+        smov/b.w r3, r4, r5             ; 95 55 34
+        sstr/f.b r0, r1, r2             ; 94 02 01
+        sstr/b.w r3, r4, r5             ; 95 45 34
+        scmp/eq/f.b r0, r1, r2, r3      ; 94 A2 01 37
+        ssch/ne/b.w r4, r5, r6, r7      ; 95 C6 45 76
+;;; Bit-field family (0xD4-0xD7)
+        bfext r0, r1, @r2, @r3          ; D4 01 02 03
+        bfins r0, r1, r4, @r5           ; D5 01 44 05
+        bfsch r0, r1, @r2, r3           ; D6 01 02 43
+        bfmov r0, r1, r2, r3, r4, r5    ; D7 01 23 45
+;;; SCB (0xB4-0xB6)  SET (0xB7)  TRAP (0xF3)
+        scb/eq.b r1, *+3                ; B4 17 00
+        scb/ne.w r2, *+4                ; B5 26 00 00
+        scb/gt.l r3, *+6                ; B6 3E 00 00 00 00
+        set/ne @r0                      ; B7 06 00
+        set/eq @r1                      ; B7 07 01
+        trap/eq                         ; F3 07
+        trap/vs                         ; F3 09

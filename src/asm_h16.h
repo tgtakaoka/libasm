@@ -29,7 +29,12 @@ struct AsmH16 final : Assembler, Config {
 
 private:
     Error parseOperand(StrScanner &scan, Operand &op) const;
+    Error parseIndirect(StrScanner &scan, Operand &op) const;
+    Error parseParen(StrScanner &scan, Operand &op) const;
+    Error parseRegList(StrScanner &scan, AsmInsn &insn) const;
     void encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode) const;
+    void emitEa(AsmInsn &insn, const Operand &op, uint8_t accBit) const;
+    void emitPcRelDisp(AsmInsn &insn, const Operand &op, uint8_t sd) const;
 
     Error encodeImpl(StrScanner &scan, Insn &insn) const override;
     const ConfigBase &config() const override { return *this; }

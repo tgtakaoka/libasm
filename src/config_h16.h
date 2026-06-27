@@ -23,12 +23,15 @@ namespace libasm {
 namespace h16 {
 
 enum CpuType : uint8_t {
-    HD641016,
+    H16,
 };
 
+// MaxCode 24 = longest instruction: a bit-field op (opcode + Rnb|Rnf byte)
+// with two maximal EAs, each a bank-prefixed register double-indirect
+// (prefix + EA byte + ext + 4-byte ds1 + 4-byte ds2 = 11 bytes): 1+1+11+11.
 struct Config
-        : ConfigImpl<CpuType, ADDRESS_32BIT, ADDRESS_BYTE, OPCODE_8BIT, ENDIAN_BIG, 10, 8> {
-    Config(const InsnTable<CpuType> &table) : ConfigImpl(table, HD641016) {}
+        : ConfigImpl<CpuType, ADDRESS_32BIT, ADDRESS_BYTE, OPCODE_8BIT, ENDIAN_BIG, 24, 8> {
+    Config(const InsnTable<CpuType> &table) : ConfigImpl(table, H16) {}
 };
 
 }  // namespace h16

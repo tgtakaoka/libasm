@@ -24,8 +24,8 @@ namespace text {
 namespace h16 {
 // clang-format off
 
-extern const char TEXT_H16_LIST[]      PROGMEM;
-extern const char TEXT_CPU_HD641016[]  PROGMEM;
+extern const char TEXT_H16_LIST[] PROGMEM;
+extern const char TEXT_CPU_H16[]  PROGMEM;
 
 // Instructions reused from common
 using common::TEXT_ADD;
@@ -41,6 +41,7 @@ using common::TEXT_BF;
 using common::TEXT_BGE;
 using common::TEXT_BGT;
 using common::TEXT_BHI;
+using common::TEXT_BHS;
 using common::TEXT_BLE;
 using common::TEXT_BLO;
 using common::TEXT_BLS;
@@ -57,6 +58,7 @@ using common::TEXT_BTST;
 using common::TEXT_BVC;
 using common::TEXT_BVS;
 using common::TEXT_CLR;
+using common::TEXT_CMP;
 using common::TEXT_CMPS;
 using common::TEXT_DADD;
 using common::TEXT_DIVXU;
@@ -125,42 +127,18 @@ using common::TEXT_REG_PC;
 using common::TEXT_REG_SR;
 using common::TEXT_REG_USP;
 
-// H16-specific instructions
-extern const char TEXT_ADD_G[]   PROGMEM;  // "ADD:G"
-extern const char TEXT_ADD_Q[]   PROGMEM;  // "ADD:Q"
-extern const char TEXT_ADD_R[]   PROGMEM;  // "ADD:R"
-extern const char TEXT_ADD_RQ[]  PROGMEM;  // "ADD:RQ"
-extern const char TEXT_BCC_G[]   PROGMEM;  // "BCC:G"
-extern const char TEXT_BCLR_X[]  PROGMEM;  // (unused; use TEXT_BCLR from common)
-extern const char TEXT_BCS_G[]   PROGMEM;  // "BCS:G"
-extern const char TEXT_BEQ_G[]   PROGMEM;  // "BEQ:G"
-extern const char TEXT_BF_G[]    PROGMEM;  // "BF:G"
-extern const char TEXT_BGE_G[]   PROGMEM;  // "BGE:G"
-extern const char TEXT_BGT_G[]   PROGMEM;  // "BGT:G"
-extern const char TEXT_BHI_G[]   PROGMEM;  // "BHI:G"
-extern const char TEXT_BLE_G[]   PROGMEM;  // "BLE:G"
-extern const char TEXT_BLS_G[]   PROGMEM;  // "BLS:G"
-extern const char TEXT_BLT_G[]   PROGMEM;  // "BLT:G"
-extern const char TEXT_BMI_G[]   PROGMEM;  // "BMI:G"
-extern const char TEXT_BNE_G[]   PROGMEM;  // "BNE:G"
-extern const char TEXT_BPL_G[]   PROGMEM;  // "BPL:G"
-extern const char TEXT_BT_G[]    PROGMEM;  // "BT:G"
-extern const char TEXT_BVC_G[]   PROGMEM;  // "BVC:G"
-extern const char TEXT_BVS_G[]   PROGMEM;  // "BVS:G"
+// H16-specific instructions.  Class-qualified mnemonics (ADD:G, MOV:RQ, BHI:G,
+// ...) are stored stem-only; the ":X" class is an Entry attribute (InsnClass).
+extern const char TEXT_BFEXT[]   PROGMEM;
+extern const char TEXT_BFINS[]   PROGMEM;
+extern const char TEXT_BFMOV[]   PROGMEM;
+extern const char TEXT_BFSCH[]   PROGMEM;
 extern const char TEXT_CGBN[]    PROGMEM;
-extern const char TEXT_CMP_G[]   PROGMEM;  // "CMP:G"
-extern const char TEXT_CMP_Q[]   PROGMEM;  // "CMP:Q"
-extern const char TEXT_CMP_R[]   PROGMEM;  // "CMP:R"
-extern const char TEXT_CMP_RQ[]  PROGMEM;  // "CMP:RQ"
 extern const char TEXT_DCBN[]    PROGMEM;
 extern const char TEXT_DIVXS[]   PROGMEM;
 extern const char TEXT_DNEG[]    PROGMEM;
 extern const char TEXT_DSUB[]    PROGMEM;
 extern const char TEXT_ICBN[]    PROGMEM;
-extern const char TEXT_MOV_G[]   PROGMEM;  // "MOV:G"
-extern const char TEXT_MOV_Q[]   PROGMEM;  // "MOV:Q"
-extern const char TEXT_MOV_R[]   PROGMEM;  // "MOV:R"
-extern const char TEXT_MOV_RQ[]  PROGMEM;  // "MOV:RQ"
 extern const char TEXT_MOVA[]    PROGMEM;
 extern const char TEXT_MOVF[]    PROGMEM;
 extern const char TEXT_MOVFP[]   PROGMEM;
@@ -173,9 +151,6 @@ extern const char TEXT_SCMP[]    PROGMEM;
 extern const char TEXT_SMOV[]    PROGMEM;
 extern const char TEXT_SSCH[]    PROGMEM;
 extern const char TEXT_SSTR[]    PROGMEM;
-extern const char TEXT_SUB_G[]   PROGMEM;  // "SUB:G"
-extern const char TEXT_SUB_R[]   PROGMEM;  // "SUB:R"
-extern const char TEXT_SUB_RQ[]  PROGMEM;  // "SUB:RQ"
 
 // Additional condition code names
 extern const char TEXT_CC_CC[]   PROGMEM;  // "CC"

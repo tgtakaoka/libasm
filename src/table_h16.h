@@ -31,6 +31,9 @@ struct TableH16 final : InsnTable<CpuType> {
 
 extern const TableH16 TABLE;
 
+// True if |code| is the first byte of a multi-byte (prefixed) instruction.
+bool isPrefix(CpuType cpuType, Config::opcode_t code);
+
 // Search by opcode for disassembly. insn.opCode() must be set.
 Error searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out);
 
