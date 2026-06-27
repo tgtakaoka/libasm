@@ -12,17 +12,17 @@
 ; See the License for the specific language governing permissions and
 ; limitations under the License.
 
-        cpu     ns32032
+        .cpu     ns32032
         .org     0x10000
-        include "test_ns32000.inc"
+        .include "test_ns32000.inc"
 
-        fpu     ns32081
-        include "test_ns32081.inc"
+        .fpu     ns32081
+        .include "test_ns32081.inc"
 
-        pmmu    ns32082
-        include "test_ns32082.inc"
+        .pmmu    ns32082
+        .include "test_ns32082.inc"
 
-        end
+        .end
 
 ; Local Variables:
 ; mode: asm

@@ -664,11 +664,14 @@ void AsmNs32000::emitOperand(AsmInsn &insn, AddrMode mode, OprSize size, const O
 
 Error AsmNs32000::processPseudo(StrScanner &scan, Insn &insn) {
     const auto at = scan;
-    if (strcasecmp_P(insn.name(), TEXT_FPU) == 0) {
+    auto name = insn.name();
+    if (*name == '.')  // accept an optional leading dot, like the base lookup
+        ++name;
+    if (strcasecmp_P(name, TEXT_FPU) == 0) {
         const auto error = _opt_fpu.set(scan);
         return error ? insn.setErrorIf(at, error) : OK;
     }
-    if (strcasecmp_P(insn.name(), TEXT_PMMU) == 0) {
+    if (strcasecmp_P(name, TEXT_PMMU) == 0) {
         const auto error = _opt_pmmu.set(scan);
         return error ? insn.setErrorIf(at, error) : OK;
     }

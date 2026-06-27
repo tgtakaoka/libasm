@@ -12,12 +12,12 @@
 ;# See the License for the specific language governing permissions and
 ;# limitations under the License.
 
-        cpu     ns32032
-        fpu     ns32081
-        pmmu    ns32082
+        .cpu     ns32032
+        .fpu     ns32081
+        .pmmu    ns32082
         .org     0x10000
-        include "gen_ns32000.inc"
-        end
+        .include "gen_ns32000.inc"
+        .end
 
 ;# Local Variables:
 ;# mode: asm
