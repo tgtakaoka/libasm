@@ -36,6 +36,24 @@ struct NumberParser {
     virtual Error parseNumber(StrScanner &scan, Value &val, Radix defaultRadix) const = 0;
 
     /**
+     * Parse |scan| as a floating-point number. |tail| is the position after parseNumber() consumed
+     * the integer part (used to peek at what follows: '.', 'E', INF, NAN). |intError| is the
+     * preceding parseNumber() result (OK / OVERFLOW_RANGE / NOT_AN_EXPECTED) and |delimitor| is the
+     * expression delimiter (so '.' isn't misread as a decimal point).
+     *
+     * Looking at the post-integer |tail| (not |scan|) is what lets a number-with-suffix like Intel
+     * hex "0E34H" go through cleanly: parseNumber consumed it all, so |tail| sees no float marker.
+     *
+     * - Returns OK or OVERFLOW_RANGE when |scan| is a floating-point number, sets |val| to a float
+     *   and updates |scan| at the end of the number.
+     * - Returns NOT_AN_EXPECTED when |scan| isn't a floating-point number; |scan| is unchanged.
+     *
+     * The default recognizes C-style floats ( ".digits", "[eE][+-]?digits", INF, NAN ).
+     */
+    virtual Error parseFloat(StrScanner &scan, const StrScanner &tail, Value &val, Error intError,
+            char delimitor) const;
+
+    /**
      * Search |scan| as a |radix| based number with optional |suffix|.
      *
      * - Returns OK when |scan| looks a valid number, and |scan| is updated to the end of a number
@@ -200,6 +218,9 @@ struct Pdp11NumberParser final : NumberParser, Singleton<Pdp11NumberParser> {
 struct HitachiNumberParser final : NationalNumberParser, Singleton<HitachiNumberParser> {
     HitachiNumberParser() : NationalNumberParser('H', 'B', 'Q', 'D') {}
     Error parseNumber(StrScanner &scan, Value &val, Radix defaultRadix) const override;
+    /** Hitachi floating-point literal: F'[+-][n][.m][S|D][+-][xx], plus C-style as backup. */
+    Error parseFloat(StrScanner &scan, const StrScanner &tail, Value &val, Error intError,
+            char delimitor) const override;
 };
 
 }  // namespace libasm

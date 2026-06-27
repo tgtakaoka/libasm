@@ -20,6 +20,7 @@
 #include "function_table.h"
 #include "letter_parser.h"
 #include "number_parser.h"
+#include "str_buffer.h"
 #include "symbol_parser.h"
 #include "text_common.h"
 
@@ -72,6 +73,52 @@ Error NumberParser::scanNumberEnd(StrScanner &scan, Radix radix, char suffix) {
         }
     }
     return NOT_AN_EXPECTED;
+}
+
+Error NumberParser::parseFloat(StrScanner &scan, const StrScanner &tail, Value &val,
+        Error intError, char delimitor) const {
+    // Only an integer overflow, a clean integer, or "not a number" can be the head of a float.
+    if (intError != OK && intError != OVERFLOW_RANGE && intError != NOT_AN_EXPECTED)
+        return NOT_AN_EXPECTED;
+    // An integer too large to hold is always a float; otherwise look for a C-style float tail.
+    auto fpnum = (intError == OVERFLOW_RANGE);
+    // Peek past whatever parseNumber consumed -- not from |scan| -- so a number-with-suffix like
+    // Intel hex "0E34H" isn't mistaken for "0E34" exponent-form (parseNumber ate it all).
+    auto p = tail;
+    auto q = p;
+    if (q.expect('.') && delimitor != '.' && q.expect(isdigit)) {
+        fpnum = true;
+        q.trimStart(isdigit);
+        p = q;
+    }
+    if (p.iexpect('E')) {
+        p.expect('-') || p.expect('+');
+        if (p.expect(isdigit)) {
+            fpnum = true;
+            p.trimStart(isdigit);
+        }
+    }
+    if (!fpnum && intError == NOT_AN_EXPECTED) {
+        if (p.iexpectWord_P(TEXT_INF) || p.iexpectWord_P(TEXT_INFINITY) || p.iexpectWord_P(TEXT_NAN))
+            fpnum = true;
+    }
+    if (!fpnum)
+        return NOT_AN_EXPECTED;
+#if defined(LIBASM_ASM_NOFLOAT)
+    val.setFloat();
+    scan = p;
+    return OK;
+#else
+    char *end;
+    Value::float_t f80;
+    const auto error = f80.read(scan.str(), &end);
+    if (end > scan.str()) {
+        val.setFloat(f80);
+        scan = end;
+        return error == 0 || f80.isSubnormal() ? OK : OVERFLOW_RANGE;
+    }
+    return NOT_AN_EXPECTED;
+#endif
 }
 
 Radix CStyleNumberParser::hasPrefix(StrScanner &scan, Radix defaultRadix) const {
@@ -282,6 +329,68 @@ Error HitachiNumberParser::parseNumber(StrScanner &scan, Value &val, Radix defau
     val.setUnsigned(result);
     scan = p;
     return OK;
+}
+
+namespace {
+
+// Copy a run of decimal digits from |p| into |out|; advances |p| past the digits.
+void copyDigits(StrScanner &p, StrBuffer &out) {
+    auto run = p;
+    p = run.takeWhile(isdigit);
+    out.text(run);
+}
+
+}  // namespace
+
+Error HitachiNumberParser::parseFloat(StrScanner &scan, const StrScanner &tail, Value &val,
+        Error intError, char delimitor) const {
+    auto p = scan;
+    if (!(p.iexpect('F') && p.expect('\'')))
+        return NumberParser::parseFloat(scan, tail, val, intError, delimitor);
+    // F'[+-][n][.m][S|D][+-][xx]: normalize into a C-style float string ('S'/'D' -> 'E').
+    char buf[80];
+    StrBuffer out{buf, sizeof(buf)};
+    if (*p == '+' || *p == '-')
+        out.letter(*p++);
+    const auto mantissaStart = out.mark();
+    copyDigits(p, out);
+    auto mantissaDigits = out.mark() - mantissaStart;
+    if (p.expect('.')) {
+        out.letter('.');
+        copyDigits(p, out);
+        mantissaDigits = (out.mark() - mantissaStart) - 1;  // exclude the '.'
+    }
+    if (mantissaDigits == 0)
+        return NOT_AN_EXPECTED;  // no mantissa
+    if (p.iexpect('S') || p.iexpect('D')) {
+        // The precision marker doubles as the exponent letter; emit 'E' only if digits follow.
+        auto q = p;
+        char esign = 0;
+        if (*q == '+' || *q == '-')
+            esign = *q++;
+        if (isdigit(*q)) {
+            out.letter('E');
+            if (esign)
+                out.letter(esign);
+            copyDigits(q, out);
+            p = q;
+        }
+    }
+#if defined(LIBASM_ASM_NOFLOAT)
+    val.setFloat();
+    scan = p;
+    return OK;
+#else
+    char *end;
+    Value::float_t f80;
+    const auto error = f80.read(out.str(), &end);
+    if (end > out.str()) {
+        val.setFloat(f80);
+        scan = p;
+        return error == 0 || f80.isSubnormal() ? OK : OVERFLOW_RANGE;
+    }
+    return NOT_AN_EXPECTED;
+#endif
 }
 
 bool SymbolParser::symbolLetter(char c, bool headOfSymbol) const {

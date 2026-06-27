@@ -19,6 +19,9 @@
 
 #include "config_base.h"
 
+/** Disable SuperH FPU (SH-2E/SH-2A floating-point) instructions and float data */
+// #define LIBASM_SUPERH_NOFPU
+
 namespace libasm {
 namespace superh {
 
@@ -32,9 +35,11 @@ enum CpuType : uint8_t {
 
 enum FpuType : uint8_t {
     FPU_NONE,
+#if !defined(LIBASM_SUPERH_NOFPU)
     FPU_ON,    // generic "FPU enabled" intent; resolved to the CPU's FPU below
     FPU_SH2E,  // resolution targets (used as FPU page-table keys)
     FPU_SH2A,
+#endif
 };
 
 // DSP unit is an orthogonal feature (only the SH-DSP CPU enables it), searched

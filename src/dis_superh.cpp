@@ -39,7 +39,11 @@ DisSuperH::DisSuperH(const ValueFormatter::Plugins &plugins)
 
 void DisSuperH::reset() {
     Disassembler::reset();
+#if defined(LIBASM_SUPERH_NOFPU)
+    setFpuType(FPU_NONE);
+#else
     setFpuType(FPU_ON);  // disassembler decodes FPU instructions by default
+#endif
 }
 
 // SH-2A's FPU is optional; SH-2E's is mandatory and implied by the CPU

@@ -441,6 +441,12 @@ bool isSh2a() {
     return strcasecmp_P("SH-2A", assembler.config().cpu_P()) == 0;
 }
 
+// The FPU is usable only when compiled in (LIBASM_SUPERH_NOFPU keeps fpuType()
+// at FPU_NONE) and enabled for the current CPU.
+bool is_fpu_ready() {
+    return asmsuperh.fpuType() != FPU_NONE;
+}
+
 void test_shdsp_only() {
     if (isShDsp()) {
         // DSP register transfers
@@ -491,7 +497,10 @@ void test_shdsp_only() {
 }
 
 void test_sh2e_only() {
-    if (isSh2e()) {
+    // The FPU is mandatory on the SH-2E, so it is active here unless compiled
+    // out with LIBASM_SUPERH_NOFPU (then fpuType() stays FPU_NONE and the
+    // floating-point instructions are unknown, like on a non-FPU CPU).
+    if (isSh2e() && is_fpu_ready()) {
         // Arithmetic
         TEST("FADD FR0, FR1",     0xF100);
         TEST("FADD FR14, FR15",   0xFFE0);
@@ -585,20 +594,26 @@ void test_sh2a_only() {
         ERRT("LDS R0, FPUL",       OPERAND_NOT_ALLOWED, "R0, FPUL");
         ERRT("STS.L FPSCR, @-R0",  OPERAND_NOT_ALLOWED, "FPSCR, @-R0");
         // The FPU-related CPU instructions and the SH-2A FPU additions require
-        // the FPU (--fpu enabled).
+        // the FPU (--fpu enabled). With LIBASM_SUPERH_NOFPU it cannot be enabled
+        // (fpuType() stays FPU_NONE) and those instructions remain undefined.
         assembler.setOption("fpu", "true");
-        TEST("LDS R0, FPUL",       0x405A);
-        TEST("LDS R15, FPSCR",     0x4F6A);
-        TEST("STS FPUL, R0",       0x005A);
-        TEST("STS FPSCR, R15",     0x0F6A);
-        TEST("LDS.L @R0+, FPUL",   0x4056);
-        TEST("STS.L FPUL, @-R0",   0x4052);
-        TEST("LDS.L @R0+, FPSCR",  0x4066);
-        TEST("STS.L FPSCR, @-R0",  0x4062);
-        TEST("FCNVDS DR0, FPUL",   0xF0BD);
-        TEST("FCNVDS DR14, FPUL",  0xFEBD);
-        TEST("FCNVSD FPUL, DR0",   0xF0AD);
-        TEST("FCNVSD FPUL, DR14", 0xFEAD);
+        if (is_fpu_ready()) {
+            TEST("LDS R0, FPUL",       0x405A);
+            TEST("LDS R15, FPSCR",     0x4F6A);
+            TEST("STS FPUL, R0",       0x005A);
+            TEST("STS FPSCR, R15",     0x0F6A);
+            TEST("LDS.L @R0+, FPUL",   0x4056);
+            TEST("STS.L FPUL, @-R0",   0x4052);
+            TEST("LDS.L @R0+, FPSCR",  0x4066);
+            TEST("STS.L FPSCR, @-R0",  0x4062);
+            TEST("FCNVDS DR0, FPUL",   0xF0BD);
+            TEST("FCNVDS DR14, FPUL",  0xFEBD);
+            TEST("FCNVSD FPUL, DR0",   0xF0AD);
+            TEST("FCNVSD FPUL, DR14", 0xFEAD);
+        } else {
+            ERRT("FCNVDS DR0, FPUL",   UNKNOWN_INSTRUCTION, "FCNVDS DR0, FPUL");
+            ERRT("FCNVSD FPUL, DR0",   UNKNOWN_INSTRUCTION, "FCNVSD FPUL, DR0");
+        }
     } else {
         ERRT("CLIPS.B R0",         UNKNOWN_INSTRUCTION, "CLIPS.B R0");
         ERRT("MULR R0, R1",        UNKNOWN_INSTRUCTION, "MULR R0, R1");
@@ -623,6 +638,29 @@ void test_data_constant() {
     TEST(R"(.data "AB")",                         0x4142);
     TEST(R"(.data "Hi!")",                        0x4869, 0x2100);  // odd-length string padded
     TEST(R"(.data H'1234, "OK")",                 0x1234, 0x4F4B);
+
+    // Floating-point data constants. .fdata.s emits a 4-byte IEEE-754 single,
+    // .fdata.d an 8-byte double, both big-endian (TEST args are 16-bit words).
+    // The Hitachi float literal is F'[+-]n[.m][S|D][+-]xx; a plain C-style float
+    // (no F' prefix) is accepted as a backup.
+    // .fdata is a float-data feature gated only by LIBASM_ASM_NOFLOAT (not the
+    // FPU instruction set), so it works the same with or without the FPU.
+#if defined(LIBASM_ASM_NOFLOAT)
+    ERRT(".fdata.s F'0.5S-2", FLOAT_NOT_SUPPORTED, "F'0.5S-2", 0x0000, 0x0000);
+    ERRT(".fdata.d F'.123D3", FLOAT_NOT_SUPPORTED, "F'.123D3", 0x0000, 0x0000, 0x0000, 0x0000);
+#else
+    // Manual examples: F'0.5S-2 -> H'3BA3D70A, F'.123D3 -> H'405EC00000000000.
+    TEST(".fdata.s F'0.5S-2",                     0x3BA3, 0xD70A);
+    TEST(".fdata.d F'.123D3",                     0x405E, 0xC000, 0x0000, 0x0000);
+    // Precision marker without an exponent, and a signed mantissa.
+    TEST(".fdata.s F'1.0",                        0x3F80, 0x0000);
+    TEST(".fdata.s F'1S0",                        0x3F80, 0x0000);
+    TEST(".fdata.s F'-2.5",                       0xC020, 0x0000);
+    TEST(".fdata.d F'1.5",                        0x3FF8, 0x0000, 0x0000, 0x0000);
+    // C-style float backup (no F' prefix) still works.
+    TEST(".fdata.s 0.5",                          0x3F00, 0x0000);
+    TEST(".fdata.s 0.5, F'1.0",                   0x3F00, 0x0000, 0x3F80, 0x0000);
+#endif
 }
 
 // Documentation note: the libasm SH-DSP table does NOT yet implement the

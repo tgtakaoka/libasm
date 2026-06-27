@@ -30,10 +30,17 @@ using namespace text::option;
 
 namespace {
 // clang-format off
-constexpr char TEXT_dDATA[] PROGMEM = ".data";
+constexpr char TEXT_dDATA[]    PROGMEM = ".data";
+// Float data constants are a floating-point feature (guarded by LIBASM_ASM_NOFLOAT
+// in defineDataConstant), independent of the FPU *instruction* set: IEEE bytes can
+// be emitted without the FPU, so these are not gated by LIBASM_SUPERH_NOFPU.
+constexpr char TEXT_dFDATA_S[] PROGMEM = ".fdata.s";
+constexpr char TEXT_dFDATA_D[] PROGMEM = ".fdata.d";
 
 constexpr Pseudo PSEUDOS[] PROGMEM = {
-    { TEXT_dDATA, &Assembler::defineDataConstant, Assembler::DATA_WORD },
+    { TEXT_dDATA,    &Assembler::defineDataConstant, Assembler::DATA_WORD    },
+    { TEXT_dFDATA_D, &Assembler::defineDataConstant, Assembler::DATA_FLOAT64 },
+    { TEXT_dFDATA_S, &Assembler::defineDataConstant, Assembler::DATA_FLOAT32 },
 };
 PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
 // clang-format on

@@ -15,11 +15,8 @@
  */
 
 #include "value_parser.h"
-#include <ctype.h>
-#include <stdlib.h>
 #include "config_base.h"
 #include "stack.h"
-#include "text_common.h"
 
 namespace libasm {
 
@@ -366,39 +363,6 @@ Value ValueParser::_eval(StrScanner &scan, ErrorAt &error, ParserContext &contex
     return vstack.pop();
 }
 
-namespace {
-
-bool isFloatNumber(StrScanner &scan, Error error, ParserContext &context) {
-    if (error == OVERFLOW_RANGE)
-        return true;
-    if (error == OK) {
-        auto p = scan;
-        auto fpnum = false;
-        if (p.expect('.') && context.delimitor != '.' && p.expect(isdigit)) {
-            fpnum = true;
-            p.trimStart(isdigit);
-        } else {
-            p = scan;
-        }
-        if (p.iexpect('E')) {
-            p.expect('-') || p.expect('+');
-            if (p.expect(isdigit)) {
-                fpnum = true;
-                p.trimStart(isdigit);
-            }
-        }
-        if (fpnum)
-            scan = p;
-        return fpnum;
-    }
-    if (error == NOT_AN_EXPECTED)
-        return scan.iexpectWord_P(text::common::TEXT_INF) ||
-               scan.iexpectWord_P(text::common::TEXT_INFINITY) ||
-               scan.iexpectWord_P(text::common::TEXT_NAN);
-    return false;
-}
-}  // namespace
-
 Error ValueParser::parseConstant(StrScanner &scan, Value &val, ParserContext &context) const {
     auto p = scan;
 
@@ -413,21 +377,11 @@ Error ValueParser::parseConstant(StrScanner &scan, Value &val, ParserContext &co
         return err;
 
     err = _number.parseNumber(p, val, context.defaultRadix);
-    if (isFloatNumber(p, err, context)) {
-#if defined(LIBASM_ASM_NOFLOAT)
-        val.setFloat();
-        scan = p;
-        return OK;
-#else
-        char *end;
-        Value::float_t f80;
-        const auto error = f80.read(scan.str(), &end);
-        if (end > scan.str()) {
-            val.setFloat(f80);
-            scan = end;
-            return error == 0 || f80.isSubnormal() ? OK : OVERFLOW_RANGE;
-        }
-#endif
+    auto fp = scan;
+    const auto ferr = _number.parseFloat(fp, p, val, err, context.delimitor);
+    if (ferr != NOT_AN_EXPECTED) {
+        scan = fp;
+        return ferr;
     }
     if (err != NOT_AN_EXPECTED) {
         scan = p;

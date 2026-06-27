@@ -246,6 +246,7 @@ constexpr Entry TABLE_SH2A_LONG[] PROGMEM = {
     E2(0x0001, TEXT_MOVI20S, ISZ_NONE, M_IMM20S, M_RN),  // MOVI20S #imm20<<8,Rn
 };
 
+#if !defined(LIBASM_SUPERH_NOFPU)
 // SH-2A FPU additions.
 constexpr Entry TABLE_FPU_SH2A[] PROGMEM = {
     E2(0xF0AD, TEXT_FCNVSD,  ISZ_NONE, M_FPUL,  M_DRN),  // FCNVSD FPUL,DRn 1111nnn010101101
@@ -294,6 +295,7 @@ constexpr Entry TABLE_FPU[] PROGMEM = {
     E1(0xF08D, TEXT_FLDI0,   ISZ_NONE, M_FRN),           // FLDI0 FRn
     E1(0xF09D, TEXT_FLDI1,   ISZ_NONE, M_FRN),           // FLDI1 FRn
 };
+#endif  // !LIBASM_SUPERH_NOFPU
 
 // INDEX arrays sorted alphabetically by the mnemonic STRING (not by the
 // TEXT_X identifier), so the binary-search comparator (strcasecmp_P on
@@ -455,6 +457,7 @@ constexpr uint8_t INDEX_SH2A_LONG[] PROGMEM = {
       0,  // TEXT_MOVI20
       1,  // TEXT_MOVI20S
 };
+#if !defined(LIBASM_SUPERH_NOFPU)
 constexpr uint8_t INDEX_FPU_SH2A[] PROGMEM = {
       1,  // TEXT_FCNVDS
       0,  // TEXT_FCNVSD
@@ -495,6 +498,7 @@ constexpr uint8_t INDEX_FPU[] PROGMEM = {
       1,  // TEXT_FSUB
      17,  // TEXT_FTRC
 };
+#endif  // !LIBASM_SUPERH_NOFPU
 
 constexpr uint8_t INDEX_DSP[] PROGMEM = {
      11,  // TEXT_LDC
@@ -576,6 +580,7 @@ constexpr EntryPage SH2A_PAGES[] PROGMEM = {
         {ARRAY_RANGE(TABLE_SH2A_LONG), ARRAY_RANGE(INDEX_SH2A_LONG)},
 };
 
+#if !defined(LIBASM_SUPERH_NOFPU)
 constexpr EntryPage FPU_PAGES[] PROGMEM = {
         {ARRAY_RANGE(TABLE_FPU_CPU), ARRAY_RANGE(INDEX_FPU_CPU)},
         {ARRAY_RANGE(TABLE_FPU), ARRAY_RANGE(INDEX_FPU)},
@@ -586,6 +591,7 @@ constexpr EntryPage FPU_SH2A_PAGES[] PROGMEM = {
         {ARRAY_RANGE(TABLE_FPU), ARRAY_RANGE(INDEX_FPU)},
         {ARRAY_RANGE(TABLE_FPU_SH2A), ARRAY_RANGE(INDEX_FPU_SH2A)},
 };
+#endif  // !LIBASM_SUPERH_NOFPU
 
 constexpr EntryPage DSP_PAGES[] PROGMEM = {
         {ARRAY_RANGE(TABLE_DSP), ARRAY_RANGE(INDEX_DSP)},
@@ -594,7 +600,9 @@ constexpr EntryPage DSP_PAGES[] PROGMEM = {
 #define EMPTY_RANGE(a) ARRAY_BEGIN(a), ARRAY_BEGIN(a)
 
 using Cpu = entry::CpuBase<CpuType, EntryPage>;
+#if !defined(LIBASM_SUPERH_NOFPU)
 using Fpu = entry::CpuBase<FpuType, EntryPage>;
+#endif
 using Dsp = entry::CpuBase<DspType, EntryPage>;
 
 constexpr Cpu CPU_TABLE[] PROGMEM = {
@@ -605,11 +613,13 @@ constexpr Cpu CPU_TABLE[] PROGMEM = {
         {SH2A, TEXT_CPU_SH2A, ARRAY_RANGE(SH2A_PAGES)},
 };
 
+#if !defined(LIBASM_SUPERH_NOFPU)
 constexpr Fpu FPU_TABLE[] PROGMEM = {
         {FPU_NONE, TEXT_FPU_NONE, EMPTY_RANGE(FPU_PAGES)},
         {FPU_SH2E, TEXT_FPU_SH2E, ARRAY_RANGE(FPU_PAGES)},
         {FPU_SH2A, TEXT_FPU_SH2A, ARRAY_RANGE(FPU_SH2A_PAGES)},
 };
+#endif  // !LIBASM_SUPERH_NOFPU
 
 // DSP is enabled only by the SH-DSP CPU, so the names are internal (not parsed).
 constexpr Dsp DSP_TABLE[] PROGMEM = {
@@ -621,14 +631,17 @@ static const Cpu *cpu(CpuType cpuType) {
     return Cpu::search(cpuType, ARRAY_RANGE(CPU_TABLE));
 }
 
+#if !defined(LIBASM_SUPERH_NOFPU)
 static const Fpu *fpu(FpuType fpuType) {
     return Fpu::search(fpuType, ARRAY_RANGE(FPU_TABLE));
 }
+#endif
 
 static const Dsp *dsp(DspType dspType) {
     return Dsp::search(dspType, ARRAY_RANGE(DSP_TABLE));
 }
 
+#if !defined(LIBASM_SUPERH_NOFPU)
 // Resolve the on/off FPU intent to the current CPU's actual FPU page: SH-2E and
 // SH-2A have (different) FPUs; SH-1/SH-2/SH-DSP have none, so the intent is
 // gated off there.
@@ -641,6 +654,7 @@ static FpuType effectiveFpu(const CpuSpec &cpuSpec) {
         return FPU_SH2E;
     return FPU_NONE;
 }
+#endif  // !LIBASM_SUPERH_NOFPU
 
 // matchOpCode: mask out variable bits (register/immediate fields) before comparing.
 static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *) {
@@ -662,12 +676,14 @@ static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *) {
 
 Error searchOpCode(const CpuSpec &cpuSpec, DisInsn &insn, StrBuffer &out) {
     cpu(cpuSpec.cpu)->searchOpCode(insn, out, matchOpCode);
+#if !defined(LIBASM_SUPERH_NOFPU)
     if (insn.getError() == UNKNOWN_INSTRUCTION) {
         insn.nameBuffer().reset();
         out.reset();
         insn.setError(insn.errorAt(), OK);
         fpu(effectiveFpu(cpuSpec))->searchOpCode(insn, out, matchOpCode);
     }
+#endif
     if (insn.getError() == UNKNOWN_INSTRUCTION) {
         insn.nameBuffer().reset();
         out.reset();
@@ -761,6 +777,7 @@ Error searchName(const CpuSpec &cpuSpec, AsmInsn &insn) {
     // with different operands, so an operand-not-allowed can mean "try the next
     // page" rather than a real error. Fall back CPU -> FPU -> DSP.
     auto err = insn.getError();
+#if !defined(LIBASM_SUPERH_NOFPU)
     if (err == UNKNOWN_INSTRUCTION || err == OPERAND_NOT_ALLOWED) {
         insn.setError(insn.errorAt(), OK);
         fpu(effectiveFpu(cpuSpec))->searchName(insn, acceptModes);
@@ -768,6 +785,7 @@ Error searchName(const CpuSpec &cpuSpec, AsmInsn &insn) {
             insn.setError(insn.errorAt(), err);
     }
     err = insn.getError();
+#endif
     if (err == UNKNOWN_INSTRUCTION || err == OPERAND_NOT_ALLOWED) {
         insn.setError(insn.errorAt(), OK);
         dsp(cpuSpec.dsp)->searchName(insn, acceptModes);
@@ -796,20 +814,31 @@ Error TableSuperH::searchCpuName(StrScanner &name, CpuType &cpuType) const {
 void Config::setCpuType(CpuType cpuType) {
     ConfigImpl::setCpuType(cpuType);
     _cpuSpec.cpu = cpuType;
+#if !defined(LIBASM_SUPERH_NOFPU)
     // SH-2E mandates its FPU; other CPUs keep the current on/off intent so a
     // setCpu (e.g. gen_driver's repeated setCpu) never clobbers it. effectiveFpu
     // gates the intent off on CPUs without an FPU.
     if (cpuType == SH2E)
         _cpuSpec.fpu = FPU_ON;
+#endif
     // The DSP unit is present only on SH-DSP.
     _cpuSpec.dsp = (cpuType == SH_DSP) ? DSP_ON : DSP_NONE;
 }
 
 const /* PROGMEM */ char *Config::fpu_P() const {
+#if defined(LIBASM_SUPERH_NOFPU)
+    return TEXT_FPU_NONE;
+#else
     return fpu(effectiveFpu(_cpuSpec))->name_P();
+#endif
 }
 
 Error Config::setFpuType(FpuType fpuType) {
+#if defined(LIBASM_SUPERH_NOFPU)
+    // No FPU compiled in: the only FpuType is FPU_NONE.
+    _cpuSpec.fpu = fpuType;
+    return OK;
+#else
     // Store only the on/off intent; effectiveFpu() resolves it per CPU. SH-2E
     // mandates its FPU, so it cannot be turned off there.
     if (fpuType == FPU_NONE) {
@@ -820,13 +849,16 @@ Error Config::setFpuType(FpuType fpuType) {
     }
     _cpuSpec.fpu = FPU_ON;
     return OK;
+#endif
 }
 
 Error Config::setFpuName(StrScanner &scan) {
     if (scan.expectFalse())
         return setFpuType(FPU_NONE);
+#if !defined(LIBASM_SUPERH_NOFPU)
     if (scan.expectTrue())
         return setFpuType(FPU_ON);
+#endif
     return UNKNOWN_OPERAND;
 }
 

@@ -44,6 +44,12 @@ bool isSh2a() {
     return strcasecmp_P("SH-2A", disassembler.config().cpu_P()) == 0;
 }
 
+// The FPU is usable only when compiled in (LIBASM_SUPERH_NOFPU keeps fpuType()
+// at FPU_NONE) and enabled for the current CPU.
+bool is_fpu_ready() {
+    return dissuperh.fpuType() != FPU_NONE;
+}
+
 void set_up() {
     disassembler.reset();
 }
@@ -309,6 +315,16 @@ void test_shdsp_additions() {
 
 // SH-2E adds single-precision FPU.
 void test_sh2e_fpu() {
+    // With LIBASM_SUPERH_NOFPU the FPU is compiled out (fpuType() is FPU_NONE)
+    // and the floating-point opcodes decode as unknown instructions.
+    if (!is_fpu_ready()) {
+        UNKN(0xF100);  // FADD
+        UNKN(0xF05D);  // FABS
+        UNKN(0xF10C);  // FMOV
+        UNKN(0xF08D);  // FLDI0
+        UNKN(0x405A);  // LDS R0, FPUL
+        return;
+    }
     // Arithmetic
     TEST("FADD",    "FR0, FR1",       0xF100);
     TEST("FADD",    "FR14, FR15",     0xFFE0);
@@ -394,13 +410,19 @@ void test_sh2a_additions() {
     TEST("MOVI20",  "#-H'80000, R2",           uint16_t(0x0280), uint16_t(0x0000));
     TEST("MOVI20S", "#0, R0",                  uint16_t(0x0001), uint16_t(0x0000));
     TEST("MOVI20S", "#H'0FF0000, R1",          uint16_t(0x0101), uint16_t(0xFF00));
-    // FPU additions (require --fpu enabled)
+    // FPU additions (require --fpu enabled). With LIBASM_SUPERH_NOFPU the FPU
+    // cannot be enabled (fpuType() stays FPU_NONE) and they decode as unknown.
     disassembler.setOption("fpu", "true");
-    TEST("FCNVDS",  "DR0, FPUL",      0xF0BD);
-    TEST("FCNVDS",  "DR14, FPUL",     0xFEBD);
-    TEST("FCNVSD",  "FPUL, DR0",      0xF0AD);
-    TEST("FCNVSD",  "FPUL, DR14",     0xFEAD);
-    disassembler.setOption("fpu", "false");
+    if (is_fpu_ready()) {
+        TEST("FCNVDS",  "DR0, FPUL",      0xF0BD);
+        TEST("FCNVDS",  "DR14, FPUL",     0xFEBD);
+        TEST("FCNVSD",  "FPUL, DR0",      0xF0AD);
+        TEST("FCNVSD",  "FPUL, DR14",     0xFEAD);
+        disassembler.setOption("fpu", "false");
+    } else {
+        UNKN(0xF0BD);  // FCNVDS
+        UNKN(0xF0AD);  // FCNVSD
+    }
 }
 
 void test_illegal_sh1() {
