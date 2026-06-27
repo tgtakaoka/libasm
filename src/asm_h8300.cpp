@@ -393,10 +393,10 @@ void AsmH8300::encodeAbsolute(AsmInsn &insn, const Operand &op, AddrMode mode, O
 }
 
 void AsmH8300::encodeRelative(AsmInsn &insn, const Operand &op) const {
-    const auto base = insn.address() + 2;
-    const auto target = op.getError() ? base : op.val.getUnsigned();
+    const Config::uintptr_t base = insn.address() + 2;
+    const Config::uintptr_t target = op.getError() ? base : op.val.getUnsigned();
     insn.setErrorIf(op, checkAddr(target, true));
-    const auto delta = branchDelta(base, target, insn, op);
+    const Config::ptrdiff_t delta = branchDelta(base, target, insn, op);
     if (!overflowDelta(delta, 8)) {
         insn.embed(delta & UINT8_MAX);
         return;
@@ -413,9 +413,9 @@ void AsmH8300::encodeRelative(AsmInsn &insn, const Operand &op) const {
     }
     const uint16_t longOpc = (opcHi == 0x55) ? 0x5C00 : 0x5800 | ((opcHi - 0x40) << 4);
     insn.setOpCode(longOpc);
-    const auto base16 = insn.address() + 4;
-    const auto target16 = op.getError() ? base16 : op.val.getUnsigned();
-    const auto delta16 = branchDelta(base16, target16, insn, op);
+    const Config::uintptr_t base16 = insn.address() + 4;
+    const Config::uintptr_t target16 = op.getError() ? base16 : op.val.getUnsigned();
+    const Config::ptrdiff_t delta16 = branchDelta(base16, target16, insn, op);
     if (overflowDelta(delta16, 16))
         insn.setErrorIf(op, OPERAND_TOO_FAR);
     insn.emitOperand16(delta16);
