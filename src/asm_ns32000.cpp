@@ -44,11 +44,11 @@ constexpr Pseudo PSEUDOS[] PROGMEM = {
     { TEXT_dBLKD,   &Assembler::allocateSpaces,     Assembler::DATA_LONG    },
     { TEXT_dBLKW,   &Assembler::allocateSpaces,     Assembler::DATA_WORD    },
     { TEXT_dBYTE,   &Assembler::defineDataConstant, Assembler::DATA_BYTE    },
-#if !defined(LIBASM_NS32000_NOFPU)
     { TEXT_dDOUBLE, &Assembler::defineDataConstant, Assembler::DATA_LONG    },
+#if !defined(LIBASM_NS32000_NOFPU)
     { TEXT_dFLOAT,  &Assembler::defineDataConstant, Assembler::DATA_FLOAT32 },
-#endif
     { TEXT_dLONG,   &Assembler::defineDataConstant, Assembler::DATA_FLOAT64 },
+#endif
     { TEXT_dORG,    &Assembler::defineOrigin       },
     { TEXT_dSPACE,  &Assembler::allocateSpaces,     Assembler::DATA_BYTE    },
     { TEXT_dWORD,   &Assembler::defineDataConstant, Assembler::DATA_WORD    },

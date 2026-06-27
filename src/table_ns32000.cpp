@@ -986,7 +986,11 @@ Error TableNs32000::searchCpuName(StrScanner &name, CpuType &cpuType) const {
 }
 
 const /*PROGMEM*/ char *Config::fpu_P() const {
+#if defined(LIBASM_NS32000_NOFPU)
+    return TEXT_none;
+#else
     return fpu(_cpuSpec.fpu)->name_P();
+#endif
 }
 
 Error Config::setFpuType(FpuType fpuType) {
@@ -1016,7 +1020,11 @@ Error Config::setFpuName(StrScanner &scan) {
 }
 
 const /*PROGMEM*/ char *Config::pmmu_P() const {
+#if defined(LIBASM_NS32000_NOPMMU)
+    return TEXT_none;
+#else
     return pmmu(_cpuSpec.pmmu)->name_P();
+#endif
 }
 
 Error Config::setPmmuType(PmmuType pmmuType) {

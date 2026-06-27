@@ -61,7 +61,7 @@ void DisNs32000::reset() {
     setFpuType(FPU_ON);
 #endif
 #if defined(LIBASM_NS32000_NOPMMU)
-    setMmuType(PMMU_NONE);
+    setPmmuType(PMMU_NONE);
 #else
     setPmmuType(PMMU_ON);
 #endif
