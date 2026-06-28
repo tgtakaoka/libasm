@@ -177,6 +177,21 @@ void test_data_access() {
     TEST("XORI X'C3', R5", 0x03FD, 0x00C3);
 }
 
+// The assembler accepts SP and PC as synonyms for R6 and R7 (the manual's
+// nomenclature); both spellings assemble to the same bytes.
+void test_sp_pc_alias() {
+    TEST("XOR X'9ABC', SP", 0x03C6, 0x9ABC);  // SP == R6 destination
+    TEST("XOR X'9ABC', R6", 0x03C6, 0x9ABC);
+    TEST("MVII X'FF', PC", 0x02BF, 0x00FF);    // PC == R7 destination
+    TEST("MVII X'FF', R7", 0x02BF, 0x00FF);
+    TEST("ADD@ SP, R0", 0x02F0);               // SP as stack source (M_STACK)
+    TEST("ADD@ R6, R0", 0x02F0);
+    TEST("XOR@ R3, SP", 0x03DE);               // SP as indirect destination
+    TEST("XOR@ R3, R6", 0x03DE);
+    TEST("INCR PC", 0x000F);                    // PC == R7 register operand
+    TEST("INCR R7", 0x000F);
+}
+
 // Branches; the assembler picks forward/backward direction automatically.
 void test_branch() {
     // Forward to X'0105' from origin 0x0100: PC_after=0x102, disp=0x03
@@ -184,6 +199,12 @@ void test_branch() {
     ATEST(0x0100, "BC   X'0105'", 0x0201, 0x0003);
     ATEST(0x0100, "BNC  X'0105'", 0x0209, 0x0003);
     ATEST(0x0100, "BGE  X'0105'", 0x020D, 0x0003);
+    // Condition-code aliases (CP1600 Data Manual): BLGE=BC, BLLT=BNC,
+    // BEQ=BZE, BNEQ=BNZE.  libasm accepts them; ASL's CP-1600 does not.
+    ATEST(0x0100, "BLGE X'0105'", 0x0201, 0x0003);
+    ATEST(0x0100, "BLLT X'0105'", 0x0209, 0x0003);
+    ATEST(0x0100, "BEQ  X'0105'", 0x0204, 0x0003);
+    ATEST(0x0100, "BNEQ X'0105'", 0x020C, 0x0003);
     // Backward to X'0100' from origin 0x0100: PC_after=0x102, disp=0x01 (S=1)
     ATEST(0x0100, "B    X'0100'", 0x0220, 0x0001);
     // NOPP: never-taken (no operand)
@@ -314,6 +335,7 @@ void run_tests(const char *cpu) {
     RUN_TEST(test_register_shift);
     RUN_TEST(test_register_to_register);
     RUN_TEST(test_data_access);
+    RUN_TEST(test_sp_pc_alias);
     RUN_TEST(test_branch);
     RUN_TEST(test_jump);
     RUN_TEST(test_data_constant);

@@ -32,10 +32,19 @@ struct EntryInsn : EntryInsnPrefix<Config, Entry> {
     AddrMode src() const { return flags().src(); }
     AddrMode dst() const { return flags().dst(); }
     bool isSdbd() const { return !hasPrefix() && opCode() == SDBD; }
+    // SDBD has an effect only on an external reference instruction other than
+    // MVO (CP1600 Data Manual 3.3.4).  External refs MVI..XOR sit above the MVO
+    // block, so the range excludes MVO.  Immediate (mode 7, M_IMM16) reads a
+    // two-word immediate; indirect modes 1-5 take SDBD (1-3 access one word);
+    // mode 0 (direct, decoded as M_DADDR) and mode 6 (R6 stack) are unsupported.
     bool is_sdbdAware() const {
         constexpr auto MVI = 01200;
         constexpr auto XOR = 01777;
-        return opCode() >= MVI && opCode() <= XOR && (src() == M_INDIR || src() == M_IMM16);
+        if (opCode() < MVI || opCode() > XOR)
+            return false;
+        if (src() == M_IMM16)
+            return true;
+        return src() == M_INDIR && ((opCode() >> 3) & 7) != 6;
     }
 };
 

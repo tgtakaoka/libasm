@@ -65,10 +65,10 @@ void test_dis_cp1600() {
     driver.setUppercase(false);
 
     // Covers label/address reference, varying instruction length (1/2/3 word),
-    // and SDBD-prefixed continuation.  The SDBD prefix puts the continuation
-    // line at the same address as SDBD itself (listing-formatter quirk: the
-    // continuation reuses the original insn's address; bytes are suppressed and
-    // an overflow line for the remaining bytes appears below).
+    // and SDBD-prefixed continuation.  SDBD owns the whole prefixed instruction
+    // for the decode loop, but lists as its own 1-word line with the follower at
+    // the next address (Insn::continueOffset splits the segments): a 3-word
+    // immediate follower (MVII) and a 1-word indirect follower (MVI@).
     DIS16("cp1600", 0x0100,
             R"(      cpu   cp1600
       org   x'0100'
@@ -79,6 +79,10 @@ void test_dis_cp1600() {
       b     x'0100'
       sdbd
       mvii  x'1234', r0
+      sdbd
+      mvii  x'5678', r1
+      sdbd
+      mvi@  r1, r1
 )",
             R"(       0 :                            cpu   cp1600
      100 :                            org   x'0100'
@@ -89,6 +93,10 @@ void test_dis_cp1600() {
      108 : 0220 0009                  b     x'0100'
      10a : 0001                       sdbd
      10b : 02b8 0034 0012             mvii  x'1234', r0
+     10e : 0001                       sdbd
+     10f : 02b9 0078 0056             mvii  x'5678', r1
+     112 : 0001                       sdbd
+     113 : 0289                       mvi@  r1, r1
 )",
             // 1-word
             0x0040,
@@ -101,8 +109,12 @@ void test_dis_cp1600() {
             // 2-word backward branch to X'0100'
             // disp = (PC_after=0x10A) - 0x100 - 1 = 9
             0x0220, 0x0009,
-            // SDBD-prefixed MVII X'1234', R0 (4 words = SDBD + opcode + low + high)
-            0x0001, 0x02B8, 0x0034, 0x0012);
+            // SDBD + MVII X'1234', R0: 1-word prefix line + 3-word follower
+            0x0001, 0x02B8, 0x0034, 0x0012,
+            // SDBD + MVII X'5678', R1: another 3-word immediate follower
+            0x0001, 0x02B9, 0x0078, 0x0056,
+            // SDBD + MVI@ R1, R1: 1-word indirect follower
+            0x0001, 0x0289);
 }
 
 void run_tests() {

@@ -115,11 +115,17 @@ void DisFormatter::formatError(StrBuffer &out) {
 }
 
 void DisFormatter::formatLine(StrBuffer &out, int &next) {
-    _formatter.formatAddress(out, startAddress() + next);
+    // `next` is a byte offset; convert to address units (no-op when byte-addressed,
+    // /2 for word-addressed CPUs) so multi-line overflow rows show the right address.
+    _formatter.formatAddress(out, startAddress() + next / config().addressUnit());
     auto pos = out.len();
+    // An overlap continuation (continueOffset == 0, e.g. a TMS320 parallel pair)
+    // re-displays the owning word's bytes, so suppress them on the second line.
+    // A sequential continuation (continueOffset > 0, e.g. CP1600 SDBD) shows its
+    // own follower bytes.
     char buf[1];
     StrBuffer null{buf, sizeof(buf)};
-    auto &bytesOut = _continueMark_P ? null : out;
+    auto &bytesOut = (_continueMark_P && _insn.continueOffset() == 0) ? null : out;
     const auto formatted = _formatter.formatBytes(bytesOut, next);
     if (next == 0 && *_insn.name()) {
         _formatter.formatTab(out, pos + _formatter.bytesColumnWidth() + 1);

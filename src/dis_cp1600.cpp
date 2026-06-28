@@ -15,6 +15,8 @@
  */
 
 #include "dis_cp1600.h"
+
+#include "array_memory.h"
 #include "formatters.h"
 #include "reg_cp1600.h"
 #include "table_cp1600.h"
@@ -125,6 +127,9 @@ void DisCp1600::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) cons
     case M_INDIR:
         outReg(out, (opc >> 3) & 7);
         break;
+    case M_STACK:
+        outReg(out, 6);
+        break;
     case M_BCOND: {
         // BEXT condition (0..17 octal) lives in bits 3:0 of the raw word1.  The
         // entry's opcode after searchOpCode no longer carries those bits, so
@@ -172,12 +177,39 @@ void DisCp1600::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) cons
     }
 }
 
+// Decode the operands of the instruction at |insn| (opcode already searched).
+void DisCp1600::decodeBody(DisInsn &insn, StrBuffer &out) const {
+    decodeOperand(insn, out, insn.src());
+    const auto dst = insn.dst();
+    if (dst == M_SHCNT) {
+        decodeOperand(insn, out, dst);
+    } else if (dst != M_NONE) {
+        decodeOperand(insn, out.comma(), dst);
+    }
+}
+
 Error DisCp1600::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) const {
     DisInsn insn(_insn, memory, out);
-    auto &state = _insn.state<State>();
-    // One-shot: consume the carry-over flag set by the previous decode.
-    insn.sdbd_prefix = state.sdbdPrefix;
-    state.sdbdPrefix = false;
+
+    // Continuation: the preceding SDBD decode already read the whole
+    // SDBD-prefixed instruction; re-decode it here from those bytes (skipping
+    // the leading SDBD word), so we touch neither the caller's reader nor this
+    // insn's length.
+    if (_insn.hasContinue()) {
+        _insn.setContinueMark_P(nullptr);
+        ArrayMemory mem(_insn.address(), _insn.bytes(), _insn.length());
+        auto reader = mem.iterator();
+        Insn work(_insn.address());
+        DisInsn cont(work, reader, out);
+        cont.readUint16();  // skip the SDBD word
+        cont.setOpCode(cont.readUint16());
+        if (!searchOpCode(cpuType(), cont, out)) {
+            cont.sdbd_prefix = cont.is_sdbdAware();  // double-byte only when aware
+            decodeBody(cont, out);
+        }
+        _insn.nameBuffer().reset().text(work.name());
+        return _insn.setError(cont);
+    }
 
     const auto raw1 = insn.readUint16();
     insn.setOpCode(raw1);
@@ -195,24 +227,40 @@ Error DisCp1600::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) cons
     if (searchOpCode(cpuType(), insn, out))
         return _insn.setError(insn);
 
-    if (insn.sdbd_prefix && !insn.is_sdbdAware())
-        insn.setErrorIf(PREFIX_HAS_NO_EFFECT);
-
-    // Standalone SDBD: emit a one-line "sdbd" insn and carry the flag forward
-    // so the next decode reads its M_IMM16 as a two-word immediate.
-    if (insn.isSdbd() && !insn.sdbd_prefix) {
-        state.sdbdPrefix = true;
+    // SDBD is a prefix.  Read and decode the following instruction completely so
+    // its bytes belong to this insn, emit "SDBD", and mark a continuation that
+    // re-decodes that instruction (above).  A follower that the SDBD prefix has
+    // no effect on flags PREFIX_HAS_NO_EFFECT and is dropped by the test
+    // generator, so the follower opcode is still reached standalone.
+    if (insn.isSdbd()) {
+        const auto raw2 = insn.readUint16();
+        if (insn.getError())  // NO_MEMORY: the caller must supply the follower
+            return _insn.setError(insn);
+        insn.setOpCode(raw2);
+        if (raw2 & 0xFC00)
+            return _insn.setError(insn.setError(INVALID_INSTRUCTION));
+        if (searchOpCode(cpuType(), insn, out))
+            return _insn.setError(insn);
+        insn.sdbd_prefix = insn.is_sdbdAware();  // double-byte only when aware
+        char buf[40];
+        StrBuffer discard{buf, sizeof(buf)};
+        decodeBody(insn, discard);  // consume the follower's operand bytes
+        if (insn.getError() == NO_MEMORY)  // need the follower's operand words
+            return _insn.setError(insn);
+        insn.resetError();  // operand-validation errors belong to the continuation
+        if (!insn.sdbd_prefix)  // follower the SDBD prefix has no effect on
+            insn.setError(PREFIX_HAS_NO_EFFECT);
+        auto save{out};
+        insn.nameBuffer().reset().over(out).text_P(TEXT_SDBD).over(insn.nameBuffer());
+        save.over(out);
+        _insn.setContinueMark_P(TEXT_null);
+        // The follower's bytes start right after the 1-word SDBD prefix, so the
+        // listing shows SDBD as one word and the follower at the next address.
+        _insn.setContinueOffset(sizeof(Config::opcode_t));
         return _insn.setError(insn);
     }
 
-    decodeOperand(insn, out, insn.src());
-    const auto dst = insn.dst();
-    if (dst == M_SHCNT) {
-        decodeOperand(insn, out, insn.dst());
-    } else if (dst != M_NONE) {
-        decodeOperand(insn, out.comma(), insn.dst());
-    }
-
+    decodeBody(insn, out);
     return _insn.setError(insn);
 }
 

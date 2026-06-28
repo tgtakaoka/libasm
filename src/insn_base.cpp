@@ -20,7 +20,8 @@
 
 namespace libasm {
 
-Insn::Insn(uint32_t addr) : ErrorAt(), _address(addr), _length(0), _continueMark_P(nullptr) {
+Insn::Insn(uint32_t addr)
+    : ErrorAt(), _address(addr), _length(0), _continueOffset(0), _continueMark_P(nullptr) {
     memset(_bytes, 0, sizeof(_bytes));
 }
 
@@ -31,6 +32,7 @@ void Insn::reset(uint32_t addr, uint8_t length) {
     if (length >= sizeof(_bytes))
         length = sizeof(_bytes);
     _length = length;
+    _continueOffset = 0;
     memset(_bytes + length, 0, sizeof(_bytes) - length);
     _buffer.reset();
 }

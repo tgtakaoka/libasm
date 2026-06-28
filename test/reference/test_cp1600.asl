@@ -13,8 +13,16 @@
 ;;; limitations under the License.
 
         cpu     CP-1600
-        org     $0100
+        org     X'0100'
         include "test_cp1600.inc"
+;;; CP1600 branch-condition aliases BLGE/BLLT/BEQ/BNEQ (= BC/BNC/BZE/BNZE
+;;; branching to L_ALIAS).  ASL's CP-1600 target rejects these mnemonics with
+;;; "unknown instruction" (see ~/asl_bug_cp1600.md), so emit the exact bytes
+;;; libasm assembles from test_cp1600_brnalias.inc.
+        WORD    X'0221', X'0001'    ; BLGE   L_ALIAS
+        WORD    X'0229', X'0003'    ; BLLT   L_ALIAS
+        WORD    X'0224', X'0005'    ; BEQ    L_ALIAS
+        WORD    X'022C', X'0007'    ; BNEQ   L_ALIAS
         end
 
 ;;; Local Variables:
