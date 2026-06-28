@@ -25,6 +25,9 @@ int main(int argc, const char **argv) {
     GenDriver driver(dis1600);
     if (driver.main(argc, argv))
         return 1;
+    // Emit C-style hex (0x..) so generated immediates/addresses dedup; the
+    // IBM X'..' form the disassembler defaults to is not collapsed.
+    dis1600.setOption("c-style", "enable");
 
     TestGenerator generator(driver, dis1600, 0x0000);
     // Generate the unprefixed instruction set, then the SDBD-prefixed sequences

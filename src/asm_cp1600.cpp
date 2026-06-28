@@ -160,9 +160,7 @@ Error AsmCp1600::defineByte(StrScanner &scan, Insn &insn, uint16_t) {
         }
         const auto v = val.getUnsigned();
         const auto lo = static_cast<uint16_t>(v & 0xFF);
-        auto hi = static_cast<uint16_t>((v >> 8) & 0xFF);
-        if (val.isNegative())
-            hi |= 0xFF00;
+        const auto hi = static_cast<uint16_t>((v >> 8) & 0xFF);
         if (insn.emitUint16Be(lo) || insn.emitUint16Be(hi)) {
             error.setErrorIf(scan, NO_MEMORY);
             break;
@@ -392,10 +390,7 @@ void AsmCp1600::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode) c
         const auto val = op.val.getUnsigned();
         if (state.sdbdPrefix) {
             insn.emitOperand16(val & UINT8_MAX);
-            uint16_t hi = (val >> 8) & UINT8_MAX;
-            if (op.val.isNegative())
-                hi |= 0xFF00;
-            insn.emitOperand16(hi);
+            insn.emitOperand16((val >> 8) & UINT8_MAX);
         } else {
             insn.emitOperand16(val);
         }

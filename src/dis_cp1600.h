@@ -39,16 +39,9 @@ private:
     bool _spAlias;
     bool _pcAlias;
 
-    // Cross-instruction state carried on the Insn (per Insn::state<T>).
-    // sdbdPrefix: true when the previous decode was a standalone SDBD; the
-    // next decode then interprets M_IMM16 as an SDBD-prefixed two-word
-    // immediate. All-zero (sdbdPrefix == false) is the natural fresh state.
-    struct State {
-        bool sdbdPrefix;
-    };
-
     StrBuffer &outReg(StrBuffer &out, uint_fast8_t num) const;
     void decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) const;
+    void decodeBody(DisInsn &insn, StrBuffer &out) const;
 
     Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) const override;
     const ConfigBase &config() const override { return *this; }

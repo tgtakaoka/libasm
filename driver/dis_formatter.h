@@ -67,11 +67,23 @@ protected:
     void formatError(StrBuffer &out);
     void formatLine(StrBuffer &out, int &next);
 
-    // ListFormatter::Provider
+    // ListFormatter::Provider.  A sequential continuation (continueOffset > 0, e.g.
+    // CP1600 SDBD) splits the instruction: the owning line shows bytes [0,at) and
+    // the continuation shows [at,len) at the advanced address.  continueOffset == 0
+    // leaves both showing the full bytes at the same address (TMS320 parallel).
     const ConfigBase &config() const override { return _disassembler.config(); }
-    uint32_t startAddress() const override { return _insn.address(); }
-    uint8_t bytesSize() const override { return _insn.length(); }
-    uint8_t getByte(uint8_t offset) const override { return _insn.bytes()[offset]; }
+    uint32_t startAddress() const override {
+        return _continueMark_P
+                       ? _insn.address() + _insn.continueOffset() / config().addressUnit()
+                       : _insn.address();
+    }
+    uint8_t bytesSize() const override {
+        const auto at = _insn.continueOffset();
+        return _continueMark_P ? _insn.length() - at : (at ? at : _insn.length());
+    }
+    uint8_t getByte(uint8_t offset) const override {
+        return _insn.bytes()[offset + (_continueMark_P ? _insn.continueOffset() : 0)];
+    }
 
     static constexpr int min_nameWidth = 5;
 };

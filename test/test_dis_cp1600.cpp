@@ -31,13 +31,13 @@
         Insn insn(memory.origin());                                                     \
         char actual_opr[64];                                                            \
         disassembler.decode(reader, insn, actual_opr, sizeof(actual_opr), &symtab);     \
-        asserter.equals(file, line, name1, name1, insn);                                \
-        asserter.equals(file, line, name1, "", actual_opr);                             \
-        insn.reset(insn.address() + insn.length() / unit, 0);                           \
-        disassembler.decode(reader, insn, actual_opr, sizeof(actual_opr), &symtab);     \
         ErrorAt expected;                                                               \
         expected.setError(err);                                                         \
-        asserter.equals(file, line, name2, expected.errorText_P(), insn.errorText_P()); \
+        asserter.equals(file, line, name1, expected.errorText_P(), insn.errorText_P()); \
+        asserter.equals(file, line, name1, name1, insn);                                \
+        asserter.equals(file, line, name1, "", actual_opr);                             \
+        asserter.isTrue(file, line, name1, insn.hasContinue());                         \
+        disassembler.decode(reader, insn, actual_opr, sizeof(actual_opr), &symtab);     \
         asserter.equals(file, line, name2, name2, insn);                                \
         asserter.equals(file, line, name2, opr2, actual_opr);                           \
     } while (0)
@@ -76,8 +76,9 @@ void test_internal_control() {
     TEST("TCI", "", 0x0005);
     TEST("CLRC", "", 0x0006);
     TEST("SETC", "", 0x0007);
-    // SDBD last: it sets _sdbdPrefix=true; set_up() resets before the next test.
-    TEST("SDBD", "", 0x0001);
+    // SDBD is a prefix: alone it is an incomplete instruction (needs a
+    // following SDBD-aware instruction, decoded as a continuation).
+    NMEM("SDBD", "", "", 0x0001);
 }
 
 // Single-register operations (bits[2:0] = DDD)
@@ -143,6 +144,12 @@ void test_data_access() {
     TEST("CMP@", "R2, R4", 0x0354);
     TEST("AND@", "R1, R5", 0x038D);
     TEST("XOR@", "R3, SP", 0x03DE);
+    // Stack indirect via R6 (MMM=110)
+    TEST("ADD@", "SP, R0", 0x02F0);
+    TEST("SUB@", "SP, R1", 0x0331);
+    TEST("CMP@", "SP, R2", 0x0372);
+    TEST("AND@", "SP, R3", 0x03B3);
+    TEST("XOR@", "SP, R4", 0x03F4);
     // Immediate (MMM=111)
     TEST("MVOI", "R0, X'00'", 0x0278, 0x0000);
     TEST("MVII", "X'FF', PC", 0x02BF, 0x00FF);
@@ -151,6 +158,26 @@ void test_data_access() {
     TEST("CMPI", "X'FF', R3", 0x037B, 0x00FF);
     TEST("ANDI", "X'3C', R4", 0x03BC, 0x003C);
     TEST("XORI", "X'C3', R5", 0x03FD, 0x00C3);
+}
+
+// sp-alias / pc-alias decode R6 as SP and R7 as PC (default off).
+void test_sp_pc_alias() {
+    // Off: R6/R7 (round-trips through ASL, which only knows R0-R7).
+    dis1600.setSpAlias(false);
+    dis1600.setPcAlias(false);
+    TEST("XOR", "X'9ABC', R6", 0x03C6, 0x9ABC);  // R6 as destination
+    TEST("MVII", "X'FF', R7", 0x02BF, 0x00FF);    // R7 as destination
+    TEST("ADD@", "R6, R0", 0x02F0);               // R6 as stack source (M_STACK)
+    TEST("XOR@", "R3, R6", 0x03DE);               // R6 as indirect destination
+    TEST("INCR", "R7", 0x000F);                   // R7 as register operand
+    // On: R6 -> SP, R7 -> PC (the manual's nomenclature).
+    dis1600.setSpAlias(true);
+    dis1600.setPcAlias(true);
+    TEST("XOR", "X'9ABC', SP", 0x03C6, 0x9ABC);
+    TEST("MVII", "X'FF', PC", 0x02BF, 0x00FF);
+    TEST("ADD@", "SP, R0", 0x02F0);
+    TEST("XOR@", "R3, SP", 0x03DE);
+    TEST("INCR", "PC", 0x000F);
 }
 
 // Branches (bit5=S direction, bits[2:0]=condition)
@@ -213,7 +240,7 @@ void test_sdbd() {
     DERRT("SDBD", "EIS", "", 0x0001, 0x0002);
     DERRT("SDBD", "MVO", "R0, X'1234'", 0x0001, 0x0240, 0x1234);
     DERRT("SDBD", "MVO@", "R0, R1", 0x0001, 0x0248);
-    DERRT("SDBD", "MVOI", "R0, X'0034'", 0x0001, 0x0278, 0x0034);
+    DERRT("SDBD", "MVOI", "R0, X'34'", 0x0001, 0x0278, 0x0034);
     DERRT("SDBD", "MVI", "X'1234', R0", 0x0001, 0x0280, 0x1234);
     DERRT("SDBD", "PULR", "R0", 0x0001, 0x02B0);
 }
@@ -239,6 +266,7 @@ void run_tests(const char *cpu) {
     RUN_TEST(test_register_shift);
     RUN_TEST(test_register_to_register);
     RUN_TEST(test_data_access);
+    RUN_TEST(test_sp_pc_alias);
     RUN_TEST(test_branch);
     RUN_TEST(test_jump);
     RUN_TEST(test_sdbd);
