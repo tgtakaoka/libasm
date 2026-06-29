@@ -210,9 +210,21 @@
       EX     L, (-XIX)
       CP     (-XIX), 40H
       MUL    WA, (-XIX)
+      MUL    BC, (-XIX)
+      MUL    DE, (-XIX)
+      MUL    HL, (-XIX)
       MULS   WA, (-XIX)
+      MULS   BC, (-XIX)
+      MULS   DE, (-XIX)
+      MULS   HL, (-XIX)
       DIV    WA, (-XIX)
+      DIV    BC, (-XIX)
+      DIV    DE, (-XIX)
+      DIV    HL, (-XIX)
       DIVS   WA, (-XIX)
+      DIVS   BC, (-XIX)
+      DIVS   DE, (-XIX)
+      DIVS   HL, (-XIX)
       INC    1, (-XIX)
       DEC    1, (-XIX)
       ADD    W, (-XIX)
@@ -308,9 +320,21 @@
       EX     L, (-XIY)
       CP     (-XIY), 40H
       MUL    WA, (-XIY)
+      MUL    BC, (-XIY)
+      MUL    DE, (-XIY)
+      MUL    HL, (-XIY)
       MULS   WA, (-XIY)
+      MULS   BC, (-XIY)
+      MULS   DE, (-XIY)
+      MULS   HL, (-XIY)
       DIV    WA, (-XIY)
+      DIV    BC, (-XIY)
+      DIV    DE, (-XIY)
+      DIV    HL, (-XIY)
       DIVS   WA, (-XIY)
+      DIVS   BC, (-XIY)
+      DIVS   DE, (-XIY)
+      DIVS   HL, (-XIY)
       INC    1, (-XIY)
       DEC    1, (-XIY)
       ADD    W, (-XIY)
@@ -406,9 +430,21 @@
       EX     L, (-XIZ)
       CP     (-XIZ), 40H
       MUL    WA, (-XIZ)
+      MUL    BC, (-XIZ)
+      MUL    DE, (-XIZ)
+      MUL    HL, (-XIZ)
       MULS   WA, (-XIZ)
+      MULS   BC, (-XIZ)
+      MULS   DE, (-XIZ)
+      MULS   HL, (-XIZ)
       DIV    WA, (-XIZ)
+      DIV    BC, (-XIZ)
+      DIV    DE, (-XIZ)
+      DIV    HL, (-XIZ)
       DIVS   WA, (-XIZ)
+      DIVS   BC, (-XIZ)
+      DIVS   DE, (-XIZ)
+      DIVS   HL, (-XIZ)
       INC    1, (-XIZ)
       DEC    1, (-XIZ)
       ADD    W, (-XIZ)
@@ -511,9 +547,21 @@
       EX     L, (XIX)
       CP     (XIX), 40H
       MUL    WA, (XIX)
+      MUL    BC, (XIX)
+      MUL    DE, (XIX)
+      MUL    HL, (XIX)
       MULS   WA, (XIX)
+      MULS   BC, (XIX)
+      MULS   DE, (XIX)
+      MULS   HL, (XIX)
       DIV    WA, (XIX)
+      DIV    BC, (XIX)
+      DIV    DE, (XIX)
+      DIV    HL, (XIX)
       DIVS   WA, (XIX)
+      DIVS   BC, (XIX)
+      DIVS   DE, (XIX)
+      DIVS   HL, (XIX)
       INC    1, (XIX)
       DEC    1, (XIX)
       ADD    W, (XIX)
@@ -609,9 +657,21 @@
       EX     L, (XIY)
       CP     (XIY), 40H
       MUL    WA, (XIY)
+      MUL    BC, (XIY)
+      MUL    DE, (XIY)
+      MUL    HL, (XIY)
       MULS   WA, (XIY)
+      MULS   BC, (XIY)
+      MULS   DE, (XIY)
+      MULS   HL, (XIY)
       DIV    WA, (XIY)
+      DIV    BC, (XIY)
+      DIV    DE, (XIY)
+      DIV    HL, (XIY)
       DIVS   WA, (XIY)
+      DIVS   BC, (XIY)
+      DIVS   DE, (XIY)
+      DIVS   HL, (XIY)
       INC    1, (XIY)
       DEC    1, (XIY)
       ADD    W, (XIY)
@@ -707,9 +767,21 @@
       EX     L, (XIZ)
       CP     (XIZ), 40H
       MUL    WA, (XIZ)
+      MUL    BC, (XIZ)
+      MUL    DE, (XIZ)
+      MUL    HL, (XIZ)
       MULS   WA, (XIZ)
+      MULS   BC, (XIZ)
+      MULS   DE, (XIZ)
+      MULS   HL, (XIZ)
       DIV    WA, (XIZ)
+      DIV    BC, (XIZ)
+      DIV    DE, (XIZ)
+      DIV    HL, (XIZ)
       DIVS   WA, (XIZ)
+      DIVS   BC, (XIZ)
+      DIVS   DE, (XIZ)
+      DIVS   HL, (XIZ)
       INC    1, (XIZ)
       DEC    1, (XIZ)
       ADD    W, (XIZ)
@@ -805,9 +877,21 @@
       EX     L, (XSP)
       CP     (XSP), 40H
       MUL    WA, (XSP)
+      MUL    BC, (XSP)
+      MUL    DE, (XSP)
+      MUL    HL, (XSP)
       MULS   WA, (XSP)
+      MULS   BC, (XSP)
+      MULS   DE, (XSP)
+      MULS   HL, (XSP)
       DIV    WA, (XSP)
+      DIV    BC, (XSP)
+      DIV    DE, (XSP)
+      DIV    HL, (XSP)
       DIVS   WA, (XSP)
+      DIVS   BC, (XSP)
+      DIVS   DE, (XSP)
+      DIVS   HL, (XSP)
       INC    1, (XSP)
       DEC    1, (XSP)
       ADD    W, (XSP)
@@ -904,9 +988,21 @@
       EX     L, (XIX+)
       CP     (XIX+), 40H
       MUL    WA, (XIX+)
+      MUL    BC, (XIX+)
+      MUL    DE, (XIX+)
+      MUL    HL, (XIX+)
       MULS   WA, (XIX+)
+      MULS   BC, (XIX+)
+      MULS   DE, (XIX+)
+      MULS   HL, (XIX+)
       DIV    WA, (XIX+)
+      DIV    BC, (XIX+)
+      DIV    DE, (XIX+)
+      DIV    HL, (XIX+)
       DIVS   WA, (XIX+)
+      DIVS   BC, (XIX+)
+      DIVS   DE, (XIX+)
+      DIVS   HL, (XIX+)
       INC    1, (XIX+)
       DEC    1, (XIX+)
       ADD    W, (XIX+)
@@ -1003,9 +1099,21 @@
       EX     L, (XIY+)
       CP     (XIY+), 40H
       MUL    WA, (XIY+)
+      MUL    BC, (XIY+)
+      MUL    DE, (XIY+)
+      MUL    HL, (XIY+)
       MULS   WA, (XIY+)
+      MULS   BC, (XIY+)
+      MULS   DE, (XIY+)
+      MULS   HL, (XIY+)
       DIV    WA, (XIY+)
+      DIV    BC, (XIY+)
+      DIV    DE, (XIY+)
+      DIV    HL, (XIY+)
       DIVS   WA, (XIY+)
+      DIVS   BC, (XIY+)
+      DIVS   DE, (XIY+)
+      DIVS   HL, (XIY+)
       INC    1, (XIY+)
       DEC    1, (XIY+)
       ADD    W, (XIY+)
@@ -1102,9 +1210,21 @@
       EX     L, (XIZ+)
       CP     (XIZ+), 40H
       MUL    WA, (XIZ+)
+      MUL    BC, (XIZ+)
+      MUL    DE, (XIZ+)
+      MUL    HL, (XIZ+)
       MULS   WA, (XIZ+)
+      MULS   BC, (XIZ+)
+      MULS   DE, (XIZ+)
+      MULS   HL, (XIZ+)
       DIV    WA, (XIZ+)
+      DIV    BC, (XIZ+)
+      DIV    DE, (XIZ+)
+      DIV    HL, (XIZ+)
       DIVS   WA, (XIZ+)
+      DIVS   BC, (XIZ+)
+      DIVS   DE, (XIZ+)
+      DIVS   HL, (XIZ+)
       INC    1, (XIZ+)
       DEC    1, (XIZ+)
       ADD    W, (XIZ+)
@@ -1201,9 +1321,21 @@
       EX     L, (XSP+)
       CP     (XSP+), 40H
       MUL    WA, (XSP+)
+      MUL    BC, (XSP+)
+      MUL    DE, (XSP+)
+      MUL    HL, (XSP+)
       MULS   WA, (XSP+)
+      MULS   BC, (XSP+)
+      MULS   DE, (XSP+)
+      MULS   HL, (XSP+)
       DIV    WA, (XSP+)
+      DIV    BC, (XSP+)
+      DIV    DE, (XSP+)
+      DIV    HL, (XSP+)
       DIVS   WA, (XSP+)
+      DIVS   BC, (XSP+)
+      DIVS   DE, (XSP+)
+      DIVS   HL, (XSP+)
       INC    1, (XSP+)
       DEC    1, (XSP+)
       ADD    W, (XSP+)
@@ -1300,9 +1432,21 @@
       EX     L, (XIX-73H)
       CP     (XIX-73H), 40H
       MUL    WA, (XIX-73H)
+      MUL    BC, (XIX-73H)
+      MUL    DE, (XIX-73H)
+      MUL    HL, (XIX-73H)
       MULS   WA, (XIX-73H)
+      MULS   BC, (XIX-73H)
+      MULS   DE, (XIX-73H)
+      MULS   HL, (XIX-73H)
       DIV    WA, (XIX-73H)
+      DIV    BC, (XIX-73H)
+      DIV    DE, (XIX-73H)
+      DIV    HL, (XIX-73H)
       DIVS   WA, (XIX-73H)
+      DIVS   BC, (XIX-73H)
+      DIVS   DE, (XIX-73H)
+      DIVS   HL, (XIX-73H)
       INC    1, (XIX-73H)
       DEC    1, (XIX-73H)
       ADD    W, (XIX-73H)
@@ -1335,9 +1479,21 @@
       EX     L, (XIX+0)
       CP     (XIX+0), 40H
       MUL    WA, (XIX+0)
+      MUL    BC, (XIX+0)
+      MUL    DE, (XIX+0)
+      MUL    HL, (XIX+0)
       MULS   WA, (XIX+0)
+      MULS   BC, (XIX+0)
+      MULS   DE, (XIX+0)
+      MULS   HL, (XIX+0)
       DIV    WA, (XIX+0)
+      DIV    BC, (XIX+0)
+      DIV    DE, (XIX+0)
+      DIV    HL, (XIX+0)
       DIVS   WA, (XIX+0)
+      DIVS   BC, (XIX+0)
+      DIVS   DE, (XIX+0)
+      DIVS   HL, (XIX+0)
       INC    1, (XIX+0)
       DEC    1, (XIX+0)
       ADD    W, (XIX+0)
@@ -1498,9 +1654,21 @@
       EX     L, (XIY-72H)
       CP     (XIY-72H), 40H
       MUL    WA, (XIY-72H)
+      MUL    BC, (XIY-72H)
+      MUL    DE, (XIY-72H)
+      MUL    HL, (XIY-72H)
       MULS   WA, (XIY-72H)
+      MULS   BC, (XIY-72H)
+      MULS   DE, (XIY-72H)
+      MULS   HL, (XIY-72H)
       DIV    WA, (XIY-72H)
+      DIV    BC, (XIY-72H)
+      DIV    DE, (XIY-72H)
+      DIV    HL, (XIY-72H)
       DIVS   WA, (XIY-72H)
+      DIVS   BC, (XIY-72H)
+      DIVS   DE, (XIY-72H)
+      DIVS   HL, (XIY-72H)
       INC    1, (XIY-72H)
       DEC    1, (XIY-72H)
       ADD    W, (XIY-72H)
@@ -1533,9 +1701,21 @@
       EX     L, (XIY+0)
       CP     (XIY+0), 40H
       MUL    WA, (XIY+0)
+      MUL    BC, (XIY+0)
+      MUL    DE, (XIY+0)
+      MUL    HL, (XIY+0)
       MULS   WA, (XIY+0)
+      MULS   BC, (XIY+0)
+      MULS   DE, (XIY+0)
+      MULS   HL, (XIY+0)
       DIV    WA, (XIY+0)
+      DIV    BC, (XIY+0)
+      DIV    DE, (XIY+0)
+      DIV    HL, (XIY+0)
       DIVS   WA, (XIY+0)
+      DIVS   BC, (XIY+0)
+      DIVS   DE, (XIY+0)
+      DIVS   HL, (XIY+0)
       INC    1, (XIY+0)
       DEC    1, (XIY+0)
       ADD    W, (XIY+0)
@@ -1696,9 +1876,21 @@
       EX     L, (XIZ-71H)
       CP     (XIZ-71H), 40H
       MUL    WA, (XIZ-71H)
+      MUL    BC, (XIZ-71H)
+      MUL    DE, (XIZ-71H)
+      MUL    HL, (XIZ-71H)
       MULS   WA, (XIZ-71H)
+      MULS   BC, (XIZ-71H)
+      MULS   DE, (XIZ-71H)
+      MULS   HL, (XIZ-71H)
       DIV    WA, (XIZ-71H)
+      DIV    BC, (XIZ-71H)
+      DIV    DE, (XIZ-71H)
+      DIV    HL, (XIZ-71H)
       DIVS   WA, (XIZ-71H)
+      DIVS   BC, (XIZ-71H)
+      DIVS   DE, (XIZ-71H)
+      DIVS   HL, (XIZ-71H)
       INC    1, (XIZ-71H)
       DEC    1, (XIZ-71H)
       ADD    W, (XIZ-71H)
@@ -1731,9 +1923,21 @@
       EX     L, (XIZ+0)
       CP     (XIZ+0), 40H
       MUL    WA, (XIZ+0)
+      MUL    BC, (XIZ+0)
+      MUL    DE, (XIZ+0)
+      MUL    HL, (XIZ+0)
       MULS   WA, (XIZ+0)
+      MULS   BC, (XIZ+0)
+      MULS   DE, (XIZ+0)
+      MULS   HL, (XIZ+0)
       DIV    WA, (XIZ+0)
+      DIV    BC, (XIZ+0)
+      DIV    DE, (XIZ+0)
+      DIV    HL, (XIZ+0)
       DIVS   WA, (XIZ+0)
+      DIVS   BC, (XIZ+0)
+      DIVS   DE, (XIZ+0)
+      DIVS   HL, (XIZ+0)
       INC    1, (XIZ+0)
       DEC    1, (XIZ+0)
       ADD    W, (XIZ+0)
@@ -1893,9 +2097,21 @@
       EX     L, (XSP-70H)
       CP     (XSP-70H), 40H
       MUL    WA, (XSP-70H)
+      MUL    BC, (XSP-70H)
+      MUL    DE, (XSP-70H)
+      MUL    HL, (XSP-70H)
       MULS   WA, (XSP-70H)
+      MULS   BC, (XSP-70H)
+      MULS   DE, (XSP-70H)
+      MULS   HL, (XSP-70H)
       DIV    WA, (XSP-70H)
+      DIV    BC, (XSP-70H)
+      DIV    DE, (XSP-70H)
+      DIV    HL, (XSP-70H)
       DIVS   WA, (XSP-70H)
+      DIVS   BC, (XSP-70H)
+      DIVS   DE, (XSP-70H)
+      DIVS   HL, (XSP-70H)
       INC    1, (XSP-70H)
       DEC    1, (XSP-70H)
       ADD    W, (XSP-70H)
@@ -1929,9 +2145,21 @@
       EX     L, (XSP+0)
       CP     (XSP+0), 40H
       MUL    WA, (XSP+0)
+      MUL    BC, (XSP+0)
+      MUL    DE, (XSP+0)
+      MUL    HL, (XSP+0)
       MULS   WA, (XSP+0)
+      MULS   BC, (XSP+0)
+      MULS   DE, (XSP+0)
+      MULS   HL, (XSP+0)
       DIV    WA, (XSP+0)
+      DIV    BC, (XSP+0)
+      DIV    DE, (XSP+0)
+      DIV    HL, (XSP+0)
       DIVS   WA, (XSP+0)
+      DIVS   BC, (XSP+0)
+      DIVS   DE, (XSP+0)
+      DIVS   HL, (XSP+0)
       INC    1, (XSP+0)
       DEC    1, (XSP+0)
       ADD    W, (XSP+0)
@@ -2077,6 +2305,38 @@
       EX     IY, (-XIX)
       EX     IZ, (-XIX)
       EX     SP, (-XIX)
+      MUL    XWA, (-XIX)
+      MUL    XBC, (-XIX)
+      MUL    XDE, (-XIX)
+      MUL    XHL, (-XIX)
+      MUL    XIX, (-XIX)
+      MUL    XIY, (-XIX)
+      MUL    XIZ, (-XIX)
+      MUL    XSP, (-XIX)
+      MULS   XWA, (-XIX)
+      MULS   XBC, (-XIX)
+      MULS   XDE, (-XIX)
+      MULS   XHL, (-XIX)
+      MULS   XIX, (-XIX)
+      MULS   XIY, (-XIX)
+      MULS   XIZ, (-XIX)
+      MULS   XSP, (-XIX)
+      DIV    XWA, (-XIX)
+      DIV    XBC, (-XIX)
+      DIV    XDE, (-XIX)
+      DIV    XHL, (-XIX)
+      DIV    XIX, (-XIX)
+      DIV    XIY, (-XIX)
+      DIV    XIZ, (-XIX)
+      DIV    XSP, (-XIX)
+      DIVS   XWA, (-XIX)
+      DIVS   XBC, (-XIX)
+      DIVS   XDE, (-XIX)
+      DIVS   XHL, (-XIX)
+      DIVS   XIX, (-XIX)
+      DIVS   XIY, (-XIX)
+      DIVS   XIZ, (-XIX)
+      DIVS   XSP, (-XIX)
       ADD    WA, (-XIX)
       ADD    BC, (-XIX)
       ADD    DE, (-XIX)
@@ -2156,6 +2416,38 @@
       EX     IY, (-XIY)
       EX     IZ, (-XIY)
       EX     SP, (-XIY)
+      MUL    XWA, (-XIY)
+      MUL    XBC, (-XIY)
+      MUL    XDE, (-XIY)
+      MUL    XHL, (-XIY)
+      MUL    XIX, (-XIY)
+      MUL    XIY, (-XIY)
+      MUL    XIZ, (-XIY)
+      MUL    XSP, (-XIY)
+      MULS   XWA, (-XIY)
+      MULS   XBC, (-XIY)
+      MULS   XDE, (-XIY)
+      MULS   XHL, (-XIY)
+      MULS   XIX, (-XIY)
+      MULS   XIY, (-XIY)
+      MULS   XIZ, (-XIY)
+      MULS   XSP, (-XIY)
+      DIV    XWA, (-XIY)
+      DIV    XBC, (-XIY)
+      DIV    XDE, (-XIY)
+      DIV    XHL, (-XIY)
+      DIV    XIX, (-XIY)
+      DIV    XIY, (-XIY)
+      DIV    XIZ, (-XIY)
+      DIV    XSP, (-XIY)
+      DIVS   XWA, (-XIY)
+      DIVS   XBC, (-XIY)
+      DIVS   XDE, (-XIY)
+      DIVS   XHL, (-XIY)
+      DIVS   XIX, (-XIY)
+      DIVS   XIY, (-XIY)
+      DIVS   XIZ, (-XIY)
+      DIVS   XSP, (-XIY)
       ADD    WA, (-XIY)
       ADD    BC, (-XIY)
       ADD    DE, (-XIY)
@@ -2235,6 +2527,38 @@
       EX     IY, (-XIZ)
       EX     IZ, (-XIZ)
       EX     SP, (-XIZ)
+      MUL    XWA, (-XIZ)
+      MUL    XBC, (-XIZ)
+      MUL    XDE, (-XIZ)
+      MUL    XHL, (-XIZ)
+      MUL    XIX, (-XIZ)
+      MUL    XIY, (-XIZ)
+      MUL    XIZ, (-XIZ)
+      MUL    XSP, (-XIZ)
+      MULS   XWA, (-XIZ)
+      MULS   XBC, (-XIZ)
+      MULS   XDE, (-XIZ)
+      MULS   XHL, (-XIZ)
+      MULS   XIX, (-XIZ)
+      MULS   XIY, (-XIZ)
+      MULS   XIZ, (-XIZ)
+      MULS   XSP, (-XIZ)
+      DIV    XWA, (-XIZ)
+      DIV    XBC, (-XIZ)
+      DIV    XDE, (-XIZ)
+      DIV    XHL, (-XIZ)
+      DIV    XIX, (-XIZ)
+      DIV    XIY, (-XIZ)
+      DIV    XIZ, (-XIZ)
+      DIV    XSP, (-XIZ)
+      DIVS   XWA, (-XIZ)
+      DIVS   XBC, (-XIZ)
+      DIVS   XDE, (-XIZ)
+      DIVS   XHL, (-XIZ)
+      DIVS   XIX, (-XIZ)
+      DIVS   XIY, (-XIZ)
+      DIVS   XIZ, (-XIZ)
+      DIVS   XSP, (-XIZ)
       ADD    WA, (-XIZ)
       ADD    BC, (-XIZ)
       ADD    DE, (-XIZ)
@@ -2327,10 +2651,38 @@
       EX     IZ, (-XSP)
       EX     SP, (-XSP)
       CP     (-XSP), 40H
-      MUL    WA, (-XSP)
-      MULS   WA, (-XSP)
-      DIV    WA, (-XSP)
-      DIVS   WA, (-XSP)
+      MUL    XWA, (-XSP)
+      MUL    XBC, (-XSP)
+      MUL    XDE, (-XSP)
+      MUL    XHL, (-XSP)
+      MUL    XIX, (-XSP)
+      MUL    XIY, (-XSP)
+      MUL    XIZ, (-XSP)
+      MUL    XSP, (-XSP)
+      MULS   XWA, (-XSP)
+      MULS   XBC, (-XSP)
+      MULS   XDE, (-XSP)
+      MULS   XHL, (-XSP)
+      MULS   XIX, (-XSP)
+      MULS   XIY, (-XSP)
+      MULS   XIZ, (-XSP)
+      MULS   XSP, (-XSP)
+      DIV    XWA, (-XSP)
+      DIV    XBC, (-XSP)
+      DIV    XDE, (-XSP)
+      DIV    XHL, (-XSP)
+      DIV    XIX, (-XSP)
+      DIV    XIY, (-XSP)
+      DIV    XIZ, (-XSP)
+      DIV    XSP, (-XSP)
+      DIVS   XWA, (-XSP)
+      DIVS   XBC, (-XSP)
+      DIVS   XDE, (-XSP)
+      DIVS   XHL, (-XSP)
+      DIVS   XIX, (-XSP)
+      DIVS   XIY, (-XSP)
+      DIVS   XIZ, (-XSP)
+      DIVS   XSP, (-XSP)
       INC    1, (-XSP)
       DEC    1, (-XSP)
       ADD    WA, (-XSP)
@@ -2412,6 +2764,38 @@
       EX     IY, (XIX)
       EX     IZ, (XIX)
       EX     SP, (XIX)
+      MUL    XWA, (XIX)
+      MUL    XBC, (XIX)
+      MUL    XDE, (XIX)
+      MUL    XHL, (XIX)
+      MUL    XIX, (XIX)
+      MUL    XIY, (XIX)
+      MUL    XIZ, (XIX)
+      MUL    XSP, (XIX)
+      MULS   XWA, (XIX)
+      MULS   XBC, (XIX)
+      MULS   XDE, (XIX)
+      MULS   XHL, (XIX)
+      MULS   XIX, (XIX)
+      MULS   XIY, (XIX)
+      MULS   XIZ, (XIX)
+      MULS   XSP, (XIX)
+      DIV    XWA, (XIX)
+      DIV    XBC, (XIX)
+      DIV    XDE, (XIX)
+      DIV    XHL, (XIX)
+      DIV    XIX, (XIX)
+      DIV    XIY, (XIX)
+      DIV    XIZ, (XIX)
+      DIV    XSP, (XIX)
+      DIVS   XWA, (XIX)
+      DIVS   XBC, (XIX)
+      DIVS   XDE, (XIX)
+      DIVS   XHL, (XIX)
+      DIVS   XIX, (XIX)
+      DIVS   XIY, (XIX)
+      DIVS   XIZ, (XIX)
+      DIVS   XSP, (XIX)
       ADD    WA, (XIX)
       ADD    BC, (XIX)
       ADD    DE, (XIX)
@@ -2491,6 +2875,38 @@
       EX     IY, (XIY)
       EX     IZ, (XIY)
       EX     SP, (XIY)
+      MUL    XWA, (XIY)
+      MUL    XBC, (XIY)
+      MUL    XDE, (XIY)
+      MUL    XHL, (XIY)
+      MUL    XIX, (XIY)
+      MUL    XIY, (XIY)
+      MUL    XIZ, (XIY)
+      MUL    XSP, (XIY)
+      MULS   XWA, (XIY)
+      MULS   XBC, (XIY)
+      MULS   XDE, (XIY)
+      MULS   XHL, (XIY)
+      MULS   XIX, (XIY)
+      MULS   XIY, (XIY)
+      MULS   XIZ, (XIY)
+      MULS   XSP, (XIY)
+      DIV    XWA, (XIY)
+      DIV    XBC, (XIY)
+      DIV    XDE, (XIY)
+      DIV    XHL, (XIY)
+      DIV    XIX, (XIY)
+      DIV    XIY, (XIY)
+      DIV    XIZ, (XIY)
+      DIV    XSP, (XIY)
+      DIVS   XWA, (XIY)
+      DIVS   XBC, (XIY)
+      DIVS   XDE, (XIY)
+      DIVS   XHL, (XIY)
+      DIVS   XIX, (XIY)
+      DIVS   XIY, (XIY)
+      DIVS   XIZ, (XIY)
+      DIVS   XSP, (XIY)
       ADD    WA, (XIY)
       ADD    BC, (XIY)
       ADD    DE, (XIY)
@@ -2570,6 +2986,38 @@
       EX     IY, (XIZ)
       EX     IZ, (XIZ)
       EX     SP, (XIZ)
+      MUL    XWA, (XIZ)
+      MUL    XBC, (XIZ)
+      MUL    XDE, (XIZ)
+      MUL    XHL, (XIZ)
+      MUL    XIX, (XIZ)
+      MUL    XIY, (XIZ)
+      MUL    XIZ, (XIZ)
+      MUL    XSP, (XIZ)
+      MULS   XWA, (XIZ)
+      MULS   XBC, (XIZ)
+      MULS   XDE, (XIZ)
+      MULS   XHL, (XIZ)
+      MULS   XIX, (XIZ)
+      MULS   XIY, (XIZ)
+      MULS   XIZ, (XIZ)
+      MULS   XSP, (XIZ)
+      DIV    XWA, (XIZ)
+      DIV    XBC, (XIZ)
+      DIV    XDE, (XIZ)
+      DIV    XHL, (XIZ)
+      DIV    XIX, (XIZ)
+      DIV    XIY, (XIZ)
+      DIV    XIZ, (XIZ)
+      DIV    XSP, (XIZ)
+      DIVS   XWA, (XIZ)
+      DIVS   XBC, (XIZ)
+      DIVS   XDE, (XIZ)
+      DIVS   XHL, (XIZ)
+      DIVS   XIX, (XIZ)
+      DIVS   XIY, (XIZ)
+      DIVS   XIZ, (XIZ)
+      DIVS   XSP, (XIZ)
       ADD    WA, (XIZ)
       ADD    BC, (XIZ)
       ADD    DE, (XIZ)
@@ -2649,6 +3097,38 @@
       EX     IY, (XSP)
       EX     IZ, (XSP)
       EX     SP, (XSP)
+      MUL    XWA, (XSP)
+      MUL    XBC, (XSP)
+      MUL    XDE, (XSP)
+      MUL    XHL, (XSP)
+      MUL    XIX, (XSP)
+      MUL    XIY, (XSP)
+      MUL    XIZ, (XSP)
+      MUL    XSP, (XSP)
+      MULS   XWA, (XSP)
+      MULS   XBC, (XSP)
+      MULS   XDE, (XSP)
+      MULS   XHL, (XSP)
+      MULS   XIX, (XSP)
+      MULS   XIY, (XSP)
+      MULS   XIZ, (XSP)
+      MULS   XSP, (XSP)
+      DIV    XWA, (XSP)
+      DIV    XBC, (XSP)
+      DIV    XDE, (XSP)
+      DIV    XHL, (XSP)
+      DIV    XIX, (XSP)
+      DIV    XIY, (XSP)
+      DIV    XIZ, (XSP)
+      DIV    XSP, (XSP)
+      DIVS   XWA, (XSP)
+      DIVS   XBC, (XSP)
+      DIVS   XDE, (XSP)
+      DIVS   XHL, (XSP)
+      DIVS   XIX, (XSP)
+      DIVS   XIY, (XSP)
+      DIVS   XIZ, (XSP)
+      DIVS   XSP, (XSP)
       ADD    WA, (XSP)
       ADD    BC, (XSP)
       ADD    DE, (XSP)
@@ -2729,6 +3209,38 @@
       EX     IY, (XIX+)
       EX     IZ, (XIX+)
       EX     SP, (XIX+)
+      MUL    XWA, (XIX+)
+      MUL    XBC, (XIX+)
+      MUL    XDE, (XIX+)
+      MUL    XHL, (XIX+)
+      MUL    XIX, (XIX+)
+      MUL    XIY, (XIX+)
+      MUL    XIZ, (XIX+)
+      MUL    XSP, (XIX+)
+      MULS   XWA, (XIX+)
+      MULS   XBC, (XIX+)
+      MULS   XDE, (XIX+)
+      MULS   XHL, (XIX+)
+      MULS   XIX, (XIX+)
+      MULS   XIY, (XIX+)
+      MULS   XIZ, (XIX+)
+      MULS   XSP, (XIX+)
+      DIV    XWA, (XIX+)
+      DIV    XBC, (XIX+)
+      DIV    XDE, (XIX+)
+      DIV    XHL, (XIX+)
+      DIV    XIX, (XIX+)
+      DIV    XIY, (XIX+)
+      DIV    XIZ, (XIX+)
+      DIV    XSP, (XIX+)
+      DIVS   XWA, (XIX+)
+      DIVS   XBC, (XIX+)
+      DIVS   XDE, (XIX+)
+      DIVS   XHL, (XIX+)
+      DIVS   XIX, (XIX+)
+      DIVS   XIY, (XIX+)
+      DIVS   XIZ, (XIX+)
+      DIVS   XSP, (XIX+)
       ADD    WA, (XIX+)
       ADD    BC, (XIX+)
       ADD    DE, (XIX+)
@@ -2809,6 +3321,38 @@
       EX     IY, (XIY+)
       EX     IZ, (XIY+)
       EX     SP, (XIY+)
+      MUL    XWA, (XIY+)
+      MUL    XBC, (XIY+)
+      MUL    XDE, (XIY+)
+      MUL    XHL, (XIY+)
+      MUL    XIX, (XIY+)
+      MUL    XIY, (XIY+)
+      MUL    XIZ, (XIY+)
+      MUL    XSP, (XIY+)
+      MULS   XWA, (XIY+)
+      MULS   XBC, (XIY+)
+      MULS   XDE, (XIY+)
+      MULS   XHL, (XIY+)
+      MULS   XIX, (XIY+)
+      MULS   XIY, (XIY+)
+      MULS   XIZ, (XIY+)
+      MULS   XSP, (XIY+)
+      DIV    XWA, (XIY+)
+      DIV    XBC, (XIY+)
+      DIV    XDE, (XIY+)
+      DIV    XHL, (XIY+)
+      DIV    XIX, (XIY+)
+      DIV    XIY, (XIY+)
+      DIV    XIZ, (XIY+)
+      DIV    XSP, (XIY+)
+      DIVS   XWA, (XIY+)
+      DIVS   XBC, (XIY+)
+      DIVS   XDE, (XIY+)
+      DIVS   XHL, (XIY+)
+      DIVS   XIX, (XIY+)
+      DIVS   XIY, (XIY+)
+      DIVS   XIZ, (XIY+)
+      DIVS   XSP, (XIY+)
       ADD    WA, (XIY+)
       ADD    BC, (XIY+)
       ADD    DE, (XIY+)
@@ -2889,6 +3433,38 @@
       EX     IY, (XIZ+)
       EX     IZ, (XIZ+)
       EX     SP, (XIZ+)
+      MUL    XWA, (XIZ+)
+      MUL    XBC, (XIZ+)
+      MUL    XDE, (XIZ+)
+      MUL    XHL, (XIZ+)
+      MUL    XIX, (XIZ+)
+      MUL    XIY, (XIZ+)
+      MUL    XIZ, (XIZ+)
+      MUL    XSP, (XIZ+)
+      MULS   XWA, (XIZ+)
+      MULS   XBC, (XIZ+)
+      MULS   XDE, (XIZ+)
+      MULS   XHL, (XIZ+)
+      MULS   XIX, (XIZ+)
+      MULS   XIY, (XIZ+)
+      MULS   XIZ, (XIZ+)
+      MULS   XSP, (XIZ+)
+      DIV    XWA, (XIZ+)
+      DIV    XBC, (XIZ+)
+      DIV    XDE, (XIZ+)
+      DIV    XHL, (XIZ+)
+      DIV    XIX, (XIZ+)
+      DIV    XIY, (XIZ+)
+      DIV    XIZ, (XIZ+)
+      DIV    XSP, (XIZ+)
+      DIVS   XWA, (XIZ+)
+      DIVS   XBC, (XIZ+)
+      DIVS   XDE, (XIZ+)
+      DIVS   XHL, (XIZ+)
+      DIVS   XIX, (XIZ+)
+      DIVS   XIY, (XIZ+)
+      DIVS   XIZ, (XIZ+)
+      DIVS   XSP, (XIZ+)
       ADD    WA, (XIZ+)
       ADD    BC, (XIZ+)
       ADD    DE, (XIZ+)
@@ -2969,6 +3545,38 @@
       EX     IY, (XSP+)
       EX     IZ, (XSP+)
       EX     SP, (XSP+)
+      MUL    XWA, (XSP+)
+      MUL    XBC, (XSP+)
+      MUL    XDE, (XSP+)
+      MUL    XHL, (XSP+)
+      MUL    XIX, (XSP+)
+      MUL    XIY, (XSP+)
+      MUL    XIZ, (XSP+)
+      MUL    XSP, (XSP+)
+      MULS   XWA, (XSP+)
+      MULS   XBC, (XSP+)
+      MULS   XDE, (XSP+)
+      MULS   XHL, (XSP+)
+      MULS   XIX, (XSP+)
+      MULS   XIY, (XSP+)
+      MULS   XIZ, (XSP+)
+      MULS   XSP, (XSP+)
+      DIV    XWA, (XSP+)
+      DIV    XBC, (XSP+)
+      DIV    XDE, (XSP+)
+      DIV    XHL, (XSP+)
+      DIV    XIX, (XSP+)
+      DIV    XIY, (XSP+)
+      DIV    XIZ, (XSP+)
+      DIV    XSP, (XSP+)
+      DIVS   XWA, (XSP+)
+      DIVS   XBC, (XSP+)
+      DIVS   XDE, (XSP+)
+      DIVS   XHL, (XSP+)
+      DIVS   XIX, (XSP+)
+      DIVS   XIY, (XSP+)
+      DIVS   XIZ, (XSP+)
+      DIVS   XSP, (XSP+)
       ADD    WA, (XSP+)
       ADD    BC, (XSP+)
       ADD    DE, (XSP+)
@@ -3049,6 +3657,38 @@
       EX     IY, (XIX-63H)
       EX     IZ, (XIX-63H)
       EX     SP, (XIX-63H)
+      MUL    XWA, (XIX-63H)
+      MUL    XBC, (XIX-63H)
+      MUL    XDE, (XIX-63H)
+      MUL    XHL, (XIX-63H)
+      MUL    XIX, (XIX-63H)
+      MUL    XIY, (XIX-63H)
+      MUL    XIZ, (XIX-63H)
+      MUL    XSP, (XIX-63H)
+      MULS   XWA, (XIX-63H)
+      MULS   XBC, (XIX-63H)
+      MULS   XDE, (XIX-63H)
+      MULS   XHL, (XIX-63H)
+      MULS   XIX, (XIX-63H)
+      MULS   XIY, (XIX-63H)
+      MULS   XIZ, (XIX-63H)
+      MULS   XSP, (XIX-63H)
+      DIV    XWA, (XIX-63H)
+      DIV    XBC, (XIX-63H)
+      DIV    XDE, (XIX-63H)
+      DIV    XHL, (XIX-63H)
+      DIV    XIX, (XIX-63H)
+      DIV    XIY, (XIX-63H)
+      DIV    XIZ, (XIX-63H)
+      DIV    XSP, (XIX-63H)
+      DIVS   XWA, (XIX-63H)
+      DIVS   XBC, (XIX-63H)
+      DIVS   XDE, (XIX-63H)
+      DIVS   XHL, (XIX-63H)
+      DIVS   XIX, (XIX-63H)
+      DIVS   XIY, (XIX-63H)
+      DIVS   XIZ, (XIX-63H)
+      DIVS   XSP, (XIX-63H)
       ADD    WA, (XIX-63H)
       ADD    BC, (XIX-63H)
       ADD    DE, (XIX-63H)
@@ -3081,6 +3721,38 @@
       EX     IY, (XIX+0)
       EX     IZ, (XIX+0)
       EX     SP, (XIX+0)
+      MUL    XWA, (XIX+0)
+      MUL    XBC, (XIX+0)
+      MUL    XDE, (XIX+0)
+      MUL    XHL, (XIX+0)
+      MUL    XIX, (XIX+0)
+      MUL    XIY, (XIX+0)
+      MUL    XIZ, (XIX+0)
+      MUL    XSP, (XIX+0)
+      MULS   XWA, (XIX+0)
+      MULS   XBC, (XIX+0)
+      MULS   XDE, (XIX+0)
+      MULS   XHL, (XIX+0)
+      MULS   XIX, (XIX+0)
+      MULS   XIY, (XIX+0)
+      MULS   XIZ, (XIX+0)
+      MULS   XSP, (XIX+0)
+      DIV    XWA, (XIX+0)
+      DIV    XBC, (XIX+0)
+      DIV    XDE, (XIX+0)
+      DIV    XHL, (XIX+0)
+      DIV    XIX, (XIX+0)
+      DIV    XIY, (XIX+0)
+      DIV    XIZ, (XIX+0)
+      DIV    XSP, (XIX+0)
+      DIVS   XWA, (XIX+0)
+      DIVS   XBC, (XIX+0)
+      DIVS   XDE, (XIX+0)
+      DIVS   XHL, (XIX+0)
+      DIVS   XIX, (XIX+0)
+      DIVS   XIY, (XIX+0)
+      DIVS   XIZ, (XIX+0)
+      DIVS   XSP, (XIX+0)
       ADD    WA, (XIX+0)
       ADD    BC, (XIX+0)
       ADD    DE, (XIX+0)
@@ -3209,6 +3881,38 @@
       EX     IY, (XIY-62H)
       EX     IZ, (XIY-62H)
       EX     SP, (XIY-62H)
+      MUL    XWA, (XIY-62H)
+      MUL    XBC, (XIY-62H)
+      MUL    XDE, (XIY-62H)
+      MUL    XHL, (XIY-62H)
+      MUL    XIX, (XIY-62H)
+      MUL    XIY, (XIY-62H)
+      MUL    XIZ, (XIY-62H)
+      MUL    XSP, (XIY-62H)
+      MULS   XWA, (XIY-62H)
+      MULS   XBC, (XIY-62H)
+      MULS   XDE, (XIY-62H)
+      MULS   XHL, (XIY-62H)
+      MULS   XIX, (XIY-62H)
+      MULS   XIY, (XIY-62H)
+      MULS   XIZ, (XIY-62H)
+      MULS   XSP, (XIY-62H)
+      DIV    XWA, (XIY-62H)
+      DIV    XBC, (XIY-62H)
+      DIV    XDE, (XIY-62H)
+      DIV    XHL, (XIY-62H)
+      DIV    XIX, (XIY-62H)
+      DIV    XIY, (XIY-62H)
+      DIV    XIZ, (XIY-62H)
+      DIV    XSP, (XIY-62H)
+      DIVS   XWA, (XIY-62H)
+      DIVS   XBC, (XIY-62H)
+      DIVS   XDE, (XIY-62H)
+      DIVS   XHL, (XIY-62H)
+      DIVS   XIX, (XIY-62H)
+      DIVS   XIY, (XIY-62H)
+      DIVS   XIZ, (XIY-62H)
+      DIVS   XSP, (XIY-62H)
       ADD    WA, (XIY-62H)
       ADD    BC, (XIY-62H)
       ADD    DE, (XIY-62H)
@@ -3241,6 +3945,38 @@
       EX     IY, (XIY+0)
       EX     IZ, (XIY+0)
       EX     SP, (XIY+0)
+      MUL    XWA, (XIY+0)
+      MUL    XBC, (XIY+0)
+      MUL    XDE, (XIY+0)
+      MUL    XHL, (XIY+0)
+      MUL    XIX, (XIY+0)
+      MUL    XIY, (XIY+0)
+      MUL    XIZ, (XIY+0)
+      MUL    XSP, (XIY+0)
+      MULS   XWA, (XIY+0)
+      MULS   XBC, (XIY+0)
+      MULS   XDE, (XIY+0)
+      MULS   XHL, (XIY+0)
+      MULS   XIX, (XIY+0)
+      MULS   XIY, (XIY+0)
+      MULS   XIZ, (XIY+0)
+      MULS   XSP, (XIY+0)
+      DIV    XWA, (XIY+0)
+      DIV    XBC, (XIY+0)
+      DIV    XDE, (XIY+0)
+      DIV    XHL, (XIY+0)
+      DIV    XIX, (XIY+0)
+      DIV    XIY, (XIY+0)
+      DIV    XIZ, (XIY+0)
+      DIV    XSP, (XIY+0)
+      DIVS   XWA, (XIY+0)
+      DIVS   XBC, (XIY+0)
+      DIVS   XDE, (XIY+0)
+      DIVS   XHL, (XIY+0)
+      DIVS   XIX, (XIY+0)
+      DIVS   XIY, (XIY+0)
+      DIVS   XIZ, (XIY+0)
+      DIVS   XSP, (XIY+0)
       ADD    WA, (XIY+0)
       ADD    BC, (XIY+0)
       ADD    DE, (XIY+0)
@@ -3369,6 +4105,38 @@
       EX     IY, (XIZ-61H)
       EX     IZ, (XIZ-61H)
       EX     SP, (XIZ-61H)
+      MUL    XWA, (XIZ-61H)
+      MUL    XBC, (XIZ-61H)
+      MUL    XDE, (XIZ-61H)
+      MUL    XHL, (XIZ-61H)
+      MUL    XIX, (XIZ-61H)
+      MUL    XIY, (XIZ-61H)
+      MUL    XIZ, (XIZ-61H)
+      MUL    XSP, (XIZ-61H)
+      MULS   XWA, (XIZ-61H)
+      MULS   XBC, (XIZ-61H)
+      MULS   XDE, (XIZ-61H)
+      MULS   XHL, (XIZ-61H)
+      MULS   XIX, (XIZ-61H)
+      MULS   XIY, (XIZ-61H)
+      MULS   XIZ, (XIZ-61H)
+      MULS   XSP, (XIZ-61H)
+      DIV    XWA, (XIZ-61H)
+      DIV    XBC, (XIZ-61H)
+      DIV    XDE, (XIZ-61H)
+      DIV    XHL, (XIZ-61H)
+      DIV    XIX, (XIZ-61H)
+      DIV    XIY, (XIZ-61H)
+      DIV    XIZ, (XIZ-61H)
+      DIV    XSP, (XIZ-61H)
+      DIVS   XWA, (XIZ-61H)
+      DIVS   XBC, (XIZ-61H)
+      DIVS   XDE, (XIZ-61H)
+      DIVS   XHL, (XIZ-61H)
+      DIVS   XIX, (XIZ-61H)
+      DIVS   XIY, (XIZ-61H)
+      DIVS   XIZ, (XIZ-61H)
+      DIVS   XSP, (XIZ-61H)
       ADD    WA, (XIZ-61H)
       ADD    BC, (XIZ-61H)
       ADD    DE, (XIZ-61H)
@@ -3401,6 +4169,38 @@
       EX     IY, (XIZ+0)
       EX     IZ, (XIZ+0)
       EX     SP, (XIZ+0)
+      MUL    XWA, (XIZ+0)
+      MUL    XBC, (XIZ+0)
+      MUL    XDE, (XIZ+0)
+      MUL    XHL, (XIZ+0)
+      MUL    XIX, (XIZ+0)
+      MUL    XIY, (XIZ+0)
+      MUL    XIZ, (XIZ+0)
+      MUL    XSP, (XIZ+0)
+      MULS   XWA, (XIZ+0)
+      MULS   XBC, (XIZ+0)
+      MULS   XDE, (XIZ+0)
+      MULS   XHL, (XIZ+0)
+      MULS   XIX, (XIZ+0)
+      MULS   XIY, (XIZ+0)
+      MULS   XIZ, (XIZ+0)
+      MULS   XSP, (XIZ+0)
+      DIV    XWA, (XIZ+0)
+      DIV    XBC, (XIZ+0)
+      DIV    XDE, (XIZ+0)
+      DIV    XHL, (XIZ+0)
+      DIV    XIX, (XIZ+0)
+      DIV    XIY, (XIZ+0)
+      DIV    XIZ, (XIZ+0)
+      DIV    XSP, (XIZ+0)
+      DIVS   XWA, (XIZ+0)
+      DIVS   XBC, (XIZ+0)
+      DIVS   XDE, (XIZ+0)
+      DIVS   XHL, (XIZ+0)
+      DIVS   XIX, (XIZ+0)
+      DIVS   XIY, (XIZ+0)
+      DIVS   XIZ, (XIZ+0)
+      DIVS   XSP, (XIZ+0)
       ADD    WA, (XIZ+0)
       ADD    BC, (XIZ+0)
       ADD    DE, (XIZ+0)
@@ -3528,6 +4328,38 @@
       EX     IY, (XSP-60H)
       EX     IZ, (XSP-60H)
       EX     SP, (XSP-60H)
+      MUL    XWA, (XSP-60H)
+      MUL    XBC, (XSP-60H)
+      MUL    XDE, (XSP-60H)
+      MUL    XHL, (XSP-60H)
+      MUL    XIX, (XSP-60H)
+      MUL    XIY, (XSP-60H)
+      MUL    XIZ, (XSP-60H)
+      MUL    XSP, (XSP-60H)
+      MULS   XWA, (XSP-60H)
+      MULS   XBC, (XSP-60H)
+      MULS   XDE, (XSP-60H)
+      MULS   XHL, (XSP-60H)
+      MULS   XIX, (XSP-60H)
+      MULS   XIY, (XSP-60H)
+      MULS   XIZ, (XSP-60H)
+      MULS   XSP, (XSP-60H)
+      DIV    XWA, (XSP-60H)
+      DIV    XBC, (XSP-60H)
+      DIV    XDE, (XSP-60H)
+      DIV    XHL, (XSP-60H)
+      DIV    XIX, (XSP-60H)
+      DIV    XIY, (XSP-60H)
+      DIV    XIZ, (XSP-60H)
+      DIV    XSP, (XSP-60H)
+      DIVS   XWA, (XSP-60H)
+      DIVS   XBC, (XSP-60H)
+      DIVS   XDE, (XSP-60H)
+      DIVS   XHL, (XSP-60H)
+      DIVS   XIX, (XSP-60H)
+      DIVS   XIY, (XSP-60H)
+      DIVS   XIZ, (XSP-60H)
+      DIVS   XSP, (XSP-60H)
       ADD    WA, (XSP-60H)
       ADD    BC, (XSP-60H)
       ADD    DE, (XSP-60H)
@@ -3561,6 +4393,38 @@
       EX     IY, (XSP+0)
       EX     IZ, (XSP+0)
       EX     SP, (XSP+0)
+      MUL    XWA, (XSP+0)
+      MUL    XBC, (XSP+0)
+      MUL    XDE, (XSP+0)
+      MUL    XHL, (XSP+0)
+      MUL    XIX, (XSP+0)
+      MUL    XIY, (XSP+0)
+      MUL    XIZ, (XSP+0)
+      MUL    XSP, (XSP+0)
+      MULS   XWA, (XSP+0)
+      MULS   XBC, (XSP+0)
+      MULS   XDE, (XSP+0)
+      MULS   XHL, (XSP+0)
+      MULS   XIX, (XSP+0)
+      MULS   XIY, (XSP+0)
+      MULS   XIZ, (XSP+0)
+      MULS   XSP, (XSP+0)
+      DIV    XWA, (XSP+0)
+      DIV    XBC, (XSP+0)
+      DIV    XDE, (XSP+0)
+      DIV    XHL, (XSP+0)
+      DIV    XIX, (XSP+0)
+      DIV    XIY, (XSP+0)
+      DIV    XIZ, (XSP+0)
+      DIV    XSP, (XSP+0)
+      DIVS   XWA, (XSP+0)
+      DIVS   XBC, (XSP+0)
+      DIVS   XDE, (XSP+0)
+      DIVS   XHL, (XSP+0)
+      DIVS   XIX, (XSP+0)
+      DIVS   XIY, (XSP+0)
+      DIVS   XIZ, (XSP+0)
+      DIVS   XSP, (XSP+0)
       ADD    WA, (XSP+0)
       ADD    BC, (XSP+0)
       ADD    DE, (XSP+0)
@@ -6918,9 +7782,21 @@
       EX     L, (0C1H)
       CP     (0C1H), 40H
       MUL    WA, (0C1H)
+      MUL    BC, (0C1H)
+      MUL    DE, (0C1H)
+      MUL    HL, (0C1H)
       MULS   WA, (0C1H)
+      MULS   BC, (0C1H)
+      MULS   DE, (0C1H)
+      MULS   HL, (0C1H)
       DIV    WA, (0C1H)
+      DIV    BC, (0C1H)
+      DIV    DE, (0C1H)
+      DIV    HL, (0C1H)
       DIVS   WA, (0C1H)
+      DIVS   BC, (0C1H)
+      DIVS   DE, (0C1H)
+      DIVS   HL, (0C1H)
       INC    1, (0C1H)
       DEC    1, (0C1H)
       ADD    W, (0C1H)
@@ -7015,9 +7891,21 @@
       EX     L, (0C3C2H)
       CP     (0C3C2H), 40H
       MUL    WA, (0C3C2H)
+      MUL    BC, (0C3C2H)
+      MUL    DE, (0C3C2H)
+      MUL    HL, (0C3C2H)
       MULS   WA, (0C3C2H)
+      MULS   BC, (0C3C2H)
+      MULS   DE, (0C3C2H)
+      MULS   HL, (0C3C2H)
       DIV    WA, (0C3C2H)
+      DIV    BC, (0C3C2H)
+      DIV    DE, (0C3C2H)
+      DIV    HL, (0C3C2H)
       DIVS   WA, (0C3C2H)
+      DIVS   BC, (0C3C2H)
+      DIVS   DE, (0C3C2H)
+      DIVS   HL, (0C3C2H)
       INC    1, (0C3C2H)
       DEC    1, (0C3C2H)
       ADD    W, (0C3C2H)
@@ -7112,9 +8000,21 @@
       EX     L, (0C5C4C3H)
       CP     (0C5C4C3H), 40H
       MUL    WA, (0C5C4C3H)
+      MUL    BC, (0C5C4C3H)
+      MUL    DE, (0C5C4C3H)
+      MUL    HL, (0C5C4C3H)
       MULS   WA, (0C5C4C3H)
+      MULS   BC, (0C5C4C3H)
+      MULS   DE, (0C5C4C3H)
+      MULS   HL, (0C5C4C3H)
       DIV    WA, (0C5C4C3H)
+      DIV    BC, (0C5C4C3H)
+      DIV    DE, (0C5C4C3H)
+      DIV    HL, (0C5C4C3H)
       DIVS   WA, (0C5C4C3H)
+      DIVS   BC, (0C5C4C3H)
+      DIVS   DE, (0C5C4C3H)
+      DIVS   HL, (0C5C4C3H)
       INC    1, (0C5C4C3H)
       DEC    1, (0C5C4C3H)
       ADD    W, (0C5C4C3H)
@@ -7155,7 +8055,6 @@
       AND    C, (0C5C4C3H)
       AND    D, (0C5C4C3H)
       AND    E, (0C5C4C3H)
-
       CP     D, (XIX+-0C0EH)
       CP     E, (XIX+-0C0EH)
       CP     H, (XIX+-0C0EH)
@@ -7182,9 +8081,21 @@
       EX     L, (XIX+-0C0EH)
       CP     (XIX+-0C0EH), 40H
       MUL    WA, (XIX+-0C0EH)
+      MUL    BC, (XIX+-0C0EH)
+      MUL    DE, (XIX+-0C0EH)
+      MUL    HL, (XIX+-0C0EH)
       MULS   WA, (XIX+-0C0EH)
+      MULS   BC, (XIX+-0C0EH)
+      MULS   DE, (XIX+-0C0EH)
+      MULS   HL, (XIX+-0C0EH)
       DIV    WA, (XIX+-0C0EH)
+      DIV    BC, (XIX+-0C0EH)
+      DIV    DE, (XIX+-0C0EH)
+      DIV    HL, (XIX+-0C0EH)
       DIVS   WA, (XIX+-0C0EH)
+      DIVS   BC, (XIX+-0C0EH)
+      DIVS   DE, (XIX+-0C0EH)
+      DIVS   HL, (XIX+-0C0EH)
       INC    1, (XIX+-0C0EH)
       DEC    1, (XIX+-0C0EH)
       ADD    W, (XIX+-0C0EH)
@@ -7277,9 +8188,21 @@
       EX     L, (XIY+-080AH)
       CP     (XIY+-080AH), 40H
       MUL    WA, (XIY+-080AH)
+      MUL    BC, (XIY+-080AH)
+      MUL    DE, (XIY+-080AH)
+      MUL    HL, (XIY+-080AH)
       MULS   WA, (XIY+-080AH)
+      MULS   BC, (XIY+-080AH)
+      MULS   DE, (XIY+-080AH)
+      MULS   HL, (XIY+-080AH)
       DIV    WA, (XIY+-080AH)
+      DIV    BC, (XIY+-080AH)
+      DIV    DE, (XIY+-080AH)
+      DIV    HL, (XIY+-080AH)
       DIVS   WA, (XIY+-080AH)
+      DIVS   BC, (XIY+-080AH)
+      DIVS   DE, (XIY+-080AH)
+      DIVS   HL, (XIY+-080AH)
       INC    1, (XIY+-080AH)
       DEC    1, (XIY+-080AH)
       ADD    W, (XIY+-080AH)
@@ -7376,9 +8299,21 @@
       EX     L, (XIZ+-0406H)
       CP     (XIZ+-0406H), 40H
       MUL    WA, (XIZ+-0406H)
+      MUL    BC, (XIZ+-0406H)
+      MUL    DE, (XIZ+-0406H)
+      MUL    HL, (XIZ+-0406H)
       MULS   WA, (XIZ+-0406H)
+      MULS   BC, (XIZ+-0406H)
+      MULS   DE, (XIZ+-0406H)
+      MULS   HL, (XIZ+-0406H)
       DIV    WA, (XIZ+-0406H)
+      DIV    BC, (XIZ+-0406H)
+      DIV    DE, (XIZ+-0406H)
+      DIV    HL, (XIZ+-0406H)
       DIVS   WA, (XIZ+-0406H)
+      DIVS   BC, (XIZ+-0406H)
+      DIVS   DE, (XIZ+-0406H)
+      DIVS   HL, (XIZ+-0406H)
       INC    1, (XIZ+-0406H)
       DEC    1, (XIZ+-0406H)
       ADD    W, (XIZ+-0406H)
@@ -7475,9 +8410,21 @@
       EX     L, (XSP+-2)
       CP     (XSP+-2), 40H
       MUL    WA, (XSP+-2)
+      MUL    BC, (XSP+-2)
+      MUL    DE, (XSP+-2)
+      MUL    HL, (XSP+-2)
       MULS   WA, (XSP+-2)
+      MULS   BC, (XSP+-2)
+      MULS   DE, (XSP+-2)
+      MULS   HL, (XSP+-2)
       DIV    WA, (XSP+-2)
+      DIV    BC, (XSP+-2)
+      DIV    DE, (XSP+-2)
+      DIV    HL, (XSP+-2)
       DIVS   WA, (XSP+-2)
+      DIVS   BC, (XSP+-2)
+      DIVS   DE, (XSP+-2)
+      DIVS   HL, (XSP+-2)
       INC    1, (XSP+-2)
       DEC    1, (XSP+-2)
       ADD    W, (XSP+-2)
@@ -7552,7 +8499,6 @@
       CP     E, (XSP+-2)
       CP     H, (XSP+-2)
       CP     L, (XSP+-2)
-
       OR     A, (XIY+A)
       OR     B, (XIY+A)
       OR     C, (XIY+A)
@@ -7598,9 +8544,21 @@
       EX     L, (XIY+A)
       CP     (XIY+A), 40H
       MUL    WA, (XIY+A)
+      MUL    BC, (XIY+A)
+      MUL    DE, (XIY+A)
+      MUL    HL, (XIY+A)
       MULS   WA, (XIY+A)
+      MULS   BC, (XIY+A)
+      MULS   DE, (XIY+A)
+      MULS   HL, (XIY+A)
       DIV    WA, (XIY+A)
+      DIV    BC, (XIY+A)
+      DIV    DE, (XIY+A)
+      DIV    HL, (XIY+A)
       DIVS   WA, (XIY+A)
+      DIVS   BC, (XIY+A)
+      DIVS   DE, (XIY+A)
+      DIVS   HL, (XIY+A)
       INC    1, (XIY+A)
       DEC    1, (XIY+A)
       ADD    W, (XIY+A)
@@ -7696,9 +8654,21 @@
       EX     L, (XIY+W)
       CP     (XIY+W), 40H
       MUL    WA, (XIY+W)
+      MUL    BC, (XIY+W)
+      MUL    DE, (XIY+W)
+      MUL    HL, (XIY+W)
       MULS   WA, (XIY+W)
+      MULS   BC, (XIY+W)
+      MULS   DE, (XIY+W)
+      MULS   HL, (XIY+W)
       DIV    WA, (XIY+W)
+      DIV    BC, (XIY+W)
+      DIV    DE, (XIY+W)
+      DIV    HL, (XIY+W)
       DIVS   WA, (XIY+W)
+      DIVS   BC, (XIY+W)
+      DIVS   DE, (XIY+W)
+      DIVS   HL, (XIY+W)
       INC    1, (XIY+W)
       DEC    1, (XIY+W)
       ADD    W, (XIY+W)
@@ -7792,9 +8762,21 @@
       EX     L, (XIY+C)
       CP     (XIY+C), 40H
       MUL    WA, (XIY+C)
+      MUL    BC, (XIY+C)
+      MUL    DE, (XIY+C)
+      MUL    HL, (XIY+C)
       MULS   WA, (XIY+C)
+      MULS   BC, (XIY+C)
+      MULS   DE, (XIY+C)
+      MULS   HL, (XIY+C)
       DIV    WA, (XIY+C)
+      DIV    BC, (XIY+C)
+      DIV    DE, (XIY+C)
+      DIV    HL, (XIY+C)
       DIVS   WA, (XIY+C)
+      DIVS   BC, (XIY+C)
+      DIVS   DE, (XIY+C)
+      DIVS   HL, (XIY+C)
       INC    1, (XIY+C)
       DEC    1, (XIY+C)
       ADD    W, (XIY+C)
@@ -7890,9 +8872,21 @@
       EX     L, (XIY+B)
       CP     (XIY+B), 40H
       MUL    WA, (XIY+B)
+      MUL    BC, (XIY+B)
+      MUL    DE, (XIY+B)
+      MUL    HL, (XIY+B)
       MULS   WA, (XIY+B)
+      MULS   BC, (XIY+B)
+      MULS   DE, (XIY+B)
+      MULS   HL, (XIY+B)
       DIV    WA, (XIY+B)
+      DIV    BC, (XIY+B)
+      DIV    DE, (XIY+B)
+      DIV    HL, (XIY+B)
       DIVS   WA, (XIY+B)
+      DIVS   BC, (XIY+B)
+      DIVS   DE, (XIY+B)
+      DIVS   HL, (XIY+B)
       INC    1, (XIY+B)
       DEC    1, (XIY+B)
       ADD    W, (XIY+B)
@@ -7986,9 +8980,21 @@
       EX     L, (XIY+E)
       CP     (XIY+E), 40H
       MUL    WA, (XIY+E)
+      MUL    BC, (XIY+E)
+      MUL    DE, (XIY+E)
+      MUL    HL, (XIY+E)
       MULS   WA, (XIY+E)
+      MULS   BC, (XIY+E)
+      MULS   DE, (XIY+E)
+      MULS   HL, (XIY+E)
       DIV    WA, (XIY+E)
+      DIV    BC, (XIY+E)
+      DIV    DE, (XIY+E)
+      DIV    HL, (XIY+E)
       DIVS   WA, (XIY+E)
+      DIVS   BC, (XIY+E)
+      DIVS   DE, (XIY+E)
+      DIVS   HL, (XIY+E)
       INC    1, (XIY+E)
       DEC    1, (XIY+E)
       ADD    W, (XIY+E)
@@ -8084,9 +9090,21 @@
       EX     L, (XIY+D)
       CP     (XIY+D), 40H
       MUL    WA, (XIY+D)
+      MUL    BC, (XIY+D)
+      MUL    DE, (XIY+D)
+      MUL    HL, (XIY+D)
       MULS   WA, (XIY+D)
+      MULS   BC, (XIY+D)
+      MULS   DE, (XIY+D)
+      MULS   HL, (XIY+D)
       DIV    WA, (XIY+D)
+      DIV    BC, (XIY+D)
+      DIV    DE, (XIY+D)
+      DIV    HL, (XIY+D)
       DIVS   WA, (XIY+D)
+      DIVS   BC, (XIY+D)
+      DIVS   DE, (XIY+D)
+      DIVS   HL, (XIY+D)
       INC    1, (XIY+D)
       DEC    1, (XIY+D)
       ADD    W, (XIY+D)
@@ -8180,9 +9198,21 @@
       EX     L, (XIY+L)
       CP     (XIY+L), 40H
       MUL    WA, (XIY+L)
+      MUL    BC, (XIY+L)
+      MUL    DE, (XIY+L)
+      MUL    HL, (XIY+L)
       MULS   WA, (XIY+L)
+      MULS   BC, (XIY+L)
+      MULS   DE, (XIY+L)
+      MULS   HL, (XIY+L)
       DIV    WA, (XIY+L)
+      DIV    BC, (XIY+L)
+      DIV    DE, (XIY+L)
+      DIV    HL, (XIY+L)
       DIVS   WA, (XIY+L)
+      DIVS   BC, (XIY+L)
+      DIVS   DE, (XIY+L)
+      DIVS   HL, (XIY+L)
       INC    1, (XIY+L)
       DEC    1, (XIY+L)
       ADD    W, (XIY+L)
@@ -8278,9 +9308,21 @@
       EX     L, (XIY+H)
       CP     (XIY+H), 40H
       MUL    WA, (XIY+H)
+      MUL    BC, (XIY+H)
+      MUL    DE, (XIY+H)
+      MUL    HL, (XIY+H)
       MULS   WA, (XIY+H)
+      MULS   BC, (XIY+H)
+      MULS   DE, (XIY+H)
+      MULS   HL, (XIY+H)
       DIV    WA, (XIY+H)
+      DIV    BC, (XIY+H)
+      DIV    DE, (XIY+H)
+      DIV    HL, (XIY+H)
       DIVS   WA, (XIY+H)
+      DIVS   BC, (XIY+H)
+      DIVS   DE, (XIY+H)
+      DIVS   HL, (XIY+H)
       INC    1, (XIY+H)
       DEC    1, (XIY+H)
       ADD    W, (XIY+H)
@@ -8390,9 +9432,21 @@
       EX     L, (XIZ+A)
       CP     (XIZ+A), 40H
       MUL    WA, (XIZ+A)
+      MUL    BC, (XIZ+A)
+      MUL    DE, (XIZ+A)
+      MUL    HL, (XIZ+A)
       MULS   WA, (XIZ+A)
+      MULS   BC, (XIZ+A)
+      MULS   DE, (XIZ+A)
+      MULS   HL, (XIZ+A)
       DIV    WA, (XIZ+A)
+      DIV    BC, (XIZ+A)
+      DIV    DE, (XIZ+A)
+      DIV    HL, (XIZ+A)
       DIVS   WA, (XIZ+A)
+      DIVS   BC, (XIZ+A)
+      DIVS   DE, (XIZ+A)
+      DIVS   HL, (XIZ+A)
       INC    1, (XIZ+A)
       DEC    1, (XIZ+A)
       ADD    W, (XIZ+A)
@@ -8488,9 +9542,21 @@
       EX     L, (XIZ+W)
       CP     (XIZ+W), 40H
       MUL    WA, (XIZ+W)
+      MUL    BC, (XIZ+W)
+      MUL    DE, (XIZ+W)
+      MUL    HL, (XIZ+W)
       MULS   WA, (XIZ+W)
+      MULS   BC, (XIZ+W)
+      MULS   DE, (XIZ+W)
+      MULS   HL, (XIZ+W)
       DIV    WA, (XIZ+W)
+      DIV    BC, (XIZ+W)
+      DIV    DE, (XIZ+W)
+      DIV    HL, (XIZ+W)
       DIVS   WA, (XIZ+W)
+      DIVS   BC, (XIZ+W)
+      DIVS   DE, (XIZ+W)
+      DIVS   HL, (XIZ+W)
       INC    1, (XIZ+W)
       DEC    1, (XIZ+W)
       ADD    W, (XIZ+W)
@@ -8584,9 +9650,21 @@
       EX     L, (XIZ+C)
       CP     (XIZ+C), 40H
       MUL    WA, (XIZ+C)
+      MUL    BC, (XIZ+C)
+      MUL    DE, (XIZ+C)
+      MUL    HL, (XIZ+C)
       MULS   WA, (XIZ+C)
+      MULS   BC, (XIZ+C)
+      MULS   DE, (XIZ+C)
+      MULS   HL, (XIZ+C)
       DIV    WA, (XIZ+C)
+      DIV    BC, (XIZ+C)
+      DIV    DE, (XIZ+C)
+      DIV    HL, (XIZ+C)
       DIVS   WA, (XIZ+C)
+      DIVS   BC, (XIZ+C)
+      DIVS   DE, (XIZ+C)
+      DIVS   HL, (XIZ+C)
       INC    1, (XIZ+C)
       DEC    1, (XIZ+C)
       ADD    W, (XIZ+C)
@@ -8682,9 +9760,21 @@
       EX     L, (XIZ+B)
       CP     (XIZ+B), 40H
       MUL    WA, (XIZ+B)
+      MUL    BC, (XIZ+B)
+      MUL    DE, (XIZ+B)
+      MUL    HL, (XIZ+B)
       MULS   WA, (XIZ+B)
+      MULS   BC, (XIZ+B)
+      MULS   DE, (XIZ+B)
+      MULS   HL, (XIZ+B)
       DIV    WA, (XIZ+B)
+      DIV    BC, (XIZ+B)
+      DIV    DE, (XIZ+B)
+      DIV    HL, (XIZ+B)
       DIVS   WA, (XIZ+B)
+      DIVS   BC, (XIZ+B)
+      DIVS   DE, (XIZ+B)
+      DIVS   HL, (XIZ+B)
       INC    1, (XIZ+B)
       DEC    1, (XIZ+B)
       ADD    W, (XIZ+B)
@@ -8778,9 +9868,21 @@
       EX     L, (XIZ+E)
       CP     (XIZ+E), 40H
       MUL    WA, (XIZ+E)
+      MUL    BC, (XIZ+E)
+      MUL    DE, (XIZ+E)
+      MUL    HL, (XIZ+E)
       MULS   WA, (XIZ+E)
+      MULS   BC, (XIZ+E)
+      MULS   DE, (XIZ+E)
+      MULS   HL, (XIZ+E)
       DIV    WA, (XIZ+E)
+      DIV    BC, (XIZ+E)
+      DIV    DE, (XIZ+E)
+      DIV    HL, (XIZ+E)
       DIVS   WA, (XIZ+E)
+      DIVS   BC, (XIZ+E)
+      DIVS   DE, (XIZ+E)
+      DIVS   HL, (XIZ+E)
       INC    1, (XIZ+E)
       DEC    1, (XIZ+E)
       ADD    W, (XIZ+E)
@@ -8876,9 +9978,21 @@
       EX     L, (XIZ+D)
       CP     (XIZ+D), 40H
       MUL    WA, (XIZ+D)
+      MUL    BC, (XIZ+D)
+      MUL    DE, (XIZ+D)
+      MUL    HL, (XIZ+D)
       MULS   WA, (XIZ+D)
+      MULS   BC, (XIZ+D)
+      MULS   DE, (XIZ+D)
+      MULS   HL, (XIZ+D)
       DIV    WA, (XIZ+D)
+      DIV    BC, (XIZ+D)
+      DIV    DE, (XIZ+D)
+      DIV    HL, (XIZ+D)
       DIVS   WA, (XIZ+D)
+      DIVS   BC, (XIZ+D)
+      DIVS   DE, (XIZ+D)
+      DIVS   HL, (XIZ+D)
       INC    1, (XIZ+D)
       DEC    1, (XIZ+D)
       ADD    W, (XIZ+D)
@@ -8972,9 +10086,21 @@
       EX     L, (XIZ+L)
       CP     (XIZ+L), 40H
       MUL    WA, (XIZ+L)
+      MUL    BC, (XIZ+L)
+      MUL    DE, (XIZ+L)
+      MUL    HL, (XIZ+L)
       MULS   WA, (XIZ+L)
+      MULS   BC, (XIZ+L)
+      MULS   DE, (XIZ+L)
+      MULS   HL, (XIZ+L)
       DIV    WA, (XIZ+L)
+      DIV    BC, (XIZ+L)
+      DIV    DE, (XIZ+L)
+      DIV    HL, (XIZ+L)
       DIVS   WA, (XIZ+L)
+      DIVS   BC, (XIZ+L)
+      DIVS   DE, (XIZ+L)
+      DIVS   HL, (XIZ+L)
       INC    1, (XIZ+L)
       DEC    1, (XIZ+L)
       ADD    W, (XIZ+L)
@@ -9070,9 +10196,21 @@
       EX     L, (XIZ+H)
       CP     (XIZ+H), 40H
       MUL    WA, (XIZ+H)
+      MUL    BC, (XIZ+H)
+      MUL    DE, (XIZ+H)
+      MUL    HL, (XIZ+H)
       MULS   WA, (XIZ+H)
+      MULS   BC, (XIZ+H)
+      MULS   DE, (XIZ+H)
+      MULS   HL, (XIZ+H)
       DIV    WA, (XIZ+H)
+      DIV    BC, (XIZ+H)
+      DIV    DE, (XIZ+H)
+      DIV    HL, (XIZ+H)
       DIVS   WA, (XIZ+H)
+      DIVS   BC, (XIZ+H)
+      DIVS   DE, (XIZ+H)
+      DIVS   HL, (XIZ+H)
       INC    1, (XIZ+H)
       DEC    1, (XIZ+H)
       ADD    W, (XIZ+H)
@@ -9182,9 +10320,21 @@
       EX     L, (XSP+A)
       CP     (XSP+A), 40H
       MUL    WA, (XSP+A)
+      MUL    BC, (XSP+A)
+      MUL    DE, (XSP+A)
+      MUL    HL, (XSP+A)
       MULS   WA, (XSP+A)
+      MULS   BC, (XSP+A)
+      MULS   DE, (XSP+A)
+      MULS   HL, (XSP+A)
       DIV    WA, (XSP+A)
+      DIV    BC, (XSP+A)
+      DIV    DE, (XSP+A)
+      DIV    HL, (XSP+A)
       DIVS   WA, (XSP+A)
+      DIVS   BC, (XSP+A)
+      DIVS   DE, (XSP+A)
+      DIVS   HL, (XSP+A)
       INC    1, (XSP+A)
       DEC    1, (XSP+A)
       ADD    W, (XSP+A)
@@ -9280,9 +10430,21 @@
       EX     L, (XSP+W)
       CP     (XSP+W), 40H
       MUL    WA, (XSP+W)
+      MUL    BC, (XSP+W)
+      MUL    DE, (XSP+W)
+      MUL    HL, (XSP+W)
       MULS   WA, (XSP+W)
+      MULS   BC, (XSP+W)
+      MULS   DE, (XSP+W)
+      MULS   HL, (XSP+W)
       DIV    WA, (XSP+W)
+      DIV    BC, (XSP+W)
+      DIV    DE, (XSP+W)
+      DIV    HL, (XSP+W)
       DIVS   WA, (XSP+W)
+      DIVS   BC, (XSP+W)
+      DIVS   DE, (XSP+W)
+      DIVS   HL, (XSP+W)
       INC    1, (XSP+W)
       DEC    1, (XSP+W)
       ADD    W, (XSP+W)
@@ -9376,9 +10538,21 @@
       EX     L, (XSP+C)
       CP     (XSP+C), 40H
       MUL    WA, (XSP+C)
+      MUL    BC, (XSP+C)
+      MUL    DE, (XSP+C)
+      MUL    HL, (XSP+C)
       MULS   WA, (XSP+C)
+      MULS   BC, (XSP+C)
+      MULS   DE, (XSP+C)
+      MULS   HL, (XSP+C)
       DIV    WA, (XSP+C)
+      DIV    BC, (XSP+C)
+      DIV    DE, (XSP+C)
+      DIV    HL, (XSP+C)
       DIVS   WA, (XSP+C)
+      DIVS   BC, (XSP+C)
+      DIVS   DE, (XSP+C)
+      DIVS   HL, (XSP+C)
       INC    1, (XSP+C)
       DEC    1, (XSP+C)
       ADD    W, (XSP+C)
@@ -9474,9 +10648,21 @@
       EX     L, (XSP+B)
       CP     (XSP+B), 40H
       MUL    WA, (XSP+B)
+      MUL    BC, (XSP+B)
+      MUL    DE, (XSP+B)
+      MUL    HL, (XSP+B)
       MULS   WA, (XSP+B)
+      MULS   BC, (XSP+B)
+      MULS   DE, (XSP+B)
+      MULS   HL, (XSP+B)
       DIV    WA, (XSP+B)
+      DIV    BC, (XSP+B)
+      DIV    DE, (XSP+B)
+      DIV    HL, (XSP+B)
       DIVS   WA, (XSP+B)
+      DIVS   BC, (XSP+B)
+      DIVS   DE, (XSP+B)
+      DIVS   HL, (XSP+B)
       INC    1, (XSP+B)
       DEC    1, (XSP+B)
       ADD    W, (XSP+B)
@@ -9570,9 +10756,21 @@
       EX     L, (XSP+E)
       CP     (XSP+E), 40H
       MUL    WA, (XSP+E)
+      MUL    BC, (XSP+E)
+      MUL    DE, (XSP+E)
+      MUL    HL, (XSP+E)
       MULS   WA, (XSP+E)
+      MULS   BC, (XSP+E)
+      MULS   DE, (XSP+E)
+      MULS   HL, (XSP+E)
       DIV    WA, (XSP+E)
+      DIV    BC, (XSP+E)
+      DIV    DE, (XSP+E)
+      DIV    HL, (XSP+E)
       DIVS   WA, (XSP+E)
+      DIVS   BC, (XSP+E)
+      DIVS   DE, (XSP+E)
+      DIVS   HL, (XSP+E)
       INC    1, (XSP+E)
       DEC    1, (XSP+E)
       ADD    W, (XSP+E)
@@ -9668,9 +10866,21 @@
       EX     L, (XSP+D)
       CP     (XSP+D), 40H
       MUL    WA, (XSP+D)
+      MUL    BC, (XSP+D)
+      MUL    DE, (XSP+D)
+      MUL    HL, (XSP+D)
       MULS   WA, (XSP+D)
+      MULS   BC, (XSP+D)
+      MULS   DE, (XSP+D)
+      MULS   HL, (XSP+D)
       DIV    WA, (XSP+D)
+      DIV    BC, (XSP+D)
+      DIV    DE, (XSP+D)
+      DIV    HL, (XSP+D)
       DIVS   WA, (XSP+D)
+      DIVS   BC, (XSP+D)
+      DIVS   DE, (XSP+D)
+      DIVS   HL, (XSP+D)
       INC    1, (XSP+D)
       DEC    1, (XSP+D)
       ADD    W, (XSP+D)
@@ -9764,9 +10974,21 @@
       EX     L, (XSP+L)
       CP     (XSP+L), 40H
       MUL    WA, (XSP+L)
+      MUL    BC, (XSP+L)
+      MUL    DE, (XSP+L)
+      MUL    HL, (XSP+L)
       MULS   WA, (XSP+L)
+      MULS   BC, (XSP+L)
+      MULS   DE, (XSP+L)
+      MULS   HL, (XSP+L)
       DIV    WA, (XSP+L)
+      DIV    BC, (XSP+L)
+      DIV    DE, (XSP+L)
+      DIV    HL, (XSP+L)
       DIVS   WA, (XSP+L)
+      DIVS   BC, (XSP+L)
+      DIVS   DE, (XSP+L)
+      DIVS   HL, (XSP+L)
       INC    1, (XSP+L)
       DEC    1, (XSP+L)
       ADD    W, (XSP+L)
@@ -9862,9 +11084,21 @@
       EX     L, (XSP+H)
       CP     (XSP+H), 40H
       MUL    WA, (XSP+H)
+      MUL    BC, (XSP+H)
+      MUL    DE, (XSP+H)
+      MUL    HL, (XSP+H)
       MULS   WA, (XSP+H)
+      MULS   BC, (XSP+H)
+      MULS   DE, (XSP+H)
+      MULS   HL, (XSP+H)
       DIV    WA, (XSP+H)
+      DIV    BC, (XSP+H)
+      DIV    DE, (XSP+H)
+      DIV    HL, (XSP+H)
       DIVS   WA, (XSP+H)
+      DIVS   BC, (XSP+H)
+      DIVS   DE, (XSP+H)
+      DIVS   HL, (XSP+H)
       INC    1, (XSP+H)
       DEC    1, (XSP+H)
       ADD    W, (XSP+H)
@@ -9974,9 +11208,21 @@
       EX     L, (XIX+A)
       CP     (XIX+A), 40H
       MUL    WA, (XIX+A)
+      MUL    BC, (XIX+A)
+      MUL    DE, (XIX+A)
+      MUL    HL, (XIX+A)
       MULS   WA, (XIX+A)
+      MULS   BC, (XIX+A)
+      MULS   DE, (XIX+A)
+      MULS   HL, (XIX+A)
       DIV    WA, (XIX+A)
+      DIV    BC, (XIX+A)
+      DIV    DE, (XIX+A)
+      DIV    HL, (XIX+A)
       DIVS   WA, (XIX+A)
+      DIVS   BC, (XIX+A)
+      DIVS   DE, (XIX+A)
+      DIVS   HL, (XIX+A)
       INC    1, (XIX+A)
       DEC    1, (XIX+A)
       ADD    W, (XIX+A)
@@ -10072,9 +11318,21 @@
       EX     L, (XIX+W)
       CP     (XIX+W), 40H
       MUL    WA, (XIX+W)
+      MUL    BC, (XIX+W)
+      MUL    DE, (XIX+W)
+      MUL    HL, (XIX+W)
       MULS   WA, (XIX+W)
+      MULS   BC, (XIX+W)
+      MULS   DE, (XIX+W)
+      MULS   HL, (XIX+W)
       DIV    WA, (XIX+W)
+      DIV    BC, (XIX+W)
+      DIV    DE, (XIX+W)
+      DIV    HL, (XIX+W)
       DIVS   WA, (XIX+W)
+      DIVS   BC, (XIX+W)
+      DIVS   DE, (XIX+W)
+      DIVS   HL, (XIX+W)
       INC    1, (XIX+W)
       DEC    1, (XIX+W)
       ADD    W, (XIX+W)
@@ -10168,9 +11426,21 @@
       EX     L, (XIX+C)
       CP     (XIX+C), 40H
       MUL    WA, (XIX+C)
+      MUL    BC, (XIX+C)
+      MUL    DE, (XIX+C)
+      MUL    HL, (XIX+C)
       MULS   WA, (XIX+C)
+      MULS   BC, (XIX+C)
+      MULS   DE, (XIX+C)
+      MULS   HL, (XIX+C)
       DIV    WA, (XIX+C)
+      DIV    BC, (XIX+C)
+      DIV    DE, (XIX+C)
+      DIV    HL, (XIX+C)
       DIVS   WA, (XIX+C)
+      DIVS   BC, (XIX+C)
+      DIVS   DE, (XIX+C)
+      DIVS   HL, (XIX+C)
       INC    1, (XIX+C)
       DEC    1, (XIX+C)
       ADD    W, (XIX+C)
@@ -10266,9 +11536,21 @@
       EX     L, (XIX+B)
       CP     (XIX+B), 40H
       MUL    WA, (XIX+B)
+      MUL    BC, (XIX+B)
+      MUL    DE, (XIX+B)
+      MUL    HL, (XIX+B)
       MULS   WA, (XIX+B)
+      MULS   BC, (XIX+B)
+      MULS   DE, (XIX+B)
+      MULS   HL, (XIX+B)
       DIV    WA, (XIX+B)
+      DIV    BC, (XIX+B)
+      DIV    DE, (XIX+B)
+      DIV    HL, (XIX+B)
       DIVS   WA, (XIX+B)
+      DIVS   BC, (XIX+B)
+      DIVS   DE, (XIX+B)
+      DIVS   HL, (XIX+B)
       INC    1, (XIX+B)
       DEC    1, (XIX+B)
       ADD    W, (XIX+B)
@@ -10362,9 +11644,21 @@
       EX     L, (XIX+E)
       CP     (XIX+E), 40H
       MUL    WA, (XIX+E)
+      MUL    BC, (XIX+E)
+      MUL    DE, (XIX+E)
+      MUL    HL, (XIX+E)
       MULS   WA, (XIX+E)
+      MULS   BC, (XIX+E)
+      MULS   DE, (XIX+E)
+      MULS   HL, (XIX+E)
       DIV    WA, (XIX+E)
+      DIV    BC, (XIX+E)
+      DIV    DE, (XIX+E)
+      DIV    HL, (XIX+E)
       DIVS   WA, (XIX+E)
+      DIVS   BC, (XIX+E)
+      DIVS   DE, (XIX+E)
+      DIVS   HL, (XIX+E)
       INC    1, (XIX+E)
       DEC    1, (XIX+E)
       ADD    W, (XIX+E)
@@ -10460,9 +11754,21 @@
       EX     L, (XIX+D)
       CP     (XIX+D), 40H
       MUL    WA, (XIX+D)
+      MUL    BC, (XIX+D)
+      MUL    DE, (XIX+D)
+      MUL    HL, (XIX+D)
       MULS   WA, (XIX+D)
+      MULS   BC, (XIX+D)
+      MULS   DE, (XIX+D)
+      MULS   HL, (XIX+D)
       DIV    WA, (XIX+D)
+      DIV    BC, (XIX+D)
+      DIV    DE, (XIX+D)
+      DIV    HL, (XIX+D)
       DIVS   WA, (XIX+D)
+      DIVS   BC, (XIX+D)
+      DIVS   DE, (XIX+D)
+      DIVS   HL, (XIX+D)
       INC    1, (XIX+D)
       DEC    1, (XIX+D)
       ADD    W, (XIX+D)
@@ -10556,9 +11862,21 @@
       EX     L, (XIX+L)
       CP     (XIX+L), 40H
       MUL    WA, (XIX+L)
+      MUL    BC, (XIX+L)
+      MUL    DE, (XIX+L)
+      MUL    HL, (XIX+L)
       MULS   WA, (XIX+L)
+      MULS   BC, (XIX+L)
+      MULS   DE, (XIX+L)
+      MULS   HL, (XIX+L)
       DIV    WA, (XIX+L)
+      DIV    BC, (XIX+L)
+      DIV    DE, (XIX+L)
+      DIV    HL, (XIX+L)
       DIVS   WA, (XIX+L)
+      DIVS   BC, (XIX+L)
+      DIVS   DE, (XIX+L)
+      DIVS   HL, (XIX+L)
       INC    1, (XIX+L)
       DEC    1, (XIX+L)
       ADD    W, (XIX+L)
@@ -10654,9 +11972,21 @@
       EX     L, (XIX+H)
       CP     (XIX+H), 40H
       MUL    WA, (XIX+H)
+      MUL    BC, (XIX+H)
+      MUL    DE, (XIX+H)
+      MUL    HL, (XIX+H)
       MULS   WA, (XIX+H)
+      MULS   BC, (XIX+H)
+      MULS   DE, (XIX+H)
+      MULS   HL, (XIX+H)
       DIV    WA, (XIX+H)
+      DIV    BC, (XIX+H)
+      DIV    DE, (XIX+H)
+      DIV    HL, (XIX+H)
       DIVS   WA, (XIX+H)
+      DIVS   BC, (XIX+H)
+      DIVS   DE, (XIX+H)
+      DIVS   HL, (XIX+H)
       INC    1, (XIX+H)
       DEC    1, (XIX+H)
       ADD    W, (XIX+H)
@@ -10777,9 +12107,21 @@
       EX     L, (-XIY)
       CP     (-XIY), 40H
       MUL    WA, (-XIY)
+      MUL    BC, (-XIY)
+      MUL    DE, (-XIY)
+      MUL    HL, (-XIY)
       MULS   WA, (-XIY)
+      MULS   BC, (-XIY)
+      MULS   DE, (-XIY)
+      MULS   HL, (-XIY)
       DIV    WA, (-XIY)
+      DIV    BC, (-XIY)
+      DIV    DE, (-XIY)
+      DIV    HL, (-XIY)
       DIVS   WA, (-XIY)
+      DIVS   BC, (-XIY)
+      DIVS   DE, (-XIY)
+      DIVS   HL, (-XIY)
       INC    1, (-XIY)
       DEC    1, (-XIY)
       ADD    W, (-XIY)
@@ -10874,9 +12216,21 @@
       EX     L, (-XIZ)
       CP     (-XIZ), 40H
       MUL    WA, (-XIZ)
+      MUL    BC, (-XIZ)
+      MUL    DE, (-XIZ)
+      MUL    HL, (-XIZ)
       MULS   WA, (-XIZ)
+      MULS   BC, (-XIZ)
+      MULS   DE, (-XIZ)
+      MULS   HL, (-XIZ)
       DIV    WA, (-XIZ)
+      DIV    BC, (-XIZ)
+      DIV    DE, (-XIZ)
+      DIV    HL, (-XIZ)
       DIVS   WA, (-XIZ)
+      DIVS   BC, (-XIZ)
+      DIVS   DE, (-XIZ)
+      DIVS   HL, (-XIZ)
       INC    1, (-XIZ)
       DEC    1, (-XIZ)
       ADD    W, (-XIZ)
@@ -10973,9 +12327,21 @@
       EX     L, (-XSP)
       CP     (-XSP), 40H
       MUL    WA, (-XSP)
+      MUL    BC, (-XSP)
+      MUL    DE, (-XSP)
+      MUL    HL, (-XSP)
       MULS   WA, (-XSP)
+      MULS   BC, (-XSP)
+      MULS   DE, (-XSP)
+      MULS   HL, (-XSP)
       DIV    WA, (-XSP)
+      DIV    BC, (-XSP)
+      DIV    DE, (-XSP)
+      DIV    HL, (-XSP)
       DIVS   WA, (-XSP)
+      DIVS   BC, (-XSP)
+      DIVS   DE, (-XSP)
+      DIVS   HL, (-XSP)
       INC    1, (-XSP)
       DEC    1, (-XSP)
       ADD    W, (-XSP)
@@ -11071,9 +12437,21 @@
       EX     L, (-XIX)
       CP     (-XIX), 40H
       MUL    WA, (-XIX)
+      MUL    BC, (-XIX)
+      MUL    DE, (-XIX)
+      MUL    HL, (-XIX)
       MULS   WA, (-XIX)
+      MULS   BC, (-XIX)
+      MULS   DE, (-XIX)
+      MULS   HL, (-XIX)
       DIV    WA, (-XIX)
+      DIV    BC, (-XIX)
+      DIV    DE, (-XIX)
+      DIV    HL, (-XIX)
       DIVS   WA, (-XIX)
+      DIVS   BC, (-XIX)
+      DIVS   DE, (-XIX)
+      DIVS   HL, (-XIX)
       INC    1, (-XIX)
       DEC    1, (-XIX)
       ADD    W, (-XIX)
@@ -11172,9 +12550,21 @@
       EX     L, (XIY+)
       CP     (XIY+), 40H
       MUL    WA, (XIY+)
+      MUL    BC, (XIY+)
+      MUL    DE, (XIY+)
+      MUL    HL, (XIY+)
       MULS   WA, (XIY+)
+      MULS   BC, (XIY+)
+      MULS   DE, (XIY+)
+      MULS   HL, (XIY+)
       DIV    WA, (XIY+)
+      DIV    BC, (XIY+)
+      DIV    DE, (XIY+)
+      DIV    HL, (XIY+)
       DIVS   WA, (XIY+)
+      DIVS   BC, (XIY+)
+      DIVS   DE, (XIY+)
+      DIVS   HL, (XIY+)
       INC    1, (XIY+)
       DEC    1, (XIY+)
       ADD    W, (XIY+)
@@ -11270,9 +12660,21 @@
       EX     L, (XIZ+)
       CP     (XIZ+), 40H
       MUL    WA, (XIZ+)
+      MUL    BC, (XIZ+)
+      MUL    DE, (XIZ+)
+      MUL    HL, (XIZ+)
       MULS   WA, (XIZ+)
+      MULS   BC, (XIZ+)
+      MULS   DE, (XIZ+)
+      MULS   HL, (XIZ+)
       DIV    WA, (XIZ+)
+      DIV    BC, (XIZ+)
+      DIV    DE, (XIZ+)
+      DIV    HL, (XIZ+)
       DIVS   WA, (XIZ+)
+      DIVS   BC, (XIZ+)
+      DIVS   DE, (XIZ+)
+      DIVS   HL, (XIZ+)
       INC    1, (XIZ+)
       DEC    1, (XIZ+)
       ADD    W, (XIZ+)
@@ -11369,9 +12771,21 @@
       EX     L, (XSP+)
       CP     (XSP+), 40H
       MUL    WA, (XSP+)
+      MUL    BC, (XSP+)
+      MUL    DE, (XSP+)
+      MUL    HL, (XSP+)
       MULS   WA, (XSP+)
+      MULS   BC, (XSP+)
+      MULS   DE, (XSP+)
+      MULS   HL, (XSP+)
       DIV    WA, (XSP+)
+      DIV    BC, (XSP+)
+      DIV    DE, (XSP+)
+      DIV    HL, (XSP+)
       DIVS   WA, (XSP+)
+      DIVS   BC, (XSP+)
+      DIVS   DE, (XSP+)
+      DIVS   HL, (XSP+)
       INC    1, (XSP+)
       DEC    1, (XSP+)
       ADD    W, (XSP+)
@@ -11467,9 +12881,21 @@
       EX     L, (XIX+)
       CP     (XIX+), 40H
       MUL    WA, (XIX+)
+      MUL    BC, (XIX+)
+      MUL    DE, (XIX+)
+      MUL    HL, (XIX+)
       MULS   WA, (XIX+)
+      MULS   BC, (XIX+)
+      MULS   DE, (XIX+)
+      MULS   HL, (XIX+)
       DIV    WA, (XIX+)
+      DIV    BC, (XIX+)
+      DIV    DE, (XIX+)
+      DIV    HL, (XIX+)
       DIVS   WA, (XIX+)
+      DIVS   BC, (XIX+)
+      DIVS   DE, (XIX+)
+      DIVS   HL, (XIX+)
       INC    1, (XIX+)
       DEC    1, (XIX+)
       ADD    W, (XIX+)
@@ -11513,8 +12939,6 @@
       AND    H, (XIX+)
       AND    L, (XIX+)
       XOR    W, (XIX+)
-      MUL    WA, 9
-      MULS   WA, 10
       XOR    A, A'
       XOR    B, A'
       XOR    C, A'
@@ -11554,11 +12978,6 @@
       BS1F   A, A'
       BS1B   A, A'
       DAA    A'
-      EXTZ   A'
-      EXTS   A'
-      PAA    A'
-      MIRR   A'
-      MULA   A'
       DJNZ   A', $+33
       ANDCF  1, A'
       ORCF   2, A'
@@ -11571,9 +12990,21 @@
       BIT    4, A'
       TSET   5, A'
       MUL    WA, A'
+      MUL    BC, A'
+      MUL    DE, A'
+      MUL    HL, A'
       MULS   WA, A'
+      MULS   BC, A'
+      MULS   DE, A'
+      MULS   HL, A'
       DIV    WA, A'
+      DIV    BC, A'
+      DIV    DE, A'
+      DIV    HL, A'
       DIVS   WA, A'
+      DIVS   BC, A'
+      DIVS   DE, A'
+      DIVS   HL, A'
       INC    1, A'
       DEC    1, A'
       SCC    F, A'
@@ -11703,11 +13134,6 @@
       BS1F   A, W'
       BS1B   A, W'
       DAA    W'
-      EXTZ   W'
-      EXTS   W'
-      PAA    W'
-      MIRR   W'
-      MULA   W'
       DJNZ   W', $+33
       ANDCF  1, W'
       ORCF   2, W'
@@ -11720,9 +13146,21 @@
       BIT    4, W'
       TSET   5, W'
       MUL    WA, W'
+      MUL    BC, W'
+      MUL    DE, W'
+      MUL    HL, W'
       MULS   WA, W'
+      MULS   BC, W'
+      MULS   DE, W'
+      MULS   HL, W'
       DIV    WA, W'
+      DIV    BC, W'
+      DIV    DE, W'
+      DIV    HL, W'
       DIVS   WA, W'
+      DIVS   BC, W'
+      DIVS   DE, W'
+      DIVS   HL, W'
       INC    1, W'
       DEC    1, W'
       SCC    F, W'
@@ -11852,11 +13290,6 @@
       BS1F   A, QA'
       BS1B   A, QA'
       DAA    QA'
-      EXTZ   QA'
-      EXTS   QA'
-      PAA    QA'
-      MIRR   QA'
-      MULA   QA'
       DJNZ   QA', $+33
       ANDCF  1, QA'
       ORCF   2, QA'
@@ -11869,9 +13302,21 @@
       BIT    4, QA'
       TSET   5, QA'
       MUL    WA, QA'
+      MUL    BC, QA'
+      MUL    DE, QA'
+      MUL    HL, QA'
       MULS   WA, QA'
+      MULS   BC, QA'
+      MULS   DE, QA'
+      MULS   HL, QA'
       DIV    WA, QA'
+      DIV    BC, QA'
+      DIV    DE, QA'
+      DIV    HL, QA'
       DIVS   WA, QA'
+      DIVS   BC, QA'
+      DIVS   DE, QA'
+      DIVS   HL, QA'
       INC    1, QA'
       DEC    1, QA'
       SCC    F, QA'
@@ -12001,11 +13446,6 @@
       BS1F   A, QW'
       BS1B   A, QW'
       DAA    QW'
-      EXTZ   QW'
-      EXTS   QW'
-      PAA    QW'
-      MIRR   QW'
-      MULA   QW'
       DJNZ   QW', $+33
       ANDCF  1, QW'
       ORCF   2, QW'
@@ -12018,9 +13458,21 @@
       BIT    4, QW'
       TSET   5, QW'
       MUL    WA, QW'
+      MUL    BC, QW'
+      MUL    DE, QW'
+      MUL    HL, QW'
       MULS   WA, QW'
+      MULS   BC, QW'
+      MULS   DE, QW'
+      MULS   HL, QW'
       DIV    WA, QW'
+      DIV    BC, QW'
+      DIV    DE, QW'
+      DIV    HL, QW'
       DIVS   WA, QW'
+      DIVS   BC, QW'
+      DIVS   DE, QW'
+      DIVS   HL, QW'
       INC    1, QW'
       DEC    1, QW'
       SCC    F, QW'
@@ -12150,11 +13602,6 @@
       BS1F   A, C'
       BS1B   A, C'
       DAA    C'
-      EXTZ   C'
-      EXTS   C'
-      PAA    C'
-      MIRR   C'
-      MULA   C'
       DJNZ   C', $+33
       ANDCF  1, C'
       ORCF   2, C'
@@ -12167,9 +13614,21 @@
       BIT    4, C'
       TSET   5, C'
       MUL    WA, C'
+      MUL    BC, C'
+      MUL    DE, C'
+      MUL    HL, C'
       MULS   WA, C'
+      MULS   BC, C'
+      MULS   DE, C'
+      MULS   HL, C'
       DIV    WA, C'
+      DIV    BC, C'
+      DIV    DE, C'
+      DIV    HL, C'
       DIVS   WA, C'
+      DIVS   BC, C'
+      DIVS   DE, C'
+      DIVS   HL, C'
       INC    1, C'
       DEC    1, C'
       SCC    F, C'
@@ -12299,11 +13758,6 @@
       BS1F   A, B'
       BS1B   A, B'
       DAA    B'
-      EXTZ   B'
-      EXTS   B'
-      PAA    B'
-      MIRR   B'
-      MULA   B'
       DJNZ   B', $+33
       ANDCF  1, B'
       ORCF   2, B'
@@ -12316,9 +13770,21 @@
       BIT    4, B'
       TSET   5, B'
       MUL    WA, B'
+      MUL    BC, B'
+      MUL    DE, B'
+      MUL    HL, B'
       MULS   WA, B'
+      MULS   BC, B'
+      MULS   DE, B'
+      MULS   HL, B'
       DIV    WA, B'
+      DIV    BC, B'
+      DIV    DE, B'
+      DIV    HL, B'
       DIVS   WA, B'
+      DIVS   BC, B'
+      DIVS   DE, B'
+      DIVS   HL, B'
       INC    1, B'
       DEC    1, B'
       SCC    F, B'
@@ -12448,11 +13914,6 @@
       BS1F   A, QC'
       BS1B   A, QC'
       DAA    QC'
-      EXTZ   QC'
-      EXTS   QC'
-      PAA    QC'
-      MIRR   QC'
-      MULA   QC'
       DJNZ   QC', $+33
       ANDCF  1, QC'
       ORCF   2, QC'
@@ -12465,9 +13926,21 @@
       BIT    4, QC'
       TSET   5, QC'
       MUL    WA, QC'
+      MUL    BC, QC'
+      MUL    DE, QC'
+      MUL    HL, QC'
       MULS   WA, QC'
+      MULS   BC, QC'
+      MULS   DE, QC'
+      MULS   HL, QC'
       DIV    WA, QC'
+      DIV    BC, QC'
+      DIV    DE, QC'
+      DIV    HL, QC'
       DIVS   WA, QC'
+      DIVS   BC, QC'
+      DIVS   DE, QC'
+      DIVS   HL, QC'
       INC    1, QC'
       DEC    1, QC'
       SCC    F, QC'
@@ -12597,11 +14070,6 @@
       BS1F   A, QB'
       BS1B   A, QB'
       DAA    QB'
-      EXTZ   QB'
-      EXTS   QB'
-      PAA    QB'
-      MIRR   QB'
-      MULA   QB'
       DJNZ   QB', $+33
       ANDCF  1, QB'
       ORCF   2, QB'
@@ -12614,9 +14082,21 @@
       BIT    4, QB'
       TSET   5, QB'
       MUL    WA, QB'
+      MUL    BC, QB'
+      MUL    DE, QB'
+      MUL    HL, QB'
       MULS   WA, QB'
+      MULS   BC, QB'
+      MULS   DE, QB'
+      MULS   HL, QB'
       DIV    WA, QB'
+      DIV    BC, QB'
+      DIV    DE, QB'
+      DIV    HL, QB'
       DIVS   WA, QB'
+      DIVS   BC, QB'
+      DIVS   DE, QB'
+      DIVS   HL, QB'
       INC    1, QB'
       DEC    1, QB'
       SCC    F, QB'
@@ -12747,11 +14227,6 @@
       BS1F   A, E'
       BS1B   A, E'
       DAA    E'
-      EXTZ   E'
-      EXTS   E'
-      PAA    E'
-      MIRR   E'
-      MULA   E'
       DJNZ   E', $+33
       ANDCF  1, E'
       ORCF   2, E'
@@ -12764,9 +14239,21 @@
       BIT    4, E'
       TSET   5, E'
       MUL    WA, E'
+      MUL    BC, E'
+      MUL    DE, E'
+      MUL    HL, E'
       MULS   WA, E'
+      MULS   BC, E'
+      MULS   DE, E'
+      MULS   HL, E'
       DIV    WA, E'
+      DIV    BC, E'
+      DIV    DE, E'
+      DIV    HL, E'
       DIVS   WA, E'
+      DIVS   BC, E'
+      DIVS   DE, E'
+      DIVS   HL, E'
       INC    1, E'
       DEC    1, E'
       SCC    F, E'
@@ -12897,11 +14384,6 @@
       BS1F   A, D'
       BS1B   A, D'
       DAA    D'
-      EXTZ   D'
-      EXTS   D'
-      PAA    D'
-      MIRR   D'
-      MULA   D'
       DJNZ   D', $+33
       ANDCF  1, D'
       ORCF   2, D'
@@ -12914,9 +14396,21 @@
       BIT    4, D'
       TSET   5, D'
       MUL    WA, D'
+      MUL    BC, D'
+      MUL    DE, D'
+      MUL    HL, D'
       MULS   WA, D'
+      MULS   BC, D'
+      MULS   DE, D'
+      MULS   HL, D'
       DIV    WA, D'
+      DIV    BC, D'
+      DIV    DE, D'
+      DIV    HL, D'
       DIVS   WA, D'
+      DIVS   BC, D'
+      DIVS   DE, D'
+      DIVS   HL, D'
       INC    1, D'
       DEC    1, D'
       SCC    F, D'
@@ -13047,11 +14541,6 @@
       BS1F   A, QE'
       BS1B   A, QE'
       DAA    QE'
-      EXTZ   QE'
-      EXTS   QE'
-      PAA    QE'
-      MIRR   QE'
-      MULA   QE'
       DJNZ   QE', $+33
       ANDCF  1, QE'
       ORCF   2, QE'
@@ -13064,9 +14553,21 @@
       BIT    4, QE'
       TSET   5, QE'
       MUL    WA, QE'
+      MUL    BC, QE'
+      MUL    DE, QE'
+      MUL    HL, QE'
       MULS   WA, QE'
+      MULS   BC, QE'
+      MULS   DE, QE'
+      MULS   HL, QE'
       DIV    WA, QE'
+      DIV    BC, QE'
+      DIV    DE, QE'
+      DIV    HL, QE'
       DIVS   WA, QE'
+      DIVS   BC, QE'
+      DIVS   DE, QE'
+      DIVS   HL, QE'
       INC    1, QE'
       DEC    1, QE'
       SCC    F, QE'
@@ -13197,11 +14698,6 @@
       BS1F   A, QD'
       BS1B   A, QD'
       DAA    QD'
-      EXTZ   QD'
-      EXTS   QD'
-      PAA    QD'
-      MIRR   QD'
-      MULA   QD'
       DJNZ   QD', $+33
       ANDCF  1, QD'
       ORCF   2, QD'
@@ -13214,9 +14710,21 @@
       BIT    4, QD'
       TSET   5, QD'
       MUL    WA, QD'
+      MUL    BC, QD'
+      MUL    DE, QD'
+      MUL    HL, QD'
       MULS   WA, QD'
+      MULS   BC, QD'
+      MULS   DE, QD'
+      MULS   HL, QD'
       DIV    WA, QD'
+      DIV    BC, QD'
+      DIV    DE, QD'
+      DIV    HL, QD'
       DIVS   WA, QD'
+      DIVS   BC, QD'
+      DIVS   DE, QD'
+      DIVS   HL, QD'
       INC    1, QD'
       DEC    1, QD'
       SCC    F, QD'
@@ -13347,11 +14855,6 @@
       BS1F   A, L'
       BS1B   A, L'
       DAA    L'
-      EXTZ   L'
-      EXTS   L'
-      PAA    L'
-      MIRR   L'
-      MULA   L'
       DJNZ   L', $+33
       ANDCF  1, L'
       ORCF   2, L'
@@ -13364,9 +14867,21 @@
       BIT    4, L'
       TSET   5, L'
       MUL    WA, L'
+      MUL    BC, L'
+      MUL    DE, L'
+      MUL    HL, L'
       MULS   WA, L'
+      MULS   BC, L'
+      MULS   DE, L'
+      MULS   HL, L'
       DIV    WA, L'
+      DIV    BC, L'
+      DIV    DE, L'
+      DIV    HL, L'
       DIVS   WA, L'
+      DIVS   BC, L'
+      DIVS   DE, L'
+      DIVS   HL, L'
       INC    1, L'
       DEC    1, L'
       SCC    F, L'
@@ -13497,11 +15012,6 @@
       BS1F   A, H'
       BS1B   A, H'
       DAA    H'
-      EXTZ   H'
-      EXTS   H'
-      PAA    H'
-      MIRR   H'
-      MULA   H'
       DJNZ   H', $+33
       ANDCF  1, H'
       ORCF   2, H'
@@ -13514,9 +15024,21 @@
       BIT    4, H'
       TSET   5, H'
       MUL    WA, H'
+      MUL    BC, H'
+      MUL    DE, H'
+      MUL    HL, H'
       MULS   WA, H'
+      MULS   BC, H'
+      MULS   DE, H'
+      MULS   HL, H'
       DIV    WA, H'
+      DIV    BC, H'
+      DIV    DE, H'
+      DIV    HL, H'
       DIVS   WA, H'
+      DIVS   BC, H'
+      DIVS   DE, H'
+      DIVS   HL, H'
       INC    1, H'
       DEC    1, H'
       SCC    F, H'
@@ -13647,11 +15169,6 @@
       BS1F   A, QL'
       BS1B   A, QL'
       DAA    QL'
-      EXTZ   QL'
-      EXTS   QL'
-      PAA    QL'
-      MIRR   QL'
-      MULA   QL'
       DJNZ   QL', $+33
       ANDCF  1, QL'
       ORCF   2, QL'
@@ -13664,9 +15181,21 @@
       BIT    4, QL'
       TSET   5, QL'
       MUL    WA, QL'
+      MUL    BC, QL'
+      MUL    DE, QL'
+      MUL    HL, QL'
       MULS   WA, QL'
+      MULS   BC, QL'
+      MULS   DE, QL'
+      MULS   HL, QL'
       DIV    WA, QL'
+      DIV    BC, QL'
+      DIV    DE, QL'
+      DIV    HL, QL'
       DIVS   WA, QL'
+      DIVS   BC, QL'
+      DIVS   DE, QL'
+      DIVS   HL, QL'
       INC    1, QL'
       DEC    1, QL'
       SCC    F, QL'
@@ -13797,11 +15326,6 @@
       BS1F   A, QH'
       BS1B   A, QH'
       DAA    QH'
-      EXTZ   QH'
-      EXTS   QH'
-      PAA    QH'
-      MIRR   QH'
-      MULA   QH'
       DJNZ   QH', $+33
       ANDCF  1, QH'
       ORCF   2, QH'
@@ -13814,9 +15338,21 @@
       BIT    4, QH'
       TSET   5, QH'
       MUL    WA, QH'
+      MUL    BC, QH'
+      MUL    DE, QH'
+      MUL    HL, QH'
       MULS   WA, QH'
+      MULS   BC, QH'
+      MULS   DE, QH'
+      MULS   HL, QH'
       DIV    WA, QH'
+      DIV    BC, QH'
+      DIV    DE, QH'
+      DIV    HL, QH'
       DIVS   WA, QH'
+      DIVS   BC, QH'
+      DIVS   DE, QH'
+      DIVS   HL, QH'
       INC    1, QH'
       DEC    1, QH'
       SCC    F, QH'
@@ -13946,11 +15482,6 @@
       BS1F   A, A
       BS1B   A, A
       DAA    A
-      EXTZ   A
-      EXTS   A
-      PAA    A
-      MIRR   A
-      MULA   A
       DJNZ   A, $+33
       ANDCF  1, A
       ORCF   2, A
@@ -13963,9 +15494,21 @@
       BIT    4, A
       TSET   5, A
       MUL    WA, A
+      MUL    BC, A
+      MUL    DE, A
+      MUL    HL, A
       MULS   WA, A
+      MULS   BC, A
+      MULS   DE, A
+      MULS   HL, A
       DIV    WA, A
+      DIV    BC, A
+      DIV    DE, A
+      DIV    HL, A
       DIVS   WA, A
+      DIVS   BC, A
+      DIVS   DE, A
+      DIVS   HL, A
       INC    1, A
       DEC    1, A
       SCC    F, A
@@ -14094,11 +15637,6 @@
       BS1F   A, W
       BS1B   A, W
       DAA    W
-      EXTZ   W
-      EXTS   W
-      PAA    W
-      MIRR   W
-      MULA   W
       DJNZ   W, $+33
       ANDCF  1, W
       ORCF   2, W
@@ -14111,9 +15649,21 @@
       BIT    4, W
       TSET   5, W
       MUL    WA, W
+      MUL    BC, W
+      MUL    DE, W
+      MUL    HL, W
       MULS   WA, W
+      MULS   BC, W
+      MULS   DE, W
+      MULS   HL, W
       DIV    WA, W
+      DIV    BC, W
+      DIV    DE, W
+      DIV    HL, W
       DIVS   WA, W
+      DIVS   BC, W
+      DIVS   DE, W
+      DIVS   HL, W
       INC    1, W
       DEC    1, W
       SCC    F, W
@@ -14240,11 +15790,6 @@
       BS1F   A, QA
       BS1B   A, QA
       DAA    QA
-      EXTZ   QA
-      EXTS   QA
-      PAA    QA
-      MIRR   QA
-      MULA   QA
       DJNZ   QA, $+33
       ANDCF  1, QA
       ORCF   2, QA
@@ -14257,9 +15802,21 @@
       BIT    4, QA
       TSET   5, QA
       MUL    WA, QA
+      MUL    BC, QA
+      MUL    DE, QA
+      MUL    HL, QA
       MULS   WA, QA
+      MULS   BC, QA
+      MULS   DE, QA
+      MULS   HL, QA
       DIV    WA, QA
+      DIV    BC, QA
+      DIV    DE, QA
+      DIV    HL, QA
       DIVS   WA, QA
+      DIVS   BC, QA
+      DIVS   DE, QA
+      DIVS   HL, QA
       INC    1, QA
       DEC    1, QA
       SCC    F, QA
@@ -14389,11 +15946,6 @@
       BS1F   A, QW
       BS1B   A, QW
       DAA    QW
-      EXTZ   QW
-      EXTS   QW
-      PAA    QW
-      MIRR   QW
-      MULA   QW
       DJNZ   QW, $+33
       ANDCF  1, QW
       ORCF   2, QW
@@ -14406,9 +15958,21 @@
       BIT    4, QW
       TSET   5, QW
       MUL    WA, QW
+      MUL    BC, QW
+      MUL    DE, QW
+      MUL    HL, QW
       MULS   WA, QW
+      MULS   BC, QW
+      MULS   DE, QW
+      MULS   HL, QW
       DIV    WA, QW
+      DIV    BC, QW
+      DIV    DE, QW
+      DIV    HL, QW
       DIVS   WA, QW
+      DIVS   BC, QW
+      DIVS   DE, QW
+      DIVS   HL, QW
       INC    1, QW
       DEC    1, QW
       SCC    F, QW
@@ -14538,11 +16102,6 @@
       BS1F   A, C
       BS1B   A, C
       DAA    C
-      EXTZ   C
-      EXTS   C
-      PAA    C
-      MIRR   C
-      MULA   C
       DJNZ   C, $+33
       ANDCF  1, C
       ORCF   2, C
@@ -14555,9 +16114,21 @@
       BIT    4, C
       TSET   5, C
       MUL    WA, C
+      MUL    BC, C
+      MUL    DE, C
+      MUL    HL, C
       MULS   WA, C
+      MULS   BC, C
+      MULS   DE, C
+      MULS   HL, C
       DIV    WA, C
+      DIV    BC, C
+      DIV    DE, C
+      DIV    HL, C
       DIVS   WA, C
+      DIVS   BC, C
+      DIVS   DE, C
+      DIVS   HL, C
       INC    1, C
       DEC    1, C
       SCC    F, C
@@ -14682,11 +16253,6 @@
       BS1F   A, B
       BS1B   A, B
       DAA    B
-      EXTZ   B
-      EXTS   B
-      PAA    B
-      MIRR   B
-      MULA   B
       DJNZ   B, $+33
       ANDCF  1, B
       ORCF   2, B
@@ -14699,9 +16265,21 @@
       BIT    4, B
       TSET   5, B
       MUL    WA, B
+      MUL    BC, B
+      MUL    DE, B
+      MUL    HL, B
       MULS   WA, B
+      MULS   BC, B
+      MULS   DE, B
+      MULS   HL, B
       DIV    WA, B
+      DIV    BC, B
+      DIV    DE, B
+      DIV    HL, B
       DIVS   WA, B
+      DIVS   BC, B
+      DIVS   DE, B
+      DIVS   HL, B
       INC    1, B
       DEC    1, B
       SCC    F, B
@@ -14824,11 +16402,6 @@
       BS1F   A, QC
       BS1B   A, QC
       DAA    QC
-      EXTZ   QC
-      EXTS   QC
-      PAA    QC
-      MIRR   QC
-      MULA   QC
       DJNZ   QC, $+33
       ANDCF  1, QC
       ORCF   2, QC
@@ -14841,9 +16414,21 @@
       BIT    4, QC
       TSET   5, QC
       MUL    WA, QC
+      MUL    BC, QC
+      MUL    DE, QC
+      MUL    HL, QC
       MULS   WA, QC
+      MULS   BC, QC
+      MULS   DE, QC
+      MULS   HL, QC
       DIV    WA, QC
+      DIV    BC, QC
+      DIV    DE, QC
+      DIV    HL, QC
       DIVS   WA, QC
+      DIVS   BC, QC
+      DIVS   DE, QC
+      DIVS   HL, QC
       INC    1, QC
       DEC    1, QC
       SCC    F, QC
@@ -14973,11 +16558,6 @@
       BS1F   A, QB
       BS1B   A, QB
       DAA    QB
-      EXTZ   QB
-      EXTS   QB
-      PAA    QB
-      MIRR   QB
-      MULA   QB
       DJNZ   QB, $+33
       ANDCF  1, QB
       ORCF   2, QB
@@ -14990,9 +16570,21 @@
       BIT    4, QB
       TSET   5, QB
       MUL    WA, QB
+      MUL    BC, QB
+      MUL    DE, QB
+      MUL    HL, QB
       MULS   WA, QB
+      MULS   BC, QB
+      MULS   DE, QB
+      MULS   HL, QB
       DIV    WA, QB
+      DIV    BC, QB
+      DIV    DE, QB
+      DIV    HL, QB
       DIVS   WA, QB
+      DIVS   BC, QB
+      DIVS   DE, QB
+      DIVS   HL, QB
       INC    1, QB
       DEC    1, QB
       SCC    F, QB
@@ -15122,11 +16714,6 @@
       BS1F   A, E
       BS1B   A, E
       DAA    E
-      EXTZ   E
-      EXTS   E
-      PAA    E
-      MIRR   E
-      MULA   E
       DJNZ   E, $+33
       ANDCF  1, E
       ORCF   2, E
@@ -15139,9 +16726,21 @@
       BIT    4, E
       TSET   5, E
       MUL    WA, E
+      MUL    BC, E
+      MUL    DE, E
+      MUL    HL, E
       MULS   WA, E
+      MULS   BC, E
+      MULS   DE, E
+      MULS   HL, E
       DIV    WA, E
+      DIV    BC, E
+      DIV    DE, E
+      DIV    HL, E
       DIVS   WA, E
+      DIVS   BC, E
+      DIVS   DE, E
+      DIVS   HL, E
       INC    1, E
       DEC    1, E
       SCC    F, E
@@ -15262,11 +16861,6 @@
       BS1F   A, D
       BS1B   A, D
       DAA    D
-      EXTZ   D
-      EXTS   D
-      PAA    D
-      MIRR   D
-      MULA   D
       DJNZ   D, $+33
       ANDCF  1, D
       ORCF   2, D
@@ -15279,9 +16873,21 @@
       BIT    4, D
       TSET   5, D
       MUL    WA, D
+      MUL    BC, D
+      MUL    DE, D
+      MUL    HL, D
       MULS   WA, D
+      MULS   BC, D
+      MULS   DE, D
+      MULS   HL, D
       DIV    WA, D
+      DIV    BC, D
+      DIV    DE, D
+      DIV    HL, D
       DIVS   WA, D
+      DIVS   BC, D
+      DIVS   DE, D
+      DIVS   HL, D
       INC    1, D
       DEC    1, D
       SCC    F, D
@@ -15400,11 +17006,6 @@
       BS1F   A, QE
       BS1B   A, QE
       DAA    QE
-      EXTZ   QE
-      EXTS   QE
-      PAA    QE
-      MIRR   QE
-      MULA   QE
       DJNZ   QE, $+33
       ANDCF  1, QE
       ORCF   2, QE
@@ -15417,9 +17018,21 @@
       BIT    4, QE
       TSET   5, QE
       MUL    WA, QE
+      MUL    BC, QE
+      MUL    DE, QE
+      MUL    HL, QE
       MULS   WA, QE
+      MULS   BC, QE
+      MULS   DE, QE
+      MULS   HL, QE
       DIV    WA, QE
+      DIV    BC, QE
+      DIV    DE, QE
+      DIV    HL, QE
       DIVS   WA, QE
+      DIVS   BC, QE
+      DIVS   DE, QE
+      DIVS   HL, QE
       INC    1, QE
       DEC    1, QE
       SCC    F, QE
@@ -15549,11 +17162,6 @@
       BS1F   A, QD
       BS1B   A, QD
       DAA    QD
-      EXTZ   QD
-      EXTS   QD
-      PAA    QD
-      MIRR   QD
-      MULA   QD
       DJNZ   QD, $+33
       ANDCF  1, QD
       ORCF   2, QD
@@ -15566,9 +17174,21 @@
       BIT    4, QD
       TSET   5, QD
       MUL    WA, QD
+      MUL    BC, QD
+      MUL    DE, QD
+      MUL    HL, QD
       MULS   WA, QD
+      MULS   BC, QD
+      MULS   DE, QD
+      MULS   HL, QD
       DIV    WA, QD
+      DIV    BC, QD
+      DIV    DE, QD
+      DIV    HL, QD
       DIVS   WA, QD
+      DIVS   BC, QD
+      DIVS   DE, QD
+      DIVS   HL, QD
       INC    1, QD
       DEC    1, QD
       SCC    F, QD
@@ -15698,11 +17318,6 @@
       BS1F   A, L
       BS1B   A, L
       DAA    L
-      EXTZ   L
-      EXTS   L
-      PAA    L
-      MIRR   L
-      MULA   L
       DJNZ   L, $+33
       ANDCF  1, L
       ORCF   2, L
@@ -15715,9 +17330,21 @@
       BIT    4, L
       TSET   5, L
       MUL    WA, L
+      MUL    BC, L
+      MUL    DE, L
+      MUL    HL, L
       MULS   WA, L
+      MULS   BC, L
+      MULS   DE, L
+      MULS   HL, L
       DIV    WA, L
+      DIV    BC, L
+      DIV    DE, L
+      DIV    HL, L
       DIVS   WA, L
+      DIVS   BC, L
+      DIVS   DE, L
+      DIVS   HL, L
       INC    1, L
       DEC    1, L
       SCC    F, L
@@ -15834,11 +17461,6 @@
       BS1F   A, H
       BS1B   A, H
       DAA    H
-      EXTZ   H
-      EXTS   H
-      PAA    H
-      MIRR   H
-      MULA   H
       DJNZ   H, $+33
       ANDCF  1, H
       ORCF   2, H
@@ -15851,9 +17473,21 @@
       BIT    4, H
       TSET   5, H
       MUL    WA, H
+      MUL    BC, H
+      MUL    DE, H
+      MUL    HL, H
       MULS   WA, H
+      MULS   BC, H
+      MULS   DE, H
+      MULS   HL, H
       DIV    WA, H
+      DIV    BC, H
+      DIV    DE, H
+      DIV    HL, H
       DIVS   WA, H
+      DIVS   BC, H
+      DIVS   DE, H
+      DIVS   HL, H
       INC    1, H
       DEC    1, H
       SCC    F, H
@@ -15968,11 +17602,6 @@
       BS1F   A, QL
       BS1B   A, QL
       DAA    QL
-      EXTZ   QL
-      EXTS   QL
-      PAA    QL
-      MIRR   QL
-      MULA   QL
       DJNZ   QL, $+33
       ANDCF  1, QL
       ORCF   2, QL
@@ -15985,9 +17614,21 @@
       BIT    4, QL
       TSET   5, QL
       MUL    WA, QL
+      MUL    BC, QL
+      MUL    DE, QL
+      MUL    HL, QL
       MULS   WA, QL
+      MULS   BC, QL
+      MULS   DE, QL
+      MULS   HL, QL
       DIV    WA, QL
+      DIV    BC, QL
+      DIV    DE, QL
+      DIV    HL, QL
       DIVS   WA, QL
+      DIVS   BC, QL
+      DIVS   DE, QL
+      DIVS   HL, QL
       INC    1, QL
       DEC    1, QL
       SCC    F, QL
@@ -16117,11 +17758,6 @@
       BS1F   A, QH
       BS1B   A, QH
       DAA    QH
-      EXTZ   QH
-      EXTS   QH
-      PAA    QH
-      MIRR   QH
-      MULA   QH
       DJNZ   QH, $+33
       ANDCF  1, QH
       ORCF   2, QH
@@ -16134,9 +17770,21 @@
       BIT    4, QH
       TSET   5, QH
       MUL    WA, QH
+      MUL    BC, QH
+      MUL    DE, QH
+      MUL    HL, QH
       MULS   WA, QH
+      MULS   BC, QH
+      MULS   DE, QH
+      MULS   HL, QH
       DIV    WA, QH
+      DIV    BC, QH
+      DIV    DE, QH
+      DIV    HL, QH
       DIVS   WA, QH
+      DIVS   BC, QH
+      DIVS   DE, QH
+      DIVS   HL, QH
       INC    1, QH
       DEC    1, QH
       SCC    F, QH
@@ -16266,11 +17914,6 @@
       BS1F   A, IXL
       BS1B   A, IXL
       DAA    IXL
-      EXTZ   IXL
-      EXTS   IXL
-      PAA    IXL
-      MIRR   IXL
-      MULA   IXL
       DJNZ   IXL, $+33
       ANDCF  1, IXL
       ORCF   2, IXL
@@ -16283,9 +17926,21 @@
       BIT    4, IXL
       TSET   5, IXL
       MUL    WA, IXL
+      MUL    BC, IXL
+      MUL    DE, IXL
+      MUL    HL, IXL
       MULS   WA, IXL
+      MULS   BC, IXL
+      MULS   DE, IXL
+      MULS   HL, IXL
       DIV    WA, IXL
+      DIV    BC, IXL
+      DIV    DE, IXL
+      DIV    HL, IXL
       DIVS   WA, IXL
+      DIVS   BC, IXL
+      DIVS   DE, IXL
+      DIVS   HL, IXL
       INC    1, IXL
       DEC    1, IXL
       SCC    F, IXL
@@ -16415,11 +18070,6 @@
       BS1F   A, IXH
       BS1B   A, IXH
       DAA    IXH
-      EXTZ   IXH
-      EXTS   IXH
-      PAA    IXH
-      MIRR   IXH
-      MULA   IXH
       DJNZ   IXH, $+33
       ANDCF  1, IXH
       ORCF   2, IXH
@@ -16432,9 +18082,21 @@
       BIT    4, IXH
       TSET   5, IXH
       MUL    WA, IXH
+      MUL    BC, IXH
+      MUL    DE, IXH
+      MUL    HL, IXH
       MULS   WA, IXH
+      MULS   BC, IXH
+      MULS   DE, IXH
+      MULS   HL, IXH
       DIV    WA, IXH
+      DIV    BC, IXH
+      DIV    DE, IXH
+      DIV    HL, IXH
       DIVS   WA, IXH
+      DIVS   BC, IXH
+      DIVS   DE, IXH
+      DIVS   HL, IXH
       INC    1, IXH
       DEC    1, IXH
       SCC    F, IXH
@@ -16564,11 +18226,6 @@
       BS1F   A, QIXL
       BS1B   A, QIXL
       DAA    QIXL
-      EXTZ   QIXL
-      EXTS   QIXL
-      PAA    QIXL
-      MIRR   QIXL
-      MULA   QIXL
       DJNZ   QIXL, $+33
       ANDCF  1, QIXL
       ORCF   2, QIXL
@@ -16581,9 +18238,21 @@
       BIT    4, QIXL
       TSET   5, QIXL
       MUL    WA, QIXL
+      MUL    BC, QIXL
+      MUL    DE, QIXL
+      MUL    HL, QIXL
       MULS   WA, QIXL
+      MULS   BC, QIXL
+      MULS   DE, QIXL
+      MULS   HL, QIXL
       DIV    WA, QIXL
+      DIV    BC, QIXL
+      DIV    DE, QIXL
+      DIV    HL, QIXL
       DIVS   WA, QIXL
+      DIVS   BC, QIXL
+      DIVS   DE, QIXL
+      DIVS   HL, QIXL
       INC    1, QIXL
       DEC    1, QIXL
       SCC    F, QIXL
@@ -16713,11 +18382,6 @@
       BS1F   A, QIXH
       BS1B   A, QIXH
       DAA    QIXH
-      EXTZ   QIXH
-      EXTS   QIXH
-      PAA    QIXH
-      MIRR   QIXH
-      MULA   QIXH
       DJNZ   QIXH, $+33
       ANDCF  1, QIXH
       ORCF   2, QIXH
@@ -16730,9 +18394,21 @@
       BIT    4, QIXH
       TSET   5, QIXH
       MUL    WA, QIXH
+      MUL    BC, QIXH
+      MUL    DE, QIXH
+      MUL    HL, QIXH
       MULS   WA, QIXH
+      MULS   BC, QIXH
+      MULS   DE, QIXH
+      MULS   HL, QIXH
       DIV    WA, QIXH
+      DIV    BC, QIXH
+      DIV    DE, QIXH
+      DIV    HL, QIXH
       DIVS   WA, QIXH
+      DIVS   BC, QIXH
+      DIVS   DE, QIXH
+      DIVS   HL, QIXH
       INC    1, QIXH
       DEC    1, QIXH
       SCC    F, QIXH
@@ -16862,11 +18538,6 @@
       BS1F   A, IYL
       BS1B   A, IYL
       DAA    IYL
-      EXTZ   IYL
-      EXTS   IYL
-      PAA    IYL
-      MIRR   IYL
-      MULA   IYL
       DJNZ   IYL, $+33
       ANDCF  1, IYL
       ORCF   2, IYL
@@ -16879,9 +18550,21 @@
       BIT    4, IYL
       TSET   5, IYL
       MUL    WA, IYL
+      MUL    BC, IYL
+      MUL    DE, IYL
+      MUL    HL, IYL
       MULS   WA, IYL
+      MULS   BC, IYL
+      MULS   DE, IYL
+      MULS   HL, IYL
       DIV    WA, IYL
+      DIV    BC, IYL
+      DIV    DE, IYL
+      DIV    HL, IYL
       DIVS   WA, IYL
+      DIVS   BC, IYL
+      DIVS   DE, IYL
+      DIVS   HL, IYL
       INC    1, IYL
       DEC    1, IYL
       SCC    F, IYL
@@ -17011,11 +18694,6 @@
       BS1F   A, IYH
       BS1B   A, IYH
       DAA    IYH
-      EXTZ   IYH
-      EXTS   IYH
-      PAA    IYH
-      MIRR   IYH
-      MULA   IYH
       DJNZ   IYH, $+33
       ANDCF  1, IYH
       ORCF   2, IYH
@@ -17028,9 +18706,21 @@
       BIT    4, IYH
       TSET   5, IYH
       MUL    WA, IYH
+      MUL    BC, IYH
+      MUL    DE, IYH
+      MUL    HL, IYH
       MULS   WA, IYH
+      MULS   BC, IYH
+      MULS   DE, IYH
+      MULS   HL, IYH
       DIV    WA, IYH
+      DIV    BC, IYH
+      DIV    DE, IYH
+      DIV    HL, IYH
       DIVS   WA, IYH
+      DIVS   BC, IYH
+      DIVS   DE, IYH
+      DIVS   HL, IYH
       INC    1, IYH
       DEC    1, IYH
       SCC    F, IYH
@@ -17160,11 +18850,6 @@
       BS1F   A, QIYL
       BS1B   A, QIYL
       DAA    QIYL
-      EXTZ   QIYL
-      EXTS   QIYL
-      PAA    QIYL
-      MIRR   QIYL
-      MULA   QIYL
       DJNZ   QIYL, $+33
       ANDCF  1, QIYL
       ORCF   2, QIYL
@@ -17177,9 +18862,21 @@
       BIT    4, QIYL
       TSET   5, QIYL
       MUL    WA, QIYL
+      MUL    BC, QIYL
+      MUL    DE, QIYL
+      MUL    HL, QIYL
       MULS   WA, QIYL
+      MULS   BC, QIYL
+      MULS   DE, QIYL
+      MULS   HL, QIYL
       DIV    WA, QIYL
+      DIV    BC, QIYL
+      DIV    DE, QIYL
+      DIV    HL, QIYL
       DIVS   WA, QIYL
+      DIVS   BC, QIYL
+      DIVS   DE, QIYL
+      DIVS   HL, QIYL
       INC    1, QIYL
       DEC    1, QIYL
       SCC    F, QIYL
@@ -17309,11 +19006,6 @@
       BS1F   A, QIYH
       BS1B   A, QIYH
       DAA    QIYH
-      EXTZ   QIYH
-      EXTS   QIYH
-      PAA    QIYH
-      MIRR   QIYH
-      MULA   QIYH
       DJNZ   QIYH, $+33
       ANDCF  1, QIYH
       ORCF   2, QIYH
@@ -17326,9 +19018,21 @@
       BIT    4, QIYH
       TSET   5, QIYH
       MUL    WA, QIYH
+      MUL    BC, QIYH
+      MUL    DE, QIYH
+      MUL    HL, QIYH
       MULS   WA, QIYH
+      MULS   BC, QIYH
+      MULS   DE, QIYH
+      MULS   HL, QIYH
       DIV    WA, QIYH
+      DIV    BC, QIYH
+      DIV    DE, QIYH
+      DIV    HL, QIYH
       DIVS   WA, QIYH
+      DIVS   BC, QIYH
+      DIVS   DE, QIYH
+      DIVS   HL, QIYH
       INC    1, QIYH
       DEC    1, QIYH
       SCC    F, QIYH
@@ -17459,11 +19163,6 @@
       BS1F   A, IZL
       BS1B   A, IZL
       DAA    IZL
-      EXTZ   IZL
-      EXTS   IZL
-      PAA    IZL
-      MIRR   IZL
-      MULA   IZL
       DJNZ   IZL, $+33
       ANDCF  1, IZL
       ORCF   2, IZL
@@ -17476,9 +19175,21 @@
       BIT    4, IZL
       TSET   5, IZL
       MUL    WA, IZL
+      MUL    BC, IZL
+      MUL    DE, IZL
+      MUL    HL, IZL
       MULS   WA, IZL
+      MULS   BC, IZL
+      MULS   DE, IZL
+      MULS   HL, IZL
       DIV    WA, IZL
+      DIV    BC, IZL
+      DIV    DE, IZL
+      DIV    HL, IZL
       DIVS   WA, IZL
+      DIVS   BC, IZL
+      DIVS   DE, IZL
+      DIVS   HL, IZL
       INC    1, IZL
       DEC    1, IZL
       SCC    F, IZL
@@ -17609,11 +19320,6 @@
       BS1F   A, IZH
       BS1B   A, IZH
       DAA    IZH
-      EXTZ   IZH
-      EXTS   IZH
-      PAA    IZH
-      MIRR   IZH
-      MULA   IZH
       DJNZ   IZH, $+33
       ANDCF  1, IZH
       ORCF   2, IZH
@@ -17626,9 +19332,21 @@
       BIT    4, IZH
       TSET   5, IZH
       MUL    WA, IZH
+      MUL    BC, IZH
+      MUL    DE, IZH
+      MUL    HL, IZH
       MULS   WA, IZH
+      MULS   BC, IZH
+      MULS   DE, IZH
+      MULS   HL, IZH
       DIV    WA, IZH
+      DIV    BC, IZH
+      DIV    DE, IZH
+      DIV    HL, IZH
       DIVS   WA, IZH
+      DIVS   BC, IZH
+      DIVS   DE, IZH
+      DIVS   HL, IZH
       INC    1, IZH
       DEC    1, IZH
       SCC    F, IZH
@@ -17759,11 +19477,6 @@
       BS1F   A, QIZL
       BS1B   A, QIZL
       DAA    QIZL
-      EXTZ   QIZL
-      EXTS   QIZL
-      PAA    QIZL
-      MIRR   QIZL
-      MULA   QIZL
       DJNZ   QIZL, $+33
       ANDCF  1, QIZL
       ORCF   2, QIZL
@@ -17776,9 +19489,21 @@
       BIT    4, QIZL
       TSET   5, QIZL
       MUL    WA, QIZL
+      MUL    BC, QIZL
+      MUL    DE, QIZL
+      MUL    HL, QIZL
       MULS   WA, QIZL
+      MULS   BC, QIZL
+      MULS   DE, QIZL
+      MULS   HL, QIZL
       DIV    WA, QIZL
+      DIV    BC, QIZL
+      DIV    DE, QIZL
+      DIV    HL, QIZL
       DIVS   WA, QIZL
+      DIVS   BC, QIZL
+      DIVS   DE, QIZL
+      DIVS   HL, QIZL
       INC    1, QIZL
       DEC    1, QIZL
       SCC    F, QIZL
@@ -17909,11 +19634,6 @@
       BS1F   A, QIZH
       BS1B   A, QIZH
       DAA    QIZH
-      EXTZ   QIZH
-      EXTS   QIZH
-      PAA    QIZH
-      MIRR   QIZH
-      MULA   QIZH
       DJNZ   QIZH, $+33
       ANDCF  1, QIZH
       ORCF   2, QIZH
@@ -17926,9 +19646,21 @@
       BIT    4, QIZH
       TSET   5, QIZH
       MUL    WA, QIZH
+      MUL    BC, QIZH
+      MUL    DE, QIZH
+      MUL    HL, QIZH
       MULS   WA, QIZH
+      MULS   BC, QIZH
+      MULS   DE, QIZH
+      MULS   HL, QIZH
       DIV    WA, QIZH
+      DIV    BC, QIZH
+      DIV    DE, QIZH
+      DIV    HL, QIZH
       DIVS   WA, QIZH
+      DIVS   BC, QIZH
+      DIVS   DE, QIZH
+      DIVS   HL, QIZH
       INC    1, QIZH
       DEC    1, QIZH
       SCC    F, QIZH
@@ -18059,11 +19791,6 @@
       BS1F   A, SPL
       BS1B   A, SPL
       DAA    SPL
-      EXTZ   SPL
-      EXTS   SPL
-      PAA    SPL
-      MIRR   SPL
-      MULA   SPL
       DJNZ   SPL, $+33
       ANDCF  1, SPL
       ORCF   2, SPL
@@ -18076,9 +19803,21 @@
       BIT    4, SPL
       TSET   5, SPL
       MUL    WA, SPL
+      MUL    BC, SPL
+      MUL    DE, SPL
+      MUL    HL, SPL
       MULS   WA, SPL
+      MULS   BC, SPL
+      MULS   DE, SPL
+      MULS   HL, SPL
       DIV    WA, SPL
+      DIV    BC, SPL
+      DIV    DE, SPL
+      DIV    HL, SPL
       DIVS   WA, SPL
+      DIVS   BC, SPL
+      DIVS   DE, SPL
+      DIVS   HL, SPL
       INC    1, SPL
       DEC    1, SPL
       SCC    F, SPL
@@ -18209,11 +19948,6 @@
       BS1F   A, SPH
       BS1B   A, SPH
       DAA    SPH
-      EXTZ   SPH
-      EXTS   SPH
-      PAA    SPH
-      MIRR   SPH
-      MULA   SPH
       DJNZ   SPH, $+33
       ANDCF  1, SPH
       ORCF   2, SPH
@@ -18226,9 +19960,21 @@
       BIT    4, SPH
       TSET   5, SPH
       MUL    WA, SPH
+      MUL    BC, SPH
+      MUL    DE, SPH
+      MUL    HL, SPH
       MULS   WA, SPH
+      MULS   BC, SPH
+      MULS   DE, SPH
+      MULS   HL, SPH
       DIV    WA, SPH
+      DIV    BC, SPH
+      DIV    DE, SPH
+      DIV    HL, SPH
       DIVS   WA, SPH
+      DIVS   BC, SPH
+      DIVS   DE, SPH
+      DIVS   HL, SPH
       INC    1, SPH
       DEC    1, SPH
       SCC    F, SPH
@@ -18359,11 +20105,6 @@
       BS1F   A, QSPL
       BS1B   A, QSPL
       DAA    QSPL
-      EXTZ   QSPL
-      EXTS   QSPL
-      PAA    QSPL
-      MIRR   QSPL
-      MULA   QSPL
       DJNZ   QSPL, $+33
       ANDCF  1, QSPL
       ORCF   2, QSPL
@@ -18376,9 +20117,21 @@
       BIT    4, QSPL
       TSET   5, QSPL
       MUL    WA, QSPL
+      MUL    BC, QSPL
+      MUL    DE, QSPL
+      MUL    HL, QSPL
       MULS   WA, QSPL
+      MULS   BC, QSPL
+      MULS   DE, QSPL
+      MULS   HL, QSPL
       DIV    WA, QSPL
+      DIV    BC, QSPL
+      DIV    DE, QSPL
+      DIV    HL, QSPL
       DIVS   WA, QSPL
+      DIVS   BC, QSPL
+      DIVS   DE, QSPL
+      DIVS   HL, QSPL
       INC    1, QSPL
       DEC    1, QSPL
       SCC    F, QSPL
@@ -18509,11 +20262,6 @@
       BS1F   A, QSPH
       BS1B   A, QSPH
       DAA    QSPH
-      EXTZ   QSPH
-      EXTS   QSPH
-      PAA    QSPH
-      MIRR   QSPH
-      MULA   QSPH
       DJNZ   QSPH, $+33
       ANDCF  1, QSPH
       ORCF   2, QSPH
@@ -18526,9 +20274,21 @@
       BIT    4, QSPH
       TSET   5, QSPH
       MUL    WA, QSPH
+      MUL    BC, QSPH
+      MUL    DE, QSPH
+      MUL    HL, QSPH
       MULS   WA, QSPH
+      MULS   BC, QSPH
+      MULS   DE, QSPH
+      MULS   HL, QSPH
       DIV    WA, QSPH
+      DIV    BC, QSPH
+      DIV    DE, QSPH
+      DIV    HL, QSPH
       DIVS   WA, QSPH
+      DIVS   BC, QSPH
+      DIVS   DE, QSPH
+      DIVS   HL, QSPH
       INC    1, QSPH
       DEC    1, QSPH
       SCC    F, QSPH
@@ -18659,11 +20419,6 @@
       BS1F   A, A0
       BS1B   A, A0
       DAA    A0
-      EXTZ   A0
-      EXTS   A0
-      PAA    A0
-      MIRR   A0
-      MULA   A0
       DJNZ   A0, $+33
       ANDCF  1, A0
       ORCF   2, A0
@@ -18676,9 +20431,21 @@
       BIT    4, A0
       TSET   5, A0
       MUL    WA, A0
+      MUL    BC, A0
+      MUL    DE, A0
+      MUL    HL, A0
       MULS   WA, A0
+      MULS   BC, A0
+      MULS   DE, A0
+      MULS   HL, A0
       DIV    WA, A0
+      DIV    BC, A0
+      DIV    DE, A0
+      DIV    HL, A0
       DIVS   WA, A0
+      DIVS   BC, A0
+      DIVS   DE, A0
+      DIVS   HL, A0
       INC    1, A0
       DEC    1, A0
       SCC    F, A0
@@ -18809,11 +20576,6 @@
       BS1F   A, W0
       BS1B   A, W0
       DAA    W0
-      EXTZ   W0
-      EXTS   W0
-      PAA    W0
-      MIRR   W0
-      MULA   W0
       DJNZ   W0, $+33
       ANDCF  1, W0
       ORCF   2, W0
@@ -18826,9 +20588,21 @@
       BIT    4, W0
       TSET   5, W0
       MUL    WA, W0
+      MUL    BC, W0
+      MUL    DE, W0
+      MUL    HL, W0
       MULS   WA, W0
+      MULS   BC, W0
+      MULS   DE, W0
+      MULS   HL, W0
       DIV    WA, W0
+      DIV    BC, W0
+      DIV    DE, W0
+      DIV    HL, W0
       DIVS   WA, W0
+      DIVS   BC, W0
+      DIVS   DE, W0
+      DIVS   HL, W0
       INC    1, W0
       DEC    1, W0
       SCC    F, W0
@@ -18959,11 +20733,6 @@
       BS1F   A, QA0
       BS1B   A, QA0
       DAA    QA0
-      EXTZ   QA0
-      EXTS   QA0
-      PAA    QA0
-      MIRR   QA0
-      MULA   QA0
       DJNZ   QA0, $+33
       ANDCF  1, QA0
       ORCF   2, QA0
@@ -18976,9 +20745,21 @@
       BIT    4, QA0
       TSET   5, QA0
       MUL    WA, QA0
+      MUL    BC, QA0
+      MUL    DE, QA0
+      MUL    HL, QA0
       MULS   WA, QA0
+      MULS   BC, QA0
+      MULS   DE, QA0
+      MULS   HL, QA0
       DIV    WA, QA0
+      DIV    BC, QA0
+      DIV    DE, QA0
+      DIV    HL, QA0
       DIVS   WA, QA0
+      DIVS   BC, QA0
+      DIVS   DE, QA0
+      DIVS   HL, QA0
       INC    1, QA0
       DEC    1, QA0
       SCC    F, QA0
@@ -19108,11 +20889,6 @@
       BS1F   A, QW0
       BS1B   A, QW0
       DAA    QW0
-      EXTZ   QW0
-      EXTS   QW0
-      PAA    QW0
-      MIRR   QW0
-      MULA   QW0
       DJNZ   QW0, $+33
       ANDCF  1, QW0
       ORCF   2, QW0
@@ -19125,9 +20901,21 @@
       BIT    4, QW0
       TSET   5, QW0
       MUL    WA, QW0
+      MUL    BC, QW0
+      MUL    DE, QW0
+      MUL    HL, QW0
       MULS   WA, QW0
+      MULS   BC, QW0
+      MULS   DE, QW0
+      MULS   HL, QW0
       DIV    WA, QW0
+      DIV    BC, QW0
+      DIV    DE, QW0
+      DIV    HL, QW0
       DIVS   WA, QW0
+      DIVS   BC, QW0
+      DIVS   DE, QW0
+      DIVS   HL, QW0
       INC    1, QW0
       DEC    1, QW0
       SCC    F, QW0
@@ -19258,11 +21046,6 @@
       BS1F   A, C0
       BS1B   A, C0
       DAA    C0
-      EXTZ   C0
-      EXTS   C0
-      PAA    C0
-      MIRR   C0
-      MULA   C0
       DJNZ   C0, $+33
       ANDCF  1, C0
       ORCF   2, C0
@@ -19275,9 +21058,21 @@
       BIT    4, C0
       TSET   5, C0
       MUL    WA, C0
+      MUL    BC, C0
+      MUL    DE, C0
+      MUL    HL, C0
       MULS   WA, C0
+      MULS   BC, C0
+      MULS   DE, C0
+      MULS   HL, C0
       DIV    WA, C0
+      DIV    BC, C0
+      DIV    DE, C0
+      DIV    HL, C0
       DIVS   WA, C0
+      DIVS   BC, C0
+      DIVS   DE, C0
+      DIVS   HL, C0
       INC    1, C0
       DEC    1, C0
       SCC    F, C0
@@ -19408,11 +21203,6 @@
       BS1F   A, B0
       BS1B   A, B0
       DAA    B0
-      EXTZ   B0
-      EXTS   B0
-      PAA    B0
-      MIRR   B0
-      MULA   B0
       DJNZ   B0, $+33
       ANDCF  1, B0
       ORCF   2, B0
@@ -19425,9 +21215,21 @@
       BIT    4, B0
       TSET   5, B0
       MUL    WA, B0
+      MUL    BC, B0
+      MUL    DE, B0
+      MUL    HL, B0
       MULS   WA, B0
+      MULS   BC, B0
+      MULS   DE, B0
+      MULS   HL, B0
       DIV    WA, B0
+      DIV    BC, B0
+      DIV    DE, B0
+      DIV    HL, B0
       DIVS   WA, B0
+      DIVS   BC, B0
+      DIVS   DE, B0
+      DIVS   HL, B0
       INC    1, B0
       DEC    1, B0
       SCC    F, B0
@@ -19557,11 +21359,6 @@
       BS1F   A, QC0
       BS1B   A, QC0
       DAA    QC0
-      EXTZ   QC0
-      EXTS   QC0
-      PAA    QC0
-      MIRR   QC0
-      MULA   QC0
       DJNZ   QC0, $+33
       ANDCF  1, QC0
       ORCF   2, QC0
@@ -19574,9 +21371,21 @@
       BIT    4, QC0
       TSET   5, QC0
       MUL    WA, QC0
+      MUL    BC, QC0
+      MUL    DE, QC0
+      MUL    HL, QC0
       MULS   WA, QC0
+      MULS   BC, QC0
+      MULS   DE, QC0
+      MULS   HL, QC0
       DIV    WA, QC0
+      DIV    BC, QC0
+      DIV    DE, QC0
+      DIV    HL, QC0
       DIVS   WA, QC0
+      DIVS   BC, QC0
+      DIVS   DE, QC0
+      DIVS   HL, QC0
       INC    1, QC0
       DEC    1, QC0
       SCC    F, QC0
@@ -19706,11 +21515,6 @@
       BS1F   A, QB0
       BS1B   A, QB0
       DAA    QB0
-      EXTZ   QB0
-      EXTS   QB0
-      PAA    QB0
-      MIRR   QB0
-      MULA   QB0
       DJNZ   QB0, $+33
       ANDCF  1, QB0
       ORCF   2, QB0
@@ -19723,9 +21527,21 @@
       BIT    4, QB0
       TSET   5, QB0
       MUL    WA, QB0
+      MUL    BC, QB0
+      MUL    DE, QB0
+      MUL    HL, QB0
       MULS   WA, QB0
+      MULS   BC, QB0
+      MULS   DE, QB0
+      MULS   HL, QB0
       DIV    WA, QB0
+      DIV    BC, QB0
+      DIV    DE, QB0
+      DIV    HL, QB0
       DIVS   WA, QB0
+      DIVS   BC, QB0
+      DIVS   DE, QB0
+      DIVS   HL, QB0
       INC    1, QB0
       DEC    1, QB0
       SCC    F, QB0
@@ -19856,11 +21672,6 @@
       BS1F   A, E0
       BS1B   A, E0
       DAA    E0
-      EXTZ   E0
-      EXTS   E0
-      PAA    E0
-      MIRR   E0
-      MULA   E0
       DJNZ   E0, $+33
       ANDCF  1, E0
       ORCF   2, E0
@@ -19873,9 +21684,21 @@
       BIT    4, E0
       TSET   5, E0
       MUL    WA, E0
+      MUL    BC, E0
+      MUL    DE, E0
+      MUL    HL, E0
       MULS   WA, E0
+      MULS   BC, E0
+      MULS   DE, E0
+      MULS   HL, E0
       DIV    WA, E0
+      DIV    BC, E0
+      DIV    DE, E0
+      DIV    HL, E0
       DIVS   WA, E0
+      DIVS   BC, E0
+      DIVS   DE, E0
+      DIVS   HL, E0
       INC    1, E0
       DEC    1, E0
       SCC    F, E0
@@ -20006,11 +21829,6 @@
       BS1F   A, D0
       BS1B   A, D0
       DAA    D0
-      EXTZ   D0
-      EXTS   D0
-      PAA    D0
-      MIRR   D0
-      MULA   D0
       DJNZ   D0, $+33
       ANDCF  1, D0
       ORCF   2, D0
@@ -20023,9 +21841,21 @@
       BIT    4, D0
       TSET   5, D0
       MUL    WA, D0
+      MUL    BC, D0
+      MUL    DE, D0
+      MUL    HL, D0
       MULS   WA, D0
+      MULS   BC, D0
+      MULS   DE, D0
+      MULS   HL, D0
       DIV    WA, D0
+      DIV    BC, D0
+      DIV    DE, D0
+      DIV    HL, D0
       DIVS   WA, D0
+      DIVS   BC, D0
+      DIVS   DE, D0
+      DIVS   HL, D0
       INC    1, D0
       DEC    1, D0
       SCC    F, D0
@@ -20156,11 +21986,6 @@
       BS1F   A, QE0
       BS1B   A, QE0
       DAA    QE0
-      EXTZ   QE0
-      EXTS   QE0
-      PAA    QE0
-      MIRR   QE0
-      MULA   QE0
       DJNZ   QE0, $+33
       ANDCF  1, QE0
       ORCF   2, QE0
@@ -20173,9 +21998,21 @@
       BIT    4, QE0
       TSET   5, QE0
       MUL    WA, QE0
+      MUL    BC, QE0
+      MUL    DE, QE0
+      MUL    HL, QE0
       MULS   WA, QE0
+      MULS   BC, QE0
+      MULS   DE, QE0
+      MULS   HL, QE0
       DIV    WA, QE0
+      DIV    BC, QE0
+      DIV    DE, QE0
+      DIV    HL, QE0
       DIVS   WA, QE0
+      DIVS   BC, QE0
+      DIVS   DE, QE0
+      DIVS   HL, QE0
       INC    1, QE0
       DEC    1, QE0
       SCC    F, QE0
@@ -20306,11 +22143,6 @@
       BS1F   A, QD0
       BS1B   A, QD0
       DAA    QD0
-      EXTZ   QD0
-      EXTS   QD0
-      PAA    QD0
-      MIRR   QD0
-      MULA   QD0
       DJNZ   QD0, $+33
       ANDCF  1, QD0
       ORCF   2, QD0
@@ -20323,9 +22155,21 @@
       BIT    4, QD0
       TSET   5, QD0
       MUL    WA, QD0
+      MUL    BC, QD0
+      MUL    DE, QD0
+      MUL    HL, QD0
       MULS   WA, QD0
+      MULS   BC, QD0
+      MULS   DE, QD0
+      MULS   HL, QD0
       DIV    WA, QD0
+      DIV    BC, QD0
+      DIV    DE, QD0
+      DIV    HL, QD0
       DIVS   WA, QD0
+      DIVS   BC, QD0
+      DIVS   DE, QD0
+      DIVS   HL, QD0
       INC    1, QD0
       DEC    1, QD0
       SCC    F, QD0
@@ -20455,11 +22299,6 @@
       BS1F   A, L0
       BS1B   A, L0
       DAA    L0
-      EXTZ   L0
-      EXTS   L0
-      PAA    L0
-      MIRR   L0
-      MULA   L0
       DJNZ   L0, $+33
       ANDCF  1, L0
       ORCF   2, L0
@@ -20472,9 +22311,21 @@
       BIT    4, L0
       TSET   5, L0
       MUL    WA, L0
+      MUL    BC, L0
+      MUL    DE, L0
+      MUL    HL, L0
       MULS   WA, L0
+      MULS   BC, L0
+      MULS   DE, L0
+      MULS   HL, L0
       DIV    WA, L0
+      DIV    BC, L0
+      DIV    DE, L0
+      DIV    HL, L0
       DIVS   WA, L0
+      DIVS   BC, L0
+      DIVS   DE, L0
+      DIVS   HL, L0
       INC    1, L0
       DEC    1, L0
       SCC    F, L0
@@ -20604,11 +22455,6 @@
       BS1F   A, H0
       BS1B   A, H0
       DAA    H0
-      EXTZ   H0
-      EXTS   H0
-      PAA    H0
-      MIRR   H0
-      MULA   H0
       DJNZ   H0, $+33
       ANDCF  1, H0
       ORCF   2, H0
@@ -20621,9 +22467,21 @@
       BIT    4, H0
       TSET   5, H0
       MUL    WA, H0
+      MUL    BC, H0
+      MUL    DE, H0
+      MUL    HL, H0
       MULS   WA, H0
+      MULS   BC, H0
+      MULS   DE, H0
+      MULS   HL, H0
       DIV    WA, H0
+      DIV    BC, H0
+      DIV    DE, H0
+      DIV    HL, H0
       DIVS   WA, H0
+      DIVS   BC, H0
+      DIVS   DE, H0
+      DIVS   HL, H0
       INC    1, H0
       DEC    1, H0
       SCC    F, H0
@@ -20753,11 +22611,6 @@
       UNLK   H0
       BS1B   A, QL0
       DAA    QL0
-      EXTZ   QL0
-      EXTS   QL0
-      PAA    QL0
-      MIRR   QL0
-      MULA   QL0
       DJNZ   QL0, $+33
       ANDCF  1, QL0
       ORCF   2, QL0
@@ -20770,9 +22623,21 @@
       BIT    4, QL0
       TSET   5, QL0
       MUL    WA, QL0
+      MUL    BC, QL0
+      MUL    DE, QL0
+      MUL    HL, QL0
       MULS   WA, QL0
+      MULS   BC, QL0
+      MULS   DE, QL0
+      MULS   HL, QL0
       DIV    WA, QL0
+      DIV    BC, QL0
+      DIV    DE, QL0
+      DIV    HL, QL0
       DIVS   WA, QL0
+      DIVS   BC, QL0
+      DIVS   DE, QL0
+      DIVS   HL, QL0
       INC    1, QL0
       DEC    1, QL0
       SCC    F, QL0
@@ -20902,11 +22767,6 @@
       UNLK   QL0
       BS1F   A, QL0
       DAA    QH0
-      EXTZ   QH0
-      EXTS   QH0
-      PAA    QH0
-      MIRR   QH0
-      MULA   QH0
       DJNZ   QH0, $+33
       ANDCF  1, QH0
       ORCF   2, QH0
@@ -20919,9 +22779,21 @@
       BIT    4, QH0
       TSET   5, QH0
       MUL    WA, QH0
+      MUL    BC, QH0
+      MUL    DE, QH0
+      MUL    HL, QH0
       MULS   WA, QH0
+      MULS   BC, QH0
+      MULS   DE, QH0
+      MULS   HL, QH0
       DIV    WA, QH0
+      DIV    BC, QH0
+      DIV    DE, QH0
+      DIV    HL, QH0
       DIVS   WA, QH0
+      DIVS   BC, QH0
+      DIVS   DE, QH0
+      DIVS   HL, QH0
       INC    1, QH0
       DEC    1, QH0
       SCC    F, QH0
@@ -21092,18 +22964,11 @@
       CP     L, W
       CPL    W
       NEG    W
-      MUL    WA, 9
-      MULS   WA, 10
       LINK   W, 0E0DH
       UNLK   W
       BS1F   A, W
       BS1B   A, W
       DAA    W
-      EXTZ   W
-      EXTS   W
-      PAA    W
-      MIRR   W
-      MULA   W
       DJNZ   W, $+32
       ANDCF  1, W
       ORCF   2, W
@@ -21116,9 +22981,21 @@
       BIT    4, W
       TSET   5, W
       MUL    WA, W
+      MUL    BC, W
+      MUL    DE, W
+      MUL    HL, W
       MULS   WA, W
+      MULS   BC, W
+      MULS   DE, W
+      MULS   HL, W
       DIV    WA, W
+      DIV    BC, W
+      DIV    DE, W
+      DIV    HL, W
       DIVS   WA, W
+      DIVS   BC, W
+      DIVS   DE, W
+      DIVS   HL, W
       INC    1, W
       DEC    1, W
       SCC    F, W
@@ -21234,16 +23111,15 @@
       CP     L, A
       CPL    A
       NEG    A
+      MUL    WA, 9
+      MULS   WA, 10
+      DIV    WA, 11
+      DIVS   WA, 12
       LINK   A, 0E0DH
       UNLK   A
       BS1F   A, A
       BS1B   A, A
       DAA    A
-      EXTZ   A
-      EXTS   A
-      PAA    A
-      MIRR   A
-      MULA   A
       DJNZ   A, $+32
       ANDCF  1, A
       ORCF   2, A
@@ -21256,9 +23132,21 @@
       BIT    4, A
       TSET   5, A
       MUL    WA, A
+      MUL    BC, A
+      MUL    DE, A
+      MUL    HL, A
       MULS   WA, A
+      MULS   BC, A
+      MULS   DE, A
+      MULS   HL, A
       DIV    WA, A
+      DIV    BC, A
+      DIV    DE, A
+      DIV    HL, A
       DIVS   WA, A
+      DIVS   BC, A
+      DIVS   DE, A
+      DIVS   HL, A
       INC    1, A
       DEC    1, A
       SCC    F, A
@@ -21379,11 +23267,6 @@
       BS1F   A, B
       BS1B   A, B
       DAA    B
-      EXTZ   B
-      EXTS   B
-      PAA    B
-      MIRR   B
-      MULA   B
       DJNZ   B, $+32
       ANDCF  1, B
       ORCF   2, B
@@ -21396,9 +23279,21 @@
       BIT    4, B
       TSET   5, B
       MUL    WA, B
+      MUL    BC, B
+      MUL    DE, B
+      MUL    HL, B
       MULS   WA, B
+      MULS   BC, B
+      MULS   DE, B
+      MULS   HL, B
       DIV    WA, B
+      DIV    BC, B
+      DIV    DE, B
+      DIV    HL, B
       DIVS   WA, B
+      DIVS   BC, B
+      DIVS   DE, B
+      DIVS   HL, B
       INC    1, B
       DEC    1, B
       SCC    F, B
@@ -21514,16 +23409,15 @@
       CP     L, C
       CPL    C
       NEG    C
+      MUL    BC, 9
+      MULS   BC, 10
+      DIV    BC, 11
+      DIVS   BC, 12
       LINK   C, 0E0DH
       UNLK   C
       BS1F   A, C
       BS1B   A, C
       DAA    C
-      EXTZ   C
-      EXTS   C
-      PAA    C
-      MIRR   C
-      MULA   C
       DJNZ   C, $+32
       ANDCF  1, C
       ORCF   2, C
@@ -21536,9 +23430,21 @@
       BIT    4, C
       TSET   5, C
       MUL    WA, C
+      MUL    BC, C
+      MUL    DE, C
+      MUL    HL, C
       MULS   WA, C
+      MULS   BC, C
+      MULS   DE, C
+      MULS   HL, C
       DIV    WA, C
+      DIV    BC, C
+      DIV    DE, C
+      DIV    HL, C
       DIVS   WA, C
+      DIVS   BC, C
+      DIVS   DE, C
+      DIVS   HL, C
       INC    1, C
       DEC    1, C
       SCC    F, C
@@ -21659,11 +23565,6 @@
       BS1F   A, D
       BS1B   A, D
       DAA    D
-      EXTZ   D
-      EXTS   D
-      PAA    D
-      MIRR   D
-      MULA   D
       DJNZ   D, $+32
       ANDCF  1, D
       ORCF   2, D
@@ -21676,9 +23577,21 @@
       BIT    4, D
       TSET   5, D
       MUL    WA, D
+      MUL    BC, D
+      MUL    DE, D
+      MUL    HL, D
       MULS   WA, D
+      MULS   BC, D
+      MULS   DE, D
+      MULS   HL, D
       DIV    WA, D
+      DIV    BC, D
+      DIV    DE, D
+      DIV    HL, D
       DIVS   WA, D
+      DIVS   BC, D
+      DIVS   DE, D
+      DIVS   HL, D
       INC    1, D
       DEC    1, D
       SCC    F, D
@@ -21794,16 +23707,15 @@
       CP     L, E
       CPL    E
       NEG    E
+      MUL    DE, 9
+      MULS   DE, 10
+      DIV    DE, 11
+      DIVS   DE, 12
       LINK   E, 0E0DH
       UNLK   E
       BS1F   A, E
       BS1B   A, E
       DAA    E
-      EXTZ   E
-      EXTS   E
-      PAA    E
-      MIRR   E
-      MULA   E
       DJNZ   E, $+32
       ANDCF  1, E
       ORCF   2, E
@@ -21816,9 +23728,21 @@
       BIT    4, E
       TSET   5, E
       MUL    WA, E
+      MUL    BC, E
+      MUL    DE, E
+      MUL    HL, E
       MULS   WA, E
+      MULS   BC, E
+      MULS   DE, E
+      MULS   HL, E
       DIV    WA, E
+      DIV    BC, E
+      DIV    DE, E
+      DIV    HL, E
       DIVS   WA, E
+      DIVS   BC, E
+      DIVS   DE, E
+      DIVS   HL, E
       INC    1, E
       DEC    1, E
       SCC    F, E
@@ -21939,11 +23863,6 @@
       BS1F   A, H
       BS1B   A, H
       DAA    H
-      EXTZ   H
-      EXTS   H
-      PAA    H
-      MIRR   H
-      MULA   H
       DJNZ   H, $+32
       ANDCF  1, H
       ORCF   2, H
@@ -21956,9 +23875,21 @@
       BIT    4, H
       TSET   5, H
       MUL    WA, H
+      MUL    BC, H
+      MUL    DE, H
+      MUL    HL, H
       MULS   WA, H
+      MULS   BC, H
+      MULS   DE, H
+      MULS   HL, H
       DIV    WA, H
+      DIV    BC, H
+      DIV    DE, H
+      DIV    HL, H
       DIVS   WA, H
+      DIVS   BC, H
+      DIVS   DE, H
+      DIVS   HL, H
       INC    1, H
       DEC    1, H
       SCC    F, H
@@ -22074,16 +24005,15 @@
       CP     L, L
       CPL    L
       NEG    L
+      MUL    HL, 9
+      MULS   HL, 10
+      DIV    HL, 11
+      DIVS   HL, 12
       LINK   L, 0E0DH
       UNLK   L
       BS1F   A, L
       BS1B   A, L
       DAA    L
-      EXTZ   L
-      EXTS   L
-      PAA    L
-      MIRR   L
-      MULA   L
       DJNZ   L, $+32
       ANDCF  1, L
       ORCF   2, L
@@ -22096,9 +24026,21 @@
       BIT    4, L
       TSET   5, L
       MUL    WA, L
+      MUL    BC, L
+      MUL    DE, L
+      MUL    HL, L
       MULS   WA, L
+      MULS   BC, L
+      MULS   DE, L
+      MULS   HL, L
       DIV    WA, L
+      DIV    BC, L
+      DIV    DE, L
+      DIV    HL, L
       DIVS   WA, L
+      DIVS   BC, L
+      DIVS   DE, L
+      DIVS   HL, L
       INC    1, L
       DEC    1, L
       SCC    F, L
@@ -22219,6 +24161,38 @@
       EX     IY, (0EFH)
       EX     IZ, (0EFH)
       EX     SP, (0EFH)
+      MUL    XWA, (3FH)
+      MUL    XBC, (3FH)
+      MUL    XDE, (3FH)
+      MUL    XHL, (3FH)
+      MUL    XIX, (3FH)
+      MUL    XIY, (3FH)
+      MUL    XIZ, (3FH)
+      MUL    XSP, (3FH)
+      MULS   XWA, (3FH)
+      MULS   XBC, (3FH)
+      MULS   XDE, (3FH)
+      MULS   XHL, (3FH)
+      MULS   XIX, (3FH)
+      MULS   XIY, (3FH)
+      MULS   XIZ, (3FH)
+      MULS   XSP, (3FH)
+      DIV    XWA, (3FH)
+      DIV    XBC, (3FH)
+      DIV    XDE, (3FH)
+      DIV    XHL, (3FH)
+      DIV    XIX, (3FH)
+      DIV    XIY, (3FH)
+      DIV    XIZ, (3FH)
+      DIV    XSP, (3FH)
+      DIVS   XWA, (3FH)
+      DIVS   XBC, (3FH)
+      DIVS   XDE, (3FH)
+      DIVS   XHL, (3FH)
+      DIVS   XIX, (3FH)
+      DIVS   XIY, (3FH)
+      DIVS   XIZ, (3FH)
+      DIVS   XSP, (3FH)
       ADD    WA, (3FH)
       ADD    BC, (3FH)
       ADD    DE, (3FH)
@@ -22297,6 +24271,38 @@
       EX     IY, (1918H)
       EX     IZ, (1918H)
       EX     SP, (1918H)
+      MUL    XWA, (3F3EH)
+      MUL    XBC, (3F3EH)
+      MUL    XDE, (3F3EH)
+      MUL    XHL, (3F3EH)
+      MUL    XIX, (3F3EH)
+      MUL    XIY, (3F3EH)
+      MUL    XIZ, (3F3EH)
+      MUL    XSP, (3F3EH)
+      MULS   XWA, (3F3EH)
+      MULS   XBC, (3F3EH)
+      MULS   XDE, (3F3EH)
+      MULS   XHL, (3F3EH)
+      MULS   XIX, (3F3EH)
+      MULS   XIY, (3F3EH)
+      MULS   XIZ, (3F3EH)
+      MULS   XSP, (3F3EH)
+      DIV    XWA, (3F3EH)
+      DIV    XBC, (3F3EH)
+      DIV    XDE, (3F3EH)
+      DIV    XHL, (3F3EH)
+      DIV    XIX, (3F3EH)
+      DIV    XIY, (3F3EH)
+      DIV    XIZ, (3F3EH)
+      DIV    XSP, (3F3EH)
+      DIVS   XWA, (3F3EH)
+      DIVS   XBC, (3F3EH)
+      DIVS   XDE, (3F3EH)
+      DIVS   XHL, (3F3EH)
+      DIVS   XIX, (3F3EH)
+      DIVS   XIY, (3F3EH)
+      DIVS   XIZ, (3F3EH)
+      DIVS   XSP, (3F3EH)
       ADD    WA, (3F3EH)
       ADD    BC, (3F3EH)
       ADD    DE, (3F3EH)
@@ -22375,6 +24381,38 @@
       EX     IY, (191817H)
       EX     IZ, (191817H)
       EX     SP, (191817H)
+      MUL    XWA, (3F3E3DH)
+      MUL    XBC, (3F3E3DH)
+      MUL    XDE, (3F3E3DH)
+      MUL    XHL, (3F3E3DH)
+      MUL    XIX, (3F3E3DH)
+      MUL    XIY, (3F3E3DH)
+      MUL    XIZ, (3F3E3DH)
+      MUL    XSP, (3F3E3DH)
+      MULS   XWA, (3F3E3DH)
+      MULS   XBC, (3F3E3DH)
+      MULS   XDE, (3F3E3DH)
+      MULS   XHL, (3F3E3DH)
+      MULS   XIX, (3F3E3DH)
+      MULS   XIY, (3F3E3DH)
+      MULS   XIZ, (3F3E3DH)
+      MULS   XSP, (3F3E3DH)
+      DIV    XWA, (3F3E3DH)
+      DIV    XBC, (3F3E3DH)
+      DIV    XDE, (3F3E3DH)
+      DIV    XHL, (3F3E3DH)
+      DIV    XIX, (3F3E3DH)
+      DIV    XIY, (3F3E3DH)
+      DIV    XIZ, (3F3E3DH)
+      DIV    XSP, (3F3E3DH)
+      DIVS   XWA, (3F3E3DH)
+      DIVS   XBC, (3F3E3DH)
+      DIVS   XDE, (3F3E3DH)
+      DIVS   XHL, (3F3E3DH)
+      DIVS   XIX, (3F3E3DH)
+      DIVS   XIY, (3F3E3DH)
+      DIVS   XIZ, (3F3E3DH)
+      DIVS   XSP, (3F3E3DH)
       ADD    WA, (3F3E3DH)
       ADD    BC, (3F3E3DH)
       ADD    DE, (3F3E3DH)
@@ -22441,6 +24479,38 @@
       EX     IY, (XIX+1918H)
       EX     IZ, (XIX+1918H)
       EX     SP, (XIX+1918H)
+      MUL    XWA, (XIX+3F3EH)
+      MUL    XBC, (XIX+3F3EH)
+      MUL    XDE, (XIX+3F3EH)
+      MUL    XHL, (XIX+3F3EH)
+      MUL    XIX, (XIX+3F3EH)
+      MUL    XIY, (XIX+3F3EH)
+      MUL    XIZ, (XIX+3F3EH)
+      MUL    XSP, (XIX+3F3EH)
+      MULS   XWA, (XIX+3F3EH)
+      MULS   XBC, (XIX+3F3EH)
+      MULS   XDE, (XIX+3F3EH)
+      MULS   XHL, (XIX+3F3EH)
+      MULS   XIX, (XIX+3F3EH)
+      MULS   XIY, (XIX+3F3EH)
+      MULS   XIZ, (XIX+3F3EH)
+      MULS   XSP, (XIX+3F3EH)
+      DIV    XWA, (XIX+3F3EH)
+      DIV    XBC, (XIX+3F3EH)
+      DIV    XDE, (XIX+3F3EH)
+      DIV    XHL, (XIX+3F3EH)
+      DIV    XIX, (XIX+3F3EH)
+      DIV    XIY, (XIX+3F3EH)
+      DIV    XIZ, (XIX+3F3EH)
+      DIV    XSP, (XIX+3F3EH)
+      DIVS   XWA, (XIX+3F3EH)
+      DIVS   XBC, (XIX+3F3EH)
+      DIVS   XDE, (XIX+3F3EH)
+      DIVS   XHL, (XIX+3F3EH)
+      DIVS   XIX, (XIX+3F3EH)
+      DIVS   XIY, (XIX+3F3EH)
+      DIVS   XIZ, (XIX+3F3EH)
+      DIVS   XSP, (XIX+3F3EH)
       ADD    WA, (XIX+3F3EH)
       ADD    BC, (XIX+3F3EH)
       ADD    DE, (XIX+3F3EH)
@@ -22513,6 +24583,38 @@
       EX     IY, (XIY+1918H)
       EX     IZ, (XIY+1918H)
       EX     SP, (XIY+1918H)
+      MUL    XWA, (XIY+3F3EH)
+      MUL    XBC, (XIY+3F3EH)
+      MUL    XDE, (XIY+3F3EH)
+      MUL    XHL, (XIY+3F3EH)
+      MUL    XIX, (XIY+3F3EH)
+      MUL    XIY, (XIY+3F3EH)
+      MUL    XIZ, (XIY+3F3EH)
+      MUL    XSP, (XIY+3F3EH)
+      MULS   XWA, (XIY+3F3EH)
+      MULS   XBC, (XIY+3F3EH)
+      MULS   XDE, (XIY+3F3EH)
+      MULS   XHL, (XIY+3F3EH)
+      MULS   XIX, (XIY+3F3EH)
+      MULS   XIY, (XIY+3F3EH)
+      MULS   XIZ, (XIY+3F3EH)
+      MULS   XSP, (XIY+3F3EH)
+      DIV    XWA, (XIY+3F3EH)
+      DIV    XBC, (XIY+3F3EH)
+      DIV    XDE, (XIY+3F3EH)
+      DIV    XHL, (XIY+3F3EH)
+      DIV    XIX, (XIY+3F3EH)
+      DIV    XIY, (XIY+3F3EH)
+      DIV    XIZ, (XIY+3F3EH)
+      DIV    XSP, (XIY+3F3EH)
+      DIVS   XWA, (XIY+3F3EH)
+      DIVS   XBC, (XIY+3F3EH)
+      DIVS   XDE, (XIY+3F3EH)
+      DIVS   XHL, (XIY+3F3EH)
+      DIVS   XIX, (XIY+3F3EH)
+      DIVS   XIY, (XIY+3F3EH)
+      DIVS   XIZ, (XIY+3F3EH)
+      DIVS   XSP, (XIY+3F3EH)
       ADD    WA, (XIY+3F3EH)
       ADD    BC, (XIY+3F3EH)
       ADD    DE, (XIY+3F3EH)
@@ -22585,6 +24687,38 @@
       EX     IY, (XIZ+1918H)
       EX     IZ, (XIZ+1918H)
       EX     SP, (XIZ+1918H)
+      MUL    XWA, (XIZ+3F3EH)
+      MUL    XBC, (XIZ+3F3EH)
+      MUL    XDE, (XIZ+3F3EH)
+      MUL    XHL, (XIZ+3F3EH)
+      MUL    XIX, (XIZ+3F3EH)
+      MUL    XIY, (XIZ+3F3EH)
+      MUL    XIZ, (XIZ+3F3EH)
+      MUL    XSP, (XIZ+3F3EH)
+      MULS   XWA, (XIZ+3F3EH)
+      MULS   XBC, (XIZ+3F3EH)
+      MULS   XDE, (XIZ+3F3EH)
+      MULS   XHL, (XIZ+3F3EH)
+      MULS   XIX, (XIZ+3F3EH)
+      MULS   XIY, (XIZ+3F3EH)
+      MULS   XIZ, (XIZ+3F3EH)
+      MULS   XSP, (XIZ+3F3EH)
+      DIV    XWA, (XIZ+3F3EH)
+      DIV    XBC, (XIZ+3F3EH)
+      DIV    XDE, (XIZ+3F3EH)
+      DIV    XHL, (XIZ+3F3EH)
+      DIV    XIX, (XIZ+3F3EH)
+      DIV    XIY, (XIZ+3F3EH)
+      DIV    XIZ, (XIZ+3F3EH)
+      DIV    XSP, (XIZ+3F3EH)
+      DIVS   XWA, (XIZ+3F3EH)
+      DIVS   XBC, (XIZ+3F3EH)
+      DIVS   XDE, (XIZ+3F3EH)
+      DIVS   XHL, (XIZ+3F3EH)
+      DIVS   XIX, (XIZ+3F3EH)
+      DIVS   XIY, (XIZ+3F3EH)
+      DIVS   XIZ, (XIZ+3F3EH)
+      DIVS   XSP, (XIZ+3F3EH)
       ADD    WA, (XIZ+3F3EH)
       ADD    BC, (XIZ+3F3EH)
       ADD    DE, (XIZ+3F3EH)
@@ -22657,6 +24791,38 @@
       EX     IY, (XSP+1918H)
       EX     IZ, (XSP+1918H)
       EX     SP, (XSP+1918H)
+      MUL    XWA, (XSP+3F3EH)
+      MUL    XBC, (XSP+3F3EH)
+      MUL    XDE, (XSP+3F3EH)
+      MUL    XHL, (XSP+3F3EH)
+      MUL    XIX, (XSP+3F3EH)
+      MUL    XIY, (XSP+3F3EH)
+      MUL    XIZ, (XSP+3F3EH)
+      MUL    XSP, (XSP+3F3EH)
+      MULS   XWA, (XSP+3F3EH)
+      MULS   XBC, (XSP+3F3EH)
+      MULS   XDE, (XSP+3F3EH)
+      MULS   XHL, (XSP+3F3EH)
+      MULS   XIX, (XSP+3F3EH)
+      MULS   XIY, (XSP+3F3EH)
+      MULS   XIZ, (XSP+3F3EH)
+      MULS   XSP, (XSP+3F3EH)
+      DIV    XWA, (XSP+3F3EH)
+      DIV    XBC, (XSP+3F3EH)
+      DIV    XDE, (XSP+3F3EH)
+      DIV    XHL, (XSP+3F3EH)
+      DIV    XIX, (XSP+3F3EH)
+      DIV    XIY, (XSP+3F3EH)
+      DIV    XIZ, (XSP+3F3EH)
+      DIV    XSP, (XSP+3F3EH)
+      DIVS   XWA, (XSP+3F3EH)
+      DIVS   XBC, (XSP+3F3EH)
+      DIVS   XDE, (XSP+3F3EH)
+      DIVS   XHL, (XSP+3F3EH)
+      DIVS   XIX, (XSP+3F3EH)
+      DIVS   XIY, (XSP+3F3EH)
+      DIVS   XIZ, (XSP+3F3EH)
+      DIVS   XSP, (XSP+3F3EH)
       ADD    WA, (XSP+3F3EH)
       ADD    BC, (XSP+3F3EH)
       ADD    DE, (XSP+3F3EH)
@@ -22744,6 +24910,38 @@
       EX     IY, (XIY+A)
       EX     IZ, (XIY+A)
       EX     SP, (XIY+A)
+      MUL    XWA, (XIY+A)
+      MUL    XBC, (XIY+A)
+      MUL    XDE, (XIY+A)
+      MUL    XHL, (XIY+A)
+      MUL    XIX, (XIY+A)
+      MUL    XIY, (XIY+A)
+      MUL    XIZ, (XIY+A)
+      MUL    XSP, (XIY+A)
+      MULS   XWA, (XIY+A)
+      MULS   XBC, (XIY+A)
+      MULS   XDE, (XIY+A)
+      MULS   XHL, (XIY+A)
+      MULS   XIX, (XIY+A)
+      MULS   XIY, (XIY+A)
+      MULS   XIZ, (XIY+A)
+      MULS   XSP, (XIY+A)
+      DIV    XWA, (XIY+A)
+      DIV    XBC, (XIY+A)
+      DIV    XDE, (XIY+A)
+      DIV    XHL, (XIY+A)
+      DIV    XIX, (XIY+A)
+      DIV    XIY, (XIY+A)
+      DIV    XIZ, (XIY+A)
+      DIV    XSP, (XIY+A)
+      DIVS   XWA, (XIY+A)
+      DIVS   XBC, (XIY+A)
+      DIVS   XDE, (XIY+A)
+      DIVS   XHL, (XIY+A)
+      DIVS   XIX, (XIY+A)
+      DIVS   XIY, (XIY+A)
+      DIVS   XIZ, (XIY+A)
+      DIVS   XSP, (XIY+A)
       ADD    WA, (XIY+A)
       ADD    BC, (XIY+A)
       ADD    DE, (XIY+A)
@@ -22823,6 +25021,38 @@
       EX     IY, (XIY+W)
       EX     IZ, (XIY+W)
       EX     SP, (XIY+W)
+      MUL    XWA, (XIY+W)
+      MUL    XBC, (XIY+W)
+      MUL    XDE, (XIY+W)
+      MUL    XHL, (XIY+W)
+      MUL    XIX, (XIY+W)
+      MUL    XIY, (XIY+W)
+      MUL    XIZ, (XIY+W)
+      MUL    XSP, (XIY+W)
+      MULS   XWA, (XIY+W)
+      MULS   XBC, (XIY+W)
+      MULS   XDE, (XIY+W)
+      MULS   XHL, (XIY+W)
+      MULS   XIX, (XIY+W)
+      MULS   XIY, (XIY+W)
+      MULS   XIZ, (XIY+W)
+      MULS   XSP, (XIY+W)
+      DIV    XWA, (XIY+W)
+      DIV    XBC, (XIY+W)
+      DIV    XDE, (XIY+W)
+      DIV    XHL, (XIY+W)
+      DIV    XIX, (XIY+W)
+      DIV    XIY, (XIY+W)
+      DIV    XIZ, (XIY+W)
+      DIV    XSP, (XIY+W)
+      DIVS   XWA, (XIY+W)
+      DIVS   XBC, (XIY+W)
+      DIVS   XDE, (XIY+W)
+      DIVS   XHL, (XIY+W)
+      DIVS   XIX, (XIY+W)
+      DIVS   XIY, (XIY+W)
+      DIVS   XIZ, (XIY+W)
+      DIVS   XSP, (XIY+W)
       ADD    WA, (XIY+W)
       ADD    BC, (XIY+W)
       ADD    DE, (XIY+W)
@@ -22900,6 +25130,38 @@
       EX     IY, (XIY+C)
       EX     IZ, (XIY+C)
       EX     SP, (XIY+C)
+      MUL    XWA, (XIY+C)
+      MUL    XBC, (XIY+C)
+      MUL    XDE, (XIY+C)
+      MUL    XHL, (XIY+C)
+      MUL    XIX, (XIY+C)
+      MUL    XIY, (XIY+C)
+      MUL    XIZ, (XIY+C)
+      MUL    XSP, (XIY+C)
+      MULS   XWA, (XIY+C)
+      MULS   XBC, (XIY+C)
+      MULS   XDE, (XIY+C)
+      MULS   XHL, (XIY+C)
+      MULS   XIX, (XIY+C)
+      MULS   XIY, (XIY+C)
+      MULS   XIZ, (XIY+C)
+      MULS   XSP, (XIY+C)
+      DIV    XWA, (XIY+C)
+      DIV    XBC, (XIY+C)
+      DIV    XDE, (XIY+C)
+      DIV    XHL, (XIY+C)
+      DIV    XIX, (XIY+C)
+      DIV    XIY, (XIY+C)
+      DIV    XIZ, (XIY+C)
+      DIV    XSP, (XIY+C)
+      DIVS   XWA, (XIY+C)
+      DIVS   XBC, (XIY+C)
+      DIVS   XDE, (XIY+C)
+      DIVS   XHL, (XIY+C)
+      DIVS   XIX, (XIY+C)
+      DIVS   XIY, (XIY+C)
+      DIVS   XIZ, (XIY+C)
+      DIVS   XSP, (XIY+C)
       ADD    WA, (XIY+C)
       ADD    BC, (XIY+C)
       ADD    DE, (XIY+C)
@@ -22979,6 +25241,38 @@
       EX     IY, (XIY+B)
       EX     IZ, (XIY+B)
       EX     SP, (XIY+B)
+      MUL    XWA, (XIY+B)
+      MUL    XBC, (XIY+B)
+      MUL    XDE, (XIY+B)
+      MUL    XHL, (XIY+B)
+      MUL    XIX, (XIY+B)
+      MUL    XIY, (XIY+B)
+      MUL    XIZ, (XIY+B)
+      MUL    XSP, (XIY+B)
+      MULS   XWA, (XIY+B)
+      MULS   XBC, (XIY+B)
+      MULS   XDE, (XIY+B)
+      MULS   XHL, (XIY+B)
+      MULS   XIX, (XIY+B)
+      MULS   XIY, (XIY+B)
+      MULS   XIZ, (XIY+B)
+      MULS   XSP, (XIY+B)
+      DIV    XWA, (XIY+B)
+      DIV    XBC, (XIY+B)
+      DIV    XDE, (XIY+B)
+      DIV    XHL, (XIY+B)
+      DIV    XIX, (XIY+B)
+      DIV    XIY, (XIY+B)
+      DIV    XIZ, (XIY+B)
+      DIV    XSP, (XIY+B)
+      DIVS   XWA, (XIY+B)
+      DIVS   XBC, (XIY+B)
+      DIVS   XDE, (XIY+B)
+      DIVS   XHL, (XIY+B)
+      DIVS   XIX, (XIY+B)
+      DIVS   XIY, (XIY+B)
+      DIVS   XIZ, (XIY+B)
+      DIVS   XSP, (XIY+B)
       ADD    WA, (XIY+B)
       ADD    BC, (XIY+B)
       ADD    DE, (XIY+B)
@@ -23057,6 +25351,38 @@
       EX     IY, (XIY+E)
       EX     IZ, (XIY+E)
       EX     SP, (XIY+E)
+      MUL    XWA, (XIY+E)
+      MUL    XBC, (XIY+E)
+      MUL    XDE, (XIY+E)
+      MUL    XHL, (XIY+E)
+      MUL    XIX, (XIY+E)
+      MUL    XIY, (XIY+E)
+      MUL    XIZ, (XIY+E)
+      MUL    XSP, (XIY+E)
+      MULS   XWA, (XIY+E)
+      MULS   XBC, (XIY+E)
+      MULS   XDE, (XIY+E)
+      MULS   XHL, (XIY+E)
+      MULS   XIX, (XIY+E)
+      MULS   XIY, (XIY+E)
+      MULS   XIZ, (XIY+E)
+      MULS   XSP, (XIY+E)
+      DIV    XWA, (XIY+E)
+      DIV    XBC, (XIY+E)
+      DIV    XDE, (XIY+E)
+      DIV    XHL, (XIY+E)
+      DIV    XIX, (XIY+E)
+      DIV    XIY, (XIY+E)
+      DIV    XIZ, (XIY+E)
+      DIV    XSP, (XIY+E)
+      DIVS   XWA, (XIY+E)
+      DIVS   XBC, (XIY+E)
+      DIVS   XDE, (XIY+E)
+      DIVS   XHL, (XIY+E)
+      DIVS   XIX, (XIY+E)
+      DIVS   XIY, (XIY+E)
+      DIVS   XIZ, (XIY+E)
+      DIVS   XSP, (XIY+E)
       ADD    WA, (XIY+E)
       ADD    BC, (XIY+E)
       ADD    DE, (XIY+E)
@@ -23137,6 +25463,38 @@
       EX     IY, (XIY+D)
       EX     IZ, (XIY+D)
       EX     SP, (XIY+D)
+      MUL    XWA, (XIY+D)
+      MUL    XBC, (XIY+D)
+      MUL    XDE, (XIY+D)
+      MUL    XHL, (XIY+D)
+      MUL    XIX, (XIY+D)
+      MUL    XIY, (XIY+D)
+      MUL    XIZ, (XIY+D)
+      MUL    XSP, (XIY+D)
+      MULS   XWA, (XIY+D)
+      MULS   XBC, (XIY+D)
+      MULS   XDE, (XIY+D)
+      MULS   XHL, (XIY+D)
+      MULS   XIX, (XIY+D)
+      MULS   XIY, (XIY+D)
+      MULS   XIZ, (XIY+D)
+      MULS   XSP, (XIY+D)
+      DIV    XWA, (XIY+D)
+      DIV    XBC, (XIY+D)
+      DIV    XDE, (XIY+D)
+      DIV    XHL, (XIY+D)
+      DIV    XIX, (XIY+D)
+      DIV    XIY, (XIY+D)
+      DIV    XIZ, (XIY+D)
+      DIV    XSP, (XIY+D)
+      DIVS   XWA, (XIY+D)
+      DIVS   XBC, (XIY+D)
+      DIVS   XDE, (XIY+D)
+      DIVS   XHL, (XIY+D)
+      DIVS   XIX, (XIY+D)
+      DIVS   XIY, (XIY+D)
+      DIVS   XIZ, (XIY+D)
+      DIVS   XSP, (XIY+D)
       ADD    WA, (XIY+D)
       ADD    BC, (XIY+D)
       ADD    DE, (XIY+D)
@@ -23217,6 +25575,38 @@
       EX     IY, (XIY+L)
       EX     IZ, (XIY+L)
       EX     SP, (XIY+L)
+      MUL    XWA, (XIY+L)
+      MUL    XBC, (XIY+L)
+      MUL    XDE, (XIY+L)
+      MUL    XHL, (XIY+L)
+      MUL    XIX, (XIY+L)
+      MUL    XIY, (XIY+L)
+      MUL    XIZ, (XIY+L)
+      MUL    XSP, (XIY+L)
+      MULS   XWA, (XIY+L)
+      MULS   XBC, (XIY+L)
+      MULS   XDE, (XIY+L)
+      MULS   XHL, (XIY+L)
+      MULS   XIX, (XIY+L)
+      MULS   XIY, (XIY+L)
+      MULS   XIZ, (XIY+L)
+      MULS   XSP, (XIY+L)
+      DIV    XWA, (XIY+L)
+      DIV    XBC, (XIY+L)
+      DIV    XDE, (XIY+L)
+      DIV    XHL, (XIY+L)
+      DIV    XIX, (XIY+L)
+      DIV    XIY, (XIY+L)
+      DIV    XIZ, (XIY+L)
+      DIV    XSP, (XIY+L)
+      DIVS   XWA, (XIY+L)
+      DIVS   XBC, (XIY+L)
+      DIVS   XDE, (XIY+L)
+      DIVS   XHL, (XIY+L)
+      DIVS   XIX, (XIY+L)
+      DIVS   XIY, (XIY+L)
+      DIVS   XIZ, (XIY+L)
+      DIVS   XSP, (XIY+L)
       ADD    WA, (XIY+L)
       ADD    BC, (XIY+L)
       ADD    DE, (XIY+L)
@@ -23297,6 +25687,38 @@
       EX     IY, (XIY+H)
       EX     IZ, (XIY+H)
       EX     SP, (XIY+H)
+      MUL    XWA, (XIY+H)
+      MUL    XBC, (XIY+H)
+      MUL    XDE, (XIY+H)
+      MUL    XHL, (XIY+H)
+      MUL    XIX, (XIY+H)
+      MUL    XIY, (XIY+H)
+      MUL    XIZ, (XIY+H)
+      MUL    XSP, (XIY+H)
+      MULS   XWA, (XIY+H)
+      MULS   XBC, (XIY+H)
+      MULS   XDE, (XIY+H)
+      MULS   XHL, (XIY+H)
+      MULS   XIX, (XIY+H)
+      MULS   XIY, (XIY+H)
+      MULS   XIZ, (XIY+H)
+      MULS   XSP, (XIY+H)
+      DIV    XWA, (XIY+H)
+      DIV    XBC, (XIY+H)
+      DIV    XDE, (XIY+H)
+      DIV    XHL, (XIY+H)
+      DIV    XIX, (XIY+H)
+      DIV    XIY, (XIY+H)
+      DIV    XIZ, (XIY+H)
+      DIV    XSP, (XIY+H)
+      DIVS   XWA, (XIY+H)
+      DIVS   XBC, (XIY+H)
+      DIVS   XDE, (XIY+H)
+      DIVS   XHL, (XIY+H)
+      DIVS   XIX, (XIY+H)
+      DIVS   XIY, (XIY+H)
+      DIVS   XIZ, (XIY+H)
+      DIVS   XSP, (XIY+H)
       ADD    WA, (XIY+H)
       ADD    BC, (XIY+H)
       ADD    DE, (XIY+H)
@@ -23384,6 +25806,38 @@
       EX     IY, (XIZ+A)
       EX     IZ, (XIZ+A)
       EX     SP, (XIZ+A)
+      MUL    XWA, (XIZ+A)
+      MUL    XBC, (XIZ+A)
+      MUL    XDE, (XIZ+A)
+      MUL    XHL, (XIZ+A)
+      MUL    XIX, (XIZ+A)
+      MUL    XIY, (XIZ+A)
+      MUL    XIZ, (XIZ+A)
+      MUL    XSP, (XIZ+A)
+      MULS   XWA, (XIZ+A)
+      MULS   XBC, (XIZ+A)
+      MULS   XDE, (XIZ+A)
+      MULS   XHL, (XIZ+A)
+      MULS   XIX, (XIZ+A)
+      MULS   XIY, (XIZ+A)
+      MULS   XIZ, (XIZ+A)
+      MULS   XSP, (XIZ+A)
+      DIV    XWA, (XIZ+A)
+      DIV    XBC, (XIZ+A)
+      DIV    XDE, (XIZ+A)
+      DIV    XHL, (XIZ+A)
+      DIV    XIX, (XIZ+A)
+      DIV    XIY, (XIZ+A)
+      DIV    XIZ, (XIZ+A)
+      DIV    XSP, (XIZ+A)
+      DIVS   XWA, (XIZ+A)
+      DIVS   XBC, (XIZ+A)
+      DIVS   XDE, (XIZ+A)
+      DIVS   XHL, (XIZ+A)
+      DIVS   XIX, (XIZ+A)
+      DIVS   XIY, (XIZ+A)
+      DIVS   XIZ, (XIZ+A)
+      DIVS   XSP, (XIZ+A)
       ADD    WA, (XIZ+A)
       ADD    BC, (XIZ+A)
       ADD    DE, (XIZ+A)
@@ -23463,6 +25917,38 @@
       EX     IY, (XIZ+W)
       EX     IZ, (XIZ+W)
       EX     SP, (XIZ+W)
+      MUL    XWA, (XIZ+W)
+      MUL    XBC, (XIZ+W)
+      MUL    XDE, (XIZ+W)
+      MUL    XHL, (XIZ+W)
+      MUL    XIX, (XIZ+W)
+      MUL    XIY, (XIZ+W)
+      MUL    XIZ, (XIZ+W)
+      MUL    XSP, (XIZ+W)
+      MULS   XWA, (XIZ+W)
+      MULS   XBC, (XIZ+W)
+      MULS   XDE, (XIZ+W)
+      MULS   XHL, (XIZ+W)
+      MULS   XIX, (XIZ+W)
+      MULS   XIY, (XIZ+W)
+      MULS   XIZ, (XIZ+W)
+      MULS   XSP, (XIZ+W)
+      DIV    XWA, (XIZ+W)
+      DIV    XBC, (XIZ+W)
+      DIV    XDE, (XIZ+W)
+      DIV    XHL, (XIZ+W)
+      DIV    XIX, (XIZ+W)
+      DIV    XIY, (XIZ+W)
+      DIV    XIZ, (XIZ+W)
+      DIV    XSP, (XIZ+W)
+      DIVS   XWA, (XIZ+W)
+      DIVS   XBC, (XIZ+W)
+      DIVS   XDE, (XIZ+W)
+      DIVS   XHL, (XIZ+W)
+      DIVS   XIX, (XIZ+W)
+      DIVS   XIY, (XIZ+W)
+      DIVS   XIZ, (XIZ+W)
+      DIVS   XSP, (XIZ+W)
       ADD    WA, (XIZ+W)
       ADD    BC, (XIZ+W)
       ADD    DE, (XIZ+W)
@@ -23540,6 +26026,38 @@
       EX     IY, (XIZ+C)
       EX     IZ, (XIZ+C)
       EX     SP, (XIZ+C)
+      MUL    XWA, (XIZ+C)
+      MUL    XBC, (XIZ+C)
+      MUL    XDE, (XIZ+C)
+      MUL    XHL, (XIZ+C)
+      MUL    XIX, (XIZ+C)
+      MUL    XIY, (XIZ+C)
+      MUL    XIZ, (XIZ+C)
+      MUL    XSP, (XIZ+C)
+      MULS   XWA, (XIZ+C)
+      MULS   XBC, (XIZ+C)
+      MULS   XDE, (XIZ+C)
+      MULS   XHL, (XIZ+C)
+      MULS   XIX, (XIZ+C)
+      MULS   XIY, (XIZ+C)
+      MULS   XIZ, (XIZ+C)
+      MULS   XSP, (XIZ+C)
+      DIV    XWA, (XIZ+C)
+      DIV    XBC, (XIZ+C)
+      DIV    XDE, (XIZ+C)
+      DIV    XHL, (XIZ+C)
+      DIV    XIX, (XIZ+C)
+      DIV    XIY, (XIZ+C)
+      DIV    XIZ, (XIZ+C)
+      DIV    XSP, (XIZ+C)
+      DIVS   XWA, (XIZ+C)
+      DIVS   XBC, (XIZ+C)
+      DIVS   XDE, (XIZ+C)
+      DIVS   XHL, (XIZ+C)
+      DIVS   XIX, (XIZ+C)
+      DIVS   XIY, (XIZ+C)
+      DIVS   XIZ, (XIZ+C)
+      DIVS   XSP, (XIZ+C)
       ADD    WA, (XIZ+C)
       ADD    BC, (XIZ+C)
       ADD    DE, (XIZ+C)
@@ -23619,6 +26137,38 @@
       EX     IY, (XIZ+B)
       EX     IZ, (XIZ+B)
       EX     SP, (XIZ+B)
+      MUL    XWA, (XIZ+B)
+      MUL    XBC, (XIZ+B)
+      MUL    XDE, (XIZ+B)
+      MUL    XHL, (XIZ+B)
+      MUL    XIX, (XIZ+B)
+      MUL    XIY, (XIZ+B)
+      MUL    XIZ, (XIZ+B)
+      MUL    XSP, (XIZ+B)
+      MULS   XWA, (XIZ+B)
+      MULS   XBC, (XIZ+B)
+      MULS   XDE, (XIZ+B)
+      MULS   XHL, (XIZ+B)
+      MULS   XIX, (XIZ+B)
+      MULS   XIY, (XIZ+B)
+      MULS   XIZ, (XIZ+B)
+      MULS   XSP, (XIZ+B)
+      DIV    XWA, (XIZ+B)
+      DIV    XBC, (XIZ+B)
+      DIV    XDE, (XIZ+B)
+      DIV    XHL, (XIZ+B)
+      DIV    XIX, (XIZ+B)
+      DIV    XIY, (XIZ+B)
+      DIV    XIZ, (XIZ+B)
+      DIV    XSP, (XIZ+B)
+      DIVS   XWA, (XIZ+B)
+      DIVS   XBC, (XIZ+B)
+      DIVS   XDE, (XIZ+B)
+      DIVS   XHL, (XIZ+B)
+      DIVS   XIX, (XIZ+B)
+      DIVS   XIY, (XIZ+B)
+      DIVS   XIZ, (XIZ+B)
+      DIVS   XSP, (XIZ+B)
       ADD    WA, (XIZ+B)
       ADD    BC, (XIZ+B)
       ADD    DE, (XIZ+B)
@@ -23697,6 +26247,38 @@
       EX     IY, (XIZ+E)
       EX     IZ, (XIZ+E)
       EX     SP, (XIZ+E)
+      MUL    XWA, (XIZ+E)
+      MUL    XBC, (XIZ+E)
+      MUL    XDE, (XIZ+E)
+      MUL    XHL, (XIZ+E)
+      MUL    XIX, (XIZ+E)
+      MUL    XIY, (XIZ+E)
+      MUL    XIZ, (XIZ+E)
+      MUL    XSP, (XIZ+E)
+      MULS   XWA, (XIZ+E)
+      MULS   XBC, (XIZ+E)
+      MULS   XDE, (XIZ+E)
+      MULS   XHL, (XIZ+E)
+      MULS   XIX, (XIZ+E)
+      MULS   XIY, (XIZ+E)
+      MULS   XIZ, (XIZ+E)
+      MULS   XSP, (XIZ+E)
+      DIV    XWA, (XIZ+E)
+      DIV    XBC, (XIZ+E)
+      DIV    XDE, (XIZ+E)
+      DIV    XHL, (XIZ+E)
+      DIV    XIX, (XIZ+E)
+      DIV    XIY, (XIZ+E)
+      DIV    XIZ, (XIZ+E)
+      DIV    XSP, (XIZ+E)
+      DIVS   XWA, (XIZ+E)
+      DIVS   XBC, (XIZ+E)
+      DIVS   XDE, (XIZ+E)
+      DIVS   XHL, (XIZ+E)
+      DIVS   XIX, (XIZ+E)
+      DIVS   XIY, (XIZ+E)
+      DIVS   XIZ, (XIZ+E)
+      DIVS   XSP, (XIZ+E)
       ADD    WA, (XIZ+E)
       ADD    BC, (XIZ+E)
       ADD    DE, (XIZ+E)
@@ -23777,6 +26359,38 @@
       EX     IY, (XIZ+D)
       EX     IZ, (XIZ+D)
       EX     SP, (XIZ+D)
+      MUL    XWA, (XIZ+D)
+      MUL    XBC, (XIZ+D)
+      MUL    XDE, (XIZ+D)
+      MUL    XHL, (XIZ+D)
+      MUL    XIX, (XIZ+D)
+      MUL    XIY, (XIZ+D)
+      MUL    XIZ, (XIZ+D)
+      MUL    XSP, (XIZ+D)
+      MULS   XWA, (XIZ+D)
+      MULS   XBC, (XIZ+D)
+      MULS   XDE, (XIZ+D)
+      MULS   XHL, (XIZ+D)
+      MULS   XIX, (XIZ+D)
+      MULS   XIY, (XIZ+D)
+      MULS   XIZ, (XIZ+D)
+      MULS   XSP, (XIZ+D)
+      DIV    XWA, (XIZ+D)
+      DIV    XBC, (XIZ+D)
+      DIV    XDE, (XIZ+D)
+      DIV    XHL, (XIZ+D)
+      DIV    XIX, (XIZ+D)
+      DIV    XIY, (XIZ+D)
+      DIV    XIZ, (XIZ+D)
+      DIV    XSP, (XIZ+D)
+      DIVS   XWA, (XIZ+D)
+      DIVS   XBC, (XIZ+D)
+      DIVS   XDE, (XIZ+D)
+      DIVS   XHL, (XIZ+D)
+      DIVS   XIX, (XIZ+D)
+      DIVS   XIY, (XIZ+D)
+      DIVS   XIZ, (XIZ+D)
+      DIVS   XSP, (XIZ+D)
       ADD    WA, (XIZ+D)
       ADD    BC, (XIZ+D)
       ADD    DE, (XIZ+D)
@@ -23857,6 +26471,38 @@
       EX     IY, (XIZ+L)
       EX     IZ, (XIZ+L)
       EX     SP, (XIZ+L)
+      MUL    XWA, (XIZ+L)
+      MUL    XBC, (XIZ+L)
+      MUL    XDE, (XIZ+L)
+      MUL    XHL, (XIZ+L)
+      MUL    XIX, (XIZ+L)
+      MUL    XIY, (XIZ+L)
+      MUL    XIZ, (XIZ+L)
+      MUL    XSP, (XIZ+L)
+      MULS   XWA, (XIZ+L)
+      MULS   XBC, (XIZ+L)
+      MULS   XDE, (XIZ+L)
+      MULS   XHL, (XIZ+L)
+      MULS   XIX, (XIZ+L)
+      MULS   XIY, (XIZ+L)
+      MULS   XIZ, (XIZ+L)
+      MULS   XSP, (XIZ+L)
+      DIV    XWA, (XIZ+L)
+      DIV    XBC, (XIZ+L)
+      DIV    XDE, (XIZ+L)
+      DIV    XHL, (XIZ+L)
+      DIV    XIX, (XIZ+L)
+      DIV    XIY, (XIZ+L)
+      DIV    XIZ, (XIZ+L)
+      DIV    XSP, (XIZ+L)
+      DIVS   XWA, (XIZ+L)
+      DIVS   XBC, (XIZ+L)
+      DIVS   XDE, (XIZ+L)
+      DIVS   XHL, (XIZ+L)
+      DIVS   XIX, (XIZ+L)
+      DIVS   XIY, (XIZ+L)
+      DIVS   XIZ, (XIZ+L)
+      DIVS   XSP, (XIZ+L)
       ADD    WA, (XIZ+L)
       ADD    BC, (XIZ+L)
       ADD    DE, (XIZ+L)
@@ -23937,6 +26583,38 @@
       EX     IY, (XIZ+H)
       EX     IZ, (XIZ+H)
       EX     SP, (XIZ+H)
+      MUL    XWA, (XIZ+H)
+      MUL    XBC, (XIZ+H)
+      MUL    XDE, (XIZ+H)
+      MUL    XHL, (XIZ+H)
+      MUL    XIX, (XIZ+H)
+      MUL    XIY, (XIZ+H)
+      MUL    XIZ, (XIZ+H)
+      MUL    XSP, (XIZ+H)
+      MULS   XWA, (XIZ+H)
+      MULS   XBC, (XIZ+H)
+      MULS   XDE, (XIZ+H)
+      MULS   XHL, (XIZ+H)
+      MULS   XIX, (XIZ+H)
+      MULS   XIY, (XIZ+H)
+      MULS   XIZ, (XIZ+H)
+      MULS   XSP, (XIZ+H)
+      DIV    XWA, (XIZ+H)
+      DIV    XBC, (XIZ+H)
+      DIV    XDE, (XIZ+H)
+      DIV    XHL, (XIZ+H)
+      DIV    XIX, (XIZ+H)
+      DIV    XIY, (XIZ+H)
+      DIV    XIZ, (XIZ+H)
+      DIV    XSP, (XIZ+H)
+      DIVS   XWA, (XIZ+H)
+      DIVS   XBC, (XIZ+H)
+      DIVS   XDE, (XIZ+H)
+      DIVS   XHL, (XIZ+H)
+      DIVS   XIX, (XIZ+H)
+      DIVS   XIY, (XIZ+H)
+      DIVS   XIZ, (XIZ+H)
+      DIVS   XSP, (XIZ+H)
       ADD    WA, (XIZ+H)
       ADD    BC, (XIZ+H)
       ADD    DE, (XIZ+H)
@@ -23993,6 +26671,1798 @@
       OR     IY, (XIZ+H)
       OR     IZ, (XIZ+H)
       OR     SP, (XIZ+H)
+      OR     BC, (XSP+A)
+      OR     DE, (XSP+A)
+      OR     HL, (XSP+A)
+      OR     IX, (XSP+A)
+      OR     IY, (XSP+A)
+      OR     IZ, (XSP+A)
+      OR     SP, (XSP+A)
+      CP     WA, (XSP+A)
+      CP     BC, (XSP+A)
+      CP     DE, (XSP+A)
+      CP     HL, (XSP+A)
+      CP     IX, (XSP+A)
+      CP     IY, (XSP+A)
+      CP     IZ, (XSP+A)
+      CP     SP, (XSP+A)
+      LD     WA, (XSP+A)
+      LD     BC, (XSP+A)
+      LD     DE, (XSP+A)
+      LD     HL, (XSP+A)
+      LD     IX, (XSP+A)
+      LD     IY, (XSP+A)
+      LD     IZ, (XSP+A)
+      LD     SP, (XSP+A)
+      EX     WA, (XSP+A)
+      EX     BC, (XSP+A)
+      EX     DE, (XSP+A)
+      EX     HL, (XSP+A)
+      EX     IX, (XSP+A)
+      EX     IY, (XSP+A)
+      EX     IZ, (XSP+A)
+      EX     SP, (XSP+A)
+      MUL    XWA, (XSP+A)
+      MUL    XBC, (XSP+A)
+      MUL    XDE, (XSP+A)
+      MUL    XHL, (XSP+A)
+      MUL    XIX, (XSP+A)
+      MUL    XIY, (XSP+A)
+      MUL    XIZ, (XSP+A)
+      MUL    XSP, (XSP+A)
+      MULS   XWA, (XSP+A)
+      MULS   XBC, (XSP+A)
+      MULS   XDE, (XSP+A)
+      MULS   XHL, (XSP+A)
+      MULS   XIX, (XSP+A)
+      MULS   XIY, (XSP+A)
+      MULS   XIZ, (XSP+A)
+      MULS   XSP, (XSP+A)
+      DIV    XWA, (XSP+A)
+      DIV    XBC, (XSP+A)
+      DIV    XDE, (XSP+A)
+      DIV    XHL, (XSP+A)
+      DIV    XIX, (XSP+A)
+      DIV    XIY, (XSP+A)
+      DIV    XIZ, (XSP+A)
+      DIV    XSP, (XSP+A)
+      DIVS   XWA, (XSP+A)
+      DIVS   XBC, (XSP+A)
+      DIVS   XDE, (XSP+A)
+      DIVS   XHL, (XSP+A)
+      DIVS   XIX, (XSP+A)
+      DIVS   XIY, (XSP+A)
+      DIVS   XIZ, (XSP+A)
+      DIVS   XSP, (XSP+A)
+      ADD    WA, (XSP+A)
+      ADD    BC, (XSP+A)
+      ADD    DE, (XSP+A)
+      ADD    HL, (XSP+A)
+      ADD    IX, (XSP+A)
+      ADD    IY, (XSP+A)
+      ADD    IZ, (XSP+A)
+      ADD    SP, (XSP+A)
+      ADC    WA, (XSP+A)
+      ADC    BC, (XSP+A)
+      ADC    DE, (XSP+A)
+      ADC    HL, (XSP+A)
+      ADC    IX, (XSP+A)
+      ADC    IY, (XSP+A)
+      ADC    IZ, (XSP+A)
+      ADC    SP, (XSP+A)
+      SUB    WA, (XSP+A)
+      SUB    BC, (XSP+A)
+      SUB    DE, (XSP+A)
+      SUB    HL, (XSP+A)
+      SUB    IX, (XSP+A)
+      SUB    IY, (XSP+A)
+      SUB    IZ, (XSP+A)
+      SUB    SP, (XSP+A)
+      SBC    WA, (XSP+A)
+      SBC    BC, (XSP+A)
+      SBC    DE, (XSP+A)
+      SBC    HL, (XSP+A)
+      SBC    IX, (XSP+A)
+      SBC    IY, (XSP+A)
+      SBC    IZ, (XSP+A)
+      SBC    SP, (XSP+A)
+      AND    WA, (XSP+A)
+      AND    BC, (XSP+A)
+      AND    DE, (XSP+A)
+      AND    HL, (XSP+A)
+      AND    IX, (XSP+A)
+      AND    IY, (XSP+A)
+      AND    IZ, (XSP+A)
+      AND    SP, (XSP+A)
+      XOR    WA, (XSP+A)
+      XOR    BC, (XSP+A)
+      XOR    DE, (XSP+A)
+      XOR    HL, (XSP+A)
+      XOR    IX, (XSP+A)
+      XOR    IY, (XSP+A)
+      XOR    IZ, (XSP+A)
+      XOR    SP, (XSP+A)
+      OR     WA, (XSP+A)
+      OR     DE, (XSP+W)
+      OR     HL, (XSP+W)
+      OR     IX, (XSP+W)
+      OR     IY, (XSP+W)
+      OR     IZ, (XSP+W)
+      OR     SP, (XSP+W)
+      CP     WA, (XSP+W)
+      CP     BC, (XSP+W)
+      CP     DE, (XSP+W)
+      CP     HL, (XSP+W)
+      CP     IX, (XSP+W)
+      CP     IY, (XSP+W)
+      CP     IZ, (XSP+W)
+      CP     SP, (XSP+W)
+      LD     WA, (XSP+W)
+      LD     BC, (XSP+W)
+      LD     DE, (XSP+W)
+      LD     HL, (XSP+W)
+      LD     IX, (XSP+W)
+      LD     IY, (XSP+W)
+      LD     IZ, (XSP+W)
+      LD     SP, (XSP+W)
+      EX     WA, (XSP+W)
+      EX     BC, (XSP+W)
+      EX     DE, (XSP+W)
+      EX     HL, (XSP+W)
+      EX     IX, (XSP+W)
+      EX     IY, (XSP+W)
+      EX     IZ, (XSP+W)
+      EX     SP, (XSP+W)
+      MUL    XWA, (XSP+W)
+      MUL    XBC, (XSP+W)
+      MUL    XDE, (XSP+W)
+      MUL    XHL, (XSP+W)
+      MUL    XIX, (XSP+W)
+      MUL    XIY, (XSP+W)
+      MUL    XIZ, (XSP+W)
+      MUL    XSP, (XSP+W)
+      MULS   XWA, (XSP+W)
+      MULS   XBC, (XSP+W)
+      MULS   XDE, (XSP+W)
+      MULS   XHL, (XSP+W)
+      MULS   XIX, (XSP+W)
+      MULS   XIY, (XSP+W)
+      MULS   XIZ, (XSP+W)
+      MULS   XSP, (XSP+W)
+      DIV    XWA, (XSP+W)
+      DIV    XBC, (XSP+W)
+      DIV    XDE, (XSP+W)
+      DIV    XHL, (XSP+W)
+      DIV    XIX, (XSP+W)
+      DIV    XIY, (XSP+W)
+      DIV    XIZ, (XSP+W)
+      DIV    XSP, (XSP+W)
+      DIVS   XWA, (XSP+W)
+      DIVS   XBC, (XSP+W)
+      DIVS   XDE, (XSP+W)
+      DIVS   XHL, (XSP+W)
+      DIVS   XIX, (XSP+W)
+      DIVS   XIY, (XSP+W)
+      DIVS   XIZ, (XSP+W)
+      DIVS   XSP, (XSP+W)
+      ADD    WA, (XSP+W)
+      ADD    BC, (XSP+W)
+      ADD    DE, (XSP+W)
+      ADD    HL, (XSP+W)
+      ADD    IX, (XSP+W)
+      ADD    IY, (XSP+W)
+      ADD    IZ, (XSP+W)
+      ADD    SP, (XSP+W)
+      ADC    WA, (XSP+W)
+      ADC    BC, (XSP+W)
+      ADC    DE, (XSP+W)
+      ADC    HL, (XSP+W)
+      ADC    IX, (XSP+W)
+      ADC    IY, (XSP+W)
+      ADC    IZ, (XSP+W)
+      ADC    SP, (XSP+W)
+      SUB    WA, (XSP+W)
+      SUB    BC, (XSP+W)
+      SUB    DE, (XSP+W)
+      SUB    HL, (XSP+W)
+      SUB    IX, (XSP+W)
+      SUB    IY, (XSP+W)
+      SUB    IZ, (XSP+W)
+      SUB    SP, (XSP+W)
+      SBC    WA, (XSP+W)
+      SBC    BC, (XSP+W)
+      SBC    DE, (XSP+W)
+      SBC    HL, (XSP+W)
+      SBC    IX, (XSP+W)
+      SBC    IY, (XSP+W)
+      SBC    IZ, (XSP+W)
+      SBC    SP, (XSP+W)
+      AND    WA, (XSP+W)
+      AND    BC, (XSP+W)
+      AND    DE, (XSP+W)
+      AND    HL, (XSP+W)
+      AND    IX, (XSP+W)
+      AND    IY, (XSP+W)
+      AND    IZ, (XSP+W)
+      AND    SP, (XSP+W)
+      XOR    WA, (XSP+W)
+      XOR    BC, (XSP+W)
+      XOR    DE, (XSP+W)
+      XOR    HL, (XSP+W)
+      XOR    IX, (XSP+W)
+      XOR    IY, (XSP+W)
+      XOR    IZ, (XSP+W)
+      XOR    SP, (XSP+W)
+      OR     WA, (XSP+W)
+      OR     BC, (XSP+W)
+      OR     IY, (XSP+C)
+      OR     IZ, (XSP+C)
+      OR     SP, (XSP+C)
+      CP     WA, (XSP+C)
+      CP     BC, (XSP+C)
+      CP     DE, (XSP+C)
+      CP     HL, (XSP+C)
+      CP     IX, (XSP+C)
+      CP     IY, (XSP+C)
+      CP     IZ, (XSP+C)
+      CP     SP, (XSP+C)
+      LD     WA, (XSP+C)
+      LD     BC, (XSP+C)
+      LD     DE, (XSP+C)
+      LD     HL, (XSP+C)
+      LD     IX, (XSP+C)
+      LD     IY, (XSP+C)
+      LD     IZ, (XSP+C)
+      LD     SP, (XSP+C)
+      EX     WA, (XSP+C)
+      EX     BC, (XSP+C)
+      EX     DE, (XSP+C)
+      EX     HL, (XSP+C)
+      EX     IX, (XSP+C)
+      EX     IY, (XSP+C)
+      EX     IZ, (XSP+C)
+      EX     SP, (XSP+C)
+      MUL    XWA, (XSP+C)
+      MUL    XBC, (XSP+C)
+      MUL    XDE, (XSP+C)
+      MUL    XHL, (XSP+C)
+      MUL    XIX, (XSP+C)
+      MUL    XIY, (XSP+C)
+      MUL    XIZ, (XSP+C)
+      MUL    XSP, (XSP+C)
+      MULS   XWA, (XSP+C)
+      MULS   XBC, (XSP+C)
+      MULS   XDE, (XSP+C)
+      MULS   XHL, (XSP+C)
+      MULS   XIX, (XSP+C)
+      MULS   XIY, (XSP+C)
+      MULS   XIZ, (XSP+C)
+      MULS   XSP, (XSP+C)
+      DIV    XWA, (XSP+C)
+      DIV    XBC, (XSP+C)
+      DIV    XDE, (XSP+C)
+      DIV    XHL, (XSP+C)
+      DIV    XIX, (XSP+C)
+      DIV    XIY, (XSP+C)
+      DIV    XIZ, (XSP+C)
+      DIV    XSP, (XSP+C)
+      DIVS   XWA, (XSP+C)
+      DIVS   XBC, (XSP+C)
+      DIVS   XDE, (XSP+C)
+      DIVS   XHL, (XSP+C)
+      DIVS   XIX, (XSP+C)
+      DIVS   XIY, (XSP+C)
+      DIVS   XIZ, (XSP+C)
+      DIVS   XSP, (XSP+C)
+      ADD    WA, (XSP+C)
+      ADD    BC, (XSP+C)
+      ADD    DE, (XSP+C)
+      ADD    HL, (XSP+C)
+      ADD    IX, (XSP+C)
+      ADD    IY, (XSP+C)
+      ADD    IZ, (XSP+C)
+      ADD    SP, (XSP+C)
+      ADC    WA, (XSP+C)
+      ADC    BC, (XSP+C)
+      ADC    DE, (XSP+C)
+      ADC    HL, (XSP+C)
+      ADC    IX, (XSP+C)
+      ADC    IY, (XSP+C)
+      ADC    IZ, (XSP+C)
+      ADC    SP, (XSP+C)
+      SUB    WA, (XSP+C)
+      SUB    BC, (XSP+C)
+      SUB    DE, (XSP+C)
+      SUB    HL, (XSP+C)
+      SUB    IX, (XSP+C)
+      SUB    IY, (XSP+C)
+      SUB    IZ, (XSP+C)
+      SUB    SP, (XSP+C)
+      SBC    WA, (XSP+C)
+      SBC    BC, (XSP+C)
+      SBC    DE, (XSP+C)
+      SBC    HL, (XSP+C)
+      SBC    IX, (XSP+C)
+      SBC    IY, (XSP+C)
+      SBC    IZ, (XSP+C)
+      SBC    SP, (XSP+C)
+      AND    WA, (XSP+C)
+      AND    BC, (XSP+C)
+      AND    DE, (XSP+C)
+      AND    HL, (XSP+C)
+      AND    IX, (XSP+C)
+      AND    IY, (XSP+C)
+      AND    IZ, (XSP+C)
+      AND    SP, (XSP+C)
+      XOR    WA, (XSP+C)
+      XOR    BC, (XSP+C)
+      XOR    DE, (XSP+C)
+      XOR    HL, (XSP+C)
+      XOR    IX, (XSP+C)
+      XOR    IY, (XSP+C)
+      XOR    IZ, (XSP+C)
+      XOR    SP, (XSP+C)
+      OR     WA, (XSP+C)
+      OR     BC, (XSP+C)
+      OR     DE, (XSP+C)
+      OR     HL, (XSP+C)
+      OR     IX, (XSP+C)
+      OR     IZ, (XSP+B)
+      OR     SP, (XSP+B)
+      CP     WA, (XSP+B)
+      CP     BC, (XSP+B)
+      CP     DE, (XSP+B)
+      CP     HL, (XSP+B)
+      CP     IX, (XSP+B)
+      CP     IY, (XSP+B)
+      CP     IZ, (XSP+B)
+      CP     SP, (XSP+B)
+      LD     WA, (XSP+B)
+      LD     BC, (XSP+B)
+      LD     DE, (XSP+B)
+      LD     HL, (XSP+B)
+      LD     IX, (XSP+B)
+      LD     IY, (XSP+B)
+      LD     IZ, (XSP+B)
+      LD     SP, (XSP+B)
+      EX     WA, (XSP+B)
+      EX     BC, (XSP+B)
+      EX     DE, (XSP+B)
+      EX     HL, (XSP+B)
+      EX     IX, (XSP+B)
+      EX     IY, (XSP+B)
+      EX     IZ, (XSP+B)
+      EX     SP, (XSP+B)
+      MUL    XWA, (XSP+B)
+      MUL    XBC, (XSP+B)
+      MUL    XDE, (XSP+B)
+      MUL    XHL, (XSP+B)
+      MUL    XIX, (XSP+B)
+      MUL    XIY, (XSP+B)
+      MUL    XIZ, (XSP+B)
+      MUL    XSP, (XSP+B)
+      MULS   XWA, (XSP+B)
+      MULS   XBC, (XSP+B)
+      MULS   XDE, (XSP+B)
+      MULS   XHL, (XSP+B)
+      MULS   XIX, (XSP+B)
+      MULS   XIY, (XSP+B)
+      MULS   XIZ, (XSP+B)
+      MULS   XSP, (XSP+B)
+      DIV    XWA, (XSP+B)
+      DIV    XBC, (XSP+B)
+      DIV    XDE, (XSP+B)
+      DIV    XHL, (XSP+B)
+      DIV    XIX, (XSP+B)
+      DIV    XIY, (XSP+B)
+      DIV    XIZ, (XSP+B)
+      DIV    XSP, (XSP+B)
+      DIVS   XWA, (XSP+B)
+      DIVS   XBC, (XSP+B)
+      DIVS   XDE, (XSP+B)
+      DIVS   XHL, (XSP+B)
+      DIVS   XIX, (XSP+B)
+      DIVS   XIY, (XSP+B)
+      DIVS   XIZ, (XSP+B)
+      DIVS   XSP, (XSP+B)
+      ADD    WA, (XSP+B)
+      ADD    BC, (XSP+B)
+      ADD    DE, (XSP+B)
+      ADD    HL, (XSP+B)
+      ADD    IX, (XSP+B)
+      ADD    IY, (XSP+B)
+      ADD    IZ, (XSP+B)
+      ADD    SP, (XSP+B)
+      ADC    WA, (XSP+B)
+      ADC    BC, (XSP+B)
+      ADC    DE, (XSP+B)
+      ADC    HL, (XSP+B)
+      ADC    IX, (XSP+B)
+      ADC    IY, (XSP+B)
+      ADC    IZ, (XSP+B)
+      ADC    SP, (XSP+B)
+      SUB    WA, (XSP+B)
+      SUB    BC, (XSP+B)
+      SUB    DE, (XSP+B)
+      SUB    HL, (XSP+B)
+      SUB    IX, (XSP+B)
+      SUB    IY, (XSP+B)
+      SUB    IZ, (XSP+B)
+      SUB    SP, (XSP+B)
+      SBC    WA, (XSP+B)
+      SBC    BC, (XSP+B)
+      SBC    DE, (XSP+B)
+      SBC    HL, (XSP+B)
+      SBC    IX, (XSP+B)
+      SBC    IY, (XSP+B)
+      SBC    IZ, (XSP+B)
+      SBC    SP, (XSP+B)
+      AND    WA, (XSP+B)
+      AND    BC, (XSP+B)
+      AND    DE, (XSP+B)
+      AND    HL, (XSP+B)
+      AND    IX, (XSP+B)
+      AND    IY, (XSP+B)
+      AND    IZ, (XSP+B)
+      AND    SP, (XSP+B)
+      XOR    WA, (XSP+B)
+      XOR    BC, (XSP+B)
+      XOR    DE, (XSP+B)
+      XOR    HL, (XSP+B)
+      XOR    IX, (XSP+B)
+      XOR    IY, (XSP+B)
+      XOR    IZ, (XSP+B)
+      XOR    SP, (XSP+B)
+      OR     WA, (XSP+B)
+      OR     BC, (XSP+B)
+      OR     DE, (XSP+B)
+      OR     HL, (XSP+B)
+      OR     IX, (XSP+B)
+      OR     IY, (XSP+B)
+      CP     WA, (XSP+E)
+      CP     BC, (XSP+E)
+      CP     DE, (XSP+E)
+      CP     HL, (XSP+E)
+      CP     IX, (XSP+E)
+      CP     IY, (XSP+E)
+      CP     IZ, (XSP+E)
+      CP     SP, (XSP+E)
+      LD     WA, (XSP+E)
+      LD     BC, (XSP+E)
+      LD     DE, (XSP+E)
+      LD     HL, (XSP+E)
+      LD     IX, (XSP+E)
+      LD     IY, (XSP+E)
+      LD     IZ, (XSP+E)
+      LD     SP, (XSP+E)
+      EX     WA, (XSP+E)
+      EX     BC, (XSP+E)
+      EX     DE, (XSP+E)
+      EX     HL, (XSP+E)
+      EX     IX, (XSP+E)
+      EX     IY, (XSP+E)
+      EX     IZ, (XSP+E)
+      EX     SP, (XSP+E)
+      MUL    XWA, (XSP+E)
+      MUL    XBC, (XSP+E)
+      MUL    XDE, (XSP+E)
+      MUL    XHL, (XSP+E)
+      MUL    XIX, (XSP+E)
+      MUL    XIY, (XSP+E)
+      MUL    XIZ, (XSP+E)
+      MUL    XSP, (XSP+E)
+      MULS   XWA, (XSP+E)
+      MULS   XBC, (XSP+E)
+      MULS   XDE, (XSP+E)
+      MULS   XHL, (XSP+E)
+      MULS   XIX, (XSP+E)
+      MULS   XIY, (XSP+E)
+      MULS   XIZ, (XSP+E)
+      MULS   XSP, (XSP+E)
+      DIV    XWA, (XSP+E)
+      DIV    XBC, (XSP+E)
+      DIV    XDE, (XSP+E)
+      DIV    XHL, (XSP+E)
+      DIV    XIX, (XSP+E)
+      DIV    XIY, (XSP+E)
+      DIV    XIZ, (XSP+E)
+      DIV    XSP, (XSP+E)
+      DIVS   XWA, (XSP+E)
+      DIVS   XBC, (XSP+E)
+      DIVS   XDE, (XSP+E)
+      DIVS   XHL, (XSP+E)
+      DIVS   XIX, (XSP+E)
+      DIVS   XIY, (XSP+E)
+      DIVS   XIZ, (XSP+E)
+      DIVS   XSP, (XSP+E)
+      ADD    WA, (XSP+E)
+      ADD    BC, (XSP+E)
+      ADD    DE, (XSP+E)
+      ADD    HL, (XSP+E)
+      ADD    IX, (XSP+E)
+      ADD    IY, (XSP+E)
+      ADD    IZ, (XSP+E)
+      ADD    SP, (XSP+E)
+      ADC    WA, (XSP+E)
+      ADC    BC, (XSP+E)
+      ADC    DE, (XSP+E)
+      ADC    HL, (XSP+E)
+      ADC    IX, (XSP+E)
+      ADC    IY, (XSP+E)
+      ADC    IZ, (XSP+E)
+      ADC    SP, (XSP+E)
+      SUB    WA, (XSP+E)
+      SUB    BC, (XSP+E)
+      SUB    DE, (XSP+E)
+      SUB    HL, (XSP+E)
+      SUB    IX, (XSP+E)
+      SUB    IY, (XSP+E)
+      SUB    IZ, (XSP+E)
+      SUB    SP, (XSP+E)
+      SBC    WA, (XSP+E)
+      SBC    BC, (XSP+E)
+      SBC    DE, (XSP+E)
+      SBC    HL, (XSP+E)
+      SBC    IX, (XSP+E)
+      SBC    IY, (XSP+E)
+      SBC    IZ, (XSP+E)
+      SBC    SP, (XSP+E)
+      AND    WA, (XSP+E)
+      AND    BC, (XSP+E)
+      AND    DE, (XSP+E)
+      AND    HL, (XSP+E)
+      AND    IX, (XSP+E)
+      AND    IY, (XSP+E)
+      AND    IZ, (XSP+E)
+      AND    SP, (XSP+E)
+      XOR    WA, (XSP+E)
+      XOR    BC, (XSP+E)
+      XOR    DE, (XSP+E)
+      XOR    HL, (XSP+E)
+      XOR    IX, (XSP+E)
+      XOR    IY, (XSP+E)
+      XOR    IZ, (XSP+E)
+      XOR    SP, (XSP+E)
+      OR     WA, (XSP+E)
+      OR     BC, (XSP+E)
+      OR     DE, (XSP+E)
+      OR     HL, (XSP+E)
+      OR     IX, (XSP+E)
+      OR     IY, (XSP+E)
+      OR     IZ, (XSP+E)
+      OR     SP, (XSP+E)
+      CP     WA, (XSP+D)
+      CP     BC, (XSP+D)
+      CP     DE, (XSP+D)
+      CP     HL, (XSP+D)
+      CP     IX, (XSP+D)
+      CP     IY, (XSP+D)
+      CP     IZ, (XSP+D)
+      CP     SP, (XSP+D)
+      LD     WA, (XSP+D)
+      LD     BC, (XSP+D)
+      LD     DE, (XSP+D)
+      LD     HL, (XSP+D)
+      LD     IX, (XSP+D)
+      LD     IY, (XSP+D)
+      LD     IZ, (XSP+D)
+      LD     SP, (XSP+D)
+      EX     WA, (XSP+D)
+      EX     BC, (XSP+D)
+      EX     DE, (XSP+D)
+      EX     HL, (XSP+D)
+      EX     IX, (XSP+D)
+      EX     IY, (XSP+D)
+      EX     IZ, (XSP+D)
+      EX     SP, (XSP+D)
+      MUL    XWA, (XSP+D)
+      MUL    XBC, (XSP+D)
+      MUL    XDE, (XSP+D)
+      MUL    XHL, (XSP+D)
+      MUL    XIX, (XSP+D)
+      MUL    XIY, (XSP+D)
+      MUL    XIZ, (XSP+D)
+      MUL    XSP, (XSP+D)
+      MULS   XWA, (XSP+D)
+      MULS   XBC, (XSP+D)
+      MULS   XDE, (XSP+D)
+      MULS   XHL, (XSP+D)
+      MULS   XIX, (XSP+D)
+      MULS   XIY, (XSP+D)
+      MULS   XIZ, (XSP+D)
+      MULS   XSP, (XSP+D)
+      DIV    XWA, (XSP+D)
+      DIV    XBC, (XSP+D)
+      DIV    XDE, (XSP+D)
+      DIV    XHL, (XSP+D)
+      DIV    XIX, (XSP+D)
+      DIV    XIY, (XSP+D)
+      DIV    XIZ, (XSP+D)
+      DIV    XSP, (XSP+D)
+      DIVS   XWA, (XSP+D)
+      DIVS   XBC, (XSP+D)
+      DIVS   XDE, (XSP+D)
+      DIVS   XHL, (XSP+D)
+      DIVS   XIX, (XSP+D)
+      DIVS   XIY, (XSP+D)
+      DIVS   XIZ, (XSP+D)
+      DIVS   XSP, (XSP+D)
+      ADD    WA, (XSP+D)
+      ADD    BC, (XSP+D)
+      ADD    DE, (XSP+D)
+      ADD    HL, (XSP+D)
+      ADD    IX, (XSP+D)
+      ADD    IY, (XSP+D)
+      ADD    IZ, (XSP+D)
+      ADD    SP, (XSP+D)
+      ADC    WA, (XSP+D)
+      ADC    BC, (XSP+D)
+      ADC    DE, (XSP+D)
+      ADC    HL, (XSP+D)
+      ADC    IX, (XSP+D)
+      ADC    IY, (XSP+D)
+      ADC    IZ, (XSP+D)
+      ADC    SP, (XSP+D)
+      SUB    WA, (XSP+D)
+      SUB    BC, (XSP+D)
+      SUB    DE, (XSP+D)
+      SUB    HL, (XSP+D)
+      SUB    IX, (XSP+D)
+      SUB    IY, (XSP+D)
+      SUB    IZ, (XSP+D)
+      SUB    SP, (XSP+D)
+      SBC    WA, (XSP+D)
+      SBC    BC, (XSP+D)
+      SBC    DE, (XSP+D)
+      SBC    HL, (XSP+D)
+      SBC    IX, (XSP+D)
+      SBC    IY, (XSP+D)
+      SBC    IZ, (XSP+D)
+      SBC    SP, (XSP+D)
+      AND    WA, (XSP+D)
+      AND    BC, (XSP+D)
+      AND    DE, (XSP+D)
+      AND    HL, (XSP+D)
+      AND    IX, (XSP+D)
+      AND    IY, (XSP+D)
+      AND    IZ, (XSP+D)
+      AND    SP, (XSP+D)
+      XOR    WA, (XSP+D)
+      XOR    BC, (XSP+D)
+      XOR    DE, (XSP+D)
+      XOR    HL, (XSP+D)
+      XOR    IX, (XSP+D)
+      XOR    IY, (XSP+D)
+      XOR    IZ, (XSP+D)
+      XOR    SP, (XSP+D)
+      OR     WA, (XSP+D)
+      OR     BC, (XSP+D)
+      OR     DE, (XSP+D)
+      OR     HL, (XSP+D)
+      OR     IX, (XSP+D)
+      OR     IY, (XSP+D)
+      OR     IZ, (XSP+D)
+      OR     SP, (XSP+D)
+      CP     WA, (XSP+L)
+      CP     BC, (XSP+L)
+      CP     DE, (XSP+L)
+      CP     HL, (XSP+L)
+      CP     IX, (XSP+L)
+      CP     IY, (XSP+L)
+      CP     IZ, (XSP+L)
+      CP     SP, (XSP+L)
+      LD     WA, (XSP+L)
+      LD     BC, (XSP+L)
+      LD     DE, (XSP+L)
+      LD     HL, (XSP+L)
+      LD     IX, (XSP+L)
+      LD     IY, (XSP+L)
+      LD     IZ, (XSP+L)
+      LD     SP, (XSP+L)
+      EX     WA, (XSP+L)
+      EX     BC, (XSP+L)
+      EX     DE, (XSP+L)
+      EX     HL, (XSP+L)
+      EX     IX, (XSP+L)
+      EX     IY, (XSP+L)
+      EX     IZ, (XSP+L)
+      EX     SP, (XSP+L)
+      MUL    XWA, (XSP+L)
+      MUL    XBC, (XSP+L)
+      MUL    XDE, (XSP+L)
+      MUL    XHL, (XSP+L)
+      MUL    XIX, (XSP+L)
+      MUL    XIY, (XSP+L)
+      MUL    XIZ, (XSP+L)
+      MUL    XSP, (XSP+L)
+      MULS   XWA, (XSP+L)
+      MULS   XBC, (XSP+L)
+      MULS   XDE, (XSP+L)
+      MULS   XHL, (XSP+L)
+      MULS   XIX, (XSP+L)
+      MULS   XIY, (XSP+L)
+      MULS   XIZ, (XSP+L)
+      MULS   XSP, (XSP+L)
+      DIV    XWA, (XSP+L)
+      DIV    XBC, (XSP+L)
+      DIV    XDE, (XSP+L)
+      DIV    XHL, (XSP+L)
+      DIV    XIX, (XSP+L)
+      DIV    XIY, (XSP+L)
+      DIV    XIZ, (XSP+L)
+      DIV    XSP, (XSP+L)
+      DIVS   XWA, (XSP+L)
+      DIVS   XBC, (XSP+L)
+      DIVS   XDE, (XSP+L)
+      DIVS   XHL, (XSP+L)
+      DIVS   XIX, (XSP+L)
+      DIVS   XIY, (XSP+L)
+      DIVS   XIZ, (XSP+L)
+      DIVS   XSP, (XSP+L)
+      ADD    WA, (XSP+L)
+      ADD    BC, (XSP+L)
+      ADD    DE, (XSP+L)
+      ADD    HL, (XSP+L)
+      ADD    IX, (XSP+L)
+      ADD    IY, (XSP+L)
+      ADD    IZ, (XSP+L)
+      ADD    SP, (XSP+L)
+      ADC    WA, (XSP+L)
+      ADC    BC, (XSP+L)
+      ADC    DE, (XSP+L)
+      ADC    HL, (XSP+L)
+      ADC    IX, (XSP+L)
+      ADC    IY, (XSP+L)
+      ADC    IZ, (XSP+L)
+      ADC    SP, (XSP+L)
+      SUB    WA, (XSP+L)
+      SUB    BC, (XSP+L)
+      SUB    DE, (XSP+L)
+      SUB    HL, (XSP+L)
+      SUB    IX, (XSP+L)
+      SUB    IY, (XSP+L)
+      SUB    IZ, (XSP+L)
+      SUB    SP, (XSP+L)
+      SBC    WA, (XSP+L)
+      SBC    BC, (XSP+L)
+      SBC    DE, (XSP+L)
+      SBC    HL, (XSP+L)
+      SBC    IX, (XSP+L)
+      SBC    IY, (XSP+L)
+      SBC    IZ, (XSP+L)
+      SBC    SP, (XSP+L)
+      AND    WA, (XSP+L)
+      AND    BC, (XSP+L)
+      AND    DE, (XSP+L)
+      AND    HL, (XSP+L)
+      AND    IX, (XSP+L)
+      AND    IY, (XSP+L)
+      AND    IZ, (XSP+L)
+      AND    SP, (XSP+L)
+      XOR    WA, (XSP+L)
+      XOR    BC, (XSP+L)
+      XOR    DE, (XSP+L)
+      XOR    HL, (XSP+L)
+      XOR    IX, (XSP+L)
+      XOR    IY, (XSP+L)
+      XOR    IZ, (XSP+L)
+      XOR    SP, (XSP+L)
+      OR     WA, (XSP+L)
+      OR     BC, (XSP+L)
+      OR     DE, (XSP+L)
+      OR     HL, (XSP+L)
+      OR     IX, (XSP+L)
+      OR     IY, (XSP+L)
+      OR     IZ, (XSP+L)
+      OR     SP, (XSP+L)
+      CP     WA, (XSP+H)
+      CP     BC, (XSP+H)
+      CP     DE, (XSP+H)
+      CP     HL, (XSP+H)
+      CP     IX, (XSP+H)
+      CP     IY, (XSP+H)
+      CP     IZ, (XSP+H)
+      CP     SP, (XSP+H)
+      LD     WA, (XSP+H)
+      LD     BC, (XSP+H)
+      LD     DE, (XSP+H)
+      LD     HL, (XSP+H)
+      LD     IX, (XSP+H)
+      LD     IY, (XSP+H)
+      LD     IZ, (XSP+H)
+      LD     SP, (XSP+H)
+      EX     WA, (XSP+H)
+      EX     BC, (XSP+H)
+      EX     DE, (XSP+H)
+      EX     HL, (XSP+H)
+      EX     IX, (XSP+H)
+      EX     IY, (XSP+H)
+      EX     IZ, (XSP+H)
+      EX     SP, (XSP+H)
+      MUL    XWA, (XSP+H)
+      MUL    XBC, (XSP+H)
+      MUL    XDE, (XSP+H)
+      MUL    XHL, (XSP+H)
+      MUL    XIX, (XSP+H)
+      MUL    XIY, (XSP+H)
+      MUL    XIZ, (XSP+H)
+      MUL    XSP, (XSP+H)
+      MULS   XWA, (XSP+H)
+      MULS   XBC, (XSP+H)
+      MULS   XDE, (XSP+H)
+      MULS   XHL, (XSP+H)
+      MULS   XIX, (XSP+H)
+      MULS   XIY, (XSP+H)
+      MULS   XIZ, (XSP+H)
+      MULS   XSP, (XSP+H)
+      DIV    XWA, (XSP+H)
+      DIV    XBC, (XSP+H)
+      DIV    XDE, (XSP+H)
+      DIV    XHL, (XSP+H)
+      DIV    XIX, (XSP+H)
+      DIV    XIY, (XSP+H)
+      DIV    XIZ, (XSP+H)
+      DIV    XSP, (XSP+H)
+      DIVS   XWA, (XSP+H)
+      DIVS   XBC, (XSP+H)
+      DIVS   XDE, (XSP+H)
+      DIVS   XHL, (XSP+H)
+      DIVS   XIX, (XSP+H)
+      DIVS   XIY, (XSP+H)
+      DIVS   XIZ, (XSP+H)
+      DIVS   XSP, (XSP+H)
+      ADD    WA, (XSP+H)
+      ADD    BC, (XSP+H)
+      ADD    DE, (XSP+H)
+      ADD    HL, (XSP+H)
+      ADD    IX, (XSP+H)
+      ADD    IY, (XSP+H)
+      ADD    IZ, (XSP+H)
+      ADD    SP, (XSP+H)
+      ADC    WA, (XSP+H)
+      ADC    BC, (XSP+H)
+      ADC    DE, (XSP+H)
+      ADC    HL, (XSP+H)
+      ADC    IX, (XSP+H)
+      ADC    IY, (XSP+H)
+      ADC    IZ, (XSP+H)
+      ADC    SP, (XSP+H)
+      SUB    WA, (XSP+H)
+      SUB    BC, (XSP+H)
+      SUB    DE, (XSP+H)
+      SUB    HL, (XSP+H)
+      SUB    IX, (XSP+H)
+      SUB    IY, (XSP+H)
+      SUB    IZ, (XSP+H)
+      SUB    SP, (XSP+H)
+      SBC    WA, (XSP+H)
+      SBC    BC, (XSP+H)
+      SBC    DE, (XSP+H)
+      SBC    HL, (XSP+H)
+      SBC    IX, (XSP+H)
+      SBC    IY, (XSP+H)
+      SBC    IZ, (XSP+H)
+      SBC    SP, (XSP+H)
+      AND    WA, (XSP+H)
+      AND    BC, (XSP+H)
+      AND    DE, (XSP+H)
+      AND    HL, (XSP+H)
+      AND    IX, (XSP+H)
+      AND    IY, (XSP+H)
+      AND    IZ, (XSP+H)
+      AND    SP, (XSP+H)
+      XOR    WA, (XSP+H)
+      XOR    BC, (XSP+H)
+      XOR    DE, (XSP+H)
+      XOR    HL, (XSP+H)
+      XOR    IX, (XSP+H)
+      XOR    IY, (XSP+H)
+      XOR    IZ, (XSP+H)
+      XOR    SP, (XSP+H)
+      OR     WA, (XSP+H)
+      OR     BC, (XSP+H)
+      OR     DE, (XSP+H)
+      OR     HL, (XSP+H)
+      OR     IX, (XSP+H)
+      OR     IY, (XSP+H)
+      OR     IZ, (XSP+H)
+      OR     SP, (XSP+H)
+      OR     BC, (XIX+A)
+      OR     DE, (XIX+A)
+      OR     HL, (XIX+A)
+      OR     IX, (XIX+A)
+      OR     IY, (XIX+A)
+      OR     IZ, (XIX+A)
+      OR     SP, (XIX+A)
+      CP     WA, (XIX+A)
+      CP     BC, (XIX+A)
+      CP     DE, (XIX+A)
+      CP     HL, (XIX+A)
+      CP     IX, (XIX+A)
+      CP     IY, (XIX+A)
+      CP     IZ, (XIX+A)
+      CP     SP, (XIX+A)
+      LD     WA, (XIX+A)
+      LD     BC, (XIX+A)
+      LD     DE, (XIX+A)
+      LD     HL, (XIX+A)
+      LD     IX, (XIX+A)
+      LD     IY, (XIX+A)
+      LD     IZ, (XIX+A)
+      LD     SP, (XIX+A)
+      EX     WA, (XIX+A)
+      EX     BC, (XIX+A)
+      EX     DE, (XIX+A)
+      EX     HL, (XIX+A)
+      EX     IX, (XIX+A)
+      EX     IY, (XIX+A)
+      EX     IZ, (XIX+A)
+      EX     SP, (XIX+A)
+      MUL    XWA, (XIX+A)
+      MUL    XBC, (XIX+A)
+      MUL    XDE, (XIX+A)
+      MUL    XHL, (XIX+A)
+      MUL    XIX, (XIX+A)
+      MUL    XIY, (XIX+A)
+      MUL    XIZ, (XIX+A)
+      MUL    XSP, (XIX+A)
+      MULS   XWA, (XIX+A)
+      MULS   XBC, (XIX+A)
+      MULS   XDE, (XIX+A)
+      MULS   XHL, (XIX+A)
+      MULS   XIX, (XIX+A)
+      MULS   XIY, (XIX+A)
+      MULS   XIZ, (XIX+A)
+      MULS   XSP, (XIX+A)
+      DIV    XWA, (XIX+A)
+      DIV    XBC, (XIX+A)
+      DIV    XDE, (XIX+A)
+      DIV    XHL, (XIX+A)
+      DIV    XIX, (XIX+A)
+      DIV    XIY, (XIX+A)
+      DIV    XIZ, (XIX+A)
+      DIV    XSP, (XIX+A)
+      DIVS   XWA, (XIX+A)
+      DIVS   XBC, (XIX+A)
+      DIVS   XDE, (XIX+A)
+      DIVS   XHL, (XIX+A)
+      DIVS   XIX, (XIX+A)
+      DIVS   XIY, (XIX+A)
+      DIVS   XIZ, (XIX+A)
+      DIVS   XSP, (XIX+A)
+      ADD    WA, (XIX+A)
+      ADD    BC, (XIX+A)
+      ADD    DE, (XIX+A)
+      ADD    HL, (XIX+A)
+      ADD    IX, (XIX+A)
+      ADD    IY, (XIX+A)
+      ADD    IZ, (XIX+A)
+      ADD    SP, (XIX+A)
+      ADC    WA, (XIX+A)
+      ADC    BC, (XIX+A)
+      ADC    DE, (XIX+A)
+      ADC    HL, (XIX+A)
+      ADC    IX, (XIX+A)
+      ADC    IY, (XIX+A)
+      ADC    IZ, (XIX+A)
+      ADC    SP, (XIX+A)
+      SUB    WA, (XIX+A)
+      SUB    BC, (XIX+A)
+      SUB    DE, (XIX+A)
+      SUB    HL, (XIX+A)
+      SUB    IX, (XIX+A)
+      SUB    IY, (XIX+A)
+      SUB    IZ, (XIX+A)
+      SUB    SP, (XIX+A)
+      SBC    WA, (XIX+A)
+      SBC    BC, (XIX+A)
+      SBC    DE, (XIX+A)
+      SBC    HL, (XIX+A)
+      SBC    IX, (XIX+A)
+      SBC    IY, (XIX+A)
+      SBC    IZ, (XIX+A)
+      SBC    SP, (XIX+A)
+      AND    WA, (XIX+A)
+      AND    BC, (XIX+A)
+      AND    DE, (XIX+A)
+      AND    HL, (XIX+A)
+      AND    IX, (XIX+A)
+      AND    IY, (XIX+A)
+      AND    IZ, (XIX+A)
+      AND    SP, (XIX+A)
+      XOR    WA, (XIX+A)
+      XOR    BC, (XIX+A)
+      XOR    DE, (XIX+A)
+      XOR    HL, (XIX+A)
+      XOR    IX, (XIX+A)
+      XOR    IY, (XIX+A)
+      XOR    IZ, (XIX+A)
+      XOR    SP, (XIX+A)
+      OR     WA, (XIX+A)
+      OR     DE, (XIX+W)
+      OR     HL, (XIX+W)
+      OR     IX, (XIX+W)
+      OR     IY, (XIX+W)
+      OR     IZ, (XIX+W)
+      OR     SP, (XIX+W)
+      CP     WA, (XIX+W)
+      CP     BC, (XIX+W)
+      CP     DE, (XIX+W)
+      CP     HL, (XIX+W)
+      CP     IX, (XIX+W)
+      CP     IY, (XIX+W)
+      CP     IZ, (XIX+W)
+      CP     SP, (XIX+W)
+      LD     WA, (XIX+W)
+      LD     BC, (XIX+W)
+      LD     DE, (XIX+W)
+      LD     HL, (XIX+W)
+      LD     IX, (XIX+W)
+      LD     IY, (XIX+W)
+      LD     IZ, (XIX+W)
+      LD     SP, (XIX+W)
+      EX     WA, (XIX+W)
+      EX     BC, (XIX+W)
+      EX     DE, (XIX+W)
+      EX     HL, (XIX+W)
+      EX     IX, (XIX+W)
+      EX     IY, (XIX+W)
+      EX     IZ, (XIX+W)
+      EX     SP, (XIX+W)
+      MUL    XWA, (XIX+W)
+      MUL    XBC, (XIX+W)
+      MUL    XDE, (XIX+W)
+      MUL    XHL, (XIX+W)
+      MUL    XIX, (XIX+W)
+      MUL    XIY, (XIX+W)
+      MUL    XIZ, (XIX+W)
+      MUL    XSP, (XIX+W)
+      MULS   XWA, (XIX+W)
+      MULS   XBC, (XIX+W)
+      MULS   XDE, (XIX+W)
+      MULS   XHL, (XIX+W)
+      MULS   XIX, (XIX+W)
+      MULS   XIY, (XIX+W)
+      MULS   XIZ, (XIX+W)
+      MULS   XSP, (XIX+W)
+      DIV    XWA, (XIX+W)
+      DIV    XBC, (XIX+W)
+      DIV    XDE, (XIX+W)
+      DIV    XHL, (XIX+W)
+      DIV    XIX, (XIX+W)
+      DIV    XIY, (XIX+W)
+      DIV    XIZ, (XIX+W)
+      DIV    XSP, (XIX+W)
+      DIVS   XWA, (XIX+W)
+      DIVS   XBC, (XIX+W)
+      DIVS   XDE, (XIX+W)
+      DIVS   XHL, (XIX+W)
+      DIVS   XIX, (XIX+W)
+      DIVS   XIY, (XIX+W)
+      DIVS   XIZ, (XIX+W)
+      DIVS   XSP, (XIX+W)
+      ADD    WA, (XIX+W)
+      ADD    BC, (XIX+W)
+      ADD    DE, (XIX+W)
+      ADD    HL, (XIX+W)
+      ADD    IX, (XIX+W)
+      ADD    IY, (XIX+W)
+      ADD    IZ, (XIX+W)
+      ADD    SP, (XIX+W)
+      ADC    WA, (XIX+W)
+      ADC    BC, (XIX+W)
+      ADC    DE, (XIX+W)
+      ADC    HL, (XIX+W)
+      ADC    IX, (XIX+W)
+      ADC    IY, (XIX+W)
+      ADC    IZ, (XIX+W)
+      ADC    SP, (XIX+W)
+      SUB    WA, (XIX+W)
+      SUB    BC, (XIX+W)
+      SUB    DE, (XIX+W)
+      SUB    HL, (XIX+W)
+      SUB    IX, (XIX+W)
+      SUB    IY, (XIX+W)
+      SUB    IZ, (XIX+W)
+      SUB    SP, (XIX+W)
+      SBC    WA, (XIX+W)
+      SBC    BC, (XIX+W)
+      SBC    DE, (XIX+W)
+      SBC    HL, (XIX+W)
+      SBC    IX, (XIX+W)
+      SBC    IY, (XIX+W)
+      SBC    IZ, (XIX+W)
+      SBC    SP, (XIX+W)
+      AND    WA, (XIX+W)
+      AND    BC, (XIX+W)
+      AND    DE, (XIX+W)
+      AND    HL, (XIX+W)
+      AND    IX, (XIX+W)
+      AND    IY, (XIX+W)
+      AND    IZ, (XIX+W)
+      AND    SP, (XIX+W)
+      XOR    WA, (XIX+W)
+      XOR    BC, (XIX+W)
+      XOR    DE, (XIX+W)
+      XOR    HL, (XIX+W)
+      XOR    IX, (XIX+W)
+      XOR    IY, (XIX+W)
+      XOR    IZ, (XIX+W)
+      XOR    SP, (XIX+W)
+      OR     WA, (XIX+W)
+      OR     BC, (XIX+W)
+      OR     IY, (XIX+C)
+      OR     IZ, (XIX+C)
+      OR     SP, (XIX+C)
+      CP     WA, (XIX+C)
+      CP     BC, (XIX+C)
+      CP     DE, (XIX+C)
+      CP     HL, (XIX+C)
+      CP     IX, (XIX+C)
+      CP     IY, (XIX+C)
+      CP     IZ, (XIX+C)
+      CP     SP, (XIX+C)
+      LD     WA, (XIX+C)
+      LD     BC, (XIX+C)
+      LD     DE, (XIX+C)
+      LD     HL, (XIX+C)
+      LD     IX, (XIX+C)
+      LD     IY, (XIX+C)
+      LD     IZ, (XIX+C)
+      LD     SP, (XIX+C)
+      EX     WA, (XIX+C)
+      EX     BC, (XIX+C)
+      EX     DE, (XIX+C)
+      EX     HL, (XIX+C)
+      EX     IX, (XIX+C)
+      EX     IY, (XIX+C)
+      EX     IZ, (XIX+C)
+      EX     SP, (XIX+C)
+      MUL    XWA, (XIX+C)
+      MUL    XBC, (XIX+C)
+      MUL    XDE, (XIX+C)
+      MUL    XHL, (XIX+C)
+      MUL    XIX, (XIX+C)
+      MUL    XIY, (XIX+C)
+      MUL    XIZ, (XIX+C)
+      MUL    XSP, (XIX+C)
+      MULS   XWA, (XIX+C)
+      MULS   XBC, (XIX+C)
+      MULS   XDE, (XIX+C)
+      MULS   XHL, (XIX+C)
+      MULS   XIX, (XIX+C)
+      MULS   XIY, (XIX+C)
+      MULS   XIZ, (XIX+C)
+      MULS   XSP, (XIX+C)
+      DIV    XWA, (XIX+C)
+      DIV    XBC, (XIX+C)
+      DIV    XDE, (XIX+C)
+      DIV    XHL, (XIX+C)
+      DIV    XIX, (XIX+C)
+      DIV    XIY, (XIX+C)
+      DIV    XIZ, (XIX+C)
+      DIV    XSP, (XIX+C)
+      DIVS   XWA, (XIX+C)
+      DIVS   XBC, (XIX+C)
+      DIVS   XDE, (XIX+C)
+      DIVS   XHL, (XIX+C)
+      DIVS   XIX, (XIX+C)
+      DIVS   XIY, (XIX+C)
+      DIVS   XIZ, (XIX+C)
+      DIVS   XSP, (XIX+C)
+      ADD    WA, (XIX+C)
+      ADD    BC, (XIX+C)
+      ADD    DE, (XIX+C)
+      ADD    HL, (XIX+C)
+      ADD    IX, (XIX+C)
+      ADD    IY, (XIX+C)
+      ADD    IZ, (XIX+C)
+      ADD    SP, (XIX+C)
+      ADC    WA, (XIX+C)
+      ADC    BC, (XIX+C)
+      ADC    DE, (XIX+C)
+      ADC    HL, (XIX+C)
+      ADC    IX, (XIX+C)
+      ADC    IY, (XIX+C)
+      ADC    IZ, (XIX+C)
+      ADC    SP, (XIX+C)
+      SUB    WA, (XIX+C)
+      SUB    BC, (XIX+C)
+      SUB    DE, (XIX+C)
+      SUB    HL, (XIX+C)
+      SUB    IX, (XIX+C)
+      SUB    IY, (XIX+C)
+      SUB    IZ, (XIX+C)
+      SUB    SP, (XIX+C)
+      SBC    WA, (XIX+C)
+      SBC    BC, (XIX+C)
+      SBC    DE, (XIX+C)
+      SBC    HL, (XIX+C)
+      SBC    IX, (XIX+C)
+      SBC    IY, (XIX+C)
+      SBC    IZ, (XIX+C)
+      SBC    SP, (XIX+C)
+      AND    WA, (XIX+C)
+      AND    BC, (XIX+C)
+      AND    DE, (XIX+C)
+      AND    HL, (XIX+C)
+      AND    IX, (XIX+C)
+      AND    IY, (XIX+C)
+      AND    IZ, (XIX+C)
+      AND    SP, (XIX+C)
+      XOR    WA, (XIX+C)
+      XOR    BC, (XIX+C)
+      XOR    DE, (XIX+C)
+      XOR    HL, (XIX+C)
+      XOR    IX, (XIX+C)
+      XOR    IY, (XIX+C)
+      XOR    IZ, (XIX+C)
+      XOR    SP, (XIX+C)
+      OR     WA, (XIX+C)
+      OR     BC, (XIX+C)
+      OR     DE, (XIX+C)
+      OR     HL, (XIX+C)
+      OR     IX, (XIX+C)
+      OR     IZ, (XIX+B)
+      OR     SP, (XIX+B)
+      CP     WA, (XIX+B)
+      CP     BC, (XIX+B)
+      CP     DE, (XIX+B)
+      CP     HL, (XIX+B)
+      CP     IX, (XIX+B)
+      CP     IY, (XIX+B)
+      CP     IZ, (XIX+B)
+      CP     SP, (XIX+B)
+      LD     WA, (XIX+B)
+      LD     BC, (XIX+B)
+      LD     DE, (XIX+B)
+      LD     HL, (XIX+B)
+      LD     IX, (XIX+B)
+      LD     IY, (XIX+B)
+      LD     IZ, (XIX+B)
+      LD     SP, (XIX+B)
+      EX     WA, (XIX+B)
+      EX     BC, (XIX+B)
+      EX     DE, (XIX+B)
+      EX     HL, (XIX+B)
+      EX     IX, (XIX+B)
+      EX     IY, (XIX+B)
+      EX     IZ, (XIX+B)
+      EX     SP, (XIX+B)
+      MUL    XWA, (XIX+B)
+      MUL    XBC, (XIX+B)
+      MUL    XDE, (XIX+B)
+      MUL    XHL, (XIX+B)
+      MUL    XIX, (XIX+B)
+      MUL    XIY, (XIX+B)
+      MUL    XIZ, (XIX+B)
+      MUL    XSP, (XIX+B)
+      MULS   XWA, (XIX+B)
+      MULS   XBC, (XIX+B)
+      MULS   XDE, (XIX+B)
+      MULS   XHL, (XIX+B)
+      MULS   XIX, (XIX+B)
+      MULS   XIY, (XIX+B)
+      MULS   XIZ, (XIX+B)
+      MULS   XSP, (XIX+B)
+      DIV    XWA, (XIX+B)
+      DIV    XBC, (XIX+B)
+      DIV    XDE, (XIX+B)
+      DIV    XHL, (XIX+B)
+      DIV    XIX, (XIX+B)
+      DIV    XIY, (XIX+B)
+      DIV    XIZ, (XIX+B)
+      DIV    XSP, (XIX+B)
+      DIVS   XWA, (XIX+B)
+      DIVS   XBC, (XIX+B)
+      DIVS   XDE, (XIX+B)
+      DIVS   XHL, (XIX+B)
+      DIVS   XIX, (XIX+B)
+      DIVS   XIY, (XIX+B)
+      DIVS   XIZ, (XIX+B)
+      DIVS   XSP, (XIX+B)
+      ADD    WA, (XIX+B)
+      ADD    BC, (XIX+B)
+      ADD    DE, (XIX+B)
+      ADD    HL, (XIX+B)
+      ADD    IX, (XIX+B)
+      ADD    IY, (XIX+B)
+      ADD    IZ, (XIX+B)
+      ADD    SP, (XIX+B)
+      ADC    WA, (XIX+B)
+      ADC    BC, (XIX+B)
+      ADC    DE, (XIX+B)
+      ADC    HL, (XIX+B)
+      ADC    IX, (XIX+B)
+      ADC    IY, (XIX+B)
+      ADC    IZ, (XIX+B)
+      ADC    SP, (XIX+B)
+      SUB    WA, (XIX+B)
+      SUB    BC, (XIX+B)
+      SUB    DE, (XIX+B)
+      SUB    HL, (XIX+B)
+      SUB    IX, (XIX+B)
+      SUB    IY, (XIX+B)
+      SUB    IZ, (XIX+B)
+      SUB    SP, (XIX+B)
+      SBC    WA, (XIX+B)
+      SBC    BC, (XIX+B)
+      SBC    DE, (XIX+B)
+      SBC    HL, (XIX+B)
+      SBC    IX, (XIX+B)
+      SBC    IY, (XIX+B)
+      SBC    IZ, (XIX+B)
+      SBC    SP, (XIX+B)
+      AND    WA, (XIX+B)
+      AND    BC, (XIX+B)
+      AND    DE, (XIX+B)
+      AND    HL, (XIX+B)
+      AND    IX, (XIX+B)
+      AND    IY, (XIX+B)
+      AND    IZ, (XIX+B)
+      AND    SP, (XIX+B)
+      XOR    WA, (XIX+B)
+      XOR    BC, (XIX+B)
+      XOR    DE, (XIX+B)
+      XOR    HL, (XIX+B)
+      XOR    IX, (XIX+B)
+      XOR    IY, (XIX+B)
+      XOR    IZ, (XIX+B)
+      XOR    SP, (XIX+B)
+      OR     WA, (XIX+B)
+      OR     BC, (XIX+B)
+      OR     DE, (XIX+B)
+      OR     HL, (XIX+B)
+      OR     IX, (XIX+B)
+      OR     IY, (XIX+B)
+      CP     WA, (XIX+E)
+      CP     BC, (XIX+E)
+      CP     DE, (XIX+E)
+      CP     HL, (XIX+E)
+      CP     IX, (XIX+E)
+      CP     IY, (XIX+E)
+      CP     IZ, (XIX+E)
+      CP     SP, (XIX+E)
+      LD     WA, (XIX+E)
+      LD     BC, (XIX+E)
+      LD     DE, (XIX+E)
+      LD     HL, (XIX+E)
+      LD     IX, (XIX+E)
+      LD     IY, (XIX+E)
+      LD     IZ, (XIX+E)
+      LD     SP, (XIX+E)
+      EX     WA, (XIX+E)
+      EX     BC, (XIX+E)
+      EX     DE, (XIX+E)
+      EX     HL, (XIX+E)
+      EX     IX, (XIX+E)
+      EX     IY, (XIX+E)
+      EX     IZ, (XIX+E)
+      EX     SP, (XIX+E)
+      MUL    XWA, (XIX+E)
+      MUL    XBC, (XIX+E)
+      MUL    XDE, (XIX+E)
+      MUL    XHL, (XIX+E)
+      MUL    XIX, (XIX+E)
+      MUL    XIY, (XIX+E)
+      MUL    XIZ, (XIX+E)
+      MUL    XSP, (XIX+E)
+      MULS   XWA, (XIX+E)
+      MULS   XBC, (XIX+E)
+      MULS   XDE, (XIX+E)
+      MULS   XHL, (XIX+E)
+      MULS   XIX, (XIX+E)
+      MULS   XIY, (XIX+E)
+      MULS   XIZ, (XIX+E)
+      MULS   XSP, (XIX+E)
+      DIV    XWA, (XIX+E)
+      DIV    XBC, (XIX+E)
+      DIV    XDE, (XIX+E)
+      DIV    XHL, (XIX+E)
+      DIV    XIX, (XIX+E)
+      DIV    XIY, (XIX+E)
+      DIV    XIZ, (XIX+E)
+      DIV    XSP, (XIX+E)
+      DIVS   XWA, (XIX+E)
+      DIVS   XBC, (XIX+E)
+      DIVS   XDE, (XIX+E)
+      DIVS   XHL, (XIX+E)
+      DIVS   XIX, (XIX+E)
+      DIVS   XIY, (XIX+E)
+      DIVS   XIZ, (XIX+E)
+      DIVS   XSP, (XIX+E)
+      ADD    WA, (XIX+E)
+      ADD    BC, (XIX+E)
+      ADD    DE, (XIX+E)
+      ADD    HL, (XIX+E)
+      ADD    IX, (XIX+E)
+      ADD    IY, (XIX+E)
+      ADD    IZ, (XIX+E)
+      ADD    SP, (XIX+E)
+      ADC    WA, (XIX+E)
+      ADC    BC, (XIX+E)
+      ADC    DE, (XIX+E)
+      ADC    HL, (XIX+E)
+      ADC    IX, (XIX+E)
+      ADC    IY, (XIX+E)
+      ADC    IZ, (XIX+E)
+      ADC    SP, (XIX+E)
+      SUB    WA, (XIX+E)
+      SUB    BC, (XIX+E)
+      SUB    DE, (XIX+E)
+      SUB    HL, (XIX+E)
+      SUB    IX, (XIX+E)
+      SUB    IY, (XIX+E)
+      SUB    IZ, (XIX+E)
+      SUB    SP, (XIX+E)
+      SBC    WA, (XIX+E)
+      SBC    BC, (XIX+E)
+      SBC    DE, (XIX+E)
+      SBC    HL, (XIX+E)
+      SBC    IX, (XIX+E)
+      SBC    IY, (XIX+E)
+      SBC    IZ, (XIX+E)
+      SBC    SP, (XIX+E)
+      AND    WA, (XIX+E)
+      AND    BC, (XIX+E)
+      AND    DE, (XIX+E)
+      AND    HL, (XIX+E)
+      AND    IX, (XIX+E)
+      AND    IY, (XIX+E)
+      AND    IZ, (XIX+E)
+      AND    SP, (XIX+E)
+      XOR    WA, (XIX+E)
+      XOR    BC, (XIX+E)
+      XOR    DE, (XIX+E)
+      XOR    HL, (XIX+E)
+      XOR    IX, (XIX+E)
+      XOR    IY, (XIX+E)
+      XOR    IZ, (XIX+E)
+      XOR    SP, (XIX+E)
+      OR     WA, (XIX+E)
+      OR     BC, (XIX+E)
+      OR     DE, (XIX+E)
+      OR     HL, (XIX+E)
+      OR     IX, (XIX+E)
+      OR     IY, (XIX+E)
+      OR     IZ, (XIX+E)
+      OR     SP, (XIX+E)
+      CP     WA, (XIX+D)
+      CP     BC, (XIX+D)
+      CP     DE, (XIX+D)
+      CP     HL, (XIX+D)
+      CP     IX, (XIX+D)
+      CP     IY, (XIX+D)
+      CP     IZ, (XIX+D)
+      CP     SP, (XIX+D)
+      LD     WA, (XIX+D)
+      LD     BC, (XIX+D)
+      LD     DE, (XIX+D)
+      LD     HL, (XIX+D)
+      LD     IX, (XIX+D)
+      LD     IY, (XIX+D)
+      LD     IZ, (XIX+D)
+      LD     SP, (XIX+D)
+      EX     WA, (XIX+D)
+      EX     BC, (XIX+D)
+      EX     DE, (XIX+D)
+      EX     HL, (XIX+D)
+      EX     IX, (XIX+D)
+      EX     IY, (XIX+D)
+      EX     IZ, (XIX+D)
+      EX     SP, (XIX+D)
+      MUL    XWA, (XIX+D)
+      MUL    XBC, (XIX+D)
+      MUL    XDE, (XIX+D)
+      MUL    XHL, (XIX+D)
+      MUL    XIX, (XIX+D)
+      MUL    XIY, (XIX+D)
+      MUL    XIZ, (XIX+D)
+      MUL    XSP, (XIX+D)
+      MULS   XWA, (XIX+D)
+      MULS   XBC, (XIX+D)
+      MULS   XDE, (XIX+D)
+      MULS   XHL, (XIX+D)
+      MULS   XIX, (XIX+D)
+      MULS   XIY, (XIX+D)
+      MULS   XIZ, (XIX+D)
+      MULS   XSP, (XIX+D)
+      DIV    XWA, (XIX+D)
+      DIV    XBC, (XIX+D)
+      DIV    XDE, (XIX+D)
+      DIV    XHL, (XIX+D)
+      DIV    XIX, (XIX+D)
+      DIV    XIY, (XIX+D)
+      DIV    XIZ, (XIX+D)
+      DIV    XSP, (XIX+D)
+      DIVS   XWA, (XIX+D)
+      DIVS   XBC, (XIX+D)
+      DIVS   XDE, (XIX+D)
+      DIVS   XHL, (XIX+D)
+      DIVS   XIX, (XIX+D)
+      DIVS   XIY, (XIX+D)
+      DIVS   XIZ, (XIX+D)
+      DIVS   XSP, (XIX+D)
+      ADD    WA, (XIX+D)
+      ADD    BC, (XIX+D)
+      ADD    DE, (XIX+D)
+      ADD    HL, (XIX+D)
+      ADD    IX, (XIX+D)
+      ADD    IY, (XIX+D)
+      ADD    IZ, (XIX+D)
+      ADD    SP, (XIX+D)
+      ADC    WA, (XIX+D)
+      ADC    BC, (XIX+D)
+      ADC    DE, (XIX+D)
+      ADC    HL, (XIX+D)
+      ADC    IX, (XIX+D)
+      ADC    IY, (XIX+D)
+      ADC    IZ, (XIX+D)
+      ADC    SP, (XIX+D)
+      SUB    WA, (XIX+D)
+      SUB    BC, (XIX+D)
+      SUB    DE, (XIX+D)
+      SUB    HL, (XIX+D)
+      SUB    IX, (XIX+D)
+      SUB    IY, (XIX+D)
+      SUB    IZ, (XIX+D)
+      SUB    SP, (XIX+D)
+      SBC    WA, (XIX+D)
+      SBC    BC, (XIX+D)
+      SBC    DE, (XIX+D)
+      SBC    HL, (XIX+D)
+      SBC    IX, (XIX+D)
+      SBC    IY, (XIX+D)
+      SBC    IZ, (XIX+D)
+      SBC    SP, (XIX+D)
+      AND    WA, (XIX+D)
+      AND    BC, (XIX+D)
+      AND    DE, (XIX+D)
+      AND    HL, (XIX+D)
+      AND    IX, (XIX+D)
+      AND    IY, (XIX+D)
+      AND    IZ, (XIX+D)
+      AND    SP, (XIX+D)
+      XOR    WA, (XIX+D)
+      XOR    BC, (XIX+D)
+      XOR    DE, (XIX+D)
+      XOR    HL, (XIX+D)
+      XOR    IX, (XIX+D)
+      XOR    IY, (XIX+D)
+      XOR    IZ, (XIX+D)
+      XOR    SP, (XIX+D)
+      OR     WA, (XIX+D)
+      OR     BC, (XIX+D)
+      OR     DE, (XIX+D)
+      OR     HL, (XIX+D)
+      OR     IX, (XIX+D)
+      OR     IY, (XIX+D)
+      OR     IZ, (XIX+D)
+      OR     SP, (XIX+D)
+      CP     WA, (XIX+L)
+      CP     BC, (XIX+L)
+      CP     DE, (XIX+L)
+      CP     HL, (XIX+L)
+      CP     IX, (XIX+L)
+      CP     IY, (XIX+L)
+      CP     IZ, (XIX+L)
+      CP     SP, (XIX+L)
+      LD     WA, (XIX+L)
+      LD     BC, (XIX+L)
+      LD     DE, (XIX+L)
+      LD     HL, (XIX+L)
+      LD     IX, (XIX+L)
+      LD     IY, (XIX+L)
+      LD     IZ, (XIX+L)
+      LD     SP, (XIX+L)
+      EX     WA, (XIX+L)
+      EX     BC, (XIX+L)
+      EX     DE, (XIX+L)
+      EX     HL, (XIX+L)
+      EX     IX, (XIX+L)
+      EX     IY, (XIX+L)
+      EX     IZ, (XIX+L)
+      EX     SP, (XIX+L)
+      MUL    XWA, (XIX+L)
+      MUL    XBC, (XIX+L)
+      MUL    XDE, (XIX+L)
+      MUL    XHL, (XIX+L)
+      MUL    XIX, (XIX+L)
+      MUL    XIY, (XIX+L)
+      MUL    XIZ, (XIX+L)
+      MUL    XSP, (XIX+L)
+      MULS   XWA, (XIX+L)
+      MULS   XBC, (XIX+L)
+      MULS   XDE, (XIX+L)
+      MULS   XHL, (XIX+L)
+      MULS   XIX, (XIX+L)
+      MULS   XIY, (XIX+L)
+      MULS   XIZ, (XIX+L)
+      MULS   XSP, (XIX+L)
+      DIV    XWA, (XIX+L)
+      DIV    XBC, (XIX+L)
+      DIV    XDE, (XIX+L)
+      DIV    XHL, (XIX+L)
+      DIV    XIX, (XIX+L)
+      DIV    XIY, (XIX+L)
+      DIV    XIZ, (XIX+L)
+      DIV    XSP, (XIX+L)
+      DIVS   XWA, (XIX+L)
+      DIVS   XBC, (XIX+L)
+      DIVS   XDE, (XIX+L)
+      DIVS   XHL, (XIX+L)
+      DIVS   XIX, (XIX+L)
+      DIVS   XIY, (XIX+L)
+      DIVS   XIZ, (XIX+L)
+      DIVS   XSP, (XIX+L)
+      ADD    WA, (XIX+L)
+      ADD    BC, (XIX+L)
+      ADD    DE, (XIX+L)
+      ADD    HL, (XIX+L)
+      ADD    IX, (XIX+L)
+      ADD    IY, (XIX+L)
+      ADD    IZ, (XIX+L)
+      ADD    SP, (XIX+L)
+      ADC    WA, (XIX+L)
+      ADC    BC, (XIX+L)
+      ADC    DE, (XIX+L)
+      ADC    HL, (XIX+L)
+      ADC    IX, (XIX+L)
+      ADC    IY, (XIX+L)
+      ADC    IZ, (XIX+L)
+      ADC    SP, (XIX+L)
+      SUB    WA, (XIX+L)
+      SUB    BC, (XIX+L)
+      SUB    DE, (XIX+L)
+      SUB    HL, (XIX+L)
+      SUB    IX, (XIX+L)
+      SUB    IY, (XIX+L)
+      SUB    IZ, (XIX+L)
+      SUB    SP, (XIX+L)
+      SBC    WA, (XIX+L)
+      SBC    BC, (XIX+L)
+      SBC    DE, (XIX+L)
+      SBC    HL, (XIX+L)
+      SBC    IX, (XIX+L)
+      SBC    IY, (XIX+L)
+      SBC    IZ, (XIX+L)
+      SBC    SP, (XIX+L)
+      AND    WA, (XIX+L)
+      AND    BC, (XIX+L)
+      AND    DE, (XIX+L)
+      AND    HL, (XIX+L)
+      AND    IX, (XIX+L)
+      AND    IY, (XIX+L)
+      AND    IZ, (XIX+L)
+      AND    SP, (XIX+L)
+      XOR    WA, (XIX+L)
+      XOR    BC, (XIX+L)
+      XOR    DE, (XIX+L)
+      XOR    HL, (XIX+L)
+      XOR    IX, (XIX+L)
+      XOR    IY, (XIX+L)
+      XOR    IZ, (XIX+L)
+      XOR    SP, (XIX+L)
+      OR     WA, (XIX+L)
+      OR     BC, (XIX+L)
+      OR     DE, (XIX+L)
+      OR     HL, (XIX+L)
+      OR     IX, (XIX+L)
+      OR     IY, (XIX+L)
+      OR     IZ, (XIX+L)
+      OR     SP, (XIX+L)
+      CP     WA, (XIX+H)
+      CP     BC, (XIX+H)
+      CP     DE, (XIX+H)
+      CP     HL, (XIX+H)
+      CP     IX, (XIX+H)
+      CP     IY, (XIX+H)
+      CP     IZ, (XIX+H)
+      CP     SP, (XIX+H)
+      LD     WA, (XIX+H)
+      LD     BC, (XIX+H)
+      LD     DE, (XIX+H)
+      LD     HL, (XIX+H)
+      LD     IX, (XIX+H)
+      LD     IY, (XIX+H)
+      LD     IZ, (XIX+H)
+      LD     SP, (XIX+H)
+      EX     WA, (XIX+H)
+      EX     BC, (XIX+H)
+      EX     DE, (XIX+H)
+      EX     HL, (XIX+H)
+      EX     IX, (XIX+H)
+      EX     IY, (XIX+H)
+      EX     IZ, (XIX+H)
+      EX     SP, (XIX+H)
+      MUL    XWA, (XIX+H)
+      MUL    XBC, (XIX+H)
+      MUL    XDE, (XIX+H)
+      MUL    XHL, (XIX+H)
+      MUL    XIX, (XIX+H)
+      MUL    XIY, (XIX+H)
+      MUL    XIZ, (XIX+H)
+      MUL    XSP, (XIX+H)
+      MULS   XWA, (XIX+H)
+      MULS   XBC, (XIX+H)
+      MULS   XDE, (XIX+H)
+      MULS   XHL, (XIX+H)
+      MULS   XIX, (XIX+H)
+      MULS   XIY, (XIX+H)
+      MULS   XIZ, (XIX+H)
+      MULS   XSP, (XIX+H)
+      DIV    XWA, (XIX+H)
+      DIV    XBC, (XIX+H)
+      DIV    XDE, (XIX+H)
+      DIV    XHL, (XIX+H)
+      DIV    XIX, (XIX+H)
+      DIV    XIY, (XIX+H)
+      DIV    XIZ, (XIX+H)
+      DIV    XSP, (XIX+H)
+      DIVS   XWA, (XIX+H)
+      DIVS   XBC, (XIX+H)
+      DIVS   XDE, (XIX+H)
+      DIVS   XHL, (XIX+H)
+      DIVS   XIX, (XIX+H)
+      DIVS   XIY, (XIX+H)
+      DIVS   XIZ, (XIX+H)
+      DIVS   XSP, (XIX+H)
+      ADD    WA, (XIX+H)
+      ADD    BC, (XIX+H)
+      ADD    DE, (XIX+H)
+      ADD    HL, (XIX+H)
+      ADD    IX, (XIX+H)
+      ADD    IY, (XIX+H)
+      ADD    IZ, (XIX+H)
+      ADD    SP, (XIX+H)
+      ADC    WA, (XIX+H)
+      ADC    BC, (XIX+H)
+      ADC    DE, (XIX+H)
+      ADC    HL, (XIX+H)
+      ADC    IX, (XIX+H)
+      ADC    IY, (XIX+H)
+      ADC    IZ, (XIX+H)
+      ADC    SP, (XIX+H)
+      SUB    WA, (XIX+H)
+      SUB    BC, (XIX+H)
+      SUB    DE, (XIX+H)
+      SUB    HL, (XIX+H)
+      SUB    IX, (XIX+H)
+      SUB    IY, (XIX+H)
+      SUB    IZ, (XIX+H)
+      SUB    SP, (XIX+H)
+      SBC    WA, (XIX+H)
+      SBC    BC, (XIX+H)
+      SBC    DE, (XIX+H)
+      SBC    HL, (XIX+H)
+      SBC    IX, (XIX+H)
+      SBC    IY, (XIX+H)
+      SBC    IZ, (XIX+H)
+      SBC    SP, (XIX+H)
+      AND    WA, (XIX+H)
+      AND    BC, (XIX+H)
+      AND    DE, (XIX+H)
+      AND    HL, (XIX+H)
+      AND    IX, (XIX+H)
+      AND    IY, (XIX+H)
+      AND    IZ, (XIX+H)
+      AND    SP, (XIX+H)
+      XOR    WA, (XIX+H)
+      XOR    BC, (XIX+H)
+      XOR    DE, (XIX+H)
+      XOR    HL, (XIX+H)
+      XOR    IX, (XIX+H)
+      XOR    IY, (XIX+H)
+      XOR    IZ, (XIX+H)
+      XOR    SP, (XIX+H)
+      OR     WA, (XIX+H)
+      OR     BC, (XIX+H)
+      OR     DE, (XIX+H)
+      OR     HL, (XIX+H)
+      OR     IX, (XIX+H)
+      OR     IY, (XIX+H)
+      OR     IZ, (XIX+H)
+      OR     SP, (XIX+H)
       XOR    IZ, (-XIY)
       XOR    SP, (-XIY)
       OR     WA, (-XIY)
@@ -24027,6 +28497,38 @@
       EX     IY, (-XIY)
       EX     IZ, (-XIY)
       EX     SP, (-XIY)
+      MUL    XWA, (-XIY)
+      MUL    XBC, (-XIY)
+      MUL    XDE, (-XIY)
+      MUL    XHL, (-XIY)
+      MUL    XIX, (-XIY)
+      MUL    XIY, (-XIY)
+      MUL    XIZ, (-XIY)
+      MUL    XSP, (-XIY)
+      MULS   XWA, (-XIY)
+      MULS   XBC, (-XIY)
+      MULS   XDE, (-XIY)
+      MULS   XHL, (-XIY)
+      MULS   XIX, (-XIY)
+      MULS   XIY, (-XIY)
+      MULS   XIZ, (-XIY)
+      MULS   XSP, (-XIY)
+      DIV    XWA, (-XIY)
+      DIV    XBC, (-XIY)
+      DIV    XDE, (-XIY)
+      DIV    XHL, (-XIY)
+      DIV    XIX, (-XIY)
+      DIV    XIY, (-XIY)
+      DIV    XIZ, (-XIY)
+      DIV    XSP, (-XIY)
+      DIVS   XWA, (-XIY)
+      DIVS   XBC, (-XIY)
+      DIVS   XDE, (-XIY)
+      DIVS   XHL, (-XIY)
+      DIVS   XIX, (-XIY)
+      DIVS   XIY, (-XIY)
+      DIVS   XIZ, (-XIY)
+      DIVS   XSP, (-XIY)
       ADD    WA, (-XIY)
       ADD    BC, (-XIY)
       ADD    DE, (-XIY)
@@ -24105,6 +28607,38 @@
       EX     IY, (-XIZ)
       EX     IZ, (-XIZ)
       EX     SP, (-XIZ)
+      MUL    XWA, (-XIZ)
+      MUL    XBC, (-XIZ)
+      MUL    XDE, (-XIZ)
+      MUL    XHL, (-XIZ)
+      MUL    XIX, (-XIZ)
+      MUL    XIY, (-XIZ)
+      MUL    XIZ, (-XIZ)
+      MUL    XSP, (-XIZ)
+      MULS   XWA, (-XIZ)
+      MULS   XBC, (-XIZ)
+      MULS   XDE, (-XIZ)
+      MULS   XHL, (-XIZ)
+      MULS   XIX, (-XIZ)
+      MULS   XIY, (-XIZ)
+      MULS   XIZ, (-XIZ)
+      MULS   XSP, (-XIZ)
+      DIV    XWA, (-XIZ)
+      DIV    XBC, (-XIZ)
+      DIV    XDE, (-XIZ)
+      DIV    XHL, (-XIZ)
+      DIV    XIX, (-XIZ)
+      DIV    XIY, (-XIZ)
+      DIV    XIZ, (-XIZ)
+      DIV    XSP, (-XIZ)
+      DIVS   XWA, (-XIZ)
+      DIVS   XBC, (-XIZ)
+      DIVS   XDE, (-XIZ)
+      DIVS   XHL, (-XIZ)
+      DIVS   XIX, (-XIZ)
+      DIVS   XIY, (-XIZ)
+      DIVS   XIZ, (-XIZ)
+      DIVS   XSP, (-XIZ)
       ADD    WA, (-XIZ)
       ADD    BC, (-XIZ)
       ADD    DE, (-XIZ)
@@ -24185,6 +28719,38 @@
       EX     IY, (-XSP)
       EX     IZ, (-XSP)
       EX     SP, (-XSP)
+      MUL    XWA, (-XSP)
+      MUL    XBC, (-XSP)
+      MUL    XDE, (-XSP)
+      MUL    XHL, (-XSP)
+      MUL    XIX, (-XSP)
+      MUL    XIY, (-XSP)
+      MUL    XIZ, (-XSP)
+      MUL    XSP, (-XSP)
+      MULS   XWA, (-XSP)
+      MULS   XBC, (-XSP)
+      MULS   XDE, (-XSP)
+      MULS   XHL, (-XSP)
+      MULS   XIX, (-XSP)
+      MULS   XIY, (-XSP)
+      MULS   XIZ, (-XSP)
+      MULS   XSP, (-XSP)
+      DIV    XWA, (-XSP)
+      DIV    XBC, (-XSP)
+      DIV    XDE, (-XSP)
+      DIV    XHL, (-XSP)
+      DIV    XIX, (-XSP)
+      DIV    XIY, (-XSP)
+      DIV    XIZ, (-XSP)
+      DIV    XSP, (-XSP)
+      DIVS   XWA, (-XSP)
+      DIVS   XBC, (-XSP)
+      DIVS   XDE, (-XSP)
+      DIVS   XHL, (-XSP)
+      DIVS   XIX, (-XSP)
+      DIVS   XIY, (-XSP)
+      DIVS   XIZ, (-XSP)
+      DIVS   XSP, (-XSP)
       ADD    WA, (-XSP)
       ADD    BC, (-XSP)
       ADD    DE, (-XSP)
@@ -24264,6 +28830,38 @@
       EX     IY, (-XIX)
       EX     IZ, (-XIX)
       EX     SP, (-XIX)
+      MUL    XWA, (-XIX)
+      MUL    XBC, (-XIX)
+      MUL    XDE, (-XIX)
+      MUL    XHL, (-XIX)
+      MUL    XIX, (-XIX)
+      MUL    XIY, (-XIX)
+      MUL    XIZ, (-XIX)
+      MUL    XSP, (-XIX)
+      MULS   XWA, (-XIX)
+      MULS   XBC, (-XIX)
+      MULS   XDE, (-XIX)
+      MULS   XHL, (-XIX)
+      MULS   XIX, (-XIX)
+      MULS   XIY, (-XIX)
+      MULS   XIZ, (-XIX)
+      MULS   XSP, (-XIX)
+      DIV    XWA, (-XIX)
+      DIV    XBC, (-XIX)
+      DIV    XDE, (-XIX)
+      DIV    XHL, (-XIX)
+      DIV    XIX, (-XIX)
+      DIV    XIY, (-XIX)
+      DIV    XIZ, (-XIX)
+      DIV    XSP, (-XIX)
+      DIVS   XWA, (-XIX)
+      DIVS   XBC, (-XIX)
+      DIVS   XDE, (-XIX)
+      DIVS   XHL, (-XIX)
+      DIVS   XIX, (-XIX)
+      DIVS   XIY, (-XIX)
+      DIVS   XIZ, (-XIX)
+      DIVS   XSP, (-XIX)
       ADD    WA, (-XIX)
       ADD    BC, (-XIX)
       ADD    DE, (-XIX)
@@ -24346,6 +28944,38 @@
       EX     IY, (XIY+)
       EX     IZ, (XIY+)
       EX     SP, (XIY+)
+      MUL    XWA, (XIY+)
+      MUL    XBC, (XIY+)
+      MUL    XDE, (XIY+)
+      MUL    XHL, (XIY+)
+      MUL    XIX, (XIY+)
+      MUL    XIY, (XIY+)
+      MUL    XIZ, (XIY+)
+      MUL    XSP, (XIY+)
+      MULS   XWA, (XIY+)
+      MULS   XBC, (XIY+)
+      MULS   XDE, (XIY+)
+      MULS   XHL, (XIY+)
+      MULS   XIX, (XIY+)
+      MULS   XIY, (XIY+)
+      MULS   XIZ, (XIY+)
+      MULS   XSP, (XIY+)
+      DIV    XWA, (XIY+)
+      DIV    XBC, (XIY+)
+      DIV    XDE, (XIY+)
+      DIV    XHL, (XIY+)
+      DIV    XIX, (XIY+)
+      DIV    XIY, (XIY+)
+      DIV    XIZ, (XIY+)
+      DIV    XSP, (XIY+)
+      DIVS   XWA, (XIY+)
+      DIVS   XBC, (XIY+)
+      DIVS   XDE, (XIY+)
+      DIVS   XHL, (XIY+)
+      DIVS   XIX, (XIY+)
+      DIVS   XIY, (XIY+)
+      DIVS   XIZ, (XIY+)
+      DIVS   XSP, (XIY+)
       ADD    WA, (XIY+)
       ADD    BC, (XIY+)
       ADD    DE, (XIY+)
@@ -24425,6 +29055,38 @@
       EX     IY, (XIZ+)
       EX     IZ, (XIZ+)
       EX     SP, (XIZ+)
+      MUL    XWA, (XIZ+)
+      MUL    XBC, (XIZ+)
+      MUL    XDE, (XIZ+)
+      MUL    XHL, (XIZ+)
+      MUL    XIX, (XIZ+)
+      MUL    XIY, (XIZ+)
+      MUL    XIZ, (XIZ+)
+      MUL    XSP, (XIZ+)
+      MULS   XWA, (XIZ+)
+      MULS   XBC, (XIZ+)
+      MULS   XDE, (XIZ+)
+      MULS   XHL, (XIZ+)
+      MULS   XIX, (XIZ+)
+      MULS   XIY, (XIZ+)
+      MULS   XIZ, (XIZ+)
+      MULS   XSP, (XIZ+)
+      DIV    XWA, (XIZ+)
+      DIV    XBC, (XIZ+)
+      DIV    XDE, (XIZ+)
+      DIV    XHL, (XIZ+)
+      DIV    XIX, (XIZ+)
+      DIV    XIY, (XIZ+)
+      DIV    XIZ, (XIZ+)
+      DIV    XSP, (XIZ+)
+      DIVS   XWA, (XIZ+)
+      DIVS   XBC, (XIZ+)
+      DIVS   XDE, (XIZ+)
+      DIVS   XHL, (XIZ+)
+      DIVS   XIX, (XIZ+)
+      DIVS   XIY, (XIZ+)
+      DIVS   XIZ, (XIZ+)
+      DIVS   XSP, (XIZ+)
       ADD    WA, (XIZ+)
       ADD    BC, (XIZ+)
       ADD    DE, (XIZ+)
@@ -24505,6 +29167,38 @@
       EX     IY, (XSP+)
       EX     IZ, (XSP+)
       EX     SP, (XSP+)
+      MUL    XWA, (XSP+)
+      MUL    XBC, (XSP+)
+      MUL    XDE, (XSP+)
+      MUL    XHL, (XSP+)
+      MUL    XIX, (XSP+)
+      MUL    XIY, (XSP+)
+      MUL    XIZ, (XSP+)
+      MUL    XSP, (XSP+)
+      MULS   XWA, (XSP+)
+      MULS   XBC, (XSP+)
+      MULS   XDE, (XSP+)
+      MULS   XHL, (XSP+)
+      MULS   XIX, (XSP+)
+      MULS   XIY, (XSP+)
+      MULS   XIZ, (XSP+)
+      MULS   XSP, (XSP+)
+      DIV    XWA, (XSP+)
+      DIV    XBC, (XSP+)
+      DIV    XDE, (XSP+)
+      DIV    XHL, (XSP+)
+      DIV    XIX, (XSP+)
+      DIV    XIY, (XSP+)
+      DIV    XIZ, (XSP+)
+      DIV    XSP, (XSP+)
+      DIVS   XWA, (XSP+)
+      DIVS   XBC, (XSP+)
+      DIVS   XDE, (XSP+)
+      DIVS   XHL, (XSP+)
+      DIVS   XIX, (XSP+)
+      DIVS   XIY, (XSP+)
+      DIVS   XIZ, (XSP+)
+      DIVS   XSP, (XSP+)
       ADD    WA, (XSP+)
       ADD    BC, (XSP+)
       ADD    DE, (XSP+)
@@ -24584,6 +29278,38 @@
       EX     IY, (XIX+)
       EX     IZ, (XIX+)
       EX     SP, (XIX+)
+      MUL    XWA, (XIX+)
+      MUL    XBC, (XIX+)
+      MUL    XDE, (XIX+)
+      MUL    XHL, (XIX+)
+      MUL    XIX, (XIX+)
+      MUL    XIY, (XIX+)
+      MUL    XIZ, (XIX+)
+      MUL    XSP, (XIX+)
+      MULS   XWA, (XIX+)
+      MULS   XBC, (XIX+)
+      MULS   XDE, (XIX+)
+      MULS   XHL, (XIX+)
+      MULS   XIX, (XIX+)
+      MULS   XIY, (XIX+)
+      MULS   XIZ, (XIX+)
+      MULS   XSP, (XIX+)
+      DIV    XWA, (XIX+)
+      DIV    XBC, (XIX+)
+      DIV    XDE, (XIX+)
+      DIV    XHL, (XIX+)
+      DIV    XIX, (XIX+)
+      DIV    XIY, (XIX+)
+      DIV    XIZ, (XIX+)
+      DIV    XSP, (XIX+)
+      DIVS   XWA, (XIX+)
+      DIVS   XBC, (XIX+)
+      DIVS   XDE, (XIX+)
+      DIVS   XHL, (XIX+)
+      DIVS   XIX, (XIX+)
+      DIVS   XIY, (XIX+)
+      DIVS   XIZ, (XIX+)
+      DIVS   XSP, (XIX+)
       ADD    WA, (XIX+)
       ADD    BC, (XIX+)
       ADD    DE, (XIX+)
@@ -24660,6 +29386,161 @@
       LD     DE', 0504H
       CPL    DE'
       NEG    DE'
+      LINK   DE', 0E0DH
+      UNLK   DE'
+      BS1F   A, DE'
+      BS1B   A, DE'
+      EXTZ   DE'
+      EXTS   DE'
+      PAA    DE'
+      MIRR   DE'
+      DJNZ   DE', $+33
+      ANDCF  1, DE'
+      ORCF   2, DE'
+      XORCF  3, DE'
+      LDCF   4, DE'
+      STCF   5, DE'
+      RES    1, DE'
+      SET    2, DE'
+      CHG    3, DE'
+      BIT    4, DE'
+      TSET   5, DE'
+      MINC1  0040H, DE'
+      MINC2  0040H, DE'
+      MINC4  0040H, DE'
+      MDEC1  0040H, DE'
+      MDEC2  0040H, DE'
+      MDEC4  0080H, DE'
+      MUL    XWA, DE'
+      MUL    XBC, DE'
+      MUL    XDE, DE'
+      MUL    XHL, DE'
+      MUL    XIX, DE'
+      MUL    XIY, DE'
+      MUL    XIZ, DE'
+      MUL    XSP, DE'
+      MULS   XWA, DE'
+      MULS   XBC, DE'
+      MULS   XDE, DE'
+      MULS   XHL, DE'
+      MULS   XIX, DE'
+      MULS   XIY, DE'
+      MULS   XIZ, DE'
+      MULS   XSP, DE'
+      DIV    XWA, DE'
+      DIV    XBC, DE'
+      DIV    XDE, DE'
+      DIV    XHL, DE'
+      DIV    XIX, DE'
+      DIV    XIY, DE'
+      DIV    XIZ, DE'
+      DIV    XSP, DE'
+      DIVS   XWA, DE'
+      DIVS   XBC, DE'
+      DIVS   XDE, DE'
+      DIVS   XHL, DE'
+      DIVS   XIX, DE'
+      DIVS   XIY, DE'
+      DIVS   XIZ, DE'
+      DIVS   XSP, DE'
+      INC    1, DE'
+      DEC    1, DE'
+      SCC    F, DE'
+      SCC    LT, DE'
+      SCC    LE, DE'
+      SCC    ULE, DE'
+      SCC    OV, DE'
+      SCC    MI, DE'
+      SCC    Z, DE'
+      SCC    C, DE'
+      SCC    T, DE'
+      SCC    GE, DE'
+      SCC    GT, DE'
+      SCC    UGT, DE'
+      SCC    NOV, DE'
+      SCC    PL, DE'
+      SCC    NZ, DE'
+      SCC    NC, DE'
+      ADD    WA, DE'
+      ADD    BC, DE'
+      ADD    DE, DE'
+      ADD    HL, DE'
+      ADD    IX, DE'
+      ADD    IY, DE'
+      ADD    IZ, DE'
+      ADD    SP, DE'
+      LD     WA, DE'
+      LD     BC, DE'
+      LD     DE, DE'
+      LD     HL, DE'
+      LD     IX, DE'
+      LD     IY, DE'
+      LD     IZ, DE'
+      LD     SP, DE'
+      ADC    WA, DE'
+      ADC    BC, DE'
+      ADC    DE, DE'
+      ADC    HL, DE'
+      ADC    IX, DE'
+      ADC    IY, DE'
+      ADC    IZ, DE'
+      ADC    SP, DE'
+      LD     DE', WA
+      LD     DE', BC
+      LD     DE', DE
+      LD     DE', HL
+      LD     DE', IX
+      LD     DE', IY
+      LD     DE', IZ
+      LD     DE', SP
+      SUB    WA, DE'
+      SUB    BC, DE'
+      SUB    DE, DE'
+      SUB    HL, DE'
+      SUB    IX, DE'
+      SUB    IY, DE'
+      SUB    IZ, DE'
+      SUB    SP, DE'
+      SBC    WA, DE'
+      SBC    BC, DE'
+      SBC    DE, DE'
+      SBC    HL, DE'
+      SBC    IX, DE'
+      SBC    IY, DE'
+      SBC    IZ, DE'
+      SBC    SP, DE'
+      EX     WA, DE'
+      EX     BC, DE'
+      EX     DE, DE'
+      EX     HL, DE'
+      EX     IX, DE'
+      EX     IY, DE'
+      EX     IZ, DE'
+      EX     SP, DE'
+      AND    WA, DE'
+      AND    BC, DE'
+      AND    DE, DE'
+      AND    HL, DE'
+      AND    IX, DE'
+      AND    IY, DE'
+      AND    IZ, DE'
+      AND    SP, DE'
+      ADD    DE', 0CAC9H
+      ADC    DE', 0CBCAH
+      SUB    DE', 0CCCBH
+      SBC    DE', 0CDCCH
+      AND    DE', 0CECDH
+      XOR    DE', 0CFCEH
+      OR     DE', 0D0CFH
+      CP     DE', 0D1D0H
+      XOR    WA, DE'
+      XOR    BC, DE'
+      XOR    DE, DE'
+      XOR    HL, DE'
+      XOR    IX, DE'
+      XOR    IY, DE'
+      XOR    IZ, DE'
+      XOR    SP, DE'
       OR     WA, QDE'
       OR     BC, QDE'
       OR     DE, QDE'
@@ -24687,6 +29568,161 @@
       LD     QDE', 0504H
       CPL    QDE'
       NEG    QDE'
+      LINK   QDE', 0E0DH
+      UNLK   QDE'
+      BS1F   A, QDE'
+      BS1B   A, QDE'
+      EXTZ   QDE'
+      EXTS   QDE'
+      PAA    QDE'
+      MIRR   QDE'
+      DJNZ   QDE', $+33
+      ANDCF  1, QDE'
+      ORCF   2, QDE'
+      XORCF  3, QDE'
+      LDCF   4, QDE'
+      STCF   5, QDE'
+      RES    1, QDE'
+      SET    2, QDE'
+      CHG    3, QDE'
+      BIT    4, QDE'
+      TSET   5, QDE'
+      MINC1  0040H, QDE'
+      MINC2  0040H, QDE'
+      MINC4  0040H, QDE'
+      MDEC1  0040H, QDE'
+      MDEC2  0040H, QDE'
+      MDEC4  0080H, QDE'
+      MUL    XWA, QDE'
+      MUL    XBC, QDE'
+      MUL    XDE, QDE'
+      MUL    XHL, QDE'
+      MUL    XIX, QDE'
+      MUL    XIY, QDE'
+      MUL    XIZ, QDE'
+      MUL    XSP, QDE'
+      MULS   XWA, QDE'
+      MULS   XBC, QDE'
+      MULS   XDE, QDE'
+      MULS   XHL, QDE'
+      MULS   XIX, QDE'
+      MULS   XIY, QDE'
+      MULS   XIZ, QDE'
+      MULS   XSP, QDE'
+      DIV    XWA, QDE'
+      DIV    XBC, QDE'
+      DIV    XDE, QDE'
+      DIV    XHL, QDE'
+      DIV    XIX, QDE'
+      DIV    XIY, QDE'
+      DIV    XIZ, QDE'
+      DIV    XSP, QDE'
+      DIVS   XWA, QDE'
+      DIVS   XBC, QDE'
+      DIVS   XDE, QDE'
+      DIVS   XHL, QDE'
+      DIVS   XIX, QDE'
+      DIVS   XIY, QDE'
+      DIVS   XIZ, QDE'
+      DIVS   XSP, QDE'
+      INC    1, QDE'
+      DEC    1, QDE'
+      SCC    F, QDE'
+      SCC    LT, QDE'
+      SCC    LE, QDE'
+      SCC    ULE, QDE'
+      SCC    OV, QDE'
+      SCC    MI, QDE'
+      SCC    Z, QDE'
+      SCC    C, QDE'
+      SCC    T, QDE'
+      SCC    GE, QDE'
+      SCC    GT, QDE'
+      SCC    UGT, QDE'
+      SCC    NOV, QDE'
+      SCC    PL, QDE'
+      SCC    NZ, QDE'
+      SCC    NC, QDE'
+      ADD    WA, QDE'
+      ADD    BC, QDE'
+      ADD    DE, QDE'
+      ADD    HL, QDE'
+      ADD    IX, QDE'
+      ADD    IY, QDE'
+      ADD    IZ, QDE'
+      ADD    SP, QDE'
+      LD     WA, QDE'
+      LD     BC, QDE'
+      LD     DE, QDE'
+      LD     HL, QDE'
+      LD     IX, QDE'
+      LD     IY, QDE'
+      LD     IZ, QDE'
+      LD     SP, QDE'
+      ADC    WA, QDE'
+      ADC    BC, QDE'
+      ADC    DE, QDE'
+      ADC    HL, QDE'
+      ADC    IX, QDE'
+      ADC    IY, QDE'
+      ADC    IZ, QDE'
+      ADC    SP, QDE'
+      LD     QDE', WA
+      LD     QDE', BC
+      LD     QDE', DE
+      LD     QDE', HL
+      LD     QDE', IX
+      LD     QDE', IY
+      LD     QDE', IZ
+      LD     QDE', SP
+      SUB    WA, QDE'
+      SUB    BC, QDE'
+      SUB    DE, QDE'
+      SUB    HL, QDE'
+      SUB    IX, QDE'
+      SUB    IY, QDE'
+      SUB    IZ, QDE'
+      SUB    SP, QDE'
+      SBC    WA, QDE'
+      SBC    BC, QDE'
+      SBC    DE, QDE'
+      SBC    HL, QDE'
+      SBC    IX, QDE'
+      SBC    IY, QDE'
+      SBC    IZ, QDE'
+      SBC    SP, QDE'
+      EX     WA, QDE'
+      EX     BC, QDE'
+      EX     DE, QDE'
+      EX     HL, QDE'
+      EX     IX, QDE'
+      EX     IY, QDE'
+      EX     IZ, QDE'
+      EX     SP, QDE'
+      AND    WA, QDE'
+      AND    BC, QDE'
+      AND    DE, QDE'
+      AND    HL, QDE'
+      AND    IX, QDE'
+      AND    IY, QDE'
+      AND    IZ, QDE'
+      AND    SP, QDE'
+      ADD    QDE', 0CAC9H
+      ADC    QDE', 0CBCAH
+      SUB    QDE', 0CCCBH
+      SBC    QDE', 0CDCCH
+      AND    QDE', 0CECDH
+      XOR    QDE', 0CFCEH
+      OR     QDE', 0D0CFH
+      CP     QDE', 0D1D0H
+      XOR    WA, QDE'
+      XOR    BC, QDE'
+      XOR    DE, QDE'
+      XOR    HL, QDE'
+      XOR    IX, QDE'
+      XOR    IY, QDE'
+      XOR    IZ, QDE'
+      XOR    SP, QDE'
       OR     WA, HL'
       OR     BC, HL'
       OR     DE, HL'
@@ -24714,6 +29750,161 @@
       LD     HL', 0504H
       CPL    HL'
       NEG    HL'
+      LINK   HL', 0E0DH
+      UNLK   HL'
+      BS1F   A, HL'
+      BS1B   A, HL'
+      EXTZ   HL'
+      EXTS   HL'
+      PAA    HL'
+      MIRR   HL'
+      DJNZ   HL', $+33
+      ANDCF  1, HL'
+      ORCF   2, HL'
+      XORCF  3, HL'
+      LDCF   4, HL'
+      STCF   5, HL'
+      RES    1, HL'
+      SET    2, HL'
+      CHG    3, HL'
+      BIT    4, HL'
+      TSET   5, HL'
+      MINC1  0040H, HL'
+      MINC2  0040H, HL'
+      MINC4  0040H, HL'
+      MDEC1  0040H, HL'
+      MDEC2  0040H, HL'
+      MDEC4  0080H, HL'
+      MUL    XWA, HL'
+      MUL    XBC, HL'
+      MUL    XDE, HL'
+      MUL    XHL, HL'
+      MUL    XIX, HL'
+      MUL    XIY, HL'
+      MUL    XIZ, HL'
+      MUL    XSP, HL'
+      MULS   XWA, HL'
+      MULS   XBC, HL'
+      MULS   XDE, HL'
+      MULS   XHL, HL'
+      MULS   XIX, HL'
+      MULS   XIY, HL'
+      MULS   XIZ, HL'
+      MULS   XSP, HL'
+      DIV    XWA, HL'
+      DIV    XBC, HL'
+      DIV    XDE, HL'
+      DIV    XHL, HL'
+      DIV    XIX, HL'
+      DIV    XIY, HL'
+      DIV    XIZ, HL'
+      DIV    XSP, HL'
+      DIVS   XWA, HL'
+      DIVS   XBC, HL'
+      DIVS   XDE, HL'
+      DIVS   XHL, HL'
+      DIVS   XIX, HL'
+      DIVS   XIY, HL'
+      DIVS   XIZ, HL'
+      DIVS   XSP, HL'
+      INC    1, HL'
+      DEC    1, HL'
+      SCC    F, HL'
+      SCC    LT, HL'
+      SCC    LE, HL'
+      SCC    ULE, HL'
+      SCC    OV, HL'
+      SCC    MI, HL'
+      SCC    Z, HL'
+      SCC    C, HL'
+      SCC    T, HL'
+      SCC    GE, HL'
+      SCC    GT, HL'
+      SCC    UGT, HL'
+      SCC    NOV, HL'
+      SCC    PL, HL'
+      SCC    NZ, HL'
+      SCC    NC, HL'
+      ADD    WA, HL'
+      ADD    BC, HL'
+      ADD    DE, HL'
+      ADD    HL, HL'
+      ADD    IX, HL'
+      ADD    IY, HL'
+      ADD    IZ, HL'
+      ADD    SP, HL'
+      LD     WA, HL'
+      LD     BC, HL'
+      LD     DE, HL'
+      LD     HL, HL'
+      LD     IX, HL'
+      LD     IY, HL'
+      LD     IZ, HL'
+      LD     SP, HL'
+      ADC    WA, HL'
+      ADC    BC, HL'
+      ADC    DE, HL'
+      ADC    HL, HL'
+      ADC    IX, HL'
+      ADC    IY, HL'
+      ADC    IZ, HL'
+      ADC    SP, HL'
+      LD     HL', WA
+      LD     HL', BC
+      LD     HL', DE
+      LD     HL', HL
+      LD     HL', IX
+      LD     HL', IY
+      LD     HL', IZ
+      LD     HL', SP
+      SUB    WA, HL'
+      SUB    BC, HL'
+      SUB    DE, HL'
+      SUB    HL, HL'
+      SUB    IX, HL'
+      SUB    IY, HL'
+      SUB    IZ, HL'
+      SUB    SP, HL'
+      SBC    WA, HL'
+      SBC    BC, HL'
+      SBC    DE, HL'
+      SBC    HL, HL'
+      SBC    IX, HL'
+      SBC    IY, HL'
+      SBC    IZ, HL'
+      SBC    SP, HL'
+      EX     WA, HL'
+      EX     BC, HL'
+      EX     DE, HL'
+      EX     HL, HL'
+      EX     IX, HL'
+      EX     IY, HL'
+      EX     IZ, HL'
+      EX     SP, HL'
+      AND    WA, HL'
+      AND    BC, HL'
+      AND    DE, HL'
+      AND    HL, HL'
+      AND    IX, HL'
+      AND    IY, HL'
+      AND    IZ, HL'
+      AND    SP, HL'
+      ADD    HL', 0CAC9H
+      ADC    HL', 0CBCAH
+      SUB    HL', 0CCCBH
+      SBC    HL', 0CDCCH
+      AND    HL', 0CECDH
+      XOR    HL', 0CFCEH
+      OR     HL', 0D0CFH
+      CP     HL', 0D1D0H
+      XOR    WA, HL'
+      XOR    BC, HL'
+      XOR    DE, HL'
+      XOR    HL, HL'
+      XOR    IX, HL'
+      XOR    IY, HL'
+      XOR    IZ, HL'
+      XOR    SP, HL'
       OR     WA, QHL'
       OR     BC, QHL'
       OR     DE, QHL'
@@ -24741,6 +29932,161 @@
       LD     QHL', 0504H
       CPL    QHL'
       NEG    QHL'
+      LINK   QHL', 0E0DH
+      UNLK   QHL'
+      BS1F   A, QHL'
+      BS1B   A, QHL'
+      EXTZ   QHL'
+      EXTS   QHL'
+      PAA    QHL'
+      MIRR   QHL'
+      DJNZ   QHL', $+33
+      ANDCF  1, QHL'
+      ORCF   2, QHL'
+      XORCF  3, QHL'
+      LDCF   4, QHL'
+      STCF   5, QHL'
+      RES    1, QHL'
+      SET    2, QHL'
+      CHG    3, QHL'
+      BIT    4, QHL'
+      TSET   5, QHL'
+      MINC1  0040H, QHL'
+      MINC2  0040H, QHL'
+      MINC4  0040H, QHL'
+      MDEC1  0040H, QHL'
+      MDEC2  0040H, QHL'
+      MDEC4  0080H, QHL'
+      MUL    XWA, QHL'
+      MUL    XBC, QHL'
+      MUL    XDE, QHL'
+      MUL    XHL, QHL'
+      MUL    XIX, QHL'
+      MUL    XIY, QHL'
+      MUL    XIZ, QHL'
+      MUL    XSP, QHL'
+      MULS   XWA, QHL'
+      MULS   XBC, QHL'
+      MULS   XDE, QHL'
+      MULS   XHL, QHL'
+      MULS   XIX, QHL'
+      MULS   XIY, QHL'
+      MULS   XIZ, QHL'
+      MULS   XSP, QHL'
+      DIV    XWA, QHL'
+      DIV    XBC, QHL'
+      DIV    XDE, QHL'
+      DIV    XHL, QHL'
+      DIV    XIX, QHL'
+      DIV    XIY, QHL'
+      DIV    XIZ, QHL'
+      DIV    XSP, QHL'
+      DIVS   XWA, QHL'
+      DIVS   XBC, QHL'
+      DIVS   XDE, QHL'
+      DIVS   XHL, QHL'
+      DIVS   XIX, QHL'
+      DIVS   XIY, QHL'
+      DIVS   XIZ, QHL'
+      DIVS   XSP, QHL'
+      INC    1, QHL'
+      DEC    1, QHL'
+      SCC    F, QHL'
+      SCC    LT, QHL'
+      SCC    LE, QHL'
+      SCC    ULE, QHL'
+      SCC    OV, QHL'
+      SCC    MI, QHL'
+      SCC    Z, QHL'
+      SCC    C, QHL'
+      SCC    T, QHL'
+      SCC    GE, QHL'
+      SCC    GT, QHL'
+      SCC    UGT, QHL'
+      SCC    NOV, QHL'
+      SCC    PL, QHL'
+      SCC    NZ, QHL'
+      SCC    NC, QHL'
+      ADD    WA, QHL'
+      ADD    BC, QHL'
+      ADD    DE, QHL'
+      ADD    HL, QHL'
+      ADD    IX, QHL'
+      ADD    IY, QHL'
+      ADD    IZ, QHL'
+      ADD    SP, QHL'
+      LD     WA, QHL'
+      LD     BC, QHL'
+      LD     DE, QHL'
+      LD     HL, QHL'
+      LD     IX, QHL'
+      LD     IY, QHL'
+      LD     IZ, QHL'
+      LD     SP, QHL'
+      ADC    WA, QHL'
+      ADC    BC, QHL'
+      ADC    DE, QHL'
+      ADC    HL, QHL'
+      ADC    IX, QHL'
+      ADC    IY, QHL'
+      ADC    IZ, QHL'
+      ADC    SP, QHL'
+      LD     QHL', WA
+      LD     QHL', BC
+      LD     QHL', DE
+      LD     QHL', HL
+      LD     QHL', IX
+      LD     QHL', IY
+      LD     QHL', IZ
+      LD     QHL', SP
+      SUB    WA, QHL'
+      SUB    BC, QHL'
+      SUB    DE, QHL'
+      SUB    HL, QHL'
+      SUB    IX, QHL'
+      SUB    IY, QHL'
+      SUB    IZ, QHL'
+      SUB    SP, QHL'
+      SBC    WA, QHL'
+      SBC    BC, QHL'
+      SBC    DE, QHL'
+      SBC    HL, QHL'
+      SBC    IX, QHL'
+      SBC    IY, QHL'
+      SBC    IZ, QHL'
+      SBC    SP, QHL'
+      EX     WA, QHL'
+      EX     BC, QHL'
+      EX     DE, QHL'
+      EX     HL, QHL'
+      EX     IX, QHL'
+      EX     IY, QHL'
+      EX     IZ, QHL'
+      EX     SP, QHL'
+      AND    WA, QHL'
+      AND    BC, QHL'
+      AND    DE, QHL'
+      AND    HL, QHL'
+      AND    IX, QHL'
+      AND    IY, QHL'
+      AND    IZ, QHL'
+      AND    SP, QHL'
+      ADD    QHL', 0CAC9H
+      ADC    QHL', 0CBCAH
+      SUB    QHL', 0CCCBH
+      SBC    QHL', 0CDCCH
+      AND    QHL', 0CECDH
+      XOR    QHL', 0CFCEH
+      OR     QHL', 0D0CFH
+      CP     QHL', 0D1D0H
+      XOR    WA, QHL'
+      XOR    BC, QHL'
+      XOR    DE, QHL'
+      XOR    HL, QHL'
+      XOR    IX, QHL'
+      XOR    IY, QHL'
+      XOR    IZ, QHL'
+      XOR    SP, QHL'
       OR     BC, WA
       OR     DE, WA
       OR     HL, WA
@@ -24767,6 +30113,161 @@
       LD     WA, 0504H
       CPL    WA
       NEG    WA
+      LINK   WA, 0E0DH
+      UNLK   WA
+      BS1F   A, WA
+      BS1B   A, WA
+      EXTZ   WA
+      EXTS   WA
+      PAA    WA
+      MIRR   WA
+      DJNZ   WA, $+33
+      ANDCF  1, WA
+      ORCF   2, WA
+      XORCF  3, WA
+      LDCF   4, WA
+      STCF   5, WA
+      RES    1, WA
+      SET    2, WA
+      CHG    3, WA
+      BIT    4, WA
+      TSET   5, WA
+      MINC1  0040H, WA
+      MINC2  0040H, WA
+      MINC4  0040H, WA
+      MDEC1  0040H, WA
+      MDEC2  0040H, WA
+      MDEC4  0080H, WA
+      MUL    XWA, WA
+      MUL    XBC, WA
+      MUL    XDE, WA
+      MUL    XHL, WA
+      MUL    XIX, WA
+      MUL    XIY, WA
+      MUL    XIZ, WA
+      MUL    XSP, WA
+      MULS   XWA, WA
+      MULS   XBC, WA
+      MULS   XDE, WA
+      MULS   XHL, WA
+      MULS   XIX, WA
+      MULS   XIY, WA
+      MULS   XIZ, WA
+      MULS   XSP, WA
+      DIV    XWA, WA
+      DIV    XBC, WA
+      DIV    XDE, WA
+      DIV    XHL, WA
+      DIV    XIX, WA
+      DIV    XIY, WA
+      DIV    XIZ, WA
+      DIV    XSP, WA
+      DIVS   XWA, WA
+      DIVS   XBC, WA
+      DIVS   XDE, WA
+      DIVS   XHL, WA
+      DIVS   XIX, WA
+      DIVS   XIY, WA
+      DIVS   XIZ, WA
+      DIVS   XSP, WA
+      INC    1, WA
+      DEC    1, WA
+      SCC    F, WA
+      SCC    LT, WA
+      SCC    LE, WA
+      SCC    ULE, WA
+      SCC    OV, WA
+      SCC    MI, WA
+      SCC    Z, WA
+      SCC    C, WA
+      SCC    T, WA
+      SCC    GE, WA
+      SCC    GT, WA
+      SCC    UGT, WA
+      SCC    NOV, WA
+      SCC    PL, WA
+      SCC    NZ, WA
+      SCC    NC, WA
+      ADD    WA, WA
+      ADD    BC, WA
+      ADD    DE, WA
+      ADD    HL, WA
+      ADD    IX, WA
+      ADD    IY, WA
+      ADD    IZ, WA
+      ADD    SP, WA
+      LD     WA, WA
+      LD     BC, WA
+      LD     DE, WA
+      LD     HL, WA
+      LD     IX, WA
+      LD     IY, WA
+      LD     IZ, WA
+      LD     SP, WA
+      ADC    WA, WA
+      ADC    BC, WA
+      ADC    DE, WA
+      ADC    HL, WA
+      ADC    IX, WA
+      ADC    IY, WA
+      ADC    IZ, WA
+      ADC    SP, WA
+      LD     WA, BC
+      LD     WA, DE
+      LD     WA, HL
+      LD     WA, IX
+      LD     WA, IY
+      LD     WA, IZ
+      LD     WA, SP
+      SUB    WA, WA
+      SUB    BC, WA
+      SUB    DE, WA
+      SUB    HL, WA
+      SUB    IX, WA
+      SUB    IY, WA
+      SUB    IZ, WA
+      SUB    SP, WA
+      SBC    WA, WA
+      SBC    BC, WA
+      SBC    DE, WA
+      SBC    HL, WA
+      SBC    IX, WA
+      SBC    IY, WA
+      SBC    IZ, WA
+      SBC    SP, WA
+      EX     WA, WA
+      EX     BC, WA
+      EX     DE, WA
+      EX     HL, WA
+      EX     IX, WA
+      EX     IY, WA
+      EX     IZ, WA
+      EX     SP, WA
+      AND    WA, WA
+      AND    BC, WA
+      AND    DE, WA
+      AND    HL, WA
+      AND    IX, WA
+      AND    IY, WA
+      AND    IZ, WA
+      AND    SP, WA
+      ADD    WA, 0CAC9H
+      ADC    WA, 0CBCAH
+      SUB    WA, 0CCCBH
+      SBC    WA, 0CDCCH
+      AND    WA, 0CECDH
+      XOR    WA, 0CFCEH
+      OR     WA, 0D0CFH
+      CP     WA, 0D1D0H
+      XOR    WA, WA
+      XOR    BC, WA
+      XOR    DE, WA
+      XOR    HL, WA
+      XOR    IX, WA
+      XOR    IY, WA
+      XOR    IZ, WA
+      XOR    SP, WA
+      OR     WA, WA
       OR     HL, QWA
       OR     IX, QWA
       OR     IY, QWA
@@ -24791,6 +30292,164 @@
       LD     QWA, 0504H
       CPL    QWA
       NEG    QWA
+      LINK   QWA, 0E0DH
+      UNLK   QWA
+      BS1F   A, QWA
+      BS1B   A, QWA
+      EXTZ   QWA
+      EXTS   QWA
+      PAA    QWA
+      MIRR   QWA
+      DJNZ   QWA, $+33
+      ANDCF  1, QWA
+      ORCF   2, QWA
+      XORCF  3, QWA
+      LDCF   4, QWA
+      STCF   5, QWA
+      RES    1, QWA
+      SET    2, QWA
+      CHG    3, QWA
+      BIT    4, QWA
+      TSET   5, QWA
+      MINC1  0040H, QWA
+      MINC2  0040H, QWA
+      MINC4  0040H, QWA
+      MDEC1  0040H, QWA
+      MDEC2  0040H, QWA
+      MDEC4  0080H, QWA
+      MUL    XWA, QWA
+      MUL    XBC, QWA
+      MUL    XDE, QWA
+      MUL    XHL, QWA
+      MUL    XIX, QWA
+      MUL    XIY, QWA
+      MUL    XIZ, QWA
+      MUL    XSP, QWA
+      MULS   XWA, QWA
+      MULS   XBC, QWA
+      MULS   XDE, QWA
+      MULS   XHL, QWA
+      MULS   XIX, QWA
+      MULS   XIY, QWA
+      MULS   XIZ, QWA
+      MULS   XSP, QWA
+      DIV    XWA, QWA
+      DIV    XBC, QWA
+      DIV    XDE, QWA
+      DIV    XHL, QWA
+      DIV    XIX, QWA
+      DIV    XIY, QWA
+      DIV    XIZ, QWA
+      DIV    XSP, QWA
+      DIVS   XWA, QWA
+      DIVS   XBC, QWA
+      DIVS   XDE, QWA
+      DIVS   XHL, QWA
+      DIVS   XIX, QWA
+      DIVS   XIY, QWA
+      DIVS   XIZ, QWA
+      DIVS   XSP, QWA
+      INC    1, QWA
+      DEC    1, QWA
+      SCC    F, QWA
+      SCC    LT, QWA
+      SCC    LE, QWA
+      SCC    ULE, QWA
+      SCC    OV, QWA
+      SCC    MI, QWA
+      SCC    Z, QWA
+      SCC    C, QWA
+      SCC    T, QWA
+      SCC    GE, QWA
+      SCC    GT, QWA
+      SCC    UGT, QWA
+      SCC    NOV, QWA
+      SCC    PL, QWA
+      SCC    NZ, QWA
+      SCC    NC, QWA
+      ADD    WA, QWA
+      ADD    BC, QWA
+      ADD    DE, QWA
+      ADD    HL, QWA
+      ADD    IX, QWA
+      ADD    IY, QWA
+      ADD    IZ, QWA
+      ADD    SP, QWA
+      LD     WA, QWA
+      LD     BC, QWA
+      LD     DE, QWA
+      LD     HL, QWA
+      LD     IX, QWA
+      LD     IY, QWA
+      LD     IZ, QWA
+      LD     SP, QWA
+      ADC    WA, QWA
+      ADC    BC, QWA
+      ADC    DE, QWA
+      ADC    HL, QWA
+      ADC    IX, QWA
+      ADC    IY, QWA
+      ADC    IZ, QWA
+      ADC    SP, QWA
+      LD     QWA, WA
+      LD     QWA, BC
+      LD     QWA, DE
+      LD     QWA, HL
+      LD     QWA, IX
+      LD     QWA, IY
+      LD     QWA, IZ
+      LD     QWA, SP
+      SUB    WA, QWA
+      SUB    BC, QWA
+      SUB    DE, QWA
+      SUB    HL, QWA
+      SUB    IX, QWA
+      SUB    IY, QWA
+      SUB    IZ, QWA
+      SUB    SP, QWA
+      SBC    WA, QWA
+      SBC    BC, QWA
+      SBC    DE, QWA
+      SBC    HL, QWA
+      SBC    IX, QWA
+      SBC    IY, QWA
+      SBC    IZ, QWA
+      SBC    SP, QWA
+      EX     WA, QWA
+      EX     BC, QWA
+      EX     DE, QWA
+      EX     HL, QWA
+      EX     IX, QWA
+      EX     IY, QWA
+      EX     IZ, QWA
+      EX     SP, QWA
+      AND    WA, QWA
+      AND    BC, QWA
+      AND    DE, QWA
+      AND    HL, QWA
+      AND    IX, QWA
+      AND    IY, QWA
+      AND    IZ, QWA
+      AND    SP, QWA
+      ADD    QWA, 0CAC9H
+      ADC    QWA, 0CBCAH
+      SUB    QWA, 0CCCBH
+      SBC    QWA, 0CDCCH
+      AND    QWA, 0CECDH
+      XOR    QWA, 0CFCEH
+      OR     QWA, 0D0CFH
+      CP     QWA, 0D1D0H
+      XOR    WA, QWA
+      XOR    BC, QWA
+      XOR    DE, QWA
+      XOR    HL, QWA
+      XOR    IX, QWA
+      XOR    IY, QWA
+      XOR    IZ, QWA
+      XOR    SP, QWA
+      OR     WA, QWA
+      OR     BC, QWA
+      OR     DE, QWA
       OR     IY, BC
       OR     IZ, BC
       OR     SP, BC
@@ -24813,6 +30472,163 @@
       LD     BC, 0504H
       CPL    BC
       NEG    BC
+      LINK   BC, 0E0DH
+      UNLK   BC
+      BS1F   A, BC
+      BS1B   A, BC
+      EXTZ   BC
+      EXTS   BC
+      PAA    BC
+      MIRR   BC
+      DJNZ   BC, $+33
+      ANDCF  1, BC
+      ORCF   2, BC
+      XORCF  3, BC
+      LDCF   4, BC
+      STCF   5, BC
+      RES    1, BC
+      SET    2, BC
+      CHG    3, BC
+      BIT    4, BC
+      TSET   5, BC
+      MINC1  0040H, BC
+      MINC2  0040H, BC
+      MINC4  0040H, BC
+      MDEC1  0040H, BC
+      MDEC2  0040H, BC
+      MDEC4  0080H, BC
+      MUL    XWA, BC
+      MUL    XBC, BC
+      MUL    XDE, BC
+      MUL    XHL, BC
+      MUL    XIX, BC
+      MUL    XIY, BC
+      MUL    XIZ, BC
+      MUL    XSP, BC
+      MULS   XWA, BC
+      MULS   XBC, BC
+      MULS   XDE, BC
+      MULS   XHL, BC
+      MULS   XIX, BC
+      MULS   XIY, BC
+      MULS   XIZ, BC
+      MULS   XSP, BC
+      DIV    XWA, BC
+      DIV    XBC, BC
+      DIV    XDE, BC
+      DIV    XHL, BC
+      DIV    XIX, BC
+      DIV    XIY, BC
+      DIV    XIZ, BC
+      DIV    XSP, BC
+      DIVS   XWA, BC
+      DIVS   XBC, BC
+      DIVS   XDE, BC
+      DIVS   XHL, BC
+      DIVS   XIX, BC
+      DIVS   XIY, BC
+      DIVS   XIZ, BC
+      DIVS   XSP, BC
+      INC    1, BC
+      DEC    1, BC
+      SCC    F, BC
+      SCC    LT, BC
+      SCC    LE, BC
+      SCC    ULE, BC
+      SCC    OV, BC
+      SCC    MI, BC
+      SCC    Z, BC
+      SCC    C, BC
+      SCC    T, BC
+      SCC    GE, BC
+      SCC    GT, BC
+      SCC    UGT, BC
+      SCC    NOV, BC
+      SCC    PL, BC
+      SCC    NZ, BC
+      SCC    NC, BC
+      ADD    WA, BC
+      ADD    BC, BC
+      ADD    DE, BC
+      ADD    HL, BC
+      ADD    IX, BC
+      ADD    IY, BC
+      ADD    IZ, BC
+      ADD    SP, BC
+      LD     BC, BC
+      LD     DE, BC
+      LD     HL, BC
+      LD     IX, BC
+      LD     IY, BC
+      LD     IZ, BC
+      LD     SP, BC
+      ADC    WA, BC
+      ADC    BC, BC
+      ADC    DE, BC
+      ADC    HL, BC
+      ADC    IX, BC
+      ADC    IY, BC
+      ADC    IZ, BC
+      ADC    SP, BC
+      LD     BC, DE
+      LD     BC, HL
+      LD     BC, IX
+      LD     BC, IY
+      LD     BC, IZ
+      LD     BC, SP
+      SUB    WA, BC
+      SUB    BC, BC
+      SUB    DE, BC
+      SUB    HL, BC
+      SUB    IX, BC
+      SUB    IY, BC
+      SUB    IZ, BC
+      SUB    SP, BC
+      SBC    WA, BC
+      SBC    BC, BC
+      SBC    DE, BC
+      SBC    HL, BC
+      SBC    IX, BC
+      SBC    IY, BC
+      SBC    IZ, BC
+      SBC    SP, BC
+      EX     WA, BC
+      EX     BC, BC
+      EX     DE, BC
+      EX     HL, BC
+      EX     IX, BC
+      EX     IY, BC
+      EX     IZ, BC
+      EX     SP, BC
+      AND    WA, BC
+      AND    BC, BC
+      AND    DE, BC
+      AND    HL, BC
+      AND    IX, BC
+      AND    IY, BC
+      AND    IZ, BC
+      AND    SP, BC
+      ADD    BC, 0CAC9H
+      ADC    BC, 0CBCAH
+      SUB    BC, 0CCCBH
+      SBC    BC, 0CDCCH
+      AND    BC, 0CECDH
+      XOR    BC, 0CFCEH
+      OR     BC, 0D0CFH
+      CP     BC, 0D1D0H
+      XOR    WA, BC
+      XOR    BC, BC
+      XOR    DE, BC
+      XOR    HL, BC
+      XOR    IX, BC
+      XOR    IY, BC
+      XOR    IZ, BC
+      XOR    SP, BC
+      OR     WA, BC
+      OR     BC, BC
+      OR     DE, BC
+      OR     HL, BC
+      OR     IX, BC
       OR     SP, QBC
       RLC    0E9H, QBC
       RRC    0EAH, QBC
@@ -24833,6 +30649,168 @@
       LD     QBC, 0504H
       CPL    QBC
       NEG    QBC
+      LINK   QBC, 0E0DH
+      UNLK   QBC
+      BS1F   A, QBC
+      BS1B   A, QBC
+      EXTZ   QBC
+      EXTS   QBC
+      PAA    QBC
+      MIRR   QBC
+      DJNZ   QBC, $+33
+      ANDCF  1, QBC
+      ORCF   2, QBC
+      XORCF  3, QBC
+      LDCF   4, QBC
+      STCF   5, QBC
+      RES    1, QBC
+      SET    2, QBC
+      CHG    3, QBC
+      BIT    4, QBC
+      TSET   5, QBC
+      MINC1  0040H, QBC
+      MINC2  0040H, QBC
+      MINC4  0040H, QBC
+      MDEC1  0040H, QBC
+      MDEC2  0040H, QBC
+      MDEC4  0080H, QBC
+      MUL    XWA, QBC
+      MUL    XBC, QBC
+      MUL    XDE, QBC
+      MUL    XHL, QBC
+      MUL    XIX, QBC
+      MUL    XIY, QBC
+      MUL    XIZ, QBC
+      MUL    XSP, QBC
+      MULS   XWA, QBC
+      MULS   XBC, QBC
+      MULS   XDE, QBC
+      MULS   XHL, QBC
+      MULS   XIX, QBC
+      MULS   XIY, QBC
+      MULS   XIZ, QBC
+      MULS   XSP, QBC
+      DIV    XWA, QBC
+      DIV    XBC, QBC
+      DIV    XDE, QBC
+      DIV    XHL, QBC
+      DIV    XIX, QBC
+      DIV    XIY, QBC
+      DIV    XIZ, QBC
+      DIV    XSP, QBC
+      DIVS   XWA, QBC
+      DIVS   XBC, QBC
+      DIVS   XDE, QBC
+      DIVS   XHL, QBC
+      DIVS   XIX, QBC
+      DIVS   XIY, QBC
+      DIVS   XIZ, QBC
+      DIVS   XSP, QBC
+      INC    1, QBC
+      DEC    1, QBC
+      SCC    F, QBC
+      SCC    LT, QBC
+      SCC    LE, QBC
+      SCC    ULE, QBC
+      SCC    OV, QBC
+      SCC    MI, QBC
+      SCC    Z, QBC
+      SCC    C, QBC
+      SCC    T, QBC
+      SCC    GE, QBC
+      SCC    GT, QBC
+      SCC    UGT, QBC
+      SCC    NOV, QBC
+      SCC    PL, QBC
+      SCC    NZ, QBC
+      SCC    NC, QBC
+      ADD    WA, QBC
+      ADD    BC, QBC
+      ADD    DE, QBC
+      ADD    HL, QBC
+      ADD    IX, QBC
+      ADD    IY, QBC
+      ADD    IZ, QBC
+      ADD    SP, QBC
+      LD     WA, QBC
+      LD     BC, QBC
+      LD     DE, QBC
+      LD     HL, QBC
+      LD     IX, QBC
+      LD     IY, QBC
+      LD     IZ, QBC
+      LD     SP, QBC
+      ADC    WA, QBC
+      ADC    BC, QBC
+      ADC    DE, QBC
+      ADC    HL, QBC
+      ADC    IX, QBC
+      ADC    IY, QBC
+      ADC    IZ, QBC
+      ADC    SP, QBC
+      LD     QBC, WA
+      LD     QBC, BC
+      LD     QBC, DE
+      LD     QBC, HL
+      LD     QBC, IX
+      LD     QBC, IY
+      LD     QBC, IZ
+      LD     QBC, SP
+      SUB    WA, QBC
+      SUB    BC, QBC
+      SUB    DE, QBC
+      SUB    HL, QBC
+      SUB    IX, QBC
+      SUB    IY, QBC
+      SUB    IZ, QBC
+      SUB    SP, QBC
+      SBC    WA, QBC
+      SBC    BC, QBC
+      SBC    DE, QBC
+      SBC    HL, QBC
+      SBC    IX, QBC
+      SBC    IY, QBC
+      SBC    IZ, QBC
+      SBC    SP, QBC
+      EX     WA, QBC
+      EX     BC, QBC
+      EX     DE, QBC
+      EX     HL, QBC
+      EX     IX, QBC
+      EX     IY, QBC
+      EX     IZ, QBC
+      EX     SP, QBC
+      AND    WA, QBC
+      AND    BC, QBC
+      AND    DE, QBC
+      AND    HL, QBC
+      AND    IX, QBC
+      AND    IY, QBC
+      AND    IZ, QBC
+      AND    SP, QBC
+      ADD    QBC, 0CAC9H
+      ADC    QBC, 0CBCAH
+      SUB    QBC, 0CCCBH
+      SBC    QBC, 0CDCCH
+      AND    QBC, 0CECDH
+      XOR    QBC, 0CFCEH
+      OR     QBC, 0D0CFH
+      CP     QBC, 0D1D0H
+      XOR    WA, QBC
+      XOR    BC, QBC
+      XOR    DE, QBC
+      XOR    HL, QBC
+      XOR    IX, QBC
+      XOR    IY, QBC
+      XOR    IZ, QBC
+      XOR    SP, QBC
+      OR     WA, QBC
+      OR     BC, QBC
+      OR     DE, QBC
+      OR     HL, QBC
+      OR     IX, QBC
+      OR     IY, QBC
+      OR     IZ, QBC
       RRC    0EAH, DE
       RL     0EBH, DE
       RR     0ECH, DE
@@ -24851,6 +30829,165 @@
       LD     DE, 0504H
       CPL    DE
       NEG    DE
+      LINK   DE, 0E0DH
+      UNLK   DE
+      BS1F   A, DE
+      BS1B   A, DE
+      EXTZ   DE
+      EXTS   DE
+      PAA    DE
+      MIRR   DE
+      DJNZ   DE, $+33
+      ANDCF  1, DE
+      ORCF   2, DE
+      XORCF  3, DE
+      LDCF   4, DE
+      STCF   5, DE
+      RES    1, DE
+      SET    2, DE
+      CHG    3, DE
+      BIT    4, DE
+      TSET   5, DE
+      MINC1  0040H, DE
+      MINC2  0040H, DE
+      MINC4  0040H, DE
+      MDEC1  0040H, DE
+      MDEC2  0040H, DE
+      MDEC4  0080H, DE
+      MUL    XWA, DE
+      MUL    XBC, DE
+      MUL    XDE, DE
+      MUL    XHL, DE
+      MUL    XIX, DE
+      MUL    XIY, DE
+      MUL    XIZ, DE
+      MUL    XSP, DE
+      MULS   XWA, DE
+      MULS   XBC, DE
+      MULS   XDE, DE
+      MULS   XHL, DE
+      MULS   XIX, DE
+      MULS   XIY, DE
+      MULS   XIZ, DE
+      MULS   XSP, DE
+      DIV    XWA, DE
+      DIV    XBC, DE
+      DIV    XDE, DE
+      DIV    XHL, DE
+      DIV    XIX, DE
+      DIV    XIY, DE
+      DIV    XIZ, DE
+      DIV    XSP, DE
+      DIVS   XWA, DE
+      DIVS   XBC, DE
+      DIVS   XDE, DE
+      DIVS   XHL, DE
+      DIVS   XIX, DE
+      DIVS   XIY, DE
+      DIVS   XIZ, DE
+      DIVS   XSP, DE
+      INC    1, DE
+      DEC    1, DE
+      SCC    F, DE
+      SCC    LT, DE
+      SCC    LE, DE
+      SCC    ULE, DE
+      SCC    OV, DE
+      SCC    MI, DE
+      SCC    Z, DE
+      SCC    C, DE
+      SCC    T, DE
+      SCC    GE, DE
+      SCC    GT, DE
+      SCC    UGT, DE
+      SCC    NOV, DE
+      SCC    PL, DE
+      SCC    NZ, DE
+      SCC    NC, DE
+      ADD    WA, DE
+      ADD    BC, DE
+      ADD    DE, DE
+      ADD    HL, DE
+      ADD    IX, DE
+      ADD    IY, DE
+      ADD    IZ, DE
+      ADD    SP, DE
+      LD     DE, DE
+      LD     HL, DE
+      LD     IX, DE
+      LD     IY, DE
+      LD     IZ, DE
+      LD     SP, DE
+      ADC    WA, DE
+      ADC    BC, DE
+      ADC    DE, DE
+      ADC    HL, DE
+      ADC    IX, DE
+      ADC    IY, DE
+      ADC    IZ, DE
+      ADC    SP, DE
+      LD     DE, HL
+      LD     DE, IX
+      LD     DE, IY
+      LD     DE, IZ
+      LD     DE, SP
+      SUB    WA, DE
+      SUB    BC, DE
+      SUB    DE, DE
+      SUB    HL, DE
+      SUB    IX, DE
+      SUB    IY, DE
+      SUB    IZ, DE
+      SUB    SP, DE
+      SBC    WA, DE
+      SBC    BC, DE
+      SBC    DE, DE
+      SBC    HL, DE
+      SBC    IX, DE
+      SBC    IY, DE
+      SBC    IZ, DE
+      SBC    SP, DE
+      EX     WA, DE
+      EX     BC, DE
+      EX     DE, DE
+      EX     HL, DE
+      EX     IX, DE
+      EX     IY, DE
+      EX     IZ, DE
+      EX     SP, DE
+      AND    WA, DE
+      AND    BC, DE
+      AND    DE, DE
+      AND    HL, DE
+      AND    IX, DE
+      AND    IY, DE
+      AND    IZ, DE
+      AND    SP, DE
+      ADD    DE, 0CAC9H
+      ADC    DE, 0CBCAH
+      SUB    DE, 0CCCBH
+      SBC    DE, 0CDCCH
+      AND    DE, 0CECDH
+      XOR    DE, 0CFCEH
+      OR     DE, 0D0CFH
+      CP     DE, 0D1D0H
+      XOR    WA, DE
+      XOR    BC, DE
+      XOR    DE, DE
+      XOR    HL, DE
+      XOR    IX, DE
+      XOR    IY, DE
+      XOR    IZ, DE
+      XOR    SP, DE
+      OR     WA, DE
+      OR     BC, DE
+      OR     DE, DE
+      OR     HL, DE
+      OR     IX, DE
+      OR     IY, DE
+      OR     IZ, DE
+      OR     SP, DE
+      RLC    0E9H, DE
       RR     0ECH, QDE
       SLA    0EDH, QDE
       SRA    0EEH, QDE
@@ -24867,6 +31004,172 @@
       LD     QDE, 0504H
       CPL    QDE
       NEG    QDE
+      LINK   QDE, 0E0DH
+      UNLK   QDE
+      BS1F   A, QDE
+      BS1B   A, QDE
+      EXTZ   QDE
+      EXTS   QDE
+      PAA    QDE
+      MIRR   QDE
+      DJNZ   QDE, $+33
+      ANDCF  1, QDE
+      ORCF   2, QDE
+      XORCF  3, QDE
+      LDCF   4, QDE
+      STCF   5, QDE
+      RES    1, QDE
+      SET    2, QDE
+      CHG    3, QDE
+      BIT    4, QDE
+      TSET   5, QDE
+      MINC1  0040H, QDE
+      MINC2  0040H, QDE
+      MINC4  0040H, QDE
+      MDEC1  0040H, QDE
+      MDEC2  0040H, QDE
+      MDEC4  0080H, QDE
+      MUL    XWA, QDE
+      MUL    XBC, QDE
+      MUL    XDE, QDE
+      MUL    XHL, QDE
+      MUL    XIX, QDE
+      MUL    XIY, QDE
+      MUL    XIZ, QDE
+      MUL    XSP, QDE
+      MULS   XWA, QDE
+      MULS   XBC, QDE
+      MULS   XDE, QDE
+      MULS   XHL, QDE
+      MULS   XIX, QDE
+      MULS   XIY, QDE
+      MULS   XIZ, QDE
+      MULS   XSP, QDE
+      DIV    XWA, QDE
+      DIV    XBC, QDE
+      DIV    XDE, QDE
+      DIV    XHL, QDE
+      DIV    XIX, QDE
+      DIV    XIY, QDE
+      DIV    XIZ, QDE
+      DIV    XSP, QDE
+      DIVS   XWA, QDE
+      DIVS   XBC, QDE
+      DIVS   XDE, QDE
+      DIVS   XHL, QDE
+      DIVS   XIX, QDE
+      DIVS   XIY, QDE
+      DIVS   XIZ, QDE
+      DIVS   XSP, QDE
+      INC    1, QDE
+      DEC    1, QDE
+      SCC    F, QDE
+      SCC    LT, QDE
+      SCC    LE, QDE
+      SCC    ULE, QDE
+      SCC    OV, QDE
+      SCC    MI, QDE
+      SCC    Z, QDE
+      SCC    C, QDE
+      SCC    T, QDE
+      SCC    GE, QDE
+      SCC    GT, QDE
+      SCC    UGT, QDE
+      SCC    NOV, QDE
+      SCC    PL, QDE
+      SCC    NZ, QDE
+      SCC    NC, QDE
+      ADD    WA, QDE
+      ADD    BC, QDE
+      ADD    DE, QDE
+      ADD    HL, QDE
+      ADD    IX, QDE
+      ADD    IY, QDE
+      ADD    IZ, QDE
+      ADD    SP, QDE
+      LD     WA, QDE
+      LD     BC, QDE
+      LD     DE, QDE
+      LD     HL, QDE
+      LD     IX, QDE
+      LD     IY, QDE
+      LD     IZ, QDE
+      LD     SP, QDE
+      ADC    WA, QDE
+      ADC    BC, QDE
+      ADC    DE, QDE
+      ADC    HL, QDE
+      ADC    IX, QDE
+      ADC    IY, QDE
+      ADC    IZ, QDE
+      ADC    SP, QDE
+      LD     QDE, WA
+      LD     QDE, BC
+      LD     QDE, DE
+      LD     QDE, HL
+      LD     QDE, IX
+      LD     QDE, IY
+      LD     QDE, IZ
+      LD     QDE, SP
+      SUB    WA, QDE
+      SUB    BC, QDE
+      SUB    DE, QDE
+      SUB    HL, QDE
+      SUB    IX, QDE
+      SUB    IY, QDE
+      SUB    IZ, QDE
+      SUB    SP, QDE
+      SBC    WA, QDE
+      SBC    BC, QDE
+      SBC    DE, QDE
+      SBC    HL, QDE
+      SBC    IX, QDE
+      SBC    IY, QDE
+      SBC    IZ, QDE
+      SBC    SP, QDE
+      EX     WA, QDE
+      EX     BC, QDE
+      EX     DE, QDE
+      EX     HL, QDE
+      EX     IX, QDE
+      EX     IY, QDE
+      EX     IZ, QDE
+      EX     SP, QDE
+      AND    WA, QDE
+      AND    BC, QDE
+      AND    DE, QDE
+      AND    HL, QDE
+      AND    IX, QDE
+      AND    IY, QDE
+      AND    IZ, QDE
+      AND    SP, QDE
+      ADD    QDE, 0CAC9H
+      ADC    QDE, 0CBCAH
+      SUB    QDE, 0CCCBH
+      SBC    QDE, 0CDCCH
+      AND    QDE, 0CECDH
+      XOR    QDE, 0CFCEH
+      OR     QDE, 0D0CFH
+      CP     QDE, 0D1D0H
+      XOR    WA, QDE
+      XOR    BC, QDE
+      XOR    DE, QDE
+      XOR    HL, QDE
+      XOR    IX, QDE
+      XOR    IY, QDE
+      XOR    IZ, QDE
+      XOR    SP, QDE
+      OR     WA, QDE
+      OR     BC, QDE
+      OR     DE, QDE
+      OR     HL, QDE
+      OR     IX, QDE
+      OR     IY, QDE
+      OR     IZ, QDE
+      OR     SP, QDE
+      RLC    0E9H, QDE
+      RRC    0EAH, QDE
+      RL     0EBH, QDE
       SRA    0EEH, HL
       SLL    0EFH, HL
       SRL    0F0H, HL
@@ -24881,6 +31184,167 @@
       LD     HL, 0504H
       CPL    HL
       NEG    HL
+      LINK   HL, 0E0DH
+      UNLK   HL
+      BS1F   A, HL
+      BS1B   A, HL
+      EXTZ   HL
+      EXTS   HL
+      PAA    HL
+      MIRR   HL
+      DJNZ   HL, $+33
+      ANDCF  1, HL
+      ORCF   2, HL
+      XORCF  3, HL
+      LDCF   4, HL
+      STCF   5, HL
+      RES    1, HL
+      SET    2, HL
+      CHG    3, HL
+      BIT    4, HL
+      TSET   5, HL
+      MINC1  0040H, HL
+      MINC2  0040H, HL
+      MINC4  0040H, HL
+      MDEC1  0040H, HL
+      MDEC2  0040H, HL
+      MDEC4  0080H, HL
+      MUL    XWA, HL
+      MUL    XBC, HL
+      MUL    XDE, HL
+      MUL    XHL, HL
+      MUL    XIX, HL
+      MUL    XIY, HL
+      MUL    XIZ, HL
+      MUL    XSP, HL
+      MULS   XWA, HL
+      MULS   XBC, HL
+      MULS   XDE, HL
+      MULS   XHL, HL
+      MULS   XIX, HL
+      MULS   XIY, HL
+      MULS   XIZ, HL
+      MULS   XSP, HL
+      DIV    XWA, HL
+      DIV    XBC, HL
+      DIV    XDE, HL
+      DIV    XHL, HL
+      DIV    XIX, HL
+      DIV    XIY, HL
+      DIV    XIZ, HL
+      DIV    XSP, HL
+      DIVS   XWA, HL
+      DIVS   XBC, HL
+      DIVS   XDE, HL
+      DIVS   XHL, HL
+      DIVS   XIX, HL
+      DIVS   XIY, HL
+      DIVS   XIZ, HL
+      DIVS   XSP, HL
+      INC    1, HL
+      DEC    1, HL
+      SCC    F, HL
+      SCC    LT, HL
+      SCC    LE, HL
+      SCC    ULE, HL
+      SCC    OV, HL
+      SCC    MI, HL
+      SCC    Z, HL
+      SCC    C, HL
+      SCC    T, HL
+      SCC    GE, HL
+      SCC    GT, HL
+      SCC    UGT, HL
+      SCC    NOV, HL
+      SCC    PL, HL
+      SCC    NZ, HL
+      SCC    NC, HL
+      ADD    WA, HL
+      ADD    BC, HL
+      ADD    DE, HL
+      ADD    HL, HL
+      ADD    IX, HL
+      ADD    IY, HL
+      ADD    IZ, HL
+      ADD    SP, HL
+      LD     HL, HL
+      LD     IX, HL
+      LD     IY, HL
+      LD     IZ, HL
+      LD     SP, HL
+      ADC    WA, HL
+      ADC    BC, HL
+      ADC    DE, HL
+      ADC    HL, HL
+      ADC    IX, HL
+      ADC    IY, HL
+      ADC    IZ, HL
+      ADC    SP, HL
+      LD     HL, IX
+      LD     HL, IY
+      LD     HL, IZ
+      LD     HL, SP
+      SUB    WA, HL
+      SUB    BC, HL
+      SUB    DE, HL
+      SUB    HL, HL
+      SUB    IX, HL
+      SUB    IY, HL
+      SUB    IZ, HL
+      SUB    SP, HL
+      SBC    WA, HL
+      SBC    BC, HL
+      SBC    DE, HL
+      SBC    HL, HL
+      SBC    IX, HL
+      SBC    IY, HL
+      SBC    IZ, HL
+      SBC    SP, HL
+      EX     WA, HL
+      EX     BC, HL
+      EX     DE, HL
+      EX     HL, HL
+      EX     IX, HL
+      EX     IY, HL
+      EX     IZ, HL
+      EX     SP, HL
+      AND    WA, HL
+      AND    BC, HL
+      AND    DE, HL
+      AND    HL, HL
+      AND    IX, HL
+      AND    IY, HL
+      AND    IZ, HL
+      AND    SP, HL
+      ADD    HL, 0CAC9H
+      ADC    HL, 0CBCAH
+      SUB    HL, 0CCCBH
+      SBC    HL, 0CDCCH
+      AND    HL, 0CECDH
+      XOR    HL, 0CFCEH
+      OR     HL, 0D0CFH
+      CP     HL, 0D1D0H
+      XOR    WA, HL
+      XOR    BC, HL
+      XOR    DE, HL
+      XOR    HL, HL
+      XOR    IX, HL
+      XOR    IY, HL
+      XOR    IZ, HL
+      XOR    SP, HL
+      OR     WA, HL
+      OR     BC, HL
+      OR     DE, HL
+      OR     HL, HL
+      OR     IX, HL
+      OR     IY, HL
+      OR     IZ, HL
+      OR     SP, HL
+      RLC    0E9H, HL
+      RRC    0EAH, HL
+      RL     0EBH, HL
+      RR     0ECH, HL
+      SLA    0EDH, HL
       SRL    0F0H, QHL
       CP     WA, QHL
       CP     BC, QHL
@@ -24893,6 +31357,176 @@
       LD     QHL, 0504H
       CPL    QHL
       NEG    QHL
+      LINK   QHL, 0E0DH
+      UNLK   QHL
+      BS1F   A, QHL
+      BS1B   A, QHL
+      EXTZ   QHL
+      EXTS   QHL
+      PAA    QHL
+      MIRR   QHL
+      DJNZ   QHL, $+33
+      ANDCF  1, QHL
+      ORCF   2, QHL
+      XORCF  3, QHL
+      LDCF   4, QHL
+      STCF   5, QHL
+      RES    1, QHL
+      SET    2, QHL
+      CHG    3, QHL
+      BIT    4, QHL
+      TSET   5, QHL
+      MINC1  0040H, QHL
+      MINC2  0040H, QHL
+      MINC4  0040H, QHL
+      MDEC1  0040H, QHL
+      MDEC2  0040H, QHL
+      MDEC4  0080H, QHL
+      MUL    XWA, QHL
+      MUL    XBC, QHL
+      MUL    XDE, QHL
+      MUL    XHL, QHL
+      MUL    XIX, QHL
+      MUL    XIY, QHL
+      MUL    XIZ, QHL
+      MUL    XSP, QHL
+      MULS   XWA, QHL
+      MULS   XBC, QHL
+      MULS   XDE, QHL
+      MULS   XHL, QHL
+      MULS   XIX, QHL
+      MULS   XIY, QHL
+      MULS   XIZ, QHL
+      MULS   XSP, QHL
+      DIV    XWA, QHL
+      DIV    XBC, QHL
+      DIV    XDE, QHL
+      DIV    XHL, QHL
+      DIV    XIX, QHL
+      DIV    XIY, QHL
+      DIV    XIZ, QHL
+      DIV    XSP, QHL
+      DIVS   XWA, QHL
+      DIVS   XBC, QHL
+      DIVS   XDE, QHL
+      DIVS   XHL, QHL
+      DIVS   XIX, QHL
+      DIVS   XIY, QHL
+      DIVS   XIZ, QHL
+      DIVS   XSP, QHL
+      INC    1, QHL
+      DEC    1, QHL
+      SCC    F, QHL
+      SCC    LT, QHL
+      SCC    LE, QHL
+      SCC    ULE, QHL
+      SCC    OV, QHL
+      SCC    MI, QHL
+      SCC    Z, QHL
+      SCC    C, QHL
+      SCC    T, QHL
+      SCC    GE, QHL
+      SCC    GT, QHL
+      SCC    UGT, QHL
+      SCC    NOV, QHL
+      SCC    PL, QHL
+      SCC    NZ, QHL
+      SCC    NC, QHL
+      ADD    WA, QHL
+      ADD    BC, QHL
+      ADD    DE, QHL
+      ADD    HL, QHL
+      ADD    IX, QHL
+      ADD    IY, QHL
+      ADD    IZ, QHL
+      ADD    SP, QHL
+      LD     WA, QHL
+      LD     BC, QHL
+      LD     DE, QHL
+      LD     HL, QHL
+      LD     IX, QHL
+      LD     IY, QHL
+      LD     IZ, QHL
+      LD     SP, QHL
+      ADC    WA, QHL
+      ADC    BC, QHL
+      ADC    DE, QHL
+      ADC    HL, QHL
+      ADC    IX, QHL
+      ADC    IY, QHL
+      ADC    IZ, QHL
+      ADC    SP, QHL
+      LD     QHL, WA
+      LD     QHL, BC
+      LD     QHL, DE
+      LD     QHL, HL
+      LD     QHL, IX
+      LD     QHL, IY
+      LD     QHL, IZ
+      LD     QHL, SP
+      SUB    WA, QHL
+      SUB    BC, QHL
+      SUB    DE, QHL
+      SUB    HL, QHL
+      SUB    IX, QHL
+      SUB    IY, QHL
+      SUB    IZ, QHL
+      SUB    SP, QHL
+      SBC    WA, QHL
+      SBC    BC, QHL
+      SBC    DE, QHL
+      SBC    HL, QHL
+      SBC    IX, QHL
+      SBC    IY, QHL
+      SBC    IZ, QHL
+      SBC    SP, QHL
+      EX     WA, QHL
+      EX     BC, QHL
+      EX     DE, QHL
+      EX     HL, QHL
+      EX     IX, QHL
+      EX     IY, QHL
+      EX     IZ, QHL
+      EX     SP, QHL
+      AND    WA, QHL
+      AND    BC, QHL
+      AND    DE, QHL
+      AND    HL, QHL
+      AND    IX, QHL
+      AND    IY, QHL
+      AND    IZ, QHL
+      AND    SP, QHL
+      ADD    QHL, 0CAC9H
+      ADC    QHL, 0CBCAH
+      SUB    QHL, 0CCCBH
+      SBC    QHL, 0CDCCH
+      AND    QHL, 0CECDH
+      XOR    QHL, 0CFCEH
+      OR     QHL, 0D0CFH
+      CP     QHL, 0D1D0H
+      XOR    WA, QHL
+      XOR    BC, QHL
+      XOR    DE, QHL
+      XOR    HL, QHL
+      XOR    IX, QHL
+      XOR    IY, QHL
+      XOR    IZ, QHL
+      XOR    SP, QHL
+      OR     WA, QHL
+      OR     BC, QHL
+      OR     DE, QHL
+      OR     HL, QHL
+      OR     IX, QHL
+      OR     IY, QHL
+      OR     IZ, QHL
+      OR     SP, QHL
+      RLC    0E9H, QHL
+      RRC    0EAH, QHL
+      RL     0EBH, QHL
+      RR     0ECH, QHL
+      SLA    0EDH, QHL
+      SRA    0EEH, QHL
+      SLL    0EFH, QHL
       CP     BC, IX
       CP     DE, IX
       CP     HL, IX
@@ -24903,6 +31537,169 @@
       LD     IX, 0504H
       CPL    IX
       NEG    IX
+      LINK   IX, 0E0DH
+      UNLK   IX
+      BS1F   A, IX
+      BS1B   A, IX
+      EXTZ   IX
+      EXTS   IX
+      PAA    IX
+      MIRR   IX
+      DJNZ   IX, $+33
+      ANDCF  1, IX
+      ORCF   2, IX
+      XORCF  3, IX
+      LDCF   4, IX
+      STCF   5, IX
+      RES    1, IX
+      SET    2, IX
+      CHG    3, IX
+      BIT    4, IX
+      TSET   5, IX
+      MINC1  0040H, IX
+      MINC2  0040H, IX
+      MINC4  0040H, IX
+      MDEC1  0040H, IX
+      MDEC2  0040H, IX
+      MDEC4  0080H, IX
+      MUL    XWA, IX
+      MUL    XBC, IX
+      MUL    XDE, IX
+      MUL    XHL, IX
+      MUL    XIX, IX
+      MUL    XIY, IX
+      MUL    XIZ, IX
+      MUL    XSP, IX
+      MULS   XWA, IX
+      MULS   XBC, IX
+      MULS   XDE, IX
+      MULS   XHL, IX
+      MULS   XIX, IX
+      MULS   XIY, IX
+      MULS   XIZ, IX
+      MULS   XSP, IX
+      DIV    XWA, IX
+      DIV    XBC, IX
+      DIV    XDE, IX
+      DIV    XHL, IX
+      DIV    XIX, IX
+      DIV    XIY, IX
+      DIV    XIZ, IX
+      DIV    XSP, IX
+      DIVS   XWA, IX
+      DIVS   XBC, IX
+      DIVS   XDE, IX
+      DIVS   XHL, IX
+      DIVS   XIX, IX
+      DIVS   XIY, IX
+      DIVS   XIZ, IX
+      DIVS   XSP, IX
+      INC    1, IX
+      DEC    1, IX
+      SCC    F, IX
+      SCC    LT, IX
+      SCC    LE, IX
+      SCC    ULE, IX
+      SCC    OV, IX
+      SCC    MI, IX
+      SCC    Z, IX
+      SCC    C, IX
+      SCC    T, IX
+      SCC    GE, IX
+      SCC    GT, IX
+      SCC    UGT, IX
+      SCC    NOV, IX
+      SCC    PL, IX
+      SCC    NZ, IX
+      SCC    NC, IX
+      ADD    WA, IX
+      ADD    BC, IX
+      ADD    DE, IX
+      ADD    HL, IX
+      ADD    IX, IX
+      ADD    IY, IX
+      ADD    IZ, IX
+      ADD    SP, IX
+      LD     IX, IX
+      LD     IY, IX
+      LD     IZ, IX
+      LD     SP, IX
+      ADC    WA, IX
+      ADC    BC, IX
+      ADC    DE, IX
+      ADC    HL, IX
+      ADC    IX, IX
+      ADC    IY, IX
+      ADC    IZ, IX
+      ADC    SP, IX
+      LD     IX, IY
+      LD     IX, IZ
+      LD     IX, SP
+      SUB    WA, IX
+      SUB    BC, IX
+      SUB    DE, IX
+      SUB    HL, IX
+      SUB    IX, IX
+      SUB    IY, IX
+      SUB    IZ, IX
+      SUB    SP, IX
+      SBC    WA, IX
+      SBC    BC, IX
+      SBC    DE, IX
+      SBC    HL, IX
+      SBC    IX, IX
+      SBC    IY, IX
+      SBC    IZ, IX
+      SBC    SP, IX
+      EX     WA, IX
+      EX     BC, IX
+      EX     DE, IX
+      EX     HL, IX
+      EX     IX, IX
+      EX     IY, IX
+      EX     IZ, IX
+      EX     SP, IX
+      AND    WA, IX
+      AND    BC, IX
+      AND    DE, IX
+      AND    HL, IX
+      AND    IX, IX
+      AND    IY, IX
+      AND    IZ, IX
+      AND    SP, IX
+      ADD    IX, 0CAC9H
+      ADC    IX, 0CBCAH
+      SUB    IX, 0CCCBH
+      SBC    IX, 0CDCCH
+      AND    IX, 0CECDH
+      XOR    IX, 0CFCEH
+      OR     IX, 0D0CFH
+      CP     IX, 0D1D0H
+      XOR    WA, IX
+      XOR    BC, IX
+      XOR    DE, IX
+      XOR    HL, IX
+      XOR    IX, IX
+      XOR    IY, IX
+      XOR    IZ, IX
+      XOR    SP, IX
+      OR     WA, IX
+      OR     BC, IX
+      OR     DE, IX
+      OR     HL, IX
+      OR     IX, IX
+      OR     IY, IX
+      OR     IZ, IX
+      OR     SP, IX
+      RLC    0E9H, IX
+      RRC    0EAH, IX
+      RL     0EBH, IX
+      RR     0ECH, IX
+      SLA    0EDH, IX
+      SRA    0EEH, IX
+      SLL    0EFH, IX
+      SRL    0F0H, IX
+      CP     WA, IX
       CP     HL, QIX
       CP     IX, QIX
       CP     IY, QIX
@@ -24911,47 +31708,2151 @@
       LD     QIX, 0504H
       CPL    QIX
       NEG    QIX
+      LINK   QIX, 0E0DH
+      UNLK   QIX
+      BS1F   A, QIX
+      BS1B   A, QIX
+      EXTZ   QIX
+      EXTS   QIX
+      PAA    QIX
+      MIRR   QIX
+      DJNZ   QIX, $+33
+      ANDCF  1, QIX
+      ORCF   2, QIX
+      XORCF  3, QIX
+      LDCF   4, QIX
+      STCF   5, QIX
+      RES    1, QIX
+      SET    2, QIX
+      CHG    3, QIX
+      BIT    4, QIX
+      TSET   5, QIX
+      MINC1  0040H, QIX
+      MINC2  0040H, QIX
+      MINC4  0040H, QIX
+      MDEC1  0040H, QIX
+      MDEC2  0040H, QIX
+      MDEC4  0080H, QIX
+      MUL    XWA, QIX
+      MUL    XBC, QIX
+      MUL    XDE, QIX
+      MUL    XHL, QIX
+      MUL    XIX, QIX
+      MUL    XIY, QIX
+      MUL    XIZ, QIX
+      MUL    XSP, QIX
+      MULS   XWA, QIX
+      MULS   XBC, QIX
+      MULS   XDE, QIX
+      MULS   XHL, QIX
+      MULS   XIX, QIX
+      MULS   XIY, QIX
+      MULS   XIZ, QIX
+      MULS   XSP, QIX
+      DIV    XWA, QIX
+      DIV    XBC, QIX
+      DIV    XDE, QIX
+      DIV    XHL, QIX
+      DIV    XIX, QIX
+      DIV    XIY, QIX
+      DIV    XIZ, QIX
+      DIV    XSP, QIX
+      DIVS   XWA, QIX
+      DIVS   XBC, QIX
+      DIVS   XDE, QIX
+      DIVS   XHL, QIX
+      DIVS   XIX, QIX
+      DIVS   XIY, QIX
+      DIVS   XIZ, QIX
+      DIVS   XSP, QIX
+      INC    1, QIX
+      DEC    1, QIX
+      SCC    F, QIX
+      SCC    LT, QIX
+      SCC    LE, QIX
+      SCC    ULE, QIX
+      SCC    OV, QIX
+      SCC    MI, QIX
+      SCC    Z, QIX
+      SCC    C, QIX
+      SCC    T, QIX
+      SCC    GE, QIX
+      SCC    GT, QIX
+      SCC    UGT, QIX
+      SCC    NOV, QIX
+      SCC    PL, QIX
+      SCC    NZ, QIX
+      SCC    NC, QIX
+      ADD    WA, QIX
+      ADD    BC, QIX
+      ADD    DE, QIX
+      ADD    HL, QIX
+      ADD    IX, QIX
+      ADD    IY, QIX
+      ADD    IZ, QIX
+      ADD    SP, QIX
+      LD     WA, QIX
+      LD     BC, QIX
+      LD     DE, QIX
+      LD     HL, QIX
+      LD     IX, QIX
+      LD     IY, QIX
+      LD     IZ, QIX
+      LD     SP, QIX
+      ADC    WA, QIX
+      ADC    BC, QIX
+      ADC    DE, QIX
+      ADC    HL, QIX
+      ADC    IX, QIX
+      ADC    IY, QIX
+      ADC    IZ, QIX
+      ADC    SP, QIX
+      LD     QIX, WA
+      LD     QIX, BC
+      LD     QIX, DE
+      LD     QIX, HL
+      LD     QIX, IX
+      LD     QIX, IY
+      LD     QIX, IZ
+      LD     QIX, SP
+      SUB    WA, QIX
+      SUB    BC, QIX
+      SUB    DE, QIX
+      SUB    HL, QIX
+      SUB    IX, QIX
+      SUB    IY, QIX
+      SUB    IZ, QIX
+      SUB    SP, QIX
+      SBC    WA, QIX
+      SBC    BC, QIX
+      SBC    DE, QIX
+      SBC    HL, QIX
+      SBC    IX, QIX
+      SBC    IY, QIX
+      SBC    IZ, QIX
+      SBC    SP, QIX
+      EX     WA, QIX
+      EX     BC, QIX
+      EX     DE, QIX
+      EX     HL, QIX
+      EX     IX, QIX
+      EX     IY, QIX
+      EX     IZ, QIX
+      EX     SP, QIX
+      AND    WA, QIX
+      AND    BC, QIX
+      AND    DE, QIX
+      AND    HL, QIX
+      AND    IX, QIX
+      AND    IY, QIX
+      AND    IZ, QIX
+      AND    SP, QIX
+      ADD    QIX, 0CAC9H
+      ADC    QIX, 0CBCAH
+      SUB    QIX, 0CCCBH
+      SBC    QIX, 0CDCCH
+      AND    QIX, 0CECDH
+      XOR    QIX, 0CFCEH
+      OR     QIX, 0D0CFH
+      CP     QIX, 0D1D0H
+      XOR    WA, QIX
+      XOR    BC, QIX
+      XOR    DE, QIX
+      XOR    HL, QIX
+      XOR    IX, QIX
+      XOR    IY, QIX
+      XOR    IZ, QIX
+      XOR    SP, QIX
+      OR     WA, QIX
+      OR     BC, QIX
+      OR     DE, QIX
+      OR     HL, QIX
+      OR     IX, QIX
+      OR     IY, QIX
+      OR     IZ, QIX
+      OR     SP, QIX
+      RLC    0E9H, QIX
+      RRC    0EAH, QIX
+      RL     0EBH, QIX
+      RR     0ECH, QIX
+      SLA    0EDH, QIX
+      SRA    0EEH, QIX
+      SLL    0EFH, QIX
+      SRL    0F0H, QIX
+      CP     WA, QIX
+      CP     BC, QIX
+      CP     DE, QIX
       CP     IY, IY
       CP     IZ, IY
       CP     SP, IY
       LD     IY, 0504H
       CPL    IY
       NEG    IY
+      LINK   IY, 0E0DH
+      UNLK   IY
+      BS1F   A, IY
+      BS1B   A, IY
+      EXTZ   IY
+      EXTS   IY
+      PAA    IY
+      MIRR   IY
+      DJNZ   IY, $+33
+      ANDCF  1, IY
+      ORCF   2, IY
+      XORCF  3, IY
+      LDCF   4, IY
+      STCF   5, IY
+      RES    1, IY
+      SET    2, IY
+      CHG    3, IY
+      BIT    4, IY
+      TSET   5, IY
+      MINC1  0040H, IY
+      MINC2  0040H, IY
+      MINC4  0040H, IY
+      MDEC1  0040H, IY
+      MDEC2  0040H, IY
+      MDEC4  0080H, IY
+      MUL    XWA, IY
+      MUL    XBC, IY
+      MUL    XDE, IY
+      MUL    XHL, IY
+      MUL    XIX, IY
+      MUL    XIY, IY
+      MUL    XIZ, IY
+      MUL    XSP, IY
+      MULS   XWA, IY
+      MULS   XBC, IY
+      MULS   XDE, IY
+      MULS   XHL, IY
+      MULS   XIX, IY
+      MULS   XIY, IY
+      MULS   XIZ, IY
+      MULS   XSP, IY
+      DIV    XWA, IY
+      DIV    XBC, IY
+      DIV    XDE, IY
+      DIV    XHL, IY
+      DIV    XIX, IY
+      DIV    XIY, IY
+      DIV    XIZ, IY
+      DIV    XSP, IY
+      DIVS   XWA, IY
+      DIVS   XBC, IY
+      DIVS   XDE, IY
+      DIVS   XHL, IY
+      DIVS   XIX, IY
+      DIVS   XIY, IY
+      DIVS   XIZ, IY
+      DIVS   XSP, IY
+      INC    1, IY
+      DEC    1, IY
+      SCC    F, IY
+      SCC    LT, IY
+      SCC    LE, IY
+      SCC    ULE, IY
+      SCC    OV, IY
+      SCC    MI, IY
+      SCC    Z, IY
+      SCC    C, IY
+      SCC    T, IY
+      SCC    GE, IY
+      SCC    GT, IY
+      SCC    UGT, IY
+      SCC    NOV, IY
+      SCC    PL, IY
+      SCC    NZ, IY
+      SCC    NC, IY
+      ADD    WA, IY
+      ADD    BC, IY
+      ADD    DE, IY
+      ADD    HL, IY
+      ADD    IX, IY
+      ADD    IY, IY
+      ADD    IZ, IY
+      ADD    SP, IY
+      LD     IY, IY
+      LD     IZ, IY
+      LD     SP, IY
+      ADC    WA, IY
+      ADC    BC, IY
+      ADC    DE, IY
+      ADC    HL, IY
+      ADC    IX, IY
+      ADC    IY, IY
+      ADC    IZ, IY
+      ADC    SP, IY
+      LD     IY, IZ
+      LD     IY, SP
+      SUB    WA, IY
+      SUB    BC, IY
+      SUB    DE, IY
+      SUB    HL, IY
+      SUB    IX, IY
+      SUB    IY, IY
+      SUB    IZ, IY
+      SUB    SP, IY
+      SBC    WA, IY
+      SBC    BC, IY
+      SBC    DE, IY
+      SBC    HL, IY
+      SBC    IX, IY
+      SBC    IY, IY
+      SBC    IZ, IY
+      SBC    SP, IY
+      EX     WA, IY
+      EX     BC, IY
+      EX     DE, IY
+      EX     HL, IY
+      EX     IX, IY
+      EX     IY, IY
+      EX     IZ, IY
+      EX     SP, IY
+      AND    WA, IY
+      AND    BC, IY
+      AND    DE, IY
+      AND    HL, IY
+      AND    IX, IY
+      AND    IY, IY
+      AND    IZ, IY
+      AND    SP, IY
+      ADD    IY, 0CAC9H
+      ADC    IY, 0CBCAH
+      SUB    IY, 0CCCBH
+      SBC    IY, 0CDCCH
+      AND    IY, 0CECDH
+      XOR    IY, 0CFCEH
+      OR     IY, 0D0CFH
+      CP     IY, 0D1D0H
+      XOR    WA, IY
+      XOR    BC, IY
+      XOR    DE, IY
+      XOR    HL, IY
+      XOR    IX, IY
+      XOR    IY, IY
+      XOR    IZ, IY
+      XOR    SP, IY
+      OR     WA, IY
+      OR     BC, IY
+      OR     DE, IY
+      OR     HL, IY
+      OR     IX, IY
+      OR     IY, IY
+      OR     IZ, IY
+      OR     SP, IY
+      RLC    0E9H, IY
+      RRC    0EAH, IY
+      RL     0EBH, IY
+      RR     0ECH, IY
+      SLA    0EDH, IY
+      SRA    0EEH, IY
+      SLL    0EFH, IY
+      SRL    0F0H, IY
+      CP     WA, IY
+      CP     BC, IY
+      CP     DE, IY
+      CP     HL, IY
+      CP     IX, IY
       CP     SP, QIY
       LD     QIY, 0504H
       CPL    QIY
       NEG    QIY
+      LINK   QIY, 0E0DH
+      UNLK   QIY
+      BS1F   A, QIY
+      BS1B   A, QIY
+      EXTZ   QIY
+      EXTS   QIY
+      PAA    QIY
+      MIRR   QIY
+      DJNZ   QIY, $+33
+      ANDCF  1, QIY
+      ORCF   2, QIY
+      XORCF  3, QIY
+      LDCF   4, QIY
+      STCF   5, QIY
+      RES    1, QIY
+      SET    2, QIY
+      CHG    3, QIY
+      BIT    4, QIY
+      TSET   5, QIY
+      MINC1  0040H, QIY
+      MINC2  0040H, QIY
+      MINC4  0040H, QIY
+      MDEC1  0040H, QIY
+      MDEC2  0040H, QIY
+      MDEC4  0080H, QIY
+      MUL    XWA, QIY
+      MUL    XBC, QIY
+      MUL    XDE, QIY
+      MUL    XHL, QIY
+      MUL    XIX, QIY
+      MUL    XIY, QIY
+      MUL    XIZ, QIY
+      MUL    XSP, QIY
+      MULS   XWA, QIY
+      MULS   XBC, QIY
+      MULS   XDE, QIY
+      MULS   XHL, QIY
+      MULS   XIX, QIY
+      MULS   XIY, QIY
+      MULS   XIZ, QIY
+      MULS   XSP, QIY
+      DIV    XWA, QIY
+      DIV    XBC, QIY
+      DIV    XDE, QIY
+      DIV    XHL, QIY
+      DIV    XIX, QIY
+      DIV    XIY, QIY
+      DIV    XIZ, QIY
+      DIV    XSP, QIY
+      DIVS   XWA, QIY
+      DIVS   XBC, QIY
+      DIVS   XDE, QIY
+      DIVS   XHL, QIY
+      DIVS   XIX, QIY
+      DIVS   XIY, QIY
+      DIVS   XIZ, QIY
+      DIVS   XSP, QIY
+      INC    1, QIY
+      DEC    1, QIY
+      SCC    F, QIY
+      SCC    LT, QIY
+      SCC    LE, QIY
+      SCC    ULE, QIY
+      SCC    OV, QIY
+      SCC    MI, QIY
+      SCC    Z, QIY
+      SCC    C, QIY
+      SCC    T, QIY
+      SCC    GE, QIY
+      SCC    GT, QIY
+      SCC    UGT, QIY
+      SCC    NOV, QIY
+      SCC    PL, QIY
+      SCC    NZ, QIY
+      SCC    NC, QIY
+      ADD    WA, QIY
+      ADD    BC, QIY
+      ADD    DE, QIY
+      ADD    HL, QIY
+      ADD    IX, QIY
+      ADD    IY, QIY
+      ADD    IZ, QIY
+      ADD    SP, QIY
+      LD     WA, QIY
+      LD     BC, QIY
+      LD     DE, QIY
+      LD     HL, QIY
+      LD     IX, QIY
+      LD     IY, QIY
+      LD     IZ, QIY
+      LD     SP, QIY
+      ADC    WA, QIY
+      ADC    BC, QIY
+      ADC    DE, QIY
+      ADC    HL, QIY
+      ADC    IX, QIY
+      ADC    IY, QIY
+      ADC    IZ, QIY
+      ADC    SP, QIY
+      LD     QIY, WA
+      LD     QIY, BC
+      LD     QIY, DE
+      LD     QIY, HL
+      LD     QIY, IX
+      LD     QIY, IY
+      LD     QIY, IZ
+      LD     QIY, SP
+      SUB    WA, QIY
+      SUB    BC, QIY
+      SUB    DE, QIY
+      SUB    HL, QIY
+      SUB    IX, QIY
+      SUB    IY, QIY
+      SUB    IZ, QIY
+      SUB    SP, QIY
+      SBC    WA, QIY
+      SBC    BC, QIY
+      SBC    DE, QIY
+      SBC    HL, QIY
+      SBC    IX, QIY
+      SBC    IY, QIY
+      SBC    IZ, QIY
+      SBC    SP, QIY
+      EX     WA, QIY
+      EX     BC, QIY
+      EX     DE, QIY
+      EX     HL, QIY
+      EX     IX, QIY
+      EX     IY, QIY
+      EX     IZ, QIY
+      EX     SP, QIY
+      AND    WA, QIY
+      AND    BC, QIY
+      AND    DE, QIY
+      AND    HL, QIY
+      AND    IX, QIY
+      AND    IY, QIY
+      AND    IZ, QIY
+      AND    SP, QIY
+      ADD    QIY, 0CAC9H
+      ADC    QIY, 0CBCAH
+      SUB    QIY, 0CCCBH
+      SBC    QIY, 0CDCCH
+      AND    QIY, 0CECDH
+      XOR    QIY, 0CFCEH
+      OR     QIY, 0D0CFH
+      CP     QIY, 0D1D0H
+      XOR    WA, QIY
+      XOR    BC, QIY
+      XOR    DE, QIY
+      XOR    HL, QIY
+      XOR    IX, QIY
+      XOR    IY, QIY
+      XOR    IZ, QIY
+      XOR    SP, QIY
+      OR     WA, QIY
+      OR     BC, QIY
+      OR     DE, QIY
+      OR     HL, QIY
+      OR     IX, QIY
+      OR     IY, QIY
+      OR     IZ, QIY
+      OR     SP, QIY
+      RLC    0E9H, QIY
+      RRC    0EAH, QIY
+      RL     0EBH, QIY
+      RR     0ECH, QIY
+      SLA    0EDH, QIY
+      SRA    0EEH, QIY
+      SLL    0EFH, QIY
+      SRL    0F0H, QIY
+      CP     WA, QIY
+      CP     BC, QIY
+      CP     DE, QIY
+      CP     HL, QIY
+      CP     IX, QIY
+      CP     IY, QIY
+      CP     IZ, QIY
       LD     IZ, 0504H
       CPL    IZ
       NEG    IZ
+      LINK   IZ, 0E0DH
+      UNLK   IZ
+      BS1F   A, IZ
+      BS1B   A, IZ
+      EXTZ   IZ
+      EXTS   IZ
+      PAA    IZ
+      MIRR   IZ
+      DJNZ   IZ, $+33
+      ANDCF  1, IZ
+      ORCF   2, IZ
+      XORCF  3, IZ
+      LDCF   4, IZ
+      STCF   5, IZ
+      RES    1, IZ
+      SET    2, IZ
+      CHG    3, IZ
+      BIT    4, IZ
+      TSET   5, IZ
+      MINC1  0040H, IZ
+      MINC2  0040H, IZ
+      MINC4  0040H, IZ
+      MDEC1  0040H, IZ
+      MDEC2  0040H, IZ
+      MDEC4  0080H, IZ
+      MUL    XWA, IZ
+      MUL    XBC, IZ
+      MUL    XDE, IZ
+      MUL    XHL, IZ
+      MUL    XIX, IZ
+      MUL    XIY, IZ
+      MUL    XIZ, IZ
+      MUL    XSP, IZ
+      MULS   XWA, IZ
+      MULS   XBC, IZ
+      MULS   XDE, IZ
+      MULS   XHL, IZ
+      MULS   XIX, IZ
+      MULS   XIY, IZ
+      MULS   XIZ, IZ
+      MULS   XSP, IZ
+      DIV    XWA, IZ
+      DIV    XBC, IZ
+      DIV    XDE, IZ
+      DIV    XHL, IZ
+      DIV    XIX, IZ
+      DIV    XIY, IZ
+      DIV    XIZ, IZ
+      DIV    XSP, IZ
+      DIVS   XWA, IZ
+      DIVS   XBC, IZ
+      DIVS   XDE, IZ
+      DIVS   XHL, IZ
+      DIVS   XIX, IZ
+      DIVS   XIY, IZ
+      DIVS   XIZ, IZ
+      DIVS   XSP, IZ
+      INC    1, IZ
+      DEC    1, IZ
+      SCC    F, IZ
+      SCC    LT, IZ
+      SCC    LE, IZ
+      SCC    ULE, IZ
+      SCC    OV, IZ
+      SCC    MI, IZ
+      SCC    Z, IZ
+      SCC    C, IZ
+      SCC    T, IZ
+      SCC    GE, IZ
+      SCC    GT, IZ
+      SCC    UGT, IZ
+      SCC    NOV, IZ
+      SCC    PL, IZ
+      SCC    NZ, IZ
+      SCC    NC, IZ
+      ADD    WA, IZ
+      ADD    BC, IZ
+      ADD    DE, IZ
+      ADD    HL, IZ
+      ADD    IX, IZ
+      ADD    IY, IZ
+      ADD    IZ, IZ
+      ADD    SP, IZ
+      LD     IZ, IZ
+      LD     SP, IZ
+      ADC    WA, IZ
+      ADC    BC, IZ
+      ADC    DE, IZ
+      ADC    HL, IZ
+      ADC    IX, IZ
+      ADC    IY, IZ
+      ADC    IZ, IZ
+      ADC    SP, IZ
+      LD     IZ, SP
+      SUB    WA, IZ
+      SUB    BC, IZ
+      SUB    DE, IZ
+      SUB    HL, IZ
+      SUB    IX, IZ
+      SUB    IY, IZ
+      SUB    IZ, IZ
+      SUB    SP, IZ
+      SBC    WA, IZ
+      SBC    BC, IZ
+      SBC    DE, IZ
+      SBC    HL, IZ
+      SBC    IX, IZ
+      SBC    IY, IZ
+      SBC    IZ, IZ
+      SBC    SP, IZ
+      EX     WA, IZ
+      EX     BC, IZ
+      EX     DE, IZ
+      EX     HL, IZ
+      EX     IX, IZ
+      EX     IY, IZ
+      EX     IZ, IZ
+      EX     SP, IZ
+      AND    WA, IZ
+      AND    BC, IZ
+      AND    DE, IZ
+      AND    HL, IZ
+      AND    IX, IZ
+      AND    IY, IZ
+      AND    IZ, IZ
+      AND    SP, IZ
+      ADD    IZ, 0CAC9H
+      ADC    IZ, 0CBCAH
+      SUB    IZ, 0CCCBH
+      SBC    IZ, 0CDCCH
+      AND    IZ, 0CECDH
+      XOR    IZ, 0CFCEH
+      OR     IZ, 0D0CFH
+      CP     IZ, 0D1D0H
+      XOR    WA, IZ
+      XOR    BC, IZ
+      XOR    DE, IZ
+      XOR    HL, IZ
+      XOR    IX, IZ
+      XOR    IY, IZ
+      XOR    IZ, IZ
+      XOR    SP, IZ
+      OR     WA, IZ
+      OR     BC, IZ
+      OR     DE, IZ
+      OR     HL, IZ
+      OR     IX, IZ
+      OR     IY, IZ
+      OR     IZ, IZ
+      OR     SP, IZ
+      RLC    0E9H, IZ
+      RRC    0EAH, IZ
+      RL     0EBH, IZ
+      RR     0ECH, IZ
+      SLA    0EDH, IZ
+      SRA    0EEH, IZ
+      SLL    0EFH, IZ
+      SRL    0F0H, IZ
+      CP     WA, IZ
+      CP     BC, IZ
+      CP     DE, IZ
+      CP     HL, IZ
+      CP     IX, IZ
+      CP     IY, IZ
+      CP     IZ, IZ
+      CP     SP, IZ
       LD     QIZ, 0504H
       CPL    QIZ
       NEG    QIZ
+      LINK   QIZ, 0E0DH
+      UNLK   QIZ
+      BS1F   A, QIZ
+      BS1B   A, QIZ
+      EXTZ   QIZ
+      EXTS   QIZ
+      PAA    QIZ
+      MIRR   QIZ
+      DJNZ   QIZ, $+33
+      ANDCF  1, QIZ
+      ORCF   2, QIZ
+      XORCF  3, QIZ
+      LDCF   4, QIZ
+      STCF   5, QIZ
+      RES    1, QIZ
+      SET    2, QIZ
+      CHG    3, QIZ
+      BIT    4, QIZ
+      TSET   5, QIZ
+      MINC1  0040H, QIZ
+      MINC2  0040H, QIZ
+      MINC4  0040H, QIZ
+      MDEC1  0040H, QIZ
+      MDEC2  0040H, QIZ
+      MDEC4  0080H, QIZ
+      MUL    XWA, QIZ
+      MUL    XBC, QIZ
+      MUL    XDE, QIZ
+      MUL    XHL, QIZ
+      MUL    XIX, QIZ
+      MUL    XIY, QIZ
+      MUL    XIZ, QIZ
+      MUL    XSP, QIZ
+      MULS   XWA, QIZ
+      MULS   XBC, QIZ
+      MULS   XDE, QIZ
+      MULS   XHL, QIZ
+      MULS   XIX, QIZ
+      MULS   XIY, QIZ
+      MULS   XIZ, QIZ
+      MULS   XSP, QIZ
+      DIV    XWA, QIZ
+      DIV    XBC, QIZ
+      DIV    XDE, QIZ
+      DIV    XHL, QIZ
+      DIV    XIX, QIZ
+      DIV    XIY, QIZ
+      DIV    XIZ, QIZ
+      DIV    XSP, QIZ
+      DIVS   XWA, QIZ
+      DIVS   XBC, QIZ
+      DIVS   XDE, QIZ
+      DIVS   XHL, QIZ
+      DIVS   XIX, QIZ
+      DIVS   XIY, QIZ
+      DIVS   XIZ, QIZ
+      DIVS   XSP, QIZ
+      INC    1, QIZ
+      DEC    1, QIZ
+      SCC    F, QIZ
+      SCC    LT, QIZ
+      SCC    LE, QIZ
+      SCC    ULE, QIZ
+      SCC    OV, QIZ
+      SCC    MI, QIZ
+      SCC    Z, QIZ
+      SCC    C, QIZ
+      SCC    T, QIZ
+      SCC    GE, QIZ
+      SCC    GT, QIZ
+      SCC    UGT, QIZ
+      SCC    NOV, QIZ
+      SCC    PL, QIZ
+      SCC    NZ, QIZ
+      SCC    NC, QIZ
+      ADD    WA, QIZ
+      ADD    BC, QIZ
+      ADD    DE, QIZ
+      ADD    HL, QIZ
+      ADD    IX, QIZ
+      ADD    IY, QIZ
+      ADD    IZ, QIZ
+      ADD    SP, QIZ
+      LD     WA, QIZ
+      LD     BC, QIZ
+      LD     DE, QIZ
+      LD     HL, QIZ
+      LD     IX, QIZ
+      LD     IY, QIZ
+      LD     IZ, QIZ
+      LD     SP, QIZ
+      ADC    WA, QIZ
+      ADC    BC, QIZ
+      ADC    DE, QIZ
+      ADC    HL, QIZ
+      ADC    IX, QIZ
+      ADC    IY, QIZ
+      ADC    IZ, QIZ
+      ADC    SP, QIZ
+      LD     QIZ, WA
+      LD     QIZ, BC
+      LD     QIZ, DE
+      LD     QIZ, HL
+      LD     QIZ, IX
+      LD     QIZ, IY
+      LD     QIZ, IZ
+      LD     QIZ, SP
+      SUB    WA, QIZ
+      SUB    BC, QIZ
+      SUB    DE, QIZ
+      SUB    HL, QIZ
+      SUB    IX, QIZ
+      SUB    IY, QIZ
+      SUB    IZ, QIZ
+      SUB    SP, QIZ
+      SBC    WA, QIZ
+      SBC    BC, QIZ
+      SBC    DE, QIZ
+      SBC    HL, QIZ
+      SBC    IX, QIZ
+      SBC    IY, QIZ
+      SBC    IZ, QIZ
+      SBC    SP, QIZ
+      EX     WA, QIZ
+      EX     BC, QIZ
+      EX     DE, QIZ
+      EX     HL, QIZ
+      EX     IX, QIZ
+      EX     IY, QIZ
+      EX     IZ, QIZ
+      EX     SP, QIZ
+      AND    WA, QIZ
+      AND    BC, QIZ
+      AND    DE, QIZ
+      AND    HL, QIZ
+      AND    IX, QIZ
+      AND    IY, QIZ
+      AND    IZ, QIZ
+      AND    SP, QIZ
+      ADD    QIZ, 0CAC9H
+      ADC    QIZ, 0CBCAH
+      SUB    QIZ, 0CCCBH
+      SBC    QIZ, 0CDCCH
+      AND    QIZ, 0CECDH
+      XOR    QIZ, 0CFCEH
+      OR     QIZ, 0D0CFH
+      CP     QIZ, 0D1D0H
+      XOR    WA, QIZ
+      XOR    BC, QIZ
+      XOR    DE, QIZ
+      XOR    HL, QIZ
+      XOR    IX, QIZ
+      XOR    IY, QIZ
+      XOR    IZ, QIZ
+      XOR    SP, QIZ
+      OR     WA, QIZ
+      OR     BC, QIZ
+      OR     DE, QIZ
+      OR     HL, QIZ
+      OR     IX, QIZ
+      OR     IY, QIZ
+      OR     IZ, QIZ
+      OR     SP, QIZ
+      RLC    0E9H, QIZ
+      RRC    0EAH, QIZ
+      RL     0EBH, QIZ
+      RR     0ECH, QIZ
+      SLA    0EDH, QIZ
+      SRA    0EEH, QIZ
+      SLL    0EFH, QIZ
+      SRL    0F0H, QIZ
+      CP     WA, QIZ
+      CP     BC, QIZ
+      CP     DE, QIZ
+      CP     HL, QIZ
+      CP     IX, QIZ
+      CP     IY, QIZ
+      CP     IZ, QIZ
+      CP     SP, QIZ
       LD     SP, 0504H
       CPL    SP
       NEG    SP
+      LINK   SP, 0E0DH
+      UNLK   SP
+      BS1F   A, SP
+      BS1B   A, SP
+      EXTZ   SP
+      EXTS   SP
+      PAA    SP
+      MIRR   SP
+      DJNZ   SP, $+33
+      ANDCF  1, SP
+      ORCF   2, SP
+      XORCF  3, SP
+      LDCF   4, SP
+      STCF   5, SP
+      RES    1, SP
+      SET    2, SP
+      CHG    3, SP
+      BIT    4, SP
+      TSET   5, SP
+      MINC1  0040H, SP
+      MINC2  0040H, SP
+      MINC4  0040H, SP
+      MDEC1  0040H, SP
+      MDEC2  0040H, SP
+      MDEC4  0080H, SP
+      MUL    XWA, SP
+      MUL    XBC, SP
+      MUL    XDE, SP
+      MUL    XHL, SP
+      MUL    XIX, SP
+      MUL    XIY, SP
+      MUL    XIZ, SP
+      MUL    XSP, SP
+      MULS   XWA, SP
+      MULS   XBC, SP
+      MULS   XDE, SP
+      MULS   XHL, SP
+      MULS   XIX, SP
+      MULS   XIY, SP
+      MULS   XIZ, SP
+      MULS   XSP, SP
+      DIV    XWA, SP
+      DIV    XBC, SP
+      DIV    XDE, SP
+      DIV    XHL, SP
+      DIV    XIX, SP
+      DIV    XIY, SP
+      DIV    XIZ, SP
+      DIV    XSP, SP
+      DIVS   XWA, SP
+      DIVS   XBC, SP
+      DIVS   XDE, SP
+      DIVS   XHL, SP
+      DIVS   XIX, SP
+      DIVS   XIY, SP
+      DIVS   XIZ, SP
+      DIVS   XSP, SP
+      INC    1, SP
+      DEC    1, SP
+      SCC    F, SP
+      SCC    LT, SP
+      SCC    LE, SP
+      SCC    ULE, SP
+      SCC    OV, SP
+      SCC    MI, SP
+      SCC    Z, SP
+      SCC    C, SP
+      SCC    T, SP
+      SCC    GE, SP
+      SCC    GT, SP
+      SCC    UGT, SP
+      SCC    NOV, SP
+      SCC    PL, SP
+      SCC    NZ, SP
+      SCC    NC, SP
+      ADD    WA, SP
+      ADD    BC, SP
+      ADD    DE, SP
+      ADD    HL, SP
+      ADD    IX, SP
+      ADD    IY, SP
+      ADD    IZ, SP
+      ADD    SP, SP
+      LD     SP, SP
+      ADC    WA, SP
+      ADC    BC, SP
+      ADC    DE, SP
+      ADC    HL, SP
+      ADC    IX, SP
+      ADC    IY, SP
+      ADC    IZ, SP
+      ADC    SP, SP
+      SUB    WA, SP
+      SUB    BC, SP
+      SUB    DE, SP
+      SUB    HL, SP
+      SUB    IX, SP
+      SUB    IY, SP
+      SUB    IZ, SP
+      SUB    SP, SP
+      SBC    WA, SP
+      SBC    BC, SP
+      SBC    DE, SP
+      SBC    HL, SP
+      SBC    IX, SP
+      SBC    IY, SP
+      SBC    IZ, SP
+      SBC    SP, SP
+      EX     WA, SP
+      EX     BC, SP
+      EX     DE, SP
+      EX     HL, SP
+      EX     IX, SP
+      EX     IY, SP
+      EX     IZ, SP
+      EX     SP, SP
+      AND    WA, SP
+      AND    BC, SP
+      AND    DE, SP
+      AND    HL, SP
+      AND    IX, SP
+      AND    IY, SP
+      AND    IZ, SP
+      AND    SP, SP
+      ADD    SP, 0CAC9H
+      ADC    SP, 0CBCAH
+      SUB    SP, 0CCCBH
+      SBC    SP, 0CDCCH
+      AND    SP, 0CECDH
+      XOR    SP, 0CFCEH
+      OR     SP, 0D0CFH
+      CP     SP, 0D1D0H
+      XOR    WA, SP
+      XOR    BC, SP
+      XOR    DE, SP
+      XOR    HL, SP
+      XOR    IX, SP
+      XOR    IY, SP
+      XOR    IZ, SP
+      XOR    SP, SP
+      OR     WA, SP
+      OR     BC, SP
+      OR     DE, SP
+      OR     HL, SP
+      OR     IX, SP
+      OR     IY, SP
+      OR     IZ, SP
+      OR     SP, SP
+      RLC    0E9H, SP
+      RRC    0EAH, SP
+      RL     0EBH, SP
+      RR     0ECH, SP
+      SLA    0EDH, SP
+      SRA    0EEH, SP
+      SLL    0EFH, SP
+      SRL    0F0H, SP
+      CP     WA, SP
+      CP     BC, SP
+      CP     DE, SP
+      CP     HL, SP
+      CP     IX, SP
+      CP     IY, SP
+      CP     IZ, SP
+      CP     SP, SP
       LD     QSP, 0504H
       CPL    QSP
       NEG    QSP
+      LINK   QSP, 0E0DH
+      UNLK   QSP
+      BS1F   A, QSP
+      BS1B   A, QSP
+      EXTZ   QSP
+      EXTS   QSP
+      PAA    QSP
+      MIRR   QSP
+      DJNZ   QSP, $+33
+      ANDCF  1, QSP
+      ORCF   2, QSP
+      XORCF  3, QSP
+      LDCF   4, QSP
+      STCF   5, QSP
+      RES    1, QSP
+      SET    2, QSP
+      CHG    3, QSP
+      BIT    4, QSP
+      TSET   5, QSP
+      MINC1  0040H, QSP
+      MINC2  0040H, QSP
+      MINC4  0040H, QSP
+      MDEC1  0040H, QSP
+      MDEC2  0040H, QSP
+      MDEC4  0080H, QSP
+      MUL    XWA, QSP
+      MUL    XBC, QSP
+      MUL    XDE, QSP
+      MUL    XHL, QSP
+      MUL    XIX, QSP
+      MUL    XIY, QSP
+      MUL    XIZ, QSP
+      MUL    XSP, QSP
+      MULS   XWA, QSP
+      MULS   XBC, QSP
+      MULS   XDE, QSP
+      MULS   XHL, QSP
+      MULS   XIX, QSP
+      MULS   XIY, QSP
+      MULS   XIZ, QSP
+      MULS   XSP, QSP
+      DIV    XWA, QSP
+      DIV    XBC, QSP
+      DIV    XDE, QSP
+      DIV    XHL, QSP
+      DIV    XIX, QSP
+      DIV    XIY, QSP
+      DIV    XIZ, QSP
+      DIV    XSP, QSP
+      DIVS   XWA, QSP
+      DIVS   XBC, QSP
+      DIVS   XDE, QSP
+      DIVS   XHL, QSP
+      DIVS   XIX, QSP
+      DIVS   XIY, QSP
+      DIVS   XIZ, QSP
+      DIVS   XSP, QSP
+      INC    1, QSP
+      DEC    1, QSP
+      SCC    F, QSP
+      SCC    LT, QSP
+      SCC    LE, QSP
+      SCC    ULE, QSP
+      SCC    OV, QSP
+      SCC    MI, QSP
+      SCC    Z, QSP
+      SCC    C, QSP
+      SCC    T, QSP
+      SCC    GE, QSP
+      SCC    GT, QSP
+      SCC    UGT, QSP
+      SCC    NOV, QSP
+      SCC    PL, QSP
+      SCC    NZ, QSP
+      SCC    NC, QSP
+      ADD    WA, QSP
+      ADD    BC, QSP
+      ADD    DE, QSP
+      ADD    HL, QSP
+      ADD    IX, QSP
+      ADD    IY, QSP
+      ADD    IZ, QSP
+      ADD    SP, QSP
+      LD     WA, QSP
+      LD     BC, QSP
+      LD     DE, QSP
+      LD     HL, QSP
+      LD     IX, QSP
+      LD     IY, QSP
+      LD     IZ, QSP
+      LD     SP, QSP
+      ADC    WA, QSP
+      ADC    BC, QSP
+      ADC    DE, QSP
+      ADC    HL, QSP
+      ADC    IX, QSP
+      ADC    IY, QSP
+      ADC    IZ, QSP
+      ADC    SP, QSP
+      LD     QSP, WA
+      LD     QSP, BC
+      LD     QSP, DE
+      LD     QSP, HL
+      LD     QSP, IX
+      LD     QSP, IY
+      LD     QSP, IZ
+      LD     QSP, SP
+      SUB    WA, QSP
+      SUB    BC, QSP
+      SUB    DE, QSP
+      SUB    HL, QSP
+      SUB    IX, QSP
+      SUB    IY, QSP
+      SUB    IZ, QSP
+      SUB    SP, QSP
+      SBC    WA, QSP
+      SBC    BC, QSP
+      SBC    DE, QSP
+      SBC    HL, QSP
+      SBC    IX, QSP
+      SBC    IY, QSP
+      SBC    IZ, QSP
+      SBC    SP, QSP
+      EX     WA, QSP
+      EX     BC, QSP
+      EX     DE, QSP
+      EX     HL, QSP
+      EX     IX, QSP
+      EX     IY, QSP
+      EX     IZ, QSP
+      EX     SP, QSP
+      AND    WA, QSP
+      AND    BC, QSP
+      AND    DE, QSP
+      AND    HL, QSP
+      AND    IX, QSP
+      AND    IY, QSP
+      AND    IZ, QSP
+      AND    SP, QSP
+      ADD    QSP, 0CAC9H
+      ADC    QSP, 0CBCAH
+      SUB    QSP, 0CCCBH
+      SBC    QSP, 0CDCCH
+      AND    QSP, 0CECDH
+      XOR    QSP, 0CFCEH
+      OR     QSP, 0D0CFH
+      CP     QSP, 0D1D0H
+      XOR    WA, QSP
+      XOR    BC, QSP
+      XOR    DE, QSP
+      XOR    HL, QSP
+      XOR    IX, QSP
+      XOR    IY, QSP
+      XOR    IZ, QSP
+      XOR    SP, QSP
+      OR     WA, QSP
+      OR     BC, QSP
+      OR     DE, QSP
+      OR     HL, QSP
+      OR     IX, QSP
+      OR     IY, QSP
+      OR     IZ, QSP
+      OR     SP, QSP
+      RLC    0E9H, QSP
+      RRC    0EAH, QSP
+      RL     0EBH, QSP
+      RR     0ECH, QSP
+      SLA    0EDH, QSP
+      SRA    0EEH, QSP
+      SLL    0EFH, QSP
+      SRL    0F0H, QSP
+      CP     WA, QSP
+      CP     BC, QSP
+      CP     DE, QSP
+      CP     HL, QSP
+      CP     IX, QSP
+      CP     IY, QSP
+      CP     IZ, QSP
+      CP     SP, QSP
       LD     WA0, 0504H
       CPL    WA0
       NEG    WA0
+      LINK   WA0, 0E0DH
+      UNLK   WA0
+      BS1F   A, WA0
+      BS1B   A, WA0
+      EXTZ   WA0
+      EXTS   WA0
+      PAA    WA0
+      MIRR   WA0
+      DJNZ   WA0, $+33
+      ANDCF  1, WA0
+      ORCF   2, WA0
+      XORCF  3, WA0
+      LDCF   4, WA0
+      STCF   5, WA0
+      RES    1, WA0
+      SET    2, WA0
+      CHG    3, WA0
+      BIT    4, WA0
+      TSET   5, WA0
+      MINC1  0040H, WA0
+      MINC2  0040H, WA0
+      MINC4  0040H, WA0
+      MDEC1  0040H, WA0
+      MDEC2  0040H, WA0
+      MDEC4  0080H, WA0
+      MUL    XWA, WA0
+      MUL    XBC, WA0
+      MUL    XDE, WA0
+      MUL    XHL, WA0
+      MUL    XIX, WA0
+      MUL    XIY, WA0
+      MUL    XIZ, WA0
+      MUL    XSP, WA0
+      MULS   XWA, WA0
+      MULS   XBC, WA0
+      MULS   XDE, WA0
+      MULS   XHL, WA0
+      MULS   XIX, WA0
+      MULS   XIY, WA0
+      MULS   XIZ, WA0
+      MULS   XSP, WA0
+      DIV    XWA, WA0
+      DIV    XBC, WA0
+      DIV    XDE, WA0
+      DIV    XHL, WA0
+      DIV    XIX, WA0
+      DIV    XIY, WA0
+      DIV    XIZ, WA0
+      DIV    XSP, WA0
+      DIVS   XWA, WA0
+      DIVS   XBC, WA0
+      DIVS   XDE, WA0
+      DIVS   XHL, WA0
+      DIVS   XIX, WA0
+      DIVS   XIY, WA0
+      DIVS   XIZ, WA0
+      DIVS   XSP, WA0
+      INC    1, WA0
+      DEC    1, WA0
+      SCC    F, WA0
+      SCC    LT, WA0
+      SCC    LE, WA0
+      SCC    ULE, WA0
+      SCC    OV, WA0
+      SCC    MI, WA0
+      SCC    Z, WA0
+      SCC    C, WA0
+      SCC    T, WA0
+      SCC    GE, WA0
+      SCC    GT, WA0
+      SCC    UGT, WA0
+      SCC    NOV, WA0
+      SCC    PL, WA0
+      SCC    NZ, WA0
+      SCC    NC, WA0
+      ADD    WA, WA0
+      ADD    BC, WA0
+      ADD    DE, WA0
+      ADD    HL, WA0
+      ADD    IX, WA0
+      ADD    IY, WA0
+      ADD    IZ, WA0
+      ADD    SP, WA0
+      LD     WA, WA0
+      LD     BC, WA0
+      LD     DE, WA0
+      LD     HL, WA0
+      LD     IX, WA0
+      LD     IY, WA0
+      LD     IZ, WA0
+      LD     SP, WA0
+      ADC    WA, WA0
+      ADC    BC, WA0
+      ADC    DE, WA0
+      ADC    HL, WA0
+      ADC    IX, WA0
+      ADC    IY, WA0
+      ADC    IZ, WA0
+      ADC    SP, WA0
+      LD     WA0, WA
+      LD     WA0, BC
+      LD     WA0, DE
+      LD     WA0, HL
+      LD     WA0, IX
+      LD     WA0, IY
+      LD     WA0, IZ
+      LD     WA0, SP
+      SUB    WA, WA0
+      SUB    BC, WA0
+      SUB    DE, WA0
+      SUB    HL, WA0
+      SUB    IX, WA0
+      SUB    IY, WA0
+      SUB    IZ, WA0
+      SUB    SP, WA0
+      SBC    WA, WA0
+      SBC    BC, WA0
+      SBC    DE, WA0
+      SBC    HL, WA0
+      SBC    IX, WA0
+      SBC    IY, WA0
+      SBC    IZ, WA0
+      SBC    SP, WA0
+      EX     WA, WA0
+      EX     BC, WA0
+      EX     DE, WA0
+      EX     HL, WA0
+      EX     IX, WA0
+      EX     IY, WA0
+      EX     IZ, WA0
+      EX     SP, WA0
+      AND    WA, WA0
+      AND    BC, WA0
+      AND    DE, WA0
+      AND    HL, WA0
+      AND    IX, WA0
+      AND    IY, WA0
+      AND    IZ, WA0
+      AND    SP, WA0
+      ADD    WA0, 0CAC9H
+      ADC    WA0, 0CBCAH
+      SUB    WA0, 0CCCBH
+      SBC    WA0, 0CDCCH
+      AND    WA0, 0CECDH
+      XOR    WA0, 0CFCEH
+      OR     WA0, 0D0CFH
+      CP     WA0, 0D1D0H
+      XOR    WA, WA0
+      XOR    BC, WA0
+      XOR    DE, WA0
+      XOR    HL, WA0
+      XOR    IX, WA0
+      XOR    IY, WA0
+      XOR    IZ, WA0
+      XOR    SP, WA0
+      OR     WA, WA0
+      OR     BC, WA0
+      OR     DE, WA0
+      OR     HL, WA0
+      OR     IX, WA0
+      OR     IY, WA0
+      OR     IZ, WA0
+      OR     SP, WA0
+      RLC    0E9H, WA0
+      RRC    0EAH, WA0
+      RL     0EBH, WA0
+      RR     0ECH, WA0
+      SLA    0EDH, WA0
+      SRA    0EEH, WA0
+      SLL    0EFH, WA0
+      SRL    0F0H, WA0
+      CP     WA, WA0
+      CP     BC, WA0
+      CP     DE, WA0
+      CP     HL, WA0
+      CP     IX, WA0
+      CP     IY, WA0
+      CP     IZ, WA0
+      CP     SP, WA0
       LD     QWA0, 0504H
       CPL    QWA0
       NEG    QWA0
+      LINK   QWA0, 0E0DH
+      UNLK   QWA0
+      BS1F   A, QWA0
+      BS1B   A, QWA0
+      EXTZ   QWA0
+      EXTS   QWA0
+      PAA    QWA0
+      MIRR   QWA0
+      DJNZ   QWA0, $+33
+      ANDCF  1, QWA0
+      ORCF   2, QWA0
+      XORCF  3, QWA0
+      LDCF   4, QWA0
+      STCF   5, QWA0
+      RES    1, QWA0
+      SET    2, QWA0
+      CHG    3, QWA0
+      BIT    4, QWA0
+      TSET   5, QWA0
+      MINC1  0040H, QWA0
+      MINC2  0040H, QWA0
+      MINC4  0040H, QWA0
+      MDEC1  0040H, QWA0
+      MDEC2  0040H, QWA0
+      MDEC4  0080H, QWA0
+      MUL    XWA, QWA0
+      MUL    XBC, QWA0
+      MUL    XDE, QWA0
+      MUL    XHL, QWA0
+      MUL    XIX, QWA0
+      MUL    XIY, QWA0
+      MUL    XIZ, QWA0
+      MUL    XSP, QWA0
+      MULS   XWA, QWA0
+      MULS   XBC, QWA0
+      MULS   XDE, QWA0
+      MULS   XHL, QWA0
+      MULS   XIX, QWA0
+      MULS   XIY, QWA0
+      MULS   XIZ, QWA0
+      MULS   XSP, QWA0
+      DIV    XWA, QWA0
+      DIV    XBC, QWA0
+      DIV    XDE, QWA0
+      DIV    XHL, QWA0
+      DIV    XIX, QWA0
+      DIV    XIY, QWA0
+      DIV    XIZ, QWA0
+      DIV    XSP, QWA0
+      DIVS   XWA, QWA0
+      DIVS   XBC, QWA0
+      DIVS   XDE, QWA0
+      DIVS   XHL, QWA0
+      DIVS   XIX, QWA0
+      DIVS   XIY, QWA0
+      DIVS   XIZ, QWA0
+      DIVS   XSP, QWA0
+      INC    1, QWA0
+      DEC    1, QWA0
+      SCC    F, QWA0
+      SCC    LT, QWA0
+      SCC    LE, QWA0
+      SCC    ULE, QWA0
+      SCC    OV, QWA0
+      SCC    MI, QWA0
+      SCC    Z, QWA0
+      SCC    C, QWA0
+      SCC    T, QWA0
+      SCC    GE, QWA0
+      SCC    GT, QWA0
+      SCC    UGT, QWA0
+      SCC    NOV, QWA0
+      SCC    PL, QWA0
+      SCC    NZ, QWA0
+      SCC    NC, QWA0
+      ADD    WA, QWA0
+      ADD    BC, QWA0
+      ADD    DE, QWA0
+      ADD    HL, QWA0
+      ADD    IX, QWA0
+      ADD    IY, QWA0
+      ADD    IZ, QWA0
+      ADD    SP, QWA0
+      LD     WA, QWA0
+      LD     BC, QWA0
+      LD     DE, QWA0
+      LD     HL, QWA0
+      LD     IX, QWA0
+      LD     IY, QWA0
+      LD     IZ, QWA0
+      LD     SP, QWA0
+      ADC    WA, QWA0
+      ADC    BC, QWA0
+      ADC    DE, QWA0
+      ADC    HL, QWA0
+      ADC    IX, QWA0
+      ADC    IY, QWA0
+      ADC    IZ, QWA0
+      ADC    SP, QWA0
+      LD     QWA0, WA
+      LD     QWA0, BC
+      LD     QWA0, DE
+      LD     QWA0, HL
+      LD     QWA0, IX
+      LD     QWA0, IY
+      LD     QWA0, IZ
+      LD     QWA0, SP
+      SUB    WA, QWA0
+      SUB    BC, QWA0
+      SUB    DE, QWA0
+      SUB    HL, QWA0
+      SUB    IX, QWA0
+      SUB    IY, QWA0
+      SUB    IZ, QWA0
+      SUB    SP, QWA0
+      SBC    WA, QWA0
+      SBC    BC, QWA0
+      SBC    DE, QWA0
+      SBC    HL, QWA0
+      SBC    IX, QWA0
+      SBC    IY, QWA0
+      SBC    IZ, QWA0
+      SBC    SP, QWA0
+      EX     WA, QWA0
+      EX     BC, QWA0
+      EX     DE, QWA0
+      EX     HL, QWA0
+      EX     IX, QWA0
+      EX     IY, QWA0
+      EX     IZ, QWA0
+      EX     SP, QWA0
+      AND    WA, QWA0
+      AND    BC, QWA0
+      AND    DE, QWA0
+      AND    HL, QWA0
+      AND    IX, QWA0
+      AND    IY, QWA0
+      AND    IZ, QWA0
+      AND    SP, QWA0
+      ADD    QWA0, 0CAC9H
+      ADC    QWA0, 0CBCAH
+      SUB    QWA0, 0CCCBH
+      SBC    QWA0, 0CDCCH
+      AND    QWA0, 0CECDH
+      XOR    QWA0, 0CFCEH
+      OR     QWA0, 0D0CFH
+      CP     QWA0, 0D1D0H
+      XOR    WA, QWA0
+      XOR    BC, QWA0
+      XOR    DE, QWA0
+      XOR    HL, QWA0
+      XOR    IX, QWA0
+      XOR    IY, QWA0
+      XOR    IZ, QWA0
+      XOR    SP, QWA0
+      OR     WA, QWA0
+      OR     BC, QWA0
+      OR     DE, QWA0
+      OR     HL, QWA0
+      OR     IX, QWA0
+      OR     IY, QWA0
+      OR     IZ, QWA0
+      OR     SP, QWA0
+      RLC    0E9H, QWA0
+      RRC    0EAH, QWA0
+      RL     0EBH, QWA0
+      RR     0ECH, QWA0
+      SLA    0EDH, QWA0
+      SRA    0EEH, QWA0
+      SLL    0EFH, QWA0
+      SRL    0F0H, QWA0
+      CP     WA, QWA0
+      CP     BC, QWA0
+      CP     DE, QWA0
+      CP     HL, QWA0
+      CP     IX, QWA0
+      CP     IY, QWA0
+      CP     IZ, QWA0
+      CP     SP, QWA0
       CPL    BC0
       NEG    BC0
+      LINK   BC0, 0E0DH
+      UNLK   BC0
+      BS1F   A, BC0
+      BS1B   A, BC0
+      EXTZ   BC0
+      EXTS   BC0
+      PAA    BC0
+      MIRR   BC0
+      DJNZ   BC0, $+33
+      ANDCF  1, BC0
+      ORCF   2, BC0
+      XORCF  3, BC0
+      LDCF   4, BC0
+      STCF   5, BC0
+      RES    1, BC0
+      SET    2, BC0
+      CHG    3, BC0
+      BIT    4, BC0
+      TSET   5, BC0
+      MINC1  0040H, BC0
+      MINC2  0040H, BC0
+      MINC4  0040H, BC0
+      MDEC1  0040H, BC0
+      MDEC2  0040H, BC0
+      MDEC4  0080H, BC0
+      MUL    XWA, BC0
+      MUL    XBC, BC0
+      MUL    XDE, BC0
+      MUL    XHL, BC0
+      MUL    XIX, BC0
+      MUL    XIY, BC0
+      MUL    XIZ, BC0
+      MUL    XSP, BC0
+      MULS   XWA, BC0
+      MULS   XBC, BC0
+      MULS   XDE, BC0
+      MULS   XHL, BC0
+      MULS   XIX, BC0
+      MULS   XIY, BC0
+      MULS   XIZ, BC0
+      MULS   XSP, BC0
+      DIV    XWA, BC0
+      DIV    XBC, BC0
+      DIV    XDE, BC0
+      DIV    XHL, BC0
+      DIV    XIX, BC0
+      DIV    XIY, BC0
+      DIV    XIZ, BC0
+      DIV    XSP, BC0
+      DIVS   XWA, BC0
+      DIVS   XBC, BC0
+      DIVS   XDE, BC0
+      DIVS   XHL, BC0
+      DIVS   XIX, BC0
+      DIVS   XIY, BC0
+      DIVS   XIZ, BC0
+      DIVS   XSP, BC0
+      INC    1, BC0
+      DEC    1, BC0
+      SCC    F, BC0
+      SCC    LT, BC0
+      SCC    LE, BC0
+      SCC    ULE, BC0
+      SCC    OV, BC0
+      SCC    MI, BC0
+      SCC    Z, BC0
+      SCC    C, BC0
+      SCC    T, BC0
+      SCC    GE, BC0
+      SCC    GT, BC0
+      SCC    UGT, BC0
+      SCC    NOV, BC0
+      SCC    PL, BC0
+      SCC    NZ, BC0
+      SCC    NC, BC0
+      ADD    WA, BC0
+      ADD    BC, BC0
+      ADD    DE, BC0
+      ADD    HL, BC0
+      ADD    IX, BC0
+      ADD    IY, BC0
+      ADD    IZ, BC0
+      ADD    SP, BC0
+      LD     WA, BC0
+      LD     BC, BC0
+      LD     DE, BC0
+      LD     HL, BC0
+      LD     IX, BC0
+      LD     IY, BC0
+      LD     IZ, BC0
+      LD     SP, BC0
+      ADC    WA, BC0
+      ADC    BC, BC0
+      ADC    DE, BC0
+      ADC    HL, BC0
+      ADC    IX, BC0
+      ADC    IY, BC0
+      ADC    IZ, BC0
+      ADC    SP, BC0
+      LD     BC0, WA
+      LD     BC0, BC
+      LD     BC0, DE
+      LD     BC0, HL
+      LD     BC0, IX
+      LD     BC0, IY
+      LD     BC0, IZ
+      LD     BC0, SP
+      SUB    WA, BC0
+      SUB    BC, BC0
+      SUB    DE, BC0
+      SUB    HL, BC0
+      SUB    IX, BC0
+      SUB    IY, BC0
+      SUB    IZ, BC0
+      SUB    SP, BC0
+      SBC    WA, BC0
+      SBC    BC, BC0
+      SBC    DE, BC0
+      SBC    HL, BC0
+      SBC    IX, BC0
+      SBC    IY, BC0
+      SBC    IZ, BC0
+      SBC    SP, BC0
+      EX     WA, BC0
+      EX     BC, BC0
+      EX     DE, BC0
+      EX     HL, BC0
+      EX     IX, BC0
+      EX     IY, BC0
+      EX     IZ, BC0
+      EX     SP, BC0
+      AND    WA, BC0
+      AND    BC, BC0
+      AND    DE, BC0
+      AND    HL, BC0
+      AND    IX, BC0
+      AND    IY, BC0
+      AND    IZ, BC0
+      AND    SP, BC0
+      ADD    BC0, 0CAC9H
+      ADC    BC0, 0CBCAH
+      SUB    BC0, 0CCCBH
+      SBC    BC0, 0CDCCH
+      AND    BC0, 0CECDH
+      XOR    BC0, 0CFCEH
+      OR     BC0, 0D0CFH
+      CP     BC0, 0D1D0H
+      XOR    WA, BC0
+      XOR    BC, BC0
+      XOR    DE, BC0
+      XOR    HL, BC0
+      XOR    IX, BC0
+      XOR    IY, BC0
+      XOR    IZ, BC0
+      XOR    SP, BC0
+      OR     WA, BC0
+      OR     BC, BC0
+      OR     DE, BC0
+      OR     HL, BC0
+      OR     IX, BC0
+      OR     IY, BC0
+      OR     IZ, BC0
+      OR     SP, BC0
+      RLC    0E9H, BC0
+      RRC    0EAH, BC0
+      RL     0EBH, BC0
+      RR     0ECH, BC0
+      SLA    0EDH, BC0
+      SRA    0EEH, BC0
+      SLL    0EFH, BC0
+      SRL    0F0H, BC0
+      CP     WA, BC0
+      CP     BC, BC0
+      CP     DE, BC0
+      CP     HL, BC0
+      CP     IX, BC0
+      CP     IY, BC0
+      CP     IZ, BC0
+      CP     SP, BC0
+      LD     BC0, 0504H
       NEG    QBC0
+      LINK   QBC0, 0E0DH
+      UNLK   QBC0
+      BS1F   A, QBC0
+      BS1B   A, QBC0
+      EXTZ   QBC0
+      EXTS   QBC0
+      PAA    QBC0
+      MIRR   QBC0
+      DJNZ   QBC0, $+33
+      ANDCF  1, QBC0
+      ORCF   2, QBC0
+      XORCF  3, QBC0
+      LDCF   4, QBC0
+      STCF   5, QBC0
+      RES    1, QBC0
+      SET    2, QBC0
+      CHG    3, QBC0
+      BIT    4, QBC0
+      TSET   5, QBC0
+      MINC1  0040H, QBC0
+      MINC2  0040H, QBC0
+      MINC4  0040H, QBC0
+      MDEC1  0040H, QBC0
+      MDEC2  0040H, QBC0
+      MDEC4  0080H, QBC0
+      MUL    XWA, QBC0
+      MUL    XBC, QBC0
+      MUL    XDE, QBC0
+      MUL    XHL, QBC0
+      MUL    XIX, QBC0
+      MUL    XIY, QBC0
+      MUL    XIZ, QBC0
+      MUL    XSP, QBC0
+      MULS   XWA, QBC0
+      MULS   XBC, QBC0
+      MULS   XDE, QBC0
+      MULS   XHL, QBC0
+      MULS   XIX, QBC0
+      MULS   XIY, QBC0
+      MULS   XIZ, QBC0
+      MULS   XSP, QBC0
+      DIV    XWA, QBC0
+      DIV    XBC, QBC0
+      DIV    XDE, QBC0
+      DIV    XHL, QBC0
+      DIV    XIX, QBC0
+      DIV    XIY, QBC0
+      DIV    XIZ, QBC0
+      DIV    XSP, QBC0
+      DIVS   XWA, QBC0
+      DIVS   XBC, QBC0
+      DIVS   XDE, QBC0
+      DIVS   XHL, QBC0
+      DIVS   XIX, QBC0
+      DIVS   XIY, QBC0
+      DIVS   XIZ, QBC0
+      DIVS   XSP, QBC0
+      INC    1, QBC0
+      DEC    1, QBC0
+      SCC    F, QBC0
+      SCC    LT, QBC0
+      SCC    LE, QBC0
+      SCC    ULE, QBC0
+      SCC    OV, QBC0
+      SCC    MI, QBC0
+      SCC    Z, QBC0
+      SCC    C, QBC0
+      SCC    T, QBC0
+      SCC    GE, QBC0
+      SCC    GT, QBC0
+      SCC    UGT, QBC0
+      SCC    NOV, QBC0
+      SCC    PL, QBC0
+      SCC    NZ, QBC0
+      SCC    NC, QBC0
+      ADD    WA, QBC0
+      ADD    BC, QBC0
+      ADD    DE, QBC0
+      ADD    HL, QBC0
+      ADD    IX, QBC0
+      ADD    IY, QBC0
+      ADD    IZ, QBC0
+      ADD    SP, QBC0
+      LD     WA, QBC0
+      LD     BC, QBC0
+      LD     DE, QBC0
+      LD     HL, QBC0
+      LD     IX, QBC0
+      LD     IY, QBC0
+      LD     IZ, QBC0
+      LD     SP, QBC0
+      ADC    WA, QBC0
+      ADC    BC, QBC0
+      ADC    DE, QBC0
+      ADC    HL, QBC0
+      ADC    IX, QBC0
+      ADC    IY, QBC0
+      ADC    IZ, QBC0
+      ADC    SP, QBC0
+      LD     QBC0, WA
+      LD     QBC0, BC
+      LD     QBC0, DE
+      LD     QBC0, HL
+      LD     QBC0, IX
+      LD     QBC0, IY
+      LD     QBC0, IZ
+      LD     QBC0, SP
+      SUB    WA, QBC0
+      SUB    BC, QBC0
+      SUB    DE, QBC0
+      SUB    HL, QBC0
+      SUB    IX, QBC0
+      SUB    IY, QBC0
+      SUB    IZ, QBC0
+      SUB    SP, QBC0
+      SBC    WA, QBC0
+      SBC    BC, QBC0
+      SBC    DE, QBC0
+      SBC    HL, QBC0
+      SBC    IX, QBC0
+      SBC    IY, QBC0
+      SBC    IZ, QBC0
+      SBC    SP, QBC0
+      EX     WA, QBC0
+      EX     BC, QBC0
+      EX     DE, QBC0
+      EX     HL, QBC0
+      EX     IX, QBC0
+      EX     IY, QBC0
+      EX     IZ, QBC0
+      EX     SP, QBC0
+      AND    WA, QBC0
+      AND    BC, QBC0
+      AND    DE, QBC0
+      AND    HL, QBC0
+      AND    IX, QBC0
+      AND    IY, QBC0
+      AND    IZ, QBC0
+      AND    SP, QBC0
+      ADD    QBC0, 0CAC9H
+      ADC    QBC0, 0CBCAH
+      SUB    QBC0, 0CCCBH
+      SBC    QBC0, 0CDCCH
+      AND    QBC0, 0CECDH
+      XOR    QBC0, 0CFCEH
+      OR     QBC0, 0D0CFH
+      CP     QBC0, 0D1D0H
+      XOR    WA, QBC0
+      XOR    BC, QBC0
+      XOR    DE, QBC0
+      XOR    HL, QBC0
+      XOR    IX, QBC0
+      XOR    IY, QBC0
+      XOR    IZ, QBC0
+      XOR    SP, QBC0
+      OR     WA, QBC0
+      OR     BC, QBC0
+      OR     DE, QBC0
+      OR     HL, QBC0
+      OR     IX, QBC0
+      OR     IY, QBC0
+      OR     IZ, QBC0
+      OR     SP, QBC0
+      RLC    0E9H, QBC0
+      RRC    0EAH, QBC0
+      RL     0EBH, QBC0
+      RR     0ECH, QBC0
+      SLA    0EDH, QBC0
+      SRA    0EEH, QBC0
+      SLL    0EFH, QBC0
+      SRL    0F0H, QBC0
+      CP     WA, QBC0
+      CP     BC, QBC0
+      CP     DE, QBC0
+      CP     HL, QBC0
+      CP     IX, QBC0
+      CP     IY, QBC0
+      CP     IZ, QBC0
+      CP     SP, QBC0
+      LD     QBC0, 0504H
+      CPL    QBC0
+      LINK   DE0, 0E0DH
+      UNLK   DE0
+      BS1F   A, DE0
+      BS1B   A, DE0
+      EXTZ   DE0
+      EXTS   DE0
+      PAA    DE0
+      MIRR   DE0
+      DJNZ   DE0, $+33
+      ANDCF  1, DE0
+      ORCF   2, DE0
+      XORCF  3, DE0
+      LDCF   4, DE0
+      STCF   5, DE0
+      RES    1, DE0
+      SET    2, DE0
+      CHG    3, DE0
+      BIT    4, DE0
+      TSET   5, DE0
+      MINC1  0040H, DE0
+      MINC2  0040H, DE0
+      MINC4  0040H, DE0
+      MDEC1  0040H, DE0
+      MDEC2  0040H, DE0
+      MDEC4  0080H, DE0
+      MUL    XWA, DE0
+      MUL    XBC, DE0
+      MUL    XDE, DE0
+      MUL    XHL, DE0
+      MUL    XIX, DE0
+      MUL    XIY, DE0
+      MUL    XIZ, DE0
+      MUL    XSP, DE0
+      MULS   XWA, DE0
+      MULS   XBC, DE0
+      MULS   XDE, DE0
+      MULS   XHL, DE0
+      MULS   XIX, DE0
+      MULS   XIY, DE0
+      MULS   XIZ, DE0
+      MULS   XSP, DE0
+      DIV    XWA, DE0
+      DIV    XBC, DE0
+      DIV    XDE, DE0
+      DIV    XHL, DE0
+      DIV    XIX, DE0
+      DIV    XIY, DE0
+      DIV    XIZ, DE0
+      DIV    XSP, DE0
+      DIVS   XWA, DE0
+      DIVS   XBC, DE0
+      DIVS   XDE, DE0
+      DIVS   XHL, DE0
+      DIVS   XIX, DE0
+      DIVS   XIY, DE0
+      DIVS   XIZ, DE0
+      DIVS   XSP, DE0
+      INC    1, DE0
+      DEC    1, DE0
+      SCC    F, DE0
+      SCC    LT, DE0
+      SCC    LE, DE0
+      SCC    ULE, DE0
+      SCC    OV, DE0
+      SCC    MI, DE0
+      SCC    Z, DE0
+      SCC    C, DE0
+      SCC    T, DE0
+      SCC    GE, DE0
+      SCC    GT, DE0
+      SCC    UGT, DE0
+      SCC    NOV, DE0
+      SCC    PL, DE0
+      SCC    NZ, DE0
+      SCC    NC, DE0
+      ADD    WA, DE0
+      ADD    BC, DE0
+      ADD    DE, DE0
+      ADD    HL, DE0
+      ADD    IX, DE0
+      ADD    IY, DE0
+      ADD    IZ, DE0
+      ADD    SP, DE0
+      LD     WA, DE0
+      LD     BC, DE0
+      LD     DE, DE0
+      LD     HL, DE0
+      LD     IX, DE0
+      LD     IY, DE0
+      LD     IZ, DE0
+      LD     SP, DE0
+      ADC    WA, DE0
+      ADC    BC, DE0
+      ADC    DE, DE0
+      ADC    HL, DE0
+      ADC    IX, DE0
+      ADC    IY, DE0
+      ADC    IZ, DE0
+      ADC    SP, DE0
+      LD     DE0, WA
+      LD     DE0, BC
+      LD     DE0, DE
+      LD     DE0, HL
+      LD     DE0, IX
+      LD     DE0, IY
+      LD     DE0, IZ
+      LD     DE0, SP
+      SUB    WA, DE0
+      SUB    BC, DE0
+      SUB    DE, DE0
+      SUB    HL, DE0
+      SUB    IX, DE0
+      SUB    IY, DE0
+      SUB    IZ, DE0
+      SUB    SP, DE0
+      SBC    WA, DE0
+      SBC    BC, DE0
+      SBC    DE, DE0
+      SBC    HL, DE0
+      SBC    IX, DE0
+      SBC    IY, DE0
+      SBC    IZ, DE0
+      SBC    SP, DE0
+      EX     WA, DE0
+      EX     BC, DE0
+      EX     DE, DE0
+      EX     HL, DE0
+      EX     IX, DE0
+      EX     IY, DE0
+      EX     IZ, DE0
+      EX     SP, DE0
+      AND    WA, DE0
+      AND    BC, DE0
+      AND    DE, DE0
+      AND    HL, DE0
+      AND    IX, DE0
+      AND    IY, DE0
+      AND    IZ, DE0
+      AND    SP, DE0
+      ADD    DE0, 0CAC9H
+      ADC    DE0, 0CBCAH
+      SUB    DE0, 0CCCBH
+      SBC    DE0, 0CDCCH
+      AND    DE0, 0CECDH
+      XOR    DE0, 0CFCEH
+      OR     DE0, 0D0CFH
+      CP     DE0, 0D1D0H
+      XOR    WA, DE0
+      XOR    BC, DE0
+      XOR    DE, DE0
+      XOR    HL, DE0
+      XOR    IX, DE0
+      XOR    IY, DE0
+      XOR    IZ, DE0
+      XOR    SP, DE0
+      OR     WA, DE0
+      OR     BC, DE0
+      OR     DE, DE0
+      OR     HL, DE0
+      OR     IX, DE0
+      OR     IY, DE0
+      OR     IZ, DE0
+      OR     SP, DE0
+      RLC    0E9H, DE0
+      RRC    0EAH, DE0
+      RL     0EBH, DE0
+      RR     0ECH, DE0
+      SLA    0EDH, DE0
+      SRA    0EEH, DE0
+      SLL    0EFH, DE0
+      SRL    0F0H, DE0
+      CP     WA, DE0
+      CP     BC, DE0
+      CP     DE, DE0
+      CP     HL, DE0
+      CP     IX, DE0
+      CP     IY, DE0
+      CP     IZ, DE0
+      CP     SP, DE0
+      LD     DE0, 0504H
+      CPL    DE0
+      NEG    DE0
       LINK   QDE0, 0E0DH
       UNLK   QDE0
       BS1F   A, QDE0
       BS1B   A, QDE0
-      DAA    QDE0
       EXTZ   QDE0
       EXTS   QDE0
       PAA    QDE0
       MIRR   QDE0
-      MULA   QDE0
       DJNZ   QDE0, $+33
       ANDCF  1, QDE0
       ORCF   2, QDE0
@@ -24963,10 +33864,44 @@
       CHG    3, QDE0
       BIT    4, QDE0
       TSET   5, QDE0
-      MUL    WA, QDE0
-      MULS   WA, QDE0
-      DIV    WA, QDE0
-      DIVS   WA, QDE0
+      MINC1  0040H, QDE0
+      MINC2  0040H, QDE0
+      MINC4  0040H, QDE0
+      MDEC1  0040H, QDE0
+      MDEC2  0040H, QDE0
+      MDEC4  0080H, QDE0
+      MUL    XWA, QDE0
+      MUL    XBC, QDE0
+      MUL    XDE, QDE0
+      MUL    XHL, QDE0
+      MUL    XIX, QDE0
+      MUL    XIY, QDE0
+      MUL    XIZ, QDE0
+      MUL    XSP, QDE0
+      MULS   XWA, QDE0
+      MULS   XBC, QDE0
+      MULS   XDE, QDE0
+      MULS   XHL, QDE0
+      MULS   XIX, QDE0
+      MULS   XIY, QDE0
+      MULS   XIZ, QDE0
+      MULS   XSP, QDE0
+      DIV    XWA, QDE0
+      DIV    XBC, QDE0
+      DIV    XDE, QDE0
+      DIV    XHL, QDE0
+      DIV    XIX, QDE0
+      DIV    XIY, QDE0
+      DIV    XIZ, QDE0
+      DIV    XSP, QDE0
+      DIVS   XWA, QDE0
+      DIVS   XBC, QDE0
+      DIVS   XDE, QDE0
+      DIVS   XHL, QDE0
+      DIVS   XIX, QDE0
+      DIVS   XIY, QDE0
+      DIVS   XIZ, QDE0
+      DIVS   XSP, QDE0
       INC    1, QDE0
       DEC    1, QDE0
       SCC    F, QDE0
@@ -25095,12 +34030,10 @@
       UNLK   HL0
       BS1F   A, HL0
       BS1B   A, HL0
-      DAA    HL0
       EXTZ   HL0
       EXTS   HL0
       PAA    HL0
       MIRR   HL0
-      MULA   HL0
       DJNZ   HL0, $+33
       ANDCF  1, HL0
       ORCF   2, HL0
@@ -25112,10 +34045,44 @@
       CHG    3, HL0
       BIT    4, HL0
       TSET   5, HL0
-      MUL    WA, HL0
-      MULS   WA, HL0
-      DIV    WA, HL0
-      DIVS   WA, HL0
+      MINC1  0040H, HL0
+      MINC2  0040H, HL0
+      MINC4  0040H, HL0
+      MDEC1  0040H, HL0
+      MDEC2  0040H, HL0
+      MDEC4  0080H, HL0
+      MUL    XWA, HL0
+      MUL    XBC, HL0
+      MUL    XDE, HL0
+      MUL    XHL, HL0
+      MUL    XIX, HL0
+      MUL    XIY, HL0
+      MUL    XIZ, HL0
+      MUL    XSP, HL0
+      MULS   XWA, HL0
+      MULS   XBC, HL0
+      MULS   XDE, HL0
+      MULS   XHL, HL0
+      MULS   XIX, HL0
+      MULS   XIY, HL0
+      MULS   XIZ, HL0
+      MULS   XSP, HL0
+      DIV    XWA, HL0
+      DIV    XBC, HL0
+      DIV    XDE, HL0
+      DIV    XHL, HL0
+      DIV    XIX, HL0
+      DIV    XIY, HL0
+      DIV    XIZ, HL0
+      DIV    XSP, HL0
+      DIVS   XWA, HL0
+      DIVS   XBC, HL0
+      DIVS   XDE, HL0
+      DIVS   XHL, HL0
+      DIVS   XIX, HL0
+      DIVS   XIY, HL0
+      DIVS   XIZ, HL0
+      DIVS   XSP, HL0
       INC    1, HL0
       DEC    1, HL0
       SCC    F, HL0
@@ -25241,13 +34208,12 @@
       LD     HL0, 0504H
       CPL    HL0
       NEG    HL0
+      LINK   HL0, 0E0DH
       BS1B   A, QHL0
-      DAA    QHL0
       EXTZ   QHL0
       EXTS   QHL0
       PAA    QHL0
       MIRR   QHL0
-      MULA   QHL0
       DJNZ   QHL0, $+33
       ANDCF  1, QHL0
       ORCF   2, QHL0
@@ -25259,10 +34225,44 @@
       CHG    3, QHL0
       BIT    4, QHL0
       TSET   5, QHL0
-      MUL    WA, QHL0
-      MULS   WA, QHL0
-      DIV    WA, QHL0
-      DIVS   WA, QHL0
+      MINC1  0040H, QHL0
+      MINC2  0040H, QHL0
+      MINC4  0040H, QHL0
+      MDEC1  0040H, QHL0
+      MDEC2  0040H, QHL0
+      MDEC4  0080H, QHL0
+      MUL    XWA, QHL0
+      MUL    XBC, QHL0
+      MUL    XDE, QHL0
+      MUL    XHL, QHL0
+      MUL    XIX, QHL0
+      MUL    XIY, QHL0
+      MUL    XIZ, QHL0
+      MUL    XSP, QHL0
+      MULS   XWA, QHL0
+      MULS   XBC, QHL0
+      MULS   XDE, QHL0
+      MULS   XHL, QHL0
+      MULS   XIX, QHL0
+      MULS   XIY, QHL0
+      MULS   XIZ, QHL0
+      MULS   XSP, QHL0
+      DIV    XWA, QHL0
+      DIV    XBC, QHL0
+      DIV    XDE, QHL0
+      DIV    XHL, QHL0
+      DIV    XIX, QHL0
+      DIV    XIY, QHL0
+      DIV    XIZ, QHL0
+      DIV    XSP, QHL0
+      DIVS   XWA, QHL0
+      DIVS   XBC, QHL0
+      DIVS   XDE, QHL0
+      DIVS   XHL, QHL0
+      DIVS   XIX, QHL0
+      DIVS   XIY, QHL0
+      DIVS   XIZ, QHL0
+      DIVS   XSP, QHL0
       INC    1, QHL0
       DEC    1, QHL0
       SCC    F, QHL0
@@ -25388,710 +34388,9 @@
       LD     QHL0, 0504H
       CPL    QHL0
       NEG    QHL0
-      EXTZ   WA1
-      EXTS   WA1
-      PAA    WA1
-      MIRR   WA1
-      MULA   WA1
-      DJNZ   WA1, $+33
-      ANDCF  1, WA1
-      ORCF   2, WA1
-      XORCF  3, WA1
-      LDCF   4, WA1
-      STCF   5, WA1
-      RES    1, WA1
-      SET    2, WA1
-      CHG    3, WA1
-      BIT    4, WA1
-      TSET   5, WA1
-      MUL    WA, WA1
-      MULS   WA, WA1
-      DIV    WA, WA1
-      DIVS   WA, WA1
-      INC    1, WA1
-      DEC    1, WA1
-      SCC    F, WA1
-      SCC    LT, WA1
-      SCC    LE, WA1
-      SCC    ULE, WA1
-      SCC    OV, WA1
-      SCC    MI, WA1
-      SCC    Z, WA1
-      SCC    C, WA1
-      SCC    T, WA1
-      SCC    GE, WA1
-      SCC    GT, WA1
-      SCC    UGT, WA1
-      SCC    NOV, WA1
-      SCC    PL, WA1
-      SCC    NZ, WA1
-      SCC    NC, WA1
-      ADD    WA, WA1
-      ADD    BC, WA1
-      ADD    DE, WA1
-      ADD    HL, WA1
-      ADD    IX, WA1
-      ADD    IY, WA1
-      ADD    IZ, WA1
-      ADD    SP, WA1
-      LD     WA, WA1
-      LD     BC, WA1
-      LD     DE, WA1
-      LD     HL, WA1
-      LD     IX, WA1
-      LD     IY, WA1
-      LD     IZ, WA1
-      LD     SP, WA1
-      ADC    WA, WA1
-      ADC    BC, WA1
-      ADC    DE, WA1
-      ADC    HL, WA1
-      ADC    IX, WA1
-      ADC    IY, WA1
-      ADC    IZ, WA1
-      ADC    SP, WA1
-      LD     WA1, WA
-      LD     WA1, BC
-      LD     WA1, DE
-      LD     WA1, HL
-      LD     WA1, IX
-      LD     WA1, IY
-      LD     WA1, IZ
-      LD     WA1, SP
-      SUB    WA, WA1
-      SUB    BC, WA1
-      SUB    DE, WA1
-      SUB    HL, WA1
-      SUB    IX, WA1
-      SUB    IY, WA1
-      SUB    IZ, WA1
-      SUB    SP, WA1
-      SBC    WA, WA1
-      SBC    BC, WA1
-      SBC    DE, WA1
-      SBC    HL, WA1
-      SBC    IX, WA1
-      SBC    IY, WA1
-      SBC    IZ, WA1
-      SBC    SP, WA1
-      EX     WA, WA1
-      EX     BC, WA1
-      EX     DE, WA1
-      EX     HL, WA1
-      EX     IX, WA1
-      EX     IY, WA1
-      EX     IZ, WA1
-      EX     SP, WA1
-      AND    WA, WA1
-      AND    BC, WA1
-      AND    DE, WA1
-      AND    HL, WA1
-      AND    IX, WA1
-      AND    IY, WA1
-      AND    IZ, WA1
-      AND    SP, WA1
-      ADD    WA1, 0CAC9H
-      ADC    WA1, 0CBCAH
-      SUB    WA1, 0CCCBH
-      SBC    WA1, 0CDCCH
-      AND    WA1, 0CECDH
-      XOR    WA1, 0CFCEH
-      OR     WA1, 0D0CFH
-      CP     WA1, 0D1D0H
-      XOR    WA, WA1
-      XOR    BC, WA1
-      XOR    DE, WA1
-      XOR    HL, WA1
-      XOR    IX, WA1
-      XOR    IY, WA1
-      XOR    IZ, WA1
-      XOR    SP, WA1
-      OR     WA, WA1
-      OR     BC, WA1
-      OR     DE, WA1
-      OR     HL, WA1
-      OR     IX, WA1
-      OR     IY, WA1
-      OR     IZ, WA1
-      OR     SP, WA1
-      RLC    0E9H, WA1
-      RRC    0EAH, WA1
-      RL     0EBH, WA1
-      RR     0ECH, WA1
-      SLA    0EDH, WA1
-      SRA    0EEH, WA1
-      SLL    0EFH, WA1
-      SRL    0F0H, WA1
-      CP     WA, WA1
-      CP     BC, WA1
-      CP     DE, WA1
-      CP     HL, WA1
-      CP     IX, WA1
-      CP     IY, WA1
-      CP     IZ, WA1
-      CP     SP, WA1
-      EXTS   QWA1
-      PAA    QWA1
-      MIRR   QWA1
-      MULA   QWA1
-      DJNZ   QWA1, $+33
-      ANDCF  1, QWA1
-      ORCF   2, QWA1
-      XORCF  3, QWA1
-      LDCF   4, QWA1
-      STCF   5, QWA1
-      RES    1, QWA1
-      SET    2, QWA1
-      CHG    3, QWA1
-      BIT    4, QWA1
-      TSET   5, QWA1
-      MUL    WA, QWA1
-      MULS   WA, QWA1
-      DIV    WA, QWA1
-      DIVS   WA, QWA1
-      INC    1, QWA1
-      DEC    1, QWA1
-      SCC    F, QWA1
-      SCC    LT, QWA1
-      SCC    LE, QWA1
-      SCC    ULE, QWA1
-      SCC    OV, QWA1
-      SCC    MI, QWA1
-      SCC    Z, QWA1
-      SCC    C, QWA1
-      SCC    T, QWA1
-      SCC    GE, QWA1
-      SCC    GT, QWA1
-      SCC    UGT, QWA1
-      SCC    NOV, QWA1
-      SCC    PL, QWA1
-      SCC    NZ, QWA1
-      SCC    NC, QWA1
-      ADD    WA, QWA1
-      ADD    BC, QWA1
-      ADD    DE, QWA1
-      ADD    HL, QWA1
-      ADD    IX, QWA1
-      ADD    IY, QWA1
-      ADD    IZ, QWA1
-      ADD    SP, QWA1
-      LD     WA, QWA1
-      LD     BC, QWA1
-      LD     DE, QWA1
-      LD     HL, QWA1
-      LD     IX, QWA1
-      LD     IY, QWA1
-      LD     IZ, QWA1
-      LD     SP, QWA1
-      ADC    WA, QWA1
-      ADC    BC, QWA1
-      ADC    DE, QWA1
-      ADC    HL, QWA1
-      ADC    IX, QWA1
-      ADC    IY, QWA1
-      ADC    IZ, QWA1
-      ADC    SP, QWA1
-      LD     QWA1, WA
-      LD     QWA1, BC
-      LD     QWA1, DE
-      LD     QWA1, HL
-      LD     QWA1, IX
-      LD     QWA1, IY
-      LD     QWA1, IZ
-      LD     QWA1, SP
-      SUB    WA, QWA1
-      SUB    BC, QWA1
-      SUB    DE, QWA1
-      SUB    HL, QWA1
-      SUB    IX, QWA1
-      SUB    IY, QWA1
-      SUB    IZ, QWA1
-      SUB    SP, QWA1
-      SBC    WA, QWA1
-      SBC    BC, QWA1
-      SBC    DE, QWA1
-      SBC    HL, QWA1
-      SBC    IX, QWA1
-      SBC    IY, QWA1
-      SBC    IZ, QWA1
-      SBC    SP, QWA1
-      EX     WA, QWA1
-      EX     BC, QWA1
-      EX     DE, QWA1
-      EX     HL, QWA1
-      EX     IX, QWA1
-      EX     IY, QWA1
-      EX     IZ, QWA1
-      EX     SP, QWA1
-      AND    WA, QWA1
-      AND    BC, QWA1
-      AND    DE, QWA1
-      AND    HL, QWA1
-      AND    IX, QWA1
-      AND    IY, QWA1
-      AND    IZ, QWA1
-      AND    SP, QWA1
-      ADD    QWA1, 0CAC9H
-      ADC    QWA1, 0CBCAH
-      SUB    QWA1, 0CCCBH
-      SBC    QWA1, 0CDCCH
-      AND    QWA1, 0CECDH
-      XOR    QWA1, 0CFCEH
-      OR     QWA1, 0D0CFH
-      CP     QWA1, 0D1D0H
-      XOR    WA, QWA1
-      XOR    BC, QWA1
-      XOR    DE, QWA1
-      XOR    HL, QWA1
-      XOR    IX, QWA1
-      XOR    IY, QWA1
-      XOR    IZ, QWA1
-      XOR    SP, QWA1
-      OR     WA, QWA1
-      OR     BC, QWA1
-      OR     DE, QWA1
-      OR     HL, QWA1
-      OR     IX, QWA1
-      OR     IY, QWA1
-      OR     IZ, QWA1
-      OR     SP, QWA1
-      RLC    0E9H, QWA1
-      RRC    0EAH, QWA1
-      RL     0EBH, QWA1
-      RR     0ECH, QWA1
-      SLA    0EDH, QWA1
-      SRA    0EEH, QWA1
-      SLL    0EFH, QWA1
-      SRL    0F0H, QWA1
-      CP     WA, QWA1
-      CP     BC, QWA1
-      CP     DE, QWA1
-      CP     HL, QWA1
-      CP     IX, QWA1
-      CP     IY, QWA1
-      CP     IZ, QWA1
-      CP     SP, QWA1
-      MIRR   BC1
-      MULA   BC1
-      DJNZ   BC1, $+33
-      ANDCF  1, BC1
-      ORCF   2, BC1
-      XORCF  3, BC1
-      LDCF   4, BC1
-      STCF   5, BC1
-      RES    1, BC1
-      SET    2, BC1
-      CHG    3, BC1
-      BIT    4, BC1
-      TSET   5, BC1
-      MUL    WA, BC1
-      MULS   WA, BC1
-      DIV    WA, BC1
-      DIVS   WA, BC1
-      INC    1, BC1
-      DEC    1, BC1
-      SCC    F, BC1
-      SCC    LT, BC1
-      SCC    LE, BC1
-      SCC    ULE, BC1
-      SCC    OV, BC1
-      SCC    MI, BC1
-      SCC    Z, BC1
-      SCC    C, BC1
-      SCC    T, BC1
-      SCC    GE, BC1
-      SCC    GT, BC1
-      SCC    UGT, BC1
-      SCC    NOV, BC1
-      SCC    PL, BC1
-      SCC    NZ, BC1
-      SCC    NC, BC1
-      ADD    WA, BC1
-      ADD    BC, BC1
-      ADD    DE, BC1
-      ADD    HL, BC1
-      ADD    IX, BC1
-      ADD    IY, BC1
-      ADD    IZ, BC1
-      ADD    SP, BC1
-      LD     WA, BC1
-      LD     BC, BC1
-      LD     DE, BC1
-      LD     HL, BC1
-      LD     IX, BC1
-      LD     IY, BC1
-      LD     IZ, BC1
-      LD     SP, BC1
-      ADC    WA, BC1
-      ADC    BC, BC1
-      ADC    DE, BC1
-      ADC    HL, BC1
-      ADC    IX, BC1
-      ADC    IY, BC1
-      ADC    IZ, BC1
-      ADC    SP, BC1
-      LD     BC1, WA
-      LD     BC1, BC
-      LD     BC1, DE
-      LD     BC1, HL
-      LD     BC1, IX
-      LD     BC1, IY
-      LD     BC1, IZ
-      LD     BC1, SP
-      SUB    WA, BC1
-      SUB    BC, BC1
-      SUB    DE, BC1
-      SUB    HL, BC1
-      SUB    IX, BC1
-      SUB    IY, BC1
-      SUB    IZ, BC1
-      SUB    SP, BC1
-      SBC    WA, BC1
-      SBC    BC, BC1
-      SBC    DE, BC1
-      SBC    HL, BC1
-      SBC    IX, BC1
-      SBC    IY, BC1
-      SBC    IZ, BC1
-      SBC    SP, BC1
-      EX     WA, BC1
-      EX     BC, BC1
-      EX     DE, BC1
-      EX     HL, BC1
-      EX     IX, BC1
-      EX     IY, BC1
-      EX     IZ, BC1
-      EX     SP, BC1
-      AND    WA, BC1
-      AND    BC, BC1
-      AND    DE, BC1
-      AND    HL, BC1
-      AND    IX, BC1
-      AND    IY, BC1
-      AND    IZ, BC1
-      AND    SP, BC1
-      ADD    BC1, 0CAC9H
-      ADC    BC1, 0CBCAH
-      SUB    BC1, 0CCCBH
-      SBC    BC1, 0CDCCH
-      AND    BC1, 0CECDH
-      XOR    BC1, 0CFCEH
-      OR     BC1, 0D0CFH
-      CP     BC1, 0D1D0H
-      XOR    WA, BC1
-      XOR    BC, BC1
-      XOR    DE, BC1
-      XOR    HL, BC1
-      XOR    IX, BC1
-      XOR    IY, BC1
-      XOR    IZ, BC1
-      XOR    SP, BC1
-      OR     WA, BC1
-      OR     BC, BC1
-      OR     DE, BC1
-      OR     HL, BC1
-      OR     IX, BC1
-      OR     IY, BC1
-      OR     IZ, BC1
-      OR     SP, BC1
-      RLC    0E9H, BC1
-      RRC    0EAH, BC1
-      RL     0EBH, BC1
-      RR     0ECH, BC1
-      SLA    0EDH, BC1
-      SRA    0EEH, BC1
-      SLL    0EFH, BC1
-      SRL    0F0H, BC1
-      CP     WA, BC1
-      CP     BC, BC1
-      CP     DE, BC1
-      CP     HL, BC1
-      CP     IX, BC1
-      CP     IY, BC1
-      CP     IZ, BC1
-      CP     SP, BC1
-      LD     BC1, 0504H
-      MULA   QBC1
-      DJNZ   QBC1, $+33
-      ANDCF  1, QBC1
-      ORCF   2, QBC1
-      XORCF  3, QBC1
-      LDCF   4, QBC1
-      STCF   5, QBC1
-      RES    1, QBC1
-      SET    2, QBC1
-      CHG    3, QBC1
-      BIT    4, QBC1
-      TSET   5, QBC1
-      MUL    WA, QBC1
-      MULS   WA, QBC1
-      DIV    WA, QBC1
-      DIVS   WA, QBC1
-      INC    1, QBC1
-      DEC    1, QBC1
-      SCC    F, QBC1
-      SCC    LT, QBC1
-      SCC    LE, QBC1
-      SCC    ULE, QBC1
-      SCC    OV, QBC1
-      SCC    MI, QBC1
-      SCC    Z, QBC1
-      SCC    C, QBC1
-      SCC    T, QBC1
-      SCC    GE, QBC1
-      SCC    GT, QBC1
-      SCC    UGT, QBC1
-      SCC    NOV, QBC1
-      SCC    PL, QBC1
-      SCC    NZ, QBC1
-      SCC    NC, QBC1
-      ADD    WA, QBC1
-      ADD    BC, QBC1
-      ADD    DE, QBC1
-      ADD    HL, QBC1
-      ADD    IX, QBC1
-      ADD    IY, QBC1
-      ADD    IZ, QBC1
-      ADD    SP, QBC1
-      LD     WA, QBC1
-      LD     BC, QBC1
-      LD     DE, QBC1
-      LD     HL, QBC1
-      LD     IX, QBC1
-      LD     IY, QBC1
-      LD     IZ, QBC1
-      LD     SP, QBC1
-      ADC    WA, QBC1
-      ADC    BC, QBC1
-      ADC    DE, QBC1
-      ADC    HL, QBC1
-      ADC    IX, QBC1
-      ADC    IY, QBC1
-      ADC    IZ, QBC1
-      ADC    SP, QBC1
-      LD     QBC1, WA
-      LD     QBC1, BC
-      LD     QBC1, DE
-      LD     QBC1, HL
-      LD     QBC1, IX
-      LD     QBC1, IY
-      LD     QBC1, IZ
-      LD     QBC1, SP
-      SUB    WA, QBC1
-      SUB    BC, QBC1
-      SUB    DE, QBC1
-      SUB    HL, QBC1
-      SUB    IX, QBC1
-      SUB    IY, QBC1
-      SUB    IZ, QBC1
-      SUB    SP, QBC1
-      SBC    WA, QBC1
-      SBC    BC, QBC1
-      SBC    DE, QBC1
-      SBC    HL, QBC1
-      SBC    IX, QBC1
-      SBC    IY, QBC1
-      SBC    IZ, QBC1
-      SBC    SP, QBC1
-      EX     WA, QBC1
-      EX     BC, QBC1
-      EX     DE, QBC1
-      EX     HL, QBC1
-      EX     IX, QBC1
-      EX     IY, QBC1
-      EX     IZ, QBC1
-      EX     SP, QBC1
-      AND    WA, QBC1
-      AND    BC, QBC1
-      AND    DE, QBC1
-      AND    HL, QBC1
-      AND    IX, QBC1
-      AND    IY, QBC1
-      AND    IZ, QBC1
-      AND    SP, QBC1
-      ADD    QBC1, 0CAC9H
-      ADC    QBC1, 0CBCAH
-      SUB    QBC1, 0CCCBH
-      SBC    QBC1, 0CDCCH
-      AND    QBC1, 0CECDH
-      XOR    QBC1, 0CFCEH
-      OR     QBC1, 0D0CFH
-      CP     QBC1, 0D1D0H
-      XOR    WA, QBC1
-      XOR    BC, QBC1
-      XOR    DE, QBC1
-      XOR    HL, QBC1
-      XOR    IX, QBC1
-      XOR    IY, QBC1
-      XOR    IZ, QBC1
-      XOR    SP, QBC1
-      OR     WA, QBC1
-      OR     BC, QBC1
-      OR     DE, QBC1
-      OR     HL, QBC1
-      OR     IX, QBC1
-      OR     IY, QBC1
-      OR     IZ, QBC1
-      OR     SP, QBC1
-      RLC    0E9H, QBC1
-      RRC    0EAH, QBC1
-      RL     0EBH, QBC1
-      RR     0ECH, QBC1
-      SLA    0EDH, QBC1
-      SRA    0EEH, QBC1
-      SLL    0EFH, QBC1
-      SRL    0F0H, QBC1
-      CP     WA, QBC1
-      CP     BC, QBC1
-      CP     DE, QBC1
-      CP     HL, QBC1
-      CP     IX, QBC1
-      CP     IY, QBC1
-      CP     IZ, QBC1
-      CP     SP, QBC1
-      LD     QBC1, 0504H
-      CPL    QBC1
-      MULA   DE1
-      DJNZ   DE1, $+33
-      ANDCF  1, DE1
-      ORCF   2, DE1
-      XORCF  3, DE1
-      LDCF   4, DE1
-      STCF   5, DE1
-      RES    1, DE1
-      SET    2, DE1
-      CHG    3, DE1
-      BIT    4, DE1
-      TSET   5, DE1
-      MUL    WA, DE1
-      MULS   WA, DE1
-      DIV    WA, DE1
-      DIVS   WA, DE1
-      INC    1, DE1
-      DEC    1, DE1
-      SCC    F, DE1
-      SCC    LT, DE1
-      SCC    LE, DE1
-      SCC    ULE, DE1
-      SCC    OV, DE1
-      SCC    MI, DE1
-      SCC    Z, DE1
-      SCC    C, DE1
-      SCC    T, DE1
-      SCC    GE, DE1
-      SCC    GT, DE1
-      SCC    UGT, DE1
-      SCC    NOV, DE1
-      SCC    PL, DE1
-      SCC    NZ, DE1
-      SCC    NC, DE1
-      ADD    WA, DE1
-      ADD    BC, DE1
-      ADD    DE, DE1
-      ADD    HL, DE1
-      ADD    IX, DE1
-      ADD    IY, DE1
-      ADD    IZ, DE1
-      ADD    SP, DE1
-      LD     WA, DE1
-      LD     BC, DE1
-      LD     DE, DE1
-      LD     HL, DE1
-      LD     IX, DE1
-      LD     IY, DE1
-      LD     IZ, DE1
-      LD     SP, DE1
-      ADC    WA, DE1
-      ADC    BC, DE1
-      ADC    DE, DE1
-      ADC    HL, DE1
-      ADC    IX, DE1
-      ADC    IY, DE1
-      ADC    IZ, DE1
-      ADC    SP, DE1
-      LD     DE1, WA
-      LD     DE1, BC
-      LD     DE1, DE
-      LD     DE1, HL
-      LD     DE1, IX
-      LD     DE1, IY
-      LD     DE1, IZ
-      LD     DE1, SP
-      SUB    WA, DE1
-      SUB    BC, DE1
-      SUB    DE, DE1
-      SUB    HL, DE1
-      SUB    IX, DE1
-      SUB    IY, DE1
-      SUB    IZ, DE1
-      SUB    SP, DE1
-      SBC    WA, DE1
-      SBC    BC, DE1
-      SBC    DE, DE1
-      SBC    HL, DE1
-      SBC    IX, DE1
-      SBC    IY, DE1
-      SBC    IZ, DE1
-      SBC    SP, DE1
-      EX     WA, DE1
-      EX     BC, DE1
-      EX     DE, DE1
-      EX     HL, DE1
-      EX     IX, DE1
-      EX     IY, DE1
-      EX     IZ, DE1
-      EX     SP, DE1
-      AND    WA, DE1
-      AND    BC, DE1
-      AND    DE, DE1
-      AND    HL, DE1
-      AND    IX, DE1
-      AND    IY, DE1
-      AND    IZ, DE1
-      AND    SP, DE1
-      ADD    DE1, 0CAC9H
-      ADC    DE1, 0CBCAH
-      SUB    DE1, 0CCCBH
-      SBC    DE1, 0CDCCH
-      AND    DE1, 0CECDH
-      XOR    DE1, 0CFCEH
-      OR     DE1, 0D0CFH
-      CP     DE1, 0D1D0H
-      XOR    WA, DE1
-      XOR    BC, DE1
-      XOR    DE, DE1
-      XOR    HL, DE1
-      XOR    IX, DE1
-      XOR    IY, DE1
-      XOR    IZ, DE1
-      XOR    SP, DE1
-      OR     WA, DE1
-      OR     BC, DE1
-      OR     DE, DE1
-      OR     HL, DE1
-      OR     IX, DE1
-      OR     IY, DE1
-      OR     IZ, DE1
-      OR     SP, DE1
-      RLC    0E9H, DE1
-      RRC    0EAH, DE1
-      RL     0EBH, DE1
-      RR     0ECH, DE1
-      SLA    0EDH, DE1
-      SRA    0EEH, DE1
-      SLL    0EFH, DE1
-      SRL    0F0H, DE1
-      CP     WA, DE1
-      CP     BC, DE1
-      CP     DE, DE1
-      CP     HL, DE1
-      CP     IX, DE1
-      CP     IY, DE1
-      CP     IZ, DE1
-      CP     SP, DE1
-      LD     DE1, 0504H
-      CPL    DE1
-      NEG    DE1
+      LINK   QHL0, 0E0DH
+      UNLK   QHL0
+      BS1F   A, QHL0
       XOR    BC, WA'
       XOR    DE, WA'
       XOR    HL, WA'
@@ -26126,6 +34425,154 @@
       LD     WA', 0504H
       CPL    WA'
       NEG    WA'
+      LINK   WA', 0E0DH
+      UNLK   WA'
+      BS1F   A, WA'
+      BS1B   A, WA'
+      EXTZ   WA'
+      EXTS   WA'
+      PAA    WA'
+      MIRR   WA'
+      DJNZ   WA', $+33
+      ANDCF  1, WA'
+      ORCF   2, WA'
+      XORCF  3, WA'
+      LDCF   4, WA'
+      STCF   5, WA'
+      RES    1, WA'
+      SET    2, WA'
+      CHG    3, WA'
+      BIT    4, WA'
+      TSET   5, WA'
+      MINC1  0040H, WA'
+      MINC2  0040H, WA'
+      MINC4  0040H, WA'
+      MDEC1  0040H, WA'
+      MDEC2  0040H, WA'
+      MDEC4  0080H, WA'
+      MUL    XWA, WA'
+      MUL    XBC, WA'
+      MUL    XDE, WA'
+      MUL    XHL, WA'
+      MUL    XIX, WA'
+      MUL    XIY, WA'
+      MUL    XIZ, WA'
+      MUL    XSP, WA'
+      MULS   XWA, WA'
+      MULS   XBC, WA'
+      MULS   XDE, WA'
+      MULS   XHL, WA'
+      MULS   XIX, WA'
+      MULS   XIY, WA'
+      MULS   XIZ, WA'
+      MULS   XSP, WA'
+      DIV    XWA, WA'
+      DIV    XBC, WA'
+      DIV    XDE, WA'
+      DIV    XHL, WA'
+      DIV    XIX, WA'
+      DIV    XIY, WA'
+      DIV    XIZ, WA'
+      DIV    XSP, WA'
+      DIVS   XWA, WA'
+      DIVS   XBC, WA'
+      DIVS   XDE, WA'
+      DIVS   XHL, WA'
+      DIVS   XIX, WA'
+      DIVS   XIY, WA'
+      DIVS   XIZ, WA'
+      DIVS   XSP, WA'
+      INC    1, WA'
+      DEC    1, WA'
+      SCC    F, WA'
+      SCC    LT, WA'
+      SCC    LE, WA'
+      SCC    ULE, WA'
+      SCC    OV, WA'
+      SCC    MI, WA'
+      SCC    Z, WA'
+      SCC    C, WA'
+      SCC    T, WA'
+      SCC    GE, WA'
+      SCC    GT, WA'
+      SCC    UGT, WA'
+      SCC    NOV, WA'
+      SCC    PL, WA'
+      SCC    NZ, WA'
+      SCC    NC, WA'
+      ADD    WA, WA'
+      ADD    BC, WA'
+      ADD    DE, WA'
+      ADD    HL, WA'
+      ADD    IX, WA'
+      ADD    IY, WA'
+      ADD    IZ, WA'
+      ADD    SP, WA'
+      LD     WA, WA'
+      LD     BC, WA'
+      LD     DE, WA'
+      LD     HL, WA'
+      LD     IX, WA'
+      LD     IY, WA'
+      LD     IZ, WA'
+      LD     SP, WA'
+      ADC    WA, WA'
+      ADC    BC, WA'
+      ADC    DE, WA'
+      ADC    HL, WA'
+      ADC    IX, WA'
+      ADC    IY, WA'
+      ADC    IZ, WA'
+      ADC    SP, WA'
+      LD     WA', WA
+      LD     WA', BC
+      LD     WA', DE
+      LD     WA', HL
+      LD     WA', IX
+      LD     WA', IY
+      LD     WA', IZ
+      LD     WA', SP
+      SUB    WA, WA'
+      SUB    BC, WA'
+      SUB    DE, WA'
+      SUB    HL, WA'
+      SUB    IX, WA'
+      SUB    IY, WA'
+      SUB    IZ, WA'
+      SUB    SP, WA'
+      SBC    WA, WA'
+      SBC    BC, WA'
+      SBC    DE, WA'
+      SBC    HL, WA'
+      SBC    IX, WA'
+      SBC    IY, WA'
+      SBC    IZ, WA'
+      SBC    SP, WA'
+      EX     WA, WA'
+      EX     BC, WA'
+      EX     DE, WA'
+      EX     HL, WA'
+      EX     IX, WA'
+      EX     IY, WA'
+      EX     IZ, WA'
+      EX     SP, WA'
+      AND    WA, WA'
+      AND    BC, WA'
+      AND    DE, WA'
+      AND    HL, WA'
+      AND    IX, WA'
+      AND    IY, WA'
+      AND    IZ, WA'
+      AND    SP, WA'
+      ADD    WA', 0CAC9H
+      ADC    WA', 0CBCAH
+      SUB    WA', 0CCCBH
+      SBC    WA', 0CDCCH
+      AND    WA', 0CECDH
+      XOR    WA', 0CFCEH
+      OR     WA', 0D0CFH
+      CP     WA', 0D1D0H
+      XOR    WA, WA'
       XOR    HL, QWA'
       XOR    IX, QWA'
       XOR    IY, QWA'
@@ -26158,6 +34605,156 @@
       LD     QWA', 0504H
       CPL    QWA'
       NEG    QWA'
+      LINK   QWA', 0E0DH
+      UNLK   QWA'
+      BS1F   A, QWA'
+      BS1B   A, QWA'
+      EXTZ   QWA'
+      EXTS   QWA'
+      PAA    QWA'
+      MIRR   QWA'
+      DJNZ   QWA', $+33
+      ANDCF  1, QWA'
+      ORCF   2, QWA'
+      XORCF  3, QWA'
+      LDCF   4, QWA'
+      STCF   5, QWA'
+      RES    1, QWA'
+      SET    2, QWA'
+      CHG    3, QWA'
+      BIT    4, QWA'
+      TSET   5, QWA'
+      MINC1  0040H, QWA'
+      MINC2  0040H, QWA'
+      MINC4  0040H, QWA'
+      MDEC1  0040H, QWA'
+      MDEC2  0040H, QWA'
+      MDEC4  0080H, QWA'
+      MUL    XWA, QWA'
+      MUL    XBC, QWA'
+      MUL    XDE, QWA'
+      MUL    XHL, QWA'
+      MUL    XIX, QWA'
+      MUL    XIY, QWA'
+      MUL    XIZ, QWA'
+      MUL    XSP, QWA'
+      MULS   XWA, QWA'
+      MULS   XBC, QWA'
+      MULS   XDE, QWA'
+      MULS   XHL, QWA'
+      MULS   XIX, QWA'
+      MULS   XIY, QWA'
+      MULS   XIZ, QWA'
+      MULS   XSP, QWA'
+      DIV    XWA, QWA'
+      DIV    XBC, QWA'
+      DIV    XDE, QWA'
+      DIV    XHL, QWA'
+      DIV    XIX, QWA'
+      DIV    XIY, QWA'
+      DIV    XIZ, QWA'
+      DIV    XSP, QWA'
+      DIVS   XWA, QWA'
+      DIVS   XBC, QWA'
+      DIVS   XDE, QWA'
+      DIVS   XHL, QWA'
+      DIVS   XIX, QWA'
+      DIVS   XIY, QWA'
+      DIVS   XIZ, QWA'
+      DIVS   XSP, QWA'
+      INC    1, QWA'
+      DEC    1, QWA'
+      SCC    F, QWA'
+      SCC    LT, QWA'
+      SCC    LE, QWA'
+      SCC    ULE, QWA'
+      SCC    OV, QWA'
+      SCC    MI, QWA'
+      SCC    Z, QWA'
+      SCC    C, QWA'
+      SCC    T, QWA'
+      SCC    GE, QWA'
+      SCC    GT, QWA'
+      SCC    UGT, QWA'
+      SCC    NOV, QWA'
+      SCC    PL, QWA'
+      SCC    NZ, QWA'
+      SCC    NC, QWA'
+      ADD    WA, QWA'
+      ADD    BC, QWA'
+      ADD    DE, QWA'
+      ADD    HL, QWA'
+      ADD    IX, QWA'
+      ADD    IY, QWA'
+      ADD    IZ, QWA'
+      ADD    SP, QWA'
+      LD     WA, QWA'
+      LD     BC, QWA'
+      LD     DE, QWA'
+      LD     HL, QWA'
+      LD     IX, QWA'
+      LD     IY, QWA'
+      LD     IZ, QWA'
+      LD     SP, QWA'
+      ADC    WA, QWA'
+      ADC    BC, QWA'
+      ADC    DE, QWA'
+      ADC    HL, QWA'
+      ADC    IX, QWA'
+      ADC    IY, QWA'
+      ADC    IZ, QWA'
+      ADC    SP, QWA'
+      LD     QWA', WA
+      LD     QWA', BC
+      LD     QWA', DE
+      LD     QWA', HL
+      LD     QWA', IX
+      LD     QWA', IY
+      LD     QWA', IZ
+      LD     QWA', SP
+      SUB    WA, QWA'
+      SUB    BC, QWA'
+      SUB    DE, QWA'
+      SUB    HL, QWA'
+      SUB    IX, QWA'
+      SUB    IY, QWA'
+      SUB    IZ, QWA'
+      SUB    SP, QWA'
+      SBC    WA, QWA'
+      SBC    BC, QWA'
+      SBC    DE, QWA'
+      SBC    HL, QWA'
+      SBC    IX, QWA'
+      SBC    IY, QWA'
+      SBC    IZ, QWA'
+      SBC    SP, QWA'
+      EX     WA, QWA'
+      EX     BC, QWA'
+      EX     DE, QWA'
+      EX     HL, QWA'
+      EX     IX, QWA'
+      EX     IY, QWA'
+      EX     IZ, QWA'
+      EX     SP, QWA'
+      AND    WA, QWA'
+      AND    BC, QWA'
+      AND    DE, QWA'
+      AND    HL, QWA'
+      AND    IX, QWA'
+      AND    IY, QWA'
+      AND    IZ, QWA'
+      AND    SP, QWA'
+      ADD    QWA', 0CAC9H
+      ADC    QWA', 0CBCAH
+      SUB    QWA', 0CCCBH
+      SBC    QWA', 0CDCCH
+      AND    QWA', 0CECDH
+      XOR    QWA', 0CFCEH
+      OR     QWA', 0D0CFH
+      CP     QWA', 0D1D0H
+      XOR    WA, QWA'
+      XOR    BC, QWA'
+      XOR    DE, QWA'
       XOR    IY, BC'
       XOR    IZ, BC'
       XOR    SP, BC'
@@ -26188,6 +34785,158 @@
       LD     BC', 0504H
       CPL    BC'
       NEG    BC'
+      LINK   BC', 0E0DH
+      UNLK   BC'
+      BS1F   A, BC'
+      BS1B   A, BC'
+      EXTZ   BC'
+      EXTS   BC'
+      PAA    BC'
+      MIRR   BC'
+      DJNZ   BC', $+33
+      ANDCF  1, BC'
+      ORCF   2, BC'
+      XORCF  3, BC'
+      LDCF   4, BC'
+      STCF   5, BC'
+      RES    1, BC'
+      SET    2, BC'
+      CHG    3, BC'
+      BIT    4, BC'
+      TSET   5, BC'
+      MINC1  0040H, BC'
+      MINC2  0040H, BC'
+      MINC4  0040H, BC'
+      MDEC1  0040H, BC'
+      MDEC2  0040H, BC'
+      MDEC4  0080H, BC'
+      MUL    XWA, BC'
+      MUL    XBC, BC'
+      MUL    XDE, BC'
+      MUL    XHL, BC'
+      MUL    XIX, BC'
+      MUL    XIY, BC'
+      MUL    XIZ, BC'
+      MUL    XSP, BC'
+      MULS   XWA, BC'
+      MULS   XBC, BC'
+      MULS   XDE, BC'
+      MULS   XHL, BC'
+      MULS   XIX, BC'
+      MULS   XIY, BC'
+      MULS   XIZ, BC'
+      MULS   XSP, BC'
+      DIV    XWA, BC'
+      DIV    XBC, BC'
+      DIV    XDE, BC'
+      DIV    XHL, BC'
+      DIV    XIX, BC'
+      DIV    XIY, BC'
+      DIV    XIZ, BC'
+      DIV    XSP, BC'
+      DIVS   XWA, BC'
+      DIVS   XBC, BC'
+      DIVS   XDE, BC'
+      DIVS   XHL, BC'
+      DIVS   XIX, BC'
+      DIVS   XIY, BC'
+      DIVS   XIZ, BC'
+      DIVS   XSP, BC'
+      INC    1, BC'
+      DEC    1, BC'
+      SCC    F, BC'
+      SCC    LT, BC'
+      SCC    LE, BC'
+      SCC    ULE, BC'
+      SCC    OV, BC'
+      SCC    MI, BC'
+      SCC    Z, BC'
+      SCC    C, BC'
+      SCC    T, BC'
+      SCC    GE, BC'
+      SCC    GT, BC'
+      SCC    UGT, BC'
+      SCC    NOV, BC'
+      SCC    PL, BC'
+      SCC    NZ, BC'
+      SCC    NC, BC'
+      ADD    WA, BC'
+      ADD    BC, BC'
+      ADD    DE, BC'
+      ADD    HL, BC'
+      ADD    IX, BC'
+      ADD    IY, BC'
+      ADD    IZ, BC'
+      ADD    SP, BC'
+      LD     WA, BC'
+      LD     BC, BC'
+      LD     DE, BC'
+      LD     HL, BC'
+      LD     IX, BC'
+      LD     IY, BC'
+      LD     IZ, BC'
+      LD     SP, BC'
+      ADC    WA, BC'
+      ADC    BC, BC'
+      ADC    DE, BC'
+      ADC    HL, BC'
+      ADC    IX, BC'
+      ADC    IY, BC'
+      ADC    IZ, BC'
+      ADC    SP, BC'
+      LD     BC', WA
+      LD     BC', BC
+      LD     BC', DE
+      LD     BC', HL
+      LD     BC', IX
+      LD     BC', IY
+      LD     BC', IZ
+      LD     BC', SP
+      SUB    WA, BC'
+      SUB    BC, BC'
+      SUB    DE, BC'
+      SUB    HL, BC'
+      SUB    IX, BC'
+      SUB    IY, BC'
+      SUB    IZ, BC'
+      SUB    SP, BC'
+      SBC    WA, BC'
+      SBC    BC, BC'
+      SBC    DE, BC'
+      SBC    HL, BC'
+      SBC    IX, BC'
+      SBC    IY, BC'
+      SBC    IZ, BC'
+      SBC    SP, BC'
+      EX     WA, BC'
+      EX     BC, BC'
+      EX     DE, BC'
+      EX     HL, BC'
+      EX     IX, BC'
+      EX     IY, BC'
+      EX     IZ, BC'
+      EX     SP, BC'
+      AND    WA, BC'
+      AND    BC, BC'
+      AND    DE, BC'
+      AND    HL, BC'
+      AND    IX, BC'
+      AND    IY, BC'
+      AND    IZ, BC'
+      AND    SP, BC'
+      ADD    BC', 0CAC9H
+      ADC    BC', 0CBCAH
+      SUB    BC', 0CCCBH
+      SBC    BC', 0CDCCH
+      AND    BC', 0CECDH
+      XOR    BC', 0CFCEH
+      OR     BC', 0D0CFH
+      CP     BC', 0D1D0H
+      XOR    WA, BC'
+      XOR    BC, BC'
+      XOR    DE, BC'
+      XOR    HL, BC'
+      XOR    IX, BC'
       XOR    SP, QBC'
       OR     WA, QBC'
       OR     BC, QBC'
@@ -26216,6 +34965,160 @@
       LD     QBC', 0504H
       CPL    QBC'
       NEG    QBC'
+      LINK   QBC', 0E0DH
+      UNLK   QBC'
+      BS1F   A, QBC'
+      BS1B   A, QBC'
+      EXTZ   QBC'
+      EXTS   QBC'
+      PAA    QBC'
+      MIRR   QBC'
+      DJNZ   QBC', $+33
+      ANDCF  1, QBC'
+      ORCF   2, QBC'
+      XORCF  3, QBC'
+      LDCF   4, QBC'
+      STCF   5, QBC'
+      RES    1, QBC'
+      SET    2, QBC'
+      CHG    3, QBC'
+      BIT    4, QBC'
+      TSET   5, QBC'
+      MINC1  0040H, QBC'
+      MINC2  0040H, QBC'
+      MINC4  0040H, QBC'
+      MDEC1  0040H, QBC'
+      MDEC2  0040H, QBC'
+      MDEC4  0080H, QBC'
+      MUL    XWA, QBC'
+      MUL    XBC, QBC'
+      MUL    XDE, QBC'
+      MUL    XHL, QBC'
+      MUL    XIX, QBC'
+      MUL    XIY, QBC'
+      MUL    XIZ, QBC'
+      MUL    XSP, QBC'
+      MULS   XWA, QBC'
+      MULS   XBC, QBC'
+      MULS   XDE, QBC'
+      MULS   XHL, QBC'
+      MULS   XIX, QBC'
+      MULS   XIY, QBC'
+      MULS   XIZ, QBC'
+      MULS   XSP, QBC'
+      DIV    XWA, QBC'
+      DIV    XBC, QBC'
+      DIV    XDE, QBC'
+      DIV    XHL, QBC'
+      DIV    XIX, QBC'
+      DIV    XIY, QBC'
+      DIV    XIZ, QBC'
+      DIV    XSP, QBC'
+      DIVS   XWA, QBC'
+      DIVS   XBC, QBC'
+      DIVS   XDE, QBC'
+      DIVS   XHL, QBC'
+      DIVS   XIX, QBC'
+      DIVS   XIY, QBC'
+      DIVS   XIZ, QBC'
+      DIVS   XSP, QBC'
+      INC    1, QBC'
+      DEC    1, QBC'
+      SCC    F, QBC'
+      SCC    LT, QBC'
+      SCC    LE, QBC'
+      SCC    ULE, QBC'
+      SCC    OV, QBC'
+      SCC    MI, QBC'
+      SCC    Z, QBC'
+      SCC    C, QBC'
+      SCC    T, QBC'
+      SCC    GE, QBC'
+      SCC    GT, QBC'
+      SCC    UGT, QBC'
+      SCC    NOV, QBC'
+      SCC    PL, QBC'
+      SCC    NZ, QBC'
+      SCC    NC, QBC'
+      ADD    WA, QBC'
+      ADD    BC, QBC'
+      ADD    DE, QBC'
+      ADD    HL, QBC'
+      ADD    IX, QBC'
+      ADD    IY, QBC'
+      ADD    IZ, QBC'
+      ADD    SP, QBC'
+      LD     WA, QBC'
+      LD     BC, QBC'
+      LD     DE, QBC'
+      LD     HL, QBC'
+      LD     IX, QBC'
+      LD     IY, QBC'
+      LD     IZ, QBC'
+      LD     SP, QBC'
+      ADC    WA, QBC'
+      ADC    BC, QBC'
+      ADC    DE, QBC'
+      ADC    HL, QBC'
+      ADC    IX, QBC'
+      ADC    IY, QBC'
+      ADC    IZ, QBC'
+      ADC    SP, QBC'
+      LD     QBC', WA
+      LD     QBC', BC
+      LD     QBC', DE
+      LD     QBC', HL
+      LD     QBC', IX
+      LD     QBC', IY
+      LD     QBC', IZ
+      LD     QBC', SP
+      SUB    WA, QBC'
+      SUB    BC, QBC'
+      SUB    DE, QBC'
+      SUB    HL, QBC'
+      SUB    IX, QBC'
+      SUB    IY, QBC'
+      SUB    IZ, QBC'
+      SUB    SP, QBC'
+      SBC    WA, QBC'
+      SBC    BC, QBC'
+      SBC    DE, QBC'
+      SBC    HL, QBC'
+      SBC    IX, QBC'
+      SBC    IY, QBC'
+      SBC    IZ, QBC'
+      SBC    SP, QBC'
+      EX     WA, QBC'
+      EX     BC, QBC'
+      EX     DE, QBC'
+      EX     HL, QBC'
+      EX     IX, QBC'
+      EX     IY, QBC'
+      EX     IZ, QBC'
+      EX     SP, QBC'
+      AND    WA, QBC'
+      AND    BC, QBC'
+      AND    DE, QBC'
+      AND    HL, QBC'
+      AND    IX, QBC'
+      AND    IY, QBC'
+      AND    IZ, QBC'
+      AND    SP, QBC'
+      ADD    QBC', 0CAC9H
+      ADC    QBC', 0CBCAH
+      SUB    QBC', 0CCCBH
+      SBC    QBC', 0CDCCH
+      AND    QBC', 0CECDH
+      XOR    QBC', 0CFCEH
+      OR     QBC', 0D0CFH
+      CP     QBC', 0D1D0H
+      XOR    WA, QBC'
+      XOR    BC, QBC'
+      XOR    DE, QBC'
+      XOR    HL, QBC'
+      XOR    IX, QBC'
+      XOR    IY, QBC'
+      XOR    IZ, QBC'
       OR     WA, WA
       OR     BC, WA
       OR     DE, WA
@@ -26242,16 +35145,19 @@
       CP     SP, WA
       CPL    WA
       NEG    WA
+      MUL    XWA, 0A09H
+      MULS   XWA, 0B0AH
+      DIV    XWA, 0C0BH
+      DIVS   XWA, 0D0CH
       LINK   WA, 0E0DH
       UNLK   WA
       BS1F   A, WA
       BS1B   A, WA
-      DAA    WA
       EXTZ   WA
       EXTS   WA
       PAA    WA
       MIRR   WA
-      MULA   WA
+      MULA   XWA
       DJNZ   WA, $+32
       ANDCF  1, WA
       ORCF   2, WA
@@ -26263,10 +35169,44 @@
       CHG    3, WA
       BIT    4, WA
       TSET   5, WA
-      MUL    WA, WA
-      MULS   WA, WA
-      DIV    WA, WA
-      DIVS   WA, WA
+      MINC1  0040H, WA
+      MINC2  0040H, WA
+      MINC4  0040H, WA
+      MDEC1  0040H, WA
+      MDEC2  0040H, WA
+      MDEC4  0080H, WA
+      MUL    XWA, WA
+      MUL    XBC, WA
+      MUL    XDE, WA
+      MUL    XHL, WA
+      MUL    XIX, WA
+      MUL    XIY, WA
+      MUL    XIZ, WA
+      MUL    XSP, WA
+      MULS   XWA, WA
+      MULS   XBC, WA
+      MULS   XDE, WA
+      MULS   XHL, WA
+      MULS   XIX, WA
+      MULS   XIY, WA
+      MULS   XIZ, WA
+      MULS   XSP, WA
+      DIV    XWA, WA
+      DIV    XBC, WA
+      DIV    XDE, WA
+      DIV    XHL, WA
+      DIV    XIX, WA
+      DIV    XIY, WA
+      DIV    XIZ, WA
+      DIV    XSP, WA
+      DIVS   XWA, WA
+      DIVS   XBC, WA
+      DIVS   XDE, WA
+      DIVS   XHL, WA
+      DIVS   XIX, WA
+      DIVS   XIY, WA
+      DIVS   XIZ, WA
+      DIVS   XSP, WA
       INC    1, WA
       DEC    1, WA
       SCC    F, WA
@@ -26383,16 +35323,19 @@
       CP     SP, BC
       CPL    BC
       NEG    BC
+      MUL    XBC, 0A09H
+      MULS   XBC, 0B0AH
+      DIV    XBC, 0C0BH
+      DIVS   XBC, 0D0CH
       LINK   BC, 0E0DH
       UNLK   BC
       BS1F   A, BC
       BS1B   A, BC
-      DAA    BC
       EXTZ   BC
       EXTS   BC
       PAA    BC
       MIRR   BC
-      MULA   BC
+      MULA   XBC
       DJNZ   BC, $+32
       ANDCF  1, BC
       ORCF   2, BC
@@ -26404,10 +35347,44 @@
       CHG    3, BC
       BIT    4, BC
       TSET   5, BC
-      MUL    WA, BC
-      MULS   WA, BC
-      DIV    WA, BC
-      DIVS   WA, BC
+      MINC1  0040H, BC
+      MINC2  0040H, BC
+      MINC4  0040H, BC
+      MDEC1  0040H, BC
+      MDEC2  0040H, BC
+      MDEC4  0080H, BC
+      MUL    XWA, BC
+      MUL    XBC, BC
+      MUL    XDE, BC
+      MUL    XHL, BC
+      MUL    XIX, BC
+      MUL    XIY, BC
+      MUL    XIZ, BC
+      MUL    XSP, BC
+      MULS   XWA, BC
+      MULS   XBC, BC
+      MULS   XDE, BC
+      MULS   XHL, BC
+      MULS   XIX, BC
+      MULS   XIY, BC
+      MULS   XIZ, BC
+      MULS   XSP, BC
+      DIV    XWA, BC
+      DIV    XBC, BC
+      DIV    XDE, BC
+      DIV    XHL, BC
+      DIV    XIX, BC
+      DIV    XIY, BC
+      DIV    XIZ, BC
+      DIV    XSP, BC
+      DIVS   XWA, BC
+      DIVS   XBC, BC
+      DIVS   XDE, BC
+      DIVS   XHL, BC
+      DIVS   XIX, BC
+      DIVS   XIY, BC
+      DIVS   XIZ, BC
+      DIVS   XSP, BC
       INC    1, BC
       DEC    1, BC
       SCC    F, BC
@@ -26524,16 +35501,19 @@
       CP     SP, DE
       CPL    DE
       NEG    DE
+      MUL    XDE, 0A09H
+      MULS   XDE, 0B0AH
+      DIV    XDE, 0C0BH
+      DIVS   XDE, 0D0CH
       LINK   DE, 0E0DH
       UNLK   DE
       BS1F   A, DE
       BS1B   A, DE
-      DAA    DE
       EXTZ   DE
       EXTS   DE
       PAA    DE
       MIRR   DE
-      MULA   DE
+      MULA   XDE
       DJNZ   DE, $+32
       ANDCF  1, DE
       ORCF   2, DE
@@ -26545,10 +35525,44 @@
       CHG    3, DE
       BIT    4, DE
       TSET   5, DE
-      MUL    WA, DE
-      MULS   WA, DE
-      DIV    WA, DE
-      DIVS   WA, DE
+      MINC1  0040H, DE
+      MINC2  0040H, DE
+      MINC4  0040H, DE
+      MDEC1  0040H, DE
+      MDEC2  0040H, DE
+      MDEC4  0080H, DE
+      MUL    XWA, DE
+      MUL    XBC, DE
+      MUL    XDE, DE
+      MUL    XHL, DE
+      MUL    XIX, DE
+      MUL    XIY, DE
+      MUL    XIZ, DE
+      MUL    XSP, DE
+      MULS   XWA, DE
+      MULS   XBC, DE
+      MULS   XDE, DE
+      MULS   XHL, DE
+      MULS   XIX, DE
+      MULS   XIY, DE
+      MULS   XIZ, DE
+      MULS   XSP, DE
+      DIV    XWA, DE
+      DIV    XBC, DE
+      DIV    XDE, DE
+      DIV    XHL, DE
+      DIV    XIX, DE
+      DIV    XIY, DE
+      DIV    XIZ, DE
+      DIV    XSP, DE
+      DIVS   XWA, DE
+      DIVS   XBC, DE
+      DIVS   XDE, DE
+      DIVS   XHL, DE
+      DIVS   XIX, DE
+      DIVS   XIY, DE
+      DIVS   XIZ, DE
+      DIVS   XSP, DE
       INC    1, DE
       DEC    1, DE
       SCC    F, DE
@@ -26665,16 +35679,19 @@
       CP     SP, HL
       CPL    HL
       NEG    HL
+      MUL    XHL, 0A09H
+      MULS   XHL, 0B0AH
+      DIV    XHL, 0C0BH
+      DIVS   XHL, 0D0CH
       LINK   HL, 0E0DH
       UNLK   HL
       BS1F   A, HL
       BS1B   A, HL
-      DAA    HL
       EXTZ   HL
       EXTS   HL
       PAA    HL
       MIRR   HL
-      MULA   HL
+      MULA   XHL
       DJNZ   HL, $+32
       ANDCF  1, HL
       ORCF   2, HL
@@ -26686,10 +35703,44 @@
       CHG    3, HL
       BIT    4, HL
       TSET   5, HL
-      MUL    WA, HL
-      MULS   WA, HL
-      DIV    WA, HL
-      DIVS   WA, HL
+      MINC1  0040H, HL
+      MINC2  0040H, HL
+      MINC4  0040H, HL
+      MDEC1  0040H, HL
+      MDEC2  0040H, HL
+      MDEC4  0080H, HL
+      MUL    XWA, HL
+      MUL    XBC, HL
+      MUL    XDE, HL
+      MUL    XHL, HL
+      MUL    XIX, HL
+      MUL    XIY, HL
+      MUL    XIZ, HL
+      MUL    XSP, HL
+      MULS   XWA, HL
+      MULS   XBC, HL
+      MULS   XDE, HL
+      MULS   XHL, HL
+      MULS   XIX, HL
+      MULS   XIY, HL
+      MULS   XIZ, HL
+      MULS   XSP, HL
+      DIV    XWA, HL
+      DIV    XBC, HL
+      DIV    XDE, HL
+      DIV    XHL, HL
+      DIV    XIX, HL
+      DIV    XIY, HL
+      DIV    XIZ, HL
+      DIV    XSP, HL
+      DIVS   XWA, HL
+      DIVS   XBC, HL
+      DIVS   XDE, HL
+      DIVS   XHL, HL
+      DIVS   XIX, HL
+      DIVS   XIY, HL
+      DIVS   XIZ, HL
+      DIVS   XSP, HL
       INC    1, HL
       DEC    1, HL
       SCC    F, HL
@@ -26806,16 +35857,19 @@
       CP     SP, IX
       CPL    IX
       NEG    IX
+      MUL    XIX, 0A09H
+      MULS   XIX, 0B0AH
+      DIV    XIX, 0C0BH
+      DIVS   XIX, 0D0CH
       LINK   IX, 0E0DH
       UNLK   IX
       BS1F   A, IX
       BS1B   A, IX
-      DAA    IX
       EXTZ   IX
       EXTS   IX
       PAA    IX
       MIRR   IX
-      MULA   IX
+      MULA   XIX
       DJNZ   IX, $+32
       ANDCF  1, IX
       ORCF   2, IX
@@ -26827,10 +35881,44 @@
       CHG    3, IX
       BIT    4, IX
       TSET   5, IX
-      MUL    WA, IX
-      MULS   WA, IX
-      DIV    WA, IX
-      DIVS   WA, IX
+      MINC1  0040H, IX
+      MINC2  0040H, IX
+      MINC4  0040H, IX
+      MDEC1  0040H, IX
+      MDEC2  0040H, IX
+      MDEC4  0080H, IX
+      MUL    XWA, IX
+      MUL    XBC, IX
+      MUL    XDE, IX
+      MUL    XHL, IX
+      MUL    XIX, IX
+      MUL    XIY, IX
+      MUL    XIZ, IX
+      MUL    XSP, IX
+      MULS   XWA, IX
+      MULS   XBC, IX
+      MULS   XDE, IX
+      MULS   XHL, IX
+      MULS   XIX, IX
+      MULS   XIY, IX
+      MULS   XIZ, IX
+      MULS   XSP, IX
+      DIV    XWA, IX
+      DIV    XBC, IX
+      DIV    XDE, IX
+      DIV    XHL, IX
+      DIV    XIX, IX
+      DIV    XIY, IX
+      DIV    XIZ, IX
+      DIV    XSP, IX
+      DIVS   XWA, IX
+      DIVS   XBC, IX
+      DIVS   XDE, IX
+      DIVS   XHL, IX
+      DIVS   XIX, IX
+      DIVS   XIY, IX
+      DIVS   XIZ, IX
+      DIVS   XSP, IX
       INC    1, IX
       DEC    1, IX
       SCC    F, IX
@@ -26947,16 +36035,19 @@
       CP     SP, IY
       CPL    IY
       NEG    IY
+      MUL    XIY, 0A09H
+      MULS   XIY, 0B0AH
+      DIV    XIY, 0C0BH
+      DIVS   XIY, 0D0CH
       LINK   IY, 0E0DH
       UNLK   IY
       BS1F   A, IY
       BS1B   A, IY
-      DAA    IY
       EXTZ   IY
       EXTS   IY
       PAA    IY
       MIRR   IY
-      MULA   IY
+      MULA   XIY
       DJNZ   IY, $+32
       ANDCF  1, IY
       ORCF   2, IY
@@ -26968,10 +36059,44 @@
       CHG    3, IY
       BIT    4, IY
       TSET   5, IY
-      MUL    WA, IY
-      MULS   WA, IY
-      DIV    WA, IY
-      DIVS   WA, IY
+      MINC1  0040H, IY
+      MINC2  0040H, IY
+      MINC4  0040H, IY
+      MDEC1  0040H, IY
+      MDEC2  0040H, IY
+      MDEC4  0080H, IY
+      MUL    XWA, IY
+      MUL    XBC, IY
+      MUL    XDE, IY
+      MUL    XHL, IY
+      MUL    XIX, IY
+      MUL    XIY, IY
+      MUL    XIZ, IY
+      MUL    XSP, IY
+      MULS   XWA, IY
+      MULS   XBC, IY
+      MULS   XDE, IY
+      MULS   XHL, IY
+      MULS   XIX, IY
+      MULS   XIY, IY
+      MULS   XIZ, IY
+      MULS   XSP, IY
+      DIV    XWA, IY
+      DIV    XBC, IY
+      DIV    XDE, IY
+      DIV    XHL, IY
+      DIV    XIX, IY
+      DIV    XIY, IY
+      DIV    XIZ, IY
+      DIV    XSP, IY
+      DIVS   XWA, IY
+      DIVS   XBC, IY
+      DIVS   XDE, IY
+      DIVS   XHL, IY
+      DIVS   XIX, IY
+      DIVS   XIY, IY
+      DIVS   XIZ, IY
+      DIVS   XSP, IY
       INC    1, IY
       DEC    1, IY
       SCC    F, IY
@@ -27088,16 +36213,19 @@
       CP     SP, IZ
       CPL    IZ
       NEG    IZ
+      MUL    XIZ, 0A09H
+      MULS   XIZ, 0B0AH
+      DIV    XIZ, 0C0BH
+      DIVS   XIZ, 0D0CH
       LINK   IZ, 0E0DH
       UNLK   IZ
       BS1F   A, IZ
       BS1B   A, IZ
-      DAA    IZ
       EXTZ   IZ
       EXTS   IZ
       PAA    IZ
       MIRR   IZ
-      MULA   IZ
+      MULA   XIZ
       DJNZ   IZ, $+32
       ANDCF  1, IZ
       ORCF   2, IZ
@@ -27109,10 +36237,44 @@
       CHG    3, IZ
       BIT    4, IZ
       TSET   5, IZ
-      MUL    WA, IZ
-      MULS   WA, IZ
-      DIV    WA, IZ
-      DIVS   WA, IZ
+      MINC1  0040H, IZ
+      MINC2  0040H, IZ
+      MINC4  0040H, IZ
+      MDEC1  0040H, IZ
+      MDEC2  0040H, IZ
+      MDEC4  0080H, IZ
+      MUL    XWA, IZ
+      MUL    XBC, IZ
+      MUL    XDE, IZ
+      MUL    XHL, IZ
+      MUL    XIX, IZ
+      MUL    XIY, IZ
+      MUL    XIZ, IZ
+      MUL    XSP, IZ
+      MULS   XWA, IZ
+      MULS   XBC, IZ
+      MULS   XDE, IZ
+      MULS   XHL, IZ
+      MULS   XIX, IZ
+      MULS   XIY, IZ
+      MULS   XIZ, IZ
+      MULS   XSP, IZ
+      DIV    XWA, IZ
+      DIV    XBC, IZ
+      DIV    XDE, IZ
+      DIV    XHL, IZ
+      DIV    XIX, IZ
+      DIV    XIY, IZ
+      DIV    XIZ, IZ
+      DIV    XSP, IZ
+      DIVS   XWA, IZ
+      DIVS   XBC, IZ
+      DIVS   XDE, IZ
+      DIVS   XHL, IZ
+      DIVS   XIX, IZ
+      DIVS   XIY, IZ
+      DIVS   XIZ, IZ
+      DIVS   XSP, IZ
       INC    1, IZ
       DEC    1, IZ
       SCC    F, IZ
@@ -27229,16 +36391,19 @@
       CP     SP, SP
       CPL    SP
       NEG    SP
+      MUL    XSP, 0A09H
+      MULS   XSP, 0B0AH
+      DIV    XSP, 0C0BH
+      DIVS   XSP, 0D0CH
       LINK   SP, 0E0DH
       UNLK   SP
       BS1F   A, SP
       BS1B   A, SP
-      DAA    SP
       EXTZ   SP
       EXTS   SP
       PAA    SP
       MIRR   SP
-      MULA   SP
+      MULA   XSP
       DJNZ   SP, $+32
       ANDCF  1, SP
       ORCF   2, SP
@@ -27250,10 +36415,44 @@
       CHG    3, SP
       BIT    4, SP
       TSET   5, SP
-      MUL    WA, SP
-      MULS   WA, SP
-      DIV    WA, SP
-      DIVS   WA, SP
+      MINC1  0040H, SP
+      MINC2  0040H, SP
+      MINC4  0040H, SP
+      MDEC1  0040H, SP
+      MDEC2  0040H, SP
+      MDEC4  0080H, SP
+      MUL    XWA, SP
+      MUL    XBC, SP
+      MUL    XDE, SP
+      MUL    XHL, SP
+      MUL    XIX, SP
+      MUL    XIY, SP
+      MUL    XIZ, SP
+      MUL    XSP, SP
+      MULS   XWA, SP
+      MULS   XBC, SP
+      MULS   XDE, SP
+      MULS   XHL, SP
+      MULS   XIX, SP
+      MULS   XIY, SP
+      MULS   XIZ, SP
+      MULS   XSP, SP
+      DIV    XWA, SP
+      DIV    XBC, SP
+      DIV    XDE, SP
+      DIV    XHL, SP
+      DIV    XIX, SP
+      DIV    XIY, SP
+      DIV    XIZ, SP
+      DIV    XSP, SP
+      DIVS   XWA, SP
+      DIVS   XBC, SP
+      DIVS   XDE, SP
+      DIVS   XHL, SP
+      DIVS   XIX, SP
+      DIVS   XIY, SP
+      DIVS   XIZ, SP
+      DIVS   XSP, SP
       INC    1, SP
       DEC    1, SP
       SCC    F, SP
@@ -27722,6 +36921,2566 @@
       OR     XIY, (XSP+3F3EH)
       OR     XIZ, (XSP+3F3EH)
       OR     XSP, (XSP+3F3EH)
+      OR     XBC, (XIY+A)
+      OR     XDE, (XIY+A)
+      OR     XHL, (XIY+A)
+      OR     XIX, (XIY+A)
+      OR     XIY, (XIY+A)
+      OR     XIZ, (XIY+A)
+      OR     XSP, (XIY+A)
+      CP     XWA, (XIY+A)
+      CP     XBC, (XIY+A)
+      CP     XDE, (XIY+A)
+      CP     XHL, (XIY+A)
+      CP     XIX, (XIY+A)
+      CP     XIY, (XIY+A)
+      CP     XIZ, (XIY+A)
+      CP     XSP, (XIY+A)
+      LD     XWA, (XIY+A)
+      LD     XBC, (XIY+A)
+      LD     XDE, (XIY+A)
+      LD     XHL, (XIY+A)
+      LD     XIX, (XIY+A)
+      LD     XIY, (XIY+A)
+      LD     XIZ, (XIY+A)
+      LD     XSP, (XIY+A)
+      EX     XWA, (XIY+A)
+      EX     XBC, (XIY+A)
+      EX     XDE, (XIY+A)
+      EX     XHL, (XIY+A)
+      EX     XIX, (XIY+A)
+      EX     XIY, (XIY+A)
+      EX     XIZ, (XIY+A)
+      EX     XSP, (XIY+A)
+      ADD    XWA, (XIY+A)
+      ADD    XBC, (XIY+A)
+      ADD    XDE, (XIY+A)
+      ADD    XHL, (XIY+A)
+      ADD    XIX, (XIY+A)
+      ADD    XIY, (XIY+A)
+      ADD    XIZ, (XIY+A)
+      ADD    XSP, (XIY+A)
+      ADC    XWA, (XIY+A)
+      ADC    XBC, (XIY+A)
+      ADC    XDE, (XIY+A)
+      ADC    XHL, (XIY+A)
+      ADC    XIX, (XIY+A)
+      ADC    XIY, (XIY+A)
+      ADC    XIZ, (XIY+A)
+      ADC    XSP, (XIY+A)
+      SUB    XWA, (XIY+A)
+      SUB    XBC, (XIY+A)
+      SUB    XDE, (XIY+A)
+      SUB    XHL, (XIY+A)
+      SUB    XIX, (XIY+A)
+      SUB    XIY, (XIY+A)
+      SUB    XIZ, (XIY+A)
+      SUB    XSP, (XIY+A)
+      SBC    XWA, (XIY+A)
+      SBC    XBC, (XIY+A)
+      SBC    XDE, (XIY+A)
+      SBC    XHL, (XIY+A)
+      SBC    XIX, (XIY+A)
+      SBC    XIY, (XIY+A)
+      SBC    XIZ, (XIY+A)
+      SBC    XSP, (XIY+A)
+      AND    XWA, (XIY+A)
+      AND    XBC, (XIY+A)
+      AND    XDE, (XIY+A)
+      AND    XHL, (XIY+A)
+      AND    XIX, (XIY+A)
+      AND    XIY, (XIY+A)
+      AND    XIZ, (XIY+A)
+      AND    XSP, (XIY+A)
+      XOR    XWA, (XIY+A)
+      XOR    XBC, (XIY+A)
+      XOR    XDE, (XIY+A)
+      XOR    XHL, (XIY+A)
+      XOR    XIX, (XIY+A)
+      XOR    XIY, (XIY+A)
+      XOR    XIZ, (XIY+A)
+      XOR    XSP, (XIY+A)
+      OR     XWA, (XIY+A)
+      OR     XDE, (XIY+W)
+      OR     XHL, (XIY+W)
+      OR     XIX, (XIY+W)
+      OR     XIY, (XIY+W)
+      OR     XIZ, (XIY+W)
+      OR     XSP, (XIY+W)
+      CP     XWA, (XIY+W)
+      CP     XBC, (XIY+W)
+      CP     XDE, (XIY+W)
+      CP     XHL, (XIY+W)
+      CP     XIX, (XIY+W)
+      CP     XIY, (XIY+W)
+      CP     XIZ, (XIY+W)
+      CP     XSP, (XIY+W)
+      LD     XWA, (XIY+W)
+      LD     XBC, (XIY+W)
+      LD     XDE, (XIY+W)
+      LD     XHL, (XIY+W)
+      LD     XIX, (XIY+W)
+      LD     XIY, (XIY+W)
+      LD     XIZ, (XIY+W)
+      LD     XSP, (XIY+W)
+      EX     XWA, (XIY+W)
+      EX     XBC, (XIY+W)
+      EX     XDE, (XIY+W)
+      EX     XHL, (XIY+W)
+      EX     XIX, (XIY+W)
+      EX     XIY, (XIY+W)
+      EX     XIZ, (XIY+W)
+      EX     XSP, (XIY+W)
+      ADD    XWA, (XIY+W)
+      ADD    XBC, (XIY+W)
+      ADD    XDE, (XIY+W)
+      ADD    XHL, (XIY+W)
+      ADD    XIX, (XIY+W)
+      ADD    XIY, (XIY+W)
+      ADD    XIZ, (XIY+W)
+      ADD    XSP, (XIY+W)
+      ADC    XWA, (XIY+W)
+      ADC    XBC, (XIY+W)
+      ADC    XDE, (XIY+W)
+      ADC    XHL, (XIY+W)
+      ADC    XIX, (XIY+W)
+      ADC    XIY, (XIY+W)
+      ADC    XIZ, (XIY+W)
+      ADC    XSP, (XIY+W)
+      SUB    XWA, (XIY+W)
+      SUB    XBC, (XIY+W)
+      SUB    XDE, (XIY+W)
+      SUB    XHL, (XIY+W)
+      SUB    XIX, (XIY+W)
+      SUB    XIY, (XIY+W)
+      SUB    XIZ, (XIY+W)
+      SUB    XSP, (XIY+W)
+      SBC    XWA, (XIY+W)
+      SBC    XBC, (XIY+W)
+      SBC    XDE, (XIY+W)
+      SBC    XHL, (XIY+W)
+      SBC    XIX, (XIY+W)
+      SBC    XIY, (XIY+W)
+      SBC    XIZ, (XIY+W)
+      SBC    XSP, (XIY+W)
+      AND    XWA, (XIY+W)
+      AND    XBC, (XIY+W)
+      AND    XDE, (XIY+W)
+      AND    XHL, (XIY+W)
+      AND    XIX, (XIY+W)
+      AND    XIY, (XIY+W)
+      AND    XIZ, (XIY+W)
+      AND    XSP, (XIY+W)
+      XOR    XWA, (XIY+W)
+      XOR    XBC, (XIY+W)
+      XOR    XDE, (XIY+W)
+      XOR    XHL, (XIY+W)
+      XOR    XIX, (XIY+W)
+      XOR    XIY, (XIY+W)
+      XOR    XIZ, (XIY+W)
+      XOR    XSP, (XIY+W)
+      OR     XWA, (XIY+W)
+      OR     XBC, (XIY+W)
+      OR     XIY, (XIY+C)
+      OR     XIZ, (XIY+C)
+      OR     XSP, (XIY+C)
+      CP     XWA, (XIY+C)
+      CP     XBC, (XIY+C)
+      CP     XDE, (XIY+C)
+      CP     XHL, (XIY+C)
+      CP     XIX, (XIY+C)
+      CP     XIY, (XIY+C)
+      CP     XIZ, (XIY+C)
+      CP     XSP, (XIY+C)
+      LD     XWA, (XIY+C)
+      LD     XBC, (XIY+C)
+      LD     XDE, (XIY+C)
+      LD     XHL, (XIY+C)
+      LD     XIX, (XIY+C)
+      LD     XIY, (XIY+C)
+      LD     XIZ, (XIY+C)
+      LD     XSP, (XIY+C)
+      EX     XWA, (XIY+C)
+      EX     XBC, (XIY+C)
+      EX     XDE, (XIY+C)
+      EX     XHL, (XIY+C)
+      EX     XIX, (XIY+C)
+      EX     XIY, (XIY+C)
+      EX     XIZ, (XIY+C)
+      EX     XSP, (XIY+C)
+      ADD    XWA, (XIY+C)
+      ADD    XBC, (XIY+C)
+      ADD    XDE, (XIY+C)
+      ADD    XHL, (XIY+C)
+      ADD    XIX, (XIY+C)
+      ADD    XIY, (XIY+C)
+      ADD    XIZ, (XIY+C)
+      ADD    XSP, (XIY+C)
+      ADC    XWA, (XIY+C)
+      ADC    XBC, (XIY+C)
+      ADC    XDE, (XIY+C)
+      ADC    XHL, (XIY+C)
+      ADC    XIX, (XIY+C)
+      ADC    XIY, (XIY+C)
+      ADC    XIZ, (XIY+C)
+      ADC    XSP, (XIY+C)
+      SUB    XWA, (XIY+C)
+      SUB    XBC, (XIY+C)
+      SUB    XDE, (XIY+C)
+      SUB    XHL, (XIY+C)
+      SUB    XIX, (XIY+C)
+      SUB    XIY, (XIY+C)
+      SUB    XIZ, (XIY+C)
+      SUB    XSP, (XIY+C)
+      SBC    XWA, (XIY+C)
+      SBC    XBC, (XIY+C)
+      SBC    XDE, (XIY+C)
+      SBC    XHL, (XIY+C)
+      SBC    XIX, (XIY+C)
+      SBC    XIY, (XIY+C)
+      SBC    XIZ, (XIY+C)
+      SBC    XSP, (XIY+C)
+      AND    XWA, (XIY+C)
+      AND    XBC, (XIY+C)
+      AND    XDE, (XIY+C)
+      AND    XHL, (XIY+C)
+      AND    XIX, (XIY+C)
+      AND    XIY, (XIY+C)
+      AND    XIZ, (XIY+C)
+      AND    XSP, (XIY+C)
+      XOR    XWA, (XIY+C)
+      XOR    XBC, (XIY+C)
+      XOR    XDE, (XIY+C)
+      XOR    XHL, (XIY+C)
+      XOR    XIX, (XIY+C)
+      XOR    XIY, (XIY+C)
+      XOR    XIZ, (XIY+C)
+      XOR    XSP, (XIY+C)
+      OR     XWA, (XIY+C)
+      OR     XBC, (XIY+C)
+      OR     XDE, (XIY+C)
+      OR     XHL, (XIY+C)
+      OR     XIX, (XIY+C)
+      OR     XIZ, (XIY+B)
+      OR     XSP, (XIY+B)
+      CP     XWA, (XIY+B)
+      CP     XBC, (XIY+B)
+      CP     XDE, (XIY+B)
+      CP     XHL, (XIY+B)
+      CP     XIX, (XIY+B)
+      CP     XIY, (XIY+B)
+      CP     XIZ, (XIY+B)
+      CP     XSP, (XIY+B)
+      LD     XWA, (XIY+B)
+      LD     XBC, (XIY+B)
+      LD     XDE, (XIY+B)
+      LD     XHL, (XIY+B)
+      LD     XIX, (XIY+B)
+      LD     XIY, (XIY+B)
+      LD     XIZ, (XIY+B)
+      LD     XSP, (XIY+B)
+      EX     XWA, (XIY+B)
+      EX     XBC, (XIY+B)
+      EX     XDE, (XIY+B)
+      EX     XHL, (XIY+B)
+      EX     XIX, (XIY+B)
+      EX     XIY, (XIY+B)
+      EX     XIZ, (XIY+B)
+      EX     XSP, (XIY+B)
+      ADD    XWA, (XIY+B)
+      ADD    XBC, (XIY+B)
+      ADD    XDE, (XIY+B)
+      ADD    XHL, (XIY+B)
+      ADD    XIX, (XIY+B)
+      ADD    XIY, (XIY+B)
+      ADD    XIZ, (XIY+B)
+      ADD    XSP, (XIY+B)
+      ADC    XWA, (XIY+B)
+      ADC    XBC, (XIY+B)
+      ADC    XDE, (XIY+B)
+      ADC    XHL, (XIY+B)
+      ADC    XIX, (XIY+B)
+      ADC    XIY, (XIY+B)
+      ADC    XIZ, (XIY+B)
+      ADC    XSP, (XIY+B)
+      SUB    XWA, (XIY+B)
+      SUB    XBC, (XIY+B)
+      SUB    XDE, (XIY+B)
+      SUB    XHL, (XIY+B)
+      SUB    XIX, (XIY+B)
+      SUB    XIY, (XIY+B)
+      SUB    XIZ, (XIY+B)
+      SUB    XSP, (XIY+B)
+      SBC    XWA, (XIY+B)
+      SBC    XBC, (XIY+B)
+      SBC    XDE, (XIY+B)
+      SBC    XHL, (XIY+B)
+      SBC    XIX, (XIY+B)
+      SBC    XIY, (XIY+B)
+      SBC    XIZ, (XIY+B)
+      SBC    XSP, (XIY+B)
+      AND    XWA, (XIY+B)
+      AND    XBC, (XIY+B)
+      AND    XDE, (XIY+B)
+      AND    XHL, (XIY+B)
+      AND    XIX, (XIY+B)
+      AND    XIY, (XIY+B)
+      AND    XIZ, (XIY+B)
+      AND    XSP, (XIY+B)
+      XOR    XWA, (XIY+B)
+      XOR    XBC, (XIY+B)
+      XOR    XDE, (XIY+B)
+      XOR    XHL, (XIY+B)
+      XOR    XIX, (XIY+B)
+      XOR    XIY, (XIY+B)
+      XOR    XIZ, (XIY+B)
+      XOR    XSP, (XIY+B)
+      OR     XWA, (XIY+B)
+      OR     XBC, (XIY+B)
+      OR     XDE, (XIY+B)
+      OR     XHL, (XIY+B)
+      OR     XIX, (XIY+B)
+      OR     XIY, (XIY+B)
+      CP     XWA, (XIY+E)
+      CP     XBC, (XIY+E)
+      CP     XDE, (XIY+E)
+      CP     XHL, (XIY+E)
+      CP     XIX, (XIY+E)
+      CP     XIY, (XIY+E)
+      CP     XIZ, (XIY+E)
+      CP     XSP, (XIY+E)
+      LD     XWA, (XIY+E)
+      LD     XBC, (XIY+E)
+      LD     XDE, (XIY+E)
+      LD     XHL, (XIY+E)
+      LD     XIX, (XIY+E)
+      LD     XIY, (XIY+E)
+      LD     XIZ, (XIY+E)
+      LD     XSP, (XIY+E)
+      EX     XWA, (XIY+E)
+      EX     XBC, (XIY+E)
+      EX     XDE, (XIY+E)
+      EX     XHL, (XIY+E)
+      EX     XIX, (XIY+E)
+      EX     XIY, (XIY+E)
+      EX     XIZ, (XIY+E)
+      EX     XSP, (XIY+E)
+      ADD    XWA, (XIY+E)
+      ADD    XBC, (XIY+E)
+      ADD    XDE, (XIY+E)
+      ADD    XHL, (XIY+E)
+      ADD    XIX, (XIY+E)
+      ADD    XIY, (XIY+E)
+      ADD    XIZ, (XIY+E)
+      ADD    XSP, (XIY+E)
+      ADC    XWA, (XIY+E)
+      ADC    XBC, (XIY+E)
+      ADC    XDE, (XIY+E)
+      ADC    XHL, (XIY+E)
+      ADC    XIX, (XIY+E)
+      ADC    XIY, (XIY+E)
+      ADC    XIZ, (XIY+E)
+      ADC    XSP, (XIY+E)
+      SUB    XWA, (XIY+E)
+      SUB    XBC, (XIY+E)
+      SUB    XDE, (XIY+E)
+      SUB    XHL, (XIY+E)
+      SUB    XIX, (XIY+E)
+      SUB    XIY, (XIY+E)
+      SUB    XIZ, (XIY+E)
+      SUB    XSP, (XIY+E)
+      SBC    XWA, (XIY+E)
+      SBC    XBC, (XIY+E)
+      SBC    XDE, (XIY+E)
+      SBC    XHL, (XIY+E)
+      SBC    XIX, (XIY+E)
+      SBC    XIY, (XIY+E)
+      SBC    XIZ, (XIY+E)
+      SBC    XSP, (XIY+E)
+      AND    XWA, (XIY+E)
+      AND    XBC, (XIY+E)
+      AND    XDE, (XIY+E)
+      AND    XHL, (XIY+E)
+      AND    XIX, (XIY+E)
+      AND    XIY, (XIY+E)
+      AND    XIZ, (XIY+E)
+      AND    XSP, (XIY+E)
+      XOR    XWA, (XIY+E)
+      XOR    XBC, (XIY+E)
+      XOR    XDE, (XIY+E)
+      XOR    XHL, (XIY+E)
+      XOR    XIX, (XIY+E)
+      XOR    XIY, (XIY+E)
+      XOR    XIZ, (XIY+E)
+      XOR    XSP, (XIY+E)
+      OR     XWA, (XIY+E)
+      OR     XBC, (XIY+E)
+      OR     XDE, (XIY+E)
+      OR     XHL, (XIY+E)
+      OR     XIX, (XIY+E)
+      OR     XIY, (XIY+E)
+      OR     XIZ, (XIY+E)
+      OR     XSP, (XIY+E)
+      CP     XWA, (XIY+D)
+      CP     XBC, (XIY+D)
+      CP     XDE, (XIY+D)
+      CP     XHL, (XIY+D)
+      CP     XIX, (XIY+D)
+      CP     XIY, (XIY+D)
+      CP     XIZ, (XIY+D)
+      CP     XSP, (XIY+D)
+      LD     XWA, (XIY+D)
+      LD     XBC, (XIY+D)
+      LD     XDE, (XIY+D)
+      LD     XHL, (XIY+D)
+      LD     XIX, (XIY+D)
+      LD     XIY, (XIY+D)
+      LD     XIZ, (XIY+D)
+      LD     XSP, (XIY+D)
+      EX     XWA, (XIY+D)
+      EX     XBC, (XIY+D)
+      EX     XDE, (XIY+D)
+      EX     XHL, (XIY+D)
+      EX     XIX, (XIY+D)
+      EX     XIY, (XIY+D)
+      EX     XIZ, (XIY+D)
+      EX     XSP, (XIY+D)
+      ADD    XWA, (XIY+D)
+      ADD    XBC, (XIY+D)
+      ADD    XDE, (XIY+D)
+      ADD    XHL, (XIY+D)
+      ADD    XIX, (XIY+D)
+      ADD    XIY, (XIY+D)
+      ADD    XIZ, (XIY+D)
+      ADD    XSP, (XIY+D)
+      ADC    XWA, (XIY+D)
+      ADC    XBC, (XIY+D)
+      ADC    XDE, (XIY+D)
+      ADC    XHL, (XIY+D)
+      ADC    XIX, (XIY+D)
+      ADC    XIY, (XIY+D)
+      ADC    XIZ, (XIY+D)
+      ADC    XSP, (XIY+D)
+      SUB    XWA, (XIY+D)
+      SUB    XBC, (XIY+D)
+      SUB    XDE, (XIY+D)
+      SUB    XHL, (XIY+D)
+      SUB    XIX, (XIY+D)
+      SUB    XIY, (XIY+D)
+      SUB    XIZ, (XIY+D)
+      SUB    XSP, (XIY+D)
+      SBC    XWA, (XIY+D)
+      SBC    XBC, (XIY+D)
+      SBC    XDE, (XIY+D)
+      SBC    XHL, (XIY+D)
+      SBC    XIX, (XIY+D)
+      SBC    XIY, (XIY+D)
+      SBC    XIZ, (XIY+D)
+      SBC    XSP, (XIY+D)
+      AND    XWA, (XIY+D)
+      AND    XBC, (XIY+D)
+      AND    XDE, (XIY+D)
+      AND    XHL, (XIY+D)
+      AND    XIX, (XIY+D)
+      AND    XIY, (XIY+D)
+      AND    XIZ, (XIY+D)
+      AND    XSP, (XIY+D)
+      XOR    XWA, (XIY+D)
+      XOR    XBC, (XIY+D)
+      XOR    XDE, (XIY+D)
+      XOR    XHL, (XIY+D)
+      XOR    XIX, (XIY+D)
+      XOR    XIY, (XIY+D)
+      XOR    XIZ, (XIY+D)
+      XOR    XSP, (XIY+D)
+      OR     XWA, (XIY+D)
+      OR     XBC, (XIY+D)
+      OR     XDE, (XIY+D)
+      OR     XHL, (XIY+D)
+      OR     XIX, (XIY+D)
+      OR     XIY, (XIY+D)
+      OR     XIZ, (XIY+D)
+      OR     XSP, (XIY+D)
+      CP     XWA, (XIY+L)
+      CP     XBC, (XIY+L)
+      CP     XDE, (XIY+L)
+      CP     XHL, (XIY+L)
+      CP     XIX, (XIY+L)
+      CP     XIY, (XIY+L)
+      CP     XIZ, (XIY+L)
+      CP     XSP, (XIY+L)
+      LD     XWA, (XIY+L)
+      LD     XBC, (XIY+L)
+      LD     XDE, (XIY+L)
+      LD     XHL, (XIY+L)
+      LD     XIX, (XIY+L)
+      LD     XIY, (XIY+L)
+      LD     XIZ, (XIY+L)
+      LD     XSP, (XIY+L)
+      EX     XWA, (XIY+L)
+      EX     XBC, (XIY+L)
+      EX     XDE, (XIY+L)
+      EX     XHL, (XIY+L)
+      EX     XIX, (XIY+L)
+      EX     XIY, (XIY+L)
+      EX     XIZ, (XIY+L)
+      EX     XSP, (XIY+L)
+      ADD    XWA, (XIY+L)
+      ADD    XBC, (XIY+L)
+      ADD    XDE, (XIY+L)
+      ADD    XHL, (XIY+L)
+      ADD    XIX, (XIY+L)
+      ADD    XIY, (XIY+L)
+      ADD    XIZ, (XIY+L)
+      ADD    XSP, (XIY+L)
+      ADC    XWA, (XIY+L)
+      ADC    XBC, (XIY+L)
+      ADC    XDE, (XIY+L)
+      ADC    XHL, (XIY+L)
+      ADC    XIX, (XIY+L)
+      ADC    XIY, (XIY+L)
+      ADC    XIZ, (XIY+L)
+      ADC    XSP, (XIY+L)
+      SUB    XWA, (XIY+L)
+      SUB    XBC, (XIY+L)
+      SUB    XDE, (XIY+L)
+      SUB    XHL, (XIY+L)
+      SUB    XIX, (XIY+L)
+      SUB    XIY, (XIY+L)
+      SUB    XIZ, (XIY+L)
+      SUB    XSP, (XIY+L)
+      SBC    XWA, (XIY+L)
+      SBC    XBC, (XIY+L)
+      SBC    XDE, (XIY+L)
+      SBC    XHL, (XIY+L)
+      SBC    XIX, (XIY+L)
+      SBC    XIY, (XIY+L)
+      SBC    XIZ, (XIY+L)
+      SBC    XSP, (XIY+L)
+      AND    XWA, (XIY+L)
+      AND    XBC, (XIY+L)
+      AND    XDE, (XIY+L)
+      AND    XHL, (XIY+L)
+      AND    XIX, (XIY+L)
+      AND    XIY, (XIY+L)
+      AND    XIZ, (XIY+L)
+      AND    XSP, (XIY+L)
+      XOR    XWA, (XIY+L)
+      XOR    XBC, (XIY+L)
+      XOR    XDE, (XIY+L)
+      XOR    XHL, (XIY+L)
+      XOR    XIX, (XIY+L)
+      XOR    XIY, (XIY+L)
+      XOR    XIZ, (XIY+L)
+      XOR    XSP, (XIY+L)
+      OR     XWA, (XIY+L)
+      OR     XBC, (XIY+L)
+      OR     XDE, (XIY+L)
+      OR     XHL, (XIY+L)
+      OR     XIX, (XIY+L)
+      OR     XIY, (XIY+L)
+      OR     XIZ, (XIY+L)
+      OR     XSP, (XIY+L)
+      CP     XWA, (XIY+H)
+      CP     XBC, (XIY+H)
+      CP     XDE, (XIY+H)
+      CP     XHL, (XIY+H)
+      CP     XIX, (XIY+H)
+      CP     XIY, (XIY+H)
+      CP     XIZ, (XIY+H)
+      CP     XSP, (XIY+H)
+      LD     XWA, (XIY+H)
+      LD     XBC, (XIY+H)
+      LD     XDE, (XIY+H)
+      LD     XHL, (XIY+H)
+      LD     XIX, (XIY+H)
+      LD     XIY, (XIY+H)
+      LD     XIZ, (XIY+H)
+      LD     XSP, (XIY+H)
+      EX     XWA, (XIY+H)
+      EX     XBC, (XIY+H)
+      EX     XDE, (XIY+H)
+      EX     XHL, (XIY+H)
+      EX     XIX, (XIY+H)
+      EX     XIY, (XIY+H)
+      EX     XIZ, (XIY+H)
+      EX     XSP, (XIY+H)
+      ADD    XWA, (XIY+H)
+      ADD    XBC, (XIY+H)
+      ADD    XDE, (XIY+H)
+      ADD    XHL, (XIY+H)
+      ADD    XIX, (XIY+H)
+      ADD    XIY, (XIY+H)
+      ADD    XIZ, (XIY+H)
+      ADD    XSP, (XIY+H)
+      ADC    XWA, (XIY+H)
+      ADC    XBC, (XIY+H)
+      ADC    XDE, (XIY+H)
+      ADC    XHL, (XIY+H)
+      ADC    XIX, (XIY+H)
+      ADC    XIY, (XIY+H)
+      ADC    XIZ, (XIY+H)
+      ADC    XSP, (XIY+H)
+      SUB    XWA, (XIY+H)
+      SUB    XBC, (XIY+H)
+      SUB    XDE, (XIY+H)
+      SUB    XHL, (XIY+H)
+      SUB    XIX, (XIY+H)
+      SUB    XIY, (XIY+H)
+      SUB    XIZ, (XIY+H)
+      SUB    XSP, (XIY+H)
+      SBC    XWA, (XIY+H)
+      SBC    XBC, (XIY+H)
+      SBC    XDE, (XIY+H)
+      SBC    XHL, (XIY+H)
+      SBC    XIX, (XIY+H)
+      SBC    XIY, (XIY+H)
+      SBC    XIZ, (XIY+H)
+      SBC    XSP, (XIY+H)
+      AND    XWA, (XIY+H)
+      AND    XBC, (XIY+H)
+      AND    XDE, (XIY+H)
+      AND    XHL, (XIY+H)
+      AND    XIX, (XIY+H)
+      AND    XIY, (XIY+H)
+      AND    XIZ, (XIY+H)
+      AND    XSP, (XIY+H)
+      XOR    XWA, (XIY+H)
+      XOR    XBC, (XIY+H)
+      XOR    XDE, (XIY+H)
+      XOR    XHL, (XIY+H)
+      XOR    XIX, (XIY+H)
+      XOR    XIY, (XIY+H)
+      XOR    XIZ, (XIY+H)
+      XOR    XSP, (XIY+H)
+      OR     XWA, (XIY+H)
+      OR     XBC, (XIY+H)
+      OR     XDE, (XIY+H)
+      OR     XHL, (XIY+H)
+      OR     XIX, (XIY+H)
+      OR     XIY, (XIY+H)
+      OR     XIZ, (XIY+H)
+      OR     XSP, (XIY+H)
+      OR     XBC, (XIZ+A)
+      OR     XDE, (XIZ+A)
+      OR     XHL, (XIZ+A)
+      OR     XIX, (XIZ+A)
+      OR     XIY, (XIZ+A)
+      OR     XIZ, (XIZ+A)
+      OR     XSP, (XIZ+A)
+      CP     XWA, (XIZ+A)
+      CP     XBC, (XIZ+A)
+      CP     XDE, (XIZ+A)
+      CP     XHL, (XIZ+A)
+      CP     XIX, (XIZ+A)
+      CP     XIY, (XIZ+A)
+      CP     XIZ, (XIZ+A)
+      CP     XSP, (XIZ+A)
+      LD     XWA, (XIZ+A)
+      LD     XBC, (XIZ+A)
+      LD     XDE, (XIZ+A)
+      LD     XHL, (XIZ+A)
+      LD     XIX, (XIZ+A)
+      LD     XIY, (XIZ+A)
+      LD     XIZ, (XIZ+A)
+      LD     XSP, (XIZ+A)
+      EX     XWA, (XIZ+A)
+      EX     XBC, (XIZ+A)
+      EX     XDE, (XIZ+A)
+      EX     XHL, (XIZ+A)
+      EX     XIX, (XIZ+A)
+      EX     XIY, (XIZ+A)
+      EX     XIZ, (XIZ+A)
+      EX     XSP, (XIZ+A)
+      ADD    XWA, (XIZ+A)
+      ADD    XBC, (XIZ+A)
+      ADD    XDE, (XIZ+A)
+      ADD    XHL, (XIZ+A)
+      ADD    XIX, (XIZ+A)
+      ADD    XIY, (XIZ+A)
+      ADD    XIZ, (XIZ+A)
+      ADD    XSP, (XIZ+A)
+      ADC    XWA, (XIZ+A)
+      ADC    XBC, (XIZ+A)
+      ADC    XDE, (XIZ+A)
+      ADC    XHL, (XIZ+A)
+      ADC    XIX, (XIZ+A)
+      ADC    XIY, (XIZ+A)
+      ADC    XIZ, (XIZ+A)
+      ADC    XSP, (XIZ+A)
+      SUB    XWA, (XIZ+A)
+      SUB    XBC, (XIZ+A)
+      SUB    XDE, (XIZ+A)
+      SUB    XHL, (XIZ+A)
+      SUB    XIX, (XIZ+A)
+      SUB    XIY, (XIZ+A)
+      SUB    XIZ, (XIZ+A)
+      SUB    XSP, (XIZ+A)
+      SBC    XWA, (XIZ+A)
+      SBC    XBC, (XIZ+A)
+      SBC    XDE, (XIZ+A)
+      SBC    XHL, (XIZ+A)
+      SBC    XIX, (XIZ+A)
+      SBC    XIY, (XIZ+A)
+      SBC    XIZ, (XIZ+A)
+      SBC    XSP, (XIZ+A)
+      AND    XWA, (XIZ+A)
+      AND    XBC, (XIZ+A)
+      AND    XDE, (XIZ+A)
+      AND    XHL, (XIZ+A)
+      AND    XIX, (XIZ+A)
+      AND    XIY, (XIZ+A)
+      AND    XIZ, (XIZ+A)
+      AND    XSP, (XIZ+A)
+      XOR    XWA, (XIZ+A)
+      XOR    XBC, (XIZ+A)
+      XOR    XDE, (XIZ+A)
+      XOR    XHL, (XIZ+A)
+      XOR    XIX, (XIZ+A)
+      XOR    XIY, (XIZ+A)
+      XOR    XIZ, (XIZ+A)
+      XOR    XSP, (XIZ+A)
+      OR     XWA, (XIZ+A)
+      OR     XDE, (XIZ+W)
+      OR     XHL, (XIZ+W)
+      OR     XIX, (XIZ+W)
+      OR     XIY, (XIZ+W)
+      OR     XIZ, (XIZ+W)
+      OR     XSP, (XIZ+W)
+      CP     XWA, (XIZ+W)
+      CP     XBC, (XIZ+W)
+      CP     XDE, (XIZ+W)
+      CP     XHL, (XIZ+W)
+      CP     XIX, (XIZ+W)
+      CP     XIY, (XIZ+W)
+      CP     XIZ, (XIZ+W)
+      CP     XSP, (XIZ+W)
+      LD     XWA, (XIZ+W)
+      LD     XBC, (XIZ+W)
+      LD     XDE, (XIZ+W)
+      LD     XHL, (XIZ+W)
+      LD     XIX, (XIZ+W)
+      LD     XIY, (XIZ+W)
+      LD     XIZ, (XIZ+W)
+      LD     XSP, (XIZ+W)
+      EX     XWA, (XIZ+W)
+      EX     XBC, (XIZ+W)
+      EX     XDE, (XIZ+W)
+      EX     XHL, (XIZ+W)
+      EX     XIX, (XIZ+W)
+      EX     XIY, (XIZ+W)
+      EX     XIZ, (XIZ+W)
+      EX     XSP, (XIZ+W)
+      ADD    XWA, (XIZ+W)
+      ADD    XBC, (XIZ+W)
+      ADD    XDE, (XIZ+W)
+      ADD    XHL, (XIZ+W)
+      ADD    XIX, (XIZ+W)
+      ADD    XIY, (XIZ+W)
+      ADD    XIZ, (XIZ+W)
+      ADD    XSP, (XIZ+W)
+      ADC    XWA, (XIZ+W)
+      ADC    XBC, (XIZ+W)
+      ADC    XDE, (XIZ+W)
+      ADC    XHL, (XIZ+W)
+      ADC    XIX, (XIZ+W)
+      ADC    XIY, (XIZ+W)
+      ADC    XIZ, (XIZ+W)
+      ADC    XSP, (XIZ+W)
+      SUB    XWA, (XIZ+W)
+      SUB    XBC, (XIZ+W)
+      SUB    XDE, (XIZ+W)
+      SUB    XHL, (XIZ+W)
+      SUB    XIX, (XIZ+W)
+      SUB    XIY, (XIZ+W)
+      SUB    XIZ, (XIZ+W)
+      SUB    XSP, (XIZ+W)
+      SBC    XWA, (XIZ+W)
+      SBC    XBC, (XIZ+W)
+      SBC    XDE, (XIZ+W)
+      SBC    XHL, (XIZ+W)
+      SBC    XIX, (XIZ+W)
+      SBC    XIY, (XIZ+W)
+      SBC    XIZ, (XIZ+W)
+      SBC    XSP, (XIZ+W)
+      AND    XWA, (XIZ+W)
+      AND    XBC, (XIZ+W)
+      AND    XDE, (XIZ+W)
+      AND    XHL, (XIZ+W)
+      AND    XIX, (XIZ+W)
+      AND    XIY, (XIZ+W)
+      AND    XIZ, (XIZ+W)
+      AND    XSP, (XIZ+W)
+      XOR    XWA, (XIZ+W)
+      XOR    XBC, (XIZ+W)
+      XOR    XDE, (XIZ+W)
+      XOR    XHL, (XIZ+W)
+      XOR    XIX, (XIZ+W)
+      XOR    XIY, (XIZ+W)
+      XOR    XIZ, (XIZ+W)
+      XOR    XSP, (XIZ+W)
+      OR     XWA, (XIZ+W)
+      OR     XBC, (XIZ+W)
+      OR     XIY, (XIZ+C)
+      OR     XIZ, (XIZ+C)
+      OR     XSP, (XIZ+C)
+      CP     XWA, (XIZ+C)
+      CP     XBC, (XIZ+C)
+      CP     XDE, (XIZ+C)
+      CP     XHL, (XIZ+C)
+      CP     XIX, (XIZ+C)
+      CP     XIY, (XIZ+C)
+      CP     XIZ, (XIZ+C)
+      CP     XSP, (XIZ+C)
+      LD     XWA, (XIZ+C)
+      LD     XBC, (XIZ+C)
+      LD     XDE, (XIZ+C)
+      LD     XHL, (XIZ+C)
+      LD     XIX, (XIZ+C)
+      LD     XIY, (XIZ+C)
+      LD     XIZ, (XIZ+C)
+      LD     XSP, (XIZ+C)
+      EX     XWA, (XIZ+C)
+      EX     XBC, (XIZ+C)
+      EX     XDE, (XIZ+C)
+      EX     XHL, (XIZ+C)
+      EX     XIX, (XIZ+C)
+      EX     XIY, (XIZ+C)
+      EX     XIZ, (XIZ+C)
+      EX     XSP, (XIZ+C)
+      ADD    XWA, (XIZ+C)
+      ADD    XBC, (XIZ+C)
+      ADD    XDE, (XIZ+C)
+      ADD    XHL, (XIZ+C)
+      ADD    XIX, (XIZ+C)
+      ADD    XIY, (XIZ+C)
+      ADD    XIZ, (XIZ+C)
+      ADD    XSP, (XIZ+C)
+      ADC    XWA, (XIZ+C)
+      ADC    XBC, (XIZ+C)
+      ADC    XDE, (XIZ+C)
+      ADC    XHL, (XIZ+C)
+      ADC    XIX, (XIZ+C)
+      ADC    XIY, (XIZ+C)
+      ADC    XIZ, (XIZ+C)
+      ADC    XSP, (XIZ+C)
+      SUB    XWA, (XIZ+C)
+      SUB    XBC, (XIZ+C)
+      SUB    XDE, (XIZ+C)
+      SUB    XHL, (XIZ+C)
+      SUB    XIX, (XIZ+C)
+      SUB    XIY, (XIZ+C)
+      SUB    XIZ, (XIZ+C)
+      SUB    XSP, (XIZ+C)
+      SBC    XWA, (XIZ+C)
+      SBC    XBC, (XIZ+C)
+      SBC    XDE, (XIZ+C)
+      SBC    XHL, (XIZ+C)
+      SBC    XIX, (XIZ+C)
+      SBC    XIY, (XIZ+C)
+      SBC    XIZ, (XIZ+C)
+      SBC    XSP, (XIZ+C)
+      AND    XWA, (XIZ+C)
+      AND    XBC, (XIZ+C)
+      AND    XDE, (XIZ+C)
+      AND    XHL, (XIZ+C)
+      AND    XIX, (XIZ+C)
+      AND    XIY, (XIZ+C)
+      AND    XIZ, (XIZ+C)
+      AND    XSP, (XIZ+C)
+      XOR    XWA, (XIZ+C)
+      XOR    XBC, (XIZ+C)
+      XOR    XDE, (XIZ+C)
+      XOR    XHL, (XIZ+C)
+      XOR    XIX, (XIZ+C)
+      XOR    XIY, (XIZ+C)
+      XOR    XIZ, (XIZ+C)
+      XOR    XSP, (XIZ+C)
+      OR     XWA, (XIZ+C)
+      OR     XBC, (XIZ+C)
+      OR     XDE, (XIZ+C)
+      OR     XHL, (XIZ+C)
+      OR     XIX, (XIZ+C)
+      OR     XIZ, (XIZ+B)
+      OR     XSP, (XIZ+B)
+      CP     XWA, (XIZ+B)
+      CP     XBC, (XIZ+B)
+      CP     XDE, (XIZ+B)
+      CP     XHL, (XIZ+B)
+      CP     XIX, (XIZ+B)
+      CP     XIY, (XIZ+B)
+      CP     XIZ, (XIZ+B)
+      CP     XSP, (XIZ+B)
+      LD     XWA, (XIZ+B)
+      LD     XBC, (XIZ+B)
+      LD     XDE, (XIZ+B)
+      LD     XHL, (XIZ+B)
+      LD     XIX, (XIZ+B)
+      LD     XIY, (XIZ+B)
+      LD     XIZ, (XIZ+B)
+      LD     XSP, (XIZ+B)
+      EX     XWA, (XIZ+B)
+      EX     XBC, (XIZ+B)
+      EX     XDE, (XIZ+B)
+      EX     XHL, (XIZ+B)
+      EX     XIX, (XIZ+B)
+      EX     XIY, (XIZ+B)
+      EX     XIZ, (XIZ+B)
+      EX     XSP, (XIZ+B)
+      ADD    XWA, (XIZ+B)
+      ADD    XBC, (XIZ+B)
+      ADD    XDE, (XIZ+B)
+      ADD    XHL, (XIZ+B)
+      ADD    XIX, (XIZ+B)
+      ADD    XIY, (XIZ+B)
+      ADD    XIZ, (XIZ+B)
+      ADD    XSP, (XIZ+B)
+      ADC    XWA, (XIZ+B)
+      ADC    XBC, (XIZ+B)
+      ADC    XDE, (XIZ+B)
+      ADC    XHL, (XIZ+B)
+      ADC    XIX, (XIZ+B)
+      ADC    XIY, (XIZ+B)
+      ADC    XIZ, (XIZ+B)
+      ADC    XSP, (XIZ+B)
+      SUB    XWA, (XIZ+B)
+      SUB    XBC, (XIZ+B)
+      SUB    XDE, (XIZ+B)
+      SUB    XHL, (XIZ+B)
+      SUB    XIX, (XIZ+B)
+      SUB    XIY, (XIZ+B)
+      SUB    XIZ, (XIZ+B)
+      SUB    XSP, (XIZ+B)
+      SBC    XWA, (XIZ+B)
+      SBC    XBC, (XIZ+B)
+      SBC    XDE, (XIZ+B)
+      SBC    XHL, (XIZ+B)
+      SBC    XIX, (XIZ+B)
+      SBC    XIY, (XIZ+B)
+      SBC    XIZ, (XIZ+B)
+      SBC    XSP, (XIZ+B)
+      AND    XWA, (XIZ+B)
+      AND    XBC, (XIZ+B)
+      AND    XDE, (XIZ+B)
+      AND    XHL, (XIZ+B)
+      AND    XIX, (XIZ+B)
+      AND    XIY, (XIZ+B)
+      AND    XIZ, (XIZ+B)
+      AND    XSP, (XIZ+B)
+      XOR    XWA, (XIZ+B)
+      XOR    XBC, (XIZ+B)
+      XOR    XDE, (XIZ+B)
+      XOR    XHL, (XIZ+B)
+      XOR    XIX, (XIZ+B)
+      XOR    XIY, (XIZ+B)
+      XOR    XIZ, (XIZ+B)
+      XOR    XSP, (XIZ+B)
+      OR     XWA, (XIZ+B)
+      OR     XBC, (XIZ+B)
+      OR     XDE, (XIZ+B)
+      OR     XHL, (XIZ+B)
+      OR     XIX, (XIZ+B)
+      OR     XIY, (XIZ+B)
+      CP     XWA, (XIZ+E)
+      CP     XBC, (XIZ+E)
+      CP     XDE, (XIZ+E)
+      CP     XHL, (XIZ+E)
+      CP     XIX, (XIZ+E)
+      CP     XIY, (XIZ+E)
+      CP     XIZ, (XIZ+E)
+      CP     XSP, (XIZ+E)
+      LD     XWA, (XIZ+E)
+      LD     XBC, (XIZ+E)
+      LD     XDE, (XIZ+E)
+      LD     XHL, (XIZ+E)
+      LD     XIX, (XIZ+E)
+      LD     XIY, (XIZ+E)
+      LD     XIZ, (XIZ+E)
+      LD     XSP, (XIZ+E)
+      EX     XWA, (XIZ+E)
+      EX     XBC, (XIZ+E)
+      EX     XDE, (XIZ+E)
+      EX     XHL, (XIZ+E)
+      EX     XIX, (XIZ+E)
+      EX     XIY, (XIZ+E)
+      EX     XIZ, (XIZ+E)
+      EX     XSP, (XIZ+E)
+      ADD    XWA, (XIZ+E)
+      ADD    XBC, (XIZ+E)
+      ADD    XDE, (XIZ+E)
+      ADD    XHL, (XIZ+E)
+      ADD    XIX, (XIZ+E)
+      ADD    XIY, (XIZ+E)
+      ADD    XIZ, (XIZ+E)
+      ADD    XSP, (XIZ+E)
+      ADC    XWA, (XIZ+E)
+      ADC    XBC, (XIZ+E)
+      ADC    XDE, (XIZ+E)
+      ADC    XHL, (XIZ+E)
+      ADC    XIX, (XIZ+E)
+      ADC    XIY, (XIZ+E)
+      ADC    XIZ, (XIZ+E)
+      ADC    XSP, (XIZ+E)
+      SUB    XWA, (XIZ+E)
+      SUB    XBC, (XIZ+E)
+      SUB    XDE, (XIZ+E)
+      SUB    XHL, (XIZ+E)
+      SUB    XIX, (XIZ+E)
+      SUB    XIY, (XIZ+E)
+      SUB    XIZ, (XIZ+E)
+      SUB    XSP, (XIZ+E)
+      SBC    XWA, (XIZ+E)
+      SBC    XBC, (XIZ+E)
+      SBC    XDE, (XIZ+E)
+      SBC    XHL, (XIZ+E)
+      SBC    XIX, (XIZ+E)
+      SBC    XIY, (XIZ+E)
+      SBC    XIZ, (XIZ+E)
+      SBC    XSP, (XIZ+E)
+      AND    XWA, (XIZ+E)
+      AND    XBC, (XIZ+E)
+      AND    XDE, (XIZ+E)
+      AND    XHL, (XIZ+E)
+      AND    XIX, (XIZ+E)
+      AND    XIY, (XIZ+E)
+      AND    XIZ, (XIZ+E)
+      AND    XSP, (XIZ+E)
+      XOR    XWA, (XIZ+E)
+      XOR    XBC, (XIZ+E)
+      XOR    XDE, (XIZ+E)
+      XOR    XHL, (XIZ+E)
+      XOR    XIX, (XIZ+E)
+      XOR    XIY, (XIZ+E)
+      XOR    XIZ, (XIZ+E)
+      XOR    XSP, (XIZ+E)
+      OR     XWA, (XIZ+E)
+      OR     XBC, (XIZ+E)
+      OR     XDE, (XIZ+E)
+      OR     XHL, (XIZ+E)
+      OR     XIX, (XIZ+E)
+      OR     XIY, (XIZ+E)
+      OR     XIZ, (XIZ+E)
+      OR     XSP, (XIZ+E)
+      CP     XWA, (XIZ+D)
+      CP     XBC, (XIZ+D)
+      CP     XDE, (XIZ+D)
+      CP     XHL, (XIZ+D)
+      CP     XIX, (XIZ+D)
+      CP     XIY, (XIZ+D)
+      CP     XIZ, (XIZ+D)
+      CP     XSP, (XIZ+D)
+      LD     XWA, (XIZ+D)
+      LD     XBC, (XIZ+D)
+      LD     XDE, (XIZ+D)
+      LD     XHL, (XIZ+D)
+      LD     XIX, (XIZ+D)
+      LD     XIY, (XIZ+D)
+      LD     XIZ, (XIZ+D)
+      LD     XSP, (XIZ+D)
+      EX     XWA, (XIZ+D)
+      EX     XBC, (XIZ+D)
+      EX     XDE, (XIZ+D)
+      EX     XHL, (XIZ+D)
+      EX     XIX, (XIZ+D)
+      EX     XIY, (XIZ+D)
+      EX     XIZ, (XIZ+D)
+      EX     XSP, (XIZ+D)
+      ADD    XWA, (XIZ+D)
+      ADD    XBC, (XIZ+D)
+      ADD    XDE, (XIZ+D)
+      ADD    XHL, (XIZ+D)
+      ADD    XIX, (XIZ+D)
+      ADD    XIY, (XIZ+D)
+      ADD    XIZ, (XIZ+D)
+      ADD    XSP, (XIZ+D)
+      ADC    XWA, (XIZ+D)
+      ADC    XBC, (XIZ+D)
+      ADC    XDE, (XIZ+D)
+      ADC    XHL, (XIZ+D)
+      ADC    XIX, (XIZ+D)
+      ADC    XIY, (XIZ+D)
+      ADC    XIZ, (XIZ+D)
+      ADC    XSP, (XIZ+D)
+      SUB    XWA, (XIZ+D)
+      SUB    XBC, (XIZ+D)
+      SUB    XDE, (XIZ+D)
+      SUB    XHL, (XIZ+D)
+      SUB    XIX, (XIZ+D)
+      SUB    XIY, (XIZ+D)
+      SUB    XIZ, (XIZ+D)
+      SUB    XSP, (XIZ+D)
+      SBC    XWA, (XIZ+D)
+      SBC    XBC, (XIZ+D)
+      SBC    XDE, (XIZ+D)
+      SBC    XHL, (XIZ+D)
+      SBC    XIX, (XIZ+D)
+      SBC    XIY, (XIZ+D)
+      SBC    XIZ, (XIZ+D)
+      SBC    XSP, (XIZ+D)
+      AND    XWA, (XIZ+D)
+      AND    XBC, (XIZ+D)
+      AND    XDE, (XIZ+D)
+      AND    XHL, (XIZ+D)
+      AND    XIX, (XIZ+D)
+      AND    XIY, (XIZ+D)
+      AND    XIZ, (XIZ+D)
+      AND    XSP, (XIZ+D)
+      XOR    XWA, (XIZ+D)
+      XOR    XBC, (XIZ+D)
+      XOR    XDE, (XIZ+D)
+      XOR    XHL, (XIZ+D)
+      XOR    XIX, (XIZ+D)
+      XOR    XIY, (XIZ+D)
+      XOR    XIZ, (XIZ+D)
+      XOR    XSP, (XIZ+D)
+      OR     XWA, (XIZ+D)
+      OR     XBC, (XIZ+D)
+      OR     XDE, (XIZ+D)
+      OR     XHL, (XIZ+D)
+      OR     XIX, (XIZ+D)
+      OR     XIY, (XIZ+D)
+      OR     XIZ, (XIZ+D)
+      OR     XSP, (XIZ+D)
+      CP     XWA, (XIZ+L)
+      CP     XBC, (XIZ+L)
+      CP     XDE, (XIZ+L)
+      CP     XHL, (XIZ+L)
+      CP     XIX, (XIZ+L)
+      CP     XIY, (XIZ+L)
+      CP     XIZ, (XIZ+L)
+      CP     XSP, (XIZ+L)
+      LD     XWA, (XIZ+L)
+      LD     XBC, (XIZ+L)
+      LD     XDE, (XIZ+L)
+      LD     XHL, (XIZ+L)
+      LD     XIX, (XIZ+L)
+      LD     XIY, (XIZ+L)
+      LD     XIZ, (XIZ+L)
+      LD     XSP, (XIZ+L)
+      EX     XWA, (XIZ+L)
+      EX     XBC, (XIZ+L)
+      EX     XDE, (XIZ+L)
+      EX     XHL, (XIZ+L)
+      EX     XIX, (XIZ+L)
+      EX     XIY, (XIZ+L)
+      EX     XIZ, (XIZ+L)
+      EX     XSP, (XIZ+L)
+      ADD    XWA, (XIZ+L)
+      ADD    XBC, (XIZ+L)
+      ADD    XDE, (XIZ+L)
+      ADD    XHL, (XIZ+L)
+      ADD    XIX, (XIZ+L)
+      ADD    XIY, (XIZ+L)
+      ADD    XIZ, (XIZ+L)
+      ADD    XSP, (XIZ+L)
+      ADC    XWA, (XIZ+L)
+      ADC    XBC, (XIZ+L)
+      ADC    XDE, (XIZ+L)
+      ADC    XHL, (XIZ+L)
+      ADC    XIX, (XIZ+L)
+      ADC    XIY, (XIZ+L)
+      ADC    XIZ, (XIZ+L)
+      ADC    XSP, (XIZ+L)
+      SUB    XWA, (XIZ+L)
+      SUB    XBC, (XIZ+L)
+      SUB    XDE, (XIZ+L)
+      SUB    XHL, (XIZ+L)
+      SUB    XIX, (XIZ+L)
+      SUB    XIY, (XIZ+L)
+      SUB    XIZ, (XIZ+L)
+      SUB    XSP, (XIZ+L)
+      SBC    XWA, (XIZ+L)
+      SBC    XBC, (XIZ+L)
+      SBC    XDE, (XIZ+L)
+      SBC    XHL, (XIZ+L)
+      SBC    XIX, (XIZ+L)
+      SBC    XIY, (XIZ+L)
+      SBC    XIZ, (XIZ+L)
+      SBC    XSP, (XIZ+L)
+      AND    XWA, (XIZ+L)
+      AND    XBC, (XIZ+L)
+      AND    XDE, (XIZ+L)
+      AND    XHL, (XIZ+L)
+      AND    XIX, (XIZ+L)
+      AND    XIY, (XIZ+L)
+      AND    XIZ, (XIZ+L)
+      AND    XSP, (XIZ+L)
+      XOR    XWA, (XIZ+L)
+      XOR    XBC, (XIZ+L)
+      XOR    XDE, (XIZ+L)
+      XOR    XHL, (XIZ+L)
+      XOR    XIX, (XIZ+L)
+      XOR    XIY, (XIZ+L)
+      XOR    XIZ, (XIZ+L)
+      XOR    XSP, (XIZ+L)
+      OR     XWA, (XIZ+L)
+      OR     XBC, (XIZ+L)
+      OR     XDE, (XIZ+L)
+      OR     XHL, (XIZ+L)
+      OR     XIX, (XIZ+L)
+      OR     XIY, (XIZ+L)
+      OR     XIZ, (XIZ+L)
+      OR     XSP, (XIZ+L)
+      CP     XWA, (XIZ+H)
+      CP     XBC, (XIZ+H)
+      CP     XDE, (XIZ+H)
+      CP     XHL, (XIZ+H)
+      CP     XIX, (XIZ+H)
+      CP     XIY, (XIZ+H)
+      CP     XIZ, (XIZ+H)
+      CP     XSP, (XIZ+H)
+      LD     XWA, (XIZ+H)
+      LD     XBC, (XIZ+H)
+      LD     XDE, (XIZ+H)
+      LD     XHL, (XIZ+H)
+      LD     XIX, (XIZ+H)
+      LD     XIY, (XIZ+H)
+      LD     XIZ, (XIZ+H)
+      LD     XSP, (XIZ+H)
+      EX     XWA, (XIZ+H)
+      EX     XBC, (XIZ+H)
+      EX     XDE, (XIZ+H)
+      EX     XHL, (XIZ+H)
+      EX     XIX, (XIZ+H)
+      EX     XIY, (XIZ+H)
+      EX     XIZ, (XIZ+H)
+      EX     XSP, (XIZ+H)
+      ADD    XWA, (XIZ+H)
+      ADD    XBC, (XIZ+H)
+      ADD    XDE, (XIZ+H)
+      ADD    XHL, (XIZ+H)
+      ADD    XIX, (XIZ+H)
+      ADD    XIY, (XIZ+H)
+      ADD    XIZ, (XIZ+H)
+      ADD    XSP, (XIZ+H)
+      ADC    XWA, (XIZ+H)
+      ADC    XBC, (XIZ+H)
+      ADC    XDE, (XIZ+H)
+      ADC    XHL, (XIZ+H)
+      ADC    XIX, (XIZ+H)
+      ADC    XIY, (XIZ+H)
+      ADC    XIZ, (XIZ+H)
+      ADC    XSP, (XIZ+H)
+      SUB    XWA, (XIZ+H)
+      SUB    XBC, (XIZ+H)
+      SUB    XDE, (XIZ+H)
+      SUB    XHL, (XIZ+H)
+      SUB    XIX, (XIZ+H)
+      SUB    XIY, (XIZ+H)
+      SUB    XIZ, (XIZ+H)
+      SUB    XSP, (XIZ+H)
+      SBC    XWA, (XIZ+H)
+      SBC    XBC, (XIZ+H)
+      SBC    XDE, (XIZ+H)
+      SBC    XHL, (XIZ+H)
+      SBC    XIX, (XIZ+H)
+      SBC    XIY, (XIZ+H)
+      SBC    XIZ, (XIZ+H)
+      SBC    XSP, (XIZ+H)
+      AND    XWA, (XIZ+H)
+      AND    XBC, (XIZ+H)
+      AND    XDE, (XIZ+H)
+      AND    XHL, (XIZ+H)
+      AND    XIX, (XIZ+H)
+      AND    XIY, (XIZ+H)
+      AND    XIZ, (XIZ+H)
+      AND    XSP, (XIZ+H)
+      XOR    XWA, (XIZ+H)
+      XOR    XBC, (XIZ+H)
+      XOR    XDE, (XIZ+H)
+      XOR    XHL, (XIZ+H)
+      XOR    XIX, (XIZ+H)
+      XOR    XIY, (XIZ+H)
+      XOR    XIZ, (XIZ+H)
+      XOR    XSP, (XIZ+H)
+      OR     XWA, (XIZ+H)
+      OR     XBC, (XIZ+H)
+      OR     XDE, (XIZ+H)
+      OR     XHL, (XIZ+H)
+      OR     XIX, (XIZ+H)
+      OR     XIY, (XIZ+H)
+      OR     XIZ, (XIZ+H)
+      OR     XSP, (XIZ+H)
+      OR     XBC, (XSP+A)
+      OR     XDE, (XSP+A)
+      OR     XHL, (XSP+A)
+      OR     XIX, (XSP+A)
+      OR     XIY, (XSP+A)
+      OR     XIZ, (XSP+A)
+      OR     XSP, (XSP+A)
+      CP     XWA, (XSP+A)
+      CP     XBC, (XSP+A)
+      CP     XDE, (XSP+A)
+      CP     XHL, (XSP+A)
+      CP     XIX, (XSP+A)
+      CP     XIY, (XSP+A)
+      CP     XIZ, (XSP+A)
+      CP     XSP, (XSP+A)
+      LD     XWA, (XSP+A)
+      LD     XBC, (XSP+A)
+      LD     XDE, (XSP+A)
+      LD     XHL, (XSP+A)
+      LD     XIX, (XSP+A)
+      LD     XIY, (XSP+A)
+      LD     XIZ, (XSP+A)
+      LD     XSP, (XSP+A)
+      EX     XWA, (XSP+A)
+      EX     XBC, (XSP+A)
+      EX     XDE, (XSP+A)
+      EX     XHL, (XSP+A)
+      EX     XIX, (XSP+A)
+      EX     XIY, (XSP+A)
+      EX     XIZ, (XSP+A)
+      EX     XSP, (XSP+A)
+      ADD    XWA, (XSP+A)
+      ADD    XBC, (XSP+A)
+      ADD    XDE, (XSP+A)
+      ADD    XHL, (XSP+A)
+      ADD    XIX, (XSP+A)
+      ADD    XIY, (XSP+A)
+      ADD    XIZ, (XSP+A)
+      ADD    XSP, (XSP+A)
+      ADC    XWA, (XSP+A)
+      ADC    XBC, (XSP+A)
+      ADC    XDE, (XSP+A)
+      ADC    XHL, (XSP+A)
+      ADC    XIX, (XSP+A)
+      ADC    XIY, (XSP+A)
+      ADC    XIZ, (XSP+A)
+      ADC    XSP, (XSP+A)
+      SUB    XWA, (XSP+A)
+      SUB    XBC, (XSP+A)
+      SUB    XDE, (XSP+A)
+      SUB    XHL, (XSP+A)
+      SUB    XIX, (XSP+A)
+      SUB    XIY, (XSP+A)
+      SUB    XIZ, (XSP+A)
+      SUB    XSP, (XSP+A)
+      SBC    XWA, (XSP+A)
+      SBC    XBC, (XSP+A)
+      SBC    XDE, (XSP+A)
+      SBC    XHL, (XSP+A)
+      SBC    XIX, (XSP+A)
+      SBC    XIY, (XSP+A)
+      SBC    XIZ, (XSP+A)
+      SBC    XSP, (XSP+A)
+      AND    XWA, (XSP+A)
+      AND    XBC, (XSP+A)
+      AND    XDE, (XSP+A)
+      AND    XHL, (XSP+A)
+      AND    XIX, (XSP+A)
+      AND    XIY, (XSP+A)
+      AND    XIZ, (XSP+A)
+      AND    XSP, (XSP+A)
+      XOR    XWA, (XSP+A)
+      XOR    XBC, (XSP+A)
+      XOR    XDE, (XSP+A)
+      XOR    XHL, (XSP+A)
+      XOR    XIX, (XSP+A)
+      XOR    XIY, (XSP+A)
+      XOR    XIZ, (XSP+A)
+      XOR    XSP, (XSP+A)
+      OR     XWA, (XSP+A)
+      OR     XDE, (XSP+W)
+      OR     XHL, (XSP+W)
+      OR     XIX, (XSP+W)
+      OR     XIY, (XSP+W)
+      OR     XIZ, (XSP+W)
+      OR     XSP, (XSP+W)
+      CP     XWA, (XSP+W)
+      CP     XBC, (XSP+W)
+      CP     XDE, (XSP+W)
+      CP     XHL, (XSP+W)
+      CP     XIX, (XSP+W)
+      CP     XIY, (XSP+W)
+      CP     XIZ, (XSP+W)
+      CP     XSP, (XSP+W)
+      LD     XWA, (XSP+W)
+      LD     XBC, (XSP+W)
+      LD     XDE, (XSP+W)
+      LD     XHL, (XSP+W)
+      LD     XIX, (XSP+W)
+      LD     XIY, (XSP+W)
+      LD     XIZ, (XSP+W)
+      LD     XSP, (XSP+W)
+      EX     XWA, (XSP+W)
+      EX     XBC, (XSP+W)
+      EX     XDE, (XSP+W)
+      EX     XHL, (XSP+W)
+      EX     XIX, (XSP+W)
+      EX     XIY, (XSP+W)
+      EX     XIZ, (XSP+W)
+      EX     XSP, (XSP+W)
+      ADD    XWA, (XSP+W)
+      ADD    XBC, (XSP+W)
+      ADD    XDE, (XSP+W)
+      ADD    XHL, (XSP+W)
+      ADD    XIX, (XSP+W)
+      ADD    XIY, (XSP+W)
+      ADD    XIZ, (XSP+W)
+      ADD    XSP, (XSP+W)
+      ADC    XWA, (XSP+W)
+      ADC    XBC, (XSP+W)
+      ADC    XDE, (XSP+W)
+      ADC    XHL, (XSP+W)
+      ADC    XIX, (XSP+W)
+      ADC    XIY, (XSP+W)
+      ADC    XIZ, (XSP+W)
+      ADC    XSP, (XSP+W)
+      SUB    XWA, (XSP+W)
+      SUB    XBC, (XSP+W)
+      SUB    XDE, (XSP+W)
+      SUB    XHL, (XSP+W)
+      SUB    XIX, (XSP+W)
+      SUB    XIY, (XSP+W)
+      SUB    XIZ, (XSP+W)
+      SUB    XSP, (XSP+W)
+      SBC    XWA, (XSP+W)
+      SBC    XBC, (XSP+W)
+      SBC    XDE, (XSP+W)
+      SBC    XHL, (XSP+W)
+      SBC    XIX, (XSP+W)
+      SBC    XIY, (XSP+W)
+      SBC    XIZ, (XSP+W)
+      SBC    XSP, (XSP+W)
+      AND    XWA, (XSP+W)
+      AND    XBC, (XSP+W)
+      AND    XDE, (XSP+W)
+      AND    XHL, (XSP+W)
+      AND    XIX, (XSP+W)
+      AND    XIY, (XSP+W)
+      AND    XIZ, (XSP+W)
+      AND    XSP, (XSP+W)
+      XOR    XWA, (XSP+W)
+      XOR    XBC, (XSP+W)
+      XOR    XDE, (XSP+W)
+      XOR    XHL, (XSP+W)
+      XOR    XIX, (XSP+W)
+      XOR    XIY, (XSP+W)
+      XOR    XIZ, (XSP+W)
+      XOR    XSP, (XSP+W)
+      OR     XWA, (XSP+W)
+      OR     XBC, (XSP+W)
+      OR     XIY, (XSP+C)
+      OR     XIZ, (XSP+C)
+      OR     XSP, (XSP+C)
+      CP     XWA, (XSP+C)
+      CP     XBC, (XSP+C)
+      CP     XDE, (XSP+C)
+      CP     XHL, (XSP+C)
+      CP     XIX, (XSP+C)
+      CP     XIY, (XSP+C)
+      CP     XIZ, (XSP+C)
+      CP     XSP, (XSP+C)
+      LD     XWA, (XSP+C)
+      LD     XBC, (XSP+C)
+      LD     XDE, (XSP+C)
+      LD     XHL, (XSP+C)
+      LD     XIX, (XSP+C)
+      LD     XIY, (XSP+C)
+      LD     XIZ, (XSP+C)
+      LD     XSP, (XSP+C)
+      EX     XWA, (XSP+C)
+      EX     XBC, (XSP+C)
+      EX     XDE, (XSP+C)
+      EX     XHL, (XSP+C)
+      EX     XIX, (XSP+C)
+      EX     XIY, (XSP+C)
+      EX     XIZ, (XSP+C)
+      EX     XSP, (XSP+C)
+      ADD    XWA, (XSP+C)
+      ADD    XBC, (XSP+C)
+      ADD    XDE, (XSP+C)
+      ADD    XHL, (XSP+C)
+      ADD    XIX, (XSP+C)
+      ADD    XIY, (XSP+C)
+      ADD    XIZ, (XSP+C)
+      ADD    XSP, (XSP+C)
+      ADC    XWA, (XSP+C)
+      ADC    XBC, (XSP+C)
+      ADC    XDE, (XSP+C)
+      ADC    XHL, (XSP+C)
+      ADC    XIX, (XSP+C)
+      ADC    XIY, (XSP+C)
+      ADC    XIZ, (XSP+C)
+      ADC    XSP, (XSP+C)
+      SUB    XWA, (XSP+C)
+      SUB    XBC, (XSP+C)
+      SUB    XDE, (XSP+C)
+      SUB    XHL, (XSP+C)
+      SUB    XIX, (XSP+C)
+      SUB    XIY, (XSP+C)
+      SUB    XIZ, (XSP+C)
+      SUB    XSP, (XSP+C)
+      SBC    XWA, (XSP+C)
+      SBC    XBC, (XSP+C)
+      SBC    XDE, (XSP+C)
+      SBC    XHL, (XSP+C)
+      SBC    XIX, (XSP+C)
+      SBC    XIY, (XSP+C)
+      SBC    XIZ, (XSP+C)
+      SBC    XSP, (XSP+C)
+      AND    XWA, (XSP+C)
+      AND    XBC, (XSP+C)
+      AND    XDE, (XSP+C)
+      AND    XHL, (XSP+C)
+      AND    XIX, (XSP+C)
+      AND    XIY, (XSP+C)
+      AND    XIZ, (XSP+C)
+      AND    XSP, (XSP+C)
+      XOR    XWA, (XSP+C)
+      XOR    XBC, (XSP+C)
+      XOR    XDE, (XSP+C)
+      XOR    XHL, (XSP+C)
+      XOR    XIX, (XSP+C)
+      XOR    XIY, (XSP+C)
+      XOR    XIZ, (XSP+C)
+      XOR    XSP, (XSP+C)
+      OR     XWA, (XSP+C)
+      OR     XBC, (XSP+C)
+      OR     XDE, (XSP+C)
+      OR     XHL, (XSP+C)
+      OR     XIX, (XSP+C)
+      OR     XIZ, (XSP+B)
+      OR     XSP, (XSP+B)
+      CP     XWA, (XSP+B)
+      CP     XBC, (XSP+B)
+      CP     XDE, (XSP+B)
+      CP     XHL, (XSP+B)
+      CP     XIX, (XSP+B)
+      CP     XIY, (XSP+B)
+      CP     XIZ, (XSP+B)
+      CP     XSP, (XSP+B)
+      LD     XWA, (XSP+B)
+      LD     XBC, (XSP+B)
+      LD     XDE, (XSP+B)
+      LD     XHL, (XSP+B)
+      LD     XIX, (XSP+B)
+      LD     XIY, (XSP+B)
+      LD     XIZ, (XSP+B)
+      LD     XSP, (XSP+B)
+      EX     XWA, (XSP+B)
+      EX     XBC, (XSP+B)
+      EX     XDE, (XSP+B)
+      EX     XHL, (XSP+B)
+      EX     XIX, (XSP+B)
+      EX     XIY, (XSP+B)
+      EX     XIZ, (XSP+B)
+      EX     XSP, (XSP+B)
+      ADD    XWA, (XSP+B)
+      ADD    XBC, (XSP+B)
+      ADD    XDE, (XSP+B)
+      ADD    XHL, (XSP+B)
+      ADD    XIX, (XSP+B)
+      ADD    XIY, (XSP+B)
+      ADD    XIZ, (XSP+B)
+      ADD    XSP, (XSP+B)
+      ADC    XWA, (XSP+B)
+      ADC    XBC, (XSP+B)
+      ADC    XDE, (XSP+B)
+      ADC    XHL, (XSP+B)
+      ADC    XIX, (XSP+B)
+      ADC    XIY, (XSP+B)
+      ADC    XIZ, (XSP+B)
+      ADC    XSP, (XSP+B)
+      SUB    XWA, (XSP+B)
+      SUB    XBC, (XSP+B)
+      SUB    XDE, (XSP+B)
+      SUB    XHL, (XSP+B)
+      SUB    XIX, (XSP+B)
+      SUB    XIY, (XSP+B)
+      SUB    XIZ, (XSP+B)
+      SUB    XSP, (XSP+B)
+      SBC    XWA, (XSP+B)
+      SBC    XBC, (XSP+B)
+      SBC    XDE, (XSP+B)
+      SBC    XHL, (XSP+B)
+      SBC    XIX, (XSP+B)
+      SBC    XIY, (XSP+B)
+      SBC    XIZ, (XSP+B)
+      SBC    XSP, (XSP+B)
+      AND    XWA, (XSP+B)
+      AND    XBC, (XSP+B)
+      AND    XDE, (XSP+B)
+      AND    XHL, (XSP+B)
+      AND    XIX, (XSP+B)
+      AND    XIY, (XSP+B)
+      AND    XIZ, (XSP+B)
+      AND    XSP, (XSP+B)
+      XOR    XWA, (XSP+B)
+      XOR    XBC, (XSP+B)
+      XOR    XDE, (XSP+B)
+      XOR    XHL, (XSP+B)
+      XOR    XIX, (XSP+B)
+      XOR    XIY, (XSP+B)
+      XOR    XIZ, (XSP+B)
+      XOR    XSP, (XSP+B)
+      OR     XWA, (XSP+B)
+      OR     XBC, (XSP+B)
+      OR     XDE, (XSP+B)
+      OR     XHL, (XSP+B)
+      OR     XIX, (XSP+B)
+      OR     XIY, (XSP+B)
+      CP     XWA, (XSP+E)
+      CP     XBC, (XSP+E)
+      CP     XDE, (XSP+E)
+      CP     XHL, (XSP+E)
+      CP     XIX, (XSP+E)
+      CP     XIY, (XSP+E)
+      CP     XIZ, (XSP+E)
+      CP     XSP, (XSP+E)
+      LD     XWA, (XSP+E)
+      LD     XBC, (XSP+E)
+      LD     XDE, (XSP+E)
+      LD     XHL, (XSP+E)
+      LD     XIX, (XSP+E)
+      LD     XIY, (XSP+E)
+      LD     XIZ, (XSP+E)
+      LD     XSP, (XSP+E)
+      EX     XWA, (XSP+E)
+      EX     XBC, (XSP+E)
+      EX     XDE, (XSP+E)
+      EX     XHL, (XSP+E)
+      EX     XIX, (XSP+E)
+      EX     XIY, (XSP+E)
+      EX     XIZ, (XSP+E)
+      EX     XSP, (XSP+E)
+      ADD    XWA, (XSP+E)
+      ADD    XBC, (XSP+E)
+      ADD    XDE, (XSP+E)
+      ADD    XHL, (XSP+E)
+      ADD    XIX, (XSP+E)
+      ADD    XIY, (XSP+E)
+      ADD    XIZ, (XSP+E)
+      ADD    XSP, (XSP+E)
+      ADC    XWA, (XSP+E)
+      ADC    XBC, (XSP+E)
+      ADC    XDE, (XSP+E)
+      ADC    XHL, (XSP+E)
+      ADC    XIX, (XSP+E)
+      ADC    XIY, (XSP+E)
+      ADC    XIZ, (XSP+E)
+      ADC    XSP, (XSP+E)
+      SUB    XWA, (XSP+E)
+      SUB    XBC, (XSP+E)
+      SUB    XDE, (XSP+E)
+      SUB    XHL, (XSP+E)
+      SUB    XIX, (XSP+E)
+      SUB    XIY, (XSP+E)
+      SUB    XIZ, (XSP+E)
+      SUB    XSP, (XSP+E)
+      SBC    XWA, (XSP+E)
+      SBC    XBC, (XSP+E)
+      SBC    XDE, (XSP+E)
+      SBC    XHL, (XSP+E)
+      SBC    XIX, (XSP+E)
+      SBC    XIY, (XSP+E)
+      SBC    XIZ, (XSP+E)
+      SBC    XSP, (XSP+E)
+      AND    XWA, (XSP+E)
+      AND    XBC, (XSP+E)
+      AND    XDE, (XSP+E)
+      AND    XHL, (XSP+E)
+      AND    XIX, (XSP+E)
+      AND    XIY, (XSP+E)
+      AND    XIZ, (XSP+E)
+      AND    XSP, (XSP+E)
+      XOR    XWA, (XSP+E)
+      XOR    XBC, (XSP+E)
+      XOR    XDE, (XSP+E)
+      XOR    XHL, (XSP+E)
+      XOR    XIX, (XSP+E)
+      XOR    XIY, (XSP+E)
+      XOR    XIZ, (XSP+E)
+      XOR    XSP, (XSP+E)
+      OR     XWA, (XSP+E)
+      OR     XBC, (XSP+E)
+      OR     XDE, (XSP+E)
+      OR     XHL, (XSP+E)
+      OR     XIX, (XSP+E)
+      OR     XIY, (XSP+E)
+      OR     XIZ, (XSP+E)
+      OR     XSP, (XSP+E)
+      CP     XWA, (XSP+D)
+      CP     XBC, (XSP+D)
+      CP     XDE, (XSP+D)
+      CP     XHL, (XSP+D)
+      CP     XIX, (XSP+D)
+      CP     XIY, (XSP+D)
+      CP     XIZ, (XSP+D)
+      CP     XSP, (XSP+D)
+      LD     XWA, (XSP+D)
+      LD     XBC, (XSP+D)
+      LD     XDE, (XSP+D)
+      LD     XHL, (XSP+D)
+      LD     XIX, (XSP+D)
+      LD     XIY, (XSP+D)
+      LD     XIZ, (XSP+D)
+      LD     XSP, (XSP+D)
+      EX     XWA, (XSP+D)
+      EX     XBC, (XSP+D)
+      EX     XDE, (XSP+D)
+      EX     XHL, (XSP+D)
+      EX     XIX, (XSP+D)
+      EX     XIY, (XSP+D)
+      EX     XIZ, (XSP+D)
+      EX     XSP, (XSP+D)
+      ADD    XWA, (XSP+D)
+      ADD    XBC, (XSP+D)
+      ADD    XDE, (XSP+D)
+      ADD    XHL, (XSP+D)
+      ADD    XIX, (XSP+D)
+      ADD    XIY, (XSP+D)
+      ADD    XIZ, (XSP+D)
+      ADD    XSP, (XSP+D)
+      ADC    XWA, (XSP+D)
+      ADC    XBC, (XSP+D)
+      ADC    XDE, (XSP+D)
+      ADC    XHL, (XSP+D)
+      ADC    XIX, (XSP+D)
+      ADC    XIY, (XSP+D)
+      ADC    XIZ, (XSP+D)
+      ADC    XSP, (XSP+D)
+      SUB    XWA, (XSP+D)
+      SUB    XBC, (XSP+D)
+      SUB    XDE, (XSP+D)
+      SUB    XHL, (XSP+D)
+      SUB    XIX, (XSP+D)
+      SUB    XIY, (XSP+D)
+      SUB    XIZ, (XSP+D)
+      SUB    XSP, (XSP+D)
+      SBC    XWA, (XSP+D)
+      SBC    XBC, (XSP+D)
+      SBC    XDE, (XSP+D)
+      SBC    XHL, (XSP+D)
+      SBC    XIX, (XSP+D)
+      SBC    XIY, (XSP+D)
+      SBC    XIZ, (XSP+D)
+      SBC    XSP, (XSP+D)
+      AND    XWA, (XSP+D)
+      AND    XBC, (XSP+D)
+      AND    XDE, (XSP+D)
+      AND    XHL, (XSP+D)
+      AND    XIX, (XSP+D)
+      AND    XIY, (XSP+D)
+      AND    XIZ, (XSP+D)
+      AND    XSP, (XSP+D)
+      XOR    XWA, (XSP+D)
+      XOR    XBC, (XSP+D)
+      XOR    XDE, (XSP+D)
+      XOR    XHL, (XSP+D)
+      XOR    XIX, (XSP+D)
+      XOR    XIY, (XSP+D)
+      XOR    XIZ, (XSP+D)
+      XOR    XSP, (XSP+D)
+      OR     XWA, (XSP+D)
+      OR     XBC, (XSP+D)
+      OR     XDE, (XSP+D)
+      OR     XHL, (XSP+D)
+      OR     XIX, (XSP+D)
+      OR     XIY, (XSP+D)
+      OR     XIZ, (XSP+D)
+      OR     XSP, (XSP+D)
+      CP     XWA, (XSP+L)
+      CP     XBC, (XSP+L)
+      CP     XDE, (XSP+L)
+      CP     XHL, (XSP+L)
+      CP     XIX, (XSP+L)
+      CP     XIY, (XSP+L)
+      CP     XIZ, (XSP+L)
+      CP     XSP, (XSP+L)
+      LD     XWA, (XSP+L)
+      LD     XBC, (XSP+L)
+      LD     XDE, (XSP+L)
+      LD     XHL, (XSP+L)
+      LD     XIX, (XSP+L)
+      LD     XIY, (XSP+L)
+      LD     XIZ, (XSP+L)
+      LD     XSP, (XSP+L)
+      EX     XWA, (XSP+L)
+      EX     XBC, (XSP+L)
+      EX     XDE, (XSP+L)
+      EX     XHL, (XSP+L)
+      EX     XIX, (XSP+L)
+      EX     XIY, (XSP+L)
+      EX     XIZ, (XSP+L)
+      EX     XSP, (XSP+L)
+      ADD    XWA, (XSP+L)
+      ADD    XBC, (XSP+L)
+      ADD    XDE, (XSP+L)
+      ADD    XHL, (XSP+L)
+      ADD    XIX, (XSP+L)
+      ADD    XIY, (XSP+L)
+      ADD    XIZ, (XSP+L)
+      ADD    XSP, (XSP+L)
+      ADC    XWA, (XSP+L)
+      ADC    XBC, (XSP+L)
+      ADC    XDE, (XSP+L)
+      ADC    XHL, (XSP+L)
+      ADC    XIX, (XSP+L)
+      ADC    XIY, (XSP+L)
+      ADC    XIZ, (XSP+L)
+      ADC    XSP, (XSP+L)
+      SUB    XWA, (XSP+L)
+      SUB    XBC, (XSP+L)
+      SUB    XDE, (XSP+L)
+      SUB    XHL, (XSP+L)
+      SUB    XIX, (XSP+L)
+      SUB    XIY, (XSP+L)
+      SUB    XIZ, (XSP+L)
+      SUB    XSP, (XSP+L)
+      SBC    XWA, (XSP+L)
+      SBC    XBC, (XSP+L)
+      SBC    XDE, (XSP+L)
+      SBC    XHL, (XSP+L)
+      SBC    XIX, (XSP+L)
+      SBC    XIY, (XSP+L)
+      SBC    XIZ, (XSP+L)
+      SBC    XSP, (XSP+L)
+      AND    XWA, (XSP+L)
+      AND    XBC, (XSP+L)
+      AND    XDE, (XSP+L)
+      AND    XHL, (XSP+L)
+      AND    XIX, (XSP+L)
+      AND    XIY, (XSP+L)
+      AND    XIZ, (XSP+L)
+      AND    XSP, (XSP+L)
+      XOR    XWA, (XSP+L)
+      XOR    XBC, (XSP+L)
+      XOR    XDE, (XSP+L)
+      XOR    XHL, (XSP+L)
+      XOR    XIX, (XSP+L)
+      XOR    XIY, (XSP+L)
+      XOR    XIZ, (XSP+L)
+      XOR    XSP, (XSP+L)
+      OR     XWA, (XSP+L)
+      OR     XBC, (XSP+L)
+      OR     XDE, (XSP+L)
+      OR     XHL, (XSP+L)
+      OR     XIX, (XSP+L)
+      OR     XIY, (XSP+L)
+      OR     XIZ, (XSP+L)
+      OR     XSP, (XSP+L)
+      CP     XWA, (XSP+H)
+      CP     XBC, (XSP+H)
+      CP     XDE, (XSP+H)
+      CP     XHL, (XSP+H)
+      CP     XIX, (XSP+H)
+      CP     XIY, (XSP+H)
+      CP     XIZ, (XSP+H)
+      CP     XSP, (XSP+H)
+      LD     XWA, (XSP+H)
+      LD     XBC, (XSP+H)
+      LD     XDE, (XSP+H)
+      LD     XHL, (XSP+H)
+      LD     XIX, (XSP+H)
+      LD     XIY, (XSP+H)
+      LD     XIZ, (XSP+H)
+      LD     XSP, (XSP+H)
+      EX     XWA, (XSP+H)
+      EX     XBC, (XSP+H)
+      EX     XDE, (XSP+H)
+      EX     XHL, (XSP+H)
+      EX     XIX, (XSP+H)
+      EX     XIY, (XSP+H)
+      EX     XIZ, (XSP+H)
+      EX     XSP, (XSP+H)
+      ADD    XWA, (XSP+H)
+      ADD    XBC, (XSP+H)
+      ADD    XDE, (XSP+H)
+      ADD    XHL, (XSP+H)
+      ADD    XIX, (XSP+H)
+      ADD    XIY, (XSP+H)
+      ADD    XIZ, (XSP+H)
+      ADD    XSP, (XSP+H)
+      ADC    XWA, (XSP+H)
+      ADC    XBC, (XSP+H)
+      ADC    XDE, (XSP+H)
+      ADC    XHL, (XSP+H)
+      ADC    XIX, (XSP+H)
+      ADC    XIY, (XSP+H)
+      ADC    XIZ, (XSP+H)
+      ADC    XSP, (XSP+H)
+      SUB    XWA, (XSP+H)
+      SUB    XBC, (XSP+H)
+      SUB    XDE, (XSP+H)
+      SUB    XHL, (XSP+H)
+      SUB    XIX, (XSP+H)
+      SUB    XIY, (XSP+H)
+      SUB    XIZ, (XSP+H)
+      SUB    XSP, (XSP+H)
+      SBC    XWA, (XSP+H)
+      SBC    XBC, (XSP+H)
+      SBC    XDE, (XSP+H)
+      SBC    XHL, (XSP+H)
+      SBC    XIX, (XSP+H)
+      SBC    XIY, (XSP+H)
+      SBC    XIZ, (XSP+H)
+      SBC    XSP, (XSP+H)
+      AND    XWA, (XSP+H)
+      AND    XBC, (XSP+H)
+      AND    XDE, (XSP+H)
+      AND    XHL, (XSP+H)
+      AND    XIX, (XSP+H)
+      AND    XIY, (XSP+H)
+      AND    XIZ, (XSP+H)
+      AND    XSP, (XSP+H)
+      XOR    XWA, (XSP+H)
+      XOR    XBC, (XSP+H)
+      XOR    XDE, (XSP+H)
+      XOR    XHL, (XSP+H)
+      XOR    XIX, (XSP+H)
+      XOR    XIY, (XSP+H)
+      XOR    XIZ, (XSP+H)
+      XOR    XSP, (XSP+H)
+      OR     XWA, (XSP+H)
+      OR     XBC, (XSP+H)
+      OR     XDE, (XSP+H)
+      OR     XHL, (XSP+H)
+      OR     XIX, (XSP+H)
+      OR     XIY, (XSP+H)
+      OR     XIZ, (XSP+H)
+      OR     XSP, (XSP+H)
+      OR     XBC, (XIX+A)
+      OR     XDE, (XIX+A)
+      OR     XHL, (XIX+A)
+      OR     XIX, (XIX+A)
+      OR     XIY, (XIX+A)
+      OR     XIZ, (XIX+A)
+      OR     XSP, (XIX+A)
+      CP     XWA, (XIX+A)
+      CP     XBC, (XIX+A)
+      CP     XDE, (XIX+A)
+      CP     XHL, (XIX+A)
+      CP     XIX, (XIX+A)
+      CP     XIY, (XIX+A)
+      CP     XIZ, (XIX+A)
+      CP     XSP, (XIX+A)
+      LD     XWA, (XIX+A)
+      LD     XBC, (XIX+A)
+      LD     XDE, (XIX+A)
+      LD     XHL, (XIX+A)
+      LD     XIX, (XIX+A)
+      LD     XIY, (XIX+A)
+      LD     XIZ, (XIX+A)
+      LD     XSP, (XIX+A)
+      EX     XWA, (XIX+A)
+      EX     XBC, (XIX+A)
+      EX     XDE, (XIX+A)
+      EX     XHL, (XIX+A)
+      EX     XIX, (XIX+A)
+      EX     XIY, (XIX+A)
+      EX     XIZ, (XIX+A)
+      EX     XSP, (XIX+A)
+      ADD    XWA, (XIX+A)
+      ADD    XBC, (XIX+A)
+      ADD    XDE, (XIX+A)
+      ADD    XHL, (XIX+A)
+      ADD    XIX, (XIX+A)
+      ADD    XIY, (XIX+A)
+      ADD    XIZ, (XIX+A)
+      ADD    XSP, (XIX+A)
+      ADC    XWA, (XIX+A)
+      ADC    XBC, (XIX+A)
+      ADC    XDE, (XIX+A)
+      ADC    XHL, (XIX+A)
+      ADC    XIX, (XIX+A)
+      ADC    XIY, (XIX+A)
+      ADC    XIZ, (XIX+A)
+      ADC    XSP, (XIX+A)
+      SUB    XWA, (XIX+A)
+      SUB    XBC, (XIX+A)
+      SUB    XDE, (XIX+A)
+      SUB    XHL, (XIX+A)
+      SUB    XIX, (XIX+A)
+      SUB    XIY, (XIX+A)
+      SUB    XIZ, (XIX+A)
+      SUB    XSP, (XIX+A)
+      SBC    XWA, (XIX+A)
+      SBC    XBC, (XIX+A)
+      SBC    XDE, (XIX+A)
+      SBC    XHL, (XIX+A)
+      SBC    XIX, (XIX+A)
+      SBC    XIY, (XIX+A)
+      SBC    XIZ, (XIX+A)
+      SBC    XSP, (XIX+A)
+      AND    XWA, (XIX+A)
+      AND    XBC, (XIX+A)
+      AND    XDE, (XIX+A)
+      AND    XHL, (XIX+A)
+      AND    XIX, (XIX+A)
+      AND    XIY, (XIX+A)
+      AND    XIZ, (XIX+A)
+      AND    XSP, (XIX+A)
+      XOR    XWA, (XIX+A)
+      XOR    XBC, (XIX+A)
+      XOR    XDE, (XIX+A)
+      XOR    XHL, (XIX+A)
+      XOR    XIX, (XIX+A)
+      XOR    XIY, (XIX+A)
+      XOR    XIZ, (XIX+A)
+      XOR    XSP, (XIX+A)
+      OR     XWA, (XIX+A)
+      OR     XDE, (XIX+W)
+      OR     XHL, (XIX+W)
+      OR     XIX, (XIX+W)
+      OR     XIY, (XIX+W)
+      OR     XIZ, (XIX+W)
+      OR     XSP, (XIX+W)
+      CP     XWA, (XIX+W)
+      CP     XBC, (XIX+W)
+      CP     XDE, (XIX+W)
+      CP     XHL, (XIX+W)
+      CP     XIX, (XIX+W)
+      CP     XIY, (XIX+W)
+      CP     XIZ, (XIX+W)
+      CP     XSP, (XIX+W)
+      LD     XWA, (XIX+W)
+      LD     XBC, (XIX+W)
+      LD     XDE, (XIX+W)
+      LD     XHL, (XIX+W)
+      LD     XIX, (XIX+W)
+      LD     XIY, (XIX+W)
+      LD     XIZ, (XIX+W)
+      LD     XSP, (XIX+W)
+      EX     XWA, (XIX+W)
+      EX     XBC, (XIX+W)
+      EX     XDE, (XIX+W)
+      EX     XHL, (XIX+W)
+      EX     XIX, (XIX+W)
+      EX     XIY, (XIX+W)
+      EX     XIZ, (XIX+W)
+      EX     XSP, (XIX+W)
+      ADD    XWA, (XIX+W)
+      ADD    XBC, (XIX+W)
+      ADD    XDE, (XIX+W)
+      ADD    XHL, (XIX+W)
+      ADD    XIX, (XIX+W)
+      ADD    XIY, (XIX+W)
+      ADD    XIZ, (XIX+W)
+      ADD    XSP, (XIX+W)
+      ADC    XWA, (XIX+W)
+      ADC    XBC, (XIX+W)
+      ADC    XDE, (XIX+W)
+      ADC    XHL, (XIX+W)
+      ADC    XIX, (XIX+W)
+      ADC    XIY, (XIX+W)
+      ADC    XIZ, (XIX+W)
+      ADC    XSP, (XIX+W)
+      SUB    XWA, (XIX+W)
+      SUB    XBC, (XIX+W)
+      SUB    XDE, (XIX+W)
+      SUB    XHL, (XIX+W)
+      SUB    XIX, (XIX+W)
+      SUB    XIY, (XIX+W)
+      SUB    XIZ, (XIX+W)
+      SUB    XSP, (XIX+W)
+      SBC    XWA, (XIX+W)
+      SBC    XBC, (XIX+W)
+      SBC    XDE, (XIX+W)
+      SBC    XHL, (XIX+W)
+      SBC    XIX, (XIX+W)
+      SBC    XIY, (XIX+W)
+      SBC    XIZ, (XIX+W)
+      SBC    XSP, (XIX+W)
+      AND    XWA, (XIX+W)
+      AND    XBC, (XIX+W)
+      AND    XDE, (XIX+W)
+      AND    XHL, (XIX+W)
+      AND    XIX, (XIX+W)
+      AND    XIY, (XIX+W)
+      AND    XIZ, (XIX+W)
+      AND    XSP, (XIX+W)
+      XOR    XWA, (XIX+W)
+      XOR    XBC, (XIX+W)
+      XOR    XDE, (XIX+W)
+      XOR    XHL, (XIX+W)
+      XOR    XIX, (XIX+W)
+      XOR    XIY, (XIX+W)
+      XOR    XIZ, (XIX+W)
+      XOR    XSP, (XIX+W)
+      OR     XWA, (XIX+W)
+      OR     XBC, (XIX+W)
+      OR     XIY, (XIX+C)
+      OR     XIZ, (XIX+C)
+      OR     XSP, (XIX+C)
+      CP     XWA, (XIX+C)
+      CP     XBC, (XIX+C)
+      CP     XDE, (XIX+C)
+      CP     XHL, (XIX+C)
+      CP     XIX, (XIX+C)
+      CP     XIY, (XIX+C)
+      CP     XIZ, (XIX+C)
+      CP     XSP, (XIX+C)
+      LD     XWA, (XIX+C)
+      LD     XBC, (XIX+C)
+      LD     XDE, (XIX+C)
+      LD     XHL, (XIX+C)
+      LD     XIX, (XIX+C)
+      LD     XIY, (XIX+C)
+      LD     XIZ, (XIX+C)
+      LD     XSP, (XIX+C)
+      EX     XWA, (XIX+C)
+      EX     XBC, (XIX+C)
+      EX     XDE, (XIX+C)
+      EX     XHL, (XIX+C)
+      EX     XIX, (XIX+C)
+      EX     XIY, (XIX+C)
+      EX     XIZ, (XIX+C)
+      EX     XSP, (XIX+C)
+      ADD    XWA, (XIX+C)
+      ADD    XBC, (XIX+C)
+      ADD    XDE, (XIX+C)
+      ADD    XHL, (XIX+C)
+      ADD    XIX, (XIX+C)
+      ADD    XIY, (XIX+C)
+      ADD    XIZ, (XIX+C)
+      ADD    XSP, (XIX+C)
+      ADC    XWA, (XIX+C)
+      ADC    XBC, (XIX+C)
+      ADC    XDE, (XIX+C)
+      ADC    XHL, (XIX+C)
+      ADC    XIX, (XIX+C)
+      ADC    XIY, (XIX+C)
+      ADC    XIZ, (XIX+C)
+      ADC    XSP, (XIX+C)
+      SUB    XWA, (XIX+C)
+      SUB    XBC, (XIX+C)
+      SUB    XDE, (XIX+C)
+      SUB    XHL, (XIX+C)
+      SUB    XIX, (XIX+C)
+      SUB    XIY, (XIX+C)
+      SUB    XIZ, (XIX+C)
+      SUB    XSP, (XIX+C)
+      SBC    XWA, (XIX+C)
+      SBC    XBC, (XIX+C)
+      SBC    XDE, (XIX+C)
+      SBC    XHL, (XIX+C)
+      SBC    XIX, (XIX+C)
+      SBC    XIY, (XIX+C)
+      SBC    XIZ, (XIX+C)
+      SBC    XSP, (XIX+C)
+      AND    XWA, (XIX+C)
+      AND    XBC, (XIX+C)
+      AND    XDE, (XIX+C)
+      AND    XHL, (XIX+C)
+      AND    XIX, (XIX+C)
+      AND    XIY, (XIX+C)
+      AND    XIZ, (XIX+C)
+      AND    XSP, (XIX+C)
+      XOR    XWA, (XIX+C)
+      XOR    XBC, (XIX+C)
+      XOR    XDE, (XIX+C)
+      XOR    XHL, (XIX+C)
+      XOR    XIX, (XIX+C)
+      XOR    XIY, (XIX+C)
+      XOR    XIZ, (XIX+C)
+      XOR    XSP, (XIX+C)
+      OR     XWA, (XIX+C)
+      OR     XBC, (XIX+C)
+      OR     XDE, (XIX+C)
+      OR     XHL, (XIX+C)
+      OR     XIX, (XIX+C)
+      OR     XIZ, (XIX+B)
+      OR     XSP, (XIX+B)
+      CP     XWA, (XIX+B)
+      CP     XBC, (XIX+B)
+      CP     XDE, (XIX+B)
+      CP     XHL, (XIX+B)
+      CP     XIX, (XIX+B)
+      CP     XIY, (XIX+B)
+      CP     XIZ, (XIX+B)
+      CP     XSP, (XIX+B)
+      LD     XWA, (XIX+B)
+      LD     XBC, (XIX+B)
+      LD     XDE, (XIX+B)
+      LD     XHL, (XIX+B)
+      LD     XIX, (XIX+B)
+      LD     XIY, (XIX+B)
+      LD     XIZ, (XIX+B)
+      LD     XSP, (XIX+B)
+      EX     XWA, (XIX+B)
+      EX     XBC, (XIX+B)
+      EX     XDE, (XIX+B)
+      EX     XHL, (XIX+B)
+      EX     XIX, (XIX+B)
+      EX     XIY, (XIX+B)
+      EX     XIZ, (XIX+B)
+      EX     XSP, (XIX+B)
+      ADD    XWA, (XIX+B)
+      ADD    XBC, (XIX+B)
+      ADD    XDE, (XIX+B)
+      ADD    XHL, (XIX+B)
+      ADD    XIX, (XIX+B)
+      ADD    XIY, (XIX+B)
+      ADD    XIZ, (XIX+B)
+      ADD    XSP, (XIX+B)
+      ADC    XWA, (XIX+B)
+      ADC    XBC, (XIX+B)
+      ADC    XDE, (XIX+B)
+      ADC    XHL, (XIX+B)
+      ADC    XIX, (XIX+B)
+      ADC    XIY, (XIX+B)
+      ADC    XIZ, (XIX+B)
+      ADC    XSP, (XIX+B)
+      SUB    XWA, (XIX+B)
+      SUB    XBC, (XIX+B)
+      SUB    XDE, (XIX+B)
+      SUB    XHL, (XIX+B)
+      SUB    XIX, (XIX+B)
+      SUB    XIY, (XIX+B)
+      SUB    XIZ, (XIX+B)
+      SUB    XSP, (XIX+B)
+      SBC    XWA, (XIX+B)
+      SBC    XBC, (XIX+B)
+      SBC    XDE, (XIX+B)
+      SBC    XHL, (XIX+B)
+      SBC    XIX, (XIX+B)
+      SBC    XIY, (XIX+B)
+      SBC    XIZ, (XIX+B)
+      SBC    XSP, (XIX+B)
+      AND    XWA, (XIX+B)
+      AND    XBC, (XIX+B)
+      AND    XDE, (XIX+B)
+      AND    XHL, (XIX+B)
+      AND    XIX, (XIX+B)
+      AND    XIY, (XIX+B)
+      AND    XIZ, (XIX+B)
+      AND    XSP, (XIX+B)
+      XOR    XWA, (XIX+B)
+      XOR    XBC, (XIX+B)
+      XOR    XDE, (XIX+B)
+      XOR    XHL, (XIX+B)
+      XOR    XIX, (XIX+B)
+      XOR    XIY, (XIX+B)
+      XOR    XIZ, (XIX+B)
+      XOR    XSP, (XIX+B)
+      OR     XWA, (XIX+B)
+      OR     XBC, (XIX+B)
+      OR     XDE, (XIX+B)
+      OR     XHL, (XIX+B)
+      OR     XIX, (XIX+B)
+      OR     XIY, (XIX+B)
+      CP     XWA, (XIX+E)
+      CP     XBC, (XIX+E)
+      CP     XDE, (XIX+E)
+      CP     XHL, (XIX+E)
+      CP     XIX, (XIX+E)
+      CP     XIY, (XIX+E)
+      CP     XIZ, (XIX+E)
+      CP     XSP, (XIX+E)
+      LD     XWA, (XIX+E)
+      LD     XBC, (XIX+E)
+      LD     XDE, (XIX+E)
+      LD     XHL, (XIX+E)
+      LD     XIX, (XIX+E)
+      LD     XIY, (XIX+E)
+      LD     XIZ, (XIX+E)
+      LD     XSP, (XIX+E)
+      EX     XWA, (XIX+E)
+      EX     XBC, (XIX+E)
+      EX     XDE, (XIX+E)
+      EX     XHL, (XIX+E)
+      EX     XIX, (XIX+E)
+      EX     XIY, (XIX+E)
+      EX     XIZ, (XIX+E)
+      EX     XSP, (XIX+E)
+      ADD    XWA, (XIX+E)
+      ADD    XBC, (XIX+E)
+      ADD    XDE, (XIX+E)
+      ADD    XHL, (XIX+E)
+      ADD    XIX, (XIX+E)
+      ADD    XIY, (XIX+E)
+      ADD    XIZ, (XIX+E)
+      ADD    XSP, (XIX+E)
+      ADC    XWA, (XIX+E)
+      ADC    XBC, (XIX+E)
+      ADC    XDE, (XIX+E)
+      ADC    XHL, (XIX+E)
+      ADC    XIX, (XIX+E)
+      ADC    XIY, (XIX+E)
+      ADC    XIZ, (XIX+E)
+      ADC    XSP, (XIX+E)
+      SUB    XWA, (XIX+E)
+      SUB    XBC, (XIX+E)
+      SUB    XDE, (XIX+E)
+      SUB    XHL, (XIX+E)
+      SUB    XIX, (XIX+E)
+      SUB    XIY, (XIX+E)
+      SUB    XIZ, (XIX+E)
+      SUB    XSP, (XIX+E)
+      SBC    XWA, (XIX+E)
+      SBC    XBC, (XIX+E)
+      SBC    XDE, (XIX+E)
+      SBC    XHL, (XIX+E)
+      SBC    XIX, (XIX+E)
+      SBC    XIY, (XIX+E)
+      SBC    XIZ, (XIX+E)
+      SBC    XSP, (XIX+E)
+      AND    XWA, (XIX+E)
+      AND    XBC, (XIX+E)
+      AND    XDE, (XIX+E)
+      AND    XHL, (XIX+E)
+      AND    XIX, (XIX+E)
+      AND    XIY, (XIX+E)
+      AND    XIZ, (XIX+E)
+      AND    XSP, (XIX+E)
+      XOR    XWA, (XIX+E)
+      XOR    XBC, (XIX+E)
+      XOR    XDE, (XIX+E)
+      XOR    XHL, (XIX+E)
+      XOR    XIX, (XIX+E)
+      XOR    XIY, (XIX+E)
+      XOR    XIZ, (XIX+E)
+      XOR    XSP, (XIX+E)
+      OR     XWA, (XIX+E)
+      OR     XBC, (XIX+E)
+      OR     XDE, (XIX+E)
+      OR     XHL, (XIX+E)
+      OR     XIX, (XIX+E)
+      OR     XIY, (XIX+E)
+      OR     XIZ, (XIX+E)
+      OR     XSP, (XIX+E)
+      CP     XWA, (XIX+D)
+      CP     XBC, (XIX+D)
+      CP     XDE, (XIX+D)
+      CP     XHL, (XIX+D)
+      CP     XIX, (XIX+D)
+      CP     XIY, (XIX+D)
+      CP     XIZ, (XIX+D)
+      CP     XSP, (XIX+D)
+      LD     XWA, (XIX+D)
+      LD     XBC, (XIX+D)
+      LD     XDE, (XIX+D)
+      LD     XHL, (XIX+D)
+      LD     XIX, (XIX+D)
+      LD     XIY, (XIX+D)
+      LD     XIZ, (XIX+D)
+      LD     XSP, (XIX+D)
+      EX     XWA, (XIX+D)
+      EX     XBC, (XIX+D)
+      EX     XDE, (XIX+D)
+      EX     XHL, (XIX+D)
+      EX     XIX, (XIX+D)
+      EX     XIY, (XIX+D)
+      EX     XIZ, (XIX+D)
+      EX     XSP, (XIX+D)
+      ADD    XWA, (XIX+D)
+      ADD    XBC, (XIX+D)
+      ADD    XDE, (XIX+D)
+      ADD    XHL, (XIX+D)
+      ADD    XIX, (XIX+D)
+      ADD    XIY, (XIX+D)
+      ADD    XIZ, (XIX+D)
+      ADD    XSP, (XIX+D)
+      ADC    XWA, (XIX+D)
+      ADC    XBC, (XIX+D)
+      ADC    XDE, (XIX+D)
+      ADC    XHL, (XIX+D)
+      ADC    XIX, (XIX+D)
+      ADC    XIY, (XIX+D)
+      ADC    XIZ, (XIX+D)
+      ADC    XSP, (XIX+D)
+      SUB    XWA, (XIX+D)
+      SUB    XBC, (XIX+D)
+      SUB    XDE, (XIX+D)
+      SUB    XHL, (XIX+D)
+      SUB    XIX, (XIX+D)
+      SUB    XIY, (XIX+D)
+      SUB    XIZ, (XIX+D)
+      SUB    XSP, (XIX+D)
+      SBC    XWA, (XIX+D)
+      SBC    XBC, (XIX+D)
+      SBC    XDE, (XIX+D)
+      SBC    XHL, (XIX+D)
+      SBC    XIX, (XIX+D)
+      SBC    XIY, (XIX+D)
+      SBC    XIZ, (XIX+D)
+      SBC    XSP, (XIX+D)
+      AND    XWA, (XIX+D)
+      AND    XBC, (XIX+D)
+      AND    XDE, (XIX+D)
+      AND    XHL, (XIX+D)
+      AND    XIX, (XIX+D)
+      AND    XIY, (XIX+D)
+      AND    XIZ, (XIX+D)
+      AND    XSP, (XIX+D)
+      XOR    XWA, (XIX+D)
+      XOR    XBC, (XIX+D)
+      XOR    XDE, (XIX+D)
+      XOR    XHL, (XIX+D)
+      XOR    XIX, (XIX+D)
+      XOR    XIY, (XIX+D)
+      XOR    XIZ, (XIX+D)
+      XOR    XSP, (XIX+D)
+      OR     XWA, (XIX+D)
+      OR     XBC, (XIX+D)
+      OR     XDE, (XIX+D)
+      OR     XHL, (XIX+D)
+      OR     XIX, (XIX+D)
+      OR     XIY, (XIX+D)
+      OR     XIZ, (XIX+D)
+      OR     XSP, (XIX+D)
+      CP     XWA, (XIX+L)
+      CP     XBC, (XIX+L)
+      CP     XDE, (XIX+L)
+      CP     XHL, (XIX+L)
+      CP     XIX, (XIX+L)
+      CP     XIY, (XIX+L)
+      CP     XIZ, (XIX+L)
+      CP     XSP, (XIX+L)
+      LD     XWA, (XIX+L)
+      LD     XBC, (XIX+L)
+      LD     XDE, (XIX+L)
+      LD     XHL, (XIX+L)
+      LD     XIX, (XIX+L)
+      LD     XIY, (XIX+L)
+      LD     XIZ, (XIX+L)
+      LD     XSP, (XIX+L)
+      EX     XWA, (XIX+L)
+      EX     XBC, (XIX+L)
+      EX     XDE, (XIX+L)
+      EX     XHL, (XIX+L)
+      EX     XIX, (XIX+L)
+      EX     XIY, (XIX+L)
+      EX     XIZ, (XIX+L)
+      EX     XSP, (XIX+L)
+      ADD    XWA, (XIX+L)
+      ADD    XBC, (XIX+L)
+      ADD    XDE, (XIX+L)
+      ADD    XHL, (XIX+L)
+      ADD    XIX, (XIX+L)
+      ADD    XIY, (XIX+L)
+      ADD    XIZ, (XIX+L)
+      ADD    XSP, (XIX+L)
+      ADC    XWA, (XIX+L)
+      ADC    XBC, (XIX+L)
+      ADC    XDE, (XIX+L)
+      ADC    XHL, (XIX+L)
+      ADC    XIX, (XIX+L)
+      ADC    XIY, (XIX+L)
+      ADC    XIZ, (XIX+L)
+      ADC    XSP, (XIX+L)
+      SUB    XWA, (XIX+L)
+      SUB    XBC, (XIX+L)
+      SUB    XDE, (XIX+L)
+      SUB    XHL, (XIX+L)
+      SUB    XIX, (XIX+L)
+      SUB    XIY, (XIX+L)
+      SUB    XIZ, (XIX+L)
+      SUB    XSP, (XIX+L)
+      SBC    XWA, (XIX+L)
+      SBC    XBC, (XIX+L)
+      SBC    XDE, (XIX+L)
+      SBC    XHL, (XIX+L)
+      SBC    XIX, (XIX+L)
+      SBC    XIY, (XIX+L)
+      SBC    XIZ, (XIX+L)
+      SBC    XSP, (XIX+L)
+      AND    XWA, (XIX+L)
+      AND    XBC, (XIX+L)
+      AND    XDE, (XIX+L)
+      AND    XHL, (XIX+L)
+      AND    XIX, (XIX+L)
+      AND    XIY, (XIX+L)
+      AND    XIZ, (XIX+L)
+      AND    XSP, (XIX+L)
+      XOR    XWA, (XIX+L)
+      XOR    XBC, (XIX+L)
+      XOR    XDE, (XIX+L)
+      XOR    XHL, (XIX+L)
+      XOR    XIX, (XIX+L)
+      XOR    XIY, (XIX+L)
+      XOR    XIZ, (XIX+L)
+      XOR    XSP, (XIX+L)
+      OR     XWA, (XIX+L)
+      OR     XBC, (XIX+L)
+      OR     XDE, (XIX+L)
+      OR     XHL, (XIX+L)
+      OR     XIX, (XIX+L)
+      OR     XIY, (XIX+L)
+      OR     XIZ, (XIX+L)
+      OR     XSP, (XIX+L)
+      CP     XWA, (XIX+H)
+      CP     XBC, (XIX+H)
+      CP     XDE, (XIX+H)
+      CP     XHL, (XIX+H)
+      CP     XIX, (XIX+H)
+      CP     XIY, (XIX+H)
+      CP     XIZ, (XIX+H)
+      CP     XSP, (XIX+H)
+      LD     XWA, (XIX+H)
+      LD     XBC, (XIX+H)
+      LD     XDE, (XIX+H)
+      LD     XHL, (XIX+H)
+      LD     XIX, (XIX+H)
+      LD     XIY, (XIX+H)
+      LD     XIZ, (XIX+H)
+      LD     XSP, (XIX+H)
+      EX     XWA, (XIX+H)
+      EX     XBC, (XIX+H)
+      EX     XDE, (XIX+H)
+      EX     XHL, (XIX+H)
+      EX     XIX, (XIX+H)
+      EX     XIY, (XIX+H)
+      EX     XIZ, (XIX+H)
+      EX     XSP, (XIX+H)
+      ADD    XWA, (XIX+H)
+      ADD    XBC, (XIX+H)
+      ADD    XDE, (XIX+H)
+      ADD    XHL, (XIX+H)
+      ADD    XIX, (XIX+H)
+      ADD    XIY, (XIX+H)
+      ADD    XIZ, (XIX+H)
+      ADD    XSP, (XIX+H)
+      ADC    XWA, (XIX+H)
+      ADC    XBC, (XIX+H)
+      ADC    XDE, (XIX+H)
+      ADC    XHL, (XIX+H)
+      ADC    XIX, (XIX+H)
+      ADC    XIY, (XIX+H)
+      ADC    XIZ, (XIX+H)
+      ADC    XSP, (XIX+H)
+      SUB    XWA, (XIX+H)
+      SUB    XBC, (XIX+H)
+      SUB    XDE, (XIX+H)
+      SUB    XHL, (XIX+H)
+      SUB    XIX, (XIX+H)
+      SUB    XIY, (XIX+H)
+      SUB    XIZ, (XIX+H)
+      SUB    XSP, (XIX+H)
+      SBC    XWA, (XIX+H)
+      SBC    XBC, (XIX+H)
+      SBC    XDE, (XIX+H)
+      SBC    XHL, (XIX+H)
+      SBC    XIX, (XIX+H)
+      SBC    XIY, (XIX+H)
+      SBC    XIZ, (XIX+H)
+      SBC    XSP, (XIX+H)
+      AND    XWA, (XIX+H)
+      AND    XBC, (XIX+H)
+      AND    XDE, (XIX+H)
+      AND    XHL, (XIX+H)
+      AND    XIX, (XIX+H)
+      AND    XIY, (XIX+H)
+      AND    XIZ, (XIX+H)
+      AND    XSP, (XIX+H)
+      XOR    XWA, (XIX+H)
+      XOR    XBC, (XIX+H)
+      XOR    XDE, (XIX+H)
+      XOR    XHL, (XIX+H)
+      XOR    XIX, (XIX+H)
+      XOR    XIY, (XIX+H)
+      XOR    XIZ, (XIX+H)
+      XOR    XSP, (XIX+H)
+      OR     XWA, (XIX+H)
+      OR     XBC, (XIX+H)
+      OR     XDE, (XIX+H)
+      OR     XHL, (XIX+H)
+      OR     XIX, (XIX+H)
+      OR     XIY, (XIX+H)
+      OR     XIZ, (XIX+H)
+      OR     XSP, (XIX+H)
       OR     XIZ, (-XIY)
       OR     XSP, (-XIY)
       CP     XWA, (-XIY)
@@ -28378,8 +40137,1992 @@
       CP     XIZ, XDE
       CP     XSP, XDE
       LD     XDE, 07060504H
-      CPL    XDE
-      NEG    XDE
+      LINK   XDE, 0E0DH
+      UNLK   XDE
+      BS1F   A, XDE
+      BS1B   A, XDE
+      EXTZ   XDE
+      EXTS   XDE
+      PAA    XDE
+      DJNZ   XDE, $+33
+      ANDCF  1, XDE
+      ORCF   2, XDE
+      XORCF  3, XDE
+      LDCF   4, XDE
+      STCF   5, XDE
+      LDC    DMAS0, XDE
+      LDC    DMAD0, XDE
+      LDC    XDE, DMAS0
+      LDC    XDE, DMAD0
+      RES    1, XDE
+      SET    2, XDE
+      CHG    3, XDE
+      BIT    4, XDE
+      TSET   5, XDE
+      INC    1, XDE
+      DEC    1, XDE
+      SCC    F, XDE
+      SCC    LT, XDE
+      SCC    LE, XDE
+      SCC    ULE, XDE
+      SCC    OV, XDE
+      SCC    MI, XDE
+      SCC    Z, XDE
+      SCC    C, XDE
+      SCC    T, XDE
+      SCC    GE, XDE
+      SCC    GT, XDE
+      SCC    UGT, XDE
+      SCC    NOV, XDE
+      SCC    PL, XDE
+      SCC    NZ, XDE
+      SCC    NC, XDE
+      ADD    XWA, XDE
+      ADD    XBC, XDE
+      ADD    XDE, XDE
+      ADD    XHL, XDE
+      ADD    XIX, XDE
+      ADD    XIY, XDE
+      ADD    XIZ, XDE
+      ADD    XSP, XDE
+      LD     XWA, XDE
+      LD     XBC, XDE
+      LD     XDE, XDE
+      LD     XHL, XDE
+      LD     XIX, XDE
+      LD     XIY, XDE
+      LD     XIZ, XDE
+      LD     XSP, XDE
+      ADC    XWA, XDE
+      ADC    XBC, XDE
+      ADC    XDE, XDE
+      ADC    XHL, XDE
+      ADC    XIX, XDE
+      ADC    XIY, XDE
+      ADC    XIZ, XDE
+      ADC    XSP, XDE
+      LD     XDE, XWA
+      LD     XDE, XBC
+      LD     XDE, XHL
+      LD     XDE, XIX
+      LD     XDE, XIY
+      LD     XDE, XIZ
+      LD     XDE, XSP
+      SUB    XWA, XDE
+      SUB    XBC, XDE
+      SUB    XDE, XDE
+      SUB    XHL, XDE
+      SUB    XIX, XDE
+      SUB    XIY, XDE
+      SUB    XIZ, XDE
+      SUB    XSP, XDE
+      SBC    XWA, XDE
+      SBC    XBC, XDE
+      SBC    XDE, XDE
+      SBC    XHL, XDE
+      SBC    XIX, XDE
+      SBC    XIY, XDE
+      SBC    XIZ, XDE
+      SBC    XSP, XDE
+      EX     XWA, XDE
+      EX     XBC, XDE
+      EX     XDE, XDE
+      EX     XHL, XDE
+      EX     XIX, XDE
+      EX     XIY, XDE
+      EX     XIZ, XDE
+      EX     XSP, XDE
+      AND    XWA, XDE
+      AND    XBC, XDE
+      AND    XDE, XDE
+      AND    XHL, XDE
+      AND    XIX, XDE
+      AND    XIY, XDE
+      AND    XIZ, XDE
+      AND    XSP, XDE
+      ADD    XDE, 0CCCBCAC9H
+      ADC    XDE, 0CDCCCBCAH
+      SUB    XDE, 0CECDCCCBH
+      SBC    XDE, 0CFCECDCCH
+      AND    XDE, 0D0CFCECDH
+      XOR    XDE, 0D1D0CFCEH
+      OR     XDE, 0D2D1D0CFH
+      CP     XDE, 0D3D2D1D0H
+      XOR    XWA, XDE
+      XOR    XBC, XDE
+      XOR    XDE, XDE
+      XOR    XHL, XDE
+      XOR    XIX, XDE
+      XOR    XIY, XDE
+      XOR    XIZ, XDE
+      XOR    XSP, XDE
+      OR     XWA, XDE
+      OR     XBC, XDE
+      OR     XDE, XDE
+      OR     XHL, XDE
+      OR     XIX, XDE
+      OR     XIY, XDE
+      OR     XIZ, XDE
+      OR     XSP, XDE
+      RLC    0E9H, XDE
+      SRA    0EEH, XHL
+      SLL    0EFH, XHL
+      SRL    0F0H, XHL
+      CP     XWA, XHL
+      CP     XBC, XHL
+      CP     XDE, XHL
+      CP     XHL, XHL
+      CP     XIX, XHL
+      CP     XIY, XHL
+      CP     XIZ, XHL
+      CP     XSP, XHL
+      LD     XHL, 07060504H
+      LINK   XHL, 0E0DH
+      UNLK   XHL
+      BS1F   A, XHL
+      BS1B   A, XHL
+      EXTZ   XHL
+      EXTS   XHL
+      PAA    XHL
+      DJNZ   XHL, $+33
+      ANDCF  1, XHL
+      ORCF   2, XHL
+      XORCF  3, XHL
+      LDCF   4, XHL
+      STCF   5, XHL
+      LDC    DMAS0, XHL
+      LDC    DMAD0, XHL
+      LDC    XHL, DMAS0
+      LDC    XHL, DMAD0
+      RES    1, XHL
+      SET    2, XHL
+      CHG    3, XHL
+      BIT    4, XHL
+      TSET   5, XHL
+      INC    1, XHL
+      DEC    1, XHL
+      SCC    F, XHL
+      SCC    LT, XHL
+      SCC    LE, XHL
+      SCC    ULE, XHL
+      SCC    OV, XHL
+      SCC    MI, XHL
+      SCC    Z, XHL
+      SCC    C, XHL
+      SCC    T, XHL
+      SCC    GE, XHL
+      SCC    GT, XHL
+      SCC    UGT, XHL
+      SCC    NOV, XHL
+      SCC    PL, XHL
+      SCC    NZ, XHL
+      SCC    NC, XHL
+      ADD    XWA, XHL
+      ADD    XBC, XHL
+      ADD    XDE, XHL
+      ADD    XHL, XHL
+      ADD    XIX, XHL
+      ADD    XIY, XHL
+      ADD    XIZ, XHL
+      ADD    XSP, XHL
+      LD     XWA, XHL
+      LD     XBC, XHL
+      LD     XHL, XHL
+      LD     XIX, XHL
+      LD     XIY, XHL
+      LD     XIZ, XHL
+      LD     XSP, XHL
+      ADC    XWA, XHL
+      ADC    XBC, XHL
+      ADC    XDE, XHL
+      ADC    XHL, XHL
+      ADC    XIX, XHL
+      ADC    XIY, XHL
+      ADC    XIZ, XHL
+      ADC    XSP, XHL
+      LD     XHL, XWA
+      LD     XHL, XBC
+      LD     XHL, XIX
+      LD     XHL, XIY
+      LD     XHL, XIZ
+      LD     XHL, XSP
+      SUB    XWA, XHL
+      SUB    XBC, XHL
+      SUB    XDE, XHL
+      SUB    XHL, XHL
+      SUB    XIX, XHL
+      SUB    XIY, XHL
+      SUB    XIZ, XHL
+      SUB    XSP, XHL
+      SBC    XWA, XHL
+      SBC    XBC, XHL
+      SBC    XDE, XHL
+      SBC    XHL, XHL
+      SBC    XIX, XHL
+      SBC    XIY, XHL
+      SBC    XIZ, XHL
+      SBC    XSP, XHL
+      EX     XWA, XHL
+      EX     XBC, XHL
+      EX     XDE, XHL
+      EX     XHL, XHL
+      EX     XIX, XHL
+      EX     XIY, XHL
+      EX     XIZ, XHL
+      EX     XSP, XHL
+      AND    XWA, XHL
+      AND    XBC, XHL
+      AND    XDE, XHL
+      AND    XHL, XHL
+      AND    XIX, XHL
+      AND    XIY, XHL
+      AND    XIZ, XHL
+      AND    XSP, XHL
+      ADD    XHL, 0CCCBCAC9H
+      ADC    XHL, 0CDCCCBCAH
+      SUB    XHL, 0CECDCCCBH
+      SBC    XHL, 0CFCECDCCH
+      AND    XHL, 0D0CFCECDH
+      XOR    XHL, 0D1D0CFCEH
+      OR     XHL, 0D2D1D0CFH
+      CP     XHL, 0D3D2D1D0H
+      XOR    XWA, XHL
+      XOR    XBC, XHL
+      XOR    XDE, XHL
+      XOR    XHL, XHL
+      XOR    XIX, XHL
+      XOR    XIY, XHL
+      XOR    XIZ, XHL
+      XOR    XSP, XHL
+      OR     XWA, XHL
+      OR     XBC, XHL
+      OR     XDE, XHL
+      OR     XHL, XHL
+      OR     XIX, XHL
+      OR     XIY, XHL
+      OR     XIZ, XHL
+      OR     XSP, XHL
+      RLC    0E9H, XHL
+      RRC    0EAH, XHL
+      RL     0EBH, XHL
+      RR     0ECH, XHL
+      SLA    0EDH, XHL
+      CP     XBC, XIX
+      CP     XDE, XIX
+      CP     XHL, XIX
+      CP     XIX, XIX
+      CP     XIY, XIX
+      CP     XIZ, XIX
+      CP     XSP, XIX
+      LD     XIX, 07060504H
+      LINK   XIX, 0E0DH
+      UNLK   XIX
+      BS1F   A, XIX
+      BS1B   A, XIX
+      EXTZ   XIX
+      EXTS   XIX
+      PAA    XIX
+      DJNZ   XIX, $+33
+      ANDCF  1, XIX
+      ORCF   2, XIX
+      XORCF  3, XIX
+      LDCF   4, XIX
+      STCF   5, XIX
+      LDC    DMAS0, XIX
+      LDC    DMAD0, XIX
+      LDC    XIX, DMAS0
+      LDC    XIX, DMAD0
+      RES    1, XIX
+      SET    2, XIX
+      CHG    3, XIX
+      BIT    4, XIX
+      TSET   5, XIX
+      INC    1, XIX
+      DEC    1, XIX
+      SCC    F, XIX
+      SCC    LT, XIX
+      SCC    LE, XIX
+      SCC    ULE, XIX
+      SCC    OV, XIX
+      SCC    MI, XIX
+      SCC    Z, XIX
+      SCC    C, XIX
+      SCC    T, XIX
+      SCC    GE, XIX
+      SCC    GT, XIX
+      SCC    UGT, XIX
+      SCC    NOV, XIX
+      SCC    PL, XIX
+      SCC    NZ, XIX
+      SCC    NC, XIX
+      ADD    XWA, XIX
+      ADD    XBC, XIX
+      ADD    XDE, XIX
+      ADD    XHL, XIX
+      ADD    XIX, XIX
+      ADD    XIY, XIX
+      ADD    XIZ, XIX
+      ADD    XSP, XIX
+      LD     XWA, XIX
+      LD     XBC, XIX
+      LD     XIX, XIX
+      LD     XIY, XIX
+      LD     XIZ, XIX
+      LD     XSP, XIX
+      ADC    XWA, XIX
+      ADC    XBC, XIX
+      ADC    XDE, XIX
+      ADC    XHL, XIX
+      ADC    XIX, XIX
+      ADC    XIY, XIX
+      ADC    XIZ, XIX
+      ADC    XSP, XIX
+      LD     XIX, XWA
+      LD     XIX, XBC
+      LD     XIX, XIY
+      LD     XIX, XIZ
+      LD     XIX, XSP
+      SUB    XWA, XIX
+      SUB    XBC, XIX
+      SUB    XDE, XIX
+      SUB    XHL, XIX
+      SUB    XIX, XIX
+      SUB    XIY, XIX
+      SUB    XIZ, XIX
+      SUB    XSP, XIX
+      SBC    XWA, XIX
+      SBC    XBC, XIX
+      SBC    XDE, XIX
+      SBC    XHL, XIX
+      SBC    XIX, XIX
+      SBC    XIY, XIX
+      SBC    XIZ, XIX
+      SBC    XSP, XIX
+      EX     XWA, XIX
+      EX     XBC, XIX
+      EX     XDE, XIX
+      EX     XHL, XIX
+      EX     XIX, XIX
+      EX     XIY, XIX
+      EX     XIZ, XIX
+      EX     XSP, XIX
+      AND    XWA, XIX
+      AND    XBC, XIX
+      AND    XDE, XIX
+      AND    XHL, XIX
+      AND    XIX, XIX
+      AND    XIY, XIX
+      AND    XIZ, XIX
+      AND    XSP, XIX
+      ADD    XIX, 0CCCBCAC9H
+      ADC    XIX, 0CDCCCBCAH
+      SUB    XIX, 0CECDCCCBH
+      SBC    XIX, 0CFCECDCCH
+      AND    XIX, 0D0CFCECDH
+      XOR    XIX, 0D1D0CFCEH
+      OR     XIX, 0D2D1D0CFH
+      CP     XIX, 0D3D2D1D0H
+      XOR    XWA, XIX
+      XOR    XBC, XIX
+      XOR    XDE, XIX
+      XOR    XHL, XIX
+      XOR    XIX, XIX
+      XOR    XIY, XIX
+      XOR    XIZ, XIX
+      XOR    XSP, XIX
+      OR     XWA, XIX
+      OR     XBC, XIX
+      OR     XDE, XIX
+      OR     XHL, XIX
+      OR     XIX, XIX
+      OR     XIY, XIX
+      OR     XIZ, XIX
+      OR     XSP, XIX
+      RLC    0E9H, XIX
+      RRC    0EAH, XIX
+      RL     0EBH, XIX
+      RR     0ECH, XIX
+      SLA    0EDH, XIX
+      SRA    0EEH, XIX
+      SLL    0EFH, XIX
+      SRL    0F0H, XIX
+      CP     XWA, XIX
+      CP     XIY, XIY
+      CP     XIZ, XIY
+      CP     XSP, XIY
+      LD     XIY, 07060504H
+      LINK   XIY, 0E0DH
+      UNLK   XIY
+      BS1F   A, XIY
+      BS1B   A, XIY
+      EXTZ   XIY
+      EXTS   XIY
+      PAA    XIY
+      DJNZ   XIY, $+33
+      ANDCF  1, XIY
+      ORCF   2, XIY
+      XORCF  3, XIY
+      LDCF   4, XIY
+      STCF   5, XIY
+      LDC    DMAS0, XIY
+      LDC    DMAD0, XIY
+      LDC    XIY, DMAS0
+      LDC    XIY, DMAD0
+      RES    1, XIY
+      SET    2, XIY
+      CHG    3, XIY
+      BIT    4, XIY
+      TSET   5, XIY
+      INC    1, XIY
+      DEC    1, XIY
+      SCC    F, XIY
+      SCC    LT, XIY
+      SCC    LE, XIY
+      SCC    ULE, XIY
+      SCC    OV, XIY
+      SCC    MI, XIY
+      SCC    Z, XIY
+      SCC    C, XIY
+      SCC    T, XIY
+      SCC    GE, XIY
+      SCC    GT, XIY
+      SCC    UGT, XIY
+      SCC    NOV, XIY
+      SCC    PL, XIY
+      SCC    NZ, XIY
+      SCC    NC, XIY
+      ADD    XWA, XIY
+      ADD    XBC, XIY
+      ADD    XDE, XIY
+      ADD    XHL, XIY
+      ADD    XIX, XIY
+      ADD    XIY, XIY
+      ADD    XIZ, XIY
+      ADD    XSP, XIY
+      LD     XWA, XIY
+      LD     XBC, XIY
+      LD     XIY, XIY
+      LD     XIZ, XIY
+      LD     XSP, XIY
+      ADC    XWA, XIY
+      ADC    XBC, XIY
+      ADC    XDE, XIY
+      ADC    XHL, XIY
+      ADC    XIX, XIY
+      ADC    XIY, XIY
+      ADC    XIZ, XIY
+      ADC    XSP, XIY
+      LD     XIY, XWA
+      LD     XIY, XBC
+      LD     XIY, XIZ
+      LD     XIY, XSP
+      SUB    XWA, XIY
+      SUB    XBC, XIY
+      SUB    XDE, XIY
+      SUB    XHL, XIY
+      SUB    XIX, XIY
+      SUB    XIY, XIY
+      SUB    XIZ, XIY
+      SUB    XSP, XIY
+      SBC    XWA, XIY
+      SBC    XBC, XIY
+      SBC    XDE, XIY
+      SBC    XHL, XIY
+      SBC    XIX, XIY
+      SBC    XIY, XIY
+      SBC    XIZ, XIY
+      SBC    XSP, XIY
+      EX     XWA, XIY
+      EX     XBC, XIY
+      EX     XDE, XIY
+      EX     XHL, XIY
+      EX     XIX, XIY
+      EX     XIY, XIY
+      EX     XIZ, XIY
+      EX     XSP, XIY
+      AND    XWA, XIY
+      AND    XBC, XIY
+      AND    XDE, XIY
+      AND    XHL, XIY
+      AND    XIX, XIY
+      AND    XIY, XIY
+      AND    XIZ, XIY
+      AND    XSP, XIY
+      ADD    XIY, 0CCCBCAC9H
+      ADC    XIY, 0CDCCCBCAH
+      SUB    XIY, 0CECDCCCBH
+      SBC    XIY, 0CFCECDCCH
+      AND    XIY, 0D0CFCECDH
+      XOR    XIY, 0D1D0CFCEH
+      OR     XIY, 0D2D1D0CFH
+      CP     XIY, 0D3D2D1D0H
+      XOR    XWA, XIY
+      XOR    XBC, XIY
+      XOR    XDE, XIY
+      XOR    XHL, XIY
+      XOR    XIX, XIY
+      XOR    XIY, XIY
+      XOR    XIZ, XIY
+      XOR    XSP, XIY
+      OR     XWA, XIY
+      OR     XBC, XIY
+      OR     XDE, XIY
+      OR     XHL, XIY
+      OR     XIX, XIY
+      OR     XIY, XIY
+      OR     XIZ, XIY
+      OR     XSP, XIY
+      RLC    0E9H, XIY
+      RRC    0EAH, XIY
+      RL     0EBH, XIY
+      RR     0ECH, XIY
+      SLA    0EDH, XIY
+      SRA    0EEH, XIY
+      SLL    0EFH, XIY
+      SRL    0F0H, XIY
+      CP     XWA, XIY
+      CP     XBC, XIY
+      CP     XDE, XIY
+      CP     XHL, XIY
+      CP     XIX, XIY
+      LD     XIZ, 07060504H
+      LINK   XIZ, 0E0DH
+      UNLK   XIZ
+      BS1F   A, XIZ
+      BS1B   A, XIZ
+      EXTZ   XIZ
+      EXTS   XIZ
+      PAA    XIZ
+      DJNZ   XIZ, $+33
+      ANDCF  1, XIZ
+      ORCF   2, XIZ
+      XORCF  3, XIZ
+      LDCF   4, XIZ
+      STCF   5, XIZ
+      LDC    DMAS0, XIZ
+      LDC    DMAD0, XIZ
+      LDC    XIZ, DMAS0
+      LDC    XIZ, DMAD0
+      RES    1, XIZ
+      SET    2, XIZ
+      CHG    3, XIZ
+      BIT    4, XIZ
+      TSET   5, XIZ
+      INC    1, XIZ
+      DEC    1, XIZ
+      SCC    F, XIZ
+      SCC    LT, XIZ
+      SCC    LE, XIZ
+      SCC    ULE, XIZ
+      SCC    OV, XIZ
+      SCC    MI, XIZ
+      SCC    Z, XIZ
+      SCC    C, XIZ
+      SCC    T, XIZ
+      SCC    GE, XIZ
+      SCC    GT, XIZ
+      SCC    UGT, XIZ
+      SCC    NOV, XIZ
+      SCC    PL, XIZ
+      SCC    NZ, XIZ
+      SCC    NC, XIZ
+      ADD    XWA, XIZ
+      ADD    XBC, XIZ
+      ADD    XDE, XIZ
+      ADD    XHL, XIZ
+      ADD    XIX, XIZ
+      ADD    XIY, XIZ
+      ADD    XIZ, XIZ
+      ADD    XSP, XIZ
+      LD     XWA, XIZ
+      LD     XBC, XIZ
+      LD     XIZ, XIZ
+      LD     XSP, XIZ
+      ADC    XWA, XIZ
+      ADC    XBC, XIZ
+      ADC    XDE, XIZ
+      ADC    XHL, XIZ
+      ADC    XIX, XIZ
+      ADC    XIY, XIZ
+      ADC    XIZ, XIZ
+      ADC    XSP, XIZ
+      LD     XIZ, XWA
+      LD     XIZ, XBC
+      LD     XIZ, XSP
+      SUB    XWA, XIZ
+      SUB    XBC, XIZ
+      SUB    XDE, XIZ
+      SUB    XHL, XIZ
+      SUB    XIX, XIZ
+      SUB    XIY, XIZ
+      SUB    XIZ, XIZ
+      SUB    XSP, XIZ
+      SBC    XWA, XIZ
+      SBC    XBC, XIZ
+      SBC    XDE, XIZ
+      SBC    XHL, XIZ
+      SBC    XIX, XIZ
+      SBC    XIY, XIZ
+      SBC    XIZ, XIZ
+      SBC    XSP, XIZ
+      EX     XWA, XIZ
+      EX     XBC, XIZ
+      EX     XDE, XIZ
+      EX     XHL, XIZ
+      EX     XIX, XIZ
+      EX     XIY, XIZ
+      EX     XIZ, XIZ
+      EX     XSP, XIZ
+      AND    XWA, XIZ
+      AND    XBC, XIZ
+      AND    XDE, XIZ
+      AND    XHL, XIZ
+      AND    XIX, XIZ
+      AND    XIY, XIZ
+      AND    XIZ, XIZ
+      AND    XSP, XIZ
+      ADD    XIZ, 0CCCBCAC9H
+      ADC    XIZ, 0CDCCCBCAH
+      SUB    XIZ, 0CECDCCCBH
+      SBC    XIZ, 0CFCECDCCH
+      AND    XIZ, 0D0CFCECDH
+      XOR    XIZ, 0D1D0CFCEH
+      OR     XIZ, 0D2D1D0CFH
+      CP     XIZ, 0D3D2D1D0H
+      XOR    XWA, XIZ
+      XOR    XBC, XIZ
+      XOR    XDE, XIZ
+      XOR    XHL, XIZ
+      XOR    XIX, XIZ
+      XOR    XIY, XIZ
+      XOR    XIZ, XIZ
+      XOR    XSP, XIZ
+      OR     XWA, XIZ
+      OR     XBC, XIZ
+      OR     XDE, XIZ
+      OR     XHL, XIZ
+      OR     XIX, XIZ
+      OR     XIY, XIZ
+      OR     XIZ, XIZ
+      OR     XSP, XIZ
+      RLC    0E9H, XIZ
+      RRC    0EAH, XIZ
+      RL     0EBH, XIZ
+      RR     0ECH, XIZ
+      SLA    0EDH, XIZ
+      SRA    0EEH, XIZ
+      SLL    0EFH, XIZ
+      SRL    0F0H, XIZ
+      CP     XWA, XIZ
+      CP     XBC, XIZ
+      CP     XDE, XIZ
+      CP     XHL, XIZ
+      CP     XIX, XIZ
+      CP     XIY, XIZ
+      CP     XIZ, XIZ
+      CP     XSP, XIZ
+      LD     XSP, 07060504H
+      LINK   XSP, 0E0DH
+      UNLK   XSP
+      BS1F   A, XSP
+      BS1B   A, XSP
+      EXTZ   XSP
+      EXTS   XSP
+      PAA    XSP
+      DJNZ   XSP, $+33
+      ANDCF  1, XSP
+      ORCF   2, XSP
+      XORCF  3, XSP
+      LDCF   4, XSP
+      STCF   5, XSP
+      LDC    DMAS0, XSP
+      LDC    DMAD0, XSP
+      LDC    XSP, DMAS0
+      LDC    XSP, DMAD0
+      RES    1, XSP
+      SET    2, XSP
+      CHG    3, XSP
+      BIT    4, XSP
+      TSET   5, XSP
+      INC    1, XSP
+      DEC    1, XSP
+      SCC    F, XSP
+      SCC    LT, XSP
+      SCC    LE, XSP
+      SCC    ULE, XSP
+      SCC    OV, XSP
+      SCC    MI, XSP
+      SCC    Z, XSP
+      SCC    C, XSP
+      SCC    T, XSP
+      SCC    GE, XSP
+      SCC    GT, XSP
+      SCC    UGT, XSP
+      SCC    NOV, XSP
+      SCC    PL, XSP
+      SCC    NZ, XSP
+      SCC    NC, XSP
+      ADD    XWA, XSP
+      ADD    XBC, XSP
+      ADD    XDE, XSP
+      ADD    XHL, XSP
+      ADD    XIX, XSP
+      ADD    XIY, XSP
+      ADD    XIZ, XSP
+      ADD    XSP, XSP
+      LD     XWA, XSP
+      LD     XBC, XSP
+      LD     XSP, XSP
+      ADC    XWA, XSP
+      ADC    XBC, XSP
+      ADC    XDE, XSP
+      ADC    XHL, XSP
+      ADC    XIX, XSP
+      ADC    XIY, XSP
+      ADC    XIZ, XSP
+      ADC    XSP, XSP
+      LD     XSP, XWA
+      LD     XSP, XBC
+      SUB    XWA, XSP
+      SUB    XBC, XSP
+      SUB    XDE, XSP
+      SUB    XHL, XSP
+      SUB    XIX, XSP
+      SUB    XIY, XSP
+      SUB    XIZ, XSP
+      SUB    XSP, XSP
+      SBC    XWA, XSP
+      SBC    XBC, XSP
+      SBC    XDE, XSP
+      SBC    XHL, XSP
+      SBC    XIX, XSP
+      SBC    XIY, XSP
+      SBC    XIZ, XSP
+      SBC    XSP, XSP
+      EX     XWA, XSP
+      EX     XBC, XSP
+      EX     XDE, XSP
+      EX     XHL, XSP
+      EX     XIX, XSP
+      EX     XIY, XSP
+      EX     XIZ, XSP
+      EX     XSP, XSP
+      AND    XWA, XSP
+      AND    XBC, XSP
+      AND    XDE, XSP
+      AND    XHL, XSP
+      AND    XIX, XSP
+      AND    XIY, XSP
+      AND    XIZ, XSP
+      AND    XSP, XSP
+      ADD    XSP, 0CCCBCAC9H
+      ADC    XSP, 0CDCCCBCAH
+      SUB    XSP, 0CECDCCCBH
+      SBC    XSP, 0CFCECDCCH
+      AND    XSP, 0D0CFCECDH
+      XOR    XSP, 0D1D0CFCEH
+      OR     XSP, 0D2D1D0CFH
+      CP     XSP, 0D3D2D1D0H
+      XOR    XWA, XSP
+      XOR    XBC, XSP
+      XOR    XDE, XSP
+      XOR    XHL, XSP
+      XOR    XIX, XSP
+      XOR    XIY, XSP
+      XOR    XIZ, XSP
+      XOR    XSP, XSP
+      OR     XWA, XSP
+      OR     XBC, XSP
+      OR     XDE, XSP
+      OR     XHL, XSP
+      OR     XIX, XSP
+      OR     XIY, XSP
+      OR     XIZ, XSP
+      OR     XSP, XSP
+      RLC    0E9H, XSP
+      RRC    0EAH, XSP
+      RL     0EBH, XSP
+      RR     0ECH, XSP
+      SLA    0EDH, XSP
+      SRA    0EEH, XSP
+      SLL    0EFH, XSP
+      SRL    0F0H, XSP
+      CP     XWA, XSP
+      CP     XBC, XSP
+      CP     XDE, XSP
+      CP     XHL, XSP
+      CP     XIX, XSP
+      CP     XIY, XSP
+      CP     XIZ, XSP
+      CP     XSP, XSP
+      LD     XWA0, 07060504H
+      LINK   XWA0, 0E0DH
+      UNLK   XWA0
+      BS1F   A, XWA0
+      BS1B   A, XWA0
+      EXTZ   XWA0
+      EXTS   XWA0
+      PAA    XWA0
+      DJNZ   XWA0, $+33
+      ANDCF  1, XWA0
+      ORCF   2, XWA0
+      XORCF  3, XWA0
+      LDCF   4, XWA0
+      STCF   5, XWA0
+      LDC    DMAS0, XWA0
+      LDC    DMAD0, XWA0
+      LDC    XWA0, DMAS0
+      LDC    XWA0, DMAD0
+      RES    1, XWA0
+      SET    2, XWA0
+      CHG    3, XWA0
+      BIT    4, XWA0
+      TSET   5, XWA0
+      INC    1, XWA0
+      DEC    1, XWA0
+      SCC    F, XWA0
+      SCC    LT, XWA0
+      SCC    LE, XWA0
+      SCC    ULE, XWA0
+      SCC    OV, XWA0
+      SCC    MI, XWA0
+      SCC    Z, XWA0
+      SCC    C, XWA0
+      SCC    T, XWA0
+      SCC    GE, XWA0
+      SCC    GT, XWA0
+      SCC    UGT, XWA0
+      SCC    NOV, XWA0
+      SCC    PL, XWA0
+      SCC    NZ, XWA0
+      SCC    NC, XWA0
+      ADD    XWA, XWA0
+      ADD    XBC, XWA0
+      ADD    XDE, XWA0
+      ADD    XHL, XWA0
+      ADD    XIX, XWA0
+      ADD    XIY, XWA0
+      ADD    XIZ, XWA0
+      ADD    XSP, XWA0
+      LD     XWA, XWA0
+      LD     XBC, XWA0
+      LD     XDE, XWA0
+      LD     XHL, XWA0
+      LD     XIX, XWA0
+      LD     XIY, XWA0
+      LD     XIZ, XWA0
+      LD     XSP, XWA0
+      ADC    XWA, XWA0
+      ADC    XBC, XWA0
+      ADC    XDE, XWA0
+      ADC    XHL, XWA0
+      ADC    XIX, XWA0
+      ADC    XIY, XWA0
+      ADC    XIZ, XWA0
+      ADC    XSP, XWA0
+      LD     XWA0, XWA
+      LD     XWA0, XBC
+      LD     XWA0, XDE
+      LD     XWA0, XHL
+      LD     XWA0, XIX
+      LD     XWA0, XIY
+      LD     XWA0, XIZ
+      LD     XWA0, XSP
+      SUB    XWA, XWA0
+      SUB    XBC, XWA0
+      SUB    XDE, XWA0
+      SUB    XHL, XWA0
+      SUB    XIX, XWA0
+      SUB    XIY, XWA0
+      SUB    XIZ, XWA0
+      SUB    XSP, XWA0
+      SBC    XWA, XWA0
+      SBC    XBC, XWA0
+      SBC    XDE, XWA0
+      SBC    XHL, XWA0
+      SBC    XIX, XWA0
+      SBC    XIY, XWA0
+      SBC    XIZ, XWA0
+      SBC    XSP, XWA0
+      EX     XWA, XWA0
+      EX     XBC, XWA0
+      EX     XDE, XWA0
+      EX     XHL, XWA0
+      EX     XIX, XWA0
+      EX     XIY, XWA0
+      EX     XIZ, XWA0
+      EX     XSP, XWA0
+      AND    XWA, XWA0
+      AND    XBC, XWA0
+      AND    XDE, XWA0
+      AND    XHL, XWA0
+      AND    XIX, XWA0
+      AND    XIY, XWA0
+      AND    XIZ, XWA0
+      AND    XSP, XWA0
+      ADD    XWA0, 0CCCBCAC9H
+      ADC    XWA0, 0CDCCCBCAH
+      SUB    XWA0, 0CECDCCCBH
+      SBC    XWA0, 0CFCECDCCH
+      AND    XWA0, 0D0CFCECDH
+      XOR    XWA0, 0D1D0CFCEH
+      OR     XWA0, 0D2D1D0CFH
+      CP     XWA0, 0D3D2D1D0H
+      XOR    XWA, XWA0
+      XOR    XBC, XWA0
+      XOR    XDE, XWA0
+      XOR    XHL, XWA0
+      XOR    XIX, XWA0
+      XOR    XIY, XWA0
+      XOR    XIZ, XWA0
+      XOR    XSP, XWA0
+      OR     XWA, XWA0
+      OR     XBC, XWA0
+      OR     XDE, XWA0
+      OR     XHL, XWA0
+      OR     XIX, XWA0
+      OR     XIY, XWA0
+      OR     XIZ, XWA0
+      OR     XSP, XWA0
+      RLC    0E9H, XWA0
+      RRC    0EAH, XWA0
+      RL     0EBH, XWA0
+      RR     0ECH, XWA0
+      SLA    0EDH, XWA0
+      SRA    0EEH, XWA0
+      SLL    0EFH, XWA0
+      SRL    0F0H, XWA0
+      CP     XWA, XWA0
+      CP     XBC, XWA0
+      CP     XDE, XWA0
+      CP     XHL, XWA0
+      CP     XIX, XWA0
+      CP     XIY, XWA0
+      CP     XIZ, XWA0
+      CP     XSP, XWA0
+      LINK   XBC0, 0E0DH
+      UNLK   XBC0
+      BS1F   A, XBC0
+      BS1B   A, XBC0
+      EXTZ   XBC0
+      EXTS   XBC0
+      PAA    XBC0
+      DJNZ   XBC0, $+33
+      ANDCF  1, XBC0
+      ORCF   2, XBC0
+      XORCF  3, XBC0
+      LDCF   4, XBC0
+      STCF   5, XBC0
+      LDC    DMAS0, XBC0
+      LDC    DMAD0, XBC0
+      LDC    XBC0, DMAS0
+      LDC    XBC0, DMAD0
+      RES    1, XBC0
+      SET    2, XBC0
+      CHG    3, XBC0
+      BIT    4, XBC0
+      TSET   5, XBC0
+      INC    1, XBC0
+      DEC    1, XBC0
+      SCC    F, XBC0
+      SCC    LT, XBC0
+      SCC    LE, XBC0
+      SCC    ULE, XBC0
+      SCC    OV, XBC0
+      SCC    MI, XBC0
+      SCC    Z, XBC0
+      SCC    C, XBC0
+      SCC    T, XBC0
+      SCC    GE, XBC0
+      SCC    GT, XBC0
+      SCC    UGT, XBC0
+      SCC    NOV, XBC0
+      SCC    PL, XBC0
+      SCC    NZ, XBC0
+      SCC    NC, XBC0
+      ADD    XWA, XBC0
+      ADD    XBC, XBC0
+      ADD    XDE, XBC0
+      ADD    XHL, XBC0
+      ADD    XIX, XBC0
+      ADD    XIY, XBC0
+      ADD    XIZ, XBC0
+      ADD    XSP, XBC0
+      LD     XWA, XBC0
+      LD     XBC, XBC0
+      LD     XDE, XBC0
+      LD     XHL, XBC0
+      LD     XIX, XBC0
+      LD     XIY, XBC0
+      LD     XIZ, XBC0
+      LD     XSP, XBC0
+      ADC    XWA, XBC0
+      ADC    XBC, XBC0
+      ADC    XDE, XBC0
+      ADC    XHL, XBC0
+      ADC    XIX, XBC0
+      ADC    XIY, XBC0
+      ADC    XIZ, XBC0
+      ADC    XSP, XBC0
+      LD     XBC0, XWA
+      LD     XBC0, XBC
+      LD     XBC0, XDE
+      LD     XBC0, XHL
+      LD     XBC0, XIX
+      LD     XBC0, XIY
+      LD     XBC0, XIZ
+      LD     XBC0, XSP
+      SUB    XWA, XBC0
+      SUB    XBC, XBC0
+      SUB    XDE, XBC0
+      SUB    XHL, XBC0
+      SUB    XIX, XBC0
+      SUB    XIY, XBC0
+      SUB    XIZ, XBC0
+      SUB    XSP, XBC0
+      SBC    XWA, XBC0
+      SBC    XBC, XBC0
+      SBC    XDE, XBC0
+      SBC    XHL, XBC0
+      SBC    XIX, XBC0
+      SBC    XIY, XBC0
+      SBC    XIZ, XBC0
+      SBC    XSP, XBC0
+      EX     XWA, XBC0
+      EX     XBC, XBC0
+      EX     XDE, XBC0
+      EX     XHL, XBC0
+      EX     XIX, XBC0
+      EX     XIY, XBC0
+      EX     XIZ, XBC0
+      EX     XSP, XBC0
+      AND    XWA, XBC0
+      AND    XBC, XBC0
+      AND    XDE, XBC0
+      AND    XHL, XBC0
+      AND    XIX, XBC0
+      AND    XIY, XBC0
+      AND    XIZ, XBC0
+      AND    XSP, XBC0
+      ADD    XBC0, 0CCCBCAC9H
+      ADC    XBC0, 0CDCCCBCAH
+      SUB    XBC0, 0CECDCCCBH
+      SBC    XBC0, 0CFCECDCCH
+      AND    XBC0, 0D0CFCECDH
+      XOR    XBC0, 0D1D0CFCEH
+      OR     XBC0, 0D2D1D0CFH
+      CP     XBC0, 0D3D2D1D0H
+      XOR    XWA, XBC0
+      XOR    XBC, XBC0
+      XOR    XDE, XBC0
+      XOR    XHL, XBC0
+      XOR    XIX, XBC0
+      XOR    XIY, XBC0
+      XOR    XIZ, XBC0
+      XOR    XSP, XBC0
+      OR     XWA, XBC0
+      OR     XBC, XBC0
+      OR     XDE, XBC0
+      OR     XHL, XBC0
+      OR     XIX, XBC0
+      OR     XIY, XBC0
+      OR     XIZ, XBC0
+      OR     XSP, XBC0
+      RLC    0E9H, XBC0
+      RRC    0EAH, XBC0
+      RL     0EBH, XBC0
+      RR     0ECH, XBC0
+      SLA    0EDH, XBC0
+      SRA    0EEH, XBC0
+      SLL    0EFH, XBC0
+      SRL    0F0H, XBC0
+      CP     XWA, XBC0
+      CP     XBC, XBC0
+      CP     XDE, XBC0
+      CP     XHL, XBC0
+      CP     XIX, XBC0
+      CP     XIY, XBC0
+      CP     XIZ, XBC0
+      CP     XSP, XBC0
+      LD     XBC0, 07060504H
+      LINK   XDE0, 0E0DH
+      UNLK   XDE0
+      BS1F   A, XDE0
+      BS1B   A, XDE0
+      EXTZ   XDE0
+      EXTS   XDE0
+      PAA    XDE0
+      DJNZ   XDE0, $+33
+      ANDCF  1, XDE0
+      ORCF   2, XDE0
+      XORCF  3, XDE0
+      LDCF   4, XDE0
+      STCF   5, XDE0
+      LDC    DMAS0, XDE0
+      LDC    DMAD0, XDE0
+      LDC    XDE0, DMAS0
+      LDC    XDE0, DMAD0
+      RES    1, XDE0
+      SET    2, XDE0
+      CHG    3, XDE0
+      BIT    4, XDE0
+      TSET   5, XDE0
+      INC    1, XDE0
+      DEC    1, XDE0
+      SCC    F, XDE0
+      SCC    LT, XDE0
+      SCC    LE, XDE0
+      SCC    ULE, XDE0
+      SCC    OV, XDE0
+      SCC    MI, XDE0
+      SCC    Z, XDE0
+      SCC    C, XDE0
+      SCC    T, XDE0
+      SCC    GE, XDE0
+      SCC    GT, XDE0
+      SCC    UGT, XDE0
+      SCC    NOV, XDE0
+      SCC    PL, XDE0
+      SCC    NZ, XDE0
+      SCC    NC, XDE0
+      ADD    XWA, XDE0
+      ADD    XBC, XDE0
+      ADD    XDE, XDE0
+      ADD    XHL, XDE0
+      ADD    XIX, XDE0
+      ADD    XIY, XDE0
+      ADD    XIZ, XDE0
+      ADD    XSP, XDE0
+      LD     XWA, XDE0
+      LD     XBC, XDE0
+      LD     XDE, XDE0
+      LD     XHL, XDE0
+      LD     XIX, XDE0
+      LD     XIY, XDE0
+      LD     XIZ, XDE0
+      LD     XSP, XDE0
+      ADC    XWA, XDE0
+      ADC    XBC, XDE0
+      ADC    XDE, XDE0
+      ADC    XHL, XDE0
+      ADC    XIX, XDE0
+      ADC    XIY, XDE0
+      ADC    XIZ, XDE0
+      ADC    XSP, XDE0
+      LD     XDE0, XWA
+      LD     XDE0, XBC
+      LD     XDE0, XDE
+      LD     XDE0, XHL
+      LD     XDE0, XIX
+      LD     XDE0, XIY
+      LD     XDE0, XIZ
+      LD     XDE0, XSP
+      SUB    XWA, XDE0
+      SUB    XBC, XDE0
+      SUB    XDE, XDE0
+      SUB    XHL, XDE0
+      SUB    XIX, XDE0
+      SUB    XIY, XDE0
+      SUB    XIZ, XDE0
+      SUB    XSP, XDE0
+      SBC    XWA, XDE0
+      SBC    XBC, XDE0
+      SBC    XDE, XDE0
+      SBC    XHL, XDE0
+      SBC    XIX, XDE0
+      SBC    XIY, XDE0
+      SBC    XIZ, XDE0
+      SBC    XSP, XDE0
+      EX     XWA, XDE0
+      EX     XBC, XDE0
+      EX     XDE, XDE0
+      EX     XHL, XDE0
+      EX     XIX, XDE0
+      EX     XIY, XDE0
+      EX     XIZ, XDE0
+      EX     XSP, XDE0
+      AND    XWA, XDE0
+      AND    XBC, XDE0
+      AND    XDE, XDE0
+      AND    XHL, XDE0
+      AND    XIX, XDE0
+      AND    XIY, XDE0
+      AND    XIZ, XDE0
+      AND    XSP, XDE0
+      ADD    XDE0, 0CCCBCAC9H
+      ADC    XDE0, 0CDCCCBCAH
+      SUB    XDE0, 0CECDCCCBH
+      SBC    XDE0, 0CFCECDCCH
+      AND    XDE0, 0D0CFCECDH
+      XOR    XDE0, 0D1D0CFCEH
+      OR     XDE0, 0D2D1D0CFH
+      CP     XDE0, 0D3D2D1D0H
+      XOR    XWA, XDE0
+      XOR    XBC, XDE0
+      XOR    XDE, XDE0
+      XOR    XHL, XDE0
+      XOR    XIX, XDE0
+      XOR    XIY, XDE0
+      XOR    XIZ, XDE0
+      XOR    XSP, XDE0
+      OR     XWA, XDE0
+      OR     XBC, XDE0
+      OR     XDE, XDE0
+      OR     XHL, XDE0
+      OR     XIX, XDE0
+      OR     XIY, XDE0
+      OR     XIZ, XDE0
+      OR     XSP, XDE0
+      RLC    0E9H, XDE0
+      RRC    0EAH, XDE0
+      RL     0EBH, XDE0
+      RR     0ECH, XDE0
+      SLA    0EDH, XDE0
+      SRA    0EEH, XDE0
+      SLL    0EFH, XDE0
+      SRL    0F0H, XDE0
+      CP     XWA, XDE0
+      CP     XBC, XDE0
+      CP     XDE, XDE0
+      CP     XHL, XDE0
+      CP     XIX, XDE0
+      CP     XIY, XDE0
+      CP     XIZ, XDE0
+      CP     XSP, XDE0
+      LD     XDE0, 07060504H
+      UNLK   XHL0
+      BS1F   A, XHL0
+      BS1B   A, XHL0
+      EXTZ   XHL0
+      EXTS   XHL0
+      PAA    XHL0
+      DJNZ   XHL0, $+33
+      ANDCF  1, XHL0
+      ORCF   2, XHL0
+      XORCF  3, XHL0
+      LDCF   4, XHL0
+      STCF   5, XHL0
+      LDC    DMAS0, XHL0
+      LDC    DMAD0, XHL0
+      LDC    XHL0, DMAS0
+      LDC    XHL0, DMAD0
+      RES    1, XHL0
+      SET    2, XHL0
+      CHG    3, XHL0
+      BIT    4, XHL0
+      TSET   5, XHL0
+      INC    1, XHL0
+      DEC    1, XHL0
+      SCC    F, XHL0
+      SCC    LT, XHL0
+      SCC    LE, XHL0
+      SCC    ULE, XHL0
+      SCC    OV, XHL0
+      SCC    MI, XHL0
+      SCC    Z, XHL0
+      SCC    C, XHL0
+      SCC    T, XHL0
+      SCC    GE, XHL0
+      SCC    GT, XHL0
+      SCC    UGT, XHL0
+      SCC    NOV, XHL0
+      SCC    PL, XHL0
+      SCC    NZ, XHL0
+      SCC    NC, XHL0
+      ADD    XWA, XHL0
+      ADD    XBC, XHL0
+      ADD    XDE, XHL0
+      ADD    XHL, XHL0
+      ADD    XIX, XHL0
+      ADD    XIY, XHL0
+      ADD    XIZ, XHL0
+      ADD    XSP, XHL0
+      LD     XWA, XHL0
+      LD     XBC, XHL0
+      LD     XDE, XHL0
+      LD     XHL, XHL0
+      LD     XIX, XHL0
+      LD     XIY, XHL0
+      LD     XIZ, XHL0
+      LD     XSP, XHL0
+      ADC    XWA, XHL0
+      ADC    XBC, XHL0
+      ADC    XDE, XHL0
+      ADC    XHL, XHL0
+      ADC    XIX, XHL0
+      ADC    XIY, XHL0
+      ADC    XIZ, XHL0
+      ADC    XSP, XHL0
+      LD     XHL0, XWA
+      LD     XHL0, XBC
+      LD     XHL0, XDE
+      LD     XHL0, XHL
+      LD     XHL0, XIX
+      LD     XHL0, XIY
+      LD     XHL0, XIZ
+      LD     XHL0, XSP
+      SUB    XWA, XHL0
+      SUB    XBC, XHL0
+      SUB    XDE, XHL0
+      SUB    XHL, XHL0
+      SUB    XIX, XHL0
+      SUB    XIY, XHL0
+      SUB    XIZ, XHL0
+      SUB    XSP, XHL0
+      SBC    XWA, XHL0
+      SBC    XBC, XHL0
+      SBC    XDE, XHL0
+      SBC    XHL, XHL0
+      SBC    XIX, XHL0
+      SBC    XIY, XHL0
+      SBC    XIZ, XHL0
+      SBC    XSP, XHL0
+      EX     XWA, XHL0
+      EX     XBC, XHL0
+      EX     XDE, XHL0
+      EX     XHL, XHL0
+      EX     XIX, XHL0
+      EX     XIY, XHL0
+      EX     XIZ, XHL0
+      EX     XSP, XHL0
+      AND    XWA, XHL0
+      AND    XBC, XHL0
+      AND    XDE, XHL0
+      AND    XHL, XHL0
+      AND    XIX, XHL0
+      AND    XIY, XHL0
+      AND    XIZ, XHL0
+      AND    XSP, XHL0
+      ADD    XHL0, 0CCCBCAC9H
+      ADC    XHL0, 0CDCCCBCAH
+      SUB    XHL0, 0CECDCCCBH
+      SBC    XHL0, 0CFCECDCCH
+      AND    XHL0, 0D0CFCECDH
+      XOR    XHL0, 0D1D0CFCEH
+      OR     XHL0, 0D2D1D0CFH
+      CP     XHL0, 0D3D2D1D0H
+      XOR    XWA, XHL0
+      XOR    XBC, XHL0
+      XOR    XDE, XHL0
+      XOR    XHL, XHL0
+      XOR    XIX, XHL0
+      XOR    XIY, XHL0
+      XOR    XIZ, XHL0
+      XOR    XSP, XHL0
+      OR     XWA, XHL0
+      OR     XBC, XHL0
+      OR     XDE, XHL0
+      OR     XHL, XHL0
+      OR     XIX, XHL0
+      OR     XIY, XHL0
+      OR     XIZ, XHL0
+      OR     XSP, XHL0
+      RLC    0E9H, XHL0
+      RRC    0EAH, XHL0
+      RL     0EBH, XHL0
+      RR     0ECH, XHL0
+      SLA    0EDH, XHL0
+      SRA    0EEH, XHL0
+      SLL    0EFH, XHL0
+      SRL    0F0H, XHL0
+      CP     XWA, XHL0
+      CP     XBC, XHL0
+      CP     XDE, XHL0
+      CP     XHL, XHL0
+      CP     XIX, XHL0
+      CP     XIY, XHL0
+      CP     XIZ, XHL0
+      CP     XSP, XHL0
+      LD     XHL0, 07060504H
+      LINK   XHL0, 0E0DH
+      XOR    XBC, XWA'
+      XOR    XDE, XWA'
+      XOR    XHL, XWA'
+      XOR    XIX, XWA'
+      XOR    XIY, XWA'
+      XOR    XIZ, XWA'
+      XOR    XSP, XWA'
+      OR     XWA, XWA'
+      OR     XBC, XWA'
+      OR     XDE, XWA'
+      OR     XHL, XWA'
+      OR     XIX, XWA'
+      OR     XIY, XWA'
+      OR     XIZ, XWA'
+      OR     XSP, XWA'
+      RLC    0E9H, XWA'
+      RRC    0EAH, XWA'
+      RL     0EBH, XWA'
+      RR     0ECH, XWA'
+      SLA    0EDH, XWA'
+      SRA    0EEH, XWA'
+      SLL    0EFH, XWA'
+      SRL    0F0H, XWA'
+      CP     XWA, XWA'
+      CP     XBC, XWA'
+      CP     XDE, XWA'
+      CP     XHL, XWA'
+      CP     XIX, XWA'
+      CP     XIY, XWA'
+      CP     XIZ, XWA'
+      CP     XSP, XWA'
+      LD     XWA', 07060504H
+      LINK   XWA', 0E0DH
+      UNLK   XWA'
+      BS1F   A, XWA'
+      BS1B   A, XWA'
+      EXTZ   XWA'
+      EXTS   XWA'
+      PAA    XWA'
+      DJNZ   XWA', $+33
+      ANDCF  1, XWA'
+      ORCF   2, XWA'
+      XORCF  3, XWA'
+      LDCF   4, XWA'
+      STCF   5, XWA'
+      LDC    DMAS0, XWA'
+      LDC    DMAD0, XWA'
+      LDC    XWA', DMAS0
+      LDC    XWA', DMAD0
+      RES    1, XWA'
+      SET    2, XWA'
+      CHG    3, XWA'
+      BIT    4, XWA'
+      TSET   5, XWA'
+      INC    1, XWA'
+      DEC    1, XWA'
+      SCC    F, XWA'
+      SCC    LT, XWA'
+      SCC    LE, XWA'
+      SCC    ULE, XWA'
+      SCC    OV, XWA'
+      SCC    MI, XWA'
+      SCC    Z, XWA'
+      SCC    C, XWA'
+      SCC    T, XWA'
+      SCC    GE, XWA'
+      SCC    GT, XWA'
+      SCC    UGT, XWA'
+      SCC    NOV, XWA'
+      SCC    PL, XWA'
+      SCC    NZ, XWA'
+      SCC    NC, XWA'
+      ADD    XWA, XWA'
+      ADD    XBC, XWA'
+      ADD    XDE, XWA'
+      ADD    XHL, XWA'
+      ADD    XIX, XWA'
+      ADD    XIY, XWA'
+      ADD    XIZ, XWA'
+      ADD    XSP, XWA'
+      LD     XWA, XWA'
+      LD     XBC, XWA'
+      LD     XDE, XWA'
+      LD     XHL, XWA'
+      LD     XIX, XWA'
+      LD     XIY, XWA'
+      LD     XIZ, XWA'
+      LD     XSP, XWA'
+      ADC    XWA, XWA'
+      ADC    XBC, XWA'
+      ADC    XDE, XWA'
+      ADC    XHL, XWA'
+      ADC    XIX, XWA'
+      ADC    XIY, XWA'
+      ADC    XIZ, XWA'
+      ADC    XSP, XWA'
+      LD     XWA', XWA
+      LD     XWA', XBC
+      LD     XWA', XDE
+      LD     XWA', XHL
+      LD     XWA', XIX
+      LD     XWA', XIY
+      LD     XWA', XIZ
+      LD     XWA', XSP
+      SUB    XWA, XWA'
+      SUB    XBC, XWA'
+      SUB    XDE, XWA'
+      SUB    XHL, XWA'
+      SUB    XIX, XWA'
+      SUB    XIY, XWA'
+      SUB    XIZ, XWA'
+      SUB    XSP, XWA'
+      SBC    XWA, XWA'
+      SBC    XBC, XWA'
+      SBC    XDE, XWA'
+      SBC    XHL, XWA'
+      SBC    XIX, XWA'
+      SBC    XIY, XWA'
+      SBC    XIZ, XWA'
+      SBC    XSP, XWA'
+      EX     XWA, XWA'
+      EX     XBC, XWA'
+      EX     XDE, XWA'
+      EX     XHL, XWA'
+      EX     XIX, XWA'
+      EX     XIY, XWA'
+      EX     XIZ, XWA'
+      EX     XSP, XWA'
+      AND    XWA, XWA'
+      AND    XBC, XWA'
+      AND    XDE, XWA'
+      AND    XHL, XWA'
+      AND    XIX, XWA'
+      AND    XIY, XWA'
+      AND    XIZ, XWA'
+      AND    XSP, XWA'
+      ADD    XWA', 0CCCBCAC9H
+      ADC    XWA', 0CDCCCBCAH
+      SUB    XWA', 0CECDCCCBH
+      SBC    XWA', 0CFCECDCCH
+      AND    XWA', 0D0CFCECDH
+      XOR    XWA', 0D1D0CFCEH
+      OR     XWA', 0D2D1D0CFH
+      CP     XWA', 0D3D2D1D0H
+      XOR    XWA, XWA'
+      XOR    XIY, XBC'
+      XOR    XIZ, XBC'
+      XOR    XSP, XBC'
+      OR     XWA, XBC'
+      OR     XBC, XBC'
+      OR     XDE, XBC'
+      OR     XHL, XBC'
+      OR     XIX, XBC'
+      OR     XIY, XBC'
+      OR     XIZ, XBC'
+      OR     XSP, XBC'
+      RLC    0E9H, XBC'
+      RRC    0EAH, XBC'
+      RL     0EBH, XBC'
+      RR     0ECH, XBC'
+      SLA    0EDH, XBC'
+      SRA    0EEH, XBC'
+      SLL    0EFH, XBC'
+      SRL    0F0H, XBC'
+      CP     XWA, XBC'
+      CP     XBC, XBC'
+      CP     XDE, XBC'
+      CP     XHL, XBC'
+      CP     XIX, XBC'
+      CP     XIY, XBC'
+      CP     XIZ, XBC'
+      CP     XSP, XBC'
+      LD     XBC', 07060504H
+      LINK   XBC', 0E0DH
+      UNLK   XBC'
+      BS1F   A, XBC'
+      BS1B   A, XBC'
+      EXTZ   XBC'
+      EXTS   XBC'
+      PAA    XBC'
+      DJNZ   XBC', $+33
+      ANDCF  1, XBC'
+      ORCF   2, XBC'
+      XORCF  3, XBC'
+      LDCF   4, XBC'
+      STCF   5, XBC'
+      LDC    DMAS0, XBC'
+      LDC    DMAD0, XBC'
+      LDC    XBC', DMAS0
+      LDC    XBC', DMAD0
+      RES    1, XBC'
+      SET    2, XBC'
+      CHG    3, XBC'
+      BIT    4, XBC'
+      TSET   5, XBC'
+      INC    1, XBC'
+      DEC    1, XBC'
+      SCC    F, XBC'
+      SCC    LT, XBC'
+      SCC    LE, XBC'
+      SCC    ULE, XBC'
+      SCC    OV, XBC'
+      SCC    MI, XBC'
+      SCC    Z, XBC'
+      SCC    C, XBC'
+      SCC    T, XBC'
+      SCC    GE, XBC'
+      SCC    GT, XBC'
+      SCC    UGT, XBC'
+      SCC    NOV, XBC'
+      SCC    PL, XBC'
+      SCC    NZ, XBC'
+      SCC    NC, XBC'
+      ADD    XWA, XBC'
+      ADD    XBC, XBC'
+      ADD    XDE, XBC'
+      ADD    XHL, XBC'
+      ADD    XIX, XBC'
+      ADD    XIY, XBC'
+      ADD    XIZ, XBC'
+      ADD    XSP, XBC'
+      LD     XWA, XBC'
+      LD     XBC, XBC'
+      LD     XDE, XBC'
+      LD     XHL, XBC'
+      LD     XIX, XBC'
+      LD     XIY, XBC'
+      LD     XIZ, XBC'
+      LD     XSP, XBC'
+      ADC    XWA, XBC'
+      ADC    XBC, XBC'
+      ADC    XDE, XBC'
+      ADC    XHL, XBC'
+      ADC    XIX, XBC'
+      ADC    XIY, XBC'
+      ADC    XIZ, XBC'
+      ADC    XSP, XBC'
+      LD     XBC', XWA
+      LD     XBC', XBC
+      LD     XBC', XDE
+      LD     XBC', XHL
+      LD     XBC', XIX
+      LD     XBC', XIY
+      LD     XBC', XIZ
+      LD     XBC', XSP
+      SUB    XWA, XBC'
+      SUB    XBC, XBC'
+      SUB    XDE, XBC'
+      SUB    XHL, XBC'
+      SUB    XIX, XBC'
+      SUB    XIY, XBC'
+      SUB    XIZ, XBC'
+      SUB    XSP, XBC'
+      SBC    XWA, XBC'
+      SBC    XBC, XBC'
+      SBC    XDE, XBC'
+      SBC    XHL, XBC'
+      SBC    XIX, XBC'
+      SBC    XIY, XBC'
+      SBC    XIZ, XBC'
+      SBC    XSP, XBC'
+      EX     XWA, XBC'
+      EX     XBC, XBC'
+      EX     XDE, XBC'
+      EX     XHL, XBC'
+      EX     XIX, XBC'
+      EX     XIY, XBC'
+      EX     XIZ, XBC'
+      EX     XSP, XBC'
+      AND    XWA, XBC'
+      AND    XBC, XBC'
+      AND    XDE, XBC'
+      AND    XHL, XBC'
+      AND    XIX, XBC'
+      AND    XIY, XBC'
+      AND    XIZ, XBC'
+      AND    XSP, XBC'
+      ADD    XBC', 0CCCBCAC9H
+      ADC    XBC', 0CDCCCBCAH
+      SUB    XBC', 0CECDCCCBH
+      SBC    XBC', 0CFCECDCCH
+      AND    XBC', 0D0CFCECDH
+      XOR    XBC', 0D1D0CFCEH
+      OR     XBC', 0D2D1D0CFH
+      CP     XBC', 0D3D2D1D0H
+      XOR    XWA, XBC'
+      XOR    XBC, XBC'
+      XOR    XDE, XBC'
+      XOR    XHL, XBC'
+      XOR    XIX, XBC'
+      OR     XWA, XDE'
+      OR     XBC, XDE'
+      OR     XDE, XDE'
+      OR     XHL, XDE'
+      OR     XIX, XDE'
+      OR     XIY, XDE'
+      OR     XIZ, XDE'
+      OR     XSP, XDE'
+      RLC    0E9H, XDE'
+      RRC    0EAH, XDE'
+      RL     0EBH, XDE'
+      RR     0ECH, XDE'
+      SLA    0EDH, XDE'
+      SRA    0EEH, XDE'
+      SLL    0EFH, XDE'
+      SRL    0F0H, XDE'
+      CP     XWA, XDE'
+      CP     XBC, XDE'
+      CP     XDE, XDE'
+      CP     XHL, XDE'
+      CP     XIX, XDE'
+      CP     XIY, XDE'
+      CP     XIZ, XDE'
+      CP     XSP, XDE'
+      LD     XDE', 07060504H
+      LINK   XDE', 0E0DH
+      UNLK   XDE'
+      BS1F   A, XDE'
+      BS1B   A, XDE'
+      EXTZ   XDE'
+      EXTS   XDE'
+      PAA    XDE'
+      DJNZ   XDE', $+33
+      ANDCF  1, XDE'
+      ORCF   2, XDE'
+      XORCF  3, XDE'
+      LDCF   4, XDE'
+      STCF   5, XDE'
+      LDC    DMAS0, XDE'
+      LDC    DMAD0, XDE'
+      LDC    XDE', DMAS0
+      LDC    XDE', DMAD0
+      RES    1, XDE'
+      SET    2, XDE'
+      CHG    3, XDE'
+      BIT    4, XDE'
+      TSET   5, XDE'
+      INC    1, XDE'
+      DEC    1, XDE'
+      SCC    F, XDE'
+      SCC    LT, XDE'
+      SCC    LE, XDE'
+      SCC    ULE, XDE'
+      SCC    OV, XDE'
+      SCC    MI, XDE'
+      SCC    Z, XDE'
+      SCC    C, XDE'
+      SCC    T, XDE'
+      SCC    GE, XDE'
+      SCC    GT, XDE'
+      SCC    UGT, XDE'
+      SCC    NOV, XDE'
+      SCC    PL, XDE'
+      SCC    NZ, XDE'
+      SCC    NC, XDE'
+      ADD    XWA, XDE'
+      ADD    XBC, XDE'
+      ADD    XDE, XDE'
+      ADD    XHL, XDE'
+      ADD    XIX, XDE'
+      ADD    XIY, XDE'
+      ADD    XIZ, XDE'
+      ADD    XSP, XDE'
+      LD     XWA, XDE'
+      LD     XBC, XDE'
+      LD     XDE, XDE'
+      LD     XHL, XDE'
+      LD     XIX, XDE'
+      LD     XIY, XDE'
+      LD     XIZ, XDE'
+      LD     XSP, XDE'
+      ADC    XWA, XDE'
+      ADC    XBC, XDE'
+      ADC    XDE, XDE'
+      ADC    XHL, XDE'
+      ADC    XIX, XDE'
+      ADC    XIY, XDE'
+      ADC    XIZ, XDE'
+      ADC    XSP, XDE'
+      LD     XDE', XWA
+      LD     XDE', XBC
+      LD     XDE', XDE
+      LD     XDE', XHL
+      LD     XDE', XIX
+      LD     XDE', XIY
+      LD     XDE', XIZ
+      LD     XDE', XSP
+      SUB    XWA, XDE'
+      SUB    XBC, XDE'
+      SUB    XDE, XDE'
+      SUB    XHL, XDE'
+      SUB    XIX, XDE'
+      SUB    XIY, XDE'
+      SUB    XIZ, XDE'
+      SUB    XSP, XDE'
+      SBC    XWA, XDE'
+      SBC    XBC, XDE'
+      SBC    XDE, XDE'
+      SBC    XHL, XDE'
+      SBC    XIX, XDE'
+      SBC    XIY, XDE'
+      SBC    XIZ, XDE'
+      SBC    XSP, XDE'
+      EX     XWA, XDE'
+      EX     XBC, XDE'
+      EX     XDE, XDE'
+      EX     XHL, XDE'
+      EX     XIX, XDE'
+      EX     XIY, XDE'
+      EX     XIZ, XDE'
+      EX     XSP, XDE'
+      AND    XWA, XDE'
+      AND    XBC, XDE'
+      AND    XDE, XDE'
+      AND    XHL, XDE'
+      AND    XIX, XDE'
+      AND    XIY, XDE'
+      AND    XIZ, XDE'
+      AND    XSP, XDE'
+      ADD    XDE', 0CCCBCAC9H
+      ADC    XDE', 0CDCCCBCAH
+      SUB    XDE', 0CECDCCCBH
+      SBC    XDE', 0CFCECDCCH
+      AND    XDE', 0D0CFCECDH
+      XOR    XDE', 0D1D0CFCEH
+      OR     XDE', 0D2D1D0CFH
+      CP     XDE', 0D3D2D1D0H
+      XOR    XWA, XDE'
+      XOR    XBC, XDE'
+      XOR    XDE, XDE'
+      XOR    XHL, XDE'
+      XOR    XIX, XDE'
+      XOR    XIY, XDE'
+      XOR    XIZ, XDE'
+      XOR    XSP, XDE'
+      OR     XWA, XHL'
+      OR     XBC, XHL'
+      OR     XDE, XHL'
+      OR     XHL, XHL'
+      OR     XIX, XHL'
+      OR     XIY, XHL'
+      OR     XIZ, XHL'
+      OR     XSP, XHL'
+      RLC    0E9H, XHL'
+      RRC    0EAH, XHL'
+      RL     0EBH, XHL'
+      RR     0ECH, XHL'
+      SLA    0EDH, XHL'
+      SRA    0EEH, XHL'
+      SLL    0EFH, XHL'
+      SRL    0F0H, XHL'
+      CP     XWA, XHL'
+      CP     XBC, XHL'
+      CP     XDE, XHL'
+      CP     XHL, XHL'
+      CP     XIX, XHL'
+      CP     XIY, XHL'
+      CP     XIZ, XHL'
+      CP     XSP, XHL'
+      LD     XHL', 07060504H
+      LINK   XHL', 0E0DH
+      UNLK   XHL'
+      BS1F   A, XHL'
+      BS1B   A, XHL'
+      EXTZ   XHL'
+      EXTS   XHL'
+      PAA    XHL'
+      DJNZ   XHL', $+33
+      ANDCF  1, XHL'
+      ORCF   2, XHL'
+      XORCF  3, XHL'
+      LDCF   4, XHL'
+      STCF   5, XHL'
+      LDC    DMAS0, XHL'
+      LDC    DMAD0, XHL'
+      LDC    XHL', DMAS0
+      LDC    XHL', DMAD0
+      RES    1, XHL'
+      SET    2, XHL'
+      CHG    3, XHL'
+      BIT    4, XHL'
+      TSET   5, XHL'
+      INC    1, XHL'
+      DEC    1, XHL'
+      SCC    F, XHL'
+      SCC    LT, XHL'
+      SCC    LE, XHL'
+      SCC    ULE, XHL'
+      SCC    OV, XHL'
+      SCC    MI, XHL'
+      SCC    Z, XHL'
+      SCC    C, XHL'
+      SCC    T, XHL'
+      SCC    GE, XHL'
+      SCC    GT, XHL'
+      SCC    UGT, XHL'
+      SCC    NOV, XHL'
+      SCC    PL, XHL'
+      SCC    NZ, XHL'
+      SCC    NC, XHL'
+      ADD    XWA, XHL'
+      ADD    XBC, XHL'
+      ADD    XDE, XHL'
+      ADD    XHL, XHL'
+      ADD    XIX, XHL'
+      ADD    XIY, XHL'
+      ADD    XIZ, XHL'
+      ADD    XSP, XHL'
+      LD     XWA, XHL'
+      LD     XBC, XHL'
+      LD     XDE, XHL'
+      LD     XHL, XHL'
+      LD     XIX, XHL'
+      LD     XIY, XHL'
+      LD     XIZ, XHL'
+      LD     XSP, XHL'
+      ADC    XWA, XHL'
+      ADC    XBC, XHL'
+      ADC    XDE, XHL'
+      ADC    XHL, XHL'
+      ADC    XIX, XHL'
+      ADC    XIY, XHL'
+      ADC    XIZ, XHL'
+      ADC    XSP, XHL'
+      LD     XHL', XWA
+      LD     XHL', XBC
+      LD     XHL', XDE
+      LD     XHL', XHL
+      LD     XHL', XIX
+      LD     XHL', XIY
+      LD     XHL', XIZ
+      LD     XHL', XSP
+      SUB    XWA, XHL'
+      SUB    XBC, XHL'
+      SUB    XDE, XHL'
+      SUB    XHL, XHL'
+      SUB    XIX, XHL'
+      SUB    XIY, XHL'
+      SUB    XIZ, XHL'
+      SUB    XSP, XHL'
+      SBC    XWA, XHL'
+      SBC    XBC, XHL'
+      SBC    XDE, XHL'
+      SBC    XHL, XHL'
+      SBC    XIX, XHL'
+      SBC    XIY, XHL'
+      SBC    XIZ, XHL'
+      SBC    XSP, XHL'
+      EX     XWA, XHL'
+      EX     XBC, XHL'
+      EX     XDE, XHL'
+      EX     XHL, XHL'
+      EX     XIX, XHL'
+      EX     XIY, XHL'
+      EX     XIZ, XHL'
+      EX     XSP, XHL'
+      AND    XWA, XHL'
+      AND    XBC, XHL'
+      AND    XDE, XHL'
+      AND    XHL, XHL'
+      AND    XIX, XHL'
+      AND    XIY, XHL'
+      AND    XIZ, XHL'
+      AND    XSP, XHL'
+      ADD    XHL', 0CCCBCAC9H
+      ADC    XHL', 0CDCCCBCAH
+      SUB    XHL', 0CECDCCCBH
+      SBC    XHL', 0CFCECDCCH
+      AND    XHL', 0D0CFCECDH
+      XOR    XHL', 0D1D0CFCEH
+      OR     XHL', 0D2D1D0CFH
+      CP     XHL', 0D3D2D1D0H
+      XOR    XWA, XHL'
+      XOR    XBC, XHL'
+      XOR    XDE, XHL'
+      XOR    XHL, XHL'
+      XOR    XIX, XHL'
+      XOR    XIY, XHL'
+      XOR    XIZ, XHL'
+      XOR    XSP, XHL'
+      OR     XBC, XWA
+      OR     XDE, XWA
+      OR     XHL, XWA
+      OR     XIX, XWA
+      OR     XIY, XWA
+      OR     XIZ, XWA
+      OR     XSP, XWA
+      RLC    0E9H, XWA
       RRC    0EAH, XWA
       RL     0EBH, XWA
       RR     0ECH, XWA
@@ -28395,28 +42138,22 @@
       CP     XIY, XWA
       CP     XIZ, XWA
       CP     XSP, XWA
-      CPL    XWA
-      NEG    XWA
+      LD     XWA, 07060504H
       LINK   XWA, 0E0DH
       UNLK   XWA
       BS1F   A, XWA
       BS1B   A, XWA
-      DAA    XWA
       EXTZ   XWA
       EXTS   XWA
       PAA    XWA
-      MIRR   XWA
-      MULA   XWA
-      DJNZ   XWA, $+32
+      DJNZ   XWA, $+33
       ANDCF  1, XWA
       ORCF   2, XWA
       XORCF  3, XWA
       LDCF   4, XWA
       STCF   5, XWA
-      LDC    XNSP, XWA
       LDC    DMAS0, XWA
       LDC    DMAD0, XWA
-      LDC    XWA, XNSP
       LDC    XWA, DMAS0
       LDC    XWA, DMAD0
       RES    1, XWA
@@ -28424,10 +42161,259 @@
       CHG    3, XWA
       BIT    4, XWA
       TSET   5, XWA
-      MUL    WA, XWA
-      MULS   WA, XWA
-      DIV    WA, XWA
-      DIVS   WA, XWA
+      INC    1, XWA
+      DEC    1, XWA
+      SCC    F, XWA
+      SCC    LT, XWA
+      SCC    LE, XWA
+      SCC    ULE, XWA
+      SCC    OV, XWA
+      SCC    MI, XWA
+      SCC    Z, XWA
+      SCC    C, XWA
+      SCC    T, XWA
+      SCC    GE, XWA
+      SCC    GT, XWA
+      SCC    UGT, XWA
+      SCC    NOV, XWA
+      SCC    PL, XWA
+      SCC    NZ, XWA
+      SCC    NC, XWA
+      ADD    XWA, XWA
+      ADD    XBC, XWA
+      ADD    XDE, XWA
+      ADD    XHL, XWA
+      ADD    XIX, XWA
+      ADD    XIY, XWA
+      ADD    XIZ, XWA
+      ADD    XSP, XWA
+      LD     XWA, XWA
+      LD     XBC, XWA
+      ADC    XWA, XWA
+      ADC    XBC, XWA
+      ADC    XDE, XWA
+      ADC    XHL, XWA
+      ADC    XIX, XWA
+      ADC    XIY, XWA
+      ADC    XIZ, XWA
+      ADC    XSP, XWA
+      LD     XWA, XBC
+      SUB    XWA, XWA
+      SUB    XBC, XWA
+      SUB    XDE, XWA
+      SUB    XHL, XWA
+      SUB    XIX, XWA
+      SUB    XIY, XWA
+      SUB    XIZ, XWA
+      SUB    XSP, XWA
+      SBC    XWA, XWA
+      SBC    XBC, XWA
+      SBC    XDE, XWA
+      SBC    XHL, XWA
+      SBC    XIX, XWA
+      SBC    XIY, XWA
+      SBC    XIZ, XWA
+      SBC    XSP, XWA
+      EX     XWA, XWA
+      EX     XBC, XWA
+      EX     XDE, XWA
+      EX     XHL, XWA
+      EX     XIX, XWA
+      EX     XIY, XWA
+      EX     XIZ, XWA
+      EX     XSP, XWA
+      AND    XWA, XWA
+      AND    XBC, XWA
+      AND    XDE, XWA
+      AND    XHL, XWA
+      AND    XIX, XWA
+      AND    XIY, XWA
+      AND    XIZ, XWA
+      AND    XSP, XWA
+      ADD    XWA, 0CCCBCAC9H
+      ADC    XWA, 0CDCCCBCAH
+      SUB    XWA, 0CECDCCCBH
+      SBC    XWA, 0CFCECDCCH
+      AND    XWA, 0D0CFCECDH
+      XOR    XWA, 0D1D0CFCEH
+      OR     XWA, 0D2D1D0CFH
+      CP     XWA, 0D3D2D1D0H
+      XOR    XWA, XWA
+      XOR    XBC, XWA
+      XOR    XDE, XWA
+      XOR    XHL, XWA
+      XOR    XIX, XWA
+      XOR    XIY, XWA
+      XOR    XIZ, XWA
+      XOR    XSP, XWA
+      OR     XWA, XWA
+      OR     XIY, XBC
+      OR     XIZ, XBC
+      OR     XSP, XBC
+      RLC    0E9H, XBC
+      RRC    0EAH, XBC
+      RL     0EBH, XBC
+      RR     0ECH, XBC
+      SLA    0EDH, XBC
+      SRA    0EEH, XBC
+      SLL    0EFH, XBC
+      SRL    0F0H, XBC
+      CP     XWA, XBC
+      CP     XBC, XBC
+      CP     XDE, XBC
+      CP     XHL, XBC
+      CP     XIX, XBC
+      CP     XIY, XBC
+      CP     XIZ, XBC
+      CP     XSP, XBC
+      LD     XBC, 07060504H
+      LINK   XBC, 0E0DH
+      UNLK   XBC
+      BS1F   A, XBC
+      BS1B   A, XBC
+      EXTZ   XBC
+      EXTS   XBC
+      PAA    XBC
+      DJNZ   XBC, $+33
+      ANDCF  1, XBC
+      ORCF   2, XBC
+      XORCF  3, XBC
+      LDCF   4, XBC
+      STCF   5, XBC
+      LDC    DMAS0, XBC
+      LDC    DMAD0, XBC
+      LDC    XBC, DMAS0
+      LDC    XBC, DMAD0
+      RES    1, XBC
+      SET    2, XBC
+      CHG    3, XBC
+      BIT    4, XBC
+      TSET   5, XBC
+      INC    1, XBC
+      DEC    1, XBC
+      SCC    F, XBC
+      SCC    LT, XBC
+      SCC    LE, XBC
+      SCC    ULE, XBC
+      SCC    OV, XBC
+      SCC    MI, XBC
+      SCC    Z, XBC
+      SCC    C, XBC
+      SCC    T, XBC
+      SCC    GE, XBC
+      SCC    GT, XBC
+      SCC    UGT, XBC
+      SCC    NOV, XBC
+      SCC    PL, XBC
+      SCC    NZ, XBC
+      SCC    NC, XBC
+      ADD    XWA, XBC
+      ADD    XBC, XBC
+      ADD    XDE, XBC
+      ADD    XHL, XBC
+      ADD    XIX, XBC
+      ADD    XIY, XBC
+      ADD    XIZ, XBC
+      ADD    XSP, XBC
+      LD     XBC, XBC
+      ADC    XWA, XBC
+      ADC    XBC, XBC
+      ADC    XDE, XBC
+      ADC    XHL, XBC
+      ADC    XIX, XBC
+      ADC    XIY, XBC
+      ADC    XIZ, XBC
+      ADC    XSP, XBC
+      SUB    XWA, XBC
+      SUB    XBC, XBC
+      SUB    XDE, XBC
+      SUB    XHL, XBC
+      SUB    XIX, XBC
+      SUB    XIY, XBC
+      SUB    XIZ, XBC
+      SUB    XSP, XBC
+      SBC    XWA, XBC
+      SBC    XBC, XBC
+      SBC    XDE, XBC
+      SBC    XHL, XBC
+      SBC    XIX, XBC
+      SBC    XIY, XBC
+      SBC    XIZ, XBC
+      SBC    XSP, XBC
+      EX     XWA, XBC
+      EX     XBC, XBC
+      EX     XDE, XBC
+      EX     XHL, XBC
+      EX     XIX, XBC
+      EX     XIY, XBC
+      EX     XIZ, XBC
+      EX     XSP, XBC
+      AND    XWA, XBC
+      AND    XBC, XBC
+      AND    XDE, XBC
+      AND    XHL, XBC
+      AND    XIX, XBC
+      AND    XIY, XBC
+      AND    XIZ, XBC
+      AND    XSP, XBC
+      ADD    XBC, 0CCCBCAC9H
+      ADC    XBC, 0CDCCCBCAH
+      SUB    XBC, 0CECDCCCBH
+      SBC    XBC, 0CFCECDCCH
+      AND    XBC, 0D0CFCECDH
+      XOR    XBC, 0D1D0CFCEH
+      OR     XBC, 0D2D1D0CFH
+      CP     XBC, 0D3D2D1D0H
+      XOR    XWA, XBC
+      XOR    XBC, XBC
+      XOR    XDE, XBC
+      XOR    XHL, XBC
+      XOR    XIX, XBC
+      XOR    XIY, XBC
+      XOR    XIZ, XBC
+      XOR    XSP, XBC
+      OR     XWA, XBC
+      OR     XBC, XBC
+      OR     XDE, XBC
+      OR     XHL, XBC
+      OR     XIX, XBC
+      RRC    0EAH, XWA
+      RL     0EBH, XWA
+      RR     0ECH, XWA
+      SLA    0EDH, XWA
+      SRA    0EEH, XWA
+      SLL    0EFH, XWA
+      SRL    0F0H, XWA
+      CP     XWA, XWA
+      CP     XBC, XWA
+      CP     XDE, XWA
+      CP     XHL, XWA
+      CP     XIX, XWA
+      CP     XIY, XWA
+      CP     XIZ, XWA
+      CP     XSP, XWA
+      LINK   XWA, 0E0DH
+      UNLK   XWA
+      BS1F   A, XWA
+      BS1B   A, XWA
+      EXTZ   XWA
+      EXTS   XWA
+      PAA    XWA
+      DJNZ   XWA, $+32
+      ANDCF  1, XWA
+      ORCF   2, XWA
+      XORCF  3, XWA
+      LDCF   4, XWA
+      STCF   5, XWA
+      LDC    DMAS0, XWA
+      LDC    DMAD0, XWA
+      LDC    XWA, DMAS0
+      LDC    XWA, DMAD0
+      RES    1, XWA
+      SET    2, XWA
+      CHG    3, XWA
+      BIT    4, XWA
+      TSET   5, XWA
       INC    1, XWA
       DEC    1, XWA
       SCC    F, XWA
@@ -28541,28 +42527,21 @@
       CP     XIY, XBC
       CP     XIZ, XBC
       CP     XSP, XBC
-      CPL    XBC
-      NEG    XBC
       LINK   XBC, 0E0DH
       UNLK   XBC
       BS1F   A, XBC
       BS1B   A, XBC
-      DAA    XBC
       EXTZ   XBC
       EXTS   XBC
       PAA    XBC
-      MIRR   XBC
-      MULA   XBC
       DJNZ   XBC, $+32
       ANDCF  1, XBC
       ORCF   2, XBC
       XORCF  3, XBC
       LDCF   4, XBC
       STCF   5, XBC
-      LDC    XNSP, XBC
       LDC    DMAS0, XBC
       LDC    DMAD0, XBC
-      LDC    XBC, XNSP
       LDC    XBC, DMAS0
       LDC    XBC, DMAD0
       RES    1, XBC
@@ -28570,10 +42549,6 @@
       CHG    3, XBC
       BIT    4, XBC
       TSET   5, XBC
-      MUL    WA, XBC
-      MULS   WA, XBC
-      DIV    WA, XBC
-      DIVS   WA, XBC
       INC    1, XBC
       DEC    1, XBC
       SCC    F, XBC
@@ -28687,28 +42662,21 @@
       CP     XIY, XDE
       CP     XIZ, XDE
       CP     XSP, XDE
-      CPL    XDE
-      NEG    XDE
       LINK   XDE, 0E0DH
       UNLK   XDE
       BS1F   A, XDE
       BS1B   A, XDE
-      DAA    XDE
       EXTZ   XDE
       EXTS   XDE
       PAA    XDE
-      MIRR   XDE
-      MULA   XDE
       DJNZ   XDE, $+32
       ANDCF  1, XDE
       ORCF   2, XDE
       XORCF  3, XDE
       LDCF   4, XDE
       STCF   5, XDE
-      LDC    XNSP, XDE
       LDC    DMAS0, XDE
       LDC    DMAD0, XDE
-      LDC    XDE, XNSP
       LDC    XDE, DMAS0
       LDC    XDE, DMAD0
       RES    1, XDE
@@ -28716,10 +42684,6 @@
       CHG    3, XDE
       BIT    4, XDE
       TSET   5, XDE
-      MUL    WA, XDE
-      MULS   WA, XDE
-      DIV    WA, XDE
-      DIVS   WA, XDE
       INC    1, XDE
       DEC    1, XDE
       SCC    F, XDE
@@ -28833,28 +42797,21 @@
       CP     XIY, XHL
       CP     XIZ, XHL
       CP     XSP, XHL
-      CPL    XHL
-      NEG    XHL
       LINK   XHL, 0E0DH
       UNLK   XHL
       BS1F   A, XHL
       BS1B   A, XHL
-      DAA    XHL
       EXTZ   XHL
       EXTS   XHL
       PAA    XHL
-      MIRR   XHL
-      MULA   XHL
       DJNZ   XHL, $+32
       ANDCF  1, XHL
       ORCF   2, XHL
       XORCF  3, XHL
       LDCF   4, XHL
       STCF   5, XHL
-      LDC    XNSP, XHL
       LDC    DMAS0, XHL
       LDC    DMAD0, XHL
-      LDC    XHL, XNSP
       LDC    XHL, DMAS0
       LDC    XHL, DMAD0
       RES    1, XHL
@@ -28862,10 +42819,6 @@
       CHG    3, XHL
       BIT    4, XHL
       TSET   5, XHL
-      MUL    WA, XHL
-      MULS   WA, XHL
-      DIV    WA, XHL
-      DIVS   WA, XHL
       INC    1, XHL
       DEC    1, XHL
       SCC    F, XHL
@@ -28979,28 +42932,21 @@
       CP     XIY, XIX
       CP     XIZ, XIX
       CP     XSP, XIX
-      CPL    XIX
-      NEG    XIX
       LINK   XIX, 0E0DH
       UNLK   XIX
       BS1F   A, XIX
       BS1B   A, XIX
-      DAA    XIX
       EXTZ   XIX
       EXTS   XIX
       PAA    XIX
-      MIRR   XIX
-      MULA   XIX
       DJNZ   XIX, $+32
       ANDCF  1, XIX
       ORCF   2, XIX
       XORCF  3, XIX
       LDCF   4, XIX
       STCF   5, XIX
-      LDC    XNSP, XIX
       LDC    DMAS0, XIX
       LDC    DMAD0, XIX
-      LDC    XIX, XNSP
       LDC    XIX, DMAS0
       LDC    XIX, DMAD0
       RES    1, XIX
@@ -29008,10 +42954,6 @@
       CHG    3, XIX
       BIT    4, XIX
       TSET   5, XIX
-      MUL    WA, XIX
-      MULS   WA, XIX
-      DIV    WA, XIX
-      DIVS   WA, XIX
       INC    1, XIX
       DEC    1, XIX
       SCC    F, XIX
@@ -29125,28 +43067,21 @@
       CP     XIY, XIY
       CP     XIZ, XIY
       CP     XSP, XIY
-      CPL    XIY
-      NEG    XIY
       LINK   XIY, 0E0DH
       UNLK   XIY
       BS1F   A, XIY
       BS1B   A, XIY
-      DAA    XIY
       EXTZ   XIY
       EXTS   XIY
       PAA    XIY
-      MIRR   XIY
-      MULA   XIY
       DJNZ   XIY, $+32
       ANDCF  1, XIY
       ORCF   2, XIY
       XORCF  3, XIY
       LDCF   4, XIY
       STCF   5, XIY
-      LDC    XNSP, XIY
       LDC    DMAS0, XIY
       LDC    DMAD0, XIY
-      LDC    XIY, XNSP
       LDC    XIY, DMAS0
       LDC    XIY, DMAD0
       RES    1, XIY
@@ -29154,10 +43089,6 @@
       CHG    3, XIY
       BIT    4, XIY
       TSET   5, XIY
-      MUL    WA, XIY
-      MULS   WA, XIY
-      DIV    WA, XIY
-      DIVS   WA, XIY
       INC    1, XIY
       DEC    1, XIY
       SCC    F, XIY
@@ -29271,28 +43202,21 @@
       CP     XIY, XIZ
       CP     XIZ, XIZ
       CP     XSP, XIZ
-      CPL    XIZ
-      NEG    XIZ
       LINK   XIZ, 0E0DH
       UNLK   XIZ
       BS1F   A, XIZ
       BS1B   A, XIZ
-      DAA    XIZ
       EXTZ   XIZ
       EXTS   XIZ
       PAA    XIZ
-      MIRR   XIZ
-      MULA   XIZ
       DJNZ   XIZ, $+32
       ANDCF  1, XIZ
       ORCF   2, XIZ
       XORCF  3, XIZ
       LDCF   4, XIZ
       STCF   5, XIZ
-      LDC    XNSP, XIZ
       LDC    DMAS0, XIZ
       LDC    DMAD0, XIZ
-      LDC    XIZ, XNSP
       LDC    XIZ, DMAS0
       LDC    XIZ, DMAD0
       RES    1, XIZ
@@ -29300,10 +43224,6 @@
       CHG    3, XIZ
       BIT    4, XIZ
       TSET   5, XIZ
-      MUL    WA, XIZ
-      MULS   WA, XIZ
-      DIV    WA, XIZ
-      DIVS   WA, XIZ
       INC    1, XIZ
       DEC    1, XIZ
       SCC    F, XIZ
@@ -29417,28 +43337,21 @@
       CP     XIY, XSP
       CP     XIZ, XSP
       CP     XSP, XSP
-      CPL    XSP
-      NEG    XSP
       LINK   XSP, 0E0DH
       UNLK   XSP
       BS1F   A, XSP
       BS1B   A, XSP
-      DAA    XSP
       EXTZ   XSP
       EXTS   XSP
       PAA    XSP
-      MIRR   XSP
-      MULA   XSP
       DJNZ   XSP, $+32
       ANDCF  1, XSP
       ORCF   2, XSP
       XORCF  3, XSP
       LDCF   4, XSP
       STCF   5, XSP
-      LDC    XNSP, XSP
       LDC    DMAS0, XSP
       LDC    DMAD0, XSP
-      LDC    XSP, XNSP
       LDC    XSP, DMAS0
       LDC    XSP, DMAD0
       RES    1, XSP
@@ -29446,10 +43359,6 @@
       CHG    3, XSP
       BIT    4, XSP
       TSET   5, XSP
-      MUL    WA, XSP
-      MULS   WA, XSP
-      DIV    WA, XSP
-      DIVS   WA, XSP
       INC    1, XSP
       DEC    1, XSP
       SCC    F, XSP
@@ -29811,350 +43720,6 @@
       CALL   PL, (141312H)
       CALL   NZ, (141312H)
       CALL   NC, (141312H)
-      LD     (XIY+-080AH), 1
-      LD     (XIY+0100H), 06050403H
-      POP    (XIY+0100H)
-      LD     (XIY+0100H), (1615H)
-      LDA    WA, (XIY+0100H)
-      LDA    BC, (XIY+0100H)
-      LDA    DE, (XIY+0100H)
-      LDA    HL, (XIY+0100H)
-      LDA    IX, (XIY+0100H)
-      LDA    IY, (XIY+0100H)
-      LDA    IZ, (XIY+0100H)
-      LDA    SP, (XIY+0100H)
-      LDA    XWA, (XIY+0100H)
-      LDA    XBC, (XIY+0100H)
-      LDA    XDE, (XIY+0100H)
-      LDA    XHL, (XIY+0100H)
-      LDA    XIX, (XIY+0100H)
-      LDA    XIY, (XIY+0100H)
-      LDA    XIZ, (XIY+0100H)
-      LDA    XSP, (XIY+0100H)
-      LD     (XIY+0100H), W
-      LD     (XIY+0100H), A
-      LD     (XIY+0100H), B
-      LD     (XIY+0100H), C
-      LD     (XIY+0100H), D
-      LD     (XIY+0100H), E
-      LD     (XIY+0100H), H
-      LD     (XIY+0100H), L
-      LD     (XIY+0100H), WA
-      LD     (XIY+0100H), BC
-      LD     (XIY+0100H), DE
-      LD     (XIY+0100H), HL
-      LD     (XIY+0100H), IX
-      LD     (XIY+0100H), IY
-      LD     (XIY+0100H), IZ
-      LD     (XIY+0100H), SP
-      LD     (XIY+0100H), XWA
-      LD     (XIY+0100H), XBC
-      LD     (XIY+0100H), XDE
-      LD     (XIY+0100H), XHL
-      LD     (XIY+0100H), XIX
-      LD     (XIY+0100H), XIY
-      LD     (XIY+0100H), XIZ
-      LD     (XIY+0100H), XSP
-      ANDCF  0, (XIY+0100H)
-      ORCF   0, (XIY+0100H)
-      XORCF  0, (XIY+0100H)
-      LDCF   0, (XIY+0100H)
-      STCF   0, (XIY+0100H)
-      TSET   0, (XIY+0100H)
-      RES    0, (XIY+0100H)
-      SET    0, (XIY+0100H)
-      CHG    0, (XIY+0100H)
-      BIT    0, (XIY+0100H)
-      JP     F, (XIY+0100H)
-      JP     LT, (XIY+0100H)
-      JP     LE, (XIY+0100H)
-      JP     ULE, (XIY+0100H)
-      JP     OV, (XIY+0100H)
-      JP     MI, (XIY+0100H)
-      JP     Z, (XIY+0100H)
-      JP     C, (XIY+0100H)
-      JP     T, (XIY+0100H)
-      JP     GE, (XIY+0100H)
-      JP     GT, (XIY+0100H)
-      JP     UGT, (XIY+0100H)
-      JP     NOV, (XIY+0100H)
-      JP     PL, (XIY+0100H)
-      JP     NZ, (XIY+0100H)
-      JP     NC, (XIY+0100H)
-      CALL   F, (XIY+0100H)
-      CALL   LT, (XIY+0100H)
-      CALL   LE, (XIY+0100H)
-      CALL   ULE, (XIY+0100H)
-      CALL   OV, (XIY+0100H)
-      CALL   MI, (XIY+0100H)
-      CALL   Z, (XIY+0100H)
-      CALL   C, (XIY+0100H)
-      CALL   T, (XIY+0100H)
-      CALL   GE, (XIY+0100H)
-      CALL   GT, (XIY+0100H)
-      CALL   UGT, (XIY+0100H)
-      CALL   NOV, (XIY+0100H)
-      CALL   PL, (XIY+0100H)
-      CALL   NZ, (XIY+0100H)
-      CALL   NC, (XIY+0100H)
-      LD     (XIZ+-0406H), 1
-      LD     (XIZ+0100H), 06050403H
-      POP    (XIZ+0100H)
-      LD     (XIZ+0100H), (1615H)
-      LDA    WA, (XIZ+0100H)
-      LDA    BC, (XIZ+0100H)
-      LDA    DE, (XIZ+0100H)
-      LDA    HL, (XIZ+0100H)
-      LDA    IX, (XIZ+0100H)
-      LDA    IY, (XIZ+0100H)
-      LDA    IZ, (XIZ+0100H)
-      LDA    SP, (XIZ+0100H)
-      LDA    XWA, (XIZ+0100H)
-      LDA    XBC, (XIZ+0100H)
-      LDA    XDE, (XIZ+0100H)
-      LDA    XHL, (XIZ+0100H)
-      LDA    XIX, (XIZ+0100H)
-      LDA    XIY, (XIZ+0100H)
-      LDA    XIZ, (XIZ+0100H)
-      LDA    XSP, (XIZ+0100H)
-      LD     (XIZ+0100H), W
-      LD     (XIZ+0100H), A
-      LD     (XIZ+0100H), B
-      LD     (XIZ+0100H), C
-      LD     (XIZ+0100H), D
-      LD     (XIZ+0100H), E
-      LD     (XIZ+0100H), H
-      LD     (XIZ+0100H), L
-      LD     (XIZ+0100H), WA
-      LD     (XIZ+0100H), BC
-      LD     (XIZ+0100H), DE
-      LD     (XIZ+0100H), HL
-      LD     (XIZ+0100H), IX
-      LD     (XIZ+0100H), IY
-      LD     (XIZ+0100H), IZ
-      LD     (XIZ+0100H), SP
-      LD     (XIZ+0100H), XWA
-      LD     (XIZ+0100H), XBC
-      LD     (XIZ+0100H), XDE
-      LD     (XIZ+0100H), XHL
-      LD     (XIZ+0100H), XIX
-      LD     (XIZ+0100H), XIY
-      LD     (XIZ+0100H), XIZ
-      LD     (XIZ+0100H), XSP
-      ANDCF  0, (XIZ+0100H)
-      ORCF   0, (XIZ+0100H)
-      XORCF  0, (XIZ+0100H)
-      LDCF   0, (XIZ+0100H)
-      STCF   0, (XIZ+0100H)
-      TSET   0, (XIZ+0100H)
-      RES    0, (XIZ+0100H)
-      SET    0, (XIZ+0100H)
-      CHG    0, (XIZ+0100H)
-      BIT    0, (XIZ+0100H)
-      JP     F, (XIZ+0100H)
-      JP     LT, (XIZ+0100H)
-      JP     LE, (XIZ+0100H)
-      JP     ULE, (XIZ+0100H)
-      JP     OV, (XIZ+0100H)
-      JP     MI, (XIZ+0100H)
-      JP     Z, (XIZ+0100H)
-      JP     C, (XIZ+0100H)
-      JP     T, (XIZ+0100H)
-      JP     GE, (XIZ+0100H)
-      JP     GT, (XIZ+0100H)
-      JP     UGT, (XIZ+0100H)
-      JP     NOV, (XIZ+0100H)
-      JP     PL, (XIZ+0100H)
-      JP     NZ, (XIZ+0100H)
-      JP     NC, (XIZ+0100H)
-      CALL   F, (XIZ+0100H)
-      CALL   LT, (XIZ+0100H)
-      CALL   LE, (XIZ+0100H)
-      CALL   ULE, (XIZ+0100H)
-      CALL   OV, (XIZ+0100H)
-      CALL   MI, (XIZ+0100H)
-      CALL   Z, (XIZ+0100H)
-      CALL   C, (XIZ+0100H)
-      CALL   T, (XIZ+0100H)
-      CALL   GE, (XIZ+0100H)
-      CALL   GT, (XIZ+0100H)
-      CALL   UGT, (XIZ+0100H)
-      CALL   NOV, (XIZ+0100H)
-      CALL   PL, (XIZ+0100H)
-      CALL   NZ, (XIZ+0100H)
-      CALL   NC, (XIZ+0100H)
-      LD     (XSP+-2), 1
-      LD     (XSP+0100H), 06050403H
-      POP    (XSP+0100H)
-      LD     (XSP+0100H), (1615H)
-      LDA    WA, (XSP+0100H)
-      LDA    BC, (XSP+0100H)
-      LDA    DE, (XSP+0100H)
-      LDA    HL, (XSP+0100H)
-      LDA    IX, (XSP+0100H)
-      LDA    IY, (XSP+0100H)
-      LDA    IZ, (XSP+0100H)
-      LDA    SP, (XSP+0100H)
-      LDA    XWA, (XSP+0100H)
-      LDA    XBC, (XSP+0100H)
-      LDA    XDE, (XSP+0100H)
-      LDA    XHL, (XSP+0100H)
-      LDA    XIX, (XSP+0100H)
-      LDA    XIY, (XSP+0100H)
-      LDA    XIZ, (XSP+0100H)
-      LDA    XSP, (XSP+0100H)
-      LD     (XSP+0100H), W
-      LD     (XSP+0100H), A
-      LD     (XSP+0100H), B
-      LD     (XSP+0100H), C
-      LD     (XSP+0100H), D
-      LD     (XSP+0100H), E
-      LD     (XSP+0100H), H
-      LD     (XSP+0100H), L
-      LD     (XSP+0100H), WA
-      LD     (XSP+0100H), BC
-      LD     (XSP+0100H), DE
-      LD     (XSP+0100H), HL
-      LD     (XSP+0100H), IX
-      LD     (XSP+0100H), IY
-      LD     (XSP+0100H), IZ
-      LD     (XSP+0100H), SP
-      LD     (XSP+0100H), XWA
-      LD     (XSP+0100H), XBC
-      LD     (XSP+0100H), XDE
-      LD     (XSP+0100H), XHL
-      LD     (XSP+0100H), XIX
-      LD     (XSP+0100H), XIY
-      LD     (XSP+0100H), XIZ
-      LD     (XSP+0100H), XSP
-      ANDCF  0, (XSP+0100H)
-      ORCF   0, (XSP+0100H)
-      XORCF  0, (XSP+0100H)
-      LDCF   0, (XSP+0100H)
-      STCF   0, (XSP+0100H)
-      TSET   0, (XSP+0100H)
-      RES    0, (XSP+0100H)
-      SET    0, (XSP+0100H)
-      CHG    0, (XSP+0100H)
-      BIT    0, (XSP+0100H)
-      JP     F, (XSP+0100H)
-      JP     LT, (XSP+0100H)
-      JP     LE, (XSP+0100H)
-      JP     ULE, (XSP+0100H)
-      JP     OV, (XSP+0100H)
-      JP     MI, (XSP+0100H)
-      JP     Z, (XSP+0100H)
-      JP     C, (XSP+0100H)
-      JP     T, (XSP+0100H)
-      JP     GE, (XSP+0100H)
-      JP     GT, (XSP+0100H)
-      JP     UGT, (XSP+0100H)
-      JP     NOV, (XSP+0100H)
-      JP     PL, (XSP+0100H)
-      JP     NZ, (XSP+0100H)
-      JP     NC, (XSP+0100H)
-      CALL   F, (XSP+0100H)
-      CALL   LT, (XSP+0100H)
-      CALL   LE, (XSP+0100H)
-      CALL   ULE, (XSP+0100H)
-      CALL   OV, (XSP+0100H)
-      CALL   MI, (XSP+0100H)
-      CALL   Z, (XSP+0100H)
-      CALL   C, (XSP+0100H)
-      CALL   T, (XSP+0100H)
-      CALL   GE, (XSP+0100H)
-      CALL   GT, (XSP+0100H)
-      CALL   UGT, (XSP+0100H)
-      CALL   NOV, (XSP+0100H)
-      CALL   PL, (XSP+0100H)
-      CALL   NZ, (XSP+0100H)
-      CALL   NC, (XSP+0100H)
-      LD     (XIX+-0C0EH), 1
-      LD     (XIX+0100H), 06050403H
-      POP    (XIX+0100H)
-      LD     (XIX+0100H), (1615H)
-      LDA    WA, (XIX+0100H)
-      LDA    BC, (XIX+0100H)
-      LDA    DE, (XIX+0100H)
-      LDA    HL, (XIX+0100H)
-      LDA    IX, (XIX+0100H)
-      LDA    IY, (XIX+0100H)
-      LDA    IZ, (XIX+0100H)
-      LDA    SP, (XIX+0100H)
-      LDA    XWA, (XIX+0100H)
-      LDA    XBC, (XIX+0100H)
-      LDA    XDE, (XIX+0100H)
-      LDA    XHL, (XIX+0100H)
-      LDA    XIX, (XIX+0100H)
-      LDA    XIY, (XIX+0100H)
-      LDA    XIZ, (XIX+0100H)
-      LDA    XSP, (XIX+0100H)
-      LD     (XIX+0100H), W
-      LD     (XIX+0100H), A
-      LD     (XIX+0100H), B
-      LD     (XIX+0100H), C
-      LD     (XIX+0100H), D
-      LD     (XIX+0100H), E
-      LD     (XIX+0100H), H
-      LD     (XIX+0100H), L
-      LD     (XIX+0100H), WA
-      LD     (XIX+0100H), BC
-      LD     (XIX+0100H), DE
-      LD     (XIX+0100H), HL
-      LD     (XIX+0100H), IX
-      LD     (XIX+0100H), IY
-      LD     (XIX+0100H), IZ
-      LD     (XIX+0100H), SP
-      LD     (XIX+0100H), XWA
-      LD     (XIX+0100H), XBC
-      LD     (XIX+0100H), XDE
-      LD     (XIX+0100H), XHL
-      LD     (XIX+0100H), XIX
-      LD     (XIX+0100H), XIY
-      LD     (XIX+0100H), XIZ
-      LD     (XIX+0100H), XSP
-      ANDCF  0, (XIX+0100H)
-      ORCF   0, (XIX+0100H)
-      XORCF  0, (XIX+0100H)
-      LDCF   0, (XIX+0100H)
-      STCF   0, (XIX+0100H)
-      TSET   0, (XIX+0100H)
-      RES    0, (XIX+0100H)
-      SET    0, (XIX+0100H)
-      CHG    0, (XIX+0100H)
-      BIT    0, (XIX+0100H)
-      JP     F, (XIX+0100H)
-      JP     LT, (XIX+0100H)
-      JP     LE, (XIX+0100H)
-      JP     ULE, (XIX+0100H)
-      JP     OV, (XIX+0100H)
-      JP     MI, (XIX+0100H)
-      JP     Z, (XIX+0100H)
-      JP     C, (XIX+0100H)
-      JP     T, (XIX+0100H)
-      JP     GE, (XIX+0100H)
-      JP     GT, (XIX+0100H)
-      JP     UGT, (XIX+0100H)
-      JP     NOV, (XIX+0100H)
-      JP     PL, (XIX+0100H)
-      JP     NZ, (XIX+0100H)
-      JP     NC, (XIX+0100H)
-      CALL   F, (XIX+0100H)
-      CALL   LT, (XIX+0100H)
-      CALL   LE, (XIX+0100H)
-      CALL   ULE, (XIX+0100H)
-      CALL   OV, (XIX+0100H)
-      CALL   MI, (XIX+0100H)
-      CALL   Z, (XIX+0100H)
-      CALL   C, (XIX+0100H)
-      CALL   T, (XIX+0100H)
-      CALL   GE, (XIX+0100H)
-      CALL   GT, (XIX+0100H)
-      CALL   UGT, (XIX+0100H)
-      CALL   NOV, (XIX+0100H)
-      CALL   PL, (XIX+0100H)
-      CALL   NZ, (XIX+0100H)
-      CALL   NC, (XIX+0100H)
       LD     (-XIX), 0302H
       LD     (-XIX), 06050403H
       POP    (-XIX)

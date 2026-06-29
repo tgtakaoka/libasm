@@ -61,24 +61,27 @@ private:
 // Decoded operand
 struct Operand final : ErrorAt {
     AddrMode mode;  // addressing mode
-    RegName reg;    // base register (for indirect, indexed, or src/dst reg)
+    RegName reg;    // src/dst register operand
     RegName idx;    // index register (for M_IDXR only)
     CcName cc;      // condition code (for M_CC)
     Value val;      // immediate, displacement, or address value
     uint8_t size;   // operand size from prefix: 0=byte, 1=word, 2=lword
+    uint8_t base;   // memory base register code (M_IND/M_IDX*/M_PRDC/M_PINC/M_IDXR)
     Operand()
-        : ErrorAt(), mode(M_NONE), reg(REG_UNDEF), idx(REG_UNDEF), cc(CC_UNDEF), val(), size(0) {}
+        : ErrorAt(),
+          mode(M_NONE),
+          reg(REG_UNDEF),
+          idx(REG_UNDEF),
+          cc(CC_UNDEF),
+          val(),
+          size(0),
+          base(0) {}
 };
 
 struct AsmInsn final : AsmInsnImpl<Config>, EntryInsn {
     AsmInsn(Insn &insn) : AsmInsnImpl(insn) {}
 
     Operand dstOp, srcOp;
-
-    // Stashed by AsmTlcs900 before encoding so prefixSize() can decide
-    // between the compact (1-byte) and complex (2-byte) M_PRDC/M_PINC
-    // prefix forms without having to consult the assembler instance.
-    bool complexIndir = false;
 
     // Opcode position computed from the resolved AddrMode / PrefixMode /
     // prefix() state -- independent of the current emit length.

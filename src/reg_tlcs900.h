@@ -200,7 +200,6 @@ StrBuffer &outRegName(StrBuffer &out, RegName name);
 bool isReg8(RegName name);
 bool isReg16(RegName name);
 bool isReg32(RegName name);
-bool isIndexReg(RegName name);
 
 uint8_t encodeReg8(RegName name);
 RegName decodeReg8(uint8_t num);
@@ -211,9 +210,6 @@ RegName decodeReg16(uint8_t num);
 uint8_t encodeReg32(RegName name);
 RegName decodeReg32(uint8_t num);
 
-uint8_t encodeIndReg(RegName name);
-RegName decodeIndReg(uint8_t num);
-
 CcName parseCcName(StrScanner &scan, const ValueParser &parser);
 StrBuffer &outCcName(StrBuffer &out, CcName cc);
 uint8_t encodeCcName(CcName name);
@@ -222,7 +218,7 @@ CcName decodeCcName(uint8_t num);
 bool isCtrlReg(RegName name);
 uint8_t ctrlRegCode(RegName name);  // returns ctrl sub-byte
 Size ctrlRegSize(RegName name);     // SZ_BYTE/SZ_WORD/SZ_QUAD
-RegName decodeCtrlReg(uint8_t sub, bool is32, bool isBase);
+RegName decodeCtrlReg(uint8_t sub, bool is32, bool isL);
 RegName parseCtrlRegName(StrScanner &scan, const ValueParser &parser);
 StrBuffer &outCtrlRegName(StrBuffer &out, RegName name);
 
@@ -235,6 +231,32 @@ bool parseAbsRegCode(StrScanner &scan, const ValueParser &parser, uint8_t &code,
 // Output the absolute bank register named by |code| (0/1/2 size = 8/16/32-bit).
 // Returns false if |code| is invalid for the given access size.
 bool outAbsReg(StrBuffer &out, uint8_t code, uint8_t size);
+
+// Memory base register code helpers. The base register of a memory operand
+// ((r32), (r32+d), (-r32), (r32+)) is carried as its full 8-bit register
+// code (the "r32'<<2" field of the mem-specify table); outAbsReg renders it.
+//   current bank XWA..XSP  = 0xE0..0xFC (stride 4)
+//   previous bank XWA'..XHL' = 0xD0..0xDC
+//   bank N (0-3) XWAn..XHLn  = 0x00..0x3C
+// Returns true when |code| names a usable 32-bit memory base register.
+bool isMemBaseCode(uint8_t code);
+// True when |code| is a current-bank base register (XWA..XSP), the only set
+// encodable by the single-byte (0x80-0x8F) register-indirect / +d8 forms.
+bool isCurrentBankBaseCode(uint8_t code);
+// 3-bit register index (0=XWA..7=XSP) for a current-bank base |code|.
+uint8_t memBaseIndex(uint8_t code);
+// Current-bank base register code for a 3-bit |index| (inverse of above).
+uint8_t currentBankBaseCode(uint8_t index);
+// Memory base register code for a current-bank 32-bit register |name|.
+uint8_t reg32BaseCode(RegName name);
+
+// XWA/XBC/XDE/XHL are the general 32-bit register pairs; they cannot be used in
+// minimum mode (only XIX/XIY/XIZ/XSP remain). Manual 3.2.1 footnote *1.
+bool isReg32General(RegName name);
+// True when a memory base register code names XIX/XIY/XIZ/XSP (the index
+// registers, always usable); every other 32-bit base (XWA-XHL current/prev/
+// bank-N) is illegal in minimum mode.
+bool isIndexBaseCode(uint8_t code);
 
 }  // namespace reg
 }  // namespace tlcs900

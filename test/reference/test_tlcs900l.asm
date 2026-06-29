@@ -13,7 +13,6 @@
 ;;; limitations under the License.
 
         cpu     TLCS900L
-        option  complex-indir, on
         org     0100h
         include "test_tlcs900_common.inc"
         include "test_tlcs900_intnest.inc"

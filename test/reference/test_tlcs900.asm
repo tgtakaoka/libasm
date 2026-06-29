@@ -13,9 +13,10 @@
 ;;; limitations under the License.
 
         cpu     TLCS900
-        option  complex-indir, on
         org     0100h
+        MAXMODE ON
         include "test_tlcs900_common.inc"
+        include "test_tlcs900_reg32.inc"
         include "test_tlcs900_normal.inc"
         include "test_tlcs900_max.inc"
         include "test_tlcs900_nsp.inc"

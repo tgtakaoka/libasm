@@ -30,10 +30,6 @@ using namespace text::tlcs900;
 
 namespace {
 
-constexpr char OPT_BOOL_COMPLEX_INDIR[] PROGMEM = "complex-indir";
-constexpr char OPT_DESC_COMPLEX_INDIR[] PROGMEM =
-        "use complex encoding for (-xrr) and (xrr+) addressing";
-
 // clang-format off
 constexpr Pseudo PSEUDOS[] PROGMEM = {
     { TEXT_DB,      &Assembler::defineDataConstant, Assembler::DATA_BYTE },
@@ -53,23 +49,16 @@ PROGMEM constexpr AsmTlcs900::PseudosTlcs900 AsmTlcs900::PSEUDOS_TLCS900{
         ARRAY_RANGE(PSEUDO_TLCS900_TABLE)};
 
 AsmTlcs900::AsmTlcs900(const ValueParser::Plugins &plugins)
-    : Assembler(plugins, PSEUDO_TABLE, &_opt_complexIndir),
+    : Assembler(plugins, PSEUDO_TABLE, &_opt_maxMode),
       Config(TABLE),
-      _opt_complexIndir(
-              this, &AsmTlcs900::setComplexIndir, OPT_BOOL_COMPLEX_INDIR, OPT_DESC_COMPLEX_INDIR) {
+      _opt_maxMode(this, &Config::setMaxMode, OPT_BOOL_MAXIMUM_MODE, OPT_DESC_MAXIMUM_MODE) {
     reset();
 }
 
 void AsmTlcs900::reset() {
     Assembler::reset();
-    setComplexIndir(false);
     // Reset register mode to the CPU's natural default (handled by setCpuType).
     setCpuType(cpuType());
-}
-
-Error AsmTlcs900::setComplexIndir(bool enable) {
-    _complexIndir = enable;
-    return OK;
 }
 
 Error AsmTlcs900::processPseudo(StrScanner &scan, Insn &insn) {
@@ -98,6 +87,37 @@ const ValueParser::Plugins &AsmTlcs900::defaultPlugins() {
     return ValueParser::Plugins::intel();
 }
 
+// Parse a 32-bit memory base register into its register code: current bank
+// XWA..XSP, previous bank XWA'..XHL', or bank-N XWAn..XHLn. The abs-bank
+// parser handles the suffixed forms; plain current-bank names come from the
+// register table. Advances |p| and returns true on success.
+static bool parseMemBaseReg(StrScanner &p, const ValueParser &parser, uint8_t &code) {
+    auto q = p;
+    uint8_t size;
+    if (reg::parseAbsRegCode(q, parser, code, size)) {
+        if (size != 2 || !reg::isMemBaseCode(code))
+            return false;
+        p = q;
+        return true;
+    }
+    auto r = p;
+    const auto reg = reg::parseRegName(r, parser);
+    if (reg != REG_UNDEF && reg::isReg32(reg)) {
+        code = reg::reg32BaseCode(reg);
+        p = r;
+        return true;
+    }
+    return false;
+}
+
+// 0x83 (block transfer) and 0xB0 (conditional return) are reserved prefix
+// bytes, so the single-byte register-indirect forms that would land on them
+// -- (XHL) byte-source and (XWA) destination -- must use the complex (r32)
+// encoding instead.
+static bool isReservedPrefixByte(uint8_t b) {
+    return b == 0x83 || b == 0xB0;
+}
+
 static uint8_t memPmSimpleBase(PrefixMode pm) {
     switch (pm) {
     case PM_MEM8:
@@ -115,6 +135,16 @@ static uint8_t memPmSimpleBase(PrefixMode pm) {
 
 static uint8_t memPmComplexBase(PrefixMode pm) {
     return memPmSimpleBase(pm) | 0x40;
+}
+
+// Single-byte register-indirect prefix byte for a current-bank base register,
+// or 0 when the single-byte form is unavailable (non-current-bank base, or a
+// reserved prefix byte) and the complex (r32) form must be used instead.
+static uint8_t memIndSingleByte(PrefixMode pm, uint8_t base) {
+    if (!reg::isCurrentBankBaseCode(base))
+        return 0;
+    const uint8_t b = memPmSimpleBase(pm) | reg::memBaseIndex(base);
+    return isReservedPrefixByte(b) ? 0 : b;
 }
 
 static uint8_t pmSizeCode(PrefixMode pm) {
@@ -150,8 +180,9 @@ static uint8_t opdSizeCode(const AsmInsn &insn, PrefixMode pm) {
 static const Operand &prefixOperand(const AsmInsn &insn) {
     const auto pm = insn.pre();
     const auto d = insn.dst();
-    const bool dstIsPre =
-            (d == M_SRC) || (d == M_DST && pm == PM_MEMD) || d == M_ABSDST || d == M_R32SRC;
+    const bool dstIsPre = (d == M_SRC) || (d == M_DST && pm == PM_MEMD) || d == M_ABSDST ||
+                          d == M_R32SRC || d == M_SRCB || d == M_SRCW || d == M_SRCWL ||
+                          d == M_SRCBW || d == M_MULDSTP;
     return dstIsPre ? insn.dstOp : insn.srcOp;
 }
 
@@ -196,27 +227,29 @@ uint_fast8_t AsmInsn::prefixSize() const {
     case M_REG8:
     case M_REG16:
     case M_REG32:
-    case M_IND:
     case M_IMM8:
         return 1;
+    case M_IND:
+        // single byte (current bank) or C3 + r32' sub-byte (complex)
+        return memIndSingleByte(pm, op.base) ? 1 : 2;
     case M_ABREG8:
     case M_ABREG16:
     case M_ABREG32:
-    case M_IDX8:
     case M_ABS8:
         return 2;
+    case M_IDX8:
+        // single byte + d8 (current bank) or C3 + r32' sub-byte + d16 (complex)
+        return reg::isCurrentBankBaseCode(op.base) ? 2 : 4;
     case M_ABS16:
         return 3;
     case M_IDX16:
     case M_IDXR:
     case M_ABS24:
         return 4;
-    case M_PRDC: {
-        const uint8_t compact = memPmSimpleBase(pm) | encodeIndReg(op.reg);
-        return (!complexIndir && compact != 0x83 && compact != 0xB0) ? 1 : 2;
-    }
+    case M_PRDC:
     case M_PINC:
-        return complexIndir ? 2 : 1;
+        // C4/C5 + r32' sub-byte: the two-byte form is the only encoding.
+        return 2;
     default:
         return 0;
     }
@@ -252,6 +285,14 @@ void AsmTlcs900::encodePrefixAddr(AsmInsn &insn) const {
         return;
     const Operand &op = prefixOperand(insn);
     insn.setErrorIf(op);
+    if (insn.dst() == M_MULDSTP) {
+        // MUL/DIV rr,#: the dest is carried in the prefix, doubled -- a 16-bit
+        // pair (C8 + 2*idx+1) for a byte op or a 32-bit register (D8 + idx) for
+        // a word op.
+        insn.emitByte(pm == PM_REG8 ? (0xC8 | (2 * encodeReg16(op.reg) + 1))
+                                    : (0xD8 | encodeReg32(op.reg)));
+        return;
+    }
     switch (op.mode) {
     case R_C:
     case M_REG8:
@@ -282,23 +323,38 @@ void AsmTlcs900::encodePrefixAddr(AsmInsn &insn) const {
         insn.emitByte(static_cast<uint8_t>(op.val.getUnsigned()));
         break;
     case M_IND:
-        insn.emitByte(memPmSimpleBase(pm) | 0x04 | encodeIndReg(op.reg));
+        if (const uint8_t single = memIndSingleByte(pm, op.base)) {
+            // single-byte register-indirect (XWA)..(XSP): 0x80-0x87
+            insn.emitByte(single);
+        } else {
+            // complex (r32): C3 + r32' sub-byte (low 2 bits 0)
+            insn.emitByte(memPmComplexBase(pm) | 0x03);
+            insn.emitByte(op.base);
+        }
         break;
     case M_IDX8: {
-        insn.emitByte(memPmSimpleBase(pm) | 0x0C | encodeIndReg(op.reg));
         const auto disp = static_cast<int8_t>(op.val.getSigned());
-        insn.emitByte(static_cast<uint8_t>(disp));
+        if (reg::isCurrentBankBaseCode(op.base)) {
+            // single-byte indexed (Xrr+d8): 0x88-0x8F + d8
+            insn.emitByte(memPmSimpleBase(pm) | 0x08 | reg::memBaseIndex(op.base));
+            insn.emitByte(static_cast<uint8_t>(disp));
+        } else {
+            // no single-byte +d8 form for non-current-bank base: use (r32+d16)
+            insn.emitByte(memPmComplexBase(pm) | 0x03);
+            insn.emitByte(op.base | 0x01);
+            insn.emitUint16(static_cast<uint16_t>(disp));
+        }
         break;
     }
     case M_IDX16:
         insn.emitByte(memPmComplexBase(pm) | 0x03);
-        insn.emitByte(0xF0 | (encodeIndReg(op.reg) << 2) | 0x01);
+        insn.emitByte(op.base | 0x01);
         insn.emitUint16(static_cast<uint16_t>(op.val.getSigned()));
         break;
     case M_IDXR:
         insn.emitByte(memPmComplexBase(pm) | 0x03);
         insn.emitByte(0x03);
-        insn.emitByte(0xF0 | (encodeIndReg(op.reg) << 2));
+        insn.emitByte(op.base);
         insn.emitByte(encodeIdxRegSfr(op.idx));
         break;
     case M_ABS8:
@@ -313,23 +369,15 @@ void AsmTlcs900::encodePrefixAddr(AsmInsn &insn) const {
         insn.emitByte(memPmComplexBase(pm) | 0x02);
         insn.emitUint24(op.val.getUnsigned() & 0xFFFFFF);
         break;
-    case M_PRDC: {
-        const uint8_t compact = memPmSimpleBase(pm) | encodeIndReg(op.reg);
-        if (!_complexIndir && compact != 0x83 && compact != 0xB0) {
-            insn.emitByte(compact);
-        } else {
-            insn.emitByte(memPmComplexBase(pm) | 0x04);
-            insn.emitByte(0xF0 | (encodeIndReg(op.reg) << 2) | opdSizeCode(insn, pm));
-        }
+    case M_PRDC:
+        // (-r32): C4 + r32' sub-byte with the increment-size (zz) field.
+        insn.emitByte(memPmComplexBase(pm) | 0x04);
+        insn.emitByte(op.base | opdSizeCode(insn, pm));
         break;
-    }
     case M_PINC:
-        if (!_complexIndir) {
-            insn.emitByte(memPmSimpleBase(pm) | 0x08 | encodeIndReg(op.reg));
-        } else {
-            insn.emitByte(memPmComplexBase(pm) | 0x05);
-            insn.emitByte(0xF0 | (encodeIndReg(op.reg) << 2) | opdSizeCode(insn, pm));
-        }
+        // (r32+): C5 + r32' sub-byte with the increment-size (zz) field.
+        insn.emitByte(memPmComplexBase(pm) | 0x05);
+        insn.emitByte(op.base | opdSizeCode(insn, pm));
         break;
     case M_IMM8:
         // MUL/MULS WA,#n8: register-context prefix with A (0xC9) as placeholder
@@ -386,11 +434,25 @@ void AsmTlcs900::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode) 
     case R_FP:
     case R_C:
     case M_R32SRC:
+    case M_SRCB:
+    case M_SRCW:
+    case M_SRCWL:
+    case M_SRCBW:
+    case M_CCT:      // matcher only: opcode already carries the unconditional form
+    case M_MULDSTP:  // emitted as the prefix byte by encodePrefixAddr
         break;
     case M_DST:
         if (pm != PM_MEMD)
             insn.embed(encodePrefixSizedReg(op, pm));
         break;
+    case M_MULDST: {
+        // dest in opcode low bits, double the source(prefix) size: a 16-bit
+        // register for a byte-op (R=2*idx+1) or a 32-bit one for a word-op
+        // (R=idx). The source may be a register, absolute-bank reg, or memory.
+        const bool byteOp = pm == PM_REG8 || pm == PM_ABREG8 || pm == PM_MEM8;
+        insn.embed(byteOp ? (2 * encodeReg16(op.reg) + 1) : encodeReg32(op.reg));
+        break;
+    }
     case M_REG8:
         insn.embed(encodeReg8(op.reg));
         break;
@@ -414,16 +476,18 @@ void AsmTlcs900::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode) 
         break;
     case M_CREG: {
         const auto creg = op.reg;
-        const bool isBase = (cpuType() == TLCS900);
+        // Control sub-byte 0x3C is the normal stack pointer (NSP/XNSP) on every
+        // variant except /L, where it is the interrupt-nesting counter INTNEST.
+        const bool isL = (cpuType() == TLCS900L);
         // Structural errors (CPU mismatch, size mismatch) drop any bytes
         // already emitted for this instruction so the failure is reported
         // with no encoded output.
-        if ((creg == REG_NSP || creg == REG_XNSP) && !isBase) {
+        if ((creg == REG_NSP || creg == REG_XNSP) && isL) {
             insn.setErrorIf(op, REGISTER_NOT_ALLOWED);
             insn.resetBytes();
             break;
         }
-        if (creg == REG_INTNEST && isBase) {
+        if (creg == REG_INTNEST && !isL) {
             insn.setErrorIf(op, REGISTER_NOT_ALLOWED);
             insn.resetBytes();
             break;
@@ -555,7 +619,9 @@ void AsmTlcs900::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode) 
     case M_BUF: {
         const auto step = 1u << (insn.opCode() & 3);
         const auto bufSize = op.val.getUnsigned();
-        if (bufSize < step || (bufSize & (bufSize - 1)) != 0)
+        // Buffer size must be 2^n (manual: n = (opc&3)+1..15), i.e. a power
+        // of two with 2*step <= bufSize <= 0x8000.
+        if ((bufSize & (bufSize - 1)) != 0 || bufSize < step * 2 || bufSize > 0x8000)
             insn.setErrorIf(op, OVERFLOW_RANGE);
         insn.emitOperand16(static_cast<uint16_t>(bufSize - step));
         break;
@@ -621,6 +687,9 @@ Error AsmTlcs900::parseOperand(StrScanner &scan, Operand &op) const {
             op.mode = M_REG16;
         } else if (isReg32(reg)) {
             op.mode = M_REG32;
+            // XWA/XBC/XDE/XHL cannot be used in minimum mode.
+            if (!maxMode() && reg::isReg32General(reg))
+                op.setError(regAt, REGISTER_NOT_ALLOWED);
         } else if (reg == REG_SR) {
             op.mode = R_SR;
         } else {
@@ -646,37 +715,41 @@ Error AsmTlcs900::parseOperand(StrScanner &scan, Operand &op) const {
     }
 
     p.skipSpaces();
-    // Check for pre-decrement: (-XIx)
+    // Check for pre-decrement: (-r32)
     if (p.expect('-')) {
         const auto idxAt = p.skipSpaces();
-        const auto idxReg = parseRegName(p, parser());
-        if (!isIndexReg(idxReg))
+        uint8_t code;
+        if (!parseMemBaseReg(p, parser(), code))
+            return op.setError(idxAt, REGISTER_NOT_ALLOWED);
+        // Only XIX/XIY/XIZ/XSP are usable as a base register in minimum mode.
+        if (!maxMode() && !reg::isIndexBaseCode(code))
             return op.setError(idxAt, REGISTER_NOT_ALLOWED);
         if (!p.skipSpaces().expect(')'))
             return op.setError(p, MISSING_CLOSING_PAREN);
-        op.reg = idxReg;
+        op.base = code;
         op.mode = M_PRDC;
         scan = p;
         return OK;
     }
 
-    // Try to parse a register
+    // Try to parse a 32-bit memory base register
     const auto innerAt = p;
-    const auto innerReg = parseRegName(p, parser());
-    if (innerReg != REG_UNDEF) {
-        if (!isIndexReg(innerReg))
+    uint8_t baseCode;
+    if (parseMemBaseReg(p, parser(), baseCode)) {
+        // Only XIX/XIY/XIZ/XSP are usable as a base register in minimum mode.
+        if (!maxMode() && !reg::isIndexBaseCode(baseCode))
             return op.setError(innerAt, REGISTER_NOT_ALLOWED);
         p.skipSpaces();
         const auto signAt = p;
         if (p.expect('+')) {
-            // (XIx+) post-increment
+            // (r32+) post-increment
             if (p.expect(')')) {
-                op.reg = innerReg;
+                op.base = baseCode;
                 op.mode = M_PINC;
                 scan = p;
                 return OK;
             }
-            // (XIx+r8) register-indexed
+            // (r32+r8) register-indexed
             const auto idxAt = p.skipSpaces();
             const auto idxReg = parseRegName(p, parser());
             if (idxReg != REG_UNDEF) {
@@ -684,22 +757,22 @@ Error AsmTlcs900::parseOperand(StrScanner &scan, Operand &op) const {
                     return op.setError(idxAt, REGISTER_NOT_ALLOWED);
                 if (!p.skipSpaces().expect(')'))
                     return op.setError(p, MISSING_CLOSING_PAREN);
-                op.reg = innerReg;
+                op.base = baseCode;
                 op.idx = idxReg;
                 op.mode = M_IDXR;
                 scan = p;
                 return OK;
             }
-            // (XIx+disp) falls through to the signed-displacement path
+            // (r32+disp) falls through to the signed-displacement path
             // below; parseInteger handles '+' after we backtrack to signAt.
         } else if (p.expect(')')) {
-            // (XIx) indirect
-            op.reg = innerReg;
+            // (r32) indirect
+            op.base = baseCode;
             op.mode = M_IND;
             scan = p;
             return OK;
         }
-        // Signed displacement: (XIx+disp) or (XIx-disp). parseInteger accepts
+        // Signed displacement: (r32+disp) or (r32-disp). parseInteger accepts
         // either leading sign starting from signAt.
         p = signAt;
         op.val = parseInteger(p, op, ')');
@@ -707,10 +780,17 @@ Error AsmTlcs900::parseOperand(StrScanner &scan, Operand &op) const {
             return op.getError();
         if (!p.skipSpaces().expect(')'))
             return op.setError(p, MISSING_CLOSING_PAREN);
-        op.reg = innerReg;
+        op.base = baseCode;
         op.mode = op.val.overflowInt8() ? M_IDX16 : M_IDX8;
         scan = p;
         return OK;
+    }
+    // A register name that isn't a valid 32-bit base is rejected here rather
+    // than mis-parsed as an absolute symbol.
+    {
+        auto probe = innerAt;
+        if (parseRegName(probe, parser()) != REG_UNDEF)
+            return op.setError(innerAt, REGISTER_NOT_ALLOWED);
     }
 
     // Absolute address
@@ -743,7 +823,6 @@ Error AsmTlcs900::encodeImpl(StrScanner &scan, Insn &_insn) const {
     if (searchName(cpuType(), insn))
         return _insn.setError(insn.dstOp, insn);
 
-    insn.complexIndir = _complexIndir;
     encodePrefixAddr(insn);
     encodeOperand(insn, insn.dstOp, insn.dst());
     if (insn.pre() != PM_LDAR)

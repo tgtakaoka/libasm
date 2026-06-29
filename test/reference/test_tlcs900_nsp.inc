@@ -12,12 +12,11 @@
 ;;; See the License for the specific language governing permissions and
 ;;; limitations under the License.
 
-;;; LDC NSP/XNSP (privileged). NSP exists in base, /H, /L1, /H2; removed in /L.
+;;; LDC NSP/XNSP (privileged). NSP exists in base, /H, /L1, /H2; replaced by
+;;; INTNEST in /L (see test_tlcs900_intnest.inc). Requires MAXMODE (wrapper).
 
-        MAXMODE ON
         LDC     XNSP,XSP
         LDC     XSP,XNSP
-        MAXMODE OFF
         LDC     NSP,SP
         LDC     SP,NSP
 

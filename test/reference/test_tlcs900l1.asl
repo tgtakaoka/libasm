@@ -20,6 +20,8 @@
         SUPMODE ON
         MAXMODE ON
         include "test_tlcs900_common.inc"
+        include "test_tlcs900_reg32.inc"
+        include "test_tlcs900_nsp.inc"
         include "test_tlcs900_ldx.inc"
         end
 
