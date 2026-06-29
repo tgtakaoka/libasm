@@ -177,51 +177,17 @@
 
 ;;; LD: 32-bit register <- register (MAX mode)
 
-        MAXMODE ON
-
-        LD      XWA,XWA
-        LD      XWA,XBC
-        LD      XWA,XDE
-        LD      XWA,XHL
-        LD      XWA,XIX
-        LD      XWA,XIY
-        LD      XWA,XIZ
-        LD      XWA,XSP
-        LD      XIX,XWA
-        LD      XIY,XWA
-        LD      XIZ,XWA
-        LD      XSP,XWA
 
 ;;; LD: 32-bit register <- immediate
 
-        LD      XWA,012345678H
-        LD      XBC,012345678H
         LD      XIX,012345678H
         LD      XIY,012345678H
 
 ;;; LD: 32-bit register <- memory
 
-        LD      XWA,(XIX)
-        LD      XWA,(-XIX)
-        LD      XWA,(XIX+)
-        LD      XWA,(XIX+20H)
-        LD      XWA,(XIX+1234H)
-        LD      XWA,(034H)
-        LD      XWA,(01234H)
-        LD      XWA,(0123456H)
-        LD      XWA,(XIX+A)
 
 ;;; LD: memory <- 32-bit register
 
-        LD      (XIX),XWA
-        LD      (-XIX),XWA
-        LD      (XIX+),XWA
-        LD      (XIX+20H),XWA
-        LD      (XIX+1234H),XWA
-        LD      (034H),XWA
-        LD      (01234H),XWA
-        LD      (0123456H),XWA
-        LD      (XIX+A),XWA
 
 
 ;;; LD: absolute addressing (16-bit/24-bit absolute <- mem and vice versa)
@@ -256,11 +222,7 @@
         POP     (XIX)
         POP     SR
 
-        MAXMODE ON
-        PUSH    XWA
-        PUSH    XBC
         PUSH    XIX
-        POP     XWA
         POP     XIX
 
 ;;; LDA
@@ -273,7 +235,6 @@
         LDA     WA,(0123456H)
         LDA     WA,(XIX+A)
         LDA     IX,(XIX+20H)
-        MAXMODE ON
         LDA     XIX,(XIY)
         LDA     XIX,(XIY+20H)
         LDA     XIX,(XIY+1234H)
@@ -287,7 +248,6 @@
         LDAR    WA,$
         LDAR    WA,$+7FFFH
         LDAR    IX,$
-        MAXMODE ON
         LDAR    XIX,$
         LDAR    XIX,$+7FFFH
 
@@ -341,16 +301,6 @@
         ADD     WA,(0123456H)
         ADD     WA,(XIX+A)
 
-        MAXMODE ON
-        ADD     XWA,XWA
-        ADD     XWA,XBC
-        ADD     XWA,012345678H
-        ADD     XWA,(XIX)
-        ADD     XWA,(XIX+20H)
-        ADD     XWA,(034H)
-        ADD     XWA,(01234H)
-        ADD     XWA,(0123456H)
-        ADD     XWA,(XIX+A)
 
         ADC     A,A
         ADC     A,034H
@@ -430,11 +380,6 @@
         DEC     1,(XIX+20H)
         DEC     1,(034H)
 
-        MAXMODE ON
-        INC     1,XWA
-        INC     2,XWA
-        INC     4,XWA
-        DEC     1,XWA
 
 ;;; MUL / MULS / DIV / DIVS
 
@@ -458,8 +403,6 @@
 
 ;;; MULA (32-bit register only)
 
-        MAXMODE ON
-        MULA    XWA
         MULA    XIX
 
 ;;; MINC / MDEC (word operand, buffer size must be power of 2)
@@ -490,9 +433,6 @@
         EXTZ    BC
         EXTS    WA
         EXTS    BC
-        MAXMODE ON
-        EXTZ    XWA
-        EXTS    XWA
         EXTZ    XIX
         EXTS    XIX
 
@@ -505,8 +445,6 @@
 
         PAA     WA
         PAA     BC
-        MAXMODE ON
-        PAA     XWA
         PAA     XIX
 
 ;;; BS1F / BS1B (word register)
@@ -686,7 +624,6 @@
 
 ;;; DJNZ
 
-        DJNZ    $+2
         DJNZ    WA,$+2
         DJNZ    BC,$+2
         DJNZ    IX,$+2
@@ -715,7 +652,6 @@
 
 ;;; LINK / UNLK (longword register)
 
-        MAXMODE ON
         LINK    XIX,-4
         LINK    XIY,0
         UNLK    XIX

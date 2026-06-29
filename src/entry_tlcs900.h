@@ -82,6 +82,18 @@ enum AddrMode : uint8_t {
     M_R32SRC  = 45,  // 32-bit register passed as PM_REG16 prefix (MULA xrr32 alias)
     M_LDARREG = 46,  // LDAR destination register: emits 0x20|reg16 or 0x30|reg32 as trailing byte
     M_LDARREL = 47,  // LDAR rel16 target with base = instruction_start + 4
+    // Size-restricted prefix-encoded source registers (like M_SRC but only a
+    // subset of operation sizes is valid, per the manual's B/W/L flags).
+    M_SRCB    = 48,  // byte only (DAA): PM_REG8/PM_ABREG8
+    M_SRCW    = 49,  // word only (MIRR, MINC/MDEC): PM_REG16/PM_ABREG16
+    M_SRCWL   = 50,  // word or long, no byte (EXTZ/EXTS/PAA): PM_REG16/32, PM_ABREG16/32
+    M_MULDST  = 51,  // MUL/MULS/DIV/DIVS dest in opcode (0x40+R): double the prefix(src)
+                     // size -- 16-bit at PM_REG8 (R=2*idx+1), 32-bit at PM_REG16 (R=idx)
+    M_MULDSTP = 52,  // MUL/MULS/DIV/DIVS rr,# dest carried IN the prefix (C8+code byte /
+                     // D8+code word); same code scheme as M_MULDST. Source is the immediate.
+    M_SRCBW   = 53,  // byte or word, no long (NEG, CPL): PM_REG8/16, PM_ABREG8/16
+    M_CCT     = 54,  // the always-true condition (cc=T) as an explicit operand: folds
+                     // JP/CALL T,(abs) to the compact unconditional form (asm-only match)
 };
 // clang-format on
 

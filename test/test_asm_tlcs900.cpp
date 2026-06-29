@@ -24,14 +24,6 @@ using namespace libasm::test;
 AsmTlcs900 asm900;
 Assembler &assembler(asm900);
 
-void set_up() {
-    assembler.reset();
-}
-
-void tear_down() {
-    symtab.reset();
-}
-
 static bool is_tlcs900() {
     return strcmp_P("TLCS900", assembler.config().cpu_P()) == 0;
 }
@@ -40,6 +32,19 @@ static bool is_tlcs900l() {
 }
 static bool is_tlcs900h2() {
     return strcmp_P("TLCS900H2", assembler.config().cpu_P()) == 0;
+}
+
+void set_up() {
+    assembler.reset();
+    // Base TLCS900 resets to minimum mode; the operand suite exercises the
+    // general 32-bit registers XWA-XHL, which exist only in maximum mode.
+    // /L is minimum-mode only and keeps the reset (minimum) mode.
+    if (!is_tlcs900l())
+        assembler.setOption("maximum-mode", "on");
+}
+
+void tear_down() {
+    symtab.reset();
 }
 // clang-format off
 void test_cpu() {
@@ -96,18 +101,18 @@ void test_single() {
         ERRT("LDX (034H),056H",   UNKNOWN_INSTRUCTION, "LDX (034H),056H");
         ERRT("LDX (01234H),056H", UNKNOWN_INSTRUCTION, "LDX (01234H),056H");
     }
-    // NSP/XNSP exists only on base; INTNEST exists on /L, /H, /L1, /H2. Both use sub-byte 0x3C.
-    if (is_tlcs900()) {
+    // Sub-byte 0x3C is NSP/XNSP on every variant except /L, where it is INTNEST.
+    if (is_tlcs900l()) {
+        TEST("LDC INTNEST,WA",  0xD8, 0x2E, 0x3C);
+        TEST("LDC WA,INTNEST",  0xD8, 0x2F, 0x3C);
+        ERRT("LDC NSP,SP",      REGISTER_NOT_ALLOWED, "NSP,SP");
+        ERRT("LDC XNSP,XSP",    REGISTER_NOT_ALLOWED, "XNSP,XSP");
+    } else {
         TEST("LDC XNSP,XSP",    0xEF, 0x2E, 0x3C);
         TEST("LDC XSP,XNSP",    0xEF, 0x2F, 0x3C);
         TEST("LDC NSP,SP",      0xDF, 0x2E, 0x3C);
         TEST("LDC SP,NSP",      0xDF, 0x2F, 0x3C);
         ERRT("LDC INTNEST,WA",  REGISTER_NOT_ALLOWED, "INTNEST,WA");
-    } else {
-        TEST("LDC INTNEST,WA",  0xD8, 0x2E, 0x3C);
-        TEST("LDC WA,INTNEST",  0xD8, 0x2F, 0x3C);
-        ERRT("LDC NSP,SP",      REGISTER_NOT_ALLOWED, "NSP,SP");
-        ERRT("LDC XNSP,XSP",    REGISTER_NOT_ALLOWED, "XNSP,XSP");
     }
     // LDC DMA control registers
     TEST("LDC DMAS0,XWA",   0xE8, 0x2E, 0x00);
@@ -135,15 +140,10 @@ void test_single() {
     TEST("DI",      0x06, 0x07);
     TEST("LDF 0",   0x17, 0x00);
     TEST("LDF 3",   0x17, 0x03);
-    // LDF range depends on the reset register mode: base and /L start in MIN (0-7),
-    // /H and /L1 start in MAX (0-3).
-    if (is_tlcs900() || is_tlcs900l()) {
-        TEST("LDF 7",   0x17, 0x07);
-        ERRT("LDF 8",   OVERFLOW_RANGE, "8", 0x17, 0x00);
-    } else {
-        ERRT("LDF 4",   OVERFLOW_RANGE, "4", 0x17, 0x00);
-        ERRT("LDF 7",   OVERFLOW_RANGE, "7", 0x17, 0x03);
-    }
+    // test_single runs in maximum mode (4 register banks): LDF takes 0-3.
+    // The minimum-mode range (0-7) is covered by test_minmode.
+    ERRT("LDF 4",   OVERFLOW_RANGE, "4", 0x17, 0x00);
+    ERRT("LDF 7",   OVERFLOW_RANGE, "7", 0x17, 0x03);
     TEST("SWI 0",   0xF8);
     TEST("SWI 7",   0xFF);
     TEST("SWI",     0xFF);  // bare SWI defaults to vec 7 (ASL convention)
@@ -166,6 +166,17 @@ void test_tlcs900l() {
     TEST("MDEC1 2,BC",    0xD9, 0x3C, 0x01, 0x00);
     TEST("MDEC2 4,DE",    0xDA, 0x3D, 0x02, 0x00);
     TEST("MDEC4 8,HL",    0xDB, 0x3E, 0x04, 0x00);
+    // Max valid buffer size is 2^15 (n=15).
+    TEST("MINC1 8000H,BC", 0xD9, 0x38, 0xFF, 0x7F);
+    // The buffer must be 2^n (2*step <= size <= 0x8000); out-of-range still
+    // encodes (size-step) but flags OVERFLOW_RANGE.
+    ERRT("MINC1 3,BC", OVERFLOW_RANGE, "3,BC", 0xD9, 0x38, 0x02, 0x00); // not 2^n
+    ERRT("MINC1 1,BC", OVERFLOW_RANGE, "1,BC", 0xD9, 0x38, 0x00, 0x00); // n=0, too small
+    ERRT("MINC4 4,BC", OVERFLOW_RANGE, "4,BC", 0xD9, 0x3A, 0x00, 0x00); // n=2 < min n=3
+    // The index register is word-only (D8+r); 8-bit and 32-bit are rejected.
+    ERRT("MINC1 8,A",   OPERAND_NOT_ALLOWED, "8,A");
+    ERRT("MINC1 8,XIX", OPERAND_NOT_ALLOWED, "8,XIX");
+    ERRT("MDEC2 8,XBC", OPERAND_NOT_ALLOWED, "8,XBC");
 }
 
 void test_ld_reg8_reg8() {
@@ -198,12 +209,20 @@ void test_ld_reg8_imm() {
 }
 
 void test_ld_reg8_mem() {
+    TEST("LD A,(XWA)",       0x80, 0x21);
+    TEST("LD A,(XBC)",       0x81, 0x21);
+    TEST("LD A,(XDE)",       0x82, 0x21);
+    TEST("LD A,(XHL)",       0xC3, 0xEC, 0x21);  // 0x83 reserved (block) -> complex
     TEST("LD A,(XIX)",       0x84, 0x21);
     TEST("LD A,(XIY)",       0x85, 0x21);
     TEST("LD A,(XIZ)",       0x86, 0x21);
     TEST("LD A,(XSP)",       0x87, 0x21);
-    TEST("LD A,(-XIX)",      0x80, 0x21);
-    TEST("LD A,(XIX+)",      0x88, 0x21);
+    TEST("LD A,(-XIX)",      0xC4, 0xF0, 0x21);
+    TEST("LD A,(XIX+)",      0xC5, 0xF0, 0x21);
+    TEST("LD A,(-XWA)",      0xC4, 0xE0, 0x21);
+    TEST("LD A,(XWA+)",      0xC5, 0xE0, 0x21);
+    TEST("LD A,(-XWA')",     0xC4, 0xD0, 0x21);  // previous-bank base
+    TEST("LD A,(XBC0)",      0xC3, 0x04, 0x21);  // bank-0 base (complex)
     TEST("LD A,(XIX+20H)",   0x8C, 0x20, 0x21);
     TEST("LD A,(XIX-20H)",   0x8C, 0xE0, 0x21);
     TEST("LD A,(XIX-2)",     0x8C, 0xFE, 0x21);
@@ -220,10 +239,13 @@ void test_ld_reg8_mem() {
 }
 
 void test_ld_mem_reg8() {
+    TEST("LD (XWA),A",       0xF3, 0xE0, 0x41);  // 0xB0 reserved (retcc) -> complex
+    TEST("LD (XBC),A",       0xB1, 0x41);
+    TEST("LD (XHL),A",       0xB3, 0x41);
     TEST("LD (XIX),A",       0xB4, 0x41);
     TEST("LD (XIY),A",       0xB5, 0x41);
     TEST("LD (-XIX),A",      0xF4, 0xF0, 0x41);
-    TEST("LD (XIX+),A",      0xB8, 0x41);
+    TEST("LD (XIX+),A",      0xF5, 0xF0, 0x41);
     TEST("LD (XIX+20H),A",   0xBC, 0x20, 0x41);
     TEST("LD (XIX+1234H),A", 0xF3, 0xF1, 0x34, 0x12, 0x41);
     TEST("LD (034H),A",      0xF0, 0x34, 0x41);
@@ -235,7 +257,7 @@ void test_ld_mem_reg8() {
 void test_ld_mem_imm8() {
     TEST("LD (XIX),034H",       0xB4, 0x00, 0x34);
     TEST("LD (-XIX),034H",      0xF4, 0xF0, 0x00, 0x34);
-    TEST("LD (XIX+),034H",      0xB8, 0x00, 0x34);
+    TEST("LD (XIX+),034H",      0xF5, 0xF0, 0x00, 0x34);
     TEST("LD (XIX+20H),034H",   0xBC, 0x20, 0x00, 0x34);
     TEST("LD (XIX+1234H),034H", 0xF3, 0xF1, 0x34, 0x12, 0x00, 0x34);
     TEST("LD (034H),034H",      0x08, 0x34, 0x34);
@@ -276,8 +298,8 @@ void test_ld_reg16_imm() {
 void test_ld_reg16_mem() {
     TEST("LD WA,(XIX)",       0x94, 0x20);
     TEST("LD WA,(XIY)",       0x95, 0x20);
-    TEST("LD WA,(-XIX)",      0x90, 0x20);
-    TEST("LD WA,(XIX+)",      0x98, 0x20);
+    TEST("LD WA,(-XIX)",      0xD4, 0xF1, 0x20);
+    TEST("LD WA,(XIX+)",      0xD5, 0xF1, 0x20);
     TEST("LD WA,(XIX+20H)",   0x9C, 0x20, 0x20);
     TEST("LD WA,(XIX+1234H)", 0xD3, 0xF1, 0x34, 0x12, 0x20);
     TEST("LD WA,(034H)",      0xD0, 0x34, 0x20);
@@ -290,7 +312,7 @@ void test_ld_mem_reg16() {
     TEST("LD (XIX),WA",       0xB4, 0x50);
     TEST("LD (XIY),WA",       0xB5, 0x50);
     TEST("LD (-XIX),WA",      0xF4, 0xF1, 0x50);
-    TEST("LD (XIX+),WA",      0xB8, 0x50);
+    TEST("LD (XIX+),WA",      0xF5, 0xF1, 0x50);
     TEST("LD (XIX+20H),WA",   0xBC, 0x20, 0x50);
     TEST("LD (XIX+1234H),WA", 0xF3, 0xF1, 0x34, 0x12, 0x50);
     TEST("LD (034H),WA",      0xF0, 0x34, 0x50);
@@ -323,8 +345,8 @@ void test_ld_reg32_imm() {
 
 void test_ld_reg32_mem() {
     TEST("LD XWA,(XIX)",       0xA4, 0x20);
-    TEST("LD XWA,(-XIX)",      0xA0, 0x20);
-    TEST("LD XWA,(XIX+)",      0xA8, 0x20);
+    TEST("LD XWA,(-XIX)",      0xE4, 0xF2, 0x20);
+    TEST("LD XWA,(XIX+)",      0xE5, 0xF2, 0x20);
     TEST("LD XWA,(XIX+20H)",   0xAC, 0x20, 0x20);
     TEST("LD XWA,(XIX+1234H)", 0xE3, 0xF1, 0x34, 0x12, 0x20);
     TEST("LD XWA,(034H)",      0xE0, 0x34, 0x20);
@@ -354,15 +376,15 @@ void test_push_pop() {
     // PUSH/POP from/to memory
     TEST("PUSH (XIX)",       0x84, 0x04);
     TEST("PUSH (XIY)",       0x85, 0x04);
-    TEST("PUSH (-XIX)",      0x80, 0x04);
-    TEST("PUSH (XIX+)",      0x88, 0x04);
+    TEST("PUSH (-XIX)",      0xC4, 0xF0, 0x04);
+    TEST("PUSH (XIX+)",      0xC5, 0xF0, 0x04);
     TEST("PUSH (XIX+20H)",   0x8C, 0x20, 0x04);
     TEST("PUSH (034H)",      0xC0, 0x34, 0x04);
     TEST("PUSH (01234H)",    0xC1, 0x34, 0x12, 0x04);
     TEST("POP (XIX)",        0xB4, 0x04);
     TEST("POP (XIY)",        0xB5, 0x04);
     TEST("POP (-XIX)",       0xF4, 0xF2, 0x04);
-    TEST("POP (XIX+)",       0xB8, 0x04);
+    TEST("POP (XIX+)",       0xF5, 0xF2, 0x04);
     TEST("POP (XIX+20H)",    0xBC, 0x20, 0x04);
     TEST("POP (034H)",       0xF0, 0x34, 0x04);
     TEST("POP (01234H)",     0xF1, 0x34, 0x12, 0x04);
@@ -539,15 +561,24 @@ void test_unary() {
     TEST("NEG A",    0xC9, 0x07);
     TEST("CPL BC",   0xD9, 0x06);
     TEST("NEG BC",   0xD9, 0x07);
-    TEST("CPL XWA",  0xE8, 0x06);
-    TEST("NEG XWA",  0xE8, 0x07);
+    // NEG/CPL are byte/word only (manual BW-); the long form is undefined.
+    ERRT("CPL XWA",  OPERAND_NOT_ALLOWED, "XWA");
+    ERRT("NEG XWA",  OPERAND_NOT_ALLOWED, "XWA");
     // DAA/EXTZ/EXTS/PAA/MIRR/MULA
     TEST("DAA  A",   0xC9, 0x10);
     TEST("EXTZ BC",  0xD9, 0x12);
     TEST("EXTS BC",  0xD9, 0x13);
     TEST("PAA  XBC", 0xE9, 0x14);
     TEST("MIRR BC",  0xD9, 0x16);
-    TEST("MULA BC",  0xD9, 0x19);
+    TEST("MULA XBC", 0xD9, 0x19);  // 32-bit operand via D8+r (PM_REG16) alias
+    // Operand size is fixed per instruction (manual B/W/L flags): DAA byte
+    // only; MIRR word only; EXTZ/EXTS/PAA word or long (no byte).
+    ERRT("DAA  WA",  OPERAND_NOT_ALLOWED, "WA");
+    ERRT("DAA  XWA", OPERAND_NOT_ALLOWED, "XWA");
+    ERRT("MIRR A",   OPERAND_NOT_ALLOWED, "A");
+    ERRT("MIRR XBC", OPERAND_NOT_ALLOWED, "XBC");
+    ERRT("EXTZ A",   OPERAND_NOT_ALLOWED, "A");
+    ERRT("PAA  A",   OPERAND_NOT_ALLOWED, "A");
     // BS1F/BS1B: result in A, source is 16-bit register
     TEST("BS1F A,WA", 0xD8, 0x0E);
     TEST("BS1F A,BC", 0xD9, 0x0E);
@@ -577,6 +608,24 @@ void test_mul_div() {
     TEST("DIVS WA,A",  0xC9, 0x59);
     TEST("MUL  WA,B",  0xCA, 0x41);
     TEST("DIV  WA,L",  0xCF, 0x51);
+    // Non-WA destination (byte op: dest 16-bit, R=2*idx+1).
+    TEST("MUL  BC,A",  0xC9, 0x43);
+    TEST("MUL  DE,C",  0xCB, 0x45);
+    TEST("MULS HL,B",  0xCA, 0x4F);
+    TEST("DIV  BC,A",  0xC9, 0x53);
+    // Word op: dest 32-bit (R=idx), source 16-bit.
+    TEST("MUL  XWA,BC", 0xD9, 0x40);
+    TEST("MUL  XBC,DE", 0xDA, 0x41);
+    TEST("DIV  XWA,BC", 0xD9, 0x50);
+    TEST("DIVS XHL,IX", 0xDC, 0x5B);
+    TEST("MUL  XBC,(XIX)", 0x94, 0x41);
+    // Immediate source: dest carried in the prefix; byte op -> imm8, word op -> imm16.
+    TEST("MUL  WA,5",   0xC9, 0x08, 0x05);
+    TEST("MUL  BC,5",   0xCB, 0x08, 0x05);
+    TEST("MUL  XWA,5",  0xD8, 0x08, 0x05, 0x00);
+    TEST("MULS WA,5",   0xC9, 0x09, 0x05);
+    TEST("DIV  WA,5",   0xC9, 0x0A, 0x05);
+    TEST("DIVS BC,5",   0xCB, 0x0B, 0x05);
 }
 
 void test_branch() {
@@ -591,6 +640,10 @@ void test_branch() {
     TEST("JP   (0123456H)",0x1B, 0x56, 0x34, 0x12);
     TEST("CALL (01234H)",  0x1C, 0x34, 0x12);
     TEST("CALL (0123456H)",0x1D, 0x56, 0x34, 0x12);
+    // cc=T (always) folds to the compact unconditional form
+    TEST("RET  T",         0x0E);
+    TEST("JP   T,(01234H)",0x1A, 0x34, 0x12);
+    TEST("CALL T,(0123456H)",0x1D, 0x56, 0x34, 0x12);
     // JR cc, rel8: at address 0, base=2
     TEST("JR F,2",         0x60, 0x00);
     TEST("JR LT,2",        0x61, 0x00);
@@ -712,28 +765,88 @@ void test_abs_reg() {
 }
 
 // clang-format on
-void test_complex_indir() {
-    TEST("option complex-indir, on");
+// Register-indirect single-byte forms whose prefix byte would be a reserved
+// prefix (0x83 = block transfer, 0xB0 = conditional return) must fall back to
+// the complex (r32) encoding, plus previous-bank / bank-N base registers that
+// only have a complex form.
+void test_reserved_and_bank() {
+    // (XHL) byte-source single byte is 0x83 (block) -> complex C3 EC
+    TEST("LD A,(XHL)",   0xC3, 0xEC, 0x21);
+    // (XHL) word/long-source bytes 0x93/0xA3 are NOT reserved -> single byte
+    TEST("LD WA,(XHL)",  0x93, 0x20);
+    TEST("LD XWA,(XHL)", 0xA3, 0x20);
+    // (XWA) destination single byte is 0xB0 (retcc) -> complex F3 E0
+    TEST("LD (XWA),A",   0xF3, 0xE0, 0x41);
+    // other destination bases keep the single byte
+    TEST("LD (XHL),A",   0xB3, 0x41);
+    // previous-bank and bank-N base registers (complex only)
+    TEST("LD A,(XWA')",  0xC3, 0xD0, 0x21);
+    TEST("LD A,(-XHL')", 0xC4, 0xDC, 0x21);
+    TEST("LD A,(XDE3)",  0xC3, 0x38, 0x21);
+    TEST("LD A,(XBC0+)", 0xC5, 0x04, 0x21);
+}
 
-    TEST("LD A,(-XIX)", 0xC4, 0xF0, 0x21);
-    TEST("LD A,(XIX+)", 0xC5, 0xF0, 0x21);
-    TEST("LD WA,(-XIX)", 0xD4, 0xF1, 0x20);
-    TEST("LD WA,(XIX+)", 0xD5, 0xF1, 0x20);
-    TEST("LD XWA,(-XIX)", 0xE4, 0xF2, 0x20);
-    TEST("LD XWA,(XIX+)", 0xE5, 0xF2, 0x20);
-    // MEMD+XIX pre-dec: compact=0xB0 conflicts, already complex; same with option
-    TEST("LD (-XIX),A", 0xF4, 0xF0, 0x41);
-    // MEMD+XIX post-inc: compact=0xB8, no conflict; complex with option
-    TEST("LD (XIX+),A", 0xF5, 0xF0, 0x41);
-
-    TEST("option complex-indir, off");
+// Minimum mode (TLCS900L): the general 32-bit registers XWA/XBC/XDE/XHL are
+// unavailable as data operands and as memory base registers; only the index
+// registers XIX/XIY/XIZ/XSP remain usable (manual 3.2.1). This covers the
+// instruction classes that remain valid in minimum mode plus the rejections.
+void test_minmode() {
+    // LD: 8/16-bit registers, immediates, and XIX-based addressing.
+    TEST("LD A,B",            0xCA, 0x89);
+    TEST("LD A,34H",          0x21, 0x34);
+    TEST("LD WA,BC",          0xD9, 0x88);
+    TEST("LD WA,1234H",       0x30, 0x34, 0x12);
+    TEST("LD A,(XIX)",        0x84, 0x21);
+    TEST("LD A,(-XIX)",       0xC4, 0xF0, 0x21);
+    TEST("LD A,(XIX+20H)",    0x8C, 0x20, 0x21);
+    TEST("LD (XIX),A",        0xB4, 0x41);
+    TEST("LD A,(1234H)",      0xC1, 0x34, 0x12, 0x21);
+    TEST("LD XIX,12345678H",  0x44, 0x78, 0x56, 0x34, 0x12);
+    TEST("LD XSP,1234H",      0x47, 0x34, 0x12, 0x00, 0x00);
+    // PUSH/POP, ALU, INC/DEC, shift, bit, branch, MUL/DIV.
+    TEST("PUSH BC",           0x29);
+    TEST("PUSH XIX",          0x3C);
+    TEST("POP WA",            0x48);
+    TEST("ADD A,B",           0xCA, 0x81);
+    TEST("ADD A,34H",         0xC9, 0xC8, 0x34);
+    TEST("ADD WA,BC",         0xD9, 0x80);
+    TEST("ADD XIX,XIY",       0xED, 0x84);
+    TEST("SUB A,B",           0xCA, 0xA1);
+    TEST("CP A,B",            0xCA, 0xF1);
+    TEST("AND A,B",           0xCA, 0xC1);
+    TEST("INC 1,A",           0xC9, 0x61);
+    TEST("DEC 1,WA",          0xD8, 0x69);
+    TEST("RLC 1,A",           0xC9, 0xE8, 0x01);
+    TEST("SLA 1,WA",          0xD8, 0xEC, 0x01);
+    TEST("BIT 3,A",           0xC9, 0x33, 0x03);
+    TEST("SET 3,(XIX)",       0xB4, 0xBB);
+    TEST("JR NZ,$",           0x6E, 0xFE);
+    TEST("MUL WA,B",          0xCA, 0x41);
+    TEST("DIV WA,B",          0xCA, 0x51);
+    // 8 register banks in minimum mode: LDF takes 0-7.
+    TEST("LDF 7",             0x17, 0x07);
+    ERRT("LDF 8",             OVERFLOW_RANGE, "8", 0x17, 0x00);
+    // The general 32-bit registers XWA-XHL are rejected as data operands...
+    ERRT("LD XWA,XBC", REGISTER_NOT_ALLOWED, "XBC", 0xE9, 0x88);
+    ERRT("MULA XWA",   REGISTER_NOT_ALLOWED, "XWA", 0xD8, 0x19);
+    ERRT("EXTZ XWA",   REGISTER_NOT_ALLOWED, "XWA", 0xE8, 0x12);
+    ERRT("PUSH XWA",   REGISTER_NOT_ALLOWED, "XWA", 0x38);
+    // ...and as memory base registers.
+    ERRT("LD A,(XHL)",  REGISTER_NOT_ALLOWED, "XHL)");
+    ERRT("LD A,(XBC)",  REGISTER_NOT_ALLOWED, "XBC)");
+    ERRT("LD A,(-XWA)", REGISTER_NOT_ALLOWED, "XWA)");
 }
 
 void run_tests(const char *cpu) {
     assembler.setCpu(cpu);
-    RUN_TEST(test_single);
-    if (is_tlcs900l())
+    if (is_tlcs900l()) {
+        // /L is minimum-mode only: the maximum-mode operand suite (general
+        // 32-bit registers) does not apply.
         RUN_TEST(test_tlcs900l);
+        RUN_TEST(test_minmode);
+        return;
+    }
+    RUN_TEST(test_single);
     RUN_TEST(test_ld_reg8_reg8);
     RUN_TEST(test_ld_reg8_imm);
     RUN_TEST(test_ld_reg8_mem);
@@ -760,7 +873,7 @@ void run_tests(const char *cpu) {
     RUN_TEST(test_branch);
     RUN_TEST(test_block);
     RUN_TEST(test_abs_reg);
-    RUN_TEST(test_complex_indir);
+    RUN_TEST(test_reserved_and_bank);
 }
 
 // Local Variables:

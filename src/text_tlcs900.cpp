@@ -27,6 +27,9 @@ constexpr char TEXT_CPU_TLCS900H[] PROGMEM = "TLCS900H";
 constexpr char TEXT_CPU_TLCS900L1[] PROGMEM = "TLCS900L1";
 constexpr char TEXT_CPU_TLCS900H2[] PROGMEM = "TLCS900H2";
 
+constexpr char OPT_BOOL_MAXIMUM_MODE[] PROGMEM = "maximum-mode";
+constexpr char OPT_DESC_MAXIMUM_MODE[] PROGMEM = "enable maximum mode";
+
 // clang-format off
 // constexpr char TEXT_ADC[]   PROGMEM = "ADC";
 // constexpr char TEXT_ADD[]   PROGMEM = "ADD";

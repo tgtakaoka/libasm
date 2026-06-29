@@ -47,6 +47,7 @@ constexpr Entry TABLE_OPC[] PROGMEM = {
     E0(0x0C, CF_00, TEXT_INCF),
     E0(0x0D, CF_00, TEXT_DECF),
     E0(0x0E, CF_00, TEXT_RET),
+    E1(0x0E, CF_00, TEXT_RET,   M_CCT),  // RET T folds to the unconditional RET
     E1(0x0F, CF_00, TEXT_RETD,  M_IMM16),
     E0(0x10, CF_00, TEXT_RCF),
     E0(0x11, CF_00, TEXT_SCF),
@@ -62,6 +63,12 @@ constexpr Entry TABLE_OPC[] PROGMEM = {
     E1(0x1B, CF_00, TEXT_JP,    M_ABS24),
     E1(0x1C, CF_00, TEXT_CALL,  M_ABS16),
     E1(0x1D, CF_00, TEXT_CALL,  M_ABS24),
+    // Fold JP/CALL T,(abs) (always-true cc) to the compact unconditional form.
+    // Placed after the no-cc entries so dis decodes 0x1A..0x1D as plain JP/CALL.
+    E2(0x1A, CF_00, TEXT_JP,    M_CCT, M_ABS16),
+    E2(0x1B, CF_00, TEXT_JP,    M_CCT, M_ABS24),
+    E2(0x1C, CF_00, TEXT_CALL,  M_CCT, M_ABS16),
+    E2(0x1D, CF_00, TEXT_CALL,  M_CCT, M_ABS24),
     E1(0x1E, CF_00, TEXT_CALR,  M_REL16),
     E2(0x20, CF_07, TEXT_LD,    M_REG8,  M_IMM8),
     E1(0x28, CF_07, TEXT_PUSH,  M_REG16),
@@ -80,48 +87,53 @@ constexpr Entry TABLE_OPC[] PROGMEM = {
     E1(0x06, CF_00, TEXT_DI,    M_DISUF),
 };
 constexpr uint8_t INDEX_OPC[] PROGMEM = {
-     26,  // TEXT_CALL
      27,  // TEXT_CALL
-     28,  // TEXT_CALR
-     16,  // TEXT_CCF
+     28,  // TEXT_CALL
+     31,  // TEXT_CALL
+     32,  // TEXT_CALL
+     33,  // TEXT_CALR
+     17,  // TEXT_CCF
      11,  // TEXT_DECF
-     41,  // TEXT_DI
+     46,  // TEXT_DI
       4,  // TEXT_EI
-     40,  // TEXT_EI
-     20,  // TEXT_EX
+     45,  // TEXT_EI
+     21,  // TEXT_EX
       3,  // TEXT_HALT
      10,  // TEXT_INCF
-     24,  // TEXT_JP
      25,  // TEXT_JP
-     36,  // TEXT_JR
-     37,  // TEXT_JRL
+     26,  // TEXT_JP
+     29,  // TEXT_JP
+     30,  // TEXT_JP
+     41,  // TEXT_JR
+     42,  // TEXT_JRL
       6,  // TEXT_LD
-     29,  // TEXT_LD
-     31,  // TEXT_LD
-     33,  // TEXT_LD
-     21,  // TEXT_LDF
+     34,  // TEXT_LD
+     36,  // TEXT_LD
+     38,  // TEXT_LD
+     22,  // TEXT_LDF
       8,  // TEXT_LDW
       0,  // TEXT_NOP
       2,  // TEXT_POP
-     19,  // TEXT_POP
-     23,  // TEXT_POP
-     34,  // TEXT_POP
-     35,  // TEXT_POP
+     20,  // TEXT_POP
+     24,  // TEXT_POP
+     39,  // TEXT_POP
+     40,  // TEXT_POP
       1,  // TEXT_PUSH
       7,  // TEXT_PUSH
-     18,  // TEXT_PUSH
-     22,  // TEXT_PUSH
-     30,  // TEXT_PUSH
-     32,  // TEXT_PUSH
+     19,  // TEXT_PUSH
+     23,  // TEXT_PUSH
+     35,  // TEXT_PUSH
+     37,  // TEXT_PUSH
       9,  // TEXT_PUSHW
-     14,  // TEXT_RCF
+     15,  // TEXT_RCF
      12,  // TEXT_RET
-     13,  // TEXT_RETD
+     13,  // TEXT_RET
+     14,  // TEXT_RETD
       5,  // TEXT_RETI
-     15,  // TEXT_SCF
-     38,  // TEXT_SWI
-     39,  // TEXT_SWI
-     17,  // TEXT_ZCF
+     16,  // TEXT_SCF
+     43,  // TEXT_SWI
+     44,  // TEXT_SWI
+     18,  // TEXT_ZCF
 };
 
 constexpr Entry TABLE_OPC_TLCS900[] PROGMEM = {
@@ -141,20 +153,21 @@ constexpr uint8_t INDEX_OPC_TLCS900L[] PROGMEM = {
 };
 
 constexpr Entry TABLE_SRC_REG[] PROGMEM = {
-    E1(0x06, CF_00, TEXT_CPL,   M_SRC),
-    E1(0x07, CF_00, TEXT_NEG,   M_SRC),
-    E2(0x08, CF_00, TEXT_MUL,   R_WA,    M_IMM8),
-    E2(0x09, CF_00, TEXT_MULS,  R_WA,    M_IMM8),
+    E1(0x06, CF_00, TEXT_CPL,   M_SRCBW),
+    E1(0x07, CF_00, TEXT_NEG,   M_SRCBW),
+    E2(0x08, CF_00, TEXT_MUL,   M_MULDSTP, M_IMMX),
+    E2(0x09, CF_00, TEXT_MULS,  M_MULDSTP, M_IMMX),
+    E2(0x0A, CF_00, TEXT_DIV,   M_MULDSTP, M_IMMX),
+    E2(0x0B, CF_00, TEXT_DIVS,  M_MULDSTP, M_IMMX),
     E2(0x0C, CF_00, TEXT_LINK,  M_SRC,   M_IMM16),
     E1(0x0D, CF_00, TEXT_UNLK,  M_SRC),
     E2(0x0E, CF_00, TEXT_BS1F,  R_A,     M_SRC),
     E2(0x0F, CF_00, TEXT_BS1B,  R_A,     M_SRC),
-    E1(0x10, CF_00, TEXT_DAA,   M_SRC),
-    E1(0x12, CF_00, TEXT_EXTZ,  M_SRC),
-    E1(0x13, CF_00, TEXT_EXTS,  M_SRC),
-    E1(0x14, CF_00, TEXT_PAA,   M_SRC),
-    E1(0x16, CF_00, TEXT_MIRR,  M_SRC),
-    E1(0x19, CF_00, TEXT_MULA,  M_SRC),
+    E1(0x10, CF_00, TEXT_DAA,   M_SRCB),
+    E1(0x12, CF_00, TEXT_EXTZ,  M_SRCWL),
+    E1(0x13, CF_00, TEXT_EXTS,  M_SRCWL),
+    E1(0x14, CF_00, TEXT_PAA,   M_SRCWL),
+    E1(0x16, CF_00, TEXT_MIRR,  M_SRCW),
     E1(0x19, CF_00, TEXT_MULA,  M_R32SRC),
     E2(0x1C, CF_00, TEXT_DJNZ,  M_SRC,   M_REL8),
     E2(0x20, CF_00, TEXT_ANDCF, M_BIT,   M_SRC),
@@ -169,10 +182,10 @@ constexpr Entry TABLE_SRC_REG[] PROGMEM = {
     E2(0x32, CF_00, TEXT_CHG,   M_BIT,   M_SRC),
     E2(0x33, CF_00, TEXT_BIT,   M_BIT,   M_SRC),
     E2(0x34, CF_00, TEXT_TSET,  M_BIT,   M_SRC),
-    E2(0x41, CF_00, TEXT_MUL,   R_WA,    M_SRC),
-    E2(0x49, CF_00, TEXT_MULS,  R_WA,    M_SRC),
-    E2(0x51, CF_00, TEXT_DIV,   R_WA,    M_SRC),
-    E2(0x59, CF_00, TEXT_DIVS,  R_WA,    M_SRC),
+    E2(0x40, CF_07, TEXT_MUL,   M_MULDST, M_SRC),
+    E2(0x48, CF_07, TEXT_MULS,  M_MULDST, M_SRC),
+    E2(0x50, CF_07, TEXT_DIV,   M_MULDST, M_SRC),
+    E2(0x58, CF_07, TEXT_DIVS,  M_MULDST, M_SRC),
     E2(0x61, CF_00, TEXT_INC,   M_STEP1, M_SRC),
     E2(0x62, CF_00, TEXT_INC,   M_STEP2, M_SRC),
     E2(0x64, CF_00, TEXT_INC,   M_STEP4, M_SRC),
@@ -206,85 +219,86 @@ constexpr Entry TABLE_SRC_REG[] PROGMEM = {
     E2(0xEE, CF_00, TEXT_SLL,   M_RCOUNT, M_SRC),
     E2(0xEF, CF_00, TEXT_SRL,   M_RCOUNT, M_SRC),
     E2(0xF0, CF_07, TEXT_CP,    M_DST,   M_SRC),
-    E2(0x38, CF_00, TEXT_MINC1, M_BUF,   M_SRC),
-    E2(0x39, CF_00, TEXT_MINC2, M_BUF,   M_SRC),
-    E2(0x3A, CF_00, TEXT_MINC4, M_BUF,   M_SRC),
-    E2(0x3C, CF_00, TEXT_MDEC1, M_BUF,   M_SRC),
-    E2(0x3D, CF_00, TEXT_MDEC2, M_BUF,   M_SRC),
-    E2(0x3E, CF_00, TEXT_MDEC4, M_BUF,   M_SRC),
+    E2(0x38, CF_00, TEXT_MINC1, M_BUF,   M_SRCW),
+    E2(0x39, CF_00, TEXT_MINC2, M_BUF,   M_SRCW),
+    E2(0x3A, CF_00, TEXT_MINC4, M_BUF,   M_SRCW),
+    E2(0x3C, CF_00, TEXT_MDEC1, M_BUF,   M_SRCW),
+    E2(0x3D, CF_00, TEXT_MDEC2, M_BUF,   M_SRCW),
+    E2(0x3E, CF_00, TEXT_MDEC4, M_BUF,   M_SRCW),
 };
 constexpr uint8_t INDEX_SRC_REG[] PROGMEM = {
-     41,  // TEXT_ADC
-     47,  // TEXT_ADC
-     39,  // TEXT_ADD
-     46,  // TEXT_ADD
-     45,  // TEXT_AND
-     50,  // TEXT_AND
-     16,  // TEXT_ANDCF
-     26,  // TEXT_BIT
-      7,  // TEXT_BS1B
-      6,  // TEXT_BS1F
-     25,  // TEXT_CHG
-     53,  // TEXT_CP
-     64,  // TEXT_CP
+     42,  // TEXT_ADC
+     48,  // TEXT_ADC
+     40,  // TEXT_ADD
+     47,  // TEXT_ADD
+     46,  // TEXT_AND
+     51,  // TEXT_AND
+     17,  // TEXT_ANDCF
+     27,  // TEXT_BIT
+      9,  // TEXT_BS1B
+      8,  // TEXT_BS1F
+     26,  // TEXT_CHG
+     54,  // TEXT_CP
+     65,  // TEXT_CP
       0,  // TEXT_CPL
-      8,  // TEXT_DAA
-     35,  // TEXT_DEC
+     10,  // TEXT_DAA
      36,  // TEXT_DEC
      37,  // TEXT_DEC
-     30,  // TEXT_DIV
-     31,  // TEXT_DIVS
-     15,  // TEXT_DJNZ
-     44,  // TEXT_EX
-     10,  // TEXT_EXTS
-      9,  // TEXT_EXTZ
-     32,  // TEXT_INC
+     38,  // TEXT_DEC
+      4,  // TEXT_DIV
+     31,  // TEXT_DIV
+      5,  // TEXT_DIVS
+     32,  // TEXT_DIVS
+     16,  // TEXT_DJNZ
+     45,  // TEXT_EX
+     12,  // TEXT_EXTS
+     11,  // TEXT_EXTZ
      33,  // TEXT_INC
      34,  // TEXT_INC
-     40,  // TEXT_LD
-     21,  // TEXT_LDC
+     35,  // TEXT_INC
+     41,  // TEXT_LD
      22,  // TEXT_LDC
-     19,  // TEXT_LDCF
-      4,  // TEXT_LINK
-     68,  // TEXT_MDEC1
-     69,  // TEXT_MDEC2
-     70,  // TEXT_MDEC4
-     65,  // TEXT_MINC1
-     66,  // TEXT_MINC2
-     67,  // TEXT_MINC4
-     12,  // TEXT_MIRR
+     23,  // TEXT_LDC
+     20,  // TEXT_LDCF
+      6,  // TEXT_LINK
+     69,  // TEXT_MDEC1
+     70,  // TEXT_MDEC2
+     71,  // TEXT_MDEC4
+     66,  // TEXT_MINC1
+     67,  // TEXT_MINC2
+     68,  // TEXT_MINC4
+     14,  // TEXT_MIRR
       2,  // TEXT_MUL
-     28,  // TEXT_MUL
-     13,  // TEXT_MULA
-     14,  // TEXT_MULA
+     29,  // TEXT_MUL
+     15,  // TEXT_MULA
       3,  // TEXT_MULS
-     29,  // TEXT_MULS
+     30,  // TEXT_MULS
       1,  // TEXT_NEG
-     52,  // TEXT_OR
-     55,  // TEXT_OR
-     17,  // TEXT_ORCF
-     11,  // TEXT_PAA
-     23,  // TEXT_RES
-     58,  // TEXT_RL
-     56,  // TEXT_RLC
-     59,  // TEXT_RR
-     57,  // TEXT_RRC
-     43,  // TEXT_SBC
-     49,  // TEXT_SBC
-     38,  // TEXT_SCC
-     24,  // TEXT_SET
-     60,  // TEXT_SLA
-     62,  // TEXT_SLL
-     61,  // TEXT_SRA
-     63,  // TEXT_SRL
-     20,  // TEXT_STCF
-     42,  // TEXT_SUB
-     48,  // TEXT_SUB
-     27,  // TEXT_TSET
-      5,  // TEXT_UNLK
-     51,  // TEXT_XOR
-     54,  // TEXT_XOR
-     18,  // TEXT_XORCF
+     53,  // TEXT_OR
+     56,  // TEXT_OR
+     18,  // TEXT_ORCF
+     13,  // TEXT_PAA
+     24,  // TEXT_RES
+     59,  // TEXT_RL
+     57,  // TEXT_RLC
+     60,  // TEXT_RR
+     58,  // TEXT_RRC
+     44,  // TEXT_SBC
+     50,  // TEXT_SBC
+     39,  // TEXT_SCC
+     25,  // TEXT_SET
+     61,  // TEXT_SLA
+     63,  // TEXT_SLL
+     62,  // TEXT_SRA
+     64,  // TEXT_SRL
+     21,  // TEXT_STCF
+     43,  // TEXT_SUB
+     49,  // TEXT_SUB
+     28,  // TEXT_TSET
+      7,  // TEXT_UNLK
+     52,  // TEXT_XOR
+     55,  // TEXT_XOR
+     19,  // TEXT_XORCF
 };
 
 constexpr Entry TABLE_SRC_ABREG[] PROGMEM = {
@@ -300,10 +314,10 @@ constexpr Entry TABLE_SRC_MEM[] PROGMEM = {
     E1(0x04, CF_00, TEXT_PUSH,  M_SRC),
     E2(0x06, CF_00, TEXT_RLD,   R_A,     M_SRC),
     E2(0x07, CF_00, TEXT_RRD,   R_A,     M_SRC),
-    E2(0x41, CF_00, TEXT_MUL,   R_WA,    M_SRC),
-    E2(0x49, CF_00, TEXT_MULS,  R_WA,    M_SRC),
-    E2(0x51, CF_00, TEXT_DIV,   R_WA,    M_SRC),
-    E2(0x59, CF_00, TEXT_DIVS,  R_WA,    M_SRC),
+    E2(0x40, CF_07, TEXT_MUL,   M_MULDST, M_SRC),
+    E2(0x48, CF_07, TEXT_MULS,  M_MULDST, M_SRC),
+    E2(0x50, CF_07, TEXT_DIV,   M_MULDST, M_SRC),
+    E2(0x58, CF_07, TEXT_DIVS,  M_MULDST, M_SRC),
     E2(0x61, CF_00, TEXT_INC,   M_STEP1, M_SRC),
     E2(0x62, CF_00, TEXT_INC,   M_STEP2, M_SRC),
     E2(0x64, CF_00, TEXT_INC,   M_STEP4, M_SRC),
@@ -729,6 +743,36 @@ static AddrMode resolveMode(AddrMode expected, PrefixMode pm, bool dstSlot, cons
         default:
             return expected;
         }
+    case M_R32SRC:
+        // MULA xrr32 alias: a 32-bit register operand carried by the
+        // PM_REG16 prefix (D8+r). Legal only at PM_REG16.
+        return pm == PM_REG16 ? M_REG32 : M_NONE;
+    case M_SRCB:  // byte-only source register
+        return pm == PM_REG8 ? M_REG8 : pm == PM_ABREG8 ? M_ABREG8 : M_NONE;
+    case M_SRCW:  // word-only source register
+        return pm == PM_REG16 ? M_REG16 : pm == PM_ABREG16 ? M_ABREG16 : M_NONE;
+    case M_SRCWL:  // word/long source register (no byte)
+        return pm == PM_REG16   ? M_REG16
+               : pm == PM_REG32   ? M_REG32
+               : pm == PM_ABREG16 ? M_ABREG16
+               : pm == PM_ABREG32 ? M_ABREG32
+                                  : M_NONE;
+    case M_SRCBW:  // byte/word source register (no long)
+        return pm == PM_REG8    ? M_REG8
+               : pm == PM_REG16   ? M_REG16
+               : pm == PM_ABREG8  ? M_ABREG8
+               : pm == PM_ABREG16 ? M_ABREG16
+                                  : M_NONE;
+    case M_CCT:  // the always-true condition; the cc==T check is in acceptModes
+        return M_CC;
+    case M_MULDST:  // MUL/DIV dest: double the source size (no long-op)
+        if (pm == PM_REG8 || pm == PM_ABREG8 || pm == PM_MEM8)
+            return M_REG16;
+        if (pm == PM_REG16 || pm == PM_ABREG16 || pm == PM_MEM16)
+            return M_REG32;
+        return M_NONE;
+    case M_MULDSTP:  // MUL/DIV rr,# dest in the prefix: 16-bit (byte op) / 32-bit (word op)
+        return pm == PM_REG8 ? M_REG16 : pm == PM_REG16 ? M_REG32 : M_NONE;
     case M_IMMX:
         switch (pm) {
         case PM_REG8:
@@ -765,6 +809,8 @@ static bool acceptModes(AsmInsn &insn, const Entry *entry, PrefixMode pm) {
     if (!acceptMode(insn.srcOp, flags.src(), pm, /*dstSlot=*/false))
         return false;
     const auto dst = flags.dst();
+    if (dst == M_CCT && insn.dstOp.cc != CC_T)
+        return false;  // the cc=T fold only matches the always-true condition
     if (dst == M_STEP1 && insn.dstOp.val.getUnsigned() != 1)
         return false;
     if (dst == M_STEP2 && insn.dstOp.val.getUnsigned() != 2)
