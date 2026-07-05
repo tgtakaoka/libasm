@@ -16,7 +16,6 @@
         radix   10
         org     X'0100'
         include "test_cp1600.inc"
-        include "test_cp1600_brnalias.inc"
         end
 
 ;;; Local Variables:

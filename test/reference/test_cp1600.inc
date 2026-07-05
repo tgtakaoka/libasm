@@ -393,7 +393,9 @@ L_BRA:
         NOPP
         B       L_BRA_END       ; forward unconditional
         BC      L_BRA
+        BLGE    L_BRA
         BNC     L_BRA
+        BLLT    L_BRA
         BOV     L_BRA
         BNOV    L_BRA
         BPL     L_BRA
@@ -419,7 +421,9 @@ L_BRA_END:
         BPL     L_BRA_END
         BMI     L_BRA_END
         BZE     L_BRA_END
+        BEQ     L_BRA_END
         BNZE    L_BRA_END
+        BNEQ    L_BRA_END
         BLT     L_BRA_END
         BGE     L_BRA_END
         BLE     L_BRA_END

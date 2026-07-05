@@ -142,7 +142,7 @@ static constexpr uint8_t INDEX_CP1600[] PROGMEM = {
      77,  // TEXT_BGE
      79,  // TEXT_BGT
      78,  // TEXT_BLE
-     66,  // TEXT_BLGE
+     66,  // TEXT_BLGT
      67,  // TEXT_BLLT
      76,  // TEXT_BLT
      71,  // TEXT_BMI
