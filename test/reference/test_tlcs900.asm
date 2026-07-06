@@ -13,13 +13,19 @@
 ;;; limitations under the License.
 
         cpu     TLCS900
-        option  complex-indir, on
         org     0100h
+;;; Base 900 resets to minimum mode: test the minimum-mode instructions first,
+;;; then switch to maximum mode for the general 32-bit register instructions.
+        MAXMODE OFF
         include "test_tlcs900_common.inc"
+        include "test_tlcs900_ldx.inc"
+        include "test_tlcs900_minmode.inc"
+        MAXMODE ON
+        include "test_tlcs900_common.inc"
+        include "test_tlcs900_maxmode.inc"
         include "test_tlcs900_normal.inc"
         include "test_tlcs900_max.inc"
         include "test_tlcs900_nsp.inc"
-        include "test_tlcs900_ldx.inc"
         end
 
 ;;; Local Variables:

@@ -15,11 +15,18 @@
         cpu     96c141
         org     0100h
         SUPMODE ON
+;;; Base 900 resets to minimum mode (96c141 is a generic selector, so set it
+;;; explicitly): minimum-mode instructions first, then maximum mode.
+        MAXMODE OFF
         include "test_tlcs900_common.inc"
+        include "test_tlcs900_ldx.inc"
+        include "test_tlcs900_minmode.inc"
+        MAXMODE ON
+        include "test_tlcs900_common.inc"
+        include "test_tlcs900_maxmode.inc"
         include "test_tlcs900_normal.inc"
         include "test_tlcs900_max.inc"
         include "test_tlcs900_nsp.inc"
-        include "test_tlcs900_ldx.inc"
         end
 
 ;;; Local Variables:

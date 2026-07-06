@@ -17,6 +17,8 @@
         SUPMODE ON
         MAXMODE ON
         include "test_tlcs900_common.inc"
+        include "test_tlcs900_maxmode.inc"
+        include "test_tlcs900_nsp.inc"
         end
 
 ;;; Local Variables:
