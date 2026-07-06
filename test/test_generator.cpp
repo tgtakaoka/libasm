@@ -193,9 +193,14 @@ DataGenerator *DataGenerator::newChild() {
 }
 
 TestGenerator::TestGenerator(Formatter &formatter, Disassembler &disassembler, uint32_t addr)
+    : TestGenerator(formatter, disassembler, addr, standardTokenizers(disassembler.curSym())) {}
+
+TestGenerator::TestGenerator(Formatter &formatter, Disassembler &disassembler, uint32_t addr,
+        TokenizerList tokenizers)
     : _formatter(formatter),
       _disassembler(disassembler),
       _disFormatter(formatter.formatter()),
+      _tokenizers(std::move(tokenizers)),
       _opCodeWidth(disassembler.config().opCodeWidth()),
       _endian(disassembler.config().endian()),
       _addressUnit(disassembler.config().addressUnit()),
@@ -294,7 +299,7 @@ const TokenizedText *TestGenerator::_meaningfulTestData(
         operands += insn.continueMark_P();
         operands += contOpr;
     }
-    const TokenizedText opr{operands.c_str()};
+    const TokenizedText opr{operands.c_str(), _tokenizers};
     auto found = oprVariants.find(opr);
     if (found == oprVariants.end())
         found = oprVariants.insert(opr).first;
@@ -322,7 +327,7 @@ const TokenizedText *TestGenerator::meaningfulError(std::string &name) {
     if (seen == _error.end())
         seen = _error.emplace(name, TokenizedText::Set()).first;
     auto &oprVariants = seen->second;
-    const TokenizedText opr{_disFormatter.operands().str()};
+    const TokenizedText opr{_disFormatter.operands().str(), _tokenizers};
     auto found = oprVariants.find(opr);
     if (found == oprVariants.end())
         found = oprVariants.insert(opr).first;

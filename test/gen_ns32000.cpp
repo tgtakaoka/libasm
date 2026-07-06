@@ -14,11 +14,61 @@
  * limitations under the License.
  */
 
+#include <cctype>
+
 #include "dis_ns32000.h"
 #include "gen_driver.h"
+#include "tokenizer.h"
 
 using namespace libasm::ns32000;
 using namespace libasm::gen;
+
+namespace {
+
+bool isNs32kScale(const char *p) {
+    if (p[1] == ']') {
+        const auto c = toupper(*p);
+        return c == 'B' || c == 'W' || c == 'D' || c == 'Q';
+    }
+    return false;
+}
+
+// Reduce displacement variants "+(-n)" to "+n" (drops the surrounding parens).
+struct Ns32kDispTokenizer : Tokenizer {
+    const char *tokenize(const char *p, std::string &out) const override {
+        const char *tmp;
+        if (p[0] == '+' && p[1] == '(' && p[2] == '-' && isNumber(p + 3, tmp) && *tmp == ')') {
+            out.append("+n");
+            return tmp + 1;
+        }
+        return nullptr;
+    }
+};
+
+// Reduce index size variants "[Rn:B]", "[Rn:W]", "[Rn:D]", "[Rn:Q]" to ":s".
+struct Ns32kScaleTokenizer : Tokenizer {
+    const char *tokenize(const char *p, std::string &out) const override {
+        if (p[0] == ':' && isNs32kScale(p + 1)) {
+            out.push_back(':');
+            out.push_back('s');
+            out.push_back(p[2]);
+            return p + 3;
+        }
+        return nullptr;
+    }
+};
+
+const Ns32kDispTokenizer DISP;
+const Ns32kScaleTokenizer SCALE;
+
+TokenizerList tokenizers(char loc) {
+    TokenizerList list = standardTokenizers(loc);
+    list.push_back(&DISP);
+    list.push_back(&SCALE);
+    return list;
+}
+
+}  // namespace
 
 int main(int argc, const char **argv) {
     DisNs32000 dis32000;
@@ -32,7 +82,8 @@ int main(int argc, const char **argv) {
     if (driver.generateGas()) {
         dis32000.setOption("gnu-as", "on");
     }
-    TestGenerator generator(driver, dis32000, 0x10000);
+    const auto toks = tokenizers(dis32000.curSym());
+    TestGenerator generator(driver, dis32000, 0x10000, toks);
     generator.ignoreSizeVariation().generate();
 
     return driver.close();

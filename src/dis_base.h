@@ -62,6 +62,10 @@ struct Disassembler {
     Error setCurSym(char curSym);
     virtual Error setGnuAs(bool enable);
 
+    // The location-counter (origin) symbol this disassembler emits for
+    // PC-relative targets, after options are applied (e.g. '$', '*', '.').
+    char curSym() const { return _curSym; }
+
     Radix listRadix() const { return _listRadix; }
 
     /**
