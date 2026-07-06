@@ -15,12 +15,12 @@
       XOR@  R1, R0
       EIS
       DIS
-      JSRE  R5, 0x0606
-      JSRD  R5, 0x0607
-      JSR   R5, 0x0A09
-      J     0x0001
-      JE    0x0002
-      JD    0x0003
+      JSRE  R5, X'0606'
+      JSRD  R5, X'0607'
+      JSR   R5, X'0A09'
+      J     X'0001'
+      JE    X'0002'
+      JD    X'0003'
       TCI
       CLRC
       SETC
@@ -58,43 +58,43 @@
       ANDR  R0, R0
       CLRR  R0
       XORR  R0, R1
-      B     0x0349
-      BC    0x034C
-      BOV   0x034F
-      BPL   0x0352
-      BZE   0x0355
-      BLT   0x0358
-      BLE   0x035B
-      BUSC  0x035E
+      B     X'0349'
+      BC    X'034C'
+      BOV   X'034F'
+      BPL   X'0352'
+      BZE   X'0355'
+      BLT   X'0358'
+      BLE   X'035B'
+      BUSC  X'035E'
       NOPP
-      BNC   0x0364
-      BNOV  0x0367
-      BMI   0x036A
-      BNZE  0x036D
-      BGE   0x0370
-      BGT   0x0373
-      BESC  0x0376
-      BEXT  0x0379, 0
-      MVO   R0, 0x0341
+      BNC   X'0364'
+      BNOV  X'0367'
+      BMI   X'036A'
+      BNZE  X'036D'
+      BGE   X'0370'
+      BGT   X'0373'
+      BESC  X'0376'
+      BEXT  X'0379', 0
+      MVO   R0, X'0341'
       MVO@  R0, R1
       PSHR  R0
-      MVOI  R0, 0x00
-      MVI   0x0381, R0
+      MVOI  R0, X'00'
+      MVI   X'0381', R0
       MVI@  R1, R0
       PULR  R0
-      MVII  0x00, R0
-      ADD   0x03C1, R0
+      MVII  X'00', R0
+      ADD   X'03C1', R0
       ADD@  R1, R0
-      ADDI  0x00, R0
-      SUB   0x0401, R0
+      ADDI  X'00', R0
+      SUB   X'0401', R0
       SUB@  R1, R0
-      SUBI  0x00, R0
-      CMP   0x0441, R0
+      SUBI  X'00', R0
+      CMP   X'0441', R0
       CMP@  R1, R0
-      CMPI  0x00, R0
-      AND   0x0481, R0
+      CMPI  X'00', R0
+      AND   X'0481', R0
       AND@  R1, R0
-      ANDI  0x00, R0
-      XOR   0x04C1, R0
+      ANDI  X'00', R0
+      XOR   X'04C1', R0
       XOR@  R1, R0
-      XORI  0x00, R0
+      XORI  X'00', R0
