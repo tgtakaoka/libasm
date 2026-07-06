@@ -32,11 +32,9 @@ struct AsmTlcs900 final : Assembler, Config {
     AsmTlcs900(const ValueParser::Plugins &plugins = defaultPlugins());
 
     void reset() override;
-    Error setComplexIndir(bool enable);
 
 private:
-    const BoolOption<AsmTlcs900> _opt_complexIndir;
-    bool _complexIndir;
+    const BoolOption<Config> _opt_maxMode;
 
     Error parseOperand(StrScanner &scan, Operand &op) const;
     void encodePrefixAddr(AsmInsn &insn) const;

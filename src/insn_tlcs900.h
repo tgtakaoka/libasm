@@ -43,13 +43,14 @@ enum PrefixMode : uint8_t {
     PM_ABREG16 = 11,  // prefix 0xD7: 16-bit absolute bank register context
     PM_ABREG32 = 12,  // prefix 0xE7: 32-bit absolute bank register context
     PM_LDAR = 13,     // 2-byte prefix 0xF313: LDAR, rel16 src sits between prefix and opcode
+    PM_BLOCKW = 14,   // 0x93 prefix: word block transfer (LDIW/LDIRW/LDDW/LDDRW)
 };
 
 struct EntryInsn : EntryInsnPrefix<Config, Entry> {
     AddrMode dst() const { return flags().dst(); }
     AddrMode src() const { return flags().src(); }
     void setAddrMode(AddrMode dst, AddrMode src) {
-        setFlags(Entry::Flags::create(flags().format(), dst, src));
+        setFlags(Entry::Flags::create(flags().format(), dst, src, flags().sizes()));
     }
     PrefixMode pre() const { return _prefixMode; }
     void setPrefixMode(PrefixMode mode) { _prefixMode = mode; }
@@ -61,24 +62,27 @@ private:
 // Decoded operand
 struct Operand final : ErrorAt {
     AddrMode mode;  // addressing mode
-    RegName reg;    // base register (for indirect, indexed, or src/dst reg)
+    RegName reg;    // src/dst register operand
     RegName idx;    // index register (for M_IDXR only)
     CcName cc;      // condition code (for M_CC)
     Value val;      // immediate, displacement, or address value
     uint8_t size;   // operand size from prefix: 0=byte, 1=word, 2=lword
+    uint8_t base;   // memory base register code (M_IND/M_IDX*/M_PDEC/M_PINC/M_IDXR)
     Operand()
-        : ErrorAt(), mode(M_NONE), reg(REG_UNDEF), idx(REG_UNDEF), cc(CC_UNDEF), val(), size(0) {}
+        : ErrorAt(),
+          mode(M_NONE),
+          reg(REG_UNDEF),
+          idx(REG_UNDEF),
+          cc(CC_UNDEF),
+          val(),
+          size(0),
+          base(0) {}
 };
 
 struct AsmInsn final : AsmInsnImpl<Config>, EntryInsn {
     AsmInsn(Insn &insn) : AsmInsnImpl(insn) {}
 
     Operand dstOp, srcOp;
-
-    // Stashed by AsmTlcs900 before encoding so prefixSize() can decide
-    // between the compact (1-byte) and complex (2-byte) M_PRDC/M_PINC
-    // prefix forms without having to consult the assembler instance.
-    bool complexIndir = false;
 
     // Opcode position computed from the resolved AddrMode / PrefixMode /
     // prefix() state -- independent of the current emit length.
@@ -102,8 +106,16 @@ struct AsmInsn final : AsmInsnImpl<Config>, EntryInsn {
     uint16_t pmMask() const { return _pmMask; }
     void setPmMask(uint16_t mask) { _pmMask = mask; }
 
+    // Set when a candidate entry matched the operand modes but the resolved
+    // operation size was not in the entry's SizeMask. If the search then fails
+    // to find any full match, searchName reports ILLEGAL_SIZE instead of
+    // UNKNOWN_INSTRUCTION.
+    bool sizeError() const { return _sizeError; }
+    void setSizeError() { _sizeError = true; }
+
 private:
     uint16_t _pmMask = 0;
+    bool _sizeError = false;
 };
 
 struct DisInsn final : DisInsnImpl<Config>, EntryInsn {

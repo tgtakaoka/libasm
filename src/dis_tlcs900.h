@@ -20,6 +20,7 @@
 #include "config_tlcs900.h"
 #include "dis_base.h"
 #include "insn_tlcs900.h"
+#include "option_base.h"
 
 namespace libasm {
 namespace tlcs900 {
@@ -28,10 +29,18 @@ struct DisTlcs900 final : Disassembler, Config {
     DisTlcs900(const ValueFormatter::Plugins &plugins = defaultPlugins());
 
 private:
+    const BoolOption<Config> _opt_maxMode;
+
     Error readPrefix(DisInsn &insn, Operand &prefixOp) const;
     Error decodePrefixAddr(
             DisInsn &insn, PrefixMode pm, Operand &op, Config::opcode_t prefix) const;
     void outMemAddr(StrBuffer &out, const Operand &op) const;
+    // Register width of a memory base register: index registers (XIX/XIY/XIZ/XSP,
+    // code >= 0xF0) are always 32-bit; the general pairs are 16-bit in minimum mode.
+    uint8_t baseRegSize(uint8_t code) const { return (!maxMode() && code < 0xF0) ? 1 : 2; }
+    // Output an opcode-encoded 32-bit register; flags it illegal when the CPU
+    // is in minimum mode and the register is one of the general pairs XWA-XHL.
+    void outReg32(DisInsn &insn, StrBuffer &out, RegName reg) const;
     void decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode, const Operand &prefixOp) const;
 
     Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) const override;

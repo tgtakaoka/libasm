@@ -39,7 +39,7 @@ void test_asm_tlcs900l() {
         ld      a, (1234h)
         ldx     (1234h), 56h
         bit     3, (xix+20h)
-        ldc     dmas0, xwa
+        ldc     intnest, wa
 )",
             R"(          0 :                            cpu     tlcs900l
           0 :                    ; comment line
@@ -48,7 +48,7 @@ void test_asm_tlcs900l() {
        bce1 : c1 34 12 21                ld      a, (1234h)
        bce5 : f7 00 34 12 56 00          ldx     (1234h), 56h
        bceb : bc 20 cb                   bit     3, (xix+20h)
-       bcee : e8 2e 00                   ldc     dmas0, xwa
+       bcee : d8 2e 3c                   ldc     intnest, wa
 )");
 }
 
@@ -60,23 +60,23 @@ void test_dis_tlcs900l() {
 
     DIS8("tlcs900l", 0xbcde,
             R"(      cpu    tlcs900l
-      org    0bcdeh
+      org    00bcdeh
       ld     a, (34h)
       ld     a, (1234h)
       ldx    (1234h), 0056h
       bit    3, (xix+32)
-      ldc    dmas0, xwa
+      ldc    intnest, wa
 )",
             R"(       0 :                            cpu    tlcs900l
-    bcde :                            org    0bcdeh
+    bcde :                            org    00bcdeh
     bcde : c0 34 21                   ld     a, (34h)
     bce1 : c1 34 12 21                ld     a, (1234h)
     bce5 : f7 00 34 12 56 00          ldx    (1234h), 0056h
     bceb : bc 20 cb                   bit    3, (xix+32)
-    bcee : e8 2e 00                   ldc    dmas0, xwa
+    bcee : d8 2e 3c                   ldc    intnest, wa
 )",
             0xc0, 0x34, 0x21, 0xc1, 0x34, 0x12, 0x21, 0xf7, 0x00, 0x34, 0x12, 0x56, 0x00, 0xbc,
-            0x20, 0xcb, 0xe8, 0x2e, 0x00);
+            0x20, 0xcb, 0xd8, 0x2e, 0x3c);
 }
 
 void test_asm_tlcs900h() {
@@ -94,7 +94,7 @@ void test_asm_tlcs900h() {
         ldx     (1234h), 56h
         bit     3, (xix+20h)
         ldc     dmas0, xwa
-        ld      (0123456h), 012345678h
+        ldw     (xix+1234h), 5678h
 )",
             R"(          0 :                            cpu     tlcs900h
           0 :                    ; comment line
@@ -105,8 +105,8 @@ void test_asm_tlcs900h() {
       bcdfb : f7 00 34 12 56 00          ldx     (1234h), 56h
       bce01 : bc 20 cb                   bit     3, (xix+20h)
       bce04 : e8 2e 00                   ldc     dmas0, xwa
-      bce07 : f2 56 34 12 02 78          ld      (0123456h), 012345678h
-      bce0d : 56 34 12
+      bce07 : f3 f1 34 12 02 78          ldw     (xix+1234h), 5678h
+      bce0d : 56
 )");
 }
 
@@ -125,7 +125,7 @@ void test_dis_tlcs900h() {
       ldx    (1234h), 0056h
       bit    3, (xix+32)
       ldc    dmas0, xwa
-      ld     (123456h), 12345678h
+      ldw    (xix+1234h), 5678h
 )",
             R"(       0 :                            cpu    tlcs900h
    bcdef :                            org    0bcdefh
@@ -135,12 +135,12 @@ void test_dis_tlcs900h() {
    bcdfb : f7 00 34 12 56 00          ldx    (1234h), 0056h
    bce01 : bc 20 cb                   bit    3, (xix+32)
    bce04 : e8 2e 00                   ldc    dmas0, xwa
-   bce07 : f2 56 34 12 02 78          ld     (123456h), 12345678h
-   bce0d : 56 34 12
+   bce07 : f3 f1 34 12 02 78          ldw    (xix+1234h), 5678h
+   bce0d : 56
 )",
             0xc0, 0x34, 0x21, 0xc1, 0x34, 0x12, 0x21, 0xc2, 0x56, 0x34, 0x12, 0x21, 0xf7, 0x00,
-            0x34, 0x12, 0x56, 0x00, 0xbc, 0x20, 0xcb, 0xe8, 0x2e, 0x00, 0xf2, 0x56, 0x34, 0x12,
-            0x02, 0x78, 0x56, 0x34, 0x12);
+            0x34, 0x12, 0x56, 0x00, 0xbc, 0x20, 0xcb, 0xe8, 0x2e, 0x00, 0xf3, 0xf1, 0x34, 0x12,
+            0x02, 0x78, 0x56);
 }
 
 void run_tests() {

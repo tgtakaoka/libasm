@@ -22,11 +22,12 @@
 namespace libasm {
 namespace tlcs900 {
 
+static constexpr uint32_t UINT24_MAX = 0xFFFFFFu;
+
 enum CpuType : uint8_t {
     TLCS900,
     TLCS900L,
     TLCS900H,
-    TLCS900L1,
     TLCS900H2,
 };
 
@@ -39,12 +40,12 @@ struct Config : ConfigImpl<CpuType, ADDRESS_24BIT, ADDRESS_BYTE, OPCODE_8BIT, EN
 
     bool maxMode() const { return _maxMode; }
 
-    // /L is MIN-only (rejects MAXMODE ON); /H, /L1, /H2 are MAX-only (reject MAXMODE OFF).
+    // /H and /H2 are maximum-mode only; the base 900 and 900/L support both
+    // modes and so accept MAXMODE ON/OFF.
     Error setMaxMode(bool enable) {
         const auto ct = cpuType();
-        const bool maxOnly = (ct == TLCS900H || ct == TLCS900L1 || ct == TLCS900H2);
-        const bool minOnly = (ct == TLCS900L);
-        if ((maxOnly && !enable) || (minOnly && enable))
+        const bool maxOnly = (ct == TLCS900H || ct == TLCS900H2);
+        if (maxOnly && !enable)
             return OPERAND_NOT_ALLOWED;
         _maxMode = enable;
         return OK;
@@ -52,7 +53,9 @@ struct Config : ConfigImpl<CpuType, ADDRESS_24BIT, ADDRESS_BYTE, OPCODE_8BIT, EN
 
     void setCpuType(CpuType cpuType) override {
         ConfigImpl::setCpuType(cpuType);
-        _maxMode = (cpuType == TLCS900H || cpuType == TLCS900L1 || cpuType == TLCS900H2);
+        // Reset default (manual, CPU900L 1-1): only the base 900 boots minimum
+        // mode; 900/L, /H, /H2 all boot maximum mode.
+        _maxMode = (cpuType != TLCS900);
     }
 
 protected:

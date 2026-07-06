@@ -30,31 +30,34 @@ const ValueFormatter::Plugins &DisTlcs900::defaultPlugins() {
 }
 
 DisTlcs900::DisTlcs900(const ValueFormatter::Plugins &plugins)
-    : Disassembler(plugins), Config(TABLE) {
+    : Disassembler(plugins, &_opt_maxMode),
+      Config(TABLE),
+      _opt_maxMode(this, &Config::setMaxMode, OPT_BOOL_MAXIMUM_MODE, OPT_DESC_MAXIMUM_MODE) {
     reset();
 }
 
 // Decode the sub-byte for complex/pre-dec/post-inc addressing (0xF0-0xFF range).
 // Returns the index register and the operand size (0=byte, 1=word, 2=lword).
-static RegName decodeSubReg(uint8_t sub, uint8_t &size) {
+// Split a complex sub-byte "r32' zz" into the base register code (low 2 bits
+// cleared) and the increment-size (zz) field.
+static uint8_t decodeSubReg(uint8_t sub, uint8_t &size) {
     size = sub & 3;
-    return decodeIndReg((sub >> 2) & 3);
+    return sub & 0xFC;
 }
 
-// Decode a complex (C3/D3/E3/F3) sub-addressing.
-// sub_byte == 0x03: register-indexed (reads base_reg + idx_reg bytes)
-// sub_byte 0xF0+: d16-indexed (reads reg from sub-byte, then 16-bit displacement)
+// Decode a complex (C3/D3/E3/F3) sub-addressing. The sub-byte low 2 bits
+// select the form:
+//   00 -> (r32) register-indirect              sub = r32' code
+//   01 -> (r32+d16)                            sub = r32' code, then 16-bit disp
+//   11 -> sub==0x03: (r32+r8) register-indexed (reads base code + index byte)
 static Error decodeComplexAddr(DisInsn &insn, Operand &op) {
     const uint8_t sub = insn.sub;
+    const uint8_t low2 = sub & 3;
     if (sub == 0x03) {
-        // Register-indexed: (XIx + r8)
-        // Next byte selects base register (F0=XIX, F4=XIY, F8=XIZ, FC=XSP)
-        const uint8_t base_byte = insn.readByte();
-        // Next byte selects 8-bit index register in SFR map
+        // Register-indexed: (r32 + r8). Next byte is the base register code,
+        // then an 8-bit index register selected from the current-bank SFR map.
+        op.base = insn.readByte();
         const uint8_t idx_byte = insn.readByte();
-        // Decode base register: bits[3:2] of (base_byte >> 2) & 3
-        op.reg = decodeIndReg((base_byte >> 2) & 3);
-        // Decode index register from current bank SFR map byte:
         // E0=A, E1=W, E4=C, E5=B, E8=E, E9=D, EC=L, ED=H
         static const RegName IDX_MAP[] PROGMEM = {
                 REG_A,  // E0
@@ -79,15 +82,20 @@ static Error decodeComplexAddr(DisInsn &insn, Operand &op) {
         if (op.idx == REG_UNDEF)
             op.setError(UNKNOWN_INSTRUCTION);
         op.mode = M_IDXR;
-    } else if ((sub & 0xF0) == 0xF0 && (sub & 0x03) == 0x01) {
-        // d16-indexed: (XIx + d16)
-        uint8_t size;
-        op.reg = decodeSubReg(sub, size);
+    } else if (low2 == 0) {
+        // (r32) register-indirect
+        op.base = sub;
+        op.mode = M_IND;
+    } else if (low2 == 1) {
+        // (r32 + d16)
+        op.base = sub & 0xFC;
         op.val.setUnsigned(insn.readUint16());
         op.mode = M_IDX16;
     } else {
         op.setError(UNKNOWN_INSTRUCTION);
     }
+    if (!op.hasError() && !reg::isMemBaseCode(op.base))
+        op.setError(UNKNOWN_INSTRUCTION);
     return op.getError();
 }
 
@@ -123,26 +131,21 @@ Error DisTlcs900::decodePrefixAddr(
         op.val.setUnsigned(insn.readByte());
         return OK;
     }
-    if (pm == PM_BLOCK || pm == PM_RETCC)
+    if (pm == PM_BLOCK || pm == PM_BLOCKW || pm == PM_RETCC)
         return OK;
 
     // Memory context: decode addressing mode from prefix byte.
-    // 0x80-0xBF: bits[1:0] = register index (XIX=0..XSP=3)
-    //   nibble 0-3: compact pre-decrement (-xrr)
-    //   nibble 4-7: indirect (xrr)
-    //   nibble 8-B: compact post-increment (xrr+)
-    //   nibble C-F: 8-bit displacement indexed (xrr+d8)
+    // 0x80-0xBF single-byte forms address the 8 current-bank registers
+    // (XWA..XSP) by their 3-bit index in the low nibble:
+    //   nibble 0-7: register-indirect (XWA)..(XSP)
+    //   nibble 8-F: 8-bit displacement indexed (Xrr+d8)
 
     const uint8_t nibble = prefix & 0x0F;
 
     if (prefix >= 0x80 && prefix <= 0xBF) {
-        op.reg = decodeIndReg(prefix & 3);
-        if (nibble <= 3) {
-            op.mode = M_PRDC;
-        } else if (nibble <= 7) {
+        op.base = reg::currentBankBaseCode(nibble & 7);
+        if (nibble <= 7) {
             op.mode = M_IND;
-        } else if (nibble <= 0xB) {
-            op.mode = M_PINC;
         } else {
             op.val.setSigned(static_cast<int8_t>(insn.readByte()));
             op.mode = M_IDX8;
@@ -166,20 +169,24 @@ Error DisTlcs900::decodePrefixAddr(
             insn.sub = insn.readByte();
             decodeComplexAddr(insn, op);
             break;
-        case 4: {  // complex pre-decrement
+        case 4: {  // complex pre-decrement (-r32)
             const uint8_t sub = insn.readByte();
             uint8_t size;
-            op.reg = decodeSubReg(sub, size);
+            op.base = decodeSubReg(sub, size);
             op.size = size;
-            op.mode = M_PRDC;
+            op.mode = M_PDEC;
+            if (!reg::isMemBaseCode(op.base))
+                op.setError(UNKNOWN_INSTRUCTION);
             break;
         }
-        case 5: {  // complex post-increment
+        case 5: {  // complex post-increment (r32+)
             const uint8_t sub = insn.readByte();
             uint8_t size;
-            op.reg = decodeSubReg(sub, size);
+            op.base = decodeSubReg(sub, size);
             op.size = size;
             op.mode = M_PINC;
+            if (!reg::isMemBaseCode(op.base))
+                op.setError(UNKNOWN_INSTRUCTION);
             break;
         }
         default:
@@ -194,20 +201,24 @@ Error DisTlcs900::decodePrefixAddr(
 void DisTlcs900::outMemAddr(StrBuffer &out, const Operand &op) const {
     switch (op.mode) {
     case M_IND:
-        outRegName(out.letter('('), op.reg).letter(')');
+        out.letter('(');
+        outAbsReg(out, op.base, baseRegSize(op.base));
+        out.letter(')');
         break;
-    case M_PRDC:
+    case M_PDEC:
         out.letter('(').letter('-');
-        outRegName(out, op.reg).letter(')');
+        outAbsReg(out, op.base, baseRegSize(op.base));
+        out.letter(')');
         break;
     case M_PINC:
         out.letter('(');
-        outRegName(out, op.reg).letter('+').letter(')');
+        outAbsReg(out, op.base, baseRegSize(op.base));
+        out.letter('+').letter(')');
         break;
     case M_IDX8: {
         const auto disp = static_cast<int16_t>(op.val.getSigned());
         out.letter('(');
-        outRegName(out, op.reg);
+        outAbsReg(out, op.base, baseRegSize(op.base));
         if (disp >= 0)
             out.letter('+');
         outHex(out, disp, -8);
@@ -215,9 +226,9 @@ void DisTlcs900::outMemAddr(StrBuffer &out, const Operand &op) const {
         break;
     }
     case M_IDX16: {
-        const auto disp = static_cast<int32_t>(op.val.getUnsigned());
+        const auto disp = static_cast<int16_t>(op.val.getUnsigned());
         out.letter('(');
-        outRegName(out, op.reg);
+        outAbsReg(out, op.base, baseRegSize(op.base));
         if (disp >= 0)
             out.letter('+');
         outHex(out, disp, -16);
@@ -226,7 +237,8 @@ void DisTlcs900::outMemAddr(StrBuffer &out, const Operand &op) const {
     }
     case M_IDXR:
         out.letter('(');
-        outRegName(out, op.reg).letter('+');
+        outAbsReg(out, op.base, baseRegSize(op.base));
+        out.letter('+');
         outRegName(out, op.idx).letter(')');
         break;
     case M_ABS8:
@@ -241,6 +253,20 @@ void DisTlcs900::outMemAddr(StrBuffer &out, const Operand &op) const {
     default:
         break;
     }
+}
+
+void DisTlcs900::outReg32(DisInsn &insn, StrBuffer &out, RegName reg) const {
+    if (!maxMode() && reg::isReg32General(reg))
+        insn.setError(UNKNOWN_INSTRUCTION);
+    outRegName(out, reg);
+}
+
+// In minimum mode a general 32-bit register XWA-XHL does not exist as a data
+// operand. Detect a prefix operand carrying one so the caller can reject the
+// instruction before reading its opcode. (A general register used as a MEMORY
+// base is fine -- it is simply written with its 16-bit name.)
+static bool minModeIllegalPrefix(const Operand &op) {
+    return op.mode == M_REG32 && reg::isReg32General(op.reg);
 }
 
 void DisTlcs900::decodeOperand(
@@ -262,6 +288,25 @@ void DisTlcs900::decodeOperand(
             outMemAddr(out, prefixOp);
         }
         break;
+    case M_BLKDST:
+    case M_BLKSRC: {
+        // Block-transfer pointer pair. The prefix low nibble is the source
+        // pointer (XHL=3 / XIY=5); the destination pointer is one register lower
+        // (XDE=2 / XIX=4). Increment vs decrement comes from opcode bit 1.
+        const uint8_t nibble = insn.prefix() & 7;
+        // Block transfer (opcode < 0x14) only uses the XDE/XHL (3) or XIX/XIY (5)
+        // pair; block compare accepts any current-bank pointer.
+        if (opc < 0x14 && nibble != 3 && nibble != 5) {
+            insn.setError(UNKNOWN_INSTRUCTION);
+            break;
+        }
+        const uint8_t idx = (mode == M_BLKSRC) ? nibble : uint8_t(nibble - 1);
+        // Block notation puts the sign AFTER the register: (XHL+) / (XHL-).
+        out.letter('(');
+        outAbsReg(out, currentBankBaseCode(idx), baseRegSize(currentBankBaseCode(idx)));
+        out.letter((opc & 2) ? '-' : '+').letter(')');
+        break;
+    }
     case M_ABSDST:
         // M_ABSDST: abs-bank register in dst (prefix-encoded). PM is always PM_ABREG{8,16,32}.
         {
@@ -288,13 +333,48 @@ void DisTlcs900::decodeOperand(
             case PM_REG32:
             case PM_MEM32:
             case PM_ABREG32:
-                outRegName(out, decodeReg32(opc & 7));
+                outReg32(insn, out, decodeReg32(opc & 7));
                 break;
             default:
                 break;
             }
         }
         break;
+    case M_MULDST: {
+        // MUL/DIV dest in opcode low bits, double the source size: a 16-bit
+        // pair for a byte-op (R=2*idx+1, R must be odd) or a 32-bit register
+        // for a word-op (R=idx). Long-op (PM_REG32 etc.) is not a valid form.
+        const uint8_t r = opc & 7;
+        if (pm == PM_REG8 || pm == PM_ABREG8 || pm == PM_MEM8) {
+            if ((r & 1) == 0) {
+                insn.setError(UNKNOWN_INSTRUCTION);
+                break;
+            }
+            outRegName(out, decodeReg16(r >> 1));
+        } else if (pm == PM_REG16 || pm == PM_ABREG16 || pm == PM_MEM16) {
+            outReg32(insn, out, decodeReg32(r));
+        } else {
+            insn.setError(UNKNOWN_INSTRUCTION);
+        }
+        break;
+    }
+    case M_MULDSTP: {
+        // MUL/DIV rr,#: dest carried in the prefix low bits (same code scheme
+        // as M_MULDST).
+        const uint8_t r = insn.prefix() & 7;
+        if (pm == PM_REG8) {
+            if ((r & 1) == 0) {
+                insn.setError(UNKNOWN_INSTRUCTION);
+                break;
+            }
+            outRegName(out, decodeReg16(r >> 1));
+        } else if (pm == PM_REG16) {
+            outReg32(insn, out, decodeReg32(r));
+        } else {
+            insn.setError(UNKNOWN_INSTRUCTION);
+        }
+        break;
+    }
     case M_REG8:
         outRegName(out, decodeReg8(opc & 7));
         break;
@@ -302,7 +382,7 @@ void DisTlcs900::decodeOperand(
         outRegName(out, decodeReg16(opc & 7));
         break;
     case M_REG32:
-        outRegName(out, decodeReg32(opc & 7));
+        outReg32(insn, out, decodeReg32(opc & 7));
         break;
     case M_IMM8:
         outHex(out, insn.readByte(), 8);
@@ -388,22 +468,34 @@ void DisTlcs900::decodeOperand(
     case M_SWI:
         outHex(out, opc & 7, 4);
         break;
-    case M_RCOUNT:
-        outHex(out, insn.readByte(), 8);
+    case M_RCOUNT: {
+        // Rotate/shift count is a 4-bit field: 1-15 direct, 0 means 16. A
+        // non-zero high nibble is not a canonical encoding (reject so it does
+        // not round-trip to a different byte).
+        const auto b = insn.readByte();
+        if (b & 0xF0) {
+            insn.setError(ILLEGAL_OPERAND);
+            break;
+        }
+        outDec(out, b == 0 ? 16 : b, 8);
         break;
-    case M_STEP1:
-        out.letter('1');
+    }
+    case M_STEP: {
+        // INC/DEC step 1-8 in the opcode low 3 bits, with 8 encoded as 0.
+        const auto s = opc & 7;
+        out.letter(char('0' + (s == 0 ? 8 : s)));
         break;
-    case M_STEP2:
-        out.letter('2');
-        break;
-    case M_STEP4:
-        out.letter('4');
-        break;
+    }
     case M_BUF: {
         const auto step = 1u << (opc & 3);
         const auto word = insn.readUint16();
-        outHex(out, static_cast<uint16_t>(word + step), 16);
+        const auto bufSize = word + step;
+        // Buffer size must be 2^n (manual: n = (opc&3)+1..15), i.e. a power
+        // of two with 2*step <= bufSize <= 0x8000.  Other encodings do not
+        // round-trip through the assembler.
+        if ((bufSize & (bufSize - 1)) || bufSize < step * 2 || bufSize > 0x8000)
+            insn.setErrorIf(out, ILLEGAL_OPERAND);
+        outHex(out, static_cast<uint16_t>(bufSize), 16);
         break;
     }
     case M_LDXDST: {
@@ -432,8 +524,10 @@ void DisTlcs900::decodeOperand(
         break;
     case M_CREG: {
         const uint8_t sub = insn.readByte();
-        const RegName creg = decodeCtrlReg(sub, pm == PM_REG32, cpuType() == TLCS900);
-        const Size expected = pm == PM_REG8 ? SZ_BYTE : pm == PM_REG16 ? SZ_WORD : SZ_QUAD;
+        const RegName creg = decodeCtrlReg(sub, pm == PM_REG32, cpuType() == TLCS900L);
+        const Size expected = (pm == PM_REG8 || pm == PM_ABREG8)   ? SZ_BYTE
+                              : (pm == PM_REG16 || pm == PM_ABREG16) ? SZ_WORD
+                                                                     : SZ_QUAD;
         if (creg == REG_UNDEF || ctrlRegSize(creg) != expected) {
             insn.setError(UNKNOWN_INSTRUCTION);
             break;
@@ -446,9 +540,14 @@ void DisTlcs900::decodeOperand(
             insn.setError(UNKNOWN_INSTRUCTION);
         break;
     case M_R32SRC:
-        // MULA xrr32 (alias): the PM_REG16 prefix encodes XWA..XHL (low 2 bits
-        // of the reg field), so map the prefix register back to its 32-bit form.
-        outRegName(out, RegName(uint8_t(REG_XWA) + (uint8_t(prefixOp.reg) - uint8_t(REG_WA))));
+        // MULA xrr32 (alias): the PM_REG16 prefix (D8+r) encodes XWA..XHL, so
+        // map the 16-bit prefix register back to its 32-bit form. Valid ONLY
+        // with PM_REG16; any other register prefix is not a MULA encoding.
+        if (pm != PM_REG16) {
+            insn.setError(UNKNOWN_INSTRUCTION);
+            break;
+        }
+        outReg32(insn, out, RegName(uint8_t(REG_XWA) + (uint8_t(prefixOp.reg) - uint8_t(REG_WA))));
         break;
     default:
         break;
@@ -476,7 +575,9 @@ Error DisTlcs900::readPrefix(DisInsn &insn, Operand &prefixOp) const {
             // pageMatcher derives PM_MEMD from 0xF3 byte.
             insn.setPrefix(firstByte);
             if (decodeComplexAddr(insn, prefixOp))
-                return insn.getError();
+                return insn.setError(prefixOp);
+            if (!maxMode() && minModeIllegalPrefix(prefixOp))
+                return insn.setError(UNKNOWN_INSTRUCTION);
             insn.setOpCode(insn.readByte());
         }
         return insn.getError();
@@ -488,7 +589,9 @@ Error DisTlcs900::readPrefix(DisInsn &insn, Operand &prefixOp) const {
         // the PrefixMode and accept the right page.
         insn.setPrefix(firstByte);
         if (decodePrefixAddr(insn, pm, prefixOp, firstByte))
-            return insn.getError();
+            return insn.setError(prefixOp);
+        if (!maxMode() && minModeIllegalPrefix(prefixOp))
+            return insn.setError(UNKNOWN_INSTRUCTION);
         insn.setOpCode(insn.readByte());
         return insn.getError();
     }

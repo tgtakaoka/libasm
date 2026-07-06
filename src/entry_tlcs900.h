@@ -27,61 +27,69 @@ namespace libasm {
 namespace tlcs900 {
 
 // clang-format off
+// AddrMode is ordered so the Flags fields stay narrow (see Entry::Flags):
+//   0-18  : usable in the SRC (2nd) operand -> the 5-bit src field.
+//   19-39 : only ever the DST (1st) operand -> the 6-bit dst field.
+//   40+   : never stored in a Flags field (parser results / disassembler /
+//           resolveMode targets); value is unconstrained.
 enum AddrMode : uint8_t {
-    M_NONE  = 0,
-    // Register operands (actual register from prefix byte or opcode field)
+    // -- SRC-usable (0-18); most are usable as DST too --
+    M_NONE  = 0,   // no operand
     M_REG8  = 1,   // 8-bit current bank register (W,A,B,C,D,E,H,L)
     M_REG16 = 2,   // 16-bit current bank register (WA,BC,DE,HL,IX,IY,IZ,SP)
     M_REG32 = 3,   // 32-bit current bank register (XWA,...,XSP)
-    // Memory addressing modes (prefix byte determines the memory address)
-    M_IND   = 4,   // (xrr) indirect via 32-bit register
-    M_PRDC  = 5,   // (-xrr) pre-decrement
-    M_PINC  = 6,   // (xrr+) post-increment
-    M_IDX8  = 7,   // (xrr+d8) 8-bit displacement indexed
-    M_IDX16 = 8,   // (xrr+d16) 16-bit displacement indexed
-    M_IDXR  = 9,   // (xrr+r) register indexed (r is an 8-bit register)
-    M_ABS8  = 10,  // (n) 8-bit absolute address
-    M_ABS16 = 11,  // (nn) 16-bit absolute address
-    M_ABS24 = 12,  // (nnn) 24-bit absolute address
-    // Immediate / literal
-    M_IMM8  = 13,  // 8-bit immediate
-    M_IMM16 = 14,  // 16-bit immediate
-    M_IMM32 = 15,  // 32-bit immediate
-    // Encoded in opcode byte
-    M_BIT   = 16,  // bit number 0-7 (in following byte)
-    M_CC    = 17,  // condition code CC (in opcode low nibble)
-    M_REL8  = 18,  // 8-bit PC-relative displacement
-    M_REL16 = 19,  // 16-bit PC-relative displacement
-    M_STEP1 = 20,  // INC/DEC step=1 (opcode encodes this)
-    M_STEP2 = 21,  // INC/DEC step=2
-    M_STEP4 = 22,  // INC/DEC step=4
+    M_ABS16 = 4,   // (nn) 16-bit absolute address
+    M_ABS24 = 5,   // (nnn) 24-bit absolute address
+    M_IMM8  = 6,   // 8-bit immediate
+    M_IMM16 = 7,   // 16-bit immediate
+    M_IMM32 = 8,   // 32-bit immediate
+    M_IMMX  = 9,   // immediate of context-matching size (8/16/32-bit)
+    M_REL8  = 10,  // 8-bit PC-relative displacement
+    M_REL16 = 11,  // 16-bit PC-relative displacement
+    M_SRC   = 12,  // operand is the prefix-encoded source
+    M_DST   = 13,  // operand is the prefix-encoded destination
+    M_CREG  = 14,  // DMA/NSP control register (RegName in op.reg)
+    M_LDARREL = 15,  // LDAR rel16 target with base = instruction_start + 4
+    R_FP    = 16,  // F' (alternate flag register, EX F,F' only)
+    M_RC1   = 17,  // implicit rotate/shift count 1: matches M_NONE; emits 0x01
+    M_BLKSRC = 18,  // block source pointer (XHL/XIY+/-): prefix low nibble, dir from opcode
+    // -- DST-only (19-40); asm-only matcher modes at the top --
+    M_ABS8  = 19,  // (n) 8-bit absolute address
+    M_BIT   = 20,  // bit number 0-7 (in following byte)
+    M_CC    = 21,  // condition code CC (in opcode low nibble)
+    M_STEP  = 22,  // INC/DEC step 1-8 in opcode low 3 bits (8 encoded as 0)
     M_LDF   = 23,  // LDF RFP bank 0-3 (in following byte, low 2 bits)
     M_SWI   = 24,  // SWI vector 0-7 (in opcode low 3 bits)
-    M_RCOUNT = 25, // rotate/shift count (in following byte)
+    M_RCOUNT = 25,  // rotate/shift count 1-16 (in following byte, 16 encoded as 0)
     M_BUF   = 26,  // MINC/MDEC buffer size (power of 2, following word)
-    // Placeholder: resolved from prefix context
-    M_SRC   = 27,  // operand is the prefix-encoded source
-    M_DST   = 28,  // operand is the prefix-encoded destination
-    // Implicit / hard-coded registers
-    R_A     = 29,  // register A (implicit)
-    R_WA    = 30,  // register WA (implicit, e.g. MUL result)
-    R_SR    = 31,  // status register SR
-    R_F     = 32,  // flag byte F (implicit, PUSH F / POP F)
-    R_FP    = 33,  // F' (alternate flag register, EX F,F' only)
-    R_C     = 34,  // 'C' dual-use: matches M_REG8 (reg C) or M_CC (carry)
-    M_IMMX    = 35,  // immediate of context-matching size (8/16/32-bit)
-    M_ABREG8  = 36,  // 8-bit absolute bank register (register code in op.val)
-    M_ABREG16 = 37,  // 16-bit absolute bank register
-    M_ABREG32 = 38,  // 32-bit absolute bank register
-    M_CREG    = 39,  // DMA/NSP control register (RegName in op.reg)
-    M_LDXDST  = 40,  // LDX destination: emits/expects 0x00 sub-byte, then 16-bit absolute address
-    M_ABSDST  = 41,  // absolute bank register in dst (prefix-encoded), resolves to M_ABREG{8,16,32} by PM
-    M_ZERO    = 42,  // implicit zero operand: matches M_NONE in asm; emits 0x00 trailing byte
-    M_INTLVL  = 43,  // EI interrupt level 0-7 (in following byte, low 3 bits)
-    M_DISUF   = 44,  // DI suffix: matches M_NONE in asm; emits 0x07 trailing byte
-    M_R32SRC  = 45,  // 32-bit register passed as PM_REG16 prefix (MULA xrr32 alias)
-    M_LDARREG = 46,  // LDAR destination register: emits 0x20|reg16 or 0x30|reg32 as trailing byte
-    M_LDARREL = 47,  // LDAR rel16 target with base = instruction_start + 4
+    R_A     = 27,  // register A (implicit; byte block-compare accumulator)
+    R_SR    = 28,  // status register SR
+    R_F     = 29,  // flag byte F (implicit, PUSH F / POP F)
+    R_WA    = 30,  // register WA (implicit; word block-compare accumulator, MUL result)
+    M_LDXDST = 31,  // LDX destination: 0x00 sub-byte, then 16-bit absolute address
+    M_ABSDST = 32,  // absolute bank register in dst, resolves to M_ABREG{8,16,32} by PM
+    M_INTLVL = 33,  // EI interrupt level 0-7 (in following byte, low 3 bits)
+    M_MULDST = 34,  // MUL/DIV dest in opcode (0x40+R): double the prefix(src) size
+    M_MULDSTP = 35,  // MUL/DIV rr,# dest carried IN the prefix (C8+code / D8+code)
+    M_R32SRC = 36,  // 32-bit register passed as PM_REG16 prefix (MULA xrr32 alias)
+    M_BLKDST = 37,  // block dest pointer (XDE/XIX+/-): src pointer - 1, dir from opcode
+    // asm-only matcher modes (never emitted by the disassembler):
+    M_CCT   = 38,  // always-true condition (cc=T): folds JP/CALL T,(abs) (asm-only)
+    M_ZERO  = 39,  // implicit zero: matches M_NONE in asm; emits 0x00 trailing byte
+    M_DISUF = 40,  // DI suffix: matches M_NONE in asm; emits 0x07 trailing byte
+    // -- Never a Flags field: parser results / disassembler / resolveMode --
+    M_IND   = 41,  // (xrr) indirect via 32-bit register
+    M_PDEC  = 42,  // (-xrr) pre-decrement
+    M_PINC  = 43,  // (xrr+) post-increment
+    M_IDX8  = 44,  // (xrr+d8) 8-bit displacement indexed
+    M_IDX16 = 45,  // (xrr+d16) 16-bit displacement indexed
+    M_IDXR  = 46,  // (xrr+r) register indexed (r is an 8-bit register)
+    M_ABREG8  = 47,  // 8-bit absolute bank register (register code in op.val)
+    M_ABREG16 = 48,  // 16-bit absolute bank register
+    M_ABREG32 = 49,  // 32-bit absolute bank register
+    M_LDARREG = 50,  // LDAR destination register (resolved form)
+    R_C     = 51,  // 'C' dual-use: matches M_REG8 (reg C) or M_CC (carry)
+    M_BPDEC = 52,  // (xrr-) block post-decrement; parser result, block ops only
 };
 // clang-format on
 
@@ -92,17 +100,39 @@ enum CodeFormat : uint8_t {
     CF_07L = 3,  // bits[3] + bits[2:0]: mask 0x0F but grouped as 0x08|reg
 };
 
+// Set of operation sizes an instruction permits. The operand's actual size
+// (inferred from the register name or the prefix mode) is a one-hot member;
+// intersecting it with the entry's mask decides legality (empty -> illegal),
+// and the intersection is the operation size. SM_ANY (the E0/E1/E2 default)
+// means unrestricted.
+enum SizeMask : uint8_t {
+    SM_ANY = 0,  // no restriction (treated as B|W|L)
+    SM_B = 1,    // byte only
+    SM_W = 2,    // word only
+    SM_L = 4,    // long only
+    SM_BW = 3,   // byte or word (no long)
+    SM_WL = 6,   // word or long (no byte)
+    SM_BWL = 7,  // all three
+};
+
 struct Entry final : entry::Base<Config::opcode_t> {
     struct Flags final {
         uint16_t _attr;
 
-        static constexpr Flags create(CodeFormat cf, AddrMode dst, AddrMode src) {
-            return Flags{static_cast<uint16_t>((dst << dst_gp) | (src << src_gp) | (cf << cf_gp))};
+        static constexpr Flags create(CodeFormat cf, AddrMode dst, AddrMode src, SizeMask sz) {
+            return Flags{static_cast<uint16_t>((static_cast<uint16_t>(dst) << dst_gp) |
+                                               (static_cast<uint16_t>(src) << src_gp) |
+                                               (static_cast<uint16_t>(cf) << cf_gp) |
+                                               (static_cast<uint16_t>(sz) << sz_gp))};
         }
 
         AddrMode dst() const { return AddrMode((_attr >> dst_gp) & dst_gm); }
         AddrMode src() const { return AddrMode((_attr >> src_gp) & src_gm); }
         CodeFormat format() const { return CodeFormat((_attr >> cf_gp) & cf_gm); }
+        SizeMask sizes() const {
+            const auto sz = SizeMask((_attr >> sz_gp) & sz_gm);
+            return sz == SM_ANY ? SM_BWL : sz;
+        }
         uint8_t mask() const {
             static constexpr uint8_t MASK[] PROGMEM = {
                     0x00,  // CF_00
@@ -114,12 +144,16 @@ struct Entry final : entry::Base<Config::opcode_t> {
         }
 
     private:
+        // dst 6 bits, src 5 bits (only 17 modes ever appear there), cf 2 bits,
+        // size 3 bits = 16 bits total.
         static constexpr int dst_gp = 0;
         static constexpr int src_gp = 6;
-        static constexpr int cf_gp = 12;
+        static constexpr int cf_gp = 11;
+        static constexpr int sz_gp = 13;
         static constexpr uint_fast8_t dst_gm = 0x3F;
-        static constexpr uint_fast8_t src_gm = 0x3F;
+        static constexpr uint_fast8_t src_gm = 0x1F;
         static constexpr uint_fast8_t cf_gm = 0x3;
+        static constexpr uint_fast8_t sz_gm = 0x7;
     };
 
     constexpr Entry(Config::opcode_t opc, Flags flags, const /* PROGMEM */ char *name_P)

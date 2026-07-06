@@ -199,12 +199,6 @@ bool isReg32(RegName name) {
     return n >= int8_t(REG_XWA) && n <= int8_t(REG_XSP);
 }
 
-bool isIndexReg(RegName name) {
-    // XIX..XSP: usable as base register in indirect/indexed addressing
-    const auto n = int8_t(name);
-    return n >= int8_t(REG_XIX) && n <= int8_t(REG_XSP);
-}
-
 // Current-bank 8-bit register index (0=W,1=A,2=B,...,7=L)
 uint8_t encodeReg8(RegName name) {
     return uint8_t(name);  // REG_W=0..REG_L=7
@@ -232,14 +226,35 @@ RegName decodeReg32(uint8_t num) {
     return RegName((num & 7) + 16);
 }
 
-// Encode 32-bit index register for indirect addressing (0=XIX,1=XIY,2=XIZ,3=XSP)
-// Prefix byte = 0x84 + encodeIndReg (for byte-source indirect)
-uint8_t encodeIndReg(RegName name) {
-    return uint8_t(name) - uint8_t(REG_XIX);
+bool isMemBaseCode(uint8_t code) {
+    // 32-bit register code: stride 4, and only banks 0-3 / previous / current
+    // exist (codes 0x40-0xCF address non-existent banks 4-12).
+    return (code & 3) == 0 && (code < 0x40 || code >= 0xD0);
 }
 
-RegName decodeIndReg(uint8_t num) {
-    return RegName((num & 3) + uint8_t(REG_XIX));
+bool isCurrentBankBaseCode(uint8_t code) {
+    return code >= 0xE0 && (code & 3) == 0;
+}
+
+uint8_t memBaseIndex(uint8_t code) {
+    return (code - 0xE0) >> 2;
+}
+
+uint8_t currentBankBaseCode(uint8_t index) {
+    return 0xE0 + ((index & 7) << 2);
+}
+
+uint8_t reg32BaseCode(RegName name) {
+    return currentBankBaseCode(encodeReg32(name));
+}
+
+bool isReg32General(RegName name) {
+    const auto n = int8_t(name);
+    return n >= int8_t(REG_XWA) && n <= int8_t(REG_XHL);
+}
+
+bool isIndexBaseCode(uint8_t code) {
+    return code >= 0xF0 && (code & 3) == 0;
 }
 
 bool isCtrlReg(RegName name) {
@@ -266,12 +281,13 @@ Size ctrlRegSize(RegName name) {
     return (sub & 2) ? SZ_BYTE : SZ_WORD;  // DMAM (bit1=1): 8-bit; DMAC (bit1=0): 16-bit
 }
 
-// sub 0x3C is shared by NSP/XNSP (base only) and INTNEST (non-base only); disambiguate by CPU.
-RegName decodeCtrlReg(uint8_t sub, bool is32, bool isBase) {
+// sub 0x3C is the normal stack pointer (NSP/XNSP) on every variant except /L,
+// where it is the interrupt-nesting counter INTNEST; disambiguate by CPU.
+RegName decodeCtrlReg(uint8_t sub, bool is32, bool isL) {
     if (sub == 0x3C) {
         if (is32)
-            return isBase ? REG_XNSP : REG_UNDEF;
-        return isBase ? REG_NSP : REG_INTNEST;
+            return isL ? REG_UNDEF : REG_XNSP;
+        return isL ? REG_INTNEST : REG_NSP;
     }
     if (sub & 1)
         return REG_UNDEF;  // odd sub-bytes invalid
