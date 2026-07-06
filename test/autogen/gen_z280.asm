@@ -323,27 +323,20 @@
       MULTU  A, (IX-14)
       MULTU  A, (IX+0)
       MULTW  HL, <$-0208H>
-      MULTW  HL, <$>
       MULTUW HL, <$-0207H>
-      MULTUW HL, <$>
       DIV    HL, (IX-11)
       DIV    HL, (IX+0)
       DIVU   HL, (IX-10)
       DIVU   HL, (IX+0)
-      ADDW   HL, <$-0304H>
-      ADDW   HL, <$>
+      ADDW   HL, <$-0204H>
       CPW    HL, <$-0303H>
-      CPW    HL, <$>
       MULT   A, (0FAF9H)
       MULTU  A, (0FBFAH)
       DIVW   DEHL, <$-0300H>
-      DIVW   DEHL, <$>
       DIVUW  DEHL, <$-01FFH>
-      DIVUW  DEHL, <$>
       DIV    HL, (0FEFDH)
       DIVU   HL, (0FFFEH)
       SUBW   HL, <$+0104H>
-      SUBW   HL, <$>
       LDA    IX, (SP+0403H)
       LDA    IX, (SP-7FFDH)
       LDW    IX, (SP+0605H)
@@ -373,11 +366,8 @@
       LDW    (IX-128), DE
       EX     A, (IX+IY)
       LDA    IX, <$+2428H>
-      LDA    IX, <$>
       LDW    IX, <$+262AH>
-      LDW    IX, <$>
       LDW    <$+272BH>, IX
-      LDW    <$>, IX
       LDW    HL, (IX+39)
       LDW    HL, (IX-128)
       EX     A, IXH
@@ -495,11 +485,9 @@
       DIV    HL, IXL
       DIVU   HL, IXL
       POP    <$-050AH>
-      POP    <$>
       JP     P, (HL)
       CALL   P, (HL)
       PUSH   <$-0506H>
-      PUSH   <$>
       LD     SP, IX
       JP     M, (HL)
       CALL   M, (HL)
@@ -542,7 +530,6 @@
       LD     IXL, 2FH
       LDW    <$+3338H>, 3534H
       INCW   <$+3538H>
-      INCW   <$>
       INC    (IX+53)
       INC    (IX-128)
       DEC    (IX+54)
@@ -551,7 +538,6 @@
       LD     (IX-128), 81H
       ADD    IX, SP
       DECW   <$+3D40H>
-      DECW   <$>
       INC    (3E3DH)
       DEC    (3F3EH)
       LD     (403FH), 41H
@@ -786,13 +772,9 @@
       LDW    (HL), DE
       EX     A, E
       LDA    HL, <$+2427H>
-      LDA    HL, <$>
       LD     <$+2528H>, A
-      LD     <$>, A
       LDW    HL, <$+2629H>
-      LDW    HL, <$>
       LDW    <$+272AH>, HL
-      LDW    <$>, HL
       LDW    HL, (HL)
       EX     A, H
       LDA    HL, (IX+2C2BH)
@@ -963,9 +945,7 @@
       INCW   (IX+0504H)
       INCW   (IX-7FFCH)
       INC    <$+0609H>
-      INC    <$>
       DEC    <$+070AH>
-      DEC    <$>
       LD     <$+080CH>, 9
       ADD    IY, BC
       DECW   (IX+0D0CH)
@@ -1061,7 +1041,6 @@
       LD     (IY+120), A
       LD     (IY-128), A
       LD     A, <$+7A7DH>
-      LD     A, <$>
       LD     A, (IX+7B7AH)
       LD     A, (IX-7F86H)
       LD     A, (IY+7C7BH)
@@ -1072,8 +1051,7 @@
       LD     A, IYL
       LD     A, (IY+127)
       LD     A, (IY-128)
-      ADD    A, <$-0B7BH>
-      ADD    A, <$>
+      ADD    A, <$-0A7BH>
       ADD    A, (IX-7C7EH)
       ADD    A, (IX+0082H)
       ADD    A, (IY-7B7DH)
@@ -1085,7 +1063,6 @@
       ADD    A, (IY-121)
       ADD    A, (IY+0)
       ADC    A, <$-0B73H>
-      ADC    A, <$>
       ADC    A, (IX-7476H)
       ADC    A, (IX+008AH)
       ADC    A, (IY-7375H)
@@ -1097,7 +1074,6 @@
       ADC    A, (IY-113)
       ADC    A, (IY+0)
       SUB    A, <$-0B6BH>
-      SUB    A, <$>
       SUB    A, (IX-6C6EH)
       SUB    A, (IX+0092H)
       SUB    A, (IY-6B6DH)
@@ -1109,7 +1085,6 @@
       SUB    (IY-105)
       SUB    (IY+0)
       SBC    A, <$-0B63H>
-      SBC    A, <$>
       SBC    A, (IX-6466H)
       SBC    A, (IX+009AH)
       SBC    A, (IY-6365H)
@@ -1120,8 +1095,7 @@
       SBC    A, IYL
       SBC    A, (IY-97)
       SBC    A, (IY+0)
-      AND    A, <$-0C5BH>
-      AND    A, <$>
+      AND    A, <$-0B5BH>
       AND    A, (IX-5C5EH)
       AND    A, (IX+00A2H)
       AND    A, (IY-5B5DH)
@@ -1132,8 +1106,7 @@
       AND    A, IYL
       AND    (IY-89)
       AND    (IY+0)
-      XOR    A, <$-0C53H>
-      XOR    A, <$>
+      XOR    A, <$-0B53H>
       XOR    A, (IX-5456H)
       XOR    A, (IX+00AAH)
       XOR    A, (IY-5355H)
@@ -1145,7 +1118,6 @@
       XOR    (IY-81)
       XOR    (IY+0)
       OR     A, <$-0C4BH>
-      OR     A, <$>
       OR     A, (IX-4C4EH)
       OR     A, (IX+00B2H)
       OR     A, (IY-4B4DH)
@@ -1157,7 +1129,6 @@
       OR     (IY-73)
       OR     (IY+0)
       CP     A, <$-0C43H>
-      CP     A, <$>
       CP     A, (IX-4446H)
       CP     A, (IX+00BAH)
       CP     A, (IY-4345H)
@@ -1169,13 +1140,9 @@
       CP     (IY-65)
       CP     (IY+0)
       JP     NZ, <$-0C39H>
-      JP     NZ, <$>
       JP     <$-0C38H>
-      JP     <$>
       CALL   NZ, <$-0C37H>
-      CALL   NZ, <$>
       JP     Z, <$-0C31H>
-      JP     Z, <$>
       SET    1, (IY-52)
       RLC    (IY-52)
       RRC    (IY-52)
@@ -1198,31 +1165,21 @@
       BIT    0, (IY+0)
       RES    0, (IY+0)
       SET    0, (IY+0)
-      CALL   Z, <$-0D2FH>
-      CALL   Z, <$>
-      CALL   <$-0D2EH>
-      CALL   <$>
-      JP     NC, <$-0D29H>
-      JP     NC, <$>
-      CALL   NC, <$-0D27H>
-      CALL   NC, <$>
-      JP     C, <$-0D21H>
-      JP     C, <$>
-      CALL   C, <$-0D1FH>
-      CALL   C, <$>
+      CALL   Z, <$-0C2FH>
+      CALL   <$-0C2EH>
+      JP     NC, <$-0C29H>
+      CALL   NC, <$-0C27H>
+      JP     C, <$-0C21H>
+      CALL   C, <$-0C1FH>
       POP    IY
       JP     PO, <$-0D19H>
-      JP     PO, <$>
       EX     (SP), IY
       CALL   PO, <$-0D17H>
-      CALL   PO, <$>
       PUSH   IY
       JP     (IY)
       JP     PE, <$-0D11H>
-      JP     PE, <$>
       EX     IY, HL
       CALL   PE, <$-0D0FH>
-      CALL   PE, <$>
       SUBW   HL, IY
       MULT   A, (IY-15)
       MULT   A, (IY+0)
@@ -1252,7 +1209,6 @@
       LDW    BC, (IY+7)
       LDW    BC, (IY-128)
       EX     A, <$+090DH>
-      EX     A, <$>
       LDA    IY, (HL+IX)
       LDW    IY, (HL+IX)
       LDW    (HL+IX), IY
@@ -1275,11 +1231,8 @@
       EX     A, (HL+2120H)
       EX     A, (HL-7FE0H)
       LDA    IY, <$+2428H>
-      LDA    IY, <$>
       LDW    IY, <$+262AH>
-      LDW    IY, <$>
       LDW    <$+272BH>, IY
-      LDW    <$>, IY
       EX     A, IYH
       LDA    IY, (IX+2C2BH)
       LDA    IY, (IX-7FD5H)
@@ -1307,9 +1260,7 @@
       LDW    (IY+63), SP
       LDW    (IY-128), SP
       IN     <$+4246H>, (C)
-      IN     <$>, (C)
       OUT    (C), <$+4347H>
-      OUT    (C), <$>
       SBC    IY, BC
       IN     (IX+4A49H), (C)
       IN     (IX-7FB7H), (C)
@@ -1347,18 +1298,14 @@
       LDUP   A, (IY+0)
       LDUP   (IY-97), A
       LDUP   (IY+0), A
-      MULT   A, <$-0F3AH>
-      MULT   A, <$>
-      MULTU  A, <$-0F39H>
-      MULTU  A, <$>
+      MULT   A, <$-0E3AH>
+      MULTU  A, <$-0E39H>
       MULTW  HL, (IX-3B3DH)
       MULTW  HL, (IX+00C3H)
       MULTUW HL, (IX-3A3CH)
       MULTUW HL, (IX+00C4H)
       DIV    HL, <$-0F36H>
-      DIV    HL, <$>
       DIVU   HL, <$-0F35H>
-      DIVU   HL, <$>
       ADDW   HL, (IX-3739H)
       ADDW   HL, (IX+00C7H)
       CPW    HL, (IX-3638H)
@@ -1422,13 +1369,9 @@
       DIV    HL, IYL
       DIVU   HL, IYL
       JP     P, <$-0B09H>
-      JP     P, <$>
       CALL   P, <$-0907H>
-      CALL   P, <$>
       PUSH   0F7F6H
       LD     SP, IY
       JP     M, <$-0301H>
-      JP     M, <$>
       CALL   M, <$-00FFH>
-      CALL   M, <$>
       CP     0FFH
