@@ -58,7 +58,7 @@ OBJS_expr = test_expr_helper.o \
     value.o value_formatter.o value_parser.o text_common.o \
     fixed64.o ieee_float.o float80_base.o float80_hard.o float80_soft.o \
     dec_float.o ibm_float.o ti_float.o
-OBJS_gen  = gen_driver.o test_generator.o tokenized_text.o \
+OBJS_gen  = gen_driver.o test_generator.o tokenized_text.o tokenizer.o \
     config_base.o dis_base.o dis_formatter.o formatters.o insn_base.o \
     value_parser.o operators.o parsers.o \
     list_formatter.o reg_base.o value.o value_formatter.o text_common.o \

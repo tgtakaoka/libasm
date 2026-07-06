@@ -80,7 +80,12 @@ struct TestGenerator {
         virtual void setOrigin(uint32_t addr) = 0;
     };
 
+    // Default: build the standard tokenizer list from the disassembler's
+    // origin symbol (float, number, relative(dis.curSym())).
     TestGenerator(Formatter &formatter, Disassembler &disassembler, uint32_t addr = 0);
+    // Explicit: an arch supplies its own tokenizer list (standard + extras).
+    TestGenerator(Formatter &formatter, Disassembler &disassembler, uint32_t addr,
+            TokenizerList tokenizers);
     virtual ~TestGenerator();
 
     TestGenerator &generate();
@@ -92,6 +97,7 @@ private:
     Formatter &_formatter;
     Disassembler &_disassembler;
     driver::DisFormatter &_disFormatter;
+    const TokenizerList _tokenizers;
     const OpCodeWidth _opCodeWidth;
     const Endian _endian;
     const AddressUnit _addressUnit;
