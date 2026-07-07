@@ -103445,6 +103445,7 @@
       FDISI
       FCLEX
       FINIT
+      FSETPM
       FSAVE   [EAX]
       FSAVE   [ECX]
       FSAVE   [ESI+39383736H]
@@ -103677,3 +103678,4 @@
       FSTSW   [ESI+ESI+3A393837H]
       FSTSW   [EBP-3E3F4042H]
       FSTSW   [ESI-3D3E3F41H]
+      FSTSW   AX

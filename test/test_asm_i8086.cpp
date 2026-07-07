@@ -53,7 +53,7 @@ bool is80287() {
 }
 
 bool is80C187() {
-    return strcasecmp_P("801C87", asm8086.fpu_P()) == 0;
+    return strcasecmp_P("80C187", asm8086.fpu_P()) == 0;
 }
 
 bool fpu_on() {
@@ -2469,7 +2469,11 @@ void test_float() {
     TEST("FSTCW [BX+DI-52]",      FWAIT, 0xD9, 0171, 0xCC);
     TEST("FSTCW [BP+SI+89ABH]",   FWAIT, 0xD9, 0272, 0xAB, 0x89);
 
-    ERRT("FSTSW AX", OPERAND_NOT_ALLOWED, "AX");
+    if (is80286() || is80386() || is80486() || is80C187()) {
+        TEST("FSTSW AX", FWAIT, 0xDF, 0xE0);  // 287+ WAIT form
+    } else {
+        ERRT("FSTSW AX", OPERAND_NOT_ALLOWED, "AX");  // no FSTSW AX on the 8087
+    }
     TEST("FSTSW [SI]",          FWAIT, 0xDD, 0074);
     TEST("FSTSW [1234H]",       FWAIT, 0xDD, 0076, 0x34, 0x12);
     TEST("FSTSW [DI+52]",       FWAIT, 0xDD, 0175, 0x34);
@@ -3055,6 +3059,7 @@ void test_float_nowait() {
     TEST("FNDISI",       0xDB, 0xE1);
     if (is80286() || is80C187()) {
         TEST("FNSETPM",   0xDB, 0xE4);
+        TEST("FSETPM",    FWAIT, 0xDB, 0xE4);
         TEST("FNSTSW AX", 0xDF, 0xE0);
     }
 }

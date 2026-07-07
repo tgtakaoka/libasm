@@ -4980,7 +4980,11 @@ void test_float() {
     UNKN(            FWAIT, 0xDC);
     NMEM("", "", "", FWAIT, 0xDD);
     UNKN(            FWAIT, 0xDE);
-    UNKN(            FWAIT, 0xDF);
+    if (is80287() || is80387()) {
+        NMEM("", "", "", FWAIT, 0xDF);  // 9B DF is the FSTSW AX prefix on 287+
+    } else {
+        UNKN(        FWAIT, 0xDF);  // 9B DF not a prefix on the 8087
+    }
     UNKN(            FWAIT, 0xE0);
 
     TEST("FINIT", "", FWAIT, 0xDB, 0xE3);
@@ -5587,7 +5591,9 @@ void test_float_nowait() {
 
     if (is80287() || is80387()) {
         TEST("FNSETPM", "",  0xDB, 0xE4);
+        TEST("FSETPM", "",   FWAIT, 0xDB, 0xE4);
         TEST("FNSTSW", "AX", 0xDF, 0xE0);
+        TEST("FSTSW", "AX",  FWAIT, 0xDF, 0xE0);
     }
 
     if (is80386() && is80387()) {

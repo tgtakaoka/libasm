@@ -372,6 +372,7 @@ extern const char TEXT_FYL2XP1[] PROGMEM;
 
 // i80287
 extern const char TEXT_FNSETPM[] PROGMEM;
+extern const char TEXT_FSETPM[]  PROGMEM;
 
 // i80387/i80C187
 using common::TEXT_FCOS;

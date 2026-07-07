@@ -194252,6 +194252,7 @@
       fdisi
       fclex
       finit
+      fsetpm
       fsave   [eax]
       fsave   [ecx]
       fsave   [esi+0x39383736]
@@ -194484,3 +194485,4 @@
       fstsw   [esi+esi+0x3a393837]
       fstsw   [ebp-0x3e3f4042]
       fstsw   [esi-0x3d3e3f41]
+      fstsw   ax

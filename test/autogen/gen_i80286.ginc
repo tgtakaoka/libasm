@@ -12545,6 +12545,7 @@
       fdisi
       fclex
       finit
+      fsetpm
       fsave   [bx+si]
       fsave   [bp+si]
       fsave   [si]
@@ -12575,3 +12576,4 @@
       fstsw   [si+0xbebd]
       fstsw   [bp+0xc0bf]
       fstsw   [bx+0xc1c0]
+      fstsw   ax

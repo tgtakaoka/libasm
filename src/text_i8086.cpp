@@ -366,6 +366,7 @@ constexpr char TEXT_FYL2XP1[] PROGMEM = "FYL2XP1";
 
 // i80287
 constexpr char TEXT_FNSETPM[] PROGMEM = "FNSETPM";
+constexpr char TEXT_FSETPM[]  PROGMEM = "FSETPM";
 
 // i80387/i80C187
 // constexpr char TEXT_FCOS[]    PROGMEM = "FCOS";
