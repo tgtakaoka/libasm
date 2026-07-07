@@ -406,6 +406,42 @@
       OR     AX, [BX]
       OR     AX, 0F0EH
       PUSH   CS
+      TEST1  BYTE PTR [BX+DI], CL
+      TEST1  BYTE PTR [BP+SI], CL
+      TEST1  BYTE PTR [SI], CL
+      TEST1  BYTE PTR [1817H], CL
+      TEST1  BYTE PTR [BX], CL
+      TEST1  BYTE PTR [BX+SI+65], CL
+      TEST1  BYTE PTR [BP+SI+67], CL
+      TEST1  BYTE PTR [SI+69], CL
+      TEST1  BYTE PTR [BP+71], CL
+      TEST1  BYTE PTR [BX+72], CL
+      TEST1  BYTE PTR [BX+SI+8281H], CL
+      TEST1  BYTE PTR [BP+SI+8483H], CL
+      TEST1  BYTE PTR [SI+8685H], CL
+      TEST1  BYTE PTR [BP+8887H], CL
+      TEST1  BYTE PTR [BX+8988H], CL
+      TEST1  AL, CL
+      TEST1  AH, CL
+      TEST1  WORD PTR [BP+SI], CL
+      TEST1  WORD PTR [SI], CL
+      TEST1  WORD PTR [1817H], CL
+      TEST1  WORD PTR [BX], CL
+      TEST1  WORD PTR [BX+SI], CL
+      TEST1  WORD PTR [BX+SI+65], CL
+      TEST1  WORD PTR [BP+SI+67], CL
+      TEST1  WORD PTR [SI+69], CL
+      TEST1  WORD PTR [BP+71], CL
+      TEST1  WORD PTR [BX+72], CL
+      TEST1  WORD PTR [BX+SI+8281H], CL
+      TEST1  WORD PTR [BP+SI+8483H], CL
+      TEST1  WORD PTR [SI+8685H], CL
+      TEST1  WORD PTR [BP+8887H], CL
+      TEST1  WORD PTR [BX+8988H], CL
+      TEST1  AX, CL
+      TEST1  CX, CL
+      TEST1  SP, CL
+      TEST1  SI, CL
       CLR1   BYTE PTR [BP+DI], CL
       CLR1   BYTE PTR [SI], CL
       CLR1   BYTE PTR [1817H], CL
@@ -514,6 +550,42 @@
       NOT1   CX, CL
       NOT1   SP, CL
       NOT1   SI, CL
+      TEST1  BYTE PTR [BX+DI], 0
+      TEST1  BYTE PTR [BP+SI], 0
+      TEST1  BYTE PTR [SI], 0
+      TEST1  BYTE PTR [201FH], 0
+      TEST1  BYTE PTR [BX], 0
+      TEST1  BYTE PTR [BX+SI+65], 0
+      TEST1  BYTE PTR [BP+SI+67], 0
+      TEST1  BYTE PTR [SI+69], 0
+      TEST1  BYTE PTR [BP+71], 0
+      TEST1  BYTE PTR [BX+72], 0
+      TEST1  BYTE PTR [BX+SI+8281H], 0
+      TEST1  BYTE PTR [BP+SI+8483H], 0
+      TEST1  BYTE PTR [SI+8685H], 0
+      TEST1  BYTE PTR [BP+8887H], 0
+      TEST1  BYTE PTR [BX+8988H], 0
+      TEST1  AL, 0
+      TEST1  AH, 0
+      TEST1  WORD PTR [BP+SI], 0
+      TEST1  WORD PTR [SI], 0
+      TEST1  WORD PTR [201FH], 0
+      TEST1  WORD PTR [BX], 0
+      TEST1  WORD PTR [BX+SI], 0
+      TEST1  WORD PTR [BX+SI+65], 0
+      TEST1  WORD PTR [BP+SI+67], 0
+      TEST1  WORD PTR [SI+69], 0
+      TEST1  WORD PTR [BP+71], 0
+      TEST1  WORD PTR [BX+72], 0
+      TEST1  WORD PTR [BX+SI+8281H], 0
+      TEST1  WORD PTR [BP+SI+8483H], 0
+      TEST1  WORD PTR [SI+8685H], 0
+      TEST1  WORD PTR [BP+8887H], 0
+      TEST1  WORD PTR [BX+8988H], 0
+      TEST1  AX, 0
+      TEST1  CX, 0
+      TEST1  SP, 0
+      TEST1  SI, 0
       CLR1   BYTE PTR [BP+DI], 0
       CLR1   BYTE PTR [SI], 0
       CLR1   BYTE PTR [201FH], 0
@@ -5576,4 +5648,4 @@
       PUSH   CX
       PUSH   SP
       PUSH   SI
-      ORG    04B7BH
+      ORG    04CBBH

@@ -1235,8 +1235,12 @@ constexpr Entry TV30_0F[] PROGMEM = {
     N2(0x1D, CF_00, TEXT_SET1,   SZ_WORD, M_WMOD, M_BIT,  P_MOD,  P_OPR), 
     N2(0x16, CF_00, TEXT_NOT1,   SZ_BYTE, M_BMOD, M_CL,   P_MOD,  P_NONE),
     N2(0x17, CF_00, TEXT_NOT1,   SZ_WORD, M_WMOD, M_CL,   P_MOD,  P_NONE),
-    N2(0x1E, CF_00, TEXT_NOT1,   SZ_BYTE, M_BMOD, M_BIT,  P_MOD,  P_OPR), 
-    N2(0x1F, CF_00, TEXT_NOT1,   SZ_WORD, M_WMOD, M_BIT,  P_MOD,  P_OPR), 
+    N2(0x1E, CF_00, TEXT_NOT1,   SZ_BYTE, M_BMOD, M_BIT,  P_MOD,  P_OPR),
+    N2(0x1F, CF_00, TEXT_NOT1,   SZ_WORD, M_WMOD, M_BIT,  P_MOD,  P_OPR),
+    N2(0x10, CF_00, TEXT_TEST1,  SZ_BYTE, M_BMOD, M_CL,   P_MOD,  P_NONE),
+    N2(0x11, CF_00, TEXT_TEST1,  SZ_WORD, M_WMOD, M_CL,   P_MOD,  P_NONE),
+    N2(0x18, CF_00, TEXT_TEST1,  SZ_BYTE, M_BMOD, M_BIT,  P_MOD,  P_OPR),
+    N2(0x19, CF_00, TEXT_TEST1,  SZ_WORD, M_WMOD, M_BIT,  P_MOD,  P_OPR),
 };
 
 constexpr uint8_t IV30_0F[] PROGMEM = {
@@ -1265,6 +1269,10 @@ constexpr uint8_t IV30_0F[] PROGMEM = {
      20,  // TEXT_SET1
       5,  // TEXT_SUB4S
       6,  // TEXT_SUB4S
+     25,  // TEXT_TEST1
+     26,  // TEXT_TEST1
+     27,  // TEXT_TEST1
+     28,  // TEXT_TEST1
 };
 
 #if !defined(LIBASM_I8086_NOFPU)
