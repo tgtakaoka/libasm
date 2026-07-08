@@ -17,14 +17,20 @@ help:
 	@echo '"make asm-test" assemble with "asm" command'
 	@echo '"make asl-test" assemble with "asl" command'
 	@echo '"make gas-test" assemble with "gas" command'
+	@echo '"make nasm-test" round-trip i8086 family through nasm'
 
 -include ../../src/Makefile.arch
 -include ../Makefile.asm
 -include ../Makefile.asl
 -include ../Makefile.gas
 
-.PHONY:: gen asm-test asl-test gas-test
+.PHONY:: gen asm-test asl-test gas-test nasm-test
 .PHONY:: clean clean-gen clean-asm clean-asl clean-gas
+
+# Round-trip the i8086-family autogen through nasm as a third independent
+# assembler (alongside libasm and gas); requires "make gen" first.
+nasm-test:
+	./nasm-roundtrip.sh
 
 # target which has ".inc" suffix for output.
 INC_targets = w65c816 tlcs90 $(TGT_tlcs900) i8086 i80186 i80386 i80486 $(TGT_mc68000) $(TGT_z8000) $(TGT_nm1610) \
