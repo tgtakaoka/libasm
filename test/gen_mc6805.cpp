@@ -16,6 +16,7 @@
 
 #include "dis_mc6805.h"
 #include "gen_driver.h"
+#include "tokenizer.h"
 
 using namespace libasm::mc6805;
 using namespace libasm::gen;
@@ -28,7 +29,7 @@ int main(int argc, const char **argv) {
 
     dis6805.setOption("relative", "enable");
 
-    TestGenerator generator(driver, dis6805, 0x0100);
+    TestGenerator generator(driver, dis6805, 0x0100, standardTokenizers<MotorolaNumber>(dis6805.curSym()));
     generator.generate();
 
     return driver.close();

@@ -281,8 +281,10 @@
       LD     0E7H, #0E8H
       LD     >00H, #1
       LDC    R14, -23(RR8)
+      LDC    R14, 0(RR8)
       LDC    R14, +1(RR8)
       LDE    R14, -22(RR8)
+      LDE    R14, 0(RR8)
       LDE    R14, +1(RR8)
       JR     NZ, $-18
       JP     NZ, 0EEEFH
@@ -299,8 +301,10 @@
       LD     @01H, >00H
       CALL   0F7F8H
       LDC    -7(RR8), R15
+      LDC    0(RR8), R15
       LDC    +1(RR8), R15
       LDE    -6(RR8), R15
+      LDE    0(RR8), R15
       LDE    +1(RR8), R15
       JR     NC, $-2
       JP     NC, 0FEFFH

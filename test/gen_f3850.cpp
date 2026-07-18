@@ -16,6 +16,7 @@
 
 #include "dis_f3850.h"
 #include "gen_driver.h"
+#include "tokenizer.h"
 
 using namespace libasm::f3850;
 using namespace libasm::gen;
@@ -30,7 +31,7 @@ int main(int argc, const char **argv) {
     dis3850.setOption("relative", "enable");
     dis3850.setOption("use-scratchpad", "on");
 
-    TestGenerator generator(driver, dis3850, 0x0100);
+    TestGenerator generator(driver, dis3850, 0x0100, standardTokenizers<IntelNumber>(dis3850.curSym()));
     generator.generate();
 
     return driver.close();

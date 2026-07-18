@@ -16,9 +16,14 @@
 
 #include "dis_ins8060.h"
 #include "gen_driver.h"
+#include "tokenizer.h"
 
 using namespace libasm::ins8060;
 using namespace libasm::gen;
+
+namespace {
+const RegisterTokenizer REG_Pn("P", 3, "Pn");
+}  // namespace
 
 int main(int argc, const char **argv) {
     DisIns8060 dis8060;
@@ -29,7 +34,7 @@ int main(int argc, const char **argv) {
     dis8060.setOption("relative", "enable");
     dis8060.setOption("intel-style", "enable");
 
-    TestGenerator generator(driver, dis8060, 0x0100);
+    TestGenerator generator(driver, dis8060, 0x0100, standardTokenizers<IntelNumber>(dis8060.curSym(), {&REG_Pn}));
     generator.generate();
 
     return driver.close();

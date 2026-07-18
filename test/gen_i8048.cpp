@@ -16,9 +16,18 @@
 
 #include "dis_i8048.h"
 #include "gen_driver.h"
+#include "tokenizer.h"
 
 using namespace libasm::i8048;
 using namespace libasm::gen;
+
+namespace {
+const RegisterTokenizer REG_Rn("R", 7, "Rn");
+const RegisterTokenizer REG_Pn("P", 7, "Pn");
+const RegisterTokenizer REG_RBn("RB", 1, "RBn");
+const RegisterTokenizer REG_MBn("MB", 1, "MBn");
+const RegisterTokenizer REG_Fn("F", 1, "Fn");
+}  // namespace
 
 int main(int argc, const char **argv) {
     DisI8048 dis8048;
@@ -26,7 +35,7 @@ int main(int argc, const char **argv) {
     if (driver.main(argc, argv))
         return 1;
 
-    TestGenerator generator(driver, dis8048, 0x0100);
+    TestGenerator generator(driver, dis8048, 0x0100, standardTokenizers<IntelNumber>(dis8048.curSym(), {&REG_RBn, &REG_MBn, &REG_Fn, &REG_Rn, &REG_Pn}));
     generator.generate();
 
     return driver.close();

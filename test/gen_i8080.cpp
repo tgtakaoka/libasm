@@ -16,6 +16,7 @@
 
 #include "dis_i8080.h"
 #include "gen_driver.h"
+#include "tokenizer.h"
 
 using namespace libasm::i8080;
 using namespace libasm::gen;
@@ -28,7 +29,7 @@ int main(int argc, const char **argv) {
 
     if (driver.generateZilog())
         dis8080.setOption("zilog-syntax", "on");
-    TestGenerator generator(driver, dis8080, 0x0100);
+    TestGenerator generator(driver, dis8080, 0x0100, standardTokenizers<IntelNumber>(dis8080.curSym()));
     generator.generate();
 
     return driver.close();

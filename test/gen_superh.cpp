@@ -16,9 +16,20 @@
 
 #include "dis_superh.h"
 #include "gen_driver.h"
+#include "tokenizer.h"
 
 using namespace libasm::superh;
 using namespace libasm::gen;
+
+namespace {
+// SH prints lowercase registers: r0..r15 -> rn, fr0..fr15 -> frn, dr even -> drn.
+const RegisterTokenizer REG_fr("fr", 15, "frn");
+const RegisterTokenizer REG_dr("dr", 14, "drn");
+const RegisterTokenizer REG_r("r", 15, "rn");
+const RegisterTokenizer REG_a("a", 0, "an");
+const RegisterTokenizer REG_x("x", 1, "xn");
+const RegisterTokenizer REG_y("y", 1, "yn");
+}  // namespace
 
 int main(int argc, const char **argv) {
     DisSuperH dissuperh;
@@ -39,7 +50,13 @@ int main(int argc, const char **argv) {
         dis.setOption("origin-char", "$");
         dis.setOption("motorola-style", "enable");
     }
-    TestGenerator generator(driver, dis, 0x0000);
+    // SH displacements are unsigned (no sign to consolidate).  gnu-as prints
+    // C-style (0x..) numbers, native Motorola ($..).
+    const auto sym = dis.curSym();
+    const auto toks = driver.generateGas()
+            ? standardTokenizers<CstyleNumber>(sym, {&REG_fr, &REG_dr, &REG_r, &REG_a, &REG_x, &REG_y})
+            : standardTokenizers<MotorolaNumber>(sym, {&REG_fr, &REG_dr, &REG_r, &REG_a, &REG_x, &REG_y});
+    TestGenerator generator(driver, dis, 0x0000, toks);
     generator.generate();
 
     return driver.close();

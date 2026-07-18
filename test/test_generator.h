@@ -21,6 +21,7 @@
 #include <string>
 #include <unordered_map>
 
+#include "array_memory.h"
 #include "dis_base.h"
 #include "dis_formatter.h"
 #include "tokenized_text.h"
@@ -80,7 +81,10 @@ struct TestGenerator {
         virtual void setOrigin(uint32_t addr) = 0;
     };
 
-    TestGenerator(Formatter &formatter, Disassembler &disassembler, uint32_t addr = 0);
+    // Each arch supplies its own tokenizer list, built from
+    // standardTokenizers<HexPolicy>(dis.curSym(), {index tokenizers}).
+    TestGenerator(Formatter &formatter, Disassembler &disassembler, uint32_t addr,
+            TokenizerList tokenizers);
     virtual ~TestGenerator();
 
     TestGenerator &generate();
@@ -92,6 +96,7 @@ private:
     Formatter &_formatter;
     Disassembler &_disassembler;
     driver::DisFormatter &_disFormatter;
+    const TokenizerList _tokenizers;
     const OpCodeWidth _opCodeWidth;
     const Endian _endian;
     const AddressUnit _addressUnit;
@@ -104,10 +109,17 @@ private:
     std::unordered_map<std::string, TokenizedText::Set> _error;
 
     void printInsn(const libasm::driver::DisFormatter &data);
-    const TokenizedText *_meaningfulTestData(
-            std::string &name, bool withSize, const Insn *cont, const char *contOpr);
-    const TokenizedText *meaningfulTestData(
-            std::string &name, const Insn *cont = nullptr, const char *contOpr = nullptr);
+    // Disassemble the bytes in _memory at _address into _disFormatter.insn().
+    // mark_P==nullptr: decode a fresh instruction (reads the opcode, resets state);
+    // mark_P!=nullptr: decode the continuation half (reuses the opcode bytes).
+    Error disasm(const ArrayMemory &memory, const char *mark_P = nullptr);
+    // Dedup key = namePrefix + insn.name() [+ ":size"], and namePrefix's operand
+    // counterpart. For a continuation the caller passes the first half as the
+    // prefix and leaves the second half in _disFormatter.
+    const TokenizedText *_meaningfulTestData(std::string &name, int size,
+            const std::string &namePrefix, const std::string &oprPrefix);
+    const TokenizedText *meaningfulTestData(std::string &name, int size,
+            const std::string &namePrefix = "", const std::string &oprPrefix = "");
     const TokenizedText *meaningfulError(std::string &name);
     static constexpr uint8_t MAX_DROP_BYTE = 22;
     static uint8_t calcDrop(const TokenizedText &text);

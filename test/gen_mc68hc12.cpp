@@ -16,9 +16,18 @@
 
 #include "dis_mc68hc12.h"
 #include "gen_driver.h"
+#include "tokenizer.h"
 
 using namespace libasm::mc68hc12;
 using namespace libasm::gen;
+
+// |Hex| = MotorolaNumber (native) or CstyleNumber (gnu-as).  Consolidate
+// index/base displacement sign "n,X".
+template <class Hex>
+static TokenizerList hc12Tokenizers(char loc) {
+    static const IndexDispTokenizer<Hex, CommaIndex> indexDisp;
+    return standardTokenizers<Hex>(loc, {&indexDisp});
+}
 
 int main(int argc, const char **argv) {
     DisMc68HC12 dis6812;
@@ -30,7 +39,11 @@ int main(int argc, const char **argv) {
     if (driver.generateGas())
         dis6812.setOption("gnu-as", "enable");
 
-    TestGenerator generator(driver, dis6812, 0x0100);
+    // gnu-as prints C-style ($ -> 0x) numbers; native uses Motorola.
+    const auto sym = dis6812.curSym();
+    auto toks = driver.generateGas() ? hc12Tokenizers<CstyleNumber>(sym)
+                                     : hc12Tokenizers<MotorolaNumber>(sym);
+    TestGenerator generator(driver, dis6812, 0x0100, toks);
     generator.generate();
 
     return driver.close();

@@ -124,21 +124,30 @@
       ldrb   rh0, .+0x3105
       ldrb   rl0, .+0x310d
       ldb    rh0, r1(#0x3111)
+      ldb    rh0, r1(#-0x8000)
       ldb    rl0, r1(#0x3119)
+      ldb    rl0, r1(#-0x8000)
       ldr    r0, .+0x3206
       ld     r0, r1(#0x3211)
+      ld     r0, r1(#-0x8000)
       ldrb   .+0x3305, rh0
       ldrb   .+0x330d, rl0
       ldb    r1(#0x3311), rh0
+      ldb    r1(#-0x8000), rh0
       ldb    r1(#0x3319), rl0
+      ldb    r1(#-0x8000), rl0
       ldr    .+0x3406, r0
       ld     r1(#0x3411), r0
+      ld     r1(#-0x8000), r0
       ldar   r0, .+0x3505
       lda    r0, r1(#0x3511)
+      lda    r0, r1(#-0x8000)
       ldrl   rr0, .+0x3606
       ldl    rr0, r1(#0x3611)
+      ldl    rr0, r1(#-0x8000)
       ldrl   .+0x3806, rr0
       ldl    r1(#0x3811), rr0
+      ldl    r1(#-0x8000), rr0
       ldps   @r1
       inb    rh0, #0x3b05
       sinb   rh0, #0x3b06

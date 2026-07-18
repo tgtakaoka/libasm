@@ -16,20 +16,22 @@
 
 #include "dis_cp1600.h"
 #include "gen_driver.h"
+#include "tokenizer.h"
 
 using namespace libasm::cp1600;
 using namespace libasm::gen;
+
+namespace {
+const RegisterTokenizer REG_Rn("R", 7, "Rn");
+}  // namespace
 
 int main(int argc, const char **argv) {
     DisCp1600 dis1600;
     GenDriver driver(dis1600);
     if (driver.main(argc, argv))
         return 1;
-    // Emit C-style hex (0x..) so generated immediates/addresses dedup; the
-    // IBM X'..' form the disassembler defaults to is not collapsed.
-    dis1600.setOption("c-style", "enable");
 
-    TestGenerator generator(driver, dis1600, 0x0000);
+    TestGenerator generator(driver, dis1600, 0x0000, standardTokenizers<NationalNumber>(dis1600.curSym(), {&REG_Rn}));
     // Generate the unprefixed instruction set, then the SDBD-prefixed sequences
     // for external-reference instructions that consume the prefix.
     generator.generate().generate(0x0001);

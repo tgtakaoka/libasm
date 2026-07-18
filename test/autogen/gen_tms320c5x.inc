@@ -1298,6 +1298,7 @@
       XOR   #0C0D1H
       BSAR  1
       MPY   #0
+      MPY   #-4096
       BCND  0E101H, BIO
       BCND  0E102H, BIO,NC
       BCND  0E103H, BIO,NOV

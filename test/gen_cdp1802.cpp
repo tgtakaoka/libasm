@@ -16,9 +16,14 @@
 
 #include "dis_cdp1802.h"
 #include "gen_driver.h"
+#include "tokenizer.h"
 
 using namespace libasm::cdp1802;
 using namespace libasm::gen;
+
+namespace {
+const RegisterTokenizer REG_Rn("R", 15, "Rn");
+}  // namespace
 
 int main(int argc, const char **argv) {
     DisCdp1802 dis1802;
@@ -28,7 +33,7 @@ int main(int argc, const char **argv) {
 
     dis1802.setOption("intel-style", "true");
 
-    TestGenerator generator(driver, dis1802, 0x0100);
+    TestGenerator generator(driver, dis1802, 0x0100, standardTokenizers<IntelNumber>(dis1802.curSym(), {&REG_Rn}));
     generator.generate();
 
     return driver.close();

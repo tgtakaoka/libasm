@@ -16,9 +16,12 @@
 
 #include "dis_mc68hc16.h"
 #include "gen_driver.h"
+#include "tokenizer.h"
 
 using namespace libasm::mc68hc16;
 using namespace libasm::gen;
+
+static const IndexDispTokenizer<MotorolaNumber, CommaIndex> INDEX_TOK;  // INDEX_TOK_INSTANCE
 
 int main(int argc, const char **argv) {
     DisMc68HC16 dis6816;
@@ -30,7 +33,7 @@ int main(int argc, const char **argv) {
     if (driver.generateGas())
         dis6816.setOption("gnu-as", "enable");
 
-    TestGenerator generator(driver, dis6816, 0x10000);
+    TestGenerator generator(driver, dis6816, 0x10000, standardTokenizers<MotorolaNumber>(dis6816.curSym(), {&INDEX_TOK}));
     generator.generate();
 
     return driver.close();

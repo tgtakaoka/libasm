@@ -54,6 +54,7 @@
       subx.b   #5, r0
       divxu.b  #5, r0
       add:q.b  #1, @0x06:8
+      add:q.b  #-1, @0x06:8
       clr.b    @0x06:8
       neg.b    @0x06:8
       not.b    @0x06:8
@@ -163,6 +164,7 @@
       mov:g.w  #7, @0x0e:8
       mov:g.w  #0x0809, @0x0e:8
       add:q.w  #1, @0x0e:8
+      add:q.w  #-1, @0x0e:8
       bsr      .+17
       unlk     r6
       jmp      @0x1112:16
@@ -243,6 +245,7 @@
       cmp:g.b  #5, @0x1617:16
       mov:g.b  #7, @0x1617:16
       add:q.b  #1, @0x1617:16
+      add:q.b  #-1, @0x1617:16
       clr.b    @0x1617:16
       neg.b    @0x1617:16
       not.b    @0x1617:16
@@ -281,6 +284,7 @@
       cmp:g.w  #0x0607, @0x0304:16
       mov:g.w  #0x0809, @0x0506:16
       add:q.w  #1, @0x0506:16
+      add:q.w  #-1, @0x0506:16
       clr.w    @0x0506:16
       neg.w    @0x0506:16
       not.w    @0x0506:16
@@ -351,6 +355,7 @@
       dadd     r0, r0
       dsub     r0, r0
       add:q.b  #1, r0
+      add:q.b  #-1, r0
       swap     r0
       exts     r0
       extu     r0
@@ -398,6 +403,7 @@
       bnot.w   #0, r0
       btst.w   #0, r0
       add:q.w  #1, r0
+      add:q.w  #-1, r0
       clr.w    r0
       neg.w    r0
       not.w    r0
@@ -438,6 +444,7 @@
       cmp:g.b  #5, @-r0
       mov:g.b  #7, @-r0
       add:q.b  #1, @-r0
+      add:q.b  #-1, @-r0
       clr.b    @-r0
       neg.b    @-r0
       not.b    @-r0
@@ -487,6 +494,7 @@
       cmp:g.b  #5, @-sp
       mov:g.b  #7, @-sp
       add:q.b  #1, @-sp
+      add:q.b  #-1, @-sp
       clr.b    @-sp
       neg.b    @-sp
       not.b    @-sp
@@ -537,6 +545,7 @@
       mov:g.w  #7, @-r0
       mov:g.w  #0x0809, @-r0
       add:q.w  #1, @-r0
+      add:q.w  #-1, @-r0
       clr.w    @-r0
       neg.w    @-r0
       not.w    @-r0
@@ -577,6 +586,7 @@
       mov:g.w  #7, @-sp
       mov:g.w  #0x0809, @-sp
       add:q.w  #1, @-sp
+      add:q.w  #-1, @-sp
       clr.w    @-sp
       neg.w    @-sp
       not.w    @-sp
@@ -618,6 +628,7 @@
       cmp:g.b  #5, @r0+
       mov:g.b  #7, @r0+
       add:q.b  #1, @r0+
+      add:q.b  #-1, @r0+
       clr.b    @r0+
       neg.b    @r0+
       not.b    @r0+
@@ -667,6 +678,7 @@
       cmp:g.b  #5, @sp+
       mov:g.b  #7, @sp+
       add:q.b  #1, @sp+
+      add:q.b  #-1, @sp+
       clr.b    @sp+
       neg.b    @sp+
       not.b    @sp+
@@ -718,6 +730,7 @@
       mov:g.w  #7, @r0+
       mov:g.w  #0x0809, @r0+
       add:q.w  #1, @r0+
+      add:q.w  #-1, @r0+
       clr.w    @r0+
       neg.w    @r0+
       not.w    @r0+
@@ -758,6 +771,7 @@
       mov:g.w  #7, @sp+
       mov:g.w  #0x0809, @sp+
       add:q.w  #1, @sp+
+      add:q.w  #-1, @sp+
       clr.w    @sp+
       neg.w    @sp+
       not.w    @sp+
@@ -799,6 +813,7 @@
       cmp:g.b  #5, @r0
       mov:g.b  #7, @r0
       add:q.b  #1, @r0
+      add:q.b  #-1, @r0
       clr.b    @r0
       neg.b    @r0
       not.b    @r0
@@ -848,6 +863,7 @@
       cmp:g.b  #5, @sp
       mov:g.b  #7, @sp
       add:q.b  #1, @sp
+      add:q.b  #-1, @sp
       clr.b    @sp
       neg.b    @sp
       not.b    @sp
@@ -899,6 +915,7 @@
       mov:g.w  #7, @r0
       mov:g.w  #0x0809, @r0
       add:q.w  #1, @r0
+      add:q.w  #-1, @r0
       clr.w    @r0
       neg.w    @r0
       not.w    @r0
@@ -939,6 +956,7 @@
       mov:g.w  #7, @sp
       mov:g.w  #0x0809, @sp
       add:q.w  #1, @sp
+      add:q.w  #-1, @sp
       clr.w    @sp
       neg.w    @sp
       not.w    @sp
@@ -980,6 +998,7 @@
       cmp:g.b  #5, @(-31,r0)
       mov:g.b  #7, @(-31,r0)
       add:q.b  #1, @(-31,r0)
+      add:q.b  #-1, @(-31,r0)
       clr.b    @(-31,r0)
       neg.b    @(-31,r0)
       not.b    @(-31,r0)
@@ -1029,6 +1048,7 @@
       cmp:g.b  #5, @(-24,sp)
       mov:g.b  #7, @(-24,sp)
       add:q.b  #1, @(-24,sp)
+      add:q.b  #-1, @(-24,sp)
       clr.b    @(-24,sp)
       neg.b    @(-24,sp)
       not.b    @(-24,sp)
@@ -1080,6 +1100,7 @@
       mov:g.w  #7, @(-23,r0)
       mov:g.w  #0x0809, @(-23,r0)
       add:q.w  #1, @(-23,r0)
+      add:q.w  #-1, @(-23,r0)
       clr.w    @(-23,r0)
       neg.w    @(-23,r0)
       not.w    @(-23,r0)
@@ -1120,6 +1141,7 @@
       mov:g.w  #7, @(-16,sp)
       mov:g.w  #0x0809, @(-16,sp)
       add:q.w  #1, @(-16,sp)
+      add:q.w  #-1, @(-16,sp)
       clr.w    @(-16,sp)
       neg.w    @(-16,sp)
       not.w    @(-16,sp)
@@ -1161,6 +1183,7 @@
       cmp:g.b  #5, @(-0x0e0e,r0)
       mov:g.b  #7, @(-0x0e0e,r0)
       add:q.b  #1, @(-0x0e0e,r0)
+      add:q.b  #-1, @(-0x0e0e,r0)
       clr.b    @(-0x0e0e,r0)
       neg.b    @(-0x0e0e,r0)
       not.b    @(-0x0e0e,r0)
@@ -1210,6 +1233,7 @@
       cmp:g.b  #5, @(-0x0707,sp)
       mov:g.b  #7, @(-0x0707,sp)
       add:q.b  #1, @(-0x0707,sp)
+      add:q.b  #-1, @(-0x0707,sp)
       clr.b    @(-0x0707,sp)
       neg.b    @(-0x0707,sp)
       not.b    @(-0x0707,sp)
@@ -1259,6 +1283,7 @@
       cmp:g.w  #0x0607, @(0x0304,r0)
       mov:g.w  #0x0809, @(0x0506,r0)
       add:q.w  #1, @(0x0506,r0)
+      add:q.w  #-1, @(0x0506,r0)
       clr.w    @(0x0506,r0)
       neg.w    @(0x0506,r0)
       not.w    @(0x0506,r0)
@@ -1297,6 +1322,7 @@
       cmp:g.w  #0x0607, @(0x0304,sp)
       mov:g.w  #0x0809, @(0x0506,sp)
       add:q.w  #1, @(0x0506,sp)
+      add:q.w  #-1, @(0x0506,sp)
       clr.w    @(0x0506,sp)
       neg.w    @(0x0506,sp)
       not.w    @(0x0506,sp)

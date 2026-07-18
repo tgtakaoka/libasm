@@ -103,6 +103,7 @@
       DAC   B, A
       DSB   B, A
       INCW  #113, R114
+      INCW  #-128, R129
       MOV   R114, P115
       MOV   #73H, R116
       AND   #74H, R117
@@ -209,17 +210,28 @@
       TRAP  15
       DINT
       MOV   -14(SP), A
+      MOV   0(SP), A
       MOV   A, -13(SP)
+      MOV   A, 0(SP)
       CMP   -12(SP), A
+      CMP   0(SP), A
       DIV   R249, A
       MOVW  #-23(R234), R235
+      MOVW  #0(R1), R2
       JMPL  -22(R235)
+      JMPL  0(R1)
       MOV   -21(R236), A
+      MOV   0(R1), A
       MOV   A, -20(R237)
+      MOV   A, 0(R1)
       BR    -19(R238)
+      BR    0(R1)
       CMP   -18(R239), A
+      CMP   0(R1), A
       CALL  -17(R240)
+      CALL  0(R1)
       CALLR -16(R241)
+      CALLR 0(R1)
       IDLE
       MOV   #0F8H, P249
       SETC

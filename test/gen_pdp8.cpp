@@ -16,6 +16,7 @@
 
 #include "dis_pdp8.h"
 #include "gen_driver.h"
+#include "tokenizer.h"
 
 using namespace libasm::pdp8;
 using namespace libasm::gen;
@@ -29,7 +30,7 @@ int main(int argc, const char **argv) {
     dispdp8.setOption("list-radix", "16");
     dispdp8.setOption("intel-style", "on");
 
-    TestGenerator generator(driver, dispdp8, 0x080);
+    TestGenerator generator(driver, dispdp8, 0x080, standardTokenizers<IntelNumber>(dispdp8.curSym()));
     generator.generate();
 
     return driver.close();

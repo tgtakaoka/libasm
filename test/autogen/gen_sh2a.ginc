@@ -34,6 +34,8 @@
       sts    fpscr, r0
       rts/n
       rtv/n  r0
+      movi20 #-0x7fe7f, r0
+      movi20s    #-0x7fe7e00, r0
       pref   @r0
       mov.l  r0, @(0,r0)
       mov.b  r0, @r0
@@ -144,6 +146,7 @@
       exts.b r0, r0
       exts.w r0, r0
       add    #0, r0
+      add    #-0x80, r0
       mov.b  r0, @(0,r0)
       mov.w  r0, @(0,r0)
       mov.b  @(0,r0), r0
@@ -153,13 +156,14 @@
       bst    #0, r0
       bld    #0, r0
       cmp/eq #0, r0
-      bt     0x0000013a
-      bf     0x0000013c
-      bt/s   0x0000013e
-      bf/s   0x00000140
-      mov.w  0x00000142, r0
-      bra    0x00000144
-      bsr    0x00000146
+      cmp/eq #-0x80, r0
+      bt     0x00000146
+      bf     0x00000148
+      bt/s   0x0000014a
+      bf/s   0x0000014c
+      mov.w  0x0000014e, r0
+      bra    0x00000150
+      bsr    0x00000152
       mov.b  r0, @(0,gbr)
       mov.w  r0, @(0,gbr)
       mov.l  r0, @(0,gbr)
@@ -167,17 +171,26 @@
       mov.b  @(0,gbr), r0
       mov.w  @(0,gbr), r0
       mov.l  @(0,gbr), r0
-      mova   0x00000154, r0
+      mova   0x00000160, r0
       tst    #0, r0
+      tst    #-0x80, r0
       and    #0, r0
+      and    #-0x80, r0
       xor    #0, r0
+      xor    #-0x80, r0
       or     #0, r0
+      or     #-0x80, r0
       tst.b  #0, @(r0,gbr)
+      tst.b  #-0x80, @(r0,gbr)
       and.b  #0, @(r0,gbr)
+      and.b  #-0x80, @(r0,gbr)
       xor.b  #0, @(r0,gbr)
+      xor.b  #-0x80, @(r0,gbr)
       or.b   #0, @(r0,gbr)
-      mov.l  0x00000168, r0
+      or.b   #-0x80, @(r0,gbr)
+      mov.l  0x00000184, r0
       mov    #0, r0
+      mov    #-0x80, r0
       fadd   fr0, fr0
       fsub   fr0, fr0
       fmul   fr0, fr0

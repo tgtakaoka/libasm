@@ -124,21 +124,30 @@
       LDRB   RH0, $+3105H
       LDRB   RL0, $+310DH
       LDB    RH0, R1(#3111H)
+      LDB    RH0, R1(#-8000H)
       LDB    RL0, R1(#3119H)
+      LDB    RL0, R1(#-8000H)
       LDR    R0, $+3206H
       LD     R0, R1(#3211H)
+      LD     R0, R1(#-8000H)
       LDRB   $+3305H, RH0
       LDRB   $+330DH, RL0
       LDB    R1(#3311H), RH0
+      LDB    R1(#-8000H), RH0
       LDB    R1(#3319H), RL0
+      LDB    R1(#-8000H), RL0
       LDR    $+3406H, R0
       LD     R1(#3411H), R0
+      LD     R1(#-8000H), R0
       LDAR   R0, $+3505H
       LDA    R0, R1(#3511H)
+      LDA    R0, R1(#-8000H)
       LDRL   RR0, $+3606H
       LDL    RR0, R1(#3611H)
+      LDL    RR0, R1(#-8000H)
       LDRL   $+3806H, RR0
       LDL    R1(#3811H), RR0
+      LDL    R1(#-8000H), RR0
       LDPS   @R1
       INB    RH0, 3B05H
       SINB   RH0, 3B06H

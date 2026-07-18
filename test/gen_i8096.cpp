@@ -16,6 +16,7 @@
 
 #include "dis_i8096.h"
 #include "gen_driver.h"
+#include "tokenizer.h"
 
 using namespace libasm::i8096;
 using namespace libasm::gen;
@@ -28,7 +29,7 @@ int main(int argc, const char **argv) {
 
     dis8096.setOption("relative", "enable");
 
-    TestGenerator generator(driver, dis8096, 0x2000);
+    TestGenerator generator(driver, dis8096, 0x2000, standardTokenizers<IntelNumber>(dis8096.curSym()));
     generator.generate();
 
     return driver.close();

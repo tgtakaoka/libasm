@@ -16,9 +16,17 @@
 
 #include "dis_z8.h"
 #include "gen_driver.h"
+#include "tokenizer.h"
 
 using namespace libasm::z8;
 using namespace libasm::gen;
+
+namespace {
+// Working-register file: R0..R15 -> Rn, even register pairs RR0..RR14 -> RRn.
+// Order RRn before Rn so "RR4" is not split into "R" + "R4".
+const RegisterTokenizer REG_PAIR("RR", 14, "RRn");
+const RegisterTokenizer REG("R", 15, "Rn");
+}  // namespace
 
 int main(int argc, const char **argv) {
     DisZ8 disz8;
@@ -30,7 +38,8 @@ int main(int argc, const char **argv) {
     disz8.setOption("work-register", "disable");
     disz8.setOption("intel-style", "enable");
 
-    TestGenerator generator(driver, disz8, 0x0100);
+    TestGenerator generator(driver, disz8, 0x0100,
+            standardTokenizers<IntelNumber>(disz8.curSym(), {&REG_PAIR, &REG}));
     generator.generate();
 
     return driver.close();

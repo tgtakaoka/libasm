@@ -312,56 +312,31 @@
       LD    IX, (2C2BH)
       DEC   IX
       INC   (IX+53)
-      INC   (IX-128)
       DEC   (IX+54)
-      DEC   (IX-128)
       LD    (IX+55), 38H
-      LD    (IX-128), 81H
       ADD   IX, SP
       LD    B, (IX+71)
-      LD    B, (IX-128)
       LD    C, (IX+79)
-      LD    C, (IX-128)
       LD    D, (IX+87)
-      LD    D, (IX-128)
       LD    E, (IX+95)
-      LD    E, (IX-128)
       LD    H, (IX+103)
-      LD    H, (IX-128)
       LD    L, (IX+111)
-      LD    L, (IX-128)
       LD    (IX+113), B
-      LD    (IX-128), B
       LD    (IX+114), C
-      LD    (IX-128), C
       LD    (IX+115), D
-      LD    (IX-128), D
       LD    (IX+116), E
-      LD    (IX-128), E
       LD    (IX+117), H
-      LD    (IX-128), H
       LD    (IX+118), L
-      LD    (IX-128), L
       LD    (IX+120), A
-      LD    (IX-128), A
       LD    A, (IX+127)
-      LD    A, (IX-128)
       ADD   A, (IX-121)
-      ADD   A, (IX+0)
       ADC   A, (IX-113)
-      ADC   A, (IX+0)
       SUB   (IX-105)
-      SUB   (IX+0)
       SBC   A, (IX-97)
-      SBC   A, (IX+0)
       AND   (IX-89)
-      AND   (IX+0)
       XOR   (IX-81)
-      XOR   (IX+0)
       OR    (IX-73)
-      OR    (IX+0)
       CP    (IX-65)
-      CP    (IX+0)
       SET   1, (IX-52)
       RLC   (IX-52)
       RRC   (IX-52)
@@ -372,16 +347,6 @@
       SRL   (IX-52)
       BIT   0, (IX-52)
       RES   0, (IX-52)
-      RLC   (IX+0)
-      RRC   (IX+0)
-      RL    (IX+0)
-      RR    (IX+0)
-      SLA   (IX+0)
-      SRA   (IX+0)
-      SRL   (IX+0)
-      BIT   0, (IX+0)
-      RES   0, (IX+0)
-      SET   0, (IX+0)
       SBC   A, 0DFH
       RET   PO
       POP   HL
@@ -504,56 +469,31 @@
       LD    IY, (2C2BH)
       DEC   IY
       INC   (IY+53)
-      INC   (IY-128)
       DEC   (IY+54)
-      DEC   (IY-128)
       LD    (IY+55), 38H
-      LD    (IY-128), 81H
       ADD   IY, SP
       LD    B, (IY+71)
-      LD    B, (IY-128)
       LD    C, (IY+79)
-      LD    C, (IY-128)
       LD    D, (IY+87)
-      LD    D, (IY-128)
       LD    E, (IY+95)
-      LD    E, (IY-128)
       LD    H, (IY+103)
-      LD    H, (IY-128)
       LD    L, (IY+111)
-      LD    L, (IY-128)
       LD    (IY+113), B
-      LD    (IY-128), B
       LD    (IY+114), C
-      LD    (IY-128), C
       LD    (IY+115), D
-      LD    (IY-128), D
       LD    (IY+116), E
-      LD    (IY-128), E
       LD    (IY+117), H
-      LD    (IY-128), H
       LD    (IY+118), L
-      LD    (IY-128), L
       LD    (IY+120), A
-      LD    (IY-128), A
       LD    A, (IY+127)
-      LD    A, (IY-128)
       ADD   A, (IY-121)
-      ADD   A, (IY+0)
       ADC   A, (IY-113)
-      ADC   A, (IY+0)
       SUB   (IY-105)
-      SUB   (IY+0)
       SBC   A, (IY-97)
-      SBC   A, (IY+0)
       AND   (IY-89)
-      AND   (IY+0)
       XOR   (IY-81)
-      XOR   (IY+0)
       OR    (IY-73)
-      OR    (IY+0)
       CP    (IY-65)
-      CP    (IY+0)
       SET   1, (IY-52)
       RLC   (IY-52)
       RRC   (IY-52)
@@ -564,16 +504,6 @@
       SRL   (IY-52)
       BIT   0, (IY-52)
       RES   0, (IY-52)
-      RLC   (IY+0)
-      RRC   (IY+0)
-      RL    (IY+0)
-      RR    (IY+0)
-      SLA   (IY+0)
-      SRA   (IY+0)
-      SRL   (IY+0)
-      BIT   0, (IY+0)
-      RES   0, (IY+0)
-      SET   0, (IY+0)
       POP   IY
       EX    (SP), IY
       PUSH  IY

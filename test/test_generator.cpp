@@ -192,10 +192,12 @@ DataGenerator *DataGenerator::newChild() {
     return nullptr;
 }
 
-TestGenerator::TestGenerator(Formatter &formatter, Disassembler &disassembler, uint32_t addr)
+TestGenerator::TestGenerator(Formatter &formatter, Disassembler &disassembler, uint32_t addr,
+        TokenizerList tokenizers)
     : _formatter(formatter),
       _disassembler(disassembler),
       _disFormatter(formatter.formatter()),
+      _tokenizers(std::move(tokenizers)),
       _opCodeWidth(disassembler.config().opCodeWidth()),
       _endian(disassembler.config().endian()),
       _addressUnit(disassembler.config().addressUnit()),
@@ -272,29 +274,36 @@ void TestGenerator::dump() const {
     }
 }
 
-const TokenizedText *TestGenerator::_meaningfulTestData(
-        std::string &name, bool withSize, const Insn *cont, const char *contOpr) {
-    const auto &insn = _disFormatter.insn();
-    name = insn.name();
-    if (insn.hasContinue() && cont) {
-        name += insn.continueMark_P();
-        name += cont->name();
+Error TestGenerator::disasm(const ArrayMemory &memory, const char *mark_P) {
+    auto it = memory.iterator();
+    auto &insn = _disFormatter.insn();
+    auto &operands = _disFormatter.operands();
+    if (mark_P == nullptr) {
+        _disFormatter.reset();
+        insn.reset(_address / _addressUnit);
     }
-    if (withSize) {
-        const auto size = insn.length();
+    insn.setContinueMark_P(mark_P);
+    const auto error = _disassembler.decode(it, insn, operands.mark(), operands.capacity());
+    _disFormatter.set(insn, mark_P);
+    return error;
+}
+
+const TokenizedText *TestGenerator::_meaningfulTestData(
+        std::string &name, int size, const std::string &namePrefix, const std::string &oprPrefix) {
+    const auto &insn = _disFormatter.insn();
+    name = namePrefix;
+    name += insn.name();
+    if (size >= 0) {
         name += ':';
-        name += size + '0';
+        name += char(size + '0');
     }
     auto seen = _map.find(name);
     if (seen == _map.end())
         seen = _map.emplace(name, TokenizedText::Set()).first;
     auto &oprVariants = seen->second;
-    std::string operands{_disFormatter.operands().str()};
-    if (insn.hasContinue() && contOpr) {
-        operands += insn.continueMark_P();
-        operands += contOpr;
-    }
-    const TokenizedText opr{operands.c_str()};
+    std::string operands{oprPrefix};
+    operands += _disFormatter.operands().str();
+    const TokenizedText opr{operands.c_str(), _tokenizers};
     auto found = oprVariants.find(opr);
     if (found == oprVariants.end())
         found = oprVariants.insert(opr).first;
@@ -303,11 +312,11 @@ const TokenizedText *TestGenerator::_meaningfulTestData(
 }
 
 const TokenizedText *TestGenerator::meaningfulTestData(
-        std::string &name, const Insn *cont, const char *contOpr) {
-    auto found = _meaningfulTestData(name, true, cont, contOpr);
+        std::string &name, int size, const std::string &namePrefix, const std::string &oprPrefix) {
+    auto found = _meaningfulTestData(name, size, namePrefix, oprPrefix);
     if (found->count() == 1 && _ignoreSizeVariation) {
         std::string mnemonic;
-        found = _meaningfulTestData(mnemonic, false, cont, contOpr);
+        found = _meaningfulTestData(mnemonic, -1, namePrefix, oprPrefix);
     }
     return found;
 }
@@ -322,7 +331,7 @@ const TokenizedText *TestGenerator::meaningfulError(std::string &name) {
     if (seen == _error.end())
         seen = _error.emplace(name, TokenizedText::Set()).first;
     auto &oprVariants = seen->second;
-    const TokenizedText opr{_disFormatter.operands().str()};
+    const TokenizedText opr{_disFormatter.operands().str(), _tokenizers};
     auto found = oprVariants.find(opr);
     if (found == oprVariants.end())
         found = oprVariants.insert(opr).first;
@@ -342,39 +351,37 @@ uint8_t TestGenerator::generateTests(DataGenerator &gen, const bool root) {
     do {
         gen.next();
         const ArrayMemory memory(_address, _memory, gen.length());
-        auto it = memory.iterator();
-        _disFormatter.reset();
+        auto error = disasm(memory);
         auto &insn = _disFormatter.insn();
-        auto &operands = _disFormatter.operands();
-        insn.reset(_address / _addressUnit);
-        insn.setContinueMark_P(nullptr);
-        auto error = _disassembler.decode(it, insn, operands.mark(), operands.capacity());
-        _disFormatter.set(insn);
         const TokenizedText *found = nullptr;
         if (insn.isOK()) {
             const int len = gen.length();
             const int newLen = insn.length();
             std::string name;
+            const char *mark_P = nullptr;
             if (insn.hasContinue()) {
-                Insn cont(insn.address());
-                for (auto i = 0; i < newLen; ++i)
-                    cont.emitByte(insn.bytes()[i]);
-                cont.setContinueMark_P(insn.continueMark_P());
-                char operands[128];
-                error = _disassembler.decode(it, cont, operands, sizeof(operands));
+                // Snapshot the first half; the decision decode below overwrites it.
+                const std::string name1{insn.name()};
+                const std::string opr1{_disFormatter.operands().str()};
+                mark_P = insn.continueMark_P();
+                // Decision decode on the SAME insn -> carries cross-half state, so it
+                // reproduces errors (e.g. tms320 parallel DUPLICATE_REGISTER) that a
+                // fresh Insn would miss. Any error drops the whole continuation.
+                error = disasm(memory, mark_P);
                 if (error)
                     goto error_handling;
-                found = meaningfulTestData(name, &cont, operands);
+                found = meaningfulTestData(name, newLen, name1 + mark_P, opr1 + mark_P);
             } else {
-                found = meaningfulTestData(name);
+                found = meaningfulTestData(name, newLen);
             }
             if (found->count() == 1) {
                 // Found the first occurence of name/size/operand combination
-                _formatter.printList();
-                if (insn.hasContinue()) {
-                    const auto mark_P = insn.continueMark_P();
-                    _disassembler.decode(it, insn, operands.mark(), operands.capacity());
-                    _disFormatter.set(insn, mark_P);
+                if (mark_P) {
+                    disasm(memory);
+                    _formatter.printList();
+                    disasm(memory, mark_P);
+                    _formatter.printList();
+                } else {
                     _formatter.printList();
                 }
                 _address += newLen;

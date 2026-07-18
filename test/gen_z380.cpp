@@ -16,9 +16,12 @@
 
 #include "dis_z380.h"
 #include "gen_driver.h"
+#include "tokenizer.h"
 
 using namespace libasm::z380;
 using namespace libasm::gen;
+
+static const RegDispTokenizer<IntelNumber, ParenReg> INDEX_TOK;  // INDEX_TOK_INSTANCE
 
 int main(int argc, const char **argv) {
     DisZ380 disz380;
@@ -30,7 +33,7 @@ int main(int argc, const char **argv) {
     disz380.setOption("extmode", "on");
     disz380.setOption("lwordmode", "on");
 
-    TestGenerator generator(driver, disz380, 0x10000);
+    TestGenerator generator(driver, disz380, 0x10000, standardTokenizers<IntelNumber>(disz380.curSym(), {&INDEX_TOK}));
     generator.generate();
 
     return driver.close();

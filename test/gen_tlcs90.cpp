@@ -16,6 +16,7 @@
 
 #include "dis_tlcs90.h"
 #include "gen_driver.h"
+#include "tokenizer.h"
 
 using namespace libasm::tlcs90;
 using namespace libasm::gen;
@@ -28,7 +29,7 @@ int main(int argc, const char **argv) {
 
     dis90.setOption("relative", "enable");
 
-    TestGenerator generator(driver, dis90, 0x0100);
+    TestGenerator generator(driver, dis90, 0x0100, standardTokenizers<IntelNumber>(dis90.curSym()));
     generator.generate();
 
     return driver.close();

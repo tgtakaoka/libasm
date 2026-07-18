@@ -16,9 +16,20 @@
 
 #include "dis_mn1610.h"
 #include "gen_driver.h"
+#include "tokenizer.h"
 
 using namespace libasm::mn1610;
 using namespace libasm::gen;
+
+
+namespace {
+// mn1613 adds segment/double registers TSR0-1, OSR0-3, DR0.
+const RegisterTokenizer REG_TSRn("TSR", 1, "TSRn");
+const RegisterTokenizer REG_OSRn("OSR", 3, "OSRn");
+const RegisterTokenizer REG_DRn("DR", 0, "DRn");
+const RegisterTokenizer REG_Rn("R", 4, "Rn");
+const RegisterTokenizer REG_Xn("X", 1, "Xn");
+}  // namespace
 
 int main(int argc, const char **argv) {
     DisMn1610 dis1610;
@@ -29,7 +40,7 @@ int main(int argc, const char **argv) {
     dis1610.setOption("relative", "enable");
     dis1610.setOption("intel-style", "enable");
 
-    TestGenerator generator(driver, dis1610, 0x0100);
+    TestGenerator generator(driver, dis1610, 0x0100, standardTokenizers<IntelNumber>(dis1610.curSym(), {&REG_TSRn, &REG_OSRn, &REG_DRn, &REG_Rn, &REG_Xn}));
     generator.generate();
 
     return driver.close();

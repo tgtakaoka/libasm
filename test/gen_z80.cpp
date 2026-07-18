@@ -16,9 +16,12 @@
 
 #include "dis_z80.h"
 #include "gen_driver.h"
+#include "tokenizer.h"
 
 using namespace libasm::z80;
 using namespace libasm::gen;
+
+static const RegDispTokenizer<IntelNumber, ParenReg> INDEX_TOK;  // INDEX_TOK_INSTANCE
 
 int main(int argc, const char **argv) {
     DisZ80 disz80;
@@ -28,7 +31,7 @@ int main(int argc, const char **argv) {
 
     disz80.setOption("relative", "enable");
 
-    TestGenerator generator(driver, disz80, 0x0100);
+    TestGenerator generator(driver, disz80, 0x0100, standardTokenizers<IntelNumber>(disz80.curSym(), {&INDEX_TOK}));
     generator.generate();
 
     return driver.close();

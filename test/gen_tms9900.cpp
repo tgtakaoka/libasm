@@ -16,9 +16,15 @@
 
 #include "dis_tms9900.h"
 #include "gen_driver.h"
+#include "tokenizer.h"
 
 using namespace libasm::tms9900;
 using namespace libasm::gen;
+
+
+namespace {
+const RegisterTokenizer REG_Rn("R", 15, "Rn");
+}  // namespace
 
 int main(int argc, const char **argv) {
     DisTms9900 dis9900;
@@ -29,7 +35,7 @@ int main(int argc, const char **argv) {
     dis9900.setOption("relative", "enable");
     dis9900.setOption("intel-style", "true");
 
-    TestGenerator generator(driver, dis9900, 0x0100);
+    TestGenerator generator(driver, dis9900, 0x0100, standardTokenizers<IntelNumber>(dis9900.curSym(), {&REG_Rn}));
     generator.generate();
 
     return driver.close();

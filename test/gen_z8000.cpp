@@ -14,11 +14,54 @@
  * limitations under the License.
  */
 
+#include <cctype>
+
 #include "dis_z8000.h"
 #include "gen_driver.h"
+#include "tokenizer.h"
 
 using namespace libasm::z8000;
 using namespace libasm::gen;
+
+namespace {
+
+// Match a Z8001 extern symbol "seg_SS_off_XXXX" (2 + 4 hex digits) emitted by
+// DisZ8000 with the extern-symbol option (gas path).  Collapse to "s" so the
+// generator dedups across addresses instead of one test per segmented address.
+struct Z8001ExternSymTokenizer : Tokenizer {
+    const char *tokenize(const char *p, std::string &out) const override {
+        if (p[0] != 's' || p[1] != 'e' || p[2] != 'g' || p[3] != '_')
+            return nullptr;
+        if (!isxdigit(p[4]) || !isxdigit(p[5]))
+            return nullptr;
+        if (p[6] != '_' || p[7] != 'o' || p[8] != 'f' || p[9] != 'f' || p[10] != '_')
+            return nullptr;
+        if (!isxdigit(p[11]) || !isxdigit(p[12]) || !isxdigit(p[13]) || !isxdigit(p[14]))
+            return nullptr;
+        out.push_back('s');
+        return p + 15;
+    }
+};
+
+const Z8001ExternSymTokenizer EXTERN_SYM;
+// Register file: word R0-R15, byte RH0-RH7/RL0-RL7, long RR0-RR14, quad RQ0-RQ12.
+// Order longer prefixes first so "RR4"/"RQ4"/"RH4"/"RL4" are not split by "R".
+const RegisterTokenizer REG_RQ("RQ", 12, "RQn");
+const RegisterTokenizer REG_RR("RR", 14, "RRn");
+const RegisterTokenizer REG_RH("RH", 7, "RHn");
+const RegisterTokenizer REG_RL("RL", 7, "RLn");
+const RegisterTokenizer REG_R("R", 15, "Rn");
+
+// |Hex| = IntelNumber (native ..H) or CstyleNumber (gnu-as 0x..).
+template <class Hex>
+TokenizerList tokenizers(char loc) {
+    TokenizerList list =
+            standardTokenizers<Hex>(loc, {&REG_RQ, &REG_RR, &REG_RH, &REG_RL, &REG_R});
+    list.push_back(&EXTERN_SYM);
+    return list;
+}
+
+}  // namespace
 
 int main(int argc, const char **argv) {
     DisZ8000 dis8000;
@@ -46,7 +89,10 @@ int main(int argc, const char **argv) {
     // collide with .text.  Z8002 (16-bit, non-segmented) keeps 0x1000.
     const Config::uintptr_t org =
             dis8000.addressWidth() == libasm::ADDRESS_16BIT ? 0x1000 : 0x20000;
-    TestGenerator generator(driver, dis8000, org);
+    const auto sym = dis8000.curSym();
+    const auto toks = driver.generateGas() ? tokenizers<CstyleNumber>(sym)
+                                           : tokenizers<IntelNumber>(sym);
+    TestGenerator generator(driver, dis8000, org, toks);
     generator.generate();
 
     return driver.close();

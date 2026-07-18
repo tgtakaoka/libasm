@@ -1147,9 +1147,13 @@
       BRCLR  $3C3D, #$3B, *+$3E46
       BRSET  $3D3E, #$3C, *+$3F46
       AIX    #$3D
+      AIX    #-$80
       AIY    #$3E
+      AIY    #-$80
       AIZ    #$3F
+      AIZ    #-$80
       AIS    #$40
+      AIS    #-$80
       SUBA   $41,X
       ADDA   $42,X
       SBCA   $43,X
@@ -1210,7 +1214,11 @@
       BITA   #$7A
       JMP    $00102
       MAC    7, -4
+      MAC    -8, 0
+      MAC    -8, -8
+      MAC    0, 0
       ADDE   #$7D
+      ADDE   #-$80
       SUBD   $81,X
       ADDD   $82,X
       SBCD   $83,X
@@ -1335,4 +1343,8 @@
       BITB   #$FA
       JSR    $00102
       RMAC   -1, -4
+      RMAC   0, 0
+      RMAC   0, -8
+      RMAC   -8, 0
       ADDD   #-3
+      ADDD   #0

@@ -31,6 +31,7 @@
       ABSF     *AR0++(IR0)B, R0
       ABSF     1, R0
       ABSF     1.0005, R0
+      ABSF     -2, R0
       ABSI     R0
       ABSI     R1, R0
       ABSI     AR0, R0
@@ -45,6 +46,7 @@
       ABSI     RS, R0
       ABSI     RE, R0
       ABSI     RC, R0
+      ABSI     R-1, R0
       ABSI     R0, AR0
       ABSI     AR0
       ABSI     AR1, AR0
@@ -59,6 +61,7 @@
       ABSI     RS, AR0
       ABSI     RE, AR0
       ABSI     RC, AR0
+      ABSI     R-1, AR0
       ABSI     R0, DP
       ABSI     AR0, DP
       ABSI     DP
@@ -72,6 +75,7 @@
       ABSI     RS, DP
       ABSI     RE, DP
       ABSI     RC, DP
+      ABSI     R-1, DP
       ABSI     R0, IR0
       ABSI     AR0, IR0
       ABSI     DP, IR0
@@ -86,6 +90,7 @@
       ABSI     RS, IR0
       ABSI     RE, IR0
       ABSI     RC, IR0
+      ABSI     R-1, IR0
       ABSI     R0, BK
       ABSI     AR0, BK
       ABSI     DP, BK
@@ -99,6 +104,7 @@
       ABSI     RS, BK
       ABSI     RE, BK
       ABSI     RC, BK
+      ABSI     R-1, BK
       ABSI     R0, SP
       ABSI     AR0, SP
       ABSI     DP, SP
@@ -112,6 +118,7 @@
       ABSI     RS, SP
       ABSI     RE, SP
       ABSI     RC, SP
+      ABSI     R-1, SP
       ABSI     R0, ST
       ABSI     AR0, ST
       ABSI     DP, ST
@@ -125,6 +132,7 @@
       ABSI     RS, ST
       ABSI     RE, ST
       ABSI     RC, ST
+      ABSI     R-1, ST
       ABSI     R0, IE
       ABSI     AR0, IE
       ABSI     DP, IE
@@ -138,6 +146,7 @@
       ABSI     RS, IE
       ABSI     RE, IE
       ABSI     RC, IE
+      ABSI     R-1, IE
       ABSI     R0, IF
       ABSI     AR0, IF
       ABSI     DP, IF
@@ -151,6 +160,7 @@
       ABSI     RS, IF
       ABSI     RE, IF
       ABSI     RC, IF
+      ABSI     R-1, IF
       ABSI     R0, IOF
       ABSI     AR0, IOF
       ABSI     DP, IOF
@@ -164,6 +174,7 @@
       ABSI     RS, IOF
       ABSI     RE, IOF
       ABSI     RC, IOF
+      ABSI     R-1, IOF
       ABSI     R0, RS
       ABSI     AR0, RS
       ABSI     DP, RS
@@ -177,6 +188,7 @@
       ABSI     RS
       ABSI     RE, RS
       ABSI     RC, RS
+      ABSI     R-1, RS
       ABSI     R0, RE
       ABSI     AR0, RE
       ABSI     DP, RE
@@ -190,6 +202,7 @@
       ABSI     RS, RE
       ABSI     RE
       ABSI     RC, RE
+      ABSI     R-1, RE
       ABSI     R0, RC
       ABSI     AR0, RC
       ABSI     DP, RC
@@ -203,6 +216,7 @@
       ABSI     RS, RC
       ABSI     RE, RC
       ABSI     RC
+      ABSI     R-1, RC
       ABSI     @000000H, R0
       ABSI     @000000H, AR0
       ABSI     @000000H, DP
@@ -555,18 +569,31 @@
       ABSI     *AR0, RC
       ABSI     *AR0++(IR0)B, RC
       ABSI     0, R0
+      ABSI     -8000H, R0
       ABSI     0, AR0
+      ABSI     -8000H, AR0
       ABSI     0, DP
+      ABSI     -8000H, DP
       ABSI     0, IR0
+      ABSI     -8000H, IR0
       ABSI     0, BK
+      ABSI     -8000H, BK
       ABSI     0, SP
+      ABSI     -8000H, SP
       ABSI     0, ST
+      ABSI     -8000H, ST
       ABSI     0, IE
+      ABSI     -8000H, IE
       ABSI     0, IF
+      ABSI     -8000H, IF
       ABSI     0, IOF
+      ABSI     -8000H, IOF
       ABSI     0, RS
+      ABSI     -8000H, RS
       ABSI     0, RE
+      ABSI     -8000H, RE
       ABSI     0, RC
+      ABSI     -8000H, RC
       ADDC     R0, R0
       ADDC     AR0, R0
       ADDC     DP, R0
@@ -580,6 +607,7 @@
       ADDC     RS, R0
       ADDC     RE, R0
       ADDC     RC, R0
+      ADDC     R-1, R0
       ADDC     R0, AR0
       ADDC     AR0, AR0
       ADDC     DP, AR0
@@ -593,6 +621,7 @@
       ADDC     RS, AR0
       ADDC     RE, AR0
       ADDC     RC, AR0
+      ADDC     R-1, AR0
       ADDC     R0, DP
       ADDC     AR0, DP
       ADDC     DP, DP
@@ -606,6 +635,7 @@
       ADDC     RS, DP
       ADDC     RE, DP
       ADDC     RC, DP
+      ADDC     R-1, DP
       ADDC     R0, IR0
       ADDC     AR0, IR0
       ADDC     DP, IR0
@@ -619,6 +649,7 @@
       ADDC     RS, IR0
       ADDC     RE, IR0
       ADDC     RC, IR0
+      ADDC     R-1, IR0
       ADDC     R0, BK
       ADDC     AR0, BK
       ADDC     DP, BK
@@ -632,6 +663,7 @@
       ADDC     RS, BK
       ADDC     RE, BK
       ADDC     RC, BK
+      ADDC     R-1, BK
       ADDC     R0, SP
       ADDC     AR0, SP
       ADDC     DP, SP
@@ -645,6 +677,7 @@
       ADDC     RS, SP
       ADDC     RE, SP
       ADDC     RC, SP
+      ADDC     R-1, SP
       ADDC     R0, ST
       ADDC     AR0, ST
       ADDC     DP, ST
@@ -658,6 +691,7 @@
       ADDC     RS, ST
       ADDC     RE, ST
       ADDC     RC, ST
+      ADDC     R-1, ST
       ADDC     R0, IE
       ADDC     AR0, IE
       ADDC     DP, IE
@@ -671,6 +705,7 @@
       ADDC     RS, IE
       ADDC     RE, IE
       ADDC     RC, IE
+      ADDC     R-1, IE
       ADDC     R0, IF
       ADDC     AR0, IF
       ADDC     DP, IF
@@ -684,6 +719,7 @@
       ADDC     RS, IF
       ADDC     RE, IF
       ADDC     RC, IF
+      ADDC     R-1, IF
       ADDC     R0, IOF
       ADDC     AR0, IOF
       ADDC     DP, IOF
@@ -697,6 +733,7 @@
       ADDC     RS, IOF
       ADDC     RE, IOF
       ADDC     RC, IOF
+      ADDC     R-1, IOF
       ADDC     R0, RS
       ADDC     AR0, RS
       ADDC     DP, RS
@@ -710,6 +747,7 @@
       ADDC     RS, RS
       ADDC     RE, RS
       ADDC     RC, RS
+      ADDC     R-1, RS
       ADDC     R0, RE
       ADDC     AR0, RE
       ADDC     DP, RE
@@ -723,6 +761,7 @@
       ADDC     RS, RE
       ADDC     RE, RE
       ADDC     RC, RE
+      ADDC     R-1, RE
       ADDC     R0, RC
       ADDC     AR0, RC
       ADDC     DP, RC
@@ -736,6 +775,7 @@
       ADDC     RS, RC
       ADDC     RE, RC
       ADDC     RC, RC
+      ADDC     R-1, RC
       ADDC     @000000H, R0
       ADDC     @000000H, AR0
       ADDC     @000000H, DP
@@ -1088,18 +1128,31 @@
       ADDC     *AR0, RC
       ADDC     *AR0++(IR0)B, RC
       ADDC     0, R0
+      ADDC     -8000H, R0
       ADDC     0, AR0
+      ADDC     -8000H, AR0
       ADDC     0, DP
+      ADDC     -8000H, DP
       ADDC     0, IR0
+      ADDC     -8000H, IR0
       ADDC     0, BK
+      ADDC     -8000H, BK
       ADDC     0, SP
+      ADDC     -8000H, SP
       ADDC     0, ST
+      ADDC     -8000H, ST
       ADDC     0, IE
+      ADDC     -8000H, IE
       ADDC     0, IF
+      ADDC     -8000H, IF
       ADDC     0, IOF
+      ADDC     -8000H, IOF
       ADDC     0, RS
+      ADDC     -8000H, RS
       ADDC     0, RE
+      ADDC     -8000H, RE
       ADDC     0, RC
+      ADDC     -8000H, RC
       ADDF     R0, R0
       ADDF     @000000H, R0
       ADDF     *+AR0(0), R0
@@ -1130,6 +1183,7 @@
       ADDF     *AR0++(IR0)B, R0
       ADDF     1, R0
       ADDF     1.0005, R0
+      ADDF     -2, R0
       ADDI     R0, R0
       ADDI     AR0, R0
       ADDI     DP, R0
@@ -1143,6 +1197,7 @@
       ADDI     RS, R0
       ADDI     RE, R0
       ADDI     RC, R0
+      ADDI     R-1, R0
       ADDI     R0, AR0
       ADDI     AR0, AR0
       ADDI     DP, AR0
@@ -1156,6 +1211,7 @@
       ADDI     RS, AR0
       ADDI     RE, AR0
       ADDI     RC, AR0
+      ADDI     R-1, AR0
       ADDI     R0, DP
       ADDI     AR0, DP
       ADDI     DP, DP
@@ -1169,6 +1225,7 @@
       ADDI     RS, DP
       ADDI     RE, DP
       ADDI     RC, DP
+      ADDI     R-1, DP
       ADDI     R0, IR0
       ADDI     AR0, IR0
       ADDI     DP, IR0
@@ -1182,6 +1239,7 @@
       ADDI     RS, IR0
       ADDI     RE, IR0
       ADDI     RC, IR0
+      ADDI     R-1, IR0
       ADDI     R0, BK
       ADDI     AR0, BK
       ADDI     DP, BK
@@ -1195,6 +1253,7 @@
       ADDI     RS, BK
       ADDI     RE, BK
       ADDI     RC, BK
+      ADDI     R-1, BK
       ADDI     R0, SP
       ADDI     AR0, SP
       ADDI     DP, SP
@@ -1208,6 +1267,7 @@
       ADDI     RS, SP
       ADDI     RE, SP
       ADDI     RC, SP
+      ADDI     R-1, SP
       ADDI     R0, ST
       ADDI     AR0, ST
       ADDI     DP, ST
@@ -1221,6 +1281,7 @@
       ADDI     RS, ST
       ADDI     RE, ST
       ADDI     RC, ST
+      ADDI     R-1, ST
       ADDI     R0, IE
       ADDI     AR0, IE
       ADDI     DP, IE
@@ -1234,6 +1295,7 @@
       ADDI     RS, IE
       ADDI     RE, IE
       ADDI     RC, IE
+      ADDI     R-1, IE
       ADDI     R0, IF
       ADDI     AR0, IF
       ADDI     DP, IF
@@ -1247,6 +1309,7 @@
       ADDI     RS, IF
       ADDI     RE, IF
       ADDI     RC, IF
+      ADDI     R-1, IF
       ADDI     R0, IOF
       ADDI     AR0, IOF
       ADDI     DP, IOF
@@ -1260,6 +1323,7 @@
       ADDI     RS, IOF
       ADDI     RE, IOF
       ADDI     RC, IOF
+      ADDI     R-1, IOF
       ADDI     R0, RS
       ADDI     AR0, RS
       ADDI     DP, RS
@@ -1273,6 +1337,7 @@
       ADDI     RS, RS
       ADDI     RE, RS
       ADDI     RC, RS
+      ADDI     R-1, RS
       ADDI     R0, RE
       ADDI     AR0, RE
       ADDI     DP, RE
@@ -1286,6 +1351,7 @@
       ADDI     RS, RE
       ADDI     RE, RE
       ADDI     RC, RE
+      ADDI     R-1, RE
       ADDI     R0, RC
       ADDI     AR0, RC
       ADDI     DP, RC
@@ -1299,6 +1365,7 @@
       ADDI     RS, RC
       ADDI     RE, RC
       ADDI     RC, RC
+      ADDI     R-1, RC
       ADDI     @000000H, R0
       ADDI     @000000H, AR0
       ADDI     @000000H, DP
@@ -1651,18 +1718,31 @@
       ADDI     *AR0, RC
       ADDI     *AR0++(IR0)B, RC
       ADDI     0, R0
+      ADDI     -8000H, R0
       ADDI     0, AR0
+      ADDI     -8000H, AR0
       ADDI     0, DP
+      ADDI     -8000H, DP
       ADDI     0, IR0
+      ADDI     -8000H, IR0
       ADDI     0, BK
+      ADDI     -8000H, BK
       ADDI     0, SP
+      ADDI     -8000H, SP
       ADDI     0, ST
+      ADDI     -8000H, ST
       ADDI     0, IE
+      ADDI     -8000H, IE
       ADDI     0, IF
+      ADDI     -8000H, IF
       ADDI     0, IOF
+      ADDI     -8000H, IOF
       ADDI     0, RS
+      ADDI     -8000H, RS
       ADDI     0, RE
+      ADDI     -8000H, RE
       ADDI     0, RC
+      ADDI     -8000H, RC
       AND      R0, R0
       AND      AR0, R0
       AND      DP, R0
@@ -1676,6 +1756,7 @@
       AND      RS, R0
       AND      RE, R0
       AND      RC, R0
+      AND      R-1, R0
       AND      R0, AR0
       AND      AR0, AR0
       AND      DP, AR0
@@ -1689,6 +1770,7 @@
       AND      RS, AR0
       AND      RE, AR0
       AND      RC, AR0
+      AND      R-1, AR0
       AND      R0, DP
       AND      AR0, DP
       AND      DP, DP
@@ -1702,6 +1784,7 @@
       AND      RS, DP
       AND      RE, DP
       AND      RC, DP
+      AND      R-1, DP
       AND      R0, IR0
       AND      AR0, IR0
       AND      DP, IR0
@@ -1715,6 +1798,7 @@
       AND      RS, IR0
       AND      RE, IR0
       AND      RC, IR0
+      AND      R-1, IR0
       AND      R0, BK
       AND      AR0, BK
       AND      DP, BK
@@ -1728,6 +1812,7 @@
       AND      RS, BK
       AND      RE, BK
       AND      RC, BK
+      AND      R-1, BK
       AND      R0, SP
       AND      AR0, SP
       AND      DP, SP
@@ -1741,6 +1826,7 @@
       AND      RS, SP
       AND      RE, SP
       AND      RC, SP
+      AND      R-1, SP
       AND      R0, ST
       AND      AR0, ST
       AND      DP, ST
@@ -1754,6 +1840,7 @@
       AND      RS, ST
       AND      RE, ST
       AND      RC, ST
+      AND      R-1, ST
       AND      R0, IE
       AND      AR0, IE
       AND      DP, IE
@@ -1767,6 +1854,7 @@
       AND      RS, IE
       AND      RE, IE
       AND      RC, IE
+      AND      R-1, IE
       AND      R0, IF
       AND      AR0, IF
       AND      DP, IF
@@ -1780,6 +1868,7 @@
       AND      RS, IF
       AND      RE, IF
       AND      RC, IF
+      AND      R-1, IF
       AND      R0, IOF
       AND      AR0, IOF
       AND      DP, IOF
@@ -1793,6 +1882,7 @@
       AND      RS, IOF
       AND      RE, IOF
       AND      RC, IOF
+      AND      R-1, IOF
       AND      R0, RS
       AND      AR0, RS
       AND      DP, RS
@@ -1806,6 +1896,7 @@
       AND      RS, RS
       AND      RE, RS
       AND      RC, RS
+      AND      R-1, RS
       AND      R0, RE
       AND      AR0, RE
       AND      DP, RE
@@ -1819,6 +1910,7 @@
       AND      RS, RE
       AND      RE, RE
       AND      RC, RE
+      AND      R-1, RE
       AND      R0, RC
       AND      AR0, RC
       AND      DP, RC
@@ -1832,6 +1924,7 @@
       AND      RS, RC
       AND      RE, RC
       AND      RC, RC
+      AND      R-1, RC
       AND      @000000H, R0
       AND      @000000H, AR0
       AND      @000000H, DP
@@ -2209,6 +2302,7 @@
       ANDN     RS, R0
       ANDN     RE, R0
       ANDN     RC, R0
+      ANDN     R-1, R0
       ANDN     R0, AR0
       ANDN     AR0, AR0
       ANDN     DP, AR0
@@ -2222,6 +2316,7 @@
       ANDN     RS, AR0
       ANDN     RE, AR0
       ANDN     RC, AR0
+      ANDN     R-1, AR0
       ANDN     R0, DP
       ANDN     AR0, DP
       ANDN     DP, DP
@@ -2235,6 +2330,7 @@
       ANDN     RS, DP
       ANDN     RE, DP
       ANDN     RC, DP
+      ANDN     R-1, DP
       ANDN     R0, IR0
       ANDN     AR0, IR0
       ANDN     DP, IR0
@@ -2248,6 +2344,7 @@
       ANDN     RS, IR0
       ANDN     RE, IR0
       ANDN     RC, IR0
+      ANDN     R-1, IR0
       ANDN     R0, BK
       ANDN     AR0, BK
       ANDN     DP, BK
@@ -2261,6 +2358,7 @@
       ANDN     RS, BK
       ANDN     RE, BK
       ANDN     RC, BK
+      ANDN     R-1, BK
       ANDN     R0, SP
       ANDN     AR0, SP
       ANDN     DP, SP
@@ -2274,6 +2372,7 @@
       ANDN     RS, SP
       ANDN     RE, SP
       ANDN     RC, SP
+      ANDN     R-1, SP
       ANDN     R0, ST
       ANDN     AR0, ST
       ANDN     DP, ST
@@ -2287,6 +2386,7 @@
       ANDN     RS, ST
       ANDN     RE, ST
       ANDN     RC, ST
+      ANDN     R-1, ST
       ANDN     R0, IE
       ANDN     AR0, IE
       ANDN     DP, IE
@@ -2300,6 +2400,7 @@
       ANDN     RS, IE
       ANDN     RE, IE
       ANDN     RC, IE
+      ANDN     R-1, IE
       ANDN     R0, IF
       ANDN     AR0, IF
       ANDN     DP, IF
@@ -2313,6 +2414,7 @@
       ANDN     RS, IF
       ANDN     RE, IF
       ANDN     RC, IF
+      ANDN     R-1, IF
       ANDN     R0, IOF
       ANDN     AR0, IOF
       ANDN     DP, IOF
@@ -2326,6 +2428,7 @@
       ANDN     RS, IOF
       ANDN     RE, IOF
       ANDN     RC, IOF
+      ANDN     R-1, IOF
       ANDN     R0, RS
       ANDN     AR0, RS
       ANDN     DP, RS
@@ -2339,6 +2442,7 @@
       ANDN     RS, RS
       ANDN     RE, RS
       ANDN     RC, RS
+      ANDN     R-1, RS
       ANDN     R0, RE
       ANDN     AR0, RE
       ANDN     DP, RE
@@ -2352,6 +2456,7 @@
       ANDN     RS, RE
       ANDN     RE, RE
       ANDN     RC, RE
+      ANDN     R-1, RE
       ANDN     R0, RC
       ANDN     AR0, RC
       ANDN     DP, RC
@@ -2365,6 +2470,7 @@
       ANDN     RS, RC
       ANDN     RE, RC
       ANDN     RC, RC
+      ANDN     R-1, RC
       ANDN     @000000H, R0
       ANDN     @000000H, AR0
       ANDN     @000000H, DP
@@ -2742,6 +2848,7 @@
       ASH      RS, R0
       ASH      RE, R0
       ASH      RC, R0
+      ASH      R-1, R0
       ASH      R0, AR0
       ASH      AR0, AR0
       ASH      DP, AR0
@@ -2755,6 +2862,7 @@
       ASH      RS, AR0
       ASH      RE, AR0
       ASH      RC, AR0
+      ASH      R-1, AR0
       ASH      R0, DP
       ASH      AR0, DP
       ASH      DP, DP
@@ -2768,6 +2876,7 @@
       ASH      RS, DP
       ASH      RE, DP
       ASH      RC, DP
+      ASH      R-1, DP
       ASH      R0, IR0
       ASH      AR0, IR0
       ASH      DP, IR0
@@ -2781,6 +2890,7 @@
       ASH      RS, IR0
       ASH      RE, IR0
       ASH      RC, IR0
+      ASH      R-1, IR0
       ASH      R0, BK
       ASH      AR0, BK
       ASH      DP, BK
@@ -2794,6 +2904,7 @@
       ASH      RS, BK
       ASH      RE, BK
       ASH      RC, BK
+      ASH      R-1, BK
       ASH      R0, SP
       ASH      AR0, SP
       ASH      DP, SP
@@ -2807,6 +2918,7 @@
       ASH      RS, SP
       ASH      RE, SP
       ASH      RC, SP
+      ASH      R-1, SP
       ASH      R0, ST
       ASH      AR0, ST
       ASH      DP, ST
@@ -2820,6 +2932,7 @@
       ASH      RS, ST
       ASH      RE, ST
       ASH      RC, ST
+      ASH      R-1, ST
       ASH      R0, IE
       ASH      AR0, IE
       ASH      DP, IE
@@ -2833,6 +2946,7 @@
       ASH      RS, IE
       ASH      RE, IE
       ASH      RC, IE
+      ASH      R-1, IE
       ASH      R0, IF
       ASH      AR0, IF
       ASH      DP, IF
@@ -2846,6 +2960,7 @@
       ASH      RS, IF
       ASH      RE, IF
       ASH      RC, IF
+      ASH      R-1, IF
       ASH      R0, IOF
       ASH      AR0, IOF
       ASH      DP, IOF
@@ -2859,6 +2974,7 @@
       ASH      RS, IOF
       ASH      RE, IOF
       ASH      RC, IOF
+      ASH      R-1, IOF
       ASH      R0, RS
       ASH      AR0, RS
       ASH      DP, RS
@@ -2872,6 +2988,7 @@
       ASH      RS, RS
       ASH      RE, RS
       ASH      RC, RS
+      ASH      R-1, RS
       ASH      R0, RE
       ASH      AR0, RE
       ASH      DP, RE
@@ -2885,6 +3002,7 @@
       ASH      RS, RE
       ASH      RE, RE
       ASH      RC, RE
+      ASH      R-1, RE
       ASH      R0, RC
       ASH      AR0, RC
       ASH      DP, RC
@@ -2898,6 +3016,7 @@
       ASH      RS, RC
       ASH      RE, RC
       ASH      RC, RC
+      ASH      R-1, RC
       ASH      @000000H, R0
       ASH      @000000H, AR0
       ASH      @000000H, DP
@@ -3250,18 +3369,31 @@
       ASH      *AR0, RC
       ASH      *AR0++(IR0)B, RC
       ASH      0, R0
+      ASH      -64, R0
       ASH      0, AR0
+      ASH      -64, AR0
       ASH      0, DP
+      ASH      -64, DP
       ASH      0, IR0
+      ASH      -64, IR0
       ASH      0, BK
+      ASH      -64, BK
       ASH      0, SP
+      ASH      -64, SP
       ASH      0, ST
+      ASH      -64, ST
       ASH      0, IE
+      ASH      -64, IE
       ASH      0, IF
+      ASH      -64, IF
       ASH      0, IOF
+      ASH      -64, IOF
       ASH      0, RS
+      ASH      -64, RS
       ASH      0, RE
+      ASH      -64, RE
       ASH      0, RC
+      ASH      -64, RC
       CMPF     R0, R0
       CMPF     @000000H, R0
       CMPF     *+AR0(0), R0
@@ -3292,6 +3424,7 @@
       CMPF     *AR0++(IR0)B, R0
       CMPF     1, R0
       CMPF     1.0005, R0
+      CMPF     -2, R0
       CMPI     R0, R0
       CMPI     AR0, R0
       CMPI     DP, R0
@@ -3305,6 +3438,7 @@
       CMPI     RS, R0
       CMPI     RE, R0
       CMPI     RC, R0
+      CMPI     R-1, R0
       CMPI     R0, AR0
       CMPI     AR0, AR0
       CMPI     DP, AR0
@@ -3318,6 +3452,7 @@
       CMPI     RS, AR0
       CMPI     RE, AR0
       CMPI     RC, AR0
+      CMPI     R-1, AR0
       CMPI     R0, DP
       CMPI     AR0, DP
       CMPI     DP, DP
@@ -3331,6 +3466,7 @@
       CMPI     RS, DP
       CMPI     RE, DP
       CMPI     RC, DP
+      CMPI     R-1, DP
       CMPI     R0, IR0
       CMPI     AR0, IR0
       CMPI     DP, IR0
@@ -3344,6 +3480,7 @@
       CMPI     RS, IR0
       CMPI     RE, IR0
       CMPI     RC, IR0
+      CMPI     R-1, IR0
       CMPI     R0, BK
       CMPI     AR0, BK
       CMPI     DP, BK
@@ -3357,6 +3494,7 @@
       CMPI     RS, BK
       CMPI     RE, BK
       CMPI     RC, BK
+      CMPI     R-1, BK
       CMPI     R0, SP
       CMPI     AR0, SP
       CMPI     DP, SP
@@ -3370,6 +3508,7 @@
       CMPI     RS, SP
       CMPI     RE, SP
       CMPI     RC, SP
+      CMPI     R-1, SP
       CMPI     R0, ST
       CMPI     AR0, ST
       CMPI     DP, ST
@@ -3383,6 +3522,7 @@
       CMPI     RS, ST
       CMPI     RE, ST
       CMPI     RC, ST
+      CMPI     R-1, ST
       CMPI     R0, IE
       CMPI     AR0, IE
       CMPI     DP, IE
@@ -3396,6 +3536,7 @@
       CMPI     RS, IE
       CMPI     RE, IE
       CMPI     RC, IE
+      CMPI     R-1, IE
       CMPI     R0, IF
       CMPI     AR0, IF
       CMPI     DP, IF
@@ -3409,6 +3550,7 @@
       CMPI     RS, IF
       CMPI     RE, IF
       CMPI     RC, IF
+      CMPI     R-1, IF
       CMPI     R0, IOF
       CMPI     AR0, IOF
       CMPI     DP, IOF
@@ -3422,6 +3564,7 @@
       CMPI     RS, IOF
       CMPI     RE, IOF
       CMPI     RC, IOF
+      CMPI     R-1, IOF
       CMPI     R0, RS
       CMPI     AR0, RS
       CMPI     DP, RS
@@ -3435,6 +3578,7 @@
       CMPI     RS, RS
       CMPI     RE, RS
       CMPI     RC, RS
+      CMPI     R-1, RS
       CMPI     R0, RE
       CMPI     AR0, RE
       CMPI     DP, RE
@@ -3448,6 +3592,7 @@
       CMPI     RS, RE
       CMPI     RE, RE
       CMPI     RC, RE
+      CMPI     R-1, RE
       CMPI     R0, RC
       CMPI     AR0, RC
       CMPI     DP, RC
@@ -3461,6 +3606,7 @@
       CMPI     RS, RC
       CMPI     RE, RC
       CMPI     RC, RC
+      CMPI     R-1, RC
       CMPI     @000000H, R0
       CMPI     @000000H, AR0
       CMPI     @000000H, DP
@@ -3813,18 +3959,31 @@
       CMPI     *AR0, RC
       CMPI     *AR0++(IR0)B, RC
       CMPI     0, R0
+      CMPI     -8000H, R0
       CMPI     0, AR0
+      CMPI     -8000H, AR0
       CMPI     0, DP
+      CMPI     -8000H, DP
       CMPI     0, IR0
+      CMPI     -8000H, IR0
       CMPI     0, BK
+      CMPI     -8000H, BK
       CMPI     0, SP
+      CMPI     -8000H, SP
       CMPI     0, ST
+      CMPI     -8000H, ST
       CMPI     0, IE
+      CMPI     -8000H, IE
       CMPI     0, IF
+      CMPI     -8000H, IF
       CMPI     0, IOF
+      CMPI     -8000H, IOF
       CMPI     0, RS
+      CMPI     -8000H, RS
       CMPI     0, RE
+      CMPI     -8000H, RE
       CMPI     0, RC
+      CMPI     -8000H, RC
       FIX      R0
       FIX      R1, R0
       FIX      R0, AR0
@@ -4192,30 +4351,43 @@
       FIX      *AR0++(IR0)B, RC
       FIX      1, R0
       FIX      1.0005, R0
+      FIX      -2, R0
       FIX      1, AR0
       FIX      1.0005, AR0
+      FIX      -2, AR0
       FIX      1, DP
       FIX      1.0005, DP
+      FIX      -2, DP
       FIX      1, IR0
       FIX      1.0005, IR0
+      FIX      -2, IR0
       FIX      1, BK
       FIX      1.0005, BK
+      FIX      -2, BK
       FIX      1, SP
       FIX      1.0005, SP
+      FIX      -2, SP
       FIX      1, ST
       FIX      1.0005, ST
+      FIX      -2, ST
       FIX      1, IE
       FIX      1.0005, IE
+      FIX      -2, IE
       FIX      1, IF
       FIX      1.0005, IF
+      FIX      -2, IF
       FIX      1, IOF
       FIX      1.0005, IOF
+      FIX      -2, IOF
       FIX      1, RS
       FIX      1.0005, RS
+      FIX      -2, RS
       FIX      1, RE
       FIX      1.0005, RE
+      FIX      -2, RE
       FIX      1, RC
       FIX      1.0005, RC
+      FIX      -2, RC
       FLOAT    R0
       FLOAT    R1, R0
       FLOAT    AR0, R0
@@ -4230,6 +4402,7 @@
       FLOAT    RS, R0
       FLOAT    RE, R0
       FLOAT    RC, R0
+      FLOAT    R-1, R0
       FLOAT    @000000H, R0
       FLOAT    *+AR0(0), R0
       FLOAT    *+AR0, R0
@@ -4258,6 +4431,7 @@
       FLOAT    *AR0, R0
       FLOAT    *AR0++(IR0)B, R0
       FLOAT    0, R0
+      FLOAT    -8000H, R0
       IDLE
       LDE      R0, R0
       LDE      @000000H, R0
@@ -4289,6 +4463,7 @@
       LDE      *AR0++(IR0)B, R0
       LDE      1, R0
       LDE      1.0005, R0
+      LDE      -2, R0
       LDF      R0, R0
       LDF      @000000H, R0
       LDF      *+AR0(0), R0
@@ -4319,6 +4494,7 @@
       LDF      *AR0++(IR0)B, R0
       LDF      1, R0
       LDF      1.0005, R0
+      LDF      -2, R0
       LDFI     @000000H, R0
       LDFI     *+AR0(0), R0
       LDFI     *+AR0, R0
@@ -4359,6 +4535,7 @@
       LDI      RS, R0
       LDI      RE, R0
       LDI      RC, R0
+      LDI      R-1, R0
       LDI      R0, AR0
       LDI      AR0, AR0
       LDI      DP, AR0
@@ -4372,6 +4549,7 @@
       LDI      RS, AR0
       LDI      RE, AR0
       LDI      RC, AR0
+      LDI      R-1, AR0
       LDI      R0, DP
       LDI      AR0, DP
       LDI      DP, DP
@@ -4385,6 +4563,7 @@
       LDI      RS, DP
       LDI      RE, DP
       LDI      RC, DP
+      LDI      R-1, DP
       LDI      R0, IR0
       LDI      AR0, IR0
       LDI      DP, IR0
@@ -4398,6 +4577,7 @@
       LDI      RS, IR0
       LDI      RE, IR0
       LDI      RC, IR0
+      LDI      R-1, IR0
       LDI      R0, BK
       LDI      AR0, BK
       LDI      DP, BK
@@ -4411,6 +4591,7 @@
       LDI      RS, BK
       LDI      RE, BK
       LDI      RC, BK
+      LDI      R-1, BK
       LDI      R0, SP
       LDI      AR0, SP
       LDI      DP, SP
@@ -4424,6 +4605,7 @@
       LDI      RS, SP
       LDI      RE, SP
       LDI      RC, SP
+      LDI      R-1, SP
       LDI      R0, ST
       LDI      AR0, ST
       LDI      DP, ST
@@ -4437,6 +4619,7 @@
       LDI      RS, ST
       LDI      RE, ST
       LDI      RC, ST
+      LDI      R-1, ST
       LDI      R0, IE
       LDI      AR0, IE
       LDI      DP, IE
@@ -4450,6 +4633,7 @@
       LDI      RS, IE
       LDI      RE, IE
       LDI      RC, IE
+      LDI      R-1, IE
       LDI      R0, IF
       LDI      AR0, IF
       LDI      DP, IF
@@ -4463,6 +4647,7 @@
       LDI      RS, IF
       LDI      RE, IF
       LDI      RC, IF
+      LDI      R-1, IF
       LDI      R0, IOF
       LDI      AR0, IOF
       LDI      DP, IOF
@@ -4476,6 +4661,7 @@
       LDI      RS, IOF
       LDI      RE, IOF
       LDI      RC, IOF
+      LDI      R-1, IOF
       LDI      R0, RS
       LDI      AR0, RS
       LDI      DP, RS
@@ -4489,6 +4675,7 @@
       LDI      RS, RS
       LDI      RE, RS
       LDI      RC, RS
+      LDI      R-1, RS
       LDI      R0, RE
       LDI      AR0, RE
       LDI      DP, RE
@@ -4502,6 +4689,7 @@
       LDI      RS, RE
       LDI      RE, RE
       LDI      RC, RE
+      LDI      R-1, RE
       LDI      R0, RC
       LDI      AR0, RC
       LDI      DP, RC
@@ -4515,6 +4703,7 @@
       LDI      RS, RC
       LDI      RE, RC
       LDI      RC, RC
+      LDI      R-1, RC
       LDI      @000000H, R0
       LDI      @000000H, AR0
       LDI      @000000H, DP
@@ -4867,18 +5056,30 @@
       LDI      *AR0, RC
       LDI      *AR0++(IR0)B, RC
       LDI      0, R0
+      LDI      -8000H, R0
       LDI      0, AR0
+      LDI      -8000H, AR0
       LDP      0
       LDI      0, IR0
+      LDI      -8000H, IR0
       LDI      0, BK
+      LDI      -8000H, BK
       LDI      0, SP
+      LDI      -8000H, SP
       LDI      0, ST
+      LDI      -8000H, ST
       LDI      0, IE
+      LDI      -8000H, IE
       LDI      0, IF
+      LDI      -8000H, IF
       LDI      0, IOF
+      LDI      -8000H, IOF
       LDI      0, RS
+      LDI      -8000H, RS
       LDI      0, RE
+      LDI      -8000H, RE
       LDI      0, RC
+      LDI      -8000H, RC
       LDII     @000000H, R0
       LDII     @000000H, AR0
       LDII     @000000H, DP
@@ -5260,6 +5461,7 @@
       LDM      *AR0++(IR0)B, R0
       LDM      1, R0
       LDM      1.0005, R0
+      LDM      -2, R0
       LSH      R0, R0
       LSH      AR0, R0
       LSH      DP, R0
@@ -5273,6 +5475,7 @@
       LSH      RS, R0
       LSH      RE, R0
       LSH      RC, R0
+      LSH      R-1, R0
       LSH      R0, AR0
       LSH      AR0, AR0
       LSH      DP, AR0
@@ -5286,6 +5489,7 @@
       LSH      RS, AR0
       LSH      RE, AR0
       LSH      RC, AR0
+      LSH      R-1, AR0
       LSH      R0, DP
       LSH      AR0, DP
       LSH      DP, DP
@@ -5299,6 +5503,7 @@
       LSH      RS, DP
       LSH      RE, DP
       LSH      RC, DP
+      LSH      R-1, DP
       LSH      R0, IR0
       LSH      AR0, IR0
       LSH      DP, IR0
@@ -5312,6 +5517,7 @@
       LSH      RS, IR0
       LSH      RE, IR0
       LSH      RC, IR0
+      LSH      R-1, IR0
       LSH      R0, BK
       LSH      AR0, BK
       LSH      DP, BK
@@ -5325,6 +5531,7 @@
       LSH      RS, BK
       LSH      RE, BK
       LSH      RC, BK
+      LSH      R-1, BK
       LSH      R0, SP
       LSH      AR0, SP
       LSH      DP, SP
@@ -5338,6 +5545,7 @@
       LSH      RS, SP
       LSH      RE, SP
       LSH      RC, SP
+      LSH      R-1, SP
       LSH      R0, ST
       LSH      AR0, ST
       LSH      DP, ST
@@ -5351,6 +5559,7 @@
       LSH      RS, ST
       LSH      RE, ST
       LSH      RC, ST
+      LSH      R-1, ST
       LSH      R0, IE
       LSH      AR0, IE
       LSH      DP, IE
@@ -5364,6 +5573,7 @@
       LSH      RS, IE
       LSH      RE, IE
       LSH      RC, IE
+      LSH      R-1, IE
       LSH      R0, IF
       LSH      AR0, IF
       LSH      DP, IF
@@ -5377,6 +5587,7 @@
       LSH      RS, IF
       LSH      RE, IF
       LSH      RC, IF
+      LSH      R-1, IF
       LSH      R0, IOF
       LSH      AR0, IOF
       LSH      DP, IOF
@@ -5390,6 +5601,7 @@
       LSH      RS, IOF
       LSH      RE, IOF
       LSH      RC, IOF
+      LSH      R-1, IOF
       LSH      R0, RS
       LSH      AR0, RS
       LSH      DP, RS
@@ -5403,6 +5615,7 @@
       LSH      RS, RS
       LSH      RE, RS
       LSH      RC, RS
+      LSH      R-1, RS
       LSH      R0, RE
       LSH      AR0, RE
       LSH      DP, RE
@@ -5416,6 +5629,7 @@
       LSH      RS, RE
       LSH      RE, RE
       LSH      RC, RE
+      LSH      R-1, RE
       LSH      R0, RC
       LSH      AR0, RC
       LSH      DP, RC
@@ -5429,6 +5643,7 @@
       LSH      RS, RC
       LSH      RE, RC
       LSH      RC, RC
+      LSH      R-1, RC
       LSH      @000000H, R0
       LSH      @000000H, AR0
       LSH      @000000H, DP
@@ -5781,18 +5996,31 @@
       LSH      *AR0, RC
       LSH      *AR0++(IR0)B, RC
       LSH      0, R0
+      LSH      -64, R0
       LSH      0, AR0
+      LSH      -64, AR0
       LSH      0, DP
+      LSH      -64, DP
       LSH      0, IR0
+      LSH      -64, IR0
       LSH      0, BK
+      LSH      -64, BK
       LSH      0, SP
+      LSH      -64, SP
       LSH      0, ST
+      LSH      -64, ST
       LSH      0, IE
+      LSH      -64, IE
       LSH      0, IF
+      LSH      -64, IF
       LSH      0, IOF
+      LSH      -64, IOF
       LSH      0, RS
+      LSH      -64, RS
       LSH      0, RE
+      LSH      -64, RE
       LSH      0, RC
+      LSH      -64, RC
       MPYF     R0, R0
       MPYF     @000000H, R0
       MPYF     *+AR0(0), R0
@@ -5823,6 +6051,7 @@
       MPYF     *AR0++(IR0)B, R0
       MPYF     1, R0
       MPYF     1.0005, R0
+      MPYF     -2, R0
       MPYI     R0, R0
       MPYI     AR0, R0
       MPYI     DP, R0
@@ -5836,6 +6065,7 @@
       MPYI     RS, R0
       MPYI     RE, R0
       MPYI     RC, R0
+      MPYI     R-1, R0
       MPYI     R0, AR0
       MPYI     AR0, AR0
       MPYI     DP, AR0
@@ -5849,6 +6079,7 @@
       MPYI     RS, AR0
       MPYI     RE, AR0
       MPYI     RC, AR0
+      MPYI     R-1, AR0
       MPYI     R0, DP
       MPYI     AR0, DP
       MPYI     DP, DP
@@ -5862,6 +6093,7 @@
       MPYI     RS, DP
       MPYI     RE, DP
       MPYI     RC, DP
+      MPYI     R-1, DP
       MPYI     R0, IR0
       MPYI     AR0, IR0
       MPYI     DP, IR0
@@ -5875,6 +6107,7 @@
       MPYI     RS, IR0
       MPYI     RE, IR0
       MPYI     RC, IR0
+      MPYI     R-1, IR0
       MPYI     R0, BK
       MPYI     AR0, BK
       MPYI     DP, BK
@@ -5888,6 +6121,7 @@
       MPYI     RS, BK
       MPYI     RE, BK
       MPYI     RC, BK
+      MPYI     R-1, BK
       MPYI     R0, SP
       MPYI     AR0, SP
       MPYI     DP, SP
@@ -5901,6 +6135,7 @@
       MPYI     RS, SP
       MPYI     RE, SP
       MPYI     RC, SP
+      MPYI     R-1, SP
       MPYI     R0, ST
       MPYI     AR0, ST
       MPYI     DP, ST
@@ -5914,6 +6149,7 @@
       MPYI     RS, ST
       MPYI     RE, ST
       MPYI     RC, ST
+      MPYI     R-1, ST
       MPYI     R0, IE
       MPYI     AR0, IE
       MPYI     DP, IE
@@ -5927,6 +6163,7 @@
       MPYI     RS, IE
       MPYI     RE, IE
       MPYI     RC, IE
+      MPYI     R-1, IE
       MPYI     R0, IF
       MPYI     AR0, IF
       MPYI     DP, IF
@@ -5940,6 +6177,7 @@
       MPYI     RS, IF
       MPYI     RE, IF
       MPYI     RC, IF
+      MPYI     R-1, IF
       MPYI     R0, IOF
       MPYI     AR0, IOF
       MPYI     DP, IOF
@@ -5953,6 +6191,7 @@
       MPYI     RS, IOF
       MPYI     RE, IOF
       MPYI     RC, IOF
+      MPYI     R-1, IOF
       MPYI     R0, RS
       MPYI     AR0, RS
       MPYI     DP, RS
@@ -5966,6 +6205,7 @@
       MPYI     RS, RS
       MPYI     RE, RS
       MPYI     RC, RS
+      MPYI     R-1, RS
       MPYI     R0, RE
       MPYI     AR0, RE
       MPYI     DP, RE
@@ -5979,6 +6219,7 @@
       MPYI     RS, RE
       MPYI     RE, RE
       MPYI     RC, RE
+      MPYI     R-1, RE
       MPYI     R0, RC
       MPYI     AR0, RC
       MPYI     DP, RC
@@ -5992,6 +6233,7 @@
       MPYI     RS, RC
       MPYI     RE, RC
       MPYI     RC, RC
+      MPYI     R-1, RC
       MPYI     @000000H, R0
       MPYI     @000000H, AR0
       MPYI     @000000H, DP
@@ -6344,18 +6586,31 @@
       MPYI     *AR0, RC
       MPYI     *AR0++(IR0)B, RC
       MPYI     0, R0
+      MPYI     -8000H, R0
       MPYI     0, AR0
+      MPYI     -8000H, AR0
       MPYI     0, DP
+      MPYI     -8000H, DP
       MPYI     0, IR0
+      MPYI     -8000H, IR0
       MPYI     0, BK
+      MPYI     -8000H, BK
       MPYI     0, SP
+      MPYI     -8000H, SP
       MPYI     0, ST
+      MPYI     -8000H, ST
       MPYI     0, IE
+      MPYI     -8000H, IE
       MPYI     0, IF
+      MPYI     -8000H, IF
       MPYI     0, IOF
+      MPYI     -8000H, IOF
       MPYI     0, RS
+      MPYI     -8000H, RS
       MPYI     0, RE
+      MPYI     -8000H, RE
       MPYI     0, RC
+      MPYI     -8000H, RC
       NEGB     R0
       NEGB     R1, R0
       NEGB     AR0, R0
@@ -6370,6 +6625,7 @@
       NEGB     RS, R0
       NEGB     RE, R0
       NEGB     RC, R0
+      NEGB     R-1, R0
       NEGB     R0, AR0
       NEGB     AR0
       NEGB     AR1, AR0
@@ -6384,6 +6640,7 @@
       NEGB     RS, AR0
       NEGB     RE, AR0
       NEGB     RC, AR0
+      NEGB     R-1, AR0
       NEGB     R0, DP
       NEGB     AR0, DP
       NEGB     DP
@@ -6397,6 +6654,7 @@
       NEGB     RS, DP
       NEGB     RE, DP
       NEGB     RC, DP
+      NEGB     R-1, DP
       NEGB     R0, IR0
       NEGB     AR0, IR0
       NEGB     DP, IR0
@@ -6411,6 +6669,7 @@
       NEGB     RS, IR0
       NEGB     RE, IR0
       NEGB     RC, IR0
+      NEGB     R-1, IR0
       NEGB     R0, BK
       NEGB     AR0, BK
       NEGB     DP, BK
@@ -6424,6 +6683,7 @@
       NEGB     RS, BK
       NEGB     RE, BK
       NEGB     RC, BK
+      NEGB     R-1, BK
       NEGB     R0, SP
       NEGB     AR0, SP
       NEGB     DP, SP
@@ -6437,6 +6697,7 @@
       NEGB     RS, SP
       NEGB     RE, SP
       NEGB     RC, SP
+      NEGB     R-1, SP
       NEGB     R0, ST
       NEGB     AR0, ST
       NEGB     DP, ST
@@ -6450,6 +6711,7 @@
       NEGB     RS, ST
       NEGB     RE, ST
       NEGB     RC, ST
+      NEGB     R-1, ST
       NEGB     R0, IE
       NEGB     AR0, IE
       NEGB     DP, IE
@@ -6463,6 +6725,7 @@
       NEGB     RS, IE
       NEGB     RE, IE
       NEGB     RC, IE
+      NEGB     R-1, IE
       NEGB     R0, IF
       NEGB     AR0, IF
       NEGB     DP, IF
@@ -6476,6 +6739,7 @@
       NEGB     RS, IF
       NEGB     RE, IF
       NEGB     RC, IF
+      NEGB     R-1, IF
       NEGB     R0, IOF
       NEGB     AR0, IOF
       NEGB     DP, IOF
@@ -6489,6 +6753,7 @@
       NEGB     RS, IOF
       NEGB     RE, IOF
       NEGB     RC, IOF
+      NEGB     R-1, IOF
       NEGB     R0, RS
       NEGB     AR0, RS
       NEGB     DP, RS
@@ -6502,6 +6767,7 @@
       NEGB     RS
       NEGB     RE, RS
       NEGB     RC, RS
+      NEGB     R-1, RS
       NEGB     R0, RE
       NEGB     AR0, RE
       NEGB     DP, RE
@@ -6515,6 +6781,7 @@
       NEGB     RS, RE
       NEGB     RE
       NEGB     RC, RE
+      NEGB     R-1, RE
       NEGB     R0, RC
       NEGB     AR0, RC
       NEGB     DP, RC
@@ -6528,6 +6795,7 @@
       NEGB     RS, RC
       NEGB     RE, RC
       NEGB     RC
+      NEGB     R-1, RC
       NEGB     @000000H, R0
       NEGB     @000000H, AR0
       NEGB     @000000H, DP
@@ -6880,18 +7148,31 @@
       NEGB     *AR0, RC
       NEGB     *AR0++(IR0)B, RC
       NEGB     0, R0
+      NEGB     -8000H, R0
       NEGB     0, AR0
+      NEGB     -8000H, AR0
       NEGB     0, DP
+      NEGB     -8000H, DP
       NEGB     0, IR0
+      NEGB     -8000H, IR0
       NEGB     0, BK
+      NEGB     -8000H, BK
       NEGB     0, SP
+      NEGB     -8000H, SP
       NEGB     0, ST
+      NEGB     -8000H, ST
       NEGB     0, IE
+      NEGB     -8000H, IE
       NEGB     0, IF
+      NEGB     -8000H, IF
       NEGB     0, IOF
+      NEGB     -8000H, IOF
       NEGB     0, RS
+      NEGB     -8000H, RS
       NEGB     0, RE
+      NEGB     -8000H, RE
       NEGB     0, RC
+      NEGB     -8000H, RC
       NEGF     R0
       NEGF     R1, R0
       NEGF     @000000H, R0
@@ -6923,6 +7204,7 @@
       NEGF     *AR0++(IR0)B, R0
       NEGF     1, R0
       NEGF     1.0005, R0
+      NEGF     -2, R0
       NEGI     R0
       NEGI     R1, R0
       NEGI     AR0, R0
@@ -6937,6 +7219,7 @@
       NEGI     RS, R0
       NEGI     RE, R0
       NEGI     RC, R0
+      NEGI     R-1, R0
       NEGI     R0, AR0
       NEGI     AR0
       NEGI     AR1, AR0
@@ -6951,6 +7234,7 @@
       NEGI     RS, AR0
       NEGI     RE, AR0
       NEGI     RC, AR0
+      NEGI     R-1, AR0
       NEGI     R0, DP
       NEGI     AR0, DP
       NEGI     DP
@@ -6964,6 +7248,7 @@
       NEGI     RS, DP
       NEGI     RE, DP
       NEGI     RC, DP
+      NEGI     R-1, DP
       NEGI     R0, IR0
       NEGI     AR0, IR0
       NEGI     DP, IR0
@@ -6978,6 +7263,7 @@
       NEGI     RS, IR0
       NEGI     RE, IR0
       NEGI     RC, IR0
+      NEGI     R-1, IR0
       NEGI     R0, BK
       NEGI     AR0, BK
       NEGI     DP, BK
@@ -6991,6 +7277,7 @@
       NEGI     RS, BK
       NEGI     RE, BK
       NEGI     RC, BK
+      NEGI     R-1, BK
       NEGI     R0, SP
       NEGI     AR0, SP
       NEGI     DP, SP
@@ -7004,6 +7291,7 @@
       NEGI     RS, SP
       NEGI     RE, SP
       NEGI     RC, SP
+      NEGI     R-1, SP
       NEGI     R0, ST
       NEGI     AR0, ST
       NEGI     DP, ST
@@ -7017,6 +7305,7 @@
       NEGI     RS, ST
       NEGI     RE, ST
       NEGI     RC, ST
+      NEGI     R-1, ST
       NEGI     R0, IE
       NEGI     AR0, IE
       NEGI     DP, IE
@@ -7030,6 +7319,7 @@
       NEGI     RS, IE
       NEGI     RE, IE
       NEGI     RC, IE
+      NEGI     R-1, IE
       NEGI     R0, IF
       NEGI     AR0, IF
       NEGI     DP, IF
@@ -7043,6 +7333,7 @@
       NEGI     RS, IF
       NEGI     RE, IF
       NEGI     RC, IF
+      NEGI     R-1, IF
       NEGI     R0, IOF
       NEGI     AR0, IOF
       NEGI     DP, IOF
@@ -7056,6 +7347,7 @@
       NEGI     RS, IOF
       NEGI     RE, IOF
       NEGI     RC, IOF
+      NEGI     R-1, IOF
       NEGI     R0, RS
       NEGI     AR0, RS
       NEGI     DP, RS
@@ -7069,6 +7361,7 @@
       NEGI     RS
       NEGI     RE, RS
       NEGI     RC, RS
+      NEGI     R-1, RS
       NEGI     R0, RE
       NEGI     AR0, RE
       NEGI     DP, RE
@@ -7082,6 +7375,7 @@
       NEGI     RS, RE
       NEGI     RE
       NEGI     RC, RE
+      NEGI     R-1, RE
       NEGI     R0, RC
       NEGI     AR0, RC
       NEGI     DP, RC
@@ -7095,6 +7389,7 @@
       NEGI     RS, RC
       NEGI     RE, RC
       NEGI     RC
+      NEGI     R-1, RC
       NEGI     @000000H, R0
       NEGI     @000000H, AR0
       NEGI     @000000H, DP
@@ -7447,18 +7742,31 @@
       NEGI     *AR0, RC
       NEGI     *AR0++(IR0)B, RC
       NEGI     0, R0
+      NEGI     -8000H, R0
       NEGI     0, AR0
+      NEGI     -8000H, AR0
       NEGI     0, DP
+      NEGI     -8000H, DP
       NEGI     0, IR0
+      NEGI     -8000H, IR0
       NEGI     0, BK
+      NEGI     -8000H, BK
       NEGI     0, SP
+      NEGI     -8000H, SP
       NEGI     0, ST
+      NEGI     -8000H, ST
       NEGI     0, IE
+      NEGI     -8000H, IE
       NEGI     0, IF
+      NEGI     -8000H, IF
       NEGI     0, IOF
+      NEGI     -8000H, IOF
       NEGI     0, RS
+      NEGI     -8000H, RS
       NEGI     0, RE
+      NEGI     -8000H, RE
       NEGI     0, RC
+      NEGI     -8000H, RC
       NOP      R0
       NOP      AR0
       NOP      DP
@@ -7472,6 +7780,7 @@
       NOP      RS
       NOP      RE
       NOP      RC
+      NOP      R-1
       NOP      *+AR0(0)
       NOP      *+AR0
       NOP      *-AR0(0)
@@ -7529,6 +7838,7 @@
       NORM     *AR0++(IR0)B, R0
       NORM     1, R0
       NORM     1.0005, R0
+      NORM     -2, R0
       NOT      R0
       NOT      R1, R0
       NOT      AR0, R0
@@ -7543,6 +7853,7 @@
       NOT      RS, R0
       NOT      RE, R0
       NOT      RC, R0
+      NOT      R-1, R0
       NOT      R0, AR0
       NOT      AR0
       NOT      AR1, AR0
@@ -7557,6 +7868,7 @@
       NOT      RS, AR0
       NOT      RE, AR0
       NOT      RC, AR0
+      NOT      R-1, AR0
       NOT      R0, DP
       NOT      AR0, DP
       NOT      DP
@@ -7570,6 +7882,7 @@
       NOT      RS, DP
       NOT      RE, DP
       NOT      RC, DP
+      NOT      R-1, DP
       NOT      R0, IR0
       NOT      AR0, IR0
       NOT      DP, IR0
@@ -7584,6 +7897,7 @@
       NOT      RS, IR0
       NOT      RE, IR0
       NOT      RC, IR0
+      NOT      R-1, IR0
       NOT      R0, BK
       NOT      AR0, BK
       NOT      DP, BK
@@ -7597,6 +7911,7 @@
       NOT      RS, BK
       NOT      RE, BK
       NOT      RC, BK
+      NOT      R-1, BK
       NOT      R0, SP
       NOT      AR0, SP
       NOT      DP, SP
@@ -7610,6 +7925,7 @@
       NOT      RS, SP
       NOT      RE, SP
       NOT      RC, SP
+      NOT      R-1, SP
       NOT      R0, ST
       NOT      AR0, ST
       NOT      DP, ST
@@ -7623,6 +7939,7 @@
       NOT      RS, ST
       NOT      RE, ST
       NOT      RC, ST
+      NOT      R-1, ST
       NOT      R0, IE
       NOT      AR0, IE
       NOT      DP, IE
@@ -7636,6 +7953,7 @@
       NOT      RS, IE
       NOT      RE, IE
       NOT      RC, IE
+      NOT      R-1, IE
       NOT      R0, IF
       NOT      AR0, IF
       NOT      DP, IF
@@ -7649,6 +7967,7 @@
       NOT      RS, IF
       NOT      RE, IF
       NOT      RC, IF
+      NOT      R-1, IF
       NOT      R0, IOF
       NOT      AR0, IOF
       NOT      DP, IOF
@@ -7662,6 +7981,7 @@
       NOT      RS, IOF
       NOT      RE, IOF
       NOT      RC, IOF
+      NOT      R-1, IOF
       NOT      R0, RS
       NOT      AR0, RS
       NOT      DP, RS
@@ -7675,6 +7995,7 @@
       NOT      RS
       NOT      RE, RS
       NOT      RC, RS
+      NOT      R-1, RS
       NOT      R0, RE
       NOT      AR0, RE
       NOT      DP, RE
@@ -7688,6 +8009,7 @@
       NOT      RS, RE
       NOT      RE
       NOT      RC, RE
+      NOT      R-1, RE
       NOT      R0, RC
       NOT      AR0, RC
       NOT      DP, RC
@@ -7701,6 +8023,7 @@
       NOT      RS, RC
       NOT      RE, RC
       NOT      RC
+      NOT      R-1, RC
       NOT      @000000H, R0
       NOT      @000000H, AR0
       NOT      @000000H, DP
@@ -8106,6 +8429,7 @@
       OR       RS, R0
       OR       RE, R0
       OR       RC, R0
+      OR       R-1, R0
       OR       R0, AR0
       OR       AR0, AR0
       OR       DP, AR0
@@ -8119,6 +8443,7 @@
       OR       RS, AR0
       OR       RE, AR0
       OR       RC, AR0
+      OR       R-1, AR0
       OR       R0, DP
       OR       AR0, DP
       OR       DP, DP
@@ -8132,6 +8457,7 @@
       OR       RS, DP
       OR       RE, DP
       OR       RC, DP
+      OR       R-1, DP
       OR       R0, IR0
       OR       AR0, IR0
       OR       DP, IR0
@@ -8145,6 +8471,7 @@
       OR       RS, IR0
       OR       RE, IR0
       OR       RC, IR0
+      OR       R-1, IR0
       OR       R0, BK
       OR       AR0, BK
       OR       DP, BK
@@ -8158,6 +8485,7 @@
       OR       RS, BK
       OR       RE, BK
       OR       RC, BK
+      OR       R-1, BK
       OR       R0, SP
       OR       AR0, SP
       OR       DP, SP
@@ -8171,6 +8499,7 @@
       OR       RS, SP
       OR       RE, SP
       OR       RC, SP
+      OR       R-1, SP
       OR       R0, ST
       OR       AR0, ST
       OR       DP, ST
@@ -8184,6 +8513,7 @@
       OR       RS, ST
       OR       RE, ST
       OR       RC, ST
+      OR       R-1, ST
       OR       R0, IE
       OR       AR0, IE
       OR       DP, IE
@@ -8197,6 +8527,7 @@
       OR       RS, IE
       OR       RE, IE
       OR       RC, IE
+      OR       R-1, IE
       OR       R0, IF
       OR       AR0, IF
       OR       DP, IF
@@ -8210,6 +8541,7 @@
       OR       RS, IF
       OR       RE, IF
       OR       RC, IF
+      OR       R-1, IF
       OR       R0, IOF
       OR       AR0, IOF
       OR       DP, IOF
@@ -8223,6 +8555,7 @@
       OR       RS, IOF
       OR       RE, IOF
       OR       RC, IOF
+      OR       R-1, IOF
       OR       R0, RS
       OR       AR0, RS
       OR       DP, RS
@@ -8236,6 +8569,7 @@
       OR       RS, RS
       OR       RE, RS
       OR       RC, RS
+      OR       R-1, RS
       OR       R0, RE
       OR       AR0, RE
       OR       DP, RE
@@ -8249,6 +8583,7 @@
       OR       RS, RE
       OR       RE, RE
       OR       RC, RE
+      OR       R-1, RE
       OR       R0, RC
       OR       AR0, RC
       OR       DP, RC
@@ -8262,6 +8597,7 @@
       OR       RS, RC
       OR       RE, RC
       OR       RC, RC
+      OR       R-1, RC
       OR       @000000H, R0
       OR       @000000H, AR0
       OR       @000000H, DP
@@ -8657,6 +8993,7 @@
       RND      *AR0++(IR0)B, R0
       RND      1, R0
       RND      1.0005, R0
+      RND      -2, R0
       ROL      R0
       ROL      AR0
       ROL      DP
@@ -8722,6 +9059,7 @@
       RPTS     RS
       RPTS     RE
       RPTS     RC
+      RPTS     R-1
       RPTS     @000000H
       RPTS     *+AR0(0)
       RPTS     *+AR0
@@ -9520,6 +9858,7 @@
       SUBB     RS, R0
       SUBB     RE, R0
       SUBB     RC, R0
+      SUBB     R-1, R0
       SUBB     R0, AR0
       SUBB     AR0, AR0
       SUBB     DP, AR0
@@ -9533,6 +9872,7 @@
       SUBB     RS, AR0
       SUBB     RE, AR0
       SUBB     RC, AR0
+      SUBB     R-1, AR0
       SUBB     R0, DP
       SUBB     AR0, DP
       SUBB     DP, DP
@@ -9546,6 +9886,7 @@
       SUBB     RS, DP
       SUBB     RE, DP
       SUBB     RC, DP
+      SUBB     R-1, DP
       SUBB     R0, IR0
       SUBB     AR0, IR0
       SUBB     DP, IR0
@@ -9559,6 +9900,7 @@
       SUBB     RS, IR0
       SUBB     RE, IR0
       SUBB     RC, IR0
+      SUBB     R-1, IR0
       SUBB     R0, BK
       SUBB     AR0, BK
       SUBB     DP, BK
@@ -9572,6 +9914,7 @@
       SUBB     RS, BK
       SUBB     RE, BK
       SUBB     RC, BK
+      SUBB     R-1, BK
       SUBB     R0, SP
       SUBB     AR0, SP
       SUBB     DP, SP
@@ -9585,6 +9928,7 @@
       SUBB     RS, SP
       SUBB     RE, SP
       SUBB     RC, SP
+      SUBB     R-1, SP
       SUBB     R0, ST
       SUBB     AR0, ST
       SUBB     DP, ST
@@ -9598,6 +9942,7 @@
       SUBB     RS, ST
       SUBB     RE, ST
       SUBB     RC, ST
+      SUBB     R-1, ST
       SUBB     R0, IE
       SUBB     AR0, IE
       SUBB     DP, IE
@@ -9611,6 +9956,7 @@
       SUBB     RS, IE
       SUBB     RE, IE
       SUBB     RC, IE
+      SUBB     R-1, IE
       SUBB     R0, IF
       SUBB     AR0, IF
       SUBB     DP, IF
@@ -9624,6 +9970,7 @@
       SUBB     RS, IF
       SUBB     RE, IF
       SUBB     RC, IF
+      SUBB     R-1, IF
       SUBB     R0, IOF
       SUBB     AR0, IOF
       SUBB     DP, IOF
@@ -9637,6 +9984,7 @@
       SUBB     RS, IOF
       SUBB     RE, IOF
       SUBB     RC, IOF
+      SUBB     R-1, IOF
       SUBB     R0, RS
       SUBB     AR0, RS
       SUBB     DP, RS
@@ -9650,6 +9998,7 @@
       SUBB     RS, RS
       SUBB     RE, RS
       SUBB     RC, RS
+      SUBB     R-1, RS
       SUBB     R0, RE
       SUBB     AR0, RE
       SUBB     DP, RE
@@ -9663,6 +10012,7 @@
       SUBB     RS, RE
       SUBB     RE, RE
       SUBB     RC, RE
+      SUBB     R-1, RE
       SUBB     R0, RC
       SUBB     AR0, RC
       SUBB     DP, RC
@@ -9676,6 +10026,7 @@
       SUBB     RS, RC
       SUBB     RE, RC
       SUBB     RC, RC
+      SUBB     R-1, RC
       SUBB     @000000H, R0
       SUBB     @000000H, AR0
       SUBB     @000000H, DP
@@ -10028,18 +10379,31 @@
       SUBB     *AR0, RC
       SUBB     *AR0++(IR0)B, RC
       SUBB     0, R0
+      SUBB     -8000H, R0
       SUBB     0, AR0
+      SUBB     -8000H, AR0
       SUBB     0, DP
+      SUBB     -8000H, DP
       SUBB     0, IR0
+      SUBB     -8000H, IR0
       SUBB     0, BK
+      SUBB     -8000H, BK
       SUBB     0, SP
+      SUBB     -8000H, SP
       SUBB     0, ST
+      SUBB     -8000H, ST
       SUBB     0, IE
+      SUBB     -8000H, IE
       SUBB     0, IF
+      SUBB     -8000H, IF
       SUBB     0, IOF
+      SUBB     -8000H, IOF
       SUBB     0, RS
+      SUBB     -8000H, RS
       SUBB     0, RE
+      SUBB     -8000H, RE
       SUBB     0, RC
+      SUBB     -8000H, RC
       SUBC     R0, R0
       SUBC     AR0, R0
       SUBC     DP, R0
@@ -10053,6 +10417,7 @@
       SUBC     RS, R0
       SUBC     RE, R0
       SUBC     RC, R0
+      SUBC     R-1, R0
       SUBC     R0, AR0
       SUBC     AR0, AR0
       SUBC     DP, AR0
@@ -10066,6 +10431,7 @@
       SUBC     RS, AR0
       SUBC     RE, AR0
       SUBC     RC, AR0
+      SUBC     R-1, AR0
       SUBC     R0, DP
       SUBC     AR0, DP
       SUBC     DP, DP
@@ -10079,6 +10445,7 @@
       SUBC     RS, DP
       SUBC     RE, DP
       SUBC     RC, DP
+      SUBC     R-1, DP
       SUBC     R0, IR0
       SUBC     AR0, IR0
       SUBC     DP, IR0
@@ -10092,6 +10459,7 @@
       SUBC     RS, IR0
       SUBC     RE, IR0
       SUBC     RC, IR0
+      SUBC     R-1, IR0
       SUBC     R0, BK
       SUBC     AR0, BK
       SUBC     DP, BK
@@ -10105,6 +10473,7 @@
       SUBC     RS, BK
       SUBC     RE, BK
       SUBC     RC, BK
+      SUBC     R-1, BK
       SUBC     R0, SP
       SUBC     AR0, SP
       SUBC     DP, SP
@@ -10118,6 +10487,7 @@
       SUBC     RS, SP
       SUBC     RE, SP
       SUBC     RC, SP
+      SUBC     R-1, SP
       SUBC     R0, ST
       SUBC     AR0, ST
       SUBC     DP, ST
@@ -10131,6 +10501,7 @@
       SUBC     RS, ST
       SUBC     RE, ST
       SUBC     RC, ST
+      SUBC     R-1, ST
       SUBC     R0, IE
       SUBC     AR0, IE
       SUBC     DP, IE
@@ -10144,6 +10515,7 @@
       SUBC     RS, IE
       SUBC     RE, IE
       SUBC     RC, IE
+      SUBC     R-1, IE
       SUBC     R0, IF
       SUBC     AR0, IF
       SUBC     DP, IF
@@ -10157,6 +10529,7 @@
       SUBC     RS, IF
       SUBC     RE, IF
       SUBC     RC, IF
+      SUBC     R-1, IF
       SUBC     R0, IOF
       SUBC     AR0, IOF
       SUBC     DP, IOF
@@ -10170,6 +10543,7 @@
       SUBC     RS, IOF
       SUBC     RE, IOF
       SUBC     RC, IOF
+      SUBC     R-1, IOF
       SUBC     R0, RS
       SUBC     AR0, RS
       SUBC     DP, RS
@@ -10183,6 +10557,7 @@
       SUBC     RS, RS
       SUBC     RE, RS
       SUBC     RC, RS
+      SUBC     R-1, RS
       SUBC     R0, RE
       SUBC     AR0, RE
       SUBC     DP, RE
@@ -10196,6 +10571,7 @@
       SUBC     RS, RE
       SUBC     RE, RE
       SUBC     RC, RE
+      SUBC     R-1, RE
       SUBC     R0, RC
       SUBC     AR0, RC
       SUBC     DP, RC
@@ -10209,6 +10585,7 @@
       SUBC     RS, RC
       SUBC     RE, RC
       SUBC     RC, RC
+      SUBC     R-1, RC
       SUBC     @000000H, R0
       SUBC     @000000H, AR0
       SUBC     @000000H, DP
@@ -10603,6 +10980,7 @@
       SUBF     *AR0++(IR0)B, R0
       SUBF     1, R0
       SUBF     1.0005, R0
+      SUBF     -2, R0
       SUBI     R0, R0
       SUBI     AR0, R0
       SUBI     DP, R0
@@ -10616,6 +10994,7 @@
       SUBI     RS, R0
       SUBI     RE, R0
       SUBI     RC, R0
+      SUBI     R-1, R0
       SUBI     R0, AR0
       SUBI     AR0, AR0
       SUBI     DP, AR0
@@ -10629,6 +11008,7 @@
       SUBI     RS, AR0
       SUBI     RE, AR0
       SUBI     RC, AR0
+      SUBI     R-1, AR0
       SUBI     R0, DP
       SUBI     AR0, DP
       SUBI     DP, DP
@@ -10642,6 +11022,7 @@
       SUBI     RS, DP
       SUBI     RE, DP
       SUBI     RC, DP
+      SUBI     R-1, DP
       SUBI     R0, IR0
       SUBI     AR0, IR0
       SUBI     DP, IR0
@@ -10655,6 +11036,7 @@
       SUBI     RS, IR0
       SUBI     RE, IR0
       SUBI     RC, IR0
+      SUBI     R-1, IR0
       SUBI     R0, BK
       SUBI     AR0, BK
       SUBI     DP, BK
@@ -10668,6 +11050,7 @@
       SUBI     RS, BK
       SUBI     RE, BK
       SUBI     RC, BK
+      SUBI     R-1, BK
       SUBI     R0, SP
       SUBI     AR0, SP
       SUBI     DP, SP
@@ -10681,6 +11064,7 @@
       SUBI     RS, SP
       SUBI     RE, SP
       SUBI     RC, SP
+      SUBI     R-1, SP
       SUBI     R0, ST
       SUBI     AR0, ST
       SUBI     DP, ST
@@ -10694,6 +11078,7 @@
       SUBI     RS, ST
       SUBI     RE, ST
       SUBI     RC, ST
+      SUBI     R-1, ST
       SUBI     R0, IE
       SUBI     AR0, IE
       SUBI     DP, IE
@@ -10707,6 +11092,7 @@
       SUBI     RS, IE
       SUBI     RE, IE
       SUBI     RC, IE
+      SUBI     R-1, IE
       SUBI     R0, IF
       SUBI     AR0, IF
       SUBI     DP, IF
@@ -10720,6 +11106,7 @@
       SUBI     RS, IF
       SUBI     RE, IF
       SUBI     RC, IF
+      SUBI     R-1, IF
       SUBI     R0, IOF
       SUBI     AR0, IOF
       SUBI     DP, IOF
@@ -10733,6 +11120,7 @@
       SUBI     RS, IOF
       SUBI     RE, IOF
       SUBI     RC, IOF
+      SUBI     R-1, IOF
       SUBI     R0, RS
       SUBI     AR0, RS
       SUBI     DP, RS
@@ -10746,6 +11134,7 @@
       SUBI     RS, RS
       SUBI     RE, RS
       SUBI     RC, RS
+      SUBI     R-1, RS
       SUBI     R0, RE
       SUBI     AR0, RE
       SUBI     DP, RE
@@ -10759,6 +11148,7 @@
       SUBI     RS, RE
       SUBI     RE, RE
       SUBI     RC, RE
+      SUBI     R-1, RE
       SUBI     R0, RC
       SUBI     AR0, RC
       SUBI     DP, RC
@@ -10772,6 +11162,7 @@
       SUBI     RS, RC
       SUBI     RE, RC
       SUBI     RC, RC
+      SUBI     R-1, RC
       SUBI     @000000H, R0
       SUBI     @000000H, AR0
       SUBI     @000000H, DP
@@ -11124,18 +11515,31 @@
       SUBI     *AR0, RC
       SUBI     *AR0++(IR0)B, RC
       SUBI     0, R0
+      SUBI     -8000H, R0
       SUBI     0, AR0
+      SUBI     -8000H, AR0
       SUBI     0, DP
+      SUBI     -8000H, DP
       SUBI     0, IR0
+      SUBI     -8000H, IR0
       SUBI     0, BK
+      SUBI     -8000H, BK
       SUBI     0, SP
+      SUBI     -8000H, SP
       SUBI     0, ST
+      SUBI     -8000H, ST
       SUBI     0, IE
+      SUBI     -8000H, IE
       SUBI     0, IF
+      SUBI     -8000H, IF
       SUBI     0, IOF
+      SUBI     -8000H, IOF
       SUBI     0, RS
+      SUBI     -8000H, RS
       SUBI     0, RE
+      SUBI     -8000H, RE
       SUBI     0, RC
+      SUBI     -8000H, RC
       SUBRB    R0, R0
       SUBRB    AR0, R0
       SUBRB    DP, R0
@@ -11149,6 +11553,7 @@
       SUBRB    RS, R0
       SUBRB    RE, R0
       SUBRB    RC, R0
+      SUBRB    R-1, R0
       SUBRB    R0, AR0
       SUBRB    AR0, AR0
       SUBRB    DP, AR0
@@ -11162,6 +11567,7 @@
       SUBRB    RS, AR0
       SUBRB    RE, AR0
       SUBRB    RC, AR0
+      SUBRB    R-1, AR0
       SUBRB    R0, DP
       SUBRB    AR0, DP
       SUBRB    DP, DP
@@ -11175,6 +11581,7 @@
       SUBRB    RS, DP
       SUBRB    RE, DP
       SUBRB    RC, DP
+      SUBRB    R-1, DP
       SUBRB    R0, IR0
       SUBRB    AR0, IR0
       SUBRB    DP, IR0
@@ -11188,6 +11595,7 @@
       SUBRB    RS, IR0
       SUBRB    RE, IR0
       SUBRB    RC, IR0
+      SUBRB    R-1, IR0
       SUBRB    R0, BK
       SUBRB    AR0, BK
       SUBRB    DP, BK
@@ -11201,6 +11609,7 @@
       SUBRB    RS, BK
       SUBRB    RE, BK
       SUBRB    RC, BK
+      SUBRB    R-1, BK
       SUBRB    R0, SP
       SUBRB    AR0, SP
       SUBRB    DP, SP
@@ -11214,6 +11623,7 @@
       SUBRB    RS, SP
       SUBRB    RE, SP
       SUBRB    RC, SP
+      SUBRB    R-1, SP
       SUBRB    R0, ST
       SUBRB    AR0, ST
       SUBRB    DP, ST
@@ -11227,6 +11637,7 @@
       SUBRB    RS, ST
       SUBRB    RE, ST
       SUBRB    RC, ST
+      SUBRB    R-1, ST
       SUBRB    R0, IE
       SUBRB    AR0, IE
       SUBRB    DP, IE
@@ -11240,6 +11651,7 @@
       SUBRB    RS, IE
       SUBRB    RE, IE
       SUBRB    RC, IE
+      SUBRB    R-1, IE
       SUBRB    R0, IF
       SUBRB    AR0, IF
       SUBRB    DP, IF
@@ -11253,6 +11665,7 @@
       SUBRB    RS, IF
       SUBRB    RE, IF
       SUBRB    RC, IF
+      SUBRB    R-1, IF
       SUBRB    R0, IOF
       SUBRB    AR0, IOF
       SUBRB    DP, IOF
@@ -11266,6 +11679,7 @@
       SUBRB    RS, IOF
       SUBRB    RE, IOF
       SUBRB    RC, IOF
+      SUBRB    R-1, IOF
       SUBRB    R0, RS
       SUBRB    AR0, RS
       SUBRB    DP, RS
@@ -11279,6 +11693,7 @@
       SUBRB    RS, RS
       SUBRB    RE, RS
       SUBRB    RC, RS
+      SUBRB    R-1, RS
       SUBRB    R0, RE
       SUBRB    AR0, RE
       SUBRB    DP, RE
@@ -11292,6 +11707,7 @@
       SUBRB    RS, RE
       SUBRB    RE, RE
       SUBRB    RC, RE
+      SUBRB    R-1, RE
       SUBRB    R0, RC
       SUBRB    AR0, RC
       SUBRB    DP, RC
@@ -11305,6 +11721,7 @@
       SUBRB    RS, RC
       SUBRB    RE, RC
       SUBRB    RC, RC
+      SUBRB    R-1, RC
       SUBRB    @000000H, R0
       SUBRB    @000000H, AR0
       SUBRB    @000000H, DP
@@ -11657,18 +12074,31 @@
       SUBRB    *AR0, RC
       SUBRB    *AR0++(IR0)B, RC
       SUBRB    0, R0
+      SUBRB    -8000H, R0
       SUBRB    0, AR0
+      SUBRB    -8000H, AR0
       SUBRB    0, DP
+      SUBRB    -8000H, DP
       SUBRB    0, IR0
+      SUBRB    -8000H, IR0
       SUBRB    0, BK
+      SUBRB    -8000H, BK
       SUBRB    0, SP
+      SUBRB    -8000H, SP
       SUBRB    0, ST
+      SUBRB    -8000H, ST
       SUBRB    0, IE
+      SUBRB    -8000H, IE
       SUBRB    0, IF
+      SUBRB    -8000H, IF
       SUBRB    0, IOF
+      SUBRB    -8000H, IOF
       SUBRB    0, RS
+      SUBRB    -8000H, RS
       SUBRB    0, RE
+      SUBRB    -8000H, RE
       SUBRB    0, RC
+      SUBRB    -8000H, RC
       SUBRF    R0, R0
       SUBRF    @000000H, R0
       SUBRF    *+AR0(0), R0
@@ -11699,6 +12129,7 @@
       SUBRF    *AR0++(IR0)B, R0
       SUBRF    1, R0
       SUBRF    1.0005, R0
+      SUBRF    -2, R0
       SUBRI    R0, R0
       SUBRI    AR0, R0
       SUBRI    DP, R0
@@ -11712,6 +12143,7 @@
       SUBRI    RS, R0
       SUBRI    RE, R0
       SUBRI    RC, R0
+      SUBRI    R-1, R0
       SUBRI    R0, AR0
       SUBRI    AR0, AR0
       SUBRI    DP, AR0
@@ -11725,6 +12157,7 @@
       SUBRI    RS, AR0
       SUBRI    RE, AR0
       SUBRI    RC, AR0
+      SUBRI    R-1, AR0
       SUBRI    R0, DP
       SUBRI    AR0, DP
       SUBRI    DP, DP
@@ -11738,6 +12171,7 @@
       SUBRI    RS, DP
       SUBRI    RE, DP
       SUBRI    RC, DP
+      SUBRI    R-1, DP
       SUBRI    R0, IR0
       SUBRI    AR0, IR0
       SUBRI    DP, IR0
@@ -11751,6 +12185,7 @@
       SUBRI    RS, IR0
       SUBRI    RE, IR0
       SUBRI    RC, IR0
+      SUBRI    R-1, IR0
       SUBRI    R0, BK
       SUBRI    AR0, BK
       SUBRI    DP, BK
@@ -11764,6 +12199,7 @@
       SUBRI    RS, BK
       SUBRI    RE, BK
       SUBRI    RC, BK
+      SUBRI    R-1, BK
       SUBRI    R0, SP
       SUBRI    AR0, SP
       SUBRI    DP, SP
@@ -11777,6 +12213,7 @@
       SUBRI    RS, SP
       SUBRI    RE, SP
       SUBRI    RC, SP
+      SUBRI    R-1, SP
       SUBRI    R0, ST
       SUBRI    AR0, ST
       SUBRI    DP, ST
@@ -11790,6 +12227,7 @@
       SUBRI    RS, ST
       SUBRI    RE, ST
       SUBRI    RC, ST
+      SUBRI    R-1, ST
       SUBRI    R0, IE
       SUBRI    AR0, IE
       SUBRI    DP, IE
@@ -11803,6 +12241,7 @@
       SUBRI    RS, IE
       SUBRI    RE, IE
       SUBRI    RC, IE
+      SUBRI    R-1, IE
       SUBRI    R0, IF
       SUBRI    AR0, IF
       SUBRI    DP, IF
@@ -11816,6 +12255,7 @@
       SUBRI    RS, IF
       SUBRI    RE, IF
       SUBRI    RC, IF
+      SUBRI    R-1, IF
       SUBRI    R0, IOF
       SUBRI    AR0, IOF
       SUBRI    DP, IOF
@@ -11829,6 +12269,7 @@
       SUBRI    RS, IOF
       SUBRI    RE, IOF
       SUBRI    RC, IOF
+      SUBRI    R-1, IOF
       SUBRI    R0, RS
       SUBRI    AR0, RS
       SUBRI    DP, RS
@@ -11842,6 +12283,7 @@
       SUBRI    RS, RS
       SUBRI    RE, RS
       SUBRI    RC, RS
+      SUBRI    R-1, RS
       SUBRI    R0, RE
       SUBRI    AR0, RE
       SUBRI    DP, RE
@@ -11855,6 +12297,7 @@
       SUBRI    RS, RE
       SUBRI    RE, RE
       SUBRI    RC, RE
+      SUBRI    R-1, RE
       SUBRI    R0, RC
       SUBRI    AR0, RC
       SUBRI    DP, RC
@@ -11868,6 +12311,7 @@
       SUBRI    RS, RC
       SUBRI    RE, RC
       SUBRI    RC, RC
+      SUBRI    R-1, RC
       SUBRI    @000000H, R0
       SUBRI    @000000H, AR0
       SUBRI    @000000H, DP
@@ -12220,18 +12664,31 @@
       SUBRI    *AR0, RC
       SUBRI    *AR0++(IR0)B, RC
       SUBRI    0, R0
+      SUBRI    -8000H, R0
       SUBRI    0, AR0
+      SUBRI    -8000H, AR0
       SUBRI    0, DP
+      SUBRI    -8000H, DP
       SUBRI    0, IR0
+      SUBRI    -8000H, IR0
       SUBRI    0, BK
+      SUBRI    -8000H, BK
       SUBRI    0, SP
+      SUBRI    -8000H, SP
       SUBRI    0, ST
+      SUBRI    -8000H, ST
       SUBRI    0, IE
+      SUBRI    -8000H, IE
       SUBRI    0, IF
+      SUBRI    -8000H, IF
       SUBRI    0, IOF
+      SUBRI    -8000H, IOF
       SUBRI    0, RS
+      SUBRI    -8000H, RS
       SUBRI    0, RE
+      SUBRI    -8000H, RE
       SUBRI    0, RC
+      SUBRI    -8000H, RC
       TSTB     R0, R0
       TSTB     AR0, R0
       TSTB     DP, R0
@@ -12245,6 +12702,7 @@
       TSTB     RS, R0
       TSTB     RE, R0
       TSTB     RC, R0
+      TSTB     R-1, R0
       TSTB     R0, AR0
       TSTB     AR0, AR0
       TSTB     DP, AR0
@@ -12258,6 +12716,7 @@
       TSTB     RS, AR0
       TSTB     RE, AR0
       TSTB     RC, AR0
+      TSTB     R-1, AR0
       TSTB     R0, DP
       TSTB     AR0, DP
       TSTB     DP, DP
@@ -12271,6 +12730,7 @@
       TSTB     RS, DP
       TSTB     RE, DP
       TSTB     RC, DP
+      TSTB     R-1, DP
       TSTB     R0, IR0
       TSTB     AR0, IR0
       TSTB     DP, IR0
@@ -12284,6 +12744,7 @@
       TSTB     RS, IR0
       TSTB     RE, IR0
       TSTB     RC, IR0
+      TSTB     R-1, IR0
       TSTB     R0, BK
       TSTB     AR0, BK
       TSTB     DP, BK
@@ -12297,6 +12758,7 @@
       TSTB     RS, BK
       TSTB     RE, BK
       TSTB     RC, BK
+      TSTB     R-1, BK
       TSTB     R0, SP
       TSTB     AR0, SP
       TSTB     DP, SP
@@ -12310,6 +12772,7 @@
       TSTB     RS, SP
       TSTB     RE, SP
       TSTB     RC, SP
+      TSTB     R-1, SP
       TSTB     R0, ST
       TSTB     AR0, ST
       TSTB     DP, ST
@@ -12323,6 +12786,7 @@
       TSTB     RS, ST
       TSTB     RE, ST
       TSTB     RC, ST
+      TSTB     R-1, ST
       TSTB     R0, IE
       TSTB     AR0, IE
       TSTB     DP, IE
@@ -12336,6 +12800,7 @@
       TSTB     RS, IE
       TSTB     RE, IE
       TSTB     RC, IE
+      TSTB     R-1, IE
       TSTB     R0, IF
       TSTB     AR0, IF
       TSTB     DP, IF
@@ -12349,6 +12814,7 @@
       TSTB     RS, IF
       TSTB     RE, IF
       TSTB     RC, IF
+      TSTB     R-1, IF
       TSTB     R0, IOF
       TSTB     AR0, IOF
       TSTB     DP, IOF
@@ -12362,6 +12828,7 @@
       TSTB     RS, IOF
       TSTB     RE, IOF
       TSTB     RC, IOF
+      TSTB     R-1, IOF
       TSTB     R0, RS
       TSTB     AR0, RS
       TSTB     DP, RS
@@ -12375,6 +12842,7 @@
       TSTB     RS, RS
       TSTB     RE, RS
       TSTB     RC, RS
+      TSTB     R-1, RS
       TSTB     R0, RE
       TSTB     AR0, RE
       TSTB     DP, RE
@@ -12388,6 +12856,7 @@
       TSTB     RS, RE
       TSTB     RE, RE
       TSTB     RC, RE
+      TSTB     R-1, RE
       TSTB     R0, RC
       TSTB     AR0, RC
       TSTB     DP, RC
@@ -12401,6 +12870,7 @@
       TSTB     RS, RC
       TSTB     RE, RC
       TSTB     RC, RC
+      TSTB     R-1, RC
       TSTB     @000000H, R0
       TSTB     @000000H, AR0
       TSTB     @000000H, DP
@@ -12778,6 +13248,7 @@
       XOR      RS, R0
       XOR      RE, R0
       XOR      RC, R0
+      XOR      R-1, R0
       XOR      R0, AR0
       XOR      AR0, AR0
       XOR      DP, AR0
@@ -12791,6 +13262,7 @@
       XOR      RS, AR0
       XOR      RE, AR0
       XOR      RC, AR0
+      XOR      R-1, AR0
       XOR      R0, DP
       XOR      AR0, DP
       XOR      DP, DP
@@ -12804,6 +13276,7 @@
       XOR      RS, DP
       XOR      RE, DP
       XOR      RC, DP
+      XOR      R-1, DP
       XOR      R0, IR0
       XOR      AR0, IR0
       XOR      DP, IR0
@@ -12817,6 +13290,7 @@
       XOR      RS, IR0
       XOR      RE, IR0
       XOR      RC, IR0
+      XOR      R-1, IR0
       XOR      R0, BK
       XOR      AR0, BK
       XOR      DP, BK
@@ -12830,6 +13304,7 @@
       XOR      RS, BK
       XOR      RE, BK
       XOR      RC, BK
+      XOR      R-1, BK
       XOR      R0, SP
       XOR      AR0, SP
       XOR      DP, SP
@@ -12843,6 +13318,7 @@
       XOR      RS, SP
       XOR      RE, SP
       XOR      RC, SP
+      XOR      R-1, SP
       XOR      R0, ST
       XOR      AR0, ST
       XOR      DP, ST
@@ -12856,6 +13332,7 @@
       XOR      RS, ST
       XOR      RE, ST
       XOR      RC, ST
+      XOR      R-1, ST
       XOR      R0, IE
       XOR      AR0, IE
       XOR      DP, IE
@@ -12869,6 +13346,7 @@
       XOR      RS, IE
       XOR      RE, IE
       XOR      RC, IE
+      XOR      R-1, IE
       XOR      R0, IF
       XOR      AR0, IF
       XOR      DP, IF
@@ -12882,6 +13360,7 @@
       XOR      RS, IF
       XOR      RE, IF
       XOR      RC, IF
+      XOR      R-1, IF
       XOR      R0, IOF
       XOR      AR0, IOF
       XOR      DP, IOF
@@ -12895,6 +13374,7 @@
       XOR      RS, IOF
       XOR      RE, IOF
       XOR      RC, IOF
+      XOR      R-1, IOF
       XOR      R0, RS
       XOR      AR0, RS
       XOR      DP, RS
@@ -12908,6 +13388,7 @@
       XOR      RS, RS
       XOR      RE, RS
       XOR      RC, RS
+      XOR      R-1, RS
       XOR      R0, RE
       XOR      AR0, RE
       XOR      DP, RE
@@ -12921,6 +13402,7 @@
       XOR      RS, RE
       XOR      RE, RE
       XOR      RC, RE
+      XOR      R-1, RE
       XOR      R0, RC
       XOR      AR0, RC
       XOR      DP, RC
@@ -12934,6 +13416,7 @@
       XOR      RS, RC
       XOR      RE, RC
       XOR      RC, RC
+      XOR      R-1, RC
       XOR      @000000H, R0
       XOR      @000000H, AR0
       XOR      @000000H, DP
@@ -154144,6 +154627,7 @@
       LDFU     *AR0++(IR0)B, R0
       LDFU     1, R0
       LDFU     1.0005, R0
+      LDFU     -2, R0
       LDFLO    R0, R0
       LDFLO    @000000H, R0
       LDFLO    *+AR0(0), R0
@@ -154174,6 +154658,7 @@
       LDFLO    *AR0++(IR0)B, R0
       LDFLO    1, R0
       LDFLO    1.0005, R0
+      LDFLO    -2, R0
       LDFLS    R0, R0
       LDFLS    @000000H, R0
       LDFLS    *+AR0(0), R0
@@ -154204,6 +154689,7 @@
       LDFLS    *AR0++(IR0)B, R0
       LDFLS    1, R0
       LDFLS    1.0005, R0
+      LDFLS    -2, R0
       LDFHI    R0, R0
       LDFHI    @000000H, R0
       LDFHI    *+AR0(0), R0
@@ -154234,6 +154720,7 @@
       LDFHI    *AR0++(IR0)B, R0
       LDFHI    1, R0
       LDFHI    1.0005, R0
+      LDFHI    -2, R0
       LDFHS    R0, R0
       LDFHS    @000000H, R0
       LDFHS    *+AR0(0), R0
@@ -154264,6 +154751,7 @@
       LDFHS    *AR0++(IR0)B, R0
       LDFHS    1, R0
       LDFHS    1.0005, R0
+      LDFHS    -2, R0
       LDFEQ    R0, R0
       LDFEQ    @000000H, R0
       LDFEQ    *+AR0(0), R0
@@ -154294,6 +154782,7 @@
       LDFEQ    *AR0++(IR0)B, R0
       LDFEQ    1, R0
       LDFEQ    1.0005, R0
+      LDFEQ    -2, R0
       LDFNE    R0, R0
       LDFNE    @000000H, R0
       LDFNE    *+AR0(0), R0
@@ -154324,6 +154813,7 @@
       LDFNE    *AR0++(IR0)B, R0
       LDFNE    1, R0
       LDFNE    1.0005, R0
+      LDFNE    -2, R0
       LDFLT    R0, R0
       LDFLT    @000000H, R0
       LDFLT    *+AR0(0), R0
@@ -154354,6 +154844,7 @@
       LDFLT    *AR0++(IR0)B, R0
       LDFLT    1, R0
       LDFLT    1.0005, R0
+      LDFLT    -2, R0
       LDFLE    R0, R0
       LDFLE    @000000H, R0
       LDFLE    *+AR0(0), R0
@@ -154384,6 +154875,7 @@
       LDFLE    *AR0++(IR0)B, R0
       LDFLE    1, R0
       LDFLE    1.0005, R0
+      LDFLE    -2, R0
       LDFGT    R0, R0
       LDFGT    @000000H, R0
       LDFGT    *+AR0(0), R0
@@ -154414,6 +154906,7 @@
       LDFGT    *AR0++(IR0)B, R0
       LDFGT    1, R0
       LDFGT    1.0005, R0
+      LDFGT    -2, R0
       LDFGE    R0, R0
       LDFGE    @000000H, R0
       LDFGE    *+AR0(0), R0
@@ -154444,6 +154937,7 @@
       LDFGE    *AR0++(IR0)B, R0
       LDFGE    1, R0
       LDFGE    1.0005, R0
+      LDFGE    -2, R0
       LDFNV    R0, R0
       LDFNV    @000000H, R0
       LDFNV    *+AR0(0), R0
@@ -154474,6 +154968,7 @@
       LDFNV    *AR0++(IR0)B, R0
       LDFNV    1, R0
       LDFNV    1.0005, R0
+      LDFNV    -2, R0
       LDFV     R0, R0
       LDFV     @000000H, R0
       LDFV     *+AR0(0), R0
@@ -154504,6 +154999,7 @@
       LDFV     *AR0++(IR0)B, R0
       LDFV     1, R0
       LDFV     1.0005, R0
+      LDFV     -2, R0
       LDFNUF   R0, R0
       LDFNUF   @000000H, R0
       LDFNUF   *+AR0(0), R0
@@ -154534,6 +155030,7 @@
       LDFNUF   *AR0++(IR0)B, R0
       LDFNUF   1, R0
       LDFNUF   1.0005, R0
+      LDFNUF   -2, R0
       LDFUF    R0, R0
       LDFUF    @000000H, R0
       LDFUF    *+AR0(0), R0
@@ -154564,6 +155061,7 @@
       LDFUF    *AR0++(IR0)B, R0
       LDFUF    1, R0
       LDFUF    1.0005, R0
+      LDFUF    -2, R0
       LDFNLV   R0, R0
       LDFNLV   @000000H, R0
       LDFNLV   *+AR0(0), R0
@@ -154594,6 +155092,7 @@
       LDFNLV   *AR0++(IR0)B, R0
       LDFNLV   1, R0
       LDFNLV   1.0005, R0
+      LDFNLV   -2, R0
       LDFLV    R0, R0
       LDFLV    @000000H, R0
       LDFLV    *+AR0(0), R0
@@ -154624,6 +155123,7 @@
       LDFLV    *AR0++(IR0)B, R0
       LDFLV    1, R0
       LDFLV    1.0005, R0
+      LDFLV    -2, R0
       LDFNLUF  R0, R0
       LDFNLUF  @000000H, R0
       LDFNLUF  *+AR0(0), R0
@@ -154654,6 +155154,7 @@
       LDFNLUF  *AR0++(IR0)B, R0
       LDFNLUF  1, R0
       LDFNLUF  1.0005, R0
+      LDFNLUF  -2, R0
       LDFLUF   R0, R0
       LDFLUF   @000000H, R0
       LDFLUF   *+AR0(0), R0
@@ -154684,6 +155185,7 @@
       LDFLUF   *AR0++(IR0)B, R0
       LDFLUF   1, R0
       LDFLUF   1.0005, R0
+      LDFLUF   -2, R0
       LDFZUF   R0, R0
       LDFZUF   @000000H, R0
       LDFZUF   *+AR0(0), R0
@@ -154714,6 +155216,7 @@
       LDFZUF   *AR0++(IR0)B, R0
       LDFZUF   1, R0
       LDFZUF   1.0005, R0
+      LDFZUF   -2, R0
       LDIU     R0, R0
       LDIU     AR0, R0
       LDIU     DP, R0
@@ -154727,6 +155230,7 @@
       LDIU     RS, R0
       LDIU     RE, R0
       LDIU     RC, R0
+      LDIU     R-1, R0
       LDIU     R0, AR0
       LDIU     AR0, AR0
       LDIU     DP, AR0
@@ -154740,6 +155244,7 @@
       LDIU     RS, AR0
       LDIU     RE, AR0
       LDIU     RC, AR0
+      LDIU     R-1, AR0
       LDIU     R0, DP
       LDIU     AR0, DP
       LDIU     DP, DP
@@ -154753,6 +155258,7 @@
       LDIU     RS, DP
       LDIU     RE, DP
       LDIU     RC, DP
+      LDIU     R-1, DP
       LDIU     R0, IR0
       LDIU     AR0, IR0
       LDIU     DP, IR0
@@ -154766,6 +155272,7 @@
       LDIU     RS, IR0
       LDIU     RE, IR0
       LDIU     RC, IR0
+      LDIU     R-1, IR0
       LDIU     R0, BK
       LDIU     AR0, BK
       LDIU     DP, BK
@@ -154779,6 +155286,7 @@
       LDIU     RS, BK
       LDIU     RE, BK
       LDIU     RC, BK
+      LDIU     R-1, BK
       LDIU     R0, SP
       LDIU     AR0, SP
       LDIU     DP, SP
@@ -154792,6 +155300,7 @@
       LDIU     RS, SP
       LDIU     RE, SP
       LDIU     RC, SP
+      LDIU     R-1, SP
       LDIU     R0, ST
       LDIU     AR0, ST
       LDIU     DP, ST
@@ -154805,6 +155314,7 @@
       LDIU     RS, ST
       LDIU     RE, ST
       LDIU     RC, ST
+      LDIU     R-1, ST
       LDIU     R0, IE
       LDIU     AR0, IE
       LDIU     DP, IE
@@ -154818,6 +155328,7 @@
       LDIU     RS, IE
       LDIU     RE, IE
       LDIU     RC, IE
+      LDIU     R-1, IE
       LDIU     R0, IF
       LDIU     AR0, IF
       LDIU     DP, IF
@@ -154831,6 +155342,7 @@
       LDIU     RS, IF
       LDIU     RE, IF
       LDIU     RC, IF
+      LDIU     R-1, IF
       LDIU     R0, IOF
       LDIU     AR0, IOF
       LDIU     DP, IOF
@@ -154844,6 +155356,7 @@
       LDIU     RS, IOF
       LDIU     RE, IOF
       LDIU     RC, IOF
+      LDIU     R-1, IOF
       LDIU     R0, RS
       LDIU     AR0, RS
       LDIU     DP, RS
@@ -154857,6 +155370,7 @@
       LDIU     RS, RS
       LDIU     RE, RS
       LDIU     RC, RS
+      LDIU     R-1, RS
       LDIU     R0, RE
       LDIU     AR0, RE
       LDIU     DP, RE
@@ -154870,6 +155384,7 @@
       LDIU     RS, RE
       LDIU     RE, RE
       LDIU     RC, RE
+      LDIU     R-1, RE
       LDIU     R0, RC
       LDIU     AR0, RC
       LDIU     DP, RC
@@ -154883,6 +155398,7 @@
       LDIU     RS, RC
       LDIU     RE, RC
       LDIU     RC, RC
+      LDIU     R-1, RC
       LDIU     @000000H, R0
       LDIU     @000000H, AR0
       LDIU     @000000H, DP
@@ -155235,18 +155751,31 @@
       LDIU     *AR0, RC
       LDIU     *AR0++(IR0)B, RC
       LDIU     0, R0
+      LDIU     -8000H, R0
       LDIU     0, AR0
+      LDIU     -8000H, AR0
       LDIU     0, DP
+      LDIU     -8000H, DP
       LDIU     0, IR0
+      LDIU     -8000H, IR0
       LDIU     0, BK
+      LDIU     -8000H, BK
       LDIU     0, SP
+      LDIU     -8000H, SP
       LDIU     0, ST
+      LDIU     -8000H, ST
       LDIU     0, IE
+      LDIU     -8000H, IE
       LDIU     0, IF
+      LDIU     -8000H, IF
       LDIU     0, IOF
+      LDIU     -8000H, IOF
       LDIU     0, RS
+      LDIU     -8000H, RS
       LDIU     0, RE
+      LDIU     -8000H, RE
       LDIU     0, RC
+      LDIU     -8000H, RC
       LDILO    R0, R0
       LDILO    AR0, R0
       LDILO    DP, R0
@@ -155260,6 +155789,7 @@
       LDILO    RS, R0
       LDILO    RE, R0
       LDILO    RC, R0
+      LDILO    R-1, R0
       LDILO    R0, AR0
       LDILO    AR0, AR0
       LDILO    DP, AR0
@@ -155273,6 +155803,7 @@
       LDILO    RS, AR0
       LDILO    RE, AR0
       LDILO    RC, AR0
+      LDILO    R-1, AR0
       LDILO    R0, DP
       LDILO    AR0, DP
       LDILO    DP, DP
@@ -155286,6 +155817,7 @@
       LDILO    RS, DP
       LDILO    RE, DP
       LDILO    RC, DP
+      LDILO    R-1, DP
       LDILO    R0, IR0
       LDILO    AR0, IR0
       LDILO    DP, IR0
@@ -155299,6 +155831,7 @@
       LDILO    RS, IR0
       LDILO    RE, IR0
       LDILO    RC, IR0
+      LDILO    R-1, IR0
       LDILO    R0, BK
       LDILO    AR0, BK
       LDILO    DP, BK
@@ -155312,6 +155845,7 @@
       LDILO    RS, BK
       LDILO    RE, BK
       LDILO    RC, BK
+      LDILO    R-1, BK
       LDILO    R0, SP
       LDILO    AR0, SP
       LDILO    DP, SP
@@ -155325,6 +155859,7 @@
       LDILO    RS, SP
       LDILO    RE, SP
       LDILO    RC, SP
+      LDILO    R-1, SP
       LDILO    R0, ST
       LDILO    AR0, ST
       LDILO    DP, ST
@@ -155338,6 +155873,7 @@
       LDILO    RS, ST
       LDILO    RE, ST
       LDILO    RC, ST
+      LDILO    R-1, ST
       LDILO    R0, IE
       LDILO    AR0, IE
       LDILO    DP, IE
@@ -155351,6 +155887,7 @@
       LDILO    RS, IE
       LDILO    RE, IE
       LDILO    RC, IE
+      LDILO    R-1, IE
       LDILO    R0, IF
       LDILO    AR0, IF
       LDILO    DP, IF
@@ -155364,6 +155901,7 @@
       LDILO    RS, IF
       LDILO    RE, IF
       LDILO    RC, IF
+      LDILO    R-1, IF
       LDILO    R0, IOF
       LDILO    AR0, IOF
       LDILO    DP, IOF
@@ -155377,6 +155915,7 @@
       LDILO    RS, IOF
       LDILO    RE, IOF
       LDILO    RC, IOF
+      LDILO    R-1, IOF
       LDILO    R0, RS
       LDILO    AR0, RS
       LDILO    DP, RS
@@ -155390,6 +155929,7 @@
       LDILO    RS, RS
       LDILO    RE, RS
       LDILO    RC, RS
+      LDILO    R-1, RS
       LDILO    R0, RE
       LDILO    AR0, RE
       LDILO    DP, RE
@@ -155403,6 +155943,7 @@
       LDILO    RS, RE
       LDILO    RE, RE
       LDILO    RC, RE
+      LDILO    R-1, RE
       LDILO    R0, RC
       LDILO    AR0, RC
       LDILO    DP, RC
@@ -155416,6 +155957,7 @@
       LDILO    RS, RC
       LDILO    RE, RC
       LDILO    RC, RC
+      LDILO    R-1, RC
       LDILO    @000000H, R0
       LDILO    @000000H, AR0
       LDILO    @000000H, DP
@@ -155768,18 +156310,31 @@
       LDILO    *AR0, RC
       LDILO    *AR0++(IR0)B, RC
       LDILO    0, R0
+      LDILO    -8000H, R0
       LDILO    0, AR0
+      LDILO    -8000H, AR0
       LDILO    0, DP
+      LDILO    -8000H, DP
       LDILO    0, IR0
+      LDILO    -8000H, IR0
       LDILO    0, BK
+      LDILO    -8000H, BK
       LDILO    0, SP
+      LDILO    -8000H, SP
       LDILO    0, ST
+      LDILO    -8000H, ST
       LDILO    0, IE
+      LDILO    -8000H, IE
       LDILO    0, IF
+      LDILO    -8000H, IF
       LDILO    0, IOF
+      LDILO    -8000H, IOF
       LDILO    0, RS
+      LDILO    -8000H, RS
       LDILO    0, RE
+      LDILO    -8000H, RE
       LDILO    0, RC
+      LDILO    -8000H, RC
       LDILS    R0, R0
       LDILS    AR0, R0
       LDILS    DP, R0
@@ -155793,6 +156348,7 @@
       LDILS    RS, R0
       LDILS    RE, R0
       LDILS    RC, R0
+      LDILS    R-1, R0
       LDILS    R0, AR0
       LDILS    AR0, AR0
       LDILS    DP, AR0
@@ -155806,6 +156362,7 @@
       LDILS    RS, AR0
       LDILS    RE, AR0
       LDILS    RC, AR0
+      LDILS    R-1, AR0
       LDILS    R0, DP
       LDILS    AR0, DP
       LDILS    DP, DP
@@ -155819,6 +156376,7 @@
       LDILS    RS, DP
       LDILS    RE, DP
       LDILS    RC, DP
+      LDILS    R-1, DP
       LDILS    R0, IR0
       LDILS    AR0, IR0
       LDILS    DP, IR0
@@ -155832,6 +156390,7 @@
       LDILS    RS, IR0
       LDILS    RE, IR0
       LDILS    RC, IR0
+      LDILS    R-1, IR0
       LDILS    R0, BK
       LDILS    AR0, BK
       LDILS    DP, BK
@@ -155845,6 +156404,7 @@
       LDILS    RS, BK
       LDILS    RE, BK
       LDILS    RC, BK
+      LDILS    R-1, BK
       LDILS    R0, SP
       LDILS    AR0, SP
       LDILS    DP, SP
@@ -155858,6 +156418,7 @@
       LDILS    RS, SP
       LDILS    RE, SP
       LDILS    RC, SP
+      LDILS    R-1, SP
       LDILS    R0, ST
       LDILS    AR0, ST
       LDILS    DP, ST
@@ -155871,6 +156432,7 @@
       LDILS    RS, ST
       LDILS    RE, ST
       LDILS    RC, ST
+      LDILS    R-1, ST
       LDILS    R0, IE
       LDILS    AR0, IE
       LDILS    DP, IE
@@ -155884,6 +156446,7 @@
       LDILS    RS, IE
       LDILS    RE, IE
       LDILS    RC, IE
+      LDILS    R-1, IE
       LDILS    R0, IF
       LDILS    AR0, IF
       LDILS    DP, IF
@@ -155897,6 +156460,7 @@
       LDILS    RS, IF
       LDILS    RE, IF
       LDILS    RC, IF
+      LDILS    R-1, IF
       LDILS    R0, IOF
       LDILS    AR0, IOF
       LDILS    DP, IOF
@@ -155910,6 +156474,7 @@
       LDILS    RS, IOF
       LDILS    RE, IOF
       LDILS    RC, IOF
+      LDILS    R-1, IOF
       LDILS    R0, RS
       LDILS    AR0, RS
       LDILS    DP, RS
@@ -155923,6 +156488,7 @@
       LDILS    RS, RS
       LDILS    RE, RS
       LDILS    RC, RS
+      LDILS    R-1, RS
       LDILS    R0, RE
       LDILS    AR0, RE
       LDILS    DP, RE
@@ -155936,6 +156502,7 @@
       LDILS    RS, RE
       LDILS    RE, RE
       LDILS    RC, RE
+      LDILS    R-1, RE
       LDILS    R0, RC
       LDILS    AR0, RC
       LDILS    DP, RC
@@ -155949,6 +156516,7 @@
       LDILS    RS, RC
       LDILS    RE, RC
       LDILS    RC, RC
+      LDILS    R-1, RC
       LDILS    @000000H, R0
       LDILS    @000000H, AR0
       LDILS    @000000H, DP
@@ -156301,18 +156869,31 @@
       LDILS    *AR0, RC
       LDILS    *AR0++(IR0)B, RC
       LDILS    0, R0
+      LDILS    -8000H, R0
       LDILS    0, AR0
+      LDILS    -8000H, AR0
       LDILS    0, DP
+      LDILS    -8000H, DP
       LDILS    0, IR0
+      LDILS    -8000H, IR0
       LDILS    0, BK
+      LDILS    -8000H, BK
       LDILS    0, SP
+      LDILS    -8000H, SP
       LDILS    0, ST
+      LDILS    -8000H, ST
       LDILS    0, IE
+      LDILS    -8000H, IE
       LDILS    0, IF
+      LDILS    -8000H, IF
       LDILS    0, IOF
+      LDILS    -8000H, IOF
       LDILS    0, RS
+      LDILS    -8000H, RS
       LDILS    0, RE
+      LDILS    -8000H, RE
       LDILS    0, RC
+      LDILS    -8000H, RC
       LDIHI    R0, R0
       LDIHI    AR0, R0
       LDIHI    DP, R0
@@ -156326,6 +156907,7 @@
       LDIHI    RS, R0
       LDIHI    RE, R0
       LDIHI    RC, R0
+      LDIHI    R-1, R0
       LDIHI    R0, AR0
       LDIHI    AR0, AR0
       LDIHI    DP, AR0
@@ -156339,6 +156921,7 @@
       LDIHI    RS, AR0
       LDIHI    RE, AR0
       LDIHI    RC, AR0
+      LDIHI    R-1, AR0
       LDIHI    R0, DP
       LDIHI    AR0, DP
       LDIHI    DP, DP
@@ -156352,6 +156935,7 @@
       LDIHI    RS, DP
       LDIHI    RE, DP
       LDIHI    RC, DP
+      LDIHI    R-1, DP
       LDIHI    R0, IR0
       LDIHI    AR0, IR0
       LDIHI    DP, IR0
@@ -156365,6 +156949,7 @@
       LDIHI    RS, IR0
       LDIHI    RE, IR0
       LDIHI    RC, IR0
+      LDIHI    R-1, IR0
       LDIHI    R0, BK
       LDIHI    AR0, BK
       LDIHI    DP, BK
@@ -156378,6 +156963,7 @@
       LDIHI    RS, BK
       LDIHI    RE, BK
       LDIHI    RC, BK
+      LDIHI    R-1, BK
       LDIHI    R0, SP
       LDIHI    AR0, SP
       LDIHI    DP, SP
@@ -156391,6 +156977,7 @@
       LDIHI    RS, SP
       LDIHI    RE, SP
       LDIHI    RC, SP
+      LDIHI    R-1, SP
       LDIHI    R0, ST
       LDIHI    AR0, ST
       LDIHI    DP, ST
@@ -156404,6 +156991,7 @@
       LDIHI    RS, ST
       LDIHI    RE, ST
       LDIHI    RC, ST
+      LDIHI    R-1, ST
       LDIHI    R0, IE
       LDIHI    AR0, IE
       LDIHI    DP, IE
@@ -156417,6 +157005,7 @@
       LDIHI    RS, IE
       LDIHI    RE, IE
       LDIHI    RC, IE
+      LDIHI    R-1, IE
       LDIHI    R0, IF
       LDIHI    AR0, IF
       LDIHI    DP, IF
@@ -156430,6 +157019,7 @@
       LDIHI    RS, IF
       LDIHI    RE, IF
       LDIHI    RC, IF
+      LDIHI    R-1, IF
       LDIHI    R0, IOF
       LDIHI    AR0, IOF
       LDIHI    DP, IOF
@@ -156443,6 +157033,7 @@
       LDIHI    RS, IOF
       LDIHI    RE, IOF
       LDIHI    RC, IOF
+      LDIHI    R-1, IOF
       LDIHI    R0, RS
       LDIHI    AR0, RS
       LDIHI    DP, RS
@@ -156456,6 +157047,7 @@
       LDIHI    RS, RS
       LDIHI    RE, RS
       LDIHI    RC, RS
+      LDIHI    R-1, RS
       LDIHI    R0, RE
       LDIHI    AR0, RE
       LDIHI    DP, RE
@@ -156469,6 +157061,7 @@
       LDIHI    RS, RE
       LDIHI    RE, RE
       LDIHI    RC, RE
+      LDIHI    R-1, RE
       LDIHI    R0, RC
       LDIHI    AR0, RC
       LDIHI    DP, RC
@@ -156482,6 +157075,7 @@
       LDIHI    RS, RC
       LDIHI    RE, RC
       LDIHI    RC, RC
+      LDIHI    R-1, RC
       LDIHI    @000000H, R0
       LDIHI    @000000H, AR0
       LDIHI    @000000H, DP
@@ -156834,18 +157428,31 @@
       LDIHI    *AR0, RC
       LDIHI    *AR0++(IR0)B, RC
       LDIHI    0, R0
+      LDIHI    -8000H, R0
       LDIHI    0, AR0
+      LDIHI    -8000H, AR0
       LDIHI    0, DP
+      LDIHI    -8000H, DP
       LDIHI    0, IR0
+      LDIHI    -8000H, IR0
       LDIHI    0, BK
+      LDIHI    -8000H, BK
       LDIHI    0, SP
+      LDIHI    -8000H, SP
       LDIHI    0, ST
+      LDIHI    -8000H, ST
       LDIHI    0, IE
+      LDIHI    -8000H, IE
       LDIHI    0, IF
+      LDIHI    -8000H, IF
       LDIHI    0, IOF
+      LDIHI    -8000H, IOF
       LDIHI    0, RS
+      LDIHI    -8000H, RS
       LDIHI    0, RE
+      LDIHI    -8000H, RE
       LDIHI    0, RC
+      LDIHI    -8000H, RC
       LDIHS    R0, R0
       LDIHS    AR0, R0
       LDIHS    DP, R0
@@ -156859,6 +157466,7 @@
       LDIHS    RS, R0
       LDIHS    RE, R0
       LDIHS    RC, R0
+      LDIHS    R-1, R0
       LDIHS    R0, AR0
       LDIHS    AR0, AR0
       LDIHS    DP, AR0
@@ -156872,6 +157480,7 @@
       LDIHS    RS, AR0
       LDIHS    RE, AR0
       LDIHS    RC, AR0
+      LDIHS    R-1, AR0
       LDIHS    R0, DP
       LDIHS    AR0, DP
       LDIHS    DP, DP
@@ -156885,6 +157494,7 @@
       LDIHS    RS, DP
       LDIHS    RE, DP
       LDIHS    RC, DP
+      LDIHS    R-1, DP
       LDIHS    R0, IR0
       LDIHS    AR0, IR0
       LDIHS    DP, IR0
@@ -156898,6 +157508,7 @@
       LDIHS    RS, IR0
       LDIHS    RE, IR0
       LDIHS    RC, IR0
+      LDIHS    R-1, IR0
       LDIHS    R0, BK
       LDIHS    AR0, BK
       LDIHS    DP, BK
@@ -156911,6 +157522,7 @@
       LDIHS    RS, BK
       LDIHS    RE, BK
       LDIHS    RC, BK
+      LDIHS    R-1, BK
       LDIHS    R0, SP
       LDIHS    AR0, SP
       LDIHS    DP, SP
@@ -156924,6 +157536,7 @@
       LDIHS    RS, SP
       LDIHS    RE, SP
       LDIHS    RC, SP
+      LDIHS    R-1, SP
       LDIHS    R0, ST
       LDIHS    AR0, ST
       LDIHS    DP, ST
@@ -156937,6 +157550,7 @@
       LDIHS    RS, ST
       LDIHS    RE, ST
       LDIHS    RC, ST
+      LDIHS    R-1, ST
       LDIHS    R0, IE
       LDIHS    AR0, IE
       LDIHS    DP, IE
@@ -156950,6 +157564,7 @@
       LDIHS    RS, IE
       LDIHS    RE, IE
       LDIHS    RC, IE
+      LDIHS    R-1, IE
       LDIHS    R0, IF
       LDIHS    AR0, IF
       LDIHS    DP, IF
@@ -156963,6 +157578,7 @@
       LDIHS    RS, IF
       LDIHS    RE, IF
       LDIHS    RC, IF
+      LDIHS    R-1, IF
       LDIHS    R0, IOF
       LDIHS    AR0, IOF
       LDIHS    DP, IOF
@@ -156976,6 +157592,7 @@
       LDIHS    RS, IOF
       LDIHS    RE, IOF
       LDIHS    RC, IOF
+      LDIHS    R-1, IOF
       LDIHS    R0, RS
       LDIHS    AR0, RS
       LDIHS    DP, RS
@@ -156989,6 +157606,7 @@
       LDIHS    RS, RS
       LDIHS    RE, RS
       LDIHS    RC, RS
+      LDIHS    R-1, RS
       LDIHS    R0, RE
       LDIHS    AR0, RE
       LDIHS    DP, RE
@@ -157002,6 +157620,7 @@
       LDIHS    RS, RE
       LDIHS    RE, RE
       LDIHS    RC, RE
+      LDIHS    R-1, RE
       LDIHS    R0, RC
       LDIHS    AR0, RC
       LDIHS    DP, RC
@@ -157015,6 +157634,7 @@
       LDIHS    RS, RC
       LDIHS    RE, RC
       LDIHS    RC, RC
+      LDIHS    R-1, RC
       LDIHS    @000000H, R0
       LDIHS    @000000H, AR0
       LDIHS    @000000H, DP
@@ -157367,18 +157987,31 @@
       LDIHS    *AR0, RC
       LDIHS    *AR0++(IR0)B, RC
       LDIHS    0, R0
+      LDIHS    -8000H, R0
       LDIHS    0, AR0
+      LDIHS    -8000H, AR0
       LDIHS    0, DP
+      LDIHS    -8000H, DP
       LDIHS    0, IR0
+      LDIHS    -8000H, IR0
       LDIHS    0, BK
+      LDIHS    -8000H, BK
       LDIHS    0, SP
+      LDIHS    -8000H, SP
       LDIHS    0, ST
+      LDIHS    -8000H, ST
       LDIHS    0, IE
+      LDIHS    -8000H, IE
       LDIHS    0, IF
+      LDIHS    -8000H, IF
       LDIHS    0, IOF
+      LDIHS    -8000H, IOF
       LDIHS    0, RS
+      LDIHS    -8000H, RS
       LDIHS    0, RE
+      LDIHS    -8000H, RE
       LDIHS    0, RC
+      LDIHS    -8000H, RC
       LDIEQ    R0, R0
       LDIEQ    AR0, R0
       LDIEQ    DP, R0
@@ -157392,6 +158025,7 @@
       LDIEQ    RS, R0
       LDIEQ    RE, R0
       LDIEQ    RC, R0
+      LDIEQ    R-1, R0
       LDIEQ    R0, AR0
       LDIEQ    AR0, AR0
       LDIEQ    DP, AR0
@@ -157405,6 +158039,7 @@
       LDIEQ    RS, AR0
       LDIEQ    RE, AR0
       LDIEQ    RC, AR0
+      LDIEQ    R-1, AR0
       LDIEQ    R0, DP
       LDIEQ    AR0, DP
       LDIEQ    DP, DP
@@ -157418,6 +158053,7 @@
       LDIEQ    RS, DP
       LDIEQ    RE, DP
       LDIEQ    RC, DP
+      LDIEQ    R-1, DP
       LDIEQ    R0, IR0
       LDIEQ    AR0, IR0
       LDIEQ    DP, IR0
@@ -157431,6 +158067,7 @@
       LDIEQ    RS, IR0
       LDIEQ    RE, IR0
       LDIEQ    RC, IR0
+      LDIEQ    R-1, IR0
       LDIEQ    R0, BK
       LDIEQ    AR0, BK
       LDIEQ    DP, BK
@@ -157444,6 +158081,7 @@
       LDIEQ    RS, BK
       LDIEQ    RE, BK
       LDIEQ    RC, BK
+      LDIEQ    R-1, BK
       LDIEQ    R0, SP
       LDIEQ    AR0, SP
       LDIEQ    DP, SP
@@ -157457,6 +158095,7 @@
       LDIEQ    RS, SP
       LDIEQ    RE, SP
       LDIEQ    RC, SP
+      LDIEQ    R-1, SP
       LDIEQ    R0, ST
       LDIEQ    AR0, ST
       LDIEQ    DP, ST
@@ -157470,6 +158109,7 @@
       LDIEQ    RS, ST
       LDIEQ    RE, ST
       LDIEQ    RC, ST
+      LDIEQ    R-1, ST
       LDIEQ    R0, IE
       LDIEQ    AR0, IE
       LDIEQ    DP, IE
@@ -157483,6 +158123,7 @@
       LDIEQ    RS, IE
       LDIEQ    RE, IE
       LDIEQ    RC, IE
+      LDIEQ    R-1, IE
       LDIEQ    R0, IF
       LDIEQ    AR0, IF
       LDIEQ    DP, IF
@@ -157496,6 +158137,7 @@
       LDIEQ    RS, IF
       LDIEQ    RE, IF
       LDIEQ    RC, IF
+      LDIEQ    R-1, IF
       LDIEQ    R0, IOF
       LDIEQ    AR0, IOF
       LDIEQ    DP, IOF
@@ -157509,6 +158151,7 @@
       LDIEQ    RS, IOF
       LDIEQ    RE, IOF
       LDIEQ    RC, IOF
+      LDIEQ    R-1, IOF
       LDIEQ    R0, RS
       LDIEQ    AR0, RS
       LDIEQ    DP, RS
@@ -157522,6 +158165,7 @@
       LDIEQ    RS, RS
       LDIEQ    RE, RS
       LDIEQ    RC, RS
+      LDIEQ    R-1, RS
       LDIEQ    R0, RE
       LDIEQ    AR0, RE
       LDIEQ    DP, RE
@@ -157535,6 +158179,7 @@
       LDIEQ    RS, RE
       LDIEQ    RE, RE
       LDIEQ    RC, RE
+      LDIEQ    R-1, RE
       LDIEQ    R0, RC
       LDIEQ    AR0, RC
       LDIEQ    DP, RC
@@ -157548,6 +158193,7 @@
       LDIEQ    RS, RC
       LDIEQ    RE, RC
       LDIEQ    RC, RC
+      LDIEQ    R-1, RC
       LDIEQ    @000000H, R0
       LDIEQ    @000000H, AR0
       LDIEQ    @000000H, DP
@@ -157900,18 +158546,31 @@
       LDIEQ    *AR0, RC
       LDIEQ    *AR0++(IR0)B, RC
       LDIEQ    0, R0
+      LDIEQ    -8000H, R0
       LDIEQ    0, AR0
+      LDIEQ    -8000H, AR0
       LDIEQ    0, DP
+      LDIEQ    -8000H, DP
       LDIEQ    0, IR0
+      LDIEQ    -8000H, IR0
       LDIEQ    0, BK
+      LDIEQ    -8000H, BK
       LDIEQ    0, SP
+      LDIEQ    -8000H, SP
       LDIEQ    0, ST
+      LDIEQ    -8000H, ST
       LDIEQ    0, IE
+      LDIEQ    -8000H, IE
       LDIEQ    0, IF
+      LDIEQ    -8000H, IF
       LDIEQ    0, IOF
+      LDIEQ    -8000H, IOF
       LDIEQ    0, RS
+      LDIEQ    -8000H, RS
       LDIEQ    0, RE
+      LDIEQ    -8000H, RE
       LDIEQ    0, RC
+      LDIEQ    -8000H, RC
       LDINE    R0, R0
       LDINE    AR0, R0
       LDINE    DP, R0
@@ -157925,6 +158584,7 @@
       LDINE    RS, R0
       LDINE    RE, R0
       LDINE    RC, R0
+      LDINE    R-1, R0
       LDINE    R0, AR0
       LDINE    AR0, AR0
       LDINE    DP, AR0
@@ -157938,6 +158598,7 @@
       LDINE    RS, AR0
       LDINE    RE, AR0
       LDINE    RC, AR0
+      LDINE    R-1, AR0
       LDINE    R0, DP
       LDINE    AR0, DP
       LDINE    DP, DP
@@ -157951,6 +158612,7 @@
       LDINE    RS, DP
       LDINE    RE, DP
       LDINE    RC, DP
+      LDINE    R-1, DP
       LDINE    R0, IR0
       LDINE    AR0, IR0
       LDINE    DP, IR0
@@ -157964,6 +158626,7 @@
       LDINE    RS, IR0
       LDINE    RE, IR0
       LDINE    RC, IR0
+      LDINE    R-1, IR0
       LDINE    R0, BK
       LDINE    AR0, BK
       LDINE    DP, BK
@@ -157977,6 +158640,7 @@
       LDINE    RS, BK
       LDINE    RE, BK
       LDINE    RC, BK
+      LDINE    R-1, BK
       LDINE    R0, SP
       LDINE    AR0, SP
       LDINE    DP, SP
@@ -157990,6 +158654,7 @@
       LDINE    RS, SP
       LDINE    RE, SP
       LDINE    RC, SP
+      LDINE    R-1, SP
       LDINE    R0, ST
       LDINE    AR0, ST
       LDINE    DP, ST
@@ -158003,6 +158668,7 @@
       LDINE    RS, ST
       LDINE    RE, ST
       LDINE    RC, ST
+      LDINE    R-1, ST
       LDINE    R0, IE
       LDINE    AR0, IE
       LDINE    DP, IE
@@ -158016,6 +158682,7 @@
       LDINE    RS, IE
       LDINE    RE, IE
       LDINE    RC, IE
+      LDINE    R-1, IE
       LDINE    R0, IF
       LDINE    AR0, IF
       LDINE    DP, IF
@@ -158029,6 +158696,7 @@
       LDINE    RS, IF
       LDINE    RE, IF
       LDINE    RC, IF
+      LDINE    R-1, IF
       LDINE    R0, IOF
       LDINE    AR0, IOF
       LDINE    DP, IOF
@@ -158042,6 +158710,7 @@
       LDINE    RS, IOF
       LDINE    RE, IOF
       LDINE    RC, IOF
+      LDINE    R-1, IOF
       LDINE    R0, RS
       LDINE    AR0, RS
       LDINE    DP, RS
@@ -158055,6 +158724,7 @@
       LDINE    RS, RS
       LDINE    RE, RS
       LDINE    RC, RS
+      LDINE    R-1, RS
       LDINE    R0, RE
       LDINE    AR0, RE
       LDINE    DP, RE
@@ -158068,6 +158738,7 @@
       LDINE    RS, RE
       LDINE    RE, RE
       LDINE    RC, RE
+      LDINE    R-1, RE
       LDINE    R0, RC
       LDINE    AR0, RC
       LDINE    DP, RC
@@ -158081,6 +158752,7 @@
       LDINE    RS, RC
       LDINE    RE, RC
       LDINE    RC, RC
+      LDINE    R-1, RC
       LDINE    @000000H, R0
       LDINE    @000000H, AR0
       LDINE    @000000H, DP
@@ -158433,18 +159105,31 @@
       LDINE    *AR0, RC
       LDINE    *AR0++(IR0)B, RC
       LDINE    0, R0
+      LDINE    -8000H, R0
       LDINE    0, AR0
+      LDINE    -8000H, AR0
       LDINE    0, DP
+      LDINE    -8000H, DP
       LDINE    0, IR0
+      LDINE    -8000H, IR0
       LDINE    0, BK
+      LDINE    -8000H, BK
       LDINE    0, SP
+      LDINE    -8000H, SP
       LDINE    0, ST
+      LDINE    -8000H, ST
       LDINE    0, IE
+      LDINE    -8000H, IE
       LDINE    0, IF
+      LDINE    -8000H, IF
       LDINE    0, IOF
+      LDINE    -8000H, IOF
       LDINE    0, RS
+      LDINE    -8000H, RS
       LDINE    0, RE
+      LDINE    -8000H, RE
       LDINE    0, RC
+      LDINE    -8000H, RC
       LDILT    R0, R0
       LDILT    AR0, R0
       LDILT    DP, R0
@@ -158458,6 +159143,7 @@
       LDILT    RS, R0
       LDILT    RE, R0
       LDILT    RC, R0
+      LDILT    R-1, R0
       LDILT    R0, AR0
       LDILT    AR0, AR0
       LDILT    DP, AR0
@@ -158471,6 +159157,7 @@
       LDILT    RS, AR0
       LDILT    RE, AR0
       LDILT    RC, AR0
+      LDILT    R-1, AR0
       LDILT    R0, DP
       LDILT    AR0, DP
       LDILT    DP, DP
@@ -158484,6 +159171,7 @@
       LDILT    RS, DP
       LDILT    RE, DP
       LDILT    RC, DP
+      LDILT    R-1, DP
       LDILT    R0, IR0
       LDILT    AR0, IR0
       LDILT    DP, IR0
@@ -158497,6 +159185,7 @@
       LDILT    RS, IR0
       LDILT    RE, IR0
       LDILT    RC, IR0
+      LDILT    R-1, IR0
       LDILT    R0, BK
       LDILT    AR0, BK
       LDILT    DP, BK
@@ -158510,6 +159199,7 @@
       LDILT    RS, BK
       LDILT    RE, BK
       LDILT    RC, BK
+      LDILT    R-1, BK
       LDILT    R0, SP
       LDILT    AR0, SP
       LDILT    DP, SP
@@ -158523,6 +159213,7 @@
       LDILT    RS, SP
       LDILT    RE, SP
       LDILT    RC, SP
+      LDILT    R-1, SP
       LDILT    R0, ST
       LDILT    AR0, ST
       LDILT    DP, ST
@@ -158536,6 +159227,7 @@
       LDILT    RS, ST
       LDILT    RE, ST
       LDILT    RC, ST
+      LDILT    R-1, ST
       LDILT    R0, IE
       LDILT    AR0, IE
       LDILT    DP, IE
@@ -158549,6 +159241,7 @@
       LDILT    RS, IE
       LDILT    RE, IE
       LDILT    RC, IE
+      LDILT    R-1, IE
       LDILT    R0, IF
       LDILT    AR0, IF
       LDILT    DP, IF
@@ -158562,6 +159255,7 @@
       LDILT    RS, IF
       LDILT    RE, IF
       LDILT    RC, IF
+      LDILT    R-1, IF
       LDILT    R0, IOF
       LDILT    AR0, IOF
       LDILT    DP, IOF
@@ -158575,6 +159269,7 @@
       LDILT    RS, IOF
       LDILT    RE, IOF
       LDILT    RC, IOF
+      LDILT    R-1, IOF
       LDILT    R0, RS
       LDILT    AR0, RS
       LDILT    DP, RS
@@ -158588,6 +159283,7 @@
       LDILT    RS, RS
       LDILT    RE, RS
       LDILT    RC, RS
+      LDILT    R-1, RS
       LDILT    R0, RE
       LDILT    AR0, RE
       LDILT    DP, RE
@@ -158601,6 +159297,7 @@
       LDILT    RS, RE
       LDILT    RE, RE
       LDILT    RC, RE
+      LDILT    R-1, RE
       LDILT    R0, RC
       LDILT    AR0, RC
       LDILT    DP, RC
@@ -158614,6 +159311,7 @@
       LDILT    RS, RC
       LDILT    RE, RC
       LDILT    RC, RC
+      LDILT    R-1, RC
       LDILT    @000000H, R0
       LDILT    @000000H, AR0
       LDILT    @000000H, DP
@@ -158966,18 +159664,31 @@
       LDILT    *AR0, RC
       LDILT    *AR0++(IR0)B, RC
       LDILT    0, R0
+      LDILT    -8000H, R0
       LDILT    0, AR0
+      LDILT    -8000H, AR0
       LDILT    0, DP
+      LDILT    -8000H, DP
       LDILT    0, IR0
+      LDILT    -8000H, IR0
       LDILT    0, BK
+      LDILT    -8000H, BK
       LDILT    0, SP
+      LDILT    -8000H, SP
       LDILT    0, ST
+      LDILT    -8000H, ST
       LDILT    0, IE
+      LDILT    -8000H, IE
       LDILT    0, IF
+      LDILT    -8000H, IF
       LDILT    0, IOF
+      LDILT    -8000H, IOF
       LDILT    0, RS
+      LDILT    -8000H, RS
       LDILT    0, RE
+      LDILT    -8000H, RE
       LDILT    0, RC
+      LDILT    -8000H, RC
       LDILE    R0, R0
       LDILE    AR0, R0
       LDILE    DP, R0
@@ -158991,6 +159702,7 @@
       LDILE    RS, R0
       LDILE    RE, R0
       LDILE    RC, R0
+      LDILE    R-1, R0
       LDILE    R0, AR0
       LDILE    AR0, AR0
       LDILE    DP, AR0
@@ -159004,6 +159716,7 @@
       LDILE    RS, AR0
       LDILE    RE, AR0
       LDILE    RC, AR0
+      LDILE    R-1, AR0
       LDILE    R0, DP
       LDILE    AR0, DP
       LDILE    DP, DP
@@ -159017,6 +159730,7 @@
       LDILE    RS, DP
       LDILE    RE, DP
       LDILE    RC, DP
+      LDILE    R-1, DP
       LDILE    R0, IR0
       LDILE    AR0, IR0
       LDILE    DP, IR0
@@ -159030,6 +159744,7 @@
       LDILE    RS, IR0
       LDILE    RE, IR0
       LDILE    RC, IR0
+      LDILE    R-1, IR0
       LDILE    R0, BK
       LDILE    AR0, BK
       LDILE    DP, BK
@@ -159043,6 +159758,7 @@
       LDILE    RS, BK
       LDILE    RE, BK
       LDILE    RC, BK
+      LDILE    R-1, BK
       LDILE    R0, SP
       LDILE    AR0, SP
       LDILE    DP, SP
@@ -159056,6 +159772,7 @@
       LDILE    RS, SP
       LDILE    RE, SP
       LDILE    RC, SP
+      LDILE    R-1, SP
       LDILE    R0, ST
       LDILE    AR0, ST
       LDILE    DP, ST
@@ -159069,6 +159786,7 @@
       LDILE    RS, ST
       LDILE    RE, ST
       LDILE    RC, ST
+      LDILE    R-1, ST
       LDILE    R0, IE
       LDILE    AR0, IE
       LDILE    DP, IE
@@ -159082,6 +159800,7 @@
       LDILE    RS, IE
       LDILE    RE, IE
       LDILE    RC, IE
+      LDILE    R-1, IE
       LDILE    R0, IF
       LDILE    AR0, IF
       LDILE    DP, IF
@@ -159095,6 +159814,7 @@
       LDILE    RS, IF
       LDILE    RE, IF
       LDILE    RC, IF
+      LDILE    R-1, IF
       LDILE    R0, IOF
       LDILE    AR0, IOF
       LDILE    DP, IOF
@@ -159108,6 +159828,7 @@
       LDILE    RS, IOF
       LDILE    RE, IOF
       LDILE    RC, IOF
+      LDILE    R-1, IOF
       LDILE    R0, RS
       LDILE    AR0, RS
       LDILE    DP, RS
@@ -159121,6 +159842,7 @@
       LDILE    RS, RS
       LDILE    RE, RS
       LDILE    RC, RS
+      LDILE    R-1, RS
       LDILE    R0, RE
       LDILE    AR0, RE
       LDILE    DP, RE
@@ -159134,6 +159856,7 @@
       LDILE    RS, RE
       LDILE    RE, RE
       LDILE    RC, RE
+      LDILE    R-1, RE
       LDILE    R0, RC
       LDILE    AR0, RC
       LDILE    DP, RC
@@ -159147,6 +159870,7 @@
       LDILE    RS, RC
       LDILE    RE, RC
       LDILE    RC, RC
+      LDILE    R-1, RC
       LDILE    @000000H, R0
       LDILE    @000000H, AR0
       LDILE    @000000H, DP
@@ -159499,18 +160223,31 @@
       LDILE    *AR0, RC
       LDILE    *AR0++(IR0)B, RC
       LDILE    0, R0
+      LDILE    -8000H, R0
       LDILE    0, AR0
+      LDILE    -8000H, AR0
       LDILE    0, DP
+      LDILE    -8000H, DP
       LDILE    0, IR0
+      LDILE    -8000H, IR0
       LDILE    0, BK
+      LDILE    -8000H, BK
       LDILE    0, SP
+      LDILE    -8000H, SP
       LDILE    0, ST
+      LDILE    -8000H, ST
       LDILE    0, IE
+      LDILE    -8000H, IE
       LDILE    0, IF
+      LDILE    -8000H, IF
       LDILE    0, IOF
+      LDILE    -8000H, IOF
       LDILE    0, RS
+      LDILE    -8000H, RS
       LDILE    0, RE
+      LDILE    -8000H, RE
       LDILE    0, RC
+      LDILE    -8000H, RC
       LDIGT    R0, R0
       LDIGT    AR0, R0
       LDIGT    DP, R0
@@ -159524,6 +160261,7 @@
       LDIGT    RS, R0
       LDIGT    RE, R0
       LDIGT    RC, R0
+      LDIGT    R-1, R0
       LDIGT    R0, AR0
       LDIGT    AR0, AR0
       LDIGT    DP, AR0
@@ -159537,6 +160275,7 @@
       LDIGT    RS, AR0
       LDIGT    RE, AR0
       LDIGT    RC, AR0
+      LDIGT    R-1, AR0
       LDIGT    R0, DP
       LDIGT    AR0, DP
       LDIGT    DP, DP
@@ -159550,6 +160289,7 @@
       LDIGT    RS, DP
       LDIGT    RE, DP
       LDIGT    RC, DP
+      LDIGT    R-1, DP
       LDIGT    R0, IR0
       LDIGT    AR0, IR0
       LDIGT    DP, IR0
@@ -159563,6 +160303,7 @@
       LDIGT    RS, IR0
       LDIGT    RE, IR0
       LDIGT    RC, IR0
+      LDIGT    R-1, IR0
       LDIGT    R0, BK
       LDIGT    AR0, BK
       LDIGT    DP, BK
@@ -159576,6 +160317,7 @@
       LDIGT    RS, BK
       LDIGT    RE, BK
       LDIGT    RC, BK
+      LDIGT    R-1, BK
       LDIGT    R0, SP
       LDIGT    AR0, SP
       LDIGT    DP, SP
@@ -159589,6 +160331,7 @@
       LDIGT    RS, SP
       LDIGT    RE, SP
       LDIGT    RC, SP
+      LDIGT    R-1, SP
       LDIGT    R0, ST
       LDIGT    AR0, ST
       LDIGT    DP, ST
@@ -159602,6 +160345,7 @@
       LDIGT    RS, ST
       LDIGT    RE, ST
       LDIGT    RC, ST
+      LDIGT    R-1, ST
       LDIGT    R0, IE
       LDIGT    AR0, IE
       LDIGT    DP, IE
@@ -159615,6 +160359,7 @@
       LDIGT    RS, IE
       LDIGT    RE, IE
       LDIGT    RC, IE
+      LDIGT    R-1, IE
       LDIGT    R0, IF
       LDIGT    AR0, IF
       LDIGT    DP, IF
@@ -159628,6 +160373,7 @@
       LDIGT    RS, IF
       LDIGT    RE, IF
       LDIGT    RC, IF
+      LDIGT    R-1, IF
       LDIGT    R0, IOF
       LDIGT    AR0, IOF
       LDIGT    DP, IOF
@@ -159641,6 +160387,7 @@
       LDIGT    RS, IOF
       LDIGT    RE, IOF
       LDIGT    RC, IOF
+      LDIGT    R-1, IOF
       LDIGT    R0, RS
       LDIGT    AR0, RS
       LDIGT    DP, RS
@@ -159654,6 +160401,7 @@
       LDIGT    RS, RS
       LDIGT    RE, RS
       LDIGT    RC, RS
+      LDIGT    R-1, RS
       LDIGT    R0, RE
       LDIGT    AR0, RE
       LDIGT    DP, RE
@@ -159667,6 +160415,7 @@
       LDIGT    RS, RE
       LDIGT    RE, RE
       LDIGT    RC, RE
+      LDIGT    R-1, RE
       LDIGT    R0, RC
       LDIGT    AR0, RC
       LDIGT    DP, RC
@@ -159680,6 +160429,7 @@
       LDIGT    RS, RC
       LDIGT    RE, RC
       LDIGT    RC, RC
+      LDIGT    R-1, RC
       LDIGT    @000000H, R0
       LDIGT    @000000H, AR0
       LDIGT    @000000H, DP
@@ -160032,18 +160782,31 @@
       LDIGT    *AR0, RC
       LDIGT    *AR0++(IR0)B, RC
       LDIGT    0, R0
+      LDIGT    -8000H, R0
       LDIGT    0, AR0
+      LDIGT    -8000H, AR0
       LDIGT    0, DP
+      LDIGT    -8000H, DP
       LDIGT    0, IR0
+      LDIGT    -8000H, IR0
       LDIGT    0, BK
+      LDIGT    -8000H, BK
       LDIGT    0, SP
+      LDIGT    -8000H, SP
       LDIGT    0, ST
+      LDIGT    -8000H, ST
       LDIGT    0, IE
+      LDIGT    -8000H, IE
       LDIGT    0, IF
+      LDIGT    -8000H, IF
       LDIGT    0, IOF
+      LDIGT    -8000H, IOF
       LDIGT    0, RS
+      LDIGT    -8000H, RS
       LDIGT    0, RE
+      LDIGT    -8000H, RE
       LDIGT    0, RC
+      LDIGT    -8000H, RC
       LDIGE    R0, R0
       LDIGE    AR0, R0
       LDIGE    DP, R0
@@ -160057,6 +160820,7 @@
       LDIGE    RS, R0
       LDIGE    RE, R0
       LDIGE    RC, R0
+      LDIGE    R-1, R0
       LDIGE    R0, AR0
       LDIGE    AR0, AR0
       LDIGE    DP, AR0
@@ -160070,6 +160834,7 @@
       LDIGE    RS, AR0
       LDIGE    RE, AR0
       LDIGE    RC, AR0
+      LDIGE    R-1, AR0
       LDIGE    R0, DP
       LDIGE    AR0, DP
       LDIGE    DP, DP
@@ -160083,6 +160848,7 @@
       LDIGE    RS, DP
       LDIGE    RE, DP
       LDIGE    RC, DP
+      LDIGE    R-1, DP
       LDIGE    R0, IR0
       LDIGE    AR0, IR0
       LDIGE    DP, IR0
@@ -160096,6 +160862,7 @@
       LDIGE    RS, IR0
       LDIGE    RE, IR0
       LDIGE    RC, IR0
+      LDIGE    R-1, IR0
       LDIGE    R0, BK
       LDIGE    AR0, BK
       LDIGE    DP, BK
@@ -160109,6 +160876,7 @@
       LDIGE    RS, BK
       LDIGE    RE, BK
       LDIGE    RC, BK
+      LDIGE    R-1, BK
       LDIGE    R0, SP
       LDIGE    AR0, SP
       LDIGE    DP, SP
@@ -160122,6 +160890,7 @@
       LDIGE    RS, SP
       LDIGE    RE, SP
       LDIGE    RC, SP
+      LDIGE    R-1, SP
       LDIGE    R0, ST
       LDIGE    AR0, ST
       LDIGE    DP, ST
@@ -160135,6 +160904,7 @@
       LDIGE    RS, ST
       LDIGE    RE, ST
       LDIGE    RC, ST
+      LDIGE    R-1, ST
       LDIGE    R0, IE
       LDIGE    AR0, IE
       LDIGE    DP, IE
@@ -160148,6 +160918,7 @@
       LDIGE    RS, IE
       LDIGE    RE, IE
       LDIGE    RC, IE
+      LDIGE    R-1, IE
       LDIGE    R0, IF
       LDIGE    AR0, IF
       LDIGE    DP, IF
@@ -160161,6 +160932,7 @@
       LDIGE    RS, IF
       LDIGE    RE, IF
       LDIGE    RC, IF
+      LDIGE    R-1, IF
       LDIGE    R0, IOF
       LDIGE    AR0, IOF
       LDIGE    DP, IOF
@@ -160174,6 +160946,7 @@
       LDIGE    RS, IOF
       LDIGE    RE, IOF
       LDIGE    RC, IOF
+      LDIGE    R-1, IOF
       LDIGE    R0, RS
       LDIGE    AR0, RS
       LDIGE    DP, RS
@@ -160187,6 +160960,7 @@
       LDIGE    RS, RS
       LDIGE    RE, RS
       LDIGE    RC, RS
+      LDIGE    R-1, RS
       LDIGE    R0, RE
       LDIGE    AR0, RE
       LDIGE    DP, RE
@@ -160200,6 +160974,7 @@
       LDIGE    RS, RE
       LDIGE    RE, RE
       LDIGE    RC, RE
+      LDIGE    R-1, RE
       LDIGE    R0, RC
       LDIGE    AR0, RC
       LDIGE    DP, RC
@@ -160213,6 +160988,7 @@
       LDIGE    RS, RC
       LDIGE    RE, RC
       LDIGE    RC, RC
+      LDIGE    R-1, RC
       LDIGE    @000000H, R0
       LDIGE    @000000H, AR0
       LDIGE    @000000H, DP
@@ -160565,18 +161341,31 @@
       LDIGE    *AR0, RC
       LDIGE    *AR0++(IR0)B, RC
       LDIGE    0, R0
+      LDIGE    -8000H, R0
       LDIGE    0, AR0
+      LDIGE    -8000H, AR0
       LDIGE    0, DP
+      LDIGE    -8000H, DP
       LDIGE    0, IR0
+      LDIGE    -8000H, IR0
       LDIGE    0, BK
+      LDIGE    -8000H, BK
       LDIGE    0, SP
+      LDIGE    -8000H, SP
       LDIGE    0, ST
+      LDIGE    -8000H, ST
       LDIGE    0, IE
+      LDIGE    -8000H, IE
       LDIGE    0, IF
+      LDIGE    -8000H, IF
       LDIGE    0, IOF
+      LDIGE    -8000H, IOF
       LDIGE    0, RS
+      LDIGE    -8000H, RS
       LDIGE    0, RE
+      LDIGE    -8000H, RE
       LDIGE    0, RC
+      LDIGE    -8000H, RC
       LDINV    R0, R0
       LDINV    AR0, R0
       LDINV    DP, R0
@@ -160590,6 +161379,7 @@
       LDINV    RS, R0
       LDINV    RE, R0
       LDINV    RC, R0
+      LDINV    R-1, R0
       LDINV    R0, AR0
       LDINV    AR0, AR0
       LDINV    DP, AR0
@@ -160603,6 +161393,7 @@
       LDINV    RS, AR0
       LDINV    RE, AR0
       LDINV    RC, AR0
+      LDINV    R-1, AR0
       LDINV    R0, DP
       LDINV    AR0, DP
       LDINV    DP, DP
@@ -160616,6 +161407,7 @@
       LDINV    RS, DP
       LDINV    RE, DP
       LDINV    RC, DP
+      LDINV    R-1, DP
       LDINV    R0, IR0
       LDINV    AR0, IR0
       LDINV    DP, IR0
@@ -160629,6 +161421,7 @@
       LDINV    RS, IR0
       LDINV    RE, IR0
       LDINV    RC, IR0
+      LDINV    R-1, IR0
       LDINV    R0, BK
       LDINV    AR0, BK
       LDINV    DP, BK
@@ -160642,6 +161435,7 @@
       LDINV    RS, BK
       LDINV    RE, BK
       LDINV    RC, BK
+      LDINV    R-1, BK
       LDINV    R0, SP
       LDINV    AR0, SP
       LDINV    DP, SP
@@ -160655,6 +161449,7 @@
       LDINV    RS, SP
       LDINV    RE, SP
       LDINV    RC, SP
+      LDINV    R-1, SP
       LDINV    R0, ST
       LDINV    AR0, ST
       LDINV    DP, ST
@@ -160668,6 +161463,7 @@
       LDINV    RS, ST
       LDINV    RE, ST
       LDINV    RC, ST
+      LDINV    R-1, ST
       LDINV    R0, IE
       LDINV    AR0, IE
       LDINV    DP, IE
@@ -160681,6 +161477,7 @@
       LDINV    RS, IE
       LDINV    RE, IE
       LDINV    RC, IE
+      LDINV    R-1, IE
       LDINV    R0, IF
       LDINV    AR0, IF
       LDINV    DP, IF
@@ -160694,6 +161491,7 @@
       LDINV    RS, IF
       LDINV    RE, IF
       LDINV    RC, IF
+      LDINV    R-1, IF
       LDINV    R0, IOF
       LDINV    AR0, IOF
       LDINV    DP, IOF
@@ -160707,6 +161505,7 @@
       LDINV    RS, IOF
       LDINV    RE, IOF
       LDINV    RC, IOF
+      LDINV    R-1, IOF
       LDINV    R0, RS
       LDINV    AR0, RS
       LDINV    DP, RS
@@ -160720,6 +161519,7 @@
       LDINV    RS, RS
       LDINV    RE, RS
       LDINV    RC, RS
+      LDINV    R-1, RS
       LDINV    R0, RE
       LDINV    AR0, RE
       LDINV    DP, RE
@@ -160733,6 +161533,7 @@
       LDINV    RS, RE
       LDINV    RE, RE
       LDINV    RC, RE
+      LDINV    R-1, RE
       LDINV    R0, RC
       LDINV    AR0, RC
       LDINV    DP, RC
@@ -160746,6 +161547,7 @@
       LDINV    RS, RC
       LDINV    RE, RC
       LDINV    RC, RC
+      LDINV    R-1, RC
       LDINV    @000000H, R0
       LDINV    @000000H, AR0
       LDINV    @000000H, DP
@@ -161098,18 +161900,31 @@
       LDINV    *AR0, RC
       LDINV    *AR0++(IR0)B, RC
       LDINV    0, R0
+      LDINV    -8000H, R0
       LDINV    0, AR0
+      LDINV    -8000H, AR0
       LDINV    0, DP
+      LDINV    -8000H, DP
       LDINV    0, IR0
+      LDINV    -8000H, IR0
       LDINV    0, BK
+      LDINV    -8000H, BK
       LDINV    0, SP
+      LDINV    -8000H, SP
       LDINV    0, ST
+      LDINV    -8000H, ST
       LDINV    0, IE
+      LDINV    -8000H, IE
       LDINV    0, IF
+      LDINV    -8000H, IF
       LDINV    0, IOF
+      LDINV    -8000H, IOF
       LDINV    0, RS
+      LDINV    -8000H, RS
       LDINV    0, RE
+      LDINV    -8000H, RE
       LDINV    0, RC
+      LDINV    -8000H, RC
       LDIV     R0, R0
       LDIV     AR0, R0
       LDIV     DP, R0
@@ -161123,6 +161938,7 @@
       LDIV     RS, R0
       LDIV     RE, R0
       LDIV     RC, R0
+      LDIV     R-1, R0
       LDIV     R0, AR0
       LDIV     AR0, AR0
       LDIV     DP, AR0
@@ -161136,6 +161952,7 @@
       LDIV     RS, AR0
       LDIV     RE, AR0
       LDIV     RC, AR0
+      LDIV     R-1, AR0
       LDIV     R0, DP
       LDIV     AR0, DP
       LDIV     DP, DP
@@ -161149,6 +161966,7 @@
       LDIV     RS, DP
       LDIV     RE, DP
       LDIV     RC, DP
+      LDIV     R-1, DP
       LDIV     R0, IR0
       LDIV     AR0, IR0
       LDIV     DP, IR0
@@ -161162,6 +161980,7 @@
       LDIV     RS, IR0
       LDIV     RE, IR0
       LDIV     RC, IR0
+      LDIV     R-1, IR0
       LDIV     R0, BK
       LDIV     AR0, BK
       LDIV     DP, BK
@@ -161175,6 +161994,7 @@
       LDIV     RS, BK
       LDIV     RE, BK
       LDIV     RC, BK
+      LDIV     R-1, BK
       LDIV     R0, SP
       LDIV     AR0, SP
       LDIV     DP, SP
@@ -161188,6 +162008,7 @@
       LDIV     RS, SP
       LDIV     RE, SP
       LDIV     RC, SP
+      LDIV     R-1, SP
       LDIV     R0, ST
       LDIV     AR0, ST
       LDIV     DP, ST
@@ -161201,6 +162022,7 @@
       LDIV     RS, ST
       LDIV     RE, ST
       LDIV     RC, ST
+      LDIV     R-1, ST
       LDIV     R0, IE
       LDIV     AR0, IE
       LDIV     DP, IE
@@ -161214,6 +162036,7 @@
       LDIV     RS, IE
       LDIV     RE, IE
       LDIV     RC, IE
+      LDIV     R-1, IE
       LDIV     R0, IF
       LDIV     AR0, IF
       LDIV     DP, IF
@@ -161227,6 +162050,7 @@
       LDIV     RS, IF
       LDIV     RE, IF
       LDIV     RC, IF
+      LDIV     R-1, IF
       LDIV     R0, IOF
       LDIV     AR0, IOF
       LDIV     DP, IOF
@@ -161240,6 +162064,7 @@
       LDIV     RS, IOF
       LDIV     RE, IOF
       LDIV     RC, IOF
+      LDIV     R-1, IOF
       LDIV     R0, RS
       LDIV     AR0, RS
       LDIV     DP, RS
@@ -161253,6 +162078,7 @@
       LDIV     RS, RS
       LDIV     RE, RS
       LDIV     RC, RS
+      LDIV     R-1, RS
       LDIV     R0, RE
       LDIV     AR0, RE
       LDIV     DP, RE
@@ -161266,6 +162092,7 @@
       LDIV     RS, RE
       LDIV     RE, RE
       LDIV     RC, RE
+      LDIV     R-1, RE
       LDIV     R0, RC
       LDIV     AR0, RC
       LDIV     DP, RC
@@ -161279,6 +162106,7 @@
       LDIV     RS, RC
       LDIV     RE, RC
       LDIV     RC, RC
+      LDIV     R-1, RC
       LDIV     @000000H, R0
       LDIV     @000000H, AR0
       LDIV     @000000H, DP
@@ -161631,18 +162459,31 @@
       LDIV     *AR0, RC
       LDIV     *AR0++(IR0)B, RC
       LDIV     0, R0
+      LDIV     -8000H, R0
       LDIV     0, AR0
+      LDIV     -8000H, AR0
       LDIV     0, DP
+      LDIV     -8000H, DP
       LDIV     0, IR0
+      LDIV     -8000H, IR0
       LDIV     0, BK
+      LDIV     -8000H, BK
       LDIV     0, SP
+      LDIV     -8000H, SP
       LDIV     0, ST
+      LDIV     -8000H, ST
       LDIV     0, IE
+      LDIV     -8000H, IE
       LDIV     0, IF
+      LDIV     -8000H, IF
       LDIV     0, IOF
+      LDIV     -8000H, IOF
       LDIV     0, RS
+      LDIV     -8000H, RS
       LDIV     0, RE
+      LDIV     -8000H, RE
       LDIV     0, RC
+      LDIV     -8000H, RC
       LDINUF   R0, R0
       LDINUF   AR0, R0
       LDINUF   DP, R0
@@ -161656,6 +162497,7 @@
       LDINUF   RS, R0
       LDINUF   RE, R0
       LDINUF   RC, R0
+      LDINUF   R-1, R0
       LDINUF   R0, AR0
       LDINUF   AR0, AR0
       LDINUF   DP, AR0
@@ -161669,6 +162511,7 @@
       LDINUF   RS, AR0
       LDINUF   RE, AR0
       LDINUF   RC, AR0
+      LDINUF   R-1, AR0
       LDINUF   R0, DP
       LDINUF   AR0, DP
       LDINUF   DP, DP
@@ -161682,6 +162525,7 @@
       LDINUF   RS, DP
       LDINUF   RE, DP
       LDINUF   RC, DP
+      LDINUF   R-1, DP
       LDINUF   R0, IR0
       LDINUF   AR0, IR0
       LDINUF   DP, IR0
@@ -161695,6 +162539,7 @@
       LDINUF   RS, IR0
       LDINUF   RE, IR0
       LDINUF   RC, IR0
+      LDINUF   R-1, IR0
       LDINUF   R0, BK
       LDINUF   AR0, BK
       LDINUF   DP, BK
@@ -161708,6 +162553,7 @@
       LDINUF   RS, BK
       LDINUF   RE, BK
       LDINUF   RC, BK
+      LDINUF   R-1, BK
       LDINUF   R0, SP
       LDINUF   AR0, SP
       LDINUF   DP, SP
@@ -161721,6 +162567,7 @@
       LDINUF   RS, SP
       LDINUF   RE, SP
       LDINUF   RC, SP
+      LDINUF   R-1, SP
       LDINUF   R0, ST
       LDINUF   AR0, ST
       LDINUF   DP, ST
@@ -161734,6 +162581,7 @@
       LDINUF   RS, ST
       LDINUF   RE, ST
       LDINUF   RC, ST
+      LDINUF   R-1, ST
       LDINUF   R0, IE
       LDINUF   AR0, IE
       LDINUF   DP, IE
@@ -161747,6 +162595,7 @@
       LDINUF   RS, IE
       LDINUF   RE, IE
       LDINUF   RC, IE
+      LDINUF   R-1, IE
       LDINUF   R0, IF
       LDINUF   AR0, IF
       LDINUF   DP, IF
@@ -161760,6 +162609,7 @@
       LDINUF   RS, IF
       LDINUF   RE, IF
       LDINUF   RC, IF
+      LDINUF   R-1, IF
       LDINUF   R0, IOF
       LDINUF   AR0, IOF
       LDINUF   DP, IOF
@@ -161773,6 +162623,7 @@
       LDINUF   RS, IOF
       LDINUF   RE, IOF
       LDINUF   RC, IOF
+      LDINUF   R-1, IOF
       LDINUF   R0, RS
       LDINUF   AR0, RS
       LDINUF   DP, RS
@@ -161786,6 +162637,7 @@
       LDINUF   RS, RS
       LDINUF   RE, RS
       LDINUF   RC, RS
+      LDINUF   R-1, RS
       LDINUF   R0, RE
       LDINUF   AR0, RE
       LDINUF   DP, RE
@@ -161799,6 +162651,7 @@
       LDINUF   RS, RE
       LDINUF   RE, RE
       LDINUF   RC, RE
+      LDINUF   R-1, RE
       LDINUF   R0, RC
       LDINUF   AR0, RC
       LDINUF   DP, RC
@@ -161812,6 +162665,7 @@
       LDINUF   RS, RC
       LDINUF   RE, RC
       LDINUF   RC, RC
+      LDINUF   R-1, RC
       LDINUF   @000000H, R0
       LDINUF   @000000H, AR0
       LDINUF   @000000H, DP
@@ -162164,18 +163018,31 @@
       LDINUF   *AR0, RC
       LDINUF   *AR0++(IR0)B, RC
       LDINUF   0, R0
+      LDINUF   -8000H, R0
       LDINUF   0, AR0
+      LDINUF   -8000H, AR0
       LDINUF   0, DP
+      LDINUF   -8000H, DP
       LDINUF   0, IR0
+      LDINUF   -8000H, IR0
       LDINUF   0, BK
+      LDINUF   -8000H, BK
       LDINUF   0, SP
+      LDINUF   -8000H, SP
       LDINUF   0, ST
+      LDINUF   -8000H, ST
       LDINUF   0, IE
+      LDINUF   -8000H, IE
       LDINUF   0, IF
+      LDINUF   -8000H, IF
       LDINUF   0, IOF
+      LDINUF   -8000H, IOF
       LDINUF   0, RS
+      LDINUF   -8000H, RS
       LDINUF   0, RE
+      LDINUF   -8000H, RE
       LDINUF   0, RC
+      LDINUF   -8000H, RC
       LDIUF    R0, R0
       LDIUF    AR0, R0
       LDIUF    DP, R0
@@ -162189,6 +163056,7 @@
       LDIUF    RS, R0
       LDIUF    RE, R0
       LDIUF    RC, R0
+      LDIUF    R-1, R0
       LDIUF    R0, AR0
       LDIUF    AR0, AR0
       LDIUF    DP, AR0
@@ -162202,6 +163070,7 @@
       LDIUF    RS, AR0
       LDIUF    RE, AR0
       LDIUF    RC, AR0
+      LDIUF    R-1, AR0
       LDIUF    R0, DP
       LDIUF    AR0, DP
       LDIUF    DP, DP
@@ -162215,6 +163084,7 @@
       LDIUF    RS, DP
       LDIUF    RE, DP
       LDIUF    RC, DP
+      LDIUF    R-1, DP
       LDIUF    R0, IR0
       LDIUF    AR0, IR0
       LDIUF    DP, IR0
@@ -162228,6 +163098,7 @@
       LDIUF    RS, IR0
       LDIUF    RE, IR0
       LDIUF    RC, IR0
+      LDIUF    R-1, IR0
       LDIUF    R0, BK
       LDIUF    AR0, BK
       LDIUF    DP, BK
@@ -162241,6 +163112,7 @@
       LDIUF    RS, BK
       LDIUF    RE, BK
       LDIUF    RC, BK
+      LDIUF    R-1, BK
       LDIUF    R0, SP
       LDIUF    AR0, SP
       LDIUF    DP, SP
@@ -162254,6 +163126,7 @@
       LDIUF    RS, SP
       LDIUF    RE, SP
       LDIUF    RC, SP
+      LDIUF    R-1, SP
       LDIUF    R0, ST
       LDIUF    AR0, ST
       LDIUF    DP, ST
@@ -162267,6 +163140,7 @@
       LDIUF    RS, ST
       LDIUF    RE, ST
       LDIUF    RC, ST
+      LDIUF    R-1, ST
       LDIUF    R0, IE
       LDIUF    AR0, IE
       LDIUF    DP, IE
@@ -162280,6 +163154,7 @@
       LDIUF    RS, IE
       LDIUF    RE, IE
       LDIUF    RC, IE
+      LDIUF    R-1, IE
       LDIUF    R0, IF
       LDIUF    AR0, IF
       LDIUF    DP, IF
@@ -162293,6 +163168,7 @@
       LDIUF    RS, IF
       LDIUF    RE, IF
       LDIUF    RC, IF
+      LDIUF    R-1, IF
       LDIUF    R0, IOF
       LDIUF    AR0, IOF
       LDIUF    DP, IOF
@@ -162306,6 +163182,7 @@
       LDIUF    RS, IOF
       LDIUF    RE, IOF
       LDIUF    RC, IOF
+      LDIUF    R-1, IOF
       LDIUF    R0, RS
       LDIUF    AR0, RS
       LDIUF    DP, RS
@@ -162319,6 +163196,7 @@
       LDIUF    RS, RS
       LDIUF    RE, RS
       LDIUF    RC, RS
+      LDIUF    R-1, RS
       LDIUF    R0, RE
       LDIUF    AR0, RE
       LDIUF    DP, RE
@@ -162332,6 +163210,7 @@
       LDIUF    RS, RE
       LDIUF    RE, RE
       LDIUF    RC, RE
+      LDIUF    R-1, RE
       LDIUF    R0, RC
       LDIUF    AR0, RC
       LDIUF    DP, RC
@@ -162345,6 +163224,7 @@
       LDIUF    RS, RC
       LDIUF    RE, RC
       LDIUF    RC, RC
+      LDIUF    R-1, RC
       LDIUF    @000000H, R0
       LDIUF    @000000H, AR0
       LDIUF    @000000H, DP
@@ -162697,18 +163577,31 @@
       LDIUF    *AR0, RC
       LDIUF    *AR0++(IR0)B, RC
       LDIUF    0, R0
+      LDIUF    -8000H, R0
       LDIUF    0, AR0
+      LDIUF    -8000H, AR0
       LDIUF    0, DP
+      LDIUF    -8000H, DP
       LDIUF    0, IR0
+      LDIUF    -8000H, IR0
       LDIUF    0, BK
+      LDIUF    -8000H, BK
       LDIUF    0, SP
+      LDIUF    -8000H, SP
       LDIUF    0, ST
+      LDIUF    -8000H, ST
       LDIUF    0, IE
+      LDIUF    -8000H, IE
       LDIUF    0, IF
+      LDIUF    -8000H, IF
       LDIUF    0, IOF
+      LDIUF    -8000H, IOF
       LDIUF    0, RS
+      LDIUF    -8000H, RS
       LDIUF    0, RE
+      LDIUF    -8000H, RE
       LDIUF    0, RC
+      LDIUF    -8000H, RC
       LDINLV   R0, R0
       LDINLV   AR0, R0
       LDINLV   DP, R0
@@ -162722,6 +163615,7 @@
       LDINLV   RS, R0
       LDINLV   RE, R0
       LDINLV   RC, R0
+      LDINLV   R-1, R0
       LDINLV   R0, AR0
       LDINLV   AR0, AR0
       LDINLV   DP, AR0
@@ -162735,6 +163629,7 @@
       LDINLV   RS, AR0
       LDINLV   RE, AR0
       LDINLV   RC, AR0
+      LDINLV   R-1, AR0
       LDINLV   R0, DP
       LDINLV   AR0, DP
       LDINLV   DP, DP
@@ -162748,6 +163643,7 @@
       LDINLV   RS, DP
       LDINLV   RE, DP
       LDINLV   RC, DP
+      LDINLV   R-1, DP
       LDINLV   R0, IR0
       LDINLV   AR0, IR0
       LDINLV   DP, IR0
@@ -162761,6 +163657,7 @@
       LDINLV   RS, IR0
       LDINLV   RE, IR0
       LDINLV   RC, IR0
+      LDINLV   R-1, IR0
       LDINLV   R0, BK
       LDINLV   AR0, BK
       LDINLV   DP, BK
@@ -162774,6 +163671,7 @@
       LDINLV   RS, BK
       LDINLV   RE, BK
       LDINLV   RC, BK
+      LDINLV   R-1, BK
       LDINLV   R0, SP
       LDINLV   AR0, SP
       LDINLV   DP, SP
@@ -162787,6 +163685,7 @@
       LDINLV   RS, SP
       LDINLV   RE, SP
       LDINLV   RC, SP
+      LDINLV   R-1, SP
       LDINLV   R0, ST
       LDINLV   AR0, ST
       LDINLV   DP, ST
@@ -162800,6 +163699,7 @@
       LDINLV   RS, ST
       LDINLV   RE, ST
       LDINLV   RC, ST
+      LDINLV   R-1, ST
       LDINLV   R0, IE
       LDINLV   AR0, IE
       LDINLV   DP, IE
@@ -162813,6 +163713,7 @@
       LDINLV   RS, IE
       LDINLV   RE, IE
       LDINLV   RC, IE
+      LDINLV   R-1, IE
       LDINLV   R0, IF
       LDINLV   AR0, IF
       LDINLV   DP, IF
@@ -162826,6 +163727,7 @@
       LDINLV   RS, IF
       LDINLV   RE, IF
       LDINLV   RC, IF
+      LDINLV   R-1, IF
       LDINLV   R0, IOF
       LDINLV   AR0, IOF
       LDINLV   DP, IOF
@@ -162839,6 +163741,7 @@
       LDINLV   RS, IOF
       LDINLV   RE, IOF
       LDINLV   RC, IOF
+      LDINLV   R-1, IOF
       LDINLV   R0, RS
       LDINLV   AR0, RS
       LDINLV   DP, RS
@@ -162852,6 +163755,7 @@
       LDINLV   RS, RS
       LDINLV   RE, RS
       LDINLV   RC, RS
+      LDINLV   R-1, RS
       LDINLV   R0, RE
       LDINLV   AR0, RE
       LDINLV   DP, RE
@@ -162865,6 +163769,7 @@
       LDINLV   RS, RE
       LDINLV   RE, RE
       LDINLV   RC, RE
+      LDINLV   R-1, RE
       LDINLV   R0, RC
       LDINLV   AR0, RC
       LDINLV   DP, RC
@@ -162878,6 +163783,7 @@
       LDINLV   RS, RC
       LDINLV   RE, RC
       LDINLV   RC, RC
+      LDINLV   R-1, RC
       LDINLV   @000000H, R0
       LDINLV   @000000H, AR0
       LDINLV   @000000H, DP
@@ -163230,18 +164136,31 @@
       LDINLV   *AR0, RC
       LDINLV   *AR0++(IR0)B, RC
       LDINLV   0, R0
+      LDINLV   -8000H, R0
       LDINLV   0, AR0
+      LDINLV   -8000H, AR0
       LDINLV   0, DP
+      LDINLV   -8000H, DP
       LDINLV   0, IR0
+      LDINLV   -8000H, IR0
       LDINLV   0, BK
+      LDINLV   -8000H, BK
       LDINLV   0, SP
+      LDINLV   -8000H, SP
       LDINLV   0, ST
+      LDINLV   -8000H, ST
       LDINLV   0, IE
+      LDINLV   -8000H, IE
       LDINLV   0, IF
+      LDINLV   -8000H, IF
       LDINLV   0, IOF
+      LDINLV   -8000H, IOF
       LDINLV   0, RS
+      LDINLV   -8000H, RS
       LDINLV   0, RE
+      LDINLV   -8000H, RE
       LDINLV   0, RC
+      LDINLV   -8000H, RC
       LDILV    R0, R0
       LDILV    AR0, R0
       LDILV    DP, R0
@@ -163255,6 +164174,7 @@
       LDILV    RS, R0
       LDILV    RE, R0
       LDILV    RC, R0
+      LDILV    R-1, R0
       LDILV    R0, AR0
       LDILV    AR0, AR0
       LDILV    DP, AR0
@@ -163268,6 +164188,7 @@
       LDILV    RS, AR0
       LDILV    RE, AR0
       LDILV    RC, AR0
+      LDILV    R-1, AR0
       LDILV    R0, DP
       LDILV    AR0, DP
       LDILV    DP, DP
@@ -163281,6 +164202,7 @@
       LDILV    RS, DP
       LDILV    RE, DP
       LDILV    RC, DP
+      LDILV    R-1, DP
       LDILV    R0, IR0
       LDILV    AR0, IR0
       LDILV    DP, IR0
@@ -163294,6 +164216,7 @@
       LDILV    RS, IR0
       LDILV    RE, IR0
       LDILV    RC, IR0
+      LDILV    R-1, IR0
       LDILV    R0, BK
       LDILV    AR0, BK
       LDILV    DP, BK
@@ -163307,6 +164230,7 @@
       LDILV    RS, BK
       LDILV    RE, BK
       LDILV    RC, BK
+      LDILV    R-1, BK
       LDILV    R0, SP
       LDILV    AR0, SP
       LDILV    DP, SP
@@ -163320,6 +164244,7 @@
       LDILV    RS, SP
       LDILV    RE, SP
       LDILV    RC, SP
+      LDILV    R-1, SP
       LDILV    R0, ST
       LDILV    AR0, ST
       LDILV    DP, ST
@@ -163333,6 +164258,7 @@
       LDILV    RS, ST
       LDILV    RE, ST
       LDILV    RC, ST
+      LDILV    R-1, ST
       LDILV    R0, IE
       LDILV    AR0, IE
       LDILV    DP, IE
@@ -163346,6 +164272,7 @@
       LDILV    RS, IE
       LDILV    RE, IE
       LDILV    RC, IE
+      LDILV    R-1, IE
       LDILV    R0, IF
       LDILV    AR0, IF
       LDILV    DP, IF
@@ -163359,6 +164286,7 @@
       LDILV    RS, IF
       LDILV    RE, IF
       LDILV    RC, IF
+      LDILV    R-1, IF
       LDILV    R0, IOF
       LDILV    AR0, IOF
       LDILV    DP, IOF
@@ -163372,6 +164300,7 @@
       LDILV    RS, IOF
       LDILV    RE, IOF
       LDILV    RC, IOF
+      LDILV    R-1, IOF
       LDILV    R0, RS
       LDILV    AR0, RS
       LDILV    DP, RS
@@ -163385,6 +164314,7 @@
       LDILV    RS, RS
       LDILV    RE, RS
       LDILV    RC, RS
+      LDILV    R-1, RS
       LDILV    R0, RE
       LDILV    AR0, RE
       LDILV    DP, RE
@@ -163398,6 +164328,7 @@
       LDILV    RS, RE
       LDILV    RE, RE
       LDILV    RC, RE
+      LDILV    R-1, RE
       LDILV    R0, RC
       LDILV    AR0, RC
       LDILV    DP, RC
@@ -163411,6 +164342,7 @@
       LDILV    RS, RC
       LDILV    RE, RC
       LDILV    RC, RC
+      LDILV    R-1, RC
       LDILV    @000000H, R0
       LDILV    @000000H, AR0
       LDILV    @000000H, DP
@@ -163763,18 +164695,31 @@
       LDILV    *AR0, RC
       LDILV    *AR0++(IR0)B, RC
       LDILV    0, R0
+      LDILV    -8000H, R0
       LDILV    0, AR0
+      LDILV    -8000H, AR0
       LDILV    0, DP
+      LDILV    -8000H, DP
       LDILV    0, IR0
+      LDILV    -8000H, IR0
       LDILV    0, BK
+      LDILV    -8000H, BK
       LDILV    0, SP
+      LDILV    -8000H, SP
       LDILV    0, ST
+      LDILV    -8000H, ST
       LDILV    0, IE
+      LDILV    -8000H, IE
       LDILV    0, IF
+      LDILV    -8000H, IF
       LDILV    0, IOF
+      LDILV    -8000H, IOF
       LDILV    0, RS
+      LDILV    -8000H, RS
       LDILV    0, RE
+      LDILV    -8000H, RE
       LDILV    0, RC
+      LDILV    -8000H, RC
       LDINLUF  R0, R0
       LDINLUF  AR0, R0
       LDINLUF  DP, R0
@@ -163788,6 +164733,7 @@
       LDINLUF  RS, R0
       LDINLUF  RE, R0
       LDINLUF  RC, R0
+      LDINLUF  R-1, R0
       LDINLUF  R0, AR0
       LDINLUF  AR0, AR0
       LDINLUF  DP, AR0
@@ -163801,6 +164747,7 @@
       LDINLUF  RS, AR0
       LDINLUF  RE, AR0
       LDINLUF  RC, AR0
+      LDINLUF  R-1, AR0
       LDINLUF  R0, DP
       LDINLUF  AR0, DP
       LDINLUF  DP, DP
@@ -163814,6 +164761,7 @@
       LDINLUF  RS, DP
       LDINLUF  RE, DP
       LDINLUF  RC, DP
+      LDINLUF  R-1, DP
       LDINLUF  R0, IR0
       LDINLUF  AR0, IR0
       LDINLUF  DP, IR0
@@ -163827,6 +164775,7 @@
       LDINLUF  RS, IR0
       LDINLUF  RE, IR0
       LDINLUF  RC, IR0
+      LDINLUF  R-1, IR0
       LDINLUF  R0, BK
       LDINLUF  AR0, BK
       LDINLUF  DP, BK
@@ -163840,6 +164789,7 @@
       LDINLUF  RS, BK
       LDINLUF  RE, BK
       LDINLUF  RC, BK
+      LDINLUF  R-1, BK
       LDINLUF  R0, SP
       LDINLUF  AR0, SP
       LDINLUF  DP, SP
@@ -163853,6 +164803,7 @@
       LDINLUF  RS, SP
       LDINLUF  RE, SP
       LDINLUF  RC, SP
+      LDINLUF  R-1, SP
       LDINLUF  R0, ST
       LDINLUF  AR0, ST
       LDINLUF  DP, ST
@@ -163866,6 +164817,7 @@
       LDINLUF  RS, ST
       LDINLUF  RE, ST
       LDINLUF  RC, ST
+      LDINLUF  R-1, ST
       LDINLUF  R0, IE
       LDINLUF  AR0, IE
       LDINLUF  DP, IE
@@ -163879,6 +164831,7 @@
       LDINLUF  RS, IE
       LDINLUF  RE, IE
       LDINLUF  RC, IE
+      LDINLUF  R-1, IE
       LDINLUF  R0, IF
       LDINLUF  AR0, IF
       LDINLUF  DP, IF
@@ -163892,6 +164845,7 @@
       LDINLUF  RS, IF
       LDINLUF  RE, IF
       LDINLUF  RC, IF
+      LDINLUF  R-1, IF
       LDINLUF  R0, IOF
       LDINLUF  AR0, IOF
       LDINLUF  DP, IOF
@@ -163905,6 +164859,7 @@
       LDINLUF  RS, IOF
       LDINLUF  RE, IOF
       LDINLUF  RC, IOF
+      LDINLUF  R-1, IOF
       LDINLUF  R0, RS
       LDINLUF  AR0, RS
       LDINLUF  DP, RS
@@ -163918,6 +164873,7 @@
       LDINLUF  RS, RS
       LDINLUF  RE, RS
       LDINLUF  RC, RS
+      LDINLUF  R-1, RS
       LDINLUF  R0, RE
       LDINLUF  AR0, RE
       LDINLUF  DP, RE
@@ -163931,6 +164887,7 @@
       LDINLUF  RS, RE
       LDINLUF  RE, RE
       LDINLUF  RC, RE
+      LDINLUF  R-1, RE
       LDINLUF  R0, RC
       LDINLUF  AR0, RC
       LDINLUF  DP, RC
@@ -163944,6 +164901,7 @@
       LDINLUF  RS, RC
       LDINLUF  RE, RC
       LDINLUF  RC, RC
+      LDINLUF  R-1, RC
       LDINLUF  @000000H, R0
       LDINLUF  @000000H, AR0
       LDINLUF  @000000H, DP
@@ -164296,18 +165254,31 @@
       LDINLUF  *AR0, RC
       LDINLUF  *AR0++(IR0)B, RC
       LDINLUF  0, R0
+      LDINLUF  -8000H, R0
       LDINLUF  0, AR0
+      LDINLUF  -8000H, AR0
       LDINLUF  0, DP
+      LDINLUF  -8000H, DP
       LDINLUF  0, IR0
+      LDINLUF  -8000H, IR0
       LDINLUF  0, BK
+      LDINLUF  -8000H, BK
       LDINLUF  0, SP
+      LDINLUF  -8000H, SP
       LDINLUF  0, ST
+      LDINLUF  -8000H, ST
       LDINLUF  0, IE
+      LDINLUF  -8000H, IE
       LDINLUF  0, IF
+      LDINLUF  -8000H, IF
       LDINLUF  0, IOF
+      LDINLUF  -8000H, IOF
       LDINLUF  0, RS
+      LDINLUF  -8000H, RS
       LDINLUF  0, RE
+      LDINLUF  -8000H, RE
       LDINLUF  0, RC
+      LDINLUF  -8000H, RC
       LDILUF   R0, R0
       LDILUF   AR0, R0
       LDILUF   DP, R0
@@ -164321,6 +165292,7 @@
       LDILUF   RS, R0
       LDILUF   RE, R0
       LDILUF   RC, R0
+      LDILUF   R-1, R0
       LDILUF   R0, AR0
       LDILUF   AR0, AR0
       LDILUF   DP, AR0
@@ -164334,6 +165306,7 @@
       LDILUF   RS, AR0
       LDILUF   RE, AR0
       LDILUF   RC, AR0
+      LDILUF   R-1, AR0
       LDILUF   R0, DP
       LDILUF   AR0, DP
       LDILUF   DP, DP
@@ -164347,6 +165320,7 @@
       LDILUF   RS, DP
       LDILUF   RE, DP
       LDILUF   RC, DP
+      LDILUF   R-1, DP
       LDILUF   R0, IR0
       LDILUF   AR0, IR0
       LDILUF   DP, IR0
@@ -164360,6 +165334,7 @@
       LDILUF   RS, IR0
       LDILUF   RE, IR0
       LDILUF   RC, IR0
+      LDILUF   R-1, IR0
       LDILUF   R0, BK
       LDILUF   AR0, BK
       LDILUF   DP, BK
@@ -164373,6 +165348,7 @@
       LDILUF   RS, BK
       LDILUF   RE, BK
       LDILUF   RC, BK
+      LDILUF   R-1, BK
       LDILUF   R0, SP
       LDILUF   AR0, SP
       LDILUF   DP, SP
@@ -164386,6 +165362,7 @@
       LDILUF   RS, SP
       LDILUF   RE, SP
       LDILUF   RC, SP
+      LDILUF   R-1, SP
       LDILUF   R0, ST
       LDILUF   AR0, ST
       LDILUF   DP, ST
@@ -164399,6 +165376,7 @@
       LDILUF   RS, ST
       LDILUF   RE, ST
       LDILUF   RC, ST
+      LDILUF   R-1, ST
       LDILUF   R0, IE
       LDILUF   AR0, IE
       LDILUF   DP, IE
@@ -164412,6 +165390,7 @@
       LDILUF   RS, IE
       LDILUF   RE, IE
       LDILUF   RC, IE
+      LDILUF   R-1, IE
       LDILUF   R0, IF
       LDILUF   AR0, IF
       LDILUF   DP, IF
@@ -164425,6 +165404,7 @@
       LDILUF   RS, IF
       LDILUF   RE, IF
       LDILUF   RC, IF
+      LDILUF   R-1, IF
       LDILUF   R0, IOF
       LDILUF   AR0, IOF
       LDILUF   DP, IOF
@@ -164438,6 +165418,7 @@
       LDILUF   RS, IOF
       LDILUF   RE, IOF
       LDILUF   RC, IOF
+      LDILUF   R-1, IOF
       LDILUF   R0, RS
       LDILUF   AR0, RS
       LDILUF   DP, RS
@@ -164451,6 +165432,7 @@
       LDILUF   RS, RS
       LDILUF   RE, RS
       LDILUF   RC, RS
+      LDILUF   R-1, RS
       LDILUF   R0, RE
       LDILUF   AR0, RE
       LDILUF   DP, RE
@@ -164464,6 +165446,7 @@
       LDILUF   RS, RE
       LDILUF   RE, RE
       LDILUF   RC, RE
+      LDILUF   R-1, RE
       LDILUF   R0, RC
       LDILUF   AR0, RC
       LDILUF   DP, RC
@@ -164477,6 +165460,7 @@
       LDILUF   RS, RC
       LDILUF   RE, RC
       LDILUF   RC, RC
+      LDILUF   R-1, RC
       LDILUF   @000000H, R0
       LDILUF   @000000H, AR0
       LDILUF   @000000H, DP
@@ -164829,18 +165813,31 @@
       LDILUF   *AR0, RC
       LDILUF   *AR0++(IR0)B, RC
       LDILUF   0, R0
+      LDILUF   -8000H, R0
       LDILUF   0, AR0
+      LDILUF   -8000H, AR0
       LDILUF   0, DP
+      LDILUF   -8000H, DP
       LDILUF   0, IR0
+      LDILUF   -8000H, IR0
       LDILUF   0, BK
+      LDILUF   -8000H, BK
       LDILUF   0, SP
+      LDILUF   -8000H, SP
       LDILUF   0, ST
+      LDILUF   -8000H, ST
       LDILUF   0, IE
+      LDILUF   -8000H, IE
       LDILUF   0, IF
+      LDILUF   -8000H, IF
       LDILUF   0, IOF
+      LDILUF   -8000H, IOF
       LDILUF   0, RS
+      LDILUF   -8000H, RS
       LDILUF   0, RE
+      LDILUF   -8000H, RE
       LDILUF   0, RC
+      LDILUF   -8000H, RC
       LDIZUF   R0, R0
       LDIZUF   AR0, R0
       LDIZUF   DP, R0
@@ -164854,6 +165851,7 @@
       LDIZUF   RS, R0
       LDIZUF   RE, R0
       LDIZUF   RC, R0
+      LDIZUF   R-1, R0
       LDIZUF   R0, AR0
       LDIZUF   AR0, AR0
       LDIZUF   DP, AR0
@@ -164867,6 +165865,7 @@
       LDIZUF   RS, AR0
       LDIZUF   RE, AR0
       LDIZUF   RC, AR0
+      LDIZUF   R-1, AR0
       LDIZUF   R0, DP
       LDIZUF   AR0, DP
       LDIZUF   DP, DP
@@ -164880,6 +165879,7 @@
       LDIZUF   RS, DP
       LDIZUF   RE, DP
       LDIZUF   RC, DP
+      LDIZUF   R-1, DP
       LDIZUF   R0, IR0
       LDIZUF   AR0, IR0
       LDIZUF   DP, IR0
@@ -164893,6 +165893,7 @@
       LDIZUF   RS, IR0
       LDIZUF   RE, IR0
       LDIZUF   RC, IR0
+      LDIZUF   R-1, IR0
       LDIZUF   R0, BK
       LDIZUF   AR0, BK
       LDIZUF   DP, BK
@@ -164906,6 +165907,7 @@
       LDIZUF   RS, BK
       LDIZUF   RE, BK
       LDIZUF   RC, BK
+      LDIZUF   R-1, BK
       LDIZUF   R0, SP
       LDIZUF   AR0, SP
       LDIZUF   DP, SP
@@ -164919,6 +165921,7 @@
       LDIZUF   RS, SP
       LDIZUF   RE, SP
       LDIZUF   RC, SP
+      LDIZUF   R-1, SP
       LDIZUF   R0, ST
       LDIZUF   AR0, ST
       LDIZUF   DP, ST
@@ -164932,6 +165935,7 @@
       LDIZUF   RS, ST
       LDIZUF   RE, ST
       LDIZUF   RC, ST
+      LDIZUF   R-1, ST
       LDIZUF   R0, IE
       LDIZUF   AR0, IE
       LDIZUF   DP, IE
@@ -164945,6 +165949,7 @@
       LDIZUF   RS, IE
       LDIZUF   RE, IE
       LDIZUF   RC, IE
+      LDIZUF   R-1, IE
       LDIZUF   R0, IF
       LDIZUF   AR0, IF
       LDIZUF   DP, IF
@@ -164958,6 +165963,7 @@
       LDIZUF   RS, IF
       LDIZUF   RE, IF
       LDIZUF   RC, IF
+      LDIZUF   R-1, IF
       LDIZUF   R0, IOF
       LDIZUF   AR0, IOF
       LDIZUF   DP, IOF
@@ -164971,6 +165977,7 @@
       LDIZUF   RS, IOF
       LDIZUF   RE, IOF
       LDIZUF   RC, IOF
+      LDIZUF   R-1, IOF
       LDIZUF   R0, RS
       LDIZUF   AR0, RS
       LDIZUF   DP, RS
@@ -164984,6 +165991,7 @@
       LDIZUF   RS, RS
       LDIZUF   RE, RS
       LDIZUF   RC, RS
+      LDIZUF   R-1, RS
       LDIZUF   R0, RE
       LDIZUF   AR0, RE
       LDIZUF   DP, RE
@@ -164997,6 +166005,7 @@
       LDIZUF   RS, RE
       LDIZUF   RE, RE
       LDIZUF   RC, RE
+      LDIZUF   R-1, RE
       LDIZUF   R0, RC
       LDIZUF   AR0, RC
       LDIZUF   DP, RC
@@ -165010,6 +166019,7 @@
       LDIZUF   RS, RC
       LDIZUF   RE, RC
       LDIZUF   RC, RC
+      LDIZUF   R-1, RC
       LDIZUF   @000000H, R0
       LDIZUF   @000000H, AR0
       LDIZUF   @000000H, DP
@@ -165362,18 +166372,31 @@
       LDIZUF   *AR0, RC
       LDIZUF   *AR0++(IR0)B, RC
       LDIZUF   0, R0
+      LDIZUF   -8000H, R0
       LDIZUF   0, AR0
+      LDIZUF   -8000H, AR0
       LDIZUF   0, DP
+      LDIZUF   -8000H, DP
       LDIZUF   0, IR0
+      LDIZUF   -8000H, IR0
       LDIZUF   0, BK
+      LDIZUF   -8000H, BK
       LDIZUF   0, SP
+      LDIZUF   -8000H, SP
       LDIZUF   0, ST
+      LDIZUF   -8000H, ST
       LDIZUF   0, IE
+      LDIZUF   -8000H, IE
       LDIZUF   0, IF
+      LDIZUF   -8000H, IF
       LDIZUF   0, IOF
+      LDIZUF   -8000H, IOF
       LDIZUF   0, RS
+      LDIZUF   -8000H, RS
       LDIZUF   0, RE
+      LDIZUF   -8000H, RE
       LDIZUF   0, RC
+      LDIZUF   -8000H, RC
       BR       000000H
       BRD      000000H
       CALL     000000H

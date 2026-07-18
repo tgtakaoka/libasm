@@ -16,9 +16,15 @@
 
 #include "dis_h8300.h"
 #include "gen_driver.h"
+#include "tokenizer.h"
 
 using namespace libasm::h8300;
 using namespace libasm::gen;
+
+static const IndexDispTokenizer<CstyleNumber, CommaIndex> INDEX_TOK;  // INDEX_TOK_INSTANCE
+static const RegisterTokenizer REG_ER("ER", 7, "ERn");
+static const RegisterTokenizer REG_R("R", 7, "Rn", "HL");
+static const RegisterTokenizer REG_E("E", 7, "En");
 
 int main(int argc, const char **argv) {
     DisH8300 dish8300;
@@ -37,7 +43,7 @@ int main(int argc, const char **argv) {
         dish8300.setOption("sp-alias", "disable");
     }
 
-    TestGenerator generator(driver, dish8300, 0x0100);
+    TestGenerator generator(driver, dish8300, 0x0100, standardTokenizers<CstyleNumber>(dish8300.curSym(), {&INDEX_TOK, &REG_ER, &REG_R, &REG_E}));
     generator.generate();
 
     return driver.close();

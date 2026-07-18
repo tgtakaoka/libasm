@@ -16,9 +16,12 @@
 
 #include "dis_mc6809.h"
 #include "gen_driver.h"
+#include "tokenizer.h"
 
 using namespace libasm::mc6809;
 using namespace libasm::gen;
+
+static const IndexDispTokenizer<MotorolaNumber, CommaIndex> INDEX_TOK;  // INDEX_TOK_INSTANCE
 
 int main(int argc, const char **argv) {
     DisMc6809 dis6809;
@@ -28,7 +31,7 @@ int main(int argc, const char **argv) {
 
     dis6809.setOption("relative", "enable");
 
-    TestGenerator generator(driver, dis6809, 0x0100);
+    TestGenerator generator(driver, dis6809, 0x0100, standardTokenizers<MotorolaNumber>(dis6809.curSym(), {&INDEX_TOK}));
     generator.generate();
 
     return driver.close();

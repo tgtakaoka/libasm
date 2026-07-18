@@ -16,9 +16,14 @@
 
 #include "dis_i8051.h"
 #include "gen_driver.h"
+#include "tokenizer.h"
 
 using namespace libasm::i8051;
 using namespace libasm::gen;
+
+namespace {
+const RegisterTokenizer REG_Rn("R", 7, "Rn");
+}  // namespace
 
 int main(int argc, const char **argv) {
     DisI8051 dis8051;
@@ -28,7 +33,7 @@ int main(int argc, const char **argv) {
 
     dis8051.setOption("relative", "enable");
 
-    TestGenerator generator(driver, dis8051, 0x0100);
+    TestGenerator generator(driver, dis8051, 0x0100, standardTokenizers<IntelNumber>(dis8051.curSym(), {&REG_Rn}));
     generator.generate();
 
     return driver.close();

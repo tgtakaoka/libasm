@@ -16,9 +16,15 @@
 
 #include "dis_tms320.h"
 #include "gen_driver.h"
+#include "tokenizer.h"
 
 using namespace libasm::tms320;
 using namespace libasm::gen;
+
+namespace {
+const RegisterTokenizer REG_PAn("PA", 15, "PAn");
+const RegisterTokenizer REG_ARn("AR", 7, "ARn");
+}  // namespace
 
 int main(int argc, const char **argv) {
     DisTms320 dis32010;
@@ -27,7 +33,7 @@ int main(int argc, const char **argv) {
         return 1;
 
     dis32010.setOption("use-port-name", "off");
-    TestGenerator generator(driver, dis32010, 0x0100);
+    TestGenerator generator(driver, dis32010, 0x0100, standardTokenizers<IntelNumber>(dis32010.curSym(), {&REG_PAn, &REG_ARn}));
     generator.generate();
 
     return driver.close();

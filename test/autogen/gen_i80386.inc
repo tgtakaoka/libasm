@@ -27661,45 +27661,105 @@
       IMUL    CX, [BX+80], 5251H
       IMUL    SP, [BX+SI+97], 6362H
       IMUL    BP, [SI+109], 110
+      IMUL    BP, [SI+109], -128
       IMUL    BP, [BP+111], 112
+      IMUL    BP, [BP+111], -128
       IMUL    BP, [BX+112], 113
+      IMUL    BP, [BX+112], -128
       IMUL    SI, [BX+SI+113], 114
+      IMUL    SI, [BX+SI+113], -128
       IMUL    SI, [BP+SI+115], 116
+      IMUL    SI, [BP+SI+115], -128
       IMUL    SI, [SI+117], 118
+      IMUL    SI, [SI+117], -128
       IMUL    SI, [BP+119], 120
+      IMUL    SI, [BP+119], -128
       IMUL    SI, [BX+120], 121
+      IMUL    SI, [BX+120], -128
+      IMUL    AX, [BX+SI-7D7FH], -125
+      IMUL    AX, [BP+SI-7B7DH], -123
+      IMUL    AX, [SI-797BH], -121
+      IMUL    AX, [BP-7779H], -119
+      IMUL    AX, [BX-7678H], -118
+      IMUL    CX, [BX+SI-7577H], -117
+      IMUL    CX, [BP+SI-7375H], -115
+      IMUL    CX, [SI-7173H], -113
+      IMUL    CX, [BP-6F71H], -111
+      IMUL    CX, [BX-6E70H], -110
+      IMUL    SP, [BX+SI-5D5FH], -93
+      IMUL    SP, [BP+SI-5B5DH], -91
+      IMUL    SP, [SI-595BH], -89
+      IMUL    SP, [BP-5759H], -87
+      IMUL    SP, [BX-5658H], -86
+      IMUL    SI, [BX+SI-4D4FH], -77
+      IMUL    SI, [BP+SI-4B4DH], -75
+      IMUL    SI, [SI-494BH], -73
+      IMUL    SI, [BP-4749H], -71
+      IMUL    SI, [BX-4648H], -70
       IMUL    AX, [BX+SI], 1
+      IMUL    AX, [BX+SI], -128
       IMUL    AX, [BP+SI], 3
+      IMUL    AX, [BP+SI], -128
       IMUL    AX, [SI], 5
+      IMUL    AX, [SI], -128
       IMUL    AX, [0807H], 9
+      IMUL    AX, [0807H], -128
       IMUL    AX, [BX], 8
+      IMUL    AX, [BX], -128
       IMUL    CX, [BX+SI], 9
+      IMUL    CX, [BX+SI], -128
       IMUL    CX, [BP+SI], 11
+      IMUL    CX, [BP+SI], -128
       IMUL    CX, [SI], 13
+      IMUL    CX, [SI], -128
       IMUL    CX, [100FH], 17
+      IMUL    CX, [100FH], -128
       IMUL    CX, [BX], 16
+      IMUL    CX, [BX], -128
       IMUL    SP, [BX+SI], 33
+      IMUL    SP, [BX+SI], -128
       IMUL    SP, [BP+SI], 35
+      IMUL    SP, [BP+SI], -128
       IMUL    SP, [SI], 37
+      IMUL    SP, [SI], -128
       IMUL    SP, [2827H], 41
+      IMUL    SP, [2827H], -128
       IMUL    SP, [BX], 40
+      IMUL    SP, [BX], -128
       IMUL    SI, [BX+SI], 49
+      IMUL    SI, [BX+SI], -128
       IMUL    SI, [BP+SI], 51
+      IMUL    SI, [BP+SI], -128
       IMUL    SI, [SI], 53
+      IMUL    SI, [SI], -128
       IMUL    SI, [3837H], 57
+      IMUL    SI, [3837H], -128
       IMUL    SI, [BX], 56
+      IMUL    SI, [BX], -128
       IMUL    AX, [BX+SI+65], 66
+      IMUL    AX, [BX+SI+65], -128
       IMUL    AX, [BP+SI+67], 68
+      IMUL    AX, [BP+SI+67], -128
       IMUL    AX, [SI+69], 70
+      IMUL    AX, [SI+69], -128
       IMUL    AX, [BP+71], 72
+      IMUL    AX, [BP+71], -128
       IMUL    AX, [BX+72], 73
+      IMUL    AX, [BX+72], -128
       IMUL    CX, [BX+SI+73], 74
+      IMUL    CX, [BX+SI+73], -128
       IMUL    CX, [BP+SI+75], 76
+      IMUL    CX, [BP+SI+75], -128
       IMUL    CX, [SI+77], 78
+      IMUL    CX, [SI+77], -128
       IMUL    CX, [BP+79], 80
+      IMUL    CX, [BP+79], -128
       IMUL    CX, [BX+80], 81
+      IMUL    CX, [BX+80], -128
       IMUL    SP, [BX+SI+97], 98
+      IMUL    SP, [BX+SI+97], -128
       IMUL    SP, [BP+SI+99], 100
+      IMUL    SP, [BP+SI+99], -128
       ADD     WORD PTR [BP+SI-7B7DH], 8685H
       ADD     WORD PTR [SI-797BH], 8887H
       ADD     WORD PTR [BP-7779H], 8A89H
@@ -27820,86 +27880,206 @@
       CMP     WORD PTR [BP+127], 8180H
       CMP     WORD PTR [BX-128], 8281H
       ADD     WORD PTR [BX+SI-7D7FH], 8483H
+      ADD     WORD PTR [SI-797BH], -121
+      ADD     WORD PTR [BP-7779H], -119
+      ADD     WORD PTR [BX-7678H], -118
+      OR      WORD PTR [BX+SI-7577H], -117
+      OR      WORD PTR [BP+SI-7375H], -115
+      OR      WORD PTR [SI-7173H], -113
+      OR      WORD PTR [BP-6F71H], -111
+      OR      WORD PTR [BX-6E70H], -110
+      ADC     WORD PTR [BX+SI-6D6FH], -109
+      ADC     WORD PTR [BP+SI-6B6DH], -107
+      ADC     WORD PTR [SI-696BH], -105
+      ADC     WORD PTR [BP-6769H], -103
+      ADC     WORD PTR [BX-6668H], -102
+      SBB     WORD PTR [BX+SI-6567H], -101
+      SBB     WORD PTR [BP+SI-6365H], -99
+      SBB     WORD PTR [SI-6163H], -97
+      SBB     WORD PTR [BP-5F61H], -95
+      SBB     WORD PTR [BX-5E60H], -94
+      AND     WORD PTR [BX+SI-5D5FH], -93
+      AND     WORD PTR [BP+SI-5B5DH], -91
+      AND     WORD PTR [SI-595BH], -89
+      AND     WORD PTR [BP-5759H], -87
+      AND     WORD PTR [BX-5658H], -86
+      SUB     WORD PTR [BX+SI-5557H], -85
+      SUB     WORD PTR [BP+SI-5355H], -83
+      SUB     WORD PTR [SI-5153H], -81
+      SUB     WORD PTR [BP-4F51H], -79
+      SUB     WORD PTR [BX-4E50H], -78
+      XOR     WORD PTR [BX+SI-4D4FH], -77
+      XOR     WORD PTR [BP+SI-4B4DH], -75
+      XOR     WORD PTR [SI-494BH], -73
+      XOR     WORD PTR [BP-4749H], -71
+      XOR     WORD PTR [BX-4648H], -70
+      CMP     WORD PTR [BX+SI-4547H], -69
+      CMP     WORD PTR [BP+SI-4345H], -67
+      CMP     WORD PTR [SI-4143H], -65
+      CMP     WORD PTR [BP-3F41H], -63
+      CMP     WORD PTR [BX-3E40H], -62
       ADD     WORD PTR [BX+SI], 1
+      ADD     WORD PTR [BX+SI], -128
       ADD     WORD PTR [BP+SI], 3
+      ADD     WORD PTR [BP+SI], -128
       ADD     WORD PTR [SI], 5
+      ADD     WORD PTR [SI], -128
       ADD     WORD PTR [0807H], 9
+      ADD     WORD PTR [0807H], -128
       ADD     WORD PTR [BX], 8
+      ADD     WORD PTR [BX], -128
       OR      WORD PTR [BX+SI], 9
+      OR      WORD PTR [BX+SI], -128
       OR      WORD PTR [BP+SI], 11
+      OR      WORD PTR [BP+SI], -128
       OR      WORD PTR [SI], 13
+      OR      WORD PTR [SI], -128
       OR      WORD PTR [100FH], 17
+      OR      WORD PTR [100FH], -128
       OR      WORD PTR [BX], 16
+      OR      WORD PTR [BX], -128
       ADC     WORD PTR [BX+SI], 17
+      ADC     WORD PTR [BX+SI], -128
       ADC     WORD PTR [BP+SI], 19
+      ADC     WORD PTR [BP+SI], -128
       ADC     WORD PTR [SI], 21
+      ADC     WORD PTR [SI], -128
       ADC     WORD PTR [1817H], 25
+      ADC     WORD PTR [1817H], -128
       ADC     WORD PTR [BX], 24
+      ADC     WORD PTR [BX], -128
       SBB     WORD PTR [BX+SI], 25
+      SBB     WORD PTR [BX+SI], -128
       SBB     WORD PTR [BP+SI], 27
+      SBB     WORD PTR [BP+SI], -128
       SBB     WORD PTR [SI], 29
+      SBB     WORD PTR [SI], -128
       SBB     WORD PTR [201FH], 33
+      SBB     WORD PTR [201FH], -128
       SBB     WORD PTR [BX], 32
+      SBB     WORD PTR [BX], -128
       AND     WORD PTR [BX+SI], 33
+      AND     WORD PTR [BX+SI], -128
       AND     WORD PTR [BP+SI], 35
+      AND     WORD PTR [BP+SI], -128
       AND     WORD PTR [SI], 37
+      AND     WORD PTR [SI], -128
       AND     WORD PTR [2827H], 41
+      AND     WORD PTR [2827H], -128
       AND     WORD PTR [BX], 40
+      AND     WORD PTR [BX], -128
       SUB     WORD PTR [BX+SI], 41
+      SUB     WORD PTR [BX+SI], -128
       SUB     WORD PTR [BP+SI], 43
+      SUB     WORD PTR [BP+SI], -128
       SUB     WORD PTR [SI], 45
+      SUB     WORD PTR [SI], -128
       SUB     WORD PTR [302FH], 49
+      SUB     WORD PTR [302FH], -128
       SUB     WORD PTR [BX], 48
+      SUB     WORD PTR [BX], -128
       XOR     WORD PTR [BX+SI], 49
+      XOR     WORD PTR [BX+SI], -128
       XOR     WORD PTR [BP+SI], 51
+      XOR     WORD PTR [BP+SI], -128
       XOR     WORD PTR [SI], 53
+      XOR     WORD PTR [SI], -128
       XOR     WORD PTR [3837H], 57
+      XOR     WORD PTR [3837H], -128
       XOR     WORD PTR [BX], 56
+      XOR     WORD PTR [BX], -128
       CMP     WORD PTR [BX+SI], 57
+      CMP     WORD PTR [BX+SI], -128
       CMP     WORD PTR [BP+SI], 59
+      CMP     WORD PTR [BP+SI], -128
       CMP     WORD PTR [SI], 61
+      CMP     WORD PTR [SI], -128
       CMP     WORD PTR [403FH], 65
+      CMP     WORD PTR [403FH], -128
       CMP     WORD PTR [BX], 64
+      CMP     WORD PTR [BX], -128
       ADD     WORD PTR [BX+SI+65], 66
+      ADD     WORD PTR [BX+SI+65], -128
       ADD     WORD PTR [BP+SI+67], 68
+      ADD     WORD PTR [BP+SI+67], -128
       ADD     WORD PTR [SI+69], 70
+      ADD     WORD PTR [SI+69], -128
       ADD     WORD PTR [BP+71], 72
+      ADD     WORD PTR [BP+71], -128
       ADD     WORD PTR [BX+72], 73
+      ADD     WORD PTR [BX+72], -128
       OR      WORD PTR [BX+SI+73], 74
+      OR      WORD PTR [BX+SI+73], -128
       OR      WORD PTR [BP+SI+75], 76
+      OR      WORD PTR [BP+SI+75], -128
       OR      WORD PTR [SI+77], 78
+      OR      WORD PTR [SI+77], -128
       OR      WORD PTR [BP+79], 80
+      OR      WORD PTR [BP+79], -128
       OR      WORD PTR [BX+80], 81
+      OR      WORD PTR [BX+80], -128
       ADC     WORD PTR [BX+SI+81], 82
+      ADC     WORD PTR [BX+SI+81], -128
       ADC     WORD PTR [BP+SI+83], 84
+      ADC     WORD PTR [BP+SI+83], -128
       ADC     WORD PTR [SI+85], 86
+      ADC     WORD PTR [SI+85], -128
       ADC     WORD PTR [BP+87], 88
+      ADC     WORD PTR [BP+87], -128
       ADC     WORD PTR [BX+88], 89
+      ADC     WORD PTR [BX+88], -128
       SBB     WORD PTR [BX+SI+89], 90
+      SBB     WORD PTR [BX+SI+89], -128
       SBB     WORD PTR [BP+SI+91], 92
+      SBB     WORD PTR [BP+SI+91], -128
       SBB     WORD PTR [SI+93], 94
+      SBB     WORD PTR [SI+93], -128
       SBB     WORD PTR [BP+95], 96
+      SBB     WORD PTR [BP+95], -128
       SBB     WORD PTR [BX+96], 97
+      SBB     WORD PTR [BX+96], -128
       AND     WORD PTR [BX+SI+97], 98
+      AND     WORD PTR [BX+SI+97], -128
       AND     WORD PTR [BP+SI+99], 100
+      AND     WORD PTR [BP+SI+99], -128
       AND     WORD PTR [SI+101], 102
+      AND     WORD PTR [SI+101], -128
       AND     WORD PTR [BP+103], 104
+      AND     WORD PTR [BP+103], -128
       AND     WORD PTR [BX+104], 105
+      AND     WORD PTR [BX+104], -128
       SUB     WORD PTR [BX+SI+105], 106
+      SUB     WORD PTR [BX+SI+105], -128
       SUB     WORD PTR [BP+SI+107], 108
+      SUB     WORD PTR [BP+SI+107], -128
       SUB     WORD PTR [SI+109], 110
+      SUB     WORD PTR [SI+109], -128
       SUB     WORD PTR [BP+111], 112
+      SUB     WORD PTR [BP+111], -128
       SUB     WORD PTR [BX+112], 113
+      SUB     WORD PTR [BX+112], -128
       XOR     WORD PTR [BX+SI+113], 114
+      XOR     WORD PTR [BX+SI+113], -128
       XOR     WORD PTR [BP+SI+115], 116
+      XOR     WORD PTR [BP+SI+115], -128
       XOR     WORD PTR [SI+117], 118
+      XOR     WORD PTR [SI+117], -128
       XOR     WORD PTR [BP+119], 120
+      XOR     WORD PTR [BP+119], -128
       XOR     WORD PTR [BX+120], 121
+      XOR     WORD PTR [BX+120], -128
       CMP     WORD PTR [BX+SI+121], 122
+      CMP     WORD PTR [BX+SI+121], -128
       CMP     WORD PTR [BP+SI+123], 124
+      CMP     WORD PTR [BP+SI+123], -128
       CMP     WORD PTR [SI+125], 126
+      CMP     WORD PTR [SI+125], -128
       CMP     WORD PTR [BP+127], -128
+      CMP     WORD PTR [BP+127], 0
       CMP     WORD PTR [BX-128], -127
+      CMP     WORD PTR [BX-128], 0
+      ADD     WORD PTR [BX+SI-7D7FH], -125
+      ADD     WORD PTR [BP+SI-7B7DH], -123
       TEST    [BP-7779H], AX
       TEST    [BX-7678H], AX
       TEST    [BX+SI-7577H], CX
@@ -29217,76 +29397,181 @@
       LOCK XOR    WORD PTR [BP+119], 7978H
       LOCK XOR    WORD PTR [BX+120], 7A79H
       LOCK ADD    WORD PTR [BX+SI-7D7FH], 8483H
+      LOCK ADD    WORD PTR [SI-797BH], -121
+      LOCK ADD    WORD PTR [BP-7779H], -119
+      LOCK ADD    WORD PTR [BX-7678H], -118
+      LOCK OR WORD PTR [BX+SI-7577H], -117
+      LOCK OR WORD PTR [BP+SI-7375H], -115
+      LOCK OR WORD PTR [SI-7173H], -113
+      LOCK OR WORD PTR [BP-6F71H], -111
+      LOCK OR WORD PTR [BX-6E70H], -110
+      LOCK ADC    WORD PTR [BX+SI-6D6FH], -109
+      LOCK ADC    WORD PTR [BP+SI-6B6DH], -107
+      LOCK ADC    WORD PTR [SI-696BH], -105
+      LOCK ADC    WORD PTR [BP-6769H], -103
+      LOCK ADC    WORD PTR [BX-6668H], -102
+      LOCK SBB    WORD PTR [BX+SI-6567H], -101
+      LOCK SBB    WORD PTR [BP+SI-6365H], -99
+      LOCK SBB    WORD PTR [SI-6163H], -97
+      LOCK SBB    WORD PTR [BP-5F61H], -95
+      LOCK SBB    WORD PTR [BX-5E60H], -94
+      LOCK AND    WORD PTR [BX+SI-5D5FH], -93
+      LOCK AND    WORD PTR [BP+SI-5B5DH], -91
+      LOCK AND    WORD PTR [SI-595BH], -89
+      LOCK AND    WORD PTR [BP-5759H], -87
+      LOCK AND    WORD PTR [BX-5658H], -86
+      LOCK SUB    WORD PTR [BX+SI-5557H], -85
+      LOCK SUB    WORD PTR [BP+SI-5355H], -83
+      LOCK SUB    WORD PTR [SI-5153H], -81
+      LOCK SUB    WORD PTR [BP-4F51H], -79
+      LOCK SUB    WORD PTR [BX-4E50H], -78
+      LOCK XOR    WORD PTR [BX+SI-4D4FH], -77
+      LOCK XOR    WORD PTR [BP+SI-4B4DH], -75
+      LOCK XOR    WORD PTR [SI-494BH], -73
+      LOCK XOR    WORD PTR [BP-4749H], -71
+      LOCK XOR    WORD PTR [BX-4648H], -70
       LOCK ADD    WORD PTR [BX+SI], 1
+      LOCK ADD    WORD PTR [BX+SI], -128
       LOCK ADD    WORD PTR [BP+SI], 3
+      LOCK ADD    WORD PTR [BP+SI], -128
       LOCK ADD    WORD PTR [SI], 5
+      LOCK ADD    WORD PTR [SI], -128
       LOCK ADD    WORD PTR [0807H], 9
+      LOCK ADD    WORD PTR [0807H], -128
       LOCK ADD    WORD PTR [BX], 8
+      LOCK ADD    WORD PTR [BX], -128
       LOCK OR WORD PTR [BX+SI], 9
+      LOCK OR WORD PTR [BX+SI], -128
       LOCK OR WORD PTR [BP+SI], 11
+      LOCK OR WORD PTR [BP+SI], -128
       LOCK OR WORD PTR [SI], 13
+      LOCK OR WORD PTR [SI], -128
       LOCK OR WORD PTR [100FH], 17
+      LOCK OR WORD PTR [100FH], -128
       LOCK OR WORD PTR [BX], 16
+      LOCK OR WORD PTR [BX], -128
       LOCK ADC    WORD PTR [BX+SI], 17
+      LOCK ADC    WORD PTR [BX+SI], -128
       LOCK ADC    WORD PTR [BP+SI], 19
+      LOCK ADC    WORD PTR [BP+SI], -128
       LOCK ADC    WORD PTR [SI], 21
+      LOCK ADC    WORD PTR [SI], -128
       LOCK ADC    WORD PTR [1817H], 25
+      LOCK ADC    WORD PTR [1817H], -128
       LOCK ADC    WORD PTR [BX], 24
+      LOCK ADC    WORD PTR [BX], -128
       LOCK SBB    WORD PTR [BX+SI], 25
+      LOCK SBB    WORD PTR [BX+SI], -128
       LOCK SBB    WORD PTR [BP+SI], 27
+      LOCK SBB    WORD PTR [BP+SI], -128
       LOCK SBB    WORD PTR [SI], 29
+      LOCK SBB    WORD PTR [SI], -128
       LOCK SBB    WORD PTR [201FH], 33
+      LOCK SBB    WORD PTR [201FH], -128
       LOCK SBB    WORD PTR [BX], 32
+      LOCK SBB    WORD PTR [BX], -128
       LOCK AND    WORD PTR [BX+SI], 33
+      LOCK AND    WORD PTR [BX+SI], -128
       LOCK AND    WORD PTR [BP+SI], 35
+      LOCK AND    WORD PTR [BP+SI], -128
       LOCK AND    WORD PTR [SI], 37
+      LOCK AND    WORD PTR [SI], -128
       LOCK AND    WORD PTR [2827H], 41
+      LOCK AND    WORD PTR [2827H], -128
       LOCK AND    WORD PTR [BX], 40
+      LOCK AND    WORD PTR [BX], -128
       LOCK SUB    WORD PTR [BX+SI], 41
+      LOCK SUB    WORD PTR [BX+SI], -128
       LOCK SUB    WORD PTR [BP+SI], 43
+      LOCK SUB    WORD PTR [BP+SI], -128
       LOCK SUB    WORD PTR [SI], 45
+      LOCK SUB    WORD PTR [SI], -128
       LOCK SUB    WORD PTR [302FH], 49
+      LOCK SUB    WORD PTR [302FH], -128
       LOCK SUB    WORD PTR [BX], 48
+      LOCK SUB    WORD PTR [BX], -128
       LOCK XOR    WORD PTR [BX+SI], 49
+      LOCK XOR    WORD PTR [BX+SI], -128
       LOCK XOR    WORD PTR [BP+SI], 51
+      LOCK XOR    WORD PTR [BP+SI], -128
       LOCK XOR    WORD PTR [SI], 53
+      LOCK XOR    WORD PTR [SI], -128
       LOCK XOR    WORD PTR [3837H], 57
+      LOCK XOR    WORD PTR [3837H], -128
       LOCK XOR    WORD PTR [BX], 56
+      LOCK XOR    WORD PTR [BX], -128
       LOCK ADD    WORD PTR [BX+SI+65], 66
+      LOCK ADD    WORD PTR [BX+SI+65], -128
       LOCK ADD    WORD PTR [BP+SI+67], 68
+      LOCK ADD    WORD PTR [BP+SI+67], -128
       LOCK ADD    WORD PTR [SI+69], 70
+      LOCK ADD    WORD PTR [SI+69], -128
       LOCK ADD    WORD PTR [BP+71], 72
+      LOCK ADD    WORD PTR [BP+71], -128
       LOCK ADD    WORD PTR [BX+72], 73
+      LOCK ADD    WORD PTR [BX+72], -128
       LOCK OR WORD PTR [BX+SI+73], 74
+      LOCK OR WORD PTR [BX+SI+73], -128
       LOCK OR WORD PTR [BP+SI+75], 76
+      LOCK OR WORD PTR [BP+SI+75], -128
       LOCK OR WORD PTR [SI+77], 78
+      LOCK OR WORD PTR [SI+77], -128
       LOCK OR WORD PTR [BP+79], 80
+      LOCK OR WORD PTR [BP+79], -128
       LOCK OR WORD PTR [BX+80], 81
+      LOCK OR WORD PTR [BX+80], -128
       LOCK ADC    WORD PTR [BX+SI+81], 82
+      LOCK ADC    WORD PTR [BX+SI+81], -128
       LOCK ADC    WORD PTR [BP+SI+83], 84
+      LOCK ADC    WORD PTR [BP+SI+83], -128
       LOCK ADC    WORD PTR [SI+85], 86
+      LOCK ADC    WORD PTR [SI+85], -128
       LOCK ADC    WORD PTR [BP+87], 88
+      LOCK ADC    WORD PTR [BP+87], -128
       LOCK ADC    WORD PTR [BX+88], 89
+      LOCK ADC    WORD PTR [BX+88], -128
       LOCK SBB    WORD PTR [BX+SI+89], 90
+      LOCK SBB    WORD PTR [BX+SI+89], -128
       LOCK SBB    WORD PTR [BP+SI+91], 92
+      LOCK SBB    WORD PTR [BP+SI+91], -128
       LOCK SBB    WORD PTR [SI+93], 94
+      LOCK SBB    WORD PTR [SI+93], -128
       LOCK SBB    WORD PTR [BP+95], 96
+      LOCK SBB    WORD PTR [BP+95], -128
       LOCK SBB    WORD PTR [BX+96], 97
+      LOCK SBB    WORD PTR [BX+96], -128
       LOCK AND    WORD PTR [BX+SI+97], 98
+      LOCK AND    WORD PTR [BX+SI+97], -128
       LOCK AND    WORD PTR [BP+SI+99], 100
+      LOCK AND    WORD PTR [BP+SI+99], -128
       LOCK AND    WORD PTR [SI+101], 102
+      LOCK AND    WORD PTR [SI+101], -128
       LOCK AND    WORD PTR [BP+103], 104
+      LOCK AND    WORD PTR [BP+103], -128
       LOCK AND    WORD PTR [BX+104], 105
+      LOCK AND    WORD PTR [BX+104], -128
       LOCK SUB    WORD PTR [BX+SI+105], 106
+      LOCK SUB    WORD PTR [BX+SI+105], -128
       LOCK SUB    WORD PTR [BP+SI+107], 108
+      LOCK SUB    WORD PTR [BP+SI+107], -128
       LOCK SUB    WORD PTR [SI+109], 110
+      LOCK SUB    WORD PTR [SI+109], -128
       LOCK SUB    WORD PTR [BP+111], 112
+      LOCK SUB    WORD PTR [BP+111], -128
       LOCK SUB    WORD PTR [BX+112], 113
+      LOCK SUB    WORD PTR [BX+112], -128
       LOCK XOR    WORD PTR [BX+SI+113], 114
+      LOCK XOR    WORD PTR [BX+SI+113], -128
       LOCK XOR    WORD PTR [BP+SI+115], 116
+      LOCK XOR    WORD PTR [BP+SI+115], -128
       LOCK XOR    WORD PTR [SI+117], 118
+      LOCK XOR    WORD PTR [SI+117], -128
       LOCK XOR    WORD PTR [BP+119], 120
+      LOCK XOR    WORD PTR [BP+119], -128
       LOCK XOR    WORD PTR [BX+120], 121
+      LOCK XOR    WORD PTR [BX+120], -128
+      LOCK ADD    WORD PTR [BX+SI-7D7FH], -125
+      LOCK ADD    WORD PTR [BP+SI-7B7DH], -123
       LOCK XCHG   [BX+SI-7577H], CX
       LOCK XCHG   [BP+SI-7375H], CX
       LOCK XCHG   [SI-7173H], CX
@@ -29999,128 +30284,275 @@
       IMUL    CX, [ESI+ESI+55], 3938H
       IMUL    SP, [EAX+97], 6362H
       IMUL    BP, [EBP+EBP*2+110], 111
+      IMUL    BP, [EBP+EBP*2+110], -128
       IMUL    BP, [ESI+EBP*2+111], 112
+      IMUL    BP, [ESI+EBP*2+111], -128
       IMUL    BP, [EAX+ESI*2+113], 114
+      IMUL    BP, [EAX+ESI*2+113], -128
       IMUL    BP, [ECX+ESI*2+114], 115
+      IMUL    BP, [ECX+ESI*2+114], -128
       IMUL    BP, [ESP+ESI*2+117], 118
+      IMUL    BP, [ESP+ESI*2+117], -128
       IMUL    BP, [ESI+ESI*2+119], 120
+      IMUL    BP, [ESI+ESI*2+119], -128
       IMUL    BP, [EAX+EAX*4-127], -126
+      IMUL    BP, [EAX+EAX*4-127], 0
       IMUL    BP, [ECX+EAX*4-126], -125
+      IMUL    BP, [ECX+EAX*4-126], 0
       IMUL    BP, [ESP+EAX*4-123], -122
+      IMUL    BP, [ESP+EAX*4-123], 0
       IMUL    BP, [ESI+EAX*4-121], -120
+      IMUL    BP, [ESI+EAX*4-121], 0
       IMUL    BP, [EAX+ECX*4-119], -118
+      IMUL    BP, [EAX+ECX*4-119], 0
       IMUL    BP, [ECX+ECX*4-118], -117
+      IMUL    BP, [ECX+ECX*4-118], 0
       IMUL    BP, [ESP+ECX*4-115], -114
+      IMUL    BP, [ESP+ECX*4-115], 0
       IMUL    BP, [ESI+ECX*4-113], -112
+      IMUL    BP, [ESI+ECX*4-113], 0
+      IMUL    BP, [EAX-95], -94
       IMUL    BP, [EBP+110], 111
+      IMUL    BP, [EBP+110], -128
       IMUL    BP, [ESI+111], 112
+      IMUL    BP, [ESI+111], -128
       IMUL    SI, [EAX+113], 114
+      IMUL    SI, [EAX+113], -128
       IMUL    SI, [ECX+114], 115
+      IMUL    SI, [ECX+114], -128
       IMUL    SI, [EBP+ESI*2+118], 119
+      IMUL    SI, [EBP+ESI*2+118], -128
       IMUL    SI, [ESI+ESI*2+119], 120
+      IMUL    SI, [ESI+ESI*2+119], -128
       IMUL    SI, [EAX+EDI*2+121], 122
+      IMUL    SI, [EAX+EDI*2+121], -128
       IMUL    SI, [ECX+EDI*2+122], 123
+      IMUL    SI, [ECX+EDI*2+122], -128
       IMUL    SI, [EAX+EAX*4-127], -126
+      IMUL    SI, [EAX+EAX*4-127], 0
       IMUL    SI, [ECX+EAX*4-126], -125
+      IMUL    SI, [ECX+EAX*4-126], 0
       IMUL    SI, [ESP+EAX*4-123], -122
+      IMUL    SI, [ESP+EAX*4-123], 0
       IMUL    SI, [ESI+EAX*4-121], -120
+      IMUL    SI, [ESI+EAX*4-121], 0
       IMUL    SI, [EAX+ECX*4-119], -118
+      IMUL    SI, [EAX+ECX*4-119], 0
       IMUL    SI, [ECX+ECX*4-118], -117
+      IMUL    SI, [ECX+ECX*4-118], 0
       IMUL    SI, [ESP+ECX*4-115], -114
+      IMUL    SI, [ESP+ECX*4-115], 0
       IMUL    SI, [ESI+ECX*4-113], -112
+      IMUL    SI, [ESI+ECX*4-113], 0
+      IMUL    SI, [EAX-95], -94
       IMUL    SI, [EBP+118], 119
+      IMUL    SI, [EBP+118], -128
       IMUL    SI, [ESI+119], 120
+      IMUL    SI, [ESI+119], -128
       IMUL    AX, [EAX-7B7C7D7FH], -123
+      IMUL    AX, [EAX-7B7C7D7FH], 0
+      IMUL    AX, [ECX-7A7B7C7EH], -122
       IMUL    AX, [EBP+EAX*4-7677787AH], -118
+      IMUL    AX, [EBP+EAX*4-7677787AH], 0
       IMUL    AX, [ESI+EAX*4-75767779H], -117
+      IMUL    AX, [ESI+EAX*4-75767779H], 0
       IMUL    AX, [EAX+ECX*4-73747577H], -115
+      IMUL    AX, [EAX+ECX*4-73747577H], 0
       IMUL    AX, [ECX+ECX*4-72737476H], -114
+      IMUL    AX, [ECX+ECX*4-72737476H], 0
       IMUL    AX, [ESP+ECX*4-6F707173H], -111
+      IMUL    AX, [ESP+ECX*4-6F707173H], 0
       IMUL    AX, [ESI+ECX*4-6D6E6F71H], -109
+      IMUL    AX, [ESI+ECX*4-6D6E6F71H], 0
+      IMUL    AX, [EAX-5B5C5D5FH], -91
+      IMUL    AX, [ECX-5A5B5C5EH], -90
+      IMUL    AX, [EBP-7677787AH], -118
+      IMUL    AX, [ESI-75767779H], -117
       IMUL    CX, [EAX-73747577H], -115
+      IMUL    CX, [EAX-73747577H], 0
+      IMUL    CX, [ECX-72737476H], -114
       IMUL    CX, [EBP+ECX*4-6E6F7072H], -110
+      IMUL    CX, [EBP+ECX*4-6E6F7072H], 0
       IMUL    CX, [ESI+ECX*4-6D6E6F71H], -109
+      IMUL    CX, [ESI+ECX*4-6D6E6F71H], 0
       IMUL    CX, [EAX+EDX*4-6B6C6D6FH], -107
+      IMUL    CX, [EAX+EDX*4-6B6C6D6FH], 0
       IMUL    CX, [ECX+EDX*4-6A6B6C6EH], -106
+      IMUL    CX, [ECX+EDX*4-6A6B6C6EH], 0
+      IMUL    CX, [EAX-5B5C5D5FH], -91
+      IMUL    CX, [EBP-6E6F7072H], -110
+      IMUL    CX, [ESI-6D6E6F71H], -109
       IMUL    SP, [EAX-5B5C5D5FH], -91
+      IMUL    SP, [EAX-5B5C5D5FH], 0
+      IMUL    SP, [ECX-5A5B5C5EH], -90
+      IMUL    SP, [EBP-5657585AH], -86
+      IMUL    SP, [EBP-5657585AH], -86
+      IMUL    SP, [ESI-55565759H], -85
       IMUL    BP, [EBP+EBP*4-4E4F5052H], -78
+      IMUL    BP, [EBP+EBP*4-4E4F5052H], 0
       IMUL    BP, [ESI+EBP*4-4D4E4F51H], -77
+      IMUL    BP, [ESI+EBP*4-4D4E4F51H], 0
       IMUL    BP, [EAX+ESI*4-4B4C4D4FH], -75
+      IMUL    BP, [EAX+ESI*4-4B4C4D4FH], 0
       IMUL    BP, [ECX+ESI*4-4A4B4C4EH], -74
+      IMUL    BP, [ECX+ESI*4-4A4B4C4EH], 0
       IMUL    BP, [ESP+ESI*4-4748494BH], -71
+      IMUL    BP, [ESP+ESI*4-4748494BH], 0
       IMUL    BP, [ESI+ESI*4-45464749H], -69
+      IMUL    BP, [ESI+ESI*4-45464749H], 0
       IMUL    BP, [EAX+EAX*8-3B3C3D3FH], -59
+      IMUL    BP, [EAX+EAX*8-3B3C3D3FH], 0
       IMUL    BP, [ECX+EAX*8-3A3B3C3EH], -58
+      IMUL    BP, [ECX+EAX*8-3A3B3C3EH], 0
       IMUL    BP, [ESP+EAX*8-3738393BH], -55
+      IMUL    BP, [ESP+EAX*8-3738393BH], 0
       IMUL    BP, [ESI+EAX*8-35363739H], -53
+      IMUL    BP, [ESI+EAX*8-35363739H], 0
       IMUL    BP, [EAX+ECX*8-33343537H], -51
+      IMUL    BP, [EAX+ECX*8-33343537H], 0
       IMUL    BP, [ECX+ECX*8-32333436H], -50
+      IMUL    BP, [ECX+ECX*8-32333436H], 0
       IMUL    BP, [ESP+ECX*8-2F303133H], -47
+      IMUL    BP, [ESP+ECX*8-2F303133H], 0
       IMUL    BP, [ESI+ECX*8-2D2E2F31H], -45
+      IMUL    BP, [ESI+ECX*8-2D2E2F31H], 0
+      IMUL    BP, [EAX-1B1C1D1FH], -27
       IMUL    SI, [EAX-4B4C4D4FH], -75
+      IMUL    SI, [EAX-4B4C4D4FH], 0
+      IMUL    SI, [ECX-4A4B4C4EH], -74
       IMUL    SI, [EBP+ESI*4-4647484AH], -70
+      IMUL    SI, [EBP+ESI*4-4647484AH], 0
       IMUL    SI, [ESI+ESI*4-45464749H], -69
+      IMUL    SI, [ESI+ESI*4-45464749H], 0
       IMUL    SI, [EAX+EDI*4-43444547H], -67
+      IMUL    SI, [EAX+EDI*4-43444547H], 0
       IMUL    SI, [ECX+EDI*4-42434446H], -66
+      IMUL    SI, [ECX+EDI*4-42434446H], 0
       IMUL    SI, [EAX+EAX*8-3B3C3D3FH], -59
+      IMUL    SI, [EAX+EAX*8-3B3C3D3FH], 0
       IMUL    SI, [ECX+EAX*8-3A3B3C3EH], -58
+      IMUL    SI, [ECX+EAX*8-3A3B3C3EH], 0
       IMUL    SI, [ESP+EAX*8-3738393BH], -55
+      IMUL    SI, [ESP+EAX*8-3738393BH], 0
       IMUL    SI, [ESI+EAX*8-35363739H], -53
+      IMUL    SI, [ESI+EAX*8-35363739H], 0
       IMUL    SI, [EAX+ECX*8-33343537H], -51
+      IMUL    SI, [EAX+ECX*8-33343537H], 0
       IMUL    SI, [ECX+ECX*8-32333436H], -50
+      IMUL    SI, [ECX+ECX*8-32333436H], 0
       IMUL    SI, [ESP+ECX*8-2F303133H], -47
+      IMUL    SI, [ESP+ECX*8-2F303133H], 0
       IMUL    SI, [ESI+ECX*8-2D2E2F31H], -45
+      IMUL    SI, [ESI+ECX*8-2D2E2F31H], 0
+      IMUL    SI, [EAX-1B1C1D1FH], -27
+      IMUL    SI, [EBP-4647484AH], -70
+      IMUL    SI, [ESI-45464749H], -69
       IMUL    AX, -63
+      IMUL    AX, 0
       IMUL    AX, CX, -62
+      IMUL    AX, CX, 0
       IMUL    AX, SP, -59
+      IMUL    AX, SP, 0
       IMUL    AX, SI, -57
+      IMUL    AX, SI, 0
       IMUL    CX, AX, -55
+      IMUL    CX, AX, 0
       IMUL    CX, -54
+      IMUL    CX, 0
       IMUL    CX, DX, -53
+      IMUL    CX, DX, 0
       IMUL    CX, SP, -51
+      IMUL    CX, SP, 0
       IMUL    CX, SI, -49
+      IMUL    CX, SI, 0
       IMUL    SP, AX, -31
+      IMUL    SP, AX, 0
       IMUL    SP, CX, -30
+      IMUL    SP, CX, 0
       IMUL    SP, -27
+      IMUL    SP, 0
       IMUL    SP, BP, -26
+      IMUL    SP, BP, 0
       IMUL    SP, SI, -25
+      IMUL    SP, SI, 0
       IMUL    SI, AX, -15
+      IMUL    SI, AX, 0
       IMUL    SI, CX, -14
+      IMUL    SI, CX, 0
       IMUL    SI, SP, -11
+      IMUL    SI, SP, 0
       IMUL    SI, -9
+      IMUL    SI, 0
       IMUL    SI, DI, -8
+      IMUL    SI, DI, 0
       IMUL    AX, [EAX], 1
+      IMUL    AX, [EAX], -128
       IMUL    AX, [ECX], 2
+      IMUL    AX, [ECX], -128
+      IMUL    AX, [7F7E7D7CH], -128
       IMUL    AX, [ESI], 7
+      IMUL    AX, [ESI], -128
       IMUL    CX, [EAX], 9
+      IMUL    CX, [EAX], -128
       IMUL    CX, [ECX], 10
+      IMUL    CX, [ECX], -128
+      IMUL    CX, [7F7E7D7CH], -128
       IMUL    CX, [ESI], 15
+      IMUL    CX, [ESI], -128
       IMUL    SP, [EAX], 33
+      IMUL    SP, [EAX], -128
       IMUL    SP, [ECX], 34
+      IMUL    SP, [ECX], -128
+      IMUL    SP, [7F7E7D7CH], -128
       IMUL    SP, [ESI], 39
+      IMUL    SP, [ESI], -128
       IMUL    SI, [EAX], 49
+      IMUL    SI, [EAX], -128
       IMUL    SI, [ECX], 50
+      IMUL    SI, [ECX], -128
+      IMUL    SI, [7F7E7D7CH], -128
       IMUL    SI, [ESI], 55
+      IMUL    SI, [ESI], -128
       IMUL    AX, [EAX+65], 66
+      IMUL    AX, [EAX+65], -128
       IMUL    AX, [ECX+66], 67
+      IMUL    AX, [ECX+66], -128
       IMUL    AX, [EBP+EAX*2+70], 71
+      IMUL    AX, [EBP+EAX*2+70], -128
       IMUL    AX, [ESI+EAX*2+71], 72
+      IMUL    AX, [ESI+EAX*2+71], -128
       IMUL    AX, [EAX+ECX*2+73], 74
+      IMUL    AX, [EAX+ECX*2+73], -128
       IMUL    AX, [ECX+ECX*2+74], 75
+      IMUL    AX, [ECX+ECX*2+74], -128
       IMUL    AX, [ESP+ECX*2+77], 78
+      IMUL    AX, [ESP+ECX*2+77], -128
       IMUL    AX, [ESI+ECX*2+79], 80
+      IMUL    AX, [ESI+ECX*2+79], -128
       IMUL    AX, [EBP+70], 71
+      IMUL    AX, [EBP+70], -128
       IMUL    AX, [ESI+71], 72
+      IMUL    AX, [ESI+71], -128
       IMUL    CX, [EAX+73], 74
+      IMUL    CX, [EAX+73], -128
       IMUL    CX, [ECX+74], 75
+      IMUL    CX, [ECX+74], -128
       IMUL    CX, [EBP+ECX*2+78], 79
+      IMUL    CX, [EBP+ECX*2+78], -128
       IMUL    CX, [ESI+ECX*2+79], 80
+      IMUL    CX, [ESI+ECX*2+79], -128
       IMUL    CX, [EAX+EDX*2+81], 82
+      IMUL    CX, [EAX+EDX*2+81], -128
       IMUL    CX, [ECX+EDX*2+82], 83
+      IMUL    CX, [ECX+EDX*2+82], -128
       IMUL    CX, [EBP+78], 79
+      IMUL    CX, [EBP+78], -128
       IMUL    CX, [ESI+79], 80
+      IMUL    CX, [ESI+79], -128
       IMUL    SP, [EAX+97], 98
+      IMUL    SP, [EAX+97], -128
       IMUL    SP, [ECX+98], 99
+      IMUL    SP, [ECX+98], -128
       INSW
       OUTSW
       ADD     WORD PTR [EDX-797A7B7DH], 8887H
@@ -31044,207 +31476,460 @@
       CMP     WORD PTR [ESI+ESI+55], 3938H
       ADD     WORD PTR [EAX-7B7C7D7FH], 8685H
       ADD     WORD PTR [EBP+EAX*4-7677787AH], -118
+      ADD     WORD PTR [EBP+EAX*4-7677787AH], 0
       ADD     WORD PTR [ESI+EAX*4-75767779H], -117
+      ADD     WORD PTR [ESI+EAX*4-75767779H], 0
       ADD     WORD PTR [EAX+ECX*4-73747577H], -115
+      ADD     WORD PTR [EAX+ECX*4-73747577H], 0
       ADD     WORD PTR [ECX+ECX*4-72737476H], -114
+      ADD     WORD PTR [ECX+ECX*4-72737476H], 0
       ADD     WORD PTR [ESP+ECX*4-6F707173H], -111
+      ADD     WORD PTR [ESP+ECX*4-6F707173H], 0
       ADD     WORD PTR [ESI+ECX*4-6D6E6F71H], -109
+      ADD     WORD PTR [ESI+ECX*4-6D6E6F71H], 0
+      ADD     WORD PTR [EAX-5B5C5D5FH], -91
+      ADD     WORD PTR [ECX-5A5B5C5EH], -90
+      ADD     WORD PTR [EBP-7677787AH], -118
+      ADD     WORD PTR [ESI-75767779H], -117
       OR      WORD PTR [EAX-73747577H], -115
+      OR      WORD PTR [EAX-73747577H], 0
+      OR      WORD PTR [ECX-72737476H], -114
       OR      WORD PTR [EBP+ECX*4-6E6F7072H], -110
+      OR      WORD PTR [EBP+ECX*4-6E6F7072H], 0
       OR      WORD PTR [ESI+ECX*4-6D6E6F71H], -109
+      OR      WORD PTR [ESI+ECX*4-6D6E6F71H], 0
       OR      WORD PTR [EAX+EDX*4-6B6C6D6FH], -107
+      OR      WORD PTR [EAX+EDX*4-6B6C6D6FH], 0
       OR      WORD PTR [ECX+EDX*4-6A6B6C6EH], -106
+      OR      WORD PTR [ECX+EDX*4-6A6B6C6EH], 0
+      OR      WORD PTR [EAX-5B5C5D5FH], -91
+      OR      WORD PTR [ECX-5A5B5C5EH], -90
+      OR      WORD PTR [EBP-6E6F7072H], -110
+      OR      WORD PTR [ESI-6D6E6F71H], -109
       ADC     WORD PTR [EAX-6B6C6D6FH], -107
+      ADC     WORD PTR [EAX-6B6C6D6FH], 0
+      ADC     WORD PTR [ECX-6A6B6C6EH], -106
       ADC     WORD PTR [EBP+EDX*4-6667686AH], -102
+      ADC     WORD PTR [EBP+EDX*4-6667686AH], 0
       ADC     WORD PTR [ESI+EDX*4-65666769H], -101
+      ADC     WORD PTR [ESI+EDX*4-65666769H], 0
       ADC     WORD PTR [EAX+EBX*4-63646567H], -99
+      ADC     WORD PTR [EAX+EBX*4-63646567H], 0
       ADC     WORD PTR [ECX+EBX*4-62636466H], -98
+      ADC     WORD PTR [ECX+EBX*4-62636466H], 0
+      ADC     WORD PTR [EAX-5B5C5D5FH], -91
+      ADC     WORD PTR [ECX-5A5B5C5EH], -90
+      ADC     WORD PTR [EBP-6667686AH], -102
+      ADC     WORD PTR [ESI-65666769H], -101
       SBB     WORD PTR [EAX-63646567H], -99
+      SBB     WORD PTR [EAX-63646567H], 0
+      SBB     WORD PTR [ECX-62636466H], -98
       SBB     WORD PTR [EBP+EBX*4-5E5F6062H], -94
+      SBB     WORD PTR [EBP+EBX*4-5E5F6062H], 0
       SBB     WORD PTR [ESI+EBX*4-5D5E5F61H], -93
+      SBB     WORD PTR [ESI+EBX*4-5D5E5F61H], 0
+      SBB     WORD PTR [EAX-5B5C5D5FH], -91
+      SBB     WORD PTR [ECX-5A5B5C5EH], -90
+      SBB     WORD PTR [EBP-5E5F6062H], -94
+      SBB     WORD PTR [ESI-5D5E5F61H], -93
       AND     WORD PTR [EAX-5B5C5D5FH], -91
+      AND     WORD PTR [EAX-5B5C5D5FH], 0
+      AND     WORD PTR [ECX-5A5B5C5EH], -90
+      AND     WORD PTR [EBP-5657585AH], -86
+      AND     WORD PTR [ESI-55565759H], -85
+      AND     WORD PTR [EBP-5657585AH], -86
+      AND     WORD PTR [ESI-55565759H], -85
       SUB     WORD PTR [EAX-53545557H], -83
+      SUB     WORD PTR [EAX-53545557H], 0
+      SUB     WORD PTR [ECX-52535456H], -82
       SUB     WORD PTR [EBP+EBP*4-4E4F5052H], -78
+      SUB     WORD PTR [EBP+EBP*4-4E4F5052H], 0
       SUB     WORD PTR [ESI+EBP*4-4D4E4F51H], -77
+      SUB     WORD PTR [ESI+EBP*4-4D4E4F51H], 0
       SUB     WORD PTR [EAX+ESI*4-4B4C4D4FH], -75
+      SUB     WORD PTR [EAX+ESI*4-4B4C4D4FH], 0
       SUB     WORD PTR [ECX+ESI*4-4A4B4C4EH], -74
+      SUB     WORD PTR [ECX+ESI*4-4A4B4C4EH], 0
       SUB     WORD PTR [ESP+ESI*4-4748494BH], -71
+      SUB     WORD PTR [ESP+ESI*4-4748494BH], 0
       SUB     WORD PTR [ESI+ESI*4-45464749H], -69
+      SUB     WORD PTR [ESI+ESI*4-45464749H], 0
       SUB     WORD PTR [EAX+EAX*8-3B3C3D3FH], -59
+      SUB     WORD PTR [EAX+EAX*8-3B3C3D3FH], 0
       SUB     WORD PTR [ECX+EAX*8-3A3B3C3EH], -58
+      SUB     WORD PTR [ECX+EAX*8-3A3B3C3EH], 0
       SUB     WORD PTR [ESP+EAX*8-3738393BH], -55
+      SUB     WORD PTR [ESP+EAX*8-3738393BH], 0
       SUB     WORD PTR [ESI+EAX*8-35363739H], -53
+      SUB     WORD PTR [ESI+EAX*8-35363739H], 0
       SUB     WORD PTR [EAX+ECX*8-33343537H], -51
+      SUB     WORD PTR [EAX+ECX*8-33343537H], 0
       SUB     WORD PTR [ECX+ECX*8-32333436H], -50
+      SUB     WORD PTR [ECX+ECX*8-32333436H], 0
       SUB     WORD PTR [ESP+ECX*8-2F303133H], -47
+      SUB     WORD PTR [ESP+ECX*8-2F303133H], 0
       SUB     WORD PTR [ESI+ECX*8-2D2E2F31H], -45
+      SUB     WORD PTR [ESI+ECX*8-2D2E2F31H], 0
+      SUB     WORD PTR [EAX-1B1C1D1FH], -27
+      SUB     WORD PTR [ECX-1A1B1C1EH], -26
+      SUB     WORD PTR [EBP-4E4F5052H], -78
+      SUB     WORD PTR [ESI-4D4E4F51H], -77
       XOR     WORD PTR [EAX-4B4C4D4FH], -75
+      XOR     WORD PTR [EAX-4B4C4D4FH], 0
+      XOR     WORD PTR [ECX-4A4B4C4EH], -74
       XOR     WORD PTR [EBP+ESI*4-4647484AH], -70
+      XOR     WORD PTR [EBP+ESI*4-4647484AH], 0
       XOR     WORD PTR [ESI+ESI*4-45464749H], -69
+      XOR     WORD PTR [ESI+ESI*4-45464749H], 0
       XOR     WORD PTR [EAX+EDI*4-43444547H], -67
+      XOR     WORD PTR [EAX+EDI*4-43444547H], 0
       XOR     WORD PTR [ECX+EDI*4-42434446H], -66
+      XOR     WORD PTR [ECX+EDI*4-42434446H], 0
       XOR     WORD PTR [EAX+EAX*8-3B3C3D3FH], -59
+      XOR     WORD PTR [EAX+EAX*8-3B3C3D3FH], 0
       XOR     WORD PTR [ECX+EAX*8-3A3B3C3EH], -58
+      XOR     WORD PTR [ECX+EAX*8-3A3B3C3EH], 0
       XOR     WORD PTR [ESP+EAX*8-3738393BH], -55
+      XOR     WORD PTR [ESP+EAX*8-3738393BH], 0
       XOR     WORD PTR [ESI+EAX*8-35363739H], -53
+      XOR     WORD PTR [ESI+EAX*8-35363739H], 0
       XOR     WORD PTR [EAX+ECX*8-33343537H], -51
+      XOR     WORD PTR [EAX+ECX*8-33343537H], 0
       XOR     WORD PTR [ECX+ECX*8-32333436H], -50
+      XOR     WORD PTR [ECX+ECX*8-32333436H], 0
       XOR     WORD PTR [ESP+ECX*8-2F303133H], -47
+      XOR     WORD PTR [ESP+ECX*8-2F303133H], 0
       XOR     WORD PTR [ESI+ECX*8-2D2E2F31H], -45
+      XOR     WORD PTR [ESI+ECX*8-2D2E2F31H], 0
+      XOR     WORD PTR [EAX-1B1C1D1FH], -27
+      XOR     WORD PTR [ECX-1A1B1C1EH], -26
+      XOR     WORD PTR [EBP-4647484AH], -70
+      XOR     WORD PTR [ESI-45464749H], -69
       CMP     WORD PTR [EAX-43444547H], -67
+      CMP     WORD PTR [EAX-43444547H], 0
+      CMP     WORD PTR [ECX-42434446H], -66
       CMP     WORD PTR [EBP+EDI*4-3E3F4042H], -62
+      CMP     WORD PTR [EBP+EDI*4-3E3F4042H], 0
       CMP     WORD PTR [ESI+EDI*4-3D3E3F41H], -61
+      CMP     WORD PTR [ESI+EDI*4-3D3E3F41H], 0
       CMP     WORD PTR [EAX+EAX*8-3B3C3D3FH], -59
+      CMP     WORD PTR [EAX+EAX*8-3B3C3D3FH], 0
       CMP     WORD PTR [ECX+EAX*8-3A3B3C3EH], -58
+      CMP     WORD PTR [ECX+EAX*8-3A3B3C3EH], 0
       CMP     WORD PTR [ESP+EAX*8-3738393BH], -55
+      CMP     WORD PTR [ESP+EAX*8-3738393BH], 0
       CMP     WORD PTR [ESI+EAX*8-35363739H], -53
+      CMP     WORD PTR [ESI+EAX*8-35363739H], 0
       CMP     WORD PTR [EAX+ECX*8-33343537H], -51
+      CMP     WORD PTR [EAX+ECX*8-33343537H], 0
       CMP     WORD PTR [ECX+ECX*8-32333436H], -50
+      CMP     WORD PTR [ECX+ECX*8-32333436H], 0
       CMP     WORD PTR [ESP+ECX*8-2F303133H], -47
+      CMP     WORD PTR [ESP+ECX*8-2F303133H], 0
       CMP     WORD PTR [ESI+ECX*8-2D2E2F31H], -45
+      CMP     WORD PTR [ESI+ECX*8-2D2E2F31H], 0
+      CMP     WORD PTR [EAX-1B1C1D1FH], -27
+      CMP     WORD PTR [ECX-1A1B1C1EH], -26
+      CMP     WORD PTR [EBP-3E3F4042H], -62
+      CMP     WORD PTR [ESI-3D3E3F41H], -61
       ADD     AX, -63
+      ADD     AX, 0
       ADD     CX, -62
+      ADD     CX, 0
       ADD     SP, -59
+      ADD     SP, 0
       ADD     SI, -57
+      ADD     SI, 0
       OR      AX, -55
+      OR      AX, 0
       OR      CX, -54
+      OR      CX, 0
       OR      SP, -51
+      OR      SP, 0
       OR      SI, -49
+      OR      SI, 0
       ADC     AX, -47
+      ADC     AX, 0
       ADC     CX, -46
+      ADC     CX, 0
       ADC     SP, -43
+      ADC     SP, 0
       ADC     SI, -41
+      ADC     SI, 0
       SBB     AX, -39
+      SBB     AX, 0
       SBB     CX, -38
+      SBB     CX, 0
       SBB     SP, -35
+      SBB     SP, 0
       SBB     SI, -33
+      SBB     SI, 0
       AND     AX, -31
+      AND     AX, 0
       AND     CX, -30
+      AND     CX, 0
       AND     SP, -27
+      AND     SP, 0
       AND     SI, -25
+      AND     SI, 0
       SUB     AX, -23
+      SUB     AX, 0
       SUB     CX, -22
+      SUB     CX, 0
       SUB     SP, -19
+      SUB     SP, 0
       SUB     SI, -17
+      SUB     SI, 0
       XOR     AX, -15
+      XOR     AX, 0
       XOR     CX, -14
+      XOR     CX, 0
       XOR     SP, -11
+      XOR     SP, 0
       XOR     SI, -9
+      XOR     SI, 0
       CMP     AX, -7
+      CMP     AX, 0
       CMP     CX, -6
+      CMP     CX, 0
       CMP     SP, -3
+      CMP     SP, 0
       CMP     SI, -1
+      CMP     SI, 0
       ADD     WORD PTR [EAX], 1
+      ADD     WORD PTR [EAX], -128
       ADD     WORD PTR [ECX], 2
+      ADD     WORD PTR [ECX], -128
+      ADD     WORD PTR [7F7E7D7CH], -128
       ADD     WORD PTR [ESI], 7
+      ADD     WORD PTR [ESI], -128
       OR      WORD PTR [EAX], 9
+      OR      WORD PTR [EAX], -128
       OR      WORD PTR [ECX], 10
+      OR      WORD PTR [ECX], -128
+      OR      WORD PTR [7F7E7D7CH], -128
       OR      WORD PTR [ESI], 15
+      OR      WORD PTR [ESI], -128
       ADC     WORD PTR [EAX], 17
+      ADC     WORD PTR [EAX], -128
       ADC     WORD PTR [ECX], 18
+      ADC     WORD PTR [ECX], -128
+      ADC     WORD PTR [7F7E7D7CH], -128
       ADC     WORD PTR [ESI], 23
+      ADC     WORD PTR [ESI], -128
       SBB     WORD PTR [EAX], 25
+      SBB     WORD PTR [EAX], -128
       SBB     WORD PTR [ECX], 26
+      SBB     WORD PTR [ECX], -128
+      SBB     WORD PTR [7F7E7D7CH], -128
       SBB     WORD PTR [ESI], 31
+      SBB     WORD PTR [ESI], -128
       AND     WORD PTR [EAX], 33
+      AND     WORD PTR [EAX], -128
       AND     WORD PTR [ECX], 34
+      AND     WORD PTR [ECX], -128
+      AND     WORD PTR [7F7E7D7CH], -128
       AND     WORD PTR [ESI], 39
+      AND     WORD PTR [ESI], -128
       SUB     WORD PTR [EAX], 41
+      SUB     WORD PTR [EAX], -128
       SUB     WORD PTR [ECX], 42
+      SUB     WORD PTR [ECX], -128
       SUB     WORD PTR [ESI+EBP], 47
+      SUB     WORD PTR [ESI+EBP], -128
       SUB     WORD PTR [EAX+ESI], 49
+      SUB     WORD PTR [EAX+ESI], -128
+      SUB     WORD PTR [7F7E7D7CH], -128
       SUB     WORD PTR [ESI], 47
+      SUB     WORD PTR [ESI], -128
       XOR     WORD PTR [EAX], 49
+      XOR     WORD PTR [EAX], -128
       XOR     WORD PTR [ECX], 50
+      XOR     WORD PTR [ECX], -128
+      XOR     WORD PTR [7F7E7D7CH], -128
       XOR     WORD PTR [ESI], 55
+      XOR     WORD PTR [ESI], -128
       CMP     WORD PTR [EAX], 57
+      CMP     WORD PTR [EAX], -128
       CMP     WORD PTR [ECX], 58
+      CMP     WORD PTR [ECX], -128
+      CMP     WORD PTR [7F7E7D7CH], -128
       CMP     WORD PTR [ESI], 63
+      CMP     WORD PTR [ESI], -128
       ADD     WORD PTR [EAX+65], 66
+      ADD     WORD PTR [EAX+65], -128
       ADD     WORD PTR [ECX+66], 67
+      ADD     WORD PTR [ECX+66], -128
       ADD     WORD PTR [EBP+EAX*2+70], 71
+      ADD     WORD PTR [EBP+EAX*2+70], -128
       ADD     WORD PTR [ESI+EAX*2+71], 72
+      ADD     WORD PTR [ESI+EAX*2+71], -128
       ADD     WORD PTR [EAX+ECX*2+73], 74
+      ADD     WORD PTR [EAX+ECX*2+73], -128
       ADD     WORD PTR [ECX+ECX*2+74], 75
+      ADD     WORD PTR [ECX+ECX*2+74], -128
       ADD     WORD PTR [ESP+ECX*2+77], 78
+      ADD     WORD PTR [ESP+ECX*2+77], -128
       ADD     WORD PTR [ESI+ECX*2+79], 80
+      ADD     WORD PTR [ESI+ECX*2+79], -128
       ADD     WORD PTR [EBP+70], 71
+      ADD     WORD PTR [EBP+70], -128
       ADD     WORD PTR [ESI+71], 72
+      ADD     WORD PTR [ESI+71], -128
       OR      WORD PTR [EAX+73], 74
+      OR      WORD PTR [EAX+73], -128
       OR      WORD PTR [ECX+74], 75
+      OR      WORD PTR [ECX+74], -128
       OR      WORD PTR [EBP+ECX*2+78], 79
+      OR      WORD PTR [EBP+ECX*2+78], -128
       OR      WORD PTR [ESI+ECX*2+79], 80
+      OR      WORD PTR [ESI+ECX*2+79], -128
       OR      WORD PTR [EAX+EDX*2+81], 82
+      OR      WORD PTR [EAX+EDX*2+81], -128
       OR      WORD PTR [ECX+EDX*2+82], 83
+      OR      WORD PTR [ECX+EDX*2+82], -128
       OR      WORD PTR [EBP+78], 79
+      OR      WORD PTR [EBP+78], -128
       OR      WORD PTR [ESI+79], 80
+      OR      WORD PTR [ESI+79], -128
       ADC     WORD PTR [EAX+81], 82
+      ADC     WORD PTR [EAX+81], -128
       ADC     WORD PTR [ECX+82], 83
+      ADC     WORD PTR [ECX+82], -128
       ADC     WORD PTR [EBP+EDX*2+86], 87
+      ADC     WORD PTR [EBP+EDX*2+86], -128
       ADC     WORD PTR [ESI+EDX*2+87], 88
+      ADC     WORD PTR [ESI+EDX*2+87], -128
       ADC     WORD PTR [EAX+EBX*2+89], 90
+      ADC     WORD PTR [EAX+EBX*2+89], -128
       ADC     WORD PTR [ECX+EBX*2+90], 91
+      ADC     WORD PTR [ECX+EBX*2+90], -128
       ADC     WORD PTR [EBP+86], 87
+      ADC     WORD PTR [EBP+86], -128
       ADC     WORD PTR [ESI+87], 88
+      ADC     WORD PTR [ESI+87], -128
       SBB     WORD PTR [EAX+89], 90
+      SBB     WORD PTR [EAX+89], -128
       SBB     WORD PTR [ECX+90], 91
+      SBB     WORD PTR [ECX+90], -128
       SBB     WORD PTR [EBP+EBX*2+94], 95
+      SBB     WORD PTR [EBP+EBX*2+94], -128
       SBB     WORD PTR [ESI+EBX*2+95], 96
+      SBB     WORD PTR [ESI+EBX*2+95], -128
       SBB     WORD PTR [EBP+94], 95
+      SBB     WORD PTR [EBP+94], -128
       SBB     WORD PTR [ESI+95], 96
+      SBB     WORD PTR [ESI+95], -128
       AND     WORD PTR [EAX+97], 98
+      AND     WORD PTR [EAX+97], -128
       AND     WORD PTR [ECX+98], 99
+      AND     WORD PTR [ECX+98], -128
       AND     WORD PTR [EBP+102], 103
+      AND     WORD PTR [EBP+102], -128
       AND     WORD PTR [ESI+103], 104
+      AND     WORD PTR [ESI+103], -128
       SUB     WORD PTR [EAX+105], 106
+      SUB     WORD PTR [EAX+105], -128
       SUB     WORD PTR [ECX+106], 107
+      SUB     WORD PTR [ECX+106], -128
       SUB     WORD PTR [EBP+EBP*2+110], 111
+      SUB     WORD PTR [EBP+EBP*2+110], -128
       SUB     WORD PTR [ESI+EBP*2+111], 112
+      SUB     WORD PTR [ESI+EBP*2+111], -128
       SUB     WORD PTR [EAX+ESI*2+113], 114
+      SUB     WORD PTR [EAX+ESI*2+113], -128
       SUB     WORD PTR [ECX+ESI*2+114], 115
+      SUB     WORD PTR [ECX+ESI*2+114], -128
       SUB     WORD PTR [ESP+ESI*2+117], 118
+      SUB     WORD PTR [ESP+ESI*2+117], -128
       SUB     WORD PTR [ESI+ESI*2+119], 120
+      SUB     WORD PTR [ESI+ESI*2+119], -128
       SUB     WORD PTR [EAX+EAX*4-127], -126
+      SUB     WORD PTR [EAX+EAX*4-127], 0
       SUB     WORD PTR [ECX+EAX*4-126], -125
+      SUB     WORD PTR [ECX+EAX*4-126], 0
       SUB     WORD PTR [ESP+EAX*4-123], -122
+      SUB     WORD PTR [ESP+EAX*4-123], 0
       SUB     WORD PTR [ESI+EAX*4-121], -120
+      SUB     WORD PTR [ESI+EAX*4-121], 0
       SUB     WORD PTR [EAX+ECX*4-119], -118
+      SUB     WORD PTR [EAX+ECX*4-119], 0
       SUB     WORD PTR [ECX+ECX*4-118], -117
+      SUB     WORD PTR [ECX+ECX*4-118], 0
       SUB     WORD PTR [ESP+ECX*4-115], -114
+      SUB     WORD PTR [ESP+ECX*4-115], 0
       SUB     WORD PTR [ESI+ECX*4-113], -112
+      SUB     WORD PTR [ESI+ECX*4-113], 0
+      SUB     WORD PTR [EAX-95], -94
       SUB     WORD PTR [EBP+110], 111
+      SUB     WORD PTR [EBP+110], -128
       SUB     WORD PTR [ESI+111], 112
+      SUB     WORD PTR [ESI+111], -128
       XOR     WORD PTR [EAX+113], 114
+      XOR     WORD PTR [EAX+113], -128
       XOR     WORD PTR [ECX+114], 115
+      XOR     WORD PTR [ECX+114], -128
       XOR     WORD PTR [EBP+ESI*2+118], 119
+      XOR     WORD PTR [EBP+ESI*2+118], -128
       XOR     WORD PTR [ESI+ESI*2+119], 120
+      XOR     WORD PTR [ESI+ESI*2+119], -128
       XOR     WORD PTR [EAX+EDI*2+121], 122
+      XOR     WORD PTR [EAX+EDI*2+121], -128
       XOR     WORD PTR [ECX+EDI*2+122], 123
+      XOR     WORD PTR [ECX+EDI*2+122], -128
       XOR     WORD PTR [EAX+EAX*4-127], -126
+      XOR     WORD PTR [EAX+EAX*4-127], 0
       XOR     WORD PTR [ECX+EAX*4-126], -125
+      XOR     WORD PTR [ECX+EAX*4-126], 0
       XOR     WORD PTR [ESP+EAX*4-123], -122
+      XOR     WORD PTR [ESP+EAX*4-123], 0
       XOR     WORD PTR [ESI+EAX*4-121], -120
+      XOR     WORD PTR [ESI+EAX*4-121], 0
       XOR     WORD PTR [EAX+ECX*4-119], -118
+      XOR     WORD PTR [EAX+ECX*4-119], 0
       XOR     WORD PTR [ECX+ECX*4-118], -117
+      XOR     WORD PTR [ECX+ECX*4-118], 0
       XOR     WORD PTR [ESP+ECX*4-115], -114
+      XOR     WORD PTR [ESP+ECX*4-115], 0
       XOR     WORD PTR [ESI+ECX*4-113], -112
+      XOR     WORD PTR [ESI+ECX*4-113], 0
+      XOR     WORD PTR [EAX-95], -94
       XOR     WORD PTR [EBP+118], 119
+      XOR     WORD PTR [EBP+118], -128
       XOR     WORD PTR [ESI+119], 120
+      XOR     WORD PTR [ESI+119], -128
       CMP     WORD PTR [EAX+121], 122
+      CMP     WORD PTR [EAX+121], -128
       CMP     WORD PTR [ECX+122], 123
+      CMP     WORD PTR [ECX+122], -128
       CMP     WORD PTR [EBP+EDI*2+126], 127
+      CMP     WORD PTR [EBP+EDI*2+126], -128
       CMP     WORD PTR [ESI+EDI*2+127], -128
+      CMP     WORD PTR [ESI+EDI*2+127], 0
       CMP     WORD PTR [EAX+EAX*4-127], -126
+      CMP     WORD PTR [EAX+EAX*4-127], 0
       CMP     WORD PTR [ECX+EAX*4-126], -125
+      CMP     WORD PTR [ECX+EAX*4-126], 0
       CMP     WORD PTR [ESP+EAX*4-123], -122
+      CMP     WORD PTR [ESP+EAX*4-123], 0
       CMP     WORD PTR [ESI+EAX*4-121], -120
+      CMP     WORD PTR [ESI+EAX*4-121], 0
       CMP     WORD PTR [EAX+ECX*4-119], -118
+      CMP     WORD PTR [EAX+ECX*4-119], 0
       CMP     WORD PTR [ECX+ECX*4-118], -117
+      CMP     WORD PTR [ECX+ECX*4-118], 0
       CMP     WORD PTR [ESP+ECX*4-115], -114
+      CMP     WORD PTR [ESP+ECX*4-115], 0
       CMP     WORD PTR [ESI+ECX*4-113], -112
+      CMP     WORD PTR [ESI+ECX*4-113], 0
+      CMP     WORD PTR [EAX-95], -94
       CMP     WORD PTR [EBP+126], 127
+      CMP     WORD PTR [EBP+126], -128
       CMP     WORD PTR [ESI+127], -128
+      CMP     WORD PTR [ESI+127], 0
       ADD     WORD PTR [EAX-7B7C7D7FH], -123
+      ADD     WORD PTR [EAX-7B7C7D7FH], 0
+      ADD     WORD PTR [ECX-7A7B7C7EH], -122
       TEST    [ESI-75767779H], AX
       TEST    [EAX-73747577H], CX
       TEST    [ECX-72737476H], CX
@@ -41705,147 +42390,333 @@
       LOCK XOR    WORD PTR [ESI+ESI+55], 3938H
       LOCK ADD    WORD PTR [EAX-7B7C7D7FH], 8685H
       LOCK ADD    WORD PTR [EBP+EAX*4-7677787AH], -118
+      LOCK ADD    WORD PTR [EBP+EAX*4-7677787AH], 0
       LOCK ADD    WORD PTR [ESI+EAX*4-75767779H], -117
+      LOCK ADD    WORD PTR [ESI+EAX*4-75767779H], 0
       LOCK ADD    WORD PTR [EAX+ECX*4-73747577H], -115
+      LOCK ADD    WORD PTR [EAX+ECX*4-73747577H], 0
       LOCK ADD    WORD PTR [ECX+ECX*4-72737476H], -114
+      LOCK ADD    WORD PTR [ECX+ECX*4-72737476H], 0
       LOCK ADD    WORD PTR [ESP+ECX*4-6F707173H], -111
+      LOCK ADD    WORD PTR [ESP+ECX*4-6F707173H], 0
       LOCK ADD    WORD PTR [ESI+ECX*4-6D6E6F71H], -109
+      LOCK ADD    WORD PTR [ESI+ECX*4-6D6E6F71H], 0
+      LOCK ADD    WORD PTR [EAX-5B5C5D5FH], -91
+      LOCK ADD    WORD PTR [ECX-5A5B5C5EH], -90
+      LOCK ADD    WORD PTR [EBP-7677787AH], -118
+      LOCK ADD    WORD PTR [ESI-75767779H], -117
       LOCK OR WORD PTR [EAX-73747577H], -115
+      LOCK OR WORD PTR [EAX-73747577H], 0
+      LOCK OR WORD PTR [ECX-72737476H], -114
       LOCK OR WORD PTR [EBP+ECX*4-6E6F7072H], -110
+      LOCK OR WORD PTR [EBP+ECX*4-6E6F7072H], 0
       LOCK OR WORD PTR [ESI+ECX*4-6D6E6F71H], -109
+      LOCK OR WORD PTR [ESI+ECX*4-6D6E6F71H], 0
       LOCK OR WORD PTR [EAX+EDX*4-6B6C6D6FH], -107
+      LOCK OR WORD PTR [EAX+EDX*4-6B6C6D6FH], 0
       LOCK OR WORD PTR [ECX+EDX*4-6A6B6C6EH], -106
+      LOCK OR WORD PTR [ECX+EDX*4-6A6B6C6EH], 0
+      LOCK OR WORD PTR [EAX-5B5C5D5FH], -91
+      LOCK OR WORD PTR [ECX-5A5B5C5EH], -90
+      LOCK OR WORD PTR [EBP-6E6F7072H], -110
+      LOCK OR WORD PTR [ESI-6D6E6F71H], -109
       LOCK ADC    WORD PTR [EAX-6B6C6D6FH], -107
+      LOCK ADC    WORD PTR [EAX-6B6C6D6FH], 0
+      LOCK ADC    WORD PTR [ECX-6A6B6C6EH], -106
       LOCK ADC    WORD PTR [EBP+EDX*4-6667686AH], -102
+      LOCK ADC    WORD PTR [EBP+EDX*4-6667686AH], 0
       LOCK ADC    WORD PTR [ESI+EDX*4-65666769H], -101
+      LOCK ADC    WORD PTR [ESI+EDX*4-65666769H], 0
       LOCK ADC    WORD PTR [EAX+EBX*4-63646567H], -99
+      LOCK ADC    WORD PTR [EAX+EBX*4-63646567H], 0
       LOCK ADC    WORD PTR [ECX+EBX*4-62636466H], -98
+      LOCK ADC    WORD PTR [ECX+EBX*4-62636466H], 0
+      LOCK ADC    WORD PTR [EAX-5B5C5D5FH], -91
+      LOCK ADC    WORD PTR [ECX-5A5B5C5EH], -90
+      LOCK ADC    WORD PTR [EBP-6667686AH], -102
+      LOCK ADC    WORD PTR [ESI-65666769H], -101
       LOCK SBB    WORD PTR [EAX-63646567H], -99
+      LOCK SBB    WORD PTR [EAX-63646567H], 0
+      LOCK SBB    WORD PTR [ECX-62636466H], -98
       LOCK SBB    WORD PTR [EBP+EBX*4-5E5F6062H], -94
+      LOCK SBB    WORD PTR [EBP+EBX*4-5E5F6062H], 0
       LOCK SBB    WORD PTR [ESI+EBX*4-5D5E5F61H], -93
+      LOCK SBB    WORD PTR [ESI+EBX*4-5D5E5F61H], 0
+      LOCK SBB    WORD PTR [EAX-5B5C5D5FH], -91
+      LOCK SBB    WORD PTR [ECX-5A5B5C5EH], -90
+      LOCK SBB    WORD PTR [EBP-5E5F6062H], -94
+      LOCK SBB    WORD PTR [ESI-5D5E5F61H], -93
       LOCK AND    WORD PTR [EAX-5B5C5D5FH], -91
+      LOCK AND    WORD PTR [EAX-5B5C5D5FH], 0
+      LOCK AND    WORD PTR [ECX-5A5B5C5EH], -90
+      LOCK AND    WORD PTR [EBP-5657585AH], -86
+      LOCK AND    WORD PTR [ESI-55565759H], -85
+      LOCK AND    WORD PTR [EBP-5657585AH], -86
+      LOCK AND    WORD PTR [ESI-55565759H], -85
       LOCK SUB    WORD PTR [EAX-53545557H], -83
+      LOCK SUB    WORD PTR [EAX-53545557H], 0
+      LOCK SUB    WORD PTR [ECX-52535456H], -82
       LOCK SUB    WORD PTR [EBP+EBP*4-4E4F5052H], -78
+      LOCK SUB    WORD PTR [EBP+EBP*4-4E4F5052H], 0
       LOCK SUB    WORD PTR [ESI+EBP*4-4D4E4F51H], -77
+      LOCK SUB    WORD PTR [ESI+EBP*4-4D4E4F51H], 0
       LOCK SUB    WORD PTR [EAX+ESI*4-4B4C4D4FH], -75
+      LOCK SUB    WORD PTR [EAX+ESI*4-4B4C4D4FH], 0
       LOCK SUB    WORD PTR [ECX+ESI*4-4A4B4C4EH], -74
+      LOCK SUB    WORD PTR [ECX+ESI*4-4A4B4C4EH], 0
       LOCK SUB    WORD PTR [ESP+ESI*4-4748494BH], -71
+      LOCK SUB    WORD PTR [ESP+ESI*4-4748494BH], 0
       LOCK SUB    WORD PTR [ESI+ESI*4-45464749H], -69
+      LOCK SUB    WORD PTR [ESI+ESI*4-45464749H], 0
       LOCK SUB    WORD PTR [EAX+EAX*8-3B3C3D3FH], -59
+      LOCK SUB    WORD PTR [EAX+EAX*8-3B3C3D3FH], 0
       LOCK SUB    WORD PTR [ECX+EAX*8-3A3B3C3EH], -58
+      LOCK SUB    WORD PTR [ECX+EAX*8-3A3B3C3EH], 0
       LOCK SUB    WORD PTR [ESP+EAX*8-3738393BH], -55
+      LOCK SUB    WORD PTR [ESP+EAX*8-3738393BH], 0
       LOCK SUB    WORD PTR [ESI+EAX*8-35363739H], -53
+      LOCK SUB    WORD PTR [ESI+EAX*8-35363739H], 0
       LOCK SUB    WORD PTR [EAX+ECX*8-33343537H], -51
+      LOCK SUB    WORD PTR [EAX+ECX*8-33343537H], 0
       LOCK SUB    WORD PTR [ECX+ECX*8-32333436H], -50
+      LOCK SUB    WORD PTR [ECX+ECX*8-32333436H], 0
       LOCK SUB    WORD PTR [ESP+ECX*8-2F303133H], -47
+      LOCK SUB    WORD PTR [ESP+ECX*8-2F303133H], 0
       LOCK SUB    WORD PTR [ESI+ECX*8-2D2E2F31H], -45
+      LOCK SUB    WORD PTR [ESI+ECX*8-2D2E2F31H], 0
+      LOCK SUB    WORD PTR [EAX-1B1C1D1FH], -27
+      LOCK SUB    WORD PTR [ECX-1A1B1C1EH], -26
+      LOCK SUB    WORD PTR [EBP-4E4F5052H], -78
+      LOCK SUB    WORD PTR [ESI-4D4E4F51H], -77
       LOCK XOR    WORD PTR [EAX-4B4C4D4FH], -75
+      LOCK XOR    WORD PTR [EAX-4B4C4D4FH], 0
+      LOCK XOR    WORD PTR [ECX-4A4B4C4EH], -74
       LOCK XOR    WORD PTR [EBP+ESI*4-4647484AH], -70
+      LOCK XOR    WORD PTR [EBP+ESI*4-4647484AH], 0
       LOCK XOR    WORD PTR [ESI+ESI*4-45464749H], -69
+      LOCK XOR    WORD PTR [ESI+ESI*4-45464749H], 0
       LOCK XOR    WORD PTR [EAX+EDI*4-43444547H], -67
+      LOCK XOR    WORD PTR [EAX+EDI*4-43444547H], 0
       LOCK XOR    WORD PTR [ECX+EDI*4-42434446H], -66
+      LOCK XOR    WORD PTR [ECX+EDI*4-42434446H], 0
       LOCK XOR    WORD PTR [EAX+EAX*8-3B3C3D3FH], -59
+      LOCK XOR    WORD PTR [EAX+EAX*8-3B3C3D3FH], 0
       LOCK XOR    WORD PTR [ECX+EAX*8-3A3B3C3EH], -58
+      LOCK XOR    WORD PTR [ECX+EAX*8-3A3B3C3EH], 0
       LOCK XOR    WORD PTR [ESP+EAX*8-3738393BH], -55
+      LOCK XOR    WORD PTR [ESP+EAX*8-3738393BH], 0
       LOCK XOR    WORD PTR [ESI+EAX*8-35363739H], -53
+      LOCK XOR    WORD PTR [ESI+EAX*8-35363739H], 0
       LOCK XOR    WORD PTR [EAX+ECX*8-33343537H], -51
+      LOCK XOR    WORD PTR [EAX+ECX*8-33343537H], 0
       LOCK XOR    WORD PTR [ECX+ECX*8-32333436H], -50
+      LOCK XOR    WORD PTR [ECX+ECX*8-32333436H], 0
       LOCK XOR    WORD PTR [ESP+ECX*8-2F303133H], -47
+      LOCK XOR    WORD PTR [ESP+ECX*8-2F303133H], 0
       LOCK XOR    WORD PTR [ESI+ECX*8-2D2E2F31H], -45
+      LOCK XOR    WORD PTR [ESI+ECX*8-2D2E2F31H], 0
+      LOCK XOR    WORD PTR [EAX-1B1C1D1FH], -27
+      LOCK XOR    WORD PTR [ECX-1A1B1C1EH], -26
+      LOCK XOR    WORD PTR [EBP-4647484AH], -70
+      LOCK XOR    WORD PTR [ESI-45464749H], -69
       LOCK ADD    WORD PTR [EAX], 1
+      LOCK ADD    WORD PTR [EAX], -128
       LOCK ADD    WORD PTR [ECX], 2
+      LOCK ADD    WORD PTR [ECX], -128
+      LOCK ADD    WORD PTR [7F7E7D7CH], -128
       LOCK ADD    WORD PTR [ESI], 7
+      LOCK ADD    WORD PTR [ESI], -128
       LOCK OR WORD PTR [EAX], 9
+      LOCK OR WORD PTR [EAX], -128
       LOCK OR WORD PTR [ECX], 10
+      LOCK OR WORD PTR [ECX], -128
+      LOCK OR WORD PTR [7F7E7D7CH], -128
       LOCK OR WORD PTR [ESI], 15
+      LOCK OR WORD PTR [ESI], -128
       LOCK ADC    WORD PTR [EAX], 17
+      LOCK ADC    WORD PTR [EAX], -128
       LOCK ADC    WORD PTR [ECX], 18
+      LOCK ADC    WORD PTR [ECX], -128
+      LOCK ADC    WORD PTR [7F7E7D7CH], -128
       LOCK ADC    WORD PTR [ESI], 23
+      LOCK ADC    WORD PTR [ESI], -128
       LOCK SBB    WORD PTR [EAX], 25
+      LOCK SBB    WORD PTR [EAX], -128
       LOCK SBB    WORD PTR [ECX], 26
+      LOCK SBB    WORD PTR [ECX], -128
+      LOCK SBB    WORD PTR [7F7E7D7CH], -128
       LOCK SBB    WORD PTR [ESI], 31
+      LOCK SBB    WORD PTR [ESI], -128
       LOCK AND    WORD PTR [EAX], 33
+      LOCK AND    WORD PTR [EAX], -128
       LOCK AND    WORD PTR [ECX], 34
+      LOCK AND    WORD PTR [ECX], -128
+      LOCK AND    WORD PTR [7F7E7D7CH], -128
       LOCK AND    WORD PTR [ESI], 39
+      LOCK AND    WORD PTR [ESI], -128
       LOCK SUB    WORD PTR [EAX], 41
+      LOCK SUB    WORD PTR [EAX], -128
       LOCK SUB    WORD PTR [ECX], 42
+      LOCK SUB    WORD PTR [ECX], -128
       LOCK SUB    WORD PTR [ESI+EBP], 47
+      LOCK SUB    WORD PTR [ESI+EBP], -128
       LOCK SUB    WORD PTR [EAX+ESI], 49
+      LOCK SUB    WORD PTR [EAX+ESI], -128
+      LOCK SUB    WORD PTR [7F7E7D7CH], -128
       LOCK SUB    WORD PTR [ESI], 47
+      LOCK SUB    WORD PTR [ESI], -128
       LOCK XOR    WORD PTR [EAX], 49
+      LOCK XOR    WORD PTR [EAX], -128
       LOCK XOR    WORD PTR [ECX], 50
+      LOCK XOR    WORD PTR [ECX], -128
+      LOCK XOR    WORD PTR [7F7E7D7CH], -128
       LOCK XOR    WORD PTR [ESI], 55
+      LOCK XOR    WORD PTR [ESI], -128
       LOCK ADD    WORD PTR [EAX+65], 66
+      LOCK ADD    WORD PTR [EAX+65], -128
       LOCK ADD    WORD PTR [ECX+66], 67
+      LOCK ADD    WORD PTR [ECX+66], -128
       LOCK ADD    WORD PTR [EBP+EAX*2+70], 71
+      LOCK ADD    WORD PTR [EBP+EAX*2+70], -128
       LOCK ADD    WORD PTR [ESI+EAX*2+71], 72
+      LOCK ADD    WORD PTR [ESI+EAX*2+71], -128
       LOCK ADD    WORD PTR [EAX+ECX*2+73], 74
+      LOCK ADD    WORD PTR [EAX+ECX*2+73], -128
       LOCK ADD    WORD PTR [ECX+ECX*2+74], 75
+      LOCK ADD    WORD PTR [ECX+ECX*2+74], -128
       LOCK ADD    WORD PTR [ESP+ECX*2+77], 78
+      LOCK ADD    WORD PTR [ESP+ECX*2+77], -128
       LOCK ADD    WORD PTR [ESI+ECX*2+79], 80
+      LOCK ADD    WORD PTR [ESI+ECX*2+79], -128
       LOCK ADD    WORD PTR [EBP+70], 71
+      LOCK ADD    WORD PTR [EBP+70], -128
       LOCK ADD    WORD PTR [ESI+71], 72
+      LOCK ADD    WORD PTR [ESI+71], -128
       LOCK OR WORD PTR [EAX+73], 74
+      LOCK OR WORD PTR [EAX+73], -128
       LOCK OR WORD PTR [ECX+74], 75
+      LOCK OR WORD PTR [ECX+74], -128
       LOCK OR WORD PTR [EBP+ECX*2+78], 79
+      LOCK OR WORD PTR [EBP+ECX*2+78], -128
       LOCK OR WORD PTR [ESI+ECX*2+79], 80
+      LOCK OR WORD PTR [ESI+ECX*2+79], -128
       LOCK OR WORD PTR [EAX+EDX*2+81], 82
+      LOCK OR WORD PTR [EAX+EDX*2+81], -128
       LOCK OR WORD PTR [ECX+EDX*2+82], 83
+      LOCK OR WORD PTR [ECX+EDX*2+82], -128
       LOCK OR WORD PTR [EBP+78], 79
+      LOCK OR WORD PTR [EBP+78], -128
       LOCK OR WORD PTR [ESI+79], 80
+      LOCK OR WORD PTR [ESI+79], -128
       LOCK ADC    WORD PTR [EAX+81], 82
+      LOCK ADC    WORD PTR [EAX+81], -128
       LOCK ADC    WORD PTR [ECX+82], 83
+      LOCK ADC    WORD PTR [ECX+82], -128
       LOCK ADC    WORD PTR [EBP+EDX*2+86], 87
+      LOCK ADC    WORD PTR [EBP+EDX*2+86], -128
       LOCK ADC    WORD PTR [ESI+EDX*2+87], 88
+      LOCK ADC    WORD PTR [ESI+EDX*2+87], -128
       LOCK ADC    WORD PTR [EAX+EBX*2+89], 90
+      LOCK ADC    WORD PTR [EAX+EBX*2+89], -128
       LOCK ADC    WORD PTR [ECX+EBX*2+90], 91
+      LOCK ADC    WORD PTR [ECX+EBX*2+90], -128
       LOCK ADC    WORD PTR [EBP+86], 87
+      LOCK ADC    WORD PTR [EBP+86], -128
       LOCK ADC    WORD PTR [ESI+87], 88
+      LOCK ADC    WORD PTR [ESI+87], -128
       LOCK SBB    WORD PTR [EAX+89], 90
+      LOCK SBB    WORD PTR [EAX+89], -128
       LOCK SBB    WORD PTR [ECX+90], 91
+      LOCK SBB    WORD PTR [ECX+90], -128
       LOCK SBB    WORD PTR [EBP+EBX*2+94], 95
+      LOCK SBB    WORD PTR [EBP+EBX*2+94], -128
       LOCK SBB    WORD PTR [ESI+EBX*2+95], 96
+      LOCK SBB    WORD PTR [ESI+EBX*2+95], -128
       LOCK SBB    WORD PTR [EBP+94], 95
+      LOCK SBB    WORD PTR [EBP+94], -128
       LOCK SBB    WORD PTR [ESI+95], 96
+      LOCK SBB    WORD PTR [ESI+95], -128
       LOCK AND    WORD PTR [EAX+97], 98
+      LOCK AND    WORD PTR [EAX+97], -128
       LOCK AND    WORD PTR [ECX+98], 99
+      LOCK AND    WORD PTR [ECX+98], -128
       LOCK AND    WORD PTR [EBP+102], 103
+      LOCK AND    WORD PTR [EBP+102], -128
       LOCK AND    WORD PTR [ESI+103], 104
+      LOCK AND    WORD PTR [ESI+103], -128
       LOCK SUB    WORD PTR [EAX+105], 106
+      LOCK SUB    WORD PTR [EAX+105], -128
       LOCK SUB    WORD PTR [ECX+106], 107
+      LOCK SUB    WORD PTR [ECX+106], -128
       LOCK SUB    WORD PTR [EBP+EBP*2+110], 111
+      LOCK SUB    WORD PTR [EBP+EBP*2+110], -128
       LOCK SUB    WORD PTR [ESI+EBP*2+111], 112
+      LOCK SUB    WORD PTR [ESI+EBP*2+111], -128
       LOCK SUB    WORD PTR [EAX+ESI*2+113], 114
+      LOCK SUB    WORD PTR [EAX+ESI*2+113], -128
       LOCK SUB    WORD PTR [ECX+ESI*2+114], 115
+      LOCK SUB    WORD PTR [ECX+ESI*2+114], -128
       LOCK SUB    WORD PTR [ESP+ESI*2+117], 118
+      LOCK SUB    WORD PTR [ESP+ESI*2+117], -128
       LOCK SUB    WORD PTR [ESI+ESI*2+119], 120
+      LOCK SUB    WORD PTR [ESI+ESI*2+119], -128
       LOCK SUB    WORD PTR [EAX+EAX*4-127], -126
+      LOCK SUB    WORD PTR [EAX+EAX*4-127], 0
       LOCK SUB    WORD PTR [ECX+EAX*4-126], -125
+      LOCK SUB    WORD PTR [ECX+EAX*4-126], 0
       LOCK SUB    WORD PTR [ESP+EAX*4-123], -122
+      LOCK SUB    WORD PTR [ESP+EAX*4-123], 0
       LOCK SUB    WORD PTR [ESI+EAX*4-121], -120
+      LOCK SUB    WORD PTR [ESI+EAX*4-121], 0
       LOCK SUB    WORD PTR [EAX+ECX*4-119], -118
+      LOCK SUB    WORD PTR [EAX+ECX*4-119], 0
       LOCK SUB    WORD PTR [ECX+ECX*4-118], -117
+      LOCK SUB    WORD PTR [ECX+ECX*4-118], 0
       LOCK SUB    WORD PTR [ESP+ECX*4-115], -114
+      LOCK SUB    WORD PTR [ESP+ECX*4-115], 0
       LOCK SUB    WORD PTR [ESI+ECX*4-113], -112
+      LOCK SUB    WORD PTR [ESI+ECX*4-113], 0
+      LOCK SUB    WORD PTR [EAX-95], -94
       LOCK SUB    WORD PTR [EBP+110], 111
+      LOCK SUB    WORD PTR [EBP+110], -128
       LOCK SUB    WORD PTR [ESI+111], 112
+      LOCK SUB    WORD PTR [ESI+111], -128
       LOCK XOR    WORD PTR [EAX+113], 114
+      LOCK XOR    WORD PTR [EAX+113], -128
       LOCK XOR    WORD PTR [ECX+114], 115
+      LOCK XOR    WORD PTR [ECX+114], -128
       LOCK XOR    WORD PTR [EBP+ESI*2+118], 119
+      LOCK XOR    WORD PTR [EBP+ESI*2+118], -128
       LOCK XOR    WORD PTR [ESI+ESI*2+119], 120
+      LOCK XOR    WORD PTR [ESI+ESI*2+119], -128
       LOCK XOR    WORD PTR [EAX+EDI*2+121], 122
+      LOCK XOR    WORD PTR [EAX+EDI*2+121], -128
       LOCK XOR    WORD PTR [ECX+EDI*2+122], 123
+      LOCK XOR    WORD PTR [ECX+EDI*2+122], -128
       LOCK XOR    WORD PTR [EAX+EAX*4-127], -126
+      LOCK XOR    WORD PTR [EAX+EAX*4-127], 0
       LOCK XOR    WORD PTR [ECX+EAX*4-126], -125
+      LOCK XOR    WORD PTR [ECX+EAX*4-126], 0
       LOCK XOR    WORD PTR [ESP+EAX*4-123], -122
+      LOCK XOR    WORD PTR [ESP+EAX*4-123], 0
       LOCK XOR    WORD PTR [ESI+EAX*4-121], -120
+      LOCK XOR    WORD PTR [ESI+EAX*4-121], 0
       LOCK XOR    WORD PTR [EAX+ECX*4-119], -118
+      LOCK XOR    WORD PTR [EAX+ECX*4-119], 0
       LOCK XOR    WORD PTR [ECX+ECX*4-118], -117
+      LOCK XOR    WORD PTR [ECX+ECX*4-118], 0
       LOCK XOR    WORD PTR [ESP+ECX*4-115], -114
+      LOCK XOR    WORD PTR [ESP+ECX*4-115], 0
       LOCK XOR    WORD PTR [ESI+ECX*4-113], -112
+      LOCK XOR    WORD PTR [ESI+ECX*4-113], 0
+      LOCK XOR    WORD PTR [EAX-95], -94
       LOCK XOR    WORD PTR [EBP+118], 119
+      LOCK XOR    WORD PTR [EBP+118], -128
       LOCK XOR    WORD PTR [ESI+119], 120
+      LOCK XOR    WORD PTR [ESI+119], -128
       LOCK ADD    WORD PTR [EAX-7B7C7D7FH], -123
+      LOCK ADD    WORD PTR [EAX-7B7C7D7FH], 0
+      LOCK ADD    WORD PTR [ECX-7A7B7C7EH], -122
       LOCK XCHG   [EAX-73747577H], CX
       LOCK XCHG   [ECX-72737476H], CX
       LOCK XCHG   [EBP+ECX*4-6E6F7072H], CX
@@ -61894,35 +62765,65 @@
       IMUL    EAX, [BP+71], 4B4A4948H
       IMUL    EAX, [BX+72], 4C4B4A49H
       IMUL    ESI, [BX+SI+113], 114
+      IMUL    ESI, [BX+SI+113], -128
       IMUL    ESI, [BP+SI+115], 116
+      IMUL    ESI, [BP+SI+115], -128
       IMUL    EAX, [BX+SI-7D7FH], -125
+      IMUL    EAX, [BX+SI-7D7FH], 0
       IMUL    EAX, [BP+SI-7B7DH], -123
+      IMUL    EAX, [BP+SI-7B7DH], 0
       IMUL    EAX, [SI-797BH], -121
+      IMUL    EAX, [SI-797BH], 0
       IMUL    EAX, [BP-7779H], -119
+      IMUL    EAX, [BP-7779H], 0
       IMUL    EAX, [BX-7678H], -118
+      IMUL    EAX, [BX-7678H], 0
       IMUL    EAX, [BX+SI], 1
+      IMUL    EAX, [BX+SI], -128
       IMUL    EAX, [BP+SI], 3
+      IMUL    EAX, [BP+SI], -128
       IMUL    EAX, [SI], 5
+      IMUL    EAX, [SI], -128
       IMUL    EAX, [0807H], 9
+      IMUL    EAX, [0807H], -128
       IMUL    EAX, [BX], 8
+      IMUL    EAX, [BX], -128
       IMUL    ECX, [BX+SI], 9
+      IMUL    ECX, [BX+SI], -128
       IMUL    ECX, [BP+SI], 11
+      IMUL    ECX, [BP+SI], -128
       IMUL    ECX, [100FH], 17
+      IMUL    ECX, [100FH], -128
       IMUL    ESP, [BX+SI], 33
+      IMUL    ESP, [BX+SI], -128
       IMUL    ESP, [BP+SI], 35
+      IMUL    ESP, [BP+SI], -128
       IMUL    ESP, [2827H], 41
+      IMUL    ESP, [2827H], -128
       IMUL    ESI, [BX+SI], 49
+      IMUL    ESI, [BX+SI], -128
       IMUL    ESI, [BP+SI], 51
+      IMUL    ESI, [BP+SI], -128
       IMUL    ESI, [3837H], 57
+      IMUL    ESI, [3837H], -128
       IMUL    EAX, [BX+SI+65], 66
+      IMUL    EAX, [BX+SI+65], -128
       IMUL    EAX, [BP+SI+67], 68
+      IMUL    EAX, [BP+SI+67], -128
       IMUL    EAX, [SI+69], 70
+      IMUL    EAX, [SI+69], -128
       IMUL    EAX, [BP+71], 72
+      IMUL    EAX, [BP+71], -128
       IMUL    EAX, [BX+72], 73
+      IMUL    EAX, [BX+72], -128
       IMUL    ECX, [BX+SI+73], 74
+      IMUL    ECX, [BX+SI+73], -128
       IMUL    ECX, [BP+SI+75], 76
+      IMUL    ECX, [BP+SI+75], -128
       IMUL    ESP, [BX+SI+97], 98
+      IMUL    ESP, [BX+SI+97], -128
       IMUL    ESP, [BP+SI+99], 100
+      IMUL    ESP, [BP+SI+99], -128
       ADD     BYTE PTR [BX+DI-7C7EH], 132
       ADD     BYTE PTR [BP+SI-7B7DH], 133
       ADD     BYTE PTR [SI-797BH], 135
@@ -62164,125 +63065,245 @@
       CMP     DWORD PTR [BX-128], 84838281H
       ADD     DWORD PTR [BX+SI-7D7FH], 86858483H
       ADD     DWORD PTR [SI-797BH], -121
+      ADD     DWORD PTR [SI-797BH], 0
       ADD     DWORD PTR [BP-7779H], -119
+      ADD     DWORD PTR [BP-7779H], 0
       ADD     DWORD PTR [BX-7678H], -118
+      ADD     DWORD PTR [BX-7678H], 0
       OR      DWORD PTR [BX+SI-7577H], -117
+      OR      DWORD PTR [BX+SI-7577H], 0
       OR      DWORD PTR [BP+SI-7375H], -115
+      OR      DWORD PTR [BP+SI-7375H], 0
       OR      DWORD PTR [SI-7173H], -113
+      OR      DWORD PTR [SI-7173H], 0
       OR      DWORD PTR [BP-6F71H], -111
+      OR      DWORD PTR [BP-6F71H], 0
       OR      DWORD PTR [BX-6E70H], -110
+      OR      DWORD PTR [BX-6E70H], 0
       ADC     DWORD PTR [BX+SI-6D6FH], -109
+      ADC     DWORD PTR [BX+SI-6D6FH], 0
       ADC     DWORD PTR [BP+SI-6B6DH], -107
+      ADC     DWORD PTR [BP+SI-6B6DH], 0
       ADC     DWORD PTR [SI-696BH], -105
+      ADC     DWORD PTR [SI-696BH], 0
       ADC     DWORD PTR [BP-6769H], -103
+      ADC     DWORD PTR [BP-6769H], 0
       ADC     DWORD PTR [BX-6668H], -102
+      ADC     DWORD PTR [BX-6668H], 0
       SBB     DWORD PTR [BX+SI-6567H], -101
+      SBB     DWORD PTR [BX+SI-6567H], 0
       SBB     DWORD PTR [BP+SI-6365H], -99
+      SBB     DWORD PTR [BP+SI-6365H], 0
       SBB     DWORD PTR [SI-6163H], -97
+      SBB     DWORD PTR [SI-6163H], 0
       SBB     DWORD PTR [BP-5F61H], -95
+      SBB     DWORD PTR [BP-5F61H], 0
       SBB     DWORD PTR [BX-5E60H], -94
+      SBB     DWORD PTR [BX-5E60H], 0
       AND     DWORD PTR [BX+SI-5D5FH], -93
+      AND     DWORD PTR [BX+SI-5D5FH], 0
       AND     DWORD PTR [BP+SI-5B5DH], -91
+      AND     DWORD PTR [BP+SI-5B5DH], 0
       AND     DWORD PTR [SI-595BH], -89
+      AND     DWORD PTR [SI-595BH], 0
       AND     DWORD PTR [BP-5759H], -87
+      AND     DWORD PTR [BP-5759H], 0
       AND     DWORD PTR [BX-5658H], -86
+      AND     DWORD PTR [BX-5658H], 0
       SUB     DWORD PTR [BX+SI-5557H], -85
+      SUB     DWORD PTR [BX+SI-5557H], 0
       SUB     DWORD PTR [BP+SI-5355H], -83
+      SUB     DWORD PTR [BP+SI-5355H], 0
       SUB     DWORD PTR [SI-5153H], -81
+      SUB     DWORD PTR [SI-5153H], 0
       SUB     DWORD PTR [BP-4F51H], -79
+      SUB     DWORD PTR [BP-4F51H], 0
       SUB     DWORD PTR [BX-4E50H], -78
+      SUB     DWORD PTR [BX-4E50H], 0
       XOR     DWORD PTR [BX+SI-4D4FH], -77
+      XOR     DWORD PTR [BX+SI-4D4FH], 0
       XOR     DWORD PTR [BP+SI-4B4DH], -75
+      XOR     DWORD PTR [BP+SI-4B4DH], 0
       XOR     DWORD PTR [SI-494BH], -73
+      XOR     DWORD PTR [SI-494BH], 0
       XOR     DWORD PTR [BP-4749H], -71
+      XOR     DWORD PTR [BP-4749H], 0
       XOR     DWORD PTR [BX-4648H], -70
+      XOR     DWORD PTR [BX-4648H], 0
       CMP     DWORD PTR [BX+SI-4547H], -69
+      CMP     DWORD PTR [BX+SI-4547H], 0
       CMP     DWORD PTR [BP+SI-4345H], -67
+      CMP     DWORD PTR [BP+SI-4345H], 0
       CMP     DWORD PTR [SI-4143H], -65
+      CMP     DWORD PTR [SI-4143H], 0
       CMP     DWORD PTR [BP-3F41H], -63
+      CMP     DWORD PTR [BP-3F41H], 0
       CMP     DWORD PTR [BX-3E40H], -62
+      CMP     DWORD PTR [BX-3E40H], 0
       ADD     DWORD PTR [BX+SI], 1
+      ADD     DWORD PTR [BX+SI], -128
       ADD     DWORD PTR [BP+SI], 3
+      ADD     DWORD PTR [BP+SI], -128
       ADD     DWORD PTR [SI], 5
+      ADD     DWORD PTR [SI], -128
       ADD     DWORD PTR [0807H], 9
+      ADD     DWORD PTR [0807H], -128
       ADD     DWORD PTR [BX], 8
+      ADD     DWORD PTR [BX], -128
       OR      DWORD PTR [BX+SI], 9
+      OR      DWORD PTR [BX+SI], -128
       OR      DWORD PTR [BP+SI], 11
+      OR      DWORD PTR [BP+SI], -128
       OR      DWORD PTR [SI], 13
+      OR      DWORD PTR [SI], -128
       OR      DWORD PTR [100FH], 17
+      OR      DWORD PTR [100FH], -128
       OR      DWORD PTR [BX], 16
+      OR      DWORD PTR [BX], -128
       ADC     DWORD PTR [BX+SI], 17
+      ADC     DWORD PTR [BX+SI], -128
       ADC     DWORD PTR [BP+SI], 19
+      ADC     DWORD PTR [BP+SI], -128
       ADC     DWORD PTR [SI], 21
+      ADC     DWORD PTR [SI], -128
       ADC     DWORD PTR [1817H], 25
+      ADC     DWORD PTR [1817H], -128
       ADC     DWORD PTR [BX], 24
+      ADC     DWORD PTR [BX], -128
       SBB     DWORD PTR [BX+SI], 25
+      SBB     DWORD PTR [BX+SI], -128
       SBB     DWORD PTR [BP+SI], 27
+      SBB     DWORD PTR [BP+SI], -128
       SBB     DWORD PTR [SI], 29
+      SBB     DWORD PTR [SI], -128
       SBB     DWORD PTR [201FH], 33
+      SBB     DWORD PTR [201FH], -128
       SBB     DWORD PTR [BX], 32
+      SBB     DWORD PTR [BX], -128
       AND     DWORD PTR [BX+SI], 33
+      AND     DWORD PTR [BX+SI], -128
       AND     DWORD PTR [BP+SI], 35
+      AND     DWORD PTR [BP+SI], -128
       AND     DWORD PTR [SI], 37
+      AND     DWORD PTR [SI], -128
       AND     DWORD PTR [2827H], 41
+      AND     DWORD PTR [2827H], -128
       AND     DWORD PTR [BX], 40
+      AND     DWORD PTR [BX], -128
       SUB     DWORD PTR [BX+SI], 41
+      SUB     DWORD PTR [BX+SI], -128
       SUB     DWORD PTR [BP+SI], 43
+      SUB     DWORD PTR [BP+SI], -128
       SUB     DWORD PTR [SI], 45
+      SUB     DWORD PTR [SI], -128
       SUB     DWORD PTR [302FH], 49
+      SUB     DWORD PTR [302FH], -128
       SUB     DWORD PTR [BX], 48
+      SUB     DWORD PTR [BX], -128
       XOR     DWORD PTR [BX+SI], 49
+      XOR     DWORD PTR [BX+SI], -128
       XOR     DWORD PTR [BP+SI], 51
+      XOR     DWORD PTR [BP+SI], -128
       XOR     DWORD PTR [SI], 53
+      XOR     DWORD PTR [SI], -128
       XOR     DWORD PTR [3837H], 57
+      XOR     DWORD PTR [3837H], -128
       XOR     DWORD PTR [BX], 56
+      XOR     DWORD PTR [BX], -128
       CMP     DWORD PTR [BX+SI], 57
+      CMP     DWORD PTR [BX+SI], -128
       CMP     DWORD PTR [BP+SI], 59
+      CMP     DWORD PTR [BP+SI], -128
       CMP     DWORD PTR [SI], 61
+      CMP     DWORD PTR [SI], -128
       CMP     DWORD PTR [403FH], 65
+      CMP     DWORD PTR [403FH], -128
       CMP     DWORD PTR [BX], 64
+      CMP     DWORD PTR [BX], -128
       ADD     DWORD PTR [BX+SI+65], 66
+      ADD     DWORD PTR [BX+SI+65], -128
       ADD     DWORD PTR [BP+SI+67], 68
+      ADD     DWORD PTR [BP+SI+67], -128
       ADD     DWORD PTR [SI+69], 70
+      ADD     DWORD PTR [SI+69], -128
       ADD     DWORD PTR [BP+71], 72
+      ADD     DWORD PTR [BP+71], -128
       ADD     DWORD PTR [BX+72], 73
+      ADD     DWORD PTR [BX+72], -128
       OR      DWORD PTR [BX+SI+73], 74
+      OR      DWORD PTR [BX+SI+73], -128
       OR      DWORD PTR [BP+SI+75], 76
+      OR      DWORD PTR [BP+SI+75], -128
       OR      DWORD PTR [SI+77], 78
+      OR      DWORD PTR [SI+77], -128
       OR      DWORD PTR [BP+79], 80
+      OR      DWORD PTR [BP+79], -128
       OR      DWORD PTR [BX+80], 81
+      OR      DWORD PTR [BX+80], -128
       ADC     DWORD PTR [BX+SI+81], 82
+      ADC     DWORD PTR [BX+SI+81], -128
       ADC     DWORD PTR [BP+SI+83], 84
+      ADC     DWORD PTR [BP+SI+83], -128
       ADC     DWORD PTR [SI+85], 86
+      ADC     DWORD PTR [SI+85], -128
       ADC     DWORD PTR [BP+87], 88
+      ADC     DWORD PTR [BP+87], -128
       ADC     DWORD PTR [BX+88], 89
+      ADC     DWORD PTR [BX+88], -128
       SBB     DWORD PTR [BX+SI+89], 90
+      SBB     DWORD PTR [BX+SI+89], -128
       SBB     DWORD PTR [BP+SI+91], 92
+      SBB     DWORD PTR [BP+SI+91], -128
       SBB     DWORD PTR [SI+93], 94
+      SBB     DWORD PTR [SI+93], -128
       SBB     DWORD PTR [BP+95], 96
+      SBB     DWORD PTR [BP+95], -128
       SBB     DWORD PTR [BX+96], 97
+      SBB     DWORD PTR [BX+96], -128
       AND     DWORD PTR [BX+SI+97], 98
+      AND     DWORD PTR [BX+SI+97], -128
       AND     DWORD PTR [BP+SI+99], 100
+      AND     DWORD PTR [BP+SI+99], -128
       AND     DWORD PTR [SI+101], 102
+      AND     DWORD PTR [SI+101], -128
       AND     DWORD PTR [BP+103], 104
+      AND     DWORD PTR [BP+103], -128
       AND     DWORD PTR [BX+104], 105
+      AND     DWORD PTR [BX+104], -128
       SUB     DWORD PTR [BX+SI+105], 106
+      SUB     DWORD PTR [BX+SI+105], -128
       SUB     DWORD PTR [BP+SI+107], 108
+      SUB     DWORD PTR [BP+SI+107], -128
       SUB     DWORD PTR [SI+109], 110
+      SUB     DWORD PTR [SI+109], -128
       SUB     DWORD PTR [BP+111], 112
+      SUB     DWORD PTR [BP+111], -128
       SUB     DWORD PTR [BX+112], 113
+      SUB     DWORD PTR [BX+112], -128
       XOR     DWORD PTR [BX+SI+113], 114
+      XOR     DWORD PTR [BX+SI+113], -128
       XOR     DWORD PTR [BP+SI+115], 116
+      XOR     DWORD PTR [BP+SI+115], -128
       XOR     DWORD PTR [SI+117], 118
+      XOR     DWORD PTR [SI+117], -128
       XOR     DWORD PTR [BP+119], 120
+      XOR     DWORD PTR [BP+119], -128
       XOR     DWORD PTR [BX+120], 121
+      XOR     DWORD PTR [BX+120], -128
       CMP     DWORD PTR [BX+SI+121], 122
+      CMP     DWORD PTR [BX+SI+121], -128
       CMP     DWORD PTR [BP+SI+123], 124
+      CMP     DWORD PTR [BP+SI+123], -128
       CMP     DWORD PTR [SI+125], 126
+      CMP     DWORD PTR [SI+125], -128
       CMP     DWORD PTR [BP+127], -128
+      CMP     DWORD PTR [BP+127], 0
       CMP     DWORD PTR [BX-128], -127
+      CMP     DWORD PTR [BX-128], 0
       ADD     DWORD PTR [BX+SI-7D7FH], -125
+      ADD     DWORD PTR [BX+SI-7D7FH], 0
       ADD     DWORD PTR [BP+SI-7B7DH], -123
+      ADD     DWORD PTR [BP+SI-7B7DH], 0
       TEST    [DI-787AH], AL
       TEST    [BP-7779H], AL
       TEST    [BX-7678H], AL
@@ -65013,110 +66034,215 @@
       LOCK XOR    DWORD PTR [BX+120], 7C7B7A79H
       LOCK ADD    DWORD PTR [BX+SI-7D7FH], 86858483H
       LOCK ADD    DWORD PTR [SI-797BH], -121
+      LOCK ADD    DWORD PTR [SI-797BH], 0
       LOCK ADD    DWORD PTR [BP-7779H], -119
+      LOCK ADD    DWORD PTR [BP-7779H], 0
       LOCK ADD    DWORD PTR [BX-7678H], -118
+      LOCK ADD    DWORD PTR [BX-7678H], 0
       LOCK OR DWORD PTR [BX+SI-7577H], -117
+      LOCK OR DWORD PTR [BX+SI-7577H], 0
       LOCK OR DWORD PTR [BP+SI-7375H], -115
+      LOCK OR DWORD PTR [BP+SI-7375H], 0
       LOCK OR DWORD PTR [SI-7173H], -113
+      LOCK OR DWORD PTR [SI-7173H], 0
       LOCK OR DWORD PTR [BP-6F71H], -111
+      LOCK OR DWORD PTR [BP-6F71H], 0
       LOCK OR DWORD PTR [BX-6E70H], -110
+      LOCK OR DWORD PTR [BX-6E70H], 0
       LOCK ADC    DWORD PTR [BX+SI-6D6FH], -109
+      LOCK ADC    DWORD PTR [BX+SI-6D6FH], 0
       LOCK ADC    DWORD PTR [BP+SI-6B6DH], -107
+      LOCK ADC    DWORD PTR [BP+SI-6B6DH], 0
       LOCK ADC    DWORD PTR [SI-696BH], -105
+      LOCK ADC    DWORD PTR [SI-696BH], 0
       LOCK ADC    DWORD PTR [BP-6769H], -103
+      LOCK ADC    DWORD PTR [BP-6769H], 0
       LOCK ADC    DWORD PTR [BX-6668H], -102
+      LOCK ADC    DWORD PTR [BX-6668H], 0
       LOCK SBB    DWORD PTR [BX+SI-6567H], -101
+      LOCK SBB    DWORD PTR [BX+SI-6567H], 0
       LOCK SBB    DWORD PTR [BP+SI-6365H], -99
+      LOCK SBB    DWORD PTR [BP+SI-6365H], 0
       LOCK SBB    DWORD PTR [SI-6163H], -97
+      LOCK SBB    DWORD PTR [SI-6163H], 0
       LOCK SBB    DWORD PTR [BP-5F61H], -95
+      LOCK SBB    DWORD PTR [BP-5F61H], 0
       LOCK SBB    DWORD PTR [BX-5E60H], -94
+      LOCK SBB    DWORD PTR [BX-5E60H], 0
       LOCK AND    DWORD PTR [BX+SI-5D5FH], -93
+      LOCK AND    DWORD PTR [BX+SI-5D5FH], 0
       LOCK AND    DWORD PTR [BP+SI-5B5DH], -91
+      LOCK AND    DWORD PTR [BP+SI-5B5DH], 0
       LOCK AND    DWORD PTR [SI-595BH], -89
+      LOCK AND    DWORD PTR [SI-595BH], 0
       LOCK AND    DWORD PTR [BP-5759H], -87
+      LOCK AND    DWORD PTR [BP-5759H], 0
       LOCK AND    DWORD PTR [BX-5658H], -86
+      LOCK AND    DWORD PTR [BX-5658H], 0
       LOCK SUB    DWORD PTR [BX+SI-5557H], -85
+      LOCK SUB    DWORD PTR [BX+SI-5557H], 0
       LOCK SUB    DWORD PTR [BP+SI-5355H], -83
+      LOCK SUB    DWORD PTR [BP+SI-5355H], 0
       LOCK SUB    DWORD PTR [SI-5153H], -81
+      LOCK SUB    DWORD PTR [SI-5153H], 0
       LOCK SUB    DWORD PTR [BP-4F51H], -79
+      LOCK SUB    DWORD PTR [BP-4F51H], 0
       LOCK SUB    DWORD PTR [BX-4E50H], -78
+      LOCK SUB    DWORD PTR [BX-4E50H], 0
       LOCK XOR    DWORD PTR [BX+SI-4D4FH], -77
+      LOCK XOR    DWORD PTR [BX+SI-4D4FH], 0
       LOCK XOR    DWORD PTR [BP+SI-4B4DH], -75
+      LOCK XOR    DWORD PTR [BP+SI-4B4DH], 0
       LOCK XOR    DWORD PTR [SI-494BH], -73
+      LOCK XOR    DWORD PTR [SI-494BH], 0
       LOCK XOR    DWORD PTR [BP-4749H], -71
+      LOCK XOR    DWORD PTR [BP-4749H], 0
       LOCK XOR    DWORD PTR [BX-4648H], -70
+      LOCK XOR    DWORD PTR [BX-4648H], 0
       LOCK ADD    DWORD PTR [BX+SI], 1
+      LOCK ADD    DWORD PTR [BX+SI], -128
       LOCK ADD    DWORD PTR [BP+SI], 3
+      LOCK ADD    DWORD PTR [BP+SI], -128
       LOCK ADD    DWORD PTR [SI], 5
+      LOCK ADD    DWORD PTR [SI], -128
       LOCK ADD    DWORD PTR [0807H], 9
+      LOCK ADD    DWORD PTR [0807H], -128
       LOCK ADD    DWORD PTR [BX], 8
+      LOCK ADD    DWORD PTR [BX], -128
       LOCK OR DWORD PTR [BX+SI], 9
+      LOCK OR DWORD PTR [BX+SI], -128
       LOCK OR DWORD PTR [BP+SI], 11
+      LOCK OR DWORD PTR [BP+SI], -128
       LOCK OR DWORD PTR [SI], 13
+      LOCK OR DWORD PTR [SI], -128
       LOCK OR DWORD PTR [100FH], 17
+      LOCK OR DWORD PTR [100FH], -128
       LOCK OR DWORD PTR [BX], 16
+      LOCK OR DWORD PTR [BX], -128
       LOCK ADC    DWORD PTR [BX+SI], 17
+      LOCK ADC    DWORD PTR [BX+SI], -128
       LOCK ADC    DWORD PTR [BP+SI], 19
+      LOCK ADC    DWORD PTR [BP+SI], -128
       LOCK ADC    DWORD PTR [SI], 21
+      LOCK ADC    DWORD PTR [SI], -128
       LOCK ADC    DWORD PTR [1817H], 25
+      LOCK ADC    DWORD PTR [1817H], -128
       LOCK ADC    DWORD PTR [BX], 24
+      LOCK ADC    DWORD PTR [BX], -128
       LOCK SBB    DWORD PTR [BX+SI], 25
+      LOCK SBB    DWORD PTR [BX+SI], -128
       LOCK SBB    DWORD PTR [BP+SI], 27
+      LOCK SBB    DWORD PTR [BP+SI], -128
       LOCK SBB    DWORD PTR [SI], 29
+      LOCK SBB    DWORD PTR [SI], -128
       LOCK SBB    DWORD PTR [201FH], 33
+      LOCK SBB    DWORD PTR [201FH], -128
       LOCK SBB    DWORD PTR [BX], 32
+      LOCK SBB    DWORD PTR [BX], -128
       LOCK AND    DWORD PTR [BX+SI], 33
+      LOCK AND    DWORD PTR [BX+SI], -128
       LOCK AND    DWORD PTR [BP+SI], 35
+      LOCK AND    DWORD PTR [BP+SI], -128
       LOCK AND    DWORD PTR [SI], 37
+      LOCK AND    DWORD PTR [SI], -128
       LOCK AND    DWORD PTR [2827H], 41
+      LOCK AND    DWORD PTR [2827H], -128
       LOCK AND    DWORD PTR [BX], 40
+      LOCK AND    DWORD PTR [BX], -128
       LOCK SUB    DWORD PTR [BX+SI], 41
+      LOCK SUB    DWORD PTR [BX+SI], -128
       LOCK SUB    DWORD PTR [BP+SI], 43
+      LOCK SUB    DWORD PTR [BP+SI], -128
       LOCK SUB    DWORD PTR [SI], 45
+      LOCK SUB    DWORD PTR [SI], -128
       LOCK SUB    DWORD PTR [302FH], 49
+      LOCK SUB    DWORD PTR [302FH], -128
       LOCK SUB    DWORD PTR [BX], 48
+      LOCK SUB    DWORD PTR [BX], -128
       LOCK XOR    DWORD PTR [BX+SI], 49
+      LOCK XOR    DWORD PTR [BX+SI], -128
       LOCK XOR    DWORD PTR [BP+SI], 51
+      LOCK XOR    DWORD PTR [BP+SI], -128
       LOCK XOR    DWORD PTR [SI], 53
+      LOCK XOR    DWORD PTR [SI], -128
       LOCK XOR    DWORD PTR [3837H], 57
+      LOCK XOR    DWORD PTR [3837H], -128
       LOCK XOR    DWORD PTR [BX], 56
+      LOCK XOR    DWORD PTR [BX], -128
       LOCK ADD    DWORD PTR [BX+SI+65], 66
+      LOCK ADD    DWORD PTR [BX+SI+65], -128
       LOCK ADD    DWORD PTR [BP+SI+67], 68
+      LOCK ADD    DWORD PTR [BP+SI+67], -128
       LOCK ADD    DWORD PTR [SI+69], 70
+      LOCK ADD    DWORD PTR [SI+69], -128
       LOCK ADD    DWORD PTR [BP+71], 72
+      LOCK ADD    DWORD PTR [BP+71], -128
       LOCK ADD    DWORD PTR [BX+72], 73
+      LOCK ADD    DWORD PTR [BX+72], -128
       LOCK OR DWORD PTR [BX+SI+73], 74
+      LOCK OR DWORD PTR [BX+SI+73], -128
       LOCK OR DWORD PTR [BP+SI+75], 76
+      LOCK OR DWORD PTR [BP+SI+75], -128
       LOCK OR DWORD PTR [SI+77], 78
+      LOCK OR DWORD PTR [SI+77], -128
       LOCK OR DWORD PTR [BP+79], 80
+      LOCK OR DWORD PTR [BP+79], -128
       LOCK OR DWORD PTR [BX+80], 81
+      LOCK OR DWORD PTR [BX+80], -128
       LOCK ADC    DWORD PTR [BX+SI+81], 82
+      LOCK ADC    DWORD PTR [BX+SI+81], -128
       LOCK ADC    DWORD PTR [BP+SI+83], 84
+      LOCK ADC    DWORD PTR [BP+SI+83], -128
       LOCK ADC    DWORD PTR [SI+85], 86
+      LOCK ADC    DWORD PTR [SI+85], -128
       LOCK ADC    DWORD PTR [BP+87], 88
+      LOCK ADC    DWORD PTR [BP+87], -128
       LOCK ADC    DWORD PTR [BX+88], 89
+      LOCK ADC    DWORD PTR [BX+88], -128
       LOCK SBB    DWORD PTR [BX+SI+89], 90
+      LOCK SBB    DWORD PTR [BX+SI+89], -128
       LOCK SBB    DWORD PTR [BP+SI+91], 92
+      LOCK SBB    DWORD PTR [BP+SI+91], -128
       LOCK SBB    DWORD PTR [SI+93], 94
+      LOCK SBB    DWORD PTR [SI+93], -128
       LOCK SBB    DWORD PTR [BP+95], 96
+      LOCK SBB    DWORD PTR [BP+95], -128
       LOCK SBB    DWORD PTR [BX+96], 97
+      LOCK SBB    DWORD PTR [BX+96], -128
       LOCK AND    DWORD PTR [BX+SI+97], 98
+      LOCK AND    DWORD PTR [BX+SI+97], -128
       LOCK AND    DWORD PTR [BP+SI+99], 100
+      LOCK AND    DWORD PTR [BP+SI+99], -128
       LOCK AND    DWORD PTR [SI+101], 102
+      LOCK AND    DWORD PTR [SI+101], -128
       LOCK AND    DWORD PTR [BP+103], 104
+      LOCK AND    DWORD PTR [BP+103], -128
       LOCK AND    DWORD PTR [BX+104], 105
+      LOCK AND    DWORD PTR [BX+104], -128
       LOCK SUB    DWORD PTR [BX+SI+105], 106
+      LOCK SUB    DWORD PTR [BX+SI+105], -128
       LOCK SUB    DWORD PTR [BP+SI+107], 108
+      LOCK SUB    DWORD PTR [BP+SI+107], -128
       LOCK SUB    DWORD PTR [SI+109], 110
+      LOCK SUB    DWORD PTR [SI+109], -128
       LOCK SUB    DWORD PTR [BP+111], 112
+      LOCK SUB    DWORD PTR [BP+111], -128
       LOCK SUB    DWORD PTR [BX+112], 113
+      LOCK SUB    DWORD PTR [BX+112], -128
       LOCK XOR    DWORD PTR [BX+SI+113], 114
+      LOCK XOR    DWORD PTR [BX+SI+113], -128
       LOCK XOR    DWORD PTR [BP+SI+115], 116
+      LOCK XOR    DWORD PTR [BP+SI+115], -128
       LOCK XOR    DWORD PTR [SI+117], 118
+      LOCK XOR    DWORD PTR [SI+117], -128
       LOCK XOR    DWORD PTR [BP+119], 120
+      LOCK XOR    DWORD PTR [BP+119], -128
       LOCK XOR    DWORD PTR [BX+120], 121
+      LOCK XOR    DWORD PTR [BX+120], -128
       LOCK ADD    DWORD PTR [BX+SI-7D7FH], -125
+      LOCK ADD    DWORD PTR [BX+SI-7D7FH], 0
       LOCK ADD    DWORD PTR [BP+SI-7B7DH], -123
+      LOCK ADD    DWORD PTR [BP+SI-7B7DH], 0
       LOCK XCHG   [BX-7678H], AL
       LOCK XCHG   [BX+SI-7577H], CL
       LOCK XCHG   [BP+SI-7375H], CL
@@ -66709,317 +67835,704 @@
       IMUL    ECX, [EAX+ESI+49], 35343332H
       IMUL    ECX, [ESI+ESI+55], 3B3A3938H
       PUSH    107
+      PUSH    -128
       IMUL    EBP, [EBP+EBP*2+110], 111
+      IMUL    EBP, [EBP+EBP*2+110], -128
       IMUL    EBP, [ESI+EBP*2+111], 112
+      IMUL    EBP, [ESI+EBP*2+111], -128
       IMUL    EBP, [EAX+ESI*2+113], 114
+      IMUL    EBP, [EAX+ESI*2+113], -128
       IMUL    EBP, [ECX+ESI*2+114], 115
+      IMUL    EBP, [ECX+ESI*2+114], -128
       IMUL    EBP, [ESP+ESI*2+117], 118
+      IMUL    EBP, [ESP+ESI*2+117], -128
       IMUL    EBP, [ESI+ESI*2+119], 120
+      IMUL    EBP, [ESI+ESI*2+119], -128
       IMUL    EBP, [EAX+EAX*4-127], -126
+      IMUL    EBP, [EAX+EAX*4-127], 0
       IMUL    EBP, [ECX+EAX*4-126], -125
+      IMUL    EBP, [ECX+EAX*4-126], 0
       IMUL    EBP, [ESP+EAX*4-123], -122
+      IMUL    EBP, [ESP+EAX*4-123], 0
       IMUL    EBP, [ESI+EAX*4-121], -120
+      IMUL    EBP, [ESI+EAX*4-121], 0
       IMUL    EBP, [EAX+ECX*4-119], -118
+      IMUL    EBP, [EAX+ECX*4-119], 0
       IMUL    EBP, [ECX+ECX*4-118], -117
+      IMUL    EBP, [ECX+ECX*4-118], 0
       IMUL    EBP, [ESP+ECX*4-115], -114
+      IMUL    EBP, [ESP+ECX*4-115], 0
       IMUL    EBP, [ESI+ECX*4-113], -112
+      IMUL    EBP, [ESI+ECX*4-113], 0
       IMUL    EBP, [EAX+EBP*4-87], -86
+      IMUL    EBP, [EAX+EBP*4-87], 0
       IMUL    EBP, [ECX+EBP*4-86], -85
+      IMUL    EBP, [ECX+EBP*4-86], 0
       IMUL    EBP, [EAX+EAX+1], 2
+      IMUL    EBP, [EAX+EAX+1], -128
       IMUL    EBP, [ECX+EAX+2], 3
+      IMUL    EBP, [ECX+EAX+2], -128
       IMUL    EBP, [ESP+EAX+5], 6
+      IMUL    EBP, [ESP+EAX+5], -128
       IMUL    EBP, [ESI+EAX+7], 8
+      IMUL    EBP, [ESI+EAX+7], -128
       IMUL    EBP, [EAX+ECX+9], 10
+      IMUL    EBP, [EAX+ECX+9], -128
       IMUL    EBP, [ECX+ECX+10], 11
+      IMUL    EBP, [ECX+ECX+10], -128
       IMUL    EBP, [ESP+ECX+13], 14
+      IMUL    EBP, [ESP+ECX+13], -128
       IMUL    EBP, [ESI+ECX+15], 16
+      IMUL    EBP, [ESI+ECX+15], -128
       IMUL    EBP, [EAX+EBP+41], 42
+      IMUL    EBP, [EAX+EBP+41], -128
       IMUL    EBP, [ECX+EBP+42], 43
+      IMUL    EBP, [ECX+EBP+42], -128
       IMUL    EBP, [ESP+EBP+45], 46
+      IMUL    EBP, [ESP+EBP+45], -128
       IMUL    EBP, [ESI+EBP+47], 48
+      IMUL    EBP, [ESI+EBP+47], -128
       IMUL    EBP, [EAX+ESI+49], 50
+      IMUL    EBP, [EAX+ESI+49], -128
       IMUL    EBP, [ESI+ESI+55], 56
+      IMUL    EBP, [ESI+ESI+55], -128
       IMUL    EBP, [EBP+110], 111
+      IMUL    EBP, [EBP+110], -128
       IMUL    EBP, [ESI+111], 112
+      IMUL    EBP, [ESI+111], -128
       IMUL    ESI, [EAX+113], 114
+      IMUL    ESI, [EAX+113], -128
       IMUL    ESI, [ECX+114], 115
+      IMUL    ESI, [ECX+114], -128
       IMUL    ESI, [EBP+ESI*2+118], 119
+      IMUL    ESI, [EBP+ESI*2+118], -128
       IMUL    ESI, [ESI+ESI*2+119], 120
+      IMUL    ESI, [ESI+ESI*2+119], -128
       IMUL    ESI, [EAX+EDI*2+121], 122
+      IMUL    ESI, [EAX+EDI*2+121], -128
       IMUL    ESI, [ECX+EDI*2+122], 123
+      IMUL    ESI, [ECX+EDI*2+122], -128
       IMUL    ESI, [EAX+EAX*4-127], -126
+      IMUL    ESI, [EAX+EAX*4-127], 0
       IMUL    ESI, [ECX+EAX*4-126], -125
+      IMUL    ESI, [ECX+EAX*4-126], 0
       IMUL    ESI, [ESP+EAX*4-123], -122
+      IMUL    ESI, [ESP+EAX*4-123], 0
       IMUL    ESI, [ESI+EAX*4-121], -120
+      IMUL    ESI, [ESI+EAX*4-121], 0
       IMUL    ESI, [EAX+ECX*4-119], -118
+      IMUL    ESI, [EAX+ECX*4-119], 0
       IMUL    ESI, [ECX+ECX*4-118], -117
+      IMUL    ESI, [ECX+ECX*4-118], 0
       IMUL    ESI, [ESP+ECX*4-115], -114
+      IMUL    ESI, [ESP+ECX*4-115], 0
       IMUL    ESI, [ESI+ECX*4-113], -112
+      IMUL    ESI, [ESI+ECX*4-113], 0
       IMUL    ESI, [EAX+EBP*4-87], -86
+      IMUL    ESI, [EAX+EBP*4-87], 0
       IMUL    ESI, [ECX+EBP*4-86], -85
+      IMUL    ESI, [ECX+EBP*4-86], 0
       IMUL    ESI, [ESP+EBP*4-83], -82
+      IMUL    ESI, [ESP+EBP*4-83], 0
       IMUL    ESI, [ESI+EBP*4-81], -80
+      IMUL    ESI, [ESI+EBP*4-81], 0
       IMUL    ESI, [EAX+EAX+1], 2
+      IMUL    ESI, [EAX+EAX+1], -128
       IMUL    ESI, [ECX+EAX+2], 3
+      IMUL    ESI, [ECX+EAX+2], -128
       IMUL    ESI, [ESP+EAX+5], 6
+      IMUL    ESI, [ESP+EAX+5], -128
       IMUL    ESI, [ESI+EAX+7], 8
+      IMUL    ESI, [ESI+EAX+7], -128
       IMUL    ESI, [EAX+ECX+9], 10
+      IMUL    ESI, [EAX+ECX+9], -128
       IMUL    ESI, [ECX+ECX+10], 11
+      IMUL    ESI, [ECX+ECX+10], -128
       IMUL    ESI, [ESP+ECX+13], 14
+      IMUL    ESI, [ESP+ECX+13], -128
       IMUL    ESI, [ESI+ECX+15], 16
+      IMUL    ESI, [ESI+ECX+15], -128
       IMUL    ESI, [EAX+EBP+41], 42
+      IMUL    ESI, [EAX+EBP+41], -128
       IMUL    ESI, [ECX+EBP+42], 43
+      IMUL    ESI, [ECX+EBP+42], -128
       IMUL    ESI, [ESP+EBP+45], 46
+      IMUL    ESI, [ESP+EBP+45], -128
       IMUL    ESI, [ESI+EBP+47], 48
+      IMUL    ESI, [ESI+EBP+47], -128
       IMUL    ESI, [EAX+ESI+49], 50
+      IMUL    ESI, [EAX+ESI+49], -128
       IMUL    ESI, [ESI+ESI+55], 56
+      IMUL    ESI, [ESI+ESI+55], -128
       IMUL    ESI, [EBP+118], 119
+      IMUL    ESI, [EBP+118], -128
       IMUL    ESI, [ESI+119], 120
+      IMUL    ESI, [ESI+119], -128
+      IMUL    EAX, [EAX-7B7C7D7FH], -123
+      IMUL    EAX, [ECX-7A7B7C7EH], -122
+      IMUL    EAX, [EBP+EAX*4-7677787AH], -118
+      IMUL    EAX, [ESI+EAX*4-75767779H], -117
+      IMUL    EAX, [EAX+ECX*4-73747577H], -115
+      IMUL    EAX, [ECX+ECX*4-72737476H], -114
+      IMUL    EAX, [ESP+ECX*4-6F707173H], -111
+      IMUL    EAX, [ESI+ECX*4-6D6E6F71H], -109
+      IMUL    EAX, [EAX-5B5C5D5FH], -91
+      IMUL    EAX, [ECX-5A5B5C5EH], -90
+      IMUL    EAX, [ESP-5758595BH], -87
+      IMUL    EAX, [ESI-55565759H], -85
+      IMUL    EAX, [EAX+EBP*4-53545557H], -83
+      IMUL    EAX, [ECX+EBP*4-52535456H], -82
+      IMUL    EAX, [ESP+EBP*4-4F505153H], -79
+      IMUL    EAX, [ESI+EBP*4-4D4E4F51H], -77
+      IMUL    EAX, [EAX+ESI*4-4B4C4D4FH], -75
+      IMUL    EAX, [ECX+ESI*4-4A4B4C4EH], -74
+      IMUL    EAX, [ESP+ESI*4-4748494BH], -71
+      IMUL    EAX, [ESI+ESI*4-45464749H], -69
+      IMUL    EAX, [EAX+EAX*8-3B3C3D3FH], -59
+      IMUL    EAX, [ECX+EAX*8-3A3B3C3EH], -58
+      IMUL    EAX, [EBP-7677787AH], -118
+      IMUL    EAX, [ESI-75767779H], -117
+      IMUL    ECX, [EAX-73747577H], -115
+      IMUL    ECX, [EBP+ECX*4-6E6F7072H], -110
+      IMUL    ECX, [ESI+ECX*4-6D6E6F71H], -109
+      IMUL    ECX, [EAX+EDX*4-6B6C6D6FH], -107
+      IMUL    ECX, [ECX+EDX*4-6A6B6C6EH], -106
+      IMUL    ECX, [EAX+EBP*4-53545557H], -83
+      IMUL    ECX, [ECX+EBP*4-52535456H], -82
+      IMUL    ECX, [ESP+EBP*4-4F505153H], -79
+      IMUL    ECX, [ESI+EBP*4-4D4E4F51H], -77
+      IMUL    ECX, [EAX+ESI*4-4B4C4D4FH], -75
+      IMUL    ECX, [ECX+ESI*4-4A4B4C4EH], -74
+      IMUL    ECX, [ESP+ESI*4-4748494BH], -71
+      IMUL    ECX, [ESI+ESI*4-45464749H], -69
+      IMUL    ECX, [EAX+EAX*8-3B3C3D3FH], -59
+      IMUL    ECX, [ECX+EAX*8-3A3B3C3EH], -58
+      IMUL    ECX, [ESP+EAX*8-3738393BH], -55
+      IMUL    ECX, [ESI+EAX*8-35363739H], -53
+      IMUL    ESP, [EAX-5B5C5D5FH], -91
+      IMUL    ESP, [EAX+EBP*4-53545557H], -83
+      IMUL    ESP, [ECX+EBP*4-52535456H], -82
+      IMUL    ESP, [ESP+EBP*4-4F505153H], -79
+      IMUL    ESP, [ESI+EBP*4-4D4E4F51H], -77
+      IMUL    ESP, [EAX+ESI*4-4B4C4D4FH], -75
+      IMUL    ESP, [ECX+ESI*4-4A4B4C4EH], -74
+      IMUL    ESP, [ESP+ESI*4-4748494BH], -71
+      IMUL    ESP, [ESI+ESI*4-45464749H], -69
+      IMUL    ESP, [EAX+EAX*8-3B3C3D3FH], -59
+      IMUL    ESP, [ECX+EAX*8-3A3B3C3EH], -58
+      IMUL    ESP, [ESP+EAX*8-3738393BH], -55
+      IMUL    ESP, [ESI+EAX*8-35363739H], -53
+      IMUL    ESP, [EAX+ECX*8-33343537H], -51
+      IMUL    ESP, [ECX+ECX*8-32333436H], -50
+      IMUL    ESP, [ESP+ECX*8-2F303133H], -47
+      IMUL    ESP, [ESI+ECX*8-2D2E2F31H], -45
+      IMUL    ESI, [EAX-4B4C4D4FH], -75
+      IMUL    ESI, [EBP+ESI*4-4647484AH], -70
+      IMUL    ESI, [ESI+ESI*4-45464749H], -69
+      IMUL    ESI, [EAX+EDI*4-43444547H], -67
+      IMUL    ESI, [ECX+EDI*4-42434446H], -66
+      IMUL    ESI, [EAX+EAX*8-3B3C3D3FH], -59
+      IMUL    ESI, [ECX+EAX*8-3A3B3C3EH], -58
+      IMUL    ESI, [ESP+EAX*8-3738393BH], -55
+      IMUL    ESI, [ESI+EAX*8-35363739H], -53
+      IMUL    ESI, [EAX+ECX*8-33343537H], -51
+      IMUL    ESI, [ECX+ECX*8-32333436H], -50
+      IMUL    ESI, [ESP+ECX*8-2F303133H], -47
+      IMUL    ESI, [ESI+ECX*8-2D2E2F31H], -45
+      IMUL    ESI, [EAX+EBP*8-13141517H], -19
+      IMUL    ESI, [ECX+EBP*8-12131416H], -18
+      IMUL    ESI, [ESP+EBP*8-0F101113H], -15
+      IMUL    ESI, [ESI+EBP*8-0D0E0F11H], -13
       IMUL    EAX, -63
+      IMUL    EAX, 0
       IMUL    EAX, ECX, -62
+      IMUL    EAX, ECX, 0
       IMUL    EAX, ESP, -59
+      IMUL    EAX, ESP, 0
       IMUL    EAX, ESI, -57
+      IMUL    EAX, ESI, 0
       IMUL    ECX, EAX, -55
+      IMUL    ECX, EAX, 0
       IMUL    ECX, -54
+      IMUL    ECX, 0
       IMUL    ECX, EDX, -53
+      IMUL    ECX, EDX, 0
       IMUL    ECX, ESP, -51
+      IMUL    ECX, ESP, 0
       IMUL    ECX, ESI, -49
+      IMUL    ECX, ESI, 0
       IMUL    ESP, EAX, -31
+      IMUL    ESP, EAX, 0
       IMUL    ESP, ECX, -30
+      IMUL    ESP, ECX, 0
       IMUL    ESP, -27
+      IMUL    ESP, 0
       IMUL    ESP, EBP, -26
+      IMUL    ESP, EBP, 0
       IMUL    ESP, ESI, -25
+      IMUL    ESP, ESI, 0
       IMUL    ESI, EAX, -15
+      IMUL    ESI, EAX, 0
       IMUL    ESI, ECX, -14
+      IMUL    ESI, ECX, 0
       IMUL    ESI, ESP, -11
+      IMUL    ESI, ESP, 0
       IMUL    ESI, -9
+      IMUL    ESI, 0
       IMUL    ESI, EDI, -8
+      IMUL    ESI, EDI, 0
       IMUL    EAX, [EAX], 1
+      IMUL    EAX, [EAX], -128
       IMUL    EAX, [ECX], 2
+      IMUL    EAX, [ECX], -128
       IMUL    EAX, [ESI+EAX], 7
+      IMUL    EAX, [ESI+EAX], -128
       IMUL    EAX, [EAX+ECX], 9
+      IMUL    EAX, [EAX+ECX], -128
       IMUL    EAX, [ECX+ECX], 10
+      IMUL    EAX, [ECX+ECX], -128
       IMUL    EAX, [ESP+ECX], 13
+      IMUL    EAX, [ESP+ECX], -128
       IMUL    EAX, [ESI+ECX], 15
+      IMUL    EAX, [ESI+ECX], -128
       IMUL    EAX, [EAX], 33
+      IMUL    EAX, [EAX], -128
       IMUL    EAX, [ESP], 37
+      IMUL    EAX, [ESP], -128
       IMUL    EAX, [29282726H], 42
+      IMUL    EAX, [29282726H], -128
       IMUL    EAX, [EAX+EBP], 41
+      IMUL    EAX, [EAX+EBP], -128
       IMUL    EAX, [ECX+EBP], 42
+      IMUL    EAX, [ECX+EBP], -128
       IMUL    EAX, [ESP+EBP], 45
+      IMUL    EAX, [ESP+EBP], -128
       IMUL    EAX, [ESI+EBP], 47
+      IMUL    EAX, [ESI+EBP], -128
       IMUL    EAX, [EAX+ESI], 49
+      IMUL    EAX, [EAX+ESI], -128
       IMUL    EAX, [ESI+ESI], 55
+      IMUL    EAX, [ESI+ESI], -128
       IMUL    EAX, [EAX+EAX*2], 65
+      IMUL    EAX, [EAX+EAX*2], -128
       IMUL    EAX, [ECX+EAX*2], 66
+      IMUL    EAX, [ECX+EAX*2], -128
       IMUL    EAX, [ESP+EAX*2], 69
+      IMUL    EAX, [ESP+EAX*2], -128
       IMUL    EAX, [EAX*2+49484746H], 74
+      IMUL    EAX, [EAX*2+49484746H], -128
       IMUL    EAX, [ESI+EAX*2], 71
+      IMUL    EAX, [ESI+EAX*2], -128
       IMUL    EAX, [EAX+ECX*2], 73
+      IMUL    EAX, [EAX+ECX*2], -128
       IMUL    EAX, [ECX+ECX*2], 74
+      IMUL    EAX, [ECX+ECX*2], -128
       IMUL    EAX, [ESP+ECX*2], 77
+      IMUL    EAX, [ESP+ECX*2], -128
       IMUL    EAX, [ECX*2+51504F4EH], 82
+      IMUL    EAX, [ECX*2+51504F4EH], -128
       IMUL    EAX, [ESI+ECX*2], 79
+      IMUL    EAX, [ESI+ECX*2], -128
       IMUL    EAX, [EAX+EBP*2], 105
+      IMUL    EAX, [EAX+EBP*2], -128
       IMUL    EAX, [ECX+EBP*2], 106
+      IMUL    EAX, [ECX+EBP*2], -128
       IMUL    EAX, [ESP+EBP*2], 109
+      IMUL    EAX, [ESP+EBP*2], -128
       IMUL    EAX, [EBP*2+71706F6EH], 114
+      IMUL    EAX, [EBP*2+71706F6EH], -128
       IMUL    EAX, [ESI+EBP*2], 111
+      IMUL    EAX, [ESI+EBP*2], -128
       IMUL    EAX, [EAX+ESI*2], 113
+      IMUL    EAX, [EAX+ESI*2], -128
       IMUL    EAX, [ECX+ESI*2], 114
+      IMUL    EAX, [ECX+ESI*2], -128
       IMUL    EAX, [ESP+ESI*2], 117
+      IMUL    EAX, [ESP+ESI*2], -128
       IMUL    EAX, [ESI*2+79787776H], 122
+      IMUL    EAX, [ESI*2+79787776H], -128
       IMUL    EAX, [ESI+ESI*2], 119
+      IMUL    EAX, [ESI+ESI*2], -128
       IMUL    EAX, [EAX+EAX], 1
+      IMUL    EAX, [EAX+EAX], -128
       IMUL    EAX, [ECX+EAX], 2
+      IMUL    EAX, [ECX+EAX], -128
       IMUL    EAX, [ESP+EAX], 5
+      IMUL    EAX, [ESP+EAX], -128
       IMUL    EAX, [09080706H], 10
+      IMUL    EAX, [09080706H], -128
       IMUL    EAX, [ESI], 7
+      IMUL    EAX, [ESI], -128
       IMUL    ECX, [EAX], 9
+      IMUL    ECX, [EAX], -128
       IMUL    ECX, [ECX], 10
+      IMUL    ECX, [ECX], -128
       IMUL    ECX, [ESI+ECX], 15
+      IMUL    ECX, [ESI+ECX], -128
       IMUL    ECX, [EAX+EDX], 17
+      IMUL    ECX, [EAX+EDX], -128
       IMUL    ECX, [ECX+EDX], 18
+      IMUL    ECX, [ECX+EDX], -128
       IMUL    ECX, [ESP+EDX], 21
+      IMUL    ECX, [ESP+EDX], -128
       IMUL    ECX, [ESP], 37
+      IMUL    ECX, [ESP], -128
       IMUL    ECX, [EAX+EBP], 41
+      IMUL    ECX, [EAX+EBP], -128
       IMUL    ECX, [ECX+EBP], 42
+      IMUL    ECX, [ECX+EBP], -128
       IMUL    ECX, [ESP+EBP], 45
+      IMUL    ECX, [ESP+EBP], -128
       IMUL    ECX, [ESI+EBP], 47
+      IMUL    ECX, [ESI+EBP], -128
       IMUL    ECX, [EAX+ESI], 49
+      IMUL    ECX, [EAX+ESI], -128
       IMUL    ECX, [ESI+ESI], 55
+      IMUL    ECX, [ESI+ESI], -128
       IMUL    ECX, [EAX+EAX*2], 65
+      IMUL    ECX, [EAX+EAX*2], -128
       IMUL    ECX, [ECX+EAX*2], 66
+      IMUL    ECX, [ECX+EAX*2], -128
       IMUL    ECX, [ESP+EAX*2], 69
+      IMUL    ECX, [ESP+EAX*2], -128
       IMUL    ECX, [EAX*2+49484746H], 74
+      IMUL    ECX, [EAX*2+49484746H], -128
       IMUL    ECX, [ESI+EAX*2], 71
+      IMUL    ECX, [ESI+EAX*2], -128
       IMUL    ECX, [EAX+ECX*2], 73
+      IMUL    ECX, [EAX+ECX*2], -128
       IMUL    ECX, [ECX+ECX*2], 74
+      IMUL    ECX, [ECX+ECX*2], -128
       IMUL    ECX, [ESP+ECX*2], 77
+      IMUL    ECX, [ESP+ECX*2], -128
       IMUL    ECX, [ECX*2+51504F4EH], 82
+      IMUL    ECX, [ECX*2+51504F4EH], -128
       IMUL    ECX, [ESI+ECX*2], 79
+      IMUL    ECX, [ESI+ECX*2], -128
       IMUL    ECX, [EAX+EBP*2], 105
+      IMUL    ECX, [EAX+EBP*2], -128
       IMUL    ECX, [ECX+EBP*2], 106
+      IMUL    ECX, [ECX+EBP*2], -128
       IMUL    ECX, [ESP+EBP*2], 109
+      IMUL    ECX, [ESP+EBP*2], -128
       IMUL    ECX, [EBP*2+71706F6EH], 114
+      IMUL    ECX, [EBP*2+71706F6EH], -128
       IMUL    ECX, [ESI+EBP*2], 111
+      IMUL    ECX, [ESI+EBP*2], -128
       IMUL    ECX, [EAX+ESI*2], 113
+      IMUL    ECX, [EAX+ESI*2], -128
       IMUL    ECX, [ECX+ESI*2], 114
+      IMUL    ECX, [ECX+ESI*2], -128
       IMUL    ECX, [ESP+ESI*2], 117
+      IMUL    ECX, [ESP+ESI*2], -128
       IMUL    ECX, [ESI*2+79787776H], 122
+      IMUL    ECX, [ESI*2+79787776H], -128
       IMUL    ECX, [ESI+ESI*2], 119
+      IMUL    ECX, [ESI+ESI*2], -128
       IMUL    ECX, [EAX+EAX], 1
+      IMUL    ECX, [EAX+EAX], -128
       IMUL    ECX, [ECX+EAX], 2
+      IMUL    ECX, [ECX+EAX], -128
       IMUL    ECX, [ESP+EAX], 5
+      IMUL    ECX, [ESP+EAX], -128
       IMUL    ECX, [ESI+EAX], 7
+      IMUL    ECX, [ESI+EAX], -128
       IMUL    ECX, [ESI], 15
+      IMUL    ECX, [ESI], -128
       IMUL    ESP, [EAX], 33
+      IMUL    ESP, [EAX], -128
       IMUL    ESP, [ECX], 34
+      IMUL    ESP, [ECX], -128
       IMUL    ESP, [EAX+EBP], 41
+      IMUL    ESP, [EAX+EBP], -128
       IMUL    ESP, [ECX+EBP], 42
+      IMUL    ESP, [ECX+EBP], -128
       IMUL    ESP, [ESP+EBP], 45
+      IMUL    ESP, [ESP+EBP], -128
       IMUL    ESP, [ESI+EBP], 47
+      IMUL    ESP, [ESI+EBP], -128
       IMUL    ESP, [EAX+ESI], 49
+      IMUL    ESP, [EAX+ESI], -128
       IMUL    ESP, [ESI+ESI], 55
+      IMUL    ESP, [ESI+ESI], -128
       IMUL    ESP, [EAX+EAX*2], 65
+      IMUL    ESP, [EAX+EAX*2], -128
       IMUL    ESP, [ECX+EAX*2], 66
+      IMUL    ESP, [ECX+EAX*2], -128
       IMUL    ESP, [ESP+EAX*2], 69
+      IMUL    ESP, [ESP+EAX*2], -128
       IMUL    ESP, [EAX*2+49484746H], 74
+      IMUL    ESP, [EAX*2+49484746H], -128
       IMUL    ESP, [ESI+EAX*2], 71
+      IMUL    ESP, [ESI+EAX*2], -128
       IMUL    ESP, [EAX+ECX*2], 73
+      IMUL    ESP, [EAX+ECX*2], -128
       IMUL    ESP, [ECX+ECX*2], 74
+      IMUL    ESP, [ECX+ECX*2], -128
       IMUL    ESP, [ESP+ECX*2], 77
+      IMUL    ESP, [ESP+ECX*2], -128
       IMUL    ESP, [ECX*2+51504F4EH], 82
+      IMUL    ESP, [ECX*2+51504F4EH], -128
       IMUL    ESP, [ESI+ECX*2], 79
+      IMUL    ESP, [ESI+ECX*2], -128
       IMUL    ESP, [ESP], 101
+      IMUL    ESP, [ESP], -128
       IMUL    ESP, [EAX+EBP*2], 105
+      IMUL    ESP, [EAX+EBP*2], -128
       IMUL    ESP, [ECX+EBP*2], 106
+      IMUL    ESP, [ECX+EBP*2], -128
       IMUL    ESP, [ESP+EBP*2], 109
+      IMUL    ESP, [ESP+EBP*2], -128
       IMUL    ESP, [EBP*2+71706F6EH], 114
+      IMUL    ESP, [EBP*2+71706F6EH], -128
       IMUL    ESP, [ESI+EBP*2], 111
+      IMUL    ESP, [ESI+EBP*2], -128
       IMUL    ESP, [EAX+ESI*2], 113
+      IMUL    ESP, [EAX+ESI*2], -128
       IMUL    ESP, [ECX+ESI*2], 114
+      IMUL    ESP, [ECX+ESI*2], -128
       IMUL    ESP, [ESP+ESI*2], 117
+      IMUL    ESP, [ESP+ESI*2], -128
       IMUL    ESP, [ESI*2+79787776H], 122
+      IMUL    ESP, [ESI*2+79787776H], -128
       IMUL    ESP, [ESI+ESI*2], 119
+      IMUL    ESP, [ESI+ESI*2], -128
       IMUL    ESP, [EAX+EAX], 1
+      IMUL    ESP, [EAX+EAX], -128
       IMUL    ESP, [ECX+EAX], 2
+      IMUL    ESP, [ECX+EAX], -128
       IMUL    ESP, [ESP+EAX], 5
+      IMUL    ESP, [ESP+EAX], -128
       IMUL    ESP, [ESI+EAX], 7
+      IMUL    ESP, [ESI+EAX], -128
       IMUL    ESP, [EAX+ECX], 9
+      IMUL    ESP, [EAX+ECX], -128
       IMUL    ESP, [ECX+ECX], 10
+      IMUL    ESP, [ECX+ECX], -128
       IMUL    ESP, [ESP+ECX], 13
+      IMUL    ESP, [ESP+ECX], -128
       IMUL    ESP, [ESI+ECX], 15
+      IMUL    ESP, [ESI+ECX], -128
       IMUL    ESP, [ESI], 39
+      IMUL    ESP, [ESI], -128
       IMUL    ESI, [EAX], 49
+      IMUL    ESI, [EAX], -128
       IMUL    ESI, [ECX], 50
+      IMUL    ESI, [ECX], -128
       IMUL    ESI, [ESI+ESI], 55
+      IMUL    ESI, [ESI+ESI], -128
       IMUL    ESI, [EAX+EDI], 57
+      IMUL    ESI, [EAX+EDI], -128
       IMUL    ESI, [EAX+EAX*2], 65
+      IMUL    ESI, [EAX+EAX*2], -128
       IMUL    ESI, [ECX+EAX*2], 66
+      IMUL    ESI, [ECX+EAX*2], -128
       IMUL    ESI, [ESP+EAX*2], 69
+      IMUL    ESI, [ESP+EAX*2], -128
       IMUL    ESI, [EAX*2+49484746H], 74
+      IMUL    ESI, [EAX*2+49484746H], -128
       IMUL    ESI, [ESI+EAX*2], 71
+      IMUL    ESI, [ESI+EAX*2], -128
       IMUL    ESI, [EAX+ECX*2], 73
+      IMUL    ESI, [EAX+ECX*2], -128
       IMUL    ESI, [ECX+ECX*2], 74
+      IMUL    ESI, [ECX+ECX*2], -128
       IMUL    ESI, [ESP+ECX*2], 77
+      IMUL    ESI, [ESP+ECX*2], -128
       IMUL    ESI, [ECX*2+51504F4EH], 82
+      IMUL    ESI, [ECX*2+51504F4EH], -128
       IMUL    ESI, [ESI+ECX*2], 79
+      IMUL    ESI, [ESI+ECX*2], -128
       IMUL    ESI, [ESP], 101
+      IMUL    ESI, [ESP], -128
       IMUL    ESI, [EAX+EBP*2], 105
+      IMUL    ESI, [EAX+EBP*2], -128
       IMUL    ESI, [ECX+EBP*2], 106
+      IMUL    ESI, [ECX+EBP*2], -128
       IMUL    ESI, [ESP+EBP*2], 109
+      IMUL    ESI, [ESP+EBP*2], -128
       IMUL    ESI, [EBP*2+71706F6EH], 114
+      IMUL    ESI, [EBP*2+71706F6EH], -128
       IMUL    ESI, [ESI+EBP*2], 111
+      IMUL    ESI, [ESI+EBP*2], -128
       IMUL    ESI, [EAX+ESI*2], 113
+      IMUL    ESI, [EAX+ESI*2], -128
       IMUL    ESI, [ECX+ESI*2], 114
+      IMUL    ESI, [ECX+ESI*2], -128
       IMUL    ESI, [ESP+ESI*2], 117
+      IMUL    ESI, [ESP+ESI*2], -128
       IMUL    ESI, [ESI*2+79787776H], 122
+      IMUL    ESI, [ESI*2+79787776H], -128
       IMUL    ESI, [ESI+ESI*2], 119
+      IMUL    ESI, [ESI+ESI*2], -128
       IMUL    ESI, [EAX+EAX], 1
+      IMUL    ESI, [EAX+EAX], -128
       IMUL    ESI, [ECX+EAX], 2
+      IMUL    ESI, [ECX+EAX], -128
       IMUL    ESI, [ESP+EAX], 5
+      IMUL    ESI, [ESP+EAX], -128
       IMUL    ESI, [ESI+EAX], 7
+      IMUL    ESI, [ESI+EAX], -128
       IMUL    ESI, [EAX+ECX], 9
+      IMUL    ESI, [EAX+ECX], -128
       IMUL    ESI, [ECX+ECX], 10
+      IMUL    ESI, [ECX+ECX], -128
       IMUL    ESI, [ESP+ECX], 13
+      IMUL    ESI, [ESP+ECX], -128
       IMUL    ESI, [ESI+ECX], 15
+      IMUL    ESI, [ESI+ECX], -128
       IMUL    ESI, [EAX+EBP], 41
+      IMUL    ESI, [EAX+EBP], -128
       IMUL    ESI, [ECX+EBP], 42
+      IMUL    ESI, [ECX+EBP], -128
       IMUL    ESI, [ESP+EBP], 45
+      IMUL    ESI, [ESP+EBP], -128
       IMUL    ESI, [ESI+EBP], 47
+      IMUL    ESI, [ESI+EBP], -128
       IMUL    ESI, [ESI], 55
+      IMUL    ESI, [ESI], -128
       IMUL    EAX, [EAX+65], 66
+      IMUL    EAX, [EAX+65], -128
       IMUL    EAX, [ECX+66], 67
+      IMUL    EAX, [ECX+66], -128
       IMUL    EAX, [EBP+EAX*2+70], 71
+      IMUL    EAX, [EBP+EAX*2+70], -128
       IMUL    EAX, [ESI+EAX*2+71], 72
+      IMUL    EAX, [ESI+EAX*2+71], -128
       IMUL    EAX, [EAX+ECX*2+73], 74
+      IMUL    EAX, [EAX+ECX*2+73], -128
       IMUL    EAX, [ECX+ECX*2+74], 75
+      IMUL    EAX, [ECX+ECX*2+74], -128
       IMUL    EAX, [ESP+ECX*2+77], 78
+      IMUL    EAX, [ESP+ECX*2+77], -128
       IMUL    EAX, [ESI+ECX*2+79], 80
+      IMUL    EAX, [ESI+ECX*2+79], -128
       IMUL    EAX, [EAX+97], 98
+      IMUL    EAX, [EAX+97], -128
       IMUL    EAX, [EAX+EBP*2+105], 106
+      IMUL    EAX, [EAX+EBP*2+105], -128
       IMUL    EAX, [ECX+EBP*2+106], 107
+      IMUL    EAX, [ECX+EBP*2+106], -128
       IMUL    EAX, [ESP+EBP*2+109], 110
+      IMUL    EAX, [ESP+EBP*2+109], -128
       IMUL    EAX, [ESI+EBP*2+111], 112
+      IMUL    EAX, [ESI+EBP*2+111], -128
       IMUL    EAX, [EAX+ESI*2+113], 114
+      IMUL    EAX, [EAX+ESI*2+113], -128
       IMUL    EAX, [ECX+ESI*2+114], 115
+      IMUL    EAX, [ECX+ESI*2+114], -128
       IMUL    EAX, [ESP+ESI*2+117], 118
+      IMUL    EAX, [ESP+ESI*2+117], -128
       IMUL    EAX, [ESI+ESI*2+119], 120
+      IMUL    EAX, [ESI+ESI*2+119], -128
       IMUL    EAX, [EAX+EAX*4-127], -126
+      IMUL    EAX, [EAX+EAX*4-127], 0
       IMUL    EAX, [ECX+EAX*4-126], -125
+      IMUL    EAX, [ECX+EAX*4-126], 0
       IMUL    EAX, [EAX+EAX+1], 2
+      IMUL    EAX, [EAX+EAX+1], -128
       IMUL    EAX, [ECX+EAX+2], 3
+      IMUL    EAX, [ECX+EAX+2], -128
       IMUL    EAX, [ESP+EAX+5], 6
+      IMUL    EAX, [ESP+EAX+5], -128
       IMUL    EAX, [ESI+EAX+7], 8
+      IMUL    EAX, [ESI+EAX+7], -128
       IMUL    EAX, [EAX+ECX+9], 10
+      IMUL    EAX, [EAX+ECX+9], -128
       IMUL    EAX, [ECX+ECX+10], 11
+      IMUL    EAX, [ECX+ECX+10], -128
       IMUL    EAX, [ESP+ECX+13], 14
+      IMUL    EAX, [ESP+ECX+13], -128
       IMUL    EAX, [ESI+ECX+15], 16
+      IMUL    EAX, [ESI+ECX+15], -128
       IMUL    EAX, [EAX+EBP+41], 42
+      IMUL    EAX, [EAX+EBP+41], -128
       IMUL    EAX, [ECX+EBP+42], 43
+      IMUL    EAX, [ECX+EBP+42], -128
       IMUL    EAX, [ESP+EBP+45], 46
+      IMUL    EAX, [ESP+EBP+45], -128
       IMUL    EAX, [ESI+EBP+47], 48
+      IMUL    EAX, [ESI+EBP+47], -128
       IMUL    EAX, [EAX+ESI+49], 50
+      IMUL    EAX, [EAX+ESI+49], -128
       IMUL    EAX, [ESI+ESI+55], 56
+      IMUL    EAX, [ESI+ESI+55], -128
       IMUL    EAX, [EBP+70], 71
+      IMUL    EAX, [EBP+70], -128
       IMUL    EAX, [ESI+71], 72
+      IMUL    EAX, [ESI+71], -128
       IMUL    ECX, [EAX+73], 74
+      IMUL    ECX, [EAX+73], -128
       IMUL    ECX, [ECX+74], 75
+      IMUL    ECX, [ECX+74], -128
       IMUL    ECX, [EBP+ECX*2+78], 79
+      IMUL    ECX, [EBP+ECX*2+78], -128
       IMUL    ECX, [ESI+ECX*2+79], 80
+      IMUL    ECX, [ESI+ECX*2+79], -128
       IMUL    ECX, [EAX+EDX*2+81], 82
+      IMUL    ECX, [EAX+EDX*2+81], -128
       IMUL    ECX, [ECX+EDX*2+82], 83
+      IMUL    ECX, [ECX+EDX*2+82], -128
       IMUL    ECX, [EAX+EBP*2+105], 106
+      IMUL    ECX, [EAX+EBP*2+105], -128
       IMUL    ECX, [ECX+EBP*2+106], 107
+      IMUL    ECX, [ECX+EBP*2+106], -128
       IMUL    ECX, [ESP+EBP*2+109], 110
+      IMUL    ECX, [ESP+EBP*2+109], -128
       IMUL    ECX, [ESI+EBP*2+111], 112
+      IMUL    ECX, [ESI+EBP*2+111], -128
       IMUL    ECX, [EAX+ESI*2+113], 114
+      IMUL    ECX, [EAX+ESI*2+113], -128
       IMUL    ECX, [ECX+ESI*2+114], 115
+      IMUL    ECX, [ECX+ESI*2+114], -128
       IMUL    ECX, [ESP+ESI*2+117], 118
+      IMUL    ECX, [ESP+ESI*2+117], -128
       IMUL    ECX, [ESI+ESI*2+119], 120
+      IMUL    ECX, [ESI+ESI*2+119], -128
       IMUL    ECX, [EAX+EAX*4-127], -126
+      IMUL    ECX, [EAX+EAX*4-127], 0
       IMUL    ECX, [ECX+EAX*4-126], -125
+      IMUL    ECX, [ECX+EAX*4-126], 0
       IMUL    ECX, [ESP+EAX*4-123], -122
+      IMUL    ECX, [ESP+EAX*4-123], 0
       IMUL    ECX, [ESI+EAX*4-121], -120
+      IMUL    ECX, [ESI+EAX*4-121], 0
       IMUL    ECX, [EAX+EAX+1], 2
+      IMUL    ECX, [EAX+EAX+1], -128
       IMUL    ECX, [ECX+EAX+2], 3
+      IMUL    ECX, [ECX+EAX+2], -128
       IMUL    ECX, [ESP+EAX+5], 6
+      IMUL    ECX, [ESP+EAX+5], -128
       IMUL    ECX, [ESI+EAX+7], 8
+      IMUL    ECX, [ESI+EAX+7], -128
       IMUL    ECX, [EAX+ECX+9], 10
+      IMUL    ECX, [EAX+ECX+9], -128
       IMUL    ECX, [ECX+ECX+10], 11
+      IMUL    ECX, [ECX+ECX+10], -128
       IMUL    ECX, [ESP+ECX+13], 14
+      IMUL    ECX, [ESP+ECX+13], -128
       IMUL    ECX, [ESI+ECX+15], 16
+      IMUL    ECX, [ESI+ECX+15], -128
       IMUL    ECX, [EAX+EBP+41], 42
+      IMUL    ECX, [EAX+EBP+41], -128
       IMUL    ECX, [ECX+EBP+42], 43
+      IMUL    ECX, [ECX+EBP+42], -128
       IMUL    ECX, [ESP+EBP+45], 46
+      IMUL    ECX, [ESP+EBP+45], -128
       IMUL    ECX, [ESI+EBP+47], 48
+      IMUL    ECX, [ESI+EBP+47], -128
       IMUL    ECX, [EAX+ESI+49], 50
+      IMUL    ECX, [EAX+ESI+49], -128
       IMUL    ECX, [ESI+ESI+55], 56
+      IMUL    ECX, [ESI+ESI+55], -128
       IMUL    ECX, [EBP+78], 79
+      IMUL    ECX, [EBP+78], -128
       IMUL    ECX, [ESI+79], 80
+      IMUL    ECX, [ESI+79], -128
       IMUL    ESP, [EAX+97], 98
+      IMUL    ESP, [EAX+97], -128
       IMUL    ESP, [ECX+98], 99
+      IMUL    ESP, [ECX+98], -128
       INSB
       INSD
       OUTSB
@@ -68944,646 +70457,1478 @@
       CMP     DWORD PTR [EBP+126], 8281807FH
       CMP     DWORD PTR [ESI+127], 83828180H
       ADD     DWORD PTR [EAX-7B7C7D7FH], 88878685H
+      ADD     DWORD PTR [EBP+EAX*4-7677787AH], -118
+      ADD     DWORD PTR [ESI+EAX*4-75767779H], -117
+      ADD     DWORD PTR [EAX+ECX*4-73747577H], -115
+      ADD     DWORD PTR [ECX+ECX*4-72737476H], -114
+      ADD     DWORD PTR [ESP+ECX*4-6F707173H], -111
+      ADD     DWORD PTR [ESI+ECX*4-6D6E6F71H], -109
+      ADD     DWORD PTR [EAX-5B5C5D5FH], -91
+      ADD     DWORD PTR [ECX-5A5B5C5EH], -90
+      ADD     DWORD PTR [ESP-5758595BH], -87
+      ADD     DWORD PTR [ESI-55565759H], -85
+      ADD     DWORD PTR [EAX+EBP*4-53545557H], -83
+      ADD     DWORD PTR [ECX+EBP*4-52535456H], -82
+      ADD     DWORD PTR [ESP+EBP*4-4F505153H], -79
+      ADD     DWORD PTR [ESI+EBP*4-4D4E4F51H], -77
+      ADD     DWORD PTR [EAX+ESI*4-4B4C4D4FH], -75
+      ADD     DWORD PTR [ECX+ESI*4-4A4B4C4EH], -74
+      ADD     DWORD PTR [ESP+ESI*4-4748494BH], -71
+      ADD     DWORD PTR [ESI+ESI*4-45464749H], -69
+      ADD     DWORD PTR [EAX+EAX*8-3B3C3D3FH], -59
+      ADD     DWORD PTR [ECX+EAX*8-3A3B3C3EH], -58
+      ADD     DWORD PTR [EBP-7677787AH], -118
+      ADD     DWORD PTR [ESI-75767779H], -117
+      OR      DWORD PTR [EAX-73747577H], -115
+      OR      DWORD PTR [ECX-72737476H], -114
+      OR      DWORD PTR [EBP+ECX*4-6E6F7072H], -110
+      OR      DWORD PTR [ESI+ECX*4-6D6E6F71H], -109
+      OR      DWORD PTR [EAX+EDX*4-6B6C6D6FH], -107
+      OR      DWORD PTR [ECX+EDX*4-6A6B6C6EH], -106
+      OR      DWORD PTR [EAX-5B5C5D5FH], -91
+      OR      DWORD PTR [ECX-5A5B5C5EH], -90
+      OR      DWORD PTR [ESP-5758595BH], -87
+      OR      DWORD PTR [ESI-55565759H], -85
+      OR      DWORD PTR [EAX+EBP*4-53545557H], -83
+      OR      DWORD PTR [ECX+EBP*4-52535456H], -82
+      OR      DWORD PTR [ESP+EBP*4-4F505153H], -79
+      OR      DWORD PTR [ESI+EBP*4-4D4E4F51H], -77
+      OR      DWORD PTR [EAX+ESI*4-4B4C4D4FH], -75
+      OR      DWORD PTR [ECX+ESI*4-4A4B4C4EH], -74
+      OR      DWORD PTR [ESP+ESI*4-4748494BH], -71
+      OR      DWORD PTR [ESI+ESI*4-45464749H], -69
+      OR      DWORD PTR [EAX+EAX*8-3B3C3D3FH], -59
+      OR      DWORD PTR [ECX+EAX*8-3A3B3C3EH], -58
+      OR      DWORD PTR [ESP+EAX*8-3738393BH], -55
+      OR      DWORD PTR [ESI+EAX*8-35363739H], -53
+      OR      DWORD PTR [EBP-6E6F7072H], -110
+      OR      DWORD PTR [ESI-6D6E6F71H], -109
+      ADC     DWORD PTR [EAX-6B6C6D6FH], -107
+      ADC     DWORD PTR [ECX-6A6B6C6EH], -106
+      ADC     DWORD PTR [EBP+EDX*4-6667686AH], -102
+      ADC     DWORD PTR [ESI+EDX*4-65666769H], -101
+      ADC     DWORD PTR [EAX+EBX*4-63646567H], -99
+      ADC     DWORD PTR [ECX+EBX*4-62636466H], -98
+      ADC     DWORD PTR [EAX-5B5C5D5FH], -91
+      ADC     DWORD PTR [ECX-5A5B5C5EH], -90
+      ADC     DWORD PTR [ESP-5758595BH], -87
+      ADC     DWORD PTR [ESI-55565759H], -85
+      ADC     DWORD PTR [EAX+EBP*4-53545557H], -83
+      ADC     DWORD PTR [ECX+EBP*4-52535456H], -82
+      ADC     DWORD PTR [ESP+EBP*4-4F505153H], -79
+      ADC     DWORD PTR [ESI+EBP*4-4D4E4F51H], -77
+      ADC     DWORD PTR [EAX+ESI*4-4B4C4D4FH], -75
+      ADC     DWORD PTR [ECX+ESI*4-4A4B4C4EH], -74
+      ADC     DWORD PTR [ESP+ESI*4-4748494BH], -71
+      ADC     DWORD PTR [ESI+ESI*4-45464749H], -69
+      ADC     DWORD PTR [EAX+EAX*8-3B3C3D3FH], -59
+      ADC     DWORD PTR [ECX+EAX*8-3A3B3C3EH], -58
+      ADC     DWORD PTR [ESP+EAX*8-3738393BH], -55
+      ADC     DWORD PTR [ESI+EAX*8-35363739H], -53
+      ADC     DWORD PTR [EBP-6667686AH], -102
+      ADC     DWORD PTR [ESI-65666769H], -101
+      SBB     DWORD PTR [EAX-63646567H], -99
+      SBB     DWORD PTR [ECX-62636466H], -98
+      SBB     DWORD PTR [EBP+EBX*4-5E5F6062H], -94
+      SBB     DWORD PTR [ESI+EBX*4-5D5E5F61H], -93
+      SBB     DWORD PTR [EAX-5B5C5D5FH], -91
+      SBB     DWORD PTR [ECX-5A5B5C5EH], -90
+      SBB     DWORD PTR [ESP-5758595BH], -87
+      SBB     DWORD PTR [ESI-55565759H], -85
+      SBB     DWORD PTR [EAX+EBP*4-53545557H], -83
+      SBB     DWORD PTR [ECX+EBP*4-52535456H], -82
+      SBB     DWORD PTR [ESP+EBP*4-4F505153H], -79
+      SBB     DWORD PTR [ESI+EBP*4-4D4E4F51H], -77
+      SBB     DWORD PTR [EAX+ESI*4-4B4C4D4FH], -75
+      SBB     DWORD PTR [ECX+ESI*4-4A4B4C4EH], -74
+      SBB     DWORD PTR [ESP+ESI*4-4748494BH], -71
+      SBB     DWORD PTR [ESI+ESI*4-45464749H], -69
+      SBB     DWORD PTR [EAX+EAX*8-3B3C3D3FH], -59
+      SBB     DWORD PTR [ECX+EAX*8-3A3B3C3EH], -58
+      SBB     DWORD PTR [ESP+EAX*8-3738393BH], -55
+      SBB     DWORD PTR [ESI+EAX*8-35363739H], -53
+      SBB     DWORD PTR [EAX+ECX*8-33343537H], -51
+      SBB     DWORD PTR [ECX+ECX*8-32333436H], -50
+      SBB     DWORD PTR [EBP-5E5F6062H], -94
+      SBB     DWORD PTR [ESI-5D5E5F61H], -93
+      AND     DWORD PTR [EAX-5B5C5D5FH], -91
+      AND     DWORD PTR [ECX-5A5B5C5EH], -90
+      AND     DWORD PTR [EBP-5657585AH], -86
+      AND     DWORD PTR [ESI-55565759H], -85
+      AND     DWORD PTR [EAX+EBP*4-53545557H], -83
+      AND     DWORD PTR [ECX+EBP*4-52535456H], -82
+      AND     DWORD PTR [ESP+EBP*4-4F505153H], -79
+      AND     DWORD PTR [ESI+EBP*4-4D4E4F51H], -77
+      AND     DWORD PTR [EAX+ESI*4-4B4C4D4FH], -75
+      AND     DWORD PTR [ECX+ESI*4-4A4B4C4EH], -74
+      AND     DWORD PTR [ESP+ESI*4-4748494BH], -71
+      AND     DWORD PTR [ESI+ESI*4-45464749H], -69
+      AND     DWORD PTR [EAX+EAX*8-3B3C3D3FH], -59
+      AND     DWORD PTR [ECX+EAX*8-3A3B3C3EH], -58
+      AND     DWORD PTR [ESP+EAX*8-3738393BH], -55
+      AND     DWORD PTR [ESI+EAX*8-35363739H], -53
+      AND     DWORD PTR [EAX+ECX*8-33343537H], -51
+      AND     DWORD PTR [ECX+ECX*8-32333436H], -50
+      AND     DWORD PTR [ESP+ECX*8-2F303133H], -47
+      AND     DWORD PTR [ESI+ECX*8-2D2E2F31H], -45
+      AND     DWORD PTR [EAX-1B1C1D1FH], -27
+      AND     DWORD PTR [ECX-1A1B1C1EH], -26
+      AND     DWORD PTR [EBP-5657585AH], -86
+      AND     DWORD PTR [ESI-55565759H], -85
+      SUB     DWORD PTR [EAX-53545557H], -83
+      SUB     DWORD PTR [ECX-52535456H], -82
+      SUB     DWORD PTR [EBP+EBP*4-4E4F5052H], -78
+      SUB     DWORD PTR [ESI+EBP*4-4D4E4F51H], -77
+      SUB     DWORD PTR [EAX+ESI*4-4B4C4D4FH], -75
+      SUB     DWORD PTR [ECX+ESI*4-4A4B4C4EH], -74
+      SUB     DWORD PTR [ESP+ESI*4-4748494BH], -71
+      SUB     DWORD PTR [ESI+ESI*4-45464749H], -69
+      SUB     DWORD PTR [EAX+EAX*8-3B3C3D3FH], -59
+      SUB     DWORD PTR [ECX+EAX*8-3A3B3C3EH], -58
+      SUB     DWORD PTR [ESP+EAX*8-3738393BH], -55
+      SUB     DWORD PTR [ESI+EAX*8-35363739H], -53
+      SUB     DWORD PTR [EAX+ECX*8-33343537H], -51
+      SUB     DWORD PTR [ECX+ECX*8-32333436H], -50
+      SUB     DWORD PTR [ESP+ECX*8-2F303133H], -47
+      SUB     DWORD PTR [ESI+ECX*8-2D2E2F31H], -45
+      SUB     DWORD PTR [EAX-1B1C1D1FH], -27
+      SUB     DWORD PTR [ECX-1A1B1C1EH], -26
+      SUB     DWORD PTR [ESP-1718191BH], -23
+      SUB     DWORD PTR [ESI-15161719H], -21
+      SUB     DWORD PTR [EAX+EBP*8-13141517H], -19
+      SUB     DWORD PTR [ECX+EBP*8-12131416H], -18
+      SUB     DWORD PTR [EBP-4E4F5052H], -78
+      SUB     DWORD PTR [ESI-4D4E4F51H], -77
+      XOR     DWORD PTR [EAX-4B4C4D4FH], -75
+      XOR     DWORD PTR [ECX-4A4B4C4EH], -74
+      XOR     DWORD PTR [EBP+ESI*4-4647484AH], -70
+      XOR     DWORD PTR [ESI+ESI*4-45464749H], -69
+      XOR     DWORD PTR [EAX+EDI*4-43444547H], -67
+      XOR     DWORD PTR [ECX+EDI*4-42434446H], -66
+      XOR     DWORD PTR [EAX+EAX*8-3B3C3D3FH], -59
+      XOR     DWORD PTR [ECX+EAX*8-3A3B3C3EH], -58
+      XOR     DWORD PTR [ESP+EAX*8-3738393BH], -55
+      XOR     DWORD PTR [ESI+EAX*8-35363739H], -53
+      XOR     DWORD PTR [EAX+ECX*8-33343537H], -51
+      XOR     DWORD PTR [ECX+ECX*8-32333436H], -50
+      XOR     DWORD PTR [ESP+ECX*8-2F303133H], -47
+      XOR     DWORD PTR [ESI+ECX*8-2D2E2F31H], -45
+      XOR     DWORD PTR [EAX-1B1C1D1FH], -27
+      XOR     DWORD PTR [ECX-1A1B1C1EH], -26
+      XOR     DWORD PTR [ESP-1718191BH], -23
+      XOR     DWORD PTR [ESI-15161719H], -21
+      XOR     DWORD PTR [EAX+EBP*8-13141517H], -19
+      XOR     DWORD PTR [ECX+EBP*8-12131416H], -18
+      XOR     DWORD PTR [ESP+EBP*8-0F101113H], -15
+      XOR     DWORD PTR [ESI+EBP*8-0D0E0F11H], -13
+      XOR     DWORD PTR [EBP-4647484AH], -70
+      XOR     DWORD PTR [ESI-45464749H], -69
+      CMP     DWORD PTR [EAX-43444547H], -67
+      CMP     DWORD PTR [ECX-42434446H], -66
+      CMP     DWORD PTR [EBP+EDI*4-3E3F4042H], -62
+      CMP     DWORD PTR [ESI+EDI*4-3D3E3F41H], -61
+      CMP     DWORD PTR [EAX+EAX*8-3B3C3D3FH], -59
+      CMP     DWORD PTR [ECX+EAX*8-3A3B3C3EH], -58
+      CMP     DWORD PTR [ESP+EAX*8-3738393BH], -55
+      CMP     DWORD PTR [ESI+EAX*8-35363739H], -53
+      CMP     DWORD PTR [EAX+ECX*8-33343537H], -51
+      CMP     DWORD PTR [ECX+ECX*8-32333436H], -50
+      CMP     DWORD PTR [ESP+ECX*8-2F303133H], -47
+      CMP     DWORD PTR [ESI+ECX*8-2D2E2F31H], -45
+      CMP     DWORD PTR [EAX-1B1C1D1FH], -27
+      CMP     DWORD PTR [ECX-1A1B1C1EH], -26
+      CMP     DWORD PTR [ESP-1718191BH], -23
+      CMP     DWORD PTR [ESI-15161719H], -21
+      CMP     DWORD PTR [EAX+EBP*8-13141517H], -19
+      CMP     DWORD PTR [ECX+EBP*8-12131416H], -18
+      CMP     DWORD PTR [ESP+EBP*8-0F101113H], -15
+      CMP     DWORD PTR [ESI+EBP*8-0D0E0F11H], -13
+      CMP     DWORD PTR [EAX+ESI*8-0B0C0D0FH], -11
+      CMP     DWORD PTR [ECX+ESI*8-0A0B0C0EH], -10
+      CMP     DWORD PTR [EBP-3E3F4042H], -62
+      CMP     DWORD PTR [ESI-3D3E3F41H], -61
       ADD     EAX, -63
+      ADD     EAX, 0
       ADD     ECX, -62
+      ADD     ECX, 0
       ADD     ESP, -59
+      ADD     ESP, 0
       ADD     ESI, -57
+      ADD     ESI, 0
       OR      EAX, -55
+      OR      EAX, 0
       OR      ECX, -54
+      OR      ECX, 0
       OR      ESP, -51
+      OR      ESP, 0
       OR      ESI, -49
+      OR      ESI, 0
       ADC     EAX, -47
+      ADC     EAX, 0
       ADC     ECX, -46
+      ADC     ECX, 0
       ADC     ESP, -43
+      ADC     ESP, 0
       ADC     ESI, -41
+      ADC     ESI, 0
       SBB     EAX, -39
+      SBB     EAX, 0
       SBB     ECX, -38
+      SBB     ECX, 0
       SBB     ESP, -35
+      SBB     ESP, 0
       SBB     ESI, -33
+      SBB     ESI, 0
       AND     EAX, -31
+      AND     EAX, 0
       AND     ECX, -30
+      AND     ECX, 0
       AND     ESP, -27
+      AND     ESP, 0
       AND     ESI, -25
+      AND     ESI, 0
       SUB     EAX, -23
+      SUB     EAX, 0
       SUB     ECX, -22
+      SUB     ECX, 0
       SUB     ESP, -19
+      SUB     ESP, 0
       SUB     ESI, -17
+      SUB     ESI, 0
       XOR     EAX, -15
+      XOR     EAX, 0
       XOR     ECX, -14
+      XOR     ECX, 0
       XOR     ESP, -11
+      XOR     ESP, 0
       XOR     ESI, -9
+      XOR     ESI, 0
       CMP     EAX, -7
+      CMP     EAX, 0
       CMP     ECX, -6
+      CMP     ECX, 0
       CMP     ESP, -3
+      CMP     ESP, 0
       CMP     ESI, -1
+      CMP     ESI, 0
       ADD     DWORD PTR [EAX], 1
+      ADD     DWORD PTR [EAX], -128
       ADD     DWORD PTR [ECX], 2
+      ADD     DWORD PTR [ECX], -128
       ADD     DWORD PTR [ESI+EAX], 7
+      ADD     DWORD PTR [ESI+EAX], -128
       ADD     DWORD PTR [EAX+ECX], 9
+      ADD     DWORD PTR [EAX+ECX], -128
       ADD     DWORD PTR [ECX+ECX], 10
+      ADD     DWORD PTR [ECX+ECX], -128
       ADD     DWORD PTR [ESP+ECX], 13
+      ADD     DWORD PTR [ESP+ECX], -128
       ADD     DWORD PTR [ESI+ECX], 15
+      ADD     DWORD PTR [ESI+ECX], -128
       ADD     DWORD PTR [EAX], 33
+      ADD     DWORD PTR [EAX], -128
       ADD     DWORD PTR [ESP], 37
+      ADD     DWORD PTR [ESP], -128
       ADD     DWORD PTR [29282726H], 42
+      ADD     DWORD PTR [29282726H], -128
       ADD     DWORD PTR [EAX+EBP], 41
+      ADD     DWORD PTR [EAX+EBP], -128
       ADD     DWORD PTR [ECX+EBP], 42
+      ADD     DWORD PTR [ECX+EBP], -128
       ADD     DWORD PTR [ESP+EBP], 45
+      ADD     DWORD PTR [ESP+EBP], -128
       ADD     DWORD PTR [ESI+EBP], 47
+      ADD     DWORD PTR [ESI+EBP], -128
       ADD     DWORD PTR [EAX+ESI], 49
+      ADD     DWORD PTR [EAX+ESI], -128
       ADD     DWORD PTR [ESI+ESI], 55
+      ADD     DWORD PTR [ESI+ESI], -128
       ADD     DWORD PTR [EAX+EAX*2], 65
+      ADD     DWORD PTR [EAX+EAX*2], -128
       ADD     DWORD PTR [ECX+EAX*2], 66
+      ADD     DWORD PTR [ECX+EAX*2], -128
       ADD     DWORD PTR [ESP+EAX*2], 69
+      ADD     DWORD PTR [ESP+EAX*2], -128
       ADD     DWORD PTR [EAX*2+49484746H], 74
+      ADD     DWORD PTR [EAX*2+49484746H], -128
       ADD     DWORD PTR [ESI+EAX*2], 71
+      ADD     DWORD PTR [ESI+EAX*2], -128
       ADD     DWORD PTR [EAX+ECX*2], 73
+      ADD     DWORD PTR [EAX+ECX*2], -128
       ADD     DWORD PTR [ECX+ECX*2], 74
+      ADD     DWORD PTR [ECX+ECX*2], -128
       ADD     DWORD PTR [ESP+ECX*2], 77
+      ADD     DWORD PTR [ESP+ECX*2], -128
       ADD     DWORD PTR [ECX*2+51504F4EH], 82
+      ADD     DWORD PTR [ECX*2+51504F4EH], -128
       ADD     DWORD PTR [ESI+ECX*2], 79
+      ADD     DWORD PTR [ESI+ECX*2], -128
       ADD     DWORD PTR [EAX+EBP*2], 105
+      ADD     DWORD PTR [EAX+EBP*2], -128
       ADD     DWORD PTR [ECX+EBP*2], 106
+      ADD     DWORD PTR [ECX+EBP*2], -128
       ADD     DWORD PTR [ESP+EBP*2], 109
+      ADD     DWORD PTR [ESP+EBP*2], -128
       ADD     DWORD PTR [EBP*2+71706F6EH], 114
+      ADD     DWORD PTR [EBP*2+71706F6EH], -128
       ADD     DWORD PTR [ESI+EBP*2], 111
+      ADD     DWORD PTR [ESI+EBP*2], -128
       ADD     DWORD PTR [EAX+ESI*2], 113
+      ADD     DWORD PTR [EAX+ESI*2], -128
       ADD     DWORD PTR [ECX+ESI*2], 114
+      ADD     DWORD PTR [ECX+ESI*2], -128
       ADD     DWORD PTR [ESP+ESI*2], 117
+      ADD     DWORD PTR [ESP+ESI*2], -128
       ADD     DWORD PTR [ESI*2+79787776H], 122
+      ADD     DWORD PTR [ESI*2+79787776H], -128
       ADD     DWORD PTR [ESI+ESI*2], 119
+      ADD     DWORD PTR [ESI+ESI*2], -128
       ADD     DWORD PTR [EAX+EAX], 1
+      ADD     DWORD PTR [EAX+EAX], -128
       ADD     DWORD PTR [ECX+EAX], 2
+      ADD     DWORD PTR [ECX+EAX], -128
       ADD     DWORD PTR [ESP+EAX], 5
+      ADD     DWORD PTR [ESP+EAX], -128
       ADD     DWORD PTR [09080706H], 10
+      ADD     DWORD PTR [09080706H], -128
       ADD     DWORD PTR [ESI], 7
+      ADD     DWORD PTR [ESI], -128
       OR      DWORD PTR [EAX], 9
+      OR      DWORD PTR [EAX], -128
       OR      DWORD PTR [ECX], 10
+      OR      DWORD PTR [ECX], -128
       OR      DWORD PTR [ESI+ECX], 15
+      OR      DWORD PTR [ESI+ECX], -128
       OR      DWORD PTR [EAX+EDX], 17
+      OR      DWORD PTR [EAX+EDX], -128
       OR      DWORD PTR [ECX+EDX], 18
+      OR      DWORD PTR [ECX+EDX], -128
       OR      DWORD PTR [ESP+EDX], 21
+      OR      DWORD PTR [ESP+EDX], -128
       OR      DWORD PTR [EAX], 33
+      OR      DWORD PTR [EAX], -128
       OR      DWORD PTR [ESP], 37
+      OR      DWORD PTR [ESP], -128
       OR      DWORD PTR [29282726H], 42
+      OR      DWORD PTR [29282726H], -128
       OR      DWORD PTR [EAX+EBP], 41
+      OR      DWORD PTR [EAX+EBP], -128
       OR      DWORD PTR [ECX+EBP], 42
+      OR      DWORD PTR [ECX+EBP], -128
       OR      DWORD PTR [ESP+EBP], 45
+      OR      DWORD PTR [ESP+EBP], -128
       OR      DWORD PTR [ESI+EBP], 47
+      OR      DWORD PTR [ESI+EBP], -128
       OR      DWORD PTR [EAX+ESI], 49
+      OR      DWORD PTR [EAX+ESI], -128
       OR      DWORD PTR [ESI+ESI], 55
+      OR      DWORD PTR [ESI+ESI], -128
       OR      DWORD PTR [EAX+EAX*2], 65
+      OR      DWORD PTR [EAX+EAX*2], -128
       OR      DWORD PTR [ECX+EAX*2], 66
+      OR      DWORD PTR [ECX+EAX*2], -128
       OR      DWORD PTR [ESP+EAX*2], 69
+      OR      DWORD PTR [ESP+EAX*2], -128
       OR      DWORD PTR [EAX*2+49484746H], 74
+      OR      DWORD PTR [EAX*2+49484746H], -128
       OR      DWORD PTR [ESI+EAX*2], 71
+      OR      DWORD PTR [ESI+EAX*2], -128
       OR      DWORD PTR [EAX+ECX*2], 73
+      OR      DWORD PTR [EAX+ECX*2], -128
       OR      DWORD PTR [ECX+ECX*2], 74
+      OR      DWORD PTR [ECX+ECX*2], -128
       OR      DWORD PTR [ESP+ECX*2], 77
+      OR      DWORD PTR [ESP+ECX*2], -128
       OR      DWORD PTR [ECX*2+51504F4EH], 82
+      OR      DWORD PTR [ECX*2+51504F4EH], -128
       OR      DWORD PTR [ESI+ECX*2], 79
+      OR      DWORD PTR [ESI+ECX*2], -128
       OR      DWORD PTR [EAX+EBP*2], 105
+      OR      DWORD PTR [EAX+EBP*2], -128
       OR      DWORD PTR [ECX+EBP*2], 106
+      OR      DWORD PTR [ECX+EBP*2], -128
       OR      DWORD PTR [ESP+EBP*2], 109
+      OR      DWORD PTR [ESP+EBP*2], -128
       OR      DWORD PTR [EBP*2+71706F6EH], 114
+      OR      DWORD PTR [EBP*2+71706F6EH], -128
       OR      DWORD PTR [ESI+EBP*2], 111
+      OR      DWORD PTR [ESI+EBP*2], -128
       OR      DWORD PTR [EAX+ESI*2], 113
+      OR      DWORD PTR [EAX+ESI*2], -128
       OR      DWORD PTR [ECX+ESI*2], 114
+      OR      DWORD PTR [ECX+ESI*2], -128
       OR      DWORD PTR [ESP+ESI*2], 117
+      OR      DWORD PTR [ESP+ESI*2], -128
       OR      DWORD PTR [ESI*2+79787776H], 122
+      OR      DWORD PTR [ESI*2+79787776H], -128
       OR      DWORD PTR [ESI+ESI*2], 119
+      OR      DWORD PTR [ESI+ESI*2], -128
       OR      DWORD PTR [EAX+EAX], 1
+      OR      DWORD PTR [EAX+EAX], -128
       OR      DWORD PTR [ECX+EAX], 2
+      OR      DWORD PTR [ECX+EAX], -128
       OR      DWORD PTR [ESP+EAX], 5
+      OR      DWORD PTR [ESP+EAX], -128
       OR      DWORD PTR [ESI+EAX], 7
+      OR      DWORD PTR [ESI+EAX], -128
       OR      DWORD PTR [11100F0EH], 18
+      OR      DWORD PTR [11100F0EH], -128
       OR      DWORD PTR [ESI], 15
+      OR      DWORD PTR [ESI], -128
       ADC     DWORD PTR [EAX], 17
+      ADC     DWORD PTR [EAX], -128
       ADC     DWORD PTR [ECX], 18
+      ADC     DWORD PTR [ECX], -128
       ADC     DWORD PTR [ESI+EDX], 23
+      ADC     DWORD PTR [ESI+EDX], -128
       ADC     DWORD PTR [EAX+EBX], 25
+      ADC     DWORD PTR [EAX+EBX], -128
       ADC     DWORD PTR [ECX+EBX], 26
+      ADC     DWORD PTR [ECX+EBX], -128
       ADC     DWORD PTR [ESP+EBX], 29
+      ADC     DWORD PTR [ESP+EBX], -128
       ADC     DWORD PTR [EAX], 33
+      ADC     DWORD PTR [EAX], -128
       ADC     DWORD PTR [ESP], 37
+      ADC     DWORD PTR [ESP], -128
       ADC     DWORD PTR [29282726H], 42
+      ADC     DWORD PTR [29282726H], -128
       ADC     DWORD PTR [EAX+EBP], 41
+      ADC     DWORD PTR [EAX+EBP], -128
       ADC     DWORD PTR [ECX+EBP], 42
+      ADC     DWORD PTR [ECX+EBP], -128
       ADC     DWORD PTR [ESP+EBP], 45
+      ADC     DWORD PTR [ESP+EBP], -128
       ADC     DWORD PTR [ESI+EBP], 47
+      ADC     DWORD PTR [ESI+EBP], -128
       ADC     DWORD PTR [EAX+ESI], 49
+      ADC     DWORD PTR [EAX+ESI], -128
       ADC     DWORD PTR [ESI+ESI], 55
+      ADC     DWORD PTR [ESI+ESI], -128
       ADC     DWORD PTR [EAX+EAX*2], 65
+      ADC     DWORD PTR [EAX+EAX*2], -128
       ADC     DWORD PTR [ECX+EAX*2], 66
+      ADC     DWORD PTR [ECX+EAX*2], -128
       ADC     DWORD PTR [ESP+EAX*2], 69
+      ADC     DWORD PTR [ESP+EAX*2], -128
       ADC     DWORD PTR [EAX*2+49484746H], 74
+      ADC     DWORD PTR [EAX*2+49484746H], -128
       ADC     DWORD PTR [ESI+EAX*2], 71
+      ADC     DWORD PTR [ESI+EAX*2], -128
       ADC     DWORD PTR [EAX+ECX*2], 73
+      ADC     DWORD PTR [EAX+ECX*2], -128
       ADC     DWORD PTR [ECX+ECX*2], 74
+      ADC     DWORD PTR [ECX+ECX*2], -128
       ADC     DWORD PTR [ESP+ECX*2], 77
+      ADC     DWORD PTR [ESP+ECX*2], -128
       ADC     DWORD PTR [ECX*2+51504F4EH], 82
+      ADC     DWORD PTR [ECX*2+51504F4EH], -128
       ADC     DWORD PTR [ESI+ECX*2], 79
+      ADC     DWORD PTR [ESI+ECX*2], -128
       ADC     DWORD PTR [EAX+EBP*2], 105
+      ADC     DWORD PTR [EAX+EBP*2], -128
       ADC     DWORD PTR [ECX+EBP*2], 106
+      ADC     DWORD PTR [ECX+EBP*2], -128
       ADC     DWORD PTR [ESP+EBP*2], 109
+      ADC     DWORD PTR [ESP+EBP*2], -128
       ADC     DWORD PTR [EBP*2+71706F6EH], 114
+      ADC     DWORD PTR [EBP*2+71706F6EH], -128
       ADC     DWORD PTR [ESI+EBP*2], 111
+      ADC     DWORD PTR [ESI+EBP*2], -128
       ADC     DWORD PTR [EAX+ESI*2], 113
+      ADC     DWORD PTR [EAX+ESI*2], -128
       ADC     DWORD PTR [ECX+ESI*2], 114
+      ADC     DWORD PTR [ECX+ESI*2], -128
       ADC     DWORD PTR [ESP+ESI*2], 117
+      ADC     DWORD PTR [ESP+ESI*2], -128
       ADC     DWORD PTR [ESI*2+79787776H], 122
+      ADC     DWORD PTR [ESI*2+79787776H], -128
       ADC     DWORD PTR [ESI+ESI*2], 119
+      ADC     DWORD PTR [ESI+ESI*2], -128
       ADC     DWORD PTR [EAX+EAX], 1
+      ADC     DWORD PTR [EAX+EAX], -128
       ADC     DWORD PTR [ECX+EAX], 2
+      ADC     DWORD PTR [ECX+EAX], -128
       ADC     DWORD PTR [ESP+EAX], 5
+      ADC     DWORD PTR [ESP+EAX], -128
       ADC     DWORD PTR [ESI+EAX], 7
+      ADC     DWORD PTR [ESI+EAX], -128
       ADC     DWORD PTR [19181716H], 26
+      ADC     DWORD PTR [19181716H], -128
       ADC     DWORD PTR [ESI], 23
+      ADC     DWORD PTR [ESI], -128
       SBB     DWORD PTR [EAX], 25
+      SBB     DWORD PTR [EAX], -128
       SBB     DWORD PTR [ECX], 26
+      SBB     DWORD PTR [ECX], -128
       SBB     DWORD PTR [ESI+EBX], 31
+      SBB     DWORD PTR [ESI+EBX], -128
       SBB     DWORD PTR [EAX], 33
+      SBB     DWORD PTR [EAX], -128
       SBB     DWORD PTR [ESP], 37
+      SBB     DWORD PTR [ESP], -128
       SBB     DWORD PTR [29282726H], 42
+      SBB     DWORD PTR [29282726H], -128
       SBB     DWORD PTR [EAX+EBP], 41
+      SBB     DWORD PTR [EAX+EBP], -128
       SBB     DWORD PTR [ECX+EBP], 42
+      SBB     DWORD PTR [ECX+EBP], -128
       SBB     DWORD PTR [ESP+EBP], 45
+      SBB     DWORD PTR [ESP+EBP], -128
       SBB     DWORD PTR [ESI+EBP], 47
+      SBB     DWORD PTR [ESI+EBP], -128
       SBB     DWORD PTR [EAX+ESI], 49
+      SBB     DWORD PTR [EAX+ESI], -128
       SBB     DWORD PTR [ESI+ESI], 55
+      SBB     DWORD PTR [ESI+ESI], -128
       SBB     DWORD PTR [EAX+EAX*2], 65
+      SBB     DWORD PTR [EAX+EAX*2], -128
       SBB     DWORD PTR [ECX+EAX*2], 66
+      SBB     DWORD PTR [ECX+EAX*2], -128
       SBB     DWORD PTR [ESP+EAX*2], 69
+      SBB     DWORD PTR [ESP+EAX*2], -128
       SBB     DWORD PTR [EAX*2+49484746H], 74
+      SBB     DWORD PTR [EAX*2+49484746H], -128
       SBB     DWORD PTR [ESI+EAX*2], 71
+      SBB     DWORD PTR [ESI+EAX*2], -128
       SBB     DWORD PTR [EAX+ECX*2], 73
+      SBB     DWORD PTR [EAX+ECX*2], -128
       SBB     DWORD PTR [ECX+ECX*2], 74
+      SBB     DWORD PTR [ECX+ECX*2], -128
       SBB     DWORD PTR [ESP+ECX*2], 77
+      SBB     DWORD PTR [ESP+ECX*2], -128
       SBB     DWORD PTR [ECX*2+51504F4EH], 82
+      SBB     DWORD PTR [ECX*2+51504F4EH], -128
       SBB     DWORD PTR [ESI+ECX*2], 79
+      SBB     DWORD PTR [ESI+ECX*2], -128
       SBB     DWORD PTR [EAX+EBP*2], 105
+      SBB     DWORD PTR [EAX+EBP*2], -128
       SBB     DWORD PTR [ECX+EBP*2], 106
+      SBB     DWORD PTR [ECX+EBP*2], -128
       SBB     DWORD PTR [ESP+EBP*2], 109
+      SBB     DWORD PTR [ESP+EBP*2], -128
       SBB     DWORD PTR [EBP*2+71706F6EH], 114
+      SBB     DWORD PTR [EBP*2+71706F6EH], -128
       SBB     DWORD PTR [ESI+EBP*2], 111
+      SBB     DWORD PTR [ESI+EBP*2], -128
       SBB     DWORD PTR [EAX+ESI*2], 113
+      SBB     DWORD PTR [EAX+ESI*2], -128
       SBB     DWORD PTR [ECX+ESI*2], 114
+      SBB     DWORD PTR [ECX+ESI*2], -128
       SBB     DWORD PTR [ESP+ESI*2], 117
+      SBB     DWORD PTR [ESP+ESI*2], -128
       SBB     DWORD PTR [ESI*2+79787776H], 122
+      SBB     DWORD PTR [ESI*2+79787776H], -128
       SBB     DWORD PTR [ESI+ESI*2], 119
+      SBB     DWORD PTR [ESI+ESI*2], -128
       SBB     DWORD PTR [EAX+EAX], 1
+      SBB     DWORD PTR [EAX+EAX], -128
       SBB     DWORD PTR [ECX+EAX], 2
+      SBB     DWORD PTR [ECX+EAX], -128
       SBB     DWORD PTR [ESP+EAX], 5
+      SBB     DWORD PTR [ESP+EAX], -128
       SBB     DWORD PTR [ESI+EAX], 7
+      SBB     DWORD PTR [ESI+EAX], -128
       SBB     DWORD PTR [EAX+ECX], 9
+      SBB     DWORD PTR [EAX+ECX], -128
       SBB     DWORD PTR [ECX+ECX], 10
+      SBB     DWORD PTR [ECX+ECX], -128
       SBB     DWORD PTR [ESP+ECX], 13
+      SBB     DWORD PTR [ESP+ECX], -128
       SBB     DWORD PTR [21201F1EH], 34
+      SBB     DWORD PTR [21201F1EH], -128
       SBB     DWORD PTR [ESI], 31
+      SBB     DWORD PTR [ESI], -128
       AND     DWORD PTR [EAX], 33
+      AND     DWORD PTR [EAX], -128
       AND     DWORD PTR [ECX], 34
+      AND     DWORD PTR [ECX], -128
       AND     DWORD PTR [29282726H], 42
+      AND     DWORD PTR [29282726H], -128
       AND     DWORD PTR [EAX+EBP], 41
+      AND     DWORD PTR [EAX+EBP], -128
       AND     DWORD PTR [ECX+EBP], 42
+      AND     DWORD PTR [ECX+EBP], -128
       AND     DWORD PTR [ESP+EBP], 45
+      AND     DWORD PTR [ESP+EBP], -128
       AND     DWORD PTR [ESI+EBP], 47
+      AND     DWORD PTR [ESI+EBP], -128
       AND     DWORD PTR [EAX+ESI], 49
+      AND     DWORD PTR [EAX+ESI], -128
       AND     DWORD PTR [ESI+ESI], 55
+      AND     DWORD PTR [ESI+ESI], -128
       AND     DWORD PTR [EAX+EAX*2], 65
+      AND     DWORD PTR [EAX+EAX*2], -128
       AND     DWORD PTR [ECX+EAX*2], 66
+      AND     DWORD PTR [ECX+EAX*2], -128
       AND     DWORD PTR [ESP+EAX*2], 69
+      AND     DWORD PTR [ESP+EAX*2], -128
       AND     DWORD PTR [EAX*2+49484746H], 74
+      AND     DWORD PTR [EAX*2+49484746H], -128
       AND     DWORD PTR [ESI+EAX*2], 71
+      AND     DWORD PTR [ESI+EAX*2], -128
       AND     DWORD PTR [EAX+ECX*2], 73
+      AND     DWORD PTR [EAX+ECX*2], -128
       AND     DWORD PTR [ECX+ECX*2], 74
+      AND     DWORD PTR [ECX+ECX*2], -128
       AND     DWORD PTR [ESP+ECX*2], 77
+      AND     DWORD PTR [ESP+ECX*2], -128
       AND     DWORD PTR [ECX*2+51504F4EH], 82
+      AND     DWORD PTR [ECX*2+51504F4EH], -128
       AND     DWORD PTR [ESI+ECX*2], 79
+      AND     DWORD PTR [ESI+ECX*2], -128
       AND     DWORD PTR [EAX], 97
+      AND     DWORD PTR [EAX], -128
       AND     DWORD PTR [ESP], 101
+      AND     DWORD PTR [ESP], -128
       AND     DWORD PTR [EAX+EBP*2], 105
+      AND     DWORD PTR [EAX+EBP*2], -128
       AND     DWORD PTR [ECX+EBP*2], 106
+      AND     DWORD PTR [ECX+EBP*2], -128
       AND     DWORD PTR [ESP+EBP*2], 109
+      AND     DWORD PTR [ESP+EBP*2], -128
       AND     DWORD PTR [EBP*2+71706F6EH], 114
+      AND     DWORD PTR [EBP*2+71706F6EH], -128
       AND     DWORD PTR [ESI+EBP*2], 111
+      AND     DWORD PTR [ESI+EBP*2], -128
       AND     DWORD PTR [EAX+ESI*2], 113
+      AND     DWORD PTR [EAX+ESI*2], -128
       AND     DWORD PTR [ECX+ESI*2], 114
+      AND     DWORD PTR [ECX+ESI*2], -128
       AND     DWORD PTR [ESP+ESI*2], 117
+      AND     DWORD PTR [ESP+ESI*2], -128
       AND     DWORD PTR [ESI*2+79787776H], 122
+      AND     DWORD PTR [ESI*2+79787776H], -128
       AND     DWORD PTR [ESI+ESI*2], 119
+      AND     DWORD PTR [ESI+ESI*2], -128
       AND     DWORD PTR [EAX+EAX], 1
+      AND     DWORD PTR [EAX+EAX], -128
       AND     DWORD PTR [ECX+EAX], 2
+      AND     DWORD PTR [ECX+EAX], -128
       AND     DWORD PTR [ESP+EAX], 5
+      AND     DWORD PTR [ESP+EAX], -128
       AND     DWORD PTR [ESI+EAX], 7
+      AND     DWORD PTR [ESI+EAX], -128
       AND     DWORD PTR [EAX+ECX], 9
+      AND     DWORD PTR [EAX+ECX], -128
       AND     DWORD PTR [ECX+ECX], 10
+      AND     DWORD PTR [ECX+ECX], -128
       AND     DWORD PTR [ESP+ECX], 13
+      AND     DWORD PTR [ESP+ECX], -128
       AND     DWORD PTR [ESI+ECX], 15
+      AND     DWORD PTR [ESI+ECX], -128
       AND     DWORD PTR [29282726H], 42
+      AND     DWORD PTR [29282726H], -128
       AND     DWORD PTR [ESI], 39
+      AND     DWORD PTR [ESI], -128
       SUB     DWORD PTR [EAX], 41
+      SUB     DWORD PTR [EAX], -128
       SUB     DWORD PTR [ECX], 42
+      SUB     DWORD PTR [ECX], -128
       SUB     DWORD PTR [ESI+EBP], 47
+      SUB     DWORD PTR [ESI+EBP], -128
       SUB     DWORD PTR [EAX+ESI], 49
+      SUB     DWORD PTR [EAX+ESI], -128
       SUB     DWORD PTR [ESI+ESI], 55
+      SUB     DWORD PTR [ESI+ESI], -128
       SUB     DWORD PTR [EAX+EAX*2], 65
+      SUB     DWORD PTR [EAX+EAX*2], -128
       SUB     DWORD PTR [ECX+EAX*2], 66
+      SUB     DWORD PTR [ECX+EAX*2], -128
       SUB     DWORD PTR [ESP+EAX*2], 69
+      SUB     DWORD PTR [ESP+EAX*2], -128
       SUB     DWORD PTR [EAX*2+49484746H], 74
+      SUB     DWORD PTR [EAX*2+49484746H], -128
       SUB     DWORD PTR [ESI+EAX*2], 71
+      SUB     DWORD PTR [ESI+EAX*2], -128
       SUB     DWORD PTR [EAX+ECX*2], 73
+      SUB     DWORD PTR [EAX+ECX*2], -128
       SUB     DWORD PTR [ECX+ECX*2], 74
+      SUB     DWORD PTR [ECX+ECX*2], -128
       SUB     DWORD PTR [ESP+ECX*2], 77
+      SUB     DWORD PTR [ESP+ECX*2], -128
       SUB     DWORD PTR [ECX*2+51504F4EH], 82
+      SUB     DWORD PTR [ECX*2+51504F4EH], -128
       SUB     DWORD PTR [ESI+ECX*2], 79
+      SUB     DWORD PTR [ESI+ECX*2], -128
       SUB     DWORD PTR [EAX], 97
+      SUB     DWORD PTR [EAX], -128
       SUB     DWORD PTR [ESP], 101
+      SUB     DWORD PTR [ESP], -128
       SUB     DWORD PTR [69686766H], 106
+      SUB     DWORD PTR [69686766H], -128
       SUB     DWORD PTR [EAX+EBP*2], 105
+      SUB     DWORD PTR [EAX+EBP*2], -128
       SUB     DWORD PTR [ECX+EBP*2], 106
+      SUB     DWORD PTR [ECX+EBP*2], -128
       SUB     DWORD PTR [ESP+EBP*2], 109
+      SUB     DWORD PTR [ESP+EBP*2], -128
       SUB     DWORD PTR [EBP*2+71706F6EH], 114
+      SUB     DWORD PTR [EBP*2+71706F6EH], -128
       SUB     DWORD PTR [ESI+EBP*2], 111
+      SUB     DWORD PTR [ESI+EBP*2], -128
       SUB     DWORD PTR [EAX+ESI*2], 113
+      SUB     DWORD PTR [EAX+ESI*2], -128
       SUB     DWORD PTR [ECX+ESI*2], 114
+      SUB     DWORD PTR [ECX+ESI*2], -128
       SUB     DWORD PTR [ESP+ESI*2], 117
+      SUB     DWORD PTR [ESP+ESI*2], -128
       SUB     DWORD PTR [ESI*2+79787776H], 122
+      SUB     DWORD PTR [ESI*2+79787776H], -128
       SUB     DWORD PTR [ESI+ESI*2], 119
+      SUB     DWORD PTR [ESI+ESI*2], -128
       SUB     DWORD PTR [EAX+EAX], 1
+      SUB     DWORD PTR [EAX+EAX], -128
       SUB     DWORD PTR [ECX+EAX], 2
+      SUB     DWORD PTR [ECX+EAX], -128
       SUB     DWORD PTR [ESP+EAX], 5
+      SUB     DWORD PTR [ESP+EAX], -128
       SUB     DWORD PTR [ESI+EAX], 7
+      SUB     DWORD PTR [ESI+EAX], -128
       SUB     DWORD PTR [EAX+ECX], 9
+      SUB     DWORD PTR [EAX+ECX], -128
       SUB     DWORD PTR [ECX+ECX], 10
+      SUB     DWORD PTR [ECX+ECX], -128
       SUB     DWORD PTR [ESP+ECX], 13
+      SUB     DWORD PTR [ESP+ECX], -128
       SUB     DWORD PTR [ESI+ECX], 15
+      SUB     DWORD PTR [ESI+ECX], -128
       SUB     DWORD PTR [EAX+EBP], 41
+      SUB     DWORD PTR [EAX+EBP], -128
       SUB     DWORD PTR [ECX+EBP], 42
+      SUB     DWORD PTR [ECX+EBP], -128
       SUB     DWORD PTR [ESP+EBP], 45
+      SUB     DWORD PTR [ESP+EBP], -128
       SUB     DWORD PTR [31302F2EH], 50
+      SUB     DWORD PTR [31302F2EH], -128
       SUB     DWORD PTR [ESI], 47
+      SUB     DWORD PTR [ESI], -128
       XOR     DWORD PTR [EAX], 49
+      XOR     DWORD PTR [EAX], -128
       XOR     DWORD PTR [ECX], 50
+      XOR     DWORD PTR [ECX], -128
       XOR     DWORD PTR [ESI+ESI], 55
+      XOR     DWORD PTR [ESI+ESI], -128
       XOR     DWORD PTR [EAX+EDI], 57
+      XOR     DWORD PTR [EAX+EDI], -128
       XOR     DWORD PTR [EAX+EAX*2], 65
+      XOR     DWORD PTR [EAX+EAX*2], -128
       XOR     DWORD PTR [ECX+EAX*2], 66
+      XOR     DWORD PTR [ECX+EAX*2], -128
       XOR     DWORD PTR [ESP+EAX*2], 69
+      XOR     DWORD PTR [ESP+EAX*2], -128
       XOR     DWORD PTR [EAX*2+49484746H], 74
+      XOR     DWORD PTR [EAX*2+49484746H], -128
       XOR     DWORD PTR [ESI+EAX*2], 71
+      XOR     DWORD PTR [ESI+EAX*2], -128
       XOR     DWORD PTR [EAX+ECX*2], 73
+      XOR     DWORD PTR [EAX+ECX*2], -128
       XOR     DWORD PTR [ECX+ECX*2], 74
+      XOR     DWORD PTR [ECX+ECX*2], -128
       XOR     DWORD PTR [ESP+ECX*2], 77
+      XOR     DWORD PTR [ESP+ECX*2], -128
       XOR     DWORD PTR [ECX*2+51504F4EH], 82
+      XOR     DWORD PTR [ECX*2+51504F4EH], -128
       XOR     DWORD PTR [ESI+ECX*2], 79
+      XOR     DWORD PTR [ESI+ECX*2], -128
       XOR     DWORD PTR [EAX], 97
+      XOR     DWORD PTR [EAX], -128
       XOR     DWORD PTR [ESP], 101
+      XOR     DWORD PTR [ESP], -128
       XOR     DWORD PTR [69686766H], 106
+      XOR     DWORD PTR [69686766H], -128
       XOR     DWORD PTR [EAX+EBP*2], 105
+      XOR     DWORD PTR [EAX+EBP*2], -128
       XOR     DWORD PTR [ECX+EBP*2], 106
+      XOR     DWORD PTR [ECX+EBP*2], -128
       XOR     DWORD PTR [ESP+EBP*2], 109
+      XOR     DWORD PTR [ESP+EBP*2], -128
       XOR     DWORD PTR [EBP*2+71706F6EH], 114
+      XOR     DWORD PTR [EBP*2+71706F6EH], -128
       XOR     DWORD PTR [ESI+EBP*2], 111
+      XOR     DWORD PTR [ESI+EBP*2], -128
       XOR     DWORD PTR [EAX+ESI*2], 113
+      XOR     DWORD PTR [EAX+ESI*2], -128
       XOR     DWORD PTR [ECX+ESI*2], 114
+      XOR     DWORD PTR [ECX+ESI*2], -128
       XOR     DWORD PTR [ESP+ESI*2], 117
+      XOR     DWORD PTR [ESP+ESI*2], -128
       XOR     DWORD PTR [ESI*2+79787776H], 122
+      XOR     DWORD PTR [ESI*2+79787776H], -128
       XOR     DWORD PTR [ESI+ESI*2], 119
+      XOR     DWORD PTR [ESI+ESI*2], -128
       XOR     DWORD PTR [EAX+EAX], 1
+      XOR     DWORD PTR [EAX+EAX], -128
       XOR     DWORD PTR [ECX+EAX], 2
+      XOR     DWORD PTR [ECX+EAX], -128
       XOR     DWORD PTR [ESP+EAX], 5
+      XOR     DWORD PTR [ESP+EAX], -128
       XOR     DWORD PTR [ESI+EAX], 7
+      XOR     DWORD PTR [ESI+EAX], -128
       XOR     DWORD PTR [EAX+ECX], 9
+      XOR     DWORD PTR [EAX+ECX], -128
       XOR     DWORD PTR [ECX+ECX], 10
+      XOR     DWORD PTR [ECX+ECX], -128
       XOR     DWORD PTR [ESP+ECX], 13
+      XOR     DWORD PTR [ESP+ECX], -128
       XOR     DWORD PTR [ESI+ECX], 15
+      XOR     DWORD PTR [ESI+ECX], -128
       XOR     DWORD PTR [EAX+EBP], 41
+      XOR     DWORD PTR [EAX+EBP], -128
       XOR     DWORD PTR [ECX+EBP], 42
+      XOR     DWORD PTR [ECX+EBP], -128
       XOR     DWORD PTR [ESP+EBP], 45
+      XOR     DWORD PTR [ESP+EBP], -128
       XOR     DWORD PTR [ESI+EBP], 47
+      XOR     DWORD PTR [ESI+EBP], -128
       XOR     DWORD PTR [39383736H], 58
+      XOR     DWORD PTR [39383736H], -128
       XOR     DWORD PTR [ESI], 55
+      XOR     DWORD PTR [ESI], -128
       CMP     DWORD PTR [EAX], 57
+      CMP     DWORD PTR [EAX], -128
       CMP     DWORD PTR [ECX], 58
+      CMP     DWORD PTR [ECX], -128
       CMP     DWORD PTR [ESI+EDI], 63
+      CMP     DWORD PTR [ESI+EDI], -128
       CMP     DWORD PTR [EAX+EAX*2], 65
+      CMP     DWORD PTR [EAX+EAX*2], -128
       CMP     DWORD PTR [ECX+EAX*2], 66
+      CMP     DWORD PTR [ECX+EAX*2], -128
       CMP     DWORD PTR [ESP+EAX*2], 69
+      CMP     DWORD PTR [ESP+EAX*2], -128
       CMP     DWORD PTR [EAX*2+49484746H], 74
+      CMP     DWORD PTR [EAX*2+49484746H], -128
       CMP     DWORD PTR [ESI+EAX*2], 71
+      CMP     DWORD PTR [ESI+EAX*2], -128
       CMP     DWORD PTR [EAX+ECX*2], 73
+      CMP     DWORD PTR [EAX+ECX*2], -128
       CMP     DWORD PTR [ECX+ECX*2], 74
+      CMP     DWORD PTR [ECX+ECX*2], -128
       CMP     DWORD PTR [ESP+ECX*2], 77
+      CMP     DWORD PTR [ESP+ECX*2], -128
       CMP     DWORD PTR [ECX*2+51504F4EH], 82
+      CMP     DWORD PTR [ECX*2+51504F4EH], -128
       CMP     DWORD PTR [ESI+ECX*2], 79
+      CMP     DWORD PTR [ESI+ECX*2], -128
       CMP     DWORD PTR [EAX], 97
+      CMP     DWORD PTR [EAX], -128
       CMP     DWORD PTR [ESP], 101
+      CMP     DWORD PTR [ESP], -128
       CMP     DWORD PTR [69686766H], 106
+      CMP     DWORD PTR [69686766H], -128
       CMP     DWORD PTR [EAX+EBP*2], 105
+      CMP     DWORD PTR [EAX+EBP*2], -128
       CMP     DWORD PTR [ECX+EBP*2], 106
+      CMP     DWORD PTR [ECX+EBP*2], -128
       CMP     DWORD PTR [ESP+EBP*2], 109
+      CMP     DWORD PTR [ESP+EBP*2], -128
       CMP     DWORD PTR [EBP*2+71706F6EH], 114
+      CMP     DWORD PTR [EBP*2+71706F6EH], -128
       CMP     DWORD PTR [ESI+EBP*2], 111
+      CMP     DWORD PTR [ESI+EBP*2], -128
       CMP     DWORD PTR [EAX+ESI*2], 113
+      CMP     DWORD PTR [EAX+ESI*2], -128
       CMP     DWORD PTR [ECX+ESI*2], 114
+      CMP     DWORD PTR [ECX+ESI*2], -128
       CMP     DWORD PTR [ESP+ESI*2], 117
+      CMP     DWORD PTR [ESP+ESI*2], -128
       CMP     DWORD PTR [ESI*2+79787776H], 122
+      CMP     DWORD PTR [ESI*2+79787776H], -128
       CMP     DWORD PTR [ESI+ESI*2], 119
+      CMP     DWORD PTR [ESI+ESI*2], -128
       CMP     DWORD PTR [EAX+EAX], 1
+      CMP     DWORD PTR [EAX+EAX], -128
       CMP     DWORD PTR [ECX+EAX], 2
+      CMP     DWORD PTR [ECX+EAX], -128
       CMP     DWORD PTR [ESP+EAX], 5
+      CMP     DWORD PTR [ESP+EAX], -128
       CMP     DWORD PTR [ESI+EAX], 7
+      CMP     DWORD PTR [ESI+EAX], -128
       CMP     DWORD PTR [EAX+ECX], 9
+      CMP     DWORD PTR [EAX+ECX], -128
       CMP     DWORD PTR [ECX+ECX], 10
+      CMP     DWORD PTR [ECX+ECX], -128
       CMP     DWORD PTR [ESP+ECX], 13
+      CMP     DWORD PTR [ESP+ECX], -128
       CMP     DWORD PTR [ESI+ECX], 15
+      CMP     DWORD PTR [ESI+ECX], -128
       CMP     DWORD PTR [EAX+EBP], 41
+      CMP     DWORD PTR [EAX+EBP], -128
       CMP     DWORD PTR [ECX+EBP], 42
+      CMP     DWORD PTR [ECX+EBP], -128
       CMP     DWORD PTR [ESP+EBP], 45
+      CMP     DWORD PTR [ESP+EBP], -128
       CMP     DWORD PTR [ESI+EBP], 47
+      CMP     DWORD PTR [ESI+EBP], -128
       CMP     DWORD PTR [EAX+ESI], 49
+      CMP     DWORD PTR [EAX+ESI], -128
       CMP     DWORD PTR [41403F3EH], 66
+      CMP     DWORD PTR [41403F3EH], -128
       CMP     DWORD PTR [ESI], 63
+      CMP     DWORD PTR [ESI], -128
       ADD     DWORD PTR [EAX+65], 66
+      ADD     DWORD PTR [EAX+65], -128
       ADD     DWORD PTR [ECX+66], 67
+      ADD     DWORD PTR [ECX+66], -128
       ADD     DWORD PTR [EBP+EAX*2+70], 71
+      ADD     DWORD PTR [EBP+EAX*2+70], -128
       ADD     DWORD PTR [ESI+EAX*2+71], 72
+      ADD     DWORD PTR [ESI+EAX*2+71], -128
       ADD     DWORD PTR [EAX+ECX*2+73], 74
+      ADD     DWORD PTR [EAX+ECX*2+73], -128
       ADD     DWORD PTR [ECX+ECX*2+74], 75
+      ADD     DWORD PTR [ECX+ECX*2+74], -128
       ADD     DWORD PTR [ESP+ECX*2+77], 78
+      ADD     DWORD PTR [ESP+ECX*2+77], -128
       ADD     DWORD PTR [ESI+ECX*2+79], 80
+      ADD     DWORD PTR [ESI+ECX*2+79], -128
       ADD     DWORD PTR [EAX+97], 98
+      ADD     DWORD PTR [EAX+97], -128
       ADD     DWORD PTR [EAX+EBP*2+105], 106
+      ADD     DWORD PTR [EAX+EBP*2+105], -128
       ADD     DWORD PTR [ECX+EBP*2+106], 107
+      ADD     DWORD PTR [ECX+EBP*2+106], -128
       ADD     DWORD PTR [ESP+EBP*2+109], 110
+      ADD     DWORD PTR [ESP+EBP*2+109], -128
       ADD     DWORD PTR [ESI+EBP*2+111], 112
+      ADD     DWORD PTR [ESI+EBP*2+111], -128
       ADD     DWORD PTR [EAX+ESI*2+113], 114
+      ADD     DWORD PTR [EAX+ESI*2+113], -128
       ADD     DWORD PTR [ECX+ESI*2+114], 115
+      ADD     DWORD PTR [ECX+ESI*2+114], -128
       ADD     DWORD PTR [ESP+ESI*2+117], 118
+      ADD     DWORD PTR [ESP+ESI*2+117], -128
       ADD     DWORD PTR [ESI+ESI*2+119], 120
+      ADD     DWORD PTR [ESI+ESI*2+119], -128
       ADD     DWORD PTR [EAX+EAX*4-127], -126
+      ADD     DWORD PTR [EAX+EAX*4-127], 0
       ADD     DWORD PTR [ECX+EAX*4-126], -125
+      ADD     DWORD PTR [ECX+EAX*4-126], 0
       ADD     DWORD PTR [EAX+EAX+1], 2
+      ADD     DWORD PTR [EAX+EAX+1], -128
       ADD     DWORD PTR [ECX+EAX+2], 3
+      ADD     DWORD PTR [ECX+EAX+2], -128
       ADD     DWORD PTR [ESP+EAX+5], 6
+      ADD     DWORD PTR [ESP+EAX+5], -128
       ADD     DWORD PTR [ESI+EAX+7], 8
+      ADD     DWORD PTR [ESI+EAX+7], -128
       ADD     DWORD PTR [EAX+ECX+9], 10
+      ADD     DWORD PTR [EAX+ECX+9], -128
       ADD     DWORD PTR [ECX+ECX+10], 11
+      ADD     DWORD PTR [ECX+ECX+10], -128
       ADD     DWORD PTR [ESP+ECX+13], 14
+      ADD     DWORD PTR [ESP+ECX+13], -128
       ADD     DWORD PTR [ESI+ECX+15], 16
+      ADD     DWORD PTR [ESI+ECX+15], -128
       ADD     DWORD PTR [EAX+EBP+41], 42
+      ADD     DWORD PTR [EAX+EBP+41], -128
       ADD     DWORD PTR [ECX+EBP+42], 43
+      ADD     DWORD PTR [ECX+EBP+42], -128
       ADD     DWORD PTR [ESP+EBP+45], 46
+      ADD     DWORD PTR [ESP+EBP+45], -128
       ADD     DWORD PTR [ESI+EBP+47], 48
+      ADD     DWORD PTR [ESI+EBP+47], -128
       ADD     DWORD PTR [EAX+ESI+49], 50
+      ADD     DWORD PTR [EAX+ESI+49], -128
       ADD     DWORD PTR [ESI+ESI+55], 56
+      ADD     DWORD PTR [ESI+ESI+55], -128
       ADD     DWORD PTR [EBP+70], 71
+      ADD     DWORD PTR [EBP+70], -128
       ADD     DWORD PTR [ESI+71], 72
+      ADD     DWORD PTR [ESI+71], -128
       OR      DWORD PTR [EAX+73], 74
+      OR      DWORD PTR [EAX+73], -128
       OR      DWORD PTR [ECX+74], 75
+      OR      DWORD PTR [ECX+74], -128
       OR      DWORD PTR [EBP+ECX*2+78], 79
+      OR      DWORD PTR [EBP+ECX*2+78], -128
       OR      DWORD PTR [ESI+ECX*2+79], 80
+      OR      DWORD PTR [ESI+ECX*2+79], -128
       OR      DWORD PTR [EAX+EDX*2+81], 82
+      OR      DWORD PTR [EAX+EDX*2+81], -128
       OR      DWORD PTR [ECX+EDX*2+82], 83
+      OR      DWORD PTR [ECX+EDX*2+82], -128
       OR      DWORD PTR [EAX+97], 98
+      OR      DWORD PTR [EAX+97], -128
       OR      DWORD PTR [EAX+EBP*2+105], 106
+      OR      DWORD PTR [EAX+EBP*2+105], -128
       OR      DWORD PTR [ECX+EBP*2+106], 107
+      OR      DWORD PTR [ECX+EBP*2+106], -128
       OR      DWORD PTR [ESP+EBP*2+109], 110
+      OR      DWORD PTR [ESP+EBP*2+109], -128
       OR      DWORD PTR [ESI+EBP*2+111], 112
+      OR      DWORD PTR [ESI+EBP*2+111], -128
       OR      DWORD PTR [EAX+ESI*2+113], 114
+      OR      DWORD PTR [EAX+ESI*2+113], -128
       OR      DWORD PTR [ECX+ESI*2+114], 115
+      OR      DWORD PTR [ECX+ESI*2+114], -128
       OR      DWORD PTR [ESP+ESI*2+117], 118
+      OR      DWORD PTR [ESP+ESI*2+117], -128
       OR      DWORD PTR [ESI+ESI*2+119], 120
+      OR      DWORD PTR [ESI+ESI*2+119], -128
       OR      DWORD PTR [EAX+EAX*4-127], -126
+      OR      DWORD PTR [EAX+EAX*4-127], 0
       OR      DWORD PTR [ECX+EAX*4-126], -125
+      OR      DWORD PTR [ECX+EAX*4-126], 0
       OR      DWORD PTR [ESP+EAX*4-123], -122
+      OR      DWORD PTR [ESP+EAX*4-123], 0
       OR      DWORD PTR [ESI+EAX*4-121], -120
+      OR      DWORD PTR [ESI+EAX*4-121], 0
       OR      DWORD PTR [EAX+EAX+1], 2
+      OR      DWORD PTR [EAX+EAX+1], -128
       OR      DWORD PTR [ECX+EAX+2], 3
+      OR      DWORD PTR [ECX+EAX+2], -128
       OR      DWORD PTR [ESP+EAX+5], 6
+      OR      DWORD PTR [ESP+EAX+5], -128
       OR      DWORD PTR [ESI+EAX+7], 8
+      OR      DWORD PTR [ESI+EAX+7], -128
       OR      DWORD PTR [EAX+ECX+9], 10
+      OR      DWORD PTR [EAX+ECX+9], -128
       OR      DWORD PTR [ECX+ECX+10], 11
+      OR      DWORD PTR [ECX+ECX+10], -128
       OR      DWORD PTR [ESP+ECX+13], 14
+      OR      DWORD PTR [ESP+ECX+13], -128
       OR      DWORD PTR [ESI+ECX+15], 16
+      OR      DWORD PTR [ESI+ECX+15], -128
       OR      DWORD PTR [EAX+EBP+41], 42
+      OR      DWORD PTR [EAX+EBP+41], -128
       OR      DWORD PTR [ECX+EBP+42], 43
+      OR      DWORD PTR [ECX+EBP+42], -128
       OR      DWORD PTR [ESP+EBP+45], 46
+      OR      DWORD PTR [ESP+EBP+45], -128
       OR      DWORD PTR [ESI+EBP+47], 48
+      OR      DWORD PTR [ESI+EBP+47], -128
       OR      DWORD PTR [EAX+ESI+49], 50
+      OR      DWORD PTR [EAX+ESI+49], -128
       OR      DWORD PTR [ESI+ESI+55], 56
+      OR      DWORD PTR [ESI+ESI+55], -128
       OR      DWORD PTR [EBP+78], 79
+      OR      DWORD PTR [EBP+78], -128
       OR      DWORD PTR [ESI+79], 80
+      OR      DWORD PTR [ESI+79], -128
       ADC     DWORD PTR [EAX+81], 82
+      ADC     DWORD PTR [EAX+81], -128
       ADC     DWORD PTR [ECX+82], 83
+      ADC     DWORD PTR [ECX+82], -128
       ADC     DWORD PTR [EBP+EDX*2+86], 87
+      ADC     DWORD PTR [EBP+EDX*2+86], -128
       ADC     DWORD PTR [ESI+EDX*2+87], 88
+      ADC     DWORD PTR [ESI+EDX*2+87], -128
       ADC     DWORD PTR [EAX+EBX*2+89], 90
+      ADC     DWORD PTR [EAX+EBX*2+89], -128
       ADC     DWORD PTR [ECX+EBX*2+90], 91
+      ADC     DWORD PTR [ECX+EBX*2+90], -128
       ADC     DWORD PTR [EAX+97], 98
+      ADC     DWORD PTR [EAX+97], -128
       ADC     DWORD PTR [EAX+EBP*2+105], 106
+      ADC     DWORD PTR [EAX+EBP*2+105], -128
       ADC     DWORD PTR [ECX+EBP*2+106], 107
+      ADC     DWORD PTR [ECX+EBP*2+106], -128
       ADC     DWORD PTR [ESP+EBP*2+109], 110
+      ADC     DWORD PTR [ESP+EBP*2+109], -128
       ADC     DWORD PTR [ESI+EBP*2+111], 112
+      ADC     DWORD PTR [ESI+EBP*2+111], -128
       ADC     DWORD PTR [EAX+ESI*2+113], 114
+      ADC     DWORD PTR [EAX+ESI*2+113], -128
       ADC     DWORD PTR [ECX+ESI*2+114], 115
+      ADC     DWORD PTR [ECX+ESI*2+114], -128
       ADC     DWORD PTR [ESP+ESI*2+117], 118
+      ADC     DWORD PTR [ESP+ESI*2+117], -128
       ADC     DWORD PTR [ESI+ESI*2+119], 120
+      ADC     DWORD PTR [ESI+ESI*2+119], -128
       ADC     DWORD PTR [EAX+EAX*4-127], -126
+      ADC     DWORD PTR [EAX+EAX*4-127], 0
       ADC     DWORD PTR [ECX+EAX*4-126], -125
+      ADC     DWORD PTR [ECX+EAX*4-126], 0
       ADC     DWORD PTR [ESP+EAX*4-123], -122
+      ADC     DWORD PTR [ESP+EAX*4-123], 0
       ADC     DWORD PTR [ESI+EAX*4-121], -120
+      ADC     DWORD PTR [ESI+EAX*4-121], 0
       ADC     DWORD PTR [EAX+EAX+1], 2
+      ADC     DWORD PTR [EAX+EAX+1], -128
       ADC     DWORD PTR [ECX+EAX+2], 3
+      ADC     DWORD PTR [ECX+EAX+2], -128
       ADC     DWORD PTR [ESP+EAX+5], 6
+      ADC     DWORD PTR [ESP+EAX+5], -128
       ADC     DWORD PTR [ESI+EAX+7], 8
+      ADC     DWORD PTR [ESI+EAX+7], -128
       ADC     DWORD PTR [EAX+ECX+9], 10
+      ADC     DWORD PTR [EAX+ECX+9], -128
       ADC     DWORD PTR [ECX+ECX+10], 11
+      ADC     DWORD PTR [ECX+ECX+10], -128
       ADC     DWORD PTR [ESP+ECX+13], 14
+      ADC     DWORD PTR [ESP+ECX+13], -128
       ADC     DWORD PTR [ESI+ECX+15], 16
+      ADC     DWORD PTR [ESI+ECX+15], -128
       ADC     DWORD PTR [EAX+EBP+41], 42
+      ADC     DWORD PTR [EAX+EBP+41], -128
       ADC     DWORD PTR [ECX+EBP+42], 43
+      ADC     DWORD PTR [ECX+EBP+42], -128
       ADC     DWORD PTR [ESP+EBP+45], 46
+      ADC     DWORD PTR [ESP+EBP+45], -128
       ADC     DWORD PTR [ESI+EBP+47], 48
+      ADC     DWORD PTR [ESI+EBP+47], -128
       ADC     DWORD PTR [EAX+ESI+49], 50
+      ADC     DWORD PTR [EAX+ESI+49], -128
       ADC     DWORD PTR [ESI+ESI+55], 56
+      ADC     DWORD PTR [ESI+ESI+55], -128
       ADC     DWORD PTR [EBP+86], 87
+      ADC     DWORD PTR [EBP+86], -128
       ADC     DWORD PTR [ESI+87], 88
+      ADC     DWORD PTR [ESI+87], -128
       SBB     DWORD PTR [EAX+89], 90
+      SBB     DWORD PTR [EAX+89], -128
       SBB     DWORD PTR [ECX+90], 91
+      SBB     DWORD PTR [ECX+90], -128
       SBB     DWORD PTR [EBP+EBX*2+94], 95
+      SBB     DWORD PTR [EBP+EBX*2+94], -128
       SBB     DWORD PTR [ESI+EBX*2+95], 96
+      SBB     DWORD PTR [ESI+EBX*2+95], -128
       SBB     DWORD PTR [EAX+97], 98
+      SBB     DWORD PTR [EAX+97], -128
       SBB     DWORD PTR [EAX+EBP*2+105], 106
+      SBB     DWORD PTR [EAX+EBP*2+105], -128
       SBB     DWORD PTR [ECX+EBP*2+106], 107
+      SBB     DWORD PTR [ECX+EBP*2+106], -128
       SBB     DWORD PTR [ESP+EBP*2+109], 110
+      SBB     DWORD PTR [ESP+EBP*2+109], -128
       SBB     DWORD PTR [ESI+EBP*2+111], 112
+      SBB     DWORD PTR [ESI+EBP*2+111], -128
       SBB     DWORD PTR [EAX+ESI*2+113], 114
+      SBB     DWORD PTR [EAX+ESI*2+113], -128
       SBB     DWORD PTR [ECX+ESI*2+114], 115
+      SBB     DWORD PTR [ECX+ESI*2+114], -128
       SBB     DWORD PTR [ESP+ESI*2+117], 118
+      SBB     DWORD PTR [ESP+ESI*2+117], -128
       SBB     DWORD PTR [ESI+ESI*2+119], 120
+      SBB     DWORD PTR [ESI+ESI*2+119], -128
       SBB     DWORD PTR [EAX+EAX*4-127], -126
+      SBB     DWORD PTR [EAX+EAX*4-127], 0
       SBB     DWORD PTR [ECX+EAX*4-126], -125
+      SBB     DWORD PTR [ECX+EAX*4-126], 0
       SBB     DWORD PTR [ESP+EAX*4-123], -122
+      SBB     DWORD PTR [ESP+EAX*4-123], 0
       SBB     DWORD PTR [ESI+EAX*4-121], -120
+      SBB     DWORD PTR [ESI+EAX*4-121], 0
       SBB     DWORD PTR [EAX+ECX*4-119], -118
+      SBB     DWORD PTR [EAX+ECX*4-119], 0
       SBB     DWORD PTR [ECX+ECX*4-118], -117
+      SBB     DWORD PTR [ECX+ECX*4-118], 0
       SBB     DWORD PTR [EAX+EAX+1], 2
+      SBB     DWORD PTR [EAX+EAX+1], -128
       SBB     DWORD PTR [ECX+EAX+2], 3
+      SBB     DWORD PTR [ECX+EAX+2], -128
       SBB     DWORD PTR [ESP+EAX+5], 6
+      SBB     DWORD PTR [ESP+EAX+5], -128
       SBB     DWORD PTR [ESI+EAX+7], 8
+      SBB     DWORD PTR [ESI+EAX+7], -128
       SBB     DWORD PTR [EAX+ECX+9], 10
+      SBB     DWORD PTR [EAX+ECX+9], -128
       SBB     DWORD PTR [ECX+ECX+10], 11
+      SBB     DWORD PTR [ECX+ECX+10], -128
       SBB     DWORD PTR [ESP+ECX+13], 14
+      SBB     DWORD PTR [ESP+ECX+13], -128
       SBB     DWORD PTR [ESI+ECX+15], 16
+      SBB     DWORD PTR [ESI+ECX+15], -128
       SBB     DWORD PTR [EAX+EBP+41], 42
+      SBB     DWORD PTR [EAX+EBP+41], -128
       SBB     DWORD PTR [ECX+EBP+42], 43
+      SBB     DWORD PTR [ECX+EBP+42], -128
       SBB     DWORD PTR [ESP+EBP+45], 46
+      SBB     DWORD PTR [ESP+EBP+45], -128
       SBB     DWORD PTR [ESI+EBP+47], 48
+      SBB     DWORD PTR [ESI+EBP+47], -128
       SBB     DWORD PTR [EAX+ESI+49], 50
+      SBB     DWORD PTR [EAX+ESI+49], -128
       SBB     DWORD PTR [ESI+ESI+55], 56
+      SBB     DWORD PTR [ESI+ESI+55], -128
       SBB     DWORD PTR [EBP+94], 95
+      SBB     DWORD PTR [EBP+94], -128
       SBB     DWORD PTR [ESI+95], 96
+      SBB     DWORD PTR [ESI+95], -128
       AND     DWORD PTR [EAX+97], 98
+      AND     DWORD PTR [EAX+97], -128
       AND     DWORD PTR [ECX+98], 99
+      AND     DWORD PTR [ECX+98], -128
       AND     DWORD PTR [EAX+EBP*2+105], 106
+      AND     DWORD PTR [EAX+EBP*2+105], -128
       AND     DWORD PTR [ECX+EBP*2+106], 107
+      AND     DWORD PTR [ECX+EBP*2+106], -128
       AND     DWORD PTR [ESP+EBP*2+109], 110
+      AND     DWORD PTR [ESP+EBP*2+109], -128
       AND     DWORD PTR [ESI+EBP*2+111], 112
+      AND     DWORD PTR [ESI+EBP*2+111], -128
       AND     DWORD PTR [EAX+ESI*2+113], 114
+      AND     DWORD PTR [EAX+ESI*2+113], -128
       AND     DWORD PTR [ECX+ESI*2+114], 115
+      AND     DWORD PTR [ECX+ESI*2+114], -128
       AND     DWORD PTR [ESP+ESI*2+117], 118
+      AND     DWORD PTR [ESP+ESI*2+117], -128
       AND     DWORD PTR [ESI+ESI*2+119], 120
+      AND     DWORD PTR [ESI+ESI*2+119], -128
       AND     DWORD PTR [EAX+EAX*4-127], -126
+      AND     DWORD PTR [EAX+EAX*4-127], 0
       AND     DWORD PTR [ECX+EAX*4-126], -125
+      AND     DWORD PTR [ECX+EAX*4-126], 0
       AND     DWORD PTR [ESP+EAX*4-123], -122
+      AND     DWORD PTR [ESP+EAX*4-123], 0
       AND     DWORD PTR [ESI+EAX*4-121], -120
+      AND     DWORD PTR [ESI+EAX*4-121], 0
       AND     DWORD PTR [EAX+ECX*4-119], -118
+      AND     DWORD PTR [EAX+ECX*4-119], 0
       AND     DWORD PTR [ECX+ECX*4-118], -117
+      AND     DWORD PTR [ECX+ECX*4-118], 0
       AND     DWORD PTR [ESP+ECX*4-115], -114
+      AND     DWORD PTR [ESP+ECX*4-115], 0
       AND     DWORD PTR [ESI+ECX*4-113], -112
+      AND     DWORD PTR [ESI+ECX*4-113], 0
       AND     DWORD PTR [EAX-95], -94
+      AND     DWORD PTR [EAX-95], 0
       AND     DWORD PTR [EAX+EAX+1], 2
+      AND     DWORD PTR [EAX+EAX+1], -128
       AND     DWORD PTR [ECX+EAX+2], 3
+      AND     DWORD PTR [ECX+EAX+2], -128
       AND     DWORD PTR [ESP+EAX+5], 6
+      AND     DWORD PTR [ESP+EAX+5], -128
       AND     DWORD PTR [ESI+EAX+7], 8
+      AND     DWORD PTR [ESI+EAX+7], -128
       AND     DWORD PTR [EAX+ECX+9], 10
+      AND     DWORD PTR [EAX+ECX+9], -128
       AND     DWORD PTR [ECX+ECX+10], 11
+      AND     DWORD PTR [ECX+ECX+10], -128
       AND     DWORD PTR [ESP+ECX+13], 14
+      AND     DWORD PTR [ESP+ECX+13], -128
       AND     DWORD PTR [ESI+ECX+15], 16
+      AND     DWORD PTR [ESI+ECX+15], -128
       AND     DWORD PTR [EAX+EBP+41], 42
+      AND     DWORD PTR [EAX+EBP+41], -128
       AND     DWORD PTR [ECX+EBP+42], 43
+      AND     DWORD PTR [ECX+EBP+42], -128
       AND     DWORD PTR [ESP+EBP+45], 46
+      AND     DWORD PTR [ESP+EBP+45], -128
       AND     DWORD PTR [ESI+EBP+47], 48
+      AND     DWORD PTR [ESI+EBP+47], -128
       AND     DWORD PTR [EAX+ESI+49], 50
+      AND     DWORD PTR [EAX+ESI+49], -128
       AND     DWORD PTR [ESI+ESI+55], 56
+      AND     DWORD PTR [ESI+ESI+55], -128
       AND     DWORD PTR [EBP+102], 103
+      AND     DWORD PTR [EBP+102], -128
       AND     DWORD PTR [ESI+103], 104
+      AND     DWORD PTR [ESI+103], -128
       SUB     DWORD PTR [EAX+105], 106
+      SUB     DWORD PTR [EAX+105], -128
       SUB     DWORD PTR [ECX+106], 107
+      SUB     DWORD PTR [ECX+106], -128
       SUB     DWORD PTR [EBP+EBP*2+110], 111
+      SUB     DWORD PTR [EBP+EBP*2+110], -128
       SUB     DWORD PTR [ESI+EBP*2+111], 112
+      SUB     DWORD PTR [ESI+EBP*2+111], -128
       SUB     DWORD PTR [EAX+ESI*2+113], 114
+      SUB     DWORD PTR [EAX+ESI*2+113], -128
       SUB     DWORD PTR [ECX+ESI*2+114], 115
+      SUB     DWORD PTR [ECX+ESI*2+114], -128
       SUB     DWORD PTR [ESP+ESI*2+117], 118
+      SUB     DWORD PTR [ESP+ESI*2+117], -128
       SUB     DWORD PTR [ESI+ESI*2+119], 120
+      SUB     DWORD PTR [ESI+ESI*2+119], -128
       SUB     DWORD PTR [EAX+EAX*4-127], -126
+      SUB     DWORD PTR [EAX+EAX*4-127], 0
       SUB     DWORD PTR [ECX+EAX*4-126], -125
+      SUB     DWORD PTR [ECX+EAX*4-126], 0
       SUB     DWORD PTR [ESP+EAX*4-123], -122
+      SUB     DWORD PTR [ESP+EAX*4-123], 0
       SUB     DWORD PTR [ESI+EAX*4-121], -120
+      SUB     DWORD PTR [ESI+EAX*4-121], 0
       SUB     DWORD PTR [EAX+ECX*4-119], -118
+      SUB     DWORD PTR [EAX+ECX*4-119], 0
       SUB     DWORD PTR [ECX+ECX*4-118], -117
+      SUB     DWORD PTR [ECX+ECX*4-118], 0
       SUB     DWORD PTR [ESP+ECX*4-115], -114
+      SUB     DWORD PTR [ESP+ECX*4-115], 0
       SUB     DWORD PTR [ESI+ECX*4-113], -112
+      SUB     DWORD PTR [ESI+ECX*4-113], 0
       SUB     DWORD PTR [EAX-95], -94
+      SUB     DWORD PTR [EAX-95], 0
       SUB     DWORD PTR [EAX+EBP*4-87], -86
+      SUB     DWORD PTR [EAX+EBP*4-87], 0
       SUB     DWORD PTR [ECX+EBP*4-86], -85
+      SUB     DWORD PTR [ECX+EBP*4-86], 0
       SUB     DWORD PTR [EAX+EAX+1], 2
+      SUB     DWORD PTR [EAX+EAX+1], -128
       SUB     DWORD PTR [ECX+EAX+2], 3
+      SUB     DWORD PTR [ECX+EAX+2], -128
       SUB     DWORD PTR [ESP+EAX+5], 6
+      SUB     DWORD PTR [ESP+EAX+5], -128
       SUB     DWORD PTR [ESI+EAX+7], 8
+      SUB     DWORD PTR [ESI+EAX+7], -128
       SUB     DWORD PTR [EAX+ECX+9], 10
+      SUB     DWORD PTR [EAX+ECX+9], -128
       SUB     DWORD PTR [ECX+ECX+10], 11
+      SUB     DWORD PTR [ECX+ECX+10], -128
       SUB     DWORD PTR [ESP+ECX+13], 14
+      SUB     DWORD PTR [ESP+ECX+13], -128
       SUB     DWORD PTR [ESI+ECX+15], 16
+      SUB     DWORD PTR [ESI+ECX+15], -128
       SUB     DWORD PTR [EAX+EBP+41], 42
+      SUB     DWORD PTR [EAX+EBP+41], -128
       SUB     DWORD PTR [ECX+EBP+42], 43
+      SUB     DWORD PTR [ECX+EBP+42], -128
       SUB     DWORD PTR [ESP+EBP+45], 46
+      SUB     DWORD PTR [ESP+EBP+45], -128
       SUB     DWORD PTR [ESI+EBP+47], 48
+      SUB     DWORD PTR [ESI+EBP+47], -128
       SUB     DWORD PTR [EAX+ESI+49], 50
+      SUB     DWORD PTR [EAX+ESI+49], -128
       SUB     DWORD PTR [ESI+ESI+55], 56
+      SUB     DWORD PTR [ESI+ESI+55], -128
       SUB     DWORD PTR [EBP+110], 111
+      SUB     DWORD PTR [EBP+110], -128
       SUB     DWORD PTR [ESI+111], 112
+      SUB     DWORD PTR [ESI+111], -128
       XOR     DWORD PTR [EAX+113], 114
+      XOR     DWORD PTR [EAX+113], -128
       XOR     DWORD PTR [ECX+114], 115
+      XOR     DWORD PTR [ECX+114], -128
       XOR     DWORD PTR [EBP+ESI*2+118], 119
+      XOR     DWORD PTR [EBP+ESI*2+118], -128
       XOR     DWORD PTR [ESI+ESI*2+119], 120
+      XOR     DWORD PTR [ESI+ESI*2+119], -128
       XOR     DWORD PTR [EAX+EDI*2+121], 122
+      XOR     DWORD PTR [EAX+EDI*2+121], -128
       XOR     DWORD PTR [ECX+EDI*2+122], 123
+      XOR     DWORD PTR [ECX+EDI*2+122], -128
       XOR     DWORD PTR [EAX+EAX*4-127], -126
+      XOR     DWORD PTR [EAX+EAX*4-127], 0
       XOR     DWORD PTR [ECX+EAX*4-126], -125
+      XOR     DWORD PTR [ECX+EAX*4-126], 0
       XOR     DWORD PTR [ESP+EAX*4-123], -122
+      XOR     DWORD PTR [ESP+EAX*4-123], 0
       XOR     DWORD PTR [ESI+EAX*4-121], -120
+      XOR     DWORD PTR [ESI+EAX*4-121], 0
       XOR     DWORD PTR [EAX+ECX*4-119], -118
+      XOR     DWORD PTR [EAX+ECX*4-119], 0
       XOR     DWORD PTR [ECX+ECX*4-118], -117
+      XOR     DWORD PTR [ECX+ECX*4-118], 0
       XOR     DWORD PTR [ESP+ECX*4-115], -114
+      XOR     DWORD PTR [ESP+ECX*4-115], 0
       XOR     DWORD PTR [ESI+ECX*4-113], -112
+      XOR     DWORD PTR [ESI+ECX*4-113], 0
       XOR     DWORD PTR [EAX-95], -94
+      XOR     DWORD PTR [EAX-95], 0
       XOR     DWORD PTR [EAX+EBP*4-87], -86
+      XOR     DWORD PTR [EAX+EBP*4-87], 0
       XOR     DWORD PTR [ECX+EBP*4-86], -85
+      XOR     DWORD PTR [ECX+EBP*4-86], 0
       XOR     DWORD PTR [ESP+EBP*4-83], -82
+      XOR     DWORD PTR [ESP+EBP*4-83], 0
       XOR     DWORD PTR [ESI+EBP*4-81], -80
+      XOR     DWORD PTR [ESI+EBP*4-81], 0
       XOR     DWORD PTR [EAX+EAX+1], 2
+      XOR     DWORD PTR [EAX+EAX+1], -128
       XOR     DWORD PTR [ECX+EAX+2], 3
+      XOR     DWORD PTR [ECX+EAX+2], -128
       XOR     DWORD PTR [ESP+EAX+5], 6
+      XOR     DWORD PTR [ESP+EAX+5], -128
       XOR     DWORD PTR [ESI+EAX+7], 8
+      XOR     DWORD PTR [ESI+EAX+7], -128
       XOR     DWORD PTR [EAX+ECX+9], 10
+      XOR     DWORD PTR [EAX+ECX+9], -128
       XOR     DWORD PTR [ECX+ECX+10], 11
+      XOR     DWORD PTR [ECX+ECX+10], -128
       XOR     DWORD PTR [ESP+ECX+13], 14
+      XOR     DWORD PTR [ESP+ECX+13], -128
       XOR     DWORD PTR [ESI+ECX+15], 16
+      XOR     DWORD PTR [ESI+ECX+15], -128
       XOR     DWORD PTR [EAX+EBP+41], 42
+      XOR     DWORD PTR [EAX+EBP+41], -128
       XOR     DWORD PTR [ECX+EBP+42], 43
+      XOR     DWORD PTR [ECX+EBP+42], -128
       XOR     DWORD PTR [ESP+EBP+45], 46
+      XOR     DWORD PTR [ESP+EBP+45], -128
       XOR     DWORD PTR [ESI+EBP+47], 48
+      XOR     DWORD PTR [ESI+EBP+47], -128
       XOR     DWORD PTR [EAX+ESI+49], 50
+      XOR     DWORD PTR [EAX+ESI+49], -128
       XOR     DWORD PTR [ESI+ESI+55], 56
+      XOR     DWORD PTR [ESI+ESI+55], -128
       XOR     DWORD PTR [EBP+118], 119
+      XOR     DWORD PTR [EBP+118], -128
       XOR     DWORD PTR [ESI+119], 120
+      XOR     DWORD PTR [ESI+119], -128
       CMP     DWORD PTR [EAX+121], 122
+      CMP     DWORD PTR [EAX+121], -128
       CMP     DWORD PTR [ECX+122], 123
+      CMP     DWORD PTR [ECX+122], -128
       CMP     DWORD PTR [EBP+EDI*2+126], 127
+      CMP     DWORD PTR [EBP+EDI*2+126], -128
       CMP     DWORD PTR [ESI+EDI*2+127], -128
+      CMP     DWORD PTR [ESI+EDI*2+127], 0
       CMP     DWORD PTR [EAX+EAX*4-127], -126
+      CMP     DWORD PTR [EAX+EAX*4-127], 0
       CMP     DWORD PTR [ECX+EAX*4-126], -125
+      CMP     DWORD PTR [ECX+EAX*4-126], 0
       CMP     DWORD PTR [ESP+EAX*4-123], -122
+      CMP     DWORD PTR [ESP+EAX*4-123], 0
       CMP     DWORD PTR [ESI+EAX*4-121], -120
+      CMP     DWORD PTR [ESI+EAX*4-121], 0
       CMP     DWORD PTR [EAX+ECX*4-119], -118
+      CMP     DWORD PTR [EAX+ECX*4-119], 0
       CMP     DWORD PTR [ECX+ECX*4-118], -117
+      CMP     DWORD PTR [ECX+ECX*4-118], 0
       CMP     DWORD PTR [ESP+ECX*4-115], -114
+      CMP     DWORD PTR [ESP+ECX*4-115], 0
       CMP     DWORD PTR [ESI+ECX*4-113], -112
+      CMP     DWORD PTR [ESI+ECX*4-113], 0
       CMP     DWORD PTR [EAX-95], -94
+      CMP     DWORD PTR [EAX-95], 0
       CMP     DWORD PTR [EAX+EBP*4-87], -86
+      CMP     DWORD PTR [EAX+EBP*4-87], 0
       CMP     DWORD PTR [ECX+EBP*4-86], -85
+      CMP     DWORD PTR [ECX+EBP*4-86], 0
       CMP     DWORD PTR [ESP+EBP*4-83], -82
+      CMP     DWORD PTR [ESP+EBP*4-83], 0
       CMP     DWORD PTR [ESI+EBP*4-81], -80
+      CMP     DWORD PTR [ESI+EBP*4-81], 0
       CMP     DWORD PTR [EAX+ESI*4-79], -78
+      CMP     DWORD PTR [EAX+ESI*4-79], 0
       CMP     DWORD PTR [ECX+ESI*4-78], -77
+      CMP     DWORD PTR [ECX+ESI*4-78], 0
       CMP     DWORD PTR [EAX+EAX+1], 2
+      CMP     DWORD PTR [EAX+EAX+1], -128
       CMP     DWORD PTR [ECX+EAX+2], 3
+      CMP     DWORD PTR [ECX+EAX+2], -128
       CMP     DWORD PTR [ESP+EAX+5], 6
+      CMP     DWORD PTR [ESP+EAX+5], -128
       CMP     DWORD PTR [ESI+EAX+7], 8
+      CMP     DWORD PTR [ESI+EAX+7], -128
       CMP     DWORD PTR [EAX+ECX+9], 10
+      CMP     DWORD PTR [EAX+ECX+9], -128
       CMP     DWORD PTR [ECX+ECX+10], 11
+      CMP     DWORD PTR [ECX+ECX+10], -128
       CMP     DWORD PTR [ESP+ECX+13], 14
+      CMP     DWORD PTR [ESP+ECX+13], -128
       CMP     DWORD PTR [ESI+ECX+15], 16
+      CMP     DWORD PTR [ESI+ECX+15], -128
       CMP     DWORD PTR [EAX+EBP+41], 42
+      CMP     DWORD PTR [EAX+EBP+41], -128
       CMP     DWORD PTR [ECX+EBP+42], 43
+      CMP     DWORD PTR [ECX+EBP+42], -128
       CMP     DWORD PTR [ESP+EBP+45], 46
+      CMP     DWORD PTR [ESP+EBP+45], -128
       CMP     DWORD PTR [ESI+EBP+47], 48
+      CMP     DWORD PTR [ESI+EBP+47], -128
       CMP     DWORD PTR [EAX+ESI+49], 50
+      CMP     DWORD PTR [EAX+ESI+49], -128
       CMP     DWORD PTR [ESI+ESI+55], 56
+      CMP     DWORD PTR [ESI+ESI+55], -128
       CMP     DWORD PTR [EBP+126], 127
+      CMP     DWORD PTR [EBP+126], -128
       CMP     DWORD PTR [ESI+127], -128
+      CMP     DWORD PTR [ESI+127], 0
+      ADD     DWORD PTR [EAX-7B7C7D7FH], -123
+      ADD     DWORD PTR [ECX-7A7B7C7EH], -122
       TEST    [EBP-7677787AH], AL
       TEST    [ESI-75767779H], AL
       TEST    [EAX-73747577H], CL
@@ -94016,538 +96361,1238 @@
       LOCK XOR    DWORD PTR [EBP+118], 7A797877H
       LOCK XOR    DWORD PTR [ESI+119], 7B7A7978H
       LOCK ADD    DWORD PTR [EAX-7B7C7D7FH], 88878685H
+      LOCK ADD    DWORD PTR [EBP+EAX*4-7677787AH], -118
+      LOCK ADD    DWORD PTR [ESI+EAX*4-75767779H], -117
+      LOCK ADD    DWORD PTR [EAX+ECX*4-73747577H], -115
+      LOCK ADD    DWORD PTR [ECX+ECX*4-72737476H], -114
+      LOCK ADD    DWORD PTR [ESP+ECX*4-6F707173H], -111
+      LOCK ADD    DWORD PTR [ESI+ECX*4-6D6E6F71H], -109
+      LOCK ADD    DWORD PTR [EAX-5B5C5D5FH], -91
+      LOCK ADD    DWORD PTR [ECX-5A5B5C5EH], -90
+      LOCK ADD    DWORD PTR [ESP-5758595BH], -87
+      LOCK ADD    DWORD PTR [ESI-55565759H], -85
+      LOCK ADD    DWORD PTR [EAX+EBP*4-53545557H], -83
+      LOCK ADD    DWORD PTR [ECX+EBP*4-52535456H], -82
+      LOCK ADD    DWORD PTR [ESP+EBP*4-4F505153H], -79
+      LOCK ADD    DWORD PTR [ESI+EBP*4-4D4E4F51H], -77
+      LOCK ADD    DWORD PTR [EAX+ESI*4-4B4C4D4FH], -75
+      LOCK ADD    DWORD PTR [ECX+ESI*4-4A4B4C4EH], -74
+      LOCK ADD    DWORD PTR [ESP+ESI*4-4748494BH], -71
+      LOCK ADD    DWORD PTR [ESI+ESI*4-45464749H], -69
+      LOCK ADD    DWORD PTR [EAX+EAX*8-3B3C3D3FH], -59
+      LOCK ADD    DWORD PTR [ECX+EAX*8-3A3B3C3EH], -58
+      LOCK ADD    DWORD PTR [EBP-7677787AH], -118
+      LOCK ADD    DWORD PTR [ESI-75767779H], -117
+      LOCK OR DWORD PTR [EAX-73747577H], -115
+      LOCK OR DWORD PTR [ECX-72737476H], -114
+      LOCK OR DWORD PTR [EBP+ECX*4-6E6F7072H], -110
+      LOCK OR DWORD PTR [ESI+ECX*4-6D6E6F71H], -109
+      LOCK OR DWORD PTR [EAX+EDX*4-6B6C6D6FH], -107
+      LOCK OR DWORD PTR [ECX+EDX*4-6A6B6C6EH], -106
+      LOCK OR DWORD PTR [EAX-5B5C5D5FH], -91
+      LOCK OR DWORD PTR [ECX-5A5B5C5EH], -90
+      LOCK OR DWORD PTR [ESP-5758595BH], -87
+      LOCK OR DWORD PTR [ESI-55565759H], -85
+      LOCK OR DWORD PTR [EAX+EBP*4-53545557H], -83
+      LOCK OR DWORD PTR [ECX+EBP*4-52535456H], -82
+      LOCK OR DWORD PTR [ESP+EBP*4-4F505153H], -79
+      LOCK OR DWORD PTR [ESI+EBP*4-4D4E4F51H], -77
+      LOCK OR DWORD PTR [EAX+ESI*4-4B4C4D4FH], -75
+      LOCK OR DWORD PTR [ECX+ESI*4-4A4B4C4EH], -74
+      LOCK OR DWORD PTR [ESP+ESI*4-4748494BH], -71
+      LOCK OR DWORD PTR [ESI+ESI*4-45464749H], -69
+      LOCK OR DWORD PTR [EAX+EAX*8-3B3C3D3FH], -59
+      LOCK OR DWORD PTR [ECX+EAX*8-3A3B3C3EH], -58
+      LOCK OR DWORD PTR [ESP+EAX*8-3738393BH], -55
+      LOCK OR DWORD PTR [ESI+EAX*8-35363739H], -53
+      LOCK OR DWORD PTR [EBP-6E6F7072H], -110
+      LOCK OR DWORD PTR [ESI-6D6E6F71H], -109
+      LOCK ADC    DWORD PTR [EAX-6B6C6D6FH], -107
+      LOCK ADC    DWORD PTR [ECX-6A6B6C6EH], -106
+      LOCK ADC    DWORD PTR [EBP+EDX*4-6667686AH], -102
+      LOCK ADC    DWORD PTR [ESI+EDX*4-65666769H], -101
+      LOCK ADC    DWORD PTR [EAX+EBX*4-63646567H], -99
+      LOCK ADC    DWORD PTR [ECX+EBX*4-62636466H], -98
+      LOCK ADC    DWORD PTR [EAX-5B5C5D5FH], -91
+      LOCK ADC    DWORD PTR [ECX-5A5B5C5EH], -90
+      LOCK ADC    DWORD PTR [ESP-5758595BH], -87
+      LOCK ADC    DWORD PTR [ESI-55565759H], -85
+      LOCK ADC    DWORD PTR [EAX+EBP*4-53545557H], -83
+      LOCK ADC    DWORD PTR [ECX+EBP*4-52535456H], -82
+      LOCK ADC    DWORD PTR [ESP+EBP*4-4F505153H], -79
+      LOCK ADC    DWORD PTR [ESI+EBP*4-4D4E4F51H], -77
+      LOCK ADC    DWORD PTR [EAX+ESI*4-4B4C4D4FH], -75
+      LOCK ADC    DWORD PTR [ECX+ESI*4-4A4B4C4EH], -74
+      LOCK ADC    DWORD PTR [ESP+ESI*4-4748494BH], -71
+      LOCK ADC    DWORD PTR [ESI+ESI*4-45464749H], -69
+      LOCK ADC    DWORD PTR [EAX+EAX*8-3B3C3D3FH], -59
+      LOCK ADC    DWORD PTR [ECX+EAX*8-3A3B3C3EH], -58
+      LOCK ADC    DWORD PTR [ESP+EAX*8-3738393BH], -55
+      LOCK ADC    DWORD PTR [ESI+EAX*8-35363739H], -53
+      LOCK ADC    DWORD PTR [EBP-6667686AH], -102
+      LOCK ADC    DWORD PTR [ESI-65666769H], -101
+      LOCK SBB    DWORD PTR [EAX-63646567H], -99
+      LOCK SBB    DWORD PTR [ECX-62636466H], -98
+      LOCK SBB    DWORD PTR [EBP+EBX*4-5E5F6062H], -94
+      LOCK SBB    DWORD PTR [ESI+EBX*4-5D5E5F61H], -93
+      LOCK SBB    DWORD PTR [EAX-5B5C5D5FH], -91
+      LOCK SBB    DWORD PTR [ECX-5A5B5C5EH], -90
+      LOCK SBB    DWORD PTR [ESP-5758595BH], -87
+      LOCK SBB    DWORD PTR [ESI-55565759H], -85
+      LOCK SBB    DWORD PTR [EAX+EBP*4-53545557H], -83
+      LOCK SBB    DWORD PTR [ECX+EBP*4-52535456H], -82
+      LOCK SBB    DWORD PTR [ESP+EBP*4-4F505153H], -79
+      LOCK SBB    DWORD PTR [ESI+EBP*4-4D4E4F51H], -77
+      LOCK SBB    DWORD PTR [EAX+ESI*4-4B4C4D4FH], -75
+      LOCK SBB    DWORD PTR [ECX+ESI*4-4A4B4C4EH], -74
+      LOCK SBB    DWORD PTR [ESP+ESI*4-4748494BH], -71
+      LOCK SBB    DWORD PTR [ESI+ESI*4-45464749H], -69
+      LOCK SBB    DWORD PTR [EAX+EAX*8-3B3C3D3FH], -59
+      LOCK SBB    DWORD PTR [ECX+EAX*8-3A3B3C3EH], -58
+      LOCK SBB    DWORD PTR [ESP+EAX*8-3738393BH], -55
+      LOCK SBB    DWORD PTR [ESI+EAX*8-35363739H], -53
+      LOCK SBB    DWORD PTR [EAX+ECX*8-33343537H], -51
+      LOCK SBB    DWORD PTR [ECX+ECX*8-32333436H], -50
+      LOCK SBB    DWORD PTR [EBP-5E5F6062H], -94
+      LOCK SBB    DWORD PTR [ESI-5D5E5F61H], -93
+      LOCK AND    DWORD PTR [EAX-5B5C5D5FH], -91
+      LOCK AND    DWORD PTR [ECX-5A5B5C5EH], -90
+      LOCK AND    DWORD PTR [EBP-5657585AH], -86
+      LOCK AND    DWORD PTR [ESI-55565759H], -85
+      LOCK AND    DWORD PTR [EAX+EBP*4-53545557H], -83
+      LOCK AND    DWORD PTR [ECX+EBP*4-52535456H], -82
+      LOCK AND    DWORD PTR [ESP+EBP*4-4F505153H], -79
+      LOCK AND    DWORD PTR [ESI+EBP*4-4D4E4F51H], -77
+      LOCK AND    DWORD PTR [EAX+ESI*4-4B4C4D4FH], -75
+      LOCK AND    DWORD PTR [ECX+ESI*4-4A4B4C4EH], -74
+      LOCK AND    DWORD PTR [ESP+ESI*4-4748494BH], -71
+      LOCK AND    DWORD PTR [ESI+ESI*4-45464749H], -69
+      LOCK AND    DWORD PTR [EAX+EAX*8-3B3C3D3FH], -59
+      LOCK AND    DWORD PTR [ECX+EAX*8-3A3B3C3EH], -58
+      LOCK AND    DWORD PTR [ESP+EAX*8-3738393BH], -55
+      LOCK AND    DWORD PTR [ESI+EAX*8-35363739H], -53
+      LOCK AND    DWORD PTR [EAX+ECX*8-33343537H], -51
+      LOCK AND    DWORD PTR [ECX+ECX*8-32333436H], -50
+      LOCK AND    DWORD PTR [ESP+ECX*8-2F303133H], -47
+      LOCK AND    DWORD PTR [ESI+ECX*8-2D2E2F31H], -45
+      LOCK AND    DWORD PTR [EAX-1B1C1D1FH], -27
+      LOCK AND    DWORD PTR [ECX-1A1B1C1EH], -26
+      LOCK AND    DWORD PTR [EBP-5657585AH], -86
+      LOCK AND    DWORD PTR [ESI-55565759H], -85
+      LOCK SUB    DWORD PTR [EAX-53545557H], -83
+      LOCK SUB    DWORD PTR [ECX-52535456H], -82
+      LOCK SUB    DWORD PTR [EBP+EBP*4-4E4F5052H], -78
+      LOCK SUB    DWORD PTR [ESI+EBP*4-4D4E4F51H], -77
+      LOCK SUB    DWORD PTR [EAX+ESI*4-4B4C4D4FH], -75
+      LOCK SUB    DWORD PTR [ECX+ESI*4-4A4B4C4EH], -74
+      LOCK SUB    DWORD PTR [ESP+ESI*4-4748494BH], -71
+      LOCK SUB    DWORD PTR [ESI+ESI*4-45464749H], -69
+      LOCK SUB    DWORD PTR [EAX+EAX*8-3B3C3D3FH], -59
+      LOCK SUB    DWORD PTR [ECX+EAX*8-3A3B3C3EH], -58
+      LOCK SUB    DWORD PTR [ESP+EAX*8-3738393BH], -55
+      LOCK SUB    DWORD PTR [ESI+EAX*8-35363739H], -53
+      LOCK SUB    DWORD PTR [EAX+ECX*8-33343537H], -51
+      LOCK SUB    DWORD PTR [ECX+ECX*8-32333436H], -50
+      LOCK SUB    DWORD PTR [ESP+ECX*8-2F303133H], -47
+      LOCK SUB    DWORD PTR [ESI+ECX*8-2D2E2F31H], -45
+      LOCK SUB    DWORD PTR [EAX-1B1C1D1FH], -27
+      LOCK SUB    DWORD PTR [ECX-1A1B1C1EH], -26
+      LOCK SUB    DWORD PTR [ESP-1718191BH], -23
+      LOCK SUB    DWORD PTR [ESI-15161719H], -21
+      LOCK SUB    DWORD PTR [EAX+EBP*8-13141517H], -19
+      LOCK SUB    DWORD PTR [ECX+EBP*8-12131416H], -18
+      LOCK SUB    DWORD PTR [EBP-4E4F5052H], -78
+      LOCK SUB    DWORD PTR [ESI-4D4E4F51H], -77
+      LOCK XOR    DWORD PTR [EAX-4B4C4D4FH], -75
+      LOCK XOR    DWORD PTR [ECX-4A4B4C4EH], -74
+      LOCK XOR    DWORD PTR [EBP+ESI*4-4647484AH], -70
+      LOCK XOR    DWORD PTR [ESI+ESI*4-45464749H], -69
+      LOCK XOR    DWORD PTR [EAX+EDI*4-43444547H], -67
+      LOCK XOR    DWORD PTR [ECX+EDI*4-42434446H], -66
+      LOCK XOR    DWORD PTR [EAX+EAX*8-3B3C3D3FH], -59
+      LOCK XOR    DWORD PTR [ECX+EAX*8-3A3B3C3EH], -58
+      LOCK XOR    DWORD PTR [ESP+EAX*8-3738393BH], -55
+      LOCK XOR    DWORD PTR [ESI+EAX*8-35363739H], -53
+      LOCK XOR    DWORD PTR [EAX+ECX*8-33343537H], -51
+      LOCK XOR    DWORD PTR [ECX+ECX*8-32333436H], -50
+      LOCK XOR    DWORD PTR [ESP+ECX*8-2F303133H], -47
+      LOCK XOR    DWORD PTR [ESI+ECX*8-2D2E2F31H], -45
+      LOCK XOR    DWORD PTR [EAX-1B1C1D1FH], -27
+      LOCK XOR    DWORD PTR [ECX-1A1B1C1EH], -26
+      LOCK XOR    DWORD PTR [ESP-1718191BH], -23
+      LOCK XOR    DWORD PTR [ESI-15161719H], -21
+      LOCK XOR    DWORD PTR [EAX+EBP*8-13141517H], -19
+      LOCK XOR    DWORD PTR [ECX+EBP*8-12131416H], -18
+      LOCK XOR    DWORD PTR [ESP+EBP*8-0F101113H], -15
+      LOCK XOR    DWORD PTR [ESI+EBP*8-0D0E0F11H], -13
+      LOCK XOR    DWORD PTR [EBP-4647484AH], -70
+      LOCK XOR    DWORD PTR [ESI-45464749H], -69
       LOCK ADD    DWORD PTR [EAX], 1
+      LOCK ADD    DWORD PTR [EAX], -128
       LOCK ADD    DWORD PTR [ECX], 2
+      LOCK ADD    DWORD PTR [ECX], -128
       LOCK ADD    DWORD PTR [ESI+EAX], 7
+      LOCK ADD    DWORD PTR [ESI+EAX], -128
       LOCK ADD    DWORD PTR [EAX+ECX], 9
+      LOCK ADD    DWORD PTR [EAX+ECX], -128
       LOCK ADD    DWORD PTR [ECX+ECX], 10
+      LOCK ADD    DWORD PTR [ECX+ECX], -128
       LOCK ADD    DWORD PTR [ESP+ECX], 13
+      LOCK ADD    DWORD PTR [ESP+ECX], -128
       LOCK ADD    DWORD PTR [ESI+ECX], 15
+      LOCK ADD    DWORD PTR [ESI+ECX], -128
       LOCK ADD    DWORD PTR [EAX], 33
+      LOCK ADD    DWORD PTR [EAX], -128
       LOCK ADD    DWORD PTR [ESP], 37
+      LOCK ADD    DWORD PTR [ESP], -128
       LOCK ADD    DWORD PTR [29282726H], 42
+      LOCK ADD    DWORD PTR [29282726H], -128
       LOCK ADD    DWORD PTR [EAX+EBP], 41
+      LOCK ADD    DWORD PTR [EAX+EBP], -128
       LOCK ADD    DWORD PTR [ECX+EBP], 42
+      LOCK ADD    DWORD PTR [ECX+EBP], -128
       LOCK ADD    DWORD PTR [ESP+EBP], 45
+      LOCK ADD    DWORD PTR [ESP+EBP], -128
       LOCK ADD    DWORD PTR [ESI+EBP], 47
+      LOCK ADD    DWORD PTR [ESI+EBP], -128
       LOCK ADD    DWORD PTR [EAX+ESI], 49
+      LOCK ADD    DWORD PTR [EAX+ESI], -128
       LOCK ADD    DWORD PTR [ESI+ESI], 55
+      LOCK ADD    DWORD PTR [ESI+ESI], -128
       LOCK ADD    DWORD PTR [EAX+EAX*2], 65
+      LOCK ADD    DWORD PTR [EAX+EAX*2], -128
       LOCK ADD    DWORD PTR [ECX+EAX*2], 66
+      LOCK ADD    DWORD PTR [ECX+EAX*2], -128
       LOCK ADD    DWORD PTR [ESP+EAX*2], 69
+      LOCK ADD    DWORD PTR [ESP+EAX*2], -128
       LOCK ADD    DWORD PTR [EAX*2+49484746H], 74
+      LOCK ADD    DWORD PTR [EAX*2+49484746H], -128
       LOCK ADD    DWORD PTR [ESI+EAX*2], 71
+      LOCK ADD    DWORD PTR [ESI+EAX*2], -128
       LOCK ADD    DWORD PTR [EAX+ECX*2], 73
+      LOCK ADD    DWORD PTR [EAX+ECX*2], -128
       LOCK ADD    DWORD PTR [ECX+ECX*2], 74
+      LOCK ADD    DWORD PTR [ECX+ECX*2], -128
       LOCK ADD    DWORD PTR [ESP+ECX*2], 77
+      LOCK ADD    DWORD PTR [ESP+ECX*2], -128
       LOCK ADD    DWORD PTR [ECX*2+51504F4EH], 82
+      LOCK ADD    DWORD PTR [ECX*2+51504F4EH], -128
       LOCK ADD    DWORD PTR [ESI+ECX*2], 79
+      LOCK ADD    DWORD PTR [ESI+ECX*2], -128
       LOCK ADD    DWORD PTR [EAX+EBP*2], 105
+      LOCK ADD    DWORD PTR [EAX+EBP*2], -128
       LOCK ADD    DWORD PTR [ECX+EBP*2], 106
+      LOCK ADD    DWORD PTR [ECX+EBP*2], -128
       LOCK ADD    DWORD PTR [ESP+EBP*2], 109
+      LOCK ADD    DWORD PTR [ESP+EBP*2], -128
       LOCK ADD    DWORD PTR [EBP*2+71706F6EH], 114
+      LOCK ADD    DWORD PTR [EBP*2+71706F6EH], -128
       LOCK ADD    DWORD PTR [ESI+EBP*2], 111
+      LOCK ADD    DWORD PTR [ESI+EBP*2], -128
       LOCK ADD    DWORD PTR [EAX+ESI*2], 113
+      LOCK ADD    DWORD PTR [EAX+ESI*2], -128
       LOCK ADD    DWORD PTR [ECX+ESI*2], 114
+      LOCK ADD    DWORD PTR [ECX+ESI*2], -128
       LOCK ADD    DWORD PTR [ESP+ESI*2], 117
+      LOCK ADD    DWORD PTR [ESP+ESI*2], -128
       LOCK ADD    DWORD PTR [ESI*2+79787776H], 122
+      LOCK ADD    DWORD PTR [ESI*2+79787776H], -128
       LOCK ADD    DWORD PTR [ESI+ESI*2], 119
+      LOCK ADD    DWORD PTR [ESI+ESI*2], -128
       LOCK ADD    DWORD PTR [EAX+EAX], 1
+      LOCK ADD    DWORD PTR [EAX+EAX], -128
       LOCK ADD    DWORD PTR [ECX+EAX], 2
+      LOCK ADD    DWORD PTR [ECX+EAX], -128
       LOCK ADD    DWORD PTR [ESP+EAX], 5
+      LOCK ADD    DWORD PTR [ESP+EAX], -128
       LOCK ADD    DWORD PTR [09080706H], 10
+      LOCK ADD    DWORD PTR [09080706H], -128
       LOCK ADD    DWORD PTR [ESI], 7
+      LOCK ADD    DWORD PTR [ESI], -128
       LOCK OR DWORD PTR [EAX], 9
+      LOCK OR DWORD PTR [EAX], -128
       LOCK OR DWORD PTR [ECX], 10
+      LOCK OR DWORD PTR [ECX], -128
       LOCK OR DWORD PTR [ESI+ECX], 15
+      LOCK OR DWORD PTR [ESI+ECX], -128
       LOCK OR DWORD PTR [EAX+EDX], 17
+      LOCK OR DWORD PTR [EAX+EDX], -128
       LOCK OR DWORD PTR [ECX+EDX], 18
+      LOCK OR DWORD PTR [ECX+EDX], -128
       LOCK OR DWORD PTR [ESP+EDX], 21
+      LOCK OR DWORD PTR [ESP+EDX], -128
       LOCK OR DWORD PTR [EAX], 33
+      LOCK OR DWORD PTR [EAX], -128
       LOCK OR DWORD PTR [ESP], 37
+      LOCK OR DWORD PTR [ESP], -128
       LOCK OR DWORD PTR [29282726H], 42
+      LOCK OR DWORD PTR [29282726H], -128
       LOCK OR DWORD PTR [EAX+EBP], 41
+      LOCK OR DWORD PTR [EAX+EBP], -128
       LOCK OR DWORD PTR [ECX+EBP], 42
+      LOCK OR DWORD PTR [ECX+EBP], -128
       LOCK OR DWORD PTR [ESP+EBP], 45
+      LOCK OR DWORD PTR [ESP+EBP], -128
       LOCK OR DWORD PTR [ESI+EBP], 47
+      LOCK OR DWORD PTR [ESI+EBP], -128
       LOCK OR DWORD PTR [EAX+ESI], 49
+      LOCK OR DWORD PTR [EAX+ESI], -128
       LOCK OR DWORD PTR [ESI+ESI], 55
+      LOCK OR DWORD PTR [ESI+ESI], -128
       LOCK OR DWORD PTR [EAX+EAX*2], 65
+      LOCK OR DWORD PTR [EAX+EAX*2], -128
       LOCK OR DWORD PTR [ECX+EAX*2], 66
+      LOCK OR DWORD PTR [ECX+EAX*2], -128
       LOCK OR DWORD PTR [ESP+EAX*2], 69
+      LOCK OR DWORD PTR [ESP+EAX*2], -128
       LOCK OR DWORD PTR [EAX*2+49484746H], 74
+      LOCK OR DWORD PTR [EAX*2+49484746H], -128
       LOCK OR DWORD PTR [ESI+EAX*2], 71
+      LOCK OR DWORD PTR [ESI+EAX*2], -128
       LOCK OR DWORD PTR [EAX+ECX*2], 73
+      LOCK OR DWORD PTR [EAX+ECX*2], -128
       LOCK OR DWORD PTR [ECX+ECX*2], 74
+      LOCK OR DWORD PTR [ECX+ECX*2], -128
       LOCK OR DWORD PTR [ESP+ECX*2], 77
+      LOCK OR DWORD PTR [ESP+ECX*2], -128
       LOCK OR DWORD PTR [ECX*2+51504F4EH], 82
+      LOCK OR DWORD PTR [ECX*2+51504F4EH], -128
       LOCK OR DWORD PTR [ESI+ECX*2], 79
+      LOCK OR DWORD PTR [ESI+ECX*2], -128
       LOCK OR DWORD PTR [EAX+EBP*2], 105
+      LOCK OR DWORD PTR [EAX+EBP*2], -128
       LOCK OR DWORD PTR [ECX+EBP*2], 106
+      LOCK OR DWORD PTR [ECX+EBP*2], -128
       LOCK OR DWORD PTR [ESP+EBP*2], 109
+      LOCK OR DWORD PTR [ESP+EBP*2], -128
       LOCK OR DWORD PTR [EBP*2+71706F6EH], 114
+      LOCK OR DWORD PTR [EBP*2+71706F6EH], -128
       LOCK OR DWORD PTR [ESI+EBP*2], 111
+      LOCK OR DWORD PTR [ESI+EBP*2], -128
       LOCK OR DWORD PTR [EAX+ESI*2], 113
+      LOCK OR DWORD PTR [EAX+ESI*2], -128
       LOCK OR DWORD PTR [ECX+ESI*2], 114
+      LOCK OR DWORD PTR [ECX+ESI*2], -128
       LOCK OR DWORD PTR [ESP+ESI*2], 117
+      LOCK OR DWORD PTR [ESP+ESI*2], -128
       LOCK OR DWORD PTR [ESI*2+79787776H], 122
+      LOCK OR DWORD PTR [ESI*2+79787776H], -128
       LOCK OR DWORD PTR [ESI+ESI*2], 119
+      LOCK OR DWORD PTR [ESI+ESI*2], -128
       LOCK OR DWORD PTR [EAX+EAX], 1
+      LOCK OR DWORD PTR [EAX+EAX], -128
       LOCK OR DWORD PTR [ECX+EAX], 2
+      LOCK OR DWORD PTR [ECX+EAX], -128
       LOCK OR DWORD PTR [ESP+EAX], 5
+      LOCK OR DWORD PTR [ESP+EAX], -128
       LOCK OR DWORD PTR [ESI+EAX], 7
+      LOCK OR DWORD PTR [ESI+EAX], -128
       LOCK OR DWORD PTR [11100F0EH], 18
+      LOCK OR DWORD PTR [11100F0EH], -128
       LOCK OR DWORD PTR [ESI], 15
+      LOCK OR DWORD PTR [ESI], -128
       LOCK ADC    DWORD PTR [EAX], 17
+      LOCK ADC    DWORD PTR [EAX], -128
       LOCK ADC    DWORD PTR [ECX], 18
+      LOCK ADC    DWORD PTR [ECX], -128
       LOCK ADC    DWORD PTR [ESI+EDX], 23
+      LOCK ADC    DWORD PTR [ESI+EDX], -128
       LOCK ADC    DWORD PTR [EAX+EBX], 25
+      LOCK ADC    DWORD PTR [EAX+EBX], -128
       LOCK ADC    DWORD PTR [ECX+EBX], 26
+      LOCK ADC    DWORD PTR [ECX+EBX], -128
       LOCK ADC    DWORD PTR [ESP+EBX], 29
+      LOCK ADC    DWORD PTR [ESP+EBX], -128
       LOCK ADC    DWORD PTR [EAX], 33
+      LOCK ADC    DWORD PTR [EAX], -128
       LOCK ADC    DWORD PTR [ESP], 37
+      LOCK ADC    DWORD PTR [ESP], -128
       LOCK ADC    DWORD PTR [29282726H], 42
+      LOCK ADC    DWORD PTR [29282726H], -128
       LOCK ADC    DWORD PTR [EAX+EBP], 41
+      LOCK ADC    DWORD PTR [EAX+EBP], -128
       LOCK ADC    DWORD PTR [ECX+EBP], 42
+      LOCK ADC    DWORD PTR [ECX+EBP], -128
       LOCK ADC    DWORD PTR [ESP+EBP], 45
+      LOCK ADC    DWORD PTR [ESP+EBP], -128
       LOCK ADC    DWORD PTR [ESI+EBP], 47
+      LOCK ADC    DWORD PTR [ESI+EBP], -128
       LOCK ADC    DWORD PTR [EAX+ESI], 49
+      LOCK ADC    DWORD PTR [EAX+ESI], -128
       LOCK ADC    DWORD PTR [ESI+ESI], 55
+      LOCK ADC    DWORD PTR [ESI+ESI], -128
       LOCK ADC    DWORD PTR [EAX+EAX*2], 65
+      LOCK ADC    DWORD PTR [EAX+EAX*2], -128
       LOCK ADC    DWORD PTR [ECX+EAX*2], 66
+      LOCK ADC    DWORD PTR [ECX+EAX*2], -128
       LOCK ADC    DWORD PTR [ESP+EAX*2], 69
+      LOCK ADC    DWORD PTR [ESP+EAX*2], -128
       LOCK ADC    DWORD PTR [EAX*2+49484746H], 74
+      LOCK ADC    DWORD PTR [EAX*2+49484746H], -128
       LOCK ADC    DWORD PTR [ESI+EAX*2], 71
+      LOCK ADC    DWORD PTR [ESI+EAX*2], -128
       LOCK ADC    DWORD PTR [EAX+ECX*2], 73
+      LOCK ADC    DWORD PTR [EAX+ECX*2], -128
       LOCK ADC    DWORD PTR [ECX+ECX*2], 74
+      LOCK ADC    DWORD PTR [ECX+ECX*2], -128
       LOCK ADC    DWORD PTR [ESP+ECX*2], 77
+      LOCK ADC    DWORD PTR [ESP+ECX*2], -128
       LOCK ADC    DWORD PTR [ECX*2+51504F4EH], 82
+      LOCK ADC    DWORD PTR [ECX*2+51504F4EH], -128
       LOCK ADC    DWORD PTR [ESI+ECX*2], 79
+      LOCK ADC    DWORD PTR [ESI+ECX*2], -128
       LOCK ADC    DWORD PTR [EAX+EBP*2], 105
+      LOCK ADC    DWORD PTR [EAX+EBP*2], -128
       LOCK ADC    DWORD PTR [ECX+EBP*2], 106
+      LOCK ADC    DWORD PTR [ECX+EBP*2], -128
       LOCK ADC    DWORD PTR [ESP+EBP*2], 109
+      LOCK ADC    DWORD PTR [ESP+EBP*2], -128
       LOCK ADC    DWORD PTR [EBP*2+71706F6EH], 114
+      LOCK ADC    DWORD PTR [EBP*2+71706F6EH], -128
       LOCK ADC    DWORD PTR [ESI+EBP*2], 111
+      LOCK ADC    DWORD PTR [ESI+EBP*2], -128
       LOCK ADC    DWORD PTR [EAX+ESI*2], 113
+      LOCK ADC    DWORD PTR [EAX+ESI*2], -128
       LOCK ADC    DWORD PTR [ECX+ESI*2], 114
+      LOCK ADC    DWORD PTR [ECX+ESI*2], -128
       LOCK ADC    DWORD PTR [ESP+ESI*2], 117
+      LOCK ADC    DWORD PTR [ESP+ESI*2], -128
       LOCK ADC    DWORD PTR [ESI*2+79787776H], 122
+      LOCK ADC    DWORD PTR [ESI*2+79787776H], -128
       LOCK ADC    DWORD PTR [ESI+ESI*2], 119
+      LOCK ADC    DWORD PTR [ESI+ESI*2], -128
       LOCK ADC    DWORD PTR [EAX+EAX], 1
+      LOCK ADC    DWORD PTR [EAX+EAX], -128
       LOCK ADC    DWORD PTR [ECX+EAX], 2
+      LOCK ADC    DWORD PTR [ECX+EAX], -128
       LOCK ADC    DWORD PTR [ESP+EAX], 5
+      LOCK ADC    DWORD PTR [ESP+EAX], -128
       LOCK ADC    DWORD PTR [ESI+EAX], 7
+      LOCK ADC    DWORD PTR [ESI+EAX], -128
       LOCK ADC    DWORD PTR [19181716H], 26
+      LOCK ADC    DWORD PTR [19181716H], -128
       LOCK ADC    DWORD PTR [ESI], 23
+      LOCK ADC    DWORD PTR [ESI], -128
       LOCK SBB    DWORD PTR [EAX], 25
+      LOCK SBB    DWORD PTR [EAX], -128
       LOCK SBB    DWORD PTR [ECX], 26
+      LOCK SBB    DWORD PTR [ECX], -128
       LOCK SBB    DWORD PTR [ESI+EBX], 31
+      LOCK SBB    DWORD PTR [ESI+EBX], -128
       LOCK SBB    DWORD PTR [EAX], 33
+      LOCK SBB    DWORD PTR [EAX], -128
       LOCK SBB    DWORD PTR [ESP], 37
+      LOCK SBB    DWORD PTR [ESP], -128
       LOCK SBB    DWORD PTR [29282726H], 42
+      LOCK SBB    DWORD PTR [29282726H], -128
       LOCK SBB    DWORD PTR [EAX+EBP], 41
+      LOCK SBB    DWORD PTR [EAX+EBP], -128
       LOCK SBB    DWORD PTR [ECX+EBP], 42
+      LOCK SBB    DWORD PTR [ECX+EBP], -128
       LOCK SBB    DWORD PTR [ESP+EBP], 45
+      LOCK SBB    DWORD PTR [ESP+EBP], -128
       LOCK SBB    DWORD PTR [ESI+EBP], 47
+      LOCK SBB    DWORD PTR [ESI+EBP], -128
       LOCK SBB    DWORD PTR [EAX+ESI], 49
+      LOCK SBB    DWORD PTR [EAX+ESI], -128
       LOCK SBB    DWORD PTR [ESI+ESI], 55
+      LOCK SBB    DWORD PTR [ESI+ESI], -128
       LOCK SBB    DWORD PTR [EAX+EAX*2], 65
+      LOCK SBB    DWORD PTR [EAX+EAX*2], -128
       LOCK SBB    DWORD PTR [ECX+EAX*2], 66
+      LOCK SBB    DWORD PTR [ECX+EAX*2], -128
       LOCK SBB    DWORD PTR [ESP+EAX*2], 69
+      LOCK SBB    DWORD PTR [ESP+EAX*2], -128
       LOCK SBB    DWORD PTR [EAX*2+49484746H], 74
+      LOCK SBB    DWORD PTR [EAX*2+49484746H], -128
       LOCK SBB    DWORD PTR [ESI+EAX*2], 71
+      LOCK SBB    DWORD PTR [ESI+EAX*2], -128
       LOCK SBB    DWORD PTR [EAX+ECX*2], 73
+      LOCK SBB    DWORD PTR [EAX+ECX*2], -128
       LOCK SBB    DWORD PTR [ECX+ECX*2], 74
+      LOCK SBB    DWORD PTR [ECX+ECX*2], -128
       LOCK SBB    DWORD PTR [ESP+ECX*2], 77
+      LOCK SBB    DWORD PTR [ESP+ECX*2], -128
       LOCK SBB    DWORD PTR [ECX*2+51504F4EH], 82
+      LOCK SBB    DWORD PTR [ECX*2+51504F4EH], -128
       LOCK SBB    DWORD PTR [ESI+ECX*2], 79
+      LOCK SBB    DWORD PTR [ESI+ECX*2], -128
       LOCK SBB    DWORD PTR [EAX+EBP*2], 105
+      LOCK SBB    DWORD PTR [EAX+EBP*2], -128
       LOCK SBB    DWORD PTR [ECX+EBP*2], 106
+      LOCK SBB    DWORD PTR [ECX+EBP*2], -128
       LOCK SBB    DWORD PTR [ESP+EBP*2], 109
+      LOCK SBB    DWORD PTR [ESP+EBP*2], -128
       LOCK SBB    DWORD PTR [EBP*2+71706F6EH], 114
+      LOCK SBB    DWORD PTR [EBP*2+71706F6EH], -128
       LOCK SBB    DWORD PTR [ESI+EBP*2], 111
+      LOCK SBB    DWORD PTR [ESI+EBP*2], -128
       LOCK SBB    DWORD PTR [EAX+ESI*2], 113
+      LOCK SBB    DWORD PTR [EAX+ESI*2], -128
       LOCK SBB    DWORD PTR [ECX+ESI*2], 114
+      LOCK SBB    DWORD PTR [ECX+ESI*2], -128
       LOCK SBB    DWORD PTR [ESP+ESI*2], 117
+      LOCK SBB    DWORD PTR [ESP+ESI*2], -128
       LOCK SBB    DWORD PTR [ESI*2+79787776H], 122
+      LOCK SBB    DWORD PTR [ESI*2+79787776H], -128
       LOCK SBB    DWORD PTR [ESI+ESI*2], 119
+      LOCK SBB    DWORD PTR [ESI+ESI*2], -128
       LOCK SBB    DWORD PTR [EAX+EAX], 1
+      LOCK SBB    DWORD PTR [EAX+EAX], -128
       LOCK SBB    DWORD PTR [ECX+EAX], 2
+      LOCK SBB    DWORD PTR [ECX+EAX], -128
       LOCK SBB    DWORD PTR [ESP+EAX], 5
+      LOCK SBB    DWORD PTR [ESP+EAX], -128
       LOCK SBB    DWORD PTR [ESI+EAX], 7
+      LOCK SBB    DWORD PTR [ESI+EAX], -128
       LOCK SBB    DWORD PTR [EAX+ECX], 9
+      LOCK SBB    DWORD PTR [EAX+ECX], -128
       LOCK SBB    DWORD PTR [ECX+ECX], 10
+      LOCK SBB    DWORD PTR [ECX+ECX], -128
       LOCK SBB    DWORD PTR [ESP+ECX], 13
+      LOCK SBB    DWORD PTR [ESP+ECX], -128
       LOCK SBB    DWORD PTR [21201F1EH], 34
+      LOCK SBB    DWORD PTR [21201F1EH], -128
       LOCK SBB    DWORD PTR [ESI], 31
+      LOCK SBB    DWORD PTR [ESI], -128
       LOCK AND    DWORD PTR [EAX], 33
+      LOCK AND    DWORD PTR [EAX], -128
       LOCK AND    DWORD PTR [ECX], 34
+      LOCK AND    DWORD PTR [ECX], -128
       LOCK AND    DWORD PTR [29282726H], 42
+      LOCK AND    DWORD PTR [29282726H], -128
       LOCK AND    DWORD PTR [EAX+EBP], 41
+      LOCK AND    DWORD PTR [EAX+EBP], -128
       LOCK AND    DWORD PTR [ECX+EBP], 42
+      LOCK AND    DWORD PTR [ECX+EBP], -128
       LOCK AND    DWORD PTR [ESP+EBP], 45
+      LOCK AND    DWORD PTR [ESP+EBP], -128
       LOCK AND    DWORD PTR [ESI+EBP], 47
+      LOCK AND    DWORD PTR [ESI+EBP], -128
       LOCK AND    DWORD PTR [EAX+ESI], 49
+      LOCK AND    DWORD PTR [EAX+ESI], -128
       LOCK AND    DWORD PTR [ESI+ESI], 55
+      LOCK AND    DWORD PTR [ESI+ESI], -128
       LOCK AND    DWORD PTR [EAX+EAX*2], 65
+      LOCK AND    DWORD PTR [EAX+EAX*2], -128
       LOCK AND    DWORD PTR [ECX+EAX*2], 66
+      LOCK AND    DWORD PTR [ECX+EAX*2], -128
       LOCK AND    DWORD PTR [ESP+EAX*2], 69
+      LOCK AND    DWORD PTR [ESP+EAX*2], -128
       LOCK AND    DWORD PTR [EAX*2+49484746H], 74
+      LOCK AND    DWORD PTR [EAX*2+49484746H], -128
       LOCK AND    DWORD PTR [ESI+EAX*2], 71
+      LOCK AND    DWORD PTR [ESI+EAX*2], -128
       LOCK AND    DWORD PTR [EAX+ECX*2], 73
+      LOCK AND    DWORD PTR [EAX+ECX*2], -128
       LOCK AND    DWORD PTR [ECX+ECX*2], 74
+      LOCK AND    DWORD PTR [ECX+ECX*2], -128
       LOCK AND    DWORD PTR [ESP+ECX*2], 77
+      LOCK AND    DWORD PTR [ESP+ECX*2], -128
       LOCK AND    DWORD PTR [ECX*2+51504F4EH], 82
+      LOCK AND    DWORD PTR [ECX*2+51504F4EH], -128
       LOCK AND    DWORD PTR [ESI+ECX*2], 79
+      LOCK AND    DWORD PTR [ESI+ECX*2], -128
       LOCK AND    DWORD PTR [EAX], 97
+      LOCK AND    DWORD PTR [EAX], -128
       LOCK AND    DWORD PTR [ESP], 101
+      LOCK AND    DWORD PTR [ESP], -128
       LOCK AND    DWORD PTR [EAX+EBP*2], 105
+      LOCK AND    DWORD PTR [EAX+EBP*2], -128
       LOCK AND    DWORD PTR [ECX+EBP*2], 106
+      LOCK AND    DWORD PTR [ECX+EBP*2], -128
       LOCK AND    DWORD PTR [ESP+EBP*2], 109
+      LOCK AND    DWORD PTR [ESP+EBP*2], -128
       LOCK AND    DWORD PTR [EBP*2+71706F6EH], 114
+      LOCK AND    DWORD PTR [EBP*2+71706F6EH], -128
       LOCK AND    DWORD PTR [ESI+EBP*2], 111
+      LOCK AND    DWORD PTR [ESI+EBP*2], -128
       LOCK AND    DWORD PTR [EAX+ESI*2], 113
+      LOCK AND    DWORD PTR [EAX+ESI*2], -128
       LOCK AND    DWORD PTR [ECX+ESI*2], 114
+      LOCK AND    DWORD PTR [ECX+ESI*2], -128
       LOCK AND    DWORD PTR [ESP+ESI*2], 117
+      LOCK AND    DWORD PTR [ESP+ESI*2], -128
       LOCK AND    DWORD PTR [ESI*2+79787776H], 122
+      LOCK AND    DWORD PTR [ESI*2+79787776H], -128
       LOCK AND    DWORD PTR [ESI+ESI*2], 119
+      LOCK AND    DWORD PTR [ESI+ESI*2], -128
       LOCK AND    DWORD PTR [EAX+EAX], 1
+      LOCK AND    DWORD PTR [EAX+EAX], -128
       LOCK AND    DWORD PTR [ECX+EAX], 2
+      LOCK AND    DWORD PTR [ECX+EAX], -128
       LOCK AND    DWORD PTR [ESP+EAX], 5
+      LOCK AND    DWORD PTR [ESP+EAX], -128
       LOCK AND    DWORD PTR [ESI+EAX], 7
+      LOCK AND    DWORD PTR [ESI+EAX], -128
       LOCK AND    DWORD PTR [EAX+ECX], 9
+      LOCK AND    DWORD PTR [EAX+ECX], -128
       LOCK AND    DWORD PTR [ECX+ECX], 10
+      LOCK AND    DWORD PTR [ECX+ECX], -128
       LOCK AND    DWORD PTR [ESP+ECX], 13
+      LOCK AND    DWORD PTR [ESP+ECX], -128
       LOCK AND    DWORD PTR [ESI+ECX], 15
+      LOCK AND    DWORD PTR [ESI+ECX], -128
       LOCK AND    DWORD PTR [29282726H], 42
+      LOCK AND    DWORD PTR [29282726H], -128
       LOCK AND    DWORD PTR [ESI], 39
+      LOCK AND    DWORD PTR [ESI], -128
       LOCK SUB    DWORD PTR [EAX], 41
+      LOCK SUB    DWORD PTR [EAX], -128
       LOCK SUB    DWORD PTR [ECX], 42
+      LOCK SUB    DWORD PTR [ECX], -128
       LOCK SUB    DWORD PTR [ESI+EBP], 47
+      LOCK SUB    DWORD PTR [ESI+EBP], -128
       LOCK SUB    DWORD PTR [EAX+ESI], 49
+      LOCK SUB    DWORD PTR [EAX+ESI], -128
       LOCK SUB    DWORD PTR [ESI+ESI], 55
+      LOCK SUB    DWORD PTR [ESI+ESI], -128
       LOCK SUB    DWORD PTR [EAX+EAX*2], 65
+      LOCK SUB    DWORD PTR [EAX+EAX*2], -128
       LOCK SUB    DWORD PTR [ECX+EAX*2], 66
+      LOCK SUB    DWORD PTR [ECX+EAX*2], -128
       LOCK SUB    DWORD PTR [ESP+EAX*2], 69
+      LOCK SUB    DWORD PTR [ESP+EAX*2], -128
       LOCK SUB    DWORD PTR [EAX*2+49484746H], 74
+      LOCK SUB    DWORD PTR [EAX*2+49484746H], -128
       LOCK SUB    DWORD PTR [ESI+EAX*2], 71
+      LOCK SUB    DWORD PTR [ESI+EAX*2], -128
       LOCK SUB    DWORD PTR [EAX+ECX*2], 73
+      LOCK SUB    DWORD PTR [EAX+ECX*2], -128
       LOCK SUB    DWORD PTR [ECX+ECX*2], 74
+      LOCK SUB    DWORD PTR [ECX+ECX*2], -128
       LOCK SUB    DWORD PTR [ESP+ECX*2], 77
+      LOCK SUB    DWORD PTR [ESP+ECX*2], -128
       LOCK SUB    DWORD PTR [ECX*2+51504F4EH], 82
+      LOCK SUB    DWORD PTR [ECX*2+51504F4EH], -128
       LOCK SUB    DWORD PTR [ESI+ECX*2], 79
+      LOCK SUB    DWORD PTR [ESI+ECX*2], -128
       LOCK SUB    DWORD PTR [EAX], 97
+      LOCK SUB    DWORD PTR [EAX], -128
       LOCK SUB    DWORD PTR [ESP], 101
+      LOCK SUB    DWORD PTR [ESP], -128
       LOCK SUB    DWORD PTR [69686766H], 106
+      LOCK SUB    DWORD PTR [69686766H], -128
       LOCK SUB    DWORD PTR [EAX+EBP*2], 105
+      LOCK SUB    DWORD PTR [EAX+EBP*2], -128
       LOCK SUB    DWORD PTR [ECX+EBP*2], 106
+      LOCK SUB    DWORD PTR [ECX+EBP*2], -128
       LOCK SUB    DWORD PTR [ESP+EBP*2], 109
+      LOCK SUB    DWORD PTR [ESP+EBP*2], -128
       LOCK SUB    DWORD PTR [EBP*2+71706F6EH], 114
+      LOCK SUB    DWORD PTR [EBP*2+71706F6EH], -128
       LOCK SUB    DWORD PTR [ESI+EBP*2], 111
+      LOCK SUB    DWORD PTR [ESI+EBP*2], -128
       LOCK SUB    DWORD PTR [EAX+ESI*2], 113
+      LOCK SUB    DWORD PTR [EAX+ESI*2], -128
       LOCK SUB    DWORD PTR [ECX+ESI*2], 114
+      LOCK SUB    DWORD PTR [ECX+ESI*2], -128
       LOCK SUB    DWORD PTR [ESP+ESI*2], 117
+      LOCK SUB    DWORD PTR [ESP+ESI*2], -128
       LOCK SUB    DWORD PTR [ESI*2+79787776H], 122
+      LOCK SUB    DWORD PTR [ESI*2+79787776H], -128
       LOCK SUB    DWORD PTR [ESI+ESI*2], 119
+      LOCK SUB    DWORD PTR [ESI+ESI*2], -128
       LOCK SUB    DWORD PTR [EAX+EAX], 1
+      LOCK SUB    DWORD PTR [EAX+EAX], -128
       LOCK SUB    DWORD PTR [ECX+EAX], 2
+      LOCK SUB    DWORD PTR [ECX+EAX], -128
       LOCK SUB    DWORD PTR [ESP+EAX], 5
+      LOCK SUB    DWORD PTR [ESP+EAX], -128
       LOCK SUB    DWORD PTR [ESI+EAX], 7
+      LOCK SUB    DWORD PTR [ESI+EAX], -128
       LOCK SUB    DWORD PTR [EAX+ECX], 9
+      LOCK SUB    DWORD PTR [EAX+ECX], -128
       LOCK SUB    DWORD PTR [ECX+ECX], 10
+      LOCK SUB    DWORD PTR [ECX+ECX], -128
       LOCK SUB    DWORD PTR [ESP+ECX], 13
+      LOCK SUB    DWORD PTR [ESP+ECX], -128
       LOCK SUB    DWORD PTR [ESI+ECX], 15
+      LOCK SUB    DWORD PTR [ESI+ECX], -128
       LOCK SUB    DWORD PTR [EAX+EBP], 41
+      LOCK SUB    DWORD PTR [EAX+EBP], -128
       LOCK SUB    DWORD PTR [ECX+EBP], 42
+      LOCK SUB    DWORD PTR [ECX+EBP], -128
       LOCK SUB    DWORD PTR [ESP+EBP], 45
+      LOCK SUB    DWORD PTR [ESP+EBP], -128
       LOCK SUB    DWORD PTR [31302F2EH], 50
+      LOCK SUB    DWORD PTR [31302F2EH], -128
       LOCK SUB    DWORD PTR [ESI], 47
+      LOCK SUB    DWORD PTR [ESI], -128
       LOCK XOR    DWORD PTR [EAX], 49
+      LOCK XOR    DWORD PTR [EAX], -128
       LOCK XOR    DWORD PTR [ECX], 50
+      LOCK XOR    DWORD PTR [ECX], -128
       LOCK XOR    DWORD PTR [ESI+ESI], 55
+      LOCK XOR    DWORD PTR [ESI+ESI], -128
       LOCK XOR    DWORD PTR [EAX+EDI], 57
+      LOCK XOR    DWORD PTR [EAX+EDI], -128
       LOCK XOR    DWORD PTR [EAX+EAX*2], 65
+      LOCK XOR    DWORD PTR [EAX+EAX*2], -128
       LOCK XOR    DWORD PTR [ECX+EAX*2], 66
+      LOCK XOR    DWORD PTR [ECX+EAX*2], -128
       LOCK XOR    DWORD PTR [ESP+EAX*2], 69
+      LOCK XOR    DWORD PTR [ESP+EAX*2], -128
       LOCK XOR    DWORD PTR [EAX*2+49484746H], 74
+      LOCK XOR    DWORD PTR [EAX*2+49484746H], -128
       LOCK XOR    DWORD PTR [ESI+EAX*2], 71
+      LOCK XOR    DWORD PTR [ESI+EAX*2], -128
       LOCK XOR    DWORD PTR [EAX+ECX*2], 73
+      LOCK XOR    DWORD PTR [EAX+ECX*2], -128
       LOCK XOR    DWORD PTR [ECX+ECX*2], 74
+      LOCK XOR    DWORD PTR [ECX+ECX*2], -128
       LOCK XOR    DWORD PTR [ESP+ECX*2], 77
+      LOCK XOR    DWORD PTR [ESP+ECX*2], -128
       LOCK XOR    DWORD PTR [ECX*2+51504F4EH], 82
+      LOCK XOR    DWORD PTR [ECX*2+51504F4EH], -128
       LOCK XOR    DWORD PTR [ESI+ECX*2], 79
+      LOCK XOR    DWORD PTR [ESI+ECX*2], -128
       LOCK XOR    DWORD PTR [EAX], 97
+      LOCK XOR    DWORD PTR [EAX], -128
       LOCK XOR    DWORD PTR [ESP], 101
+      LOCK XOR    DWORD PTR [ESP], -128
       LOCK XOR    DWORD PTR [69686766H], 106
+      LOCK XOR    DWORD PTR [69686766H], -128
       LOCK XOR    DWORD PTR [EAX+EBP*2], 105
+      LOCK XOR    DWORD PTR [EAX+EBP*2], -128
       LOCK XOR    DWORD PTR [ECX+EBP*2], 106
+      LOCK XOR    DWORD PTR [ECX+EBP*2], -128
       LOCK XOR    DWORD PTR [ESP+EBP*2], 109
+      LOCK XOR    DWORD PTR [ESP+EBP*2], -128
       LOCK XOR    DWORD PTR [EBP*2+71706F6EH], 114
+      LOCK XOR    DWORD PTR [EBP*2+71706F6EH], -128
       LOCK XOR    DWORD PTR [ESI+EBP*2], 111
+      LOCK XOR    DWORD PTR [ESI+EBP*2], -128
       LOCK XOR    DWORD PTR [EAX+ESI*2], 113
+      LOCK XOR    DWORD PTR [EAX+ESI*2], -128
       LOCK XOR    DWORD PTR [ECX+ESI*2], 114
+      LOCK XOR    DWORD PTR [ECX+ESI*2], -128
       LOCK XOR    DWORD PTR [ESP+ESI*2], 117
+      LOCK XOR    DWORD PTR [ESP+ESI*2], -128
       LOCK XOR    DWORD PTR [ESI*2+79787776H], 122
+      LOCK XOR    DWORD PTR [ESI*2+79787776H], -128
       LOCK XOR    DWORD PTR [ESI+ESI*2], 119
+      LOCK XOR    DWORD PTR [ESI+ESI*2], -128
       LOCK XOR    DWORD PTR [EAX+EAX], 1
+      LOCK XOR    DWORD PTR [EAX+EAX], -128
       LOCK XOR    DWORD PTR [ECX+EAX], 2
+      LOCK XOR    DWORD PTR [ECX+EAX], -128
       LOCK XOR    DWORD PTR [ESP+EAX], 5
+      LOCK XOR    DWORD PTR [ESP+EAX], -128
       LOCK XOR    DWORD PTR [ESI+EAX], 7
+      LOCK XOR    DWORD PTR [ESI+EAX], -128
       LOCK XOR    DWORD PTR [EAX+ECX], 9
+      LOCK XOR    DWORD PTR [EAX+ECX], -128
       LOCK XOR    DWORD PTR [ECX+ECX], 10
+      LOCK XOR    DWORD PTR [ECX+ECX], -128
       LOCK XOR    DWORD PTR [ESP+ECX], 13
+      LOCK XOR    DWORD PTR [ESP+ECX], -128
       LOCK XOR    DWORD PTR [ESI+ECX], 15
+      LOCK XOR    DWORD PTR [ESI+ECX], -128
       LOCK XOR    DWORD PTR [EAX+EBP], 41
+      LOCK XOR    DWORD PTR [EAX+EBP], -128
       LOCK XOR    DWORD PTR [ECX+EBP], 42
+      LOCK XOR    DWORD PTR [ECX+EBP], -128
       LOCK XOR    DWORD PTR [ESP+EBP], 45
+      LOCK XOR    DWORD PTR [ESP+EBP], -128
       LOCK XOR    DWORD PTR [ESI+EBP], 47
+      LOCK XOR    DWORD PTR [ESI+EBP], -128
       LOCK XOR    DWORD PTR [39383736H], 58
+      LOCK XOR    DWORD PTR [39383736H], -128
       LOCK XOR    DWORD PTR [ESI], 55
+      LOCK XOR    DWORD PTR [ESI], -128
       LOCK ADD    DWORD PTR [EAX+65], 66
+      LOCK ADD    DWORD PTR [EAX+65], -128
       LOCK ADD    DWORD PTR [ECX+66], 67
+      LOCK ADD    DWORD PTR [ECX+66], -128
       LOCK ADD    DWORD PTR [EBP+EAX*2+70], 71
+      LOCK ADD    DWORD PTR [EBP+EAX*2+70], -128
       LOCK ADD    DWORD PTR [ESI+EAX*2+71], 72
+      LOCK ADD    DWORD PTR [ESI+EAX*2+71], -128
       LOCK ADD    DWORD PTR [EAX+ECX*2+73], 74
+      LOCK ADD    DWORD PTR [EAX+ECX*2+73], -128
       LOCK ADD    DWORD PTR [ECX+ECX*2+74], 75
+      LOCK ADD    DWORD PTR [ECX+ECX*2+74], -128
       LOCK ADD    DWORD PTR [ESP+ECX*2+77], 78
+      LOCK ADD    DWORD PTR [ESP+ECX*2+77], -128
       LOCK ADD    DWORD PTR [ESI+ECX*2+79], 80
+      LOCK ADD    DWORD PTR [ESI+ECX*2+79], -128
       LOCK ADD    DWORD PTR [EAX+97], 98
+      LOCK ADD    DWORD PTR [EAX+97], -128
       LOCK ADD    DWORD PTR [EAX+EBP*2+105], 106
+      LOCK ADD    DWORD PTR [EAX+EBP*2+105], -128
       LOCK ADD    DWORD PTR [ECX+EBP*2+106], 107
+      LOCK ADD    DWORD PTR [ECX+EBP*2+106], -128
       LOCK ADD    DWORD PTR [ESP+EBP*2+109], 110
+      LOCK ADD    DWORD PTR [ESP+EBP*2+109], -128
       LOCK ADD    DWORD PTR [ESI+EBP*2+111], 112
+      LOCK ADD    DWORD PTR [ESI+EBP*2+111], -128
       LOCK ADD    DWORD PTR [EAX+ESI*2+113], 114
+      LOCK ADD    DWORD PTR [EAX+ESI*2+113], -128
       LOCK ADD    DWORD PTR [ECX+ESI*2+114], 115
+      LOCK ADD    DWORD PTR [ECX+ESI*2+114], -128
       LOCK ADD    DWORD PTR [ESP+ESI*2+117], 118
+      LOCK ADD    DWORD PTR [ESP+ESI*2+117], -128
       LOCK ADD    DWORD PTR [ESI+ESI*2+119], 120
+      LOCK ADD    DWORD PTR [ESI+ESI*2+119], -128
       LOCK ADD    DWORD PTR [EAX+EAX*4-127], -126
+      LOCK ADD    DWORD PTR [EAX+EAX*4-127], 0
       LOCK ADD    DWORD PTR [ECX+EAX*4-126], -125
+      LOCK ADD    DWORD PTR [ECX+EAX*4-126], 0
       LOCK ADD    DWORD PTR [EAX+EAX+1], 2
+      LOCK ADD    DWORD PTR [EAX+EAX+1], -128
       LOCK ADD    DWORD PTR [ECX+EAX+2], 3
+      LOCK ADD    DWORD PTR [ECX+EAX+2], -128
       LOCK ADD    DWORD PTR [ESP+EAX+5], 6
+      LOCK ADD    DWORD PTR [ESP+EAX+5], -128
       LOCK ADD    DWORD PTR [ESI+EAX+7], 8
+      LOCK ADD    DWORD PTR [ESI+EAX+7], -128
       LOCK ADD    DWORD PTR [EAX+ECX+9], 10
+      LOCK ADD    DWORD PTR [EAX+ECX+9], -128
       LOCK ADD    DWORD PTR [ECX+ECX+10], 11
+      LOCK ADD    DWORD PTR [ECX+ECX+10], -128
       LOCK ADD    DWORD PTR [ESP+ECX+13], 14
+      LOCK ADD    DWORD PTR [ESP+ECX+13], -128
       LOCK ADD    DWORD PTR [ESI+ECX+15], 16
+      LOCK ADD    DWORD PTR [ESI+ECX+15], -128
       LOCK ADD    DWORD PTR [EAX+EBP+41], 42
+      LOCK ADD    DWORD PTR [EAX+EBP+41], -128
       LOCK ADD    DWORD PTR [ECX+EBP+42], 43
+      LOCK ADD    DWORD PTR [ECX+EBP+42], -128
       LOCK ADD    DWORD PTR [ESP+EBP+45], 46
+      LOCK ADD    DWORD PTR [ESP+EBP+45], -128
       LOCK ADD    DWORD PTR [ESI+EBP+47], 48
+      LOCK ADD    DWORD PTR [ESI+EBP+47], -128
       LOCK ADD    DWORD PTR [EAX+ESI+49], 50
+      LOCK ADD    DWORD PTR [EAX+ESI+49], -128
       LOCK ADD    DWORD PTR [ESI+ESI+55], 56
+      LOCK ADD    DWORD PTR [ESI+ESI+55], -128
       LOCK ADD    DWORD PTR [EBP+70], 71
+      LOCK ADD    DWORD PTR [EBP+70], -128
       LOCK ADD    DWORD PTR [ESI+71], 72
+      LOCK ADD    DWORD PTR [ESI+71], -128
       LOCK OR DWORD PTR [EAX+73], 74
+      LOCK OR DWORD PTR [EAX+73], -128
       LOCK OR DWORD PTR [ECX+74], 75
+      LOCK OR DWORD PTR [ECX+74], -128
       LOCK OR DWORD PTR [EBP+ECX*2+78], 79
+      LOCK OR DWORD PTR [EBP+ECX*2+78], -128
       LOCK OR DWORD PTR [ESI+ECX*2+79], 80
+      LOCK OR DWORD PTR [ESI+ECX*2+79], -128
       LOCK OR DWORD PTR [EAX+EDX*2+81], 82
+      LOCK OR DWORD PTR [EAX+EDX*2+81], -128
       LOCK OR DWORD PTR [ECX+EDX*2+82], 83
+      LOCK OR DWORD PTR [ECX+EDX*2+82], -128
       LOCK OR DWORD PTR [EAX+97], 98
+      LOCK OR DWORD PTR [EAX+97], -128
       LOCK OR DWORD PTR [EAX+EBP*2+105], 106
+      LOCK OR DWORD PTR [EAX+EBP*2+105], -128
       LOCK OR DWORD PTR [ECX+EBP*2+106], 107
+      LOCK OR DWORD PTR [ECX+EBP*2+106], -128
       LOCK OR DWORD PTR [ESP+EBP*2+109], 110
+      LOCK OR DWORD PTR [ESP+EBP*2+109], -128
       LOCK OR DWORD PTR [ESI+EBP*2+111], 112
+      LOCK OR DWORD PTR [ESI+EBP*2+111], -128
       LOCK OR DWORD PTR [EAX+ESI*2+113], 114
+      LOCK OR DWORD PTR [EAX+ESI*2+113], -128
       LOCK OR DWORD PTR [ECX+ESI*2+114], 115
+      LOCK OR DWORD PTR [ECX+ESI*2+114], -128
       LOCK OR DWORD PTR [ESP+ESI*2+117], 118
+      LOCK OR DWORD PTR [ESP+ESI*2+117], -128
       LOCK OR DWORD PTR [ESI+ESI*2+119], 120
+      LOCK OR DWORD PTR [ESI+ESI*2+119], -128
       LOCK OR DWORD PTR [EAX+EAX*4-127], -126
+      LOCK OR DWORD PTR [EAX+EAX*4-127], 0
       LOCK OR DWORD PTR [ECX+EAX*4-126], -125
+      LOCK OR DWORD PTR [ECX+EAX*4-126], 0
       LOCK OR DWORD PTR [ESP+EAX*4-123], -122
+      LOCK OR DWORD PTR [ESP+EAX*4-123], 0
       LOCK OR DWORD PTR [ESI+EAX*4-121], -120
+      LOCK OR DWORD PTR [ESI+EAX*4-121], 0
       LOCK OR DWORD PTR [EAX+EAX+1], 2
+      LOCK OR DWORD PTR [EAX+EAX+1], -128
       LOCK OR DWORD PTR [ECX+EAX+2], 3
+      LOCK OR DWORD PTR [ECX+EAX+2], -128
       LOCK OR DWORD PTR [ESP+EAX+5], 6
+      LOCK OR DWORD PTR [ESP+EAX+5], -128
       LOCK OR DWORD PTR [ESI+EAX+7], 8
+      LOCK OR DWORD PTR [ESI+EAX+7], -128
       LOCK OR DWORD PTR [EAX+ECX+9], 10
+      LOCK OR DWORD PTR [EAX+ECX+9], -128
       LOCK OR DWORD PTR [ECX+ECX+10], 11
+      LOCK OR DWORD PTR [ECX+ECX+10], -128
       LOCK OR DWORD PTR [ESP+ECX+13], 14
+      LOCK OR DWORD PTR [ESP+ECX+13], -128
       LOCK OR DWORD PTR [ESI+ECX+15], 16
+      LOCK OR DWORD PTR [ESI+ECX+15], -128
       LOCK OR DWORD PTR [EAX+EBP+41], 42
+      LOCK OR DWORD PTR [EAX+EBP+41], -128
       LOCK OR DWORD PTR [ECX+EBP+42], 43
+      LOCK OR DWORD PTR [ECX+EBP+42], -128
       LOCK OR DWORD PTR [ESP+EBP+45], 46
+      LOCK OR DWORD PTR [ESP+EBP+45], -128
       LOCK OR DWORD PTR [ESI+EBP+47], 48
+      LOCK OR DWORD PTR [ESI+EBP+47], -128
       LOCK OR DWORD PTR [EAX+ESI+49], 50
+      LOCK OR DWORD PTR [EAX+ESI+49], -128
       LOCK OR DWORD PTR [ESI+ESI+55], 56
+      LOCK OR DWORD PTR [ESI+ESI+55], -128
       LOCK OR DWORD PTR [EBP+78], 79
+      LOCK OR DWORD PTR [EBP+78], -128
       LOCK OR DWORD PTR [ESI+79], 80
+      LOCK OR DWORD PTR [ESI+79], -128
       LOCK ADC    DWORD PTR [EAX+81], 82
+      LOCK ADC    DWORD PTR [EAX+81], -128
       LOCK ADC    DWORD PTR [ECX+82], 83
+      LOCK ADC    DWORD PTR [ECX+82], -128
       LOCK ADC    DWORD PTR [EBP+EDX*2+86], 87
+      LOCK ADC    DWORD PTR [EBP+EDX*2+86], -128
       LOCK ADC    DWORD PTR [ESI+EDX*2+87], 88
+      LOCK ADC    DWORD PTR [ESI+EDX*2+87], -128
       LOCK ADC    DWORD PTR [EAX+EBX*2+89], 90
+      LOCK ADC    DWORD PTR [EAX+EBX*2+89], -128
       LOCK ADC    DWORD PTR [ECX+EBX*2+90], 91
+      LOCK ADC    DWORD PTR [ECX+EBX*2+90], -128
       LOCK ADC    DWORD PTR [EAX+97], 98
+      LOCK ADC    DWORD PTR [EAX+97], -128
       LOCK ADC    DWORD PTR [EAX+EBP*2+105], 106
+      LOCK ADC    DWORD PTR [EAX+EBP*2+105], -128
       LOCK ADC    DWORD PTR [ECX+EBP*2+106], 107
+      LOCK ADC    DWORD PTR [ECX+EBP*2+106], -128
       LOCK ADC    DWORD PTR [ESP+EBP*2+109], 110
+      LOCK ADC    DWORD PTR [ESP+EBP*2+109], -128
       LOCK ADC    DWORD PTR [ESI+EBP*2+111], 112
+      LOCK ADC    DWORD PTR [ESI+EBP*2+111], -128
       LOCK ADC    DWORD PTR [EAX+ESI*2+113], 114
+      LOCK ADC    DWORD PTR [EAX+ESI*2+113], -128
       LOCK ADC    DWORD PTR [ECX+ESI*2+114], 115
+      LOCK ADC    DWORD PTR [ECX+ESI*2+114], -128
       LOCK ADC    DWORD PTR [ESP+ESI*2+117], 118
+      LOCK ADC    DWORD PTR [ESP+ESI*2+117], -128
       LOCK ADC    DWORD PTR [ESI+ESI*2+119], 120
+      LOCK ADC    DWORD PTR [ESI+ESI*2+119], -128
       LOCK ADC    DWORD PTR [EAX+EAX*4-127], -126
+      LOCK ADC    DWORD PTR [EAX+EAX*4-127], 0
       LOCK ADC    DWORD PTR [ECX+EAX*4-126], -125
+      LOCK ADC    DWORD PTR [ECX+EAX*4-126], 0
       LOCK ADC    DWORD PTR [ESP+EAX*4-123], -122
+      LOCK ADC    DWORD PTR [ESP+EAX*4-123], 0
       LOCK ADC    DWORD PTR [ESI+EAX*4-121], -120
+      LOCK ADC    DWORD PTR [ESI+EAX*4-121], 0
       LOCK ADC    DWORD PTR [EAX+EAX+1], 2
+      LOCK ADC    DWORD PTR [EAX+EAX+1], -128
       LOCK ADC    DWORD PTR [ECX+EAX+2], 3
+      LOCK ADC    DWORD PTR [ECX+EAX+2], -128
       LOCK ADC    DWORD PTR [ESP+EAX+5], 6
+      LOCK ADC    DWORD PTR [ESP+EAX+5], -128
       LOCK ADC    DWORD PTR [ESI+EAX+7], 8
+      LOCK ADC    DWORD PTR [ESI+EAX+7], -128
       LOCK ADC    DWORD PTR [EAX+ECX+9], 10
+      LOCK ADC    DWORD PTR [EAX+ECX+9], -128
       LOCK ADC    DWORD PTR [ECX+ECX+10], 11
+      LOCK ADC    DWORD PTR [ECX+ECX+10], -128
       LOCK ADC    DWORD PTR [ESP+ECX+13], 14
+      LOCK ADC    DWORD PTR [ESP+ECX+13], -128
       LOCK ADC    DWORD PTR [ESI+ECX+15], 16
+      LOCK ADC    DWORD PTR [ESI+ECX+15], -128
       LOCK ADC    DWORD PTR [EAX+EBP+41], 42
+      LOCK ADC    DWORD PTR [EAX+EBP+41], -128
       LOCK ADC    DWORD PTR [ECX+EBP+42], 43
+      LOCK ADC    DWORD PTR [ECX+EBP+42], -128
       LOCK ADC    DWORD PTR [ESP+EBP+45], 46
+      LOCK ADC    DWORD PTR [ESP+EBP+45], -128
       LOCK ADC    DWORD PTR [ESI+EBP+47], 48
+      LOCK ADC    DWORD PTR [ESI+EBP+47], -128
       LOCK ADC    DWORD PTR [EAX+ESI+49], 50
+      LOCK ADC    DWORD PTR [EAX+ESI+49], -128
       LOCK ADC    DWORD PTR [ESI+ESI+55], 56
+      LOCK ADC    DWORD PTR [ESI+ESI+55], -128
       LOCK ADC    DWORD PTR [EBP+86], 87
+      LOCK ADC    DWORD PTR [EBP+86], -128
       LOCK ADC    DWORD PTR [ESI+87], 88
+      LOCK ADC    DWORD PTR [ESI+87], -128
       LOCK SBB    DWORD PTR [EAX+89], 90
+      LOCK SBB    DWORD PTR [EAX+89], -128
       LOCK SBB    DWORD PTR [ECX+90], 91
+      LOCK SBB    DWORD PTR [ECX+90], -128
       LOCK SBB    DWORD PTR [EBP+EBX*2+94], 95
+      LOCK SBB    DWORD PTR [EBP+EBX*2+94], -128
       LOCK SBB    DWORD PTR [ESI+EBX*2+95], 96
+      LOCK SBB    DWORD PTR [ESI+EBX*2+95], -128
       LOCK SBB    DWORD PTR [EAX+97], 98
+      LOCK SBB    DWORD PTR [EAX+97], -128
       LOCK SBB    DWORD PTR [EAX+EBP*2+105], 106
+      LOCK SBB    DWORD PTR [EAX+EBP*2+105], -128
       LOCK SBB    DWORD PTR [ECX+EBP*2+106], 107
+      LOCK SBB    DWORD PTR [ECX+EBP*2+106], -128
       LOCK SBB    DWORD PTR [ESP+EBP*2+109], 110
+      LOCK SBB    DWORD PTR [ESP+EBP*2+109], -128
       LOCK SBB    DWORD PTR [ESI+EBP*2+111], 112
+      LOCK SBB    DWORD PTR [ESI+EBP*2+111], -128
       LOCK SBB    DWORD PTR [EAX+ESI*2+113], 114
+      LOCK SBB    DWORD PTR [EAX+ESI*2+113], -128
       LOCK SBB    DWORD PTR [ECX+ESI*2+114], 115
+      LOCK SBB    DWORD PTR [ECX+ESI*2+114], -128
       LOCK SBB    DWORD PTR [ESP+ESI*2+117], 118
+      LOCK SBB    DWORD PTR [ESP+ESI*2+117], -128
       LOCK SBB    DWORD PTR [ESI+ESI*2+119], 120
+      LOCK SBB    DWORD PTR [ESI+ESI*2+119], -128
       LOCK SBB    DWORD PTR [EAX+EAX*4-127], -126
+      LOCK SBB    DWORD PTR [EAX+EAX*4-127], 0
       LOCK SBB    DWORD PTR [ECX+EAX*4-126], -125
+      LOCK SBB    DWORD PTR [ECX+EAX*4-126], 0
       LOCK SBB    DWORD PTR [ESP+EAX*4-123], -122
+      LOCK SBB    DWORD PTR [ESP+EAX*4-123], 0
       LOCK SBB    DWORD PTR [ESI+EAX*4-121], -120
+      LOCK SBB    DWORD PTR [ESI+EAX*4-121], 0
       LOCK SBB    DWORD PTR [EAX+ECX*4-119], -118
+      LOCK SBB    DWORD PTR [EAX+ECX*4-119], 0
       LOCK SBB    DWORD PTR [ECX+ECX*4-118], -117
+      LOCK SBB    DWORD PTR [ECX+ECX*4-118], 0
       LOCK SBB    DWORD PTR [EAX+EAX+1], 2
+      LOCK SBB    DWORD PTR [EAX+EAX+1], -128
       LOCK SBB    DWORD PTR [ECX+EAX+2], 3
+      LOCK SBB    DWORD PTR [ECX+EAX+2], -128
       LOCK SBB    DWORD PTR [ESP+EAX+5], 6
+      LOCK SBB    DWORD PTR [ESP+EAX+5], -128
       LOCK SBB    DWORD PTR [ESI+EAX+7], 8
+      LOCK SBB    DWORD PTR [ESI+EAX+7], -128
       LOCK SBB    DWORD PTR [EAX+ECX+9], 10
+      LOCK SBB    DWORD PTR [EAX+ECX+9], -128
       LOCK SBB    DWORD PTR [ECX+ECX+10], 11
+      LOCK SBB    DWORD PTR [ECX+ECX+10], -128
       LOCK SBB    DWORD PTR [ESP+ECX+13], 14
+      LOCK SBB    DWORD PTR [ESP+ECX+13], -128
       LOCK SBB    DWORD PTR [ESI+ECX+15], 16
+      LOCK SBB    DWORD PTR [ESI+ECX+15], -128
       LOCK SBB    DWORD PTR [EAX+EBP+41], 42
+      LOCK SBB    DWORD PTR [EAX+EBP+41], -128
       LOCK SBB    DWORD PTR [ECX+EBP+42], 43
+      LOCK SBB    DWORD PTR [ECX+EBP+42], -128
       LOCK SBB    DWORD PTR [ESP+EBP+45], 46
+      LOCK SBB    DWORD PTR [ESP+EBP+45], -128
       LOCK SBB    DWORD PTR [ESI+EBP+47], 48
+      LOCK SBB    DWORD PTR [ESI+EBP+47], -128
       LOCK SBB    DWORD PTR [EAX+ESI+49], 50
+      LOCK SBB    DWORD PTR [EAX+ESI+49], -128
       LOCK SBB    DWORD PTR [ESI+ESI+55], 56
+      LOCK SBB    DWORD PTR [ESI+ESI+55], -128
       LOCK SBB    DWORD PTR [EBP+94], 95
+      LOCK SBB    DWORD PTR [EBP+94], -128
       LOCK SBB    DWORD PTR [ESI+95], 96
+      LOCK SBB    DWORD PTR [ESI+95], -128
       LOCK AND    DWORD PTR [EAX+97], 98
+      LOCK AND    DWORD PTR [EAX+97], -128
       LOCK AND    DWORD PTR [ECX+98], 99
+      LOCK AND    DWORD PTR [ECX+98], -128
       LOCK AND    DWORD PTR [EAX+EBP*2+105], 106
+      LOCK AND    DWORD PTR [EAX+EBP*2+105], -128
       LOCK AND    DWORD PTR [ECX+EBP*2+106], 107
+      LOCK AND    DWORD PTR [ECX+EBP*2+106], -128
       LOCK AND    DWORD PTR [ESP+EBP*2+109], 110
+      LOCK AND    DWORD PTR [ESP+EBP*2+109], -128
       LOCK AND    DWORD PTR [ESI+EBP*2+111], 112
+      LOCK AND    DWORD PTR [ESI+EBP*2+111], -128
       LOCK AND    DWORD PTR [EAX+ESI*2+113], 114
+      LOCK AND    DWORD PTR [EAX+ESI*2+113], -128
       LOCK AND    DWORD PTR [ECX+ESI*2+114], 115
+      LOCK AND    DWORD PTR [ECX+ESI*2+114], -128
       LOCK AND    DWORD PTR [ESP+ESI*2+117], 118
+      LOCK AND    DWORD PTR [ESP+ESI*2+117], -128
       LOCK AND    DWORD PTR [ESI+ESI*2+119], 120
+      LOCK AND    DWORD PTR [ESI+ESI*2+119], -128
       LOCK AND    DWORD PTR [EAX+EAX*4-127], -126
+      LOCK AND    DWORD PTR [EAX+EAX*4-127], 0
       LOCK AND    DWORD PTR [ECX+EAX*4-126], -125
+      LOCK AND    DWORD PTR [ECX+EAX*4-126], 0
       LOCK AND    DWORD PTR [ESP+EAX*4-123], -122
+      LOCK AND    DWORD PTR [ESP+EAX*4-123], 0
       LOCK AND    DWORD PTR [ESI+EAX*4-121], -120
+      LOCK AND    DWORD PTR [ESI+EAX*4-121], 0
       LOCK AND    DWORD PTR [EAX+ECX*4-119], -118
+      LOCK AND    DWORD PTR [EAX+ECX*4-119], 0
       LOCK AND    DWORD PTR [ECX+ECX*4-118], -117
+      LOCK AND    DWORD PTR [ECX+ECX*4-118], 0
       LOCK AND    DWORD PTR [ESP+ECX*4-115], -114
+      LOCK AND    DWORD PTR [ESP+ECX*4-115], 0
       LOCK AND    DWORD PTR [ESI+ECX*4-113], -112
+      LOCK AND    DWORD PTR [ESI+ECX*4-113], 0
       LOCK AND    DWORD PTR [EAX-95], -94
+      LOCK AND    DWORD PTR [EAX-95], 0
       LOCK AND    DWORD PTR [EAX+EAX+1], 2
+      LOCK AND    DWORD PTR [EAX+EAX+1], -128
       LOCK AND    DWORD PTR [ECX+EAX+2], 3
+      LOCK AND    DWORD PTR [ECX+EAX+2], -128
       LOCK AND    DWORD PTR [ESP+EAX+5], 6
+      LOCK AND    DWORD PTR [ESP+EAX+5], -128
       LOCK AND    DWORD PTR [ESI+EAX+7], 8
+      LOCK AND    DWORD PTR [ESI+EAX+7], -128
       LOCK AND    DWORD PTR [EAX+ECX+9], 10
+      LOCK AND    DWORD PTR [EAX+ECX+9], -128
       LOCK AND    DWORD PTR [ECX+ECX+10], 11
+      LOCK AND    DWORD PTR [ECX+ECX+10], -128
       LOCK AND    DWORD PTR [ESP+ECX+13], 14
+      LOCK AND    DWORD PTR [ESP+ECX+13], -128
       LOCK AND    DWORD PTR [ESI+ECX+15], 16
+      LOCK AND    DWORD PTR [ESI+ECX+15], -128
       LOCK AND    DWORD PTR [EAX+EBP+41], 42
+      LOCK AND    DWORD PTR [EAX+EBP+41], -128
       LOCK AND    DWORD PTR [ECX+EBP+42], 43
+      LOCK AND    DWORD PTR [ECX+EBP+42], -128
       LOCK AND    DWORD PTR [ESP+EBP+45], 46
+      LOCK AND    DWORD PTR [ESP+EBP+45], -128
       LOCK AND    DWORD PTR [ESI+EBP+47], 48
+      LOCK AND    DWORD PTR [ESI+EBP+47], -128
       LOCK AND    DWORD PTR [EAX+ESI+49], 50
+      LOCK AND    DWORD PTR [EAX+ESI+49], -128
       LOCK AND    DWORD PTR [ESI+ESI+55], 56
+      LOCK AND    DWORD PTR [ESI+ESI+55], -128
       LOCK AND    DWORD PTR [EBP+102], 103
+      LOCK AND    DWORD PTR [EBP+102], -128
       LOCK AND    DWORD PTR [ESI+103], 104
+      LOCK AND    DWORD PTR [ESI+103], -128
       LOCK SUB    DWORD PTR [EAX+105], 106
+      LOCK SUB    DWORD PTR [EAX+105], -128
       LOCK SUB    DWORD PTR [ECX+106], 107
+      LOCK SUB    DWORD PTR [ECX+106], -128
       LOCK SUB    DWORD PTR [EBP+EBP*2+110], 111
+      LOCK SUB    DWORD PTR [EBP+EBP*2+110], -128
       LOCK SUB    DWORD PTR [ESI+EBP*2+111], 112
+      LOCK SUB    DWORD PTR [ESI+EBP*2+111], -128
       LOCK SUB    DWORD PTR [EAX+ESI*2+113], 114
+      LOCK SUB    DWORD PTR [EAX+ESI*2+113], -128
       LOCK SUB    DWORD PTR [ECX+ESI*2+114], 115
+      LOCK SUB    DWORD PTR [ECX+ESI*2+114], -128
       LOCK SUB    DWORD PTR [ESP+ESI*2+117], 118
+      LOCK SUB    DWORD PTR [ESP+ESI*2+117], -128
       LOCK SUB    DWORD PTR [ESI+ESI*2+119], 120
+      LOCK SUB    DWORD PTR [ESI+ESI*2+119], -128
       LOCK SUB    DWORD PTR [EAX+EAX*4-127], -126
+      LOCK SUB    DWORD PTR [EAX+EAX*4-127], 0
       LOCK SUB    DWORD PTR [ECX+EAX*4-126], -125
+      LOCK SUB    DWORD PTR [ECX+EAX*4-126], 0
       LOCK SUB    DWORD PTR [ESP+EAX*4-123], -122
+      LOCK SUB    DWORD PTR [ESP+EAX*4-123], 0
       LOCK SUB    DWORD PTR [ESI+EAX*4-121], -120
+      LOCK SUB    DWORD PTR [ESI+EAX*4-121], 0
       LOCK SUB    DWORD PTR [EAX+ECX*4-119], -118
+      LOCK SUB    DWORD PTR [EAX+ECX*4-119], 0
       LOCK SUB    DWORD PTR [ECX+ECX*4-118], -117
+      LOCK SUB    DWORD PTR [ECX+ECX*4-118], 0
       LOCK SUB    DWORD PTR [ESP+ECX*4-115], -114
+      LOCK SUB    DWORD PTR [ESP+ECX*4-115], 0
       LOCK SUB    DWORD PTR [ESI+ECX*4-113], -112
+      LOCK SUB    DWORD PTR [ESI+ECX*4-113], 0
       LOCK SUB    DWORD PTR [EAX-95], -94
+      LOCK SUB    DWORD PTR [EAX-95], 0
       LOCK SUB    DWORD PTR [EAX+EBP*4-87], -86
+      LOCK SUB    DWORD PTR [EAX+EBP*4-87], 0
       LOCK SUB    DWORD PTR [ECX+EBP*4-86], -85
+      LOCK SUB    DWORD PTR [ECX+EBP*4-86], 0
       LOCK SUB    DWORD PTR [EAX+EAX+1], 2
+      LOCK SUB    DWORD PTR [EAX+EAX+1], -128
       LOCK SUB    DWORD PTR [ECX+EAX+2], 3
+      LOCK SUB    DWORD PTR [ECX+EAX+2], -128
       LOCK SUB    DWORD PTR [ESP+EAX+5], 6
+      LOCK SUB    DWORD PTR [ESP+EAX+5], -128
       LOCK SUB    DWORD PTR [ESI+EAX+7], 8
+      LOCK SUB    DWORD PTR [ESI+EAX+7], -128
       LOCK SUB    DWORD PTR [EAX+ECX+9], 10
+      LOCK SUB    DWORD PTR [EAX+ECX+9], -128
       LOCK SUB    DWORD PTR [ECX+ECX+10], 11
+      LOCK SUB    DWORD PTR [ECX+ECX+10], -128
       LOCK SUB    DWORD PTR [ESP+ECX+13], 14
+      LOCK SUB    DWORD PTR [ESP+ECX+13], -128
       LOCK SUB    DWORD PTR [ESI+ECX+15], 16
+      LOCK SUB    DWORD PTR [ESI+ECX+15], -128
       LOCK SUB    DWORD PTR [EAX+EBP+41], 42
+      LOCK SUB    DWORD PTR [EAX+EBP+41], -128
       LOCK SUB    DWORD PTR [ECX+EBP+42], 43
+      LOCK SUB    DWORD PTR [ECX+EBP+42], -128
       LOCK SUB    DWORD PTR [ESP+EBP+45], 46
+      LOCK SUB    DWORD PTR [ESP+EBP+45], -128
       LOCK SUB    DWORD PTR [ESI+EBP+47], 48
+      LOCK SUB    DWORD PTR [ESI+EBP+47], -128
       LOCK SUB    DWORD PTR [EAX+ESI+49], 50
+      LOCK SUB    DWORD PTR [EAX+ESI+49], -128
       LOCK SUB    DWORD PTR [ESI+ESI+55], 56
+      LOCK SUB    DWORD PTR [ESI+ESI+55], -128
       LOCK SUB    DWORD PTR [EBP+110], 111
+      LOCK SUB    DWORD PTR [EBP+110], -128
       LOCK SUB    DWORD PTR [ESI+111], 112
+      LOCK SUB    DWORD PTR [ESI+111], -128
       LOCK XOR    DWORD PTR [EAX+113], 114
+      LOCK XOR    DWORD PTR [EAX+113], -128
       LOCK XOR    DWORD PTR [ECX+114], 115
+      LOCK XOR    DWORD PTR [ECX+114], -128
       LOCK XOR    DWORD PTR [EBP+ESI*2+118], 119
+      LOCK XOR    DWORD PTR [EBP+ESI*2+118], -128
       LOCK XOR    DWORD PTR [ESI+ESI*2+119], 120
+      LOCK XOR    DWORD PTR [ESI+ESI*2+119], -128
       LOCK XOR    DWORD PTR [EAX+EDI*2+121], 122
+      LOCK XOR    DWORD PTR [EAX+EDI*2+121], -128
       LOCK XOR    DWORD PTR [ECX+EDI*2+122], 123
+      LOCK XOR    DWORD PTR [ECX+EDI*2+122], -128
       LOCK XOR    DWORD PTR [EAX+EAX*4-127], -126
+      LOCK XOR    DWORD PTR [EAX+EAX*4-127], 0
       LOCK XOR    DWORD PTR [ECX+EAX*4-126], -125
+      LOCK XOR    DWORD PTR [ECX+EAX*4-126], 0
       LOCK XOR    DWORD PTR [ESP+EAX*4-123], -122
+      LOCK XOR    DWORD PTR [ESP+EAX*4-123], 0
       LOCK XOR    DWORD PTR [ESI+EAX*4-121], -120
+      LOCK XOR    DWORD PTR [ESI+EAX*4-121], 0
       LOCK XOR    DWORD PTR [EAX+ECX*4-119], -118
+      LOCK XOR    DWORD PTR [EAX+ECX*4-119], 0
       LOCK XOR    DWORD PTR [ECX+ECX*4-118], -117
+      LOCK XOR    DWORD PTR [ECX+ECX*4-118], 0
       LOCK XOR    DWORD PTR [ESP+ECX*4-115], -114
+      LOCK XOR    DWORD PTR [ESP+ECX*4-115], 0
       LOCK XOR    DWORD PTR [ESI+ECX*4-113], -112
+      LOCK XOR    DWORD PTR [ESI+ECX*4-113], 0
       LOCK XOR    DWORD PTR [EAX-95], -94
+      LOCK XOR    DWORD PTR [EAX-95], 0
       LOCK XOR    DWORD PTR [EAX+EBP*4-87], -86
+      LOCK XOR    DWORD PTR [EAX+EBP*4-87], 0
       LOCK XOR    DWORD PTR [ECX+EBP*4-86], -85
+      LOCK XOR    DWORD PTR [ECX+EBP*4-86], 0
       LOCK XOR    DWORD PTR [ESP+EBP*4-83], -82
+      LOCK XOR    DWORD PTR [ESP+EBP*4-83], 0
       LOCK XOR    DWORD PTR [ESI+EBP*4-81], -80
+      LOCK XOR    DWORD PTR [ESI+EBP*4-81], 0
       LOCK XOR    DWORD PTR [EAX+EAX+1], 2
+      LOCK XOR    DWORD PTR [EAX+EAX+1], -128
       LOCK XOR    DWORD PTR [ECX+EAX+2], 3
+      LOCK XOR    DWORD PTR [ECX+EAX+2], -128
       LOCK XOR    DWORD PTR [ESP+EAX+5], 6
+      LOCK XOR    DWORD PTR [ESP+EAX+5], -128
       LOCK XOR    DWORD PTR [ESI+EAX+7], 8
+      LOCK XOR    DWORD PTR [ESI+EAX+7], -128
       LOCK XOR    DWORD PTR [EAX+ECX+9], 10
+      LOCK XOR    DWORD PTR [EAX+ECX+9], -128
       LOCK XOR    DWORD PTR [ECX+ECX+10], 11
+      LOCK XOR    DWORD PTR [ECX+ECX+10], -128
       LOCK XOR    DWORD PTR [ESP+ECX+13], 14
+      LOCK XOR    DWORD PTR [ESP+ECX+13], -128
       LOCK XOR    DWORD PTR [ESI+ECX+15], 16
+      LOCK XOR    DWORD PTR [ESI+ECX+15], -128
       LOCK XOR    DWORD PTR [EAX+EBP+41], 42
+      LOCK XOR    DWORD PTR [EAX+EBP+41], -128
       LOCK XOR    DWORD PTR [ECX+EBP+42], 43
+      LOCK XOR    DWORD PTR [ECX+EBP+42], -128
       LOCK XOR    DWORD PTR [ESP+EBP+45], 46
+      LOCK XOR    DWORD PTR [ESP+EBP+45], -128
       LOCK XOR    DWORD PTR [ESI+EBP+47], 48
+      LOCK XOR    DWORD PTR [ESI+EBP+47], -128
       LOCK XOR    DWORD PTR [EAX+ESI+49], 50
+      LOCK XOR    DWORD PTR [EAX+ESI+49], -128
       LOCK XOR    DWORD PTR [ESI+ESI+55], 56
+      LOCK XOR    DWORD PTR [ESI+ESI+55], -128
       LOCK XOR    DWORD PTR [EBP+118], 119
+      LOCK XOR    DWORD PTR [EBP+118], -128
       LOCK XOR    DWORD PTR [ESI+119], 120
+      LOCK XOR    DWORD PTR [ESI+119], -128
+      LOCK ADD    DWORD PTR [EAX-7B7C7D7FH], -123
+      LOCK ADD    DWORD PTR [ECX-7A7B7C7EH], -122
       LOCK XCHG   [EDI-74757678H], AL
       LOCK XCHG   [EAX-73747577H], CL
       LOCK XCHG   [ECX-72737476H], CL

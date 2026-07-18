@@ -16,9 +16,14 @@
 
 #include "dis_scn2650.h"
 #include "gen_driver.h"
+#include "tokenizer.h"
 
 using namespace libasm::scn2650;
 using namespace libasm::gen;
+
+namespace {
+const RegisterTokenizer REG_Rn("R", 3, "Rn");
+}  // namespace
 
 int main(int argc, const char **argv) {
     DisScn2650 dis2650;
@@ -29,7 +34,7 @@ int main(int argc, const char **argv) {
     dis2650.setOption("relative", "disable");
     dis2650.setOption("intel-style", "enable");
 
-    TestGenerator generator(driver, dis2650, 0x0100);
+    TestGenerator generator(driver, dis2650, 0x0100, standardTokenizers<IntelNumber>(dis2650.curSym(), {&REG_Rn}));
     generator.generate();
 
     return driver.close();

@@ -120,11 +120,13 @@
       exts.b r0, r0
       exts.w r0, r0
       add    #0, r0
+      add    #-$80, r0
       mov.b  r0, @(0,r0)
       mov.w  r0, @(0,r0)
       mov.b  @(0,r0), r0
       mov.w  @(0,r0), r0
       cmp/eq #0, r0
+      cmp/eq #-$80, r0
       bt     $+4
       bf     $+4
       bt/s   $+4
@@ -141,15 +143,24 @@
       mov.l  @(0,gbr), r0
       mova   $+2, r0
       tst    #0, r0
+      tst    #-$80, r0
       and    #0, r0
+      and    #-$80, r0
       xor    #0, r0
+      xor    #-$80, r0
       or     #0, r0
+      or     #-$80, r0
       tst.b  #0, @(r0,gbr)
+      tst.b  #-$80, @(r0,gbr)
       and.b  #0, @(r0,gbr)
+      and.b  #-$80, @(r0,gbr)
       xor.b  #0, @(r0,gbr)
+      xor.b  #-$80, @(r0,gbr)
       or.b   #0, @(r0,gbr)
+      or.b   #-$80, @(r0,gbr)
       mov.l  $+4, r0
       mov    #0, r0
+      mov    #-$80, r0
       fadd   fr0, fr0
       fsub   fr0, fr0
       fmul   fr0, fr0

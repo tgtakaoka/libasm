@@ -16,6 +16,7 @@
 
 #include "dis_pdp11.h"
 #include "gen_driver.h"
+#include "tokenizer.h"
 
 using namespace libasm::pdp11;
 using namespace libasm::gen;
@@ -33,7 +34,12 @@ int main(int argc, const char **argv) {
     if (driver.generateGas())
         dispdp11.setOption("gnu-as", "on");
 
-    TestGenerator generator(driver, dispdp11, 0x080);
+    // pdp11 displacements are unsigned octal (no sign to consolidate), so no
+    // index tokenizer.  gnu-as prints Motorola-style ($..) numbers, native octal.
+    const auto sym = dispdp11.curSym();
+    const auto toks = driver.generateGas() ? standardTokenizers<MotorolaNumber>(sym)
+                                           : standardTokenizers<IntelNumber>(sym);
+    TestGenerator generator(driver, dispdp11, 0x080, toks);
     generator.generate();
 
     return driver.close();

@@ -1782,65 +1782,145 @@
       IMUL    CX, [BX+80], 5251H
       IMUL    SP, [BX+SI+97], 6362H
       PUSH    107
+      PUSH    -128
       IMUL    BP, [SI+109], 110
+      IMUL    BP, [SI+109], -128
       IMUL    BP, [BP+111], 112
+      IMUL    BP, [BP+111], -128
       IMUL    BP, [BX+112], 113
+      IMUL    BP, [BX+112], -128
       IMUL    SI, [BX+SI+113], 114
+      IMUL    SI, [BX+SI+113], -128
       IMUL    SI, [BP+SI+115], 116
+      IMUL    SI, [BP+SI+115], -128
       IMUL    SI, [SI+117], 118
+      IMUL    SI, [SI+117], -128
       IMUL    SI, [BP+119], 120
+      IMUL    SI, [BP+119], -128
       IMUL    SI, [BX+120], 121
+      IMUL    SI, [BX+120], -128
+      IMUL    AX, [BX+SI+8281H], -125
+      IMUL    AX, [BP+SI+8483H], -123
+      IMUL    AX, [SI+8685H], -121
+      IMUL    AX, [BP+8887H], -119
+      IMUL    AX, [BX+8988H], -118
+      IMUL    CX, [BX+SI+8A89H], -117
+      IMUL    CX, [BP+SI+8C8BH], -115
+      IMUL    CX, [SI+8E8DH], -113
+      IMUL    CX, [BP+908FH], -111
+      IMUL    CX, [BX+9190H], -110
+      IMUL    SP, [BX+SI+0A2A1H], -93
+      IMUL    SP, [BP+SI+0A4A3H], -91
+      IMUL    SP, [SI+0A6A5H], -89
+      IMUL    SP, [BP+0A8A7H], -87
+      IMUL    SP, [BX+0A9A8H], -86
+      IMUL    SI, [BX+SI+0B2B1H], -77
+      IMUL    SI, [BP+SI+0B4B3H], -75
+      IMUL    SI, [SI+0B6B5H], -73
+      IMUL    SI, [BP+0B8B7H], -71
+      IMUL    SI, [BX+0B9B8H], -70
       IMUL    AX, -63
+      IMUL    AX, 0
       IMUL    AX, CX, -62
+      IMUL    AX, CX, 0
       IMUL    AX, SP, -59
+      IMUL    AX, SP, 0
       IMUL    AX, SI, -57
+      IMUL    AX, SI, 0
       IMUL    CX, AX, -55
+      IMUL    CX, AX, 0
       IMUL    CX, -54
+      IMUL    CX, 0
       IMUL    CX, DX, -53
+      IMUL    CX, DX, 0
       IMUL    CX, SP, -51
+      IMUL    CX, SP, 0
       IMUL    CX, SI, -49
+      IMUL    CX, SI, 0
       IMUL    SP, AX, -31
+      IMUL    SP, AX, 0
       IMUL    SP, CX, -30
+      IMUL    SP, CX, 0
       IMUL    SP, -27
+      IMUL    SP, 0
       IMUL    SP, BP, -26
+      IMUL    SP, BP, 0
       IMUL    SP, SI, -25
+      IMUL    SP, SI, 0
       IMUL    SI, AX, -15
+      IMUL    SI, AX, 0
       IMUL    SI, CX, -14
+      IMUL    SI, CX, 0
       IMUL    SI, SP, -11
+      IMUL    SI, SP, 0
       IMUL    SI, -9
+      IMUL    SI, 0
       IMUL    SI, DI, -8
+      IMUL    SI, DI, 0
       IMUL    AX, [BX+SI], 1
+      IMUL    AX, [BX+SI], -128
       IMUL    AX, [BP+SI], 3
+      IMUL    AX, [BP+SI], -128
       IMUL    AX, [SI], 5
+      IMUL    AX, [SI], -128
       IMUL    AX, [0807H], 9
+      IMUL    AX, [0807H], -128
       IMUL    AX, [BX], 8
+      IMUL    AX, [BX], -128
       IMUL    CX, [BX+SI], 9
+      IMUL    CX, [BX+SI], -128
       IMUL    CX, [BP+SI], 11
+      IMUL    CX, [BP+SI], -128
       IMUL    CX, [SI], 13
+      IMUL    CX, [SI], -128
       IMUL    CX, [100FH], 17
+      IMUL    CX, [100FH], -128
       IMUL    CX, [BX], 16
+      IMUL    CX, [BX], -128
       IMUL    SP, [BX+SI], 33
+      IMUL    SP, [BX+SI], -128
       IMUL    SP, [BP+SI], 35
+      IMUL    SP, [BP+SI], -128
       IMUL    SP, [SI], 37
+      IMUL    SP, [SI], -128
       IMUL    SP, [2827H], 41
+      IMUL    SP, [2827H], -128
       IMUL    SP, [BX], 40
+      IMUL    SP, [BX], -128
       IMUL    SI, [BX+SI], 49
+      IMUL    SI, [BX+SI], -128
       IMUL    SI, [BP+SI], 51
+      IMUL    SI, [BP+SI], -128
       IMUL    SI, [SI], 53
+      IMUL    SI, [SI], -128
       IMUL    SI, [3837H], 57
+      IMUL    SI, [3837H], -128
       IMUL    SI, [BX], 56
+      IMUL    SI, [BX], -128
       IMUL    AX, [BX+SI+65], 66
+      IMUL    AX, [BX+SI+65], -128
       IMUL    AX, [BP+SI+67], 68
+      IMUL    AX, [BP+SI+67], -128
       IMUL    AX, [SI+69], 70
+      IMUL    AX, [SI+69], -128
       IMUL    AX, [BP+71], 72
+      IMUL    AX, [BP+71], -128
       IMUL    AX, [BX+72], 73
+      IMUL    AX, [BX+72], -128
       IMUL    CX, [BX+SI+73], 74
+      IMUL    CX, [BX+SI+73], -128
       IMUL    CX, [BP+SI+75], 76
+      IMUL    CX, [BP+SI+75], -128
       IMUL    CX, [SI+77], 78
+      IMUL    CX, [SI+77], -128
       IMUL    CX, [BP+79], 80
+      IMUL    CX, [BP+79], -128
       IMUL    CX, [BX+80], 81
+      IMUL    CX, [BX+80], -128
       IMUL    SP, [BX+SI+97], 98
+      IMUL    SP, [BX+SI+97], -128
       IMUL    SP, [BP+SI+99], 100
+      IMUL    SP, [BP+SI+99], -128
       INSB
       INSW
       OUTSB
@@ -2149,6 +2229,45 @@
       CMP     WORD PTR [BP+127], 8180H
       CMP     WORD PTR [BX-128], 8281H
       ADD     WORD PTR [BX+SI+8281H], 8483H
+      ADD     WORD PTR [SI+8685H], -121
+      ADD     WORD PTR [BP+8887H], -119
+      ADD     WORD PTR [BX+8988H], -118
+      OR      WORD PTR [BX+SI+8A89H], -117
+      OR      WORD PTR [BP+SI+8C8BH], -115
+      OR      WORD PTR [SI+8E8DH], -113
+      OR      WORD PTR [BP+908FH], -111
+      OR      WORD PTR [BX+9190H], -110
+      ADC     WORD PTR [BX+SI+9291H], -109
+      ADC     WORD PTR [BP+SI+9493H], -107
+      ADC     WORD PTR [SI+9695H], -105
+      ADC     WORD PTR [BP+9897H], -103
+      ADC     WORD PTR [BX+9998H], -102
+      SBB     WORD PTR [BX+SI+9A99H], -101
+      SBB     WORD PTR [BP+SI+9C9BH], -99
+      SBB     WORD PTR [SI+9E9DH], -97
+      SBB     WORD PTR [BP+0A09FH], -95
+      SBB     WORD PTR [BX+0A1A0H], -94
+      AND     WORD PTR [BX+SI+0A2A1H], -93
+      AND     WORD PTR [BP+SI+0A4A3H], -91
+      AND     WORD PTR [SI+0A6A5H], -89
+      AND     WORD PTR [BP+0A8A7H], -87
+      AND     WORD PTR [BX+0A9A8H], -86
+      SUB     WORD PTR [BX+SI+0AAA9H], -85
+      SUB     WORD PTR [BP+SI+0ACABH], -83
+      SUB     WORD PTR [SI+0AEADH], -81
+      SUB     WORD PTR [BP+0B0AFH], -79
+      SUB     WORD PTR [BX+0B1B0H], -78
+      XOR     WORD PTR [BX+SI+0B2B1H], -77
+      XOR     WORD PTR [BP+SI+0B4B3H], -75
+      XOR     WORD PTR [SI+0B6B5H], -73
+      XOR     WORD PTR [BP+0B8B7H], -71
+      XOR     WORD PTR [BX+0B9B8H], -70
+      CMP     WORD PTR [BX+SI+0BAB9H], -69
+      CMP     WORD PTR [BP+SI+0BCBBH], -67
+      CMP     WORD PTR [SI+0BEBDH], -65
+      CMP     WORD PTR [BP+0C0BFH], -63
+      CMP     WORD PTR [BX+0C1C0H], -62
+      ADD     AX, -63
       TEST    [DI+8786H], AL
       TEST    [BP+8887H], AL
       TEST    [BX+8988H], AL
@@ -5571,76 +5690,181 @@
       LOCK XOR    WORD PTR [BP+119], 7978H
       LOCK XOR    WORD PTR [BX+120], 7A79H
       LOCK ADD    WORD PTR [BX+SI+8281H], 8483H
+      LOCK ADD    WORD PTR [SI+8685H], -121
+      LOCK ADD    WORD PTR [BP+8887H], -119
+      LOCK ADD    WORD PTR [BX+8988H], -118
+      LOCK OR WORD PTR [BX+SI+8A89H], -117
+      LOCK OR WORD PTR [BP+SI+8C8BH], -115
+      LOCK OR WORD PTR [SI+8E8DH], -113
+      LOCK OR WORD PTR [BP+908FH], -111
+      LOCK OR WORD PTR [BX+9190H], -110
+      LOCK ADC    WORD PTR [BX+SI+9291H], -109
+      LOCK ADC    WORD PTR [BP+SI+9493H], -107
+      LOCK ADC    WORD PTR [SI+9695H], -105
+      LOCK ADC    WORD PTR [BP+9897H], -103
+      LOCK ADC    WORD PTR [BX+9998H], -102
+      LOCK SBB    WORD PTR [BX+SI+9A99H], -101
+      LOCK SBB    WORD PTR [BP+SI+9C9BH], -99
+      LOCK SBB    WORD PTR [SI+9E9DH], -97
+      LOCK SBB    WORD PTR [BP+0A09FH], -95
+      LOCK SBB    WORD PTR [BX+0A1A0H], -94
+      LOCK AND    WORD PTR [BX+SI+0A2A1H], -93
+      LOCK AND    WORD PTR [BP+SI+0A4A3H], -91
+      LOCK AND    WORD PTR [SI+0A6A5H], -89
+      LOCK AND    WORD PTR [BP+0A8A7H], -87
+      LOCK AND    WORD PTR [BX+0A9A8H], -86
+      LOCK SUB    WORD PTR [BX+SI+0AAA9H], -85
+      LOCK SUB    WORD PTR [BP+SI+0ACABH], -83
+      LOCK SUB    WORD PTR [SI+0AEADH], -81
+      LOCK SUB    WORD PTR [BP+0B0AFH], -79
+      LOCK SUB    WORD PTR [BX+0B1B0H], -78
+      LOCK XOR    WORD PTR [BX+SI+0B2B1H], -77
+      LOCK XOR    WORD PTR [BP+SI+0B4B3H], -75
+      LOCK XOR    WORD PTR [SI+0B6B5H], -73
+      LOCK XOR    WORD PTR [BP+0B8B7H], -71
+      LOCK XOR    WORD PTR [BX+0B9B8H], -70
       LOCK ADD    WORD PTR [BX+SI], 1
+      LOCK ADD    WORD PTR [BX+SI], -128
       LOCK ADD    WORD PTR [BP+SI], 3
+      LOCK ADD    WORD PTR [BP+SI], -128
       LOCK ADD    WORD PTR [SI], 5
+      LOCK ADD    WORD PTR [SI], -128
       LOCK ADD    WORD PTR [0807H], 9
+      LOCK ADD    WORD PTR [0807H], -128
       LOCK ADD    WORD PTR [BX], 8
+      LOCK ADD    WORD PTR [BX], -128
       LOCK OR WORD PTR [BX+SI], 9
+      LOCK OR WORD PTR [BX+SI], -128
       LOCK OR WORD PTR [BP+SI], 11
+      LOCK OR WORD PTR [BP+SI], -128
       LOCK OR WORD PTR [SI], 13
+      LOCK OR WORD PTR [SI], -128
       LOCK OR WORD PTR [100FH], 17
+      LOCK OR WORD PTR [100FH], -128
       LOCK OR WORD PTR [BX], 16
+      LOCK OR WORD PTR [BX], -128
       LOCK ADC    WORD PTR [BX+SI], 17
+      LOCK ADC    WORD PTR [BX+SI], -128
       LOCK ADC    WORD PTR [BP+SI], 19
+      LOCK ADC    WORD PTR [BP+SI], -128
       LOCK ADC    WORD PTR [SI], 21
+      LOCK ADC    WORD PTR [SI], -128
       LOCK ADC    WORD PTR [1817H], 25
+      LOCK ADC    WORD PTR [1817H], -128
       LOCK ADC    WORD PTR [BX], 24
+      LOCK ADC    WORD PTR [BX], -128
       LOCK SBB    WORD PTR [BX+SI], 25
+      LOCK SBB    WORD PTR [BX+SI], -128
       LOCK SBB    WORD PTR [BP+SI], 27
+      LOCK SBB    WORD PTR [BP+SI], -128
       LOCK SBB    WORD PTR [SI], 29
+      LOCK SBB    WORD PTR [SI], -128
       LOCK SBB    WORD PTR [201FH], 33
+      LOCK SBB    WORD PTR [201FH], -128
       LOCK SBB    WORD PTR [BX], 32
+      LOCK SBB    WORD PTR [BX], -128
       LOCK AND    WORD PTR [BX+SI], 33
+      LOCK AND    WORD PTR [BX+SI], -128
       LOCK AND    WORD PTR [BP+SI], 35
+      LOCK AND    WORD PTR [BP+SI], -128
       LOCK AND    WORD PTR [SI], 37
+      LOCK AND    WORD PTR [SI], -128
       LOCK AND    WORD PTR [2827H], 41
+      LOCK AND    WORD PTR [2827H], -128
       LOCK AND    WORD PTR [BX], 40
+      LOCK AND    WORD PTR [BX], -128
       LOCK SUB    WORD PTR [BX+SI], 41
+      LOCK SUB    WORD PTR [BX+SI], -128
       LOCK SUB    WORD PTR [BP+SI], 43
+      LOCK SUB    WORD PTR [BP+SI], -128
       LOCK SUB    WORD PTR [SI], 45
+      LOCK SUB    WORD PTR [SI], -128
       LOCK SUB    WORD PTR [302FH], 49
+      LOCK SUB    WORD PTR [302FH], -128
       LOCK SUB    WORD PTR [BX], 48
+      LOCK SUB    WORD PTR [BX], -128
       LOCK XOR    WORD PTR [BX+SI], 49
+      LOCK XOR    WORD PTR [BX+SI], -128
       LOCK XOR    WORD PTR [BP+SI], 51
+      LOCK XOR    WORD PTR [BP+SI], -128
       LOCK XOR    WORD PTR [SI], 53
+      LOCK XOR    WORD PTR [SI], -128
       LOCK XOR    WORD PTR [3837H], 57
+      LOCK XOR    WORD PTR [3837H], -128
       LOCK XOR    WORD PTR [BX], 56
+      LOCK XOR    WORD PTR [BX], -128
       LOCK ADD    WORD PTR [BX+SI+65], 66
+      LOCK ADD    WORD PTR [BX+SI+65], -128
       LOCK ADD    WORD PTR [BP+SI+67], 68
+      LOCK ADD    WORD PTR [BP+SI+67], -128
       LOCK ADD    WORD PTR [SI+69], 70
+      LOCK ADD    WORD PTR [SI+69], -128
       LOCK ADD    WORD PTR [BP+71], 72
+      LOCK ADD    WORD PTR [BP+71], -128
       LOCK ADD    WORD PTR [BX+72], 73
+      LOCK ADD    WORD PTR [BX+72], -128
       LOCK OR WORD PTR [BX+SI+73], 74
+      LOCK OR WORD PTR [BX+SI+73], -128
       LOCK OR WORD PTR [BP+SI+75], 76
+      LOCK OR WORD PTR [BP+SI+75], -128
       LOCK OR WORD PTR [SI+77], 78
+      LOCK OR WORD PTR [SI+77], -128
       LOCK OR WORD PTR [BP+79], 80
+      LOCK OR WORD PTR [BP+79], -128
       LOCK OR WORD PTR [BX+80], 81
+      LOCK OR WORD PTR [BX+80], -128
       LOCK ADC    WORD PTR [BX+SI+81], 82
+      LOCK ADC    WORD PTR [BX+SI+81], -128
       LOCK ADC    WORD PTR [BP+SI+83], 84
+      LOCK ADC    WORD PTR [BP+SI+83], -128
       LOCK ADC    WORD PTR [SI+85], 86
+      LOCK ADC    WORD PTR [SI+85], -128
       LOCK ADC    WORD PTR [BP+87], 88
+      LOCK ADC    WORD PTR [BP+87], -128
       LOCK ADC    WORD PTR [BX+88], 89
+      LOCK ADC    WORD PTR [BX+88], -128
       LOCK SBB    WORD PTR [BX+SI+89], 90
+      LOCK SBB    WORD PTR [BX+SI+89], -128
       LOCK SBB    WORD PTR [BP+SI+91], 92
+      LOCK SBB    WORD PTR [BP+SI+91], -128
       LOCK SBB    WORD PTR [SI+93], 94
+      LOCK SBB    WORD PTR [SI+93], -128
       LOCK SBB    WORD PTR [BP+95], 96
+      LOCK SBB    WORD PTR [BP+95], -128
       LOCK SBB    WORD PTR [BX+96], 97
+      LOCK SBB    WORD PTR [BX+96], -128
       LOCK AND    WORD PTR [BX+SI+97], 98
+      LOCK AND    WORD PTR [BX+SI+97], -128
       LOCK AND    WORD PTR [BP+SI+99], 100
+      LOCK AND    WORD PTR [BP+SI+99], -128
       LOCK AND    WORD PTR [SI+101], 102
+      LOCK AND    WORD PTR [SI+101], -128
       LOCK AND    WORD PTR [BP+103], 104
+      LOCK AND    WORD PTR [BP+103], -128
       LOCK AND    WORD PTR [BX+104], 105
+      LOCK AND    WORD PTR [BX+104], -128
       LOCK SUB    WORD PTR [BX+SI+105], 106
+      LOCK SUB    WORD PTR [BX+SI+105], -128
       LOCK SUB    WORD PTR [BP+SI+107], 108
+      LOCK SUB    WORD PTR [BP+SI+107], -128
       LOCK SUB    WORD PTR [SI+109], 110
+      LOCK SUB    WORD PTR [SI+109], -128
       LOCK SUB    WORD PTR [BP+111], 112
+      LOCK SUB    WORD PTR [BP+111], -128
       LOCK SUB    WORD PTR [BX+112], 113
+      LOCK SUB    WORD PTR [BX+112], -128
       LOCK XOR    WORD PTR [BX+SI+113], 114
+      LOCK XOR    WORD PTR [BX+SI+113], -128
       LOCK XOR    WORD PTR [BP+SI+115], 116
+      LOCK XOR    WORD PTR [BP+SI+115], -128
       LOCK XOR    WORD PTR [SI+117], 118
+      LOCK XOR    WORD PTR [SI+117], -128
       LOCK XOR    WORD PTR [BP+119], 120
+      LOCK XOR    WORD PTR [BP+119], -128
       LOCK XOR    WORD PTR [BX+120], 121
+      LOCK XOR    WORD PTR [BX+120], -128
+      LOCK ADD    WORD PTR [BX+SI+8281H], -125
+      LOCK ADD    WORD PTR [BP+SI+8483H], -123
       LOCK XCHG   [BX+8988H], AL
       LOCK XCHG   [BX+SI+8A89H], CL
       LOCK XCHG   [BP+SI+8C8BH], CL

@@ -16,6 +16,7 @@
 
 #include "dis_mc6800.h"
 #include "gen_driver.h"
+#include "tokenizer.h"
 
 using namespace libasm::mc6800;
 using namespace libasm::gen;
@@ -30,7 +31,12 @@ int main(int argc, const char **argv) {
     if (driver.generateGas())
         dis6800.setOption("gnu-as", "enable");
 
-    TestGenerator generator(driver, dis6800, 0x0100);
+    // 6800 index offset is unsigned 8-bit (no sign to consolidate).  gnu-as
+    // prints C-style (0x..) numbers, native Motorola ($..).
+    const auto sym = dis6800.curSym();
+    const auto toks = driver.generateGas() ? standardTokenizers<CstyleNumber>(sym)
+                                           : standardTokenizers<MotorolaNumber>(sym);
+    TestGenerator generator(driver, dis6800, 0x0100, toks);
     generator.generate();
 
     return driver.close();

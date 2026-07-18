@@ -88,6 +88,7 @@
       DIVXU.B  #5, R0
       DIVXU.B  #5, FP
       ADD:Q.B  #1, @0x06:8
+      ADD:Q.B  #-1, @0x06:8
       CLR.B    @0x06:8
       NEG.B    @0x06:8
       NOT.B    @0x06:8
@@ -248,6 +249,7 @@
       MOV:G.W  #7, @0x0E:8
       MOV:G.W  #0x0809, @0x0E:8
       ADD:Q.W  #1, @0x0E:8
+      ADD:Q.W  #-1, @0x0E:8
       BSR      *+17
       UNLK     FP
       JMP      @0x1112:16
@@ -383,6 +385,7 @@
       CMP:G.B  #5, @0x1617:16
       MOV:G.B  #7, @0x1617:16
       ADD:Q.B  #1, @0x1617:16
+      ADD:Q.B  #-1, @0x1617:16
       CLR.B    @0x1617:16
       NEG.B    @0x1617:16
       NOT.B    @0x1617:16
@@ -439,6 +442,7 @@
       CMP:G.W  #0x0607, @0x0304:16
       MOV:G.W  #0x0809, @0x0506:16
       ADD:Q.W  #1, @0x0506:16
+      ADD:Q.W  #-1, @0x0506:16
       CLR.W    @0x0506:16
       NEG.W    @0x0506:16
       NOT.W    @0x0506:16
@@ -527,6 +531,7 @@
       DSUB     R0, R0
       DSUB     R0, FP
       ADD:Q.B  #1, R0
+      ADD:Q.B  #-1, R0
       SWAP     R0
       EXTS     R0
       EXTU     R0
@@ -595,6 +600,7 @@
       DSUB     FP, R0
       DSUB     FP, FP
       ADD:Q.B  #1, FP
+      ADD:Q.B  #-1, FP
       SWAP     FP
       EXTS     FP
       EXTU     FP
@@ -659,6 +665,7 @@
       BNOT.W   #0, R0
       BTST.W   #0, R0
       ADD:Q.W  #1, R0
+      ADD:Q.W  #-1, R0
       CLR.W    R0
       NEG.W    R0
       NOT.W    R0
@@ -712,6 +719,7 @@
       BNOT.W   #0, FP
       BTST.W   #0, FP
       ADD:Q.W  #1, FP
+      ADD:Q.W  #-1, FP
       CLR.W    FP
       NEG.W    FP
       NOT.W    FP
@@ -773,6 +781,7 @@
       CMP:G.B  #5, @-R0
       MOV:G.B  #7, @-R0
       ADD:Q.B  #1, @-R0
+      ADD:Q.B  #-1, @-R0
       CLR.B    @-R0
       NEG.B    @-R0
       NOT.B    @-R0
@@ -842,6 +851,7 @@
       CMP:G.B  #5, @-FP
       MOV:G.B  #7, @-FP
       ADD:Q.B  #1, @-FP
+      ADD:Q.B  #-1, @-FP
       CLR.B    @-FP
       NEG.B    @-FP
       NOT.B    @-FP
@@ -911,6 +921,7 @@
       CMP:G.B  #5, @-SP
       MOV:G.B  #7, @-SP
       ADD:Q.B  #1, @-SP
+      ADD:Q.B  #-1, @-SP
       CLR.B    @-SP
       NEG.B    @-SP
       NOT.B    @-SP
@@ -979,6 +990,7 @@
       MOV:G.W  #7, @-R0
       MOV:G.W  #0x0809, @-R0
       ADD:Q.W  #1, @-R0
+      ADD:Q.W  #-1, @-R0
       CLR.W    @-R0
       NEG.W    @-R0
       NOT.W    @-R0
@@ -1036,6 +1048,7 @@
       MOV:G.W  #7, @-FP
       MOV:G.W  #0x0809, @-FP
       ADD:Q.W  #1, @-FP
+      ADD:Q.W  #-1, @-FP
       CLR.W    @-FP
       NEG.W    @-FP
       NOT.W    @-FP
@@ -1095,6 +1108,7 @@
       MOV:G.W  #7, @-SP
       MOV:G.W  #0x0809, @-SP
       ADD:Q.W  #1, @-SP
+      ADD:Q.W  #-1, @-SP
       CLR.W    @-SP
       NEG.W    @-SP
       NOT.W    @-SP
@@ -1156,6 +1170,7 @@
       CMP:G.B  #5, @R0+
       MOV:G.B  #7, @R0+
       ADD:Q.B  #1, @R0+
+      ADD:Q.B  #-1, @R0+
       CLR.B    @R0+
       NEG.B    @R0+
       NOT.B    @R0+
@@ -1226,6 +1241,7 @@
       CMP:G.B  #5, @FP+
       MOV:G.B  #7, @FP+
       ADD:Q.B  #1, @FP+
+      ADD:Q.B  #-1, @FP+
       CLR.B    @FP+
       NEG.B    @FP+
       NOT.B    @FP+
@@ -1295,6 +1311,7 @@
       CMP:G.B  #5, @SP+
       MOV:G.B  #7, @SP+
       ADD:Q.B  #1, @SP+
+      ADD:Q.B  #-1, @SP+
       CLR.B    @SP+
       NEG.B    @SP+
       NOT.B    @SP+
@@ -1364,6 +1381,7 @@
       MOV:G.W  #7, @R0+
       MOV:G.W  #0x0809, @R0+
       ADD:Q.W  #1, @R0+
+      ADD:Q.W  #-1, @R0+
       CLR.W    @R0+
       NEG.W    @R0+
       NOT.W    @R0+
@@ -1423,6 +1441,7 @@
       MOV:G.W  #7, @FP+
       MOV:G.W  #0x0809, @FP+
       ADD:Q.W  #1, @FP+
+      ADD:Q.W  #-1, @FP+
       CLR.W    @FP+
       NEG.W    @FP+
       NOT.W    @FP+
@@ -1481,6 +1500,7 @@
       MOV:G.W  #7, @SP+
       MOV:G.W  #0x0809, @SP+
       ADD:Q.W  #1, @SP+
+      ADD:Q.W  #-1, @SP+
       CLR.W    @SP+
       NEG.W    @SP+
       NOT.W    @SP+
@@ -1542,6 +1562,7 @@
       CMP:G.B  #5, @R0
       MOV:G.B  #7, @R0
       ADD:Q.B  #1, @R0
+      ADD:Q.B  #-1, @R0
       CLR.B    @R0
       NEG.B    @R0
       NOT.B    @R0
@@ -1612,6 +1633,7 @@
       CMP:G.B  #5, @FP
       MOV:G.B  #7, @FP
       ADD:Q.B  #1, @FP
+      ADD:Q.B  #-1, @FP
       CLR.B    @FP
       NEG.B    @FP
       NOT.B    @FP
@@ -1681,6 +1703,7 @@
       CMP:G.B  #5, @SP
       MOV:G.B  #7, @SP
       ADD:Q.B  #1, @SP
+      ADD:Q.B  #-1, @SP
       CLR.B    @SP
       NEG.B    @SP
       NOT.B    @SP
@@ -1750,6 +1773,7 @@
       MOV:G.W  #7, @R0
       MOV:G.W  #0x0809, @R0
       ADD:Q.W  #1, @R0
+      ADD:Q.W  #-1, @R0
       CLR.W    @R0
       NEG.W    @R0
       NOT.W    @R0
@@ -1809,6 +1833,7 @@
       MOV:G.W  #7, @FP
       MOV:G.W  #0x0809, @FP
       ADD:Q.W  #1, @FP
+      ADD:Q.W  #-1, @FP
       CLR.W    @FP
       NEG.W    @FP
       NOT.W    @FP
@@ -1867,6 +1892,7 @@
       MOV:G.W  #7, @SP
       MOV:G.W  #0x0809, @SP
       ADD:Q.W  #1, @SP
+      ADD:Q.W  #-1, @SP
       CLR.W    @SP
       NEG.W    @SP
       NOT.W    @SP
@@ -1928,6 +1954,7 @@
       CMP:G.B  #5, @(-31,R0)
       MOV:G.B  #7, @(-31,R0)
       ADD:Q.B  #1, @(-31,R0)
+      ADD:Q.B  #-1, @(-31,R0)
       CLR.B    @(-31,R0)
       NEG.B    @(-31,R0)
       NOT.B    @(-31,R0)
@@ -1997,6 +2024,7 @@
       CMP:G.B  #5, @(-25,FP)
       MOV:G.B  #7, @(-25,FP)
       ADD:Q.B  #1, @(-25,FP)
+      ADD:Q.B  #-1, @(-25,FP)
       CLR.B    @(-25,FP)
       NEG.B    @(-25,FP)
       NOT.B    @(-25,FP)
@@ -2067,6 +2095,7 @@
       CMP:G.B  #5, @(-24,SP)
       MOV:G.B  #7, @(-24,SP)
       ADD:Q.B  #1, @(-24,SP)
+      ADD:Q.B  #-1, @(-24,SP)
       CLR.B    @(-24,SP)
       NEG.B    @(-24,SP)
       NOT.B    @(-24,SP)
@@ -2136,6 +2165,7 @@
       MOV:G.W  #7, @(-23,R0)
       MOV:G.W  #0x0809, @(-23,R0)
       ADD:Q.W  #1, @(-23,R0)
+      ADD:Q.W  #-1, @(-23,R0)
       CLR.W    @(-23,R0)
       NEG.W    @(-23,R0)
       NOT.W    @(-23,R0)
@@ -2194,6 +2224,7 @@
       MOV:G.W  #7, @(-17,FP)
       MOV:G.W  #0x0809, @(-17,FP)
       ADD:Q.W  #1, @(-17,FP)
+      ADD:Q.W  #-1, @(-17,FP)
       CLR.W    @(-17,FP)
       NEG.W    @(-17,FP)
       NOT.W    @(-17,FP)
@@ -2253,6 +2284,7 @@
       MOV:G.W  #7, @(-16,SP)
       MOV:G.W  #0x0809, @(-16,SP)
       ADD:Q.W  #1, @(-16,SP)
+      ADD:Q.W  #-1, @(-16,SP)
       CLR.W    @(-16,SP)
       NEG.W    @(-16,SP)
       NOT.W    @(-16,SP)
@@ -2314,6 +2346,7 @@
       CMP:G.B  #5, @(-0x0E0E,R0)
       MOV:G.B  #7, @(-0x0E0E,R0)
       ADD:Q.B  #1, @(-0x0E0E,R0)
+      ADD:Q.B  #-1, @(-0x0E0E,R0)
       CLR.B    @(-0x0E0E,R0)
       NEG.B    @(-0x0E0E,R0)
       NOT.B    @(-0x0E0E,R0)
@@ -2383,6 +2416,7 @@
       CMP:G.B  #5, @(-0x0808,FP)
       MOV:G.B  #7, @(-0x0808,FP)
       ADD:Q.B  #1, @(-0x0808,FP)
+      ADD:Q.B  #-1, @(-0x0808,FP)
       CLR.B    @(-0x0808,FP)
       NEG.B    @(-0x0808,FP)
       NOT.B    @(-0x0808,FP)
@@ -2453,6 +2487,7 @@
       CMP:G.B  #5, @(-0x0707,SP)
       MOV:G.B  #7, @(-0x0707,SP)
       ADD:Q.B  #1, @(-0x0707,SP)
+      ADD:Q.B  #-1, @(-0x0707,SP)
       CLR.B    @(-0x0707,SP)
       NEG.B    @(-0x0707,SP)
       NOT.B    @(-0x0707,SP)
@@ -2520,6 +2555,7 @@
       CMP:G.W  #0x0607, @(0x0304,R0)
       MOV:G.W  #0x0809, @(0x0506,R0)
       ADD:Q.W  #1, @(0x0506,R0)
+      ADD:Q.W  #-1, @(0x0506,R0)
       CLR.W    @(0x0506,R0)
       NEG.W    @(0x0506,R0)
       NOT.W    @(0x0506,R0)
@@ -2576,6 +2612,7 @@
       CMP:G.W  #0x0607, @(0x0304,FP)
       MOV:G.W  #0x0809, @(0x0506,FP)
       ADD:Q.W  #1, @(0x0506,FP)
+      ADD:Q.W  #-1, @(0x0506,FP)
       CLR.W    @(0x0506,FP)
       NEG.W    @(0x0506,FP)
       NOT.W    @(0x0506,FP)
@@ -2633,6 +2670,7 @@
       CMP:G.W  #0x0607, @(0x0304,SP)
       MOV:G.W  #0x0809, @(0x0506,SP)
       ADD:Q.W  #1, @(0x0506,SP)
+      ADD:Q.W  #-1, @(0x0506,SP)
       CLR.W    @(0x0506,SP)
       NEG.W    @(0x0506,SP)
       NOT.W    @(0x0506,SP)

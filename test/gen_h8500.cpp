@@ -16,9 +16,16 @@
 
 #include "dis_h8500.h"
 #include "gen_driver.h"
+#include "tokenizer.h"
 
 using namespace libasm::h8500;
 using namespace libasm::gen;
+
+static const IndexDispTokenizer<CstyleNumber, CommaIndex> INDEX_TOK;  // INDEX_TOK_INSTANCE
+
+namespace {
+const RegisterTokenizer REG_Rn("R", 7, "Rn");
+}  // namespace
 
 int main(int argc, const char **argv) {
     DisH8500 dish8500;
@@ -42,7 +49,7 @@ int main(int argc, const char **argv) {
 
     // Maximum mode reaches past 0xFFFF (S2 records); minimum mode stays 16-bit.
     const auto org = dish8500.maxMode() ? 0x010000 : 0x0100;
-    TestGenerator generator(driver, dish8500, org);
+    TestGenerator generator(driver, dish8500, org, standardTokenizers<CstyleNumber>(dish8500.curSym(), {&INDEX_TOK, &REG_Rn}));
     generator.generate();
 
     return driver.close();

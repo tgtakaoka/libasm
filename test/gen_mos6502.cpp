@@ -16,9 +16,11 @@
 
 #include "dis_mos6502.h"
 #include "gen_driver.h"
+#include "tokenizer.h"
 
 using namespace libasm::mos6502;
 using namespace libasm::gen;
+
 
 int main(int argc, const char **argv) {
     DisMos6502 dis6502;
@@ -31,7 +33,7 @@ int main(int argc, const char **argv) {
 
     const Config::uintptr_t origin =
             dis6502.addressWidth() == libasm::ADDRESS_24BIT ? 0x100200 : 0x0200;
-    TestGenerator generator(driver, dis6502, origin);
+    TestGenerator generator(driver, dis6502, origin, standardTokenizers<MotorolaNumber>(dis6502.curSym()));
     generator.generate();
 
     return driver.close();

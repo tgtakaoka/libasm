@@ -120,18 +120,20 @@
       exts.b r0, r0
       exts.w r0, r0
       add    #0, r0
+      add    #-0x80, r0
       mov.b  r0, @(0,r0)
       mov.w  r0, @(0,r0)
       mov.b  @(0,r0), r0
       mov.w  @(0,r0), r0
       cmp/eq #0, r0
-      bt     0x000000fe
-      bf     0x00000100
-      bt/s   0x00000102
-      bf/s   0x00000104
-      mov.w  0x00000106, r0
-      bra    0x00000108
-      bsr    0x0000010a
+      cmp/eq #-0x80, r0
+      bt     0x00000102
+      bf     0x00000104
+      bt/s   0x00000106
+      bf/s   0x00000108
+      mov.w  0x0000010a, r0
+      bra    0x0000010c
+      bsr    0x0000010e
       mov.b  r0, @(0,gbr)
       mov.w  r0, @(0,gbr)
       mov.l  r0, @(0,gbr)
@@ -139,17 +141,26 @@
       mov.b  @(0,gbr), r0
       mov.w  @(0,gbr), r0
       mov.l  @(0,gbr), r0
-      mova   0x00000118, r0
+      mova   0x0000011c, r0
       tst    #0, r0
+      tst    #-0x80, r0
       and    #0, r0
+      and    #-0x80, r0
       xor    #0, r0
+      xor    #-0x80, r0
       or     #0, r0
+      or     #-0x80, r0
       tst.b  #0, @(r0,gbr)
+      tst.b  #-0x80, @(r0,gbr)
       and.b  #0, @(r0,gbr)
+      and.b  #-0x80, @(r0,gbr)
       xor.b  #0, @(r0,gbr)
+      xor.b  #-0x80, @(r0,gbr)
       or.b   #0, @(r0,gbr)
-      mov.l  0x0000012c, r0
+      or.b   #-0x80, @(r0,gbr)
+      mov.l  0x00000140, r0
       mov    #0, r0
+      mov    #-0x80, r0
       fadd   fr0, fr0
       fsub   fr0, fr0
       fmul   fr0, fr0

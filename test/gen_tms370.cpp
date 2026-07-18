@@ -16,9 +16,15 @@
 
 #include "dis_tms370.h"
 #include "gen_driver.h"
+#include "tokenizer.h"
 
 using namespace libasm::tms370;
 using namespace libasm::gen;
+
+namespace {
+const RegisterTokenizer REG_Rn("R", 255, "Rn");
+const RegisterTokenizer REG_Pn("P", 255, "Pn");
+}  // namespace
 
 int main(int argc, const char **argv) {
     DisTms370 dis370;
@@ -28,7 +34,7 @@ int main(int argc, const char **argv) {
 
     dis370.setOption("relative", "enable");
 
-    TestGenerator generator(driver, dis370, 0x0200);
+    TestGenerator generator(driver, dis370, 0x0200, standardTokenizers<IntelNumber>(dis370.curSym(), {&REG_Rn, &REG_Pn}));
     generator.generate();
 
     return driver.close();
