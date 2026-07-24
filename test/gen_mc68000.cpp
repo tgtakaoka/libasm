@@ -76,12 +76,14 @@ const RegisterTokenizer REG_D("D", 7, "Dn");
 const RegisterTokenizer REG_A("A", 7, "An");
 
 // |Hex| = MotorolaNumber (native $..) or CstyleNumber (gnu-as 0x..).  Consolidate
-// index/base displacement sign: "(n,An)", "(n,An,Dn.sz)".
+// index/base displacement sign: "(n,An)", "(n,An,Dn.sz)"; and the memory-indirect
+// outer displacement sign: "([...],od)"/"(...,od)".
 template <class Hex>
 TokenizerList tokenizers(char loc) {
     static const IndexDispTokenizer<Hex, CommaIndex> indexDisp;
+    static const IndexDispTokenizer<Hex, OuterDisp> outerDisp;
     return standardTokenizers<Hex>(
-            loc, {&indexDisp, &INDEX, &LIST, &REG_FP, &REG_D, &REG_A});
+            loc, {&indexDisp, &outerDisp, &INDEX, &LIST, &REG_FP, &REG_D, &REG_A});
 }
 
 }  // namespace

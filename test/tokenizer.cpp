@@ -44,14 +44,32 @@ bool isFloat(const char *p, const char *&r) {
     const char *s = p;
     if (*s == '-')
         ++s;
-    if (isDigits(s, s) && *s == '.' && isDigits(s, s + 1)) {
-        const char *e = s + 1;
-        if (toupper(*s) == 'E' && (*e == '-' || *e == '+') && isDigits(e, e + 1)) {
-            r = e;
+    if (isDigits(s, s)) {  // integer part
+        bool isFloatNum = false;
+        if (*s == '.') {  // optional fractional part ".ddd"
+            const char *t = s + 1;
+            if (isDigits(t, t)) {
+                s = t;
+                isFloatNum = true;
+            }
+        }
+        if (toupper(*s) == 'E') {  // optional exponent "E[+/-]ddd" (sign optional)
+            const char *t = s + 1;
+            if (*t == '+' || *t == '-')
+                ++t;
+            if (isDigits(t, t)) {
+                s = t;
+                isFloatNum = true;
+            }
+        }
+        // A plain integer (no '.' and no 'E') is not a float.  The match must
+        // also end at a boundary: if an alphanumeric follows, this is a hex/octal
+        // literal that merely contains 'E' (Intel "0000E0H", "0E34H"), not a
+        // float -- leave it for the number tokenizer.
+        if (isFloatNum && !isalnum(static_cast<unsigned char>(*s))) {
+            r = s;
             return true;
         }
-        r = s;
-        return true;
     }
     if (strncasecmp(s, "nan", 3) == 0 || strncasecmp(s, "inf", 3) == 0) {
         r = s + 3;

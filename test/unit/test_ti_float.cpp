@@ -98,23 +98,23 @@ void test_ti_float16() {
     ti_float16_t f16;
 
     EQ("0.0", "8.000", f16.set(-8, 0x000).str());
-    EQ("0.0", "0", gcvt(f16));
+    EQ("0.0", "0.0", gcvt(f16));
     EQ("0.0", OK, f16.set(f80));
     EQ("0.0", "8.000", f16.str());
 
     // Non-canonical zeros: the most-negative exponent decodes to 0 regardless
     // of the sign/mantissa bits.
-    EQ("0.0 (8.001)", "0", gcvt(f16.set(-8, 0x001)));
-    EQ("0.0 (8.800)", "0", gcvt(f16.set(-8, ti_float16_t::SGN_MASK)));
-    EQ("0.0 (8.FFF)", "0", gcvt(f16.set(-8, ti_float16_t::SGN_MASK | ti_float16_t::FRAC_MASK)));
+    EQ("0.0 (8.001)", "0.0", gcvt(f16.set(-8, 0x001)));
+    EQ("0.0 (8.800)", "0.0", gcvt(f16.set(-8, ti_float16_t::SGN_MASK)));
+    EQ("0.0 (8.FFF)", "0.0", gcvt(f16.set(-8, ti_float16_t::SGN_MASK | ti_float16_t::FRAC_MASK)));
 
     EQ("1.0", "0.000", f16.set(0, 0x000).str());
-    EQ("1.0", "1", gcvt(f16));
+    EQ("1.0", "1.0", gcvt(f16));
     EQ("1.0", OK, f16.set(f80));
     EQ("1.0", "0.000", f16.str());
 
     EQ("-1.0", "F.800", f16.set(-1, ti_float16_t::SGN_MASK | 0x000).str());
-    EQ("-1.0", "-1", gcvt(f16));
+    EQ("-1.0", "-1.0", gcvt(f16));
     EQ("-1.0", OK, f16.set(f80));
     EQ("-1.0", "F.800", f16.str());
 
@@ -129,22 +129,22 @@ void test_ti_float16() {
     EQ("-1.5", "0.C00", f16.str());
 
     EQ("2.0", "1.000", f16.set(1, 0x000).str());
-    EQ("2.0", "2", gcvt(f16));
+    EQ("2.0", "2.0", gcvt(f16));
     EQ("2.0", OK, f16.set(f80));
     EQ("2.0", "1.000", f16.str());
 
     EQ("-2.0", "0.800", f16.set(0, ti_float16_t::SGN_MASK | 0x000).str());
-    EQ("-2.0", "-2", gcvt(f16));
+    EQ("-2.0", "-2.0", gcvt(f16));
     EQ("-2.0", OK, f16.set(f80));
     EQ("-2.0", "0.800", f16.str());
 
     EQ("3.0", "1.400", f16.set(1, 0x400).str());
-    EQ("3.0", "3", gcvt(f16));
+    EQ("3.0", "3.0", gcvt(f16));
     EQ("3.0", OK, f16.set(f80));
     EQ("3.0", "1.400", f16.str());
 
     EQ("-3.0", "1.C00", f16.set(1, ti_float16_t::SGN_MASK | 0x400).str());
-    EQ("-3.0", "-3", gcvt(f16));
+    EQ("-3.0", "-3.0", gcvt(f16));
     EQ("-3.0", OK, f16.set(f80));
     EQ("-3.0", "1.C00", f16.str());
 
@@ -172,24 +172,24 @@ void test_ti_float16() {
     EQ("DBL_MAX", OVERFLOW_RANGE, f16.set(read_f80(STR_DBL_MAX)));
     EQ("DBL_MAX", STR(TI_FLT16_MAX_POS), ecvt(f16));
     EQ("DBL_MIN", UNDERFLOW_RANGE, f16.set(read_f80(STR_DBL_MIN)));
-    EQ("DBL_MIN", "0", gcvt(f16));
+    EQ("DBL_MIN", "0.0", gcvt(f16));
 }
 
 void test_ti_float32() {
     ti_float32_t f32;
 
     EQ("0.0", "80.000000", f32.set(-128, 0x000000).str());
-    EQ("0.0", "0", gcvt(f32));
+    EQ("0.0", "0.0", gcvt(f32));
     EQ("0.0", OK, f32.set(f80));
     EQ("0.0", "80.000000", f32.str());
 
     EQ("1.0", "00.000000", f32.set(0, 0x000000).str());
-    EQ("1.0", "1", gcvt(f32));
+    EQ("1.0", "1.0", gcvt(f32));
     EQ("1.0", OK, f32.set(f80));
     EQ("1.0", "00.000000", f32.str());
 
     EQ("-1.0", "FF.800000", f32.set(-1, ti_float32_t::SGN_MASK | 0x0000000).str());
-    EQ("-1.0", "-1", gcvt(f32));
+    EQ("-1.0", "-1.0", gcvt(f32));
     EQ("-1.0", OK, f32.set(f80));
     EQ("-1.0", "FF.800000", f32.str());
 
@@ -204,22 +204,22 @@ void test_ti_float32() {
     EQ("-1.5", "00.C00000", f32.str());
 
     EQ("2.0", "01.000000", f32.set(1, 0x000000).str());
-    EQ("2.0", "2", gcvt(f32));
+    EQ("2.0", "2.0", gcvt(f32));
     EQ("2.0", OK, f32.set(f80));
     EQ("2.0", "01.000000", f32.str());
 
     EQ("-2.0", "00.800000", f32.set(0, ti_float32_t::SGN_MASK | 0x000000).str());
-    EQ("-2.0", "-2", gcvt(f32));
+    EQ("-2.0", "-2.0", gcvt(f32));
     EQ("-2.0", OK, f32.set(f80));
     EQ("-2.0", "00.800000", f32.str());
 
     EQ("3.0", "01.400000", f32.set(1, 0x400000).str());
-    EQ("3.0", "3", gcvt(f32));
+    EQ("3.0", "3.0", gcvt(f32));
     EQ("3.0", OK, f32.set(f80));
     EQ("3.0", "01.400000", f32.str());
 
     EQ("-3.0", "01.C00000", f32.set(1, ti_float32_t::SGN_MASK | 0x400000).str());
-    EQ("-3.0", "-3", gcvt(f32));
+    EQ("-3.0", "-3.0", gcvt(f32));
     EQ("-3.0", OK, f32.set(f80));
     EQ("-3.0", "01.C00000", f32.str());
 
@@ -248,24 +248,24 @@ void test_ti_float32() {
     EQ("DBL_MAX", OVERFLOW_RANGE, f32.set(read_f80(STR_DBL_MAX)));
     EQ("DBL_MAX", STR(TI_FLT32_MAX_POS), ecvt(f32));
     EQ("DBL_MIN", UNDERFLOW_RANGE, f32.set(read_f80(STR_DBL_MIN)));
-    EQ("DBL_MIN", "0", gcvt(f32));
+    EQ("DBL_MIN", "0.0", gcvt(f32));
 }
 
 void test_ti_float40() {
     ti_float40_t f40;
 
     EQ("0.0", "80.00000000", f40.set(-128, 0x00000000).str());
-    EQ("0.0", "0", gcvt(f40));
+    EQ("0.0", "0.0", gcvt(f40));
     EQ("0.0", OK, f40.set(f80));
     EQ("0.0", "80.00000000", f40.str());
 
     EQ("1.0", "00.00000000", f40.set(0, 0x00000000).str());
-    EQ("1.0", "1", gcvt(f40));
+    EQ("1.0", "1.0", gcvt(f40));
     EQ("1.0", OK, f40.set(f80));
     EQ("1.0", "00.00000000", f40.str());
 
     EQ("-1.0", "FF.80000000", f40.set(-1, ti_float40_t::SGN_MASK | 0x000000000).str());
-    EQ("-1.0", "-1", gcvt(f40));
+    EQ("-1.0", "-1.0", gcvt(f40));
     EQ("-1.0", OK, f40.set(f80));
     EQ("-1.0", "FF.80000000", f40.str());
 
@@ -280,22 +280,22 @@ void test_ti_float40() {
     EQ("-1.5", "00.C0000000", f40.str());
 
     EQ("2.0", "01.00000000", f40.set(1, 0x00000000).str());
-    EQ("2.0", "2", gcvt(f40));
+    EQ("2.0", "2.0", gcvt(f40));
     EQ("2.0", OK, f40.set(f80));
     EQ("2.0", "01.00000000", f40.str());
 
     EQ("-2.0", "00.80000000", f40.set(0, ti_float40_t::SGN_MASK | 0x00000000).str());
-    EQ("-2.0", "-2", gcvt(f40));
+    EQ("-2.0", "-2.0", gcvt(f40));
     EQ("-2.0", OK, f40.set(f80));
     EQ("-2.0", "00.80000000", f40.str());
 
     EQ("3.0", "01.40000000", f40.set(1, 0x40000000).str());
-    EQ("3.0", "3", gcvt(f40));
+    EQ("3.0", "3.0", gcvt(f40));
     EQ("3.0", OK, f40.set(f80));
     EQ("3.0", "01.40000000", f40.str());
 
     EQ("-3.0", "01.C0000000", f40.set(1, ti_float40_t::SGN_MASK | 0x40000000).str());
-    EQ("-3.0", "-3", gcvt(f40));
+    EQ("-3.0", "-3.0", gcvt(f40));
     EQ("-3.0", OK, f40.set(f80));
     EQ("-3.0", "01.C0000000", f40.str());
 
@@ -324,24 +324,24 @@ void test_ti_float40() {
     EQ("DBL_MAX", OVERFLOW_RANGE, f40.set(read_f80(STR_DBL_MAX)));
     EQ("DBL_MAX", STR(TI_FLT40_MAX_POS), ecvt(f40));
     EQ("DBL_MIN", UNDERFLOW_RANGE, f40.set(read_f80(STR_DBL_MIN)));
-    EQ("DBL_MIN", "0", gcvt(f40));
+    EQ("DBL_MIN", "0.0", gcvt(f40));
 }
 
 void test_ti_float16_external() {
     ti_float16_external_t f16;
 
     EQ("0.0", "80.00", f16.set(-128, 0x00).str());
-    EQ("0.0", "0", gcvt(f16));
+    EQ("0.0", "0.0", gcvt(f16));
     EQ("0.0", OK, f16.set(f80));
     EQ("0.0", "80.00", f16.str());
 
     EQ("1.0", "00.00", f16.set(0, 0x00).str());
-    EQ("1.0", "1", gcvt(f16));
+    EQ("1.0", "1.0", gcvt(f16));
     EQ("1.0", OK, f16.set(f80));
     EQ("1.0", "00.00", f16.str());
 
     EQ("-1.0", "FF.80", f16.set(-1, ti_float16_external_t::SGN_MASK | 0x00).str());
-    EQ("-1.0", "-1", gcvt(f16));
+    EQ("-1.0", "-1.0", gcvt(f16));
     EQ("-1.0", OK, f16.set(f80));
     EQ("-1.0", "FF.80", f16.str());
 
@@ -356,22 +356,22 @@ void test_ti_float16_external() {
     EQ("-1.5", "00.C0", f16.str());
 
     EQ("2.0", "01.00", f16.set(1, 0x00).str());
-    EQ("2.0", "2", gcvt(f16));
+    EQ("2.0", "2.0", gcvt(f16));
     EQ("2.0", OK, f16.set(f80));
     EQ("2.0", "01.00", f16.str());
 
     EQ("-2.0", "00.80", f16.set(0, ti_float16_external_t::SGN_MASK | 0x00).str());
-    EQ("-2.0", "-2", gcvt(f16));
+    EQ("-2.0", "-2.0", gcvt(f16));
     EQ("-2.0", OK, f16.set(f80));
     EQ("-2.0", "00.80", f16.str());
 
     EQ("3.0", "01.40", f16.set(1, 0x40).str());
-    EQ("3.0", "3", gcvt(f16));
+    EQ("3.0", "3.0", gcvt(f16));
     EQ("3.0", OK, f16.set(f80));
     EQ("3.0", "01.40", f16.str());
 
     EQ("-3.0", "01.C0", f16.set(1, ti_float16_external_t::SGN_MASK | 0x40).str());
-    EQ("-3.0", "-3", gcvt(f16));
+    EQ("-3.0", "-3.0", gcvt(f16));
     EQ("-3.0", OK, f16.set(f80));
     EQ("-3.0", "01.C0", f16.str());
 
@@ -403,7 +403,7 @@ void test_ti_float16_external() {
     EQ("DBL_MAX", OVERFLOW_RANGE, f16.set(read_f80(STR_DBL_MAX)));
     EQ("DBL_MAX", STR(TI_FLT16EXT_MAX_POS), ecvt(f16));
     EQ("DBL_MIN", UNDERFLOW_RANGE, f16.set(read_f80(STR_DBL_MIN)));
-    EQ("DBL_MIN", "0", gcvt(f16));
+    EQ("DBL_MIN", "0.0", gcvt(f16));
 }
 
 void run_tests() {

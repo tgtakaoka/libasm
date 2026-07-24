@@ -99,7 +99,26 @@ int __float80_hard::fcvt(char *buf, uint_fast8_t len, uint_fast8_t prec) const {
 }
 
 int __float80_hard::gcvt(char *buf, uint_fast8_t len, uint_fast8_t prec) const {
-    return snprintf(buf, len, "%.*Lg", prec, _f80);
+    auto n = snprintf(buf, len, "%.*Lg", prec, _f80);
+    // A whole-valued number prints without a fractional part ("13389134"); append
+    // ".0" so a float stays distinguishable from an integer.  Exponent (e/E) and
+    // nan/inf forms already read as non-integers and are left as-is.
+    if (n > 0 && static_cast<uint_fast8_t>(n + 2) < len) {
+        bool integral = true;
+        for (int i = 0; i < n; ++i) {
+            const auto c = buf[i];
+            if (c != '-' && (c < '0' || c > '9')) {
+                integral = false;
+                break;
+            }
+        }
+        if (integral) {
+            buf[n++] = '.';
+            buf[n++] = '0';
+            buf[n] = '\0';
+        }
+    }
+    return n;
 }
 
 __float80_hard __float80_hard::compose(bool negative, int_fast16_t exp, fixed64_t &sig) {

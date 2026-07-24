@@ -421,7 +421,13 @@ void test_float32() {
     StrCaseBuffer out(buffer, sizeof(buffer), false);
     float80_t v;
 
-    EQ("FLT_0", "0", out.float32(v.set(UINT64_C(0))).str());
+    EQ("FLT_0", "0.0", out.float32(v.set(UINT64_C(0))).str());
+
+    // whole-valued floats keep a decimal point (".0") so they stay distinct
+    // from integers; exponent forms are left as-is.
+    EQ("FLT_1", "1.0", out.reset().float32(v.set(int64_t(1))).str());
+    EQ("FLT_100", "100.0", out.reset().float32(v.set(int64_t(100))).str());
+    EQ("FLT_int", "13389134.0", out.reset().float32(v.set(int64_t(13389134))).str());
 
     EQ("FLT_EPSILON", "1.1920929e-07", out.reset().float32(read_float("1.1920929e-07")).str());
 
@@ -447,7 +453,10 @@ void test_float64() {
     StrCaseBuffer out(buffer, sizeof(buffer), true);
     float80_t v;
 
-    EQ("DBL_0", "0", out.float64(v.set(UINT64_C(0))).str());
+    EQ("DBL_0", "0.0", out.float64(v.set(UINT64_C(0))).str());
+
+    EQ("DBL_1", "1.0", out.reset().float64(v.set(int64_t(1))).str());
+    EQ("DBL_int", "123456789.0", out.reset().float64(v.set(int64_t(123456789))).str());
 
     EQ("DBL_EPSILON", "2.2204460492503131E-16",
             out.reset().float64(read_float("2.2204460492503131e-16")).str());
@@ -474,7 +483,10 @@ void test_float80() {
     StrCaseBuffer out(buffer, sizeof(buffer), true);
     float80_t v;
 
-    EQ("LDBL_0", "0", out.float80(v.set(UINT64_C(0))).str());
+    EQ("LDBL_0", "0.0", out.float80(v.set(UINT64_C(0))).str());
+
+    EQ("LDBL_1", "1.0", out.reset().float80(v.set(int64_t(1))).str());
+    EQ("LDBL_int", "123456789.0", out.reset().float80(v.set(int64_t(123456789))).str());
 
     EQ("LDBL_EPSILON", "1.08420217248550443401E-19",
             out.reset().float80(read_float("1.08420217248550443401e-19")).str());

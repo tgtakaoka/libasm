@@ -339,8 +339,9 @@ void __float80_soft::fcvt(StrBuffer &out, uint_fast8_t prec, bool suppress) cons
         for (int_fast16_t i = 0; i <= exp10; ++i)
             out.letter((index < ndigits ? digits[index++] : 0) + '0');
     }
-    // fractional part
-    if (prec && (index < ndigits || !suppress)) {
+    // fractional part -- always keep the decimal point with at least one digit
+    // (".0") so a whole-valued float is still distinguishable from an integer.
+    if (prec) {
         out.letter('.');
         uint_fast8_t frac = 0;
         if (exp10 < 0) {
@@ -349,10 +350,14 @@ void __float80_soft::fcvt(StrBuffer &out, uint_fast8_t prec, bool suppress) cons
                 out.letter('0');
         }
         // significant digits
+        bool emitted = frac > 0;
         while (frac++ < prec) {
             if (index < ndigits) {
                 out.letter(digits[index++] + '0');
+                emitted = true;
             } else if (suppress) {
+                if (!emitted)
+                    out.letter('0');
                 break;
             } else {
                 out.letter('0');
@@ -404,7 +409,11 @@ int __float80_soft::write(char *buf, uint_fast8_t len, uint_fast8_t prec, char f
             if (sig.decompose(exp, digits, ndigits))
                 ++exp10;
             if (static_cast<int_fast16_t>(prec) > exp10 && exp10 >= -4) {
-                fcvt(out, prec - 1 - exp10, true);
+                // A whole-valued number leaves no fractional digits here
+                // (prec-1-exp10 == 0); keep at least one so ".0" is emitted and a
+                // float stays distinguishable from an integer (cf. float80_hard).
+                const auto fprec = static_cast<int_fast16_t>(prec) - 1 - exp10;
+                fcvt(out, fprec < 1 ? 1 : fprec, true);
             } else {
                 ecvt(out, prec - 1, true);
             }

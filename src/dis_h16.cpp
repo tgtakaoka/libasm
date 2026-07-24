@@ -202,7 +202,7 @@ void DisH16::decodeEa(
             out.letter('@').letter('(');
             outHex(out, disp, dispWidth(sd));
             outAutoLen(out, disp, fieldBits(sd));
-            out.comma();
+            out.letter(',');
             outRegName(out, decodeReg(rn, bank));
             out.letter(')');
         }
@@ -287,7 +287,7 @@ void DisH16::decodeEa(
             if (sd != 0) {
                 outHex(out, disp, dispWidth(sd));
                 outAutoLen(out, disp, fieldBits(sd));
-                out.comma();
+                out.letter(',');
             }
             outRegName(out, decodeReg(base, bank));
             out.letter('*');
@@ -309,10 +309,10 @@ void DisH16::decodeEa(
             if (sd != 0) {
                 outHex(out, disp, dispWidth(sd));
                 outAutoLen(out, disp, fieldBits(sd));
-                out.comma();
+                out.letter(',');
             }
             outIndex(insn, out, ext2, longIdx);
-            out.comma();
+            out.letter(',');
             outRegName(out, decodeReg(base, bank));
             out.letter(')');
             return;
@@ -335,7 +335,7 @@ void DisH16::decodeEa(
                 if (sd != 0) {
                     outHex(out, target, 32, false);
                     outAutoLen(out, disp, fieldBits(sd));
-                    out.comma();
+                    out.letter(',');
                 }
                 out.text_P(TEXT_REG_PC);
                 out.letter(')');
@@ -351,10 +351,10 @@ void DisH16::decodeEa(
                 if (sd != 0) {
                     outHex(out, target, 32, false);
                     outAutoLen(out, disp, fieldBits(sd));
-                    out.comma();
+                    out.letter(',');
                 }
                 outIndex(insn, out, ext2, longIdx);
-                out.comma();
+                out.letter(',');
                 out.text_P(TEXT_REG_PC);
                 out.letter(')');
             }
@@ -377,7 +377,7 @@ void DisH16::decodeEa(
             out.text_P(PSTR(",@("));
             outHex(out, disp1, s1 == 1 ? -8 : -32);
             outDsLen(out, disp1, s1);
-            out.comma();
+            out.letter(',');
             outRegName(out, decodeReg(base, bank));
             out.text_P(PSTR("))"));
             return;

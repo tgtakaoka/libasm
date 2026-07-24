@@ -114,9 +114,9 @@ void test_load() {
     TEST("LDE", "*AR0--(IR1)%, R2", 0x06C2B800);
     TEST("LDE", "*AR1, R3",         0x06C3C100);
     TEST("LDE", "*AR2++(IR0)B, R4", 0x06C4CA00);
-    TEST("LDE", "1, R5",            0x06E50000);
+    TEST("LDE", "1.0, R5",            0x06E50000);
     TEST("LDE", "-1.5, R6",         0x06E60C00);
-    TEST("LDE", "0, R7",            0x06E78000);
+    TEST("LDE", "0.0, R7",            0x06E78000);
     TEST("LDE", "-0.50024, R0",     0x06E0FFFF);
 
     TEST("LDF", "R0, R1",           0x07010000);
@@ -154,9 +154,9 @@ void test_load() {
     TEST("LDF", "*AR0--(IR1)%, R2", 0x0742B800);
     TEST("LDF", "*AR1, R3",         0x0743C100);
     TEST("LDF", "*AR2++(IR0)B, R4", 0x0744CA00);
-    TEST("LDF", "1, R5",            0x07650000);
+    TEST("LDF", "1.0, R5",            0x07650000);
     TEST("LDF", "-1.5, R6",         0x07660C00);
-    TEST("LDF", "0, R7",            0x07678000);
+    TEST("LDF", "0.0, R7",            0x07678000);
     TEST("LDF", "-0.50024, R0",     0x0760FFFF);
 
     TEST("LDI", "R0, R1",           0x08010000);
@@ -340,9 +340,9 @@ void test_load() {
     TEST("LDFHS",   "*AR0--(IR1)%, R2", 0x4242B800);
     TEST("LDFEQ",   "*AR1, R3",         0x42C3C100);
     TEST("LDFNE",   "*AR2++(IR0)B, R4", 0x4344CA00);
-    TEST("LDFLT",   "1, R5",            0x43E50000);
+    TEST("LDFLT",   "1.0, R5",            0x43E50000);
     TEST("LDFLE",   "-1.5, R6",         0x44660C00);
-    TEST("LDFGT",   "0, R7",            0x44E78000);
+    TEST("LDFGT",   "0.0, R7",            0x44E78000);
     TEST("LDFGE",   "-0.50024, R0",     0x4560FFFF);
 
     TEST("LDIU",    "R0, R1",           0x50010000);
@@ -409,7 +409,7 @@ void test_store() {
     TEST("STF", "R2, *AR0--(IR1)%", 0x1442B800);
     TEST("STF", "R3, *AR1",         0x1443C100);
     TEST("STF", "R4, *AR2++(IR0)B", 0x1444CA00);
-    ERRT("STF", "R5, 1",    ILLEGAL_OPERAND_MODE, "1",    0x14650000);
+    ERRT("STF", "R5, 1.0",    ILLEGAL_OPERAND_MODE, "1.0",    0x14650000);
     ERRT("STF", "R6, -1.5", ILLEGAL_OPERAND_MODE, "-1.5", 0x14660C00);
 
     ERRT("STI", "R1, R0",  REGISTER_NOT_ALLOWED, "R0",   0x15010000);
@@ -522,9 +522,9 @@ void test_store() {
 void test_2op() {
     TEST("ABSF", "R0, R1",       0x00010000);
     ERRT("ABSF", "AR0, R1", ILLEGAL_REGISTER, "AR0, R1", 0x00010008);
-    TEST("ABSF", "1, R5",        0x00650000);
+    TEST("ABSF", "1.0, R5",        0x00650000);
     TEST("ABSF", "-1.5, R6",     0x00660C00);
-    TEST("ABSF", "0, R7",        0x00678000);
+    TEST("ABSF", "0.0, R7",        0x00678000);
     TEST("ABSF", "-0.50024, R0", 0x0060FFFF);
 
     TEST("ABSI", "R0, R1",     0x00810000);
@@ -544,9 +544,9 @@ void test_2op() {
     TEST("ADDF", "R0, R1",   0x01810000);
     TEST("ADDF", "R1, R1",   0x01810001);
     ERRT("ADDF", "AR0, R1", ILLEGAL_REGISTER, "AR0, R1", 0x01810008);
-    TEST("ADDF", "1, R5",    0x01E50000);
+    TEST("ADDF", "1.0, R5",    0x01E50000);
     TEST("ADDF", "-1.5, R6", 0x01E60C00);
-    TEST("ADDF", "0, R7",    0x01E78000);
+    TEST("ADDF", "0.0, R7",    0x01E78000);
 
     TEST("ADDI", "R0, R1",     0x02010000);
     TEST("ADDI", "R1, R1",     0x02010001);
@@ -608,9 +608,9 @@ void test_2op() {
     TEST("CMPF", "R0, R1",   0x04010000);
     TEST("CMPF", "R1, R1",   0x04010001);
     ERRT("CMPF", "AR0, R1", ILLEGAL_REGISTER, "AR0, R1", 0x04010008);
-    TEST("CMPF", "1, R5",    0x04650000);
+    TEST("CMPF", "1.0, R5",    0x04650000);
     TEST("CMPF", "-1.5, R6", 0x04660C00);
-    TEST("CMPF", "0, R7",    0x04678000);
+    TEST("CMPF", "0.0, R7",    0x04678000);
 
     TEST("CMPI", "R0, R1",     0x04810000);
     TEST("CMPI", "R1, R1",     0x04810001);
@@ -621,9 +621,9 @@ void test_2op() {
 
     TEST("FIX", "R0, R1",       0x05010000);
     ERRT("FIX", "AR0, R1", ILLEGAL_REGISTER, "AR0, R1", 0x05010008);
-    TEST("FIX", "1, R5",        0x05650000);
+    TEST("FIX", "1.0, R5",        0x05650000);
     TEST("FIX", "-1.5, R6",     0x05660C00);
-    TEST("FIX", "0, R7",        0x05678000);
+    TEST("FIX", "0.0, R7",        0x05678000);
     TEST("FIX", "-0.50024, R0", 0x0560FFFF);
 
     TEST("FLOAT", "R0, R1",     0x05810000);
@@ -670,9 +670,9 @@ void test_2op() {
     TEST("MPYF", "R0, R1",   0x0A010000);
     TEST("MPYF", "R1, R1",   0x0A010001);
     ERRT("MPYF", "AR0, R1", ILLEGAL_REGISTER, "AR0, R1", 0x0A010008);
-    TEST("MPYF", "1, R5",    0x0A650000);
+    TEST("MPYF", "1.0, R5",    0x0A650000);
     TEST("MPYF", "-1.5, R6", 0x0A660C00);
-    TEST("MPYF", "0, R7",    0x0A678000);
+    TEST("MPYF", "0.0, R7",    0x0A678000);
 
     TEST("MPYI", "R0, R1",     0x0A810000);
     TEST("MPYI", "R1, R1",     0x0A810001);
@@ -689,9 +689,9 @@ void test_2op() {
 
     TEST("NEGF", "R0, R1",       0x0B810000);
     ERRT("NEGF", "AR0, R1", ILLEGAL_REGISTER, "AR0, R1", 0x0B810008);
-    TEST("NEGF", "1, R5",        0x0BE50000);
+    TEST("NEGF", "1.0, R5",        0x0BE50000);
     TEST("NEGF", "-1.5, R6",     0x0BE60C00);
-    TEST("NEGF", "0, R7",        0x0BE78000);
+    TEST("NEGF", "0.0, R7",        0x0BE78000);
     TEST("NEGF", "-0.50024, R0", 0x0BE0FFFF);
 
     TEST("NEGI", "R0, R1",     0x0C010000);
@@ -702,9 +702,9 @@ void test_2op() {
 
     TEST("NORM", "R0, R1",       0x0D010000);
     ERRT("NORM", "AR0, R1", ILLEGAL_REGISTER, "AR0, R1", 0x0D010008);
-    TEST("NORM", "1, R5",        0x0D650000);
+    TEST("NORM", "1.0, R5",        0x0D650000);
     TEST("NORM", "-1.5, R6",     0x0D660C00);
-    TEST("NORM", "0, R7",        0x0D678000);
+    TEST("NORM", "0.0, R7",        0x0D678000);
     TEST("NORM", "-0.50024, R0", 0x0D60FFFF);
 
     TEST("NOT", "R0, R1",     0x0D810000);
@@ -722,9 +722,9 @@ void test_2op() {
 
     TEST("RND", "R0, R1",       0x11010000);
     ERRT("RND", "AR0, R1", ILLEGAL_REGISTER, "AR0, R1", 0x11010008);
-    TEST("RND", "1, R5",        0x11650000);
+    TEST("RND", "1.0, R5",        0x11650000);
     TEST("RND", "-1.5, R6",     0x11660C00);
-    TEST("RND", "0, R7",        0x11678000);
+    TEST("RND", "0.0, R7",        0x11678000);
     TEST("RND", "-0.50024, R0", 0x1160FFFF);
 
     TEST("ROL", "R0",  0x11E00001);
@@ -780,9 +780,9 @@ void test_2op() {
     TEST("SUBF", "R0, R1",   0x17810000);
     TEST("SUBF", "R1, R1",   0x17810001);
     ERRT("SUBF", "AR0, R1", ILLEGAL_REGISTER, "AR0, R1", 0x17810008);
-    TEST("SUBF", "1, R5",    0x17E50000);
+    TEST("SUBF", "1.0, R5",    0x17E50000);
     TEST("SUBF", "-1.5, R6", 0x17E60C00);
-    TEST("SUBF", "0, R7",    0x17E78000);
+    TEST("SUBF", "0.0, R7",    0x17E78000);
 
     TEST("SUBI", "R0, R1",     0x18010000);
     TEST("SUBI", "R1, R1",     0x18010001);
@@ -801,9 +801,9 @@ void test_2op() {
     TEST("SUBRF", "R0, R1",   0x19010000);
     TEST("SUBRF", "R1, R1",   0x19010001);
     ERRT("SUBRF", "AR0, R1", ILLEGAL_REGISTER, "AR0, R1", 0x19010008);
-    TEST("SUBRF", "1, R5",    0x19650000);
+    TEST("SUBRF", "1.0, R5",    0x19650000);
     TEST("SUBRF", "-1.5, R6", 0x19660C00);
-    TEST("SUBRF", "0, R7",    0x19678000);
+    TEST("SUBRF", "0.0, R7",    0x19678000);
 
     TEST("SUBRI", "R0, R1",     0x19810000);
     TEST("SUBRI", "R1, R1",     0x19810001);
@@ -1863,7 +1863,7 @@ void test_interlock() {
     TEST("LDFI", "*AR0--(IR1)%, R2", 0x07C2B800);
     TEST("LDFI", "*AR1, R3",         0x07C3C100);
     TEST("LDFI", "*AR2++(IR0)B, R4", 0x07C4CA00);
-    ERRT("LDFI", "1, R5",    ILLEGAL_OPERAND_MODE, "1, R5",    0x07E50000);
+    ERRT("LDFI", "1.0, R5",    ILLEGAL_OPERAND_MODE, "1.0, R5",    0x07E50000);
     ERRT("LDFI", "-1.5, R6", ILLEGAL_OPERAND_MODE, "-1.5, R6", 0x07E60C00);
 
     ERRT("LDII", "R0, R1",  REGISTER_NOT_ALLOWED, "R0, R1",  0x08810000);
@@ -1927,7 +1927,7 @@ void test_interlock() {
     TEST("STFI", "R2, *AR0--(IR1)%", 0x14C2B800);
     TEST("STFI", "R3, *AR1",         0x14C3C100);
     TEST("STFI", "R4, *AR2++(IR0)B", 0x14C4CA00);
-    ERRT("STFI", "R5, 1",    ILLEGAL_OPERAND_MODE, "1",    0x14E50000);
+    ERRT("STFI", "R5, 1.0",    ILLEGAL_OPERAND_MODE, "1.0",    0x14E50000);
     ERRT("STFI", "R6, -1.5", ILLEGAL_OPERAND_MODE, "-1.5", 0x14E60C00);
 
     ERRT("STII", "R1, R0",  REGISTER_NOT_ALLOWED, "R0",   0x15810000);

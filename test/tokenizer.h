@@ -164,11 +164,34 @@ struct ParenIndex {  // n(Rn), @n(Rn), nested n(n(Rn))
         return *t == '(';
     }
 };
-struct CommaIndex {  // n,X ; (n,An) ; @(n,Rn) ; h16 @(n, Rn)
+struct CommaIndex {  // n,X ; (n,An) ; @(n,Rn)
     static bool ok(const char *t, const std::string &o) {
-        // ", " at top level is the operand separator; inside parens it is an
-        // index (h16 "@(n, Rn)").
-        return *t == ',' && (t[1] != ' ' || (!o.empty() && o.back() == '('));
+        (void)o;
+        // ", " (comma+space) is the top-level operand separator; a comma with no
+        // space is an index/base displacement inside an addressing mode.
+        return *t == ',' && t[1] != ' ';
+    }
+};
+struct OuterDisp {  // mc68020 memory-indirect outer displacement: ([...],od) / (...,od)
+    static bool ok(const char *t, const std::string &o) {
+        // the outer displacement closes the mode with ')' and follows a ','.
+        return *t == ')' && !o.empty() && o.back() == ',';
+    }
+};
+struct ColonDisp {  // h16 size-suffixed base displacement: @(disp:8/:16/:32, ...)
+    static bool ok(const char *t, const std::string &o) {
+        // a ":N"-sized displacement right after "@(" (an immediate after '#'
+        // keeps its sign, so require the open-paren context).
+        return *t == ':' && !o.empty() && o.back() == '(';
+    }
+};
+struct LeadImm {  // leading bare immediate/quick operand: "<mnem> -8, <EA>"
+    static bool ok(const char *t, const std::string &o) {
+        // the FIRST operand (o empty) is a bare value ending at the operand
+        // separator ", " -- collapse its sign so "0"/"-8" quicks conflate.  An
+        // EA displacement ends at '(' and the EXT disp2 has a non-empty prefix,
+        // so neither is matched here.
+        return *t == ',' && t[1] == ' ' && o.empty();
     }
 };
 

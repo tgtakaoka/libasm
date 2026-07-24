@@ -29,9 +29,7 @@
       ABSF     *AR0--(IR0)%, R0
       ABSF     *AR0, R0
       ABSF     *AR0++(IR0)B, R0
-      ABSF     1, R0
-      ABSF     1.0005, R0
-      ABSF     -2, R0
+      ABSF     1.0, R0
       ABSI     R0
       ABSI     R1, R0
       ABSI     AR0, R0
@@ -1181,9 +1179,7 @@
       ADDF     *AR0--(IR0)%, R0
       ADDF     *AR0, R0
       ADDF     *AR0++(IR0)B, R0
-      ADDF     1, R0
-      ADDF     1.0005, R0
-      ADDF     -2, R0
+      ADDF     1.0, R0
       ADDI     R0, R0
       ADDI     AR0, R0
       ADDI     DP, R0
@@ -3422,9 +3418,7 @@
       CMPF     *AR0--(IR0)%, R0
       CMPF     *AR0, R0
       CMPF     *AR0++(IR0)B, R0
-      CMPF     1, R0
-      CMPF     1.0005, R0
-      CMPF     -2, R0
+      CMPF     1.0, R0
       CMPI     R0, R0
       CMPI     AR0, R0
       CMPI     DP, R0
@@ -4349,45 +4343,19 @@
       FIX      *AR0--(IR0)%, RC
       FIX      *AR0, RC
       FIX      *AR0++(IR0)B, RC
-      FIX      1, R0
-      FIX      1.0005, R0
-      FIX      -2, R0
-      FIX      1, AR0
-      FIX      1.0005, AR0
-      FIX      -2, AR0
-      FIX      1, DP
-      FIX      1.0005, DP
-      FIX      -2, DP
-      FIX      1, IR0
-      FIX      1.0005, IR0
-      FIX      -2, IR0
-      FIX      1, BK
-      FIX      1.0005, BK
-      FIX      -2, BK
-      FIX      1, SP
-      FIX      1.0005, SP
-      FIX      -2, SP
-      FIX      1, ST
-      FIX      1.0005, ST
-      FIX      -2, ST
-      FIX      1, IE
-      FIX      1.0005, IE
-      FIX      -2, IE
-      FIX      1, IF
-      FIX      1.0005, IF
-      FIX      -2, IF
-      FIX      1, IOF
-      FIX      1.0005, IOF
-      FIX      -2, IOF
-      FIX      1, RS
-      FIX      1.0005, RS
-      FIX      -2, RS
-      FIX      1, RE
-      FIX      1.0005, RE
-      FIX      -2, RE
-      FIX      1, RC
-      FIX      1.0005, RC
-      FIX      -2, RC
+      FIX      1.0, R0
+      FIX      1.0, AR0
+      FIX      1.0, DP
+      FIX      1.0, IR0
+      FIX      1.0, BK
+      FIX      1.0, SP
+      FIX      1.0, ST
+      FIX      1.0, IE
+      FIX      1.0, IF
+      FIX      1.0, IOF
+      FIX      1.0, RS
+      FIX      1.0, RE
+      FIX      1.0, RC
       FLOAT    R0
       FLOAT    R1, R0
       FLOAT    AR0, R0
@@ -4462,9 +4430,7 @@
       LDE      *AR0--(IR0)%, R0
       LDE      *AR0, R0
       LDE      *AR0++(IR0)B, R0
-      LDE      1, R0
-      LDE      1.0005, R0
-      LDE      -2, R0
+      LDE      1.0, R0
       LDF      R0, R0
       LDF      @000000H, R0
       LDF      *+AR0(0), R0
@@ -4493,9 +4459,7 @@
       LDF      *AR0--(IR0)%, R0
       LDF      *AR0, R0
       LDF      *AR0++(IR0)B, R0
-      LDF      1, R0
-      LDF      1.0005, R0
-      LDF      -2, R0
+      LDF      1.0, R0
       LDFI     @000000H, R0
       LDFI     *+AR0(0), R0
       LDFI     *+AR0, R0
@@ -5460,9 +5424,7 @@
       LDM      *AR0--(IR0)%, R0
       LDM      *AR0, R0
       LDM      *AR0++(IR0)B, R0
-      LDM      1, R0
-      LDM      1.0005, R0
-      LDM      -2, R0
+      LDM      1.0, R0
       LSH      R0, R0
       LSH      AR0, R0
       LSH      DP, R0
@@ -6050,9 +6012,7 @@
       MPYF     *AR0--(IR0)%, R0
       MPYF     *AR0, R0
       MPYF     *AR0++(IR0)B, R0
-      MPYF     1, R0
-      MPYF     1.0005, R0
-      MPYF     -2, R0
+      MPYF     1.0, R0
       MPYI     R0, R0
       MPYI     AR0, R0
       MPYI     DP, R0
@@ -7203,9 +7163,7 @@
       NEGF     *AR0--(IR0)%, R0
       NEGF     *AR0, R0
       NEGF     *AR0++(IR0)B, R0
-      NEGF     1, R0
-      NEGF     1.0005, R0
-      NEGF     -2, R0
+      NEGF     1.0, R0
       NEGI     R0
       NEGI     R1, R0
       NEGI     AR0, R0
@@ -7837,9 +7795,7 @@
       NORM     *AR0--(IR0)%, R0
       NORM     *AR0, R0
       NORM     *AR0++(IR0)B, R0
-      NORM     1, R0
-      NORM     1.0005, R0
-      NORM     -2, R0
+      NORM     1.0, R0
       NOT      R0
       NOT      R1, R0
       NOT      AR0, R0
@@ -8994,9 +8950,7 @@
       RND      *AR0--(IR0)%, R0
       RND      *AR0, R0
       RND      *AR0++(IR0)B, R0
-      RND      1, R0
-      RND      1.0005, R0
-      RND      -2, R0
+      RND      1.0, R0
       ROL      R0
       ROL      AR0
       ROL      DP
@@ -10981,9 +10935,7 @@
       SUBF     *AR0--(IR0)%, R0
       SUBF     *AR0, R0
       SUBF     *AR0++(IR0)B, R0
-      SUBF     1, R0
-      SUBF     1.0005, R0
-      SUBF     -2, R0
+      SUBF     1.0, R0
       SUBI     R0, R0
       SUBI     AR0, R0
       SUBI     DP, R0
@@ -12130,9 +12082,7 @@
       SUBRF    *AR0--(IR0)%, R0
       SUBRF    *AR0, R0
       SUBRF    *AR0++(IR0)B, R0
-      SUBRF    1, R0
-      SUBRF    1.0005, R0
-      SUBRF    -2, R0
+      SUBRF    1.0, R0
       SUBRI    R0, R0
       SUBRI    AR0, R0
       SUBRI    DP, R0
@@ -154628,9 +154578,7 @@
       LDFU     *AR0--(IR0)%, R0
       LDFU     *AR0, R0
       LDFU     *AR0++(IR0)B, R0
-      LDFU     1, R0
-      LDFU     1.0005, R0
-      LDFU     -2, R0
+      LDFU     1.0, R0
       LDFLO    R0, R0
       LDFLO    @000000H, R0
       LDFLO    *+AR0(0), R0
@@ -154659,9 +154607,7 @@
       LDFLO    *AR0--(IR0)%, R0
       LDFLO    *AR0, R0
       LDFLO    *AR0++(IR0)B, R0
-      LDFLO    1, R0
-      LDFLO    1.0005, R0
-      LDFLO    -2, R0
+      LDFLO    1.0, R0
       LDFLS    R0, R0
       LDFLS    @000000H, R0
       LDFLS    *+AR0(0), R0
@@ -154690,9 +154636,7 @@
       LDFLS    *AR0--(IR0)%, R0
       LDFLS    *AR0, R0
       LDFLS    *AR0++(IR0)B, R0
-      LDFLS    1, R0
-      LDFLS    1.0005, R0
-      LDFLS    -2, R0
+      LDFLS    1.0, R0
       LDFHI    R0, R0
       LDFHI    @000000H, R0
       LDFHI    *+AR0(0), R0
@@ -154721,9 +154665,7 @@
       LDFHI    *AR0--(IR0)%, R0
       LDFHI    *AR0, R0
       LDFHI    *AR0++(IR0)B, R0
-      LDFHI    1, R0
-      LDFHI    1.0005, R0
-      LDFHI    -2, R0
+      LDFHI    1.0, R0
       LDFHS    R0, R0
       LDFHS    @000000H, R0
       LDFHS    *+AR0(0), R0
@@ -154752,9 +154694,7 @@
       LDFHS    *AR0--(IR0)%, R0
       LDFHS    *AR0, R0
       LDFHS    *AR0++(IR0)B, R0
-      LDFHS    1, R0
-      LDFHS    1.0005, R0
-      LDFHS    -2, R0
+      LDFHS    1.0, R0
       LDFEQ    R0, R0
       LDFEQ    @000000H, R0
       LDFEQ    *+AR0(0), R0
@@ -154783,9 +154723,7 @@
       LDFEQ    *AR0--(IR0)%, R0
       LDFEQ    *AR0, R0
       LDFEQ    *AR0++(IR0)B, R0
-      LDFEQ    1, R0
-      LDFEQ    1.0005, R0
-      LDFEQ    -2, R0
+      LDFEQ    1.0, R0
       LDFNE    R0, R0
       LDFNE    @000000H, R0
       LDFNE    *+AR0(0), R0
@@ -154814,9 +154752,7 @@
       LDFNE    *AR0--(IR0)%, R0
       LDFNE    *AR0, R0
       LDFNE    *AR0++(IR0)B, R0
-      LDFNE    1, R0
-      LDFNE    1.0005, R0
-      LDFNE    -2, R0
+      LDFNE    1.0, R0
       LDFLT    R0, R0
       LDFLT    @000000H, R0
       LDFLT    *+AR0(0), R0
@@ -154845,9 +154781,7 @@
       LDFLT    *AR0--(IR0)%, R0
       LDFLT    *AR0, R0
       LDFLT    *AR0++(IR0)B, R0
-      LDFLT    1, R0
-      LDFLT    1.0005, R0
-      LDFLT    -2, R0
+      LDFLT    1.0, R0
       LDFLE    R0, R0
       LDFLE    @000000H, R0
       LDFLE    *+AR0(0), R0
@@ -154876,9 +154810,7 @@
       LDFLE    *AR0--(IR0)%, R0
       LDFLE    *AR0, R0
       LDFLE    *AR0++(IR0)B, R0
-      LDFLE    1, R0
-      LDFLE    1.0005, R0
-      LDFLE    -2, R0
+      LDFLE    1.0, R0
       LDFGT    R0, R0
       LDFGT    @000000H, R0
       LDFGT    *+AR0(0), R0
@@ -154907,9 +154839,7 @@
       LDFGT    *AR0--(IR0)%, R0
       LDFGT    *AR0, R0
       LDFGT    *AR0++(IR0)B, R0
-      LDFGT    1, R0
-      LDFGT    1.0005, R0
-      LDFGT    -2, R0
+      LDFGT    1.0, R0
       LDFGE    R0, R0
       LDFGE    @000000H, R0
       LDFGE    *+AR0(0), R0
@@ -154938,9 +154868,7 @@
       LDFGE    *AR0--(IR0)%, R0
       LDFGE    *AR0, R0
       LDFGE    *AR0++(IR0)B, R0
-      LDFGE    1, R0
-      LDFGE    1.0005, R0
-      LDFGE    -2, R0
+      LDFGE    1.0, R0
       LDFNV    R0, R0
       LDFNV    @000000H, R0
       LDFNV    *+AR0(0), R0
@@ -154969,9 +154897,7 @@
       LDFNV    *AR0--(IR0)%, R0
       LDFNV    *AR0, R0
       LDFNV    *AR0++(IR0)B, R0
-      LDFNV    1, R0
-      LDFNV    1.0005, R0
-      LDFNV    -2, R0
+      LDFNV    1.0, R0
       LDFV     R0, R0
       LDFV     @000000H, R0
       LDFV     *+AR0(0), R0
@@ -155000,9 +154926,7 @@
       LDFV     *AR0--(IR0)%, R0
       LDFV     *AR0, R0
       LDFV     *AR0++(IR0)B, R0
-      LDFV     1, R0
-      LDFV     1.0005, R0
-      LDFV     -2, R0
+      LDFV     1.0, R0
       LDFNUF   R0, R0
       LDFNUF   @000000H, R0
       LDFNUF   *+AR0(0), R0
@@ -155031,9 +154955,7 @@
       LDFNUF   *AR0--(IR0)%, R0
       LDFNUF   *AR0, R0
       LDFNUF   *AR0++(IR0)B, R0
-      LDFNUF   1, R0
-      LDFNUF   1.0005, R0
-      LDFNUF   -2, R0
+      LDFNUF   1.0, R0
       LDFUF    R0, R0
       LDFUF    @000000H, R0
       LDFUF    *+AR0(0), R0
@@ -155062,9 +154984,7 @@
       LDFUF    *AR0--(IR0)%, R0
       LDFUF    *AR0, R0
       LDFUF    *AR0++(IR0)B, R0
-      LDFUF    1, R0
-      LDFUF    1.0005, R0
-      LDFUF    -2, R0
+      LDFUF    1.0, R0
       LDFNLV   R0, R0
       LDFNLV   @000000H, R0
       LDFNLV   *+AR0(0), R0
@@ -155093,9 +155013,7 @@
       LDFNLV   *AR0--(IR0)%, R0
       LDFNLV   *AR0, R0
       LDFNLV   *AR0++(IR0)B, R0
-      LDFNLV   1, R0
-      LDFNLV   1.0005, R0
-      LDFNLV   -2, R0
+      LDFNLV   1.0, R0
       LDFLV    R0, R0
       LDFLV    @000000H, R0
       LDFLV    *+AR0(0), R0
@@ -155124,9 +155042,7 @@
       LDFLV    *AR0--(IR0)%, R0
       LDFLV    *AR0, R0
       LDFLV    *AR0++(IR0)B, R0
-      LDFLV    1, R0
-      LDFLV    1.0005, R0
-      LDFLV    -2, R0
+      LDFLV    1.0, R0
       LDFNLUF  R0, R0
       LDFNLUF  @000000H, R0
       LDFNLUF  *+AR0(0), R0
@@ -155155,9 +155071,7 @@
       LDFNLUF  *AR0--(IR0)%, R0
       LDFNLUF  *AR0, R0
       LDFNLUF  *AR0++(IR0)B, R0
-      LDFNLUF  1, R0
-      LDFNLUF  1.0005, R0
-      LDFNLUF  -2, R0
+      LDFNLUF  1.0, R0
       LDFLUF   R0, R0
       LDFLUF   @000000H, R0
       LDFLUF   *+AR0(0), R0
@@ -155186,9 +155100,7 @@
       LDFLUF   *AR0--(IR0)%, R0
       LDFLUF   *AR0, R0
       LDFLUF   *AR0++(IR0)B, R0
-      LDFLUF   1, R0
-      LDFLUF   1.0005, R0
-      LDFLUF   -2, R0
+      LDFLUF   1.0, R0
       LDFZUF   R0, R0
       LDFZUF   @000000H, R0
       LDFZUF   *+AR0(0), R0
@@ -155217,9 +155129,7 @@
       LDFZUF   *AR0--(IR0)%, R0
       LDFZUF   *AR0, R0
       LDFZUF   *AR0++(IR0)B, R0
-      LDFZUF   1, R0
-      LDFZUF   1.0005, R0
-      LDFZUF   -2, R0
+      LDFZUF   1.0, R0
       LDIU     R0, R0
       LDIU     AR0, R0
       LDIU     DP, R0

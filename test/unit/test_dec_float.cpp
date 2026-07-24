@@ -50,17 +50,17 @@ void test_dec_float16() {
     dec_float16_t f16;
 
     EQ("0.0", "000.00", f16.set(0, 0).str());
-    EQ("0.0", "0", gcvt(f16));
+    EQ("0.0", "0.0", gcvt(f16));
     EQ("0.0", OK, f16.set(f80));
     EQ("0.0", "000.00", f16.str());
 
     EQ("1.0", "081.00", f16.set(1 + dec_float16_t::EXP_BASE, 0).str());
-    EQ("1.0", "1", gcvt(f16));
+    EQ("1.0", "1.0", gcvt(f16));
     EQ("1.0", OK, f16.set(f80));
     EQ("1.0", "081.00", f16.str());
 
     EQ("-1.0", "181.00", f16.set(1 + dec_float16_t::EXP_BASE + dec_float16_t::SGN_MASK, 0).str());
-    EQ("-1.0", "-1", gcvt(f16));
+    EQ("-1.0", "-1.0", gcvt(f16));
     EQ("-1.0", OK, f16.set(f80));
     EQ("-1.0", "181.00", f16.str());
 
@@ -76,7 +76,7 @@ void test_dec_float16() {
 
     EQ("DBL_MAX", OVERFLOW_RANGE, f16.set(read_f80(STR_DBL_MAX)));
     EQ("DBL_MIN", OK, f16.set(read_f80(STR_DBL_MIN)));
-    EQ("DBL_MIN", "0", gcvt(f16));
+    EQ("DBL_MIN", "0.0", gcvt(f16));
 }
 
 const char *gcvt(const dec_float32_t &f32) {
@@ -89,18 +89,18 @@ const char *gcvt(const dec_float32_t &f32) {
 void test_dec_float32() {
     dec_float32_t f32;
     EQ("0.0", "000.000000", f32.set(0, 0).str());
-    EQ("0.0", "0", gcvt(f32));
+    EQ("0.0", "0.0", gcvt(f32));
     EQ("0.0", OK, f32.set(f80));
     EQ("0.0", "000.000000", f32.str());
 
     EQ("1.0", "081.000000", f32.set(1 + dec_float32_t::EXP_BASE, 0).str());
-    EQ("1.0", "1", gcvt(f32));
+    EQ("1.0", "1.0", gcvt(f32));
     EQ("1.0", OK, f32.set(f80));
     EQ("1.0", "081.000000", f32.str());
 
     EQ("-1.0", "181.000000",
             f32.set(1 + dec_float32_t::EXP_BASE + dec_float32_t::SGN_MASK, 0).str());
-    EQ("-1.0", "-1", gcvt(f32));
+    EQ("-1.0", "-1.0", gcvt(f32));
     EQ("-1.0", OK, f32.set(f80));
     EQ("-1.0", "181.000000", f32.str());
 
@@ -116,7 +116,7 @@ void test_dec_float32() {
 
     EQ("DBL_MAX", OVERFLOW_RANGE, f32.set(read_f80(STR_DBL_MAX)));
     EQ("DBL_MIN", OK, f32.set(read_f80(STR_DBL_MIN)));
-    EQ("DBL_MIN", "0", gcvt(f32));
+    EQ("DBL_MIN", "0.0", gcvt(f32));
 }
 
 const char *gcvt(const dec_float64_t &f64) {
@@ -129,18 +129,18 @@ const char *gcvt(const dec_float64_t &f64) {
 void test_dec_float64() {
     dec_float64_t f64;
     EQ("0.0", "000.00000-00000000", f64.set(0, 0).str());
-    EQ("0.0", "0", gcvt(f64));
+    EQ("0.0", "0.0", gcvt(f64));
     EQ("0.0", OK, f64.set(f80));
     EQ("0.0", "000.00000-00000000", f64.str());
 
     EQ("1.0", "081.00000-00000000", f64.set(1 + dec_float64_t::EXP_BASE, 0).str());
-    EQ("1.0", "1", gcvt(f64));
+    EQ("1.0", "1.0", gcvt(f64));
     EQ("1.0", OK, f64.set(f80));
     EQ("1.0", "081.00000-00000000", f64.str());
 
     EQ("-1.0", "181.00000-00000000",
             f64.set(1 + dec_float64_t::EXP_BASE + dec_float64_t::SGN_MASK, 0).str());
-    EQ("-1.0", "-1", gcvt(f64));
+    EQ("-1.0", "-1.0", gcvt(f64));
     EQ("-1.0", OK, f64.set(f80));
     EQ("-1.0", "181.00000-00000000", f64.str());
 
@@ -157,7 +157,7 @@ void test_dec_float64() {
 
     EQ("DBL_MAX", OVERFLOW_RANGE, f64.set(read_f80(STR_DBL_MAX)));
     EQ("DBL_MIN", OK, f64.set(read_f80(STR_DBL_MIN)));
-    EQ("DBL_MIN", "0", gcvt(f64));
+    EQ("DBL_MIN", "0.0", gcvt(f64));
 }
 
 void run_tests() {

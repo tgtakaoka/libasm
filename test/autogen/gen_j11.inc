@@ -6893,8 +6893,6 @@
       TSTD   (R0)+
       TSTD   (SP)+
       TSTD   #-1.07428729430005862409E+30
-      TSTD   #0
-      TSTD   #-0
       TSTD   @(R0)+
       TSTD   @(SP)+
       TSTD   @#171140Q
@@ -6953,8 +6951,6 @@
       MULD   (R0)+, AC0
       MULD   (SP)+, AC0
       MULD   #-3.02955660629680382341E+30, AC0
-      MULD   #0, AC0
-      MULD   #-0, AC0
       MULD   @(R0)+, AC0
       MULD   @(SP)+, AC0
       MULD   @#171440Q, AC0
@@ -6975,8 +6971,6 @@
       MODD   (R0)+, AC0
       MODD   (SP)+, AC0
       MODD   #-1.21185359149194751792E+31, AC0
-      MODD   #0, AC0
-      MODD   #-0, AC0
       MODD   @(R0)+, AC0
       MODD   @(SP)+, AC0
       MODD   @#172040Q, AC0
@@ -6997,8 +6991,6 @@
       ADDD   (R0)+, AC0
       ADDD   (SP)+, AC0
       ADDD   #-4.84753816186069402589E+31, AC0
-      ADDD   #0, AC0
-      ADDD   #-0, AC0
       ADDD   @(R0)+, AC0
       ADDD   @(SP)+, AC0
       ADDD   @#172440Q, AC0
@@ -7019,8 +7011,6 @@
       LDD    (R0)+, AC0
       LDD    (SP)+, AC0
       LDD    #-1.93906478310143919204E+32, AC0
-      LDD    #0, AC0
-      LDD    #-0, AC0
       LDD    @(R0)+, AC0
       LDD    @(SP)+, AC0
       LDD    @#173040Q, AC0
@@ -7041,8 +7031,6 @@
       SUBD   (R0)+, AC0
       SUBD   (SP)+, AC0
       SUBD   #-7.7564572058344030949E+32, AC0
-      SUBD   #0, AC0
-      SUBD   #-0, AC0
       SUBD   @(R0)+, AC0
       SUBD   @(SP)+, AC0
       SUBD   @#173440Q, AC0
@@ -7063,8 +7051,6 @@
       CMPD   (R0)+, AC0
       CMPD   (SP)+, AC0
       CMPD   #-3.10266211170521976866E+33, AC0
-      CMPD   #0, AC0
-      CMPD   #-0, AC0
       CMPD   @(R0)+, AC0
       CMPD   @(SP)+, AC0
       CMPD   @#174040Q, AC0
@@ -7103,8 +7089,6 @@
       DIVD   (R0)+, AC0
       DIVD   (SP)+, AC0
       DIVD   #-4.96451291271701892808E+34, AC0
-      DIVD   #0, AC0
-      DIVD   #-0, AC0
       DIVD   @(R0)+, AC0
       DIVD   @(SP)+, AC0
       DIVD   @#175040Q, AC0
@@ -7230,9 +7214,7 @@
       LDCDF  (PC), AC0
       LDCDF  (R0)+, AC0
       LDCDF  (SP)+, AC0
-      LDCDF  #0, AC0
-      LDCDF  #2.93887075546481324943E-39, AC0
-      LDCDF  #-0, AC0
+      LDCDF  #0.0, AC0
       LDCDF  @(R0)+, AC0
       LDCDF  @(SP)+, AC0
       LDCDF  @#000040Q, AC0

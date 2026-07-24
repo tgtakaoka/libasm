@@ -57,17 +57,17 @@ void test_ibm_float32() {
 #define SIG32(sig, pos) (UINT32_C(sig) << pos)
     ibm_float32_t f32;
     EQ("0.0", "00.000000", f32.set(0, 0).str());
-    EQ("0.0", "0", gcvt(f32));
+    EQ("0.0", "0.0", gcvt(f32));
     EQ("0.0", OK, f32.set(f80));
     EQ("0.0", "00.000000", f32.str());
 
     EQ("1.0", "41.100000", f32.set(EXP16(1), SIG32(1, MSD_POS)).str());
-    EQ("1.0", "1", gcvt(f32));
+    EQ("1.0", "1.0", gcvt(f32));
     EQ("1.0", OK, f32.set(f80));
     EQ("1.0", "41.100000", f32.str());
 
     EQ("-1.0", "C1.100000", f32.set(EXP16(1) + SGN_MASK, SIG32(1, MSD_POS)).str());
-    EQ("-1.0", "-1", gcvt(f32));
+    EQ("-1.0", "-1.0", gcvt(f32));
     EQ("-1.0", OK, f32.set(f80));
     EQ("-1.0", "C1.100000", f32.str());
 
@@ -83,21 +83,21 @@ void test_ibm_float32() {
 
     EQ("DBL_MAX", OVERFLOW_RANGE, f32.set(read_f80(STR_DBL_MAX)));
     EQ("DBL_MIN", OK, f32.set(read_f80(STR_DBL_MIN)));
-    EQ("DBL_MIN", "0", gcvt(f32));
+    EQ("DBL_MIN", "0.0", gcvt(f32));
 
-    EQ("1.0", "1", gcvt(f32.set(EXP16(1), SIG32(1, MSD_POS))));                 // 1/16 * 16^1
-    EQ("2.0", "2", gcvt(f32.set(EXP16(1), SIG32(2, MSD_POS))));                 // 2/16 * 16^1
-    EQ("4.0", "4", gcvt(f32.set(EXP16(1), SIG32(4, MSD_POS))));                 // 4/16 * 16^1
-    EQ("8.0", "8", gcvt(f32.set(EXP16(1), SIG32(8, MSD_POS))));                 // 8/16 * 16^1
-    EQ("16.0", "16", gcvt(f32.set(EXP16(2), SIG32(1, MSD_POS))));               // 1/16 * 16^2
-    EQ("24.0", "24", gcvt(f32.set(EXP16(2), SIG32(24, MSD2_POS))));             // 24/16^2 * 16^2
-    EQ("42.0", "42", gcvt(f32.set(EXP16(2), SIG32(42, MSD2_POS))));             // 42/16^2 * 16^2
+    EQ("1.0", "1.0", gcvt(f32.set(EXP16(1), SIG32(1, MSD_POS))));               // 1/16 * 16^1
+    EQ("2.0", "2.0", gcvt(f32.set(EXP16(1), SIG32(2, MSD_POS))));               // 2/16 * 16^1
+    EQ("4.0", "4.0", gcvt(f32.set(EXP16(1), SIG32(4, MSD_POS))));               // 4/16 * 16^1
+    EQ("8.0", "8.0", gcvt(f32.set(EXP16(1), SIG32(8, MSD_POS))));               // 8/16 * 16^1
+    EQ("16.0", "16.0", gcvt(f32.set(EXP16(2), SIG32(1, MSD_POS))));             // 1/16 * 16^2
+    EQ("24.0", "24.0", gcvt(f32.set(EXP16(2), SIG32(24, MSD2_POS))));           // 24/16^2 * 16^2
+    EQ("42.0", "42.0", gcvt(f32.set(EXP16(2), SIG32(42, MSD2_POS))));           // 42/16^2 * 16^2
     EQ("0.5", "0.5", gcvt(f32.set(EXP16(0), SIG32(8, MSD_POS))));               // 8/16 * 16^0
     EQ("0.125", "0.125", gcvt(f32.set(EXP16(0), SIG32(2, MSD_POS))));           // 2/16 * 16^0
     EQ("0.0078125", "0.0078125", gcvt(f32.set(EXP16(-1), SIG32(2, MSD_POS))));  // 2/16^2 * 16^-1
-    EQ("1000.0", "1000", gcvt(f32.set(EXP16(3), SIG32(1000, MSD3_POS))));       // 1000/16^3 * 16^3
+    EQ("1000.0", "1000.0", gcvt(f32.set(EXP16(3), SIG32(1000, MSD3_POS))));     // 1000/16^3 * 16^3
     EQ("118.625", "118.625", gcvt(f32.set(EXP16(2), SIG32(1898, MSD3_POS))));   // 1898/16 * 16^2
-    EQ("101.0", "101", gcvt(f32.set(EXP16(2), SIG32(101, MSD2_POS))));          // 101/16^2 * 16^2
+    EQ("101.0", "101.0", gcvt(f32.set(EXP16(2), SIG32(101, MSD2_POS))));        // 101/16^2 * 16^2
     EQ("0.03125", "0.03125", gcvt(f32.set(EXP16(-1), SIG32(8, MSD_POS))));      // 8/16 * 16^-1
 }
 
@@ -117,17 +117,17 @@ void test_ibm_float64() {
 #define SIG64(sig, pos) (UINT64_C(sig) << pos)
     ibm_float64_t f64;
     EQ("0.0", "00.000000-00000000", f64.set(0, 0).str());
-    EQ("0.0", "0", gcvt(f64));
+    EQ("0.0", "0.0", gcvt(f64));
     EQ("0.0", OK, f64.set(f80));
     EQ("0.0", "00.000000-00000000", f64.str());
 
     EQ("1.0", "41.100000-00000000", f64.set(EXP16(1), SIG64(1, MSD_POS)).str());
-    EQ("1.0", "1", gcvt(f64));
+    EQ("1.0", "1.0", gcvt(f64));
     EQ("1.0", OK, f64.set(f80));
     EQ("1.0", "41.100000-00000000", f64.str());
 
     EQ("-1.0", "C1.100000-00000000", f64.set(EXP16(1) + SGN_MASK, SIG64(1, MSD_POS)).str());
-    EQ("-1.0", "-1", gcvt(f64));
+    EQ("-1.0", "-1.0", gcvt(f64));
     EQ("-1.0", OK, f64.set(f80));
     EQ("-1.0", "C1.100000-00000000", f64.str());
 
@@ -143,23 +143,23 @@ void test_ibm_float64() {
 
     EQ("DBL_MAX", OVERFLOW_RANGE, f64.set(read_f80(STR_DBL_MAX)));
     EQ("DBL_MIN", OK, f64.set(read_f80(STR_DBL_MIN)));
-    EQ("DBL_MIN", "0", gcvt(f64));
+    EQ("DBL_MIN", "0.0", gcvt(f64));
 
     constexpr auto MSD2_POS = MSD_POS - 4;
     constexpr auto MSD3_POS = MSD2_POS - 4;
-    EQ("1.0", "1", gcvt(f64.set(EXP16(1), SIG64(1, MSD_POS))));                 // 1/16 * 16^1
-    EQ("2.0", "2", gcvt(f64.set(EXP16(1), SIG64(2, MSD_POS))));                 // 2/16 * 16^1
-    EQ("4.0", "4", gcvt(f64.set(EXP16(1), SIG64(4, MSD_POS))));                 // 4/16 * 16^1
-    EQ("8.0", "8", gcvt(f64.set(EXP16(1), SIG64(8, MSD_POS))));                 // 8/16 * 16^1
-    EQ("16.0", "16", gcvt(f64.set(EXP16(2), SIG64(1, MSD_POS))));               // 1/16 * 16^2
-    EQ("24.0", "24", gcvt(f64.set(EXP16(2), SIG64(24, MSD2_POS))));             // 24/16^2 * 16^2
-    EQ("42.0", "42", gcvt(f64.set(EXP16(2), SIG64(42, MSD2_POS))));             // 42/16^2 * 16^2
+    EQ("1.0", "1.0", gcvt(f64.set(EXP16(1), SIG64(1, MSD_POS))));               // 1/16 * 16^1
+    EQ("2.0", "2.0", gcvt(f64.set(EXP16(1), SIG64(2, MSD_POS))));               // 2/16 * 16^1
+    EQ("4.0", "4.0", gcvt(f64.set(EXP16(1), SIG64(4, MSD_POS))));               // 4/16 * 16^1
+    EQ("8.0", "8.0", gcvt(f64.set(EXP16(1), SIG64(8, MSD_POS))));               // 8/16 * 16^1
+    EQ("16.0", "16.0", gcvt(f64.set(EXP16(2), SIG64(1, MSD_POS))));             // 1/16 * 16^2
+    EQ("24.0", "24.0", gcvt(f64.set(EXP16(2), SIG64(24, MSD2_POS))));           // 24/16^2 * 16^2
+    EQ("42.0", "42.0", gcvt(f64.set(EXP16(2), SIG64(42, MSD2_POS))));           // 42/16^2 * 16^2
     EQ("0.5", "0.5", gcvt(f64.set(EXP16(0), SIG64(8, MSD_POS))));               // 8/16 * 16^0
     EQ("0.125", "0.125", gcvt(f64.set(EXP16(0), SIG64(2, MSD_POS))));           // 2/16 * 16^0
     EQ("0.0078125", "0.0078125", gcvt(f64.set(EXP16(-1), SIG64(2, MSD_POS))));  // 2/16^2 * 16^-1
-    EQ("1000.0", "1000", gcvt(f64.set(EXP16(3), SIG64(1000, MSD3_POS))));       // 1000/16^3 * 16^3
+    EQ("1000.0", "1000.0", gcvt(f64.set(EXP16(3), SIG64(1000, MSD3_POS))));     // 1000/16^3 * 16^3
     EQ("118.625", "118.625", gcvt(f64.set(EXP16(2), SIG64(1898, MSD3_POS))));   // 1898/16 * 16^2
-    EQ("101.0", "101", gcvt(f64.set(EXP16(2), SIG64(101, MSD2_POS))));          // 101/16^2 * 16^2
+    EQ("101.0", "101.0", gcvt(f64.set(EXP16(2), SIG64(101, MSD2_POS))));        // 101/16^2 * 16^2
     EQ("0.03125", "0.03125", gcvt(f64.set(EXP16(-1), SIG64(8, MSD_POS))));      // 8/16 * 16^-1
 }
 

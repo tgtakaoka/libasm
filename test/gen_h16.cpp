@@ -113,8 +113,9 @@ struct H16RegListTokenizer : Tokenizer {
 };
 
 // Drop a forced ":N" size suffix (H16's :8/:16/:32 displacement/immediate/
-// absolute width) so a forced-width value dedups with its natural-width form.
-// H16's sole ":number" operand syntax is this size suffix.
+// absolute width) so a forced-width value conflates with its natural-width form.
+// ColonDisp consolidates the sign of a sized base displacement so it conflates
+// regardless of sign.  H16's sole ":number" operand syntax is this size suffix.
 struct H16SizeSuffixTokenizer : Tokenizer {
     const char *tokenize(const char *p, std::string &out) const override {
         const char *tmp;
@@ -128,11 +129,13 @@ const H16RegListTokenizer REG_LIST;
 const H16IndexTokenizer INDEX;
 const H16RegTokenizer REG;
 const H16SizeSuffixTokenizer SIZE_SUFFIX;
-// Consolidate index/base displacement sign: "@(n, Rn)" (comma+space inside parens).
+// Consolidate index/base displacement sign: "@(n, Rn)" (comma+space inside parens)
+// and the size-suffixed base displacement "@(n:16, Rn)" (SIZE_SUFFIX drops ":16").
 const IndexDispTokenizer<CstyleNumber, CommaIndex> INDEX_DISP;
+const IndexDispTokenizer<CstyleNumber, ColonDisp> SIZED_DISP;
 
 TokenizerList tokenizers(char loc) {
-    TokenizerList list = standardTokenizers<CstyleNumber>(loc, {&INDEX_DISP});
+    TokenizerList list = standardTokenizers<CstyleNumber>(loc, {&INDEX_DISP, &SIZED_DISP});
     list.push_back(&REG_LIST);
     list.push_back(&INDEX);
     list.push_back(&REG);

@@ -5025,119 +5025,43 @@
       FCMP.L      #$4139423A, FP0
       FTST.L      #$413B423C
       FMOVE.S     #2068.37549, FP0
-      FMOVE.S     #2069, FP0
-      FMOVE.S     #-8965129, FP0
       FINT.S      #2084.37573, FP0
-      FINT.S      #2085, FP0
-      FINT.S      #-2224834, FP0
       FSINH.S     #2100.37598, FP0
-      FSINH.S     #2101, FP0
-      FSINH.S     #-9096203, FP0
       FINTRZ.S    #2116.37622, FP0
-      FINTRZ.S    #2117, FP0
-      FINTRZ.S    #-9161740, FP0
       FSQRT.S     #2132.37646, FP0
-      FSQRT.S     #2133, FP0
-      FSQRT.S     #-9227277, FP0
       FLOGNP1.S   #2164.37695, FP0
-      FLOGNP1.S   #2165, FP0
-      FLOGNP1.S   #-9358351, FP0
       FETOXM1.S   #2196.37744, FP0
-      FETOXM1.S   #2197, FP0
-      FETOXM1.S   #-9489425, FP0
       FTANH.S     #2212.37769, FP0
-      FTANH.S     #2213, FP0
-      FTANH.S     #-2355908, FP0
       FATAN.S     #2228.37793, FP0
-      FATAN.S     #2229, FP0
-      FATAN.S     #-9620499, FP0
       FASIN.S     #2260.37842, FP0
-      FASIN.S     #2261, FP0
-      FASIN.S     #-9751573, FP0
       FATANH.S    #2276.37866, FP0
-      FATANH.S    #2277, FP0
-      FATANH.S    #-2421445, FP0
       FSIN.S      #2292.37891, FP0
-      FSIN.S      #2293, FP0
-      FSIN.S      #-9882647, FP0
       FTAN.S      #2308.37915, FP0
-      FTAN.S      #2309, FP0
-      FTAN.S      #-9948184, FP0
       FETOX.S     #2324.37939, FP0
-      FETOX.S     #2325, FP0
-      FETOX.S     #-10013721, FP0
       FTWOTOX.S   #2340.37964, FP0
-      FTWOTOX.S   #2341, FP0
-      FTWOTOX.S   #-2486982, FP0
       FTENTOX.S   #2356.37988, FP0
-      FTENTOX.S   #2357, FP0
-      FTENTOX.S   #-10144795, FP0
       FLOGN.S     #2388.38037, FP0
-      FLOGN.S     #2389, FP0
-      FLOGN.S     #-10275869, FP0
       FLOG10.S    #2404.38062, FP0
-      FLOG10.S    #2405, FP0
-      FLOG10.S    #-2552519, FP0
       FLOG2.S     #2420.38086, FP0
-      FLOG2.S     #2421, FP0
-      FLOG2.S     #-10406943, FP0
       FABS.S      #2452.38135, FP0
-      FABS.S      #2453, FP0
-      FABS.S      #-10538017, FP0
       FCOSH.S     #2468.38159, FP0
-      FCOSH.S     #2469, FP0
-      FCOSH.S     #-2618056, FP0
       FNEG.S      #2484.38184, FP0
-      FNEG.S      #2485, FP0
-      FNEG.S      #-10669091, FP0
       FACOS.S     #2516.38232, FP0
-      FACOS.S     #2517, FP0
-      FACOS.S     #-10800165, FP0
       FCOS.S      #2532.38257, FP0
-      FCOS.S      #2533, FP0
-      FCOS.S      #-2683593, FP0
       FGETEXP.S   #2548.38281, FP0
-      FGETEXP.S   #2549, FP0
-      FGETEXP.S   #-10931239, FP0
       FGETMAN.S   #2564.38306, FP0
-      FGETMAN.S   #2565, FP0
-      FGETMAN.S   #-10996776, FP0
       FDIV.S      #2580.3833, FP0
-      FDIV.S      #2581, FP0
-      FDIV.S      #-11062313, FP0
       FMOD.S      #2596.38354, FP0
-      FMOD.S      #2597, FP0
-      FMOD.S      #-2749130, FP0
       FADD.S      #2612.38379, FP0
-      FADD.S      #2613, FP0
-      FADD.S      #-11193387, FP0
       FMUL.S      #2628.38403, FP0
-      FMUL.S      #2629, FP0
-      FMUL.S      #-11258924, FP0
       FSGLDIV.S   #2644.38428, FP0
-      FSGLDIV.S   #2645, FP0
-      FSGLDIV.S   #-11324461, FP0
       FREM.S      #2660.38452, FP0
-      FREM.S      #2661, FP0
-      FREM.S      #-2814667, FP0
       FSCALE.S    #2676.38477, FP0
-      FSCALE.S    #2677, FP0
-      FSCALE.S    #-11455535, FP0
       FSGLMUL.S   #2692.38501, FP0
-      FSGLMUL.S   #2693, FP0
-      FSGLMUL.S   #-11521072, FP0
       FSUB.S      #2708.38525, FP0
-      FSUB.S      #2709, FP0
-      FSUB.S      #-11586609, FP0
       FSINCOS.S   #2836.38721, FP0:FP0
-      FSINCOS.S   #2837, FP0:FP0
-      FSINCOS.S   #-12110905, FP0:FP0
       FCMP.S      #2964.38916, FP0
-      FCMP.S      #2965, FP0
-      FCMP.S      #-12635201, FP0
       FTST.S      #2996.38965
-      FTST.S      #2997
-      FTST.S      #-12766275
       FMOVE.X     #1.50177792631662443937E+694, FP0
       FINT.X      #3.0036472127590050001E+694, FP0
       FSINH.X     #6.00747714576952224293E+694, FP0
@@ -5244,10 +5168,8 @@
       FMOD.D      #1.2834071060827604E+102, FP0
       FADD.D      #1.3534001972856313E+102, FP0
       FMUL.D      #1.4233932884885021E+102, FP0
-      FMUL.D      #-523642082425952, FP0
       FSGLDIV.D   #1.493386379691373E+102, FP0
       FREM.D      #1.5633794708942439E+102, FP0
-      FREM.D      #514845855183968, FP0
       FSCALE.D    #1.6333725620971148E+102, FP0
       FSGLMUL.D   #1.7033656532999857E+102, FP0
       FSUB.D      #1.7733587445028565E+102, FP0

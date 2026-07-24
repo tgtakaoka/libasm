@@ -6893,11 +6893,8 @@
       tstd   (r0)+
       tstd   (sp)+
       tstd   $0d-1.07428729430005862409e+30
-      tstd   $0d0
+      tstd   $0d0.0
       tstd   $0d2.93887075546481324943e-39
-      tstd   $0d0.000115027551031236862993
-      tstd   $0d3.36460083192912419226e+21
-      tstd   $0d-0
       tstd   @(r0)+
       tstd   @(sp)+
       tstd   *$0171140
@@ -6956,11 +6953,8 @@
       muld   (r0)+, ac0
       muld   (sp)+, ac0
       muld   $0d-3.02955660629680382341e+30, ac0
-      muld   $0d0, ac0
+      muld   $0d0.0, ac0
       muld   $0d2.93887075546481324943e-39, ac0
-      muld   $0d0.000115027551031236862993, ac0
-      muld   $0d2.25414019343359066112e+21, ac0
-      muld   $0d-0, ac0
       muld   @(r0)+, ac0
       muld   @(sp)+, ac0
       muld   *$0171440, ac0
@@ -6981,11 +6975,8 @@
       modd   (r0)+, ac0
       modd   (sp)+, ac0
       modd   $0d-1.21185359149194751792e+31, ac0
-      modd   $0d0, ac0
+      modd   $0d0.0, ac0
       modd   $0d2.93887075546481324943e-39, ac0
-      modd   $0d0.000115027551031236862993, ac0
-      modd   $0d2.23569316788060936602e+21, ac0
-      modd   $0d-0, ac0
       modd   @(r0)+, ac0
       modd   @(sp)+, ac0
       modd   *$0172040, ac0
@@ -7006,11 +6997,8 @@
       addd   (r0)+, ac0
       addd   (sp)+, ac0
       addd   $0d-4.84753816186069402589e+31, ac0
-      addd   $0d0, ac0
+      addd   $0d0.0, ac0
       addd   $0d2.93887075546481324943e-39, ac0
-      addd   $0d0.000115027551031236862993, ac0
-      addd   $0d2.21724614232762807091e+21, ac0
-      addd   $0d-0, ac0
       addd   @(r0)+, ac0
       addd   @(sp)+, ac0
       addd   *$0172440, ac0
@@ -7031,11 +7019,8 @@
       ldd    (r0)+, ac0
       ldd    (sp)+, ac0
       ldd    $0d-1.93906478310143919204e+32, ac0
-      ldd    $0d0, ac0
+      ldd    $0d0.0, ac0
       ldd    $0d2.93887075546481324943e-39, ac0
-      ldd    $0d0.000115027551031236862993, ac0
-      ldd    $0d2.19879911677464677581e+21, ac0
-      ldd    $0d-0, ac0
       ldd    @(r0)+, ac0
       ldd    @(sp)+, ac0
       ldd    *$0173040, ac0
@@ -7056,11 +7041,8 @@
       subd   (r0)+, ac0
       subd   (sp)+, ac0
       subd   $0d-7.7564572058344030949e+32, ac0
-      subd   $0d0, ac0
+      subd   $0d0.0, ac0
       subd   $0d2.93887075546481324943e-39, ac0
-      subd   $0d0.000115027551031236862993, ac0
-      subd   $0d2.1803520912216654807e+21, ac0
-      subd   $0d-0, ac0
       subd   @(r0)+, ac0
       subd   @(sp)+, ac0
       subd   *$0173440, ac0
@@ -7081,11 +7063,8 @@
       cmpd   (r0)+, ac0
       cmpd   (sp)+, ac0
       cmpd   $0d-3.10266211170521976866e+33, ac0
-      cmpd   $0d0, ac0
+      cmpd   $0d0.0, ac0
       cmpd   $0d2.93887075546481324943e-39, ac0
-      cmpd   $0d0.000115027551031236862993, ac0
-      cmpd   $0d2.1619050656686841856e+21, ac0
-      cmpd   $0d-0, ac0
       cmpd   @(r0)+, ac0
       cmpd   @(sp)+, ac0
       cmpd   *$0174040, ac0
@@ -7124,11 +7103,8 @@
       divd   (r0)+, ac0
       divd   (sp)+, ac0
       divd   $0d-4.96451291271701892808e+34, ac0
-      divd   $0d0, ac0
+      divd   $0d0.0, ac0
       divd   $0d2.93887075546481324943e-39, ac0
-      divd   $0d0.000115027551031236862993, ac0
-      divd   $0d2.12501101456272159539e+21, ac0
-      divd   $0d-0, ac0
       divd   @(r0)+, ac0
       divd   @(sp)+, ac0
       divd   *$0175040, ac0
@@ -7254,12 +7230,9 @@
       ldcdf  (pc), ac0
       ldcdf  (r0)+, ac0
       ldcdf  (sp)+, ac0
-      ldcdf  $0d0, ac0
+      ldcdf  $0d0.0, ac0
       ldcdf  $0d2.93887075546481324943e-39, ac0
-      ldcdf  $0d0.000115027551031236862993, ac0
-      ldcdf  $0d2.02355237402132447232e+21, ac0
-      ldcdf  $0d-0, ac0
-      ldcdf  $0d-2.95035036764954295619e-39, ac0
+      ldcdf  $0d-0.0, ac0
       ldcdf  @(r0)+, ac0
       ldcdf  @(sp)+, ac0
       ldcdf  *$0000040, ac0

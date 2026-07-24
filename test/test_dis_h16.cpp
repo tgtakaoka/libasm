@@ -254,7 +254,7 @@ void test_branch() {
 // Computed jumps (any EA).
 void test_jump() {
     TEST("JMP", "@R0",          0x9B, 0x00);
-    TEST("JMP", "@($1234, R0)", 0x9B, 0x20, 0x12, 0x34);
+    TEST("JMP", "@($1234,R0)", 0x9B, 0x20, 0x12, 0x34);
     TEST("JSR", "@R0",          0xAB, 0x00);
     TEST("JSR", "@$1234", 0xAB, 0x76, 0x12, 0x34);  // 16-bit minimal -> bare
 }
@@ -264,10 +264,10 @@ void test_jump() {
 // field is wider -- the bare form then re-assembles to the same bytes.
 void test_ea_size() {
     // Displacement: bare at 8-bit minimal, :16/:32 when the field is wider.
-    TEST("ADD:G.W", "@(5, R0), R1",     0x01, 0x10, 0x05, 0x41);
-    TEST("ADD:G.W", "@(5:16, R0), R1",  0x01, 0x20, 0x00, 0x05, 0x41);
-    TEST("ADD:G.W", "@(5:32, R0), R1",  0x01, 0x30, 0x00, 0x00, 0x00, 0x05, 0x41);
-    TEST("ADD:G.W", "@($1234, R0), R1", 0x01, 0x20, 0x12, 0x34, 0x41);  // 16-bit minimal
+    TEST("ADD:G.W", "@(5,R0), R1",     0x01, 0x10, 0x05, 0x41);
+    TEST("ADD:G.W", "@(5:16,R0), R1",  0x01, 0x20, 0x00, 0x05, 0x41);
+    TEST("ADD:G.W", "@(5:32,R0), R1",  0x01, 0x30, 0x00, 0x00, 0x00, 0x05, 0x41);
+    TEST("ADD:G.W", "@($1234,R0), R1", 0x01, 0x20, 0x12, 0x34, 0x41);  // 16-bit minimal
     // Absolute: bare when minimal, :N when wider.  A negative absolute uses its
     // full 32-bit form (a leading "@-" would be the @-Rn auto-decrement mode).
     TEST("ADD:G.W", "@5, R1",           0x01, 0x75, 0x05, 0x41);
@@ -333,7 +333,7 @@ void test_illegal_zero() {
     ERRT("SET/EQ",  "@R0", ILLEGAL_OPERAND_MODE, "", 0xB7, 0x17, 0x00);
     // Double-indirect: each Sd field must be byte (01) or long (11); a 0 or
     // word (10) field is illegal (here s1=s2=00).
-    ERRT("ADD:G.W", "@(0,@(0, R0)), R1", ILLEGAL_OPERAND_MODE, "",
+    ERRT("ADD:G.W", "@(0,@(0,R0)), R1", ILLEGAL_OPERAND_MODE, "",
             0x01, 0x7E, 0x00, 0x41);
     // Scale mode (0x78-0x7B) ext byte [*|*|Sf|Rn]: mode 7 has no index-size
     // bit, so both spare top bits (7 and 6) must be 0.
@@ -341,8 +341,8 @@ void test_illegal_zero() {
     ERRT("ADD:G.W", "@(R5*4), R2", ILLEGAL_OPERAND_MODE, "", 0x01, 0x78, 0xA5, 0x42);
     // Index mode (0x7C) ext byte [**|Sf|Xm]: the top 2 bits are "don't care"
     // (manual Second Expansion Byte) and must be 0 to round-trip exactly.
-    ERRT("ADD:G.W", "@(R2.W*2, R1), R1", ILLEGAL_OPERAND_MODE, "", 0x01, 0x7C, 0x01, 0x52, 0x41);
-    ERRT("ADD:G.W", "@(R2.W*2, R1), R1", ILLEGAL_OPERAND_MODE, "", 0x01, 0x7C, 0x01, 0x92, 0x41);
+    ERRT("ADD:G.W", "@(R2.W*2,R1), R1", ILLEGAL_OPERAND_MODE, "", 0x01, 0x7C, 0x01, 0x52, 0x41);
+    ERRT("ADD:G.W", "@(R2.W*2,R1), R1", ILLEGAL_OPERAND_MODE, "", 0x01, 0x7C, 0x01, 0x92, 0x41);
     // Bit-field EAs/EAd never use accumulator form, so bit 7 of either EA byte
     // is a reserved bit that must be 0.
     ERRT("BFINS", "R0, R1, @R2, @R3", ILLEGAL_OPERAND_MODE, "", 0xD5, 0x01, 0x82, 0x03);
@@ -363,7 +363,7 @@ void test_illegal_zero() {
     // EA of a two-EA instruction.  Set on a single-operand EA (NOT) or on a
     // destination byte (ADDS dst), nothing consumes it -- illegal.
     ERRT("NOT.B",  "@R9", ILLEGAL_OPERAND_MODE, "", 0x90, 0x89);
-    ERRT("ADDS.L", "@R3+, @(-$77, R0)", ILLEGAL_OPERAND_MODE, "",
+    ERRT("ADDS.L", "@R3+, @(-$77,R0)", ILLEGAL_OPERAND_MODE, "",
             0x42, 0x53, 0x90, 0x89);
     // JMP/JSR target forbids register-direct and immediate (manual Available
     // EA): both have no effective address to jump to.

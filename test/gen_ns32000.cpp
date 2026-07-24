@@ -33,6 +33,27 @@ bool isNs32kScale(const char *p) {
     return false;
 }
 
+// External addressing "EXT(disp1)+disp2": disp1 is a signed module-table
+// displacement.  Collapse "EXT(+/-n)" -> "EXT(n)" so external references dedup
+// regardless of disp1's sign; disp2's sign is consolidated by Ns32kDispTokenizer
+// ("+(-n)"->"+n") and the number tokenizer ("+n").
+struct Ns32kExternTokenizer : Tokenizer {
+    const char *tokenize(const char *p, std::string &out) const override {
+        if (toupper(static_cast<unsigned char>(p[0])) != 'E' ||
+                toupper(static_cast<unsigned char>(p[1])) != 'X' ||
+                toupper(static_cast<unsigned char>(p[2])) != 'T' || p[3] != '(')
+            return nullptr;
+        const char *q = p + 4;
+        if (*q == '+' || *q == '-')  // disp1 sign
+            ++q;
+        const char *tmp;
+        if (!matchNum<CstyleNumber>(q, tmp))
+            return nullptr;
+        out.append("EXT(n");  // leaves ")" + disp2 for the remaining tokenizers
+        return tmp;
+    }
+};
+
 // Reduce displacement variants "+(-n)" to "+n" (drops the surrounding parens).
 struct Ns32kDispTokenizer : Tokenizer {
     const char *tokenize(const char *p, std::string &out) const override {
@@ -59,10 +80,13 @@ struct Ns32kScaleTokenizer : Tokenizer {
     }
 };
 
+const Ns32kExternTokenizer EXTERN;
 const Ns32kDispTokenizer DISP;
 const Ns32kScaleTokenizer SCALE;
 // Consolidate index/base displacement sign: "n(Rn)", nested "n(n(Rn))".
 const IndexDispTokenizer<CstyleNumber, ParenIndex> INDEX_DISP;
+// Consolidate the leading immediate/quick operand sign: "ADDQ 0/-8, EA" -> one.
+const IndexDispTokenizer<CstyleNumber, LeadImm> LEAD_IMM;
 // Register files: R0-R7, F0-F7 (FPU); config regs PTB0/1, BPR0/1.
 const RegisterTokenizer REG_PTB("PTB", 1, "PTBn");
 const RegisterTokenizer REG_BPR("BPR", 1, "BPRn");
@@ -71,7 +95,7 @@ const RegisterTokenizer REG_F("F", 7, "Fn");
 
 TokenizerList tokenizers(char loc) {
     TokenizerList list = standardTokenizers<CstyleNumber>(
-            loc, {&INDEX_DISP, &REG_PTB, &REG_BPR, &REG_R, &REG_F});
+            loc, {&EXTERN, &INDEX_DISP, &LEAD_IMM, &REG_PTB, &REG_BPR, &REG_R, &REG_F});
     list.push_back(&DISP);
     list.push_back(&SCALE);
     return list;
