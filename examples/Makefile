@@ -25,6 +25,7 @@ help:
 EXS = \
 	cdp1802  \
 	f3850    \
+	h16      \
 	h8300    \
 	h8500    \
 	i8048    \
@@ -48,6 +49,7 @@ EXS = \
 	scn2650  \
 	superh   \
 	tlcs90   \
+	tlcs900  \
 	tms320   \
 	tms320f  \
 	tms370   \
