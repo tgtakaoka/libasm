@@ -37,8 +37,10 @@ struct Base {
     OPCODE readOpCode() const {
         if (sizeof(OPCODE) == 1) {
             return pgm_read_byte(&_opCode_P);
-        } else {
+        } else if (sizeof(OPCODE) == 2) {
             return pgm_read_word(&_opCode_P);
+        } else {
+            return pgm_read_dword(&_opCode_P);
         }
     }
 
