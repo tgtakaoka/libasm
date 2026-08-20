@@ -36,10 +36,10 @@ nasm-test:
 INC_targets = w65c816 tlcs90 $(TGT_tlcs900) i8086 i80186 i80386 i80486 $(TGT_mc68000) $(TGT_z8000) $(TGT_nm1610) \
     ns32000 tms320c20x tms320c5x tms320c30 tms320c31 tms320c32 tms370 tms7000 tms9980 \
     j11 t11 mc146805 z80 z180 z380 h8300 h8300hn h8300h $(TGT_h8500) $(TGT_h16) cp1600 $(TGT_superh) \
-    $(TGT_z8)
+    $(TGT_z8) $(TGT_am29000)
 # target which for GNU assembler (also ".ginc" targets)
 GINC_targets = $(TGT_mc68000) $(TGT_z8000) $(TGT_pdp11) $(TGT_h8300) $(TGT_h8500) \
-    $(TGT_superh) \
+    $(TGT_superh) $(TGT_am29000) \
     ns32000 mc68hc11 mc68hc12 i8086 i80186 i80286 i80386 i80486 \
     tms320c30 tms320c31 tms320c32
 # target which also has Zilog syntax (also ".zinc" targets)
@@ -52,8 +52,12 @@ NOASM_targets = i80286 h8s2000n h8s2000 h8s2600n h8s2600
 # h8500: the disassembler emits MOV:F negative displacements as @(-0x7F,FP),
 # which ASL rejects (it needs @((-0x7F),fp)); the curated reference test, which
 # spells them ASL-compatibly, is byte-identical with ASL.
+# am29050: ASL has no AM29050 selector, and knows neither the seven opcodes
+# exclusive to that chip (ORN, FMAC, DMAC, FMSM, DMSM, MTACC, MFACC) nor its
+# own special-purpose registers.  The other five variants map onto the AM29245
+# and AM29240 selectors in their wrappers.
 ASL_exclude = mb8861 i80286 h8300hn h8300h h8s2000n h8s2000 h8s2600n h8s2600 shdsp sh2e sh2a \
-    $(TGT_h8500)
+    $(TGT_h8500) am29050
 # CPU variants whose gas toolchain does not produce a manual-conforming
 # encoding. h8300-elf-as has no -mach=h8300; it always emits the H8/300H
 # 4-byte form for JMP/JSR @aa:16, producing bytes that don't execute on
@@ -187,6 +191,17 @@ GEN_Z8001_TEXT_ORG = 0x020000
 # Z8002 has no segmented relocation, so the autogen @file is just a
 # single --section-start=.text line; gen on demand (kept out of git so
 # clean-gas can wipe it).  Reference tests ship a hand-written file.
+# Am29000 branch target symbols and the linker @file are scraped from the dis
+# output (.ginc).  Reference tests ship a hand-written .ld_flags; this
+# autogen-only rule generates it.  The text origin must match the org in
+# gen_am29XXX.asm and the org passed to gen_am29000 (see TestGenerator).
+GEN_AM29000_TEXT_ORG = 0x40000
+gen_%.ld_flags: gen_%.ginc
+	../../scripts/scrape-am29000-syms.sh $< $@ $(GEN_AM29000_TEXT_ORG)
+# Keep the scraped @file: it is a prerequisite of a pattern rule, so make would
+# otherwise treat it as intermediate and delete it after linking.
+.SECONDARY: $(foreach t,$(TGT_am29000),gen_$(t).ld_flags)
+
 GEN_Z8002_TEXT_ORG = 0x1000
 gen_z8002.ld_flags:
 	printf -- '--section-start=.text=%s\n' '$(GEN_Z8002_TEXT_ORG)' > $@

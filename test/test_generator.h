@@ -40,8 +40,11 @@ struct GenDebugger {
 };
 
 struct DataGenerator {
-    static DataGenerator *newGenerator(
-            uint8_t *buffer, const ConfigBase &config, GenDebugger &debugger);
+    // |width| is how much of an instruction one step of the scan covers, which
+    // is normally the CPU's opcode width but may be narrowed, see
+    // TestGenerator::scanByByte.
+    static DataGenerator *newGenerator(uint8_t *buffer, const ConfigBase &config,
+            GenDebugger &debugger, OpCodeWidth width);
     DataGenerator *newChild();
     virtual ~DataGenerator();
 
@@ -69,7 +72,8 @@ protected:
     void genData();
     void dump(const char *msg, int start, int size, va_list args) const;
 
-    DataGenerator(uint8_t *buffer, const ConfigBase &config, GenDebugger &debugger);
+    DataGenerator(
+            uint8_t *buffer, const ConfigBase &config, GenDebugger &debugger, OpCodeWidth width);
     DataGenerator(DataGenerator &parent);
 };
 
@@ -91,6 +95,14 @@ struct TestGenerator {
     TestGenerator &generate(uint16_t opc1);
     TestGenerator &generate(uint16_t opc1, uint16_t opc2);
     TestGenerator &ignoreSizeVariation();
+    // Walk the opcode space a byte at a time rather than a whole opcode at a
+    // time.  A CPU whose instruction is one wide word never asks for more bytes
+    // while decoding, so it never spawns a child generator, and the drop
+    // heuristic which abandons an exhausted subtree never runs -- the scan then
+    // has to visit every one of the 2^32 encodings.  Scanning by byte builds
+    // the same child chain a narrower CPU gets, which lets whole subtrees be
+    // dropped once an opcode has shown all the operand variety it has.
+    TestGenerator &scanByByte();
 
 private:
     Formatter &_formatter;
@@ -98,6 +110,7 @@ private:
     driver::DisFormatter &_disFormatter;
     const TokenizerList _tokenizers;
     const OpCodeWidth _opCodeWidth;
+    OpCodeWidth _scanWidth;
     const Endian _endian;
     const AddressUnit _addressUnit;
     const int _codeMax;

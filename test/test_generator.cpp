@@ -53,9 +53,10 @@ void DataGenerator::dump(const char *fmt, int start, int size, va_list args) con
     _debugger.info("\n");
 }
 
-DataGenerator::DataGenerator(uint8_t *buffer, const ConfigBase &config, GenDebugger &debugger)
+DataGenerator::DataGenerator(
+        uint8_t *buffer, const ConfigBase &config, GenDebugger &debugger, OpCodeWidth width)
     : _buffer(buffer),
-      _width(config.opCodeWidth()),
+      _width(width),
       _endian(config.endian()),
       _start(0),
       _debugger(debugger),
@@ -95,8 +96,9 @@ void DataGenerator::genData() {
 DataGenerator::~DataGenerator() {}
 
 struct ByteGenerator : DataGenerator {
-    ByteGenerator(uint8_t *buffer, const ConfigBase &config, GenDebugger &debugger)
-        : DataGenerator(buffer, config, debugger) {
+    ByteGenerator(
+            uint8_t *buffer, const ConfigBase &config, GenDebugger &debugger, OpCodeWidth width)
+        : DataGenerator(buffer, config, debugger, width) {
         _data = 0;
     }
 
@@ -108,8 +110,9 @@ struct ByteGenerator : DataGenerator {
 };
 
 struct WordGenerator : DataGenerator {
-    WordGenerator(uint8_t *buffer, const ConfigBase &config, GenDebugger &debugger)
-        : DataGenerator(buffer, config, debugger) {
+    WordGenerator(
+            uint8_t *buffer, const ConfigBase &config, GenDebugger &debugger, OpCodeWidth width)
+        : DataGenerator(buffer, config, debugger, width) {
         _data = 0;
     }
 
@@ -134,8 +137,9 @@ struct WordGenerator : DataGenerator {
 };
 
 struct LongGenerator : DataGenerator {
-    LongGenerator(uint8_t *buffer, const ConfigBase &config, GenDebugger &debugger)
-        : DataGenerator(buffer, config, debugger) {
+    LongGenerator(
+            uint8_t *buffer, const ConfigBase &config, GenDebugger &debugger, OpCodeWidth width)
+        : DataGenerator(buffer, config, debugger, width) {
         _data = 0;
     }
 
@@ -165,16 +169,16 @@ struct LongGenerator : DataGenerator {
     }
 };
 
-DataGenerator *DataGenerator::newGenerator(
-        uint8_t *buffer, const ConfigBase &config, GenDebugger &debugger) {
-    switch (config.opCodeWidth()) {
+DataGenerator *DataGenerator::newGenerator(uint8_t *buffer, const ConfigBase &config,
+        GenDebugger &debugger, OpCodeWidth width) {
+    switch (width) {
     case OPCODE_8BIT:
-        return new ByteGenerator(buffer, config, debugger);
+        return new ByteGenerator(buffer, config, debugger, width);
     case OPCODE_12BIT:
     case OPCODE_16BIT:
-        return new WordGenerator(buffer, config, debugger);
+        return new WordGenerator(buffer, config, debugger, width);
     case OPCODE_32BIT:
-        return new LongGenerator(buffer, config, debugger);
+        return new LongGenerator(buffer, config, debugger, width);
     }
     return nullptr;
 }
@@ -199,6 +203,7 @@ TestGenerator::TestGenerator(Formatter &formatter, Disassembler &disassembler, u
       _disFormatter(formatter.formatter()),
       _tokenizers(std::move(tokenizers)),
       _opCodeWidth(disassembler.config().opCodeWidth()),
+      _scanWidth(_opCodeWidth),
       _endian(disassembler.config().endian()),
       _addressUnit(disassembler.config().addressUnit()),
       _codeMax(disassembler.config().codeMax()),
@@ -215,12 +220,18 @@ TestGenerator &TestGenerator::ignoreSizeVariation() {
     return *this;
 }
 
+TestGenerator &TestGenerator::scanByByte() {
+    _scanWidth = OPCODE_8BIT;
+    return *this;
+}
+
 TestGenerator &TestGenerator::generate() {
     if (_address) {
         const auto addr = _address / _addressUnit;
         _formatter.setOrigin(addr);
     }
-    auto *gen = DataGenerator::newGenerator(_memory, _disassembler.config(), _formatter);
+    auto *gen = DataGenerator::newGenerator(
+            _memory, _disassembler.config(), _formatter, _scanWidth);
     gen->dump("@@ generate:");
     generateTests(*gen, true);
     delete gen;
@@ -233,7 +244,8 @@ TestGenerator &TestGenerator::generate(uint16_t opc1) {
         const auto addr = _address / _addressUnit;
         _formatter.setOrigin(addr);
     }
-    auto *parent = DataGenerator::newGenerator(_memory, _disassembler.config(), _formatter);
+    auto *parent = DataGenerator::newGenerator(
+            _memory, _disassembler.config(), _formatter, _scanWidth);
     parent->outData(opc1);
     auto *gen = parent->newChild();
     gen->dump("@@ generate:");
@@ -249,7 +261,8 @@ TestGenerator &TestGenerator::generate(uint16_t opc1, uint16_t opc2) {
         const auto addr = _address / _addressUnit;
         _formatter.setOrigin(addr);
     }
-    auto *parent = DataGenerator::newGenerator(_memory, _disassembler.config(), _formatter);
+    auto *parent = DataGenerator::newGenerator(
+            _memory, _disassembler.config(), _formatter, _scanWidth);
     parent->outData(opc1);
     auto *parent2 = parent->newChild();
     parent2->outData(opc2);
@@ -417,7 +430,7 @@ uint8_t TestGenerator::generateTests(DataGenerator &gen, const bool root) {
             }
             delete child;
             // Here a byte/word is dropped.
-            if (_opCodeWidth == OPCODE_16BIT || _opCodeWidth == OPCODE_12BIT) {
+            if (_scanWidth == OPCODE_16BIT || _scanWidth == OPCODE_12BIT) {
                 // further words needs to be droppped.
                 if (drop >= 4) {
                     gen.dump("@@ drop=%d", drop);
@@ -426,7 +439,7 @@ uint8_t TestGenerator::generateTests(DataGenerator &gen, const bool root) {
                     gen.dump("@@ drop=%d", drop);
                     gen.nextByte();
                 }
-            } else if (_opCodeWidth == OPCODE_8BIT) {
+            } else if (_scanWidth == OPCODE_8BIT) {
                 // further bytes needs to be dropped.
                 if (drop >= 2) {
                     gen.dump("@@ drop=%d", drop);
