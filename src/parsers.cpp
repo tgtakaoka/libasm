@@ -453,6 +453,14 @@ bool Ns32000SymbolParser::locationSymbol(StrScanner &scan) const {
     return SymbolParser::locationSymbol(scan, '.') || SymbolParser::locationSymbol(scan, '*');
 }
 
+bool Am29000SymbolParser::locationSymbol(StrScanner &scan) const {
+    return SymbolParser::locationSymbol(scan, '$');
+}
+
+bool Am29000SymbolParser::instructionLetter(char c) const {
+    return SimpleSymbolParser::instructionLetter(c) || c == '.';
+}
+
 bool Ns32000SymbolParser::instructionLetter(char c) const {
     return SimpleSymbolParser::instructionLetter(c) || c == '.';
 }

@@ -143,6 +143,12 @@ struct Mc68000SymbolParser final : PrefixSymbolParser, Singleton<Mc68000SymbolPa
     bool instructionLetter(char c) const override;
 };
 
+struct Am29000SymbolParser final : SimpleSymbolParser, Singleton<Am29000SymbolParser> {
+    Am29000SymbolParser() : SimpleSymbolParser(text::common::PSTR_UNDER_DOT) {}
+    bool locationSymbol(StrScanner &scan) const override;
+    bool instructionLetter(char c) const override;
+};
+
 struct Ns32000SymbolParser final : SimpleSymbolParser, Singleton<Ns32000SymbolParser> {
     Ns32000SymbolParser() : SimpleSymbolParser(text::common::PSTR_UNDER_DOT) {}
     bool locationSymbol(StrScanner &scan) const override;

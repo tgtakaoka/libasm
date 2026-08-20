@@ -177,6 +177,126 @@ constexpr Entry TABLE_AM29000[] PROGMEM = {
     E0(0x89000000, TEXT_HALT),
 };
 
+static constexpr uint8_t INDEX_AM29000[] PROGMEM = {
+      0,  // TEXT_ADD
+      3,  // TEXT_ADDC
+      4,  // TEXT_ADDCS
+      5,  // TEXT_ADDCU
+      1,  // TEXT_ADDS
+      2,  // TEXT_ADDU
+     52,  // TEXT_AND
+     53,  // TEXT_ANDN
+     42,  // TEXT_ASEQ
+     50,  // TEXT_ASGE
+     51,  // TEXT_ASGEU
+     48,  // TEXT_ASGT
+     49,  // TEXT_ASGTU
+     46,  // TEXT_ASLE
+     47,  // TEXT_ASLEU
+     44,  // TEXT_ASLT
+     45,  // TEXT_ASLTU
+     43,  // TEXT_ASNEQ
+    105,  // TEXT_CALL
+    109,  // TEXT_CALLI
+    100,  // TEXT_CLASS
+    110,  // TEXT_CLZ
+     80,  // TEXT_CONST
+     81,  // TEXT_CONSTH
+     82,  // TEXT_CONSTN
+     98,  // TEXT_CONVERT
+     41,  // TEXT_CPBYTE
+     31,  // TEXT_CPEQ
+     39,  // TEXT_CPGE
+     40,  // TEXT_CPGEU
+     37,  // TEXT_CPGT
+     38,  // TEXT_CPGTU
+     35,  // TEXT_CPLE
+     36,  // TEXT_CPLEU
+     33,  // TEXT_CPLT
+     34,  // TEXT_CPLTU
+     32,  // TEXT_CPNEQ
+     84,  // TEXT_DADD
+     91,  // TEXT_DDIV
+     93,  // TEXT_DEQ
+     97,  // TEXT_DGE
+     95,  // TEXT_DGT
+     22,  // TEXT_DIV
+     21,  // TEXT_DIV0
+     29,  // TEXT_DIVIDE
+     30,  // TEXT_DIVIDU
+     23,  // TEXT_DIVL
+     24,  // TEXT_DIVREM
+     88,  // TEXT_DMUL
+     86,  // TEXT_DSUB
+    112,  // TEXT_EMULATE
+     70,  // TEXT_EXBYTE
+     71,  // TEXT_EXHW
+     72,  // TEXT_EXHWS
+     62,  // TEXT_EXTRACT
+     83,  // TEXT_FADD
+     90,  // TEXT_FDIV
+     89,  // TEXT_FDMUL
+     92,  // TEXT_FEQ
+     96,  // TEXT_FGE
+     94,  // TEXT_FGT
+     87,  // TEXT_FMUL
+     85,  // TEXT_FSUB
+    116,  // TEXT_HALT
+     73,  // TEXT_INBYTE
+     74,  // TEXT_INHW
+    113,  // TEXT_INV
+    114,  // TEXT_IRET
+    115,  // TEXT_IRETINV
+    101,  // TEXT_JMP
+    102,  // TEXT_JMPF
+    104,  // TEXT_JMPFDEC
+    107,  // TEXT_JMPFI
+    106,  // TEXT_JMPI
+    103,  // TEXT_JMPT
+    108,  // TEXT_JMPTI
+     63,  // TEXT_LOAD
+     64,  // TEXT_LOADL
+     66,  // TEXT_LOADM
+     65,  // TEXT_LOADSET
+     75,  // TEXT_MFSR
+     78,  // TEXT_MFTLB
+     76,  // TEXT_MTSR
+     77,  // TEXT_MTSRIM
+     79,  // TEXT_MTTLB
+     18,  // TEXT_MUL
+     19,  // TEXT_MULL
+     26,  // TEXT_MULTIPLU
+     25,  // TEXT_MULTIPLY
+     27,  // TEXT_MULTM
+     28,  // TEXT_MULTMU
+     20,  // TEXT_MULU
+     54,  // TEXT_NAND
+     56,  // TEXT_NOR
+     55,  // TEXT_OR
+    111,  // TEXT_SETIP
+     59,  // TEXT_SLL
+     99,  // TEXT_SQRT
+     61,  // TEXT_SRA
+     60,  // TEXT_SRL
+     67,  // TEXT_STORE
+     68,  // TEXT_STOREL
+     69,  // TEXT_STOREM
+      6,  // TEXT_SUB
+      9,  // TEXT_SUBC
+     10,  // TEXT_SUBCS
+     11,  // TEXT_SUBCU
+     12,  // TEXT_SUBR
+     15,  // TEXT_SUBRC
+     16,  // TEXT_SUBRCS
+     17,  // TEXT_SUBRCU
+     13,  // TEXT_SUBRS
+     14,  // TEXT_SUBRU
+      7,  // TEXT_SUBS
+      8,  // TEXT_SUBU
+     58,  // TEXT_XNOR
+     57,  // TEXT_XOR
+};
+
 // Instructions found only on the Am29050.  Every other family member reserves
 // these operation codes for instruction emulation.
 constexpr Entry TABLE_AM29050[] PROGMEM = {
@@ -189,17 +309,26 @@ constexpr Entry TABLE_AM29050[] PROGMEM = {
     X3(0xE9000100, TEXT_MFACC,   M_RC, M_TFMT, M_ACN, EXT_FPU),
 };
 
+static constexpr uint8_t INDEX_AM29050[] PROGMEM = {
+      2,  // TEXT_DMAC
+      4,  // TEXT_DMSM
+      1,  // TEXT_FMAC
+      3,  // TEXT_FMSM
+      6,  // TEXT_MFACC
+      5,  // TEXT_MTACC
+      0,  // TEXT_ORN
+};
 // clang-format on
 
 using EntryPage = entry::TableBase<Entry>;
 
 constexpr EntryPage AM29000_PAGES[] PROGMEM = {
-        {ARRAY_RANGE(TABLE_AM29000), nullptr, nullptr},
+        {ARRAY_RANGE(TABLE_AM29000), ARRAY_RANGE(INDEX_AM29000)},
 };
 
 constexpr EntryPage AM29050_PAGES[] PROGMEM = {
-        {ARRAY_RANGE(TABLE_AM29000), nullptr, nullptr},
-        {ARRAY_RANGE(TABLE_AM29050), nullptr, nullptr},
+        {ARRAY_RANGE(TABLE_AM29000), ARRAY_RANGE(INDEX_AM29000)},
+        {ARRAY_RANGE(TABLE_AM29050), ARRAY_RANGE(INDEX_AM29050)},
 };
 
 using Cpu = entry::CpuBase<CpuType, EntryPage>;
@@ -217,6 +346,55 @@ namespace {
 
 const Cpu *cpu(CpuType cpuType) {
     return Cpu::search(cpuType, ARRAY_RANGE(CPU_TABLE));
+}
+
+// The parser reports a general register as M_RB, a special-purpose register as
+// M_SA and anything else as M_IM16, since which field an operand occupies is
+// known only once an entry is chosen.
+bool acceptMode(const Operand &op, AddrMode table) {
+    if (op.mode == table)
+        return true;
+    switch (table) {
+    case M_RC:
+    case M_RA:
+        return op.mode == M_RB;
+    case M_RBI:
+        // A register or an 8-bit constant; the M bit tells them apart.
+        return op.mode == M_RB || op.mode == M_IM16;
+    case M_ID:
+        // The cache select of INV and IRETINV may be left out.
+        return op.mode == M_IM16 || op.mode == M_NONE;
+    case M_SA:
+    case M_VN:
+    case M_CE:
+    case M_CNTL:
+    case M_UI:
+    case M_RND:
+    case M_FD:
+    case M_FS:
+    case M_FMT:
+    case M_TFMT:
+    case M_ACN:
+    case M_ACNH:
+    case M_FUNC:
+    case M_IM16:
+    case M_IMH:
+    case M_TGT:
+        return op.mode == M_IM16;
+    default:
+        return false;
+    }
+}
+
+bool acceptOperands(AsmInsn &insn, const Entry *entry) {
+    const auto flags = entry->readFlags();
+    if (!insn.allows(flags.extension()))
+        return false;
+    for (uint_fast8_t pos = 0; pos < MAX_OPERANDS; pos++) {
+        if (!acceptMode(insn.operands[pos], flags.mode(pos)))
+            return false;
+    }
+    return true;
 }
 
 // A special-purpose register number which this CPU does not implement reads
@@ -276,6 +454,22 @@ bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *) {
 }
 
 }  // namespace
+
+Error searchName(CpuType cpuType, bool fpu, bool intMul, AsmInsn &insn) {
+    insn.setExtensions(fpu, intMul, cpuType);
+    cpu(cpuType)->searchName(insn, acceptOperands);
+    if (insn.getError() == OPERAND_NOT_ALLOWED) {
+        // The name is in the table but every entry for it was turned down.  If
+        // allowing the arithmetic this CPU traps would have found one, the
+        // instruction is turned off rather than misspelled; say so the way the
+        // disassembler does for the same encoding.
+        insn.setExtensions(true, true, cpuType);
+        if (cpu(cpuType)->searchName(insn, acceptOperands))
+            insn.setError(UNKNOWN_INSTRUCTION);
+        insn.setExtensions(fpu, intMul, cpuType);
+    }
+    return insn.getError();
+}
 
 Error searchOpCode(CpuType cpuType, bool fpu, bool intMul, DisInsn &insn, StrBuffer &out) {
     insn.setExtensions(fpu, intMul, cpuType);

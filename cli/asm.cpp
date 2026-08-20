@@ -46,6 +46,7 @@
 #include "asm_tlcs900.h"
 #include "asm_tms320.h"
 #include "asm_tms320f.h"
+#include "asm_am29000.h"
 #include "asm_tms370.h"
 #include "asm_tms7000.h"
 #include "asm_tms9900.h"
@@ -89,6 +90,7 @@ tlcs90::AsmTlcs90 asm90;
 tlcs900::AsmTlcs900 asm900;
 tms320::AsmTms320 asm320;
 tms320f::AsmTms320f asm320f;
+am29000::AsmAm29000 asm29000;
 tms370::AsmTms370 asm370;
 tms7000::AsmTms7000 asm7000;
 tms9900::AsmTms9900 asm9900;
@@ -105,6 +107,7 @@ IntelDirective dir1610(asm1610);
 IntelDirective dir2650(asm2650);
 IntelDirective dir320(asm320);
 IntelDirective dir320f(asm320f);
+IntelDirective dir29000(asm29000);
 IntelDirective dir370(asm370);
 IntelDirective dir7000(asm7000);
 IntelDirective dir8048(asm8048);
@@ -164,6 +167,7 @@ AsmCommander commander{
         &dir370,
         &dir320,
         &dir320f,
+        &dir29000,
         &dir8086,
         &dir8096,
         &dir68000,
