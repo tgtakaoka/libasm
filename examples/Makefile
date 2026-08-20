@@ -23,6 +23,7 @@ help:
 	@echo '"make update"      propagate common files to sketches'
 
 EXS = \
+	am29000  \
 	cdp1802  \
 	cp1600   \
 	f3850    \

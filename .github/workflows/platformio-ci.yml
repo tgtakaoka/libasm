@@ -28,6 +28,7 @@ jobs:
     strategy:
       matrix:
         example:
+          - am29000
           - cdp1802
           - cp1600
           - f3850
