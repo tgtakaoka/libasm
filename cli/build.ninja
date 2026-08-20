@@ -74,6 +74,7 @@ build dis: link dis.o $
   value_parser.o parsers.o operators.o $
   fixed64.o ieee_float.o float80_base.o float80_hard.o float80_soft.o $
   dec_float.o ibm_float.o ti_float.o $
+  dis_am29000.o  reg_am29000.o  table_am29000.o  text_am29000.o  $
   dis_cdp1802.o  reg_cdp1802.o  table_cdp1802.o  text_cdp1802.o  $
   dis_cp1600.o   reg_cp1600.o   table_cp1600.o   text_cp1600.o   $
   dis_f3850.o    reg_f3850.o    table_f3850.o    text_f3850.o    $

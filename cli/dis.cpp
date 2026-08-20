@@ -44,6 +44,7 @@
 #include "dis_tlcs900.h"
 #include "dis_tms320.h"
 #include "dis_tms320f.h"
+#include "dis_am29000.h"
 #include "dis_tms370.h"
 #include "dis_tms7000.h"
 #include "dis_tms9900.h"
@@ -88,6 +89,7 @@ tlcs90::DisTlcs90 dis90;
 tlcs900::DisTlcs900 dis900;
 tms320::DisTms320 dis320;
 tms320f::DisTms320f dis320f;
+am29000::DisAm29000 dis29000;
 tms370::DisTms370 dis370;
 tms7000::DisTms7000 dis7000;
 tms9900::DisTms9900 dis9900;
@@ -124,6 +126,7 @@ DisCommander commander{
         &dis370,
         &dis320,
         &dis320f,
+        &dis29000,
         &dis8086,
         &dis8096,
         &dis68000,

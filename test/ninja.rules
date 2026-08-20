@@ -13,6 +13,9 @@ build test_generator.o:  cxx ${root}/test/test_generator.cpp
 build tokenized_text.o:  cxx ${root}/test/tokenized_text.cpp
 build tokenizer.o:       cxx ${root}/test/tokenizer.cpp
 
+# am29000
+build test_dis_am29000.o: cxx ${root}/test/test_dis_am29000.cpp
+
 # cdp1802
 build test_asm_cdp1802.o: cxx ${root}/test/test_asm_cdp1802.cpp
 build test_dis_cdp1802.o: cxx ${root}/test/test_dis_cdp1802.cpp

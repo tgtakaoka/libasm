@@ -26,6 +26,12 @@ build value_formatter.o: cxx ${root}/src/value_formatter.cpp
 build value.o:           cxx ${root}/src/value.cpp
 build value_parser.o:    cxx ${root}/src/value_parser.cpp
 
+# am29000
+build dis_am29000.o:   cxx ${root}/src/dis_am29000.cpp
+build reg_am29000.o:   cxx ${root}/src/reg_am29000.cpp
+build table_am29000.o: cxx ${root}/src/table_am29000.cpp
+build text_am29000.o:  cxx ${root}/src/text_am29000.cpp
+
 # cdp1802
 build asm_cdp1802.o:   cxx ${root}/src/asm_cdp1802.cpp
 build dis_cdp1802.o:   cxx ${root}/src/dis_cdp1802.cpp

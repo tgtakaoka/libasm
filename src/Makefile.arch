@@ -14,6 +14,7 @@
 
 # List of architectures.
 ARCHS = \
+	am29000  \
 	cdp1802  \
 	cp1600   \
 	f3850    \
@@ -61,6 +62,7 @@ endef
 $(eval $(foreach a,$(ARCHS),$(call objs-arch,$(a))))
 
 # target list for each architecture.
+TGT_am29000  = am29200 am29245 am29030 am29240 am29040 am29050
 TGT_cdp1802  = cdp1802 cdp1804 cdp1804a
 TGT_cp1600   = cp1600
 TGT_f3850    = f3850
@@ -107,6 +109,12 @@ TGT_z80      = z80 z180
 TGT_z8       = z8 z86c z88
 
 # CPU for each target
+CPU_am29200  = AM29200
+CPU_am29245  = AM29245
+CPU_am29030  = AM29030
+CPU_am29240  = AM29240
+CPU_am29040  = AM29040
+CPU_am29050  = AM29050
 CPU_cdp1802  = 1802
 CPU_cdp1804  = 1804
 CPU_cdp1804a = 1804A
@@ -222,7 +230,7 @@ S28_OUTS = mc68000 mc68010 mc68hc16 w65c816 w65c816_m0x0 w65c816_m0x1 w65c816_m1
 # targets with Motorola S37 format
 S37_OUTS = mc68020 mc68030 mc68040 $(TGT_superh) h16
 # targets with Intel32 (32bit address) format
-I32_OUTS = $(TGT_i8086) $(TGT_i8096) $(TGT_mn1610) \
+I32_OUTS = $(TGT_am29000) $(TGT_i8086) $(TGT_i8096) $(TGT_mn1610) \
     z180 z280 z380 z8001 ns32032 tms320c25 tms320c26 tms320c20x tms320c3x tms320c2x
 # other targets use Intel8 format
 define __out-ext # target
