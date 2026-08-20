@@ -11,6 +11,7 @@ build test_expr_helper.o: cxx ${root}/test/test_expr_helper.cpp
 build gen_driver.o:      cxx ${root}/test/gen_driver.cpp
 build test_generator.o:  cxx ${root}/test/test_generator.cpp
 build tokenized_text.o:  cxx ${root}/test/tokenized_text.cpp
+build tokenizer.o:       cxx ${root}/test/tokenizer.cpp
 
 # cdp1802
 build test_asm_cdp1802.o: cxx ${root}/test/test_asm_cdp1802.cpp
