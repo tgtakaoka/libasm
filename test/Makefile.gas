@@ -14,6 +14,31 @@
 
 # GNU assembler rules
 
+# Am29000 family targets.
+# a29k-coff-as has no CPU selector; it accepts the whole family's instruction
+# set, including the Am29050-only opcodes, so every target shares one rule.
+# The linker flags live in <stem>.ld_flags: the section start, plus a --defsym
+# for any target the source names rather than spells out.  binutils 2.11.2's
+# a29k-coff-ld predates @file, so the flags are read with a command
+# substitution instead.
+# $(1) target suffix.
+define gas-am29000-rule
+gas-%_$(1).hex: %_$(1).gas %_$(1).ld_flags
+	a29k-coff-as --warn -o $$(<:.gas=.p) -al=$$(<:.gas=.lst) $$<
+	a29k-coff-ld --entry=0 $$$$(cat $$*_$(1).ld_flags) -o $$(<:.gas=.o) $$(<:.gas=.p)
+	a29k-coff-objcopy -I coff-a29k-big -O ihex $$(<:.gas=.o) /dev/stdout \
+	| tr -d '\015' > $$(<:.gas=.hex)
+endef
+# No objdump step: a29k-coff-objdump 2.11.2 segfaults on any word whose
+# operation code is 02 (CONSTH); a bare ".word 0x02566078" reproduces it, and
+# the generated source does contain CONSTH.
+$(eval $(call gas-am29000-rule,am29200))
+$(eval $(call gas-am29000-rule,am29245))
+$(eval $(call gas-am29000-rule,am29030))
+$(eval $(call gas-am29000-rule,am29240))
+$(eval $(call gas-am29000-rule,am29040))
+$(eval $(call gas-am29000-rule,am29050))
+
 # PDP-11 targets.
 #
 # binutils 2.46.1's --target-help advertises -mt11/-mj11, but the option
