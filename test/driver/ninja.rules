@@ -9,6 +9,7 @@ build test_helpers.o:       cxx test_helpers.cpp
 build test_intel_hex.o:     cxx test_intel_hex.cpp
 build test_moto_srec.o:     cxx test_moto_srec.cpp
 
+build test_formatter_am29000.o:  cxx test_formatter_am29000.cpp
 build test_formatter_cdp1802.o:  cxx test_formatter_cdp1802.cpp
 build test_formatter_f3850.o:    cxx test_formatter_f3850.cpp
 build test_formatter_h8300.o:    cxx test_formatter_h8300.cpp

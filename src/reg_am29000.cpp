@@ -118,6 +118,28 @@ bool isCacheReg(RegName name) {
 
 }  // namespace
 
+bool parseGenReg(StrScanner &scan, uint8_t &regno) {
+    auto p = scan;
+    uint8_t base;
+    if (p.iexpect('G')) {
+        base = 0;
+    } else if (p.iexpect('L')) {
+        base = LOCAL_BASE;
+    } else {
+        return false;
+    }
+    if (!p.iexpect('R'))
+        return false;
+    const auto num = parseRegNumber(p);
+    if (num < 0 || num >= LOCAL_BASE)
+        return false;
+    if (isIdLetter(*p))
+        return false;
+    regno = base + static_cast<uint8_t>(num);
+    scan = p;
+    return true;
+}
+
 StrBuffer &outGenReg(StrBuffer &out, uint8_t regno) {
     const auto local = regno >= LOCAL_BASE;
     out.letter(local ? 'L' : 'G').letter('R');
@@ -139,6 +161,25 @@ bool hasSpReg(RegName name, CpuType cpuType) {
 
 }  // namespace
 
+RegName parseSpReg(StrScanner &scan, const ValueParser &parser, CpuType cpuType) {
+    auto p = scan;
+    const auto symbol = parser.readRegName(p);
+    auto entry = SPREGS.searchText(symbol);
+    if (entry == nullptr)
+        entry = MMU_SPREGS.searchText(symbol);
+    if (entry == nullptr)
+        entry = AM29050_SPREGS.searchText(symbol);
+    if (entry == nullptr)
+        entry = CACHE_SPREGS.searchText(symbol);
+    if (entry == nullptr)
+        return REG_UNDEF;
+    const auto name = RegName(entry->name());
+    if (!hasSpReg(name, cpuType))
+        return REG_UNDEF;
+    scan = p;
+    return name;
+}
+
 StrBuffer &outSpReg(StrBuffer &out, RegName name) {
     const auto *entry = isMmuReg(name)       ? MMU_SPREGS.searchName(name)
                         : isAm29050Reg(name) ? AM29050_SPREGS.searchName(name)
@@ -158,6 +199,10 @@ RegName decodeSpReg(uint8_t number, CpuType cpuType) {
         }
     }
     return REG_UNDEF;
+}
+
+uint8_t encodeSpReg(RegName name) {
+    return pgm_read_byte(&SPREG_NUMBERS[name]);
 }
 
 }  // namespace reg

@@ -27,6 +27,7 @@ build value.o:           cxx ${root}/src/value.cpp
 build value_parser.o:    cxx ${root}/src/value_parser.cpp
 
 # am29000
+build asm_am29000.o:   cxx ${root}/src/asm_am29000.cpp
 build dis_am29000.o:   cxx ${root}/src/dis_am29000.cpp
 build reg_am29000.o:   cxx ${root}/src/reg_am29000.cpp
 build table_am29000.o: cxx ${root}/src/table_am29000.cpp

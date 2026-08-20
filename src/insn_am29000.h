@@ -21,6 +21,7 @@
 #include "entry_am29000.h"
 #include "insn_base.h"
 #include "reg_am29000.h"
+#include "value.h"
 
 namespace libasm {
 namespace am29000 {
@@ -62,6 +63,22 @@ private:
     bool _fpu;
     bool _intMul;
     CpuType _cpuType;
+};
+
+struct Operand final : ErrorAt {
+    AddrMode mode;
+    RegName sreg;
+    uint8_t regno;
+    Value val;
+    Operand() : mode(M_NONE), sreg(REG_UNDEF), regno(0), val() {}
+};
+
+struct AsmInsn final : AsmInsnImpl<Config>, EntryInsn {
+    AsmInsn(Insn &insn) : AsmInsnImpl(insn) {}
+
+    Operand operands[MAX_OPERANDS];
+
+    void emitInsn() { emitUint32(opCode(), 0); }
 };
 
 struct DisInsn final : DisInsnImpl<Config>, EntryInsn {

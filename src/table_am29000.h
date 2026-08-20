@@ -35,6 +35,7 @@ extern const TableAm29000 TABLE;
 // instructions may be used; they follow the CPU by default but either may be
 // turned on for a system whose trap handlers provide the arithmetic.
 Error searchOpCode(CpuType, bool fpu, bool intMul, DisInsn &insn, StrBuffer &out);
+Error searchName(CpuType, bool fpu, bool intMul, AsmInsn &insn);
 
 }  // namespace am29000
 }  // namespace libasm

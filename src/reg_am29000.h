@@ -21,6 +21,8 @@
 
 #include "config_am29000.h"
 #include "str_buffer.h"
+#include "str_scanner.h"
+#include "value_parser.h"
 
 namespace libasm {
 namespace am29000 {
@@ -88,13 +90,16 @@ namespace reg {
 // addressed as one bank of 256 absolute register numbers.
 constexpr uint8_t LOCAL_BASE = 128;
 
+bool parseGenReg(StrScanner &scan, uint8_t &regno);
 StrBuffer &outGenReg(StrBuffer &out, uint8_t regno);
 
 // Which special-purpose registers exist depends on the CPU: the Am29200 has
 // neither the memory management unit nor a cache, the Am29050 adds a set of
 // its own and has no cache registers, and the rest have both.
+RegName parseSpReg(StrScanner &scan, const ValueParser &parser, CpuType cpuType);
 StrBuffer &outSpReg(StrBuffer &out, RegName name);
 RegName decodeSpReg(uint8_t number, CpuType cpuType);
+uint8_t encodeSpReg(RegName name);
 
 }  // namespace reg
 }  // namespace am29000

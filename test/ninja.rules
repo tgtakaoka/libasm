@@ -14,6 +14,7 @@ build tokenized_text.o:  cxx ${root}/test/tokenized_text.cpp
 build tokenizer.o:       cxx ${root}/test/tokenizer.cpp
 
 # am29000
+build test_asm_am29000.o: cxx ${root}/test/test_asm_am29000.cpp
 build test_dis_am29000.o: cxx ${root}/test/test_dis_am29000.cpp
 
 # cdp1802
