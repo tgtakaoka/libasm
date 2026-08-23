@@ -12,7 +12,7 @@
 ;;; See the License for the specific language governing permissions and
 ;;; limitations under the License.
 
-        cpu     320C31
+        cpu     320C30
         org     0C0H
         include "test_tms320c30.inc"
         end

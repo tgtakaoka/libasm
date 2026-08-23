@@ -157,7 +157,7 @@ endef
 define asl-rule # source stem suffix option
 .PHONY:: asl-$(2).$(3)
 asl-$(2).$(3): $(1)
-	$$(ASL) $$(ASL_FLAGS) -L $$^ && p2hex $$(P2HEX_FLAGS) $(4) $(2).p $(2).$(3)
+	$$(ASL) $$(ASL_FLAGS) -L $$^ && $$(call asl-conv,$(2),$(3))
 
 endef
 $(eval $(foreach f,$(ASL_TESTS),$(call asl-rule,$(call asl-file,$(f)),$(f),$(call out-ext,$(f)),$(call asl-opt,$(f)))))
@@ -195,7 +195,7 @@ clean-gen:
 	-rm -f $(GEN_OUTS)
 
 clean: clean-asm clean-asl clean-gas
-	-rm -f *.p *.o *.lst *.dis
+	-rm -f *.p *.o *.lst *.dis *.bin
 
 # Local Variables:
 # mode: makefile-gmake

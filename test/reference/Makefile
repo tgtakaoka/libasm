@@ -55,7 +55,7 @@ ASL_OUTS  = $(foreach t,$(ASL_TESTS),$(t).$(call out-ext,$(t)))
 define asl-rule # test suffix option source
 .PHONY:: asl-$(1).$(2)
 asl-$(1).$(2): $(4)
-	$$(ASL) $$(ASL_FLAGS) -L $$^ && p2hex $$(P2HEX_FLAGS) $(3) $(1).p $(1).$(2)
+	$$(ASL) $$(ASL_FLAGS) -L $$^ && $$(call asl-conv,$(1),$(2))
 
 endef
 define asl-source # test
@@ -74,7 +74,7 @@ clean-gas:
 	-rm -f $(GAS_OUTS)
 
 clean: clean-nasm
-	-rm -f *.o *.p *.lst *.dis
+	-rm -f *.o *.p *.lst *.dis *.bin
 
 # Local Variables:
 # mode: makefile-gmake
