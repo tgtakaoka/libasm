@@ -394,7 +394,7 @@ void AsmSuperH::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode) c
         const auto v = op.val.getUnsigned();
         if (v > 7)
             insn.setErrorIf(op, OVERFLOW_RANGE);
-        opc |= static_cast<Config::opcode_t>(v & 0x7) << 1;  // bits[3:1]
+        opc |= static_cast<Config::opcode_t>(v & 0x7);  // bits[2:0]
         insn.setOpCode(opc);
         break;
     }

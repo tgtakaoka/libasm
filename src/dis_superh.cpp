@@ -304,7 +304,7 @@ void DisSuperH::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) cons
         outRegName(out, decodeDm(opc));
         break;
     case M_IMM3: {
-        const auto v = (opc >> 1) & 0x7;  // bits[3:1]
+        const auto v = opc & 0x7;  // bits[2:0]
         out.letter('#');
         outHex(out, v, 3);
         break;

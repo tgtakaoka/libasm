@@ -231,10 +231,10 @@ constexpr Entry TABLE_SH2A[] PROGMEM = {
     E2(0x40F1, TEXT_MOVML,   ISZ_LONG, M_RN,    M_PUSH), // MOVML.L Rn,@-R15
     E2(0x40F4, TEXT_MOVMU,   ISZ_LONG, M_PULL,  M_RN),   // MOVMU.L @R15+,Rn
     E2(0x40F5, TEXT_MOVML,   ISZ_LONG, M_PULL,  M_RN),   // MOVML.L @R15+,Rn
-    E2(0x8600, TEXT_BCLR,    ISZ_NONE, M_IMM3,  M_RM),   // BCLR #imm3,Rn   10000110nnnniii0  (n in bits[7:4])
-    E2(0x8601, TEXT_BSET,    ISZ_NONE, M_IMM3,  M_RM),   // BSET #imm3,Rn   10000110nnnniii1
-    E2(0x8700, TEXT_BST,     ISZ_NONE, M_IMM3,  M_RM),   // BST #imm3,Rn    10000111nnnniii0
-    E2(0x8701, TEXT_BLD,     ISZ_NONE, M_IMM3,  M_RM),   // BLD #imm3,Rn    10000111nnnniii1
+    E2(0x8600, TEXT_BCLR,    ISZ_NONE, M_IMM3,  M_RM),   // BCLR #imm3,Rn   10000110nnnn0iii  (n in bits[7:4])
+    E2(0x8608, TEXT_BSET,    ISZ_NONE, M_IMM3,  M_RM),   // BSET #imm3,Rn   10000110nnnn1iii
+    E2(0x8700, TEXT_BST,     ISZ_NONE, M_IMM3,  M_RM),   // BST #imm3,Rn    10000111nnnn0iii
+    E2(0x8708, TEXT_BLD,     ISZ_NONE, M_IMM3,  M_RM),   // BLD #imm3,Rn    10000111nnnn1iii
 };
 
 // SH-2A 32-bit CPU additions. Each entry's opcode is the FIRST 16-bit word

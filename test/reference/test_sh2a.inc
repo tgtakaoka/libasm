@@ -60,21 +60,21 @@
         MAC.W   @R0+,@R1+               ;# 010F
         MAC.W   @R14+,@R15+             ;# 0FEF
 
-;;; BCLR #imm3,Rn (n format: 10000110nnnniii0) clear bit
+;;; BCLR #imm3,Rn (n format: 10000110nnnn0iii) clear bit
         BCLR    #0,R0                   ;# 8600
-        BCLR    #7,R15                  ;# 86FE
+        BCLR    #7,R15                  ;# 86F7
 
-;;; BSET #imm3,Rn (n format: 10000110nnnniii1) set bit
-        BSET    #0,R0                   ;# 8601
+;;; BSET #imm3,Rn (n format: 10000110nnnn1iii) set bit
+        BSET    #0,R0                   ;# 8608
         BSET    #7,R15                  ;# 86FF
 
-;;; BLD #imm3,Rn (n format: 10000111nnnniii1) load bit to T
-        BLD     #0,R0                   ;# 8701
+;;; BLD #imm3,Rn (n format: 10000111nnnn1iii) load bit to T
+        BLD     #0,R0                   ;# 8708
         BLD     #7,R15                  ;# 87FF
 
-;;; BST #imm3,Rn (n format: 10000111nnnniii0) store T to bit
+;;; BST #imm3,Rn (n format: 10000111nnnn0iii) store T to bit
         BST     #0,R0                   ;# 8700
-        BST     #7,R15                  ;# 87FE
+        BST     #7,R15                  ;# 87F7
 
 ;;; MOVRT Rn (n format: 0000nnnn00111001) T -> Rn
         MOVRT   R0                      ;# 0039

@@ -579,8 +579,8 @@ void test_sh2a_only() {
         TEST("MOVML.L @R15+, R0",  0x40F5);
         TEST("BCLR #0, R0",        0x8600);
         TEST("BSET #7, R15",       0x86FF);
-        TEST("BLD #0, R0",         0x8701);
-        TEST("BST #7, R15",        0x87FE);
+        TEST("BLD #0, R0",         0x8708);
+        TEST("BST #7, R15",        0x87F7);
         // SH-2A 32-bit CPU additions (MOVI20 / MOVI20S).
         // Use uint16_t casts so the two 16-bit opcode words in a long-form
         // instruction read clearly as a pair of words.
@@ -761,7 +761,7 @@ void test_undef() {
     if (isSh2a()) {
         // M_IMM3 -- BCLR/BSET/BST #imm3,Rn (SH-2A).
         ERUS("BCLR #UNDEF, R0",       "UNDEF, R0",          0x8600);
-        ERUS("BSET #UNDEF, R0",       "UNDEF, R0",          0x8601);
+        ERUS("BSET #UNDEF, R0",       "UNDEF, R0",          0x8608);
         ERUS("BST  #UNDEF, R0",       "UNDEF, R0",          0x8700);
         // M_IMM20 / M_IMM20S -- 32-bit MOVI20/MOVI20S (two words).
         ERUS("MOVI20  #UNDEF, R0",    "UNDEF, R0", uint16_t(0x0000), uint16_t(0x0000));

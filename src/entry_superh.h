@@ -91,7 +91,7 @@ enum AddrMode : uint8_t {
     // singleton variations
     M_D4N = 45,    // @(d4,Rn), n=bits[11:8],d=bits[3:0] -> 0x0F0F
     M_REL12 = 46,  // 12-bit signed PC-rel branch, bits[11:0] -> 0x0FFF
-    M_IMM3 = 47,   // 3-bit unsigned imm, bits[3:1] -> 0x000E
+    M_IMM3 = 47,   // 3-bit unsigned imm, bits[2:0] -> 0x0007
     M_DRN = 48,    // DRn (even FRn pair), bits[11:9] -> 0x0E00
     M_DRM = 49,    // DRm (even FRm pair), bits[7:5]  -> 0x00E0
 };
@@ -229,7 +229,7 @@ struct Entry final : entry::Base<Config::opcode_t> {
                 V_D8,    // 0x00FF  8-bit disp/imm/rel
                 V_D4N,   // 0x0F0F  n-field + 4-bit disp
                 V_REL12, // 0x0FFF  12-bit rel
-                V_IMM3,  // 0x000E  bits[3:1]
+                V_IMM3,  // 0x0007  bits[2:0]
                 V_DRN,   // 0x0E00  bits[11:9]
                 V_DRM,   // 0x00E0  bits[7:5]
             };
@@ -244,7 +244,7 @@ struct Entry final : entry::Base<Config::opcode_t> {
                 V_DRM,                                        // M_DRM
             };
             static constexpr Config::opcode_t VAR_MASK[] PROGMEM = {
-                0x0F00, 0x00F0, 0x00FF, 0x0F0F, 0x0FFF, 0x000E, 0x0E00, 0x00E0,
+                0x0F00, 0x00F0, 0x00FF, 0x0F0F, 0x0FFF, 0x0007, 0x0E00, 0x00E0,
             };
             return pgm_read_word(&VAR_MASK[pgm_read_byte(&MODE_VAR[mode - M_RN])]);
         }

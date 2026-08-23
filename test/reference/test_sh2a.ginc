@@ -37,13 +37,13 @@
         mac.w   @r0+,@r1+               ;# 010F
         mac.w   @r14+,@r15+             ;# 0FEF
         bclr    #0,r0                   ;# 8600
-        bclr    #7,r15                  ;# 86FE
-        bset    #0,r0                   ;# 8601
+        bclr    #7,r15                  ;# 86F7
+        bset    #0,r0                   ;# 8608
         bset    #7,r15                  ;# 86FF
-        bld     #0,r0                   ;# 8701
+        bld     #0,r0                   ;# 8708
         bld     #7,r15                  ;# 87FF
         bst     #0,r0                   ;# 8700
-        bst     #7,r15                  ;# 87FE
+        bst     #7,r15                  ;# 87F7
         movrt   r0                      ;# 0039
         movrt   r15                     ;# 0F39
         nott                            ;# 0068

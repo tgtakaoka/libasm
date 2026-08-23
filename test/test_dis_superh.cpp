@@ -402,8 +402,8 @@ void test_sh2a_additions() {
     // Bit instructions
     TEST("BCLR",    "#0, R0",         0x8600);
     TEST("BSET",    "#7, R15",        0x86FF);
-    TEST("BLD",     "#0, R0",         0x8701);
-    TEST("BST",     "#7, R15",        0x87FE);
+    TEST("BLD",     "#0, R0",         0x8708);
+    TEST("BST",     "#7, R15",        0x87F7);
     // MOVI20 / MOVI20S (two-word instructions; pass each word as uint16_t)
     TEST("MOVI20",  "#0, R0",                  uint16_t(0x0000), uint16_t(0x0000));
     TEST("MOVI20",  "#H'7FFFF, R1",            uint16_t(0x0170), uint16_t(0xFFFF));
