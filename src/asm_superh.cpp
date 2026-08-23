@@ -48,9 +48,8 @@ PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
 // SH mnemonics embed '.' (size suffix: MOV.B, AND.B, ...) and '/' (condition
 // suffix: CMP/EQ, BF/S, BT/S) directly in the name token. Extend the default
 // SymbolParser so the tokenizer doesn't split the mnemonic at those chars. The
-// location counter is '$' (the inherited default); per the SuperH Assembler
-// manual '*' is the multiplication operator, not the location counter.
-struct SuperHSymbolParser final : SymbolParser {
+// location counter is '$'/'*'/'.'
+struct SuperHSymbolParser final : HitachiSymbolParser {
     bool instructionLetter(char c) const override {
         return SymbolParser::instructionLetter(c) || c == '/' || c == '.';
     }
