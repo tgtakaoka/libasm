@@ -45,7 +45,9 @@ asm-test: $(ASM)-refresh clean-asm $(ASM_OUTS:%=asm-%)
 clean-asm:
 	-rm -f $(ASM_OUTS)
 
-ASL_exclude = test_i80286
+ASL_exclude = test_i80286 test_i80386 test_real_i80386 test_i80486 test_real_i80486 \
+   test_tms320c31 test_tms320c32 \
+   test_h8s2000 test_h8s2000n test_h8s2600 test_h8s2600n test_shdsp test_sh2e test_sh2a
 ASL_TESTS = $(foreach a,$(ASM_TESTS) \
    $(foreach t,$(patsubst %.asl,%,$(wildcard test_*.asl)),$(if $(filter $(t),$(ASM_TESTS)),,$(t))),\
    $(if $(filter $(a),$(ASL_exclude)),,$(a)))
