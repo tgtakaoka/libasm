@@ -255,21 +255,21 @@
         btst.b  r1h,@sp                 ; 7C70 6310
 
 ;;; Bit Manipulation absolute 8-bit
-        bset    #3,@0xFF80              ; 7F80 7030
+        bset    #3,@0xFF80:8            ; 7F80 7030
         bset.b  #7,@0xFF81:8            ; 7F81 7070
         bset    r1h,@0xFF82:8           ; 7F82 6010
-        bset.b  r1h,@0xFF83             ; 7F83 6010
+        bset.b  r1h,@0xFF83:8           ; 7F83 6010
         bclr    #3,@0xFF00:8            ; 7F00 7230
-        bclr.b  #7,@0xFF01              ; 7F01 7270
-        bclr    r1h,@0xFF02             ; 7F02 6210
+        bclr.b  #7,@0xFF01:8            ; 7F01 7270
+        bclr    r1h,@0xFF02:8           ; 7F02 6210
         bclr.b  r1h,@0xFF03:8           ; 7F03 6210
-        bnot    #3,@0xFFE0              ; 7FE0 7130
+        bnot    #3,@0xFFE0:8            ; 7FE0 7130
         bnot.b  #7,@0xFFE1:8            ; 7FE1 7170
         bnot    r1h,@0xFFE2:8           ; 7FE2 6110
-        bnot.b  r1h,@0xFFE3             ; 7FE3 6110
+        bnot.b  r1h,@0xFFE3:8           ; 7FE3 6110
         btst    #3,@0xFFFC:8            ; 7EFC 7330
-        btst.b  #7,@0xFFFD              ; 7EFD 7370
-        btst    r1h,@0xFFFE             ; 7EFE 6310
+        btst.b  #7,@0xFFFD:8            ; 7EFD 7370
+        btst    r1h,@0xFFFE:8           ; 7EFE 6310
         btst.b  r1h,@0xFFFF:8           ; 7EFF 6310
 
 ;;; Bit to carry register
@@ -318,24 +318,24 @@
 
 ;;; Bit to carry absolute 8-bit
         bld     #0,@0xFF07:8            ; 7E07 7700
-        bld.b   #1,@0xFF06              ; 7E06 7710
-        bild    #2,@0xFF05              ; 7E05 77A0
+        bld.b   #1,@0xFF06:8            ; 7E06 7710
+        bild    #2,@0xFF05:8            ; 7E05 77A0
         bild.b  #3,@0xFF04:8            ; 7E04 77B0
-        bst     #4,@0xFF03              ; 7F03 6740
+        bst     #4,@0xFF03:8            ; 7F03 6740
         bst.b   #5,@0xFF02:8            ; 7F02 6750
         bist    #6,@0xFF01:8            ; 7F01 67E0
-        bist.b  #7,@0xFF80              ; 7F80 67F0
+        bist.b  #7,@0xFF80:8            ; 7F80 67F0
         band    #0,@0xFF87:8            ; 7E87 7600
-        band.b  #1,@0xFF86              ; 7E86 7610
-        biand   #2,@0xFF85              ; 7E85 76A0
+        band.b  #1,@0xFF86:8            ; 7E86 7610
+        biand   #2,@0xFF85:8            ; 7E85 76A0
         biand.b #3,@0xFF84:8            ; 7E84 76B0
-        bor     #4,@0xFF83              ; 7E83 7440
+        bor     #4,@0xFF83:8            ; 7E83 7440
         bor.b   #5,@0xFF82:8            ; 7E82 7450
         bior    #6,@0xFF81:8            ; 7E81 74E0
-        bior.b  #7,@0xFF80              ; 7E80 74F0
+        bior.b  #7,@0xFF80:8            ; 7E80 74F0
         bxor    #0,@0xFFFC:8            ; 7EFC 7500
-        bxor.b  #1,@0xFFFD              ; 7EFD 7510
-        bixor   #2,@0xFFFE              ; 7EFE 75A0
+        bxor.b  #1,@0xFFFD:8            ; 7EFD 7510
+        bixor   #2,@0xFFFE:8            ; 7EFE 75A0
         bixor.b #3,@0xFFFF:8            ; 7EFF 75B0
 
 ;;; Control Registers
