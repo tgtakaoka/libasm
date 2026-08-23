@@ -16,8 +16,8 @@
 
 ;;; MOV #imm,Rn (ni format)
         MOV     #0,R0                   ;# E000
-        MOV     #H'7F,R1                ;# E17F
-        MOV     #-H'80,R2               ;# E280
+        MOV     #0x7F,R1                ;# E17F
+        MOV     #-0x80,R2               ;# E280
         MOV     #-1,R15                 ;# EFFF
 
 ;;; MOV Rm,Rn (nm format: register to register)
@@ -26,15 +26,15 @@
 
 ;;; MOV.W @(disp,PC),Rn (nd8 format: PC-relative word load)
 ;;; d = (N - 4) / 2, position-independent
-        MOV.W   $+4,R0            ;# 9000
-        MOV.W   $+8,R3            ;# 9302
-        MOV.W   $+H'40,R7         ;# 971E
+        MOV.W   *+4,R0            ;# 9000
+        MOV.W   *+8,R3            ;# 9302
+        MOV.W   *+0x40,R7         ;# 971E
 
 ;;; MOV.L @(disp,PC),Rn (nd8 format: PC-relative longword load)
 ;;; d = (target - ((PC+4) & ~3)) / 4; target must be 4-byte aligned
-        MOV.L   $+6,R0            ;# D001
-        MOV.L   $+8,R5            ;# D501
-        MOV.L   $+H'42,R9         ;# D910
+        MOV.L   *+6,R0            ;# D001
+        MOV.L   *+8,R5            ;# D501
+        MOV.L   *+0x42,R9         ;# D910
 
 ;;; MOV.B @Rm,Rn (nm format: register-indirect byte load)
         MOV.B   @R1,R0                  ;# 6010
@@ -140,39 +140,39 @@
 
 ;;; MOV.B R0,@(disp,GBR) (d8 format: GBR-relative byte store)
         MOV.B   R0,@(0,GBR)             ;# C000
-        MOV.B   R0,@(H'80,GBR)          ;# C080
-        MOV.B   R0,@(H'FF,GBR)          ;# C0FF
+        MOV.B   R0,@(0x80,GBR)          ;# C080
+        MOV.B   R0,@(0xFF,GBR)          ;# C0FF
 
 ;;; MOV.W R0,@(disp,GBR) (d8 format: GBR-relative word store, disp scaled by 2)
         MOV.W   R0,@(0,GBR)             ;# C100
-        MOV.W   R0,@(H'100,GBR)         ;# C180
-        MOV.W   R0,@(H'1FE,GBR)         ;# C1FF
+        MOV.W   R0,@(0x100,GBR)         ;# C180
+        MOV.W   R0,@(0x1FE,GBR)         ;# C1FF
 
 ;;; MOV.L R0,@(disp,GBR) (d8 format: GBR-relative longword store, disp scaled by 4)
         MOV.L   R0,@(0,GBR)             ;# C200
-        MOV.L   R0,@(H'200,GBR)         ;# C280
-        MOV.L   R0,@(H'3FC,GBR)         ;# C2FF
+        MOV.L   R0,@(0x200,GBR)         ;# C280
+        MOV.L   R0,@(0x3FC,GBR)         ;# C2FF
 
 ;;; MOV.B @(disp,GBR),R0 (d8 format: GBR-relative byte load)
         MOV.B   @(0,GBR),R0             ;# C400
-        MOV.B   @(H'80,GBR),R0          ;# C480
-        MOV.B   @(H'FF,GBR),R0          ;# C4FF
+        MOV.B   @(0x80,GBR),R0          ;# C480
+        MOV.B   @(0xFF,GBR),R0          ;# C4FF
 
 ;;; MOV.W @(disp,GBR),R0 (d8 format: GBR-relative word load, disp scaled by 2)
         MOV.W   @(0,GBR),R0             ;# C500
-        MOV.W   @(H'100,GBR),R0         ;# C580
-        MOV.W   @(H'1FE,GBR),R0         ;# C5FF
+        MOV.W   @(0x100,GBR),R0         ;# C580
+        MOV.W   @(0x1FE,GBR),R0         ;# C5FF
 
 ;;; MOV.L @(disp,GBR),R0 (d8 format: GBR-relative longword load, disp scaled by 4)
         MOV.L   @(0,GBR),R0             ;# C600
-        MOV.L   @(H'200,GBR),R0         ;# C680
-        MOV.L   @(H'3FC,GBR),R0         ;# C6FF
+        MOV.L   @(0x200,GBR),R0         ;# C680
+        MOV.L   @(0x3FC,GBR),R0         ;# C6FF
 
 ;;; MOVA @(disp,PC),R0 (d8 format: compute PC-relative longword-aligned address)
 ;;; d = (target - ((PC+4) & ~3)) / 4; target must be 4-byte aligned
-        MOVA    $+4,R0             ;# C700
-        MOVA    $+6,R0             ;# C701
-        MOVA    $+H'40,R0          ;# C70F
+        MOVA    *+4,R0             ;# C700
+        MOVA    *+6,R0             ;# C701
+        MOVA    *+0x40,R0          ;# C70F
 
 ;;; MOVT Rn (n format: move T bit to register)
         MOVT    R0                       ;# 0029
@@ -188,9 +188,9 @@
 ;;; ADD #imm,Rn (ni format: 8-bit signed immediate)
         ADD     #0,R0                   ;# 7000
         ADD     #1,R1                   ;# 7101
-        ADD     #H'7F,R7                ;# 777F
+        ADD     #0x7F,R7                ;# 777F
         ADD     #-1,R8                  ;# 78FF
-        ADD     #-H'80,R15              ;# 7F80
+        ADD     #-0x80,R15              ;# 7F80
 
 ;;; ADDC Rm,Rn (nm format: add with carry)
         ADDC    R0,R1                   ;# 310E
@@ -214,7 +214,7 @@
 
 ;;; CMP/EQ #imm,R0 (i8 format: compare immediate with R0)
         CMP/EQ  #0,R0                   ;# 8800
-        CMP/EQ  #H'7F,R0                ;# 887F
+        CMP/EQ  #0x7F,R0                ;# 887F
         CMP/EQ  #-1,R0                  ;# 88FF
 
 ;;; CMP/EQ Rm,Rn (nm format)
@@ -318,13 +318,13 @@
 
 ;;; AND #imm,R0 (i8 format: logical AND immediate with R0)
         AND     #0,R0                   ;# C900
-        AND     #H'AA,R0                ;# C9AA
-        AND     #H'FF,R0                ;# C9FF
+        AND     #0xAA,R0                ;# C9AA
+        AND     #0xFF,R0                ;# C9FF
 
 ;;; AND.B #imm,@(R0,GBR) (i8 format: logical AND immediate with @(R0+GBR))
         AND.B   #0,@(R0,GBR)            ;# CD00
-        AND.B   #H'AA,@(R0,GBR)         ;# CDAA
-        AND.B   #H'FF,@(R0,GBR)         ;# CDFF
+        AND.B   #0xAA,@(R0,GBR)         ;# CDAA
+        AND.B   #0xFF,@(R0,GBR)         ;# CDFF
 
 ;;; NOT Rm,Rn (nm format: bitwise NOT)
         NOT     R0,R1                   ;# 6107
@@ -336,13 +336,13 @@
 
 ;;; OR #imm,R0 (i8 format: logical OR immediate with R0)
         OR      #0,R0                   ;# CB00
-        OR      #H'55,R0                ;# CB55
-        OR      #H'FF,R0                ;# CBFF
+        OR      #0x55,R0                ;# CB55
+        OR      #0xFF,R0                ;# CBFF
 
 ;;; OR.B #imm,@(R0,GBR) (i8 format: logical OR immediate with @(R0+GBR))
         OR.B    #0,@(R0,GBR)            ;# CF00
-        OR.B    #H'55,@(R0,GBR)         ;# CF55
-        OR.B    #H'FF,@(R0,GBR)         ;# CFFF
+        OR.B    #0x55,@(R0,GBR)         ;# CF55
+        OR.B    #0xFF,@(R0,GBR)         ;# CFFF
 
 ;;; TAS.B @Rn (n format: test and set byte)
         TAS.B   @R0                     ;# 401B
@@ -355,11 +355,11 @@
 
 ;;; TST #imm,R0 (i8 format: logical AND immediate with R0, set T only)
         TST     #0,R0                   ;# C800
-        TST     #H'FF,R0                ;# C8FF
+        TST     #0xFF,R0                ;# C8FF
 
 ;;; TST.B #imm,@(R0,GBR) (i8 format: test @(R0+GBR) with immediate)
         TST.B   #0,@(R0,GBR)            ;# CC00
-        TST.B   #H'FF,@(R0,GBR)         ;# CCFF
+        TST.B   #0xFF,@(R0,GBR)         ;# CCFF
 
 ;;; XOR Rm,Rn (nm format)
         XOR     R0,R1                   ;# 210A
@@ -367,13 +367,13 @@
 
 ;;; XOR #imm,R0 (i8 format: logical XOR immediate with R0)
         XOR     #0,R0                   ;# CA00
-        XOR     #H'0F,R0                ;# CA0F
-        XOR     #H'FF,R0                ;# CAFF
+        XOR     #0x0F,R0                ;# CA0F
+        XOR     #0xFF,R0                ;# CAFF
 
 ;;; XOR.B #imm,@(R0,GBR) (i8 format: logical XOR immediate with @(R0+GBR))
         XOR.B   #0,@(R0,GBR)            ;# CE00
-        XOR.B   #H'0F,@(R0,GBR)         ;# CE0F
-        XOR.B   #H'FF,@(R0,GBR)         ;# CEFF
+        XOR.B   #0x0F,@(R0,GBR)         ;# CE0F
+        XOR.B   #0xFF,@(R0,GBR)         ;# CEFF
 
 ;;; Shift and Rotate
 
@@ -451,28 +451,28 @@
 
 ;;; BF label (d8 format: branch if T=0, 8-bit signed PC-relative)
 ;;; d = (N - 4) / 2, position-independent
-        BF      $+4                     ;# 8B00
-        BF      $+6                     ;# 8B01
-        BF      $+H'84                  ;# 8B40
-        BF      $-2                     ;# 8BFD
+        BF      *+4                     ;# 8B00
+        BF      *+6                     ;# 8B01
+        BF      *+0x84                  ;# 8B40
+        BF      *-2                     ;# 8BFD
 
 ;;; BT label (d8 format: branch if T=1, 8-bit signed PC-relative)
-        BT      $+4                     ;# 8900
-        BT      $+6                     ;# 8901
-        BT      $+H'84                  ;# 8940
-        BT      $-2                     ;# 89FD
+        BT      *+4                     ;# 8900
+        BT      *+6                     ;# 8901
+        BT      *+0x84                  ;# 8940
+        BT      *-2                     ;# 89FD
 
 ;;; BRA label (d12 format: unconditional branch, 12-bit signed PC-relative)
 ;;; d = (N - 4) / 2, position-independent
-        BRA     $+4                     ;# A000
-        BRA     $+8                     ;# A002
-        BRA     $+H'800                 ;# A3FE
-        BRA     $-2                     ;# AFFD
+        BRA     *+4                     ;# A000
+        BRA     *+8                     ;# A002
+        BRA     *+0x800                 ;# A3FE
+        BRA     *-2                     ;# AFFD
 
 ;;; BSR label (d12 format: branch to subroutine, 12-bit signed PC-relative)
-        BSR     $+4                     ;# B000
-        BSR     $+8                     ;# B002
-        BSR     $+H'800                 ;# B3FE
+        BSR     *+4                     ;# B000
+        BSR     *+8                     ;# B002
+        BSR     *+0x800                 ;# B3FE
 
 ;;; JMP @Rm (m format: unconditional branch to register)
         JMP     @R0                     ;# 402B
@@ -629,8 +629,8 @@
 
 ;;; TRAPA #imm (i8 format: trap to vector)
         TRAPA   #0                      ;# C300
-        TRAPA   #H'20                   ;# C320
-        TRAPA   #H'FF                   ;# C3FF
+        TRAPA   #0x20                   ;# C320
+        TRAPA   #0xFF                   ;# C3FF
 
 ;;; Local Variables:
 ;;; mode: asm

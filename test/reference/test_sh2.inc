@@ -16,16 +16,16 @@
 
 ;;; BF/S label (d8 format: branch if T=0 with delay slot)
 ;;; d = (N - 4) / 2, position-independent
-        BF/S    $+4                     ;# 8F00
-        BF/S    $+6                     ;# 8F01
-        BF/S    $+H'84                  ;# 8F40
-        BF/S    $-2                     ;# 8FFD
+        BF/S    *+4                     ;# 8F00
+        BF/S    *+6                     ;# 8F01
+        BF/S    *+0x84                  ;# 8F40
+        BF/S    *-2                     ;# 8FFD
 
 ;;; BT/S label (d8 format: branch if T=1 with delay slot)
-        BT/S    $+4                     ;# 8D00
-        BT/S    $+6                     ;# 8D01
-        BT/S    $+H'84                  ;# 8D40
-        BT/S    $-2                     ;# 8DFD
+        BT/S    *+4                     ;# 8D00
+        BT/S    *+6                     ;# 8D01
+        BT/S    *+0x84                  ;# 8D40
+        BT/S    *-2                     ;# 8DFD
 
 ;;; BRAF Rm (m format: branch far via register, PC-relative indirect, delay slot)
         BRAF    R0                      ;# 0023

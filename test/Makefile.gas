@@ -321,7 +321,7 @@ gas-%_z180.hex: %_z180.gas
 gas-%_sh1.s37: %_sh1.gas
 	sh-elf-as --isa=sh --warn -o $(^:.gas=.p) -al=$(^:.gas=.lst) $^
 	sh-elf-ld --entry=0 -section-start=.text=0x0000 -o $(^:.gas=.o) $(^:.gas=.p)
-	sh-elf-objcopy -I elf32-sh -O srec --srec-len=16 $(^:.gas=.o) /dev/stdout \
+	sh-elf-objcopy -I elf32-sh -O srec --srec-len=16 -j .text $(^:.gas=.o) /dev/stdout \
 	| tr -d '\015' > $(^:.gas=.s37)
 	sh-elf-objdump -m sh -D $(^:.gas=.s37) > $(^:.gas=.dis)
 
@@ -329,7 +329,7 @@ gas-%_sh1.s37: %_sh1.gas
 gas-%_sh2.s37: %_sh2.gas
 	sh-elf-as --isa=sh2 --warn -o $(^:.gas=.p) -al=$(^:.gas=.lst) $^
 	sh-elf-ld --entry=0 -section-start=.text=0x0000 -o $(^:.gas=.o) $(^:.gas=.p)
-	sh-elf-objcopy -I elf32-sh -O srec --srec-len=16 $(^:.gas=.o) /dev/stdout \
+	sh-elf-objcopy -I elf32-sh -O srec --srec-len=16 -j .text $(^:.gas=.o) /dev/stdout \
 	| tr -d '\015' > $(^:.gas=.s37)
 	sh-elf-objdump -m sh2 -D $(^:.gas=.s37) > $(^:.gas=.dis)
 
@@ -337,7 +337,7 @@ gas-%_sh2.s37: %_sh2.gas
 gas-%_shdsp.s37: %_shdsp.gas
 	sh-elf-as --isa=sh-dsp --warn -o $(^:.gas=.p) -al=$(^:.gas=.lst) $^
 	sh-elf-ld --entry=0 -section-start=.text=0x0000 -o $(^:.gas=.o) $(^:.gas=.p)
-	sh-elf-objcopy -I elf32-sh -O srec --srec-len=16 $(^:.gas=.o) /dev/stdout \
+	sh-elf-objcopy -I elf32-sh -O srec --srec-len=16 -j .text $(^:.gas=.o) /dev/stdout \
 	| tr -d '\015' > $(^:.gas=.s37)
 	sh-elf-objdump -m sh-dsp -D $(^:.gas=.s37) > $(^:.gas=.dis)
 
@@ -345,7 +345,7 @@ gas-%_shdsp.s37: %_shdsp.gas
 gas-%_sh2e.s37: %_sh2e.gas
 	sh-elf-as --isa=sh2e --warn -o $(^:.gas=.p) -al=$(^:.gas=.lst) $^
 	sh-elf-ld --entry=0 -section-start=.text=0x0000 -o $(^:.gas=.o) $(^:.gas=.p)
-	sh-elf-objcopy -I elf32-sh -O srec --srec-len=16 $(^:.gas=.o) /dev/stdout \
+	sh-elf-objcopy -I elf32-sh -O srec --srec-len=16 -j .text $(^:.gas=.o) /dev/stdout \
 	| tr -d '\015' > $(^:.gas=.s37)
 	sh-elf-objdump -m sh2e -D $(^:.gas=.s37) > $(^:.gas=.dis)
 
@@ -353,7 +353,7 @@ gas-%_sh2e.s37: %_sh2e.gas
 gas-%_sh2a.s37: %_sh2a.gas
 	sh-elf-as --isa=sh2a --warn -o $(^:.gas=.p) -al=$(^:.gas=.lst) $^
 	sh-elf-ld --entry=0 -section-start=.text=0x0000 -o $(^:.gas=.o) $(^:.gas=.p)
-	sh-elf-objcopy -I elf32-sh -O srec --srec-len=16 $(^:.gas=.o) /dev/stdout \
+	sh-elf-objcopy -I elf32-sh -O srec --srec-len=16 -j .text $(^:.gas=.o) /dev/stdout \
 	| tr -d '\015' > $(^:.gas=.s37)
 	sh-elf-objdump -m sh2a -D $(^:.gas=.s37) > $(^:.gas=.dis)
 

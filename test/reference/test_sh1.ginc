@@ -25,52 +25,14 @@
         mov     r14, r15                ;# 6FE3
 
 !! MOV.W @(disp,PC),Rn (1001 nnnn dddd dddd) -- d=byte_offset/2 from (PC+4)
-        mov.w   pcw0, r0                ;# 9000
-        nop
-pcw0:   .word   0x1234
-
-        mov.w   pcw1, r3                ;# 9301
-        nop
-        nop
-pcw1:   .word   0x5678
-
-        mov.w   pcw2, r7                ;# 9702
-        nop
-        nop
-        nop
-pcw2:   .word   0xabcd
+        mov.w   @(4,pc), r0             ;# 9000
+        mov.w   @(8,pc), r3             ;# 9302
+        mov.w   @(0x40,pc), r7          ;# 971E
 
 !! MOV.L @(disp,PC),Rn (1101 nnnn dddd dddd) -- d=byte_offset/4 from ((PC+4)&~3)
-        .align  4
-        mov.l   pcl0, r0                ;# D000
-        nop
-pcl0:   .long   0x11223344
-
-        mov.l   pcl1, r5                ;# D501
-        nop
-        nop
-        nop
-pcl1:   .long   0x55667788
-
-        mov.l   pcl2, r9                ;# D902
-        nop
-        nop
-        nop
-        nop
-        nop
-pcl2:   .long   0x99aabbcc
-
-!! MOVA @(disp,PC),R0 (1100 0111 dddd dddd) -- d=byte_offset/4 from ((PC+4)&~3)
-        .align  4
-        mova    mova0, r0               ;# C700
-        nop
-mova0:  .long   0xdeadbeef
-
-        mova    mova1, r0               ;# C701
-        nop
-        nop
-        nop
-mova1:  .long   0xcafebabe
+        mov.l   @(6,pc), r0             ;# D001
+        mov.l   @(8,pc), r5             ;# D501
+        mov.l   @(0x42,pc), r9          ;# D910
 
 !! MOV.B @Rm,Rn (0110 nnnn mmmm 0000)
         mov.b   @r1, r0                 ;# 6010
@@ -203,6 +165,11 @@ mova1:  .long   0xcafebabe
         mov.l   @(0, gbr), r0           ;# C600
         mov.l   @(0x200, gbr), r0       ;# C680
         mov.l   @(0x3fc, gbr), r0       ;# C6FF
+
+!! MOVA @(disp,PC),R0 (1100 0111 dddd dddd) -- d=byte_offset/4 from ((PC+4)&~3)
+        mova    @(4,pc), r0             ;# C700
+        mova    @(6,pc), r0             ;# C701
+        mova    @(0x40,pc), r0          ;# C70F
 
 !! MOVT Rn (0000 nnnn 0010 1001)
         movt    r0                      ;# 0029
@@ -478,41 +445,42 @@ mova1:  .long   0xcafebabe
         shlr16  r15                     ;# 4F29
 
 !!! Branch
-!! All branches forward before label, all backward after (H8/300 style)
 
-        bf      label                   ;# 8B04
-        bt      label                   ;# 8903
-        bra     label                   ;# A002
-        nop
-        bsr     label                   ;# B000
-        nop
-label:
-        bf      label                   ;# 8BFE
-        bt      label                   ;# 89FD
-        bra     label                   ;# AFFC
-        nop
-        bsr     label                   ;# BFFA
-        nop
+!! BF label (1000 1011 dddd dddd) -- d=(N-4)/2
+        bf      .+4                     ;# 8B00
+        bf      .+6                     ;# 8B01
+        bf      .+0x84                  ;# 8B40
+        bf      .-2                     ;# 8BFD
 
-!! JMP @Rm (0100 mmmm 0010 1011) indirect branch, delay slot
+!! BT label (1000 1001 dddd dddd) -- d=(N-4)/2
+        bt      .+4                     ;# 8900
+        bt      .+6                     ;# 8901
+        bt      .+0x84                  ;# 8940
+        bt      .-2                     ;# 89FD
+
+!! BRA label (1010 dddd dddd dddd) -- d=(N-4)/2
+        bra     .+4                     ;# A000
+        bra     .+8                     ;# A002
+        bra     .+0x800                 ;# A3FE
+        bra     .-2                     ;# AFFD
+
+!! BSR label (1011 dddd dddd dddd) -- d=(N-4)/2
+        bsr     .+4                     ;# B000
+        bsr     .+8                     ;# B002
+        bsr     .+0x800                 ;# B3FE
+
+!! JMP @Rm (0100 mmmm 0010 1011) indirect branch
         jmp     @r0                     ;# 402B
-        nop
         jmp     @r7                     ;# 472B
-        nop
         jmp     @r15                    ;# 4F2B
-        nop
 
-!! JSR @Rm (0100 mmmm 0000 1011) jump to subroutine, delay slot
+!! JSR @Rm (0100 mmmm 0000 1011) jump to subroutine
         jsr     @r0                     ;# 400B
-        nop
         jsr     @r7                     ;# 470B
-        nop
         jsr     @r15                    ;# 4F0B
-        nop
 
-!! RTS (0000 0000 0000 1011) return from subroutine, delay slot
+!! RTS (0000 0000 0000 1011) return from subroutine
         rts                             ;# 000B
-        nop
 
 !!! System Control
 
@@ -585,9 +553,8 @@ label:
 !! NOP (0000 0000 0000 1001)
         nop                             ;# 0009
 
-!! RTE (0000 0000 0010 1011) return from exception, delay slot
+!! RTE (0000 0000 0010 1011) return from exception
         rte                             ;# 002B
-        nop
 
 !! SETT (0000 0000 0001 1000)
         sett                            ;# 0018

@@ -195,22 +195,12 @@
         stc.l   re,@-r15                ;# 4F73
 
 !! LDRS @(disp,PC) -- target = (PC+4) + disp*2
-        ldrs    shdsp_ldrs_1            ;# 8C00
-        nop
-shdsp_ldrs_1:
-        ldrs    shdsp_ldrs_2            ;# 8C1E
-        .skip   62
-shdsp_ldrs_2:
-        nop
+        ldrs    .+4                     ;# 8C00
+        ldrs    .+0x40                  ;# 8C1E
 
 !! LDRE @(disp,PC)
-        ldre    shdsp_ldre_1            ;# 8E00
-        nop
-shdsp_ldre_1:
-        ldre    shdsp_ldre_2            ;# 8E1E
-        .skip   62
-shdsp_ldre_2:
-        nop
+        ldre    .+4                     ;# 8E00
+        ldre    .+0x40                  ;# 8E1E
 
 !! SETRC #imm
         setrc   #0                      ;# 8200

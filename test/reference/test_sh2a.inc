@@ -129,12 +129,12 @@
 
 ;;; MOVI20 #imm,Rn (n format: 0000nnnniiii0000 iiiiiiiiiiiiiiii) 20-bit immediate
         MOVI20  #0,R0                   ;# 00000000
-        MOVI20  #H'7FFFF,R1             ;# 0170FFFF
-        MOVI20  #-H'80000,R2            ;# 02800000
+        MOVI20  #0x7FFFF,R1             ;# 0170FFFF
+        MOVI20  #-0x80000,R2            ;# 02800000
 
 ;;; MOVI20S #imm,Rn (n format: 0000nnnniiii0001 iiiiiiiiiiiiiiii) 28-bit, low 8 zero
         MOVI20S #0,R0                   ;# 00010000
-        MOVI20S #H'FF0000,R1            ;# 0101FF00
+        MOVI20S #0xFF0000,R1            ;# 0101FF00
 
 ;;; Local Variables:
 ;;; mode: asm
