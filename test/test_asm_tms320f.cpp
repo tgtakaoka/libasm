@@ -43,6 +43,23 @@ using namespace libasm::test;
     __PERRT(__FILE__, __LINE__, line1, opc1, OK, "", line2, opc2, OK, "")
 #define PERRT(line1, opc1, err1, at1, line2, opc2, err2, at2) \
     __PERRT(__FILE__, __LINE__, line1, opc1, err1, at1, line2, opc2, err2, at2)
+// The pair is rejected: the second half emits nothing and stays at its own
+// address instead of being folded into the first word.
+#define PERRN(line1, opc1, line2, err2, at2)                                   \
+    do {                                                                       \
+        const Config::opcode_t e1[] = {opc1};                                  \
+        const auto endian = assembler.config().endian();                       \
+        const auto unit = assembler.config().addressUnit();                    \
+        const ArrayMemory m1(0x1000, e1, sizeof(e1), endian, unit);            \
+        const ArrayMemory m2(0x1001, e1, 0, endian, unit);                     \
+        Insn insn(m1.origin());                                                \
+        ErrorAt err_1;                                                         \
+        err_1.setError("", OK);                                                \
+        asm_assert(__FILE__, __LINE__, err_1, line1, m1, insn);                \
+        ErrorAt err_2;                                                         \
+        err_2.setError(at2, err2);                                             \
+        cont_assert(__FILE__, __LINE__, err_2, "|| " line2, 0x1001, m2, insn); \
+    } while (0)
 
 AsmTms320f asm320f;
 Assembler &assembler(asm320f);
@@ -3029,6 +3046,13 @@ void test_parallel() {
               "SUBI3 *AR4, R5, R3",  0x8FD5E9C4);
         PTEST("MPYI3 R1, R2, R1",    0x25010201,
               "SUBI3 R4, R5, R3",    0x8CECE2E1);
+    } else {
+        // A register where the base device requires an indirect address is an
+        // augmented operand, available on the C32 only.
+        PERRN("ABSF  R0, R1", 0x00010000,
+              "STF   R2, *-AR3", OPERAND_NOT_ALLOWED, "R2, *-AR3");
+        PERRN("NEGF  R0, R1", 0x0B810000,
+              "STF   R2, *-AR3", OPERAND_NOT_ALLOWED, "R2, *-AR3");
     }
 }
 

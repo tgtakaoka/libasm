@@ -1678,8 +1678,11 @@ bool acceptMode(AddrMode opr, AddrMode table) {
     if (opr == M_IDIR)
         return table >= M_IGEN && table <= M_FIDR;
     if (opr == M_FREG)
-        return (table >= M_IGEN && table <= M_IREG) || table == R_R01 || table == R_R23 ||
-               table == M_IREL || table == M_DREL;
+        // M_IDIR is skipped: a parallel operand that only accepts an indirect
+        // address takes a register just on the devices with the augmented
+        // operands, and those entries use M_FIDR or M_IIDR instead.
+        return (table >= M_IGEN && table <= M_IDAT) || (table >= M_IIDR && table <= M_IREG) ||
+               table == R_R01 || table == R_R23 || table == M_IREL || table == M_DREL;
     if (opr == M_IREG || opr == R_DP)
         return (table >= M_IGEN && table <= M_GCNT) || table == M_MREG || table == M_IDAT ||
                table == M_IIDR || (table >= M_IREG && table <= R_DP) || table == M_IREL ||
