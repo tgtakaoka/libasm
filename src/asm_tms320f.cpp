@@ -45,6 +45,7 @@ constexpr AsmTms320f::PseudoTms320F AsmTms320f::PSEUDO_TMS320F_TABLE[] PROGMEM =
     { TEXT_dHWORD,   &AsmTms320f::defineInteger,  UINT16_MAX },
     { TEXT_dLDOUBLE, &AsmTms320f::defineFloat,    40         },
     { TEXT_dSFLOAT,  &AsmTms320f::defineFloat,    16         },
+    { TEXT_SILICON,  &AsmTms320f::processSilicon },
     { TEXT_PARALLEL, &AsmTms320f::encodeParallel },
 };
 PROGMEM constexpr AsmTms320f::PseudosTms320F AsmTms320f::PSEUDOS_TMS320F{
@@ -62,8 +63,33 @@ const ValueParser::Plugins &AsmTms320f::defaultPlugins() {
 }
 
 AsmTms320f::AsmTms320f(const ValueParser::Plugins &plugins)
-    : Assembler(plugins, PSEUDO_TABLE), Config(TABLE) {
+    : Assembler(plugins, PSEUDO_TABLE, &_opt_silicon),
+      Config(TABLE),
+      _opt_silicon(this, &AsmTms320f::setSiliconOption, OPT_INT_SILICON, OPT_DESC_SILICON) {
     reset();
+}
+
+void AsmTms320f::reset() {
+    Assembler::reset();
+    // Return the capabilities to what the selected CPU implements.
+    resetSilicon();
+}
+
+Error AsmTms320f::setSiliconOption(int32_t rev) {
+    return setSilicon(rev);
+}
+
+// "silicon <revision>" names the silicon a source targets, so that one using
+// IDLE2 or an augmented parallel operand records which devices it runs on.
+Error AsmTms320f::processSilicon(StrScanner &scan, Insn &insn, uint16_t) {
+    auto p = scan.skipSpaces();
+    const auto at = p;
+    ErrorAt error;
+    const auto rev = parseInteger(p, error, 0);
+    if (error.hasError())
+        return insn.setError(at, error);
+    scan = p;
+    return insn.setErrorIf(at, setSilicon(rev.getUnsigned()));
 }
 
 Error AsmTms320f::parseOperand(StrScanner &scan, Operand &op) const {
@@ -612,7 +638,7 @@ Error AsmTms320f::encodeImpl(StrScanner &scan, Insn &_insn) const {
     } else {
         search.para = nullptr;
     }
-    if (searchName(cpuType(), search))
+    if (searchName(_cpuSpec, search))
         return _insn.setError(insn.op1, search);
 
     encodeOperand(insn, search, search.op1, search.mode1(), search.pos1());

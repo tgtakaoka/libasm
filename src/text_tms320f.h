@@ -29,6 +29,10 @@ extern const char TEXT_CPU_320C30[] PROGMEM;
 extern const char TEXT_CPU_320C31[] PROGMEM;
 extern const char TEXT_CPU_320C32[] PROGMEM;
 
+extern const char TEXT_SILICON[] PROGMEM;
+extern const char OPT_INT_SILICON[] PROGMEM;
+extern const char OPT_DESC_SILICON[] PROGMEM;
+
 // TMS320C3x
 using common::TEXT_ABSF;
 extern const char TEXT_ABSI[]      PROGMEM;

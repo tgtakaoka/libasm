@@ -20,6 +20,7 @@
 #include "text_tms320f.h"
 
 using namespace libasm::text::tms320f;
+using libasm::text::common::TEXT_none;
 
 namespace libasm {
 namespace tms320f {
@@ -264,16 +265,22 @@ constexpr uint8_t INDEX_TMS320C30[] PROGMEM = {
      99,  // TEXT_XOR3
 };
 
-constexpr Entry TABLE_TMS320C31[] PROGMEM = {
+constexpr Entry TABLE_IDLE2[] PROGMEM = {
     X0(0x0600, CF_00, TEXT_IDLE2, LF_01),
+};
+
+constexpr uint8_t INDEX_IDLE2[] PROGMEM = {
+      0,  // TEXT_IDLE2
+};
+
+constexpr Entry TABLE_LOPOWER[] PROGMEM = {
     X0(0x1080, CF_00, TEXT_LOPOWER,  LF_01),
     X0(0x1080, CF_00, TEXT_MAXSPEED, LF_00),
 };
 
-constexpr uint8_t INDEX_TMS320C31[] PROGMEM = {
-      0,  // TEXT_IDLE2
-      1,  // TEXT_LOPOWER
-      2,  // TEXT_MAXSPEED
+constexpr uint8_t INDEX_LOPOWER[] PROGMEM = {
+      0,  // TEXT_LOPOWER
+      1,  // TEXT_MAXSPEED
 };
 
 constexpr Entry TABLE_LDCOND[] PROGMEM =  {
@@ -1619,31 +1626,31 @@ static_assert(sizeof(TABLE_TMS320C32_PARA1ST) == sizeof(TABLE_TMS320C30_PARA1ST)
 static_assert(sizeof(TABLE_TMS320C32_PARA2ND) == sizeof(TABLE_TMS320C30_PARA2ND),
         "C32 and C30 parallel 2nd tables must have the same entry count");
 
-constexpr EntryPage TMS320C30_PAGES[] PROGMEM = {
+#define EMPTY_RANGE(a) ARRAY_BEGIN(a), ARRAY_BEGIN(a)
+
+// Every 'C3x shares one instruction set; the power-down modes and the
+// augmented parallel operands are selected by capability, not by CPU.
+constexpr EntryPage TMS320C3X_PAGES[] PROGMEM = {
         {ARRAY_RANGE(TABLE_TMS320C30), ARRAY_RANGE(INDEX_TMS320C30)},
         {ARRAY_RANGE(TABLE_LDCOND), ARRAY_RANGE(INDEX_LDCOND)},
         {ARRAY_RANGE(TABLE_BRCOND), ARRAY_RANGE(INDEX_BRCOND)},
         {ARRAY_RANGE(TABLE_CALLCOND), ARRAY_RANGE(INDEX_CALLCOND)},
+};
+
+constexpr EntryPage IDLE2_PAGES[] PROGMEM = {
+        {ARRAY_RANGE(TABLE_IDLE2), ARRAY_RANGE(INDEX_IDLE2)},
+};
+
+constexpr EntryPage LOPOWER_PAGES[] PROGMEM = {
+        {ARRAY_RANGE(TABLE_LOPOWER), ARRAY_RANGE(INDEX_LOPOWER)},
+};
+
+constexpr EntryPage BASE_PARA_PAGES[] PROGMEM = {
         {ARRAY_RANGE(TABLE_TMS320C30_PARA1ST), ARRAY_RANGE(INDEX_TMS320C30_PARA1ST)},
         {ARRAY_RANGE(TABLE_TMS320C30_PARA2ND), ARRAY_RANGE(INDEX_TMS320C30_PARA2ND)},
 };
 
-constexpr EntryPage TMS320C31_PAGES[] PROGMEM = {
-        {ARRAY_RANGE(TABLE_TMS320C30), ARRAY_RANGE(INDEX_TMS320C30)},
-        {ARRAY_RANGE(TABLE_TMS320C31), ARRAY_RANGE(INDEX_TMS320C31)},
-        {ARRAY_RANGE(TABLE_LDCOND), ARRAY_RANGE(INDEX_LDCOND)},
-        {ARRAY_RANGE(TABLE_BRCOND), ARRAY_RANGE(INDEX_BRCOND)},
-        {ARRAY_RANGE(TABLE_CALLCOND), ARRAY_RANGE(INDEX_CALLCOND)},
-        {ARRAY_RANGE(TABLE_TMS320C30_PARA1ST), ARRAY_RANGE(INDEX_TMS320C30_PARA1ST)},
-        {ARRAY_RANGE(TABLE_TMS320C30_PARA2ND), ARRAY_RANGE(INDEX_TMS320C30_PARA2ND)},
-};
-
-constexpr EntryPage TMS320C32_PAGES[] PROGMEM = {
-        {ARRAY_RANGE(TABLE_TMS320C30), ARRAY_RANGE(INDEX_TMS320C30)},
-        {ARRAY_RANGE(TABLE_TMS320C31), ARRAY_RANGE(INDEX_TMS320C31)},
-        {ARRAY_RANGE(TABLE_LDCOND), ARRAY_RANGE(INDEX_LDCOND)},
-        {ARRAY_RANGE(TABLE_BRCOND), ARRAY_RANGE(INDEX_BRCOND)},
-        {ARRAY_RANGE(TABLE_CALLCOND), ARRAY_RANGE(INDEX_CALLCOND)},
+constexpr EntryPage ENHANCED_PARA_PAGES[] PROGMEM = {
         {ARRAY_RANGE(TABLE_TMS320C32_PARA1ST), ARRAY_RANGE(INDEX_TMS320C30_PARA1ST)},
         {ARRAY_RANGE(TABLE_TMS320C32_PARA2ND), ARRAY_RANGE(INDEX_TMS320C30_PARA2ND)},
 };
@@ -1661,10 +1668,43 @@ const Entry *parallelInsn(const Entry *first) {
 using Cpu = entry::CpuBase<CpuType, EntryPage>;
 
 constexpr Cpu CPU_TABLE[] PROGMEM = {
-        {TMS320C30, TEXT_CPU_320C30, ARRAY_RANGE(TMS320C30_PAGES)},
-        {TMS320C31, TEXT_CPU_320C31, ARRAY_RANGE(TMS320C31_PAGES)},
-        {TMS320C32, TEXT_CPU_320C32, ARRAY_RANGE(TMS320C32_PAGES)},
+        {TMS320C30, TEXT_CPU_320C30, ARRAY_RANGE(TMS320C3X_PAGES)},
+        {TMS320C31, TEXT_CPU_320C31, ARRAY_RANGE(TMS320C3X_PAGES)},
+        {TMS320C32, TEXT_CPU_320C32, ARRAY_RANGE(TMS320C3X_PAGES)},
 };
+
+using Idle2 = entry::CpuBase<Idle2Type, EntryPage>;
+
+constexpr Idle2 IDLE2_TABLE[] PROGMEM = {
+        {IDLE2_ON, TEXT_IDLE2, ARRAY_RANGE(IDLE2_PAGES)},
+        {IDLE2_NONE, TEXT_none, EMPTY_RANGE(IDLE2_PAGES)},
+};
+
+const Idle2 *idle2(Idle2Type idle2Type) {
+    return Idle2::search(idle2Type, ARRAY_RANGE(IDLE2_TABLE));
+}
+
+using LoPower = entry::CpuBase<LoPowerType, EntryPage>;
+
+constexpr LoPower LOPOWER_TABLE[] PROGMEM = {
+        {LOPOWER_ON, TEXT_LOPOWER, ARRAY_RANGE(LOPOWER_PAGES)},
+        {LOPOWER_NONE, TEXT_none, EMPTY_RANGE(LOPOWER_PAGES)},
+};
+
+const LoPower *lopower(LoPowerType lopowerType) {
+    return LoPower::search(lopowerType, ARRAY_RANGE(LOPOWER_TABLE));
+}
+
+using Para = entry::CpuBase<EnhancedType, EntryPage>;
+
+constexpr Para PARA_TABLE[] PROGMEM = {
+        {ENHANCED_ON, TEXT_none, ARRAY_RANGE(ENHANCED_PARA_PAGES)},
+        {ENHANCED_NONE, TEXT_none, ARRAY_RANGE(BASE_PARA_PAGES)},
+};
+
+const Para *para(EnhancedType enhancedType) {
+    return Para::search(enhancedType, ARRAY_RANGE(PARA_TABLE));
+}
 
 const Cpu *cpu(CpuType cpuType) {
     return Cpu::search(cpuType, ARRAY_RANGE(CPU_TABLE));
@@ -1678,8 +1718,11 @@ bool acceptMode(AddrMode opr, AddrMode table) {
     if (opr == M_IDIR)
         return table >= M_IGEN && table <= M_FIDR;
     if (opr == M_FREG)
-        return (table >= M_IGEN && table <= M_IREG) || table == R_R01 || table == R_R23 ||
-               table == M_IREL || table == M_DREL;
+        // M_IDIR is skipped: a parallel operand that only accepts an indirect
+        // address takes a register just on the devices with the augmented
+        // operands, and those entries use M_FIDR or M_IIDR instead.
+        return (table >= M_IGEN && table <= M_IDAT) || (table >= M_IIDR && table <= M_IREG) ||
+               table == R_R01 || table == R_R23 || table == M_IREL || table == M_DREL;
     if (opr == M_IREG || opr == R_DP)
         return (table >= M_IGEN && table <= M_GCNT) || table == M_MREG || table == M_IDAT ||
                table == M_IIDR || (table >= M_IREG && table <= R_DP) || table == M_IREL ||
@@ -1716,13 +1759,14 @@ void readParallel(AsmInsn &insn, const Entry *entry, const EntryPage *page) {
     Cpu::defaultReadCode(*insn.para, parallel, page);
 }
 
-Error searchName(CpuType cpuType, AsmInsn &insn) {
+Error searchName(const CpuSpec &cpuSpec, AsmInsn &insn) {
     if (insn.para) {
         // const auto &para = *insn.para;
         // printf("@@ search: %s op1=%d op2=%d op3=%d || %s op1=%d op2=%d op3=%d\n", insn.name(),
         //         insn.op1.mode, insn.op2.mode, insn.op3.mode, para.name(), para.op1.mode,
         //         para.op2.mode, para.op3.mode);
-        cpu(cpuType)->searchName(insn, acceptParallels, Cpu::defaultPageSetup, readParallel);
+        para(cpuSpec.enhanced)
+                ->searchName(insn, acceptParallels, Para::defaultPageSetup, readParallel);
         // if (insn.isOK())
         //     printf("@@  found: %s op1=%d op2=%d op3=%d || %s op1=%d op2=%d op3=%d opc=%08X\n",
         //             insn.name(), insn.mode1(), insn.mode2(), insn.mode3(), para.name(),
@@ -1730,7 +1774,13 @@ Error searchName(CpuType cpuType, AsmInsn &insn) {
     } else {
         // printf("@@ search: %s op1=%d op2=%d op3=%d\n", insn.name(), insn.op1.mode, insn.op2.mode,
         //         insn.op3.mode);
-        cpu(cpuType)->searchName(insn, acceptSingle);
+        cpu(cpuSpec.cpu)->searchName(insn, acceptSingle);
+        if (insn.getError() == UNKNOWN_INSTRUCTION)
+            idle2(cpuSpec.idle2)->searchName(insn, acceptSingle);
+        if (insn.getError() == UNKNOWN_INSTRUCTION)
+            lopower(cpuSpec.lopower)->searchName(insn, acceptSingle);
+        if (insn.getError() == UNKNOWN_INSTRUCTION)
+            para(cpuSpec.enhanced)->searchName(insn, acceptSingle);
         // if (insn.isOK())
         //     printf("@@  found: %s op1=%d op2=%d op3=%d opc=%08X\n", insn.name(), insn.mode1(),
         //             insn.mode2(), insn.mode3(), insn.opCode());
@@ -1745,13 +1795,86 @@ bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *) {
     return opc == entry->readOpCode();
 }
 
-Error searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) {
-    auto entry = cpu(cpuType)->searchOpCode(insn, out, matchOpCode);
+Error searchOpCode(const CpuSpec &cpuSpec, DisInsn &insn, StrBuffer &out) {
+    auto entry = cpu(cpuSpec.cpu)->searchOpCode(insn, out, matchOpCode);
+    if (insn.getError() == UNKNOWN_INSTRUCTION)
+        entry = idle2(cpuSpec.idle2)->searchOpCode(insn, out, matchOpCode);
+    if (insn.getError() == UNKNOWN_INSTRUCTION)
+        entry = lopower(cpuSpec.lopower)->searchOpCode(insn, out, matchOpCode);
+    if (insn.getError() == UNKNOWN_INSTRUCTION)
+        entry = para(cpuSpec.enhanced)->searchOpCode(insn, out, matchOpCode);
     if (entry && insn.hasContinue()) {
         entry = parallelInsn(entry);
         Cpu::defaultReadName(insn, entry, out);
     }
     return insn.getError();
+}
+
+uint8_t Config::defaultSilicon(CpuType cpuType) {
+    // The oldest 'C30, a 'C31 revision 5.x, and a 'C32 revision 2.0 or
+    // greater, which is also what a 'VC33 is.
+    return cpuType == TMS320C31 ? 5 : cpuType == TMS320C32 ? 2 : 1;
+}
+
+void Config::resetSilicon() {
+    _cpuSpec.silicon = 0;
+    deriveCapabilities();
+}
+
+void Config::setCpuType(CpuType cpuType) {
+    _cpuSpec.cpu = cpuType;
+    ConfigImpl::setCpuType(cpuType);
+    deriveCapabilities();
+}
+
+Error Config::setIdle2(bool enable) {
+    _cpuSpec.idle2 = enable ? IDLE2_ON : IDLE2_NONE;
+    return OK;
+}
+
+Error Config::setLoPower(bool enable) {
+    _cpuSpec.lopower = enable ? LOPOWER_ON : LOPOWER_NONE;
+    return OK;
+}
+
+Error Config::setEnhanced(bool enable) {
+    if (enable && !cpuHasEnhanced(cpuType()))
+        return OPERAND_NOT_ALLOWED;
+    _cpuSpec.enhanced = enable ? ENHANCED_ON : ENHANCED_NONE;
+    return OK;
+}
+
+// User's Guide 7.9 (7-48) for the power-down modes, and the augmented
+// operand note repeated on every parallel instruction page.
+Error Config::setSilicon(int32_t rev) {
+    // Silicon revisions are numbered from 1.
+    if (rev < 1 || rev > UINT8_MAX)
+        return OVERFLOW_RANGE;
+    _cpuSpec.silicon = rev;
+    deriveCapabilities();
+    return OK;
+}
+
+void Config::deriveCapabilities() {
+    const auto rev = _cpuSpec.silicon ? _cpuSpec.silicon : defaultSilicon(_cpuSpec.cpu);
+    auto power = false;
+    auto enhanced = false;
+    switch (_cpuSpec.cpu) {
+    case TMS320C30:
+        power = rev >= 7;
+        break;
+    case TMS320C31:
+        power = rev >= 5;
+        enhanced = rev >= 6;
+        break;
+    case TMS320C32:
+        power = true;
+        enhanced = rev >= 2;
+        break;
+    }
+    setIdle2(power);
+    setLoPower(power);
+    setEnhanced(enhanced);
 }
 
 const /*PROGMEM*/ char *TableTms320f::listCpu_P() const {

@@ -26,6 +26,10 @@ constexpr char TEXT_CPU_320C30[]   PROGMEM = "320C30";
 constexpr char TEXT_CPU_320C31[]   PROGMEM = "320C31";
 constexpr char TEXT_CPU_320C32[]   PROGMEM = "320C32";
 
+constexpr char TEXT_SILICON[]      PROGMEM = "silicon";
+constexpr char OPT_INT_SILICON[]   PROGMEM = "silicon";
+constexpr char OPT_DESC_SILICON[]  PROGMEM = "silicon revision (default C30 1, C31 5, C32 2)";
+
 // TMS320C3x
 // constexpr char TEXT_ABSF[]      PROGMEM = "ABSF";
 constexpr char TEXT_ABSI[]      PROGMEM = "ABSI";

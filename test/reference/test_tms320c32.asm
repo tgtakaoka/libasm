@@ -13,6 +13,7 @@
 ;;; limitations under the License.
 
         cpu     320C32
+        silicon 2
         org     0C0H
         include "test_tms320c30.inc"
         include "test_tms320c31.inc"

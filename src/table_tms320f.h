@@ -31,8 +31,8 @@ struct TableTms320f final : InsnTable<CpuType> {
 
 extern const TableTms320f TABLE;
 
-Error searchName(CpuType, AsmInsn &insn);
-Error searchOpCode(CpuType, DisInsn &insn, StrBuffer &out);
+Error searchName(const CpuSpec &, AsmInsn &insn);
+Error searchOpCode(const CpuSpec &, DisInsn &insn, StrBuffer &out);
 
 }  // namespace tms320f
 }  // namespace libasm

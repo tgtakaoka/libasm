@@ -43,6 +43,23 @@ using namespace libasm::test;
     __PERRT(__FILE__, __LINE__, line1, opc1, OK, "", line2, opc2, OK, "")
 #define PERRT(line1, opc1, err1, at1, line2, opc2, err2, at2) \
     __PERRT(__FILE__, __LINE__, line1, opc1, err1, at1, line2, opc2, err2, at2)
+// The pair is rejected: the second half emits nothing and stays at its own
+// address instead of being folded into the first word.
+#define PERRN(line1, opc1, line2, err2, at2)                                   \
+    do {                                                                       \
+        const Config::opcode_t e1[] = {opc1};                                  \
+        const auto endian = assembler.config().endian();                       \
+        const auto unit = assembler.config().addressUnit();                    \
+        const ArrayMemory m1(0x1000, e1, sizeof(e1), endian, unit);            \
+        const ArrayMemory m2(0x1001, e1, 0, endian, unit);                     \
+        Insn insn(m1.origin());                                                \
+        ErrorAt err_1;                                                         \
+        err_1.setError("", OK);                                                \
+        asm_assert(__FILE__, __LINE__, err_1, line1, m1, insn);                \
+        ErrorAt err_2;                                                         \
+        err_2.setError(at2, err2);                                             \
+        cont_assert(__FILE__, __LINE__, err_2, "|| " line2, 0x1001, m2, insn); \
+    } while (0)
 
 AsmTms320f asm320f;
 Assembler &assembler(asm320f);
@@ -2496,6 +2513,61 @@ void test_misc() {
     }
 }
 
+// The power-down modes and the augmented parallel operands came with later
+// silicon rather than with a new part, so "silicon" is what selects them.
+// User's Guide 7.9 (7-48) for IDLE2/LOPOWER, and the augmented operand note
+// repeated on every parallel instruction page.
+void test_silicon() {
+    if (is320c32()) {
+        // A 'C32 has the power-down modes on every revision, and the
+        // augmented operands from revision 2.0.  Also what a 'VC33 is.
+        TEST("IDLE2",    0x06000001);
+        TEST("LOPOWER",  0x10800001);
+        PTEST("ABSI AR0, R1", 0x00810008,
+              "STI  R2, *-AR3", 0xCA420BE8);
+        assembler.setOption("silicon", "1");
+        TEST("IDLE2",    0x06000001);
+        PERRN("ABSI AR0, R1", 0x00810008,
+              "STI  R2, *-AR3", OPERAND_NOT_ALLOWED, "R2, *-AR3");
+        assembler.setOption("silicon", "2");
+        PTEST("ABSI AR0, R1", 0x00810008,
+              "STI  R2, *-AR3", 0xCA420BE8);
+    } else if (is320c31()) {
+        // A 'C31 gains the power-down modes at revision 5.0 and the
+        // augmented operands at 6.0.
+        TEST("IDLE2",    0x06000001);
+        PERRN("ABSI AR0, R1", 0x00810008,
+              "STI  R2, *-AR3", OPERAND_NOT_ALLOWED, "R2, *-AR3");
+        assembler.setOption("silicon", "4");
+        ERUI("IDLE2");
+        ERUI("LOPOWER");
+        ERUI("MAXSPEED");
+        assembler.setOption("silicon", "5");
+        TEST("IDLE2",    0x06000001);
+        TEST("MAXSPEED", 0x10800000);
+        PERRN("ABSI AR0, R1", 0x00810008,
+              "STI  R2, *-AR3", OPERAND_NOT_ALLOWED, "R2, *-AR3");
+        assembler.setOption("silicon", "6");
+        PTEST("ABSI AR0, R1", 0x00810008,
+              "STI  R2, *-AR3", 0xCA420BE8);
+    } else {
+        // A 'C30 gains the power-down modes at version 7.0, and never has
+        // the augmented operands.
+        // Silicon revisions are numbered from 1; there is no revision 0.
+        EQUALS("silicon 0", OVERFLOW_RANGE, assembler.setOption("silicon", "0"));
+        ERUI("IDLE2");
+        ERUI("LOPOWER");
+        assembler.setOption("silicon", "6");
+        ERUI("IDLE2");
+        assembler.setOption("silicon", "7");
+        TEST("IDLE2",    0x06000001);
+        TEST("LOPOWER",  0x10800001);
+        TEST("MAXSPEED", 0x10800000);
+        PERRN("ABSI AR0, R1", 0x00810008,
+              "STI  R2, *-AR3", OPERAND_NOT_ALLOWED, "R2, *-AR3");
+    }
+}
+
 void test_interlock() {
     TEST("SIGI", 0x16000000);
 
@@ -3029,6 +3101,13 @@ void test_parallel() {
               "SUBI3 *AR4, R5, R3",  0x8FD5E9C4);
         PTEST("MPYI3 R1, R2, R1",    0x25010201,
               "SUBI3 R4, R5, R3",    0x8CECE2E1);
+    } else {
+        // A register where the base device requires an indirect address is an
+        // augmented operand, available on the C32 only.
+        PERRN("ABSF  R0, R1", 0x00010000,
+              "STF   R2, *-AR3", OPERAND_NOT_ALLOWED, "R2, *-AR3");
+        PERRN("NEGF  R0, R1", 0x0B810000,
+              "STF   R2, *-AR3", OPERAND_NOT_ALLOWED, "R2, *-AR3");
     }
 }
 
@@ -3601,6 +3680,7 @@ void run_tests(const char *cpu) {
     RUN_TEST(test_3op_no3);
     RUN_TEST(test_program);
     RUN_TEST(test_misc);
+    RUN_TEST(test_silicon);
     RUN_TEST(test_interlock);
     RUN_TEST(test_parallel);
     RUN_TEST(test_parallel_no3);
