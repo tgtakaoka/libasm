@@ -201,8 +201,12 @@ gas-%_i80386.hex: %_i80386.gas
 	i386-elf-objdump -m i386 -M intel -D $(^:.gas=.hex) > $(^:.gas=.dis)
 
 # i80486 target
+# -mtune only picks between equivalent encodings here (it does not gate the
+# instruction set), and the i486 tuning prefers the 3-byte "C0 /4 ib" shift
+# form over the canonical 2-byte "D0 /4" that both libasm and nasm emit for a
+# shift count of 1, so keep the i386 tuning.
 gas-%_i80486.hex: %_i80486.gas
-	i386-elf-as -mtune=i486 --warn -mnaked-reg -msyntax=intel \
+	i386-elf-as -mtune=i386 --warn -mnaked-reg -msyntax=intel \
 		-mmnemonic=intel -o $(^:.gas=.p) -al=$(^:.gas=.lst) $^
 	i386-elf-ld --entry=0 -section-start=.text=0x1000 -o $(^:.gas=.o) $(^:.gas=.p)
 	i386-elf-objcopy -I elf32-i386 -O ihex $(^:.gas=.o) /dev/stdout \
