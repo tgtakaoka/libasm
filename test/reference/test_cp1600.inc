@@ -339,6 +339,20 @@ D_DATA: EQU     X'1234'
         AND@    R6, R3
         XOR@    R6, R4
 
+;;; Register alias - SP is R6, PC is R7
+        MVO@    R0, SP
+        MVI@    SP, R1
+        ADD@    SP, R2
+        SUB@    SP, R3
+        CMP@    SP, R4
+        AND@    SP, R5
+        XOR@    SP, R0
+        TSTR    PC
+        CLRR    PC
+        JR      PC
+        MOVR    PC, R3
+        MOVR    R3, PC
+
 ;;; Data Access - Immediate
         MVII    X'00', R0
         MVII    X'FF', R1
