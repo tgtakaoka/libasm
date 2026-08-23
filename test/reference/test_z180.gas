@@ -12,10 +12,13 @@
 ;;; See the License for the specific language governing permissions and
 ;;; limitations under the License.
 
+        .text
         include "test_i8080.zinc"
-        align   5
+        .section z80part,"ax"
+        .p2align 5
         include "test_z80.inc"
-        align   5
+        .section z180part,"ax"
+        .p2align 5
         include "test_z180.inc"
         end
 

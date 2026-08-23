@@ -14,9 +14,9 @@
 
         .text
         include "test_mc6800.ginc"
-        .align  5
+        .section mc6801part,"ax"
         include "test_mc6801.ginc"
-        .align  5
+        .section mc68hc11part,"ax"
         include "test_mc68hc11.ginc"
         end
 

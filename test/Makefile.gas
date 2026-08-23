@@ -264,20 +264,28 @@ gas-%_mc68040.s37: %_mc68040.gas
 	m68k-elf-objdump -m 68040 -D $(^:.gas=.s37) > $(^:.gas=.dis)
 
 # MC68HC11 target
+# Converted straight from the assembler output: the m68hc11 linker script
+# rounds .text up and would append fill bytes the libasm reference does not
+# have.  Each include sits in its own section so the reference's alignment
+# boundaries stay empty rather than zero-filled, and objcopy places them.
 gas-%_mc68hc11.s19: %_mc68hc11.gas
 	m6811-elf-as -m68hc11 --warn -o $(^:.gas=.p) -al=$(^:.gas=.lst) $^
-	m6811-elf-ld -m m68hc11elf --entry=0 -o $(^:.gas=.o) $(^:.gas=.p)
 	m6811-elf-objcopy -I elf32-m68hc11 -O srec --srec-len=16 \
-	        --change-section-lma .text=0x0100 $(^:.gas=.o) /dev/stdout \
+		-j .text -j mc6801part -j mc68hc11part \
+		--change-section-lma .text=0x0100 \
+		--change-section-lma mc6801part=0x02A0 \
+		--change-section-lma mc68hc11part=0x02E0 \
+		$(^:.gas=.p) /dev/stdout \
 	| tr -d '\015' > $(^:.gas=.s19)
 	m6811-elf-objdump -m m68hc11 -D $(^:.gas=.s19) > $(^:.gas=.dis)
 
 # MC68HC12 target
+# Converted straight from the assembler output; the m68hc12 linker script
+# rounds .text up and would append a trailing fill byte.
 gas-%_mc68hc12.s19: %_mc68hc12.gas
 	m6811-elf-as -m68hc12 --warn -o $(^:.gas=.p) -al=$(^:.gas=.lst) $^
-	m6811-elf-ld -m m68hc12elf --entry=0 -o $(^:.gas=.o) $(^:.gas=.p)
-	m6811-elf-objcopy -I elf32-m68hc12 -O srec --srec-len=16 \
-	        --change-section-lma .text=0x0100 $(^:.gas=.o) /dev/stdout \
+	m6811-elf-objcopy -I elf32-m68hc12 -O srec --srec-len=16 -j .text \
+	        --change-section-lma .text=0x0100 $(^:.gas=.p) /dev/stdout \
 	| tr -d '\015' > $(^:.gas=.s19)
 	m6811-elf-objdump -m m68hc12 -D $(^:.gas=.s19) > $(^:.gas=.dis)
 
