@@ -27,7 +27,13 @@ namespace tms320f {
 struct DisTms320f final : Disassembler, Config {
     DisTms320f(const ValueFormatter::Plugins &plugins = defaultPlugins());
 
+    void reset() override;
+
 private:
+    Error setSiliconOption(int32_t rev);
+
+    const IntOption<DisTms320f> _opt_silicon;
+
     // Cross-instruction state carried on the Insn (per Insn::state<T>).
     // hasParaDst: set during the first half of a parallel pair, consumed by
     // the second to flag DUPLICATE_REGISTER. All-zero (hasParaDst == false)

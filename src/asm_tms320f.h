@@ -27,6 +27,8 @@ namespace tms320f {
 struct AsmTms320f final : Assembler, Config {
     AsmTms320f(const ValueParser::Plugins &plugins = defaultPlugins());
 
+    void reset() override;
+
     // Cross-instruction state carried on the Insn (per Insn::state<T>).
     // Holds the previous AsmInsn so a parallel continuation can re-search
     // and re-encode the first half against the second. Size exceeds
@@ -38,6 +40,11 @@ struct AsmTms320f final : Assembler, Config {
     };
 
 private:
+    Error setSiliconOption(int32_t rev);
+    Error processSilicon(StrScanner &scan, Insn &insn, uint16_t);
+
+    const IntOption<AsmTms320f> _opt_silicon;
+
     Error parseOperand(StrScanner &scan, Operand &op) const;
     Error encodeRelative(AsmInsn &insn, const Operand &op, AddrMode mode) const;
     Error encodeIndirect(AsmInsn &insn, const Operand &op, AddrMode mode, OprPos pos) const;

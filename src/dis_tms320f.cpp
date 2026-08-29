@@ -38,8 +38,20 @@ const ValueFormatter::Plugins &DisTms320f::defaultPlugins() {
 }
 
 DisTms320f::DisTms320f(const ValueFormatter::Plugins &plugins)
-    : Disassembler(plugins), Config(TABLE) {
+    : Disassembler(plugins, &_opt_silicon),
+      Config(TABLE),
+      _opt_silicon(this, &DisTms320f::setSiliconOption, OPT_INT_SILICON, OPT_DESC_SILICON) {
     reset();
+}
+
+void DisTms320f::reset() {
+    Disassembler::reset();
+    // Return the capabilities to what the selected CPU implements.
+    resetSilicon();
+}
+
+Error DisTms320f::setSiliconOption(int32_t rev) {
+    return setSilicon(rev);
 }
 
 void DisTms320f::decodeRelative(DisInsn &insn, StrBuffer &out, AddrMode mode) const {
@@ -322,7 +334,7 @@ Error DisTms320f::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) con
     } else {
         insn.setOpCode(insn.readUint32());
     }
-    if (searchOpCode(cpuType(), insn, out))
+    if (searchOpCode(_cpuSpec, insn, out))
         return _insn.setError(insn);
 
     if (insn.codeFormat() != CF_00 && insn.lswFormat() == LF_00 &&

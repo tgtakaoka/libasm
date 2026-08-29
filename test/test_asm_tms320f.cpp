@@ -2513,6 +2513,61 @@ void test_misc() {
     }
 }
 
+// The power-down modes and the augmented parallel operands came with later
+// silicon rather than with a new part, so "silicon" is what selects them.
+// User's Guide 7.9 (7-48) for IDLE2/LOPOWER, and the augmented operand note
+// repeated on every parallel instruction page.
+void test_silicon() {
+    if (is320c32()) {
+        // A 'C32 has the power-down modes on every revision, and the
+        // augmented operands from revision 2.0.  Also what a 'VC33 is.
+        TEST("IDLE2",    0x06000001);
+        TEST("LOPOWER",  0x10800001);
+        PTEST("ABSI AR0, R1", 0x00810008,
+              "STI  R2, *-AR3", 0xCA420BE8);
+        assembler.setOption("silicon", "1");
+        TEST("IDLE2",    0x06000001);
+        PERRN("ABSI AR0, R1", 0x00810008,
+              "STI  R2, *-AR3", OPERAND_NOT_ALLOWED, "R2, *-AR3");
+        assembler.setOption("silicon", "2");
+        PTEST("ABSI AR0, R1", 0x00810008,
+              "STI  R2, *-AR3", 0xCA420BE8);
+    } else if (is320c31()) {
+        // A 'C31 gains the power-down modes at revision 5.0 and the
+        // augmented operands at 6.0.
+        TEST("IDLE2",    0x06000001);
+        PERRN("ABSI AR0, R1", 0x00810008,
+              "STI  R2, *-AR3", OPERAND_NOT_ALLOWED, "R2, *-AR3");
+        assembler.setOption("silicon", "4");
+        ERUI("IDLE2");
+        ERUI("LOPOWER");
+        ERUI("MAXSPEED");
+        assembler.setOption("silicon", "5");
+        TEST("IDLE2",    0x06000001);
+        TEST("MAXSPEED", 0x10800000);
+        PERRN("ABSI AR0, R1", 0x00810008,
+              "STI  R2, *-AR3", OPERAND_NOT_ALLOWED, "R2, *-AR3");
+        assembler.setOption("silicon", "6");
+        PTEST("ABSI AR0, R1", 0x00810008,
+              "STI  R2, *-AR3", 0xCA420BE8);
+    } else {
+        // A 'C30 gains the power-down modes at version 7.0, and never has
+        // the augmented operands.
+        // Silicon revisions are numbered from 1; there is no revision 0.
+        EQUALS("silicon 0", OVERFLOW_RANGE, assembler.setOption("silicon", "0"));
+        ERUI("IDLE2");
+        ERUI("LOPOWER");
+        assembler.setOption("silicon", "6");
+        ERUI("IDLE2");
+        assembler.setOption("silicon", "7");
+        TEST("IDLE2",    0x06000001);
+        TEST("LOPOWER",  0x10800001);
+        TEST("MAXSPEED", 0x10800000);
+        PERRN("ABSI AR0, R1", 0x00810008,
+              "STI  R2, *-AR3", OPERAND_NOT_ALLOWED, "R2, *-AR3");
+    }
+}
+
 void test_interlock() {
     TEST("SIGI", 0x16000000);
 
@@ -3625,6 +3680,7 @@ void run_tests(const char *cpu) {
     RUN_TEST(test_3op_no3);
     RUN_TEST(test_program);
     RUN_TEST(test_misc);
+    RUN_TEST(test_silicon);
     RUN_TEST(test_interlock);
     RUN_TEST(test_parallel);
     RUN_TEST(test_parallel_no3);
