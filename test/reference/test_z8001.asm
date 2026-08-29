@@ -13,7 +13,7 @@
 ; limitations under the License.
 
         cpu     z8001
-        org         010000h
+        org         100000h
 off1234:    equ     1234h
 data1234:   equ     0A1234h
 data5678:   equ     0B5678h

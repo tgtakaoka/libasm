@@ -176,7 +176,7 @@ GAS_TESTS = $(foreach f,$(wildcard gen_*.gas),\
 GAS_OUTS    = $(foreach f,$(GAS_TESTS),$(f:.gas=).$(call out-ext,$(f:.gas=)))
 gas-test: clean-gas $(GAS_OUTS:%=gas-%)
 clean-gas:
-	-rm -f $(GAS_OUTS) gen_*.syms gen_*.ld_flags
+	-rm -f $(GAS_OUTS) gen_*.syms gen_*.ld_flags am29000.ld
 
 # Z8001 per-segment helper sections + linker --section-start flags are
 # scraped from the dis output (.ginc).  Reference tests ship a hand-
@@ -184,23 +184,28 @@ clean-gas:
 # text origin must match gen_z8001.asm's `org` and the org passed to
 # gen_z8000 (see TestGenerator), chosen so .text lands in a segment not
 # referenced by any direct-address operand the dis emits.
-GEN_Z8001_TEXT_ORG = 0x020000
+Z8001_TEXT_ORG = 0x020000
 %_z8001.syms %_z8001.ld_flags: %_z8001.ginc
-	../../scripts/scrape-z8001-syms.sh $< $*_z8001.syms $*_z8001.ld_flags $(GEN_Z8001_TEXT_ORG)
+	../../scripts/scrape-z8001-syms.sh $< $*_z8001.syms $*_z8001.ld_flags $(Z8001_TEXT_ORG)
 
 # Z8002 has no segmented relocation, so the autogen @file is just a
 # single --section-start=.text line; gen on demand (kept out of git so
 # clean-gas can wipe it).  Reference tests ship a hand-written file.
 # Am29000 branch target symbols and the linker @file are scraped from the dis
-# output (.ginc).  Reference tests ship a hand-written .ld_flags; this
-# autogen-only rule generates it.  The text origin must match the org in
+# output (.ginc); the reference tests name no such symbol and generate an @file
+# holding just their own origin.  The text origin must match the org in
 # gen_am29XXX.asm and the org passed to gen_am29000 (see TestGenerator).
-GEN_AM29000_TEXT_ORG = 0x40000
+AM29000_TEXT_ORG = 0x40000
 gen_%.ld_flags: gen_%.ginc
-	../../scripts/scrape-am29000-syms.sh $< $@ $(GEN_AM29000_TEXT_ORG)
+	../../scripts/scrape-am29000-syms.sh $< $@ $(AM29000_TEXT_ORG)
 # Keep the scraped @file: it is a prerequisite of a pattern rule, so make would
 # otherwise treat it as intermediate and delete it after linking.
 .SECONDARY: $(foreach t,$(TGT_am29000),gen_$(t).ld_flags)
+
+# The Am29000 link needs the same script the reference tests use; keep one
+# master there and copy it in, so the two cannot drift apart.
+am29000.ld: ../reference/am29000.ld
+	cp $< $@
 
 GEN_Z8002_TEXT_ORG = 0x1000
 gen_z8002.ld_flags:

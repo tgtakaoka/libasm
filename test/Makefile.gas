@@ -20,18 +20,23 @@
 # The linker flags live in <stem>.ld_flags: the section start, plus a --defsym
 # for any target the source names rather than spells out.  binutils 2.11.2's
 # a29k-coff-ld predates @file, so the flags are read with a command
-# substitution instead.
+# substitution instead.  Both directories generate that file, and both hold an
+# am29000.ld; see it for why the link uses a script of its own.
+# The .hex carries no architecture, hence the explicit -m a29k on objdump.
+# Note that a29k-coff-objdump 2.11.2 segfaults on a CONSTH placed at address 0:
+# it reads the preceding word to recognize a CONST/CONSTH pair, and that read
+# underflows past the bounds check when there is nothing before it.  Every text
+# origin here is non-zero, so the step is safe.
 # $(1) target suffix.
 define gas-am29000-rule
-gas-%_$(1).hex: %_$(1).gas %_$(1).ld_flags
+gas-%_$(1).hex: %_$(1).gas %_$(1).ld_flags am29000.ld
 	a29k-coff-as --warn -o $$(<:.gas=.p) -al=$$(<:.gas=.lst) $$<
-	a29k-coff-ld --entry=0 $$$$(cat $$*_$(1).ld_flags) -o $$(<:.gas=.o) $$(<:.gas=.p)
+	a29k-coff-ld --entry=0 -T am29000.ld $$$$(cat $$*_$(1).ld_flags) \
+		-o $$(<:.gas=.o) $$(<:.gas=.p)
 	a29k-coff-objcopy -I coff-a29k-big -O ihex $$(<:.gas=.o) /dev/stdout \
 	| tr -d '\015' > $$(<:.gas=.hex)
+	a29k-coff-objdump -m a29k -D $$(<:.gas=.hex) > $$(<:.gas=.dis)
 endef
-# No objdump step: a29k-coff-objdump 2.11.2 segfaults on any word whose
-# operation code is 02 (CONSTH); a bare ".word 0x02566078" reproduces it, and
-# the generated source does contain CONSTH.
 $(eval $(call gas-am29000-rule,am29200))
 $(eval $(call gas-am29000-rule,am29245))
 $(eval $(call gas-am29000-rule,am29030))
@@ -68,17 +73,21 @@ gas-%_j11.hex: %_j11.gas
 
 # Z8001 target
 # all --section-start linker flags (text + per-segment helpers) live in
-# <stem>.ld_flags and are passed to ld via @<stem>.ld_flags.  The text
-# VMA is extracted from the same file for objcopy's --adjust-section-vma.
+# <stem>.ld_flags and are passed to ld via @<stem>.ld_flags.  Both directories
+# generate that file from Z8001_TEXT_ORG, which objcopy's
+# --adjust-section-vma reads directly.
 # Helper sections are discarded from the .hex via `-j .text` so only
 # emitted instructions appear.
+# Keep Z8001_TEXT_ORG at or above 0x100000: objcopy writes the ihex base as a
+# type 02 record (extended segment, base<<4) below 1MB and as a type 04 record
+# (extended linear, base<<16) at or above it.  Only type 04 describes a Z8001
+# segment number, and only type 04 matches what the other assemblers emit.
 gas-%_z8001.hex: %_z8001.gas %_z8001.ld_flags
 	z8k-coff-as --warn -o $(<:.gas=.p) -al=$(<:.gas=.lst) $<
 	z8k-coff-ld -m z8001 --entry=0 -o $(<:.gas=.o) $(<:.gas=.p) \
 		@$*_z8001.ld_flags
-	text_vma=$$(sed -n 's/^--section-start=\.text=//p' $*_z8001.ld_flags); \
 	z8k-coff-objcopy -I coff-z8k -O ihex -j .text $(<:.gas=.o) /dev/stdout \
-		--adjust-section-vma .text=$$text_vma \
+		--adjust-section-vma .text=$(Z8001_TEXT_ORG) \
 	| tr -d '\015' > $(<:.gas=.hex)
 	z8k-coff-objdump -m z8001 -D $(<:.gas=.hex) > $(<:.gas=.dis)
 

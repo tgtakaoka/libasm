@@ -71,11 +71,51 @@ clean-asl:
 GAS_TESTS = $(patsubst %.gas,%,$(wildcard test_*.gas))
 GAS_OUTS  = $(foreach t,$(GAS_TESTS),$(t).$(call out-ext,$(t)))
 gas-test: clean-gas $(GAS_OUTS:%=gas-%)
+
+# Linker @files are generated on demand and kept out of git, so clean and
+# clean-gas can wipe them.
+GAS_LD_FLAGS = $(patsubst %.gas,%.ld_flags,$(wildcard test_am29*.gas)) \
+    test_z8001.ld_flags test_z8002.ld_flags
+
+# Am29000: these sources name no undefined symbol, so the @file holds just the
+# text origin, which must match the org in test_am29XXX.asm; the --defsym lines
+# the autogen sources need have no counterpart here.
+AM29000_TEXT_ORG = 0x1000
+test_am29%.ld_flags:
+	printf -- '--section-start=.text=%s\n' '$(AM29000_TEXT_ORG)' > $@
+
+# Z8001: the text origin plus one --section-start per per-segment helper section
+# the source declares, each placed at seg<<16 -- the same mapping
+# scrape-z8001-syms.sh applies to the autogen sources.  The origin must match
+# the org in test_z8001.asm, and is held at or above 0x100000 on purpose: below
+# 1MB binutils writes the ihex base as a type 02 (extended segment, base<<4)
+# record, which does not describe Z8001 segmentation and does not match the
+# type 04 (extended linear, base<<16) record the other assemblers emit.
+Z8001_TEXT_ORG = 0x100000
+test_z8001.ld_flags: test_z8001.gas
+	printf -- '--section-start=.text=%s\n' '$(Z8001_TEXT_ORG)' > $@
+	sed -n 's,^[ \t]*\.section[ \t]*seg_\([0-9a-f][0-9a-f]\)$$,--section-start=seg_\1=0x\10000,p' \
+	    $< >> $@
+
+# Z8002: the text origin plus the two helper sections the source declares, at
+# the addresses its operands name.
+Z8002_TEXT_ORG = 0x1000
+Z8002_BSS1_ORG = 0x1234
+Z8002_BSS2_ORG = 0x5678
+test_z8002.ld_flags:
+	{ printf -- '--section-start=.text=%s\n' '$(Z8002_TEXT_ORG)'; \
+	  printf -- '--section-start=bss1=%s\n'  '$(Z8002_BSS1_ORG)'; \
+	  printf -- '--section-start=bss2=%s\n'  '$(Z8002_BSS2_ORG)'; } > $@
+
+# Keep the generated @files: they are prerequisites of pattern rules, so make
+# would otherwise treat them as intermediate and delete them after linking.
+.SECONDARY: $(GAS_LD_FLAGS)
+
 clean-gas:
-	-rm -f $(GAS_OUTS)
+	-rm -f $(GAS_OUTS) *.ld_flags
 
 clean: clean-nasm
-	-rm -f *.o *.p *.lst *.dis *.bin
+	-rm -f *.o *.p *.lst *.dis *.bin *.ld_flags
 
 # Local Variables:
 # mode: makefile-gmake
