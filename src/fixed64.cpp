@@ -192,9 +192,9 @@ bool __fixed64::round_off(uint_fast8_t bits) {
         // no need to round
         return false;
     }
-    const auto lsb = FULL_BITS - bits;  // least significand bit
-    const auto roundb = lsb - 1;        // round bit
-    const auto roundi = roundb / _BITS;
+    const uint_fast8_t lsb = FULL_BITS - bits;  // least significand bit
+    const uint_fast8_t roundb = lsb - 1;        // round bit
+    const uint_fast8_t roundi = roundb / _BITS;
     const auto roundm = UINT16_C(1) << (roundb % _BITS);
     if (_v[roundi] & roundm) {
         auto intermediate = true;
@@ -204,7 +204,7 @@ bool __fixed64::round_off(uint_fast8_t bits) {
         }
         if ((_v[roundi] & (roundm - 1)) != 0)
             intermediate = false;
-        const auto lsbi = lsb / _BITS;
+        const uint_fast8_t lsbi = lsb / _BITS;
         const auto lsbm = UINT16_C(1) << (lsb % _BITS);
         const auto even = (_v[lsbi] & lsbm) == 0;
         if (!intermediate || !even) {
