@@ -1,10 +1,9 @@
 name: Auto Approve
 on:
-  pull_request_target:
+  pull_request:
     types:
       - opened
       - reopened
-      - synchronize
       - ready_for_review
 jobs:
   approve:
@@ -17,8 +16,8 @@ jobs:
     permissions:
       pull-requests: write
     steps:
-      - name: Self Approve PR with Bot Token
-        uses: hmarr/auto-approve-action@v4
-        with:
-          github-token: ${{ secrets.TGTAKAOKA_BOT }}
-          review-message: 'Self-approved as owner.'
+      - name: Self Approve PR as github-actions bot
+        run: gh pr review --approve --body 'Self-approved as owner.' "$PR_URL"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_URL: ${{ github.event.pull_request.html_url }}
