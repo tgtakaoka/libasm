@@ -69,21 +69,23 @@ jobs:
           - z8000
 
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
       - name: Cache pip
-        uses: actions/cache@v5
+        uses: actions/cache@v6
         with:
           path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          key: ${{ runner.os }}-pip-${{ hashFiles('.github/workflows/platformio-ci.yml') }}
           restore-keys: |
             ${{ runner.os }}-pip-
       - name: Cache PlatformIO
-        uses: actions/cache@v5
+        uses: actions/cache@v6
         with:
           path: ~/.platformio
-          key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
+          key: ${{ runner.os }}-pio-${{ hashFiles('.github/workflows/platformio-ci.yml') }}
+          restore-keys: |
+            ${{ runner.os }}-pio-
       - name: Set up Python
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@v7
         with:
           python-version: '3.x'
       - name: Install PlatformIO
@@ -91,7 +93,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install --upgrade platformio
       - name: Install library dependency
-        run: pio lib install libcli@1.4.2
+        run: pio pkg install --global --library "tgtakaoka/libcli@1.4.2"
       - name: Run PlatformIO
         run: pio ci --lib="." --board=ATmega1284P --board=AVR128DA48 --board=teensy41
         env:

@@ -6,7 +6,7 @@ which platformio || {
     python3 get-platformio.py
     hash -r
     }
-platformio pkg install -g -l libcli
+platformio pkg install -g -l "tgtakaoka/libcli@1.4.2"
 
 echo '@@ You may want to install udev rules'
 echo '@@ See https://docs.platformio.org/en/stable/core/installation/udev-rules.html'
