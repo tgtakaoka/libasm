@@ -21,6 +21,9 @@ on:
       - "**/*.s37"
   pull_request:
 
+permissions:
+  contents: read
+
 jobs:
   compile-examples:
     name: 'Compile for ${{matrix.board.name}}'
