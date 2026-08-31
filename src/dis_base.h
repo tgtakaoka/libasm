@@ -79,7 +79,7 @@ struct Disassembler {
     // setting (e.g. SH-2A's optional FPU) that the assembler needs in the
     // source to re-encode the output cleanly.  Return false (the default)
     // when nothing extra needs surfacing.
-    virtual bool currentOption(const char *&name, const char *&value) const {
+    virtual bool currentOption(const char *&, const char *&) const {
         return false;
     }
 

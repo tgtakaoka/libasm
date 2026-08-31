@@ -311,8 +311,8 @@ void DisSuperH::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) cons
     }
     case M_IMM20: {
         // 20-bit signed: hi 4 bits in opc[7:4], lo 16 in opc2
-        const auto hi = (opc >> 4) & 0xF;
-        const auto lo = insn.opCode2() & 0xFFFFu;
+        const uint32_t hi = (opc >> 4) & 0xF;
+        const uint32_t lo = insn.opCode2() & 0xFFFFu;
         auto val = static_cast<int32_t>((hi << 16) | lo);
         if (val & 0x80000)
             val |= 0xFFF00000u;  // sign-extend 20 -> 32
@@ -323,8 +323,8 @@ void DisSuperH::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) cons
     case M_IMM20S: {
         // 20-bit signed shifted left 8: hi 4 in opc[7:4], next 16 in opc2;
         // print the "real" 28-bit value (hi:lo << 8).
-        const auto hi = (opc >> 4) & 0xF;
-        const auto lo = insn.opCode2() & 0xFFFFu;
+        const uint32_t hi = (opc >> 4) & 0xF;
+        const uint32_t lo = insn.opCode2() & 0xFFFFu;
         auto val = static_cast<int32_t>((hi << 24) | (lo << 8));
         if (val & 0x08000000)
             val |= 0xF0000000u;  // sign-extend 28 -> 32

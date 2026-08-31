@@ -89,7 +89,7 @@ void DisH8300::decodeAbsolute(DisInsn &insn, StrBuffer &out, AddrMode mode, OprP
     }
 }
 
-void DisH8300::decodeImmediate(DisInsn &insn, StrBuffer &out, AddrMode mode, uint32_t val) const {
+void DisH8300::decodeImmediate(DisInsn &, StrBuffer &out, AddrMode mode, uint32_t val) const {
     const auto bits = (mode == M_IMM8) ? 8 : (mode == M_IMM32) ? 32 : 16;
     out.letter('#');
     if (bits == addressWidth()) {
@@ -207,7 +207,7 @@ void DisH8300::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode, OprPo
             insn.setErrorIf(out, UNKNOWN_INSTRUCTION);
             break;
         }
-        const auto disp = ((hi & 0xFF) << 16) | insn.readUint16();
+        const auto disp = (static_cast<uint32_t>(hi & 0xFF) << 16) | insn.readUint16();
         out.letter('@').letter('(');
         outHex(out, disp, 24, false);
         out.letter(':').int16(24);
@@ -242,7 +242,7 @@ void DisH8300::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode, OprPo
         Config::uintptr_t addr;
         int_fast8_t bits = 24;
         if (pos == POS__FF) {
-            addr = ((insn.opCode() & 0xFF) << 16) | insn.readUint16();
+            addr = (static_cast<uint32_t>(insn.opCode() & 0xFF) << 16) | insn.readUint16();
         } else if (hasExr() && advancedMode()) {
             addr = insn.readUint32Be();
             bits = 32;
@@ -252,7 +252,7 @@ void DisH8300::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode, OprPo
                 insn.setErrorIf(out, UNKNOWN_INSTRUCTION);
                 break;
             }
-            addr = ((hi & 0xFF) << 16) | insn.readUint16();
+            addr = (static_cast<uint32_t>(hi & 0xFF) << 16) | insn.readUint16();
         }
         out.letter('@');
         const auto *label = lookup(addr, bits == 32 ? ADDRESS_32BIT : ADDRESS_24BIT);

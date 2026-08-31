@@ -48,7 +48,7 @@ struct ArrayMemory {
             if (_endian == ENDIAN_BIG) {
                 quad = (quad << 16) | readUint16();
             } else {
-                quad |= readUint16() << 16;
+                quad |= static_cast<uint32_t>(readUint16()) << 16;
             }
             return quad;
         }

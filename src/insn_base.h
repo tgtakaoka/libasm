@@ -162,22 +162,22 @@ struct Insn final : ErrorAt {
                 "Insn::state<T>: inline T over-aligned for uintptr_t");
         if (sizeof(T) <= sizeof(uintptr_t)) {
             // Inline: _stateBuf IS the storage, zero-init = fresh state.
-            return *reinterpret_cast<T *>(&_stateBuf);
+            return *reinterpret_cast<T *>(_stateBuf);
         }
         // Heap fallback: _stateBuf carries a pointer; alloc on first use.
         if (!_stateDestroyer) {
             T *p = new T();  // value-init -> zero for trivial T
-            _stateBuf = reinterpret_cast<uintptr_t>(p);
+            setStatePtr(p);
             _stateDestroyer = +[](void *q) { delete static_cast<T *>(q); };
         }
-        return *reinterpret_cast<T *>(_stateBuf);
+        return *static_cast<T *>(statePtr());
     }
     void clearState() {
         if (_stateDestroyer) {
-            _stateDestroyer(reinterpret_cast<void *>(_stateBuf));
+            _stateDestroyer(statePtr());
             _stateDestroyer = nullptr;
         }
-        _stateBuf = 0;
+        memset(_stateBuf, 0, sizeof(_stateBuf));
     }
     ~Insn() { clearState(); }
 
@@ -193,8 +193,20 @@ private:
     static constexpr size_t MAX_CODE = 64;
     uint8_t _bytes[MAX_CODE];
 
-    uintptr_t _stateBuf = 0;
+    /**
+     * Raw storage for state<T>(); a byte array so that reading it back as T
+     * is not an aliasing violation. The heap fallback pointer is memcpy'd in
+     * and out for the same reason.
+     */
+    alignas(uintptr_t) uint8_t _stateBuf[sizeof(uintptr_t)] = {};
     void (*_stateDestroyer)(void *) = nullptr;
+
+    void *statePtr() const {
+        void *p;
+        memcpy(&p, _stateBuf, sizeof(p));
+        return p;
+    }
+    void setStatePtr(void *p) { memcpy(_stateBuf, &p, sizeof(p)); }
 };
 
 /**

@@ -489,7 +489,7 @@ Error AsmPdp11::defineAscii(StrScanner &scan, Insn &insn, uint16_t) {
     return insn.setError(error);
 }
 
-Error AsmPdp11::setRadix(StrScanner &scan, Insn &insn, uint16_t) {
+Error AsmPdp11::setRadix(StrScanner &scan, Insn &, uint16_t) {
     const auto saved = _inputRadix;
     setInputRadix(RADIX_10);  // argument is always parsed with RADIX 10
     int32_t radix;

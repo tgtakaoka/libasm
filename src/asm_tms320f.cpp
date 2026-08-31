@@ -515,7 +515,7 @@ Error AsmTms320f::encodeOperand(
     return out.getError();
 }
 
-Error AsmTms320f::alignOrigin(StrScanner &scan, Insn &insn, uint16_t) {
+Error AsmTms320f::alignOrigin(StrScanner &, Insn &insn, uint16_t) {
     const auto start = insn.address();
     if ((start & 0x1F) == 0)
         return OK;
