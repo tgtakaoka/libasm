@@ -32,6 +32,7 @@ ARDUINO_FLAGS += --no-color
 endif
 endif
 
+PIO_INSTALL_FLAGS = --no-save
 PIO_CI_FLAGS =
 ARDUINO_CI_FLAGS = --warnings all --library $(CURDIR)/../../
 
@@ -43,14 +44,17 @@ BOARD ?= $(firstword $(BOARDS))
 
 EXAMPLE = $(shell basename $(CURDIR))
 
-define pio-libdep-path # env libdep
--l .pio/libdeps/$(1)/$(2)
+define pio-board-env # board
+$(shell awk 'BEGIN{RS="\n\n"} /$(1)/' platformio.ini | grep -Po '(?<=env:)[^]]+')
+endef
+
+define pio-libdep-path # board libdep
+-l .pio/libdeps/$(call pio-board-env,$(1))/$(2)
 endef
 
 define pio-ci # board
-	ENV=$(shell awk 'BEGIN{RS="\n\n"} /$(1)/' platformio.ini | grep -Po '(?<=env:)[^]]+')
-	pio $(PIO_FLAGS) pkg install -l tgtakaoka/libcli
-	pio $(PIO_FLAGS) ci -l $(CURDIR)/../.. $(call pio-libdep-path,$(ENV),libcli) -b $(1) $(EXAMPLE).ino
+	pio $(PIO_FLAGS) pkg install $(PIO_INSTALL_FLAGS) -l tgtakaoka/libcli
+	pio $(PIO_FLAGS) ci $(PIO_CI_FLAGS) -l $(CURDIR)/../.. $(call pio-libdep-path,$(1),libcli) -b $(1) $(EXAMPLE).ino
 
 endef
 
