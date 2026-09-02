@@ -51,6 +51,15 @@ build test_dis_i960: run test_dis_i960.o $
   fixed64.o ieee_float.o float80_base.o float80_hard.o float80_soft.o $
   test_dis_helper.o test_asserter.o
 
+build gen_i960: link gen_i960.o $
+  dis_i960.o reg_i960.o table_i960.o text_i960.o $
+  config_base.o dis_base.o dis_formatter.o error_reporter.o formatters.o $
+  insn_base.o list_formatter.o option_base.o reg_base.o str_buffer.o $
+  str_scanner.o test_generator.o text_common.o value.o value_formatter.o $
+  fixed64.o ieee_float.o float80_base.o float80_hard.o float80_soft.o $
+  dec_float.o ti_float.o value_parser.o parsers.o operators.o $
+  gen_driver.o tokenized_text.o tokenizer.o
+
 build gen_am29000: link gen_am29000.o $
   dis_am29000.o reg_am29000.o table_am29000.o text_am29000.o $
   config_base.o dis_base.o dis_formatter.o error_reporter.o formatters.o $

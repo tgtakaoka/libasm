@@ -39,13 +39,16 @@ INC_targets = w65c816 tlcs90 $(TGT_tlcs900) i8086 i80186 i80386 i80486 $(TGT_mc6
     $(TGT_z8) $(TGT_am29000)
 # target which for GNU assembler (also ".ginc" targets)
 GINC_targets = $(TGT_mc68000) $(TGT_z8000) $(TGT_pdp11) $(TGT_h8300) $(TGT_h8500) \
-    $(TGT_superh) $(TGT_am29000) \
+    $(TGT_superh) $(TGT_am29000) $(TGT_i960) \
     ns32000 mc68hc11 mc68hc12 i8086 i80186 i80286 i80386 i80486 \
     tms320c30 tms320c31 tms320c32
 # target which also has Zilog syntax (also ".zinc" targets)
 ZINC_targets = i8080 i8085 v30emu
 # target which doesn't need ".asm"
-NOASM_targets = i80286 h8s2000n h8s2000 h8s2600n h8s2600
+# i960 generates only the .ginc: its GNU as syntax differs from the native one
+# in nothing but the comment marker, so one generated file serves both and
+# gen_i960.asm includes it directly.
+NOASM_targets = i80286 h8s2000n h8s2000 h8s2600n h8s2600 i960
 # CPU variants whose generated source ASL cannot assemble. This filters
 # which asl-X.hex rules exist (asl-test target). Generation of .inc/.ginc
 # still happens because libasm and gas consume them.
@@ -56,8 +59,12 @@ NOASM_targets = i80286 h8s2000n h8s2000 h8s2600n h8s2600
 # exclusive to that chip (ORN, FMAC, DMAC, FMSM, DMSM, MTACC, MFACC) nor its
 # own special-purpose registers.  The other five variants map onto the AM29245
 # and AM29240 selectors in their wrappers.
+# i960: ASL's code960.c has six encoding bugs (wrong opcodes for xor, bno and
+# testno, src2 routed into the src/dst field for scanbyte and synmov*, and an
+# integer literal on a register-pair operand evaluated as a float), so it
+# cannot adjudicate this generated source; see ~/asl_bugs/asl_bug_i960.md.
 ASL_exclude = mb8861 i80286 h8300hn h8300h h8s2000n h8s2000 h8s2600n h8s2600 shdsp sh2e sh2a \
-    $(TGT_h8500) am29050
+    $(TGT_h8500) am29050 i960
 # CPU variants whose gas toolchain does not produce a manual-conforming
 # encoding. h8300-elf-as has no -mach=h8300; it always emits the H8/300H
 # 4-byte form for JMP/JSR @aa:16, producing bytes that don't execute on
