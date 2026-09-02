@@ -18,6 +18,7 @@
 #define __LIBASM_H__
 
 #include "asm_am29000.h"
+#include "asm_i960.h"
 #include "asm_cdp1802.h"
 #include "asm_cp1600.h"
 #include "asm_f3850.h"

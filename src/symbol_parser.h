@@ -149,6 +149,14 @@ struct Am29000SymbolParser final : SimpleSymbolParser, Singleton<Am29000SymbolPa
     bool instructionLetter(char c) const override;
 };
 
+// GNU as writes an i960 directive with a leading dot and takes '.' as the
+// location counter, and a symbol may hold '_' and '.'.
+struct I960SymbolParser final : SimpleSymbolParser, Singleton<I960SymbolParser> {
+    I960SymbolParser() : SimpleSymbolParser(text::common::PSTR_UNDER_DOT) {}
+    bool locationSymbol(StrScanner &scan) const override;
+    bool instructionLetter(char c) const override;
+};
+
 struct Ns32000SymbolParser final : SimpleSymbolParser, Singleton<Ns32000SymbolParser> {
     Ns32000SymbolParser() : SimpleSymbolParser(text::common::PSTR_UNDER_DOT) {}
     bool locationSymbol(StrScanner &scan) const override;

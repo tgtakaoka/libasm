@@ -38,6 +38,7 @@ build asm: link asm.o $
   asm_i8086.o    reg_i8086.o    table_i8086.o    text_i8086.o    $
   asm_h8300.o    reg_h8300.o    table_h8300.o    text_h8300.o    $
   asm_i8096.o    reg_i8096.o    table_i8096.o    text_i8096.o    $
+  asm_i960.o     reg_i960.o     table_i960.o     text_i960.o     $
   asm_pdp11.o    reg_pdp11.o    table_pdp11.o    text_pdp11.o    $
   asm_pdp8.o     reg_pdp8.o     table_pdp8.o     text_pdp8.o     $
   asm_ins8060.o  reg_ins8060.o  table_ins8060.o  text_ins8060.o  $

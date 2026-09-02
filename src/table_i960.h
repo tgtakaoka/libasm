@@ -35,6 +35,7 @@ extern const TableI960 TABLE;
 // to read one, which is how GNU as and the Intel assembler encode it.
 // |fpu| tells whether the 80960KB extensions may be used.
 Error searchOpCode(CpuType, ModeBits modeBits, bool fpu, DisInsn &insn, StrBuffer &out);
+Error searchName(CpuType, ModeBits modeBits, bool fpu, AsmInsn &insn);
 
 }  // namespace i960
 }  // namespace libasm

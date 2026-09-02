@@ -135,6 +135,13 @@ struct RcaDirective : IntelDirective {
     RcaDirective(Assembler &assembler);
 };
 
+// The i960 Processor Assembler User's Guide, page 5-24, gives .equ and .set
+// the symbol name as their first operand rather than as a line label, which is
+// what setVariable already does for the National targets.
+struct I960Directive : IntelDirective {
+    I960Directive(Assembler &assembler);
+};
+
 struct NationalDirective : IntelDirective {
     NationalDirective(Assembler &assembler);
 };
