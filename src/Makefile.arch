@@ -111,6 +111,7 @@ TGT_z80      = z80 z180
 TGT_z8       = z8 z86c z88
 
 # CPU for each target
+CPU_i960     = 80960
 CPU_am29200  = AM29200
 CPU_am29245  = AM29245
 CPU_am29030  = AM29030

@@ -432,6 +432,15 @@ I960_GINCS = test_i960_common.ginc test_i960_iprel.ginc test_i960_fpu.ginc
 $(I960_GINCS): %.ginc: %.inc
 	sed -e 's/;/#/g' $< > $@
 
+# The autogen source needs neither substitution: the disassembler already
+# writes a branch against the location counter and an IP-relative operand as
+# its displacement when it generates for GNU as, so only the generator's
+# ";###" comment marker has to become one GNU as reads.
+gen_i960_gas.inc: %_gas.inc: %.ginc
+	sed -e 's/^;#*/#/' $< > $@
+
+# The recipe names its files from the stem rather than from $<, so that each
+# source can carry its own extra prerequisites without displacing the .gas.
 gas-%_i960.hex: %_i960.gas
 	i960-coff-as -AKB --warn -o $*_i960.p -al=$*_i960.lst $*_i960.gas
 	i960-coff-objcopy -I coff-Intel-little -O ihex -j .text \
@@ -439,6 +448,7 @@ gas-%_i960.hex: %_i960.gas
 	| tr -d '\015' > $*_i960.hex
 	i960-coff-objdump -d $*_i960.p > $*_i960.dis
 gas-test_i960.hex: $(I960_GINCS)
+gas-gen_i960.hex: gen_i960_gas.inc
 
 # Local Variables:
 # mode: makefile-gmake
