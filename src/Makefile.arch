@@ -230,7 +230,7 @@ S28_OUTS = mc68000 mc68010 mc68hc16 w65c816 w65c816_m0x0 w65c816_m0x1 w65c816_m1
 # targets with Motorola S37 format
 S37_OUTS = mc68020 mc68030 mc68040 $(TGT_superh) h16
 # targets with Intel32 (32bit address) format
-I32_OUTS = $(TGT_am29000) $(TGT_i8086) $(TGT_i8096) $(TGT_mn1610) \
+I32_OUTS = $(TGT_am29000) $(TGT_i8086) $(TGT_i8096) $(TGT_mn1610) i960 \
     z180 z280 z380 z8001 ns32032 tms320c25 tms320c26 tms320c20x tms320c3x tms320c2x
 # other targets use Intel8 format
 define __out-ext # target

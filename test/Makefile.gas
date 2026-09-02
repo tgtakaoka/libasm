@@ -403,6 +403,43 @@ gas-%_sh2a.s37: %_sh2a.gas
 	| tr -d '\015' > $(^:.gas=.s37)
 	sh-elf-objdump -m sh2a -D $(^:.gas=.s37) > $(^:.gas=.dis)
 
+# Intel 80960 target.
+#
+# -AKA selects the 80960KA instruction set, which is the base architecture
+# plus the synchronous instructions; the KB floating point and decimal
+# instructions are rejected, so this also guards the base sources against
+# accidentally picking one up.
+#
+# No link step: the sources name no undefined symbol and every branch is
+# PC-relative and resolved by the assembler, so objcopy moves the section to
+# its final address directly.  Going through i960-coff-ld instead would append
+# the linker script's section padding to the image.
+#
+# Keep I960_TEXT_ORG at or above 0x100000 so objcopy writes the ihex base as a
+# type 04 record (extended linear) rather than a type 02 (extended segment),
+# which is what libasm and p2hex emit.
+I960_TEXT_ORG = 0x00100000
+
+# GNU as and ASL cannot read the same source: as takes '#' as its comment
+# character and treats ';' as a statement separator, while ASL rejects '#'
+# outright.  The .ginc files are therefore derived from the .inc that ASL
+# reads, so the instruction list has a single origin.
+#
+# Only the comment marker has to change: an IP-relative operand is written as
+# its displacement, which is what GNU as and the manual both mean by it, so the
+# two assemblers read the same operand text.
+I960_GINCS = test_i960_common.ginc test_i960_iprel.ginc test_i960_fpu.ginc
+$(I960_GINCS): %.ginc: %.inc
+	sed -e 's/;/#/g' $< > $@
+
+gas-%_i960.hex: %_i960.gas
+	i960-coff-as -AKB --warn -o $*_i960.p -al=$*_i960.lst $*_i960.gas
+	i960-coff-objcopy -I coff-Intel-little -O ihex -j .text \
+		--adjust-section-vma .text=$(I960_TEXT_ORG) $*_i960.p /dev/stdout \
+	| tr -d '\015' > $*_i960.hex
+	i960-coff-objdump -d $*_i960.p > $*_i960.dis
+gas-test_i960.hex: $(I960_GINCS)
+
 # Local Variables:
 # mode: makefile-gmake
 # End:

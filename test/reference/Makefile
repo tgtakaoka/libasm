@@ -45,8 +45,16 @@ asm-test: $(ASM)-refresh clean-asm $(ASM_OUTS:%=asm-%)
 clean-asm:
 	-rm -f $(ASM_OUTS)
 
+# test_i960: ASL's code960.c has six encoding bugs (wrong opcodes for xor, bno
+# and testno, src2 routed into the src/dst field for scanbyte and synmov*, and
+# integer literals on register-pair operands evaluated as floats), and it also
+# leaves the mode bit of every unused operand field at 0 where GNU as and the
+# original Intel toolchain set it.  GNU as agrees with the 80960KB manual on
+# every one, so it is the adjudicator here.  See ~/asl_bugs/asl_bug_i960.md;
+# the .asl wrapper is kept, and assembles cleanly, so the check can come back
+# if ASL is fixed.
 ASL_exclude = test_i80286 test_i80386 test_real_i80386 test_i80486 test_real_i80486 \
-   test_tms320c31 test_tms320c32 \
+   test_tms320c31 test_tms320c32 test_i960 \
    test_h8s2000 test_h8s2000n test_h8s2600 test_h8s2600n test_shdsp test_sh2e test_sh2a \
    test_am29050
 ASL_TESTS = $(foreach a,$(ASM_TESTS) \
