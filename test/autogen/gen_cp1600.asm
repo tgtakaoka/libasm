@@ -13,6 +13,7 @@
 ; limitations under the License.
 
         cpu     CP1600
-        org     $0000
+        radix   10
+        org     X'0000'
         include "gen_cp1600.inc"
         end
