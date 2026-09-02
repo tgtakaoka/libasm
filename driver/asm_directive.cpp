@@ -303,6 +303,13 @@ RcaDirective::RcaDirective(Assembler &assembler) : IntelDirective(assembler) {
     registerPseudo("=", &RcaDirective::defineConstant);
 }
 
+I960Directive::I960Directive(Assembler &assembler) : IntelDirective(assembler) {
+    disablePseudo(".equ");
+    disablePseudo(".set");
+    registerPseudo(".equ", &I960Directive::setVariable);
+    registerPseudo(".set", &I960Directive::setVariable);
+}
+
 NationalDirective::NationalDirective(Assembler &assembler) : IntelDirective(assembler) {
     disablePseudo(".set");
     registerPseudo("=", &NationalDirective::defineConstant);

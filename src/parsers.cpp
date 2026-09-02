@@ -461,6 +461,14 @@ bool Am29000SymbolParser::instructionLetter(char c) const {
     return SimpleSymbolParser::instructionLetter(c) || c == '.';
 }
 
+bool I960SymbolParser::locationSymbol(StrScanner &scan) const {
+    return SymbolParser::locationSymbol(scan, '.');
+}
+
+bool I960SymbolParser::instructionLetter(char c) const {
+    return SimpleSymbolParser::instructionLetter(c) || c == '.';
+}
+
 bool Ns32000SymbolParser::instructionLetter(char c) const {
     return SimpleSymbolParser::instructionLetter(c) || c == '.';
 }

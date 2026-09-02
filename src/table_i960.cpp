@@ -487,6 +487,38 @@ bool registersAligned(const DisInsn &insn, const Entry::Flags &flags) {
     return true;
 }
 
+// The parser reports M_REG, M_FREG, M_MEM or M_VALUE; which field the operand
+// occupies, and whether a bare expression is a literal, a branch target or a
+// memory offset, is known only once an entry is chosen.
+bool acceptMode(const Operand &op, AddrMode table) {
+    if (op.mode == table)
+        return true;
+    if (table == M_NONE)
+        return false;
+    // AddrMode groups the entry modes by what each accepts, so one range
+    // covers each group.
+    if (table <= M_CSRC1)  // a register or a five-bit literal
+        return op.mode == M_REG || op.mode == M_VALUE;
+    if (table <= M_MDSTQ)  // a register only
+        return op.mode == M_REG;
+    if (table <= M_MEM)  // a bare expression; for M_MEM a MEMA offset
+        return op.mode == M_VALUE;
+    if (table <= M_FDSTQ)  // a register of either bank, or a real literal
+        return op.mode == M_REG || op.mode == M_FREG;
+    return false;
+}
+
+bool acceptOperands(AsmInsn &insn, const Entry *entry) {
+    const auto flags = entry->readFlags();
+    if (!insn.allows(flags))
+        return false;
+    for (uint_fast8_t pos = 0; pos < MAX_OPERANDS; pos++) {
+        if (!acceptMode(insn.operands[pos], flags.mode(pos)))
+            return false;
+    }
+    return true;
+}
+
 bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *) {
     const auto flags = entry->readFlags();
     if (!insn.allows(flags))
@@ -504,6 +536,29 @@ bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *) {
 }
 
 }  // namespace
+
+Error searchName(CpuType cpuType, ModeBits modeBits, bool fpu, AsmInsn &insn) {
+    insn.setModeBits(modeBits);
+    insn.setFpu(fpu);
+    cpu(cpuType)->searchName(insn, acceptOperands);
+    if (!fpu && insn.getError() == OPERAND_NOT_ALLOWED) {
+        // The name is in the table but every entry for it is an 80960KB
+        // extension.  Allowing them would have found one, so the instruction
+        // is turned off rather than misspelled; say so the way the
+        // disassembler does for the same encoding.
+        insn.setFpu(true);
+        insn.setOK();
+        cpu(cpuType)->searchName(insn, acceptOperands);
+        if (insn.getError() == OK)
+            insn.setError(UNKNOWN_INSTRUCTION);
+        insn.setFpu(false);
+    }
+    // The table carries the set mode bits; clear them when the assembly wants
+    // an unused field left at zero the way ASL writes it.
+    if (insn.getError() == OK && !insn.hasModeBits())
+        insn.setOpCode(insn.opCode() & ~MODE_BITS);
+    return insn.getError();
+}
 
 Error searchOpCode(CpuType cpuType, ModeBits modeBits, bool fpu, DisInsn &insn, StrBuffer &out) {
     insn.setModeBits(modeBits);

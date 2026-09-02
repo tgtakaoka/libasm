@@ -88,6 +88,56 @@ private:
     bool _fpu;
 };
 
+struct Operand final : ErrorAt {
+    AddrMode mode;
+    // A floating-point register or one of the two real literals, held as the
+    // field value the mode bit selects.
+    uint8_t floatField;
+    // A register operand, and the register an operand field names.
+    uint8_t regno;
+    // A memory operand: the address base and index registers, the encoded
+    // power-of-two scale, and whether the base is the instruction pointer.
+    uint8_t base;
+    uint8_t index;
+    uint8_t scale;
+    bool ip;
+    // Whether a displacement was written.  A bare (g5) is not the same operand
+    // as 0(g5): the first is MEMB and the second MEMA, which is what GNU as
+    // and the Intel assembler encode.
+    bool hasDisp;
+    Value val;
+    Operand()
+        : mode(M_NONE),
+          floatField(0),
+          regno(0),
+          base(reg::NO_REG),
+          index(reg::NO_REG),
+          scale(0),
+          ip(false),
+          hasDisp(false),
+          val() {}
+};
+
+struct AsmInsn final : AsmInsnImpl<Config>, EntryInsn {
+    AsmInsn(Insn &insn) : AsmInsnImpl(insn), displacement(0), hasDisplacement(false) {}
+
+    Operand operands[MAX_OPERANDS];
+
+    // The MEMB displacement, emitted as a second word when the addressing mode
+    // calls for one.
+    uint32_t displacement;
+    bool hasDisplacement;
+
+    // The MEMB mode occupies bits 13-10.
+    void embedMemMode(MemMode mode) { embed(static_cast<Config::opcode_t>(mode) << 10); }
+
+    void emitInsn() {
+        emitUint32(opCode(), 0);
+        if (hasDisplacement)
+            emitUint32(displacement, 4);
+    }
+};
+
 struct DisInsn final : DisInsnImpl<Config>, EntryInsn {
     DisInsn(Insn &insn, DisMemory &memory, const StrBuffer &out) : DisInsnImpl(insn, memory, out) {}
 
