@@ -88,6 +88,12 @@ build reg_i8080.o:   cxx ${root}/src/reg_i8080.cpp
 build table_i8080.o: cxx ${root}/src/table_i8080.cpp
 build text_i8080.o:  cxx ${root}/src/text_i8080.cpp
 
+# i960
+build dis_i960.o:   cxx ${root}/src/dis_i960.cpp
+build reg_i960.o:   cxx ${root}/src/reg_i960.cpp
+build table_i960.o: cxx ${root}/src/table_i960.cpp
+build text_i960.o:  cxx ${root}/src/text_i960.cpp
+
 # i8086
 build asm_i8086.o:   cxx ${root}/src/asm_i8086.cpp
 build dis_i8086.o:   cxx ${root}/src/dis_i8086.cpp

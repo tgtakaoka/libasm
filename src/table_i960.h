@@ -1,0 +1,49 @@
+/*
+ * Copyright 2026 Tadashi G. Takaoka
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+#ifndef __LIBASM_TABLE_I960_H__
+#define __LIBASM_TABLE_I960_H__
+
+#include "config_i960.h"
+#include "insn_i960.h"
+
+namespace libasm {
+namespace i960 {
+
+struct TableI960 final : InsnTable<CpuType> {
+    const /*PROGMEM*/ char *listCpu_P() const override;
+    const /*PROGMEM*/ char *cpuName_P(CpuType cpuType) const override;
+    Error searchCpuName(StrScanner &name, CpuType &cpuType) const override;
+};
+
+extern const TableI960 TABLE;
+
+// |modeBits| says whether the mode bit of an unused operand field is expected
+// to read one, which is how GNU as and the Intel assembler encode it.
+// |fpu| tells whether the 80960KB extensions may be used.
+Error searchOpCode(CpuType, ModeBits modeBits, bool fpu, DisInsn &insn, StrBuffer &out);
+
+}  // namespace i960
+}  // namespace libasm
+
+#endif  // __LIBASM_TABLE_I960_H__
+
+// Local Variables:
+// mode: c++
+// c-basic-offset: 4
+// tab-width: 4
+// End:
+// vim: set ft=cpp et ts=4 sw=4:

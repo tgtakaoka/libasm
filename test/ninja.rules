@@ -16,6 +16,7 @@ build tokenizer.o:       cxx ${root}/test/tokenizer.cpp
 # am29000
 build test_asm_am29000.o: cxx ${root}/test/test_asm_am29000.cpp
 build test_dis_am29000.o: cxx ${root}/test/test_dis_am29000.cpp
+build test_dis_i960.o: cxx ${root}/test/test_dis_i960.cpp
 build gen_am29000.o:      cxx ${root}/test/gen_am29000.cpp
 
 # cdp1802

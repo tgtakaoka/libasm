@@ -35,6 +35,14 @@ build test_dis_am29000: run test_dis_am29000.o $
   value_formatter.o value_parser.o parsers.o operators.o dec_float.o $
   fixed64.o ieee_float.o float80_base.o float80_hard.o float80_soft.o $
   test_dis_helper.o test_asserter.o
+build test_dis_i960: run test_dis_i960.o $
+  dis_i960.o reg_i960.o table_i960.o text_i960.o $
+  dis_base.o config_base.o error_reporter.o formatters.o insn_base.o $
+  option_base.o reg_base.o str_buffer.o str_scanner.o text_common.o value.o $
+  value_formatter.o value_parser.o parsers.o operators.o dec_float.o $
+  fixed64.o ieee_float.o float80_base.o float80_hard.o float80_soft.o $
+  test_dis_helper.o test_asserter.o
+
 build gen_am29000: link gen_am29000.o $
   dis_am29000.o reg_am29000.o table_am29000.o text_am29000.o $
   config_base.o dis_base.o dis_formatter.o error_reporter.o formatters.o $
@@ -948,6 +956,7 @@ build test_expr_zilog: run test_expr_zilog.o $
   dec_float.o ibm_float.o ti_float.o
 
 build test_am29000:  phony test_asm_am29000  test_dis_am29000
+build test_i960:     phony test_dis_i960
 build test_cdp1802:  phony test_asm_cdp1802  test_dis_cdp1802
 build test_f3850:    phony test_asm_f3850    test_dis_f3850
 build test_h16:      phony test_asm_h16    test_dis_h16
@@ -995,6 +1004,7 @@ build test_expr: phony $
 
 build test: phony $
   test_am29000  $
+  test_i960     $
   test_cdp1802  $
   test_f3850    $
   test_h16      $
