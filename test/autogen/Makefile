@@ -55,10 +55,8 @@ NOASM_targets = i80286 h8s2000n h8s2000 h8s2600n h8s2600 i960
 # h8500: the disassembler emits MOV:F negative displacements as @(-0x7F,FP),
 # which ASL rejects (it needs @((-0x7F),fp)); the curated reference test, which
 # spells them ASL-compatibly, is byte-identical with ASL.
-# am29050: ASL has no AM29050 selector, and knows neither the seven opcodes
-# exclusive to that chip (ORN, FMAC, DMAC, FMSM, DMSM, MTACC, MFACC) nor its
-# own special-purpose registers.  The other five variants map onto the AM29245
-# and AM29240 selectors in their wrappers.
+# am29050: ASL has no AM29050 selector, so it knows neither the opcodes
+# exclusive to that chip nor its own special-purpose registers.
 # i960: ASL's code960.c has six encoding bugs (wrong opcodes for xor, bno and
 # testno, src2 routed into the src/dst field for scanbyte and synmov*, and an
 # integer literal on a register-pair operand evaluated as a float), so it

@@ -57,6 +57,7 @@ extern const char TEXT_CLASS[]   PROGMEM;
 extern const char TEXT_CLZ[]     PROGMEM;
 extern const char TEXT_CONST[]   PROGMEM;
 extern const char TEXT_CONSTH[]  PROGMEM;
+extern const char TEXT_CONSTHZ[] PROGMEM;
 extern const char TEXT_CONSTN[]  PROGMEM;
 extern const char TEXT_CONVERT[] PROGMEM;
 extern const char TEXT_CPBYTE[]  PROGMEM;

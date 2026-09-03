@@ -37,6 +37,8 @@
       MTSRIM   CFG, 0x0504
       MTSRIM   CHA, 0x0505
       MTSRIM   CHD, 0x0506
+      CONSTHZ  GR7, 0x0608
+      CONSTHZ  LR0, 0x0681
       LOADL    0, 7, GR8, GR9
       LOADL    0, 7, GR8, LR0
       LOADL    0, 7, LR0, LR1
@@ -767,11 +769,11 @@
       SETIP    GR0, LR0, LR1
       SETIP    GR0, LR0, GR0
       INV      0
-      JMP      0x00029000
-      JMPF     LR38, 0x0002A29C
-      JMPF     GR0, 0x0002A008
-      CALL     LR42, 0x0002B2B4
-      CALL     GR0, 0x0002B010
+      JMP      0x00029008
+      JMPF     LR38, 0x0002A2A4
+      JMPF     GR0, 0x0002A010
+      CALL     LR42, 0x0002B2BC
+      CALL     GR0, 0x0002B018
       ORN      LR43, LR44, LR45
       ORN      LR43, LR44, GR0
       ORN      LR43, GR0, GR1
@@ -784,10 +786,10 @@
       ORN      LR44, GR0, 1
       ORN      GR0, GR1, 2
       ORN      GR0, LR0, 0x81
-      JMPT     LR46, 0x0002C2FC
-      JMPT     GR0, 0x0002C048
-      JMPFDEC  LR54, 0x0002E324
-      JMPFDEC  GR0, 0x0002E050
+      JMPT     LR46, 0x0002C304
+      JMPT     GR0, 0x0002C050
+      JMPFDEC  LR54, 0x0002E32C
+      JMPFDEC  GR0, 0x0002E058
       MFTLB    LR55, LR56
       MFTLB    LR55, GR0
       MFTLB    GR0, GR1

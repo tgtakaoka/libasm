@@ -396,6 +396,8 @@ void test_no_coprocessor() {
 }
 
 void test_am29050() {
+    TEST("CONSTHZ", "GR96, 0x5678", 0x05566078);
+    TEST("CONSTHZ", "GR0, 0",       0x05000000);
     TEST("ORN",   "GR96, GR97, GR98", 0xAA606162);
     TEST("ORN",   "GR96, GR97, 15", 0xAB60610F);
     TEST("FMAC",  "0, 0, GR97, GR98", 0xD8006162);
@@ -421,6 +423,7 @@ void test_am29050() {
 }
 
 void test_no_am29050() {
+    UNKN(0x05566078);
     UNKN(0xAA606162);
     UNKN(0xD8006162);
     UNKN(0xD9006162);
@@ -435,7 +438,6 @@ void test_no_am29050() {
 // for instruction emulation.
 void test_illegal() {
     UNKN(0x00000000);
-    UNKN(0x05000000);
     UNKN(0x76000000);
     UNKN(0x77000000);
     UNKN(0x7F000000);

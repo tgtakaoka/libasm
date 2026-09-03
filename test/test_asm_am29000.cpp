@@ -322,6 +322,10 @@ void test_no_coprocessor() {
 }
 
 void test_am29050() {
+    TEST("CONSTHZ gr96, 0x5678", 0x05566078);
+    TEST("CONSTHZ gr0, 0",       0x05000000);
+    // The operand is the 16-bit field itself, so it may not overflow it.
+    ERRT("CONSTHZ gr96, 0x10000", OVERFLOW_RANGE, "0x10000", 0x05006000);
     TEST("ORN   gr96, gr97, gr98", 0xAA606162);
     TEST("ORN   gr96, gr97, 15",   0xAB60610F);
     TEST("FMAC  0, 0, gr97, gr98", 0xD8006162);
@@ -350,6 +354,7 @@ void test_am29050() {
 }
 
 void test_no_am29050() {
+    ERUI("CONSTHZ gr96, 0x5678");
     ERUI("ORN   gr96, gr97, gr98");
     ERUI("FMSM  gr96, gr97, gr98");
     ERUI("MTACC gr97, 1, 0");
