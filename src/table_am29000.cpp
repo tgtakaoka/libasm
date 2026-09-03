@@ -300,6 +300,7 @@ static constexpr uint8_t INDEX_AM29000[] PROGMEM = {
 // Instructions found only on the Am29050.  Every other family member reserves
 // these operation codes for instruction emulation.
 constexpr Entry TABLE_AM29050[] PROGMEM = {
+    E2(0x05000000, TEXT_CONSTHZ, M_RA, M_IMH),
     E3(0xAA000000, TEXT_ORN,     M_RC, M_RA, M_RBI),
     X4(0xD8000000, TEXT_FMAC,    M_FUNC, M_ACNH, M_RA, M_RB, EXT_FPU),
     X4(0xD9000000, TEXT_DMAC,    M_FUNC, M_ACNH, M_RA, M_RB, EXT_FPU),
@@ -310,13 +311,14 @@ constexpr Entry TABLE_AM29050[] PROGMEM = {
 };
 
 static constexpr uint8_t INDEX_AM29050[] PROGMEM = {
-      2,  // TEXT_DMAC
-      4,  // TEXT_DMSM
-      1,  // TEXT_FMAC
-      3,  // TEXT_FMSM
-      6,  // TEXT_MFACC
-      5,  // TEXT_MTACC
-      0,  // TEXT_ORN
+      0,  // TEXT_CONSTHZ
+      3,  // TEXT_DMAC
+      5,  // TEXT_DMSM
+      2,  // TEXT_FMAC
+      4,  // TEXT_FMSM
+      7,  // TEXT_MFACC
+      6,  // TEXT_MTACC
+      1,  // TEXT_ORN
 };
 // clang-format on
 

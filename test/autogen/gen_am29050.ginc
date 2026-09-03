@@ -37,6 +37,8 @@
       mtsrim   cfg, 0x0504
       mtsrim   cha, 0x0505
       mtsrim   chd, 0x0506
+      consthz  gr7, 0x06080000
+      consthz  lr0, 0x06810000
       loadl    0, 7, gr8, gr9
       loadl    0, 7, gr8, lr0
       loadl    0, 7, lr0, lr1

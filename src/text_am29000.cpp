@@ -54,6 +54,7 @@ constexpr char TEXT_CLASS[]   PROGMEM = "CLASS";
 constexpr char TEXT_CLZ[]     PROGMEM = "CLZ";
 constexpr char TEXT_CONST[]   PROGMEM = "CONST";
 constexpr char TEXT_CONSTH[]  PROGMEM = "CONSTH";
+constexpr char TEXT_CONSTHZ[] PROGMEM = "CONSTHZ";
 constexpr char TEXT_CONSTN[]  PROGMEM = "CONSTN";
 constexpr char TEXT_CONVERT[] PROGMEM = "CONVERT";
 constexpr char TEXT_CPBYTE[]  PROGMEM = "CPBYTE";
