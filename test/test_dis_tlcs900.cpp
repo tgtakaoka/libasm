@@ -394,6 +394,15 @@ void test_alu() {
     TEST("XOR", "A, 34H", 0xC9, 0xCD, 0x34);
     TEST("OR",  "A, 34H", 0xC9, 0xCE, 0x34);
     TEST("CP",  "A, 34H", 0xC9, 0xCF, 0x34);
+    // CP r,#3: the 3-bit short form (C8+zz+r :D8+#3), preferred over the
+    // full-width encoding above whenever the value fits, as ASL does.
+    TEST("CP",  "W, 0", 0xC8, 0xD8);
+    TEST("CP",  "W, 3", 0xC8, 0xDB);
+    TEST("CP",  "W, 7", 0xC8, 0xDF);
+    // LD has the same short form (C8+zz+r :A8+#3).
+    TEST("LD",  "W, 0", 0xC8, 0xA8);
+    TEST("LD",  "W, 3", 0xC8, 0xAB);
+    TEST("LD",  "W, 7", 0xC8, 0xAF);
     // ALU r16, #n16
     TEST("ADD", "BC, 1234H", 0xD9, 0xC8, 0x34, 0x12);
     TEST("CP",  "HL, 1234H", 0xDB, 0xCF, 0x34, 0x12);
@@ -451,6 +460,16 @@ void test_alu() {
 }
 
 void test_bit() {
+    // Carry-flag ops taking the bit number from A (manual C8+zz+r :28-:2C),
+    // the accumulator counterpart of the #4 forms at :20-:24 below.
+    TEST("ANDCF", "A, A",  0xC9, 0x28);
+    TEST("ORCF",  "A, A",  0xC9, 0x29);
+    TEST("XORCF", "A, A",  0xC9, 0x2A);
+    TEST("LDCF",  "A, A",  0xC9, 0x2B);
+    TEST("STCF",  "A, A",  0xC9, 0x2C);
+    // and on memory (B0+mem :28-:2C)
+    TEST("ANDCF", "A, (XIX)", 0xB4, 0x28);
+    TEST("STCF",  "A, (XIX)", 0xB4, 0x2C);
     // Bit ops on registers (bit in following byte)
     TEST("ANDCF", "2, A",  0xC9, 0x20, 0x02);
     TEST("ORCF",  "5, A",  0xC9, 0x21, 0x05);
@@ -489,6 +508,15 @@ void test_bit() {
 
 void test_shift() {
     // Rotate/shift on registers
+    // Shift/rotate taking the count from A (manual C8+zz+r :F8-:FF)
+    TEST("RLC", "A, A",  0xC9, 0xF8);
+    TEST("RRC", "A, A",  0xC9, 0xF9);
+    TEST("RL",  "A, A",  0xC9, 0xFA);
+    TEST("RR",  "A, A",  0xC9, 0xFB);
+    TEST("SLA", "A, A",  0xC9, 0xFC);
+    TEST("SRA", "A, A",  0xC9, 0xFD);
+    TEST("SLL", "A, A",  0xC9, 0xFE);
+    TEST("SRL", "A, A",  0xC9, 0xFF);
     TEST("RLC", "1, A",  0xC9, 0xE8, 0x01);
     TEST("RRC", "2, A",  0xC9, 0xE9, 0x02);
     TEST("RL",  "3, A",  0xC9, 0xEA, 0x03);

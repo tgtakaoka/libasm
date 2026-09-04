@@ -149,7 +149,25 @@ constexpr uint8_t INDEX_OPC_TLCS900L[] PROGMEM = {
       0,  // TEXT_MIN
 };
 
+// The 3-bit immediate short forms.  These share the "reg" prefix with
+// TABLE_SRC_REG but sit in a page of their own so the page can be searched
+// ahead of the unprefixed table, which also encodes LD and CP with a wider
+// immediate.  Giving only these two entries that precedence makes the encoder
+// pick the short form whenever the value fits, as ASL does, without promoting
+// the whole prefix page over the one-byte opcodes of the unprefixed one.
+constexpr Entry TABLE_SRC_REG_SHORT[] PROGMEM = {
+    E2(0xA8,  CF_07, TEXT_LD,    SM_ANY, M_SRC,    M_IMM3),     // LD r,#3
+    E2(0xD8,  CF_07, TEXT_CP,    SM_BW,  M_SRC,    M_IMM3),     // CP r,#3
+};
+
+constexpr uint8_t INDEX_SRC_REG_SHORT[] PROGMEM = {
+      1,  // TEXT_CP
+      0,  // TEXT_LD
+};
+
 constexpr Entry TABLE_SRC_REG[] PROGMEM = {
+    E1(0x04,  CF_00, TEXT_PUSH,  SM_ANY, M_SRC),                // PUSH r
+    E1(0x05,  CF_00, TEXT_POP,   SM_ANY, M_SRC),                // POP r
     E1(0x06,  CF_00, TEXT_CPL,   SM_BW,  M_SRC),                // CPL (mem)
     E1(0x07,  CF_00, TEXT_NEG,   SM_BW,  M_SRC),                // NEG (mem)
     E2(0x08,  CF_00, TEXT_MUL,   SM_ANY, M_MULDSTP, M_IMMX),    // MUL RR,#
@@ -172,6 +190,11 @@ constexpr Entry TABLE_SRC_REG[] PROGMEM = {
     E2(0x22,  CF_00, TEXT_XORCF, SM_BW,  M_BIT,    M_SRC),      // XORCF b,(mem)
     E2(0x23,  CF_00, TEXT_LDCF,  SM_BW,  M_BIT,    M_SRC),      // LDCF b,(mem)
     E2(0x24,  CF_00, TEXT_STCF,  SM_BW,  M_BIT,    M_SRC),      // STCF b,(mem)
+    E2(0x28,  CF_00, TEXT_ANDCF, SM_BW,  R_A,      M_SRC),      // ANDCF A,r
+    E2(0x29,  CF_00, TEXT_ORCF,  SM_BW,  R_A,      M_SRC),      // ORCF A,r
+    E2(0x2A,  CF_00, TEXT_XORCF, SM_BW,  R_A,      M_SRC),      // XORCF A,r
+    E2(0x2B,  CF_00, TEXT_LDCF,  SM_BW,  R_A,      M_SRC),      // LDCF A,r
+    E2(0x2C,  CF_00, TEXT_STCF,  SM_BW,  R_A,      M_SRC),      // STCF A,r
     E2(0x2E,  CF_00, TEXT_LDC,   SM_ANY, M_CREG,   M_SRC),      // LDC cr,(mem)
     E2(0x2F,  CF_00, TEXT_LDC,   SM_ANY, M_SRC,    M_CREG),     // LDC (mem),cr
     E2(0x30,  CF_00, TEXT_RES,   SM_BW,  M_BIT,    M_SRC),      // RES b,(mem)
@@ -222,6 +245,14 @@ constexpr Entry TABLE_SRC_REG[] PROGMEM = {
     E2(0xED,  CF_00, TEXT_SRA,   SM_ANY, M_SRC,    M_RC1),      // SRA r
     E2(0xEE,  CF_00, TEXT_SLL,   SM_ANY, M_SRC,    M_RC1),      // SLL r
     E2(0xEF,  CF_00, TEXT_SRL,   SM_ANY, M_SRC,    M_RC1),      // SRL r
+    E2(0xF8,  CF_00, TEXT_RLC,   SM_ANY, R_A,      M_SRC),      // RLC A,r
+    E2(0xF9,  CF_00, TEXT_RRC,   SM_ANY, R_A,      M_SRC),      // RRC A,r
+    E2(0xFA,  CF_00, TEXT_RL,    SM_ANY, R_A,      M_SRC),      // RL A,r
+    E2(0xFB,  CF_00, TEXT_RR,    SM_ANY, R_A,      M_SRC),      // RR A,r
+    E2(0xFC,  CF_00, TEXT_SLA,   SM_ANY, R_A,      M_SRC),      // SLA A,r
+    E2(0xFD,  CF_00, TEXT_SRA,   SM_ANY, R_A,      M_SRC),      // SRA A,r
+    E2(0xFE,  CF_00, TEXT_SLL,   SM_ANY, R_A,      M_SRC),      // SLL A,r
+    E2(0xFF,  CF_00, TEXT_SRL,   SM_ANY, R_A,      M_SRC),      // SRL A,r
     E2(0xF0,  CF_07, TEXT_CP,    SM_ANY, M_DST,    M_SRC),      // CP R,(mem)
     E2(0x38,  CF_00, TEXT_MINC1, SM_W,   M_BUF,    M_SRC),      // MINC1 #buf,(mem)
     E2(0x39,  CF_00, TEXT_MINC2, SM_W,   M_BUF,    M_SRC),      // MINC2 #buf,(mem)
@@ -231,84 +262,99 @@ constexpr Entry TABLE_SRC_REG[] PROGMEM = {
     E2(0x3E,  CF_00, TEXT_MDEC4, SM_W,   M_BUF,    M_SRC),      // MDEC4 #buf,(mem)
 };
 constexpr uint8_t INDEX_SRC_REG[] PROGMEM = {
-     40,  // TEXT_ADC
-     46,  // TEXT_ADC
-     38,  // TEXT_ADD
+     47,  // TEXT_ADC
+     53,  // TEXT_ADC
      45,  // TEXT_ADD
-     44,  // TEXT_AND
-     49,  // TEXT_AND
-     17,  // TEXT_ANDCF
-     27,  // TEXT_BIT
-      9,  // TEXT_BS1B
-      8,  // TEXT_BS1F
-     26,  // TEXT_CHG
-     52,  // TEXT_CP
-     71,  // TEXT_CP
-      0,  // TEXT_CPL
-     10,  // TEXT_DAA
-     35,  // TEXT_DEC
-     36,  // TEXT_DEC
-      4,  // TEXT_DIV
-     31,  // TEXT_DIV
-      5,  // TEXT_DIVS
-     32,  // TEXT_DIVS
-     16,  // TEXT_DJNZ
-     43,  // TEXT_EX
-     12,  // TEXT_EXTS
-     11,  // TEXT_EXTZ
-     33,  // TEXT_INC
-     34,  // TEXT_INC
-     39,  // TEXT_LD
-     22,  // TEXT_LDC
-     23,  // TEXT_LDC
-     20,  // TEXT_LDCF
-      6,  // TEXT_LINK
-     75,  // TEXT_MDEC1
-     76,  // TEXT_MDEC2
-     77,  // TEXT_MDEC4
-     72,  // TEXT_MINC1
-     73,  // TEXT_MINC2
-     74,  // TEXT_MINC4
-     14,  // TEXT_MIRR
-      2,  // TEXT_MUL
-     29,  // TEXT_MUL
-     15,  // TEXT_MULA
-      3,  // TEXT_MULS
-     30,  // TEXT_MULS
-      1,  // TEXT_NEG
-     51,  // TEXT_OR
-     54,  // TEXT_OR
-     18,  // TEXT_ORCF
-     13,  // TEXT_PAA
-     24,  // TEXT_RES
-     57,  // TEXT_RL
-     65,  // TEXT_RL
-     55,  // TEXT_RLC
-     63,  // TEXT_RLC
-     58,  // TEXT_RR
-     66,  // TEXT_RR
-     56,  // TEXT_RRC
-     64,  // TEXT_RRC
-     42,  // TEXT_SBC
-     48,  // TEXT_SBC
-     37,  // TEXT_SCC
-     25,  // TEXT_SET
-     59,  // TEXT_SLA
-     67,  // TEXT_SLA
-     61,  // TEXT_SLL
-     69,  // TEXT_SLL
-     60,  // TEXT_SRA
-     68,  // TEXT_SRA
-     62,  // TEXT_SRL
-     70,  // TEXT_SRL
-     21,  // TEXT_STCF
-     41,  // TEXT_SUB
-     47,  // TEXT_SUB
-     28,  // TEXT_TSET
-      7,  // TEXT_UNLK
-     50,  // TEXT_XOR
-     53,  // TEXT_XOR
-     19,  // TEXT_XORCF
+     52,  // TEXT_ADD
+     51,  // TEXT_AND
+     56,  // TEXT_AND
+     19,  // TEXT_ANDCF
+     24,  // TEXT_ANDCF
+     34,  // TEXT_BIT
+     11,  // TEXT_BS1B
+     10,  // TEXT_BS1F
+     33,  // TEXT_CHG
+     59,  // TEXT_CP
+     86,  // TEXT_CP
+      2,  // TEXT_CPL
+     12,  // TEXT_DAA
+     42,  // TEXT_DEC
+     43,  // TEXT_DEC
+      6,  // TEXT_DIV
+     38,  // TEXT_DIV
+      7,  // TEXT_DIVS
+     39,  // TEXT_DIVS
+     18,  // TEXT_DJNZ
+     50,  // TEXT_EX
+     14,  // TEXT_EXTS
+     13,  // TEXT_EXTZ
+     40,  // TEXT_INC
+     41,  // TEXT_INC
+     46,  // TEXT_LD
+     29,  // TEXT_LDC
+     30,  // TEXT_LDC
+     22,  // TEXT_LDCF
+     27,  // TEXT_LDCF
+      8,  // TEXT_LINK
+     90,  // TEXT_MDEC1
+     91,  // TEXT_MDEC2
+     92,  // TEXT_MDEC4
+     87,  // TEXT_MINC1
+     88,  // TEXT_MINC2
+     89,  // TEXT_MINC4
+     16,  // TEXT_MIRR
+      4,  // TEXT_MUL
+     36,  // TEXT_MUL
+     17,  // TEXT_MULA
+      5,  // TEXT_MULS
+     37,  // TEXT_MULS
+      3,  // TEXT_NEG
+     58,  // TEXT_OR
+     61,  // TEXT_OR
+     20,  // TEXT_ORCF
+     25,  // TEXT_ORCF
+     15,  // TEXT_PAA
+      1,  // TEXT_POP
+      0,  // TEXT_PUSH
+     31,  // TEXT_RES
+     64,  // TEXT_RL
+     72,  // TEXT_RL
+     80,  // TEXT_RL
+     62,  // TEXT_RLC
+     70,  // TEXT_RLC
+     78,  // TEXT_RLC
+     65,  // TEXT_RR
+     73,  // TEXT_RR
+     81,  // TEXT_RR
+     63,  // TEXT_RRC
+     71,  // TEXT_RRC
+     79,  // TEXT_RRC
+     49,  // TEXT_SBC
+     55,  // TEXT_SBC
+     44,  // TEXT_SCC
+     32,  // TEXT_SET
+     66,  // TEXT_SLA
+     74,  // TEXT_SLA
+     82,  // TEXT_SLA
+     68,  // TEXT_SLL
+     76,  // TEXT_SLL
+     84,  // TEXT_SLL
+     67,  // TEXT_SRA
+     75,  // TEXT_SRA
+     83,  // TEXT_SRA
+     69,  // TEXT_SRL
+     77,  // TEXT_SRL
+     85,  // TEXT_SRL
+     23,  // TEXT_STCF
+     28,  // TEXT_STCF
+     48,  // TEXT_SUB
+     54,  // TEXT_SUB
+     35,  // TEXT_TSET
+      9,  // TEXT_UNLK
+     57,  // TEXT_XOR
+     60,  // TEXT_XOR
+     21,  // TEXT_XORCF
+     26,  // TEXT_XORCF
 };
 
 constexpr Entry TABLE_SRC_ABREG[] PROGMEM = {
@@ -478,6 +524,11 @@ constexpr Entry TABLE_DST_MEM[] PROGMEM = {
     E2(0x40,  CF_07, TEXT_LD,    SM_ANY, M_DST,    M_REG8),     // LD R,r
     E2(0x50,  CF_07, TEXT_LD,    SM_ANY, M_DST,    M_REG16),    // LD R,r
     E2(0x60,  CF_07, TEXT_LD,    SM_ANY, M_DST,    M_REG32),    // LD R,r
+    E2(0x28,  CF_00, TEXT_ANDCF, SM_B,   R_A,      M_DST),      // ANDCF A,(mem)
+    E2(0x29,  CF_00, TEXT_ORCF,  SM_B,   R_A,      M_DST),      // ORCF A,(mem)
+    E2(0x2A,  CF_00, TEXT_XORCF, SM_B,   R_A,      M_DST),      // XORCF A,(mem)
+    E2(0x2B,  CF_00, TEXT_LDCF,  SM_B,   R_A,      M_DST),      // LDCF A,(mem)
+    E2(0x2C,  CF_00, TEXT_STCF,  SM_B,   R_A,      M_DST),      // STCF A,(mem)
     E2(0x80,  CF_07, TEXT_ANDCF, SM_B,   M_BIT,    M_DST),      // ANDCF b,R
     E2(0x88,  CF_07, TEXT_ORCF,  SM_B,   M_BIT,    M_DST),      // ORCF b,R
     E2(0x90,  CF_07, TEXT_XORCF, SM_B,   M_BIT,    M_DST),      // XORCF b,R
@@ -493,10 +544,11 @@ constexpr Entry TABLE_DST_MEM[] PROGMEM = {
 };
 constexpr uint8_t INDEX_DST_MEM[] PROGMEM = {
      11,  // TEXT_ANDCF
-     20,  // TEXT_BIT
-     22,  // TEXT_CALL
-     19,  // TEXT_CHG
-     21,  // TEXT_JP
+     16,  // TEXT_ANDCF
+     25,  // TEXT_BIT
+     27,  // TEXT_CALL
+     24,  // TEXT_CHG
+     26,  // TEXT_JP
       0,  // TEXT_LD
       4,  // TEXT_LD
       8,  // TEXT_LD
@@ -505,16 +557,20 @@ constexpr uint8_t INDEX_DST_MEM[] PROGMEM = {
       6,  // TEXT_LDA
       7,  // TEXT_LDA
      14,  // TEXT_LDCF
+     19,  // TEXT_LDCF
       1,  // TEXT_LDW
       5,  // TEXT_LDW
      12,  // TEXT_ORCF
+     17,  // TEXT_ORCF
       2,  // TEXT_POP
       3,  // TEXT_POPW
-     17,  // TEXT_RES
-     18,  // TEXT_SET
+     22,  // TEXT_RES
+     23,  // TEXT_SET
      15,  // TEXT_STCF
-     16,  // TEXT_TSET
+     20,  // TEXT_STCF
+     21,  // TEXT_TSET
      13,  // TEXT_XORCF
+     18,  // TEXT_XORCF
 };
 
 constexpr Entry TABLE_LDX[] PROGMEM = {
@@ -645,6 +701,8 @@ struct Cpu : entry::CpuBase<CpuType, EntryPage> {
 constexpr EntryPage TLCS900_PAGES[] PROGMEM = {
     {PM_BIT(PM_NONE),  0,    ARRAY_RANGE(TABLE_OPC_TLCS900), ARRAY_RANGE(INDEX_OPC_TLCS900)},
     {PM_BIT(PM_NONE),  0,    ARRAY_RANGE(TABLE_LDX),         ARRAY_RANGE(INDEX_LDX)},
+    {PM_BITS_REG | PM_BITS_ABREG, 0,
+                             ARRAY_RANGE(TABLE_SRC_REG_SHORT), ARRAY_RANGE(INDEX_SRC_REG_SHORT)},
     {PM_BIT(PM_NONE),  0,    ARRAY_RANGE(TABLE_OPC),         ARRAY_RANGE(INDEX_OPC)},
     {PM_BITS_REG | PM_BITS_ABREG, 0,
                              ARRAY_RANGE(TABLE_SRC_REG),     ARRAY_RANGE(INDEX_SRC_REG)},
@@ -661,6 +719,8 @@ constexpr EntryPage TLCS900_PAGES[] PROGMEM = {
 constexpr EntryPage TLCS900L_PAGES[] PROGMEM = {
     {PM_BIT(PM_NONE),  0,    ARRAY_RANGE(TABLE_OPC_TLCS900L), ARRAY_RANGE(INDEX_OPC_TLCS900L)},
     {PM_BIT(PM_NONE),  0,    ARRAY_RANGE(TABLE_LDX),          ARRAY_RANGE(INDEX_LDX)},
+    {PM_BITS_REG | PM_BITS_ABREG, 0,
+                             ARRAY_RANGE(TABLE_SRC_REG_SHORT), ARRAY_RANGE(INDEX_SRC_REG_SHORT)},
     {PM_BIT(PM_NONE),  0,    ARRAY_RANGE(TABLE_OPC),          ARRAY_RANGE(INDEX_OPC)},
     {PM_BITS_REG | PM_BITS_ABREG, 0,
                              ARRAY_RANGE(TABLE_SRC_REG),      ARRAY_RANGE(INDEX_SRC_REG)},
@@ -674,6 +734,8 @@ constexpr EntryPage TLCS900L_PAGES[] PROGMEM = {
 
 constexpr EntryPage TLCS900H_PAGES[] PROGMEM = {
     {PM_BIT(PM_NONE),  0,      ARRAY_RANGE(TABLE_LDX),       ARRAY_RANGE(INDEX_LDX)},
+    {PM_BITS_REG | PM_BITS_ABREG, 0,
+                             ARRAY_RANGE(TABLE_SRC_REG_SHORT), ARRAY_RANGE(INDEX_SRC_REG_SHORT)},
     {PM_BIT(PM_NONE),  0,      ARRAY_RANGE(TABLE_OPC),       ARRAY_RANGE(INDEX_OPC)},
     {PM_BITS_REG | PM_BITS_ABREG, 0,
                                ARRAY_RANGE(TABLE_SRC_REG),   ARRAY_RANGE(INDEX_SRC_REG)},
@@ -687,6 +749,8 @@ constexpr EntryPage TLCS900H_PAGES[] PROGMEM = {
 
 // TLCS900/H2 is TLCS900/H minus LDX.
 constexpr EntryPage TLCS900H2_PAGES[] PROGMEM = {
+    {PM_BITS_REG | PM_BITS_ABREG, 0,
+                             ARRAY_RANGE(TABLE_SRC_REG_SHORT), ARRAY_RANGE(INDEX_SRC_REG_SHORT)},
     {PM_BIT(PM_NONE),  0,      ARRAY_RANGE(TABLE_OPC),       ARRAY_RANGE(INDEX_OPC)},
     {PM_BITS_REG | PM_BITS_ABREG, 0,
                                ARRAY_RANGE(TABLE_SRC_REG),   ARRAY_RANGE(INDEX_SRC_REG)},
@@ -786,7 +850,7 @@ static bool modeMatch(AddrMode actual, AddrMode expected, RegName reg) {
         return true;
     if ((expected == M_LDF || expected == M_INTLVL) && actual == M_IMM8)
         return true;
-    if (expected == M_SWI && actual == M_IMM8)
+    if ((expected == M_SWI || expected == M_IMM3) && actual == M_IMM8)
         return true;
     if (expected == M_BIT && actual == M_IMM8)
         return true;
@@ -914,6 +978,10 @@ static AddrMode resolveMode(AddrMode expected, PrefixMode pm, bool dstSlot, cons
 static bool acceptMode(const Operand &op, AddrMode expected, PrefixMode pm, bool dstSlot) {
     if (op.mode == expected)
         return true;
+    // The 3-bit immediate is a short form of an instruction that also has a
+    // full-width encoding, so it may only match a value which fits.
+    if (expected == M_IMM3 && op.val.getUnsigned() > 7)
+        return false;
     const auto resolved = resolveMode(expected, pm, dstSlot, op);
     if (resolved == R_F)
         return op.mode == M_CC && op.cc == CC_F;

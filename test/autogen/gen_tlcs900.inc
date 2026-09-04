@@ -7133,6 +7133,11 @@
       LDA    IY, (WA)
       LDA    IZ, (WA)
       LDA    SP, (WA)
+      ANDCF  A, (WA)
+      ORCF   A, (WA)
+      XORCF  A, (WA)
+      LDCF   A, (WA)
+      STCF   A, (WA)
       LDA    XIX, (WA)
       LDA    XIY, (WA)
       LDA    XIZ, (WA)
@@ -7213,6 +7218,11 @@
       LDA    IY, (BC)
       LDA    IZ, (BC)
       LDA    SP, (BC)
+      ANDCF  A, (BC)
+      ORCF   A, (BC)
+      XORCF  A, (BC)
+      LDCF   A, (BC)
+      STCF   A, (BC)
       LDA    XIX, (BC)
       LDA    XIY, (BC)
       LDA    XIZ, (BC)
@@ -7293,6 +7303,11 @@
       LDA    IY, (DE)
       LDA    IZ, (DE)
       LDA    SP, (DE)
+      ANDCF  A, (DE)
+      ORCF   A, (DE)
+      XORCF  A, (DE)
+      LDCF   A, (DE)
+      STCF   A, (DE)
       LDA    XIX, (DE)
       LDA    XIY, (DE)
       LDA    XIZ, (DE)
@@ -7373,6 +7388,11 @@
       LDA    IY, (HL)
       LDA    IZ, (HL)
       LDA    SP, (HL)
+      ANDCF  A, (HL)
+      ORCF   A, (HL)
+      XORCF  A, (HL)
+      LDCF   A, (HL)
+      STCF   A, (HL)
       LDA    XIX, (HL)
       LDA    XIY, (HL)
       LDA    XIZ, (HL)
@@ -7453,6 +7473,11 @@
       LDA    IY, (XIX)
       LDA    IZ, (XIX)
       LDA    SP, (XIX)
+      ANDCF  A, (XIX)
+      ORCF   A, (XIX)
+      XORCF  A, (XIX)
+      LDCF   A, (XIX)
+      STCF   A, (XIX)
       LDA    XIX, (XIX)
       LDA    XIY, (XIX)
       LDA    XIZ, (XIX)
@@ -7533,6 +7558,11 @@
       LDA    IY, (XIY)
       LDA    IZ, (XIY)
       LDA    SP, (XIY)
+      ANDCF  A, (XIY)
+      ORCF   A, (XIY)
+      XORCF  A, (XIY)
+      LDCF   A, (XIY)
+      STCF   A, (XIY)
       LDA    XIX, (XIY)
       LDA    XIY, (XIY)
       LDA    XIZ, (XIY)
@@ -7613,6 +7643,11 @@
       LDA    IY, (XIZ)
       LDA    IZ, (XIZ)
       LDA    SP, (XIZ)
+      ANDCF  A, (XIZ)
+      ORCF   A, (XIZ)
+      XORCF  A, (XIZ)
+      LDCF   A, (XIZ)
+      STCF   A, (XIZ)
       LDA    XIX, (XIZ)
       LDA    XIY, (XIZ)
       LDA    XIZ, (XIZ)
@@ -7692,6 +7727,11 @@
       LDA    IY, (XSP)
       LDA    IZ, (XSP)
       LDA    SP, (XSP)
+      ANDCF  A, (XSP)
+      ORCF   A, (XSP)
+      XORCF  A, (XSP)
+      LDCF   A, (XSP)
+      STCF   A, (XSP)
       LDA    XIX, (XSP)
       LDA    XIY, (XSP)
       LDA    XIZ, (XSP)
@@ -7772,6 +7812,11 @@
       LDA    IY, (WA-47H)
       LDA    IZ, (WA-47H)
       LDA    SP, (WA-47H)
+      ANDCF  A, (WA-47H)
+      ORCF   A, (WA-47H)
+      XORCF  A, (WA-47H)
+      LDCF   A, (WA-47H)
+      STCF   A, (WA-47H)
       LDA    XIX, (WA-47H)
       LDA    XIY, (WA-47H)
       LDA    XIZ, (WA-47H)
@@ -7852,6 +7897,11 @@
       LDA    IY, (BC-46H)
       LDA    IZ, (BC-46H)
       LDA    SP, (BC-46H)
+      ANDCF  A, (BC-46H)
+      ORCF   A, (BC-46H)
+      XORCF  A, (BC-46H)
+      LDCF   A, (BC-46H)
+      STCF   A, (BC-46H)
       LDA    XIX, (BC-46H)
       LDA    XIY, (BC-46H)
       LDA    XIZ, (BC-46H)
@@ -7932,6 +7982,11 @@
       LDA    IY, (DE-45H)
       LDA    IZ, (DE-45H)
       LDA    SP, (DE-45H)
+      ANDCF  A, (DE-45H)
+      ORCF   A, (DE-45H)
+      XORCF  A, (DE-45H)
+      LDCF   A, (DE-45H)
+      STCF   A, (DE-45H)
       LDA    XIX, (DE-45H)
       LDA    XIY, (DE-45H)
       LDA    XIZ, (DE-45H)
@@ -8012,6 +8067,11 @@
       LDA    IY, (HL-44H)
       LDA    IZ, (HL-44H)
       LDA    SP, (HL-44H)
+      ANDCF  A, (HL-44H)
+      ORCF   A, (HL-44H)
+      XORCF  A, (HL-44H)
+      LDCF   A, (HL-44H)
+      STCF   A, (HL-44H)
       LDA    XIX, (HL-44H)
       LDA    XIY, (HL-44H)
       LDA    XIZ, (HL-44H)
@@ -8092,6 +8152,11 @@
       LDA    IY, (XIX-43H)
       LDA    IZ, (XIX-43H)
       LDA    SP, (XIX-43H)
+      ANDCF  A, (XIX-43H)
+      ORCF   A, (XIX-43H)
+      XORCF  A, (XIX-43H)
+      LDCF   A, (XIX-43H)
+      STCF   A, (XIX-43H)
       LDA    XIX, (XIX-43H)
       LDA    XIY, (XIX-43H)
       LDA    XIZ, (XIX-43H)
@@ -8172,6 +8237,11 @@
       LDA    IY, (XIY-42H)
       LDA    IZ, (XIY-42H)
       LDA    SP, (XIY-42H)
+      ANDCF  A, (XIY-42H)
+      ORCF   A, (XIY-42H)
+      XORCF  A, (XIY-42H)
+      LDCF   A, (XIY-42H)
+      STCF   A, (XIY-42H)
       LDA    XIX, (XIY-42H)
       LDA    XIY, (XIY-42H)
       LDA    XIZ, (XIY-42H)
@@ -8251,6 +8321,11 @@
       LDA    IY, (XIZ-41H)
       LDA    IZ, (XIZ-41H)
       LDA    SP, (XIZ-41H)
+      ANDCF  A, (XIZ-41H)
+      ORCF   A, (XIZ-41H)
+      XORCF  A, (XIZ-41H)
+      LDCF   A, (XIZ-41H)
+      STCF   A, (XIZ-41H)
       LDA    XIX, (XIZ-41H)
       LDA    XIY, (XIZ-41H)
       LDA    XIZ, (XIZ-41H)
@@ -8331,6 +8406,11 @@
       LDA    IY, (XSP-40H)
       LDA    IZ, (XSP-40H)
       LDA    SP, (XSP-40H)
+      ANDCF  A, (XSP-40H)
+      ORCF   A, (XSP-40H)
+      XORCF  A, (XSP-40H)
+      LDCF   A, (XSP-40H)
+      STCF   A, (XSP-40H)
       LDA    XIX, (XSP-40H)
       LDA    XIY, (XSP-40H)
       LDA    XIZ, (XSP-40H)
@@ -20108,69 +20188,3 @@
       ADC    (XIY+), E
       ADC    (XIY+), H
       ADC    (XIY+), L
-      SUB    W, (XIY+)
-      SUB    A, (XIY+)
-      SUB    B, (XIY+)
-      SUB    C, (XIY+)
-      SUB    D, (XIY+)
-      SUB    E, (XIY+)
-      SUB    H, (XIY+)
-      SUB    L, (XIY+)
-      SUB    (XIY+), W
-      SUB    (XIY+), A
-      SUB    (XIY+), B
-      SUB    (XIY+), C
-      SUB    (XIY+), D
-      SUB    (XIY+), E
-      SUB    (XIY+), H
-      SUB    (XIY+), L
-      SBC    W, (XIY+)
-      SBC    A, (XIY+)
-      SBC    B, (XIY+)
-      SBC    C, (XIY+)
-      SBC    D, (XIY+)
-      SBC    E, (XIY+)
-      SBC    H, (XIY+)
-      SBC    L, (XIY+)
-      SBC    (XIY+), W
-      SBC    (XIY+), A
-      SBC    (XIY+), B
-      SBC    (XIY+), C
-      SBC    (XIY+), D
-      SBC    (XIY+), E
-      SBC    (XIY+), H
-      SBC    (XIY+), L
-      AND    W, (XIY+)
-      AND    A, (XIY+)
-      AND    B, (XIY+)
-      AND    C, (XIY+)
-      AND    D, (XIY+)
-      AND    E, (XIY+)
-      AND    H, (XIY+)
-      AND    L, (XIY+)
-      AND    (XIY+), W
-      AND    (XIY+), A
-      AND    (XIY+), B
-      AND    (XIY+), C
-      AND    (XIY+), D
-      AND    (XIY+), E
-      AND    (XIY+), H
-      AND    (XIY+), L
-      XOR    W, (XIY+)
-      XOR    A, (XIY+)
-      XOR    B, (XIY+)
-      XOR    C, (XIY+)
-      XOR    D, (XIY+)
-      XOR    E, (XIY+)
-      XOR    H, (XIY+)
-      XOR    L, (XIY+)
-      XOR    (XIY+), W
-      XOR    (XIY+), A
-      XOR    (XIY+), B
-      XOR    (XIY+), C
-      XOR    (XIY+), D
-      XOR    (XIY+), E
-      XOR    (XIY+), H
-      XOR    (XIY+), L
-      OR     W, (XIY+)
-      OR     A, (XIY+)

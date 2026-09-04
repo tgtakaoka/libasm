@@ -43,53 +43,54 @@ enum AddrMode : uint8_t {
     M_IMM8  = 6,   // 8-bit immediate
     M_IMM16 = 7,   // 16-bit immediate
     M_IMM32 = 8,   // 32-bit immediate
-    M_IMMX  = 9,   // immediate of context-matching size (8/16/32-bit)
-    M_REL8  = 10,  // 8-bit PC-relative displacement
-    M_REL16 = 11,  // 16-bit PC-relative displacement
-    M_SRC   = 12,  // operand is the prefix-encoded source
-    M_DST   = 13,  // operand is the prefix-encoded destination
-    M_CREG  = 14,  // DMA/NSP control register (RegName in op.reg)
-    M_LDARREL = 15,  // LDAR rel16 target with base = instruction_start + 4
-    R_FP    = 16,  // F' (alternate flag register, EX F,F' only)
-    M_RC1   = 17,  // implicit rotate/shift count 1: matches M_NONE; emits 0x01
-    M_BLKSRC = 18,  // block source pointer (XHL/XIY+/-): prefix low nibble, dir from opcode
+    M_IMM3  = 9,   // 3-bit immediate 0-7 in opcode low 3 bits
+    M_IMMX  = 10,  // immediate of context-matching size (8/16/32-bit)
+    M_REL8  = 11,  // 8-bit PC-relative displacement
+    M_REL16 = 12,  // 16-bit PC-relative displacement
+    M_SRC   = 13,  // operand is the prefix-encoded source
+    M_DST   = 14,  // operand is the prefix-encoded destination
+    M_CREG  = 15,  // DMA/NSP control register (RegName in op.reg)
+    M_LDARREL = 16,  // LDAR rel16 target with base = instruction_start + 4
+    R_FP    = 17,  // F' (alternate flag register, EX F,F' only)
+    M_RC1   = 18,  // implicit rotate/shift count 1: matches M_NONE; emits 0x01
+    M_BLKSRC = 19,  // block source pointer (XHL/XIY+/-): prefix low nibble, dir from opcode
     // -- DST-only (19-40); asm-only matcher modes at the top --
-    M_ABS8  = 19,  // (n) 8-bit absolute address
-    M_BIT   = 20,  // bit number 0-7 (in following byte)
-    M_CC    = 21,  // condition code CC (in opcode low nibble)
-    M_STEP  = 22,  // INC/DEC step 1-8 in opcode low 3 bits (8 encoded as 0)
-    M_LDF   = 23,  // LDF RFP bank 0-3 (in following byte, low 2 bits)
-    M_SWI   = 24,  // SWI vector 0-7 (in opcode low 3 bits)
-    M_RCOUNT = 25,  // rotate/shift count 1-16 (in following byte, 16 encoded as 0)
-    M_BUF   = 26,  // MINC/MDEC buffer size (power of 2, following word)
-    R_A     = 27,  // register A (implicit; byte block-compare accumulator)
-    R_SR    = 28,  // status register SR
-    R_F     = 29,  // flag byte F (implicit, PUSH F / POP F)
-    R_WA    = 30,  // register WA (implicit; word block-compare accumulator, MUL result)
-    M_LDXDST = 31,  // LDX destination: 0x00 sub-byte, then 16-bit absolute address
-    M_ABSDST = 32,  // absolute bank register in dst, resolves to M_ABREG{8,16,32} by PM
-    M_INTLVL = 33,  // EI interrupt level 0-7 (in following byte, low 3 bits)
-    M_MULDST = 34,  // MUL/DIV dest in opcode (0x40+R): double the prefix(src) size
-    M_MULDSTP = 35,  // MUL/DIV rr,# dest carried IN the prefix (C8+code / D8+code)
-    M_R32SRC = 36,  // 32-bit register passed as PM_REG16 prefix (MULA xrr32 alias)
-    M_BLKDST = 37,  // block dest pointer (XDE/XIX+/-): src pointer - 1, dir from opcode
+    M_ABS8  = 20,  // (n) 8-bit absolute address
+    M_BIT   = 21,  // bit number 0-7 (in following byte)
+    M_CC    = 22,  // condition code CC (in opcode low nibble)
+    M_STEP  = 23,  // INC/DEC step 1-8 in opcode low 3 bits (8 encoded as 0)
+    M_LDF   = 24,  // LDF RFP bank 0-3 (in following byte, low 2 bits)
+    M_SWI   = 25,  // SWI vector 0-7 (in opcode low 3 bits)
+    M_RCOUNT = 26,  // rotate/shift count 1-16 (in following byte, 16 encoded as 0)
+    M_BUF   = 27,  // MINC/MDEC buffer size (power of 2, following word)
+    R_A     = 28,  // register A (implicit; byte block-compare accumulator)
+    R_SR    = 29,  // status register SR
+    R_F     = 30,  // flag byte F (implicit, PUSH F / POP F)
+    R_WA    = 31,  // register WA (implicit; word block-compare accumulator, MUL result)
+    M_LDXDST = 32,  // LDX destination: 0x00 sub-byte, then 16-bit absolute address
+    M_ABSDST = 33,  // absolute bank register in dst, resolves to M_ABREG{8,16,32} by PM
+    M_INTLVL = 34,  // EI interrupt level 0-7 (in following byte, low 3 bits)
+    M_MULDST = 35,  // MUL/DIV dest in opcode (0x40+R): double the prefix(src) size
+    M_MULDSTP = 36,  // MUL/DIV rr,# dest carried IN the prefix (C8+code / D8+code)
+    M_R32SRC = 37,  // 32-bit register passed as PM_REG16 prefix (MULA xrr32 alias)
+    M_BLKDST = 38,  // block dest pointer (XDE/XIX+/-): src pointer - 1, dir from opcode
     // asm-only matcher modes (never emitted by the disassembler):
-    M_CCT   = 38,  // always-true condition (cc=T): folds JP/CALL T,(abs) (asm-only)
-    M_ZERO  = 39,  // implicit zero: matches M_NONE in asm; emits 0x00 trailing byte
-    M_DISUF = 40,  // DI suffix: matches M_NONE in asm; emits 0x07 trailing byte
+    M_CCT   = 39,  // always-true condition (cc=T): folds JP/CALL T,(abs) (asm-only)
+    M_ZERO  = 40,  // implicit zero: matches M_NONE in asm; emits 0x00 trailing byte
+    M_DISUF = 41,  // DI suffix: matches M_NONE in asm; emits 0x07 trailing byte
     // -- Never a Flags field: parser results / disassembler / resolveMode --
-    M_IND   = 41,  // (xrr) indirect via 32-bit register
-    M_PDEC  = 42,  // (-xrr) pre-decrement
-    M_PINC  = 43,  // (xrr+) post-increment
-    M_IDX8  = 44,  // (xrr+d8) 8-bit displacement indexed
-    M_IDX16 = 45,  // (xrr+d16) 16-bit displacement indexed
-    M_IDXR  = 46,  // (xrr+r) register indexed (r is an 8-bit register)
-    M_ABREG8  = 47,  // 8-bit absolute bank register (register code in op.val)
-    M_ABREG16 = 48,  // 16-bit absolute bank register
-    M_ABREG32 = 49,  // 32-bit absolute bank register
-    M_LDARREG = 50,  // LDAR destination register (resolved form)
-    R_C     = 51,  // 'C' dual-use: matches M_REG8 (reg C) or M_CC (carry)
-    M_BPDEC = 52,  // (xrr-) block post-decrement; parser result, block ops only
+    M_IND   = 42,  // (xrr) indirect via 32-bit register
+    M_PDEC  = 43,  // (-xrr) pre-decrement
+    M_PINC  = 44,  // (xrr+) post-increment
+    M_IDX8  = 45,  // (xrr+d8) 8-bit displacement indexed
+    M_IDX16 = 46,  // (xrr+d16) 16-bit displacement indexed
+    M_IDXR  = 47,  // (xrr+r) register indexed (r is an 8-bit register)
+    M_ABREG8  = 48,  // 8-bit absolute bank register (register code in op.val)
+    M_ABREG16 = 49,  // 16-bit absolute bank register
+    M_ABREG32 = 50,  // 32-bit absolute bank register
+    M_LDARREG = 51,  // LDAR destination register (resolved form)
+    R_C     = 52,  // 'C' dual-use: matches M_REG8 (reg C) or M_CC (carry)
+    M_BPDEC = 53,  // (xrr-) block post-decrement; parser result, block ops only
 };
 // clang-format on
 

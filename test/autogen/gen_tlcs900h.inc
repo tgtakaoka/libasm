@@ -8487,6 +8487,11 @@
       LDA    IY, (XWA)
       LDA    IZ, (XWA)
       LDA    SP, (XWA)
+      ANDCF  A, (XWA)
+      ORCF   A, (XWA)
+      XORCF  A, (XWA)
+      LDCF   A, (XWA)
+      STCF   A, (XWA)
       LDA    XWA, (XWA)
       LDA    XBC, (XWA)
       LDA    XDE, (XWA)
@@ -8575,6 +8580,11 @@
       LDA    IY, (XBC)
       LDA    IZ, (XBC)
       LDA    SP, (XBC)
+      ANDCF  A, (XBC)
+      ORCF   A, (XBC)
+      XORCF  A, (XBC)
+      LDCF   A, (XBC)
+      STCF   A, (XBC)
       LDA    XWA, (XBC)
       LDA    XBC, (XBC)
       LDA    XDE, (XBC)
@@ -8663,6 +8673,11 @@
       LDA    IY, (XDE)
       LDA    IZ, (XDE)
       LDA    SP, (XDE)
+      ANDCF  A, (XDE)
+      ORCF   A, (XDE)
+      XORCF  A, (XDE)
+      LDCF   A, (XDE)
+      STCF   A, (XDE)
       LDA    XWA, (XDE)
       LDA    XBC, (XDE)
       LDA    XDE, (XDE)
@@ -8751,6 +8766,11 @@
       LDA    IY, (XHL)
       LDA    IZ, (XHL)
       LDA    SP, (XHL)
+      ANDCF  A, (XHL)
+      ORCF   A, (XHL)
+      XORCF  A, (XHL)
+      LDCF   A, (XHL)
+      STCF   A, (XHL)
       LDA    XWA, (XHL)
       LDA    XBC, (XHL)
       LDA    XDE, (XHL)
@@ -8839,6 +8859,11 @@
       LDA    IY, (XIX)
       LDA    IZ, (XIX)
       LDA    SP, (XIX)
+      ANDCF  A, (XIX)
+      ORCF   A, (XIX)
+      XORCF  A, (XIX)
+      LDCF   A, (XIX)
+      STCF   A, (XIX)
       LDA    XWA, (XIX)
       LDA    XBC, (XIX)
       LDA    XDE, (XIX)
@@ -8927,6 +8952,11 @@
       LDA    IY, (XIY)
       LDA    IZ, (XIY)
       LDA    SP, (XIY)
+      ANDCF  A, (XIY)
+      ORCF   A, (XIY)
+      XORCF  A, (XIY)
+      LDCF   A, (XIY)
+      STCF   A, (XIY)
       LDA    XWA, (XIY)
       LDA    XBC, (XIY)
       LDA    XDE, (XIY)
@@ -9015,6 +9045,11 @@
       LDA    IY, (XIZ)
       LDA    IZ, (XIZ)
       LDA    SP, (XIZ)
+      ANDCF  A, (XIZ)
+      ORCF   A, (XIZ)
+      XORCF  A, (XIZ)
+      LDCF   A, (XIZ)
+      STCF   A, (XIZ)
       LDA    XWA, (XIZ)
       LDA    XBC, (XIZ)
       LDA    XDE, (XIZ)
@@ -9102,6 +9137,11 @@
       LDA    IY, (XSP)
       LDA    IZ, (XSP)
       LDA    SP, (XSP)
+      ANDCF  A, (XSP)
+      ORCF   A, (XSP)
+      XORCF  A, (XSP)
+      LDCF   A, (XSP)
+      STCF   A, (XSP)
       LDA    XWA, (XSP)
       LDA    XBC, (XSP)
       LDA    XDE, (XSP)
@@ -9190,6 +9230,11 @@
       LDA    IY, (XWA-47H)
       LDA    IZ, (XWA-47H)
       LDA    SP, (XWA-47H)
+      ANDCF  A, (XWA-47H)
+      ORCF   A, (XWA-47H)
+      XORCF  A, (XWA-47H)
+      LDCF   A, (XWA-47H)
+      STCF   A, (XWA-47H)
       LDA    XWA, (XWA-47H)
       LDA    XBC, (XWA-47H)
       LDA    XDE, (XWA-47H)
@@ -9278,6 +9323,11 @@
       LDA    IY, (XBC-46H)
       LDA    IZ, (XBC-46H)
       LDA    SP, (XBC-46H)
+      ANDCF  A, (XBC-46H)
+      ORCF   A, (XBC-46H)
+      XORCF  A, (XBC-46H)
+      LDCF   A, (XBC-46H)
+      STCF   A, (XBC-46H)
       LDA    XWA, (XBC-46H)
       LDA    XBC, (XBC-46H)
       LDA    XDE, (XBC-46H)
@@ -9366,6 +9416,11 @@
       LDA    IY, (XDE-45H)
       LDA    IZ, (XDE-45H)
       LDA    SP, (XDE-45H)
+      ANDCF  A, (XDE-45H)
+      ORCF   A, (XDE-45H)
+      XORCF  A, (XDE-45H)
+      LDCF   A, (XDE-45H)
+      STCF   A, (XDE-45H)
       LDA    XWA, (XDE-45H)
       LDA    XBC, (XDE-45H)
       LDA    XDE, (XDE-45H)
@@ -9454,6 +9509,11 @@
       LDA    IY, (XHL-44H)
       LDA    IZ, (XHL-44H)
       LDA    SP, (XHL-44H)
+      ANDCF  A, (XHL-44H)
+      ORCF   A, (XHL-44H)
+      XORCF  A, (XHL-44H)
+      LDCF   A, (XHL-44H)
+      STCF   A, (XHL-44H)
       LDA    XWA, (XHL-44H)
       LDA    XBC, (XHL-44H)
       LDA    XDE, (XHL-44H)
@@ -9542,6 +9602,11 @@
       LDA    IY, (XIX-43H)
       LDA    IZ, (XIX-43H)
       LDA    SP, (XIX-43H)
+      ANDCF  A, (XIX-43H)
+      ORCF   A, (XIX-43H)
+      XORCF  A, (XIX-43H)
+      LDCF   A, (XIX-43H)
+      STCF   A, (XIX-43H)
       LDA    XWA, (XIX-43H)
       LDA    XBC, (XIX-43H)
       LDA    XDE, (XIX-43H)
@@ -9630,6 +9695,11 @@
       LDA    IY, (XIY-42H)
       LDA    IZ, (XIY-42H)
       LDA    SP, (XIY-42H)
+      ANDCF  A, (XIY-42H)
+      ORCF   A, (XIY-42H)
+      XORCF  A, (XIY-42H)
+      LDCF   A, (XIY-42H)
+      STCF   A, (XIY-42H)
       LDA    XWA, (XIY-42H)
       LDA    XBC, (XIY-42H)
       LDA    XDE, (XIY-42H)
@@ -9717,6 +9787,11 @@
       LDA    IY, (XIZ-41H)
       LDA    IZ, (XIZ-41H)
       LDA    SP, (XIZ-41H)
+      ANDCF  A, (XIZ-41H)
+      ORCF   A, (XIZ-41H)
+      XORCF  A, (XIZ-41H)
+      LDCF   A, (XIZ-41H)
+      STCF   A, (XIZ-41H)
       LDA    XWA, (XIZ-41H)
       LDA    XBC, (XIZ-41H)
       LDA    XDE, (XIZ-41H)
@@ -9805,6 +9880,11 @@
       LDA    IY, (XSP-40H)
       LDA    IZ, (XSP-40H)
       LDA    SP, (XSP-40H)
+      ANDCF  A, (XSP-40H)
+      ORCF   A, (XSP-40H)
+      XORCF  A, (XSP-40H)
+      LDCF   A, (XSP-40H)
+      STCF   A, (XSP-40H)
       LDA    XWA, (XSP-40H)
       LDA    XBC, (XSP-40H)
       LDA    XDE, (XSP-40H)
@@ -22774,6 +22854,7 @@
       XOR    E, A'
       XOR    H, A'
       XOR    L, A'
+      CP     A', 0
       OR     W, A'
       OR     A, A'
       OR     B, A'
@@ -22798,7 +22879,17 @@
       CP     E, A'
       CP     H, A'
       CP     L, A'
+      RLC    A, A'
+      RRC    A, A'
+      RL     A, A'
+      RR     A, A'
+      SLA    A, A'
+      SRA    A, A'
+      SLL    A, A'
+      SRL    A, A'
       LD     A', 4
+      PUSH   A'
+      POP    A'
       CPL    A'
       NEG    A'
       DAA    A'
@@ -22808,6 +22899,11 @@
       XORCF  3, A'
       LDCF   4, A'
       STCF   5, A'
+      ANDCF  A, A'
+      ORCF   A, A'
+      XORCF  A, A'
+      LDCF   A, A'
+      STCF   A, A'
       RES    1, A'
       SET    2, A'
       CHG    3, A'
@@ -22887,6 +22983,7 @@
       SUB    E, A'
       SUB    H, A'
       SUB    L, A'
+      LD     A', 0
       SBC    W, A'
       SBC    A, A'
       SBC    B, A'
@@ -22926,6 +23023,7 @@
       XOR    E, W'
       XOR    H, W'
       XOR    L, W'
+      CP     W', 0
       OR     W, W'
       OR     A, W'
       OR     B, W'
@@ -22950,7 +23048,17 @@
       CP     E, W'
       CP     H, W'
       CP     L, W'
+      RLC    A, W'
+      RRC    A, W'
+      RL     A, W'
+      RR     A, W'
+      SLA    A, W'
+      SRA    A, W'
+      SLL    A, W'
+      SRL    A, W'
       LD     W', 4
+      PUSH   W'
+      POP    W'
       CPL    W'
       NEG    W'
       DAA    W'
@@ -22960,6 +23068,11 @@
       XORCF  3, W'
       LDCF   4, W'
       STCF   5, W'
+      ANDCF  A, W'
+      ORCF   A, W'
+      XORCF  A, W'
+      LDCF   A, W'
+      STCF   A, W'
       RES    1, W'
       SET    2, W'
       CHG    3, W'
@@ -23039,6 +23152,7 @@
       SUB    E, W'
       SUB    H, W'
       SUB    L, W'
+      LD     W', 0
       SBC    W, W'
       SBC    A, W'
       SBC    B, W'
@@ -23078,6 +23192,7 @@
       XOR    E, QA'
       XOR    H, QA'
       XOR    L, QA'
+      CP     QA', 0
       OR     W, QA'
       OR     A, QA'
       OR     B, QA'
@@ -23102,7 +23217,17 @@
       CP     E, QA'
       CP     H, QA'
       CP     L, QA'
+      RLC    A, QA'
+      RRC    A, QA'
+      RL     A, QA'
+      RR     A, QA'
+      SLA    A, QA'
+      SRA    A, QA'
+      SLL    A, QA'
+      SRL    A, QA'
       LD     QA', 4
+      PUSH   QA'
+      POP    QA'
       CPL    QA'
       NEG    QA'
       DAA    QA'
@@ -23112,6 +23237,11 @@
       XORCF  3, QA'
       LDCF   4, QA'
       STCF   5, QA'
+      ANDCF  A, QA'
+      ORCF   A, QA'
+      XORCF  A, QA'
+      LDCF   A, QA'
+      STCF   A, QA'
       RES    1, QA'
       SET    2, QA'
       CHG    3, QA'
@@ -23191,6 +23321,7 @@
       SUB    E, QA'
       SUB    H, QA'
       SUB    L, QA'
+      LD     QA', 0
       SBC    W, QA'
       SBC    A, QA'
       SBC    B, QA'
@@ -23230,6 +23361,7 @@
       XOR    E, QW'
       XOR    H, QW'
       XOR    L, QW'
+      CP     QW', 0
       OR     W, QW'
       OR     A, QW'
       OR     B, QW'
@@ -23254,7 +23386,17 @@
       CP     E, QW'
       CP     H, QW'
       CP     L, QW'
+      RLC    A, QW'
+      RRC    A, QW'
+      RL     A, QW'
+      RR     A, QW'
+      SLA    A, QW'
+      SRA    A, QW'
+      SLL    A, QW'
+      SRL    A, QW'
       LD     QW', 4
+      PUSH   QW'
+      POP    QW'
       CPL    QW'
       NEG    QW'
       DAA    QW'
@@ -23264,6 +23406,11 @@
       XORCF  3, QW'
       LDCF   4, QW'
       STCF   5, QW'
+      ANDCF  A, QW'
+      ORCF   A, QW'
+      XORCF  A, QW'
+      LDCF   A, QW'
+      STCF   A, QW'
       RES    1, QW'
       SET    2, QW'
       CHG    3, QW'
@@ -23343,6 +23490,7 @@
       SUB    E, QW'
       SUB    H, QW'
       SUB    L, QW'
+      LD     QW', 0
       SBC    W, QW'
       SBC    A, QW'
       SBC    B, QW'
@@ -23382,6 +23530,7 @@
       XOR    E, C'
       XOR    H, C'
       XOR    L, C'
+      CP     C', 0
       OR     W, C'
       OR     A, C'
       OR     B, C'
@@ -23406,7 +23555,17 @@
       CP     E, C'
       CP     H, C'
       CP     L, C'
+      RLC    A, C'
+      RRC    A, C'
+      RL     A, C'
+      RR     A, C'
+      SLA    A, C'
+      SRA    A, C'
+      SLL    A, C'
+      SRL    A, C'
       LD     C', 4
+      PUSH   C'
+      POP    C'
       CPL    C'
       NEG    C'
       DAA    C'
@@ -23416,6 +23575,11 @@
       XORCF  3, C'
       LDCF   4, C'
       STCF   5, C'
+      ANDCF  A, C'
+      ORCF   A, C'
+      XORCF  A, C'
+      LDCF   A, C'
+      STCF   A, C'
       RES    1, C'
       SET    2, C'
       CHG    3, C'
@@ -23495,6 +23659,7 @@
       SUB    E, C'
       SUB    H, C'
       SUB    L, C'
+      LD     C', 0
       SBC    W, C'
       SBC    A, C'
       SBC    B, C'
@@ -23534,6 +23699,7 @@
       XOR    D, C'
       XOR    H, B'
       XOR    L, B'
+      CP     B', 0
       OR     W, B'
       OR     A, B'
       OR     B, B'
@@ -23558,7 +23724,17 @@
       CP     E, B'
       CP     H, B'
       CP     L, B'
+      RLC    A, B'
+      RRC    A, B'
+      RL     A, B'
+      RR     A, B'
+      SLA    A, B'
+      SRA    A, B'
+      SLL    A, B'
+      SRL    A, B'
       LD     B', 4
+      PUSH   B'
+      POP    B'
       CPL    B'
       NEG    B'
       DAA    B'
@@ -23568,6 +23744,11 @@
       XORCF  3, B'
       LDCF   4, B'
       STCF   5, B'
+      ANDCF  A, B'
+      ORCF   A, B'
+      XORCF  A, B'
+      LDCF   A, B'
+      STCF   A, B'
       RES    1, B'
       SET    2, B'
       CHG    3, B'
@@ -23647,6 +23828,7 @@
       SUB    E, B'
       SUB    H, B'
       SUB    L, B'
+      LD     B', 0
       SBC    W, B'
       SBC    A, B'
       SBC    B, B'
@@ -23686,6 +23868,7 @@
       XOR    D, B'
       XOR    E, B'
       XOR    L, QC'
+      CP     QC', 0
       OR     W, QC'
       OR     A, QC'
       OR     B, QC'
@@ -23710,7 +23893,17 @@
       CP     E, QC'
       CP     H, QC'
       CP     L, QC'
+      RLC    A, QC'
+      RRC    A, QC'
+      RL     A, QC'
+      RR     A, QC'
+      SLA    A, QC'
+      SRA    A, QC'
+      SLL    A, QC'
+      SRL    A, QC'
       LD     QC', 4
+      PUSH   QC'
+      POP    QC'
       CPL    QC'
       NEG    QC'
       DAA    QC'
@@ -23720,6 +23913,11 @@
       XORCF  3, QC'
       LDCF   4, QC'
       STCF   5, QC'
+      ANDCF  A, QC'
+      ORCF   A, QC'
+      XORCF  A, QC'
+      LDCF   A, QC'
+      STCF   A, QC'
       RES    1, QC'
       SET    2, QC'
       CHG    3, QC'
@@ -23799,6 +23997,7 @@
       SUB    E, QC'
       SUB    H, QC'
       SUB    L, QC'
+      LD     QC', 0
       SBC    W, QC'
       SBC    A, QC'
       SBC    B, QC'
@@ -23838,6 +24037,7 @@
       XOR    D, QC'
       XOR    E, QC'
       XOR    H, QC'
+      CP     QB', 0
       OR     W, QB'
       OR     A, QB'
       OR     B, QB'
@@ -23862,7 +24062,17 @@
       CP     E, QB'
       CP     H, QB'
       CP     L, QB'
+      RLC    A, QB'
+      RRC    A, QB'
+      RL     A, QB'
+      RR     A, QB'
+      SLA    A, QB'
+      SRA    A, QB'
+      SLL    A, QB'
+      SRL    A, QB'
       LD     QB', 4
+      PUSH   QB'
+      POP    QB'
       CPL    QB'
       NEG    QB'
       DAA    QB'
@@ -23872,6 +24082,11 @@
       XORCF  3, QB'
       LDCF   4, QB'
       STCF   5, QB'
+      ANDCF  A, QB'
+      ORCF   A, QB'
+      XORCF  A, QB'
+      LDCF   A, QB'
+      STCF   A, QB'
       RES    1, QB'
       SET    2, QB'
       CHG    3, QB'
@@ -23951,6 +24166,7 @@
       SUB    E, QB'
       SUB    H, QB'
       SUB    L, QB'
+      LD     QB', 0
       SBC    W, QB'
       SBC    A, QB'
       SBC    B, QB'
@@ -23991,6 +24207,7 @@
       XOR    E, QB'
       XOR    H, QB'
       XOR    L, QB'
+      CP     E', 1
       OR     W, E'
       OR     A, E'
       OR     B, E'
@@ -24015,7 +24232,17 @@
       CP     E, E'
       CP     H, E'
       CP     L, E'
+      RLC    A, E'
+      RRC    A, E'
+      RL     A, E'
+      RR     A, E'
+      SLA    A, E'
+      SRA    A, E'
+      SLL    A, E'
+      SRL    A, E'
       LD     E', 4
+      PUSH   E'
+      POP    E'
       CPL    E'
       NEG    E'
       DAA    E'
@@ -24025,6 +24252,11 @@
       XORCF  3, E'
       LDCF   4, E'
       STCF   5, E'
+      ANDCF  A, E'
+      ORCF   A, E'
+      XORCF  A, E'
+      LDCF   A, E'
+      STCF   A, E'
       RES    1, E'
       SET    2, E'
       CHG    3, E'
@@ -24104,6 +24336,7 @@
       SUB    E, E'
       SUB    H, E'
       SUB    L, E'
+      LD     E', 0
       SBC    W, E'
       SBC    A, E'
       SBC    B, E'
@@ -24144,6 +24377,7 @@
       XOR    E, E'
       XOR    H, E'
       XOR    L, E'
+      CP     D', 2
       OR     W, D'
       OR     A, D'
       OR     B, D'
@@ -24168,7 +24402,17 @@
       CP     E, D'
       CP     H, D'
       CP     L, D'
+      RLC    A, D'
+      RRC    A, D'
+      RL     A, D'
+      RR     A, D'
+      SLA    A, D'
+      SRA    A, D'
+      SLL    A, D'
+      SRL    A, D'
       LD     D', 4
+      PUSH   D'
+      POP    D'
       CPL    D'
       NEG    D'
       DAA    D'
@@ -24178,6 +24422,11 @@
       XORCF  3, D'
       LDCF   4, D'
       STCF   5, D'
+      ANDCF  A, D'
+      ORCF   A, D'
+      XORCF  A, D'
+      LDCF   A, D'
+      STCF   A, D'
       RES    1, D'
       SET    2, D'
       CHG    3, D'
@@ -24257,6 +24506,7 @@
       SUB    E, D'
       SUB    H, D'
       SUB    L, D'
+      LD     D', 0
       SBC    W, D'
       SBC    A, D'
       SBC    B, D'
@@ -24297,6 +24547,7 @@
       XOR    E, D'
       XOR    H, D'
       XOR    L, D'
+      CP     QE', 3
       OR     W, QE'
       OR     A, QE'
       OR     B, QE'
@@ -24321,7 +24572,17 @@
       CP     E, QE'
       CP     H, QE'
       CP     L, QE'
+      RLC    A, QE'
+      RRC    A, QE'
+      RL     A, QE'
+      RR     A, QE'
+      SLA    A, QE'
+      SRA    A, QE'
+      SLL    A, QE'
+      SRL    A, QE'
       LD     QE', 4
+      PUSH   QE'
+      POP    QE'
       CPL    QE'
       NEG    QE'
       DAA    QE'
@@ -24331,6 +24592,11 @@
       XORCF  3, QE'
       LDCF   4, QE'
       STCF   5, QE'
+      ANDCF  A, QE'
+      ORCF   A, QE'
+      XORCF  A, QE'
+      LDCF   A, QE'
+      STCF   A, QE'
       RES    1, QE'
       SET    2, QE'
       CHG    3, QE'
@@ -24410,6 +24676,7 @@
       SUB    E, QE'
       SUB    H, QE'
       SUB    L, QE'
+      LD     QE', 0
       SBC    W, QE'
       SBC    A, QE'
       SBC    B, QE'
@@ -24450,6 +24717,7 @@
       XOR    E, QE'
       XOR    H, QE'
       XOR    L, QE'
+      CP     QD', 4
       OR     W, QD'
       OR     A, QD'
       OR     B, QD'
@@ -24474,7 +24742,17 @@
       CP     E, QD'
       CP     H, QD'
       CP     L, QD'
+      RLC    A, QD'
+      RRC    A, QD'
+      RL     A, QD'
+      RR     A, QD'
+      SLA    A, QD'
+      SRA    A, QD'
+      SLL    A, QD'
+      SRL    A, QD'
       LD     QD', 4
+      PUSH   QD'
+      POP    QD'
       CPL    QD'
       NEG    QD'
       DAA    QD'
@@ -24484,6 +24762,11 @@
       XORCF  3, QD'
       LDCF   4, QD'
       STCF   5, QD'
+      ANDCF  A, QD'
+      ORCF   A, QD'
+      XORCF  A, QD'
+      LDCF   A, QD'
+      STCF   A, QD'
       RES    1, QD'
       SET    2, QD'
       CHG    3, QD'
@@ -24563,6 +24846,7 @@
       SUB    E, QD'
       SUB    H, QD'
       SUB    L, QD'
+      LD     QD', 0
       SBC    W, QD'
       SBC    A, QD'
       SBC    B, QD'
@@ -24603,6 +24887,7 @@
       XOR    E, QD'
       XOR    H, QD'
       XOR    L, QD'
+      CP     L', 5
       OR     W, L'
       OR     A, L'
       OR     B, L'
@@ -24627,7 +24912,17 @@
       CP     E, L'
       CP     H, L'
       CP     L, L'
+      RLC    A, L'
+      RRC    A, L'
+      RL     A, L'
+      RR     A, L'
+      SLA    A, L'
+      SRA    A, L'
+      SLL    A, L'
+      SRL    A, L'
       LD     L', 4
+      PUSH   L'
+      POP    L'
       CPL    L'
       NEG    L'
       DAA    L'
@@ -24637,6 +24932,11 @@
       XORCF  3, L'
       LDCF   4, L'
       STCF   5, L'
+      ANDCF  A, L'
+      ORCF   A, L'
+      XORCF  A, L'
+      LDCF   A, L'
+      STCF   A, L'
       RES    1, L'
       SET    2, L'
       CHG    3, L'
@@ -24716,6 +25016,7 @@
       SUB    E, L'
       SUB    H, L'
       SUB    L, L'
+      LD     L', 0
       SBC    W, L'
       SBC    A, L'
       SBC    B, L'
@@ -24756,6 +25057,7 @@
       XOR    E, L'
       XOR    H, L'
       XOR    L, L'
+      CP     H', 6
       OR     W, H'
       OR     A, H'
       OR     B, H'
@@ -24780,7 +25082,17 @@
       CP     E, H'
       CP     H, H'
       CP     L, H'
+      RLC    A, H'
+      RRC    A, H'
+      RL     A, H'
+      RR     A, H'
+      SLA    A, H'
+      SRA    A, H'
+      SLL    A, H'
+      SRL    A, H'
       LD     H', 4
+      PUSH   H'
+      POP    H'
       CPL    H'
       NEG    H'
       DAA    H'
@@ -24790,6 +25102,11 @@
       XORCF  3, H'
       LDCF   4, H'
       STCF   5, H'
+      ANDCF  A, H'
+      ORCF   A, H'
+      XORCF  A, H'
+      LDCF   A, H'
+      STCF   A, H'
       RES    1, H'
       SET    2, H'
       CHG    3, H'
@@ -24869,6 +25186,7 @@
       SUB    E, H'
       SUB    H, H'
       SUB    L, H'
+      LD     H', 0
       SBC    W, H'
       SBC    A, H'
       SBC    B, H'
@@ -24909,6 +25227,7 @@
       XOR    E, H'
       XOR    H, H'
       XOR    L, H'
+      CP     QL', 7
       OR     W, QL'
       OR     A, QL'
       OR     B, QL'
@@ -24933,7 +25252,17 @@
       CP     E, QL'
       CP     H, QL'
       CP     L, QL'
+      RLC    A, QL'
+      RRC    A, QL'
+      RL     A, QL'
+      RR     A, QL'
+      SLA    A, QL'
+      SRA    A, QL'
+      SLL    A, QL'
+      SRL    A, QL'
       LD     QL', 4
+      PUSH   QL'
+      POP    QL'
       CPL    QL'
       NEG    QL'
       DAA    QL'
@@ -24943,6 +25272,11 @@
       XORCF  3, QL'
       LDCF   4, QL'
       STCF   5, QL'
+      ANDCF  A, QL'
+      ORCF   A, QL'
+      XORCF  A, QL'
+      LDCF   A, QL'
+      STCF   A, QL'
       RES    1, QL'
       SET    2, QL'
       CHG    3, QL'
@@ -25022,6 +25356,7 @@
       SUB    E, QL'
       SUB    H, QL'
       SUB    L, QL'
+      LD     QL', 0
       SBC    W, QL'
       SBC    A, QL'
       SBC    B, QL'
@@ -25086,7 +25421,17 @@
       CP     E, QH'
       CP     H, QH'
       CP     L, QH'
+      RLC    A, QH'
+      RRC    A, QH'
+      RL     A, QH'
+      RR     A, QH'
+      SLA    A, QH'
+      SRA    A, QH'
+      SLL    A, QH'
+      SRL    A, QH'
       LD     QH', 4
+      PUSH   QH'
+      POP    QH'
       CPL    QH'
       NEG    QH'
       DAA    QH'
@@ -25096,6 +25441,11 @@
       XORCF  3, QH'
       LDCF   4, QH'
       STCF   5, QH'
+      ANDCF  A, QH'
+      ORCF   A, QH'
+      XORCF  A, QH'
+      LDCF   A, QH'
+      STCF   A, QH'
       RES    1, QH'
       SET    2, QH'
       CHG    3, QH'
@@ -25175,6 +25525,7 @@
       SUB    E, QH'
       SUB    H, QH'
       SUB    L, QH'
+      LD     QH', 0
       SBC    W, QH'
       SBC    A, QH'
       SBC    B, QH'
@@ -25215,6 +25566,7 @@
       XOR    E, QH'
       XOR    H, QH'
       XOR    L, QH'
+      CP     QH', 0
       OR     A, A
       OR     B, A
       OR     C, A
@@ -25238,7 +25590,17 @@
       CP     E, A
       CP     H, A
       CP     L, A
+      RLC    A, A
+      RRC    A, A
+      RL     A, A
+      RR     A, A
+      SLA    A, A
+      SRA    A, A
+      SLL    A, A
+      SRL    A, A
       LD     A, 4
+      PUSH   A
+      POP    A
       CPL    A
       NEG    A
       DAA    A
@@ -25248,6 +25610,11 @@
       XORCF  3, A
       LDCF   4, A
       STCF   5, A
+      ANDCF  A, A
+      ORCF   A, A
+      XORCF  A, A
+      LDCF   A, A
+      STCF   A, A
       RES    1, A
       SET    2, A
       CHG    3, A
@@ -25326,6 +25693,7 @@
       SUB    E, A
       SUB    H, A
       SUB    L, A
+      LD     A, 0
       SBC    W, A
       SBC    A, A
       SBC    B, A
@@ -25366,6 +25734,7 @@
       XOR    E, A
       XOR    H, A
       XOR    L, A
+      CP     A, 0
       OR     W, A
       OR     B, W
       OR     C, W
@@ -25389,7 +25758,17 @@
       CP     E, W
       CP     H, W
       CP     L, W
+      RLC    A, W
+      RRC    A, W
+      RL     A, W
+      RR     A, W
+      SLA    A, W
+      SRA    A, W
+      SLL    A, W
+      SRL    A, W
       LD     W, 4
+      PUSH   W
+      POP    W
       CPL    W
       NEG    W
       DAA    W
@@ -25399,6 +25778,11 @@
       XORCF  3, W
       LDCF   4, W
       STCF   5, W
+      ANDCF  A, W
+      ORCF   A, W
+      XORCF  A, W
+      LDCF   A, W
+      STCF   A, W
       RES    1, W
       SET    2, W
       CHG    3, W
@@ -25475,6 +25859,7 @@
       SUB    E, W
       SUB    H, W
       SUB    L, W
+      LD     W, 0
       SBC    W, W
       SBC    A, W
       SBC    B, W
@@ -25515,6 +25900,7 @@
       XOR    E, W
       XOR    H, W
       XOR    L, W
+      CP     W, 0
       OR     W, W
       OR     A, W
       OR     C, QA
@@ -25538,7 +25924,17 @@
       CP     E, QA
       CP     H, QA
       CP     L, QA
+      RLC    A, QA
+      RRC    A, QA
+      RL     A, QA
+      RR     A, QA
+      SLA    A, QA
+      SRA    A, QA
+      SLL    A, QA
+      SRL    A, QA
       LD     QA, 4
+      PUSH   QA
+      POP    QA
       CPL    QA
       NEG    QA
       DAA    QA
@@ -25548,6 +25944,11 @@
       XORCF  3, QA
       LDCF   4, QA
       STCF   5, QA
+      ANDCF  A, QA
+      ORCF   A, QA
+      XORCF  A, QA
+      LDCF   A, QA
+      STCF   A, QA
       RES    1, QA
       SET    2, QA
       CHG    3, QA
@@ -25627,6 +26028,7 @@
       SUB    E, QA
       SUB    H, QA
       SUB    L, QA
+      LD     QA, 0
       SBC    W, QA
       SBC    A, QA
       SBC    B, QA
@@ -25667,6 +26069,7 @@
       XOR    E, QA
       XOR    H, QA
       XOR    L, QA
+      CP     QA, 0
       OR     W, QA
       OR     A, QA
       OR     B, QA
@@ -25690,7 +26093,17 @@
       CP     E, QW
       CP     H, QW
       CP     L, QW
+      RLC    A, QW
+      RRC    A, QW
+      RL     A, QW
+      RR     A, QW
+      SLA    A, QW
+      SRA    A, QW
+      SLL    A, QW
+      SRL    A, QW
       LD     QW, 4
+      PUSH   QW
+      POP    QW
       CPL    QW
       NEG    QW
       DAA    QW
@@ -25700,6 +26113,11 @@
       XORCF  3, QW
       LDCF   4, QW
       STCF   5, QW
+      ANDCF  A, QW
+      ORCF   A, QW
+      XORCF  A, QW
+      LDCF   A, QW
+      STCF   A, QW
       RES    1, QW
       SET    2, QW
       CHG    3, QW
@@ -25779,6 +26197,7 @@
       SUB    E, QW
       SUB    H, QW
       SUB    L, QW
+      LD     QW, 0
       SBC    W, QW
       SBC    A, QW
       SBC    B, QW
@@ -25819,6 +26238,7 @@
       XOR    E, QW
       XOR    H, QW
       XOR    L, QW
+      CP     QW, 0
       OR     W, QW
       OR     A, QW
       OR     B, QW
@@ -25842,7 +26262,17 @@
       CP     E, C
       CP     H, C
       CP     L, C
+      RLC    A, C
+      RRC    A, C
+      RL     A, C
+      RR     A, C
+      SLA    A, C
+      SRA    A, C
+      SLL    A, C
+      SRL    A, C
       LD     C, 4
+      PUSH   C
+      POP    C
       CPL    C
       NEG    C
       DAA    C
@@ -25852,6 +26282,11 @@
       XORCF  3, C
       LDCF   4, C
       STCF   5, C
+      ANDCF  A, C
+      ORCF   A, C
+      XORCF  A, C
+      LDCF   A, C
+      STCF   A, C
       RES    1, C
       SET    2, C
       CHG    3, C
@@ -25926,6 +26361,7 @@
       SUB    E, C
       SUB    H, C
       SUB    L, C
+      LD     C, 0
       SBC    W, C
       SBC    A, C
       SBC    B, C
@@ -25966,6 +26402,7 @@
       XOR    E, C
       XOR    H, C
       XOR    L, C
+      CP     C, 0
       OR     W, C
       OR     A, C
       OR     B, C
@@ -25989,7 +26426,17 @@
       CP     E, B
       CP     H, B
       CP     L, B
+      RLC    A, B
+      RRC    A, B
+      RL     A, B
+      RR     A, B
+      SLA    A, B
+      SRA    A, B
+      SLL    A, B
+      SRL    A, B
       LD     B, 4
+      PUSH   B
+      POP    B
       CPL    B
       NEG    B
       DAA    B
@@ -25999,6 +26446,11 @@
       XORCF  3, B
       LDCF   4, B
       STCF   5, B
+      ANDCF  A, B
+      ORCF   A, B
+      XORCF  A, B
+      LDCF   A, B
+      STCF   A, B
       RES    1, B
       SET    2, B
       CHG    3, B
@@ -26071,6 +26523,7 @@
       SUB    E, B
       SUB    H, B
       SUB    L, B
+      LD     B, 0
       SBC    W, B
       SBC    A, B
       SBC    B, B
@@ -26111,6 +26564,7 @@
       XOR    E, B
       XOR    H, B
       XOR    L, B
+      CP     B, 0
       OR     W, B
       OR     A, B
       OR     B, B
@@ -26134,7 +26588,17 @@
       CP     E, QC
       CP     H, QC
       CP     L, QC
+      RLC    A, QC
+      RRC    A, QC
+      RL     A, QC
+      RR     A, QC
+      SLA    A, QC
+      SRA    A, QC
+      SLL    A, QC
+      SRL    A, QC
       LD     QC, 4
+      PUSH   QC
+      POP    QC
       CPL    QC
       NEG    QC
       DAA    QC
@@ -26144,6 +26608,11 @@
       XORCF  3, QC
       LDCF   4, QC
       STCF   5, QC
+      ANDCF  A, QC
+      ORCF   A, QC
+      XORCF  A, QC
+      LDCF   A, QC
+      STCF   A, QC
       RES    1, QC
       SET    2, QC
       CHG    3, QC
@@ -26223,6 +26692,7 @@
       SUB    E, QC
       SUB    H, QC
       SUB    L, QC
+      LD     QC, 0
       SBC    W, QC
       SBC    A, QC
       SBC    B, QC
@@ -26263,6 +26733,7 @@
       XOR    E, QC
       XOR    H, QC
       XOR    L, QC
+      CP     QC, 0
       OR     W, QC
       OR     A, QC
       OR     B, QC
@@ -26286,7 +26757,17 @@
       CP     E, QB
       CP     H, QB
       CP     L, QB
+      RLC    A, QB
+      RRC    A, QB
+      RL     A, QB
+      RR     A, QB
+      SLA    A, QB
+      SRA    A, QB
+      SLL    A, QB
+      SRL    A, QB
       LD     QB, 4
+      PUSH   QB
+      POP    QB
       CPL    QB
       NEG    QB
       DAA    QB
@@ -26296,6 +26777,11 @@
       XORCF  3, QB
       LDCF   4, QB
       STCF   5, QB
+      ANDCF  A, QB
+      ORCF   A, QB
+      XORCF  A, QB
+      LDCF   A, QB
+      STCF   A, QB
       RES    1, QB
       SET    2, QB
       CHG    3, QB
@@ -26375,6 +26861,7 @@
       SUB    E, QB
       SUB    H, QB
       SUB    L, QB
+      LD     QB, 0
       SBC    W, QB
       SBC    A, QB
       SBC    B, QB
@@ -26415,6 +26902,7 @@
       XOR    E, QB
       XOR    H, QB
       XOR    L, QB
+      CP     QB, 0
       OR     W, QB
       OR     A, QB
       OR     B, QB
@@ -26438,7 +26926,17 @@
       CP     E, E
       CP     H, E
       CP     L, E
+      RLC    A, E
+      RRC    A, E
+      RL     A, E
+      RR     A, E
+      SLA    A, E
+      SRA    A, E
+      SLL    A, E
+      SRL    A, E
       LD     E, 4
+      PUSH   E
+      POP    E
       CPL    E
       NEG    E
       DAA    E
@@ -26448,6 +26946,11 @@
       XORCF  3, E
       LDCF   4, E
       STCF   5, E
+      ANDCF  A, E
+      ORCF   A, E
+      XORCF  A, E
+      LDCF   A, E
+      STCF   A, E
       RES    1, E
       SET    2, E
       CHG    3, E
@@ -26518,6 +27021,7 @@
       SUB    E, E
       SUB    H, E
       SUB    L, E
+      LD     E, 0
       SBC    W, E
       SBC    A, E
       SBC    B, E
@@ -26558,6 +27062,7 @@
       XOR    E, E
       XOR    H, E
       XOR    L, E
+      CP     E, 0
       OR     W, E
       OR     A, E
       OR     B, E
@@ -26581,7 +27086,17 @@
       CP     E, D
       CP     H, D
       CP     L, D
+      RLC    A, D
+      RRC    A, D
+      RL     A, D
+      RR     A, D
+      SLA    A, D
+      SRA    A, D
+      SLL    A, D
+      SRL    A, D
       LD     D, 4
+      PUSH   D
+      POP    D
       CPL    D
       NEG    D
       DAA    D
@@ -26591,6 +27106,11 @@
       XORCF  3, D
       LDCF   4, D
       STCF   5, D
+      ANDCF  A, D
+      ORCF   A, D
+      XORCF  A, D
+      LDCF   A, D
+      STCF   A, D
       RES    1, D
       SET    2, D
       CHG    3, D
@@ -26659,6 +27179,7 @@
       SUB    E, D
       SUB    H, D
       SUB    L, D
+      LD     D, 0
       SBC    W, D
       SBC    A, D
       SBC    B, D
@@ -26699,6 +27220,7 @@
       XOR    E, D
       XOR    H, D
       XOR    L, D
+      CP     D, 0
       OR     W, D
       OR     A, D
       OR     B, D
@@ -26722,7 +27244,17 @@
       CP     E, QE
       CP     H, QE
       CP     L, QE
+      RLC    A, QE
+      RRC    A, QE
+      RL     A, QE
+      RR     A, QE
+      SLA    A, QE
+      SRA    A, QE
+      SLL    A, QE
+      SRL    A, QE
       LD     QE, 4
+      PUSH   QE
+      POP    QE
       CPL    QE
       NEG    QE
       DAA    QE
@@ -26732,6 +27264,11 @@
       XORCF  3, QE
       LDCF   4, QE
       STCF   5, QE
+      ANDCF  A, QE
+      ORCF   A, QE
+      XORCF  A, QE
+      LDCF   A, QE
+      STCF   A, QE
       RES    1, QE
       SET    2, QE
       CHG    3, QE
@@ -26811,6 +27348,7 @@
       SUB    E, QE
       SUB    H, QE
       SUB    L, QE
+      LD     QE, 0
       SBC    W, QE
       SBC    A, QE
       SBC    B, QE
@@ -26851,6 +27389,7 @@
       XOR    E, QE
       XOR    H, QE
       XOR    L, QE
+      CP     QE, 0
       OR     W, QE
       OR     A, QE
       OR     B, QE
@@ -26874,7 +27413,17 @@
       CP     E, QD
       CP     H, QD
       CP     L, QD
+      RLC    A, QD
+      RRC    A, QD
+      RL     A, QD
+      RR     A, QD
+      SLA    A, QD
+      SRA    A, QD
+      SLL    A, QD
+      SRL    A, QD
       LD     QD, 4
+      PUSH   QD
+      POP    QD
       CPL    QD
       NEG    QD
       DAA    QD
@@ -26884,6 +27433,11 @@
       XORCF  3, QD
       LDCF   4, QD
       STCF   5, QD
+      ANDCF  A, QD
+      ORCF   A, QD
+      XORCF  A, QD
+      LDCF   A, QD
+      STCF   A, QD
       RES    1, QD
       SET    2, QD
       CHG    3, QD
@@ -26963,6 +27517,7 @@
       SUB    E, QD
       SUB    H, QD
       SUB    L, QD
+      LD     QD, 0
       SBC    W, QD
       SBC    A, QD
       SBC    B, QD
@@ -27003,6 +27558,7 @@
       XOR    E, QD
       XOR    H, QD
       XOR    L, QD
+      CP     QD, 0
       OR     W, QD
       OR     A, QD
       OR     B, QD
@@ -27026,7 +27582,17 @@
       CP     E, L
       CP     H, L
       CP     L, L
+      RLC    A, L
+      RRC    A, L
+      RL     A, L
+      RR     A, L
+      SLA    A, L
+      SRA    A, L
+      SLL    A, L
+      SRL    A, L
       LD     L, 4
+      PUSH   L
+      POP    L
       CPL    L
       NEG    L
       DAA    L
@@ -27036,6 +27602,11 @@
       XORCF  3, L
       LDCF   4, L
       STCF   5, L
+      ANDCF  A, L
+      ORCF   A, L
+      XORCF  A, L
+      LDCF   A, L
+      STCF   A, L
       RES    1, L
       SET    2, L
       CHG    3, L
@@ -27102,6 +27673,7 @@
       SUB    E, L
       SUB    H, L
       SUB    L, L
+      LD     L, 0
       SBC    W, L
       SBC    A, L
       SBC    B, L
@@ -27142,6 +27714,7 @@
       XOR    E, L
       XOR    H, L
       XOR    L, L
+      CP     L, 0
       OR     W, L
       OR     A, L
       OR     B, L
@@ -27165,7 +27738,17 @@
       CP     E, H
       CP     H, H
       CP     L, H
+      RLC    A, H
+      RRC    A, H
+      RL     A, H
+      RR     A, H
+      SLA    A, H
+      SRA    A, H
+      SLL    A, H
+      SRL    A, H
       LD     H, 4
+      PUSH   H
+      POP    H
       CPL    H
       NEG    H
       DAA    H
@@ -27175,6 +27758,11 @@
       XORCF  3, H
       LDCF   4, H
       STCF   5, H
+      ANDCF  A, H
+      ORCF   A, H
+      XORCF  A, H
+      LDCF   A, H
+      STCF   A, H
       RES    1, H
       SET    2, H
       CHG    3, H
@@ -27239,6 +27827,7 @@
       SUB    E, H
       SUB    H, H
       SUB    L, H
+      LD     H, 0
       SBC    W, H
       SBC    A, H
       SBC    B, H
@@ -27279,6 +27868,7 @@
       XOR    E, H
       XOR    H, H
       XOR    L, H
+      CP     H, 0
       OR     W, H
       OR     A, H
       OR     B, H
@@ -27302,7 +27892,17 @@
       CP     E, QL
       CP     H, QL
       CP     L, QL
+      RLC    A, QL
+      RRC    A, QL
+      RL     A, QL
+      RR     A, QL
+      SLA    A, QL
+      SRA    A, QL
+      SLL    A, QL
+      SRL    A, QL
       LD     QL, 4
+      PUSH   QL
+      POP    QL
       CPL    QL
       NEG    QL
       DAA    QL
@@ -27312,6 +27912,11 @@
       XORCF  3, QL
       LDCF   4, QL
       STCF   5, QL
+      ANDCF  A, QL
+      ORCF   A, QL
+      XORCF  A, QL
+      LDCF   A, QL
+      STCF   A, QL
       RES    1, QL
       SET    2, QL
       CHG    3, QL
@@ -27391,6 +27996,7 @@
       SUB    E, QL
       SUB    H, QL
       SUB    L, QL
+      LD     QL, 0
       SBC    W, QL
       SBC    A, QL
       SBC    B, QL
@@ -27431,6 +28037,7 @@
       XOR    E, QL
       XOR    H, QL
       XOR    L, QL
+      CP     QL, 0
       OR     W, QL
       OR     A, QL
       OR     B, QL
@@ -27454,7 +28061,17 @@
       CP     E, QH
       CP     H, QH
       CP     L, QH
+      RLC    A, QH
+      RRC    A, QH
+      RL     A, QH
+      RR     A, QH
+      SLA    A, QH
+      SRA    A, QH
+      SLL    A, QH
+      SRL    A, QH
       LD     QH, 4
+      PUSH   QH
+      POP    QH
       CPL    QH
       NEG    QH
       DAA    QH
@@ -27464,6 +28081,11 @@
       XORCF  3, QH
       LDCF   4, QH
       STCF   5, QH
+      ANDCF  A, QH
+      ORCF   A, QH
+      XORCF  A, QH
+      LDCF   A, QH
+      STCF   A, QH
       RES    1, QH
       SET    2, QH
       CHG    3, QH
@@ -27543,6 +28165,7 @@
       SUB    E, QH
       SUB    H, QH
       SUB    L, QH
+      LD     QH, 0
       SBC    W, QH
       SBC    A, QH
       SBC    B, QH
@@ -27583,6 +28206,7 @@
       XOR    E, QH
       XOR    H, QH
       XOR    L, QH
+      CP     QH, 0
       OR     W, QH
       OR     A, QH
       OR     B, QH
@@ -27606,7 +28230,17 @@
       CP     E, IXL
       CP     H, IXL
       CP     L, IXL
+      RLC    A, IXL
+      RRC    A, IXL
+      RL     A, IXL
+      RR     A, IXL
+      SLA    A, IXL
+      SRA    A, IXL
+      SLL    A, IXL
+      SRL    A, IXL
       LD     IXL, 4
+      PUSH   IXL
+      POP    IXL
       CPL    IXL
       NEG    IXL
       DAA    IXL
@@ -27616,6 +28250,11 @@
       XORCF  3, IXL
       LDCF   4, IXL
       STCF   5, IXL
+      ANDCF  A, IXL
+      ORCF   A, IXL
+      XORCF  A, IXL
+      LDCF   A, IXL
+      STCF   A, IXL
       RES    1, IXL
       SET    2, IXL
       CHG    3, IXL
@@ -27695,6 +28334,7 @@
       SUB    E, IXL
       SUB    H, IXL
       SUB    L, IXL
+      LD     IXL, 0
       SBC    W, IXL
       SBC    A, IXL
       SBC    B, IXL
@@ -27735,6 +28375,7 @@
       XOR    E, IXL
       XOR    H, IXL
       XOR    L, IXL
+      CP     IXL, 0
       OR     W, IXL
       OR     A, IXL
       OR     B, IXL
@@ -27758,7 +28399,17 @@
       CP     E, IXH
       CP     H, IXH
       CP     L, IXH
+      RLC    A, IXH
+      RRC    A, IXH
+      RL     A, IXH
+      RR     A, IXH
+      SLA    A, IXH
+      SRA    A, IXH
+      SLL    A, IXH
+      SRL    A, IXH
       LD     IXH, 4
+      PUSH   IXH
+      POP    IXH
       CPL    IXH
       NEG    IXH
       DAA    IXH
@@ -27768,6 +28419,11 @@
       XORCF  3, IXH
       LDCF   4, IXH
       STCF   5, IXH
+      ANDCF  A, IXH
+      ORCF   A, IXH
+      XORCF  A, IXH
+      LDCF   A, IXH
+      STCF   A, IXH
       RES    1, IXH
       SET    2, IXH
       CHG    3, IXH
@@ -27847,6 +28503,7 @@
       SUB    E, IXH
       SUB    H, IXH
       SUB    L, IXH
+      LD     IXH, 0
       SBC    W, IXH
       SBC    A, IXH
       SBC    B, IXH
@@ -27887,6 +28544,7 @@
       XOR    E, IXH
       XOR    H, IXH
       XOR    L, IXH
+      CP     IXH, 0
       OR     W, IXH
       OR     A, IXH
       OR     B, IXH
@@ -27910,7 +28568,17 @@
       CP     E, QIXL
       CP     H, QIXL
       CP     L, QIXL
+      RLC    A, QIXL
+      RRC    A, QIXL
+      RL     A, QIXL
+      RR     A, QIXL
+      SLA    A, QIXL
+      SRA    A, QIXL
+      SLL    A, QIXL
+      SRL    A, QIXL
       LD     QIXL, 4
+      PUSH   QIXL
+      POP    QIXL
       CPL    QIXL
       NEG    QIXL
       DAA    QIXL
@@ -27920,6 +28588,11 @@
       XORCF  3, QIXL
       LDCF   4, QIXL
       STCF   5, QIXL
+      ANDCF  A, QIXL
+      ORCF   A, QIXL
+      XORCF  A, QIXL
+      LDCF   A, QIXL
+      STCF   A, QIXL
       RES    1, QIXL
       SET    2, QIXL
       CHG    3, QIXL
@@ -27999,6 +28672,7 @@
       SUB    E, QIXL
       SUB    H, QIXL
       SUB    L, QIXL
+      LD     QIXL, 0
       SBC    W, QIXL
       SBC    A, QIXL
       SBC    B, QIXL
@@ -28039,6 +28713,7 @@
       XOR    E, QIXL
       XOR    H, QIXL
       XOR    L, QIXL
+      CP     QIXL, 0
       OR     W, QIXL
       OR     A, QIXL
       OR     B, QIXL
@@ -28062,7 +28737,17 @@
       CP     E, QIXH
       CP     H, QIXH
       CP     L, QIXH
+      RLC    A, QIXH
+      RRC    A, QIXH
+      RL     A, QIXH
+      RR     A, QIXH
+      SLA    A, QIXH
+      SRA    A, QIXH
+      SLL    A, QIXH
+      SRL    A, QIXH
       LD     QIXH, 4
+      PUSH   QIXH
+      POP    QIXH
       CPL    QIXH
       NEG    QIXH
       DAA    QIXH
@@ -28072,6 +28757,11 @@
       XORCF  3, QIXH
       LDCF   4, QIXH
       STCF   5, QIXH
+      ANDCF  A, QIXH
+      ORCF   A, QIXH
+      XORCF  A, QIXH
+      LDCF   A, QIXH
+      STCF   A, QIXH
       RES    1, QIXH
       SET    2, QIXH
       CHG    3, QIXH
@@ -28151,6 +28841,7 @@
       SUB    E, QIXH
       SUB    H, QIXH
       SUB    L, QIXH
+      LD     QIXH, 0
       SBC    W, QIXH
       SBC    A, QIXH
       SBC    B, QIXH
@@ -28191,6 +28882,7 @@
       XOR    E, QIXH
       XOR    H, QIXH
       XOR    L, QIXH
+      CP     QIXH, 0
       OR     W, QIXH
       OR     A, QIXH
       OR     B, QIXH
@@ -28214,7 +28906,17 @@
       CP     E, IYL
       CP     H, IYL
       CP     L, IYL
+      RLC    A, IYL
+      RRC    A, IYL
+      RL     A, IYL
+      RR     A, IYL
+      SLA    A, IYL
+      SRA    A, IYL
+      SLL    A, IYL
+      SRL    A, IYL
       LD     IYL, 4
+      PUSH   IYL
+      POP    IYL
       CPL    IYL
       NEG    IYL
       DAA    IYL
@@ -28224,6 +28926,11 @@
       XORCF  3, IYL
       LDCF   4, IYL
       STCF   5, IYL
+      ANDCF  A, IYL
+      ORCF   A, IYL
+      XORCF  A, IYL
+      LDCF   A, IYL
+      STCF   A, IYL
       RES    1, IYL
       SET    2, IYL
       CHG    3, IYL
@@ -28303,6 +29010,7 @@
       SUB    E, IYL
       SUB    H, IYL
       SUB    L, IYL
+      LD     IYL, 0
       SBC    W, IYL
       SBC    A, IYL
       SBC    B, IYL
@@ -28343,6 +29051,7 @@
       XOR    E, IYL
       XOR    H, IYL
       XOR    L, IYL
+      CP     IYL, 0
       OR     W, IYL
       OR     A, IYL
       OR     B, IYL
@@ -28366,7 +29075,17 @@
       CP     D, IYL
       CP     H, IYH
       CP     L, IYH
+      RLC    A, IYH
+      RRC    A, IYH
+      RL     A, IYH
+      RR     A, IYH
+      SLA    A, IYH
+      SRA    A, IYH
+      SLL    A, IYH
+      SRL    A, IYH
       LD     IYH, 4
+      PUSH   IYH
+      POP    IYH
       CPL    IYH
       NEG    IYH
       DAA    IYH
@@ -28376,6 +29095,11 @@
       XORCF  3, IYH
       LDCF   4, IYH
       STCF   5, IYH
+      ANDCF  A, IYH
+      ORCF   A, IYH
+      XORCF  A, IYH
+      LDCF   A, IYH
+      STCF   A, IYH
       RES    1, IYH
       SET    2, IYH
       CHG    3, IYH
@@ -28455,6 +29179,7 @@
       SUB    E, IYH
       SUB    H, IYH
       SUB    L, IYH
+      LD     IYH, 0
       SBC    W, IYH
       SBC    A, IYH
       SBC    B, IYH
@@ -28495,6 +29220,7 @@
       XOR    E, IYH
       XOR    H, IYH
       XOR    L, IYH
+      CP     IYH, 0
       OR     W, IYH
       OR     A, IYH
       OR     B, IYH
@@ -28518,7 +29244,17 @@
       CP     D, IYH
       CP     E, IYH
       CP     L, QIYL
+      RLC    A, QIYL
+      RRC    A, QIYL
+      RL     A, QIYL
+      RR     A, QIYL
+      SLA    A, QIYL
+      SRA    A, QIYL
+      SLL    A, QIYL
+      SRL    A, QIYL
       LD     QIYL, 4
+      PUSH   QIYL
+      POP    QIYL
       CPL    QIYL
       NEG    QIYL
       DAA    QIYL
@@ -28528,6 +29264,11 @@
       XORCF  3, QIYL
       LDCF   4, QIYL
       STCF   5, QIYL
+      ANDCF  A, QIYL
+      ORCF   A, QIYL
+      XORCF  A, QIYL
+      LDCF   A, QIYL
+      STCF   A, QIYL
       RES    1, QIYL
       SET    2, QIYL
       CHG    3, QIYL
@@ -28607,6 +29348,7 @@
       SUB    E, QIYL
       SUB    H, QIYL
       SUB    L, QIYL
+      LD     QIYL, 0
       SBC    W, QIYL
       SBC    A, QIYL
       SBC    B, QIYL
@@ -28647,6 +29389,7 @@
       XOR    E, QIYL
       XOR    H, QIYL
       XOR    L, QIYL
+      CP     QIYL, 0
       OR     W, QIYL
       OR     A, QIYL
       OR     B, QIYL
@@ -28670,7 +29413,17 @@
       CP     D, QIYL
       CP     E, QIYL
       CP     H, QIYL
+      RLC    A, QIYH
+      RRC    A, QIYH
+      RL     A, QIYH
+      RR     A, QIYH
+      SLA    A, QIYH
+      SRA    A, QIYH
+      SLL    A, QIYH
+      SRL    A, QIYH
       LD     QIYH, 4
+      PUSH   QIYH
+      POP    QIYH
       CPL    QIYH
       NEG    QIYH
       DAA    QIYH
@@ -28680,6 +29433,11 @@
       XORCF  3, QIYH
       LDCF   4, QIYH
       STCF   5, QIYH
+      ANDCF  A, QIYH
+      ORCF   A, QIYH
+      XORCF  A, QIYH
+      LDCF   A, QIYH
+      STCF   A, QIYH
       RES    1, QIYH
       SET    2, QIYH
       CHG    3, QIYH
@@ -28759,6 +29517,7 @@
       SUB    E, QIYH
       SUB    H, QIYH
       SUB    L, QIYH
+      LD     QIYH, 0
       SBC    W, QIYH
       SBC    A, QIYH
       SBC    B, QIYH
@@ -28799,6 +29558,7 @@
       XOR    E, QIYH
       XOR    H, QIYH
       XOR    L, QIYH
+      CP     QIYH, 0
       OR     W, QIYH
       OR     A, QIYH
       OR     B, QIYH
@@ -28823,7 +29583,16 @@
       CP     E, QIYH
       CP     H, QIYH
       CP     L, QIYH
+      RRC    A, IZL
+      RL     A, IZL
+      RR     A, IZL
+      SLA    A, IZL
+      SRA    A, IZL
+      SLL    A, IZL
+      SRL    A, IZL
       LD     IZL, 4
+      PUSH   IZL
+      POP    IZL
       CPL    IZL
       NEG    IZL
       DAA    IZL
@@ -28833,6 +29602,11 @@
       XORCF  3, IZL
       LDCF   4, IZL
       STCF   5, IZL
+      ANDCF  A, IZL
+      ORCF   A, IZL
+      XORCF  A, IZL
+      LDCF   A, IZL
+      STCF   A, IZL
       RES    1, IZL
       SET    2, IZL
       CHG    3, IZL
@@ -28912,6 +29686,7 @@
       SUB    E, IZL
       SUB    H, IZL
       SUB    L, IZL
+      LD     IZL, 0
       SBC    W, IZL
       SBC    A, IZL
       SBC    B, IZL
@@ -28952,6 +29727,7 @@
       XOR    E, IZL
       XOR    H, IZL
       XOR    L, IZL
+      CP     IZL, 0
       OR     W, IZL
       OR     A, IZL
       OR     B, IZL
@@ -28976,7 +29752,16 @@
       CP     E, IZL
       CP     H, IZL
       CP     L, IZL
+      RLC    A, IZL
+      RL     A, IZH
+      RR     A, IZH
+      SLA    A, IZH
+      SRA    A, IZH
+      SLL    A, IZH
+      SRL    A, IZH
       LD     IZH, 4
+      PUSH   IZH
+      POP    IZH
       CPL    IZH
       NEG    IZH
       DAA    IZH
@@ -28986,6 +29771,11 @@
       XORCF  3, IZH
       LDCF   4, IZH
       STCF   5, IZH
+      ANDCF  A, IZH
+      ORCF   A, IZH
+      XORCF  A, IZH
+      LDCF   A, IZH
+      STCF   A, IZH
       RES    1, IZH
       SET    2, IZH
       CHG    3, IZH
@@ -29065,6 +29855,7 @@
       SUB    E, IZH
       SUB    H, IZH
       SUB    L, IZH
+      LD     IZH, 0
       SBC    W, IZH
       SBC    A, IZH
       SBC    B, IZH
@@ -29105,6 +29896,7 @@
       XOR    E, IZH
       XOR    H, IZH
       XOR    L, IZH
+      CP     IZH, 0
       OR     W, IZH
       OR     A, IZH
       OR     B, IZH
@@ -29129,7 +29921,16 @@
       CP     E, IZH
       CP     H, IZH
       CP     L, IZH
+      RLC    A, IZH
+      RRC    A, IZH
+      RR     A, QIZL
+      SLA    A, QIZL
+      SRA    A, QIZL
+      SLL    A, QIZL
+      SRL    A, QIZL
       LD     QIZL, 4
+      PUSH   QIZL
+      POP    QIZL
       CPL    QIZL
       NEG    QIZL
       DAA    QIZL
@@ -29139,6 +29940,11 @@
       XORCF  3, QIZL
       LDCF   4, QIZL
       STCF   5, QIZL
+      ANDCF  A, QIZL
+      ORCF   A, QIZL
+      XORCF  A, QIZL
+      LDCF   A, QIZL
+      STCF   A, QIZL
       RES    1, QIZL
       SET    2, QIZL
       CHG    3, QIZL
@@ -29218,6 +30024,7 @@
       SUB    E, QIZL
       SUB    H, QIZL
       SUB    L, QIZL
+      LD     QIZL, 0
       SBC    W, QIZL
       SBC    A, QIZL
       SBC    B, QIZL
@@ -29258,6 +30065,7 @@
       XOR    E, QIZL
       XOR    H, QIZL
       XOR    L, QIZL
+      CP     QIZL, 0
       OR     W, QIZL
       OR     A, QIZL
       OR     B, QIZL
@@ -29282,7 +30090,16 @@
       CP     E, QIZL
       CP     H, QIZL
       CP     L, QIZL
+      RLC    A, QIZL
+      RRC    A, QIZL
+      RL     A, QIZL
+      SLA    A, QIZH
+      SRA    A, QIZH
+      SLL    A, QIZH
+      SRL    A, QIZH
       LD     QIZH, 4
+      PUSH   QIZH
+      POP    QIZH
       CPL    QIZH
       NEG    QIZH
       DAA    QIZH
@@ -29292,6 +30109,11 @@
       XORCF  3, QIZH
       LDCF   4, QIZH
       STCF   5, QIZH
+      ANDCF  A, QIZH
+      ORCF   A, QIZH
+      XORCF  A, QIZH
+      LDCF   A, QIZH
+      STCF   A, QIZH
       RES    1, QIZH
       SET    2, QIZH
       CHG    3, QIZH
@@ -29371,6 +30193,7 @@
       SUB    E, QIZH
       SUB    H, QIZH
       SUB    L, QIZH
+      LD     QIZH, 0
       SBC    W, QIZH
       SBC    A, QIZH
       SBC    B, QIZH
@@ -29411,6 +30234,7 @@
       XOR    E, QIZH
       XOR    H, QIZH
       XOR    L, QIZH
+      CP     QIZH, 0
       OR     W, QIZH
       OR     A, QIZH
       OR     B, QIZH
@@ -29435,7 +30259,16 @@
       CP     E, QIZH
       CP     H, QIZH
       CP     L, QIZH
+      RLC    A, QIZH
+      RRC    A, QIZH
+      RL     A, QIZH
+      RR     A, QIZH
+      SRA    A, SPL
+      SLL    A, SPL
+      SRL    A, SPL
       LD     SPL, 4
+      PUSH   SPL
+      POP    SPL
       CPL    SPL
       NEG    SPL
       DAA    SPL
@@ -29445,6 +30278,11 @@
       XORCF  3, SPL
       LDCF   4, SPL
       STCF   5, SPL
+      ANDCF  A, SPL
+      ORCF   A, SPL
+      XORCF  A, SPL
+      LDCF   A, SPL
+      STCF   A, SPL
       RES    1, SPL
       SET    2, SPL
       CHG    3, SPL
@@ -29524,6 +30362,7 @@
       SUB    E, SPL
       SUB    H, SPL
       SUB    L, SPL
+      LD     SPL, 0
       SBC    W, SPL
       SBC    A, SPL
       SBC    B, SPL
@@ -29564,6 +30403,7 @@
       XOR    E, SPL
       XOR    H, SPL
       XOR    L, SPL
+      CP     SPL, 0
       OR     W, SPL
       OR     A, SPL
       OR     B, SPL
@@ -29588,7 +30428,16 @@
       CP     E, SPL
       CP     H, SPL
       CP     L, SPL
+      RLC    A, SPL
+      RRC    A, SPL
+      RL     A, SPL
+      RR     A, SPL
+      SLA    A, SPL
+      SLL    A, SPH
+      SRL    A, SPH
       LD     SPH, 4
+      PUSH   SPH
+      POP    SPH
       CPL    SPH
       NEG    SPH
       DAA    SPH
@@ -29598,6 +30447,11 @@
       XORCF  3, SPH
       LDCF   4, SPH
       STCF   5, SPH
+      ANDCF  A, SPH
+      ORCF   A, SPH
+      XORCF  A, SPH
+      LDCF   A, SPH
+      STCF   A, SPH
       RES    1, SPH
       SET    2, SPH
       CHG    3, SPH
@@ -29677,6 +30531,7 @@
       SUB    E, SPH
       SUB    H, SPH
       SUB    L, SPH
+      LD     SPH, 0
       SBC    W, SPH
       SBC    A, SPH
       SBC    B, SPH
@@ -29717,6 +30572,7 @@
       XOR    E, SPH
       XOR    H, SPH
       XOR    L, SPH
+      CP     SPH, 0
       OR     W, SPH
       OR     A, SPH
       OR     B, SPH
@@ -29741,7 +30597,16 @@
       CP     E, SPH
       CP     H, SPH
       CP     L, SPH
+      RLC    A, SPH
+      RRC    A, SPH
+      RL     A, SPH
+      RR     A, SPH
+      SLA    A, SPH
+      SRA    A, SPH
+      SRL    A, QSPL
       LD     QSPL, 4
+      PUSH   QSPL
+      POP    QSPL
       CPL    QSPL
       NEG    QSPL
       DAA    QSPL
@@ -29751,6 +30616,11 @@
       XORCF  3, QSPL
       LDCF   4, QSPL
       STCF   5, QSPL
+      ANDCF  A, QSPL
+      ORCF   A, QSPL
+      XORCF  A, QSPL
+      LDCF   A, QSPL
+      STCF   A, QSPL
       RES    1, QSPL
       SET    2, QSPL
       CHG    3, QSPL
@@ -29830,6 +30700,7 @@
       SUB    E, QSPL
       SUB    H, QSPL
       SUB    L, QSPL
+      LD     QSPL, 0
       SBC    W, QSPL
       SBC    A, QSPL
       SBC    B, QSPL
@@ -29870,6 +30741,7 @@
       XOR    E, QSPL
       XOR    H, QSPL
       XOR    L, QSPL
+      CP     QSPL, 0
       OR     W, QSPL
       OR     A, QSPL
       OR     B, QSPL
@@ -29894,7 +30766,16 @@
       CP     E, QSPL
       CP     H, QSPL
       CP     L, QSPL
+      RLC    A, QSPL
+      RRC    A, QSPL
+      RL     A, QSPL
+      RR     A, QSPL
+      SLA    A, QSPL
+      SRA    A, QSPL
+      SLL    A, QSPL
       LD     QSPH, 4
+      PUSH   QSPH
+      POP    QSPH
       CPL    QSPH
       NEG    QSPH
       DAA    QSPH
@@ -29904,6 +30785,11 @@
       XORCF  3, QSPH
       LDCF   4, QSPH
       STCF   5, QSPH
+      ANDCF  A, QSPH
+      ORCF   A, QSPH
+      XORCF  A, QSPH
+      LDCF   A, QSPH
+      STCF   A, QSPH
       RES    1, QSPH
       SET    2, QSPH
       CHG    3, QSPH
@@ -29983,6 +30869,7 @@
       SUB    E, QSPH
       SUB    H, QSPH
       SUB    L, QSPH
+      LD     QSPH, 0
       SBC    W, QSPH
       SBC    A, QSPH
       SBC    B, QSPH
@@ -30023,6 +30910,7 @@
       XOR    E, QSPH
       XOR    H, QSPH
       XOR    L, QSPH
+      CP     QSPH, 0
       OR     W, QSPH
       OR     A, QSPH
       OR     B, QSPH
@@ -30047,7 +30935,17 @@
       CP     E, QSPH
       CP     H, QSPH
       CP     L, QSPH
+      RLC    A, QSPH
+      RRC    A, QSPH
+      RL     A, QSPH
+      RR     A, QSPH
+      SLA    A, QSPH
+      SRA    A, QSPH
+      SLL    A, QSPH
+      SRL    A, QSPH
       LD     A0, 4
+      PUSH   A0
+      POP    A0
       CPL    A0
       NEG    A0
       DAA    A0
@@ -30057,6 +30955,11 @@
       XORCF  3, A0
       LDCF   4, A0
       STCF   5, A0
+      ANDCF  A, A0
+      ORCF   A, A0
+      XORCF  A, A0
+      LDCF   A, A0
+      STCF   A, A0
       RES    1, A0
       SET    2, A0
       CHG    3, A0
@@ -30136,6 +31039,7 @@
       SUB    E, A0
       SUB    H, A0
       SUB    L, A0
+      LD     A0, 0
       SBC    W, A0
       SBC    A, A0
       SBC    B, A0
@@ -30176,6 +31080,7 @@
       XOR    E, A0
       XOR    H, A0
       XOR    L, A0
+      CP     A0, 0
       OR     W, A0
       OR     A, A0
       OR     B, A0
@@ -30200,7 +31105,17 @@
       CP     E, A0
       CP     H, A0
       CP     L, A0
+      RLC    A, A0
+      RRC    A, A0
+      RL     A, A0
+      RR     A, A0
+      SLA    A, A0
+      SRA    A, A0
+      SLL    A, A0
+      SRL    A, A0
       LD     W0, 4
+      PUSH   W0
+      POP    W0
       CPL    W0
       NEG    W0
       DAA    W0
@@ -30210,6 +31125,11 @@
       XORCF  3, W0
       LDCF   4, W0
       STCF   5, W0
+      ANDCF  A, W0
+      ORCF   A, W0
+      XORCF  A, W0
+      LDCF   A, W0
+      STCF   A, W0
       RES    1, W0
       SET    2, W0
       CHG    3, W0
@@ -30289,6 +31209,7 @@
       SUB    E, W0
       SUB    H, W0
       SUB    L, W0
+      LD     W0, 0
       SBC    W, W0
       SBC    A, W0
       SBC    B, W0
@@ -30329,6 +31250,7 @@
       XOR    E, W0
       XOR    H, W0
       XOR    L, W0
+      CP     W0, 0
       OR     W, W0
       OR     A, W0
       OR     B, W0
@@ -30353,7 +31275,17 @@
       CP     E, W0
       CP     H, W0
       CP     L, W0
+      RLC    A, W0
+      RRC    A, W0
+      RL     A, W0
+      RR     A, W0
+      SLA    A, W0
+      SRA    A, W0
+      SLL    A, W0
+      SRL    A, W0
       LD     QA0, 4
+      PUSH   QA0
+      POP    QA0
       CPL    QA0
       NEG    QA0
       DAA    QA0
@@ -30363,6 +31295,11 @@
       XORCF  3, QA0
       LDCF   4, QA0
       STCF   5, QA0
+      ANDCF  A, QA0
+      ORCF   A, QA0
+      XORCF  A, QA0
+      LDCF   A, QA0
+      STCF   A, QA0
       RES    1, QA0
       SET    2, QA0
       CHG    3, QA0
@@ -30442,6 +31379,7 @@
       SUB    E, QA0
       SUB    H, QA0
       SUB    L, QA0
+      LD     QA0, 0
       SBC    W, QA0
       SBC    A, QA0
       SBC    B, QA0
@@ -30482,6 +31420,7 @@
       XOR    E, QA0
       XOR    H, QA0
       XOR    L, QA0
+      CP     QA0, 0
       OR     W, QA0
       OR     A, QA0
       OR     B, QA0
@@ -30506,6 +31445,16 @@
       CP     E, QA0
       CP     H, QA0
       CP     L, QA0
+      RLC    A, QA0
+      RRC    A, QA0
+      RL     A, QA0
+      RR     A, QA0
+      SLA    A, QA0
+      SRA    A, QA0
+      SLL    A, QA0
+      SRL    A, QA0
+      PUSH   QW0
+      POP    QW0
       CPL    QW0
       NEG    QW0
       DAA    QW0
@@ -30515,6 +31464,11 @@
       XORCF  3, QW0
       LDCF   4, QW0
       STCF   5, QW0
+      ANDCF  A, QW0
+      ORCF   A, QW0
+      XORCF  A, QW0
+      LDCF   A, QW0
+      STCF   A, QW0
       RES    1, QW0
       SET    2, QW0
       CHG    3, QW0
@@ -30594,6 +31548,7 @@
       SUB    E, QW0
       SUB    H, QW0
       SUB    L, QW0
+      LD     QW0, 0
       SBC    W, QW0
       SBC    A, QW0
       SBC    B, QW0
@@ -30634,6 +31589,7 @@
       XOR    E, QW0
       XOR    H, QW0
       XOR    L, QW0
+      CP     QW0, 0
       OR     W, QW0
       OR     A, QW0
       OR     B, QW0
@@ -30658,7 +31614,16 @@
       CP     E, QW0
       CP     H, QW0
       CP     L, QW0
+      RLC    A, QW0
+      RRC    A, QW0
+      RL     A, QW0
+      RR     A, QW0
+      SLA    A, QW0
+      SRA    A, QW0
+      SLL    A, QW0
+      SRL    A, QW0
       LD     QW0, 4
+      POP    C0
       CPL    C0
       NEG    C0
       DAA    C0
@@ -30668,6 +31633,11 @@
       XORCF  3, C0
       LDCF   4, C0
       STCF   5, C0
+      ANDCF  A, C0
+      ORCF   A, C0
+      XORCF  A, C0
+      LDCF   A, C0
+      STCF   A, C0
       RES    1, C0
       SET    2, C0
       CHG    3, C0
@@ -30747,6 +31717,7 @@
       SUB    E, C0
       SUB    H, C0
       SUB    L, C0
+      LD     C0, 0
       SBC    W, C0
       SBC    A, C0
       SBC    B, C0
@@ -30787,6 +31758,7 @@
       XOR    E, C0
       XOR    H, C0
       XOR    L, C0
+      CP     C0, 0
       OR     W, C0
       OR     A, C0
       OR     B, C0
@@ -30811,7 +31783,16 @@
       CP     E, C0
       CP     H, C0
       CP     L, C0
+      RLC    A, C0
+      RRC    A, C0
+      RL     A, C0
+      RR     A, C0
+      SLA    A, C0
+      SRA    A, C0
+      SLL    A, C0
+      SRL    A, C0
       LD     C0, 4
+      PUSH   C0
       CPL    B0
       NEG    B0
       DAA    B0
@@ -30821,6 +31802,11 @@
       XORCF  3, B0
       LDCF   4, B0
       STCF   5, B0
+      ANDCF  A, B0
+      ORCF   A, B0
+      XORCF  A, B0
+      LDCF   A, B0
+      STCF   A, B0
       RES    1, B0
       SET    2, B0
       CHG    3, B0
@@ -30900,6 +31886,7 @@
       SUB    E, B0
       SUB    H, B0
       SUB    L, B0
+      LD     B0, 0
       SBC    W, B0
       SBC    A, B0
       SBC    B, B0
@@ -30940,6 +31927,7 @@
       XOR    E, B0
       XOR    H, B0
       XOR    L, B0
+      CP     B0, 0
       OR     W, B0
       OR     A, B0
       OR     B, B0
@@ -30964,7 +31952,17 @@
       CP     E, B0
       CP     H, B0
       CP     L, B0
+      RLC    A, B0
+      RRC    A, B0
+      RL     A, B0
+      RR     A, B0
+      SLA    A, B0
+      SRA    A, B0
+      SLL    A, B0
+      SRL    A, B0
       LD     B0, 4
+      PUSH   B0
+      POP    B0
       NEG    QC0
       DAA    QC0
       DJNZ   QC0, $+33
@@ -30973,6 +31971,11 @@
       XORCF  3, QC0
       LDCF   4, QC0
       STCF   5, QC0
+      ANDCF  A, QC0
+      ORCF   A, QC0
+      XORCF  A, QC0
+      LDCF   A, QC0
+      STCF   A, QC0
       RES    1, QC0
       SET    2, QC0
       CHG    3, QC0
@@ -31052,6 +32055,7 @@
       SUB    E, QC0
       SUB    H, QC0
       SUB    L, QC0
+      LD     QC0, 0
       SBC    W, QC0
       SBC    A, QC0
       SBC    B, QC0
@@ -31092,6 +32096,7 @@
       XOR    E, QC0
       XOR    H, QC0
       XOR    L, QC0
+      CP     QC0, 0
       OR     W, QC0
       OR     A, QC0
       OR     B, QC0
@@ -31116,7 +32121,17 @@
       CP     E, QC0
       CP     H, QC0
       CP     L, QC0
+      RLC    A, QC0
+      RRC    A, QC0
+      RL     A, QC0
+      RR     A, QC0
+      SLA    A, QC0
+      SRA    A, QC0
+      SLL    A, QC0
+      SRL    A, QC0
       LD     QC0, 4
+      PUSH   QC0
+      POP    QC0
       CPL    QC0
       DAA    QB0
       DJNZ   QB0, $+33
@@ -31125,6 +32140,11 @@
       XORCF  3, QB0
       LDCF   4, QB0
       STCF   5, QB0
+      ANDCF  A, QB0
+      ORCF   A, QB0
+      XORCF  A, QB0
+      LDCF   A, QB0
+      STCF   A, QB0
       RES    1, QB0
       SET    2, QB0
       CHG    3, QB0
@@ -31204,6 +32224,7 @@
       SUB    E, QB0
       SUB    H, QB0
       SUB    L, QB0
+      LD     QB0, 0
       SBC    W, QB0
       SBC    A, QB0
       SBC    B, QB0
@@ -31244,6 +32265,7 @@
       XOR    E, QB0
       XOR    H, QB0
       XOR    L, QB0
+      CP     QB0, 0
       OR     W, QB0
       OR     A, QB0
       OR     B, QB0
@@ -31268,7 +32290,17 @@
       CP     E, QB0
       CP     H, QB0
       CP     L, QB0
+      RLC    A, QB0
+      RRC    A, QB0
+      RL     A, QB0
+      RR     A, QB0
+      SLA    A, QB0
+      SRA    A, QB0
+      SLL    A, QB0
+      SRL    A, QB0
       LD     QB0, 4
+      PUSH   QB0
+      POP    QB0
       CPL    QB0
       NEG    QB0
       DAA    E0
@@ -31278,6 +32310,11 @@
       XORCF  3, E0
       LDCF   4, E0
       STCF   5, E0
+      ANDCF  A, E0
+      ORCF   A, E0
+      XORCF  A, E0
+      LDCF   A, E0
+      STCF   A, E0
       RES    1, E0
       SET    2, E0
       CHG    3, E0
@@ -31357,6 +32394,7 @@
       SUB    E, E0
       SUB    H, E0
       SUB    L, E0
+      LD     E0, 0
       SBC    W, E0
       SBC    A, E0
       SBC    B, E0
@@ -31397,6 +32435,7 @@
       XOR    E, E0
       XOR    H, E0
       XOR    L, E0
+      CP     E0, 0
       OR     W, E0
       OR     A, E0
       OR     B, E0
@@ -31421,7 +32460,17 @@
       CP     E, E0
       CP     H, E0
       CP     L, E0
+      RLC    A, E0
+      RRC    A, E0
+      RL     A, E0
+      RR     A, E0
+      SLA    A, E0
+      SRA    A, E0
+      SLL    A, E0
+      SRL    A, E0
       LD     E0, 4
+      PUSH   E0
+      POP    E0
       CPL    E0
       NEG    E0
       DAA    D0
@@ -31431,6 +32480,11 @@
       XORCF  3, D0
       LDCF   4, D0
       STCF   5, D0
+      ANDCF  A, D0
+      ORCF   A, D0
+      XORCF  A, D0
+      LDCF   A, D0
+      STCF   A, D0
       RES    1, D0
       SET    2, D0
       CHG    3, D0
@@ -31510,6 +32564,7 @@
       SUB    E, D0
       SUB    H, D0
       SUB    L, D0
+      LD     D0, 0
       SBC    W, D0
       SBC    A, D0
       SBC    B, D0
@@ -31550,6 +32605,7 @@
       XOR    E, D0
       XOR    H, D0
       XOR    L, D0
+      CP     D0, 0
       OR     W, D0
       OR     A, D0
       OR     B, D0
@@ -31574,7 +32630,17 @@
       CP     E, D0
       CP     H, D0
       CP     L, D0
+      RLC    A, D0
+      RRC    A, D0
+      RL     A, D0
+      RR     A, D0
+      SLA    A, D0
+      SRA    A, D0
+      SLL    A, D0
+      SRL    A, D0
       LD     D0, 4
+      PUSH   D0
+      POP    D0
       CPL    D0
       NEG    D0
       DAA    QE0
@@ -31584,6 +32650,11 @@
       XORCF  3, QE0
       LDCF   4, QE0
       STCF   5, QE0
+      ANDCF  A, QE0
+      ORCF   A, QE0
+      XORCF  A, QE0
+      LDCF   A, QE0
+      STCF   A, QE0
       RES    1, QE0
       SET    2, QE0
       CHG    3, QE0
@@ -31663,6 +32734,7 @@
       SUB    E, QE0
       SUB    H, QE0
       SUB    L, QE0
+      LD     QE0, 0
       SBC    W, QE0
       SBC    A, QE0
       SBC    B, QE0
@@ -31703,6 +32775,7 @@
       XOR    E, QE0
       XOR    H, QE0
       XOR    L, QE0
+      CP     QE0, 0
       OR     W, QE0
       OR     A, QE0
       OR     B, QE0
@@ -31727,7 +32800,17 @@
       CP     E, QE0
       CP     H, QE0
       CP     L, QE0
+      RLC    A, QE0
+      RRC    A, QE0
+      RL     A, QE0
+      RR     A, QE0
+      SLA    A, QE0
+      SRA    A, QE0
+      SLL    A, QE0
+      SRL    A, QE0
       LD     QE0, 4
+      PUSH   QE0
+      POP    QE0
       CPL    QE0
       NEG    QE0
       DAA    QD0
@@ -31737,6 +32820,11 @@
       XORCF  3, QD0
       LDCF   4, QD0
       STCF   5, QD0
+      ANDCF  A, QD0
+      ORCF   A, QD0
+      XORCF  A, QD0
+      LDCF   A, QD0
+      STCF   A, QD0
       RES    1, QD0
       SET    2, QD0
       CHG    3, QD0
@@ -31816,6 +32904,7 @@
       SUB    E, QD0
       SUB    H, QD0
       SUB    L, QD0
+      LD     QD0, 0
       SBC    W, QD0
       SBC    A, QD0
       SBC    B, QD0
@@ -31856,6 +32945,7 @@
       XOR    E, QD0
       XOR    H, QD0
       XOR    L, QD0
+      CP     QD0, 0
       OR     W, QD0
       OR     A, QD0
       OR     B, QD0
@@ -31880,7 +32970,17 @@
       CP     E, QD0
       CP     H, QD0
       CP     L, QD0
+      RLC    A, QD0
+      RRC    A, QD0
+      RL     A, QD0
+      RR     A, QD0
+      SLA    A, QD0
+      SRA    A, QD0
+      SLL    A, QD0
+      SRL    A, QD0
       LD     QD0, 4
+      PUSH   QD0
+      POP    QD0
       CPL    QD0
       NEG    QD0
       DAA    L0
@@ -31890,6 +32990,11 @@
       XORCF  3, L0
       LDCF   4, L0
       STCF   5, L0
+      ANDCF  A, L0
+      ORCF   A, L0
+      XORCF  A, L0
+      LDCF   A, L0
+      STCF   A, L0
       RES    1, L0
       SET    2, L0
       CHG    3, L0
@@ -31969,6 +33074,7 @@
       SUB    E, L0
       SUB    H, L0
       SUB    L, L0
+      LD     L0, 0
       SBC    W, L0
       SBC    A, L0
       SBC    B, L0
@@ -32009,6 +33115,7 @@
       XOR    E, L0
       XOR    H, L0
       XOR    L, L0
+      CP     L0, 0
       OR     W, L0
       OR     A, L0
       OR     B, L0
@@ -32033,7 +33140,17 @@
       CP     E, L0
       CP     H, L0
       CP     L, L0
+      RLC    A, L0
+      RRC    A, L0
+      RL     A, L0
+      RR     A, L0
+      SLA    A, L0
+      SRA    A, L0
+      SLL    A, L0
+      SRL    A, L0
       LD     L0, 4
+      PUSH   L0
+      POP    L0
       CPL    L0
       NEG    L0
       DAA    H0
@@ -32043,6 +33160,11 @@
       XORCF  3, H0
       LDCF   4, H0
       STCF   5, H0
+      ANDCF  A, H0
+      ORCF   A, H0
+      XORCF  A, H0
+      LDCF   A, H0
+      STCF   A, H0
       RES    1, H0
       SET    2, H0
       CHG    3, H0
@@ -32122,6 +33244,7 @@
       SUB    E, H0
       SUB    H, H0
       SUB    L, H0
+      LD     H0, 0
       SBC    W, H0
       SBC    A, H0
       SBC    B, H0
@@ -32162,6 +33285,7 @@
       XOR    E, H0
       XOR    H, H0
       XOR    L, H0
+      CP     H0, 0
       OR     W, H0
       OR     A, H0
       OR     B, H0
@@ -32186,7 +33310,17 @@
       CP     E, H0
       CP     H, H0
       CP     L, H0
+      RLC    A, H0
+      RRC    A, H0
+      RL     A, H0
+      RR     A, H0
+      SLA    A, H0
+      SRA    A, H0
+      SLL    A, H0
+      SRL    A, H0
       LD     H0, 4
+      PUSH   H0
+      POP    H0
       CPL    H0
       NEG    H0
       DAA    QL0
@@ -32196,6 +33330,11 @@
       XORCF  3, QL0
       LDCF   4, QL0
       STCF   5, QL0
+      ANDCF  A, QL0
+      ORCF   A, QL0
+      XORCF  A, QL0
+      LDCF   A, QL0
+      STCF   A, QL0
       RES    1, QL0
       SET    2, QL0
       CHG    3, QL0
@@ -32275,6 +33414,7 @@
       SUB    E, QL0
       SUB    H, QL0
       SUB    L, QL0
+      LD     QL0, 0
       SBC    W, QL0
       SBC    A, QL0
       SBC    B, QL0
@@ -32315,6 +33455,7 @@
       XOR    E, QL0
       XOR    H, QL0
       XOR    L, QL0
+      CP     QL0, 0
       OR     W, QL0
       OR     A, QL0
       OR     B, QL0
@@ -32339,7 +33480,17 @@
       CP     E, QL0
       CP     H, QL0
       CP     L, QL0
+      RLC    A, QL0
+      RRC    A, QL0
+      RL     A, QL0
+      RR     A, QL0
+      SLA    A, QL0
+      SRA    A, QL0
+      SLL    A, QL0
+      SRL    A, QL0
       LD     QL0, 4
+      PUSH   QL0
+      POP    QL0
       CPL    QL0
       NEG    QL0
       DAA    QH0
@@ -32349,6 +33500,11 @@
       XORCF  3, QH0
       LDCF   4, QH0
       STCF   5, QH0
+      ANDCF  A, QH0
+      ORCF   A, QH0
+      XORCF  A, QH0
+      LDCF   A, QH0
+      STCF   A, QH0
       RES    1, QH0
       SET    2, QH0
       CHG    3, QH0
@@ -32428,6 +33584,7 @@
       SUB    E, QH0
       SUB    H, QH0
       SUB    L, QH0
+      LD     QH0, 0
       SBC    W, QH0
       SBC    A, QH0
       SBC    B, QH0
@@ -32468,6 +33625,7 @@
       XOR    E, QH0
       XOR    H, QH0
       XOR    L, QH0
+      CP     QH0, 0
       OR     W, QH0
       OR     A, QH0
       OR     B, QH0
@@ -32492,7 +33650,17 @@
       CP     E, QH0
       CP     H, QH0
       CP     L, QH0
+      RLC    A, QH0
+      RRC    A, QH0
+      RL     A, QH0
+      RR     A, QH0
+      SLA    A, QH0
+      SRA    A, QH0
+      SLL    A, QH0
+      SRL    A, QH0
       LD     QH0, 4
+      PUSH   QH0
+      POP    QH0
       CPL    QH0
       NEG    QH0
       ADC    W, 0CAH
@@ -32501,7 +33669,6 @@
       AND    W, 0CDH
       XOR    W, 0CEH
       OR     W, 0CFH
-      CP     W, 0D0H
       XOR    W, W
       XOR    A, W
       XOR    B, W
@@ -32510,6 +33677,7 @@
       XOR    E, W
       XOR    H, W
       XOR    L, W
+      CP     W, 0
       OR     W, W
       OR     A, W
       OR     B, W
@@ -32534,6 +33702,16 @@
       CP     E, W
       CP     H, W
       CP     L, W
+      RLC    A, W
+      RRC    A, W
+      RL     A, W
+      RR     A, W
+      SLA    A, W
+      SRA    A, W
+      SLL    A, W
+      SRL    A, W
+      PUSH   W
+      POP    W
       CPL    W
       NEG    W
       DAA    W
@@ -32543,6 +33721,11 @@
       XORCF  3, W
       LDCF   4, W
       STCF   5, W
+      ANDCF  A, W
+      ORCF   A, W
+      XORCF  A, W
+      LDCF   A, W
+      STCF   A, W
       RES    1, W
       SET    2, W
       CHG    3, W
@@ -32644,7 +33827,6 @@
       AND    A, 0CDH
       XOR    A, 0CEH
       OR     A, 0CFH
-      CP     A, 0D0H
       XOR    W, A
       XOR    A, A
       XOR    B, A
@@ -32653,6 +33835,7 @@
       XOR    E, A
       XOR    H, A
       XOR    L, A
+      CP     A, 0
       OR     W, A
       OR     A, A
       OR     B, A
@@ -32677,6 +33860,16 @@
       CP     E, A
       CP     H, A
       CP     L, A
+      RLC    A, A
+      RRC    A, A
+      RL     A, A
+      RR     A, A
+      SLA    A, A
+      SRA    A, A
+      SLL    A, A
+      SRL    A, A
+      PUSH   A
+      POP    A
       CPL    A
       NEG    A
       MUL    WA, 9
@@ -32690,6 +33883,11 @@
       XORCF  3, A
       LDCF   4, A
       STCF   5, A
+      ANDCF  A, A
+      ORCF   A, A
+      XORCF  A, A
+      LDCF   A, A
+      STCF   A, A
       RES    1, A
       SET    2, A
       CHG    3, A
@@ -32791,7 +33989,6 @@
       AND    B, 0CDH
       XOR    B, 0CEH
       OR     B, 0CFH
-      CP     B, 0D0H
       XOR    W, B
       XOR    A, B
       XOR    B, B
@@ -32800,6 +33997,7 @@
       XOR    E, B
       XOR    H, B
       XOR    L, B
+      CP     B, 0
       OR     W, B
       OR     A, B
       OR     B, B
@@ -32824,6 +34022,16 @@
       CP     E, B
       CP     H, B
       CP     L, B
+      RLC    A, B
+      RRC    A, B
+      RL     A, B
+      RR     A, B
+      SLA    A, B
+      SRA    A, B
+      SLL    A, B
+      SRL    A, B
+      PUSH   B
+      POP    B
       CPL    B
       NEG    B
       DAA    B
@@ -32833,6 +34041,11 @@
       XORCF  3, B
       LDCF   4, B
       STCF   5, B
+      ANDCF  A, B
+      ORCF   A, B
+      XORCF  A, B
+      LDCF   A, B
+      STCF   A, B
       RES    1, B
       SET    2, B
       CHG    3, B
@@ -32934,7 +34147,6 @@
       AND    C, 0CDH
       XOR    C, 0CEH
       OR     C, 0CFH
-      CP     C, 0D0H
       XOR    W, C
       XOR    A, C
       XOR    B, C
@@ -32943,6 +34155,7 @@
       XOR    E, C
       XOR    H, C
       XOR    L, C
+      CP     C, 0
       OR     W, C
       OR     A, C
       OR     B, C
@@ -32967,6 +34180,16 @@
       CP     E, C
       CP     H, C
       CP     L, C
+      RLC    A, C
+      RRC    A, C
+      RL     A, C
+      RR     A, C
+      SLA    A, C
+      SRA    A, C
+      SLL    A, C
+      SRL    A, C
+      PUSH   C
+      POP    C
       CPL    C
       NEG    C
       MUL    BC, 9
@@ -32980,6 +34203,11 @@
       XORCF  3, C
       LDCF   4, C
       STCF   5, C
+      ANDCF  A, C
+      ORCF   A, C
+      XORCF  A, C
+      LDCF   A, C
+      STCF   A, C
       RES    1, C
       SET    2, C
       CHG    3, C
@@ -33081,7 +34309,6 @@
       SBC    C, 0CCH
       XOR    D, 0CEH
       OR     D, 0CFH
-      CP     D, 0D0H
       XOR    W, D
       XOR    A, D
       XOR    B, D
@@ -33090,6 +34317,7 @@
       XOR    E, D
       XOR    H, D
       XOR    L, D
+      CP     D, 0
       OR     W, D
       OR     A, D
       OR     B, D
@@ -33114,6 +34342,16 @@
       CP     E, D
       CP     H, D
       CP     L, D
+      RLC    A, D
+      RRC    A, D
+      RL     A, D
+      RR     A, D
+      SLA    A, D
+      SRA    A, D
+      SLL    A, D
+      SRL    A, D
+      PUSH   D
+      POP    D
       CPL    D
       NEG    D
       DAA    D
@@ -33123,6 +34361,11 @@
       XORCF  3, D
       LDCF   4, D
       STCF   5, D
+      ANDCF  A, D
+      ORCF   A, D
+      XORCF  A, D
+      LDCF   A, D
+      STCF   A, D
       RES    1, D
       SET    2, D
       CHG    3, D
@@ -33224,7 +34467,6 @@
       SBC    D, 0CCH
       AND    D, 0CDH
       OR     E, 0CFH
-      CP     E, 0D0H
       XOR    W, E
       XOR    A, E
       XOR    B, E
@@ -33233,6 +34475,7 @@
       XOR    E, E
       XOR    H, E
       XOR    L, E
+      CP     E, 0
       OR     W, E
       OR     A, E
       OR     B, E
@@ -33257,6 +34500,16 @@
       CP     E, E
       CP     H, E
       CP     L, E
+      RLC    A, E
+      RRC    A, E
+      RL     A, E
+      RR     A, E
+      SLA    A, E
+      SRA    A, E
+      SLL    A, E
+      SRL    A, E
+      PUSH   E
+      POP    E
       CPL    E
       NEG    E
       MUL    DE, 9
@@ -33270,6 +34523,11 @@
       XORCF  3, E
       LDCF   4, E
       STCF   5, E
+      ANDCF  A, E
+      ORCF   A, E
+      XORCF  A, E
+      LDCF   A, E
+      STCF   A, E
       RES    1, E
       SET    2, E
       CHG    3, E
@@ -33371,7 +34629,6 @@
       SBC    E, 0CCH
       AND    E, 0CDH
       XOR    E, 0CEH
-      CP     H, 0D0H
       XOR    W, H
       XOR    A, H
       XOR    B, H
@@ -33380,6 +34637,7 @@
       XOR    E, H
       XOR    H, H
       XOR    L, H
+      CP     H, 0
       OR     W, H
       OR     A, H
       OR     B, H
@@ -33404,6 +34662,16 @@
       CP     E, H
       CP     H, H
       CP     L, H
+      RLC    A, H
+      RRC    A, H
+      RL     A, H
+      RR     A, H
+      SLA    A, H
+      SRA    A, H
+      SLL    A, H
+      SRL    A, H
+      PUSH   H
+      POP    H
       CPL    H
       NEG    H
       DAA    H
@@ -33413,6 +34681,11 @@
       XORCF  3, H
       LDCF   4, H
       STCF   5, H
+      ANDCF  A, H
+      ORCF   A, H
+      XORCF  A, H
+      LDCF   A, H
+      STCF   A, H
       RES    1, H
       SET    2, H
       CHG    3, H
@@ -33523,6 +34796,7 @@
       XOR    E, L
       XOR    H, L
       XOR    L, L
+      CP     L, 0
       OR     W, L
       OR     A, L
       OR     B, L
@@ -33547,6 +34821,16 @@
       CP     E, L
       CP     H, L
       CP     L, L
+      RLC    A, L
+      RRC    A, L
+      RL     A, L
+      RR     A, L
+      SLA    A, L
+      SRA    A, L
+      SLL    A, L
+      SRL    A, L
+      PUSH   L
+      POP    L
       CPL    L
       NEG    L
       MUL    HL, 9
@@ -33560,6 +34844,11 @@
       XORCF  3, L
       LDCF   4, L
       STCF   5, L
+      ANDCF  A, L
+      ORCF   A, L
+      XORCF  A, L
+      LDCF   A, L
+      STCF   A, L
       RES    1, L
       SET    2, L
       CHG    3, L
@@ -33662,7 +34951,6 @@
       AND    L, 0CDH
       XOR    L, 0CEH
       OR     L, 0CFH
-      CP     L, 0D0H
       XOR    DE, (0D1H)
       XOR    HL, (0D1H)
       XOR    IX, (0D1H)
@@ -47579,6 +48867,7 @@
       AND    (XWA'+), IZ
       AND    (XWA'+), SP
       XOR    WA, (XWA'+)
+      CP     DE', 1
       OR     WA, DE'
       OR     BC, DE'
       OR     DE, DE'
@@ -47603,7 +48892,17 @@
       CP     IY, DE'
       CP     IZ, DE'
       CP     SP, DE'
+      RLC    A, DE'
+      RRC    A, DE'
+      RL     A, DE'
+      RR     A, DE'
+      SLA    A, DE'
+      SRA    A, DE'
+      SLL    A, DE'
+      SRL    A, DE'
       LD     DE', 0504H
+      PUSH   DE'
+      POP    DE'
       CPL    DE'
       NEG    DE'
       BS1F   A, DE'
@@ -47618,6 +48917,11 @@
       XORCF  3, DE'
       LDCF   4, DE'
       STCF   5, DE'
+      ANDCF  A, DE'
+      ORCF   A, DE'
+      XORCF  A, DE'
+      LDCF   A, DE'
+      STCF   A, DE'
       RES    1, DE'
       SET    2, DE'
       CHG    3, DE'
@@ -47719,6 +49023,7 @@
       SUB    IY, DE'
       SUB    IZ, DE'
       SUB    SP, DE'
+      LD     DE', 0
       SBC    WA, DE'
       SBC    BC, DE'
       SBC    DE, DE'
@@ -47759,6 +49064,7 @@
       XOR    IY, DE'
       XOR    IZ, DE'
       XOR    SP, DE'
+      CP     QDE', 3
       OR     WA, QDE'
       OR     BC, QDE'
       OR     DE, QDE'
@@ -47783,7 +49089,17 @@
       CP     IY, QDE'
       CP     IZ, QDE'
       CP     SP, QDE'
+      RLC    A, QDE'
+      RRC    A, QDE'
+      RL     A, QDE'
+      RR     A, QDE'
+      SLA    A, QDE'
+      SRA    A, QDE'
+      SLL    A, QDE'
+      SRL    A, QDE'
       LD     QDE', 0504H
+      PUSH   QDE'
+      POP    QDE'
       CPL    QDE'
       NEG    QDE'
       BS1F   A, QDE'
@@ -47798,6 +49114,11 @@
       XORCF  3, QDE'
       LDCF   4, QDE'
       STCF   5, QDE'
+      ANDCF  A, QDE'
+      ORCF   A, QDE'
+      XORCF  A, QDE'
+      LDCF   A, QDE'
+      STCF   A, QDE'
       RES    1, QDE'
       SET    2, QDE'
       CHG    3, QDE'
@@ -47899,6 +49220,7 @@
       SUB    IY, QDE'
       SUB    IZ, QDE'
       SUB    SP, QDE'
+      LD     QDE', 0
       SBC    WA, QDE'
       SBC    BC, QDE'
       SBC    DE, QDE'
@@ -47939,6 +49261,7 @@
       XOR    IY, QDE'
       XOR    IZ, QDE'
       XOR    SP, QDE'
+      CP     HL', 5
       OR     WA, HL'
       OR     BC, HL'
       OR     DE, HL'
@@ -47963,7 +49286,17 @@
       CP     IY, HL'
       CP     IZ, HL'
       CP     SP, HL'
+      RLC    A, HL'
+      RRC    A, HL'
+      RL     A, HL'
+      RR     A, HL'
+      SLA    A, HL'
+      SRA    A, HL'
+      SLL    A, HL'
+      SRL    A, HL'
       LD     HL', 0504H
+      PUSH   HL'
+      POP    HL'
       CPL    HL'
       NEG    HL'
       BS1F   A, HL'
@@ -47978,6 +49311,11 @@
       XORCF  3, HL'
       LDCF   4, HL'
       STCF   5, HL'
+      ANDCF  A, HL'
+      ORCF   A, HL'
+      XORCF  A, HL'
+      LDCF   A, HL'
+      STCF   A, HL'
       RES    1, HL'
       SET    2, HL'
       CHG    3, HL'
@@ -48079,6 +49417,7 @@
       SUB    IY, HL'
       SUB    IZ, HL'
       SUB    SP, HL'
+      LD     HL', 0
       SBC    WA, HL'
       SBC    BC, HL'
       SBC    DE, HL'
@@ -48119,6 +49458,7 @@
       XOR    IY, HL'
       XOR    IZ, HL'
       XOR    SP, HL'
+      CP     QHL', 7
       OR     WA, QHL'
       OR     BC, QHL'
       OR     DE, QHL'
@@ -48143,7 +49483,17 @@
       CP     IY, QHL'
       CP     IZ, QHL'
       CP     SP, QHL'
+      RLC    A, QHL'
+      RRC    A, QHL'
+      RL     A, QHL'
+      RR     A, QHL'
+      SLA    A, QHL'
+      SRA    A, QHL'
+      SLL    A, QHL'
+      SRL    A, QHL'
       LD     QHL', 0504H
+      PUSH   QHL'
+      POP    QHL'
       CPL    QHL'
       NEG    QHL'
       BS1F   A, QHL'
@@ -48158,6 +49508,11 @@
       XORCF  3, QHL'
       LDCF   4, QHL'
       STCF   5, QHL'
+      ANDCF  A, QHL'
+      ORCF   A, QHL'
+      XORCF  A, QHL'
+      LDCF   A, QHL'
+      STCF   A, QHL'
       RES    1, QHL'
       SET    2, QHL'
       CHG    3, QHL'
@@ -48259,6 +49614,7 @@
       SUB    IY, QHL'
       SUB    IZ, QHL'
       SUB    SP, QHL'
+      LD     QHL', 0
       SBC    WA, QHL'
       SBC    BC, QHL'
       SBC    DE, QHL'
@@ -48322,7 +49678,17 @@
       CP     IY, WA
       CP     IZ, WA
       CP     SP, WA
+      RLC    A, WA
+      RRC    A, WA
+      RL     A, WA
+      RR     A, WA
+      SLA    A, WA
+      SRA    A, WA
+      SLL    A, WA
+      SRL    A, WA
       LD     WA, 0504H
+      PUSH   WA
+      POP    WA
       CPL    WA
       NEG    WA
       BS1F   A, WA
@@ -48337,6 +49703,11 @@
       XORCF  3, WA
       LDCF   4, WA
       STCF   5, WA
+      ANDCF  A, WA
+      ORCF   A, WA
+      XORCF  A, WA
+      LDCF   A, WA
+      STCF   A, WA
       RES    1, WA
       SET    2, WA
       CHG    3, WA
@@ -48437,4844 +49808,7 @@
       SUB    IY, WA
       SUB    IZ, WA
       SUB    SP, WA
-      SBC    WA, WA
-      SBC    BC, WA
-      SBC    DE, WA
-      SBC    HL, WA
-      SBC    IX, WA
-      SBC    IY, WA
-      SBC    IZ, WA
-      SBC    SP, WA
-      EX     WA, WA
-      EX     BC, WA
-      EX     DE, WA
-      EX     HL, WA
-      EX     IX, WA
-      EX     IY, WA
-      EX     IZ, WA
-      EX     SP, WA
-      AND    WA, WA
-      AND    BC, WA
-      AND    DE, WA
-      AND    HL, WA
-      AND    IX, WA
-      AND    IY, WA
-      AND    IZ, WA
-      AND    SP, WA
-      ADD    WA, 0CAC9H
-      ADC    WA, 0CBCAH
-      SUB    WA, 0CCCBH
-      SBC    WA, 0CDCCH
-      AND    WA, 0CECDH
-      XOR    WA, 0CFCEH
-      OR     WA, 0D0CFH
-      CP     WA, 0D1D0H
-      XOR    WA, WA
-      XOR    BC, WA
-      XOR    DE, WA
-      XOR    HL, WA
-      XOR    IX, WA
-      XOR    IY, WA
-      XOR    IZ, WA
-      XOR    SP, WA
-      OR     WA, WA
-      OR     HL, QWA
-      OR     IX, QWA
-      OR     IY, QWA
-      OR     IZ, QWA
-      OR     SP, QWA
-      RLC    16, QWA
-      RRC    16, QWA
-      RL     16, QWA
-      RR     16, QWA
-      SLA    16, QWA
-      SRA    16, QWA
-      SLL    16, QWA
-      SRL    16, QWA
-      CP     WA, QWA
-      CP     BC, QWA
-      CP     DE, QWA
-      CP     HL, QWA
-      CP     IX, QWA
-      CP     IY, QWA
-      CP     IZ, QWA
-      CP     SP, QWA
-      LD     QWA, 0504H
-      CPL    QWA
-      NEG    QWA
-      BS1F   A, QWA
-      BS1B   A, QWA
-      EXTZ   QWA
-      EXTS   QWA
-      PAA    QWA
-      MIRR   QWA
-      DJNZ   QWA, $+33
-      ANDCF  1, QWA
-      ORCF   2, QWA
-      XORCF  3, QWA
-      LDCF   4, QWA
-      STCF   5, QWA
-      RES    1, QWA
-      SET    2, QWA
-      CHG    3, QWA
-      BIT    4, QWA
-      TSET   5, QWA
-      MINC1  0040H, QWA
-      MINC2  0040H, QWA
-      MINC4  0040H, QWA
-      MDEC1  0040H, QWA
-      MDEC2  0040H, QWA
-      MDEC4  0080H, QWA
-      MUL    XWA, QWA
-      MUL    XBC, QWA
-      MUL    XDE, QWA
-      MUL    XHL, QWA
-      MUL    XIX, QWA
-      MUL    XIY, QWA
-      MUL    XIZ, QWA
-      MUL    XSP, QWA
-      MULS   XWA, QWA
-      MULS   XBC, QWA
-      MULS   XDE, QWA
-      MULS   XHL, QWA
-      MULS   XIX, QWA
-      MULS   XIY, QWA
-      MULS   XIZ, QWA
-      MULS   XSP, QWA
-      DIV    XWA, QWA
-      DIV    XBC, QWA
-      DIV    XDE, QWA
-      DIV    XHL, QWA
-      DIV    XIX, QWA
-      DIV    XIY, QWA
-      DIV    XIZ, QWA
-      DIV    XSP, QWA
-      DIVS   XWA, QWA
-      DIVS   XBC, QWA
-      DIVS   XDE, QWA
-      DIVS   XHL, QWA
-      DIVS   XIX, QWA
-      DIVS   XIY, QWA
-      DIVS   XIZ, QWA
-      DIVS   XSP, QWA
-      INC    8, QWA
-      DEC    8, QWA
-      SCC    F, QWA
-      SCC    LT, QWA
-      SCC    LE, QWA
-      SCC    ULE, QWA
-      SCC    OV, QWA
-      SCC    MI, QWA
-      SCC    Z, QWA
-      SCC    C, QWA
-      SCC    T, QWA
-      SCC    GE, QWA
-      SCC    GT, QWA
-      SCC    UGT, QWA
-      SCC    NOV, QWA
-      SCC    PL, QWA
-      SCC    NZ, QWA
-      SCC    NC, QWA
-      ADD    WA, QWA
-      ADD    BC, QWA
-      ADD    DE, QWA
-      ADD    HL, QWA
-      ADD    IX, QWA
-      ADD    IY, QWA
-      ADD    IZ, QWA
-      ADD    SP, QWA
-      LD     WA, QWA
-      LD     BC, QWA
-      LD     DE, QWA
-      LD     HL, QWA
-      LD     IX, QWA
-      LD     IY, QWA
-      LD     IZ, QWA
-      LD     SP, QWA
-      ADC    WA, QWA
-      ADC    BC, QWA
-      ADC    DE, QWA
-      ADC    HL, QWA
-      ADC    IX, QWA
-      ADC    IY, QWA
-      ADC    IZ, QWA
-      ADC    SP, QWA
-      LD     QWA, WA
-      LD     QWA, BC
-      LD     QWA, DE
-      LD     QWA, HL
-      LD     QWA, IX
-      LD     QWA, IY
-      LD     QWA, IZ
-      LD     QWA, SP
-      SUB    WA, QWA
-      SUB    BC, QWA
-      SUB    DE, QWA
-      SUB    HL, QWA
-      SUB    IX, QWA
-      SUB    IY, QWA
-      SUB    IZ, QWA
-      SUB    SP, QWA
-      SBC    WA, QWA
-      SBC    BC, QWA
-      SBC    DE, QWA
-      SBC    HL, QWA
-      SBC    IX, QWA
-      SBC    IY, QWA
-      SBC    IZ, QWA
-      SBC    SP, QWA
-      EX     WA, QWA
-      EX     BC, QWA
-      EX     DE, QWA
-      EX     HL, QWA
-      EX     IX, QWA
-      EX     IY, QWA
-      EX     IZ, QWA
-      EX     SP, QWA
-      AND    WA, QWA
-      AND    BC, QWA
-      AND    DE, QWA
-      AND    HL, QWA
-      AND    IX, QWA
-      AND    IY, QWA
-      AND    IZ, QWA
-      AND    SP, QWA
-      ADD    QWA, 0CAC9H
-      ADC    QWA, 0CBCAH
-      SUB    QWA, 0CCCBH
-      SBC    QWA, 0CDCCH
-      AND    QWA, 0CECDH
-      XOR    QWA, 0CFCEH
-      OR     QWA, 0D0CFH
-      CP     QWA, 0D1D0H
-      XOR    WA, QWA
-      XOR    BC, QWA
-      XOR    DE, QWA
-      XOR    HL, QWA
-      XOR    IX, QWA
-      XOR    IY, QWA
-      XOR    IZ, QWA
-      XOR    SP, QWA
-      OR     WA, QWA
-      OR     BC, QWA
-      OR     DE, QWA
-      OR     IY, BC
-      OR     IZ, BC
-      OR     SP, BC
-      RLC    16, BC
-      RRC    16, BC
-      RL     16, BC
-      RR     16, BC
-      SLA    16, BC
-      SRA    16, BC
-      SLL    16, BC
-      SRL    16, BC
-      CP     WA, BC
-      CP     BC, BC
-      CP     DE, BC
-      CP     HL, BC
-      CP     IX, BC
-      CP     IY, BC
-      CP     IZ, BC
-      CP     SP, BC
-      LD     BC, 0504H
-      CPL    BC
-      NEG    BC
-      BS1F   A, BC
-      BS1B   A, BC
-      EXTZ   BC
-      EXTS   BC
-      PAA    BC
-      MIRR   BC
-      DJNZ   BC, $+33
-      ANDCF  1, BC
-      ORCF   2, BC
-      XORCF  3, BC
-      LDCF   4, BC
-      STCF   5, BC
-      RES    1, BC
-      SET    2, BC
-      CHG    3, BC
-      BIT    4, BC
-      TSET   5, BC
-      MINC1  0040H, BC
-      MINC2  0040H, BC
-      MINC4  0040H, BC
-      MDEC1  0040H, BC
-      MDEC2  0040H, BC
-      MDEC4  0080H, BC
-      MUL    XWA, BC
-      MUL    XBC, BC
-      MUL    XDE, BC
-      MUL    XHL, BC
-      MUL    XIX, BC
-      MUL    XIY, BC
-      MUL    XIZ, BC
-      MUL    XSP, BC
-      MULS   XWA, BC
-      MULS   XBC, BC
-      MULS   XDE, BC
-      MULS   XHL, BC
-      MULS   XIX, BC
-      MULS   XIY, BC
-      MULS   XIZ, BC
-      MULS   XSP, BC
-      DIV    XWA, BC
-      DIV    XBC, BC
-      DIV    XDE, BC
-      DIV    XHL, BC
-      DIV    XIX, BC
-      DIV    XIY, BC
-      DIV    XIZ, BC
-      DIV    XSP, BC
-      DIVS   XWA, BC
-      DIVS   XBC, BC
-      DIVS   XDE, BC
-      DIVS   XHL, BC
-      DIVS   XIX, BC
-      DIVS   XIY, BC
-      DIVS   XIZ, BC
-      DIVS   XSP, BC
-      INC    8, BC
-      DEC    8, BC
-      SCC    F, BC
-      SCC    LT, BC
-      SCC    LE, BC
-      SCC    ULE, BC
-      SCC    OV, BC
-      SCC    MI, BC
-      SCC    Z, BC
-      SCC    C, BC
-      SCC    T, BC
-      SCC    GE, BC
-      SCC    GT, BC
-      SCC    UGT, BC
-      SCC    NOV, BC
-      SCC    PL, BC
-      SCC    NZ, BC
-      SCC    NC, BC
-      ADD    WA, BC
-      ADD    BC, BC
-      ADD    DE, BC
-      ADD    HL, BC
-      ADD    IX, BC
-      ADD    IY, BC
-      ADD    IZ, BC
-      ADD    SP, BC
-      LD     BC, BC
-      LD     DE, BC
-      LD     HL, BC
-      LD     IX, BC
-      LD     IY, BC
-      LD     IZ, BC
-      LD     SP, BC
-      ADC    WA, BC
-      ADC    BC, BC
-      ADC    DE, BC
-      ADC    HL, BC
-      ADC    IX, BC
-      ADC    IY, BC
-      ADC    IZ, BC
-      ADC    SP, BC
-      LD     BC, DE
-      LD     BC, HL
-      LD     BC, IX
-      LD     BC, IY
-      LD     BC, IZ
-      LD     BC, SP
-      SUB    WA, BC
-      SUB    BC, BC
-      SUB    DE, BC
-      SUB    HL, BC
-      SUB    IX, BC
-      SUB    IY, BC
-      SUB    IZ, BC
-      SUB    SP, BC
-      SBC    WA, BC
-      SBC    BC, BC
-      SBC    DE, BC
-      SBC    HL, BC
-      SBC    IX, BC
-      SBC    IY, BC
-      SBC    IZ, BC
-      SBC    SP, BC
-      EX     WA, BC
-      EX     BC, BC
-      EX     DE, BC
-      EX     HL, BC
-      EX     IX, BC
-      EX     IY, BC
-      EX     IZ, BC
-      EX     SP, BC
-      AND    WA, BC
-      AND    BC, BC
-      AND    DE, BC
-      AND    HL, BC
-      AND    IX, BC
-      AND    IY, BC
-      AND    IZ, BC
-      AND    SP, BC
-      ADD    BC, 0CAC9H
-      ADC    BC, 0CBCAH
-      SUB    BC, 0CCCBH
-      SBC    BC, 0CDCCH
-      AND    BC, 0CECDH
-      XOR    BC, 0CFCEH
-      OR     BC, 0D0CFH
-      CP     BC, 0D1D0H
-      XOR    WA, BC
-      XOR    BC, BC
-      XOR    DE, BC
-      XOR    HL, BC
-      XOR    IX, BC
-      XOR    IY, BC
-      XOR    IZ, BC
-      XOR    SP, BC
-      OR     WA, BC
-      OR     BC, BC
-      OR     DE, BC
-      OR     HL, BC
-      OR     IX, BC
-      OR     SP, QBC
-      RLC    16, QBC
-      RRC    16, QBC
-      RL     16, QBC
-      RR     16, QBC
-      SLA    16, QBC
-      SRA    16, QBC
-      SLL    16, QBC
-      SRL    16, QBC
-      CP     WA, QBC
-      CP     BC, QBC
-      CP     DE, QBC
-      CP     HL, QBC
-      CP     IX, QBC
-      CP     IY, QBC
-      CP     IZ, QBC
-      CP     SP, QBC
-      LD     QBC, 0504H
-      CPL    QBC
-      NEG    QBC
-      BS1F   A, QBC
-      BS1B   A, QBC
-      EXTZ   QBC
-      EXTS   QBC
-      PAA    QBC
-      MIRR   QBC
-      DJNZ   QBC, $+33
-      ANDCF  1, QBC
-      ORCF   2, QBC
-      XORCF  3, QBC
-      LDCF   4, QBC
-      STCF   5, QBC
-      RES    1, QBC
-      SET    2, QBC
-      CHG    3, QBC
-      BIT    4, QBC
-      TSET   5, QBC
-      MINC1  0040H, QBC
-      MINC2  0040H, QBC
-      MINC4  0040H, QBC
-      MDEC1  0040H, QBC
-      MDEC2  0040H, QBC
-      MDEC4  0080H, QBC
-      MUL    XWA, QBC
-      MUL    XBC, QBC
-      MUL    XDE, QBC
-      MUL    XHL, QBC
-      MUL    XIX, QBC
-      MUL    XIY, QBC
-      MUL    XIZ, QBC
-      MUL    XSP, QBC
-      MULS   XWA, QBC
-      MULS   XBC, QBC
-      MULS   XDE, QBC
-      MULS   XHL, QBC
-      MULS   XIX, QBC
-      MULS   XIY, QBC
-      MULS   XIZ, QBC
-      MULS   XSP, QBC
-      DIV    XWA, QBC
-      DIV    XBC, QBC
-      DIV    XDE, QBC
-      DIV    XHL, QBC
-      DIV    XIX, QBC
-      DIV    XIY, QBC
-      DIV    XIZ, QBC
-      DIV    XSP, QBC
-      DIVS   XWA, QBC
-      DIVS   XBC, QBC
-      DIVS   XDE, QBC
-      DIVS   XHL, QBC
-      DIVS   XIX, QBC
-      DIVS   XIY, QBC
-      DIVS   XIZ, QBC
-      DIVS   XSP, QBC
-      INC    8, QBC
-      DEC    8, QBC
-      SCC    F, QBC
-      SCC    LT, QBC
-      SCC    LE, QBC
-      SCC    ULE, QBC
-      SCC    OV, QBC
-      SCC    MI, QBC
-      SCC    Z, QBC
-      SCC    C, QBC
-      SCC    T, QBC
-      SCC    GE, QBC
-      SCC    GT, QBC
-      SCC    UGT, QBC
-      SCC    NOV, QBC
-      SCC    PL, QBC
-      SCC    NZ, QBC
-      SCC    NC, QBC
-      ADD    WA, QBC
-      ADD    BC, QBC
-      ADD    DE, QBC
-      ADD    HL, QBC
-      ADD    IX, QBC
-      ADD    IY, QBC
-      ADD    IZ, QBC
-      ADD    SP, QBC
-      LD     WA, QBC
-      LD     BC, QBC
-      LD     DE, QBC
-      LD     HL, QBC
-      LD     IX, QBC
-      LD     IY, QBC
-      LD     IZ, QBC
-      LD     SP, QBC
-      ADC    WA, QBC
-      ADC    BC, QBC
-      ADC    DE, QBC
-      ADC    HL, QBC
-      ADC    IX, QBC
-      ADC    IY, QBC
-      ADC    IZ, QBC
-      ADC    SP, QBC
-      LD     QBC, WA
-      LD     QBC, BC
-      LD     QBC, DE
-      LD     QBC, HL
-      LD     QBC, IX
-      LD     QBC, IY
-      LD     QBC, IZ
-      LD     QBC, SP
-      SUB    WA, QBC
-      SUB    BC, QBC
-      SUB    DE, QBC
-      SUB    HL, QBC
-      SUB    IX, QBC
-      SUB    IY, QBC
-      SUB    IZ, QBC
-      SUB    SP, QBC
-      SBC    WA, QBC
-      SBC    BC, QBC
-      SBC    DE, QBC
-      SBC    HL, QBC
-      SBC    IX, QBC
-      SBC    IY, QBC
-      SBC    IZ, QBC
-      SBC    SP, QBC
-      EX     WA, QBC
-      EX     BC, QBC
-      EX     DE, QBC
-      EX     HL, QBC
-      EX     IX, QBC
-      EX     IY, QBC
-      EX     IZ, QBC
-      EX     SP, QBC
-      AND    WA, QBC
-      AND    BC, QBC
-      AND    DE, QBC
-      AND    HL, QBC
-      AND    IX, QBC
-      AND    IY, QBC
-      AND    IZ, QBC
-      AND    SP, QBC
-      ADD    QBC, 0CAC9H
-      ADC    QBC, 0CBCAH
-      SUB    QBC, 0CCCBH
-      SBC    QBC, 0CDCCH
-      AND    QBC, 0CECDH
-      XOR    QBC, 0CFCEH
-      OR     QBC, 0D0CFH
-      CP     QBC, 0D1D0H
-      XOR    WA, QBC
-      XOR    BC, QBC
-      XOR    DE, QBC
-      XOR    HL, QBC
-      XOR    IX, QBC
-      XOR    IY, QBC
-      XOR    IZ, QBC
-      XOR    SP, QBC
-      OR     WA, QBC
-      OR     BC, QBC
-      OR     DE, QBC
-      OR     HL, QBC
-      OR     IX, QBC
-      OR     IY, QBC
-      OR     IZ, QBC
-      RRC    16, DE
-      RL     16, DE
-      RR     16, DE
-      SLA    16, DE
-      SRA    16, DE
-      SLL    16, DE
-      SRL    16, DE
-      CP     WA, DE
-      CP     BC, DE
-      CP     DE, DE
-      CP     HL, DE
-      CP     IX, DE
-      CP     IY, DE
-      CP     IZ, DE
-      CP     SP, DE
-      LD     DE, 0504H
-      CPL    DE
-      NEG    DE
-      BS1F   A, DE
-      BS1B   A, DE
-      EXTZ   DE
-      EXTS   DE
-      PAA    DE
-      MIRR   DE
-      DJNZ   DE, $+33
-      ANDCF  1, DE
-      ORCF   2, DE
-      XORCF  3, DE
-      LDCF   4, DE
-      STCF   5, DE
-      RES    1, DE
-      SET    2, DE
-      CHG    3, DE
-      BIT    4, DE
-      TSET   5, DE
-      MINC1  0040H, DE
-      MINC2  0040H, DE
-      MINC4  0040H, DE
-      MDEC1  0040H, DE
-      MDEC2  0040H, DE
-      MDEC4  0080H, DE
-      MUL    XWA, DE
-      MUL    XBC, DE
-      MUL    XDE, DE
-      MUL    XHL, DE
-      MUL    XIX, DE
-      MUL    XIY, DE
-      MUL    XIZ, DE
-      MUL    XSP, DE
-      MULS   XWA, DE
-      MULS   XBC, DE
-      MULS   XDE, DE
-      MULS   XHL, DE
-      MULS   XIX, DE
-      MULS   XIY, DE
-      MULS   XIZ, DE
-      MULS   XSP, DE
-      DIV    XWA, DE
-      DIV    XBC, DE
-      DIV    XDE, DE
-      DIV    XHL, DE
-      DIV    XIX, DE
-      DIV    XIY, DE
-      DIV    XIZ, DE
-      DIV    XSP, DE
-      DIVS   XWA, DE
-      DIVS   XBC, DE
-      DIVS   XDE, DE
-      DIVS   XHL, DE
-      DIVS   XIX, DE
-      DIVS   XIY, DE
-      DIVS   XIZ, DE
-      DIVS   XSP, DE
-      INC    8, DE
-      DEC    8, DE
-      SCC    F, DE
-      SCC    LT, DE
-      SCC    LE, DE
-      SCC    ULE, DE
-      SCC    OV, DE
-      SCC    MI, DE
-      SCC    Z, DE
-      SCC    C, DE
-      SCC    T, DE
-      SCC    GE, DE
-      SCC    GT, DE
-      SCC    UGT, DE
-      SCC    NOV, DE
-      SCC    PL, DE
-      SCC    NZ, DE
-      SCC    NC, DE
-      ADD    WA, DE
-      ADD    BC, DE
-      ADD    DE, DE
-      ADD    HL, DE
-      ADD    IX, DE
-      ADD    IY, DE
-      ADD    IZ, DE
-      ADD    SP, DE
-      LD     DE, DE
-      LD     HL, DE
-      LD     IX, DE
-      LD     IY, DE
-      LD     IZ, DE
-      LD     SP, DE
-      ADC    WA, DE
-      ADC    BC, DE
-      ADC    DE, DE
-      ADC    HL, DE
-      ADC    IX, DE
-      ADC    IY, DE
-      ADC    IZ, DE
-      ADC    SP, DE
-      LD     DE, HL
-      LD     DE, IX
-      LD     DE, IY
-      LD     DE, IZ
-      LD     DE, SP
-      SUB    WA, DE
-      SUB    BC, DE
-      SUB    DE, DE
-      SUB    HL, DE
-      SUB    IX, DE
-      SUB    IY, DE
-      SUB    IZ, DE
-      SUB    SP, DE
-      SBC    WA, DE
-      SBC    BC, DE
-      SBC    DE, DE
-      SBC    HL, DE
-      SBC    IX, DE
-      SBC    IY, DE
-      SBC    IZ, DE
-      SBC    SP, DE
-      EX     WA, DE
-      EX     BC, DE
-      EX     DE, DE
-      EX     HL, DE
-      EX     IX, DE
-      EX     IY, DE
-      EX     IZ, DE
-      EX     SP, DE
-      AND    WA, DE
-      AND    BC, DE
-      AND    DE, DE
-      AND    HL, DE
-      AND    IX, DE
-      AND    IY, DE
-      AND    IZ, DE
-      AND    SP, DE
-      ADD    DE, 0CAC9H
-      ADC    DE, 0CBCAH
-      SUB    DE, 0CCCBH
-      SBC    DE, 0CDCCH
-      AND    DE, 0CECDH
-      XOR    DE, 0CFCEH
-      OR     DE, 0D0CFH
-      CP     DE, 0D1D0H
-      XOR    WA, DE
-      XOR    BC, DE
-      XOR    DE, DE
-      XOR    HL, DE
-      XOR    IX, DE
-      XOR    IY, DE
-      XOR    IZ, DE
-      XOR    SP, DE
-      OR     WA, DE
-      OR     BC, DE
-      OR     DE, DE
-      OR     HL, DE
-      OR     IX, DE
-      OR     IY, DE
-      OR     IZ, DE
-      OR     SP, DE
-      RLC    16, DE
-      RR     16, QDE
-      SLA    16, QDE
-      SRA    16, QDE
-      SLL    16, QDE
-      SRL    16, QDE
-      CP     WA, QDE
-      CP     BC, QDE
-      CP     DE, QDE
-      CP     HL, QDE
-      CP     IX, QDE
-      CP     IY, QDE
-      CP     IZ, QDE
-      CP     SP, QDE
-      LD     QDE, 0504H
-      CPL    QDE
-      NEG    QDE
-      BS1F   A, QDE
-      BS1B   A, QDE
-      EXTZ   QDE
-      EXTS   QDE
-      PAA    QDE
-      MIRR   QDE
-      DJNZ   QDE, $+33
-      ANDCF  1, QDE
-      ORCF   2, QDE
-      XORCF  3, QDE
-      LDCF   4, QDE
-      STCF   5, QDE
-      RES    1, QDE
-      SET    2, QDE
-      CHG    3, QDE
-      BIT    4, QDE
-      TSET   5, QDE
-      MINC1  0040H, QDE
-      MINC2  0040H, QDE
-      MINC4  0040H, QDE
-      MDEC1  0040H, QDE
-      MDEC2  0040H, QDE
-      MDEC4  0080H, QDE
-      MUL    XWA, QDE
-      MUL    XBC, QDE
-      MUL    XDE, QDE
-      MUL    XHL, QDE
-      MUL    XIX, QDE
-      MUL    XIY, QDE
-      MUL    XIZ, QDE
-      MUL    XSP, QDE
-      MULS   XWA, QDE
-      MULS   XBC, QDE
-      MULS   XDE, QDE
-      MULS   XHL, QDE
-      MULS   XIX, QDE
-      MULS   XIY, QDE
-      MULS   XIZ, QDE
-      MULS   XSP, QDE
-      DIV    XWA, QDE
-      DIV    XBC, QDE
-      DIV    XDE, QDE
-      DIV    XHL, QDE
-      DIV    XIX, QDE
-      DIV    XIY, QDE
-      DIV    XIZ, QDE
-      DIV    XSP, QDE
-      DIVS   XWA, QDE
-      DIVS   XBC, QDE
-      DIVS   XDE, QDE
-      DIVS   XHL, QDE
-      DIVS   XIX, QDE
-      DIVS   XIY, QDE
-      DIVS   XIZ, QDE
-      DIVS   XSP, QDE
-      INC    8, QDE
-      DEC    8, QDE
-      SCC    F, QDE
-      SCC    LT, QDE
-      SCC    LE, QDE
-      SCC    ULE, QDE
-      SCC    OV, QDE
-      SCC    MI, QDE
-      SCC    Z, QDE
-      SCC    C, QDE
-      SCC    T, QDE
-      SCC    GE, QDE
-      SCC    GT, QDE
-      SCC    UGT, QDE
-      SCC    NOV, QDE
-      SCC    PL, QDE
-      SCC    NZ, QDE
-      SCC    NC, QDE
-      ADD    WA, QDE
-      ADD    BC, QDE
-      ADD    DE, QDE
-      ADD    HL, QDE
-      ADD    IX, QDE
-      ADD    IY, QDE
-      ADD    IZ, QDE
-      ADD    SP, QDE
-      LD     WA, QDE
-      LD     BC, QDE
-      LD     DE, QDE
-      LD     HL, QDE
-      LD     IX, QDE
-      LD     IY, QDE
-      LD     IZ, QDE
-      LD     SP, QDE
-      ADC    WA, QDE
-      ADC    BC, QDE
-      ADC    DE, QDE
-      ADC    HL, QDE
-      ADC    IX, QDE
-      ADC    IY, QDE
-      ADC    IZ, QDE
-      ADC    SP, QDE
-      LD     QDE, WA
-      LD     QDE, BC
-      LD     QDE, DE
-      LD     QDE, HL
-      LD     QDE, IX
-      LD     QDE, IY
-      LD     QDE, IZ
-      LD     QDE, SP
-      SUB    WA, QDE
-      SUB    BC, QDE
-      SUB    DE, QDE
-      SUB    HL, QDE
-      SUB    IX, QDE
-      SUB    IY, QDE
-      SUB    IZ, QDE
-      SUB    SP, QDE
-      SBC    WA, QDE
-      SBC    BC, QDE
-      SBC    DE, QDE
-      SBC    HL, QDE
-      SBC    IX, QDE
-      SBC    IY, QDE
-      SBC    IZ, QDE
-      SBC    SP, QDE
-      EX     WA, QDE
-      EX     BC, QDE
-      EX     DE, QDE
-      EX     HL, QDE
-      EX     IX, QDE
-      EX     IY, QDE
-      EX     IZ, QDE
-      EX     SP, QDE
-      AND    WA, QDE
-      AND    BC, QDE
-      AND    DE, QDE
-      AND    HL, QDE
-      AND    IX, QDE
-      AND    IY, QDE
-      AND    IZ, QDE
-      AND    SP, QDE
-      ADD    QDE, 0CAC9H
-      ADC    QDE, 0CBCAH
-      SUB    QDE, 0CCCBH
-      SBC    QDE, 0CDCCH
-      AND    QDE, 0CECDH
-      XOR    QDE, 0CFCEH
-      OR     QDE, 0D0CFH
-      CP     QDE, 0D1D0H
-      XOR    WA, QDE
-      XOR    BC, QDE
-      XOR    DE, QDE
-      XOR    HL, QDE
-      XOR    IX, QDE
-      XOR    IY, QDE
-      XOR    IZ, QDE
-      XOR    SP, QDE
-      OR     WA, QDE
-      OR     BC, QDE
-      OR     DE, QDE
-      OR     HL, QDE
-      OR     IX, QDE
-      OR     IY, QDE
-      OR     IZ, QDE
-      OR     SP, QDE
-      RLC    16, QDE
-      RRC    16, QDE
-      RL     16, QDE
-      SRA    16, HL
-      SLL    16, HL
-      SRL    16, HL
-      CP     WA, HL
-      CP     BC, HL
-      CP     DE, HL
-      CP     HL, HL
-      CP     IX, HL
-      CP     IY, HL
-      CP     IZ, HL
-      CP     SP, HL
-      LD     HL, 0504H
-      CPL    HL
-      NEG    HL
-      BS1F   A, HL
-      BS1B   A, HL
-      EXTZ   HL
-      EXTS   HL
-      PAA    HL
-      MIRR   HL
-      DJNZ   HL, $+33
-      ANDCF  1, HL
-      ORCF   2, HL
-      XORCF  3, HL
-      LDCF   4, HL
-      STCF   5, HL
-      RES    1, HL
-      SET    2, HL
-      CHG    3, HL
-      BIT    4, HL
-      TSET   5, HL
-      MINC1  0040H, HL
-      MINC2  0040H, HL
-      MINC4  0040H, HL
-      MDEC1  0040H, HL
-      MDEC2  0040H, HL
-      MDEC4  0080H, HL
-      MUL    XWA, HL
-      MUL    XBC, HL
-      MUL    XDE, HL
-      MUL    XHL, HL
-      MUL    XIX, HL
-      MUL    XIY, HL
-      MUL    XIZ, HL
-      MUL    XSP, HL
-      MULS   XWA, HL
-      MULS   XBC, HL
-      MULS   XDE, HL
-      MULS   XHL, HL
-      MULS   XIX, HL
-      MULS   XIY, HL
-      MULS   XIZ, HL
-      MULS   XSP, HL
-      DIV    XWA, HL
-      DIV    XBC, HL
-      DIV    XDE, HL
-      DIV    XHL, HL
-      DIV    XIX, HL
-      DIV    XIY, HL
-      DIV    XIZ, HL
-      DIV    XSP, HL
-      DIVS   XWA, HL
-      DIVS   XBC, HL
-      DIVS   XDE, HL
-      DIVS   XHL, HL
-      DIVS   XIX, HL
-      DIVS   XIY, HL
-      DIVS   XIZ, HL
-      DIVS   XSP, HL
-      INC    8, HL
-      DEC    8, HL
-      SCC    F, HL
-      SCC    LT, HL
-      SCC    LE, HL
-      SCC    ULE, HL
-      SCC    OV, HL
-      SCC    MI, HL
-      SCC    Z, HL
-      SCC    C, HL
-      SCC    T, HL
-      SCC    GE, HL
-      SCC    GT, HL
-      SCC    UGT, HL
-      SCC    NOV, HL
-      SCC    PL, HL
-      SCC    NZ, HL
-      SCC    NC, HL
-      ADD    WA, HL
-      ADD    BC, HL
-      ADD    DE, HL
-      ADD    HL, HL
-      ADD    IX, HL
-      ADD    IY, HL
-      ADD    IZ, HL
-      ADD    SP, HL
-      LD     HL, HL
-      LD     IX, HL
-      LD     IY, HL
-      LD     IZ, HL
-      LD     SP, HL
-      ADC    WA, HL
-      ADC    BC, HL
-      ADC    DE, HL
-      ADC    HL, HL
-      ADC    IX, HL
-      ADC    IY, HL
-      ADC    IZ, HL
-      ADC    SP, HL
-      LD     HL, IX
-      LD     HL, IY
-      LD     HL, IZ
-      LD     HL, SP
-      SUB    WA, HL
-      SUB    BC, HL
-      SUB    DE, HL
-      SUB    HL, HL
-      SUB    IX, HL
-      SUB    IY, HL
-      SUB    IZ, HL
-      SUB    SP, HL
-      SBC    WA, HL
-      SBC    BC, HL
-      SBC    DE, HL
-      SBC    HL, HL
-      SBC    IX, HL
-      SBC    IY, HL
-      SBC    IZ, HL
-      SBC    SP, HL
-      EX     WA, HL
-      EX     BC, HL
-      EX     DE, HL
-      EX     HL, HL
-      EX     IX, HL
-      EX     IY, HL
-      EX     IZ, HL
-      EX     SP, HL
-      AND    WA, HL
-      AND    BC, HL
-      AND    DE, HL
-      AND    HL, HL
-      AND    IX, HL
-      AND    IY, HL
-      AND    IZ, HL
-      AND    SP, HL
-      ADD    HL, 0CAC9H
-      ADC    HL, 0CBCAH
-      SUB    HL, 0CCCBH
-      SBC    HL, 0CDCCH
-      AND    HL, 0CECDH
-      XOR    HL, 0CFCEH
-      OR     HL, 0D0CFH
-      CP     HL, 0D1D0H
-      XOR    WA, HL
-      XOR    BC, HL
-      XOR    DE, HL
-      XOR    HL, HL
-      XOR    IX, HL
-      XOR    IY, HL
-      XOR    IZ, HL
-      XOR    SP, HL
-      OR     WA, HL
-      OR     BC, HL
-      OR     DE, HL
-      OR     HL, HL
-      OR     IX, HL
-      OR     IY, HL
-      OR     IZ, HL
-      OR     SP, HL
-      RLC    16, HL
-      RRC    16, HL
-      RL     16, HL
-      RR     16, HL
-      SLA    16, HL
-      SRL    16, QHL
-      CP     WA, QHL
-      CP     BC, QHL
-      CP     DE, QHL
-      CP     HL, QHL
-      CP     IX, QHL
-      CP     IY, QHL
-      CP     IZ, QHL
-      CP     SP, QHL
-      LD     QHL, 0504H
-      CPL    QHL
-      NEG    QHL
-      BS1F   A, QHL
-      BS1B   A, QHL
-      EXTZ   QHL
-      EXTS   QHL
-      PAA    QHL
-      MIRR   QHL
-      DJNZ   QHL, $+33
-      ANDCF  1, QHL
-      ORCF   2, QHL
-      XORCF  3, QHL
-      LDCF   4, QHL
-      STCF   5, QHL
-      RES    1, QHL
-      SET    2, QHL
-      CHG    3, QHL
-      BIT    4, QHL
-      TSET   5, QHL
-      MINC1  0040H, QHL
-      MINC2  0040H, QHL
-      MINC4  0040H, QHL
-      MDEC1  0040H, QHL
-      MDEC2  0040H, QHL
-      MDEC4  0080H, QHL
-      MUL    XWA, QHL
-      MUL    XBC, QHL
-      MUL    XDE, QHL
-      MUL    XHL, QHL
-      MUL    XIX, QHL
-      MUL    XIY, QHL
-      MUL    XIZ, QHL
-      MUL    XSP, QHL
-      MULS   XWA, QHL
-      MULS   XBC, QHL
-      MULS   XDE, QHL
-      MULS   XHL, QHL
-      MULS   XIX, QHL
-      MULS   XIY, QHL
-      MULS   XIZ, QHL
-      MULS   XSP, QHL
-      DIV    XWA, QHL
-      DIV    XBC, QHL
-      DIV    XDE, QHL
-      DIV    XHL, QHL
-      DIV    XIX, QHL
-      DIV    XIY, QHL
-      DIV    XIZ, QHL
-      DIV    XSP, QHL
-      DIVS   XWA, QHL
-      DIVS   XBC, QHL
-      DIVS   XDE, QHL
-      DIVS   XHL, QHL
-      DIVS   XIX, QHL
-      DIVS   XIY, QHL
-      DIVS   XIZ, QHL
-      DIVS   XSP, QHL
-      INC    8, QHL
-      DEC    8, QHL
-      SCC    F, QHL
-      SCC    LT, QHL
-      SCC    LE, QHL
-      SCC    ULE, QHL
-      SCC    OV, QHL
-      SCC    MI, QHL
-      SCC    Z, QHL
-      SCC    C, QHL
-      SCC    T, QHL
-      SCC    GE, QHL
-      SCC    GT, QHL
-      SCC    UGT, QHL
-      SCC    NOV, QHL
-      SCC    PL, QHL
-      SCC    NZ, QHL
-      SCC    NC, QHL
-      ADD    WA, QHL
-      ADD    BC, QHL
-      ADD    DE, QHL
-      ADD    HL, QHL
-      ADD    IX, QHL
-      ADD    IY, QHL
-      ADD    IZ, QHL
-      ADD    SP, QHL
-      LD     WA, QHL
-      LD     BC, QHL
-      LD     DE, QHL
-      LD     HL, QHL
-      LD     IX, QHL
-      LD     IY, QHL
-      LD     IZ, QHL
-      LD     SP, QHL
-      ADC    WA, QHL
-      ADC    BC, QHL
-      ADC    DE, QHL
-      ADC    HL, QHL
-      ADC    IX, QHL
-      ADC    IY, QHL
-      ADC    IZ, QHL
-      ADC    SP, QHL
-      LD     QHL, WA
-      LD     QHL, BC
-      LD     QHL, DE
-      LD     QHL, HL
-      LD     QHL, IX
-      LD     QHL, IY
-      LD     QHL, IZ
-      LD     QHL, SP
-      SUB    WA, QHL
-      SUB    BC, QHL
-      SUB    DE, QHL
-      SUB    HL, QHL
-      SUB    IX, QHL
-      SUB    IY, QHL
-      SUB    IZ, QHL
-      SUB    SP, QHL
-      SBC    WA, QHL
-      SBC    BC, QHL
-      SBC    DE, QHL
-      SBC    HL, QHL
-      SBC    IX, QHL
-      SBC    IY, QHL
-      SBC    IZ, QHL
-      SBC    SP, QHL
-      EX     WA, QHL
-      EX     BC, QHL
-      EX     DE, QHL
-      EX     HL, QHL
-      EX     IX, QHL
-      EX     IY, QHL
-      EX     IZ, QHL
-      EX     SP, QHL
-      AND    WA, QHL
-      AND    BC, QHL
-      AND    DE, QHL
-      AND    HL, QHL
-      AND    IX, QHL
-      AND    IY, QHL
-      AND    IZ, QHL
-      AND    SP, QHL
-      ADD    QHL, 0CAC9H
-      ADC    QHL, 0CBCAH
-      SUB    QHL, 0CCCBH
-      SBC    QHL, 0CDCCH
-      AND    QHL, 0CECDH
-      XOR    QHL, 0CFCEH
-      OR     QHL, 0D0CFH
-      CP     QHL, 0D1D0H
-      XOR    WA, QHL
-      XOR    BC, QHL
-      XOR    DE, QHL
-      XOR    HL, QHL
-      XOR    IX, QHL
-      XOR    IY, QHL
-      XOR    IZ, QHL
-      XOR    SP, QHL
-      OR     WA, QHL
-      OR     BC, QHL
-      OR     DE, QHL
-      OR     HL, QHL
-      OR     IX, QHL
-      OR     IY, QHL
-      OR     IZ, QHL
-      OR     SP, QHL
-      RLC    16, QHL
-      RRC    16, QHL
-      RL     16, QHL
-      RR     16, QHL
-      SLA    16, QHL
-      SRA    16, QHL
-      SLL    16, QHL
-      CP     BC, IX
-      CP     DE, IX
-      CP     HL, IX
-      CP     IX, IX
-      CP     IY, IX
-      CP     IZ, IX
-      CP     SP, IX
-      LD     IX, 0504H
-      CPL    IX
-      NEG    IX
-      BS1F   A, IX
-      BS1B   A, IX
-      EXTZ   IX
-      EXTS   IX
-      PAA    IX
-      MIRR   IX
-      DJNZ   IX, $+33
-      ANDCF  1, IX
-      ORCF   2, IX
-      XORCF  3, IX
-      LDCF   4, IX
-      STCF   5, IX
-      RES    1, IX
-      SET    2, IX
-      CHG    3, IX
-      BIT    4, IX
-      TSET   5, IX
-      MINC1  0040H, IX
-      MINC2  0040H, IX
-      MINC4  0040H, IX
-      MDEC1  0040H, IX
-      MDEC2  0040H, IX
-      MDEC4  0080H, IX
-      MUL    XWA, IX
-      MUL    XBC, IX
-      MUL    XDE, IX
-      MUL    XHL, IX
-      MUL    XIX, IX
-      MUL    XIY, IX
-      MUL    XIZ, IX
-      MUL    XSP, IX
-      MULS   XWA, IX
-      MULS   XBC, IX
-      MULS   XDE, IX
-      MULS   XHL, IX
-      MULS   XIX, IX
-      MULS   XIY, IX
-      MULS   XIZ, IX
-      MULS   XSP, IX
-      DIV    XWA, IX
-      DIV    XBC, IX
-      DIV    XDE, IX
-      DIV    XHL, IX
-      DIV    XIX, IX
-      DIV    XIY, IX
-      DIV    XIZ, IX
-      DIV    XSP, IX
-      DIVS   XWA, IX
-      DIVS   XBC, IX
-      DIVS   XDE, IX
-      DIVS   XHL, IX
-      DIVS   XIX, IX
-      DIVS   XIY, IX
-      DIVS   XIZ, IX
-      DIVS   XSP, IX
-      INC    8, IX
-      DEC    8, IX
-      SCC    F, IX
-      SCC    LT, IX
-      SCC    LE, IX
-      SCC    ULE, IX
-      SCC    OV, IX
-      SCC    MI, IX
-      SCC    Z, IX
-      SCC    C, IX
-      SCC    T, IX
-      SCC    GE, IX
-      SCC    GT, IX
-      SCC    UGT, IX
-      SCC    NOV, IX
-      SCC    PL, IX
-      SCC    NZ, IX
-      SCC    NC, IX
-      ADD    WA, IX
-      ADD    BC, IX
-      ADD    DE, IX
-      ADD    HL, IX
-      ADD    IX, IX
-      ADD    IY, IX
-      ADD    IZ, IX
-      ADD    SP, IX
-      LD     IX, IX
-      LD     IY, IX
-      LD     IZ, IX
-      LD     SP, IX
-      ADC    WA, IX
-      ADC    BC, IX
-      ADC    DE, IX
-      ADC    HL, IX
-      ADC    IX, IX
-      ADC    IY, IX
-      ADC    IZ, IX
-      ADC    SP, IX
-      LD     IX, IY
-      LD     IX, IZ
-      LD     IX, SP
-      SUB    WA, IX
-      SUB    BC, IX
-      SUB    DE, IX
-      SUB    HL, IX
-      SUB    IX, IX
-      SUB    IY, IX
-      SUB    IZ, IX
-      SUB    SP, IX
-      SBC    WA, IX
-      SBC    BC, IX
-      SBC    DE, IX
-      SBC    HL, IX
-      SBC    IX, IX
-      SBC    IY, IX
-      SBC    IZ, IX
-      SBC    SP, IX
-      EX     WA, IX
-      EX     BC, IX
-      EX     DE, IX
-      EX     HL, IX
-      EX     IX, IX
-      EX     IY, IX
-      EX     IZ, IX
-      EX     SP, IX
-      AND    WA, IX
-      AND    BC, IX
-      AND    DE, IX
-      AND    HL, IX
-      AND    IX, IX
-      AND    IY, IX
-      AND    IZ, IX
-      AND    SP, IX
-      ADD    IX, 0CAC9H
-      ADC    IX, 0CBCAH
-      SUB    IX, 0CCCBH
-      SBC    IX, 0CDCCH
-      AND    IX, 0CECDH
-      XOR    IX, 0CFCEH
-      OR     IX, 0D0CFH
-      CP     IX, 0D1D0H
-      XOR    WA, IX
-      XOR    BC, IX
-      XOR    DE, IX
-      XOR    HL, IX
-      XOR    IX, IX
-      XOR    IY, IX
-      XOR    IZ, IX
-      XOR    SP, IX
-      OR     WA, IX
-      OR     BC, IX
-      OR     DE, IX
-      OR     HL, IX
-      OR     IX, IX
-      OR     IY, IX
-      OR     IZ, IX
-      OR     SP, IX
-      RLC    16, IX
-      RRC    16, IX
-      RL     16, IX
-      RR     16, IX
-      SLA    16, IX
-      SRA    16, IX
-      SLL    16, IX
-      SRL    16, IX
-      CP     WA, IX
-      CP     HL, QIX
-      CP     IX, QIX
-      CP     IY, QIX
-      CP     IZ, QIX
-      CP     SP, QIX
-      LD     QIX, 0504H
-      CPL    QIX
-      NEG    QIX
-      BS1F   A, QIX
-      BS1B   A, QIX
-      EXTZ   QIX
-      EXTS   QIX
-      PAA    QIX
-      MIRR   QIX
-      DJNZ   QIX, $+33
-      ANDCF  1, QIX
-      ORCF   2, QIX
-      XORCF  3, QIX
-      LDCF   4, QIX
-      STCF   5, QIX
-      RES    1, QIX
-      SET    2, QIX
-      CHG    3, QIX
-      BIT    4, QIX
-      TSET   5, QIX
-      MINC1  0040H, QIX
-      MINC2  0040H, QIX
-      MINC4  0040H, QIX
-      MDEC1  0040H, QIX
-      MDEC2  0040H, QIX
-      MDEC4  0080H, QIX
-      MUL    XWA, QIX
-      MUL    XBC, QIX
-      MUL    XDE, QIX
-      MUL    XHL, QIX
-      MUL    XIX, QIX
-      MUL    XIY, QIX
-      MUL    XIZ, QIX
-      MUL    XSP, QIX
-      MULS   XWA, QIX
-      MULS   XBC, QIX
-      MULS   XDE, QIX
-      MULS   XHL, QIX
-      MULS   XIX, QIX
-      MULS   XIY, QIX
-      MULS   XIZ, QIX
-      MULS   XSP, QIX
-      DIV    XWA, QIX
-      DIV    XBC, QIX
-      DIV    XDE, QIX
-      DIV    XHL, QIX
-      DIV    XIX, QIX
-      DIV    XIY, QIX
-      DIV    XIZ, QIX
-      DIV    XSP, QIX
-      DIVS   XWA, QIX
-      DIVS   XBC, QIX
-      DIVS   XDE, QIX
-      DIVS   XHL, QIX
-      DIVS   XIX, QIX
-      DIVS   XIY, QIX
-      DIVS   XIZ, QIX
-      DIVS   XSP, QIX
-      INC    8, QIX
-      DEC    8, QIX
-      SCC    F, QIX
-      SCC    LT, QIX
-      SCC    LE, QIX
-      SCC    ULE, QIX
-      SCC    OV, QIX
-      SCC    MI, QIX
-      SCC    Z, QIX
-      SCC    C, QIX
-      SCC    T, QIX
-      SCC    GE, QIX
-      SCC    GT, QIX
-      SCC    UGT, QIX
-      SCC    NOV, QIX
-      SCC    PL, QIX
-      SCC    NZ, QIX
-      SCC    NC, QIX
-      ADD    WA, QIX
-      ADD    BC, QIX
-      ADD    DE, QIX
-      ADD    HL, QIX
-      ADD    IX, QIX
-      ADD    IY, QIX
-      ADD    IZ, QIX
-      ADD    SP, QIX
-      LD     WA, QIX
-      LD     BC, QIX
-      LD     DE, QIX
-      LD     HL, QIX
-      LD     IX, QIX
-      LD     IY, QIX
-      LD     IZ, QIX
-      LD     SP, QIX
-      ADC    WA, QIX
-      ADC    BC, QIX
-      ADC    DE, QIX
-      ADC    HL, QIX
-      ADC    IX, QIX
-      ADC    IY, QIX
-      ADC    IZ, QIX
-      ADC    SP, QIX
-      LD     QIX, WA
-      LD     QIX, BC
-      LD     QIX, DE
-      LD     QIX, HL
-      LD     QIX, IX
-      LD     QIX, IY
-      LD     QIX, IZ
-      LD     QIX, SP
-      SUB    WA, QIX
-      SUB    BC, QIX
-      SUB    DE, QIX
-      SUB    HL, QIX
-      SUB    IX, QIX
-      SUB    IY, QIX
-      SUB    IZ, QIX
-      SUB    SP, QIX
-      SBC    WA, QIX
-      SBC    BC, QIX
-      SBC    DE, QIX
-      SBC    HL, QIX
-      SBC    IX, QIX
-      SBC    IY, QIX
-      SBC    IZ, QIX
-      SBC    SP, QIX
-      EX     WA, QIX
-      EX     BC, QIX
-      EX     DE, QIX
-      EX     HL, QIX
-      EX     IX, QIX
-      EX     IY, QIX
-      EX     IZ, QIX
-      EX     SP, QIX
-      AND    WA, QIX
-      AND    BC, QIX
-      AND    DE, QIX
-      AND    HL, QIX
-      AND    IX, QIX
-      AND    IY, QIX
-      AND    IZ, QIX
-      AND    SP, QIX
-      ADD    QIX, 0CAC9H
-      ADC    QIX, 0CBCAH
-      SUB    QIX, 0CCCBH
-      SBC    QIX, 0CDCCH
-      AND    QIX, 0CECDH
-      XOR    QIX, 0CFCEH
-      OR     QIX, 0D0CFH
-      CP     QIX, 0D1D0H
-      XOR    WA, QIX
-      XOR    BC, QIX
-      XOR    DE, QIX
-      XOR    HL, QIX
-      XOR    IX, QIX
-      XOR    IY, QIX
-      XOR    IZ, QIX
-      XOR    SP, QIX
-      OR     WA, QIX
-      OR     BC, QIX
-      OR     DE, QIX
-      OR     HL, QIX
-      OR     IX, QIX
-      OR     IY, QIX
-      OR     IZ, QIX
-      OR     SP, QIX
-      RLC    16, QIX
-      RRC    16, QIX
-      RL     16, QIX
-      RR     16, QIX
-      SLA    16, QIX
-      SRA    16, QIX
-      SLL    16, QIX
-      SRL    16, QIX
-      CP     WA, QIX
-      CP     BC, QIX
-      CP     DE, QIX
-      CP     IY, IY
-      CP     IZ, IY
-      CP     SP, IY
-      LD     IY, 0504H
-      CPL    IY
-      NEG    IY
-      BS1F   A, IY
-      BS1B   A, IY
-      EXTZ   IY
-      EXTS   IY
-      PAA    IY
-      MIRR   IY
-      DJNZ   IY, $+33
-      ANDCF  1, IY
-      ORCF   2, IY
-      XORCF  3, IY
-      LDCF   4, IY
-      STCF   5, IY
-      RES    1, IY
-      SET    2, IY
-      CHG    3, IY
-      BIT    4, IY
-      TSET   5, IY
-      MINC1  0040H, IY
-      MINC2  0040H, IY
-      MINC4  0040H, IY
-      MDEC1  0040H, IY
-      MDEC2  0040H, IY
-      MDEC4  0080H, IY
-      MUL    XWA, IY
-      MUL    XBC, IY
-      MUL    XDE, IY
-      MUL    XHL, IY
-      MUL    XIX, IY
-      MUL    XIY, IY
-      MUL    XIZ, IY
-      MUL    XSP, IY
-      MULS   XWA, IY
-      MULS   XBC, IY
-      MULS   XDE, IY
-      MULS   XHL, IY
-      MULS   XIX, IY
-      MULS   XIY, IY
-      MULS   XIZ, IY
-      MULS   XSP, IY
-      DIV    XWA, IY
-      DIV    XBC, IY
-      DIV    XDE, IY
-      DIV    XHL, IY
-      DIV    XIX, IY
-      DIV    XIY, IY
-      DIV    XIZ, IY
-      DIV    XSP, IY
-      DIVS   XWA, IY
-      DIVS   XBC, IY
-      DIVS   XDE, IY
-      DIVS   XHL, IY
-      DIVS   XIX, IY
-      DIVS   XIY, IY
-      DIVS   XIZ, IY
-      DIVS   XSP, IY
-      INC    8, IY
-      DEC    8, IY
-      SCC    F, IY
-      SCC    LT, IY
-      SCC    LE, IY
-      SCC    ULE, IY
-      SCC    OV, IY
-      SCC    MI, IY
-      SCC    Z, IY
-      SCC    C, IY
-      SCC    T, IY
-      SCC    GE, IY
-      SCC    GT, IY
-      SCC    UGT, IY
-      SCC    NOV, IY
-      SCC    PL, IY
-      SCC    NZ, IY
-      SCC    NC, IY
-      ADD    WA, IY
-      ADD    BC, IY
-      ADD    DE, IY
-      ADD    HL, IY
-      ADD    IX, IY
-      ADD    IY, IY
-      ADD    IZ, IY
-      ADD    SP, IY
-      LD     IY, IY
-      LD     IZ, IY
-      LD     SP, IY
-      ADC    WA, IY
-      ADC    BC, IY
-      ADC    DE, IY
-      ADC    HL, IY
-      ADC    IX, IY
-      ADC    IY, IY
-      ADC    IZ, IY
-      ADC    SP, IY
-      LD     IY, IZ
-      LD     IY, SP
-      SUB    WA, IY
-      SUB    BC, IY
-      SUB    DE, IY
-      SUB    HL, IY
-      SUB    IX, IY
-      SUB    IY, IY
-      SUB    IZ, IY
-      SUB    SP, IY
-      SBC    WA, IY
-      SBC    BC, IY
-      SBC    DE, IY
-      SBC    HL, IY
-      SBC    IX, IY
-      SBC    IY, IY
-      SBC    IZ, IY
-      SBC    SP, IY
-      EX     WA, IY
-      EX     BC, IY
-      EX     DE, IY
-      EX     HL, IY
-      EX     IX, IY
-      EX     IY, IY
-      EX     IZ, IY
-      EX     SP, IY
-      AND    WA, IY
-      AND    BC, IY
-      AND    DE, IY
-      AND    HL, IY
-      AND    IX, IY
-      AND    IY, IY
-      AND    IZ, IY
-      AND    SP, IY
-      ADD    IY, 0CAC9H
-      ADC    IY, 0CBCAH
-      SUB    IY, 0CCCBH
-      SBC    IY, 0CDCCH
-      AND    IY, 0CECDH
-      XOR    IY, 0CFCEH
-      OR     IY, 0D0CFH
-      CP     IY, 0D1D0H
-      XOR    WA, IY
-      XOR    BC, IY
-      XOR    DE, IY
-      XOR    HL, IY
-      XOR    IX, IY
-      XOR    IY, IY
-      XOR    IZ, IY
-      XOR    SP, IY
-      OR     WA, IY
-      OR     BC, IY
-      OR     DE, IY
-      OR     HL, IY
-      OR     IX, IY
-      OR     IY, IY
-      OR     IZ, IY
-      OR     SP, IY
-      RLC    16, IY
-      RRC    16, IY
-      RL     16, IY
-      RR     16, IY
-      SLA    16, IY
-      SRA    16, IY
-      SLL    16, IY
-      SRL    16, IY
-      CP     WA, IY
-      CP     BC, IY
-      CP     DE, IY
-      CP     HL, IY
-      CP     IX, IY
-      CP     SP, QIY
-      LD     QIY, 0504H
-      CPL    QIY
-      NEG    QIY
-      BS1F   A, QIY
-      BS1B   A, QIY
-      EXTZ   QIY
-      EXTS   QIY
-      PAA    QIY
-      MIRR   QIY
-      DJNZ   QIY, $+33
-      ANDCF  1, QIY
-      ORCF   2, QIY
-      XORCF  3, QIY
-      LDCF   4, QIY
-      STCF   5, QIY
-      RES    1, QIY
-      SET    2, QIY
-      CHG    3, QIY
-      BIT    4, QIY
-      TSET   5, QIY
-      MINC1  0040H, QIY
-      MINC2  0040H, QIY
-      MINC4  0040H, QIY
-      MDEC1  0040H, QIY
-      MDEC2  0040H, QIY
-      MDEC4  0080H, QIY
-      MUL    XWA, QIY
-      MUL    XBC, QIY
-      MUL    XDE, QIY
-      MUL    XHL, QIY
-      MUL    XIX, QIY
-      MUL    XIY, QIY
-      MUL    XIZ, QIY
-      MUL    XSP, QIY
-      MULS   XWA, QIY
-      MULS   XBC, QIY
-      MULS   XDE, QIY
-      MULS   XHL, QIY
-      MULS   XIX, QIY
-      MULS   XIY, QIY
-      MULS   XIZ, QIY
-      MULS   XSP, QIY
-      DIV    XWA, QIY
-      DIV    XBC, QIY
-      DIV    XDE, QIY
-      DIV    XHL, QIY
-      DIV    XIX, QIY
-      DIV    XIY, QIY
-      DIV    XIZ, QIY
-      DIV    XSP, QIY
-      DIVS   XWA, QIY
-      DIVS   XBC, QIY
-      DIVS   XDE, QIY
-      DIVS   XHL, QIY
-      DIVS   XIX, QIY
-      DIVS   XIY, QIY
-      DIVS   XIZ, QIY
-      DIVS   XSP, QIY
-      INC    8, QIY
-      DEC    8, QIY
-      SCC    F, QIY
-      SCC    LT, QIY
-      SCC    LE, QIY
-      SCC    ULE, QIY
-      SCC    OV, QIY
-      SCC    MI, QIY
-      SCC    Z, QIY
-      SCC    C, QIY
-      SCC    T, QIY
-      SCC    GE, QIY
-      SCC    GT, QIY
-      SCC    UGT, QIY
-      SCC    NOV, QIY
-      SCC    PL, QIY
-      SCC    NZ, QIY
-      SCC    NC, QIY
-      ADD    WA, QIY
-      ADD    BC, QIY
-      ADD    DE, QIY
-      ADD    HL, QIY
-      ADD    IX, QIY
-      ADD    IY, QIY
-      ADD    IZ, QIY
-      ADD    SP, QIY
-      LD     WA, QIY
-      LD     BC, QIY
-      LD     DE, QIY
-      LD     HL, QIY
-      LD     IX, QIY
-      LD     IY, QIY
-      LD     IZ, QIY
-      LD     SP, QIY
-      ADC    WA, QIY
-      ADC    BC, QIY
-      ADC    DE, QIY
-      ADC    HL, QIY
-      ADC    IX, QIY
-      ADC    IY, QIY
-      ADC    IZ, QIY
-      ADC    SP, QIY
-      LD     QIY, WA
-      LD     QIY, BC
-      LD     QIY, DE
-      LD     QIY, HL
-      LD     QIY, IX
-      LD     QIY, IY
-      LD     QIY, IZ
-      LD     QIY, SP
-      SUB    WA, QIY
-      SUB    BC, QIY
-      SUB    DE, QIY
-      SUB    HL, QIY
-      SUB    IX, QIY
-      SUB    IY, QIY
-      SUB    IZ, QIY
-      SUB    SP, QIY
-      SBC    WA, QIY
-      SBC    BC, QIY
-      SBC    DE, QIY
-      SBC    HL, QIY
-      SBC    IX, QIY
-      SBC    IY, QIY
-      SBC    IZ, QIY
-      SBC    SP, QIY
-      EX     WA, QIY
-      EX     BC, QIY
-      EX     DE, QIY
-      EX     HL, QIY
-      EX     IX, QIY
-      EX     IY, QIY
-      EX     IZ, QIY
-      EX     SP, QIY
-      AND    WA, QIY
-      AND    BC, QIY
-      AND    DE, QIY
-      AND    HL, QIY
-      AND    IX, QIY
-      AND    IY, QIY
-      AND    IZ, QIY
-      AND    SP, QIY
-      ADD    QIY, 0CAC9H
-      ADC    QIY, 0CBCAH
-      SUB    QIY, 0CCCBH
-      SBC    QIY, 0CDCCH
-      AND    QIY, 0CECDH
-      XOR    QIY, 0CFCEH
-      OR     QIY, 0D0CFH
-      CP     QIY, 0D1D0H
-      XOR    WA, QIY
-      XOR    BC, QIY
-      XOR    DE, QIY
-      XOR    HL, QIY
-      XOR    IX, QIY
-      XOR    IY, QIY
-      XOR    IZ, QIY
-      XOR    SP, QIY
-      OR     WA, QIY
-      OR     BC, QIY
-      OR     DE, QIY
-      OR     HL, QIY
-      OR     IX, QIY
-      OR     IY, QIY
-      OR     IZ, QIY
-      OR     SP, QIY
-      RLC    16, QIY
-      RRC    16, QIY
-      RL     16, QIY
-      RR     16, QIY
-      SLA    16, QIY
-      SRA    16, QIY
-      SLL    16, QIY
-      SRL    16, QIY
-      CP     WA, QIY
-      CP     BC, QIY
-      CP     DE, QIY
-      CP     HL, QIY
-      CP     IX, QIY
-      CP     IY, QIY
-      CP     IZ, QIY
-      LD     IZ, 0504H
-      CPL    IZ
-      NEG    IZ
-      BS1F   A, IZ
-      BS1B   A, IZ
-      EXTZ   IZ
-      EXTS   IZ
-      PAA    IZ
-      MIRR   IZ
-      DJNZ   IZ, $+33
-      ANDCF  1, IZ
-      ORCF   2, IZ
-      XORCF  3, IZ
-      LDCF   4, IZ
-      STCF   5, IZ
-      RES    1, IZ
-      SET    2, IZ
-      CHG    3, IZ
-      BIT    4, IZ
-      TSET   5, IZ
-      MINC1  0040H, IZ
-      MINC2  0040H, IZ
-      MINC4  0040H, IZ
-      MDEC1  0040H, IZ
-      MDEC2  0040H, IZ
-      MDEC4  0080H, IZ
-      MUL    XWA, IZ
-      MUL    XBC, IZ
-      MUL    XDE, IZ
-      MUL    XHL, IZ
-      MUL    XIX, IZ
-      MUL    XIY, IZ
-      MUL    XIZ, IZ
-      MUL    XSP, IZ
-      MULS   XWA, IZ
-      MULS   XBC, IZ
-      MULS   XDE, IZ
-      MULS   XHL, IZ
-      MULS   XIX, IZ
-      MULS   XIY, IZ
-      MULS   XIZ, IZ
-      MULS   XSP, IZ
-      DIV    XWA, IZ
-      DIV    XBC, IZ
-      DIV    XDE, IZ
-      DIV    XHL, IZ
-      DIV    XIX, IZ
-      DIV    XIY, IZ
-      DIV    XIZ, IZ
-      DIV    XSP, IZ
-      DIVS   XWA, IZ
-      DIVS   XBC, IZ
-      DIVS   XDE, IZ
-      DIVS   XHL, IZ
-      DIVS   XIX, IZ
-      DIVS   XIY, IZ
-      DIVS   XIZ, IZ
-      DIVS   XSP, IZ
-      INC    8, IZ
-      DEC    8, IZ
-      SCC    F, IZ
-      SCC    LT, IZ
-      SCC    LE, IZ
-      SCC    ULE, IZ
-      SCC    OV, IZ
-      SCC    MI, IZ
-      SCC    Z, IZ
-      SCC    C, IZ
-      SCC    T, IZ
-      SCC    GE, IZ
-      SCC    GT, IZ
-      SCC    UGT, IZ
-      SCC    NOV, IZ
-      SCC    PL, IZ
-      SCC    NZ, IZ
-      SCC    NC, IZ
-      ADD    WA, IZ
-      ADD    BC, IZ
-      ADD    DE, IZ
-      ADD    HL, IZ
-      ADD    IX, IZ
-      ADD    IY, IZ
-      ADD    IZ, IZ
-      ADD    SP, IZ
-      LD     IZ, IZ
-      LD     SP, IZ
-      ADC    WA, IZ
-      ADC    BC, IZ
-      ADC    DE, IZ
-      ADC    HL, IZ
-      ADC    IX, IZ
-      ADC    IY, IZ
-      ADC    IZ, IZ
-      ADC    SP, IZ
-      LD     IZ, SP
-      SUB    WA, IZ
-      SUB    BC, IZ
-      SUB    DE, IZ
-      SUB    HL, IZ
-      SUB    IX, IZ
-      SUB    IY, IZ
-      SUB    IZ, IZ
-      SUB    SP, IZ
-      SBC    WA, IZ
-      SBC    BC, IZ
-      SBC    DE, IZ
-      SBC    HL, IZ
-      SBC    IX, IZ
-      SBC    IY, IZ
-      SBC    IZ, IZ
-      SBC    SP, IZ
-      EX     WA, IZ
-      EX     BC, IZ
-      EX     DE, IZ
-      EX     HL, IZ
-      EX     IX, IZ
-      EX     IY, IZ
-      EX     IZ, IZ
-      EX     SP, IZ
-      AND    WA, IZ
-      AND    BC, IZ
-      AND    DE, IZ
-      AND    HL, IZ
-      AND    IX, IZ
-      AND    IY, IZ
-      AND    IZ, IZ
-      AND    SP, IZ
-      ADD    IZ, 0CAC9H
-      ADC    IZ, 0CBCAH
-      SUB    IZ, 0CCCBH
-      SBC    IZ, 0CDCCH
-      AND    IZ, 0CECDH
-      XOR    IZ, 0CFCEH
-      OR     IZ, 0D0CFH
-      CP     IZ, 0D1D0H
-      XOR    WA, IZ
-      XOR    BC, IZ
-      XOR    DE, IZ
-      XOR    HL, IZ
-      XOR    IX, IZ
-      XOR    IY, IZ
-      XOR    IZ, IZ
-      XOR    SP, IZ
-      OR     WA, IZ
-      OR     BC, IZ
-      OR     DE, IZ
-      OR     HL, IZ
-      OR     IX, IZ
-      OR     IY, IZ
-      OR     IZ, IZ
-      OR     SP, IZ
-      RLC    16, IZ
-      RRC    16, IZ
-      RL     16, IZ
-      RR     16, IZ
-      SLA    16, IZ
-      SRA    16, IZ
-      SLL    16, IZ
-      SRL    16, IZ
-      CP     WA, IZ
-      CP     BC, IZ
-      CP     DE, IZ
-      CP     HL, IZ
-      CP     IX, IZ
-      CP     IY, IZ
-      CP     IZ, IZ
-      CP     SP, IZ
-      LD     QIZ, 0504H
-      CPL    QIZ
-      NEG    QIZ
-      BS1F   A, QIZ
-      BS1B   A, QIZ
-      EXTZ   QIZ
-      EXTS   QIZ
-      PAA    QIZ
-      MIRR   QIZ
-      DJNZ   QIZ, $+33
-      ANDCF  1, QIZ
-      ORCF   2, QIZ
-      XORCF  3, QIZ
-      LDCF   4, QIZ
-      STCF   5, QIZ
-      RES    1, QIZ
-      SET    2, QIZ
-      CHG    3, QIZ
-      BIT    4, QIZ
-      TSET   5, QIZ
-      MINC1  0040H, QIZ
-      MINC2  0040H, QIZ
-      MINC4  0040H, QIZ
-      MDEC1  0040H, QIZ
-      MDEC2  0040H, QIZ
-      MDEC4  0080H, QIZ
-      MUL    XWA, QIZ
-      MUL    XBC, QIZ
-      MUL    XDE, QIZ
-      MUL    XHL, QIZ
-      MUL    XIX, QIZ
-      MUL    XIY, QIZ
-      MUL    XIZ, QIZ
-      MUL    XSP, QIZ
-      MULS   XWA, QIZ
-      MULS   XBC, QIZ
-      MULS   XDE, QIZ
-      MULS   XHL, QIZ
-      MULS   XIX, QIZ
-      MULS   XIY, QIZ
-      MULS   XIZ, QIZ
-      MULS   XSP, QIZ
-      DIV    XWA, QIZ
-      DIV    XBC, QIZ
-      DIV    XDE, QIZ
-      DIV    XHL, QIZ
-      DIV    XIX, QIZ
-      DIV    XIY, QIZ
-      DIV    XIZ, QIZ
-      DIV    XSP, QIZ
-      DIVS   XWA, QIZ
-      DIVS   XBC, QIZ
-      DIVS   XDE, QIZ
-      DIVS   XHL, QIZ
-      DIVS   XIX, QIZ
-      DIVS   XIY, QIZ
-      DIVS   XIZ, QIZ
-      DIVS   XSP, QIZ
-      INC    8, QIZ
-      DEC    8, QIZ
-      SCC    F, QIZ
-      SCC    LT, QIZ
-      SCC    LE, QIZ
-      SCC    ULE, QIZ
-      SCC    OV, QIZ
-      SCC    MI, QIZ
-      SCC    Z, QIZ
-      SCC    C, QIZ
-      SCC    T, QIZ
-      SCC    GE, QIZ
-      SCC    GT, QIZ
-      SCC    UGT, QIZ
-      SCC    NOV, QIZ
-      SCC    PL, QIZ
-      SCC    NZ, QIZ
-      SCC    NC, QIZ
-      ADD    WA, QIZ
-      ADD    BC, QIZ
-      ADD    DE, QIZ
-      ADD    HL, QIZ
-      ADD    IX, QIZ
-      ADD    IY, QIZ
-      ADD    IZ, QIZ
-      ADD    SP, QIZ
-      LD     WA, QIZ
-      LD     BC, QIZ
-      LD     DE, QIZ
-      LD     HL, QIZ
-      LD     IX, QIZ
-      LD     IY, QIZ
-      LD     IZ, QIZ
-      LD     SP, QIZ
-      ADC    WA, QIZ
-      ADC    BC, QIZ
-      ADC    DE, QIZ
-      ADC    HL, QIZ
-      ADC    IX, QIZ
-      ADC    IY, QIZ
-      ADC    IZ, QIZ
-      ADC    SP, QIZ
-      LD     QIZ, WA
-      LD     QIZ, BC
-      LD     QIZ, DE
-      LD     QIZ, HL
-      LD     QIZ, IX
-      LD     QIZ, IY
-      LD     QIZ, IZ
-      LD     QIZ, SP
-      SUB    WA, QIZ
-      SUB    BC, QIZ
-      SUB    DE, QIZ
-      SUB    HL, QIZ
-      SUB    IX, QIZ
-      SUB    IY, QIZ
-      SUB    IZ, QIZ
-      SUB    SP, QIZ
-      SBC    WA, QIZ
-      SBC    BC, QIZ
-      SBC    DE, QIZ
-      SBC    HL, QIZ
-      SBC    IX, QIZ
-      SBC    IY, QIZ
-      SBC    IZ, QIZ
-      SBC    SP, QIZ
-      EX     WA, QIZ
-      EX     BC, QIZ
-      EX     DE, QIZ
-      EX     HL, QIZ
-      EX     IX, QIZ
-      EX     IY, QIZ
-      EX     IZ, QIZ
-      EX     SP, QIZ
-      AND    WA, QIZ
-      AND    BC, QIZ
-      AND    DE, QIZ
-      AND    HL, QIZ
-      AND    IX, QIZ
-      AND    IY, QIZ
-      AND    IZ, QIZ
-      AND    SP, QIZ
-      ADD    QIZ, 0CAC9H
-      ADC    QIZ, 0CBCAH
-      SUB    QIZ, 0CCCBH
-      SBC    QIZ, 0CDCCH
-      AND    QIZ, 0CECDH
-      XOR    QIZ, 0CFCEH
-      OR     QIZ, 0D0CFH
-      CP     QIZ, 0D1D0H
-      XOR    WA, QIZ
-      XOR    BC, QIZ
-      XOR    DE, QIZ
-      XOR    HL, QIZ
-      XOR    IX, QIZ
-      XOR    IY, QIZ
-      XOR    IZ, QIZ
-      XOR    SP, QIZ
-      OR     WA, QIZ
-      OR     BC, QIZ
-      OR     DE, QIZ
-      OR     HL, QIZ
-      OR     IX, QIZ
-      OR     IY, QIZ
-      OR     IZ, QIZ
-      OR     SP, QIZ
-      RLC    16, QIZ
-      RRC    16, QIZ
-      RL     16, QIZ
-      RR     16, QIZ
-      SLA    16, QIZ
-      SRA    16, QIZ
-      SLL    16, QIZ
-      SRL    16, QIZ
-      CP     WA, QIZ
-      CP     BC, QIZ
-      CP     DE, QIZ
-      CP     HL, QIZ
-      CP     IX, QIZ
-      CP     IY, QIZ
-      CP     IZ, QIZ
-      CP     SP, QIZ
-      LD     SP, 0504H
-      CPL    SP
-      NEG    SP
-      BS1F   A, SP
-      BS1B   A, SP
-      EXTZ   SP
-      EXTS   SP
-      PAA    SP
-      MIRR   SP
-      DJNZ   SP, $+33
-      ANDCF  1, SP
-      ORCF   2, SP
-      XORCF  3, SP
-      LDCF   4, SP
-      STCF   5, SP
-      RES    1, SP
-      SET    2, SP
-      CHG    3, SP
-      BIT    4, SP
-      TSET   5, SP
-      MINC1  0040H, SP
-      MINC2  0040H, SP
-      MINC4  0040H, SP
-      MDEC1  0040H, SP
-      MDEC2  0040H, SP
-      MDEC4  0080H, SP
-      MUL    XWA, SP
-      MUL    XBC, SP
-      MUL    XDE, SP
-      MUL    XHL, SP
-      MUL    XIX, SP
-      MUL    XIY, SP
-      MUL    XIZ, SP
-      MUL    XSP, SP
-      MULS   XWA, SP
-      MULS   XBC, SP
-      MULS   XDE, SP
-      MULS   XHL, SP
-      MULS   XIX, SP
-      MULS   XIY, SP
-      MULS   XIZ, SP
-      MULS   XSP, SP
-      DIV    XWA, SP
-      DIV    XBC, SP
-      DIV    XDE, SP
-      DIV    XHL, SP
-      DIV    XIX, SP
-      DIV    XIY, SP
-      DIV    XIZ, SP
-      DIV    XSP, SP
-      DIVS   XWA, SP
-      DIVS   XBC, SP
-      DIVS   XDE, SP
-      DIVS   XHL, SP
-      DIVS   XIX, SP
-      DIVS   XIY, SP
-      DIVS   XIZ, SP
-      DIVS   XSP, SP
-      INC    8, SP
-      DEC    8, SP
-      SCC    F, SP
-      SCC    LT, SP
-      SCC    LE, SP
-      SCC    ULE, SP
-      SCC    OV, SP
-      SCC    MI, SP
-      SCC    Z, SP
-      SCC    C, SP
-      SCC    T, SP
-      SCC    GE, SP
-      SCC    GT, SP
-      SCC    UGT, SP
-      SCC    NOV, SP
-      SCC    PL, SP
-      SCC    NZ, SP
-      SCC    NC, SP
-      ADD    WA, SP
-      ADD    BC, SP
-      ADD    DE, SP
-      ADD    HL, SP
-      ADD    IX, SP
-      ADD    IY, SP
-      ADD    IZ, SP
-      ADD    SP, SP
-      LD     SP, SP
-      ADC    WA, SP
-      ADC    BC, SP
-      ADC    DE, SP
-      ADC    HL, SP
-      ADC    IX, SP
-      ADC    IY, SP
-      ADC    IZ, SP
-      ADC    SP, SP
-      SUB    WA, SP
-      SUB    BC, SP
-      SUB    DE, SP
-      SUB    HL, SP
-      SUB    IX, SP
-      SUB    IY, SP
-      SUB    IZ, SP
-      SUB    SP, SP
-      SBC    WA, SP
-      SBC    BC, SP
-      SBC    DE, SP
-      SBC    HL, SP
-      SBC    IX, SP
-      SBC    IY, SP
-      SBC    IZ, SP
-      SBC    SP, SP
-      EX     WA, SP
-      EX     BC, SP
-      EX     DE, SP
-      EX     HL, SP
-      EX     IX, SP
-      EX     IY, SP
-      EX     IZ, SP
-      EX     SP, SP
-      AND    WA, SP
-      AND    BC, SP
-      AND    DE, SP
-      AND    HL, SP
-      AND    IX, SP
-      AND    IY, SP
-      AND    IZ, SP
-      AND    SP, SP
-      ADD    SP, 0CAC9H
-      ADC    SP, 0CBCAH
-      SUB    SP, 0CCCBH
-      SBC    SP, 0CDCCH
-      AND    SP, 0CECDH
-      XOR    SP, 0CFCEH
-      OR     SP, 0D0CFH
-      CP     SP, 0D1D0H
-      XOR    WA, SP
-      XOR    BC, SP
-      XOR    DE, SP
-      XOR    HL, SP
-      XOR    IX, SP
-      XOR    IY, SP
-      XOR    IZ, SP
-      XOR    SP, SP
-      OR     WA, SP
-      OR     BC, SP
-      OR     DE, SP
-      OR     HL, SP
-      OR     IX, SP
-      OR     IY, SP
-      OR     IZ, SP
-      OR     SP, SP
-      RLC    16, SP
-      RRC    16, SP
-      RL     16, SP
-      RR     16, SP
-      SLA    16, SP
-      SRA    16, SP
-      SLL    16, SP
-      SRL    16, SP
-      CP     WA, SP
-      CP     BC, SP
-      CP     DE, SP
-      CP     HL, SP
-      CP     IX, SP
-      CP     IY, SP
-      CP     IZ, SP
-      CP     SP, SP
-      LD     QSP, 0504H
-      CPL    QSP
-      NEG    QSP
-      BS1F   A, QSP
-      BS1B   A, QSP
-      EXTZ   QSP
-      EXTS   QSP
-      PAA    QSP
-      MIRR   QSP
-      DJNZ   QSP, $+33
-      ANDCF  1, QSP
-      ORCF   2, QSP
-      XORCF  3, QSP
-      LDCF   4, QSP
-      STCF   5, QSP
-      RES    1, QSP
-      SET    2, QSP
-      CHG    3, QSP
-      BIT    4, QSP
-      TSET   5, QSP
-      MINC1  0040H, QSP
-      MINC2  0040H, QSP
-      MINC4  0040H, QSP
-      MDEC1  0040H, QSP
-      MDEC2  0040H, QSP
-      MDEC4  0080H, QSP
-      MUL    XWA, QSP
-      MUL    XBC, QSP
-      MUL    XDE, QSP
-      MUL    XHL, QSP
-      MUL    XIX, QSP
-      MUL    XIY, QSP
-      MUL    XIZ, QSP
-      MUL    XSP, QSP
-      MULS   XWA, QSP
-      MULS   XBC, QSP
-      MULS   XDE, QSP
-      MULS   XHL, QSP
-      MULS   XIX, QSP
-      MULS   XIY, QSP
-      MULS   XIZ, QSP
-      MULS   XSP, QSP
-      DIV    XWA, QSP
-      DIV    XBC, QSP
-      DIV    XDE, QSP
-      DIV    XHL, QSP
-      DIV    XIX, QSP
-      DIV    XIY, QSP
-      DIV    XIZ, QSP
-      DIV    XSP, QSP
-      DIVS   XWA, QSP
-      DIVS   XBC, QSP
-      DIVS   XDE, QSP
-      DIVS   XHL, QSP
-      DIVS   XIX, QSP
-      DIVS   XIY, QSP
-      DIVS   XIZ, QSP
-      DIVS   XSP, QSP
-      INC    8, QSP
-      DEC    8, QSP
-      SCC    F, QSP
-      SCC    LT, QSP
-      SCC    LE, QSP
-      SCC    ULE, QSP
-      SCC    OV, QSP
-      SCC    MI, QSP
-      SCC    Z, QSP
-      SCC    C, QSP
-      SCC    T, QSP
-      SCC    GE, QSP
-      SCC    GT, QSP
-      SCC    UGT, QSP
-      SCC    NOV, QSP
-      SCC    PL, QSP
-      SCC    NZ, QSP
-      SCC    NC, QSP
-      ADD    WA, QSP
-      ADD    BC, QSP
-      ADD    DE, QSP
-      ADD    HL, QSP
-      ADD    IX, QSP
-      ADD    IY, QSP
-      ADD    IZ, QSP
-      ADD    SP, QSP
-      LD     WA, QSP
-      LD     BC, QSP
-      LD     DE, QSP
-      LD     HL, QSP
-      LD     IX, QSP
-      LD     IY, QSP
-      LD     IZ, QSP
-      LD     SP, QSP
-      ADC    WA, QSP
-      ADC    BC, QSP
-      ADC    DE, QSP
-      ADC    HL, QSP
-      ADC    IX, QSP
-      ADC    IY, QSP
-      ADC    IZ, QSP
-      ADC    SP, QSP
-      LD     QSP, WA
-      LD     QSP, BC
-      LD     QSP, DE
-      LD     QSP, HL
-      LD     QSP, IX
-      LD     QSP, IY
-      LD     QSP, IZ
-      LD     QSP, SP
-      SUB    WA, QSP
-      SUB    BC, QSP
-      SUB    DE, QSP
-      SUB    HL, QSP
-      SUB    IX, QSP
-      SUB    IY, QSP
-      SUB    IZ, QSP
-      SUB    SP, QSP
-      SBC    WA, QSP
-      SBC    BC, QSP
-      SBC    DE, QSP
-      SBC    HL, QSP
-      SBC    IX, QSP
-      SBC    IY, QSP
-      SBC    IZ, QSP
-      SBC    SP, QSP
-      EX     WA, QSP
-      EX     BC, QSP
-      EX     DE, QSP
-      EX     HL, QSP
-      EX     IX, QSP
-      EX     IY, QSP
-      EX     IZ, QSP
-      EX     SP, QSP
-      AND    WA, QSP
-      AND    BC, QSP
-      AND    DE, QSP
-      AND    HL, QSP
-      AND    IX, QSP
-      AND    IY, QSP
-      AND    IZ, QSP
-      AND    SP, QSP
-      ADD    QSP, 0CAC9H
-      ADC    QSP, 0CBCAH
-      SUB    QSP, 0CCCBH
-      SBC    QSP, 0CDCCH
-      AND    QSP, 0CECDH
-      XOR    QSP, 0CFCEH
-      OR     QSP, 0D0CFH
-      CP     QSP, 0D1D0H
-      XOR    WA, QSP
-      XOR    BC, QSP
-      XOR    DE, QSP
-      XOR    HL, QSP
-      XOR    IX, QSP
-      XOR    IY, QSP
-      XOR    IZ, QSP
-      XOR    SP, QSP
-      OR     WA, QSP
-      OR     BC, QSP
-      OR     DE, QSP
-      OR     HL, QSP
-      OR     IX, QSP
-      OR     IY, QSP
-      OR     IZ, QSP
-      OR     SP, QSP
-      RLC    16, QSP
-      RRC    16, QSP
-      RL     16, QSP
-      RR     16, QSP
-      SLA    16, QSP
-      SRA    16, QSP
-      SLL    16, QSP
-      SRL    16, QSP
-      CP     WA, QSP
-      CP     BC, QSP
-      CP     DE, QSP
-      CP     HL, QSP
-      CP     IX, QSP
-      CP     IY, QSP
-      CP     IZ, QSP
-      CP     SP, QSP
-      LD     WA0, 0504H
-      CPL    WA0
-      NEG    WA0
-      BS1F   A, WA0
-      BS1B   A, WA0
-      EXTZ   WA0
-      EXTS   WA0
-      PAA    WA0
-      MIRR   WA0
-      DJNZ   WA0, $+33
-      ANDCF  1, WA0
-      ORCF   2, WA0
-      XORCF  3, WA0
-      LDCF   4, WA0
-      STCF   5, WA0
-      RES    1, WA0
-      SET    2, WA0
-      CHG    3, WA0
-      BIT    4, WA0
-      TSET   5, WA0
-      MINC1  0040H, WA0
-      MINC2  0040H, WA0
-      MINC4  0040H, WA0
-      MDEC1  0040H, WA0
-      MDEC2  0040H, WA0
-      MDEC4  0080H, WA0
-      MUL    XWA, WA0
-      MUL    XBC, WA0
-      MUL    XDE, WA0
-      MUL    XHL, WA0
-      MUL    XIX, WA0
-      MUL    XIY, WA0
-      MUL    XIZ, WA0
-      MUL    XSP, WA0
-      MULS   XWA, WA0
-      MULS   XBC, WA0
-      MULS   XDE, WA0
-      MULS   XHL, WA0
-      MULS   XIX, WA0
-      MULS   XIY, WA0
-      MULS   XIZ, WA0
-      MULS   XSP, WA0
-      DIV    XWA, WA0
-      DIV    XBC, WA0
-      DIV    XDE, WA0
-      DIV    XHL, WA0
-      DIV    XIX, WA0
-      DIV    XIY, WA0
-      DIV    XIZ, WA0
-      DIV    XSP, WA0
-      DIVS   XWA, WA0
-      DIVS   XBC, WA0
-      DIVS   XDE, WA0
-      DIVS   XHL, WA0
-      DIVS   XIX, WA0
-      DIVS   XIY, WA0
-      DIVS   XIZ, WA0
-      DIVS   XSP, WA0
-      INC    8, WA0
-      DEC    8, WA0
-      SCC    F, WA0
-      SCC    LT, WA0
-      SCC    LE, WA0
-      SCC    ULE, WA0
-      SCC    OV, WA0
-      SCC    MI, WA0
-      SCC    Z, WA0
-      SCC    C, WA0
-      SCC    T, WA0
-      SCC    GE, WA0
-      SCC    GT, WA0
-      SCC    UGT, WA0
-      SCC    NOV, WA0
-      SCC    PL, WA0
-      SCC    NZ, WA0
-      SCC    NC, WA0
-      ADD    WA, WA0
-      ADD    BC, WA0
-      ADD    DE, WA0
-      ADD    HL, WA0
-      ADD    IX, WA0
-      ADD    IY, WA0
-      ADD    IZ, WA0
-      ADD    SP, WA0
-      LD     WA, WA0
-      LD     BC, WA0
-      LD     DE, WA0
-      LD     HL, WA0
-      LD     IX, WA0
-      LD     IY, WA0
-      LD     IZ, WA0
-      LD     SP, WA0
-      ADC    WA, WA0
-      ADC    BC, WA0
-      ADC    DE, WA0
-      ADC    HL, WA0
-      ADC    IX, WA0
-      ADC    IY, WA0
-      ADC    IZ, WA0
-      ADC    SP, WA0
-      LD     WA0, WA
-      LD     WA0, BC
-      LD     WA0, DE
-      LD     WA0, HL
-      LD     WA0, IX
-      LD     WA0, IY
-      LD     WA0, IZ
-      LD     WA0, SP
-      SUB    WA, WA0
-      SUB    BC, WA0
-      SUB    DE, WA0
-      SUB    HL, WA0
-      SUB    IX, WA0
-      SUB    IY, WA0
-      SUB    IZ, WA0
-      SUB    SP, WA0
-      SBC    WA, WA0
-      SBC    BC, WA0
-      SBC    DE, WA0
-      SBC    HL, WA0
-      SBC    IX, WA0
-      SBC    IY, WA0
-      SBC    IZ, WA0
-      SBC    SP, WA0
-      EX     WA, WA0
-      EX     BC, WA0
-      EX     DE, WA0
-      EX     HL, WA0
-      EX     IX, WA0
-      EX     IY, WA0
-      EX     IZ, WA0
-      EX     SP, WA0
-      AND    WA, WA0
-      AND    BC, WA0
-      AND    DE, WA0
-      AND    HL, WA0
-      AND    IX, WA0
-      AND    IY, WA0
-      AND    IZ, WA0
-      AND    SP, WA0
-      ADD    WA0, 0CAC9H
-      ADC    WA0, 0CBCAH
-      SUB    WA0, 0CCCBH
-      SBC    WA0, 0CDCCH
-      AND    WA0, 0CECDH
-      XOR    WA0, 0CFCEH
-      OR     WA0, 0D0CFH
-      CP     WA0, 0D1D0H
-      XOR    WA, WA0
-      XOR    BC, WA0
-      XOR    DE, WA0
-      XOR    HL, WA0
-      XOR    IX, WA0
-      XOR    IY, WA0
-      XOR    IZ, WA0
-      XOR    SP, WA0
-      OR     WA, WA0
-      OR     BC, WA0
-      OR     DE, WA0
-      OR     HL, WA0
-      OR     IX, WA0
-      OR     IY, WA0
-      OR     IZ, WA0
-      OR     SP, WA0
-      RLC    16, WA0
-      RRC    16, WA0
-      RL     16, WA0
-      RR     16, WA0
-      SLA    16, WA0
-      SRA    16, WA0
-      SLL    16, WA0
-      SRL    16, WA0
-      CP     WA, WA0
-      CP     BC, WA0
-      CP     DE, WA0
-      CP     HL, WA0
-      CP     IX, WA0
-      CP     IY, WA0
-      CP     IZ, WA0
-      CP     SP, WA0
-      LD     QWA0, 0504H
-      CPL    QWA0
-      NEG    QWA0
-      BS1F   A, QWA0
-      BS1B   A, QWA0
-      EXTZ   QWA0
-      EXTS   QWA0
-      PAA    QWA0
-      MIRR   QWA0
-      DJNZ   QWA0, $+33
-      ANDCF  1, QWA0
-      ORCF   2, QWA0
-      XORCF  3, QWA0
-      LDCF   4, QWA0
-      STCF   5, QWA0
-      RES    1, QWA0
-      SET    2, QWA0
-      CHG    3, QWA0
-      BIT    4, QWA0
-      TSET   5, QWA0
-      MINC1  0040H, QWA0
-      MINC2  0040H, QWA0
-      MINC4  0040H, QWA0
-      MDEC1  0040H, QWA0
-      MDEC2  0040H, QWA0
-      MDEC4  0080H, QWA0
-      MUL    XWA, QWA0
-      MUL    XBC, QWA0
-      MUL    XDE, QWA0
-      MUL    XHL, QWA0
-      MUL    XIX, QWA0
-      MUL    XIY, QWA0
-      MUL    XIZ, QWA0
-      MUL    XSP, QWA0
-      MULS   XWA, QWA0
-      MULS   XBC, QWA0
-      MULS   XDE, QWA0
-      MULS   XHL, QWA0
-      MULS   XIX, QWA0
-      MULS   XIY, QWA0
-      MULS   XIZ, QWA0
-      MULS   XSP, QWA0
-      DIV    XWA, QWA0
-      DIV    XBC, QWA0
-      DIV    XDE, QWA0
-      DIV    XHL, QWA0
-      DIV    XIX, QWA0
-      DIV    XIY, QWA0
-      DIV    XIZ, QWA0
-      DIV    XSP, QWA0
-      DIVS   XWA, QWA0
-      DIVS   XBC, QWA0
-      DIVS   XDE, QWA0
-      DIVS   XHL, QWA0
-      DIVS   XIX, QWA0
-      DIVS   XIY, QWA0
-      DIVS   XIZ, QWA0
-      DIVS   XSP, QWA0
-      INC    8, QWA0
-      DEC    8, QWA0
-      SCC    F, QWA0
-      SCC    LT, QWA0
-      SCC    LE, QWA0
-      SCC    ULE, QWA0
-      SCC    OV, QWA0
-      SCC    MI, QWA0
-      SCC    Z, QWA0
-      SCC    C, QWA0
-      SCC    T, QWA0
-      SCC    GE, QWA0
-      SCC    GT, QWA0
-      SCC    UGT, QWA0
-      SCC    NOV, QWA0
-      SCC    PL, QWA0
-      SCC    NZ, QWA0
-      SCC    NC, QWA0
-      ADD    WA, QWA0
-      ADD    BC, QWA0
-      ADD    DE, QWA0
-      ADD    HL, QWA0
-      ADD    IX, QWA0
-      ADD    IY, QWA0
-      ADD    IZ, QWA0
-      ADD    SP, QWA0
-      LD     WA, QWA0
-      LD     BC, QWA0
-      LD     DE, QWA0
-      LD     HL, QWA0
-      LD     IX, QWA0
-      LD     IY, QWA0
-      LD     IZ, QWA0
-      LD     SP, QWA0
-      ADC    WA, QWA0
-      ADC    BC, QWA0
-      ADC    DE, QWA0
-      ADC    HL, QWA0
-      ADC    IX, QWA0
-      ADC    IY, QWA0
-      ADC    IZ, QWA0
-      ADC    SP, QWA0
-      LD     QWA0, WA
-      LD     QWA0, BC
-      LD     QWA0, DE
-      LD     QWA0, HL
-      LD     QWA0, IX
-      LD     QWA0, IY
-      LD     QWA0, IZ
-      LD     QWA0, SP
-      SUB    WA, QWA0
-      SUB    BC, QWA0
-      SUB    DE, QWA0
-      SUB    HL, QWA0
-      SUB    IX, QWA0
-      SUB    IY, QWA0
-      SUB    IZ, QWA0
-      SUB    SP, QWA0
-      SBC    WA, QWA0
-      SBC    BC, QWA0
-      SBC    DE, QWA0
-      SBC    HL, QWA0
-      SBC    IX, QWA0
-      SBC    IY, QWA0
-      SBC    IZ, QWA0
-      SBC    SP, QWA0
-      EX     WA, QWA0
-      EX     BC, QWA0
-      EX     DE, QWA0
-      EX     HL, QWA0
-      EX     IX, QWA0
-      EX     IY, QWA0
-      EX     IZ, QWA0
-      EX     SP, QWA0
-      AND    WA, QWA0
-      AND    BC, QWA0
-      AND    DE, QWA0
-      AND    HL, QWA0
-      AND    IX, QWA0
-      AND    IY, QWA0
-      AND    IZ, QWA0
-      AND    SP, QWA0
-      ADD    QWA0, 0CAC9H
-      ADC    QWA0, 0CBCAH
-      SUB    QWA0, 0CCCBH
-      SBC    QWA0, 0CDCCH
-      AND    QWA0, 0CECDH
-      XOR    QWA0, 0CFCEH
-      OR     QWA0, 0D0CFH
-      CP     QWA0, 0D1D0H
-      XOR    WA, QWA0
-      XOR    BC, QWA0
-      XOR    DE, QWA0
-      XOR    HL, QWA0
-      XOR    IX, QWA0
-      XOR    IY, QWA0
-      XOR    IZ, QWA0
-      XOR    SP, QWA0
-      OR     WA, QWA0
-      OR     BC, QWA0
-      OR     DE, QWA0
-      OR     HL, QWA0
-      OR     IX, QWA0
-      OR     IY, QWA0
-      OR     IZ, QWA0
-      OR     SP, QWA0
-      RLC    16, QWA0
-      RRC    16, QWA0
-      RL     16, QWA0
-      RR     16, QWA0
-      SLA    16, QWA0
-      SRA    16, QWA0
-      SLL    16, QWA0
-      SRL    16, QWA0
-      CP     WA, QWA0
-      CP     BC, QWA0
-      CP     DE, QWA0
-      CP     HL, QWA0
-      CP     IX, QWA0
-      CP     IY, QWA0
-      CP     IZ, QWA0
-      CP     SP, QWA0
-      CPL    BC0
-      NEG    BC0
-      BS1F   A, BC0
-      BS1B   A, BC0
-      EXTZ   BC0
-      EXTS   BC0
-      PAA    BC0
-      MIRR   BC0
-      DJNZ   BC0, $+33
-      ANDCF  1, BC0
-      ORCF   2, BC0
-      XORCF  3, BC0
-      LDCF   4, BC0
-      STCF   5, BC0
-      RES    1, BC0
-      SET    2, BC0
-      CHG    3, BC0
-      BIT    4, BC0
-      TSET   5, BC0
-      MINC1  0040H, BC0
-      MINC2  0040H, BC0
-      MINC4  0040H, BC0
-      MDEC1  0040H, BC0
-      MDEC2  0040H, BC0
-      MDEC4  0080H, BC0
-      MUL    XWA, BC0
-      MUL    XBC, BC0
-      MUL    XDE, BC0
-      MUL    XHL, BC0
-      MUL    XIX, BC0
-      MUL    XIY, BC0
-      MUL    XIZ, BC0
-      MUL    XSP, BC0
-      MULS   XWA, BC0
-      MULS   XBC, BC0
-      MULS   XDE, BC0
-      MULS   XHL, BC0
-      MULS   XIX, BC0
-      MULS   XIY, BC0
-      MULS   XIZ, BC0
-      MULS   XSP, BC0
-      DIV    XWA, BC0
-      DIV    XBC, BC0
-      DIV    XDE, BC0
-      DIV    XHL, BC0
-      DIV    XIX, BC0
-      DIV    XIY, BC0
-      DIV    XIZ, BC0
-      DIV    XSP, BC0
-      DIVS   XWA, BC0
-      DIVS   XBC, BC0
-      DIVS   XDE, BC0
-      DIVS   XHL, BC0
-      DIVS   XIX, BC0
-      DIVS   XIY, BC0
-      DIVS   XIZ, BC0
-      DIVS   XSP, BC0
-      INC    8, BC0
-      DEC    8, BC0
-      SCC    F, BC0
-      SCC    LT, BC0
-      SCC    LE, BC0
-      SCC    ULE, BC0
-      SCC    OV, BC0
-      SCC    MI, BC0
-      SCC    Z, BC0
-      SCC    C, BC0
-      SCC    T, BC0
-      SCC    GE, BC0
-      SCC    GT, BC0
-      SCC    UGT, BC0
-      SCC    NOV, BC0
-      SCC    PL, BC0
-      SCC    NZ, BC0
-      SCC    NC, BC0
-      ADD    WA, BC0
-      ADD    BC, BC0
-      ADD    DE, BC0
-      ADD    HL, BC0
-      ADD    IX, BC0
-      ADD    IY, BC0
-      ADD    IZ, BC0
-      ADD    SP, BC0
-      LD     WA, BC0
-      LD     BC, BC0
-      LD     DE, BC0
-      LD     HL, BC0
-      LD     IX, BC0
-      LD     IY, BC0
-      LD     IZ, BC0
-      LD     SP, BC0
-      ADC    WA, BC0
-      ADC    BC, BC0
-      ADC    DE, BC0
-      ADC    HL, BC0
-      ADC    IX, BC0
-      ADC    IY, BC0
-      ADC    IZ, BC0
-      ADC    SP, BC0
-      LD     BC0, WA
-      LD     BC0, BC
-      LD     BC0, DE
-      LD     BC0, HL
-      LD     BC0, IX
-      LD     BC0, IY
-      LD     BC0, IZ
-      LD     BC0, SP
-      SUB    WA, BC0
-      SUB    BC, BC0
-      SUB    DE, BC0
-      SUB    HL, BC0
-      SUB    IX, BC0
-      SUB    IY, BC0
-      SUB    IZ, BC0
-      SUB    SP, BC0
-      SBC    WA, BC0
-      SBC    BC, BC0
-      SBC    DE, BC0
-      SBC    HL, BC0
-      SBC    IX, BC0
-      SBC    IY, BC0
-      SBC    IZ, BC0
-      SBC    SP, BC0
-      EX     WA, BC0
-      EX     BC, BC0
-      EX     DE, BC0
-      EX     HL, BC0
-      EX     IX, BC0
-      EX     IY, BC0
-      EX     IZ, BC0
-      EX     SP, BC0
-      AND    WA, BC0
-      AND    BC, BC0
-      AND    DE, BC0
-      AND    HL, BC0
-      AND    IX, BC0
-      AND    IY, BC0
-      AND    IZ, BC0
-      AND    SP, BC0
-      ADD    BC0, 0CAC9H
-      ADC    BC0, 0CBCAH
-      SUB    BC0, 0CCCBH
-      SBC    BC0, 0CDCCH
-      AND    BC0, 0CECDH
-      XOR    BC0, 0CFCEH
-      OR     BC0, 0D0CFH
-      CP     BC0, 0D1D0H
-      XOR    WA, BC0
-      XOR    BC, BC0
-      XOR    DE, BC0
-      XOR    HL, BC0
-      XOR    IX, BC0
-      XOR    IY, BC0
-      XOR    IZ, BC0
-      XOR    SP, BC0
-      OR     WA, BC0
-      OR     BC, BC0
-      OR     DE, BC0
-      OR     HL, BC0
-      OR     IX, BC0
-      OR     IY, BC0
-      OR     IZ, BC0
-      OR     SP, BC0
-      RLC    16, BC0
-      RRC    16, BC0
-      RL     16, BC0
-      RR     16, BC0
-      SLA    16, BC0
-      SRA    16, BC0
-      SLL    16, BC0
-      SRL    16, BC0
-      CP     WA, BC0
-      CP     BC, BC0
-      CP     DE, BC0
-      CP     HL, BC0
-      CP     IX, BC0
-      CP     IY, BC0
-      CP     IZ, BC0
-      CP     SP, BC0
-      LD     BC0, 0504H
-      NEG    QBC0
-      BS1F   A, QBC0
-      BS1B   A, QBC0
-      EXTZ   QBC0
-      EXTS   QBC0
-      PAA    QBC0
-      MIRR   QBC0
-      DJNZ   QBC0, $+33
-      ANDCF  1, QBC0
-      ORCF   2, QBC0
-      XORCF  3, QBC0
-      LDCF   4, QBC0
-      STCF   5, QBC0
-      RES    1, QBC0
-      SET    2, QBC0
-      CHG    3, QBC0
-      BIT    4, QBC0
-      TSET   5, QBC0
-      MINC1  0040H, QBC0
-      MINC2  0040H, QBC0
-      MINC4  0040H, QBC0
-      MDEC1  0040H, QBC0
-      MDEC2  0040H, QBC0
-      MDEC4  0080H, QBC0
-      MUL    XWA, QBC0
-      MUL    XBC, QBC0
-      MUL    XDE, QBC0
-      MUL    XHL, QBC0
-      MUL    XIX, QBC0
-      MUL    XIY, QBC0
-      MUL    XIZ, QBC0
-      MUL    XSP, QBC0
-      MULS   XWA, QBC0
-      MULS   XBC, QBC0
-      MULS   XDE, QBC0
-      MULS   XHL, QBC0
-      MULS   XIX, QBC0
-      MULS   XIY, QBC0
-      MULS   XIZ, QBC0
-      MULS   XSP, QBC0
-      DIV    XWA, QBC0
-      DIV    XBC, QBC0
-      DIV    XDE, QBC0
-      DIV    XHL, QBC0
-      DIV    XIX, QBC0
-      DIV    XIY, QBC0
-      DIV    XIZ, QBC0
-      DIV    XSP, QBC0
-      DIVS   XWA, QBC0
-      DIVS   XBC, QBC0
-      DIVS   XDE, QBC0
-      DIVS   XHL, QBC0
-      DIVS   XIX, QBC0
-      DIVS   XIY, QBC0
-      DIVS   XIZ, QBC0
-      DIVS   XSP, QBC0
-      INC    8, QBC0
-      DEC    8, QBC0
-      SCC    F, QBC0
-      SCC    LT, QBC0
-      SCC    LE, QBC0
-      SCC    ULE, QBC0
-      SCC    OV, QBC0
-      SCC    MI, QBC0
-      SCC    Z, QBC0
-      SCC    C, QBC0
-      SCC    T, QBC0
-      SCC    GE, QBC0
-      SCC    GT, QBC0
-      SCC    UGT, QBC0
-      SCC    NOV, QBC0
-      SCC    PL, QBC0
-      SCC    NZ, QBC0
-      SCC    NC, QBC0
-      ADD    WA, QBC0
-      ADD    BC, QBC0
-      ADD    DE, QBC0
-      ADD    HL, QBC0
-      ADD    IX, QBC0
-      ADD    IY, QBC0
-      ADD    IZ, QBC0
-      ADD    SP, QBC0
-      LD     WA, QBC0
-      LD     BC, QBC0
-      LD     DE, QBC0
-      LD     HL, QBC0
-      LD     IX, QBC0
-      LD     IY, QBC0
-      LD     IZ, QBC0
-      LD     SP, QBC0
-      ADC    WA, QBC0
-      ADC    BC, QBC0
-      ADC    DE, QBC0
-      ADC    HL, QBC0
-      ADC    IX, QBC0
-      ADC    IY, QBC0
-      ADC    IZ, QBC0
-      ADC    SP, QBC0
-      LD     QBC0, WA
-      LD     QBC0, BC
-      LD     QBC0, DE
-      LD     QBC0, HL
-      LD     QBC0, IX
-      LD     QBC0, IY
-      LD     QBC0, IZ
-      LD     QBC0, SP
-      SUB    WA, QBC0
-      SUB    BC, QBC0
-      SUB    DE, QBC0
-      SUB    HL, QBC0
-      SUB    IX, QBC0
-      SUB    IY, QBC0
-      SUB    IZ, QBC0
-      SUB    SP, QBC0
-      SBC    WA, QBC0
-      SBC    BC, QBC0
-      SBC    DE, QBC0
-      SBC    HL, QBC0
-      SBC    IX, QBC0
-      SBC    IY, QBC0
-      SBC    IZ, QBC0
-      SBC    SP, QBC0
-      EX     WA, QBC0
-      EX     BC, QBC0
-      EX     DE, QBC0
-      EX     HL, QBC0
-      EX     IX, QBC0
-      EX     IY, QBC0
-      EX     IZ, QBC0
-      EX     SP, QBC0
-      AND    WA, QBC0
-      AND    BC, QBC0
-      AND    DE, QBC0
-      AND    HL, QBC0
-      AND    IX, QBC0
-      AND    IY, QBC0
-      AND    IZ, QBC0
-      AND    SP, QBC0
-      ADD    QBC0, 0CAC9H
-      ADC    QBC0, 0CBCAH
-      SUB    QBC0, 0CCCBH
-      SBC    QBC0, 0CDCCH
-      AND    QBC0, 0CECDH
-      XOR    QBC0, 0CFCEH
-      OR     QBC0, 0D0CFH
-      CP     QBC0, 0D1D0H
-      XOR    WA, QBC0
-      XOR    BC, QBC0
-      XOR    DE, QBC0
-      XOR    HL, QBC0
-      XOR    IX, QBC0
-      XOR    IY, QBC0
-      XOR    IZ, QBC0
-      XOR    SP, QBC0
-      OR     WA, QBC0
-      OR     BC, QBC0
-      OR     DE, QBC0
-      OR     HL, QBC0
-      OR     IX, QBC0
-      OR     IY, QBC0
-      OR     IZ, QBC0
-      OR     SP, QBC0
-      RLC    16, QBC0
-      RRC    16, QBC0
-      RL     16, QBC0
-      RR     16, QBC0
-      SLA    16, QBC0
-      SRA    16, QBC0
-      SLL    16, QBC0
-      SRL    16, QBC0
-      CP     WA, QBC0
-      CP     BC, QBC0
-      CP     DE, QBC0
-      CP     HL, QBC0
-      CP     IX, QBC0
-      CP     IY, QBC0
-      CP     IZ, QBC0
-      CP     SP, QBC0
-      LD     QBC0, 0504H
-      CPL    QBC0
-      BS1F   A, DE0
-      BS1B   A, DE0
-      EXTZ   DE0
-      EXTS   DE0
-      PAA    DE0
-      MIRR   DE0
-      DJNZ   DE0, $+33
-      ANDCF  1, DE0
-      ORCF   2, DE0
-      XORCF  3, DE0
-      LDCF   4, DE0
-      STCF   5, DE0
-      RES    1, DE0
-      SET    2, DE0
-      CHG    3, DE0
-      BIT    4, DE0
-      TSET   5, DE0
-      MINC1  0040H, DE0
-      MINC2  0040H, DE0
-      MINC4  0040H, DE0
-      MDEC1  0040H, DE0
-      MDEC2  0040H, DE0
-      MDEC4  0080H, DE0
-      MUL    XWA, DE0
-      MUL    XBC, DE0
-      MUL    XDE, DE0
-      MUL    XHL, DE0
-      MUL    XIX, DE0
-      MUL    XIY, DE0
-      MUL    XIZ, DE0
-      MUL    XSP, DE0
-      MULS   XWA, DE0
-      MULS   XBC, DE0
-      MULS   XDE, DE0
-      MULS   XHL, DE0
-      MULS   XIX, DE0
-      MULS   XIY, DE0
-      MULS   XIZ, DE0
-      MULS   XSP, DE0
-      DIV    XWA, DE0
-      DIV    XBC, DE0
-      DIV    XDE, DE0
-      DIV    XHL, DE0
-      DIV    XIX, DE0
-      DIV    XIY, DE0
-      DIV    XIZ, DE0
-      DIV    XSP, DE0
-      DIVS   XWA, DE0
-      DIVS   XBC, DE0
-      DIVS   XDE, DE0
-      DIVS   XHL, DE0
-      DIVS   XIX, DE0
-      DIVS   XIY, DE0
-      DIVS   XIZ, DE0
-      DIVS   XSP, DE0
-      INC    8, DE0
-      DEC    8, DE0
-      SCC    F, DE0
-      SCC    LT, DE0
-      SCC    LE, DE0
-      SCC    ULE, DE0
-      SCC    OV, DE0
-      SCC    MI, DE0
-      SCC    Z, DE0
-      SCC    C, DE0
-      SCC    T, DE0
-      SCC    GE, DE0
-      SCC    GT, DE0
-      SCC    UGT, DE0
-      SCC    NOV, DE0
-      SCC    PL, DE0
-      SCC    NZ, DE0
-      SCC    NC, DE0
-      ADD    WA, DE0
-      ADD    BC, DE0
-      ADD    DE, DE0
-      ADD    HL, DE0
-      ADD    IX, DE0
-      ADD    IY, DE0
-      ADD    IZ, DE0
-      ADD    SP, DE0
-      LD     WA, DE0
-      LD     BC, DE0
-      LD     DE, DE0
-      LD     HL, DE0
-      LD     IX, DE0
-      LD     IY, DE0
-      LD     IZ, DE0
-      LD     SP, DE0
-      ADC    WA, DE0
-      ADC    BC, DE0
-      ADC    DE, DE0
-      ADC    HL, DE0
-      ADC    IX, DE0
-      ADC    IY, DE0
-      ADC    IZ, DE0
-      ADC    SP, DE0
-      LD     DE0, WA
-      LD     DE0, BC
-      LD     DE0, DE
-      LD     DE0, HL
-      LD     DE0, IX
-      LD     DE0, IY
-      LD     DE0, IZ
-      LD     DE0, SP
-      SUB    WA, DE0
-      SUB    BC, DE0
-      SUB    DE, DE0
-      SUB    HL, DE0
-      SUB    IX, DE0
-      SUB    IY, DE0
-      SUB    IZ, DE0
-      SUB    SP, DE0
-      SBC    WA, DE0
-      SBC    BC, DE0
-      SBC    DE, DE0
-      SBC    HL, DE0
-      SBC    IX, DE0
-      SBC    IY, DE0
-      SBC    IZ, DE0
-      SBC    SP, DE0
-      EX     WA, DE0
-      EX     BC, DE0
-      EX     DE, DE0
-      EX     HL, DE0
-      EX     IX, DE0
-      EX     IY, DE0
-      EX     IZ, DE0
-      EX     SP, DE0
-      AND    WA, DE0
-      AND    BC, DE0
-      AND    DE, DE0
-      AND    HL, DE0
-      AND    IX, DE0
-      AND    IY, DE0
-      AND    IZ, DE0
-      AND    SP, DE0
-      ADD    DE0, 0CAC9H
-      ADC    DE0, 0CBCAH
-      SUB    DE0, 0CCCBH
-      SBC    DE0, 0CDCCH
-      AND    DE0, 0CECDH
-      XOR    DE0, 0CFCEH
-      OR     DE0, 0D0CFH
-      CP     DE0, 0D1D0H
-      XOR    WA, DE0
-      XOR    BC, DE0
-      XOR    DE, DE0
-      XOR    HL, DE0
-      XOR    IX, DE0
-      XOR    IY, DE0
-      XOR    IZ, DE0
-      XOR    SP, DE0
-      OR     WA, DE0
-      OR     BC, DE0
-      OR     DE, DE0
-      OR     HL, DE0
-      OR     IX, DE0
-      OR     IY, DE0
-      OR     IZ, DE0
-      OR     SP, DE0
-      RLC    16, DE0
-      RRC    16, DE0
-      RL     16, DE0
-      RR     16, DE0
-      SLA    16, DE0
-      SRA    16, DE0
-      SLL    16, DE0
-      SRL    16, DE0
-      CP     WA, DE0
-      CP     BC, DE0
-      CP     DE, DE0
-      CP     HL, DE0
-      CP     IX, DE0
-      CP     IY, DE0
-      CP     IZ, DE0
-      CP     SP, DE0
-      LD     DE0, 0504H
-      CPL    DE0
-      NEG    DE0
-      BS1F   A, QDE0
-      BS1B   A, QDE0
-      EXTZ   QDE0
-      EXTS   QDE0
-      PAA    QDE0
-      MIRR   QDE0
-      DJNZ   QDE0, $+33
-      ANDCF  1, QDE0
-      ORCF   2, QDE0
-      XORCF  3, QDE0
-      LDCF   4, QDE0
-      STCF   5, QDE0
-      RES    1, QDE0
-      SET    2, QDE0
-      CHG    3, QDE0
-      BIT    4, QDE0
-      TSET   5, QDE0
-      MINC1  0040H, QDE0
-      MINC2  0040H, QDE0
-      MINC4  0040H, QDE0
-      MDEC1  0040H, QDE0
-      MDEC2  0040H, QDE0
-      MDEC4  0080H, QDE0
-      MUL    XWA, QDE0
-      MUL    XBC, QDE0
-      MUL    XDE, QDE0
-      MUL    XHL, QDE0
-      MUL    XIX, QDE0
-      MUL    XIY, QDE0
-      MUL    XIZ, QDE0
-      MUL    XSP, QDE0
-      MULS   XWA, QDE0
-      MULS   XBC, QDE0
-      MULS   XDE, QDE0
-      MULS   XHL, QDE0
-      MULS   XIX, QDE0
-      MULS   XIY, QDE0
-      MULS   XIZ, QDE0
-      MULS   XSP, QDE0
-      DIV    XWA, QDE0
-      DIV    XBC, QDE0
-      DIV    XDE, QDE0
-      DIV    XHL, QDE0
-      DIV    XIX, QDE0
-      DIV    XIY, QDE0
-      DIV    XIZ, QDE0
-      DIV    XSP, QDE0
-      DIVS   XWA, QDE0
-      DIVS   XBC, QDE0
-      DIVS   XDE, QDE0
-      DIVS   XHL, QDE0
-      DIVS   XIX, QDE0
-      DIVS   XIY, QDE0
-      DIVS   XIZ, QDE0
-      DIVS   XSP, QDE0
-      INC    8, QDE0
-      DEC    8, QDE0
-      SCC    F, QDE0
-      SCC    LT, QDE0
-      SCC    LE, QDE0
-      SCC    ULE, QDE0
-      SCC    OV, QDE0
-      SCC    MI, QDE0
-      SCC    Z, QDE0
-      SCC    C, QDE0
-      SCC    T, QDE0
-      SCC    GE, QDE0
-      SCC    GT, QDE0
-      SCC    UGT, QDE0
-      SCC    NOV, QDE0
-      SCC    PL, QDE0
-      SCC    NZ, QDE0
-      SCC    NC, QDE0
-      ADD    WA, QDE0
-      ADD    BC, QDE0
-      ADD    DE, QDE0
-      ADD    HL, QDE0
-      ADD    IX, QDE0
-      ADD    IY, QDE0
-      ADD    IZ, QDE0
-      ADD    SP, QDE0
-      LD     WA, QDE0
-      LD     BC, QDE0
-      LD     DE, QDE0
-      LD     HL, QDE0
-      LD     IX, QDE0
-      LD     IY, QDE0
-      LD     IZ, QDE0
-      LD     SP, QDE0
-      ADC    WA, QDE0
-      ADC    BC, QDE0
-      ADC    DE, QDE0
-      ADC    HL, QDE0
-      ADC    IX, QDE0
-      ADC    IY, QDE0
-      ADC    IZ, QDE0
-      ADC    SP, QDE0
-      LD     QDE0, WA
-      LD     QDE0, BC
-      LD     QDE0, DE
-      LD     QDE0, HL
-      LD     QDE0, IX
-      LD     QDE0, IY
-      LD     QDE0, IZ
-      LD     QDE0, SP
-      SUB    WA, QDE0
-      SUB    BC, QDE0
-      SUB    DE, QDE0
-      SUB    HL, QDE0
-      SUB    IX, QDE0
-      SUB    IY, QDE0
-      SUB    IZ, QDE0
-      SUB    SP, QDE0
-      SBC    WA, QDE0
-      SBC    BC, QDE0
-      SBC    DE, QDE0
-      SBC    HL, QDE0
-      SBC    IX, QDE0
-      SBC    IY, QDE0
-      SBC    IZ, QDE0
-      SBC    SP, QDE0
-      EX     WA, QDE0
-      EX     BC, QDE0
-      EX     DE, QDE0
-      EX     HL, QDE0
-      EX     IX, QDE0
-      EX     IY, QDE0
-      EX     IZ, QDE0
-      EX     SP, QDE0
-      AND    WA, QDE0
-      AND    BC, QDE0
-      AND    DE, QDE0
-      AND    HL, QDE0
-      AND    IX, QDE0
-      AND    IY, QDE0
-      AND    IZ, QDE0
-      AND    SP, QDE0
-      ADD    QDE0, 0CAC9H
-      ADC    QDE0, 0CBCAH
-      SUB    QDE0, 0CCCBH
-      SBC    QDE0, 0CDCCH
-      AND    QDE0, 0CECDH
-      XOR    QDE0, 0CFCEH
-      OR     QDE0, 0D0CFH
-      CP     QDE0, 0D1D0H
-      XOR    WA, QDE0
-      XOR    BC, QDE0
-      XOR    DE, QDE0
-      XOR    HL, QDE0
-      XOR    IX, QDE0
-      XOR    IY, QDE0
-      XOR    IZ, QDE0
-      XOR    SP, QDE0
-      OR     WA, QDE0
-      OR     BC, QDE0
-      OR     DE, QDE0
-      OR     HL, QDE0
-      OR     IX, QDE0
-      OR     IY, QDE0
-      OR     IZ, QDE0
-      OR     SP, QDE0
-      RLC    16, QDE0
-      RRC    16, QDE0
-      RL     16, QDE0
-      RR     16, QDE0
-      SLA    16, QDE0
-      SRA    16, QDE0
-      SLL    16, QDE0
-      SRL    16, QDE0
-      CP     WA, QDE0
-      CP     BC, QDE0
-      CP     DE, QDE0
-      CP     HL, QDE0
-      CP     IX, QDE0
-      CP     IY, QDE0
-      CP     IZ, QDE0
-      CP     SP, QDE0
-      LD     QDE0, 0504H
-      CPL    QDE0
-      NEG    QDE0
-      BS1F   A, HL0
-      BS1B   A, HL0
-      EXTZ   HL0
-      EXTS   HL0
-      PAA    HL0
-      MIRR   HL0
-      DJNZ   HL0, $+33
-      ANDCF  1, HL0
-      ORCF   2, HL0
-      XORCF  3, HL0
-      LDCF   4, HL0
-      STCF   5, HL0
-      RES    1, HL0
-      SET    2, HL0
-      CHG    3, HL0
-      BIT    4, HL0
-      TSET   5, HL0
-      MINC1  0040H, HL0
-      MINC2  0040H, HL0
-      MINC4  0040H, HL0
-      MDEC1  0040H, HL0
-      MDEC2  0040H, HL0
-      MDEC4  0080H, HL0
-      MUL    XWA, HL0
-      MUL    XBC, HL0
-      MUL    XDE, HL0
-      MUL    XHL, HL0
-      MUL    XIX, HL0
-      MUL    XIY, HL0
-      MUL    XIZ, HL0
-      MUL    XSP, HL0
-      MULS   XWA, HL0
-      MULS   XBC, HL0
-      MULS   XDE, HL0
-      MULS   XHL, HL0
-      MULS   XIX, HL0
-      MULS   XIY, HL0
-      MULS   XIZ, HL0
-      MULS   XSP, HL0
-      DIV    XWA, HL0
-      DIV    XBC, HL0
-      DIV    XDE, HL0
-      DIV    XHL, HL0
-      DIV    XIX, HL0
-      DIV    XIY, HL0
-      DIV    XIZ, HL0
-      DIV    XSP, HL0
-      DIVS   XWA, HL0
-      DIVS   XBC, HL0
-      DIVS   XDE, HL0
-      DIVS   XHL, HL0
-      DIVS   XIX, HL0
-      DIVS   XIY, HL0
-      DIVS   XIZ, HL0
-      DIVS   XSP, HL0
-      INC    8, HL0
-      DEC    8, HL0
-      SCC    F, HL0
-      SCC    LT, HL0
-      SCC    LE, HL0
-      SCC    ULE, HL0
-      SCC    OV, HL0
-      SCC    MI, HL0
-      SCC    Z, HL0
-      SCC    C, HL0
-      SCC    T, HL0
-      SCC    GE, HL0
-      SCC    GT, HL0
-      SCC    UGT, HL0
-      SCC    NOV, HL0
-      SCC    PL, HL0
-      SCC    NZ, HL0
-      SCC    NC, HL0
-      ADD    WA, HL0
-      ADD    BC, HL0
-      ADD    DE, HL0
-      ADD    HL, HL0
-      ADD    IX, HL0
-      ADD    IY, HL0
-      ADD    IZ, HL0
-      ADD    SP, HL0
-      LD     WA, HL0
-      LD     BC, HL0
-      LD     DE, HL0
-      LD     HL, HL0
-      LD     IX, HL0
-      LD     IY, HL0
-      LD     IZ, HL0
-      LD     SP, HL0
-      ADC    WA, HL0
-      ADC    BC, HL0
-      ADC    DE, HL0
-      ADC    HL, HL0
-      ADC    IX, HL0
-      ADC    IY, HL0
-      ADC    IZ, HL0
-      ADC    SP, HL0
-      LD     HL0, WA
-      LD     HL0, BC
-      LD     HL0, DE
-      LD     HL0, HL
-      LD     HL0, IX
-      LD     HL0, IY
-      LD     HL0, IZ
-      LD     HL0, SP
-      SUB    WA, HL0
-      SUB    BC, HL0
-      SUB    DE, HL0
-      SUB    HL, HL0
-      SUB    IX, HL0
-      SUB    IY, HL0
-      SUB    IZ, HL0
-      SUB    SP, HL0
-      SBC    WA, HL0
-      SBC    BC, HL0
-      SBC    DE, HL0
-      SBC    HL, HL0
-      SBC    IX, HL0
-      SBC    IY, HL0
-      SBC    IZ, HL0
-      SBC    SP, HL0
-      EX     WA, HL0
-      EX     BC, HL0
-      EX     DE, HL0
-      EX     HL, HL0
-      EX     IX, HL0
-      EX     IY, HL0
-      EX     IZ, HL0
-      EX     SP, HL0
-      AND    WA, HL0
-      AND    BC, HL0
-      AND    DE, HL0
-      AND    HL, HL0
-      AND    IX, HL0
-      AND    IY, HL0
-      AND    IZ, HL0
-      AND    SP, HL0
-      ADD    HL0, 0CAC9H
-      ADC    HL0, 0CBCAH
-      SUB    HL0, 0CCCBH
-      SBC    HL0, 0CDCCH
-      AND    HL0, 0CECDH
-      XOR    HL0, 0CFCEH
-      OR     HL0, 0D0CFH
-      CP     HL0, 0D1D0H
-      XOR    WA, HL0
-      XOR    BC, HL0
-      XOR    DE, HL0
-      XOR    HL, HL0
-      XOR    IX, HL0
-      XOR    IY, HL0
-      XOR    IZ, HL0
-      XOR    SP, HL0
-      OR     WA, HL0
-      OR     BC, HL0
-      OR     DE, HL0
-      OR     HL, HL0
-      OR     IX, HL0
-      OR     IY, HL0
-      OR     IZ, HL0
-      OR     SP, HL0
-      RLC    16, HL0
-      RRC    16, HL0
-      RL     16, HL0
-      RR     16, HL0
-      SLA    16, HL0
-      SRA    16, HL0
-      SLL    16, HL0
-      SRL    16, HL0
-      CP     WA, HL0
-      CP     BC, HL0
-      CP     DE, HL0
-      CP     HL, HL0
-      CP     IX, HL0
-      CP     IY, HL0
-      CP     IZ, HL0
-      CP     SP, HL0
-      LD     HL0, 0504H
-      CPL    HL0
-      NEG    HL0
-      BS1B   A, QHL0
-      EXTZ   QHL0
-      EXTS   QHL0
-      PAA    QHL0
-      MIRR   QHL0
-      DJNZ   QHL0, $+33
-      ANDCF  1, QHL0
-      ORCF   2, QHL0
-      XORCF  3, QHL0
-      LDCF   4, QHL0
-      STCF   5, QHL0
-      RES    1, QHL0
-      SET    2, QHL0
-      CHG    3, QHL0
-      BIT    4, QHL0
-      TSET   5, QHL0
-      MINC1  0040H, QHL0
-      MINC2  0040H, QHL0
-      MINC4  0040H, QHL0
-      MDEC1  0040H, QHL0
-      MDEC2  0040H, QHL0
-      MDEC4  0080H, QHL0
-      MUL    XWA, QHL0
-      MUL    XBC, QHL0
-      MUL    XDE, QHL0
-      MUL    XHL, QHL0
-      MUL    XIX, QHL0
-      MUL    XIY, QHL0
-      MUL    XIZ, QHL0
-      MUL    XSP, QHL0
-      MULS   XWA, QHL0
-      MULS   XBC, QHL0
-      MULS   XDE, QHL0
-      MULS   XHL, QHL0
-      MULS   XIX, QHL0
-      MULS   XIY, QHL0
-      MULS   XIZ, QHL0
-      MULS   XSP, QHL0
-      DIV    XWA, QHL0
-      DIV    XBC, QHL0
-      DIV    XDE, QHL0
-      DIV    XHL, QHL0
-      DIV    XIX, QHL0
-      DIV    XIY, QHL0
-      DIV    XIZ, QHL0
-      DIV    XSP, QHL0
-      DIVS   XWA, QHL0
-      DIVS   XBC, QHL0
-      DIVS   XDE, QHL0
-      DIVS   XHL, QHL0
-      DIVS   XIX, QHL0
-      DIVS   XIY, QHL0
-      DIVS   XIZ, QHL0
-      DIVS   XSP, QHL0
-      INC    8, QHL0
-      DEC    8, QHL0
-      SCC    F, QHL0
-      SCC    LT, QHL0
-      SCC    LE, QHL0
-      SCC    ULE, QHL0
-      SCC    OV, QHL0
-      SCC    MI, QHL0
-      SCC    Z, QHL0
-      SCC    C, QHL0
-      SCC    T, QHL0
-      SCC    GE, QHL0
-      SCC    GT, QHL0
-      SCC    UGT, QHL0
-      SCC    NOV, QHL0
-      SCC    PL, QHL0
-      SCC    NZ, QHL0
-      SCC    NC, QHL0
-      ADD    WA, QHL0
-      ADD    BC, QHL0
-      ADD    DE, QHL0
-      ADD    HL, QHL0
-      ADD    IX, QHL0
-      ADD    IY, QHL0
-      ADD    IZ, QHL0
-      ADD    SP, QHL0
-      LD     WA, QHL0
-      LD     BC, QHL0
-      LD     DE, QHL0
-      LD     HL, QHL0
-      LD     IX, QHL0
-      LD     IY, QHL0
-      LD     IZ, QHL0
-      LD     SP, QHL0
-      ADC    WA, QHL0
-      ADC    BC, QHL0
-      ADC    DE, QHL0
-      ADC    HL, QHL0
-      ADC    IX, QHL0
-      ADC    IY, QHL0
-      ADC    IZ, QHL0
-      ADC    SP, QHL0
-      LD     QHL0, WA
-      LD     QHL0, BC
-      LD     QHL0, DE
-      LD     QHL0, HL
-      LD     QHL0, IX
-      LD     QHL0, IY
-      LD     QHL0, IZ
-      LD     QHL0, SP
-      SUB    WA, QHL0
-      SUB    BC, QHL0
-      SUB    DE, QHL0
-      SUB    HL, QHL0
-      SUB    IX, QHL0
-      SUB    IY, QHL0
-      SUB    IZ, QHL0
-      SUB    SP, QHL0
-      SBC    WA, QHL0
-      SBC    BC, QHL0
-      SBC    DE, QHL0
-      SBC    HL, QHL0
-      SBC    IX, QHL0
-      SBC    IY, QHL0
-      SBC    IZ, QHL0
-      SBC    SP, QHL0
-      EX     WA, QHL0
-      EX     BC, QHL0
-      EX     DE, QHL0
-      EX     HL, QHL0
-      EX     IX, QHL0
-      EX     IY, QHL0
-      EX     IZ, QHL0
-      EX     SP, QHL0
-      AND    WA, QHL0
-      AND    BC, QHL0
-      AND    DE, QHL0
-      AND    HL, QHL0
-      AND    IX, QHL0
-      AND    IY, QHL0
-      AND    IZ, QHL0
-      AND    SP, QHL0
-      ADD    QHL0, 0CAC9H
-      ADC    QHL0, 0CBCAH
-      SUB    QHL0, 0CCCBH
-      SBC    QHL0, 0CDCCH
-      AND    QHL0, 0CECDH
-      XOR    QHL0, 0CFCEH
-      OR     QHL0, 0D0CFH
-      CP     QHL0, 0D1D0H
-      XOR    WA, QHL0
-      XOR    BC, QHL0
-      XOR    DE, QHL0
-      XOR    HL, QHL0
-      XOR    IX, QHL0
-      XOR    IY, QHL0
-      XOR    IZ, QHL0
-      XOR    SP, QHL0
-      OR     WA, QHL0
-      OR     BC, QHL0
-      OR     DE, QHL0
-      OR     HL, QHL0
-      OR     IX, QHL0
-      OR     IY, QHL0
-      OR     IZ, QHL0
-      OR     SP, QHL0
-      RLC    16, QHL0
-      RRC    16, QHL0
-      RL     16, QHL0
-      RR     16, QHL0
-      SLA    16, QHL0
-      SRA    16, QHL0
-      SLL    16, QHL0
-      SRL    16, QHL0
-      CP     WA, QHL0
-      CP     BC, QHL0
-      CP     DE, QHL0
-      CP     HL, QHL0
-      CP     IX, QHL0
-      CP     IY, QHL0
-      CP     IZ, QHL0
-      CP     SP, QHL0
-      LD     QHL0, 0504H
-      CPL    QHL0
-      NEG    QHL0
-      BS1F   A, QHL0
-      XOR    BC, WA'
-      XOR    DE, WA'
-      XOR    HL, WA'
-      XOR    IX, WA'
-      XOR    IY, WA'
-      XOR    IZ, WA'
-      XOR    SP, WA'
-      OR     WA, WA'
-      OR     BC, WA'
-      OR     DE, WA'
-      OR     HL, WA'
-      OR     IX, WA'
-      OR     IY, WA'
-      OR     IZ, WA'
-      OR     SP, WA'
-      RLC    16, WA'
-      RRC    16, WA'
-      RL     16, WA'
-      RR     16, WA'
-      SLA    16, WA'
-      SRA    16, WA'
-      SLL    16, WA'
-      SRL    16, WA'
-      CP     WA, WA'
-      CP     BC, WA'
-      CP     DE, WA'
-      CP     HL, WA'
-      CP     IX, WA'
-      CP     IY, WA'
-      CP     IZ, WA'
-      CP     SP, WA'
-      LD     WA', 0504H
-      CPL    WA'
-      NEG    WA'
-      BS1F   A, WA'
-      BS1B   A, WA'
-      EXTZ   WA'
-      EXTS   WA'
-      PAA    WA'
-      MIRR   WA'
-      DJNZ   WA', $+33
-      ANDCF  1, WA'
-      ORCF   2, WA'
-      XORCF  3, WA'
-      LDCF   4, WA'
-      STCF   5, WA'
-      RES    1, WA'
-      SET    2, WA'
-      CHG    3, WA'
-      BIT    4, WA'
-      TSET   5, WA'
-      MINC1  0040H, WA'
-      MINC2  0040H, WA'
-      MINC4  0040H, WA'
-      MDEC1  0040H, WA'
-      MDEC2  0040H, WA'
-      MDEC4  0080H, WA'
-      MUL    XWA, WA'
-      MUL    XBC, WA'
-      MUL    XDE, WA'
-      MUL    XHL, WA'
-      MUL    XIX, WA'
-      MUL    XIY, WA'
-      MUL    XIZ, WA'
-      MUL    XSP, WA'
-      MULS   XWA, WA'
-      MULS   XBC, WA'
-      MULS   XDE, WA'
-      MULS   XHL, WA'
-      MULS   XIX, WA'
-      MULS   XIY, WA'
-      MULS   XIZ, WA'
-      MULS   XSP, WA'
-      DIV    XWA, WA'
-      DIV    XBC, WA'
-      DIV    XDE, WA'
-      DIV    XHL, WA'
-      DIV    XIX, WA'
-      DIV    XIY, WA'
-      DIV    XIZ, WA'
-      DIV    XSP, WA'
-      DIVS   XWA, WA'
-      DIVS   XBC, WA'
-      DIVS   XDE, WA'
-      DIVS   XHL, WA'
-      DIVS   XIX, WA'
-      DIVS   XIY, WA'
-      DIVS   XIZ, WA'
-      DIVS   XSP, WA'
-      INC    8, WA'
-      DEC    8, WA'
-      SCC    F, WA'
-      SCC    LT, WA'
-      SCC    LE, WA'
-      SCC    ULE, WA'
-      SCC    OV, WA'
-      SCC    MI, WA'
-      SCC    Z, WA'
-      SCC    C, WA'
-      SCC    T, WA'
-      SCC    GE, WA'
-      SCC    GT, WA'
-      SCC    UGT, WA'
-      SCC    NOV, WA'
-      SCC    PL, WA'
-      SCC    NZ, WA'
-      SCC    NC, WA'
-      ADD    WA, WA'
-      ADD    BC, WA'
-      ADD    DE, WA'
-      ADD    HL, WA'
-      ADD    IX, WA'
-      ADD    IY, WA'
-      ADD    IZ, WA'
-      ADD    SP, WA'
-      LD     WA, WA'
-      LD     BC, WA'
-      LD     DE, WA'
-      LD     HL, WA'
-      LD     IX, WA'
-      LD     IY, WA'
-      LD     IZ, WA'
-      LD     SP, WA'
-      ADC    WA, WA'
-      ADC    BC, WA'
-      ADC    DE, WA'
-      ADC    HL, WA'
-      ADC    IX, WA'
-      ADC    IY, WA'
-      ADC    IZ, WA'
-      ADC    SP, WA'
-      LD     WA', WA
-      LD     WA', BC
-      LD     WA', DE
-      LD     WA', HL
-      LD     WA', IX
-      LD     WA', IY
-      LD     WA', IZ
-      LD     WA', SP
-      SUB    WA, WA'
-      SUB    BC, WA'
-      SUB    DE, WA'
-      SUB    HL, WA'
-      SUB    IX, WA'
-      SUB    IY, WA'
-      SUB    IZ, WA'
-      SUB    SP, WA'
-      SBC    WA, WA'
-      SBC    BC, WA'
-      SBC    DE, WA'
-      SBC    HL, WA'
-      SBC    IX, WA'
-      SBC    IY, WA'
-      SBC    IZ, WA'
-      SBC    SP, WA'
-      EX     WA, WA'
-      EX     BC, WA'
-      EX     DE, WA'
-      EX     HL, WA'
-      EX     IX, WA'
-      EX     IY, WA'
-      EX     IZ, WA'
-      EX     SP, WA'
-      AND    WA, WA'
-      AND    BC, WA'
-      AND    DE, WA'
-      AND    HL, WA'
-      AND    IX, WA'
-      AND    IY, WA'
-      AND    IZ, WA'
-      AND    SP, WA'
-      ADD    WA', 0CAC9H
-      ADC    WA', 0CBCAH
-      SUB    WA', 0CCCBH
-      SBC    WA', 0CDCCH
-      AND    WA', 0CECDH
-      XOR    WA', 0CFCEH
-      OR     WA', 0D0CFH
-      CP     WA', 0D1D0H
-      XOR    WA, WA'
-      XOR    HL, QWA'
-      XOR    IX, QWA'
-      XOR    IY, QWA'
-      XOR    IZ, QWA'
-      XOR    SP, QWA'
-      OR     WA, QWA'
-      OR     BC, QWA'
-      OR     DE, QWA'
-      OR     HL, QWA'
-      OR     IX, QWA'
-      OR     IY, QWA'
-      OR     IZ, QWA'
-      OR     SP, QWA'
-      RLC    16, QWA'
-      RRC    16, QWA'
-      RL     16, QWA'
-      RR     16, QWA'
-      SLA    16, QWA'
-      SRA    16, QWA'
-      SLL    16, QWA'
-      SRL    16, QWA'
-      CP     WA, QWA'
-      CP     BC, QWA'
-      CP     DE, QWA'
-      CP     HL, QWA'
-      CP     IX, QWA'
-      CP     IY, QWA'
-      CP     IZ, QWA'
-      CP     SP, QWA'
-      LD     QWA', 0504H
-      CPL    QWA'
-      NEG    QWA'
-      BS1F   A, QWA'
-      BS1B   A, QWA'
-      EXTZ   QWA'
-      EXTS   QWA'
-      PAA    QWA'
-      MIRR   QWA'
-      DJNZ   QWA', $+33
-      ANDCF  1, QWA'
-      ORCF   2, QWA'
-      XORCF  3, QWA'
-      LDCF   4, QWA'
-      STCF   5, QWA'
-      RES    1, QWA'
-      SET    2, QWA'
-      CHG    3, QWA'
-      BIT    4, QWA'
-      TSET   5, QWA'
-      MINC1  0040H, QWA'
-      MINC2  0040H, QWA'
-      MINC4  0040H, QWA'
-      MDEC1  0040H, QWA'
-      MDEC2  0040H, QWA'
-      MDEC4  0080H, QWA'
-      MUL    XWA, QWA'
-      MUL    XBC, QWA'
-      MUL    XDE, QWA'
-      MUL    XHL, QWA'
-      MUL    XIX, QWA'
-      MUL    XIY, QWA'
-      MUL    XIZ, QWA'
-      MUL    XSP, QWA'
-      MULS   XWA, QWA'
-      MULS   XBC, QWA'
-      MULS   XDE, QWA'
-      MULS   XHL, QWA'
-      MULS   XIX, QWA'
-      MULS   XIY, QWA'
-      MULS   XIZ, QWA'
-      MULS   XSP, QWA'
-      DIV    XWA, QWA'
-      DIV    XBC, QWA'
-      DIV    XDE, QWA'
-      DIV    XHL, QWA'
-      DIV    XIX, QWA'
-      DIV    XIY, QWA'
-      DIV    XIZ, QWA'
-      DIV    XSP, QWA'
-      DIVS   XWA, QWA'
-      DIVS   XBC, QWA'
-      DIVS   XDE, QWA'
-      DIVS   XHL, QWA'
-      DIVS   XIX, QWA'
-      DIVS   XIY, QWA'
-      DIVS   XIZ, QWA'
-      DIVS   XSP, QWA'
-      INC    8, QWA'
-      DEC    8, QWA'
-      SCC    F, QWA'
-      SCC    LT, QWA'
-      SCC    LE, QWA'
-      SCC    ULE, QWA'
-      SCC    OV, QWA'
-      SCC    MI, QWA'
-      SCC    Z, QWA'
-      SCC    C, QWA'
-      SCC    T, QWA'
-      SCC    GE, QWA'
-      SCC    GT, QWA'
-      SCC    UGT, QWA'
-      SCC    NOV, QWA'
-      SCC    PL, QWA'
-      SCC    NZ, QWA'
-      SCC    NC, QWA'
-      ADD    WA, QWA'
-      ADD    BC, QWA'
-      ADD    DE, QWA'
-      ADD    HL, QWA'
-      ADD    IX, QWA'
-      ADD    IY, QWA'
-      ADD    IZ, QWA'
-      ADD    SP, QWA'
-      LD     WA, QWA'
-      LD     BC, QWA'
-      LD     DE, QWA'
-      LD     HL, QWA'
-      LD     IX, QWA'
-      LD     IY, QWA'
-      LD     IZ, QWA'
-      LD     SP, QWA'
-      ADC    WA, QWA'
-      ADC    BC, QWA'
-      ADC    DE, QWA'
-      ADC    HL, QWA'
-      ADC    IX, QWA'
-      ADC    IY, QWA'
-      ADC    IZ, QWA'
-      ADC    SP, QWA'
-      LD     QWA', WA
-      LD     QWA', BC
-      LD     QWA', DE
-      LD     QWA', HL
-      LD     QWA', IX
-      LD     QWA', IY
-      LD     QWA', IZ
-      LD     QWA', SP
-      SUB    WA, QWA'
-      SUB    BC, QWA'
-      SUB    DE, QWA'
-      SUB    HL, QWA'
-      SUB    IX, QWA'
-      SUB    IY, QWA'
-      SUB    IZ, QWA'
-      SUB    SP, QWA'
-      SBC    WA, QWA'
-      SBC    BC, QWA'
-      SBC    DE, QWA'
-      SBC    HL, QWA'
-      SBC    IX, QWA'
-      SBC    IY, QWA'
-      SBC    IZ, QWA'
-      SBC    SP, QWA'
-      EX     WA, QWA'
-      EX     BC, QWA'
-      EX     DE, QWA'
-      EX     HL, QWA'
-      EX     IX, QWA'
-      EX     IY, QWA'
-      EX     IZ, QWA'
-      EX     SP, QWA'
-      AND    WA, QWA'
-      AND    BC, QWA'
-      AND    DE, QWA'
-      AND    HL, QWA'
-      AND    IX, QWA'
-      AND    IY, QWA'
-      AND    IZ, QWA'
-      AND    SP, QWA'
-      ADD    QWA', 0CAC9H
-      ADC    QWA', 0CBCAH
-      SUB    QWA', 0CCCBH
-      SBC    QWA', 0CDCCH
-      AND    QWA', 0CECDH
-      XOR    QWA', 0CFCEH
-      OR     QWA', 0D0CFH
-      CP     QWA', 0D1D0H
-      XOR    WA, QWA'
-      XOR    BC, QWA'
-      XOR    DE, QWA'
-      XOR    IY, BC'
-      XOR    IZ, BC'
-      XOR    SP, BC'
-      OR     WA, BC'
-      OR     BC, BC'
-      OR     DE, BC'
-      OR     HL, BC'
-      OR     IX, BC'
-      OR     IY, BC'
-      OR     IZ, BC'
-      OR     SP, BC'
-      RLC    16, BC'
-      RRC    16, BC'
-      RL     16, BC'
-      RR     16, BC'
-      SLA    16, BC'
-      SRA    16, BC'
-      SLL    16, BC'
-      SRL    16, BC'
-      CP     WA, BC'
-      CP     BC, BC'
-      CP     DE, BC'
-      CP     HL, BC'
-      CP     IX, BC'
-      CP     IY, BC'
-      CP     IZ, BC'
-      CP     SP, BC'
-      LD     BC', 0504H
-      CPL    BC'
-      NEG    BC'
-      BS1F   A, BC'
-      BS1B   A, BC'
-      EXTZ   BC'
-      EXTS   BC'
-      PAA    BC'
-      MIRR   BC'
-      DJNZ   BC', $+33
-      ANDCF  1, BC'
-      ORCF   2, BC'
-      XORCF  3, BC'
-      LDCF   4, BC'
-      STCF   5, BC'
-      RES    1, BC'
-      SET    2, BC'
-      CHG    3, BC'
-      BIT    4, BC'
-      TSET   5, BC'
-      MINC1  0040H, BC'
-      MINC2  0040H, BC'
-      MINC4  0040H, BC'
-      MDEC1  0040H, BC'
-      MDEC2  0040H, BC'
-      MDEC4  0080H, BC'
-      MUL    XWA, BC'
-      MUL    XBC, BC'
-      MUL    XDE, BC'
-      MUL    XHL, BC'
-      MUL    XIX, BC'
-      MUL    XIY, BC'
-      MUL    XIZ, BC'
-      MUL    XSP, BC'
-      MULS   XWA, BC'
-      MULS   XBC, BC'
-      MULS   XDE, BC'
-      MULS   XHL, BC'
-      MULS   XIX, BC'
-      MULS   XIY, BC'
-      MULS   XIZ, BC'
-      MULS   XSP, BC'
-      DIV    XWA, BC'
-      DIV    XBC, BC'
-      DIV    XDE, BC'
-      DIV    XHL, BC'
-      DIV    XIX, BC'
-      DIV    XIY, BC'
-      DIV    XIZ, BC'
-      DIV    XSP, BC'
-      DIVS   XWA, BC'
-      DIVS   XBC, BC'
-      DIVS   XDE, BC'
-      DIVS   XHL, BC'
-      DIVS   XIX, BC'
-      DIVS   XIY, BC'
-      DIVS   XIZ, BC'
-      DIVS   XSP, BC'
-      INC    8, BC'
-      DEC    8, BC'
-      SCC    F, BC'
-      SCC    LT, BC'
-      SCC    LE, BC'
-      SCC    ULE, BC'
-      SCC    OV, BC'
-      SCC    MI, BC'
-      SCC    Z, BC'
-      SCC    C, BC'
-      SCC    T, BC'
-      SCC    GE, BC'
-      SCC    GT, BC'
-      SCC    UGT, BC'
-      SCC    NOV, BC'
-      SCC    PL, BC'
-      SCC    NZ, BC'
-      SCC    NC, BC'
-      ADD    WA, BC'
-      ADD    BC, BC'
-      ADD    DE, BC'
-      ADD    HL, BC'
-      ADD    IX, BC'
-      ADD    IY, BC'
-      ADD    IZ, BC'
-      ADD    SP, BC'
-      LD     WA, BC'
-      LD     BC, BC'
-      LD     DE, BC'
-      LD     HL, BC'
-      LD     IX, BC'
-      LD     IY, BC'
-      LD     IZ, BC'
-      LD     SP, BC'
-      ADC    WA, BC'
-      ADC    BC, BC'
-      ADC    DE, BC'
-      ADC    HL, BC'
-      ADC    IX, BC'
-      ADC    IY, BC'
-      ADC    IZ, BC'
-      ADC    SP, BC'
-      LD     BC', WA
-      LD     BC', BC
-      LD     BC', DE
-      LD     BC', HL
-      LD     BC', IX
-      LD     BC', IY
-      LD     BC', IZ
-      LD     BC', SP
-      SUB    WA, BC'
-      SUB    BC, BC'
-      SUB    DE, BC'
-      SUB    HL, BC'
-      SUB    IX, BC'
-      SUB    IY, BC'
-      SUB    IZ, BC'
-      SUB    SP, BC'
-      SBC    WA, BC'
-      SBC    BC, BC'
-      SBC    DE, BC'
-      SBC    HL, BC'
-      SBC    IX, BC'
-      SBC    IY, BC'
-      SBC    IZ, BC'
-      SBC    SP, BC'
-      EX     WA, BC'
-      EX     BC, BC'
-      EX     DE, BC'
-      EX     HL, BC'
-      EX     IX, BC'
-      EX     IY, BC'
-      EX     IZ, BC'
-      EX     SP, BC'
-      AND    WA, BC'
-      AND    BC, BC'
-      AND    DE, BC'
-      AND    HL, BC'
-      AND    IX, BC'
-      AND    IY, BC'
-      AND    IZ, BC'
-      AND    SP, BC'
-      ADD    BC', 0CAC9H
-      ADC    BC', 0CBCAH
-      SUB    BC', 0CCCBH
-      SBC    BC', 0CDCCH
-      AND    BC', 0CECDH
-      XOR    BC', 0CFCEH
-      OR     BC', 0D0CFH
-      CP     BC', 0D1D0H
-      XOR    WA, BC'
-      XOR    BC, BC'
-      XOR    DE, BC'
-      XOR    HL, BC'
-      XOR    IX, BC'
-      XOR    SP, QBC'
-      OR     WA, QBC'
-      OR     BC, QBC'
-      OR     DE, QBC'
-      OR     HL, QBC'
-      OR     IX, QBC'
-      OR     IY, QBC'
-      OR     IZ, QBC'
-      OR     SP, QBC'
-      RLC    16, QBC'
-      RRC    16, QBC'
-      RL     16, QBC'
-      RR     16, QBC'
-      SLA    16, QBC'
-      SRA    16, QBC'
-      SLL    16, QBC'
-      SRL    16, QBC'
-      CP     WA, QBC'
-      CP     BC, QBC'
-      CP     DE, QBC'
-      CP     HL, QBC'
-      CP     IX, QBC'
-      CP     IY, QBC'
-      CP     IZ, QBC'
-      CP     SP, QBC'
-      LD     QBC', 0504H
-      CPL    QBC'
-      NEG    QBC'
-      BS1F   A, QBC'
-      BS1B   A, QBC'
-      EXTZ   QBC'
-      EXTS   QBC'
-      PAA    QBC'
-      MIRR   QBC'
-      DJNZ   QBC', $+33
-      ANDCF  1, QBC'
-      ORCF   2, QBC'
-      XORCF  3, QBC'
-      LDCF   4, QBC'
-      STCF   5, QBC'
-      RES    1, QBC'
-      SET    2, QBC'
-      CHG    3, QBC'
-      BIT    4, QBC'
-      TSET   5, QBC'
-      MINC1  0040H, QBC'
-      MINC2  0040H, QBC'
-      MINC4  0040H, QBC'
-      MDEC1  0040H, QBC'
-      MDEC2  0040H, QBC'
-      MDEC4  0080H, QBC'
-      MUL    XWA, QBC'
-      MUL    XBC, QBC'
-      MUL    XDE, QBC'
-      MUL    XHL, QBC'
-      MUL    XIX, QBC'
-      MUL    XIY, QBC'
-      MUL    XIZ, QBC'
-      MUL    XSP, QBC'
-      MULS   XWA, QBC'
-      MULS   XBC, QBC'
-      MULS   XDE, QBC'
-      MULS   XHL, QBC'
-      MULS   XIX, QBC'
-      MULS   XIY, QBC'
-      MULS   XIZ, QBC'
-      MULS   XSP, QBC'
-      DIV    XWA, QBC'
-      DIV    XBC, QBC'
-      DIV    XDE, QBC'
-      DIV    XHL, QBC'
-      DIV    XIX, QBC'
-      DIV    XIY, QBC'
-      DIV    XIZ, QBC'
-      DIV    XSP, QBC'
-      DIVS   XWA, QBC'
-      DIVS   XBC, QBC'
-      DIVS   XDE, QBC'
-      DIVS   XHL, QBC'
-      DIVS   XIX, QBC'
-      DIVS   XIY, QBC'
-      DIVS   XIZ, QBC'
-      DIVS   XSP, QBC'
-      INC    8, QBC'
-      DEC    8, QBC'
-      SCC    F, QBC'
-      SCC    LT, QBC'
-      SCC    LE, QBC'
-      SCC    ULE, QBC'
-      SCC    OV, QBC'
-      SCC    MI, QBC'
-      SCC    Z, QBC'
-      SCC    C, QBC'
-      SCC    T, QBC'
-      SCC    GE, QBC'
-      SCC    GT, QBC'
-      SCC    UGT, QBC'
-      SCC    NOV, QBC'
-      SCC    PL, QBC'
-      SCC    NZ, QBC'
-      SCC    NC, QBC'
-      ADD    WA, QBC'
-      ADD    BC, QBC'
-      ADD    DE, QBC'
-      ADD    HL, QBC'
-      ADD    IX, QBC'
-      ADD    IY, QBC'
-      ADD    IZ, QBC'
-      ADD    SP, QBC'
-      LD     WA, QBC'
-      LD     BC, QBC'
-      LD     DE, QBC'
-      LD     HL, QBC'
-      LD     IX, QBC'
-      LD     IY, QBC'
-      LD     IZ, QBC'
-      LD     SP, QBC'
-      ADC    WA, QBC'
-      ADC    BC, QBC'
-      ADC    DE, QBC'
-      ADC    HL, QBC'
-      ADC    IX, QBC'
-      ADC    IY, QBC'
-      ADC    IZ, QBC'
-      ADC    SP, QBC'
-      LD     QBC', WA
-      LD     QBC', BC
-      LD     QBC', DE
-      LD     QBC', HL
-      LD     QBC', IX
-      LD     QBC', IY
-      LD     QBC', IZ
-      LD     QBC', SP
-      SUB    WA, QBC'
-      SUB    BC, QBC'
-      SUB    DE, QBC'
-      SUB    HL, QBC'
-      SUB    IX, QBC'
-      SUB    IY, QBC'
-      SUB    IZ, QBC'
-      SUB    SP, QBC'
-      SBC    WA, QBC'
-      SBC    BC, QBC'
-      SBC    DE, QBC'
-      SBC    HL, QBC'
-      SBC    IX, QBC'
-      SBC    IY, QBC'
-      SBC    IZ, QBC'
-      SBC    SP, QBC'
-      EX     WA, QBC'
-      EX     BC, QBC'
-      EX     DE, QBC'
-      EX     HL, QBC'
-      EX     IX, QBC'
-      EX     IY, QBC'
-      EX     IZ, QBC'
-      EX     SP, QBC'
-      AND    WA, QBC'
-      AND    BC, QBC'
-      AND    DE, QBC'
-      AND    HL, QBC'
-      AND    IX, QBC'
-      AND    IY, QBC'
-      AND    IZ, QBC'
-      AND    SP, QBC'
-      ADD    QBC', 0CAC9H
-      ADC    QBC', 0CBCAH
-      SUB    QBC', 0CCCBH
-      SBC    QBC', 0CDCCH
-      AND    QBC', 0CECDH
-      XOR    QBC', 0CFCEH
-      OR     QBC', 0D0CFH
-      CP     QBC', 0D1D0H
-      XOR    WA, QBC'
-      XOR    BC, QBC'
-      XOR    DE, QBC'
-      XOR    HL, QBC'
-      XOR    IX, QBC'
-      XOR    IY, QBC'
-      XOR    IZ, QBC'
+      CP     WA, 1
       OR     WA, WA
       OR     BC, WA
       OR     DE, WA
@@ -53299,6 +49833,16 @@
       CP     IY, WA
       CP     IZ, WA
       CP     SP, WA
+      RLC    A, WA
+      RRC    A, WA
+      RL     A, WA
+      RR     A, WA
+      SLA    A, WA
+      SRA    A, WA
+      SLL    A, WA
+      SRL    A, WA
+      PUSH   WA
+      POP    WA
       CPL    WA
       NEG    WA
       MUL    XWA, 0A09H
@@ -53318,6 +49862,11 @@
       XORCF  3, WA
       LDCF   4, WA
       STCF   5, WA
+      ANDCF  A, WA
+      ORCF   A, WA
+      XORCF  A, WA
+      LDCF   A, WA
+      STCF   A, WA
       RES    1, WA
       SET    2, WA
       CHG    3, WA
@@ -53411,6 +49960,7 @@
       SUB    IY, WA
       SUB    IZ, WA
       SUB    SP, WA
+      LD     WA, 0
       SBC    WA, WA
       SBC    BC, WA
       SBC    DE, WA
@@ -53451,6 +50001,7 @@
       XOR    IY, WA
       XOR    IZ, WA
       XOR    SP, WA
+      CP     BC, 2
       OR     WA, BC
       OR     BC, BC
       OR     DE, BC
@@ -53475,6 +50026,16 @@
       CP     IY, BC
       CP     IZ, BC
       CP     SP, BC
+      RLC    A, BC
+      RRC    A, BC
+      RL     A, BC
+      RR     A, BC
+      SLA    A, BC
+      SRA    A, BC
+      SLL    A, BC
+      SRL    A, BC
+      PUSH   BC
+      POP    BC
       CPL    BC
       NEG    BC
       MUL    XBC, 0A09H
@@ -53494,6 +50055,11 @@
       XORCF  3, BC
       LDCF   4, BC
       STCF   5, BC
+      ANDCF  A, BC
+      ORCF   A, BC
+      XORCF  A, BC
+      LDCF   A, BC
+      STCF   A, BC
       RES    1, BC
       SET    2, BC
       CHG    3, BC
@@ -53587,6 +50153,7 @@
       SUB    IY, BC
       SUB    IZ, BC
       SUB    SP, BC
+      LD     BC, 0
       SBC    WA, BC
       SBC    BC, BC
       SBC    DE, BC
@@ -53627,6 +50194,7 @@
       XOR    IY, BC
       XOR    IZ, BC
       XOR    SP, BC
+      CP     DE, 3
       OR     WA, DE
       OR     BC, DE
       OR     DE, DE
@@ -53651,6 +50219,16 @@
       CP     IY, DE
       CP     IZ, DE
       CP     SP, DE
+      RLC    A, DE
+      RRC    A, DE
+      RL     A, DE
+      RR     A, DE
+      SLA    A, DE
+      SRA    A, DE
+      SLL    A, DE
+      SRL    A, DE
+      PUSH   DE
+      POP    DE
       CPL    DE
       NEG    DE
       MUL    XDE, 0A09H
@@ -53670,6 +50248,11 @@
       XORCF  3, DE
       LDCF   4, DE
       STCF   5, DE
+      ANDCF  A, DE
+      ORCF   A, DE
+      XORCF  A, DE
+      LDCF   A, DE
+      STCF   A, DE
       RES    1, DE
       SET    2, DE
       CHG    3, DE
@@ -53763,6 +50346,7 @@
       SUB    IY, DE
       SUB    IZ, DE
       SUB    SP, DE
+      LD     DE, 0
       SBC    WA, DE
       SBC    BC, DE
       SBC    DE, DE
@@ -53803,6 +50387,7 @@
       XOR    IY, DE
       XOR    IZ, DE
       XOR    SP, DE
+      CP     HL, 4
       OR     WA, HL
       OR     BC, HL
       OR     DE, HL
@@ -53827,6 +50412,16 @@
       CP     IY, HL
       CP     IZ, HL
       CP     SP, HL
+      RLC    A, HL
+      RRC    A, HL
+      RL     A, HL
+      RR     A, HL
+      SLA    A, HL
+      SRA    A, HL
+      SLL    A, HL
+      SRL    A, HL
+      PUSH   HL
+      POP    HL
       CPL    HL
       NEG    HL
       MUL    XHL, 0A09H
@@ -53846,6 +50441,11 @@
       XORCF  3, HL
       LDCF   4, HL
       STCF   5, HL
+      ANDCF  A, HL
+      ORCF   A, HL
+      XORCF  A, HL
+      LDCF   A, HL
+      STCF   A, HL
       RES    1, HL
       SET    2, HL
       CHG    3, HL
@@ -53939,6 +50539,7 @@
       SUB    IY, HL
       SUB    IZ, HL
       SUB    SP, HL
+      LD     HL, 0
       SBC    WA, HL
       SBC    BC, HL
       SBC    DE, HL
@@ -53979,6 +50580,7 @@
       XOR    IY, HL
       XOR    IZ, HL
       XOR    SP, HL
+      CP     IX, 5
       OR     WA, IX
       OR     BC, IX
       OR     DE, IX
@@ -54003,6 +50605,16 @@
       CP     IY, IX
       CP     IZ, IX
       CP     SP, IX
+      RLC    A, IX
+      RRC    A, IX
+      RL     A, IX
+      RR     A, IX
+      SLA    A, IX
+      SRA    A, IX
+      SLL    A, IX
+      SRL    A, IX
+      PUSH   IX
+      POP    IX
       CPL    IX
       NEG    IX
       MUL    XIX, 0A09H
@@ -54022,6 +50634,11 @@
       XORCF  3, IX
       LDCF   4, IX
       STCF   5, IX
+      ANDCF  A, IX
+      ORCF   A, IX
+      XORCF  A, IX
+      LDCF   A, IX
+      STCF   A, IX
       RES    1, IX
       SET    2, IX
       CHG    3, IX
@@ -54115,6 +50732,7 @@
       SUB    IY, IX
       SUB    IZ, IX
       SUB    SP, IX
+      LD     IX, 0
       SBC    WA, IX
       SBC    BC, IX
       SBC    DE, IX
@@ -54155,6 +50773,7 @@
       XOR    IY, IX
       XOR    IZ, IX
       XOR    SP, IX
+      CP     IY, 6
       OR     WA, IY
       OR     BC, IY
       OR     DE, IY
@@ -54179,6 +50798,16 @@
       CP     IY, IY
       CP     IZ, IY
       CP     SP, IY
+      RLC    A, IY
+      RRC    A, IY
+      RL     A, IY
+      RR     A, IY
+      SLA    A, IY
+      SRA    A, IY
+      SLL    A, IY
+      SRL    A, IY
+      PUSH   IY
+      POP    IY
       CPL    IY
       NEG    IY
       MUL    XIY, 0A09H
@@ -54198,6 +50827,11 @@
       XORCF  3, IY
       LDCF   4, IY
       STCF   5, IY
+      ANDCF  A, IY
+      ORCF   A, IY
+      XORCF  A, IY
+      LDCF   A, IY
+      STCF   A, IY
       RES    1, IY
       SET    2, IY
       CHG    3, IY
@@ -54291,6 +50925,7 @@
       SUB    IY, IY
       SUB    IZ, IY
       SUB    SP, IY
+      LD     IY, 0
       SBC    WA, IY
       SBC    BC, IY
       SBC    DE, IY
@@ -54331,6 +50966,7 @@
       XOR    IY, IY
       XOR    IZ, IY
       XOR    SP, IY
+      CP     IZ, 7
       OR     WA, IZ
       OR     BC, IZ
       OR     DE, IZ
@@ -54355,6 +50991,16 @@
       CP     IY, IZ
       CP     IZ, IZ
       CP     SP, IZ
+      RLC    A, IZ
+      RRC    A, IZ
+      RL     A, IZ
+      RR     A, IZ
+      SLA    A, IZ
+      SRA    A, IZ
+      SLL    A, IZ
+      SRL    A, IZ
+      PUSH   IZ
+      POP    IZ
       CPL    IZ
       NEG    IZ
       MUL    XIZ, 0A09H
@@ -54374,6 +51020,11 @@
       XORCF  3, IZ
       LDCF   4, IZ
       STCF   5, IZ
+      ANDCF  A, IZ
+      ORCF   A, IZ
+      XORCF  A, IZ
+      LDCF   A, IZ
+      STCF   A, IZ
       RES    1, IZ
       SET    2, IZ
       CHG    3, IZ
@@ -54467,6 +51118,7 @@
       SUB    IY, IZ
       SUB    IZ, IZ
       SUB    SP, IZ
+      LD     IZ, 0
       SBC    WA, IZ
       SBC    BC, IZ
       SBC    DE, IZ
@@ -54531,6 +51183,16 @@
       CP     IY, SP
       CP     IZ, SP
       CP     SP, SP
+      RLC    A, SP
+      RRC    A, SP
+      RL     A, SP
+      RR     A, SP
+      SLA    A, SP
+      SRA    A, SP
+      SLL    A, SP
+      SRL    A, SP
+      PUSH   SP
+      POP    SP
       CPL    SP
       NEG    SP
       MUL    XSP, 0A09H
@@ -54550,6 +51212,11 @@
       XORCF  3, SP
       LDCF   4, SP
       STCF   5, SP
+      ANDCF  A, SP
+      ORCF   A, SP
+      XORCF  A, SP
+      LDCF   A, SP
+      STCF   A, SP
       RES    1, SP
       SET    2, SP
       CHG    3, SP
@@ -54643,6 +51310,7 @@
       SUB    IY, SP
       SUB    IZ, SP
       SUB    SP, SP
+      LD     SP, 0
       SBC    WA, SP
       SBC    BC, SP
       SBC    DE, SP
@@ -54683,6 +51351,7 @@
       XOR    IY, SP
       XOR    IZ, SP
       XOR    SP, SP
+      CP     SP, 0
       OR     XDE, (0E1H)
       OR     XHL, (0E1H)
       OR     XIX, (0E1H)
@@ -64354,7 +61023,17 @@
       CP     XIY, XDE
       CP     XIZ, XDE
       CP     XSP, XDE
+      RLC    A, XDE
+      RRC    A, XDE
+      RL     A, XDE
+      RR     A, XDE
+      SLA    A, XDE
+      SRA    A, XDE
+      SLL    A, XDE
+      SRL    A, XDE
       LD     XDE, 07060504H
+      PUSH   XDE
+      POP    XDE
       LINK   XDE, 0E0DH
       UNLK   XDE
       EXTZ   XDE
@@ -64405,6 +61084,7 @@
       SUB    XIY, XDE
       SUB    XIZ, XDE
       SUB    XSP, XDE
+      LD     XDE, 0
       SBC    XWA, XDE
       SBC    XBC, XDE
       SBC    XDE, XDE
@@ -64457,7 +61137,17 @@
       CP     XIY, XHL
       CP     XIZ, XHL
       CP     XSP, XHL
+      RLC    A, XHL
+      RRC    A, XHL
+      RL     A, XHL
+      RR     A, XHL
+      SLA    A, XHL
+      SRA    A, XHL
+      SLL    A, XHL
+      SRL    A, XHL
       LD     XHL, 07060504H
+      PUSH   XHL
+      POP    XHL
       LINK   XHL, 0E0DH
       UNLK   XHL
       EXTZ   XHL
@@ -64506,6 +61196,7 @@
       SUB    XIY, XHL
       SUB    XIZ, XHL
       SUB    XSP, XHL
+      LD     XHL, 0
       SBC    XWA, XHL
       SBC    XBC, XHL
       SBC    XDE, XHL
@@ -64558,7 +61249,17 @@
       CP     XIY, XIX
       CP     XIZ, XIX
       CP     XSP, XIX
+      RLC    A, XIX
+      RRC    A, XIX
+      RL     A, XIX
+      RR     A, XIX
+      SLA    A, XIX
+      SRA    A, XIX
+      SLL    A, XIX
+      SRL    A, XIX
       LD     XIX, 07060504H
+      PUSH   XIX
+      POP    XIX
       LINK   XIX, 0E0DH
       UNLK   XIX
       EXTZ   XIX
@@ -64605,6 +61306,7 @@
       SUB    XIY, XIX
       SUB    XIZ, XIX
       SUB    XSP, XIX
+      LD     XIX, 0
       SBC    XWA, XIX
       SBC    XBC, XIX
       SBC    XDE, XIX
@@ -64657,7 +61359,17 @@
       CP     XIY, XIY
       CP     XIZ, XIY
       CP     XSP, XIY
+      RLC    A, XIY
+      RRC    A, XIY
+      RL     A, XIY
+      RR     A, XIY
+      SLA    A, XIY
+      SRA    A, XIY
+      SLL    A, XIY
+      SRL    A, XIY
       LD     XIY, 07060504H
+      PUSH   XIY
+      POP    XIY
       LINK   XIY, 0E0DH
       UNLK   XIY
       EXTZ   XIY
@@ -64702,6 +61414,7 @@
       SUB    XIY, XIY
       SUB    XIZ, XIY
       SUB    XSP, XIY
+      LD     XIY, 0
       SBC    XWA, XIY
       SBC    XBC, XIY
       SBC    XDE, XIY
@@ -64755,7 +61468,16 @@
       CP     XDE, XIY
       CP     XHL, XIY
       CP     XIX, XIY
+      RRC    A, XIZ
+      RL     A, XIZ
+      RR     A, XIZ
+      SLA    A, XIZ
+      SRA    A, XIZ
+      SLL    A, XIZ
+      SRL    A, XIZ
       LD     XIZ, 07060504H
+      PUSH   XIZ
+      POP    XIZ
       LINK   XIZ, 0E0DH
       UNLK   XIZ
       EXTZ   XIZ
@@ -64798,6 +61520,7 @@
       SUB    XIY, XIZ
       SUB    XIZ, XIZ
       SUB    XSP, XIZ
+      LD     XIZ, 0
       SBC    XWA, XIZ
       SBC    XBC, XIZ
       SBC    XDE, XIZ
@@ -64854,7 +61577,13 @@
       CP     XIY, XIZ
       CP     XIZ, XIZ
       CP     XSP, XIZ
+      RLC    A, XIZ
+      SRA    A, XSP
+      SLL    A, XSP
+      SRL    A, XSP
       LD     XSP, 07060504H
+      PUSH   XSP
+      POP    XSP
       LINK   XSP, 0E0DH
       UNLK   XSP
       EXTZ   XSP
@@ -64895,6 +61624,7 @@
       SUB    XIY, XSP
       SUB    XIZ, XSP
       SUB    XSP, XSP
+      LD     XSP, 0
       SBC    XWA, XSP
       SBC    XBC, XSP
       SBC    XDE, XSP
@@ -64951,7 +61681,14 @@
       CP     XIY, XSP
       CP     XIZ, XSP
       CP     XSP, XSP
+      RLC    A, XSP
+      RRC    A, XSP
+      RL     A, XSP
+      RR     A, XSP
+      SLA    A, XSP
       LD     XWA0, 07060504H
+      PUSH   XWA0
+      POP    XWA0
       LINK   XWA0, 0E0DH
       UNLK   XWA0
       EXTZ   XWA0
@@ -65003,6 +61740,7 @@
       SUB    XIY, XWA0
       SUB    XIZ, XWA0
       SUB    XSP, XWA0
+      LD     XWA0, 0
       SBC    XWA, XWA0
       SBC    XBC, XWA0
       SBC    XDE, XWA0
@@ -65059,6 +61797,15 @@
       CP     XIY, XWA0
       CP     XIZ, XWA0
       CP     XSP, XWA0
+      RLC    A, XWA0
+      RRC    A, XWA0
+      RL     A, XWA0
+      RR     A, XWA0
+      SLA    A, XWA0
+      SRA    A, XWA0
+      SLL    A, XWA0
+      SRL    A, XWA0
+      POP    XBC0
       LINK   XBC0, 0E0DH
       UNLK   XBC0
       EXTZ   XBC0
@@ -65110,6 +61857,7 @@
       SUB    XIY, XBC0
       SUB    XIZ, XBC0
       SUB    XSP, XBC0
+      LD     XBC0, 0
       SBC    XWA, XBC0
       SBC    XBC, XBC0
       SBC    XDE, XBC0
@@ -65166,7 +61914,16 @@
       CP     XIY, XBC0
       CP     XIZ, XBC0
       CP     XSP, XBC0
+      RLC    A, XBC0
+      RRC    A, XBC0
+      RL     A, XBC0
+      RR     A, XBC0
+      SLA    A, XBC0
+      SRA    A, XBC0
+      SLL    A, XBC0
+      SRL    A, XBC0
       LD     XBC0, 07060504H
+      PUSH   XBC0
       LINK   XDE0, 0E0DH
       UNLK   XDE0
       EXTZ   XDE0
@@ -65218,6 +61975,7 @@
       SUB    XIY, XDE0
       SUB    XIZ, XDE0
       SUB    XSP, XDE0
+      LD     XDE0, 0
       SBC    XWA, XDE0
       SBC    XBC, XDE0
       SBC    XDE, XDE0
@@ -65274,7 +62032,17 @@
       CP     XIY, XDE0
       CP     XIZ, XDE0
       CP     XSP, XDE0
+      RLC    A, XDE0
+      RRC    A, XDE0
+      RL     A, XDE0
+      RR     A, XDE0
+      SLA    A, XDE0
+      SRA    A, XDE0
+      SLL    A, XDE0
+      SRL    A, XDE0
       LD     XDE0, 07060504H
+      PUSH   XDE0
+      POP    XDE0
       UNLK   XHL0
       EXTZ   XHL0
       EXTS   XHL0
@@ -65325,6 +62093,7 @@
       SUB    XIY, XHL0
       SUB    XIZ, XHL0
       SUB    XSP, XHL0
+      LD     XHL0, 0
       SBC    XWA, XHL0
       SBC    XBC, XHL0
       SBC    XDE, XHL0
@@ -65381,7 +62150,17 @@
       CP     XIY, XHL0
       CP     XIZ, XHL0
       CP     XSP, XHL0
+      RLC    A, XHL0
+      RRC    A, XHL0
+      RL     A, XHL0
+      RR     A, XHL0
+      SLA    A, XHL0
+      SRA    A, XHL0
+      SLL    A, XHL0
+      SRL    A, XHL0
       LD     XHL0, 07060504H
+      PUSH   XHL0
+      POP    XHL0
       LINK   XHL0, 0E0DH
       XOR    XBC, XWA'
       XOR    XDE, XWA'
@@ -65414,7 +62193,17 @@
       CP     XIY, XWA'
       CP     XIZ, XWA'
       CP     XSP, XWA'
+      RLC    A, XWA'
+      RRC    A, XWA'
+      RL     A, XWA'
+      RR     A, XWA'
+      SLA    A, XWA'
+      SRA    A, XWA'
+      SLL    A, XWA'
+      SRL    A, XWA'
       LD     XWA', 07060504H
+      PUSH   XWA'
+      POP    XWA'
       LINK   XWA', 0E0DH
       UNLK   XWA'
       EXTZ   XWA'
@@ -65466,6 +62255,7 @@
       SUB    XIY, XWA'
       SUB    XIZ, XWA'
       SUB    XSP, XWA'
+      LD     XWA', 0
       SBC    XWA, XWA'
       SBC    XBC, XWA'
       SBC    XDE, XWA'
@@ -65518,7 +62308,17 @@
       CP     XIY, XBC'
       CP     XIZ, XBC'
       CP     XSP, XBC'
+      RLC    A, XBC'
+      RRC    A, XBC'
+      RL     A, XBC'
+      RR     A, XBC'
+      SLA    A, XBC'
+      SRA    A, XBC'
+      SLL    A, XBC'
+      SRL    A, XBC'
       LD     XBC', 07060504H
+      PUSH   XBC'
+      POP    XBC'
       LINK   XBC', 0E0DH
       UNLK   XBC'
       EXTZ   XBC'
@@ -65570,6 +62370,7 @@
       SUB    XIY, XBC'
       SUB    XIZ, XBC'
       SUB    XSP, XBC'
+      LD     XBC', 0
       SBC    XWA, XBC'
       SBC    XBC, XBC'
       SBC    XDE, XBC'
@@ -65623,7 +62424,17 @@
       CP     XIY, XDE'
       CP     XIZ, XDE'
       CP     XSP, XDE'
+      RLC    A, XDE'
+      RRC    A, XDE'
+      RL     A, XDE'
+      RR     A, XDE'
+      SLA    A, XDE'
+      SRA    A, XDE'
+      SLL    A, XDE'
+      SRL    A, XDE'
       LD     XDE', 07060504H
+      PUSH   XDE'
+      POP    XDE'
       LINK   XDE', 0E0DH
       UNLK   XDE'
       EXTZ   XDE'
@@ -65675,6 +62486,7 @@
       SUB    XIY, XDE'
       SUB    XIZ, XDE'
       SUB    XSP, XDE'
+      LD     XDE', 0
       SBC    XWA, XDE'
       SBC    XBC, XDE'
       SBC    XDE, XDE'
@@ -65731,7 +62543,17 @@
       CP     XIY, XHL'
       CP     XIZ, XHL'
       CP     XSP, XHL'
+      RLC    A, XHL'
+      RRC    A, XHL'
+      RL     A, XHL'
+      RR     A, XHL'
+      SLA    A, XHL'
+      SRA    A, XHL'
+      SLL    A, XHL'
+      SRL    A, XHL'
       LD     XHL', 07060504H
+      PUSH   XHL'
+      POP    XHL'
       LINK   XHL', 0E0DH
       UNLK   XHL'
       EXTZ   XHL'
@@ -65783,6 +62605,7 @@
       SUB    XIY, XHL'
       SUB    XIZ, XHL'
       SUB    XSP, XHL'
+      LD     XHL', 0
       SBC    XWA, XHL'
       SBC    XBC, XHL'
       SBC    XDE, XHL'
@@ -65838,7 +62661,17 @@
       CP     XIY, XWA
       CP     XIZ, XWA
       CP     XSP, XWA
+      RLC    A, XWA
+      RRC    A, XWA
+      RL     A, XWA
+      RR     A, XWA
+      SLA    A, XWA
+      SRA    A, XWA
+      SLL    A, XWA
+      SRL    A, XWA
       LD     XWA, 07060504H
+      PUSH   XWA
+      POP    XWA
       LINK   XWA, 0E0DH
       UNLK   XWA
       EXTZ   XWA
@@ -65877,6 +62710,7 @@
       SUB    XIY, XWA
       SUB    XIZ, XWA
       SUB    XSP, XWA
+      LD     XWA, 0
       SBC    XWA, XWA
       SBC    XBC, XWA
       SBC    XDE, XWA
@@ -65929,7 +62763,17 @@
       CP     XIY, XBC
       CP     XIZ, XBC
       CP     XSP, XBC
+      RLC    A, XBC
+      RRC    A, XBC
+      RL     A, XBC
+      RR     A, XBC
+      SLA    A, XBC
+      SRA    A, XBC
+      SLL    A, XBC
+      SRL    A, XBC
       LD     XBC, 07060504H
+      PUSH   XBC
+      POP    XBC
       LINK   XBC, 0E0DH
       UNLK   XBC
       EXTZ   XBC
@@ -65966,6 +62810,7 @@
       SUB    XIY, XBC
       SUB    XIZ, XBC
       SUB    XSP, XBC
+      LD     XBC, 0
       SBC    XWA, XBC
       SBC    XBC, XBC
       SBC    XDE, XBC
@@ -66018,6 +62863,16 @@
       CP     XIY, XWA
       CP     XIZ, XWA
       CP     XSP, XWA
+      RLC    A, XWA
+      RRC    A, XWA
+      RL     A, XWA
+      RR     A, XWA
+      SLA    A, XWA
+      SRA    A, XWA
+      SLL    A, XWA
+      SRL    A, XWA
+      PUSH   XWA
+      POP    XWA
       LINK   XWA, 0E0DH
       UNLK   XWA
       EXTZ   XWA
@@ -66063,6 +62918,7 @@
       SUB    XIY, XWA
       SUB    XIZ, XWA
       SUB    XSP, XWA
+      LD     XWA, 0
       SBC    XWA, XWA
       SBC    XBC, XWA
       SBC    XDE, XWA
@@ -66118,6 +62974,16 @@
       CP     XIY, XBC
       CP     XIZ, XBC
       CP     XSP, XBC
+      RLC    A, XBC
+      RRC    A, XBC
+      RL     A, XBC
+      RR     A, XBC
+      SLA    A, XBC
+      SRA    A, XBC
+      SLL    A, XBC
+      SRL    A, XBC
+      PUSH   XBC
+      POP    XBC
       LINK   XBC, 0E0DH
       UNLK   XBC
       EXTZ   XBC
@@ -66163,6 +63029,7 @@
       SUB    XIY, XBC
       SUB    XIZ, XBC
       SUB    XSP, XBC
+      LD     XBC, 0
       SBC    XWA, XBC
       SBC    XBC, XBC
       SBC    XDE, XBC
@@ -66218,6 +63085,16 @@
       CP     XIY, XDE
       CP     XIZ, XDE
       CP     XSP, XDE
+      RLC    A, XDE
+      RRC    A, XDE
+      RL     A, XDE
+      RR     A, XDE
+      SLA    A, XDE
+      SRA    A, XDE
+      SLL    A, XDE
+      SRL    A, XDE
+      PUSH   XDE
+      POP    XDE
       LINK   XDE, 0E0DH
       UNLK   XDE
       EXTZ   XDE
@@ -66263,6 +63140,7 @@
       SUB    XIY, XDE
       SUB    XIZ, XDE
       SUB    XSP, XDE
+      LD     XDE, 0
       SBC    XWA, XDE
       SBC    XBC, XDE
       SBC    XDE, XDE
@@ -66318,6 +63196,16 @@
       CP     XIY, XHL
       CP     XIZ, XHL
       CP     XSP, XHL
+      RLC    A, XHL
+      RRC    A, XHL
+      RL     A, XHL
+      RR     A, XHL
+      SLA    A, XHL
+      SRA    A, XHL
+      SLL    A, XHL
+      SRL    A, XHL
+      PUSH   XHL
+      POP    XHL
       LINK   XHL, 0E0DH
       UNLK   XHL
       EXTZ   XHL
@@ -66363,6 +63251,7 @@
       SUB    XIY, XHL
       SUB    XIZ, XHL
       SUB    XSP, XHL
+      LD     XHL, 0
       SBC    XWA, XHL
       SBC    XBC, XHL
       SBC    XDE, XHL
@@ -66418,6 +63307,16 @@
       CP     XIY, XIX
       CP     XIZ, XIX
       CP     XSP, XIX
+      RLC    A, XIX
+      RRC    A, XIX
+      RL     A, XIX
+      RR     A, XIX
+      SLA    A, XIX
+      SRA    A, XIX
+      SLL    A, XIX
+      SRL    A, XIX
+      PUSH   XIX
+      POP    XIX
       LINK   XIX, 0E0DH
       UNLK   XIX
       EXTZ   XIX
@@ -66463,6 +63362,7 @@
       SUB    XIY, XIX
       SUB    XIZ, XIX
       SUB    XSP, XIX
+      LD     XIX, 0
       SBC    XWA, XIX
       SBC    XBC, XIX
       SBC    XDE, XIX
@@ -66518,6 +63418,16 @@
       CP     XIY, XIY
       CP     XIZ, XIY
       CP     XSP, XIY
+      RLC    A, XIY
+      RRC    A, XIY
+      RL     A, XIY
+      RR     A, XIY
+      SLA    A, XIY
+      SRA    A, XIY
+      SLL    A, XIY
+      SRL    A, XIY
+      PUSH   XIY
+      POP    XIY
       LINK   XIY, 0E0DH
       UNLK   XIY
       EXTZ   XIY
@@ -66563,6 +63473,7 @@
       SUB    XIY, XIY
       SUB    XIZ, XIY
       SUB    XSP, XIY
+      LD     XIY, 0
       SBC    XWA, XIY
       SBC    XBC, XIY
       SBC    XDE, XIY
@@ -66618,6 +63529,16 @@
       CP     XIY, XIZ
       CP     XIZ, XIZ
       CP     XSP, XIZ
+      RLC    A, XIZ
+      RRC    A, XIZ
+      RL     A, XIZ
+      RR     A, XIZ
+      SLA    A, XIZ
+      SRA    A, XIZ
+      SLL    A, XIZ
+      SRL    A, XIZ
+      PUSH   XIZ
+      POP    XIZ
       LINK   XIZ, 0E0DH
       UNLK   XIZ
       EXTZ   XIZ
@@ -66663,6 +63584,7 @@
       SUB    XIY, XIZ
       SUB    XIZ, XIZ
       SUB    XSP, XIZ
+      LD     XIZ, 0
       SBC    XWA, XIZ
       SBC    XBC, XIZ
       SBC    XDE, XIZ
@@ -66718,6 +63640,16 @@
       CP     XIY, XSP
       CP     XIZ, XSP
       CP     XSP, XSP
+      RLC    A, XSP
+      RRC    A, XSP
+      RL     A, XSP
+      RR     A, XSP
+      SLA    A, XSP
+      SRA    A, XSP
+      SLL    A, XSP
+      SRL    A, XSP
+      PUSH   XSP
+      POP    XSP
       LINK   XSP, 0E0DH
       UNLK   XSP
       EXTZ   XSP
@@ -66763,6 +63695,7 @@
       SUB    XIY, XSP
       SUB    XIZ, XSP
       SUB    XSP, XSP
+      LD     XSP, 0
       SBC    XWA, XSP
       SBC    XBC, XSP
       SBC    XDE, XSP
@@ -66823,6 +63756,11 @@
       LDA    IY, (22)
       LDA    IZ, (22)
       LDA    SP, (22)
+      ANDCF  A, (22)
+      ORCF   A, (22)
+      XORCF  A, (22)
+      LDCF   A, (22)
+      STCF   A, (22)
       LDA    XWA, (22)
       LDA    XBC, (22)
       LDA    XDE, (22)
@@ -66919,6 +63857,11 @@
       LDA    IY, (XIY)
       LDA    IZ, (XIY)
       LDA    SP, (XIY)
+      ANDCF  A, (XIY)
+      ORCF   A, (XIY)
+      XORCF  A, (XIY)
+      LDCF   A, (XIY)
+      STCF   A, (XIY)
       LDA    XWA, (XIY)
       LDA    XBC, (XIY)
       LDA    XDE, (XIY)
@@ -67007,6 +63950,11 @@
       LDA    IY, (XIY-080AH)
       LDA    IZ, (XIY-080AH)
       LDA    SP, (XIY-080AH)
+      ANDCF  A, (XIY-080AH)
+      ORCF   A, (XIY-080AH)
+      XORCF  A, (XIY-080AH)
+      LDCF   A, (XIY-080AH)
+      STCF   A, (XIY-080AH)
       LDA    XWA, (XIY-080AH)
       LDA    XBC, (XIY-080AH)
       LDA    XDE, (XIY-080AH)
@@ -67095,6 +64043,11 @@
       LDA    IY, (XIZ)
       LDA    IZ, (XIZ)
       LDA    SP, (XIZ)
+      ANDCF  A, (XIZ)
+      ORCF   A, (XIZ)
+      XORCF  A, (XIZ)
+      LDCF   A, (XIZ)
+      STCF   A, (XIZ)
       LDA    XWA, (XIZ)
       LDA    XBC, (XIZ)
       LDA    XDE, (XIZ)
@@ -67183,6 +64136,11 @@
       LDA    IY, (XIZ-0406H)
       LDA    IZ, (XIZ-0406H)
       LDA    SP, (XIZ-0406H)
+      ANDCF  A, (XIZ-0406H)
+      ORCF   A, (XIZ-0406H)
+      XORCF  A, (XIZ-0406H)
+      LDCF   A, (XIZ-0406H)
+      STCF   A, (XIZ-0406H)
       LDA    XWA, (XIZ-0406H)
       LDA    XBC, (XIZ-0406H)
       LDA    XDE, (XIZ-0406H)
@@ -67271,6 +64229,11 @@
       LDA    IY, (XSP)
       LDA    IZ, (XSP)
       LDA    SP, (XSP)
+      ANDCF  A, (XSP)
+      ORCF   A, (XSP)
+      XORCF  A, (XSP)
+      LDCF   A, (XSP)
+      STCF   A, (XSP)
       LDA    XWA, (XSP)
       LDA    XBC, (XSP)
       LDA    XDE, (XSP)
@@ -67359,6 +64322,11 @@
       LDA    IY, (XSP-2)
       LDA    IZ, (XSP-2)
       LDA    SP, (XSP-2)
+      ANDCF  A, (XSP-2)
+      ORCF   A, (XSP-2)
+      XORCF  A, (XSP-2)
+      LDCF   A, (XSP-2)
+      STCF   A, (XSP-2)
       LDA    XWA, (XSP-2)
       LDA    XBC, (XSP-2)
       LDA    XDE, (XSP-2)
@@ -67446,6 +64414,11 @@
       LDA    IY, (XWA0)
       LDA    IZ, (XWA0)
       LDA    SP, (XWA0)
+      ANDCF  A, (XWA0)
+      ORCF   A, (XWA0)
+      XORCF  A, (XWA0)
+      LDCF   A, (XWA0)
+      STCF   A, (XWA0)
       LDA    XWA, (XWA0)
       LDA    XBC, (XWA0)
       LDA    XDE, (XWA0)
@@ -67533,6 +64506,11 @@
       LDA    IY, (XWA0+0302H)
       LDA    IZ, (XWA0+0302H)
       LDA    SP, (XWA0+0302H)
+      ANDCF  A, (XWA0+0302H)
+      ORCF   A, (XWA0+0302H)
+      XORCF  A, (XWA0+0302H)
+      LDCF   A, (XWA0+0302H)
+      STCF   A, (XWA0+0302H)
       LDA    XWA, (XWA0+0302H)
       LDA    XBC, (XWA0+0302H)
       LDA    XDE, (XWA0+0302H)
@@ -67620,6 +64598,11 @@
       LDA    IY, (XBC0)
       LDA    IZ, (XBC0)
       LDA    SP, (XBC0)
+      ANDCF  A, (XBC0)
+      ORCF   A, (XBC0)
+      XORCF  A, (XBC0)
+      LDCF   A, (XBC0)
+      STCF   A, (XBC0)
       LDA    XWA, (XBC0)
       LDA    XBC, (XBC0)
       LDA    XDE, (XBC0)
@@ -67707,6 +64690,11 @@
       LDA    IY, (XBC0+0706H)
       LDA    IZ, (XBC0+0706H)
       LDA    SP, (XBC0+0706H)
+      ANDCF  A, (XBC0+0706H)
+      ORCF   A, (XBC0+0706H)
+      XORCF  A, (XBC0+0706H)
+      LDCF   A, (XBC0+0706H)
+      STCF   A, (XBC0+0706H)
       LDA    XWA, (XBC0+0706H)
       LDA    XBC, (XBC0+0706H)
       LDA    XDE, (XBC0+0706H)
@@ -67795,6 +64783,11 @@
       LDA    IY, (XDE0)
       LDA    IZ, (XDE0)
       LDA    SP, (XDE0)
+      ANDCF  A, (XDE0)
+      ORCF   A, (XDE0)
+      XORCF  A, (XDE0)
+      LDCF   A, (XDE0)
+      STCF   A, (XDE0)
       LDA    XWA, (XDE0)
       LDA    XBC, (XDE0)
       LDA    XDE, (XDE0)
@@ -67883,6 +64876,11 @@
       LDA    IY, (XDE0+0B0AH)
       LDA    IZ, (XDE0+0B0AH)
       LDA    SP, (XDE0+0B0AH)
+      ANDCF  A, (XDE0+0B0AH)
+      ORCF   A, (XDE0+0B0AH)
+      XORCF  A, (XDE0+0B0AH)
+      LDCF   A, (XDE0+0B0AH)
+      STCF   A, (XDE0+0B0AH)
       LDA    XWA, (XDE0+0B0AH)
       LDA    XBC, (XDE0+0B0AH)
       LDA    XDE, (XDE0+0B0AH)
@@ -67971,6 +64969,11 @@
       LDA    IY, (XHL0)
       LDA    IZ, (XHL0)
       LDA    SP, (XHL0)
+      ANDCF  A, (XHL0)
+      ORCF   A, (XHL0)
+      XORCF  A, (XHL0)
+      LDCF   A, (XHL0)
+      STCF   A, (XHL0)
       LDA    XWA, (XHL0)
       LDA    XBC, (XHL0)
       LDA    XDE, (XHL0)
@@ -68059,6 +65062,11 @@
       LDA    IY, (XHL0+0F0EH)
       LDA    IZ, (XHL0+0F0EH)
       LDA    SP, (XHL0+0F0EH)
+      ANDCF  A, (XHL0+0F0EH)
+      ORCF   A, (XHL0+0F0EH)
+      XORCF  A, (XHL0+0F0EH)
+      LDCF   A, (XHL0+0F0EH)
+      STCF   A, (XHL0+0F0EH)
       LDA    XWA, (XHL0+0F0EH)
       LDA    XBC, (XHL0+0F0EH)
       LDA    XDE, (XHL0+0F0EH)
@@ -68198,6 +65206,11 @@
       LDA    IY, (XWA')
       LDA    IZ, (XWA')
       LDA    SP, (XWA')
+      ANDCF  A, (XWA')
+      ORCF   A, (XWA')
+      XORCF  A, (XWA')
+      LDCF   A, (XWA')
+      STCF   A, (XWA')
       LDA    XWA, (XWA')
       LDA    XBC, (XWA')
       LDA    XDE, (XWA')
@@ -68283,6 +65296,11 @@
       LDA    IY, (XWA'-2C2EH)
       LDA    IZ, (XWA'-2C2EH)
       LDA    SP, (XWA'-2C2EH)
+      ANDCF  A, (XWA'-2C2EH)
+      ORCF   A, (XWA'-2C2EH)
+      XORCF  A, (XWA'-2C2EH)
+      LDCF   A, (XWA'-2C2EH)
+      STCF   A, (XWA'-2C2EH)
       LDA    XWA, (XWA'-2C2EH)
       LDA    XBC, (XWA'-2C2EH)
       LDA    XDE, (XWA'-2C2EH)
@@ -68342,6 +65360,11 @@
       LDA    IY, (XWA'+00D2H)
       LDA    IZ, (XWA'+00D2H)
       LDA    SP, (XWA'+00D2H)
+      ANDCF  A, (XWA'+00D2H)
+      ORCF   A, (XWA'+00D2H)
+      XORCF  A, (XWA'+00D2H)
+      LDCF   A, (XWA'+00D2H)
+      STCF   A, (XWA'+00D2H)
       LDA    XWA, (XWA'+00D2H)
       LDA    XBC, (XWA'+00D2H)
       LDA    XDE, (XWA'+00D2H)
@@ -68458,6 +65481,11 @@
       LDA    IY, (XBC')
       LDA    IZ, (XBC')
       LDA    SP, (XBC')
+      ANDCF  A, (XBC')
+      ORCF   A, (XBC')
+      XORCF  A, (XBC')
+      LDCF   A, (XBC')
+      STCF   A, (XBC')
       LDA    XWA, (XBC')
       LDA    XBC, (XBC')
       LDA    XDE, (XBC')
@@ -68543,6 +65571,11 @@
       LDA    IY, (XBC'-282AH)
       LDA    IZ, (XBC'-282AH)
       LDA    SP, (XBC'-282AH)
+      ANDCF  A, (XBC'-282AH)
+      ORCF   A, (XBC'-282AH)
+      XORCF  A, (XBC'-282AH)
+      LDCF   A, (XBC'-282AH)
+      STCF   A, (XBC'-282AH)
       LDA    XWA, (XBC'-282AH)
       LDA    XBC, (XBC'-282AH)
       LDA    XDE, (XBC'-282AH)
@@ -68606,6 +65639,11 @@
       LDA    IY, (XBC'+00D6H)
       LDA    IZ, (XBC'+00D6H)
       LDA    SP, (XBC'+00D6H)
+      ANDCF  A, (XBC'+00D6H)
+      ORCF   A, (XBC'+00D6H)
+      XORCF  A, (XBC'+00D6H)
+      LDCF   A, (XBC'+00D6H)
+      STCF   A, (XBC'+00D6H)
       LDA    XWA, (XBC'+00D6H)
       LDA    XBC, (XBC'+00D6H)
       LDA    XDE, (XBC'+00D6H)
@@ -68718,6 +65756,11 @@
       LDA    IY, (XDE')
       LDA    IZ, (XDE')
       LDA    SP, (XDE')
+      ANDCF  A, (XDE')
+      ORCF   A, (XDE')
+      XORCF  A, (XDE')
+      LDCF   A, (XDE')
+      STCF   A, (XDE')
       LDA    XWA, (XDE')
       LDA    XBC, (XDE')
       LDA    XDE, (XDE')
@@ -68803,6 +65846,11 @@
       LDA    IY, (XDE'-2426H)
       LDA    IZ, (XDE'-2426H)
       LDA    SP, (XDE'-2426H)
+      ANDCF  A, (XDE'-2426H)
+      ORCF   A, (XDE'-2426H)
+      XORCF  A, (XDE'-2426H)
+      LDCF   A, (XDE'-2426H)
+      STCF   A, (XDE'-2426H)
       LDA    XWA, (XDE'-2426H)
       LDA    XBC, (XDE'-2426H)
       LDA    XDE, (XDE'-2426H)
@@ -68870,6 +65918,11 @@
       LDA    IY, (XDE'+00DAH)
       LDA    IZ, (XDE'+00DAH)
       LDA    SP, (XDE'+00DAH)
+      ANDCF  A, (XDE'+00DAH)
+      ORCF   A, (XDE'+00DAH)
+      XORCF  A, (XDE'+00DAH)
+      LDCF   A, (XDE'+00DAH)
+      STCF   A, (XDE'+00DAH)
       LDA    XWA, (XDE'+00DAH)
       LDA    XBC, (XDE'+00DAH)
       LDA    XDE, (XDE'+00DAH)
@@ -68978,6 +66031,11 @@
       LDA    IY, (XHL')
       LDA    IZ, (XHL')
       LDA    SP, (XHL')
+      ANDCF  A, (XHL')
+      ORCF   A, (XHL')
+      XORCF  A, (XHL')
+      LDCF   A, (XHL')
+      STCF   A, (XHL')
       LDA    XWA, (XHL')
       LDA    XBC, (XHL')
       LDA    XDE, (XHL')
@@ -69063,6 +66121,11 @@
       LDA    IY, (XHL'-2022H)
       LDA    IZ, (XHL'-2022H)
       LDA    SP, (XHL'-2022H)
+      ANDCF  A, (XHL'-2022H)
+      ORCF   A, (XHL'-2022H)
+      XORCF  A, (XHL'-2022H)
+      LDCF   A, (XHL'-2022H)
+      STCF   A, (XHL'-2022H)
       LDA    XWA, (XHL'-2022H)
       LDA    XBC, (XHL'-2022H)
       LDA    XDE, (XHL'-2022H)
@@ -69134,6 +66197,11 @@
       LDA    IY, (XHL'+00DEH)
       LDA    IZ, (XHL'+00DEH)
       LDA    SP, (XHL'+00DEH)
+      ANDCF  A, (XHL'+00DEH)
+      ORCF   A, (XHL'+00DEH)
+      XORCF  A, (XHL'+00DEH)
+      LDCF   A, (XHL'+00DEH)
+      STCF   A, (XHL'+00DEH)
       LDA    XWA, (XHL'+00DEH)
       LDA    XBC, (XHL'+00DEH)
       LDA    XDE, (XHL'+00DEH)
@@ -69238,6 +66306,11 @@
       LDA    IY, (XWA)
       LDA    IZ, (XWA)
       LDA    SP, (XWA)
+      ANDCF  A, (XWA)
+      ORCF   A, (XWA)
+      XORCF  A, (XWA)
+      LDCF   A, (XWA)
+      STCF   A, (XWA)
       LDA    XWA, (XWA)
       LDA    XBC, (XWA)
       LDA    XDE, (XWA)
@@ -69323,6 +66396,11 @@
       LDA    IY, (XWA-1C1EH)
       LDA    IZ, (XWA-1C1EH)
       LDA    SP, (XWA-1C1EH)
+      ANDCF  A, (XWA-1C1EH)
+      ORCF   A, (XWA-1C1EH)
+      XORCF  A, (XWA-1C1EH)
+      LDCF   A, (XWA-1C1EH)
+      STCF   A, (XWA-1C1EH)
       LDA    XWA, (XWA-1C1EH)
       LDA    XBC, (XWA-1C1EH)
       LDA    XDE, (XWA-1C1EH)
@@ -69410,6 +66488,11 @@
       LDA    IY, (XBC)
       LDA    IZ, (XBC)
       LDA    SP, (XBC)
+      ANDCF  A, (XBC)
+      ORCF   A, (XBC)
+      XORCF  A, (XBC)
+      LDCF   A, (XBC)
+      STCF   A, (XBC)
       LDA    XWA, (XBC)
       LDA    XBC, (XBC)
       LDA    XDE, (XBC)
@@ -69495,6 +66578,11 @@
       LDA    IY, (XBC-181AH)
       LDA    IZ, (XBC-181AH)
       LDA    SP, (XBC-181AH)
+      ANDCF  A, (XBC-181AH)
+      ORCF   A, (XBC-181AH)
+      XORCF  A, (XBC-181AH)
+      LDCF   A, (XBC-181AH)
+      STCF   A, (XBC-181AH)
       LDA    XWA, (XBC-181AH)
       LDA    XBC, (XBC-181AH)
       LDA    XDE, (XBC-181AH)
@@ -69582,6 +66670,11 @@
       LDA    IY, (XDE)
       LDA    IZ, (XDE)
       LDA    SP, (XDE)
+      ANDCF  A, (XDE)
+      ORCF   A, (XDE)
+      XORCF  A, (XDE)
+      LDCF   A, (XDE)
+      STCF   A, (XDE)
       LDA    XWA, (XDE)
       LDA    XBC, (XDE)
       LDA    XDE, (XDE)
@@ -69667,6 +66760,11 @@
       LDA    IY, (XDE-1416H)
       LDA    IZ, (XDE-1416H)
       LDA    SP, (XDE-1416H)
+      ANDCF  A, (XDE-1416H)
+      ORCF   A, (XDE-1416H)
+      XORCF  A, (XDE-1416H)
+      LDCF   A, (XDE-1416H)
+      STCF   A, (XDE-1416H)
       LDA    XWA, (XDE-1416H)
       LDA    XBC, (XDE-1416H)
       LDA    XDE, (XDE-1416H)
@@ -69754,6 +66852,11 @@
       LDA    IY, (XHL)
       LDA    IZ, (XHL)
       LDA    SP, (XHL)
+      ANDCF  A, (XHL)
+      ORCF   A, (XHL)
+      XORCF  A, (XHL)
+      LDCF   A, (XHL)
+      STCF   A, (XHL)
       LDA    XWA, (XHL)
       LDA    XBC, (XHL)
       LDA    XDE, (XHL)
@@ -69839,6 +66942,11 @@
       LDA    IY, (XHL-1012H)
       LDA    IZ, (XHL-1012H)
       LDA    SP, (XHL-1012H)
+      ANDCF  A, (XHL-1012H)
+      ORCF   A, (XHL-1012H)
+      XORCF  A, (XHL-1012H)
+      LDCF   A, (XHL-1012H)
+      STCF   A, (XHL-1012H)
       LDA    XWA, (XHL-1012H)
       LDA    XBC, (XHL-1012H)
       LDA    XDE, (XHL-1012H)
@@ -69927,6 +67035,11 @@
       LDA    IY, (XIX)
       LDA    IZ, (XIX)
       LDA    SP, (XIX)
+      ANDCF  A, (XIX)
+      ORCF   A, (XIX)
+      XORCF  A, (XIX)
+      LDCF   A, (XIX)
+      STCF   A, (XIX)
       LDA    XWA, (XIX)
       LDA    XBC, (XIX)
       LDA    XDE, (XIX)
@@ -70015,6 +67128,11 @@
       LDA    IY, (XIX-0C0EH)
       LDA    IZ, (XIX-0C0EH)
       LDA    SP, (XIX-0C0EH)
+      ANDCF  A, (XIX-0C0EH)
+      ORCF   A, (XIX-0C0EH)
+      XORCF  A, (XIX-0C0EH)
+      LDCF   A, (XIX-0C0EH)
+      STCF   A, (XIX-0C0EH)
       LDA    XWA, (XIX-0C0EH)
       LDA    XBC, (XIX-0C0EH)
       LDA    XDE, (XIX-0C0EH)
@@ -70103,6 +67221,11 @@
       LDA    IY, (-XIY)
       LDA    IZ, (-XIY)
       LDA    SP, (-XIY)
+      ANDCF  A, (-XIY)
+      ORCF   A, (-XIY)
+      XORCF  A, (-XIY)
+      LDCF   A, (-XIY)
+      STCF   A, (-XIY)
       LDA    XWA, (-XIY)
       LDA    XBC, (-XIY)
       LDA    XDE, (-XIY)
@@ -70191,6 +67314,11 @@
       LDA    IY, (-XIZ)
       LDA    IZ, (-XIZ)
       LDA    SP, (-XIZ)
+      ANDCF  A, (-XIZ)
+      ORCF   A, (-XIZ)
+      XORCF  A, (-XIZ)
+      LDCF   A, (-XIZ)
+      STCF   A, (-XIZ)
       LDA    XWA, (-XIZ)
       LDA    XBC, (-XIZ)
       LDA    XDE, (-XIZ)
@@ -70279,6 +67407,11 @@
       LDA    IY, (-XSP)
       LDA    IZ, (-XSP)
       LDA    SP, (-XSP)
+      ANDCF  A, (-XSP)
+      ORCF   A, (-XSP)
+      XORCF  A, (-XSP)
+      LDCF   A, (-XSP)
+      STCF   A, (-XSP)
       LDA    XWA, (-XSP)
       LDA    XBC, (-XSP)
       LDA    XDE, (-XSP)
@@ -70366,6 +67499,11 @@
       LDA    IY, (-XWA0)
       LDA    IZ, (-XWA0)
       LDA    SP, (-XWA0)
+      ANDCF  A, (-XWA0)
+      ORCF   A, (-XWA0)
+      XORCF  A, (-XWA0)
+      LDCF   A, (-XWA0)
+      STCF   A, (-XWA0)
       LDA    XWA, (-XWA0)
       LDA    XBC, (-XWA0)
       LDA    XDE, (-XWA0)
@@ -70452,6 +67590,11 @@
       LDA    IY, (-XBC0)
       LDA    IZ, (-XBC0)
       LDA    SP, (-XBC0)
+      ANDCF  A, (-XBC0)
+      ORCF   A, (-XBC0)
+      XORCF  A, (-XBC0)
+      LDCF   A, (-XBC0)
+      STCF   A, (-XBC0)
       LDA    XWA, (-XBC0)
       LDA    XBC, (-XBC0)
       LDA    XDE, (-XBC0)
@@ -70539,6 +67682,11 @@
       LDA    IY, (-XDE0)
       LDA    IZ, (-XDE0)
       LDA    SP, (-XDE0)
+      ANDCF  A, (-XDE0)
+      ORCF   A, (-XDE0)
+      XORCF  A, (-XDE0)
+      LDCF   A, (-XDE0)
+      STCF   A, (-XDE0)
       LDA    XWA, (-XDE0)
       LDA    XBC, (-XDE0)
       LDA    XDE, (-XDE0)
@@ -70627,6 +67775,11 @@
       LDA    IY, (-XHL0)
       LDA    IZ, (-XHL0)
       LDA    SP, (-XHL0)
+      ANDCF  A, (-XHL0)
+      ORCF   A, (-XHL0)
+      XORCF  A, (-XHL0)
+      LDCF   A, (-XHL0)
+      STCF   A, (-XHL0)
       LDA    XWA, (-XHL0)
       LDA    XBC, (-XHL0)
       LDA    XDE, (-XHL0)
@@ -70750,6 +67903,11 @@
       LDA    IY, (-XWA')
       LDA    IZ, (-XWA')
       LDA    SP, (-XWA')
+      ANDCF  A, (-XWA')
+      ORCF   A, (-XWA')
+      XORCF  A, (-XWA')
+      LDCF   A, (-XWA')
+      STCF   A, (-XWA')
       LDA    XWA, (-XWA')
       LDA    XBC, (-XWA')
       LDA    XDE, (-XWA')
@@ -70834,6 +67992,11 @@
       LDA    IY, (-XBC')
       LDA    IZ, (-XBC')
       LDA    SP, (-XBC')
+      ANDCF  A, (-XBC')
+      ORCF   A, (-XBC')
+      XORCF  A, (-XBC')
+      LDCF   A, (-XBC')
+      STCF   A, (-XBC')
       LDA    XWA, (-XBC')
       LDA    XBC, (-XBC')
       LDA    XDE, (-XBC')
@@ -70918,6 +68081,11 @@
       LDA    IY, (-XDE')
       LDA    IZ, (-XDE')
       LDA    SP, (-XDE')
+      ANDCF  A, (-XDE')
+      ORCF   A, (-XDE')
+      XORCF  A, (-XDE')
+      LDCF   A, (-XDE')
+      STCF   A, (-XDE')
       LDA    XWA, (-XDE')
       LDA    XBC, (-XDE')
       LDA    XDE, (-XDE')
@@ -71002,6 +68170,11 @@
       LDA    IY, (-XHL')
       LDA    IZ, (-XHL')
       LDA    SP, (-XHL')
+      ANDCF  A, (-XHL')
+      ORCF   A, (-XHL')
+      XORCF  A, (-XHL')
+      LDCF   A, (-XHL')
+      STCF   A, (-XHL')
       LDA    XWA, (-XHL')
       LDA    XBC, (-XHL')
       LDA    XDE, (-XHL')
@@ -71086,6 +68259,11 @@
       LDA    IY, (-XWA)
       LDA    IZ, (-XWA)
       LDA    SP, (-XWA)
+      ANDCF  A, (-XWA)
+      ORCF   A, (-XWA)
+      XORCF  A, (-XWA)
+      LDCF   A, (-XWA)
+      STCF   A, (-XWA)
       LDA    XWA, (-XWA)
       LDA    XBC, (-XWA)
       LDA    XDE, (-XWA)
@@ -71170,6 +68348,11 @@
       LDA    IY, (-XBC)
       LDA    IZ, (-XBC)
       LDA    SP, (-XBC)
+      ANDCF  A, (-XBC)
+      ORCF   A, (-XBC)
+      XORCF  A, (-XBC)
+      LDCF   A, (-XBC)
+      STCF   A, (-XBC)
       LDA    XWA, (-XBC)
       LDA    XBC, (-XBC)
       LDA    XDE, (-XBC)
@@ -71254,6 +68437,11 @@
       LDA    IY, (-XDE)
       LDA    IZ, (-XDE)
       LDA    SP, (-XDE)
+      ANDCF  A, (-XDE)
+      ORCF   A, (-XDE)
+      XORCF  A, (-XDE)
+      LDCF   A, (-XDE)
+      STCF   A, (-XDE)
       LDA    XWA, (-XDE)
       LDA    XBC, (-XDE)
       LDA    XDE, (-XDE)
@@ -71338,6 +68526,11 @@
       LDA    IY, (-XHL)
       LDA    IZ, (-XHL)
       LDA    SP, (-XHL)
+      ANDCF  A, (-XHL)
+      ORCF   A, (-XHL)
+      XORCF  A, (-XHL)
+      LDCF   A, (-XHL)
+      STCF   A, (-XHL)
       LDA    XWA, (-XHL)
       LDA    XBC, (-XHL)
       LDA    XDE, (-XHL)
@@ -71423,6 +68616,11 @@
       LDA    IY, (-XIX)
       LDA    IZ, (-XIX)
       LDA    SP, (-XIX)
+      ANDCF  A, (-XIX)
+      ORCF   A, (-XIX)
+      XORCF  A, (-XIX)
+      LDCF   A, (-XIX)
+      STCF   A, (-XIX)
       LDA    XWA, (-XIX)
       LDA    XBC, (-XIX)
       LDA    XDE, (-XIX)
@@ -71511,6 +68709,11 @@
       LDA    IY, (XIY+)
       LDA    IZ, (XIY+)
       LDA    SP, (XIY+)
+      ANDCF  A, (XIY+)
+      ORCF   A, (XIY+)
+      XORCF  A, (XIY+)
+      LDCF   A, (XIY+)
+      STCF   A, (XIY+)
       LDA    XWA, (XIY+)
       LDA    XBC, (XIY+)
       LDA    XDE, (XIY+)
@@ -71599,6 +68802,11 @@
       LDA    IY, (XIZ+)
       LDA    IZ, (XIZ+)
       LDA    SP, (XIZ+)
+      ANDCF  A, (XIZ+)
+      ORCF   A, (XIZ+)
+      XORCF  A, (XIZ+)
+      LDCF   A, (XIZ+)
+      STCF   A, (XIZ+)
       LDA    XWA, (XIZ+)
       LDA    XBC, (XIZ+)
       LDA    XDE, (XIZ+)
@@ -71687,6 +68895,11 @@
       LDA    IY, (XSP+)
       LDA    IZ, (XSP+)
       LDA    SP, (XSP+)
+      ANDCF  A, (XSP+)
+      ORCF   A, (XSP+)
+      XORCF  A, (XSP+)
+      LDCF   A, (XSP+)
+      STCF   A, (XSP+)
       LDA    XWA, (XSP+)
       LDA    XBC, (XSP+)
       LDA    XDE, (XSP+)
@@ -71774,6 +68987,11 @@
       LDA    IY, (XWA0+)
       LDA    IZ, (XWA0+)
       LDA    SP, (XWA0+)
+      ANDCF  A, (XWA0+)
+      ORCF   A, (XWA0+)
+      XORCF  A, (XWA0+)
+      LDCF   A, (XWA0+)
+      STCF   A, (XWA0+)
       LDA    XWA, (XWA0+)
       LDA    XBC, (XWA0+)
       LDA    XDE, (XWA0+)
@@ -71860,6 +69078,11 @@
       LDA    IY, (XBC0+)
       LDA    IZ, (XBC0+)
       LDA    SP, (XBC0+)
+      ANDCF  A, (XBC0+)
+      ORCF   A, (XBC0+)
+      XORCF  A, (XBC0+)
+      LDCF   A, (XBC0+)
+      STCF   A, (XBC0+)
       LDA    XWA, (XBC0+)
       LDA    XBC, (XBC0+)
       LDA    XDE, (XBC0+)
@@ -71947,6 +69170,11 @@
       LDA    IY, (XDE0+)
       LDA    IZ, (XDE0+)
       LDA    SP, (XDE0+)
+      ANDCF  A, (XDE0+)
+      ORCF   A, (XDE0+)
+      XORCF  A, (XDE0+)
+      LDCF   A, (XDE0+)
+      STCF   A, (XDE0+)
       LDA    XWA, (XDE0+)
       LDA    XBC, (XDE0+)
       LDA    XDE, (XDE0+)
@@ -72035,6 +69263,11 @@
       LDA    IY, (XHL0+)
       LDA    IZ, (XHL0+)
       LDA    SP, (XHL0+)
+      ANDCF  A, (XHL0+)
+      ORCF   A, (XHL0+)
+      XORCF  A, (XHL0+)
+      LDCF   A, (XHL0+)
+      STCF   A, (XHL0+)
       LDA    XWA, (XHL0+)
       LDA    XBC, (XHL0+)
       LDA    XDE, (XHL0+)
@@ -72158,6 +69391,11 @@
       LDA    IY, (XWA'+)
       LDA    IZ, (XWA'+)
       LDA    SP, (XWA'+)
+      ANDCF  A, (XWA'+)
+      ORCF   A, (XWA'+)
+      XORCF  A, (XWA'+)
+      LDCF   A, (XWA'+)
+      STCF   A, (XWA'+)
       LDA    XWA, (XWA'+)
       LDA    XBC, (XWA'+)
       LDA    XDE, (XWA'+)
@@ -72242,6 +69480,11 @@
       LDA    IY, (XBC'+)
       LDA    IZ, (XBC'+)
       LDA    SP, (XBC'+)
+      ANDCF  A, (XBC'+)
+      ORCF   A, (XBC'+)
+      XORCF  A, (XBC'+)
+      LDCF   A, (XBC'+)
+      STCF   A, (XBC'+)
       LDA    XWA, (XBC'+)
       LDA    XBC, (XBC'+)
       LDA    XDE, (XBC'+)
@@ -72326,6 +69569,11 @@
       LDA    IY, (XDE'+)
       LDA    IZ, (XDE'+)
       LDA    SP, (XDE'+)
+      ANDCF  A, (XDE'+)
+      ORCF   A, (XDE'+)
+      XORCF  A, (XDE'+)
+      LDCF   A, (XDE'+)
+      STCF   A, (XDE'+)
       LDA    XWA, (XDE'+)
       LDA    XBC, (XDE'+)
       LDA    XDE, (XDE'+)
@@ -72410,6 +69658,11 @@
       LDA    IY, (XHL'+)
       LDA    IZ, (XHL'+)
       LDA    SP, (XHL'+)
+      ANDCF  A, (XHL'+)
+      ORCF   A, (XHL'+)
+      XORCF  A, (XHL'+)
+      LDCF   A, (XHL'+)
+      STCF   A, (XHL'+)
       LDA    XWA, (XHL'+)
       LDA    XBC, (XHL'+)
       LDA    XDE, (XHL'+)
@@ -72494,6 +69747,11 @@
       LDA    IY, (XWA+)
       LDA    IZ, (XWA+)
       LDA    SP, (XWA+)
+      ANDCF  A, (XWA+)
+      ORCF   A, (XWA+)
+      XORCF  A, (XWA+)
+      LDCF   A, (XWA+)
+      STCF   A, (XWA+)
       LDA    XWA, (XWA+)
       LDA    XBC, (XWA+)
       LDA    XDE, (XWA+)
@@ -72578,6 +69836,11 @@
       LDA    IY, (XBC+)
       LDA    IZ, (XBC+)
       LDA    SP, (XBC+)
+      ANDCF  A, (XBC+)
+      ORCF   A, (XBC+)
+      XORCF  A, (XBC+)
+      LDCF   A, (XBC+)
+      STCF   A, (XBC+)
       LDA    XWA, (XBC+)
       LDA    XBC, (XBC+)
       LDA    XDE, (XBC+)
@@ -72662,6 +69925,11 @@
       LDA    IY, (XDE+)
       LDA    IZ, (XDE+)
       LDA    SP, (XDE+)
+      ANDCF  A, (XDE+)
+      ORCF   A, (XDE+)
+      XORCF  A, (XDE+)
+      LDCF   A, (XDE+)
+      STCF   A, (XDE+)
       LDA    XWA, (XDE+)
       LDA    XBC, (XDE+)
       LDA    XDE, (XDE+)
@@ -72746,6 +70014,11 @@
       LDA    IY, (XHL+)
       LDA    IZ, (XHL+)
       LDA    SP, (XHL+)
+      ANDCF  A, (XHL+)
+      ORCF   A, (XHL+)
+      XORCF  A, (XHL+)
+      LDCF   A, (XHL+)
+      STCF   A, (XHL+)
       LDA    XWA, (XHL+)
       LDA    XBC, (XHL+)
       LDA    XDE, (XHL+)
@@ -72831,6 +70104,11 @@
       LDA    IY, (XIX+)
       LDA    IZ, (XIX+)
       LDA    SP, (XIX+)
+      ANDCF  A, (XIX+)
+      ORCF   A, (XIX+)
+      XORCF  A, (XIX+)
+      LDCF   A, (XIX+)
+      STCF   A, (XIX+)
       LDA    XWA, (XIX+)
       LDA    XBC, (XIX+)
       LDA    XDE, (XIX+)

@@ -458,15 +458,17 @@ void DisTlcs900::decodeOperand(
         break;
     case M_LDF: {
         // RFP width: 3-bit (banks 0-7) in MIN mode, 2-bit (0-3) in MAX mode.
-        const uint8_t mask = maxMode() ? 3 : 7;
-        outHex(out, insn.readByte() & mask, 4);
+        outHex(out, insn.readByte() & (maxMode() ? 3 : 7), maxMode() ? 2 : 3);
         break;
     }
     case M_INTLVL:
-        outHex(out, insn.readByte() & 7, 4);
+        outHex(out, insn.readByte() & 7, 3);
         break;
     case M_SWI:
-        outHex(out, opc & 7, 4);
+        outHex(out, opc & 7, 3);
+        break;
+    case M_IMM3:
+        outHex(out, opc & 7, 3);
         break;
     case M_RCOUNT: {
         // Rotate/shift count is a 4-bit field: 1-15 direct, 0 means 16. A
