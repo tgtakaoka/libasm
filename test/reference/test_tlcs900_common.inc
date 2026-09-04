@@ -756,6 +756,39 @@
         RLC     A
         SRL     BC
 
+;;; Instructions on the "reg" prefix page whose operand is the accumulator or
+;;; the register itself (manual C8+zz+r :04, :05, :28-:2C, :F8-:FF), and the
+;;; carry-flag group of the "dst" page (B0+mem :28-:2C).
+        PUSH    W
+        POP     W
+        ANDCF   A,W
+        ORCF    A,W
+        XORCF   A,W
+        LDCF    A,W
+        STCF    A,W
+        RLC     A,W
+        RRC     A,W
+        RL      A,W
+        RR      A,W
+        SLA     A,W
+        SRA     A,W
+        SLL     A,W
+        SRL     A,W
+        ANDCF   A,(01234H)
+        ORCF    A,(01234H)
+        XORCF   A,(01234H)
+        LDCF    A,(01234H)
+        STCF    A,(01234H)
+
+;;; The 3-bit immediate short forms (C8+zz+r :A8+#3, :D8+#3), which the
+;;; encoder prefers over the wider encodings whenever the value fits.
+        LD      W,0
+        LD      W,7
+        LD      W,8
+        CP      W,0
+        CP      W,7
+        CP      W,8
+
 ;;; Local Variables:
 ;;; mode: asm
 ;;; End:

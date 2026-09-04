@@ -66,6 +66,11 @@ void test_single() {
         ERRT("NORMAL", UNKNOWN_INSTRUCTION, "NORMAL");
     }
     TEST("PUSH SR", 0x02);
+    // PUSH/POP of a prefix-encoded register (manual C8+zz+r :04/:05).  WA and
+    // the other registers with a one-byte opcode of their own keep it; this
+    // form is what reaches the rest, such as the byte register W.
+    TEST("PUSH W", 0xC8, 0x04);
+    TEST("POP W",  0xC8, 0x05);
     TEST("POP SR",  0x03);
     if (is_tlcs900()) {
         TEST("MAX", 0x04);
@@ -420,6 +425,16 @@ void test_alu_reg_imm() {
     TEST("XOR A,034H",  0xC9, 0xCD, 0x34);
     TEST("OR  A,034H",  0xC9, 0xCE, 0x34);
     TEST("CP  A,034H",  0xC9, 0xCF, 0x34);
+    // CP r,#3: the 3-bit short form is preferred while the value fits;
+    // 8 no longer does, so it falls back to the full-width encoding.
+    TEST("CP W,0", 0xC8, 0xD8);
+    TEST("CP W,7", 0xC8, 0xDF);
+    TEST("CP W,8", 0xC8, 0xCF, 0x08);
+    TEST("CP A0,3", 0xC7, 0x00, 0xDB);
+    TEST("LD W,0", 0xC8, 0xA8);
+    TEST("LD W,7", 0xC8, 0xAF);
+    TEST("LD W,8", 0x20, 0x08);
+    TEST("LD A0,3", 0xC7, 0x00, 0xAB);
     // ALU r16, #n16
     TEST("ADD BC,01234H", 0xD9, 0xC8, 0x34, 0x12);
     TEST("CP  HL,01234H", 0xDB, 0xCF, 0x34, 0x12);
@@ -502,6 +517,13 @@ void test_ld_memd() {
 
 void test_bit_reg() {
     // Bit ops in register context (bit in following byte)
+    TEST("ANDCF A,A",  0xC9, 0x28);
+    TEST("ORCF A,A",   0xC9, 0x29);
+    TEST("XORCF A,A",  0xC9, 0x2A);
+    TEST("LDCF A,A",   0xC9, 0x2B);
+    TEST("STCF A,A",   0xC9, 0x2C);
+    TEST("ANDCF A,(XIX)", 0xB4, 0x28);
+    TEST("STCF A,(XIX)",  0xB4, 0x2C);
     TEST("ANDCF 2,A",  0xC9, 0x20, 0x02);
     TEST("ORCF  5,A",  0xC9, 0x21, 0x05);
     TEST("XORCF 6,A",  0xC9, 0x22, 0x06);
@@ -542,6 +564,14 @@ void test_bit_mem() {
 
 void test_shift() {
     // Rotate/shift: count in following byte, src in prefix
+    TEST("RLC A,A",  0xC9, 0xF8);
+    TEST("RRC A,A",  0xC9, 0xF9);
+    TEST("RL A,A",   0xC9, 0xFA);
+    TEST("RR A,A",   0xC9, 0xFB);
+    TEST("SLA A,A",  0xC9, 0xFC);
+    TEST("SRA A,A",  0xC9, 0xFD);
+    TEST("SLL A,A",  0xC9, 0xFE);
+    TEST("SRL A,A",  0xC9, 0xFF);
     TEST("RLC 1,A",    0xC9, 0xE8, 0x01);
     TEST("RRC 2,A",    0xC9, 0xE9, 0x02);
     TEST("RL  3,A",    0xC9, 0xEA, 0x03);

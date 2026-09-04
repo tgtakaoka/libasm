@@ -492,6 +492,7 @@ void AsmTlcs900::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode) 
         insn.embed(encodeCcName(op.cc));
         break;
     case M_SWI:
+    case M_IMM3:
         insn.embed(op.val.getUnsigned() & 7);
         break;
     case M_ZERO:
