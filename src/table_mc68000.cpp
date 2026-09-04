@@ -2244,8 +2244,17 @@ Error TableMc68000::searchCpuName(StrScanner &name, CpuType &cpuType) const {
 void Config::setCpuType(CpuType cpuType) {
     _cpuSpec.cpu = cpuType;
     ConfigImpl::setCpuType(cpuType);
-    setFpuType(_cpuSpec.fpu == FPU_NONE ? FPU_NONE : FPU_ON);
-    setPmmuType(_cpuSpec.pmmu == PMMU_NONE ? PMMU_NONE : PMMU_ON);
+    // Whatever the CPU has on chip is present: the MC68040 has both a floating
+    // point unit and a PMMU, the MC68030 a PMMU alone.  Earlier parts reach
+    // theirs through a separate MC68881 or MC68851, so those are asked for
+    // with the fpu and pmmu options instead.  The same options turn either off
+    // to name the cut-down MC68040s -- the MC68LC040 has no floating point
+    // unit, the MC68EC040 has neither.
+    //
+    // This cannot be left to reset(), which runs before a CPU is chosen:
+    // PMMU_ON names no PMMU until then and degrades to PMMU_NONE.
+    setFpuType(mc68040() || _cpuSpec.fpu != FPU_NONE ? FPU_ON : FPU_NONE);
+    setPmmuType(mc68030() || mc68040() || _cpuSpec.pmmu != PMMU_NONE ? PMMU_ON : PMMU_NONE);
 }
 
 const /*PROGMEM*/ char *Config::fpu_P() const {
