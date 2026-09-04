@@ -12133,260 +12133,6 @@
       AND.L    @(0x32348BA7,R1.W*8,PC), @(0x00015706,PC)
       AND.L    @(0x32348BB2,R1.W*8,PC), @(R1.W,PC)
       AND.L    @(0x32348BBD,R1.W*8,PC), @(0x0001579E,R1.W*2,PC)
-      DADD     @R4, R0
-      DADD     @(-0x6F,R0), R0
-      DADD     R0, R0
-      DADD     @R0+, R0
-      DADD     @-R0, R0
-      DADD     @(CR0*1), R0
-      DADD     @(1,CR0*1), R0
-      DADD     @(R1.W,CR0), R0
-      DADD     @(18,R1.W*2,CR0), R0
-      DADD     @(0x04050607,@(0x00010203,CR15)), R0
-      DADD     #-14:8, R0
-      DADD     #0:8, R0
-      DADD     @0xFFFFFFF6, R0
-      DADD     @(R1.W,PC), R0
-      DADD     @(0x000157DB,R1.W*2,PC), R0
-      DADD     @(PC), R0
-      DADD     @(0x00015761,PC), R0
-      DADD     @R0, @R1
-      DADD     @R0, @(17,R0)
-      DADD     @R0, @R0+
-      DADD     @R0, @-R0
-      DADD     @R0, @(CR0*1)
-      DADD     @R0, @(1,CR0*1)
-      DADD     @R0, @(0x01020304,R0.L,CR13)
-      DADD     @R0, @(R1.W,CR0)
-      DADD     @R0, @(-0x7C,@(-0x7F7E7D7D,CR15))
-      DADD     @R0, @0x76
-      DADD     @R0, @(PC)
-      DADD     @R0, @(0x000157A0,PC)
-      DADD     @R0, @(R1.W,PC)
-      DADD     @R0, @(0x0001582C,R1.W*2,PC)
-      DADD     @(17,R0), @(19,R2)
-      DADD     @(0x2122,R0), @R0+
-      DADD     @(0x2122,R0), @-R0
-      DADD     @(0x2122,R0), @(CR0*1)
-      DADD     @(0x2122,R0), @(1,CR0*1)
-      DADD     @(0x2122,R0), @(0x01020304,R0.L,CR13)
-      DADD     @(0x2122,R0), @(R1.W,CR0)
-      DADD     @(0x2122,R0), @(-0x7C,@(-0x7F7E7D7D,CR15))
-      DADD     @(0x2122,R0), @CR0
-      DADD     @(0x2122,R0), @0x76
-      DADD     @(0x2122,R0), @(PC)
-      DADD     @(0x2122,R0), @(0x00015802,PC)
-      DADD     @(0x2122,R0), @(R1.W,PC)
-      DADD     @(0x2122,R0), @(0x00015892,R1.W*2,PC)
-      DADD     R0, @R0+
-      DADD     R0, @-R0
-      DADD     R0, @(CR0*1)
-      DADD     R0, @(1,CR0*1)
-      DADD     R0, @(0x01020304,R0.L,CR13)
-      DADD     R0, @(R1.W,CR0)
-      DADD     R0, @(-0x7C,@(-0x7F7E7D7D,CR15))
-      DADD     R0, @CR0
-      DADD     R0, @(17,CR0)
-      DADD     R0, @0x76
-      DADD     R0, @(PC)
-      DADD     R0, @(0x00015852,PC)
-      DADD     R0, @(R1.W,PC)
-      DADD     R0, @(0x000158DE,R1.W*2,PC)
-      DADD     @R0+, @R1+
-      DADD     @R0+, @-R0
-      DADD     @R0+, @(CR0*1)
-      DADD     @R0+, @(1,CR0*1)
-      DADD     @R0+, @(0x01020304,R0.L,CR13)
-      DADD     @R0+, @(R1.W,CR0)
-      DADD     @R0+, @(-0x7C,@(-0x7F7E7D7D,CR15))
-      DADD     @R0+, @CR0
-      DADD     @R0+, @(17,CR0)
-      DADD     @R0+, @0x76
-      DADD     @R0+, @(PC)
-      DADD     @R0+, @(0x0001589E,PC)
-      DADD     @R0+, @(R1.W,PC)
-      DADD     @R0+, @(0x0001592A,R1.W*2,PC)
-      DADD     @-R0, @-R1
-      DADD     @-R0, @(CR0*1)
-      DADD     @-R0, @(1,CR0*1)
-      DADD     @-R0, @(0x01020304,R0.L,CR13)
-      DADD     @-R0, @(R1.W,CR0)
-      DADD     @-R0, @(-0x7C,@(-0x7F7E7D7D,CR15))
-      DADD     @-R0, @CR0
-      DADD     @-R0, @(17,CR0)
-      DADD     @-R0, @CR0+
-      DADD     @-R0, @0x76
-      DADD     @-R0, @(PC)
-      DADD     @-R0, @(0x000158EB,PC)
-      DADD     @-R0, @(R1.W,PC)
-      DADD     @-R0, @(0x00015977,R1.W*2,PC)
-      DADD     @(CR0*1), @R1
-      DADD     @(CR0*1), @(17,R0)
-      DADD     @(CR0*1), @R0+
-      DADD     @(CR0*1), @-R0
-      DADD     @(CR0*1), @(CR0*1)
-      DADD     @(CR0*1), @(1,CR0*1)
-      DADD     @(CR0*1), @(0x01020304,R0.L,CR13)
-      DADD     @(CR0*1), @(R1.W,CR0)
-      DADD     @(CR0*1), @(-0x7C,@(-0x7F7E7D7D,CR15))
-      DADD     @(CR0*1), @0x76
-      DADD     @(CR0*1), @(PC)
-      DADD     @(CR0*1), @(0x0001594D,PC)
-      DADD     @(CR0*1), @(R1.W,PC)
-      DADD     @(CR0*1), @(0x000159DD,R1.W*2,PC)
-      DADD     @(1,CR0*1), @R2
-      DADD     @(1,CR0*1), @(17,R0)
-      DADD     @(0x1C1D2E2F,CR11*2), @R0+
-      DADD     @(0x1C1D2E2F,CR11*2), @-R0
-      DADD     @(0x1C1D2E2F,CR11*2), @(CR0*1)
-      DADD     @(0x1C1D2E2F,CR11*2), @(1,CR0*1)
-      DADD     @(0x1C1D2E2F,CR11*2), @(0x01020304,R0.L,CR13)
-      DADD     @(0x1C1D2E2F,CR11*2), @(R1.W,CR0)
-      DADD     @(0x1C1D2E2F,CR11*2), @(-0x7C,@(-0x7F7E7D7D,CR15))
-      DADD     @(0x1C1D3D3E,CR11*2), @0x76
-      DADD     @(0x1C1D3D3E,CR11*2), @(PC)
-      DADD     @(0x1C1D3D3E,CR11*2), @(0x000159DD,PC)
-      DADD     @(0x1C1D3D3E,CR11*2), @(R1.W,PC)
-      DADD     @(0x1C1D3D3E,CR11*2), @(0x00015A75,R1.W*2,PC)
-      DADD     @(0x01020304,R0.L,CR13), @R5
-      DADD     @(0x01020304,R0.L,CR13), @(17,R0)
-      DADD     @(0x01020304,R0.L,CR13), @R0+
-      DADD     @(0x01020304,R0.L,CR13), @-R0
-      DADD     @(0x01020304,R0.L,CR13), @(CR0*1)
-      DADD     @(0x01020304,R0.L,CR13), @(1,CR0*1)
-      DADD     @(0x01020304,R0.L,CR13), @(0x01020304,R0.L,CR13)
-      DADD     @(0x01020304,R0.L,CR13), @(R1.W,CR0)
-      DADD     @(0x01020304,R0.L,CR13), @(-0x7C,@(-0x7F7E7D7D,CR15))
-      DADD     @(0x01020304,R0.L,CR13), @0x76
-      DADD     @(0x01020304,R0.L,CR13), @(PC)
-      DADD     @(0x01020304,R0.L,CR13), @(0x00015A87,PC)
-      DADD     @(0x01020304,R0.L,CR13), @(R1.W,PC)
-      DADD     @(0x01020304,R0.L,CR13), @(0x00015B21,R1.W*2,PC)
-      DADD     @(R1.W,CR0), @R2
-      DADD     @(R1.W,CR0), @(17,R0)
-      DADD     @(R1.W,CR0), @R0+
-      DADD     @(R1.W,CR0), @-R0
-      DADD     @(R1.W,CR0), @(CR0*1)
-      DADD     @(R1.W,CR0), @(1,CR0*1)
-      DADD     @(R1.W,CR0), @(0x01020304,R0.L,CR13)
-      DADD     @(R1.W,CR0), @(R1.W,CR0)
-      DADD     @(R1.W,CR0), @(-0x7C,@(-0x7F7E7D7D,CR15))
-      DADD     @(R1.W,CR0), @0x76
-      DADD     @(R1.W,CR0), @(PC)
-      DADD     @(R1.W,CR0), @(0x00015B03,PC)
-      DADD     @(R1.W,CR0), @(R1.W,PC)
-      DADD     @(R1.W,CR0), @(0x00015B95,R1.W*2,PC)
-      DADD     @(-0x7C,@(-0x7F7E7D7D,CR15)), @R0
-      DADD     @(-0x7C,@(-0x7F7E7D7D,CR15)), @(17,R0)
-      DADD     @(-0x7C,@(-0x7F7E7D7D,CR15)), @R0+
-      DADD     @(-0x7C,@(-0x7F7E7D7D,CR15)), @-R0
-      DADD     @(-0x7C,@(-0x7F7E7D7D,CR15)), @(CR0*1)
-      DADD     @(-0x7C,@(-0x7F7E7D7D,CR15)), @(1,CR0*1)
-      DADD     @(-0x7C,@(-0x7F7E7D7D,CR15)), @(-0x7C,@(-0x7F7E7D7D,CR15))
-      DADD     @(-0x7C,@(-0x7F7E7D7D,CR15)), @0x76
-      DADD     @(-0x7C,@(-0x7F7E7D7D,CR15)), @(R1.W,R0)
-      DADD     @(-0x7C,@(-0x7F7E7D7D,CR15)), @(18,R1.W*2,R0)
-      DADD     @(-0x7C,@(-0x7F7E7D7D,CR15)), @(PC)
-      DADD     @(-0x7C,@(-0x7F7E7D7D,CR15)), @(0x00015BA2,PC)
-      DADD     @(-0x7C,@(-0x7F7E7D7D,CR15)), @(R1.W,PC)
-      DADD     @(-0x7C,@(-0x7F7E7D7D,CR15)), @(0x00015C3C,R1.W*2,PC)
-      DADD     #0x72:8, @(PR0*1)
-      DADD     #0x72:8, @(1,PR0*1)
-      DADD     #0x72:8, @(0x01020304,R0.L,PR13)
-      DADD     #0x72:8, @(R1.W,PR0)
-      DADD     #0x72:8, @(-0x7C,@(-0x7F7E7D7D,PR15))
-      DADD     #0x72:8, @PR0
-      DADD     #0x72:8, @(17,PR0)
-      DADD     #0x72:8, @PR0+
-      DADD     #0x72:8, @-PR0
-      DADD     #0x72:8, @0x76
-      DADD     #0x72:8, @(PC)
-      DADD     #0x72:8, @(0x00015C0A,PC)
-      DADD     #0x72:8, @(R1.W,PC)
-      DADD     #0x72:8, @(0x00015C98,R1.W*2,PC)
-      DADD     #-0x80:8, @R0
-      DADD     #-0x80:8, @(17,R0)
-      DADD     #-0x80:8, @R0+
-      DADD     #-0x80:8, @-R0
-      DADD     #-0x80:8, @(CR0*1)
-      DADD     #-0x80:8, @(1,CR0*1)
-      DADD     #-0x80:8, @(-0x7C,@(-0x7F7E7D7D,CR15))
-      DADD     #-0x80:8, @0x76
-      DADD     #-0x80:8, @(R1.W,R0)
-      DADD     #-0x80:8, @(18,R1.W*2,R0)
-      DADD     #-0x80:8, @(PC)
-      DADD     #-0x80:8, @(0x00015C5D,PC)
-      DADD     #-0x80:8, @(R1.W,PC)
-      DADD     #-0x80:8, @(0x00015CEB,R1.W*2,PC)
-      DADD     @0x76, @0x78797A7B
-      DADD     @0x76, @(R0*1)
-      DADD     @0x76, @(1,R0*1)
-      DADD     @0x76, @(0x01020304,R0.L,R13)
-      DADD     @0x76, @(R1.W,R0)
-      DADD     @0x76, @(PC)
-      DADD     @0x76, @(0x00015C98,PC)
-      DADD     @0x76, @(R1.W,PC)
-      DADD     @0x76, @(0x00015D26,R1.W*2,PC)
-      DADD     @0x76, @(-0x7C,@(-0x7F7E7D7D,R15))
-      DADD     @0x76, @R0
-      DADD     @0x76, @(17,R0)
-      DADD     @0x771F, @R0+
-      DADD     @0x771F, @-R0
-      DADD     @(PC), @R0
-      DADD     @(PC), @(17,R0)
-      DADD     @(PC), @R0+
-      DADD     @(PC), @-R0
-      DADD     @(PC), @(CR0*1)
-      DADD     @(PC), @(1,CR0*1)
-      DADD     @(PC), @(-0x7C,@(-0x7F7E7D7D,CR15))
-      DADD     @(PC), @0x76
-      DADD     @(PC), @(R1.W,R0)
-      DADD     @(PC), @(18,R1.W*2,R0)
-      DADD     @(PC), @(PC)
-      DADD     @(PC), @(0x00015D08,PC)
-      DADD     @(PC), @(R1.W,PC)
-      DADD     @(PC), @(0x00015D96,R1.W*2,PC)
-      DADD     @(0x00015D19,PC), @R0
-      DADD     @(0x00015D1E,PC), @(17,R0)
-      DADD     @(0x0000FEB3,PC), @R0+
-      DADD     @(0x0000FEB9,PC), @-R0
-      DADD     @(0x0000FF14,PC), @0x76
-      DADD     @(0x0000FF1B,PC), @(R0*1)
-      DADD     @(0x0000FF22,PC), @(1,R0*1)
-      DADD     @(0x0000FF2A,PC), @(PC)
-      DADD     @(0x0000FF31,PC), @(0x00015D51,PC)
-      DADD     @(0x0000FF39,PC), @(R1.W,PC)
-      DADD     @(0x0000FF41,PC), @(0x00015DE3,R1.W*2,PC)
-      DADD     @(0x0000FF4A,PC), @(-0x7C,@(-0x7F7E7D7D,R15))
-      DADD     @(0x7173D85F,PC), @(0x01020304,R0.L,R13)
-      DADD     @(R1.W,PC), @R2
-      DADD     @(R1.W,PC), @(17,R0)
-      DADD     @(R1.W,PC), @R0+
-      DADD     @(R1.W,PC), @-R0
-      DADD     @(R1.W,PC), @(CR0*1)
-      DADD     @(R1.W,PC), @(1,CR0*1)
-      DADD     @(R1.W,PC), @(0x01020304,R0.L,CR13)
-      DADD     @(R1.W,PC), @(R1.W,CR0)
-      DADD     @(R1.W,PC), @(-0x7C,@(-0x7F7E7D7D,CR15))
-      DADD     @(R1.W,PC), @0x76
-      DADD     @(R1.W,PC), @(PC)
-      DADD     @(R1.W,PC), @(0x00015DD3,PC)
-      DADD     @(R1.W,PC), @(R1.W,PC)
-      DADD     @(R1.W,PC), @(0x00015E63,R1.W*2,PC)
-      DADD     @(0x00015E68,R1.W*2,PC), @(20,R3)
-      DADD     @(0x00015E5E,R0.W,PC), @R2
-      DADD     @(0x00018087,R1.W*4,PC), @R0+
-      DADD     @(0x0001808E,R1.W*4,PC), @-R0
-      DADD     @(0x00018095,R1.W*4,PC), @(CR0*1)
-      DADD     @(0x0001809E,R1.W*4,PC), @(1,CR0*1)
-      DADD     @(0x000180A8,R1.W*4,PC), @(0x01020304,R0.L,CR13)
-      DADD     @(0x000180B6,R1.W*4,PC), @(R1.W,CR0)
-      DADD     @(0x000180C0,R1.W*4,PC), @(-0x7C,@(-0x7F7E7D7D,CR15))
-      DADD     @(0x323492E2,R1.W*8,PC), @0x76
-      DADD     @(0x323492EC,R1.W*8,PC), @(PC)
-      DADD     @(0x323492F6,R1.W*8,PC), @(0x00015E55,PC)
-      DADD     @(0x32349301,R1.W*8,PC), @(R1.W,PC)
-      DADD     @(0x3234930C,R1.W*8,PC), @(0x00015EED,R1.W*2,PC)
       XOR.B    @R5, R0
       XOR.B    @(-0x6F,R0), R0
       XOR.B    R0, R0
@@ -12401,9 +12147,9 @@
       XOR.B    #0:8, R0
       XOR.B    @0xFFFFFFF6, R0
       XOR.B    @(R1.W,PC), R0
-      XOR.B    @(0x00015F2A,R1.W*2,PC), R0
+      XOR.B    @(0x000157DB,R1.W*2,PC), R0
       XOR.B    @(PC), R0
-      XOR.B    @(0x00015EB0,PC), R0
+      XOR.B    @(0x00015761,PC), R0
       XOR.B    @R0, @R1
       XOR.B    @R0, @(17,R0)
       XOR.B    @R0, @R0+
@@ -12415,9 +12161,9 @@
       XOR.B    @R0, @(-0x7C,@(-0x7F7E7D7D,CR15))
       XOR.B    @R0, @0x76
       XOR.B    @R0, @(PC)
-      XOR.B    @R0, @(0x00015EEF,PC)
+      XOR.B    @R0, @(0x000157A0,PC)
       XOR.B    @R0, @(R1.W,PC)
-      XOR.B    @R0, @(0x00015F7B,R1.W*2,PC)
+      XOR.B    @R0, @(0x0001582C,R1.W*2,PC)
       XOR.B    @(17,R0), @(19,R2)
       XOR.B    @(0x2122,R0), @R0+
       XOR.B    @(0x2122,R0), @-R0
@@ -12429,9 +12175,9 @@
       XOR.B    @(0x2122,R0), @CR0
       XOR.B    @(0x2122,R0), @0x76
       XOR.B    @(0x2122,R0), @(PC)
-      XOR.B    @(0x2122,R0), @(0x00015F51,PC)
+      XOR.B    @(0x2122,R0), @(0x00015802,PC)
       XOR.B    @(0x2122,R0), @(R1.W,PC)
-      XOR.B    @(0x2122,R0), @(0x00015FE1,R1.W*2,PC)
+      XOR.B    @(0x2122,R0), @(0x00015892,R1.W*2,PC)
       XOR.B    R0, @R0+
       XOR.B    R0, @-R0
       XOR.B    R0, @(CR0*1)
@@ -12443,9 +12189,9 @@
       XOR.B    R0, @(17,CR0)
       XOR.B    R0, @0x76
       XOR.B    R0, @(PC)
-      XOR.B    R0, @(0x00015FA1,PC)
+      XOR.B    R0, @(0x00015852,PC)
       XOR.B    R0, @(R1.W,PC)
-      XOR.B    R0, @(0x0001602D,R1.W*2,PC)
+      XOR.B    R0, @(0x000158DE,R1.W*2,PC)
       XOR.B    @R0+, @R1+
       XOR.B    @R0+, @-R0
       XOR.B    @R0+, @(CR0*1)
@@ -12457,9 +12203,9 @@
       XOR.B    @R0+, @(17,CR0)
       XOR.B    @R0+, @0x76
       XOR.B    @R0+, @(PC)
-      XOR.B    @R0+, @(0x00015FED,PC)
+      XOR.B    @R0+, @(0x0001589E,PC)
       XOR.B    @R0+, @(R1.W,PC)
-      XOR.B    @R0+, @(0x00016079,R1.W*2,PC)
+      XOR.B    @R0+, @(0x0001592A,R1.W*2,PC)
       XOR.B    @-R0, @-R1
       XOR.B    @-R0, @(CR0*1)
       XOR.B    @-R0, @(1,CR0*1)
@@ -12471,9 +12217,9 @@
       XOR.B    @-R0, @CR0+
       XOR.B    @-R0, @0x76
       XOR.B    @-R0, @(PC)
-      XOR.B    @-R0, @(0x0001603A,PC)
+      XOR.B    @-R0, @(0x000158EB,PC)
       XOR.B    @-R0, @(R1.W,PC)
-      XOR.B    @-R0, @(0x000160C6,R1.W*2,PC)
+      XOR.B    @-R0, @(0x00015977,R1.W*2,PC)
       XOR.B    @(CR0*1), @R1
       XOR.B    @(CR0*1), @(17,R0)
       XOR.B    @(CR0*1), @R0+
@@ -12485,9 +12231,9 @@
       XOR.B    @(CR0*1), @(-0x7C,@(-0x7F7E7D7D,CR15))
       XOR.B    @(CR0*1), @0x76
       XOR.B    @(CR0*1), @(PC)
-      XOR.B    @(CR0*1), @(0x0001609C,PC)
+      XOR.B    @(CR0*1), @(0x0001594D,PC)
       XOR.B    @(CR0*1), @(R1.W,PC)
-      XOR.B    @(CR0*1), @(0x0001612C,R1.W*2,PC)
+      XOR.B    @(CR0*1), @(0x000159DD,R1.W*2,PC)
       XOR.B    @(1,CR0*1), @R2
       XOR.B    @(1,CR0*1), @(17,R0)
       XOR.B    @(0x1C1D2E2F,CR11*2), @R0+
@@ -12499,9 +12245,9 @@
       XOR.B    @(0x1C1D2E2F,CR11*2), @(-0x7C,@(-0x7F7E7D7D,CR15))
       XOR.B    @(0x1C1D3D3E,CR11*2), @0x76
       XOR.B    @(0x1C1D3D3E,CR11*2), @(PC)
-      XOR.B    @(0x1C1D3D3E,CR11*2), @(0x0001612C,PC)
+      XOR.B    @(0x1C1D3D3E,CR11*2), @(0x000159DD,PC)
       XOR.B    @(0x1C1D3D3E,CR11*2), @(R1.W,PC)
-      XOR.B    @(0x1C1D3D3E,CR11*2), @(0x000161C4,R1.W*2,PC)
+      XOR.B    @(0x1C1D3D3E,CR11*2), @(0x00015A75,R1.W*2,PC)
       XOR.B    @(0x01020304,R0.L,CR13), @R5
       XOR.B    @(0x01020304,R0.L,CR13), @(17,R0)
       XOR.B    @(0x01020304,R0.L,CR13), @R0+
@@ -12513,9 +12259,9 @@
       XOR.B    @(0x01020304,R0.L,CR13), @(-0x7C,@(-0x7F7E7D7D,CR15))
       XOR.B    @(0x01020304,R0.L,CR13), @0x76
       XOR.B    @(0x01020304,R0.L,CR13), @(PC)
-      XOR.B    @(0x01020304,R0.L,CR13), @(0x000161D6,PC)
+      XOR.B    @(0x01020304,R0.L,CR13), @(0x00015A87,PC)
       XOR.B    @(0x01020304,R0.L,CR13), @(R1.W,PC)
-      XOR.B    @(0x01020304,R0.L,CR13), @(0x00016270,R1.W*2,PC)
+      XOR.B    @(0x01020304,R0.L,CR13), @(0x00015B21,R1.W*2,PC)
       XOR.B    @(R1.W,CR0), @R2
       XOR.B    @(R1.W,CR0), @(17,R0)
       XOR.B    @(R1.W,CR0), @R0+
@@ -12527,9 +12273,9 @@
       XOR.B    @(R1.W,CR0), @(-0x7C,@(-0x7F7E7D7D,CR15))
       XOR.B    @(R1.W,CR0), @0x76
       XOR.B    @(R1.W,CR0), @(PC)
-      XOR.B    @(R1.W,CR0), @(0x00016252,PC)
+      XOR.B    @(R1.W,CR0), @(0x00015B03,PC)
       XOR.B    @(R1.W,CR0), @(R1.W,PC)
-      XOR.B    @(R1.W,CR0), @(0x000162E4,R1.W*2,PC)
+      XOR.B    @(R1.W,CR0), @(0x00015B95,R1.W*2,PC)
       XOR.B    @(-0x7C,@(-0x7F7E7D7D,CR15)), @R0
       XOR.B    @(-0x7C,@(-0x7F7E7D7D,CR15)), @(17,R0)
       XOR.B    @(-0x7C,@(-0x7F7E7D7D,CR15)), @R0+
@@ -12541,9 +12287,9 @@
       XOR.B    @(-0x7C,@(-0x7F7E7D7D,CR15)), @(R1.W,R0)
       XOR.B    @(-0x7C,@(-0x7F7E7D7D,CR15)), @(18,R1.W*2,R0)
       XOR.B    @(-0x7C,@(-0x7F7E7D7D,CR15)), @(PC)
-      XOR.B    @(-0x7C,@(-0x7F7E7D7D,CR15)), @(0x000162F1,PC)
+      XOR.B    @(-0x7C,@(-0x7F7E7D7D,CR15)), @(0x00015BA2,PC)
       XOR.B    @(-0x7C,@(-0x7F7E7D7D,CR15)), @(R1.W,PC)
-      XOR.B    @(-0x7C,@(-0x7F7E7D7D,CR15)), @(0x0001638B,R1.W*2,PC)
+      XOR.B    @(-0x7C,@(-0x7F7E7D7D,CR15)), @(0x00015C3C,R1.W*2,PC)
       XOR.B    #0x72:8, @(PR0*1)
       XOR.B    #0x72:8, @(1,PR0*1)
       XOR.B    #0x72:8, @(0x01020304,R0.L,PR13)
@@ -12555,9 +12301,9 @@
       XOR.B    #0x72:8, @-PR0
       XOR.B    #0x72:8, @0x76
       XOR.B    #0x72:8, @(PC)
-      XOR.B    #0x72:8, @(0x00016359,PC)
+      XOR.B    #0x72:8, @(0x00015C0A,PC)
       XOR.B    #0x72:8, @(R1.W,PC)
-      XOR.B    #0x72:8, @(0x000163E7,R1.W*2,PC)
+      XOR.B    #0x72:8, @(0x00015C98,R1.W*2,PC)
       XOR.B    #-0x80:8, @R0
       XOR.B    #-0x80:8, @(17,R0)
       XOR.B    #-0x80:8, @R0+
@@ -12569,18 +12315,18 @@
       XOR.B    #-0x80:8, @(R1.W,R0)
       XOR.B    #-0x80:8, @(18,R1.W*2,R0)
       XOR.B    #-0x80:8, @(PC)
-      XOR.B    #-0x80:8, @(0x000163AC,PC)
+      XOR.B    #-0x80:8, @(0x00015C5D,PC)
       XOR.B    #-0x80:8, @(R1.W,PC)
-      XOR.B    #-0x80:8, @(0x0001643A,R1.W*2,PC)
+      XOR.B    #-0x80:8, @(0x00015CEB,R1.W*2,PC)
       XOR.B    @0x76, @0x78797A7B
       XOR.B    @0x76, @(R0*1)
       XOR.B    @0x76, @(1,R0*1)
       XOR.B    @0x76, @(0x01020304,R0.L,R13)
       XOR.B    @0x76, @(R1.W,R0)
       XOR.B    @0x76, @(PC)
-      XOR.B    @0x76, @(0x000163E7,PC)
+      XOR.B    @0x76, @(0x00015C98,PC)
       XOR.B    @0x76, @(R1.W,PC)
-      XOR.B    @0x76, @(0x00016475,R1.W*2,PC)
+      XOR.B    @0x76, @(0x00015D26,R1.W*2,PC)
       XOR.B    @0x76, @(-0x7C,@(-0x7F7E7D7D,R15))
       XOR.B    @0x76, @R0
       XOR.B    @0x76, @(17,R0)
@@ -12597,22 +12343,22 @@
       XOR.B    @(PC), @(R1.W,R0)
       XOR.B    @(PC), @(18,R1.W*2,R0)
       XOR.B    @(PC), @(PC)
-      XOR.B    @(PC), @(0x00016457,PC)
+      XOR.B    @(PC), @(0x00015D08,PC)
       XOR.B    @(PC), @(R1.W,PC)
-      XOR.B    @(PC), @(0x000164E5,R1.W*2,PC)
-      XOR.B    @(0x00016468,PC), @R0
-      XOR.B    @(0x0001646D,PC), @(17,R0)
-      XOR.B    @(0x00010602,PC), @R0+
-      XOR.B    @(0x00010608,PC), @-R0
-      XOR.B    @(0x00010663,PC), @0x76
-      XOR.B    @(0x0001066A,PC), @(R0*1)
-      XOR.B    @(0x00010671,PC), @(1,R0*1)
-      XOR.B    @(0x00010679,PC), @(PC)
-      XOR.B    @(0x00010680,PC), @(0x000164A0,PC)
-      XOR.B    @(0x00010688,PC), @(R1.W,PC)
-      XOR.B    @(0x00010690,PC), @(0x00016532,R1.W*2,PC)
-      XOR.B    @(0x00010699,PC), @(-0x7C,@(-0x7F7E7D7D,R15))
-      XOR.B    @(0x7173DFAE,PC), @(0x01020304,R0.L,R13)
+      XOR.B    @(PC), @(0x00015D96,R1.W*2,PC)
+      XOR.B    @(0x00015D19,PC), @R0
+      XOR.B    @(0x00015D1E,PC), @(17,R0)
+      XOR.B    @(0x0000FEB3,PC), @R0+
+      XOR.B    @(0x0000FEB9,PC), @-R0
+      XOR.B    @(0x0000FF14,PC), @0x76
+      XOR.B    @(0x0000FF1B,PC), @(R0*1)
+      XOR.B    @(0x0000FF22,PC), @(1,R0*1)
+      XOR.B    @(0x0000FF2A,PC), @(PC)
+      XOR.B    @(0x0000FF31,PC), @(0x00015D51,PC)
+      XOR.B    @(0x0000FF39,PC), @(R1.W,PC)
+      XOR.B    @(0x0000FF41,PC), @(0x00015DE3,R1.W*2,PC)
+      XOR.B    @(0x0000FF4A,PC), @(-0x7C,@(-0x7F7E7D7D,R15))
+      XOR.B    @(0x7173D85F,PC), @(0x01020304,R0.L,R13)
       XOR.B    @(R1.W,PC), @R2
       XOR.B    @(R1.W,PC), @(17,R0)
       XOR.B    @(R1.W,PC), @R0+
@@ -12624,23 +12370,23 @@
       XOR.B    @(R1.W,PC), @(-0x7C,@(-0x7F7E7D7D,CR15))
       XOR.B    @(R1.W,PC), @0x76
       XOR.B    @(R1.W,PC), @(PC)
-      XOR.B    @(R1.W,PC), @(0x00016522,PC)
+      XOR.B    @(R1.W,PC), @(0x00015DD3,PC)
       XOR.B    @(R1.W,PC), @(R1.W,PC)
-      XOR.B    @(R1.W,PC), @(0x000165B2,R1.W*2,PC)
-      XOR.B    @(0x000165B7,R1.W*2,PC), @(20,R3)
-      XOR.B    @(0x000165AD,R0.W,PC), @R2
-      XOR.B    @(0x000187D6,R1.W*4,PC), @R0+
-      XOR.B    @(0x000187DD,R1.W*4,PC), @-R0
-      XOR.B    @(0x000187E4,R1.W*4,PC), @(CR0*1)
-      XOR.B    @(0x000187ED,R1.W*4,PC), @(1,CR0*1)
-      XOR.B    @(0x000187F7,R1.W*4,PC), @(0x01020304,R0.L,CR13)
-      XOR.B    @(0x00018805,R1.W*4,PC), @(R1.W,CR0)
-      XOR.B    @(0x0001880F,R1.W*4,PC), @(-0x7C,@(-0x7F7E7D7D,CR15))
-      XOR.B    @(0x32349A31,R1.W*8,PC), @0x76
-      XOR.B    @(0x32349A3B,R1.W*8,PC), @(PC)
-      XOR.B    @(0x32349A45,R1.W*8,PC), @(0x000165A4,PC)
-      XOR.B    @(0x32349A50,R1.W*8,PC), @(R1.W,PC)
-      XOR.B    @(0x32349A5B,R1.W*8,PC), @(0x0001663C,R1.W*2,PC)
+      XOR.B    @(R1.W,PC), @(0x00015E63,R1.W*2,PC)
+      XOR.B    @(0x00015E68,R1.W*2,PC), @(20,R3)
+      XOR.B    @(0x00015E5E,R0.W,PC), @R2
+      XOR.B    @(0x00018087,R1.W*4,PC), @R0+
+      XOR.B    @(0x0001808E,R1.W*4,PC), @-R0
+      XOR.B    @(0x00018095,R1.W*4,PC), @(CR0*1)
+      XOR.B    @(0x0001809E,R1.W*4,PC), @(1,CR0*1)
+      XOR.B    @(0x000180A8,R1.W*4,PC), @(0x01020304,R0.L,CR13)
+      XOR.B    @(0x000180B6,R1.W*4,PC), @(R1.W,CR0)
+      XOR.B    @(0x000180C0,R1.W*4,PC), @(-0x7C,@(-0x7F7E7D7D,CR15))
+      XOR.B    @(0x323492E2,R1.W*8,PC), @0x76
+      XOR.B    @(0x323492EC,R1.W*8,PC), @(PC)
+      XOR.B    @(0x323492F6,R1.W*8,PC), @(0x00015E55,PC)
+      XOR.B    @(0x32349301,R1.W*8,PC), @(R1.W,PC)
+      XOR.B    @(0x3234930C,R1.W*8,PC), @(0x00015EED,R1.W*2,PC)
       XOR.W    @R6, R0
       XOR.W    @(-0x6F,R0), R0
       XOR.W    R0, R0
@@ -12655,9 +12401,9 @@
       XOR.W    #0:8, R0
       XOR.W    @0xFFFFFFF6, R0
       XOR.W    @(R1.W,PC), R0
-      XOR.W    @(0x00016679,R1.W*2,PC), R0
+      XOR.W    @(0x00015F2A,R1.W*2,PC), R0
       XOR.W    @(PC), R0
-      XOR.W    @(0x000165FF,PC), R0
+      XOR.W    @(0x00015EB0,PC), R0
       XOR.W    @R0, @R1
       XOR.W    @R0, @(17,R0)
       XOR.W    @R0, @R0+
@@ -12669,9 +12415,9 @@
       XOR.W    @R0, @(-0x7C,@(-0x7F7E7D7D,CR15))
       XOR.W    @R0, @0x76
       XOR.W    @R0, @(PC)
-      XOR.W    @R0, @(0x0001663E,PC)
+      XOR.W    @R0, @(0x00015EEF,PC)
       XOR.W    @R0, @(R1.W,PC)
-      XOR.W    @R0, @(0x000166CA,R1.W*2,PC)
+      XOR.W    @R0, @(0x00015F7B,R1.W*2,PC)
       XOR.W    @(17,R0), @(19,R2)
       XOR.W    @(0x2122,R0), @R0+
       XOR.W    @(0x2122,R0), @-R0
@@ -12683,9 +12429,9 @@
       XOR.W    @(0x2122,R0), @CR0
       XOR.W    @(0x2122,R0), @0x76
       XOR.W    @(0x2122,R0), @(PC)
-      XOR.W    @(0x2122,R0), @(0x000166A0,PC)
+      XOR.W    @(0x2122,R0), @(0x00015F51,PC)
       XOR.W    @(0x2122,R0), @(R1.W,PC)
-      XOR.W    @(0x2122,R0), @(0x00016730,R1.W*2,PC)
+      XOR.W    @(0x2122,R0), @(0x00015FE1,R1.W*2,PC)
       XOR.W    R0, @R0+
       XOR.W    R0, @-R0
       XOR.W    R0, @(CR0*1)
@@ -12697,9 +12443,9 @@
       XOR.W    R0, @(17,CR0)
       XOR.W    R0, @0x76
       XOR.W    R0, @(PC)
-      XOR.W    R0, @(0x000166F0,PC)
+      XOR.W    R0, @(0x00015FA1,PC)
       XOR.W    R0, @(R1.W,PC)
-      XOR.W    R0, @(0x0001677C,R1.W*2,PC)
+      XOR.W    R0, @(0x0001602D,R1.W*2,PC)
       XOR.W    @R0+, @R1+
       XOR.W    @R0+, @-R0
       XOR.W    @R0+, @(CR0*1)
@@ -12711,9 +12457,9 @@
       XOR.W    @R0+, @(17,CR0)
       XOR.W    @R0+, @0x76
       XOR.W    @R0+, @(PC)
-      XOR.W    @R0+, @(0x0001673C,PC)
+      XOR.W    @R0+, @(0x00015FED,PC)
       XOR.W    @R0+, @(R1.W,PC)
-      XOR.W    @R0+, @(0x000167C8,R1.W*2,PC)
+      XOR.W    @R0+, @(0x00016079,R1.W*2,PC)
       XOR.W    @-R0, @-R1
       XOR.W    @-R0, @(CR0*1)
       XOR.W    @-R0, @(1,CR0*1)
@@ -12725,9 +12471,9 @@
       XOR.W    @-R0, @CR0+
       XOR.W    @-R0, @0x76
       XOR.W    @-R0, @(PC)
-      XOR.W    @-R0, @(0x00016789,PC)
+      XOR.W    @-R0, @(0x0001603A,PC)
       XOR.W    @-R0, @(R1.W,PC)
-      XOR.W    @-R0, @(0x00016815,R1.W*2,PC)
+      XOR.W    @-R0, @(0x000160C6,R1.W*2,PC)
       XOR.W    @(CR0*1), @R1
       XOR.W    @(CR0*1), @(17,R0)
       XOR.W    @(CR0*1), @R0+
@@ -12739,9 +12485,9 @@
       XOR.W    @(CR0*1), @(-0x7C,@(-0x7F7E7D7D,CR15))
       XOR.W    @(CR0*1), @0x76
       XOR.W    @(CR0*1), @(PC)
-      XOR.W    @(CR0*1), @(0x000167EB,PC)
+      XOR.W    @(CR0*1), @(0x0001609C,PC)
       XOR.W    @(CR0*1), @(R1.W,PC)
-      XOR.W    @(CR0*1), @(0x0001687B,R1.W*2,PC)
+      XOR.W    @(CR0*1), @(0x0001612C,R1.W*2,PC)
       XOR.W    @(1,CR0*1), @R2
       XOR.W    @(1,CR0*1), @(17,R0)
       XOR.W    @(0x1C1D2E2F,CR11*2), @R0+
@@ -12753,9 +12499,9 @@
       XOR.W    @(0x1C1D2E2F,CR11*2), @(-0x7C,@(-0x7F7E7D7D,CR15))
       XOR.W    @(0x1C1D3D3E,CR11*2), @0x76
       XOR.W    @(0x1C1D3D3E,CR11*2), @(PC)
-      XOR.W    @(0x1C1D3D3E,CR11*2), @(0x0001687B,PC)
+      XOR.W    @(0x1C1D3D3E,CR11*2), @(0x0001612C,PC)
       XOR.W    @(0x1C1D3D3E,CR11*2), @(R1.W,PC)
-      XOR.W    @(0x1C1D3D3E,CR11*2), @(0x00016913,R1.W*2,PC)
+      XOR.W    @(0x1C1D3D3E,CR11*2), @(0x000161C4,R1.W*2,PC)
       XOR.W    @(0x01020304,R0.L,CR13), @R5
       XOR.W    @(0x01020304,R0.L,CR13), @(17,R0)
       XOR.W    @(0x01020304,R0.L,CR13), @R0+
@@ -12767,9 +12513,9 @@
       XOR.W    @(0x01020304,R0.L,CR13), @(-0x7C,@(-0x7F7E7D7D,CR15))
       XOR.W    @(0x01020304,R0.L,CR13), @0x76
       XOR.W    @(0x01020304,R0.L,CR13), @(PC)
-      XOR.W    @(0x01020304,R0.L,CR13), @(0x00016925,PC)
+      XOR.W    @(0x01020304,R0.L,CR13), @(0x000161D6,PC)
       XOR.W    @(0x01020304,R0.L,CR13), @(R1.W,PC)
-      XOR.W    @(0x01020304,R0.L,CR13), @(0x000169BF,R1.W*2,PC)
+      XOR.W    @(0x01020304,R0.L,CR13), @(0x00016270,R1.W*2,PC)
       XOR.W    @(R1.W,CR0), @R2
       XOR.W    @(R1.W,CR0), @(17,R0)
       XOR.W    @(R1.W,CR0), @R0+
@@ -12781,9 +12527,9 @@
       XOR.W    @(R1.W,CR0), @(-0x7C,@(-0x7F7E7D7D,CR15))
       XOR.W    @(R1.W,CR0), @0x76
       XOR.W    @(R1.W,CR0), @(PC)
-      XOR.W    @(R1.W,CR0), @(0x000169A1,PC)
+      XOR.W    @(R1.W,CR0), @(0x00016252,PC)
       XOR.W    @(R1.W,CR0), @(R1.W,PC)
-      XOR.W    @(R1.W,CR0), @(0x00016A33,R1.W*2,PC)
+      XOR.W    @(R1.W,CR0), @(0x000162E4,R1.W*2,PC)
       XOR.W    @(-0x7C,@(-0x7F7E7D7D,CR15)), @R0
       XOR.W    @(-0x7C,@(-0x7F7E7D7D,CR15)), @(17,R0)
       XOR.W    @(-0x7C,@(-0x7F7E7D7D,CR15)), @R0+
@@ -12795,9 +12541,9 @@
       XOR.W    @(-0x7C,@(-0x7F7E7D7D,CR15)), @(R1.W,R0)
       XOR.W    @(-0x7C,@(-0x7F7E7D7D,CR15)), @(18,R1.W*2,R0)
       XOR.W    @(-0x7C,@(-0x7F7E7D7D,CR15)), @(PC)
-      XOR.W    @(-0x7C,@(-0x7F7E7D7D,CR15)), @(0x00016A40,PC)
+      XOR.W    @(-0x7C,@(-0x7F7E7D7D,CR15)), @(0x000162F1,PC)
       XOR.W    @(-0x7C,@(-0x7F7E7D7D,CR15)), @(R1.W,PC)
-      XOR.W    @(-0x7C,@(-0x7F7E7D7D,CR15)), @(0x00016ADA,R1.W*2,PC)
+      XOR.W    @(-0x7C,@(-0x7F7E7D7D,CR15)), @(0x0001638B,R1.W*2,PC)
       XOR.W    #0x72:8, @(PR0*1)
       XOR.W    #0x72:8, @(1,PR0*1)
       XOR.W    #0x72:8, @(0x01020304,R0.L,PR13)
@@ -12809,9 +12555,9 @@
       XOR.W    #0x72:8, @-PR0
       XOR.W    #0x72:8, @0x76
       XOR.W    #0x72:8, @(PC)
-      XOR.W    #0x72:8, @(0x00016AA8,PC)
+      XOR.W    #0x72:8, @(0x00016359,PC)
       XOR.W    #0x72:8, @(R1.W,PC)
-      XOR.W    #0x72:8, @(0x00016B36,R1.W*2,PC)
+      XOR.W    #0x72:8, @(0x000163E7,R1.W*2,PC)
       XOR.W    #-0x80:8, @R0
       XOR.W    #-0x80:8, @(17,R0)
       XOR.W    #-0x80:8, @R0+
@@ -12823,18 +12569,18 @@
       XOR.W    #-0x80:8, @(R1.W,R0)
       XOR.W    #-0x80:8, @(18,R1.W*2,R0)
       XOR.W    #-0x80:8, @(PC)
-      XOR.W    #-0x80:8, @(0x00016AFB,PC)
+      XOR.W    #-0x80:8, @(0x000163AC,PC)
       XOR.W    #-0x80:8, @(R1.W,PC)
-      XOR.W    #-0x80:8, @(0x00016B89,R1.W*2,PC)
+      XOR.W    #-0x80:8, @(0x0001643A,R1.W*2,PC)
       XOR.W    @0x76, @0x78797A7B
       XOR.W    @0x76, @(R0*1)
       XOR.W    @0x76, @(1,R0*1)
       XOR.W    @0x76, @(0x01020304,R0.L,R13)
       XOR.W    @0x76, @(R1.W,R0)
       XOR.W    @0x76, @(PC)
-      XOR.W    @0x76, @(0x00016B36,PC)
+      XOR.W    @0x76, @(0x000163E7,PC)
       XOR.W    @0x76, @(R1.W,PC)
-      XOR.W    @0x76, @(0x00016BC4,R1.W*2,PC)
+      XOR.W    @0x76, @(0x00016475,R1.W*2,PC)
       XOR.W    @0x76, @(-0x7C,@(-0x7F7E7D7D,R15))
       XOR.W    @0x76, @R0
       XOR.W    @0x76, @(17,R0)
@@ -12851,22 +12597,22 @@
       XOR.W    @(PC), @(R1.W,R0)
       XOR.W    @(PC), @(18,R1.W*2,R0)
       XOR.W    @(PC), @(PC)
-      XOR.W    @(PC), @(0x00016BA6,PC)
+      XOR.W    @(PC), @(0x00016457,PC)
       XOR.W    @(PC), @(R1.W,PC)
-      XOR.W    @(PC), @(0x00016C34,R1.W*2,PC)
-      XOR.W    @(0x00016BB7,PC), @R0
-      XOR.W    @(0x00016BBC,PC), @(17,R0)
-      XOR.W    @(0x00010D51,PC), @R0+
-      XOR.W    @(0x00010D57,PC), @-R0
-      XOR.W    @(0x00010DB2,PC), @0x76
-      XOR.W    @(0x00010DB9,PC), @(R0*1)
-      XOR.W    @(0x00010DC0,PC), @(1,R0*1)
-      XOR.W    @(0x00010DC8,PC), @(PC)
-      XOR.W    @(0x00010DCF,PC), @(0x00016BEF,PC)
-      XOR.W    @(0x00010DD7,PC), @(R1.W,PC)
-      XOR.W    @(0x00010DDF,PC), @(0x00016C81,R1.W*2,PC)
-      XOR.W    @(0x00010DE8,PC), @(-0x7C,@(-0x7F7E7D7D,R15))
-      XOR.W    @(0x7173E6FD,PC), @(0x01020304,R0.L,R13)
+      XOR.W    @(PC), @(0x000164E5,R1.W*2,PC)
+      XOR.W    @(0x00016468,PC), @R0
+      XOR.W    @(0x0001646D,PC), @(17,R0)
+      XOR.W    @(0x00010602,PC), @R0+
+      XOR.W    @(0x00010608,PC), @-R0
+      XOR.W    @(0x00010663,PC), @0x76
+      XOR.W    @(0x0001066A,PC), @(R0*1)
+      XOR.W    @(0x00010671,PC), @(1,R0*1)
+      XOR.W    @(0x00010679,PC), @(PC)
+      XOR.W    @(0x00010680,PC), @(0x000164A0,PC)
+      XOR.W    @(0x00010688,PC), @(R1.W,PC)
+      XOR.W    @(0x00010690,PC), @(0x00016532,R1.W*2,PC)
+      XOR.W    @(0x00010699,PC), @(-0x7C,@(-0x7F7E7D7D,R15))
+      XOR.W    @(0x7173DFAE,PC), @(0x01020304,R0.L,R13)
       XOR.W    @(R1.W,PC), @R2
       XOR.W    @(R1.W,PC), @(17,R0)
       XOR.W    @(R1.W,PC), @R0+
@@ -12878,23 +12624,23 @@
       XOR.W    @(R1.W,PC), @(-0x7C,@(-0x7F7E7D7D,CR15))
       XOR.W    @(R1.W,PC), @0x76
       XOR.W    @(R1.W,PC), @(PC)
-      XOR.W    @(R1.W,PC), @(0x00016C71,PC)
+      XOR.W    @(R1.W,PC), @(0x00016522,PC)
       XOR.W    @(R1.W,PC), @(R1.W,PC)
-      XOR.W    @(R1.W,PC), @(0x00016D01,R1.W*2,PC)
-      XOR.W    @(0x00016D06,R1.W*2,PC), @(20,R3)
-      XOR.W    @(0x00016CFC,R0.W,PC), @R2
-      XOR.W    @(0x00018F25,R1.W*4,PC), @R0+
-      XOR.W    @(0x00018F2C,R1.W*4,PC), @-R0
-      XOR.W    @(0x00018F33,R1.W*4,PC), @(CR0*1)
-      XOR.W    @(0x00018F3C,R1.W*4,PC), @(1,CR0*1)
-      XOR.W    @(0x00018F46,R1.W*4,PC), @(0x01020304,R0.L,CR13)
-      XOR.W    @(0x00018F54,R1.W*4,PC), @(R1.W,CR0)
-      XOR.W    @(0x00018F5E,R1.W*4,PC), @(-0x7C,@(-0x7F7E7D7D,CR15))
-      XOR.W    @(0x3234A180,R1.W*8,PC), @0x76
-      XOR.W    @(0x3234A18A,R1.W*8,PC), @(PC)
-      XOR.W    @(0x3234A194,R1.W*8,PC), @(0x00016CF3,PC)
-      XOR.W    @(0x3234A19F,R1.W*8,PC), @(R1.W,PC)
-      XOR.W    @(0x3234A1AA,R1.W*8,PC), @(0x00016D8B,R1.W*2,PC)
+      XOR.W    @(R1.W,PC), @(0x000165B2,R1.W*2,PC)
+      XOR.W    @(0x000165B7,R1.W*2,PC), @(20,R3)
+      XOR.W    @(0x000165AD,R0.W,PC), @R2
+      XOR.W    @(0x000187D6,R1.W*4,PC), @R0+
+      XOR.W    @(0x000187DD,R1.W*4,PC), @-R0
+      XOR.W    @(0x000187E4,R1.W*4,PC), @(CR0*1)
+      XOR.W    @(0x000187ED,R1.W*4,PC), @(1,CR0*1)
+      XOR.W    @(0x000187F7,R1.W*4,PC), @(0x01020304,R0.L,CR13)
+      XOR.W    @(0x00018805,R1.W*4,PC), @(R1.W,CR0)
+      XOR.W    @(0x0001880F,R1.W*4,PC), @(-0x7C,@(-0x7F7E7D7D,CR15))
+      XOR.W    @(0x32349A31,R1.W*8,PC), @0x76
+      XOR.W    @(0x32349A3B,R1.W*8,PC), @(PC)
+      XOR.W    @(0x32349A45,R1.W*8,PC), @(0x000165A4,PC)
+      XOR.W    @(0x32349A50,R1.W*8,PC), @(R1.W,PC)
+      XOR.W    @(0x32349A5B,R1.W*8,PC), @(0x0001663C,R1.W*2,PC)
       XOR.L    @R7, R0
       XOR.L    @(-0x6F,R0), R0
       XOR.L    R0, R0
@@ -12909,9 +12655,9 @@
       XOR.L    #0:8, R0
       XOR.L    @0xFFFFFFF6, R0
       XOR.L    @(R1.W,PC), R0
-      XOR.L    @(0x00016DC8,R1.W*2,PC), R0
+      XOR.L    @(0x00016679,R1.W*2,PC), R0
       XOR.L    @(PC), R0
-      XOR.L    @(0x00016D4E,PC), R0
+      XOR.L    @(0x000165FF,PC), R0
       XOR.L    @R0, @R1
       XOR.L    @R0, @(17,R0)
       XOR.L    @R0, @R0+
@@ -12923,9 +12669,9 @@
       XOR.L    @R0, @(-0x7C,@(-0x7F7E7D7D,CR15))
       XOR.L    @R0, @0x76
       XOR.L    @R0, @(PC)
-      XOR.L    @R0, @(0x00016D8D,PC)
+      XOR.L    @R0, @(0x0001663E,PC)
       XOR.L    @R0, @(R1.W,PC)
-      XOR.L    @R0, @(0x00016E19,R1.W*2,PC)
+      XOR.L    @R0, @(0x000166CA,R1.W*2,PC)
       XOR.L    @(17,R0), @(19,R2)
       XOR.L    @(0x2122,R0), @R0+
       XOR.L    @(0x2122,R0), @-R0
@@ -12937,9 +12683,9 @@
       XOR.L    @(0x2122,R0), @CR0
       XOR.L    @(0x2122,R0), @0x76
       XOR.L    @(0x2122,R0), @(PC)
-      XOR.L    @(0x2122,R0), @(0x00016DEF,PC)
+      XOR.L    @(0x2122,R0), @(0x000166A0,PC)
       XOR.L    @(0x2122,R0), @(R1.W,PC)
-      XOR.L    @(0x2122,R0), @(0x00016E7F,R1.W*2,PC)
+      XOR.L    @(0x2122,R0), @(0x00016730,R1.W*2,PC)
       XOR.L    R0, @R0+
       XOR.L    R0, @-R0
       XOR.L    R0, @(CR0*1)
@@ -12951,9 +12697,9 @@
       XOR.L    R0, @(17,CR0)
       XOR.L    R0, @0x76
       XOR.L    R0, @(PC)
-      XOR.L    R0, @(0x00016E3F,PC)
+      XOR.L    R0, @(0x000166F0,PC)
       XOR.L    R0, @(R1.W,PC)
-      XOR.L    R0, @(0x00016ECB,R1.W*2,PC)
+      XOR.L    R0, @(0x0001677C,R1.W*2,PC)
       XOR.L    @R0+, @R1+
       XOR.L    @R0+, @-R0
       XOR.L    @R0+, @(CR0*1)
@@ -12965,9 +12711,9 @@
       XOR.L    @R0+, @(17,CR0)
       XOR.L    @R0+, @0x76
       XOR.L    @R0+, @(PC)
-      XOR.L    @R0+, @(0x00016E8B,PC)
+      XOR.L    @R0+, @(0x0001673C,PC)
       XOR.L    @R0+, @(R1.W,PC)
-      XOR.L    @R0+, @(0x00016F17,R1.W*2,PC)
+      XOR.L    @R0+, @(0x000167C8,R1.W*2,PC)
       XOR.L    @-R0, @-R1
       XOR.L    @-R0, @(CR0*1)
       XOR.L    @-R0, @(1,CR0*1)
@@ -12979,9 +12725,9 @@
       XOR.L    @-R0, @CR0+
       XOR.L    @-R0, @0x76
       XOR.L    @-R0, @(PC)
-      XOR.L    @-R0, @(0x00016ED8,PC)
+      XOR.L    @-R0, @(0x00016789,PC)
       XOR.L    @-R0, @(R1.W,PC)
-      XOR.L    @-R0, @(0x00016F64,R1.W*2,PC)
+      XOR.L    @-R0, @(0x00016815,R1.W*2,PC)
       XOR.L    @(CR0*1), @R1
       XOR.L    @(CR0*1), @(17,R0)
       XOR.L    @(CR0*1), @R0+
@@ -12993,9 +12739,9 @@
       XOR.L    @(CR0*1), @(-0x7C,@(-0x7F7E7D7D,CR15))
       XOR.L    @(CR0*1), @0x76
       XOR.L    @(CR0*1), @(PC)
-      XOR.L    @(CR0*1), @(0x00016F3A,PC)
+      XOR.L    @(CR0*1), @(0x000167EB,PC)
       XOR.L    @(CR0*1), @(R1.W,PC)
-      XOR.L    @(CR0*1), @(0x00016FCA,R1.W*2,PC)
+      XOR.L    @(CR0*1), @(0x0001687B,R1.W*2,PC)
       XOR.L    @(1,CR0*1), @R2
       XOR.L    @(1,CR0*1), @(17,R0)
       XOR.L    @(0x1C1D2E2F,CR11*2), @R0+
@@ -13007,9 +12753,9 @@
       XOR.L    @(0x1C1D2E2F,CR11*2), @(-0x7C,@(-0x7F7E7D7D,CR15))
       XOR.L    @(0x1C1D3D3E,CR11*2), @0x76
       XOR.L    @(0x1C1D3D3E,CR11*2), @(PC)
-      XOR.L    @(0x1C1D3D3E,CR11*2), @(0x00016FCA,PC)
+      XOR.L    @(0x1C1D3D3E,CR11*2), @(0x0001687B,PC)
       XOR.L    @(0x1C1D3D3E,CR11*2), @(R1.W,PC)
-      XOR.L    @(0x1C1D3D3E,CR11*2), @(0x00017062,R1.W*2,PC)
+      XOR.L    @(0x1C1D3D3E,CR11*2), @(0x00016913,R1.W*2,PC)
       XOR.L    @(0x01020304,R0.L,CR13), @R5
       XOR.L    @(0x01020304,R0.L,CR13), @(17,R0)
       XOR.L    @(0x01020304,R0.L,CR13), @R0+
@@ -13021,9 +12767,9 @@
       XOR.L    @(0x01020304,R0.L,CR13), @(-0x7C,@(-0x7F7E7D7D,CR15))
       XOR.L    @(0x01020304,R0.L,CR13), @0x76
       XOR.L    @(0x01020304,R0.L,CR13), @(PC)
-      XOR.L    @(0x01020304,R0.L,CR13), @(0x00017074,PC)
+      XOR.L    @(0x01020304,R0.L,CR13), @(0x00016925,PC)
       XOR.L    @(0x01020304,R0.L,CR13), @(R1.W,PC)
-      XOR.L    @(0x01020304,R0.L,CR13), @(0x0001710E,R1.W*2,PC)
+      XOR.L    @(0x01020304,R0.L,CR13), @(0x000169BF,R1.W*2,PC)
       XOR.L    @(R1.W,CR0), @R2
       XOR.L    @(R1.W,CR0), @(17,R0)
       XOR.L    @(R1.W,CR0), @R0+
@@ -13035,9 +12781,9 @@
       XOR.L    @(R1.W,CR0), @(-0x7C,@(-0x7F7E7D7D,CR15))
       XOR.L    @(R1.W,CR0), @0x76
       XOR.L    @(R1.W,CR0), @(PC)
-      XOR.L    @(R1.W,CR0), @(0x000170F0,PC)
+      XOR.L    @(R1.W,CR0), @(0x000169A1,PC)
       XOR.L    @(R1.W,CR0), @(R1.W,PC)
-      XOR.L    @(R1.W,CR0), @(0x00017182,R1.W*2,PC)
+      XOR.L    @(R1.W,CR0), @(0x00016A33,R1.W*2,PC)
       XOR.L    @(-0x7C,@(-0x7F7E7D7D,CR15)), @R0
       XOR.L    @(-0x7C,@(-0x7F7E7D7D,CR15)), @(17,R0)
       XOR.L    @(-0x7C,@(-0x7F7E7D7D,CR15)), @R0+
@@ -13049,9 +12795,9 @@
       XOR.L    @(-0x7C,@(-0x7F7E7D7D,CR15)), @(R1.W,R0)
       XOR.L    @(-0x7C,@(-0x7F7E7D7D,CR15)), @(18,R1.W*2,R0)
       XOR.L    @(-0x7C,@(-0x7F7E7D7D,CR15)), @(PC)
-      XOR.L    @(-0x7C,@(-0x7F7E7D7D,CR15)), @(0x0001718F,PC)
+      XOR.L    @(-0x7C,@(-0x7F7E7D7D,CR15)), @(0x00016A40,PC)
       XOR.L    @(-0x7C,@(-0x7F7E7D7D,CR15)), @(R1.W,PC)
-      XOR.L    @(-0x7C,@(-0x7F7E7D7D,CR15)), @(0x00017229,R1.W*2,PC)
+      XOR.L    @(-0x7C,@(-0x7F7E7D7D,CR15)), @(0x00016ADA,R1.W*2,PC)
       XOR.L    #0x72:8, @(PR0*1)
       XOR.L    #0x72:8, @(1,PR0*1)
       XOR.L    #0x72:8, @(0x01020304,R0.L,PR13)
@@ -13063,9 +12809,9 @@
       XOR.L    #0x72:8, @-PR0
       XOR.L    #0x72:8, @0x76
       XOR.L    #0x72:8, @(PC)
-      XOR.L    #0x72:8, @(0x000171F7,PC)
+      XOR.L    #0x72:8, @(0x00016AA8,PC)
       XOR.L    #0x72:8, @(R1.W,PC)
-      XOR.L    #0x72:8, @(0x00017285,R1.W*2,PC)
+      XOR.L    #0x72:8, @(0x00016B36,R1.W*2,PC)
       XOR.L    #-0x80:8, @R0
       XOR.L    #-0x80:8, @(17,R0)
       XOR.L    #-0x80:8, @R0+
@@ -13077,18 +12823,18 @@
       XOR.L    #-0x80:8, @(R1.W,R0)
       XOR.L    #-0x80:8, @(18,R1.W*2,R0)
       XOR.L    #-0x80:8, @(PC)
-      XOR.L    #-0x80:8, @(0x0001724A,PC)
+      XOR.L    #-0x80:8, @(0x00016AFB,PC)
       XOR.L    #-0x80:8, @(R1.W,PC)
-      XOR.L    #-0x80:8, @(0x000172D8,R1.W*2,PC)
+      XOR.L    #-0x80:8, @(0x00016B89,R1.W*2,PC)
       XOR.L    @0x76, @0x78797A7B
       XOR.L    @0x76, @(R0*1)
       XOR.L    @0x76, @(1,R0*1)
       XOR.L    @0x76, @(0x01020304,R0.L,R13)
       XOR.L    @0x76, @(R1.W,R0)
       XOR.L    @0x76, @(PC)
-      XOR.L    @0x76, @(0x00017285,PC)
+      XOR.L    @0x76, @(0x00016B36,PC)
       XOR.L    @0x76, @(R1.W,PC)
-      XOR.L    @0x76, @(0x00017313,R1.W*2,PC)
+      XOR.L    @0x76, @(0x00016BC4,R1.W*2,PC)
       XOR.L    @0x76, @(-0x7C,@(-0x7F7E7D7D,R15))
       XOR.L    @0x76, @R0
       XOR.L    @0x76, @(17,R0)
@@ -13105,22 +12851,22 @@
       XOR.L    @(PC), @(R1.W,R0)
       XOR.L    @(PC), @(18,R1.W*2,R0)
       XOR.L    @(PC), @(PC)
-      XOR.L    @(PC), @(0x000172F5,PC)
+      XOR.L    @(PC), @(0x00016BA6,PC)
       XOR.L    @(PC), @(R1.W,PC)
-      XOR.L    @(PC), @(0x00017383,R1.W*2,PC)
-      XOR.L    @(0x00017306,PC), @R0
-      XOR.L    @(0x0001730B,PC), @(17,R0)
-      XOR.L    @(0x000114A0,PC), @R0+
-      XOR.L    @(0x000114A6,PC), @-R0
-      XOR.L    @(0x00011501,PC), @0x76
-      XOR.L    @(0x00011508,PC), @(R0*1)
-      XOR.L    @(0x0001150F,PC), @(1,R0*1)
-      XOR.L    @(0x00011517,PC), @(PC)
-      XOR.L    @(0x0001151E,PC), @(0x0001733E,PC)
-      XOR.L    @(0x00011526,PC), @(R1.W,PC)
-      XOR.L    @(0x0001152E,PC), @(0x000173D0,R1.W*2,PC)
-      XOR.L    @(0x00011537,PC), @(-0x7C,@(-0x7F7E7D7D,R15))
-      XOR.L    @(0x7173EE4C,PC), @(0x01020304,R0.L,R13)
+      XOR.L    @(PC), @(0x00016C34,R1.W*2,PC)
+      XOR.L    @(0x00016BB7,PC), @R0
+      XOR.L    @(0x00016BBC,PC), @(17,R0)
+      XOR.L    @(0x00010D51,PC), @R0+
+      XOR.L    @(0x00010D57,PC), @-R0
+      XOR.L    @(0x00010DB2,PC), @0x76
+      XOR.L    @(0x00010DB9,PC), @(R0*1)
+      XOR.L    @(0x00010DC0,PC), @(1,R0*1)
+      XOR.L    @(0x00010DC8,PC), @(PC)
+      XOR.L    @(0x00010DCF,PC), @(0x00016BEF,PC)
+      XOR.L    @(0x00010DD7,PC), @(R1.W,PC)
+      XOR.L    @(0x00010DDF,PC), @(0x00016C81,R1.W*2,PC)
+      XOR.L    @(0x00010DE8,PC), @(-0x7C,@(-0x7F7E7D7D,R15))
+      XOR.L    @(0x7173E6FD,PC), @(0x01020304,R0.L,R13)
       XOR.L    @(R1.W,PC), @R2
       XOR.L    @(R1.W,PC), @(17,R0)
       XOR.L    @(R1.W,PC), @R0+
@@ -13132,277 +12878,23 @@
       XOR.L    @(R1.W,PC), @(-0x7C,@(-0x7F7E7D7D,CR15))
       XOR.L    @(R1.W,PC), @0x76
       XOR.L    @(R1.W,PC), @(PC)
-      XOR.L    @(R1.W,PC), @(0x000173C0,PC)
+      XOR.L    @(R1.W,PC), @(0x00016C71,PC)
       XOR.L    @(R1.W,PC), @(R1.W,PC)
-      XOR.L    @(R1.W,PC), @(0x00017450,R1.W*2,PC)
-      XOR.L    @(0x00017455,R1.W*2,PC), @(20,R3)
-      XOR.L    @(0x0001744B,R0.W,PC), @R2
-      XOR.L    @(0x00019674,R1.W*4,PC), @R0+
-      XOR.L    @(0x0001967B,R1.W*4,PC), @-R0
-      XOR.L    @(0x00019682,R1.W*4,PC), @(CR0*1)
-      XOR.L    @(0x0001968B,R1.W*4,PC), @(1,CR0*1)
-      XOR.L    @(0x00019695,R1.W*4,PC), @(0x01020304,R0.L,CR13)
-      XOR.L    @(0x000196A3,R1.W*4,PC), @(R1.W,CR0)
-      XOR.L    @(0x000196AD,R1.W*4,PC), @(-0x7C,@(-0x7F7E7D7D,CR15))
-      XOR.L    @(0x3234A8CF,R1.W*8,PC), @0x76
-      XOR.L    @(0x3234A8D9,R1.W*8,PC), @(PC)
-      XOR.L    @(0x3234A8E3,R1.W*8,PC), @(0x00017442,PC)
-      XOR.L    @(0x3234A8EE,R1.W*8,PC), @(R1.W,PC)
-      XOR.L    @(0x3234A8F9,R1.W*8,PC), @(0x000174DA,R1.W*2,PC)
-      DSUB     @R8, R0
-      DSUB     @(-0x6F,R0), R0
-      DSUB     R0, R0
-      DSUB     @R0+, R0
-      DSUB     @-R0, R0
-      DSUB     @(CR0*1), R0
-      DSUB     @(1,CR0*1), R0
-      DSUB     @(R1.W,CR0), R0
-      DSUB     @(18,R1.W*2,CR0), R0
-      DSUB     @(0x04050607,@(0x00010203,CR15)), R0
-      DSUB     #-14:8, R0
-      DSUB     #0:8, R0
-      DSUB     @0xFFFFFFF6, R0
-      DSUB     @(R1.W,PC), R0
-      DSUB     @(0x00017517,R1.W*2,PC), R0
-      DSUB     @(PC), R0
-      DSUB     @(0x0001749D,PC), R0
-      DSUB     @R0, @R1
-      DSUB     @R0, @(17,R0)
-      DSUB     @R0, @R0+
-      DSUB     @R0, @-R0
-      DSUB     @R0, @(CR0*1)
-      DSUB     @R0, @(1,CR0*1)
-      DSUB     @R0, @(0x01020304,R0.L,CR13)
-      DSUB     @R0, @(R1.W,CR0)
-      DSUB     @R0, @(-0x7C,@(-0x7F7E7D7D,CR15))
-      DSUB     @R0, @0x76
-      DSUB     @R0, @(PC)
-      DSUB     @R0, @(0x000174DC,PC)
-      DSUB     @R0, @(R1.W,PC)
-      DSUB     @R0, @(0x00017568,R1.W*2,PC)
-      DSUB     @(17,R0), @(19,R2)
-      DSUB     @(0x2122,R0), @R0+
-      DSUB     @(0x2122,R0), @-R0
-      DSUB     @(0x2122,R0), @(CR0*1)
-      DSUB     @(0x2122,R0), @(1,CR0*1)
-      DSUB     @(0x2122,R0), @(0x01020304,R0.L,CR13)
-      DSUB     @(0x2122,R0), @(R1.W,CR0)
-      DSUB     @(0x2122,R0), @(-0x7C,@(-0x7F7E7D7D,CR15))
-      DSUB     @(0x2122,R0), @CR0
-      DSUB     @(0x2122,R0), @0x76
-      DSUB     @(0x2122,R0), @(PC)
-      DSUB     @(0x2122,R0), @(0x0001753E,PC)
-      DSUB     @(0x2122,R0), @(R1.W,PC)
-      DSUB     @(0x2122,R0), @(0x000175CE,R1.W*2,PC)
-      DSUB     R0, @R0+
-      DSUB     R0, @-R0
-      DSUB     R0, @(CR0*1)
-      DSUB     R0, @(1,CR0*1)
-      DSUB     R0, @(0x01020304,R0.L,CR13)
-      DSUB     R0, @(R1.W,CR0)
-      DSUB     R0, @(-0x7C,@(-0x7F7E7D7D,CR15))
-      DSUB     R0, @CR0
-      DSUB     R0, @(17,CR0)
-      DSUB     R0, @0x76
-      DSUB     R0, @(PC)
-      DSUB     R0, @(0x0001758E,PC)
-      DSUB     R0, @(R1.W,PC)
-      DSUB     R0, @(0x0001761A,R1.W*2,PC)
-      DSUB     @R0+, @R1+
-      DSUB     @R0+, @-R0
-      DSUB     @R0+, @(CR0*1)
-      DSUB     @R0+, @(1,CR0*1)
-      DSUB     @R0+, @(0x01020304,R0.L,CR13)
-      DSUB     @R0+, @(R1.W,CR0)
-      DSUB     @R0+, @(-0x7C,@(-0x7F7E7D7D,CR15))
-      DSUB     @R0+, @CR0
-      DSUB     @R0+, @(17,CR0)
-      DSUB     @R0+, @0x76
-      DSUB     @R0+, @(PC)
-      DSUB     @R0+, @(0x000175DA,PC)
-      DSUB     @R0+, @(R1.W,PC)
-      DSUB     @R0+, @(0x00017666,R1.W*2,PC)
-      DSUB     @-R0, @-R1
-      DSUB     @-R0, @(CR0*1)
-      DSUB     @-R0, @(1,CR0*1)
-      DSUB     @-R0, @(0x01020304,R0.L,CR13)
-      DSUB     @-R0, @(R1.W,CR0)
-      DSUB     @-R0, @(-0x7C,@(-0x7F7E7D7D,CR15))
-      DSUB     @-R0, @CR0
-      DSUB     @-R0, @(17,CR0)
-      DSUB     @-R0, @CR0+
-      DSUB     @-R0, @0x76
-      DSUB     @-R0, @(PC)
-      DSUB     @-R0, @(0x00017627,PC)
-      DSUB     @-R0, @(R1.W,PC)
-      DSUB     @-R0, @(0x000176B3,R1.W*2,PC)
-      DSUB     @(CR0*1), @R1
-      DSUB     @(CR0*1), @(17,R0)
-      DSUB     @(CR0*1), @R0+
-      DSUB     @(CR0*1), @-R0
-      DSUB     @(CR0*1), @(CR0*1)
-      DSUB     @(CR0*1), @(1,CR0*1)
-      DSUB     @(CR0*1), @(0x01020304,R0.L,CR13)
-      DSUB     @(CR0*1), @(R1.W,CR0)
-      DSUB     @(CR0*1), @(-0x7C,@(-0x7F7E7D7D,CR15))
-      DSUB     @(CR0*1), @0x76
-      DSUB     @(CR0*1), @(PC)
-      DSUB     @(CR0*1), @(0x00017689,PC)
-      DSUB     @(CR0*1), @(R1.W,PC)
-      DSUB     @(CR0*1), @(0x00017719,R1.W*2,PC)
-      DSUB     @(1,CR0*1), @R2
-      DSUB     @(1,CR0*1), @(17,R0)
-      DSUB     @(0x1C1D2E2F,CR11*2), @R0+
-      DSUB     @(0x1C1D2E2F,CR11*2), @-R0
-      DSUB     @(0x1C1D2E2F,CR11*2), @(CR0*1)
-      DSUB     @(0x1C1D2E2F,CR11*2), @(1,CR0*1)
-      DSUB     @(0x1C1D2E2F,CR11*2), @(0x01020304,R0.L,CR13)
-      DSUB     @(0x1C1D2E2F,CR11*2), @(R1.W,CR0)
-      DSUB     @(0x1C1D2E2F,CR11*2), @(-0x7C,@(-0x7F7E7D7D,CR15))
-      DSUB     @(0x1C1D3D3E,CR11*2), @0x76
-      DSUB     @(0x1C1D3D3E,CR11*2), @(PC)
-      DSUB     @(0x1C1D3D3E,CR11*2), @(0x00017719,PC)
-      DSUB     @(0x1C1D3D3E,CR11*2), @(R1.W,PC)
-      DSUB     @(0x1C1D3D3E,CR11*2), @(0x000177B1,R1.W*2,PC)
-      DSUB     @(0x01020304,R0.L,CR13), @R5
-      DSUB     @(0x01020304,R0.L,CR13), @(17,R0)
-      DSUB     @(0x01020304,R0.L,CR13), @R0+
-      DSUB     @(0x01020304,R0.L,CR13), @-R0
-      DSUB     @(0x01020304,R0.L,CR13), @(CR0*1)
-      DSUB     @(0x01020304,R0.L,CR13), @(1,CR0*1)
-      DSUB     @(0x01020304,R0.L,CR13), @(0x01020304,R0.L,CR13)
-      DSUB     @(0x01020304,R0.L,CR13), @(R1.W,CR0)
-      DSUB     @(0x01020304,R0.L,CR13), @(-0x7C,@(-0x7F7E7D7D,CR15))
-      DSUB     @(0x01020304,R0.L,CR13), @0x76
-      DSUB     @(0x01020304,R0.L,CR13), @(PC)
-      DSUB     @(0x01020304,R0.L,CR13), @(0x000177C3,PC)
-      DSUB     @(0x01020304,R0.L,CR13), @(R1.W,PC)
-      DSUB     @(0x01020304,R0.L,CR13), @(0x0001785D,R1.W*2,PC)
-      DSUB     @(R1.W,CR0), @R2
-      DSUB     @(R1.W,CR0), @(17,R0)
-      DSUB     @(R1.W,CR0), @R0+
-      DSUB     @(R1.W,CR0), @-R0
-      DSUB     @(R1.W,CR0), @(CR0*1)
-      DSUB     @(R1.W,CR0), @(1,CR0*1)
-      DSUB     @(R1.W,CR0), @(0x01020304,R0.L,CR13)
-      DSUB     @(R1.W,CR0), @(R1.W,CR0)
-      DSUB     @(R1.W,CR0), @(-0x7C,@(-0x7F7E7D7D,CR15))
-      DSUB     @(R1.W,CR0), @0x76
-      DSUB     @(R1.W,CR0), @(PC)
-      DSUB     @(R1.W,CR0), @(0x0001783F,PC)
-      DSUB     @(R1.W,CR0), @(R1.W,PC)
-      DSUB     @(R1.W,CR0), @(0x000178D1,R1.W*2,PC)
-      DSUB     @(-0x7C,@(-0x7F7E7D7D,CR15)), @R0
-      DSUB     @(-0x7C,@(-0x7F7E7D7D,CR15)), @(17,R0)
-      DSUB     @(-0x7C,@(-0x7F7E7D7D,CR15)), @R0+
-      DSUB     @(-0x7C,@(-0x7F7E7D7D,CR15)), @-R0
-      DSUB     @(-0x7C,@(-0x7F7E7D7D,CR15)), @(CR0*1)
-      DSUB     @(-0x7C,@(-0x7F7E7D7D,CR15)), @(1,CR0*1)
-      DSUB     @(-0x7C,@(-0x7F7E7D7D,CR15)), @(-0x7C,@(-0x7F7E7D7D,CR15))
-      DSUB     @(-0x7C,@(-0x7F7E7D7D,CR15)), @0x76
-      DSUB     @(-0x7C,@(-0x7F7E7D7D,CR15)), @(R1.W,R0)
-      DSUB     @(-0x7C,@(-0x7F7E7D7D,CR15)), @(18,R1.W*2,R0)
-      DSUB     @(-0x7C,@(-0x7F7E7D7D,CR15)), @(PC)
-      DSUB     @(-0x7C,@(-0x7F7E7D7D,CR15)), @(0x000178DE,PC)
-      DSUB     @(-0x7C,@(-0x7F7E7D7D,CR15)), @(R1.W,PC)
-      DSUB     @(-0x7C,@(-0x7F7E7D7D,CR15)), @(0x00017978,R1.W*2,PC)
-      DSUB     #0x72:8, @(PR0*1)
-      DSUB     #0x72:8, @(1,PR0*1)
-      DSUB     #0x72:8, @(0x01020304,R0.L,PR13)
-      DSUB     #0x72:8, @(R1.W,PR0)
-      DSUB     #0x72:8, @(-0x7C,@(-0x7F7E7D7D,PR15))
-      DSUB     #0x72:8, @PR0
-      DSUB     #0x72:8, @(17,PR0)
-      DSUB     #0x72:8, @PR0+
-      DSUB     #0x72:8, @-PR0
-      DSUB     #0x72:8, @0x76
-      DSUB     #0x72:8, @(PC)
-      DSUB     #0x72:8, @(0x00017946,PC)
-      DSUB     #0x72:8, @(R1.W,PC)
-      DSUB     #0x72:8, @(0x000179D4,R1.W*2,PC)
-      DSUB     #-0x80:8, @R0
-      DSUB     #-0x80:8, @(17,R0)
-      DSUB     #-0x80:8, @R0+
-      DSUB     #-0x80:8, @-R0
-      DSUB     #-0x80:8, @(CR0*1)
-      DSUB     #-0x80:8, @(1,CR0*1)
-      DSUB     #-0x80:8, @(-0x7C,@(-0x7F7E7D7D,CR15))
-      DSUB     #-0x80:8, @0x76
-      DSUB     #-0x80:8, @(R1.W,R0)
-      DSUB     #-0x80:8, @(18,R1.W*2,R0)
-      DSUB     #-0x80:8, @(PC)
-      DSUB     #-0x80:8, @(0x00017999,PC)
-      DSUB     #-0x80:8, @(R1.W,PC)
-      DSUB     #-0x80:8, @(0x00017A27,R1.W*2,PC)
-      DSUB     @0x76, @0x78797A7B
-      DSUB     @0x76, @(R0*1)
-      DSUB     @0x76, @(1,R0*1)
-      DSUB     @0x76, @(0x01020304,R0.L,R13)
-      DSUB     @0x76, @(R1.W,R0)
-      DSUB     @0x76, @(PC)
-      DSUB     @0x76, @(0x000179D4,PC)
-      DSUB     @0x76, @(R1.W,PC)
-      DSUB     @0x76, @(0x00017A62,R1.W*2,PC)
-      DSUB     @0x76, @(-0x7C,@(-0x7F7E7D7D,R15))
-      DSUB     @0x76, @R0
-      DSUB     @0x76, @(17,R0)
-      DSUB     @0x771F, @R0+
-      DSUB     @0x771F, @-R0
-      DSUB     @(PC), @R0
-      DSUB     @(PC), @(17,R0)
-      DSUB     @(PC), @R0+
-      DSUB     @(PC), @-R0
-      DSUB     @(PC), @(CR0*1)
-      DSUB     @(PC), @(1,CR0*1)
-      DSUB     @(PC), @(-0x7C,@(-0x7F7E7D7D,CR15))
-      DSUB     @(PC), @0x76
-      DSUB     @(PC), @(R1.W,R0)
-      DSUB     @(PC), @(18,R1.W*2,R0)
-      DSUB     @(PC), @(PC)
-      DSUB     @(PC), @(0x00017A44,PC)
-      DSUB     @(PC), @(R1.W,PC)
-      DSUB     @(PC), @(0x00017AD2,R1.W*2,PC)
-      DSUB     @(0x00017A55,PC), @R0
-      DSUB     @(0x00017A5A,PC), @(17,R0)
-      DSUB     @(0x00011BEF,PC), @R0+
-      DSUB     @(0x00011BF5,PC), @-R0
-      DSUB     @(0x00011C50,PC), @0x76
-      DSUB     @(0x00011C57,PC), @(R0*1)
-      DSUB     @(0x00011C5E,PC), @(1,R0*1)
-      DSUB     @(0x00011C66,PC), @(PC)
-      DSUB     @(0x00011C6D,PC), @(0x00017A8D,PC)
-      DSUB     @(0x00011C75,PC), @(R1.W,PC)
-      DSUB     @(0x00011C7D,PC), @(0x00017B1F,R1.W*2,PC)
-      DSUB     @(0x00011C86,PC), @(-0x7C,@(-0x7F7E7D7D,R15))
-      DSUB     @(0x7173F59B,PC), @(0x01020304,R0.L,R13)
-      DSUB     @(R1.W,PC), @R2
-      DSUB     @(R1.W,PC), @(17,R0)
-      DSUB     @(R1.W,PC), @R0+
-      DSUB     @(R1.W,PC), @-R0
-      DSUB     @(R1.W,PC), @(CR0*1)
-      DSUB     @(R1.W,PC), @(1,CR0*1)
-      DSUB     @(R1.W,PC), @(0x01020304,R0.L,CR13)
-      DSUB     @(R1.W,PC), @(R1.W,CR0)
-      DSUB     @(R1.W,PC), @(-0x7C,@(-0x7F7E7D7D,CR15))
-      DSUB     @(R1.W,PC), @0x76
-      DSUB     @(R1.W,PC), @(PC)
-      DSUB     @(R1.W,PC), @(0x00017B0F,PC)
-      DSUB     @(R1.W,PC), @(R1.W,PC)
-      DSUB     @(R1.W,PC), @(0x00017B9F,R1.W*2,PC)
-      DSUB     @(0x00017BA4,R1.W*2,PC), @(20,R3)
-      DSUB     @(0x00017B9A,R0.W,PC), @R2
-      DSUB     @(0x00019DC3,R1.W*4,PC), @R0+
-      DSUB     @(0x00019DCA,R1.W*4,PC), @-R0
-      DSUB     @(0x00019DD1,R1.W*4,PC), @(CR0*1)
-      DSUB     @(0x00019DDA,R1.W*4,PC), @(1,CR0*1)
-      DSUB     @(0x00019DE4,R1.W*4,PC), @(0x01020304,R0.L,CR13)
-      DSUB     @(0x00019DF2,R1.W*4,PC), @(R1.W,CR0)
-      DSUB     @(0x00019DFC,R1.W*4,PC), @(-0x7C,@(-0x7F7E7D7D,CR15))
-      DSUB     @(0x3234B01E,R1.W*8,PC), @0x76
-      DSUB     @(0x3234B028,R1.W*8,PC), @(PC)
-      DSUB     @(0x3234B032,R1.W*8,PC), @(0x00017B91,PC)
-      DSUB     @(0x3234B03D,R1.W*8,PC), @(R1.W,PC)
-      DSUB     @(0x3234B048,R1.W*8,PC), @(0x00017C29,R1.W*2,PC)
+      XOR.L    @(R1.W,PC), @(0x00016D01,R1.W*2,PC)
+      XOR.L    @(0x00016D06,R1.W*2,PC), @(20,R3)
+      XOR.L    @(0x00016CFC,R0.W,PC), @R2
+      XOR.L    @(0x00018F25,R1.W*4,PC), @R0+
+      XOR.L    @(0x00018F2C,R1.W*4,PC), @-R0
+      XOR.L    @(0x00018F33,R1.W*4,PC), @(CR0*1)
+      XOR.L    @(0x00018F3C,R1.W*4,PC), @(1,CR0*1)
+      XOR.L    @(0x00018F46,R1.W*4,PC), @(0x01020304,R0.L,CR13)
+      XOR.L    @(0x00018F54,R1.W*4,PC), @(R1.W,CR0)
+      XOR.L    @(0x00018F5E,R1.W*4,PC), @(-0x7C,@(-0x7F7E7D7D,CR15))
+      XOR.L    @(0x3234A180,R1.W*8,PC), @0x76
+      XOR.L    @(0x3234A18A,R1.W*8,PC), @(PC)
+      XOR.L    @(0x3234A194,R1.W*8,PC), @(0x00016CF3,PC)
+      XOR.L    @(0x3234A19F,R1.W*8,PC), @(R1.W,PC)
+      XOR.L    @(0x3234A1AA,R1.W*8,PC), @(0x00016D8B,R1.W*2,PC)
       OR.B     @R9, R0
       OR.B     @(-0x6F,R0), R0
       OR.B     R0, R0
@@ -13417,9 +12909,9 @@
       OR.B     #0:8, R0
       OR.B     @0xFFFFFFF6, R0
       OR.B     @(R1.W,PC), R0
-      OR.B     @(0x00017C66,R1.W*2,PC), R0
+      OR.B     @(0x00016DC8,R1.W*2,PC), R0
       OR.B     @(PC), R0
-      OR.B     @(0x00017BEC,PC), R0
+      OR.B     @(0x00016D4E,PC), R0
       OR.B     @R0, @R1
       OR.B     @R0, @(17,R0)
       OR.B     @R0, @R0+
@@ -13431,9 +12923,9 @@
       OR.B     @R0, @(-0x7C,@(-0x7F7E7D7D,CR15))
       OR.B     @R0, @0x76
       OR.B     @R0, @(PC)
-      OR.B     @R0, @(0x00017C2B,PC)
+      OR.B     @R0, @(0x00016D8D,PC)
       OR.B     @R0, @(R1.W,PC)
-      OR.B     @R0, @(0x00017CB7,R1.W*2,PC)
+      OR.B     @R0, @(0x00016E19,R1.W*2,PC)
       OR.B     @(17,R0), @(19,R2)
       OR.B     @(0x2122,R0), @R0+
       OR.B     @(0x2122,R0), @-R0
@@ -13445,9 +12937,9 @@
       OR.B     @(0x2122,R0), @CR0
       OR.B     @(0x2122,R0), @0x76
       OR.B     @(0x2122,R0), @(PC)
-      OR.B     @(0x2122,R0), @(0x00017C8D,PC)
+      OR.B     @(0x2122,R0), @(0x00016DEF,PC)
       OR.B     @(0x2122,R0), @(R1.W,PC)
-      OR.B     @(0x2122,R0), @(0x00017D1D,R1.W*2,PC)
+      OR.B     @(0x2122,R0), @(0x00016E7F,R1.W*2,PC)
       OR.B     R0, @R0+
       OR.B     R0, @-R0
       OR.B     R0, @(CR0*1)
@@ -13459,9 +12951,9 @@
       OR.B     R0, @(17,CR0)
       OR.B     R0, @0x76
       OR.B     R0, @(PC)
-      OR.B     R0, @(0x00017CDD,PC)
+      OR.B     R0, @(0x00016E3F,PC)
       OR.B     R0, @(R1.W,PC)
-      OR.B     R0, @(0x00017D69,R1.W*2,PC)
+      OR.B     R0, @(0x00016ECB,R1.W*2,PC)
       OR.B     @R0+, @R1+
       OR.B     @R0+, @-R0
       OR.B     @R0+, @(CR0*1)
@@ -13473,9 +12965,9 @@
       OR.B     @R0+, @(17,CR0)
       OR.B     @R0+, @0x76
       OR.B     @R0+, @(PC)
-      OR.B     @R0+, @(0x00017D29,PC)
+      OR.B     @R0+, @(0x00016E8B,PC)
       OR.B     @R0+, @(R1.W,PC)
-      OR.B     @R0+, @(0x00017DB5,R1.W*2,PC)
+      OR.B     @R0+, @(0x00016F17,R1.W*2,PC)
       OR.B     @-R0, @-R1
       OR.B     @-R0, @(CR0*1)
       OR.B     @-R0, @(1,CR0*1)
@@ -13487,9 +12979,9 @@
       OR.B     @-R0, @CR0+
       OR.B     @-R0, @0x76
       OR.B     @-R0, @(PC)
-      OR.B     @-R0, @(0x00017D76,PC)
+      OR.B     @-R0, @(0x00016ED8,PC)
       OR.B     @-R0, @(R1.W,PC)
-      OR.B     @-R0, @(0x00017E02,R1.W*2,PC)
+      OR.B     @-R0, @(0x00016F64,R1.W*2,PC)
       OR.B     @(CR0*1), @R1
       OR.B     @(CR0*1), @(17,R0)
       OR.B     @(CR0*1), @R0+
@@ -13501,9 +12993,9 @@
       OR.B     @(CR0*1), @(-0x7C,@(-0x7F7E7D7D,CR15))
       OR.B     @(CR0*1), @0x76
       OR.B     @(CR0*1), @(PC)
-      OR.B     @(CR0*1), @(0x00017DD8,PC)
+      OR.B     @(CR0*1), @(0x00016F3A,PC)
       OR.B     @(CR0*1), @(R1.W,PC)
-      OR.B     @(CR0*1), @(0x00017E68,R1.W*2,PC)
+      OR.B     @(CR0*1), @(0x00016FCA,R1.W*2,PC)
       OR.B     @(1,CR0*1), @R2
       OR.B     @(1,CR0*1), @(17,R0)
       OR.B     @(0x1C1D2E2F,CR11*2), @R0+
@@ -13515,9 +13007,9 @@
       OR.B     @(0x1C1D2E2F,CR11*2), @(-0x7C,@(-0x7F7E7D7D,CR15))
       OR.B     @(0x1C1D3D3E,CR11*2), @0x76
       OR.B     @(0x1C1D3D3E,CR11*2), @(PC)
-      OR.B     @(0x1C1D3D3E,CR11*2), @(0x00017E68,PC)
+      OR.B     @(0x1C1D3D3E,CR11*2), @(0x00016FCA,PC)
       OR.B     @(0x1C1D3D3E,CR11*2), @(R1.W,PC)
-      OR.B     @(0x1C1D3D3E,CR11*2), @(0x00017F00,R1.W*2,PC)
+      OR.B     @(0x1C1D3D3E,CR11*2), @(0x00017062,R1.W*2,PC)
       OR.B     @(0x01020304,R0.L,CR13), @R5
       OR.B     @(0x01020304,R0.L,CR13), @(17,R0)
       OR.B     @(0x01020304,R0.L,CR13), @R0+
@@ -13529,9 +13021,9 @@
       OR.B     @(0x01020304,R0.L,CR13), @(-0x7C,@(-0x7F7E7D7D,CR15))
       OR.B     @(0x01020304,R0.L,CR13), @0x76
       OR.B     @(0x01020304,R0.L,CR13), @(PC)
-      OR.B     @(0x01020304,R0.L,CR13), @(0x00017F12,PC)
+      OR.B     @(0x01020304,R0.L,CR13), @(0x00017074,PC)
       OR.B     @(0x01020304,R0.L,CR13), @(R1.W,PC)
-      OR.B     @(0x01020304,R0.L,CR13), @(0x00017FAC,R1.W*2,PC)
+      OR.B     @(0x01020304,R0.L,CR13), @(0x0001710E,R1.W*2,PC)
       OR.B     @(R1.W,CR0), @R2
       OR.B     @(R1.W,CR0), @(17,R0)
       OR.B     @(R1.W,CR0), @R0+
@@ -13543,9 +13035,9 @@
       OR.B     @(R1.W,CR0), @(-0x7C,@(-0x7F7E7D7D,CR15))
       OR.B     @(R1.W,CR0), @0x76
       OR.B     @(R1.W,CR0), @(PC)
-      OR.B     @(R1.W,CR0), @(0x00017F8E,PC)
+      OR.B     @(R1.W,CR0), @(0x000170F0,PC)
       OR.B     @(R1.W,CR0), @(R1.W,PC)
-      OR.B     @(R1.W,CR0), @(0x00018020,R1.W*2,PC)
+      OR.B     @(R1.W,CR0), @(0x00017182,R1.W*2,PC)
       OR.B     @(-0x7C,@(-0x7F7E7D7D,CR15)), @R0
       OR.B     @(-0x7C,@(-0x7F7E7D7D,CR15)), @(17,R0)
       OR.B     @(-0x7C,@(-0x7F7E7D7D,CR15)), @R0+
@@ -13557,9 +13049,9 @@
       OR.B     @(-0x7C,@(-0x7F7E7D7D,CR15)), @(R1.W,R0)
       OR.B     @(-0x7C,@(-0x7F7E7D7D,CR15)), @(18,R1.W*2,R0)
       OR.B     @(-0x7C,@(-0x7F7E7D7D,CR15)), @(PC)
-      OR.B     @(-0x7C,@(-0x7F7E7D7D,CR15)), @(0x0001802D,PC)
+      OR.B     @(-0x7C,@(-0x7F7E7D7D,CR15)), @(0x0001718F,PC)
       OR.B     @(-0x7C,@(-0x7F7E7D7D,CR15)), @(R1.W,PC)
-      OR.B     @(-0x7C,@(-0x7F7E7D7D,CR15)), @(0x000180C7,R1.W*2,PC)
+      OR.B     @(-0x7C,@(-0x7F7E7D7D,CR15)), @(0x00017229,R1.W*2,PC)
       OR.B     #0x72:8, @(PR0*1)
       OR.B     #0x72:8, @(1,PR0*1)
       OR.B     #0x72:8, @(0x01020304,R0.L,PR13)
@@ -13571,9 +13063,9 @@
       OR.B     #0x72:8, @-PR0
       OR.B     #0x72:8, @0x76
       OR.B     #0x72:8, @(PC)
-      OR.B     #0x72:8, @(0x00018095,PC)
+      OR.B     #0x72:8, @(0x000171F7,PC)
       OR.B     #0x72:8, @(R1.W,PC)
-      OR.B     #0x72:8, @(0x00018123,R1.W*2,PC)
+      OR.B     #0x72:8, @(0x00017285,R1.W*2,PC)
       OR.B     #-0x80:8, @R0
       OR.B     #-0x80:8, @(17,R0)
       OR.B     #-0x80:8, @R0+
@@ -13585,18 +13077,18 @@
       OR.B     #-0x80:8, @(R1.W,R0)
       OR.B     #-0x80:8, @(18,R1.W*2,R0)
       OR.B     #-0x80:8, @(PC)
-      OR.B     #-0x80:8, @(0x000180E8,PC)
+      OR.B     #-0x80:8, @(0x0001724A,PC)
       OR.B     #-0x80:8, @(R1.W,PC)
-      OR.B     #-0x80:8, @(0x00018176,R1.W*2,PC)
+      OR.B     #-0x80:8, @(0x000172D8,R1.W*2,PC)
       OR.B     @0x76, @0x78797A7B
       OR.B     @0x76, @(R0*1)
       OR.B     @0x76, @(1,R0*1)
       OR.B     @0x76, @(0x01020304,R0.L,R13)
       OR.B     @0x76, @(R1.W,R0)
       OR.B     @0x76, @(PC)
-      OR.B     @0x76, @(0x00018123,PC)
+      OR.B     @0x76, @(0x00017285,PC)
       OR.B     @0x76, @(R1.W,PC)
-      OR.B     @0x76, @(0x000181B1,R1.W*2,PC)
+      OR.B     @0x76, @(0x00017313,R1.W*2,PC)
       OR.B     @0x76, @(-0x7C,@(-0x7F7E7D7D,R15))
       OR.B     @0x76, @R0
       OR.B     @0x76, @(17,R0)
@@ -13613,22 +13105,22 @@
       OR.B     @(PC), @(R1.W,R0)
       OR.B     @(PC), @(18,R1.W*2,R0)
       OR.B     @(PC), @(PC)
-      OR.B     @(PC), @(0x00018193,PC)
+      OR.B     @(PC), @(0x000172F5,PC)
       OR.B     @(PC), @(R1.W,PC)
-      OR.B     @(PC), @(0x00018221,R1.W*2,PC)
-      OR.B     @(0x000181A4,PC), @R0
-      OR.B     @(0x000181A9,PC), @(17,R0)
-      OR.B     @(0x0001233E,PC), @R0+
-      OR.B     @(0x00012344,PC), @-R0
-      OR.B     @(0x0001239F,PC), @0x76
-      OR.B     @(0x000123A6,PC), @(R0*1)
-      OR.B     @(0x000123AD,PC), @(1,R0*1)
-      OR.B     @(0x000123B5,PC), @(PC)
-      OR.B     @(0x000123BC,PC), @(0x000181DC,PC)
-      OR.B     @(0x000123C4,PC), @(R1.W,PC)
-      OR.B     @(0x000123CC,PC), @(0x0001826E,R1.W*2,PC)
-      OR.B     @(0x000123D5,PC), @(-0x7C,@(-0x7F7E7D7D,R15))
-      OR.B     @(0x7173FCEA,PC), @(0x01020304,R0.L,R13)
+      OR.B     @(PC), @(0x00017383,R1.W*2,PC)
+      OR.B     @(0x00017306,PC), @R0
+      OR.B     @(0x0001730B,PC), @(17,R0)
+      OR.B     @(0x000114A0,PC), @R0+
+      OR.B     @(0x000114A6,PC), @-R0
+      OR.B     @(0x00011501,PC), @0x76
+      OR.B     @(0x00011508,PC), @(R0*1)
+      OR.B     @(0x0001150F,PC), @(1,R0*1)
+      OR.B     @(0x00011517,PC), @(PC)
+      OR.B     @(0x0001151E,PC), @(0x0001733E,PC)
+      OR.B     @(0x00011526,PC), @(R1.W,PC)
+      OR.B     @(0x0001152E,PC), @(0x000173D0,R1.W*2,PC)
+      OR.B     @(0x00011537,PC), @(-0x7C,@(-0x7F7E7D7D,R15))
+      OR.B     @(0x7173EE4C,PC), @(0x01020304,R0.L,R13)
       OR.B     @(R1.W,PC), @R2
       OR.B     @(R1.W,PC), @(17,R0)
       OR.B     @(R1.W,PC), @R0+
@@ -13640,23 +13132,23 @@
       OR.B     @(R1.W,PC), @(-0x7C,@(-0x7F7E7D7D,CR15))
       OR.B     @(R1.W,PC), @0x76
       OR.B     @(R1.W,PC), @(PC)
-      OR.B     @(R1.W,PC), @(0x0001825E,PC)
+      OR.B     @(R1.W,PC), @(0x000173C0,PC)
       OR.B     @(R1.W,PC), @(R1.W,PC)
-      OR.B     @(R1.W,PC), @(0x000182EE,R1.W*2,PC)
-      OR.B     @(0x000182F3,R1.W*2,PC), @(20,R3)
-      OR.B     @(0x000182E9,R0.W,PC), @R2
-      OR.B     @(0x0001A512,R1.W*4,PC), @R0+
-      OR.B     @(0x0001A519,R1.W*4,PC), @-R0
-      OR.B     @(0x0001A520,R1.W*4,PC), @(CR0*1)
-      OR.B     @(0x0001A529,R1.W*4,PC), @(1,CR0*1)
-      OR.B     @(0x0001A533,R1.W*4,PC), @(0x01020304,R0.L,CR13)
-      OR.B     @(0x0001A541,R1.W*4,PC), @(R1.W,CR0)
-      OR.B     @(0x0001A54B,R1.W*4,PC), @(-0x7C,@(-0x7F7E7D7D,CR15))
-      OR.B     @(0x3234B76D,R1.W*8,PC), @0x76
-      OR.B     @(0x3234B777,R1.W*8,PC), @(PC)
-      OR.B     @(0x3234B781,R1.W*8,PC), @(0x000182E0,PC)
-      OR.B     @(0x3234B78C,R1.W*8,PC), @(R1.W,PC)
-      OR.B     @(0x3234B797,R1.W*8,PC), @(0x00018378,R1.W*2,PC)
+      OR.B     @(R1.W,PC), @(0x00017450,R1.W*2,PC)
+      OR.B     @(0x00017455,R1.W*2,PC), @(20,R3)
+      OR.B     @(0x0001744B,R0.W,PC), @R2
+      OR.B     @(0x00019674,R1.W*4,PC), @R0+
+      OR.B     @(0x0001967B,R1.W*4,PC), @-R0
+      OR.B     @(0x00019682,R1.W*4,PC), @(CR0*1)
+      OR.B     @(0x0001968B,R1.W*4,PC), @(1,CR0*1)
+      OR.B     @(0x00019695,R1.W*4,PC), @(0x01020304,R0.L,CR13)
+      OR.B     @(0x000196A3,R1.W*4,PC), @(R1.W,CR0)
+      OR.B     @(0x000196AD,R1.W*4,PC), @(-0x7C,@(-0x7F7E7D7D,CR15))
+      OR.B     @(0x3234A8CF,R1.W*8,PC), @0x76
+      OR.B     @(0x3234A8D9,R1.W*8,PC), @(PC)
+      OR.B     @(0x3234A8E3,R1.W*8,PC), @(0x00017442,PC)
+      OR.B     @(0x3234A8EE,R1.W*8,PC), @(R1.W,PC)
+      OR.B     @(0x3234A8F9,R1.W*8,PC), @(0x000174DA,R1.W*2,PC)
       OR.W     @R10, R0
       OR.W     @(-0x6F,R0), R0
       OR.W     R0, R0
@@ -13671,9 +13163,9 @@
       OR.W     #0:8, R0
       OR.W     @0xFFFFFFF6, R0
       OR.W     @(R1.W,PC), R0
-      OR.W     @(0x000183B5,R1.W*2,PC), R0
+      OR.W     @(0x00017517,R1.W*2,PC), R0
       OR.W     @(PC), R0
-      OR.W     @(0x0001833B,PC), R0
+      OR.W     @(0x0001749D,PC), R0
       OR.W     @R0, @R1
       OR.W     @R0, @(17,R0)
       OR.W     @R0, @R0+
@@ -13685,9 +13177,9 @@
       OR.W     @R0, @(-0x7C,@(-0x7F7E7D7D,CR15))
       OR.W     @R0, @0x76
       OR.W     @R0, @(PC)
-      OR.W     @R0, @(0x0001837A,PC)
+      OR.W     @R0, @(0x000174DC,PC)
       OR.W     @R0, @(R1.W,PC)
-      OR.W     @R0, @(0x00018406,R1.W*2,PC)
+      OR.W     @R0, @(0x00017568,R1.W*2,PC)
       OR.W     @(17,R0), @(19,R2)
       OR.W     @(0x2122,R0), @R0+
       OR.W     @(0x2122,R0), @-R0
@@ -13699,9 +13191,9 @@
       OR.W     @(0x2122,R0), @CR0
       OR.W     @(0x2122,R0), @0x76
       OR.W     @(0x2122,R0), @(PC)
-      OR.W     @(0x2122,R0), @(0x000183DC,PC)
+      OR.W     @(0x2122,R0), @(0x0001753E,PC)
       OR.W     @(0x2122,R0), @(R1.W,PC)
-      OR.W     @(0x2122,R0), @(0x0001846C,R1.W*2,PC)
+      OR.W     @(0x2122,R0), @(0x000175CE,R1.W*2,PC)
       OR.W     R0, @R0+
       OR.W     R0, @-R0
       OR.W     R0, @(CR0*1)
@@ -13713,9 +13205,9 @@
       OR.W     R0, @(17,CR0)
       OR.W     R0, @0x76
       OR.W     R0, @(PC)
-      OR.W     R0, @(0x0001842C,PC)
+      OR.W     R0, @(0x0001758E,PC)
       OR.W     R0, @(R1.W,PC)
-      OR.W     R0, @(0x000184B8,R1.W*2,PC)
+      OR.W     R0, @(0x0001761A,R1.W*2,PC)
       OR.W     @R0+, @R1+
       OR.W     @R0+, @-R0
       OR.W     @R0+, @(CR0*1)
@@ -13727,9 +13219,9 @@
       OR.W     @R0+, @(17,CR0)
       OR.W     @R0+, @0x76
       OR.W     @R0+, @(PC)
-      OR.W     @R0+, @(0x00018478,PC)
+      OR.W     @R0+, @(0x000175DA,PC)
       OR.W     @R0+, @(R1.W,PC)
-      OR.W     @R0+, @(0x00018504,R1.W*2,PC)
+      OR.W     @R0+, @(0x00017666,R1.W*2,PC)
       OR.W     @-R0, @-R1
       OR.W     @-R0, @(CR0*1)
       OR.W     @-R0, @(1,CR0*1)
@@ -13741,9 +13233,9 @@
       OR.W     @-R0, @CR0+
       OR.W     @-R0, @0x76
       OR.W     @-R0, @(PC)
-      OR.W     @-R0, @(0x000184C5,PC)
+      OR.W     @-R0, @(0x00017627,PC)
       OR.W     @-R0, @(R1.W,PC)
-      OR.W     @-R0, @(0x00018551,R1.W*2,PC)
+      OR.W     @-R0, @(0x000176B3,R1.W*2,PC)
       OR.W     @(CR0*1), @R1
       OR.W     @(CR0*1), @(17,R0)
       OR.W     @(CR0*1), @R0+
@@ -13755,9 +13247,9 @@
       OR.W     @(CR0*1), @(-0x7C,@(-0x7F7E7D7D,CR15))
       OR.W     @(CR0*1), @0x76
       OR.W     @(CR0*1), @(PC)
-      OR.W     @(CR0*1), @(0x00018527,PC)
+      OR.W     @(CR0*1), @(0x00017689,PC)
       OR.W     @(CR0*1), @(R1.W,PC)
-      OR.W     @(CR0*1), @(0x000185B7,R1.W*2,PC)
+      OR.W     @(CR0*1), @(0x00017719,R1.W*2,PC)
       OR.W     @(1,CR0*1), @R2
       OR.W     @(1,CR0*1), @(17,R0)
       OR.W     @(0x1C1D2E2F,CR11*2), @R0+
@@ -13769,9 +13261,9 @@
       OR.W     @(0x1C1D2E2F,CR11*2), @(-0x7C,@(-0x7F7E7D7D,CR15))
       OR.W     @(0x1C1D3D3E,CR11*2), @0x76
       OR.W     @(0x1C1D3D3E,CR11*2), @(PC)
-      OR.W     @(0x1C1D3D3E,CR11*2), @(0x000185B7,PC)
+      OR.W     @(0x1C1D3D3E,CR11*2), @(0x00017719,PC)
       OR.W     @(0x1C1D3D3E,CR11*2), @(R1.W,PC)
-      OR.W     @(0x1C1D3D3E,CR11*2), @(0x0001864F,R1.W*2,PC)
+      OR.W     @(0x1C1D3D3E,CR11*2), @(0x000177B1,R1.W*2,PC)
       OR.W     @(0x01020304,R0.L,CR13), @R5
       OR.W     @(0x01020304,R0.L,CR13), @(17,R0)
       OR.W     @(0x01020304,R0.L,CR13), @R0+
@@ -13783,9 +13275,9 @@
       OR.W     @(0x01020304,R0.L,CR13), @(-0x7C,@(-0x7F7E7D7D,CR15))
       OR.W     @(0x01020304,R0.L,CR13), @0x76
       OR.W     @(0x01020304,R0.L,CR13), @(PC)
-      OR.W     @(0x01020304,R0.L,CR13), @(0x00018661,PC)
+      OR.W     @(0x01020304,R0.L,CR13), @(0x000177C3,PC)
       OR.W     @(0x01020304,R0.L,CR13), @(R1.W,PC)
-      OR.W     @(0x01020304,R0.L,CR13), @(0x000186FB,R1.W*2,PC)
+      OR.W     @(0x01020304,R0.L,CR13), @(0x0001785D,R1.W*2,PC)
       OR.W     @(R1.W,CR0), @R2
       OR.W     @(R1.W,CR0), @(17,R0)
       OR.W     @(R1.W,CR0), @R0+
@@ -13797,9 +13289,9 @@
       OR.W     @(R1.W,CR0), @(-0x7C,@(-0x7F7E7D7D,CR15))
       OR.W     @(R1.W,CR0), @0x76
       OR.W     @(R1.W,CR0), @(PC)
-      OR.W     @(R1.W,CR0), @(0x000186DD,PC)
+      OR.W     @(R1.W,CR0), @(0x0001783F,PC)
       OR.W     @(R1.W,CR0), @(R1.W,PC)
-      OR.W     @(R1.W,CR0), @(0x0001876F,R1.W*2,PC)
+      OR.W     @(R1.W,CR0), @(0x000178D1,R1.W*2,PC)
       OR.W     @(-0x7C,@(-0x7F7E7D7D,CR15)), @R0
       OR.W     @(-0x7C,@(-0x7F7E7D7D,CR15)), @(17,R0)
       OR.W     @(-0x7C,@(-0x7F7E7D7D,CR15)), @R0+
@@ -13811,9 +13303,9 @@
       OR.W     @(-0x7C,@(-0x7F7E7D7D,CR15)), @(R1.W,R0)
       OR.W     @(-0x7C,@(-0x7F7E7D7D,CR15)), @(18,R1.W*2,R0)
       OR.W     @(-0x7C,@(-0x7F7E7D7D,CR15)), @(PC)
-      OR.W     @(-0x7C,@(-0x7F7E7D7D,CR15)), @(0x0001877C,PC)
+      OR.W     @(-0x7C,@(-0x7F7E7D7D,CR15)), @(0x000178DE,PC)
       OR.W     @(-0x7C,@(-0x7F7E7D7D,CR15)), @(R1.W,PC)
-      OR.W     @(-0x7C,@(-0x7F7E7D7D,CR15)), @(0x00018816,R1.W*2,PC)
+      OR.W     @(-0x7C,@(-0x7F7E7D7D,CR15)), @(0x00017978,R1.W*2,PC)
       OR.W     #0x72:8, @(PR0*1)
       OR.W     #0x72:8, @(1,PR0*1)
       OR.W     #0x72:8, @(0x01020304,R0.L,PR13)
@@ -13825,9 +13317,9 @@
       OR.W     #0x72:8, @-PR0
       OR.W     #0x72:8, @0x76
       OR.W     #0x72:8, @(PC)
-      OR.W     #0x72:8, @(0x000187E4,PC)
+      OR.W     #0x72:8, @(0x00017946,PC)
       OR.W     #0x72:8, @(R1.W,PC)
-      OR.W     #0x72:8, @(0x00018872,R1.W*2,PC)
+      OR.W     #0x72:8, @(0x000179D4,R1.W*2,PC)
       OR.W     #-0x80:8, @R0
       OR.W     #-0x80:8, @(17,R0)
       OR.W     #-0x80:8, @R0+
@@ -13839,18 +13331,18 @@
       OR.W     #-0x80:8, @(R1.W,R0)
       OR.W     #-0x80:8, @(18,R1.W*2,R0)
       OR.W     #-0x80:8, @(PC)
-      OR.W     #-0x80:8, @(0x00018837,PC)
+      OR.W     #-0x80:8, @(0x00017999,PC)
       OR.W     #-0x80:8, @(R1.W,PC)
-      OR.W     #-0x80:8, @(0x000188C5,R1.W*2,PC)
+      OR.W     #-0x80:8, @(0x00017A27,R1.W*2,PC)
       OR.W     @0x76, @0x78797A7B
       OR.W     @0x76, @(R0*1)
       OR.W     @0x76, @(1,R0*1)
       OR.W     @0x76, @(0x01020304,R0.L,R13)
       OR.W     @0x76, @(R1.W,R0)
       OR.W     @0x76, @(PC)
-      OR.W     @0x76, @(0x00018872,PC)
+      OR.W     @0x76, @(0x000179D4,PC)
       OR.W     @0x76, @(R1.W,PC)
-      OR.W     @0x76, @(0x00018900,R1.W*2,PC)
+      OR.W     @0x76, @(0x00017A62,R1.W*2,PC)
       OR.W     @0x76, @(-0x7C,@(-0x7F7E7D7D,R15))
       OR.W     @0x76, @R0
       OR.W     @0x76, @(17,R0)
@@ -13867,22 +13359,22 @@
       OR.W     @(PC), @(R1.W,R0)
       OR.W     @(PC), @(18,R1.W*2,R0)
       OR.W     @(PC), @(PC)
-      OR.W     @(PC), @(0x000188E2,PC)
+      OR.W     @(PC), @(0x00017A44,PC)
       OR.W     @(PC), @(R1.W,PC)
-      OR.W     @(PC), @(0x00018970,R1.W*2,PC)
-      OR.W     @(0x000188F3,PC), @R0
-      OR.W     @(0x000188F8,PC), @(17,R0)
-      OR.W     @(0x00012A8D,PC), @R0+
-      OR.W     @(0x00012A93,PC), @-R0
-      OR.W     @(0x00012AEE,PC), @0x76
-      OR.W     @(0x00012AF5,PC), @(R0*1)
-      OR.W     @(0x00012AFC,PC), @(1,R0*1)
-      OR.W     @(0x00012B04,PC), @(PC)
-      OR.W     @(0x00012B0B,PC), @(0x0001892B,PC)
-      OR.W     @(0x00012B13,PC), @(R1.W,PC)
-      OR.W     @(0x00012B1B,PC), @(0x000189BD,R1.W*2,PC)
-      OR.W     @(0x00012B24,PC), @(-0x7C,@(-0x7F7E7D7D,R15))
-      OR.W     @(0x71740439,PC), @(0x01020304,R0.L,R13)
+      OR.W     @(PC), @(0x00017AD2,R1.W*2,PC)
+      OR.W     @(0x00017A55,PC), @R0
+      OR.W     @(0x00017A5A,PC), @(17,R0)
+      OR.W     @(0x00011BEF,PC), @R0+
+      OR.W     @(0x00011BF5,PC), @-R0
+      OR.W     @(0x00011C50,PC), @0x76
+      OR.W     @(0x00011C57,PC), @(R0*1)
+      OR.W     @(0x00011C5E,PC), @(1,R0*1)
+      OR.W     @(0x00011C66,PC), @(PC)
+      OR.W     @(0x00011C6D,PC), @(0x00017A8D,PC)
+      OR.W     @(0x00011C75,PC), @(R1.W,PC)
+      OR.W     @(0x00011C7D,PC), @(0x00017B1F,R1.W*2,PC)
+      OR.W     @(0x00011C86,PC), @(-0x7C,@(-0x7F7E7D7D,R15))
+      OR.W     @(0x7173F59B,PC), @(0x01020304,R0.L,R13)
       OR.W     @(R1.W,PC), @R2
       OR.W     @(R1.W,PC), @(17,R0)
       OR.W     @(R1.W,PC), @R0+
@@ -13894,23 +13386,23 @@
       OR.W     @(R1.W,PC), @(-0x7C,@(-0x7F7E7D7D,CR15))
       OR.W     @(R1.W,PC), @0x76
       OR.W     @(R1.W,PC), @(PC)
-      OR.W     @(R1.W,PC), @(0x000189AD,PC)
+      OR.W     @(R1.W,PC), @(0x00017B0F,PC)
       OR.W     @(R1.W,PC), @(R1.W,PC)
-      OR.W     @(R1.W,PC), @(0x00018A3D,R1.W*2,PC)
-      OR.W     @(0x00018A42,R1.W*2,PC), @(20,R3)
-      OR.W     @(0x00018A38,R0.W,PC), @R2
-      OR.W     @(0x0001AC61,R1.W*4,PC), @R0+
-      OR.W     @(0x0001AC68,R1.W*4,PC), @-R0
-      OR.W     @(0x0001AC6F,R1.W*4,PC), @(CR0*1)
-      OR.W     @(0x0001AC78,R1.W*4,PC), @(1,CR0*1)
-      OR.W     @(0x0001AC82,R1.W*4,PC), @(0x01020304,R0.L,CR13)
-      OR.W     @(0x0001AC90,R1.W*4,PC), @(R1.W,CR0)
-      OR.W     @(0x0001AC9A,R1.W*4,PC), @(-0x7C,@(-0x7F7E7D7D,CR15))
-      OR.W     @(0x3234BEBC,R1.W*8,PC), @0x76
-      OR.W     @(0x3234BEC6,R1.W*8,PC), @(PC)
-      OR.W     @(0x3234BED0,R1.W*8,PC), @(0x00018A2F,PC)
-      OR.W     @(0x3234BEDB,R1.W*8,PC), @(R1.W,PC)
-      OR.W     @(0x3234BEE6,R1.W*8,PC), @(0x00018AC7,R1.W*2,PC)
+      OR.W     @(R1.W,PC), @(0x00017B9F,R1.W*2,PC)
+      OR.W     @(0x00017BA4,R1.W*2,PC), @(20,R3)
+      OR.W     @(0x00017B9A,R0.W,PC), @R2
+      OR.W     @(0x00019DC3,R1.W*4,PC), @R0+
+      OR.W     @(0x00019DCA,R1.W*4,PC), @-R0
+      OR.W     @(0x00019DD1,R1.W*4,PC), @(CR0*1)
+      OR.W     @(0x00019DDA,R1.W*4,PC), @(1,CR0*1)
+      OR.W     @(0x00019DE4,R1.W*4,PC), @(0x01020304,R0.L,CR13)
+      OR.W     @(0x00019DF2,R1.W*4,PC), @(R1.W,CR0)
+      OR.W     @(0x00019DFC,R1.W*4,PC), @(-0x7C,@(-0x7F7E7D7D,CR15))
+      OR.W     @(0x3234B01E,R1.W*8,PC), @0x76
+      OR.W     @(0x3234B028,R1.W*8,PC), @(PC)
+      OR.W     @(0x3234B032,R1.W*8,PC), @(0x00017B91,PC)
+      OR.W     @(0x3234B03D,R1.W*8,PC), @(R1.W,PC)
+      OR.W     @(0x3234B048,R1.W*8,PC), @(0x00017C29,R1.W*2,PC)
       OR.L     @R11, R0
       OR.L     @(-0x6F,R0), R0
       OR.L     R0, R0
@@ -13925,9 +13417,9 @@
       OR.L     #0:8, R0
       OR.L     @0xFFFFFFF6, R0
       OR.L     @(R1.W,PC), R0
-      OR.L     @(0x00018B04,R1.W*2,PC), R0
+      OR.L     @(0x00017C66,R1.W*2,PC), R0
       OR.L     @(PC), R0
-      OR.L     @(0x00018A8A,PC), R0
+      OR.L     @(0x00017BEC,PC), R0
       OR.L     @R0, @R1
       OR.L     @R0, @(17,R0)
       OR.L     @R0, @R0+
@@ -13939,9 +13431,9 @@
       OR.L     @R0, @(-0x7C,@(-0x7F7E7D7D,CR15))
       OR.L     @R0, @0x76
       OR.L     @R0, @(PC)
-      OR.L     @R0, @(0x00018AC9,PC)
+      OR.L     @R0, @(0x00017C2B,PC)
       OR.L     @R0, @(R1.W,PC)
-      OR.L     @R0, @(0x00018B55,R1.W*2,PC)
+      OR.L     @R0, @(0x00017CB7,R1.W*2,PC)
       OR.L     @(17,R0), @(19,R2)
       OR.L     @(0x2122,R0), @R0+
       OR.L     @(0x2122,R0), @-R0
@@ -13953,9 +13445,9 @@
       OR.L     @(0x2122,R0), @CR0
       OR.L     @(0x2122,R0), @0x76
       OR.L     @(0x2122,R0), @(PC)
-      OR.L     @(0x2122,R0), @(0x00018B2B,PC)
+      OR.L     @(0x2122,R0), @(0x00017C8D,PC)
       OR.L     @(0x2122,R0), @(R1.W,PC)
-      OR.L     @(0x2122,R0), @(0x00018BBB,R1.W*2,PC)
+      OR.L     @(0x2122,R0), @(0x00017D1D,R1.W*2,PC)
       OR.L     R0, @R0+
       OR.L     R0, @-R0
       OR.L     R0, @(CR0*1)
@@ -13967,9 +13459,9 @@
       OR.L     R0, @(17,CR0)
       OR.L     R0, @0x76
       OR.L     R0, @(PC)
-      OR.L     R0, @(0x00018B7B,PC)
+      OR.L     R0, @(0x00017CDD,PC)
       OR.L     R0, @(R1.W,PC)
-      OR.L     R0, @(0x00018C07,R1.W*2,PC)
+      OR.L     R0, @(0x00017D69,R1.W*2,PC)
       OR.L     @R0+, @R1+
       OR.L     @R0+, @-R0
       OR.L     @R0+, @(CR0*1)
@@ -13981,9 +13473,9 @@
       OR.L     @R0+, @(17,CR0)
       OR.L     @R0+, @0x76
       OR.L     @R0+, @(PC)
-      OR.L     @R0+, @(0x00018BC7,PC)
+      OR.L     @R0+, @(0x00017D29,PC)
       OR.L     @R0+, @(R1.W,PC)
-      OR.L     @R0+, @(0x00018C53,R1.W*2,PC)
+      OR.L     @R0+, @(0x00017DB5,R1.W*2,PC)
       OR.L     @-R0, @-R1
       OR.L     @-R0, @(CR0*1)
       OR.L     @-R0, @(1,CR0*1)
@@ -13995,9 +13487,9 @@
       OR.L     @-R0, @CR0+
       OR.L     @-R0, @0x76
       OR.L     @-R0, @(PC)
-      OR.L     @-R0, @(0x00018C14,PC)
+      OR.L     @-R0, @(0x00017D76,PC)
       OR.L     @-R0, @(R1.W,PC)
-      OR.L     @-R0, @(0x00018CA0,R1.W*2,PC)
+      OR.L     @-R0, @(0x00017E02,R1.W*2,PC)
       OR.L     @(CR0*1), @R1
       OR.L     @(CR0*1), @(17,R0)
       OR.L     @(CR0*1), @R0+
@@ -14009,9 +13501,9 @@
       OR.L     @(CR0*1), @(-0x7C,@(-0x7F7E7D7D,CR15))
       OR.L     @(CR0*1), @0x76
       OR.L     @(CR0*1), @(PC)
-      OR.L     @(CR0*1), @(0x00018C76,PC)
+      OR.L     @(CR0*1), @(0x00017DD8,PC)
       OR.L     @(CR0*1), @(R1.W,PC)
-      OR.L     @(CR0*1), @(0x00018D06,R1.W*2,PC)
+      OR.L     @(CR0*1), @(0x00017E68,R1.W*2,PC)
       OR.L     @(1,CR0*1), @R2
       OR.L     @(1,CR0*1), @(17,R0)
       OR.L     @(0x1C1D2E2F,CR11*2), @R0+
@@ -14023,9 +13515,9 @@
       OR.L     @(0x1C1D2E2F,CR11*2), @(-0x7C,@(-0x7F7E7D7D,CR15))
       OR.L     @(0x1C1D3D3E,CR11*2), @0x76
       OR.L     @(0x1C1D3D3E,CR11*2), @(PC)
-      OR.L     @(0x1C1D3D3E,CR11*2), @(0x00018D06,PC)
+      OR.L     @(0x1C1D3D3E,CR11*2), @(0x00017E68,PC)
       OR.L     @(0x1C1D3D3E,CR11*2), @(R1.W,PC)
-      OR.L     @(0x1C1D3D3E,CR11*2), @(0x00018D9E,R1.W*2,PC)
+      OR.L     @(0x1C1D3D3E,CR11*2), @(0x00017F00,R1.W*2,PC)
       OR.L     @(0x01020304,R0.L,CR13), @R5
       OR.L     @(0x01020304,R0.L,CR13), @(17,R0)
       OR.L     @(0x01020304,R0.L,CR13), @R0+
@@ -14037,9 +13529,9 @@
       OR.L     @(0x01020304,R0.L,CR13), @(-0x7C,@(-0x7F7E7D7D,CR15))
       OR.L     @(0x01020304,R0.L,CR13), @0x76
       OR.L     @(0x01020304,R0.L,CR13), @(PC)
-      OR.L     @(0x01020304,R0.L,CR13), @(0x00018DB0,PC)
+      OR.L     @(0x01020304,R0.L,CR13), @(0x00017F12,PC)
       OR.L     @(0x01020304,R0.L,CR13), @(R1.W,PC)
-      OR.L     @(0x01020304,R0.L,CR13), @(0x00018E4A,R1.W*2,PC)
+      OR.L     @(0x01020304,R0.L,CR13), @(0x00017FAC,R1.W*2,PC)
       OR.L     @(R1.W,CR0), @R2
       OR.L     @(R1.W,CR0), @(17,R0)
       OR.L     @(R1.W,CR0), @R0+
@@ -14051,9 +13543,9 @@
       OR.L     @(R1.W,CR0), @(-0x7C,@(-0x7F7E7D7D,CR15))
       OR.L     @(R1.W,CR0), @0x76
       OR.L     @(R1.W,CR0), @(PC)
-      OR.L     @(R1.W,CR0), @(0x00018E2C,PC)
+      OR.L     @(R1.W,CR0), @(0x00017F8E,PC)
       OR.L     @(R1.W,CR0), @(R1.W,PC)
-      OR.L     @(R1.W,CR0), @(0x00018EBE,R1.W*2,PC)
+      OR.L     @(R1.W,CR0), @(0x00018020,R1.W*2,PC)
       OR.L     @(-0x7C,@(-0x7F7E7D7D,CR15)), @R0
       OR.L     @(-0x7C,@(-0x7F7E7D7D,CR15)), @(17,R0)
       OR.L     @(-0x7C,@(-0x7F7E7D7D,CR15)), @R0+
@@ -14065,9 +13557,9 @@
       OR.L     @(-0x7C,@(-0x7F7E7D7D,CR15)), @(R1.W,R0)
       OR.L     @(-0x7C,@(-0x7F7E7D7D,CR15)), @(18,R1.W*2,R0)
       OR.L     @(-0x7C,@(-0x7F7E7D7D,CR15)), @(PC)
-      OR.L     @(-0x7C,@(-0x7F7E7D7D,CR15)), @(0x00018ECB,PC)
+      OR.L     @(-0x7C,@(-0x7F7E7D7D,CR15)), @(0x0001802D,PC)
       OR.L     @(-0x7C,@(-0x7F7E7D7D,CR15)), @(R1.W,PC)
-      OR.L     @(-0x7C,@(-0x7F7E7D7D,CR15)), @(0x00018F65,R1.W*2,PC)
+      OR.L     @(-0x7C,@(-0x7F7E7D7D,CR15)), @(0x000180C7,R1.W*2,PC)
       OR.L     #0x72:8, @(PR0*1)
       OR.L     #0x72:8, @(1,PR0*1)
       OR.L     #0x72:8, @(0x01020304,R0.L,PR13)
@@ -14079,9 +13571,9 @@
       OR.L     #0x72:8, @-PR0
       OR.L     #0x72:8, @0x76
       OR.L     #0x72:8, @(PC)
-      OR.L     #0x72:8, @(0x00018F33,PC)
+      OR.L     #0x72:8, @(0x00018095,PC)
       OR.L     #0x72:8, @(R1.W,PC)
-      OR.L     #0x72:8, @(0x00018FC1,R1.W*2,PC)
+      OR.L     #0x72:8, @(0x00018123,R1.W*2,PC)
       OR.L     #-0x80:8, @R0
       OR.L     #-0x80:8, @(17,R0)
       OR.L     #-0x80:8, @R0+
@@ -14093,18 +13585,18 @@
       OR.L     #-0x80:8, @(R1.W,R0)
       OR.L     #-0x80:8, @(18,R1.W*2,R0)
       OR.L     #-0x80:8, @(PC)
-      OR.L     #-0x80:8, @(0x00018F86,PC)
+      OR.L     #-0x80:8, @(0x000180E8,PC)
       OR.L     #-0x80:8, @(R1.W,PC)
-      OR.L     #-0x80:8, @(0x00019014,R1.W*2,PC)
+      OR.L     #-0x80:8, @(0x00018176,R1.W*2,PC)
       OR.L     @0x76, @0x78797A7B
       OR.L     @0x76, @(R0*1)
       OR.L     @0x76, @(1,R0*1)
       OR.L     @0x76, @(0x01020304,R0.L,R13)
       OR.L     @0x76, @(R1.W,R0)
       OR.L     @0x76, @(PC)
-      OR.L     @0x76, @(0x00018FC1,PC)
+      OR.L     @0x76, @(0x00018123,PC)
       OR.L     @0x76, @(R1.W,PC)
-      OR.L     @0x76, @(0x0001904F,R1.W*2,PC)
+      OR.L     @0x76, @(0x000181B1,R1.W*2,PC)
       OR.L     @0x76, @(-0x7C,@(-0x7F7E7D7D,R15))
       OR.L     @0x76, @R0
       OR.L     @0x76, @(17,R0)
@@ -14121,22 +13613,22 @@
       OR.L     @(PC), @(R1.W,R0)
       OR.L     @(PC), @(18,R1.W*2,R0)
       OR.L     @(PC), @(PC)
-      OR.L     @(PC), @(0x00019031,PC)
+      OR.L     @(PC), @(0x00018193,PC)
       OR.L     @(PC), @(R1.W,PC)
-      OR.L     @(PC), @(0x000190BF,R1.W*2,PC)
-      OR.L     @(0x00019042,PC), @R0
-      OR.L     @(0x00019047,PC), @(17,R0)
-      OR.L     @(0x000131DC,PC), @R0+
-      OR.L     @(0x000131E2,PC), @-R0
-      OR.L     @(0x0001323D,PC), @0x76
-      OR.L     @(0x00013244,PC), @(R0*1)
-      OR.L     @(0x0001324B,PC), @(1,R0*1)
-      OR.L     @(0x00013253,PC), @(PC)
-      OR.L     @(0x0001325A,PC), @(0x0001907A,PC)
-      OR.L     @(0x00013262,PC), @(R1.W,PC)
-      OR.L     @(0x0001326A,PC), @(0x0001910C,R1.W*2,PC)
-      OR.L     @(0x00013273,PC), @(-0x7C,@(-0x7F7E7D7D,R15))
-      OR.L     @(0x71740B88,PC), @(0x01020304,R0.L,R13)
+      OR.L     @(PC), @(0x00018221,R1.W*2,PC)
+      OR.L     @(0x000181A4,PC), @R0
+      OR.L     @(0x000181A9,PC), @(17,R0)
+      OR.L     @(0x0001233E,PC), @R0+
+      OR.L     @(0x00012344,PC), @-R0
+      OR.L     @(0x0001239F,PC), @0x76
+      OR.L     @(0x000123A6,PC), @(R0*1)
+      OR.L     @(0x000123AD,PC), @(1,R0*1)
+      OR.L     @(0x000123B5,PC), @(PC)
+      OR.L     @(0x000123BC,PC), @(0x000181DC,PC)
+      OR.L     @(0x000123C4,PC), @(R1.W,PC)
+      OR.L     @(0x000123CC,PC), @(0x0001826E,R1.W*2,PC)
+      OR.L     @(0x000123D5,PC), @(-0x7C,@(-0x7F7E7D7D,R15))
+      OR.L     @(0x7173FCEA,PC), @(0x01020304,R0.L,R13)
       OR.L     @(R1.W,PC), @R2
       OR.L     @(R1.W,PC), @(17,R0)
       OR.L     @(R1.W,PC), @R0+
@@ -14148,23 +13640,23 @@
       OR.L     @(R1.W,PC), @(-0x7C,@(-0x7F7E7D7D,CR15))
       OR.L     @(R1.W,PC), @0x76
       OR.L     @(R1.W,PC), @(PC)
-      OR.L     @(R1.W,PC), @(0x000190FC,PC)
+      OR.L     @(R1.W,PC), @(0x0001825E,PC)
       OR.L     @(R1.W,PC), @(R1.W,PC)
-      OR.L     @(R1.W,PC), @(0x0001918C,R1.W*2,PC)
-      OR.L     @(0x00019191,R1.W*2,PC), @(20,R3)
-      OR.L     @(0x00019187,R0.W,PC), @R2
-      OR.L     @(0x0001B3B0,R1.W*4,PC), @R0+
-      OR.L     @(0x0001B3B7,R1.W*4,PC), @-R0
-      OR.L     @(0x0001B3BE,R1.W*4,PC), @(CR0*1)
-      OR.L     @(0x0001B3C7,R1.W*4,PC), @(1,CR0*1)
-      OR.L     @(0x0001B3D1,R1.W*4,PC), @(0x01020304,R0.L,CR13)
-      OR.L     @(0x0001B3DF,R1.W*4,PC), @(R1.W,CR0)
-      OR.L     @(0x0001B3E9,R1.W*4,PC), @(-0x7C,@(-0x7F7E7D7D,CR15))
-      OR.L     @(0x3234C60B,R1.W*8,PC), @0x76
-      OR.L     @(0x3234C615,R1.W*8,PC), @(PC)
-      OR.L     @(0x3234C61F,R1.W*8,PC), @(0x0001917E,PC)
-      OR.L     @(0x3234C62A,R1.W*8,PC), @(R1.W,PC)
-      OR.L     @(0x3234C635,R1.W*8,PC), @(0x00019216,R1.W*2,PC)
+      OR.L     @(R1.W,PC), @(0x000182EE,R1.W*2,PC)
+      OR.L     @(0x000182F3,R1.W*2,PC), @(20,R3)
+      OR.L     @(0x000182E9,R0.W,PC), @R2
+      OR.L     @(0x0001A512,R1.W*4,PC), @R0+
+      OR.L     @(0x0001A519,R1.W*4,PC), @-R0
+      OR.L     @(0x0001A520,R1.W*4,PC), @(CR0*1)
+      OR.L     @(0x0001A529,R1.W*4,PC), @(1,CR0*1)
+      OR.L     @(0x0001A533,R1.W*4,PC), @(0x01020304,R0.L,CR13)
+      OR.L     @(0x0001A541,R1.W*4,PC), @(R1.W,CR0)
+      OR.L     @(0x0001A54B,R1.W*4,PC), @(-0x7C,@(-0x7F7E7D7D,CR15))
+      OR.L     @(0x3234B76D,R1.W*8,PC), @0x76
+      OR.L     @(0x3234B777,R1.W*8,PC), @(PC)
+      OR.L     @(0x3234B781,R1.W*8,PC), @(0x000182E0,PC)
+      OR.L     @(0x3234B78C,R1.W*8,PC), @(R1.W,PC)
+      OR.L     @(0x3234B797,R1.W*8,PC), @(0x00018378,R1.W*2,PC)
       NEG.B    @R0
       NEG.B    @(17,R0)
       NEG.B    R0
@@ -14177,9 +13669,9 @@
       NEG.B    @(R1.W,R0)
       NEG.B    @(18,R1.W*2,R0)
       NEG.B    @(PC)
-      NEG.B    @(0x000191C5,PC)
+      NEG.B    @(0x00018327,PC)
       NEG.B    @(R1.W,PC)
-      NEG.B    @(0x0001924F,R1.W*2,PC)
+      NEG.B    @(0x000183B1,R1.W*2,PC)
       NEG.W    @R0
       NEG.W    @(17,R0)
       NEG.W    R0
@@ -14192,9 +13684,9 @@
       NEG.W    @(R1.W,R0)
       NEG.W    @(18,R1.W*2,R0)
       NEG.W    @(PC)
-      NEG.W    @(0x000191FE,PC)
+      NEG.W    @(0x00018360,PC)
       NEG.W    @(R1.W,PC)
-      NEG.W    @(0x00019288,R1.W*2,PC)
+      NEG.W    @(0x000183EA,R1.W*2,PC)
       NEG.L    @R0
       NEG.L    @(17,R0)
       NEG.L    R0
@@ -14207,9 +13699,9 @@
       NEG.L    @(R1.W,R0)
       NEG.L    @(18,R1.W*2,R0)
       NEG.L    @(PC)
-      NEG.L    @(0x00019237,PC)
+      NEG.L    @(0x00018399,PC)
       NEG.L    @(R1.W,PC)
-      NEG.L    @(0x000192C1,R1.W*2,PC)
+      NEG.L    @(0x00018423,R1.W*2,PC)
       NOT.B    @R0
       NOT.B    @(17,R0)
       NOT.B    R0
@@ -14222,9 +13714,9 @@
       NOT.B    @(R1.W,R0)
       NOT.B    @(18,R1.W*2,R0)
       NOT.B    @(PC)
-      NOT.B    @(0x00019270,PC)
+      NOT.B    @(0x000183D2,PC)
       NOT.B    @(R1.W,PC)
-      NOT.B    @(0x000192FA,R1.W*2,PC)
+      NOT.B    @(0x0001845C,R1.W*2,PC)
       NOT.W    @R0
       NOT.W    @(17,R0)
       NOT.W    R0
@@ -14237,9 +13729,9 @@
       NOT.W    @(R1.W,R0)
       NOT.W    @(18,R1.W*2,R0)
       NOT.W    @(PC)
-      NOT.W    @(0x000192A9,PC)
+      NOT.W    @(0x0001840B,PC)
       NOT.W    @(R1.W,PC)
-      NOT.W    @(0x00019333,R1.W*2,PC)
+      NOT.W    @(0x00018495,R1.W*2,PC)
       NOT.L    @R0
       NOT.L    @(17,R0)
       NOT.L    R0
@@ -14252,9 +13744,9 @@
       NOT.L    @(R1.W,R0)
       NOT.L    @(18,R1.W*2,R0)
       NOT.L    @(PC)
-      NOT.L    @(0x000192E2,PC)
+      NOT.L    @(0x00018444,PC)
       NOT.L    @(R1.W,PC)
-      NOT.L    @(0x0001936C,R1.W*2,PC)
+      NOT.L    @(0x000184CE,R1.W*2,PC)
       SCMP/HI/F.B  R10, R1, R0, R10
       SCMP/LS/F.B  R10, R1, R0, R10
       SCMP/CC/F.B  R10, R1, R0, R10
@@ -14405,9 +13897,9 @@
       JMP      @(R1.W,R0)
       JMP      @(18,R1.W*2,R0)
       JMP      @(PC)
-      JMP      @(0x0001953B,PC)
+      JMP      @(0x0001869D,PC)
       JMP      @(R1.W,PC)
-      JMP      @(0x000195C5,R1.W*2,PC)
+      JMP      @(0x00018727,R1.W*2,PC)
       NEGX.B   @R0
       NEGX.B   @(17,R0)
       NEGX.B   R0
@@ -14420,9 +13912,9 @@
       NEGX.B   @(R1.W,R0)
       NEGX.B   @(18,R1.W*2,R0)
       NEGX.B   @(PC)
-      NEGX.B   @(0x00019574,PC)
+      NEGX.B   @(0x000186D6,PC)
       NEGX.B   @(R1.W,PC)
-      NEGX.B   @(0x000195FE,R1.W*2,PC)
+      NEGX.B   @(0x00018760,R1.W*2,PC)
       NEGX.W   @R0
       NEGX.W   @(17,R0)
       NEGX.W   R0
@@ -14435,9 +13927,9 @@
       NEGX.W   @(R1.W,R0)
       NEGX.W   @(18,R1.W*2,R0)
       NEGX.W   @(PC)
-      NEGX.W   @(0x000195AD,PC)
+      NEGX.W   @(0x0001870F,PC)
       NEGX.W   @(R1.W,PC)
-      NEGX.W   @(0x00019637,R1.W*2,PC)
+      NEGX.W   @(0x00018799,R1.W*2,PC)
       NEGX.L   @R0
       NEGX.L   @(17,R0)
       NEGX.L   R0
@@ -14450,12 +13942,266 @@
       NEGX.L   @(R1.W,R0)
       NEGX.L   @(18,R1.W*2,R0)
       NEGX.L   @(PC)
-      NEGX.L   @(0x000195E6,PC)
+      NEGX.L   @(0x00018748,PC)
       NEGX.L   @(R1.W,PC)
-      NEGX.L   @(0x00019670,R1.W*2,PC)
+      NEGX.L   @(0x000187D2,R1.W*2,PC)
       BEQ.B    *-93
       BEQ.W    *-0x5D5A
       BEQ.L    *-0x5C5B5A55
+      DADD     @(-0x5A5A,R4), R0
+      DADD     R0, R0
+      DADD     @R0+, R0
+      DADD     @-R0, R0
+      DADD     @(CR0*1), R0
+      DADD     @(1,CR0*1), R0
+      DADD     @(R1.W,CR0), R0
+      DADD     @(18,R1.W*2,CR0), R0
+      DADD     @(0x04050607,@(0x00010203,CR15)), R0
+      DADD     @CR0, R0
+      DADD     #-14:8, R0
+      DADD     #0:8, R0
+      DADD     @0xFFFFFFF6, R0
+      DADD     @(R1.W,PC), R0
+      DADD     @(0x0001881B,R1.W*2,PC), R0
+      DADD     @(PC), R0
+      DADD     @(0x000187A1,PC), R0
+      DADD     @R0, @R1
+      DADD     @R0, @(17,R0)
+      DADD     @R0, @R0+
+      DADD     @R0, @-R0
+      DADD     @R0, @(CR0*1)
+      DADD     @R0, @(1,CR0*1)
+      DADD     @R0, @(0x01020304,R0.L,CR13)
+      DADD     @R0, @(R1.W,CR0)
+      DADD     @R0, @(-0x7C,@(-0x7F7E7D7D,CR15))
+      DADD     @R0, @0x76
+      DADD     @R0, @(PC)
+      DADD     @R0, @(0x000187E0,PC)
+      DADD     @R0, @(R1.W,PC)
+      DADD     @R0, @(0x0001886C,R1.W*2,PC)
+      DADD     @(17,R0), @(19,R2)
+      DADD     @(0x2122,R0), @R0+
+      DADD     @(0x2122,R0), @-R0
+      DADD     @(0x2122,R0), @(CR0*1)
+      DADD     @(0x2122,R0), @(1,CR0*1)
+      DADD     @(0x2122,R0), @(0x01020304,R0.L,CR13)
+      DADD     @(0x2122,R0), @(R1.W,CR0)
+      DADD     @(0x2122,R0), @(-0x7C,@(-0x7F7E7D7D,CR15))
+      DADD     @(0x2122,R0), @CR0
+      DADD     @(0x2122,R0), @0x76
+      DADD     @(0x2122,R0), @(PC)
+      DADD     @(0x2122,R0), @(0x00018842,PC)
+      DADD     @(0x2122,R0), @(R1.W,PC)
+      DADD     @(0x2122,R0), @(0x000188D2,R1.W*2,PC)
+      DADD     R0, @R0+
+      DADD     R0, @-R0
+      DADD     R0, @(CR0*1)
+      DADD     R0, @(1,CR0*1)
+      DADD     R0, @(0x01020304,R0.L,CR13)
+      DADD     R0, @(R1.W,CR0)
+      DADD     R0, @(-0x7C,@(-0x7F7E7D7D,CR15))
+      DADD     R0, @CR0
+      DADD     R0, @(17,CR0)
+      DADD     R0, @0x76
+      DADD     R0, @(PC)
+      DADD     R0, @(0x00018892,PC)
+      DADD     R0, @(R1.W,PC)
+      DADD     R0, @(0x0001891E,R1.W*2,PC)
+      DADD     @R0+, @R1+
+      DADD     @R0+, @-R0
+      DADD     @R0+, @(CR0*1)
+      DADD     @R0+, @(1,CR0*1)
+      DADD     @R0+, @(0x01020304,R0.L,CR13)
+      DADD     @R0+, @(R1.W,CR0)
+      DADD     @R0+, @(-0x7C,@(-0x7F7E7D7D,CR15))
+      DADD     @R0+, @CR0
+      DADD     @R0+, @(17,CR0)
+      DADD     @R0+, @0x76
+      DADD     @R0+, @(PC)
+      DADD     @R0+, @(0x000188DE,PC)
+      DADD     @R0+, @(R1.W,PC)
+      DADD     @R0+, @(0x0001896A,R1.W*2,PC)
+      DADD     @-R0, @-R1
+      DADD     @-R0, @(CR0*1)
+      DADD     @-R0, @(1,CR0*1)
+      DADD     @-R0, @(0x01020304,R0.L,CR13)
+      DADD     @-R0, @(R1.W,CR0)
+      DADD     @-R0, @(-0x7C,@(-0x7F7E7D7D,CR15))
+      DADD     @-R0, @CR0
+      DADD     @-R0, @(17,CR0)
+      DADD     @-R0, @CR0+
+      DADD     @-R0, @0x76
+      DADD     @-R0, @(PC)
+      DADD     @-R0, @(0x0001892B,PC)
+      DADD     @-R0, @(R1.W,PC)
+      DADD     @-R0, @(0x000189B7,R1.W*2,PC)
+      DADD     @(CR0*1), @R1
+      DADD     @(CR0*1), @(17,R0)
+      DADD     @(CR0*1), @R0+
+      DADD     @(CR0*1), @-R0
+      DADD     @(CR0*1), @(CR0*1)
+      DADD     @(CR0*1), @(1,CR0*1)
+      DADD     @(CR0*1), @(0x01020304,R0.L,CR13)
+      DADD     @(CR0*1), @(R1.W,CR0)
+      DADD     @(CR0*1), @(-0x7C,@(-0x7F7E7D7D,CR15))
+      DADD     @(CR0*1), @0x76
+      DADD     @(CR0*1), @(PC)
+      DADD     @(CR0*1), @(0x0001898D,PC)
+      DADD     @(CR0*1), @(R1.W,PC)
+      DADD     @(CR0*1), @(0x00018A1D,R1.W*2,PC)
+      DADD     @(1,CR0*1), @R2
+      DADD     @(1,CR0*1), @(17,R0)
+      DADD     @(0x1C1D2E2F,CR11*2), @R0+
+      DADD     @(0x1C1D2E2F,CR11*2), @-R0
+      DADD     @(0x1C1D2E2F,CR11*2), @(CR0*1)
+      DADD     @(0x1C1D2E2F,CR11*2), @(1,CR0*1)
+      DADD     @(0x1C1D2E2F,CR11*2), @(0x01020304,R0.L,CR13)
+      DADD     @(0x1C1D2E2F,CR11*2), @(R1.W,CR0)
+      DADD     @(0x1C1D2E2F,CR11*2), @(-0x7C,@(-0x7F7E7D7D,CR15))
+      DADD     @(0x1C1D3D3E,CR11*2), @0x76
+      DADD     @(0x1C1D3D3E,CR11*2), @(PC)
+      DADD     @(0x1C1D3D3E,CR11*2), @(0x00018A1D,PC)
+      DADD     @(0x1C1D3D3E,CR11*2), @(R1.W,PC)
+      DADD     @(0x1C1D3D3E,CR11*2), @(0x00018AB5,R1.W*2,PC)
+      DADD     @(0x01020304,R0.L,CR13), @R5
+      DADD     @(0x01020304,R0.L,CR13), @(17,R0)
+      DADD     @(0x01020304,R0.L,CR13), @R0+
+      DADD     @(0x01020304,R0.L,CR13), @-R0
+      DADD     @(0x01020304,R0.L,CR13), @(CR0*1)
+      DADD     @(0x01020304,R0.L,CR13), @(1,CR0*1)
+      DADD     @(0x01020304,R0.L,CR13), @(0x01020304,R0.L,CR13)
+      DADD     @(0x01020304,R0.L,CR13), @(R1.W,CR0)
+      DADD     @(0x01020304,R0.L,CR13), @(-0x7C,@(-0x7F7E7D7D,CR15))
+      DADD     @(0x01020304,R0.L,CR13), @0x76
+      DADD     @(0x01020304,R0.L,CR13), @(PC)
+      DADD     @(0x01020304,R0.L,CR13), @(0x00018AC7,PC)
+      DADD     @(0x01020304,R0.L,CR13), @(R1.W,PC)
+      DADD     @(0x01020304,R0.L,CR13), @(0x00018B61,R1.W*2,PC)
+      DADD     @(R1.W,CR0), @R2
+      DADD     @(R1.W,CR0), @(17,R0)
+      DADD     @(R1.W,CR0), @R0+
+      DADD     @(R1.W,CR0), @-R0
+      DADD     @(R1.W,CR0), @(CR0*1)
+      DADD     @(R1.W,CR0), @(1,CR0*1)
+      DADD     @(R1.W,CR0), @(0x01020304,R0.L,CR13)
+      DADD     @(R1.W,CR0), @(R1.W,CR0)
+      DADD     @(R1.W,CR0), @(-0x7C,@(-0x7F7E7D7D,CR15))
+      DADD     @(R1.W,CR0), @0x76
+      DADD     @(R1.W,CR0), @(PC)
+      DADD     @(R1.W,CR0), @(0x00018B43,PC)
+      DADD     @(R1.W,CR0), @(R1.W,PC)
+      DADD     @(R1.W,CR0), @(0x00018BD5,R1.W*2,PC)
+      DADD     @(-0x7C,@(-0x7F7E7D7D,CR15)), @R0
+      DADD     @(-0x7C,@(-0x7F7E7D7D,CR15)), @(17,R0)
+      DADD     @(-0x7C,@(-0x7F7E7D7D,CR15)), @R0+
+      DADD     @(-0x7C,@(-0x7F7E7D7D,CR15)), @-R0
+      DADD     @(-0x7C,@(-0x7F7E7D7D,CR15)), @(CR0*1)
+      DADD     @(-0x7C,@(-0x7F7E7D7D,CR15)), @(1,CR0*1)
+      DADD     @(-0x7C,@(-0x7F7E7D7D,CR15)), @(-0x7C,@(-0x7F7E7D7D,CR15))
+      DADD     @(-0x7C,@(-0x7F7E7D7D,CR15)), @0x76
+      DADD     @(-0x7C,@(-0x7F7E7D7D,CR15)), @(R1.W,R0)
+      DADD     @(-0x7C,@(-0x7F7E7D7D,CR15)), @(18,R1.W*2,R0)
+      DADD     @(-0x7C,@(-0x7F7E7D7D,CR15)), @(PC)
+      DADD     @(-0x7C,@(-0x7F7E7D7D,CR15)), @(0x00018BE2,PC)
+      DADD     @(-0x7C,@(-0x7F7E7D7D,CR15)), @(R1.W,PC)
+      DADD     @(-0x7C,@(-0x7F7E7D7D,CR15)), @(0x00018C7C,R1.W*2,PC)
+      DADD     #0x72:8, @(PR0*1)
+      DADD     #0x72:8, @(1,PR0*1)
+      DADD     #0x72:8, @(0x01020304,R0.L,PR13)
+      DADD     #0x72:8, @(R1.W,PR0)
+      DADD     #0x72:8, @(-0x7C,@(-0x7F7E7D7D,PR15))
+      DADD     #0x72:8, @PR0
+      DADD     #0x72:8, @(17,PR0)
+      DADD     #0x72:8, @PR0+
+      DADD     #0x72:8, @-PR0
+      DADD     #0x72:8, @0x76
+      DADD     #0x72:8, @(PC)
+      DADD     #0x72:8, @(0x00018C4A,PC)
+      DADD     #0x72:8, @(R1.W,PC)
+      DADD     #0x72:8, @(0x00018CD8,R1.W*2,PC)
+      DADD     #-0x80:8, @R0
+      DADD     #-0x80:8, @(17,R0)
+      DADD     #-0x80:8, @R0+
+      DADD     #-0x80:8, @-R0
+      DADD     #-0x80:8, @(CR0*1)
+      DADD     #-0x80:8, @(1,CR0*1)
+      DADD     #-0x80:8, @(-0x7C,@(-0x7F7E7D7D,CR15))
+      DADD     #-0x80:8, @0x76
+      DADD     #-0x80:8, @(R1.W,R0)
+      DADD     #-0x80:8, @(18,R1.W*2,R0)
+      DADD     #-0x80:8, @(PC)
+      DADD     #-0x80:8, @(0x00018C9D,PC)
+      DADD     #-0x80:8, @(R1.W,PC)
+      DADD     #-0x80:8, @(0x00018D2B,R1.W*2,PC)
+      DADD     @0x76, @0x78797A7B
+      DADD     @0x76, @(R0*1)
+      DADD     @0x76, @(1,R0*1)
+      DADD     @0x76, @(0x01020304,R0.L,R13)
+      DADD     @0x76, @(R1.W,R0)
+      DADD     @0x76, @(PC)
+      DADD     @0x76, @(0x00018CD8,PC)
+      DADD     @0x76, @(R1.W,PC)
+      DADD     @0x76, @(0x00018D66,R1.W*2,PC)
+      DADD     @0x76, @(-0x7C,@(-0x7F7E7D7D,R15))
+      DADD     @0x76, @R0
+      DADD     @0x76, @(17,R0)
+      DADD     @0x771F, @R0+
+      DADD     @0x771F, @-R0
+      DADD     @(PC), @R0
+      DADD     @(PC), @(17,R0)
+      DADD     @(PC), @R0+
+      DADD     @(PC), @-R0
+      DADD     @(PC), @(CR0*1)
+      DADD     @(PC), @(1,CR0*1)
+      DADD     @(PC), @(-0x7C,@(-0x7F7E7D7D,CR15))
+      DADD     @(PC), @0x76
+      DADD     @(PC), @(R1.W,R0)
+      DADD     @(PC), @(18,R1.W*2,R0)
+      DADD     @(PC), @(PC)
+      DADD     @(PC), @(0x00018D48,PC)
+      DADD     @(PC), @(R1.W,PC)
+      DADD     @(PC), @(0x00018DD6,R1.W*2,PC)
+      DADD     @(0x00018D59,PC), @R0
+      DADD     @(0x00018D5E,PC), @(17,R0)
+      DADD     @(0x00012EF3,PC), @R0+
+      DADD     @(0x00012EF9,PC), @-R0
+      DADD     @(0x00012F54,PC), @0x76
+      DADD     @(0x00012F5B,PC), @(R0*1)
+      DADD     @(0x00012F62,PC), @(1,R0*1)
+      DADD     @(0x00012F6A,PC), @(PC)
+      DADD     @(0x00012F71,PC), @(0x00018D91,PC)
+      DADD     @(0x00012F79,PC), @(R1.W,PC)
+      DADD     @(0x00012F81,PC), @(0x00018E23,R1.W*2,PC)
+      DADD     @(0x00012F8A,PC), @(-0x7C,@(-0x7F7E7D7D,R15))
+      DADD     @(0x7174089F,PC), @(0x01020304,R0.L,R13)
+      DADD     @(R1.W,PC), @R2
+      DADD     @(R1.W,PC), @(17,R0)
+      DADD     @(R1.W,PC), @R0+
+      DADD     @(R1.W,PC), @-R0
+      DADD     @(R1.W,PC), @(CR0*1)
+      DADD     @(R1.W,PC), @(1,CR0*1)
+      DADD     @(R1.W,PC), @(0x01020304,R0.L,CR13)
+      DADD     @(R1.W,PC), @(R1.W,CR0)
+      DADD     @(R1.W,PC), @(-0x7C,@(-0x7F7E7D7D,CR15))
+      DADD     @(R1.W,PC), @0x76
+      DADD     @(R1.W,PC), @(PC)
+      DADD     @(R1.W,PC), @(0x00018E13,PC)
+      DADD     @(R1.W,PC), @(R1.W,PC)
+      DADD     @(R1.W,PC), @(0x00018EA3,R1.W*2,PC)
+      DADD     @(0x00018EA8,R1.W*2,PC), @(20,R3)
+      DADD     @(0x00018E9E,R0.W,PC), @R2
+      DADD     @(0x0001B0C7,R1.W*4,PC), @R0+
+      DADD     @(0x0001B0CE,R1.W*4,PC), @-R0
+      DADD     @(0x0001B0D5,R1.W*4,PC), @(CR0*1)
+      DADD     @(0x0001B0DE,R1.W*4,PC), @(1,CR0*1)
+      DADD     @(0x0001B0E8,R1.W*4,PC), @(0x01020304,R0.L,CR13)
+      DADD     @(0x0001B0F6,R1.W*4,PC), @(R1.W,CR0)
+      DADD     @(0x0001B100,R1.W*4,PC), @(-0x7C,@(-0x7F7E7D7D,CR15))
+      DADD     @(0x3234C322,R1.W*8,PC), @0x76
+      DADD     @(0x3234C32C,R1.W*8,PC), @(PC)
+      DADD     @(0x3234C336,R1.W*8,PC), @(0x00018E95,PC)
+      DADD     @(0x3234C341,R1.W*8,PC), @(R1.W,PC)
+      DADD     @(0x3234C34C,R1.W*8,PC), @(0x00018F2D,R1.W*2,PC)
       BT:G.B   *+4
       BF:G.B   *+5
       BHI:G.B  *+6
@@ -14504,6 +14250,260 @@
       BLT:G.L  *+0x0E0F1017
       BGT:G.L  *+0x0F101118
       BLE:G.L  *+0x10111219
+      DSUB     @(-0x5656,R8), R0
+      DSUB     R0, R0
+      DSUB     @R0+, R0
+      DSUB     @-R0, R0
+      DSUB     @(CR0*1), R0
+      DSUB     @(1,CR0*1), R0
+      DSUB     @(R1.W,CR0), R0
+      DSUB     @(18,R1.W*2,CR0), R0
+      DSUB     @(0x04050607,@(0x00010203,CR15)), R0
+      DSUB     @CR0, R0
+      DSUB     #-14:8, R0
+      DSUB     #0:8, R0
+      DSUB     @0xFFFFFFF6, R0
+      DSUB     @(R1.W,PC), R0
+      DSUB     @(0x0001903C,R1.W*2,PC), R0
+      DSUB     @(PC), R0
+      DSUB     @(0x00018FC2,PC), R0
+      DSUB     @R0, @R1
+      DSUB     @R0, @(17,R0)
+      DSUB     @R0, @R0+
+      DSUB     @R0, @-R0
+      DSUB     @R0, @(CR0*1)
+      DSUB     @R0, @(1,CR0*1)
+      DSUB     @R0, @(0x01020304,R0.L,CR13)
+      DSUB     @R0, @(R1.W,CR0)
+      DSUB     @R0, @(-0x7C,@(-0x7F7E7D7D,CR15))
+      DSUB     @R0, @0x76
+      DSUB     @R0, @(PC)
+      DSUB     @R0, @(0x00019001,PC)
+      DSUB     @R0, @(R1.W,PC)
+      DSUB     @R0, @(0x0001908D,R1.W*2,PC)
+      DSUB     @(17,R0), @(19,R2)
+      DSUB     @(0x2122,R0), @R0+
+      DSUB     @(0x2122,R0), @-R0
+      DSUB     @(0x2122,R0), @(CR0*1)
+      DSUB     @(0x2122,R0), @(1,CR0*1)
+      DSUB     @(0x2122,R0), @(0x01020304,R0.L,CR13)
+      DSUB     @(0x2122,R0), @(R1.W,CR0)
+      DSUB     @(0x2122,R0), @(-0x7C,@(-0x7F7E7D7D,CR15))
+      DSUB     @(0x2122,R0), @CR0
+      DSUB     @(0x2122,R0), @0x76
+      DSUB     @(0x2122,R0), @(PC)
+      DSUB     @(0x2122,R0), @(0x00019063,PC)
+      DSUB     @(0x2122,R0), @(R1.W,PC)
+      DSUB     @(0x2122,R0), @(0x000190F3,R1.W*2,PC)
+      DSUB     R0, @R0+
+      DSUB     R0, @-R0
+      DSUB     R0, @(CR0*1)
+      DSUB     R0, @(1,CR0*1)
+      DSUB     R0, @(0x01020304,R0.L,CR13)
+      DSUB     R0, @(R1.W,CR0)
+      DSUB     R0, @(-0x7C,@(-0x7F7E7D7D,CR15))
+      DSUB     R0, @CR0
+      DSUB     R0, @(17,CR0)
+      DSUB     R0, @0x76
+      DSUB     R0, @(PC)
+      DSUB     R0, @(0x000190B3,PC)
+      DSUB     R0, @(R1.W,PC)
+      DSUB     R0, @(0x0001913F,R1.W*2,PC)
+      DSUB     @R0+, @R1+
+      DSUB     @R0+, @-R0
+      DSUB     @R0+, @(CR0*1)
+      DSUB     @R0+, @(1,CR0*1)
+      DSUB     @R0+, @(0x01020304,R0.L,CR13)
+      DSUB     @R0+, @(R1.W,CR0)
+      DSUB     @R0+, @(-0x7C,@(-0x7F7E7D7D,CR15))
+      DSUB     @R0+, @CR0
+      DSUB     @R0+, @(17,CR0)
+      DSUB     @R0+, @0x76
+      DSUB     @R0+, @(PC)
+      DSUB     @R0+, @(0x000190FF,PC)
+      DSUB     @R0+, @(R1.W,PC)
+      DSUB     @R0+, @(0x0001918B,R1.W*2,PC)
+      DSUB     @-R0, @-R1
+      DSUB     @-R0, @(CR0*1)
+      DSUB     @-R0, @(1,CR0*1)
+      DSUB     @-R0, @(0x01020304,R0.L,CR13)
+      DSUB     @-R0, @(R1.W,CR0)
+      DSUB     @-R0, @(-0x7C,@(-0x7F7E7D7D,CR15))
+      DSUB     @-R0, @CR0
+      DSUB     @-R0, @(17,CR0)
+      DSUB     @-R0, @CR0+
+      DSUB     @-R0, @0x76
+      DSUB     @-R0, @(PC)
+      DSUB     @-R0, @(0x0001914C,PC)
+      DSUB     @-R0, @(R1.W,PC)
+      DSUB     @-R0, @(0x000191D8,R1.W*2,PC)
+      DSUB     @(CR0*1), @R1
+      DSUB     @(CR0*1), @(17,R0)
+      DSUB     @(CR0*1), @R0+
+      DSUB     @(CR0*1), @-R0
+      DSUB     @(CR0*1), @(CR0*1)
+      DSUB     @(CR0*1), @(1,CR0*1)
+      DSUB     @(CR0*1), @(0x01020304,R0.L,CR13)
+      DSUB     @(CR0*1), @(R1.W,CR0)
+      DSUB     @(CR0*1), @(-0x7C,@(-0x7F7E7D7D,CR15))
+      DSUB     @(CR0*1), @0x76
+      DSUB     @(CR0*1), @(PC)
+      DSUB     @(CR0*1), @(0x000191AE,PC)
+      DSUB     @(CR0*1), @(R1.W,PC)
+      DSUB     @(CR0*1), @(0x0001923E,R1.W*2,PC)
+      DSUB     @(1,CR0*1), @R2
+      DSUB     @(1,CR0*1), @(17,R0)
+      DSUB     @(0x1C1D2E2F,CR11*2), @R0+
+      DSUB     @(0x1C1D2E2F,CR11*2), @-R0
+      DSUB     @(0x1C1D2E2F,CR11*2), @(CR0*1)
+      DSUB     @(0x1C1D2E2F,CR11*2), @(1,CR0*1)
+      DSUB     @(0x1C1D2E2F,CR11*2), @(0x01020304,R0.L,CR13)
+      DSUB     @(0x1C1D2E2F,CR11*2), @(R1.W,CR0)
+      DSUB     @(0x1C1D2E2F,CR11*2), @(-0x7C,@(-0x7F7E7D7D,CR15))
+      DSUB     @(0x1C1D3D3E,CR11*2), @0x76
+      DSUB     @(0x1C1D3D3E,CR11*2), @(PC)
+      DSUB     @(0x1C1D3D3E,CR11*2), @(0x0001923E,PC)
+      DSUB     @(0x1C1D3D3E,CR11*2), @(R1.W,PC)
+      DSUB     @(0x1C1D3D3E,CR11*2), @(0x000192D6,R1.W*2,PC)
+      DSUB     @(0x01020304,R0.L,CR13), @R5
+      DSUB     @(0x01020304,R0.L,CR13), @(17,R0)
+      DSUB     @(0x01020304,R0.L,CR13), @R0+
+      DSUB     @(0x01020304,R0.L,CR13), @-R0
+      DSUB     @(0x01020304,R0.L,CR13), @(CR0*1)
+      DSUB     @(0x01020304,R0.L,CR13), @(1,CR0*1)
+      DSUB     @(0x01020304,R0.L,CR13), @(0x01020304,R0.L,CR13)
+      DSUB     @(0x01020304,R0.L,CR13), @(R1.W,CR0)
+      DSUB     @(0x01020304,R0.L,CR13), @(-0x7C,@(-0x7F7E7D7D,CR15))
+      DSUB     @(0x01020304,R0.L,CR13), @0x76
+      DSUB     @(0x01020304,R0.L,CR13), @(PC)
+      DSUB     @(0x01020304,R0.L,CR13), @(0x000192E8,PC)
+      DSUB     @(0x01020304,R0.L,CR13), @(R1.W,PC)
+      DSUB     @(0x01020304,R0.L,CR13), @(0x00019382,R1.W*2,PC)
+      DSUB     @(R1.W,CR0), @R2
+      DSUB     @(R1.W,CR0), @(17,R0)
+      DSUB     @(R1.W,CR0), @R0+
+      DSUB     @(R1.W,CR0), @-R0
+      DSUB     @(R1.W,CR0), @(CR0*1)
+      DSUB     @(R1.W,CR0), @(1,CR0*1)
+      DSUB     @(R1.W,CR0), @(0x01020304,R0.L,CR13)
+      DSUB     @(R1.W,CR0), @(R1.W,CR0)
+      DSUB     @(R1.W,CR0), @(-0x7C,@(-0x7F7E7D7D,CR15))
+      DSUB     @(R1.W,CR0), @0x76
+      DSUB     @(R1.W,CR0), @(PC)
+      DSUB     @(R1.W,CR0), @(0x00019364,PC)
+      DSUB     @(R1.W,CR0), @(R1.W,PC)
+      DSUB     @(R1.W,CR0), @(0x000193F6,R1.W*2,PC)
+      DSUB     @(-0x7C,@(-0x7F7E7D7D,CR15)), @R0
+      DSUB     @(-0x7C,@(-0x7F7E7D7D,CR15)), @(17,R0)
+      DSUB     @(-0x7C,@(-0x7F7E7D7D,CR15)), @R0+
+      DSUB     @(-0x7C,@(-0x7F7E7D7D,CR15)), @-R0
+      DSUB     @(-0x7C,@(-0x7F7E7D7D,CR15)), @(CR0*1)
+      DSUB     @(-0x7C,@(-0x7F7E7D7D,CR15)), @(1,CR0*1)
+      DSUB     @(-0x7C,@(-0x7F7E7D7D,CR15)), @(-0x7C,@(-0x7F7E7D7D,CR15))
+      DSUB     @(-0x7C,@(-0x7F7E7D7D,CR15)), @0x76
+      DSUB     @(-0x7C,@(-0x7F7E7D7D,CR15)), @(R1.W,R0)
+      DSUB     @(-0x7C,@(-0x7F7E7D7D,CR15)), @(18,R1.W*2,R0)
+      DSUB     @(-0x7C,@(-0x7F7E7D7D,CR15)), @(PC)
+      DSUB     @(-0x7C,@(-0x7F7E7D7D,CR15)), @(0x00019403,PC)
+      DSUB     @(-0x7C,@(-0x7F7E7D7D,CR15)), @(R1.W,PC)
+      DSUB     @(-0x7C,@(-0x7F7E7D7D,CR15)), @(0x0001949D,R1.W*2,PC)
+      DSUB     #0x72:8, @(PR0*1)
+      DSUB     #0x72:8, @(1,PR0*1)
+      DSUB     #0x72:8, @(0x01020304,R0.L,PR13)
+      DSUB     #0x72:8, @(R1.W,PR0)
+      DSUB     #0x72:8, @(-0x7C,@(-0x7F7E7D7D,PR15))
+      DSUB     #0x72:8, @PR0
+      DSUB     #0x72:8, @(17,PR0)
+      DSUB     #0x72:8, @PR0+
+      DSUB     #0x72:8, @-PR0
+      DSUB     #0x72:8, @0x76
+      DSUB     #0x72:8, @(PC)
+      DSUB     #0x72:8, @(0x0001946B,PC)
+      DSUB     #0x72:8, @(R1.W,PC)
+      DSUB     #0x72:8, @(0x000194F9,R1.W*2,PC)
+      DSUB     #-0x80:8, @R0
+      DSUB     #-0x80:8, @(17,R0)
+      DSUB     #-0x80:8, @R0+
+      DSUB     #-0x80:8, @-R0
+      DSUB     #-0x80:8, @(CR0*1)
+      DSUB     #-0x80:8, @(1,CR0*1)
+      DSUB     #-0x80:8, @(-0x7C,@(-0x7F7E7D7D,CR15))
+      DSUB     #-0x80:8, @0x76
+      DSUB     #-0x80:8, @(R1.W,R0)
+      DSUB     #-0x80:8, @(18,R1.W*2,R0)
+      DSUB     #-0x80:8, @(PC)
+      DSUB     #-0x80:8, @(0x000194BE,PC)
+      DSUB     #-0x80:8, @(R1.W,PC)
+      DSUB     #-0x80:8, @(0x0001954C,R1.W*2,PC)
+      DSUB     @0x76, @0x78797A7B
+      DSUB     @0x76, @(R0*1)
+      DSUB     @0x76, @(1,R0*1)
+      DSUB     @0x76, @(0x01020304,R0.L,R13)
+      DSUB     @0x76, @(R1.W,R0)
+      DSUB     @0x76, @(PC)
+      DSUB     @0x76, @(0x000194F9,PC)
+      DSUB     @0x76, @(R1.W,PC)
+      DSUB     @0x76, @(0x00019587,R1.W*2,PC)
+      DSUB     @0x76, @(-0x7C,@(-0x7F7E7D7D,R15))
+      DSUB     @0x76, @R0
+      DSUB     @0x76, @(17,R0)
+      DSUB     @0x771F, @R0+
+      DSUB     @0x771F, @-R0
+      DSUB     @(PC), @R0
+      DSUB     @(PC), @(17,R0)
+      DSUB     @(PC), @R0+
+      DSUB     @(PC), @-R0
+      DSUB     @(PC), @(CR0*1)
+      DSUB     @(PC), @(1,CR0*1)
+      DSUB     @(PC), @(-0x7C,@(-0x7F7E7D7D,CR15))
+      DSUB     @(PC), @0x76
+      DSUB     @(PC), @(R1.W,R0)
+      DSUB     @(PC), @(18,R1.W*2,R0)
+      DSUB     @(PC), @(PC)
+      DSUB     @(PC), @(0x00019569,PC)
+      DSUB     @(PC), @(R1.W,PC)
+      DSUB     @(PC), @(0x000195F7,R1.W*2,PC)
+      DSUB     @(0x0001957A,PC), @R0
+      DSUB     @(0x0001957F,PC), @(17,R0)
+      DSUB     @(0x00013714,PC), @R0+
+      DSUB     @(0x0001371A,PC), @-R0
+      DSUB     @(0x00013775,PC), @0x76
+      DSUB     @(0x0001377C,PC), @(R0*1)
+      DSUB     @(0x00013783,PC), @(1,R0*1)
+      DSUB     @(0x0001378B,PC), @(PC)
+      DSUB     @(0x00013792,PC), @(0x000195B2,PC)
+      DSUB     @(0x0001379A,PC), @(R1.W,PC)
+      DSUB     @(0x000137A2,PC), @(0x00019644,R1.W*2,PC)
+      DSUB     @(0x000137AB,PC), @(-0x7C,@(-0x7F7E7D7D,R15))
+      DSUB     @(0x717410C0,PC), @(0x01020304,R0.L,R13)
+      DSUB     @(R1.W,PC), @R2
+      DSUB     @(R1.W,PC), @(17,R0)
+      DSUB     @(R1.W,PC), @R0+
+      DSUB     @(R1.W,PC), @-R0
+      DSUB     @(R1.W,PC), @(CR0*1)
+      DSUB     @(R1.W,PC), @(1,CR0*1)
+      DSUB     @(R1.W,PC), @(0x01020304,R0.L,CR13)
+      DSUB     @(R1.W,PC), @(R1.W,CR0)
+      DSUB     @(R1.W,PC), @(-0x7C,@(-0x7F7E7D7D,CR15))
+      DSUB     @(R1.W,PC), @0x76
+      DSUB     @(R1.W,PC), @(PC)
+      DSUB     @(R1.W,PC), @(0x00019634,PC)
+      DSUB     @(R1.W,PC), @(R1.W,PC)
+      DSUB     @(R1.W,PC), @(0x000196C4,R1.W*2,PC)
+      DSUB     @(0x000196C9,R1.W*2,PC), @(20,R3)
+      DSUB     @(0x000196BF,R0.W,PC), @R2
+      DSUB     @(0x0001B8E8,R1.W*4,PC), @R0+
+      DSUB     @(0x0001B8EF,R1.W*4,PC), @-R0
+      DSUB     @(0x0001B8F6,R1.W*4,PC), @(CR0*1)
+      DSUB     @(0x0001B8FF,R1.W*4,PC), @(1,CR0*1)
+      DSUB     @(0x0001B909,R1.W*4,PC), @(0x01020304,R0.L,CR13)
+      DSUB     @(0x0001B917,R1.W*4,PC), @(R1.W,CR0)
+      DSUB     @(0x0001B921,R1.W*4,PC), @(-0x7C,@(-0x7F7E7D7D,CR15))
+      DSUB     @(0x3234CB43,R1.W*8,PC), @0x76
+      DSUB     @(0x3234CB4D,R1.W*8,PC), @(PC)
+      DSUB     @(0x3234CB57,R1.W*8,PC), @(0x000196B6,PC)
+      DSUB     @(0x3234CB62,R1.W*8,PC), @(R1.W,PC)
+      DSUB     @(0x3234CB6D,R1.W*8,PC), @(0x0001974E,R1.W*2,PC)
       BSR.B    *-85
       BSR.W    *-0x5552
       BSR.L    *-0x5453524D
@@ -14518,9 +14518,9 @@
       JSR      @(R1.W,R0)
       JSR      @(18,R1.W*2,R0)
       JSR      @(PC)
-      JSR      @(0x00019701,PC)
+      JSR      @(0x00019705,PC)
       JSR      @(R1.W,PC)
-      JSR      @(0x0001978B,R1.W*2,PC)
+      JSR      @(0x0001978F,R1.W*2,PC)
       EXTU.W   R0
       EXTU.L   R0
       EXTU.B   R0
@@ -14536,9 +14536,9 @@
       DNEG     @(R1.W,R0)
       DNEG     @(18,R1.W*2,R0)
       DNEG     @(PC)
-      DNEG     @(0x00019740,PC)
+      DNEG     @(0x00019744,PC)
       DNEG     @(R1.W,PC)
-      DNEG     @(0x000197CA,R1.W*2,PC)
+      DNEG     @(0x000197CE,R1.W*2,PC)
       BNE.B    *-77
       BNE.W    *-0x4D4A
       BNE.L    *-0x4C4B4A45
@@ -14603,9 +14603,9 @@
       SET/T    @(-0x7C,@(-0x7F7E7D7D,CR15))
       SET/T    @0x76
       SET/T    @(PC)
-      SET/T    @(0x00019867,PC)
+      SET/T    @(0x0001986B,PC)
       SET/T    @(R1.W,PC)
-      SET/T    @(0x000198F3,R1.W*2,PC)
+      SET/T    @(0x000198F7,R1.W*2,PC)
       SET/F    @R2
       SET/F    @(17,R0)
       SET/F    R0
@@ -14618,9 +14618,9 @@
       SET/F    @(-0x7C,@(-0x7F7E7D7D,CR15))
       SET/F    @0x76
       SET/F    @(PC)
-      SET/F    @(0x000198B4,PC)
+      SET/F    @(0x000198B8,PC)
       SET/F    @(R1.W,PC)
-      SET/F    @(0x00019940,R1.W*2,PC)
+      SET/F    @(0x00019944,R1.W*2,PC)
       SET/HI   @R3
       SET/HI   @(17,R0)
       SET/HI   R0
@@ -14633,9 +14633,9 @@
       SET/HI   @(-0x7C,@(-0x7F7E7D7D,CR15))
       SET/HI   @0x76
       SET/HI   @(PC)
-      SET/HI   @(0x00019901,PC)
+      SET/HI   @(0x00019905,PC)
       SET/HI   @(R1.W,PC)
-      SET/HI   @(0x0001998D,R1.W*2,PC)
+      SET/HI   @(0x00019991,R1.W*2,PC)
       SET/LS   @R4
       SET/LS   @(17,R0)
       SET/LS   R0
@@ -14648,9 +14648,9 @@
       SET/LS   @(-0x7C,@(-0x7F7E7D7D,CR15))
       SET/LS   @0x76
       SET/LS   @(PC)
-      SET/LS   @(0x0001994E,PC)
+      SET/LS   @(0x00019952,PC)
       SET/LS   @(R1.W,PC)
-      SET/LS   @(0x000199DA,R1.W*2,PC)
+      SET/LS   @(0x000199DE,R1.W*2,PC)
       SET/CC   @R5
       SET/CC   @(17,R0)
       SET/CC   R0
@@ -14663,9 +14663,9 @@
       SET/CC   @(-0x7C,@(-0x7F7E7D7D,CR15))
       SET/CC   @0x76
       SET/CC   @(PC)
-      SET/CC   @(0x0001999B,PC)
+      SET/CC   @(0x0001999F,PC)
       SET/CC   @(R1.W,PC)
-      SET/CC   @(0x00019A27,R1.W*2,PC)
+      SET/CC   @(0x00019A2B,R1.W*2,PC)
       SET/CS   @R6
       SET/CS   @(17,R0)
       SET/CS   R0
@@ -14678,9 +14678,9 @@
       SET/CS   @(-0x7C,@(-0x7F7E7D7D,CR15))
       SET/CS   @0x76
       SET/CS   @(PC)
-      SET/CS   @(0x000199E8,PC)
+      SET/CS   @(0x000199EC,PC)
       SET/CS   @(R1.W,PC)
-      SET/CS   @(0x00019A74,R1.W*2,PC)
+      SET/CS   @(0x00019A78,R1.W*2,PC)
       SET/NE   @R7
       SET/NE   @(17,R0)
       SET/NE   R0
@@ -14693,9 +14693,9 @@
       SET/NE   @(-0x7C,@(-0x7F7E7D7D,CR15))
       SET/NE   @0x76
       SET/NE   @(PC)
-      SET/NE   @(0x00019A35,PC)
+      SET/NE   @(0x00019A39,PC)
       SET/NE   @(R1.W,PC)
-      SET/NE   @(0x00019AC1,R1.W*2,PC)
+      SET/NE   @(0x00019AC5,R1.W*2,PC)
       SET/EQ   @R8
       SET/EQ   @(17,R0)
       SET/EQ   R0
@@ -14708,9 +14708,9 @@
       SET/EQ   @(-0x7C,@(-0x7F7E7D7D,CR15))
       SET/EQ   @0x76
       SET/EQ   @(PC)
-      SET/EQ   @(0x00019A82,PC)
+      SET/EQ   @(0x00019A86,PC)
       SET/EQ   @(R1.W,PC)
-      SET/EQ   @(0x00019B0E,R1.W*2,PC)
+      SET/EQ   @(0x00019B12,R1.W*2,PC)
       SET/VC   @R9
       SET/VC   @(17,R0)
       SET/VC   R0
@@ -14723,9 +14723,9 @@
       SET/VC   @(-0x7C,@(-0x7F7E7D7D,CR15))
       SET/VC   @0x76
       SET/VC   @(PC)
-      SET/VC   @(0x00019ACF,PC)
+      SET/VC   @(0x00019AD3,PC)
       SET/VC   @(R1.W,PC)
-      SET/VC   @(0x00019B5B,R1.W*2,PC)
+      SET/VC   @(0x00019B5F,R1.W*2,PC)
       SET/VS   @R10
       SET/VS   @(17,R0)
       SET/VS   R0
@@ -14738,9 +14738,9 @@
       SET/VS   @(-0x7C,@(-0x7F7E7D7D,CR15))
       SET/VS   @0x76
       SET/VS   @(PC)
-      SET/VS   @(0x00019B1C,PC)
+      SET/VS   @(0x00019B20,PC)
       SET/VS   @(R1.W,PC)
-      SET/VS   @(0x00019BA8,R1.W*2,PC)
+      SET/VS   @(0x00019BAC,R1.W*2,PC)
       SET/PL   @R11
       SET/PL   @(17,R0)
       SET/PL   R0
@@ -14753,9 +14753,9 @@
       SET/PL   @(-0x7C,@(-0x7F7E7D7D,CR15))
       SET/PL   @0x76
       SET/PL   @(PC)
-      SET/PL   @(0x00019B69,PC)
+      SET/PL   @(0x00019B6D,PC)
       SET/PL   @(R1.W,PC)
-      SET/PL   @(0x00019BF5,R1.W*2,PC)
+      SET/PL   @(0x00019BF9,R1.W*2,PC)
       SET/MI   @R12
       SET/MI   @(17,R0)
       SET/MI   R0
@@ -14768,9 +14768,9 @@
       SET/MI   @(-0x7C,@(-0x7F7E7D7D,CR15))
       SET/MI   @0x76
       SET/MI   @(PC)
-      SET/MI   @(0x00019BB6,PC)
+      SET/MI   @(0x00019BBA,PC)
       SET/MI   @(R1.W,PC)
-      SET/MI   @(0x00019C42,R1.W*2,PC)
+      SET/MI   @(0x00019C46,R1.W*2,PC)
       SET/GE   @R13
       SET/GE   @(17,R0)
       SET/GE   R0
@@ -14783,9 +14783,9 @@
       SET/GE   @(-0x7C,@(-0x7F7E7D7D,CR15))
       SET/GE   @0x76
       SET/GE   @(PC)
-      SET/GE   @(0x00019C03,PC)
+      SET/GE   @(0x00019C07,PC)
       SET/GE   @(R1.W,PC)
-      SET/GE   @(0x00019C8F,R1.W*2,PC)
+      SET/GE   @(0x00019C93,R1.W*2,PC)
       SET/LT   @R14
       SET/LT   @(17,R0)
       SET/LT   R0
@@ -14798,9 +14798,9 @@
       SET/LT   @(-0x7C,@(-0x7F7E7D7D,CR15))
       SET/LT   @0x76
       SET/LT   @(PC)
-      SET/LT   @(0x00019C50,PC)
+      SET/LT   @(0x00019C54,PC)
       SET/LT   @(R1.W,PC)
-      SET/LT   @(0x00019CDC,R1.W*2,PC)
+      SET/LT   @(0x00019CE0,R1.W*2,PC)
       SET/GT   @R15
       SET/GT   @(17,R0)
       SET/GT   R0
@@ -14813,9 +14813,9 @@
       SET/GT   @(-0x7C,@(-0x7F7E7D7D,CR15))
       SET/GT   @0x76
       SET/GT   @(PC)
-      SET/GT   @(0x00019C9D,PC)
+      SET/GT   @(0x00019CA1,PC)
       SET/GT   @(R1.W,PC)
-      SET/GT   @(0x00019D29,R1.W*2,PC)
+      SET/GT   @(0x00019D2D,R1.W*2,PC)
       SET/LE   @(17,R0)
       SET/LE   R0
       SET/LE   @R0+
@@ -14828,9 +14828,9 @@
       SET/LE   @CR0
       SET/LE   @0x76
       SET/LE   @(PC)
-      SET/LE   @(0x00019CEB,PC)
+      SET/LE   @(0x00019CEF,PC)
       SET/LE   @(R1.W,PC)
-      SET/LE   @(0x00019D77,R1.W*2,PC)
+      SET/LE   @(0x00019D7B,R1.W*2,PC)
       RTD.B    #-0x47
       RTD.B    #0
       RTD.W    #-0x4545
@@ -14855,9 +14855,9 @@
       MOVA     #0:8, R0
       MOVA     @0xFFFFFFF6, R0
       MOVA     @(R1.W,PC), R0
-      MOVA     @(0x00019DD1,R1.W*2,PC), R0
+      MOVA     @(0x00019DD5,R1.W*2,PC), R0
       MOVA     @(PC), R0
-      MOVA     @(0x00019D57,PC), R0
+      MOVA     @(0x00019D5B,PC), R0
       MOVA     @R0, @R1
       MOVA     @R0, @(17,R0)
       MOVA     @R0, @R0+
@@ -14869,9 +14869,9 @@
       MOVA     @R0, @(-0x7C,@(-0x7F7E7D7D,CR15))
       MOVA     @R0, @0x76
       MOVA     @R0, @(PC)
-      MOVA     @R0, @(0x00019D96,PC)
+      MOVA     @R0, @(0x00019D9A,PC)
       MOVA     @R0, @(R1.W,PC)
-      MOVA     @R0, @(0x00019E22,R1.W*2,PC)
+      MOVA     @R0, @(0x00019E26,R1.W*2,PC)
       MOVA     @(17,R0), @(19,R2)
       MOVA     @(17,R0), @R0+
       MOVA     @(17,R0), @-R0
@@ -14883,9 +14883,9 @@
       MOVA     @(17,R0), @CR0
       MOVA     @(17,R0), @0x76
       MOVA     @(17,R0), @(PC)
-      MOVA     @(17,R0), @(0x00019DED,PC)
+      MOVA     @(17,R0), @(0x00019DF1,PC)
       MOVA     @(17,R0), @(R1.W,PC)
-      MOVA     @(17,R0), @(0x00019E7B,R1.W*2,PC)
+      MOVA     @(17,R0), @(0x00019E7F,R1.W*2,PC)
       MOVA     R0, @R0+
       MOVA     R0, @-R0
       MOVA     R0, @(CR0*1)
@@ -14897,9 +14897,9 @@
       MOVA     R0, @(17,CR0)
       MOVA     R0, @0x76
       MOVA     R0, @(PC)
-      MOVA     R0, @(0x00019E3B,PC)
+      MOVA     R0, @(0x00019E3F,PC)
       MOVA     R0, @(R1.W,PC)
-      MOVA     R0, @(0x00019EC7,R1.W*2,PC)
+      MOVA     R0, @(0x00019ECB,R1.W*2,PC)
       MOVA     @R0+, @R1+
       MOVA     @R0+, @-R0
       MOVA     @R0+, @(CR0*1)
@@ -14911,9 +14911,9 @@
       MOVA     @R0+, @(17,CR0)
       MOVA     @R0+, @0x76
       MOVA     @R0+, @(PC)
-      MOVA     @R0+, @(0x00019E87,PC)
+      MOVA     @R0+, @(0x00019E8B,PC)
       MOVA     @R0+, @(R1.W,PC)
-      MOVA     @R0+, @(0x00019F13,R1.W*2,PC)
+      MOVA     @R0+, @(0x00019F17,R1.W*2,PC)
       MOVA     @-R0, @-R1
       MOVA     @-R0, @(CR0*1)
       MOVA     @-R0, @(1,CR0*1)
@@ -14925,9 +14925,9 @@
       MOVA     @-R0, @CR0+
       MOVA     @-R0, @0x76
       MOVA     @-R0, @(PC)
-      MOVA     @-R0, @(0x00019ED4,PC)
+      MOVA     @-R0, @(0x00019ED8,PC)
       MOVA     @-R0, @(R1.W,PC)
-      MOVA     @-R0, @(0x00019F60,R1.W*2,PC)
+      MOVA     @-R0, @(0x00019F64,R1.W*2,PC)
       MOVA     @(CR0*1), @R1
       MOVA     @(CR0*1), @(17,R0)
       MOVA     @(CR0*1), @R0+
@@ -14939,9 +14939,9 @@
       MOVA     @(CR0*1), @(-0x7C,@(-0x7F7E7D7D,CR15))
       MOVA     @(CR0*1), @0x76
       MOVA     @(CR0*1), @(PC)
-      MOVA     @(CR0*1), @(0x00019F36,PC)
+      MOVA     @(CR0*1), @(0x00019F3A,PC)
       MOVA     @(CR0*1), @(R1.W,PC)
-      MOVA     @(CR0*1), @(0x00019FC6,R1.W*2,PC)
+      MOVA     @(CR0*1), @(0x00019FCA,R1.W*2,PC)
       MOVA     @(1,CR0*1), @R2
       MOVA     @(1,CR0*1), @(17,R0)
       MOVA     @(0x011D2E2F,CR0*1), @R0+
@@ -14953,9 +14953,9 @@
       MOVA     @(0x011D2E2F,CR0*1), @(-0x7C,@(-0x7F7E7D7D,CR15))
       MOVA     @(0x011D3D3E,CR0*1), @0x76
       MOVA     @(0x011D3D3E,CR0*1), @(PC)
-      MOVA     @(0x011D3D3E,CR0*1), @(0x00019FC6,PC)
+      MOVA     @(0x011D3D3E,CR0*1), @(0x00019FCA,PC)
       MOVA     @(0x011D3D3E,CR0*1), @(R1.W,PC)
-      MOVA     @(0x011D3D3E,CR0*1), @(0x0001A05E,R1.W*2,PC)
+      MOVA     @(0x011D3D3E,CR0*1), @(0x0001A062,R1.W*2,PC)
       MOVA     @(0x01020304,R0.L,CR13), @R5
       MOVA     @(0x01020304,R0.L,CR13), @(17,R0)
       MOVA     @(0x01020304,R0.L,CR13), @R0+
@@ -14967,9 +14967,9 @@
       MOVA     @(0x01020304,R0.L,CR13), @(-0x7C,@(-0x7F7E7D7D,CR15))
       MOVA     @(0x01020304,R0.L,CR13), @0x76
       MOVA     @(0x01020304,R0.L,CR13), @(PC)
-      MOVA     @(0x01020304,R0.L,CR13), @(0x0001A070,PC)
+      MOVA     @(0x01020304,R0.L,CR13), @(0x0001A074,PC)
       MOVA     @(0x01020304,R0.L,CR13), @(R1.W,PC)
-      MOVA     @(0x01020304,R0.L,CR13), @(0x0001A10A,R1.W*2,PC)
+      MOVA     @(0x01020304,R0.L,CR13), @(0x0001A10E,R1.W*2,PC)
       MOVA     @(R1.W,CR0), @R2
       MOVA     @(R1.W,CR0), @(17,R0)
       MOVA     @(R1.W,CR0), @R0+
@@ -14981,9 +14981,9 @@
       MOVA     @(R1.W,CR0), @(-0x7C,@(-0x7F7E7D7D,CR15))
       MOVA     @(R1.W,CR0), @0x76
       MOVA     @(R1.W,CR0), @(PC)
-      MOVA     @(R1.W,CR0), @(0x0001A0EC,PC)
+      MOVA     @(R1.W,CR0), @(0x0001A0F0,PC)
       MOVA     @(R1.W,CR0), @(R1.W,PC)
-      MOVA     @(R1.W,CR0), @(0x0001A17E,R1.W*2,PC)
+      MOVA     @(R1.W,CR0), @(0x0001A182,R1.W*2,PC)
       MOVA     @(-0x7C,@(-0x7F7E7D7D,CR15)), @R0
       MOVA     @(-0x7C,@(-0x7F7E7D7D,CR15)), @(17,R0)
       MOVA     @(-0x7C,@(-0x7F7E7D7D,CR15)), @R0+
@@ -14995,9 +14995,9 @@
       MOVA     @(-0x7C,@(-0x7F7E7D7D,CR15)), @(R1.W,R0)
       MOVA     @(-0x7C,@(-0x7F7E7D7D,CR15)), @(18,R1.W*2,R0)
       MOVA     @(-0x7C,@(-0x7F7E7D7D,CR15)), @(PC)
-      MOVA     @(-0x7C,@(-0x7F7E7D7D,CR15)), @(0x0001A18B,PC)
+      MOVA     @(-0x7C,@(-0x7F7E7D7D,CR15)), @(0x0001A18F,PC)
       MOVA     @(-0x7C,@(-0x7F7E7D7D,CR15)), @(R1.W,PC)
-      MOVA     @(-0x7C,@(-0x7F7E7D7D,CR15)), @(0x0001A225,R1.W*2,PC)
+      MOVA     @(-0x7C,@(-0x7F7E7D7D,CR15)), @(0x0001A229,R1.W*2,PC)
       MOVA     #0x72:8, @(PR0*1)
       MOVA     #0x72:8, @(1,PR0*1)
       MOVA     #0x72:8, @(0x01020304,R0.L,PR13)
@@ -15009,9 +15009,9 @@
       MOVA     #0x72:8, @-PR0
       MOVA     #0x72:8, @0x76
       MOVA     #0x72:8, @(PC)
-      MOVA     #0x72:8, @(0x0001A1F3,PC)
+      MOVA     #0x72:8, @(0x0001A1F7,PC)
       MOVA     #0x72:8, @(R1.W,PC)
-      MOVA     #0x72:8, @(0x0001A281,R1.W*2,PC)
+      MOVA     #0x72:8, @(0x0001A285,R1.W*2,PC)
       MOVA     #-0x80:8, @R0
       MOVA     #-0x80:8, @(17,R0)
       MOVA     #-0x80:8, @R0+
@@ -15023,18 +15023,18 @@
       MOVA     #-0x80:8, @(R1.W,R0)
       MOVA     #-0x80:8, @(18,R1.W*2,R0)
       MOVA     #-0x80:8, @(PC)
-      MOVA     #-0x80:8, @(0x0001A246,PC)
+      MOVA     #-0x80:8, @(0x0001A24A,PC)
       MOVA     #-0x80:8, @(R1.W,PC)
-      MOVA     #-0x80:8, @(0x0001A2D4,R1.W*2,PC)
+      MOVA     #-0x80:8, @(0x0001A2D8,R1.W*2,PC)
       MOVA     @0x76, @0x78797A7B
       MOVA     @0x76, @(R0*1)
       MOVA     @0x76, @(1,R0*1)
       MOVA     @0x76, @(0x01020304,R0.L,R13)
       MOVA     @0x76, @(R1.W,R0)
       MOVA     @0x76, @(PC)
-      MOVA     @0x76, @(0x0001A281,PC)
+      MOVA     @0x76, @(0x0001A285,PC)
       MOVA     @0x76, @(R1.W,PC)
-      MOVA     @0x76, @(0x0001A30F,R1.W*2,PC)
+      MOVA     @0x76, @(0x0001A313,R1.W*2,PC)
       MOVA     @0x76, @(-0x7C,@(-0x7F7E7D7D,R15))
       MOVA     @0x76, @R0
       MOVA     @0x76, @(17,R0)
@@ -15051,22 +15051,22 @@
       MOVA     @(PC), @(R1.W,R0)
       MOVA     @(PC), @(18,R1.W*2,R0)
       MOVA     @(PC), @(PC)
-      MOVA     @(PC), @(0x0001A2F1,PC)
+      MOVA     @(PC), @(0x0001A2F5,PC)
       MOVA     @(PC), @(R1.W,PC)
-      MOVA     @(PC), @(0x0001A37F,R1.W*2,PC)
-      MOVA     @(0x0001A302,PC), @R0
-      MOVA     @(0x0001A307,PC), @(17,R0)
-      MOVA     @(0x0001449C,PC), @R0+
-      MOVA     @(0x000144A2,PC), @-R0
-      MOVA     @(0x000144FD,PC), @0x76
-      MOVA     @(0x00014504,PC), @(R0*1)
-      MOVA     @(0x0001450B,PC), @(1,R0*1)
-      MOVA     @(0x00014513,PC), @(PC)
-      MOVA     @(0x0001451A,PC), @(0x0001A33A,PC)
-      MOVA     @(0x00014522,PC), @(R1.W,PC)
-      MOVA     @(0x0001452A,PC), @(0x0001A3CC,R1.W*2,PC)
-      MOVA     @(0x00014533,PC), @(-0x7C,@(-0x7F7E7D7D,R15))
-      MOVA     @(0x71741E48,PC), @(0x01020304,R0.L,R13)
+      MOVA     @(PC), @(0x0001A383,R1.W*2,PC)
+      MOVA     @(0x0001A306,PC), @R0
+      MOVA     @(0x0001A30B,PC), @(17,R0)
+      MOVA     @(0x000144A0,PC), @R0+
+      MOVA     @(0x000144A6,PC), @-R0
+      MOVA     @(0x00014501,PC), @0x76
+      MOVA     @(0x00014508,PC), @(R0*1)
+      MOVA     @(0x0001450F,PC), @(1,R0*1)
+      MOVA     @(0x00014517,PC), @(PC)
+      MOVA     @(0x0001451E,PC), @(0x0001A33E,PC)
+      MOVA     @(0x00014526,PC), @(R1.W,PC)
+      MOVA     @(0x0001452E,PC), @(0x0001A3D0,R1.W*2,PC)
+      MOVA     @(0x00014537,PC), @(-0x7C,@(-0x7F7E7D7D,R15))
+      MOVA     @(0x71741E4C,PC), @(0x01020304,R0.L,R13)
       MOVA     @(R1.W,PC), @R2
       MOVA     @(R1.W,PC), @(17,R0)
       MOVA     @(R1.W,PC), @R0+
@@ -15078,23 +15078,23 @@
       MOVA     @(R1.W,PC), @(-0x7C,@(-0x7F7E7D7D,CR15))
       MOVA     @(R1.W,PC), @0x76
       MOVA     @(R1.W,PC), @(PC)
-      MOVA     @(R1.W,PC), @(0x0001A3BC,PC)
+      MOVA     @(R1.W,PC), @(0x0001A3C0,PC)
       MOVA     @(R1.W,PC), @(R1.W,PC)
-      MOVA     @(R1.W,PC), @(0x0001A44C,R1.W*2,PC)
-      MOVA     @(0x0001A451,R1.W*2,PC), @(20,R3)
-      MOVA     @(0x0001A447,R0.W,PC), @R2
-      MOVA     @(0x0001C670,R1.W*4,PC), @R0+
-      MOVA     @(0x0001C677,R1.W*4,PC), @-R0
-      MOVA     @(0x0001C67E,R1.W*4,PC), @(CR0*1)
-      MOVA     @(0x0001C687,R1.W*4,PC), @(1,CR0*1)
-      MOVA     @(0x0001C691,R1.W*4,PC), @(0x01020304,R0.L,CR13)
-      MOVA     @(0x0001C69F,R1.W*4,PC), @(R1.W,CR0)
-      MOVA     @(0x0001C6A9,R1.W*4,PC), @(-0x7C,@(-0x7F7E7D7D,CR15))
-      MOVA     @(0x3234D8CB,R1.W*8,PC), @0x76
-      MOVA     @(0x3234D8D5,R1.W*8,PC), @(PC)
-      MOVA     @(0x3234D8DF,R1.W*8,PC), @(0x0001A43E,PC)
-      MOVA     @(0x3234D8EA,R1.W*8,PC), @(R1.W,PC)
-      MOVA     @(0x3234D8F5,R1.W*8,PC), @(0x0001A4D6,R1.W*2,PC)
+      MOVA     @(R1.W,PC), @(0x0001A450,R1.W*2,PC)
+      MOVA     @(0x0001A455,R1.W*2,PC), @(20,R3)
+      MOVA     @(0x0001A44B,R0.W,PC), @R2
+      MOVA     @(0x0001C674,R1.W*4,PC), @R0+
+      MOVA     @(0x0001C67B,R1.W*4,PC), @-R0
+      MOVA     @(0x0001C682,R1.W*4,PC), @(CR0*1)
+      MOVA     @(0x0001C68B,R1.W*4,PC), @(1,CR0*1)
+      MOVA     @(0x0001C695,R1.W*4,PC), @(0x01020304,R0.L,CR13)
+      MOVA     @(0x0001C6A3,R1.W*4,PC), @(R1.W,CR0)
+      MOVA     @(0x0001C6AD,R1.W*4,PC), @(-0x7C,@(-0x7F7E7D7D,CR15))
+      MOVA     @(0x3234D8CF,R1.W*8,PC), @0x76
+      MOVA     @(0x3234D8D9,R1.W*8,PC), @(PC)
+      MOVA     @(0x3234D8E3,R1.W*8,PC), @(0x0001A442,PC)
+      MOVA     @(0x3234D8EE,R1.W*8,PC), @(R1.W,PC)
+      MOVA     @(0x3234D8F9,R1.W*8,PC), @(0x0001A4DA,R1.W*2,PC)
       LINK.B   R0, #1
       LINK.B   R0, #-0x80
       LINK.W   R0, #0x0102
@@ -15112,9 +15112,9 @@
       BFEXT    R13, R5, @R0, @(0x01020304,R0.L,R13)
       BFEXT    R13, R5, @R0, @(R1.W,R0)
       BFEXT    R13, R5, @R0, @(PC)
-      BFEXT    R13, R5, @R0, @(0x0001A4B6,PC)
+      BFEXT    R13, R5, @R0, @(0x0001A4BA,PC)
       BFEXT    R13, R5, @R0, @(R1.W,PC)
-      BFEXT    R13, R5, @R0, @(0x0001A544,R1.W*2,PC)
+      BFEXT    R13, R5, @R0, @(0x0001A548,R1.W*2,PC)
       BFEXT    R13, R5, @(17,R0), @(19,R2)
       BFEXT    R13, R5, @(17,R0), R0
       BFEXT    R13, R5, @(17,R0), @(CR0*1)
@@ -15124,9 +15124,9 @@
       BFEXT    R13, R5, @(23,R0), @(0x01020304,R0.L,R13)
       BFEXT    R13, R5, @(23,R0), @(R1.W,R0)
       BFEXT    R13, R5, @(23,R0), @(PC)
-      BFEXT    R13, R5, @(23,R0), @(0x0001A50E,PC)
+      BFEXT    R13, R5, @(23,R0), @(0x0001A512,PC)
       BFEXT    R13, R5, @(23,R0), @(R1.W,PC)
-      BFEXT    R13, R5, @(23,R0), @(0x0001A59E,R1.W*2,PC)
+      BFEXT    R13, R5, @(23,R0), @(0x0001A5A2,R1.W*2,PC)
       BFEXT    R13, R5, @(-6,R0), @R0
       BFEXT    R13, R5, R0, R1
       BFEXT    R13, R5, R0, @(CR0*1)
@@ -15136,9 +15136,9 @@
       BFEXT    R13, R5, R0, @(0x01020304,R0.L,R13)
       BFEXT    R13, R5, R0, @(R1.W,R0)
       BFEXT    R13, R5, R0, @(PC)
-      BFEXT    R13, R5, R0, @(0x0001A55E,PC)
+      BFEXT    R13, R5, R0, @(0x0001A562,PC)
       BFEXT    R13, R5, R0, @(R1.W,PC)
-      BFEXT    R13, R5, R0, @(0x0001A5EC,R1.W*2,PC)
+      BFEXT    R13, R5, R0, @(0x0001A5F0,R1.W*2,PC)
       BFEXT    R13, R5, R0, @R0
       BFEXT    R13, R5, R0, @(17,R0)
       BFEXT    R13, R5, @(CR0*1), @R1
@@ -15157,9 +15157,9 @@
       BFEXT    R13, R5, @0x76, @(R0*1)
       BFEXT    R13, R5, @0x76, @(1,R0*1)
       BFEXT    R13, R5, @0x76, @(PC)
-      BFEXT    R13, R5, @0x76, @(0x0001A615,PC)
+      BFEXT    R13, R5, @0x76, @(0x0001A619,PC)
       BFEXT    R13, R5, @0x76, @(R1.W,PC)
-      BFEXT    R13, R5, @0x76, @(0x0001A6A5,R1.W*2,PC)
+      BFEXT    R13, R5, @0x76, @(0x0001A6A9,R1.W*2,PC)
       BFEXT    R13, R5, @0x76, @(-0x7C,@(-0x7F7E7D7D,R15))
       BFEXT    R13, R5, @0xFFFFFFF9, @R0
       BFEXT    R13, R5, @0xFFFFFFF9, @(17,R0)
@@ -15168,9 +15168,9 @@
       BFEXT    R13, R5, @(R0*1), @0x76
       BFEXT    R13, R5, @(R0*1), @(1,R0*1)
       BFEXT    R13, R5, @(R0*1), @(PC)
-      BFEXT    R13, R5, @(R0*1), @(0x0001A660,PC)
+      BFEXT    R13, R5, @(R0*1), @(0x0001A664,PC)
       BFEXT    R13, R5, @(R0*1), @(R1.W,PC)
-      BFEXT    R13, R5, @(R0*1), @(0x0001A6F0,R1.W*2,PC)
+      BFEXT    R13, R5, @(R0*1), @(0x0001A6F4,R1.W*2,PC)
       BFEXT    R13, R5, @(R0*1), @(-0x7C,@(-0x7F7E7D7D,R15))
       BFEXT    R13, R5, @(R1.W,R0), @R2
       BFEXT    R13, R5, @(R1.W,R0), @(17,R0)
@@ -15188,20 +15188,20 @@
       BFEXT    R13, R5, @(PC), @(-0x7C,@(-0x7F7E7D7D,CR15))
       BFEXT    R13, R5, @(PC), @0x76
       BFEXT    R13, R5, @(PC), @(PC)
-      BFEXT    R13, R5, @(PC), @(0x0001A6F8,PC)
+      BFEXT    R13, R5, @(PC), @(0x0001A6FC,PC)
       BFEXT    R13, R5, @(PC), @(R1.W,PC)
-      BFEXT    R13, R5, @(PC), @(0x0001A788,R1.W*2,PC)
-      BFEXT    R13, R5, @(0x0001A774,PC), @R0
-      BFEXT    R13, R5, @(0x0001A77A,PC), @(17,R0)
-      BFEXT    R13, R5, @(0x0001A781,PC), R0
-      BFEXT    R13, R5, @(0x0001A787,PC), @0x76
-      BFEXT    R13, R5, @(0x0001A78E,PC), @(R0*1)
-      BFEXT    R13, R5, @(0x0001A795,PC), @(1,R0*1)
-      BFEXT    R13, R5, @(0x0001A79D,PC), @(PC)
-      BFEXT    R13, R5, @(0x0001A7A4,PC), @(0x0001A73F,PC)
-      BFEXT    R13, R5, @(0x0001A7AC,PC), @(R1.W,PC)
-      BFEXT    R13, R5, @(0x0001A7B4,PC), @(0x0001A7D1,R1.W*2,PC)
-      BFEXT    R13, R5, @(0x0001A7BD,PC), @(-0x7C,@(-0x7F7E7D7D,R15))
+      BFEXT    R13, R5, @(PC), @(0x0001A78C,R1.W*2,PC)
+      BFEXT    R13, R5, @(0x0001A778,PC), @R0
+      BFEXT    R13, R5, @(0x0001A77E,PC), @(17,R0)
+      BFEXT    R13, R5, @(0x0001A785,PC), R0
+      BFEXT    R13, R5, @(0x0001A78B,PC), @0x76
+      BFEXT    R13, R5, @(0x0001A792,PC), @(R0*1)
+      BFEXT    R13, R5, @(0x0001A799,PC), @(1,R0*1)
+      BFEXT    R13, R5, @(0x0001A7A1,PC), @(PC)
+      BFEXT    R13, R5, @(0x0001A7A8,PC), @(0x0001A743,PC)
+      BFEXT    R13, R5, @(0x0001A7B0,PC), @(R1.W,PC)
+      BFEXT    R13, R5, @(0x0001A7B8,PC), @(0x0001A7D5,R1.W*2,PC)
+      BFEXT    R13, R5, @(0x0001A7C1,PC), @(-0x7C,@(-0x7F7E7D7D,R15))
       BFEXT    R13, R5, @(R1.W,PC), @R2
       BFEXT    R13, R5, @(R1.W,PC), @(17,R0)
       BFEXT    R13, R5, @(R1.W,PC), R0
@@ -15209,12 +15209,12 @@
       BFEXT    R13, R5, @(R1.W,PC), @0x76
       BFEXT    R13, R5, @(R1.W,PC), @(1,R0*1)
       BFEXT    R13, R5, @(R1.W,PC), @(PC)
-      BFEXT    R13, R5, @(R1.W,PC), @(0x0001A795,PC)
+      BFEXT    R13, R5, @(R1.W,PC), @(0x0001A799,PC)
       BFEXT    R13, R5, @(R1.W,PC), @(R1.W,PC)
-      BFEXT    R13, R5, @(R1.W,PC), @(0x0001A827,R1.W*2,PC)
+      BFEXT    R13, R5, @(R1.W,PC), @(0x0001A82B,R1.W*2,PC)
       BFEXT    R13, R5, @(R1.W,PC), @(-0x7C,@(-0x7F7E7D7D,R15))
-      BFEXT    R13, R5, @(0x0001A839,R1.W*2,PC), @(20,R3)
-      BFEXT    R13, R5, @(0x0001A841,R1.W*2,PC), R0
+      BFEXT    R13, R5, @(0x0001A83D,R1.W*2,PC), @(20,R3)
+      BFEXT    R13, R5, @(0x0001A845,R1.W*2,PC), R0
       BFINS    R13, R6, @R0, @R1
       BFINS    R13, R6, @R0, @(17,R0)
       BFINS    R13, R6, @R0, R0
@@ -15225,9 +15225,9 @@
       BFINS    R13, R6, @R0, @(0x01020304,R0.L,R13)
       BFINS    R13, R6, @R0, @(R1.W,R0)
       BFINS    R13, R6, @R0, @(PC)
-      BFINS    R13, R6, @R0, @(0x0001A806,PC)
+      BFINS    R13, R6, @R0, @(0x0001A80A,PC)
       BFINS    R13, R6, @R0, @(R1.W,PC)
-      BFINS    R13, R6, @R0, @(0x0001A894,R1.W*2,PC)
+      BFINS    R13, R6, @R0, @(0x0001A898,R1.W*2,PC)
       BFINS    R13, R6, @(17,R0), @(19,R2)
       BFINS    R13, R6, @(17,R0), R0
       BFINS    R13, R6, @(17,R0), @(CR0*1)
@@ -15237,9 +15237,9 @@
       BFINS    R13, R6, @(23,R0), @(0x01020304,R0.L,R13)
       BFINS    R13, R6, @(23,R0), @(R1.W,R0)
       BFINS    R13, R6, @(23,R0), @(PC)
-      BFINS    R13, R6, @(23,R0), @(0x0001A85E,PC)
+      BFINS    R13, R6, @(23,R0), @(0x0001A862,PC)
       BFINS    R13, R6, @(23,R0), @(R1.W,PC)
-      BFINS    R13, R6, @(23,R0), @(0x0001A8EE,R1.W*2,PC)
+      BFINS    R13, R6, @(23,R0), @(0x0001A8F2,R1.W*2,PC)
       BFINS    R13, R6, @(-6,R0), @R0
       BFINS    R13, R6, R0, R1
       BFINS    R13, R6, R0, @(CR0*1)
@@ -15249,9 +15249,9 @@
       BFINS    R13, R6, R0, @(0x01020304,R0.L,R13)
       BFINS    R13, R6, R0, @(R1.W,R0)
       BFINS    R13, R6, R0, @(PC)
-      BFINS    R13, R6, R0, @(0x0001A8AE,PC)
+      BFINS    R13, R6, R0, @(0x0001A8B2,PC)
       BFINS    R13, R6, R0, @(R1.W,PC)
-      BFINS    R13, R6, R0, @(0x0001A93C,R1.W*2,PC)
+      BFINS    R13, R6, R0, @(0x0001A940,R1.W*2,PC)
       BFINS    R13, R6, R0, @R0
       BFINS    R13, R6, R0, @(17,R0)
       BFINS    R13, R6, @(CR0*1), @R1
@@ -15270,9 +15270,9 @@
       BFINS    R13, R6, @0x76, @(R0*1)
       BFINS    R13, R6, @0x76, @(1,R0*1)
       BFINS    R13, R6, @0x76, @(PC)
-      BFINS    R13, R6, @0x76, @(0x0001A965,PC)
+      BFINS    R13, R6, @0x76, @(0x0001A969,PC)
       BFINS    R13, R6, @0x76, @(R1.W,PC)
-      BFINS    R13, R6, @0x76, @(0x0001A9F5,R1.W*2,PC)
+      BFINS    R13, R6, @0x76, @(0x0001A9F9,R1.W*2,PC)
       BFINS    R13, R6, @0x76, @(-0x7C,@(-0x7F7E7D7D,R15))
       BFINS    R13, R6, @0xFFFFFFF9, @R0
       BFINS    R13, R6, @0xFFFFFFF9, @(17,R0)
@@ -15281,9 +15281,9 @@
       BFINS    R13, R6, @(R0*1), @0x76
       BFINS    R13, R6, @(R0*1), @(1,R0*1)
       BFINS    R13, R6, @(R0*1), @(PC)
-      BFINS    R13, R6, @(R0*1), @(0x0001A9B0,PC)
+      BFINS    R13, R6, @(R0*1), @(0x0001A9B4,PC)
       BFINS    R13, R6, @(R0*1), @(R1.W,PC)
-      BFINS    R13, R6, @(R0*1), @(0x0001AA40,R1.W*2,PC)
+      BFINS    R13, R6, @(R0*1), @(0x0001AA44,R1.W*2,PC)
       BFINS    R13, R6, @(R0*1), @(-0x7C,@(-0x7F7E7D7D,R15))
       BFINS    R13, R6, @(R1.W,R0), @R2
       BFINS    R13, R6, @(R1.W,R0), @(17,R0)
@@ -15301,20 +15301,20 @@
       BFINS    R13, R6, @(PC), @(-0x7C,@(-0x7F7E7D7D,CR15))
       BFINS    R13, R6, @(PC), @0x76
       BFINS    R13, R6, @(PC), @(PC)
-      BFINS    R13, R6, @(PC), @(0x0001AA48,PC)
+      BFINS    R13, R6, @(PC), @(0x0001AA4C,PC)
       BFINS    R13, R6, @(PC), @(R1.W,PC)
-      BFINS    R13, R6, @(PC), @(0x0001AAD8,R1.W*2,PC)
-      BFINS    R13, R6, @(0x0001AAC4,PC), @R0
-      BFINS    R13, R6, @(0x0001AACA,PC), @(17,R0)
-      BFINS    R13, R6, @(0x0001AAD1,PC), R0
-      BFINS    R13, R6, @(0x0001AAD7,PC), @0x76
-      BFINS    R13, R6, @(0x0001AADE,PC), @(R0*1)
-      BFINS    R13, R6, @(0x0001AAE5,PC), @(1,R0*1)
-      BFINS    R13, R6, @(0x0001AAED,PC), @(PC)
-      BFINS    R13, R6, @(0x0001AAF4,PC), @(0x0001AA8F,PC)
-      BFINS    R13, R6, @(0x0001AAFC,PC), @(R1.W,PC)
-      BFINS    R13, R6, @(0x0001AB04,PC), @(0x0001AB21,R1.W*2,PC)
-      BFINS    R13, R6, @(0x0001AB0D,PC), @(-0x7C,@(-0x7F7E7D7D,R15))
+      BFINS    R13, R6, @(PC), @(0x0001AADC,R1.W*2,PC)
+      BFINS    R13, R6, @(0x0001AAC8,PC), @R0
+      BFINS    R13, R6, @(0x0001AACE,PC), @(17,R0)
+      BFINS    R13, R6, @(0x0001AAD5,PC), R0
+      BFINS    R13, R6, @(0x0001AADB,PC), @0x76
+      BFINS    R13, R6, @(0x0001AAE2,PC), @(R0*1)
+      BFINS    R13, R6, @(0x0001AAE9,PC), @(1,R0*1)
+      BFINS    R13, R6, @(0x0001AAF1,PC), @(PC)
+      BFINS    R13, R6, @(0x0001AAF8,PC), @(0x0001AA93,PC)
+      BFINS    R13, R6, @(0x0001AB00,PC), @(R1.W,PC)
+      BFINS    R13, R6, @(0x0001AB08,PC), @(0x0001AB25,R1.W*2,PC)
+      BFINS    R13, R6, @(0x0001AB11,PC), @(-0x7C,@(-0x7F7E7D7D,R15))
       BFINS    R13, R6, @(R1.W,PC), @R2
       BFINS    R13, R6, @(R1.W,PC), @(17,R0)
       BFINS    R13, R6, @(R1.W,PC), R0
@@ -15322,12 +15322,12 @@
       BFINS    R13, R6, @(R1.W,PC), @0x76
       BFINS    R13, R6, @(R1.W,PC), @(1,R0*1)
       BFINS    R13, R6, @(R1.W,PC), @(PC)
-      BFINS    R13, R6, @(R1.W,PC), @(0x0001AAE5,PC)
+      BFINS    R13, R6, @(R1.W,PC), @(0x0001AAE9,PC)
       BFINS    R13, R6, @(R1.W,PC), @(R1.W,PC)
-      BFINS    R13, R6, @(R1.W,PC), @(0x0001AB77,R1.W*2,PC)
+      BFINS    R13, R6, @(R1.W,PC), @(0x0001AB7B,R1.W*2,PC)
       BFINS    R13, R6, @(R1.W,PC), @(-0x7C,@(-0x7F7E7D7D,R15))
-      BFINS    R13, R6, @(0x0001AB89,R1.W*2,PC), @(20,R3)
-      BFINS    R13, R6, @(0x0001AB91,R1.W*2,PC), R0
+      BFINS    R13, R6, @(0x0001AB8D,R1.W*2,PC), @(20,R3)
+      BFINS    R13, R6, @(0x0001AB95,R1.W*2,PC), R0
       BFSCH    R13, R7, @R0, @R1
       BFSCH    R13, R7, @R0, @(17,R0)
       BFSCH    R13, R7, @R0, R0
@@ -15338,9 +15338,9 @@
       BFSCH    R13, R7, @R0, @(0x01020304,R0.L,R13)
       BFSCH    R13, R7, @R0, @(R1.W,R0)
       BFSCH    R13, R7, @R0, @(PC)
-      BFSCH    R13, R7, @R0, @(0x0001AB56,PC)
+      BFSCH    R13, R7, @R0, @(0x0001AB5A,PC)
       BFSCH    R13, R7, @R0, @(R1.W,PC)
-      BFSCH    R13, R7, @R0, @(0x0001ABE4,R1.W*2,PC)
+      BFSCH    R13, R7, @R0, @(0x0001ABE8,R1.W*2,PC)
       BFSCH    R13, R7, @(17,R0), @(19,R2)
       BFSCH    R13, R7, @(17,R0), R0
       BFSCH    R13, R7, @(17,R0), @(CR0*1)
@@ -15350,9 +15350,9 @@
       BFSCH    R13, R7, @(23,R0), @(0x01020304,R0.L,R13)
       BFSCH    R13, R7, @(23,R0), @(R1.W,R0)
       BFSCH    R13, R7, @(23,R0), @(PC)
-      BFSCH    R13, R7, @(23,R0), @(0x0001ABAE,PC)
+      BFSCH    R13, R7, @(23,R0), @(0x0001ABB2,PC)
       BFSCH    R13, R7, @(23,R0), @(R1.W,PC)
-      BFSCH    R13, R7, @(23,R0), @(0x0001AC3E,R1.W*2,PC)
+      BFSCH    R13, R7, @(23,R0), @(0x0001AC42,R1.W*2,PC)
       BFSCH    R13, R7, @(-6,R0), @R0
       BFSCH    R13, R7, R0, R1
       BFSCH    R13, R7, R0, @(CR0*1)
@@ -15362,9 +15362,9 @@
       BFSCH    R13, R7, R0, @(0x01020304,R0.L,R13)
       BFSCH    R13, R7, R0, @(R1.W,R0)
       BFSCH    R13, R7, R0, @(PC)
-      BFSCH    R13, R7, R0, @(0x0001ABFE,PC)
+      BFSCH    R13, R7, R0, @(0x0001AC02,PC)
       BFSCH    R13, R7, R0, @(R1.W,PC)
-      BFSCH    R13, R7, R0, @(0x0001AC8C,R1.W*2,PC)
+      BFSCH    R13, R7, R0, @(0x0001AC90,R1.W*2,PC)
       BFSCH    R13, R7, R0, @R0
       BFSCH    R13, R7, R0, @(17,R0)
       BFSCH    R13, R7, @(CR0*1), @R1
@@ -15383,9 +15383,9 @@
       BFSCH    R13, R7, @0x76, @(R0*1)
       BFSCH    R13, R7, @0x76, @(1,R0*1)
       BFSCH    R13, R7, @0x76, @(PC)
-      BFSCH    R13, R7, @0x76, @(0x0001ACB5,PC)
+      BFSCH    R13, R7, @0x76, @(0x0001ACB9,PC)
       BFSCH    R13, R7, @0x76, @(R1.W,PC)
-      BFSCH    R13, R7, @0x76, @(0x0001AD45,R1.W*2,PC)
+      BFSCH    R13, R7, @0x76, @(0x0001AD49,R1.W*2,PC)
       BFSCH    R13, R7, @0x76, @(-0x7C,@(-0x7F7E7D7D,R15))
       BFSCH    R13, R7, @0xFFFFFFF9, @R0
       BFSCH    R13, R7, @0xFFFFFFF9, @(17,R0)
@@ -15394,9 +15394,9 @@
       BFSCH    R13, R7, @(R0*1), @0x76
       BFSCH    R13, R7, @(R0*1), @(1,R0*1)
       BFSCH    R13, R7, @(R0*1), @(PC)
-      BFSCH    R13, R7, @(R0*1), @(0x0001AD00,PC)
+      BFSCH    R13, R7, @(R0*1), @(0x0001AD04,PC)
       BFSCH    R13, R7, @(R0*1), @(R1.W,PC)
-      BFSCH    R13, R7, @(R0*1), @(0x0001AD90,R1.W*2,PC)
+      BFSCH    R13, R7, @(R0*1), @(0x0001AD94,R1.W*2,PC)
       BFSCH    R13, R7, @(R0*1), @(-0x7C,@(-0x7F7E7D7D,R15))
       BFSCH    R13, R7, @(R1.W,R0), @R2
       BFSCH    R13, R7, @(R1.W,R0), @(17,R0)
@@ -15414,20 +15414,20 @@
       BFSCH    R13, R7, @(PC), @(-0x7C,@(-0x7F7E7D7D,CR15))
       BFSCH    R13, R7, @(PC), @0x76
       BFSCH    R13, R7, @(PC), @(PC)
-      BFSCH    R13, R7, @(PC), @(0x0001AD98,PC)
+      BFSCH    R13, R7, @(PC), @(0x0001AD9C,PC)
       BFSCH    R13, R7, @(PC), @(R1.W,PC)
-      BFSCH    R13, R7, @(PC), @(0x0001AE28,R1.W*2,PC)
-      BFSCH    R13, R7, @(0x0001AE14,PC), @R0
-      BFSCH    R13, R7, @(0x0001AE1A,PC), @(17,R0)
-      BFSCH    R13, R7, @(0x0001AE21,PC), R0
-      BFSCH    R13, R7, @(0x0001AE27,PC), @0x76
-      BFSCH    R13, R7, @(0x0001AE2E,PC), @(R0*1)
-      BFSCH    R13, R7, @(0x0001AE35,PC), @(1,R0*1)
-      BFSCH    R13, R7, @(0x0001AE3D,PC), @(PC)
-      BFSCH    R13, R7, @(0x0001AE44,PC), @(0x0001ADDF,PC)
-      BFSCH    R13, R7, @(0x0001AE4C,PC), @(R1.W,PC)
-      BFSCH    R13, R7, @(0x0001AE54,PC), @(0x0001AE71,R1.W*2,PC)
-      BFSCH    R13, R7, @(0x0001AE5D,PC), @(-0x7C,@(-0x7F7E7D7D,R15))
+      BFSCH    R13, R7, @(PC), @(0x0001AE2C,R1.W*2,PC)
+      BFSCH    R13, R7, @(0x0001AE18,PC), @R0
+      BFSCH    R13, R7, @(0x0001AE1E,PC), @(17,R0)
+      BFSCH    R13, R7, @(0x0001AE25,PC), R0
+      BFSCH    R13, R7, @(0x0001AE2B,PC), @0x76
+      BFSCH    R13, R7, @(0x0001AE32,PC), @(R0*1)
+      BFSCH    R13, R7, @(0x0001AE39,PC), @(1,R0*1)
+      BFSCH    R13, R7, @(0x0001AE41,PC), @(PC)
+      BFSCH    R13, R7, @(0x0001AE48,PC), @(0x0001ADE3,PC)
+      BFSCH    R13, R7, @(0x0001AE50,PC), @(R1.W,PC)
+      BFSCH    R13, R7, @(0x0001AE58,PC), @(0x0001AE75,R1.W*2,PC)
+      BFSCH    R13, R7, @(0x0001AE61,PC), @(-0x7C,@(-0x7F7E7D7D,R15))
       BFSCH    R13, R7, @(R1.W,PC), @R2
       BFSCH    R13, R7, @(R1.W,PC), @(17,R0)
       BFSCH    R13, R7, @(R1.W,PC), R0
@@ -15435,12 +15435,12 @@
       BFSCH    R13, R7, @(R1.W,PC), @0x76
       BFSCH    R13, R7, @(R1.W,PC), @(1,R0*1)
       BFSCH    R13, R7, @(R1.W,PC), @(PC)
-      BFSCH    R13, R7, @(R1.W,PC), @(0x0001AE35,PC)
+      BFSCH    R13, R7, @(R1.W,PC), @(0x0001AE39,PC)
       BFSCH    R13, R7, @(R1.W,PC), @(R1.W,PC)
-      BFSCH    R13, R7, @(R1.W,PC), @(0x0001AEC7,R1.W*2,PC)
+      BFSCH    R13, R7, @(R1.W,PC), @(0x0001AECB,R1.W*2,PC)
       BFSCH    R13, R7, @(R1.W,PC), @(-0x7C,@(-0x7F7E7D7D,R15))
-      BFSCH    R13, R7, @(0x0001AED9,R1.W*2,PC), @(20,R3)
-      BFSCH    R13, R7, @(0x0001AEE1,R1.W*2,PC), R0
+      BFSCH    R13, R7, @(0x0001AEDD,R1.W*2,PC), @(20,R3)
+      BFSCH    R13, R7, @(0x0001AEE5,R1.W*2,PC), R0
       BFMOV    R13, R8, R13, R9, R13, R10
       MOVTP.W  @R0, @R1
       MOVTP.W  @R0, @(17,R0)
@@ -15451,9 +15451,9 @@
       MOVTP.W  @R0, @(-0x7C,@(-0x7F7E7D7D,CR15))
       MOVTP.W  @R0, @0x76
       MOVTP.W  @R0, @(PC)
-      MOVTP.W  @R0, @(0x0001AE9E,PC)
+      MOVTP.W  @R0, @(0x0001AEA2,PC)
       MOVTP.W  @R0, @(R1.W,PC)
-      MOVTP.W  @R0, @(0x0001AF2A,R1.W*2,PC)
+      MOVTP.W  @R0, @(0x0001AF2E,R1.W*2,PC)
       MOVTP.W  @(17,R0), @(19,R2)
       MOVTP.W  @(17,R0), @(CR0*1)
       MOVTP.W  @(17,R0), @(1,CR0*1)
@@ -15462,9 +15462,9 @@
       MOVTP.W  @(17,R0), @(-0x7C,@(-0x7F7E7D7D,CR15))
       MOVTP.W  @(32,R0), @0x76
       MOVTP.W  @(32,R0), @(PC)
-      MOVTP.W  @(32,R0), @(0x0001AEE8,PC)
+      MOVTP.W  @(32,R0), @(0x0001AEEC,PC)
       MOVTP.W  @(32,R0), @(R1.W,PC)
-      MOVTP.W  @(32,R0), @(0x0001AF76,R1.W*2,PC)
+      MOVTP.W  @(32,R0), @(0x0001AF7A,R1.W*2,PC)
       MOVTP.W  @(32,R0), @R0
       MOVTP.W  R0, @(CR0*1)
       MOVTP.W  R0, @(1,CR0*1)
@@ -15475,9 +15475,9 @@
       MOVTP.W  R0, @(17,CR0)
       MOVTP.W  R0, @0x76
       MOVTP.W  R0, @(PC)
-      MOVTP.W  R0, @(0x0001AF34,PC)
+      MOVTP.W  R0, @(0x0001AF38,PC)
       MOVTP.W  R0, @(R1.W,PC)
-      MOVTP.W  R0, @(0x0001AFC0,R1.W*2,PC)
+      MOVTP.W  R0, @(0x0001AFC4,R1.W*2,PC)
       MOVTP.W  @R0+, @(CR0*1)
       MOVTP.W  @R0+, @(1,CR0*1)
       MOVTP.W  @R0+, @(0x01020304,R0.L,CR13)
@@ -15487,9 +15487,9 @@
       MOVTP.W  @R0+, @(17,CR0)
       MOVTP.W  @R0+, @0x76
       MOVTP.W  @R0+, @(PC)
-      MOVTP.W  @R0+, @(0x0001AF7A,PC)
+      MOVTP.W  @R0+, @(0x0001AF7E,PC)
       MOVTP.W  @R0+, @(R1.W,PC)
-      MOVTP.W  @R0+, @(0x0001B006,R1.W*2,PC)
+      MOVTP.W  @R0+, @(0x0001B00A,R1.W*2,PC)
       MOVTP.W  @-R0, @(CR0*1)
       MOVTP.W  @-R0, @(1,CR0*1)
       MOVTP.W  @-R0, @(0x01020304,R0.L,CR13)
@@ -15499,9 +15499,9 @@
       MOVTP.W  @-R0, @(17,CR0)
       MOVTP.W  @-R0, @0x76
       MOVTP.W  @-R0, @(PC)
-      MOVTP.W  @-R0, @(0x0001AFC0,PC)
+      MOVTP.W  @-R0, @(0x0001AFC4,PC)
       MOVTP.W  @-R0, @(R1.W,PC)
-      MOVTP.W  @-R0, @(0x0001B04C,R1.W*2,PC)
+      MOVTP.W  @-R0, @(0x0001B050,R1.W*2,PC)
       MOVTP.W  @(CR0*1), @R1
       MOVTP.W  @(CR0*1), @(17,R0)
       MOVTP.W  @(CR0*1), @(CR0*1)
@@ -15511,9 +15511,9 @@
       MOVTP.W  @(CR0*1), @(-0x7C,@(-0x7F7E7D7D,CR15))
       MOVTP.W  @(CR0*1), @0x76
       MOVTP.W  @(CR0*1), @(PC)
-      MOVTP.W  @(CR0*1), @(0x0001B018,PC)
+      MOVTP.W  @(CR0*1), @(0x0001B01C,PC)
       MOVTP.W  @(CR0*1), @(R1.W,PC)
-      MOVTP.W  @(CR0*1), @(0x0001B0A8,R1.W*2,PC)
+      MOVTP.W  @(CR0*1), @(0x0001B0AC,R1.W*2,PC)
       MOVTP.W  @(1,CR0*1), @R2
       MOVTP.W  @(1,CR0*1), @(17,R0)
       MOVTP.W  @(0x011D2E2F,CR0*1), @(CR0*1)
@@ -15523,9 +15523,9 @@
       MOVTP.W  @(0x011D2E2F,CR0*1), @(-0x7C,@(-0x7F7E7D7D,CR15))
       MOVTP.W  @(0x011D3D3E,CR0*1), @0x76
       MOVTP.W  @(0x011D3D3E,CR0*1), @(PC)
-      MOVTP.W  @(0x011D3D3E,CR0*1), @(0x0001B096,PC)
+      MOVTP.W  @(0x011D3D3E,CR0*1), @(0x0001B09A,PC)
       MOVTP.W  @(0x011D3D3E,CR0*1), @(R1.W,PC)
-      MOVTP.W  @(0x011D3D3E,CR0*1), @(0x0001B12E,R1.W*2,PC)
+      MOVTP.W  @(0x011D3D3E,CR0*1), @(0x0001B132,R1.W*2,PC)
       MOVTP.W  @(0x01020304,R0.L,CR13), @R5
       MOVTP.W  @(0x01020304,R0.L,CR13), @(17,R0)
       MOVTP.W  @(0x01020304,R0.L,CR13), @(CR0*1)
@@ -15535,9 +15535,9 @@
       MOVTP.W  @(0x01020304,R0.L,CR13), @(-0x7C,@(-0x7F7E7D7D,CR15))
       MOVTP.W  @(0x01020304,R0.L,CR13), @0x76
       MOVTP.W  @(0x01020304,R0.L,CR13), @(PC)
-      MOVTP.W  @(0x01020304,R0.L,CR13), @(0x0001B12C,PC)
+      MOVTP.W  @(0x01020304,R0.L,CR13), @(0x0001B130,PC)
       MOVTP.W  @(0x01020304,R0.L,CR13), @(R1.W,PC)
-      MOVTP.W  @(0x01020304,R0.L,CR13), @(0x0001B1C6,R1.W*2,PC)
+      MOVTP.W  @(0x01020304,R0.L,CR13), @(0x0001B1CA,R1.W*2,PC)
       MOVTP.W  @(R1.W,CR0), @R2
       MOVTP.W  @(R1.W,CR0), @(17,R0)
       MOVTP.W  @(R1.W,CR0), @(CR0*1)
@@ -15547,9 +15547,9 @@
       MOVTP.W  @(R1.W,CR0), @(-0x7C,@(-0x7F7E7D7D,CR15))
       MOVTP.W  @(R1.W,CR0), @0x76
       MOVTP.W  @(R1.W,CR0), @(PC)
-      MOVTP.W  @(R1.W,CR0), @(0x0001B19C,PC)
+      MOVTP.W  @(R1.W,CR0), @(0x0001B1A0,PC)
       MOVTP.W  @(R1.W,CR0), @(R1.W,PC)
-      MOVTP.W  @(R1.W,CR0), @(0x0001B22E,R1.W*2,PC)
+      MOVTP.W  @(R1.W,CR0), @(0x0001B232,R1.W*2,PC)
       MOVTP.W  @(-0x7C,@(-0x7F7E7D7D,CR15)), @R0
       MOVTP.W  @(-0x7C,@(-0x7F7E7D7D,CR15)), @(17,R0)
       MOVTP.W  @(-0x7C,@(-0x7F7E7D7D,CR15)), @(CR0*1)
@@ -15559,9 +15559,9 @@
       MOVTP.W  @(-0x7C,@(-0x7F7E7D7D,CR15)), @(R1.W,R0)
       MOVTP.W  @(-0x7C,@(-0x7F7E7D7D,CR15)), @(18,R1.W*2,R0)
       MOVTP.W  @(-0x7C,@(-0x7F7E7D7D,CR15)), @(PC)
-      MOVTP.W  @(-0x7C,@(-0x7F7E7D7D,CR15)), @(0x0001B227,PC)
+      MOVTP.W  @(-0x7C,@(-0x7F7E7D7D,CR15)), @(0x0001B22B,PC)
       MOVTP.W  @(-0x7C,@(-0x7F7E7D7D,CR15)), @(R1.W,PC)
-      MOVTP.W  @(-0x7C,@(-0x7F7E7D7D,CR15)), @(0x0001B2C1,R1.W*2,PC)
+      MOVTP.W  @(-0x7C,@(-0x7F7E7D7D,CR15)), @(0x0001B2C5,R1.W*2,PC)
       MOVTP.W  #0x72:8, @(PR0*1)
       MOVTP.W  #0x72:8, @(1,PR0*1)
       MOVTP.W  #0x72:8, @(0x01020304,R0.L,PR13)
@@ -15571,9 +15571,9 @@
       MOVTP.W  #0x72:8, @(17,PR0)
       MOVTP.W  #0x72:8, @0x76
       MOVTP.W  #0x72:8, @(PC)
-      MOVTP.W  #0x72:8, @(0x0001B285,PC)
+      MOVTP.W  #0x72:8, @(0x0001B289,PC)
       MOVTP.W  #0x72:8, @(R1.W,PC)
-      MOVTP.W  #0x72:8, @(0x0001B313,R1.W*2,PC)
+      MOVTP.W  #0x72:8, @(0x0001B317,R1.W*2,PC)
       MOVTP.W  #-0x80:8, @R0
       MOVTP.W  #-0x80:8, @(17,R0)
       MOVTP.W  #-0x80:8, @(CR0*1)
@@ -15583,18 +15583,18 @@
       MOVTP.W  #-0x80:8, @(R1.W,R0)
       MOVTP.W  #-0x80:8, @(18,R1.W*2,R0)
       MOVTP.W  #-0x80:8, @(PC)
-      MOVTP.W  #-0x80:8, @(0x0001B2D0,PC)
+      MOVTP.W  #-0x80:8, @(0x0001B2D4,PC)
       MOVTP.W  #-0x80:8, @(R1.W,PC)
-      MOVTP.W  #-0x80:8, @(0x0001B35E,R1.W*2,PC)
+      MOVTP.W  #-0x80:8, @(0x0001B362,R1.W*2,PC)
       MOVTP.W  @0x76, @0x78797A7B
       MOVTP.W  @0x76, @(R0*1)
       MOVTP.W  @0x76, @(1,R0*1)
       MOVTP.W  @0x76, @(0x01020304,R0.L,R13)
       MOVTP.W  @0x76, @(R1.W,R0)
       MOVTP.W  @0x76, @(PC)
-      MOVTP.W  @0x76, @(0x0001B30B,PC)
+      MOVTP.W  @0x76, @(0x0001B30F,PC)
       MOVTP.W  @0x76, @(R1.W,PC)
-      MOVTP.W  @0x76, @(0x0001B399,R1.W*2,PC)
+      MOVTP.W  @0x76, @(0x0001B39D,R1.W*2,PC)
       MOVTP.W  @0x76, @(-0x7C,@(-0x7F7E7D7D,R15))
       MOVTP.W  @0x779F, @R0
       MOVTP.W  @0x779F, @(17,R0)
@@ -15607,21 +15607,21 @@
       MOVTP.W  @(PC), @(R1.W,R0)
       MOVTP.W  @(PC), @(18,R1.W*2,R0)
       MOVTP.W  @(PC), @(PC)
-      MOVTP.W  @(PC), @(0x0001B36B,PC)
+      MOVTP.W  @(PC), @(0x0001B36F,PC)
       MOVTP.W  @(PC), @(R1.W,PC)
-      MOVTP.W  @(PC), @(0x0001B3F9,R1.W*2,PC)
-      MOVTP.W  @(0x0001558E,PC), @R0
-      MOVTP.W  @(0x00015594,PC), @(17,R0)
-      MOVTP.W  @(0x0001559B,PC), @(CR0*1)
-      MOVTP.W  @(0x000155A3,PC), @(1,CR0*1)
-      MOVTP.W  @(0x000155AC,PC), @(-0x7C,@(-0x7F7E7D7D,CR15))
-      MOVTP.W  @(0x000155B9,PC), @0x76
-      MOVTP.W  @(0x000155C0,PC), @(R1.W,R0)
-      MOVTP.W  @(0x000155C8,PC), @(18,R1.W*2,R0)
-      MOVTP.W  @(0x000155D1,PC), @(PC)
-      MOVTP.W  @(0x000155D8,PC), @(0x0001B3CA,PC)
-      MOVTP.W  @(0x000155E0,PC), @(R1.W,PC)
-      MOVTP.W  @(0x000155E8,PC), @(0x0001B45C,R1.W*2,PC)
+      MOVTP.W  @(PC), @(0x0001B3FD,R1.W*2,PC)
+      MOVTP.W  @(0x00015592,PC), @R0
+      MOVTP.W  @(0x00015598,PC), @(17,R0)
+      MOVTP.W  @(0x0001559F,PC), @(CR0*1)
+      MOVTP.W  @(0x000155A7,PC), @(1,CR0*1)
+      MOVTP.W  @(0x000155B0,PC), @(-0x7C,@(-0x7F7E7D7D,CR15))
+      MOVTP.W  @(0x000155BD,PC), @0x76
+      MOVTP.W  @(0x000155C4,PC), @(R1.W,R0)
+      MOVTP.W  @(0x000155CC,PC), @(18,R1.W*2,R0)
+      MOVTP.W  @(0x000155D5,PC), @(PC)
+      MOVTP.W  @(0x000155DC,PC), @(0x0001B3CE,PC)
+      MOVTP.W  @(0x000155E4,PC), @(R1.W,PC)
+      MOVTP.W  @(0x000155EC,PC), @(0x0001B460,R1.W*2,PC)
       MOVTP.W  @(R1.W,PC), @R2
       MOVTP.W  @(R1.W,PC), @(17,R0)
       MOVTP.W  @(R1.W,PC), @(CR0*1)
@@ -15631,21 +15631,21 @@
       MOVTP.W  @(R1.W,PC), @(-0x7C,@(-0x7F7E7D7D,CR15))
       MOVTP.W  @(R1.W,PC), @0x76
       MOVTP.W  @(R1.W,PC), @(PC)
-      MOVTP.W  @(R1.W,PC), @(0x0001B428,PC)
+      MOVTP.W  @(R1.W,PC), @(0x0001B42C,PC)
       MOVTP.W  @(R1.W,PC), @(R1.W,PC)
-      MOVTP.W  @(R1.W,PC), @(0x0001B4B8,R1.W*2,PC)
-      MOVTP.W  @(0x0001B4BD,R1.W*2,PC), @(20,R3)
-      MOVTP.W  @(0x0001D6D6,R1.W*4,PC), @(CR0*1)
-      MOVTP.W  @(0x0001D6DF,R1.W*4,PC), @(1,CR0*1)
-      MOVTP.W  @(0x0001D6E9,R1.W*4,PC), @(0x01020304,R0.L,CR13)
-      MOVTP.W  @(0x0001D6F7,R1.W*4,PC), @(R1.W,CR0)
-      MOVTP.W  @(0x0001D701,R1.W*4,PC), @(-0x7C,@(-0x7F7E7D7D,CR15))
-      MOVTP.W  @(0x3234E923,R1.W*8,PC), @0x76
-      MOVTP.W  @(0x3234E92D,R1.W*8,PC), @(PC)
-      MOVTP.W  @(0x3234E937,R1.W*8,PC), @(0x0001B496,PC)
-      MOVTP.W  @(0x3234E942,R1.W*8,PC), @(R1.W,PC)
-      MOVTP.W  @(0x3234E94D,R1.W*8,PC), @(0x0001B52E,R1.W*2,PC)
-      MOVTP.W  @(0x3234E9C3,R1.W*8,PC), @R0
+      MOVTP.W  @(R1.W,PC), @(0x0001B4BC,R1.W*2,PC)
+      MOVTP.W  @(0x0001B4C1,R1.W*2,PC), @(20,R3)
+      MOVTP.W  @(0x0001D6DA,R1.W*4,PC), @(CR0*1)
+      MOVTP.W  @(0x0001D6E3,R1.W*4,PC), @(1,CR0*1)
+      MOVTP.W  @(0x0001D6ED,R1.W*4,PC), @(0x01020304,R0.L,CR13)
+      MOVTP.W  @(0x0001D6FB,R1.W*4,PC), @(R1.W,CR0)
+      MOVTP.W  @(0x0001D705,R1.W*4,PC), @(-0x7C,@(-0x7F7E7D7D,CR15))
+      MOVTP.W  @(0x3234E927,R1.W*8,PC), @0x76
+      MOVTP.W  @(0x3234E931,R1.W*8,PC), @(PC)
+      MOVTP.W  @(0x3234E93B,R1.W*8,PC), @(0x0001B49A,PC)
+      MOVTP.W  @(0x3234E946,R1.W*8,PC), @(R1.W,PC)
+      MOVTP.W  @(0x3234E951,R1.W*8,PC), @(0x0001B532,R1.W*2,PC)
+      MOVTP.W  @(0x3234E9C7,R1.W*8,PC), @R0
       MOVTP.L  @R0, @R1
       MOVTP.L  @R0, @(17,R0)
       MOVTP.L  @R0, @(CR0*1)
@@ -15655,9 +15655,9 @@
       MOVTP.L  @R0, @(-0x7C,@(-0x7F7E7D7D,CR15))
       MOVTP.L  @R0, @0x76
       MOVTP.L  @R0, @(PC)
-      MOVTP.L  @R0, @(0x0001B4EF,PC)
+      MOVTP.L  @R0, @(0x0001B4F3,PC)
       MOVTP.L  @R0, @(R1.W,PC)
-      MOVTP.L  @R0, @(0x0001B57B,R1.W*2,PC)
+      MOVTP.L  @R0, @(0x0001B57F,R1.W*2,PC)
       MOVTP.L  @(17,R0), @(19,R2)
       MOVTP.L  @(17,R0), @(CR0*1)
       MOVTP.L  @(17,R0), @(1,CR0*1)
@@ -15666,9 +15666,9 @@
       MOVTP.L  @(17,R0), @(-0x7C,@(-0x7F7E7D7D,CR15))
       MOVTP.L  @(32,R0), @0x76
       MOVTP.L  @(32,R0), @(PC)
-      MOVTP.L  @(32,R0), @(0x0001B539,PC)
+      MOVTP.L  @(32,R0), @(0x0001B53D,PC)
       MOVTP.L  @(32,R0), @(R1.W,PC)
-      MOVTP.L  @(32,R0), @(0x0001B5C7,R1.W*2,PC)
+      MOVTP.L  @(32,R0), @(0x0001B5CB,R1.W*2,PC)
       MOVTP.L  @(32,R0), @R0
       MOVTP.L  R0, @(CR0*1)
       MOVTP.L  R0, @(1,CR0*1)
@@ -15679,9 +15679,9 @@
       MOVTP.L  R0, @(17,CR0)
       MOVTP.L  R0, @0x76
       MOVTP.L  R0, @(PC)
-      MOVTP.L  R0, @(0x0001B585,PC)
+      MOVTP.L  R0, @(0x0001B589,PC)
       MOVTP.L  R0, @(R1.W,PC)
-      MOVTP.L  R0, @(0x0001B611,R1.W*2,PC)
+      MOVTP.L  R0, @(0x0001B615,R1.W*2,PC)
       MOVTP.L  @R0+, @(CR0*1)
       MOVTP.L  @R0+, @(1,CR0*1)
       MOVTP.L  @R0+, @(0x01020304,R0.L,CR13)
@@ -15691,9 +15691,9 @@
       MOVTP.L  @R0+, @(17,CR0)
       MOVTP.L  @R0+, @0x76
       MOVTP.L  @R0+, @(PC)
-      MOVTP.L  @R0+, @(0x0001B5CB,PC)
+      MOVTP.L  @R0+, @(0x0001B5CF,PC)
       MOVTP.L  @R0+, @(R1.W,PC)
-      MOVTP.L  @R0+, @(0x0001B657,R1.W*2,PC)
+      MOVTP.L  @R0+, @(0x0001B65B,R1.W*2,PC)
       MOVTP.L  @-R0, @(CR0*1)
       MOVTP.L  @-R0, @(1,CR0*1)
       MOVTP.L  @-R0, @(0x01020304,R0.L,CR13)
@@ -15703,9 +15703,9 @@
       MOVTP.L  @-R0, @(17,CR0)
       MOVTP.L  @-R0, @0x76
       MOVTP.L  @-R0, @(PC)
-      MOVTP.L  @-R0, @(0x0001B611,PC)
+      MOVTP.L  @-R0, @(0x0001B615,PC)
       MOVTP.L  @-R0, @(R1.W,PC)
-      MOVTP.L  @-R0, @(0x0001B69D,R1.W*2,PC)
+      MOVTP.L  @-R0, @(0x0001B6A1,R1.W*2,PC)
       MOVTP.L  @(CR0*1), @R1
       MOVTP.L  @(CR0*1), @(17,R0)
       MOVTP.L  @(CR0*1), @(CR0*1)
@@ -15715,9 +15715,9 @@
       MOVTP.L  @(CR0*1), @(-0x7C,@(-0x7F7E7D7D,CR15))
       MOVTP.L  @(CR0*1), @0x76
       MOVTP.L  @(CR0*1), @(PC)
-      MOVTP.L  @(CR0*1), @(0x0001B669,PC)
+      MOVTP.L  @(CR0*1), @(0x0001B66D,PC)
       MOVTP.L  @(CR0*1), @(R1.W,PC)
-      MOVTP.L  @(CR0*1), @(0x0001B6F9,R1.W*2,PC)
+      MOVTP.L  @(CR0*1), @(0x0001B6FD,R1.W*2,PC)
       MOVTP.L  @(1,CR0*1), @R2
       MOVTP.L  @(1,CR0*1), @(17,R0)
       MOVTP.L  @(0x011D2E2F,CR0*1), @(CR0*1)
@@ -15727,9 +15727,9 @@
       MOVTP.L  @(0x011D2E2F,CR0*1), @(-0x7C,@(-0x7F7E7D7D,CR15))
       MOVTP.L  @(0x011D3D3E,CR0*1), @0x76
       MOVTP.L  @(0x011D3D3E,CR0*1), @(PC)
-      MOVTP.L  @(0x011D3D3E,CR0*1), @(0x0001B6E7,PC)
+      MOVTP.L  @(0x011D3D3E,CR0*1), @(0x0001B6EB,PC)
       MOVTP.L  @(0x011D3D3E,CR0*1), @(R1.W,PC)
-      MOVTP.L  @(0x011D3D3E,CR0*1), @(0x0001B77F,R1.W*2,PC)
+      MOVTP.L  @(0x011D3D3E,CR0*1), @(0x0001B783,R1.W*2,PC)
       MOVTP.L  @(0x01020304,R0.L,CR13), @R5
       MOVTP.L  @(0x01020304,R0.L,CR13), @(17,R0)
       MOVTP.L  @(0x01020304,R0.L,CR13), @(CR0*1)
@@ -15739,9 +15739,9 @@
       MOVTP.L  @(0x01020304,R0.L,CR13), @(-0x7C,@(-0x7F7E7D7D,CR15))
       MOVTP.L  @(0x01020304,R0.L,CR13), @0x76
       MOVTP.L  @(0x01020304,R0.L,CR13), @(PC)
-      MOVTP.L  @(0x01020304,R0.L,CR13), @(0x0001B77D,PC)
+      MOVTP.L  @(0x01020304,R0.L,CR13), @(0x0001B781,PC)
       MOVTP.L  @(0x01020304,R0.L,CR13), @(R1.W,PC)
-      MOVTP.L  @(0x01020304,R0.L,CR13), @(0x0001B817,R1.W*2,PC)
+      MOVTP.L  @(0x01020304,R0.L,CR13), @(0x0001B81B,R1.W*2,PC)
       MOVTP.L  @(R1.W,CR0), @R2
       MOVTP.L  @(R1.W,CR0), @(17,R0)
       MOVTP.L  @(R1.W,CR0), @(CR0*1)
@@ -15751,9 +15751,9 @@
       MOVTP.L  @(R1.W,CR0), @(-0x7C,@(-0x7F7E7D7D,CR15))
       MOVTP.L  @(R1.W,CR0), @0x76
       MOVTP.L  @(R1.W,CR0), @(PC)
-      MOVTP.L  @(R1.W,CR0), @(0x0001B7ED,PC)
+      MOVTP.L  @(R1.W,CR0), @(0x0001B7F1,PC)
       MOVTP.L  @(R1.W,CR0), @(R1.W,PC)
-      MOVTP.L  @(R1.W,CR0), @(0x0001B87F,R1.W*2,PC)
+      MOVTP.L  @(R1.W,CR0), @(0x0001B883,R1.W*2,PC)
       MOVTP.L  @(-0x7C,@(-0x7F7E7D7D,CR15)), @R0
       MOVTP.L  @(-0x7C,@(-0x7F7E7D7D,CR15)), @(17,R0)
       MOVTP.L  @(-0x7C,@(-0x7F7E7D7D,CR15)), @(CR0*1)
@@ -15763,9 +15763,9 @@
       MOVTP.L  @(-0x7C,@(-0x7F7E7D7D,CR15)), @(R1.W,R0)
       MOVTP.L  @(-0x7C,@(-0x7F7E7D7D,CR15)), @(18,R1.W*2,R0)
       MOVTP.L  @(-0x7C,@(-0x7F7E7D7D,CR15)), @(PC)
-      MOVTP.L  @(-0x7C,@(-0x7F7E7D7D,CR15)), @(0x0001B878,PC)
+      MOVTP.L  @(-0x7C,@(-0x7F7E7D7D,CR15)), @(0x0001B87C,PC)
       MOVTP.L  @(-0x7C,@(-0x7F7E7D7D,CR15)), @(R1.W,PC)
-      MOVTP.L  @(-0x7C,@(-0x7F7E7D7D,CR15)), @(0x0001B912,R1.W*2,PC)
+      MOVTP.L  @(-0x7C,@(-0x7F7E7D7D,CR15)), @(0x0001B916,R1.W*2,PC)
       MOVTP.L  #0x72:8, @(PR0*1)
       MOVTP.L  #0x72:8, @(1,PR0*1)
       MOVTP.L  #0x72:8, @(0x01020304,R0.L,PR13)
@@ -15775,9 +15775,9 @@
       MOVTP.L  #0x72:8, @(17,PR0)
       MOVTP.L  #0x72:8, @0x76
       MOVTP.L  #0x72:8, @(PC)
-      MOVTP.L  #0x72:8, @(0x0001B8D6,PC)
+      MOVTP.L  #0x72:8, @(0x0001B8DA,PC)
       MOVTP.L  #0x72:8, @(R1.W,PC)
-      MOVTP.L  #0x72:8, @(0x0001B964,R1.W*2,PC)
+      MOVTP.L  #0x72:8, @(0x0001B968,R1.W*2,PC)
       MOVTP.L  #-0x80:8, @R0
       MOVTP.L  #-0x80:8, @(17,R0)
       MOVTP.L  #-0x80:8, @(CR0*1)
@@ -15787,18 +15787,18 @@
       MOVTP.L  #-0x80:8, @(R1.W,R0)
       MOVTP.L  #-0x80:8, @(18,R1.W*2,R0)
       MOVTP.L  #-0x80:8, @(PC)
-      MOVTP.L  #-0x80:8, @(0x0001B921,PC)
+      MOVTP.L  #-0x80:8, @(0x0001B925,PC)
       MOVTP.L  #-0x80:8, @(R1.W,PC)
-      MOVTP.L  #-0x80:8, @(0x0001B9AF,R1.W*2,PC)
+      MOVTP.L  #-0x80:8, @(0x0001B9B3,R1.W*2,PC)
       MOVTP.L  @0x76, @0x78797A7B
       MOVTP.L  @0x76, @(R0*1)
       MOVTP.L  @0x76, @(1,R0*1)
       MOVTP.L  @0x76, @(0x01020304,R0.L,R13)
       MOVTP.L  @0x76, @(R1.W,R0)
       MOVTP.L  @0x76, @(PC)
-      MOVTP.L  @0x76, @(0x0001B95C,PC)
+      MOVTP.L  @0x76, @(0x0001B960,PC)
       MOVTP.L  @0x76, @(R1.W,PC)
-      MOVTP.L  @0x76, @(0x0001B9EA,R1.W*2,PC)
+      MOVTP.L  @0x76, @(0x0001B9EE,R1.W*2,PC)
       MOVTP.L  @0x76, @(-0x7C,@(-0x7F7E7D7D,R15))
       MOVTP.L  @0x779F, @R0
       MOVTP.L  @0x779F, @(17,R0)
@@ -15811,21 +15811,21 @@
       MOVTP.L  @(PC), @(R1.W,R0)
       MOVTP.L  @(PC), @(18,R1.W*2,R0)
       MOVTP.L  @(PC), @(PC)
-      MOVTP.L  @(PC), @(0x0001B9BC,PC)
+      MOVTP.L  @(PC), @(0x0001B9C0,PC)
       MOVTP.L  @(PC), @(R1.W,PC)
-      MOVTP.L  @(PC), @(0x0001BA4A,R1.W*2,PC)
-      MOVTP.L  @(0x00015BDF,PC), @R0
-      MOVTP.L  @(0x00015BE5,PC), @(17,R0)
-      MOVTP.L  @(0x00015BEC,PC), @(CR0*1)
-      MOVTP.L  @(0x00015BF4,PC), @(1,CR0*1)
-      MOVTP.L  @(0x00015BFD,PC), @(-0x7C,@(-0x7F7E7D7D,CR15))
-      MOVTP.L  @(0x00015C0A,PC), @0x76
-      MOVTP.L  @(0x00015C11,PC), @(R1.W,R0)
-      MOVTP.L  @(0x00015C19,PC), @(18,R1.W*2,R0)
-      MOVTP.L  @(0x00015C22,PC), @(PC)
-      MOVTP.L  @(0x00015C29,PC), @(0x0001BA1B,PC)
-      MOVTP.L  @(0x00015C31,PC), @(R1.W,PC)
-      MOVTP.L  @(0x00015C39,PC), @(0x0001BAAD,R1.W*2,PC)
+      MOVTP.L  @(PC), @(0x0001BA4E,R1.W*2,PC)
+      MOVTP.L  @(0x00015BE3,PC), @R0
+      MOVTP.L  @(0x00015BE9,PC), @(17,R0)
+      MOVTP.L  @(0x00015BF0,PC), @(CR0*1)
+      MOVTP.L  @(0x00015BF8,PC), @(1,CR0*1)
+      MOVTP.L  @(0x00015C01,PC), @(-0x7C,@(-0x7F7E7D7D,CR15))
+      MOVTP.L  @(0x00015C0E,PC), @0x76
+      MOVTP.L  @(0x00015C15,PC), @(R1.W,R0)
+      MOVTP.L  @(0x00015C1D,PC), @(18,R1.W*2,R0)
+      MOVTP.L  @(0x00015C26,PC), @(PC)
+      MOVTP.L  @(0x00015C2D,PC), @(0x0001BA1F,PC)
+      MOVTP.L  @(0x00015C35,PC), @(R1.W,PC)
+      MOVTP.L  @(0x00015C3D,PC), @(0x0001BAB1,R1.W*2,PC)
       MOVTP.L  @(R1.W,PC), @R2
       MOVTP.L  @(R1.W,PC), @(17,R0)
       MOVTP.L  @(R1.W,PC), @(CR0*1)
@@ -15835,21 +15835,21 @@
       MOVTP.L  @(R1.W,PC), @(-0x7C,@(-0x7F7E7D7D,CR15))
       MOVTP.L  @(R1.W,PC), @0x76
       MOVTP.L  @(R1.W,PC), @(PC)
-      MOVTP.L  @(R1.W,PC), @(0x0001BA79,PC)
+      MOVTP.L  @(R1.W,PC), @(0x0001BA7D,PC)
       MOVTP.L  @(R1.W,PC), @(R1.W,PC)
-      MOVTP.L  @(R1.W,PC), @(0x0001BB09,R1.W*2,PC)
-      MOVTP.L  @(0x0001BB0E,R1.W*2,PC), @(20,R3)
-      MOVTP.L  @(0x0001DD27,R1.W*4,PC), @(CR0*1)
-      MOVTP.L  @(0x0001DD30,R1.W*4,PC), @(1,CR0*1)
-      MOVTP.L  @(0x0001DD3A,R1.W*4,PC), @(0x01020304,R0.L,CR13)
-      MOVTP.L  @(0x0001DD48,R1.W*4,PC), @(R1.W,CR0)
-      MOVTP.L  @(0x0001DD52,R1.W*4,PC), @(-0x7C,@(-0x7F7E7D7D,CR15))
-      MOVTP.L  @(0x3234EF74,R1.W*8,PC), @0x76
-      MOVTP.L  @(0x3234EF7E,R1.W*8,PC), @(PC)
-      MOVTP.L  @(0x3234EF88,R1.W*8,PC), @(0x0001BAE7,PC)
-      MOVTP.L  @(0x3234EF93,R1.W*8,PC), @(R1.W,PC)
-      MOVTP.L  @(0x3234EF9E,R1.W*8,PC), @(0x0001BB7F,R1.W*2,PC)
-      MOVTP.L  @(0x3234F014,R1.W*8,PC), @R0
+      MOVTP.L  @(R1.W,PC), @(0x0001BB0D,R1.W*2,PC)
+      MOVTP.L  @(0x0001BB12,R1.W*2,PC), @(20,R3)
+      MOVTP.L  @(0x0001DD2B,R1.W*4,PC), @(CR0*1)
+      MOVTP.L  @(0x0001DD34,R1.W*4,PC), @(1,CR0*1)
+      MOVTP.L  @(0x0001DD3E,R1.W*4,PC), @(0x01020304,R0.L,CR13)
+      MOVTP.L  @(0x0001DD4C,R1.W*4,PC), @(R1.W,CR0)
+      MOVTP.L  @(0x0001DD56,R1.W*4,PC), @(-0x7C,@(-0x7F7E7D7D,CR15))
+      MOVTP.L  @(0x3234EF78,R1.W*8,PC), @0x76
+      MOVTP.L  @(0x3234EF82,R1.W*8,PC), @(PC)
+      MOVTP.L  @(0x3234EF8C,R1.W*8,PC), @(0x0001BAEB,PC)
+      MOVTP.L  @(0x3234EF97,R1.W*8,PC), @(R1.W,PC)
+      MOVTP.L  @(0x3234EFA2,R1.W*8,PC), @(0x0001BB83,R1.W*2,PC)
+      MOVTP.L  @(0x3234F018,R1.W*8,PC), @R0
       MOVFP.W  @(CR0*1), R0
       MOVFP.W  @(1,CR0*1), R0
       MOVFP.W  @(R1.W,CR0), R0
@@ -15859,9 +15859,9 @@
       MOVFP.W  @(17,CR0), R0
       MOVFP.W  @0xFFFFFFF6, R0
       MOVFP.W  @(R1.W,PC), R0
-      MOVFP.W  @(0x0001BBBB,R1.W*2,PC), R0
+      MOVFP.W  @(0x0001BBBF,R1.W*2,PC), R0
       MOVFP.W  @(PC), R0
-      MOVFP.W  @(0x0001BB41,PC), R0
+      MOVFP.W  @(0x0001BB45,PC), R0
       MOVFP.W  @R0, @R1
       MOVFP.W  @R0, @(17,R0)
       MOVFP.W  @R0, @R0+
@@ -15873,9 +15873,9 @@
       MOVFP.W  @R0, @(-0x7C,@(-0x7F7E7D7D,CR15))
       MOVFP.W  @R0, @0x76
       MOVFP.W  @R0, @(PC)
-      MOVFP.W  @R0, @(0x0001BB80,PC)
+      MOVFP.W  @R0, @(0x0001BB84,PC)
       MOVFP.W  @R0, @(R1.W,PC)
-      MOVFP.W  @R0, @(0x0001BC0C,R1.W*2,PC)
+      MOVFP.W  @R0, @(0x0001BC10,R1.W*2,PC)
       MOVFP.W  @(17,R0), @(19,R2)
       MOVFP.W  @(17,R0), @R0+
       MOVFP.W  @(17,R0), @-R0
@@ -15887,9 +15887,9 @@
       MOVFP.W  @(17,R0), @CR0
       MOVFP.W  @(17,R0), @0x76
       MOVFP.W  @(17,R0), @(PC)
-      MOVFP.W  @(17,R0), @(0x0001BBD7,PC)
+      MOVFP.W  @(17,R0), @(0x0001BBDB,PC)
       MOVFP.W  @(17,R0), @(R1.W,PC)
-      MOVFP.W  @(17,R0), @(0x0001BC65,R1.W*2,PC)
+      MOVFP.W  @(17,R0), @(0x0001BC69,R1.W*2,PC)
       MOVFP.W  @(CR0*1), @R1
       MOVFP.W  @(CR0*1), @(17,R0)
       MOVFP.W  @(CR0*1), @R0+
@@ -15901,9 +15901,9 @@
       MOVFP.W  @(CR0*1), @(-0x7C,@(-0x7F7E7D7D,CR15))
       MOVFP.W  @(CR0*1), @0x76
       MOVFP.W  @(CR0*1), @(PC)
-      MOVFP.W  @(CR0*1), @(0x0001BC3B,PC)
+      MOVFP.W  @(CR0*1), @(0x0001BC3F,PC)
       MOVFP.W  @(CR0*1), @(R1.W,PC)
-      MOVFP.W  @(CR0*1), @(0x0001BCCB,R1.W*2,PC)
+      MOVFP.W  @(CR0*1), @(0x0001BCCF,R1.W*2,PC)
       MOVFP.W  @(1,CR0*1), @R2
       MOVFP.W  @(1,CR0*1), @(17,R0)
       MOVFP.W  @(0x011D2E2F,CR0*1), @R0+
@@ -15915,9 +15915,9 @@
       MOVFP.W  @(0x011D2E2F,CR0*1), @(-0x7C,@(-0x7F7E7D7D,CR15))
       MOVFP.W  @(0x011D3D3E,CR0*1), @0x76
       MOVFP.W  @(0x011D3D3E,CR0*1), @(PC)
-      MOVFP.W  @(0x011D3D3E,CR0*1), @(0x0001BCCB,PC)
+      MOVFP.W  @(0x011D3D3E,CR0*1), @(0x0001BCCF,PC)
       MOVFP.W  @(0x011D3D3E,CR0*1), @(R1.W,PC)
-      MOVFP.W  @(0x011D3D3E,CR0*1), @(0x0001BD63,R1.W*2,PC)
+      MOVFP.W  @(0x011D3D3E,CR0*1), @(0x0001BD67,R1.W*2,PC)
       MOVFP.W  @(0x01020304,R0.L,CR13), @R5
       MOVFP.W  @(0x01020304,R0.L,CR13), @(17,R0)
       MOVFP.W  @(0x01020304,R0.L,CR13), @R0+
@@ -15929,9 +15929,9 @@
       MOVFP.W  @(0x01020304,R0.L,CR13), @(-0x7C,@(-0x7F7E7D7D,CR15))
       MOVFP.W  @(0x01020304,R0.L,CR13), @0x76
       MOVFP.W  @(0x01020304,R0.L,CR13), @(PC)
-      MOVFP.W  @(0x01020304,R0.L,CR13), @(0x0001BD75,PC)
+      MOVFP.W  @(0x01020304,R0.L,CR13), @(0x0001BD79,PC)
       MOVFP.W  @(0x01020304,R0.L,CR13), @(R1.W,PC)
-      MOVFP.W  @(0x01020304,R0.L,CR13), @(0x0001BE0F,R1.W*2,PC)
+      MOVFP.W  @(0x01020304,R0.L,CR13), @(0x0001BE13,R1.W*2,PC)
       MOVFP.W  @(R1.W,CR0), @R2
       MOVFP.W  @(R1.W,CR0), @(17,R0)
       MOVFP.W  @(R1.W,CR0), @R0+
@@ -15943,9 +15943,9 @@
       MOVFP.W  @(R1.W,CR0), @(-0x7C,@(-0x7F7E7D7D,CR15))
       MOVFP.W  @(R1.W,CR0), @0x76
       MOVFP.W  @(R1.W,CR0), @(PC)
-      MOVFP.W  @(R1.W,CR0), @(0x0001BDF1,PC)
+      MOVFP.W  @(R1.W,CR0), @(0x0001BDF5,PC)
       MOVFP.W  @(R1.W,CR0), @(R1.W,PC)
-      MOVFP.W  @(R1.W,CR0), @(0x0001BE83,R1.W*2,PC)
+      MOVFP.W  @(R1.W,CR0), @(0x0001BE87,R1.W*2,PC)
       MOVFP.W  @(-0x7C,@(-0x7F7E7D7D,CR15)), @R0
       MOVFP.W  @(-0x7C,@(-0x7F7E7D7D,CR15)), @(17,R0)
       MOVFP.W  @(-0x7C,@(-0x7F7E7D7D,CR15)), @R0+
@@ -15957,18 +15957,18 @@
       MOVFP.W  @(-0x7C,@(-0x7F7E7D7D,CR15)), @(R1.W,R0)
       MOVFP.W  @(-0x7C,@(-0x7F7E7D7D,CR15)), @(18,R1.W*2,R0)
       MOVFP.W  @(-0x7C,@(-0x7F7E7D7D,CR15)), @(PC)
-      MOVFP.W  @(-0x7C,@(-0x7F7E7D7D,CR15)), @(0x0001BE90,PC)
+      MOVFP.W  @(-0x7C,@(-0x7F7E7D7D,CR15)), @(0x0001BE94,PC)
       MOVFP.W  @(-0x7C,@(-0x7F7E7D7D,CR15)), @(R1.W,PC)
-      MOVFP.W  @(-0x7C,@(-0x7F7E7D7D,CR15)), @(0x0001BF2A,R1.W*2,PC)
+      MOVFP.W  @(-0x7C,@(-0x7F7E7D7D,CR15)), @(0x0001BF2E,R1.W*2,PC)
       MOVFP.W  @0x76, @0x78797A7B
       MOVFP.W  @0x76, @(R0*1)
       MOVFP.W  @0x76, @(1,R0*1)
       MOVFP.W  @0x76, @(0x01020304,R0.L,R13)
       MOVFP.W  @0x76, @(R1.W,R0)
       MOVFP.W  @0x76, @(PC)
-      MOVFP.W  @0x76, @(0x0001BED7,PC)
+      MOVFP.W  @0x76, @(0x0001BEDB,PC)
       MOVFP.W  @0x76, @(R1.W,PC)
-      MOVFP.W  @0x76, @(0x0001BF65,R1.W*2,PC)
+      MOVFP.W  @0x76, @(0x0001BF69,R1.W*2,PC)
       MOVFP.W  @0x76, @(-0x7C,@(-0x7F7E7D7D,R15))
       MOVFP.W  @0x76, @R0
       MOVFP.W  @0x76, @(17,R0)
@@ -15985,22 +15985,22 @@
       MOVFP.W  @(PC), @(R1.W,R0)
       MOVFP.W  @(PC), @(18,R1.W*2,R0)
       MOVFP.W  @(PC), @(PC)
-      MOVFP.W  @(PC), @(0x0001BF47,PC)
+      MOVFP.W  @(PC), @(0x0001BF4B,PC)
       MOVFP.W  @(PC), @(R1.W,PC)
-      MOVFP.W  @(PC), @(0x0001BFD5,R1.W*2,PC)
-      MOVFP.W  @(0x0001BF58,PC), @R0
-      MOVFP.W  @(0x0001BF5D,PC), @(17,R0)
-      MOVFP.W  @(0x000160F2,PC), @R0+
-      MOVFP.W  @(0x000160F8,PC), @-R0
-      MOVFP.W  @(0x00016153,PC), @0x76
-      MOVFP.W  @(0x0001615A,PC), @(R0*1)
-      MOVFP.W  @(0x00016161,PC), @(1,R0*1)
-      MOVFP.W  @(0x00016169,PC), @(PC)
-      MOVFP.W  @(0x00016170,PC), @(0x0001BF90,PC)
-      MOVFP.W  @(0x00016178,PC), @(R1.W,PC)
-      MOVFP.W  @(0x00016180,PC), @(0x0001C022,R1.W*2,PC)
-      MOVFP.W  @(0x00016189,PC), @(-0x7C,@(-0x7F7E7D7D,R15))
-      MOVFP.W  @(0x71743A9E,PC), @(0x01020304,R0.L,R13)
+      MOVFP.W  @(PC), @(0x0001BFD9,R1.W*2,PC)
+      MOVFP.W  @(0x0001BF5C,PC), @R0
+      MOVFP.W  @(0x0001BF61,PC), @(17,R0)
+      MOVFP.W  @(0x000160F6,PC), @R0+
+      MOVFP.W  @(0x000160FC,PC), @-R0
+      MOVFP.W  @(0x00016157,PC), @0x76
+      MOVFP.W  @(0x0001615E,PC), @(R0*1)
+      MOVFP.W  @(0x00016165,PC), @(1,R0*1)
+      MOVFP.W  @(0x0001616D,PC), @(PC)
+      MOVFP.W  @(0x00016174,PC), @(0x0001BF94,PC)
+      MOVFP.W  @(0x0001617C,PC), @(R1.W,PC)
+      MOVFP.W  @(0x00016184,PC), @(0x0001C026,R1.W*2,PC)
+      MOVFP.W  @(0x0001618D,PC), @(-0x7C,@(-0x7F7E7D7D,R15))
+      MOVFP.W  @(0x71743AA2,PC), @(0x01020304,R0.L,R13)
       MOVFP.W  @(R1.W,PC), @R2
       MOVFP.W  @(R1.W,PC), @(17,R0)
       MOVFP.W  @(R1.W,PC), @R0+
@@ -16012,23 +16012,23 @@
       MOVFP.W  @(R1.W,PC), @(-0x7C,@(-0x7F7E7D7D,CR15))
       MOVFP.W  @(R1.W,PC), @0x76
       MOVFP.W  @(R1.W,PC), @(PC)
-      MOVFP.W  @(R1.W,PC), @(0x0001C012,PC)
+      MOVFP.W  @(R1.W,PC), @(0x0001C016,PC)
       MOVFP.W  @(R1.W,PC), @(R1.W,PC)
-      MOVFP.W  @(R1.W,PC), @(0x0001C0A2,R1.W*2,PC)
-      MOVFP.W  @(0x0001C0A7,R1.W*2,PC), @(20,R3)
-      MOVFP.W  @(0x0001C09D,R0.W,PC), @R2
-      MOVFP.W  @(0x0001E2C6,R1.W*4,PC), @R0+
-      MOVFP.W  @(0x0001E2CD,R1.W*4,PC), @-R0
-      MOVFP.W  @(0x0001E2D4,R1.W*4,PC), @(CR0*1)
-      MOVFP.W  @(0x0001E2DD,R1.W*4,PC), @(1,CR0*1)
-      MOVFP.W  @(0x0001E2E7,R1.W*4,PC), @(0x01020304,R0.L,CR13)
-      MOVFP.W  @(0x0001E2F5,R1.W*4,PC), @(R1.W,CR0)
-      MOVFP.W  @(0x0001E2FF,R1.W*4,PC), @(-0x7C,@(-0x7F7E7D7D,CR15))
-      MOVFP.W  @(0x3234F521,R1.W*8,PC), @0x76
-      MOVFP.W  @(0x3234F52B,R1.W*8,PC), @(PC)
-      MOVFP.W  @(0x3234F535,R1.W*8,PC), @(0x0001C094,PC)
-      MOVFP.W  @(0x3234F540,R1.W*8,PC), @(R1.W,PC)
-      MOVFP.W  @(0x3234F54B,R1.W*8,PC), @(0x0001C12C,R1.W*2,PC)
+      MOVFP.W  @(R1.W,PC), @(0x0001C0A6,R1.W*2,PC)
+      MOVFP.W  @(0x0001C0AB,R1.W*2,PC), @(20,R3)
+      MOVFP.W  @(0x0001C0A1,R0.W,PC), @R2
+      MOVFP.W  @(0x0001E2CA,R1.W*4,PC), @R0+
+      MOVFP.W  @(0x0001E2D1,R1.W*4,PC), @-R0
+      MOVFP.W  @(0x0001E2D8,R1.W*4,PC), @(CR0*1)
+      MOVFP.W  @(0x0001E2E1,R1.W*4,PC), @(1,CR0*1)
+      MOVFP.W  @(0x0001E2EB,R1.W*4,PC), @(0x01020304,R0.L,CR13)
+      MOVFP.W  @(0x0001E2F9,R1.W*4,PC), @(R1.W,CR0)
+      MOVFP.W  @(0x0001E303,R1.W*4,PC), @(-0x7C,@(-0x7F7E7D7D,CR15))
+      MOVFP.W  @(0x3234F525,R1.W*8,PC), @0x76
+      MOVFP.W  @(0x3234F52F,R1.W*8,PC), @(PC)
+      MOVFP.W  @(0x3234F539,R1.W*8,PC), @(0x0001C098,PC)
+      MOVFP.W  @(0x3234F544,R1.W*8,PC), @(R1.W,PC)
+      MOVFP.W  @(0x3234F54F,R1.W*8,PC), @(0x0001C130,R1.W*2,PC)
       MOVFP.L  @(CR0*1), R0
       MOVFP.L  @(1,CR0*1), R0
       MOVFP.L  @(R1.W,CR0), R0
@@ -16038,9 +16038,9 @@
       MOVFP.L  @(17,CR0), R0
       MOVFP.L  @0xFFFFFFF6, R0
       MOVFP.L  @(R1.W,PC), R0
-      MOVFP.L  @(0x0001C15F,R1.W*2,PC), R0
+      MOVFP.L  @(0x0001C163,R1.W*2,PC), R0
       MOVFP.L  @(PC), R0
-      MOVFP.L  @(0x0001C0E5,PC), R0
+      MOVFP.L  @(0x0001C0E9,PC), R0
       MOVFP.L  @R0, @R1
       MOVFP.L  @R0, @(17,R0)
       MOVFP.L  @R0, @R0+
@@ -16052,9 +16052,9 @@
       MOVFP.L  @R0, @(-0x7C,@(-0x7F7E7D7D,CR15))
       MOVFP.L  @R0, @0x76
       MOVFP.L  @R0, @(PC)
-      MOVFP.L  @R0, @(0x0001C124,PC)
+      MOVFP.L  @R0, @(0x0001C128,PC)
       MOVFP.L  @R0, @(R1.W,PC)
-      MOVFP.L  @R0, @(0x0001C1B0,R1.W*2,PC)
+      MOVFP.L  @R0, @(0x0001C1B4,R1.W*2,PC)
       MOVFP.L  @(17,R0), @(19,R2)
       MOVFP.L  @(17,R0), @R0+
       MOVFP.L  @(17,R0), @-R0
@@ -16066,9 +16066,9 @@
       MOVFP.L  @(17,R0), @CR0
       MOVFP.L  @(17,R0), @0x76
       MOVFP.L  @(17,R0), @(PC)
-      MOVFP.L  @(17,R0), @(0x0001C17B,PC)
+      MOVFP.L  @(17,R0), @(0x0001C17F,PC)
       MOVFP.L  @(17,R0), @(R1.W,PC)
-      MOVFP.L  @(17,R0), @(0x0001C209,R1.W*2,PC)
+      MOVFP.L  @(17,R0), @(0x0001C20D,R1.W*2,PC)
       MOVFP.L  @(CR0*1), @R1
       MOVFP.L  @(CR0*1), @(17,R0)
       MOVFP.L  @(CR0*1), @R0+
@@ -16080,9 +16080,9 @@
       MOVFP.L  @(CR0*1), @(-0x7C,@(-0x7F7E7D7D,CR15))
       MOVFP.L  @(CR0*1), @0x76
       MOVFP.L  @(CR0*1), @(PC)
-      MOVFP.L  @(CR0*1), @(0x0001C1DF,PC)
+      MOVFP.L  @(CR0*1), @(0x0001C1E3,PC)
       MOVFP.L  @(CR0*1), @(R1.W,PC)
-      MOVFP.L  @(CR0*1), @(0x0001C26F,R1.W*2,PC)
+      MOVFP.L  @(CR0*1), @(0x0001C273,R1.W*2,PC)
       MOVFP.L  @(1,CR0*1), @R2
       MOVFP.L  @(1,CR0*1), @(17,R0)
       MOVFP.L  @(0x011D2E2F,CR0*1), @R0+
@@ -16094,9 +16094,9 @@
       MOVFP.L  @(0x011D2E2F,CR0*1), @(-0x7C,@(-0x7F7E7D7D,CR15))
       MOVFP.L  @(0x011D3D3E,CR0*1), @0x76
       MOVFP.L  @(0x011D3D3E,CR0*1), @(PC)
-      MOVFP.L  @(0x011D3D3E,CR0*1), @(0x0001C26F,PC)
+      MOVFP.L  @(0x011D3D3E,CR0*1), @(0x0001C273,PC)
       MOVFP.L  @(0x011D3D3E,CR0*1), @(R1.W,PC)
-      MOVFP.L  @(0x011D3D3E,CR0*1), @(0x0001C307,R1.W*2,PC)
+      MOVFP.L  @(0x011D3D3E,CR0*1), @(0x0001C30B,R1.W*2,PC)
       MOVFP.L  @(0x01020304,R0.L,CR13), @R5
       MOVFP.L  @(0x01020304,R0.L,CR13), @(17,R0)
       MOVFP.L  @(0x01020304,R0.L,CR13), @R0+
@@ -16108,9 +16108,9 @@
       MOVFP.L  @(0x01020304,R0.L,CR13), @(-0x7C,@(-0x7F7E7D7D,CR15))
       MOVFP.L  @(0x01020304,R0.L,CR13), @0x76
       MOVFP.L  @(0x01020304,R0.L,CR13), @(PC)
-      MOVFP.L  @(0x01020304,R0.L,CR13), @(0x0001C319,PC)
+      MOVFP.L  @(0x01020304,R0.L,CR13), @(0x0001C31D,PC)
       MOVFP.L  @(0x01020304,R0.L,CR13), @(R1.W,PC)
-      MOVFP.L  @(0x01020304,R0.L,CR13), @(0x0001C3B3,R1.W*2,PC)
+      MOVFP.L  @(0x01020304,R0.L,CR13), @(0x0001C3B7,R1.W*2,PC)
       MOVFP.L  @(R1.W,CR0), @R2
       MOVFP.L  @(R1.W,CR0), @(17,R0)
       MOVFP.L  @(R1.W,CR0), @R0+
@@ -16122,9 +16122,9 @@
       MOVFP.L  @(R1.W,CR0), @(-0x7C,@(-0x7F7E7D7D,CR15))
       MOVFP.L  @(R1.W,CR0), @0x76
       MOVFP.L  @(R1.W,CR0), @(PC)
-      MOVFP.L  @(R1.W,CR0), @(0x0001C395,PC)
+      MOVFP.L  @(R1.W,CR0), @(0x0001C399,PC)
       MOVFP.L  @(R1.W,CR0), @(R1.W,PC)
-      MOVFP.L  @(R1.W,CR0), @(0x0001C427,R1.W*2,PC)
+      MOVFP.L  @(R1.W,CR0), @(0x0001C42B,R1.W*2,PC)
       MOVFP.L  @(-0x7C,@(-0x7F7E7D7D,CR15)), @R0
       MOVFP.L  @(-0x7C,@(-0x7F7E7D7D,CR15)), @(17,R0)
       MOVFP.L  @(-0x7C,@(-0x7F7E7D7D,CR15)), @R0+
@@ -16136,18 +16136,18 @@
       MOVFP.L  @(-0x7C,@(-0x7F7E7D7D,CR15)), @(R1.W,R0)
       MOVFP.L  @(-0x7C,@(-0x7F7E7D7D,CR15)), @(18,R1.W*2,R0)
       MOVFP.L  @(-0x7C,@(-0x7F7E7D7D,CR15)), @(PC)
-      MOVFP.L  @(-0x7C,@(-0x7F7E7D7D,CR15)), @(0x0001C434,PC)
+      MOVFP.L  @(-0x7C,@(-0x7F7E7D7D,CR15)), @(0x0001C438,PC)
       MOVFP.L  @(-0x7C,@(-0x7F7E7D7D,CR15)), @(R1.W,PC)
-      MOVFP.L  @(-0x7C,@(-0x7F7E7D7D,CR15)), @(0x0001C4CE,R1.W*2,PC)
+      MOVFP.L  @(-0x7C,@(-0x7F7E7D7D,CR15)), @(0x0001C4D2,R1.W*2,PC)
       MOVFP.L  @0x76, @0x78797A7B
       MOVFP.L  @0x76, @(R0*1)
       MOVFP.L  @0x76, @(1,R0*1)
       MOVFP.L  @0x76, @(0x01020304,R0.L,R13)
       MOVFP.L  @0x76, @(R1.W,R0)
       MOVFP.L  @0x76, @(PC)
-      MOVFP.L  @0x76, @(0x0001C47B,PC)
+      MOVFP.L  @0x76, @(0x0001C47F,PC)
       MOVFP.L  @0x76, @(R1.W,PC)
-      MOVFP.L  @0x76, @(0x0001C509,R1.W*2,PC)
+      MOVFP.L  @0x76, @(0x0001C50D,R1.W*2,PC)
       MOVFP.L  @0x76, @(-0x7C,@(-0x7F7E7D7D,R15))
       MOVFP.L  @0x76, @R0
       MOVFP.L  @0x76, @(17,R0)
@@ -16164,22 +16164,22 @@
       MOVFP.L  @(PC), @(R1.W,R0)
       MOVFP.L  @(PC), @(18,R1.W*2,R0)
       MOVFP.L  @(PC), @(PC)
-      MOVFP.L  @(PC), @(0x0001C4EB,PC)
+      MOVFP.L  @(PC), @(0x0001C4EF,PC)
       MOVFP.L  @(PC), @(R1.W,PC)
-      MOVFP.L  @(PC), @(0x0001C579,R1.W*2,PC)
-      MOVFP.L  @(0x0001C4FC,PC), @R0
-      MOVFP.L  @(0x0001C501,PC), @(17,R0)
-      MOVFP.L  @(0x00016696,PC), @R0+
-      MOVFP.L  @(0x0001669C,PC), @-R0
-      MOVFP.L  @(0x000166F7,PC), @0x76
-      MOVFP.L  @(0x000166FE,PC), @(R0*1)
-      MOVFP.L  @(0x00016705,PC), @(1,R0*1)
-      MOVFP.L  @(0x0001670D,PC), @(PC)
-      MOVFP.L  @(0x00016714,PC), @(0x0001C534,PC)
-      MOVFP.L  @(0x0001671C,PC), @(R1.W,PC)
-      MOVFP.L  @(0x00016724,PC), @(0x0001C5C6,R1.W*2,PC)
-      MOVFP.L  @(0x0001672D,PC), @(-0x7C,@(-0x7F7E7D7D,R15))
-      MOVFP.L  @(0x71744042,PC), @(0x01020304,R0.L,R13)
+      MOVFP.L  @(PC), @(0x0001C57D,R1.W*2,PC)
+      MOVFP.L  @(0x0001C500,PC), @R0
+      MOVFP.L  @(0x0001C505,PC), @(17,R0)
+      MOVFP.L  @(0x0001669A,PC), @R0+
+      MOVFP.L  @(0x000166A0,PC), @-R0
+      MOVFP.L  @(0x000166FB,PC), @0x76
+      MOVFP.L  @(0x00016702,PC), @(R0*1)
+      MOVFP.L  @(0x00016709,PC), @(1,R0*1)
+      MOVFP.L  @(0x00016711,PC), @(PC)
+      MOVFP.L  @(0x00016718,PC), @(0x0001C538,PC)
+      MOVFP.L  @(0x00016720,PC), @(R1.W,PC)
+      MOVFP.L  @(0x00016728,PC), @(0x0001C5CA,R1.W*2,PC)
+      MOVFP.L  @(0x00016731,PC), @(-0x7C,@(-0x7F7E7D7D,R15))
+      MOVFP.L  @(0x71744046,PC), @(0x01020304,R0.L,R13)
       MOVFP.L  @(R1.W,PC), @R2
       MOVFP.L  @(R1.W,PC), @(17,R0)
       MOVFP.L  @(R1.W,PC), @R0+
@@ -16191,23 +16191,23 @@
       MOVFP.L  @(R1.W,PC), @(-0x7C,@(-0x7F7E7D7D,CR15))
       MOVFP.L  @(R1.W,PC), @0x76
       MOVFP.L  @(R1.W,PC), @(PC)
-      MOVFP.L  @(R1.W,PC), @(0x0001C5B6,PC)
+      MOVFP.L  @(R1.W,PC), @(0x0001C5BA,PC)
       MOVFP.L  @(R1.W,PC), @(R1.W,PC)
-      MOVFP.L  @(R1.W,PC), @(0x0001C646,R1.W*2,PC)
-      MOVFP.L  @(0x0001C64B,R1.W*2,PC), @(20,R3)
-      MOVFP.L  @(0x0001C641,R0.W,PC), @R2
-      MOVFP.L  @(0x0001E86A,R1.W*4,PC), @R0+
-      MOVFP.L  @(0x0001E871,R1.W*4,PC), @-R0
-      MOVFP.L  @(0x0001E878,R1.W*4,PC), @(CR0*1)
-      MOVFP.L  @(0x0001E881,R1.W*4,PC), @(1,CR0*1)
-      MOVFP.L  @(0x0001E88B,R1.W*4,PC), @(0x01020304,R0.L,CR13)
-      MOVFP.L  @(0x0001E899,R1.W*4,PC), @(R1.W,CR0)
-      MOVFP.L  @(0x0001E8A3,R1.W*4,PC), @(-0x7C,@(-0x7F7E7D7D,CR15))
-      MOVFP.L  @(0x3234FAC5,R1.W*8,PC), @0x76
-      MOVFP.L  @(0x3234FACF,R1.W*8,PC), @(PC)
-      MOVFP.L  @(0x3234FAD9,R1.W*8,PC), @(0x0001C638,PC)
-      MOVFP.L  @(0x3234FAE4,R1.W*8,PC), @(R1.W,PC)
-      MOVFP.L  @(0x3234FAEF,R1.W*8,PC), @(0x0001C6D0,R1.W*2,PC)
+      MOVFP.L  @(R1.W,PC), @(0x0001C64A,R1.W*2,PC)
+      MOVFP.L  @(0x0001C64F,R1.W*2,PC), @(20,R3)
+      MOVFP.L  @(0x0001C645,R0.W,PC), @R2
+      MOVFP.L  @(0x0001E86E,R1.W*4,PC), @R0+
+      MOVFP.L  @(0x0001E875,R1.W*4,PC), @-R0
+      MOVFP.L  @(0x0001E87C,R1.W*4,PC), @(CR0*1)
+      MOVFP.L  @(0x0001E885,R1.W*4,PC), @(1,CR0*1)
+      MOVFP.L  @(0x0001E88F,R1.W*4,PC), @(0x01020304,R0.L,CR13)
+      MOVFP.L  @(0x0001E89D,R1.W*4,PC), @(R1.W,CR0)
+      MOVFP.L  @(0x0001E8A7,R1.W*4,PC), @(-0x7C,@(-0x7F7E7D7D,CR15))
+      MOVFP.L  @(0x3234FAC9,R1.W*8,PC), @0x76
+      MOVFP.L  @(0x3234FAD3,R1.W*8,PC), @(PC)
+      MOVFP.L  @(0x3234FADD,R1.W*8,PC), @(0x0001C63C,PC)
+      MOVFP.L  @(0x3234FAE8,R1.W*8,PC), @(R1.W,PC)
+      MOVFP.L  @(0x3234FAF3,R1.W*8,PC), @(0x0001C6D4,R1.W*2,PC)
       CGBN     R0
       PGBN
       PGBN     R0-R1, R3, R5-R7, R9, R11, R13-R15
@@ -16232,9 +16232,9 @@
       SWAP.B   @(R1.W,R0)
       SWAP.B   @(18,R1.W*2,R0)
       SWAP.B   @(PC)
-      SWAP.B   @(0x0001C6A0,PC)
+      SWAP.B   @(0x0001C6A4,PC)
       SWAP.B   @(R1.W,PC)
-      SWAP.B   @(0x0001C72A,R1.W*2,PC)
+      SWAP.B   @(0x0001C72E,R1.W*2,PC)
       SWAP.W   @R0
       SWAP.W   @(17,R0)
       SWAP.W   R0
@@ -16247,9 +16247,9 @@
       SWAP.W   @(R1.W,R0)
       SWAP.W   @(18,R1.W*2,R0)
       SWAP.W   @(PC)
-      SWAP.W   @(0x0001C6D9,PC)
+      SWAP.W   @(0x0001C6DD,PC)
       SWAP.W   @(R1.W,PC)
-      SWAP.W   @(0x0001C763,R1.W*2,PC)
+      SWAP.W   @(0x0001C767,R1.W*2,PC)
       TAS      @R0
       TAS      @(17,R0)
       TAS      R0
@@ -16262,9 +16262,9 @@
       TAS      @(R1.W,R0)
       TAS      @(18,R1.W*2,R0)
       TAS      @(PC)
-      TAS      @(0x0001C712,PC)
+      TAS      @(0x0001C716,PC)
       TAS      @(R1.W,PC)
-      TAS      @(0x0001C79C,R1.W*2,PC)
+      TAS      @(0x0001C7A0,R1.W*2,PC)
       MULXS.B  @R1, @R2
       MULXS.B  @R1, @(17,R0)
       MULXS.B  @R1, R0
@@ -16277,9 +16277,9 @@
       MULXS.B  @R1, @(-0x7C,@(-0x7F7E7D7D,CR15))
       MULXS.B  @R1, @0x76
       MULXS.B  @R1, @(PC)
-      MULXS.B  @R1, @(0x0001C76A,PC)
+      MULXS.B  @R1, @(0x0001C76E,PC)
       MULXS.B  @R1, @(R1.W,PC)
-      MULXS.B  @R1, @(0x0001C7F8,R1.W*2,PC)
+      MULXS.B  @R1, @(0x0001C7FC,R1.W*2,PC)
       MULXS.B  @(17,R0), @(19,R2)
       MULXS.B  @(17,R0), R0
       MULXS.B  @(17,R0), @R0+
@@ -16292,9 +16292,9 @@
       MULXS.B  @(17,R0), @CR0
       MULXS.B  @(17,R0), @0x76
       MULXS.B  @(17,R0), @(PC)
-      MULXS.B  @(17,R0), @(0x0001C7D4,PC)
+      MULXS.B  @(17,R0), @(0x0001C7D8,PC)
       MULXS.B  @(17,R0), @(R1.W,PC)
-      MULXS.B  @(17,R0), @(0x0001C864,R1.W*2,PC)
+      MULXS.B  @(17,R0), @(0x0001C868,R1.W*2,PC)
       MULXS.B  R0, R1
       MULXS.B  R0, @R0+
       MULXS.B  R0, @-R0
@@ -16307,9 +16307,9 @@
       MULXS.B  R0, @(17,CR0)
       MULXS.B  R0, @0x76
       MULXS.B  R0, @(PC)
-      MULXS.B  R0, @(0x0001C834,PC)
+      MULXS.B  R0, @(0x0001C838,PC)
       MULXS.B  R0, @(R1.W,PC)
-      MULXS.B  R0, @(0x0001C8C2,R1.W*2,PC)
+      MULXS.B  R0, @(0x0001C8C6,R1.W*2,PC)
       MULXS.B  @R0+, @R1+
       MULXS.B  @R0+, @-R0
       MULXS.B  @R0+, @(CR0*1)
@@ -16322,9 +16322,9 @@
       MULXS.B  @R0+, CR0
       MULXS.B  @R0+, @0x76
       MULXS.B  @R0+, @(PC)
-      MULXS.B  @R0+, @(0x0001C893,PC)
+      MULXS.B  @R0+, @(0x0001C897,PC)
       MULXS.B  @R0+, @(R1.W,PC)
-      MULXS.B  @R0+, @(0x0001C921,R1.W*2,PC)
+      MULXS.B  @R0+, @(0x0001C925,R1.W*2,PC)
       MULXS.B  @-R0, @-R1
       MULXS.B  @-R0, @(CR0*1)
       MULXS.B  @-R0, @(1,CR0*1)
@@ -16337,9 +16337,9 @@
       MULXS.B  @-R0, @CR0+
       MULXS.B  @-R0, @0x76
       MULXS.B  @-R0, @(PC)
-      MULXS.B  @-R0, @(0x0001C8F3,PC)
+      MULXS.B  @-R0, @(0x0001C8F7,PC)
       MULXS.B  @-R0, @(R1.W,PC)
-      MULXS.B  @-R0, @(0x0001C981,R1.W*2,PC)
+      MULXS.B  @-R0, @(0x0001C985,R1.W*2,PC)
       MULXS.B  @(CR0*1), @R1
       MULXS.B  @(CR0*1), @(17,R0)
       MULXS.B  @(CR0*1), R0
@@ -16352,9 +16352,9 @@
       MULXS.B  @(CR0*1), @(-0x7C,@(-0x7F7E7D7D,CR15))
       MULXS.B  @(CR0*1), @0x76
       MULXS.B  @(CR0*1), @(PC)
-      MULXS.B  @(CR0*1), @(0x0001C969,PC)
+      MULXS.B  @(CR0*1), @(0x0001C96D,PC)
       MULXS.B  @(CR0*1), @(R1.W,PC)
-      MULXS.B  @(CR0*1), @(0x0001C9FB,R1.W*2,PC)
+      MULXS.B  @(CR0*1), @(0x0001C9FF,R1.W*2,PC)
       MULXS.B  @(1,CR0*1), @R2
       MULXS.B  @(1,CR0*1), @(17,R0)
       MULXS.B  @(1,CR0*1), R0
@@ -16367,9 +16367,9 @@
       MULXS.B  @(1,CR0*1), @(-0x7C,@(-0x7F7E7D7D,CR15))
       MULXS.B  @(1,CR0*1), @0x76
       MULXS.B  @(1,CR0*1), @(PC)
-      MULXS.B  @(1,CR0*1), @(0x0001C9F0,PC)
+      MULXS.B  @(1,CR0*1), @(0x0001C9F4,PC)
       MULXS.B  @(1,CR0*1), @(R1.W,PC)
-      MULXS.B  @(1,CR0*1), @(0x0001CA84,R1.W*2,PC)
+      MULXS.B  @(1,CR0*1), @(0x0001CA88,R1.W*2,PC)
       MULXS.B  @(0x01020304,R0.L,CR13), @R5
       MULXS.B  @(0x01020304,R0.L,CR13), @(17,R0)
       MULXS.B  @(0x01020304,R0.L,CR13), R0
@@ -16382,9 +16382,9 @@
       MULXS.B  @(0x01020304,R0.L,CR13), @(-0x7C,@(-0x7F7E7D7D,CR15))
       MULXS.B  @(0x01020304,R0.L,CR13), @0x76
       MULXS.B  @(0x01020304,R0.L,CR13), @(PC)
-      MULXS.B  @(0x01020304,R0.L,CR13), @(0x0001CAAD,PC)
+      MULXS.B  @(0x01020304,R0.L,CR13), @(0x0001CAB1,PC)
       MULXS.B  @(0x01020304,R0.L,CR13), @(R1.W,PC)
-      MULXS.B  @(0x01020304,R0.L,CR13), @(0x0001CB49,R1.W*2,PC)
+      MULXS.B  @(0x01020304,R0.L,CR13), @(0x0001CB4D,R1.W*2,PC)
       MULXS.B  @(R1.W,CR0), @R2
       MULXS.B  @(R1.W,CR0), @(17,R0)
       MULXS.B  @(R1.W,CR0), R0
@@ -16397,9 +16397,9 @@
       MULXS.B  @(R1.W,CR0), @(-0x7C,@(-0x7F7E7D7D,CR15))
       MULXS.B  @(R1.W,CR0), @0x76
       MULXS.B  @(R1.W,CR0), @(PC)
-      MULXS.B  @(R1.W,CR0), @(0x0001CB3E,PC)
+      MULXS.B  @(R1.W,CR0), @(0x0001CB42,PC)
       MULXS.B  @(R1.W,CR0), @(R1.W,PC)
-      MULXS.B  @(R1.W,CR0), @(0x0001CBD2,R1.W*2,PC)
+      MULXS.B  @(R1.W,CR0), @(0x0001CBD6,R1.W*2,PC)
       MULXS.B  @(-0x7C,@(-0x7F7E7D7D,CR15)), @R0
       MULXS.B  @(-0x7C,@(-0x7F7E7D7D,CR15)), @(17,R0)
       MULXS.B  @(-0x7C,@(-0x7F7E7D7D,CR15)), R0
@@ -16412,9 +16412,9 @@
       MULXS.B  @(-0x7C,@(-0x7F7E7D7D,CR15)), @(R1.W,R0)
       MULXS.B  @(-0x7C,@(-0x7F7E7D7D,CR15)), @(18,R1.W*2,R0)
       MULXS.B  @(-0x7C,@(-0x7F7E7D7D,CR15)), @(PC)
-      MULXS.B  @(-0x7C,@(-0x7F7E7D7D,CR15)), @(0x0001CBF6,PC)
+      MULXS.B  @(-0x7C,@(-0x7F7E7D7D,CR15)), @(0x0001CBFA,PC)
       MULXS.B  @(-0x7C,@(-0x7F7E7D7D,CR15)), @(R1.W,PC)
-      MULXS.B  @(-0x7C,@(-0x7F7E7D7D,CR15)), @(0x0001CC92,R1.W*2,PC)
+      MULXS.B  @(-0x7C,@(-0x7F7E7D7D,CR15)), @(0x0001CC96,R1.W*2,PC)
       MULXS.B  #0x72:8, @(PR0*1)
       MULXS.B  #0x72:8, @(1,PR0*1)
       MULXS.B  #0x72:8, @(0x01020304,R0.L,PR13)
@@ -16427,9 +16427,9 @@
       MULXS.B  #0x72:8, @-PR0
       MULXS.B  #0x72:8, @0x76
       MULXS.B  #0x72:8, @(PC)
-      MULXS.B  #0x72:8, @(0x0001CC72,PC)
+      MULXS.B  #0x72:8, @(0x0001CC76,PC)
       MULXS.B  #0x72:8, @(R1.W,PC)
-      MULXS.B  #0x72:8, @(0x0001CD02,R1.W*2,PC)
+      MULXS.B  #0x72:8, @(0x0001CD06,R1.W*2,PC)
       MULXS.B  #-0x80:8, @R0
       MULXS.B  #-0x80:8, @(17,R0)
       MULXS.B  #-0x80:8, R0
@@ -16442,18 +16442,18 @@
       MULXS.B  #-0x80:8, @(R1.W,R0)
       MULXS.B  #-0x80:8, @(18,R1.W*2,R0)
       MULXS.B  #-0x80:8, @(PC)
-      MULXS.B  #-0x80:8, @(0x0001CCD8,PC)
+      MULXS.B  #-0x80:8, @(0x0001CCDC,PC)
       MULXS.B  #-0x80:8, @(R1.W,PC)
-      MULXS.B  #-0x80:8, @(0x0001CD68,R1.W*2,PC)
+      MULXS.B  #-0x80:8, @(0x0001CD6C,R1.W*2,PC)
       MULXS.B  @0x76, @0x78797A7B
       MULXS.B  @0x76, @(R0*1)
       MULXS.B  @0x76, @(1,R0*1)
       MULXS.B  @0x76, @(0x01020304,R0.L,R13)
       MULXS.B  @0x76, @(R1.W,R0)
       MULXS.B  @0x76, @(PC)
-      MULXS.B  @0x76, @(0x0001CD1C,PC)
+      MULXS.B  @0x76, @(0x0001CD20,PC)
       MULXS.B  @0x76, @(R1.W,PC)
-      MULXS.B  @0x76, @(0x0001CDAC,R1.W*2,PC)
+      MULXS.B  @0x76, @(0x0001CDB0,R1.W*2,PC)
       MULXS.B  @0x76, @(-0x7C,@(-0x7F7E7D7D,R15))
       MULXS.B  @0x76, @R0
       MULXS.B  @0x76, @(17,R0)
@@ -16472,24 +16472,24 @@
       MULXS.B  @(PC), @(R1.W,R0)
       MULXS.B  @(PC), @(18,R1.W*2,R0)
       MULXS.B  @(PC), @(PC)
-      MULXS.B  @(PC), @(0x0001CDA7,PC)
+      MULXS.B  @(PC), @(0x0001CDAB,PC)
       MULXS.B  @(PC), @(R1.W,PC)
-      MULXS.B  @(PC), @(0x0001CE37,R1.W*2,PC)
-      MULXS.B  @(0x0001CDBB,PC), @R0
-      MULXS.B  @(0x0001CDC1,PC), @(17,R0)
-      MULXS.B  @(0x0001CDC8,PC), R0
-      MULXS.B  @(0x0001CDCE,PC), @R0+
-      MULXS.B  @(0x0001CDD4,PC), @-R0
-      MULXS.B  @(0x0001CDDA,PC), @(CR0*1)
-      MULXS.B  @(0x0001CDE2,PC), @(1,CR0*1)
-      MULXS.B  @(0x0001CDEB,PC), @(-0x7C,@(-0x7F7E7D7D,CR15))
-      MULXS.B  @(0x0001CDF8,PC), @0x76
-      MULXS.B  @(0x0001CDFF,PC), @(R1.W,R0)
-      MULXS.B  @(0x0001CE07,PC), @(18,R1.W*2,R0)
-      MULXS.B  @(0x0001CE10,PC), @(PC)
-      MULXS.B  @(0x0001CE17,PC), @(0x0001CE1A,PC)
-      MULXS.B  @(0x0001CE1F,PC), @(R1.W,PC)
-      MULXS.B  @(0x0001CE27,PC), @(0x0001CEAC,R1.W*2,PC)
+      MULXS.B  @(PC), @(0x0001CE3B,R1.W*2,PC)
+      MULXS.B  @(0x0001CDBF,PC), @R0
+      MULXS.B  @(0x0001CDC5,PC), @(17,R0)
+      MULXS.B  @(0x0001CDCC,PC), R0
+      MULXS.B  @(0x0001CDD2,PC), @R0+
+      MULXS.B  @(0x0001CDD8,PC), @-R0
+      MULXS.B  @(0x0001CDDE,PC), @(CR0*1)
+      MULXS.B  @(0x0001CDE6,PC), @(1,CR0*1)
+      MULXS.B  @(0x0001CDEF,PC), @(-0x7C,@(-0x7F7E7D7D,CR15))
+      MULXS.B  @(0x0001CDFC,PC), @0x76
+      MULXS.B  @(0x0001CE03,PC), @(R1.W,R0)
+      MULXS.B  @(0x0001CE0B,PC), @(18,R1.W*2,R0)
+      MULXS.B  @(0x0001CE14,PC), @(PC)
+      MULXS.B  @(0x0001CE1B,PC), @(0x0001CE1E,PC)
+      MULXS.B  @(0x0001CE23,PC), @(R1.W,PC)
+      MULXS.B  @(0x0001CE2B,PC), @(0x0001CEB0,R1.W*2,PC)
       MULXS.B  @(R1.W,PC), @R2
       MULXS.B  @(R1.W,PC), @(17,R0)
       MULXS.B  @(R1.W,PC), R0
@@ -16502,24 +16502,24 @@
       MULXS.B  @(R1.W,PC), @(-0x7C,@(-0x7F7E7D7D,CR15))
       MULXS.B  @(R1.W,PC), @0x76
       MULXS.B  @(R1.W,PC), @(PC)
-      MULXS.B  @(R1.W,PC), @(0x0001CE94,PC)
+      MULXS.B  @(R1.W,PC), @(0x0001CE98,PC)
       MULXS.B  @(R1.W,PC), @(R1.W,PC)
-      MULXS.B  @(R1.W,PC), @(0x0001CF26,R1.W*2,PC)
-      MULXS.B  @(0x0001CF2C,R1.W*2,PC), @(20,R3)
-      MULXS.B  @(0x0001CF34,R1.W*2,PC), R0
-      MULXS.B  @(0x0001CF3B,R1.W*2,PC), @R0+
-      MULXS.B  @(0x0001CF42,R1.W*2,PC), @-R0
-      MULXS.B  @(0x0001CF49,R1.W*2,PC), @(CR0*1)
-      MULXS.B  @(0x0001CF52,R1.W*2,PC), @(1,CR0*1)
-      MULXS.B  @(0x0001CF5C,R1.W*2,PC), @(0x01020304,R0.L,CR13)
-      MULXS.B  @(0x0001CF6A,R1.W*2,PC), @(R1.W,CR0)
-      MULXS.B  @(0x0001CF74,R1.W*2,PC), @(-0x7C,@(-0x7F7E7D7D,CR15))
-      MULXS.B  @(0x0001CF82,R1.W*2,PC), @CR0
-      MULXS.B  @(0x0001CF8A,R1.W*2,PC), @0x76
-      MULXS.B  @(0x0001CF92,R1.W*2,PC), @(PC)
-      MULXS.B  @(0x0001CF9A,R1.W*2,PC), @(0x0001CF1C,PC)
-      MULXS.B  @(0x0001CFA3,R1.W*2,PC), @(R1.W,PC)
-      MULXS.B  @(0x0001CFAC,R1.W*2,PC), @(0x0001CFB0,R1.W*2,PC)
+      MULXS.B  @(R1.W,PC), @(0x0001CF2A,R1.W*2,PC)
+      MULXS.B  @(0x0001CF30,R1.W*2,PC), @(20,R3)
+      MULXS.B  @(0x0001CF38,R1.W*2,PC), R0
+      MULXS.B  @(0x0001CF3F,R1.W*2,PC), @R0+
+      MULXS.B  @(0x0001CF46,R1.W*2,PC), @-R0
+      MULXS.B  @(0x0001CF4D,R1.W*2,PC), @(CR0*1)
+      MULXS.B  @(0x0001CF56,R1.W*2,PC), @(1,CR0*1)
+      MULXS.B  @(0x0001CF60,R1.W*2,PC), @(0x01020304,R0.L,CR13)
+      MULXS.B  @(0x0001CF6E,R1.W*2,PC), @(R1.W,CR0)
+      MULXS.B  @(0x0001CF78,R1.W*2,PC), @(-0x7C,@(-0x7F7E7D7D,CR15))
+      MULXS.B  @(0x0001CF86,R1.W*2,PC), @CR0
+      MULXS.B  @(0x0001CF8E,R1.W*2,PC), @0x76
+      MULXS.B  @(0x0001CF96,R1.W*2,PC), @(PC)
+      MULXS.B  @(0x0001CF9E,R1.W*2,PC), @(0x0001CF20,PC)
+      MULXS.B  @(0x0001CFA7,R1.W*2,PC), @(R1.W,PC)
+      MULXS.B  @(0x0001CFB0,R1.W*2,PC), @(0x0001CFB4,R1.W*2,PC)
       MULXS.W  @(18,R1), @(20,R3)
       MULXS.W  @(18,R1), R0
       MULXS.W  @(18,R1), @R0+
@@ -16532,9 +16532,9 @@
       MULXS.W  @(18,R1), @CR0
       MULXS.W  @(18,R1), @0x76
       MULXS.W  @(18,R1), @(PC)
-      MULXS.W  @(18,R1), @(0x0001CF8C,PC)
+      MULXS.W  @(18,R1), @(0x0001CF90,PC)
       MULXS.W  @(18,R1), @(R1.W,PC)
-      MULXS.W  @(18,R1), @(0x0001D01C,R1.W*2,PC)
+      MULXS.W  @(18,R1), @(0x0001D020,R1.W*2,PC)
       MULXS.W  R0, R1
       MULXS.W  R0, @R0+
       MULXS.W  R0, @-R0
@@ -16547,9 +16547,9 @@
       MULXS.W  R0, @(17,CR0)
       MULXS.W  R0, @0x76
       MULXS.W  R0, @(PC)
-      MULXS.W  R0, @(0x0001CFEC,PC)
+      MULXS.W  R0, @(0x0001CFF0,PC)
       MULXS.W  R0, @(R1.W,PC)
-      MULXS.W  R0, @(0x0001D07A,R1.W*2,PC)
+      MULXS.W  R0, @(0x0001D07E,R1.W*2,PC)
       MULXS.W  @R0+, @R1+
       MULXS.W  @R0+, @-R0
       MULXS.W  @R0+, @(CR0*1)
@@ -16562,9 +16562,9 @@
       MULXS.W  @R0+, CR0
       MULXS.W  @R0+, @0x76
       MULXS.W  @R0+, @(PC)
-      MULXS.W  @R0+, @(0x0001D04B,PC)
+      MULXS.W  @R0+, @(0x0001D04F,PC)
       MULXS.W  @R0+, @(R1.W,PC)
-      MULXS.W  @R0+, @(0x0001D0D9,R1.W*2,PC)
+      MULXS.W  @R0+, @(0x0001D0DD,R1.W*2,PC)
       MULXS.W  @-R0, @-R1
       MULXS.W  @-R0, @(CR0*1)
       MULXS.W  @-R0, @(1,CR0*1)
@@ -16577,9 +16577,9 @@
       MULXS.W  @-R0, @CR0+
       MULXS.W  @-R0, @0x76
       MULXS.W  @-R0, @(PC)
-      MULXS.W  @-R0, @(0x0001D0AB,PC)
+      MULXS.W  @-R0, @(0x0001D0AF,PC)
       MULXS.W  @-R0, @(R1.W,PC)
-      MULXS.W  @-R0, @(0x0001D139,R1.W*2,PC)
+      MULXS.W  @-R0, @(0x0001D13D,R1.W*2,PC)
       MULXS.W  @(CR0*1), @R1
       MULXS.W  @(CR0*1), @(17,R0)
       MULXS.W  @(CR0*1), R0
@@ -16592,9 +16592,9 @@
       MULXS.W  @(CR0*1), @(-0x7C,@(-0x7F7E7D7D,CR15))
       MULXS.W  @(CR0*1), @0x76
       MULXS.W  @(CR0*1), @(PC)
-      MULXS.W  @(CR0*1), @(0x0001D121,PC)
+      MULXS.W  @(CR0*1), @(0x0001D125,PC)
       MULXS.W  @(CR0*1), @(R1.W,PC)
-      MULXS.W  @(CR0*1), @(0x0001D1B3,R1.W*2,PC)
+      MULXS.W  @(CR0*1), @(0x0001D1B7,R1.W*2,PC)
       MULXS.W  @(1,CR0*1), @R2
       MULXS.W  @(1,CR0*1), @(17,R0)
       MULXS.W  @(1,CR0*1), R0
@@ -16607,9 +16607,9 @@
       MULXS.W  @(1,CR0*1), @(-0x7C,@(-0x7F7E7D7D,CR15))
       MULXS.W  @(1,CR0*1), @0x76
       MULXS.W  @(1,CR0*1), @(PC)
-      MULXS.W  @(1,CR0*1), @(0x0001D1A8,PC)
+      MULXS.W  @(1,CR0*1), @(0x0001D1AC,PC)
       MULXS.W  @(1,CR0*1), @(R1.W,PC)
-      MULXS.W  @(1,CR0*1), @(0x0001D23C,R1.W*2,PC)
+      MULXS.W  @(1,CR0*1), @(0x0001D240,R1.W*2,PC)
       MULXS.W  @(0x01020304,R0.L,CR13), @R5
       MULXS.W  @(0x01020304,R0.L,CR13), @(17,R0)
       MULXS.W  @(0x01020304,R0.L,CR13), R0
@@ -16622,9 +16622,9 @@
       MULXS.W  @(0x01020304,R0.L,CR13), @(-0x7C,@(-0x7F7E7D7D,CR15))
       MULXS.W  @(0x01020304,R0.L,CR13), @0x76
       MULXS.W  @(0x01020304,R0.L,CR13), @(PC)
-      MULXS.W  @(0x01020304,R0.L,CR13), @(0x0001D265,PC)
+      MULXS.W  @(0x01020304,R0.L,CR13), @(0x0001D269,PC)
       MULXS.W  @(0x01020304,R0.L,CR13), @(R1.W,PC)
-      MULXS.W  @(0x01020304,R0.L,CR13), @(0x0001D301,R1.W*2,PC)
+      MULXS.W  @(0x01020304,R0.L,CR13), @(0x0001D305,R1.W*2,PC)
       MULXS.W  @(R1.W,CR0), @R2
       MULXS.W  @(R1.W,CR0), @(17,R0)
       MULXS.W  @(R1.W,CR0), R0
@@ -16637,9 +16637,9 @@
       MULXS.W  @(R1.W,CR0), @(-0x7C,@(-0x7F7E7D7D,CR15))
       MULXS.W  @(R1.W,CR0), @0x76
       MULXS.W  @(R1.W,CR0), @(PC)
-      MULXS.W  @(R1.W,CR0), @(0x0001D2F6,PC)
+      MULXS.W  @(R1.W,CR0), @(0x0001D2FA,PC)
       MULXS.W  @(R1.W,CR0), @(R1.W,PC)
-      MULXS.W  @(R1.W,CR0), @(0x0001D38A,R1.W*2,PC)
+      MULXS.W  @(R1.W,CR0), @(0x0001D38E,R1.W*2,PC)
       MULXS.W  @(-0x7C,@(-0x7F7E7D7D,CR15)), @R0
       MULXS.W  @(-0x7C,@(-0x7F7E7D7D,CR15)), @(17,R0)
       MULXS.W  @(-0x7C,@(-0x7F7E7D7D,CR15)), R0
@@ -16652,9 +16652,9 @@
       MULXS.W  @(-0x7C,@(-0x7F7E7D7D,CR15)), @(R1.W,R0)
       MULXS.W  @(-0x7C,@(-0x7F7E7D7D,CR15)), @(18,R1.W*2,R0)
       MULXS.W  @(-0x7C,@(-0x7F7E7D7D,CR15)), @(PC)
-      MULXS.W  @(-0x7C,@(-0x7F7E7D7D,CR15)), @(0x0001D3AE,PC)
+      MULXS.W  @(-0x7C,@(-0x7F7E7D7D,CR15)), @(0x0001D3B2,PC)
       MULXS.W  @(-0x7C,@(-0x7F7E7D7D,CR15)), @(R1.W,PC)
-      MULXS.W  @(-0x7C,@(-0x7F7E7D7D,CR15)), @(0x0001D44A,R1.W*2,PC)
+      MULXS.W  @(-0x7C,@(-0x7F7E7D7D,CR15)), @(0x0001D44E,R1.W*2,PC)
       MULXS.W  @CR0, R0
       MULXS.W  @CR0, @R1
       MULXS.W  @CR0, @(17,R0)
@@ -16667,9 +16667,9 @@
       MULXS.W  @CR0, @(-0x7C,@(-0x7F7E7D7D,CR15))
       MULXS.W  @CR0, @0x76
       MULXS.W  @CR0, @(PC)
-      MULXS.W  @CR0, @(0x0001D424,PC)
+      MULXS.W  @CR0, @(0x0001D428,PC)
       MULXS.W  @CR0, @(R1.W,PC)
-      MULXS.W  @CR0, @(0x0001D4B4,R1.W*2,PC)
+      MULXS.W  @CR0, @(0x0001D4B8,R1.W*2,PC)
       MULXS.W  #0x72:8, @(PR0*1)
       MULXS.W  #0x72:8, @(1,PR0*1)
       MULXS.W  #0x72:8, @(0x01020304,R0.L,PR13)
@@ -16682,9 +16682,9 @@
       MULXS.W  #0x72:8, @-PR0
       MULXS.W  #0x72:8, @0x76
       MULXS.W  #0x72:8, @(PC)
-      MULXS.W  #0x72:8, @(0x0001D494,PC)
+      MULXS.W  #0x72:8, @(0x0001D498,PC)
       MULXS.W  #0x72:8, @(R1.W,PC)
-      MULXS.W  #0x72:8, @(0x0001D524,R1.W*2,PC)
+      MULXS.W  #0x72:8, @(0x0001D528,R1.W*2,PC)
       MULXS.W  #-0x80:8, @R0
       MULXS.W  #-0x80:8, @(17,R0)
       MULXS.W  #-0x80:8, R0
@@ -16697,18 +16697,18 @@
       MULXS.W  #-0x80:8, @(R1.W,R0)
       MULXS.W  #-0x80:8, @(18,R1.W*2,R0)
       MULXS.W  #-0x80:8, @(PC)
-      MULXS.W  #-0x80:8, @(0x0001D4FA,PC)
+      MULXS.W  #-0x80:8, @(0x0001D4FE,PC)
       MULXS.W  #-0x80:8, @(R1.W,PC)
-      MULXS.W  #-0x80:8, @(0x0001D58A,R1.W*2,PC)
+      MULXS.W  #-0x80:8, @(0x0001D58E,R1.W*2,PC)
       MULXS.W  @0x76, @0x78797A7B
       MULXS.W  @0x76, @(R0*1)
       MULXS.W  @0x76, @(1,R0*1)
       MULXS.W  @0x76, @(0x01020304,R0.L,R13)
       MULXS.W  @0x76, @(R1.W,R0)
       MULXS.W  @0x76, @(PC)
-      MULXS.W  @0x76, @(0x0001D53E,PC)
+      MULXS.W  @0x76, @(0x0001D542,PC)
       MULXS.W  @0x76, @(R1.W,PC)
-      MULXS.W  @0x76, @(0x0001D5CE,R1.W*2,PC)
+      MULXS.W  @0x76, @(0x0001D5D2,R1.W*2,PC)
       MULXS.W  @0x76, @(-0x7C,@(-0x7F7E7D7D,R15))
       MULXS.W  @0x76, @R0
       MULXS.W  @0x76, @(17,R0)
@@ -16727,24 +16727,24 @@
       MULXS.W  @(PC), @(R1.W,R0)
       MULXS.W  @(PC), @(18,R1.W*2,R0)
       MULXS.W  @(PC), @(PC)
-      MULXS.W  @(PC), @(0x0001D5C9,PC)
+      MULXS.W  @(PC), @(0x0001D5CD,PC)
       MULXS.W  @(PC), @(R1.W,PC)
-      MULXS.W  @(PC), @(0x0001D659,R1.W*2,PC)
-      MULXS.W  @(0x0001D5DD,PC), @R0
-      MULXS.W  @(0x0001D5E3,PC), @(17,R0)
-      MULXS.W  @(0x0001D5EA,PC), R0
-      MULXS.W  @(0x0001D5F0,PC), @R0+
-      MULXS.W  @(0x0001D5F6,PC), @-R0
-      MULXS.W  @(0x0001D5FC,PC), @(CR0*1)
-      MULXS.W  @(0x0001D604,PC), @(1,CR0*1)
-      MULXS.W  @(0x0001D60D,PC), @(-0x7C,@(-0x7F7E7D7D,CR15))
-      MULXS.W  @(0x0001D61A,PC), @0x76
-      MULXS.W  @(0x0001D621,PC), @(R1.W,R0)
-      MULXS.W  @(0x0001D629,PC), @(18,R1.W*2,R0)
-      MULXS.W  @(0x0001D632,PC), @(PC)
-      MULXS.W  @(0x0001D639,PC), @(0x0001D63C,PC)
-      MULXS.W  @(0x0001D641,PC), @(R1.W,PC)
-      MULXS.W  @(0x0001D649,PC), @(0x0001D6CE,R1.W*2,PC)
+      MULXS.W  @(PC), @(0x0001D65D,R1.W*2,PC)
+      MULXS.W  @(0x0001D5E1,PC), @R0
+      MULXS.W  @(0x0001D5E7,PC), @(17,R0)
+      MULXS.W  @(0x0001D5EE,PC), R0
+      MULXS.W  @(0x0001D5F4,PC), @R0+
+      MULXS.W  @(0x0001D5FA,PC), @-R0
+      MULXS.W  @(0x0001D600,PC), @(CR0*1)
+      MULXS.W  @(0x0001D608,PC), @(1,CR0*1)
+      MULXS.W  @(0x0001D611,PC), @(-0x7C,@(-0x7F7E7D7D,CR15))
+      MULXS.W  @(0x0001D61E,PC), @0x76
+      MULXS.W  @(0x0001D625,PC), @(R1.W,R0)
+      MULXS.W  @(0x0001D62D,PC), @(18,R1.W*2,R0)
+      MULXS.W  @(0x0001D636,PC), @(PC)
+      MULXS.W  @(0x0001D63D,PC), @(0x0001D640,PC)
+      MULXS.W  @(0x0001D645,PC), @(R1.W,PC)
+      MULXS.W  @(0x0001D64D,PC), @(0x0001D6D2,R1.W*2,PC)
       MULXS.W  @(R1.W,PC), @R2
       MULXS.W  @(R1.W,PC), @(17,R0)
       MULXS.W  @(R1.W,PC), R0
@@ -16757,24 +16757,24 @@
       MULXS.W  @(R1.W,PC), @(-0x7C,@(-0x7F7E7D7D,CR15))
       MULXS.W  @(R1.W,PC), @0x76
       MULXS.W  @(R1.W,PC), @(PC)
-      MULXS.W  @(R1.W,PC), @(0x0001D6B6,PC)
+      MULXS.W  @(R1.W,PC), @(0x0001D6BA,PC)
       MULXS.W  @(R1.W,PC), @(R1.W,PC)
-      MULXS.W  @(R1.W,PC), @(0x0001D748,R1.W*2,PC)
-      MULXS.W  @(0x0001D74E,R1.W*2,PC), @(20,R3)
-      MULXS.W  @(0x0001D756,R1.W*2,PC), R0
-      MULXS.W  @(0x0001D75D,R1.W*2,PC), @R0+
-      MULXS.W  @(0x0001D764,R1.W*2,PC), @-R0
-      MULXS.W  @(0x0001D76B,R1.W*2,PC), @(CR0*1)
-      MULXS.W  @(0x0001D774,R1.W*2,PC), @(1,CR0*1)
-      MULXS.W  @(0x0001D77E,R1.W*2,PC), @(0x01020304,R0.L,CR13)
-      MULXS.W  @(0x0001D78C,R1.W*2,PC), @(R1.W,CR0)
-      MULXS.W  @(0x0001D796,R1.W*2,PC), @(-0x7C,@(-0x7F7E7D7D,CR15))
-      MULXS.W  @(0x0001D7A4,R1.W*2,PC), @CR0
-      MULXS.W  @(0x0001D7AC,R1.W*2,PC), @0x76
-      MULXS.W  @(0x0001D7B4,R1.W*2,PC), @(PC)
-      MULXS.W  @(0x0001D7BC,R1.W*2,PC), @(0x0001D73E,PC)
-      MULXS.W  @(0x0001D7C5,R1.W*2,PC), @(R1.W,PC)
-      MULXS.W  @(0x0001D7CE,R1.W*2,PC), @(0x0001D7D2,R1.W*2,PC)
+      MULXS.W  @(R1.W,PC), @(0x0001D74C,R1.W*2,PC)
+      MULXS.W  @(0x0001D752,R1.W*2,PC), @(20,R3)
+      MULXS.W  @(0x0001D75A,R1.W*2,PC), R0
+      MULXS.W  @(0x0001D761,R1.W*2,PC), @R0+
+      MULXS.W  @(0x0001D768,R1.W*2,PC), @-R0
+      MULXS.W  @(0x0001D76F,R1.W*2,PC), @(CR0*1)
+      MULXS.W  @(0x0001D778,R1.W*2,PC), @(1,CR0*1)
+      MULXS.W  @(0x0001D782,R1.W*2,PC), @(0x01020304,R0.L,CR13)
+      MULXS.W  @(0x0001D790,R1.W*2,PC), @(R1.W,CR0)
+      MULXS.W  @(0x0001D79A,R1.W*2,PC), @(-0x7C,@(-0x7F7E7D7D,CR15))
+      MULXS.W  @(0x0001D7A8,R1.W*2,PC), @CR0
+      MULXS.W  @(0x0001D7B0,R1.W*2,PC), @0x76
+      MULXS.W  @(0x0001D7B8,R1.W*2,PC), @(PC)
+      MULXS.W  @(0x0001D7C0,R1.W*2,PC), @(0x0001D742,PC)
+      MULXS.W  @(0x0001D7C9,R1.W*2,PC), @(R1.W,PC)
+      MULXS.W  @(0x0001D7D2,R1.W*2,PC), @(0x0001D7D6,R1.W*2,PC)
       MULXU.B  R1, R2
       MULXU.B  R1, @R0+
       MULXU.B  R1, @-R0
@@ -16787,9 +16787,9 @@
       MULXU.B  R1, @(17,CR0)
       MULXU.B  R1, @0x76
       MULXU.B  R1, @(PC)
-      MULXU.B  R1, @(0x0001D7A2,PC)
+      MULXU.B  R1, @(0x0001D7A6,PC)
       MULXU.B  R1, @(R1.W,PC)
-      MULXU.B  R1, @(0x0001D830,R1.W*2,PC)
+      MULXU.B  R1, @(0x0001D834,R1.W*2,PC)
       MULXU.B  @R0+, @R1+
       MULXU.B  @R0+, @-R0
       MULXU.B  @R0+, @(CR0*1)
@@ -16802,9 +16802,9 @@
       MULXU.B  @R0+, CR0
       MULXU.B  @R0+, @0x76
       MULXU.B  @R0+, @(PC)
-      MULXU.B  @R0+, @(0x0001D801,PC)
+      MULXU.B  @R0+, @(0x0001D805,PC)
       MULXU.B  @R0+, @(R1.W,PC)
-      MULXU.B  @R0+, @(0x0001D88F,R1.W*2,PC)
+      MULXU.B  @R0+, @(0x0001D893,R1.W*2,PC)
       MULXU.B  @-R0, @-R1
       MULXU.B  @-R0, @(CR0*1)
       MULXU.B  @-R0, @(1,CR0*1)
@@ -16817,9 +16817,9 @@
       MULXU.B  @-R0, @CR0+
       MULXU.B  @-R0, @0x76
       MULXU.B  @-R0, @(PC)
-      MULXU.B  @-R0, @(0x0001D861,PC)
+      MULXU.B  @-R0, @(0x0001D865,PC)
       MULXU.B  @-R0, @(R1.W,PC)
-      MULXU.B  @-R0, @(0x0001D8EF,R1.W*2,PC)
+      MULXU.B  @-R0, @(0x0001D8F3,R1.W*2,PC)
       MULXU.B  @(CR0*1), @R1
       MULXU.B  @(CR0*1), @(17,R0)
       MULXU.B  @(CR0*1), R0
@@ -16832,9 +16832,9 @@
       MULXU.B  @(CR0*1), @(-0x7C,@(-0x7F7E7D7D,CR15))
       MULXU.B  @(CR0*1), @0x76
       MULXU.B  @(CR0*1), @(PC)
-      MULXU.B  @(CR0*1), @(0x0001D8D7,PC)
+      MULXU.B  @(CR0*1), @(0x0001D8DB,PC)
       MULXU.B  @(CR0*1), @(R1.W,PC)
-      MULXU.B  @(CR0*1), @(0x0001D969,R1.W*2,PC)
+      MULXU.B  @(CR0*1), @(0x0001D96D,R1.W*2,PC)
       MULXU.B  @(1,CR0*1), @R2
       MULXU.B  @(1,CR0*1), @(17,R0)
       MULXU.B  @(1,CR0*1), R0
@@ -16847,9 +16847,9 @@
       MULXU.B  @(1,CR0*1), @(-0x7C,@(-0x7F7E7D7D,CR15))
       MULXU.B  @(1,CR0*1), @0x76
       MULXU.B  @(1,CR0*1), @(PC)
-      MULXU.B  @(1,CR0*1), @(0x0001D95E,PC)
+      MULXU.B  @(1,CR0*1), @(0x0001D962,PC)
       MULXU.B  @(1,CR0*1), @(R1.W,PC)
-      MULXU.B  @(1,CR0*1), @(0x0001D9F2,R1.W*2,PC)
+      MULXU.B  @(1,CR0*1), @(0x0001D9F6,R1.W*2,PC)
       MULXU.B  @(0x01020304,R0.L,CR13), @R5
       MULXU.B  @(0x01020304,R0.L,CR13), @(17,R0)
       MULXU.B  @(0x01020304,R0.L,CR13), R0
@@ -16862,9 +16862,9 @@
       MULXU.B  @(0x01020304,R0.L,CR13), @(-0x7C,@(-0x7F7E7D7D,CR15))
       MULXU.B  @(0x01020304,R0.L,CR13), @0x76
       MULXU.B  @(0x01020304,R0.L,CR13), @(PC)
-      MULXU.B  @(0x01020304,R0.L,CR13), @(0x0001DA1B,PC)
+      MULXU.B  @(0x01020304,R0.L,CR13), @(0x0001DA1F,PC)
       MULXU.B  @(0x01020304,R0.L,CR13), @(R1.W,PC)
-      MULXU.B  @(0x01020304,R0.L,CR13), @(0x0001DAB7,R1.W*2,PC)
+      MULXU.B  @(0x01020304,R0.L,CR13), @(0x0001DABB,R1.W*2,PC)
       MULXU.B  @(R1.W,CR0), @R2
       MULXU.B  @(R1.W,CR0), @(17,R0)
       MULXU.B  @(R1.W,CR0), R0
@@ -16877,9 +16877,9 @@
       MULXU.B  @(R1.W,CR0), @(-0x7C,@(-0x7F7E7D7D,CR15))
       MULXU.B  @(R1.W,CR0), @0x76
       MULXU.B  @(R1.W,CR0), @(PC)
-      MULXU.B  @(R1.W,CR0), @(0x0001DAAC,PC)
+      MULXU.B  @(R1.W,CR0), @(0x0001DAB0,PC)
       MULXU.B  @(R1.W,CR0), @(R1.W,PC)
-      MULXU.B  @(R1.W,CR0), @(0x0001DB40,R1.W*2,PC)
+      MULXU.B  @(R1.W,CR0), @(0x0001DB44,R1.W*2,PC)
       MULXU.B  @(-0x7C,@(-0x7F7E7D7D,CR15)), @R0
       MULXU.B  @(-0x7C,@(-0x7F7E7D7D,CR15)), @(17,R0)
       MULXU.B  @(-0x7C,@(-0x7F7E7D7D,CR15)), R0
@@ -16892,9 +16892,9 @@
       MULXU.B  @(-0x7C,@(-0x7F7E7D7D,CR15)), @(R1.W,R0)
       MULXU.B  @(-0x7C,@(-0x7F7E7D7D,CR15)), @(18,R1.W*2,R0)
       MULXU.B  @(-0x7C,@(-0x7F7E7D7D,CR15)), @(PC)
-      MULXU.B  @(-0x7C,@(-0x7F7E7D7D,CR15)), @(0x0001DB64,PC)
+      MULXU.B  @(-0x7C,@(-0x7F7E7D7D,CR15)), @(0x0001DB68,PC)
       MULXU.B  @(-0x7C,@(-0x7F7E7D7D,CR15)), @(R1.W,PC)
-      MULXU.B  @(-0x7C,@(-0x7F7E7D7D,CR15)), @(0x0001DC00,R1.W*2,PC)
+      MULXU.B  @(-0x7C,@(-0x7F7E7D7D,CR15)), @(0x0001DC04,R1.W*2,PC)
       MULXU.B  @CR0, R0
       MULXU.B  @(-0x6F,CR0), R0
       MULXU.B  @CR0, @R1
@@ -16908,9 +16908,9 @@
       MULXU.B  @CR0, @(-0x7C,@(-0x7F7E7D7D,CR15))
       MULXU.B  @CR0, @0x76
       MULXU.B  @CR0, @(PC)
-      MULXU.B  @CR0, @(0x0001DBDF,PC)
+      MULXU.B  @CR0, @(0x0001DBE3,PC)
       MULXU.B  @CR0, @(R1.W,PC)
-      MULXU.B  @CR0, @(0x0001DC6F,R1.W*2,PC)
+      MULXU.B  @CR0, @(0x0001DC73,R1.W*2,PC)
       MULXU.B  @(17,CR0), @(19,R2)
       MULXU.B  @(0x2122,CR0), @R0+
       MULXU.B  @(0x2122,CR0), @-R0
@@ -16922,9 +16922,9 @@
       MULXU.B  @(0x2122,CR0), @CR0
       MULXU.B  @(0x2122,CR0), @0x76
       MULXU.B  @(0x2122,CR0), @(PC)
-      MULXU.B  @(0x2122,CR0), @(0x0001DC5D,PC)
+      MULXU.B  @(0x2122,CR0), @(0x0001DC61,PC)
       MULXU.B  @(0x2122,CR0), @(R1.W,PC)
-      MULXU.B  @(0x2122,CR0), @(0x0001DCF1,R1.W*2,PC)
+      MULXU.B  @(0x2122,CR0), @(0x0001DCF5,R1.W*2,PC)
       MULXU.B  #0x72:8, @(PR0*1)
       MULXU.B  #0x72:8, @(1,PR0*1)
       MULXU.B  #0x72:8, @(0x01020304,R0.L,PR13)
@@ -16937,9 +16937,9 @@
       MULXU.B  #0x72:8, @-PR0
       MULXU.B  #0x72:8, @0x76
       MULXU.B  #0x72:8, @(PC)
-      MULXU.B  #0x72:8, @(0x0001DCD1,PC)
+      MULXU.B  #0x72:8, @(0x0001DCD5,PC)
       MULXU.B  #0x72:8, @(R1.W,PC)
-      MULXU.B  #0x72:8, @(0x0001DD61,R1.W*2,PC)
+      MULXU.B  #0x72:8, @(0x0001DD65,R1.W*2,PC)
       MULXU.B  #-0x80:8, @R0
       MULXU.B  #-0x80:8, @(17,R0)
       MULXU.B  #-0x80:8, R0
@@ -16952,18 +16952,18 @@
       MULXU.B  #-0x80:8, @(R1.W,R0)
       MULXU.B  #-0x80:8, @(18,R1.W*2,R0)
       MULXU.B  #-0x80:8, @(PC)
-      MULXU.B  #-0x80:8, @(0x0001DD37,PC)
+      MULXU.B  #-0x80:8, @(0x0001DD3B,PC)
       MULXU.B  #-0x80:8, @(R1.W,PC)
-      MULXU.B  #-0x80:8, @(0x0001DDC7,R1.W*2,PC)
+      MULXU.B  #-0x80:8, @(0x0001DDCB,R1.W*2,PC)
       MULXU.B  @0x76, @0x78797A7B
       MULXU.B  @0x76, @(R0*1)
       MULXU.B  @0x76, @(1,R0*1)
       MULXU.B  @0x76, @(0x01020304,R0.L,R13)
       MULXU.B  @0x76, @(R1.W,R0)
       MULXU.B  @0x76, @(PC)
-      MULXU.B  @0x76, @(0x0001DD7B,PC)
+      MULXU.B  @0x76, @(0x0001DD7F,PC)
       MULXU.B  @0x76, @(R1.W,PC)
-      MULXU.B  @0x76, @(0x0001DE0B,R1.W*2,PC)
+      MULXU.B  @0x76, @(0x0001DE0F,R1.W*2,PC)
       MULXU.B  @0x76, @(-0x7C,@(-0x7F7E7D7D,R15))
       MULXU.B  @0x76, @R0
       MULXU.B  @0x76, @(17,R0)
@@ -16982,24 +16982,24 @@
       MULXU.B  @(PC), @(R1.W,R0)
       MULXU.B  @(PC), @(18,R1.W*2,R0)
       MULXU.B  @(PC), @(PC)
-      MULXU.B  @(PC), @(0x0001DE06,PC)
+      MULXU.B  @(PC), @(0x0001DE0A,PC)
       MULXU.B  @(PC), @(R1.W,PC)
-      MULXU.B  @(PC), @(0x0001DE96,R1.W*2,PC)
-      MULXU.B  @(0x0001DE1A,PC), @R0
-      MULXU.B  @(0x0001DE20,PC), @(17,R0)
-      MULXU.B  @(0x0001DE27,PC), R0
-      MULXU.B  @(0x0001DE2D,PC), @R0+
-      MULXU.B  @(0x0001DE33,PC), @-R0
-      MULXU.B  @(0x0001DE39,PC), @(CR0*1)
-      MULXU.B  @(0x0001DE41,PC), @(1,CR0*1)
-      MULXU.B  @(0x0001DE4A,PC), @(-0x7C,@(-0x7F7E7D7D,CR15))
-      MULXU.B  @(0x0001DE57,PC), @0x76
-      MULXU.B  @(0x0001DE5E,PC), @(R1.W,R0)
-      MULXU.B  @(0x0001DE66,PC), @(18,R1.W*2,R0)
-      MULXU.B  @(0x0001DE6F,PC), @(PC)
-      MULXU.B  @(0x0001DE76,PC), @(0x0001DE79,PC)
-      MULXU.B  @(0x0001DE7E,PC), @(R1.W,PC)
-      MULXU.B  @(0x0001DE86,PC), @(0x0001DF0B,R1.W*2,PC)
+      MULXU.B  @(PC), @(0x0001DE9A,R1.W*2,PC)
+      MULXU.B  @(0x0001DE1E,PC), @R0
+      MULXU.B  @(0x0001DE24,PC), @(17,R0)
+      MULXU.B  @(0x0001DE2B,PC), R0
+      MULXU.B  @(0x0001DE31,PC), @R0+
+      MULXU.B  @(0x0001DE37,PC), @-R0
+      MULXU.B  @(0x0001DE3D,PC), @(CR0*1)
+      MULXU.B  @(0x0001DE45,PC), @(1,CR0*1)
+      MULXU.B  @(0x0001DE4E,PC), @(-0x7C,@(-0x7F7E7D7D,CR15))
+      MULXU.B  @(0x0001DE5B,PC), @0x76
+      MULXU.B  @(0x0001DE62,PC), @(R1.W,R0)
+      MULXU.B  @(0x0001DE6A,PC), @(18,R1.W*2,R0)
+      MULXU.B  @(0x0001DE73,PC), @(PC)
+      MULXU.B  @(0x0001DE7A,PC), @(0x0001DE7D,PC)
+      MULXU.B  @(0x0001DE82,PC), @(R1.W,PC)
+      MULXU.B  @(0x0001DE8A,PC), @(0x0001DF0F,R1.W*2,PC)
       MULXU.B  @(R1.W,PC), @R2
       MULXU.B  @(R1.W,PC), @(17,R0)
       MULXU.B  @(R1.W,PC), R0
@@ -17012,24 +17012,24 @@
       MULXU.B  @(R1.W,PC), @(-0x7C,@(-0x7F7E7D7D,CR15))
       MULXU.B  @(R1.W,PC), @0x76
       MULXU.B  @(R1.W,PC), @(PC)
-      MULXU.B  @(R1.W,PC), @(0x0001DEF3,PC)
+      MULXU.B  @(R1.W,PC), @(0x0001DEF7,PC)
       MULXU.B  @(R1.W,PC), @(R1.W,PC)
-      MULXU.B  @(R1.W,PC), @(0x0001DF85,R1.W*2,PC)
-      MULXU.B  @(0x0001DF8B,R1.W*2,PC), @(20,R3)
-      MULXU.B  @(0x0001DF93,R1.W*2,PC), R0
-      MULXU.B  @(0x0001DF9A,R1.W*2,PC), @R0+
-      MULXU.B  @(0x0001DFA1,R1.W*2,PC), @-R0
-      MULXU.B  @(0x0001DFA8,R1.W*2,PC), @(CR0*1)
-      MULXU.B  @(0x0001DFB1,R1.W*2,PC), @(1,CR0*1)
-      MULXU.B  @(0x0001DFBB,R1.W*2,PC), @(0x01020304,R0.L,CR13)
-      MULXU.B  @(0x0001DFC9,R1.W*2,PC), @(R1.W,CR0)
-      MULXU.B  @(0x0001DFD3,R1.W*2,PC), @(-0x7C,@(-0x7F7E7D7D,CR15))
-      MULXU.B  @(0x0001DFE1,R1.W*2,PC), @CR0
-      MULXU.B  @(0x0001DFE9,R1.W*2,PC), @0x76
-      MULXU.B  @(0x0001DFF1,R1.W*2,PC), @(PC)
-      MULXU.B  @(0x0001DFF9,R1.W*2,PC), @(0x0001DF7B,PC)
-      MULXU.B  @(0x0001E002,R1.W*2,PC), @(R1.W,PC)
-      MULXU.B  @(0x0001E00B,R1.W*2,PC), @(0x0001E00F,R1.W*2,PC)
+      MULXU.B  @(R1.W,PC), @(0x0001DF89,R1.W*2,PC)
+      MULXU.B  @(0x0001DF8F,R1.W*2,PC), @(20,R3)
+      MULXU.B  @(0x0001DF97,R1.W*2,PC), R0
+      MULXU.B  @(0x0001DF9E,R1.W*2,PC), @R0+
+      MULXU.B  @(0x0001DFA5,R1.W*2,PC), @-R0
+      MULXU.B  @(0x0001DFAC,R1.W*2,PC), @(CR0*1)
+      MULXU.B  @(0x0001DFB5,R1.W*2,PC), @(1,CR0*1)
+      MULXU.B  @(0x0001DFBF,R1.W*2,PC), @(0x01020304,R0.L,CR13)
+      MULXU.B  @(0x0001DFCD,R1.W*2,PC), @(R1.W,CR0)
+      MULXU.B  @(0x0001DFD7,R1.W*2,PC), @(-0x7C,@(-0x7F7E7D7D,CR15))
+      MULXU.B  @(0x0001DFE5,R1.W*2,PC), @CR0
+      MULXU.B  @(0x0001DFED,R1.W*2,PC), @0x76
+      MULXU.B  @(0x0001DFF5,R1.W*2,PC), @(PC)
+      MULXU.B  @(0x0001DFFD,R1.W*2,PC), @(0x0001DF7F,PC)
+      MULXU.B  @(0x0001E006,R1.W*2,PC), @(R1.W,PC)
+      MULXU.B  @(0x0001E00F,R1.W*2,PC), @(0x0001E013,R1.W*2,PC)
       MULXU.W  @R1+, @R2+
       MULXU.W  @R1+, @-R0
       MULXU.W  @R1+, @(CR0*1)
@@ -17042,9 +17042,9 @@
       MULXU.W  @R1+, CR0
       MULXU.W  @R1+, @0x76
       MULXU.W  @R1+, @(PC)
-      MULXU.W  @R1+, @(0x0001DFE0,PC)
+      MULXU.W  @R1+, @(0x0001DFE4,PC)
       MULXU.W  @R1+, @(R1.W,PC)
-      MULXU.W  @R1+, @(0x0001E06E,R1.W*2,PC)
+      MULXU.W  @R1+, @(0x0001E072,R1.W*2,PC)
       MULXU.W  @-R0, @-R1
       MULXU.W  @-R0, @(CR0*1)
       MULXU.W  @-R0, @(1,CR0*1)
@@ -17057,9 +17057,9 @@
       MULXU.W  @-R0, @CR0+
       MULXU.W  @-R0, @0x76
       MULXU.W  @-R0, @(PC)
-      MULXU.W  @-R0, @(0x0001E040,PC)
+      MULXU.W  @-R0, @(0x0001E044,PC)
       MULXU.W  @-R0, @(R1.W,PC)
-      MULXU.W  @-R0, @(0x0001E0CE,R1.W*2,PC)
+      MULXU.W  @-R0, @(0x0001E0D2,R1.W*2,PC)
       MULXU.W  @(CR0*1), @R1
       MULXU.W  @(CR0*1), @(17,R0)
       MULXU.W  @(CR0*1), R0
@@ -17072,9 +17072,9 @@
       MULXU.W  @(CR0*1), @(-0x7C,@(-0x7F7E7D7D,CR15))
       MULXU.W  @(CR0*1), @0x76
       MULXU.W  @(CR0*1), @(PC)
-      MULXU.W  @(CR0*1), @(0x0001E0B6,PC)
+      MULXU.W  @(CR0*1), @(0x0001E0BA,PC)
       MULXU.W  @(CR0*1), @(R1.W,PC)
-      MULXU.W  @(CR0*1), @(0x0001E148,R1.W*2,PC)
+      MULXU.W  @(CR0*1), @(0x0001E14C,R1.W*2,PC)
       MULXU.W  @(1,CR0*1), @R2
       MULXU.W  @(1,CR0*1), @(17,R0)
       MULXU.W  @(1,CR0*1), R0
@@ -17087,9 +17087,9 @@
       MULXU.W  @(1,CR0*1), @(-0x7C,@(-0x7F7E7D7D,CR15))
       MULXU.W  @(1,CR0*1), @0x76
       MULXU.W  @(1,CR0*1), @(PC)
-      MULXU.W  @(1,CR0*1), @(0x0001E13D,PC)
+      MULXU.W  @(1,CR0*1), @(0x0001E141,PC)
       MULXU.W  @(1,CR0*1), @(R1.W,PC)
-      MULXU.W  @(1,CR0*1), @(0x0001E1D1,R1.W*2,PC)
+      MULXU.W  @(1,CR0*1), @(0x0001E1D5,R1.W*2,PC)
       MULXU.W  @(0x01020304,R0.L,CR13), @R5
       MULXU.W  @(0x01020304,R0.L,CR13), @(17,R0)
       MULXU.W  @(0x01020304,R0.L,CR13), R0
@@ -17102,9 +17102,9 @@
       MULXU.W  @(0x01020304,R0.L,CR13), @(-0x7C,@(-0x7F7E7D7D,CR15))
       MULXU.W  @(0x01020304,R0.L,CR13), @0x76
       MULXU.W  @(0x01020304,R0.L,CR13), @(PC)
-      MULXU.W  @(0x01020304,R0.L,CR13), @(0x0001E1FA,PC)
+      MULXU.W  @(0x01020304,R0.L,CR13), @(0x0001E1FE,PC)
       MULXU.W  @(0x01020304,R0.L,CR13), @(R1.W,PC)
-      MULXU.W  @(0x01020304,R0.L,CR13), @(0x0001E296,R1.W*2,PC)
+      MULXU.W  @(0x01020304,R0.L,CR13), @(0x0001E29A,R1.W*2,PC)
       MULXU.W  @(R1.W,CR0), @R2
       MULXU.W  @(R1.W,CR0), @(17,R0)
       MULXU.W  @(R1.W,CR0), R0
@@ -17117,9 +17117,9 @@
       MULXU.W  @(R1.W,CR0), @(-0x7C,@(-0x7F7E7D7D,CR15))
       MULXU.W  @(R1.W,CR0), @0x76
       MULXU.W  @(R1.W,CR0), @(PC)
-      MULXU.W  @(R1.W,CR0), @(0x0001E28B,PC)
+      MULXU.W  @(R1.W,CR0), @(0x0001E28F,PC)
       MULXU.W  @(R1.W,CR0), @(R1.W,PC)
-      MULXU.W  @(R1.W,CR0), @(0x0001E31F,R1.W*2,PC)
+      MULXU.W  @(R1.W,CR0), @(0x0001E323,R1.W*2,PC)
       MULXU.W  @(-0x7C,@(-0x7F7E7D7D,CR15)), @R0
       MULXU.W  @(-0x7C,@(-0x7F7E7D7D,CR15)), @(17,R0)
       MULXU.W  @(-0x7C,@(-0x7F7E7D7D,CR15)), R0
@@ -17132,9 +17132,9 @@
       MULXU.W  @(-0x7C,@(-0x7F7E7D7D,CR15)), @(R1.W,R0)
       MULXU.W  @(-0x7C,@(-0x7F7E7D7D,CR15)), @(18,R1.W*2,R0)
       MULXU.W  @(-0x7C,@(-0x7F7E7D7D,CR15)), @(PC)
-      MULXU.W  @(-0x7C,@(-0x7F7E7D7D,CR15)), @(0x0001E343,PC)
+      MULXU.W  @(-0x7C,@(-0x7F7E7D7D,CR15)), @(0x0001E347,PC)
       MULXU.W  @(-0x7C,@(-0x7F7E7D7D,CR15)), @(R1.W,PC)
-      MULXU.W  @(-0x7C,@(-0x7F7E7D7D,CR15)), @(0x0001E3DF,R1.W*2,PC)
+      MULXU.W  @(-0x7C,@(-0x7F7E7D7D,CR15)), @(0x0001E3E3,R1.W*2,PC)
       MULXU.W  @CR0, R0
       MULXU.W  @(-0x6F,CR0), R0
       MULXU.W  CR0, R0
@@ -17149,9 +17149,9 @@
       MULXU.W  @CR0, @(-0x7C,@(-0x7F7E7D7D,CR15))
       MULXU.W  @CR0, @0x76
       MULXU.W  @CR0, @(PC)
-      MULXU.W  @CR0, @(0x0001E3C2,PC)
+      MULXU.W  @CR0, @(0x0001E3C6,PC)
       MULXU.W  @CR0, @(R1.W,PC)
-      MULXU.W  @CR0, @(0x0001E452,R1.W*2,PC)
+      MULXU.W  @CR0, @(0x0001E456,R1.W*2,PC)
       MULXU.W  @(17,CR0), @(19,R2)
       MULXU.W  @(0x2122,CR0), @R0+
       MULXU.W  @(0x2122,CR0), @-R0
@@ -17163,9 +17163,9 @@
       MULXU.W  @(0x2122,CR0), @CR0
       MULXU.W  @(0x2122,CR0), @0x76
       MULXU.W  @(0x2122,CR0), @(PC)
-      MULXU.W  @(0x2122,CR0), @(0x0001E440,PC)
+      MULXU.W  @(0x2122,CR0), @(0x0001E444,PC)
       MULXU.W  @(0x2122,CR0), @(R1.W,PC)
-      MULXU.W  @(0x2122,CR0), @(0x0001E4D4,R1.W*2,PC)
+      MULXU.W  @(0x2122,CR0), @(0x0001E4D8,R1.W*2,PC)
       MULXU.W  CR0, @R0+
       MULXU.W  CR0, @-R0
       MULXU.W  CR0, @(CR0*1)
@@ -17177,9 +17177,9 @@
       MULXU.W  CR0, @(17,CR0)
       MULXU.W  CR0, @0x76
       MULXU.W  CR0, @(PC)
-      MULXU.W  CR0, @(0x0001E4AC,PC)
+      MULXU.W  CR0, @(0x0001E4B0,PC)
       MULXU.W  CR0, @(R1.W,PC)
-      MULXU.W  CR0, @(0x0001E53C,R1.W*2,PC)
+      MULXU.W  CR0, @(0x0001E540,R1.W*2,PC)
       MULXU.W  #0x72:8, @(PR0*1)
       MULXU.W  #0x72:8, @(1,PR0*1)
       MULXU.W  #0x72:8, @(0x01020304,R0.L,PR13)
@@ -17192,9 +17192,9 @@
       MULXU.W  #0x72:8, @-PR0
       MULXU.W  #0x72:8, @0x76
       MULXU.W  #0x72:8, @(PC)
-      MULXU.W  #0x72:8, @(0x0001E51C,PC)
+      MULXU.W  #0x72:8, @(0x0001E520,PC)
       MULXU.W  #0x72:8, @(R1.W,PC)
-      MULXU.W  #0x72:8, @(0x0001E5AC,R1.W*2,PC)
+      MULXU.W  #0x72:8, @(0x0001E5B0,R1.W*2,PC)
       MULXU.W  #-0x80:8, @R0
       MULXU.W  #-0x80:8, @(17,R0)
       MULXU.W  #-0x80:8, R0
@@ -17207,18 +17207,18 @@
       MULXU.W  #-0x80:8, @(R1.W,R0)
       MULXU.W  #-0x80:8, @(18,R1.W*2,R0)
       MULXU.W  #-0x80:8, @(PC)
-      MULXU.W  #-0x80:8, @(0x0001E582,PC)
+      MULXU.W  #-0x80:8, @(0x0001E586,PC)
       MULXU.W  #-0x80:8, @(R1.W,PC)
-      MULXU.W  #-0x80:8, @(0x0001E612,R1.W*2,PC)
+      MULXU.W  #-0x80:8, @(0x0001E616,R1.W*2,PC)
       MULXU.W  @0x76, @0x78797A7B
       MULXU.W  @0x76, @(R0*1)
       MULXU.W  @0x76, @(1,R0*1)
       MULXU.W  @0x76, @(0x01020304,R0.L,R13)
       MULXU.W  @0x76, @(R1.W,R0)
       MULXU.W  @0x76, @(PC)
-      MULXU.W  @0x76, @(0x0001E5C6,PC)
+      MULXU.W  @0x76, @(0x0001E5CA,PC)
       MULXU.W  @0x76, @(R1.W,PC)
-      MULXU.W  @0x76, @(0x0001E656,R1.W*2,PC)
+      MULXU.W  @0x76, @(0x0001E65A,R1.W*2,PC)
       MULXU.W  @0x76, @(-0x7C,@(-0x7F7E7D7D,R15))
       MULXU.W  @0x76, @R0
       MULXU.W  @0x76, @(17,R0)
@@ -17237,24 +17237,24 @@
       MULXU.W  @(PC), @(R1.W,R0)
       MULXU.W  @(PC), @(18,R1.W*2,R0)
       MULXU.W  @(PC), @(PC)
-      MULXU.W  @(PC), @(0x0001E651,PC)
+      MULXU.W  @(PC), @(0x0001E655,PC)
       MULXU.W  @(PC), @(R1.W,PC)
-      MULXU.W  @(PC), @(0x0001E6E1,R1.W*2,PC)
-      MULXU.W  @(0x0001E665,PC), @R0
-      MULXU.W  @(0x0001E66B,PC), @(17,R0)
-      MULXU.W  @(0x0001E672,PC), R0
-      MULXU.W  @(0x0001E678,PC), @R0+
-      MULXU.W  @(0x0001E67E,PC), @-R0
-      MULXU.W  @(0x0001E684,PC), @(CR0*1)
-      MULXU.W  @(0x0001E68C,PC), @(1,CR0*1)
-      MULXU.W  @(0x0001E695,PC), @(-0x7C,@(-0x7F7E7D7D,CR15))
-      MULXU.W  @(0x0001E6A2,PC), @0x76
-      MULXU.W  @(0x0001E6A9,PC), @(R1.W,R0)
-      MULXU.W  @(0x0001E6B1,PC), @(18,R1.W*2,R0)
-      MULXU.W  @(0x0001E6BA,PC), @(PC)
-      MULXU.W  @(0x0001E6C1,PC), @(0x0001E6C4,PC)
-      MULXU.W  @(0x0001E6C9,PC), @(R1.W,PC)
-      MULXU.W  @(0x0001E6D1,PC), @(0x0001E756,R1.W*2,PC)
+      MULXU.W  @(PC), @(0x0001E6E5,R1.W*2,PC)
+      MULXU.W  @(0x0001E669,PC), @R0
+      MULXU.W  @(0x0001E66F,PC), @(17,R0)
+      MULXU.W  @(0x0001E676,PC), R0
+      MULXU.W  @(0x0001E67C,PC), @R0+
+      MULXU.W  @(0x0001E682,PC), @-R0
+      MULXU.W  @(0x0001E688,PC), @(CR0*1)
+      MULXU.W  @(0x0001E690,PC), @(1,CR0*1)
+      MULXU.W  @(0x0001E699,PC), @(-0x7C,@(-0x7F7E7D7D,CR15))
+      MULXU.W  @(0x0001E6A6,PC), @0x76
+      MULXU.W  @(0x0001E6AD,PC), @(R1.W,R0)
+      MULXU.W  @(0x0001E6B5,PC), @(18,R1.W*2,R0)
+      MULXU.W  @(0x0001E6BE,PC), @(PC)
+      MULXU.W  @(0x0001E6C5,PC), @(0x0001E6C8,PC)
+      MULXU.W  @(0x0001E6CD,PC), @(R1.W,PC)
+      MULXU.W  @(0x0001E6D5,PC), @(0x0001E75A,R1.W*2,PC)
       MULXU.W  @(R1.W,PC), @R2
       MULXU.W  @(R1.W,PC), @(17,R0)
       MULXU.W  @(R1.W,PC), R0
@@ -17267,24 +17267,24 @@
       MULXU.W  @(R1.W,PC), @(-0x7C,@(-0x7F7E7D7D,CR15))
       MULXU.W  @(R1.W,PC), @0x76
       MULXU.W  @(R1.W,PC), @(PC)
-      MULXU.W  @(R1.W,PC), @(0x0001E73E,PC)
+      MULXU.W  @(R1.W,PC), @(0x0001E742,PC)
       MULXU.W  @(R1.W,PC), @(R1.W,PC)
-      MULXU.W  @(R1.W,PC), @(0x0001E7D0,R1.W*2,PC)
-      MULXU.W  @(0x0001E7D6,R1.W*2,PC), @(20,R3)
-      MULXU.W  @(0x0001E7DE,R1.W*2,PC), R0
-      MULXU.W  @(0x0001E7E5,R1.W*2,PC), @R0+
-      MULXU.W  @(0x0001E7EC,R1.W*2,PC), @-R0
-      MULXU.W  @(0x0001E7F3,R1.W*2,PC), @(CR0*1)
-      MULXU.W  @(0x0001E7FC,R1.W*2,PC), @(1,CR0*1)
-      MULXU.W  @(0x0001E806,R1.W*2,PC), @(0x01020304,R0.L,CR13)
-      MULXU.W  @(0x0001E814,R1.W*2,PC), @(R1.W,CR0)
-      MULXU.W  @(0x0001E81E,R1.W*2,PC), @(-0x7C,@(-0x7F7E7D7D,CR15))
-      MULXU.W  @(0x0001E82C,R1.W*2,PC), @CR0
-      MULXU.W  @(0x0001E834,R1.W*2,PC), @0x76
-      MULXU.W  @(0x0001E83C,R1.W*2,PC), @(PC)
-      MULXU.W  @(0x0001E844,R1.W*2,PC), @(0x0001E7C6,PC)
-      MULXU.W  @(0x0001E84D,R1.W*2,PC), @(R1.W,PC)
-      MULXU.W  @(0x0001E856,R1.W*2,PC), @(0x0001E85A,R1.W*2,PC)
+      MULXU.W  @(R1.W,PC), @(0x0001E7D4,R1.W*2,PC)
+      MULXU.W  @(0x0001E7DA,R1.W*2,PC), @(20,R3)
+      MULXU.W  @(0x0001E7E2,R1.W*2,PC), R0
+      MULXU.W  @(0x0001E7E9,R1.W*2,PC), @R0+
+      MULXU.W  @(0x0001E7F0,R1.W*2,PC), @-R0
+      MULXU.W  @(0x0001E7F7,R1.W*2,PC), @(CR0*1)
+      MULXU.W  @(0x0001E800,R1.W*2,PC), @(1,CR0*1)
+      MULXU.W  @(0x0001E80A,R1.W*2,PC), @(0x01020304,R0.L,CR13)
+      MULXU.W  @(0x0001E818,R1.W*2,PC), @(R1.W,CR0)
+      MULXU.W  @(0x0001E822,R1.W*2,PC), @(-0x7C,@(-0x7F7E7D7D,CR15))
+      MULXU.W  @(0x0001E830,R1.W*2,PC), @CR0
+      MULXU.W  @(0x0001E838,R1.W*2,PC), @0x76
+      MULXU.W  @(0x0001E840,R1.W*2,PC), @(PC)
+      MULXU.W  @(0x0001E848,R1.W*2,PC), @(0x0001E7CA,PC)
+      MULXU.W  @(0x0001E851,R1.W*2,PC), @(R1.W,PC)
+      MULXU.W  @(0x0001E85A,R1.W*2,PC), @(0x0001E85E,R1.W*2,PC)
       DIVXS.B  @R1, @R2
       DIVXS.B  @R1, @(17,R0)
       DIVXS.B  @R1, R0
@@ -17297,9 +17297,9 @@
       DIVXS.B  @R1, @(-0x7C,@(-0x7F7E7D7D,CR15))
       DIVXS.B  @R1, @0x76
       DIVXS.B  @R1, @(PC)
-      DIVXS.B  @R1, @(0x0001E828,PC)
+      DIVXS.B  @R1, @(0x0001E82C,PC)
       DIVXS.B  @R1, @(R1.W,PC)
-      DIVXS.B  @R1, @(0x0001E8B6,R1.W*2,PC)
+      DIVXS.B  @R1, @(0x0001E8BA,R1.W*2,PC)
       DIVXS.B  @(17,R0), @(19,R2)
       DIVXS.B  @(17,R0), R0
       DIVXS.B  @(17,R0), @R0+
@@ -17312,9 +17312,9 @@
       DIVXS.B  @(17,R0), @CR0
       DIVXS.B  @(17,R0), @0x76
       DIVXS.B  @(17,R0), @(PC)
-      DIVXS.B  @(17,R0), @(0x0001E892,PC)
+      DIVXS.B  @(17,R0), @(0x0001E896,PC)
       DIVXS.B  @(17,R0), @(R1.W,PC)
-      DIVXS.B  @(17,R0), @(0x0001E922,R1.W*2,PC)
+      DIVXS.B  @(17,R0), @(0x0001E926,R1.W*2,PC)
       DIVXS.B  R0, R1
       DIVXS.B  R0, @R0+
       DIVXS.B  R0, @-R0
@@ -17327,9 +17327,9 @@
       DIVXS.B  R0, @(17,CR0)
       DIVXS.B  R0, @0x76
       DIVXS.B  R0, @(PC)
-      DIVXS.B  R0, @(0x0001E8F2,PC)
+      DIVXS.B  R0, @(0x0001E8F6,PC)
       DIVXS.B  R0, @(R1.W,PC)
-      DIVXS.B  R0, @(0x0001E980,R1.W*2,PC)
+      DIVXS.B  R0, @(0x0001E984,R1.W*2,PC)
       DIVXS.B  @R0+, @R1+
       DIVXS.B  @R0+, @-R0
       DIVXS.B  @R0+, @(CR0*1)
@@ -17342,9 +17342,9 @@
       DIVXS.B  @R0+, CR0
       DIVXS.B  @R0+, @0x76
       DIVXS.B  @R0+, @(PC)
-      DIVXS.B  @R0+, @(0x0001E951,PC)
+      DIVXS.B  @R0+, @(0x0001E955,PC)
       DIVXS.B  @R0+, @(R1.W,PC)
-      DIVXS.B  @R0+, @(0x0001E9DF,R1.W*2,PC)
+      DIVXS.B  @R0+, @(0x0001E9E3,R1.W*2,PC)
       DIVXS.B  @-R0, @-R1
       DIVXS.B  @-R0, @(CR0*1)
       DIVXS.B  @-R0, @(1,CR0*1)
@@ -17357,9 +17357,9 @@
       DIVXS.B  @-R0, @CR0+
       DIVXS.B  @-R0, @0x76
       DIVXS.B  @-R0, @(PC)
-      DIVXS.B  @-R0, @(0x0001E9B1,PC)
+      DIVXS.B  @-R0, @(0x0001E9B5,PC)
       DIVXS.B  @-R0, @(R1.W,PC)
-      DIVXS.B  @-R0, @(0x0001EA3F,R1.W*2,PC)
+      DIVXS.B  @-R0, @(0x0001EA43,R1.W*2,PC)
       DIVXS.B  @(CR0*1), @R1
       DIVXS.B  @(CR0*1), @(17,R0)
       DIVXS.B  @(CR0*1), R0
@@ -17372,9 +17372,9 @@
       DIVXS.B  @(CR0*1), @(-0x7C,@(-0x7F7E7D7D,CR15))
       DIVXS.B  @(CR0*1), @0x76
       DIVXS.B  @(CR0*1), @(PC)
-      DIVXS.B  @(CR0*1), @(0x0001EA27,PC)
+      DIVXS.B  @(CR0*1), @(0x0001EA2B,PC)
       DIVXS.B  @(CR0*1), @(R1.W,PC)
-      DIVXS.B  @(CR0*1), @(0x0001EAB9,R1.W*2,PC)
+      DIVXS.B  @(CR0*1), @(0x0001EABD,R1.W*2,PC)
       DIVXS.B  @(1,CR0*1), @R2
       DIVXS.B  @(1,CR0*1), @(17,R0)
       DIVXS.B  @(1,CR0*1), R0
@@ -17387,9 +17387,9 @@
       DIVXS.B  @(1,CR0*1), @(-0x7C,@(-0x7F7E7D7D,CR15))
       DIVXS.B  @(1,CR0*1), @0x76
       DIVXS.B  @(1,CR0*1), @(PC)
-      DIVXS.B  @(1,CR0*1), @(0x0001EAAE,PC)
+      DIVXS.B  @(1,CR0*1), @(0x0001EAB2,PC)
       DIVXS.B  @(1,CR0*1), @(R1.W,PC)
-      DIVXS.B  @(1,CR0*1), @(0x0001EB42,R1.W*2,PC)
+      DIVXS.B  @(1,CR0*1), @(0x0001EB46,R1.W*2,PC)
       DIVXS.B  @(0x01020304,R0.L,CR13), @R5
       DIVXS.B  @(0x01020304,R0.L,CR13), @(17,R0)
       DIVXS.B  @(0x01020304,R0.L,CR13), R0
@@ -17402,9 +17402,9 @@
       DIVXS.B  @(0x01020304,R0.L,CR13), @(-0x7C,@(-0x7F7E7D7D,CR15))
       DIVXS.B  @(0x01020304,R0.L,CR13), @0x76
       DIVXS.B  @(0x01020304,R0.L,CR13), @(PC)
-      DIVXS.B  @(0x01020304,R0.L,CR13), @(0x0001EB6B,PC)
+      DIVXS.B  @(0x01020304,R0.L,CR13), @(0x0001EB6F,PC)
       DIVXS.B  @(0x01020304,R0.L,CR13), @(R1.W,PC)
-      DIVXS.B  @(0x01020304,R0.L,CR13), @(0x0001EC07,R1.W*2,PC)
+      DIVXS.B  @(0x01020304,R0.L,CR13), @(0x0001EC0B,R1.W*2,PC)
       DIVXS.B  @(R1.W,CR0), @R2
       DIVXS.B  @(R1.W,CR0), @(17,R0)
       DIVXS.B  @(R1.W,CR0), R0
@@ -17417,9 +17417,9 @@
       DIVXS.B  @(R1.W,CR0), @(-0x7C,@(-0x7F7E7D7D,CR15))
       DIVXS.B  @(R1.W,CR0), @0x76
       DIVXS.B  @(R1.W,CR0), @(PC)
-      DIVXS.B  @(R1.W,CR0), @(0x0001EBFC,PC)
+      DIVXS.B  @(R1.W,CR0), @(0x0001EC00,PC)
       DIVXS.B  @(R1.W,CR0), @(R1.W,PC)
-      DIVXS.B  @(R1.W,CR0), @(0x0001EC90,R1.W*2,PC)
+      DIVXS.B  @(R1.W,CR0), @(0x0001EC94,R1.W*2,PC)
       DIVXS.B  @(-0x7C,@(-0x7F7E7D7D,CR15)), @R0
       DIVXS.B  @(-0x7C,@(-0x7F7E7D7D,CR15)), @(17,R0)
       DIVXS.B  @(-0x7C,@(-0x7F7E7D7D,CR15)), R0
@@ -17432,9 +17432,9 @@
       DIVXS.B  @(-0x7C,@(-0x7F7E7D7D,CR15)), @(R1.W,R0)
       DIVXS.B  @(-0x7C,@(-0x7F7E7D7D,CR15)), @(18,R1.W*2,R0)
       DIVXS.B  @(-0x7C,@(-0x7F7E7D7D,CR15)), @(PC)
-      DIVXS.B  @(-0x7C,@(-0x7F7E7D7D,CR15)), @(0x0001ECB4,PC)
+      DIVXS.B  @(-0x7C,@(-0x7F7E7D7D,CR15)), @(0x0001ECB8,PC)
       DIVXS.B  @(-0x7C,@(-0x7F7E7D7D,CR15)), @(R1.W,PC)
-      DIVXS.B  @(-0x7C,@(-0x7F7E7D7D,CR15)), @(0x0001ED50,R1.W*2,PC)
+      DIVXS.B  @(-0x7C,@(-0x7F7E7D7D,CR15)), @(0x0001ED54,R1.W*2,PC)
       DIVXS.B  #0x72:8, @(PR0*1)
       DIVXS.B  #0x72:8, @(1,PR0*1)
       DIVXS.B  #0x72:8, @(0x01020304,R0.L,PR13)
@@ -17447,9 +17447,9 @@
       DIVXS.B  #0x72:8, @-PR0
       DIVXS.B  #0x72:8, @0x76
       DIVXS.B  #0x72:8, @(PC)
-      DIVXS.B  #0x72:8, @(0x0001ED30,PC)
+      DIVXS.B  #0x72:8, @(0x0001ED34,PC)
       DIVXS.B  #0x72:8, @(R1.W,PC)
-      DIVXS.B  #0x72:8, @(0x0001EDC0,R1.W*2,PC)
+      DIVXS.B  #0x72:8, @(0x0001EDC4,R1.W*2,PC)
       DIVXS.B  #-0x80:8, @R0
       DIVXS.B  #-0x80:8, @(17,R0)
       DIVXS.B  #-0x80:8, R0
@@ -17462,18 +17462,18 @@
       DIVXS.B  #-0x80:8, @(R1.W,R0)
       DIVXS.B  #-0x80:8, @(18,R1.W*2,R0)
       DIVXS.B  #-0x80:8, @(PC)
-      DIVXS.B  #-0x80:8, @(0x0001ED96,PC)
+      DIVXS.B  #-0x80:8, @(0x0001ED9A,PC)
       DIVXS.B  #-0x80:8, @(R1.W,PC)
-      DIVXS.B  #-0x80:8, @(0x0001EE26,R1.W*2,PC)
+      DIVXS.B  #-0x80:8, @(0x0001EE2A,R1.W*2,PC)
       DIVXS.B  @0x76, @0x78797A7B
       DIVXS.B  @0x76, @(R0*1)
       DIVXS.B  @0x76, @(1,R0*1)
       DIVXS.B  @0x76, @(0x01020304,R0.L,R13)
       DIVXS.B  @0x76, @(R1.W,R0)
       DIVXS.B  @0x76, @(PC)
-      DIVXS.B  @0x76, @(0x0001EDDA,PC)
+      DIVXS.B  @0x76, @(0x0001EDDE,PC)
       DIVXS.B  @0x76, @(R1.W,PC)
-      DIVXS.B  @0x76, @(0x0001EE6A,R1.W*2,PC)
+      DIVXS.B  @0x76, @(0x0001EE6E,R1.W*2,PC)
       DIVXS.B  @0x76, @(-0x7C,@(-0x7F7E7D7D,R15))
       DIVXS.B  @0x76, @R0
       DIVXS.B  @0x76, @(17,R0)
@@ -17492,24 +17492,24 @@
       DIVXS.B  @(PC), @(R1.W,R0)
       DIVXS.B  @(PC), @(18,R1.W*2,R0)
       DIVXS.B  @(PC), @(PC)
-      DIVXS.B  @(PC), @(0x0001EE65,PC)
+      DIVXS.B  @(PC), @(0x0001EE69,PC)
       DIVXS.B  @(PC), @(R1.W,PC)
-      DIVXS.B  @(PC), @(0x0001EEF5,R1.W*2,PC)
-      DIVXS.B  @(0x0001EE79,PC), @R0
-      DIVXS.B  @(0x0001EE7F,PC), @(17,R0)
-      DIVXS.B  @(0x0001EE86,PC), R0
-      DIVXS.B  @(0x0001EE8C,PC), @R0+
-      DIVXS.B  @(0x0001EE92,PC), @-R0
-      DIVXS.B  @(0x0001EE98,PC), @(CR0*1)
-      DIVXS.B  @(0x0001EEA0,PC), @(1,CR0*1)
-      DIVXS.B  @(0x0001EEA9,PC), @(-0x7C,@(-0x7F7E7D7D,CR15))
-      DIVXS.B  @(0x0001EEB6,PC), @0x76
-      DIVXS.B  @(0x0001EEBD,PC), @(R1.W,R0)
-      DIVXS.B  @(0x0001EEC5,PC), @(18,R1.W*2,R0)
-      DIVXS.B  @(0x0001EECE,PC), @(PC)
-      DIVXS.B  @(0x0001EED5,PC), @(0x0001EED8,PC)
-      DIVXS.B  @(0x0001EEDD,PC), @(R1.W,PC)
-      DIVXS.B  @(0x0001EEE5,PC), @(0x0001EF6A,R1.W*2,PC)
+      DIVXS.B  @(PC), @(0x0001EEF9,R1.W*2,PC)
+      DIVXS.B  @(0x0001EE7D,PC), @R0
+      DIVXS.B  @(0x0001EE83,PC), @(17,R0)
+      DIVXS.B  @(0x0001EE8A,PC), R0
+      DIVXS.B  @(0x0001EE90,PC), @R0+
+      DIVXS.B  @(0x0001EE96,PC), @-R0
+      DIVXS.B  @(0x0001EE9C,PC), @(CR0*1)
+      DIVXS.B  @(0x0001EEA4,PC), @(1,CR0*1)
+      DIVXS.B  @(0x0001EEAD,PC), @(-0x7C,@(-0x7F7E7D7D,CR15))
+      DIVXS.B  @(0x0001EEBA,PC), @0x76
+      DIVXS.B  @(0x0001EEC1,PC), @(R1.W,R0)
+      DIVXS.B  @(0x0001EEC9,PC), @(18,R1.W*2,R0)
+      DIVXS.B  @(0x0001EED2,PC), @(PC)
+      DIVXS.B  @(0x0001EED9,PC), @(0x0001EEDC,PC)
+      DIVXS.B  @(0x0001EEE1,PC), @(R1.W,PC)
+      DIVXS.B  @(0x0001EEE9,PC), @(0x0001EF6E,R1.W*2,PC)
       DIVXS.B  @(R1.W,PC), @R2
       DIVXS.B  @(R1.W,PC), @(17,R0)
       DIVXS.B  @(R1.W,PC), R0
@@ -17522,24 +17522,24 @@
       DIVXS.B  @(R1.W,PC), @(-0x7C,@(-0x7F7E7D7D,CR15))
       DIVXS.B  @(R1.W,PC), @0x76
       DIVXS.B  @(R1.W,PC), @(PC)
-      DIVXS.B  @(R1.W,PC), @(0x0001EF52,PC)
+      DIVXS.B  @(R1.W,PC), @(0x0001EF56,PC)
       DIVXS.B  @(R1.W,PC), @(R1.W,PC)
-      DIVXS.B  @(R1.W,PC), @(0x0001EFE4,R1.W*2,PC)
-      DIVXS.B  @(0x0001EFEA,R1.W*2,PC), @(20,R3)
-      DIVXS.B  @(0x0001EFF2,R1.W*2,PC), R0
-      DIVXS.B  @(0x0001EFF9,R1.W*2,PC), @R0+
-      DIVXS.B  @(0x0001F000,R1.W*2,PC), @-R0
-      DIVXS.B  @(0x0001F007,R1.W*2,PC), @(CR0*1)
-      DIVXS.B  @(0x0001F010,R1.W*2,PC), @(1,CR0*1)
-      DIVXS.B  @(0x0001F01A,R1.W*2,PC), @(0x01020304,R0.L,CR13)
-      DIVXS.B  @(0x0001F028,R1.W*2,PC), @(R1.W,CR0)
-      DIVXS.B  @(0x0001F032,R1.W*2,PC), @(-0x7C,@(-0x7F7E7D7D,CR15))
-      DIVXS.B  @(0x0001F040,R1.W*2,PC), @CR0
-      DIVXS.B  @(0x0001F048,R1.W*2,PC), @0x76
-      DIVXS.B  @(0x0001F050,R1.W*2,PC), @(PC)
-      DIVXS.B  @(0x0001F058,R1.W*2,PC), @(0x0001EFDA,PC)
-      DIVXS.B  @(0x0001F061,R1.W*2,PC), @(R1.W,PC)
-      DIVXS.B  @(0x0001F06A,R1.W*2,PC), @(0x0001F06E,R1.W*2,PC)
+      DIVXS.B  @(R1.W,PC), @(0x0001EFE8,R1.W*2,PC)
+      DIVXS.B  @(0x0001EFEE,R1.W*2,PC), @(20,R3)
+      DIVXS.B  @(0x0001EFF6,R1.W*2,PC), R0
+      DIVXS.B  @(0x0001EFFD,R1.W*2,PC), @R0+
+      DIVXS.B  @(0x0001F004,R1.W*2,PC), @-R0
+      DIVXS.B  @(0x0001F00B,R1.W*2,PC), @(CR0*1)
+      DIVXS.B  @(0x0001F014,R1.W*2,PC), @(1,CR0*1)
+      DIVXS.B  @(0x0001F01E,R1.W*2,PC), @(0x01020304,R0.L,CR13)
+      DIVXS.B  @(0x0001F02C,R1.W*2,PC), @(R1.W,CR0)
+      DIVXS.B  @(0x0001F036,R1.W*2,PC), @(-0x7C,@(-0x7F7E7D7D,CR15))
+      DIVXS.B  @(0x0001F044,R1.W*2,PC), @CR0
+      DIVXS.B  @(0x0001F04C,R1.W*2,PC), @0x76
+      DIVXS.B  @(0x0001F054,R1.W*2,PC), @(PC)
+      DIVXS.B  @(0x0001F05C,R1.W*2,PC), @(0x0001EFDE,PC)
+      DIVXS.B  @(0x0001F065,R1.W*2,PC), @(R1.W,PC)
+      DIVXS.B  @(0x0001F06E,R1.W*2,PC), @(0x0001F072,R1.W*2,PC)
       DIVXS.W  @(18,R1), @(20,R3)
       DIVXS.W  @(18,R1), R0
       DIVXS.W  @(18,R1), @R0+
@@ -17552,9 +17552,9 @@
       DIVXS.W  @(18,R1), @CR0
       DIVXS.W  @(18,R1), @0x76
       DIVXS.W  @(18,R1), @(PC)
-      DIVXS.W  @(18,R1), @(0x0001F04A,PC)
+      DIVXS.W  @(18,R1), @(0x0001F04E,PC)
       DIVXS.W  @(18,R1), @(R1.W,PC)
-      DIVXS.W  @(18,R1), @(0x0001F0DA,R1.W*2,PC)
+      DIVXS.W  @(18,R1), @(0x0001F0DE,R1.W*2,PC)
       DIVXS.W  R0, R1
       DIVXS.W  R0, @R0+
       DIVXS.W  R0, @-R0
@@ -17567,9 +17567,9 @@
       DIVXS.W  R0, @(17,CR0)
       DIVXS.W  R0, @0x76
       DIVXS.W  R0, @(PC)
-      DIVXS.W  R0, @(0x0001F0AA,PC)
+      DIVXS.W  R0, @(0x0001F0AE,PC)
       DIVXS.W  R0, @(R1.W,PC)
-      DIVXS.W  R0, @(0x0001F138,R1.W*2,PC)
+      DIVXS.W  R0, @(0x0001F13C,R1.W*2,PC)
       DIVXS.W  @R0+, @R1+
       DIVXS.W  @R0+, @-R0
       DIVXS.W  @R0+, @(CR0*1)
@@ -17582,9 +17582,9 @@
       DIVXS.W  @R0+, CR0
       DIVXS.W  @R0+, @0x76
       DIVXS.W  @R0+, @(PC)
-      DIVXS.W  @R0+, @(0x0001F109,PC)
+      DIVXS.W  @R0+, @(0x0001F10D,PC)
       DIVXS.W  @R0+, @(R1.W,PC)
-      DIVXS.W  @R0+, @(0x0001F197,R1.W*2,PC)
+      DIVXS.W  @R0+, @(0x0001F19B,R1.W*2,PC)
       DIVXS.W  @-R0, @-R1
       DIVXS.W  @-R0, @(CR0*1)
       DIVXS.W  @-R0, @(1,CR0*1)
@@ -17597,9 +17597,9 @@
       DIVXS.W  @-R0, @CR0+
       DIVXS.W  @-R0, @0x76
       DIVXS.W  @-R0, @(PC)
-      DIVXS.W  @-R0, @(0x0001F169,PC)
+      DIVXS.W  @-R0, @(0x0001F16D,PC)
       DIVXS.W  @-R0, @(R1.W,PC)
-      DIVXS.W  @-R0, @(0x0001F1F7,R1.W*2,PC)
+      DIVXS.W  @-R0, @(0x0001F1FB,R1.W*2,PC)
       DIVXS.W  @(CR0*1), @R1
       DIVXS.W  @(CR0*1), @(17,R0)
       DIVXS.W  @(CR0*1), R0
@@ -17612,9 +17612,9 @@
       DIVXS.W  @(CR0*1), @(-0x7C,@(-0x7F7E7D7D,CR15))
       DIVXS.W  @(CR0*1), @0x76
       DIVXS.W  @(CR0*1), @(PC)
-      DIVXS.W  @(CR0*1), @(0x0001F1DF,PC)
+      DIVXS.W  @(CR0*1), @(0x0001F1E3,PC)
       DIVXS.W  @(CR0*1), @(R1.W,PC)
-      DIVXS.W  @(CR0*1), @(0x0001F271,R1.W*2,PC)
+      DIVXS.W  @(CR0*1), @(0x0001F275,R1.W*2,PC)
       DIVXS.W  @(1,CR0*1), @R2
       DIVXS.W  @(1,CR0*1), @(17,R0)
       DIVXS.W  @(1,CR0*1), R0
@@ -17627,9 +17627,9 @@
       DIVXS.W  @(1,CR0*1), @(-0x7C,@(-0x7F7E7D7D,CR15))
       DIVXS.W  @(1,CR0*1), @0x76
       DIVXS.W  @(1,CR0*1), @(PC)
-      DIVXS.W  @(1,CR0*1), @(0x0001F266,PC)
+      DIVXS.W  @(1,CR0*1), @(0x0001F26A,PC)
       DIVXS.W  @(1,CR0*1), @(R1.W,PC)
-      DIVXS.W  @(1,CR0*1), @(0x0001F2FA,R1.W*2,PC)
+      DIVXS.W  @(1,CR0*1), @(0x0001F2FE,R1.W*2,PC)
       DIVXS.W  @(0x01020304,R0.L,CR13), @R5
       DIVXS.W  @(0x01020304,R0.L,CR13), @(17,R0)
       DIVXS.W  @(0x01020304,R0.L,CR13), R0
@@ -17642,9 +17642,9 @@
       DIVXS.W  @(0x01020304,R0.L,CR13), @(-0x7C,@(-0x7F7E7D7D,CR15))
       DIVXS.W  @(0x01020304,R0.L,CR13), @0x76
       DIVXS.W  @(0x01020304,R0.L,CR13), @(PC)
-      DIVXS.W  @(0x01020304,R0.L,CR13), @(0x0001F323,PC)
+      DIVXS.W  @(0x01020304,R0.L,CR13), @(0x0001F327,PC)
       DIVXS.W  @(0x01020304,R0.L,CR13), @(R1.W,PC)
-      DIVXS.W  @(0x01020304,R0.L,CR13), @(0x0001F3BF,R1.W*2,PC)
+      DIVXS.W  @(0x01020304,R0.L,CR13), @(0x0001F3C3,R1.W*2,PC)
       DIVXS.W  @(R1.W,CR0), @R2
       DIVXS.W  @(R1.W,CR0), @(17,R0)
       DIVXS.W  @(R1.W,CR0), R0
@@ -17657,9 +17657,9 @@
       DIVXS.W  @(R1.W,CR0), @(-0x7C,@(-0x7F7E7D7D,CR15))
       DIVXS.W  @(R1.W,CR0), @0x76
       DIVXS.W  @(R1.W,CR0), @(PC)
-      DIVXS.W  @(R1.W,CR0), @(0x0001F3B4,PC)
+      DIVXS.W  @(R1.W,CR0), @(0x0001F3B8,PC)
       DIVXS.W  @(R1.W,CR0), @(R1.W,PC)
-      DIVXS.W  @(R1.W,CR0), @(0x0001F448,R1.W*2,PC)
+      DIVXS.W  @(R1.W,CR0), @(0x0001F44C,R1.W*2,PC)
       DIVXS.W  @(-0x7C,@(-0x7F7E7D7D,CR15)), @R0
       DIVXS.W  @(-0x7C,@(-0x7F7E7D7D,CR15)), @(17,R0)
       DIVXS.W  @(-0x7C,@(-0x7F7E7D7D,CR15)), R0
@@ -17672,9 +17672,9 @@
       DIVXS.W  @(-0x7C,@(-0x7F7E7D7D,CR15)), @(R1.W,R0)
       DIVXS.W  @(-0x7C,@(-0x7F7E7D7D,CR15)), @(18,R1.W*2,R0)
       DIVXS.W  @(-0x7C,@(-0x7F7E7D7D,CR15)), @(PC)
-      DIVXS.W  @(-0x7C,@(-0x7F7E7D7D,CR15)), @(0x0001F46C,PC)
+      DIVXS.W  @(-0x7C,@(-0x7F7E7D7D,CR15)), @(0x0001F470,PC)
       DIVXS.W  @(-0x7C,@(-0x7F7E7D7D,CR15)), @(R1.W,PC)
-      DIVXS.W  @(-0x7C,@(-0x7F7E7D7D,CR15)), @(0x0001F508,R1.W*2,PC)
+      DIVXS.W  @(-0x7C,@(-0x7F7E7D7D,CR15)), @(0x0001F50C,R1.W*2,PC)
       DIVXS.W  @CR0, R0
       DIVXS.W  @CR0, @R1
       DIVXS.W  @CR0, @(17,R0)
@@ -17687,9 +17687,9 @@
       DIVXS.W  @CR0, @(-0x7C,@(-0x7F7E7D7D,CR15))
       DIVXS.W  @CR0, @0x76
       DIVXS.W  @CR0, @(PC)
-      DIVXS.W  @CR0, @(0x0001F4E2,PC)
+      DIVXS.W  @CR0, @(0x0001F4E6,PC)
       DIVXS.W  @CR0, @(R1.W,PC)
-      DIVXS.W  @CR0, @(0x0001F572,R1.W*2,PC)
+      DIVXS.W  @CR0, @(0x0001F576,R1.W*2,PC)
       DIVXS.W  #0x72:8, @(PR0*1)
       DIVXS.W  #0x72:8, @(1,PR0*1)
       DIVXS.W  #0x72:8, @(0x01020304,R0.L,PR13)
@@ -17702,9 +17702,9 @@
       DIVXS.W  #0x72:8, @-PR0
       DIVXS.W  #0x72:8, @0x76
       DIVXS.W  #0x72:8, @(PC)
-      DIVXS.W  #0x72:8, @(0x0001F552,PC)
+      DIVXS.W  #0x72:8, @(0x0001F556,PC)
       DIVXS.W  #0x72:8, @(R1.W,PC)
-      DIVXS.W  #0x72:8, @(0x0001F5E2,R1.W*2,PC)
+      DIVXS.W  #0x72:8, @(0x0001F5E6,R1.W*2,PC)
       DIVXS.W  #-0x80:8, @R0
       DIVXS.W  #-0x80:8, @(17,R0)
       DIVXS.W  #-0x80:8, R0
@@ -17717,18 +17717,18 @@
       DIVXS.W  #-0x80:8, @(R1.W,R0)
       DIVXS.W  #-0x80:8, @(18,R1.W*2,R0)
       DIVXS.W  #-0x80:8, @(PC)
-      DIVXS.W  #-0x80:8, @(0x0001F5B8,PC)
+      DIVXS.W  #-0x80:8, @(0x0001F5BC,PC)
       DIVXS.W  #-0x80:8, @(R1.W,PC)
-      DIVXS.W  #-0x80:8, @(0x0001F648,R1.W*2,PC)
+      DIVXS.W  #-0x80:8, @(0x0001F64C,R1.W*2,PC)
       DIVXS.W  @0x76, @0x78797A7B
       DIVXS.W  @0x76, @(R0*1)
       DIVXS.W  @0x76, @(1,R0*1)
       DIVXS.W  @0x76, @(0x01020304,R0.L,R13)
       DIVXS.W  @0x76, @(R1.W,R0)
       DIVXS.W  @0x76, @(PC)
-      DIVXS.W  @0x76, @(0x0001F5FC,PC)
+      DIVXS.W  @0x76, @(0x0001F600,PC)
       DIVXS.W  @0x76, @(R1.W,PC)
-      DIVXS.W  @0x76, @(0x0001F68C,R1.W*2,PC)
+      DIVXS.W  @0x76, @(0x0001F690,R1.W*2,PC)
       DIVXS.W  @0x76, @(-0x7C,@(-0x7F7E7D7D,R15))
       DIVXS.W  @0x76, @R0
       DIVXS.W  @0x76, @(17,R0)
@@ -17747,24 +17747,24 @@
       DIVXS.W  @(PC), @(R1.W,R0)
       DIVXS.W  @(PC), @(18,R1.W*2,R0)
       DIVXS.W  @(PC), @(PC)
-      DIVXS.W  @(PC), @(0x0001F687,PC)
+      DIVXS.W  @(PC), @(0x0001F68B,PC)
       DIVXS.W  @(PC), @(R1.W,PC)
-      DIVXS.W  @(PC), @(0x0001F717,R1.W*2,PC)
-      DIVXS.W  @(0x0001F69B,PC), @R0
-      DIVXS.W  @(0x0001F6A1,PC), @(17,R0)
-      DIVXS.W  @(0x0001F6A8,PC), R0
-      DIVXS.W  @(0x0001F6AE,PC), @R0+
-      DIVXS.W  @(0x0001F6B4,PC), @-R0
-      DIVXS.W  @(0x0001F6BA,PC), @(CR0*1)
-      DIVXS.W  @(0x0001F6C2,PC), @(1,CR0*1)
-      DIVXS.W  @(0x0001F6CB,PC), @(-0x7C,@(-0x7F7E7D7D,CR15))
-      DIVXS.W  @(0x0001F6D8,PC), @0x76
-      DIVXS.W  @(0x0001F6DF,PC), @(R1.W,R0)
-      DIVXS.W  @(0x0001F6E7,PC), @(18,R1.W*2,R0)
-      DIVXS.W  @(0x0001F6F0,PC), @(PC)
-      DIVXS.W  @(0x0001F6F7,PC), @(0x0001F6FA,PC)
-      DIVXS.W  @(0x0001F6FF,PC), @(R1.W,PC)
-      DIVXS.W  @(0x0001F707,PC), @(0x0001F78C,R1.W*2,PC)
+      DIVXS.W  @(PC), @(0x0001F71B,R1.W*2,PC)
+      DIVXS.W  @(0x0001F69F,PC), @R0
+      DIVXS.W  @(0x0001F6A5,PC), @(17,R0)
+      DIVXS.W  @(0x0001F6AC,PC), R0
+      DIVXS.W  @(0x0001F6B2,PC), @R0+
+      DIVXS.W  @(0x0001F6B8,PC), @-R0
+      DIVXS.W  @(0x0001F6BE,PC), @(CR0*1)
+      DIVXS.W  @(0x0001F6C6,PC), @(1,CR0*1)
+      DIVXS.W  @(0x0001F6CF,PC), @(-0x7C,@(-0x7F7E7D7D,CR15))
+      DIVXS.W  @(0x0001F6DC,PC), @0x76
+      DIVXS.W  @(0x0001F6E3,PC), @(R1.W,R0)
+      DIVXS.W  @(0x0001F6EB,PC), @(18,R1.W*2,R0)
+      DIVXS.W  @(0x0001F6F4,PC), @(PC)
+      DIVXS.W  @(0x0001F6FB,PC), @(0x0001F6FE,PC)
+      DIVXS.W  @(0x0001F703,PC), @(R1.W,PC)
+      DIVXS.W  @(0x0001F70B,PC), @(0x0001F790,R1.W*2,PC)
       DIVXS.W  @(R1.W,PC), @R2
       DIVXS.W  @(R1.W,PC), @(17,R0)
       DIVXS.W  @(R1.W,PC), R0
@@ -17777,24 +17777,24 @@
       DIVXS.W  @(R1.W,PC), @(-0x7C,@(-0x7F7E7D7D,CR15))
       DIVXS.W  @(R1.W,PC), @0x76
       DIVXS.W  @(R1.W,PC), @(PC)
-      DIVXS.W  @(R1.W,PC), @(0x0001F774,PC)
+      DIVXS.W  @(R1.W,PC), @(0x0001F778,PC)
       DIVXS.W  @(R1.W,PC), @(R1.W,PC)
-      DIVXS.W  @(R1.W,PC), @(0x0001F806,R1.W*2,PC)
-      DIVXS.W  @(0x0001F80C,R1.W*2,PC), @(20,R3)
-      DIVXS.W  @(0x0001F814,R1.W*2,PC), R0
-      DIVXS.W  @(0x0001F81B,R1.W*2,PC), @R0+
-      DIVXS.W  @(0x0001F822,R1.W*2,PC), @-R0
-      DIVXS.W  @(0x0001F829,R1.W*2,PC), @(CR0*1)
-      DIVXS.W  @(0x0001F832,R1.W*2,PC), @(1,CR0*1)
-      DIVXS.W  @(0x0001F83C,R1.W*2,PC), @(0x01020304,R0.L,CR13)
-      DIVXS.W  @(0x0001F84A,R1.W*2,PC), @(R1.W,CR0)
-      DIVXS.W  @(0x0001F854,R1.W*2,PC), @(-0x7C,@(-0x7F7E7D7D,CR15))
-      DIVXS.W  @(0x0001F862,R1.W*2,PC), @CR0
-      DIVXS.W  @(0x0001F86A,R1.W*2,PC), @0x76
-      DIVXS.W  @(0x0001F872,R1.W*2,PC), @(PC)
-      DIVXS.W  @(0x0001F87A,R1.W*2,PC), @(0x0001F7FC,PC)
-      DIVXS.W  @(0x0001F883,R1.W*2,PC), @(R1.W,PC)
-      DIVXS.W  @(0x0001F88C,R1.W*2,PC), @(0x0001F890,R1.W*2,PC)
+      DIVXS.W  @(R1.W,PC), @(0x0001F80A,R1.W*2,PC)
+      DIVXS.W  @(0x0001F810,R1.W*2,PC), @(20,R3)
+      DIVXS.W  @(0x0001F818,R1.W*2,PC), R0
+      DIVXS.W  @(0x0001F81F,R1.W*2,PC), @R0+
+      DIVXS.W  @(0x0001F826,R1.W*2,PC), @-R0
+      DIVXS.W  @(0x0001F82D,R1.W*2,PC), @(CR0*1)
+      DIVXS.W  @(0x0001F836,R1.W*2,PC), @(1,CR0*1)
+      DIVXS.W  @(0x0001F840,R1.W*2,PC), @(0x01020304,R0.L,CR13)
+      DIVXS.W  @(0x0001F84E,R1.W*2,PC), @(R1.W,CR0)
+      DIVXS.W  @(0x0001F858,R1.W*2,PC), @(-0x7C,@(-0x7F7E7D7D,CR15))
+      DIVXS.W  @(0x0001F866,R1.W*2,PC), @CR0
+      DIVXS.W  @(0x0001F86E,R1.W*2,PC), @0x76
+      DIVXS.W  @(0x0001F876,R1.W*2,PC), @(PC)
+      DIVXS.W  @(0x0001F87E,R1.W*2,PC), @(0x0001F800,PC)
+      DIVXS.W  @(0x0001F887,R1.W*2,PC), @(R1.W,PC)
+      DIVXS.W  @(0x0001F890,R1.W*2,PC), @(0x0001F894,R1.W*2,PC)
       DIVXU.B  R1, R2
       DIVXU.B  R1, @R0+
       DIVXU.B  R1, @-R0
@@ -17807,9 +17807,9 @@
       DIVXU.B  R1, @(17,CR0)
       DIVXU.B  R1, @0x76
       DIVXU.B  R1, @(PC)
-      DIVXU.B  R1, @(0x0001F860,PC)
+      DIVXU.B  R1, @(0x0001F864,PC)
       DIVXU.B  R1, @(R1.W,PC)
-      DIVXU.B  R1, @(0x0001F8EE,R1.W*2,PC)
+      DIVXU.B  R1, @(0x0001F8F2,R1.W*2,PC)
       DIVXU.B  @R0+, @R1+
       DIVXU.B  @R0+, @-R0
       DIVXU.B  @R0+, @(CR0*1)
@@ -17822,9 +17822,9 @@
       DIVXU.B  @R0+, CR0
       DIVXU.B  @R0+, @0x76
       DIVXU.B  @R0+, @(PC)
-      DIVXU.B  @R0+, @(0x0001F8BF,PC)
+      DIVXU.B  @R0+, @(0x0001F8C3,PC)
       DIVXU.B  @R0+, @(R1.W,PC)
-      DIVXU.B  @R0+, @(0x0001F94D,R1.W*2,PC)
+      DIVXU.B  @R0+, @(0x0001F951,R1.W*2,PC)
       DIVXU.B  @-R0, @-R1
       DIVXU.B  @-R0, @(CR0*1)
       DIVXU.B  @-R0, @(1,CR0*1)
@@ -17837,9 +17837,9 @@
       DIVXU.B  @-R0, @CR0+
       DIVXU.B  @-R0, @0x76
       DIVXU.B  @-R0, @(PC)
-      DIVXU.B  @-R0, @(0x0001F91F,PC)
+      DIVXU.B  @-R0, @(0x0001F923,PC)
       DIVXU.B  @-R0, @(R1.W,PC)
-      DIVXU.B  @-R0, @(0x0001F9AD,R1.W*2,PC)
+      DIVXU.B  @-R0, @(0x0001F9B1,R1.W*2,PC)
       DIVXU.B  @(CR0*1), @R1
       DIVXU.B  @(CR0*1), @(17,R0)
       DIVXU.B  @(CR0*1), R0
@@ -17852,9 +17852,9 @@
       DIVXU.B  @(CR0*1), @(-0x7C,@(-0x7F7E7D7D,CR15))
       DIVXU.B  @(CR0*1), @0x76
       DIVXU.B  @(CR0*1), @(PC)
-      DIVXU.B  @(CR0*1), @(0x0001F995,PC)
+      DIVXU.B  @(CR0*1), @(0x0001F999,PC)
       DIVXU.B  @(CR0*1), @(R1.W,PC)
-      DIVXU.B  @(CR0*1), @(0x0001FA27,R1.W*2,PC)
+      DIVXU.B  @(CR0*1), @(0x0001FA2B,R1.W*2,PC)
       DIVXU.B  @(1,CR0*1), @R2
       DIVXU.B  @(1,CR0*1), @(17,R0)
       DIVXU.B  @(1,CR0*1), R0
@@ -17867,9 +17867,9 @@
       DIVXU.B  @(1,CR0*1), @(-0x7C,@(-0x7F7E7D7D,CR15))
       DIVXU.B  @(1,CR0*1), @0x76
       DIVXU.B  @(1,CR0*1), @(PC)
-      DIVXU.B  @(1,CR0*1), @(0x0001FA1C,PC)
+      DIVXU.B  @(1,CR0*1), @(0x0001FA20,PC)
       DIVXU.B  @(1,CR0*1), @(R1.W,PC)
-      DIVXU.B  @(1,CR0*1), @(0x0001FAB0,R1.W*2,PC)
+      DIVXU.B  @(1,CR0*1), @(0x0001FAB4,R1.W*2,PC)
       DIVXU.B  @(0x01020304,R0.L,CR13), @R5
       DIVXU.B  @(0x01020304,R0.L,CR13), @(17,R0)
       DIVXU.B  @(0x01020304,R0.L,CR13), R0
@@ -17882,9 +17882,9 @@
       DIVXU.B  @(0x01020304,R0.L,CR13), @(-0x7C,@(-0x7F7E7D7D,CR15))
       DIVXU.B  @(0x01020304,R0.L,CR13), @0x76
       DIVXU.B  @(0x01020304,R0.L,CR13), @(PC)
-      DIVXU.B  @(0x01020304,R0.L,CR13), @(0x0001FAD9,PC)
+      DIVXU.B  @(0x01020304,R0.L,CR13), @(0x0001FADD,PC)
       DIVXU.B  @(0x01020304,R0.L,CR13), @(R1.W,PC)
-      DIVXU.B  @(0x01020304,R0.L,CR13), @(0x0001FB75,R1.W*2,PC)
+      DIVXU.B  @(0x01020304,R0.L,CR13), @(0x0001FB79,R1.W*2,PC)
       DIVXU.B  @(R1.W,CR0), @R2
       DIVXU.B  @(R1.W,CR0), @(17,R0)
       DIVXU.B  @(R1.W,CR0), R0
@@ -17897,9 +17897,9 @@
       DIVXU.B  @(R1.W,CR0), @(-0x7C,@(-0x7F7E7D7D,CR15))
       DIVXU.B  @(R1.W,CR0), @0x76
       DIVXU.B  @(R1.W,CR0), @(PC)
-      DIVXU.B  @(R1.W,CR0), @(0x0001FB6A,PC)
+      DIVXU.B  @(R1.W,CR0), @(0x0001FB6E,PC)
       DIVXU.B  @(R1.W,CR0), @(R1.W,PC)
-      DIVXU.B  @(R1.W,CR0), @(0x0001FBFE,R1.W*2,PC)
+      DIVXU.B  @(R1.W,CR0), @(0x0001FC02,R1.W*2,PC)
       DIVXU.B  @(-0x7C,@(-0x7F7E7D7D,CR15)), @R0
       DIVXU.B  @(-0x7C,@(-0x7F7E7D7D,CR15)), @(17,R0)
       DIVXU.B  @(-0x7C,@(-0x7F7E7D7D,CR15)), R0
@@ -17912,9 +17912,9 @@
       DIVXU.B  @(-0x7C,@(-0x7F7E7D7D,CR15)), @(R1.W,R0)
       DIVXU.B  @(-0x7C,@(-0x7F7E7D7D,CR15)), @(18,R1.W*2,R0)
       DIVXU.B  @(-0x7C,@(-0x7F7E7D7D,CR15)), @(PC)
-      DIVXU.B  @(-0x7C,@(-0x7F7E7D7D,CR15)), @(0x0001FC22,PC)
+      DIVXU.B  @(-0x7C,@(-0x7F7E7D7D,CR15)), @(0x0001FC26,PC)
       DIVXU.B  @(-0x7C,@(-0x7F7E7D7D,CR15)), @(R1.W,PC)
-      DIVXU.B  @(-0x7C,@(-0x7F7E7D7D,CR15)), @(0x0001FCBE,R1.W*2,PC)
+      DIVXU.B  @(-0x7C,@(-0x7F7E7D7D,CR15)), @(0x0001FCC2,R1.W*2,PC)
       DIVXU.B  @CR0, R0
       DIVXU.B  @(-0x6F,CR0), R0
       DIVXU.B  @CR0, @R1
@@ -17928,9 +17928,9 @@
       DIVXU.B  @CR0, @(-0x7C,@(-0x7F7E7D7D,CR15))
       DIVXU.B  @CR0, @0x76
       DIVXU.B  @CR0, @(PC)
-      DIVXU.B  @CR0, @(0x0001FC9D,PC)
+      DIVXU.B  @CR0, @(0x0001FCA1,PC)
       DIVXU.B  @CR0, @(R1.W,PC)
-      DIVXU.B  @CR0, @(0x0001FD2D,R1.W*2,PC)
+      DIVXU.B  @CR0, @(0x0001FD31,R1.W*2,PC)
       DIVXU.B  @(17,CR0), @(19,R2)
       DIVXU.B  @(0x2122,CR0), @R0+
       DIVXU.B  @(0x2122,CR0), @-R0
@@ -17942,9 +17942,9 @@
       DIVXU.B  @(0x2122,CR0), @CR0
       DIVXU.B  @(0x2122,CR0), @0x76
       DIVXU.B  @(0x2122,CR0), @(PC)
-      DIVXU.B  @(0x2122,CR0), @(0x0001FD1B,PC)
+      DIVXU.B  @(0x2122,CR0), @(0x0001FD1F,PC)
       DIVXU.B  @(0x2122,CR0), @(R1.W,PC)
-      DIVXU.B  @(0x2122,CR0), @(0x0001FDAF,R1.W*2,PC)
+      DIVXU.B  @(0x2122,CR0), @(0x0001FDB3,R1.W*2,PC)
       DIVXU.B  #0x72:8, @(PR0*1)
       DIVXU.B  #0x72:8, @(1,PR0*1)
       DIVXU.B  #0x72:8, @(0x01020304,R0.L,PR13)
@@ -17957,9 +17957,9 @@
       DIVXU.B  #0x72:8, @-PR0
       DIVXU.B  #0x72:8, @0x76
       DIVXU.B  #0x72:8, @(PC)
-      DIVXU.B  #0x72:8, @(0x0001FD8F,PC)
+      DIVXU.B  #0x72:8, @(0x0001FD93,PC)
       DIVXU.B  #0x72:8, @(R1.W,PC)
-      DIVXU.B  #0x72:8, @(0x0001FE1F,R1.W*2,PC)
+      DIVXU.B  #0x72:8, @(0x0001FE23,R1.W*2,PC)
       DIVXU.B  #-0x80:8, @R0
       DIVXU.B  #-0x80:8, @(17,R0)
       DIVXU.B  #-0x80:8, R0
@@ -17972,18 +17972,18 @@
       DIVXU.B  #-0x80:8, @(R1.W,R0)
       DIVXU.B  #-0x80:8, @(18,R1.W*2,R0)
       DIVXU.B  #-0x80:8, @(PC)
-      DIVXU.B  #-0x80:8, @(0x0001FDF5,PC)
+      DIVXU.B  #-0x80:8, @(0x0001FDF9,PC)
       DIVXU.B  #-0x80:8, @(R1.W,PC)
-      DIVXU.B  #-0x80:8, @(0x0001FE85,R1.W*2,PC)
+      DIVXU.B  #-0x80:8, @(0x0001FE89,R1.W*2,PC)
       DIVXU.B  @0x76, @0x78797A7B
       DIVXU.B  @0x76, @(R0*1)
       DIVXU.B  @0x76, @(1,R0*1)
       DIVXU.B  @0x76, @(0x01020304,R0.L,R13)
       DIVXU.B  @0x76, @(R1.W,R0)
       DIVXU.B  @0x76, @(PC)
-      DIVXU.B  @0x76, @(0x0001FE39,PC)
+      DIVXU.B  @0x76, @(0x0001FE3D,PC)
       DIVXU.B  @0x76, @(R1.W,PC)
-      DIVXU.B  @0x76, @(0x0001FEC9,R1.W*2,PC)
+      DIVXU.B  @0x76, @(0x0001FECD,R1.W*2,PC)
       DIVXU.B  @0x76, @(-0x7C,@(-0x7F7E7D7D,R15))
       DIVXU.B  @0x76, @R0
       DIVXU.B  @0x76, @(17,R0)
@@ -18002,24 +18002,24 @@
       DIVXU.B  @(PC), @(R1.W,R0)
       DIVXU.B  @(PC), @(18,R1.W*2,R0)
       DIVXU.B  @(PC), @(PC)
-      DIVXU.B  @(PC), @(0x0001FEC4,PC)
+      DIVXU.B  @(PC), @(0x0001FEC8,PC)
       DIVXU.B  @(PC), @(R1.W,PC)
-      DIVXU.B  @(PC), @(0x0001FF54,R1.W*2,PC)
-      DIVXU.B  @(0x0001FED8,PC), @R0
-      DIVXU.B  @(0x0001FEDE,PC), @(17,R0)
-      DIVXU.B  @(0x0001FEE5,PC), R0
-      DIVXU.B  @(0x0001FEEB,PC), @R0+
-      DIVXU.B  @(0x0001FEF1,PC), @-R0
-      DIVXU.B  @(0x0001FEF7,PC), @(CR0*1)
-      DIVXU.B  @(0x0001FEFF,PC), @(1,CR0*1)
-      DIVXU.B  @(0x0001FF08,PC), @(-0x7C,@(-0x7F7E7D7D,CR15))
-      DIVXU.B  @(0x0001FF15,PC), @0x76
-      DIVXU.B  @(0x0001FF1C,PC), @(R1.W,R0)
-      DIVXU.B  @(0x0001FF24,PC), @(18,R1.W*2,R0)
-      DIVXU.B  @(0x0001FF2D,PC), @(PC)
-      DIVXU.B  @(0x0001FF34,PC), @(0x0001FF37,PC)
-      DIVXU.B  @(0x0001FF3C,PC), @(R1.W,PC)
-      DIVXU.B  @(0x0001FF44,PC), @(0x0001FFC9,R1.W*2,PC)
+      DIVXU.B  @(PC), @(0x0001FF58,R1.W*2,PC)
+      DIVXU.B  @(0x0001FEDC,PC), @R0
+      DIVXU.B  @(0x0001FEE2,PC), @(17,R0)
+      DIVXU.B  @(0x0001FEE9,PC), R0
+      DIVXU.B  @(0x0001FEEF,PC), @R0+
+      DIVXU.B  @(0x0001FEF5,PC), @-R0
+      DIVXU.B  @(0x0001FEFB,PC), @(CR0*1)
+      DIVXU.B  @(0x0001FF03,PC), @(1,CR0*1)
+      DIVXU.B  @(0x0001FF0C,PC), @(-0x7C,@(-0x7F7E7D7D,CR15))
+      DIVXU.B  @(0x0001FF19,PC), @0x76
+      DIVXU.B  @(0x0001FF20,PC), @(R1.W,R0)
+      DIVXU.B  @(0x0001FF28,PC), @(18,R1.W*2,R0)
+      DIVXU.B  @(0x0001FF31,PC), @(PC)
+      DIVXU.B  @(0x0001FF38,PC), @(0x0001FF3B,PC)
+      DIVXU.B  @(0x0001FF40,PC), @(R1.W,PC)
+      DIVXU.B  @(0x0001FF48,PC), @(0x0001FFCD,R1.W*2,PC)
       DIVXU.B  @(R1.W,PC), @R2
       DIVXU.B  @(R1.W,PC), @(17,R0)
       DIVXU.B  @(R1.W,PC), R0
@@ -18032,24 +18032,24 @@
       DIVXU.B  @(R1.W,PC), @(-0x7C,@(-0x7F7E7D7D,CR15))
       DIVXU.B  @(R1.W,PC), @0x76
       DIVXU.B  @(R1.W,PC), @(PC)
-      DIVXU.B  @(R1.W,PC), @(0x0001FFB1,PC)
+      DIVXU.B  @(R1.W,PC), @(0x0001FFB5,PC)
       DIVXU.B  @(R1.W,PC), @(R1.W,PC)
-      DIVXU.B  @(R1.W,PC), @(0x00020043,R1.W*2,PC)
-      DIVXU.B  @(0x00020049,R1.W*2,PC), @(20,R3)
-      DIVXU.B  @(0x00020051,R1.W*2,PC), R0
-      DIVXU.B  @(0x00020058,R1.W*2,PC), @R0+
-      DIVXU.B  @(0x0002005F,R1.W*2,PC), @-R0
-      DIVXU.B  @(0x00020066,R1.W*2,PC), @(CR0*1)
-      DIVXU.B  @(0x0002006F,R1.W*2,PC), @(1,CR0*1)
-      DIVXU.B  @(0x00020079,R1.W*2,PC), @(0x01020304,R0.L,CR13)
-      DIVXU.B  @(0x00020087,R1.W*2,PC), @(R1.W,CR0)
-      DIVXU.B  @(0x00020091,R1.W*2,PC), @(-0x7C,@(-0x7F7E7D7D,CR15))
-      DIVXU.B  @(0x0002009F,R1.W*2,PC), @CR0
-      DIVXU.B  @(0x000200A7,R1.W*2,PC), @0x76
-      DIVXU.B  @(0x000200AF,R1.W*2,PC), @(PC)
-      DIVXU.B  @(0x000200B7,R1.W*2,PC), @(0x00020039,PC)
-      DIVXU.B  @(0x000200C0,R1.W*2,PC), @(R1.W,PC)
-      DIVXU.B  @(0x000200C9,R1.W*2,PC), @(0x000200CD,R1.W*2,PC)
+      DIVXU.B  @(R1.W,PC), @(0x00020047,R1.W*2,PC)
+      DIVXU.B  @(0x0002004D,R1.W*2,PC), @(20,R3)
+      DIVXU.B  @(0x00020055,R1.W*2,PC), R0
+      DIVXU.B  @(0x0002005C,R1.W*2,PC), @R0+
+      DIVXU.B  @(0x00020063,R1.W*2,PC), @-R0
+      DIVXU.B  @(0x0002006A,R1.W*2,PC), @(CR0*1)
+      DIVXU.B  @(0x00020073,R1.W*2,PC), @(1,CR0*1)
+      DIVXU.B  @(0x0002007D,R1.W*2,PC), @(0x01020304,R0.L,CR13)
+      DIVXU.B  @(0x0002008B,R1.W*2,PC), @(R1.W,CR0)
+      DIVXU.B  @(0x00020095,R1.W*2,PC), @(-0x7C,@(-0x7F7E7D7D,CR15))
+      DIVXU.B  @(0x000200A3,R1.W*2,PC), @CR0
+      DIVXU.B  @(0x000200AB,R1.W*2,PC), @0x76
+      DIVXU.B  @(0x000200B3,R1.W*2,PC), @(PC)
+      DIVXU.B  @(0x000200BB,R1.W*2,PC), @(0x0002003D,PC)
+      DIVXU.B  @(0x000200C4,R1.W*2,PC), @(R1.W,PC)
+      DIVXU.B  @(0x000200CD,R1.W*2,PC), @(0x000200D1,R1.W*2,PC)
       DIVXU.W  @R1+, @R2+
       DIVXU.W  @R1+, @-R0
       DIVXU.W  @R1+, @(CR0*1)
@@ -18062,9 +18062,9 @@
       DIVXU.W  @R1+, CR0
       DIVXU.W  @R1+, @0x76
       DIVXU.W  @R1+, @(PC)
-      DIVXU.W  @R1+, @(0x0002009E,PC)
+      DIVXU.W  @R1+, @(0x000200A2,PC)
       DIVXU.W  @R1+, @(R1.W,PC)
-      DIVXU.W  @R1+, @(0x0002012C,R1.W*2,PC)
+      DIVXU.W  @R1+, @(0x00020130,R1.W*2,PC)
       DIVXU.W  @-R0, @-R1
       DIVXU.W  @-R0, @(CR0*1)
       DIVXU.W  @-R0, @(1,CR0*1)
@@ -18077,9 +18077,9 @@
       DIVXU.W  @-R0, @CR0+
       DIVXU.W  @-R0, @0x76
       DIVXU.W  @-R0, @(PC)
-      DIVXU.W  @-R0, @(0x000200FE,PC)
+      DIVXU.W  @-R0, @(0x00020102,PC)
       DIVXU.W  @-R0, @(R1.W,PC)
-      DIVXU.W  @-R0, @(0x0002018C,R1.W*2,PC)
+      DIVXU.W  @-R0, @(0x00020190,R1.W*2,PC)
       DIVXU.W  @(CR0*1), @R1
       DIVXU.W  @(CR0*1), @(17,R0)
       DIVXU.W  @(CR0*1), R0
@@ -18092,9 +18092,9 @@
       DIVXU.W  @(CR0*1), @(-0x7C,@(-0x7F7E7D7D,CR15))
       DIVXU.W  @(CR0*1), @0x76
       DIVXU.W  @(CR0*1), @(PC)
-      DIVXU.W  @(CR0*1), @(0x00020174,PC)
+      DIVXU.W  @(CR0*1), @(0x00020178,PC)
       DIVXU.W  @(CR0*1), @(R1.W,PC)
-      DIVXU.W  @(CR0*1), @(0x00020206,R1.W*2,PC)
+      DIVXU.W  @(CR0*1), @(0x0002020A,R1.W*2,PC)
       DIVXU.W  @(1,CR0*1), @R2
       DIVXU.W  @(1,CR0*1), @(17,R0)
       DIVXU.W  @(1,CR0*1), R0
@@ -18107,9 +18107,9 @@
       DIVXU.W  @(1,CR0*1), @(-0x7C,@(-0x7F7E7D7D,CR15))
       DIVXU.W  @(1,CR0*1), @0x76
       DIVXU.W  @(1,CR0*1), @(PC)
-      DIVXU.W  @(1,CR0*1), @(0x000201FB,PC)
+      DIVXU.W  @(1,CR0*1), @(0x000201FF,PC)
       DIVXU.W  @(1,CR0*1), @(R1.W,PC)
-      DIVXU.W  @(1,CR0*1), @(0x0002028F,R1.W*2,PC)
+      DIVXU.W  @(1,CR0*1), @(0x00020293,R1.W*2,PC)
       DIVXU.W  @(0x01020304,R0.L,CR13), @R5
       DIVXU.W  @(0x01020304,R0.L,CR13), @(17,R0)
       DIVXU.W  @(0x01020304,R0.L,CR13), R0
@@ -18122,9 +18122,9 @@
       DIVXU.W  @(0x01020304,R0.L,CR13), @(-0x7C,@(-0x7F7E7D7D,CR15))
       DIVXU.W  @(0x01020304,R0.L,CR13), @0x76
       DIVXU.W  @(0x01020304,R0.L,CR13), @(PC)
-      DIVXU.W  @(0x01020304,R0.L,CR13), @(0x000202B8,PC)
+      DIVXU.W  @(0x01020304,R0.L,CR13), @(0x000202BC,PC)
       DIVXU.W  @(0x01020304,R0.L,CR13), @(R1.W,PC)
-      DIVXU.W  @(0x01020304,R0.L,CR13), @(0x00020354,R1.W*2,PC)
+      DIVXU.W  @(0x01020304,R0.L,CR13), @(0x00020358,R1.W*2,PC)
       DIVXU.W  @(R1.W,CR0), @R2
       DIVXU.W  @(R1.W,CR0), @(17,R0)
       DIVXU.W  @(R1.W,CR0), R0
@@ -18137,9 +18137,9 @@
       DIVXU.W  @(R1.W,CR0), @(-0x7C,@(-0x7F7E7D7D,CR15))
       DIVXU.W  @(R1.W,CR0), @0x76
       DIVXU.W  @(R1.W,CR0), @(PC)
-      DIVXU.W  @(R1.W,CR0), @(0x00020349,PC)
+      DIVXU.W  @(R1.W,CR0), @(0x0002034D,PC)
       DIVXU.W  @(R1.W,CR0), @(R1.W,PC)
-      DIVXU.W  @(R1.W,CR0), @(0x000203DD,R1.W*2,PC)
+      DIVXU.W  @(R1.W,CR0), @(0x000203E1,R1.W*2,PC)
       DIVXU.W  @(-0x7C,@(-0x7F7E7D7D,CR15)), @R0
       DIVXU.W  @(-0x7C,@(-0x7F7E7D7D,CR15)), @(17,R0)
       DIVXU.W  @(-0x7C,@(-0x7F7E7D7D,CR15)), R0
@@ -18152,9 +18152,9 @@
       DIVXU.W  @(-0x7C,@(-0x7F7E7D7D,CR15)), @(R1.W,R0)
       DIVXU.W  @(-0x7C,@(-0x7F7E7D7D,CR15)), @(18,R1.W*2,R0)
       DIVXU.W  @(-0x7C,@(-0x7F7E7D7D,CR15)), @(PC)
-      DIVXU.W  @(-0x7C,@(-0x7F7E7D7D,CR15)), @(0x00020401,PC)
+      DIVXU.W  @(-0x7C,@(-0x7F7E7D7D,CR15)), @(0x00020405,PC)
       DIVXU.W  @(-0x7C,@(-0x7F7E7D7D,CR15)), @(R1.W,PC)
-      DIVXU.W  @(-0x7C,@(-0x7F7E7D7D,CR15)), @(0x0002049D,R1.W*2,PC)
+      DIVXU.W  @(-0x7C,@(-0x7F7E7D7D,CR15)), @(0x000204A1,R1.W*2,PC)
       DIVXU.W  @CR0, R0
       DIVXU.W  @(-0x6F,CR0), R0
       DIVXU.W  CR0, R0
@@ -18169,9 +18169,9 @@
       DIVXU.W  @CR0, @(-0x7C,@(-0x7F7E7D7D,CR15))
       DIVXU.W  @CR0, @0x76
       DIVXU.W  @CR0, @(PC)
-      DIVXU.W  @CR0, @(0x00020480,PC)
+      DIVXU.W  @CR0, @(0x00020484,PC)
       DIVXU.W  @CR0, @(R1.W,PC)
-      DIVXU.W  @CR0, @(0x00020510,R1.W*2,PC)
+      DIVXU.W  @CR0, @(0x00020514,R1.W*2,PC)
       DIVXU.W  @(17,CR0), @(19,R2)
       DIVXU.W  @(0x2122,CR0), @R0+
       DIVXU.W  @(0x2122,CR0), @-R0
@@ -18183,9 +18183,9 @@
       DIVXU.W  @(0x2122,CR0), @CR0
       DIVXU.W  @(0x2122,CR0), @0x76
       DIVXU.W  @(0x2122,CR0), @(PC)
-      DIVXU.W  @(0x2122,CR0), @(0x000204FE,PC)
+      DIVXU.W  @(0x2122,CR0), @(0x00020502,PC)
       DIVXU.W  @(0x2122,CR0), @(R1.W,PC)
-      DIVXU.W  @(0x2122,CR0), @(0x00020592,R1.W*2,PC)
+      DIVXU.W  @(0x2122,CR0), @(0x00020596,R1.W*2,PC)
       DIVXU.W  CR0, @R0+
       DIVXU.W  CR0, @-R0
       DIVXU.W  CR0, @(CR0*1)
@@ -18197,9 +18197,9 @@
       DIVXU.W  CR0, @(17,CR0)
       DIVXU.W  CR0, @0x76
       DIVXU.W  CR0, @(PC)
-      DIVXU.W  CR0, @(0x0002056A,PC)
+      DIVXU.W  CR0, @(0x0002056E,PC)
       DIVXU.W  CR0, @(R1.W,PC)
-      DIVXU.W  CR0, @(0x000205FA,R1.W*2,PC)
+      DIVXU.W  CR0, @(0x000205FE,R1.W*2,PC)
       DIVXU.W  #0x72:8, @(PR0*1)
       DIVXU.W  #0x72:8, @(1,PR0*1)
       DIVXU.W  #0x72:8, @(0x01020304,R0.L,PR13)
@@ -18212,9 +18212,9 @@
       DIVXU.W  #0x72:8, @-PR0
       DIVXU.W  #0x72:8, @0x76
       DIVXU.W  #0x72:8, @(PC)
-      DIVXU.W  #0x72:8, @(0x000205DA,PC)
+      DIVXU.W  #0x72:8, @(0x000205DE,PC)
       DIVXU.W  #0x72:8, @(R1.W,PC)
-      DIVXU.W  #0x72:8, @(0x0002066A,R1.W*2,PC)
+      DIVXU.W  #0x72:8, @(0x0002066E,R1.W*2,PC)
       DIVXU.W  #-0x80:8, @R0
       DIVXU.W  #-0x80:8, @(17,R0)
       DIVXU.W  #-0x80:8, R0
@@ -18227,18 +18227,18 @@
       DIVXU.W  #-0x80:8, @(R1.W,R0)
       DIVXU.W  #-0x80:8, @(18,R1.W*2,R0)
       DIVXU.W  #-0x80:8, @(PC)
-      DIVXU.W  #-0x80:8, @(0x00020640,PC)
+      DIVXU.W  #-0x80:8, @(0x00020644,PC)
       DIVXU.W  #-0x80:8, @(R1.W,PC)
-      DIVXU.W  #-0x80:8, @(0x000206D0,R1.W*2,PC)
+      DIVXU.W  #-0x80:8, @(0x000206D4,R1.W*2,PC)
       DIVXU.W  @0x76, @0x78797A7B
       DIVXU.W  @0x76, @(R0*1)
       DIVXU.W  @0x76, @(1,R0*1)
       DIVXU.W  @0x76, @(0x01020304,R0.L,R13)
       DIVXU.W  @0x76, @(R1.W,R0)
       DIVXU.W  @0x76, @(PC)
-      DIVXU.W  @0x76, @(0x00020684,PC)
+      DIVXU.W  @0x76, @(0x00020688,PC)
       DIVXU.W  @0x76, @(R1.W,PC)
-      DIVXU.W  @0x76, @(0x00020714,R1.W*2,PC)
+      DIVXU.W  @0x76, @(0x00020718,R1.W*2,PC)
       DIVXU.W  @0x76, @(-0x7C,@(-0x7F7E7D7D,R15))
       DIVXU.W  @0x76, @R0
       DIVXU.W  @0x76, @(17,R0)
@@ -18257,24 +18257,24 @@
       DIVXU.W  @(PC), @(R1.W,R0)
       DIVXU.W  @(PC), @(18,R1.W*2,R0)
       DIVXU.W  @(PC), @(PC)
-      DIVXU.W  @(PC), @(0x0002070F,PC)
+      DIVXU.W  @(PC), @(0x00020713,PC)
       DIVXU.W  @(PC), @(R1.W,PC)
-      DIVXU.W  @(PC), @(0x0002079F,R1.W*2,PC)
-      DIVXU.W  @(0x00020723,PC), @R0
-      DIVXU.W  @(0x00020729,PC), @(17,R0)
-      DIVXU.W  @(0x00020730,PC), R0
-      DIVXU.W  @(0x00020736,PC), @R0+
-      DIVXU.W  @(0x0002073C,PC), @-R0
-      DIVXU.W  @(0x00020742,PC), @(CR0*1)
-      DIVXU.W  @(0x0002074A,PC), @(1,CR0*1)
-      DIVXU.W  @(0x00020753,PC), @(-0x7C,@(-0x7F7E7D7D,CR15))
-      DIVXU.W  @(0x00020760,PC), @0x76
-      DIVXU.W  @(0x00020767,PC), @(R1.W,R0)
-      DIVXU.W  @(0x0002076F,PC), @(18,R1.W*2,R0)
-      DIVXU.W  @(0x00020778,PC), @(PC)
-      DIVXU.W  @(0x0002077F,PC), @(0x00020782,PC)
-      DIVXU.W  @(0x00020787,PC), @(R1.W,PC)
-      DIVXU.W  @(0x0002078F,PC), @(0x00020814,R1.W*2,PC)
+      DIVXU.W  @(PC), @(0x000207A3,R1.W*2,PC)
+      DIVXU.W  @(0x00020727,PC), @R0
+      DIVXU.W  @(0x0002072D,PC), @(17,R0)
+      DIVXU.W  @(0x00020734,PC), R0
+      DIVXU.W  @(0x0002073A,PC), @R0+
+      DIVXU.W  @(0x00020740,PC), @-R0
+      DIVXU.W  @(0x00020746,PC), @(CR0*1)
+      DIVXU.W  @(0x0002074E,PC), @(1,CR0*1)
+      DIVXU.W  @(0x00020757,PC), @(-0x7C,@(-0x7F7E7D7D,CR15))
+      DIVXU.W  @(0x00020764,PC), @0x76
+      DIVXU.W  @(0x0002076B,PC), @(R1.W,R0)
+      DIVXU.W  @(0x00020773,PC), @(18,R1.W*2,R0)
+      DIVXU.W  @(0x0002077C,PC), @(PC)
+      DIVXU.W  @(0x00020783,PC), @(0x00020786,PC)
+      DIVXU.W  @(0x0002078B,PC), @(R1.W,PC)
+      DIVXU.W  @(0x00020793,PC), @(0x00020818,R1.W*2,PC)
       DIVXU.W  @(R1.W,PC), @R2
       DIVXU.W  @(R1.W,PC), @(17,R0)
       DIVXU.W  @(R1.W,PC), R0
@@ -18287,24 +18287,24 @@
       DIVXU.W  @(R1.W,PC), @(-0x7C,@(-0x7F7E7D7D,CR15))
       DIVXU.W  @(R1.W,PC), @0x76
       DIVXU.W  @(R1.W,PC), @(PC)
-      DIVXU.W  @(R1.W,PC), @(0x000207FC,PC)
+      DIVXU.W  @(R1.W,PC), @(0x00020800,PC)
       DIVXU.W  @(R1.W,PC), @(R1.W,PC)
-      DIVXU.W  @(R1.W,PC), @(0x0002088E,R1.W*2,PC)
-      DIVXU.W  @(0x00020894,R1.W*2,PC), @(20,R3)
-      DIVXU.W  @(0x0002089C,R1.W*2,PC), R0
-      DIVXU.W  @(0x000208A3,R1.W*2,PC), @R0+
-      DIVXU.W  @(0x000208AA,R1.W*2,PC), @-R0
-      DIVXU.W  @(0x000208B1,R1.W*2,PC), @(CR0*1)
-      DIVXU.W  @(0x000208BA,R1.W*2,PC), @(1,CR0*1)
-      DIVXU.W  @(0x000208C4,R1.W*2,PC), @(0x01020304,R0.L,CR13)
-      DIVXU.W  @(0x000208D2,R1.W*2,PC), @(R1.W,CR0)
-      DIVXU.W  @(0x000208DC,R1.W*2,PC), @(-0x7C,@(-0x7F7E7D7D,CR15))
-      DIVXU.W  @(0x000208EA,R1.W*2,PC), @CR0
-      DIVXU.W  @(0x000208F2,R1.W*2,PC), @0x76
-      DIVXU.W  @(0x000208FA,R1.W*2,PC), @(PC)
-      DIVXU.W  @(0x00020902,R1.W*2,PC), @(0x00020884,PC)
-      DIVXU.W  @(0x0002090B,R1.W*2,PC), @(R1.W,PC)
-      DIVXU.W  @(0x00020914,R1.W*2,PC), @(0x00020918,R1.W*2,PC)
+      DIVXU.W  @(R1.W,PC), @(0x00020892,R1.W*2,PC)
+      DIVXU.W  @(0x00020898,R1.W*2,PC), @(20,R3)
+      DIVXU.W  @(0x000208A0,R1.W*2,PC), R0
+      DIVXU.W  @(0x000208A7,R1.W*2,PC), @R0+
+      DIVXU.W  @(0x000208AE,R1.W*2,PC), @-R0
+      DIVXU.W  @(0x000208B5,R1.W*2,PC), @(CR0*1)
+      DIVXU.W  @(0x000208BE,R1.W*2,PC), @(1,CR0*1)
+      DIVXU.W  @(0x000208C8,R1.W*2,PC), @(0x01020304,R0.L,CR13)
+      DIVXU.W  @(0x000208D6,R1.W*2,PC), @(R1.W,CR0)
+      DIVXU.W  @(0x000208E0,R1.W*2,PC), @(-0x7C,@(-0x7F7E7D7D,CR15))
+      DIVXU.W  @(0x000208EE,R1.W*2,PC), @CR0
+      DIVXU.W  @(0x000208F6,R1.W*2,PC), @0x76
+      DIVXU.W  @(0x000208FE,R1.W*2,PC), @(PC)
+      DIVXU.W  @(0x00020906,R1.W*2,PC), @(0x00020888,PC)
+      DIVXU.W  @(0x0002090F,R1.W*2,PC), @(R1.W,PC)
+      DIVXU.W  @(0x00020918,R1.W*2,PC), @(0x0002091C,R1.W*2,PC)
       RESET
       RTE
       TRAPA    #0
@@ -18340,9 +18340,9 @@
       ANDC     #-0x80:8, VBNR
       ANDC     @0x76, VBNR
       ANDC     @(PC), VBNR
-      ANDC     @(0x00020907,PC), VBNR
+      ANDC     @(0x0002090B,PC), VBNR
       ANDC     @(R1.W,PC), VBNR
-      ANDC     @(0x00020993,R1.W*2,PC), VBNR
+      ANDC     @(0x00020997,R1.W*2,PC), VBNR
       ANDC     @(0x2223,R1), CCR
       ANDC     R0, CCR
       ANDC     @R0+, CCR
@@ -18357,9 +18357,9 @@
       ANDC     #-0x80:8, CCR
       ANDC     @0x76, CCR
       ANDC     @(PC), CCR
-      ANDC     @(0x0002095E,PC), CCR
+      ANDC     @(0x00020962,PC), CCR
       ANDC     @(R1.W,PC), CCR
-      ANDC     @(0x000209EA,R1.W*2,PC), CCR
+      ANDC     @(0x000209EE,R1.W*2,PC), CCR
       ANDC     R1, CBNR
       ANDC     @R0+, CBNR
       ANDC     @-R0, CBNR
@@ -18374,9 +18374,9 @@
       ANDC     #-0x80:8, CBNR
       ANDC     @0x76, CBNR
       ANDC     @(PC), CBNR
-      ANDC     @(0x000209B5,PC), CBNR
+      ANDC     @(0x000209B9,PC), CBNR
       ANDC     @(R1.W,PC), CBNR
-      ANDC     @(0x00020A41,R1.W*2,PC), CBNR
+      ANDC     @(0x00020A45,R1.W*2,PC), CBNR
       ANDC     R2, BSP
       ANDC     @R0+, BSP
       ANDC     @-R0, BSP
@@ -18391,9 +18391,9 @@
       ANDC     #-0x80:8, BSP
       ANDC     @0x76, BSP
       ANDC     @(PC), BSP
-      ANDC     @(0x00020A0C,PC), BSP
+      ANDC     @(0x00020A10,PC), BSP
       ANDC     @(R1.W,PC), BSP
-      ANDC     @(0x00020A98,R1.W*2,PC), BSP
+      ANDC     @(0x00020A9C,R1.W*2,PC), BSP
       ANDC     @R0, BMR
       ANDC     @(17,R0), BMR
       ANDC     R0, BMR
@@ -18408,9 +18408,9 @@
       ANDC     @(R1.W,R0), BMR
       ANDC     @(18,R1.W*2,R0), BMR
       ANDC     @(PC), BMR
-      ANDC     @(0x00020A5C,PC), BMR
+      ANDC     @(0x00020A60,PC), BMR
       ANDC     @(R1.W,PC), BMR
-      ANDC     @(0x00020AE8,R1.W*2,PC), BMR
+      ANDC     @(0x00020AEC,R1.W*2,PC), BMR
       ANDC     @R0, GBNR
       ANDC     @(17,R0), GBNR
       ANDC     R0, GBNR
@@ -18425,9 +18425,9 @@
       ANDC     @(R1.W,R0), GBNR
       ANDC     @(18,R1.W*2,R0), GBNR
       ANDC     @(PC), GBNR
-      ANDC     @(0x00020AAC,PC), GBNR
+      ANDC     @(0x00020AB0,PC), GBNR
       ANDC     @(R1.W,PC), GBNR
-      ANDC     @(0x00020B38,R1.W*2,PC), GBNR
+      ANDC     @(0x00020B3C,R1.W*2,PC), GBNR
       ANDC     @R0, SR
       ANDC     @(17,R0), SR
       ANDC     R0, SR
@@ -18442,9 +18442,9 @@
       ANDC     @(R1.W,R0), SR
       ANDC     @(18,R1.W*2,R0), SR
       ANDC     @(PC), SR
-      ANDC     @(0x00020AFC,PC), SR
+      ANDC     @(0x00020B00,PC), SR
       ANDC     @(R1.W,PC), SR
-      ANDC     @(0x00020B88,R1.W*2,PC), SR
+      ANDC     @(0x00020B8C,R1.W*2,PC), SR
       ANDC     @R0, EBR
       ANDC     @(17,R0), EBR
       ANDC     R0, EBR
@@ -18459,9 +18459,9 @@
       ANDC     @(R1.W,R0), EBR
       ANDC     @(18,R1.W*2,R0), EBR
       ANDC     @(PC), EBR
-      ANDC     @(0x00020B4C,PC), EBR
+      ANDC     @(0x00020B50,PC), EBR
       ANDC     @(R1.W,PC), EBR
-      ANDC     @(0x00020BD8,R1.W*2,PC), EBR
+      ANDC     @(0x00020BDC,R1.W*2,PC), EBR
       ANDC     @R0, RBR
       ANDC     @(17,R0), RBR
       ANDC     R0, RBR
@@ -18476,9 +18476,9 @@
       ANDC     @(R1.W,R0), RBR
       ANDC     @(18,R1.W*2,R0), RBR
       ANDC     @(PC), RBR
-      ANDC     @(0x00020B9C,PC), RBR
+      ANDC     @(0x00020BA0,PC), RBR
       ANDC     @(R1.W,PC), RBR
-      ANDC     @(0x00020C28,R1.W*2,PC), RBR
+      ANDC     @(0x00020C2C,R1.W*2,PC), RBR
       ANDC     @R0, USP
       ANDC     @(17,R0), USP
       ANDC     R0, USP
@@ -18493,9 +18493,9 @@
       ANDC     @(R1.W,R0), USP
       ANDC     @(18,R1.W*2,R0), USP
       ANDC     @(PC), USP
-      ANDC     @(0x00020BEC,PC), USP
+      ANDC     @(0x00020BF0,PC), USP
       ANDC     @(R1.W,PC), USP
-      ANDC     @(0x00020C78,R1.W*2,PC), USP
+      ANDC     @(0x00020C7C,R1.W*2,PC), USP
       ANDC     @R0, IBR
       ANDC     @(17,R0), IBR
       ANDC     R0, IBR
@@ -18510,9 +18510,9 @@
       ANDC     @(R1.W,R0), IBR
       ANDC     @(18,R1.W*2,R0), IBR
       ANDC     @(PC), IBR
-      ANDC     @(0x00020C3C,PC), IBR
+      ANDC     @(0x00020C40,PC), IBR
       ANDC     @(R1.W,PC), IBR
-      ANDC     @(0x00020CC8,R1.W*2,PC), IBR
+      ANDC     @(0x00020CCC,R1.W*2,PC), IBR
       ORC      @R2, VBNR
       ORC      @(17,R0), VBNR
       ORC      R0, VBNR
@@ -18527,9 +18527,9 @@
       ORC      #-0x80:8, VBNR
       ORC      @0x76, VBNR
       ORC      @(PC), VBNR
-      ORC      @(0x00020C91,PC), VBNR
+      ORC      @(0x00020C95,PC), VBNR
       ORC      @(R1.W,PC), VBNR
-      ORC      @(0x00020D1D,R1.W*2,PC), VBNR
+      ORC      @(0x00020D21,R1.W*2,PC), VBNR
       ORC      @(0x2223,R1), CCR
       ORC      R0, CCR
       ORC      @R0+, CCR
@@ -18544,9 +18544,9 @@
       ORC      #-0x80:8, CCR
       ORC      @0x76, CCR
       ORC      @(PC), CCR
-      ORC      @(0x00020CE8,PC), CCR
+      ORC      @(0x00020CEC,PC), CCR
       ORC      @(R1.W,PC), CCR
-      ORC      @(0x00020D74,R1.W*2,PC), CCR
+      ORC      @(0x00020D78,R1.W*2,PC), CCR
       ORC      R1, CBNR
       ORC      @R0+, CBNR
       ORC      @-R0, CBNR
@@ -18561,9 +18561,9 @@
       ORC      #-0x80:8, CBNR
       ORC      @0x76, CBNR
       ORC      @(PC), CBNR
-      ORC      @(0x00020D3F,PC), CBNR
+      ORC      @(0x00020D43,PC), CBNR
       ORC      @(R1.W,PC), CBNR
-      ORC      @(0x00020DCB,R1.W*2,PC), CBNR
+      ORC      @(0x00020DCF,R1.W*2,PC), CBNR
       ORC      R2, BSP
       ORC      @R0+, BSP
       ORC      @-R0, BSP
@@ -18578,9 +18578,9 @@
       ORC      #-0x80:8, BSP
       ORC      @0x76, BSP
       ORC      @(PC), BSP
-      ORC      @(0x00020D96,PC), BSP
+      ORC      @(0x00020D9A,PC), BSP
       ORC      @(R1.W,PC), BSP
-      ORC      @(0x00020E22,R1.W*2,PC), BSP
+      ORC      @(0x00020E26,R1.W*2,PC), BSP
       ORC      @R0, BMR
       ORC      @(17,R0), BMR
       ORC      R0, BMR
@@ -18595,9 +18595,9 @@
       ORC      @(R1.W,R0), BMR
       ORC      @(18,R1.W*2,R0), BMR
       ORC      @(PC), BMR
-      ORC      @(0x00020DE6,PC), BMR
+      ORC      @(0x00020DEA,PC), BMR
       ORC      @(R1.W,PC), BMR
-      ORC      @(0x00020E72,R1.W*2,PC), BMR
+      ORC      @(0x00020E76,R1.W*2,PC), BMR
       ORC      @R0, GBNR
       ORC      @(17,R0), GBNR
       ORC      R0, GBNR
@@ -18612,9 +18612,9 @@
       ORC      @(R1.W,R0), GBNR
       ORC      @(18,R1.W*2,R0), GBNR
       ORC      @(PC), GBNR
-      ORC      @(0x00020E36,PC), GBNR
+      ORC      @(0x00020E3A,PC), GBNR
       ORC      @(R1.W,PC), GBNR
-      ORC      @(0x00020EC2,R1.W*2,PC), GBNR
+      ORC      @(0x00020EC6,R1.W*2,PC), GBNR
       ORC      @R0, SR
       ORC      @(17,R0), SR
       ORC      R0, SR
@@ -18629,9 +18629,9 @@
       ORC      @(R1.W,R0), SR
       ORC      @(18,R1.W*2,R0), SR
       ORC      @(PC), SR
-      ORC      @(0x00020E86,PC), SR
+      ORC      @(0x00020E8A,PC), SR
       ORC      @(R1.W,PC), SR
-      ORC      @(0x00020F12,R1.W*2,PC), SR
+      ORC      @(0x00020F16,R1.W*2,PC), SR
       ORC      @R0, EBR
       ORC      @(17,R0), EBR
       ORC      R0, EBR
@@ -18646,9 +18646,9 @@
       ORC      @(R1.W,R0), EBR
       ORC      @(18,R1.W*2,R0), EBR
       ORC      @(PC), EBR
-      ORC      @(0x00020ED6,PC), EBR
+      ORC      @(0x00020EDA,PC), EBR
       ORC      @(R1.W,PC), EBR
-      ORC      @(0x00020F62,R1.W*2,PC), EBR
+      ORC      @(0x00020F66,R1.W*2,PC), EBR
       ORC      @R0, RBR
       ORC      @(17,R0), RBR
       ORC      R0, RBR
@@ -18663,9 +18663,9 @@
       ORC      @(R1.W,R0), RBR
       ORC      @(18,R1.W*2,R0), RBR
       ORC      @(PC), RBR
-      ORC      @(0x00020F26,PC), RBR
+      ORC      @(0x00020F2A,PC), RBR
       ORC      @(R1.W,PC), RBR
-      ORC      @(0x00020FB2,R1.W*2,PC), RBR
+      ORC      @(0x00020FB6,R1.W*2,PC), RBR
       ORC      @R0, USP
       ORC      @(17,R0), USP
       ORC      R0, USP
@@ -18680,9 +18680,9 @@
       ORC      @(R1.W,R0), USP
       ORC      @(18,R1.W*2,R0), USP
       ORC      @(PC), USP
-      ORC      @(0x00020F76,PC), USP
+      ORC      @(0x00020F7A,PC), USP
       ORC      @(R1.W,PC), USP
-      ORC      @(0x00021002,R1.W*2,PC), USP
+      ORC      @(0x00021006,R1.W*2,PC), USP
       ORC      @R0, IBR
       ORC      @(17,R0), IBR
       ORC      R0, IBR
@@ -18697,9 +18697,9 @@
       ORC      @(R1.W,R0), IBR
       ORC      @(18,R1.W*2,R0), IBR
       ORC      @(PC), IBR
-      ORC      @(0x00020FC6,PC), IBR
+      ORC      @(0x00020FCA,PC), IBR
       ORC      @(R1.W,PC), IBR
-      ORC      @(0x00021052,R1.W*2,PC), IBR
+      ORC      @(0x00021056,R1.W*2,PC), IBR
       XORC     @R2, VBNR
       XORC     @(17,R0), VBNR
       XORC     R0, VBNR
@@ -18714,9 +18714,9 @@
       XORC     #-0x80:8, VBNR
       XORC     @0x76, VBNR
       XORC     @(PC), VBNR
-      XORC     @(0x0002101B,PC), VBNR
+      XORC     @(0x0002101F,PC), VBNR
       XORC     @(R1.W,PC), VBNR
-      XORC     @(0x000210A7,R1.W*2,PC), VBNR
+      XORC     @(0x000210AB,R1.W*2,PC), VBNR
       XORC     @(0x2223,R1), CCR
       XORC     R0, CCR
       XORC     @R0+, CCR
@@ -18731,9 +18731,9 @@
       XORC     #-0x80:8, CCR
       XORC     @0x76, CCR
       XORC     @(PC), CCR
-      XORC     @(0x00021072,PC), CCR
+      XORC     @(0x00021076,PC), CCR
       XORC     @(R1.W,PC), CCR
-      XORC     @(0x000210FE,R1.W*2,PC), CCR
+      XORC     @(0x00021102,R1.W*2,PC), CCR
       XORC     R1, CBNR
       XORC     @R0+, CBNR
       XORC     @-R0, CBNR
@@ -18748,9 +18748,9 @@
       XORC     #-0x80:8, CBNR
       XORC     @0x76, CBNR
       XORC     @(PC), CBNR
-      XORC     @(0x000210C9,PC), CBNR
+      XORC     @(0x000210CD,PC), CBNR
       XORC     @(R1.W,PC), CBNR
-      XORC     @(0x00021155,R1.W*2,PC), CBNR
+      XORC     @(0x00021159,R1.W*2,PC), CBNR
       XORC     R2, BSP
       XORC     @R0+, BSP
       XORC     @-R0, BSP
@@ -18765,9 +18765,9 @@
       XORC     #-0x80:8, BSP
       XORC     @0x76, BSP
       XORC     @(PC), BSP
-      XORC     @(0x00021120,PC), BSP
+      XORC     @(0x00021124,PC), BSP
       XORC     @(R1.W,PC), BSP
-      XORC     @(0x000211AC,R1.W*2,PC), BSP
+      XORC     @(0x000211B0,R1.W*2,PC), BSP
       XORC     @R0, BMR
       XORC     @(17,R0), BMR
       XORC     R0, BMR
@@ -18782,9 +18782,9 @@
       XORC     @(R1.W,R0), BMR
       XORC     @(18,R1.W*2,R0), BMR
       XORC     @(PC), BMR
-      XORC     @(0x00021170,PC), BMR
+      XORC     @(0x00021174,PC), BMR
       XORC     @(R1.W,PC), BMR
-      XORC     @(0x000211FC,R1.W*2,PC), BMR
+      XORC     @(0x00021200,R1.W*2,PC), BMR
       XORC     @R0, GBNR
       XORC     @(17,R0), GBNR
       XORC     R0, GBNR
@@ -18799,9 +18799,9 @@
       XORC     @(R1.W,R0), GBNR
       XORC     @(18,R1.W*2,R0), GBNR
       XORC     @(PC), GBNR
-      XORC     @(0x000211C0,PC), GBNR
+      XORC     @(0x000211C4,PC), GBNR
       XORC     @(R1.W,PC), GBNR
-      XORC     @(0x0002124C,R1.W*2,PC), GBNR
+      XORC     @(0x00021250,R1.W*2,PC), GBNR
       XORC     @R0, SR
       XORC     @(17,R0), SR
       XORC     R0, SR
@@ -18816,9 +18816,9 @@
       XORC     @(R1.W,R0), SR
       XORC     @(18,R1.W*2,R0), SR
       XORC     @(PC), SR
-      XORC     @(0x00021210,PC), SR
+      XORC     @(0x00021214,PC), SR
       XORC     @(R1.W,PC), SR
-      XORC     @(0x0002129C,R1.W*2,PC), SR
+      XORC     @(0x000212A0,R1.W*2,PC), SR
       XORC     @R0, EBR
       XORC     @(17,R0), EBR
       XORC     R0, EBR
@@ -18833,9 +18833,9 @@
       XORC     @(R1.W,R0), EBR
       XORC     @(18,R1.W*2,R0), EBR
       XORC     @(PC), EBR
-      XORC     @(0x00021260,PC), EBR
+      XORC     @(0x00021264,PC), EBR
       XORC     @(R1.W,PC), EBR
-      XORC     @(0x000212EC,R1.W*2,PC), EBR
+      XORC     @(0x000212F0,R1.W*2,PC), EBR
       XORC     @R0, RBR
       XORC     @(17,R0), RBR
       XORC     R0, RBR
@@ -18850,9 +18850,9 @@
       XORC     @(R1.W,R0), RBR
       XORC     @(18,R1.W*2,R0), RBR
       XORC     @(PC), RBR
-      XORC     @(0x000212B0,PC), RBR
+      XORC     @(0x000212B4,PC), RBR
       XORC     @(R1.W,PC), RBR
-      XORC     @(0x0002133C,R1.W*2,PC), RBR
+      XORC     @(0x00021340,R1.W*2,PC), RBR
       XORC     @R0, USP
       XORC     @(17,R0), USP
       XORC     R0, USP
@@ -18867,9 +18867,9 @@
       XORC     @(R1.W,R0), USP
       XORC     @(18,R1.W*2,R0), USP
       XORC     @(PC), USP
-      XORC     @(0x00021300,PC), USP
+      XORC     @(0x00021304,PC), USP
       XORC     @(R1.W,PC), USP
-      XORC     @(0x0002138C,R1.W*2,PC), USP
+      XORC     @(0x00021390,R1.W*2,PC), USP
       XORC     @R0, IBR
       XORC     @(17,R0), IBR
       XORC     R0, IBR
@@ -18884,9 +18884,9 @@
       XORC     @(R1.W,R0), IBR
       XORC     @(18,R1.W*2,R0), IBR
       XORC     @(PC), IBR
-      XORC     @(0x00021350,PC), IBR
+      XORC     @(0x00021354,PC), IBR
       XORC     @(R1.W,PC), IBR
-      XORC     @(0x000213DC,R1.W*2,PC), IBR
+      XORC     @(0x000213E0,R1.W*2,PC), IBR
       LDC      @R2, VBNR
       LDC      @(17,R0), VBNR
       LDC      R0, VBNR
@@ -18901,9 +18901,9 @@
       LDC      #-0x80:8, VBNR
       LDC      @0x76, VBNR
       LDC      @(PC), VBNR
-      LDC      @(0x000213A5,PC), VBNR
+      LDC      @(0x000213A9,PC), VBNR
       LDC      @(R1.W,PC), VBNR
-      LDC      @(0x00021431,R1.W*2,PC), VBNR
+      LDC      @(0x00021435,R1.W*2,PC), VBNR
       LDC      @(0x2223,R1), CCR
       LDC      R0, CCR
       LDC      @R0+, CCR
@@ -18918,9 +18918,9 @@
       LDC      #-0x80:8, CCR
       LDC      @0x76, CCR
       LDC      @(PC), CCR
-      LDC      @(0x000213FC,PC), CCR
+      LDC      @(0x00021400,PC), CCR
       LDC      @(R1.W,PC), CCR
-      LDC      @(0x00021488,R1.W*2,PC), CCR
+      LDC      @(0x0002148C,R1.W*2,PC), CCR
       LDC      R1, CBNR
       LDC      @R0+, CBNR
       LDC      @-R0, CBNR
@@ -18935,9 +18935,9 @@
       LDC      #-0x80:8, CBNR
       LDC      @0x76, CBNR
       LDC      @(PC), CBNR
-      LDC      @(0x00021453,PC), CBNR
+      LDC      @(0x00021457,PC), CBNR
       LDC      @(R1.W,PC), CBNR
-      LDC      @(0x000214DF,R1.W*2,PC), CBNR
+      LDC      @(0x000214E3,R1.W*2,PC), CBNR
       LDC      R2, BSP
       LDC      @R0+, BSP
       LDC      @-R0, BSP
@@ -18952,9 +18952,9 @@
       LDC      #-0x80:8, BSP
       LDC      @0x76, BSP
       LDC      @(PC), BSP
-      LDC      @(0x000214AA,PC), BSP
+      LDC      @(0x000214AE,PC), BSP
       LDC      @(R1.W,PC), BSP
-      LDC      @(0x00021536,R1.W*2,PC), BSP
+      LDC      @(0x0002153A,R1.W*2,PC), BSP
       LDC      @R0, BMR
       LDC      @(17,R0), BMR
       LDC      R0, BMR
@@ -18969,9 +18969,9 @@
       LDC      @(R1.W,R0), BMR
       LDC      @(18,R1.W*2,R0), BMR
       LDC      @(PC), BMR
-      LDC      @(0x000214FA,PC), BMR
+      LDC      @(0x000214FE,PC), BMR
       LDC      @(R1.W,PC), BMR
-      LDC      @(0x00021586,R1.W*2,PC), BMR
+      LDC      @(0x0002158A,R1.W*2,PC), BMR
       LDC      @R0, GBNR
       LDC      @(17,R0), GBNR
       LDC      R0, GBNR
@@ -18986,9 +18986,9 @@
       LDC      @(R1.W,R0), GBNR
       LDC      @(18,R1.W*2,R0), GBNR
       LDC      @(PC), GBNR
-      LDC      @(0x0002154A,PC), GBNR
+      LDC      @(0x0002154E,PC), GBNR
       LDC      @(R1.W,PC), GBNR
-      LDC      @(0x000215D6,R1.W*2,PC), GBNR
+      LDC      @(0x000215DA,R1.W*2,PC), GBNR
       LDC      @R0, SR
       LDC      @(17,R0), SR
       LDC      R0, SR
@@ -19003,9 +19003,9 @@
       LDC      @(R1.W,R0), SR
       LDC      @(18,R1.W*2,R0), SR
       LDC      @(PC), SR
-      LDC      @(0x0002159A,PC), SR
+      LDC      @(0x0002159E,PC), SR
       LDC      @(R1.W,PC), SR
-      LDC      @(0x00021626,R1.W*2,PC), SR
+      LDC      @(0x0002162A,R1.W*2,PC), SR
       LDC      @R0, EBR
       LDC      @(17,R0), EBR
       LDC      R0, EBR
@@ -19020,9 +19020,9 @@
       LDC      @(R1.W,R0), EBR
       LDC      @(18,R1.W*2,R0), EBR
       LDC      @(PC), EBR
-      LDC      @(0x000215EA,PC), EBR
+      LDC      @(0x000215EE,PC), EBR
       LDC      @(R1.W,PC), EBR
-      LDC      @(0x00021676,R1.W*2,PC), EBR
+      LDC      @(0x0002167A,R1.W*2,PC), EBR
       LDC      @R0, RBR
       LDC      @(17,R0), RBR
       LDC      R0, RBR
@@ -19037,9 +19037,9 @@
       LDC      @(R1.W,R0), RBR
       LDC      @(18,R1.W*2,R0), RBR
       LDC      @(PC), RBR
-      LDC      @(0x0002163A,PC), RBR
+      LDC      @(0x0002163E,PC), RBR
       LDC      @(R1.W,PC), RBR
-      LDC      @(0x000216C6,R1.W*2,PC), RBR
+      LDC      @(0x000216CA,R1.W*2,PC), RBR
       LDC      @R0, USP
       LDC      @(17,R0), USP
       LDC      R0, USP
@@ -19054,9 +19054,9 @@
       LDC      @(R1.W,R0), USP
       LDC      @(18,R1.W*2,R0), USP
       LDC      @(PC), USP
-      LDC      @(0x0002168A,PC), USP
+      LDC      @(0x0002168E,PC), USP
       LDC      @(R1.W,PC), USP
-      LDC      @(0x00021716,R1.W*2,PC), USP
+      LDC      @(0x0002171A,R1.W*2,PC), USP
       LDC      @R0, IBR
       LDC      @(17,R0), IBR
       LDC      R0, IBR
@@ -19071,9 +19071,9 @@
       LDC      @(R1.W,R0), IBR
       LDC      @(18,R1.W*2,R0), IBR
       LDC      @(PC), IBR
-      LDC      @(0x000216DA,PC), IBR
+      LDC      @(0x000216DE,PC), IBR
       LDC      @(R1.W,PC), IBR
-      LDC      @(0x00021766,R1.W*2,PC), IBR
+      LDC      @(0x0002176A,R1.W*2,PC), IBR
       STC      VBNR, @R2
       STC      VBNR, @(17,R0)
       STC      VBNR, R0
@@ -19086,9 +19086,9 @@
       STC      VBNR, @(-0x7C,@(-0x7F7E7D7D,CR15))
       STC      VBNR, @0x76
       STC      VBNR, @(PC)
-      STC      VBNR, @(0x00021727,PC)
+      STC      VBNR, @(0x0002172B,PC)
       STC      VBNR, @(R1.W,PC)
-      STC      VBNR, @(0x000217B3,R1.W*2,PC)
+      STC      VBNR, @(0x000217B7,R1.W*2,PC)
       STC      CCR, @(0x2223,R1)
       STC      CCR, R0
       STC      CCR, @R0+
@@ -19101,9 +19101,9 @@
       STC      CCR, @CR0
       STC      CCR, @0x76
       STC      CCR, @(PC)
-      STC      CCR, @(0x00021776,PC)
+      STC      CCR, @(0x0002177A,PC)
       STC      CCR, @(R1.W,PC)
-      STC      CCR, @(0x00021802,R1.W*2,PC)
+      STC      CCR, @(0x00021806,R1.W*2,PC)
       STC      CBNR, R1
       STC      CBNR, @R0+
       STC      CBNR, @-R0
@@ -19116,9 +19116,9 @@
       STC      CBNR, @(17,CR0)
       STC      CBNR, @0x76
       STC      CBNR, @(PC)
-      STC      CBNR, @(0x000217C5,PC)
+      STC      CBNR, @(0x000217C9,PC)
       STC      CBNR, @(R1.W,PC)
-      STC      CBNR, @(0x00021851,R1.W*2,PC)
+      STC      CBNR, @(0x00021855,R1.W*2,PC)
       STC      BSP, R2
       STC      BSP, @R0+
       STC      BSP, @-R0
@@ -19131,9 +19131,9 @@
       STC      BSP, @(17,CR0)
       STC      BSP, @0x76
       STC      BSP, @(PC)
-      STC      BSP, @(0x00021814,PC)
+      STC      BSP, @(0x00021818,PC)
       STC      BSP, @(R1.W,PC)
-      STC      BSP, @(0x000218A0,R1.W*2,PC)
+      STC      BSP, @(0x000218A4,R1.W*2,PC)
       STC      BMR, @R0
       STC      BMR, @(17,R0)
       STC      BMR, R0
@@ -19146,9 +19146,9 @@
       STC      BMR, @(R1.W,R0)
       STC      BMR, @(18,R1.W*2,R0)
       STC      BMR, @(PC)
-      STC      BMR, @(0x0002185C,PC)
+      STC      BMR, @(0x00021860,PC)
       STC      BMR, @(R1.W,PC)
-      STC      BMR, @(0x000218E8,R1.W*2,PC)
+      STC      BMR, @(0x000218EC,R1.W*2,PC)
       STC      GBNR, @R0
       STC      GBNR, @(17,R0)
       STC      GBNR, R0
@@ -19161,9 +19161,9 @@
       STC      GBNR, @(R1.W,R0)
       STC      GBNR, @(18,R1.W*2,R0)
       STC      GBNR, @(PC)
-      STC      GBNR, @(0x000218A4,PC)
+      STC      GBNR, @(0x000218A8,PC)
       STC      GBNR, @(R1.W,PC)
-      STC      GBNR, @(0x00021930,R1.W*2,PC)
+      STC      GBNR, @(0x00021934,R1.W*2,PC)
       STC      SR, @R0
       STC      SR, @(17,R0)
       STC      SR, R0
@@ -19176,9 +19176,9 @@
       STC      SR, @(R1.W,R0)
       STC      SR, @(18,R1.W*2,R0)
       STC      SR, @(PC)
-      STC      SR, @(0x000218EC,PC)
+      STC      SR, @(0x000218F0,PC)
       STC      SR, @(R1.W,PC)
-      STC      SR, @(0x00021978,R1.W*2,PC)
+      STC      SR, @(0x0002197C,R1.W*2,PC)
       STC      EBR, @R0
       STC      EBR, @(17,R0)
       STC      EBR, R0
@@ -19191,9 +19191,9 @@
       STC      EBR, @(R1.W,R0)
       STC      EBR, @(18,R1.W*2,R0)
       STC      EBR, @(PC)
-      STC      EBR, @(0x00021934,PC)
+      STC      EBR, @(0x00021938,PC)
       STC      EBR, @(R1.W,PC)
-      STC      EBR, @(0x000219C0,R1.W*2,PC)
+      STC      EBR, @(0x000219C4,R1.W*2,PC)
       STC      RBR, @R0
       STC      RBR, @(17,R0)
       STC      RBR, R0
@@ -19206,9 +19206,9 @@
       STC      RBR, @(R1.W,R0)
       STC      RBR, @(18,R1.W*2,R0)
       STC      RBR, @(PC)
-      STC      RBR, @(0x0002197C,PC)
+      STC      RBR, @(0x00021980,PC)
       STC      RBR, @(R1.W,PC)
-      STC      RBR, @(0x00021A08,R1.W*2,PC)
+      STC      RBR, @(0x00021A0C,R1.W*2,PC)
       STC      USP, @R0
       STC      USP, @(17,R0)
       STC      USP, R0
@@ -19221,9 +19221,9 @@
       STC      USP, @(R1.W,R0)
       STC      USP, @(18,R1.W*2,R0)
       STC      USP, @(PC)
-      STC      USP, @(0x000219C4,PC)
+      STC      USP, @(0x000219C8,PC)
       STC      USP, @(R1.W,PC)
-      STC      USP, @(0x00021A50,R1.W*2,PC)
+      STC      USP, @(0x00021A54,R1.W*2,PC)
       STC      IBR, @R0
       STC      IBR, @(17,R0)
       STC      IBR, R0
@@ -19236,9 +19236,9 @@
       STC      IBR, @(R1.W,R0)
       STC      IBR, @(18,R1.W*2,R0)
       STC      IBR, @(PC)
-      STC      IBR, @(0x00021A0C,PC)
+      STC      IBR, @(0x00021A10,PC)
       STC      IBR, @(R1.W,PC)
-      STC      IBR, @(0x00021A98,R1.W*2,PC)
+      STC      IBR, @(0x00021A9C,R1.W*2,PC)
       ICBN
       DCBN
       NOP
