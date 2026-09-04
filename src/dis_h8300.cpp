@@ -56,6 +56,10 @@ void DisH8300::decodeRelative16(DisInsn &insn, StrBuffer &out) const {
 }
 
 Config::uintptr_t readAddress(DisInsn &insn, OprPos pos, uint_fast8_t bits, bool indirect) {
+    // A bit-address prefix carried the address ahead of the operation code, so
+    // it has already been read; the stream is positioned past it.
+    if (isBitAddrPrefix(insn.prefix()))
+        return insn.bitAddr;
     if (bits == 16)
         return insn.readUint16();
     const auto code = (pos == POS_PRX) ? insn.prefix() : insn.opCode();
@@ -241,7 +245,11 @@ void DisH8300::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode, OprPo
         // the high byte is no longer reserved.
         Config::uintptr_t addr;
         int_fast8_t bits = 24;
-        if (pos == POS__FF) {
+        if (isBitAddrPrefix(insn.prefix())) {
+            // Read ahead of the operation code, and always a full 32 bits.
+            addr = insn.bitAddr;
+            bits = 32;
+        } else if (pos == POS__FF) {
             addr = (static_cast<uint32_t>(insn.opCode() & 0xFF) << 16) | insn.readUint16();
         } else if (hasExr() && advancedMode()) {
             addr = insn.readUint32Be();
@@ -340,8 +348,19 @@ Error DisH8300::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) const
         if (insn.getError())
             return _insn.setError(insn);
     }
-    if (isPrefix(cpuType(), opc)) {
+    // A bit-address code is a prefix only on its own.  After a super-prefix
+    // the same code is the operation code of a MOV.L @aa:16 or @aa:32, so it
+    // must not be taken as a prefix there.
+    const auto bitAddr = hasExr() && insn.superPrefix == SPRX_NONE && isBitAddrPrefix(opc);
+    if (bitAddr || (!isBitAddrPrefix(opc) && isPrefix(cpuType(), opc))) {
         insn.setPrefix(opc);
+        // A bit-address prefix is followed by the address, and only then by
+        // the operation code; every other prefix is followed by the code.
+        if (bitAddr) {
+            insn.bitAddr = bitAddrBytes(opc) == 4 ? insn.readUint32() : insn.readUint16();
+            if (insn.getError())
+                return _insn.setError(insn);
+        }
         insn.setOpCode(insn.readUint16());
         if (insn.getError())
             return _insn.setError(insn);

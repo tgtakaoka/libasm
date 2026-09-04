@@ -386,8 +386,74 @@
       mov.b  @0xff00:16, r0h
       mov.b  @0x6b09, r0l
       mov.b  @0xff00:16, r0l
+      btst   #0, @0x6b11
+      bor    #0, @0x6b11
+      bior   #0, @0x6b11
+      bxor   #0, @0x6b11
+      bixor  #0, @0x6b11
+      band   #0, @0x6b11
+      biand  #0, @0x6b11
+      bld    #0, @0x6b11
+      bild   #0, @0x6b11
+      btst   r0h, @0x6b11
+      btst   r0l, @0x6b11
+      btst   r0h, @0xfff6:16
+      btst   r0l, @0xfff6:16
+      btst   #0, @0xfff6:16
+      bor    #0, @0xfff6:16
+      bior   #0, @0xfff6:16
+      bxor   #0, @0xfff6:16
+      bixor  #0, @0xfff6:16
+      band   #0, @0xfff6:16
+      biand  #0, @0xfff6:16
+      bld    #0, @0xfff6:16
+      bild   #0, @0xfff6:16
+      bset   #0, @0x6b19
+      bnot   #0, @0x6b19
+      bclr   #0, @0x6b19
+      bset   r0h, @0x6b19
+      bset   r0l, @0x6b19
+      bnot   r0h, @0x6b19
+      bnot   r0l, @0x6b19
+      bclr   r0h, @0x6b19
+      bclr   r0l, @0x6b19
+      bst    #0, @0x6b19
+      bist   #0, @0x6b19
+      bset   r0h, @0xfffe:16
+      bset   r0l, @0xfffe:16
+      bnot   r0h, @0xfffe:16
+      bnot   r0l, @0xfffe:16
+      bclr   r0h, @0xfffe:16
+      bclr   r0l, @0xfffe:16
+      bst    #0, @0xfffe:16
+      bist   #0, @0xfffe:16
+      bset   #0, @0xfffe:16
+      bnot   #0, @0xfffe:16
+      bclr   #0, @0xfffe:16
       mov.b  @0x000101:24, r0h
       mov.b  @0x000101:24, r0l
+      btst   #0, @0x6b316c32:32
+      bor    #0, @0x6b316c32:32
+      bior   #0, @0x6b316c32:32
+      bxor   #0, @0x6b316c32:32
+      bixor  #0, @0x6b316c32:32
+      band   #0, @0x6b316c32:32
+      biand  #0, @0x6b316c32:32
+      bld    #0, @0x6b316c32:32
+      bild   #0, @0x6b316c32:32
+      btst   r0h, @0x6b316c32:32
+      btst   r0l, @0x6b316c32:32
+      bset   #0, @0x6b396c3a:32
+      bnot   #0, @0x6b396c3a:32
+      bclr   #0, @0x6b396c3a:32
+      bset   r0h, @0x6b396c3a:32
+      bset   r0l, @0x6b396c3a:32
+      bnot   r0h, @0x6b396c3a:32
+      bnot   r0l, @0x6b396c3a:32
+      bclr   r0h, @0x6b396c3a:32
+      bclr   r0l, @0x6b396c3a:32
+      bst    #0, @0x6b396c3a:32
+      bist   #0, @0x6b396c3a:32
       movfpe @0x6b41, r0h
       movfpe @0xff00:16, r0h
       movfpe @0x6b49, r0l

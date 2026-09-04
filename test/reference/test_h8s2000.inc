@@ -132,6 +132,31 @@
         shlr.w  #2,r0                  ; 1150
         shlr.l  #2,er0                 ; 1170
 
+;;; Bit operations on @aa:16 and @aa:32.  The prefix carries the address width
+;;; and whether the operation writes memory; the address follows it, and the
+;;; operation code comes last.
+        btst    #0,@0x1234:16          ; 6A10 1234 7300
+        btst    r1l,@0x1234:16         ; 6A10 1234 6390
+        bor     #1,@0x1234:16          ; 6A10 1234 7410
+        bior    #1,@0x1234:16          ; 6A10 1234 7490
+        bxor    #2,@0x1234:16          ; 6A10 1234 7520
+        bixor   #2,@0x1234:16          ; 6A10 1234 75A0
+        band    #3,@0x1234:16          ; 6A10 1234 7630
+        biand   #3,@0x1234:16          ; 6A10 1234 76B0
+        bld     #4,@0x1234:16          ; 6A10 1234 7740
+        bild    #4,@0x1234:16          ; 6A10 1234 77C0
+        bset    #5,@0x1234:16          ; 6A18 1234 7050
+        bset    r1l,@0x1234:16         ; 6A18 1234 6090
+        bnot    #6,@0x1234:16          ; 6A18 1234 7160
+        bnot    r1l,@0x1234:16         ; 6A18 1234 6190
+        bclr    #7,@0x1234:16          ; 6A18 1234 7270
+        bclr    r1l,@0x1234:16         ; 6A18 1234 6290
+        bst     #0,@0x1234:16          ; 6A18 1234 6700
+        bist    #0,@0x1234:16          ; 6A18 1234 6780
+        btst    #0,@0x12345:32         ; 6A30 0001 2345 7300
+        bset    #5,@0x12345:32         ; 6A38 0001 2345 7050
+        bst     #0,@0x12345:32         ; 6A38 0001 2345 6700
+
 ;;; Local Variables:
 ;;; mode: asm
 ;;; End:

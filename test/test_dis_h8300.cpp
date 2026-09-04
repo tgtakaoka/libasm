@@ -876,6 +876,15 @@ void test_illegal_h8300() {
     };
     WALK_ILLEGAL_CASES(cases);
 
+    // The two templates held back above: setting the reserved bit 4 of MOV.B
+    // @aa:16 (0x6A00) and @aa:24 (0x6A20) gives 0x6A10 and 0x6A30.  The H8S
+    // defines both as prefixes of the bit operations on @aa:16 and @aa:32, so
+    // they are illegal on the H8/300H alone.
+    if (!is_h8s()) {
+        UNKN(0x6A10);
+        UNKN(0x6A30);
+    }
+
     // 4-byte forms: bit-3-of-Rd flip lands past the abs16/disp16/imm16 read,
     // so supply the trailing word.
     UNKN(0x6B08, 0x0000);   // MOV.W @aa:16, Rd
@@ -917,9 +926,10 @@ void test_illegal_h8300hn() {
     static constexpr IllegalCase cases[] = {
         { 0x52, 0x08, 0x00 },   // MULXU.W Rs, ERd
         { 0x53, 0x08, 0x00 },   // DIVXU.W Rs, ERd
-        // 0x6A MOV.B @aa:16/24, MOVFPE, MOVTPE — 6 templates, bit 4 reserved.
-        { 0x6A, 0x10, 0x00 },   // MOV.B @aa:16, Rd
-        { 0x6A, 0x10, 0x20 },   // MOV.B @aa:24, Rd
+        // 0x6A MOV.B @aa:16/24, MOVFPE, MOVTPE — bit 4 reserved.  Four of the
+        // six templates; the MOV.B @aa:16 and @aa:24 ones are asserted after
+        // this table, where the CPU can be tested, because the code each of
+        // them flips to is illegal only before the H8S.
         { 0x6A, 0x10, 0x40 },   // MOVFPE @aa:16, Rd
         { 0x6A, 0x10, 0x80 },   // MOV.B Rs, @aa:16
         { 0x6A, 0x10, 0xA0 },   // MOV.B Rs, @aa:24
@@ -1368,6 +1378,15 @@ void test_advanced_mode() {
 }
 
 void test_h8s_extensions() {
+    // Bit operations on @aa:16 and @aa:32: the address is read between the
+    // prefix and the operation code.
+    TEST("BTST", "#0, @H'1234",   0x6A10, 0x1234, 0x7300);
+    TEST("BTST", "R1L, @H'1234",  0x6A10, 0x1234, 0x6390);
+    TEST("BOR",  "#1, @H'1234",   0x6A10, 0x1234, 0x7410);
+    TEST("BSET", "#5, @H'1234",   0x6A18, 0x1234, 0x7050);
+    TEST("BST",  "#0, @H'1234",   0x6A18, 0x1234, 0x6700);
+    TEST("BTST", "#0, @H'00012345:32", 0x6A30, 0x0001, 0x2345, 0x7300);
+    TEST("BSET", "#5, @H'00012345:32", 0x6A38, 0x0001, 0x2345, 0x7050);
 
     // TAS @ERn (01E0 7B|er*16|C); ER7 disassembles to @SP per convention.
     TEST("TAS", "@ER0",           0x01E0, 0x7B0C);

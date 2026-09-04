@@ -26,6 +26,26 @@
 namespace libasm {
 namespace h8300 {
 
+// The H8S reaches the bit instructions' @aa:16 and @aa:32 operands through a
+// prefix word which carries the address width, followed by the address itself
+// and only then the instruction word: 6A10 aaaa 7300 is BTST #0,@aa:16.  The
+// address therefore sits between the prefix and the operation code, where no
+// other H8 instruction puts an operand.
+static constexpr Config::opcode_t PRX_BITADDR   = 0x6A10;  // @aa:16, read-only
+static constexpr Config::opcode_t PRX_BITADDR_M = 0x6A18;  // @aa:16, read-modify-write
+static constexpr Config::opcode_t PRX_BITADDR32 = 0x6A30;  // @aa:32, read-only
+static constexpr Config::opcode_t PRX_BITADDR32_M = 0x6A38;  // @aa:32, read-modify-write
+
+static inline bool isBitAddrPrefix(Config::opcode_t prefix) {
+    return prefix == PRX_BITADDR || prefix == PRX_BITADDR_M || prefix == PRX_BITADDR32 ||
+           prefix == PRX_BITADDR32_M;
+}
+
+// How many bytes of address follow such a prefix.
+static inline uint_fast8_t bitAddrBytes(Config::opcode_t prefix) {
+    return (prefix == PRX_BITADDR32 || prefix == PRX_BITADDR32_M) ? 4 : 2;
+}
+
 struct EntryInsn : EntryInsnPrefix<Config, Entry> {
     AddrMode src() const { return flags().src(); }
     AddrMode dst() const { return flags().dst(); }
@@ -73,6 +93,10 @@ private:
 
 struct DisInsn final : DisInsnImpl<Config>, EntryInsn {
     DisInsn(Insn &insn, DisMemory &memory, const StrBuffer &out) : DisInsnImpl(insn, memory, out) {}
+
+    // The address read between a bit-address prefix and the operation code,
+    // which decodeImpl has to consume before the code can be read at all.
+    uint32_t bitAddr = 0;
 
     AddrMode dst() const { return dstPos() == POS_PRX ? prefixMode : EntryInsn::dst(); }
 };
