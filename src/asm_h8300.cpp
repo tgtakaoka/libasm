@@ -544,6 +544,10 @@ OprSize AsmInsn::parseSizeSuffix() {
 }
 
 uint_fast8_t AsmInsn::operandPos() const {
+    // A bit-address prefix puts its address operand between the prefix and the
+    // operation code, which is the only place an H8 operand precedes the code.
+    if (hasPrefix() && isBitAddrPrefix(prefix()))
+        return 2;
     uint_fast8_t pos = 2;
     if (superPrefix != SPRX_NONE)
         pos += 2;
@@ -562,6 +566,10 @@ void AsmInsn::emitInsn() {
     if (hasPrefix()) {
         emitUint16(prefix(), pos);
         pos += 2;
+        // The address operand was emitted directly after a bit-address
+        // prefix, so the operation code follows it rather than the prefix.
+        if (isBitAddrPrefix(prefix()))
+            pos += bitAddrBytes(prefix());
     }
     emitUint16(opCode(), pos);
 }

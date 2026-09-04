@@ -849,6 +849,32 @@ void test_data_constant() {
 }
 
 void test_h8s_extensions() {
+    // Bit operations on @aa:16 and @aa:32.  The prefix carries the address
+    // width and whether the operation writes memory, the address follows it,
+    // and the operation code comes last (manual section 2 format tables).
+    TEST("BTST #0, @H'1234:16",  0x6A10, 0x1234, 0x7300);
+    TEST("BTST R1L, @H'1234:16", 0x6A10, 0x1234, 0x6390);
+    TEST("BOR #1, @H'1234:16",   0x6A10, 0x1234, 0x7410);
+    TEST("BIOR #1, @H'1234:16",  0x6A10, 0x1234, 0x7490);
+    TEST("BXOR #2, @H'1234:16",  0x6A10, 0x1234, 0x7520);
+    TEST("BIXOR #2, @H'1234:16", 0x6A10, 0x1234, 0x75A0);
+    TEST("BAND #3, @H'1234:16",  0x6A10, 0x1234, 0x7630);
+    TEST("BIAND #3, @H'1234:16", 0x6A10, 0x1234, 0x76B0);
+    TEST("BLD #4, @H'1234:16",   0x6A10, 0x1234, 0x7740);
+    TEST("BILD #4, @H'1234:16",  0x6A10, 0x1234, 0x77C0);
+    // Read-modify-write forms take the 0x6A18 prefix instead.
+    TEST("BSET #5, @H'1234:16",  0x6A18, 0x1234, 0x7050);
+    TEST("BSET R1L, @H'1234:16", 0x6A18, 0x1234, 0x6090);
+    TEST("BNOT #6, @H'1234:16",  0x6A18, 0x1234, 0x7160);
+    TEST("BNOT R1L, @H'1234:16", 0x6A18, 0x1234, 0x6190);
+    TEST("BCLR #7, @H'1234:16",  0x6A18, 0x1234, 0x7270);
+    TEST("BCLR R1L, @H'1234:16", 0x6A18, 0x1234, 0x6290);
+    TEST("BST #0, @H'1234:16",   0x6A18, 0x1234, 0x6700);
+    TEST("BIST #0, @H'1234:16",  0x6A18, 0x1234, 0x6780);
+    // @aa:32 uses 0x6A30 and 0x6A38 with a four-byte address.
+    TEST("BTST #0, @H'00012345:32", 0x6A30, 0x0001, 0x2345, 0x7300);
+    TEST("BSET #5, @H'00012345:32", 0x6A38, 0x0001, 0x2345, 0x7050);
+    TEST("BST #0, @H'00012345:32",  0x6A38, 0x0001, 0x2345, 0x6700);
 
     // TAS @ERn (01E0 7B|er*16|C); architectural set is {ER0,ER1,ER4,ER5},
     // but the encoder accepts all ERn (decoder also recognises @SP as ER7).
