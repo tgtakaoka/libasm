@@ -88,8 +88,8 @@ void test_arith() {
     TEST("NEG.L",  "R0", 0x8E, 0x40);
     TEST("NEGX.B", "R0", 0x9C, 0x40);
     // Decimal arithmetic (no Sz)
-    TEST("DADD",   "R0, R1", 0x83, 0x40, 0x41);
-    TEST("DSUB",   "R0, R1", 0x87, 0x40, 0x41);
+    TEST("DADD",   "R0, R1", 0xA3, 0x40, 0x41);
+    TEST("DSUB",   "R0, R1", 0xA7, 0x40, 0x41);
     TEST("DNEG",   "R0",     0xAF, 0x40);  // byte-only, no suffix
 }
 
@@ -314,6 +314,10 @@ void test_bank_prefix() {
 // Don't-care ("*") bits in the manual are zero-required: setting any of them
 // to 1 must report ILLEGAL_OPERAND_MODE.
 void test_illegal_zero() {
+    // The decimal instructions live at 0xA3/0xA7 (manual 16.3.29, 16.3.32);
+    // the size-3 slots of AND and XOR are unassigned.
+    UNKN(0x83);
+    UNKN(0x87);
     // SFT dynamic byte: bit 4 must be 0
     ERRT("SHAR.B", "R2, R1",  ILLEGAL_OPERAND_MODE, "", 0x60, 0x12, 0x41);
     // BIT dynamic byte: bits 7 and 4 must be 0

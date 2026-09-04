@@ -292,9 +292,12 @@ pc_rel_end:
         movfpe.w @r0,r1                 ; 7D 00 41
 
 ;;; ============================================================
-;;; AND (0x80-0x82)  DADD (0x83)
-;;; XOR (0x84-0x86)  DSUB (0x87)
+;;; AND (0x80-0x82)  XOR (0x84-0x86)
 ;;; OR  (0x88-0x8A)  NEG  (0x8C-0x8E)
+;;; The size-3 slots 0x83 and 0x87 are unassigned.  DADD and DSUB are 0xA3
+;;; and 0xA7 (manual 16.3.29, 16.3.32); ASL encodes them as 0x83 and 0x87, so
+;;; they are left out of this file, which is byte-compared against ASL.  The
+;;; unit tests and the generated test cover them.
 ;;; ============================================================
         and.b r0,r1                     ; 80 40 41
         and.w r0,r1                     ; 81 40 41
@@ -303,16 +306,10 @@ pc_rel_end:
         and.w #-1:8,r0              ; 81 F1 FF
         and.w @r0,r1                    ; 81 00 41
 
-        dadd r0,r1                      ; 83 40 41
-        dadd r1,r0                      ; 83 C1
-
         xor.b r0,r1                     ; 84 40 41
         xor.w r0,r1                     ; 85 40 41
         xor.l r0,r1                     ; 86 40 41
         xor.w r1,r0                     ; 85 C1
-
-        dsub r0,r1                      ; 87 40 41
-        dsub r1,r0                      ; 87 C1
 
         or.b r0,r1                      ; 88 40 41
         or.w r0,r1                      ; 89 40 41

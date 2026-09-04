@@ -57,12 +57,17 @@ NOASM_targets = i80286 h8s2000n h8s2000 h8s2600n h8s2600 i960
 # spells them ASL-compatibly, is byte-identical with ASL.
 # am29050: ASL has no AM29050 selector, so it knows neither the opcodes
 # exclusive to that chip nor its own special-purpose registers.
+# h16: ASL puts DADD at 0x83 and DSUB at 0x87, the size-3 slots of AND and
+# XOR; the manual (16.3.29, 16.3.32) assigns 0xA3 and 0xA7, which is what the
+# disassembler emits, so ASL cannot assemble this generated source.  The
+# curated reference test omits them and stays byte-identical with ASL.
+# See ~/asl_bugs/asl_bug_h16_dadd.md.
 # i960: ASL's code960.c has six encoding bugs (wrong opcodes for xor, bno and
 # testno, src2 routed into the src/dst field for scanbyte and synmov*, and an
 # integer literal on a register-pair operand evaluated as a float), so it
 # cannot adjudicate this generated source; see ~/asl_bugs/asl_bug_i960.md.
 ASL_exclude = mb8861 i80286 h8300hn h8300h h8s2000n h8s2000 h8s2600n h8s2600 shdsp sh2e sh2a \
-    $(TGT_h8500) am29050 i960
+    $(TGT_h8500) am29050 i960 h16
 # CPU variants whose gas toolchain does not produce a manual-conforming
 # encoding. h8300-elf-as has no -mach=h8300; it always emits the H8/300H
 # 4-byte form for JMP/JSR @aa:16, producing bytes that don't execute on

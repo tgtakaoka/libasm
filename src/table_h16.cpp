@@ -72,9 +72,7 @@ constexpr Entry TABLE_MAIN[] PROGMEM = {
     E2(0x78, TEXT_MOVTPE, IC_N,  ISZ_DATA,  M_EASRC, M_EAPERI), // MOVTPE EAs,<periEAd> (.B/.W/.L)
     E2(0x7C, TEXT_MOVFPE, IC_N,  ISZ_DATA,  M_EAPERI, M_EADST), // MOVFPE <periEAs>,EAd (.B/.W/.L)
     E2(0x80, TEXT_AND,    IC_N,  ISZ_DATA,  M_EASRC, M_EADST),  // AND
-    F2(0x83, TEXT_DADD,   IC_N,  SZ_BYTE,   M_EASRC, M_EADST),  // DADD   decimal add (byte)
     E2(0x84, TEXT_XOR,    IC_N,  ISZ_DATA,  M_EASRC, M_EADST),  // XOR
-    F2(0x87, TEXT_DSUB,   IC_N,  SZ_BYTE,   M_EASRC, M_EADST),  // DSUB   decimal sub (byte)
     E2(0x88, TEXT_OR,     IC_N,  ISZ_DATA,  M_EASRC, M_EADST),  // OR
     E1(0x8C, TEXT_NEG,    IC_N,  ISZ_DATA,  M_EADST),           // NEG
     E1(0x90, TEXT_NOT,    IC_N,  ISZ_DATA,  M_EADST),           // NOT
@@ -82,6 +80,8 @@ constexpr Entry TABLE_MAIN[] PROGMEM = {
     E1(0x9B, TEXT_JMP,    IC_N,  ISZ_NONE,  M_EAMEM),          // JMP    via EA (no Rn/imm)
     E1(0x9C, TEXT_NEGX,   IC_N,  ISZ_DATA,  M_EADST),           // NEGX   negate with CX
     E1(0xA0, TEXT_BEQ,    IC_N,  ISZ_DATA,  M_DISP),            // BEQ    (short)
+    F2(0xA3, TEXT_DADD,   IC_N,  SZ_BYTE,   M_EASRC, M_EADST),  // DADD   decimal add (byte)
+    F2(0xA7, TEXT_DSUB,   IC_N,  SZ_BYTE,   M_EASRC, M_EADST),  // DSUB   decimal sub (byte)
     E1(0xA8, TEXT_BSR,    IC_N,  ISZ_DATA,  M_DISP),            // BSR
     E1(0xAB, TEXT_JSR,    IC_N,  ISZ_NONE,  M_EAMEM),          // JSR    via EA (no Rn/imm)
     E1(0xAC, TEXT_EXTU,   IC_N,  ISZ_EXTU,  M_RNNO),            // EXTU   Sz: 0=W,1=L,2=B
@@ -237,7 +237,7 @@ constexpr uint8_t INDEX_MAIN[] PROGMEM = {
      20,  // TEXT_ADDX
      28,  // TEXT_AND
      76,  // TEXT_ANDC
-     38,  // TEXT_BEQ
+     36,  // TEXT_BEQ
      53,  // TEXT_BFEXT
      54,  // TEXT_BFEXT
      55,  // TEXT_BFEXT
@@ -249,7 +249,7 @@ constexpr uint8_t INDEX_MAIN[] PROGMEM = {
      60,  // TEXT_BFSCH
      61,  // TEXT_BFSCH
      43,  // TEXT_BNE
-     35,  // TEXT_BRA
+     33,  // TEXT_BRA
      39,  // TEXT_BSR
      65,  // TEXT_CGBN
      15,  // TEXT_CLR
@@ -258,14 +258,14 @@ constexpr uint8_t INDEX_MAIN[] PROGMEM = {
       9,  // TEXT_CMP
      10,  // TEXT_CMP
      18,  // TEXT_CMPS
-     29,  // TEXT_DADD
+     37,  // TEXT_DADD
      82,  // TEXT_DCBN
      42,  // TEXT_DNEG
-     31,  // TEXT_DSUB
+     38,  // TEXT_DSUB
      49,  // TEXT_EXTS
      41,  // TEXT_EXTU
      81,  // TEXT_ICBN
-     36,  // TEXT_JMP
+     34,  // TEXT_JMP
      40,  // TEXT_JSR
      79,  // TEXT_LDC
      25,  // TEXT_LDM
@@ -281,11 +281,11 @@ constexpr uint8_t INDEX_MAIN[] PROGMEM = {
      19,  // TEXT_MOVS
      63,  // TEXT_MOVTP
      26,  // TEXT_MOVTPE
-     33,  // TEXT_NEG
-     37,  // TEXT_NEGX
+     31,  // TEXT_NEG
+     35,  // TEXT_NEGX
      83,  // TEXT_NOP
-     34,  // TEXT_NOT
-     32,  // TEXT_OR
+     32,  // TEXT_NOT
+     30,  // TEXT_OR
      77,  // TEXT_ORC
      66,  // TEXT_PGBN
      67,  // TEXT_PGBN
@@ -311,7 +311,7 @@ constexpr uint8_t INDEX_MAIN[] PROGMEM = {
      22,  // TEXT_TST
      52,  // TEXT_UNLK
      44,  // TEXT_XCH
-     30,  // TEXT_XOR
+     29,  // TEXT_XOR
      78,  // TEXT_XORC
 };
 constexpr uint8_t INDEX_SFT[] PROGMEM = {
@@ -453,11 +453,19 @@ static const Cpu *cpu(CpuType cpuType) {
     return Cpu::search(cpuType, ARRAY_RANGE(CPU_TABLE));
 }
 
+// A sized prefix encodes its size in the bits prefixMask covers, and Sz=11 is
+// reserved.  That code is not part of the page, so the main table may assign
+// it: DSUB is 0xA7, the reserved size of the Bcc:G prefix 0xA4.
+static bool reservedSize(uint8_t prefixMask, uint16_t code) {
+    return prefixMask == 0x03 && (code & 0x03) == 0x03;
+}
+
 // prefixMatcher: |code| is a prefix when it falls in a page's prefix range
 // (page prefix with its Sz/variant bits, given by prefixMask, masked out).
 static bool prefixMatcher(uint16_t code, const EntryPage *page) {
     const auto prefix = page->readPrefix();
-    return prefix && (code & ~page->prefixMask()) == prefix;
+    const auto pmask = page->prefixMask();
+    return prefix && (code & ~pmask) == prefix && !reservedSize(pmask, code);
 }
 
 bool isPrefix(CpuType cpuType, Config::opcode_t code) {
@@ -470,8 +478,8 @@ static bool pageMatcher(DisInsn &insn, const EntryPage *page) {
     const auto pmask = page->prefixMask();
     if ((insn.prefix() & ~pmask) != page->readPrefix())
         return false;
-    if (pmask == 0x03 && (insn.prefix() & 0x03) == 0x03)
-        return false;  // reserved Sz=11
+    if (reservedSize(pmask, insn.prefix()))
+        return false;
     return true;
 }
 
