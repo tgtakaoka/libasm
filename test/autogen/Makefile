@@ -33,15 +33,15 @@ nasm-test:
 	./nasm-roundtrip.sh
 
 # target which has ".inc" suffix for output.
-INC_targets = w65c816 tlcs90 $(TGT_tlcs900) i8086 i80186 i80386 i80486 $(TGT_mc68000) $(TGT_z8000) $(TGT_nm1610) \
-    ns32000 tms320c20x tms320c5x tms320c30 tms320c31 tms320c32 tms370 tms7000 tms9980 \
-    j11 t11 mc146805 z80 z180 z380 h8300 h8300hn h8300h $(TGT_h8500) $(TGT_h16) cp1600 $(TGT_superh) \
-    $(TGT_z8) $(TGT_am29000)
+INC_targets = w65c816 tlcs90 $(TGT_tlcs900) i8086 i80186 i80386 i80486 v30 \
+    $(TGT_mc68000) $(TGT_z8000) $(TGT_nm1610) ns32000 tms320c20x tms320c5x \
+    tms320c30 tms320c31 tms320c32 tms370 tms7000 tms9980 j11 t11 mc146805 \
+    z80 z180 z380 h8300 h8300hn h8300h $(TGT_h8500) $(TGT_h16) cp1600 \
+    $(TGT_superh) $(TGT_z8) $(TGT_am29000)
 # target which for GNU assembler (also ".ginc" targets)
-GINC_targets = $(TGT_mc68000) $(TGT_z8000) $(TGT_pdp11) $(TGT_h8300) $(TGT_h8500) \
-    $(TGT_superh) $(TGT_am29000) $(TGT_i960) \
-    ns32000 mc68hc11 mc68hc12 i8086 i80186 i80286 i80386 i80486 \
-    tms320c30 tms320c31 tms320c32
+GINC_targets = $(TGT_mc68000) $(TGT_z8000) $(TGT_pdp11) $(TGT_h8300) \
+    $(TGT_h8500) $(TGT_superh) $(TGT_am29000) $(TGT_i960) ns32000 mc68hc11 \
+    mc68hc12 i8086 i80186 i80286 i80386 i80486 tms320c30 tms320c31 tms320c32
 # target which also has Zilog syntax (also ".zinc" targets)
 ZINC_targets = i8080 i8085 v30emu
 # target which doesn't need ".asm"
@@ -66,8 +66,8 @@ NOASM_targets = i80286 h8s2000n h8s2000 h8s2600n h8s2600 i960
 # testno, src2 routed into the src/dst field for scanbyte and synmov*, and an
 # integer literal on a register-pair operand evaluated as a float), so it
 # cannot adjudicate this generated source; see ~/asl_bugs/asl_bug_i960.md.
-ASL_exclude = mb8861 i80286 h8300hn h8300h h8s2000n h8s2000 h8s2600n h8s2600 shdsp sh2e sh2a \
-    $(TGT_h8500) am29050 i960 h16
+ASL_exclude = mb8861 i80286 h8300hn h8300h h8s2000n h8s2000 h8s2600n h8s2600 \
+    shdsp sh2e sh2a $(TGT_h8500) am29050 i960 h16
 # CPU variants whose gas toolchain does not produce a manual-conforming
 # encoding. h8300-elf-as has no -mach=h8300; it always emits the H8/300H
 # 4-byte form for JMP/JSR @aa:16, producing bytes that don't execute on
@@ -118,7 +118,7 @@ endef
 
 # make rule for auto generation file
 define gen-target # arch target out opt
-	../gen_$(1) $(4) $(call cpu-opt,$(2)) $(OPT_$(strip $(call target-stem,$(2)))) -o $(3) -l gen_$(2).lst
+	../gen_$(1) $(4) $(call cpu-opt,$(2)) $(GENOPT_$(strip $(call target-stem,$(2)))) -o $(3) -l gen_$(2).lst
 endef
 define gen-target-rule # arch target out opt
 $(3): #../gen_$(1)
