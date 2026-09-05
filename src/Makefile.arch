@@ -80,12 +80,13 @@ GENOPT_h8530 = -O maximum-mode=on
 TGT_i8048    = i8039 i8048 i80c39 i80c48 msm80c39 msm80c48
 TGT_i8051    = i8051
 TGT_i8080    = i8080 i8085 v30emu
-TGT_i8086    = i8086 i80186 i80286 i80386 i80486 v30
+TGT_i8086    = i8086 i80186 i80286 i80386 i80486 v30 v33
 # ASL takes LOCK only as a statement of its own, so the V series generates it
 # that way: ASL is the sole external assembler that knows these instructions,
 # and an outside cross-check is worth more than the round-trip coverage lost
 # when every locked form dedups down to one bare LOCK.
 GENOPT_v30   = -O lock-insn=on
+GENOPT_v33   = -O lock-insn=on
 TGT_i8096    = i8096 i80196
 TGT_ins8060  = ins8060
 TGT_ins8070  = ins8070
@@ -217,6 +218,7 @@ CPU_tms9980  = TMS9980
 CPU_tms9995  = TMS9995
 CPU_v30emu   = V30EMU
 CPU_v30      = V30
+CPU_v33      = V33
 CPU_w65c02s  = W65C02S
 CPU_w65c816  = 65816
 CPU_z180     = Z180
