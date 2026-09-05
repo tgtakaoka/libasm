@@ -3251,27 +3251,28 @@ void test_repeat() {
         EPRE("", "", REPC,  REP);
     }
 
-    TEST("REPNE MOVSB", "", REPNE, 0xA4);
-    TEST("REPNE MOVSW", "", REPNE, 0xA5);
     TEST("REPNE CMPSB", "", REPNE, 0xA6);
     TEST("REPNE CMPSW", "", REPNE, 0xA7);
-    TEST("REPNE STOSB", "", REPNE, 0xAA);
-    TEST("REPNE STOSW", "", REPNE, 0xAB);
-    TEST("REPNE LODSB", "", REPNE, 0xAC);
-    TEST("REPNE LODSW", "", REPNE, 0xAD);
     TEST("REPNE SCASB", "", REPNE, 0xAE);
     TEST("REPNE SCASW", "", REPNE, 0xAF);
+    // REPNE/REPNZ go with the block compare primitives only.
+    ERRT("REPNE MOVSB", "", ILLEGAL_COMBINATION, "MOVSB", REPNE, 0xA4);
+    ERRT("REPNE MOVSW", "", ILLEGAL_COMBINATION, "MOVSW", REPNE, 0xA5);
+    ERRT("REPNE STOSB", "", ILLEGAL_COMBINATION, "STOSB", REPNE, 0xAA);
+    ERRT("REPNE STOSW", "", ILLEGAL_COMBINATION, "STOSW", REPNE, 0xAB);
+    ERRT("REPNE LODSB", "", ILLEGAL_COMBINATION, "LODSB", REPNE, 0xAC);
+    ERRT("REPNE LODSW", "", ILLEGAL_COMBINATION, "LODSW", REPNE, 0xAD);
     ERRT("REPNE NOP", "", ILLEGAL_COMBINATION, "NOP", REPNE, 0x90);
     NMEM("", "", "",        REPNE, 0xFF);
     if (is80186()) {
-        TEST("REPNE INSB", "",  REPNE, 0x6C);
-        TEST("REPNE INSW", "",  REPNE, 0x6D);
-        TEST("REPNE OUTSB", "", REPNE, 0x6E);
-        TEST("REPNE OUTSW", "", REPNE, 0x6F);
+        ERRT("REPNE INSB", "",  ILLEGAL_COMBINATION, "INSB",  REPNE, 0x6C);
+        ERRT("REPNE INSW", "",  ILLEGAL_COMBINATION, "INSW",  REPNE, 0x6D);
+        ERRT("REPNE OUTSB", "", ILLEGAL_COMBINATION, "OUTSB", REPNE, 0x6E);
+        ERRT("REPNE OUTSW", "", ILLEGAL_COMBINATION, "OUTSW", REPNE, 0x6F);
     }
     if (is80386() || is80486()) {
-        TEST("REPNE INSD",  "", REPNE, DATA32, 0x6D);
-        TEST("REPNE OUTSD", "", REPNE, DATA32, 0x6F);
+        ERRT("REPNE INSD",  "", ILLEGAL_COMBINATION, "INSD",  REPNE, DATA32, 0x6D);
+        ERRT("REPNE OUTSD", "", ILLEGAL_COMBINATION, "OUTSD", REPNE, DATA32, 0x6F);
     }
 
     TEST("REP MOVSB", "", REP, 0xA4);
@@ -3297,13 +3298,17 @@ void test_repeat() {
     if (v30()) {
         TEST("REPNC CMPSB", "", REPNC, 0xA6);
         TEST("REP SCASW", "", REP, 0xAF);
-        TEST("REP ADD4S", "", REP, 0x0F, 0x20);
-        TEST("REP SUB4S", "", REP, 0x0F, 0x22);
-        TEST("REP CMP4S", "", REP, 0x0F, 0x26);
         TEST("REPC SCASW", "", REPC, 0xAF);
-        TEST("REPC ADD4S", "", REPC, 0x0F, 0x20);
-        TEST("REPC SUB4S", "", REPC, 0x0F, 0x22);
-        TEST("REPC CMP4S", "", REPC, 0x0F, 0x26);
+        // REPC/REPNC go with the block compare primitives only.
+        ERRT("REPC MOVSB", "",  ILLEGAL_COMBINATION, "MOVSB", REPC,  0xA4);
+        ERRT("REPNC STOSB", "", ILLEGAL_COMBINATION, "STOSB", REPNC, 0xAA);
+        // No repeat prefix is defined for the BCD string operations.
+        ERRT("REP ADD4S", "",   ILLEGAL_COMBINATION, "ADD4S", REP,   0x0F, 0x20);
+        ERRT("REP SUB4S", "",   ILLEGAL_COMBINATION, "SUB4S", REP,   0x0F, 0x22);
+        ERRT("REP CMP4S", "",   ILLEGAL_COMBINATION, "CMP4S", REP,   0x0F, 0x26);
+        ERRT("REPC ADD4S", "",  ILLEGAL_COMBINATION, "ADD4S", REPC,  0x0F, 0x20);
+        ERRT("REPC SUB4S", "",  ILLEGAL_COMBINATION, "SUB4S", REPC,  0x0F, 0x22);
+        ERRT("REPC CMP4S", "",  ILLEGAL_COMBINATION, "CMP4S", REPC,  0x0F, 0x26);
     }
 
     TEST("MOVSB", "", 0xA4);    // MOVS m8,m8

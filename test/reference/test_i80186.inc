@@ -212,14 +212,6 @@
         repz    outsb
         repz    outsw
 ;### Repeat While Not Equal/Not Zero
-        repne   insb
-        repne   insw
-        repne   outsb
-        repne   outsw
-        repnz   insb
-        repnz   insw
-        repnz   outsb
-        repnz   outsw
 ;### Input byte string
         insb
 ;### Input word string

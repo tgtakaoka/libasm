@@ -26,47 +26,47 @@ namespace i8086 {
 using namespace reg;
 using namespace libasm::text::i8086;
 
-#define X3(_opc, _cf, _name, _sz, _dst, _src, _ext, _dpos, _spos, _epos, _str, _lock, _nsz, \
+#define X3(_opc, _cf, _name, _sz, _dst, _src, _ext, _dpos, _spos, _epos, _cls, _lock, _nsz, \
         _fix)                                                                                \
     {_opc,                                                                                   \
-            Entry::Flags::create(_cf, _dst, _src, _ext, _dpos, _spos, _epos, _sz, _str,      \
+            Entry::Flags::create(_cf, _dst, _src, _ext, _dpos, _spos, _epos, _sz, _cls,      \
                     _lock, _nsz, _fix),                                                      \
             _name}
-#define X2(_opc, _cf, _name, _sz, _dst, _src, _dpos, _spos, _str, _lock, _nsz, _fix) \
-    X3(_opc, _cf, _name, _sz, _dst, _src, M_NONE, _dpos, _spos, P_NONE, _str, _lock, _nsz, _fix)
-#define X1(_opc, _cf, _name, _sz, _dst, _dpos, _str, _lock, _nsz, _fix) \
-    X2(_opc, _cf, _name, _sz, _dst, M_NONE, _dpos, P_NONE, _str, _lock, _nsz, _fix)
+#define X2(_opc, _cf, _name, _sz, _dst, _src, _dpos, _spos, _cls, _lock, _nsz, _fix) \
+    X3(_opc, _cf, _name, _sz, _dst, _src, M_NONE, _dpos, _spos, P_NONE, _cls, _lock, _nsz, _fix)
+#define X1(_opc, _cf, _name, _sz, _dst, _dpos, _cls, _lock, _nsz, _fix) \
+    X2(_opc, _cf, _name, _sz, _dst, M_NONE, _dpos, P_NONE, _cls, _lock, _nsz, _fix)
 #define E3(_opc, _cf, _name, _sz, _dst, _src, _ext, _dpos, _spos, _epos) \
-    X3(_opc, _cf, _name, _sz, _dst, _src, _ext, _dpos, _spos, _epos, false, false, false, false)
+    X3(_opc, _cf, _name, _sz, _dst, _src, _ext, _dpos, _spos, _epos, STR_NONE, false, false, false)
 #define E2(_opc, _cf, _name, _sz, _dst, _src, _dpos, _spos) \
     E3(_opc, _cf, _name, _sz, _dst, _src, M_NONE, _dpos, _spos, P_NONE)
 #define E1(_opc, _cf, _name, _sz, _dst, _dpos) \
     E2(_opc, _cf, _name, _sz, _dst, M_NONE, _dpos, P_NONE)
 #define E0(_opc, _cf, _name, _sz) E1(_opc, _cf, _name, _sz, M_NONE, P_NONE)
 #define L2(_opc, _cf, _name, _sz, _dst, _src, _dpos, _spos) \
-    X2(_opc, _cf, _name, _sz, _dst, _src, _dpos, _spos, false, true, false, false)
+    X2(_opc, _cf, _name, _sz, _dst, _src, _dpos, _spos, STR_NONE, true, false, false)
 #define L1(_opc, _cf, _name, _sz, _dst, _dpos) \
     L2(_opc, _cf, _name, _sz, _dst, M_NONE, _dpos, P_NONE)
 #define N2(_opc, _cf, _name, _sz, _dst, _src, _dpos, _spos) \
-    X2(_opc, _cf, _name, _sz, _dst, _src, _dpos, _spos, false, false, true, false)
+    X2(_opc, _cf, _name, _sz, _dst, _src, _dpos, _spos, STR_NONE, false, true, false)
 #define N1(_opc, _cf, _name, _sz, _dst, _dpos) \
     N2(_opc, _cf, _name, _sz, _dst, M_NONE, _dpos, P_NONE)
 #define M2(_opc, _cf, _name, _sz, _dst, _src, _dpos, _spos) \
-    X2(_opc, _cf, _name, _sz, _dst, _src, _dpos, _spos, false, true, true, false)
+    X2(_opc, _cf, _name, _sz, _dst, _src, _dpos, _spos, STR_NONE, true, true, false)
 #define M1(_opc, _cf, _name, _sz, _dst, _dpos) \
     M2(_opc, _cf, _name, _sz, _dst, M_NONE, _dpos, P_NONE)
-#define S2(_opc, _cf, _name, _sz, _dst, _src) \
-    X2(_opc, _cf, _name, _sz, _dst, _src, P_NONE, P_NONE, true, false, false, false)
-#define S1(_opc, _cf, _name, _sz, _dst) S2(_opc, _cf, _name, _sz, _dst, M_NONE)
-#define S0(_opc, _cf, _name, _sz) S1(_opc, _cf, _name, _sz, M_NONE)
-#define T2(_opc, _cf, _name, _sz, _dst, _src) \
-    X2(_opc, _cf, _name, _sz, _dst, _src, P_NONE, P_NONE, true, false, true, false)
-#define T1(_opc, _cf, _name, _sz, _dst) T2(_opc, _cf, _name, _sz, _dst, M_NONE)
+#define S2(_opc, _cf, _name, _cls, _sz, _dst, _src) \
+    X2(_opc, _cf, _name, _sz, _dst, _src, P_NONE, P_NONE, _cls, false, false, false)
+#define S1(_opc, _cf, _name, _cls, _sz, _dst) S2(_opc, _cf, _name, _cls, _sz, _dst, M_NONE)
+#define S0(_opc, _cf, _name, _cls, _sz) S1(_opc, _cf, _name, _cls, _sz, M_NONE)
+#define T2(_opc, _cf, _name, _cls, _sz, _dst, _src) \
+    X2(_opc, _cf, _name, _sz, _dst, _src, P_NONE, P_NONE, _cls, false, true, false)
+#define T1(_opc, _cf, _name, _cls, _sz, _dst) T2(_opc, _cf, _name, _cls, _sz, _dst, M_NONE)
 // F* entries: operand width fixed by the opcode itself (ARPL, LLDT/LTR/VERR/VERW,
 // LMSW). DATA32 (0x66) is suppressed in use32; the entry assembles to the same
 // bytes regardless of mode.
 #define F2(_opc, _cf, _name, _sz, _dst, _src, _dpos, _spos) \
-    X2(_opc, _cf, _name, _sz, _dst, _src, _dpos, _spos, false, false, false, true)
+    X2(_opc, _cf, _name, _sz, _dst, _src, _dpos, _spos, STR_NONE, false, false, true)
 #define F1(_opc, _cf, _name, _sz, _dst, _dpos) \
     F2(_opc, _cf, _name, _sz, _dst, M_NONE, _dpos, P_NONE)
 
@@ -197,38 +197,38 @@ constexpr Entry T8086_00[] PROGMEM = {
     E0(0x9D, CF_00, TEXT_POPF,   SZ_WORD),
     E0(0x9E, CF_00, TEXT_SAHF,   SZ_NONE),
     E0(0x9F, CF_00, TEXT_LAHF,   SZ_NONE),
-    S2(0xA4, CF_00, TEXT_MOVSB,  SZ_BYTE, M_BMEM, M_BMEM),
-    S2(0xA5, CF_00, TEXT_MOVSW,  SZ_WORD, M_WMEM, M_WMEM),
-    T2(0xA4, CF_00, TEXT_MOVS,   SZ_BYTE, M_BMEM, M_BMEM),
-    T2(0xA5, CF_00, TEXT_MOVS,   SZ_DATA, M_WMEM, M_WMEM),
-    S0(0xA4, CF_00, TEXT_MOVSB,  SZ_NONE),
-    S0(0xA5, CF_00, TEXT_MOVSW,  SZ_NONE),
-    S2(0xA6, CF_00, TEXT_CMPSB,  SZ_BYTE, M_BMEM, M_BMEM),
-    S2(0xA7, CF_00, TEXT_CMPSW,  SZ_WORD, M_WMEM, M_WMEM),
-    T2(0xA6, CF_00, TEXT_CMPS,   SZ_BYTE, M_BMEM, M_BMEM),
-    T2(0xA7, CF_00, TEXT_CMPS,   SZ_DATA, M_WMEM, M_WMEM),
-    S0(0xA6, CF_00, TEXT_CMPSB,  SZ_NONE),
-    S0(0xA7, CF_00, TEXT_CMPSW,  SZ_NONE),
+    S2(0xA4, CF_00, TEXT_MOVSB,  STR_MOVE, SZ_BYTE, M_BMEM, M_BMEM),
+    S2(0xA5, CF_00, TEXT_MOVSW,  STR_MOVE, SZ_WORD, M_WMEM, M_WMEM),
+    T2(0xA4, CF_00, TEXT_MOVS,   STR_MOVE, SZ_BYTE, M_BMEM, M_BMEM),
+    T2(0xA5, CF_00, TEXT_MOVS,   STR_MOVE, SZ_DATA, M_WMEM, M_WMEM),
+    S0(0xA4, CF_00, TEXT_MOVSB,  STR_MOVE, SZ_NONE),
+    S0(0xA5, CF_00, TEXT_MOVSW,  STR_MOVE, SZ_NONE),
+    S2(0xA6, CF_00, TEXT_CMPSB,  STR_COMP, SZ_BYTE, M_BMEM, M_BMEM),
+    S2(0xA7, CF_00, TEXT_CMPSW,  STR_COMP, SZ_WORD, M_WMEM, M_WMEM),
+    T2(0xA6, CF_00, TEXT_CMPS,   STR_COMP, SZ_BYTE, M_BMEM, M_BMEM),
+    T2(0xA7, CF_00, TEXT_CMPS,   STR_COMP, SZ_DATA, M_WMEM, M_WMEM),
+    S0(0xA6, CF_00, TEXT_CMPSB,  STR_COMP, SZ_NONE),
+    S0(0xA7, CF_00, TEXT_CMPSW,  STR_COMP, SZ_NONE),
     E2(0xA8, CF_00, TEXT_TEST,   SZ_BYTE, M_AL,   M_WIMM,  P_NONE, P_OPR),
     E2(0xA9, CF_00, TEXT_TEST,   SZ_DATA, M_AX,   M_WIMM,  P_NONE, P_OPR),
-    S1(0xAA, CF_00, TEXT_STOSB,  SZ_BYTE, M_BMEM),
-    S1(0xAB, CF_00, TEXT_STOSW,  SZ_WORD, M_WMEM),
-    T1(0xAA, CF_00, TEXT_STOS,   SZ_BYTE, M_BMEM),
-    T1(0xAB, CF_00, TEXT_STOS,   SZ_DATA, M_WMEM),
-    S0(0xAA, CF_00, TEXT_STOSB,  SZ_NONE),
-    S0(0xAB, CF_00, TEXT_STOSW,  SZ_NONE),
-    S1(0xAC, CF_00, TEXT_LODSB,  SZ_BYTE, M_BMEM),
-    S1(0xAD, CF_00, TEXT_LODSW,  SZ_WORD, M_WMEM),
-    T1(0xAC, CF_00, TEXT_LODS,   SZ_BYTE, M_BMEM),
-    T1(0xAD, CF_00, TEXT_LODS,   SZ_DATA, M_WMEM),
-    S0(0xAC, CF_00, TEXT_LODSB,  SZ_NONE),
-    S0(0xAD, CF_00, TEXT_LODSW,  SZ_NONE),
-    S1(0xAE, CF_00, TEXT_SCASB,  SZ_BYTE, M_BMEM),
-    S1(0xAF, CF_00, TEXT_SCASW,  SZ_WORD, M_WMEM),
-    T1(0xAE, CF_00, TEXT_SCAS,   SZ_BYTE, M_BMEM),
-    T1(0xAF, CF_00, TEXT_SCAS,   SZ_DATA, M_WMEM),
-    S0(0xAE, CF_00, TEXT_SCASB,  SZ_NONE),
-    S0(0xAF, CF_00, TEXT_SCASW,  SZ_NONE),
+    S1(0xAA, CF_00, TEXT_STOSB,  STR_MOVE, SZ_BYTE, M_BMEM),
+    S1(0xAB, CF_00, TEXT_STOSW,  STR_MOVE, SZ_WORD, M_WMEM),
+    T1(0xAA, CF_00, TEXT_STOS,   STR_MOVE, SZ_BYTE, M_BMEM),
+    T1(0xAB, CF_00, TEXT_STOS,   STR_MOVE, SZ_DATA, M_WMEM),
+    S0(0xAA, CF_00, TEXT_STOSB,  STR_MOVE, SZ_NONE),
+    S0(0xAB, CF_00, TEXT_STOSW,  STR_MOVE, SZ_NONE),
+    S1(0xAC, CF_00, TEXT_LODSB,  STR_MOVE, SZ_BYTE, M_BMEM),
+    S1(0xAD, CF_00, TEXT_LODSW,  STR_MOVE, SZ_WORD, M_WMEM),
+    T1(0xAC, CF_00, TEXT_LODS,   STR_MOVE, SZ_BYTE, M_BMEM),
+    T1(0xAD, CF_00, TEXT_LODS,   STR_MOVE, SZ_DATA, M_WMEM),
+    S0(0xAC, CF_00, TEXT_LODSB,  STR_MOVE, SZ_NONE),
+    S0(0xAD, CF_00, TEXT_LODSW,  STR_MOVE, SZ_NONE),
+    S1(0xAE, CF_00, TEXT_SCASB,  STR_COMP, SZ_BYTE, M_BMEM),
+    S1(0xAF, CF_00, TEXT_SCASW,  STR_COMP, SZ_WORD, M_WMEM),
+    T1(0xAE, CF_00, TEXT_SCAS,   STR_COMP, SZ_BYTE, M_BMEM),
+    T1(0xAF, CF_00, TEXT_SCAS,   STR_COMP, SZ_DATA, M_WMEM),
+    S0(0xAE, CF_00, TEXT_SCASB,  STR_COMP, SZ_NONE),
+    S0(0xAF, CF_00, TEXT_SCASW,  STR_COMP, SZ_NONE),
     E2(0xB0, CF_07, TEXT_MOV,    SZ_BYTE, M_BREG, M_WIMM, P_OREG, P_OPR),
     E2(0xB8, CF_07, TEXT_MOV,    SZ_DATA, M_WREG, M_WIMM, P_OREG, P_OPR),
     E1(0xC2, CF_00, TEXT_RET,    SZ_NONE, M_UI16, P_OPR),
@@ -722,18 +722,18 @@ constexpr Entry T80186_00[] PROGMEM = {
     E1(0x68, CF_00, TEXT_PUSH,  SZ_DATA, M_WIMM, P_OPR),
     E3(0x69, CF_00, TEXT_IMUL,  SZ_DATA, M_WREG, M_WMOD, M_WIMM, P_REG, P_MOD, P_OPR),
     E2(0x69, CF_00, TEXT_IMUL,  SZ_DATA, M_WREG, M_WIMM, P_MREG, P_OPR),
-    S2(0x6C, CF_00, TEXT_INSB,  SZ_BYTE, M_BMEM, M_DX),
-    S2(0x6D, CF_00, TEXT_INSW,  SZ_WORD, M_WMEM, M_DX),
-    T2(0x6C, CF_00, TEXT_INS,   SZ_BYTE, M_BMEM, M_DX),
-    T2(0x6D, CF_00, TEXT_INS,   SZ_DATA, M_WMEM, M_DX),
-    S0(0x6C, CF_00, TEXT_INSB,  SZ_BYTE),
-    S0(0x6D, CF_00, TEXT_INSW,  SZ_WORD),
-    S2(0x6E, CF_00, TEXT_OUTSB, SZ_BYTE, M_DX,   M_BMEM),
-    S2(0x6F, CF_00, TEXT_OUTSW, SZ_WORD, M_DX,   M_WMEM),
-    T2(0x6E, CF_00, TEXT_OUTS,  SZ_BYTE, M_DX,   M_BMEM),
-    T2(0x6F, CF_00, TEXT_OUTS,  SZ_DATA, M_DX,   M_WMEM),
-    S0(0x6E, CF_00, TEXT_OUTSB, SZ_BYTE),
-    S0(0x6F, CF_00, TEXT_OUTSW, SZ_WORD),
+    S2(0x6C, CF_00, TEXT_INSB,  STR_MOVE, SZ_BYTE, M_BMEM, M_DX),
+    S2(0x6D, CF_00, TEXT_INSW,  STR_MOVE, SZ_WORD, M_WMEM, M_DX),
+    T2(0x6C, CF_00, TEXT_INS,   STR_MOVE, SZ_BYTE, M_BMEM, M_DX),
+    T2(0x6D, CF_00, TEXT_INS,   STR_MOVE, SZ_DATA, M_WMEM, M_DX),
+    S0(0x6C, CF_00, TEXT_INSB,  STR_MOVE, SZ_BYTE),
+    S0(0x6D, CF_00, TEXT_INSW,  STR_MOVE, SZ_WORD),
+    S2(0x6E, CF_00, TEXT_OUTSB, STR_MOVE, SZ_BYTE, M_DX,   M_BMEM),
+    S2(0x6F, CF_00, TEXT_OUTSW, STR_MOVE, SZ_WORD, M_DX,   M_WMEM),
+    T2(0x6E, CF_00, TEXT_OUTS,  STR_MOVE, SZ_BYTE, M_DX,   M_BMEM),
+    T2(0x6F, CF_00, TEXT_OUTS,  STR_MOVE, SZ_DATA, M_DX,   M_WMEM),
+    S0(0x6E, CF_00, TEXT_OUTSB, STR_MOVE, SZ_BYTE),
+    S0(0x6F, CF_00, TEXT_OUTSW, STR_MOVE, SZ_WORD),
     E2(0xC8, CF_00, TEXT_ENTER, SZ_NONE, M_UI16, M_UI8,  P_OPR,  P_OPR),
     E0(0xC9, CF_00, TEXT_LEAVE, SZ_NONE),
 };
@@ -907,24 +907,24 @@ constexpr Entry T80386_FF[] PROGMEM = {
 constexpr Entry TCODE16_00[] PROGMEM = {
     E0(0x60, CF_00, TEXT_PUSHA, SZ_NONE),
     E0(0x61, CF_00, TEXT_POPA,  SZ_NONE),
-    S2(0x6D, CF_00, TEXT_INSW,  SZ_WORD, M_WMEM, M_DX),
-    S0(0x6D, CF_00, TEXT_INSW,  SZ_NONE),
-    S2(0x6F, CF_00, TEXT_OUTSW, SZ_WORD, M_DX,   M_WMEM),
-    S0(0x6F, CF_00, TEXT_OUTSW, SZ_NONE),
+    S2(0x6D, CF_00, TEXT_INSW,  STR_MOVE, SZ_WORD, M_WMEM, M_DX),
+    S0(0x6D, CF_00, TEXT_INSW,  STR_MOVE, SZ_NONE),
+    S2(0x6F, CF_00, TEXT_OUTSW, STR_MOVE, SZ_WORD, M_DX,   M_WMEM),
+    S0(0x6F, CF_00, TEXT_OUTSW, STR_MOVE, SZ_NONE),
     E0(0x98, CF_00, TEXT_CBW,   SZ_NONE),
     E0(0x99, CF_00, TEXT_CWD,   SZ_NONE),
     E0(0x9C, CF_00, TEXT_PUSHF, SZ_NONE),
     E0(0x9D, CF_00, TEXT_POPF,  SZ_NONE),
-    S2(0xA5, CF_00, TEXT_MOVSW, SZ_WORD, M_DMEM, M_DMEM),
-    S0(0xA5, CF_00, TEXT_MOVSW, SZ_NONE),
-    S2(0xA7, CF_00, TEXT_CMPSW, SZ_WORD, M_DMEM, M_DMEM),
-    S0(0xA7, CF_00, TEXT_CMPSW, SZ_NONE),
-    S1(0xAB, CF_00, TEXT_STOSW, SZ_WORD, M_DMEM),
-    S0(0xAB, CF_00, TEXT_STOSW, SZ_NONE),
-    S1(0xAD, CF_00, TEXT_LODSW, SZ_WORD, M_DMEM),
-    S0(0xAD, CF_00, TEXT_LODSW, SZ_NONE),
-    S1(0xAF, CF_00, TEXT_SCASW, SZ_WORD, M_DMEM),
-    S0(0xAF, CF_00, TEXT_SCASW, SZ_NONE),
+    S2(0xA5, CF_00, TEXT_MOVSW, STR_MOVE, SZ_WORD, M_DMEM, M_DMEM),
+    S0(0xA5, CF_00, TEXT_MOVSW, STR_MOVE, SZ_NONE),
+    S2(0xA7, CF_00, TEXT_CMPSW, STR_COMP, SZ_WORD, M_DMEM, M_DMEM),
+    S0(0xA7, CF_00, TEXT_CMPSW, STR_COMP, SZ_NONE),
+    S1(0xAB, CF_00, TEXT_STOSW, STR_MOVE, SZ_WORD, M_DMEM),
+    S0(0xAB, CF_00, TEXT_STOSW, STR_MOVE, SZ_NONE),
+    S1(0xAD, CF_00, TEXT_LODSW, STR_MOVE, SZ_WORD, M_DMEM),
+    S0(0xAD, CF_00, TEXT_LODSW, STR_MOVE, SZ_NONE),
+    S1(0xAF, CF_00, TEXT_SCASW, STR_COMP, SZ_WORD, M_DMEM),
+    S0(0xAF, CF_00, TEXT_SCASW, STR_COMP, SZ_NONE),
     E0(0xCF, CF_00, TEXT_IRET,  SZ_WORD),
     E1(0xE3, CF_00, TEXT_JCXZ,  SZ_NONE,  M_REL8, P_OPR),
 };
@@ -932,24 +932,24 @@ constexpr Entry TCODE16_00[] PROGMEM = {
 constexpr Entry TCODE32_00[] PROGMEM = {
     E0(0x60, CF_00, TEXT_PUSHAD, SZ_NONE),
     E0(0x61, CF_00, TEXT_POPAD,  SZ_NONE),
-    S2(0x6D, CF_00, TEXT_INSD,   SZ_DWORD, M_DMEM, M_DX),
-    S0(0x6D, CF_00, TEXT_INSD,   SZ_NONE),
-    S2(0x6F, CF_00, TEXT_OUTSD,  SZ_DWORD, M_DX,   M_DMEM),
-    S0(0x6F, CF_00, TEXT_OUTSD,  SZ_NONE),
+    S2(0x6D, CF_00, TEXT_INSD,   STR_MOVE, SZ_DWORD, M_DMEM, M_DX),
+    S0(0x6D, CF_00, TEXT_INSD,   STR_MOVE, SZ_NONE),
+    S2(0x6F, CF_00, TEXT_OUTSD,  STR_MOVE, SZ_DWORD, M_DX,   M_DMEM),
+    S0(0x6F, CF_00, TEXT_OUTSD,  STR_MOVE, SZ_NONE),
     E0(0x98, CF_00, TEXT_CWDE,   SZ_NONE),
     E0(0x99, CF_00, TEXT_CDQ,    SZ_NONE),
     E0(0x9C, CF_00, TEXT_PUSHFD, SZ_NONE),
     E0(0x9D, CF_00, TEXT_POPFD,  SZ_NONE),
-    S2(0xA5, CF_00, TEXT_MOVSD,  SZ_DWORD, M_DMEM, M_DMEM),
-    S0(0xA5, CF_00, TEXT_MOVSD,  SZ_NONE),
-    S2(0xA7, CF_00, TEXT_CMPSD,  SZ_DWORD, M_DMEM, M_DMEM),
-    S0(0xA7, CF_00, TEXT_CMPSD,  SZ_NONE),
-    S1(0xAB, CF_00, TEXT_STOSD,  SZ_DWORD, M_DMEM),
-    S0(0xAB, CF_00, TEXT_STOSD,  SZ_NONE),
-    S1(0xAD, CF_00, TEXT_LODSD,  SZ_DWORD, M_DMEM),
-    S0(0xAD, CF_00, TEXT_LODSD,  SZ_NONE),
-    S1(0xAF, CF_00, TEXT_SCASD,  SZ_DWORD, M_DMEM),
-    S0(0xAF, CF_00, TEXT_SCASD,  SZ_NONE),
+    S2(0xA5, CF_00, TEXT_MOVSD,  STR_MOVE, SZ_DWORD, M_DMEM, M_DMEM),
+    S0(0xA5, CF_00, TEXT_MOVSD,  STR_MOVE, SZ_NONE),
+    S2(0xA7, CF_00, TEXT_CMPSD,  STR_COMP, SZ_DWORD, M_DMEM, M_DMEM),
+    S0(0xA7, CF_00, TEXT_CMPSD,  STR_COMP, SZ_NONE),
+    S1(0xAB, CF_00, TEXT_STOSD,  STR_MOVE, SZ_DWORD, M_DMEM),
+    S0(0xAB, CF_00, TEXT_STOSD,  STR_MOVE, SZ_NONE),
+    S1(0xAD, CF_00, TEXT_LODSD,  STR_MOVE, SZ_DWORD, M_DMEM),
+    S0(0xAD, CF_00, TEXT_LODSD,  STR_MOVE, SZ_NONE),
+    S1(0xAF, CF_00, TEXT_SCASD,  STR_COMP, SZ_DWORD, M_DMEM),
+    S0(0xAF, CF_00, TEXT_SCASD,  STR_COMP, SZ_NONE),
     E0(0xCF, CF_00, TEXT_IRETD,  SZ_NONE),
     E1(0xE3, CF_00, TEXT_JECXZ,  SZ_NONE,  M_REL8, P_OPR),
 };
@@ -1243,12 +1243,12 @@ constexpr uint8_t IV30_00[] PROGMEM = {
 
 constexpr Entry TV30_0F[] PROGMEM = {
     E1(0xFF, CF_00, TEXT_BRKEM,  SZ_BYTE, M_UI8,  P_OPR),
-    S2(0x20, CF_00, TEXT_ADD4S,  SZ_BYTE, M_BMEM, M_BMEM),
-    S0(0x20, CF_00, TEXT_ADD4S,  SZ_NONE),
-    S2(0x26, CF_00, TEXT_CMP4S,  SZ_BYTE, M_BMEM, M_BMEM),
-    S0(0x26, CF_00, TEXT_CMP4S,  SZ_NONE),
-    S2(0x22, CF_00, TEXT_SUB4S,  SZ_BYTE, M_BMEM, M_BMEM),
-    S0(0x22, CF_00, TEXT_SUB4S,  SZ_NONE),
+    S2(0x20, CF_00, TEXT_ADD4S,  STR_BCD,  SZ_BYTE, M_BMEM, M_BMEM),
+    S0(0x20, CF_00, TEXT_ADD4S,  STR_BCD,  SZ_NONE),
+    S2(0x26, CF_00, TEXT_CMP4S,  STR_BCD,  SZ_BYTE, M_BMEM, M_BMEM),
+    S0(0x26, CF_00, TEXT_CMP4S,  STR_BCD,  SZ_NONE),
+    S2(0x22, CF_00, TEXT_SUB4S,  STR_BCD,  SZ_BYTE, M_BMEM, M_BMEM),
+    S0(0x22, CF_00, TEXT_SUB4S,  STR_BCD,  SZ_NONE),
     E1(0x28, CF_00, TEXT_ROL4,   SZ_BYTE, M_BMOD, P_MOD),
     E1(0x2A, CF_00, TEXT_ROR4,   SZ_BYTE, M_BMOD, P_MOD),
     E2(0x31, CF_00, TEXT_INS,    SZ_WORD, M_BREG, M_BREG, P_MOD,  P_REG),

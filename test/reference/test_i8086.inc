@@ -1199,24 +1199,12 @@
         repz    scasb
         repz    scasw
 ;### Repeat While Not Equal/Not Zero
-        repne   movsb
-        repne   movsw
         repne   cmpsb
         repne   cmpsw
-        repne   stosb
-        repne   stosw
-        repne   lodsb
-        repne   lodsw
         repne   scasb
         repne   scasw
-        repnz   movsb
-        repnz   movsw
         repnz   cmpsb
         repnz   cmpsw
-        repnz   stosb
-        repnz   stosw
-        repnz   lodsb
-        repnz   lodsw
         repnz   scasb
         repnz   scasw
 ;### Move byte from string to string
