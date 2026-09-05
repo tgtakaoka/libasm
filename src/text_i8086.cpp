@@ -21,13 +21,14 @@ namespace text {
 namespace i8086 {
 // clang-format off
 
-constexpr char TEXT_I8086_LIST[] PROGMEM = "i8086, i80186, i80286, i80386, i80486, V30";
+constexpr char TEXT_I8086_LIST[] PROGMEM = "i8086, i80186, i80286, i80386, i80486, V30, V33";
 constexpr char TEXT_CPU_8086[]   PROGMEM = "8086";
 constexpr char TEXT_CPU_80186[]  PROGMEM = "80186";
 constexpr char TEXT_CPU_80286[]  PROGMEM = "80286";
 constexpr char TEXT_CPU_80386[]  PROGMEM = "80386";
 constexpr char TEXT_CPU_80486[]  PROGMEM = "80486";
 constexpr char TEXT_CPU_V30[]    PROGMEM = "V30";
+constexpr char TEXT_CPU_V33[]    PROGMEM = "V33";
 constexpr char TEXT_FPU_8087[]   PROGMEM = "8087";
 constexpr char TEXT_FPU_80287[]  PROGMEM = "80287";
 constexpr char TEXT_FPU_80387[]  PROGMEM = "80387";
@@ -270,9 +271,8 @@ constexpr char TEXT_INVLPG[]   PROGMEM = "INVLPG";
 constexpr char TEXT_WBINVD[]   PROGMEM = "WBINVD";
 constexpr char TEXT_XADD[]     PROGMEM = "XADD";
 
-// V30
+// V series
 constexpr char TEXT_ADD4S[] PROGMEM = "ADD4S";
-constexpr char TEXT_BRKEM[] PROGMEM = "BRKEM";
 constexpr char TEXT_CLR1[]  PROGMEM = "CLR1";
 constexpr char TEXT_CMP4S[] PROGMEM = "CMP4S";
 // constexpr char TEXT_EXT[] PROGMEM = "EXT";
@@ -284,6 +284,13 @@ constexpr char TEXT_ROR4[]  PROGMEM = "ROR4";
 constexpr char TEXT_SET1[]  PROGMEM = "SET1";
 constexpr char TEXT_SUB4S[] PROGMEM = "SUB4S";
 constexpr char TEXT_TEST1[] PROGMEM = "TEST1";
+
+// V30
+constexpr char TEXT_BRKEM[] PROGMEM = "BRKEM";
+
+// V33
+constexpr char TEXT_BRKXA[] PROGMEM = "BRKXA";
+constexpr char TEXT_RETXA[] PROGMEM = "RETXA";
 
 // i8087
 constexpr char TEXT_F2XM1[]   PROGMEM = "F2XM1";

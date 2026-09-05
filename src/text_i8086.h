@@ -31,6 +31,7 @@ extern const char TEXT_CPU_80286[] PROGMEM;
 extern const char TEXT_CPU_80386[] PROGMEM;
 extern const char TEXT_CPU_80486[] PROGMEM;
 extern const char TEXT_CPU_V30[]   PROGMEM;
+extern const char TEXT_CPU_V33[]   PROGMEM;
 extern const char TEXT_FPU_8087[]  PROGMEM;
 extern const char TEXT_FPU_80287[] PROGMEM;
 extern const char TEXT_FPU_80387[] PROGMEM;
@@ -276,9 +277,8 @@ extern const char TEXT_INVLPG[]  PROGMEM;
 extern const char TEXT_WBINVD[]  PROGMEM;
 extern const char TEXT_XADD[]    PROGMEM;
 
-// V30
+// V series
 extern const char TEXT_ADD4S[] PROGMEM;
-extern const char TEXT_BRKEM[] PROGMEM;
 extern const char TEXT_CLR1[]  PROGMEM;
 extern const char TEXT_CMP4S[] PROGMEM;
 using common::TEXT_EXT;
@@ -290,6 +290,13 @@ extern const char TEXT_ROR4[]  PROGMEM;
 extern const char TEXT_SET1[]  PROGMEM;
 extern const char TEXT_SUB4S[] PROGMEM;
 extern const char TEXT_TEST1[] PROGMEM;
+
+// V30
+extern const char TEXT_BRKEM[] PROGMEM;
+
+// V33
+extern const char TEXT_BRKXA[] PROGMEM;
+extern const char TEXT_RETXA[] PROGMEM;
 
 // i8087
 extern const char TEXT_F2XM1[]   PROGMEM;
