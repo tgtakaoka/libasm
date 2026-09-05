@@ -37,6 +37,13 @@ struct EntryInsn : EntryInsnPrefix<Config, Entry> {
     OprPos extPos() const { return flags().extPos(); }
     OprSize size() const { return flags().size(); }
     bool stringInsn() const { return flags().stringInsn(); }
+    // REP (F3) goes with the block transfer and I/O primitives as well as the
+    // block compare ones; the conditional repeats only with block compare.
+    bool repeatAllowed() const {
+        if (!flags().repeatable())
+            return false;
+        return _repeat == 0xF3 || flags().blockCompare();
+    }
     bool lockCapable() const { return flags().lockCapable(); }
     bool needSize() const { return flags().needSize(); }
     bool noData32() const { return flags().noData32(); }

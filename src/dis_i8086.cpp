@@ -687,7 +687,7 @@ StrBuffer &DisI8086::prependRepeatInsn(DisInsn &insn, StrBuffer &out) const {
     auto save{out};
     insn.nameBuffer().reset().over(out).text(rep_name).letter(' ');
 
-    if (!insn.stringInsn())
+    if (!insn.repeatAllowed())
         insn.setErrorIf(out.mark(), ILLEGAL_COMBINATION);
 
     out.text(name).over(insn.nameBuffer());

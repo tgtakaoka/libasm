@@ -1166,6 +1166,8 @@ Error AsmI8086::encodeImpl(StrScanner &scan, AsmInsn &insn) const {
 
     if (insn.lock() && !insn.lockCapable())
         insn.setErrorIf(insn.name(), ILLEGAL_COMBINATION);
+    if (insn.repeat() && !insn.repeatAllowed())
+        insn.setErrorIf(insn.name(), ILLEGAL_COMBINATION);
     // GAS with -mtune=i486 encodes a shift/rotate by 1 as the long form
     // (C0/C1 + imm8=1) instead of the short form (D0/D1). Match that in
     // GNU-as mode only; the default keeps the canonical short form. The page
