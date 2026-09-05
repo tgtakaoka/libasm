@@ -1229,20 +1229,19 @@ constexpr uint8_t I80486_0F01[] PROGMEM = {
       0,  // TEXT_INVLPG
 };
 
-// V30
+// V series
 
-constexpr Entry TV30_00[] PROGMEM = {
+constexpr Entry TVSERIES_00[] PROGMEM = {
     E0(0x64, CF_00, TEXT_REPNC,  SZ_NONE),
     E0(0x65, CF_00, TEXT_REPC,   SZ_NONE),
 };
 
-constexpr uint8_t IV30_00[] PROGMEM = {
+constexpr uint8_t IVSERIES_00[] PROGMEM = {
       1,  // TEXT_REPC
       0,  // TEXT_REPNC
 };
 
-constexpr Entry TV30_0F[] PROGMEM = {
-    E1(0xFF, CF_00, TEXT_BRKEM,  SZ_BYTE, M_UI8,  P_OPR),
+constexpr Entry TVSERIES_0F[] PROGMEM = {
     S2(0x20, CF_00, TEXT_ADD4S,  STR_BCD,  SZ_BYTE, M_BMEM, M_BMEM),
     S0(0x20, CF_00, TEXT_ADD4S,  STR_BCD,  SZ_NONE),
     S2(0x26, CF_00, TEXT_CMP4S,  STR_BCD,  SZ_BYTE, M_BMEM, M_BMEM),
@@ -1273,36 +1272,57 @@ constexpr Entry TV30_0F[] PROGMEM = {
     N2(0x19, CF_00, TEXT_TEST1,  SZ_WORD, M_WMOD, M_BIT,  P_MOD,  P_OPR),
 };
 
-constexpr uint8_t IV30_0F[] PROGMEM = {
+constexpr uint8_t IVSERIES_0F[] PROGMEM = {
+      0,  // TEXT_ADD4S
       1,  // TEXT_ADD4S
-      2,  // TEXT_ADD4S
-      0,  // TEXT_BRKEM
+     12,  // TEXT_CLR1
      13,  // TEXT_CLR1
      14,  // TEXT_CLR1
      15,  // TEXT_CLR1
-     16,  // TEXT_CLR1
+      2,  // TEXT_CMP4S
       3,  // TEXT_CMP4S
-      4,  // TEXT_CMP4S
+     10,  // TEXT_EXT
      11,  // TEXT_EXT
-     12,  // TEXT_EXT
+      8,  // TEXT_INS
       9,  // TEXT_INS
-     10,  // TEXT_INS
+     20,  // TEXT_NOT1
      21,  // TEXT_NOT1
      22,  // TEXT_NOT1
      23,  // TEXT_NOT1
-     24,  // TEXT_NOT1
-      7,  // TEXT_ROL4
-      8,  // TEXT_ROR4
+      6,  // TEXT_ROL4
+      7,  // TEXT_ROR4
+     16,  // TEXT_SET1
      17,  // TEXT_SET1
      18,  // TEXT_SET1
      19,  // TEXT_SET1
-     20,  // TEXT_SET1
+      4,  // TEXT_SUB4S
       5,  // TEXT_SUB4S
-      6,  // TEXT_SUB4S
+     24,  // TEXT_TEST1
      25,  // TEXT_TEST1
      26,  // TEXT_TEST1
      27,  // TEXT_TEST1
-     28,  // TEXT_TEST1
+};
+
+// V30
+
+constexpr Entry TV30_0F[] PROGMEM = {
+    E1(0xFF, CF_00, TEXT_BRKEM,  SZ_BYTE, M_UI8,  P_OPR),
+};
+
+constexpr uint8_t IV30_0F[] PROGMEM = {
+      0,  // TEXT_BRKEM
+};
+
+// V33
+
+constexpr Entry TV33_0F[] PROGMEM = {
+    E1(0xE0, CF_00, TEXT_BRKXA,  SZ_BYTE, M_UI8,  P_OPR),
+    E1(0xF0, CF_00, TEXT_RETXA,  SZ_BYTE, M_UI8,  P_OPR),
+};
+
+constexpr uint8_t IV33_0F[] PROGMEM = {
+      0,  // TEXT_BRKXA
+      1,  // TEXT_RETXA
 };
 
 #if !defined(LIBASM_I8086_NOFPU)
@@ -1843,8 +1863,40 @@ constexpr EntryPage I80486_PAGES[] PROGMEM = {
 
 constexpr EntryPage V30_PAGES[] PROGMEM = {
         // V30
-        {0x00, ARRAY_RANGE(TV30_00), ARRAY_RANGE(IV30_00)},
         {0x0F, ARRAY_RANGE(TV30_0F), ARRAY_RANGE(IV30_0F)},
+        // V series
+        {0x00, ARRAY_RANGE(TVSERIES_00), ARRAY_RANGE(IVSERIES_00)},
+        {0x0F, ARRAY_RANGE(TVSERIES_0F), ARRAY_RANGE(IVSERIES_0F)},
+        // I80186
+        {0x00, ARRAY_RANGE(T80186_00), ARRAY_RANGE(I80186_00)},
+        {0xD0, ARRAY_RANGE(T8086_D0), ARRAY_RANGE(I8086_DX)},    // M_VAL1
+        {0xD1, ARRAY_RANGE(T8086_D1), ARRAY_RANGE(I8086_DX)},    // M_VAL1
+        {0xC0, ARRAY_RANGE(T80186_C0), ARRAY_RANGE(I80186_CX)},  // M_BIT
+        {0xC1, ARRAY_RANGE(T80186_C1), ARRAY_RANGE(I80186_CX)},  // M_BIT
+        // i8086
+        {0x83, ARRAY_RANGE(T8086_83), ARRAY_RANGE(I8086_8X)},  // M_BIMM
+        {0x00, ARRAY_RANGE(T8086_00), ARRAY_RANGE(I8086_00)},
+        {0x80, ARRAY_RANGE(T8086_80), ARRAY_RANGE(I8086_8X)},
+        {0x81, ARRAY_RANGE(T8086_81), ARRAY_RANGE(I8086_8X)},  // M_WIMM
+        {0x8F, ARRAY_RANGE(T8086_8F), ARRAY_RANGE(I8086_8F)},
+        {0xC6, ARRAY_RANGE(T8086_C6), ARRAY_RANGE(I8086_C6)},
+        {0xC7, ARRAY_RANGE(T8086_C7), ARRAY_RANGE(I8086_C7)},
+        {0xD2, ARRAY_RANGE(T8086_D2), ARRAY_RANGE(I8086_DX)},
+        {0xD3, ARRAY_RANGE(T8086_D3), ARRAY_RANGE(I8086_DX)},
+        {0xD4, ARRAY_RANGE(T8086_D4), ARRAY_RANGE(I8086_D4)},
+        {0xD5, ARRAY_RANGE(T8086_D5), ARRAY_RANGE(I8086_D5)},
+        {0xF6, ARRAY_RANGE(T8086_F6), ARRAY_RANGE(I8086_FX)},
+        {0xF7, ARRAY_RANGE(T8086_F7), ARRAY_RANGE(I8086_FX)},
+        {0xFE, ARRAY_RANGE(T8086_FE), ARRAY_RANGE(I8086_FE)},
+        {0xFF, ARRAY_RANGE(T8086_FF), ARRAY_RANGE(I8086_FF)},
+};
+
+constexpr EntryPage V33_PAGES[] PROGMEM = {
+        // V33
+        {0x0F, ARRAY_RANGE(TV33_0F), ARRAY_RANGE(IV33_0F)},
+        // V series
+        {0x00, ARRAY_RANGE(TVSERIES_00), ARRAY_RANGE(IVSERIES_00)},
+        {0x0F, ARRAY_RANGE(TVSERIES_0F), ARRAY_RANGE(IVSERIES_0F)},
         // I80186
         {0x00, ARRAY_RANGE(T80186_00), ARRAY_RANGE(I80186_00)},
         {0xD0, ARRAY_RANGE(T8086_D0), ARRAY_RANGE(I8086_DX)},    // M_VAL1
@@ -1878,6 +1930,7 @@ constexpr Cpu CPU_TABLE[] PROGMEM = {
         {I80386, TEXT_CPU_80386, ARRAY_RANGE(I80386_PAGES)},
         {I80486, TEXT_CPU_80486, ARRAY_RANGE(I80486_PAGES)},
         {V30, TEXT_CPU_V30, ARRAY_RANGE(V30_PAGES)},
+        {V33, TEXT_CPU_V33, ARRAY_RANGE(V33_PAGES)},
 };
 
 const Cpu *cpu(CpuType cpuType) {
@@ -2181,10 +2234,15 @@ bool isSegmentPrefix(const CpuSpec &cpuSpec, Config::opcode_t opCode) {
     return overrideSeg(cpuSpec, opCode) != REG_UNDEF;
 }
 
+// REPC/REPNC exist on the whole V series.
+static bool vSeries(CpuType cpuType) {
+    return cpuType == V30 || cpuType == V33;
+}
+
 bool isRepeatPrefix(const CpuSpec &cpuSpec, Config::opcode_t opCode) {
     if (opCode == 0xF2 || opCode == 0xF3)
         return true;
-    return cpuSpec.cpu == V30 && (opCode == 0x64 || opCode == 0x65);
+    return vSeries(cpuSpec.cpu) && (opCode == 0x64 || opCode == 0x65);
 }
 
 RegName overrideSeg(const CpuSpec &cpuSpec, Config::opcode_t opCode, RegName defSeg) {
@@ -2232,7 +2290,7 @@ bool EntryInsn::repeatInsn(Config::opcode_t opc, CpuType cpuType) {
         return true;
     case 0x64:
     case 0x65:
-        return cpuType == V30;
+        return vSeries(cpuType);
     default:
         return false;
     }

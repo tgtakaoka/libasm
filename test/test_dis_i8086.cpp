@@ -36,6 +36,14 @@ bool v30() {
     return strcmp_P("V30", disassembler.config().cpu_P()) == 0;
 }
 
+bool v33() {
+    return strcmp_P("V33", disassembler.config().cpu_P()) == 0;
+}
+
+bool vseries() {
+    return v30() || v33();
+}
+
 bool is8086() {
     return strcmp_P("8086", disassembler.config().cpu_P()) == 0;
 }
@@ -57,11 +65,16 @@ bool is80486() {
 }
 
 bool is80x86() {
-    return is80186() || is80286() || is80386() || is80486() || v30();
+    return is80186() || is80286() || is80386() || is80486() || vseries();
 }
 
 bool is16bit() {
-    return is8086() || is80186() || is80286() || v30();
+    return is8086() || is80186() || is80286() || vseries();
+}
+
+// The V series implements the 80186 instruction set.
+bool has80186() {
+    return is80186() || vseries();
 }
 
 bool hasExtraSeg() {
@@ -85,9 +98,9 @@ bool fpu_on() {
     if (is8086()) {
         EQUALS("8086", OK, dis8086.setFpuType(FPU_ON));
         EQUALS_P("8086", "8087", dis8086.fpu_P());
-    } else if (v30()) {
-        EQUALS("v30", FLOAT_NOT_SUPPORTED, dis8086.setFpuType(FPU_ON));
-        EQUALS_P("v30", "none", dis8086.fpu_P());
+    } else if (vseries()) {
+        EQUALS("V series", FLOAT_NOT_SUPPORTED, dis8086.setFpuType(FPU_ON));
+        EQUALS_P("V series", "none", dis8086.fpu_P());
         return false;
     } else if (is80186()) {
         EQUALS("80186", OK, dis8086.setFpuType(FPU_ON));
@@ -3117,7 +3130,7 @@ void test_logic() {
         use16();
     }
 
-    if (v30()) {
+    if (vseries()) {
         TEST("CLR1", "CH, 1",                  0x0F, 0x1A, 0305, 0x01);
         TEST("CLR1", "BYTE [SI], 2",           0x0F, 0x1A, 0004, 0x02);
         TEST("CLR1", "BYTE [1234H], 3",        0x0F, 0x1A, 0006, 0x34, 0x12, 0x03);
@@ -3232,7 +3245,7 @@ void test_repeat() {
     repeatInsn(true);
     TEST("REPNE", "", REPNE);
     TEST("REP",   "", REP);
-    if (v30()) {
+    if (vseries()) {
         TEST("REPNC", "", REPNC);
         TEST("REPC",  "", REPC);
     }
@@ -3244,7 +3257,7 @@ void test_repeat() {
     EPRE("", "", REP, REPNE);
     EPRE("", "", REPNE, REP);
     EPRE("", "", REPNE, REPNE);
-    if (v30()) {
+    if (vseries()) {
         NMEM("", "", "", REPNC);
         NMEM("", "", "", REPC);
         EPRE("", "", REPNE, REPNC);
@@ -3264,7 +3277,7 @@ void test_repeat() {
     ERRT("REPNE LODSW", "", ILLEGAL_COMBINATION, "LODSW", REPNE, 0xAD);
     ERRT("REPNE NOP", "", ILLEGAL_COMBINATION, "NOP", REPNE, 0x90);
     NMEM("", "", "",        REPNE, 0xFF);
-    if (is80186()) {
+    if (has80186()) {
         ERRT("REPNE INSB", "",  ILLEGAL_COMBINATION, "INSB",  REPNE, 0x6C);
         ERRT("REPNE INSW", "",  ILLEGAL_COMBINATION, "INSW",  REPNE, 0x6D);
         ERRT("REPNE OUTSB", "", ILLEGAL_COMBINATION, "OUTSB", REPNE, 0x6E);
@@ -3285,7 +3298,7 @@ void test_repeat() {
     TEST("REP LODSW", "", REP, 0xAD);
     TEST("REP SCASB", "", REP, 0xAE);
     TEST("REP SCASW", "", REP, 0xAF);
-    if (is80186()) {
+    if (has80186()) {
         TEST("REP INSB", "",  REP, 0x6C);
         TEST("REP INSW", "",  REP, 0x6D);
         TEST("REP OUTSB", "", REP, 0x6E);
@@ -3295,7 +3308,7 @@ void test_repeat() {
         TEST("REP INSD",  "", REP, DATA32, 0x6D);
         TEST("REP OUTSD", "", REP, DATA32, 0x6F);
     }
-    if (v30()) {
+    if (vseries()) {
         TEST("REPNC CMPSB", "", REPNC, 0xA6);
         TEST("REP SCASW", "", REP, 0xAF);
         TEST("REPC SCASW", "", REPC, 0xAF);
@@ -3353,7 +3366,7 @@ void test_repeat() {
         TEST("OUTSD", "", 0x6F);
         use16();
     }
-    if (v30()) {
+    if (vseries()) {
         TEST("ADD4S", "", 0x0F, 0x20);
         TEST("CMP4S", "", 0x0F, 0x26);
         TEST("SUB4S", "", 0x0F, 0x22);
@@ -3395,7 +3408,7 @@ void test_repeat() {
         EPRE("outsb", "dx, ds:[si]", DATA32, 0x6e);
         TEST("outsd", "dx, ds:[si]", DATA32, 0x6f); // OUTS DX,r/m32
     }
-    if (v30()) {
+    if (vseries()) {
         TEST("add4s", "es:[di], ds:[si]", 0x0f, 0x20);
         TEST("cmp4s", "es:[di], ds:[si]", 0x0f, 0x26);
         TEST("sub4s", "es:[di], ds:[si]", 0x0f, 0x22);
@@ -3971,8 +3984,14 @@ void test_control_transfer() {
         ERRT("BOUND", "ESP, EDI",  ILLEGAL_OPERAND, "EDI", DATA32, 0x62, 0347);
     }
 
+    // Emulation mode is V30 only, extended address mode V33 only.
     if (v30()) {
         TEST("BRKEM", "64", 0x0F, 0xFF, 0x40);
+    }
+
+    if (v33()) {
+        TEST("BRKXA", "10", 0x0F, 0xE0, 0x0A);
+        TEST("RETXA", "10", 0x0F, 0xF0, 0x0A);
     }
 
     gnu_as(true);
@@ -4724,7 +4743,7 @@ void test_segment_override() {
         ERRT("insw",  "ds:[di], dx", ILLEGAL_SEGMENT, "ds:[di], dx", SEGDS, 0x6d);
     }
 
-    if (v30()) {
+    if (vseries()) {
         TEST("add4s", "es:[di], es:[si]", SEGES, 0x0f, 0x20);
         TEST("cmp4s", "es:[di], cs:[si]", SEGCS, 0x0f, 0x26);
         TEST("sub4s", "es:[di], ss:[si]", SEGSS, 0x0f, 0x22);
@@ -4764,7 +4783,7 @@ void test_segment_override() {
         ERRT("INSW",  "DS:[DI], DX", ILLEGAL_SEGMENT, "DS:[DI], DX", SEGDS, 0x6D);
     }
 
-    if (v30()) {
+    if (vseries()) {
         ERRT("ADD4S", "ES:[DI], ES:[SI]", ILLEGAL_SEGMENT, "ES:[DI], ES:[SI]", SEGES, 0x0F, 0x20);
         ERRT("CMP4S", "ES:[DI], CS:[SI]", ILLEGAL_SEGMENT, "ES:[DI], CS:[SI]", SEGCS, 0x0F, 0x26);
         ERRT("SUB4S", "ES:[DI], SS:[SI]", ILLEGAL_SEGMENT, "ES:[DI], SS:[SI]", SEGSS, 0x0F, 0x22);
@@ -5651,7 +5670,7 @@ void test_illegal_modreg() {
                 if (mod == 3) {
                     ILOP("LDS", 0xC4, opc);
                     ILOP("LES", 0xC5, opc);
-                    if (is80186())
+                    if (has80186())
                         ILOP("BOUND", 0x62, opc);
                 }
                 if (reg == 1) {
@@ -5663,7 +5682,7 @@ void test_illegal_modreg() {
                     UNKN(0xD1, opc);
                     UNKN(0xD2, opc);
                     UNKN(0xD3, opc);
-                    if (is80186()) {
+                    if (has80186()) {
                         UNKN(0xC0, opc);
                         UNKN(0xC1, opc);
                     }
@@ -5697,7 +5716,7 @@ void test_illegal_8086() {
     test_illegal_modreg();
 }
 
-void test_illegal_v30() {
+void test_illegal_vseries() {
     static constexpr Config::opcode_t ILLEGALS[] = {
         0x63, 0x66, 0x67, 0x82, 0xD6, 0xF1,
     };
@@ -5711,22 +5730,29 @@ void test_illegal_v30() {
         0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17,
         0x18, 0x19, 0x1A, 0x1B, 0x1C, 0x1D, 0x1E, 0x1F,
         0x20, 0x22, 0x26, 0x28, 0x2A,
-        0x31, 0x33, 0x39, 0x3B, 0xFF,
+        0x31, 0x33, 0x39, 0x3B,
+    };
+    // BRKEM, undefined on V33.
+    static constexpr Config::opcode_t LEGALS_V30[] = {
+        0xFF,
+    };
+    // BRKXA and RETXA, undefined on V30.
+    static constexpr Config::opcode_t LEGALS_V33[] = {
+        0xE0, 0xF0,
     };
     for (auto i = 0; i < 0x100; i++) {
         const Config::opcode_t opc = i;
         if (contains(ARRAY_RANGE(LEGALS), opc))
+            continue;
+        if (v30() && contains(ARRAY_RANGE(LEGALS_V30), opc))
+            continue;
+        if (v33() && contains(ARRAY_RANGE(LEGALS_V33), opc))
             continue;
         UNKN(0x0F, opc);
     }
 }
 
 void test_illegal_80186() {
-    if (v30()) {
-        test_illegal_v30();
-        return;
-    }
-
     ERRT("POP", "CS", REGISTER_NOT_ALLOWED, "CS", 0x0F);
 
     static constexpr Config::opcode_t ILLEGALS[] = {
@@ -6090,6 +6116,8 @@ void run_tests(const char *cpu) {
         RUN_TEST(test_illegal_8086);
     if (is80186())
         RUN_TEST(test_illegal_80186);
+    if (vseries())
+        RUN_TEST(test_illegal_vseries);
     if (is80286())
         RUN_TEST(test_illegal_80286);
     if (is80386())

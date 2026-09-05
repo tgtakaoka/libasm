@@ -32,8 +32,17 @@ bool v30() {
     return strcmp_P("V30", assembler.config().cpu_P()) == 0;
 }
 
+bool v33() {
+    return strcmp_P("V33", assembler.config().cpu_P()) == 0;
+}
+
+// The V series shares the 80186 instruction set plus its own additions.
+bool vseries() {
+    return v30() || v33();
+}
+
 bool is80186() {
-    return strcmp_P("80186", assembler.config().cpu_P()) == 0 || v30();
+    return strcmp_P("80186", assembler.config().cpu_P()) == 0 || vseries();
 }
 
 bool is80286() {
@@ -60,9 +69,9 @@ bool fpu_on() {
     if (is8086()) {
         TEST("FPU ON");
         EQUALS_P("8086", "8087", asm8086.fpu_P());
-    } else if (v30()) {
+    } else if (vseries()) {
         ERRT("FPU ON", FLOAT_NOT_SUPPORTED, "ON");
-        EQUALS_P("v30", "none", asm8086.fpu_P());
+        EQUALS_P("V series", "none", asm8086.fpu_P());
         return false;
     } else if (is80186()) {
         TEST("FPU ON");
@@ -351,7 +360,7 @@ void test_data_transfer() {
     TEST("PUSHF", 0x9C);
     TEST("POPF ", 0x9D);
 
-    if (v30()) {
+    if (vseries()) {
         TEST("EXT AL, CL", 0x0F, 0x33, 0310);
         TEST("EXT AH, BH", 0x0F, 0x33, 0374);
         TEST("EXT DL, 0",  0x0F, 0x3B, 0302, 0x00);
@@ -1328,7 +1337,7 @@ void test_logic() {
     TEST("RCR WORD PTR [BX+DI+52],CL",    0xD3, 0131, 0x34);
     TEST("RCR WORD PTR [BP+SI+1234H],CL", 0xD3, 0232, 0x34, 0x12);
 
-    if (v30()) {
+    if (vseries()) {
         TEST("ROL4 CH",                      0x0F, 0x28, 0305);
         TEST("ROL4 BYTE PTR [SI]",           0x0F, 0x28, 0004);
         TEST("ROL4 BYTE PTR [1234H]",        0x0F, 0x28, 0006, 0x34, 0x12);
@@ -1619,7 +1628,7 @@ void test_logic() {
     TEST("XOR AL,56H",   0x34, 0x56);
     TEST("XOR AX,5678H", 0x35, 0x78, 0x56);
 
-    if (v30()) {
+    if (vseries()) {
         TEST("CLR1 CH,1",                      0x0F, 0x1A, 0305, 0x01);
         TEST("CLR1 BYTE PTR [SI],2",           0x0F, 0x1A, 0004, 0x02);
         TEST("CLR1 BYTE PTR [1234H],3",        0x0F, 0x1A, 0006, 0x34, 0x12, 0x03);
@@ -1740,7 +1749,7 @@ void test_repeat() {
     ERRT("REP REP",    ILLEGAL_COMBINATION, "REP");
     ERRT("REPNE REPE", ILLEGAL_COMBINATION, "REPE");
 
-    if (v30()) {
+    if (vseries()) {
         TEST("REPC",  0x65);
         TEST("REPNC", 0x64);
         ERRT("REP REPC",   ILLEGAL_COMBINATION, "REPC");
@@ -1857,7 +1866,7 @@ void test_repeat() {
     TEST("STOS BYTE PTR ES:[DI]", 0xAA);
     TEST("STOS WORD PTR ES:[DI]", 0xAB);
 
-    if (v30()) {
+    if (vseries()) {
         TEST("ADD4S",                  0x0F, 0x20);
         TEST("ADD4S ES:[DI], DS:[SI]", 0x0F, 0x20);
         TEST("CMP4S",                  0x0F, 0x26);
@@ -2113,8 +2122,17 @@ void test_control_transfer() {
         TEST("BOUND SP, [BP+SI+1234H]", 0x62, 0242, 0x34, 0x12);
     }
 
+    // Emulation mode is V30 only, extended address mode V33 only.
     if (v30()) {
         TEST("BRKEM 40H", 0x0F, 0xFF, 0x40);
+        ERUI("BRKXA 0AH");
+        ERUI("RETXA 0AH");
+    }
+
+    if (v33()) {
+        TEST("BRKXA 0AH", 0x0F, 0xE0, 0x0A);
+        TEST("RETXA 0AH", 0x0F, 0xF0, 0x0A);
+        ERUI("BRKEM 40H");
     }
 }
 
@@ -2354,7 +2372,7 @@ void test_segment_override() {
         TEST("OUTSW DX, DS:[SI]",        0x6F);
     }
 
-    if (v30()) {
+    if (vseries()) {
         TEST("ADD4S ES:[DI],ES:[SI]", SEGES, 0x0F, 0x20);
         TEST("CMP4S ES:[DI],CS:[SI]", SEGCS, 0x0F, 0x26);
         TEST("SUB4S ES:[DI],SS:[SI]", SEGSS, 0x0F, 0x22);
