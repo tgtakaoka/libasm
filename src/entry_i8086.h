@@ -114,6 +114,19 @@ enum OprPos : uint8_t {
     P_MREG = 7,  // In mod-reg-r/m: mo|reg|reg
 };
 
+// String instruction class.  The repeat prefixes are defined only for the
+// block instructions, and the conditional ones only for block compare:
+// iAPX 86,88/186,188 PRM, 80286 PRM 3.7.2, 80386 PRM 3.6.1 and i486 PRM 3.6.1
+// all say REPE/REPZ and REPNE/REPNZ are used "exclusively" with CMPS and SCAS,
+// and the NEC V Series manual restricts REPNE/REPNZ, REPC and REPNC to block
+// compare (CMPBK/CMPM).
+enum StrClass : uint8_t {
+    STR_NONE = 0,  // not a string instruction
+    STR_BCD = 1,   // string operands but no repeat prefix: ADD4S/SUB4S/CMP4S
+    STR_MOVE = 2,  // block transfer/IO: REP only
+    STR_COMP = 3,  // block compare: REP plus the conditional repeats
+};
+
 enum CodeFormat : uint8_t {
     CF_00 = 0,  // 0000
     CF_07 = 1,  // 0007
@@ -126,10 +139,10 @@ struct Entry final : entry::Base<Config::opcode_t> {
         uint16_t _attr;
 
         static constexpr Flags create(CodeFormat cf, AddrMode dst, AddrMode src, AddrMode ext,
-                OprPos dpos, OprPos spos, OprPos epos, OprSize size, bool strInsn, bool lockCapable,
-                bool needSize, bool noData32) {
-            return Flags{mode(dst, src, ext),
-                    attr(dpos, spos, epos, size, cf, strInsn, lockCapable, needSize, noData32)};
+                OprPos dpos, OprPos spos, OprPos epos, OprSize size, StrClass strCls,
+                bool lockCapable, bool needSize, bool noData32) {
+            return Flags{mode(dst, src, ext, noData32),
+                    attr(dpos, spos, epos, size, cf, strCls, lockCapable, needSize)};
         }
 
         AddrMode dst() const { return AddrMode((_mode >> dst_gp) & dst_gm); }
@@ -139,10 +152,13 @@ struct Entry final : entry::Base<Config::opcode_t> {
         OprPos srcPos() const { return OprPos((_attr >> spos_gp) & spos_gm); }
         OprPos extPos() const { return OprPos((_attr >> epos_gp) & epos_gm); }
         OprSize size() const { return OprSize((_attr >> size_gp) & size_gm); }
-        bool stringInsn() const { return _attr & strInsn_bm; }
+        StrClass strClass() const { return StrClass((_attr >> strCls_gp) & strCls_gm); }
+        bool stringInsn() const { return strClass() != STR_NONE; }
+        bool repeatable() const { return strClass() >= STR_MOVE; }
+        bool blockCompare() const { return strClass() == STR_COMP; }
         bool lockCapable() const { return _attr & lockCapable_bm; }
         bool needSize() const { return _attr & needSize_bm; }
-        bool noData32() const { return _attr & noData32_bm; }
+        bool noData32() const { return _mode & noData32_bm; }
         uint8_t mask() const {
             static constexpr uint8_t MASK[] PROGMEM = {
                     0000,  // CF_00 = 0
@@ -153,16 +169,16 @@ struct Entry final : entry::Base<Config::opcode_t> {
         }
 
     private:
-        static constexpr uint16_t mode(AddrMode dst, AddrMode src, AddrMode ext) {
-            return static_cast<uint16_t>((dst << dst_gp) | (src << src_gp) | (ext << ext_gp));
+        static constexpr uint16_t mode(AddrMode dst, AddrMode src, AddrMode ext, bool noData32) {
+            return static_cast<uint16_t>((dst << dst_gp) | (src << src_gp) | (ext << ext_gp) |
+                                         (noData32 ? noData32_bm : 0));
         }
         static constexpr uint16_t attr(OprPos dpos, OprPos spos, OprPos epos, OprSize size,
-                CodeFormat cf, bool strInsn, bool lockCapable, bool needSize, bool noData32) {
+                CodeFormat cf, StrClass cls, bool lockCapable, bool needSize) {
             return static_cast<uint16_t>(
                     (dpos << dpos_gp) | (spos << spos_gp) | (epos << epos_gp) | (size << size_gp) |
-                    (cf << cf_gp) | (strInsn ? strInsn_bm : 0) |
-                    (lockCapable ? lockCapable_bm : 0) | (needSize ? needSize_bm : 0) |
-                    (noData32 ? noData32_bm : 0));
+                    (cf << cf_gp) | (cls << strCls_gp) | (lockCapable ? lockCapable_bm : 0) |
+                    (needSize ? needSize_bm : 0));
         }
 
         // |_mode|
@@ -172,25 +188,26 @@ struct Entry final : entry::Base<Config::opcode_t> {
         static constexpr uint_fast8_t dst_gm = 0x3F;
         static constexpr uint_fast8_t src_gm = 0x3F;
         static constexpr uint_fast8_t ext_gm = 0x07;
+        // |_attr| is full to the last bit, so this one flag lives here.
+        static constexpr auto noData32_bp = 15;
+        static constexpr uint_fast16_t noData32_bm = (1 << noData32_bp);
         // |_attr|
         static constexpr auto dpos_gp = 0;
         static constexpr auto spos_gp = 3;
         static constexpr auto epos_gp = 6;
         static constexpr auto size_gp = 7;
         static constexpr auto cf_gp = 10;
-        static constexpr auto strInsn_bp = 12;
-        static constexpr auto lockCapable_bp = 13;
-        static constexpr auto needSize_bp = 14;
-        static constexpr auto noData32_bp = 15;
+        static constexpr auto strCls_gp = 12;
+        static constexpr auto lockCapable_bp = 14;
+        static constexpr auto needSize_bp = 15;
         static constexpr uint_fast8_t dpos_gm = 0x7;
         static constexpr uint_fast8_t spos_gm = 0x7;
         static constexpr uint_fast8_t epos_gm = 0x1;
         static constexpr uint_fast8_t size_gm = 0x7;
         static constexpr uint_fast8_t cf_gm = 0x3;
-        static constexpr uint_fast16_t strInsn_bm = (1 << strInsn_bp);
+        static constexpr uint_fast8_t strCls_gm = 0x3;
         static constexpr uint_fast16_t lockCapable_bm = (1 << lockCapable_bp);
         static constexpr uint_fast16_t needSize_bm = (1 << needSize_bp);
-        static constexpr uint_fast16_t noData32_bm = (1 << noData32_bp);
     };
 
     constexpr Entry(Config::opcode_t opc, Flags flags, const /* PROGMEM */ char *name_P)

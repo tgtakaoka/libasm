@@ -2039,40 +2039,14 @@
       BOUND  CX, [SI+77]
       BOUND  CX, [BP+79]
       BOUND  CX, [BX+80]
-      REPNC INSB
-      REPNC INSW
-      REPNC OUTSB
-      REPNC OUTSW
-      REPNC MOVSB
-      REPNC MOVSW
       REPNC CMPSB
       REPNC CMPSW
-      REPNC STOSB
-      REPNC STOSW
-      REPNC LODSB
-      REPNC LODSW
       REPNC SCASB
       REPNC SCASW
-      REPNC ADD4S
-      REPNC SUB4S
-      REPNC CMP4S
-      REPC INSB
-      REPC INSW
-      REPC OUTSB
-      REPC OUTSW
-      REPC MOVSB
-      REPC MOVSW
       REPC CMPSB
       REPC CMPSW
-      REPC STOSB
-      REPC STOSW
-      REPC LODSB
-      REPC LODSW
       REPC SCASB
       REPC SCASW
-      REPC ADD4S
-      REPC SUB4S
-      REPC CMP4S
       PUSH   6A69H
       IMUL   BP, [BP+SI+107], 6D6CH
       IMUL   BP, [SI+109], 6F6EH
@@ -4194,26 +4168,10 @@
       OUT    DX, AL
       OUT    DX, AX
       LOCK
-      REPNE ADD4S
-      REPNE SUB4S
-      REPNE CMP4S
-      REPNE INSB
-      REPNE INSW
-      REPNE OUTSB
-      REPNE OUTSW
-      REPNE MOVSB
-      REPNE MOVSW
       REPNE CMPSB
       REPNE CMPSW
-      REPNE STOSB
-      REPNE STOSW
-      REPNE LODSB
-      REPNE LODSW
       REPNE SCASB
       REPNE SCASW
-      REP ADD4S
-      REP SUB4S
-      REP CMP4S
       REP INSB
       REP INSW
       REP OUTSB
