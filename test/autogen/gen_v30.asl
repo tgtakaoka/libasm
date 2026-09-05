@@ -13,7 +13,7 @@
 ; limitations under the License.
 
         cpu     V30
-        org     0x1000
+        org     1000H
         include "gen_v30.inc"
         end
 
