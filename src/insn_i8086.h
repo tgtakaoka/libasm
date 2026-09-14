@@ -124,6 +124,10 @@ struct AsmInsn final : AsmInsnImpl<Config>, EntryInsn {
     bool useAddr32() const { return _model32 ^ (_addr32 != 0); }
 
     void emitInsn();
+    // Offset the next operand byte goes to: prefixes, opcode, mod-reg byte and
+    // any operand already emitted.  A relative operand needs it to find the end
+    // of the instruction.
+    uint_fast8_t operandPos() const;
     Error emitOperand8(uint8_t val8) { return emitByte(val8, operandPos()); }
     Error emitOperand16(uint16_t val16) { return emitUint16(val16, operandPos()); }
     Error emitOperand32(uint32_t val32) { return emitUint32Le(val32, operandPos()); }
@@ -150,8 +154,6 @@ private:
     Config::opcode_t _addr32;
     char _prefixBuffer[Insn::MAX_NAME + 1];
     StrBuffer _prefixSave{_prefixBuffer, sizeof(_prefixBuffer)};
-
-    uint_fast8_t operandPos() const;
 };
 
 enum FarMode : uint8_t {
