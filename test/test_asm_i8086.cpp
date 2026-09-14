@@ -36,9 +36,13 @@ bool v33() {
     return strcmp_P("V33", assembler.config().cpu_P()) == 0;
 }
 
+bool v35() {
+    return strcmp_P("V35", assembler.config().cpu_P()) == 0;
+}
+
 // The V series shares the 80186 instruction set plus its own additions.
 bool vseries() {
-    return v30() || v33();
+    return v30() || v33() || v35();
 }
 
 bool is80186() {
@@ -2144,6 +2148,36 @@ void test_control_transfer() {
         TEST("BRKXA 0AH", 0x0F, 0xE0, 0x0A);
         TEST("RETXA 0AH", 0x0F, 0xF0, 0x0A);
         ERUI("BRKEM 40H");
+    }
+
+    if (v35()) {
+        TEST("MOVSPA",    0x0F, 0x25);
+        TEST("BRKCS AX",  0x0F, 0x2D, 0xC0);
+        TEST("BRKCS CX",  0x0F, 0x2D, 0xC1);
+        TEST("BRKCS DI",  0x0F, 0x2D, 0xC7);
+        TEST("RETRBI",    0x0F, 0x91);
+        TEST("FINT",      0x0F, 0x92);
+        TEST("TSKSW AX",  0x0F, 0x94, 0xF8);
+        TEST("TSKSW BX",  0x0F, 0x94, 0xFB);
+        TEST("MOVSPB AX", 0x0F, 0x95, 0xF8);
+        TEST("MOVSPB SP", 0x0F, 0x95, 0xFC);
+        TEST("STOP",      0x0F, 0x9E);
+        ATEST(0x1000, "BTCLR 0EAH, 7, 01005H",  0x0F, 0x9C, 0xEA, 0x07, 0x00);
+        ATEST(0x1000, "BTCLR 0FFH, 0, 01084H",  0x0F, 0x9C, 0xFF, 0x00, 0x7F);
+        ATEST(0x1000, "BTCLR 000H, 3, 00F85H",  0x0F, 0x9C, 0x00, 0x03, 0x80);
+        AERRT(0x1000, "BTCLR 0EAH, 8, 01005H",  OVERFLOW_RANGE, "8, 01005H",
+              0x0F, 0x9C, 0xEA, 0x08, 0x00);
+        AERRT(0x1000, "BTCLR 100H, 7, 01005H",  OVERFLOW_RANGE, "100H, 7, 01005H",
+              0x0F, 0x9C, 0x00, 0x07, 0x00);
+        AERRT(0x1000, "BTCLR 0EAH, 7, 01085H",  OPERAND_TOO_FAR, "01085H",
+              0x0F, 0x9C, 0xEA, 0x07, 0x80);
+        ERUI("BRKEM 40H");
+        ERUI("BRKXA 0AH");
+    } else {
+        ERUI("MOVSPA");
+        ERUI("RETRBI");
+        ERUI("FINT");
+        ERUI("STOP");
     }
 }
 

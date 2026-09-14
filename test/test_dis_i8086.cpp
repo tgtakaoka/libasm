@@ -40,8 +40,12 @@ bool v33() {
     return strcmp_P("V33", disassembler.config().cpu_P()) == 0;
 }
 
+bool v35() {
+    return strcmp_P("V35", disassembler.config().cpu_P()) == 0;
+}
+
 bool vseries() {
-    return v30() || v33();
+    return v30() || v33() || v35();
 }
 
 bool is8086() {
@@ -3994,6 +3998,30 @@ void test_control_transfer() {
         TEST("RETXA", "10", 0x0F, 0xF0, 0x0A);
     }
 
+    if (v35()) {
+        TEST("MOVSPA", "",   0x0F, 0x25);
+        TEST("BRKCS",  "AX", 0x0F, 0x2D, 0xC0);
+        TEST("BRKCS",  "DI", 0x0F, 0x2D, 0xC7);
+        TEST("RETRBI", "",   0x0F, 0x91);
+        TEST("FINT",   "",   0x0F, 0x92);
+        TEST("TSKSW",  "AX", 0x0F, 0x94, 0xF8);
+        TEST("TSKSW",  "BX", 0x0F, 0x94, 0xFB);
+        TEST("MOVSPB", "AX", 0x0F, 0x95, 0xF8);
+        TEST("MOVSPB", "SP", 0x0F, 0x95, 0xFC);
+        TEST("STOP",   "",   0x0F, 0x9E);
+        ATEST(0x1000, "BTCLR", "0EAH, 7, 01005H", 0x0F, 0x9C, 0xEA, 0x07, 0x00);
+        ATEST(0x1000, "BTCLR", "0FFH, 0, 01084H", 0x0F, 0x9C, 0xFF, 0x00, 0x7F);
+        ATEST(0x1000, "BTCLR", "0, 3, 00F85H", 0x0F, 0x9C, 0x00, 0x03, 0x80);
+        // The register operand is a mod-reg byte with a fixed reg field and no
+        // memory form, so a wrong reg field or a mod other than 3 is illegal.
+        UNKN(0x0F, 0x2D, 0xC8);
+        UNKN(0x0F, 0x2D, 0x00);
+        UNKN(0x0F, 0x94, 0xF0);
+        UNKN(0x0F, 0x94, 0x38);
+        UNKN(0x0F, 0x95, 0xC0);
+        UNKN(0x0F, 0x95, 0x38);
+    }
+
     gnu_as(true);
 
     if (is80386() || is80486()) {
@@ -5740,6 +5768,10 @@ void test_illegal_vseries() {
     static constexpr Config::opcode_t LEGALS_V33[] = {
         0xE0, 0xF0,
     };
+    // The eight V35 instructions, undefined on V30 and V33.
+    static constexpr Config::opcode_t LEGALS_V35[] = {
+        0x25, 0x2D, 0x91, 0x92, 0x94, 0x95, 0x9C, 0x9E,
+    };
     for (auto i = 0; i < 0x100; i++) {
         const Config::opcode_t opc = i;
         if (contains(ARRAY_RANGE(LEGALS), opc))
@@ -5747,6 +5779,8 @@ void test_illegal_vseries() {
         if (v30() && contains(ARRAY_RANGE(LEGALS_V30), opc))
             continue;
         if (v33() && contains(ARRAY_RANGE(LEGALS_V33), opc))
+            continue;
+        if (v35() && contains(ARRAY_RANGE(LEGALS_V35), opc))
             continue;
         UNKN(0x0F, opc);
     }

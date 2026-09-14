@@ -1325,6 +1325,51 @@ constexpr uint8_t IV33_0F[] PROGMEM = {
       1,  // TEXT_RETXA
 };
 
+// V35
+
+constexpr Entry TV35_0F[] PROGMEM = {
+    E0(0x25, CF_00, TEXT_MOVSPA, SZ_NONE),
+    E0(0x91, CF_00, TEXT_RETRBI, SZ_NONE),
+    E0(0x92, CF_00, TEXT_FINT,   SZ_NONE),
+    E3(0x9C, CF_00, TEXT_BTCLR,  SZ_BYTE, M_SFR,  M_BIT, M_REL8, P_OPR, P_OPR, P_OPR),
+    E0(0x9E, CF_00, TEXT_STOP,   SZ_NONE),
+};
+
+constexpr uint8_t IV35_0F[] PROGMEM = {
+      3,  // TEXT_BTCLR
+      2,  // TEXT_FINT
+      0,  // TEXT_MOVSPA
+      1,  // TEXT_RETRBI
+      4,  // TEXT_STOP
+};
+
+// The register operand of these three is a mod-reg byte with a fixed reg
+// field, so each takes a page of its own like the i80386 0FBA group.
+
+constexpr Entry TV35_0F2D[] PROGMEM = {
+    E1(000, CF_00, TEXT_BRKCS,  SZ_WORD, M_WREG, P_OMOD),
+};
+
+constexpr uint8_t IV35_0F2D[] PROGMEM = {
+      0,  // TEXT_BRKCS
+};
+
+constexpr Entry TV35_0F94[] PROGMEM = {
+    E1(070, CF_00, TEXT_TSKSW,  SZ_WORD, M_WREG, P_OMOD),
+};
+
+constexpr uint8_t IV35_0F94[] PROGMEM = {
+      0,  // TEXT_TSKSW
+};
+
+constexpr Entry TV35_0F95[] PROGMEM = {
+    E1(070, CF_00, TEXT_MOVSPB, SZ_WORD, M_WREG, P_OMOD),
+};
+
+constexpr uint8_t IV35_0F95[] PROGMEM = {
+      0,  // TEXT_MOVSPB
+};
+
 #if !defined(LIBASM_I8086_NOFPU)
 constexpr Entry T8087_00[] PROGMEM = {
     E0(0x9B, CF_00, TEXT_FWAIT,  SZ_NONE),
@@ -1921,6 +1966,39 @@ constexpr EntryPage V33_PAGES[] PROGMEM = {
         {0xFF, ARRAY_RANGE(T8086_FF), ARRAY_RANGE(I8086_FF)},
 };
 
+constexpr EntryPage V35_PAGES[] PROGMEM = {
+        // V35
+        {0x0F2D, ARRAY_RANGE(TV35_0F2D), ARRAY_RANGE(IV35_0F2D)},
+        {0x0F94, ARRAY_RANGE(TV35_0F94), ARRAY_RANGE(IV35_0F94)},
+        {0x0F95, ARRAY_RANGE(TV35_0F95), ARRAY_RANGE(IV35_0F95)},
+        {0x0F,   ARRAY_RANGE(TV35_0F),   ARRAY_RANGE(IV35_0F)},
+        // V series
+        {0x00, ARRAY_RANGE(TVSERIES_00), ARRAY_RANGE(IVSERIES_00)},
+        {0x0F, ARRAY_RANGE(TVSERIES_0F), ARRAY_RANGE(IVSERIES_0F)},
+        // I80186
+        {0x00, ARRAY_RANGE(T80186_00), ARRAY_RANGE(I80186_00)},
+        {0xD0, ARRAY_RANGE(T8086_D0), ARRAY_RANGE(I8086_DX)},    // M_VAL1
+        {0xD1, ARRAY_RANGE(T8086_D1), ARRAY_RANGE(I8086_DX)},    // M_VAL1
+        {0xC0, ARRAY_RANGE(T80186_C0), ARRAY_RANGE(I80186_CX)},  // M_BIT
+        {0xC1, ARRAY_RANGE(T80186_C1), ARRAY_RANGE(I80186_CX)},  // M_BIT
+        // i8086
+        {0x83, ARRAY_RANGE(T8086_83), ARRAY_RANGE(I8086_8X)},  // M_BIMM
+        {0x00, ARRAY_RANGE(T8086_00), ARRAY_RANGE(I8086_00)},
+        {0x80, ARRAY_RANGE(T8086_80), ARRAY_RANGE(I8086_8X)},
+        {0x81, ARRAY_RANGE(T8086_81), ARRAY_RANGE(I8086_8X)},  // M_WIMM
+        {0x8F, ARRAY_RANGE(T8086_8F), ARRAY_RANGE(I8086_8F)},
+        {0xC6, ARRAY_RANGE(T8086_C6), ARRAY_RANGE(I8086_C6)},
+        {0xC7, ARRAY_RANGE(T8086_C7), ARRAY_RANGE(I8086_C7)},
+        {0xD2, ARRAY_RANGE(T8086_D2), ARRAY_RANGE(I8086_DX)},
+        {0xD3, ARRAY_RANGE(T8086_D3), ARRAY_RANGE(I8086_DX)},
+        {0xD4, ARRAY_RANGE(T8086_D4), ARRAY_RANGE(I8086_D4)},
+        {0xD5, ARRAY_RANGE(T8086_D5), ARRAY_RANGE(I8086_D5)},
+        {0xF6, ARRAY_RANGE(T8086_F6), ARRAY_RANGE(I8086_FX)},
+        {0xF7, ARRAY_RANGE(T8086_F7), ARRAY_RANGE(I8086_FX)},
+        {0xFE, ARRAY_RANGE(T8086_FE), ARRAY_RANGE(I8086_FE)},
+        {0xFF, ARRAY_RANGE(T8086_FF), ARRAY_RANGE(I8086_FF)},
+};
+
 using Cpu = entry::CpuBase<CpuType, EntryPage>;
 
 constexpr Cpu CPU_TABLE[] PROGMEM = {
@@ -1931,6 +2009,7 @@ constexpr Cpu CPU_TABLE[] PROGMEM = {
         {I80486, TEXT_CPU_80486, ARRAY_RANGE(I80486_PAGES)},
         {V30, TEXT_CPU_V30, ARRAY_RANGE(V30_PAGES)},
         {V33, TEXT_CPU_V33, ARRAY_RANGE(V33_PAGES)},
+        {V35, TEXT_CPU_V35, ARRAY_RANGE(V35_PAGES)},
 };
 
 const Cpu *cpu(CpuType cpuType) {
@@ -2041,12 +2120,12 @@ bool acceptMode(AddrMode opr, AddrMode table, OprPos pos) {
                table == M_WMOD16 || table == M_WMEM || table == M_WDIR || table == M_MEM;
     if (opr == M_VAL1 || opr == M_VAL3)
         return table == M_WIMM || table == M_BIMM || table == M_IOA || table == M_UI16 ||
-               table == M_UI8 || table == M_BIT || table == M_REL8 || table == M_REL ||
-               table == M_SEG || table == M_OFF;
+               table == M_UI8 || table == M_SFR || table == M_BIT || table == M_REL8 ||
+               table == M_REL || table == M_SEG || table == M_OFF;
     if (opr == M_WIMM || opr == M_BIMM)
         return table == M_WIMM || table == M_IOA || table == M_UI16 || table == M_UI8 ||
-               table == M_BIT || table == M_REL8 || table == M_REL || table == M_SEG ||
-               table == M_OFF;
+               table == M_SFR || table == M_BIT || table == M_REL8 || table == M_REL ||
+               table == M_SEG || table == M_OFF;
     if (opr == M_BMEM)
         return table == M_BMOD;
     if (opr == M_WMEM)
@@ -2236,7 +2315,7 @@ bool isSegmentPrefix(const CpuSpec &cpuSpec, Config::opcode_t opCode) {
 
 // REPC/REPNC exist on the whole V series.
 static bool vSeries(CpuType cpuType) {
-    return cpuType == V30 || cpuType == V33;
+    return cpuType == V30 || cpuType == V33 || cpuType == V35;
 }
 
 bool isRepeatPrefix(const CpuSpec &cpuSpec, Config::opcode_t opCode) {
@@ -2305,6 +2384,11 @@ bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page) {
         // non-FPU or non-register modReg instruction needs to be
         // masked out mode and reg field of |opc|.
         const auto mod = (opc >> 6);
+        // A register-only operand has no memory form, so the mode field must
+        // select a register; masking it out would decode one that isn't there.
+        const auto omod = (flags.dstPos() == P_OMOD) ? flags.dst() : flags.src();
+        if (omod == M_WREG && mod != 3)
+            return false;
         if (!DisInsn::escapeInsn(prefix) || mod != 3)
             mask |= 0307;
     }
