@@ -32,6 +32,7 @@ extern const char TEXT_CPU_80386[] PROGMEM;
 extern const char TEXT_CPU_80486[] PROGMEM;
 extern const char TEXT_CPU_V30[]   PROGMEM;
 extern const char TEXT_CPU_V33[]   PROGMEM;
+extern const char TEXT_CPU_V35[]   PROGMEM;
 extern const char TEXT_FPU_8087[]  PROGMEM;
 extern const char TEXT_FPU_80287[] PROGMEM;
 extern const char TEXT_FPU_80387[] PROGMEM;
@@ -297,6 +298,16 @@ extern const char TEXT_BRKEM[] PROGMEM;
 // V33
 extern const char TEXT_BRKXA[] PROGMEM;
 extern const char TEXT_RETXA[] PROGMEM;
+
+// V35
+extern const char TEXT_BRKCS[]  PROGMEM;
+extern const char TEXT_BTCLR[]  PROGMEM;
+extern const char TEXT_FINT[]   PROGMEM;
+extern const char TEXT_MOVSPA[] PROGMEM;
+extern const char TEXT_MOVSPB[] PROGMEM;
+extern const char TEXT_RETRBI[] PROGMEM;
+using common::TEXT_STOP;
+extern const char TEXT_TSKSW[]  PROGMEM;
 
 // i8087
 extern const char TEXT_F2XM1[]   PROGMEM;

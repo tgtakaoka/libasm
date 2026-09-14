@@ -755,6 +755,7 @@ void AsmI8086::emitOperand(AsmInsn &insn, AddrMode mode, const Operand &op, OprP
         insn.emitOperand16(op.val.getUnsigned());
         break;
     case M_UI8:
+    case M_SFR:
         if (op.val.overflow(UINT8_MAX))
             insn.setErrorIf(op, OVERFLOW_RANGE);
         insn.emitOperand8(op.val.getUnsigned());

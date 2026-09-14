@@ -21,7 +21,8 @@ namespace text {
 namespace i8086 {
 // clang-format off
 
-constexpr char TEXT_I8086_LIST[] PROGMEM = "i8086, i80186, i80286, i80386, i80486, V30, V33";
+constexpr char TEXT_I8086_LIST[] PROGMEM =
+        "i8086, i80186, i80286, i80386, i80486, V30, V33, V35";
 constexpr char TEXT_CPU_8086[]   PROGMEM = "8086";
 constexpr char TEXT_CPU_80186[]  PROGMEM = "80186";
 constexpr char TEXT_CPU_80286[]  PROGMEM = "80286";
@@ -29,6 +30,7 @@ constexpr char TEXT_CPU_80386[]  PROGMEM = "80386";
 constexpr char TEXT_CPU_80486[]  PROGMEM = "80486";
 constexpr char TEXT_CPU_V30[]    PROGMEM = "V30";
 constexpr char TEXT_CPU_V33[]    PROGMEM = "V33";
+constexpr char TEXT_CPU_V35[]    PROGMEM = "V35";
 constexpr char TEXT_FPU_8087[]   PROGMEM = "8087";
 constexpr char TEXT_FPU_80287[]  PROGMEM = "80287";
 constexpr char TEXT_FPU_80387[]  PROGMEM = "80387";
@@ -291,6 +293,16 @@ constexpr char TEXT_BRKEM[] PROGMEM = "BRKEM";
 // V33
 constexpr char TEXT_BRKXA[] PROGMEM = "BRKXA";
 constexpr char TEXT_RETXA[] PROGMEM = "RETXA";
+
+// V35
+constexpr char TEXT_BRKCS[]  PROGMEM = "BRKCS";
+constexpr char TEXT_BTCLR[]  PROGMEM = "BTCLR";
+constexpr char TEXT_FINT[]   PROGMEM = "FINT";
+constexpr char TEXT_MOVSPA[] PROGMEM = "MOVSPA";
+constexpr char TEXT_MOVSPB[] PROGMEM = "MOVSPB";
+constexpr char TEXT_RETRBI[] PROGMEM = "RETRBI";
+// constexpr char TEXT_STOP[] PROGMEM = "STOP";
+constexpr char TEXT_TSKSW[]  PROGMEM = "TSKSW";
 
 // i8087
 constexpr char TEXT_F2XM1[]   PROGMEM = "F2XM1";

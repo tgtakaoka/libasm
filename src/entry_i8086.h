@@ -46,8 +46,10 @@ enum AddrMode : uint8_t {
     M_BIMM = 2,  // Sign-extended 8-bit Immediate
     M_BIT = 3,   // 3/4-bit shift count/bit number constant
     M_CL = 4,    // Bit Counter: CL
+    // M_REL8 is an |ext| operand of BTCLR, and |ext| is 3 bits wide, so it
+    // must stay <= 7.  It traded values with M_AL, which is never an |ext|.
+    M_REL8 = 5,  // Relative: 8-bit displacement
     // dst/src
-    M_AL = 5,     // Byte Accumulator: AL
     M_BREG = 6,   // Byte Register: AL, AH, BL, BH, CL, CH, DL, DH
     M_AX = 7,     // Word/Dword Accumulator: AX/EAX
     M_DX = 8,     // Dynamic I/O Address: DX
@@ -69,7 +71,7 @@ enum AddrMode : uint8_t {
     M_VAL1 = 22,  // Constant 1: for bit counter
     M_VAL3 = 23,  // Constant 3: for INT type
     M_REL = 24,   // Relative: 16-bit displacement
-    M_REL8 = 25,  // Relative: 8-bit displacement
+    M_AL = 25,    // Byte Accumulator: AL
     M_IOA = 26,   // I/O Address
     M_SEG = 27,   // Segment: nnnn
     M_OFF = 28,   // Offset: nnnn
@@ -87,8 +89,9 @@ enum AddrMode : uint8_t {
     M_CX = 40,   // Counter register CX  (LOOP explicit operand)
     M_ECX = 41,  // Counter register ECX (LOOP explicit operand)
     M_WMOD16 = 42,  // Fixed 16-bit memory/register (Ew): MOVSX/MOVZX word source
+    M_SFR = 43,     // V35 special function register: 8-bit offset
     // Assembler
-    M_DIR = 43,  // Direct mode: [nnnn]
+    M_DIR = 44,  // Direct mode: [nnnn]
 };
 
 enum OprSize : uint8_t {

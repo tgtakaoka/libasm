@@ -214,6 +214,9 @@ void DisI8086::decodeImmediate(DisInsn &insn, StrBuffer &out, AddrMode mode) con
         outHex(out, insn.readUint16(), 16);
     } else if (mode == M_UI8) {
         outDec(out, insn.readByte(), 8);
+    } else if (mode == M_SFR) {
+        // A special function register is an address, so render it as one.
+        outHex(out, insn.readByte(), 8);
     } else if (mode == M_BIT) {
         const auto bit = insn.readByte();
         if (insn.size() == SZ_BYTE) {
@@ -488,6 +491,7 @@ void DisI8086::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode, OprPo
     case M_WIMM:
     case M_UI16:
     case M_UI8:
+    case M_SFR:
     case M_BIMM:
     case M_FAR:
     case M_IOA:

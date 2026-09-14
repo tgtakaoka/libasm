@@ -30,6 +30,7 @@ enum CpuType : uint8_t {
     I80186,
     V30,
     V33,
+    V35,
     I80286,
     I80386,
     I80486,
