@@ -458,10 +458,10 @@ constexpr Config::uintptr_t segment(Config::uintptr_t addr) {
 }  // namespace
 
 void AsmI8086::emitRelative(AsmInsn &insn, const Operand &op, AddrMode mode) const {
-    // PC at end of instruction = address + prefix bytes + opcode + disp.
-    const auto prefixLen =
-            (insn.hasAddr32Prefix() ? 1 : 0) + (insn.hasData32Prefix() ? 1 : 0);
-    const auto base = insn.address() + prefixLen + 2;
+    // PC at end of instruction, for the 8-bit displacement.  operandPos()
+    // covers the prefixes, the opcode, the mod-reg byte and any operand emitted
+    // before this one.
+    const auto base = insn.address() + insn.operandPos() + 1;
     const auto target = op.getError() ? base : op.val.getUnsigned();
     // Segment-boundary check is meaningful only in use16 mode. Apply it
     // BEFORE branchDelta() -- that helper also reports OVERFLOW_RANGE on
@@ -476,9 +476,8 @@ void AsmI8086::emitRelative(AsmInsn &insn, const Operand &op, AddrMode mode) con
                 longJcc(insn);
                 const auto data32 = insn.model32() ^ insn.hasData32Prefix();
                 const auto bits = data32 ? 32 : 16;
-                // [DATA32?][0x0F][0x8n][dispN]: base is PC after instruction
-                const auto lbase =
-                        insn.address() + (insn.hasData32Prefix() ? 1 : 0) + 2 + bits / 8;
+                // [prefixes][0x0F][0x8n][dispN]: base is PC after instruction
+                const auto lbase = insn.address() + insn.operandPos() + bits / 8;
                 const auto ltarget = op.getError() ? lbase : op.val.getUnsigned();
                 const auto ldelta = branchDelta(lbase, ltarget, insn, op);
                 if (overflowDelta(ldelta, bits))
@@ -499,10 +498,11 @@ void AsmI8086::emitRelative(AsmInsn &insn, const Operand &op, AddrMode mode) con
     long_branch:
         // In use32 mode the relative displacement is 32-bit by default
         // (toggled to 16-bit by an explicit DATA32 prefix). In use16 the
-        // reverse holds. Instruction length = prefix + 1 (opcode) + N/8 disp.
+        // reverse holds. operandPos() covers the prefixes and the opcode, so
+        // the end of the instruction is that plus the displacement itself.
         const auto data32 = insn.model32() ^ insn.hasData32Prefix();
         const auto bits = data32 ? 32 : 16;
-        const auto base = insn.address() + prefixLen + 1 + bits / 8;
+        const auto base = insn.address() + insn.operandPos() + bits / 8;
         const auto target = op.getError() ? base : op.val.getUnsigned();
         const auto delta = branchDelta(base, target, insn, op);
         if (overflowDelta(delta, bits))
@@ -1164,10 +1164,6 @@ Error AsmI8086::encodeImpl(StrScanner &scan, AsmInsn &insn) const {
     insn.prepareModReg();
     insn.prependPrefix();
 
-    if (insn.lock() && !insn.lockCapable())
-        insn.setErrorIf(insn.name(), ILLEGAL_COMBINATION);
-    if (insn.repeat() && !insn.repeatAllowed())
-        insn.setErrorIf(insn.name(), ILLEGAL_COMBINATION);
     // GAS with -mtune=i486 encodes a shift/rotate by 1 as the long form
     // (C0/C1 + imm8=1) instead of the short form (D0/D1). Match that in
     // GNU-as mode only; the default keeps the canonical short form. The page
@@ -1184,6 +1180,12 @@ Error AsmI8086::encodeImpl(StrScanner &scan, AsmInsn &insn) const {
         emitOperand(insn, insn.src(), insn.srcOp, insn.srcPos());
         emitOperand(insn, insn.ext(), insn.extOp, insn.extPos());
     }
+    // After the operands: promoting a short branch to a long one resets the
+    // instruction error, which would otherwise discard these.
+    if (insn.lock() && !insn.lockCapable())
+        insn.setErrorIf(insn.name(), ILLEGAL_COMBINATION);
+    if (insn.repeat() && !insn.repeatAllowed())
+        insn.setErrorIf(insn.name(), ILLEGAL_COMBINATION);
     insn.emitInsn();
     if (shiftByOneLong)
         insn.emitOperand8(1);

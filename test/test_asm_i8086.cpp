@@ -1746,6 +1746,17 @@ void test_repeat() {
     TEST("REPZ",  REP);
     TEST("REP",   REP);
     ERRT("REP NOP",    ILLEGAL_COMBINATION, "REP NOP", REP, 0x90);
+    // A prefix byte counts toward the end of the instruction the displacement
+    // is measured from, whatever its width.
+    AERRT(0x0100, "LOCK JO 0104H",   ILLEGAL_COMBINATION, "LOCK JO",
+          LOCK, 0x70, 0x01);
+    AERRT(0x0100, "LOCK CALL 0200H", ILLEGAL_COMBINATION, "LOCK CALL",
+          LOCK, 0xE8, 0xFC, 0x00);
+    AERRT(0x0100, "LOCK JMP 0300H",  ILLEGAL_COMBINATION, "LOCK JMP",
+          LOCK, 0xE9, 0xFC, 0x01);
+    // A short branch promoted to a long one must not discard these.
+    AERRT(0x0100, "REP JMP 0300H",   ILLEGAL_COMBINATION, "REP JMP",
+          REP,  0xE9, 0xFC, 0x01);
     ERRT("REP REP",    ILLEGAL_COMBINATION, "REP");
     ERRT("REPNE REPE", ILLEGAL_COMBINATION, "REPE");
 
