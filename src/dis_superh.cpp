@@ -205,6 +205,7 @@ void DisSuperH::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) cons
         outHex(out, imm, -8);
         break;
     }
+    case M_UIMM8:
     case M_TVEC: {
         const auto imm = opc & 0xFF;
         out.letter('#');
@@ -320,18 +321,6 @@ void DisSuperH::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) cons
         outHex(out, val, -20);
         break;
     }
-    case M_IMM20S: {
-        // 20-bit signed shifted left 8: hi 4 in opc[7:4], next 16 in opc2;
-        // print the "real" 28-bit value (hi:lo << 8).
-        const uint32_t hi = (opc >> 4) & 0xF;
-        const uint32_t lo = insn.opCode2() & 0xFFFFu;
-        auto val = static_cast<int32_t>((hi << 24) | (lo << 8));
-        if (val & 0x08000000)
-            val |= 0xF0000000u;  // sign-extend 28 -> 32
-        out.letter('#');
-        outHex(out, val, -28);
-        break;
-    }
     case M_D12N:
     case M_D12M: {
         // 12-bit displacement is in opc2[11:0]; scaled 1/2/4 by the access size.
@@ -392,6 +381,9 @@ Error DisSuperH::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) cons
         insn.nameBuffer().letter('.');
         insn.appendName(out, suffix);
     }
+
+    if (insn.implicitFr0())
+        outRegName(out, REG_FR0).comma();
 
     const auto src = insn.src();
     const auto dst = insn.dst();

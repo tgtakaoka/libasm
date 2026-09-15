@@ -588,7 +588,8 @@ void test_sh2a_only() {
         TEST("MOVI20 #H'7FFFF, R1",    uint16_t(0x0170), uint16_t(0xFFFF));
         TEST("MOVI20 #-H'80000, R2",   uint16_t(0x0280), uint16_t(0x0000));
         TEST("MOVI20S #0, R0",         uint16_t(0x0001), uint16_t(0x0000));
-        TEST("MOVI20S #H'FF0000, R1",  uint16_t(0x0101), uint16_t(0xFF00));
+        TEST("MOVI20S #H'FF00, R1",    uint16_t(0x0101), uint16_t(0xFF00));
+        TEST("MOVI20S #-H'80000, R2",  uint16_t(0x0281), uint16_t(0x0000));
         // Without the FPU the SH-2A has no FPU system registers, so the
         // FPU-related CPU instructions (LDS/STS FPUL/FPSCR) are undefined code.
         ERRT("LDS R0, FPUL",       OPERAND_NOT_ALLOWED, "R0, FPUL");
@@ -763,7 +764,7 @@ void test_undef() {
         ERUS("BCLR #UNDEF, R0",       "UNDEF, R0",          0x8600);
         ERUS("BSET #UNDEF, R0",       "UNDEF, R0",          0x8608);
         ERUS("BST  #UNDEF, R0",       "UNDEF, R0",          0x8700);
-        // M_IMM20 / M_IMM20S -- 32-bit MOVI20/MOVI20S (two words).
+        // M_IMM20 -- 32-bit MOVI20/MOVI20S (two words).
         ERUS("MOVI20  #UNDEF, R0",    "UNDEF, R0", uint16_t(0x0000), uint16_t(0x0000));
         ERUS("MOVI20S #UNDEF, R0",    "UNDEF, R0", uint16_t(0x0001), uint16_t(0x0000));
     }

@@ -408,19 +408,6 @@ void AsmSuperH::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode) c
         insn.setOpCode2(static_cast<Config::opcode_t>(v & 0xFFFF));
         break;
     }
-    case M_IMM20S: {
-        // 28-bit signed shifted-left-8: top 12 bits stored as (hi:lo).
-        auto v = static_cast<int32_t>(op.val.getSigned());
-        if (v & 0xFF)
-            insn.setErrorIf(op, OVERFLOW_RANGE);  // low 8 bits must be 0
-        if (v < -0x8000000 || v > 0x7FFFFFF)
-            insn.setErrorIf(op, OVERFLOW_RANGE);
-        v >>= 8;
-        opc |= static_cast<Config::opcode_t>((v >> 16) & 0xF) << 4;
-        insn.setOpCode(opc);
-        insn.setOpCode2(static_cast<Config::opcode_t>(v & 0xFFFF));
-        break;
-    }
     case M_D12N:
     case M_D12M:
         // The disp12 forms are deferred -- the assembler still emits an
@@ -515,8 +502,10 @@ void AsmSuperH::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode) c
         opc |= val & 0xFF;
         break;
     }
+    case M_UIMM8:
     case M_TVEC: {
-        // TRAPA #imm, unsigned 8-bit.
+        // TRAPA #imm, and the TST/AND/OR/XOR immediate the manual
+        // zero-extends: unsigned 8-bit.
         const auto val = op.val.getUnsigned();
         if (val > 255)
             insn.setErrorIf(op, OVERFLOW_RANGE);

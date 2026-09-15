@@ -66,8 +66,10 @@ NOASM_targets = i80286 h8s2000n h8s2000 h8s2600n h8s2600 i960
 # testno, src2 routed into the src/dst field for scanbyte and synmov*, and an
 # integer literal on a register-pair operand evaluated as a float), so it
 # cannot adjudicate this generated source; see ~/asl_bugs/asl_bug_i960.md.
+# shdsp: ASL knows no MOD/RS/RE control register and no LDRS/LDRE/SETRC.
+# See ~/asl_bugs/asl_bug_superh.md.
 ASL_exclude = mb8861 i80286 h8300hn h8300h h8s2000n h8s2000 h8s2600n h8s2600 \
-    shdsp sh2e sh2a $(TGT_h8500) am29050 i960 h16
+    shdsp $(TGT_h8500) am29050 i960 h16
 # CPU variants whose gas toolchain does not produce a manual-conforming
 # encoding. h8300-elf-as has no -mach=h8300; it always emits the H8/300H
 # 4-byte form for JMP/JSR @aa:16, producing bytes that don't execute on
@@ -75,7 +77,12 @@ ASL_exclude = mb8861 i80286 h8300hn h8300h h8s2000n h8s2000 h8s2600n h8s2600 \
 # h8500-hms-as encodes the general (:g) immediate forms with a leading EA
 # prefix (e.g. A0 04 55) where libasm/ASL use the EA-suffix form (04 55 70);
 # both decode the same, but the bytes never match the ASL-conformant output.
-GAS_exclude = h8300 $(TGT_h8500)
+# sh2a: MOVI20S takes the 20-bit field per the SH-2A manual (6.3.22, the
+# example "MOVI20S H'7FFFF,R0" leaves R0 = H'07FFFF00), which is what the
+# disassembler writes; sh-elf-as wants that value already shifted left 8 and
+# rejects anything with low bits set.  The reference test still checks sh2a
+# against gas -- test_sh2a.ginc carries the shifted spelling by hand.
+GAS_exclude = h8300 sh2a $(TGT_h8500)
 
 # file name of generating file
 define out-inc # target
@@ -162,8 +169,11 @@ clean-asm:
 	-rm -f $(ASM_OUTS)
 
 ASL_SRCS = $(foreach t,$(ASM_TESTS),$(if $(filter $(t:gen_%=%),$(ASL_exclude)),,$(t)))
+# A .asl wrapper is kept for every excluded target so the check can come back
+# when the tool is fixed, so ASL_exclude has to be applied to the wrappers too.
 ASL_TESTS = $(ASL_SRCS) \
-	$(foreach t,$(patsubst %.asl,%,$(wildcard gen_*.asl)),$(if $(filter $(t),$(ASL_SRCS)),,$(t)))
+	$(foreach t,$(patsubst %.asl,%,$(wildcard gen_*.asl)),\
+	   $(if $(filter $(t),$(ASL_SRCS))$(filter $(t:gen_%=%),$(ASL_exclude)),,$(t)))
 ASL_OUTS  = $(foreach f,$(ASL_TESTS),$(f).$(call out-ext,$(f)))
 define asl-file # stem
 $(if $(wildcard $(1).asl),$(1).asl,$(1).asm)

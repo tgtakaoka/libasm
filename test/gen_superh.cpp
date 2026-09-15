@@ -47,7 +47,11 @@ int main(int argc, const char **argv) {
         dis.setOption("gnu-as", "enable");
     } else {
         dis.setOption("relative", "enable");
-        dis.setOption("origin-char", "$");
+        // Motorola style makes '$' the hex prefix, so the location counter has
+        // to be something else or "$+4" reads as a hex literal.  The assembler
+        // manual spells it '$' (1.5, "Location Counter"), but libasm accepts
+        // '$', '*' and '.' alike and the reference sources already use '*'.
+        dis.setOption("origin-char", "*");
         dis.setOption("motorola-style", "enable");
     }
     // SH displacements are unsigned (no sign to consolidate).  gnu-as prints

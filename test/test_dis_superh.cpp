@@ -172,17 +172,17 @@ void test_arith() {
 void test_logic_shift() {
     // AND / OR / XOR / TST
     TEST("AND",   "R0, R1",        0x2109);
-    TEST("AND",   "#-1, R0",         0xC9FF);
-    TEST("AND.B", "#-1, @(R0,GBR)",  0xCDFF);
+    TEST("AND",   "#H'FF, R0",      0xC9FF);
+    TEST("AND.B", "#H'FF, @(R0,GBR)", 0xCDFF);
     TEST("OR",    "R0, R1",          0x210B);
-    TEST("OR",    "#-H'80, R0",      0xCB80);
-    TEST("OR.B",  "#-1, @(R0,GBR)",  0xCFFF);
+    TEST("OR",    "#H'80, R0",      0xCB80);
+    TEST("OR.B",  "#H'FF, @(R0,GBR)", 0xCFFF);
     TEST("XOR",   "R0, R1",          0x210A);
     TEST("XOR",   "#H'7F, R0",       0xCA7F);
     TEST("XOR.B", "#H'7F, @(R0,GBR)", 0xCE7F);
     TEST("TST",   "R0, R1",          0x2108);
-    TEST("TST",   "#-H'80, R0",      0xC880);
-    TEST("TST.B", "#-H'80, @(R0,GBR)", 0xCC80);
+    TEST("TST",   "#H'80, R0",      0xC880);
+    TEST("TST.B", "#H'80, @(R0,GBR)", 0xCC80);
     // NOT
     TEST("NOT",   "R0, R1",        0x6107);
     // SHAL / SHAR / SHLL / SHLR (single bit)
@@ -353,9 +353,9 @@ void test_sh2e_fpu() {
     // Conversion
     TEST("FLOAT",   "FPUL, FR0",      0xF02D);
     TEST("FTRC",    "FR0, FPUL",      0xF03D);
-    // FMAC: dis omits the implicit FR0 source.
-    TEST("FMAC",    "FR1, FR2",  0xF21E);
-    TEST("FMAC",    "FR14, FR15",0xFFEE);
+    // FMAC: the manual spells the implied FR0 index register out in full.
+    TEST("FMAC",    "FR0, FR1, FR2",   0xF21E);
+    TEST("FMAC",    "FR0, FR14, FR15", 0xFFEE);
     // FLDS / FSTS
     TEST("FLDS",    "FR0, FPUL",      0xF01D);
     TEST("FSTS",    "FPUL, FR0",      0xF00D);
@@ -409,7 +409,8 @@ void test_sh2a_additions() {
     TEST("MOVI20",  "#H'7FFFF, R1",            uint16_t(0x0170), uint16_t(0xFFFF));
     TEST("MOVI20",  "#-H'80000, R2",           uint16_t(0x0280), uint16_t(0x0000));
     TEST("MOVI20S", "#0, R0",                  uint16_t(0x0001), uint16_t(0x0000));
-    TEST("MOVI20S", "#H'0FF0000, R1",          uint16_t(0x0101), uint16_t(0xFF00));
+    TEST("MOVI20S", "#H'0FF00, R1",            uint16_t(0x0101), uint16_t(0xFF00));
+    TEST("MOVI20S", "#-H'80000, R2",           uint16_t(0x0281), uint16_t(0x0000));
     // FPU additions (require --fpu enabled). With LIBASM_SUPERH_NOFPU the FPU
     // cannot be enabled (fpuType() stays FPU_NONE) and they decode as unknown.
     disassembler.setOption("fpu", "true");

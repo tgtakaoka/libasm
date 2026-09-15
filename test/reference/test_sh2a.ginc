@@ -74,6 +74,8 @@
         movi20  #-0x80000,r2            ;# 02800000
         movi20s #0,r0                   ;# 00010000
         movi20s #0xFF0000,r1            ;# 0101FF00
+        movi20s #0x7FFFF00,r2           ;# 0271FFFF
+        movi20s #-0x8000000,r3          ;# 03810000
 
 ! Local Variables:
 ! mode: asm

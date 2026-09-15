@@ -79,12 +79,12 @@ enum AddrMode : uint8_t {
     M_FRM = 34,    // FRm
     M_D12M = 35,   // @(disp12,Rm), disp in 2nd word
     M_IMM20 = 36,  // 20-bit signed imm, hi nibble in bits[7:4], lo16 in 2nd word
-    M_IMM20S = 37, // 20-bit signed imm shifted-left 8 (MOVI20S)
     // V_D8: 8-bit field bits[7:0], 0x00FF
-    M_D4M = 38,    // @(d4,Rm), m=bits[7:4], d=bits[3:0] -> 0x00FF
-    M_D8 = 39,     // @(disp,GBR), d=bits[7:0]; scale from size
-    M_PCREL = 40,  // @(disp,PC),  d=bits[7:0]; scale from size
-    M_IMM8 = 41,   // #imm8 sign-extended, bits[7:0]
+    M_D4M = 37,    // @(d4,Rm), m=bits[7:4], d=bits[3:0] -> 0x00FF
+    M_D8 = 38,     // @(disp,GBR), d=bits[7:0]; scale from size
+    M_PCREL = 39,  // @(disp,PC),  d=bits[7:0]; scale from size
+    M_IMM8 = 40,   // #imm8 sign-extended, bits[7:0]
+    M_UIMM8 = 41,  // #imm8 zero-extended, bits[7:0] (TST/AND/OR/XOR)
     M_REL8 = 42,   // 8-bit signed PC-rel branch, bits[7:0]
     M_REL8P = 43,  // 8-bit signed PC-rel as "@(*+N,PC)"
     M_TVEC = 44,   // TRAPA vector, bits[7:0]
@@ -177,25 +177,29 @@ inline InsnSize decodeDataSize(AddrMode src, AddrMode dst, Config::opcode_t opc)
 // Operand modes whose data lives in a second 16-bit word (SH-2A 32-bit forms).
 // Their presence is what makes an entry "long form", so no flag bit is needed.
 inline bool isLongMode(AddrMode mode) {
-    return mode == M_IMM20 || mode == M_IMM20S || mode == M_D12N || mode == M_D12M;
+    return mode == M_IMM20 || mode == M_D12N || mode == M_D12M;
 }
 
 struct Entry final : entry::Base<Config::opcode_t> {
     struct Flags final {
-        // _attr bit layout: [14:12]=InsnSize, [11:6]=src(6), [5:0]=dst(6).
-        // Long-form (SH-2A 32-bit) is inferred from the operand modes, so no
-        // bit is stored. bp_=bit position of each field, gm_=its group mask.
+        // _attr bit layout: [15]=implicit FR0, [14:12]=InsnSize, [11:6]=src(6),
+        // [5:0]=dst(6). Long-form (SH-2A 32-bit) is inferred from the operand
+        // modes, so no bit is stored. bp_=bit position of each field,
+        // gm_=its group mask.
         static constexpr int bp_dst = 0;
         static constexpr int bp_src = 6;
         static constexpr int bp_size = 12;
         static constexpr uint16_t gm_dst = uint16_t(0x3F) << bp_dst;   // [5:0]
         static constexpr uint16_t gm_src = uint16_t(0x3F) << bp_src;   // [11:6]
         static constexpr uint16_t gm_size = uint16_t(0x07) << bp_size; // [14:12]
+        static constexpr uint16_t fr0_bm = uint16_t(1) << 15;          // [15]
 
         uint16_t _attr;
 
-        static constexpr Flags create(InsnSize isz, AddrMode src, AddrMode dst) {
+        static constexpr Flags create(InsnSize isz, AddrMode src, AddrMode dst,
+                bool fr0 = false) {
             return Flags{static_cast<uint16_t>(
+                    (fr0 ? fr0_bm : 0) |
                     ((static_cast<uint16_t>(isz) << bp_size) & gm_size) |
                     ((static_cast<uint16_t>(src) << bp_src) & gm_src) |
                     ((static_cast<uint16_t>(dst) << bp_dst) & gm_dst))};
@@ -205,6 +209,9 @@ struct Entry final : entry::Base<Config::opcode_t> {
         AddrMode src() const { return AddrMode((_attr & gm_src) >> bp_src); }
         AddrMode dst() const { return AddrMode((_attr & gm_dst) >> bp_dst); }
         bool longForm() const { return isLongMode(src()) || isLongMode(dst()); }
+        // FMAC: the manual spells the first operand, the implied FR0 index
+        // register, out in full ("FMAC FR0,FRm,FRn").
+        bool implicitFr0() const { return _attr & fr0_bm; }
 
         // Returns the OR of all variable bits in the 16-bit instruction word,
         // including the embedded size field for ISZ_DATA entries.
@@ -235,8 +242,9 @@ struct Entry final : entry::Base<Config::opcode_t> {
             };
             static constexpr uint8_t MODE_VAR[] PROGMEM = {  // indexed by mode - M_RN
                 V_N, V_N, V_N, V_N, V_N, V_N, V_N,            // M_RN M_IRN M_INCN M_DECN M_IDXN M_FRN M_D12N
-                V_M, V_M, V_M, V_M, V_M, V_M, V_M, V_M,       // M_RM M_IRM M_INCM M_IDXM M_FRM M_D12M M_IMM20 M_IMM20S
-                V_D8, V_D8, V_D8, V_D8, V_D8, V_D8, V_D8,     // M_D4M M_D8 M_PCREL M_IMM8 M_REL8 M_REL8P M_TVEC
+                V_M, V_M, V_M, V_M, V_M, V_M, V_M,            // M_RM M_IRM M_INCM M_IDXM M_FRM M_D12M M_IMM20
+                V_D8, V_D8, V_D8, V_D8, V_D8,                 // M_D4M M_D8 M_PCREL M_IMM8 M_UIMM8
+                V_D8, V_D8, V_D8,                             // M_REL8 M_REL8P M_TVEC
                 V_D4N,                                        // M_D4N
                 V_REL12,                                      // M_REL12
                 V_IMM3,                                       // M_IMM3

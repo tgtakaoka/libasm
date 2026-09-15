@@ -31,6 +31,9 @@ namespace superh {
 // locates the bits and the stored opcode is the default-size template).
 #define E2(opc, name, isz, src, dst) \
     {opc, Entry::Flags::create(isz, src, dst), name}
+// FMAC only: prefixes the two operands with the implied FR0 index register.
+#define F2(opc, name, isz, src, dst) \
+    {opc, Entry::Flags::create(isz, src, dst, true), name}
 #define E1(opc, name, isz, src) E2(opc, name, isz, src, M_NONE)
 #define E0(opc, name, isz)      E1(opc, name, isz, M_NONE)
 
@@ -139,14 +142,14 @@ constexpr Entry TABLE_COMMON[] PROGMEM = {
     E1(0xC300, TEXT_TRAPA,   ISZ_NONE, M_TVEC),           // TRAPA #imm
     E2(0xC600, TEXT_MOV,     ISZ_DATA, M_D8,    M_R0),    // MOV.B/W/L @(disp,GBR),R0
     E2(0xC700, TEXT_MOVA,    ISZ_NONE, M_PCREL, M_R0),    // MOVA @(disp,PC),R0
-    E2(0xC800, TEXT_TST,     ISZ_NONE, M_IMM8,  M_R0),    // TST #imm,R0
-    E2(0xC900, TEXT_AND,     ISZ_NONE, M_IMM8,  M_R0),    // AND #imm,R0
-    E2(0xCA00, TEXT_XOR,     ISZ_NONE, M_IMM8,  M_R0),    // XOR #imm,R0
-    E2(0xCB00, TEXT_OR,      ISZ_NONE, M_IMM8,  M_R0),    // OR #imm,R0
-    E2(0xCC00, TEXT_TST,     ISZ_BYTE, M_IMM8,  M_IGBR),  // TST.B #imm,@(R0,GBR)
-    E2(0xCD00, TEXT_AND,     ISZ_BYTE, M_IMM8,  M_IGBR),  // AND.B #imm,@(R0,GBR)
-    E2(0xCE00, TEXT_XOR,     ISZ_BYTE, M_IMM8,  M_IGBR),  // XOR.B #imm,@(R0,GBR)
-    E2(0xCF00, TEXT_OR,      ISZ_BYTE, M_IMM8,  M_IGBR),  // OR.B #imm,@(R0,GBR)
+    E2(0xC800, TEXT_TST,     ISZ_NONE, M_UIMM8, M_R0),    // TST #imm,R0
+    E2(0xC900, TEXT_AND,     ISZ_NONE, M_UIMM8, M_R0),    // AND #imm,R0
+    E2(0xCA00, TEXT_XOR,     ISZ_NONE, M_UIMM8, M_R0),    // XOR #imm,R0
+    E2(0xCB00, TEXT_OR,      ISZ_NONE, M_UIMM8, M_R0),    // OR #imm,R0
+    E2(0xCC00, TEXT_TST,     ISZ_BYTE, M_UIMM8, M_IGBR),  // TST.B #imm,@(R0,GBR)
+    E2(0xCD00, TEXT_AND,     ISZ_BYTE, M_UIMM8, M_IGBR),  // AND.B #imm,@(R0,GBR)
+    E2(0xCE00, TEXT_XOR,     ISZ_BYTE, M_UIMM8, M_IGBR),  // XOR.B #imm,@(R0,GBR)
+    E2(0xCF00, TEXT_OR,      ISZ_BYTE, M_UIMM8, M_IGBR),  // OR.B #imm,@(R0,GBR)
     E2(0xD000, TEXT_MOV,     ISZ_DATA, M_PCREL, M_RN),    // MOV.W/L @(disp,PC),Rn
     E2(0xE000, TEXT_MOV,     ISZ_NONE, M_IMM8,  M_RN),    // MOV #imm,Rn
 };
@@ -239,11 +242,11 @@ constexpr Entry TABLE_SH2A[] PROGMEM = {
 
 // SH-2A 32-bit CPU additions. Each entry's opcode is the FIRST 16-bit word
 // template (with variable bits zero); the disassembler reads a 2nd word when
-// matched. Long form is inferred from the M_IMM20/M_IMM20S/M_D12 operands;
+// matched. Long form is inferred from the M_IMM20/M_D12 operands;
 // word 2 carries the displacement, immediate, or bit field.
 constexpr Entry TABLE_SH2A_LONG[] PROGMEM = {
     E2(0x0000, TEXT_MOVI20,  ISZ_NONE, M_IMM20,  M_RN),  // MOVI20 #imm20,Rn
-    E2(0x0001, TEXT_MOVI20S, ISZ_NONE, M_IMM20S, M_RN),  // MOVI20S #imm20<<8,Rn
+    E2(0x0001, TEXT_MOVI20S, ISZ_NONE, M_IMM20,  M_RN),  // MOVI20S #imm20,Rn
 };
 
 #if !defined(LIBASM_SUPERH_NOFPU)
@@ -286,7 +289,7 @@ constexpr Entry TABLE_FPU[] PROGMEM = {
     E2(0xF00B, TEXT_FMOV_S,  ISZ_NONE, M_FRM,   M_DECN), // FMOV.S FRm,@-Rn
     E2(0xF00C, TEXT_FMOV,    ISZ_NONE, M_FRM,   M_FRN),  // FMOV FRm,FRn
     E2(0xF00D, TEXT_FSTS,    ISZ_NONE, M_FPUL,  M_FRN),  // FSTS FPUL,FRn
-    E2(0xF00E, TEXT_FMAC,    ISZ_NONE, M_FRM,   M_FRN),  // FMAC FR0,FRm,FRn
+    F2(0xF00E, TEXT_FMAC,    ISZ_NONE, M_FRM,   M_FRN),  // FMAC FR0,FRm,FRn
     E2(0xF01D, TEXT_FLDS,    ISZ_NONE, M_FRN,   M_FPUL), // FLDS FRm,FPUL  (FRm in n-slot)
     E2(0xF02D, TEXT_FLOAT,   ISZ_NONE, M_FPUL,  M_FRN),  // FLOAT FPUL,FRn
     E2(0xF03D, TEXT_FTRC,    ISZ_NONE, M_FRN,   M_FPUL), // FTRC FRm,FPUL  (FRm in n-slot)
@@ -719,6 +722,7 @@ static bool acceptMode(const Operand &op, AddrMode table) {
     case M_REL8P:
         // LDRS/LDRE accept @(target,PC) or a bare symbol target.
         return op.mode == M_PCREL || op.mode == M_REL8;
+    case M_UIMM8:
     case M_TVEC:
         return op.mode == M_IMM8;
     case M_REL12:
@@ -730,7 +734,6 @@ static bool acceptMode(const Operand &op, AddrMode table) {
     case M_IMM3:
         return op.mode == M_IMM8;  // unsigned 3-bit fits in IMM8
     case M_IMM20:
-    case M_IMM20S:
         return op.mode == M_IMM8;  // 20/28-bit signed via integer parse
     case M_PUSH:
         return op.mode == M_DECN && op.reg == REG_R15;  // @-R15 implicit
