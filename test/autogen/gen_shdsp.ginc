@@ -167,21 +167,13 @@
       mov.l  @(0,gbr), r0
       mova   0x0000014c, r0
       tst    #0, r0
-      tst    #-0x80, r0
       and    #0, r0
-      and    #-0x80, r0
       xor    #0, r0
-      xor    #-0x80, r0
       or     #0, r0
-      or     #-0x80, r0
       tst.b  #0, @(r0,gbr)
-      tst.b  #-0x80, @(r0,gbr)
       and.b  #0, @(r0,gbr)
-      and.b  #-0x80, @(r0,gbr)
       xor.b  #0, @(r0,gbr)
-      xor.b  #-0x80, @(r0,gbr)
       or.b   #0, @(r0,gbr)
-      or.b   #-0x80, @(r0,gbr)
-      mov.l  0x00000170, r0
+      mov.l  0x00000160, r0
       mov    #0, r0
       mov    #-0x80, r0

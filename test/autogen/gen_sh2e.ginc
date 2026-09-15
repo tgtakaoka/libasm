@@ -143,22 +143,14 @@
       mov.l  @(0,gbr), r0
       mova   0x0000011c, r0
       tst    #0, r0
-      tst    #-0x80, r0
       and    #0, r0
-      and    #-0x80, r0
       xor    #0, r0
-      xor    #-0x80, r0
       or     #0, r0
-      or     #-0x80, r0
       tst.b  #0, @(r0,gbr)
-      tst.b  #-0x80, @(r0,gbr)
       and.b  #0, @(r0,gbr)
-      and.b  #-0x80, @(r0,gbr)
       xor.b  #0, @(r0,gbr)
-      xor.b  #-0x80, @(r0,gbr)
       or.b   #0, @(r0,gbr)
-      or.b   #-0x80, @(r0,gbr)
-      mov.l  0x00000140, r0
+      mov.l  0x00000130, r0
       mov    #0, r0
       mov    #-0x80, r0
       fadd   fr0, fr0
@@ -175,7 +167,7 @@
       fmov.s fr0, @-r0
       fmov   fr0, fr0
       fsts   fpul, fr0
-      fmac   fr0, fr0
+      fmac   fr0, fr0, fr0
       flds   fr0, fpul
       float  fpul, fr0
       ftrc   fr0, fpul

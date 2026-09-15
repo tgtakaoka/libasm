@@ -132,9 +132,15 @@
         MOVI20  #0x7FFFF,R1             ;# 0170FFFF
         MOVI20  #-0x80000,R2            ;# 02800000
 
-;;; MOVI20S #imm,Rn (n format: 0000nnnniiii0001 iiiiiiiiiiiiiiii) 28-bit, low 8 zero
+;;; MOVI20S #imm,Rn (n format: 0000nnnniiii0001 iiiiiiiiiiiiiiii) imm20 << 8
+;;; The operand is the 20-bit field, not the shifted result: the manual's
+;;; own example is "MOVI20S H'7FFFF,R0" leaving R0 = H'07FFFF00 (6.3.22).
+;;; GNU as takes the shifted value instead, so test_sh2a.ginc multiplies
+;;; each of these by 256.
         MOVI20S #0,R0                   ;# 00010000
-        MOVI20S #0xFF0000,R1            ;# 0101FF00
+        MOVI20S #0xFF00,R1              ;# 0101FF00
+        MOVI20S #0x7FFFF,R2             ;# 0271FFFF
+        MOVI20S #-0x80000,R3            ;# 03810000
 
 ;;; Local Variables:
 ;;; mode: asm

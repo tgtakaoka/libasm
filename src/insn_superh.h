@@ -30,6 +30,7 @@ struct EntryInsn : EntryInsnBase<Config, Entry> {
     AddrMode src() const { return flags().src(); }
     AddrMode dst() const { return flags().dst(); }
     bool longForm() const { return flags().longForm(); }
+    bool implicitFr0() const { return flags().implicitFr0(); }
     InsnSize insnSize() const { return flags().insnSize(); }
 };
 

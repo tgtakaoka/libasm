@@ -196,12 +196,12 @@
 
 ;;; LDRS @(disp,PC) (d8 format: 1000 1100 dddd dddd) load repeat start
 ;;; d = (target - (PC+4)) / 2; target should be 2-byte aligned
-        LDRS    $+4               ;# 8C00
-        LDRS    $+H'40            ;# 8C1E
+        LDRS    *+4               ;# 8C00
+        LDRS    *+H'40            ;# 8C1E
 
 ;;; LDRE @(disp,PC) (d8 format: 1000 1110 dddd dddd) load repeat end
-        LDRE    $+4               ;# 8E00
-        LDRE    $+H'40            ;# 8E1E
+        LDRE    *+4               ;# 8E00
+        LDRE    *+H'40            ;# 8E1E
 
 ;;; SETRC #imm (i8 format: 1000 0010 iiii iiii) set repeat count to immediate
         SETRC   #0                      ;# 8200

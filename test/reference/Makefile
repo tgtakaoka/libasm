@@ -53,9 +53,16 @@ clean-asm:
 # every one, so it is the adjudicator here.  See ~/asl_bugs/asl_bug_i960.md;
 # the .asl wrapper is kept, and assembles cleanly, so the check can come back
 # if ASL is fixed.
+# test_sh2a: ASL encodes NOTT as 00D0; the SH-2A manual (section 6.3.28 and the
+# instruction-set summary) gives 0000000001101000 = 0068.  That one word is the
+# only divergence in the whole file -- the other 989 bytes match.
+# test_shdsp: ASL knows no MOD/RS/RE control register (LDC/LDC.L/STC/STC.L, 36
+# forms) and no LDRS/LDRE/SETRC (10 forms).  Everything it does assemble is
+# byte-identical.  See ~/asl_bugs/asl_bug_superh.md; both .asl wrappers are kept
+# and the checks can come back once ASL is fixed.
 ASL_exclude = test_i80286 test_i80386 test_real_i80386 test_i80486 test_real_i80486 \
    test_tms320c31 test_tms320c32 test_i960 \
-   test_h8s2000 test_h8s2000n test_h8s2600 test_h8s2600n test_shdsp test_sh2e test_sh2a \
+   test_h8s2000 test_h8s2000n test_h8s2600 test_h8s2600n test_shdsp test_sh2a \
    test_am29050
 ASL_TESTS = $(foreach a,$(ASM_TESTS) \
    $(foreach t,$(patsubst %.asl,%,$(wildcard test_*.asl)),$(if $(filter $(t),$(ASM_TESTS)),,$(t))),\
