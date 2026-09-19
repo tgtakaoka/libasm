@@ -487,18 +487,26 @@ int_fast16_t __fixed64::read(StrScanner &scan) {
     int_fast8_t frac = -1;
     int_fast16_t exp = 0;
     set(0);  // clear significand to 0
+    auto p = scan;
     while (true) {
-        if (isdigit(*scan)) {
+        if (isdigit(*p)) {
             ++digits;
             if (frac >= 0)
                 ++frac;
-            exp = dec_digit(exp, *scan++ - '0');
-        } else if (digits && frac < 0 && scan.expect('.')) {
+            exp = dec_digit(exp, *p++ - '0');
+        } else if (frac < 0 && p.expect('.')) {
             frac = 0;
         } else {
             break;
         }
     }
+    // The integral part may be omitted (".123"), so the '.' is accepted with no
+    // digit before it; but a bare '.' is not a number, and consuming it would
+    // make the caller read the rest as a valid zero.  Advance |scan| only once
+    // at least one digit has been seen.
+    if (digits == 0)
+        return exp;
+    scan = p;
     if (frac > 0) {
         // Adjust fraction part if exists
         exp += power10(-frac);
