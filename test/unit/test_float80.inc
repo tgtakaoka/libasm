@@ -568,6 +568,22 @@ void test_read() {
     SEQ("overflow", f80::infinity(false), v);
     EQ("underflow", ERANGE, v.read("3.7e-4951"));
     SEQ("underflow", F80_TRUE_MIN, v);
+
+    // The integral part may be omitted, with or without an exponent.
+    const auto p0_5 = read_f80(".5");
+    EQ("+.5", "3FFE.80000000-00000000", p0_5.str());
+    const auto m0_5 = read_f80("-.5");
+    EQ("-.5", "BFFE.80000000-00000000", m0_5.str());
+    const auto p123 = read_f80(".123E3");
+    EQ("+.123E3", "4005.F6000000-00000000", p123.str());
+    SEQ(".123E3==123", read_f80("123"), p123);
+
+    // ... but a '.' with no digit at all is not a number: nothing is consumed.
+    char *end;
+    EQ("bare .", 0, v.read(".", &end));
+    EQ("bare .", ".", end);
+    EQ("bare .E5", 0, v.read(".E5", &end));
+    EQ("bare .E5", ".E5", end);
 }
 
 const char *ecvt(const f80 &f, int prec = 21) {
