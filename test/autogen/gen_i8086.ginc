@@ -5152,12 +5152,8 @@
       lock xchg   es:[si+0x8685], ax
       lock xchg   es:[bp+0x8887], ax
       lock xchg   es:[bx+0x8988], ax
-      repne movsb es:[di], es:[si]
-      repne movsw es:[di], es:[si]
       repne cmpsb es:[si], es:[di]
       repne cmpsw es:[si], es:[di]
-      repne lodsb es:[si]
-      repne lodsw es:[si]
       rep movsb   es:[di], es:[si]
       rep movsw   es:[di], es:[si]
       rep cmpsb   es:[si], es:[di]
@@ -10884,14 +10880,8 @@
       lock xchg   [si+0x8685], ax
       lock xchg   [bp+0x8887], ax
       lock xchg   [bx+0x8988], ax
-      repne movsb es:[di], ds:[si]
-      repne movsw es:[di], ds:[si]
       repne cmpsb ds:[si], es:[di]
       repne cmpsw ds:[si], es:[di]
-      repne stosb es:[di]
-      repne stosw es:[di]
-      repne lodsb ds:[si]
-      repne lodsw ds:[si]
       repne scasb es:[di]
       repne scasw es:[di]
       rep movsb   es:[di], ds:[si]

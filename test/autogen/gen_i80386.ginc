@@ -44092,10 +44092,7 @@
       lock xchg   es:[esi+esi+0x3a393837], ax
       lock xchg   es:[ebp-0x7677787a], ax
       lock xchg   es:[esi-0x75767779], ax
-      repne outsw dx, es:[si]
-      repne movsw es:[di], es:[si]
       repne cmpsw es:[si], es:[di]
-      repne lodsw es:[si]
       rep outsw   dx, es:[si]
       rep movsw   es:[di], es:[si]
       rep cmpsw   es:[si], es:[di]
@@ -98761,14 +98758,8 @@
       lock xchg   es:[esi+esi+0x3a393837], eax
       lock xchg   es:[ebp-0x7677787a], eax
       lock xchg   es:[esi-0x75767779], eax
-      repne outsb dx, es:[si]
-      repne outsd dx, es:[si]
-      repne movsb es:[di], es:[si]
-      repne movsd es:[di], es:[si]
       repne cmpsb es:[si], es:[di]
       repne cmpsd es:[si], es:[di]
-      repne lodsb es:[si]
-      repne lodsd es:[si]
       rep outsb   dx, es:[si]
       rep outsd   dx, es:[si]
       rep movsb   es:[di], es:[si]
@@ -141592,12 +141583,7 @@
       lock xchg   [esi+esi+0x3a393837], ax
       lock xchg   [ebp-0x7677787a], ax
       lock xchg   [esi-0x75767779], ax
-      repne insw  es:[di], dx
-      repne outsw dx, ds:[si]
-      repne movsw es:[di], ds:[si]
       repne cmpsw ds:[si], es:[di]
-      repne stosw es:[di]
-      repne lodsw ds:[si]
       repne scasw es:[di]
       rep insw    es:[di], dx
       rep outsw   dx, ds:[si]
@@ -196669,18 +196655,8 @@
       lock xchg   [esi+esi+0x3a393837], eax
       lock xchg   [ebp-0x7677787a], eax
       lock xchg   [esi-0x75767779], eax
-      repne insb  es:[di], dx
-      repne insd  es:[di], dx
-      repne outsb dx, ds:[si]
-      repne outsd dx, ds:[si]
-      repne movsb es:[di], ds:[si]
-      repne movsd es:[di], ds:[si]
       repne cmpsb ds:[si], es:[di]
       repne cmpsd ds:[si], es:[di]
-      repne stosb es:[di]
-      repne stosd es:[di]
-      repne lodsb ds:[si]
-      repne lodsd ds:[si]
       repne scasb es:[di]
       repne scasd es:[di]
       rep insb    es:[di], dx
