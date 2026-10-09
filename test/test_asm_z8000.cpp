@@ -1187,6 +1187,32 @@ void test_program_control() {
     ATEST(0x1000, "JR rqx40", 0xE81F);
     ATEST(0x1000, "JR rx40",  0xE81F);
 
+    // VI and NVI name the EI/DI interrupt operands, but they are legal symbol
+    // names too; the matched entry decides which reading applies.
+    symtab.intern(0x1040, "vi");
+    symtab.intern(0x1040, "nvi");
+    ATEST(0x1000, "JR vi",    0xE81F);
+    ATEST(0x1000, "JR nvi",   0xE81F);
+    ATEST(0x1000, "JR vi+2",  0xE820);
+    TEST("LD R0,#vi",         0x2100, 0x1040);
+    // Same for the flag names that are not also condition codes.  C and Z are,
+    // so they stay reserved -- GNU as rejects a label of either name as well.
+    symtab.intern(0x1040, "p");
+    symtab.intern(0x1040, "s");
+    symtab.intern(0x1040, "v");
+    ATEST(0x1000, "JR p",     0xE81F);
+    ATEST(0x1000, "JR s",     0xE81F);
+    ATEST(0x1000, "JR v",     0xE81F);
+    // Condition codes go by operand count, as in ASL: one operand is the
+    // target, two are the condition and the target.
+    symtab.intern(0x1040, "c");
+    symtab.intern(0x1040, "z");
+    ATEST(0x1000, "JR c",     0xE81F);
+    ATEST(0x1000, "JR z",     0xE81F);
+    ATEST(0x1000, "JR C,c",   0xE71F);
+    ATEST(0x1000, "JR NZ,z",  0xEE1F);
+    TEST("IN R0,vi",          0x3B04, 0x1040);
+
     // Return from Procedure
     TEST("RET F",   0x9E00);
     TEST("RET LT",  0x9E01);
@@ -2569,6 +2595,10 @@ void test_comment() {
 
 void test_undefined_symbol() {
     ERUS("LDB RH2,#UNDEF", "UNDEF", 0xC200);
+    // A keyword-shaped symbol is still reported when it is never defined.
+    ERUS("JR vi",  "vi",  0xE800);
+    ERUS("JR nvi", "nvi", 0xE800);
+    ERUS("JR p",   "p",   0xE800);
     ERUS("LD  R2,#UNDEF",  "UNDEF", 0x2102, 0x0000);
     ERUS("LDL RR2,#UNDEF", "UNDEF", 0x1402, 0x0000, 0x0000);
     if (z8001()) {
