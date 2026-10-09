@@ -540,8 +540,10 @@ bool acceptMode(AddrMode opr, AddrMode table) {
                table == M_RA12 || table == M_RA8 || table == M_RA7 || table == M_IO;
     if (opr == M_X)
         return table == M_GENI || table == M_GEND || table == M_GENA;
-    if (opr == M_CC)
-        return table == M_FLAG;  // C & Z
+    if (opr == M_CC)  // C & Z are flag names as well
+        return table == M_FLAG || acceptMode(M_DA, table);
+    if (opr == M_INTR || opr == M_FLAG)
+        return acceptMode(M_DA, table);  // VI/NVI and P/S/V are symbol names too
     if (opr == M_NONE)
         return table == M_CC || table == M_INTR || table == M_FLAG;
     return false;

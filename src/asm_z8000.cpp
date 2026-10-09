@@ -283,7 +283,31 @@ void AsmZ8000::emitCtlRegister(AsmInsn &insn, OprPos pos, const Operand &op) con
     emitData(insn, pos, data);
 }
 
+namespace {
+// Modes whose operand is written as a name that could equally be a symbol.
+bool isNameMode(AddrMode mode) {
+    return mode == M_CC || mode == M_FLAG || mode == M_INTR;
+}
+}  // namespace
+
 void AsmZ8000::emitOperand(AsmInsn &insn, AddrMode mode, const Operand &op, OprPos pos) const {
+    // Condition codes, flags and interrupt sources read as keywords, but they
+    // are legal symbol names too and the parser had to choose before the entry
+    // was known.  The entry has asked for an address, so read the text again
+    // as one.  Which it is follows from the operand count, as in ASL: "JR C"
+    // jumps to a label C, "JR C,X" is the conditional jump.
+    if (isNameMode(op.mode) && !isNameMode(mode) && mode != M_NONE) {
+        Operand addr;
+        StrScanner scan{op.errorAt()};
+        addr.setAt(scan);
+        parseAddress(scan, addr);
+        // A comma-separated list is a keyword list and nothing else.
+        if (!endOfLine(scan.skipSpaces()))
+            addr.setErrorIf(UNKNOWN_OPERAND);
+        addr.mode = M_DA;
+        emitOperand(insn, mode, addr, pos);
+        return;
+    }
     insn.setErrorIf(op);
     switch (mode) {
     case M_DBLR:
