@@ -21,7 +21,8 @@ namespace text {
 namespace i8096 {
 // clang-format off
 
-constexpr char TEXT_CPU_LIST[] PROGMEM = "i8096, i80196KB, i80196, i80196N";
+constexpr char TEXT_CPU_LIST[] PROGMEM = "i8096, i80196KB, i80196, i80196N, i80296";
+constexpr char TEXT_CPU_80296[]   PROGMEM = "80296";
 constexpr char TEXT_CPU_80196[]   PROGMEM = "80196";
 constexpr char TEXT_CPU_80196N[]  PROGMEM = "80196N";
 constexpr char TEXT_CPU_80196KB[] PROGMEM = "80196KB";
@@ -96,6 +97,7 @@ constexpr char TEXT_NORML[] PROGMEM = "NORML";
 // constexpr char TEXT_PUSH[]  PROGMEM = "PUSH";
 // constexpr char TEXT_PUSHF[] PROGMEM = "PUSHF";
 // constexpr char TEXT_RET[]   PROGMEM = "RET";
+// constexpr char TEXT_RETI[]  PROGMEM = "RETI";
 // constexpr char TEXT_RST[]   PROGMEM = "RST";
 constexpr char TEXT_SCALL[] PROGMEM = "SCALL";
 // constexpr char TEXT_SETC[]  PROGMEM = "SETC";
@@ -143,6 +145,52 @@ constexpr char TEXT_EPTS[]  PROGMEM = "EPTS";
 constexpr char TEXT_TIJMP[] PROGMEM = "TIJMP";
 // constexpr char TEXT_XCH[]  PROGMEM = "XCH";
 // constexpr char TEXT_XCHB[] PROGMEM = "XCHB";
+
+// i80296
+// constexpr char TEXT_MAC[]  PROGMEM = "MAC";
+constexpr char TEXT_MACR[]     PROGMEM = "MACR";
+constexpr char TEXT_MACRZ[]    PROGMEM = "MACRZ";
+constexpr char TEXT_MACZ[]     PROGMEM = "MACZ";
+constexpr char TEXT_MSAC[]     PROGMEM = "MSAC";
+constexpr char TEXT_MVAC[]     PROGMEM = "MVAC";
+constexpr char TEXT_RPT[]      PROGMEM = "RPT";
+constexpr char TEXT_RPTC[]     PROGMEM = "RPTC";
+constexpr char TEXT_RPTE[]     PROGMEM = "RPTE";
+constexpr char TEXT_RPTGE[]    PROGMEM = "RPTGE";
+constexpr char TEXT_RPTGT[]    PROGMEM = "RPTGT";
+constexpr char TEXT_RPTH[]     PROGMEM = "RPTH";
+constexpr char TEXT_RPTI[]     PROGMEM = "RPTI";
+constexpr char TEXT_RPTIC[]    PROGMEM = "RPTIC";
+constexpr char TEXT_RPTIE[]    PROGMEM = "RPTIE";
+constexpr char TEXT_RPTIGE[]   PROGMEM = "RPTIGE";
+constexpr char TEXT_RPTIGT[]   PROGMEM = "RPTIGT";
+constexpr char TEXT_RPTIH[]    PROGMEM = "RPTIH";
+constexpr char TEXT_RPTILE[]   PROGMEM = "RPTILE";
+constexpr char TEXT_RPTILT[]   PROGMEM = "RPTILT";
+constexpr char TEXT_RPTINC[]   PROGMEM = "RPTINC";
+constexpr char TEXT_RPTINE[]   PROGMEM = "RPTINE";
+constexpr char TEXT_RPTINH[]   PROGMEM = "RPTINH";
+constexpr char TEXT_RPTINST[]  PROGMEM = "RPTINST";
+constexpr char TEXT_RPTINV[]   PROGMEM = "RPTINV";
+constexpr char TEXT_RPTINVT[]  PROGMEM = "RPTINVT";
+constexpr char TEXT_RPTIST[]   PROGMEM = "RPTIST";
+constexpr char TEXT_RPTIV[]    PROGMEM = "RPTIV";
+constexpr char TEXT_RPTIVT[]   PROGMEM = "RPTIVT";
+constexpr char TEXT_RPTLE[]    PROGMEM = "RPTLE";
+constexpr char TEXT_RPTLT[]    PROGMEM = "RPTLT";
+constexpr char TEXT_RPTNC[]    PROGMEM = "RPTNC";
+constexpr char TEXT_RPTNE[]    PROGMEM = "RPTNE";
+constexpr char TEXT_RPTNH[]    PROGMEM = "RPTNH";
+constexpr char TEXT_RPTNST[]   PROGMEM = "RPTNST";
+constexpr char TEXT_RPTNV[]    PROGMEM = "RPTNV";
+constexpr char TEXT_RPTNVT[]   PROGMEM = "RPTNVT";
+constexpr char TEXT_RPTST[]    PROGMEM = "RPTST";
+constexpr char TEXT_RPTV[]     PROGMEM = "RPTV";
+constexpr char TEXT_RPTVT[]    PROGMEM = "RPTVT";
+constexpr char TEXT_SMAC[]     PROGMEM = "SMAC";
+constexpr char TEXT_SMACR[]    PROGMEM = "SMACR";
+constexpr char TEXT_SMACRZ[]   PROGMEM = "SMACRZ";
+constexpr char TEXT_SMACZ[]    PROGMEM = "SMACZ";
 
 // clang-format on
 }  // namespace i8096

@@ -108,8 +108,23 @@ StrBuffer &DisI8096::outOperand(StrBuffer &out, DisInsn &insn, const Operand &op
         // Fall-through
     case M_BREG:
     case M_WREG:
-    case M_LREG:
     case M_QREG:
+    case M_ACCSEL:
+    case M_SWREG:
+        return outRegister(out, insn, op.regno);
+    case M_LREG:
+    case M_SLREG:
+        // A word multiply destination below 10H is a MAC selector, which the
+        // MAC entries match first; the FE prefixed form still reaches here.
+        if (insn.mulWordInsn() && macSelector(op.regno))
+            insn.setErrorIf(out, ILLEGAL_REGISTER);
+        return outRegister(out, insn, op.regno);
+    case M_POINTR:
+        // A bit pointer is an immediate up to 1FH, a register from 20H up.
+        if (op.regno < 32) {
+            out.letter('#');
+            return outDec(out, op.regno, 5);
+        }
         return outRegister(out, insn, op.regno);
     case M_INDIR:
     case M_EINDIR:
@@ -144,7 +159,7 @@ StrBuffer &DisI8096::outOperand(StrBuffer &out, DisInsn &insn, const Operand &op
 }
 
 void DisI8096::Operand::readIndirect(DisInsn &insn) {
-    regno = insn.readByte();
+    regno = insn.nextByte();
     if (isWreg(regno)) {
         mode = M_INDIR;
     } else {
@@ -154,13 +169,13 @@ void DisI8096::Operand::readIndirect(DisInsn &insn) {
 }
 
 void DisI8096::Operand::readIndexed(DisInsn &insn) {
-    regno = insn.readByte();
+    regno = insn.nextByte();
     if (isWreg(regno)) {  // 8bit displacement
-        val16 = static_cast<int16_t>(insn.readByte());
+        val16 = static_cast<int16_t>(insn.nextByte());
         mode = M_IDX8;
     } else {  // 16bit displacement
         regno &= ~1;
-        val16 = insn.readUint16();
+        val16 = insn.nextUint16();
         mode = M_IDX16;
     }
 }
@@ -169,50 +184,60 @@ Error DisI8096::Operand::read(DisInsn &insn, AddrMode opMode) {
     switch (mode = opMode) {
     case M_BREG:
     case M_COUNT:
-        regno = insn.readByte();
+    case M_POINTR:
+        regno = insn.nextByte();
+        break;
+    case M_ACCSEL:
+        // The low bits are the selector that told MVAC from MSAC.
+        regno = insn.nextByte() & ~3;
+        break;
+    case M_SLREG:
+    case M_SWREG:
+        // Bit 0 is the sign the table search has already matched; see M_SLREG.
+        regno = insn.nextByte() & ~1;
         break;
     case M_WREG:
-        regno = insn.readByte();
+        regno = insn.nextByte();
         if (!isWreg(regno))
             setErrorIf(OPERAND_NOT_ALIGNED);
         break;
     case M_INDIR:
         // BR's operand byte may already have been read to tell it from EBR.
-        regno = insn.readOperandByte();
+        regno = insn.nextByte();
         if (!isWreg(regno))
             setErrorIf(OPERAND_NOT_ALIGNED);
         break;
     case M_LREG:
-        regno = insn.readByte();
+        regno = insn.nextByte();
         if (!isLreg(regno))
             setErrorIf(OPERAND_NOT_ALIGNED);
         break;
     case M_QREG:
-        regno = insn.readByte();
+        regno = insn.nextByte();
         if (!isQreg(regno))
             setErrorIf(OPERAND_NOT_ALIGNED);
         break;
     case M_EINDIR:
-        regno = insn.readByte();
+        regno = insn.nextByte();
         if (!isLreg(regno))
             setErrorIf(OPERAND_NOT_ALIGNED);
         break;
     case M_EBIND:
         // EBR shares opcode E3 with BR and sets bit 0 to say so.
-        regno = insn.readOperandByte() & ~1;
+        regno = insn.nextByte() & ~1;
         if (!isLreg(regno))
             setErrorIf(OPERAND_NOT_ALIGNED);
         break;
     case M_EIDX:
-        regno = insn.readByte();
+        regno = insn.nextByte();
         if (!isLreg(regno))
             setErrorIf(OPERAND_NOT_ALIGNED);
-        val24 = insn.readUint16();
-        val24 |= static_cast<uint32_t>(insn.readByte()) << 16;
+        val24 = insn.nextUint16();
+        val24 |= static_cast<uint32_t>(insn.nextByte()) << 16;
         break;
     case M_REL24:
-        val24 = insn.readUint16();
-        val24 |= static_cast<uint32_t>(insn.readByte()) << 16;
+        val24 = insn.nextUint16();
+        val24 |= static_cast<uint32_t>(insn.nextByte()) << 16;
         break;
     case M_BIDX:
         readIndexed(insn);
@@ -225,11 +250,11 @@ Error DisI8096::Operand::read(DisInsn &insn, AddrMode opMode) {
     case M_BAOP:
         switch (insn.aa()) {
         case AA_REG:
-            regno = insn.readByte();
+            regno = insn.nextByte();
             mode = M_BREG;
             break;
         case AA_IMM:
-            val16 = insn.readByte();
+            val16 = insn.nextByte();
             mode = M_IMM8;
             break;
         case AA_INDIR:
@@ -243,13 +268,13 @@ Error DisI8096::Operand::read(DisInsn &insn, AddrMode opMode) {
     case M_WAOP:
         switch (insn.aa()) {
         case AA_REG:
-            regno = insn.readByte();
+            regno = insn.nextByte();
             if (!isWreg(regno))
                 setErrorIf(OPERAND_NOT_ALIGNED);
             mode = M_WREG;
             break;
         case AA_IMM:
-            val16 = insn.readUint16();
+            val16 = insn.nextUint16();
             mode = M_IMM16;
             break;
         case AA_INDIR:
@@ -264,13 +289,13 @@ Error DisI8096::Operand::read(DisInsn &insn, AddrMode opMode) {
         break;
     case M_IMM8:
     case M_REL8:
-        val16 = insn.readByte();
+        val16 = insn.nextByte();
         break;
     case M_REL11:
-        val16 = (static_cast<int16_t>(insn.opCode() & 7) << 8) | insn.readByte();
+        val16 = (static_cast<int16_t>(insn.opCode() & 7) << 8) | insn.nextByte();
         break;
     case M_REL16:
-        val16 = insn.readUint16();
+        val16 = insn.nextUint16();
         break;
     case M_BITNO:
         val16 = insn.opCode() & 7;
@@ -340,7 +365,7 @@ Error DisI8096::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) const
                 insn.setErrorIf(out, src1);
             outOperand(out, insn, src1);
         }
-        if (insn.src2() != M_NONE) {
+        if (insn.src2() != M_NONE && !insn.hasPost()) {
             out.comma();
             if (src2.getError())
                 insn.setErrorIf(out, src2);

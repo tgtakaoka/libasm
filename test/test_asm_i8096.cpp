@@ -38,13 +38,26 @@ bool is80196n() {
     return strcasecmp_P("80196N", asm8096.cpu_P()) == 0;
 }
 
+bool is80296() {
+    return strcasecmp_P("80296", asm8096.cpu_P()) == 0;
+}
+
 // The KB additions are on every CPU but the 8096; the KC additions are on the
-// KC and the N.
+// KC and later; the 1-Mbyte instructions are on the N and the 296.
 bool hasKb() {
     return !is8096();
 }
 
 bool hasKc() {
+    return is80196() || is80196n() || is80296();
+}
+
+bool hasN() {
+    return is80196n() || is80296();
+}
+
+// Only the 80196 and the N have a peripheral transaction server.
+bool hasPts() {
     return is80196() || is80196n();
 }
 
@@ -73,6 +86,9 @@ void test_cpu() {
     EQUALS("cpu 80196N", true,   assembler.setCpu("80196N"));
     EQUALS_P("cpu 80196N", "80196N", assembler.config().cpu_P());
 
+    EQUALS("cpu 80296", true,   assembler.setCpu("80296"));
+    EQUALS_P("cpu 80296", "80296", assembler.config().cpu_P());
+
     EQUALS("cpu i80196KB", true,   assembler.setCpu("i80196KB"));
     EQUALS_P("cpu i80196KB", "80196KB", assembler.config().cpu_P());
 
@@ -81,6 +97,9 @@ void test_cpu() {
 
     EQUALS("cpu i80196N", true,   assembler.setCpu("i80196N"));
     EQUALS_P("cpu i80196N", "80196N", assembler.config().cpu_P());
+
+    EQUALS("cpu i80296", true,   assembler.setCpu("i80296"));
+    EQUALS_P("cpu i80296", "80296", assembler.config().cpu_P());
 }
 
 void test_2_operands() {
@@ -313,6 +332,18 @@ void test_2_operands() {
     TEST("XORB 35, [32]+",     0x96, 0x21, 0x23);
     TEST("XORB 52, 35[32]",    0x97, 0x20, 0x23, 0x34);
     TEST("XORB 69, 3423H[32]", 0x97, 0x21, 0x23, 0x34, 0x45);
+
+    // Only the 80296 can read the sign from the destination, so the option
+    // has nothing to select here; see test_signed_80296.
+    if (!is80296()) {
+        assembler.setOption("signed-prefix", "disable");
+        TEST("MUL 52, 32",  0xFE, 0x6C, 0x20, 0x34);
+        TEST("DIVB 36, 32", 0xFE, 0x9C, 0x20, 0x24);
+        // Only there is a word multiply destination below 10H a MAC
+        // selector; see test_dsp_80296.
+        TEST("MUL 0, 32",   0xFE, 0x6C, 0x20, 0x00);
+        TEST("MULU 0, 32",  0x6C, 0x20, 0x00);
+    }
 }
 
 void test_3_operands() {
@@ -821,9 +852,17 @@ void test_control() {
     TEST("NOP",    0xFD);
     TEST("SKIP 1", 0x00, 0x01);
     TEST("TRAP",   0xF7);
-    if (hasKc()) {
+    if (hasPts()) {
         TEST("DPTS",  0xEC);
         TEST("EPTS",  0xED);
+    } else if (is80296()) {
+        ERUI("DPTS");
+        ERUI("EPTS");
+    }
+    if (is80296()) {
+        TEST("RETI",  0xE5);
+    } else {
+        ERUI("RETI");
     }
     if (hasKb())
         TEST("IDLPD #2", 0xF6, 0x02);
@@ -960,12 +999,168 @@ void test_branch_80196n() {
     ERRT("EBMOVI 68, 32", OPERAND_NOT_ALIGNED, "68, 32", 0xE4, 0x20, 0x44);
 }
 
+void test_dsp_80296() {
+    // A 3-operand MUL/MULU whose destination is below 10H is a
+    // multiply-accumulate instead, the four low bits picking the
+    // variant (manual 3.3.2, Table 3-4).
+    TEST("MAC 32",                        0x6C, 0x20, 0x00);
+    TEST("SMAC 32",                       0x6C, 0x20, 0x01);
+    TEST("MACR 32",                       0x6C, 0x20, 0x04);
+    TEST("SMACR 32",                      0x6C, 0x20, 0x05);
+    TEST("MACZ 32",                       0x6C, 0x20, 0x08);
+    TEST("SMACZ 32",                      0x6C, 0x20, 0x09);
+    TEST("MACRZ 32",                      0x6C, 0x20, 0x0C);
+    TEST("SMACRZ 32",                     0x6C, 0x20, 0x0D);
+
+    TEST("MAC 26, 32",                    0x4C, 0x20, 0x1A, 0x00);
+    TEST("SMAC 26, 32",                   0x4C, 0x20, 0x1A, 0x01);
+    TEST("MACR 26, 32",                   0x4C, 0x20, 0x1A, 0x04);
+    TEST("SMACR 26, 32",                  0x4C, 0x20, 0x1A, 0x05);
+    TEST("MACZ 26, 32",                   0x4C, 0x20, 0x1A, 0x08);
+    TEST("SMACZ 26, 32",                  0x4C, 0x20, 0x1A, 0x09);
+    TEST("MACRZ 26, 32",                  0x4C, 0x20, 0x1A, 0x0C);
+    TEST("SMACRZ 26, 32",                 0x4C, 0x20, 0x1A, 0x0D);
+
+    // The whole addressing range reaches the selector, which trails it.
+    TEST("MAC [32]",                      0x6E, 0x20, 0x00);
+    TEST("MAC [32]+",                     0x6E, 0x21, 0x00);
+    TEST("MAC 52[32]",                    0x6F, 0x20, 0x34, 0x00);
+    TEST("MAC 5634H[32]",                 0x6F, 0x21, 0x34, 0x56, 0x00);
+    TEST("MAC #3412H",                    0x6D, 0x12, 0x34, 0x00);
+    TEST("MAC 26, [32]",                  0x4E, 0x20, 0x1A, 0x00);
+    TEST("MAC 26, 5634H[32]",             0x4F, 0x21, 0x34, 0x56, 0x1A, 0x00);
+    TEST("SMACRZ 26, 5634H[32]",          0x4F, 0x21, 0x34, 0x56, 0x1A, 0x0D);
+
+    // The relocating MACs move SRC2 on afterwards, so they have no
+    // immediate form (manual A-6, MACR).
+    ERRT("MACR #3412H",   OPERAND_NOT_ALLOWED, "#3412H", 0x6D, 0x12, 0x34, 0x04);
+    ERRT("SMACR #3412H",  OPERAND_NOT_ALLOWED, "#3412H", 0x6D, 0x12, 0x34, 0x05);
+    ERRT("MACRZ #3412H",  OPERAND_NOT_ALLOWED, "#3412H", 0x6D, 0x12, 0x34, 0x0C);
+    ERRT("SMACRZ #3412H", OPERAND_NOT_ALLOWED, "#3412H", 0x6D, 0x12, 0x34, 0x0D);
+
+    // A word multiply destination below 10H is the selector, so it names an
+    // operation there rather than a register (manual 3.3.2).
+    ERRT("MULU 0, 32",     ILLEGAL_REGISTER, "0, 32",     0x6C, 0x20, 0x00);
+    ERRT("MULU 0, 24, 32", ILLEGAL_REGISTER, "0, 24, 32", 0x4C, 0x20, 0x18, 0x00);
+    ERRT("MUL 0, 32",      ILLEGAL_REGISTER, "0, 32",     0xFE, 0x6C, 0x20, 0x00);
+    ERRT("MUL 0, 24, 32",  ILLEGAL_REGISTER, "0, 24, 32", 0xFE, 0x4C, 0x20, 0x18, 0x00);
+    // The divides and the byte multiplies have no selector, so the zero
+    // register is as much a destination there as on the other parts.
+    TEST("MULUB 0, 32",                   0x7C, 0x20, 0x00);
+    TEST("DIVU 0, 32",                    0x8C, 0x20, 0x00);
+    TEST("DIVUB 0, 32",                   0x9C, 0x20, 0x00);
+
+    // Opcode 0DH is SHLL, MVAC or MSAC by the low bits of its
+    // destination treg (manual A-6, MVAC).
+    TEST("MVAC 24, 32",                   0x0D, 0x20, 0x19);
+    TEST("MVAC 24, #17",                  0x0D, 0x11, 0x19);
+    TEST("MSAC 24, 32",                   0x0D, 0x20, 0x1B);
+    TEST("MSAC 28, #31",                  0x0D, 0x1F, 0x1F);
+    TEST("MVAC 24, #0",                   0x0D, 0x00, 0x19);
+    TEST("MSAC 24, 255",                  0x0D, 0xFF, 0x1B);
+    // A bit pointer is an immediate up to 1FH, a register from 20H up.
+    ERRT("MVAC 24, #32", OVERFLOW_RANGE,   "#32", 0x0D, 0x20, 0x19);
+    ERRT("MSAC 24, 31",  ILLEGAL_REGISTER, "31",  0x0D, 0x1F, 0x1B);
+    ONAL("MVAC 26, 32",  "26, 32",                0x0D, 0x20, 0x19);
+
+    // The repeats share the 3-operand AND opcode; RPT_CNT (04H) is
+    // the destination and the second source picks the variant
+    // (manual 3.3.4, A-6).
+    TEST("RPT 32",                        0x40, 0x20, 0x00, 0x04);
+    TEST("RPTNST 32",                     0x40, 0x20, 0x10, 0x04);
+    TEST("RPTNH 32",                      0x40, 0x20, 0x11, 0x04);
+    TEST("RPTGT 32",                      0x40, 0x20, 0x12, 0x04);
+    TEST("RPTNC 32",                      0x40, 0x20, 0x13, 0x04);
+    TEST("RPTNVT 32",                     0x40, 0x20, 0x14, 0x04);
+    TEST("RPTNV 32",                      0x40, 0x20, 0x15, 0x04);
+    TEST("RPTGE 32",                      0x40, 0x20, 0x16, 0x04);
+    TEST("RPTNE 32",                      0x40, 0x20, 0x17, 0x04);
+    TEST("RPTST 32",                      0x40, 0x20, 0x18, 0x04);
+    TEST("RPTH 32",                       0x40, 0x20, 0x19, 0x04);
+    TEST("RPTLE 32",                      0x40, 0x20, 0x1A, 0x04);
+    TEST("RPTC 32",                       0x40, 0x20, 0x1B, 0x04);
+    TEST("RPTVT 32",                      0x40, 0x20, 0x1C, 0x04);
+    TEST("RPTV 32",                       0x40, 0x20, 0x1D, 0x04);
+    TEST("RPTLT 32",                      0x40, 0x20, 0x1E, 0x04);
+    TEST("RPTE 32",                       0x40, 0x20, 0x1F, 0x04);
+    TEST("RPTI 32",                       0x40, 0x20, 0x20, 0x04);
+    TEST("RPTINST 32",                    0x40, 0x20, 0x30, 0x04);
+    TEST("RPTINH 32",                     0x40, 0x20, 0x31, 0x04);
+    TEST("RPTIGT 32",                     0x40, 0x20, 0x32, 0x04);
+    TEST("RPTINC 32",                     0x40, 0x20, 0x33, 0x04);
+    TEST("RPTINVT 32",                    0x40, 0x20, 0x34, 0x04);
+    TEST("RPTINV 32",                     0x40, 0x20, 0x35, 0x04);
+    TEST("RPTIGE 32",                     0x40, 0x20, 0x36, 0x04);
+    TEST("RPTINE 32",                     0x40, 0x20, 0x37, 0x04);
+    TEST("RPTIST 32",                     0x40, 0x20, 0x38, 0x04);
+    TEST("RPTIH 32",                      0x40, 0x20, 0x39, 0x04);
+    TEST("RPTILE 32",                     0x40, 0x20, 0x3A, 0x04);
+    TEST("RPTIC 32",                      0x40, 0x20, 0x3B, 0x04);
+    TEST("RPTIVT 32",                     0x40, 0x20, 0x3C, 0x04);
+    TEST("RPTIV 32",                      0x40, 0x20, 0x3D, 0x04);
+    TEST("RPTILT 32",                     0x40, 0x20, 0x3E, 0x04);
+    TEST("RPTIE 32",                      0x40, 0x20, 0x3F, 0x04);
+
+    TEST("RPT #20",                       0x41, 0x14, 0x00, 0x00, 0x04);
+    TEST("RPT [32]",                      0x42, 0x20, 0x00, 0x04);
+    TEST("RPT [32]+",                     0x42, 0x21, 0x00, 0x04);
+    TEST("RPTIE [32]+",                   0x42, 0x21, 0x3F, 0x04);
+    // No repeat has an indexed form (manual A-6, RPT).
+    ERRT("RPT 52[32]",     OPERAND_NOT_ALLOWED, "52[32]",    0x43, 0x20, 0x34, 0x00, 0x04);
+    ERRT("RPTI 5634H[32]", OPERAND_NOT_ALLOWED, "5634H[32]", 0x43, 0x21, 0x34, 0x56, 0x20, 0x04);
+}
+
+void test_signed_80296() {
+    // The FE prefix is the default, because it assembles for the whole family.
+    TEST("MUL 52, 32", 0xFE, 0x6C, 0x20, 0x34);
+
+    // What the 80296 prefers is the sign in bit 0 of the destination (manual
+    // A-7 note 2).
+    assembler.setOption("signed-prefix", "disable");
+
+    TEST("MUL 52, 32",          0x6C, 0x20, 0x35);
+    TEST("MUL 84, #3412H",      0x6D, 0x12, 0x34, 0x55);
+    TEST("MUL 52, [32]",        0x6E, 0x20, 0x35);
+    TEST("MUL 52, [32]+",       0x6E, 0x21, 0x35);
+    TEST("MUL 84, 52[32]",      0x6F, 0x20, 0x34, 0x55);
+    TEST("MUL 120, 5634H[32]",  0x6F, 0x21, 0x34, 0x56, 0x79);
+    TEST("MUL 84, 52, 32",      0x4C, 0x20, 0x34, 0x55);
+    TEST("MUL 120, 86, #3412H", 0x4D, 0x12, 0x34, 0x56, 0x79);
+    TEST("MULB 36, 32",         0x7C, 0x20, 0x25);
+    TEST("MULB 36, #32",        0x7D, 0x20, 0x25);
+    TEST("MULB 52, 35[32]",     0x7F, 0x20, 0x23, 0x35);
+    TEST("MULB 52, 36, 32",     0x5C, 0x20, 0x24, 0x35);
+    TEST("MULB 52, 35, #32",    0x5D, 0x20, 0x23, 0x35);
+    TEST("DIV 52, 32",          0x8C, 0x20, 0x35);
+    TEST("DIV 84, #3412H",      0x8D, 0x12, 0x34, 0x55);
+    TEST("DIV 52, [32]+",       0x8E, 0x21, 0x35);
+    TEST("DIV 120, 5634H[32]",  0x8F, 0x21, 0x34, 0x56, 0x79);
+    TEST("DIVB 36, 32",         0x9C, 0x20, 0x25);
+    TEST("DIVB 36, #32",        0x9D, 0x20, 0x25);
+    TEST("DIVB 70, 3423H[32]",  0x9F, 0x21, 0x23, 0x34, 0x47);
+
+    // The unsigned forms are untouched, and an SFR is no more a destination
+    // here than it is with the prefix.
+    TEST("MULU 52, 32",                             0x6C, 0x20, 0x34);
+    ERRT("MUL 16, 32",  ILLEGAL_REGISTER, "16, 32", 0x6C, 0x20, 0x11);
+    ONAL("MUL 53, 32",  "53, 32",                   0x6C, 0x20, 0x35);
+    ONAL("MULB 37, 32", "37, 32",                   0x7C, 0x20, 0x25);
+
+    // The sign bit does not make a MAC selector a register; see
+    // test_dsp_80296.
+    ERRT("MUL 0, 32",   ILLEGAL_REGISTER, "0, 32",  0x6C, 0x20, 0x01);
+    ONAL("MUL 1, 32",   "1, 32",                    0x6C, 0x20, 0x01);
+    TEST("MULB 0, 32",                              0x7C, 0x20, 0x01);
+    TEST("DIV 0, 32",                               0x8C, 0x20, 0x01);
+    TEST("DIVB 0, 32",                              0x9C, 0x20, 0x01);
+}
+
 void run_tests(const char *cpu) {
     assembler.setCpu(cpu);
     RUN_TEST(test_2_operands);
     RUN_TEST(test_3_operands);
     RUN_TEST(test_move);
-    if (is80196n()) {
+    if (hasN()) {
         // The branch range tests assert 16-bit wrap-around, which does not
         // hold in the N's 24-bit space; the N has its own below.
         RUN_TEST(test_branch_80196n);
@@ -975,6 +1170,10 @@ void run_tests(const char *cpu) {
     }
     RUN_TEST(test_modify);
     RUN_TEST(test_control);
+    if (is80296()) {
+        RUN_TEST(test_dsp_80296);
+        RUN_TEST(test_signed_80296);
+    }
     RUN_TEST(test_comment);
     RUN_TEST(test_undef);
     RUN_TEST(test_data_constant);

@@ -22,8 +22,6 @@
         bmovi   0d0h, 0ceh
 ;;; EX
         tijmp   0e8h,0e4h,#0e6h
-        dpts
-        epts
 
 ;;; Local Variables:
 ;;; mode: asm

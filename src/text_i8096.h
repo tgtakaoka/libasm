@@ -27,6 +27,7 @@ namespace i8096 {
 extern const char TEXT_CPU_LIST[]    PROGMEM;
 extern const char TEXT_CPU_8096[]    PROGMEM;
 extern const char TEXT_CPU_80196[]   PROGMEM;
+extern const char TEXT_CPU_80296[]   PROGMEM;
 extern const char TEXT_CPU_80196N[]  PROGMEM;
 extern const char TEXT_CPU_80196KB[] PROGMEM;
 
@@ -99,6 +100,7 @@ using common::TEXT_POPF;
 using common::TEXT_PUSH;
 using common::TEXT_PUSHF;
 using common::TEXT_RET;
+using common::TEXT_RETI;
 using common::TEXT_RST;
 extern const char TEXT_SCALL[] PROGMEM;
 using common::TEXT_SETC;
@@ -146,6 +148,52 @@ extern const char TEXT_EPTS[]  PROGMEM;
 extern const char TEXT_TIJMP[] PROGMEM;
 using common::TEXT_XCH;
 using common::TEXT_XCHB;
+
+// i80296
+using common::TEXT_MAC;
+extern const char TEXT_MACR[]     PROGMEM;
+extern const char TEXT_MACRZ[]    PROGMEM;
+extern const char TEXT_MACZ[]     PROGMEM;
+extern const char TEXT_MSAC[]     PROGMEM;
+extern const char TEXT_MVAC[]     PROGMEM;
+extern const char TEXT_RPT[]      PROGMEM;
+extern const char TEXT_RPTC[]     PROGMEM;
+extern const char TEXT_RPTE[]     PROGMEM;
+extern const char TEXT_RPTGE[]    PROGMEM;
+extern const char TEXT_RPTGT[]    PROGMEM;
+extern const char TEXT_RPTH[]     PROGMEM;
+extern const char TEXT_RPTI[]     PROGMEM;
+extern const char TEXT_RPTIC[]    PROGMEM;
+extern const char TEXT_RPTIE[]    PROGMEM;
+extern const char TEXT_RPTIGE[]   PROGMEM;
+extern const char TEXT_RPTIGT[]   PROGMEM;
+extern const char TEXT_RPTIH[]    PROGMEM;
+extern const char TEXT_RPTILE[]   PROGMEM;
+extern const char TEXT_RPTILT[]   PROGMEM;
+extern const char TEXT_RPTINC[]   PROGMEM;
+extern const char TEXT_RPTINE[]   PROGMEM;
+extern const char TEXT_RPTINH[]   PROGMEM;
+extern const char TEXT_RPTINST[]  PROGMEM;
+extern const char TEXT_RPTINV[]   PROGMEM;
+extern const char TEXT_RPTINVT[]  PROGMEM;
+extern const char TEXT_RPTIST[]   PROGMEM;
+extern const char TEXT_RPTIV[]    PROGMEM;
+extern const char TEXT_RPTIVT[]   PROGMEM;
+extern const char TEXT_RPTLE[]    PROGMEM;
+extern const char TEXT_RPTLT[]    PROGMEM;
+extern const char TEXT_RPTNC[]    PROGMEM;
+extern const char TEXT_RPTNE[]    PROGMEM;
+extern const char TEXT_RPTNH[]    PROGMEM;
+extern const char TEXT_RPTNST[]   PROGMEM;
+extern const char TEXT_RPTNV[]    PROGMEM;
+extern const char TEXT_RPTNVT[]   PROGMEM;
+extern const char TEXT_RPTST[]    PROGMEM;
+extern const char TEXT_RPTV[]     PROGMEM;
+extern const char TEXT_RPTVT[]    PROGMEM;
+extern const char TEXT_SMAC[]     PROGMEM;
+extern const char TEXT_SMACR[]    PROGMEM;
+extern const char TEXT_SMACRZ[]   PROGMEM;
+extern const char TEXT_SMACZ[]    PROGMEM;
 
 // clang-format on
 }  // namespace i8096

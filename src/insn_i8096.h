@@ -25,13 +25,18 @@
 namespace libasm {
 namespace i8096 {
 
-struct EntryInsn : EntryInsnPrefix<Config, Entry> {
+struct EntryInsn : EntryInsnPrePostfix<Config, Entry> {
     AaMode aa() const { return AaMode(opCode() & 3); }
     AddrMode dst() const { return flags().dst(); }
     AddrMode src1() const { return flags().src1(); }
     AddrMode src2() const { return flags().src2(); }
+    // Whether |src2| names a DSP selector instead of a third operand.
+    bool hasPost() const { return src2() >= M_PMAC; }
     void embedAa(AaMode aa) { embed(uint8_t(aa)); }
     bool mulDivInsn() const;
+    // Whether this is a word multiply, whose destination can be a MAC
+    // selector; see Config::macSelector.
+    bool mulWordInsn() const;
 };
 
 struct Operand final : ErrorAt {
@@ -43,15 +48,28 @@ struct Operand final : ErrorAt {
 };
 
 struct AsmInsn final : AsmInsnImpl<Config>, EntryInsn {
-    AsmInsn(Insn &insn) : AsmInsnImpl(insn) {}
+    AsmInsn(Insn &insn) : AsmInsnImpl(insn), _signedPrefix(true) {}
 
     Operand dstOp, src1Op, src2Op;
+
+    // Whether a signed multiply or divide must take the FE prefix; see
+    // M_SLREG.
+    void setSignedPrefix(bool enable) { _signedPrefix = enable; }
+    bool signedPrefix() const { return _signedPrefix; }
 
     void emitInsn() {
         uint8_t pos = 0;
         if (hasPrefix())
             emitByte(prefix(), pos++);
         emitByte(opCode(), pos);
+    }
+    // The DSP selector trails the operands; RPT's is followed by the
+    // RPT_CNT register address.
+    void emitPost() {
+        if (src2() == M_PMAC || src2() == M_PRPT)
+            emitOperand8(postfix());
+        if (src2() == M_PRPT)
+            emitOperand8(RPT_CNT);
     }
     void emitOperand8(uint8_t val8) { emitByte(val8, operandPos()); }
     void emitOperand16(uint16_t val16) { emitUint16(val16, operandPos()); }
@@ -61,6 +79,8 @@ struct AsmInsn final : AsmInsnImpl<Config>, EntryInsn {
     }
 
 private:
+    bool _signedPrefix;
+
     uint8_t operandPos() {
         uint8_t pos = length();
         if (pos == 0)
@@ -71,24 +91,31 @@ private:
 
 struct DisInsn final : DisInsnImpl<Config>, EntryInsn {
     DisInsn(Insn &insn, DisMemory &memory, const StrBuffer &out)
-        : DisInsnImpl(insn, memory, out), _operand(0), _hasOperand(false) {}
+        : DisInsnImpl(insn, memory, out), _read(0), _taken(0) {}
 
-    // BR and EBR share opcode E3 and are told apart by bit 0 of the operand
-    // byte, so the table search has to look at it.  Cache it, or a candidate
-    // that does not match would leave the reader one byte on.
-    uint8_t readOperandByte() {
-        if (!_hasOperand) {
-            _operand = readByte();
-            _hasOperand = true;
-        }
-        return _operand;
+    // The table search has to look at operand bytes: BR and EBR differ only
+    // in bit 0 of the first one, and the DSP selector trails the whole
+    // operand.  What the search reads ahead is cached and handed to the
+    // operand reader in turn, so a candidate that does not match leaves the
+    // reader where it was.
+    uint8_t peekOperand(uint8_t pos) {
+        while (_read <= pos && _read < MAX_AHEAD && isOK())
+            _ahead[_read++] = readByte();
+        return pos < _read ? _ahead[pos] : 0;
     }
-    bool hasOperandByte() const { return _hasOperand; }
-    uint8_t operandByte() const { return _operand; }
+    uint8_t nextByte() { return _taken < _read ? _ahead[_taken++] : readByte(); }
+    uint16_t nextUint16() {
+        const auto lsb = nextByte();
+        return static_cast<uint16_t>(nextByte()) << 8 | lsb;
+    }
 
 private:
-    uint8_t _operand;
-    bool _hasOperand;
+    // The furthest look-ahead is a 3-operand MAC indexed by a 16-bit
+    // displacement: three operand bytes, then the register, then the selector.
+    static constexpr uint8_t MAX_AHEAD = 5;
+    uint8_t _ahead[MAX_AHEAD];
+    uint8_t _read;
+    uint8_t _taken;
 };
 
 }  // namespace i8096

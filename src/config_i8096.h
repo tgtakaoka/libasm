@@ -27,20 +27,28 @@ enum CpuType : uint8_t {
     I80196KB,
     I80196,
     I80196N,
+    I80296,
 };
 
 struct Config : ConfigImpl<CpuType, ADDRESS_24BIT, ADDRESS_BYTE, OPCODE_8BIT, ENDIAN_LITTLE, 7, 5> {
     Config(const InsnTable<CpuType> &table) : ConfigImpl(table, I8096) {}
 
-    // Only the N series reaches past 64K; the rest stay 16-bit so their
+    // Only the N and the 296 reach past 64K; the rest stay 16-bit so their
     // listings and disassembly are unchanged.
     AddressWidth addressWidth() const override {
-        return cpuType() == I80196N ? ADDRESS_24BIT : ADDRESS_16BIT;
+        return cpuType() >= I80196N ? ADDRESS_24BIT : ADDRESS_16BIT;
     }
 
 protected:
     bool ioAddress(uint16_t addr) const {
         return addr >= 0x02 && addr < 0x18;
+    }
+
+    // The 80296 reads a word multiply destination below 10H as a
+    // multiply-accumulate selector, so it cannot name a register there
+    // (manual 3.3.2).
+    bool macSelector(uint16_t addr) const {
+        return cpuType() == I80296 && addr < 0x10;
     }
 };
 

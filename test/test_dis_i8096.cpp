@@ -42,13 +42,26 @@ bool is80196n() {
     return strcasecmp_P("80196N", dis8096.cpu_P()) == 0;
 }
 
+bool is80296() {
+    return strcasecmp_P("80296", dis8096.cpu_P()) == 0;
+}
+
 // The KB additions are on every CPU but the 8096; the KC additions are on the
-// KC and the N.
+// KC and later; the 1-Mbyte instructions are on the N and the 296.
 bool hasKb() {
     return !is8096();
 }
 
 bool hasKc() {
+    return is80196() || is80196n() || is80296();
+}
+
+bool hasN() {
+    return is80196n() || is80296();
+}
+
+// Only the 80196 and the N have a peripheral transaction server.
+bool hasPts() {
     return is80196() || is80196n();
 }
 
@@ -77,6 +90,9 @@ void test_cpu() {
     EQUALS("cpu 80196N", true,   disassembler.setCpu("80196N"));
     EQUALS_P("cpu 80196N", "80196N", disassembler.config().cpu_P());
 
+    EQUALS("cpu 80296", true,   disassembler.setCpu("80296"));
+    EQUALS_P("cpu 80296", "80296", disassembler.config().cpu_P());
+
     EQUALS("cpu i80196KB", true,   disassembler.setCpu("i80196KB"));
     EQUALS_P("cpu i80196KB", "80196KB", disassembler.config().cpu_P());
 
@@ -85,6 +101,9 @@ void test_cpu() {
 
     EQUALS("cpu i80196N", true,   disassembler.setCpu("i80196N"));
     EQUALS_P("cpu i80196N", "80196N", disassembler.config().cpu_P());
+
+    EQUALS("cpu i80296", true,   disassembler.setCpu("i80296"));
+    EQUALS_P("cpu i80296", "80296", disassembler.config().cpu_P());
 }
 
 void test_2_operands() {
@@ -266,40 +285,46 @@ void test_2_operands() {
 
     TEST("DIVU", "52, 32",           0x8C, 0x20, 0x34);
     ONAL("DIVU", "52, 33",     "33", 0x8C, 0x21, 0x34);
-    ONAL("DIVU", "53, 32", "53, 32", 0x8C, 0x20, 0x35);
     ONAL("DIVU", "54, 32", "54, 32", 0x8C, 0x20, 0x36);
     ONAL("DIVU", "55, 32", "55, 32", 0x8C, 0x20, 0x37);
     TEST("DIVU", "84, #3412H",               0x8D, 0x12, 0x34, 0x54);
-    ONAL("DIVU", "85, #3412H", "85, #3412H", 0x8D, 0x12, 0x34, 0x55);
     ONAL("DIVU", "86, #3412H", "86, #3412H", 0x8D, 0x12, 0x34, 0x56);
     ONAL("DIVU", "87, #3412H", "87, #3412H", 0x8D, 0x12, 0x34, 0x57);
     TEST("DIVU", "52, [32]",             0x8E, 0x20, 0x34);
     TEST("DIVU", "52, [32]+",            0x8E, 0x21, 0x34);
-    ONAL("DIVU", "53, [32]", "53, [32]", 0x8E, 0x20, 0x35);
     ONAL("DIVU", "54, [32]", "54, [32]", 0x8E, 0x20, 0x36);
     ONAL("DIVU", "55, [32]", "55, [32]", 0x8E, 0x20, 0x37);
     TEST("DIVU", "84, 52[32]",               0x8F, 0x20, 0x34, 0x54);
-    ONAL("DIVU", "85, 52[32]", "85, 52[32]", 0x8F, 0x20, 0x34, 0x55);
     ONAL("DIVU", "86, 52[32]", "86, 52[32]", 0x8F, 0x20, 0x34, 0x56);
     ONAL("DIVU", "87, 52[32]", "87, 52[32]", 0x8F, 0x20, 0x34, 0x57);
     TEST("DIVU", "120, 5634H[32]",                   0x8F, 0x21, 0x34, 0x56, 0x78);
-    ONAL("DIVU", "121, 5634H[32]", "121, 5634H[32]", 0x8F, 0x21, 0x34, 0x56, 0x79);
     ONAL("DIVU", "122, 5634H[32]", "122, 5634H[32]", 0x8F, 0x21, 0x34, 0x56, 0x7A);
     ONAL("DIVU", "123, 5634H[32]", "123, 5634H[32]", 0x8F, 0x21, 0x34, 0x56, 0x7B);
+    // On the 80296 bit 0 of the destination asks for a signed divide; see
+    // test_signed_80296.
+    if (!is80296()) {
+        ONAL("DIVU", "53, 32",         "53, 32",         0x8C, 0x20, 0x35);
+        ONAL("DIVU", "85, #3412H",     "85, #3412H",     0x8D, 0x12, 0x34, 0x55);
+        ONAL("DIVU", "53, [32]",       "53, [32]",       0x8E, 0x20, 0x35);
+        ONAL("DIVU", "85, 52[32]",     "85, 52[32]",     0x8F, 0x20, 0x34, 0x55);
+        ONAL("DIVU", "121, 5634H[32]", "121, 5634H[32]", 0x8F, 0x21, 0x34, 0x56, 0x79);
+    }
     ERRT("DIVU", "16, 32", ILLEGAL_REGISTER, "16, 32", 0x8C, 0x20, 0x10);
     ERRT("DIVU", "52, 16", ILLEGAL_REGISTER, "16",     0x8C, 0x10, 0x34);
 
     TEST("DIVUB", "36, 33",           0x9C, 0x21, 0x24);
-    ONAL("DIVUB", "37, 32", "37, 32", 0x9C, 0x20, 0x25);
     TEST("DIVUB", "36, #32",            0x9D, 0x20, 0x24);
-    ONAL("DIVUB", "37, #32", "37, #32", 0x9D, 0x20, 0x25);
     TEST("DIVUB", "36, [32]",             0x9E, 0x20, 0x24);
     TEST("DIVUB", "36, [32]+"       ,     0x9E, 0x21, 0x24);
-    ONAL("DIVUB", "37, [32]", "37, [32]", 0x9E, 0x20, 0x25);
     TEST("DIVUB", "52, 35[32]",               0x9F, 0x20, 0x23, 0x34);
-    ONAL("DIVUB", "53, 35[32]", "53, 35[32]", 0x9F, 0x20, 0x23, 0x35);
     TEST("DIVUB", "70, 3423H[32]",                  0x9F, 0x21, 0x23, 0x34, 0x46);
-    ONAL("DIVUB", "71, 3423H[32]", "71, 3423H[32]", 0x9F, 0x21, 0x23, 0x34, 0x47);
+    if (!is80296()) {
+        ONAL("DIVUB", "37, 32",        "37, 32",        0x9C, 0x20, 0x25);
+        ONAL("DIVUB", "37, #32",       "37, #32",       0x9D, 0x20, 0x25);
+        ONAL("DIVUB", "37, [32]",      "37, [32]",      0x9E, 0x20, 0x25);
+        ONAL("DIVUB", "53, 35[32]",    "53, 35[32]",    0x9F, 0x20, 0x23, 0x35);
+        ONAL("DIVUB", "71, 3423H[32]", "71, 3423H[32]", 0x9F, 0x21, 0x23, 0x34, 0x47);
+    }
     ERRT("DIVUB", "16, 33", ILLEGAL_REGISTER, "16, 33", 0x9C, 0x21, 0x10);
     ERRT("DIVUB", "36, 16", ILLEGAL_REGISTER, "16",     0x9C, 0x10, 0x24);
 
@@ -344,6 +369,13 @@ void test_2_operands() {
     TEST("XORB", "35, [32]+",     0x96, 0x21, 0x23);
     TEST("XORB", "52, 35[32]",    0x97, 0x20, 0x23, 0x34);
     TEST("XORB", "69, 3423H[32]", 0x97, 0x21, 0x23, 0x34, 0x45);
+
+    // Only on the 80296 is a word multiply destination below 10H a MAC
+    // selector; see test_dsp_80296.
+    if (!is80296()) {
+        TEST("MUL",  "0, 32",         0xFE, 0x6C, 0x20, 0x00);
+        TEST("MULU", "0, 32",         0x6C, 0x20, 0x00);
+    }
 }
 
 void test_3_operands() {
@@ -416,34 +448,38 @@ void test_3_operands() {
     TEST("MULU", "84, 52, 32",               0x4C, 0x20, 0x34, 0x54);
     ONAL("MULU", "84, 52, 33",         "33", 0x4C, 0x21, 0x34, 0x54);
     ONAL("MULU", "84, 53, 32",     "53, 32", 0x4C, 0x20, 0x35, 0x54);
-    ONAL("MULU", "85, 52, 32", "85, 52, 32", 0x4C, 0x20, 0x34, 0x55);
     ONAL("MULU", "86, 52, 32", "86, 52, 32", 0x4C, 0x20, 0x34, 0x56);
     ONAL("MULU", "87, 52, 32", "87, 52, 32", 0x4C, 0x20, 0x34, 0x57);
     TEST("MULU", "120, 86, #3412H",                    0x4D, 0x12, 0x34, 0x56, 0x78);
     ONAL("MULU", "120, 87, #3412H",      "87, #3412H", 0x4D, 0x12, 0x34, 0x57, 0x78);
-    ONAL("MULU", "121, 86, #3412H", "121, 86, #3412H", 0x4D, 0x12, 0x34, 0x56, 0x79);
     ONAL("MULU", "122, 86, #3412H", "122, 86, #3412H", 0x4D, 0x12, 0x34, 0x56, 0x7A);
     ONAL("MULU", "123, 86, #3412H", "123, 86, #3412H", 0x4D, 0x12, 0x34, 0x56, 0x7B);
     TEST("MULU", "84, 52, [32]",                 0x4E, 0x20, 0x34, 0x54);
     TEST("MULU", "84, 52, [32]+",                0x4E, 0x21, 0x34, 0x54);
     ONAL("MULU", "84, 53, [32]",     "53, [32]", 0x4E, 0x20, 0x35, 0x54);
-    ONAL("MULU", "85, 52, [32]", "85, 52, [32]", 0x4E, 0x20, 0x34, 0x55);
     ONAL("MULU", "86, 52, [32]", "86, 52, [32]", 0x4E, 0x20, 0x34, 0x56);
     ONAL("MULU", "87, 52, [32]", "87, 52, [32]", 0x4E, 0x20, 0x34, 0x57);
     TEST("MULU", "120, 86, 52[32]",                    0x4F, 0x20, 0x34, 0x56, 0x78);
     ONAL("MULU", "120, 87, 52[32]",      "87, 52[32]", 0x4F, 0x20, 0x34, 0x57, 0x78);
-    ONAL("MULU", "121, 86, 52[32]", "121, 86, 52[32]", 0x4F, 0x20, 0x34, 0x56, 0x79);
     ONAL("MULU", "122, 86, 52[32]", "122, 86, 52[32]", 0x4F, 0x20, 0x34, 0x56, 0x7A);
     ONAL("MULU", "123, 86, 52[32]", "123, 86, 52[32]", 0x4F, 0x20, 0x34, 0x56, 0x7B);
     TEST("MULU", "152, 120, 5634H[32]", 0x4F, 0x21, 0x34, 0x56, 0x78, 0x98);
     ONAL("MULU", "152, 121, 5634H[32]",
          "121, 5634H[32]",              0x4F, 0x21, 0x34, 0x56, 0x79, 0x98);
-    ONAL("MULU", "153, 120, 5634H[32]",
-         "153, 120, 5634H[32]",         0x4F, 0x21, 0x34, 0x56, 0x78, 0x99);
     ONAL("MULU", "154, 120, 5634H[32]",
          "154, 120, 5634H[32]",         0x4F, 0x21, 0x34, 0x56, 0x78, 0x9A);
     ONAL("MULU", "155, 120, 5634H[32]",
          "155, 120, 5634H[32]",         0x4F, 0x21, 0x34, 0x56, 0x78, 0x9B);
+    // On the 80296 bit 0 of the destination asks for a signed multiply; see
+    // test_signed_80296.
+    if (!is80296()) {
+        ONAL("MULU", "85, 52, 32",      "85, 52, 32",      0x4C, 0x20, 0x34, 0x55);
+        ONAL("MULU", "121, 86, #3412H", "121, 86, #3412H", 0x4D, 0x12, 0x34, 0x56, 0x79);
+        ONAL("MULU", "85, 52, [32]",    "85, 52, [32]",    0x4E, 0x20, 0x34, 0x55);
+        ONAL("MULU", "121, 86, 52[32]", "121, 86, 52[32]", 0x4F, 0x20, 0x34, 0x56, 0x79);
+        ONAL("MULU", "153, 120, 5634H[32]", "153, 120, 5634H[32]",
+             0x4F, 0x21, 0x34, 0x56, 0x78, 0x99);
+    }
     ERRT("MULU", "16, 52, 32",
          ILLEGAL_REGISTER, "16, 52, 32", 0x4C, 0x20, 0x34, 0x10);
     ERRT("MULU", "84, 16, 32",
@@ -453,16 +489,19 @@ void test_3_operands() {
 
     TEST("MULUB", "52, 36, 33",               0x5C, 0x21, 0x24, 0x34);
     TEST("MULUB", "52, 35, 32",               0x5C, 0x20, 0x23, 0x34);
-    ONAL("MULUB", "53, 36, 32", "53, 36, 32", 0x5C, 0x20, 0x24, 0x35);
     TEST("MULUB", "52, 35, #32",                0x5D, 0x20, 0x23, 0x34);
-    ONAL("MULUB", "53, 35, #32", "53, 35, #32", 0x5D, 0x20, 0x23, 0x35);
     TEST("MULUB", "52, 35, [32]",                 0x5E, 0x20, 0x23, 0x34);
     TEST("MULUB", "52, 35, [32]+",                0x5E, 0x21, 0x23, 0x34);
-    ONAL("MULUB", "53, 35, [32]", "53, 35, [32]", 0x5E, 0x20, 0x23, 0x35);
     TEST("MULUB", "70, 53, 35[32]",                   0x5F, 0x20, 0x23, 0x35, 0x46);
-    ONAL("MULUB", "71, 53, 35[32]", "71, 53, 35[32]", 0x5F, 0x20, 0x23, 0x35, 0x47);
     TEST("MULUB", "86, 69, 3423H[32]",                      0x5F, 0x21, 0x23, 0x34, 0x45, 0x56);
-    ONAL("MULUB", "87, 69, 3423H[32]", "87, 69, 3423H[32]", 0x5F, 0x21, 0x23, 0x34, 0x45, 0x57);
+    if (!is80296()) {
+        ONAL("MULUB", "53, 36, 32",     "53, 36, 32",     0x5C, 0x20, 0x24, 0x35);
+        ONAL("MULUB", "53, 35, #32",    "53, 35, #32",    0x5D, 0x20, 0x23, 0x35);
+        ONAL("MULUB", "53, 35, [32]",   "53, 35, [32]",   0x5E, 0x20, 0x23, 0x35);
+        ONAL("MULUB", "71, 53, 35[32]", "71, 53, 35[32]", 0x5F, 0x20, 0x23, 0x35, 0x47);
+        ONAL("MULUB", "87, 69, 3423H[32]", "87, 69, 3423H[32]",
+             0x5F, 0x21, 0x23, 0x34, 0x45, 0x57);
+    }
     ERRT("MULUB", "16, 52, 32",
          ILLEGAL_REGISTER, "16, 52, 32", 0x5C, 0x20, 0x34, 0x10);
     ERRT("MULUB", "84, 16, 32",
@@ -809,9 +848,12 @@ void test_modify() {
     TEST("SHLL", "24, #15",                                0x0D, 0x0F, 0x18);
     TEST("SHLL", "24, 16",                                 0x0D, 0x10, 0x18);
     TEST("SHLL", "24, 17",                                 0x0D, 0x11, 0x18);
-    ONAL("SHLL", "25, 17", "25, 17", 0x0D, 0x11, 0x19);
+    // On the 80296 these two low bits make the instruction MVAC or MSAC.
+    if (!is80296()) {
+        ONAL("SHLL", "25, 17", "25, 17", 0x0D, 0x11, 0x19);
+        ONAL("SHLL", "27, 17", "27, 17", 0x0D, 0x11, 0x1B);
+    }
     ONAL("SHLL", "26, 17", "26, 17", 0x0D, 0x11, 0x1A);
-    ONAL("SHLL", "27, 17", "27, 17", 0x0D, 0x11, 0x1B);
 
     TEST("SHR",  "10, #15", 0x08, 0x0F, 0x0A);
     TEST("SHR",  "10, 16",  0x08, 0x10, 0x0A);
@@ -843,9 +885,17 @@ void test_control() {
     TEST("NOP",   "",  0xFD);
     TEST("SKIP",  "1", 0x00, 0x01);
     TEST("TRAP",  "",  0xF7);
-    if (hasKc()) {
+    if (hasPts()) {
         TEST("DPTS",  "", 0xEC);
         TEST("EPTS",  "", 0xED);
+    } else if (is80296()) {
+        UNKN(0xEC);
+        UNKN(0xED);
+    }
+    if (is80296()) {
+        TEST("RETI",  "", 0xE5);
+    } else {
+        UNKN(0xE5);
     }
     if (hasKb())
         TEST("IDLPD", "#1", 0xF6, 0x01);
@@ -979,12 +1029,196 @@ void test_jump_80196n() {
     ERRT("EBMOVI", "68, 32",   OPERAND_NOT_ALIGNED, "68, 32", 0xE4, 0x20, 0x44);
 }
 
+// The 296 drops DPTS/EPTS and takes E5 for RETI, so EC and ED join the
+// reserved opcodes and E5 leaves them.
+void test_dsp_80296() {
+    // A 3-operand MUL/MULU whose destination is below 10H is a
+    // multiply-accumulate instead, the four low bits picking the
+    // variant (manual 3.3.2, Table 3-4).
+    TEST("MAC",     "32",            0x6C, 0x20, 0x00);
+    TEST("SMAC",    "32",            0x6C, 0x20, 0x01);
+    TEST("MACR",    "32",            0x6C, 0x20, 0x04);
+    TEST("SMACR",   "32",            0x6C, 0x20, 0x05);
+    TEST("MACZ",    "32",            0x6C, 0x20, 0x08);
+    TEST("SMACZ",   "32",            0x6C, 0x20, 0x09);
+    TEST("MACRZ",   "32",            0x6C, 0x20, 0x0C);
+    TEST("SMACRZ",  "32",            0x6C, 0x20, 0x0D);
+
+    TEST("MAC",     "26, 32",        0x4C, 0x20, 0x1A, 0x00);
+    TEST("SMAC",    "26, 32",        0x4C, 0x20, 0x1A, 0x01);
+    TEST("MACR",    "26, 32",        0x4C, 0x20, 0x1A, 0x04);
+    TEST("SMACR",   "26, 32",        0x4C, 0x20, 0x1A, 0x05);
+    TEST("MACZ",    "26, 32",        0x4C, 0x20, 0x1A, 0x08);
+    TEST("SMACZ",   "26, 32",        0x4C, 0x20, 0x1A, 0x09);
+    TEST("MACRZ",   "26, 32",        0x4C, 0x20, 0x1A, 0x0C);
+    TEST("SMACRZ",  "26, 32",        0x4C, 0x20, 0x1A, 0x0D);
+
+    // The whole addressing range reaches the selector, which trails it.
+    TEST("MAC",     "[32]",          0x6E, 0x20, 0x00);
+    TEST("MAC",     "[32]+",         0x6E, 0x21, 0x00);
+    TEST("MAC",     "52[32]",        0x6F, 0x20, 0x34, 0x00);
+    TEST("MAC",     "5634H[32]",     0x6F, 0x21, 0x34, 0x56, 0x00);
+    TEST("MAC",     "#3412H",        0x6D, 0x12, 0x34, 0x00);
+    TEST("MAC",     "26, [32]",      0x4E, 0x20, 0x1A, 0x00);
+    TEST("MAC",     "26, 5634H[32]", 0x4F, 0x21, 0x34, 0x56, 0x1A, 0x00);
+    TEST("SMACRZ",  "26, 5634H[32]", 0x4F, 0x21, 0x34, 0x56, 0x1A, 0x0D);
+
+    // Unprefixed, a word multiply destination below 10H is one of the
+    // selectors above; prefixed, it names no register at all (manual 3.3.2).
+    ERRT("MUL",   "0, 32",     ILLEGAL_REGISTER, "0, 32",     0xFE, 0x6C, 0x20, 0x00);
+    ERRT("MUL",   "0, 24, 32", ILLEGAL_REGISTER, "0, 24, 32", 0xFE, 0x4C, 0x20, 0x18, 0x00);
+    // The divides and the byte multiplies have no selector.
+    TEST("DIVU",  "0, 32",     0x8C, 0x20, 0x00);
+    TEST("MULUB", "0, 32",     0x7C, 0x20, 0x00);
+
+    // Opcode 0DH is SHLL, MVAC or MSAC by the low bits of its
+    // destination treg; 10 is reserved (manual A-6, MVAC).
+    TEST("MVAC",    "24, 32",        0x0D, 0x20, 0x19);
+    TEST("MVAC",    "24, #17",       0x0D, 0x11, 0x19);
+    TEST("MSAC",    "24, 32",        0x0D, 0x20, 0x1B);
+    TEST("MSAC",    "28, #31",       0x0D, 0x1F, 0x1F);
+    TEST("MVAC",    "24, #0",        0x0D, 0x00, 0x19);
+    TEST("MSAC",    "24, 255",       0x0D, 0xFF, 0x1B);
+
+    // The repeats share the 3-operand AND opcode; RPT_CNT (04H) is
+    // the destination and the second source picks the variant
+    // (manual 3.3.4, A-6).
+    TEST("RPT",     "32",            0x40, 0x20, 0x00, 0x04);
+    TEST("RPTNST",  "32",            0x40, 0x20, 0x10, 0x04);
+    TEST("RPTNH",   "32",            0x40, 0x20, 0x11, 0x04);
+    TEST("RPTGT",   "32",            0x40, 0x20, 0x12, 0x04);
+    TEST("RPTNC",   "32",            0x40, 0x20, 0x13, 0x04);
+    TEST("RPTNVT",  "32",            0x40, 0x20, 0x14, 0x04);
+    TEST("RPTNV",   "32",            0x40, 0x20, 0x15, 0x04);
+    TEST("RPTGE",   "32",            0x40, 0x20, 0x16, 0x04);
+    TEST("RPTNE",   "32",            0x40, 0x20, 0x17, 0x04);
+    TEST("RPTST",   "32",            0x40, 0x20, 0x18, 0x04);
+    TEST("RPTH",    "32",            0x40, 0x20, 0x19, 0x04);
+    TEST("RPTLE",   "32",            0x40, 0x20, 0x1A, 0x04);
+    TEST("RPTC",    "32",            0x40, 0x20, 0x1B, 0x04);
+    TEST("RPTVT",   "32",            0x40, 0x20, 0x1C, 0x04);
+    TEST("RPTV",    "32",            0x40, 0x20, 0x1D, 0x04);
+    TEST("RPTLT",   "32",            0x40, 0x20, 0x1E, 0x04);
+    TEST("RPTE",    "32",            0x40, 0x20, 0x1F, 0x04);
+    TEST("RPTI",    "32",            0x40, 0x20, 0x20, 0x04);
+    TEST("RPTINST", "32",            0x40, 0x20, 0x30, 0x04);
+    TEST("RPTINH",  "32",            0x40, 0x20, 0x31, 0x04);
+    TEST("RPTIGT",  "32",            0x40, 0x20, 0x32, 0x04);
+    TEST("RPTINC",  "32",            0x40, 0x20, 0x33, 0x04);
+    TEST("RPTINVT", "32",            0x40, 0x20, 0x34, 0x04);
+    TEST("RPTINV",  "32",            0x40, 0x20, 0x35, 0x04);
+    TEST("RPTIGE",  "32",            0x40, 0x20, 0x36, 0x04);
+    TEST("RPTINE",  "32",            0x40, 0x20, 0x37, 0x04);
+    TEST("RPTIST",  "32",            0x40, 0x20, 0x38, 0x04);
+    TEST("RPTIH",   "32",            0x40, 0x20, 0x39, 0x04);
+    TEST("RPTILE",  "32",            0x40, 0x20, 0x3A, 0x04);
+    TEST("RPTIC",   "32",            0x40, 0x20, 0x3B, 0x04);
+    TEST("RPTIVT",  "32",            0x40, 0x20, 0x3C, 0x04);
+    TEST("RPTIV",   "32",            0x40, 0x20, 0x3D, 0x04);
+    TEST("RPTILT",  "32",            0x40, 0x20, 0x3E, 0x04);
+    TEST("RPTIE",   "32",            0x40, 0x20, 0x3F, 0x04);
+
+    TEST("RPT",     "#20",           0x41, 0x14, 0x00, 0x00, 0x04);
+    TEST("RPT",     "[32]",          0x42, 0x20, 0x00, 0x04);
+    TEST("RPT",     "[32]+",         0x42, 0x21, 0x00, 0x04);
+    TEST("RPTIE",   "[32]+",         0x42, 0x21, 0x3F, 0x04);
+
+    // A byte pattern that is not a defined DSP form stays the instruction
+    // whose opcode it is.  Bit 1 of a MAC selector is reserved, a repeat
+    // needs RPT_CNT as its destination, and no repeat is indexed.
+    ERRT("MULU", "2, 32",       ILLEGAL_REGISTER, "2, 32",     0x6C, 0x20, 0x02);
+    ERRT("MULU", "14, 32",      ILLEGAL_REGISTER, "14, 32",    0x6C, 0x20, 0x0E);
+    ERRT("MULU", "2, 26, 32",   ILLEGAL_REGISTER, "2, 26, 32", 0x4C, 0x20, 0x1A, 0x02);
+    ERRT("MULU", "4, #3412H",   ILLEGAL_REGISTER, "4, #3412H", 0x6D, 0x12, 0x34, 0x04);
+    TEST("AND",     "6, 0, 32",      0x40, 0x20, 0x00, 0x06);
+    ONAL("AND",  "4, 85, 32",   "85, 32",                      0x40, 0x20, 0x55, 0x04);
+    TEST("AND",     "4, 0, 52[32]",  0x43, 0x20, 0x34, 0x00, 0x04);
+    // Every MAC selector is below 10H, which is also the SFR range, so a
+    // rejected MAC always lands on MUL/MULU with an illegal register.
+
+    // The table search reads ahead to reach the selector, so a short read has
+    // to surface as NO_MEMORY on the instruction the opcode really is, not as
+    // a DSP form matching a byte that was never there.
+    NMEM("MULU", "", "", 0x6C);
+    NMEM("MULU", "", "", 0x6C, 0x20);
+    NMEM("MULU", "", "", 0x4C, 0x20, 0x1A);
+    NMEM("AND",  "", "", 0x40, 0x20, 0x00);
+    NMEM("SHLL", "", "", 0x0D, 0x11);
+}
+
+void test_signed_80296() {
+    // A signed multiply or divide can leave out the FE prefix and set bit 0 of
+    // its destination instead (manual A-7 note 2).
+    TEST("MUL",  "52, 32",          0x6C, 0x20, 0x35);
+    TEST("MUL",  "84, #3412H",      0x6D, 0x12, 0x34, 0x55);
+    TEST("MUL",  "52, [32]",        0x6E, 0x20, 0x35);
+    TEST("MUL",  "52, [32]+",       0x6E, 0x21, 0x35);
+    TEST("MUL",  "84, 52[32]",      0x6F, 0x20, 0x34, 0x55);
+    TEST("MUL",  "120, 5634H[32]",  0x6F, 0x21, 0x34, 0x56, 0x79);
+    TEST("MUL",  "84, 52, 32",      0x4C, 0x20, 0x34, 0x55);
+    TEST("MUL",  "120, 86, #3412H", 0x4D, 0x12, 0x34, 0x56, 0x79);
+    TEST("MULB", "36, 32",          0x7C, 0x20, 0x25);
+    TEST("MULB", "36, #32",         0x7D, 0x20, 0x25);
+    TEST("MULB", "52, 35[32]",      0x7F, 0x20, 0x23, 0x35);
+    TEST("MULB", "52, 36, 32",      0x5C, 0x20, 0x24, 0x35);
+    TEST("MULB", "52, 35, #32",     0x5D, 0x20, 0x23, 0x35);
+    TEST("DIV",  "52, 32",          0x8C, 0x20, 0x35);
+    TEST("DIV",  "84, #3412H",      0x8D, 0x12, 0x34, 0x55);
+    TEST("DIV",  "52, [32]+",       0x8E, 0x21, 0x35);
+    TEST("DIV",  "120, 5634H[32]",  0x8F, 0x21, 0x34, 0x56, 0x79);
+    TEST("DIVB", "36, 32",          0x9C, 0x20, 0x25);
+    TEST("DIVB", "36, #32",         0x9D, 0x20, 0x25);
+    TEST("DIVB", "70, 3423H[32]",   0x9F, 0x21, 0x23, 0x34, 0x47);
+
+    // The destination has to be a register, which puts it above the DSP
+    // selectors: 01H is SMAC, and 11H is an SFR (manual 3.3.2).
+    TEST("SMAC", "32",                                   0x6C, 0x20, 0x01);
+    ERRT("MUL",  "16, 32", ILLEGAL_REGISTER, "16, 32",    0x6C, 0x20, 0x11);
+    ERRT("MULB", "16, 32", ILLEGAL_REGISTER, "16, 32",    0x7C, 0x20, 0x11);
+    // Bit 1 is not the sign, so these stay unsigned and misaligned.
+    ONAL("MULU", "54, 32", "54, 32", 0x6C, 0x20, 0x36);
+    ONAL("MULU", "55, 32", "55, 32", 0x6C, 0x20, 0x37);
+    // The prefix still works, and then bit 0 is just a misaligned register.
+    TEST("MUL",  "52, 32",                         0xFE, 0x6C, 0x20, 0x34);
+    ONAL("MUL",  "53, 32", "53, 32",               0xFE, 0x6C, 0x20, 0x35);
+
+    // The search reads the destination ahead of the operands, so a short read
+    // has to surface as NO_MEMORY on the unsigned instruction.
+    NMEM("DIVU",  "", "", 0x8C, 0x20);
+    NMEM("DIVUB", "", "", 0x9C, 0x20);
+    NMEM("MULUB", "", "", 0x5C, 0x20, 0x24);
+
+    // The sign bit does not make a MAC selector a register; see
+    // test_dsp_80296.
+    TEST("MULB", "0, 32",                   0x7C, 0x20, 0x01);
+    TEST("DIV",  "0, 32",                   0x8C, 0x20, 0x01);
+    TEST("DIVB", "0, 32",                   0x9C, 0x20, 0x01);
+}
+
+void test_illegal_80296() {
+    static constexpr Config::opcode_t ILLEGAL[] = {
+            0x10,
+            0xEC, 0xED, 0xEE,
+    };
+    for (auto opc : ILLEGAL)
+        UNKN(opc);
+
+    for (auto i = 0; i < 0x100; i++) {
+        const Config::opcode_t opc = i;
+        const auto h4 = opc & 0xF0;
+        const auto l4 = opc & 0x0F;
+        if (h4 >= 0x40 && h4 < 0xA0 && l4 >= 0xC)
+            continue;
+        UNKN(0xFE, opc);
+    }
+}
+
 void run_tests(const char *cpu) {
     disassembler.setCpu(cpu);
     RUN_TEST(test_2_operands);
     RUN_TEST(test_3_operands);
     RUN_TEST(test_move);
-    if (is80196n()) {
+    if (hasN()) {
         // Targets render at 24 bits on the N, so the 16-bit expectations in
         // test_jump and test_jump_relative do not apply; decoding is the same
         // code and is covered by the autogen round-trip.
@@ -1004,6 +1238,11 @@ void run_tests(const char *cpu) {
         RUN_TEST(test_illegal_80196);
     if (is80196n())
         RUN_TEST(test_illegal_80196n);
+    if (is80296()) {
+        RUN_TEST(test_dsp_80296);
+        RUN_TEST(test_signed_80296);
+        RUN_TEST(test_illegal_80296);
+    }
 }
 
 // Local Variables:

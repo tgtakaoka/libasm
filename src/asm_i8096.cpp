@@ -40,6 +40,9 @@ constexpr Pseudo PSEUDOS[] PROGMEM = {
 PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
 // clang-format on
 
+constexpr char OPT_BOOL_SIGNED_PREFIX[] PROGMEM = "signed-prefix";
+constexpr char OPT_DESC_SIGNED_PREFIX[] PROGMEM = "FE prefix for signed multiply and divide";
+
 }  // namespace
 
 const ValueParser::Plugins &AsmI8096::defaultPlugins() {
@@ -47,8 +50,21 @@ const ValueParser::Plugins &AsmI8096::defaultPlugins() {
 }
 
 AsmI8096::AsmI8096(const ValueParser::Plugins &plugins)
-    : Assembler(plugins, PSEUDO_TABLE), Config(TABLE) {
+    : Assembler(plugins, PSEUDO_TABLE, &_opt_signedPrefix),
+      Config(TABLE),
+      _opt_signedPrefix(
+              this, &AsmI8096::setSignedPrefix, OPT_BOOL_SIGNED_PREFIX, OPT_DESC_SIGNED_PREFIX) {
     reset();
+}
+
+void AsmI8096::reset() {
+    Assembler::reset();
+    setSignedPrefix(true);
+}
+
+Error AsmI8096::setSignedPrefix(bool enable) {
+    _signedPrefix = enable;
+    return OK;
 }
 
 Error AsmI8096::parseIndirect(
@@ -271,6 +287,8 @@ void AsmI8096::emitOperand(AsmInsn &insn, AddrMode mode, const Operand &op) cons
     case M_LREG:
         if (!isLreg(val16))
             insn.setErrorIf(op, OPERAND_NOT_ALIGNED);
+        if (insn.mulWordInsn() && macSelector(val16))
+            insn.setErrorIf(op, ILLEGAL_REGISTER);
         // Fall-through
     case M_WREG:
         if (!isWreg(val16))
@@ -284,12 +302,39 @@ void AsmI8096::emitOperand(AsmInsn &insn, AddrMode mode, const Operand &op) cons
             insn.setErrorIf(op, ILLEGAL_REGISTER);
         insn.emitOperand8(val16);
         return;
+    case M_SLREG:
+    case M_SWREG:
+        // The 80296 reads the sign of a multiply or divide from bit 0 of the
+        // destination; see M_SLREG.
+        if (mode == M_SLREG ? !isLreg(val16) : !isWreg(val16))
+            insn.setErrorIf(op, OPERAND_NOT_ALIGNED);
+        if (op.val.overflow(UINT8_MAX) || ioAddress(val16) ||
+                (insn.mulWordInsn() && macSelector(val16)))
+            insn.setErrorIf(op, ILLEGAL_REGISTER);
+        insn.emitOperand8(val16 | 1);
+        return;
     case M_INDIR:
         emitIndirect(insn, op);
         return;
     case M_QREG:
         if (!isQreg(val16))
             insn.setErrorIf(op, OPERAND_NOT_ALIGNED);
+        insn.emitOperand8(val16);
+        return;
+    case M_ACCSEL:
+        // MVAC and MSAC put their selector in the low bits of this register.
+        if (!isLreg(val16))
+            insn.setErrorIf(op, OPERAND_NOT_ALIGNED);
+        insn.emitOperand8((val16 & ~3) | insn.postfix());
+        return;
+    case M_POINTR:
+        // A bit pointer is an immediate up to 1FH, or a register from 20H up.
+        if (op.mode == M_IMM16) {
+            if (op.val.overflow(31))
+                insn.setErrorIf(op, OVERFLOW_RANGE);
+        } else if (op.val.overflow(UINT8_MAX) || val16 < 32) {
+            insn.setErrorIf(op, ILLEGAL_REGISTER);
+        }
         insn.emitOperand8(val16);
         return;
     case M_EINDIR:
@@ -367,6 +412,7 @@ Error AsmI8096::encodeImpl(StrScanner &scan, Insn &_insn) const {
         scan.skipSpaces();
     }
 
+    insn.setSignedPrefix(_signedPrefix);
     if (searchName(cpuType(), insn))
         return _insn.setError(insn.dstOp, insn);
 
@@ -388,6 +434,13 @@ Error AsmI8096::encodeImpl(StrScanner &scan, Insn &_insn) const {
         emitOperand(insn, insn.src1(), insn.src1Op);
         emitOperand(insn, insn.src2(), insn.src2Op);
     }
+    // Manual A-6 footnotes: no RPT has an indexed form, and the relocating
+    // MACs have no immediate one.
+    const auto sel = insn.src2();
+    if ((sel == M_PRPT && insn.aa() == AA_IDX) ||
+            (sel == M_PMAC && insn.aa() == AA_IMM && (insn.postfix() & MAC_RELOC)))
+        insn.setErrorIf(insn.dstOp, OPERAND_NOT_ALLOWED);
+    insn.emitPost();
     insn.emitInsn();
     return _insn.setError(insn);
 }
