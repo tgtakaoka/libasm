@@ -30,6 +30,10 @@ bool is8096() {
     return strcasecmp_P("8096", dis8096.cpu_P()) == 0;
 }
 
+bool is80196kb() {
+    return strcasecmp_P("80196KB", dis8096.cpu_P()) == 0;
+}
+
 bool is80196() {
     return strcasecmp_P("80196", dis8096.cpu_P()) == 0;
 }
@@ -50,8 +54,14 @@ void test_cpu() {
     EQUALS("cpu i8096", true,   disassembler.setCpu("i8096"));
     EQUALS_P("cpu i8096", "8096", disassembler.config().cpu_P());
 
+    EQUALS("cpu 80196KB", true,   disassembler.setCpu("80196KB"));
+    EQUALS_P("cpu 80196KB", "80196KB", disassembler.config().cpu_P());
+
     EQUALS("cpu 80196", true,   disassembler.setCpu("80196"));
     EQUALS_P("cpu 80196", "80196", disassembler.config().cpu_P());
+
+    EQUALS("cpu i80196KB", true,   disassembler.setCpu("i80196KB"));
+    EQUALS_P("cpu i80196KB", "80196KB", disassembler.config().cpu_P());
 
     EQUALS("cpu i80196", true,   disassembler.setCpu("i80196"));
     EQUALS_P("cpu i80196", "80196", disassembler.config().cpu_P());
@@ -527,10 +537,10 @@ void test_move() {
 
     TEST("POP", "32",       0xCC, 0x20);
     ONAL("POP", "33", "33", 0xCC, 0x21);
-    if (is8096()) {
-        UNKN(0xCD);
-    } else {
+    if (is80196()) {
         TEST("BMOVI", "52, 32", 0xCD, 0x20, 0x34);
+    } else {
+        UNKN(0xCD);
     }
     TEST("POP", "[32]",         0xCE, 0x20);
     TEST("POP", "[32]+",        0xCE, 0x21);
@@ -559,8 +569,10 @@ void test_move() {
         TEST("XCHB", "120, 5634H[0]",  0x1B, 0x01, 0x34, 0x56, 0x78);
         TEST("XCHB", "120, 5635H[0]",  0x1B, 0x01, 0x35, 0x56, 0x78);
 
-        TEST("BMOV",  "52, 32", 0xC1, 0x20, 0x34);
         TEST("BMOVI", "52, 32", 0xCD, 0x20, 0x34);
+    }
+    if (!is8096()) {
+        TEST("BMOV",  "52, 32", 0xC1, 0x20, 0x34);
 
         TEST("PUSHA", "", 0xF4);
         TEST("POPA",  "", 0xF5);
@@ -640,7 +652,7 @@ void test_jump() {
     ATEST(0x2000, "DJNZ", "18, 1F83H", 0xE0, 0x12, 0x80);
     ATEST(0x2000, "DJNZ", "18, 2003H", 0xE0, 0x12, 0x00);
 
-    if (is80196()) {
+    if (!is8096()) {
         ATEST(0x2000, "DJNZW", "18, 2000H", 0xE1, 0x12, 0xFD);
         ATEST(0x2000, "DJNZW", "18, 2082H", 0xE1, 0x12, 0x7F);
         ATEST(0x2000, "DJNZW", "18, 1F83H", 0xE1, 0x12, 0x80);
@@ -814,8 +826,9 @@ void test_control() {
     if (is80196()) {
         TEST("DPTS",  "", 0xEC);
         TEST("EPTS",  "", 0xED);
-        TEST("IDLPD", "#1", 0xF6, 0x01);
     }
+    if (!is8096())
+        TEST("IDLPD", "#1", 0xF6, 0x01);
 }
 
 void test_absolute() {
@@ -842,6 +855,29 @@ void test_illegal_8096() {
             0xC1, 0xC5, 0xCD,
             0xE1, 0xE2, 0xE4, 0xE5, 0xE6, 0xE8, 0xE9, 0xEA, 0xEB, 0xEC, 0xED, 0xEE,
             0xF1, 0xF4, 0xF5, 0xF6,
+    };
+    for (auto opc : ILLEGAL)
+        UNKN(opc);
+
+    for (auto i = 0; i < 0x100; i++) {
+        const Config::opcode_t opc = i;
+        const auto h4 = opc & 0xF0;
+        const auto l4 = opc & 0x0F;
+        if (h4 >= 0x40 && h4 < 0xA0 && l4 >= 0xC)
+            continue;
+        UNKN(0xFE, opc);
+    }
+}
+
+// The KB is the 8096BH set plus exactly six instructions (BMOV, CMPL, DJNZW,
+// PUSHA, POPA, IDLPD), so its reserved opcodes are the BH's less those six.
+void test_illegal_80196kb() {
+    static constexpr Config::opcode_t ILLEGAL[] = {
+            0x04, 0x0B,
+            0x10, 0x14, 0x1B, 0x1C, 0x1D, 0x1E, 0x1F,
+            0xCD,
+            0xE2, 0xE4, 0xE5, 0xE6, 0xE8, 0xE9, 0xEA, 0xEB, 0xEC, 0xED, 0xEE,
+            0xF1,
     };
     for (auto opc : ILLEGAL)
         UNKN(opc);
@@ -889,6 +925,8 @@ void run_tests(const char *cpu) {
     RUN_TEST(test_absolute);
     if (is8096())
         RUN_TEST(test_illegal_8096);
+    if (is80196kb())
+        RUN_TEST(test_illegal_80196kb);
     if (is80196())
         RUN_TEST(test_illegal_80196);
 }

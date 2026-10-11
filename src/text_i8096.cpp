@@ -21,7 +21,7 @@ namespace text {
 namespace i8096 {
 // clang-format off
 
-constexpr char TEXT_CPU_LIST[] PROGMEM = "i8096, i80196";
+constexpr char TEXT_CPU_LIST[] PROGMEM = "i8096, i80196KB, i80196";
 constexpr char TEXT_CPU_80196[]   PROGMEM = "80196";
 constexpr char TEXT_CPU_80196KB[] PROGMEM = "80196KB";
 constexpr char TEXT_CPU_8096[]    PROGMEM = "8096";

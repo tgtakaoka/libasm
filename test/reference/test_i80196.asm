@@ -15,4 +15,5 @@
         cpu     80196
         org     2000h
         include "test_i8096.inc"
+        include "test_i80196kb.inc"
         include "test_i80196.inc"

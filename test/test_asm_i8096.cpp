@@ -26,6 +26,10 @@ using namespace libasm::test;
 AsmI8096 asm8096;
 Assembler &assembler(asm8096);
 
+bool is8096() {
+    return strcasecmp_P("8096", asm8096.cpu_P()) == 0;
+}
+
 bool is80196() {
     return strcasecmp_P("80196", asm8096.cpu_P()) == 0;
 }
@@ -46,8 +50,14 @@ void test_cpu() {
     EQUALS("cpu i8096", true,   assembler.setCpu("i8096"));
     EQUALS_P("cpu i8096", "8096", assembler.config().cpu_P());
 
+    EQUALS("cpu 80196KB", true,   assembler.setCpu("80196KB"));
+    EQUALS_P("cpu 80196KB", "80196KB", assembler.config().cpu_P());
+
     EQUALS("cpu 80196", true,   assembler.setCpu("80196"));
     EQUALS_P("cpu 80196", "80196", assembler.config().cpu_P());
+
+    EQUALS("cpu i80196KB", true,   assembler.setCpu("i80196KB"));
+    EQUALS_P("cpu i80196KB", "80196KB", assembler.config().cpu_P());
 
     EQUALS("cpu i80196", true,   assembler.setCpu("i80196"));
     EQUALS_P("cpu i80196", "80196", assembler.config().cpu_P());
@@ -151,7 +161,7 @@ void test_2_operands() {
     TEST("CMPB 52, 35[32]",    0x9B, 0x20, 0x23, 0x34);
     TEST("CMPB 69, 3423H[32]", 0x9B, 0x21, 0x23, 0x34, 0x45);
 
-    if (is80196()) {
+    if (!is8096()) {
         TEST("CMPL 52, 32",            0xC5, 0x20, 0x34);
         ONAL("CMPL 53, 32",  "53, 32", 0xC5, 0x20, 0x35);
         ONAL("CMPL 52, 33",  "33",     0xC5, 0x21, 0x34);
@@ -507,11 +517,12 @@ void test_move() {
 
     TEST("PUSHF", 0xF2);
     TEST("POPF",  0xF3);
-    if (is80196()) {
+    if (!is8096()) {
         TEST("BMOV  52, 32",           0xC1, 0x20, 0x34);
         ONAL("BMOV  54, 32", "54, 32", 0xC1, 0x20, 0x36);
         ONAL("BMOV  52, 33", "33",     0xC1, 0x21, 0x34);
-
+    }
+    if (is80196()) {
         TEST("BMOVI  52, 32",           0xCD, 0x20, 0x34);
         ONAL("BMOVI  54, 32", "54, 32", 0xCD, 0x20, 0x36);
         ONAL("BMOVI  52, 33", "33",     0xCD, 0x21, 0x34);
@@ -707,7 +718,7 @@ void test_smart_branch() {
     ATEST(0x2000, "DJNZ 32, 1F83H",                           0xE0, 0x20, 0x80);
     AERRT(0x2000, "DJNZ 32, 1F82H", OPERAND_TOO_FAR, "1F82H", 0xE0, 0x20, 0x7F);
 
-    if (is80196()) {
+    if (!is8096()) {
         ATEST(0x2000, "DJNZW 32, 2082H",                           0xE1, 0x20, 0x7F);
         AERRT(0x2000, "DJNZW 32, 2083H", OPERAND_TOO_FAR, "2083H", 0xE1, 0x20, 0x80);
         ATEST(0x2000, "DJNZW 32, 1F83H",                           0xE1, 0x20, 0x80);
@@ -793,8 +804,9 @@ void test_control() {
     if (is80196()) {
         TEST("DPTS",  0xEC);
         TEST("EPTS",  0xED);
-        TEST("IDLPD #2", 0xF6, 0x02);
     }
+    if (!is8096())
+        TEST("IDLPD #2", 0xF6, 0x02);
 }
 
 void test_comment() {
