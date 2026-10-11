@@ -19,18 +19,11 @@
         xchb    16h, 15h
         xchb    20h, 1f1eh[1ch]
 ;;; CX
-        bmov    0c4h, 0c2h
-        cmpl    0cch, 0c8h
         bmovi   0d0h, 0ceh
 ;;; EX
-        djnzw   0e2h, $-1ah
         tijmp   0e8h,0e4h,#0e6h
         dpts
         epts
-;;; FX
-        pusha
-        popa
-        idlpd   #0f7h
 
 ;;; Local Variables:
 ;;; mode: asm
