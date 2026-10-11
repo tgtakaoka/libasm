@@ -89,6 +89,13 @@ StrBuffer &DisI8096::outRelative(StrBuffer &out, DisInsn &insn, const Operand &o
     }
 }
 
+namespace {
+int32_t signExtend24(uint32_t val24) {
+    const auto v = val24 & UINT32_C(0xFFFFFF);
+    return static_cast<int32_t>(v & 0x800000 ? v | UINT32_C(0xFF000000) : v);
+}
+}  // namespace
+
 StrBuffer &DisI8096::outOperand(StrBuffer &out, DisInsn &insn, const Operand &op) const {
     switch (op.mode) {
     case M_COUNT:
@@ -102,9 +109,17 @@ StrBuffer &DisI8096::outOperand(StrBuffer &out, DisInsn &insn, const Operand &op
     case M_BREG:
     case M_WREG:
     case M_LREG:
+    case M_QREG:
         return outRegister(out, insn, op.regno);
     case M_INDIR:
+    case M_EINDIR:
+    case M_EBIND:
         return outRegister(out, insn, op.regno, true);
+    case M_EIDX:
+        return outRegister(outAbsAddr(out, op.val24, 24), insn, op.regno, true);
+    case M_REL24:
+        return outRelAddr(out, insn.address() + 4 + static_cast<int32_t>(signExtend24(op.val24)),
+                insn.address(), 24);
     case M_AINC:
         return outRegister(out, insn, op.regno & ~1, true).letter('+');
     case M_IDX8:
@@ -157,8 +172,13 @@ Error DisI8096::Operand::read(DisInsn &insn, AddrMode opMode) {
         regno = insn.readByte();
         break;
     case M_WREG:
-    case M_INDIR:
         regno = insn.readByte();
+        if (!isWreg(regno))
+            setErrorIf(OPERAND_NOT_ALIGNED);
+        break;
+    case M_INDIR:
+        // BR's operand byte may already have been read to tell it from EBR.
+        regno = insn.readOperandByte();
         if (!isWreg(regno))
             setErrorIf(OPERAND_NOT_ALIGNED);
         break;
@@ -166,6 +186,33 @@ Error DisI8096::Operand::read(DisInsn &insn, AddrMode opMode) {
         regno = insn.readByte();
         if (!isLreg(regno))
             setErrorIf(OPERAND_NOT_ALIGNED);
+        break;
+    case M_QREG:
+        regno = insn.readByte();
+        if (!isQreg(regno))
+            setErrorIf(OPERAND_NOT_ALIGNED);
+        break;
+    case M_EINDIR:
+        regno = insn.readByte();
+        if (!isLreg(regno))
+            setErrorIf(OPERAND_NOT_ALIGNED);
+        break;
+    case M_EBIND:
+        // EBR shares opcode E3 with BR and sets bit 0 to say so.
+        regno = insn.readOperandByte() & ~1;
+        if (!isLreg(regno))
+            setErrorIf(OPERAND_NOT_ALIGNED);
+        break;
+    case M_EIDX:
+        regno = insn.readByte();
+        if (!isLreg(regno))
+            setErrorIf(OPERAND_NOT_ALIGNED);
+        val24 = insn.readUint16();
+        val24 |= static_cast<uint32_t>(insn.readByte()) << 16;
+        break;
+    case M_REL24:
+        val24 = insn.readUint16();
+        val24 |= static_cast<uint32_t>(insn.readByte()) << 16;
         break;
     case M_BIDX:
         readIndexed(insn);

@@ -38,6 +38,20 @@ bool is80196() {
     return strcasecmp_P("80196", dis8096.cpu_P()) == 0;
 }
 
+bool is80196n() {
+    return strcasecmp_P("80196N", dis8096.cpu_P()) == 0;
+}
+
+// The KB additions are on every CPU but the 8096; the KC additions are on the
+// KC and the N.
+bool hasKb() {
+    return !is8096();
+}
+
+bool hasKc() {
+    return is80196() || is80196n();
+}
+
 void set_up() {
     disassembler.reset();
 }
@@ -60,11 +74,17 @@ void test_cpu() {
     EQUALS("cpu 80196", true,   disassembler.setCpu("80196"));
     EQUALS_P("cpu 80196", "80196", disassembler.config().cpu_P());
 
+    EQUALS("cpu 80196N", true,   disassembler.setCpu("80196N"));
+    EQUALS_P("cpu 80196N", "80196N", disassembler.config().cpu_P());
+
     EQUALS("cpu i80196KB", true,   disassembler.setCpu("i80196KB"));
     EQUALS_P("cpu i80196KB", "80196KB", disassembler.config().cpu_P());
 
     EQUALS("cpu i80196", true,   disassembler.setCpu("i80196"));
     EQUALS_P("cpu i80196", "80196", disassembler.config().cpu_P());
+
+    EQUALS("cpu i80196N", true,   disassembler.setCpu("i80196N"));
+    EQUALS_P("cpu i80196N", "80196N", disassembler.config().cpu_P());
 }
 
 void test_2_operands() {
@@ -159,7 +179,7 @@ void test_2_operands() {
     TEST("CMPB", "52, 35[32]",    0x9B, 0x20, 0x23, 0x34);
     TEST("CMPB", "69, 3423H[32]", 0x9B, 0x21, 0x23, 0x34, 0x45);
 
-    if (is80196()) {
+    if (hasKc()) {
         TEST("CMPL", "52, 32", 0xC5, 0x20, 0x34);
     }
 
@@ -481,7 +501,7 @@ void test_move() {
     TEST("LDB", "235, 0ECEDH[254]", 0xB3, 0xFF, 0xED, 0xEC, 0xEB);
 
     TEST("ST", "52, 32",           0xC0, 0x20, 0x34);
-    if (is8096()) {
+    if (!hasKb()) {
         UNKN(0xC1);
     } else {
         TEST("BMOV", "52, 32", 0xC1, 0x20, 0x34);
@@ -492,7 +512,7 @@ void test_move() {
     TEST("ST", "120, 5634H[32]",   0xC3, 0x21, 0x34, 0x56, 0x78);
 
     TEST("STB", "35, 32",           0xC4, 0x20, 0x23);
-    if (is8096()) {
+    if (!hasKb()) {
         UNKN(0xC5);
     } else {
         TEST("CMPL", "52, 32", 0xC5, 0x20, 0x34);
@@ -537,7 +557,7 @@ void test_move() {
 
     TEST("POP", "32",       0xCC, 0x20);
     ONAL("POP", "33", "33", 0xCC, 0x21);
-    if (is80196()) {
+    if (hasKc()) {
         TEST("BMOVI", "52, 32", 0xCD, 0x20, 0x34);
     } else {
         UNKN(0xCD);
@@ -556,7 +576,7 @@ void test_move() {
     TEST("PUSHF", "", 0xF2);
     TEST("POPF",  "", 0xF3);
 
-    if (is80196()) {
+    if (hasKc()) {
         TEST("XCH", "52, 32",         0x04, 0x20, 0x34);
         TEST("XCH", "86, 52[32]",     0x0B, 0x20, 0x34, 0x56);
         TEST("XCH", "120, 5634H[32]", 0x0B, 0x21, 0x34, 0x56, 0x78);
@@ -571,7 +591,7 @@ void test_move() {
 
         TEST("BMOVI", "52, 32", 0xCD, 0x20, 0x34);
     }
-    if (!is8096()) {
+    if (hasKb()) {
         TEST("BMOV",  "52, 32", 0xC1, 0x20, 0x34);
 
         TEST("PUSHA", "", 0xF4);
@@ -652,7 +672,7 @@ void test_jump() {
     ATEST(0x2000, "DJNZ", "18, 1F83H", 0xE0, 0x12, 0x80);
     ATEST(0x2000, "DJNZ", "18, 2003H", 0xE0, 0x12, 0x00);
 
-    if (!is8096()) {
+    if (hasKb()) {
         ATEST(0x2000, "DJNZW", "18, 2000H", 0xE1, 0x12, 0xFD);
         ATEST(0x2000, "DJNZW", "18, 2082H", 0xE1, 0x12, 0x7F);
         ATEST(0x2000, "DJNZW", "18, 1F83H", 0xE1, 0x12, 0x80);
@@ -676,7 +696,7 @@ void test_jump() {
     ATEST(0x2000, "JBS", "18, 6, 1F83H", 0x3E, 0x12, 0x80);
     ATEST(0x2000, "JBS", "18, 7, 2003H", 0x3F, 0x12, 0x00);
 
-    if (is80196()) {
+    if (hasKc()) {
         TEST("TIJMP", "86, 32, #15", 0xE2, 0x20, 0x0F, 0x56);
     }
 }
@@ -823,11 +843,11 @@ void test_control() {
     TEST("NOP",   "",  0xFD);
     TEST("SKIP",  "1", 0x00, 0x01);
     TEST("TRAP",  "",  0xF7);
-    if (is80196()) {
+    if (hasKc()) {
         TEST("DPTS",  "", 0xEC);
         TEST("EPTS",  "", 0xED);
     }
-    if (!is8096())
+    if (hasKb())
         TEST("IDLPD", "#1", 0xF6, 0x01);
 }
 
@@ -911,15 +931,68 @@ void test_illegal_80196() {
     }
 }
 
+void test_illegal_80196n() {
+    static constexpr Config::opcode_t ILLEGAL[] = {
+            0x10,
+            0xE5, 0xEE,
+    };
+    for (auto opc : ILLEGAL)
+        UNKN(opc);
+
+    for (auto i = 0; i < 0x100; i++) {
+        const Config::opcode_t opc = i;
+        const auto h4 = opc & 0xF0;
+        const auto l4 = opc & 0x0F;
+        if (h4 >= 0x40 && h4 < 0xA0 && l4 >= 0xC)
+            continue;
+        UNKN(0xFE, opc);
+    }
+}
+
 // clang-format on
+
+void test_jump_80196n() {
+    ATEST(0x2000, "SJMP", "002002H", 0x20, 0x00);
+    ATEST(0x2000, "LJMP", "002003H", 0xE7, 0x00, 0x00);
+    ATEST(0x2000, "BR",   "[32]",    0xE3, 0x20);
+
+    // The 80196N additions.
+    ATEST(0x2000, "EBR",  "[32]",    0xE3, 0x21);
+    ATEST(0x2000, "EJMP", "002004H", 0xE6, 0x00, 0x00, 0x00);
+    ATEST(0x2000, "EJMP", "003238H", 0xE6, 0x34, 0x12, 0x00);
+    ATEST(0x2000, "EJMP", "000DD0H", 0xE6, 0xCC, 0xED, 0xFF);
+    ATEST(0x2000, "ECALL", "002004H", 0xF1, 0x00, 0x00, 0x00);
+    ATEST(0x2000, "ECALL", "003238H", 0xF1, 0x34, 0x12, 0x00);
+
+    TEST("ELD",    "52, [32]",            0xE8, 0x20, 0x34);
+    TEST("ELD",    "52, 123456H[32]",     0xE9, 0x20, 0x56, 0x34, 0x12, 0x34);
+    TEST("ELDB",   "35, [32]",            0xEA, 0x20, 0x23);
+    TEST("ELDB",   "35, 123456H[32]",     0xEB, 0x20, 0x56, 0x34, 0x12, 0x23);
+    TEST("EST",    "52, [32]",            0x1C, 0x20, 0x34);
+    TEST("EST",    "52, 123456H[32]",     0x1D, 0x20, 0x56, 0x34, 0x12, 0x34);
+    TEST("ESTB",   "35, [32]",            0x1E, 0x20, 0x23);
+    TEST("ESTB",   "35, 123456H[32]",     0x1F, 0x20, 0x56, 0x34, 0x12, 0x23);
+    TEST("EBMOVI", "64, 32",              0xE4, 0x20, 0x40);
+
+    // treg is a double-word pointer and PTRS a quad-word register.
+    ERRT("ELD",    "52, [34]", OPERAND_NOT_ALIGNED, "[34]", 0xE8, 0x22, 0x34);
+    ERRT("EBMOVI", "68, 32",   OPERAND_NOT_ALIGNED, "68, 32", 0xE4, 0x20, 0x44);
+}
 
 void run_tests(const char *cpu) {
     disassembler.setCpu(cpu);
     RUN_TEST(test_2_operands);
     RUN_TEST(test_3_operands);
     RUN_TEST(test_move);
-    RUN_TEST(test_jump);
-    RUN_TEST(test_jump_relative);
+    if (is80196n()) {
+        // Targets render at 24 bits on the N, so the 16-bit expectations in
+        // test_jump and test_jump_relative do not apply; decoding is the same
+        // code and is covered by the autogen round-trip.
+        RUN_TEST(test_jump_80196n);
+    } else {
+        RUN_TEST(test_jump);
+        RUN_TEST(test_jump_relative);
+    }
     RUN_TEST(test_modify);
     RUN_TEST(test_control);
     RUN_TEST(test_absolute);
@@ -929,6 +1002,8 @@ void run_tests(const char *cpu) {
         RUN_TEST(test_illegal_80196kb);
     if (is80196())
         RUN_TEST(test_illegal_80196);
+    if (is80196n())
+        RUN_TEST(test_illegal_80196n);
 }
 
 // Local Variables:

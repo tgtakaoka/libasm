@@ -32,29 +32,40 @@ enum AaMode : uint8_t {
     AA_IDX = 3,    // Indexed
 };
 
+// Each operand position stores only the modes that can appear there, so the
+// fields are sized per position: the third operand takes just five of these,
+// which is why they come first.
 enum AddrMode : uint8_t {
+    // src2 and up: 3 bits
     M_NONE = 0,
-    M_BREG = 1,
-    M_WREG = 2,
-    M_LREG = 3,
-    M_BAOP = 4,    // Byte addressing
-    M_WAOP = 5,    // Word addressing
-    M_REL8 = 6,    // sign-extended 8-bit relative
-    M_REL11 = 7,   // sign-extended 11-bit relative
-    M_REL16 = 8,   // signed 16-bit relative
-    M_BITNO = 9,   // bit number (0~7)
-    M_COUNT = 10,  // #n (0~15) or M_BREG
-    M_INDIR = 11,  // indirect (M_BAOP:2, M_WAOP:2)
-    M_BIDX = 12,   //  indexed (M_BAOP:3)
-    M_WIDX = 13,   //  indexed (M_WAOP:3)
-    M_IMM8 = 14,   // 8-bit immediate (M_BAOP:1)
+    M_BAOP = 1,    // Byte addressing
+    M_WAOP = 2,    // Word addressing
+    M_IMM8 = 3,    // 8-bit immediate (M_BAOP:1)
+    M_REL8 = 4,    // sign-extended 8-bit relative
+    // dst and src1: 5 bits
+    M_BREG = 5,
+    M_WREG = 6,
+    M_LREG = 7,
+    M_REL11 = 8,   // sign-extended 11-bit relative
+    M_REL16 = 9,   // signed 16-bit relative
+    M_BITNO = 10,  // bit number (0~7)
+    M_COUNT = 11,  // #n (0~15) or M_BREG
+    M_INDIR = 12,  // indirect (M_BAOP:2, M_WAOP:2)
+    M_BIDX = 13,   //  indexed (M_BAOP:3)
+    M_WIDX = 14,   //  indexed (M_WAOP:3)
     M_IMM16 = 15,  // 16-bit immediate (M_WAOP:1)
+    M_EINDIR = 16, // extended indirect: [treg]
+    M_EIDX = 17,   // extended indexed: disp24[treg]
+    M_REL24 = 18,  // signed 24-bit relative
+    M_QREG = 19,   // quad-word register, divisible by eight
+    M_EBIND = 20,  // EBR's extended indirect; bit 0 of the operand byte is set
+                   // to tell it from BR, which shares opcode E3
     // not in TableI8096
-    M_AINC = 16,   // auto increment
-    M_IDX8 = 17,   // 8-bit indexed (M_BAOP:3, M_WAOP:3)
-    M_IDX16 = 18,  // 16-bit indexed (M_BAOP:3, M_WAOP:3)
-    M_REGNO = 19,  // 8-bit register number
-    M_ADDR = 20,   // 16-bit address
+    M_AINC = 21,   // auto increment
+    M_IDX8 = 22,   // 8-bit indexed (M_BAOP:3, M_WAOP:3)
+    M_IDX16 = 23,  // 16-bit indexed (M_BAOP:3, M_WAOP:3)
+    M_REGNO = 24,  // 8-bit register number
+    M_ADDR = 25,   // 16-bit address
 };
 
 enum CodeFormat : uint8_t {
@@ -82,7 +93,7 @@ struct Entry final : entry::Base<Config::opcode_t> {
 
         AddrMode dst() const { return AddrMode((_attr >> dst_gp) & mode_gm); }
         AddrMode src1() const { return AddrMode((_attr >> src1_gp) & mode_gm); }
-        AddrMode src2() const { return AddrMode((_attr >> src2_gp) & mode_gm); }
+        AddrMode src2() const { return AddrMode((_attr >> src2_gp) & src2_gm); }
         bool undefined() const { return _attr & undef_bm; }
         uint8_t mask() const {
             static constexpr uint8_t MASK[] PROGMEM = {
@@ -95,11 +106,12 @@ struct Entry final : entry::Base<Config::opcode_t> {
 
     private:
         static constexpr int dst_gp = 0;
-        static constexpr int src1_gp = 4;
-        static constexpr int src2_gp = 8;
-        static constexpr int cf_gp = 12;
+        static constexpr int src1_gp = 5;
+        static constexpr int src2_gp = 10;
+        static constexpr int cf_gp = 13;
         static constexpr int undef_bp = 15;
-        static constexpr uint_fast8_t mode_gm = 0xF;
+        static constexpr uint_fast8_t mode_gm = 0x1F;
+        static constexpr uint_fast8_t src2_gm = 0x7;
         static constexpr uint_fast8_t cf_gm = 0x3;
         static constexpr uint16_t undef_bm = (1 << undef_bp);
     };

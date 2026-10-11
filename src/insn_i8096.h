@@ -55,6 +55,10 @@ struct AsmInsn final : AsmInsnImpl<Config>, EntryInsn {
     }
     void emitOperand8(uint8_t val8) { emitByte(val8, operandPos()); }
     void emitOperand16(uint16_t val16) { emitUint16(val16, operandPos()); }
+    void emitOperand24(uint32_t val24) {
+        emitUint16(val24, operandPos());
+        emitByte(val24 >> 16, operandPos());
+    }
 
 private:
     uint8_t operandPos() {
@@ -66,7 +70,25 @@ private:
 };
 
 struct DisInsn final : DisInsnImpl<Config>, EntryInsn {
-    DisInsn(Insn &insn, DisMemory &memory, const StrBuffer &out) : DisInsnImpl(insn, memory, out) {}
+    DisInsn(Insn &insn, DisMemory &memory, const StrBuffer &out)
+        : DisInsnImpl(insn, memory, out), _operand(0), _hasOperand(false) {}
+
+    // BR and EBR share opcode E3 and are told apart by bit 0 of the operand
+    // byte, so the table search has to look at it.  Cache it, or a candidate
+    // that does not match would leave the reader one byte on.
+    uint8_t readOperandByte() {
+        if (!_hasOperand) {
+            _operand = readByte();
+            _hasOperand = true;
+        }
+        return _operand;
+    }
+    bool hasOperandByte() const { return _hasOperand; }
+    uint8_t operandByte() const { return _operand; }
+
+private:
+    uint8_t _operand;
+    bool _hasOperand;
 };
 
 }  // namespace i8096

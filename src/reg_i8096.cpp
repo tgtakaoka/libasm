@@ -28,6 +28,10 @@ bool isLreg(uint8_t regno) {
     return (regno & 3) == 0;
 }
 
+bool isQreg(uint8_t regno) {
+    return (regno & 7) == 0;
+}
+
 }  // namespace reg
 }  // namespace i8096
 }  // namespace libasm
