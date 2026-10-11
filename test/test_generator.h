@@ -104,6 +104,13 @@ struct TestGenerator {
     // dropped once an opcode has shown all the operand variety it has.
     TestGenerator &scanByByte();
 
+    // Abandon a subtree once |count| decodes have passed without turning up a
+    // skeleton not seen before.  The drop heuristic counts only decodes that
+    // SUCCEED, so a subtree whose operands are mostly rejected can be searched
+    // without ever reaching its threshold.  Off by default: a legitimate
+    // barren stretch can itself run to millions, so |count| is per target.
+    TestGenerator &maxBarren(uint32_t count);
+
 private:
     Formatter &_formatter;
     Disassembler &_disassembler;
@@ -117,6 +124,9 @@ private:
     uint8_t *const _memory;
     uint32_t _address;
     bool _ignoreSizeVariation;
+    // Decodes since the last previously-unseen skeleton; see maxBarren().
+    uint32_t _barren;
+    uint32_t _barrenLimit;
 
     std::unordered_map<std::string, TokenizedText::Set> _map;
     std::unordered_map<std::string, TokenizedText::Set> _error;

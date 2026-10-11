@@ -209,7 +209,9 @@ TestGenerator::TestGenerator(Formatter &formatter, Disassembler &disassembler, u
       _codeMax(disassembler.config().codeMax()),
       _memory(new uint8_t[_codeMax]),
       _address(addr * _addressUnit),
-      _ignoreSizeVariation(false) {}
+      _ignoreSizeVariation(false),
+      _barren(0),
+      _barrenLimit(UINT32_MAX) {}
 
 TestGenerator::~TestGenerator() {
     delete[] _memory;
@@ -352,6 +354,11 @@ const TokenizedText *TestGenerator::meaningfulError(std::string &name) {
     return &*found;
 }
 
+TestGenerator &TestGenerator::maxBarren(uint32_t count) {
+    _barrenLimit = count;
+    return *this;
+}
+
 uint8_t TestGenerator::calcDrop(const TokenizedText &text) {
     for (int8_t drop = MAX_DROP_BYTE; drop >= 0; drop--) {
         if (text.count() >= (1U << 16) + (1U << 8) * drop)
@@ -363,6 +370,16 @@ uint8_t TestGenerator::calcDrop(const TokenizedText &text) {
 uint8_t TestGenerator::generateTests(DataGenerator &gen, const bool root) {
     do {
         gen.next();
+        if (++_barren > _barrenLimit) {
+            // Nothing new for a long time.  Unwind far enough to leave the
+            // whole subtree, with the count reset so the next one starts on a
+            // full budget.  The first byte/word never drops, as below.
+            _barren = 0;
+            if (!root) {
+                gen.dump("@@ barren");
+                return MAX_DROP_BYTE;
+            }
+        }
         const ArrayMemory memory(_address, _memory, gen.length());
         auto error = disasm(memory);
         auto &insn = _disFormatter.insn();
@@ -388,6 +405,7 @@ uint8_t TestGenerator::generateTests(DataGenerator &gen, const bool root) {
                 found = meaningfulTestData(name, newLen);
             }
             if (found->count() == 1) {
+                _barren = 0;
                 // Found the first occurence of name/size/operand combination
                 if (mark_P) {
                     disasm(memory);
@@ -449,9 +467,11 @@ uint8_t TestGenerator::generateTests(DataGenerator &gen, const bool root) {
         } else if (error != UNKNOWN_INSTRUCTION && error != OPERAND_NOT_ALIGNED) {
             std::string name;
             const auto *error = meaningfulError(name);
-            if (error->count() == 1)
+            if (error->count() == 1) {
+                _barren = 0;
                 gen.dump("@@ error: %s %s: %s", name.c_str(), error->tokens().c_str(),
                         insn.errorText_P());
+            }
             if (root || error->count() < (1U << 16))
                 continue;
             const auto drop = calcDrop(*error);
