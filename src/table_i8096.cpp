@@ -17,6 +17,7 @@
 #include "table_i8096.h"
 #include "entry_i8096.h"
 #include "entry_table.h"
+#include "reg_i8096.h"
 #include "text_i8096.h"
 
 using namespace libasm::text::i8096;
@@ -29,6 +30,8 @@ namespace i8096 {
 #define E2(_opc, _cf, _name, _dst, _src1) E3(_opc, _cf, _name, _dst, _src1, M_NONE)
 #define E1(_opc, _cf, _name, _dst) E2(_opc, _cf, _name, _dst, M_NONE)
 #define E0(_opc, _cf, _name) E1(_opc, _cf, _name, M_NONE)
+#define D3(_opc, _cf, _name, _dst, _src1, _src2, _post) \
+    {_opc, Entry::Flags::create(_cf, _dst, _src1, _src2), _post, _name}
 #define U2(_opc, _cf, _name, _dst, _src1) {_opc, Entry::Flags::undef(_cf, _dst, _src1), _name}
 #define U1(_opc, _cf, _name, _dst) U2(_opc, _cf, _name, _dst, M_NONE)
 
@@ -276,19 +279,158 @@ constexpr Entry I80196KC_TABLE[] PROGMEM = {
     E2(0x1B, CF_00, TEXT_XCHB,  M_BREG, M_BIDX),
     E2(0xCD, CF_00, TEXT_BMOVI, M_LREG, M_WREG),
     E3(0xE2, CF_00, TEXT_TIJMP, M_WREG, M_WREG, M_IMM8),
-    E0(0xEC, CF_00, TEXT_DPTS),
-    E0(0xED, CF_00, TEXT_EPTS),
 };
 
 constexpr uint8_t I80196KC_INDEX[] PROGMEM = {
       4,  // TEXT_BMOVI
-      6,  // TEXT_DPTS
-      7,  // TEXT_EPTS
       5,  // TEXT_TIJMP
       0,  // TEXT_XCH
       1,  // TEXT_XCH
       2,  // TEXT_XCHB
       3,  // TEXT_XCHB
+};
+
+// The PTS instructions are a page of their own because the 80296 has no
+// peripheral transaction server and drops them.
+constexpr Entry PTS_TABLE[] PROGMEM = {
+    E0(0xEC, CF_00, TEXT_DPTS),
+    E0(0xED, CF_00, TEXT_EPTS),
+};
+
+constexpr uint8_t PTS_INDEX[] PROGMEM = {
+      0,  // TEXT_DPTS
+      1,  // TEXT_EPTS
+};
+
+// 80296: the return-from-interrupt the earlier parts leave reserved, the DSP
+// set, and the prefixless signed multiply and divide.  None of the DSP
+// instructions has an opcode of its own; each shares one with MUL/MULU, AND or
+// SHLL and carries a selector, which is why they are the only entries with a
+// |_post| (manual 3.3.2, 3.3.4, A-6).
+constexpr Entry I80296_TABLE[] PROGMEM = {
+    E0(0xE5, CF_00, TEXT_RETI),
+    D3(0x0D, CF_00, TEXT_MVAC,    M_ACCSEL, M_POINTR, M_PACC, 0x01),
+    D3(0x0D, CF_00, TEXT_MSAC,    M_ACCSEL, M_POINTR, M_PACC, 0x03),
+    D3(0x40, CF_03, TEXT_RPT,     M_WAOP,   M_NONE,   M_PRPT, 0x00),
+    D3(0x40, CF_03, TEXT_RPTNST,  M_WAOP,   M_NONE,   M_PRPT, 0x10),
+    D3(0x40, CF_03, TEXT_RPTNH,   M_WAOP,   M_NONE,   M_PRPT, 0x11),
+    D3(0x40, CF_03, TEXT_RPTGT,   M_WAOP,   M_NONE,   M_PRPT, 0x12),
+    D3(0x40, CF_03, TEXT_RPTNC,   M_WAOP,   M_NONE,   M_PRPT, 0x13),
+    D3(0x40, CF_03, TEXT_RPTNVT,  M_WAOP,   M_NONE,   M_PRPT, 0x14),
+    D3(0x40, CF_03, TEXT_RPTNV,   M_WAOP,   M_NONE,   M_PRPT, 0x15),
+    D3(0x40, CF_03, TEXT_RPTGE,   M_WAOP,   M_NONE,   M_PRPT, 0x16),
+    D3(0x40, CF_03, TEXT_RPTNE,   M_WAOP,   M_NONE,   M_PRPT, 0x17),
+    D3(0x40, CF_03, TEXT_RPTST,   M_WAOP,   M_NONE,   M_PRPT, 0x18),
+    D3(0x40, CF_03, TEXT_RPTH,    M_WAOP,   M_NONE,   M_PRPT, 0x19),
+    D3(0x40, CF_03, TEXT_RPTLE,   M_WAOP,   M_NONE,   M_PRPT, 0x1A),
+    D3(0x40, CF_03, TEXT_RPTC,    M_WAOP,   M_NONE,   M_PRPT, 0x1B),
+    D3(0x40, CF_03, TEXT_RPTVT,   M_WAOP,   M_NONE,   M_PRPT, 0x1C),
+    D3(0x40, CF_03, TEXT_RPTV,    M_WAOP,   M_NONE,   M_PRPT, 0x1D),
+    D3(0x40, CF_03, TEXT_RPTLT,   M_WAOP,   M_NONE,   M_PRPT, 0x1E),
+    D3(0x40, CF_03, TEXT_RPTE,    M_WAOP,   M_NONE,   M_PRPT, 0x1F),
+    D3(0x40, CF_03, TEXT_RPTI,    M_WAOP,   M_NONE,   M_PRPT, 0x20),
+    D3(0x40, CF_03, TEXT_RPTINST, M_WAOP,   M_NONE,   M_PRPT, 0x30),
+    D3(0x40, CF_03, TEXT_RPTINH,  M_WAOP,   M_NONE,   M_PRPT, 0x31),
+    D3(0x40, CF_03, TEXT_RPTIGT,  M_WAOP,   M_NONE,   M_PRPT, 0x32),
+    D3(0x40, CF_03, TEXT_RPTINC,  M_WAOP,   M_NONE,   M_PRPT, 0x33),
+    D3(0x40, CF_03, TEXT_RPTINVT, M_WAOP,   M_NONE,   M_PRPT, 0x34),
+    D3(0x40, CF_03, TEXT_RPTINV,  M_WAOP,   M_NONE,   M_PRPT, 0x35),
+    D3(0x40, CF_03, TEXT_RPTIGE,  M_WAOP,   M_NONE,   M_PRPT, 0x36),
+    D3(0x40, CF_03, TEXT_RPTINE,  M_WAOP,   M_NONE,   M_PRPT, 0x37),
+    D3(0x40, CF_03, TEXT_RPTIST,  M_WAOP,   M_NONE,   M_PRPT, 0x38),
+    D3(0x40, CF_03, TEXT_RPTIH,   M_WAOP,   M_NONE,   M_PRPT, 0x39),
+    D3(0x40, CF_03, TEXT_RPTILE,  M_WAOP,   M_NONE,   M_PRPT, 0x3A),
+    D3(0x40, CF_03, TEXT_RPTIC,   M_WAOP,   M_NONE,   M_PRPT, 0x3B),
+    D3(0x40, CF_03, TEXT_RPTIVT,  M_WAOP,   M_NONE,   M_PRPT, 0x3C),
+    D3(0x40, CF_03, TEXT_RPTIV,   M_WAOP,   M_NONE,   M_PRPT, 0x3D),
+    D3(0x40, CF_03, TEXT_RPTILT,  M_WAOP,   M_NONE,   M_PRPT, 0x3E),
+    D3(0x40, CF_03, TEXT_RPTIE,   M_WAOP,   M_NONE,   M_PRPT, 0x3F),
+    D3(0x4C, CF_03, TEXT_MAC,     M_WREG,   M_WAOP,   M_PMAC, 0x00),
+    D3(0x4C, CF_03, TEXT_SMAC,    M_WREG,   M_WAOP,   M_PMAC, 0x01),
+    D3(0x4C, CF_03, TEXT_MACR,    M_WREG,   M_WAOP,   M_PMAC, 0x04),
+    D3(0x4C, CF_03, TEXT_SMACR,   M_WREG,   M_WAOP,   M_PMAC, 0x05),
+    D3(0x4C, CF_03, TEXT_MACZ,    M_WREG,   M_WAOP,   M_PMAC, 0x08),
+    D3(0x4C, CF_03, TEXT_SMACZ,   M_WREG,   M_WAOP,   M_PMAC, 0x09),
+    D3(0x4C, CF_03, TEXT_MACRZ,   M_WREG,   M_WAOP,   M_PMAC, 0x0C),
+    D3(0x4C, CF_03, TEXT_SMACRZ,  M_WREG,   M_WAOP,   M_PMAC, 0x0D),
+    D3(0x6C, CF_03, TEXT_MAC,     M_WAOP,   M_NONE,   M_PMAC, 0x00),
+    D3(0x6C, CF_03, TEXT_SMAC,    M_WAOP,   M_NONE,   M_PMAC, 0x01),
+    D3(0x6C, CF_03, TEXT_MACR,    M_WAOP,   M_NONE,   M_PMAC, 0x04),
+    D3(0x6C, CF_03, TEXT_SMACR,   M_WAOP,   M_NONE,   M_PMAC, 0x05),
+    D3(0x6C, CF_03, TEXT_MACZ,    M_WAOP,   M_NONE,   M_PMAC, 0x08),
+    D3(0x6C, CF_03, TEXT_SMACZ,   M_WAOP,   M_NONE,   M_PMAC, 0x09),
+    D3(0x6C, CF_03, TEXT_MACRZ,   M_WAOP,   M_NONE,   M_PMAC, 0x0C),
+    D3(0x6C, CF_03, TEXT_SMACRZ,  M_WAOP,   M_NONE,   M_PMAC, 0x0D),
+    // See M_SLREG.  These come after the MAC entries because a destination
+    // below 10H is a selector rather than a register (manual 3.3.2).
+    E2(0x8C, CF_03, TEXT_DIV,     M_SLREG, M_WAOP),
+    E2(0x9C, CF_03, TEXT_DIVB,    M_SWREG, M_BAOP),
+    E2(0x6C, CF_03, TEXT_MUL,     M_SLREG, M_WAOP),
+    E3(0x4C, CF_03, TEXT_MUL,     M_SLREG, M_WREG,  M_WAOP),
+    E2(0x7C, CF_03, TEXT_MULB,    M_SWREG, M_BAOP),
+    E3(0x5C, CF_03, TEXT_MULB,    M_SWREG, M_BREG,  M_BAOP),
+};
+
+constexpr uint8_t I80296_INDEX[] PROGMEM = {
+     53,  // TEXT_DIV
+     54,  // TEXT_DIVB
+     37,  // TEXT_MAC
+     45,  // TEXT_MAC
+     39,  // TEXT_MACR
+     47,  // TEXT_MACR
+     43,  // TEXT_MACRZ
+     51,  // TEXT_MACRZ
+     41,  // TEXT_MACZ
+     49,  // TEXT_MACZ
+      2,  // TEXT_MSAC
+     55,  // TEXT_MUL
+     56,  // TEXT_MUL
+     57,  // TEXT_MULB
+     58,  // TEXT_MULB
+      1,  // TEXT_MVAC
+      0,  // TEXT_RETI
+      3,  // TEXT_RPT
+     15,  // TEXT_RPTC
+     19,  // TEXT_RPTE
+     10,  // TEXT_RPTGE
+      6,  // TEXT_RPTGT
+     13,  // TEXT_RPTH
+     20,  // TEXT_RPTI
+     32,  // TEXT_RPTIC
+     36,  // TEXT_RPTIE
+     27,  // TEXT_RPTIGE
+     23,  // TEXT_RPTIGT
+     30,  // TEXT_RPTIH
+     31,  // TEXT_RPTILE
+     35,  // TEXT_RPTILT
+     24,  // TEXT_RPTINC
+     28,  // TEXT_RPTINE
+     22,  // TEXT_RPTINH
+     21,  // TEXT_RPTINST
+     26,  // TEXT_RPTINV
+     25,  // TEXT_RPTINVT
+     29,  // TEXT_RPTIST
+     34,  // TEXT_RPTIV
+     33,  // TEXT_RPTIVT
+     14,  // TEXT_RPTLE
+     18,  // TEXT_RPTLT
+      7,  // TEXT_RPTNC
+     11,  // TEXT_RPTNE
+      5,  // TEXT_RPTNH
+      4,  // TEXT_RPTNST
+      9,  // TEXT_RPTNV
+      8,  // TEXT_RPTNVT
+     12,  // TEXT_RPTST
+     17,  // TEXT_RPTV
+     16,  // TEXT_RPTVT
+     38,  // TEXT_SMAC
+     46,  // TEXT_SMAC
+     40,  // TEXT_SMACR
+     48,  // TEXT_SMACR
+     44,  // TEXT_SMACRZ
+     52,  // TEXT_SMACRZ
+     42,  // TEXT_SMACZ
+     50,  // TEXT_SMACZ
 };
 
 // clang-format on
@@ -342,6 +484,7 @@ constexpr EntryPage I80196N_PAGES[] PROGMEM = {
         {0x00, ARRAY_RANGE(I80196N_TABLE), ARRAY_RANGE(I80196N_INDEX)},
         {0x00, ARRAY_RANGE(I80196KB_TABLE), ARRAY_RANGE(I80196KB_INDEX)},
         {0x00, ARRAY_RANGE(I80196KC_TABLE), ARRAY_RANGE(I80196KC_INDEX)},
+        {0x00, ARRAY_RANGE(PTS_TABLE), ARRAY_RANGE(PTS_INDEX)},
         {0x00, ARRAY_RANGE(TABLE_00), ARRAY_RANGE(INDEX_00)},
         {0xFE, ARRAY_RANGE(TABLE_FE), ARRAY_RANGE(INDEX_FE)},
 };
@@ -349,17 +492,28 @@ constexpr EntryPage I80196N_PAGES[] PROGMEM = {
 constexpr EntryPage I80196_PAGES[] PROGMEM = {
         {0x00, ARRAY_RANGE(I80196KB_TABLE), ARRAY_RANGE(I80196KB_INDEX)},
         {0x00, ARRAY_RANGE(I80196KC_TABLE), ARRAY_RANGE(I80196KC_INDEX)},
+        {0x00, ARRAY_RANGE(PTS_TABLE), ARRAY_RANGE(PTS_INDEX)},
         {0x00, ARRAY_RANGE(TABLE_00), ARRAY_RANGE(INDEX_00)},
         {0xFE, ARRAY_RANGE(TABLE_FE), ARRAY_RANGE(INDEX_FE)},
 };
 
 using Cpu = entry::CpuBase<CpuType, EntryPage>;
 
+constexpr EntryPage I80296_PAGES[] PROGMEM = {
+        {0x00, ARRAY_RANGE(I80296_TABLE), ARRAY_RANGE(I80296_INDEX)},
+        {0x00, ARRAY_RANGE(I80196N_TABLE), ARRAY_RANGE(I80196N_INDEX)},
+        {0x00, ARRAY_RANGE(I80196KB_TABLE), ARRAY_RANGE(I80196KB_INDEX)},
+        {0x00, ARRAY_RANGE(I80196KC_TABLE), ARRAY_RANGE(I80196KC_INDEX)},
+        {0x00, ARRAY_RANGE(TABLE_00), ARRAY_RANGE(INDEX_00)},
+        {0xFE, ARRAY_RANGE(TABLE_FE), ARRAY_RANGE(INDEX_FE)},
+};
+
 constexpr Cpu CPU_TABLE[] PROGMEM = {
         {I8096, TEXT_CPU_8096, ARRAY_RANGE(I8096_PAGES)},
         {I80196, TEXT_CPU_80196, ARRAY_RANGE(I80196_PAGES)},
         {I80196KB, TEXT_CPU_80196KB, ARRAY_RANGE(I80196KB_PAGES)},
         {I80196N, TEXT_CPU_80196N, ARRAY_RANGE(I80196N_PAGES)},
+        {I80296, TEXT_CPU_80296, ARRAY_RANGE(I80296_PAGES)},
 };
 
 const Cpu *cpu(CpuType cpuType) {
@@ -369,16 +523,22 @@ const Cpu *cpu(CpuType cpuType) {
 bool acceptMode(AddrMode opr, AddrMode table) {
     if (opr == table)
         return true;
+    // A DSP selector is never written out, so nothing is parsed for it.
+    if (table == M_PMAC || table == M_PRPT || table == M_PACC)
+        return opr == M_NONE;
     if (opr == M_REGNO)
         return table == M_BREG || table == M_WREG || table == M_LREG || table == M_QREG ||
                table == M_BAOP || table == M_WAOP || table == M_REL8 || table == M_REL11 ||
-               table == M_REL16 || table == M_REL24 || table == M_COUNT || table == M_BITNO;
+               table == M_REL16 || table == M_REL24 || table == M_COUNT || table == M_BITNO ||
+               table == M_ACCSEL || table == M_POINTR || table == M_SLREG ||
+               table == M_SWREG;
     if (opr == M_ADDR)
         return table == M_BAOP || table == M_WAOP || table == M_REL8 || table == M_REL11 ||
                table == M_REL16 || table == M_REL24 || table == M_COUNT || table == M_BITNO ||
                table == M_BIDX || table == M_WIDX;
     if (opr == M_IMM16)
-        return table == M_BAOP || table == M_WAOP || table == M_COUNT || table == M_IMM8;
+        return table == M_BAOP || table == M_WAOP || table == M_COUNT || table == M_IMM8 ||
+               table == M_POINTR;
     if (opr == M_INDIR || opr == M_AINC)
         return table == M_BAOP || table == M_WAOP || table == M_BIDX || table == M_WIDX ||
                table == M_EINDIR || table == M_EBIND;
@@ -390,6 +550,12 @@ bool acceptMode(AddrMode opr, AddrMode table) {
 
 bool acceptModes(AsmInsn &insn, const Entry *entry) {
     const auto table = entry->readFlags();
+    const auto dst = table.dst();
+    // The sign bit in the destination is what the 80296 prefers, but the FE
+    // prefix assembles for the whole family, so it takes an option to ask for
+    // the bit; see M_SLREG.
+    if ((dst == M_SLREG || dst == M_SWREG) && insn.signedPrefix())
+        return false;
     if (acceptMode(insn.dstOp.mode, table.dst()) && acceptMode(insn.src1Op.mode, table.src1()) &&
             acceptMode(insn.src2Op.mode, table.src2())) {
         if (table.undefined())
@@ -399,10 +565,65 @@ bool acceptModes(AsmInsn &insn, const Entry *entry) {
     return false;
 }
 
+namespace {
+
+// The DSP selector has to come across with the opcode; see M_PMAC.
+void readCode(AsmInsn &insn, const Entry *entry, const EntryPage *page) {
+    Cpu::defaultReadCode(insn, entry, page);
+    insn.setPostfix(entry->readPost());
+}
+
+}  // namespace
+
 Error searchName(CpuType cpuType, AsmInsn &insn) {
-    cpu(cpuType)->searchName(insn, acceptModes);
+    cpu(cpuType)->searchName(insn, acceptModes, Cpu::defaultPageSetup, readCode);
     return insn.getError();
 }
+
+namespace {
+
+// Whichever operand position holds the |aa|-selected one.
+AddrMode aopMode(Entry::Flags flags) {
+    const auto dst = flags.dst();
+    if (dst == M_BAOP || dst == M_WAOP)
+        return dst;
+    const auto src1 = flags.src1();
+    if (src1 == M_BAOP || src1 == M_WAOP)
+        return src1;
+    return flags.src2();
+}
+
+// How many bytes that operand takes.  Immediate is one byte wide for a byte
+// operation; indexed is two or three, decided by the index register just as
+// |readIndexed| decides it.
+uint8_t aopLen(DisInsn &insn, Entry::Flags flags) {
+    const auto aa = insn.aa();
+    if (aa == AA_IMM)
+        return aopMode(flags) == M_BAOP ? 1 : 2;
+    if (aa == AA_IDX)
+        return reg::isWreg(insn.peekOperand(0)) ? 2 : 3;
+    return 1;
+}
+
+// Where the destination sits, counting from the first operand byte.  It comes
+// last, after the |aa|-selected operand, which a 3-operand form takes as SRC2
+// and follows with a register.
+uint8_t dstPos(DisInsn &insn, Entry::Flags flags) {
+    const auto len = aopLen(insn, flags);
+    return flags.src2() == M_NONE ? len : len + 1;
+}
+
+// Where the DSP selector sits, counting from the first operand byte.
+uint8_t postPos(DisInsn &insn, Entry::Flags flags) {
+    if (flags.src2() == M_PACC)
+        return 1;  // after the bit pointer
+    const auto len = aopLen(insn, flags);
+    // A 3-operand MAC has its second register between the operand and the
+    // selector; everything else puts the selector straight after.
+    return flags.src1() == M_WAOP ? len + 1 : len;
+}
+
+}  // namespace
 
 bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *) {
     auto opc = insn.opCode();
@@ -413,8 +634,36 @@ bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *) {
     // BR and EBR share opcode E3; EBR is the one with bit 0 of the operand
     // byte set.  BR is left alone, so the older CPUs decode as before.
     if (flags.dst() == M_EBIND)
-        return insn.readOperandByte() & 1;
-    return true;
+        return insn.peekOperand(0) & 1;
+    // On the 80296 bit 0 of the destination can carry the sign of a multiply or
+    // divide in place of the FE prefix; see M_SLREG.
+    const auto dst = flags.dst();
+    if (dst == M_SLREG || dst == M_SWREG) {
+        const auto reg = insn.peekOperand(dstPos(insn, flags));
+        if (!insn.isOK())
+            return false;
+        return dst == M_SLREG ? (reg & 3) == 1 : (reg & 1) == 1;
+    }
+    const auto postMode = flags.src2();
+    if (postMode < M_PMAC)
+        return true;
+    // Manual A-6 footnotes: no RPT has an indexed form, and the relocating
+    // MACs have no immediate one.
+    const auto post = entry->readPost();
+    if (postMode == M_PRPT && insn.aa() == AA_IDX)
+        return false;
+    if (postMode == M_PMAC && insn.aa() == AA_IMM && (post & MAC_RELOC))
+        return false;
+    const auto selector = insn.peekOperand(postPos(insn, flags));
+    if (!insn.isOK())
+        return false;
+    // MVAC and MSAC carry the selector in the low bits of their destination.
+    if (postMode == M_PACC)
+        return (selector & 3) == post;
+    if (selector != post)
+        return false;
+    // A repeat also has to name RPT_CNT, or it is just an AND.
+    return postMode == M_PMAC || insn.peekOperand(postPos(insn, flags) + 1) == RPT_CNT;
 }
 
 Error searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) {
@@ -457,6 +706,11 @@ bool EntryInsn::mulDivInsn() const {
         return opc_lo >= 0x0C && (opc_hi >= 0x40 && opc_hi <= 0x90);
     }
     return false;
+}
+
+bool EntryInsn::mulWordInsn() const {
+    const auto opc_hi = opCode() & 0xF0;
+    return mulDivInsn() && (opc_hi == 0x40 || opc_hi == 0x60);
 }
 
 const TableI8096 TABLE;

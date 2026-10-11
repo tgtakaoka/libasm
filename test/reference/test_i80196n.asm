@@ -17,4 +17,5 @@
         include "test_i8096.inc"
         include "test_i80196kb.inc"
         include "test_i80196.inc"
+        include "test_pts.inc"
         include "test_i80196n.inc"

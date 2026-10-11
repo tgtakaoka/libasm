@@ -27,7 +27,15 @@ namespace i8096 {
 struct AsmI8096 final : Assembler, Config {
     AsmI8096(const ValueParser::Plugins &plugins = defaultPlugins());
 
+    void reset() override;
+
+    Error setSignedPrefix(bool enable);
+
 private:
+    const BoolOption<AsmI8096> _opt_signedPrefix;
+
+    bool _signedPrefix;
+
     Error parseIndirect(StrScanner &scan, Operand &opr, const StrScanner &at, bool autoInc) const;
     Error parseOperand(StrScanner &scan, Operand &opr) const;
     void emitIndirect(AsmInsn &insn, const Operand &op) const;
