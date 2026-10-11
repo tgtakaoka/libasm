@@ -27,6 +27,7 @@ namespace i8096 {
 extern const char TEXT_CPU_LIST[]    PROGMEM;
 extern const char TEXT_CPU_8096[]    PROGMEM;
 extern const char TEXT_CPU_80196[]   PROGMEM;
+extern const char TEXT_CPU_80196N[]  PROGMEM;
 extern const char TEXT_CPU_80196KB[] PROGMEM;
 
 using common::TEXT_ADD;
@@ -133,6 +134,14 @@ using common::TEXT_PUSHA;
 // i80C196KC
 extern const char TEXT_BMOVI[] PROGMEM;
 extern const char TEXT_DPTS[]  PROGMEM;
+extern const char TEXT_EBMOVI[] PROGMEM;
+extern const char TEXT_EBR[]   PROGMEM;
+extern const char TEXT_ECALL[] PROGMEM;
+extern const char TEXT_EJMP[]  PROGMEM;
+extern const char TEXT_ELD[]   PROGMEM;
+extern const char TEXT_ELDB[]  PROGMEM;
+extern const char TEXT_EST[]   PROGMEM;
+extern const char TEXT_ESTB[]  PROGMEM;
 extern const char TEXT_EPTS[]  PROGMEM;
 extern const char TEXT_TIJMP[] PROGMEM;
 using common::TEXT_XCH;

@@ -30,6 +30,12 @@ int main(int argc, const char **argv) {
     dis8096.setOption("relative", "enable");
 
     TestGenerator generator(driver, dis8096, 0x2000, standardTokenizers<IntelNumber>(dis8096.curSym()));
+    // The 80196N's extended operands pair a double-word register with a
+    // 24-bit displacement, so only one byte combination in eight decodes and
+    // the drop heuristic never reaches its threshold; bound the search by
+    // how long it has gone without finding anything new instead.
+    if (strcasecmp_P("80196N", dis8096.cpu_P()) == 0)
+        generator.maxBarren(12 << 20);
     generator.generate();
 
     return driver.close();

@@ -25,6 +25,7 @@ namespace reg {
 
 bool isWreg(uint8_t regno);
 bool isLreg(uint8_t regno);
+bool isQreg(uint8_t regno);
 
 }  // namespace reg
 }  // namespace i8096

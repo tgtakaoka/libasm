@@ -287,6 +287,37 @@ void AsmI8096::emitOperand(AsmInsn &insn, AddrMode mode, const Operand &op) cons
     case M_INDIR:
         emitIndirect(insn, op);
         return;
+    case M_QREG:
+        if (!isQreg(val16))
+            insn.setErrorIf(op, OPERAND_NOT_ALIGNED);
+        insn.emitOperand8(val16);
+        return;
+    case M_EINDIR:
+    case M_EBIND: {
+        const auto regno = op.regno.getUnsigned();
+        if (!isLreg(regno))
+            insn.setErrorIf(op.regAt, OPERAND_NOT_ALIGNED);
+        // EBR shares opcode E3 with BR, so its operand byte carries bit 0.
+        insn.emitOperand8(mode == M_EBIND ? regno | 1 : regno);
+        return;
+    }
+    case M_EIDX: {
+        const auto regno = op.regno.getUnsigned();
+        if (!isLreg(regno))
+            insn.setErrorIf(op.regAt, OPERAND_NOT_ALIGNED);
+        insn.emitOperand8(regno);
+        insn.emitOperand24(op.val.getUnsigned());
+        return;
+    }
+    case M_REL24: {
+        const auto base = insn.address() + 4;
+        const auto target = op.getError() ? base : op.val.getUnsigned();
+        const auto delta = static_cast<int32_t>(target - base);
+        if (delta < -0x800000 || delta > 0x7FFFFF)
+            insn.setErrorIf(op, OPERAND_TOO_FAR);
+        insn.emitOperand24(static_cast<uint32_t>(delta));
+        return;
+    }
     case M_BAOP:
     case M_WAOP:
         emitAop(insn, mode, op);

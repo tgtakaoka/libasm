@@ -40,9 +40,10 @@ private:
         AddrMode mode;
         uint8_t regno;
         uint16_t val16;
+        uint32_t val24;  // M_EIDX displacement, M_REL24 target
         int16_t int16() const { return static_cast<int16_t>(val16); }
         int8_t int8() const { return static_cast<int8_t>(val16); }
-        Operand() : mode(M_NONE), regno(0), val16(0) {}
+        Operand() : mode(M_NONE), regno(0), val16(0), val24(0) {}
         Error read(DisInsn &insn, AddrMode mode);
         void readIndirect(DisInsn &insn);
         void readIndexed(DisInsn &insn);

@@ -34,6 +34,20 @@ bool is80196() {
     return strcasecmp_P("80196", asm8096.cpu_P()) == 0;
 }
 
+bool is80196n() {
+    return strcasecmp_P("80196N", asm8096.cpu_P()) == 0;
+}
+
+// The KB additions are on every CPU but the 8096; the KC additions are on the
+// KC and the N.
+bool hasKb() {
+    return !is8096();
+}
+
+bool hasKc() {
+    return is80196() || is80196n();
+}
+
 void set_up() {
     assembler.reset();
 }
@@ -56,11 +70,17 @@ void test_cpu() {
     EQUALS("cpu 80196", true,   assembler.setCpu("80196"));
     EQUALS_P("cpu 80196", "80196", assembler.config().cpu_P());
 
+    EQUALS("cpu 80196N", true,   assembler.setCpu("80196N"));
+    EQUALS_P("cpu 80196N", "80196N", assembler.config().cpu_P());
+
     EQUALS("cpu i80196KB", true,   assembler.setCpu("i80196KB"));
     EQUALS_P("cpu i80196KB", "80196KB", assembler.config().cpu_P());
 
     EQUALS("cpu i80196", true,   assembler.setCpu("i80196"));
     EQUALS_P("cpu i80196", "80196", assembler.config().cpu_P());
+
+    EQUALS("cpu i80196N", true,   assembler.setCpu("i80196N"));
+    EQUALS_P("cpu i80196N", "80196N", assembler.config().cpu_P());
 }
 
 void test_2_operands() {
@@ -161,7 +181,7 @@ void test_2_operands() {
     TEST("CMPB 52, 35[32]",    0x9B, 0x20, 0x23, 0x34);
     TEST("CMPB 69, 3423H[32]", 0x9B, 0x21, 0x23, 0x34, 0x45);
 
-    if (!is8096()) {
+    if (hasKb()) {
         TEST("CMPL 52, 32",            0xC5, 0x20, 0x34);
         ONAL("CMPL 53, 32",  "53, 32", 0xC5, 0x20, 0x35);
         ONAL("CMPL 52, 33",  "33",     0xC5, 0x21, 0x34);
@@ -517,12 +537,12 @@ void test_move() {
 
     TEST("PUSHF", 0xF2);
     TEST("POPF",  0xF3);
-    if (!is8096()) {
+    if (hasKb()) {
         TEST("BMOV  52, 32",           0xC1, 0x20, 0x34);
         ONAL("BMOV  54, 32", "54, 32", 0xC1, 0x20, 0x36);
         ONAL("BMOV  52, 33", "33",     0xC1, 0x21, 0x34);
     }
-    if (is80196()) {
+    if (hasKc()) {
         TEST("BMOVI  52, 32",           0xCD, 0x20, 0x34);
         ONAL("BMOVI  54, 32", "54, 32", 0xCD, 0x20, 0x36);
         ONAL("BMOVI  52, 33", "33",     0xCD, 0x21, 0x34);
@@ -718,7 +738,7 @@ void test_smart_branch() {
     ATEST(0x2000, "DJNZ 32, 1F83H",                           0xE0, 0x20, 0x80);
     AERRT(0x2000, "DJNZ 32, 1F82H", OPERAND_TOO_FAR, "1F82H", 0xE0, 0x20, 0x7F);
 
-    if (!is8096()) {
+    if (hasKb()) {
         ATEST(0x2000, "DJNZW 32, 2082H",                           0xE1, 0x20, 0x7F);
         AERRT(0x2000, "DJNZW 32, 2083H", OPERAND_TOO_FAR, "2083H", 0xE1, 0x20, 0x80);
         ATEST(0x2000, "DJNZW 32, 1F83H",                           0xE1, 0x20, 0x80);
@@ -731,7 +751,7 @@ void test_smart_branch() {
     ATEST(0x2000, "JBC 32, 2, 1F83H",                           0x32, 0x20, 0x80);
     AERRT(0x2000, "JBS 32, 7, 1F82H", OPERAND_TOO_FAR, "1F82H", 0x3F, 0x20, 0x7F);
 
-    if (is80196()) {
+    if (hasKc()) {
         TEST("TIJMP 86, 32, #0FH",                           0xE2, 0x20, 0x0F, 0x56);
         ONAL("TIJMP 87, 32, #0FH", "87, 32, #0FH",           0xE2, 0x20, 0x0F, 0x57);
         ONAL("TIJMP 86, 33, #0FH", "33, #0FH",               0xE2, 0x21, 0x0F, 0x56);
@@ -801,11 +821,11 @@ void test_control() {
     TEST("NOP",    0xFD);
     TEST("SKIP 1", 0x00, 0x01);
     TEST("TRAP",   0xF7);
-    if (is80196()) {
+    if (hasKc()) {
         TEST("DPTS",  0xEC);
         TEST("EPTS",  0xED);
     }
-    if (!is8096())
+    if (hasKb())
         TEST("IDLPD #2", 0xF6, 0x02);
 }
 
@@ -910,13 +930,49 @@ void test_data_constant() {
 
 // clang-format on
 
+void test_branch_80196n() {
+    ATEST(0x2000, "SJMP 2002H",  0x20, 0x00);
+    ATEST(0x2000, "LJMP 2003H",  0xE7, 0x00, 0x00);
+    ATEST(0x2000, "BR [32]",     0xE3, 0x20);
+
+    // The 80196N additions.
+    ATEST(0x2000, "EBR [32]",       0xE3, 0x21);
+    ATEST(0x2000, "EJMP 2004H",     0xE6, 0x00, 0x00, 0x00);
+    ATEST(0x2000, "EJMP 3238H",     0xE6, 0x34, 0x12, 0x00);
+    ATEST(0x2000, "EJMP 0DD0H",     0xE6, 0xCC, 0xED, 0xFF);
+    ATEST(0x2000, "ECALL 2004H",    0xF1, 0x00, 0x00, 0x00);
+    ATEST(0x2000, "ECALL 3238H",    0xF1, 0x34, 0x12, 0x00);
+    ATEST(0x2000, "EJMP 802003H",   0xE6, 0xFF, 0xFF, 0x7F);
+    AERRT(0x2000, "EJMP 802004H", OPERAND_TOO_FAR, "802004H", 0xE6, 0x00, 0x00, 0x80);
+
+    TEST("ELD  52, [32]",         0xE8, 0x20, 0x34);
+    TEST("ELD  52, 123456H[32]",  0xE9, 0x20, 0x56, 0x34, 0x12, 0x34);
+    TEST("ELDB 35, [32]",         0xEA, 0x20, 0x23);
+    TEST("ELDB 35, 123456H[32]",  0xEB, 0x20, 0x56, 0x34, 0x12, 0x23);
+    TEST("EST  52, [32]",         0x1C, 0x20, 0x34);
+    TEST("EST  52, 123456H[32]",  0x1D, 0x20, 0x56, 0x34, 0x12, 0x34);
+    TEST("ESTB 35, [32]",         0x1E, 0x20, 0x23);
+    TEST("ESTB 35, 123456H[32]",  0x1F, 0x20, 0x56, 0x34, 0x12, 0x23);
+    TEST("EBMOVI 64, 32",         0xE4, 0x20, 0x40);
+
+    // treg is a double-word pointer; PTRS is a quad-word register.
+    ERRT("ELD 52, [34]",  OPERAND_NOT_ALIGNED, "[34]",  0xE8, 0x22, 0x34);
+    ERRT("EBMOVI 68, 32", OPERAND_NOT_ALIGNED, "68, 32", 0xE4, 0x20, 0x44);
+}
+
 void run_tests(const char *cpu) {
     assembler.setCpu(cpu);
     RUN_TEST(test_2_operands);
     RUN_TEST(test_3_operands);
     RUN_TEST(test_move);
-    RUN_TEST(test_branch);
-    RUN_TEST(test_smart_branch);
+    if (is80196n()) {
+        // The branch range tests assert 16-bit wrap-around, which does not
+        // hold in the N's 24-bit space; the N has its own below.
+        RUN_TEST(test_branch_80196n);
+    } else {
+        RUN_TEST(test_branch);
+        RUN_TEST(test_smart_branch);
+    }
     RUN_TEST(test_modify);
     RUN_TEST(test_control);
     RUN_TEST(test_comment);

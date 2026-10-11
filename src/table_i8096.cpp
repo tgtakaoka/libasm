@@ -300,8 +300,48 @@ constexpr EntryPage I8096_PAGES[] PROGMEM = {
         {0xFE, ARRAY_RANGE(TABLE_FE), ARRAY_RANGE(INDEX_FE)},
 };
 
+// 80196N: the 1-Mbyte parts.  EBR shares opcode E3 with BR and is told apart
+// by the least-significant bit of the second byte (manual A-7, EBR).
+constexpr Entry I80196N_TABLE[] PROGMEM = {
+    E2(0x1C, CF_00, TEXT_EST,    M_WREG, M_EINDIR),
+    E2(0x1D, CF_00, TEXT_EST,    M_WREG, M_EIDX),
+    E2(0x1E, CF_00, TEXT_ESTB,   M_BREG, M_EINDIR),
+    E2(0x1F, CF_00, TEXT_ESTB,   M_BREG, M_EIDX),
+    E1(0xE3, CF_00, TEXT_EBR,    M_EBIND),
+    E2(0xE4, CF_00, TEXT_EBMOVI, M_QREG, M_WREG),
+    E1(0xE6, CF_00, TEXT_EJMP,   M_REL24),
+    E2(0xE8, CF_00, TEXT_ELD,    M_WREG, M_EINDIR),
+    E2(0xE9, CF_00, TEXT_ELD,    M_WREG, M_EIDX),
+    E2(0xEA, CF_00, TEXT_ELDB,   M_BREG, M_EINDIR),
+    E2(0xEB, CF_00, TEXT_ELDB,   M_BREG, M_EIDX),
+    E1(0xF1, CF_00, TEXT_ECALL,  M_REL24),
+};
+
+constexpr uint8_t I80196N_INDEX[] PROGMEM = {
+      5,  // TEXT_EBMOVI
+      4,  // TEXT_EBR
+     11,  // TEXT_ECALL
+      6,  // TEXT_EJMP
+      7,  // TEXT_ELD
+      8,  // TEXT_ELD
+      9,  // TEXT_ELDB
+     10,  // TEXT_ELDB
+      0,  // TEXT_EST
+      1,  // TEXT_EST
+      2,  // TEXT_ESTB
+      3,  // TEXT_ESTB
+};
+
 constexpr EntryPage I80196KB_PAGES[] PROGMEM = {
         {0x00, ARRAY_RANGE(I80196KB_TABLE), ARRAY_RANGE(I80196KB_INDEX)},
+        {0x00, ARRAY_RANGE(TABLE_00), ARRAY_RANGE(INDEX_00)},
+        {0xFE, ARRAY_RANGE(TABLE_FE), ARRAY_RANGE(INDEX_FE)},
+};
+
+constexpr EntryPage I80196N_PAGES[] PROGMEM = {
+        {0x00, ARRAY_RANGE(I80196N_TABLE), ARRAY_RANGE(I80196N_INDEX)},
+        {0x00, ARRAY_RANGE(I80196KB_TABLE), ARRAY_RANGE(I80196KB_INDEX)},
+        {0x00, ARRAY_RANGE(I80196KC_TABLE), ARRAY_RANGE(I80196KC_INDEX)},
         {0x00, ARRAY_RANGE(TABLE_00), ARRAY_RANGE(INDEX_00)},
         {0xFE, ARRAY_RANGE(TABLE_FE), ARRAY_RANGE(INDEX_FE)},
 };
@@ -319,6 +359,7 @@ constexpr Cpu CPU_TABLE[] PROGMEM = {
         {I8096, TEXT_CPU_8096, ARRAY_RANGE(I8096_PAGES)},
         {I80196, TEXT_CPU_80196, ARRAY_RANGE(I80196_PAGES)},
         {I80196KB, TEXT_CPU_80196KB, ARRAY_RANGE(I80196KB_PAGES)},
+        {I80196N, TEXT_CPU_80196N, ARRAY_RANGE(I80196N_PAGES)},
 };
 
 const Cpu *cpu(CpuType cpuType) {
@@ -329,17 +370,21 @@ bool acceptMode(AddrMode opr, AddrMode table) {
     if (opr == table)
         return true;
     if (opr == M_REGNO)
-        return table == M_BREG || table == M_WREG || table == M_LREG || table == M_BAOP ||
-               table == M_WAOP || table == M_REL8 || table == M_REL11 || table == M_REL16 ||
-               table == M_COUNT || table == M_BITNO;
+        return table == M_BREG || table == M_WREG || table == M_LREG || table == M_QREG ||
+               table == M_BAOP || table == M_WAOP || table == M_REL8 || table == M_REL11 ||
+               table == M_REL16 || table == M_REL24 || table == M_COUNT || table == M_BITNO;
     if (opr == M_ADDR)
         return table == M_BAOP || table == M_WAOP || table == M_REL8 || table == M_REL11 ||
-               table == M_REL16 || table == M_COUNT || table == M_BITNO || table == M_BIDX ||
-               table == M_WIDX;
+               table == M_REL16 || table == M_REL24 || table == M_COUNT || table == M_BITNO ||
+               table == M_BIDX || table == M_WIDX;
     if (opr == M_IMM16)
         return table == M_BAOP || table == M_WAOP || table == M_COUNT || table == M_IMM8;
-    if (opr == M_INDIR || opr == M_AINC || opr == M_IDX16)
-        return table == M_BAOP || table == M_WAOP || table == M_BIDX || table == M_WIDX;
+    if (opr == M_INDIR || opr == M_AINC)
+        return table == M_BAOP || table == M_WAOP || table == M_BIDX || table == M_WIDX ||
+               table == M_EINDIR || table == M_EBIND;
+    if (opr == M_IDX16)
+        return table == M_BAOP || table == M_WAOP || table == M_BIDX || table == M_WIDX ||
+               table == M_EIDX;
     return false;
 }
 
@@ -361,8 +406,15 @@ Error searchName(CpuType cpuType, AsmInsn &insn) {
 
 bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *) {
     auto opc = insn.opCode();
-    opc &= ~entry->readFlags().mask();
-    return opc == entry->readOpCode();
+    const auto flags = entry->readFlags();
+    opc &= ~flags.mask();
+    if (opc != entry->readOpCode())
+        return false;
+    // BR and EBR share opcode E3; EBR is the one with bit 0 of the operand
+    // byte set.  BR is left alone, so the older CPUs decode as before.
+    if (flags.dst() == M_EBIND)
+        return insn.readOperandByte() & 1;
+    return true;
 }
 
 Error searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) {

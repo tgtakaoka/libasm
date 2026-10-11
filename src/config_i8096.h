@@ -26,10 +26,17 @@ enum CpuType : uint8_t {
     I8096,
     I80196KB,
     I80196,
+    I80196N,
 };
 
-struct Config : ConfigImpl<CpuType, ADDRESS_16BIT, ADDRESS_BYTE, OPCODE_8BIT, ENDIAN_LITTLE, 7, 5> {
+struct Config : ConfigImpl<CpuType, ADDRESS_24BIT, ADDRESS_BYTE, OPCODE_8BIT, ENDIAN_LITTLE, 7, 5> {
     Config(const InsnTable<CpuType> &table) : ConfigImpl(table, I8096) {}
+
+    // Only the N series reaches past 64K; the rest stay 16-bit so their
+    // listings and disassembly are unchanged.
+    AddressWidth addressWidth() const override {
+        return cpuType() == I80196N ? ADDRESS_24BIT : ADDRESS_16BIT;
+    }
 
 protected:
     bool ioAddress(uint16_t addr) const {
