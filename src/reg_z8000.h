@@ -135,8 +135,10 @@ enum IntrName : int8_t {
 
 namespace reg {
 
-RegName parseRegName(StrScanner &scan);
-StrBuffer &outRegName(StrBuffer &out, RegName name);
+RegName parseRegName(StrScanner &scan, bool segmentedModel);
+// |sp| is the register to print as SP, or REG_UNDEF to print none that way.
+StrBuffer &outRegName(StrBuffer &out, RegName name, RegName sp);
+RegName stackPointer(bool segmentedModel);
 uint8_t encodeGeneralRegName(RegName name);
 bool decodeRegNum(bool segmentedModel, uint8_t num, OprSize size, RegName &name);
 RegName decodeByteReg(uint8_t num);

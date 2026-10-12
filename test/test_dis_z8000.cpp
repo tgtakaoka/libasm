@@ -2671,6 +2671,34 @@ void test_direct_address() {
     TEST("CLR", "<<%56>>%1234(R2)", 0x4D28, 0xD600, 0x1234);
 }
 
+void test_sp_alias() {
+    disassembler.setOption("sp-alias", "on");
+    if (z8001()) {
+        // SP is RR14 in the segmented model, and R15 keeps its own name.
+        TEST("LDL",  "RR2, SP",     0x94E2);
+        TEST("LDL",  "SP, RR2",     0x942E);
+        TEST("PUSH", "@SP, R1",     0x93E1);
+        TEST("LD",   "R1, SP(#2)",  0x31E1, 0x0002);
+        TEST("LD",   "R1, R15",     0xA1F1);
+
+        disassembler.setOption("sp-alias", "off");
+
+        TEST("LDL",  "RR2, RR14",   0x94E2);
+    } else {
+        // SP is R15 in the non-segmented model, and RR14 keeps its own name.
+        TEST("LD",    "R1, SP",     0xA1F1);
+        TEST("LD",    "SP, R1",     0xA11F);
+        TEST("PUSH",  "@SP, R1",    0x93F1);
+        TEST("LD",    "R1, SP(#2)", 0x31F1, 0x0002);
+        TEST("LDCTL", "SP, FCW",    0x7DF2);
+        TEST("LDL",   "RR2, RR14",  0x94E2);
+
+        disassembler.setOption("sp-alias", "off");
+
+        TEST("LD",    "R1, R15",    0xA1F1);
+    }
+}
+
 void test_illegal() {
     // Top-byte holes — every low byte in these sub-pages decodes as Unknown.
     // Probe at the boundaries (0x??00 and 0x??FF) so a future encoding regression
@@ -2733,6 +2761,7 @@ void run_tests(const char *cpu) {
     if (z8001()) {
         RUN_TEST(test_direct_address);
     }
+    RUN_TEST(test_sp_alias);
     RUN_TEST(test_illegal);
 }
 

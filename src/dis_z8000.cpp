@@ -31,6 +31,8 @@ constexpr char OPT_BOOL_SEGMENTED_ADDR[] PROGMEM = "segmented-addr";
 constexpr char OPT_DESC_SEGMENTED_ADDR[] PROGMEM = "use <<segment>> notation";
 constexpr char OPT_BOOL_EXTERN_SYMBOL[] PROGMEM = "extern-symbol";
 constexpr char OPT_DESC_EXTERN_SYMBOL[] PROGMEM = "emit direct address as seg_SS_off_XXXX symbol";
+constexpr char OPT_BOOL_SP_ALIAS[] PROGMEM = "sp-alias";
+constexpr char OPT_DESC_SP_ALIAS[] PROGMEM = "use SP for R15 or RR14";
 
 }  // namespace
 
@@ -45,8 +47,9 @@ DisZ8000::DisZ8000(const ValueFormatter::Plugins &plugins)
               OPT_DESC_SHORT_DIRECT, &_opt_segmentedAddr),
       _opt_segmentedAddr(this, &DisZ8000::setSegmentedAddr, OPT_BOOL_SEGMENTED_ADDR,
               OPT_DESC_SEGMENTED_ADDR, &_opt_externSymbol),
-      _opt_externSymbol(
-              this, &DisZ8000::setExternSymbol, OPT_BOOL_EXTERN_SYMBOL, OPT_DESC_EXTERN_SYMBOL) {
+      _opt_externSymbol(this, &DisZ8000::setExternSymbol, OPT_BOOL_EXTERN_SYMBOL,
+              OPT_DESC_EXTERN_SYMBOL, &_opt_spAlias),
+      _opt_spAlias(this, &DisZ8000::setSpAlias, OPT_BOOL_SP_ALIAS, OPT_DESC_SP_ALIAS) {
     reset();
 }
 
@@ -55,6 +58,7 @@ void DisZ8000::reset() {
     setShortDirect(true);
     setSegmentedAddr(true);
     setExternSymbol(false);
+    setSpAlias(false);
 }
 
 Error DisZ8000::setShortDirect(bool enable) {
@@ -69,6 +73,11 @@ Error DisZ8000::setSegmentedAddr(bool enable) {
 
 Error DisZ8000::setExternSymbol(bool enable) {
     _externSymbol = enable;
+    return OK;
+}
+
+Error DisZ8000::setSpAlias(bool enable) {
+    _spAlias = enable;
     return OK;
 }
 
@@ -136,21 +145,21 @@ void DisZ8000::decodeGeneralRegister(
         checkRegisterOverlap(insn, out);
 
     RegName reg;
-    if (!decodeRegNum(cpuType() == Z8001, num, size, reg))
+    if (!decodeRegNum(segmentedModel(), num, size, reg))
         insn.setErrorIf(out, ILLEGAL_REGISTER);
-    outRegName(out, reg);
+    outRegName(out, reg, _spAlias ? stackPointer(segmentedModel()) : REG_UNDEF);
 }
 
 void DisZ8000::decodeControlRegister(
         DisInsn &insn, StrBuffer &out, uint8_t ctlNum, OprSize size) const {
-    const auto reg = decodeCtlReg(cpuType() == Z8001, ctlNum);
+    const auto reg = decodeCtlReg(segmentedModel(), ctlNum);
     if (reg == REG_UNDEF)
         insn.setErrorIf(out, UNKNOWN_REGISTER);
     if (size == SZ_BYTE && reg != REG_FLAGS)
         insn.setErrorIf(out, ILLEGAL_SIZE);
     if (size == SZ_WORD && reg == REG_FLAGS)
         insn.setErrorIf(out, ILLEGAL_SIZE);
-    outRegName(out, reg);
+    outCtlName(out, reg);
 }
 
 void DisZ8000::decodeBaseAddressing(
@@ -201,7 +210,7 @@ void DisZ8000::decodeGenericAddressing(
 void DisZ8000::decodeDirectAddress(DisInsn &insn, StrBuffer &out, AddrMode mode) const {
     const auto align = mode == M_DA && (insn.size() == SZ_WORD || insn.size() == SZ_QUAD);
     const auto val16 = insn.readUint16();
-    if (cpuType() == Z8001) {
+    if (segmentedModel()) {
         const auto seg = (val16 >> 8) & 0x7F;
         uint16_t disp = val16 & 0xFF;
         auto shortDirect = _shortDirect && !_gnuAs;
@@ -401,15 +410,15 @@ Error DisZ8000::checkRegisterOverlap(DisInsn &insn, StrBuffer &out) const {
     const auto dsize = registerSize(insn, dmode);
     const auto ssize = registerSize(insn, smode);
     RegName dst, src;
-    decodeRegNum(cpuType() == Z8001, dnum, dsize, dst);
-    decodeRegNum(cpuType() == Z8001, snum, ssize, src);
+    decodeRegNum(segmentedModel(), dnum, dsize, dst);
+    decodeRegNum(segmentedModel(), snum, ssize, src);
     if (checkOverlap(dst, src))
         insn.setErrorIf(out, REGISTERS_OVERLAPPED);
 
     if (pass == 2 && insn.isThreeRegsInsn()) {
         const auto cnum = modePos(insn, OP_P8);
         RegName cnt;
-        decodeRegNum(cpuType() == Z8001, cnum, SZ_WORD, cnt);
+        decodeRegNum(segmentedModel(), cnum, SZ_WORD, cnt);
         if (dst != REG_ILLEGAL && src != REG_ILLEGAL && checkOverlap(dst, src, cnt))
             insn.setErrorIf(out, REGISTERS_OVERLAPPED);
     }

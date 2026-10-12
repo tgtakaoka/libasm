@@ -2574,6 +2574,29 @@ void test_short_direct() {
     ERRT("CLR |<<snum>>loff|(R2)  ; long offset",  OVERFLOW_RANGE, "|<<snum>>loff|(R2)  ; long offset", 0x4D28, 0x5634);
 }
 
+void test_sp_alias() {
+    if (z8001()) {
+        // SP is RR14 in the segmented model, and R15 keeps its own name.
+        TEST("LDL   RR2, SP",       0x94E2);
+        TEST("LDL   SP, RR2",       0x942E);
+        TEST("PUSH  @SP, R1",       0x93E1);
+        TEST("LDA   R1, SP(#4)",    0x34E1, 0x0004);
+        TEST("LD    R1, SP(#2)",    0x31E1, 0x0002);
+        TEST("LD    R1, R15",       0xA1F1);
+        ERUS("LD    R1, SPAM", "SPAM", 0x6101, 0x8000, 0x0000);
+    } else {
+        // SP is R15 in the non-segmented model, and RR14 keeps its own name.
+        TEST("LD    R1, SP",        0xA1F1);
+        TEST("LD    SP, R1",        0xA11F);
+        TEST("PUSH  @SP, R1",       0x93F1);
+        TEST("LD    R1, SP(#2)",    0x31F1, 0x0002);
+        TEST("LD    R1, %1234(SP)", 0x61F1, 0x1234);
+        TEST("LDCTL SP, FCW",       0x7DF2);
+        TEST("LDL   RR2, RR14",     0x94E2);
+        ERUS("LD    R1, SPAM", "SPAM", 0x6101, 0x0000);
+    }
+}
+
 void test_comment() {
     COMM("ADD R1 , # %1234 ; comment", "; comment", 0x0101, 0x1234);
     if (z8001()) {
@@ -2759,6 +2782,7 @@ void run_tests(const char *cpu) {
     if (z8001()) {
         RUN_TEST(test_short_direct);
     }
+    RUN_TEST(test_sp_alias);
     RUN_TEST(test_comment);
     RUN_TEST(test_undefined_symbol);
     RUN_TEST(test_data_constant);
