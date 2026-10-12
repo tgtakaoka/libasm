@@ -231,6 +231,7 @@ using common::TEXT_REG_RH;
 using common::TEXT_REG_RL;
 extern const char TEXT_REG_RQ[]      PROGMEM;
 using common::TEXT_REG_RR;
+using common::TEXT_REG_SP;
 
 using common::TEXT_CC_C;
 using common::TEXT_CC_EQ;

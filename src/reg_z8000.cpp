@@ -78,7 +78,9 @@ PROGMEM constexpr NameTable FLAG_TABLE{ARRAY_RANGE(FLAG_ENTRIES)};
 // clang-format on
 }  // namespace
 
-RegName parseRegName(StrScanner &scan) {
+RegName parseRegName(StrScanner &scan, bool segmentedModel) {
+    if (scan.iexpectWord_P(TEXT_REG_SP))
+        return stackPointer(segmentedModel);
     auto p = scan;
     if (p.iexpect('R')) {
         const auto num = parseRegNumber(p);
@@ -123,7 +125,9 @@ RegName parseRegName(StrScanner &scan) {
     return REG_UNDEF;
 }
 
-StrBuffer &outRegName(StrBuffer &out, RegName name) {
+StrBuffer &outRegName(StrBuffer &out, RegName name, RegName sp) {
+    if (sp != REG_UNDEF && name == sp)
+        return out.text_P(TEXT_REG_SP);
     if (isWordReg(name))
         return out.letter('R').int16(name - REG_R0);
     if (isLongReg(name))
@@ -134,6 +138,10 @@ StrBuffer &outRegName(StrBuffer &out, RegName name) {
     if (isQuadReg(name))
         return out.text_P(TEXT_REG_RQ).int16(name - REG_RQ0);
     return outCtlName(out, name);
+}
+
+RegName stackPointer(bool segmentedModel) {
+    return segmentedModel ? REG_RR14 : REG_R15;
 }
 
 uint8_t encodeGeneralRegName(RegName name) {

@@ -197,6 +197,7 @@ It can read Intel HEX or Motorola S-Record input.
       --sp-alias       : decode R6 as SP (bool: CP1600)
       --sp-alias       : emit SP alias for ER7/R7 in indirect addressing (bool: H8/300)
       --sp-alias       : emit SP alias for R7 in indirect addressing (bool: H8/500)
+      --sp-alias       : use SP for R15 or RR14 (bool: Z8001)
       --use-absolute   : zero register indexing as absolute addressing (bool: 8096)
       --use-aux-name   : use aux register name ARn (bool: 32010)
       --use-port-name  : use port name PAn (bool: 32010)

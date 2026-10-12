@@ -32,15 +32,18 @@ struct DisZ8000 final : Disassembler, Config {
     Error setShortDirect(bool enable);
     Error setSegmentedAddr(bool enable);
     Error setExternSymbol(bool enable);
+    Error setSpAlias(bool enable);
 
 private:
     const BoolOption<DisZ8000> _opt_shortDirect;
     const BoolOption<DisZ8000> _opt_segmentedAddr;
     const BoolOption<DisZ8000> _opt_externSymbol;
+    const BoolOption<DisZ8000> _opt_spAlias;
 
     bool _shortDirect;
     bool _segmentedAddr;
     bool _externSymbol;
+    bool _spAlias;
 
     StrBuffer &outComma(StrBuffer &out, const DisInsn &insn, AddrMode mode, OprPos pos) const;
     void decodeImmediate(DisInsn &insn, StrBuffer &out, AddrMode mode, OprSize size) const;

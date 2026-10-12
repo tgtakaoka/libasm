@@ -89,7 +89,7 @@ void AsmZ8000::emitRegister(AsmInsn &insn, OprPos pos, RegName reg) const {
 
 void AsmZ8000::emitIndirectRegister(
         AsmInsn &insn, const Operand &op, OprPos pos, RegName reg) const {
-    if (cpuType() == Z8001) {
+    if (segmentedModel()) {
         if (!isLongReg(reg))
             insn.setErrorIf(op, REGISTER_NOT_ALLOWED);
     } else {
@@ -179,7 +179,7 @@ void AsmZ8000::emitDirectAddress(AsmInsn &insn, AddrMode mode, const Operand &op
     const auto align = mode == M_DA && (insn.size() == SZ_WORD || insn.size() == SZ_QUAD);
     const auto addr = op.val.getUnsigned();
     insn.setErrorIf(op, checkAddr(addr, align));
-    if (cpuType() == Z8001) {
+    if (segmentedModel()) {
         const uint16_t seg = (addr >> 8) & 0x7F00;
         const uint16_t disp = addr;
         const auto autoShortDirect = _autoShortDirect && op.isOK();
@@ -202,7 +202,7 @@ void AsmZ8000::emitRelative(AsmInsn &insn, AddrMode mode, const Operand &op) con
     const auto base = insn.address() + (mode == M_RA ? 4 : 2);
     const auto target = op.getError() ? base : op.val.getUnsigned();
     const auto align = insn.size() == SZ_WORD || insn.size() == SZ_QUAD;
-    if (cpuType() == Z8001)
+    if (segmentedModel())
         insn.setErrorIf(op, checkAddr(target, insn.address(), 16, align));
     if (mode == M_RA) {
         insn.setErrorIf(op, checkAddr(target, align));
@@ -275,7 +275,7 @@ void AsmZ8000::emitCtlRegister(AsmInsn &insn, OprPos pos, const Operand &op) con
         insn.setErrorIf(op, ILLEGAL_SIZE);
     if (insn.size() == SZ_WORD && op.reg == REG_FLAGS)
         insn.setErrorIf(op, ILLEGAL_SIZE);
-    auto data = encodeCtlReg(cpuType() == Z8001, op.reg);
+    auto data = encodeCtlReg(segmentedModel(), op.reg);
     if (data < 0) {
         insn.setErrorIf(op, ILLEGAL_REGISTER);
         data = 0;
@@ -441,7 +441,7 @@ void AsmZ8000::checkRegisterOverlap(
         insn.setErrorIf(srcOp, REGISTER_NOT_ALLOWED);
     if (insn.isTranslateInsn()) {
         // Original content of RH1 are lost, so that R1 must not be used as dst/src.
-        if (cpuType() == Z8002) {
+        if (!segmentedModel()) {
             if (dstOp.reg == REG_R1)
                 insn.setErrorIf(dstOp, REGISTER_NOT_ALLOWED);
             if (srcOp.reg == REG_R1)
@@ -549,7 +549,7 @@ Error AsmZ8000::parseOperand(StrScanner &scan, Operand &op) const {
         return OK;
 
     if (p.expect('@')) {
-        op.reg = parseRegName(p);
+        op.reg = parseRegName(p, segmentedModel());
         if (op.reg == REG_UNDEF)
             return op.setError(scan, UNKNOWN_REGISTER);
         if (op.reg == REG_ILLEGAL)
@@ -559,7 +559,7 @@ Error AsmZ8000::parseOperand(StrScanner &scan, Operand &op) const {
         return OK;
     }
 
-    op.reg = parseRegName(p);
+    op.reg = parseRegName(p, segmentedModel());
     if (op.reg != REG_UNDEF) {
         if (op.reg == REG_ILLEGAL)
             return op.setError(scan, ILLEGAL_REGISTER);
@@ -576,7 +576,7 @@ Error AsmZ8000::parseOperand(StrScanner &scan, Operand &op) const {
                 scan = p;
                 return OK;
             }
-            op.reg = parseRegName(p);
+            op.reg = parseRegName(p, segmentedModel());
             if (op.reg != REG_UNDEF) {
                 if (!p.skipSpaces().expect(')'))
                     return op.setError(p, MISSING_CLOSING_PAREN);
@@ -630,7 +630,7 @@ Error AsmZ8000::parseOperand(StrScanner &scan, Operand &op) const {
     if (op.hasError())
         return op.getError();
     if (p.skipSpaces().expect('(')) {
-        op.reg = parseRegName(p.skipSpaces());
+        op.reg = parseRegName(p.skipSpaces(), segmentedModel());
         if (op.reg == REG_UNDEF)
             return op.setError(UNKNOWN_OPERAND);
         if (!p.skipSpaces().expect(')'))
