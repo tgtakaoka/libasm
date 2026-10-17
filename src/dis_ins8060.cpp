@@ -45,7 +45,9 @@ void DisIns8060::decodeIndx(DisInsn &insn, StrBuffer &out, bool hasMode) const {
         out.letter('@');
     const auto reg = decodePointerReg(insn.opCode());
     const auto opr = insn.readByte();
-    if (reg == REG_PC) {  // PC relative
+    // A 0x80 displacement selects E, but only on a memory reference.
+    const auto useE = opr == 0x80 && insn.addrMode() == M_INDX;
+    if (reg == REG_PC && !useE) {  // PC relative
         // PC points the last byte of instruction.
         const auto base = insn.address() + 1;
         const auto disp = static_cast<int8_t>(opr);
@@ -61,7 +63,7 @@ void DisIns8060::decodeIndx(DisInsn &insn, StrBuffer &out, bool hasMode) const {
             outAbsAddr(out, target);
         }
     } else {
-        if (opr == 0x80) {  // E(Pn)
+        if (useE) {
             outRegName(out, REG_E);
         } else {
             const int8_t disp = static_cast<int8_t>(opr);

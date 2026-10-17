@@ -33,28 +33,23 @@
       JMP   $-109
       JMP   -110(P1)
       JMP   0(P1)
-      JMP   E(P1)
       JP    $-105
       JP    -106(P1)
       JP    0(P1)
-      JP    E(P1)
       JZ    $-101
       JZ    -102(P1)
       JZ    0(P1)
-      JZ    E(P1)
       JNZ   $-97
       JNZ   -98(P1)
       JNZ   0(P1)
-      JNZ   E(P1)
       ILD   $-86
       ILD   -86(P1)
       ILD   0(P1)
-      ILD   E(P1)
       DLD   $-70
       DLD   -70(P1)
       DLD   0(P1)
-      DLD   E(P1)
       LD    $-62
+      LD    E(PC)
       LD    -62(P1)
       LD    0(P1)
       LD    E(P1)
@@ -63,6 +58,7 @@
       LD    @0(P1)
       LD    @E(P1)
       ST    $-54
+      ST    E(PC)
       ST    -54(P1)
       ST    0(P1)
       ST    E(P1)
@@ -70,6 +66,7 @@
       ST    @0(P1)
       ST    @E(P1)
       AND   $-46
+      AND   E(PC)
       AND   -46(P1)
       AND   0(P1)
       AND   E(P1)
@@ -78,6 +75,7 @@
       AND   @0(P1)
       AND   @E(P1)
       OR    $-38
+      OR    E(PC)
       OR    -38(P1)
       OR    0(P1)
       OR    E(P1)
@@ -86,6 +84,7 @@
       OR    @0(P1)
       OR    @E(P1)
       XOR   $-30
+      XOR   E(PC)
       XOR   -30(P1)
       XOR   0(P1)
       XOR   E(P1)
@@ -94,6 +93,7 @@
       XOR   @0(P1)
       XOR   @E(P1)
       DAD   $-22
+      DAD   E(PC)
       DAD   -22(P1)
       DAD   0(P1)
       DAD   E(P1)
@@ -102,6 +102,7 @@
       DAD   @0(P1)
       DAD   @E(P1)
       ADD   $-14
+      ADD   E(PC)
       ADD   -14(P1)
       ADD   0(P1)
       ADD   E(P1)
@@ -110,6 +111,7 @@
       ADD   @0(P1)
       ADD   @E(P1)
       CAD   $-6
+      CAD   E(PC)
       CAD   -6(P1)
       CAD   0(P1)
       CAD   E(P1)
