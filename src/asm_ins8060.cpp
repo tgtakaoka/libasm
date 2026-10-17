@@ -55,15 +55,16 @@ AsmIns8060::AsmIns8060(const ValueParser::Plugins &plugins)
 
 void AsmIns8060::encodeRel8(AsmInsn &insn, const Operand &op) const {
     Config::ptrdiff_t delta;
+    // A 0x80 displacement selects E, but only on a memory reference.
+    const auto memoryRef = (insn.addrMode() == M_INDX);
     if (op.mode == M_DISP) {
-        const auto pcdisp = (op.reg == REG_PC || op.reg == REG_P0);
         if (op.index == REG_E) {
-            if (pcdisp)
+            if (!memoryRef)
                 insn.setErrorIf(op, REGISTER_NOT_ALLOWED);
             delta = -128;
         } else {
             delta = op.val.getSigned();
-            if (overflowDelta(delta, 8) || (!pcdisp && delta == -128))
+            if (overflowDelta(delta, 8) || (memoryRef && delta == -128))
                 insn.setErrorIf(op, OVERFLOW_RANGE);
         }
         insn.embed(encodePointerReg(op.reg));
@@ -78,7 +79,7 @@ void AsmIns8060::encodeRel8(AsmInsn &insn, const Operand &op) const {
         const auto diff = offset(target - fetch) - offset(base);
         // Sign extends 12-bit number.
         delta = signExtend(diff, 12);
-        if (overflowDelta(delta, 8))
+        if (overflowDelta(delta, 8) || (memoryRef && delta == -128))
             insn.setErrorIf(op, OPERAND_TOO_FAR);
         if (op.getError())
             delta = 0;
@@ -100,12 +101,13 @@ void AsmIns8060::encodeIndx(AsmInsn &insn, const Operand &op) const {
         insn.embed(4);
     }
     auto disp = op.val.getSigned();
-    const auto pcdisp = (op.reg == REG_PC || op.reg == REG_P0);
+    // A 0x80 displacement selects E, but only on a memory reference.
+    const auto memoryRef = (insn.addrMode() == M_INDX);
     if (op.index == REG_E) {
-        if (pcdisp)
+        if (!memoryRef)
             insn.setErrorIf(op, REGISTER_NOT_ALLOWED);
         disp = -128;
-    } else if (overflowDelta(disp, 8) || (!pcdisp && disp == -128)) {
+    } else if (overflowDelta(disp, 8) || (memoryRef && disp == -128)) {
         insn.setErrorIf(op, OVERFLOW_RANGE);
     }
     insn.emitInsn();

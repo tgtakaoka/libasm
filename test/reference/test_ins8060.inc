@@ -61,32 +61,35 @@
         jmp     $               ; pc points the last byte, will be +1
         jmp     +127(p1)
         jmp     -127(p2)
-        jmp     e(p3)
+        jmp     -128(p3)
         jp      $-125
         jp      -127(P1)
-        jp      e(p2)
+        jp      -128(p2)
         jp      +127(p3)
         jz      $+129
-        jz      e(p1)
+        jz      -128(p1)
         jz      +127(p2)
         jz      -127(p3)
         jnz     -128(pc)
         jnz     -128(p0)
         jnz     +127(p1)
         jnz     -127(p2)
-        jnz     e(p3)
+        jnz     -128(p3)
 ;;; AX
         ild     $
+        ild     -128(pc)        ; ILD never substitutes E
         ild     +127(p1)
         ild     -127(p2)
-        ild     e(p3)
+        ild     -128(p3)
 ;;; BX
         dld     $+128
+        dld     -128(p0)
         dld     +127(p1)
         dld     -127(p2)
-        dld     e(p3)
+        dld     -128(p3)
 ;;; CX
         ld      $               ; pc points the last instruction byte
+        ld      e(pc)           ; a memory reference substitutes E, PC included
         ld      +127(p1)
         ld      -127(p2)
         ld      e(p3)
@@ -94,7 +97,7 @@
         ld      @e(p1)
         ld      @+127(p2)
         ld      @-127(p3)
-        st      -128(p0)
+        st      e(p0)
         st      +127(p1)
         st      -127(p2)
         st      e(p3)
@@ -102,7 +105,7 @@
         st      @+127(p2)
         st      @-127(p3)
 ;;; DX
-        and     -128(pc)
+        and     e(pc)
         and     +127(p1)
         and     -127(p2)
         and     e(p3)
