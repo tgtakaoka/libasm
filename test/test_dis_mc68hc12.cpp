@@ -25,6 +25,20 @@ using namespace libasm::test;
 DisMc68HC12 dis6812;
 Disassembler &disassembler(dis6812);
 
+#define ILLEGAL(err, ...)                                                      \
+    do {                                                                       \
+        const Config::opcode_t codes[] = {__VA_ARGS__};                        \
+        const ArrayMemory memory(0, codes, sizeof(codes));                     \
+        auto it = memory.iterator();                                           \
+        Insn insn(memory.origin());                                            \
+        char opr[40];                                                          \
+        disassembler.decode(it, insn, opr, sizeof(opr), &symtab);              \
+        ErrorAt error;                                                         \
+        error.setError(err);                                                   \
+        asserter.equals(__FILE__, __LINE__, "illegal", error.errorText_P(),    \
+                insn.errorText_P());                                           \
+    } while (0)
+
 void set_up() {
     disassembler.reset();
 }
@@ -61,7 +75,7 @@ void test_load() {
     TEST("LDS", "#$D0D1", 0xCF, 0xD0, 0xD1);
     TEST("LDS", "$E0",    0xDF, 0xE0);
     TEST("LDS", "$F1,SP", 0xEF, 0xF0, 0xF1);
-    TEST("LDS", "$0001",  0xFF, 0x00, 0x01);
+    TEST("LDS", ">$0001", 0xFF, 0x00, 0x01);
 
     TEST("LDX", "#$CFD0", 0xCE, 0xCF, 0xD0);
     TEST("LDX", "$DF",    0xDE, 0xDF);
@@ -820,6 +834,28 @@ void test_inherent() {
     TEST("PULX", "", 0x30);
     TEST("PULY", "", 0x31);
 }
+// Don't care bits are taken as must-be-zero.
+void illegal_loop_postbyte() {
+    // Loop primitive postbyte: bits 7-5 of 6 and 7 and counters 2 and 3 are undefined.
+    for (auto lb = 0; lb < 0x100; lb++) {
+        const auto counter = lb & 7;
+        if (lb >= 0xC0 || (lb & 0x08) || counter == 2 || counter == 3)
+            ILLEGAL(UNKNOWN_INSTRUCTION, 0x04, Config::opcode_t(lb), 0x00);
+    }
+}
+
+void test_illegal_mc68hc12() {
+    illegal_loop_postbyte();
+
+    // Transfer/exchange postbyte: bit 3 is a don't care; TMP2/TMP3 are reserved.
+    for (auto eb = 0; eb < 0x100; eb++) {
+        if (eb & 0x08) {
+            ILLEGAL(UNKNOWN_INSTRUCTION, 0xB7, Config::opcode_t(eb));
+        } else if ((eb & 0x70) == 0x30 || (eb & 0x07) == 0x03) {
+            ILLEGAL(ILLEGAL_REGISTER, 0xB7, Config::opcode_t(eb));
+        }
+    }
+}
 // clang-format on
 
 void run_tests(const char *cpu) {
@@ -847,6 +883,7 @@ void run_tests(const char *cpu) {
     RUN_TEST(test_jump);
     RUN_TEST(test_interrupt);
     RUN_TEST(test_inherent);
+    RUN_TEST(test_illegal_mc68hc12);
 }
 
 // Local Variables:

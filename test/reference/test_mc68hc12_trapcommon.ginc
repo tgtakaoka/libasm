@@ -1,0 +1,47 @@
+;;; Copyright 2026 Tadashi G. Takaoka
+;;;
+;;; Licensed under the Apache License, Version 2.0 (the "License");
+;;; you may not use this file except in compliance with the License.
+;;; You may obtain a copy of the License at
+;;;
+;;;     http://www.apache.org/licenses/LICENSE-2.0
+;;;
+;;; Unless required by applicable law or agreed to in writing, software
+;;; distributed under the License is distributed on an "AS IS" BASIS,
+;;; WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+;;; See the License for the specific language governing permissions and
+;;; limitations under the License.
+
+;;; trap
+        trap    #0x30
+        trap    #0x31
+        trap    #0x32
+        trap    #0x33
+        trap    #0x34
+        trap    #0x49
+        trap    #0x4A
+        trap    #0x4B
+        trap    #0x4C
+        trap    #0x4D
+        trap    #0x4E
+        trap    #0x4F
+        trap    #0x59
+        trap    #0x81
+        trap    #0x86
+        trap    #0x91
+        trap    #0xA1
+        trap    #0xB1
+        trap    #0xB7
+        trap    #0xC1
+        trap    #0xC6
+        trap    #0xCC
+        trap    #0xCD
+        trap    #0xCE
+        trap    #0xCF
+        trap    #0xD1
+        trap    #0xE1
+        trap    #0xF1
+;;; Local Variables:
+;;; mode: asm
+;;; End:
+;;; vim: set ft=asm:

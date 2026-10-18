@@ -311,6 +311,18 @@ void AsmMc68HC12::encodeRegisterPair(AsmInsn &insn, const Operand &op) const {
     insn.embed(encodeRegNum(op.base));
 }
 
+uint16_t AsmMc68HC12::encodeAddress(AsmInsn &insn, const Operand &op) const {
+    if (op.val.overflowUint16())
+        insn.setErrorIf(op, OVERFLOW_RANGE);
+    return op.val.getUnsigned();
+}
+
+uint8_t AsmMc68HC12::encodeDirect(AsmInsn &insn, const Operand &op) const {
+    if (op.val.overflowUint8())
+        insn.setErrorIf(op, OVERFLOW_RANGE);
+    return op.val.getUnsigned();
+}
+
 void AsmMc68HC12::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode) const {
     insn.setErrorIf(op);
     switch (mode) {
@@ -323,7 +335,7 @@ void AsmMc68HC12::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode)
     case M_GN16:
         if (op.mode == M_DIR) {
             insn.embed(0x10);
-            insn.emitOperand8(op.val.getUnsigned());
+            insn.emitOperand8(encodeDirect(insn, op));
             break;
         }
         if (op.mode == M_IDX || op.mode == M_PAIR) {
@@ -333,15 +345,19 @@ void AsmMc68HC12::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode)
         }
         if (op.mode == M_EXT) {
             insn.embed(0x30);
-            insn.emitOperand16(op.val.getUnsigned());
+            insn.emitOperand16(encodeAddress(insn, op));
             break;
         }
         if (op.mode == M_IM16) {
             if (mode == M_GN8) {
             imm8:
+                if (op.val.overflowUint8())
+                    insn.setErrorIf(op, OVERFLOW_RANGE);
                 insn.emitOperand8(op.val.getUnsigned());
             } else {
             imm16:
+                if (op.val.overflowUint16())
+                    insn.setErrorIf(op, OVERFLOW_RANGE);
                 insn.emitOperand16(op.val.getUnsigned());
             }
         }
@@ -360,15 +376,15 @@ void AsmMc68HC12::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode)
         }
         if (op.mode == M_EXT) {
             insn.embed(0x70);
-            insn.emitOperand16(op.val.getUnsigned());
+            insn.emitOperand16(encodeAddress(insn, op));
             break;
         }
         // Fall-through
     case M_DIR:
-        insn.emitOperand8(op.val.getUnsigned());
+        insn.emitOperand8(encodeDirect(insn, op));
         break;
     case M_EXT:
-        insn.emitOperand16(op.val.getUnsigned());
+        insn.emitOperand16(encodeAddress(insn, op));
         break;
     case M_IDX:
     case M_DIDX:

@@ -146,6 +146,8 @@ void DisMc68HC12::decodeExtended(DisInsn &insn, StrBuffer &out) const {
             out.letter('>');
         out.rtext(label);
     } else {
+        if (addr < 0x100 && !_gnuAs)
+            out.letter('>');
         outAbsAddr(out, addr);
     }
 }
