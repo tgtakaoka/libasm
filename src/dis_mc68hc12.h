@@ -27,7 +27,15 @@ namespace mc68hc12 {
 struct DisMc68HC12 final : Disassembler, Config {
     DisMc68HC12(const ValueFormatter::Plugins &plugins = defaultPlugins());
 
+    void reset() override;
+
 private:
+    const BoolOption<Config> _opt_mmc;
+
+    bool currentOption(const char *&name, const char *&value) const override;
+    uint8_t localWidth(Config::uintptr_t addr) const;
+    Config::uintptr_t branchTarget(
+            DisInsn &insn, StrBuffer &out, Config::uintptr_t base, int32_t delta) const;
     void decodeIndexed(DisInsn &insn, StrBuffer &out, Config::opcode_t post, int16_t disp,
             AddrMode mode) const;
     void decodeDirectPage(DisInsn &insn, StrBuffer &out) const;

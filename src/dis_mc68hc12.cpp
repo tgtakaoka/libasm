@@ -17,19 +17,61 @@
 #include "dis_mc68hc12.h"
 #include "reg_mc68hc12.h"
 #include "table_mc68hc12.h"
+#include "text_mc68hc12.h"
 
 namespace libasm {
 namespace mc68hc12 {
 
 using namespace reg;
+using namespace text::mc68hc12;
 
 const ValueFormatter::Plugins &DisMc68HC12::defaultPlugins() {
     return ValueFormatter::Plugins::motorola();
 }
 
 DisMc68HC12::DisMc68HC12(const ValueFormatter::Plugins &plugins)
-    : Disassembler(plugins), Config(TABLE) {
+    : Disassembler(plugins, &_opt_mmc),
+      Config(TABLE),
+      _opt_mmc(this, &Config::setPagedModel, OPT_BOOL_MMC, OPT_DESC_MMC) {
     reset();
+}
+
+void DisMc68HC12::reset() {
+    Disassembler::reset();
+    setPagedModel(false);
+}
+
+bool DisMc68HC12::currentOption(const char *&name, const char *&value) const {
+    if (pagedModel()) {
+        name = OPT_BOOL_MMC;
+        value = "on";
+        return true;
+    }
+    return false;
+}
+
+// A CPU address is printed in 16 bits even when logical page:address is enabled.
+uint8_t DisMc68HC12::localWidth(Config::uintptr_t addr) const {
+    return (pagedModel() && addr <= UINT16_MAX) ? 16 : 0;
+}
+
+// On the memory map controller, a branch stays in the 64K CPU address space.  A target on the
+// program page of the instruction is its physical address, any other is a CPU address.
+Config::uintptr_t DisMc68HC12::branchTarget(
+        DisInsn &insn, StrBuffer &out, Config::uintptr_t base, int32_t delta) const {
+    if (!pagedModel())
+        return base + delta;
+    uint16_t pc = insn.address();
+    int16_t page = -1;
+    programAddress(cpuType(), insn.address(), pc, page);
+    auto target = static_cast<int32_t>(pc + (base - insn.address())) + delta;
+    if (target < 0 || target > UINT16_MAX) {
+        insn.setErrorIf(out, OVERFLOW_RANGE);
+        target &= UINT16_MAX;
+    }
+    if (page >= 0 && pageWindow(cpuType(), target) == PAGE_PPAGE)
+        return toPhysical(cpuType(), target, page);
+    return target;
 }
 
 Config::uintptr_t calculatePcRelBase(CpuType cpuType, DisInsn &insn) {
@@ -86,8 +128,8 @@ void DisMc68HC12::decodeIndexed(DisInsn &insn, StrBuffer &out, Config::opcode_t 
             outDec(out, disp, -5);
         } else {
             const auto base = calculatePcRelBase(cpuType(), insn);
-            const auto target = base + disp;
-            outAbsAddr(out, target);
+            const auto target = branchTarget(insn, out, base, disp);
+            outAbsAddr(out, target, localWidth(target));
         }
         outRegName(out.letter(','), REG_PC);
     } else {
@@ -105,7 +147,7 @@ void DisMc68HC12::decodeIndexed(DisInsn &insn, StrBuffer &out, Config::opcode_t 
             } else {
                 if (index == REG_PC && !_gnuAs) {
                     const auto base = calculatePcRelBase(cpuType(), insn);
-                    const auto target = base + disp;
+                    const auto target = branchTarget(insn, out, base, disp);
                     if (!indirect) {
                         if (disp >= -16 && disp < 16) {
                             out.letter(mode < 2 ? '<' : '>');
@@ -113,7 +155,7 @@ void DisMc68HC12::decodeIndexed(DisInsn &insn, StrBuffer &out, Config::opcode_t 
                             out.letter('>');
                         }
                     }
-                    outAbsAddr(out, target);
+                    outAbsAddr(out, target, localWidth(target));
                 } else {
                     const auto bits = (mode == 0) ? 8 : (mode == 1 ? -9 : 16);
                     outHex(out, disp, bits);
@@ -158,7 +200,7 @@ void DisMc68HC12::decodeExtended(DisInsn &insn, StrBuffer &out) const {
     } else {
         if (addr < 0x100 && !_gnuAs)
             out.letter('>');
-        outAbsAddr(out, addr);
+        outAbsAddr(out, addr, localWidth(addr));
     }
 }
 
@@ -173,11 +215,15 @@ void DisMc68HC12::decodeRelative(DisInsn &insn, StrBuffer &out, AddrMode mode) c
         }
     }
     const auto base = insn.address() + insn.length();
-    const auto target = base + delta;
+    const auto target = branchTarget(insn, out, base, delta);
     insn.setErrorIf(out, checkAddr(target));
     if (_gnuAs && _relativeTarget)
         out.letter('(');
-    outRelAddr(out, target, insn.address(), bits);
+    if (_relativeTarget) {
+        outRelAddr(out, target, insn.address(), bits);
+    } else {
+        outAbsAddr(out, target, localWidth(target));
+    }
     if (_gnuAs && _relativeTarget)
         out.letter(')');
 }
@@ -186,6 +232,7 @@ void DisMc68HC12::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) co
     auto opc = insn.opCode();
     switch (mode) {
     case M_DIR:
+    case M_GDIR:
     dir:
         decodeDirectPage(insn, out);
         break;
@@ -194,6 +241,7 @@ void DisMc68HC12::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) co
             goto idx;
         // Fall-through
     case M_EXT:
+    case M_GEXT:
     ext:
         decodeExtended(insn, out);
         break;

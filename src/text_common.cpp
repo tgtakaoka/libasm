@@ -803,9 +803,13 @@ constexpr char TEXT_CC_ULT[] PROGMEM = "ULT";
 constexpr char TEXT_CC_V[]   PROGMEM = "V";
 constexpr char TEXT_CC_Z[]   PROGMEM = "Z";
 
-constexpr char TEXT_FN_ADDR[] PROGMEM = "ADDR";
-constexpr char TEXT_FN_H[]    PROGMEM = "H";
-constexpr char TEXT_FN_L[]    PROGMEM = "L";
+constexpr char TEXT_FN_ADDR[]  PROGMEM = "ADDR";
+constexpr char TEXT_FN_H[]     PROGMEM = "H";
+constexpr char TEXT_FN_HIGH[]  PROGMEM = "HIGH";
+constexpr char TEXT_FN_L[]     PROGMEM = "L";
+constexpr char TEXT_FN_LOW16[] PROGMEM = "LOW16";
+constexpr char TEXT_FN_LOW[]   PROGMEM = "LOW";
+constexpr char TEXT_FN_PAGE[]  PROGMEM = "PAGE";
 
 constexpr char TEXT_ALIGN[]   PROGMEM = "align";
 constexpr char TEXT_AORG[]    PROGMEM = "aorg";

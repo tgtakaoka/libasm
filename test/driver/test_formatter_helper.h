@@ -52,7 +52,7 @@ private:
     TestSources sources;                               \
     Options options
 
-#define ASM(_cpu, _source, _expected)                                                   \
+#define ASM_MEMORY(_cpu, _source, _expected, _image)                                    \
     do {                                                                                \
         TestReader expected("expected");                                                \
         expected.add(_expected);                                                        \
@@ -78,6 +78,13 @@ private:
         for (size_t lineno = 1; lineno <= list.size(); lineno++)                        \
             EQ("line", expected.readLine(), list.line(lineno));                         \
         EQ("line eor", nullptr, expected.readLine());                                   \
+        _image.swap(memory);                                                            \
+    } while (0)
+
+#define ASM(_cpu, _source, _expected)                \
+    do {                                             \
+        BinMemory image;                             \
+        ASM_MEMORY(_cpu, _source, _expected, image); \
     } while (0)
 
 #define PREP_DIS(typeof_disassembler) \

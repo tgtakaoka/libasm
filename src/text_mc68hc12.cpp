@@ -27,6 +27,9 @@ constexpr char TEXT_CPU_68HC12X[]    PROGMEM = "68HC12X";
 constexpr char TEXT_CPU_68HCS12[]    PROGMEM = "68HCS12";
 constexpr char TEXT_CPU_68HCS12X[]   PROGMEM = "68HCS12X";
 
+constexpr char OPT_BOOL_MMC[] PROGMEM = "mmc";
+constexpr char OPT_DESC_MMC[] PROGMEM = "enable logical page:address with memory map controller";
+
 // MC68HC12
 // constexpr char TEXT_ABA[]   PROGMEM = "ABA";
 // constexpr char TEXT_ABX[]   PROGMEM = "ABX";

@@ -696,6 +696,40 @@ const Functor *Ins8060FunctionTable::lookupFunction(const StrScanner &name) cons
     return nullptr;
 }
 
+namespace mc68hc12 {
+// A physical address above $FFFF is on a program page, seen through the window at $8000; a
+// smaller value is a CPU address.
+const struct : Functor {
+    int_fast8_t nargs() const override { return 1; }
+    Error eval(ValueStack &stack, ParserContext &, uint_fast8_t) const override {
+        const auto addr = stack.pop().getUnsigned();
+        stack.pushUnsigned(addr > UINT16_MAX ? (addr >> 14) & UINT8_MAX : 0);
+        return OK;
+    }
+} FN_PAGE;
+
+const struct : Functor {
+    int_fast8_t nargs() const override { return 1; }
+    Error eval(ValueStack &stack, ParserContext &, uint_fast8_t) const override {
+        const auto addr = stack.pop().getUnsigned();
+        stack.pushUnsigned(addr > UINT16_MAX ? 0x8000 | (addr & 0x3FFF) : addr);
+        return OK;
+    }
+} FN_LOW16;
+}  // namespace mc68hc12
+
+const Functor *Mc68hc12FunctionTable::lookupFunction(const StrScanner &name) const {
+    if (name.iequals_P(TEXT_FN_HIGH))
+        return &FN_HIGH;
+    if (name.iequals_P(TEXT_FN_LOW))
+        return &FN_LOW;
+    if (name.iequals_P(TEXT_FN_PAGE))
+        return &mc68hc12::FN_PAGE;
+    if (name.iequals_P(TEXT_FN_LOW16))
+        return &mc68hc12::FN_LOW16;
+    return nullptr;
+}
+
 namespace ins8070 {
 const struct : Functor {
     int_fast8_t nargs() const override { return 1; }

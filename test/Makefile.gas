@@ -335,6 +335,27 @@ endef
 $(eval $(call gas-m68hcs12-rule,mc68hcs12,-m68hcs12))
 $(eval $(call gas-m68hcs12-rule,mc68hcs12x,-mm9s12x))
 
+# MC68HC12 family memory map controller targets
+# Linked with the banked emulation so that CALL, %page() and %addr() resolve;
+# see mc68hc12_mmc.ld.  objcopy then places each section at its physical
+# address.
+# $(1) target suffix, $(2) as option, $(3) text origin, $(4) text, page $30,
+# page $31 and fixed area physical addresses.
+define gas-m68hc12-mmc-rule
+gas-%_$(1).s28: %_$(1).gas mc68hc12_mmc.ld
+	m6811-elf-as $(2) --warn -o $$(<:.gas=.p) -al=$$(<:.gas=.lst) $$<
+	m6811-elf-ld -m m68hc12elfb --bank-window bank --entry=0 -T mc68hc12_mmc.ld \
+		--section-start=.text=$(3) -o $$(<:.gas=.o) $$(<:.gas=.p)
+	m6811-elf-objcopy -O srec --srec-len=16 \
+		$$(foreach s,$(join .text= .p30= .p31= .fixed=,$(4)),--change-section-lma $$(s)) \
+		$$(<:.gas=.o) /dev/stdout \
+	| tr -d '\015' > $$(<:.gas=.s28)
+	m6811-elf-objdump -m m68hc12 -D $$(<:.gas=.s28) > $$(<:.gas=.dis)
+endef
+$(eval $(call gas-m68hc12-mmc-rule,mc68hc12_mmc,-m68hc12,0x1000,0x3F1000 0x0C0000 0x0C4000 0x3FC000))
+$(eval $(call gas-m68hc12-mmc-rule,mc68hcs12_mmc,-m68hcs12,0x0100,0x000100 0x0C0000 0x0C4000 0x0FC000))
+$(eval $(call gas-m68hc12-mmc-rule,mc68hcs12x_mmc,-mm9s12x,0x4000,0x7F4000 0x4C0000 0x4C4000 0x7FC000))
+
 # TMS320C30 target
 gas-%_tms320c30.hex: %_tms320c30.gas
 	tic4x-coff-as -mcpu=30 --warn -o $(^:.gas=.p) -al=$(^:.gas=.lst) $^

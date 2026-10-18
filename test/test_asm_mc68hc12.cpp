@@ -107,11 +107,6 @@ void test_load() {
     ERRT("LEAY [D,Y]",  OPERAND_NOT_ALLOWED, "[D,Y]",  0x19, 0xEF);
     ERRT("LEAY [D,SP]", OPERAND_NOT_ALLOWED, "[D,SP]", 0x19, 0xF7);
     ERRT("LEAY [D,PC]", OPERAND_NOT_ALLOWED, "[D,PC]", 0x19, 0xFF);
-
-    ERRT("LDAA $12345", OVERFLOW_RANGE, "$12345",  0xB6, 0x23, 0x45);
-    ERRT("LDAA <$1234", OVERFLOW_RANGE, "<$1234",  0x96, 0x34);
-    ERRT("LDAA #$123",  OVERFLOW_RANGE, "#$123",   0x86, 0x23);
-    ERRT("LDX #$12345", OVERFLOW_RANGE, "#$12345", 0xCE, 0x23, 0x45);
 }
 
 void test_store() {
@@ -972,6 +967,135 @@ void test_inherent() {
     TEST("PULX", 0x30);
     TEST("PULY", 0x31);
 }
+void test_mmc() {
+    ERRT("LDAA $12345", OVERFLOW_RANGE, "$12345", 0xB6, 0x23, 0x45);
+    ERRT("JMP $12345",  OVERFLOW_RANGE, "$12345", 0x06, 0x23, 0x45);
+    ERRT("LDX #$12345", OVERFLOW_RANGE, "#$12345", 0xCE, 0x23, 0x45);
+    ERRT("LDAA #$123",  OVERFLOW_RANGE, "#$123",   0x86, 0x23);
+    ERRT("LDAA <$1234", OVERFLOW_RANGE, "<$1234",  0x96, 0x34);
+    ERRT("CALL $0C4123", OPERAND_NOT_ALLOWED, "$0C4123");
+    TEST("LDAB #PAGE($0C4123)",  0xC6, 0x31);
+    TEST("LDX #LOW16($0C4123)",  0xCE, 0x81, 0x23);
+    TEST("LDAB #PAGE($4C4123)",  0xC6, 0x31);
+    TEST("LDX #LOW16($4C4123)",  0xCE, 0x81, 0x23);
+    TEST("LDAB #PAGE($1234)",    0xC6, 0x00);
+    TEST("LDX #LOW16($1234)",    0xCE, 0x12, 0x34);
+    TEST("LDAA #HIGH($1050)",    0x86, 0x10);
+    TEST("LDAA #LOW($1050)",     0x86, 0x50);
+    TEST("LDAA #HIGH($308123)",  0x86, 0x81);
+    TEST("LDAA #LOW($308123)",   0x86, 0x23);
+    if (m68hcs12x()) {
+        TEST("DIRECT $12");
+        TEST("LDAA $1234", 0x96, 0x34);
+        TEST("LDAA $0034", 0xB6, 0x00, 0x34);
+        TEST("GLDAA $1234", 0x18, 0x96, 0x34);
+        ERRT("GLDAA $308123", OVERFLOW_RANGE, "$308123", 0x18, 0xB6, 0x81, 0x23);
+        ERRT("DIRECT $100", OVERFLOW_RANGE, "$100");
+        TEST("DIRECT");
+    } else {
+        ERRT("DIRECT $12", UNKNOWN_INSTRUCTION, "DIRECT $12");
+        ERRT("RPAGE $12",  UNKNOWN_INSTRUCTION, "RPAGE $12");
+        ERRT("GPAGE $12",  UNKNOWN_INSTRUCTION, "GPAGE $12");
+    }
+
+    assembler.setOption("mmc", "on");
+    if (m68hcs12x()) {
+        // Page $30 is $4C0000, the fixed $C000 is $7FC000
+        ATEST(0x4C0000, "BRA $4C0010",     0x20, 0x0E);
+        ATEST(0x4C0000, "BRA $8010",       0x20, 0x0E);
+        ATEST(0x4C0000, "LBRA $C000",      0x18, 0x20, 0x3F, 0xFC);
+        ATEST(0x4C0000, "LBRA $7FC000",    0x18, 0x20, 0x3F, 0xFC);
+        AERRT(0x4C0000, "BRA $4C4010",     OVERFLOW_RANGE, "$4C4010", 0x20, 0x0E);
+        ATEST(0x4C0000, "JMP $4C0123",     0x06, 0x81, 0x23);
+        AERRT(0x4C0000, "JMP $4C4123",     OVERFLOW_RANGE, "$4C4123", 0x06, 0x41, 0x23);
+        ATEST(0x4C0000, "LDAA $4C0010,PC", 0xA6, 0xCE);
+        ATEST(0x4C0000, "CALL $4C4123",    0x4A, 0x81, 0x23, 0x31);
+        ATEST(0x4C0000, "CALL $8123,$31",  0x4A, 0x81, 0x23, 0x31);
+        AERRT(0x4C0000, "CALL $4C4123,$32",
+              OVERFLOW_RANGE, "$4C4123,$32", 0x4A, 0x81, 0x23, 0x32);
+        AERRT(0x4C0000, "CALL $8123", OPERAND_NOT_ALLOWED, "$8123", 0x4A, 0x81, 0x23, 0x00);
+        AERRT(0x4C3FFE, "LDAA $1234",      OVERFLOW_RANGE, "$1234", 0xB6, 0x12, 0x34);
+        AERRT(0x4C0000, "LDX #$4C0123",    OVERFLOW_RANGE, "#$4C0123", 0xCE, 0x01, 0x23);
+        ATEST(0x0100,   "NOP", 0xA7);
+        AERRT(0x4000,   "NOP", OVERFLOW_RANGE, "", 0xA7);
+        AERRT(0x0FD000, "NOP", OVERFLOW_RANGE, "", 0xA7);
+
+        TEST("PPAGE $30");
+        ATEST(0x7FC000, "LBRA $4C0000",    0x18, 0x20, 0xBF, 0xFC);
+        AERRT(0x7FC000, "LBRA $4C4000",    OVERFLOW_RANGE, "$4C4000", 0x18, 0x20, 0x7F, 0xFC);
+        ERRT("DPAGE $20", UNKNOWN_INSTRUCTION, "DPAGE $20");
+        TEST("RPAGE $FD");
+        ATEST(0x7FC000, "LDAA $0FD234",    0xB6, 0x12, 0x34);
+        AERRT(0x7FC000, "LDAA $0FC234",    OVERFLOW_RANGE, "$0FC234", 0xB6, 0xC2, 0x34);
+        ATEST(0x7FC000, "LDAA $0FE234",    0xB6, 0x22, 0x34);
+        TEST("EPAGE $FE");
+        ATEST(0x7FC000, "STAA $13F856",    0x7A, 0x08, 0x56);
+        AERRT(0x7FC000, "STAA $13F456",    OVERFLOW_RANGE, "$13F456", 0x7A, 0xF4, 0x56);
+        ATEST(0x7FC000, "STAA $13FC56",    0x7A, 0x0C, 0x56);
+        TEST("DIRECT $12");
+        ATEST(0x7FC000, "LDAA $0FD234",    0x96, 0x34);
+        AERRT(0x7FC000, "LDAA <$0FC234",   OVERFLOW_RANGE, "<$0FC234", 0x96, 0x34);
+        ATEST(0x7FC000, "LDAA $0034",      0xB6, 0x00, 0x34);
+        AERRT(0x7FC000, "LDAA <$34",       OVERFLOW_RANGE, "<$34", 0x96, 0x34);
+        TEST("DIRECT");
+        ATEST(0x7FC000, "LDAA $0034",      0x96, 0x34);
+        ERRT("GPAGE $80", OVERFLOW_RANGE, "$80");
+        ATEST(0x7FC000, "GLDAA $7F8123",   0x18, 0xB6, 0x81, 0x23);
+        AERRT(0x7FC000, "GLDAA $808123",   OVERFLOW_RANGE, "$808123", 0x18, 0xB6, 0x81, 0x23);
+        TEST("GPAGE $30");
+        ATEST(0x7FC000, "GLDAA $308123",   0x18, 0xB6, 0x81, 0x23);
+        ATEST(0x7FC000, "GLDAA $8123",     0x18, 0xB6, 0x81, 0x23);
+        ATEST(0x7FC000, "GSTAA $0012",     0x18, 0x5A, 0x12);
+        ATEST(0x7FC000, "GSTAA $30C000",   0x18, 0x7A, 0xC0, 0x00);
+        AERRT(0x7FC000, "GSTAA $318123",   OVERFLOW_RANGE, "$318123", 0x18, 0x7A, 0x81, 0x23);
+        AERRT(0x7FC000, "GSTAA <$311234",  OVERFLOW_RANGE, "<$311234", 0x18, 0x5A, 0x34);
+        return;
+    }
+
+    // Page $30 is $0C0000
+    const auto fixed = m68hc12() ? 0x3FC000 : 0x0FC000;
+    ATEST(0x0C0000, "BRA $0C0010",     0x20, 0x0E);
+    ATEST(0x0C0000, "BRA $8010",       0x20, 0x0E);
+    ATEST(0x0C0000, "LBRA $C000",      0x18, 0x20, 0x3F, 0xFC);
+    AERRT(0x0C0000, "BRA $0C4010",     OVERFLOW_RANGE, "$0C4010", 0x20, 0x0E);
+    ATEST(0x0C0000, "JMP $0C0123",     0x06, 0x81, 0x23);
+    AERRT(0x0C0000, "JMP $0C4123",     OVERFLOW_RANGE, "$0C4123", 0x06, 0x41, 0x23);
+    ATEST(0x0C0000, "JMP $C000",       0x06, 0xC0, 0x00);
+    ATEST(0x0C0000, "LDAA $0C0123",    0xB6, 0x81, 0x23);
+    ATEST(0x0C0000, "LDAA $0C0010,PC", 0xA6, 0xCE);
+    ATEST(0x0C0000, "CALL $0C4123",    0x4A, 0x81, 0x23, 0x31);
+    ATEST(0x0C0000, "CALL $8123,$31",  0x4A, 0x81, 0x23, 0x31);
+    AERRT(0x0C0000, "CALL $0C4123,$32",
+          OVERFLOW_RANGE, "$0C4123,$32", 0x4A, 0x81, 0x23, 0x32);
+    AERRT(0x0C0000, "CALL $8123", OPERAND_NOT_ALLOWED, "$8123", 0x4A, 0x81, 0x23, 0x00);
+    AERRT(0x0C3FFE, "LDAA $1234",      OVERFLOW_RANGE, "$1234", 0xB6, 0x12, 0x34);
+    AERRT(0x0C0000, "LDAA $1000000",   OVERFLOW_RANGE, "$1000000", 0xB6, 0x00, 0x00);
+    AERRT(0x0C0000, "LDX #$0C0123",    OVERFLOW_RANGE, "#$0C0123", 0xCE, 0x01, 0x23);
+    AERRT(0xC000,   "NOP", OVERFLOW_RANGE, "", 0xA7);
+
+    TEST("PPAGE $30");
+    ATEST(fixed, "LBRA $0C0000", 0x18, 0x20, 0xBF, 0xFC);
+    AERRT(fixed, "LBRA $0C4000", OVERFLOW_RANGE, "$0C4000", 0x18, 0x20, 0x7F, 0xFC);
+    if (m68hc12()) {
+        AERRT(0x0100, "NOP", OVERFLOW_RANGE, "", 0xA7);
+        TEST("DPAGE $20");
+        ATEST(fixed, "LDAA $320123", 0xB6, 0x71, 0x23);
+        AERRT(fixed, "LDAA $321123", OVERFLOW_RANGE, "$321123", 0xB6, 0x11, 0x23);
+        TEST("EPAGE $05");
+        ATEST(fixed, "STAA $3C1456", 0x7A, 0x04, 0x56);
+        TEST("DPAGE");
+        ATEST(fixed, "LDAA $321123", 0xB6, 0x71, 0x23);
+        AERRT(fixed, "STAA $3C1456", OPERAND_NOT_ALLOWED, "$3C1456", 0x7A, 0x74, 0x56);
+        ERRT("DPAGE $100", OVERFLOW_RANGE, "$100");
+        TEST("PPAGE $FF");
+    } else {
+        ATEST(0x0100, "NOP", 0xA7);
+        ERRT("DPAGE $20", UNKNOWN_INSTRUCTION, "DPAGE $20");
+        ERRT("EPAGE $05", UNKNOWN_INSTRUCTION, "EPAGE $05");
+        ERRT("PPAGE $40", OVERFLOW_RANGE, "$40");
+        TEST("PPAGE $3F");
+    }
+}
 
 void test_global() {
     if (m68hcs12x()) {
@@ -1463,6 +1587,7 @@ void run_tests(const char *cpu) {
     RUN_TEST(test_jump);
     RUN_TEST(test_interrupt);
     RUN_TEST(test_inherent);
+    RUN_TEST(test_mmc);
     RUN_TEST(test_global);
     RUN_TEST(test_s12x_alu);
     RUN_TEST(test_s12x_word);

@@ -90,9 +90,14 @@ struct Operand final : ErrorAt {
 };
 
 struct AsmInsn final : AsmInsnImpl<Config>, EntryInsn {
-    AsmInsn(Insn &insn) : AsmInsnImpl(insn) {}
+    AsmInsn(Insn &insn)
+        : AsmInsnImpl(insn), pagedModel(false), cpuLocation(insn.address()), locationPage(-1) {}
 
     Operand op1, op2, op3;
+    bool pagedModel;
+    /** The CPU address of the instruction, and its program page or -1 */
+    uint16_t cpuLocation;
+    int16_t locationPage;
 
     void emitInsn() {
         uint8_t pos = 0;

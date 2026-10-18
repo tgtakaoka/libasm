@@ -1440,6 +1440,32 @@ void test_illegal_mc68hc12() {
         }
     }
 }
+void test_mmc() {
+    disassembler.setOption("mmc", "on");
+    // Page $30 is $0C0000 ($4C0000 on S12X)
+    const auto p30 = m68hcs12x() ? 0x4C0000 : 0x0C0000;
+    const auto fixed = m68hcs12x() ? 0x7FC000 : (m68hc12() ? 0x3FC000 : 0x0FC000);
+    if (m68hcs12x()) {
+        ATEST(p30, "BRA",  "$4C0010",    0x20, 0x0E);
+        ATEST(p30, "LDAA", "$4C0010,PC", 0xA6, 0xCE);
+        ATEST(p30 + 0x3FFE, "BRA", "$4C3FFE", 0x20, 0xFE);
+    } else {
+        ATEST(p30, "BRA",  "$0C0010",    0x20, 0x0E);
+        ATEST(p30, "LDAA", "$0C0010,PC", 0xA6, 0xCE);
+        ATEST(p30 + 0x3FFE, "BRA", "$0C3FFE", 0x20, 0xFE);
+    }
+    ATEST(p30, "LBRA", "$C000",      0x18, 0x20, 0x3F, 0xFC);
+    ATEST(p30, "JMP",  "$8123",      0x06, 0x81, 0x23);
+    ATEST(p30, "CALL", "$8123, $31", 0x4A, 0x81, 0x23, 0x31);
+    ATEST(fixed, "LBRA", "$8000",    0x18, 0x20, 0xBF, 0xFC);
+    ATEST(fixed, "BRA",  "$C010",    0x20, 0x0E);
+    AERRT(fixed + 0x3FF0, "BRA", "$0012", OVERFLOW_RANGE, "$0012", 0x20, 0x20);
+    if (m68hcs12x()) {
+        ATEST(p30, "GLDAA", "$8123", 0x18, 0xB6, 0x81, 0x23);
+        ATEST(p30, "GSTAA", "$34",   0x18, 0x5A, 0x34);
+        ATEST(p30, "GSTAA", "$8123", 0x18, 0x7A, 0x81, 0x23);
+    }
+}
 
 void test_illegal_mc68hcs12() {
     test_illegal_mc68hc12();
@@ -1481,6 +1507,7 @@ void run_tests(const char *cpu) {
     RUN_TEST(test_jump);
     RUN_TEST(test_interrupt);
     RUN_TEST(test_inherent);
+    RUN_TEST(test_mmc);
     RUN_TEST(test_global);
     RUN_TEST(test_s12x_alu);
     RUN_TEST(test_s12x_word);
