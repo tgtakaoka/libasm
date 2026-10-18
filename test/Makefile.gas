@@ -323,6 +323,17 @@ gas-%_mc68hc12.s19: %_mc68hc12.gas
 	| tr -d '\015' > $(^:.gas=.s19)
 	m6811-elf-objdump -m m68hc12 -D $(^:.gas=.s19) > $(^:.gas=.dis)
 
+# MC68HCS12 target
+define gas-m68hcs12-rule
+gas-%_$(1).s19: %_$(1).gas
+	m6811-elf-as $(2) --warn -o $$(^:.gas=.p) -al=$$(^:.gas=.lst) $$^
+	m6811-elf-objcopy -I elf32-m68hc12 -O srec --srec-len=16 -j .text \
+	        --change-section-lma .text=0x0100 $$(^:.gas=.p) /dev/stdout \
+	| tr -d '\015' > $$(^:.gas=.s19)
+	m6811-elf-objdump -m m68hc12 -D $$(^:.gas=.s19) > $$(^:.gas=.dis)
+endef
+$(eval $(call gas-m68hcs12-rule,mc68hcs12,-m68hcs12))
+
 # TMS320C30 target
 gas-%_tms320c30.hex: %_tms320c30.gas
 	tic4x-coff-as -mcpu=30 --warn -o $(^:.gas=.p) -al=$(^:.gas=.lst) $^

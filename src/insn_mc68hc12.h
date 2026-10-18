@@ -30,6 +30,26 @@ struct EntryInsn : EntryInsnPrefix<Config, Entry> {
     AddrMode mode1() const { return flags().mode1(); }
     AddrMode mode2() const { return flags().mode2(); }
     AddrMode mode3() const { return flags().mode3(); }
+
+    bool isMove() const { return mode2() == M_NIDX || (mode1() == M_NIDX && mode2() == M_EXT); }
+
+    /** PC-relative base of MOVB/MOVW operand |pos|, relative to the instruction address */
+    int_fast8_t movePcBase(CpuType cpuType, uint_fast8_t pos) const {
+        const auto len = 2 + operandSize(mode1()) + operandSize(mode2());
+        if (cpuType != MC68HC12)
+            return len;
+        // M68HC12 PC offsets for MOVE instructions
+        if (mode2() == M_EXT)
+            return len - 2;  // IDX => EXT
+        if (mode1() == M_NIDX)
+            return pos == 1 ? len - 1 : len + 1;  // IDX => IDX
+        return mode1() == M_IM8 ? len + 1 : len + 2;  // IMM/EXT => IDX
+    }
+
+private:
+    static uint_fast8_t operandSize(AddrMode mode) {
+        return (mode == M_IM16 || mode == M_EXT) ? 2 : 1;
+    }
 };
 
 struct Operand final : ErrorAt {

@@ -39,6 +39,14 @@ Disassembler &disassembler(dis6812);
                 insn.errorText_P());                                           \
     } while (0)
 
+bool m68hcs12() {
+    return strcmp_P("68HCS12", disassembler.config().cpu_P()) == 0;
+}
+
+bool m68hc12() {
+    return strcmp_P("68HC12", disassembler.config().cpu_P()) == 0;
+}
+
 void set_up() {
     disassembler.reset();
 }
@@ -54,6 +62,12 @@ void test_cpu() {
 
     EQUALS("cpu MC68HC12", true, disassembler.setCpu("MC68HC12"));
     EQUALS_P("cpu MC68HC12", "68HC12", disassembler.config().cpu_P());
+
+    EQUALS("cpu 68hcs12", true, disassembler.setCpu("68hcs12"));
+    EQUALS_P("cpu 68hcs12", "68HCS12", disassembler.config().cpu_P());
+
+    EQUALS("cpu MC68HCS12", true, disassembler.setCpu("MC68HCS12"));
+    EQUALS_P("cpu MC68HCS12", "68HCS12", disassembler.config().cpu_P());
 }
 
 void test_load() {
@@ -261,11 +275,18 @@ void test_move() {
     TEST("MOVW", "#$0405, $0607", 0x18, 0x03, 0x04, 0x05, 0x06, 0x07);
     TEST("MOVW", "$0506, $0708",  0x18, 0x04, 0x05, 0x06, 0x07, 0x08);
     TEST("MOVW", "6,X, $0708",    0x18, 0x05, 0x06, 0x07, 0x08);
-    // Special PC-relative offset
-    ATEST(0x1000, "MOVW", "#$1234, $1007,PC",   0x18, 0x00, 0xC0, 0x12, 0x34);
-    ATEST(0x1000, "MOVW", "$1234, $1007,PC",    0x18, 0x01, 0xC0, 0x12, 0x34);
-    ATEST(0x1000, "MOVW", "$1003,PC, $1005,PC", 0x18, 0x02, 0xC0, 0xC0);
-    ATEST(0x1000, "MOVW", "$1003,PC, $1234",    0x18, 0x05, 0xC0, 0x12, 0x34);
+    if (m68hc12()) {
+        // Special PC-relative offset
+        ATEST(0x1000, "MOVW", "#$1234, $1007,PC",   0x18, 0x00, 0xC0, 0x12, 0x34);
+        ATEST(0x1000, "MOVW", "$1234, $1007,PC",    0x18, 0x01, 0xC0, 0x12, 0x34);
+        ATEST(0x1000, "MOVW", "$1003,PC, $1005,PC", 0x18, 0x02, 0xC0, 0xC0);
+        ATEST(0x1000, "MOVW", "$1003,PC, $1234",    0x18, 0x05, 0xC0, 0x12, 0x34);
+    } else {
+        ATEST(0x1000, "MOVW", "#$1234, $1005,PC",   0x18, 0x00, 0xC0, 0x12, 0x34);
+        ATEST(0x1000, "MOVW", "$1234, $1005,PC",    0x18, 0x01, 0xC0, 0x12, 0x34);
+        ATEST(0x1000, "MOVW", "$1004,PC, $1004,PC", 0x18, 0x02, 0xC0, 0xC0);
+        ATEST(0x1000, "MOVW", "$1005,PC, $1234",    0x18, 0x05, 0xC0, 0x12, 0x34);
+    }
     ERRT("MOVW", "#$E2E3, ,X",
          OPERAND_NOT_ALLOWED, ",X",            0x18, 0x00, 0xE1, 0xE2, 0xE3);
     ERRT("MOVW", "$EBEC, ,Y",
@@ -285,11 +306,18 @@ void test_move() {
     TEST("MOVB", "#12, $0D0E",   0x18, 0x0B, 0x0C, 0x0D, 0x0E);
     TEST("MOVB", "$0D0E, $0F10", 0x18, 0x0C, 0x0D, 0x0E, 0x0F, 0x10);
     TEST("MOVB", "14,X, $0F10",  0x18, 0x0D, 0x0E, 0x0F, 0x10);
-    // Special PC-relative offset
-    ATEST(0x1000, "MOVB", "#$34, $1005,PC",     0x18, 0x08, 0xC0, 0x34);
-    ATEST(0x1000, "MOVB", "$1234, $1007,PC",    0x18, 0x09, 0xC0, 0x12, 0x34);
-    ATEST(0x1000, "MOVB", "$1003,PC, $1005,PC", 0x18, 0x0A, 0xC0, 0xC0);
-    ATEST(0x1000, "MOVB", "$1003,PC, $1234",    0x18, 0x0D, 0xC0, 0x12, 0x34);
+    if (m68hc12()) {
+        // Special PC-relative offset
+        ATEST(0x1000, "MOVB", "#$34, $1005,PC",     0x18, 0x08, 0xC0, 0x34);
+        ATEST(0x1000, "MOVB", "$1234, $1007,PC",    0x18, 0x09, 0xC0, 0x12, 0x34);
+        ATEST(0x1000, "MOVB", "$1003,PC, $1005,PC", 0x18, 0x0A, 0xC0, 0xC0);
+        ATEST(0x1000, "MOVB", "$1003,PC, $1234",    0x18, 0x0D, 0xC0, 0x12, 0x34);
+    } else {
+        ATEST(0x1000, "MOVB", "#$34, $1004,PC",     0x18, 0x08, 0xC0, 0x34);
+        ATEST(0x1000, "MOVB", "$1234, $1005,PC",    0x18, 0x09, 0xC0, 0x12, 0x34);
+        ATEST(0x1000, "MOVB", "$1004,PC, $1004,PC", 0x18, 0x0A, 0xC0, 0xC0);
+        ATEST(0x1000, "MOVB", "$1005,PC, $1234",    0x18, 0x0D, 0xC0, 0x12, 0x34);
+    }
     ERRT("MOVB", "#9, ,X",
          OPERAND_NOT_ALLOWED, ",X",            0x18, 0x08, 0xE1, 0x09);
     ERRT("MOVB", "$EBEC, ,Y",
@@ -856,6 +884,10 @@ void test_illegal_mc68hc12() {
         }
     }
 }
+
+void test_illegal_mc68hcs12() {
+    test_illegal_mc68hc12();
+}
 // clang-format on
 
 void run_tests(const char *cpu) {
@@ -883,7 +915,10 @@ void run_tests(const char *cpu) {
     RUN_TEST(test_jump);
     RUN_TEST(test_interrupt);
     RUN_TEST(test_inherent);
-    RUN_TEST(test_illegal_mc68hc12);
+    if (m68hc12())
+        RUN_TEST(test_illegal_mc68hc12);
+    if (m68hcs12())
+        RUN_TEST(test_illegal_mc68hcs12);
 }
 
 // Local Variables:

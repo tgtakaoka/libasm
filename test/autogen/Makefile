@@ -37,11 +37,12 @@ INC_targets = w65c816 tlcs90 $(TGT_tlcs900) i8086 i80186 i80386 i80486 v30 \
     v33 v35 $(TGT_mc68000) $(TGT_z8000) $(TGT_nm1610) ns32000 tms320c20x \
     tms320c5x tms320c30 tms320c31 tms320c32 tms370 tms7000 tms9980 j11 t11 \
     mc146805 z80 z180 z380 h8300 h8300hn h8300h $(TGT_h8500) $(TGT_h16) \
-    cp1600 $(TGT_superh) $(TGT_z8) $(TGT_am29000)
+    cp1600 $(TGT_superh) $(TGT_z8) $(TGT_am29000) mc68hcs12
 # target which for GNU assembler (also ".ginc" targets)
 GINC_targets = $(TGT_mc68000) $(TGT_z8000) $(TGT_pdp11) $(TGT_h8300) \
     $(TGT_h8500) $(TGT_superh) $(TGT_am29000) $(TGT_i960) ns32000 mc68hc11 \
-    mc68hc12 i8086 i80186 i80286 i80386 i80486 tms320c30 tms320c31 tms320c32
+    $(TGT_mc68hc12) i8086 i80186 i80286 i80386 i80486 tms320c30 tms320c31 \
+    tms320c32
 # target which also has Zilog syntax (also ".zinc" targets)
 ZINC_targets = i8080 i8085 v30emu
 # target which doesn't need ".asm"

@@ -21,8 +21,9 @@ namespace text {
 namespace mc68hc12 {
 // clang-format off
 
-constexpr char TEXT_CPU_MC68HC12[] PROGMEM = "MC68HC12";
-constexpr char TEXT_CPU_68HC12[]   PROGMEM = "68HC12";
+constexpr char TEXT_MC68HC12_LIST[] PROGMEM = "MC68HC12, MC68HCS12";
+constexpr char TEXT_CPU_68HC12[]     PROGMEM = "68HC12";
+constexpr char TEXT_CPU_68HCS12[]    PROGMEM = "68HCS12";
 
 // MC68HC12
 // constexpr char TEXT_ABA[]   PROGMEM = "ABA";

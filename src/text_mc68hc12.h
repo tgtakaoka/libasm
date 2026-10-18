@@ -24,8 +24,9 @@ namespace text {
 namespace mc68hc12 {
 // clang-format off
 
-extern const char TEXT_CPU_MC68HC12[] PROGMEM;
-extern const char TEXT_CPU_68HC12[]   PROGMEM;
+extern const char TEXT_MC68HC12_LIST[] PROGMEM;
+extern const char TEXT_CPU_68HC12[]     PROGMEM;
+extern const char TEXT_CPU_68HCS12[]    PROGMEM;
 
 // MC68HC12
 using common::TEXT_ABA;
