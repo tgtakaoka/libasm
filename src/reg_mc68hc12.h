@@ -18,6 +18,7 @@
 #define __LIBASM_REG_MC68HC12_H__
 
 #include <stdint.h>
+#include "config_mc68hc12.h"
 #include "str_buffer.h"
 #include "str_scanner.h"
 
@@ -37,11 +38,22 @@ enum RegName : int8_t {
     REG_Y = 6,
     REG_SP = 7,
     REG_PC = 8,
+    // MC68HCS12X transfer/exchange registers
+    REG_CCRH = 9,
+    REG_CCRL = 10,
+    REG_CCRW = 11,
+    REG_XH = 12,
+    REG_XL = 13,
+    REG_YH = 14,
+    REG_YL = 15,
+    REG_SPH = 16,
+    REG_SPL = 17,
 };
 
 namespace reg {
 
-RegName parseRegName(StrScanner &scan, const ValueParser &pareser);
+RegName parseRegName(StrScanner &scan, const ValueParser &pareser, CpuType cpuType);
+bool isS12xReg(RegName name);
 StrBuffer &outRegName(StrBuffer &out, RegName name);
 RegName decodeRegNum(uint_fast8_t num);
 uint_fast8_t regSize(RegName name);

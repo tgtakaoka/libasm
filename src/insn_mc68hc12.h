@@ -31,22 +31,38 @@ struct EntryInsn : EntryInsnPrefix<Config, Entry> {
     AddrMode mode2() const { return flags().mode2(); }
     AddrMode mode3() const { return flags().mode3(); }
 
-    bool isMove() const { return mode2() == M_NIDX || (mode1() == M_NIDX && mode2() == M_EXT); }
+    /** MOVB/MOVW */
+    bool isMove() const {
+        if (indexed(mode1()))
+            return indexed(mode2()) || mode2() == M_EXT;
+        return indexed(mode2()) && (mode1() == M_IM8 || mode1() == M_IM16 || mode1() == M_EXT);
+    }
+    /** MOVB/MOVW whose destination index post byte precedes the source operand */
+    bool moveDestFirst() const { return isMove() && !indexed(mode1()); }
 
-    /** PC-relative base of MOVB/MOVW operand |pos|, relative to the instruction address */
-    int_fast8_t movePcBase(CpuType cpuType, uint_fast8_t pos) const {
+    /** M68HC12 PC-relative base of MOVB/MOVW operand |pos|, relative to the instruction address */
+    int_fast8_t hc12MovePcBase(uint_fast8_t pos) const {
         const auto len = 2 + operandSize(mode1()) + operandSize(mode2());
-        if (cpuType != MC68HC12)
-            return len;
         // M68HC12 PC offsets for MOVE instructions
         if (mode2() == M_EXT)
             return len - 2;  // IDX => EXT
-        if (mode1() == M_NIDX)
+        if (indexed(mode1()))
             return pos == 1 ? len - 1 : len + 1;  // IDX => IDX
         return mode1() == M_IM8 ? len + 1 : len + 2;  // IMM/EXT => IDX
     }
 
+    /**
+     * Bytes after the index post byte of MOVB/MOVW operand |pos| which the PC-relative base
+     * counts. A source never counts the destination's index extension.
+     */
+    uint_fast8_t moveTrailer(uint_fast8_t pos) const {
+        if (pos == 2)
+            return indexed(mode1()) ? 0 : operandSize(mode1());
+        return mode2() == M_EXT ? 2 : 1;
+    }
+
 private:
+    static bool indexed(AddrMode mode) { return mode == M_NIDX || mode == M_IDX; }
     static uint_fast8_t operandSize(AddrMode mode) {
         return (mode == M_IM16 || mode == M_EXT) ? 2 : 1;
     }
@@ -99,10 +115,9 @@ private:
 struct DisInsn final : DisInsnImpl<Config>, EntryInsn {
     DisInsn(Insn &insn, DisMemory &memory, const StrBuffer &out) : DisInsnImpl(insn, memory, out) {}
 
-    bool moveDestIndex() const { return mode1() != M_NIDX && mode2() == M_NIDX; }
-
     uint8_t pos;  // operand position
     Config::opcode_t post;
+    int16_t postExt;
 };
 
 }  // namespace mc68hc12

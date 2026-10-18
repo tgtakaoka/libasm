@@ -40,12 +40,29 @@ constexpr NameEntry REG_ENTRIES[] PROGMEM = {
 };
 
 PROGMEM constexpr NameTable TABLE{ARRAY_RANGE(REG_ENTRIES)};
+
+constexpr NameEntry S12X_ENTRIES[] PROGMEM = {
+    { TEXT_REG_CCRH, REG_CCRH },
+    { TEXT_REG_CCRL, REG_CCRL },
+    { TEXT_REG_CCRW, REG_CCRW },
+    { TEXT_REG_SPH,  REG_SPH  },
+    { TEXT_REG_SPL,  REG_SPL  },
+    { TEXT_REG_XH,   REG_XH   },
+    { TEXT_REG_XL,   REG_XL   },
+    { TEXT_REG_YH,   REG_YH   },
+    { TEXT_REG_YL,   REG_YL   },
+};
+
+PROGMEM constexpr NameTable S12X_TABLE{ARRAY_RANGE(S12X_ENTRIES)};
 // clang-format on
 }  // namespace
 
-RegName parseRegName(StrScanner &scan, const ValueParser &parser) {
+RegName parseRegName(StrScanner &scan, const ValueParser &parser, CpuType cpuType) {
     auto p = scan;
-    const auto *entry = TABLE.searchText(parser.readRegName(p));
+    const auto name = parser.readRegName(p);
+    const auto *entry = TABLE.searchText(name);
+    if (entry == nullptr && cpuType == MC68HCS12X)
+        entry = S12X_TABLE.searchText(name);
     if (entry) {
         scan = p;
         return RegName(entry->name());
@@ -53,8 +70,12 @@ RegName parseRegName(StrScanner &scan, const ValueParser &parser) {
     return REG_UNDEF;
 }
 
+bool isS12xReg(RegName name) {
+    return name >= REG_CCRH;
+}
+
 StrBuffer &outRegName(StrBuffer &out, RegName name) {
-    const auto *entry = TABLE.searchName(name);
+    const auto *entry = isS12xReg(name) ? S12X_TABLE.searchName(name) : TABLE.searchName(name);
     if (entry)
         entry->outText(out);
     return out;

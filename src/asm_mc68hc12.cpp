@@ -121,7 +121,7 @@ uint_fast8_t encodeBaseHigh(AsmInsn &insn, const Operand &op) {
             0xF0,  // REG_SP
             0xF8,  // REG_PC
     };
-    if (op.base < REG_X) {
+    if (op.base < REG_X || op.base > REG_PC) {
         insn.setErrorIf(op.baseAt, REGISTER_NOT_ALLOWED);
         return 0xE0;
     }
@@ -167,7 +167,7 @@ uint_fast8_t encodeBaseLow(AsmInsn &insn, const Operand &op) {
             0x80,  // REG_SP
             0xC0,  // REG_PC
     };
-    if (op.base < REG_X) {
+    if (op.base < REG_X || op.base > REG_PC) {
         insn.setErrorIf(op.baseAt, REGISTER_NOT_ALLOWED);
         return 0x00;
     }
@@ -182,8 +182,13 @@ void AsmMc68HC12::encodePcRelative(AsmInsn &insn, const Operand &op, AddrMode mo
         len++;  // prefix byte
     if (mode != M_CIDX)
         len++;  // post byte
-    if (insn.isMove())
-        len = insn.movePcBase(cpuType(), op.pos);
+    if (insn.isMove()) {
+        if (cpuType() == MC68HC12) {
+            len = insn.hc12MovePcBase(op.pos);
+        } else {
+            len = (insn.length() ? insn.length() : 2) + 1 + insn.moveTrailer(op.pos);
+        }
+    }
     const auto mode2 = insn.mode2();
     if (mode2 == M_IM8 || mode2 == M_PAG) {
         len++;  // BCLR/BSET/CALL
@@ -299,9 +304,9 @@ void AsmMc68HC12::encodeRegisterPair(AsmInsn &insn, const Operand &op) const {
         if (regSize(op.base) != 16)
             insn.setErrorIf(op.baseAt, REGISTER_NOT_ALLOWED);
     }
-    if (op.index == REG_PC)
+    if (op.index == REG_PC || isS12xReg(op.index))
         insn.setErrorIf(op, REGISTER_NOT_ALLOWED);
-    if (op.base == REG_PC)
+    if (op.base == REG_PC || isS12xReg(op.base))
         insn.setErrorIf(op.baseAt, REGISTER_NOT_ALLOWED);
     insn.embed(encodeRegNum(op.index) << 4);
     insn.embed(encodeRegNum(op.base));
@@ -409,16 +414,18 @@ void AsmMc68HC12::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode)
     case M_PAIR:
         encodeRegisterPair(insn, op);
         break;
+    case M_XPAIR:
+    case M_XSEX: {
+        auto opc = insn.opCode();
+        encodeXferPair(mode, opc, op.index, op.base);
+        insn.setOpCode(opc);
+        break;
+    }
     case M_TRAP:
-        if (op.val.overflowUint8()) {
+        if (op.val.overflowUint8() || !isTrapCode(cpuType(), op.val.getUnsigned())) {
             insn.setErrorIf(op, OVERFLOW_RANGE);
         } else {
-            const auto opc = op.val.getUnsigned();
-            if ((opc >= 0x30 && opc < 0x3A) || opc >= 0x40) {
-                insn.setOpCode(op.val.getUnsigned());
-            } else {
-                insn.setErrorIf(op, OVERFLOW_RANGE);
-            }
+            insn.setOpCode(op.val.getUnsigned());
         }
         break;
     default:
@@ -443,18 +450,22 @@ Error AsmMc68HC12::parseOperand(StrScanner &scan, Operand &op) const {
 
     if ((op.indir = p.expect('[')))
         p.skipSpaces();
-    op.index = parseRegName(p, parser());
+    op.index = parseRegName(p, parser(), cpuType());
     if (op.index != REG_UNDEF) {
         auto a = p.skipSpaces();
         if (!p.expect(','))
             return op.setErrorIf(p, UNKNOWN_OPERAND);
         op.baseAt = p.skipSpaces();
-        op.base = parseRegName(p, parser());
+        op.base = parseRegName(p, parser(), cpuType());
         if (op.base == REG_UNDEF) {
+            if (isS12xReg(op.index))
+                return op.setErrorIf(REGISTER_NOT_ALLOWED);
             op.mode = (op.index == REG_A || op.index == REG_B) ? M_R8L : M_R16L;
             scan = a;
             return OK;
         }
+        if (op.indir && (isS12xReg(op.index) || isS12xReg(op.base)))
+            return op.setErrorIf(REGISTER_NOT_ALLOWED);
         if (op.indir && !p.skipSpaces().expect(']'))
             return op.setErrorIf(p, MISSING_CLOSING_BRACKET);
         op.mode = op.indir ? M_IDX : M_PAIR;
@@ -477,7 +488,9 @@ Error AsmMc68HC12::parseOperand(StrScanner &scan, Operand &op) const {
         } else if (p.expect('-')) {
             op.update = 1;  // -X
         }
-        op.base = parseRegName(p, parser());
+        op.base = parseRegName(p, parser(), cpuType());
+        if (isS12xReg(op.base))
+            return op.setErrorIf(op.baseAt, REGISTER_NOT_ALLOWED);
         if (op.base < REG_X) {
         absolute:
             if (op.indir)
@@ -530,7 +543,7 @@ Error AsmMc68HC12::encodeImpl(StrScanner &scan, Insn &_insn) const {
     if (searchName(cpuType(), insn))
         return _insn.setError(insn.op1, insn);
 
-    if (insn.mode1() != M_NIDX && insn.mode2() == M_NIDX) {
+    if (insn.moveDestFirst()) {
         // Special index post byte order for MOVW/MOVB
         encodeOperand(insn, insn.op2, insn.mode2());
         encodeOperand(insn, insn.op1, insn.mode1());

@@ -51,6 +51,8 @@ enum AddrMode : uint8_t {
     M_R16H = 19,  // 16-bit Register: D=0, X=1, Y=2, SP=3
     M_TRAP = 20,  // TRAP number
     M_PAIR = 21,  // Register pair: index,base
+    M_XPAIR = 22, // MC68HCS12X TFR/EXG register pair
+    M_XSEX = 23,  // MC68HCS12X SEX register pair
 };
 
 enum CodeFormat : uint8_t {
@@ -65,6 +67,7 @@ enum CodeFormat : uint8_t {
     CF_7F = 8,   // 0x7F
     CF_1C = 9,   // 0x18
     CF_FF = 10,  // 0xFF
+    CF_77 = 11,  // 0x77
 };
 
 struct Entry final : entry::Base<Config::opcode_t> {
@@ -94,6 +97,7 @@ struct Entry final : entry::Base<Config::opcode_t> {
                     0x7F,  // CF_7F = 8
                     0x1C,  // CF_1C = 9
                     0xFF,  // CF_FF = 10
+                    0x77,  // CF_77 = 11
             };
             return pgm_read_byte(&MASK[(_attr >> cf_gp) & cf_gm]);
         }

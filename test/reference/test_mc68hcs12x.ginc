@@ -1,0 +1,511 @@
+;;; Copyright 2026 Tadashi G. Takaoka
+;;;
+;;; Licensed under the Apache License, Version 2.0 (the "License");
+;;; you may not use this file except in compliance with the License.
+;;; You may obtain a copy of the License at
+;;;
+;;;     http://www.apache.org/licenses/LICENSE-2.0
+;;;
+;;; Unless required by applicable law or agreed to in writing, software
+;;; distributed under the License is distributed on an "AS IS" BASIS,
+;;; WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+;;; See the License for the specific language governing permissions and
+;;; limitations under the License.
+
+;;; page 2
+        subx    #0x1234
+        subx    *0x12
+        subx    5,x
+        subx    0x1234,y
+        subx    [d,sp]
+        subx    0x1234
+        sbex    #0x1234
+        sbex    *0x12
+        sbex    5,x
+        sbex    0x1234,y
+        sbex    [d,sp]
+        sbex    0x1234
+        sbed    #0x1234
+        sbed    *0x12
+        sbed    5,x
+        sbed    0x1234,y
+        sbed    [d,sp]
+        sbed    0x1234
+        andx    #0x1234
+        andx    *0x12
+        andx    5,x
+        andx    0x1234,y
+        andx    [d,sp]
+        andx    0x1234
+        bitx    #0x1234
+        bitx    *0x12
+        bitx    5,x
+        bitx    0x1234,y
+        bitx    [d,sp]
+        bitx    0x1234
+        eorx    #0x1234
+        eorx    *0x12
+        eorx    5,x
+        eorx    0x1234,y
+        eorx    [d,sp]
+        eorx    0x1234
+        adex    #0x1234
+        adex    *0x12
+        adex    5,x
+        adex    0x1234,y
+        adex    [d,sp]
+        adex    0x1234
+        orx     #0x1234
+        orx     *0x12
+        orx     5,x
+        orx     0x1234,y
+        orx     [d,sp]
+        orx     0x1234
+        addx    #0x1234
+        addx    *0x12
+        addx    5,x
+        addx    0x1234,y
+        addx    [d,sp]
+        addx    0x1234
+        cped    #0x1234
+        cped    *0x12
+        cped    5,x
+        cped    0x1234,y
+        cped    [d,sp]
+        cped    0x1234
+        cpey    #0x1234
+        cpey    *0x12
+        cpey    5,x
+        cpey    0x1234,y
+        cpey    [d,sp]
+        cpey    0x1234
+        cpex    #0x1234
+        cpex    *0x12
+        cpex    5,x
+        cpex    0x1234,y
+        cpex    [d,sp]
+        cpex    0x1234
+        cpes    #0x1234
+        cpes    *0x12
+        cpes    5,x
+        cpes    0x1234,y
+        cpes    [d,sp]
+        cpes    0x1234
+        suby    #0x1234
+        suby    *0x12
+        suby    5,x
+        suby    0x1234,y
+        suby    [d,sp]
+        suby    0x1234
+        sbey    #0x1234
+        sbey    *0x12
+        sbey    5,x
+        sbey    0x1234,y
+        sbey    [d,sp]
+        sbey    0x1234
+        aded    #0x1234
+        aded    *0x12
+        aded    5,x
+        aded    0x1234,y
+        aded    [d,sp]
+        aded    0x1234
+        andy    #0x1234
+        andy    *0x12
+        andy    5,x
+        andy    0x1234,y
+        andy    [d,sp]
+        andy    0x1234
+        bity    #0x1234
+        bity    *0x12
+        bity    5,x
+        bity    0x1234,y
+        bity    [d,sp]
+        bity    0x1234
+        eory    #0x1234
+        eory    *0x12
+        eory    5,x
+        eory    0x1234,y
+        eory    [d,sp]
+        eory    0x1234
+        adey    #0x1234
+        adey    *0x12
+        adey    5,x
+        adey    0x1234,y
+        adey    [d,sp]
+        adey    0x1234
+        ory     #0x1234
+        ory     *0x12
+        ory     5,x
+        ory     0x1234,y
+        ory     [d,sp]
+        ory     0x1234
+        addy    #0x1234
+        addy    *0x12
+        addy    5,x
+        addy    0x1234,y
+        addy    [d,sp]
+        addy    0x1234
+        negw    5,x
+        negw    -0x064,y
+        negw    [0x1234,sp]
+        negw    0x1234
+        comw    5,x
+        comw    -0x064,y
+        comw    [0x1234,sp]
+        comw    0x1234
+        incw    5,x
+        incw    -0x064,y
+        incw    [0x1234,sp]
+        incw    0x1234
+        decw    5,x
+        decw    -0x064,y
+        decw    [0x1234,sp]
+        decw    0x1234
+        lsrw    5,x
+        lsrw    -0x064,y
+        lsrw    [0x1234,sp]
+        lsrw    0x1234
+        rolw    5,x
+        rolw    -0x064,y
+        rolw    [0x1234,sp]
+        rolw    0x1234
+        rorw    5,x
+        rorw    -0x064,y
+        rorw    [0x1234,sp]
+        rorw    0x1234
+        asrw    5,x
+        asrw    -0x064,y
+        asrw    [0x1234,sp]
+        asrw    0x1234
+        aslw    5,x
+        aslw    -0x064,y
+        aslw    [0x1234,sp]
+        aslw    0x1234
+        aslw    5,x
+        aslw    -0x064,y
+        aslw    [0x1234,sp]
+        aslw    0x1234
+        clrw    5,x
+        clrw    -0x064,y
+        clrw    [0x1234,sp]
+        clrw    0x1234
+        tstw    5,x
+        tstw    -0x064,y
+        tstw    [0x1234,sp]
+        tstw    0x1234
+        negx
+        comx
+        incx
+        decx
+        lsrx
+        rolx
+        rorx
+        asrx
+        aslx
+        aslx
+        negy
+        comy
+        incy
+        decy
+        lsry
+        roly
+        rory
+        asry
+        asly
+        asly
+        clrx
+        clry
+        tstx
+        tsty
+        pulcw
+        pshcw
+        gldaa   *0x12
+        gldaa   5,x
+        gldaa   [d,y]
+        gldaa   0x1234
+        gldab   *0x12
+        gldab   5,x
+        gldab   [d,y]
+        gldab   0x1234
+        gldd    *0x12
+        gldd    5,x
+        gldd    [d,y]
+        gldd    0x1234
+        gldy    *0x12
+        gldy    5,x
+        gldy    [d,y]
+        gldy    0x1234
+        gldx    *0x12
+        gldx    5,x
+        gldx    [d,y]
+        gldx    0x1234
+        glds    *0x12
+        glds    5,x
+        glds    [d,y]
+        glds    0x1234
+        gstaa   *0x12
+        gstaa   5,x
+        gstaa   [d,y]
+        gstaa   0x1234
+        gstab   *0x12
+        gstab   5,x
+        gstab   [d,y]
+        gstab   0x1234
+        gstd    *0x12
+        gstd    5,x
+        gstd    [d,y]
+        gstd    0x1234
+        gsty    *0x12
+        gsty    5,x
+        gsty    [d,y]
+        gsty    0x1234
+        gstx    *0x12
+        gstx    5,x
+        gstx    [d,y]
+        gstx    0x1234
+        gsts    *0x12
+        gsts    5,x
+        gsts    [d,y]
+        .byte   0x18, 0x7F, 0x12, 0x34 ;# gsts    0x1234
+        btas    *0x12, #0x34
+        btas    0x1234, #0x34
+        btas    5,x, #0x34
+        btas    0x64,y, #0x34
+;;; transfer/exchange
+        tfr     ccr, a
+        tfr     ccr, b
+        tfr     ccr, ccr
+        tfr     a, ccr
+        tfr     b, ccr
+        tfr     d, ccr
+        tfr     x, a
+        tfr     x, b
+        tfr     x, ccr
+        tfr     y, a
+        tfr     y, b
+        tfr     y, ccr
+        tfr     sp, a
+        tfr     sp, b
+        tfr     sp, ccr
+        .byte   0xB7, 0x28 ;# tfr     ccrh, a
+        .byte   0xB7, 0x58 ;# tfr     xh, a
+        .byte   0xB7, 0x68 ;# tfr     yh, a
+        .byte   0xB7, 0x78 ;# tfr     sph, a
+        .byte   0xB7, 0x0A ;# tfr     a, ccrh
+        .byte   0xB7, 0x2A ;# tfr     ccrw, ccrw
+        .byte   0xB7, 0x4A ;# tfr     d, ccrw
+        .byte   0xB7, 0x5A ;# tfr     x, ccrw
+        .byte   0xB7, 0x6A ;# tfr     y, ccrw
+        .byte   0xB7, 0x7A ;# tfr     sp, ccrw
+        .byte   0xB7, 0x2C ;# tfr     ccrw, d
+        .byte   0xB7, 0x0D ;# tfr     a, xh
+        .byte   0xB7, 0x1D ;# tfr     b, xl
+        .byte   0xB7, 0x2D ;# tfr     ccrw, x
+        .byte   0xB7, 0x0E ;# tfr     a, yh
+        .byte   0xB7, 0x1E ;# tfr     b, yl
+        .byte   0xB7, 0x2E ;# tfr     ccrw, y
+        .byte   0xB7, 0x0F ;# tfr     a, sph
+        .byte   0xB7, 0x1F ;# tfr     b, spl
+        .byte   0xB7, 0x2F ;# tfr     ccrw, sp
+        sex     ccr, d
+        sex     ccr, x
+        sex     ccr, y
+        sex     ccr, sp
+        exg     ccr, a
+        exg     ccr, b
+        exg     ccr, ccr
+        exg     ccr, d
+        exg     ccr, x
+        exg     ccr, y
+        exg     ccr, sp
+        exg     a, ccr
+        exg     b, ccr
+        exg     d, ccr
+        exg     x, ccr
+        exg     y, ccr
+        exg     sp, ccr
+        .byte   0xB7, 0xA8 ;# exg     ccrh, a
+        .byte   0xB7, 0xD8 ;# exg     xh, a
+        .byte   0xB7, 0xE8 ;# exg     yh, a
+        .byte   0xB7, 0xF8 ;# exg     sph, a
+        .byte   0xB7, 0x8A ;# exg     a, ccrh
+        .byte   0xB7, 0xAA ;# exg     ccrw, ccrw
+        .byte   0xB7, 0xCA ;# exg     d, ccrw
+        .byte   0xB7, 0xDA ;# exg     x, ccrw
+        .byte   0xB7, 0xEA ;# exg     y, ccrw
+        .byte   0xB7, 0xFA ;# exg     sp, ccrw
+        .byte   0xB7, 0xAC ;# exg     ccrw, d
+        .byte   0xB7, 0x8D ;# exg     a, xh
+        .byte   0xB7, 0x9D ;# exg     b, xl
+        .byte   0xB7, 0xAD ;# exg     ccrw, x
+        .byte   0xB7, 0x8E ;# exg     a, yh
+        .byte   0xB7, 0x9E ;# exg     b, yl
+        .byte   0xB7, 0xAE ;# exg     ccrw, y
+        .byte   0xB7, 0x8F ;# exg     a, sph
+        .byte   0xB7, 0x9F ;# exg     b, spl
+        .byte   0xB7, 0xAF ;# exg     ccrw, sp
+;;; move
+        movw    #0x1234, 0x9ABC
+        movw    #0x1234, 7,y
+        movw    #0x1234, 0xC8,x
+        movw    #0x1234, 0x4321,sp
+        movw    #0x1234, [d,y]
+        movw    #0x1234, [0x4321,x]
+        movw    #0x1234, d,y
+        movw    #0x1234, 4,sp-
+        movw    0x5678, 0x9ABC
+        movw    0x5678, 7,y
+        movw    0x5678, 0xC8,x
+        movw    0x5678, 0x4321,sp
+        movw    0x5678, [d,y]
+        movw    0x5678, [0x4321,x]
+        movw    0x5678, d,y
+        movw    0x5678, 4,sp-
+        movw    1,x, 0x9ABC
+        movw    1,x, 7,y
+        movw    1,x, 0xC8,x
+        movw    1,x, 0x4321,sp
+        movw    1,x, [d,y]
+        movw    1,x, [0x4321,x]
+        movw    1,x, d,y
+        movw    1,x, 4,sp-
+        movw    -0x064,y, 0x9ABC
+        movw    -0x064,y, 7,y
+        movw    -0x064,y, 0xC8,x
+        movw    -0x064,y, 0x4321,sp
+        movw    -0x064,y, [d,y]
+        movw    -0x064,y, [0x4321,x]
+        movw    -0x064,y, d,y
+        movw    -0x064,y, 4,sp-
+        movw    0x1234,sp, 0x9ABC
+        movw    0x1234,sp, 7,y
+        movw    0x1234,sp, 0xC8,x
+        movw    0x1234,sp, 0x4321,sp
+        movw    0x1234,sp, [d,y]
+        movw    0x1234,sp, [0x4321,x]
+        movw    0x1234,sp, d,y
+        movw    0x1234,sp, 4,sp-
+        movw    [d,x], 0x9ABC
+        movw    [d,x], 7,y
+        movw    [d,x], 0xC8,x
+        movw    [d,x], 0x4321,sp
+        movw    [d,x], [d,y]
+        movw    [d,x], [0x4321,x]
+        .byte   0x18, 0x02, 0xE7, 0xEE ;# movw    [d,x], d,y
+        movw    [d,x], 4,sp-
+        movw    [0x1234,y], 0x9ABC
+        movw    [0x1234,y], 7,y
+        movw    [0x1234,y], 0xC8,x
+        movw    [0x1234,y], 0x4321,sp
+        movw    [0x1234,y], [d,y]
+        movw    [0x1234,y], [0x4321,x]
+        .byte   0x18, 0x02, 0xEB, 0x12, 0x34, 0xEE ;# movw    [0x1234,y], d,y
+        movw    [0x1234,y], 4,sp-
+        movw    a,x, 0x9ABC
+        movw    a,x, 7,y
+        movw    a,x, 0xC8,x
+        movw    a,x, 0x4321,sp
+        .byte   0x18, 0x02, 0xE4, 0xEF ;# movw    a,x, [d,y]
+        .byte   0x18, 0x02, 0xE4, 0xE3, 0x43, 0x21 ;# movw    a,x, [0x4321,x]
+        movw    a,x, d,y
+        movw    a,x, 4,sp-
+        movw    2,x+, 0x9ABC
+        movw    2,x+, 7,y
+        movw    2,x+, 0xC8,x
+        movw    2,x+, 0x4321,sp
+        .byte   0x18, 0x02, 0x31, 0xEF ;# movw    2,x+, [d,y]
+        .byte   0x18, 0x02, 0x31, 0xE3, 0x43, 0x21 ;# movw    2,x+, [0x4321,x]
+        movw    2,x+, d,y
+        movw    2,x+, 4,sp-
+        movw    3,-y, 0x9ABC
+        movw    3,-y, 7,y
+        movw    3,-y, 0xC8,x
+        movw    3,-y, 0x4321,sp
+        movw    3,-y, [d,y]
+        movw    3,-y, [0x4321,x]
+        movw    3,-y, d,y
+        movw    3,-y, 4,sp-
+        movb    #18, 0x9ABC
+        movb    #18, 7,y
+        movb    #18, 0xC8,x
+        movb    #18, 0x4321,sp
+        movb    #18, [d,y]
+        movb    #18, [0x4321,x]
+        movb    #18, d,y
+        movb    #18, 4,sp-
+        movb    0x5678, 0x9ABC
+        movb    0x5678, 7,y
+        movb    0x5678, 0xC8,x
+        movb    0x5678, 0x4321,sp
+        movb    0x5678, [d,y]
+        movb    0x5678, [0x4321,x]
+        movb    0x5678, d,y
+        movb    0x5678, 4,sp-
+        movb    1,x, 0x9ABC
+        movb    1,x, 7,y
+        movb    1,x, 0xC8,x
+        movb    1,x, 0x4321,sp
+        movb    1,x, [d,y]
+        movb    1,x, [0x4321,x]
+        movb    1,x, d,y
+        movb    1,x, 4,sp-
+        movb    -0x064,y, 0x9ABC
+        movb    -0x064,y, 7,y
+        movb    -0x064,y, 0xC8,x
+        movb    -0x064,y, 0x4321,sp
+        movb    -0x064,y, [d,y]
+        movb    -0x064,y, [0x4321,x]
+        movb    -0x064,y, d,y
+        movb    -0x064,y, 4,sp-
+        movb    0x1234,sp, 0x9ABC
+        movb    0x1234,sp, 7,y
+        movb    0x1234,sp, 0xC8,x
+        movb    0x1234,sp, 0x4321,sp
+        movb    0x1234,sp, [d,y]
+        movb    0x1234,sp, [0x4321,x]
+        movb    0x1234,sp, d,y
+        movb    0x1234,sp, 4,sp-
+        movb    [d,x], 0x9ABC
+        movb    [d,x], 7,y
+        movb    [d,x], 0xC8,x
+        movb    [d,x], 0x4321,sp
+        movb    [d,x], [d,y]
+        movb    [d,x], [0x4321,x]
+        .byte   0x18, 0x0A, 0xE7, 0xEE ;# movb    [d,x], d,y
+        movb    [d,x], 4,sp-
+        movb    [0x1234,y], 0x9ABC
+        movb    [0x1234,y], 7,y
+        movb    [0x1234,y], 0xC8,x
+        movb    [0x1234,y], 0x4321,sp
+        movb    [0x1234,y], [d,y]
+        movb    [0x1234,y], [0x4321,x]
+        .byte   0x18, 0x0A, 0xEB, 0x12, 0x34, 0xEE ;# movb    [0x1234,y], d,y
+        movb    [0x1234,y], 4,sp-
+        movb    b,sp, 0x9ABC
+        movb    b,sp, 7,y
+        movb    b,sp, 0xC8,x
+        movb    b,sp, 0x4321,sp
+        .byte   0x18, 0x0A, 0xF5, 0xEF ;# movb    b,sp, [d,y]
+        .byte   0x18, 0x0A, 0xF5, 0xE3, 0x43, 0x21 ;# movb    b,sp, [0x4321,x]
+        movb    b,sp, d,y
+        movb    b,sp, 4,sp-
+        movb    2,x+, 0x9ABC
+        movb    2,x+, 7,y
+        movb    2,x+, 0xC8,x
+        movb    2,x+, 0x4321,sp
+        .byte   0x18, 0x0A, 0x31, 0xEF ;# movb    2,x+, [d,y]
+        .byte   0x18, 0x0A, 0x31, 0xE3, 0x43, 0x21 ;# movb    2,x+, [0x4321,x]
+        movb    2,x+, d,y
+        movb    2,x+, 4,sp-
+        movb    3,-y, 0x9ABC
+        movb    3,-y, 7,y
+        movb    3,-y, 0xC8,x
+        movb    3,-y, 0x4321,sp
+        movb    3,-y, [d,y]
+        movb    3,-y, [0x4321,x]
+        movb    3,-y, d,y
+        movb    3,-y, 4,sp-
+;;; Local Variables:
+;;; mode: asm
+;;; End:
+;;; vim: set ft=asm:
