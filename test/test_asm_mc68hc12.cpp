@@ -25,6 +25,10 @@ using namespace libasm::test;
 AsmMc68HC12 asm6812;
 Assembler &assembler(asm6812);
 
+bool m68hc12() {
+    return strcmp_P("68HC12", assembler.config().cpu_P()) == 0;
+}
+
 void set_up() {
     assembler.reset();
 }
@@ -40,6 +44,12 @@ void test_cpu() {
 
     EQUALS("cpu MC68HC12", true, assembler.setCpu("MC68HC12"));
     EQUALS_P("cpu MC68HC12", "68HC12", assembler.config().cpu_P());
+
+    EQUALS("cpu 68hcs12", true, assembler.setCpu("68hcs12"));
+    EQUALS_P("cpu 68hcs12", "68HCS12", assembler.config().cpu_P());
+
+    EQUALS("cpu MC68HCS12", true, assembler.setCpu("MC68HCS12"));
+    EQUALS_P("cpu MC68HCS12", "68HCS12", assembler.config().cpu_P());
 }
 
 void test_load() {
@@ -259,11 +269,18 @@ void test_move() {
     TEST("MOVW #$0405, $0607", 0x18, 0x03, 0x04, 0x05, 0x06, 0x07);
     TEST("MOVW $0506, $0708",  0x18, 0x04, 0x05, 0x06, 0x07, 0x08);
     TEST("MOVW 6,X, $0708",    0x18, 0x05, 0x06, 0x07, 0x08);
-    // Special PC-relative offset
-    ATEST(0x1000, "MOVW #$1234, $1007,PC",   0x18, 0x00, 0xC0, 0x12, 0x34);
-    ATEST(0x1000, "MOVW $1234, $1007,PC",    0x18, 0x01, 0xC0, 0x12, 0x34);
-    ATEST(0x1000, "MOVW $1003,PC, $1005,PC", 0x18, 0x02, 0xC0, 0xC0);
-    ATEST(0x1000, "MOVW $1003,PC, $1234",    0x18, 0x05, 0xC0, 0x12, 0x34);
+    if (m68hc12()) {
+        // Special PC-relative offset
+        ATEST(0x1000, "MOVW #$1234, $1007,PC",   0x18, 0x00, 0xC0, 0x12, 0x34);
+        ATEST(0x1000, "MOVW $1234, $1007,PC",    0x18, 0x01, 0xC0, 0x12, 0x34);
+        ATEST(0x1000, "MOVW $1003,PC, $1005,PC", 0x18, 0x02, 0xC0, 0xC0);
+        ATEST(0x1000, "MOVW $1003,PC, $1234",    0x18, 0x05, 0xC0, 0x12, 0x34);
+    } else {
+        ATEST(0x1000, "MOVW #$1234, $1005,PC",   0x18, 0x00, 0xC0, 0x12, 0x34);
+        ATEST(0x1000, "MOVW $1234, $1005,PC",    0x18, 0x01, 0xC0, 0x12, 0x34);
+        ATEST(0x1000, "MOVW $1004,PC, $1004,PC", 0x18, 0x02, 0xC0, 0xC0);
+        ATEST(0x1000, "MOVW $1005,PC, $1234",    0x18, 0x05, 0xC0, 0x12, 0x34);
+    }
     ERRT("MOVW #$E3E4, $E2,X",
          OPERAND_NOT_ALLOWED, "$E2,X",         0x18, 0x00, 0xE0, 0xE3, 0xE4);
     ERRT("MOVW $EDEE, $EBEC,Y",
@@ -283,11 +300,18 @@ void test_move() {
     TEST("MOVB #12, $0D0E",   0x18, 0x0B, 0x0C, 0x0D, 0x0E);
     TEST("MOVB $0D0E, $0F10", 0x18, 0x0C, 0x0D, 0x0E, 0x0F, 0x10);
     TEST("MOVB 14,X, $0F10",  0x18, 0x0D, 0x0E, 0x0F, 0x10);
-    // Special PC-relative offset
-    ATEST(0x1000, "MOVB #$34, $1005,PC",     0x18, 0x08, 0xC0, 0x34);
-    ATEST(0x1000, "MOVB $1234, $1007,PC",    0x18, 0x09, 0xC0, 0x12, 0x34);
-    ATEST(0x1000, "MOVB $1003,PC, $1005,PC", 0x18, 0x0A, 0xC0, 0xC0);
-    ATEST(0x1000, "MOVB $1003,PC, $1234",    0x18, 0x0D, 0xC0, 0x12, 0x34);
+    if (m68hc12()) {
+        // Special PC-relative offset
+        ATEST(0x1000, "MOVB #$34, $1005,PC",     0x18, 0x08, 0xC0, 0x34);
+        ATEST(0x1000, "MOVB $1234, $1007,PC",    0x18, 0x09, 0xC0, 0x12, 0x34);
+        ATEST(0x1000, "MOVB $1003,PC, $1005,PC", 0x18, 0x0A, 0xC0, 0xC0);
+        ATEST(0x1000, "MOVB $1003,PC, $1234",    0x18, 0x0D, 0xC0, 0x12, 0x34);
+    } else {
+        ATEST(0x1000, "MOVB #$34, $1004,PC",     0x18, 0x08, 0xC0, 0x34);
+        ATEST(0x1000, "MOVB $1234, $1005,PC",    0x18, 0x09, 0xC0, 0x12, 0x34);
+        ATEST(0x1000, "MOVB $1004,PC, $1004,PC", 0x18, 0x0A, 0xC0, 0xC0);
+        ATEST(0x1000, "MOVB $1005,PC, $1234",    0x18, 0x0D, 0xC0, 0x12, 0x34);
+    }
     ERRT("MOVB #$EB, -22,Y",
          OPERAND_NOT_ALLOWED, "-22,Y",         0x18, 0x08, 0xE9, 0xEB);
     ERRT("MOVB $E5E6, $E3E4,X",

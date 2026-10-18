@@ -619,10 +619,11 @@ using Cpu = entry::CpuBase<CpuType, EntryPage>;
 
 constexpr Cpu CPU_TABLE[] PROGMEM = {
         {MC68HC12, TEXT_CPU_68HC12, ARRAY_RANGE(MC68HC12_PAGES)},
+        {MC68HCS12, TEXT_CPU_68HCS12, ARRAY_RANGE(MC68HC12_PAGES)},
 };
 
-const Cpu *cpu(CpuType) {
-    return &CPU_TABLE[0];
+const Cpu *cpu(CpuType cpuType) {
+    return Cpu::search(cpuType, ARRAY_RANGE(CPU_TABLE));
 }
 
 bool hasOperand(CpuType cpuType, AsmInsn &insn) {
@@ -679,7 +680,7 @@ bool isPrefix(CpuType cpuType, Config::opcode_t code) {
 }
 
 const /*PROGMEM*/ char *TableMc68HC12::listCpu_P() const {
-    return TEXT_CPU_MC68HC12;
+    return TEXT_MC68HC12_LIST;
 }
 
 const /*PROGMEM*/ char *TableMc68HC12::cpuName_P(CpuType cpuType) const {
@@ -688,7 +689,7 @@ const /*PROGMEM*/ char *TableMc68HC12::cpuName_P(CpuType cpuType) const {
 
 Error TableMc68HC12::searchCpuName(StrScanner &name, CpuType &cpuType) const {
     auto p = name;
-    p.iexpectText_P(TEXT_CPU_MC68HC12, 2);  // ignore prefix MC
+    p.iexpectText_P(TEXT_MC68HC12_LIST, 2);  // ignore prefix MC
     auto t = Cpu::search(p, ARRAY_RANGE(CPU_TABLE));
     if (t) {
         cpuType = t->readCpuType();

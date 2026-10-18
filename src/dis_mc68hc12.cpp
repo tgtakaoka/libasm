@@ -32,14 +32,10 @@ DisMc68HC12::DisMc68HC12(const ValueFormatter::Plugins &plugins)
     reset();
 }
 
-Config::uintptr_t calculatePcRelBase(DisInsn &insn, AddrMode type) {
-    auto base = insn.address();
-    const auto mode1 = insn.mode1();
-    if (mode1 == M_IM16 || mode1 == M_EXT)
-        return base + 7;  // MOVEW/MOVEB
-    if (mode1 == M_IM8 || (type == M_NIDX && insn.pos == 2))
-        return base + 5;  // MOVEW/MOVEB
-    base = insn.address() + insn.length();
+Config::uintptr_t calculatePcRelBase(CpuType cpuType, DisInsn &insn) {
+    if (insn.isMove())
+        return insn.address() + insn.movePcBase(cpuType, insn.pos);
+    const auto base = insn.address() + insn.length();
     const auto mode2 = insn.mode2();
     if (mode2 == M_IM8 || mode2 == M_PAG) {
         if (insn.mode3() == M_RL8)
@@ -72,7 +68,7 @@ void DisMc68HC12::decodeIndexed(
         if (_gnuAs) {
             outDec(out, disp, -5);
         } else {
-            const auto base = calculatePcRelBase(insn, type);
+            const auto base = calculatePcRelBase(cpuType(), insn);
             const auto target = base + disp;
             outAbsAddr(out, target);
         }
@@ -94,7 +90,7 @@ void DisMc68HC12::decodeIndexed(
                 if (mode == 1)
                     disp |= 0xFF00;
                 if (index == REG_PC && !_gnuAs) {
-                    const auto base = calculatePcRelBase(insn, type);
+                    const auto base = calculatePcRelBase(cpuType(), insn);
                     const auto target = base + disp;
                     if (!indirect) {
                         if (disp >= -16 && disp < 16) {

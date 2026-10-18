@@ -24,6 +24,7 @@ namespace mc68hc12 {
 
 enum CpuType : uint8_t {
     MC68HC12,
+    MC68HCS12,
 };
 
 struct Config

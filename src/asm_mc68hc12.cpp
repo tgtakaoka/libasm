@@ -182,12 +182,8 @@ void AsmMc68HC12::encodePcRelative(AsmInsn &insn, const Operand &op, AddrMode mo
         len++;  // prefix byte
     if (mode != M_CIDX)
         len++;  // post byte
-    const auto mode1 = insn.mode1();
-    if (mode1 == M_IM16 || mode1 == M_EXT) {
-        len = 7;  // MOVW #,ix/MOVx ext,ix
-    } else if (mode1 == M_IM8 || (mode == M_NIDX && op.pos == 2)) {
-        len = 5;  // MOVB #,ix/MOVx ix,ix2
-    }
+    if (insn.isMove())
+        len = insn.movePcBase(cpuType(), op.pos);
     const auto mode2 = insn.mode2();
     if (mode2 == M_IM8 || mode2 == M_PAG) {
         len++;  // BCLR/BSET/CALL
