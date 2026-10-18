@@ -42,6 +42,11 @@ struct Ins8060FunctionTable final : FunctionTable, Singleton<Ins8060FunctionTabl
     const Functor *lookupFunction(const StrScanner &) const override;
 };
 
+struct Mc68hc12FunctionTable final : FunctionTable, Singleton<Mc68hc12FunctionTable> {
+    /** PAGE(), LOW16() */
+    const Functor *lookupFunction(const StrScanner &) const override;
+};
+
 struct Ins8070FunctionTable final : FunctionTable, Singleton<Ins8070FunctionTable> {
     /** H(), L(), ADDR() */
     const Functor *lookupFunction(const StrScanner &) const override;

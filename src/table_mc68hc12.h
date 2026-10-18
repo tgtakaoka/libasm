@@ -35,6 +35,27 @@ bool hasOperand(CpuType, AsmInsn &insn);
 Error searchName(CpuType, AsmInsn &insn);
 Error searchOpCode(CpuType, DisInsn &insn, StrBuffer &out);
 bool isPrefix(CpuType, Config::opcode_t code);
+/** The page register which switches the window at CPU address |addr|, or PAGE_NONE */
+PageReg pageWindow(CpuType, uint16_t addr);
+/** The last CPU address of the window at |addr| */
+uint16_t pageWindowLast(CpuType, uint16_t addr);
+/** The number of implemented bits of page register |reg|, or 0 when it doesn't exist */
+uint_fast8_t pageRegisterBits(CpuType, PageReg reg);
+/** The physical address of CPU address |addr| when its window is on |page| */
+uint32_t toPhysical(CpuType, uint16_t addr, uint8_t page);
+/** The CPU address |cpu| of physical |addr| through the program page window on |page| */
+bool programPage(CpuType, uint32_t addr, uint16_t &cpu, int16_t &page);
+/**
+ * The CPU address |cpu| of physical |addr| in program space, a fixed region or the program page
+ * window on |page| (-1 when fixed).
+ */
+bool programAddress(CpuType, uint32_t addr, uint16_t &cpu, int16_t &page);
+/**
+ * The CPU address |cpu| of physical |addr|, through a fixed region or a window whose page is
+ * |pages| (-1 when not assumed).  OVERFLOW_RANGE when no window maps it, OPERAND_NOT_ALLOWED
+ * when two windows do.
+ */
+Error cpuAddress(CpuType, uint32_t addr, const int16_t *pages, uint16_t &cpu);
 /** Encode MC68HCS12X transfer/exchange postbyte of |src|,|dst| into |opc| */
 bool encodeXferPair(AddrMode mode, Config::opcode_t &opc, RegName src, RegName dst);
 /** Decode MC68HCS12X transfer/exchange postbyte |opc| */

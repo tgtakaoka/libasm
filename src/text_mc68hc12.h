@@ -30,6 +30,9 @@ extern const char TEXT_CPU_68HC12X[]    PROGMEM;
 extern const char TEXT_CPU_68HCS12[]    PROGMEM;
 extern const char TEXT_CPU_68HCS12X[]   PROGMEM;
 
+extern const char OPT_BOOL_MMC[] PROGMEM;
+extern const char OPT_DESC_MMC[] PROGMEM;
+
 // MC68HC12
 using common::TEXT_ABA;
 using common::TEXT_ABX;

@@ -182,6 +182,7 @@ constexpr Entry MC68HC12_TABLE[] PROGMEM = {
     E1(0xE7, CF_10, TEXT_TST,   M_GMEM),
     E0(0x00, CF_00, TEXT_BGND),
     E0(0x01, CF_00, TEXT_MEM),
+    E1(0x4A, CF_00, TEXT_CALL,  M_FEXT),
 };
 
 constexpr uint8_t MC68HC12_INDEX[] PROGMEM = {
@@ -235,6 +236,7 @@ constexpr uint8_t MC68HC12_INDEX[] PROGMEM = {
      42,  // TEXT_BVC
      43,  // TEXT_BVS
      76,  // TEXT_CALL
+    150,  // TEXT_CALL
     105,  // TEXT_CLR
     127,  // TEXT_CLRA
     145,  // TEXT_CLRB
@@ -661,12 +663,12 @@ constexpr Entry MC68HCS12X_P18[] PROGMEM = {
     E0(0x57, CF_00, TEXT_ASRY),
     E0(0x58, CF_00, TEXT_ASLY),
     E0(0x58, CF_00, TEXT_LSLY),
-    E1(0x5A, CF_00, TEXT_GSTAA, M_DIR),
-    E1(0x5B, CF_00, TEXT_GSTAB, M_DIR),
-    E1(0x5C, CF_00, TEXT_GSTD,  M_DIR),
-    E1(0x5D, CF_00, TEXT_GSTY,  M_DIR),
-    E1(0x5E, CF_00, TEXT_GSTX,  M_DIR),
-    E1(0x5F, CF_00, TEXT_GSTS,  M_DIR),
+    E1(0x5A, CF_00, TEXT_GSTAA, M_GDIR),
+    E1(0x5B, CF_00, TEXT_GSTAB, M_GDIR),
+    E1(0x5C, CF_00, TEXT_GSTD,  M_GDIR),
+    E1(0x5D, CF_00, TEXT_GSTY,  M_GDIR),
+    E1(0x5E, CF_00, TEXT_GSTX,  M_GDIR),
+    E1(0x5F, CF_00, TEXT_GSTS,  M_GDIR),
     E1(0x60, CF_10, TEXT_NEGW,  M_GMEM),
     E1(0x61, CF_10, TEXT_COMW,  M_GMEM),
     E1(0x62, CF_10, TEXT_INCW,  M_GMEM),
@@ -678,12 +680,18 @@ constexpr Entry MC68HCS12X_P18[] PROGMEM = {
     E1(0x68, CF_10, TEXT_ASLW,  M_GMEM),
     E1(0x68, CF_10, TEXT_LSLW,  M_GMEM),
     E1(0x69, CF_10, TEXT_CLRW,  M_GMEM),
-    E1(0x6A, CF_10, TEXT_GSTAA, M_GMEM),
-    E1(0x6B, CF_10, TEXT_GSTAB, M_GMEM),
-    E1(0x6C, CF_10, TEXT_GSTD,  M_GMEM),
-    E1(0x6D, CF_10, TEXT_GSTY,  M_GMEM),
-    E1(0x6E, CF_10, TEXT_GSTX,  M_GMEM),
-    E1(0x6F, CF_10, TEXT_GSTS,  M_GMEM),
+    E1(0x6A, CF_00, TEXT_GSTAA, M_IDX),
+    E1(0x6B, CF_00, TEXT_GSTAB, M_IDX),
+    E1(0x6C, CF_00, TEXT_GSTD,  M_IDX),
+    E1(0x6D, CF_00, TEXT_GSTY,  M_IDX),
+    E1(0x6E, CF_00, TEXT_GSTX,  M_IDX),
+    E1(0x6F, CF_00, TEXT_GSTS,  M_IDX),
+    E1(0x7A, CF_00, TEXT_GSTAA, M_GEXT),
+    E1(0x7B, CF_00, TEXT_GSTAB, M_GEXT),
+    E1(0x7C, CF_00, TEXT_GSTD,  M_GEXT),
+    E1(0x7D, CF_00, TEXT_GSTY,  M_GEXT),
+    E1(0x7E, CF_00, TEXT_GSTX,  M_GEXT),
+    E1(0x7F, CF_00, TEXT_GSTS,  M_GEXT),
     E1(0x80, CF_30, TEXT_SUBX,  M_GN16),
     E1(0x82, CF_30, TEXT_SBEX,  M_GN16),
     E1(0x83, CF_30, TEXT_SBED,  M_GN16),
@@ -698,11 +706,11 @@ constexpr Entry MC68HCS12X_P18[] PROGMEM = {
     E1(0x8E, CF_30, TEXT_CPEX,  M_GN16),
     E1(0x8F, CF_30, TEXT_CPES,  M_GN16),
     E0(0x87, CF_00, TEXT_CLRX),
-    E1(0x96, CF_00, TEXT_GLDAA, M_DIR),
+    E1(0x96, CF_00, TEXT_GLDAA, M_GDIR),
     E0(0x97, CF_00, TEXT_TSTX),
     E1(0xA6, CF_00, TEXT_GLDAA, M_IDX),
     E0(0xA7, CF_00, TEXT_SYS),
-    E1(0xB6, CF_00, TEXT_GLDAA, M_EXT),
+    E1(0xB6, CF_00, TEXT_GLDAA, M_GEXT),
     E1(0xC0, CF_30, TEXT_SUBY,  M_GN16),
     E1(0xC2, CF_30, TEXT_SBEY,  M_GN16),
     E1(0xC3, CF_30, TEXT_ADED,  M_GN16),
@@ -713,89 +721,95 @@ constexpr Entry MC68HCS12X_P18[] PROGMEM = {
     E1(0xCA, CF_30, TEXT_ORY,   M_GN16),
     E1(0xCB, CF_30, TEXT_ADDY,  M_GN16),
     E0(0xC7, CF_00, TEXT_CLRY),
-    E1(0xD6, CF_00, TEXT_GLDAB, M_DIR),
+    E1(0xD6, CF_00, TEXT_GLDAB, M_GDIR),
     E0(0xD7, CF_00, TEXT_TSTY),
-    E1(0xDC, CF_00, TEXT_GLDD,  M_DIR),
-    E1(0xDD, CF_00, TEXT_GLDY,  M_DIR),
-    E1(0xDE, CF_00, TEXT_GLDX,  M_DIR),
-    E1(0xDF, CF_00, TEXT_GLDS,  M_DIR),
+    E1(0xDC, CF_00, TEXT_GLDD,  M_GDIR),
+    E1(0xDD, CF_00, TEXT_GLDY,  M_GDIR),
+    E1(0xDE, CF_00, TEXT_GLDX,  M_GDIR),
+    E1(0xDF, CF_00, TEXT_GLDS,  M_GDIR),
     E1(0xE6, CF_00, TEXT_GLDAB, M_IDX),
     E1(0xE7, CF_10, TEXT_TSTW,  M_GMEM),
     E1(0xEC, CF_00, TEXT_GLDD,  M_IDX),
     E1(0xED, CF_00, TEXT_GLDY,  M_IDX),
     E1(0xEE, CF_00, TEXT_GLDX,  M_IDX),
     E1(0xEF, CF_00, TEXT_GLDS,  M_IDX),
-    E1(0xF6, CF_00, TEXT_GLDAB, M_EXT),
-    E1(0xFC, CF_00, TEXT_GLDD,  M_EXT),
-    E1(0xFD, CF_00, TEXT_GLDY,  M_EXT),
-    E1(0xFE, CF_00, TEXT_GLDX,  M_EXT),
-    E1(0xFF, CF_00, TEXT_GLDS,  M_EXT),
+    E1(0xF6, CF_00, TEXT_GLDAB, M_GEXT),
+    E1(0xFC, CF_00, TEXT_GLDD,  M_GEXT),
+    E1(0xFD, CF_00, TEXT_GLDY,  M_GEXT),
+    E1(0xFE, CF_00, TEXT_GLDX,  M_GEXT),
+    E1(0xFF, CF_00, TEXT_GLDS,  M_GEXT),
 };
 
 constexpr uint8_t MC68HCS12X_I18[] PROGMEM = {
-     64,  // TEXT_ADDX
-     83,  // TEXT_ADDY
-     77,  // TEXT_ADED
-     62,  // TEXT_ADEX
-     81,  // TEXT_ADEY
-     59,  // TEXT_ANDX
-     78,  // TEXT_ANDY
+     70,  // TEXT_ADDX
+     89,  // TEXT_ADDY
+     83,  // TEXT_ADED
+     68,  // TEXT_ADEX
+     87,  // TEXT_ADEY
+     65,  // TEXT_ANDX
+     84,  // TEXT_ANDY
      47,  // TEXT_ASLW
      21,  // TEXT_ASLX
      31,  // TEXT_ASLY
      46,  // TEXT_ASRW
      20,  // TEXT_ASRX
      30,  // TEXT_ASRY
-     60,  // TEXT_BITX
-     79,  // TEXT_BITY
+     66,  // TEXT_BITX
+     85,  // TEXT_BITY
       8,  // TEXT_BTAS
       9,  // TEXT_BTAS
      10,  // TEXT_BTAS
      49,  // TEXT_CLRW
-     69,  // TEXT_CLRX
-     84,  // TEXT_CLRY
+     75,  // TEXT_CLRX
+     90,  // TEXT_CLRY
      40,  // TEXT_COMW
      14,  // TEXT_COMX
      24,  // TEXT_COMY
-     65,  // TEXT_CPED
-     68,  // TEXT_CPES
-     67,  // TEXT_CPEX
-     66,  // TEXT_CPEY
+     71,  // TEXT_CPED
+     74,  // TEXT_CPES
+     73,  // TEXT_CPEX
+     72,  // TEXT_CPEY
      42,  // TEXT_DECW
      16,  // TEXT_DECX
      26,  // TEXT_DECY
-     61,  // TEXT_EORX
-     80,  // TEXT_EORY
-     70,  // TEXT_GLDAA
-     72,  // TEXT_GLDAA
-     74,  // TEXT_GLDAA
-     85,  // TEXT_GLDAB
+     67,  // TEXT_EORX
+     86,  // TEXT_EORY
+     76,  // TEXT_GLDAA
+     78,  // TEXT_GLDAA
+     80,  // TEXT_GLDAA
      91,  // TEXT_GLDAB
      97,  // TEXT_GLDAB
-     87,  // TEXT_GLDD
+    103,  // TEXT_GLDAB
      93,  // TEXT_GLDD
-     98,  // TEXT_GLDD
-     90,  // TEXT_GLDS
+     99,  // TEXT_GLDD
+    104,  // TEXT_GLDD
      96,  // TEXT_GLDS
-    101,  // TEXT_GLDS
-     89,  // TEXT_GLDX
+    102,  // TEXT_GLDS
+    107,  // TEXT_GLDS
      95,  // TEXT_GLDX
-    100,  // TEXT_GLDX
-     88,  // TEXT_GLDY
+    101,  // TEXT_GLDX
+    106,  // TEXT_GLDX
      94,  // TEXT_GLDY
-     99,  // TEXT_GLDY
+    100,  // TEXT_GLDY
+    105,  // TEXT_GLDY
      33,  // TEXT_GSTAA
      50,  // TEXT_GSTAA
+     56,  // TEXT_GSTAA
      34,  // TEXT_GSTAB
      51,  // TEXT_GSTAB
+     57,  // TEXT_GSTAB
      35,  // TEXT_GSTD
      52,  // TEXT_GSTD
+     58,  // TEXT_GSTD
      38,  // TEXT_GSTS
      55,  // TEXT_GSTS
+     61,  // TEXT_GSTS
      37,  // TEXT_GSTX
      54,  // TEXT_GSTX
+     60,  // TEXT_GSTX
      36,  // TEXT_GSTY
      53,  // TEXT_GSTY
+     59,  // TEXT_GSTY
      41,  // TEXT_INCW
      15,  // TEXT_INCX
      25,  // TEXT_INCY
@@ -816,8 +830,8 @@ constexpr uint8_t MC68HCS12X_I18[] PROGMEM = {
      39,  // TEXT_NEGW
      13,  // TEXT_NEGX
      23,  // TEXT_NEGY
-     63,  // TEXT_ORX
-     82,  // TEXT_ORY
+     69,  // TEXT_ORX
+     88,  // TEXT_ORY
      12,  // TEXT_PSHCW
      11,  // TEXT_PULCW
      44,  // TEXT_ROLW
@@ -826,15 +840,15 @@ constexpr uint8_t MC68HCS12X_I18[] PROGMEM = {
      45,  // TEXT_RORW
      19,  // TEXT_RORX
      29,  // TEXT_RORY
-     58,  // TEXT_SBED
-     57,  // TEXT_SBEX
-     76,  // TEXT_SBEY
-     56,  // TEXT_SUBX
-     75,  // TEXT_SUBY
-     73,  // TEXT_SYS
-     92,  // TEXT_TSTW
-     71,  // TEXT_TSTX
-     86,  // TEXT_TSTY
+     64,  // TEXT_SBED
+     63,  // TEXT_SBEX
+     82,  // TEXT_SBEY
+     62,  // TEXT_SUBX
+     81,  // TEXT_SUBY
+     79,  // TEXT_SYS
+     98,  // TEXT_TSTW
+     77,  // TEXT_TSTX
+     92,  // TEXT_TSTY
 };
 // clang-format on
 
@@ -1027,8 +1041,10 @@ bool acceptMode(AddrMode opr, AddrMode table) {
         return opr == M_EXT || opr == M_IDX || opr == M_PAIR;
     if (table == M_IDX || table == M_DIDX || table == M_NIDX || table == M_CIDX)
         return opr == M_IDX || opr == M_PAIR;
-    if (table == M_RL8 || table == M_RL9 || table == M_RL16)
+    if (table == M_RL8 || table == M_RL9 || table == M_RL16 || table == M_GEXT)
         return opr == M_EXT || opr == M_DIR;
+    if (table == M_GDIR)
+        return opr == M_DIR;
     if (opr == M_EXT)
         return table == M_TRAP;
     if (opr == M_DIR)
@@ -1047,6 +1063,8 @@ bool acceptXferPair(AsmInsn &insn, const Entry *entry, AddrMode mode) {
 bool acceptModes(AsmInsn &insn, const Entry *entry) {
     const auto table = entry->readFlags();
     const auto mode1 = table.mode1();
+    if (mode1 == M_FEXT)
+        return insn.pagedModel && insn.op1.mode == M_EXT && insn.op2.mode == M_NONE;
     if (mode1 == M_XPAIR || mode1 == M_XSEX)
         return acceptXferPair(insn, entry, mode1);
     return acceptMode(insn.op1.mode, table.mode1()) && acceptMode(insn.op2.mode, table.mode2()) &&
@@ -1074,6 +1092,214 @@ bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *) {
 Error searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) {
     cpu(cpuType)->searchOpCode(insn, out, matchOpCode);
     return insn.getError();
+}
+
+// A part of the CPU address space; a page window of |reg|, or fixed when |reg| is PAGE_NONE.
+struct MemoryRegion {
+    uint16_t base;
+    uint16_t last;
+    PageReg reg;
+    uint8_t shift;  // page shift in physical address
+    uint32_t phys;  // physical address of |base| on page 0
+
+    uint16_t readBase() const { return pgm_read_word(&base); }
+    uint16_t readLast() const { return pgm_read_word(&last); }
+    PageReg readReg() const { return PageReg(pgm_read_byte(&reg)); }
+    uint8_t readShift() const { return pgm_read_byte(&shift); }
+    uint32_t readPhys() const { return pgm_read_dword(&phys); }
+};
+
+struct PageRegister {
+    PageReg reg;
+    uint8_t bits;
+};
+
+// clang-format off
+// MC68HC812A4 expansion address ADDR21-ADDR0
+constexpr MemoryRegion MC68HC12_REGIONS[] PROGMEM = {
+    { 0x0000, 0x03FF, PAGE_NONE,   0, 0x3F0000 },
+    { 0x0400, 0x07FF, PAGE_EPAGE, 10, 0x3C0000 },
+    { 0x0800, 0x6FFF, PAGE_NONE,   0, 0x3F0800 },
+    { 0x7000, 0x7FFF, PAGE_DPAGE, 12, 0x300000 },
+    { 0x8000, 0xBFFF, PAGE_PPAGE, 14, 0x000000 },
+    { 0xC000, 0xFFFF, PAGE_NONE,   0, 0x3FC000 },
+};
+
+constexpr PageRegister MC68HC12_PAGE_REGISTERS[] PROGMEM = {
+    { PAGE_PPAGE, 8 },
+    { PAGE_DPAGE, 8 },
+    { PAGE_EPAGE, 8 },
+};
+
+// Linear address; $4000 and $C000 are fixed to page $3E and $3F
+constexpr MemoryRegion MC68HCS12_REGIONS[] PROGMEM = {
+    { 0x0000, 0x3FFF, PAGE_NONE,   0, 0x000000 },
+    { 0x4000, 0x7FFF, PAGE_NONE,   0, 0x0F8000 },
+    { 0x8000, 0xBFFF, PAGE_PPAGE, 14, 0x000000 },
+    { 0xC000, 0xFFFF, PAGE_NONE,   0, 0x0FC000 },
+};
+
+constexpr PageRegister MC68HCS12_PAGE_REGISTERS[] PROGMEM = {
+    { PAGE_PPAGE, 6 },
+};
+
+// Global address
+constexpr MemoryRegion MC68HCS12X_REGIONS[] PROGMEM = {
+    { 0x0000, 0x07FF, PAGE_NONE,   0, 0x000000 },
+    { 0x0800, 0x0BFF, PAGE_EPAGE, 10, 0x100000 },
+    { 0x0C00, 0x0FFF, PAGE_NONE,   0, 0x13FC00 },
+    { 0x1000, 0x1FFF, PAGE_RPAGE, 12, 0x000000 },
+    { 0x2000, 0x3FFF, PAGE_NONE,   0, 0x0FE000 },
+    { 0x4000, 0x7FFF, PAGE_NONE,   0, 0x7F4000 },
+    { 0x8000, 0xBFFF, PAGE_PPAGE, 14, 0x400000 },
+    { 0xC000, 0xFFFF, PAGE_NONE,   0, 0x7FC000 },
+};
+
+constexpr PageRegister MC68HCS12X_PAGE_REGISTERS[] PROGMEM = {
+    { PAGE_PPAGE,  8 },
+    { PAGE_EPAGE,  8 },
+    { PAGE_RPAGE,  8 },
+    { PAGE_GPAGE,  7 },
+    { PAGE_DIRECT, 8 },
+};
+
+struct CpuPaging {
+    CpuType cpuType;
+    table::Table<MemoryRegion> regions;
+    table::Table<PageRegister> registers;
+};
+
+constexpr CpuPaging CPU_PAGINGS[] PROGMEM = {
+    { MC68HC12,   { ARRAY_RANGE(MC68HC12_REGIONS)   }, { ARRAY_RANGE(MC68HC12_PAGE_REGISTERS)   } },
+    { MC68HCS12,  { ARRAY_RANGE(MC68HCS12_REGIONS)  }, { ARRAY_RANGE(MC68HCS12_PAGE_REGISTERS)  } },
+    { MC68HCS12X, { ARRAY_RANGE(MC68HCS12X_REGIONS) }, { ARRAY_RANGE(MC68HCS12X_PAGE_REGISTERS) } },
+};
+// clang-format on
+
+const CpuPaging *paging(CpuType cpuType) {
+    for (const auto &p : CPU_PAGINGS) {
+        if (CpuType(pgm_read_byte(&p.cpuType)) == cpuType)
+            return &p;
+    }
+    return nullptr;
+}
+
+const MemoryRegion *findRegion(CpuType cpuType, uint16_t addr) {
+    const auto &regions = paging(cpuType)->regions;
+    for (auto r = regions.readHead(); r < regions.readTail(); r++) {
+        if (addr >= r->readBase() && addr <= r->readLast())
+            return r;
+    }
+    return nullptr;
+}
+
+const MemoryRegion *findWindow(CpuType cpuType, uint16_t addr) {
+    const auto *r = findRegion(cpuType, addr);
+    return (r && r->readReg() != PAGE_NONE) ? r : nullptr;
+}
+
+const PageRegister *findRegister(CpuType cpuType, PageReg reg) {
+    const auto &registers = paging(cpuType)->registers;
+    for (auto r = registers.readHead(); r < registers.readTail(); r++) {
+        if (PageReg(pgm_read_byte(&r->reg)) == reg)
+            return r;
+    }
+    return nullptr;
+}
+
+PageReg pageWindow(CpuType cpuType, uint16_t addr) {
+    const auto *w = findWindow(cpuType, addr);
+    return w ? w->readReg() : PAGE_NONE;
+}
+
+uint16_t pageWindowLast(CpuType cpuType, uint16_t addr) {
+    const auto *w = findWindow(cpuType, addr);
+    return w ? w->readLast() : UINT16_MAX;
+}
+
+uint_fast8_t pageRegisterBits(CpuType cpuType, PageReg reg) {
+    const auto *r = findRegister(cpuType, reg);
+    return r ? pgm_read_byte(&r->bits) : 0;
+}
+
+uint32_t toPhysical(CpuType cpuType, uint16_t addr, uint8_t page) {
+    const auto *r = findRegion(cpuType, addr);
+    const auto offset = addr - r->readBase();
+    if (r->readReg() == PAGE_NONE)
+        return r->readPhys() + offset;
+    return r->readPhys() + (static_cast<uint32_t>(page) << r->readShift()) + offset;
+}
+
+namespace {
+
+uint32_t regionSize(const MemoryRegion *r) {
+    return static_cast<uint32_t>(r->readLast() - r->readBase()) + 1;
+}
+
+// Whether physical |addr| is in fixed region |r|; |cpu| is its CPU address.
+bool inFixed(const MemoryRegion *r, uint32_t addr, uint16_t &cpu) {
+    if (r->readReg() != PAGE_NONE || addr < r->readPhys() || addr - r->readPhys() >= regionSize(r))
+        return false;
+    cpu = r->readBase() + (addr - r->readPhys());
+    return true;
+}
+
+// Whether physical |addr| is on a page of window |r|; |cpu| is its CPU address.
+bool inWindow(CpuType cpuType, const MemoryRegion *r, uint32_t addr, uint16_t &cpu, int16_t &page) {
+    const auto reg = r->readReg();
+    if (reg == PAGE_NONE || addr < r->readPhys())
+        return false;
+    const auto offset = addr - r->readPhys();
+    if ((offset >> r->readShift()) >> pageRegisterBits(cpuType, reg))
+        return false;
+    page = offset >> r->readShift();
+    cpu = r->readBase() + (offset & (regionSize(r) - 1));
+    return true;
+}
+
+}  // namespace
+
+bool programPage(CpuType cpuType, uint32_t addr, uint16_t &cpu, int16_t &page) {
+    const auto &regions = paging(cpuType)->regions;
+    for (auto r = regions.readHead(); r < regions.readTail(); r++) {
+        if (r->readReg() == PAGE_PPAGE)
+            return inWindow(cpuType, r, addr, cpu, page);
+    }
+    return false;
+}
+
+bool programAddress(CpuType cpuType, uint32_t addr, uint16_t &cpu, int16_t &page) {
+    const auto &regions = paging(cpuType)->regions;
+    for (auto r = regions.readHead(); r < regions.readTail(); r++) {
+        if (inFixed(r, addr, cpu)) {
+            page = -1;
+            return true;
+        }
+    }
+    return programPage(cpuType, addr, cpu, page);
+}
+
+Error cpuAddress(CpuType cpuType, uint32_t addr, const int16_t *pages, uint16_t &cpu) {
+    const auto &regions = paging(cpuType)->regions;
+    for (auto r = regions.readHead(); r < regions.readTail(); r++) {
+        if (inFixed(r, addr, cpu))
+            return OK;
+    }
+    auto found = 0;
+    for (auto r = regions.readHead(); r < regions.readTail(); r++) {
+        uint16_t c;
+        int16_t page;
+        if (!inWindow(cpuType, r, addr, c, page))
+            continue;
+        const auto assumed = pages[r->readReg()];
+        if (assumed >= 0 && assumed != page)
+            continue;
+        cpu = c;
+        found++;
+    }
+    if (found == 0)
+        return OVERFLOW_RANGE;
+    return found == 1 ? OK : OPERAND_NOT_ALLOWED;
 }
 
 bool matchTrapCode(Config::opcode_t &opc, const Entry *entry, const EntryPage *) {

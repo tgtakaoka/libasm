@@ -807,9 +807,13 @@ extern const char TEXT_CC_ULT[] PROGMEM;
 extern const char TEXT_CC_V[]   PROGMEM;
 extern const char TEXT_CC_Z[]   PROGMEM;
 
-extern const char TEXT_FN_ADDR[] PROGMEM;
-extern const char TEXT_FN_H[]    PROGMEM;
-extern const char TEXT_FN_L[]    PROGMEM;
+extern const char TEXT_FN_ADDR[]  PROGMEM;
+extern const char TEXT_FN_H[]     PROGMEM;
+extern const char TEXT_FN_HIGH[]  PROGMEM;
+extern const char TEXT_FN_L[]     PROGMEM;
+extern const char TEXT_FN_LOW16[] PROGMEM;
+extern const char TEXT_FN_LOW[]   PROGMEM;
+extern const char TEXT_FN_PAGE[]  PROGMEM;
 
 extern const char TEXT_ALIGN[]  PROGMEM;
 extern const char TEXT_AORG[]   PROGMEM;

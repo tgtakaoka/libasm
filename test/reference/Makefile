@@ -60,10 +60,12 @@ clean-asm:
 # forms) and no LDRS/LDRE/SETRC (10 forms).  Everything it does assemble is
 # byte-identical.  See ~/asl_bugs/asl_bug_superh.md; both .asl wrappers are kept
 # and the checks can come back once ASL is fixed.
+# test_mc68hc12_mmc, test_mc68hcs12_mmc, test_mc68hcs12x_mmc: ASL has no logical
+# page:address.
 ASL_exclude = test_i80286 test_i80386 test_real_i80386 test_i80486 test_real_i80486 \
    test_tms320c31 test_tms320c32 test_i960 \
    test_h8s2000 test_h8s2000n test_h8s2600 test_h8s2600n test_shdsp test_sh2a \
-   test_am29050
+   test_am29050 test_mc68hc12_mmc test_mc68hcs12_mmc test_mc68hcs12x_mmc
 ASL_TESTS = $(foreach a,$(ASM_TESTS) \
    $(foreach t,$(patsubst %.asl,%,$(wildcard test_*.asl)),$(if $(filter $(t),$(ASM_TESTS)),,$(t))),\
    $(if $(filter $(a),$(ASL_exclude)),,$(a)))

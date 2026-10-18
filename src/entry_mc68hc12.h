@@ -51,8 +51,11 @@ enum AddrMode : uint8_t {
     M_R16H = 19,  // 16-bit Register: D=0, X=1, Y=2, SP=3
     M_TRAP = 20,  // TRAP number
     M_PAIR = 21,  // Register pair: index,base
-    M_XPAIR = 22, // MC68HCS12X TFR/EXG register pair
-    M_XSEX = 23,  // MC68HCS12X SEX register pair
+    M_FEXT = 22,  // Logical page:address of CALL
+    M_XPAIR = 23, // MC68HCS12X TFR/EXG register pair
+    M_XSEX = 24,  // MC68HCS12X SEX register pair
+    M_GDIR = 25,  // MC68HCS12X global direct page
+    M_GEXT = 26,  // MC68HCS12X global extended
 };
 
 enum CodeFormat : uint8_t {

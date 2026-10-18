@@ -27,7 +27,23 @@ namespace mc68hc12 {
 struct AsmMc68HC12 final : Assembler, Config {
     AsmMc68HC12(const ValueParser::Plugins &plugins = defaultPlugins());
 
+    void reset() override;
+
 private:
+    const BoolOption<Config> _opt_mmc;
+    int16_t _page[PAGE_NONE];
+
+    Error processPseudo(StrScanner &scan, Insn &insn) override;
+    Error processPage(StrScanner &scan, Insn &insn, PageReg reg);
+    uint8_t directPage() const;
+    uint16_t cpuAddress(const AsmInsn &insn, ErrorAt &error, const ErrorAt &at, uint32_t addr) const;
+    uint16_t encodeAddress(AsmInsn &insn, const Operand &op) const;
+    bool inDirectPage(const Value &val) const;
+    uint8_t encodeDirect(AsmInsn &insn, const Operand &op) const;
+    uint16_t encodeGlobal(AsmInsn &insn, const Operand &op) const;
+    int32_t branchDelta16(const AsmInsn &insn, uint32_t base, uint32_t target, ErrorAt &error,
+            const ErrorAt &at) const;
+
     Error parseOperand(StrScanner &scan, Operand &op) const;
 
     Config::ptrdiff_t calculateDisplacement(AsmInsn &insn, const Operand &op, AddrMode mode) const;
@@ -36,8 +52,6 @@ private:
     void encodeAccumIndexed(AsmInsn &insn, const Operand &op, AddrMode mode) const;
     void encodeIndexed(AsmInsn &insn, const Operand &op, AddrMode mode) const;
     void encodeRegisterPair(AsmInsn &insn, const Operand &op) const;
-    uint16_t encodeAddress(AsmInsn &insn, const Operand &op) const;
-    uint8_t encodeDirect(AsmInsn &insn, const Operand &op) const;
     void encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode) const;
 
     Error encodeImpl(StrScanner &scan, Insn &insn) const override;

@@ -28,9 +28,36 @@ enum CpuType : uint8_t {
     MC68HCS12X,
 };
 
+enum PageReg : uint8_t {
+    PAGE_PPAGE,
+    PAGE_DPAGE,
+    PAGE_EPAGE,
+    PAGE_RPAGE,
+    PAGE_GPAGE,
+    PAGE_DIRECT,
+    PAGE_NONE,
+};
+
 struct Config
-    : public ConfigImpl<CpuType, ADDRESS_16BIT, ADDRESS_BYTE, OPCODE_8BIT, ENDIAN_BIG, 8, 5> {
-    Config(const InsnTable<CpuType> &table) : ConfigImpl(table, MC68HC12) {}
+    : public ConfigImpl<CpuType, ADDRESS_24BIT, ADDRESS_BYTE, OPCODE_8BIT, ENDIAN_BIG, 8, 5> {
+    Config(const InsnTable<CpuType> &table) : ConfigImpl(table, MC68HC12), _pagedModel(false) {}
+
+    /**
+     * With the memory map controller, an address is a logical page:address, the page in bits
+     * 23-16 and the CPU address in bits 15-0.
+     */
+    AddressWidth addressWidth() const override {
+        return _pagedModel ? ADDRESS_24BIT : ADDRESS_16BIT;
+    }
+
+    bool pagedModel() const { return _pagedModel; }
+    Error setPagedModel(bool enable) {
+        _pagedModel = enable;
+        return OK;
+    }
+
+private:
+    bool _pagedModel;
 };
 
 }  // namespace mc68hc12
