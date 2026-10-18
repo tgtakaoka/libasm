@@ -35,6 +35,12 @@ bool hasOperand(CpuType, AsmInsn &insn);
 Error searchName(CpuType, AsmInsn &insn);
 Error searchOpCode(CpuType, DisInsn &insn, StrBuffer &out);
 bool isPrefix(CpuType, Config::opcode_t code);
+/** Encode MC68HCS12X transfer/exchange postbyte of |src|,|dst| into |opc| */
+bool encodeXferPair(AddrMode mode, Config::opcode_t &opc, RegName src, RegName dst);
+/** Decode MC68HCS12X transfer/exchange postbyte |opc| */
+bool decodeXferPair(AddrMode mode, Config::opcode_t opc, RegName &src, RegName &dst);
+/** Whether page 2 code |opc| is an unimplemented opcode trap */
+bool isTrapCode(CpuType, Config::opcode_t opc);
 
 }  // namespace mc68hc12
 }  // namespace libasm

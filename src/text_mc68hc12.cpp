@@ -21,9 +21,11 @@ namespace text {
 namespace mc68hc12 {
 // clang-format off
 
-constexpr char TEXT_MC68HC12_LIST[] PROGMEM = "MC68HC12, MC68HCS12";
+constexpr char TEXT_MC68HC12_LIST[] PROGMEM = "MC68HC12, MC68HCS12, MC68HCS12X";
 constexpr char TEXT_CPU_68HC12[]     PROGMEM = "68HC12";
+constexpr char TEXT_CPU_68HC12X[]    PROGMEM = "68HC12X";
 constexpr char TEXT_CPU_68HCS12[]    PROGMEM = "68HCS12";
+constexpr char TEXT_CPU_68HCS12X[]   PROGMEM = "68HCS12X";
 
 // MC68HC12
 // constexpr char TEXT_ABA[]   PROGMEM = "ABA";
@@ -230,15 +232,100 @@ constexpr char TEXT_WAV[]   PROGMEM = "WAV";
 // constexpr char TEXT_XGDX[]  PROGMEM = "XGDX";
 // constexpr char TEXT_XGDY[]  PROGMEM = "XGDY";
 
+// MC68HCS12X
+// constexpr char TEXT_ADDX[]  PROGMEM = "ADDX";
+constexpr char TEXT_ADDY[]  PROGMEM = "ADDY";
+constexpr char TEXT_ADED[]  PROGMEM = "ADED";
+constexpr char TEXT_ADEX[]  PROGMEM = "ADEX";
+constexpr char TEXT_ADEY[]  PROGMEM = "ADEY";
+constexpr char TEXT_ANDX[]  PROGMEM = "ANDX";
+constexpr char TEXT_ANDY[]  PROGMEM = "ANDY";
+// constexpr char TEXT_ASLW[]  PROGMEM = "ASLW";
+// constexpr char TEXT_ASLX[]  PROGMEM = "ASLX";
+constexpr char TEXT_ASLY[]  PROGMEM = "ASLY";
+// constexpr char TEXT_ASRW[]  PROGMEM = "ASRW";
+// constexpr char TEXT_ASRX[]  PROGMEM = "ASRX";
+constexpr char TEXT_ASRY[]  PROGMEM = "ASRY";
+constexpr char TEXT_BITX[]  PROGMEM = "BITX";
+constexpr char TEXT_BITY[]  PROGMEM = "BITY";
+constexpr char TEXT_BTAS[]  PROGMEM = "BTAS";
+// constexpr char TEXT_CLRW[]  PROGMEM = "CLRW";
+// constexpr char TEXT_CLRX[]  PROGMEM = "CLRX";
+constexpr char TEXT_CLRY[]  PROGMEM = "CLRY";
+// constexpr char TEXT_COMW[]  PROGMEM = "COMW";
+// constexpr char TEXT_COMX[]  PROGMEM = "COMX";
+constexpr char TEXT_COMY[]  PROGMEM = "COMY";
+constexpr char TEXT_CPED[]  PROGMEM = "CPED";
+constexpr char TEXT_CPES[]  PROGMEM = "CPES";
+constexpr char TEXT_CPEX[]  PROGMEM = "CPEX";
+constexpr char TEXT_CPEY[]  PROGMEM = "CPEY";
+// constexpr char TEXT_DECW[]  PROGMEM = "DECW";
+// constexpr char TEXT_DECX[]  PROGMEM = "DECX";
+constexpr char TEXT_DECY[]  PROGMEM = "DECY";
+constexpr char TEXT_EORX[]  PROGMEM = "EORX";
+constexpr char TEXT_EORY[]  PROGMEM = "EORY";
+constexpr char TEXT_GLDAA[] PROGMEM = "GLDAA";
+constexpr char TEXT_GLDAB[] PROGMEM = "GLDAB";
+constexpr char TEXT_GLDD[]  PROGMEM = "GLDD";
+constexpr char TEXT_GLDS[]  PROGMEM = "GLDS";
+constexpr char TEXT_GLDX[]  PROGMEM = "GLDX";
+constexpr char TEXT_GLDY[]  PROGMEM = "GLDY";
+constexpr char TEXT_GSTAA[] PROGMEM = "GSTAA";
+constexpr char TEXT_GSTAB[] PROGMEM = "GSTAB";
+constexpr char TEXT_GSTD[]  PROGMEM = "GSTD";
+constexpr char TEXT_GSTS[]  PROGMEM = "GSTS";
+constexpr char TEXT_GSTX[]  PROGMEM = "GSTX";
+constexpr char TEXT_GSTY[]  PROGMEM = "GSTY";
+// constexpr char TEXT_INCW[]  PROGMEM = "INCW";
+// constexpr char TEXT_INCX[]  PROGMEM = "INCX";
+constexpr char TEXT_INCY[]  PROGMEM = "INCY";
+// constexpr char TEXT_LSLW[]  PROGMEM = "LSLW";
+// constexpr char TEXT_LSLX[]  PROGMEM = "LSLX";
+constexpr char TEXT_LSLY[]  PROGMEM = "LSLY";
+// constexpr char TEXT_LSRW[]  PROGMEM = "LSRW";
+// constexpr char TEXT_LSRX[]  PROGMEM = "LSRX";
+constexpr char TEXT_LSRY[]  PROGMEM = "LSRY";
+// constexpr char TEXT_NEGW[]  PROGMEM = "NEGW";
+// constexpr char TEXT_NEGX[]  PROGMEM = "NEGX";
+constexpr char TEXT_NEGY[]  PROGMEM = "NEGY";
+constexpr char TEXT_ORX[]   PROGMEM = "ORX";
+constexpr char TEXT_ORY[]   PROGMEM = "ORY";
+constexpr char TEXT_PSHCW[] PROGMEM = "PSHCW";
+constexpr char TEXT_PULCW[] PROGMEM = "PULCW";
+// constexpr char TEXT_ROLW[]  PROGMEM = "ROLW";
+// constexpr char TEXT_ROLX[]  PROGMEM = "ROLX";
+constexpr char TEXT_ROLY[]  PROGMEM = "ROLY";
+// constexpr char TEXT_RORW[]  PROGMEM = "RORW";
+// constexpr char TEXT_RORX[]  PROGMEM = "RORX";
+constexpr char TEXT_RORY[]  PROGMEM = "RORY";
+constexpr char TEXT_SBED[]  PROGMEM = "SBED";
+constexpr char TEXT_SBEX[]  PROGMEM = "SBEX";
+constexpr char TEXT_SBEY[]  PROGMEM = "SBEY";
+// constexpr char TEXT_SUBX[]  PROGMEM = "SUBX";
+constexpr char TEXT_SUBY[]  PROGMEM = "SUBY";
+constexpr char TEXT_SYS[]   PROGMEM = "SYS";
+// constexpr char TEXT_TSTW[]  PROGMEM = "TSTW";
+// constexpr char TEXT_TSTX[]  PROGMEM = "TSTX";
+constexpr char TEXT_TSTY[]  PROGMEM = "TSTY";
+
 // constexpr char TEXT_REG_A[]   PROGMEM = "REG_A";
 // constexpr char TEXT_REG_B[]   PROGMEM = "REG_B";
 // constexpr char TEXT_REG_CCR[] PROGMEM = "REG_CCR";
+constexpr char TEXT_REG_CCRH[] PROGMEM = "CCRH";
+constexpr char TEXT_REG_CCRL[] PROGMEM = "CCRL";
+constexpr char TEXT_REG_CCRW[] PROGMEM = "CCRW";
 // constexpr char TEXT_REG_D[]   PROGMEM = "REG_D";
 // constexpr char TEXT_REG_PC[]  PROGMEM = "REG_PC";
 // constexpr char TEXT_REG_PCR[] PROGMEM = "REG_PCR";
 // constexpr char TEXT_REG_SP[]  PROGMEM = "REG_SP";
+// constexpr char TEXT_REG_SPH[] PROGMEM = "SPH";
+// constexpr char TEXT_REG_SPL[] PROGMEM = "SPL";
 // constexpr char TEXT_REG_X[]   PROGMEM = "REG_X";
+constexpr char TEXT_REG_XH[]   PROGMEM = "XH";
+constexpr char TEXT_REG_XL[]   PROGMEM = "XL";
 // constexpr char TEXT_REG_Y[]   PROGMEM = "REG_Y";
+constexpr char TEXT_REG_YH[]   PROGMEM = "YH";
+constexpr char TEXT_REG_YL[]   PROGMEM = "YL";
 
 // clang-format on
 }  // namespace mc68hc12

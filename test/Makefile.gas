@@ -323,7 +323,7 @@ gas-%_mc68hc12.s19: %_mc68hc12.gas
 	| tr -d '\015' > $(^:.gas=.s19)
 	m6811-elf-objdump -m m68hc12 -D $(^:.gas=.s19) > $(^:.gas=.dis)
 
-# MC68HCS12 target
+# MC68HCS12 and MC68HCS12X targets
 define gas-m68hcs12-rule
 gas-%_$(1).s19: %_$(1).gas
 	m6811-elf-as $(2) --warn -o $$(^:.gas=.p) -al=$$(^:.gas=.lst) $$^
@@ -333,6 +333,7 @@ gas-%_$(1).s19: %_$(1).gas
 	m6811-elf-objdump -m m68hc12 -D $$(^:.gas=.s19) > $$(^:.gas=.dis)
 endef
 $(eval $(call gas-m68hcs12-rule,mc68hcs12,-m68hcs12))
+$(eval $(call gas-m68hcs12-rule,mc68hcs12x,-mm9s12x))
 
 # TMS320C30 target
 gas-%_tms320c30.hex: %_tms320c30.gas

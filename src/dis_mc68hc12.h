@@ -28,7 +28,8 @@ struct DisMc68HC12 final : Disassembler, Config {
     DisMc68HC12(const ValueFormatter::Plugins &plugins = defaultPlugins());
 
 private:
-    void decodeIndexed(DisInsn &insn, StrBuffer &out, Config::opcode_t post, AddrMode mode) const;
+    void decodeIndexed(DisInsn &insn, StrBuffer &out, Config::opcode_t post, int16_t disp,
+            AddrMode mode) const;
     void decodeDirectPage(DisInsn &insn, StrBuffer &out) const;
     void decodeExtended(DisInsn &insn, StrBuffer &out) const;
     void decodeRelative(DisInsn &insn, StrBuffer &out, AddrMode mode) const;

@@ -33,9 +33,14 @@ DisMc68HC12::DisMc68HC12(const ValueFormatter::Plugins &plugins)
 }
 
 Config::uintptr_t calculatePcRelBase(CpuType cpuType, DisInsn &insn) {
-    if (insn.isMove())
-        return insn.address() + insn.movePcBase(cpuType, insn.pos);
     const auto base = insn.address() + insn.length();
+    if (insn.isMove()) {
+        if (cpuType == MC68HC12)
+            return insn.address() + insn.hc12MovePcBase(insn.pos);
+        if (insn.pos == 2 && insn.moveDestFirst())
+            return base;  // the source operand has been read
+        return base + insn.moveTrailer(insn.pos);
+    }
     const auto mode2 = insn.mode2();
     if (mode2 == M_IM8 || mode2 == M_PAG) {
         if (insn.mode3() == M_RL8)
@@ -45,8 +50,20 @@ Config::uintptr_t calculatePcRelBase(CpuType cpuType, DisInsn &insn) {
     return base;
 }
 
-void DisMc68HC12::decodeIndexed(
-        DisInsn &insn, StrBuffer &out, Config::opcode_t post, AddrMode type) const {
+int16_t readIndexExt(DisInsn &insn, Config::opcode_t post, AddrMode type) {
+    const auto mode = post & 7;
+    if (post < 0xE0 || mode >= 4 || type == M_NIDX)
+        return 0;
+    if (mode >= 2)
+        return insn.readUint16();
+    int16_t disp = insn.readByte();
+    if (mode == 1)
+        disp |= 0xFF00;
+    return disp;
+}
+
+void DisMc68HC12::decodeIndexed(DisInsn &insn, StrBuffer &out, Config::opcode_t post,
+        int16_t disp, AddrMode type) const {
     if (post < 0xC0) {
         const auto index = decodeRegNum((post >> 6) + 5);
         if ((post & 0x20) == 0) {
@@ -86,9 +103,6 @@ void DisMc68HC12::decodeIndexed(
             if (type == M_NIDX) {
                 insn.setErrorIf(out, OPERAND_NOT_ALLOWED);
             } else {
-                int16_t disp = (mode < 2) ? insn.readByte() : insn.readUint16();
-                if (mode == 1)
-                    disp |= 0xFF00;
                 if (index == REG_PC && !_gnuAs) {
                     const auto base = calculatePcRelBase(cpuType(), insn);
                     const auto target = base + disp;
@@ -187,14 +201,15 @@ void DisMc68HC12::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) co
     case M_DIDX:
     case M_NIDX:
     idx:
-        if (insn.moveDestIndex()) {
-            decodeIndexed(insn, out, insn.post, mode);
+        if (insn.pos == 2 && insn.moveDestFirst()) {
+            decodeIndexed(insn, out, insn.post, insn.postExt, mode);
         } else {
-            decodeIndexed(insn, out, insn.readByte(), mode);
+            const auto post = insn.readByte();
+            decodeIndexed(insn, out, post, readIndexExt(insn, post, mode), mode);
         }
         break;
     case M_CIDX:
-        decodeIndexed(insn, out, insn.opCode(), mode);
+        decodeIndexed(insn, out, opc, readIndexExt(insn, opc, mode), mode);
         break;
     case M_RL8:
     case M_RL9:
@@ -238,6 +253,13 @@ void DisMc68HC12::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) co
             insn.setErrorIf(out, ILLEGAL_REGISTER);
         outRegName(out, decodeRegNum(opc));
         break;
+    case M_XPAIR:
+    case M_XSEX: {
+        RegName src, dst;
+        decodeXferPair(mode, opc, src, dst);
+        outRegName(outRegName(out, src).comma(), dst);
+        break;
+    }
     case M_TRAP:
         if (_gnuAs)
             out.letter('#');
@@ -261,9 +283,10 @@ Error DisMc68HC12::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) co
     if (searchOpCode(cpuType(), insn, out))
         return _insn.setError(insn);
 
-    if (insn.moveDestIndex()) {
+    if (insn.moveDestFirst()) {
         // Special index post byte order for MOVW/MOVB
         insn.post = insn.readByte();
+        insn.postExt = readIndexExt(insn, insn.post, insn.mode2());
     }
     insn.pos = 1;
     decodeOperand(insn, out, insn.mode1());

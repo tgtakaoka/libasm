@@ -25,10 +25,11 @@ namespace mc68hc12 {
 enum CpuType : uint8_t {
     MC68HC12,
     MC68HCS12,
+    MC68HCS12X,
 };
 
 struct Config
-    : public ConfigImpl<CpuType, ADDRESS_16BIT, ADDRESS_BYTE, OPCODE_8BIT, ENDIAN_BIG, 6, 5> {
+    : public ConfigImpl<CpuType, ADDRESS_16BIT, ADDRESS_BYTE, OPCODE_8BIT, ENDIAN_BIG, 8, 5> {
     Config(const InsnTable<CpuType> &table) : ConfigImpl(table, MC68HC12) {}
 };
 
