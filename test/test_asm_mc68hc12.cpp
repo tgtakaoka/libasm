@@ -84,6 +84,11 @@ void test_load() {
     ERRT("LEAY [D,Y]",  OPERAND_NOT_ALLOWED, "[D,Y]",  0x19, 0xEF);
     ERRT("LEAY [D,SP]", OPERAND_NOT_ALLOWED, "[D,SP]", 0x19, 0xF7);
     ERRT("LEAY [D,PC]", OPERAND_NOT_ALLOWED, "[D,PC]", 0x19, 0xFF);
+
+    ERRT("LDAA $12345", OVERFLOW_RANGE, "$12345",  0xB6, 0x23, 0x45);
+    ERRT("LDAA <$1234", OVERFLOW_RANGE, "<$1234",  0x96, 0x34);
+    ERRT("LDAA #$123",  OVERFLOW_RANGE, "#$123",   0x86, 0x23);
+    ERRT("LDX #$12345", OVERFLOW_RANGE, "#$12345", 0xCE, 0x23, 0x45);
 }
 
 void test_store() {

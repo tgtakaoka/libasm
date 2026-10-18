@@ -89,6 +89,7 @@
       JMP   D,PC
       JMP   [D,PC]
       JMP   $0708
+      JMP   >$0001
       BSR   *+10
       INX
       DEX
@@ -109,7 +110,7 @@
       BSET  8,-SP, #$A9
       BSET  1,SP+, #$B1
       BSET  8,SP-, #$B9
-      BSET  $021C,PC, #$C1
+      BSET  $021F,PC, #$C1
       BSET  $E1,X, #$E2
       BSET  $E3E4,X, #$E5
       BSET  A,X, #$E5
@@ -125,10 +126,10 @@
       BSET  A,SP, #$F5
       BSET  B,SP, #$F6
       BSET  D,SP, #$F7
-      BSET  $034F,PC, #$FA
-      BSET  <$025A,PC, #1
-      BSET  $FE5B,PC, #$FD
-      BSET  >$0164,PC, #1
+      BSET  $0352,PC, #$FA
+      BSET  <$025D,PC, #1
+      BSET  $FE5E,PC, #$FD
+      BSET  >$0167,PC, #1
       BSET  A,PC, #$FD
       BSET  B,PC, #$FE
       BSET  D,PC, #$FF
@@ -147,7 +148,7 @@
       BCLR  8,-SP, #$A9
       BCLR  1,SP+, #$B1
       BCLR  8,SP-, #$B9
-      BCLR  $029D,PC, #$C1
+      BCLR  $02A0,PC, #$C1
       BCLR  $E1,X, #$E2
       BCLR  $E3E4,X, #$E5
       BCLR  A,X, #$E5
@@ -163,10 +164,10 @@
       BCLR  A,SP, #$F5
       BCLR  B,SP, #$F6
       BCLR  D,SP, #$F7
-      BCLR  $03D0,PC, #$FA
-      BCLR  <$02DB,PC, #1
-      BCLR  $FEDC,PC, #$FD
-      BCLR  >$01E5,PC, #1
+      BCLR  $03D3,PC, #$FA
+      BCLR  <$02DE,PC, #1
+      BCLR  $FEDF,PC, #$FD
+      BCLR  >$01E8,PC, #1
       BCLR  A,PC, #$FD
       BCLR  B,PC, #$FE
       BCLR  D,PC, #$FF
@@ -185,7 +186,7 @@
       BRSET 8,-SP, #$A9, *-82
       BRSET 1,SP+, #$B1, *-74
       BRSET 8,SP-, #$B9, *-66
-      BRSET $032E,PC, #$C1, *-58
+      BRSET $0331,PC, #$C1, *-58
       BRSET $E1,X, #$E2, *-24
       BRSET $E3E4,X, #$E5, *-20
       BRSET A,X, #$E5, *-22
@@ -201,10 +202,10 @@
       BRSET A,SP, #$F5, *-6
       BRSET B,SP, #$F6, *-5
       BRSET D,SP, #$F7, *-4
-      BRSET $0471,PC, #$FA, *
-      BRSET <$037D,PC, #1, *+7
-      BRSET $FF7F,PC, #$FD, *+4
-      BRSET >$0289,PC, #1, *+8
+      BRSET $0474,PC, #$FA, *
+      BRSET <$0380,PC, #1, *+7
+      BRSET $FF82,PC, #$FD, *+4
+      BRSET >$028C,PC, #1, *+8
       BRSET A,PC, #$FD, *+2
       BRSET B,PC, #$FE, *+3
       BRSET D,PC, #$FF, *+4
@@ -223,7 +224,7 @@
       BRCLR 8,-SP, #$A9, *-82
       BRCLR 1,SP+, #$B1, *-74
       BRCLR 8,SP-, #$B9, *-66
-      BRCLR $03D5,PC, #$C1, *-58
+      BRCLR $03D8,PC, #$C1, *-58
       BRCLR $E1,X, #$E2, *-24
       BRCLR $E3E4,X, #$E5, *-20
       BRCLR A,X, #$E5, *-22
@@ -239,10 +240,10 @@
       BRCLR A,SP, #$F5, *-6
       BRCLR B,SP, #$F6, *-5
       BRCLR D,SP, #$F7, *-4
-      BRCLR $0518,PC, #$FA, *
-      BRCLR <$0424,PC, #1, *+7
-      BRCLR $0026,PC, #$FD, *+4
-      BRCLR >$0330,PC, #1, *+8
+      BRCLR $051B,PC, #$FA, *
+      BRCLR <$0427,PC, #1, *+7
+      BRCLR $0029,PC, #$FD, *+4
+      BRCLR >$0333,PC, #1, *+8
       BRCLR A,PC, #$FD, *+2
       BRCLR B,PC, #$FE, *+3
       BRCLR D,PC, #$FF, *+4
@@ -266,7 +267,7 @@
       JSR   8,-SP
       JSR   1,SP+
       JSR   8,SP-
-      JSR   $0463,PC
+      JSR   $0466,PC
       JSR   $E1,X
       JSR   $E3E4,X
       JSR   [$E4E5,X]
@@ -288,16 +289,17 @@
       JSR   B,SP
       JSR   D,SP
       JSR   [D,SP]
-      JSR   $0598,PC
-      JSR   <$04A2,PC
-      JSR   $00A2,PC
-      JSR   >$03AA,PC
-      JSR   [$01AB,PC]
+      JSR   $059B,PC
+      JSR   <$04A5,PC
+      JSR   $00A5,PC
+      JSR   >$03AD,PC
+      JSR   [$01AE,PC]
       JSR   A,PC
       JSR   B,PC
       JSR   D,PC
       JSR   [D,PC]
       JSR   $1718
+      JSR   >$0001
       JSR   $18
       MINA  -6,X
       MINA  1,+X
@@ -314,7 +316,7 @@
       MINA  8,-SP
       MINA  1,SP+
       MINA  8,SP-
-      MINA  $04EB,PC
+      MINA  $04F1,PC
       MINA  $E1,X
       MINA  $E3E4,X
       MINA  [$E4E5,X]
@@ -336,11 +338,11 @@
       MINA  B,SP
       MINA  D,SP
       MINA  [D,SP]
-      MINA  $0636,PC
-      MINA  <$0541,PC
-      MINA  $0142,PC
-      MINA  >$044B,PC
-      MINA  [$024D,PC]
+      MINA  $063C,PC
+      MINA  <$0547,PC
+      MINA  $0148,PC
+      MINA  >$0451,PC
+      MINA  [$0253,PC]
       MINA  A,PC
       MINA  B,PC
       MINA  D,PC
@@ -360,7 +362,7 @@
       EMAXD 8,-SP
       EMAXD 1,SP+
       EMAXD 8,SP-
-      EMAXD $058C,PC
+      EMAXD $0592,PC
       EMAXD $E1,X
       EMAXD $E3E4,X
       EMAXD [$E4E5,X]
@@ -382,11 +384,11 @@
       EMAXD B,SP
       EMAXD D,SP
       EMAXD [D,SP]
-      EMAXD $06D7,PC
-      EMAXD <$05E2,PC
-      EMAXD $01E3,PC
-      EMAXD >$04EC,PC
-      EMAXD [$02EE,PC]
+      EMAXD $06DD,PC
+      EMAXD <$05E8,PC
+      EMAXD $01E9,PC
+      EMAXD >$04F2,PC
+      EMAXD [$02F4,PC]
       EMAXD A,PC
       EMAXD B,PC
       EMAXD D,PC
@@ -406,7 +408,7 @@
       EMIND 8,-SP
       EMIND 1,SP+
       EMIND 8,SP-
-      EMIND $062D,PC
+      EMIND $0633,PC
       EMIND $E1,X
       EMIND $E3E4,X
       EMIND [$E4E5,X]
@@ -428,11 +430,11 @@
       EMIND B,SP
       EMIND D,SP
       EMIND [D,SP]
-      EMIND $0778,PC
-      EMIND <$0683,PC
-      EMIND $0284,PC
-      EMIND >$058D,PC
-      EMIND [$038F,PC]
+      EMIND $077E,PC
+      EMIND <$0689,PC
+      EMIND $028A,PC
+      EMIND >$0593,PC
+      EMIND [$0395,PC]
       EMIND A,PC
       EMIND B,PC
       EMIND D,PC
@@ -452,7 +454,7 @@
       MAXM  8,-SP
       MAXM  1,SP+
       MAXM  8,SP-
-      MAXM  $06CE,PC
+      MAXM  $06D4,PC
       MAXM  $E1,X
       MAXM  $E3E4,X
       MAXM  [$E4E5,X]
@@ -474,11 +476,11 @@
       MAXM  B,SP
       MAXM  D,SP
       MAXM  [D,SP]
-      MAXM  $0819,PC
-      MAXM  <$0724,PC
-      MAXM  $0325,PC
-      MAXM  >$062E,PC
-      MAXM  [$0430,PC]
+      MAXM  $081F,PC
+      MAXM  <$072A,PC
+      MAXM  $032B,PC
+      MAXM  >$0634,PC
+      MAXM  [$0436,PC]
       MAXM  A,PC
       MAXM  B,PC
       MAXM  D,PC
@@ -498,7 +500,7 @@
       MINM  8,-SP
       MINM  1,SP+
       MINM  8,SP-
-      MINM  $076F,PC
+      MINM  $0775,PC
       MINM  $E1,X
       MINM  $E3E4,X
       MINM  [$E4E5,X]
@@ -520,11 +522,11 @@
       MINM  B,SP
       MINM  D,SP
       MINM  [D,SP]
-      MINM  $08BA,PC
-      MINM  <$07C5,PC
-      MINM  $03C6,PC
-      MINM  >$06CF,PC
-      MINM  [$04D1,PC]
+      MINM  $08C0,PC
+      MINM  <$07CB,PC
+      MINM  $03CC,PC
+      MINM  >$06D5,PC
+      MINM  [$04D7,PC]
       MINM  A,PC
       MINM  B,PC
       MINM  D,PC
@@ -544,7 +546,7 @@
       EMAXM 8,-SP
       EMAXM 1,SP+
       EMAXM 8,SP-
-      EMAXM $0810,PC
+      EMAXM $0816,PC
       EMAXM $E1,X
       EMAXM $E3E4,X
       EMAXM [$E4E5,X]
@@ -566,11 +568,11 @@
       EMAXM B,SP
       EMAXM D,SP
       EMAXM [D,SP]
-      EMAXM $095B,PC
-      EMAXM <$0866,PC
-      EMAXM $0467,PC
-      EMAXM >$0770,PC
-      EMAXM [$0572,PC]
+      EMAXM $0961,PC
+      EMAXM <$086C,PC
+      EMAXM $046D,PC
+      EMAXM >$0776,PC
+      EMAXM [$0578,PC]
       EMAXM A,PC
       EMAXM B,PC
       EMAXM D,PC
@@ -589,7 +591,7 @@
       EMINM 8,-SP
       EMINM 1,SP+
       EMINM 8,SP-
-      EMINM $08AE,PC
+      EMINM $08B4,PC
       EMINM $E1,X
       EMINM $E3E4,X
       EMINM [$E4E5,X]
@@ -611,11 +613,11 @@
       EMINM B,SP
       EMINM D,SP
       EMINM [D,SP]
-      EMINM $09F9,PC
-      EMINM <$0904,PC
-      EMINM $0505,PC
-      EMINM >$080E,PC
-      EMINM [$0610,PC]
+      EMINM $09FF,PC
+      EMINM <$090A,PC
+      EMINM $050B,PC
+      EMINM >$0814,PC
+      EMINM [$0616,PC]
       EMINM A,PC
       EMINM B,PC
       EMINM D,PC
@@ -652,7 +654,7 @@
       TBL   8,-SP
       TBL   1,SP+
       TBL   8,SP-
-      TBL   $098E,PC
+      TBL   $0994,PC
       TBL   A,X
       TBL   B,X
       TBL   D,X
@@ -680,7 +682,7 @@
       ETBL  8,-SP
       ETBL  1,SP+
       ETBL  8,SP-
-      ETBL  $09E1,PC
+      ETBL  $09E7,PC
       ETBL  A,X
       ETBL  B,X
       ETBL  D,X
@@ -713,7 +715,7 @@
       MOVW  #$A9AA, 8,-SP
       MOVW  #$B1B2, 1,SP+
       MOVW  #$B9BA, 8,SP-
-      MOVW  #$C1C2, $0A66,PC
+      MOVW  #$C1C2, $0A6C,PC
       MOVW  #$E5E6, A,X
       MOVW  #$E6E7, B,X
       MOVW  #$E7E8, D,X
@@ -727,33 +729,61 @@
       MOVW  #$FEFF, B,PC
       MOVW  #$FF00, D,PC
       MOVW  $0304, 2,X
+      MOVW  >$0001, 2,X
       MOVW  $2122, 1,+X
+      MOVW  >$0001, 1,+X
       MOVW  $292A, 8,-X
+      MOVW  >$0001, 8,-X
       MOVW  $3132, 1,X+
+      MOVW  >$0001, 1,X+
       MOVW  $393A, 8,X-
+      MOVW  >$0001, 8,X-
       MOVW  $4142, 0,Y
+      MOVW  >$0001, 0,Y
       MOVW  $6162, 1,+Y
+      MOVW  >$0001, 1,+Y
       MOVW  $696A, 8,-Y
+      MOVW  >$0001, 8,-Y
       MOVW  $7172, 1,Y+
+      MOVW  >$0001, 1,Y+
       MOVW  $797A, 8,Y-
+      MOVW  >$0001, 8,Y-
       MOVW  $8182, 0,SP
+      MOVW  >$0001, 0,SP
       MOVW  $A1A2, 1,+SP
+      MOVW  >$0001, 1,+SP
       MOVW  $A9AA, 8,-SP
+      MOVW  >$0001, 8,-SP
       MOVW  $B1B2, 1,SP+
+      MOVW  >$0001, 1,SP+
       MOVW  $B9BA, 8,SP-
-      MOVW  $C1C2, $0AF2,PC
+      MOVW  >$0001, 8,SP-
+      MOVW  $C1C2, $0B43,PC
+      MOVW  >$0001, $0B48,PC
       MOVW  $E5E6, A,X
+      MOVW  >$0001, A,X
       MOVW  $E6E7, B,X
+      MOVW  >$0001, B,X
       MOVW  $E7E8, D,X
+      MOVW  >$0001, D,X
       MOVW  $EDEE, A,Y
+      MOVW  >$0001, A,Y
       MOVW  $EEEF, B,Y
+      MOVW  >$0001, B,Y
       MOVW  $EFF0, D,Y
+      MOVW  >$0001, D,Y
       MOVW  $F5F6, A,SP
+      MOVW  >$0001, A,SP
       MOVW  $F6F7, B,SP
+      MOVW  >$0001, B,SP
       MOVW  $F7F8, D,SP
+      MOVW  >$0001, D,SP
       MOVW  $FDFE, A,PC
+      MOVW  >$0001, A,PC
       MOVW  $FEFF, B,PC
+      MOVW  >$0001, B,PC
       MOVW  $FF00, D,PC
+      MOVW  >$0001, D,PC
       MOVW  3,X, 4,X
       MOVW  3,X, 1,+X
       MOVW  3,X, 8,-X
@@ -769,7 +799,7 @@
       MOVW  3,X, 8,-SP
       MOVW  3,X, 1,SP+
       MOVW  3,X, 8,SP-
-      MOVW  3,X, $0B6D,PC
+      MOVW  3,X, $0BFF,PC
       MOVW  3,X, A,X
       MOVW  3,X, B,X
       MOVW  3,X, D,X
@@ -796,7 +826,7 @@
       MOVW  1,+X, 8,-SP
       MOVW  1,+X, 1,SP+
       MOVW  1,+X, 8,SP-
-      MOVW  1,+X, $0BD9,PC
+      MOVW  1,+X, $0C6B,PC
       MOVW  1,+X, A,X
       MOVW  1,+X, B,X
       MOVW  1,+X, D,X
@@ -823,7 +853,7 @@
       MOVW  8,-X, 8,-SP
       MOVW  8,-X, 1,SP+
       MOVW  8,-X, 8,SP-
-      MOVW  8,-X, $0C45,PC
+      MOVW  8,-X, $0CD7,PC
       MOVW  8,-X, A,X
       MOVW  8,-X, B,X
       MOVW  8,-X, D,X
@@ -850,7 +880,7 @@
       MOVW  1,X+, 8,-SP
       MOVW  1,X+, 1,SP+
       MOVW  1,X+, 8,SP-
-      MOVW  1,X+, $0CB1,PC
+      MOVW  1,X+, $0D43,PC
       MOVW  1,X+, A,X
       MOVW  1,X+, B,X
       MOVW  1,X+, D,X
@@ -877,7 +907,7 @@
       MOVW  8,X-, 8,-SP
       MOVW  8,X-, 1,SP+
       MOVW  8,X-, 8,SP-
-      MOVW  8,X-, $0D1D,PC
+      MOVW  8,X-, $0DAF,PC
       MOVW  8,X-, A,X
       MOVW  8,X-, B,X
       MOVW  8,X-, D,X
@@ -904,7 +934,7 @@
       MOVW  0,Y, 8,-SP
       MOVW  0,Y, 1,SP+
       MOVW  0,Y, 8,SP-
-      MOVW  0,Y, $0D89,PC
+      MOVW  0,Y, $0E1B,PC
       MOVW  0,Y, A,X
       MOVW  0,Y, B,X
       MOVW  0,Y, D,X
@@ -931,7 +961,7 @@
       MOVW  1,+Y, 8,-SP
       MOVW  1,+Y, 1,SP+
       MOVW  1,+Y, 8,SP-
-      MOVW  1,+Y, $0DF5,PC
+      MOVW  1,+Y, $0E87,PC
       MOVW  1,+Y, A,X
       MOVW  1,+Y, B,X
       MOVW  1,+Y, D,X
@@ -958,7 +988,7 @@
       MOVW  8,-Y, 8,-SP
       MOVW  8,-Y, 1,SP+
       MOVW  8,-Y, 8,SP-
-      MOVW  8,-Y, $0E61,PC
+      MOVW  8,-Y, $0EF3,PC
       MOVW  8,-Y, A,X
       MOVW  8,-Y, B,X
       MOVW  8,-Y, D,X
@@ -985,7 +1015,7 @@
       MOVW  1,Y+, 8,-SP
       MOVW  1,Y+, 1,SP+
       MOVW  1,Y+, 8,SP-
-      MOVW  1,Y+, $0ECD,PC
+      MOVW  1,Y+, $0F5F,PC
       MOVW  1,Y+, A,X
       MOVW  1,Y+, B,X
       MOVW  1,Y+, D,X
@@ -1012,7 +1042,7 @@
       MOVW  8,Y-, 8,-SP
       MOVW  8,Y-, 1,SP+
       MOVW  8,Y-, 8,SP-
-      MOVW  8,Y-, $0F39,PC
+      MOVW  8,Y-, $0FCB,PC
       MOVW  8,Y-, A,X
       MOVW  8,Y-, B,X
       MOVW  8,Y-, D,X
@@ -1039,7 +1069,7 @@
       MOVW  0,SP, 8,-SP
       MOVW  0,SP, 1,SP+
       MOVW  0,SP, 8,SP-
-      MOVW  0,SP, $0FA5,PC
+      MOVW  0,SP, $1037,PC
       MOVW  0,SP, A,X
       MOVW  0,SP, B,X
       MOVW  0,SP, D,X
@@ -1066,7 +1096,7 @@
       MOVW  1,+SP, 8,-SP
       MOVW  1,+SP, 1,SP+
       MOVW  1,+SP, 8,SP-
-      MOVW  1,+SP, $1011,PC
+      MOVW  1,+SP, $10A3,PC
       MOVW  1,+SP, A,X
       MOVW  1,+SP, B,X
       MOVW  1,+SP, D,X
@@ -1093,7 +1123,7 @@
       MOVW  8,-SP, 7,-SP
       MOVW  8,-SP, 1,SP+
       MOVW  8,-SP, 8,SP-
-      MOVW  8,-SP, $107D,PC
+      MOVW  8,-SP, $110F,PC
       MOVW  8,-SP, A,X
       MOVW  8,-SP, B,X
       MOVW  8,-SP, D,X
@@ -1120,7 +1150,7 @@
       MOVW  8,-SP, 1,+SP
       MOVW  1,SP+, 2,SP+
       MOVW  1,SP+, 8,SP-
-      MOVW  1,SP+, $10E9,PC
+      MOVW  1,SP+, $117B,PC
       MOVW  1,SP+, A,X
       MOVW  1,SP+, B,X
       MOVW  1,SP+, D,X
@@ -1147,7 +1177,7 @@
       MOVW  1,SP+, 1,+SP
       MOVW  1,SP+, 8,-SP
       MOVW  8,SP-, 7,SP-
-      MOVW  8,SP-, $1155,PC
+      MOVW  8,SP-, $11E7,PC
       MOVW  8,SP-, A,X
       MOVW  8,SP-, B,X
       MOVW  8,SP-, D,X
@@ -1174,34 +1204,34 @@
       MOVW  8,SP-, 1,+SP
       MOVW  8,SP-, 8,-SP
       MOVW  8,SP-, 1,SP+
-      MOVW  $11BF,PC, $11C2,PC
-      MOVW  $11C3,PC, A,X
-      MOVW  $11C7,PC, B,X
-      MOVW  $11CB,PC, D,X
-      MOVW  $11CF,PC, A,Y
-      MOVW  $11D3,PC, B,Y
-      MOVW  $11D7,PC, D,Y
-      MOVW  $11DB,PC, A,SP
-      MOVW  $11DF,PC, B,SP
-      MOVW  $11E3,PC, D,SP
-      MOVW  $11E7,PC, A,PC
-      MOVW  $11EB,PC, B,PC
-      MOVW  $11EF,PC, D,PC
-      MOVW  $11F3,PC, 0,X
-      MOVW  $11F7,PC, 1,+X
-      MOVW  $11FB,PC, 8,-X
-      MOVW  $11FF,PC, 1,X+
-      MOVW  $1203,PC, 8,X-
-      MOVW  $1207,PC, 0,Y
-      MOVW  $120B,PC, 1,+Y
-      MOVW  $120F,PC, 8,-Y
-      MOVW  $1213,PC, 1,Y+
-      MOVW  $1217,PC, 8,Y-
-      MOVW  $121B,PC, 0,SP
-      MOVW  $121F,PC, 1,+SP
-      MOVW  $1223,PC, 8,-SP
-      MOVW  $1227,PC, 1,SP+
-      MOVW  $122B,PC, 8,SP-
+      MOVW  $1251,PC, $1254,PC
+      MOVW  $1255,PC, A,X
+      MOVW  $1259,PC, B,X
+      MOVW  $125D,PC, D,X
+      MOVW  $1261,PC, A,Y
+      MOVW  $1265,PC, B,Y
+      MOVW  $1269,PC, D,Y
+      MOVW  $126D,PC, A,SP
+      MOVW  $1271,PC, B,SP
+      MOVW  $1275,PC, D,SP
+      MOVW  $1279,PC, A,PC
+      MOVW  $127D,PC, B,PC
+      MOVW  $1281,PC, D,PC
+      MOVW  $1285,PC, 0,X
+      MOVW  $1289,PC, 1,+X
+      MOVW  $128D,PC, 8,-X
+      MOVW  $1291,PC, 1,X+
+      MOVW  $1295,PC, 8,X-
+      MOVW  $1299,PC, 0,Y
+      MOVW  $129D,PC, 1,+Y
+      MOVW  $12A1,PC, 8,-Y
+      MOVW  $12A5,PC, 1,Y+
+      MOVW  $12A9,PC, 8,Y-
+      MOVW  $12AD,PC, 0,SP
+      MOVW  $12B1,PC, 1,+SP
+      MOVW  $12B5,PC, 8,-SP
+      MOVW  $12B9,PC, 1,SP+
+      MOVW  $12BD,PC, 8,SP-
       MOVW  A,X, B,X
       MOVW  A,X, D,X
       MOVW  A,X, A,Y
@@ -1228,7 +1258,7 @@
       MOVW  A,X, 8,-SP
       MOVW  A,X, 1,SP+
       MOVW  A,X, 8,SP-
-      MOVW  A,X, $1299,PC
+      MOVW  A,X, $132B,PC
       MOVW  A,X, A,X
       MOVW  B,X, D,X
       MOVW  B,X, A,Y
@@ -1255,7 +1285,7 @@
       MOVW  B,X, 8,-SP
       MOVW  B,X, 1,SP+
       MOVW  B,X, 8,SP-
-      MOVW  B,X, $1305,PC
+      MOVW  B,X, $1397,PC
       MOVW  B,X, A,X
       MOVW  B,X, B,X
       MOVW  D,X, A,Y
@@ -1282,7 +1312,7 @@
       MOVW  D,X, 8,-SP
       MOVW  D,X, 1,SP+
       MOVW  D,X, 8,SP-
-      MOVW  D,X, $1371,PC
+      MOVW  D,X, $1403,PC
       MOVW  D,X, A,X
       MOVW  D,X, B,X
       MOVW  D,X, D,X
@@ -1309,7 +1339,7 @@
       MOVW  A,Y, 8,-SP
       MOVW  A,Y, 1,SP+
       MOVW  A,Y, 8,SP-
-      MOVW  A,Y, $13DD,PC
+      MOVW  A,Y, $146F,PC
       MOVW  A,Y, A,X
       MOVW  A,Y, B,X
       MOVW  A,Y, D,X
@@ -1336,7 +1366,7 @@
       MOVW  B,Y, 8,-SP
       MOVW  B,Y, 1,SP+
       MOVW  B,Y, 8,SP-
-      MOVW  B,Y, $1449,PC
+      MOVW  B,Y, $14DB,PC
       MOVW  B,Y, A,X
       MOVW  B,Y, B,X
       MOVW  B,Y, D,X
@@ -1363,7 +1393,7 @@
       MOVW  D,Y, 8,-SP
       MOVW  D,Y, 1,SP+
       MOVW  D,Y, 8,SP-
-      MOVW  D,Y, $14B5,PC
+      MOVW  D,Y, $1547,PC
       MOVW  D,Y, A,X
       MOVW  D,Y, B,X
       MOVW  D,Y, D,X
@@ -1390,7 +1420,7 @@
       MOVW  A,SP, 8,-SP
       MOVW  A,SP, 1,SP+
       MOVW  A,SP, 8,SP-
-      MOVW  A,SP, $1521,PC
+      MOVW  A,SP, $15B3,PC
       MOVW  A,SP, A,X
       MOVW  A,SP, B,X
       MOVW  A,SP, D,X
@@ -1417,7 +1447,7 @@
       MOVW  B,SP, 8,-SP
       MOVW  B,SP, 1,SP+
       MOVW  B,SP, 8,SP-
-      MOVW  B,SP, $158D,PC
+      MOVW  B,SP, $161F,PC
       MOVW  B,SP, A,X
       MOVW  B,SP, B,X
       MOVW  B,SP, D,X
@@ -1444,7 +1474,7 @@
       MOVW  D,SP, 8,-SP
       MOVW  D,SP, 1,SP+
       MOVW  D,SP, 8,SP-
-      MOVW  D,SP, $15F9,PC
+      MOVW  D,SP, $168B,PC
       MOVW  D,SP, A,X
       MOVW  D,SP, B,X
       MOVW  D,SP, D,X
@@ -1471,7 +1501,7 @@
       MOVW  A,PC, 8,-SP
       MOVW  A,PC, 1,SP+
       MOVW  A,PC, 8,SP-
-      MOVW  A,PC, $1665,PC
+      MOVW  A,PC, $16F7,PC
       MOVW  A,PC, A,X
       MOVW  A,PC, B,X
       MOVW  A,PC, D,X
@@ -1498,7 +1528,7 @@
       MOVW  B,PC, 8,-SP
       MOVW  B,PC, 1,SP+
       MOVW  B,PC, 8,SP-
-      MOVW  B,PC, $16D1,PC
+      MOVW  B,PC, $1763,PC
       MOVW  B,PC, A,X
       MOVW  B,PC, B,X
       MOVW  B,PC, D,X
@@ -1525,7 +1555,7 @@
       MOVW  D,PC, 8,-SP
       MOVW  D,PC, 1,SP+
       MOVW  D,PC, 8,SP-
-      MOVW  D,PC, $173D,PC
+      MOVW  D,PC, $17CF,PC
       MOVW  D,PC, A,X
       MOVW  D,PC, B,X
       MOVW  D,PC, D,X
@@ -1539,35 +1569,67 @@
       MOVW  D,PC, B,PC
       MOVW  D,PC, D,PC
       MOVW  #$0405, $0607
+      MOVW  #$0405, >$0001
       MOVW  $0506, $0708
+      MOVW  $0506, >$0001
+      MOVW  >$0001, $0203
+      MOVW  >$0001, >$0001
       MOVW  6,X, $0708
+      MOVW  6,X, >$0001
       MOVW  1,+X, $2122
+      MOVW  1,+X, >$0001
       MOVW  8,-X, $292A
+      MOVW  8,-X, >$0001
       MOVW  1,X+, $3132
+      MOVW  1,X+, >$0001
       MOVW  8,X-, $393A
+      MOVW  8,X-, >$0001
       MOVW  0,Y, $4142
+      MOVW  0,Y, >$0001
       MOVW  1,+Y, $6162
+      MOVW  1,+Y, >$0001
       MOVW  8,-Y, $696A
+      MOVW  8,-Y, >$0001
       MOVW  1,Y+, $7172
+      MOVW  1,Y+, >$0001
       MOVW  8,Y-, $797A
+      MOVW  8,Y-, >$0001
       MOVW  0,SP, $8182
+      MOVW  0,SP, >$0001
       MOVW  1,+SP, $A1A2
+      MOVW  1,+SP, >$0001
       MOVW  8,-SP, $A9AA
+      MOVW  8,-SP, >$0001
       MOVW  1,SP+, $B1B2
+      MOVW  1,SP+, >$0001
       MOVW  8,SP-, $B9BA
-      MOVW  $17C6,PC, $C1C2
+      MOVW  8,SP-, >$0001
+      MOVW  $18BB,PC, $C1C2
+      MOVW  $18C0,PC, >$0001
       MOVW  A,X, $E5E6
+      MOVW  A,X, >$0001
       MOVW  B,X, $E6E7
+      MOVW  B,X, >$0001
       MOVW  D,X, $E7E8
+      MOVW  D,X, >$0001
       MOVW  A,Y, $EDEE
+      MOVW  A,Y, >$0001
       MOVW  B,Y, $EEEF
+      MOVW  B,Y, >$0001
       MOVW  D,Y, $EFF0
+      MOVW  D,Y, >$0001
       MOVW  A,SP, $F5F6
+      MOVW  A,SP, >$0001
       MOVW  B,SP, $F6F7
+      MOVW  B,SP, >$0001
       MOVW  D,SP, $F7F8
+      MOVW  D,SP, >$0001
       MOVW  A,PC, $FDFE
+      MOVW  A,PC, >$0001
       MOVW  B,PC, $FEFF
+      MOVW  B,PC, >$0001
       MOVW  D,PC, $FF00
+      MOVW  D,PC, >$0001
       ABA
       DAA
       MOVB  #10, 9,X
@@ -1585,7 +1647,7 @@
       MOVB  #$A9, 8,-SP
       MOVB  #$B1, 1,SP+
       MOVB  #$B9, 8,SP-
-      MOVB  #$C1, $1849,PC
+      MOVB  #$C1, $197F,PC
       MOVB  #$E5, A,X
       MOVB  #$E6, B,X
       MOVB  #$E7, D,X
@@ -1599,33 +1661,61 @@
       MOVB  #$FE, B,PC
       MOVB  #$FF, D,PC
       MOVB  $0B0C, 10,X
+      MOVB  >$0001, 10,X
       MOVB  $2122, 1,+X
+      MOVB  >$0001, 1,+X
       MOVB  $292A, 8,-X
+      MOVB  >$0001, 8,-X
       MOVB  $3132, 1,X+
+      MOVB  >$0001, 1,X+
       MOVB  $393A, 8,X-
+      MOVB  >$0001, 8,X-
       MOVB  $4142, 0,Y
+      MOVB  >$0001, 0,Y
       MOVB  $6162, 1,+Y
+      MOVB  >$0001, 1,+Y
       MOVB  $696A, 8,-Y
+      MOVB  >$0001, 8,-Y
       MOVB  $7172, 1,Y+
+      MOVB  >$0001, 1,Y+
       MOVB  $797A, 8,Y-
+      MOVB  >$0001, 8,Y-
       MOVB  $8182, 0,SP
+      MOVB  >$0001, 0,SP
       MOVB  $A1A2, 1,+SP
+      MOVB  >$0001, 1,+SP
       MOVB  $A9AA, 8,-SP
+      MOVB  >$0001, 8,-SP
       MOVB  $B1B2, 1,SP+
+      MOVB  >$0001, 1,SP+
       MOVB  $B9BA, 8,SP-
-      MOVB  $C1C2, $18CA,PC
+      MOVB  >$0001, 8,SP-
+      MOVB  $C1C2, $1A4B,PC
+      MOVB  >$0001, $1A50,PC
       MOVB  $E5E6, A,X
+      MOVB  >$0001, A,X
       MOVB  $E6E7, B,X
+      MOVB  >$0001, B,X
       MOVB  $E7E8, D,X
+      MOVB  >$0001, D,X
       MOVB  $EDEE, A,Y
+      MOVB  >$0001, A,Y
       MOVB  $EEEF, B,Y
+      MOVB  >$0001, B,Y
       MOVB  $EFF0, D,Y
+      MOVB  >$0001, D,Y
       MOVB  $F5F6, A,SP
+      MOVB  >$0001, A,SP
       MOVB  $F6F7, B,SP
+      MOVB  >$0001, B,SP
       MOVB  $F7F8, D,SP
+      MOVB  >$0001, D,SP
       MOVB  $FDFE, A,PC
+      MOVB  >$0001, A,PC
       MOVB  $FEFF, B,PC
+      MOVB  >$0001, B,PC
       MOVB  $FF00, D,PC
+      MOVB  >$0001, D,PC
       MOVB  11,X, 12,X
       MOVB  11,X, 1,+X
       MOVB  11,X, 8,-X
@@ -1641,7 +1731,7 @@
       MOVB  11,X, 8,-SP
       MOVB  11,X, 1,SP+
       MOVB  11,X, 8,SP-
-      MOVB  11,X, $1945,PC
+      MOVB  11,X, $1B07,PC
       MOVB  11,X, A,X
       MOVB  11,X, B,X
       MOVB  11,X, D,X
@@ -1668,7 +1758,7 @@
       MOVB  1,+X, 8,-SP
       MOVB  1,+X, 1,SP+
       MOVB  1,+X, 8,SP-
-      MOVB  1,+X, $19B1,PC
+      MOVB  1,+X, $1B73,PC
       MOVB  1,+X, A,X
       MOVB  1,+X, B,X
       MOVB  1,+X, D,X
@@ -1695,7 +1785,7 @@
       MOVB  8,-X, 8,-SP
       MOVB  8,-X, 1,SP+
       MOVB  8,-X, 8,SP-
-      MOVB  8,-X, $1A1D,PC
+      MOVB  8,-X, $1BDF,PC
       MOVB  8,-X, A,X
       MOVB  8,-X, B,X
       MOVB  8,-X, D,X
@@ -1722,7 +1812,7 @@
       MOVB  1,X+, 8,-SP
       MOVB  1,X+, 1,SP+
       MOVB  1,X+, 8,SP-
-      MOVB  1,X+, $1A89,PC
+      MOVB  1,X+, $1C4B,PC
       MOVB  1,X+, A,X
       MOVB  1,X+, B,X
       MOVB  1,X+, D,X
@@ -1749,7 +1839,7 @@
       MOVB  8,X-, 8,-SP
       MOVB  8,X-, 1,SP+
       MOVB  8,X-, 8,SP-
-      MOVB  8,X-, $1AF5,PC
+      MOVB  8,X-, $1CB7,PC
       MOVB  8,X-, A,X
       MOVB  8,X-, B,X
       MOVB  8,X-, D,X
@@ -1776,7 +1866,7 @@
       MOVB  0,Y, 8,-SP
       MOVB  0,Y, 1,SP+
       MOVB  0,Y, 8,SP-
-      MOVB  0,Y, $1B61,PC
+      MOVB  0,Y, $1D23,PC
       MOVB  0,Y, A,X
       MOVB  0,Y, B,X
       MOVB  0,Y, D,X
@@ -1803,7 +1893,7 @@
       MOVB  1,+Y, 8,-SP
       MOVB  1,+Y, 1,SP+
       MOVB  1,+Y, 8,SP-
-      MOVB  1,+Y, $1BCD,PC
+      MOVB  1,+Y, $1D8F,PC
       MOVB  1,+Y, A,X
       MOVB  1,+Y, B,X
       MOVB  1,+Y, D,X
@@ -1830,7 +1920,7 @@
       MOVB  8,-Y, 8,-SP
       MOVB  8,-Y, 1,SP+
       MOVB  8,-Y, 8,SP-
-      MOVB  8,-Y, $1C39,PC
+      MOVB  8,-Y, $1DFB,PC
       MOVB  8,-Y, A,X
       MOVB  8,-Y, B,X
       MOVB  8,-Y, D,X
@@ -1857,7 +1947,7 @@
       MOVB  1,Y+, 8,-SP
       MOVB  1,Y+, 1,SP+
       MOVB  1,Y+, 8,SP-
-      MOVB  1,Y+, $1CA5,PC
+      MOVB  1,Y+, $1E67,PC
       MOVB  1,Y+, A,X
       MOVB  1,Y+, B,X
       MOVB  1,Y+, D,X
@@ -1884,7 +1974,7 @@
       MOVB  8,Y-, 8,-SP
       MOVB  8,Y-, 1,SP+
       MOVB  8,Y-, 8,SP-
-      MOVB  8,Y-, $1D11,PC
+      MOVB  8,Y-, $1ED3,PC
       MOVB  8,Y-, A,X
       MOVB  8,Y-, B,X
       MOVB  8,Y-, D,X
@@ -1911,7 +2001,7 @@
       MOVB  0,SP, 8,-SP
       MOVB  0,SP, 1,SP+
       MOVB  0,SP, 8,SP-
-      MOVB  0,SP, $1D7D,PC
+      MOVB  0,SP, $1F3F,PC
       MOVB  0,SP, A,X
       MOVB  0,SP, B,X
       MOVB  0,SP, D,X
@@ -1938,7 +2028,7 @@
       MOVB  1,+SP, 8,-SP
       MOVB  1,+SP, 1,SP+
       MOVB  1,+SP, 8,SP-
-      MOVB  1,+SP, $1DE9,PC
+      MOVB  1,+SP, $1FAB,PC
       MOVB  1,+SP, A,X
       MOVB  1,+SP, B,X
       MOVB  1,+SP, D,X
@@ -1965,7 +2055,7 @@
       MOVB  8,-SP, 7,-SP
       MOVB  8,-SP, 1,SP+
       MOVB  8,-SP, 8,SP-
-      MOVB  8,-SP, $1E55,PC
+      MOVB  8,-SP, $2017,PC
       MOVB  8,-SP, A,X
       MOVB  8,-SP, B,X
       MOVB  8,-SP, D,X
@@ -1992,7 +2082,7 @@
       MOVB  8,-SP, 1,+SP
       MOVB  1,SP+, 2,SP+
       MOVB  1,SP+, 8,SP-
-      MOVB  1,SP+, $1EC1,PC
+      MOVB  1,SP+, $2083,PC
       MOVB  1,SP+, A,X
       MOVB  1,SP+, B,X
       MOVB  1,SP+, D,X
@@ -2019,7 +2109,7 @@
       MOVB  1,SP+, 1,+SP
       MOVB  1,SP+, 8,-SP
       MOVB  8,SP-, 7,SP-
-      MOVB  8,SP-, $1F2D,PC
+      MOVB  8,SP-, $20EF,PC
       MOVB  8,SP-, A,X
       MOVB  8,SP-, B,X
       MOVB  8,SP-, D,X
@@ -2046,34 +2136,34 @@
       MOVB  8,SP-, 1,+SP
       MOVB  8,SP-, 8,-SP
       MOVB  8,SP-, 1,SP+
-      MOVB  $1F97,PC, $1F9A,PC
-      MOVB  $1F9B,PC, A,X
-      MOVB  $1F9F,PC, B,X
-      MOVB  $1FA3,PC, D,X
-      MOVB  $1FA7,PC, A,Y
-      MOVB  $1FAB,PC, B,Y
-      MOVB  $1FAF,PC, D,Y
-      MOVB  $1FB3,PC, A,SP
-      MOVB  $1FB7,PC, B,SP
-      MOVB  $1FBB,PC, D,SP
-      MOVB  $1FBF,PC, A,PC
-      MOVB  $1FC3,PC, B,PC
-      MOVB  $1FC7,PC, D,PC
-      MOVB  $1FCB,PC, 0,X
-      MOVB  $1FCF,PC, 1,+X
-      MOVB  $1FD3,PC, 8,-X
-      MOVB  $1FD7,PC, 1,X+
-      MOVB  $1FDB,PC, 8,X-
-      MOVB  $1FDF,PC, 0,Y
-      MOVB  $1FE3,PC, 1,+Y
-      MOVB  $1FE7,PC, 8,-Y
-      MOVB  $1FEB,PC, 1,Y+
-      MOVB  $1FEF,PC, 8,Y-
-      MOVB  $1FF3,PC, 0,SP
-      MOVB  $1FF7,PC, 1,+SP
-      MOVB  $1FFB,PC, 8,-SP
-      MOVB  $1FFF,PC, 1,SP+
-      MOVB  $2003,PC, 8,SP-
+      MOVB  $2159,PC, $215C,PC
+      MOVB  $215D,PC, A,X
+      MOVB  $2161,PC, B,X
+      MOVB  $2165,PC, D,X
+      MOVB  $2169,PC, A,Y
+      MOVB  $216D,PC, B,Y
+      MOVB  $2171,PC, D,Y
+      MOVB  $2175,PC, A,SP
+      MOVB  $2179,PC, B,SP
+      MOVB  $217D,PC, D,SP
+      MOVB  $2181,PC, A,PC
+      MOVB  $2185,PC, B,PC
+      MOVB  $2189,PC, D,PC
+      MOVB  $218D,PC, 0,X
+      MOVB  $2191,PC, 1,+X
+      MOVB  $2195,PC, 8,-X
+      MOVB  $2199,PC, 1,X+
+      MOVB  $219D,PC, 8,X-
+      MOVB  $21A1,PC, 0,Y
+      MOVB  $21A5,PC, 1,+Y
+      MOVB  $21A9,PC, 8,-Y
+      MOVB  $21AD,PC, 1,Y+
+      MOVB  $21B1,PC, 8,Y-
+      MOVB  $21B5,PC, 0,SP
+      MOVB  $21B9,PC, 1,+SP
+      MOVB  $21BD,PC, 8,-SP
+      MOVB  $21C1,PC, 1,SP+
+      MOVB  $21C5,PC, 8,SP-
       MOVB  A,X, B,X
       MOVB  A,X, D,X
       MOVB  A,X, A,Y
@@ -2100,7 +2190,7 @@
       MOVB  A,X, 8,-SP
       MOVB  A,X, 1,SP+
       MOVB  A,X, 8,SP-
-      MOVB  A,X, $2071,PC
+      MOVB  A,X, $2233,PC
       MOVB  A,X, A,X
       MOVB  B,X, D,X
       MOVB  B,X, A,Y
@@ -2127,7 +2217,7 @@
       MOVB  B,X, 8,-SP
       MOVB  B,X, 1,SP+
       MOVB  B,X, 8,SP-
-      MOVB  B,X, $20DD,PC
+      MOVB  B,X, $229F,PC
       MOVB  B,X, A,X
       MOVB  B,X, B,X
       MOVB  D,X, A,Y
@@ -2154,7 +2244,7 @@
       MOVB  D,X, 8,-SP
       MOVB  D,X, 1,SP+
       MOVB  D,X, 8,SP-
-      MOVB  D,X, $2149,PC
+      MOVB  D,X, $230B,PC
       MOVB  D,X, A,X
       MOVB  D,X, B,X
       MOVB  D,X, D,X
@@ -2181,7 +2271,7 @@
       MOVB  A,Y, 8,-SP
       MOVB  A,Y, 1,SP+
       MOVB  A,Y, 8,SP-
-      MOVB  A,Y, $21B5,PC
+      MOVB  A,Y, $2377,PC
       MOVB  A,Y, A,X
       MOVB  A,Y, B,X
       MOVB  A,Y, D,X
@@ -2208,7 +2298,7 @@
       MOVB  B,Y, 8,-SP
       MOVB  B,Y, 1,SP+
       MOVB  B,Y, 8,SP-
-      MOVB  B,Y, $2221,PC
+      MOVB  B,Y, $23E3,PC
       MOVB  B,Y, A,X
       MOVB  B,Y, B,X
       MOVB  B,Y, D,X
@@ -2235,7 +2325,7 @@
       MOVB  D,Y, 8,-SP
       MOVB  D,Y, 1,SP+
       MOVB  D,Y, 8,SP-
-      MOVB  D,Y, $228D,PC
+      MOVB  D,Y, $244F,PC
       MOVB  D,Y, A,X
       MOVB  D,Y, B,X
       MOVB  D,Y, D,X
@@ -2262,7 +2352,7 @@
       MOVB  A,SP, 8,-SP
       MOVB  A,SP, 1,SP+
       MOVB  A,SP, 8,SP-
-      MOVB  A,SP, $22F9,PC
+      MOVB  A,SP, $24BB,PC
       MOVB  A,SP, A,X
       MOVB  A,SP, B,X
       MOVB  A,SP, D,X
@@ -2289,7 +2379,7 @@
       MOVB  B,SP, 8,-SP
       MOVB  B,SP, 1,SP+
       MOVB  B,SP, 8,SP-
-      MOVB  B,SP, $2365,PC
+      MOVB  B,SP, $2527,PC
       MOVB  B,SP, A,X
       MOVB  B,SP, B,X
       MOVB  B,SP, D,X
@@ -2316,7 +2406,7 @@
       MOVB  D,SP, 8,-SP
       MOVB  D,SP, 1,SP+
       MOVB  D,SP, 8,SP-
-      MOVB  D,SP, $23D1,PC
+      MOVB  D,SP, $2593,PC
       MOVB  D,SP, A,X
       MOVB  D,SP, B,X
       MOVB  D,SP, D,X
@@ -2343,7 +2433,7 @@
       MOVB  A,PC, 8,-SP
       MOVB  A,PC, 1,SP+
       MOVB  A,PC, 8,SP-
-      MOVB  A,PC, $243D,PC
+      MOVB  A,PC, $25FF,PC
       MOVB  A,PC, A,X
       MOVB  A,PC, B,X
       MOVB  A,PC, D,X
@@ -2370,7 +2460,7 @@
       MOVB  B,PC, 8,-SP
       MOVB  B,PC, 1,SP+
       MOVB  B,PC, 8,SP-
-      MOVB  B,PC, $24A9,PC
+      MOVB  B,PC, $266B,PC
       MOVB  B,PC, A,X
       MOVB  B,PC, B,X
       MOVB  B,PC, D,X
@@ -2397,7 +2487,7 @@
       MOVB  D,PC, 8,-SP
       MOVB  D,PC, 1,SP+
       MOVB  D,PC, 8,SP-
-      MOVB  D,PC, $2515,PC
+      MOVB  D,PC, $26D7,PC
       MOVB  D,PC, A,X
       MOVB  D,PC, B,X
       MOVB  D,PC, D,X
@@ -2411,40 +2501,73 @@
       MOVB  D,PC, B,PC
       MOVB  D,PC, D,PC
       MOVB  #12, $0D0E
+      MOVB  #12, >$0001
       MOVB  $0D0E, $0F10
+      MOVB  $0D0E, >$0001
+      MOVB  >$0001, $0203
+      MOVB  >$0001, >$0001
       MOVB  14,X, $0F10
+      MOVB  14,X, >$0001
       MOVB  1,+X, $2122
+      MOVB  1,+X, >$0001
       MOVB  8,-X, $292A
+      MOVB  8,-X, >$0001
       MOVB  1,X+, $3132
+      MOVB  1,X+, >$0001
       MOVB  8,X-, $393A
+      MOVB  8,X-, >$0001
       MOVB  0,Y, $4142
+      MOVB  0,Y, >$0001
       MOVB  1,+Y, $6162
+      MOVB  1,+Y, >$0001
       MOVB  8,-Y, $696A
+      MOVB  8,-Y, >$0001
       MOVB  1,Y+, $7172
+      MOVB  1,Y+, >$0001
       MOVB  8,Y-, $797A
+      MOVB  8,Y-, >$0001
       MOVB  0,SP, $8182
+      MOVB  0,SP, >$0001
       MOVB  1,+SP, $A1A2
+      MOVB  1,+SP, >$0001
       MOVB  8,-SP, $A9AA
+      MOVB  8,-SP, >$0001
       MOVB  1,SP+, $B1B2
+      MOVB  1,SP+, >$0001
       MOVB  8,SP-, $B9BA
-      MOVB  $259D,PC, $C1C2
+      MOVB  8,SP-, >$0001
+      MOVB  $27C1,PC, $C1C2
+      MOVB  $27C6,PC, >$0001
       MOVB  A,X, $E5E6
+      MOVB  A,X, >$0001
       MOVB  B,X, $E6E7
+      MOVB  B,X, >$0001
       MOVB  D,X, $E7E8
+      MOVB  D,X, >$0001
       MOVB  A,Y, $EDEE
+      MOVB  A,Y, >$0001
       MOVB  B,Y, $EEEF
+      MOVB  B,Y, >$0001
       MOVB  D,Y, $EFF0
+      MOVB  D,Y, >$0001
       MOVB  A,SP, $F5F6
+      MOVB  A,SP, >$0001
       MOVB  B,SP, $F6F7
+      MOVB  B,SP, >$0001
       MOVB  D,SP, $F7F8
+      MOVB  D,SP, >$0001
       MOVB  A,PC, $FDFE
+      MOVB  A,PC, >$0001
       MOVB  B,PC, $FEFF
+      MOVB  B,PC, >$0001
       MOVB  D,PC, $FF00
+      MOVB  D,PC, >$0001
       TAB
       TBA
       IDIV
       FDIV
       EMACS $1314
+      EMACS >$0001
       EMULS
       EDIVS
       IDIVS
@@ -2465,7 +2588,7 @@
       MAXA  8,-SP
       MAXA  1,SP+
       MAXA  8,SP-
-      MAXA  $2621,PC
+      MAXA  $288A,PC
       MAXA  $E1,X
       MAXA  $E3E4,X
       MAXA  [$E4E5,X]
@@ -2487,11 +2610,11 @@
       MAXA  B,SP
       MAXA  D,SP
       MAXA  [D,SP]
-      MAXA  $276C,PC
-      MAXA  <$2677,PC
-      MAXA  $2278,PC
-      MAXA  >$2581,PC
-      MAXA  [$2383,PC]
+      MAXA  $29D5,PC
+      MAXA  <$28E0,PC
+      MAXA  $24E1,PC
+      MAXA  >$27EA,PC
+      MAXA  [$25EC,PC]
       MAXA  A,PC
       MAXA  B,PC
       MAXA  D,PC
@@ -2511,7 +2634,7 @@
       LEAY  8,-SP
       LEAY  1,SP+
       LEAY  8,SP-
-      LEAY  $26B2,PC
+      LEAY  $291B,PC
       LEAY  $E1,X
       LEAY  $E3E4,X
       LEAY  A,X
@@ -2527,10 +2650,10 @@
       LEAY  A,SP
       LEAY  B,SP
       LEAY  D,SP
-      LEAY  $27D5,PC
-      LEAY  <$26DF,PC
-      LEAY  $22DF,PC
-      LEAY  >$25E7,PC
+      LEAY  $2A3E,PC
+      LEAY  <$2948,PC
+      LEAY  $2548,PC
+      LEAY  >$2850,PC
       LEAY  A,PC
       LEAY  B,PC
       LEAY  D,PC
@@ -2549,7 +2672,7 @@
       LEAX  8,-SP
       LEAX  1,SP+
       LEAX  8,SP-
-      LEAX  $270D,PC
+      LEAX  $2976,PC
       LEAX  $E1,X
       LEAX  $E3E4,X
       LEAX  A,X
@@ -2565,10 +2688,10 @@
       LEAX  A,SP
       LEAX  B,SP
       LEAX  D,SP
-      LEAX  $2830,PC
-      LEAX  <$273A,PC
-      LEAX  $233A,PC
-      LEAX  >$2642,PC
+      LEAX  $2A99,PC
+      LEAX  <$29A3,PC
+      LEAX  $25A3,PC
+      LEAX  >$28AB,PC
       LEAX  A,PC
       LEAX  B,PC
       LEAX  D,PC
@@ -2587,7 +2710,7 @@
       LEAS  8,-SP
       LEAS  1,SP+
       LEAS  8,SP-
-      LEAS  $2768,PC
+      LEAS  $29D1,PC
       LEAS  $E1,X
       LEAS  $E3E4,X
       LEAS  A,X
@@ -2603,17 +2726,21 @@
       LEAS  A,SP
       LEAS  B,SP
       LEAS  D,SP
-      LEAS  $288B,PC
-      LEAS  <$2795,PC
-      LEAS  $2395,PC
-      LEAS  >$269D,PC
+      LEAS  $2AF4,PC
+      LEAS  <$29FE,PC
+      LEAS  $25FE,PC
+      LEAS  >$2906,PC
       LEAS  A,PC
       LEAS  B,PC
       LEAS  D,PC
       BSET  $1D1E, #31
+      BSET  >$0001, #2
       BCLR  $1E1F, #32
+      BCLR  >$0001, #2
       BRSET $1F20, #$21, *+39
+      BRSET >$0001, #2, *+8
       BRCLR $2021, #$22, *+40
+      BRCLR >$0001, #2, *+8
       BRA   *+35
       BRN   *+36
       BHI   *+37
@@ -2656,6 +2783,7 @@
       ASLA
       LSRD
       CALL  $4B4C, $4D
+      CALL  >$0001, 2
       CALL  12,Y, $4D
       CALL  1,+Y, $61
       CALL  8,-Y, $69
@@ -2666,7 +2794,7 @@
       CALL  8,-SP, $A9
       CALL  1,SP+, $B1
       CALL  8,SP-, $B9
-      CALL  $2813,PC, $C1
+      CALL  $2A92,PC, $C1
       CALL  $E1,X, $E2
       CALL  $E3E4,X, $E5
       CALL  [$E4E5,X]
@@ -2688,11 +2816,11 @@
       CALL  B,SP, $F6
       CALL  D,SP, $F7
       CALL  [D,SP]
-      CALL  $2958,PC, $FA
-      CALL  <$2863,PC, 1
-      CALL  $2464,PC, $FD
-      CALL  >$276D,PC, 1
-      CALL  [$256E,PC]
+      CALL  $2BD7,PC, $FA
+      CALL  <$2AE2,PC, 1
+      CALL  $26E3,PC, $FD
+      CALL  >$29EC,PC, 1
+      CALL  [$27ED,PC]
       CALL  A,PC, $FD
       CALL  B,PC, $FE
       CALL  D,PC, $FF
@@ -2731,7 +2859,7 @@
       NEG   8,-SP
       NEG   1,SP+
       NEG   8,SP-
-      NEG   $28C3,PC
+      NEG   $2B42,PC
       NEG   $E1,X
       NEG   $E3E4,X
       NEG   [$E4E5,X]
@@ -2753,11 +2881,11 @@
       NEG   B,SP
       NEG   D,SP
       NEG   [D,SP]
-      NEG   $29F8,PC
-      NEG   <$2902,PC
-      NEG   $2502,PC
-      NEG   >$280A,PC
-      NEG   [$260B,PC]
+      NEG   $2C77,PC
+      NEG   <$2B81,PC
+      NEG   $2781,PC
+      NEG   >$2A89,PC
+      NEG   [$288A,PC]
       NEG   A,PC
       NEG   B,PC
       NEG   D,PC
@@ -2777,7 +2905,7 @@
       COM   8,-SP
       COM   1,SP+
       COM   8,SP-
-      COM   $2936,PC
+      COM   $2BB5,PC
       COM   $E1,X
       COM   $E3E4,X
       COM   [$E4E5,X]
@@ -2799,11 +2927,11 @@
       COM   B,SP
       COM   D,SP
       COM   [D,SP]
-      COM   $2A6B,PC
-      COM   <$2975,PC
-      COM   $2575,PC
-      COM   >$287D,PC
-      COM   [$267E,PC]
+      COM   $2CEA,PC
+      COM   <$2BF4,PC
+      COM   $27F4,PC
+      COM   >$2AFC,PC
+      COM   [$28FD,PC]
       COM   A,PC
       COM   B,PC
       COM   D,PC
@@ -2823,7 +2951,7 @@
       INC   8,-SP
       INC   1,SP+
       INC   8,SP-
-      INC   $29A9,PC
+      INC   $2C28,PC
       INC   $E1,X
       INC   $E3E4,X
       INC   [$E4E5,X]
@@ -2845,11 +2973,11 @@
       INC   B,SP
       INC   D,SP
       INC   [D,SP]
-      INC   $2ADE,PC
-      INC   <$29E8,PC
-      INC   $25E8,PC
-      INC   >$28F0,PC
-      INC   [$26F1,PC]
+      INC   $2D5D,PC
+      INC   <$2C67,PC
+      INC   $2867,PC
+      INC   >$2B6F,PC
+      INC   [$2970,PC]
       INC   A,PC
       INC   B,PC
       INC   D,PC
@@ -2869,7 +2997,7 @@
       DEC   8,-SP
       DEC   1,SP+
       DEC   8,SP-
-      DEC   $2A1C,PC
+      DEC   $2C9B,PC
       DEC   $E1,X
       DEC   $E3E4,X
       DEC   [$E4E5,X]
@@ -2891,11 +3019,11 @@
       DEC   B,SP
       DEC   D,SP
       DEC   [D,SP]
-      DEC   $2B51,PC
-      DEC   <$2A5B,PC
-      DEC   $265B,PC
-      DEC   >$2963,PC
-      DEC   [$2764,PC]
+      DEC   $2DD0,PC
+      DEC   <$2CDA,PC
+      DEC   $28DA,PC
+      DEC   >$2BE2,PC
+      DEC   [$29E3,PC]
       DEC   A,PC
       DEC   B,PC
       DEC   D,PC
@@ -2915,7 +3043,7 @@
       LSR   8,-SP
       LSR   1,SP+
       LSR   8,SP-
-      LSR   $2A8F,PC
+      LSR   $2D0E,PC
       LSR   $E1,X
       LSR   $E3E4,X
       LSR   [$E4E5,X]
@@ -2937,11 +3065,11 @@
       LSR   B,SP
       LSR   D,SP
       LSR   [D,SP]
-      LSR   $2BC4,PC
-      LSR   <$2ACE,PC
-      LSR   $26CE,PC
-      LSR   >$29D6,PC
-      LSR   [$27D7,PC]
+      LSR   $2E43,PC
+      LSR   <$2D4D,PC
+      LSR   $294D,PC
+      LSR   >$2C55,PC
+      LSR   [$2A56,PC]
       LSR   A,PC
       LSR   B,PC
       LSR   D,PC
@@ -2961,7 +3089,7 @@
       ROL   8,-SP
       ROL   1,SP+
       ROL   8,SP-
-      ROL   $2B02,PC
+      ROL   $2D81,PC
       ROL   $E1,X
       ROL   $E3E4,X
       ROL   [$E4E5,X]
@@ -2983,11 +3111,11 @@
       ROL   B,SP
       ROL   D,SP
       ROL   [D,SP]
-      ROL   $2C37,PC
-      ROL   <$2B41,PC
-      ROL   $2741,PC
-      ROL   >$2A49,PC
-      ROL   [$284A,PC]
+      ROL   $2EB6,PC
+      ROL   <$2DC0,PC
+      ROL   $29C0,PC
+      ROL   >$2CC8,PC
+      ROL   [$2AC9,PC]
       ROL   A,PC
       ROL   B,PC
       ROL   D,PC
@@ -3007,7 +3135,7 @@
       ROR   8,-SP
       ROR   1,SP+
       ROR   8,SP-
-      ROR   $2B75,PC
+      ROR   $2DF4,PC
       ROR   $E1,X
       ROR   $E3E4,X
       ROR   [$E4E5,X]
@@ -3029,11 +3157,11 @@
       ROR   B,SP
       ROR   D,SP
       ROR   [D,SP]
-      ROR   $2CAA,PC
-      ROR   <$2BB4,PC
-      ROR   $27B4,PC
-      ROR   >$2ABC,PC
-      ROR   [$28BD,PC]
+      ROR   $2F29,PC
+      ROR   <$2E33,PC
+      ROR   $2A33,PC
+      ROR   >$2D3B,PC
+      ROR   [$2B3C,PC]
       ROR   A,PC
       ROR   B,PC
       ROR   D,PC
@@ -3052,7 +3180,7 @@
       ASR   8,-SP
       ASR   1,SP+
       ASR   8,SP-
-      ASR   $2BE6,PC
+      ASR   $2E65,PC
       ASR   $E1,X
       ASR   $E3E4,X
       ASR   [$E4E5,X]
@@ -3074,11 +3202,11 @@
       ASR   B,SP
       ASR   D,SP
       ASR   [D,SP]
-      ASR   $2D1B,PC
-      ASR   <$2C25,PC
-      ASR   $2825,PC
-      ASR   >$2B2D,PC
-      ASR   [$292E,PC]
+      ASR   $2F9A,PC
+      ASR   <$2EA4,PC
+      ASR   $2AA4,PC
+      ASR   >$2DAC,PC
+      ASR   [$2BAD,PC]
       ASR   A,PC
       ASR   B,PC
       ASR   D,PC
@@ -3098,7 +3226,7 @@
       ASL   8,-SP
       ASL   1,SP+
       ASL   8,SP-
-      ASL   $2C59,PC
+      ASL   $2ED8,PC
       ASL   $E1,X
       ASL   $E3E4,X
       ASL   [$E4E5,X]
@@ -3120,11 +3248,11 @@
       ASL   B,SP
       ASL   D,SP
       ASL   [D,SP]
-      ASL   $2D8E,PC
-      ASL   <$2C98,PC
-      ASL   $2898,PC
-      ASL   >$2BA0,PC
-      ASL   [$29A1,PC]
+      ASL   $300D,PC
+      ASL   <$2F17,PC
+      ASL   $2B17,PC
+      ASL   >$2E1F,PC
+      ASL   [$2C20,PC]
       ASL   A,PC
       ASL   B,PC
       ASL   D,PC
@@ -3144,7 +3272,7 @@
       CLR   8,-SP
       CLR   1,SP+
       CLR   8,SP-
-      CLR   $2CCC,PC
+      CLR   $2F4B,PC
       CLR   $E1,X
       CLR   $E3E4,X
       CLR   [$E4E5,X]
@@ -3166,11 +3294,11 @@
       CLR   B,SP
       CLR   D,SP
       CLR   [D,SP]
-      CLR   $2E01,PC
-      CLR   <$2D0B,PC
-      CLR   $290B,PC
-      CLR   >$2C13,PC
-      CLR   [$2A14,PC]
+      CLR   $3080,PC
+      CLR   <$2F8A,PC
+      CLR   $2B8A,PC
+      CLR   >$2E92,PC
+      CLR   [$2C93,PC]
       CLR   A,PC
       CLR   B,PC
       CLR   D,PC
@@ -3190,7 +3318,7 @@
       STAA  8,-SP
       STAA  1,SP+
       STAA  8,SP-
-      STAA  $2D3F,PC
+      STAA  $2FBE,PC
       STAA  $E1,X
       STAA  $E3E4,X
       STAA  [$E4E5,X]
@@ -3212,11 +3340,11 @@
       STAA  B,SP
       STAA  D,SP
       STAA  [D,SP]
-      STAA  $2E74,PC
-      STAA  <$2D7E,PC
-      STAA  $297E,PC
-      STAA  >$2C86,PC
-      STAA  [$2A87,PC]
+      STAA  $30F3,PC
+      STAA  <$2FFD,PC
+      STAA  $2BFD,PC
+      STAA  >$2F05,PC
+      STAA  [$2D06,PC]
       STAA  A,PC
       STAA  B,PC
       STAA  D,PC
@@ -3236,7 +3364,7 @@
       STAB  8,-SP
       STAB  1,SP+
       STAB  8,SP-
-      STAB  $2DB2,PC
+      STAB  $3031,PC
       STAB  $E1,X
       STAB  $E3E4,X
       STAB  [$E4E5,X]
@@ -3258,11 +3386,11 @@
       STAB  B,SP
       STAB  D,SP
       STAB  [D,SP]
-      STAB  $2EE7,PC
-      STAB  <$2DF1,PC
-      STAB  $29F1,PC
-      STAB  >$2CF9,PC
-      STAB  [$2AFA,PC]
+      STAB  $3166,PC
+      STAB  <$3070,PC
+      STAB  $2C70,PC
+      STAB  >$2F78,PC
+      STAB  [$2D79,PC]
       STAB  A,PC
       STAB  B,PC
       STAB  D,PC
@@ -3282,7 +3410,7 @@
       STD   8,-SP
       STD   1,SP+
       STD   8,SP-
-      STD   $2E25,PC
+      STD   $30A4,PC
       STD   $E1,X
       STD   $E3E4,X
       STD   [$E4E5,X]
@@ -3304,11 +3432,11 @@
       STD   B,SP
       STD   D,SP
       STD   [D,SP]
-      STD   $2F5A,PC
-      STD   <$2E64,PC
-      STD   $2A64,PC
-      STD   >$2D6C,PC
-      STD   [$2B6D,PC]
+      STD   $31D9,PC
+      STD   <$30E3,PC
+      STD   $2CE3,PC
+      STD   >$2FEB,PC
+      STD   [$2DEC,PC]
       STD   A,PC
       STD   B,PC
       STD   D,PC
@@ -3328,7 +3456,7 @@
       STY   8,-SP
       STY   1,SP+
       STY   8,SP-
-      STY   $2E98,PC
+      STY   $3117,PC
       STY   $E1,X
       STY   $E3E4,X
       STY   [$E4E5,X]
@@ -3350,11 +3478,11 @@
       STY   B,SP
       STY   D,SP
       STY   [D,SP]
-      STY   $2FCD,PC
-      STY   <$2ED7,PC
-      STY   $2AD7,PC
-      STY   >$2DDF,PC
-      STY   [$2BE0,PC]
+      STY   $324C,PC
+      STY   <$3156,PC
+      STY   $2D56,PC
+      STY   >$305E,PC
+      STY   [$2E5F,PC]
       STY   A,PC
       STY   B,PC
       STY   D,PC
@@ -3374,7 +3502,7 @@
       STX   8,-SP
       STX   1,SP+
       STX   8,SP-
-      STX   $2F0B,PC
+      STX   $318A,PC
       STX   $E1,X
       STX   $E3E4,X
       STX   [$E4E5,X]
@@ -3396,11 +3524,11 @@
       STX   B,SP
       STX   D,SP
       STX   [D,SP]
-      STX   $3040,PC
-      STX   <$2F4A,PC
-      STX   $2B4A,PC
-      STX   >$2E52,PC
-      STX   [$2C53,PC]
+      STX   $32BF,PC
+      STX   <$31C9,PC
+      STX   $2DC9,PC
+      STX   >$30D1,PC
+      STX   [$2ED2,PC]
       STX   A,PC
       STX   B,PC
       STX   D,PC
@@ -3419,7 +3547,7 @@
       STS   8,-SP
       STS   1,SP+
       STS   8,SP-
-      STS   $2F7C,PC
+      STS   $31FB,PC
       STS   $E1,X
       STS   $E3E4,X
       STS   [$E4E5,X]
@@ -3441,11 +3569,11 @@
       STS   B,SP
       STS   D,SP
       STS   [D,SP]
-      STS   $30B1,PC
-      STS   <$2FBB,PC
-      STS   $2BBB,PC
-      STS   >$2EC3,PC
-      STS   [$2CC4,PC]
+      STS   $3330,PC
+      STS   <$323A,PC
+      STS   $2E3A,PC
+      STS   >$3142,PC
+      STS   [$2F43,PC]
       STS   A,PC
       STS   B,PC
       STS   D,PC
@@ -3459,21 +3587,37 @@
       STS   1,+Y
       STS   8,-Y
       NEG   $7172
+      NEG   >$0001
       COM   $7273
+      COM   >$0001
       INC   $7374
+      INC   >$0001
       DEC   $7475
+      DEC   >$0001
       LSR   $7576
+      LSR   >$0001
       ROL   $7677
+      ROL   >$0001
       ROR   $7778
+      ROR   >$0001
       ASR   $7879
+      ASR   >$0001
       ASL   $797A
+      ASL   >$0001
       CLR   $7A7B
+      CLR   >$0001
       STAA  $7B7C
+      STAA  >$0001
       STAB  $7C7D
+      STAB  >$0001
       STD   $7D7E
+      STD   >$0001
       STY   $7E7F
+      STY   >$0001
       STX   $7F80
+      STX   >$0001
       STS   $8081
+      STS   >$0001
       SUBA  #$81
       CMPA  #$82
       SBCA  #$83
@@ -3510,7 +3654,7 @@
       SUBA  8,-SP
       SUBA  1,SP+
       SUBA  8,SP-
-      SUBA  $305C,PC
+      SUBA  $330B,PC
       SUBA  $E1,X
       SUBA  $E3E4,X
       SUBA  [$E4E5,X]
@@ -3532,11 +3676,11 @@
       SUBA  B,SP
       SUBA  D,SP
       SUBA  [D,SP]
-      SUBA  $3191,PC
-      SUBA  <$309B,PC
-      SUBA  $2C9B,PC
-      SUBA  >$2FA3,PC
-      SUBA  [$2DA4,PC]
+      SUBA  $3440,PC
+      SUBA  <$334A,PC
+      SUBA  $2F4A,PC
+      SUBA  >$3252,PC
+      SUBA  [$3053,PC]
       SUBA  A,PC
       SUBA  B,PC
       SUBA  D,PC
@@ -3556,7 +3700,7 @@
       CMPA  8,-SP
       CMPA  1,SP+
       CMPA  8,SP-
-      CMPA  $30CF,PC
+      CMPA  $337E,PC
       CMPA  $E1,X
       CMPA  $E3E4,X
       CMPA  [$E4E5,X]
@@ -3578,11 +3722,11 @@
       CMPA  B,SP
       CMPA  D,SP
       CMPA  [D,SP]
-      CMPA  $3204,PC
-      CMPA  <$310E,PC
-      CMPA  $2D0E,PC
-      CMPA  >$3016,PC
-      CMPA  [$2E17,PC]
+      CMPA  $34B3,PC
+      CMPA  <$33BD,PC
+      CMPA  $2FBD,PC
+      CMPA  >$32C5,PC
+      CMPA  [$30C6,PC]
       CMPA  A,PC
       CMPA  B,PC
       CMPA  D,PC
@@ -3602,7 +3746,7 @@
       SBCA  8,-SP
       SBCA  1,SP+
       SBCA  8,SP-
-      SBCA  $3142,PC
+      SBCA  $33F1,PC
       SBCA  $E1,X
       SBCA  $E3E4,X
       SBCA  [$E4E5,X]
@@ -3624,11 +3768,11 @@
       SBCA  B,SP
       SBCA  D,SP
       SBCA  [D,SP]
-      SBCA  $3277,PC
-      SBCA  <$3181,PC
-      SBCA  $2D81,PC
-      SBCA  >$3089,PC
-      SBCA  [$2E8A,PC]
+      SBCA  $3526,PC
+      SBCA  <$3430,PC
+      SBCA  $3030,PC
+      SBCA  >$3338,PC
+      SBCA  [$3139,PC]
       SBCA  A,PC
       SBCA  B,PC
       SBCA  D,PC
@@ -3648,7 +3792,7 @@
       SUBD  8,-SP
       SUBD  1,SP+
       SUBD  8,SP-
-      SUBD  $31B5,PC
+      SUBD  $3464,PC
       SUBD  $E1,X
       SUBD  $E3E4,X
       SUBD  [$E4E5,X]
@@ -3670,11 +3814,11 @@
       SUBD  B,SP
       SUBD  D,SP
       SUBD  [D,SP]
-      SUBD  $32EA,PC
-      SUBD  <$31F4,PC
-      SUBD  $2DF4,PC
-      SUBD  >$30FC,PC
-      SUBD  [$2EFD,PC]
+      SUBD  $3599,PC
+      SUBD  <$34A3,PC
+      SUBD  $30A3,PC
+      SUBD  >$33AB,PC
+      SUBD  [$31AC,PC]
       SUBD  A,PC
       SUBD  B,PC
       SUBD  D,PC
@@ -3694,7 +3838,7 @@
       ANDA  8,-SP
       ANDA  1,SP+
       ANDA  8,SP-
-      ANDA  $3228,PC
+      ANDA  $34D7,PC
       ANDA  $E1,X
       ANDA  $E3E4,X
       ANDA  [$E4E5,X]
@@ -3716,11 +3860,11 @@
       ANDA  B,SP
       ANDA  D,SP
       ANDA  [D,SP]
-      ANDA  $335D,PC
-      ANDA  <$3267,PC
-      ANDA  $2E67,PC
-      ANDA  >$316F,PC
-      ANDA  [$2F70,PC]
+      ANDA  $360C,PC
+      ANDA  <$3516,PC
+      ANDA  $3116,PC
+      ANDA  >$341E,PC
+      ANDA  [$321F,PC]
       ANDA  A,PC
       ANDA  B,PC
       ANDA  D,PC
@@ -3740,7 +3884,7 @@
       BITA  8,-SP
       BITA  1,SP+
       BITA  8,SP-
-      BITA  $329B,PC
+      BITA  $354A,PC
       BITA  $E1,X
       BITA  $E3E4,X
       BITA  [$E4E5,X]
@@ -3762,11 +3906,11 @@
       BITA  B,SP
       BITA  D,SP
       BITA  [D,SP]
-      BITA  $33D0,PC
-      BITA  <$32DA,PC
-      BITA  $2EDA,PC
-      BITA  >$31E2,PC
-      BITA  [$2FE3,PC]
+      BITA  $367F,PC
+      BITA  <$3589,PC
+      BITA  $3189,PC
+      BITA  >$3491,PC
+      BITA  [$3292,PC]
       BITA  A,PC
       BITA  B,PC
       BITA  D,PC
@@ -3786,7 +3930,7 @@
       LDAA  8,-SP
       LDAA  1,SP+
       LDAA  8,SP-
-      LDAA  $330E,PC
+      LDAA  $35BD,PC
       LDAA  $E1,X
       LDAA  $E3E4,X
       LDAA  [$E4E5,X]
@@ -3808,11 +3952,11 @@
       LDAA  B,SP
       LDAA  D,SP
       LDAA  [D,SP]
-      LDAA  $3443,PC
-      LDAA  <$334D,PC
-      LDAA  $2F4D,PC
-      LDAA  >$3255,PC
-      LDAA  [$3056,PC]
+      LDAA  $36F2,PC
+      LDAA  <$35FC,PC
+      LDAA  $31FC,PC
+      LDAA  >$3504,PC
+      LDAA  [$3305,PC]
       LDAA  A,PC
       LDAA  B,PC
       LDAA  D,PC
@@ -3832,7 +3976,7 @@
       EORA  7,-SP
       EORA  1,SP+
       EORA  8,SP-
-      EORA  $3380,PC
+      EORA  $362F,PC
       EORA  $E1,X
       EORA  $E3E4,X
       EORA  [$E4E5,X]
@@ -3854,11 +3998,11 @@
       EORA  B,SP
       EORA  D,SP
       EORA  [D,SP]
-      EORA  $34B5,PC
-      EORA  <$33BF,PC
-      EORA  $2FBF,PC
-      EORA  >$32C7,PC
-      EORA  [$30C8,PC]
+      EORA  $3764,PC
+      EORA  <$366E,PC
+      EORA  $326E,PC
+      EORA  >$3576,PC
+      EORA  [$3377,PC]
       EORA  A,PC
       EORA  B,PC
       EORA  D,PC
@@ -3878,7 +4022,7 @@
       ADCA  6,-SP
       ADCA  1,SP+
       ADCA  8,SP-
-      ADCA  $33F3,PC
+      ADCA  $36A2,PC
       ADCA  $E1,X
       ADCA  $E3E4,X
       ADCA  [$E4E5,X]
@@ -3900,11 +4044,11 @@
       ADCA  B,SP
       ADCA  D,SP
       ADCA  [D,SP]
-      ADCA  $3528,PC
-      ADCA  <$3432,PC
-      ADCA  $3032,PC
-      ADCA  >$333A,PC
-      ADCA  [$313B,PC]
+      ADCA  $37D7,PC
+      ADCA  <$36E1,PC
+      ADCA  $32E1,PC
+      ADCA  >$35E9,PC
+      ADCA  [$33EA,PC]
       ADCA  A,PC
       ADCA  B,PC
       ADCA  D,PC
@@ -3924,7 +4068,7 @@
       ORAA  5,-SP
       ORAA  1,SP+
       ORAA  8,SP-
-      ORAA  $3466,PC
+      ORAA  $3715,PC
       ORAA  $E1,X
       ORAA  $E3E4,X
       ORAA  [$E4E5,X]
@@ -3946,11 +4090,11 @@
       ORAA  B,SP
       ORAA  D,SP
       ORAA  [D,SP]
-      ORAA  $359B,PC
-      ORAA  <$34A5,PC
-      ORAA  $30A5,PC
-      ORAA  >$33AD,PC
-      ORAA  [$31AE,PC]
+      ORAA  $384A,PC
+      ORAA  <$3754,PC
+      ORAA  $3354,PC
+      ORAA  >$365C,PC
+      ORAA  [$345D,PC]
       ORAA  A,PC
       ORAA  B,PC
       ORAA  D,PC
@@ -3970,7 +4114,7 @@
       ADDA  4,-SP
       ADDA  1,SP+
       ADDA  8,SP-
-      ADDA  $34D9,PC
+      ADDA  $3788,PC
       ADDA  $E1,X
       ADDA  $E3E4,X
       ADDA  [$E4E5,X]
@@ -3992,11 +4136,11 @@
       ADDA  B,SP
       ADDA  D,SP
       ADDA  [D,SP]
-      ADDA  $360E,PC
-      ADDA  <$3518,PC
-      ADDA  $3118,PC
-      ADDA  >$3420,PC
-      ADDA  [$3221,PC]
+      ADDA  $38BD,PC
+      ADDA  <$37C7,PC
+      ADDA  $33C7,PC
+      ADDA  >$36CF,PC
+      ADDA  [$34D0,PC]
       ADDA  A,PC
       ADDA  B,PC
       ADDA  D,PC
@@ -4016,7 +4160,7 @@
       CPD   3,-SP
       CPD   1,SP+
       CPD   8,SP-
-      CPD   $354C,PC
+      CPD   $37FB,PC
       CPD   $E1,X
       CPD   $E3E4,X
       CPD   [$E4E5,X]
@@ -4038,11 +4182,11 @@
       CPD   B,SP
       CPD   D,SP
       CPD   [D,SP]
-      CPD   $3681,PC
-      CPD   <$358B,PC
-      CPD   $318B,PC
-      CPD   >$3493,PC
-      CPD   [$3294,PC]
+      CPD   $3930,PC
+      CPD   <$383A,PC
+      CPD   $343A,PC
+      CPD   >$3742,PC
+      CPD   [$3543,PC]
       CPD   A,PC
       CPD   B,PC
       CPD   D,PC
@@ -4062,7 +4206,7 @@
       CPY   2,-SP
       CPY   1,SP+
       CPY   8,SP-
-      CPY   $35BF,PC
+      CPY   $386E,PC
       CPY   $E1,X
       CPY   $E3E4,X
       CPY   [$E4E5,X]
@@ -4084,11 +4228,11 @@
       CPY   B,SP
       CPY   D,SP
       CPY   [D,SP]
-      CPY   $36F4,PC
-      CPY   <$35FE,PC
-      CPY   $31FE,PC
-      CPY   >$3506,PC
-      CPY   [$3307,PC]
+      CPY   $39A3,PC
+      CPY   <$38AD,PC
+      CPY   $34AD,PC
+      CPY   >$37B5,PC
+      CPY   [$35B6,PC]
       CPY   A,PC
       CPY   B,PC
       CPY   D,PC
@@ -4108,7 +4252,7 @@
       CPX   1,-SP
       CPX   1,SP+
       CPX   8,SP-
-      CPX   $3632,PC
+      CPX   $38E1,PC
       CPX   $E1,X
       CPX   $E3E4,X
       CPX   [$E4E5,X]
@@ -4130,11 +4274,11 @@
       CPX   B,SP
       CPX   D,SP
       CPX   [D,SP]
-      CPX   $3767,PC
-      CPX   <$3671,PC
-      CPX   $3271,PC
-      CPX   >$3579,PC
-      CPX   [$337A,PC]
+      CPX   $3A16,PC
+      CPX   <$3920,PC
+      CPX   $3520,PC
+      CPX   >$3828,PC
+      CPX   [$3629,PC]
       CPX   A,PC
       CPX   B,PC
       CPX   D,PC
@@ -4153,7 +4297,7 @@
       CPX   1,+SP
       CPS   1,SP+
       CPS   8,SP-
-      CPS   $36A3,PC
+      CPS   $3952,PC
       CPS   $E1,X
       CPS   $E3E4,X
       CPS   [$E4E5,X]
@@ -4175,11 +4319,11 @@
       CPS   B,SP
       CPS   D,SP
       CPS   [D,SP]
-      CPS   $37D8,PC
-      CPS   <$36E2,PC
-      CPS   $32E2,PC
-      CPS   >$35EA,PC
-      CPS   [$33EB,PC]
+      CPS   $3A87,PC
+      CPS   <$3991,PC
+      CPS   $3591,PC
+      CPS   >$3899,PC
+      CPS   [$369A,PC]
       CPS   A,PC
       CPS   B,PC
       CPS   D,PC
@@ -4198,12 +4342,19 @@
       CPS   1,+SP
       CPS   8,-SP
       SUBA  $B1B2
+      SUBA  >$0001
       CMPA  $B2B3
+      CMPA  >$0001
       SBCA  $B3B4
+      SBCA  >$0001
       SUBD  $B4B5
+      SUBD  >$0001
       ANDA  $B5B6
+      ANDA  >$0001
       BITA  $B6B7
+      BITA  >$0001
       LDAA  $B7B8
+      LDAA  >$0001
       EXG   D, A
       EXG   D, B
       EXG   D, CCR
@@ -4303,13 +4454,21 @@
       EXG   CCR, Y
       EXG   CCR, SP
       EORA  $B9BA
+      EORA  >$0001
       ADCA  $BABB
+      ADCA  >$0001
       ORAA  $BBBC
+      ORAA  >$0001
       ADDA  $BCBD
+      ADDA  >$0001
       CPD   $BDBE
+      CPD   >$0001
       CPY   $BEBF
+      CPY   >$0001
       CPX   $BFC0
+      CPX   >$0001
       CPS   $C0C1
+      CPS   >$0001
       SUBB  #$C1
       CMPB  #$C2
       SBCB  #$C3
@@ -4363,11 +4522,11 @@
       SUBB  B,SP
       SUBB  D,SP
       SUBB  [D,SP]
-      SUBB  $3979,PC
-      SUBB  <$3883,PC
-      SUBB  $3483,PC
-      SUBB  >$378B,PC
-      SUBB  [$358C,PC]
+      SUBB  $3C55,PC
+      SUBB  <$3B5F,PC
+      SUBB  $375F,PC
+      SUBB  >$3A67,PC
+      SUBB  [$3868,PC]
       SUBB  A,PC
       SUBB  B,PC
       SUBB  D,PC
@@ -4387,7 +4546,7 @@
       SUBB  8,-SP
       SUBB  1,SP+
       SUBB  8,SP-
-      SUBB  $38B7,PC
+      SUBB  $3B93,PC
       CMPB  $E3E4,X
       CMPB  [$E4E5,X]
       CMPB  A,X
@@ -4408,11 +4567,11 @@
       CMPB  B,SP
       CMPB  D,SP
       CMPB  [D,SP]
-      CMPB  $39E9,PC
-      CMPB  <$38F3,PC
-      CMPB  $34F3,PC
-      CMPB  >$37FB,PC
-      CMPB  [$35FC,PC]
+      CMPB  $3CC5,PC
+      CMPB  <$3BCF,PC
+      CMPB  $37CF,PC
+      CMPB  >$3AD7,PC
+      CMPB  [$38D8,PC]
       CMPB  A,PC
       CMPB  B,PC
       CMPB  D,PC
@@ -4432,7 +4591,7 @@
       CMPB  8,-SP
       CMPB  1,SP+
       CMPB  8,SP-
-      CMPB  $3927,PC
+      CMPB  $3C03,PC
       CMPB  $E1,X
       SBCB  [$E4E5,X]
       SBCB  A,X
@@ -4453,11 +4612,11 @@
       SBCB  B,SP
       SBCB  D,SP
       SBCB  [D,SP]
-      SBCB  $3A58,PC
-      SBCB  <$3962,PC
-      SBCB  $3562,PC
-      SBCB  >$386A,PC
-      SBCB  [$366B,PC]
+      SBCB  $3D34,PC
+      SBCB  <$3C3E,PC
+      SBCB  $383E,PC
+      SBCB  >$3B46,PC
+      SBCB  [$3947,PC]
       SBCB  A,PC
       SBCB  B,PC
       SBCB  D,PC
@@ -4477,7 +4636,7 @@
       SBCB  8,-SP
       SBCB  1,SP+
       SBCB  8,SP-
-      SBCB  $3996,PC
+      SBCB  $3C72,PC
       SBCB  $E1,X
       SBCB  $E3E4,X
       ADDD  A,X
@@ -4498,11 +4657,11 @@
       ADDD  B,SP
       ADDD  D,SP
       ADDD  [D,SP]
-      ADDD  $3AC7,PC
-      ADDD  <$39D1,PC
-      ADDD  $35D1,PC
-      ADDD  >$38D9,PC
-      ADDD  [$36DA,PC]
+      ADDD  $3DA3,PC
+      ADDD  <$3CAD,PC
+      ADDD  $38AD,PC
+      ADDD  >$3BB5,PC
+      ADDD  [$39B6,PC]
       ADDD  A,PC
       ADDD  B,PC
       ADDD  D,PC
@@ -4522,7 +4681,7 @@
       ADDD  8,-SP
       ADDD  1,SP+
       ADDD  8,SP-
-      ADDD  $3A05,PC
+      ADDD  $3CE1,PC
       ADDD  $E1,X
       ADDD  $E3E4,X
       ADDD  [$E4E5,X]
@@ -4543,11 +4702,11 @@
       ANDB  B,SP
       ANDB  D,SP
       ANDB  [D,SP]
-      ANDB  $3B38,PC
-      ANDB  <$3A42,PC
-      ANDB  $3642,PC
-      ANDB  >$394A,PC
-      ANDB  [$374B,PC]
+      ANDB  $3E14,PC
+      ANDB  <$3D1E,PC
+      ANDB  $391E,PC
+      ANDB  >$3C26,PC
+      ANDB  [$3A27,PC]
       ANDB  A,PC
       ANDB  B,PC
       ANDB  D,PC
@@ -4567,7 +4726,7 @@
       ANDB  8,-SP
       ANDB  1,SP+
       ANDB  8,SP-
-      ANDB  $3A76,PC
+      ANDB  $3D52,PC
       ANDB  $E1,X
       ANDB  $E3E4,X
       ANDB  [$E4E5,X]
@@ -4588,11 +4747,11 @@
       BITB  B,SP
       BITB  D,SP
       BITB  [D,SP]
-      BITB  $3BA9,PC
-      BITB  <$3AB3,PC
-      BITB  $36B3,PC
-      BITB  >$39BB,PC
-      BITB  [$37BC,PC]
+      BITB  $3E85,PC
+      BITB  <$3D8F,PC
+      BITB  $398F,PC
+      BITB  >$3C97,PC
+      BITB  [$3A98,PC]
       BITB  A,PC
       BITB  B,PC
       BITB  D,PC
@@ -4612,7 +4771,7 @@
       BITB  8,-SP
       BITB  1,SP+
       BITB  8,SP-
-      BITB  $3AE7,PC
+      BITB  $3DC3,PC
       BITB  $E1,X
       BITB  $E3E4,X
       BITB  [$E4E5,X]
@@ -4633,11 +4792,11 @@
       LDAB  B,SP
       LDAB  D,SP
       LDAB  [D,SP]
-      LDAB  $3C1A,PC
-      LDAB  <$3B24,PC
-      LDAB  $3724,PC
-      LDAB  >$3A2C,PC
-      LDAB  [$382D,PC]
+      LDAB  $3EF6,PC
+      LDAB  <$3E00,PC
+      LDAB  $3A00,PC
+      LDAB  >$3D08,PC
+      LDAB  [$3B09,PC]
       LDAB  A,PC
       LDAB  B,PC
       LDAB  D,PC
@@ -4657,7 +4816,7 @@
       LDAB  8,-SP
       LDAB  1,SP+
       LDAB  8,SP-
-      LDAB  $3B58,PC
+      LDAB  $3E34,PC
       LDAB  $E1,X
       LDAB  $E3E4,X
       LDAB  [$E4E5,X]
@@ -4678,11 +4837,11 @@
       TST   B,SP
       TST   D,SP
       TST   [D,SP]
-      TST   $3C8B,PC
-      TST   <$3B95,PC
-      TST   $3795,PC
-      TST   >$3A9D,PC
-      TST   [$389E,PC]
+      TST   $3F67,PC
+      TST   <$3E71,PC
+      TST   $3A71,PC
+      TST   >$3D79,PC
+      TST   [$3B7A,PC]
       TST   A,PC
       TST   B,PC
       TST   D,PC
@@ -4702,7 +4861,7 @@
       TST   8,-SP
       TST   1,SP+
       TST   8,SP-
-      TST   $3BC9,PC
+      TST   $3EA5,PC
       TST   $E1,X
       TST   $E3E4,X
       TST   [$E4E5,X]
@@ -4724,11 +4883,11 @@
       EORB  B,SP
       EORB  D,SP
       EORB  [D,SP]
-      EORB  $3CFE,PC
-      EORB  <$3C08,PC
-      EORB  $3808,PC
-      EORB  >$3B10,PC
-      EORB  [$3911,PC]
+      EORB  $3FDA,PC
+      EORB  <$3EE4,PC
+      EORB  $3AE4,PC
+      EORB  >$3DEC,PC
+      EORB  [$3BED,PC]
       EORB  A,PC
       EORB  B,PC
       EORB  D,PC
@@ -4748,7 +4907,7 @@
       EORB  8,-SP
       EORB  1,SP+
       EORB  8,SP-
-      EORB  $3C3C,PC
+      EORB  $3F18,PC
       EORB  $E1,X
       EORB  $E3E4,X
       EORB  [$E4E5,X]
@@ -4769,11 +4928,11 @@
       ADCB  B,SP
       ADCB  D,SP
       ADCB  [D,SP]
-      ADCB  $3D6E,PC
-      ADCB  <$3C78,PC
-      ADCB  $3878,PC
-      ADCB  >$3B80,PC
-      ADCB  [$3981,PC]
+      ADCB  $404A,PC
+      ADCB  <$3F54,PC
+      ADCB  $3B54,PC
+      ADCB  >$3E5C,PC
+      ADCB  [$3C5D,PC]
       ADCB  A,PC
       ADCB  B,PC
       ADCB  D,PC
@@ -4793,7 +4952,7 @@
       ADCB  8,-SP
       ADCB  1,SP+
       ADCB  8,SP-
-      ADCB  $3CAC,PC
+      ADCB  $3F88,PC
       ADCB  $E1,X
       ADCB  $E3E4,X
       ADCB  [$E4E5,X]
@@ -4814,11 +4973,11 @@
       ORAB  B,SP
       ORAB  D,SP
       ORAB  [D,SP]
-      ORAB  $3DDD,PC
-      ORAB  <$3CE7,PC
-      ORAB  $38E7,PC
-      ORAB  >$3BEF,PC
-      ORAB  [$39F0,PC]
+      ORAB  $40B9,PC
+      ORAB  <$3FC3,PC
+      ORAB  $3BC3,PC
+      ORAB  >$3ECB,PC
+      ORAB  [$3CCC,PC]
       ORAB  A,PC
       ORAB  B,PC
       ORAB  D,PC
@@ -4838,7 +4997,7 @@
       ORAB  8,-SP
       ORAB  1,SP+
       ORAB  8,SP-
-      ORAB  $3D1B,PC
+      ORAB  $3FF7,PC
       ORAB  $E1,X
       ORAB  $E3E4,X
       ORAB  [$E4E5,X]
@@ -4859,11 +5018,11 @@
       ADDB  B,SP
       ADDB  D,SP
       ADDB  [D,SP]
-      ADDB  $3E4C,PC
-      ADDB  <$3D56,PC
-      ADDB  $3956,PC
-      ADDB  >$3C5E,PC
-      ADDB  [$3A5F,PC]
+      ADDB  $4128,PC
+      ADDB  <$4032,PC
+      ADDB  $3C32,PC
+      ADDB  >$3F3A,PC
+      ADDB  [$3D3B,PC]
       ADDB  A,PC
       ADDB  B,PC
       ADDB  D,PC
@@ -4883,7 +5042,7 @@
       ADDB  8,-SP
       ADDB  1,SP+
       ADDB  8,SP-
-      ADDB  $3D8A,PC
+      ADDB  $4066,PC
       ADDB  $E1,X
       ADDB  $E3E4,X
       ADDB  [$E4E5,X]
@@ -4904,11 +5063,11 @@
       LDD   B,SP
       LDD   D,SP
       LDD   [D,SP]
-      LDD   $3EBD,PC
-      LDD   <$3DC7,PC
-      LDD   $39C7,PC
-      LDD   >$3CCF,PC
-      LDD   [$3AD0,PC]
+      LDD   $4199,PC
+      LDD   <$40A3,PC
+      LDD   $3CA3,PC
+      LDD   >$3FAB,PC
+      LDD   [$3DAC,PC]
       LDD   A,PC
       LDD   B,PC
       LDD   D,PC
@@ -4928,7 +5087,7 @@
       LDD   8,-SP
       LDD   1,SP+
       LDD   8,SP-
-      LDD   $3DFB,PC
+      LDD   $40D7,PC
       LDD   $E1,X
       LDD   $E3E4,X
       LDD   [$E4E5,X]
@@ -4949,11 +5108,11 @@
       LDY   B,SP
       LDY   D,SP
       LDY   [D,SP]
-      LDY   $3F2E,PC
-      LDY   <$3E38,PC
-      LDY   $3A38,PC
-      LDY   >$3D40,PC
-      LDY   [$3B41,PC]
+      LDY   $420A,PC
+      LDY   <$4114,PC
+      LDY   $3D14,PC
+      LDY   >$401C,PC
+      LDY   [$3E1D,PC]
       LDY   A,PC
       LDY   B,PC
       LDY   D,PC
@@ -4973,7 +5132,7 @@
       LDY   8,-SP
       LDY   1,SP+
       LDY   8,SP-
-      LDY   $3E6C,PC
+      LDY   $4148,PC
       LDY   $E1,X
       LDY   $E3E4,X
       LDY   [$E4E5,X]
@@ -4994,11 +5153,11 @@
       LDX   B,SP
       LDX   D,SP
       LDX   [D,SP]
-      LDX   $3F9F,PC
-      LDX   <$3EA9,PC
-      LDX   $3AA9,PC
-      LDX   >$3DB1,PC
-      LDX   [$3BB2,PC]
+      LDX   $427B,PC
+      LDX   <$4185,PC
+      LDX   $3D85,PC
+      LDX   >$408D,PC
+      LDX   [$3E8E,PC]
       LDX   A,PC
       LDX   B,PC
       LDX   D,PC
@@ -5018,7 +5177,7 @@
       LDX   8,-SP
       LDX   1,SP+
       LDX   8,SP-
-      LDX   $3EDD,PC
+      LDX   $41B9,PC
       LDX   $E1,X
       LDX   $E3E4,X
       LDX   [$E4E5,X]
@@ -5039,11 +5198,11 @@
       LDS   B,SP
       LDS   D,SP
       LDS   [D,SP]
-      LDS   $4010,PC
-      LDS   <$3F1A,PC
-      LDS   $3B1A,PC
-      LDS   >$3E22,PC
-      LDS   [$3C23,PC]
+      LDS   $42EC,PC
+      LDS   <$41F6,PC
+      LDS   $3DF6,PC
+      LDS   >$40FE,PC
+      LDS   [$3EFF,PC]
       LDS   A,PC
       LDS   B,PC
       LDS   D,PC
@@ -5063,7 +5222,7 @@
       LDS   8,-SP
       LDS   1,SP+
       LDS   8,SP-
-      LDS   $3F4E,PC
+      LDS   $422A,PC
       LDS   $E1,X
       LDS   $E3E4,X
       LDS   [$E4E5,X]
@@ -5079,18 +5238,34 @@
       LDS   D,Y
       LDS   [D,Y]
       SUBB  $F1F2
+      SUBB  >$0001
       CMPB  $F2F3
+      CMPB  >$0001
       SBCB  $F3F4
+      SBCB  >$0001
       ADDD  $F4F5
+      ADDD  >$0001
       ANDB  $F5F6
+      ANDB  >$0001
       BITB  $F6F7
+      BITB  >$0001
       LDAB  $F7F8
+      LDAB  >$0001
       TST   $F8F9
+      TST   >$0001
       EORB  $F9FA
+      EORB  >$0001
       ADCB  $FAFB
+      ADCB  >$0001
       ORAB  $FBFC
+      ORAB  >$0001
       ADDB  $FCFD
+      ADDB  >$0001
       LDD   $FDFE
+      LDD   >$0001
       LDY   $FEFF
+      LDY   >$0001
       LDX   $FF00
-      LDS   $0001
+      LDX   >$0001
+      LDS   >$0001
+      LDS   $0102

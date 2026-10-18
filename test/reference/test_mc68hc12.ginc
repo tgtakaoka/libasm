@@ -24,21 +24,31 @@
         dex
         rtc
         rti
-        bset    0x0D,x,#0x0E
-        bclr    0x0E,x,#0x0F
-        brset   0x0F,x,#0x10,(.+0x15)
+        bset    *0x0D,x,#0x0E
+        bclr    *0x0E,x,#0x0F
+        brset   *0x0F,x,#0x10,(.+0x15)
         brclr   -16,x,#0x11,(.+0x16)
 ;;; 1x
         andcc   #0x11
+        clc
+        cli
+        clv
         ediv
         mul
         emul
         orcc    #0x15
+        sec
+        sei
+        sev
         jsr     -10,x
         mina    -6,x
         leay    -6,x
+        aby
         leax    -5,x
+        abx
         leas    -4,x
+        des
+        ins
         bset    0x1D1E,#0x1F
         bclr    0x1E1F,#0x20
         brset   0x1F20,#0x21,(.+0x27)
@@ -87,6 +97,7 @@
         rora
         asra
         asla
+        lsla
         lsrd
         call    0x4B4C,0x4D
         call    12,y,0x4D
@@ -104,7 +115,9 @@
         rorb
         asrb
         aslb
+        lslb
         asld
+        lsld
         staa    *0x5B
         stab    *0x5C
         std     *0x5D
@@ -121,6 +134,7 @@
         ror     8,+y
         asr     8,-y
         asl     7,-y
+        lsl     7,-y
         clr     6,-y
         staa    5,-y
         stab    4,-y
@@ -138,6 +152,7 @@
         ror     0x7778
         asr     0x7879
         asl     0x797A
+        lsl     0x797A
         clr     0x7A7B
         staa    0x7B7C
         stab    0x7C7D
@@ -306,6 +321,30 @@
         dbne    x,(.-0xC7)
         dbne    y,(.-0xC6)
         dbne    sp,(.-0xC5)
+        tbeq    a,(.+0x44)
+        tbeq    b,(.+0x45)
+        tbeq    d,(.+0x48)
+        tbeq    x,(.+0x49)
+        tbeq    y,(.+0x4A)
+        tbeq    sp,(.+0x4B)
+        tbeq    a,(.-0xAC)
+        tbeq    b,(.-0xAB)
+        tbeq    d,(.-0xA8)
+        tbeq    x,(.-0xA7)
+        tbeq    y,(.-0xA6)
+        tbeq    sp,(.-0xA5)
+        tbne    a,(.+0x64)
+        tbne    b,(.+0x65)
+        tbne    d,(.+0x68)
+        tbne    x,(.+0x69)
+        tbne    y,(.+0x6A)
+        tbne    sp,(.+0x6B)
+        tbne    a,(.-0x8C)
+        tbne    b,(.-0x8B)
+        tbne    d,(.-0x88)
+        tbne    x,(.-0x87)
+        tbne    y,(.-0x86)
+        tbne    sp,(.-0x85)
         ibeq    a,(.+0x84)
         ibeq    b,(.+0x85)
         ibeq    d,(.+0x88)
@@ -334,6 +373,7 @@
         tfr     a,a
         tfr     a,b
         tfr     a,ccr
+        tap
         sex     a,d
         sex     a,x
         sex     a,y
@@ -346,6 +386,7 @@
         sex     b,y
         sex     b,sp
         tfr     ccr,a
+        tpa
         tfr     ccr,b
         tfr     ccr,ccr
         sex     ccr,d
@@ -360,13 +401,17 @@
         tfr     x,x
         tfr     x,y
         tfr     x,sp
+        txs
         tfr     y,d
         tfr     y,x
         tfr     y,y
         tfr     y,sp
+        tys
         tfr     sp,d
         tfr     sp,x
+        tsx
         tfr     sp,y
+        tsy
         tfr     sp,sp
         exg     a,a
         exg     a,b
@@ -379,7 +424,9 @@
         exg     ccr,ccr
         exg     d,d
         exg     d,x
+        xgdx
         exg     d,y
+        xgdy
         exg     d,sp
         exg     x,d
         exg     x,x
@@ -453,7 +500,6 @@
         tbl     2,x-
         stop
         etbl    0,y
-
 ;;; indexing
         ldaa    0,x
         ldaa    15,x
@@ -519,15 +565,14 @@
         ldaa    b,sp
         ldaa    d,sp
         ldaa    [d,sp]
-        ldaa    (.+0x102),pc
-        ldaa    (.-0xFD),pc
-        ldaa    (.-0x400),pc
-        ldaa    [0xFCFD,pc]
+        ldaa    +0xFF,pc
+        ldaa    -0x100,pc
+        ldaa    -0x404,pc
+        ldaa    [-0x303,pc]
         ldaa    a,pc
         ldaa    b,pc
         ldaa    d,pc
         ldaa    [d,pc]
-
 ;;; Local Variables:
 ;;; mode: asm
 ;;; End:

@@ -36,6 +36,8 @@ private:
     void encodeAccumIndexed(AsmInsn &insn, const Operand &op, AddrMode mode) const;
     void encodeIndexed(AsmInsn &insn, const Operand &op, AddrMode mode) const;
     void encodeRegisterPair(AsmInsn &insn, const Operand &op) const;
+    uint16_t encodeAddress(AsmInsn &insn, const Operand &op) const;
+    uint8_t encodeDirect(AsmInsn &insn, const Operand &op) const;
     void encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode) const;
 
     Error encodeImpl(StrScanner &scan, Insn &insn) const override;
