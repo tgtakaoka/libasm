@@ -551,9 +551,9 @@ bool acceptMode(AddrMode opr, AddrMode table) {
 bool acceptModes(AsmInsn &insn, const Entry *entry) {
     const auto table = entry->readFlags();
     const auto dst = table.dst();
-    // The sign bit in the destination is what the 80296 prefers, but the FE
-    // prefix assembles for the whole family, so it takes an option to ask for
-    // the bit; see M_SLREG.
+    // The sign bit in the destination is what the 80296 prefers, so the FE
+    // prefix, which assembles for the whole family, takes an option; see
+    // M_SLREG.
     if ((dst == M_SLREG || dst == M_SWREG) && insn.signedPrefix())
         return false;
     if (acceptMode(insn.dstOp.mode, table.dst()) && acceptMode(insn.src1Op.mode, table.src1()) &&

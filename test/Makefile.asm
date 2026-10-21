@@ -20,6 +20,11 @@ ASM_FLAGS = -n
 # the output stays byte-identical with the gas + z8k-coff-ld pipeline
 # (the gas long-direct relocation cannot fall back to short-direct).
 ASMOPT_z8001 = --no-short-direct
+# 80296: the sources are shared with the parts that require the FE prefix on
+# a signed multiply or divide, and ASL emits that form too, so ask for it
+# here.  The prefixless form the 80296 prefers is the library default and is
+# covered by the unit tests.
+ASMOPT_i80296 = --signed-prefix
 
 define __asm-opt # target
 $(if $(filter $(1),$(S19_OUTS) $(S28_OUTS) $(S37_OUTS)),-S16,-H16) $(ASMOPT_$(1))

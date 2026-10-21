@@ -103,6 +103,12 @@ void test_cpu() {
 }
 
 void test_2_operands() {
+    // The 80296 writes a signed multiply or divide without the FE prefix, so
+    // ask for the prefix to check the forms shared with the rest of the
+    // family; see test_signed_80296.
+    if (is80296())
+        assembler.setOption("signed-prefix", "enable");
+
     TEST("ADD 52, 32",           0x64, 0x20, 0x34);
     ONAL("ADD 52, 33", "33",     0x64, 0x21, 0x34);
     ONAL("ADD 53, 32", "53, 32", 0x64, 0x20, 0x35);
@@ -336,7 +342,7 @@ void test_2_operands() {
     // Only the 80296 can read the sign from the destination, so the option
     // has nothing to select here; see test_signed_80296.
     if (!is80296()) {
-        assembler.setOption("signed-prefix", "disable");
+        assembler.setOption("signed-prefix", "enable");
         TEST("MUL 52, 32",  0xFE, 0x6C, 0x20, 0x34);
         TEST("DIVB 36, 32", 0xFE, 0x9C, 0x20, 0x24);
         // Only there is a word multiply destination below 10H a MAC
@@ -347,6 +353,12 @@ void test_2_operands() {
 }
 
 void test_3_operands() {
+    // The 80296 writes a signed multiply or divide without the FE prefix, so
+    // ask for the prefix to check the forms shared with the rest of the
+    // family; see test_signed_80296.
+    if (is80296())
+        assembler.setOption("signed-prefix", "enable");
+
     TEST("ADD 86, 52, 32",               0x44, 0x20, 0x34, 0x56);
     ONAL("ADD 86, 52, 33", "33",         0x44, 0x21, 0x34, 0x56);
     ONAL("ADD 86, 53, 32", "53, 32",     0x44, 0x20, 0x35, 0x56);
@@ -1042,8 +1054,8 @@ void test_dsp_80296() {
     // operation there rather than a register (manual 3.3.2).
     ERRT("MULU 0, 32",     ILLEGAL_REGISTER, "0, 32",     0x6C, 0x20, 0x00);
     ERRT("MULU 0, 24, 32", ILLEGAL_REGISTER, "0, 24, 32", 0x4C, 0x20, 0x18, 0x00);
-    ERRT("MUL 0, 32",      ILLEGAL_REGISTER, "0, 32",     0xFE, 0x6C, 0x20, 0x00);
-    ERRT("MUL 0, 24, 32",  ILLEGAL_REGISTER, "0, 24, 32", 0xFE, 0x4C, 0x20, 0x18, 0x00);
+    ERRT("MUL 0, 32",      ILLEGAL_REGISTER, "0, 32",     0x6C, 0x20, 0x01);
+    ERRT("MUL 0, 24, 32",  ILLEGAL_REGISTER, "0, 24, 32", 0x4C, 0x20, 0x18, 0x01);
     // The divides and the byte multiplies have no selector, so the zero
     // register is as much a destination there as on the other parts.
     TEST("MULUB 0, 32",                   0x7C, 0x20, 0x00);
@@ -1111,13 +1123,8 @@ void test_dsp_80296() {
 }
 
 void test_signed_80296() {
-    // The FE prefix is the default, because it assembles for the whole family.
-    TEST("MUL 52, 32", 0xFE, 0x6C, 0x20, 0x34);
-
     // What the 80296 prefers is the sign in bit 0 of the destination (manual
-    // A-7 note 2).
-    assembler.setOption("signed-prefix", "disable");
-
+    // A-7 note 2), so that is the default.
     TEST("MUL 52, 32",          0x6C, 0x20, 0x35);
     TEST("MUL 84, #3412H",      0x6D, 0x12, 0x34, 0x55);
     TEST("MUL 52, [32]",        0x6E, 0x20, 0x35);
@@ -1153,6 +1160,15 @@ void test_signed_80296() {
     TEST("MULB 0, 32",                              0x7C, 0x20, 0x01);
     TEST("DIV 0, 32",                               0x8C, 0x20, 0x01);
     TEST("DIVB 0, 32",                              0x9C, 0x20, 0x01);
+
+    // The prefix is kept for compatibility with the earlier parts, so the
+    // option asks for the form they all share.
+    assembler.setOption("signed-prefix", "enable");
+
+    TEST("MUL 52, 32",   0xFE, 0x6C, 0x20, 0x34);
+    TEST("MULB 36, 32",  0xFE, 0x7C, 0x20, 0x24);
+    TEST("DIV 52, 32",   0xFE, 0x8C, 0x20, 0x34);
+    TEST("DIVB 36, 32",  0xFE, 0x9C, 0x20, 0x24);
 }
 
 void run_tests(const char *cpu) {

@@ -1147,8 +1147,9 @@ void test_dsp_80296() {
 }
 
 void test_signed_80296() {
-    // A signed multiply or divide can leave out the FE prefix and set bit 0 of
-    // its destination instead (manual A-7 note 2).
+    // A signed multiply or divide leaves out the FE prefix and sets bit 0 of
+    // its destination instead, which is the form the 80296 prefers (manual
+    // A-7 note 2).
     TEST("MUL",  "52, 32",          0x6C, 0x20, 0x35);
     TEST("MUL",  "84, #3412H",      0x6D, 0x12, 0x34, 0x55);
     TEST("MUL",  "52, [32]",        0x6E, 0x20, 0x35);

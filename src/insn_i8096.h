@@ -48,7 +48,7 @@ struct Operand final : ErrorAt {
 };
 
 struct AsmInsn final : AsmInsnImpl<Config>, EntryInsn {
-    AsmInsn(Insn &insn) : AsmInsnImpl(insn), _signedPrefix(true) {}
+    AsmInsn(Insn &insn) : AsmInsnImpl(insn), _signedPrefix(false) {}
 
     Operand dstOp, src1Op, src2Op;
 
