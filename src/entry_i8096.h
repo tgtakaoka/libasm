@@ -76,8 +76,9 @@ enum AddrMode : uint8_t {
                    // to tell it from BR, which shares opcode E3
     M_ACCSEL = 24, // MVAC/MSAC destination: a treg carrying the selector
     M_POINTR = 25, // MVAC/MSAC bit pointer: #0~31 or M_BREG
-    // The 80296 can leave out the FE prefix that marks a signed multiply or
-    // divide and set bit 0 of the destination instead (manual A-7 note 2).
+    // The 80296 prefers to leave out the FE prefix that marks a signed
+    // multiply or divide and set bit 0 of the destination instead, which is
+    // what the assembler does unless asked for the prefix (manual A-7 note 2).
     M_SLREG = 26,  // M_LREG with that bit set
     M_SWREG = 27,  // M_WREG with that bit set
     // not in TableI8096, so unconstrained by the field width

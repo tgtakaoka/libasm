@@ -59,7 +59,7 @@ AsmI8096::AsmI8096(const ValueParser::Plugins &plugins)
 
 void AsmI8096::reset() {
     Assembler::reset();
-    setSignedPrefix(true);
+    setSignedPrefix(false);
 }
 
 Error AsmI8096::setSignedPrefix(bool enable) {
