@@ -48,6 +48,7 @@
 #include "asm_tms320f.h"
 #include "asm_am29000.h"
 #include "asm_i960.h"
+#include "asm_c166.h"
 #include "asm_tms370.h"
 #include "asm_tms7000.h"
 #include "asm_tms9900.h"
@@ -93,6 +94,7 @@ tms320::AsmTms320 asm320;
 tms320f::AsmTms320f asm320f;
 am29000::AsmAm29000 asm29000;
 i960::AsmI960 asmi960;
+c166::AsmC166 asm166;
 tms370::AsmTms370 asm370;
 tms7000::AsmTms7000 asm7000;
 tms9900::AsmTms9900 asm9900;
@@ -111,6 +113,7 @@ IntelDirective dir320(asm320);
 IntelDirective dir320f(asm320f);
 IntelDirective dir29000(asm29000);
 I960Directive diri960(asmi960);
+IntelDirective dir166(asm166);
 IntelDirective dir370(asm370);
 IntelDirective dir7000(asm7000);
 IntelDirective dir8048(asm8048);
@@ -178,6 +181,7 @@ AsmCommander commander{
         &dirh16,
         &dir8300,
         &dirh8500,
+        &dir166,
         &dirsuperh,
         &dir9900,
         &dirz8000,

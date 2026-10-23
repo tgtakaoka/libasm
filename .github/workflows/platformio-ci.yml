@@ -32,6 +32,7 @@ jobs:
       matrix:
         example:
           - am29000
+          - c166
           - cdp1802
           - cp1600
           - f3850
