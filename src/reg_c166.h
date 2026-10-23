@@ -20,8 +20,12 @@
 #include <stdint.h>
 #include "config_c166.h"
 #include "str_buffer.h"
+#include "str_scanner.h"
 
 namespace libasm {
+
+struct ValueParser;
+
 namespace c166 {
 
 enum RegName : int8_t {
@@ -52,9 +56,22 @@ enum CcName : int8_t {
     CC_SGE = 13,
     CC_UGT = 14,
     CC_ULE = 15,
+    // Aliases, encoded as the condition code they share.
+    CC_EQ = 16 + CC_Z,
+    CC_NE = 16 + CC_NZ,
+    CC_ULT = 16 + CC_C,
+    CC_UGE = 16 + CC_NC,
 };
 
 namespace reg {
+
+RegName parseRegName(StrScanner &scan, const ValueParser &parser);
+CcName parseCcName(StrScanner &scan, const ValueParser &parser);
+bool isWordReg(RegName name);
+bool isByteReg(RegName name);
+uint8_t encodeRegNum(RegName name);
+// The address of the core SFR |scan| names, or 0.
+uint16_t parseSfrName(StrScanner &scan, const ValueParser &parser, CpuType cpuType);
 
 StrBuffer &outRegName(StrBuffer &out, RegName name);
 StrBuffer &outCcName(StrBuffer &out, CcName name, bool prefix);
@@ -63,6 +80,7 @@ RegName decodeWordReg(uint8_t num);
 RegName decodeByteReg(uint8_t num);
 // The name of the core SFR at |addr|, or nullptr.
 const /*PROGMEM*/ char *sfrName_P(uint16_t addr, CpuType cpuType);
+uint8_t encodeCcNum(CcName name);
 CcName decodeCcNum(uint8_t num);
 
 }  // namespace reg

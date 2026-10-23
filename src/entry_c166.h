@@ -63,6 +63,14 @@ enum AddrMode : uint8_t {
     M_MDL = 30,   // #mask8 in the 3rd byte, #data8 in the 4th byte
     M_MDH = 31,   // #data8 in the 3rd byte, #mask8 in the 4th byte
     M_RELW = 32,  // rel in the 3rd byte; the low nibble of the 4th byte is unused
+    // Assembler operands which several of the above accept.
+    M_RW = 33,    // Rw
+    M_RB = 34,    // Rb
+    M_IDIR = 35,  // [Rw]
+    M_PINC = 36,  // [Rw+]
+    M_IMM = 37,   // #imm
+    M_BIT = 38,   // bitaddr
+    M_ADDR = 39,  // address
 };
 
 constexpr auto M_WORD2 = M_IXL;

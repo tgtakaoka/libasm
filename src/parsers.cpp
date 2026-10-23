@@ -576,6 +576,9 @@ char CStyleLetterParser::readLetter(StrScanner &scan, ErrorAt &error, char delim
         case '?':
         case '\\':
             break;
+        case 'a':
+            c = 0x07;
+            break;
         case 'b':
             c = 0x08;
             break;
@@ -584,6 +587,12 @@ char CStyleLetterParser::readLetter(StrScanner &scan, ErrorAt &error, char delim
             break;
         case 'n':
             c = 0x0a;
+            break;
+        case 'v':
+            c = 0x0b;
+            break;
+        case 'f':
+            c = 0x0c;
             break;
         case 'r':
             c = 0x0d;
