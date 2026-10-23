@@ -84,6 +84,34 @@ test.bin: error: Illegal operand mode: "4, 2345h"
             0xe6, 0x09, 0x34, 0x12, 0x08, 0x1e, 0x3d, 0x01, 0x3f, 0x01, 0xfa, 0x04, 0x45, 0x23);
 }
 
+void test_asm_xc16x() {
+    PREP_ASM(c166::AsmC166, IntelDirective);
+
+    driver.setUpperHex(false);
+
+    ASM("xc16x",
+            R"(        cpu   xc16x
+        org   12340h
+loop:   comul r1, [r2+]
+- usr1  comacm [idx0+], [r3+qr0]
+        costore r4, mal
+        jmpa  cc_nusr1, loop
+        jmpa- cc_z, done
+        sbrk
+done:   comac r5, r6, rnd
+)",
+            R"(          0 :                            cpu   xc16x
+      12340 :                            org   12340h
+      12340 : 83 12 c0 02        loop:   comul r1, [r2+]
+      12344 : 93 23 d8 64        - usr1  comacm [idx0+], [r3+qr0]
+      12348 : c3 44 20 00                costore r4, mal
+      1234c : ea 1a 40 23                jmpa  cc_nusr1, loop
+      12350 : ea 21 56 23                jmpa- cc_z, done
+      12354 : 8c 00                      sbrk
+      12356 : a3 56 d1 00        done:   comac r5, r6, rnd
+)");
+}
+
 void test_dis_xc16x() {
     PREP_DIS(c166::DisC166);
 
@@ -117,6 +145,7 @@ void test_dis_xc16x() {
 void run_tests() {
     RUN_TEST(test_asm_c166);
     RUN_TEST(test_dis_c166);
+    RUN_TEST(test_asm_xc16x);
     RUN_TEST(test_dis_xc16x);
 }
 

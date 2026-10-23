@@ -60,12 +60,20 @@ struct Operand final : ErrorAt {
     CcName cc;
     Value val;
     Value bitpos;
-    Operand() : mode(M_NONE), reg(REG_UNDEF), cc(CC_UNDEF), val(), bitpos() {}
+    // The pointer update of [Rw*] (qqq) or [IDXi*] (the high nibble).
+    uint8_t update;
+    Operand() : mode(M_NONE), reg(REG_UNDEF), cc(CC_UNDEF), val(), bitpos(), update(0) {}
 };
 
 struct AsmInsn final : AsmInsnImpl<Config>, EntryInsn {
     AsmInsn(Insn &insn)
-        : AsmInsnImpl(insn), _post(0), _word2(0), _esfr(false), _extKind(EXT_NONE), _extBase(0) {}
+        : AsmInsnImpl(insn),
+          _post(0),
+          _word2(0),
+          _esfr(false),
+          _extKind(EXT_NONE),
+          _extBase(0),
+          _repeat(0) {}
 
     Operand dstOp, srcOp, extOp;
 
@@ -84,6 +92,9 @@ struct AsmInsn final : AsmInsnImpl<Config>, EntryInsn {
     }
     ExtKind extKind() const { return _extKind; }
     uint16_t extBase() const { return _extBase; }
+    // The repeat control of a "- USR0" or "- USR1" prefix.
+    void setRepeat(uint8_t rrr) { _repeat = rrr; }
+    uint8_t repeat() const { return _repeat; }
 
     // The instruction's length before its operands are encoded.
     uint8_t insnLength() const { return hasWord2() ? 4 : 2; }
@@ -101,6 +112,7 @@ private:
     bool _esfr;
     ExtKind _extKind;
     uint16_t _extBase;
+    uint8_t _repeat;
 };
 
 struct DisInsn final : DisInsnImpl<Config>, EntryInsn {

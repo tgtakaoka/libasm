@@ -140,12 +140,23 @@ RegName parseRegName(StrScanner &scan, const ValueParser &parser) {
     return REG_UNDEF;
 }
 
+RegName parseMacRegName(StrScanner &scan, const ValueParser &parser) {
+    auto p = scan;
+    const auto name = parser.readRegName(p);
+    const auto *entry = MAC_TABLE.searchText(name);
+    if (entry) {
+        scan = p;
+        return RegName(entry->name());
+    }
+    return REG_UNDEF;
+}
+
 CcName parseCcName(StrScanner &scan, const ValueParser &parser) {
     auto p = scan;
     auto name = parser.readRegName(p);
     name.iexpectText_P(TEXT_CC_);
     const auto *entry = CC_TABLE.searchText(name);
-    if (entry && !isXccOnly(CcName(entry->name()))) {
+    if (entry) {
         scan = p;
         return CcName(entry->name());
     }
@@ -164,15 +175,25 @@ uint8_t encodeRegNum(RegName name) {
     return uint8_t(name) & 0xF;
 }
 
-uint16_t parseSfrName(StrScanner &scan, const ValueParser &parser, CpuType) {
+uint16_t parseSfrName(StrScanner &scan, const ValueParser &parser, CpuType cpuType) {
     auto p = scan;
     const auto name = parser.readRegName(p);
     auto entry = SFR_TABLE.searchText(name);
+    if (entry == nullptr && cpuType == XC16X)
+        entry = XC16X_SFR_TABLE.searchText(name);
     if (entry == nullptr)
         return 0;
     scan = p;
     const auto num = uint8_t(entry->name());
     return num < 0x80 ? 0xFE00 + 2 * num : 0xFF00 + 2 * (num - 0x80);
+}
+
+bool isCoReg(RegName name) {
+    return name >= REG_MSW && name <= REG_MRW;
+}
+
+uint8_t encodeCoReg(RegName name) {
+    return name - REG_MSW;
 }
 
 RegName decodeCoReg(uint8_t code) {
@@ -230,6 +251,10 @@ CcName decodeCcNum(uint8_t num) {
 
 bool isXccOnly(CcName name) {
     return name >= CC_NUSR0;
+}
+
+uint8_t encodeXcc(CcName name) {
+    return isXccOnly(name) ? name - 32 : encodeCcNum(name) << 1;
 }
 
 CcName decodeXcc(uint8_t code) {

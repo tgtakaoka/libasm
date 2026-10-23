@@ -85,12 +85,15 @@ enum CcName : int8_t {
 namespace reg {
 
 RegName parseRegName(StrScanner &scan, const ValueParser &parser);
+RegName parseMacRegName(StrScanner &scan, const ValueParser &parser);
 CcName parseCcName(StrScanner &scan, const ValueParser &parser);
 bool isWordReg(RegName name);
 bool isByteReg(RegName name);
 uint8_t encodeRegNum(RegName name);
 // The address of the core SFR |scan| names, or 0.
 uint16_t parseSfrName(StrScanner &scan, const ValueParser &parser, CpuType cpuType);
+bool isCoReg(RegName name);
+uint8_t encodeCoReg(RegName name);
 RegName decodeCoReg(uint8_t code);
 
 StrBuffer &outRegName(StrBuffer &out, RegName name);
@@ -103,6 +106,7 @@ const /*PROGMEM*/ char *sfrName_P(uint16_t addr, CpuType cpuType);
 uint8_t encodeCcNum(CcName name);
 CcName decodeCcNum(uint8_t num);
 bool isXccOnly(CcName name);
+uint8_t encodeXcc(CcName name);
 CcName decodeXcc(uint8_t code);
 
 }  // namespace reg
