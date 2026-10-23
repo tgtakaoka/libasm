@@ -21,8 +21,10 @@ namespace text {
 namespace c166 {
 
 // clang-format off
-constexpr char TEXT_C166_LIST[]  PROGMEM = "80C166";
-constexpr char TEXT_CPU_80C166[] PROGMEM = "80C166";
+constexpr char TEXT_C166_LIST[]    PROGMEM = "80C166, 80C167";
+constexpr char TEXT_CPU_80C166[]   PROGMEM = "80C166";
+constexpr char TEXT_CPU_80C167[]   PROGMEM = "80C167";
+constexpr char TEXT_CPU_80C167CS[] PROGMEM = "80C167CS";
 
 // constexpr char TEXT_ADD[]   PROGMEM = "ADD";
 // constexpr char TEXT_ADDB[]  PROGMEM = "ADDB";
@@ -31,6 +33,7 @@ constexpr char TEXT_CPU_80C166[] PROGMEM = "80C166";
 // constexpr char TEXT_AND[]   PROGMEM = "AND";
 // constexpr char TEXT_ANDB[]  PROGMEM = "ANDB";
 constexpr char TEXT_ASHR[]  PROGMEM = "ASHR";
+constexpr char TEXT_ATOMIC[] PROGMEM = "ATOMIC";
 // constexpr char TEXT_BAND[]  PROGMEM = "BAND";
 // constexpr char TEXT_BCLR[]  PROGMEM = "BCLR";
 constexpr char TEXT_BCMP[]  PROGMEM = "BCMP";
@@ -59,6 +62,11 @@ constexpr char TEXT_DISWDT[] PROGMEM = "DISWDT";
 constexpr char TEXT_DIVLU[] PROGMEM = "DIVLU";
 // constexpr char TEXT_DIVU[]  PROGMEM = "DIVU";
 constexpr char TEXT_EINIT[] PROGMEM = "EINIT";
+constexpr char TEXT_EXTP[]  PROGMEM = "EXTP";
+constexpr char TEXT_EXTPR[] PROGMEM = "EXTPR";
+constexpr char TEXT_EXTR[]  PROGMEM = "EXTR";
+// constexpr char TEXT_EXTS[]  PROGMEM = "EXTS";
+constexpr char TEXT_EXTSR[] PROGMEM = "EXTSR";
 // constexpr char TEXT_IDLE[]  PROGMEM = "IDLE";
 // constexpr char TEXT_JB[]    PROGMEM = "JB";
 // constexpr char TEXT_JBC[]   PROGMEM = "JBC";

@@ -478,6 +478,32 @@ constexpr uint8_t INDEX_C166[] PROGMEM = {
      81,  // TEXT_XORB
 };
 
+// Not available on the 80C166.
+constexpr Entry TABLE_C167[] PROGMEM = {
+    E1(0xD1, 0x00, CF_30, TEXT_ATOMIC, M_RNG),
+    E1(0xD1, 0x80, CF_30, TEXT_EXTR,   M_RNGR),
+    E2(0xDC, 0x00, CF_3F, TEXT_EXTS,   M_RWL,  M_RNG),
+    E2(0xDC, 0x40, CF_3F, TEXT_EXTP,   M_RWL,  M_RNG),
+    E2(0xDC, 0x80, CF_3F, TEXT_EXTSR,  M_RWL,  M_RNGR),
+    E2(0xDC, 0xC0, CF_3F, TEXT_EXTPR,  M_RWL,  M_RNGR),
+    E2(0xD7, 0x00, CF_30, TEXT_EXTS,   M_SEG8, M_RNG),
+    E2(0xD7, 0x40, CF_30, TEXT_EXTP,   M_PAG,  M_RNG),
+    E2(0xD7, 0x80, CF_30, TEXT_EXTSR,  M_SEG8, M_RNGR),
+    E2(0xD7, 0xC0, CF_30, TEXT_EXTPR,  M_PAG,  M_RNGR),
+};
+
+constexpr uint8_t INDEX_C167[] PROGMEM = {
+      0,  // TEXT_ATOMIC
+      3,  // TEXT_EXTP
+      7,  // TEXT_EXTP
+      5,  // TEXT_EXTPR
+      9,  // TEXT_EXTPR
+      1,  // TEXT_EXTR
+      2,  // TEXT_EXTS
+      6,  // TEXT_EXTS
+      4,  // TEXT_EXTSR
+      8,  // TEXT_EXTSR
+};
 // clang-format on
 
 using EntryPage = entry::TableBase<Entry>;
@@ -486,10 +512,16 @@ constexpr EntryPage C166_PAGES[] PROGMEM = {
         {ARRAY_RANGE(TABLE_C166), ARRAY_RANGE(INDEX_C166)},
 };
 
+constexpr EntryPage C167_PAGES[] PROGMEM = {
+        {ARRAY_RANGE(TABLE_C166), ARRAY_RANGE(INDEX_C166)},
+        {ARRAY_RANGE(TABLE_C167), ARRAY_RANGE(INDEX_C167)},
+};
+
 using Cpu = entry::CpuBase<CpuType, EntryPage>;
 
 constexpr Cpu CPU_TABLE[] PROGMEM = {
         {C166, TEXT_CPU_80C166, ARRAY_RANGE(C166_PAGES)},
+        {C167, TEXT_CPU_80C167, ARRAY_RANGE(C167_PAGES)},
 };
 
 const Cpu *cpu(CpuType cpuType) {
@@ -620,6 +652,10 @@ const /*PROGMEM*/ char *TableC166::cpuName_P(CpuType cpuType) const {
 }
 
 Error TableC166::searchCpuName(StrScanner &name, CpuType &cpuType) const {
+    if (name.iequals_P(TEXT_CPU_80C167CS)) {
+        cpuType = C167;
+        return OK;
+    }
     const auto t = Cpu::search(name, ARRAY_RANGE(CPU_TABLE));
     if (t) {
         cpuType = t->readCpuType();

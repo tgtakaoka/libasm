@@ -24,6 +24,10 @@ using namespace libasm::test;
 AsmC166 asm166;
 Assembler &assembler(asm166);
 
+static bool c167() {
+    return strcmp_P("80C167", assembler.config().cpu_P()) == 0;
+}
+
 void set_up() {
     assembler.reset();
 }
@@ -35,6 +39,12 @@ void tear_down() {
 void test_cpu() {
     EQUALS("cpu 80C166", true, assembler.setCpu("80C166"));
     EQUALS_P("cpu 80C166", "80C166", assembler.config().cpu_P());
+
+    EQUALS("cpu 80C167", true, assembler.setCpu("80C167"));
+    EQUALS_P("cpu 80C167", "80C167", assembler.config().cpu_P());
+
+    EQUALS("cpu 80c167cs", true, assembler.setCpu("80c167cs"));
+    EQUALS_P("cpu 80c167cs", "80C167", assembler.config().cpu_P());
 }
 
 // clang-format off
@@ -307,7 +317,12 @@ void test_jump() {
     TEST("CALLS 3, 0FFFEH",         0xDA, 0x03, 0xFE, 0xFF);
     TEST("TRAP  #7FH",              0x9B, 0xFE);
     TEST("TRAP  #0",                0x9B, 0x00);
-    ERRT("JMPS  4, 2345H", OVERFLOW_RANGE, "4, 2345H", 0xFA, 0x04, 0x45, 0x23);
+    if (c167()) {
+        TEST("JMPS  0FFH, 2345H",   0xFA, 0xFF, 0x45, 0x23);
+        ATEST(0xFF0000, "JMPA CC_C, 0FF1234H", 0xEA, 0x80, 0x34, 0x12);
+    } else {
+        ERRT("JMPS  4, 2345H", OVERFLOW_RANGE, "4, 2345H", 0xFA, 0x04, 0x45, 0x23);
+    }
 
     symtab.intern(0x1010, "label");
     ATEST(0x1000, "JMPR CC_UC, label",          0x0D, 0x07);
