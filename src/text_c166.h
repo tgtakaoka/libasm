@@ -24,8 +24,10 @@ namespace text {
 namespace c166 {
 // clang-format off
 
-extern const char TEXT_C166_LIST[]  PROGMEM;
-extern const char TEXT_CPU_80C166[] PROGMEM;
+extern const char TEXT_C166_LIST[]    PROGMEM;
+extern const char TEXT_CPU_80C166[]   PROGMEM;
+extern const char TEXT_CPU_80C167[]   PROGMEM;
+extern const char TEXT_CPU_80C167CS[] PROGMEM;
 
 using common::TEXT_ADD;
 using common::TEXT_ADDB;
@@ -34,6 +36,7 @@ using common::TEXT_ADDCB;
 using common::TEXT_AND;
 using common::TEXT_ANDB;
 extern const char TEXT_ASHR[]  PROGMEM;
+extern const char TEXT_ATOMIC[] PROGMEM;
 using common::TEXT_BAND;
 using common::TEXT_BCLR;
 extern const char TEXT_BCMP[]  PROGMEM;
@@ -62,6 +65,11 @@ using common::TEXT_DIVL;
 extern const char TEXT_DIVLU[] PROGMEM;
 using common::TEXT_DIVU;
 extern const char TEXT_EINIT[] PROGMEM;
+extern const char TEXT_EXTP[]  PROGMEM;
+extern const char TEXT_EXTPR[] PROGMEM;
+extern const char TEXT_EXTR[]  PROGMEM;
+using common::TEXT_EXTS;
+extern const char TEXT_EXTSR[] PROGMEM;
 using common::TEXT_IDLE;
 using common::TEXT_JB;
 using common::TEXT_JBC;
