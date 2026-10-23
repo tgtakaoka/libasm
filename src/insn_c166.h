@@ -33,12 +33,23 @@ struct EntryInsn : EntryInsnBase<Config, Entry> {
     bool hasWord2() const { return flags().word2(); }
 };
 
+// What the mem operands of an EXTended sequence address.
+enum ExtKind : uint8_t {
+    EXT_NONE = 0,     // the DPPs, as outside a sequence
+    EXT_UNKNOWN = 1,  // a page or segment held in a register
+    EXT_PAGE = 2,     // the page of EXTP #pag10
+    EXT_SEGMENT = 3,  // the segment of EXTS #seg8
+};
+
 // The sequence an ATOMIC or EXTended instruction begins: the instructions left
-// in it, and whether their reg and bitoff operands address the ESFR area.
-// Carried across instructions on the Insn (per Insn::state<T>).
+// in it, whether their reg and bitoff operands address the ESFR area, and what
+// their mem operands address.  Carried across instructions on the Insn (per
+// Insn::state<T>).
 struct ExtState {
     uint8_t count;
     bool esfr;
+    ExtKind kind;
+    uint16_t base;
 };
 
 struct Operand final : ErrorAt {
@@ -51,7 +62,8 @@ struct Operand final : ErrorAt {
 };
 
 struct AsmInsn final : AsmInsnImpl<Config>, EntryInsn {
-    AsmInsn(Insn &insn) : AsmInsnImpl(insn), _post(0), _word2(0) {}
+    AsmInsn(Insn &insn)
+        : AsmInsnImpl(insn), _post(0), _word2(0), _esfr(false), _extKind(EXT_NONE), _extBase(0) {}
 
     Operand dstOp, srcOp, extOp;
 
@@ -61,6 +73,15 @@ struct AsmInsn final : AsmInsnImpl<Config>, EntryInsn {
     void embedByte3(uint8_t data) { _word2 |= data; }
     void embedByte4(uint8_t data) { _word2 |= static_cast<uint16_t>(data) << 8; }
     void setWord2(uint16_t data) { _word2 = data; }
+
+    void setEsfr(bool esfr) { _esfr = esfr; }
+    bool esfr() const { return _esfr; }
+    void setExt(ExtKind kind, uint16_t base) {
+        _extKind = kind;
+        _extBase = base;
+    }
+    ExtKind extKind() const { return _extKind; }
+    uint16_t extBase() const { return _extBase; }
 
     // The instruction's length before its operands are encoded.
     uint8_t insnLength() const { return hasWord2() ? 4 : 2; }
@@ -75,6 +96,9 @@ struct AsmInsn final : AsmInsnImpl<Config>, EntryInsn {
 private:
     uint8_t _post;
     uint16_t _word2;
+    bool _esfr;
+    ExtKind _extKind;
+    uint16_t _extBase;
 };
 
 struct DisInsn final : DisInsnImpl<Config>, EntryInsn {

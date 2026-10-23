@@ -27,7 +27,15 @@ namespace c166 {
 struct AsmC166 final : Assembler, Config {
     AsmC166(const ValueParser::Plugins &plugins = defaultPlugins());
 
+    void reset() override;
+
 private:
+    // The page each DPP register is assumed to hold, -1 if none.
+    int16_t _dpp[4];
+
+    Error processPseudo(StrScanner &scan, Insn &insn) override;
+    Error processDpp(StrScanner &scan, Insn &insn, uint8_t num);
+
     Error parseIndirect(StrScanner &scan, Operand &op) const;
     Error parseOperand(StrScanner &scan, Operand &op, bool first) const;
 
@@ -35,6 +43,7 @@ private:
     uint8_t encodeBitOff(AsmInsn &insn, const Operand &op) const;
     uint8_t encodeRelative(AsmInsn &insn, const Operand &op) const;
     void encodeCodeAddress(AsmInsn &insn, const Operand &op) const;
+    void encodeMemAddress(AsmInsn &insn, const Operand &op) const;
     void encodeImmediate(AsmInsn &insn, AddrMode mode, const Operand &op) const;
     void encodeOperand(AsmInsn &insn, AddrMode mode, const Operand &op) const;
 

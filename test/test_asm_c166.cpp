@@ -24,6 +24,27 @@ using namespace libasm::test;
 AsmC166 asm166;
 Assembler &assembler(asm166);
 
+// DTEST/DERRT(src1, (bytes1), src2, ...) assemble an ATOMIC or EXTended
+// instruction and the one after it on one Insn, which carries the sequence.
+#define __CODES(...) __VA_ARGS__
+#define __DTEST(err, at, src1, bytes1, src2, ...)                              \
+    do {                                                                       \
+        const Config::opcode_t e1[] = {__CODES bytes1};                        \
+        const Config::opcode_t e2[] = {__VA_ARGS__};                           \
+        const auto endian = assembler.config().endian();                       \
+        const auto unit = assembler.config().addressUnit();                    \
+        const ArrayMemory m1(0x1000, e1, sizeof(e1), endian, unit);            \
+        const ArrayMemory m2(0x1000 + sizeof(e1), e2, sizeof(e2), endian, unit); \
+        Insn insn(m1.origin());                                                \
+        ErrorAt err0;                                                          \
+        asm_assert(__FILE__, __LINE__, err0, src1, m1, insn);                  \
+        ErrorAt err1;                                                          \
+        err1.setError(at, err);                                                \
+        asm_assert(__FILE__, __LINE__, err1, src2, m2, insn);                  \
+    } while (0)
+#define DTEST(src1, bytes1, src2, ...) __DTEST(OK, "", src1, bytes1, src2, __VA_ARGS__)
+#define DERRT(src1, bytes1, src2, err, at, ...) __DTEST(err, at, src1, bytes1, src2, __VA_ARGS__)
+
 static bool c167() {
     return strcmp_P("80C167", assembler.config().cpu_P()) == 0;
 }
@@ -355,6 +376,115 @@ void test_system() {
     TEST("EINIT",  0xB5, 0x4A, 0xB5, 0xB5);
 }
 
+void test_extended() {
+    if (c167()) {
+        TEST("ATOMIC #1",          0xD1, 0x00);
+        TEST("ATOMIC #4",          0xD1, 0x30);
+        TEST("EXTR   #2",          0xD1, 0x90);
+        TEST("EXTS   R1, #1",      0xDC, 0x01);
+        TEST("EXTP   R2, #2",      0xDC, 0x52);
+        TEST("EXTSR  R3, #3",      0xDC, 0xA3);
+        TEST("EXTPR  R15, #4",     0xDC, 0xFF);
+        TEST("EXTS   #12H, #3",    0xD7, 0x20, 0x12, 0x00);
+        TEST("EXTP   #3FFH, #4",   0xD7, 0x70, 0xFF, 0x03);
+        TEST("EXTSR  #0FFH, #1",   0xD7, 0x80, 0xFF, 0x00);
+        TEST("EXTPR  #1, #2",      0xD7, 0xD0, 0x01, 0x00);
+        ERRT("ATOMIC #0",          OVERFLOW_RANGE, "#0",  0xD1, 0x30);
+        ERRT("ATOMIC #5",          OVERFLOW_RANGE, "#5",  0xD1, 0x00);
+        ERRT("EXTP   #400H, #1",   OVERFLOW_RANGE, "#400H, #1", 0xD7, 0x40, 0x00, 0x00);
+        ERRT("EXTS   #100H, #1",   OVERFLOW_RANGE, "#100H, #1", 0xD7, 0x00, 0x00, 0x00);
+    } else {
+        ERUI("ATOMIC #1");
+        ERUI("EXTR   #2");
+        ERUI("EXTS   R1, #1");
+        ERUI("EXTP   #3FFH, #4");
+    }
+}
+
+void test_esfr() {
+    if (!c167())
+        return;
+    // reg and bitoff 80H-EFH address the ESFRs for the next #irang2
+    // instructions; bitoff 00H-7FH and the GPRs are unaffected.
+    DTEST("EXTR  #1",     (0xD1, 0x80),
+          "MOV   0F012H, #1234H",  0xE6, 0x09, 0x34, 0x12);
+    DTEST("EXTPR R1, #1", (0xDC, 0xC1),
+          "BSET  0F102H.3",        0x3F, 0x81);
+    DTEST("EXTR  #1",     (0xD1, 0x80),
+          "BSET  0FD02H.3",        0x3F, 0x01);
+    DTEST("EXTR  #1",     (0xD1, 0x80),
+          "PUSH  R1",              0xEC, 0xF1);
+    DTEST("EXTS  R1, #1", (0xDC, 0x01),
+          "PUSH  0FE12H",          0xEC, 0x09);
+    // Inside the sequence an SFR is no reg, only a mem.
+    DTEST("EXTR  #1",     (0xD1, 0x80),
+          "MOV   0FE12H, R1",      0xF6, 0xF1, 0x12, 0xFE);
+    DERRT("EXTR  #1",     (0xD1, 0x80),
+          "PUSH  0FE12H", OPERAND_NOT_ALLOWED, "0FE12H");
+    DERRT("EXTR  #1",     (0xD1, 0x80),
+          "BSET  0FF02H.3", NOT_BIT_ADDRESSABLE, "0FF02H.3", 0x3F, 0x00);
+    ERRT("PUSH 0F012H",   OPERAND_NOT_ALLOWED, "0F012H");
+}
+
+void test_dpp() {
+    // A mem operand up to 0FFFFH is the address field; the DPPs reset to pages 0-3.
+    TEST("MOV  R1, 1234H",         0xF2, 0xF1, 0x34, 0x12);
+    TEST("MOV  R1, 0C010H",        0xF2, 0xF1, 0x10, 0xC0);
+    // A larger one is a physical address, which a DPP must point into.
+    TEST("DPP1 5");
+    TEST("MOV  R1, 14234H",        0xF2, 0xF1, 0x34, 0x42);
+    TEST("MOV  14234H, R1",        0xF6, 0xF1, 0x34, 0x42);
+    ERRT("MOV  R1, 18000H",        OVERFLOW_RANGE, "18000H", 0xF2, 0xF1, 0x00, 0x80);
+    TEST("DPP2 15");
+    TEST("MOV  3C010H, R1",        0xF6, 0xF1, 0x10, 0x80);
+    TEST("DPP2");
+    ERRT("MOV  R1, 3C010H",        OVERFLOW_RANGE, "3C010H", 0xF2, 0xF1, 0x10, 0xC0);
+    ERRT("DPP0 -1",                OVERFLOW_RANGE, "-1");
+    if (c167()) {
+        TEST("DPP3 3FFH");
+        TEST("MOV  R1, 0FFC010H",  0xF2, 0xF1, 0x10, 0xC0);
+        ERRT("DPP3 400H",          OVERFLOW_RANGE, "400H");
+        // In an EXTended sequence mem is in its page or segment.
+        DTEST("EXTP  #3FFH, #1",   (0xD7, 0x40, 0xFF, 0x03),
+              "MOV   R1, 0FFC010H",   0xF2, 0xF1, 0x10, 0x00);
+        DERRT("EXTP  #3FFH, #1",   (0xD7, 0x40, 0xFF, 0x03),
+              "MOV   R1, 0FF8010H", OVERFLOW_RANGE, "0FF8010H", 0xF2, 0xF1, 0x10, 0x00);
+        DTEST("EXTS  #12H, #1",    (0xD7, 0x00, 0x12, 0x00),
+              "MOV   R1, 123456H",    0xF2, 0xF1, 0x56, 0x34);
+        DERRT("EXTS  #12H, #1",    (0xD7, 0x00, 0x12, 0x00),
+              "MOV   R1, 133456H", OVERFLOW_RANGE, "133456H", 0xF2, 0xF1, 0x56, 0x34);
+        DTEST("EXTP  R1, #1",      (0xDC, 0x41),
+              "MOV   R1, 1234H",      0xF2, 0xF1, 0x34, 0x12);
+        DERRT("EXTP  R1, #1",      (0xDC, 0x41),
+              "MOV   R1, 14234H",  OVERFLOW_RANGE, "14234H", 0xF2, 0xF1, 0x34, 0x42);
+        DTEST("ATOMIC #1",         (0xD1, 0x00),
+              "MOV   R1, 14234H",     0xF2, 0xF1, 0x34, 0x42);
+    } else {
+        ERRT("DPP3 16",            OVERFLOW_RANGE, "16");
+        ERRT("MOV  R1, 40000H",    OVERFLOW_RANGE, "40000H", 0xF2, 0xF1, 0x00, 0x00);
+    }
+}
+
+// SEG, PAG, SOF and POF give the segment, page, segment offset and page offset
+// of an address.
+void test_address_operators() {
+    TEST("MOV R0, #SEG 12345H",       0xE0, 0x10);
+    TEST("MOV R0, #PAG 12345H",       0xE0, 0x40);
+    TEST("MOV R0, #SOF 12345H",       0xE6, 0xF0, 0x45, 0x23);
+    TEST("MOV R0, #POF 12345H",       0xE6, 0xF0, 0x45, 0x23);
+    TEST("DW SEG 0FFFFFFH, PAG 0FFFFFFH, POF 0FFFFFFH", 0xFF, 0x00, 0xFF, 0x03, 0xFF, 0x3F);
+    TEST("MOV R0, #HIGH 1234H",       0xE6, 0xF0, 0x12, 0x00);
+    TEST("MOV R0, #LOW 1234H",        0xE6, 0xF0, 0x34, 0x00);
+
+    symtab.intern(0x12340, "far");
+    TEST("JMPS SEG far, SOF far",     0xFA, 0x01, 0x40, 0x23);
+    // A physical target in the segment of the instruction.
+    TEST("CALLS SEG far, far",        0xDA, 0x01, 0x40, 0x23);
+    ERRT("JMPS 2, far",               OVERFLOW_RANGE, "far", 0xFA, 0x02, 0x40, 0x23);
+    if (c167())
+        TEST("EXTP #PAG far, #1",     0xD7, 0x40, 0x04, 0x00);
+}
+
 // A core SFR name stands for its address, wherever an address may be.
 void test_sfr_name() {
     TEST("ADD  SP, #1234H",     0x06, 0x09, 0x34, 0x12);
@@ -365,6 +495,8 @@ void test_sfr_name() {
     TEST("BSET ZEROS.15",       0xFF, 0x8E);
     TEST("PUSH CP",             0xEC, 0x08);
     TEST("BSET TFR.3",          0x3F, 0xD6);
+    // The DPP directives keep their names.
+    TEST("DPP0 0");
 }
 
 // GNU as writes the location counter as '.', and data as .byte and .word.
@@ -435,7 +567,7 @@ void test_errors() {
     AERRT(0x1000, "JMPR CC_UC, 0F00H", OPERAND_TOO_FAR, "0F00H", 0x0D, 0x7F);
     AERRT(0x1000, "JMPR CC_UC, 10000H", OPERAND_TOO_FAR, "10000H", 0x0D, 0xFF);
     AERRT(0x1000, "JMPA CC_UC, 11234H", OPERAND_TOO_FAR, "11234H", 0xEA, 0x00, 0x34, 0x12);
-    ERRT("JMPS 1, 10000H",       OVERFLOW_RANGE, "10000H", 0xFA, 0x01, 0x00, 0x00);
+    ERRT("JMPS 2, 10000H",       OVERFLOW_RANGE, "10000H", 0xFA, 0x02, 0x00, 0x00);
 }
 // clang-format on
 
@@ -451,6 +583,10 @@ void run_tests(const char *cpu) {
     RUN_TEST(test_jump);
     RUN_TEST(test_return);
     RUN_TEST(test_system);
+    RUN_TEST(test_extended);
+    RUN_TEST(test_esfr);
+    RUN_TEST(test_dpp);
+    RUN_TEST(test_address_operators);
     RUN_TEST(test_sfr_name);
     RUN_TEST(test_gnu_syntax);
     RUN_TEST(test_data_constant);
