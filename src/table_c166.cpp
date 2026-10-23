@@ -522,7 +522,16 @@ constexpr Entry TABLE_XC16X[] PROGMEM = {
     E0(0x8C, 0x00, CF_00, TEXT_SBRK),
 };
 
-constexpr uint8_t INDEX_XC16X[] PROGMEM = {0};
+constexpr uint8_t INDEX_XC16X[] PROGMEM = {
+      3,  // TEXT_CALLA
+      4,  // TEXT_CALLA_P
+      5,  // TEXT_CALLA_M
+      6,  // TEXT_ENWDT
+      0,  // TEXT_JMPA
+      1,  // TEXT_JMPA_P
+      2,  // TEXT_JMPA_M
+      7,  // TEXT_SBRK
+};
 
 // The MAC unit.
 constexpr Entry TABLE_MAC[] PROGMEM = {
@@ -708,7 +717,188 @@ constexpr Entry TABLE_MAC[] PROGMEM = {
     X3(0xD3, 0x00, CF_FF, 0x00, TEXT_COMOV,      M_QIX,   M_QIRL,  M_NONE),
 };
 
-constexpr uint8_t INDEX_MAC[] PROGMEM = {0};
+constexpr uint8_t INDEX_MAC[] PROGMEM = {
+     44,  // TEXT_COABS
+    108,  // TEXT_COABS
+    127,  // TEXT_COABS
+    171,  // TEXT_COABS
+      2,  // TEXT_COADD
+     52,  // TEXT_COADD
+    121,  // TEXT_COADD
+     16,  // TEXT_COADD2
+     71,  // TEXT_COADD2
+    137,  // TEXT_COADD2
+     36,  // TEXT_COASHR
+     39,  // TEXT_COASHR
+    160,  // TEXT_COASHR
+    161,  // TEXT_COASHR
+    164,  // TEXT_COASHR
+    166,  // TEXT_COASHR
+     42,  // TEXT_COCMP
+    106,  // TEXT_COCMP
+    169,  // TEXT_COCMP
+      9,  // TEXT_COLOAD
+     61,  // TEXT_COLOAD
+    129,  // TEXT_COLOAD
+     10,  // TEXT_COLOAD_M
+     63,  // TEXT_COLOAD_M
+    130,  // TEXT_COLOAD_M
+     23,  // TEXT_COLOAD2
+     83,  // TEXT_COLOAD2
+    144,  // TEXT_COLOAD2
+     24,  // TEXT_COLOAD2_M
+     85,  // TEXT_COLOAD2_M
+    145,  // TEXT_COLOAD2_M
+     45,  // TEXT_COMAC
+     46,  // TEXT_COMAC
+    109,  // TEXT_COMAC
+    110,  // TEXT_COMAC
+    172,  // TEXT_COMAC
+    173,  // TEXT_COMAC
+     47,  // TEXT_COMAC_M
+    113,  // TEXT_COMAC_M
+    174,  // TEXT_COMAC_M
+    111,  // TEXT_COMACM
+    112,  // TEXT_COMACM
+    114,  // TEXT_COMACM_M
+    117,  // TEXT_COMACMR
+    118,  // TEXT_COMACMR
+     88,  // TEXT_COMACMRSU
+     89,  // TEXT_COMACMRSU
+     66,  // TEXT_COMACMRU
+     67,  // TEXT_COMACMRU
+    102,  // TEXT_COMACMRUS
+    103,  // TEXT_COMACMRUS
+     77,  // TEXT_COMACMSU
+     78,  // TEXT_COMACMSU
+     84,  // TEXT_COMACMSU_M
+     58,  // TEXT_COMACMU
+     59,  // TEXT_COMACMU
+     62,  // TEXT_COMACMU_M
+     96,  // TEXT_COMACMUS
+     97,  // TEXT_COMACMUS
+     99,  // TEXT_COMACMUS_M
+     48,  // TEXT_COMACR
+     49,  // TEXT_COMACR
+    115,  // TEXT_COMACR
+    116,  // TEXT_COMACR
+    175,  // TEXT_COMACR
+    176,  // TEXT_COMACR
+     25,  // TEXT_COMACRSU
+     26,  // TEXT_COMACRSU
+     86,  // TEXT_COMACRSU
+     87,  // TEXT_COMACRSU
+    146,  // TEXT_COMACRSU
+    147,  // TEXT_COMACRSU
+     11,  // TEXT_COMACRU
+     12,  // TEXT_COMACRU
+     64,  // TEXT_COMACRU
+     65,  // TEXT_COMACRU
+    131,  // TEXT_COMACRU
+    132,  // TEXT_COMACRU
+     37,  // TEXT_COMACRUS
+     38,  // TEXT_COMACRUS
+    100,  // TEXT_COMACRUS
+    101,  // TEXT_COMACRUS
+    162,  // TEXT_COMACRUS
+    163,  // TEXT_COMACRUS
+     19,  // TEXT_COMACSU
+     20,  // TEXT_COMACSU
+     74,  // TEXT_COMACSU
+     75,  // TEXT_COMACSU
+    140,  // TEXT_COMACSU
+    141,  // TEXT_COMACSU
+     22,  // TEXT_COMACSU_M
+     82,  // TEXT_COMACSU_M
+    143,  // TEXT_COMACSU_M
+      5,  // TEXT_COMACU
+      6,  // TEXT_COMACU
+     55,  // TEXT_COMACU
+     56,  // TEXT_COMACU
+    124,  // TEXT_COMACU
+    125,  // TEXT_COMACU
+      8,  // TEXT_COMACU_M
+     60,  // TEXT_COMACU_M
+    128,  // TEXT_COMACU_M
+     32,  // TEXT_COMACUS
+     33,  // TEXT_COMACUS
+     94,  // TEXT_COMACUS
+     95,  // TEXT_COMACUS
+    155,  // TEXT_COMACUS
+    156,  // TEXT_COMACUS
+     35,  // TEXT_COMACUS_M
+     98,  // TEXT_COMACUS_M
+    159,  // TEXT_COMACUS_M
+     13,  // TEXT_COMAX
+     68,  // TEXT_COMAX
+    134,  // TEXT_COMAX
+     27,  // TEXT_COMIN
+     90,  // TEXT_COMIN
+    149,  // TEXT_COMIN
+    179,  // TEXT_COMOV
+     40,  // TEXT_COMUL
+     41,  // TEXT_COMUL
+    104,  // TEXT_COMUL
+    105,  // TEXT_COMUL
+    167,  // TEXT_COMUL
+    168,  // TEXT_COMUL
+     43,  // TEXT_COMUL_M
+    107,  // TEXT_COMUL_M
+    170,  // TEXT_COMUL_M
+     14,  // TEXT_COMULSU
+     15,  // TEXT_COMULSU
+     69,  // TEXT_COMULSU
+     70,  // TEXT_COMULSU
+    135,  // TEXT_COMULSU
+    136,  // TEXT_COMULSU
+     17,  // TEXT_COMULSU_M
+     72,  // TEXT_COMULSU_M
+    138,  // TEXT_COMULSU_M
+      0,  // TEXT_COMULU
+      1,  // TEXT_COMULU
+     50,  // TEXT_COMULU
+     51,  // TEXT_COMULU
+    119,  // TEXT_COMULU
+    120,  // TEXT_COMULU
+      3,  // TEXT_COMULU_M
+     53,  // TEXT_COMULU_M
+    122,  // TEXT_COMULU_M
+     28,  // TEXT_COMULUS
+     29,  // TEXT_COMULUS
+     91,  // TEXT_COMULUS
+     92,  // TEXT_COMULUS
+    150,  // TEXT_COMULUS
+    151,  // TEXT_COMULUS
+     30,  // TEXT_COMULUS_M
+     93,  // TEXT_COMULUS_M
+    153,  // TEXT_COMULUS_M
+    133,  // TEXT_CONEG
+    148,  // TEXT_CONEG
+     79,  // TEXT_CONOP
+     80,  // TEXT_CONOP
+     81,  // TEXT_CONOP
+    165,  // TEXT_CORND
+     31,  // TEXT_COSHL
+    152,  // TEXT_COSHL
+    154,  // TEXT_COSHL
+     34,  // TEXT_COSHR
+    157,  // TEXT_COSHR
+    158,  // TEXT_COSHR
+    177,  // TEXT_COSTORE
+    178,  // TEXT_COSTORE
+      4,  // TEXT_COSUB
+     54,  // TEXT_COSUB
+    123,  // TEXT_COSUB
+     18,  // TEXT_COSUB2
+     73,  // TEXT_COSUB2
+    139,  // TEXT_COSUB2
+     21,  // TEXT_COSUB2R
+     76,  // TEXT_COSUB2R
+    142,  // TEXT_COSUB2R
+      7,  // TEXT_COSUBR
+     57,  // TEXT_COSUBR
+    126,  // TEXT_COSUBR
+};
 // clang-format on
 
 using EntryPage = entry::TableBase<Entry>;
@@ -762,6 +952,8 @@ bool acceptImm(const Operand &op, AddrMode table) {
         return fitsImm(op, 7);
     case M_D4:
         return fitsImm(op, 15);
+    case M_D5:
+        return fitsImm(op, 16);
     case M_TRAP:
     case M_IM16:
     case M_IM8:
@@ -801,13 +993,17 @@ bool acceptMode(const AsmInsn &insn, const Operand &op, AddrMode table) {
     case M_RB:
         return table == M_RBH || table == M_RBL || table == M_REGB;
     case M_IR:
-        return table == M_IRH || table == M_IRL || (table == M_IR2 && encodeRegNum(op.reg) < 4);
+        return table == M_IRH || table == M_IRL || table == M_QIRL ||
+               (table == M_IR2 && encodeRegNum(op.reg) < 4);
     case M_PI:
-        return table == M_PIH || table == M_PIL || (table == M_PI2 && encodeRegNum(op.reg) < 4);
+        return table == M_PIH || table == M_PIL || table == M_QIRL ||
+               (table == M_PI2 && encodeRegNum(op.reg) < 4);
     case M_IMM:
         return acceptImm(op, table);
     case M_CC:
-        return table == M_CCO;
+        return table == M_CCO || table == M_XCC;
+    case M_NONE:
+        return table == M_QNOP;
     case M_BIT:
         return table == M_BITO || table == M_BITQ || table == M_BITZ;
     case M_ADDR:
@@ -824,7 +1020,7 @@ bool acceptModes(AsmInsn &insn, const Entry *entry) {
     const auto src = table.src();
     if (src == M_MDL || src == M_MDH)
         return insn.srcOp.mode == M_IMM && insn.extOp.mode == M_IMM;
-    return acceptMode(insn, insn.srcOp, src) && insn.extOp.mode == M_NONE;
+    return acceptMode(insn, insn.srcOp, src) && acceptMode(insn, insn.extOp, table.ext());
 }
 
 void readCode(AsmInsn &insn, const Entry *entry, const EntryPage *) {

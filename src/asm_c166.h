@@ -36,6 +36,8 @@ private:
     Error processPseudo(StrScanner &scan, Insn &insn) override;
     Error processDpp(StrScanner &scan, Insn &insn, uint8_t num);
 
+    bool parseCoIndirect(StrScanner &scan, Operand &op) const;
+    Error parseRepeat(StrScanner &scan, AsmInsn &insn) const;
     Error parseIndirect(StrScanner &scan, Operand &op) const;
     Error parseOperand(StrScanner &scan, Operand &op, bool first) const;
 

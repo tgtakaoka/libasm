@@ -50,6 +50,10 @@ static bool c167() {
     return strcmp_P("80C166", assembler.config().cpu_P()) != 0;
 }
 
+static bool xc16x() {
+    return strcmp_P("XC16X", assembler.config().cpu_P()) == 0;
+}
+
 void set_up() {
     assembler.reset();
 }
@@ -486,6 +490,113 @@ void test_address_operators() {
         TEST("EXTP #PAG far, #1",     0xD7, 0x40, 0x04, 0x00);
 }
 
+// The MAC unit of the XC16X.  Encodings from the C166S V2 user's manual
+// (section 8.2); those marked are as the Keil assembler lists them.
+void test_mac() {
+    if (!xc16x()) {
+        ERUI("CoMUL R1, R2");
+        ERRT("MOV R1, [IDX0]", UNKNOWN_OPERAND, "IDX0]");
+        return;
+    }
+    TEST("CoMULu  R5, R4",                0xA3, 0x54, 0x00, 0x00);  // Keil
+    TEST("CoMACRu R7, R6",                0xA3, 0x76, 0x30, 0x00);  // Keil
+    TEST("CoMUL   R4, R10",               0xA3, 0x4A, 0xC0, 0x00);  // Keil
+    TEST("CoMAC-  R4, R10",               0xA3, 0x4A, 0xE0, 0x00);  // Keil
+    TEST("CoLOAD  R8, R9",                0xA3, 0x89, 0x22, 0x00);  // Keil
+    TEST("CoMUL   [IDX0+], [R8]",         0x93, 0x28, 0xC0, 0x01);  // Keil
+    TEST("CoMACu  [IDX0+], [R8]",         0x93, 0x28, 0x10, 0x01);  // Keil
+    TEST("CoMAC   R1, R2, rnd",           0xA3, 0x12, 0xD1, 0x00);
+    TEST("CoMAC   R1, [R2-], rnd",        0x83, 0x12, 0xD1, 0x03);
+    TEST("CoMACM  [IDX1-QX1], [R3-QR1]",  0x93, 0xF3, 0xD8, 0x07);
+    TEST("CoMACMRus [IDX0+QX0], [R4+QR0], rnd", 0x93, 0x44, 0xB9, 0x04);
+    TEST("CoMOV   [IDX0+], [R1+]",        0xD3, 0x21, 0x00, 0x02);
+    TEST("CoNOP   [R4+]",                 0x93, 0x14, 0x5A, 0x02);
+    TEST("CoNOP   [IDX0+]",               0x93, 0x20, 0x5A, 0x01);
+    TEST("CoNOP   [IDX1], [R2-QR0]",      0x93, 0x92, 0x5A, 0x05);
+    TEST("CoSHL   #16",                   0xA3, 0x00, 0x82, 0x10);
+    TEST("CoSHR   R5",                    0xA3, 0x55, 0x9A, 0x00);
+    TEST("CoSHL   [R6+]",                 0x83, 0x66, 0x8A, 0x02);
+    TEST("CoASHR  #3, rnd",               0xA3, 0x00, 0xB2, 0x03);
+    TEST("CoRND",                         0xA3, 0x00, 0xB2, 0x00);
+    TEST("CoABS",                         0xA3, 0x00, 0x1A, 0x00);
+    TEST("CoNEG   rnd",                   0xA3, 0x00, 0x72, 0x00);
+    TEST("CoSTORE R5, MAH",               0xC3, 0x55, 0x08, 0x00);  // Keil
+    TEST("CoSTORE R4, MAL",               0xC3, 0x44, 0x20, 0x00);  // Keil
+    TEST("CoSTORE R2, MRW",               0xC3, 0x22, 0x30, 0x00);
+    TEST("CoSTORE [R3+], MSW",            0xB3, 0x33, 0x00, 0x02);
+
+    ERRT("CoSHL   #17",                   OPERAND_NOT_ALLOWED, "#17");
+    ERRT("CoMUL   R1, R2, rnd, rnd",      GARBAGE_AT_END, ", rnd");
+    ERRT("CoMACM  R1, [R2]",              OPERAND_NOT_ALLOWED, "R1, [R2]");
+    ERRT("CoSTORE R1, IDX0",              ILLEGAL_REGISTER, "IDX0");
+    ERRT("CoMUL   [IDX0+QR0], [R1]",      MISSING_CLOSING_BRACKET, "QR0], [R1]");
+}
+
+// The XC16X adds four conditions to JMPA and CALLA, a branch prediction bit
+// and, for JMPA, a pre-fetch hint which is set for a short backward loop.
+// The repeat control decrements MRW and sets USR0 or USR1; any CoXXX
+// instruction takes it. The user's manual writes "- USR1", the TASKING
+// assembler "-usr1".
+void test_repeat() {
+    if (!xc16x()) {
+        ERUI("- USR0 CoABS");
+        ERUI("-usr1 CoMAC R12, [R2+]");
+        return;
+    }
+    TEST("- USR0 CoMULU  R5, [R4]",         0x83, 0x54, 0x00, 0x41);
+    TEST("- USR1 CoMULU  R5, [R4+], rnd",   0x83, 0x54, 0x01, 0x62);
+    TEST("- USR0 CoSHL   [R4+]",            0x83, 0x44, 0x8A, 0x42);
+    TEST("- USR1 CoASHR  [R4], rnd",        0x83, 0x44, 0xBA, 0x61);
+    TEST("- USR0 CoMUL   [IDX0+], [R8]",    0x93, 0x28, 0xC0, 0x41);
+    TEST("- USR1 CoMAC   [IDX1], [R2-], rnd", 0x93, 0x92, 0xD1, 0x63);
+    TEST("- USR0 CoMACM  [IDX0+], [R0+]",   0x93, 0x20, 0xD8, 0x42);
+    TEST("- USR0 CoNOP   [IDX0+]",          0x93, 0x20, 0x5A, 0x41);
+    TEST("- USR1 CoNOP   [R3+QR1]",         0x93, 0x13, 0x5A, 0x66);
+    TEST("- USR0 CoMULU  R5, R4",           0xA3, 0x54, 0x00, 0x40);
+    TEST("- USR1 CoMULU  R5, R4, rnd",      0xA3, 0x54, 0x01, 0x60);
+    TEST("- USR0 CoABS",                    0xA3, 0x00, 0x1A, 0x40);
+    TEST("- USR1 CoNEG   rnd",              0xA3, 0x00, 0x72, 0x60);
+    TEST("- USR0 CoSHL   #3",               0xA3, 0x00, 0x82, 0x43);
+    TEST("- USR1 CoSHL   R5",               0xA3, 0x55, 0x8A, 0x60);
+    TEST("- USR0 CoASHR  #3, rnd",          0xA3, 0x00, 0xB2, 0x43);
+    TEST("- USR1 CoASHR  R5, rnd",          0xA3, 0x55, 0xBA, 0x60);
+    TEST("- USR0 CoSTORE [R4+], MAL",       0xB3, 0x44, 0x20, 0x42);
+    TEST("- USR1 CoSTORE R5, MAH",          0xC3, 0x55, 0x08, 0x60);
+    TEST("- USR0 CoMOV   [IDX0+], [R8+]",   0xD3, 0x28, 0x00, 0x42);
+    TEST("-usr1  CoMAC   r12, [r2+]",       0x83, 0xC2, 0xD0, 0x62);
+    TEST("-USR0  CoABS",                    0xA3, 0x00, 0x1A, 0x40);
+
+    ERRT("- USR1 MOV R1, R2",               OPERAND_NOT_ALLOWED, "R1, R2");
+    ERRT("- USR0 NOP",                      OPERAND_NOT_ALLOWED, "");
+    ERUI("- USR2 CoMAC R1, R2");
+    ERUI("- NUSR0 CoABS");
+    ERUI("- USR0");
+    ERUI("- USR0 - USR1 CoMAC R1, R2");
+}
+
+void test_xc16x_branch() {
+    if (!xc16x()) {
+        ERRT("JMPA cc_usr0, 1234H", OPERAND_NOT_ALLOWED, "cc_usr0, 1234H");
+        ERUI("JMPA+ cc_UC, 1234H");
+        ERUI("SBRK");
+        return;
+    }
+    ATEST(0x1000, "JMPA   cc_UC, 1234H",     0xEA, 0x00, 0x34, 0x12);
+    ATEST(0x1000, "JMPA+  cc_UC, 1234H",     0xEA, 0x00, 0x34, 0x12);
+    ATEST(0x1000, "JMPA-  cc_Z, 1234H",      0xEA, 0x21, 0x34, 0x12);
+    ATEST(0x1010, "JMPA   cc_nusr1, 1000H",  0xEA, 0x1A, 0x00, 0x10);
+    ATEST(0x1020, "JMPA   cc_usr0, 1000H",   0xEA, 0x2A, 0x00, 0x10);
+    ATEST(0x1021, "JMPA   cc_nusr0, 1000H",  0xEA, 0x08, 0x00, 0x10);
+    ATEST(0x1000, "JMPA   cc_UC, $",         0xEA, 0x00, 0x00, 0x10);
+    ATEST(0x1000, "CALLA  cc_usr1, 2000H",   0xCA, 0x38, 0x00, 0x20);
+    ATEST(0x1000, "CALLA- cc_usr0, 2000H",   0xCA, 0x29, 0x00, 0x20);
+    ATEST(0x1010, "CALLA  cc_UC, 1000H",     0xCA, 0x00, 0x00, 0x10);
+    ERRT("JMPR cc_usr0, $",   OPERAND_NOT_ALLOWED, "cc_usr0, $");
+    ERRT("JMPI cc_nusr1, [R1]", OPERAND_NOT_ALLOWED, "cc_nusr1, [R1]");
+    TEST("ENWDT", 0x85, 0x7A, 0x85, 0x85);
+    TEST("SBRK",  0x8C, 0x00);
+}
+
 // A core SFR name stands for its address, wherever an address may be.
 void test_sfr_name() {
     TEST("ADD  SP, #1234H",     0x06, 0x09, 0x34, 0x12);
@@ -496,6 +607,14 @@ void test_sfr_name() {
     TEST("BSET ZEROS.15",       0xFF, 0x8E);
     TEST("PUSH CP",             0xEC, 0x08);
     TEST("BSET TFR.3",          0x3F, 0xD6);
+    // The SFRs the C166S V2 core adds.
+    if (xc16x()) {
+        TEST("MOV  CPUCON1, #1234H", 0xE6, 0x0C, 0x34, 0x12);
+        TEST("BSET VECSEG.3",        0x3F, 0x89);
+    } else {
+        ERUS("MOV  CPUCON1, #1234H", "CPUCON1, #1234H", 0xE6, 0x00, 0x34, 0x12);
+        ERUS("BSET VECSEG.3",        "VECSEG.3", 0x3F, 0x00);
+    }
     // The DPP directives keep their names.
     TEST("DPP0 0");
 }
@@ -588,6 +707,9 @@ void run_tests(const char *cpu) {
     RUN_TEST(test_esfr);
     RUN_TEST(test_dpp);
     RUN_TEST(test_address_operators);
+    RUN_TEST(test_mac);
+    RUN_TEST(test_repeat);
+    RUN_TEST(test_xc16x_branch);
     RUN_TEST(test_sfr_name);
     RUN_TEST(test_gnu_syntax);
     RUN_TEST(test_data_constant);

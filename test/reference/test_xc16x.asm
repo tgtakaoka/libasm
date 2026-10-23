@@ -14,8 +14,8 @@
 
         CPU     XC16X
         ORG     0AB1230H
-        INCLUDE "test_c166.inc"
-        INCLUDE "test_c167.inc"
+        INCLUDE "test_c166.ginc"
+        INCLUDE "test_c167.ginc"
         INCLUDE "test_xc16x.inc"
         END
 

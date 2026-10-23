@@ -156,10 +156,12 @@ struct C166OperatorParser final : OperatorParser, Singleton<C166OperatorParser> 
     }
 };
 
+// A mnemonic may end with '+' or '-' (JMPA+, CoMAC-), and a "-USR1" prefix
+// begins with '-'.
 struct C166SymbolParser final : PrefixSymbolParser, Singleton<C166SymbolParser> {
     C166SymbolParser() : PrefixSymbolParser(nullptr, text::common::PSTR_UNDER_QUESTION) {}
     bool instructionLetter(char c) const override {
-        return PrefixSymbolParser::instructionLetter(c) || c == '.';
+        return PrefixSymbolParser::instructionLetter(c) || c == '+' || c == '-' || c == '.';
     }
     // GNU as writes the location counter as '.'.
     bool locationSymbol(StrScanner &scan) const override {
@@ -219,8 +221,58 @@ Error AsmC166::processDpp(StrScanner &scan, Insn &insn, uint8_t num) {
     return OK;
 }
 
+// The [IDXi*] and [Rw*] operands of a CoXXX instruction which no other
+// instruction takes: an IDX pointer, a post-decrement, or an update by an
+// offset register.  The update code is the one of the instruction format.
+bool AsmC166::parseCoIndirect(StrScanner &scan, Operand &op) const {
+    auto p = scan;
+    const auto regp = p.skipSpaces();
+    auto reg = parseMacRegName(p, parser());
+    const auto idx = reg == REG_IDX0 || reg == REG_IDX1;
+    if (!idx) {
+        p = regp;
+        reg = parseRegName(p, parser());
+        if (!isWordReg(reg))
+            return false;
+    }
+    uint8_t update = 1;
+    auto q = p;
+    const auto sign = q.skipSpaces().expect('+') ? '+' : (q.expect('-') ? '-' : 0);
+    if (sign) {
+        update = sign == '+' ? 2 : 3;
+        auto r = q;
+        const auto offset = parseMacRegName(r.skipSpaces(), parser());
+        const auto q0 = idx ? REG_QX0 : REG_QR0;
+        if (offset == q0 || offset == q0 + 1) {
+            update = (sign == '+' ? 4 : 5) + 2 * (offset - q0);
+            q = r;
+        } else if (!idx && sign == '+') {
+            return false;  // [Rw+] and [Rw+#data16]
+        }
+        p = q;
+    } else if (!idx) {
+        return false;  // [Rw]
+    }
+    if (!p.skipSpaces().expect(']')) {
+        op.setError(p, MISSING_CLOSING_BRACKET);
+        scan = p;
+        return true;
+    }
+    op.reg = reg;
+    op.update = idx ? (reg == REG_IDX1 ? 8 : 0) | update : update;
+    op.mode = idx ? M_QIX : M_QIRL;
+    scan = p;
+    return true;
+}
+
 Error AsmC166::parseIndirect(StrScanner &scan, Operand &op) const {
     auto p = scan;
+    if (cpuType() == XC16X && parseCoIndirect(p, op)) {
+        if (op.hasError())
+            return op.getError();
+        scan = p;
+        return OK;
+    }
     const auto predec = p.skipSpaces().expect('-');
     const auto regp = p.skipSpaces();
     op.reg = parseRegName(p, parser());
@@ -237,9 +289,11 @@ Error AsmC166::parseIndirect(StrScanner &scan, Operand &op) const {
             op.mode = M_IXL;
         } else {
             op.mode = M_PI;
+            op.update = 2;
         }
     } else {
         op.mode = M_IR;
+        op.update = 1;
     }
     if (!p.skipSpaces().expect(']'))
         return op.setError(p, MISSING_CLOSING_BRACKET);
@@ -273,10 +327,27 @@ Error AsmC166::parseOperand(StrScanner &scan, Operand &op, bool first) const {
     if (first) {
         op.cc = parseCcName(p, parser());
         if (op.cc != CC_UNDEF) {
-            op.mode = M_CC;
+            op.mode = isXccOnly(op.cc) ? M_XCC : M_CC;
             scan = p;
             return OK;
         }
+    }
+
+    if (cpuType() == XC16X) {
+        if (p.iexpectWord_P(TEXT_RND)) {
+            op.mode = M_RND;
+            scan = p;
+            return OK;
+        }
+        const auto regp = p;
+        op.reg = parseMacRegName(p, parser());
+        if (isCoReg(op.reg)) {
+            op.mode = M_COREG;
+            scan = p;
+            return OK;
+        }
+        if (op.reg != REG_UNDEF)
+            return op.setError(regp, ILLEGAL_REGISTER);
     }
 
     op.reg = parseRegName(p, parser());
@@ -362,6 +433,10 @@ void AsmC166::encodeCodeAddress(AsmInsn &insn, const Operand &op) const {
         insn.setErrorIf(op, checkAddr(target));
         if ((target & ~UINT32_C(0xFFFF)) != (insn.address() & ~UINT32_C(0xFFFF)))
             insn.setErrorIf(op, OPERAND_TOO_FAR);
+        // The pre-fetch hint of JMPA marks a short backward loop.
+        const auto back = insn.address() - target;
+        if (insn.cf() == CF_FA && back > 0 && back <= 32)
+            insn.embedPost(2);
     }
     insn.setWord2(target);
 }
@@ -487,6 +562,27 @@ void AsmC166::encodeOperand(AsmInsn &insn, AddrMode mode, const Operand &op) con
     case M_CCO:
         insn.embed(encodeCcNum(op.cc) << 4);
         break;
+    case M_XCC:
+        insn.embedPost(encodeXcc(op.cc) << 3);
+        break;
+    case M_QIX:
+        insn.embedPost(op.update << 4);
+        break;
+    case M_QIRL:
+        insn.embedPost(num);
+        insn.embedByte4(op.update);
+        break;
+    case M_QNOP:
+        insn.embedByte4(1);
+        break;
+    case M_D5:
+        insn.embedByte4(op.val.getUnsigned());
+        break;
+    case M_COREG:
+        insn.embedByte3(encodeCoReg(op.reg) << 3);
+        break;
+    case M_RND:
+        break;
     case M_BITO:
         insn.embedPost(encodeBitOff(insn, op));
         insn.embed(op.bit.getUnsigned() << 4);
@@ -528,8 +624,37 @@ void AsmC166::encodeOperand(AsmInsn &insn, AddrMode mode, const Operand &op) con
     }
 }
 
+// A "- USR0" or "- USR1" prefix, which a CoXXX instruction follows.
+Error AsmC166::parseRepeat(StrScanner &scan, AsmInsn &insn) const {
+    if (cpuType() != XC16X)
+        return insn.setError(scan, UNKNOWN_INSTRUCTION);
+    StrScanner name{insn.name()};
+    name.expect('-');
+    auto p = scan;
+    if (name.size() == 0)
+        name = parser().readRegName(p);
+    uint8_t rrr = 0;
+    if (name.iequals_P(TEXT_CC_USR0)) {
+        rrr = 2;
+    } else if (name.iequals_P(TEXT_CC_USR1)) {
+        rrr = 3;
+    } else {
+        return insn.setError(scan, UNKNOWN_INSTRUCTION);
+    }
+    StrScanner mnemonic;
+    const auto at = p.skipSpaces();
+    if (parser().readInstruction(p, mnemonic) || *mnemonic == '-')
+        return insn.setError(at, UNKNOWN_INSTRUCTION);
+    insn.nameBuffer().reset().text(mnemonic);
+    insn.setRepeat(rrr);
+    scan = p;
+    return OK;
+}
+
 Error AsmC166::encodeImpl(StrScanner &scan, Insn &_insn) const {
     AsmInsn insn(_insn);
+    if (*insn.name() == '-' && parseRepeat(scan, insn))
+        return _insn.setError(insn);
     auto &state = _insn.state<ExtState>();
     if (state.count) {
         state.count--;
@@ -549,13 +674,22 @@ Error AsmC166::encodeImpl(StrScanner &scan, Insn &_insn) const {
             return _insn.setError(insn.extOp);
         scan.skipSpaces();
     }
+    if (!endOfLine(scan))
+        return _insn.setError(scan, GARBAGE_AT_END);
 
     if (searchName(cpuType(), insn))
         return _insn.setError(insn.dstOp, insn);
 
+    if (insn.repeat() && !insn.rrr())
+        return _insn.setError(insn.dstOp, OPERAND_NOT_ALLOWED);
+    if (insn.flags().hasSub())
+        insn.embedByte3(insn.flags().sub());
+    if (insn.rrr())
+        insn.embedByte4(insn.repeat() << 5);
     encodeOperand(insn, insn.dst(), insn.dstOp);
     const auto src = insn.src();
     encodeOperand(insn, src, insn.srcOp);
+    encodeOperand(insn, insn.ext(), insn.extOp);
     if (src == M_MDL || src == M_MDH) {
         // BFLDL takes #mask8 then #data8; BFLDH puts #data8 first.
         const auto &first = src == M_MDL ? insn.srcOp : insn.extOp;
@@ -568,8 +702,11 @@ Error AsmC166::encodeImpl(StrScanner &scan, Insn &_insn) const {
         insn.embedByte3(first.val.getUnsigned());
         insn.embedByte4(second.val.getUnsigned());
     }
-    if (insn.cf() == CF_NN)
-        insn.embedPost(insn.post() >> 4);
+    if (insn.cf() == CF_NN) {
+        // The register is in either nibble; repeat it in the other.
+        const auto num = (insn.post() >> 4) | (insn.post() & 0xF);
+        insn.setPost(num | (num << 4));
+    }
     if (insn.cf() == CF_PD)
         insn.setWord2(insn.opCode() | (static_cast<uint16_t>(insn.opCode()) << 8));
     beginSequence(insn, state);
