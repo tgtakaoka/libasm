@@ -29,7 +29,6 @@ int main(int argc, const char **argv) {
 
     dis3850.setOption("intel-style", "enable");
     dis3850.setOption("relative", "enable");
-    dis3850.setOption("use-scratchpad", "on");
 
     TestGenerator generator(driver, dis3850, 0x0100, standardTokenizers<IntelNumber>(dis3850.curSym()));
     generator.generate();
