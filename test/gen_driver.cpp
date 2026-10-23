@@ -93,6 +93,8 @@ void GenDriver::printList() {
             fprintf(_list, "%s\n", _formatter.getLine(out.reset()).str());
         } while (_formatter.hasNextLine());
     }
+    // Keep the files current while a long generation runs.
+    flush();
 }
 
 void GenDriver::flush() {
