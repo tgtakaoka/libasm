@@ -24,10 +24,15 @@ namespace c166 {
 
 enum CpuType : uint8_t {
     C166,
+    C167,
 };
 
-struct Config : ConfigImpl<CpuType, ADDRESS_18BIT, ADDRESS_BYTE, OPCODE_8BIT, ENDIAN_LITTLE, 4, 6> {
+struct Config : ConfigImpl<CpuType, ADDRESS_24BIT, ADDRESS_BYTE, OPCODE_8BIT, ENDIAN_LITTLE, 8, 6> {
     Config(const InsnTable<CpuType> &table) : ConfigImpl(table, C166) {}
+
+    AddressWidth addressWidth() const override {
+        return cpuType() == C166 ? ADDRESS_18BIT : ADDRESS_24BIT;
+    }
 };
 
 }  // namespace c166

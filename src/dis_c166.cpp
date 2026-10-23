@@ -15,8 +15,10 @@
  */
 
 #include "dis_c166.h"
+#include "array_memory.h"
 #include "reg_c166.h"
 #include "table_c166.h"
+#include "text_common.h"
 
 namespace libasm {
 namespace c166 {
@@ -30,6 +32,7 @@ constexpr char OPT_DESC_CC_PREFIX[] PROGMEM = "use cc_ prefix for condition code
 constexpr char OPT_BOOL_INDEX_SHARP[] PROGMEM = "index-sharp";
 constexpr char OPT_DESC_INDEX_SHARP[] PROGMEM = "use # for [Rw+#data16]";
 constexpr char OPT_BOOL_CANONICAL_MEM[] PROGMEM = "canonical-mem";
+constexpr char OPT_BOOL_EXT_PREFIX[] PROGMEM = "ext-prefix";
 constexpr char OPT_BOOL_SFR_NAME[] PROGMEM = "sfr-name";
 constexpr char OPT_DESC_SFR_NAME[] PROGMEM = "use name for core SFR";
 
@@ -39,9 +42,47 @@ void requireZero(DisInsn &insn, StrBuffer &out, uint8_t byte, uint8_t zeroMask) 
         insn.setErrorIf(out, ILLEGAL_OPERAND_MODE);
 }
 
+// Only the ESFR side of a sequence matters here; mem prints as it is encoded.
+void beginSequence(ExtState &state, uint8_t post, AddrMode mode) {
+    state.count = ((post >> 4) & 3) + 1;
+    state.esfr = mode == M_RNGR;
+}
+
+// EXTR, EXTPR and EXTSR move reg and bitoff to the ESFR area.
+bool beginsEsfrSequence(const DisInsn &insn) {
+    return insn.dst() == M_RNGR || insn.src() == M_RNGR;
+}
+
+bool remapsBitOff(uint8_t bitoff) {
+    return bitoff >= 0x80 && bitoff < 0xF0;
+}
+
+// Whether the ESFR area moves the operand of |mode|, as far as the bytes read
+// so far tell; a BITZ bitoff is in the 3rd byte.
+bool remaps(const DisInsn &insn, AddrMode mode, bool byte3) {
+    switch (mode) {
+    case M_REGW:
+    case M_REGB:
+        return insn.post() < 0xF0;
+    case M_BOFF:
+    case M_BITO:
+    case M_BITQ:
+        return remapsBitOff(insn.post());
+    case M_BITZ:
+        return byte3 && remapsBitOff(insn.byte3());
+    default:
+        return false;
+    }
+}
+
+bool remaps(const DisInsn &insn, bool byte3) {
+    return remaps(insn, insn.dst(), byte3) || remaps(insn, insn.src(), byte3);
+}
+
 // Whether |addr| is one a reg operand can address.
-bool regAddress(uint16_t addr) {
-    return addr >= 0xFE00 && addr <= 0xFE00 + 2 * 0xEF && (addr & 1) == 0;
+bool regAddress(const DisInsn &insn, uint16_t addr) {
+    const uint16_t base = insn.esfr() ? 0xF000 : 0xFE00;
+    return addr >= base && addr <= base + 2 * 0xEF && (addr & 1) == 0;
 }
 
 StrBuffer &outIndirect(StrBuffer &out, uint8_t num, char pre, char post) {
@@ -68,7 +109,9 @@ DisC166::DisC166(const ValueFormatter::Plugins &plugins)
       _opt_indexSharp(this, &DisC166::setIndexSharp, OPT_BOOL_INDEX_SHARP, OPT_DESC_INDEX_SHARP,
               &_opt_canonicalMem),
       _opt_canonicalMem(
-              this, &DisC166::setCanonicalMem, OPT_BOOL_CANONICAL_MEM, nullptr, &_opt_sfrName),
+              this, &DisC166::setCanonicalMem, OPT_BOOL_CANONICAL_MEM, nullptr, &_opt_extPrefix),
+      _opt_extPrefix(
+              this, &DisC166::setExtPrefix, OPT_BOOL_EXT_PREFIX, nullptr, &_opt_sfrName),
       _opt_sfrName(this, &DisC166::setSfrName, OPT_BOOL_SFR_NAME, OPT_DESC_SFR_NAME) {
     reset();
 }
@@ -78,6 +121,7 @@ void DisC166::reset() {
     setCcPrefix(true);
     setIndexSharp(true);
     setCanonicalMem(false);
+    setExtPrefix(false);
     setSfrName(false);
 }
 
@@ -93,6 +137,11 @@ Error DisC166::setIndexSharp(bool enable) {
 
 Error DisC166::setCanonicalMem(bool enable) {
     _canonicalMem = enable;
+    return OK;
+}
+
+Error DisC166::setExtPrefix(bool enable) {
+    _extPrefix = enable;
     return OK;
 }
 
@@ -125,8 +174,9 @@ void DisC166::decodeSfr(DisInsn &insn, StrBuffer &out, uint16_t addr) const {
         out.text_P(name_P);
         return;
     }
+    // GNU as cannot address the ESFR space at all.
     if (_gnuAs)
-        insn.setErrorIf(out, UNKNOWN_REGISTER);
+        insn.setErrorIf(out, insn.esfr() ? ILLEGAL_OPERAND_MODE : UNKNOWN_REGISTER);
     outAbsAddr(out, addr, 16);
 }
 
@@ -135,7 +185,8 @@ void DisC166::decodeShortReg(DisInsn &insn, StrBuffer &out, AddrMode mode) const
     if (num >= 0xF0) {
         outRegName(out, mode == M_REGW ? decodeWordReg(num) : decodeByteReg(num));
     } else {
-        decodeSfr(insn, out, 0xFE00 + 2 * num);
+        const uint16_t base = insn.esfr() ? 0xF000 : 0xFE00;
+        decodeSfr(insn, out, base + 2 * num);
     }
 }
 
@@ -148,7 +199,8 @@ void DisC166::decodeBitOff(DisInsn &insn, StrBuffer &out, uint8_t bitoff) const 
             insn.setErrorIf(out, ILLEGAL_OPERAND_MODE);
         outAbsAddr(out, 0xFD00 + 2 * bitoff, 16);
     } else {
-        decodeSfr(insn, out, 0xFF00 + 2 * (bitoff - 0x80));
+        const uint16_t base = insn.esfr() ? 0xF100 : 0xFF00;
+        decodeSfr(insn, out, base + 2 * (bitoff - 0x80));
     }
 }
 
@@ -253,6 +305,11 @@ void DisC166::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) const 
         requireZero(insn, out, post, ~((1 << (addressWidth() - 16)) - 1));
         outHex(out, post, 8);
         break;
+    case M_RNG:
+    case M_RNGR:
+        outDec(out.letter('#'), ((post >> 4) & 3) + 1, 3);
+        beginSequence(insn.insnBase().state<ExtState>(), post, mode);
+        break;
     case M_IXL:
         outRegName(out.letter('['), decodeWordReg(post)).letter('+');
         if (_indexSharp)
@@ -292,27 +349,49 @@ void DisC166::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) const 
         requireZero(insn, out, insn.byte4(), 0x0F);
         decodeRelative(insn, out, insn.byte3());
         break;
+    case M_PAG:
+        requireZero(insn, out, insn.byte4(), 0xFC);
+        outHex(out.letter('#'), insn.word2() & 0x3FF, 10);
+        break;
+    case M_SEG8:
+        requireZero(insn, out, insn.byte4(), 0xFF);
+        outHex(out.letter('#'), insn.byte3(), 8);
+        break;
     default:
         break;
     }
 }
 
-Error DisC166::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) const {
-    DisInsn insn(_insn, memory, out);
+Error DisC166::decodeInsn(DisInsn &insn, StrBuffer &out, bool follower) const {
     insn.setOpCode(insn.readByte());
     insn.readPost();
     if (insn.getError())
-        return _insn.setError(insn);
+        return insn.getError();
     if (searchOpCode(cpuType(), insn, out))
-        return _insn.setError(insn);
+        return insn.getError();
+    // As a prefix, a sequence covers the one instruction read with it; its
+    // length is in the post byte, so turn down any other before reading
+    // further.
+    if (_extPrefix && !follower && beginsEsfrSequence(insn) && (insn.post() & 0x30) != 0)
+        return insn.setErrorIf(out, ILLEGAL_OPERAND_MODE);
+    // Turn down a follower its prefix leaves alone before reading further.
+    const auto bitz = insn.dst() == M_BITZ || insn.src() == M_BITZ;
+    if (follower && !bitz && !remaps(insn, false))
+        return insn.setErrorIf(PREFIX_HAS_NO_EFFECT);
     if (insn.hasWord2()) {
-        insn.readWord2();
+        insn.readByte3();
         if (insn.getError())
-            return _insn.setError(insn);
-        if (insn.cf() == CF_PD && (insn.byte3() != insn.opCode() || insn.byte4() != insn.opCode())) {
+            return insn.getError();
+        if (follower && !remaps(insn, true))
+            return insn.setErrorIf(PREFIX_HAS_NO_EFFECT);
+        insn.readByte4();
+        if (insn.getError())
+            return insn.getError();
+        if (insn.cf() == CF_PD &&
+                (insn.byte3() != insn.opCode() || insn.byte4() != insn.opCode())) {
             insn.nameBuffer().reset();
             insn.setErrorIf(UNKNOWN_INSTRUCTION);
-            return _insn.setError(insn);
+            return insn.getError();
         }
     }
 
@@ -320,15 +399,65 @@ Error DisC166::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) const 
     const auto src = insn.src();
     // With an SFR in both operands, "mem, reg" reads back as "reg, mem".
     if (_canonicalMem && dst == M_MEM && (src == M_REGW || src == M_REGB) && insn.post() < 0xF0 &&
-            regAddress(insn.word2())) {
+            regAddress(insn, insn.word2())) {
         insn.setErrorIf(out, ILLEGAL_OPERAND_MODE);
-        return _insn.setError(insn);
+        return insn.getError();
     }
     if (dst != M_NONE) {
         decodeOperand(insn, out, dst);
         if (src != M_NONE)
             decodeOperand(insn, out.comma(), src);
     }
+    return insn.getError();
+}
+
+// The instruction an EXTR, EXTPR or EXTSR prefix has already read, on its own
+// line after the prefix.
+Error DisC166::decodeFollower(Insn &_insn, StrBuffer &out) const {
+    _insn.setContinueMark_P(nullptr);
+    const auto offset = _insn.continueOffset();
+    const ArrayMemory memory(
+            _insn.address() + offset, _insn.bytes() + offset, _insn.length() - offset);
+    auto reader = memory.iterator();
+    Insn work(memory.origin());
+    DisInsn follower(work, reader, out);
+    auto &state = _insn.state<ExtState>();
+    follower.setEsfr(state.esfr);
+    state = ExtState{};
+    decodeInsn(follower, out);
+    _insn.nameBuffer().reset().text(work.name());
+    return _insn.setError(follower);
+}
+
+Error DisC166::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) const {
+    if (_insn.hasContinue())
+        return decodeFollower(_insn, out);
+    auto &state = _insn.state<ExtState>();
+    // Each prefix decodes its own sequence.
+    if (_extPrefix)
+        state = ExtState{};
+    DisInsn insn(_insn, memory, out);
+    insn.setEsfr(state.count != 0 && state.esfr);
+    if (state.count)
+        state.count--;
+    if (decodeInsn(insn, out) || !_extPrefix || !beginsEsfrSequence(insn))
+        return _insn.setError(insn);
+
+    const auto prefixLength = _insn.length();
+    char buffer[40];
+    StrBuffer discard{buffer, sizeof(buffer)};
+    Insn work(_insn.address() + prefixLength);
+    DisInsn follower(work, memory, discard);
+    follower.setEsfr(state.esfr);
+    const auto error = decodeInsn(follower, discard, true);
+    for (uint8_t i = 0; i < work.length(); i++)
+        _insn.emitByte(work.bytes()[i]);
+    if (error == NO_MEMORY || error == UNKNOWN_INSTRUCTION || error == PREFIX_HAS_NO_EFFECT) {
+        insn.setErrorIf(out, error);
+        return _insn.setError(insn);
+    }
+    _insn.setContinueOffset(prefixLength);
+    _insn.setContinueMark_P(text::common::TEXT_null);
     return _insn.setError(insn);
 }
 

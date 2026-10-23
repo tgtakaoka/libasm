@@ -24,6 +24,83 @@ using namespace libasm::test;
 DisC166 dis166;
 Disassembler &disassembler(dis166);
 
+namespace {
+
+// Decode |codes| as consecutive instructions on one Insn, which carries the
+// ESFR state across them; |expected| holds a name and operands per
+// instruction.
+void seq_assert(const char *file, int line, const Config::opcode_t *codes, size_t size,
+        const char *const *expected, size_t count) {
+    const auto endian = disassembler.config().endian();
+    const auto unit = disassembler.config().addressUnit();
+    const ArrayMemory memory(0x1000, codes, size, endian, unit);
+    auto reader = memory.iterator();
+    Insn insn(memory.origin());
+    char actual_opr[64];
+    for (size_t i = 0; i < count; i += 2) {
+        insn.reset(reader.address());
+        disassembler.decode(reader, insn, actual_opr, sizeof(actual_opr), &symtab);
+        asserter.equals(file, line, expected[i], "OK", insn.errorText_P());
+        asserter.equals(file, line, expected[i], expected[i], insn);
+        asserter.equals(file, line, expected[i], expected[i + 1], actual_opr);
+    }
+}
+
+// Decode |codes| as an ATOMIC or EXTended prefix and the instruction it reads
+// with it, which comes as a continuation of the same Insn.
+void prefix_assert(const char *file, int line, Error error, const Config::opcode_t *codes,
+        size_t size, const char *name1, const char *opr1, const char *name2, const char *opr2) {
+    const auto endian = disassembler.config().endian();
+    const auto unit = disassembler.config().addressUnit();
+    const ArrayMemory memory(0x1000, codes, size, endian, unit);
+    auto reader = memory.iterator();
+    Insn insn(memory.origin());
+    char actual_opr[64];
+    disassembler.decode(reader, insn, actual_opr, sizeof(actual_opr), &symtab);
+    asserter.equals(file, line, name1, "OK", insn.errorText_P());
+    asserter.equals(file, line, name1, name1, insn);
+    asserter.equals(file, line, name1, opr1, actual_opr);
+    asserter.isTrue(file, line, name1, insn.hasContinue());
+    asserter.equals(file, line, name1, size, insn.length());
+    disassembler.decode(reader, insn, actual_opr, sizeof(actual_opr), &symtab);
+    ErrorAt expected;
+    expected.setError(error);
+    asserter.equals(file, line, name2, expected.errorText_P(), insn.errorText_P());
+    asserter.equals(file, line, name2, name2, insn);
+    asserter.equals(file, line, name2, opr2, actual_opr);
+}
+
+}  // namespace
+
+#define PTEST(name1, opr1, name2, opr2, ...)                                              \
+    do {                                                                                  \
+        const Config::opcode_t codes[] = {__VA_ARGS__};                                   \
+        prefix_assert(__FILE__, __LINE__, OK, codes, sizeof(codes), name1, opr1, name2, opr2); \
+    } while (0)
+#define PERRT(name1, opr1, name2, opr2, err, ...)                                            \
+    do {                                                                                     \
+        const Config::opcode_t codes[] = {__VA_ARGS__};                                      \
+        prefix_assert(__FILE__, __LINE__, err, codes, sizeof(codes), name1, opr1, name2, opr2); \
+    } while (0)
+
+// DTEST(name1, opr1, name2, opr2, ...) decodes two instructions on one Insn;
+// TTEST does three.
+#define __SEQ(codes_, ...)                                                          \
+    do {                                                                            \
+        const Config::opcode_t codes[] = {codes_};                                  \
+        const char *const expected[] = {__VA_ARGS__};                               \
+        seq_assert(__FILE__, __LINE__, codes, sizeof(codes), expected,              \
+                sizeof(expected) / sizeof(expected[0]));                            \
+    } while (0)
+#define __CODES(...) __VA_ARGS__
+#define DTEST(name1, opr1, name2, opr2, ...) __SEQ(__CODES(__VA_ARGS__), name1, opr1, name2, opr2)
+#define TTEST(name1, opr1, name2, opr2, name3, opr3, ...) \
+    __SEQ(__CODES(__VA_ARGS__), name1, opr1, name2, opr2, name3, opr3)
+
+static bool c167() {
+    return strcmp_P("80C167", disassembler.config().cpu_P()) == 0;
+}
+
 void set_up() {
     disassembler.reset();
 }
@@ -35,6 +112,12 @@ void tear_down() {
 void test_cpu() {
     EQUALS("cpu 80C166", true, disassembler.setCpu("80C166"));
     EQUALS_P("cpu 80C166", "80C166", disassembler.config().cpu_P());
+
+    EQUALS("cpu 80C167", true, disassembler.setCpu("80C167"));
+    EQUALS_P("cpu 80C167", "80C167", disassembler.config().cpu_P());
+
+    EQUALS("cpu 80c167cs", true, disassembler.setCpu("80c167cs"));
+    EQUALS_P("cpu 80c167cs", "80C167", disassembler.config().cpu_P());
 }
 
 // clang-format off
@@ -263,25 +346,26 @@ void test_bit() {
 
 void test_jump() {
     // Code addresses print at the width of the address space.
-    ATEST(0x1000, "JMPR",  "CC_UC, 0100CH",      0x0D, 0x05);
-    ATEST(0x1000, "JMPR",  "CC_Z, 00FFEH",        0x2D, 0xFE);
-    ATEST(0x1000, "JMPR",  "CC_ULE, 01002H",    0xFD, 0x00);
-    ATEST(0x1FFFE, "JMPR", "CC_NET, 10002H",    0x1D, 0x01);
-    ATEST(0x10000, "JMPR", "CC_SGT, 1FF04H",    0xAD, 0x81);
-    ATEST(0x1000, "CALLR", "01100H",                    0xBB, 0x7F);
-    ATEST(0x1000, "JB",    "0FD02H.3, 01024H",
+    const auto c7 = c167();
+    ATEST(0x1000, "JMPR",  c7 ? "CC_UC, 00100CH" : "CC_UC, 0100CH",      0x0D, 0x05);
+    ATEST(0x1000, "JMPR",  c7 ? "CC_Z, 000FFEH" : "CC_Z, 00FFEH",        0x2D, 0xFE);
+    ATEST(0x1000, "JMPR",  c7 ? "CC_ULE, 001002H" : "CC_ULE, 01002H",    0xFD, 0x00);
+    ATEST(0x1FFFE, "JMPR", c7 ? "CC_NET, 010002H" : "CC_NET, 10002H",    0x1D, 0x01);
+    ATEST(0x10000, "JMPR", c7 ? "CC_SGT, 01FF04H" : "CC_SGT, 1FF04H",    0xAD, 0x81);
+    ATEST(0x1000, "CALLR", c7 ? "001100H" : "01100H",                    0xBB, 0x7F);
+    ATEST(0x1000, "JB",    c7 ? "0FD02H.3, 001024H" : "0FD02H.3, 01024H",
           0x8A, 0x01, 0x10, 0x30);
-    ATEST(0x1000, "JNB",   "R1.0, 00F84H",        0x9A, 0xF1, 0xC0, 0x00);
-    ATEST(0x1000, "JBC",   "0FF02H.15, 01004H",
+    ATEST(0x1000, "JNB",   c7 ? "R1.0, 000F84H" : "R1.0, 00F84H",        0x9A, 0xF1, 0xC0, 0x00);
+    ATEST(0x1000, "JBC",   c7 ? "0FF02H.15, 001004H" : "0FF02H.15, 01004H",
           0xAA, 0x81, 0x00, 0xF0);
-    ATEST(0x1000, "JNBS",  "0FD00H.1, 01006H",
+    ATEST(0x1000, "JNBS",  c7 ? "0FD00H.1, 001006H" : "0FD00H.1, 01006H",
           0xBA, 0x00, 0x01, 0x10);
-    AERRT(0x1000, "JB",    "0FD02H.3, 01024H",
-          ILLEGAL_OPERAND_MODE, "01024H",
+    AERRT(0x1000, "JB",    c7 ? "0FD02H.3, 001024H" : "0FD02H.3, 01024H",
+          ILLEGAL_OPERAND_MODE, c7 ? "001024H" : "01024H",
           0x8A, 0x01, 0x10, 0x31);
-    ATEST(0x21000, "JMPA", "CC_NZ, 21234H",      0xEA, 0x30, 0x34, 0x12);
-    ATEST(0x1000, "CALLA", "CC_UC, 0FFFEH",      0xCA, 0x00, 0xFE, 0xFF);
-    ATEST(0x1000, "PCALL", "0FE12H, 01234H",    0xE2, 0x09, 0x34, 0x12);
+    ATEST(0x21000, "JMPA", c7 ? "CC_NZ, 021234H" : "CC_NZ, 21234H",      0xEA, 0x30, 0x34, 0x12);
+    ATEST(0x1000, "CALLA", c7 ? "CC_UC, 00FFFEH" : "CC_UC, 0FFFEH",      0xCA, 0x00, 0xFE, 0xFF);
+    ATEST(0x1000, "PCALL", c7 ? "0FE12H, 001234H" : "0FE12H, 01234H",    0xE2, 0x09, 0x34, 0x12);
     TEST("JMPI",  "CC_UC, [R1]",       0x9C, 0x01);
     TEST("JMPI",  "CC_NET, [R1]",      0x9C, 0x11);
     TEST("JMPI",  "CC_Z, [R1]",        0x9C, 0x21);
@@ -303,7 +387,12 @@ void test_jump() {
     TEST("CALLS", "3, 0FFFEH",         0xDA, 0x03, 0xFE, 0xFF);
     TEST("TRAP",  "#7FH",              0x9B, 0xFE);
     TEST("TRAP",  "#0",                0x9B, 0x00);
-    ERRT("JMPS",  "4, 2345H", ILLEGAL_OPERAND_MODE, "4, 2345H", 0xFA, 0x04, 0x45, 0x23);
+    if (c7) {
+        TEST("JMPS",  "0FFH, 2345H",   0xFA, 0xFF, 0x45, 0x23);
+        ATEST(0xFF0000, "JMPA", "CC_C, 0FF1234H", 0xEA, 0x80, 0x34, 0x12);
+    } else {
+        ERRT("JMPS", "4, 2345H", ILLEGAL_OPERAND_MODE, "4, 2345H", 0xFA, 0x04, 0x45, 0x23);
+    }
 }
 
 void test_relative() {
@@ -323,7 +412,7 @@ void test_options() {
 
     TEST("JMPI",  "UC, [R1]",        0x9C, 0x01);
     TEST("CALLI", "Z, [R15]",        0xAB, 0x2F);
-    ATEST(0x21000, "JMPA", "NZ, 21234H", 0xEA, 0x30, 0x34, 0x12);
+    ATEST(0x21000, "JMPA", c167() ? "NZ, 021234H" : "NZ, 21234H", 0xEA, 0x30, 0x34, 0x12);
     TEST("MOV",   "R1, [R2+1234H]",  0xD4, 0x12, 0x34, 0x12);
     TEST("MOVB",  "[R2+1234H], RL0", 0xE4, 0x02, 0x34, 0x12);
 }
@@ -355,6 +444,9 @@ void test_gnu_as() {
     ERRT("BSET", "0xFF02.3", UNKNOWN_REGISTER, "0xFF02.3", 0x3F, 0x81);
     ERRT("BSET", "0xFD02.3", ILLEGAL_OPERAND_MODE, "0xFD02.3", 0x3F, 0x01);
     ERRT("ADD",  "R1, #0", ILLEGAL_OPERAND_MODE, "#0", 0x08, 0x10);
+    // A code address is the offset in the segment.
+    if (c167())
+        ATEST(0x21000, "CALLA", "CC_NZ, 0x1234", 0xCA, 0x30, 0x34, 0x12);
 }
 
 // With an SFR in both operands, "mem, reg" assembles back as "reg, mem";
@@ -393,6 +485,77 @@ void test_system() {
     TEST("EINIT",  "", 0xB5, 0x4A, 0xB5, 0xB5);
 }
 
+void test_extended() {
+    TEST("ATOMIC", "#1",          0xD1, 0x00);
+    TEST("ATOMIC", "#4",          0xD1, 0x30);
+    TEST("EXTR",   "#2",          0xD1, 0x90);
+    TEST("EXTS",   "R1, #1",      0xDC, 0x01);
+    TEST("EXTP",   "R2, #2",      0xDC, 0x52);
+    TEST("EXTSR",  "R3, #3",      0xDC, 0xA3);
+    TEST("EXTPR",  "R15, #4",     0xDC, 0xFF);
+    TEST("EXTS",   "#18, #3",    0xD7, 0x20, 0x12, 0x00);
+    TEST("EXTP",   "#3FFH, #4",   0xD7, 0x70, 0xFF, 0x03);
+    TEST("EXTSR",  "#0FFH, #1",   0xD7, 0x80, 0xFF, 0x00);
+    TEST("EXTPR",  "#1, #2",      0xD7, 0xD0, 0x01, 0x00);
+    ERRT("EXTS",   "#18, #3", ILLEGAL_OPERAND_MODE, "#18, #3", 0xD7, 0x20, 0x12, 0x01);
+    ERRT("EXTP",   "#3FFH, #4", ILLEGAL_OPERAND_MODE, "#3FFH, #4", 0xD7, 0x70, 0xFF, 0x07);
+}
+
+void test_esfr() {
+    // reg and bitoff 80H-EFH address the ESFRs for the next #irang2
+    // instructions; bitoff 00H-7FH and the GPRs are unaffected.
+    DTEST("EXTR",  "#1",
+          "MOV",   "0F012H, #1234H",    0xD1, 0x80, 0xE6, 0x09, 0x34, 0x12);
+    DTEST("EXTPR", "R1, #1",
+          "BSET",  "0F102H.3",          0xDC, 0xC1, 0x3F, 0x81);
+    DTEST("EXTSR", "#1, #1",
+          "BSET",  "0FD02H.3",          0xD7, 0x80, 0x01, 0x00, 0x3F, 0x01);
+    DTEST("EXTR",  "#1",
+          "PUSH",  "R1",                0xD1, 0x80, 0xEC, 0xF1);
+    DTEST("EXTS",  "R1, #1",
+          "PUSH",  "0FE12H",            0xDC, 0x01, 0xEC, 0x09);
+    TTEST("EXTR",  "#1",
+          "PUSH",  "0F012H",
+          "PUSH",  "0FE12H",            0xD1, 0x80, 0xEC, 0x09, 0xEC, 0x09);
+    TTEST("EXTR",  "#2",
+          "PUSH",  "0F012H",
+          "POP",   "0F012H",            0xD1, 0x90, 0xEC, 0x09, 0xFC, 0x09);
+}
+
+// ext-prefix decodes an EXTR, EXTPR or EXTSR of one instruction's sequence
+// together with the instruction it remaps, which follows on its own line.
+void test_ext_prefix() {
+    disassembler.setOption("ext-prefix", "on");
+
+    PTEST("EXTR",   "#1", "MOV",  "0F012H, #1234H",  0xD1, 0x80, 0xE6, 0x09, 0x34, 0x12);
+    PTEST("EXTPR",  "R1, #1", "BSET", "0F102H.3",    0xDC, 0xC1, 0x3F, 0x81);
+    PTEST("EXTPR",  "#3FFH, #1", "PUSH", "0F012H",   0xD7, 0xC0, 0xFF, 0x03, 0xEC, 0x09);
+    PTEST("EXTSR",  "#1, #1", "MOVB", "0F012H, #18",  0xD7, 0x80, 0x01, 0x00, 0xE7, 0x09, 0x12, 0x00);
+    // The follower reads its relative target from its own address.
+    PTEST("EXTR",   "#1", "JB",   "0F102H.3, 001002H", 0xD1, 0x80, 0x8A, 0x81, 0xFE, 0x30);
+    // A follower which the ESFR area does not change.
+    ERRT("EXTR",    "#1", PREFIX_HAS_NO_EFFECT, "", 0xD1, 0x80, 0xCC, 0x00);
+    ERRT("EXTSR",   "#1, #1", PREFIX_HAS_NO_EFFECT, "", 0xD7, 0x80, 0x01, 0x00, 0x3F, 0x01);
+    ERRT("EXTR",    "#1", PREFIX_HAS_NO_EFFECT, "", 0xD1, 0x80, 0xEC, 0xF1);
+    ERRT("EXTR",    "#1", PREFIX_HAS_NO_EFFECT, "", 0xD1, 0x80, 0xD1, 0x80);
+    // Decided from the bytes read so far, before asking for more.
+    ERRT("EXTR",    "#1", PREFIX_HAS_NO_EFFECT, "", 0xD1, 0x80, 0xF2, 0xF0);
+    ERRT("EXTR",    "#1", PREFIX_HAS_NO_EFFECT, "", 0xD1, 0x80, 0x4A, 0x01, 0x01);
+    NMEM("EXTR",    "#1", "", 0xD1, 0x80, 0x4A, 0x01, 0x81);
+    PTEST("EXTR",   "#1", "BMOV", "0F102H.3, 0FD02H.5", 0xD1, 0x80, 0x4A, 0x01, 0x81, 0x53);
+    // A longer sequence is no prefix of one instruction.
+    ERRT("EXTR",    "", ILLEGAL_OPERAND_MODE, "", 0xD1, 0x90);
+    ERRT("EXTPR",   "", ILLEGAL_OPERAND_MODE, "", 0xDC, 0xF2);
+    ERRT("EXTPR",   "", ILLEGAL_OPERAND_MODE, "", 0xD7, 0xD0);
+    NMEM("EXTR",    "#1", "", 0xD1, 0x80);
+    NMEM("EXTPR",   "#3FFH, #1", "", 0xD7, 0xC0, 0xFF, 0x03, 0xE6, 0x09);
+    // The others leave the decoding alone and stay on their own.
+    TEST("ATOMIC",  "#2",         0xD1, 0x10);
+    TEST("EXTP",    "#3FFH, #1",  0xD7, 0x40, 0xFF, 0x03);
+    TEST("EXTS",    "R1, #4",     0xDC, 0x31);
+    TEST("PUSH",    "0FE12H",     0xEC, 0x09);
+}
+
 void test_illegal() {
     // The undefined opcodes of the opcode tables (manual section 4).
     static constexpr Config::opcode_t undefined[] = {
@@ -401,11 +564,13 @@ void test_illegal() {
     };
     for (const auto opc : undefined)
         UNKN(opc, 0x00);
-    // D1, DC and D7 are not available on the 80C166.
-    UNKN(0xD1, 0x00);
-    UNKN(0xD1, 0x80);
-    UNKN(0xDC, 0x01);
-    UNKN(0xD7, 0x00);
+    // ATOMIC and the EXTended instructions are not available on the 80C166.
+    if (!c167()) {
+        UNKN(0xD1, 0x00);
+        UNKN(0xD1, 0x80);
+        UNKN(0xDC, 0x01);
+        UNKN(0xD7, 0x00);
+    }
 
     // Constant bits of the operand byte (manual section 5).
     UNKN(0x81, 0x11);  // NEG Rwn: n0
@@ -447,6 +612,14 @@ void test_illegal() {
     UNKN(0xB7, 0x48, 0x48, 0xB7);
     UNKN(0xA5, 0x5A, 0x5A, 0xA5);
     UNKN(0xB5, 0x4A, 0xB5, 0x4A);
+    if (c167()) {
+        UNKN(0xD1, 0x40);  // D1 :00##-0 and :10##-0 only
+        UNKN(0xD1, 0xC0);
+        UNKN(0xD1, 0x01);
+        UNKN(0xD1, 0x8F);
+        UNKN(0xD7, 0x01);  // D7 :xx##-0
+        UNKN(0xD7, 0x4F);
+    }
 }
 // clang-format on
 
@@ -467,6 +640,11 @@ void run_tests(const char *cpu) {
     RUN_TEST(test_gnu_as);
     RUN_TEST(test_return);
     RUN_TEST(test_system);
+    if (c167()) {
+        RUN_TEST(test_extended);
+        RUN_TEST(test_esfr);
+        RUN_TEST(test_ext_prefix);
+    }
     RUN_TEST(test_illegal);
 }
 

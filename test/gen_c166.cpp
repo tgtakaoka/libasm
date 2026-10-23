@@ -124,6 +124,8 @@ int main(int argc, const char **argv) {
         dis166.setOption("index-sharp", "disable");
     }
     dis166.setOption("canonical-mem", "enable");
+    // Pair each ATOMIC and EXTended instruction with the one it affects.
+    dis166.setOption("ext-prefix", "enable");
 
     const SfrNameTokenizer sfrName(dis166.cpuType());
     const auto sym = dis166.curSym();
@@ -132,6 +134,9 @@ int main(int argc, const char **argv) {
                                            : standardTokenizers<IntelNumber>(
                                                      sym, {&REG_RL, &REG_RH, &REG_R, &SFR});
     TestGenerator generator(driver, dis166, 0x10100, toks);
+    // A pair whose follower the prefix leaves alone is no test, but there are
+    // far too many of them to count towards the drop heuristic.
+    generator.ignoreError(libasm::PREFIX_HAS_NO_EFFECT);
     // A register GNU as has no name for; counting it would cut the walk of
     // the reg byte short of the named ones.
     if (driver.generateGas())

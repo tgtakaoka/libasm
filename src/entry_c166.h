@@ -52,25 +52,29 @@ enum AddrMode : uint8_t {
     M_BOFF = 20,  // bitoff
     M_REL = 21,   // rel
     M_SEG = 22,   // seg
+    M_RNG = 23,   // #irang2 in bits 5:4
+    M_RNGR = 24,  // #irang2 in bits 5:4, which also starts an ESFR sequence
     // Operands which need the second word.
-    M_IXL = 23,   // [Rw+#data16]; Rw in the low nibble
-    M_IM16 = 24,  // #data16
-    M_IM8 = 25,   // #data8 in the low byte; the high byte is not significant
-    M_MEM = 26,   // mem
-    M_CADR = 27,  // caddr
-    M_BITQ = 28,  // bitaddr; bitoff, and the bit in the high nibble of the 4th byte
-    M_BITZ = 29,  // bitaddr; bitoff in the 3rd byte, the bit in the low nibble of the 4th byte
-    M_MDL = 30,   // #mask8 in the 3rd byte, #data8 in the 4th byte
-    M_MDH = 31,   // #data8 in the 3rd byte, #mask8 in the 4th byte
-    M_RELW = 32,  // rel in the 3rd byte; the low nibble of the 4th byte is unused
+    M_IXL = 25,   // [Rw+#data16]; Rw in the low nibble
+    M_IM16 = 26,  // #data16
+    M_IM8 = 27,   // #data8 in the low byte; the high byte is not significant
+    M_MEM = 28,   // mem
+    M_CADR = 29,  // caddr
+    M_BITQ = 30,  // bitaddr; bitoff, and the bit in the high nibble of the 4th byte
+    M_BITZ = 31,  // bitaddr; bitoff in the 3rd byte, the bit in the low nibble of the 4th byte
+    M_MDL = 32,   // #mask8 in the 3rd byte, #data8 in the 4th byte
+    M_MDH = 33,   // #data8 in the 3rd byte, #mask8 in the 4th byte
+    M_RELW = 34,  // rel in the 3rd byte; the low nibble of the 4th byte is unused
+    M_PAG = 35,   // #pag10
+    M_SEG8 = 36,  // #seg8
     // Assembler operands which several of the above accept.
-    M_RW = 33,    // Rw
-    M_RB = 34,    // Rb
-    M_IR = 35,    // [Rw]
-    M_PI = 36,    // [Rw+]
-    M_IMM = 37,   // #imm
-    M_BIT = 38,   // bitaddr
-    M_ADDR = 39,  // address
+    M_RW = 37,    // Rw
+    M_RB = 38,    // Rb
+    M_IR = 39,    // [Rw]
+    M_PI = 40,    // [Rw+]
+    M_IMM = 41,   // #imm
+    M_BIT = 42,   // bitaddr
+    M_ADDR = 43,  // address
 };
 
 constexpr auto M_WORD2 = M_IXL;
@@ -78,16 +82,18 @@ constexpr auto M_WORD2 = M_IXL;
 // Which bits of the operand byte carry operands; the rest must equal the
 // entry's post byte.
 enum CodeFormat : uint8_t {
-    CF_00 = 0,  // none
-    CF_FF = 1,  // all
-    CF_F0 = 2,  // high nibble
-    CF_0F = 3,  // low nibble
-    CF_F3 = 4,  // high nibble and bits 1:0
-    CF_F7 = 5,  // high nibble and bits 2:0
-    CF_FE = 6,  // bits 7:1
-    CF_NN = 7,  // the same register in both nibbles
-    CF_PD = 8,  // none; the second word repeats the opcode
-    CF_OP = 9,  // all, and the high nibble of the opcode
+    CF_00 = 0,   // none
+    CF_FF = 1,   // all
+    CF_F0 = 2,   // high nibble
+    CF_0F = 3,   // low nibble
+    CF_F3 = 4,   // high nibble and bits 1:0
+    CF_F7 = 5,   // high nibble and bits 2:0
+    CF_FE = 6,   // bits 7:1
+    CF_30 = 7,   // bits 5:4
+    CF_3F = 8,   // bits 5:4 and low nibble
+    CF_NN = 9,   // the same register in both nibbles
+    CF_PD = 10,  // none; the second word repeats the opcode
+    CF_OP = 11,  // all, and the high nibble of the opcode
 };
 
 struct Entry final : entry::Base<Config::opcode_t> {
@@ -113,6 +119,8 @@ struct Entry final : entry::Base<Config::opcode_t> {
                     0xF3,  // CF_F3
                     0xF7,  // CF_F7
                     0xFE,  // CF_FE
+                    0x30,  // CF_30
+                    0x3F,  // CF_3F
                     0xFF,  // CF_NN
                     0x00,  // CF_PD
                     0xFF,  // CF_OP

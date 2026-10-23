@@ -33,6 +33,14 @@ struct EntryInsn : EntryInsnBase<Config, Entry> {
     bool hasWord2() const { return flags().word2(); }
 };
 
+// The sequence an ATOMIC or EXTended instruction begins: the instructions left
+// in it, and whether their reg and bitoff operands address the ESFR area.
+// Carried across instructions on the Insn (per Insn::state<T>).
+struct ExtState {
+    uint8_t count;
+    bool esfr;
+};
+
 struct Operand final : ErrorAt {
     AddrMode mode;
     RegName reg;
@@ -71,22 +79,24 @@ private:
 
 struct DisInsn final : DisInsnImpl<Config>, EntryInsn {
     DisInsn(Insn &insn, DisMemory &memory, const StrBuffer &out)
-        : DisInsnImpl(insn, memory, out), _post(0), _byte3(0), _byte4(0) {}
+        : DisInsnImpl(insn, memory, out), _post(0), _byte3(0), _byte4(0), _esfr(false) {}
 
     void readPost() { _post = readByte(); }
-    void readWord2() {
-        _byte3 = readByte();
-        _byte4 = readByte();
-    }
+    void readByte3() { _byte3 = readByte(); }
+    void readByte4() { _byte4 = readByte(); }
     uint8_t post() const { return _post; }
     uint8_t byte3() const { return _byte3; }
     uint8_t byte4() const { return _byte4; }
     uint16_t word2() const { return _byte3 | (static_cast<uint16_t>(_byte4) << 8); }
 
+    void setEsfr(bool esfr) { _esfr = esfr; }
+    bool esfr() const { return _esfr; }
+
 private:
     uint8_t _post;
     uint8_t _byte3;
     uint8_t _byte4;
+    bool _esfr;
 };
 
 }  // namespace c166
