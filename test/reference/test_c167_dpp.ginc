@@ -1,0 +1,27 @@
+;;; Copyright 2026 Tadashi G. Takaoka
+;;;
+;;; Licensed under the Apache License, Version 2.0 (the "License");
+;;; you may not use this file except in compliance with the License.
+;;; You may obtain a copy of the License at
+;;;
+;;;     http://www.apache.org/licenses/LICENSE-2.0
+;;;
+;;; Unless required by applicable law or agreed to in writing, software
+;;; distributed under the License is distributed on an "AS IS" BASIS,
+;;; WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+;;; See the License for the specific language governing permissions and
+;;; limitations under the License.
+;;; Converted from test_c167_dpp.inc by scripts/c166-inc-to-ginc.py; do not edit.
+
+;;; A mem operand above 0FFFFH is a physical address
+        mov     r1, 0x1234
+        mov     r1, 0x4234
+        mov     0x8010, r1
+        movb    rl0, 0x7FFF
+;;; and in an EXTended sequence it is in the page or segment of the sequence
+        extp    #0x3FF, #1
+        mov     r1, 0x0010
+        exts    #18, #2
+        mov     r1, 0x3456
+        mov     0xFFFE, r2
+        mov     r1, 0x4234
