@@ -127,7 +127,6 @@ int main(int argc, const char **argv) {
         return 1;
 
     dis8086.setOption("relative", "enable");
-    dis8086.setOption("string-insn", "enable");
     dis8086.setOption("segment-insn", "enable");
     if (driver.generateGas()) {
         dis8086.setOption("gnu-as", "on");
@@ -135,7 +134,6 @@ int main(int argc, const char **argv) {
         // i80186 may be used with i80C187
         dis8086.setOption("fpu", "on");
     } else {
-        dis8086.setOption("lockInsn", "on");
         dis8086.setOption("far-insn", "on");
         dis8086.setOption("ptr-suffix", "on");
     }
