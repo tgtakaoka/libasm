@@ -31,7 +31,6 @@ extern const char OPT_DESC_MODE_BITS[] PROGMEM;
 extern const char OPT_TEXT_IP_OPERAND[] PROGMEM;
 extern const char OPT_DESC_IP_OPERAND[] PROGMEM;
 extern const char OPT_BOOL_CANONICAL_MEM[] PROGMEM;
-extern const char OPT_DESC_CANONICAL_MEM[] PROGMEM;
 extern const char OPT_BOOL_FPU[] PROGMEM;
 extern const char OPT_DESC_FPU[] PROGMEM;
 extern const char TEXT_REG_PFP[] PROGMEM;

@@ -169,7 +169,6 @@ It can read Intel HEX or Motorola S-Record input.
       --origin-char    : letter for origin symbol (char)
       --gnu-as         : GNU assembler compatible (bool)
       --advanced-mode  : H8/300H 24-bit advanced mode (bool: H8/300)
-      --canonical-mem  : reject memory operand which has a shorter encoding (bool: 80960)
       --extern-symbol  : emit absolute branch target as A_XXXXXXXX symbol (bool: AM29200)
       --extern-symbol  : emit direct address as seg_SS_off_XXXX symbol (bool: Z8001)
       --external-paren : disp2(disp(ext)) as external addressing (bool: 32032)
