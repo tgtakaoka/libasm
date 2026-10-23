@@ -37,6 +37,8 @@ constexpr NameEntry CC_NAMES[] PROGMEM = {
     { TEXT_CC_NE,  CC_NE  },
     { TEXT_CC_NET, CC_NET },
     { TEXT_CC_NN,  CC_NN  },
+    { TEXT_CC_NUSR0, CC_NUSR0 },
+    { TEXT_CC_NUSR1, CC_NUSR1 },
     { TEXT_CC_NV,  CC_NV  },
     { TEXT_CC_NZ,  CC_NZ  },
     { TEXT_CC_SGE, CC_SGE },
@@ -48,11 +50,30 @@ constexpr NameEntry CC_NAMES[] PROGMEM = {
     { TEXT_CC_UGT, CC_UGT },
     { TEXT_CC_ULE, CC_ULE },
     { TEXT_CC_ULT, CC_ULT },
+    { TEXT_CC_USR0, CC_USR0 },
+    { TEXT_CC_USR1, CC_USR1 },
     { TEXT_CC_V,   CC_V   },
     { TEXT_CC_Z,   CC_Z   },
 };
 
 PROGMEM constexpr NameTable CC_TABLE{ARRAY_RANGE(CC_NAMES)};
+
+constexpr NameEntry MAC_NAMES[] PROGMEM = {
+    { TEXT_REG_IDX0, REG_IDX0 },
+    { TEXT_REG_IDX1, REG_IDX1 },
+    { TEXT_REG_MAH,  REG_MAH  },
+    { TEXT_REG_MAL,  REG_MAL  },
+    { TEXT_REG_MAS,  REG_MAS  },
+    { TEXT_REG_MCW,  REG_MCW  },
+    { TEXT_REG_MRW,  REG_MRW  },
+    { TEXT_REG_MSW,  REG_MSW  },
+    { TEXT_REG_QR0,  REG_QR0  },
+    { TEXT_REG_QR1,  REG_QR1  },
+    { TEXT_REG_QX0,  REG_QX0  },
+    { TEXT_REG_QX1,  REG_QX1  },
+};
+
+PROGMEM constexpr NameTable MAC_TABLE{ARRAY_RANGE(MAC_NAMES)};
 
 // The SFRs of the CPU core, by short register number.
 constexpr NameEntry SFR_NAMES[] PROGMEM = {
@@ -75,6 +96,16 @@ constexpr NameEntry SFR_NAMES[] PROGMEM = {
 };
 
 PROGMEM constexpr NameTable SFR_TABLE{ARRAY_RANGE(SFR_NAMES)};
+
+// The SFRs the C166S V2 core adds.
+constexpr NameEntry XC16X_SFR_NAMES[] PROGMEM = {
+    { TEXT_REG_CPUCON1, int8_t(0x0C) },
+    { TEXT_REG_CPUCON2, int8_t(0x0D) },
+    { TEXT_REG_SPSEG,   int8_t(0x86) },
+    { TEXT_REG_VECSEG,  int8_t(0x89) },
+};
+
+PROGMEM constexpr NameTable XC16X_SFR_TABLE{ARRAY_RANGE(XC16X_SFR_NAMES)};
 
 // clang-format on
 
@@ -114,7 +145,7 @@ CcName parseCcName(StrScanner &scan, const ValueParser &parser) {
     auto name = parser.readRegName(p);
     name.iexpectText_P(TEXT_CC_);
     const auto *entry = CC_TABLE.searchText(name);
-    if (entry) {
+    if (entry && !isXccOnly(CcName(entry->name()))) {
         scan = p;
         return CcName(entry->name());
     }
@@ -144,8 +175,17 @@ uint16_t parseSfrName(StrScanner &scan, const ValueParser &parser, CpuType) {
     return num < 0x80 ? 0xFE00 + 2 * num : 0xFF00 + 2 * (num - 0x80);
 }
 
+RegName decodeCoReg(uint8_t code) {
+    const auto name = RegName(REG_MSW + code);
+    return MAC_TABLE.searchName(name) ? name : REG_UNDEF;
+}
+
 StrBuffer &outRegName(StrBuffer &out, RegName name) {
     const auto num = int8_t(name);
+    if (num >= REG_IDX0) {
+        const auto *entry = MAC_TABLE.searchName(num);
+        return entry ? out.text_P(entry->text_P()) : out;
+    }
     if (num < 16)
         return out.letter('R').int16(num);
     out.letter('R').letter((num & 1) ? 'H' : 'L');
@@ -170,11 +210,13 @@ RegName decodeByteReg(uint8_t num) {
     return RegName((num & 0xF) + 16);
 }
 
-const /*PROGMEM*/ char *sfrName_P(uint16_t addr, CpuType) {
+const /*PROGMEM*/ char *sfrName_P(uint16_t addr, CpuType cpuType) {
     if (addr < 0xFE00 || (addr & 1) != 0)
         return nullptr;
     const auto num = int8_t((addr - 0xFE00) / 2);
     auto entry = SFR_TABLE.searchName(num);
+    if (entry == nullptr && cpuType == XC16X)
+        entry = XC16X_SFR_TABLE.searchName(num);
     return entry ? entry->text_P() : nullptr;
 }
 
@@ -184,6 +226,16 @@ uint8_t encodeCcNum(CcName name) {
 
 CcName decodeCcNum(uint8_t num) {
     return CcName(num & 0xF);
+}
+
+bool isXccOnly(CcName name) {
+    return name >= CC_NUSR0;
+}
+
+CcName decodeXcc(uint8_t code) {
+    if ((code & 1) == 0)
+        return decodeCcNum(code >> 1);
+    return code < 8 ? CcName(32 + code) : CC_UNDEF;
 }
 
 }  // namespace reg

@@ -485,11 +485,11 @@ gas-gen_i960.hex: gen_i960_gas.inc
 
 # C166 family targets.
 # xc16x-elf-as comes from binutils 2.34, the last release with the target.  It
-# has a single machine, the 80C167 instruction set, so the 80C166 and 80C167
-# sources share it.  The link resolves absolute branch targets at the text
-# origin; c166.ld replaces the default script, whose memory region does not
-# reach the origins used here.  The origin must match the org of the matching
-# .asm; the autogen sources use the generator's.
+# has a single machine, the 80C167 instruction set with the XC16X branches, so
+# the 80C166, 80C167 and XC16X sources share it.  The link resolves absolute
+# branch targets at the text origin; c166.ld replaces the default script, whose
+# memory region does not reach the origins used here.  The origin must match
+# the org of the matching .asm; the autogen sources use the generator's.
 C166_TEXT_ORG = 0x10100
 gas-test_c166.hex: C166_TEXT_ORG = 0x12340
 gas-test_c167.hex: C166_TEXT_ORG = 0xAB1230

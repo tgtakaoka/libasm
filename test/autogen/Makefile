@@ -70,8 +70,10 @@ NOASM_targets = i80286 h8s2000n h8s2000 h8s2600n h8s2600 i960
 # cannot adjudicate this generated source; see ~/asl_bugs/asl_bug_i960.md.
 # shdsp: ASL knows no MOD/RS/RE control register and no LDRS/LDRE/SETRC.
 # See ~/asl_bugs/asl_bug_superh.md.
+# xc16x: ASL has no XC16X (C166S V2) selector, so it knows neither the MAC unit
+# nor JMPA+/-, the USR conditions, SBRK and ENWDT.
 ASL_exclude = mb8861 i80286 h8300hn h8300h h8s2000n h8s2000 h8s2600n h8s2600 \
-    shdsp $(TGT_h8500) am29050 i960 h16
+    shdsp $(TGT_h8500) am29050 i960 h16 xc16x
 # CPU variants whose gas toolchain does not produce a manual-conforming
 # encoding. h8300-elf-as has no -mach=h8300; it always emits the H8/300H
 # 4-byte form for JMP/JSR @aa:16, producing bytes that don't execute on

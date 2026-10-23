@@ -30,6 +30,12 @@ namespace c166 {
     {_opc, _post, Entry::Flags::create(_cf, _dst, _src), _name}
 #define E1(_opc, _post, _cf, _name, _dst) E2(_opc, _post, _cf, _name, _dst, M_NONE)
 #define E0(_opc, _post, _cf, _name) E1(_opc, _post, _cf, _name, M_NONE)
+// A CoXXX instruction, whose 3rd byte is a sub-opcode.
+#define X3(_opc, _post, _cf, _sub, _name, _dst, _src, _ext) \
+    {_opc, _post, Entry::Flags::create(_cf, _dst, _src, _ext, true, true, _sub), _name}
+// A CoXXX instruction without a sub-opcode.
+#define S3(_opc, _post, _cf, _name, _dst, _src, _ext) \
+    {_opc, _post, Entry::Flags::create(_cf, _dst, _src, _ext, true), _name}
 
 // clang-format off
 constexpr Entry TABLE_C166[] PROGMEM = {
@@ -504,6 +510,205 @@ constexpr uint8_t INDEX_C167[] PROGMEM = {
       4,  // TEXT_EXTSR
       8,  // TEXT_EXTSR
 };
+// Not available on the 80C166 and the 80C167.
+constexpr Entry TABLE_XC16X[] PROGMEM = {
+    E2(0xEA, 0x00, CF_FA, TEXT_JMPA,    M_XCC,  M_CADR),
+    E2(0xEA, 0x00, CF_FA, TEXT_JMPA_P,  M_XCC,  M_CADR),
+    E2(0xEA, 0x01, CF_FA, TEXT_JMPA_M,  M_XCC,  M_CADR),
+    E2(0xCA, 0x00, CF_F8, TEXT_CALLA,   M_XCC,  M_CADR),
+    E2(0xCA, 0x00, CF_F8, TEXT_CALLA_P, M_XCC,  M_CADR),
+    E2(0xCA, 0x01, CF_F8, TEXT_CALLA_M, M_XCC,  M_CADR),
+    E0(0x85, 0x7A, CF_PD, TEXT_ENWDT),
+    E0(0x8C, 0x00, CF_00, TEXT_SBRK),
+};
+
+constexpr uint8_t INDEX_XC16X[] PROGMEM = {0};
+
+// The MAC unit.
+constexpr Entry TABLE_MAC[] PROGMEM = {
+    X3(0x83, 0x00, CF_FF, 0x00, TEXT_COMULU,     M_RWH,   M_QIRL,  M_NONE),
+    X3(0x83, 0x00, CF_FF, 0x01, TEXT_COMULU,     M_RWH,   M_QIRL,  M_RND),
+    X3(0x83, 0x00, CF_FF, 0x02, TEXT_COADD,      M_RWH,   M_QIRL,  M_NONE),
+    X3(0x83, 0x00, CF_FF, 0x08, TEXT_COMULU_M,   M_RWH,   M_QIRL,  M_NONE),
+    X3(0x83, 0x00, CF_FF, 0x0A, TEXT_COSUB,      M_RWH,   M_QIRL,  M_NONE),
+    X3(0x83, 0x00, CF_FF, 0x10, TEXT_COMACU,     M_RWH,   M_QIRL,  M_NONE),
+    X3(0x83, 0x00, CF_FF, 0x11, TEXT_COMACU,     M_RWH,   M_QIRL,  M_RND),
+    X3(0x83, 0x00, CF_FF, 0x12, TEXT_COSUBR,     M_RWH,   M_QIRL,  M_NONE),
+    X3(0x83, 0x00, CF_FF, 0x20, TEXT_COMACU_M,   M_RWH,   M_QIRL,  M_NONE),
+    X3(0x83, 0x00, CF_FF, 0x22, TEXT_COLOAD,     M_RWH,   M_QIRL,  M_NONE),
+    X3(0x83, 0x00, CF_FF, 0x2A, TEXT_COLOAD_M,   M_RWH,   M_QIRL,  M_NONE),
+    X3(0x83, 0x00, CF_FF, 0x30, TEXT_COMACRU,    M_RWH,   M_QIRL,  M_NONE),
+    X3(0x83, 0x00, CF_FF, 0x31, TEXT_COMACRU,    M_RWH,   M_QIRL,  M_RND),
+    X3(0x83, 0x00, CF_FF, 0x3A, TEXT_COMAX,      M_RWH,   M_QIRL,  M_NONE),
+    X3(0x83, 0x00, CF_FF, 0x40, TEXT_COMULSU,    M_RWH,   M_QIRL,  M_NONE),
+    X3(0x83, 0x00, CF_FF, 0x41, TEXT_COMULSU,    M_RWH,   M_QIRL,  M_RND),
+    X3(0x83, 0x00, CF_FF, 0x42, TEXT_COADD2,     M_RWH,   M_QIRL,  M_NONE),
+    X3(0x83, 0x00, CF_FF, 0x48, TEXT_COMULSU_M,  M_RWH,   M_QIRL,  M_NONE),
+    X3(0x83, 0x00, CF_FF, 0x4A, TEXT_COSUB2,     M_RWH,   M_QIRL,  M_NONE),
+    X3(0x83, 0x00, CF_FF, 0x50, TEXT_COMACSU,    M_RWH,   M_QIRL,  M_NONE),
+    X3(0x83, 0x00, CF_FF, 0x51, TEXT_COMACSU,    M_RWH,   M_QIRL,  M_RND),
+    X3(0x83, 0x00, CF_FF, 0x52, TEXT_COSUB2R,    M_RWH,   M_QIRL,  M_NONE),
+    X3(0x83, 0x00, CF_FF, 0x60, TEXT_COMACSU_M,  M_RWH,   M_QIRL,  M_NONE),
+    X3(0x83, 0x00, CF_FF, 0x62, TEXT_COLOAD2,    M_RWH,   M_QIRL,  M_NONE),
+    X3(0x83, 0x00, CF_FF, 0x6A, TEXT_COLOAD2_M,  M_RWH,   M_QIRL,  M_NONE),
+    X3(0x83, 0x00, CF_FF, 0x70, TEXT_COMACRSU,   M_RWH,   M_QIRL,  M_NONE),
+    X3(0x83, 0x00, CF_FF, 0x71, TEXT_COMACRSU,   M_RWH,   M_QIRL,  M_RND),
+    X3(0x83, 0x00, CF_FF, 0x7A, TEXT_COMIN,      M_RWH,   M_QIRL,  M_NONE),
+    X3(0x83, 0x00, CF_FF, 0x80, TEXT_COMULUS,    M_RWH,   M_QIRL,  M_NONE),
+    X3(0x83, 0x00, CF_FF, 0x81, TEXT_COMULUS,    M_RWH,   M_QIRL,  M_RND),
+    X3(0x83, 0x00, CF_FF, 0x88, TEXT_COMULUS_M,  M_RWH,   M_QIRL,  M_NONE),
+    X3(0x83, 0x00, CF_NN, 0x8A, TEXT_COSHL,      M_QIRL,  M_NONE,  M_NONE),
+    X3(0x83, 0x00, CF_FF, 0x90, TEXT_COMACUS,    M_RWH,   M_QIRL,  M_NONE),
+    X3(0x83, 0x00, CF_FF, 0x91, TEXT_COMACUS,    M_RWH,   M_QIRL,  M_RND),
+    X3(0x83, 0x00, CF_NN, 0x9A, TEXT_COSHR,      M_QIRL,  M_NONE,  M_NONE),
+    X3(0x83, 0x00, CF_FF, 0xA0, TEXT_COMACUS_M,  M_RWH,   M_QIRL,  M_NONE),
+    X3(0x83, 0x00, CF_NN, 0xAA, TEXT_COASHR,     M_QIRL,  M_NONE,  M_NONE),
+    X3(0x83, 0x00, CF_FF, 0xB0, TEXT_COMACRUS,   M_RWH,   M_QIRL,  M_NONE),
+    X3(0x83, 0x00, CF_FF, 0xB1, TEXT_COMACRUS,   M_RWH,   M_QIRL,  M_RND),
+    X3(0x83, 0x00, CF_NN, 0xBA, TEXT_COASHR,     M_QIRL,  M_RND,   M_NONE),
+    X3(0x83, 0x00, CF_FF, 0xC0, TEXT_COMUL,      M_RWH,   M_QIRL,  M_NONE),
+    X3(0x83, 0x00, CF_FF, 0xC1, TEXT_COMUL,      M_RWH,   M_QIRL,  M_RND),
+    X3(0x83, 0x00, CF_FF, 0xC2, TEXT_COCMP,      M_RWH,   M_QIRL,  M_NONE),
+    X3(0x83, 0x00, CF_FF, 0xC8, TEXT_COMUL_M,    M_RWH,   M_QIRL,  M_NONE),
+    X3(0x83, 0x00, CF_FF, 0xCA, TEXT_COABS,      M_RWH,   M_QIRL,  M_NONE),
+    X3(0x83, 0x00, CF_FF, 0xD0, TEXT_COMAC,      M_RWH,   M_QIRL,  M_NONE),
+    X3(0x83, 0x00, CF_FF, 0xD1, TEXT_COMAC,      M_RWH,   M_QIRL,  M_RND),
+    X3(0x83, 0x00, CF_FF, 0xE0, TEXT_COMAC_M,    M_RWH,   M_QIRL,  M_NONE),
+    X3(0x83, 0x00, CF_FF, 0xF0, TEXT_COMACR,     M_RWH,   M_QIRL,  M_NONE),
+    X3(0x83, 0x00, CF_FF, 0xF1, TEXT_COMACR,     M_RWH,   M_QIRL,  M_RND),
+    X3(0x93, 0x00, CF_FF, 0x00, TEXT_COMULU,     M_QIX,   M_QIRL,  M_NONE),
+    X3(0x93, 0x00, CF_FF, 0x01, TEXT_COMULU,     M_QIX,   M_QIRL,  M_RND),
+    X3(0x93, 0x00, CF_FF, 0x02, TEXT_COADD,      M_QIX,   M_QIRL,  M_NONE),
+    X3(0x93, 0x00, CF_FF, 0x08, TEXT_COMULU_M,   M_QIX,   M_QIRL,  M_NONE),
+    X3(0x93, 0x00, CF_FF, 0x0A, TEXT_COSUB,      M_QIX,   M_QIRL,  M_NONE),
+    X3(0x93, 0x00, CF_FF, 0x10, TEXT_COMACU,     M_QIX,   M_QIRL,  M_NONE),
+    X3(0x93, 0x00, CF_FF, 0x11, TEXT_COMACU,     M_QIX,   M_QIRL,  M_RND),
+    X3(0x93, 0x00, CF_FF, 0x12, TEXT_COSUBR,     M_QIX,   M_QIRL,  M_NONE),
+    X3(0x93, 0x00, CF_FF, 0x18, TEXT_COMACMU,    M_QIX,   M_QIRL,  M_NONE),
+    X3(0x93, 0x00, CF_FF, 0x19, TEXT_COMACMU,    M_QIX,   M_QIRL,  M_RND),
+    X3(0x93, 0x00, CF_FF, 0x20, TEXT_COMACU_M,   M_QIX,   M_QIRL,  M_NONE),
+    X3(0x93, 0x00, CF_FF, 0x22, TEXT_COLOAD,     M_QIX,   M_QIRL,  M_NONE),
+    X3(0x93, 0x00, CF_FF, 0x28, TEXT_COMACMU_M,  M_QIX,   M_QIRL,  M_NONE),
+    X3(0x93, 0x00, CF_FF, 0x2A, TEXT_COLOAD_M,   M_QIX,   M_QIRL,  M_NONE),
+    X3(0x93, 0x00, CF_FF, 0x30, TEXT_COMACRU,    M_QIX,   M_QIRL,  M_NONE),
+    X3(0x93, 0x00, CF_FF, 0x31, TEXT_COMACRU,    M_QIX,   M_QIRL,  M_RND),
+    X3(0x93, 0x00, CF_FF, 0x38, TEXT_COMACMRU,   M_QIX,   M_QIRL,  M_NONE),
+    X3(0x93, 0x00, CF_FF, 0x39, TEXT_COMACMRU,   M_QIX,   M_QIRL,  M_RND),
+    X3(0x93, 0x00, CF_FF, 0x3A, TEXT_COMAX,      M_QIX,   M_QIRL,  M_NONE),
+    X3(0x93, 0x00, CF_FF, 0x40, TEXT_COMULSU,    M_QIX,   M_QIRL,  M_NONE),
+    X3(0x93, 0x00, CF_FF, 0x41, TEXT_COMULSU,    M_QIX,   M_QIRL,  M_RND),
+    X3(0x93, 0x00, CF_FF, 0x42, TEXT_COADD2,     M_QIX,   M_QIRL,  M_NONE),
+    X3(0x93, 0x00, CF_FF, 0x48, TEXT_COMULSU_M,  M_QIX,   M_QIRL,  M_NONE),
+    X3(0x93, 0x00, CF_FF, 0x4A, TEXT_COSUB2,     M_QIX,   M_QIRL,  M_NONE),
+    X3(0x93, 0x00, CF_FF, 0x50, TEXT_COMACSU,    M_QIX,   M_QIRL,  M_NONE),
+    X3(0x93, 0x00, CF_FF, 0x51, TEXT_COMACSU,    M_QIX,   M_QIRL,  M_RND),
+    X3(0x93, 0x00, CF_FF, 0x52, TEXT_COSUB2R,    M_QIX,   M_QIRL,  M_NONE),
+    X3(0x93, 0x00, CF_FF, 0x58, TEXT_COMACMSU,   M_QIX,   M_QIRL,  M_NONE),
+    X3(0x93, 0x00, CF_FF, 0x59, TEXT_COMACMSU,   M_QIX,   M_QIRL,  M_RND),
+    X3(0x93, 0x00, CF_F0, 0x5A, TEXT_CONOP,      M_QIX,   M_QNOP,  M_NONE),
+    X3(0x93, 0x10, CF_0F, 0x5A, TEXT_CONOP,      M_QIRL,  M_NONE,  M_NONE),
+    X3(0x93, 0x00, CF_FF, 0x5A, TEXT_CONOP,      M_QIX,   M_QIRL,  M_NONE),
+    X3(0x93, 0x00, CF_FF, 0x60, TEXT_COMACSU_M,  M_QIX,   M_QIRL,  M_NONE),
+    X3(0x93, 0x00, CF_FF, 0x62, TEXT_COLOAD2,    M_QIX,   M_QIRL,  M_NONE),
+    X3(0x93, 0x00, CF_FF, 0x68, TEXT_COMACMSU_M, M_QIX,   M_QIRL,  M_NONE),
+    X3(0x93, 0x00, CF_FF, 0x6A, TEXT_COLOAD2_M,  M_QIX,   M_QIRL,  M_NONE),
+    X3(0x93, 0x00, CF_FF, 0x70, TEXT_COMACRSU,   M_QIX,   M_QIRL,  M_NONE),
+    X3(0x93, 0x00, CF_FF, 0x71, TEXT_COMACRSU,   M_QIX,   M_QIRL,  M_RND),
+    X3(0x93, 0x00, CF_FF, 0x78, TEXT_COMACMRSU,  M_QIX,   M_QIRL,  M_NONE),
+    X3(0x93, 0x00, CF_FF, 0x79, TEXT_COMACMRSU,  M_QIX,   M_QIRL,  M_RND),
+    X3(0x93, 0x00, CF_FF, 0x7A, TEXT_COMIN,      M_QIX,   M_QIRL,  M_NONE),
+    X3(0x93, 0x00, CF_FF, 0x80, TEXT_COMULUS,    M_QIX,   M_QIRL,  M_NONE),
+    X3(0x93, 0x00, CF_FF, 0x81, TEXT_COMULUS,    M_QIX,   M_QIRL,  M_RND),
+    X3(0x93, 0x00, CF_FF, 0x88, TEXT_COMULUS_M,  M_QIX,   M_QIRL,  M_NONE),
+    X3(0x93, 0x00, CF_FF, 0x90, TEXT_COMACUS,    M_QIX,   M_QIRL,  M_NONE),
+    X3(0x93, 0x00, CF_FF, 0x91, TEXT_COMACUS,    M_QIX,   M_QIRL,  M_RND),
+    X3(0x93, 0x00, CF_FF, 0x98, TEXT_COMACMUS,   M_QIX,   M_QIRL,  M_NONE),
+    X3(0x93, 0x00, CF_FF, 0x99, TEXT_COMACMUS,   M_QIX,   M_QIRL,  M_RND),
+    X3(0x93, 0x00, CF_FF, 0xA0, TEXT_COMACUS_M,  M_QIX,   M_QIRL,  M_NONE),
+    X3(0x93, 0x00, CF_FF, 0xA8, TEXT_COMACMUS_M, M_QIX,   M_QIRL,  M_NONE),
+    X3(0x93, 0x00, CF_FF, 0xB0, TEXT_COMACRUS,   M_QIX,   M_QIRL,  M_NONE),
+    X3(0x93, 0x00, CF_FF, 0xB1, TEXT_COMACRUS,   M_QIX,   M_QIRL,  M_RND),
+    X3(0x93, 0x00, CF_FF, 0xB8, TEXT_COMACMRUS,  M_QIX,   M_QIRL,  M_NONE),
+    X3(0x93, 0x00, CF_FF, 0xB9, TEXT_COMACMRUS,  M_QIX,   M_QIRL,  M_RND),
+    X3(0x93, 0x00, CF_FF, 0xC0, TEXT_COMUL,      M_QIX,   M_QIRL,  M_NONE),
+    X3(0x93, 0x00, CF_FF, 0xC1, TEXT_COMUL,      M_QIX,   M_QIRL,  M_RND),
+    X3(0x93, 0x00, CF_FF, 0xC2, TEXT_COCMP,      M_QIX,   M_QIRL,  M_NONE),
+    X3(0x93, 0x00, CF_FF, 0xC8, TEXT_COMUL_M,    M_QIX,   M_QIRL,  M_NONE),
+    X3(0x93, 0x00, CF_FF, 0xCA, TEXT_COABS,      M_QIX,   M_QIRL,  M_NONE),
+    X3(0x93, 0x00, CF_FF, 0xD0, TEXT_COMAC,      M_QIX,   M_QIRL,  M_NONE),
+    X3(0x93, 0x00, CF_FF, 0xD1, TEXT_COMAC,      M_QIX,   M_QIRL,  M_RND),
+    X3(0x93, 0x00, CF_FF, 0xD8, TEXT_COMACM,     M_QIX,   M_QIRL,  M_NONE),
+    X3(0x93, 0x00, CF_FF, 0xD9, TEXT_COMACM,     M_QIX,   M_QIRL,  M_RND),
+    X3(0x93, 0x00, CF_FF, 0xE0, TEXT_COMAC_M,    M_QIX,   M_QIRL,  M_NONE),
+    X3(0x93, 0x00, CF_FF, 0xE8, TEXT_COMACM_M,   M_QIX,   M_QIRL,  M_NONE),
+    X3(0x93, 0x00, CF_FF, 0xF0, TEXT_COMACR,     M_QIX,   M_QIRL,  M_NONE),
+    X3(0x93, 0x00, CF_FF, 0xF1, TEXT_COMACR,     M_QIX,   M_QIRL,  M_RND),
+    X3(0x93, 0x00, CF_FF, 0xF8, TEXT_COMACMR,    M_QIX,   M_QIRL,  M_NONE),
+    X3(0x93, 0x00, CF_FF, 0xF9, TEXT_COMACMR,    M_QIX,   M_QIRL,  M_RND),
+    X3(0xA3, 0x00, CF_FF, 0x00, TEXT_COMULU,     M_RWH,   M_RWL,   M_NONE),
+    X3(0xA3, 0x00, CF_FF, 0x01, TEXT_COMULU,     M_RWH,   M_RWL,   M_RND),
+    X3(0xA3, 0x00, CF_FF, 0x02, TEXT_COADD,      M_RWH,   M_RWL,   M_NONE),
+    X3(0xA3, 0x00, CF_FF, 0x08, TEXT_COMULU_M,   M_RWH,   M_RWL,   M_NONE),
+    X3(0xA3, 0x00, CF_FF, 0x0A, TEXT_COSUB,      M_RWH,   M_RWL,   M_NONE),
+    X3(0xA3, 0x00, CF_FF, 0x10, TEXT_COMACU,     M_RWH,   M_RWL,   M_NONE),
+    X3(0xA3, 0x00, CF_FF, 0x11, TEXT_COMACU,     M_RWH,   M_RWL,   M_RND),
+    X3(0xA3, 0x00, CF_FF, 0x12, TEXT_COSUBR,     M_RWH,   M_RWL,   M_NONE),
+    X3(0xA3, 0x00, CF_00, 0x1A, TEXT_COABS,      M_NONE,  M_NONE,  M_NONE),
+    X3(0xA3, 0x00, CF_FF, 0x20, TEXT_COMACU_M,   M_RWH,   M_RWL,   M_NONE),
+    X3(0xA3, 0x00, CF_FF, 0x22, TEXT_COLOAD,     M_RWH,   M_RWL,   M_NONE),
+    X3(0xA3, 0x00, CF_FF, 0x2A, TEXT_COLOAD_M,   M_RWH,   M_RWL,   M_NONE),
+    X3(0xA3, 0x00, CF_FF, 0x30, TEXT_COMACRU,    M_RWH,   M_RWL,   M_NONE),
+    X3(0xA3, 0x00, CF_FF, 0x31, TEXT_COMACRU,    M_RWH,   M_RWL,   M_RND),
+    X3(0xA3, 0x00, CF_00, 0x32, TEXT_CONEG,      M_NONE,  M_NONE,  M_NONE),
+    X3(0xA3, 0x00, CF_FF, 0x3A, TEXT_COMAX,      M_RWH,   M_RWL,   M_NONE),
+    X3(0xA3, 0x00, CF_FF, 0x40, TEXT_COMULSU,    M_RWH,   M_RWL,   M_NONE),
+    X3(0xA3, 0x00, CF_FF, 0x41, TEXT_COMULSU,    M_RWH,   M_RWL,   M_RND),
+    X3(0xA3, 0x00, CF_FF, 0x42, TEXT_COADD2,     M_RWH,   M_RWL,   M_NONE),
+    X3(0xA3, 0x00, CF_FF, 0x48, TEXT_COMULSU_M,  M_RWH,   M_RWL,   M_NONE),
+    X3(0xA3, 0x00, CF_FF, 0x4A, TEXT_COSUB2,     M_RWH,   M_RWL,   M_NONE),
+    X3(0xA3, 0x00, CF_FF, 0x50, TEXT_COMACSU,    M_RWH,   M_RWL,   M_NONE),
+    X3(0xA3, 0x00, CF_FF, 0x51, TEXT_COMACSU,    M_RWH,   M_RWL,   M_RND),
+    X3(0xA3, 0x00, CF_FF, 0x52, TEXT_COSUB2R,    M_RWH,   M_RWL,   M_NONE),
+    X3(0xA3, 0x00, CF_FF, 0x60, TEXT_COMACSU_M,  M_RWH,   M_RWL,   M_NONE),
+    X3(0xA3, 0x00, CF_FF, 0x62, TEXT_COLOAD2,    M_RWH,   M_RWL,   M_NONE),
+    X3(0xA3, 0x00, CF_FF, 0x6A, TEXT_COLOAD2_M,  M_RWH,   M_RWL,   M_NONE),
+    X3(0xA3, 0x00, CF_FF, 0x70, TEXT_COMACRSU,   M_RWH,   M_RWL,   M_NONE),
+    X3(0xA3, 0x00, CF_FF, 0x71, TEXT_COMACRSU,   M_RWH,   M_RWL,   M_RND),
+    X3(0xA3, 0x00, CF_00, 0x72, TEXT_CONEG,      M_RND,   M_NONE,  M_NONE),
+    X3(0xA3, 0x00, CF_FF, 0x7A, TEXT_COMIN,      M_RWH,   M_RWL,   M_NONE),
+    X3(0xA3, 0x00, CF_FF, 0x80, TEXT_COMULUS,    M_RWH,   M_RWL,   M_NONE),
+    X3(0xA3, 0x00, CF_FF, 0x81, TEXT_COMULUS,    M_RWH,   M_RWL,   M_RND),
+    X3(0xA3, 0x00, CF_00, 0x82, TEXT_COSHL,      M_D5,    M_NONE,  M_NONE),
+    X3(0xA3, 0x00, CF_FF, 0x88, TEXT_COMULUS_M,  M_RWH,   M_RWL,   M_NONE),
+    X3(0xA3, 0x00, CF_NN, 0x8A, TEXT_COSHL,      M_RWH,   M_NONE,  M_NONE),
+    X3(0xA3, 0x00, CF_FF, 0x90, TEXT_COMACUS,    M_RWH,   M_RWL,   M_NONE),
+    X3(0xA3, 0x00, CF_FF, 0x91, TEXT_COMACUS,    M_RWH,   M_RWL,   M_RND),
+    X3(0xA3, 0x00, CF_00, 0x92, TEXT_COSHR,      M_D5,    M_NONE,  M_NONE),
+    X3(0xA3, 0x00, CF_NN, 0x9A, TEXT_COSHR,      M_RWH,   M_NONE,  M_NONE),
+    X3(0xA3, 0x00, CF_FF, 0xA0, TEXT_COMACUS_M,  M_RWH,   M_RWL,   M_NONE),
+    X3(0xA3, 0x00, CF_00, 0xA2, TEXT_COASHR,     M_D5,    M_NONE,  M_NONE),
+    X3(0xA3, 0x00, CF_NN, 0xAA, TEXT_COASHR,     M_RWH,   M_NONE,  M_NONE),
+    X3(0xA3, 0x00, CF_FF, 0xB0, TEXT_COMACRUS,   M_RWH,   M_RWL,   M_NONE),
+    X3(0xA3, 0x00, CF_FF, 0xB1, TEXT_COMACRUS,   M_RWH,   M_RWL,   M_RND),
+    X3(0xA3, 0x00, CF_00, 0xB2, TEXT_COASHR,     M_D5,    M_RND,   M_NONE),
+    X3(0xA3, 0x00, CF_00, 0xB2, TEXT_CORND,      M_NONE,  M_NONE,  M_NONE),
+    X3(0xA3, 0x00, CF_NN, 0xBA, TEXT_COASHR,     M_RWH,   M_RND,   M_NONE),
+    X3(0xA3, 0x00, CF_FF, 0xC0, TEXT_COMUL,      M_RWH,   M_RWL,   M_NONE),
+    X3(0xA3, 0x00, CF_FF, 0xC1, TEXT_COMUL,      M_RWH,   M_RWL,   M_RND),
+    X3(0xA3, 0x00, CF_FF, 0xC2, TEXT_COCMP,      M_RWH,   M_RWL,   M_NONE),
+    X3(0xA3, 0x00, CF_FF, 0xC8, TEXT_COMUL_M,    M_RWH,   M_RWL,   M_NONE),
+    X3(0xA3, 0x00, CF_FF, 0xCA, TEXT_COABS,      M_RWH,   M_RWL,   M_NONE),
+    X3(0xA3, 0x00, CF_FF, 0xD0, TEXT_COMAC,      M_RWH,   M_RWL,   M_NONE),
+    X3(0xA3, 0x00, CF_FF, 0xD1, TEXT_COMAC,      M_RWH,   M_RWL,   M_RND),
+    X3(0xA3, 0x00, CF_FF, 0xE0, TEXT_COMAC_M,    M_RWH,   M_RWL,   M_NONE),
+    X3(0xA3, 0x00, CF_FF, 0xF0, TEXT_COMACR,     M_RWH,   M_RWL,   M_NONE),
+    X3(0xA3, 0x00, CF_FF, 0xF1, TEXT_COMACR,     M_RWH,   M_RWL,   M_RND),
+    S3(0xB3, 0x00, CF_NN,       TEXT_COSTORE,    M_QIRL,  M_COREG, M_NONE),
+    S3(0xC3, 0x00, CF_NN,       TEXT_COSTORE,    M_RWH,   M_COREG, M_NONE),
+    X3(0xD3, 0x00, CF_FF, 0x00, TEXT_COMOV,      M_QIX,   M_QIRL,  M_NONE),
+};
+
+constexpr uint8_t INDEX_MAC[] PROGMEM = {0};
 // clang-format on
 
 using EntryPage = entry::TableBase<Entry>;
@@ -517,12 +722,29 @@ constexpr EntryPage C167_PAGES[] PROGMEM = {
         {ARRAY_RANGE(TABLE_C167), ARRAY_RANGE(INDEX_C167)},
 };
 
+constexpr EntryPage XC16X_PAGES[] PROGMEM = {
+        {ARRAY_RANGE(TABLE_XC16X), ARRAY_RANGE(INDEX_XC16X)},
+        {ARRAY_RANGE(TABLE_MAC), ARRAY_RANGE(INDEX_MAC)},
+        {ARRAY_RANGE(TABLE_C166), ARRAY_RANGE(INDEX_C166)},
+        {ARRAY_RANGE(TABLE_C167), ARRAY_RANGE(INDEX_C167)},
+};
+
+// The XC16X without the MAC unit, which GNU as does not know.
+constexpr EntryPage XC16X_NOMAC_PAGES[] PROGMEM = {
+        {ARRAY_RANGE(TABLE_XC16X), ARRAY_RANGE(INDEX_XC16X)},
+        {ARRAY_RANGE(TABLE_C166), ARRAY_RANGE(INDEX_C166)},
+        {ARRAY_RANGE(TABLE_C167), ARRAY_RANGE(INDEX_C167)},
+};
+
 using Cpu = entry::CpuBase<CpuType, EntryPage>;
 
 constexpr Cpu CPU_TABLE[] PROGMEM = {
         {C166, TEXT_CPU_80C166, ARRAY_RANGE(C166_PAGES)},
         {C167, TEXT_CPU_80C167, ARRAY_RANGE(C167_PAGES)},
+        {XC16X, TEXT_CPU_XC16X, ARRAY_RANGE(XC16X_PAGES)},
 };
+
+constexpr Cpu XC16X_NOMAC PROGMEM = {XC16X, TEXT_CPU_XC16X, ARRAY_RANGE(XC16X_NOMAC_PAGES)};
 
 const Cpu *cpu(CpuType cpuType) {
     return Cpu::search(cpuType, ARRAY_RANGE(CPU_TABLE));
@@ -641,11 +863,26 @@ bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *) {
     const auto post = insn.post();
     if (flags.cf() == CF_NN && (post >> 4) != (post & 0xF))
         return false;
-    return (post & ~flags.postMask()) == entry->readPost();
+    if ((post & ~flags.postMask()) != entry->readPost())
+        return false;
+    // No CoXXX instruction has an operand a prefix changes, so as a follower
+    // any of them will do, without asking for its second word.
+    if (flags.rrr() && insn.follower())
+        return true;
+    if (flags.hasSub()) {
+        insn.readByte3();
+        insn.readByte4();
+        if (insn.byte3() != flags.sub())
+            return false;
+    }
+    if (flags.src() == M_QNOP)
+        return (insn.byte4() & 7) == 1;
+    return true;
 }
 
-Error searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) {
-    cpu(cpuType)->searchOpCode(insn, out, matchOpCode);
+Error searchOpCode(CpuType cpuType, bool mac, DisInsn &insn, StrBuffer &out) {
+    const auto *c = (cpuType == XC16X && !mac) ? &XC16X_NOMAC : cpu(cpuType);
+    c->searchOpCode(insn, out, matchOpCode);
     return insn.getError();
 }
 

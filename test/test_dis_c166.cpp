@@ -97,8 +97,13 @@ void prefix_assert(const char *file, int line, Error error, const Config::opcode
 #define TTEST(name1, opr1, name2, opr2, name3, opr3, ...) \
     __SEQ(__CODES(__VA_ARGS__), name1, opr1, name2, opr2, name3, opr3)
 
+// The 80C167 and the XC16X.
 static bool c167() {
-    return strcmp_P("80C167", disassembler.config().cpu_P()) == 0;
+    return strcmp_P("80C166", disassembler.config().cpu_P()) != 0;
+}
+
+static bool xc16x() {
+    return strcmp_P("XC16X", disassembler.config().cpu_P()) == 0;
 }
 
 void set_up() {
@@ -429,6 +434,14 @@ void test_sfr_name() {
     TEST("ADD",  "0FFDEH, #1234H",  0x06, 0xEF, 0x34, 0x12);
     TEST("BSET", "0FD02H.3",        0x3F, 0x01);
     TEST("BSET", "TFR.3",           0x3F, 0xD6);
+    // The SFRs the C166S V2 core adds.
+    if (xc16x()) {
+        TEST("MOV", "CPUCON1, #1234H", 0xE6, 0x0C, 0x34, 0x12);
+        TEST("BSET", "VECSEG.3",       0x3F, 0x89);
+    } else {
+        TEST("MOV", "0FE18H, #1234H",  0xE6, 0x0C, 0x34, 0x12);
+        TEST("BSET", "0FF12H.3",       0x3F, 0x89);
+    }
 }
 
 // The gnu-as option names the core SFRs, writes numbers as C does and
@@ -447,6 +460,13 @@ void test_gnu_as() {
     // A code address is the offset in the segment.
     if (c167())
         ATEST(0x21000, "CALLA", "CC_NZ, 0x1234", 0xCA, 0x30, 0x34, 0x12);
+    if (xc16x()) {
+        // No pre-fetch hint, and no MAC unit.
+        ATEST(0x1000, "JMPA", "CC_UC, 0x1020", 0xEA, 0x00, 0x20, 0x10);
+        AERRT(0x1020, "JMPA", "CC_USR0, 0x1000", ILLEGAL_OPERAND_MODE, "0x1000",
+                0xEA, 0x2A, 0x00, 0x10);
+        UNKN(0xA3, 0x54);
+    }
 }
 
 // With an SFR in both operands, "mem, reg" assembles back as "reg, mem";
@@ -538,6 +558,9 @@ void test_ext_prefix() {
     ERRT("EXTSR",   "#1, #1", PREFIX_HAS_NO_EFFECT, "", 0xD7, 0x80, 0x01, 0x00, 0x3F, 0x01);
     ERRT("EXTR",    "#1", PREFIX_HAS_NO_EFFECT, "", 0xD1, 0x80, 0xEC, 0xF1);
     ERRT("EXTR",    "#1", PREFIX_HAS_NO_EFFECT, "", 0xD1, 0x80, 0xD1, 0x80);
+    // A CoXXX instruction has no such operand; turned down from its first word.
+    if (xc16x())
+        ERRT("EXTR",  "#1", PREFIX_HAS_NO_EFFECT, "", 0xD1, 0x80, 0xA3, 0x12);
     // Decided from the bytes read so far, before asking for more.
     ERRT("EXTR",    "#1", PREFIX_HAS_NO_EFFECT, "", 0xD1, 0x80, 0xF2, 0xF0);
     ERRT("EXTR",    "#1", PREFIX_HAS_NO_EFFECT, "", 0xD1, 0x80, 0x4A, 0x01, 0x01);
@@ -556,14 +579,131 @@ void test_ext_prefix() {
     TEST("PUSH",    "0FE12H",     0xEC, 0x09);
 }
 
+// The MAC unit of the XC16X.  Encodings from the C166S V2 user's manual
+// (section 8.2); those marked are as the Keil assembler lists them.
+void test_mac() {
+    TEST("COMULU",  "R5, R4",                0xA3, 0x54, 0x00, 0x00);  // Keil
+    TEST("COMACRU", "R7, R6",                0xA3, 0x76, 0x30, 0x00);  // Keil
+    TEST("COMUL",   "R4, R10",               0xA3, 0x4A, 0xC0, 0x00);  // Keil
+    TEST("COMAC",   "R6, R10",               0xA3, 0x6A, 0xD0, 0x00);  // Keil
+    TEST("COMAC-",  "R4, R10",               0xA3, 0x4A, 0xE0, 0x00);  // Keil
+    TEST("COLOAD",  "R8, R9",                0xA3, 0x89, 0x22, 0x00);  // Keil
+    TEST("COMUL",   "[IDX0+], [R8]",         0x93, 0x28, 0xC0, 0x01);  // Keil
+    TEST("COMACU",  "[IDX0+], [R8]",         0x93, 0x28, 0x10, 0x01);  // Keil
+    TEST("COMAC",   "R1, R2, RND",           0xA3, 0x12, 0xD1, 0x00);
+    TEST("COMAC",   "R1, [R2-], RND",        0x83, 0x12, 0xD1, 0x03);
+    TEST("COMACM",  "[IDX1-QX1], [R3-QR1]",  0x93, 0xF3, 0xD8, 0x07);
+    TEST("COMACMRUS", "[IDX0+QX0], [R4+QR0], RND", 0x93, 0x44, 0xB9, 0x04);
+    TEST("COMOV",   "[IDX0+], [R1+]",        0xD3, 0x21, 0x00, 0x02);
+    TEST("CONOP",   "[R4+]",                 0x93, 0x14, 0x5A, 0x02);
+    TEST("CONOP",   "[IDX0+]",               0x93, 0x20, 0x5A, 0x01);
+    TEST("CONOP",   "[IDX1], [R2-QR0]",      0x93, 0x92, 0x5A, 0x05);
+    TEST("COSHL",   "#16",                   0xA3, 0x00, 0x82, 0x10);
+    TEST("COSHR",   "R5",                    0xA3, 0x55, 0x9A, 0x00);
+    TEST("COSHL",   "[R6+]",                 0x83, 0x66, 0x8A, 0x02);
+    TEST("COASHR",  "#3, RND",               0xA3, 0x00, 0xB2, 0x03);
+    TEST("COASHR",  "#0, RND",               0xA3, 0x00, 0xB2, 0x00);  // CoRND
+    TEST("COABS",   "",                      0xA3, 0x00, 0x1A, 0x00);
+    TEST("CONEG",   "RND",                   0xA3, 0x00, 0x72, 0x00);
+    TEST("COSTORE", "R5, MAH",               0xC3, 0x55, 0x08, 0x00);  // Keil
+    TEST("COSTORE", "R4, MAL",               0xC3, 0x44, 0x20, 0x00);  // Keil
+    TEST("COSTORE", "R2, MRW",               0xC3, 0x22, 0x30, 0x00);
+    TEST("COSTORE", "[R3+], MSW",            0xB3, 0x33, 0x00, 0x02);
+
+    // Reserved codes and the bits which must be zero.
+    ERRT("COMACM",  "[IDX0+], [R0]", ILLEGAL_OPERAND_MODE, "]", 0x93, 0x20, 0xD8, 0x00);
+    ERRT("COMACM",  "[IDX0], [R0+]", ILLEGAL_OPERAND_MODE, "], [R0+]", 0x93, 0x00, 0xD8, 0x02);
+    ERRT("COMUL",   "R1, R2", ILLEGAL_OPERAND_MODE, "R1, R2", 0xA3, 0x12, 0xC0, 0x08);
+    ERRT("COSHL",   "#17", ILLEGAL_OPERAND_MODE, "#17", 0xA3, 0x00, 0x82, 0x11);
+    ERRT("COSTORE", "R1, ", ILLEGAL_REGISTER, "", 0xC3, 0x11, 0x18, 0x00);
+    ERRT("COSTORE", "R1, MAH", ILLEGAL_OPERAND_MODE, "R1, MAH", 0xC3, 0x11, 0x09, 0x00);
+    UNKN(0x93, 0x12, 0xFF, 0x01);
+    UNKN(0xA3, 0x12, 0x03, 0x00);
+}
+
+// The XC16X adds four conditions to JMPA and CALLA, a branch prediction bit
+// and, for JMPA, a pre-fetch hint which is set for a short backward loop.
+// The repeat control decrements MRW and sets USR0 or USR1; any CoXXX
+// instruction takes it.
+void test_repeat() {
+    TEST("- USR0 COMULU",  "R5, [R4]",        0x83, 0x54, 0x00, 0x41);
+    TEST("- USR1 COMULU",  "R5, [R4+], RND",  0x83, 0x54, 0x01, 0x62);
+    TEST("- USR0 COSHL",   "[R4+]",           0x83, 0x44, 0x8A, 0x42);
+    TEST("- USR1 COASHR",  "[R4], RND",       0x83, 0x44, 0xBA, 0x61);
+    TEST("- USR0 COMUL",   "[IDX0+], [R8]",   0x93, 0x28, 0xC0, 0x41);
+    TEST("- USR1 COMAC",   "[IDX1], [R2-], RND", 0x93, 0x92, 0xD1, 0x63);
+    TEST("- USR0 COMACM",  "[IDX0+], [R0+]",  0x93, 0x20, 0xD8, 0x42);
+    TEST("- USR0 CONOP",   "[IDX0+]",         0x93, 0x20, 0x5A, 0x41);
+    TEST("- USR1 CONOP",   "[R3+QR1]",        0x93, 0x13, 0x5A, 0x66);
+    TEST("- USR0 COMULU",  "R5, R4",          0xA3, 0x54, 0x00, 0x40);
+    TEST("- USR1 COMULU",  "R5, R4, RND",     0xA3, 0x54, 0x01, 0x60);
+    TEST("- USR0 COABS",   "",                0xA3, 0x00, 0x1A, 0x40);
+    TEST("- USR1 CONEG",   "RND",             0xA3, 0x00, 0x72, 0x60);
+    TEST("- USR0 COSHL",   "#3",              0xA3, 0x00, 0x82, 0x43);
+    TEST("- USR1 COSHL",   "R5",              0xA3, 0x55, 0x8A, 0x60);
+    TEST("- USR0 COASHR",  "#3, RND",         0xA3, 0x00, 0xB2, 0x43);
+    TEST("- USR1 COASHR",  "R5, RND",         0xA3, 0x55, 0xBA, 0x60);
+    TEST("- USR0 COSTORE", "[R4+], MAL",      0xB3, 0x44, 0x20, 0x42);
+    TEST("- USR1 COSTORE", "R5, MAH",         0xC3, 0x55, 0x08, 0x60);
+    TEST("- USR0 COMOV",   "[IDX0+], [R8+]",  0xD3, 0x28, 0x00, 0x42);
+    TEST("- USR1 COMAC",   "R12, [R2+]",      0x83, 0xC2, 0xD0, 0x62);
+
+    // Reserved repeat codes.
+    ERRT("COMULU", "R5, [R4]", ILLEGAL_OPERAND_MODE, "R5, [R4]", 0x83, 0x54, 0x00, 0x21);
+    ERRT("COMULU", "R5, [R4]", ILLEGAL_OPERAND_MODE, "R5, [R4]", 0x83, 0x54, 0x00, 0x81);
+    ERRT("COMULU", "R5, [R4]", ILLEGAL_OPERAND_MODE, "R5, [R4]", 0x83, 0x54, 0x00, 0xA1);
+    ERRT("COMULU", "R5, [R4]", ILLEGAL_OPERAND_MODE, "R5, [R4]", 0x83, 0x54, 0x00, 0xC1);
+    ERRT("COMULU", "R5, [R4]", ILLEGAL_OPERAND_MODE, "R5, [R4]", 0x83, 0x54, 0x00, 0xE1);
+    ERRT("COMACM", "[IDX0+], [R0+]", ILLEGAL_OPERAND_MODE, "[IDX0+], [R0+]", 0x93, 0x20, 0xD8, 0x22);
+    // The bits which must be zero, with a repeat control.
+    ERRT("- USR0 COMULU",  "R5, R4",  ILLEGAL_OPERAND_MODE, "R5, R4",  0xA3, 0x54, 0x00, 0x41);
+    ERRT("- USR1 COSTORE", "R5, MAH", ILLEGAL_OPERAND_MODE, "R5, MAH", 0xC3, 0x55, 0x09, 0x60);
+    ERRT("- USR0 COABS",   "",        ILLEGAL_OPERAND_MODE, "",        0xA3, 0x00, 0x1A, 0x50);
+
+    // Without the repeat-prefix option an instruction with one is unknown.
+    disassembler.setOption("repeat-prefix", "off");
+    UNKN(0x93, 0x20, 0xD8, 0x42);
+    UNKN(0x93, 0x20, 0xD8, 0x4A);
+    UNKN(0xA3, 0x00, 0x1A, 0x60);
+    TEST("COMACM",  "[IDX0+], [R0+]",        0x93, 0x20, 0xD8, 0x02);
+    ERRT("COMACM",  "[IDX0+], [R0+]", ILLEGAL_OPERAND_MODE, "[IDX0+], [R0+]", 0x93, 0x20, 0xD8, 0x22);
+    disassembler.setOption("repeat-prefix", "on");
+}
+
+void test_xc16x_branch() {
+    ATEST(0x1000, "JMPA",   "CC_UC, 001234H",    0xEA, 0x00, 0x34, 0x12);
+    ATEST(0x1000, "JMPA-",  "CC_Z, 001234H",     0xEA, 0x21, 0x34, 0x12);
+    ATEST(0x1010, "JMPA",   "CC_NUSR1, 001000H", 0xEA, 0x1A, 0x00, 0x10);
+    ATEST(0x1020, "JMPA",   "CC_USR0, 001000H",  0xEA, 0x2A, 0x00, 0x10);
+    ATEST(0x1021, "JMPA",   "CC_NUSR0, 001000H", 0xEA, 0x08, 0x00, 0x10);
+    ATEST(0x1000, "CALLA",  "CC_USR1, 002000H",  0xCA, 0x38, 0x00, 0x20);
+    ATEST(0x1000, "CALLA-", "CC_USR0, 002000H",  0xCA, 0x29, 0x00, 0x20);
+    ATEST(0x1000, "CALLA",  "CC_ULE, 002000H",   0xCA, 0xF0, 0x00, 0x20);
+    AERRT(0x1010, "JMPA",   "CC_NUSR1, 001000H", ILLEGAL_OPERAND_MODE, "001000H",
+          0xEA, 0x18, 0x00, 0x10);
+    AERRT(0x1000, "JMPA",   "CC_UC, 001020H", ILLEGAL_OPERAND_MODE, "001020H",
+          0xEA, 0x02, 0x20, 0x10);
+    AERRT(0x1000, "JMPA",   ", 001234H", ILLEGAL_OPERAND_MODE, ", 001234H",
+          0xEA, 0x48, 0x34, 0x12);
+    TEST("ENWDT", "", 0x85, 0x7A, 0x85, 0x85);
+    TEST("SBRK",  "", 0x8C, 0x00);
+}
+
 void test_illegal() {
     // The undefined opcodes of the opcode tables (manual section 4).
     static constexpr Config::opcode_t undefined[] = {
-        0x3B, 0x44, 0x45, 0x83, 0x85, 0x8B, 0x8C, 0x93, 0x95, 0xA3,
-        0xB3, 0xC1, 0xC3, 0xC7, 0xD3, 0xE3, 0xE5, 0xF5, 0xF8, 0xF9,
+        0x3B, 0x44, 0x45, 0x8B, 0x95, 0xC1, 0xC7, 0xE3, 0xE5, 0xF5, 0xF8, 0xF9,
     };
     for (const auto opc : undefined)
         UNKN(opc, 0x00);
+    // The MAC unit, ENWDT and SBRK of the XC16X.
+    if (!xc16x()) {
+        static constexpr Config::opcode_t xc16x_only[] = {
+            0x83, 0x85, 0x8C, 0x93, 0xA3, 0xB3, 0xC3, 0xD3,
+        };
+        for (const auto opc : xc16x_only)
+            UNKN(opc, 0x00);
+    }
     // ATOMIC and the EXTended instructions are not available on the 80C166.
     if (!c167()) {
         UNKN(0xD1, 0x00);
@@ -593,8 +733,14 @@ void test_illegal() {
     UNKN(0x5B, 0x10);  // DIVU Rwn: nn
     UNKN(0x6B, 0x01);  // DIVL Rwn: nn
     UNKN(0x7B, 0xFE);  // DIVLU Rwn: nn
-    UNKN(0xCA, 0x01);  // CALLA cc, caddr: c0
-    UNKN(0xEA, 0x0F);  // JMPA cc, caddr: c0
+    if (xc16x()) {
+        UNKN(0xCA, 0x02);  // CALLA xcc, caddr: d00a
+        UNKN(0xCA, 0x04);
+        UNKN(0xEA, 0x04);  // JMPA xcc, caddr: d0la
+    } else {
+        UNKN(0xCA, 0x01);  // CALLA cc, caddr: c0
+        UNKN(0xEA, 0x0F);  // JMPA cc, caddr: c0
+    }
     UNKN(0x9B, 0x01);  // TRAP #trap7: t:ttt0
     UNKN(0xCC, 0x01);  // NOP: 00
     UNKN(0xCB, 0x80);  // RET: 00
@@ -644,6 +790,11 @@ void run_tests(const char *cpu) {
         RUN_TEST(test_extended);
         RUN_TEST(test_esfr);
         RUN_TEST(test_ext_prefix);
+    }
+    if (xc16x()) {
+        RUN_TEST(test_mac);
+        RUN_TEST(test_repeat);
+        RUN_TEST(test_xc16x_branch);
     }
     RUN_TEST(test_illegal);
 }
