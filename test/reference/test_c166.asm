@@ -14,7 +14,7 @@
 
         CPU     80C166
         ORG     12340H
-        INCLUDE "test_c166.inc"
+        INCLUDE "test_c166.ginc"
         END
 
 ;;; Local Variables:

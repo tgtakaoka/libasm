@@ -21,6 +21,7 @@
 #include "entry_c166.h"
 #include "insn_base.h"
 #include "reg_c166.h"
+#include "value.h"
 
 namespace libasm {
 namespace c166 {
@@ -30,6 +31,42 @@ struct EntryInsn : EntryInsnBase<Config, Entry> {
     AddrMode src() const { return flags().src(); }
     CodeFormat cf() const { return flags().cf(); }
     bool hasWord2() const { return flags().word2(); }
+};
+
+struct Operand final : ErrorAt {
+    AddrMode mode;
+    RegName reg;
+    CcName cc;
+    Value val;
+    Value bit;
+    Operand() : mode(M_NONE), reg(REG_UNDEF), cc(CC_UNDEF), val(), bit() {}
+};
+
+struct AsmInsn final : AsmInsnImpl<Config>, EntryInsn {
+    AsmInsn(Insn &insn) : AsmInsnImpl(insn), _post(0), _word2(0) {}
+
+    Operand dstOp, srcOp, extOp;
+
+    void setPost(uint8_t post) { _post = post; }
+    void embedPost(uint8_t data) { _post |= data; }
+    uint8_t post() const { return _post; }
+    void embedByte3(uint8_t data) { _word2 |= data; }
+    void embedByte4(uint8_t data) { _word2 |= static_cast<uint16_t>(data) << 8; }
+    void setWord2(uint16_t data) { _word2 = data; }
+
+    // The instruction's length before its operands are encoded.
+    uint8_t insnLength() const { return hasWord2() ? 4 : 2; }
+
+    void emitInsn() {
+        emitByte(opCode(), 0);
+        emitByte(_post, 1);
+        if (hasWord2())
+            emitUint16(_word2, 2);
+    }
+
+private:
+    uint8_t _post;
+    uint16_t _word2;
 };
 
 struct DisInsn final : DisInsnImpl<Config>, EntryInsn {

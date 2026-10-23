@@ -22,6 +22,7 @@ build test_dis_i960.o: cxx ${root}/test/test_dis_i960.cpp
 build gen_am29000.o:      cxx ${root}/test/gen_am29000.cpp
 
 # c166
+build test_asm_c166.o: cxx ${root}/test/test_asm_c166.cpp
 build test_dis_c166.o: cxx ${root}/test/test_dis_c166.cpp
 build gen_c166.o:      cxx ${root}/test/gen_c166.cpp
 

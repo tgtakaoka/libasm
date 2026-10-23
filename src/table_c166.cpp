@@ -17,9 +17,11 @@
 #include "table_c166.h"
 #include "entry_c166.h"
 #include "entry_table.h"
+#include "reg_c166.h"
 #include "text_c166.h"
 
 using namespace libasm::text::c166;
+using namespace libasm::c166::reg;
 
 namespace libasm {
 namespace c166 {
@@ -253,7 +255,228 @@ constexpr Entry TABLE_C166[] PROGMEM = {
     E1(0xFC, 0x00, CF_FF, TEXT_POP,    M_REGW),
 };
 
-constexpr uint8_t INDEX_C166[] PROGMEM = {0};
+constexpr uint8_t INDEX_C166[] PROGMEM = {
+      0,  // TEXT_ADD
+      1,  // TEXT_ADD
+      2,  // TEXT_ADD
+      3,  // TEXT_ADD
+      4,  // TEXT_ADD
+      5,  // TEXT_ADD
+      6,  // TEXT_ADD
+      7,  // TEXT_ADDB
+      8,  // TEXT_ADDB
+      9,  // TEXT_ADDB
+     10,  // TEXT_ADDB
+     11,  // TEXT_ADDB
+     12,  // TEXT_ADDB
+     13,  // TEXT_ADDB
+     14,  // TEXT_ADDC
+     15,  // TEXT_ADDC
+     16,  // TEXT_ADDC
+     17,  // TEXT_ADDC
+     18,  // TEXT_ADDC
+     19,  // TEXT_ADDC
+     20,  // TEXT_ADDC
+     21,  // TEXT_ADDCB
+     22,  // TEXT_ADDCB
+     23,  // TEXT_ADDCB
+     24,  // TEXT_ADDCB
+     25,  // TEXT_ADDCB
+     26,  // TEXT_ADDCB
+     27,  // TEXT_ADDCB
+     82,  // TEXT_AND
+     83,  // TEXT_AND
+     84,  // TEXT_AND
+     85,  // TEXT_AND
+     86,  // TEXT_AND
+     87,  // TEXT_AND
+     88,  // TEXT_AND
+     89,  // TEXT_ANDB
+     90,  // TEXT_ANDB
+     91,  // TEXT_ANDB
+     92,  // TEXT_ANDB
+     93,  // TEXT_ANDB
+     94,  // TEXT_ANDB
+     95,  // TEXT_ANDB
+    133,  // TEXT_ASHR
+    134,  // TEXT_ASHR
+    116,  // TEXT_BAND
+    136,  // TEXT_BCLR
+    112,  // TEXT_BCMP
+    111,  // TEXT_BFLDH
+    110,  // TEXT_BFLDL
+    114,  // TEXT_BMOV
+    113,  // TEXT_BMOVN
+    115,  // TEXT_BOR
+    137,  // TEXT_BSET
+    117,  // TEXT_BXOR
+    208,  // TEXT_CALLA
+    203,  // TEXT_CALLI
+    205,  // TEXT_CALLR
+    210,  // TEXT_CALLS
+     56,  // TEXT_CMP
+     57,  // TEXT_CMP
+     58,  // TEXT_CMP
+     59,  // TEXT_CMP
+     60,  // TEXT_CMP
+     61,  // TEXT_CMP
+     62,  // TEXT_CMPB
+     63,  // TEXT_CMPB
+     64,  // TEXT_CMPB
+     65,  // TEXT_CMPB
+     66,  // TEXT_CMPB
+     67,  // TEXT_CMPB
+    144,  // TEXT_CMPD1
+    145,  // TEXT_CMPD1
+    146,  // TEXT_CMPD1
+    147,  // TEXT_CMPD2
+    148,  // TEXT_CMPD2
+    149,  // TEXT_CMPD2
+    138,  // TEXT_CMPI1
+    139,  // TEXT_CMPI1
+    140,  // TEXT_CMPI1
+    141,  // TEXT_CMPI2
+    142,  // TEXT_CMPI2
+    143,  // TEXT_CMPI2
+    151,  // TEXT_CPL
+    153,  // TEXT_CPLB
+    162,  // TEXT_DISWDT
+    121,  // TEXT_DIV
+    123,  // TEXT_DIVL
+    124,  // TEXT_DIVLU
+    122,  // TEXT_DIVU
+    163,  // TEXT_EINIT
+    158,  // TEXT_IDLE
+    198,  // TEXT_JB
+    200,  // TEXT_JBC
+    209,  // TEXT_JMPA
+    204,  // TEXT_JMPI
+    135,  // TEXT_JMPR
+    211,  // TEXT_JMPS
+    199,  // TEXT_JNB
+    201,  // TEXT_JNBS
+    154,  // TEXT_MOV
+    155,  // TEXT_MOV
+    164,  // TEXT_MOV
+    165,  // TEXT_MOV
+    166,  // TEXT_MOV
+    167,  // TEXT_MOV
+    168,  // TEXT_MOV
+    169,  // TEXT_MOV
+    170,  // TEXT_MOV
+    171,  // TEXT_MOV
+    172,  // TEXT_MOV
+    182,  // TEXT_MOV
+    184,  // TEXT_MOV
+    185,  // TEXT_MOV
+    188,  // TEXT_MOV
+    189,  // TEXT_MOV
+    156,  // TEXT_MOVB
+    157,  // TEXT_MOVB
+    173,  // TEXT_MOVB
+    174,  // TEXT_MOVB
+    175,  // TEXT_MOVB
+    176,  // TEXT_MOVB
+    177,  // TEXT_MOVB
+    178,  // TEXT_MOVB
+    179,  // TEXT_MOVB
+    180,  // TEXT_MOVB
+    181,  // TEXT_MOVB
+    183,  // TEXT_MOVB
+    186,  // TEXT_MOVB
+    187,  // TEXT_MOVB
+    190,  // TEXT_MOVB
+    191,  // TEXT_MOVB
+    195,  // TEXT_MOVBS
+    196,  // TEXT_MOVBS
+    197,  // TEXT_MOVBS
+    192,  // TEXT_MOVBZ
+    193,  // TEXT_MOVBZ
+    194,  // TEXT_MOVBZ
+    118,  // TEXT_MUL
+    119,  // TEXT_MULU
+    150,  // TEXT_NEG
+    152,  // TEXT_NEGB
+    217,  // TEXT_NOP
+     96,  // TEXT_OR
+     97,  // TEXT_OR
+     98,  // TEXT_OR
+     99,  // TEXT_OR
+    100,  // TEXT_OR
+    101,  // TEXT_OR
+    102,  // TEXT_OR
+    103,  // TEXT_ORB
+    104,  // TEXT_ORB
+    105,  // TEXT_ORB
+    106,  // TEXT_ORB
+    107,  // TEXT_ORB
+    108,  // TEXT_ORB
+    109,  // TEXT_ORB
+    212,  // TEXT_PCALL
+    219,  // TEXT_POP
+    120,  // TEXT_PRIOR
+    218,  // TEXT_PUSH
+    159,  // TEXT_PWRDN
+    213,  // TEXT_RET
+    215,  // TEXT_RETI
+    216,  // TEXT_RETP
+    214,  // TEXT_RETS
+    125,  // TEXT_ROL
+    126,  // TEXT_ROL
+    127,  // TEXT_ROR
+    128,  // TEXT_ROR
+    206,  // TEXT_SCXT
+    207,  // TEXT_SCXT
+    129,  // TEXT_SHL
+    130,  // TEXT_SHL
+    131,  // TEXT_SHR
+    132,  // TEXT_SHR
+    161,  // TEXT_SRST
+    160,  // TEXT_SRVWDT
+     28,  // TEXT_SUB
+     29,  // TEXT_SUB
+     30,  // TEXT_SUB
+     31,  // TEXT_SUB
+     32,  // TEXT_SUB
+     33,  // TEXT_SUB
+     34,  // TEXT_SUB
+     35,  // TEXT_SUBB
+     36,  // TEXT_SUBB
+     37,  // TEXT_SUBB
+     38,  // TEXT_SUBB
+     39,  // TEXT_SUBB
+     40,  // TEXT_SUBB
+     41,  // TEXT_SUBB
+     42,  // TEXT_SUBC
+     43,  // TEXT_SUBC
+     44,  // TEXT_SUBC
+     45,  // TEXT_SUBC
+     46,  // TEXT_SUBC
+     47,  // TEXT_SUBC
+     48,  // TEXT_SUBC
+     49,  // TEXT_SUBCB
+     50,  // TEXT_SUBCB
+     51,  // TEXT_SUBCB
+     52,  // TEXT_SUBCB
+     53,  // TEXT_SUBCB
+     54,  // TEXT_SUBCB
+     55,  // TEXT_SUBCB
+    202,  // TEXT_TRAP
+     68,  // TEXT_XOR
+     69,  // TEXT_XOR
+     70,  // TEXT_XOR
+     71,  // TEXT_XOR
+     72,  // TEXT_XOR
+     73,  // TEXT_XOR
+     74,  // TEXT_XOR
+     75,  // TEXT_XORB
+     76,  // TEXT_XORB
+     77,  // TEXT_XORB
+     78,  // TEXT_XORB
+     79,  // TEXT_XORB
+     80,  // TEXT_XORB
+     81,  // TEXT_XORB
+};
 
 // clang-format on
 
@@ -271,6 +494,106 @@ constexpr Cpu CPU_TABLE[] PROGMEM = {
 
 const Cpu *cpu(CpuType cpuType) {
     return Cpu::search(cpuType, ARRAY_RANGE(CPU_TABLE));
+}
+
+namespace {
+
+bool fitsImm(const Operand &op, uint32_t max, int32_t min = 0) {
+    return !op.val.isUndefined() && !op.val.overflow(max, min);
+}
+
+bool acceptImm(const Operand &op, AddrMode table) {
+    switch (table) {
+    case M_D3:
+        return fitsImm(op, 7);
+    case M_D4:
+        return fitsImm(op, 15);
+    case M_TRAP:
+    case M_IM16:
+    case M_IM8:
+        return true;
+    default:
+        return false;
+    }
+}
+
+bool acceptAddr(const Operand &op, AddrMode table) {
+    switch (table) {
+    case M_REGW:
+    case M_REGB:
+        return op.val.isUndefined() || shortReg(op.val.getUnsigned()) >= 0;
+    case M_MEM:
+    case M_CADR:
+    case M_REL:
+    case M_RELW:
+    case M_BOFF:
+    case M_SEG:
+        return true;
+    default:
+        return false;
+    }
+}
+
+bool acceptMode(const Operand &op, AddrMode table) {
+    if (op.mode == table)
+        return true;
+    switch (op.mode) {
+    case M_RW:
+        return table == M_RWH || table == M_RWL || table == M_REGW || table == M_BOFF;
+    case M_RB:
+        return table == M_RBH || table == M_RBL || table == M_REGB;
+    case M_IR:
+        return table == M_IRH || table == M_IRL || (table == M_IR2 && encodeRegNum(op.reg) < 4);
+    case M_PI:
+        return table == M_PIH || table == M_PIL || (table == M_PI2 && encodeRegNum(op.reg) < 4);
+    case M_IMM:
+        return acceptImm(op, table);
+    case M_CC:
+        return table == M_CCO;
+    case M_BIT:
+        return table == M_BITO || table == M_BITQ || table == M_BITZ;
+    case M_ADDR:
+        return acceptAddr(op, table);
+    default:
+        return false;
+    }
+}
+
+bool acceptModes(AsmInsn &insn, const Entry *entry) {
+    const auto table = entry->readFlags();
+    if (!acceptMode(insn.dstOp, table.dst()))
+        return false;
+    const auto src = table.src();
+    if (src == M_MDL || src == M_MDH)
+        return insn.srcOp.mode == M_IMM && insn.extOp.mode == M_IMM;
+    return acceptMode(insn.srcOp, src) && insn.extOp.mode == M_NONE;
+}
+
+void readCode(AsmInsn &insn, const Entry *entry, const EntryPage *) {
+    insn.setOpCode(entry->readOpCode());
+    insn.setFlags(entry->readFlags());
+    insn.setPost(entry->readPost());
+}
+
+}  // namespace
+
+int16_t shortReg(uint32_t addr) {
+    if (addr < 0xFE00 || addr > 0xFE00 + 2 * 0xEF || (addr & 1))
+        return -1;
+    return (addr - 0xFE00) / 2;
+}
+
+int16_t bitOff(uint32_t addr) {
+    if (addr >= 0xFD00 && addr <= 0xFDFE && (addr & 1) == 0)
+        return (addr - 0xFD00) / 2;
+    if (addr >= 0xFF00 && addr <= 0xFF00 + 2 * (0xEF - 0x80) && (addr & 1) == 0)
+        return 0x80 + (addr - 0xFF00) / 2;
+    return -1;
+}
+
+Error searchName(CpuType cpuType, AsmInsn &insn) {
+    cpu(cpuType)->searchName(insn, acceptModes, Cpu::defaultPageSetup, readCode);
+    return insn.getError();
 }
 
 bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *) {

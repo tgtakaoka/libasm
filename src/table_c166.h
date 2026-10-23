@@ -31,7 +31,12 @@ struct TableC166 final : InsnTable<CpuType> {
 
 extern const TableC166 TABLE;
 
+Error searchName(CpuType, AsmInsn &insn);
 Error searchOpCode(CpuType, DisInsn &insn, StrBuffer &out);
+
+// The reg and bitoff fields which address |addr|, or -1 if none does.
+int16_t shortReg(uint32_t addr);
+int16_t bitOff(uint32_t addr);
 
 }  // namespace c166
 }  // namespace libasm

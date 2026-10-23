@@ -17,6 +17,7 @@
 #include "reg_c166.h"
 #include "reg_base.h"
 #include "text_c166.h"
+#include "value_parser.h"
 
 using namespace libasm::reg;
 using namespace libasm::text::c166;
@@ -30,8 +31,10 @@ namespace {
 
 constexpr NameEntry CC_NAMES[] PROGMEM = {
     { TEXT_CC_C,   CC_C   },
+    { TEXT_CC_EQ,  CC_EQ  },
     { TEXT_CC_N,   CC_N   },
     { TEXT_CC_NC,  CC_NC  },
+    { TEXT_CC_NE,  CC_NE  },
     { TEXT_CC_NET, CC_NET },
     { TEXT_CC_NN,  CC_NN  },
     { TEXT_CC_NV,  CC_NV  },
@@ -41,8 +44,10 @@ constexpr NameEntry CC_NAMES[] PROGMEM = {
     { TEXT_CC_SLE, CC_SLE },
     { TEXT_CC_SLT, CC_SLT },
     { TEXT_CC_UC,  CC_UC  },
+    { TEXT_CC_UGE, CC_UGE },
     { TEXT_CC_UGT, CC_UGT },
     { TEXT_CC_ULE, CC_ULE },
+    { TEXT_CC_ULT, CC_ULT },
     { TEXT_CC_V,   CC_V   },
     { TEXT_CC_Z,   CC_Z   },
 };
@@ -72,7 +77,72 @@ constexpr NameEntry SFR_NAMES[] PROGMEM = {
 PROGMEM constexpr NameTable SFR_TABLE{ARRAY_RANGE(SFR_NAMES)};
 
 // clang-format on
+
+// Parse a register number which spans the rest of |name|.
+int16_t parseNumber(StrScanner &name) {
+    const auto num = parseRegNumber(name);
+    return name.size() == 0 ? num : -1;
+}
+
 }  // namespace
+
+RegName parseRegName(StrScanner &scan, const ValueParser &parser) {
+    auto p = scan;
+    auto name = parser.readRegName(p, true);
+    if (name.iexpect('R')) {
+        auto byte = name;
+        if (byte.iexpect('L') || byte.iexpect('H')) {
+            const auto high = toupper(name[0]) == 'H';
+            const auto num = parseNumber(byte);
+            if (num >= 0 && num < 8) {
+                scan = p;
+                return RegName(REG_RL0 + num * 2 + (high ? 1 : 0));
+            }
+            return REG_UNDEF;
+        }
+        const auto num = parseNumber(name);
+        if (num >= 0 && num < 16) {
+            scan = p;
+            return RegName(REG_R0 + num);
+        }
+    }
+    return REG_UNDEF;
+}
+
+CcName parseCcName(StrScanner &scan, const ValueParser &parser) {
+    auto p = scan;
+    auto name = parser.readRegName(p);
+    name.iexpectText_P(TEXT_CC_);
+    const auto *entry = CC_TABLE.searchText(name);
+    if (entry) {
+        scan = p;
+        return CcName(entry->name());
+    }
+    return CC_UNDEF;
+}
+
+bool isWordReg(RegName name) {
+    return name >= REG_R0 && name <= REG_R15;
+}
+
+bool isByteReg(RegName name) {
+    return name >= REG_RL0 && name <= REG_RH7;
+}
+
+uint8_t encodeRegNum(RegName name) {
+    return uint8_t(name) & 0xF;
+}
+
+uint16_t parseSfrName(StrScanner &scan, const ValueParser &parser, CpuType) {
+    auto p = scan;
+    const auto name = parser.readRegName(p);
+    auto entry = SFR_TABLE.searchText(name);
+    if (entry == nullptr)
+        return 0;
+    scan = p;
+    const auto num = uint8_t(entry->name());
+    return num < 0x80 ? 0xFE00 + 2 * num : 0xFF00 + 2 * (num - 0x80);
+}
 
 StrBuffer &outRegName(StrBuffer &out, RegName name) {
     const auto num = int8_t(name);
@@ -106,6 +176,10 @@ const /*PROGMEM*/ char *sfrName_P(uint16_t addr, CpuType) {
     const auto num = int8_t((addr - 0xFE00) / 2);
     auto entry = SFR_TABLE.searchName(num);
     return entry ? entry->text_P() : nullptr;
+}
+
+uint8_t encodeCcNum(CcName name) {
+    return uint8_t(name) & 0xF;
 }
 
 CcName decodeCcNum(uint8_t num) {

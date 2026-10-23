@@ -70,7 +70,7 @@ struct LetterParser {
 };
 
 struct CStyleLetterParser final : LetterParser, Singleton<CStyleLetterParser> {
-    /** A letter is 'c' where c is [:print:], \['"?\btnt], \x[0-9A-Fa-f]+, \[0-7]+ */
+    /** A letter is 'c' where c is [:print:], \['"?\abfnrtv], \x[0-9A-Fa-f]+, \[0-7]+ */
     char readLetter(StrScanner &scan, ErrorAt &error, char delim) const override;
     /** A string is "str". */
     char stringDelimiter(StrScanner &scan) const override { return scan.expect('"'); }

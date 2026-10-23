@@ -1,0 +1,269 @@
+;;; Copyright 2026 Tadashi G. Takaoka
+;;;
+;;; Licensed under the Apache License, Version 2.0 (the "License");
+;;; you may not use this file except in compliance with the License.
+;;; You may obtain a copy of the License at
+;;;
+;;;     http://www.apache.org/licenses/LICENSE-2.0
+;;;
+;;; Unless required by applicable law or agreed to in writing, software
+;;; distributed under the License is distributed on an "AS IS" BASIS,
+;;; WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+;;; See the License for the specific language governing permissions and
+;;; limitations under the License.
+;;; Converted from test_c166.inc by scripts/c166-inc-to-ginc.py; do not edit.
+
+;;; Arithmetic and logical
+        add     r1, r2
+        add     r1, [r2]
+        add     r1, [r3+]
+        add     r1, #7
+        add     sp, #0x1234
+        add     r4, #0x1234
+        add     sp, 0x1234
+        add     0x1234, sp
+        addb    rl1, rh2
+        addb    rh0, [r0]
+        addb    rl0, [r1+]
+        addb    rh7, #5
+        addb    sp, #0x34
+        addb    sp, 0x1234
+        addb    0x1234, rh1
+        addc    r1, r2
+        .byte   0x18, 0x10              ; ADDC    R1, #0
+        addc    r1, [r2]
+        addc    r1, [r3+]
+        addc    sp, #0x1234
+        addc    sp, 0x1234
+        addc    0x1234, sp
+        addcb   rl1, [r3]
+        addcb   rl1, rh2
+        addcb   rl0, [r1+]
+        addcb   rh7, #5
+        addcb   sp, #0x34
+        addcb   sp, 0x1234
+        addcb   0x1234, rh1
+        sub     r15, [r0+]
+        sub     0x1234, r1
+        sub     r1, r2
+        sub     r1, [r2]
+        sub     r1, #7
+        sub     sp, #0x1234
+        sub     sp, 0x1234
+        subb    sp, #0xFF
+        subb    rl1, rh2
+        subb    rh0, [r0]
+        subb    rl0, [r1+]
+        subb    rh7, #5
+        subb    sp, 0x1234
+        subb    0x1234, rh1
+        .byte   0x32, 0xEF, 0x34, 0x12  ; SUBC    0FFDEH, 1234H
+        subc    r1, r2
+        subc    r1, [r2]
+        subc    r1, [r3+]
+        subc    r1, #7
+        subc    sp, #0x1234
+        subc    0x1234, sp
+        subcb   rh7, rl0
+        subcb   rh0, [r0]
+        subcb   rl0, [r1+]
+        subcb   rh7, #5
+        subcb   sp, #0x34
+        subcb   sp, 0x1234
+        subcb   0x1234, rh1
+        cmp     r1, #0x1234
+        cmp     dpp0, 0x1234
+        cmp     r1, r2
+        cmp     r1, [r2]
+        cmp     r1, [r3+]
+        cmp     r1, #7
+        cmpb    rl0, [r2]
+        cmpb    sp, #18
+        cmpb    rl1, rh2
+        cmpb    rl0, [r1+]
+        cmpb    rh7, #5
+        cmpb    sp, 0x1234
+        xor     r2, #3
+        xor     r1, r2
+        xor     r1, [r2]
+        xor     r1, [r3+]
+        xor     sp, #0x1234
+        xor     sp, 0x1234
+        xor     0x1234, sp
+        xorb    0x1234, sp
+        xorb    rl1, rh2
+        xorb    rh0, [r0]
+        xorb    rl0, [r1+]
+        xorb    rh7, #5
+        xorb    sp, #0x34
+        xorb    sp, 0x1234
+        and     r3, [r1+]
+        and     r1, r2
+        and     r1, [r2]
+        and     r1, #7
+        and     sp, #0x1234
+        and     sp, 0x1234
+        and     0x1234, sp
+        andb    rl3, rh3
+        andb    rh0, [r0]
+        andb    rl0, [r1+]
+        andb    rh7, #5
+        andb    sp, #0x34
+        andb    sp, 0x1234
+        andb    0x1234, rh1
+        or      sp, #0xFFFF
+        or      r1, r2
+        or      r1, [r2]
+        or      r1, [r3+]
+        or      r1, #7
+        or      sp, 0x1234
+        or      0x1234, sp
+        orb     rh1, #7
+        orb     rl1, rh2
+        orb     rh0, [r0]
+        orb     rl0, [r1+]
+        orb     sp, #0x34
+        orb     sp, 0x1234
+        orb     0x1234, rh1
+        neg     r1
+        cpl     r2
+        negb    rh0
+        cplb    rl1
+;;; Multiply and divide
+        mul     r1, r2
+        mulu    r3, r4
+        prior   r5, r6
+        div     r3
+        divu    r4
+        divl    r5
+        divlu   r15
+;;; Shift and rotate
+        rol     r1, r2
+        rol     r1, #15
+        ror     r3, r4
+        ror     r3, #1
+        shl     r5, r6
+        shl     r5, #0
+        shr     r7, r8
+        shr     r7, #8
+        ashr    r9, r10
+        ashr    r9, #10
+;;; Compare and increment/decrement
+        cmpi1   r1, #3
+        cmpi1   r2, #0x1234
+        cmpi1   r3, 0x1234
+        cmpi2   r4, #15
+        cmpi2   r5, #0x1234
+        cmpi2   r6, 0x1234
+        cmpd1   r7, #0
+        cmpd1   r8, #0x1234
+        cmpd1   r9, 0x1234
+        cmpd2   r10, #1
+        cmpd2   r11, #0x1234
+        cmpd2   r12, 0x1234
+;;; Move
+        mov     r1, r2
+        mov     r1, #5
+        mov     sp, #0x1234
+        mov     r1, [r2]
+        mov     r1, [r2+]
+        mov     [r2], r1
+        mov     [-r2], r1
+        mov     [r1], [r2]
+        mov     [r1+], [r2]
+        mov     [r1], [r2+]
+        mov     r1, [r2+#0x1234]
+        mov     [r2+#0x1234], r1
+        mov     [r1], 0x1234
+        mov     0x1234, [r1]
+        mov     sp, 0x1234
+        mov     0x1234, sp
+        movb    rl1, rh2
+        movb    rh0, #5
+        movb    sp, #0x34
+        movb    rh0, [r2]
+        movb    rh0, [r2+]
+        movb    [r2], rh0
+        movb    [-r2], rh0
+        movb    [r1], [r2]
+        movb    [r1+], [r2]
+        movb    [r1], [r2+]
+        movb    rh0, [r2+#0x1234]
+        movb    [r2+#0x1234], rh0
+        movb    [r1], 0x1234
+        movb    0x1234, [r1]
+        movb    sp, 0x1234
+        movb    0x1234, sp
+        movbz   r1, rh1
+        movbz   sp, 0x1234
+        movbz   0x1234, rl0
+        movbs   r2, rl1
+        movbs   r1, 0x1234
+        movbs   0x1234, sp
+        scxt    sp, #0x1234
+        scxt    r1, 0x1234
+        push    sp
+        pop     r1
+;;; Bit
+        .byte   0x3E, 0x01              ; BCLR    0FD02H.3
+        bset    r1.15
+        .byte   0x0F, 0x81              ; BSET    0FF02H.0
+        .byte   0x9E, 0xEF              ; BCLR    0FFDEH.9
+        .byte   0x0A, 0x01, 0x12, 0x34  ; BFLDL   0FD02H, #12H, #34H
+        .byte   0x1A, 0x01, 0x34, 0x12  ; BFLDH   0FD02H, #12H, #34H
+        bfldl   r2, #0xFF, #0
+        .byte   0x2A, 0x02, 0x01, 0x53  ; BCMP    0FD02H.3, 0FD04H.5
+        .byte   0x3A, 0x80, 0xF1, 0xF0  ; BMOVN   R1.0, 0FF00H.15
+        .byte   0x4A, 0x02, 0x01, 0x53  ; BMOV    0FD02H.3, 0FD04H.5
+        .byte   0x5A, 0x02, 0x01, 0x53  ; BOR     0FD02H.3, 0FD04H.5
+        .byte   0x6A, 0x02, 0x01, 0x53  ; BAND    0FD02H.3, 0FD04H.5
+        .byte   0x7A, 0x02, 0x01, 0x53  ; BXOR    0FD02H.3, 0FD04H.5
+;;; Jump and call
+LABEL1: jmpr    cc_uc, LABEL1
+        jmpr    cc_z, LABEL2
+        jmpr    cc_nz, LABEL1
+        jmpr    cc_ule, LABEL2
+        jmpr    cc_net, LABEL2
+        jmpr    cc_sgt, LABEL1
+        callr   LABEL2
+        .byte   0x8A, 0x01, 0xF7, 0x30  ; JB      0FD02H.3, LABEL1
+        jnb     r1.0, LABEL2
+        .byte   0xAA, 0x81, 0xF3, 0xF0  ; JBC     0FF02H.15, LABEL1
+        .byte   0xBA, 0x00, 0x00, 0x10  ; JNBS    0FD00H.1, LABEL2
+LABEL2: jmpa    cc_nz, LABEL2
+        calla   cc_uc, LABEL2
+        jmpi    cc_uc, [r1]
+        jmpi    cc_net, [r1]
+        jmpi    cc_z, [r1]
+        jmpi    cc_nz, [r1]
+        jmpi    cc_v, [r1]
+        jmpi    cc_nv, [r1]
+        jmpi    cc_n, [r1]
+        jmpi    cc_nn, [r1]
+        jmpi    cc_c, [r1]
+        jmpi    cc_nc, [r1]
+        jmpi    cc_sgt, [r1]
+        jmpi    cc_sle, [r1]
+        jmpi    cc_slt, [r1]
+        jmpi    cc_sge, [r1]
+        jmpi    cc_ugt, [r1]
+        jmpi    cc_ule, [r1]
+        calli   cc_z, [r15]
+        jmps    1, 0x2345
+        calls   3, 0xFFFE
+        pcall   sp, LABEL1
+        trap    #0x7F
+        trap    #0
+        ret
+        rets
+        reti
+        retp    sp
+        retp    r5
+;;; System control
+        nop
+        idle
+        pwrdn
+        srvwdt
+        srst
+        diswdt
+        einit
