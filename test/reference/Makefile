@@ -62,10 +62,14 @@ clean-asm:
 # and the checks can come back once ASL is fixed.
 # test_mc68hc12_mmc, test_mc68hcs12_mmc, test_mc68hcs12x_mmc: ASL has no logical
 # page:address.
+# test_c167_esfr: ASL switches reg and bitoff to the ESFRs only after EXTR, not
+# after EXTPR or EXTSR, which the manual (section 5) says begin an extended
+# register sequence too.  See ~/asl_bugs/asl_bug_c166.md.
 ASL_exclude = test_i80286 test_i80386 test_real_i80386 test_i80486 test_real_i80486 \
    test_tms320c31 test_tms320c32 test_i960 \
    test_h8s2000 test_h8s2000n test_h8s2600 test_h8s2600n test_shdsp test_sh2a \
-   test_am29050 test_mc68hc12_mmc test_mc68hcs12_mmc test_mc68hcs12x_mmc
+   test_am29050 test_mc68hc12_mmc test_mc68hcs12_mmc test_mc68hcs12x_mmc \
+   test_c167_esfr
 ASL_TESTS = $(foreach a,$(ASM_TESTS) \
    $(foreach t,$(patsubst %.asl,%,$(wildcard test_*.asl)),$(if $(filter $(t),$(ASM_TESTS)),,$(t))),\
    $(if $(filter $(a),$(ASL_exclude)),,$(a)))

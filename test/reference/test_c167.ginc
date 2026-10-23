@@ -1,0 +1,40 @@
+;;; Copyright 2026 Tadashi G. Takaoka
+;;;
+;;; Licensed under the Apache License, Version 2.0 (the "License");
+;;; you may not use this file except in compliance with the License.
+;;; You may obtain a copy of the License at
+;;;
+;;;     http://www.apache.org/licenses/LICENSE-2.0
+;;;
+;;; Unless required by applicable law or agreed to in writing, software
+;;; distributed under the License is distributed on an "AS IS" BASIS,
+;;; WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+;;; See the License for the specific language governing permissions and
+;;; limitations under the License.
+;;; Converted from test_c167.inc by scripts/c166-inc-to-ginc.py; do not edit.
+
+;;; Extended instructions
+        atomic  #1
+        atomic  #4
+        exts    r1, #1
+        nop
+        extp    r2, #2
+        nop
+        nop
+        exts    #18, #3
+        nop
+        nop
+        nop
+        extp    #0x3FF, #4
+        nop
+        nop
+        nop
+        nop
+        jmps    0xFF, 0x2345
+;;; reg and bitoff 80H-EFH address the ESFRs in an EXTR sequence
+        .byte   0xD1, 0xA0              ; EXTR    #3
+        .byte   0xE6, 0x09, 0x34, 0x12  ; MOV     0F012H, #1234H
+        .byte   0x3F, 0x81              ; BSET    0F102H.3
+        .byte   0x3F, 0x01              ; BSET    0FD02H.3
+        .byte   0x3F, 0x81              ; BSET    0FF02H.3
+        push    sp
