@@ -543,17 +543,21 @@ bool acceptImm(const Operand &op, AddrMode table) {
     case M_TRAP:
     case M_IM16:
     case M_IM8:
+    case M_RNG:
+    case M_RNGR:
+    case M_PAG:
+    case M_SEG8:
         return true;
     default:
         return false;
     }
 }
 
-bool acceptAddr(const Operand &op, AddrMode table) {
+bool acceptAddr(const AsmInsn &insn, const Operand &op, AddrMode table) {
     switch (table) {
     case M_REGW:
     case M_REGB:
-        return op.val.isUndefined() || shortReg(op.val.getUnsigned()) >= 0;
+        return op.val.isUndefined() || shortReg(insn, op.val.getUnsigned()) >= 0;
     case M_MEM:
     case M_CADR:
     case M_REL:
@@ -566,7 +570,7 @@ bool acceptAddr(const Operand &op, AddrMode table) {
     }
 }
 
-bool acceptMode(const Operand &op, AddrMode table) {
+bool acceptMode(const AsmInsn &insn, const Operand &op, AddrMode table) {
     if (op.mode == table)
         return true;
     switch (op.mode) {
@@ -585,7 +589,7 @@ bool acceptMode(const Operand &op, AddrMode table) {
     case M_BIT:
         return table == M_BITO || table == M_BITQ || table == M_BITZ;
     case M_ADDR:
-        return acceptAddr(op, table);
+        return acceptAddr(insn, op, table);
     default:
         return false;
     }
@@ -593,12 +597,12 @@ bool acceptMode(const Operand &op, AddrMode table) {
 
 bool acceptModes(AsmInsn &insn, const Entry *entry) {
     const auto table = entry->readFlags();
-    if (!acceptMode(insn.dstOp, table.dst()))
+    if (!acceptMode(insn, insn.dstOp, table.dst()))
         return false;
     const auto src = table.src();
     if (src == M_MDL || src == M_MDH)
         return insn.srcOp.mode == M_IMM && insn.extOp.mode == M_IMM;
-    return acceptMode(insn.srcOp, src) && insn.extOp.mode == M_NONE;
+    return acceptMode(insn, insn.srcOp, src) && insn.extOp.mode == M_NONE;
 }
 
 void readCode(AsmInsn &insn, const Entry *entry, const EntryPage *) {
@@ -609,17 +613,19 @@ void readCode(AsmInsn &insn, const Entry *entry, const EntryPage *) {
 
 }  // namespace
 
-int16_t shortReg(uint32_t addr) {
-    if (addr < 0xFE00 || addr > 0xFE00 + 2 * 0xEF || (addr & 1))
+int16_t shortReg(const AsmInsn &insn, uint32_t addr) {
+    const uint32_t base = insn.esfr() ? 0xF000 : 0xFE00;
+    if (addr < base || addr > base + 2 * 0xEF || (addr & 1))
         return -1;
-    return (addr - 0xFE00) / 2;
+    return (addr - base) / 2;
 }
 
-int16_t bitOff(uint32_t addr) {
+int16_t bitOff(const AsmInsn &insn, uint32_t addr) {
     if (addr >= 0xFD00 && addr <= 0xFDFE && (addr & 1) == 0)
         return (addr - 0xFD00) / 2;
-    if (addr >= 0xFF00 && addr <= 0xFF00 + 2 * (0xEF - 0x80) && (addr & 1) == 0)
-        return 0x80 + (addr - 0xFF00) / 2;
+    const uint32_t base = insn.esfr() ? 0xF100 : 0xFF00;
+    if (addr >= base && addr <= base + 2 * (0xEF - 0x80) && (addr & 1) == 0)
+        return 0x80 + (addr - base) / 2;
     return -1;
 }
 

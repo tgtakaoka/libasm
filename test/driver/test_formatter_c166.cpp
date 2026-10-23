@@ -30,8 +30,8 @@ void test_asm_c166() {
 
     driver.setUpperHex(false);
 
-    ASM("80c166",
-            R"(        cpu   80c166
+    ASM("80c167",
+            R"(        cpu   80c167
 ; comment line
         org   12340h
 label1: equ   0fe12h
@@ -39,9 +39,11 @@ label1: equ   0fe12h
         add   r1, [r2+]
         jmpr  cc_nz, label2
         bset  0fd02h.3
-label2: jmpa  cc_uc, label2
+label2: extr  #1
+        mov   0f012h, r1
+        jmpa  cc_uc, label2
 )",
-            R"(          0 :                            cpu   80c166
+            R"(          0 :                            cpu   80c167
           0 :                    ; comment line
       12340 :                            org   12340h
       12340 : =fe12              label1: equ   0fe12h
@@ -49,7 +51,9 @@ label2: jmpa  cc_uc, label2
       12344 : 08 1e                      add   r1, [r2+]
       12346 : 3d 01                      jmpr  cc_nz, label2
       12348 : 3f 01                      bset  0fd02h.3
-      1234a : ea 00 4a 23        label2: jmpa  cc_uc, label2
+      1234a : d1 80              label2: extr  #1
+      1234c : f6 f1 12 f0                mov   0f012h, r1
+      12350 : ea 00 4a 23                jmpa  cc_uc, label2
 )");
 }
 
