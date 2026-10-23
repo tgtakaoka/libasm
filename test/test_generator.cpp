@@ -359,6 +359,19 @@ TestGenerator &TestGenerator::maxBarren(uint32_t count) {
     return *this;
 }
 
+TestGenerator &TestGenerator::ignoreError(Error error) {
+    _ignoreErrors.push_back(error);
+    return *this;
+}
+
+bool TestGenerator::ignored(Error error) const {
+    for (const auto e : _ignoreErrors) {
+        if (e == error)
+            return true;
+    }
+    return false;
+}
+
 uint8_t TestGenerator::calcDrop(const TokenizedText &text) {
     for (int8_t drop = MAX_DROP_BYTE; drop >= 0; drop--) {
         if (text.count() >= (1U << 16) + (1U << 8) * drop)
@@ -464,7 +477,8 @@ uint8_t TestGenerator::generateTests(DataGenerator &gen, const bool root) {
                     return drop - 1;
                 }
             }
-        } else if (error != UNKNOWN_INSTRUCTION && error != OPERAND_NOT_ALIGNED) {
+        } else if (error != UNKNOWN_INSTRUCTION && error != OPERAND_NOT_ALIGNED &&
+                   !ignored(error)) {
             std::string name;
             const auto *error = meaningfulError(name);
             if (error->count() == 1) {

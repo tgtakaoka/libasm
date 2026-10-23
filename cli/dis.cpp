@@ -46,6 +46,7 @@
 #include "dis_tms320f.h"
 #include "dis_am29000.h"
 #include "dis_i960.h"
+#include "dis_c166.h"
 #include "dis_tms370.h"
 #include "dis_tms7000.h"
 #include "dis_tms9900.h"
@@ -92,6 +93,7 @@ tms320::DisTms320 dis320;
 tms320f::DisTms320f dis320f;
 am29000::DisAm29000 dis29000;
 i960::DisI960 disi960;
+c166::DisC166 dis166;
 tms370::DisTms370 dis370;
 tms7000::DisTms7000 dis7000;
 tms9900::DisTms9900 dis9900;
@@ -136,6 +138,7 @@ DisCommander commander{
         &dish16,
         &dish8300,
         &dish8500,
+        &dis166,
         &dissuperh,
         &dis9900,
         &disz8000,

@@ -33,6 +33,12 @@ build reg_am29000.o:   cxx ${root}/src/reg_am29000.cpp
 build table_am29000.o: cxx ${root}/src/table_am29000.cpp
 build text_am29000.o:  cxx ${root}/src/text_am29000.cpp
 
+# c166
+build dis_c166.o:   cxx ${root}/src/dis_c166.cpp
+build reg_c166.o:   cxx ${root}/src/reg_c166.cpp
+build table_c166.o: cxx ${root}/src/table_c166.cpp
+build text_c166.o:  cxx ${root}/src/text_c166.cpp
+
 # cdp1802
 build asm_cdp1802.o:   cxx ${root}/src/asm_cdp1802.cpp
 build dis_cdp1802.o:   cxx ${root}/src/dis_cdp1802.cpp

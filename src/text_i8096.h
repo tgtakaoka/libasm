@@ -126,7 +126,7 @@ using common::TEXT_XOR;
 using common::TEXT_XORB;
 
 // i80C196KB
-extern const char TEXT_BMOV[]  PROGMEM;
+using common::TEXT_BMOV;
 using common::TEXT_CMPL;
 extern const char TEXT_DJNZW[] PROGMEM;
 extern const char TEXT_IDLPD[] PROGMEM;
