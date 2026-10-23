@@ -15,15 +15,19 @@
  */
 
 #include "dis_c166.h"
+#include <string.h>
+
 #include "array_memory.h"
 #include "reg_c166.h"
 #include "table_c166.h"
+#include "text_c166.h"
 #include "text_common.h"
 
 namespace libasm {
 namespace c166 {
 
 using namespace reg;
+using namespace text::c166;
 
 namespace {
 
@@ -33,6 +37,7 @@ constexpr char OPT_BOOL_INDEX_SHARP[] PROGMEM = "index-sharp";
 constexpr char OPT_DESC_INDEX_SHARP[] PROGMEM = "use # for [Rw+#data16]";
 constexpr char OPT_BOOL_CANONICAL_MEM[] PROGMEM = "canonical-mem";
 constexpr char OPT_BOOL_EXT_PREFIX[] PROGMEM = "ext-prefix";
+constexpr char OPT_BOOL_REPEAT_PREFIX[] PROGMEM = "repeat-prefix";
 constexpr char OPT_BOOL_SFR_NAME[] PROGMEM = "sfr-name";
 constexpr char OPT_DESC_SFR_NAME[] PROGMEM = "use name for core SFR";
 
@@ -85,6 +90,27 @@ bool regAddress(const DisInsn &insn, uint16_t addr) {
     return addr >= base && addr <= base + 2 * 0xEF && (addr & 1) == 0;
 }
 
+// The bits of the 4th byte of a CoXXX instruction which |mode| uses.
+uint8_t byte4Bits(AddrMode mode) {
+    if (mode == M_D5)
+        return 0x1F;
+    if (mode == M_QIRL || mode == M_QNOP)
+        return 7;
+    return 0;
+}
+
+// The update of a CoXXX pointer: 1 none, 2 +2, 3 -2, 4-7 +/- the offset
+// register |q0| or the one after it; 0 is reserved.
+StrBuffer &outUpdate(DisInsn &insn, StrBuffer &out, uint8_t code, RegName q0) {
+    if (code == 0)
+        insn.setErrorIf(out, ILLEGAL_OPERAND_MODE);
+    if (code >= 2)
+        out.letter((code & 1) ? '-' : '+');
+    if (code >= 4)
+        outRegName(out, RegName(q0 + ((code >> 1) & 1)));
+    return out.letter(']');
+}
+
 StrBuffer &outIndirect(StrBuffer &out, uint8_t num, char pre, char post) {
     out.letter('[');
     if (pre)
@@ -111,7 +137,9 @@ DisC166::DisC166(const ValueFormatter::Plugins &plugins)
       _opt_canonicalMem(
               this, &DisC166::setCanonicalMem, OPT_BOOL_CANONICAL_MEM, nullptr, &_opt_extPrefix),
       _opt_extPrefix(
-              this, &DisC166::setExtPrefix, OPT_BOOL_EXT_PREFIX, nullptr, &_opt_sfrName),
+              this, &DisC166::setExtPrefix, OPT_BOOL_EXT_PREFIX, nullptr, &_opt_repeatPrefix),
+      _opt_repeatPrefix(
+              this, &DisC166::setRepeatPrefix, OPT_BOOL_REPEAT_PREFIX, nullptr, &_opt_sfrName),
       _opt_sfrName(this, &DisC166::setSfrName, OPT_BOOL_SFR_NAME, OPT_DESC_SFR_NAME) {
     reset();
 }
@@ -122,6 +150,7 @@ void DisC166::reset() {
     setIndexSharp(true);
     setCanonicalMem(false);
     setExtPrefix(false);
+    setRepeatPrefix(true);
     setSfrName(false);
 }
 
@@ -142,6 +171,11 @@ Error DisC166::setCanonicalMem(bool enable) {
 
 Error DisC166::setExtPrefix(bool enable) {
     _extPrefix = enable;
+    return OK;
+}
+
+Error DisC166::setRepeatPrefix(bool enable) {
+    _repeatPrefix = enable;
     return OK;
 }
 
@@ -220,6 +254,16 @@ void DisC166::decodeCodeAddress(DisInsn &insn, StrBuffer &out) const {
     }
     // A target in the code segment of the instruction.
     const auto target = (insn.address() & ~UINT32_C(0xFFFF)) | insn.word2();
+    // The pre-fetch hint of JMPA is set exactly for a short backward loop.
+    if (insn.cf() == CF_FA) {
+        const auto back = insn.address() - target;
+        const bool hint = back > 0 && back <= 32;
+        if (((insn.post() & 2) != 0) != hint)
+            insn.setErrorIf(out, ILLEGAL_OPERAND_MODE);
+        // GNU as never sets the hint.
+        if (_gnuAs && hint)
+            insn.setErrorIf(out, ILLEGAL_OPERAND_MODE);
+    }
     // GNU as takes the offset in the segment, which a target against the
     // location counter gives as well.
     if (_gnuAs) {
@@ -349,6 +393,42 @@ void DisC166::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) const 
         requireZero(insn, out, insn.byte4(), 0x0F);
         decodeRelative(insn, out, insn.byte3());
         break;
+    case M_XCC: {
+        const auto cc = decodeXcc(post >> 3);
+        if (cc == CC_UNDEF) {
+            insn.setErrorIf(out, ILLEGAL_OPERAND_MODE);
+        } else {
+            outCcName(out, cc, _ccPrefix);
+        }
+        break;
+    }
+    case M_QIX:
+        outRegName(out.letter('['), (post & 0x80) ? REG_IDX1 : REG_IDX0);
+        outUpdate(insn, out, (post >> 4) & 7, REG_QX0);
+        break;
+    case M_QIRL:
+        outRegName(out.letter('['), decodeWordReg(post));
+        outUpdate(insn, out, insn.byte4() & 7, REG_QR0);
+        break;
+    case M_RND:
+        out.text_P(TEXT_RND);
+        break;
+    case M_D5: {
+        const auto count = insn.byte4() & 0x1F;
+        if (count > 16)
+            insn.setErrorIf(out, ILLEGAL_OPERAND_MODE);
+        outDec(out.letter('#'), count, 5);
+        break;
+    }
+    case M_COREG: {
+        const auto reg = decodeCoReg(insn.byte3() >> 3);
+        if (reg == REG_UNDEF) {
+            insn.setErrorIf(out, ILLEGAL_REGISTER);
+        } else {
+            outRegName(out, reg);
+        }
+        break;
+    }
     case M_PAG:
         requireZero(insn, out, insn.byte4(), 0xFC);
         outHex(out.letter('#'), insn.word2() & 0x3FF, 10);
@@ -367,7 +447,7 @@ Error DisC166::decodeInsn(DisInsn &insn, StrBuffer &out, bool follower) const {
     insn.readPost();
     if (insn.getError())
         return insn.getError();
-    if (searchOpCode(cpuType(), insn, out))
+    if (searchOpCode(cpuType(), !_gnuAs, insn, out))
         return insn.getError();
     // As a prefix, a sequence covers the one instruction read with it; its
     // length is in the post byte, so turn down any other before reading
@@ -403,12 +483,54 @@ Error DisC166::decodeInsn(DisInsn &insn, StrBuffer &out, bool follower) const {
         insn.setErrorIf(out, ILLEGAL_OPERAND_MODE);
         return insn.getError();
     }
+    if (insn.rrr() && !decodeRepeat(insn, out))
+        return insn.getError();
     if (dst != M_NONE) {
         decodeOperand(insn, out, dst);
-        if (src != M_NONE)
+        if (src != M_NONE && src != M_QNOP) {
             decodeOperand(insn, out.comma(), src);
+            const auto ext = insn.ext();
+            if (ext != M_NONE)
+                decodeOperand(insn, out.comma(), ext);
+        }
     }
     return insn.getError();
+}
+
+// The repeat control and the unused bits of a CoXXX instruction; false when
+// the repeat-prefix option leaves it unknown.
+bool DisC166::decodeRepeat(DisInsn &insn, StrBuffer &out) const {
+    const auto byte4 = insn.byte4();
+    const auto rrr = byte4 >> 5;
+    // Without the option such an instruction is unknown, which a caller like
+    // the test generator passes over.
+    if ((rrr == 2 || rrr == 3) && !_repeatPrefix) {
+        insn.nameBuffer().reset();
+        insn.setErrorIf(out, UNKNOWN_INSTRUCTION);
+        return false;
+    }
+    const auto used = byte4Bits(insn.dst()) | byte4Bits(insn.src()) | byte4Bits(insn.ext());
+    requireZero(insn, out, byte4, 0x1F & ~used);
+    if (insn.dst() == M_COREG || insn.src() == M_COREG)
+        requireZero(insn, out, insn.byte3(), 7);
+    if (rrr == 0)
+        return true;
+    if (rrr != 2 && rrr != 3) {
+        insn.setErrorIf(out, ILLEGAL_OPERAND_MODE);
+        return true;
+    }
+    char name[Insn::MAX_NAME + 1];
+    strncpy(name, insn.name(), Insn::MAX_NAME);
+    name[Insn::MAX_NAME] = 0;
+    // Write the prefix through |out| to take its letter case.
+    auto save{out};
+    insn.nameBuffer().reset().over(out).text_P(TEXT_REPEAT);
+    out.text_P(rrr == 2 ? TEXT_CC_USR0 : TEXT_CC_USR1)
+            .letter(' ')
+            .text(name)
+            .over(insn.nameBuffer());
+    save.over(out);
+    return true;
 }
 
 // The instruction an EXTR, EXTPR or EXTSR prefix has already read, on its own
@@ -448,6 +570,7 @@ Error DisC166::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) const 
     StrBuffer discard{buffer, sizeof(buffer)};
     Insn work(_insn.address() + prefixLength);
     DisInsn follower(work, memory, discard);
+    follower.setFollower();
     follower.setEsfr(state.esfr);
     const auto error = decodeInsn(follower, discard, true);
     for (uint8_t i = 0; i < work.length(); i++)

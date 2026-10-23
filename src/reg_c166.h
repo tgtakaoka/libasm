@@ -36,6 +36,20 @@ enum RegName : int8_t {
     // Byte GPRs; RLn and RHn are the low and high bytes of Rn.
     REG_RL0 = 16 + 0,
     REG_RH7 = 16 + 15,
+    // MAC unit pointer and offset registers.
+    REG_IDX0 = 32,
+    REG_IDX1 = 33,
+    REG_QX0 = 34,
+    REG_QX1 = 35,
+    REG_QR0 = 36,
+    REG_QR1 = 37,
+    // MAC unit registers; the offset from REG_MSW is the CoREG code.
+    REG_MSW = 40 + 0,
+    REG_MAH = 40 + 1,
+    REG_MAS = 40 + 2,
+    REG_MAL = 40 + 4,
+    REG_MCW = 40 + 5,
+    REG_MRW = 40 + 6,
 };
 
 enum CcName : int8_t {
@@ -61,6 +75,11 @@ enum CcName : int8_t {
     CC_NE = 16 + CC_NZ,
     CC_ULT = 16 + CC_C,
     CC_UGE = 16 + CC_NC,
+    // JMPA and CALLA only; 32 plus the xcc code.
+    CC_NUSR0 = 32 + 1,
+    CC_NUSR1 = 32 + 3,
+    CC_USR0 = 32 + 5,
+    CC_USR1 = 32 + 7,
 };
 
 namespace reg {
@@ -72,6 +91,7 @@ bool isByteReg(RegName name);
 uint8_t encodeRegNum(RegName name);
 // The address of the core SFR |scan| names, or 0.
 uint16_t parseSfrName(StrScanner &scan, const ValueParser &parser, CpuType cpuType);
+RegName decodeCoReg(uint8_t code);
 
 StrBuffer &outRegName(StrBuffer &out, RegName name);
 StrBuffer &outCcName(StrBuffer &out, CcName name, bool prefix);
@@ -82,6 +102,8 @@ RegName decodeByteReg(uint8_t num);
 const /*PROGMEM*/ char *sfrName_P(uint16_t addr, CpuType cpuType);
 uint8_t encodeCcNum(CcName name);
 CcName decodeCcNum(uint8_t num);
+bool isXccOnly(CcName name);
+CcName decodeXcc(uint8_t code);
 
 }  // namespace reg
 }  // namespace c166

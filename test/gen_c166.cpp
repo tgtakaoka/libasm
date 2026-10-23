@@ -115,7 +115,7 @@ int main(int argc, const char **argv) {
 
     dis166.setOption("relative", "enable");
     if (driver.generateGas()) {
-        // Core SFRs by name, as GNU as knows them.
+        // Core SFRs by name and no MAC unit, as GNU as knows them.
         dis166.setOption("gnu-as", "enable");
         dis166.setOption("origin-char", ".");
     } else {
@@ -126,6 +126,10 @@ int main(int argc, const char **argv) {
     dis166.setOption("canonical-mem", "enable");
     // Pair each ATOMIC and EXTended instruction with the one it affects.
     dis166.setOption("ext-prefix", "enable");
+    // The repeat control is the same for every CoXXX instruction; leave it to
+    // the hand-written tests rather than triple the instructions generated.
+    // An instruction with one is then unknown, so it is passed over.
+    dis166.setOption("repeat-prefix", "disable");
 
     const SfrNameTokenizer sfrName(dis166.cpuType());
     const auto sym = dis166.curSym();

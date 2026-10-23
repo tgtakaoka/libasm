@@ -25,6 +25,7 @@ namespace c166 {
 enum CpuType : uint8_t {
     C166,
     C167,
+    XC16X,
 };
 
 struct Config : ConfigImpl<CpuType, ADDRESS_24BIT, ADDRESS_BYTE, OPCODE_8BIT, ENDIAN_LITTLE, 8, 6> {
@@ -33,6 +34,8 @@ struct Config : ConfigImpl<CpuType, ADDRESS_24BIT, ADDRESS_BYTE, OPCODE_8BIT, EN
     AddressWidth addressWidth() const override {
         return cpuType() == C166 ? ADDRESS_18BIT : ADDRESS_24BIT;
     }
+    // Room for a "- USR1" prefix in front of COMACMRUS.
+    uint8_t nameMax() const override { return cpuType() == XC16X ? 16 : 6; }
 };
 
 }  // namespace c166

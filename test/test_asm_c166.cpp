@@ -45,8 +45,9 @@ Assembler &assembler(asm166);
 #define DTEST(src1, bytes1, src2, ...) __DTEST(OK, "", src1, bytes1, src2, __VA_ARGS__)
 #define DERRT(src1, bytes1, src2, err, at, ...) __DTEST(err, at, src1, bytes1, src2, __VA_ARGS__)
 
+// The 80C167 and the XC16X.
 static bool c167() {
-    return strcmp_P("80C167", assembler.config().cpu_P()) == 0;
+    return strcmp_P("80C166", assembler.config().cpu_P()) != 0;
 }
 
 void set_up() {
