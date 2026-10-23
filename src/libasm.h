@@ -59,6 +59,7 @@
 #include "asm_z8000.h"
 #include "dis_am29000.h"
 #include "dis_i960.h"
+#include "dis_c166.h"
 #include "dis_cdp1802.h"
 #include "dis_cp1600.h"
 #include "dis_f3850.h"

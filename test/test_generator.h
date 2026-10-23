@@ -20,6 +20,7 @@
 #include <cstdarg>
 #include <string>
 #include <unordered_map>
+#include <vector>
 
 #include "array_memory.h"
 #include "dis_base.h"
@@ -111,6 +112,11 @@ struct TestGenerator {
     // barren stretch can itself run to millions, so |count| is per target.
     TestGenerator &maxBarren(uint32_t count);
 
+    // Pass over a decode failing with |error| without counting it, as an unknown
+    // instruction is; such failures would otherwise drive the drop heuristic.
+    // Each call adds one more error.
+    TestGenerator &ignoreError(Error error);
+
 private:
     Formatter &_formatter;
     Disassembler &_disassembler;
@@ -127,10 +133,12 @@ private:
     // Decodes since the last previously-unseen skeleton; see maxBarren().
     uint32_t _barren;
     uint32_t _barrenLimit;
+    std::vector<Error> _ignoreErrors;
 
     std::unordered_map<std::string, TokenizedText::Set> _map;
     std::unordered_map<std::string, TokenizedText::Set> _error;
 
+    bool ignored(Error error) const;
     void printInsn(const libasm::driver::DisFormatter &data);
     // Disassemble the bytes in _memory at _address into _disFormatter.insn().
     // mark_P==nullptr: decode a fresh instruction (reads the opcode, resets state);

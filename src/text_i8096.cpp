@@ -123,7 +123,7 @@ constexpr char TEXT_SKIP[]  PROGMEM = "SKIP";
 // constexpr char TEXT_XORB[]  PROGMEM = "XORB";
 
 // i80C196KB
-constexpr char TEXT_BMOV[]  PROGMEM = "BMOV";
+// constexpr char TEXT_BMOV[]  PROGMEM = "BMOV";
 // constexpr char TEXT_CMPL[]  PROGMEM = "CMPL";
 constexpr char TEXT_DJNZW[] PROGMEM = "DJNZW";
 constexpr char TEXT_IDLPD[] PROGMEM = "IDLPD";
