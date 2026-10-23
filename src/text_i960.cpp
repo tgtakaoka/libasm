@@ -28,7 +28,6 @@ constexpr char OPT_DESC_MODE_BITS[] PROGMEM = "value of the mode bit of an unuse
 constexpr char OPT_TEXT_IP_OPERAND[] PROGMEM = "ip-operand";
 constexpr char OPT_DESC_IP_OPERAND[] PROGMEM = "IP-relative operand: offset (default) or target";
 constexpr char OPT_BOOL_CANONICAL_MEM[] PROGMEM = "canonical-mem";
-constexpr char OPT_DESC_CANONICAL_MEM[] PROGMEM = "reject memory operand which has a shorter encoding";
 constexpr char OPT_BOOL_FPU[] PROGMEM = "fpu";
 constexpr char OPT_DESC_FPU[] PROGMEM = "enable 80960KB floating point and decimal instructions";
 constexpr char TEXT_REG_PFP[] PROGMEM = "PFP";

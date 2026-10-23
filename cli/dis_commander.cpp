@@ -173,6 +173,8 @@ usage: %s%s [-o <output>] [-l <list>] <input>
                 "  --<name>=<vale>  : extra options (<type> [, <CPU>])\n");
         const auto dis = *_driver.begin();
         for (const auto *opt = dis->commonOptions().head(); opt; opt = opt->next()) {
+            if (opt->isPrivate())
+                continue;
             fprintf(stderr, "  --%-15s: %s (%s)\n", opt->name_P(), opt->description_P(),
                     Options::nameof(opt->spec()));
         }
@@ -183,6 +185,8 @@ usage: %s%s [-o <output>] [-l <list>] <input>
         std::map<std::pair<std::string, std::string>, OptionBase::OptionSpec> specs;
         for (const auto *dir : _driver) {
             for (const auto *opt = dir->options().head(); opt; opt = opt->next()) {
+                if (opt->isPrivate())
+                    continue;
                 const std::pair<std::string, std::string> key{
                         opt->name_P(), opt->description_P()};
                 if (cpus.find(key) == cpus.end()) {

@@ -38,6 +38,8 @@ struct OptionBase {
     const /*PROGMEM*/ char *name_P() const { return _name_P; }
     OptionSpec spec() const { return _spec; }
     const /*PROGMEM*/ char *description_P() const { return _desc_P; }
+    /** An option without description is for tests and not listed for users. */
+    bool isPrivate() const { return _desc_P == nullptr; }
     virtual Error set(StrScanner &scan) const = 0;
     const OptionBase *next() const { return _next; }
 

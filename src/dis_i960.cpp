@@ -37,8 +37,8 @@ DisI960::DisI960(const ValueFormatter::Plugins &plugins)
               &_opt_ipOperand),
       _opt_ipOperand(this, &Config::setIpOperand, OPT_TEXT_IP_OPERAND, OPT_DESC_IP_OPERAND,
               &_opt_canonicalMem),
-      _opt_canonicalMem(this, &DisI960::setCanonicalMem, OPT_BOOL_CANONICAL_MEM,
-              OPT_DESC_CANONICAL_MEM, &_opt_fpu),
+      _opt_canonicalMem(
+              this, &DisI960::setCanonicalMem, OPT_BOOL_CANONICAL_MEM, nullptr, &_opt_fpu),
       _opt_fpu(this, &Config::setFpu, OPT_BOOL_FPU, OPT_DESC_FPU) {
     reset();
 }
