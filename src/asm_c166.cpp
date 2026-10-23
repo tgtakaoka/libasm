@@ -16,7 +16,9 @@
 
 #include "asm_c166.h"
 #include "letter_parser.h"
+#include "operators.h"
 #include "table_c166.h"
+#include "text_c166.h"
 #include "text_common.h"
 
 namespace libasm {
@@ -25,6 +27,7 @@ namespace c166 {
 using namespace pseudo;
 using namespace reg;
 using namespace text::common;
+using namespace text::c166;
 
 namespace {
 
@@ -37,7 +40,41 @@ constexpr Pseudo PSEUDOS[] PROGMEM = {
     { TEXT_DW, &Assembler::defineDataConstant, Assembler::DATA_WORD_NO_STRING },
 };
 PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
+
+constexpr const char *DPP_DIRECTIVES[] PROGMEM = {
+    TEXT_REG_DPP0,
+    TEXT_REG_DPP1,
+    TEXT_REG_DPP2,
+    TEXT_REG_DPP3,
+};
 // clang-format on
+
+constexpr uint8_t PAGE_BITS = 14;
+
+bool isRange(AddrMode mode) {
+    return mode == M_RNG || mode == M_RNGR;
+}
+
+// Remember the sequence an ATOMIC or EXTended instruction begins.
+void beginSequence(AsmInsn &insn, ExtState &state) {
+    const auto dst = insn.dst();
+    const auto &range = isRange(dst) ? insn.dstOp : insn.srcOp;
+    const auto mode = isRange(dst) ? dst : insn.src();
+    if (!isRange(mode))
+        return;
+    state.count = (range.val.getUnsigned() - 1) % 4 + 1;
+    state.esfr = mode == M_RNGR;
+    const auto base = insn.dstOp.val.getUnsigned();
+    if (dst == M_PAG) {
+        state.kind = EXT_PAGE;
+        state.base = base & 0x3FF;
+    } else if (dst == M_SEG8) {
+        state.kind = EXT_SEGMENT;
+        state.base = base & 0xFF;
+    } else {
+        state.kind = dst == M_RWL ? EXT_UNKNOWN : EXT_NONE;
+    }
+}
 
 // A letter or a string is enclosed in single or double quotes, either of
 // which is doubled to include it.  Between double quotes a backslash begins a
@@ -58,6 +95,67 @@ private:
     }
 };
 
+Error segmentOf(ValueStack &stack, ParserContext &) {
+    stack.pushUnsigned((stack.pop().getUnsigned() >> 16) & UINT8_MAX);
+    return OK;
+}
+
+Error pageOf(ValueStack &stack, ParserContext &) {
+    stack.pushUnsigned((stack.pop().getUnsigned() >> PAGE_BITS) & 0x3FF);
+    return OK;
+}
+
+Error segmentOffsetOf(ValueStack &stack, ParserContext &) {
+    stack.pushUnsigned(stack.pop().getUnsigned() & UINT16_MAX);
+    return OK;
+}
+
+Error pageOffsetOf(ValueStack &stack, ParserContext &) {
+    stack.pushUnsigned(stack.pop().getUnsigned() & ((1 << PAGE_BITS) - 1));
+    return OK;
+}
+
+// clang-format off
+const Operator OP_SEG(3, Operator::RIGHT, 1, segmentOf);
+const Operator OP_PAG(3, Operator::RIGHT, 1, pageOf);
+const Operator OP_SOF(3, Operator::RIGHT, 1, segmentOffsetOf);
+const Operator OP_POF(3, Operator::RIGHT, 1, pageOffsetOf);
+
+constexpr char TEXT_SEG[] PROGMEM = "SEG";
+constexpr char TEXT_PAG[] PROGMEM = "PAG";
+constexpr char TEXT_SOF[] PROGMEM = "SOF";
+constexpr char TEXT_POF[] PROGMEM = "POF";
+// clang-format on
+
+// The segment, page, segment offset and page offset of an address.
+struct C166OperatorParser final : OperatorParser, Singleton<C166OperatorParser> {
+    const Operator *readPrefix(
+            StrScanner &scan, ValueStack &stack, ParserContext &context) const override {
+        auto p = scan;
+        p.trimStart(isalnum);
+        const StrScanner name(scan.str(), p.str());
+        const Operator *opr = nullptr;
+        if (name.iequals_P(TEXT_SEG)) {
+            opr = &OP_SEG;
+        } else if (name.iequals_P(TEXT_PAG)) {
+            opr = &OP_PAG;
+        } else if (name.iequals_P(TEXT_SOF)) {
+            opr = &OP_SOF;
+        } else if (name.iequals_P(TEXT_POF)) {
+            opr = &OP_POF;
+        }
+        if (opr) {
+            scan = p;
+            return opr;
+        }
+        return IntelOperatorParser::singleton().readPrefix(scan, stack, context);
+    }
+    const Operator *readInfix(
+            StrScanner &scan, ValueStack &stack, ParserContext &context) const override {
+        return IntelOperatorParser::singleton().readInfix(scan, stack, context);
+    }
+};
+
 struct C166SymbolParser final : PrefixSymbolParser, Singleton<C166SymbolParser> {
     C166SymbolParser() : PrefixSymbolParser(nullptr, text::common::PSTR_UNDER_QUESTION) {}
     bool instructionLetter(char c) const override {
@@ -75,6 +173,9 @@ const ValueParser::Plugins &AsmC166::defaultPlugins() {
     static const struct final : ValueParser::IntelPlugins {
         const SymbolParser &symbol() const override { return C166SymbolParser::singleton(); }
         const LetterParser &letter() const override { return C166LetterParser::singleton(); }
+        const OperatorParser &operators() const override {
+            return C166OperatorParser::singleton();
+        }
     } PLUGINS{};
     return PLUGINS;
 }
@@ -82,6 +183,40 @@ const ValueParser::Plugins &AsmC166::defaultPlugins() {
 AsmC166::AsmC166(const ValueParser::Plugins &plugins)
     : Assembler(plugins, PSEUDO_TABLE), Config(TABLE) {
     reset();
+}
+
+void AsmC166::reset() {
+    Assembler::reset();
+    for (auto i = 0; i < 4; i++)
+        _dpp[i] = i;
+}
+
+Error AsmC166::processPseudo(StrScanner &scan, Insn &insn) {
+    for (auto i = 0; i < 4; i++) {
+        const auto *name_P = reinterpret_cast<const char *>(pgm_read_ptr(&DPP_DIRECTIVES[i]));
+        if (strcasecmp_P(insn.name(), name_P) == 0)
+            return processDpp(scan, insn, i);
+    }
+    return Assembler::processPseudo(scan, insn);
+}
+
+// `DPP2 <page>` sets the page DPP2 is assumed to hold; no operand makes it unknown.
+Error AsmC166::processDpp(StrScanner &scan, Insn &insn, uint8_t num) {
+    auto p = scan.skipSpaces();
+    if (endOfLine(p)) {
+        _dpp[num] = -1;
+        return OK;
+    }
+    const auto at = p;
+    ErrorAt error;
+    const auto value = parseInteger(p, error);
+    if (error.hasError())
+        return insn.setError(error);
+    if (value.overflow((1U << (addressWidth() - PAGE_BITS)) - 1))
+        return insn.setError(at, OVERFLOW_RANGE);
+    _dpp[num] = value.getUnsigned();
+    scan = p;
+    return OK;
 }
 
 Error AsmC166::parseIndirect(StrScanner &scan, Operand &op) const {
@@ -182,7 +317,7 @@ void AsmC166::encodeShortReg(AsmInsn &insn, const Operand &op) const {
         insn.embedPost(0xF0 | encodeRegNum(op.reg));
         return;
     }
-    const auto num = shortReg(op.val.getUnsigned());
+    const auto num = shortReg(insn, op.val.getUnsigned());
     if (num < 0) {
         insn.setErrorIf(op, OVERFLOW_RANGE);
     } else {
@@ -193,7 +328,7 @@ void AsmC166::encodeShortReg(AsmInsn &insn, const Operand &op) const {
 uint8_t AsmC166::encodeBitOff(AsmInsn &insn, const Operand &op) const {
     if (isWordReg(op.reg))
         return 0xF0 | encodeRegNum(op.reg);
-    const auto num = bitOff(op.val.getUnsigned());
+    const auto num = bitOff(insn, op.val.getUnsigned());
     if (num < 0) {
         insn.setErrorIf(op, NOT_BIT_ADDRESSABLE);
         return 0;
@@ -219,7 +354,8 @@ uint8_t AsmC166::encodeRelative(AsmInsn &insn, const Operand &op) const {
 void AsmC166::encodeCodeAddress(AsmInsn &insn, const Operand &op) const {
     const auto target = op.val.getUnsigned();
     if (insn.dst() == M_SEG) {
-        if (op.val.overflow(UINT16_MAX))
+        // A physical target has to be in the segment.
+        if (op.val.overflow(UINT16_MAX) && (target >> 16) != insn.dstOp.val.getUnsigned())
             insn.setErrorIf(op, OVERFLOW_RANGE);
     } else if (!op.val.isUndefined()) {
         // A target in the code segment of the instruction.
@@ -228,6 +364,47 @@ void AsmC166::encodeCodeAddress(AsmInsn &insn, const Operand &op) const {
             insn.setErrorIf(op, OPERAND_TOO_FAR);
     }
     insn.setWord2(target);
+}
+
+// A mem operand up to 0FFFFH is the address field itself, a larger one is a physical address, which
+// must be in the page or segment of the EXTended sequence it is in, or else in the page of a DPP.
+void AsmC166::encodeMemAddress(AsmInsn &insn, const Operand &op) const {
+    const auto addr = op.val.getUnsigned();
+    if (op.val.isUndefined() || addr <= UINT16_MAX) {
+        if (op.val.overflow(UINT16_MAX))
+            insn.setErrorIf(op, OVERFLOW_RANGE);
+        insn.setWord2(addr);
+        return;
+    }
+    insn.setErrorIf(op, checkAddr(addr));
+    const auto page = addr >> PAGE_BITS;
+    const auto offset = addr & ((1U << PAGE_BITS) - 1);
+    switch (insn.extKind()) {
+    case EXT_PAGE:
+        if (page != insn.extBase())
+            insn.setErrorIf(op, OVERFLOW_RANGE);
+        insn.setWord2(offset);
+        return;
+    case EXT_SEGMENT:
+        if ((addr >> 16) != insn.extBase())
+            insn.setErrorIf(op, OVERFLOW_RANGE);
+        insn.setWord2(addr);
+        return;
+    case EXT_UNKNOWN:
+        insn.setErrorIf(op, OVERFLOW_RANGE);
+        insn.setWord2(addr);
+        return;
+    default:
+        break;
+    }
+    for (auto i = 0; i < 4; i++) {
+        if (_dpp[i] >= 0 && static_cast<uint32_t>(_dpp[i]) == page) {
+            insn.setWord2((i << PAGE_BITS) | offset);
+            return;
+        }
+    }
+    insn.setErrorIf(op, OVERFLOW_RANGE);
+    insn.setWord2(addr);
 }
 
 void AsmC166::encodeImmediate(AsmInsn &insn, AddrMode mode, const Operand &op) const {
@@ -250,6 +427,22 @@ void AsmC166::encodeImmediate(AsmInsn &insn, AddrMode mode, const Operand &op) c
         insn.setWord2(val);
         break;
     case M_IM8:
+        if (op.val.overflowUint8())
+            insn.setErrorIf(op, OVERFLOW_RANGE);
+        insn.embedByte3(val);
+        break;
+    case M_RNG:
+    case M_RNGR:
+        if (op.val.overflow(4, 1))
+            insn.setErrorIf(op, OVERFLOW_RANGE);
+        insn.embedPost(((val - 1) & 3) << 4);
+        break;
+    case M_PAG:
+        if (op.val.overflow(0x3FF))
+            insn.setErrorIf(op, OVERFLOW_RANGE);
+        insn.setWord2(val & 0x3FF);
+        break;
+    case M_SEG8:
         if (op.val.overflowUint8())
             insn.setErrorIf(op, OVERFLOW_RANGE);
         insn.embedByte3(val);
@@ -321,9 +514,7 @@ void AsmC166::encodeOperand(AsmInsn &insn, AddrMode mode, const Operand &op) con
         insn.embedPost(op.val.getUnsigned());
         break;
     case M_MEM:
-        if (op.val.overflow(UINT16_MAX))
-            insn.setErrorIf(op, OVERFLOW_RANGE);
-        insn.setWord2(op.val.getUnsigned());
+        encodeMemAddress(insn, op);
         break;
     case M_CADR:
         encodeCodeAddress(insn, op);
@@ -339,6 +530,13 @@ void AsmC166::encodeOperand(AsmInsn &insn, AddrMode mode, const Operand &op) con
 
 Error AsmC166::encodeImpl(StrScanner &scan, Insn &_insn) const {
     AsmInsn insn(_insn);
+    auto &state = _insn.state<ExtState>();
+    if (state.count) {
+        state.count--;
+        insn.setEsfr(state.esfr);
+        insn.setExt(state.kind, state.base);
+    }
+
     if (parseOperand(scan, insn.dstOp, true) && insn.dstOp.hasError())
         return _insn.setError(insn.dstOp);
     if (scan.skipSpaces().expect(',')) {
@@ -374,6 +572,7 @@ Error AsmC166::encodeImpl(StrScanner &scan, Insn &_insn) const {
         insn.embedPost(insn.post() >> 4);
     if (insn.cf() == CF_PD)
         insn.setWord2(insn.opCode() | (static_cast<uint16_t>(insn.opCode()) << 8));
+    beginSequence(insn, state);
     insn.emitInsn();
     return _insn.setError(insn);
 }

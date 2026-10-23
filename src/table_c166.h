@@ -35,8 +35,8 @@ Error searchName(CpuType, AsmInsn &insn);
 Error searchOpCode(CpuType, DisInsn &insn, StrBuffer &out);
 
 // The reg and bitoff fields which address |addr|, or -1 if none does.
-int16_t shortReg(uint32_t addr);
-int16_t bitOff(uint32_t addr);
+int16_t shortReg(const AsmInsn &insn, uint32_t addr);
+int16_t bitOff(const AsmInsn &insn, uint32_t addr);
 
 }  // namespace c166
 }  // namespace libasm
