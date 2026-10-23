@@ -63,7 +63,7 @@ extern const char TEXT_BNO[]      PROGMEM;
 extern const char TEXT_BO[]       PROGMEM;
 extern const char TEXT_BX[]       PROGMEM;
 using common::TEXT_CALL;
-extern const char TEXT_CALLS[]    PROGMEM;
+using common::TEXT_CALLS;
 extern const char TEXT_CALLX[]    PROGMEM;
 extern const char TEXT_CHKBIT[]   PROGMEM;
 extern const char TEXT_CLRBIT[]   PROGMEM;

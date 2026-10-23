@@ -34,7 +34,7 @@ using common::TEXT_BR;
 using common::TEXT_BTJO;
 using common::TEXT_BTJZ;
 using common::TEXT_CALL;
-extern const char TEXT_CALLR[] PROGMEM;
+using common::TEXT_CALLR;
 using common::TEXT_CLR;
 using common::TEXT_CLRC;
 using common::TEXT_CMP;

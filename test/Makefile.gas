@@ -483,6 +483,24 @@ gas-%_i960.hex: %_i960.gas
 gas-test_i960.hex: $(I960_GINCS)
 gas-gen_i960.hex: gen_i960_gas.inc
 
+# C166 family targets.
+# xc16x-elf-as comes from binutils 2.34, the last release with the target.  It
+# has a single machine, a superset of the 80C166 instruction set.  The link
+# resolves absolute branch targets at the text origin; c166.ld replaces the
+# default script, whose memory region does not reach the origin used here.  The
+# origin is the generator's.
+C166_TEXT_ORG = 0x10100
+# $(1) target suffix.
+define gas-c166-rule
+gas-%_$(1).hex: %_$(1).gas c166.ld
+	xc16x-elf-as --warn -o $$*_$(1).p -al=$$*_$(1).lst $$*_$(1).gas
+	xc16x-elf-ld --entry=0 -T c166.ld -Ttext=$$(C166_TEXT_ORG) -o $$*_$(1).o $$*_$(1).p
+	xc16x-elf-objcopy -O ihex -j .text $$*_$(1).o /dev/stdout \
+	| tr -d '\015' | awk -f ../../scripts/ihex-segment-to-linear.awk > $$*_$(1).hex
+	xc16x-elf-objdump -d $$*_$(1).o > $$*_$(1).dis
+endef
+$(eval $(call gas-c166-rule,c166))
+
 # Local Variables:
 # mode: makefile-gmake
 # End:
