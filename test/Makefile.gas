@@ -492,6 +492,7 @@ gas-gen_i960.hex: gen_i960_gas.inc
 # the generator's.
 C166_TEXT_ORG = 0x10100
 gas-test_c166.hex: C166_TEXT_ORG = 0x12340
+gas-test_c167.hex: C166_TEXT_ORG = 0xAB1230
 # $(1) target suffix.
 define gas-c166-rule
 gas-%_$(1).hex: %_$(1).gas c166.ld
